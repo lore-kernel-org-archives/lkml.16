@@ -1,186 +1,228 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26A8C2505D6
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 15:00:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B41824C080;
+	Thu,  3 Apr 2025 15:01:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743692432; cv=none; b=hWDhv92vsdlpYrF6XfN1S92IQ4s3SWOIfD42dsQCYGF12iv76tstjPsELwcbhlio7SVQYoXAJDIvqnooD4c+hANeyhw+OfkW1Skyq77Zp1UOivNp27x7ydlVojduR/lpbVmX+ARzDkU5QTBU9KQhDKhyI8DJ20/PsWqLTIPbxuI=
+	t=1743692509; cv=none; b=l9js1b+Zdkd7bBuq0eHvn6J+vIQfcqI5ghce/1pgQiwTayv8DPAA8Cy6T+DFs2Gu6dn59ZbJLaEzCqugRykg6wZmvA2x+mDXDERP5WQqAu9QwwnnR6UYRS4VyUMc7UAp4QLi1eFMmOU9oGSo+8YwbmX77oWYz9/PhAEMzwTq0fs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743692432; c=relaxed/simple;
-	bh=bfFZPY45P2gKmQYpGSYCaiXbidvKjiPdDyAgBnKwk9U=;
+	s=arc-20240116; t=1743692509; c=relaxed/simple;
+	bh=xGkor64d/mAWwGW2M/uJgbBXlgSRrmMMXmJy4NWr2FM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RsScvRiQa2OzJSJVtGIVEce5eQyPc6OilRr12pf9UHK4iqf67/tRvLKTu0AgaLvFdANpNVLSN7r9SQGrFIqpNtCEGmWxohVMg6CBQGqR10F5tVYI5QaeJDbbBJtr+SjbEtnLhVkB3RlcBudDNqHl7pMN5MbLBsN/MmWlwrxLeIs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=3H9WMjzx; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=voOTGShM; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=3H9WMjzx; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=voOTGShM; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	 Content-Type:Content-Disposition:In-Reply-To; b=fgYx7LGgti+wQmqqNir3l26A+SPlbVZBKSFIT8uJNTjxHh6R1YqCQ1MOrIHllSWClcmPoOR0/qu3y+N+sZUalcJejZeOLNUaKIVX++8D+3IKjaogzfO92ExTvecQlFLf/QCvrI9fglrq/jx7WCObXzPKh9vyAXsRdOsFPIwcs+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=niAfeKup; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="3H9WMjzx";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="voOTGShM";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="3H9WMjzx";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="voOTGShM"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 594F21F390;
-	Thu,  3 Apr 2025 15:00:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1743692429; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BunkOkyNC5tt3KvD+BFe7B526GiiXTQ9MnCliQp4MbI=;
-	b=3H9WMjzx3gLyAIh8mvahtAgFDZtTMr+mht6vazHjrQyJWKmYrgw0V7wt24pqQnNsD4qQIf
-	U5v6Ac0ndL0b6R8d/CRVbJ/CPPUViNgXZo3XSvU5v99IZG79NcQpBOqBP9qXu+jiKMLS6p
-	XcdmDkhq5IziICvHUOIqpQC/FTcfO9s=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1743692429;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BunkOkyNC5tt3KvD+BFe7B526GiiXTQ9MnCliQp4MbI=;
-	b=voOTGShMusTiqpQJcxGUhzNZnFkmMJPeF1XrXUmYVbFqdk/VPMva8QyFJRIh2onCYotlFN
-	C/IB4w5ibcfk08Cw==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=3H9WMjzx;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=voOTGShM
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1743692429; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BunkOkyNC5tt3KvD+BFe7B526GiiXTQ9MnCliQp4MbI=;
-	b=3H9WMjzx3gLyAIh8mvahtAgFDZtTMr+mht6vazHjrQyJWKmYrgw0V7wt24pqQnNsD4qQIf
-	U5v6Ac0ndL0b6R8d/CRVbJ/CPPUViNgXZo3XSvU5v99IZG79NcQpBOqBP9qXu+jiKMLS6p
-	XcdmDkhq5IziICvHUOIqpQC/FTcfO9s=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1743692429;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BunkOkyNC5tt3KvD+BFe7B526GiiXTQ9MnCliQp4MbI=;
-	b=voOTGShMusTiqpQJcxGUhzNZnFkmMJPeF1XrXUmYVbFqdk/VPMva8QyFJRIh2onCYotlFN
-	C/IB4w5ibcfk08Cw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4B6E21392A;
-	Thu,  3 Apr 2025 15:00:29 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id WSxqEo2i7mekYAAAD6G6ig
-	(envelope-from <jack@suse.cz>); Thu, 03 Apr 2025 15:00:29 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 00E4AA07E6; Thu,  3 Apr 2025 17:00:28 +0200 (CEST)
-Date: Thu, 3 Apr 2025 17:00:28 +0200
-From: Jan Kara <jack@suse.cz>
-To: Christian Brauner <brauner@kernel.org>
-Cc: linux-fsdevel@vger.kernel.org, jack@suse.cz, 
-	Ard Biesheuvel <ardb@kernel.org>, linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	James Bottomley <James.Bottomley@hansenpartnership.com>, mcgrof@kernel.org, hch@infradead.org, david@fromorbit.com, 
-	rafael@kernel.org, djwong@kernel.org, pavel@kernel.org, peterz@infradead.org, 
-	mingo@redhat.com, will@kernel.org, boqun.feng@gmail.com
-Subject: Re: [PATCH v2 4/4] kernfs: add warning about implementing freeze/thaw
-Message-ID: <arftvbus4knelyjz5htjdm77fqjalv2haeozfkuxdvyipuge52@wbnzvhdulu25>
-References: <20250402-work-freeze-v2-0-6719a97b52ac@kernel.org>
- <20250402-work-freeze-v2-4-6719a97b52ac@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="niAfeKup"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFAFFC4CEE3;
+	Thu,  3 Apr 2025 15:01:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743692509;
+	bh=xGkor64d/mAWwGW2M/uJgbBXlgSRrmMMXmJy4NWr2FM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=niAfeKupZCdW/v65YRBZPto/AOg0FKIEGUVfqHuk/V917Zzv6RSe5h9TeA1y+2GwB
+	 y6jcV2yMl8jRWBUPnvCpdWetEOICZmbLZMplTkNmqajUmhLgbZ+wX1pscUly5hThcv
+	 00r8ZArknZbaBkQXYhFtsbHpa5D8UxnJgj0Wy4bQURVI/mMK/CgRRKcVMbsYt4V97v
+	 KVklRVaeWtWZpCuxX5EqvWpTR5he/cmVLQ6u41nGwGTLP7vooUvJo1ALxnwkgPVyuS
+	 qdktePCFV81JXCdQ944gP3TIO2f8H19vr4TYcfaVUtFuEHNXqULkH7XatvX8/1Mfcq
+	 WednCxmadBD0A==
+Date: Thu, 3 Apr 2025 17:01:46 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Christian Marangi <ansuelsmth@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, 
+	Benjamin Larsson <benjamin.larsson@genexis.eu>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Lorenzo Bianconi <lorenzo@kernel.org>
+Subject: Re: [RESEND PATCH v11] pwm: airoha: Add support for EN7581 SoC
+Message-ID: <zwckkfd6mzzjxfpitojcmhokhjbtc4u3brf34pcu4phdlipf3z@uijstw7daze2>
+References: <20250226002537.3752-1-ansuelsmth@gmail.com>
+ <cdwttmqcvhetlf446gsaxsta76ojlqckxc253svho4xsm7qxhs@6otqm6yyuvfh>
+ <67ee67f5.050a0220.38e02.5bc2@mx.google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="km3jrdcv4oe444nf"
 Content-Disposition: inline
-In-Reply-To: <20250402-work-freeze-v2-4-6719a97b52ac@kernel.org>
-X-Rspamd-Queue-Id: 594F21F390
-X-Spam-Score: -2.51
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-2.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[17];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	MIME_TRACE(0.00)[0:+];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_COUNT_THREE(0.00)[3];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	TO_DN_SOME(0.00)[];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FREEMAIL_CC(0.00)[vger.kernel.org,suse.cz,kernel.org,hansenpartnership.com,infradead.org,fromorbit.com,redhat.com,gmail.com];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.com:email]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+In-Reply-To: <67ee67f5.050a0220.38e02.5bc2@mx.google.com>
 
-On Wed 02-04-25 16:07:34, Christian Brauner wrote:
-> Sysfs is built on top of kernfs and sysfs provides the power management
-> infrastructure to support suspend/hibernate by writing to various files
-> in /sys/power/. As filesystems may be automatically frozen during
-> suspend/hibernate implementing freeze/thaw support for kernfs
-> generically will cause deadlocks as the suspending/hibernation
-> initiating task will hold a VFS lock that it will then wait upon to be
-> released. If freeze/thaw for kernfs is needed talk to the VFS.
-> 
-> Signed-off-by: Christian Brauner <brauner@kernel.org>
 
-Yeah, good idea. Feel free to add:
+--km3jrdcv4oe444nf
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [RESEND PATCH v11] pwm: airoha: Add support for EN7581 SoC
+MIME-Version: 1.0
 
-Reviewed-by: Jan Kara <jack@suse.cz>
+Hello,
 
-								Honza
+On Thu, Apr 03, 2025 at 12:50:27PM +0200, Christian Marangi wrote:
+> On Thu, Apr 03, 2025 at 11:58:48AM +0200, Uwe Kleine-K=F6nig wrote:
+> > > +	if (hwpwm >=3D AIROHA_PWM_NUM_GPIO)
+> > > +		offset -=3D AIROHA_PWM_NUM_GPIO;
+> > > +
+> > > +	/* One FLASH_MAP register handles 8 pins */
+> > > +	*shift =3D do_div(offset, AIROHA_PWM_PINS_PER_FLASH_MAP);
+> > > +	*shift =3D AIROHA_PWM_REG_GPIO_FLASH_MAP_SHIFT(*shift);
+> > > +
+> > > +	if (offset < AIROHA_PWM_NUM_GPIO)
+> > > +		*addr =3D AIROHA_PWM_REG_GPIO_FLASH_MAP(offset);
+> > > +	else
+> > > +		*addr =3D AIROHA_PWM_REG_SIPO_FLASH_MAP(offset);
+> >=20
+> > A single if would be a bit more straight forward. Something like:
+> >=20
+> > 	static void airoha_pwm_get_flash_map_addr_and_shift(unsigned int hwpwm,
+> > 							    unsigned int *addr, unsigned int *shift)
+> > 	{
+> > 		u64 offset =3D hwpwm;
+> > =09
+> > 		if (hwpwm >=3D AIROHA_PWM_NUM_GPIO) {
+> > 			unsigned sipohwpwm =3D hwpwm - AIROHA_PWM_NUM_GPIO;
+> >=20
+> > 			*shift =3D AIROHA_PWM_REG_GPIO_FLASH_MAP_SHIFT(sipohwpwm % AIROHA_PW=
+M_PINS_PER_FLASH_MAP)
+> > 			*addr =3D AIROHA_PWM_REG_SIPO_FLASH_MAP(sipohwpwm);
+> > 		} else {
+> > 			*shift =3D AIROHA_PWM_REG_GPIO_FLASH_MAP_SHIFT(hwpwm % AIROHA_PWM_PI=
+NS_PER_FLASH_MAP)
+> > 			*addr =3D AIROHA_PWM_REG_GPIO_FLASH_MAP(hwpwm);
+> > 		}
+> > 	}
+> >=20
+>=20
+> I think you missed the do_div that do side effect on offset. Also that
+> needs to be / AIROHA_PWM_PINS_PER_FLASH_MAP.
 
-> ---
->  fs/kernfs/mount.c | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
-> 
-> diff --git a/fs/kernfs/mount.c b/fs/kernfs/mount.c
-> index 1358c21837f1..d2073bb2b633 100644
-> --- a/fs/kernfs/mount.c
-> +++ b/fs/kernfs/mount.c
-> @@ -62,6 +62,21 @@ const struct super_operations kernfs_sops = {
->  
->  	.show_options	= kernfs_sop_show_options,
->  	.show_path	= kernfs_sop_show_path,
-> +
-> +	/*
-> +	 * sysfs is built on top of kernfs and sysfs provides the power
-> +	 * management infrastructure to support suspend/hibernate by
-> +	 * writing to various files in /sys/power/. As filesystems may
-> +	 * be automatically frozen during suspend/hibernate implementing
-> +	 * freeze/thaw support for kernfs generically will cause
-> +	 * deadlocks as the suspending/hibernation initiating task will
-> +	 * hold a VFS lock that it will then wait upon to be released.
-> +	 * If freeze/thaw for kernfs is needed talk to the VFS.
-> +	 */
-> +	.freeze_fs	= NULL,
-> +	.unfreeze_fs	= NULL,
-> +	.freeze_super	= NULL,
-> +	.thaw_super	= NULL,
->  };
->  
->  static int kernfs_encode_fh(struct inode *inode, __u32 *fh, int *max_len,
-> 
-> -- 
-> 2.47.2
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Ack. Luckily you got the idea anyhow. This double effect of do_div() is
+easy to miss, so getting rid of them sounds sensible.
+
+> > > +		if (duty_ns =3D=3D bucket->duty_ns &&
+> > > +		    period_ns =3D=3D bucket->period_ns)
+> > > +			return i;
+> >=20
+> > If period_ns =3D=3D 4010 and bucket->period_ns =3D=3D 4000 you're not
+> > considering *bucket even though it has the right period setting.
+> > (period_ns is the requested period and not the expected period actually
+> > implemented by HW, right?)
+> >=20
+>=20
+> Doesn't that requires a different generator? The value we store in the
+> bucket is the requested period yes.
+
+No it doesn't. If I understood right the possible periods are: 4ms, 8ms,
+=2E.., so a request to do 4.01ms will be mapped to 4ms which allows to
+share the generator.
+
+> > > +				  AIROHA_PWM_GPIO_FLASH_EN << shift);
+> > > +		return;
+> > > +	}
+> > > +
+> > > +	regmap_update_bits(pc->regmap, addr,
+> > > +			   AIROHA_PWM_GPIO_FLASH_SET_ID << shift,
+> > > +			   FIELD_PREP(AIROHA_PWM_GPIO_FLASH_SET_ID, index) << shift);
+> >=20
+> > Huh, I'd prefer:
+> >=20
+> > 	regmap_update_bits(pc->regmap, addr,
+> > 			   AIROHA_PWM_GPIO_FLASH_SET_ID(hwpwm % 8)
+> > 			   FIELD_PREP(AIROHA_PWM_GPIO_FLASH_SET_ID(hwpwm % 8), index));
+> >=20
+> > (That probably doesn't work out of the box because of the
+> > __builtin_constant_p check on mask, so you might need a local
+> > alternative to FIELD_PREP without that check.)
+>=20
+> Honestly it's not worth to introduce custom FIELD_PREP for this. Yes the
+> problem is that FIELD_PREP requires constant mask so hwpwm % 8 is
+> problematic. An old implementation had stuff in define but resulted in
+> very ugly and confusing define and macro. The shift and FIELD_PREP
+> permits a much cleaner description in the define part at the cost of
+> that additional << shift needed.
+>=20
+> Hope you can understand why I think it's better to keep it this way.
+
+OK, I can live with that.
+
+> > > +	bucket =3D airoha_pwm_consume_generator(pc, duty_ns, period_ns,
+> > > +					      hwpwm);
+> > > +	if (bucket < 0)
+> > > +		return -EBUSY;
+> > > +
+> > > +	/*
+> > > +	 * For SIPO reinit is always needed to trigger the shift register c=
+hip
+> > > +	 * and apply the new flash configuration.
+> >=20
+> > I don't understand that sentence. What is the shift register chip? What
+> > is a flash configuration?
+> >=20
+>=20
+> The SoC can have attached a shift register chip to supports multiple LEDs.
+> The handling of this chip and comunication is done internally to the SoC
+> and it's exposed to register with these additional register.
+>=20
+> When such channel are used with an assumed shift register, to apply the
+> new configuration in airoha_pwm_config_flash_map(), the shift register
+> chip needs to be reinit to actually refresh the chip internal register
+> with the new "flash configuration" (aka the values for
+> AIROHA_PWM_GPIO_FLASH_SET_ID)
+>=20
+> Will add more comments to this to make it more clear.
+
+Sounds good.
+
+> > > +	state->enabled =3D FIELD_GET(AIROHA_PWM_GPIO_FLASH_EN, val >> shift=
+);
+> > > +	if (!state->enabled)
+> > > +		return 0;
+> > > +
+> > > +	state->polarity =3D PWM_POLARITY_NORMAL;
+> > > +
+> > > +	bucket =3D FIELD_GET(AIROHA_PWM_GPIO_FLASH_SET_ID, val >> shift);
+> > > +	state->period =3D pc->buckets[bucket].period_ns;
+> >=20
+> > Does .period_ns hold the requested or the actual period? You should
+> > return the latter.
+>=20
+> Problem is that putting .period_ns here cause error in the PWM_DEBUG
+> validations. This is caused by the conversion error of the various / and
+> * done to convert tick to ns. Also on applying the configuration we
+> already do all the validation to make sure the request value is the
+> expected one.
+
+Then there is a bug somewhere. I wouldn't completely rule out it's in
+the PWM_DEBUG logic, but my bet is on your driver then.
+=20
+> For the initial values, there is airoha_pwm_fill_bucket that read the
+> current PWM values at boot and fill the buckets with the current values.
+>=20
+> This is the compromise I found to handle both pre-configured bucket and
+> also handle the division errors in the ns - tick conversion.
+>=20
+> Hope this is acceptable, do you have hint on better handling this?
+
+I'd wait for the next iteration of your patch and then take a deeper
+look in the maths involved. It should be possible to make PWM_DEBUG
+happy and still report the actual configuration.
+
+Best regards
+Uwe
+
+--km3jrdcv4oe444nf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmfuotgACgkQj4D7WH0S
+/k4Wsgf/ckZc2RVC+cZTRSbPOpMS+evNOaG/4zAxD7Q3Nihq7+DtxuospwKQWuq9
+78YgPs7+GBWH3VxMMVcNeNBnPgpM8Kz3MfA0EvFV0AyYvweqoHFd9JY4Bhi1m6nf
+r8jelwl6BGOuxLunYexRnPsTSiLPK+QioTFX8LUc5k4LVDbBokiFGxMN5tv+ca9q
+dpKglieomzZR1QVWYZXVQAuUcYuvZV5UVHndqv6JxtNNAX8LU32m60tsUB/nIh9b
+7FIOvjrYwnAMoJNX0OpCt1GXdzEkpVtv4tGLLdREFzcyGxOO2IagywLly0emN4lw
+5REbrUS8yJpqOLGqXHcgTyCONWWDVg==
+=ILIJ
+-----END PGP SIGNATURE-----
+
+--km3jrdcv4oe444nf--
