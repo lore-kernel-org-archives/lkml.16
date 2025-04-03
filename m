@@ -1,81 +1,85 @@
-Received: from mxct.zte.com.cn (mxct.zte.com.cn [183.62.165.209])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A40D91A23B9;
-	Thu,  3 Apr 2025 07:48:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=183.62.165.209
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71EDB193402;
+	Thu,  3 Apr 2025 07:48:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743666522; cv=none; b=aA+ieKSyYonwQxKOuOSv8c4IaPvIVe+fArDccbKbhUJkLWBdHK/3geH/4HB7MCpp2fhJuY7O1Bs25Lk8eJOSVrNcW7jiXFUsujxADmMBF9vlA2qXqPnLKEcANQDigsccTwpbxlyq3pMmdxlRnUvQf/6Xr4a6jyZ085mzQGBa5Bc=
+	t=1743666532; cv=none; b=ryRx2RH3I8uPVDedqsfS0yJAmXqECfnw7Tjjw0NpURk8ZIFZzYZVZq5LbZMfAzUayMgcfVvHXxcIEhC30gNMC71m9wPAfII/GVb/XYHLEiB7Oky2voiTlHQPSRWuWAsnCxFtxFjJ3TXYf4zCCnVWrbwTSOtx0/FMHoRKDdDM6jE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743666522; c=relaxed/simple;
-	bh=bmoZkPd8++72qkDPN0upiffFV1CeiRK99wl0awuNofc=;
-	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=rHNCSjY6VoTm32DWL/NE2ekqzOpwHEgS6/sFHG+senV61myPAfUcGkHLOGFs095ELKoU6G63H+yQcgev9lK3XwwuATCWUeMfDIxy4zUm0ps8KVpbiQC29P5xI8JdmWqF567pZXmlMDdEfyV4TWQcSQG/WvJGj/BZ8h9G5O4VaHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=183.62.165.209
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxct.zte.com.cn (FangMail) with ESMTPS id 4ZSv4M3GVHz4xfxL;
-	Thu,  3 Apr 2025 15:48:35 +0800 (CST)
-Received: from xaxapp02.zte.com.cn ([10.88.97.241])
-	by mse-fl2.zte.com.cn with SMTP id 5337mUi1073671;
-	Thu, 3 Apr 2025 15:48:30 +0800 (+08)
-	(envelope-from shao.mingyin@zte.com.cn)
-Received: from mapi (xaxapp02[null])
-	by mapi (Zmail) with MAPI id mid32;
-	Thu, 3 Apr 2025 15:48:33 +0800 (CST)
-Date: Thu, 3 Apr 2025 15:48:33 +0800 (CST)
-X-Zmail-TransId: 2afa67ee3d51ffffffffff5-453cb
-X-Mailer: Zmail v1.0
-Message-ID: <20250403154833001aNpIIRBQWEw67Oo8nChch@zte.com.cn>
+	s=arc-20240116; t=1743666532; c=relaxed/simple;
+	bh=JKHMbrz5aWBVgO+ChNZ07uaUlRSflD7s97HDUzhEB3U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DeEA677KZ1gAIBPGDWEIJ5EhDww8gM9cR/vzrlv/4TTkGlFxngkQizDuZiEdEMjVnWNn3w77P2A3tyKxiwNAscqslkw01X9WxnujWhvgrpEWeAv5TwnASjBiw8zDtO1h80P8JMmC75cFOj0bsMBlaZs2D9WlZUly8Z4J3cE0I90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f0Ia45so; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f0Ia45so"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 793BCC4CEE3;
+	Thu,  3 Apr 2025 07:48:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743666532;
+	bh=JKHMbrz5aWBVgO+ChNZ07uaUlRSflD7s97HDUzhEB3U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=f0Ia45so8yQhjiKBRJnbfuax9XzNHGF9hsy1x/8IX0y/A3bPQbDsO/hzujH5X5jfS
+	 AUs9+zbwAo/dDBDFFGz23Q5ap0LwsL+7QZFEsUjaiaHJ64ds1SWUBajKfj1pkenh5l
+	 D2IhLGzApxYtCwP57SDKO4ohE72kwHllaqQvc1fKUUolv4keY3lMSDiMQVB5VxtDEa
+	 S5cUsIAQQnFN4COfmpovvy6R8JT5cdlpfVuRrcq7FaciW3Yb5sfl86hBz3NamSD7D/
+	 lNj7Fh+0SIkwacVxZVYAb9/l8jS4+FPaXVFp3+Ej6B2UvT+F0LYLhq8pO/KlEvmGQK
+	 T+iFxTC3xnSeg==
+Date: Thu, 3 Apr 2025 00:48:49 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Bagas Sanjaya <bagasdotme@gmail.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, amit@kernel.org, 
+	kvm@vger.kernel.org, amit.shah@amd.com, thomas.lendacky@amd.com, bp@alien8.de, 
+	tglx@linutronix.de, peterz@infradead.org, pawan.kumar.gupta@linux.intel.com, 
+	corbet@lwn.net, mingo@redhat.com, dave.hansen@linux.intel.com, hpa@zytor.com, 
+	seanjc@google.com, pbonzini@redhat.com, daniel.sneddon@linux.intel.com, 
+	kai.huang@intel.com, sandipan.das@amd.com, boris.ostrovsky@oracle.com, 
+	Babu.Moger@amd.com, david.kaplan@amd.com, dwmw@amazon.co.uk, 
+	andrew.cooper3@citrix.com
+Subject: Re: [PATCH v3 6/6] x86/bugs: Add RSB mitigation document
+Message-ID: <pqwdrzrd7i34batgjm2edrbizl4z5oyjnmzzei2m6tn2cybzcm@sk2p4w2jrrxp>
+References: <cover.1743617897.git.jpoimboe@kernel.org>
+ <d6c07c8ae337525cbb5d926d692e8969c2cf698d.1743617897.git.jpoimboe@kernel.org>
+ <Z-35GYpMU0GJ5Z6j@archie.me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-From: <shao.mingyin@zte.com.cn>
-To: <jonnyc@amazon.com>
-Cc: <lpieralisi@kernel.org>, <kw@linux.com>,
-        <manivannan.sadhasivam@linaro.org>, <robh@kernel.org>,
-        <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <yang.yang29@zte.com.cn>,
-        <xu.xin16@zte.com.cn>, <ye.xingchen@zte.com.cn>
-Subject: =?UTF-8?B?W1BBVENIXSBQQ0k6IGFsOiBVc2UgZGV2bV9wbGF0Zm9ybV9pb3JlbWFwX3Jlc291cmNlX2J5bmFtZQ==?=
-Content-Type: text/plain;
-	charset="UTF-8"
-X-MAIL:mse-fl2.zte.com.cn 5337mUi1073671
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 67EE3D53.003/4ZSv4M3GVHz4xfxL
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <Z-35GYpMU0GJ5Z6j@archie.me>
 
-From: Xie Ludan <xie.ludan@zte.com.cn>
+On Thu, Apr 03, 2025 at 09:57:29AM +0700, Bagas Sanjaya wrote:
+> On Wed, Apr 02, 2025 at 11:19:23AM -0700, Josh Poimboeuf wrote:
+> > +    Note that some Intel CPUs are susceptible to Post-barrier Return
+> > +    Stack Buffer Predictions (PBRSB)[#intel-pbrsb]_, where the last CALL
+> > +    from the guest can be used to predict the first unbalanced RET.  In
+> > +    this case the PBRSB mitigation is needed in addition to eIBRS.
+> 
+> I get Sphinx unreferenced footnote warning:
+> 
+> Documentation/admin-guide/hw-vuln/rsb.rst:221: WARNING: Footnote [#] is not referenced. [ref.footnote]
+> 
+> To fix that, I have to separate the footnote:
+> 
+> ---- >8 ----
+> diff --git a/Documentation/admin-guide/hw-vuln/rsb.rst b/Documentation/admin-guide/hw-vuln/rsb.rst
+> index 97bf75993d5d43..dd727048b00204 100644
+> --- a/Documentation/admin-guide/hw-vuln/rsb.rst
+> +++ b/Documentation/admin-guide/hw-vuln/rsb.rst
+> @@ -102,7 +102,7 @@ there are unbalanced CALLs/RETs after a context switch or VMEXIT.
+>  	at the time of the VM exit." [#intel-eibrs-vmexit]_
+>  
+>      Note that some Intel CPUs are susceptible to Post-barrier Return
+> -    Stack Buffer Predictions (PBRSB)[#intel-pbrsb]_, where the last CALL
+> +    Stack Buffer Predictions (PBRSB) [#intel-pbrsb]_, where the last CALL
+>      from the guest can be used to predict the first unbalanced RET.  In
+>      this case the PBRSB mitigation is needed in addition to eIBRS.
 
-Introduce devm_platform_ioremap_resource_byname() to simplify
-resource retrieval and mapping.This new function consolidates
-platform_get_resource_byname() and devm_ioremap_resource() into a single
-call, improving code readability and reducing API call overhead.
+Fixed, thanks!
 
-Signed-off-by: Xie Ludan <xie.ludan@zte.com.cn>
-Signed-off-by: Shao Mingyin <shao.mingyin@zte.com.cn>
----
- drivers/pci/controller/dwc/pcie-al.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/drivers/pci/controller/dwc/pcie-al.c b/drivers/pci/controller/dwc/pcie-al.c
-index 643115f74092..f0613d442578 100644
---- a/drivers/pci/controller/dwc/pcie-al.c
-+++ b/drivers/pci/controller/dwc/pcie-al.c
-@@ -353,9 +353,7 @@ static int al_pcie_probe(struct platform_device *pdev)
- 	}
- 	al_pcie->ecam_size = resource_size(ecam_res);
-
--	controller_res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
--						      "controller");
--	al_pcie->controller_base = devm_ioremap_resource(dev, controller_res);
-+	al_pcie->controller_base = devm_platform_ioremap_resource_byname(pdev, "controller");
- 	if (IS_ERR(al_pcie->controller_base)) {
- 		dev_err(dev, "couldn't remap controller base %pR\n",
- 			controller_res);
 -- 
-2.25.1
+Josh
