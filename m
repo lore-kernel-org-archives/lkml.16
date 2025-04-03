@@ -1,206 +1,140 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C98EB241672
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 08:25:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D63124290E;
+	Thu,  3 Apr 2025 08:25:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743668705; cv=none; b=vFNjoiqdvRC8phrwsbCu748bGdBadCNtrJ8OSJVmjTR8xvFWZOEdFelBkGtRsv3USKR/W3+Gzj37iHXpPp1ZfdgIRdSkFjzw1q55R8IHdpl6egN3JqEwHX1cqOmgJ6/QEfAcWLqXavxTqXkMVzK3yn/WA3do0ajr7Q7eia3yN+U=
+	t=1743668717; cv=none; b=h5viU+pzF6lCKd6pJfRMKzPrbQ9BGLbby5Ll03Y1aDAEhnlDaXuBTWzugael+g29A4itTX5tSxKtAz907aGJ7k1BlOnVYcWQwz0o2P1a4nyrXi71S4yjadxsTErdlw4TRiAl6miqtQKjKR231AgxHKwsOaf4P22acXtMCqy9kbw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743668705; c=relaxed/simple;
-	bh=Kx1i9o1AXCVoRdJiXCk0tz9SYnH6Z2jt+QfBA7F4UQM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QYKnRH49Cg/wb4tvq7aFksmRfWwnQm1R50Q1FvCxrP4orLo+rOJItfrHsuHRrU2SBoUWwSdOd5cNcqXAH04l8GmG/nVCXRjrzzQ0BqCo94W1oIZP8X6yRkCF2W26lw/lbmS4qa3ZWq66p0Y/aN32hZFHzv76NjIp3xN5zYr7eew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=vFQR/Wdz; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=mFjLbEDR; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=OwiZjwYL; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=jyeH/9La; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1743668717; c=relaxed/simple;
+	bh=W2GXp//p/lyuftqtpov8Pw3eTDvdK9rmsYuGvtyrxpM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ITyJpaauGutqrTWVYg+IlBn+nnbWq0eQKsRtKWWBmRWr6loYtK0D8x7IC+cLJ9ihBqnZZmFnV+YjIsh//gSZvKf+J2GvvCHZLB2UB2LxPPchiqpYsxI4GYZKaOuqwyOdXi4ijXEt/w5FcXMSTLms4oBrLOhmiWIiI4JLcYtvlCM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JMjtYpqM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="vFQR/Wdz";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="mFjLbEDR";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="OwiZjwYL";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="jyeH/9La"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id C1F031F38A;
-	Thu,  3 Apr 2025 08:24:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1743668697; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lXjFRmAk77Oc3x1SPovG++92LrFyhg0OprYLqRNOBWw=;
-	b=vFQR/Wdze1bK+3ZacQZAZO743skDtdGLOXNSFbngtVq6DqVICh0KXF1Cwbe3Zh0Or1HEpT
-	guR16qICOZdmu/17T9+4QhXp3iJNYLbRSwVhB60rSrqjEy6w73nWemmpkTvCqz1XhgVY3i
-	9LUELfDhpIbbyhNb6ARMn7RjIHz5xDw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1743668697;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lXjFRmAk77Oc3x1SPovG++92LrFyhg0OprYLqRNOBWw=;
-	b=mFjLbEDRiHXUt/AjqXRWV3pQxDaBiuFItw5urw7TYZ5rntxeAq8ksMScl47UwGUHiYcDgW
-	/gBcsIUA63SJCPDQ==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1743668696; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lXjFRmAk77Oc3x1SPovG++92LrFyhg0OprYLqRNOBWw=;
-	b=OwiZjwYLf8hovP72Cw9vIm01uCD2VxN9bZagLqJG1QzqqjU1HOZZ4pov6Xg3wvyIzAm9mx
-	VVFPKQHxVSNqqbKSG1ZACctheZ3lWZfZ1lIgqlHnog81j+GFPprGaf/AK4AvsyElstT+kW
-	k8avUhJeZwG1F9MTnGu+VhRFrptPqzw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1743668696;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lXjFRmAk77Oc3x1SPovG++92LrFyhg0OprYLqRNOBWw=;
-	b=jyeH/9LadK5HnLQ2uUy9Bi9dD9R0UNkxoulwRh/8D4eZwIoDi3aUcx6ZLSHolDIkkoGaSL
-	l6MLPY2PoH8hBqCA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A8AB31392A;
-	Thu,  3 Apr 2025 08:24:56 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id da5mKNhF7mdeWAAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Thu, 03 Apr 2025 08:24:56 +0000
-Message-ID: <ad7b308e-64aa-4bd4-be1c-fbcdd02a0f10@suse.cz>
-Date: Thu, 3 Apr 2025 10:24:56 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JMjtYpqM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95F6DC4CEE3;
+	Thu,  3 Apr 2025 08:25:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743668716;
+	bh=W2GXp//p/lyuftqtpov8Pw3eTDvdK9rmsYuGvtyrxpM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JMjtYpqMUn0oZ4P/Y4Smk3o+lWbC/knZQSwyjheBq5wGC0wmQ6Yx3+wtz0e7EEelX
+	 VSrBFnBzZ3julRuM78hF0MhjTQ4AUv6hweaGE6KMkt9Qr31tC593ltRz51wttaEGwu
+	 WDmTfEigYH41o8GhZHXqIKa8WCoI/4QyfhQVQkSHQfspAXCoTNeHKhBlrwjFj3P1f9
+	 H6oiTUIUQvhG9vWolXusW/Pth7woOu1w55QO5odOShuMo/vghEFCCvIMSaT37PfLu5
+	 bBA3wgIzq0i9Hc0cO1LLy/16yISa17qwNtkFW50ebtfkrPJul0TlRDezXfRqx85B+c
+	 NDEvRzH/YFpuw==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1u0Ft3-00000000757-0kce;
+	Thu, 03 Apr 2025 10:25:21 +0200
+Date: Thu, 3 Apr 2025 10:25:21 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Cristian Marussi <cristian.marussi@arm.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	arm-scmi@vger.kernel.org, sudeep.holla@arm.com,
+	james.quinlan@broadcom.com, f.fainelli@gmail.com,
+	vincent.guittot@linaro.org, peng.fan@oss.nxp.com,
+	michal.simek@amd.com, quic_sibis@quicinc.com,
+	dan.carpenter@linaro.org, maz@kernel.org
+Subject: Re: [RFC PATCH 3/3] [NOT FOR UPSTREAM] firmware: arm_scmi: quirk:
+ Ignore FC bit in attributes
+Message-ID: <Z-5F8eTaZB2gLTNs@hovoldconsulting.com>
+References: <20250401122545.1941755-1-cristian.marussi@arm.com>
+ <20250401122545.1941755-4-cristian.marussi@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm: kvmalloc: make kmalloc fast path real fast path
-Content-Language: en-US
-To: Michal Hocko <mhocko@suse.com>, Shakeel Butt <shakeel.butt@linux.dev>
-Cc: Dave Chinner <david@fromorbit.com>, Yafang Shao <laoar.shao@gmail.com>,
- Harry Yoo <harry.yoo@oracle.com>, Kees Cook <kees@kernel.org>,
- joel.granados@kernel.org, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
- linux-mm@kvack.org
-References: <20250401073046.51121-1-laoar.shao@gmail.com>
- <3315D21B-0772-4312-BCFB-402F408B0EF6@kernel.org> <Z-y50vEs_9MbjQhi@harry>
- <CALOAHbBSvMuZnKF_vy3kGGNOCg5N2CgomLhxMxjn8RNwMTrw7A@mail.gmail.com>
- <Z-0gPqHVto7PgM1K@dread.disaster.area> <Z-0sjd8SEtldbxB1@tiehlicka>
- <zeuszr6ot5qdi46f5gvxa2c5efy4mc6eaea3au52nqnbhjek7o@l43ps2jtip7x>
- <Z-43Q__lSUta2IrM@tiehlicka> <Z-48K0OdNxZXcnkB@tiehlicka>
-From: Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <Z-48K0OdNxZXcnkB@tiehlicka>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Score: -2.80
-X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.997];
-	MIME_GOOD(-0.10)[text/plain];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	RCVD_TLS_ALL(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[fromorbit.com,gmail.com,oracle.com,kernel.org,vger.kernel.org,toxicpanda.com,kvack.org];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.cz:mid,suse.com:email]
-X-Spam-Flag: NO
-X-Spam-Level: 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250401122545.1941755-4-cristian.marussi@arm.com>
 
-On 4/3/25 09:43, Michal Hocko wrote:
-> There are users like xfs which need larger allocations with NOFAIL
-> sementic. They are not using kvmalloc currently because the current
-> implementation tries too hard to allocate through the kmalloc path
-> which causes a lot of direct reclaim and compaction and that hurts
-> performance a lot (see 8dc9384b7d75 ("xfs: reduce kvmalloc overhead for
-> CIL shadow buffers") for more details).
+On Tue, Apr 01, 2025 at 01:25:45PM +0100, Cristian Marussi wrote:
+> Some platform misreported the support of FastChannel when queried: ignore
+> that bit on selected platforms.
 > 
-> kvmalloc does support __GFP_RETRY_MAYFAIL semantic to express that
-> kmalloc (physically contiguous) allocation is preferred and we should go
-> more aggressive to make it happen. There is currently no way to express
-> that kmalloc should be very lightweight and as it has been argued [1]
-> this mode should be default to support kvmalloc(NOFAIL) with a
-> lightweight kmalloc path which is currently impossible to express as
-> __GFP_NOFAIL cannot be combined by any other reclaim modifiers.
-> 
-> This patch makes all kmalloc allocations GFP_NOWAIT unless
-> __GFP_RETRY_MAYFAIL is provided to kvmalloc. This allows to support both
-> fail fast and retry hard on physically contiguous memory with vmalloc
-> fallback.
-> 
-> There is a potential downside that relatively small allocations (smaller
-> than PAGE_ALLOC_COSTLY_ORDER) could fallback to vmalloc too easily and
-> cause page block fragmentation. We cannot really rule that out but it
-> seems that xlog_cil_kvmalloc use doesn't indicate this to be happening.
-> 
-> [1] https://lore.kernel.org/all/Z-3i1wATGh6vI8x8@dread.disaster.area/T/#u
-> Signed-off-by: Michal Hocko <mhocko@suse.com>
-
-Looks like a step in the right direction, but is that enough?
-
-- to replace xlog_kvmalloc(), we need to deal with kvmalloc() passing
-VM_ALLOW_HUGE_VMAP, so we don't end up with GFP_KERNEL huge allocation
-anyway (in practice maybe it wouldn't happen because "size >= PMD_SIZE"
-required for the huge vmalloc is never true for current xlog_kvmalloc()
-users but dunno if we can rely on that).
-
-Maybe it's a bad idea to use VM_ALLOW_HUGE_VMAP in kvmalloc() anyway? Since
-we're in a vmalloc fallback which means the huge allocations failed anyway
-for the kmalloc() part. Maybe there's some grey area where it makes sense,
-with size much larger than PMD_SIZE, e.g. exceeding MAX_PAGE_ORDER where we
-can't kmalloc() anyway so at least try to assemble the allocation from huge
-vmalloc. Maybe tie it to such a size check, or require __GFP_RETRY_MAYFAIL
-to activate VM_ALLOW_HUGE_VMAP?
-
-- we're still not addressing the original issue of high kcompactd activity,
-but maybe the answer is that it needs to be investigated more (why deferred
-compaction doesn't limit it) instead of trying to suppress it from kvmalloc()
-
+> Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
 > ---
->  mm/slub.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
+> Match features has to be set-up properly before upstreaming this.
+> Ideally the out-of-spec firmware should be matched with a quirk matching
+> pattern based on Vendor/SubVendor/ImplVersion....but it is NOT clear if the
+> platform at hand will ship with future fixed firmwares where the ImplVersion
+> field is properly handled.
+> If we cannot be sure about that, we should fallback to a compatible match.
+> ---
+>  drivers/firmware/arm_scmi/driver.c | 8 ++++++++
+>  drivers/firmware/arm_scmi/quirks.c | 3 +++
+>  drivers/firmware/arm_scmi/quirks.h | 3 +++
+>  3 files changed, 14 insertions(+)
 > 
-> diff --git a/mm/slub.c b/mm/slub.c
-> index b46f87662e71..2da40c2f6478 100644
-> --- a/mm/slub.c
-> +++ b/mm/slub.c
-> @@ -4972,14 +4972,16 @@ static gfp_t kmalloc_gfp_adjust(gfp_t flags, size_t size)
->  	 * We want to attempt a large physically contiguous block first because
->  	 * it is less likely to fragment multiple larger blocks and therefore
->  	 * contribute to a long term fragmentation less than vmalloc fallback.
-> -	 * However make sure that larger requests are not too disruptive - no
-> -	 * OOM killer and no allocation failure warnings as we have a fallback.
-> +	 * However make sure that larger requests are not too disruptive - i.e.
-> +	 * do not direct reclaim unless physically continuous memory is preferred
-> +	 * (__GFP_RETRY_MAYFAIL mode). We still kick in kswapd/kcompactd to start
-> +	 * working in the background but the allocation itself.
->  	 */
->  	if (size > PAGE_SIZE) {
->  		flags |= __GFP_NOWARN;
+> diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
+> index 4266ef852c48..212456305bc9 100644
+> --- a/drivers/firmware/arm_scmi/driver.c
+> +++ b/drivers/firmware/arm_scmi/driver.c
+> @@ -1904,6 +1904,13 @@ struct scmi_msg_resp_desc_fc {
+>  	__le32 db_preserve_hmask;
+>  };
 >  
->  		if (!(flags & __GFP_RETRY_MAYFAIL))
-> -			flags |= __GFP_NORETRY;
-> +			flags &= ~__GFP_DIRECT_RECLAIM;
->  
->  		/* nofail semantic is implemented by the vmalloc fallback */
->  		flags &= ~__GFP_NOFAIL;
+> +#define QUIRK_PERF_FC_FORCE						\
+> +	({								\
+> +		if (pi->proto->id == SCMI_PROTOCOL_PERF ||		\
+> +		    message_id == 0x5 /* PERF_LEVEL_GET */)		\
 
+This should be logical AND and PERF_LEVEL_GET is 0x8 (currently
+fastchannel is enabled for all PERF messages).
+
+> +			attributes |= BIT(0);				\
+> +	})
+> +
+>  static void
+>  scmi_common_fastchannel_init(const struct scmi_protocol_handle *ph,
+>  			     u8 describe_id, u32 message_id, u32 valid_size,
+> @@ -1924,6 +1931,7 @@ scmi_common_fastchannel_init(const struct scmi_protocol_handle *ph,
+>  
+>  	/* Check if the MSG_ID supports fastchannel */
+>  	ret = scmi_protocol_msg_check(ph, message_id, &attributes);
+> +	SCMI_QUIRK(perf_level_get_fc_force, QUIRK_PERF_FC_FORCE);
+
+This is cool and I assume can be used to minimise overhead in hot paths.
+Perhaps you can have concerns about readability and remembering to
+update the quirk implementation if the code here changes.
+
+Does it even get compile tested if SCMI_QUIRKS is disabled?
+
+>  	if (ret || !MSG_SUPPORTS_FASTCHANNEL(attributes)) {
+>  		dev_dbg(ph->dev,
+>  			"Skip FC init for 0x%02X/%d  domain:%d - ret:%d\n",
+> diff --git a/drivers/firmware/arm_scmi/quirks.c b/drivers/firmware/arm_scmi/quirks.c
+> index 83798bc3b043..78d51bd0e5b5 100644
+> --- a/drivers/firmware/arm_scmi/quirks.c
+> +++ b/drivers/firmware/arm_scmi/quirks.c
+> @@ -70,6 +70,8 @@ struct scmi_quirk {
+>  	__DEFINE_SCMI_QUIRK_ENTRY(_qn, _comp, _ven, _sub, _impl)
+>  
+>  /* Global Quirks Definitions */
+> +DEFINE_SCMI_QUIRK(perf_level_get_fc_force,
+> +		  "your-bad-compatible", NULL, NULL, 0x0);
+
+At first I tried matching on the SoC (fallback) compatible without
+success until I noticed you need to put the primary machine compatible
+here. For the SoC at hand, that would mean adding 10 or so entries since
+all current commercial devices would be affected by this.
+
+Matching on vendor and protocol works.
+
+>  /*
+>   * Quirks Pointers Array
+> @@ -78,6 +80,7 @@ struct scmi_quirk {
+>   * defined quirks descriptors.
+>   */
+>  static struct scmi_quirk *scmi_quirks_table[] = {
+> +	__DECLARE_SCMI_QUIRK_ENTRY(perf_level_get_fc_force),
+>  	NULL
+>  };
+
+Johan
