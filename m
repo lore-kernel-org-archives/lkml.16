@@ -1,63 +1,77 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DC75288A2;
-	Thu,  3 Apr 2025 15:05:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62DCF2505A4
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 15:05:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743692712; cv=none; b=bJa5Iyihzf4OXmmA8uHVeX4U02ieP0RzKQ6h2drd01naDM/l1dwDZb5+kYITcr+2h9WH3xVtSQmrvefmIbRMcMbDhhcU5dHsorcE8NbEsqTTtKTLKU/6cNXUYR2/36UIQyepVWrzDzgCgp7NVneFpQB5eDK21wKUkY3+6/5cZt4=
+	t=1743692721; cv=none; b=aB0qwDZ2DZirmE+7UXHjA63psFa+njR+LhTuJiuh8BBfrkd9H+chqeSMxWWn7Rk6yipGi7RX8mYphq5LViuSHCFTfHNF5BzaS60/U2BOJqY9GKUxAD7C5gXBaKpJBtyv72Qn1VjBfFtF5NDCas3bfPklCe+kxCgrqokru5Yc5Nc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743692712; c=relaxed/simple;
-	bh=SMpFUIiEym7FAp7G/677xAHZhNHVi5Tv5IwIW4Xsd4I=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PT9ZPDq3RggG2ticrBmbFM1ezCJVU8c48JZ5ES76O3s0/f3Sgp274JDidkkADU0rrPZuHHNYYc9pb944xnndvEPmciyOK7FA0zhdwAjWLRjPRYAh4GWbuCwq9dOxE7BKlgBBD5zlwddHfEuwDD09kkO5OoTofrPteYsFyAlV9fQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16CA2C4CEE3;
-	Thu,  3 Apr 2025 15:05:09 +0000 (UTC)
-Date: Thu, 3 Apr 2025 11:06:15 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org,
- peterz@infradead.org, bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
- kernel-team@meta.com, mhocko@kernel.org, oleg@redhat.com,
- brauner@kernel.org, glider@google.com, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, akpm@linux-foundation.org
-Subject: Re: [PATCH v2] exit: move and extend sched_process_exit()
- tracepoint
-Message-ID: <20250403110615.7a51b793@gandalf.local.home>
-In-Reply-To: <Z-6TDh1MUT49lvjk@gmail.com>
-References: <20250402180925.90914-1-andrii@kernel.org>
-	<Z-6TDh1MUT49lvjk@gmail.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1743692721; c=relaxed/simple;
+	bh=OuJfAjQbrxmPm5MwHxPDQ4Gf5OR+D6lie7AS7lva66k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hQBhKRIky2ywqpShgMqoFrD/K0dP/Uk8m7zFEhtmED1S+yLDvHGcRsiXPhw9iTo4jnlYrXMCFvk3Nn+99XWcG2ADnHRb86Hm/SW1OnWD973dXorQph+DB5t5OH6yy6XwVpd3s3VhNEe2sZmBn+Qst9s2EQ9qWgJ7XxbsL8IJFiU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PeEFk0Dy; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PeEFk0Dy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1251EC4CEE5;
+	Thu,  3 Apr 2025 15:05:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743692717;
+	bh=OuJfAjQbrxmPm5MwHxPDQ4Gf5OR+D6lie7AS7lva66k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PeEFk0DyWB9YXvclgNkkFo9tbHIw4DiAxNNhG6EkWSrFZUv0gDFsEhM3Zu3tJnRsU
+	 seysqDLztf6nT6P1wAP/nTQT/j3p04PDiccRLAkXZ1sJt+VLZfTs/4RLUV3clAz/tK
+	 798Rd8CZnEMIVt1zSKs83o8EV+r+cI8xo7NLZX4km7zxjOhBT4fEKFdqX6Y+211cVE
+	 AQKo5jJyaPOo71RYWF5mig+mTj3AgNXCSRUyrFH98DNMxpfxV7/CvDlxuX9MWYrI4d
+	 /+rcH61wT4ii38TTA7LjYnMfV8UJ2+nUnQ2q7RBbkq91lGPq79Uua1Ta8i/GaKyOhh
+	 ULLAlu/+0xAfA==
+Date: Thu, 3 Apr 2025 17:05:13 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: "H. Peter Anvin" <hpa@zytor.com>
+Cc: linux-kernel@vger.kernel.org, Juergen Gross <jgross@suse.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH 40/41] x86/alternatives: Rename 'text_poke_sync()' to
+ 'text_poke_sync_each_cpu()'
+Message-ID: <Z-6jqf6QqRkAnTz8@gmail.com>
+References: <20250327205355.378659-1-mingo@kernel.org>
+ <20250327205355.378659-41-mingo@kernel.org>
+ <DA9DB9BF-2179-4C53-86A8-6205346AA76F@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DA9DB9BF-2179-4C53-86A8-6205346AA76F@zytor.com>
 
-On Thu, 3 Apr 2025 15:54:22 +0200
-Ingo Molnar <mingo@kernel.org> wrote:
 
-> This feels really fragile, could you please at least add a comment that 
-> points out that this is basically an extension of 
-> sched_process_template, and that it should remain a subset of it, or 
-> something to that end?
+* H. Peter Anvin <hpa@zytor.com> wrote:
 
-Is there any dependency on this?
+> Is that the only use case we have for syncing all CPUs?
 
-The reason to use the templates is because it saves memory. Each
-TRACE_EVENT() can add ~5k (which a TRACE_EVENT() is really just a
-DECLARE_EVENT_CLASS() + DEFINE_EVENT() for a single event).
+So there's:
 
-Each DEFINE_EVENT() just adds around 250 bytes. Hence, if you have multiple
-events that share the same fields and output, it's much more memory
-efficient to use the CLASS and EVENT logic then making each their own
-TRACE_EVENT().
+- kernel/sched/membarrier.c's ipi_sync_core() which does sync_core(), 
+  but it's embedded into a larger array of IPI handlers, called via 
+  smp_call_function_many()/on_each_cpu_mask(), so I don't think 
+  functionality can be shared there.
 
-I don't know of any other dependency to why this was a template other than
-to save memory.
+- there's arch/x86/kernel/cpu/mce/core.c's machine_check_poll() handler 
+  and the kill_me_maybe() function, but these are single thread.
 
--- Steve
+- then there's arch/x86/kernel/static_call.c's 
+  __static_call_update_early(), used indirectly by 
+  arch/x86/xen/enlighten.c and arch/x86/xen/enlighten_pv.c, but these 
+  are single-threaded too due to being early boot code.
+
+So not much I think - at least what I've managed to find.
+
+Thanks,
+
+	Ingo
