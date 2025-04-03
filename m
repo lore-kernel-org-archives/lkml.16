@@ -1,132 +1,167 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3958B2528E2;
-	Thu,  3 Apr 2025 17:41:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B842024397B
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 17:46:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743702084; cv=none; b=h4QAwtiHcm75v8UyOilfRoyMa1M/MD6/RRqn89NuqDAEMpLLqA2tiCGZ/NiKTjOvdj5eLWHg5s7ArRKSH4SBRZgf2M65KzyDbiNvgV61e/tyTT7EZTG7E5uXtVN7GrwclIqsWoD/48L/0bib1kEm7Opp6e6aukV5qZ3RYDbB3JQ=
+	t=1743702388; cv=none; b=ED7UC4JslxjvucyaJw6sIsTpbrtWPrgF7rzXhtHy4hf4UKnar9qQiQ04UeFIhwVTS4xNPgtie+zvAMLYb4w0+BuT5nRLCmft6w/i0WX2zRRn8GSRz9veSGrx0BpWLHh7WoJlv6zPkxqtGTNrVDVEhVc6Z5IGAZ5TUozZm8VvVhA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743702084; c=relaxed/simple;
-	bh=8lR9ylBsfo7PBLZHWh9qmMylsgZ+XsmxjxGaNWbQYxA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=jx9I5ZCXLyy8YhA8X6T2QKBjxLWav9e96c0KMfMiwp1MIrmceY5O1OVOTd7VAriztyrPFhS0fPF1lbcCi6XhVqERMSQfKkNNMzFEkcRPyj4VtxB5PytgLp0MKLQUs8SC5MmiG2GTiSMPNQ1TTmUl/sSaCI3DkKek0Pm3crq97Mk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dPoLcU6S; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dPoLcU6S"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EED42C4CEE7;
-	Thu,  3 Apr 2025 17:41:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743702083;
-	bh=8lR9ylBsfo7PBLZHWh9qmMylsgZ+XsmxjxGaNWbQYxA=;
-	h=Date:From:To:Cc:Subject:From;
-	b=dPoLcU6SLa7ZgTJZaHaiRDW64dPYRH3R0/kUgslJwP6Oc8Zk4UilUUJ+wx4HPhgf9
-	 PC+5aY3fNv3g0VpN+shYeyJMpiajZZ9sQ6nHWfFRDICVfbvbozCbJklIdl3GnJ/ZIK
-	 SZg7VIarvzNTFY7QwvkgrbUmcKhqG/uKyKWh3eDD15JnnIRBGDC24gcPTPpieWO0H8
-	 kcHvzqm9K4M2vSSmwdthaiiWzgKgJBBrfJtdU88EiN1ljDnX3iTgMgaFJdckCJ8y90
-	 YoNkIDTPGC9a1uk13aXXd0386xbs0TBu/Yw0XNJ/21lWmDmQco7jptuqkA8IhCPArs
-	 nCKRo+DLE/qUA==
-Date: Thu, 3 Apr 2025 11:41:21 -0600
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Lyude Paul <lyude@redhat.com>, Danilo Krummrich <dakr@kernel.org>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-Cc: dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH][next] drm/nouveau: fifo: Avoid
- -Wflex-array-member-not-at-end warning
-Message-ID: <Z-7IQcWNePAMQEM0@kspp>
+	s=arc-20240116; t=1743702388; c=relaxed/simple;
+	bh=7WAOF/PGgx1dnyD4FdX5UHymjIyHujyPwO0DPA9CwPw=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=A2f+u75CyOE2z4JsezM44BfNy+T5ksMMAHGbP4uuoHlGH6LTE4eMojVGyff/pTCnItGyK7iFsfK/xzSimfLqPQ06GZL7LuDkXNfy3sFIflB/mqEMXi7zGCenwoxYOCmV3MjDvcEwyohj7/stktHEnLRtmueDfP8i7doQTBaaawU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3ce843b51c3so26807505ab.0
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 10:46:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743702386; x=1744307186;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=5EIrOuna1iQfxkNQJAQ8SncT+rsXyyDd2SoWc/q5hWw=;
+        b=i94WX4/k/+xHsOSM7vecITXrQqF84gjHyKUBzukEXCEL56ylA9uY/13Mfgw5hUTcL4
+         dWuOHNUwVzPbVwJAUTeT20Unq8TuIAqFJf++UEugZzgFeoLqmeDlzQf66ME7I2KSkVXe
+         6B8thg4sI06Eisy1V7pyPuioBYPYF9uOw3PBzIx0QdAlb9pfH/kxTIhwkEeFbNfja5Zj
+         zGepq7uTKvbhHvMkftanrmHIgmFLpjz9c+Jx++O8PzVLY+kWGIrFiyNup590ifh8iBCh
+         CRxzoPFIpmRvx/uml8ZF12spFMbIMC4jCI+3CBPG+EvRqlEPvf6gKbSqBP9h62rwBdZQ
+         dFIw==
+X-Forwarded-Encrypted: i=1; AJvYcCX/v58nsF0iPLAKKbcjpopW9I4kXll5Cl8z522a0524BPgZLbHPpBAU4a9Jl00hGN5whDRVuh+Tmqka20Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzorirQRFhpY7AMuJCauI2GNJVyhrKU5I++pvE6gmV0pSXzWInH
+	OwXsQFh9ZHw+8pFEHYaVwQ++yNz83d9yZLBhx0w/kKGiUEL6yTEUs1Vzb+L9NfyFJV7KlhIONvo
+	I/zfTogzipfmHBYou1Rf1m689zBiKJ9jFBVN4bkUwcyytNhQSwJy/8d4=
+X-Google-Smtp-Source: AGHT+IHWtvoebqXEf/sTd+fBUcKziDtr+u+YE5y3cCnRiTHmaZrtU4hS05fyA0dhX1z7XLJmJkbbUGj8wTAOQujs4kPyffWIZKSC
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+X-Received: by 2002:a05:6e02:1a89:b0:3d0:4a82:3f43 with SMTP id
+ e9e14a558f8ab-3d6e3eeab17mr5099515ab.5.1743702385834; Thu, 03 Apr 2025
+ 10:46:25 -0700 (PDT)
+Date: Thu, 03 Apr 2025 10:46:25 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67eec971.050a0220.9040b.0207.GAE@google.com>
+Subject: [syzbot] [bcachefs?] BUG: unable to handle kernel paging request in bch2_fs_release
+From: syzbot <syzbot+d35395c659ed8030c05d@syzkaller.appspotmail.com>
+To: kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
--Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-getting ready to enable it, globally.
+Hello,
 
-Use the `DEFINE_RAW_FLEX()` helper for an on-stack definition of
-a flexible structure where the size of the flexible-array member
-is known at compile-time, and refactor the rest of the code,
-accordingly.
+syzbot found the following issue on:
 
-So, with these changes, fix the following warning:
+HEAD commit:    d6b13dbd03b7 Merge branch 'for-next/core' into for-kernelci
+git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
+console output: https://syzkaller.appspot.com/x/log.txt?x=1653f7b0580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=114db1c77c985e53
+dashboard link: https://syzkaller.appspot.com/bug?extid=d35395c659ed8030c05d
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+userspace arch: arm64
 
-drivers/gpu/drm/nouveau/nvif/fifo.c:29:42: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+Unfortunately, I don't have any reproducer for this issue yet.
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/fd0bf9e74cb0/disk-d6b13dbd.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/50ade35a15e1/vmlinux-d6b13dbd.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/986cdc664ca4/Image-d6b13dbd.gz.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+d35395c659ed8030c05d@syzkaller.appspotmail.com
+
+Unable to handle kernel paging request at virtual address e1ff9fffe0001864
+KASAN: maybe wild-memory-access in range [0x1000ffff0000c320-0x1000ffff0000c327]
+Mem abort info:
+  ESR = 0x0000000096000004
+  EC = 0x25: DABT (current EL), IL = 32 bits
+  SET = 0, FnV = 0
+  EA = 0, S1PTW = 0
+  FSC = 0x04: level 0 translation fault
+Data abort info:
+  ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
+  CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+  GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+[e1ff9fffe0001864] address between user and kernel address ranges
+Internal error: Oops: 0000000096000004 [#1] PREEMPT SMP
+Modules linked in:
+CPU: 0 UID: 0 PID: 6672 Comm: syz.4.10 Not tainted 6.14.0-syzkaller-gd6b13dbd03b7 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+pstate: 804000c5 (Nzcv daIF +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+pc : __lock_acquire+0xfc/0x7904 kernel/locking/lockdep.c:5091
+lr : lock_acquire+0x23c/0x724 kernel/locking/lockdep.c:5851
+sp : ffff8000a46769a0
+x29: ffff8000a4676c60 x28: ffff80008036e1e8 x27: 0000000000000000
+x26: ffff0001b3737540 x25: 0000000000000000 x24: 0000000000000001
+x23: 0000000000000000 x22: 1ffff00011faa0cd x21: 1000ffff0000c322
+x20: 0000000000000001 x19: 0000000000000000 x18: 1fffe000366e6e86
+x17: ffff80008fd4d000 x16: ffff8000832bccd4 x15: 0000000000000001
+x14: 1ffff00011faa0cd x13: dfff800000000000 x12: ffff7000148ced5c
+x11: ffff80008046f030 x10: ffff80008fd50668 x9 : 00000000000000f3
+x8 : 02001fffe0001864 x7 : ffff80008036e1e8 x6 : 0000000000000000
+x5 : 0000000000000001 x4 : 0000000000000001 x3 : 0000000000000000
+x2 : 0000000000000000 x1 : 0000000000000000 x0 : 1000ffff0000c322
+Call trace:
+ __lock_acquire+0xfc/0x7904 kernel/locking/lockdep.c:5091 (P)
+ lock_acquire+0x23c/0x724 kernel/locking/lockdep.c:5851
+ __raw_spin_lock_irq include/linux/spinlock_api_smp.h:119 [inline]
+ _raw_spin_lock_irq+0x58/0x70 kernel/locking/spinlock.c:170
+ put_pwq_unlocked kernel/workqueue.c:1662 [inline]
+ destroy_workqueue+0x8d8/0xdc0 kernel/workqueue.c:5911
+ __bch2_fs_free fs/bcachefs/super.c:613 [inline]
+ bch2_fs_release+0x64c/0x708 fs/bcachefs/super.c:624
+ kobject_cleanup lib/kobject.c:689 [inline]
+ kobject_release lib/kobject.c:720 [inline]
+ kref_put include/linux/kref.h:65 [inline]
+ kobject_put+0x2a8/0x41c lib/kobject.c:737
+ bch2_fs_free+0x2c4/0x334 fs/bcachefs/super.c:686
+ bch2_fs_alloc fs/bcachefs/super.c:963 [inline]
+ bch2_fs_open+0x18ac/0x299c fs/bcachefs/super.c:2065
+ bch2_fs_get_tree+0x58c/0x11d4 fs/bcachefs/fs.c:2190
+ vfs_get_tree+0x90/0x28c fs/super.c:1814
+ do_new_mount+0x278/0x900 fs/namespace.c:3560
+ path_mount+0x590/0xe04 fs/namespace.c:3887
+ do_mount fs/namespace.c:3900 [inline]
+ __do_sys_mount fs/namespace.c:4111 [inline]
+ __se_sys_mount fs/namespace.c:4088 [inline]
+ __arm64_sys_mount+0x4f4/0x5d0 fs/namespace.c:4088
+ __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
+ invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:49
+ el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:132
+ do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:151
+ el0_svc+0x54/0x168 arch/arm64/kernel/entry-common.c:744
+ el0t_64_sync_handler+0x84/0x108 arch/arm64/kernel/entry-common.c:762
+ el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
+Code: b007c708 b9466908 340090a8 d343fea8 (386d6908) 
+---[ end trace 0000000000000000 ]---
+----------------
+Code disassembly (best guess):
+   0:	b007c708 	adrp	x8, 0xf8e1000
+   4:	b9466908 	ldr	w8, [x8, #1640]
+   8:	340090a8 	cbz	w8, 0x121c
+   c:	d343fea8 	lsr	x8, x21, #3
+* 10:	386d6908 	ldrb	w8, [x8, x13] <-- trapping instruction
+
+
 ---
- drivers/gpu/drm/nouveau/nvif/fifo.c | 32 ++++++++++++-----------------
- 1 file changed, 13 insertions(+), 19 deletions(-)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/gpu/drm/nouveau/nvif/fifo.c b/drivers/gpu/drm/nouveau/nvif/fifo.c
-index a463289962b2..f8772340fec4 100644
---- a/drivers/gpu/drm/nouveau/nvif/fifo.c
-+++ b/drivers/gpu/drm/nouveau/nvif/fifo.c
-@@ -25,33 +25,28 @@ static int
- nvif_fifo_runlists(struct nvif_device *device)
- {
- 	struct nvif_object *object = &device->object;
--	struct {
--		struct nv_device_info_v1 m;
--		struct {
--			struct nv_device_info_v1_data runlists;
--			struct nv_device_info_v1_data runlist[64];
--		} v;
--	} *a;
-+	DEFINE_RAW_FLEX(struct nv_device_info_v1, a, data, 65);
-+	struct nv_device_info_v1_data *runlists = &a->data[0];
-+	struct nv_device_info_v1_data *runlist = &a->data[1];
-+	const u8 rl_cnt = (__struct_size(a) - sizeof(*a)) / sizeof(*a->data) - 1;
- 	int ret, i;
- 
- 	if (device->runlist)
- 		return 0;
- 
--	if (!(a = kmalloc(sizeof(*a), GFP_KERNEL)))
--		return -ENOMEM;
--	a->m.version = 1;
--	a->m.count = sizeof(a->v) / sizeof(a->v.runlists);
--	a->v.runlists.mthd = NV_DEVICE_HOST_RUNLISTS;
--	for (i = 0; i < ARRAY_SIZE(a->v.runlist); i++) {
--		a->v.runlist[i].mthd = NV_DEVICE_HOST_RUNLIST_ENGINES;
--		a->v.runlist[i].data = i;
-+	a->version = 1;
-+	a->count = (__struct_size(a) - sizeof(*a)) / sizeof(*a->data);
-+	runlists->mthd = NV_DEVICE_HOST_RUNLISTS;
-+	for (i = 0; i < rl_cnt; i++) {
-+		runlist[i].mthd = NV_DEVICE_HOST_RUNLIST_ENGINES;
-+		runlist[i].data = i;
- 	}
- 
- 	ret = nvif_object_mthd(object, NV_DEVICE_V0_INFO, a, sizeof(*a));
- 	if (ret)
- 		goto done;
- 
--	device->runlists = fls64(a->v.runlists.data);
-+	device->runlists = fls64(runlists->data);
- 	device->runlist = kcalloc(device->runlists, sizeof(*device->runlist),
- 				  GFP_KERNEL);
- 	if (!device->runlist) {
-@@ -60,12 +55,11 @@ nvif_fifo_runlists(struct nvif_device *device)
- 	}
- 
- 	for (i = 0; i < device->runlists; i++) {
--		if (a->v.runlist[i].mthd != NV_DEVICE_INFO_INVALID)
--			device->runlist[i].engines = a->v.runlist[i].data;
-+		if (runlist[i].mthd != NV_DEVICE_INFO_INVALID)
-+			device->runlist[i].engines = runlist[i].data;
- 	}
- 
- done:
--	kfree(a);
- 	return ret;
- }
- 
--- 
-2.43.0
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
