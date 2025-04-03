@@ -1,69 +1,72 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9048D25178D
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 14:45:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F30F524F5B4
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 14:45:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743691536; cv=none; b=ZIR4VRd8iPnvkgHi9VVtmIhPIut94Di5LKTUi5ApIjTBtR0usg+wVo7vFBcbLjwQ3cOvN3zSyXxXQMY8Lq58EQXSxUcNjvD58xxplTmcO60aDAkFk6uRY9IRM613czB/eLri2RFceFV7iogLzVMa9ZLPdG0yeSfjKHgquTYcOog=
+	t=1743691537; cv=none; b=f9ZiWNEX3WRSivkIwaecH6zylbVZGehbcjhPbB0somIYoe3eoI+Nzr74f++E5bxQw5fc1TiEoED1KbVOE8zQI/LxBffCsvF3XqWgZ3k4NlgU3RZ/UhG7YnsMPwxSwGKevUz7Vw3VnTPA1IyEJDiRu9nxCqNYHjQsPskj6DpCyQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743691536; c=relaxed/simple;
-	bh=3H31W12zPv2ha7Gz50I9LBwKnbP6kIyb2rBbsonHNsk=;
+	s=arc-20240116; t=1743691537; c=relaxed/simple;
+	bh=nu94xce3hyuD6l8b5q4Pb8Eh8vp9Z2NiKH6joMYQjlo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=toUcEfqFoi1VVKLq5sVrL/GcEqNUSb2CzzIxNS9Q5icVpTYV7gYdWPStsizmYZmG8kuDw2mTctAoWse/2a9nf3EVM+P+0UMlBKuKMYdZEhk1ojQKHsTIRwWPb3m+Ik9xgLlGxlK4u5xTFAaJwEBZTtCwcZnVXNa6+U1XLGevFME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=oHhNTZfz; arc=none smtp.client-ip=209.85.221.41
+	 MIME-Version; b=KcgzFWmI7DE+wC4Qe/zCkAdyWGM6IJZ4/qRX350+rBCsJ15hyVJOR4rd903PWT1Lqu2rhIXF8y4Wnzuvu0t4ryAtUtXPlQHv4HTPlN6Poj2RklVt6K6sbXEHoMV5UkuiUdOfqP8EfV5NBv1Yo+bisiSGZOpERXiWiALLda/A2lE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EmlVsqqZ; arc=none smtp.client-ip=209.85.221.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oHhNTZfz"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-39c1efbefc6so674680f8f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 07:45:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EmlVsqqZ"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-391342fc1f6so850119f8f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 07:45:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743691533; x=1744296333; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1743691534; x=1744296334; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=H6jcAZ2+oS8/yz0rFFcTHKsuoW+XOedg0QBvOhLol5s=;
-        b=oHhNTZfzK5J6+yuCavZjrvEXIQvR1HUx1h4vyFKtblOcdgHe/iFAnj+c8M8D0K7RGk
-         J9psGcmDktuKzINW/q+CEKKx7gW8JBQ+n3TxOE60q7K6hBSPmEBtOJxXmoTT7c2KMEeM
-         Dud6OV7bp8hRSCR54VOSch5EYFlEWpnKfhHrZhiAiJcGCxlvlgUZ6NzGHnezyY0z1tLr
-         VFktX61/I+dCoVkHX5jAo93geoVWczcc0MG8kDDH2cLsJdpGSS22INj+cbqAP3XdVnTv
-         E+2iP98KEry114ELE25//ErojfXTmA+Z31etwQN8sF7w3zfp8mB5Y4HLXNlzVMO2hsaH
-         M1JQ==
+        bh=o4ophriFopD1iIs2XtFpF4lW4o87XIA47+/GjWwD8Ak=;
+        b=EmlVsqqZn/KNWAqaqm8fCn+iC0rrFtOxSQKvyHghCyuCyiNna+B2E07JrufNSPJUQl
+         i7hpjb4dKOI1sHBq9n2nait7hIntVaMF+J6mYQezhUySfye/ePmlbaVbKXmuz03+Su99
+         HqPCUl9I9+Eo3TM75saWxTjiNznHh1JLl78qUHpP8nZ8ZrZJ3e47EoYSvOokkOy52hTm
+         tgrwpTPGarhyZ/kLwr6KEosVrRDiOci6fpyO+Zl2rYxcIvPK4xdlStcim12cSZR+S5Gx
+         pqJ01XnjkK+6DdgYUiGsks1N0bVVPv3jpmXSOW5vXCi7w9jAC7W5hBSXtyVIH38HYcmy
+         9vDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743691533; x=1744296333;
+        d=1e100.net; s=20230601; t=1743691534; x=1744296334;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=H6jcAZ2+oS8/yz0rFFcTHKsuoW+XOedg0QBvOhLol5s=;
-        b=bf18kZkUUsXjGFulzgq13Tz/zPsgGOoxk13pqQz6LIzm2rxmrAB1JdoolJds1BgEfw
-         OYxkdpC/9cAtd2TSzzdWZr9ppTtnAd6zCSUcfJJugUoN6BcZCZ88fIRZUIrcVdwe8X5U
-         CndWi5O8+WWt4r/HLXa4jGSPizZ5rDwIg2EuTbyn73+saCmDJDK52RNI1AJdjTduzVue
-         8bfpVOdZUhEIzT0BD+FBSkm++cJc3XPFnh5wHPsEGlUVLVmeQzeSygmcFW2sVbv1/1xZ
-         TdltXwcsTQ1OJCRZDpGcrrmnZufzo91UjHOiZLKdvzP8gB95hLexGffq5KPSnN8cnqlB
-         aSzQ==
-X-Gm-Message-State: AOJu0YyHbRDAj+xH1ie2qeDd+ouLXPnevioQTGH3HYFt9nPMsQdsFMv6
-	rMPUD/5GekauwwNhT+Ae1zw3zmQuIMoTBfOCt2+HqTtBWTHsgXvS5wei40rmUtA=
-X-Gm-Gg: ASbGncuzZwe5EPKZDX6VPVRzlPu7NzycwE9DAaZy4luhNJYgNX7J52soNX42bH7IUj0
-	Sk7scDPXUTUL256z1nmbIRmbPJDOQsvhVzU+cg4B7CykSsJOzNKVluKG8eyUcQyoHM+iSAE2GFu
-	T7MF+rhP7BcdZRa0OibOm94DfZEf9j5lgZ8wihq/SoTJpYV4Ryt0JIytr5xuxXgIa6rltGzOr+2
-	EMPhEIpXJ5Bx2UwboxYjfBbewH/5htuKcJYkhKqTEIFGAm8SOjFC52vftZAPSehsLSoF+3AGzVv
-	MeFqX/FTX1pw+uBcRsRR/JRWCRolSuq0TtkPkZNM3LiQ0jcZXl92AgxeVJ+J7PsunYQcYg==
-X-Google-Smtp-Source: AGHT+IFat3ygpgKhAkO0c0X2mTl0VFvT3wBxLPKr7JIuCyDIUvgK0NKUn/4HKa9g6CxMh8181+X/zg==
-X-Received: by 2002:a5d:6d81:0:b0:39c:1f02:449f with SMTP id ffacd0b85a97d-39c29737e82mr6393647f8f.2.1743691532756;
-        Thu, 03 Apr 2025 07:45:32 -0700 (PDT)
+        bh=o4ophriFopD1iIs2XtFpF4lW4o87XIA47+/GjWwD8Ak=;
+        b=cNTL4H0g3M3FSYLJ5XPtdkavcQsBJjEwAfVVpFfPVi2T2+JP4egjJH5OIo8CWMxd84
+         ICbg3HO3+kwtAZN/xNiRZ0xX/Vg09epD7Mxw4irQQ4E/39rcVeLQDY28ENzPmcDm2x+4
+         2TSVo7gNyyQ+EJQ5OaqhpZMEizFubY7hAy8e087adAsYwKPzYRMvZalGY8ZC9xbVZ+lm
+         gKdgZFGlwoSl8l5WpD+2iTBuHlHHyzrUU0sR9qDf72jBENrx9xtGimdMTkM9g2habH7J
+         sthAAelJKXVp7xDBl+epXqwvBsyEXqRTQP/z5H0b3Al7rc0Ug1esOVHQ8l92gfrb5lAt
+         Vpbw==
+X-Gm-Message-State: AOJu0YxG4b0wBtASJB90+n+nWkoqzowgwacYJPKPG1MDLi4sY0fmOLCu
+	CzsXEIaYehnAb5MJgf+UTVhyTZpOyZgqsWo8gv9CLHNwHkIGMBdd3hABJxJqSFE=
+X-Gm-Gg: ASbGncttkp0ZgMMvAcyGCKhO6pVgAR5dT5rqR1lThyrqOk341VJWAXK8rLo7wRQKOVz
+	XSC8hQh+xYariFqU2pSeOaxFYeoHh/YPTT2iqH28TdkyVLgZ+U3ifEeZP02ybbyRodijTFODeFL
+	vRBLijnhWMZhchAqj2iedgEGPjjg1ONe6HZyiO1R3S0z1XxbsQuNQQ7ERtpfm5thmJeDCVsBVhP
+	WQLp85wom43Hb2erbDZQ22koMQiPaG6ei4Yg6qFdio7S8fBL2x2hcLDGOTZH1z1BD5lUMerbnzO
+	QSV9rOwqX4QXoVqKD3wwx8d1ZPul7QCAqHJubcXugMbYL8dZFI9aJOSJ2Eg8dRRwIfpXf+oPJmx
+	/Ia+d
+X-Google-Smtp-Source: AGHT+IEfiyId7UJESEU4EYsFTbpdQpQ+o7lOEA2rA8h3qGB3a9oH3LXTAZmReV/mANISv4nk9jXiAw==
+X-Received: by 2002:a05:6000:23c7:b0:38f:2efb:b829 with SMTP id ffacd0b85a97d-39c1211b758mr10545483f8f.50.1743691534153;
+        Thu, 03 Apr 2025 07:45:34 -0700 (PDT)
 Received: from localhost.localdomain ([5.133.47.210])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c3020d661sm2044374f8f.66.2025.04.03.07.45.31
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c3020d661sm2044374f8f.66.2025.04.03.07.45.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Apr 2025 07:45:31 -0700 (PDT)
+        Thu, 03 Apr 2025 07:45:33 -0700 (PDT)
 From: srinivas.kandagatla@linaro.org
 To: gregkh@linuxfoundation.org
 Cc: linux-kernel@vger.kernel.org,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Sricharan Ramabadhran <quic_srichara@quicinc.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	George Moussalem <george.moussalem@outlook.com>,
 	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH v3 11/13] nvmem: qfprom: switch to 4-byte aligned reads
-Date: Thu,  3 Apr 2025 15:44:59 +0100
-Message-Id: <20250403144501.202742-12-srinivas.kandagatla@linaro.org>
+Subject: [PATCH v3 12/13] dt-bindings: nvmem: Add compatible for IPQ5018
+Date: Thu,  3 Apr 2025 15:45:00 +0100
+Message-Id: <20250403144501.202742-13-srinivas.kandagatla@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20250403144501.202742-1-srinivas.kandagatla@linaro.org>
 References: <20250403144501.202742-1-srinivas.kandagatla@linaro.org>
@@ -73,81 +76,34 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2313; i=srinivas.kandagatla@linaro.org; h=from:subject; bh=JJiFhfRmHwPniUxF2lMkh5d/tp9H/TdB0Jvtor5rjlc=; b=owEBbQGS/pANAwAKAXqh/VnHNFU3AcsmYgBn7p7jUasBH7hrcLPZhwfh2HNMT1jUIAJKxwHVL 90k/z9bwgSJATMEAAEKAB0WIQQi509axvzi9vce3Y16of1ZxzRVNwUCZ+6e4wAKCRB6of1ZxzRV N0WIB/9LLKVJPYdPQljfkXOpXnetzkruRAcIXdAW7DjAuOWyrBnX4N7GIV3f6mE+BOO1axvE2NL MRC8FpacIHtoQMs81dGCnND0Y/4hxmlP68vLAyY3LpKZgRnpfT7HcoACjL+SSNnghMe5jbeMWn8 iK9KPp4jKk/HafC2z1LDreJC/RvTqRV2mjggEvc13KgrGERfuWbPvIiIk7SZQ9oysXYfmhhetsO uuhd9+e+yCk7PDmxKWN3vCvHGa91Eekm08yQZDpGBPPLwM9ZiymF0AoW0jPo2zKAWvIHtsRNHaj IkdUs4aKNDi8RZoYtTnnviwsRspUoRvxOM50FN/OoT/9eYwK
+X-Developer-Signature: v=1; a=openpgp-sha256; l=980; i=srinivas.kandagatla@linaro.org; h=from:subject; bh=7KrYFwn+zoxtcS7p7RKNnXyTkthKyH04diDTbjPiXp8=; b=owEBbQGS/pANAwAKAXqh/VnHNFU3AcsmYgBn7p7kuqkrbBFgImiw9ZOyRPVqD40fnJhoJoaXj 5/P1pke5OaJATMEAAEKAB0WIQQi509axvzi9vce3Y16of1ZxzRVNwUCZ+6e5AAKCRB6of1ZxzRV N3wVB/0b5mwGInPpoeyCVzGwxIqja8ci7eXR1xQBugnjreqNPnsLoMb6aqQ+PVzEmBK4L/CykBh fiz6VfBOnMfKoWe1bqS7bVGaF021bmkfTjXdFhBslwopXxfZZ861lc/cdtkRsSe45hYGbgMA93v CXNGmWJRxmpCLgNkgRpHIVhBgRpGTvKvaEEVqoS4Fkz8hHR8pt2kHbSVSerJx+9j3Eq+c6UYAlN b6S6GALNW0ttOTBWzkepy+iZQEWptjFJP4r4nf3gb0DfySt1dmRumZqgE/iI/MfazjIQIpxiyes GvUvgKjNbXQdZuGtFHt9rQgVgNGjKWIkPNyi5R5EKn7bEgCx
 X-Developer-Key: i=srinivas.kandagatla@linaro.org; a=openpgp; fpr=ED6472765AB36EC43B3EF97AD77E3FC0562560D6
 Content-Transfer-Encoding: 8bit
 
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+From: Sricharan Ramabadhran <quic_srichara@quicinc.com>
 
-All platforms since Snapdragon 8 Gen1 (SM8450) require using 4-byte
-reads to access QFPROM data. While older platforms were more than happy
-with 1-byte reads, change the qfprom driver to use 4-byte reads for all
-the platforms. Specify stride and word size of 4 bytes. To retain
-compatibility with the existing DT and to simplify porting data from
-vendor kernels, use fixup_dt_cell_info in order to bump alignment
-requirements.
+Document the QFPROM block found on IPQ5018
 
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
+Signed-off-by: George Moussalem <george.moussalem@outlook.com>
 Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- drivers/nvmem/qfprom.c | 26 ++++++++++++++++++++------
- 1 file changed, 20 insertions(+), 6 deletions(-)
+ Documentation/devicetree/bindings/nvmem/qcom,qfprom.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/nvmem/qfprom.c b/drivers/nvmem/qfprom.c
-index 116a39e804c7..a872c640b8c5 100644
---- a/drivers/nvmem/qfprom.c
-+++ b/drivers/nvmem/qfprom.c
-@@ -321,19 +321,32 @@ static int qfprom_reg_read(void *context,
- 			unsigned int reg, void *_val, size_t bytes)
- {
- 	struct qfprom_priv *priv = context;
--	u8 *val = _val;
--	int i = 0, words = bytes;
-+	u32 *val = _val;
- 	void __iomem *base = priv->qfpcorrected;
-+	int words = DIV_ROUND_UP(bytes, sizeof(u32));
-+	int i;
- 
- 	if (read_raw_data && priv->qfpraw)
- 		base = priv->qfpraw;
- 
--	while (words--)
--		*val++ = readb(base + reg + i++);
-+	for (i = 0; i < words; i++)
-+		*val++ = readl(base + reg + i * sizeof(u32));
- 
- 	return 0;
- }
- 
-+/* Align reads to word boundary */
-+static void qfprom_fixup_dt_cell_info(struct nvmem_device *nvmem,
-+				      struct nvmem_cell_info *cell)
-+{
-+	unsigned int byte_offset = cell->offset % sizeof(u32);
-+
-+	cell->bit_offset += byte_offset * BITS_PER_BYTE;
-+	cell->offset -= byte_offset;
-+	if (byte_offset && !cell->nbits)
-+		cell->nbits = cell->bytes * BITS_PER_BYTE;
-+}
-+
- static void qfprom_runtime_disable(void *data)
- {
- 	pm_runtime_disable(data);
-@@ -358,10 +371,11 @@ static int qfprom_probe(struct platform_device *pdev)
- 	struct nvmem_config econfig = {
- 		.name = "qfprom",
- 		.add_legacy_fixed_of_cells = true,
--		.stride = 1,
--		.word_size = 1,
-+		.stride = 4,
-+		.word_size = 4,
- 		.id = NVMEM_DEVID_AUTO,
- 		.reg_read = qfprom_reg_read,
-+		.fixup_dt_cell_info = qfprom_fixup_dt_cell_info,
- 	};
- 	struct device *dev = &pdev->dev;
- 	struct resource *res;
+diff --git a/Documentation/devicetree/bindings/nvmem/qcom,qfprom.yaml b/Documentation/devicetree/bindings/nvmem/qcom,qfprom.yaml
+index a9de635bf31e..69e3669f8178 100644
+--- a/Documentation/devicetree/bindings/nvmem/qcom,qfprom.yaml
++++ b/Documentation/devicetree/bindings/nvmem/qcom,qfprom.yaml
+@@ -19,6 +19,7 @@ properties:
+       - enum:
+           - qcom,apq8064-qfprom
+           - qcom,apq8084-qfprom
++          - qcom,ipq5018-qfprom
+           - qcom,ipq5332-qfprom
+           - qcom,ipq5424-qfprom
+           - qcom,ipq6018-qfprom
 -- 
 2.25.1
 
