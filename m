@@ -1,194 +1,125 @@
-Received: from mail-vk1-f177.google.com (mail-vk1-f177.google.com [209.85.221.177])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A33924E000
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 10:47:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC13424886C
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 10:49:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743677278; cv=none; b=Fj9q8/L2/lmaSbkenjQQ+n+edFOLIqnnj20SQTfyaK3+KEk1ZQZ17mnqfEO9BV5Q2FhJ7DsdZ//D7ydF1wOMzoEUdVSAyeUBiQROx6ZcVf4Tqoz/0cehng+LZJpKlOApWSNgTD4H7toZcYa7W6RRzhQ3DGvbWPVm9MOwow520t4=
+	t=1743677369; cv=none; b=dBx39BhIIWs8ZDZKPU6Eqfj1lfEleiNm8UGyHCZSspAnjGknq7Irlwr+Ms+f0D5HSQx4CAhTGqGeRfpZimfjPMcszfcxdliyuqd7fvKGiAQrI9rOJdhxaBbebiw6BqF+wdz2FI6O4H+hxrQYaMFvBqSN1BuIRcRrN/EgwlTn3DY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743677278; c=relaxed/simple;
-	bh=1rSp8GUjQPXhDnQXL+D/PZL/CS3hVuRflE6/UX7tu6s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Cy8rvcemAsopXQEnA0UP41dFOxyu7LtGJO0WQshG3p3yAl7b11XUOMp7NFcCqgpvnNV9KBuvGL1cs0lJ6YcbAw4d8QD5Nfv0xO3DsiwZCFafiVbgonr1ZerQtIJEJIkL43D9NtKZImg8/CFutFWI6lU0U3pUOsBy+STqEvMgeGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TJVn8ltl; arc=none smtp.client-ip=209.85.221.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1743677369; c=relaxed/simple;
+	bh=PiSeoio2a86WeS2jXJRlVM0CbLy7adADUG+LFiQOMGk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=UPgulgiU+sU0urjdRFCr4T0/u2QmQ65jXAPHQuv7YrsJ/rzZJ5iCIXSdyQWfhNKoKR4qbHlcth1iORA8TL8YbzW93BHIcFM8h9vYoMflOWV5niapGIiZc/YOGnzluEkCL2UkGktKIpUT35cIeozxuyS9AZ8ynfTLzteuAp2ThmI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=IUSN01mH; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TJVn8ltl"
-Received: by mail-vk1-f177.google.com with SMTP id 71dfb90a1353d-523edc385caso366042e0c.3
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 03:47:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="IUSN01mH"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43ce70f9afbso7273095e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 03:49:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743677275; x=1744282075; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vAaNZ+6NXDNpsPuLfvCYG+9qWpEj8cIl19GUNWtS3+0=;
-        b=TJVn8ltlsvLP2VqpiA7BDyPBBL25jmmJdOb0koCkelTSQL8hL63eq7xHhLIQ6+9JKK
-         0LYUA3G9XOE0GAYZt4IiqQbri0T09d0gtVCTZ7n/L7dWOhVBoXHJ/W9XfegrmARmrxrw
-         HKs1j38KAM50dIaox4l0SBI8kLYS5qUr6IjoQ0y+u1VZjaaaDpSI4B/lwjmUqZuJvWOK
-         W0Yu0W8qG3YfJWJxBFVvISKu6u6lkOidKZbH+0Vm/FrbEFKxOXZ11CazYfSG2p+7lHYf
-         3PtcIuovv6jRB5NB0iVN0D3jTIO9TwRCFvX5CUtgOS7lgh1TS1p7zyvCMbnnuoC4jFDS
-         ey9Q==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1743677365; x=1744282165; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=e7N6TSglbOMXGrbSWsg3supmWymijubudO7AAYgdgVI=;
+        b=IUSN01mH1K4bGEyY8Z4ncFkfPM0tv6RudHd6S3Am5DXFaKBDi4UoVDhHmy4aFyh+8F
+         oHqZ1zPpFzTfh36NhbzFOYl0QRR38+fR+Whs454KtyHMoUuCIddJKDPwqqe+UMHQio6S
+         wWjYAqX3sPsj3Hf+RiQw9ItEHZrToMK67XSvWhOA76VGt5S1Ge8LMM8Lf1Ivg6t4ZWhm
+         gGk/Uw9QtLD+hxRB5Pu4XCRy8eEDbnpHLUi9/zkDzSHxG+f5lF7LgmmRTyZ6oCRX9aAB
+         SM16aCviadEqcnx5phopyWThMLPGsg54pqFynRG413uqhBorGuVK93lhimE5qYfoSXOS
+         VPpw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743677275; x=1744282075;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vAaNZ+6NXDNpsPuLfvCYG+9qWpEj8cIl19GUNWtS3+0=;
-        b=d8Sb6DHnw6OUdiGU0lSrKlWMTQY47owSH4c3QZ/wDYzOxMOILycQgYlj5HdWM/3UzD
-         cq9/hR8vhX5bY2JnmmTvqR3+DSdhN5X5Jw9gXrZybz9X63Fe3QAsFzEQEmLVWjKrRRFY
-         F4ExokLlVuTPUknWcU3G9RGcah+rs2XelaVfC91ER/IbwAdMroclysLLaIQu7Z1FOHFD
-         fM2hD7GUyUMFAHs9yJcMpVN654aHE+DUZmXTRKugqSSptZpOIRm0OMmhBb3nZyDtH5lA
-         g4nHSsbVwspI31VeK2xZ5wIObHgit5CDdU3kH85HXtGOxiJLiLfC+ya2TExttzRHgWF9
-         1D6w==
-X-Gm-Message-State: AOJu0YxzUVsQCvitl19NWYgBe5ZOgHRacbOb/s1TG5cOzgngjTrDMNa+
-	VLkPGsIhvhsN1KS/kwl+ZnlmuyLAEHoB3s526VcqAjbInwtwisPpJye+X+/KuULEcPhbXC37UfE
-	JH2I8nkEkBJ3dIdcPADP5BBslXGcN2/aTUM7FGw==
-X-Gm-Gg: ASbGncsFlp/5lfI8aSr2a0roDiJYKyY6wo0Wr6XkN+oAzKmc56KqNAbAev38OWHMzEo
-	bTy1perMnZ1XsLlYiAbXRqF+Kop6WV6GpmPL+Z2arHVfIP2gnMZeOflTU2ZSG3gF4OZO6eimvwM
-	ojkvepE3qZNZxGTvdDmKxFbGEkGZ8Gdpktrg2JzVYWtdrKLqHCGdwREgcusZvE+jHSmnCu
-X-Google-Smtp-Source: AGHT+IEAZl1Bq3/zu9vvbPR6m3Radye8loELaRqXD0AyDpOs+9n2p6f39NGtMiUIYfBcaZxZCiTPFXD5UyQrWFVswQo=
-X-Received: by 2002:a05:6102:3e06:b0:4c1:abaa:ad93 with SMTP id
- ada2fe7eead31-4c8477c5c58mr1268689137.14.1743677275308; Thu, 03 Apr 2025
- 03:47:55 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743677365; x=1744282165;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=e7N6TSglbOMXGrbSWsg3supmWymijubudO7AAYgdgVI=;
+        b=nOAqPk73H3I6MVIDZWtBdQ0bmVU/aN+/nEFhBvgjBXfk9cVRY9Ppc9RcQNSxWXsgCN
+         zXaIm3H27XpWzxlbVM3TfJU8P2xZvtpPbIATnV9g8C0z7+GiwdhHZj/oXZxqQAmJqOjv
+         Lhb8qUZpOKKaw5oUnYNIcCAfKGyCsV3FWWztQqqBuiqc/nqmBFGEt7RqDcmtptbglshq
+         pxto3ZEq8i7qPkz6+hd8Ozx5759nCUBgr7NuBSBXlFmvrCVM7AdxKDH474JD7ta8KMwG
+         4k+FRWvtf34K2q3srpzYZuBSoAMQ1wZshnlpeyvAhlnScetb0PhRa8Df7iSZ06oJC4TH
+         j24Q==
+X-Forwarded-Encrypted: i=1; AJvYcCX3xP5fcaS0EIRWtNch1wXLG9UpQHp+GxxDsZB6hBivEUCCAJcHbcvQK+rA+rm6+jRVPgyGV0rdXwAw8s8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw0IXBH6tWjFjN+dBx10DxA2QYXbI9w51eYXO47+/eruQURvFhC
+	FWX5JXk1+Y8a08IsdnasT+4pMd0BX7/QsB+2lvdTT5vq5LHU8l7Hatamu+hhQBpEsfEPKihS3hw
+	s
+X-Gm-Gg: ASbGncufKff3AgUKXRvZb8qBsVb6VcH+Hl+JglYWfzhPibZp6jlnbun2rryz2Jr4p/a
+	l2/VMwoL8MOjv324VGOlmoMOMIAsi9WSY4O+O91bA0JJfnx4vO9iflZSudxWK05cmsJBdi4l474
+	Gervosff/wqe3qvX5z7poiQo6twVA6HzId/Qit7LBKAl6PU6YrjpBUeGNLglHKhFSXhkrqIngmu
+	fO60I9nWlLm4g/z7sBIJ2nII07KURC/e5w7Sc7FxHKgAgSUkLywR2trOdml8tRJF4/KbS4yOZbS
+	CJ6iWhd8lAQlsImfgKVaL5PXBSrHcALVXrWTq6BFT0J+SIlSIpAFesbZn8h/BlF+QyNvcaWm4ef
+	THIz80xasSnc=
+X-Google-Smtp-Source: AGHT+IF7ppya2Qe7sDdlJauBrlDdBS0DOhdQY6it8f/OoMt81AYudBQET3IpEmjnLoCxmzeRrLg8Fw==
+X-Received: by 2002:a05:6000:1aca:b0:391:1458:2233 with SMTP id ffacd0b85a97d-39c120cb5b1mr16403178f8f.11.1743677365072;
+        Thu, 03 Apr 2025 03:49:25 -0700 (PDT)
+Received: from localhost (p200300f65f14610400000000000001b9.dip0.t-ipconnect.de. [2003:f6:5f14:6104::1b9])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-39c301a732asm1476123f8f.30.2025.04.03.03.49.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Apr 2025 03:49:24 -0700 (PDT)
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Vladimir Zapolskiy <vz@mleia.com>,
+	Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
+Cc: Purva Yeshi <purvayeshi550@gmail.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] ARM: dts: lpc32xx: Add #pwm-cells property to the two SoC PWMs
+Date: Thu,  3 Apr 2025 12:49:14 +0200
+Message-ID: <20250403104915.251303-2-u.kleine-koenig@baylibre.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CA+G9fYve7+nXJNoV48TksXoMeVjgJuP8Gs=+1br+Qur1DPWV4A@mail.gmail.com>
- <20250403011849.GA3138383@ax162>
-In-Reply-To: <20250403011849.GA3138383@ax162>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Thu, 3 Apr 2025 16:17:44 +0530
-X-Gm-Features: ATxdqUE4AkC2FOF6OY9aZNJrmty8hh4LW8Nc1vXRFFYdK231FvWNsG3UDqbvQK4
-Message-ID: <CA+G9fYtrsLHvMH=ofmdS3MMsMTEj3k0PD7=qsRsA4WkSqLkCzQ@mail.gmail.com>
-Subject: Re: v6.14-12245-g91e5bfe317d8: Boot regression: rk3399-rock-pi-4b
- dragonboard-410c dragonboard-845c no console output
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: open list <linux-kernel@vger.kernel.org>, 
-	Linux ARM <linux-arm-kernel@lists.infradead.org>, lkft-triage@lists.linaro.org, 
-	Linux Regressions <regressions@lists.linux.dev>, clang-built-linux <llvm@lists.linux.dev>, 
-	Arnd Bergmann <arnd@arndb.de>, Ard Biesheuvel <ardb@kernel.org>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, Anders Roxell <anders.roxell@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1459; i=u.kleine-koenig@baylibre.com; h=from:subject; bh=PiSeoio2a86WeS2jXJRlVM0CbLy7adADUG+LFiQOMGk=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBn7merikfyXXV0LsL+fQxBuc+nqdH7dQZ/s7ZfQ 8IOL7u4IGSJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZ+5nqwAKCRCPgPtYfRL+ TjWwB/0b9e+IY35Xp9g8dPZuyf2cd6XtTWE0FyNuSx1RToEiFcjklGDYgFCtEKABwcKtOBEulek HwZ4A4tHbzhb5jBnciWyaUFZj1wkLoW6qboUr0tx0KMvb5MHhAk9xqlCowUe7338mRaLpij9YLJ ltxRsgek2oj6gC14sGnIONM8I2Bl1SMh0j7RDoCMvS9Kb66HGMe/6t1ixavC5RUxRol2KNwYRRT UOKpKSBkan+bbe2D3N3GMzVsBNO+wJy33UIGVMjyrvyx1bmeuq8AUAgt/PJq1qvLFw/eVy6aKtr j/93vWsR7GlnQJD3O3+rrMGdlerhb/l5KqMU/hSuuIL63uot
+X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Transfer-Encoding: 8bit
 
-On Thu, 3 Apr 2025 at 06:48, Nathan Chancellor <nathan@kernel.org> wrote:
->
-> Hi Naresh,
->
-> On Wed, Apr 02, 2025 at 06:19:19PM +0530, Naresh Kamboju wrote:
-> > Regressions on rk3399-rock-pi-4b, dragonboard-410c and dragonboard-845c
-> > the lto-thing, hardening and lto-full config boot failed with toolchain
-> > clang-nightly on the mainline master branch with no console output.
-> >
-> > First seen on the v6.14-12245-g91e5bfe317d8
-> >  Good: v6.14-11270-g08733088b566
-> >  Bad: v6.14-12245-g91e5bfe317d8
-> >
-> > Regressions found on rk3399-rock-pi-4b:
-> >   - boot/clang-nightly-lkftconfig-kselftest
-> >   - boot/clang-nightly-lkftconfig-lto-thing
-> >   - boot/clang-nightly-lkftconfig-hardening
-> >   - boot/clang-nightly-lkftconfig-lto-full
-> >
-> > Regressions found on dragonboard-410c:
-> >   - boot/clang-nightly-lkftconfig-lto-thing
-> >   - boot/clang-nightly-lkftconfig-lto-full
-> >   - boot/clang-nightly-lkftconfig-hardening
-> >
-> > Regressions found on dragonboard-845c:
-> >   - boot/clang-nightly-lkftconfig-hardening
-> >   - boot/clang-nightly-lkftconfig-lto-thing
-> >
-> > Regression Analysis:
-> >  - New regression? Yes
-> >  - Reproducibility? Yes
-> >
-> > Boot regression: rk3399-rock-pi-4b dragonboard-410c dragonboard-845c
-> > no console output
-> >
-> > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> >
-> > ## Boot log
-> > Starting kernel
-> > ...
-> > <No console output>
-> >
-> >
-> > ## Source
-> > * Kernel version: 6.14.0
-> > * Git tree: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/li=
-nux.git
-> > * Git sha: 91e5bfe317d8f8471fbaa3e70cf66cae1314a516
-> > * Git describe: v6.14-12245-g91e5bfe317d8
-> > * Project details:
-> > https://qa-reports.linaro.org/lkft/linux-mainline-master/build/v6.14-12=
-245-g91e5bfe317d8/
-> > * Architectures: arm64 (rk3399-rock-pi-4b, dragonboard-410c, dragonboar=
-d-845c)
-> > * Toolchains: clang-nightly (Debian clang version 21.0.0 )
->
-> The version string for the toolchain seems to be slightly truncated but
-> from the configuration it is:
->
->   Debian clang version 21.0.0 (++20250330105456+3b3d1a5c2614-1~exp1~20250=
-330225508.1357)
->
-> which can be parsed with our parse-debian-clang.py [1] to get more
-> information:
->
->   $ scripts/parse-debian-clang.py -p -v 'Debian clang version 21.0.0 (++2=
-0250330105456+3b3d1a5c2614-1~exp1~20250330225508.1357)'
->   clang checkout date: 2025-03-30 10:54 UTC (3 days, 14:17:24.134272 ago)
->   clang revision: 3b3d1a5c2614
->   clang revision link: https://github.com/llvm/llvm-project/commit/3b3d1a=
-5c2614
->
-> Our CI is using a slightly newer version:
->
->   $ scripts/parse-debian-clang.py -p -v 'Debian clang version 21.0.0 (++2=
-0250401112529+290d7b82cb5d-1~exp1~20250401112547.1360)'
->   clang checkout date: 2025-04-01 11:25 UTC (1 day, 13:49:39.394836 ago)
->   clang revision: 290d7b82cb5d
->   clang revision link: https://github.com/llvm/llvm-project/commit/290d7b=
-82cb5d
->
-> Can you see if it is reproducible with that revision?
+If these PWMs are to be used, a #pwm-cells property is necessary. The
+right location for that is in the SoC's dtsi file to not make
+machine.dts files repeat the value for each usage. Currently the
+machines based on nxp/lpc/lpc32xx.dtsi don't make use of the PWMs, so
+there are no properties to drop there.
 
-I=E2=80=99ve re-run the tests to validate the boot behavior on the Rock Pi =
-4 board
-with different Clang nightly versions and the latest mainline kernel.
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
+---
+Hello,
 
-The combination using clang-nightly:20250319 successfully booted the
-Rock Pi 4 board.
-However, the combination using clang-nightly:20250401 failed to boot
-the same board.
+found while reviewing https://lore.kernel.org/linux-pwm/20250312122750.6391-1-purvayeshi550@gmail.com
 
-"name": "clang",
-"version": "21.0.0",
-"version_full": "Debian clang version 21.0.0
-(++20250401112529+290d7b82cb5d-1~exp1~20250401112547.1360)"
+Best regards
+Uwe
 
-Reference:
- - https://lkft.validation.linaro.org/scheduler/job/8196258
- - https://lkft.validation.linaro.org/scheduler/job/8196275
+ arch/arm/boot/dts/nxp/lpc/lpc32xx.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-- Naresh
+diff --git a/arch/arm/boot/dts/nxp/lpc/lpc32xx.dtsi b/arch/arm/boot/dts/nxp/lpc/lpc32xx.dtsi
+index 974410918f35..4460a1960606 100644
+--- a/arch/arm/boot/dts/nxp/lpc/lpc32xx.dtsi
++++ b/arch/arm/boot/dts/nxp/lpc/lpc32xx.dtsi
+@@ -481,6 +481,7 @@ pwm1: pwm@4005c000 {
+ 				compatible = "nxp,lpc3220-pwm";
+ 				reg = <0x4005c000 0x4>;
+ 				clocks = <&clk LPC32XX_CLK_PWM1>;
++				#pwm-cells = <3>;
+ 				assigned-clocks = <&clk LPC32XX_CLK_PWM1>;
+ 				assigned-clock-parents = <&clk LPC32XX_CLK_PERIPH>;
+ 				status = "disabled";
+@@ -490,6 +491,7 @@ pwm2: pwm@4005c004 {
+ 				compatible = "nxp,lpc3220-pwm";
+ 				reg = <0x4005c004 0x4>;
+ 				clocks = <&clk LPC32XX_CLK_PWM2>;
++				#pwm-cells = <3>;
+ 				assigned-clocks = <&clk LPC32XX_CLK_PWM2>;
+ 				assigned-clock-parents = <&clk LPC32XX_CLK_PERIPH>;
+ 				status = "disabled";
+-- 
+2.47.2
 
-
-
-> For what it's
-> worth, both of the arm64 boxes I have can boot a ThinLTO kernel compiled
-> with a version of LLVM @ 749535ba2808e133682074f712ac6829335f8875, so it
-> could be something that was broken for a little bit but Debian happened
-> to sync before the fix was committed.
->
-> [1]: https://github.com/ClangBuiltLinux/continuous-integration2/blob/fe48=
-44afc1be91d469fc162c8a179f23fafb9384/scripts/parse-debian-clang.py
->
-> Cheers,
-> Nathan
