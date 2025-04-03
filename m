@@ -1,90 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A922218DB10;
-	Thu,  3 Apr 2025 12:31:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0DAA24E003
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 12:31:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743683467; cv=none; b=nzcfNBWFuBdNPevswGza3DRfYvPOpXE3NCTWZN9WR/x6pETSGXcYXGwzo1ObtMsgK4TQB1VdcAq7M87YGsVDRODxYlkO6GWtOnZtWcyod7UIYOzhWUUuQ/GqRrG04gfMm6iklHuIL/AF41VZhGaHAnlVopXUjJu/RGAYfa/Z8G8=
+	t=1743683471; cv=none; b=kJHYadwEHZB0SpEf5uAWrn5ADl5suiSPej8wlD/VDYBjW+VeHPTWhlStjBqCeNNQbYKvGLcsNxP31ECvXTFrizB7UWvYL8BiduhtlR0C9I+VfMuTcFwFLVlPCQ2zEPcH+xlQOk6478CBVMCHEdrwYVKz0FrWEgdiyPJgPcEHoig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743683467; c=relaxed/simple;
-	bh=CnLDYb7XZk5vPljE2pxTY39nAE8xucWgsLuFG2jWdfA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PoXICnDT5nl+zPbms4GIozTYDgyGspZdQmxppujOx7fI+G4UgaJzjd1wylRQPGYCUwgmbR2pVFZEpKaPMf0wj7ECNg8PaWd+w/ipYd9AfqbNb0+kyKhSx+roXTJk2qHvo4h3M4WF1+UoyQuQCrQfh2w4XUjUHAls/Kw0Bb5j2M4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I9Qonby/; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I9Qonby/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA5ACC4CEE3;
-	Thu,  3 Apr 2025 12:31:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743683467;
-	bh=CnLDYb7XZk5vPljE2pxTY39nAE8xucWgsLuFG2jWdfA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=I9Qonby/7j19j+SswfqKWHC0aQs6UqsHf+JxuilqUVw+7fb2RYNWrQuJg25ADCyio
-	 Lu+wroI7lUcJJUf8GD49OVNn5AiM2qmqipnAx4BMAO9PQ2YQfgc2uyfGFD3iUG98dI
-	 2DLlPAgRLxNXTX4pMs/wGiMpUwN5dC/BdkKaF5igkRMHGLyY2/TWqFvcisvLyhFDzo
-	 mwCgOn9WwMaYNnhembITGhZ0LcTSgvkpZV3nBjWYh7ipLNEe5CrXvqcyZZSwrNKvkV
-	 b7VT8d0QoScZyCN9NAW2XtGUEacqRMbHQm1LJbHAtPWAM4YsqOwv6omYV//5l+/qF8
-	 ZQlTbfkeuoOhA==
-Date: Thu, 3 Apr 2025 14:31:02 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>
-Cc: Philipp Stanner <phasta@kernel.org>, Lyude Paul <lyude@redhat.com>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-	linaro-mm-sig@lists.linaro.org, stable@vger.kernel.org
-Subject: Re: [PATCH v2] drm/nouveau: Prevent signalled fences in pending list
-Message-ID: <Z-5_hh8kPv8btF6k@pollux>
-References: <20250403101353.42880-2-phasta@kernel.org>
- <c779bc2f-06af-4278-8bb5-08afc074b580@amd.com>
+	s=arc-20240116; t=1743683471; c=relaxed/simple;
+	bh=iSUo5pKSTWFOjmR7BDdYf2T7egjMjm5IhmeEnM/9FKY=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=gMgkna2JwR6SLk3PX+ONvY+qLsuxUUTsnztxjTrK/eT3J9ecgYu3oBYR2bAglqjDQ2/fJ4rrVRThvC7UnFtmqozhu7VM5kAI4ethc+mZ667RvBhtQ8mpqKy5ooN2IX7nNFZRt61yuPjS5vzYk7F4vv0qEO+wQFmop+ovM2eP7KE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
+Received: from [192.168.0.224] (ip5f5ae856.dynamic.kabel-deutschland.de [95.90.232.86])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 4753361E6487C;
+	Thu, 03 Apr 2025 14:30:22 +0200 (CEST)
+Message-ID: <f8ab4b21-0afc-4956-a324-12c0c67bb5de@molgen.mpg.de>
+Date: Thu, 3 Apr 2025 14:30:21 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: New warning `cryptd: no symbol version for this_cpu_off`
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, Uros Bizjak <ubizjak@gmail.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, regressions@lists.linux.dev,
+ Brian Gerst <brgerst@gmail.com>, Nadav Amit <nadav.amit@gmail.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+References: <81a25a60-de78-43fb-b56a-131151e1c035@molgen.mpg.de>
+Content-Language: en-US
+In-Reply-To: <81a25a60-de78-43fb-b56a-131151e1c035@molgen.mpg.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <c779bc2f-06af-4278-8bb5-08afc074b580@amd.com>
 
-On Thu, Apr 03, 2025 at 02:08:06PM +0200, Christian K�nig wrote:
-> Am 03.04.25 um 12:13 schrieb Philipp Stanner:
+#regzbot ^introduced: 6a367577153a
+
+[To: +Uros, Cc: +Nadav, +Andrew]
+
+
+Dear Linux folks,
+
+
+Am 03.04.25 um 09:35 schrieb Paul Menzel:
+
+> On the Intel Kaby Lake laptop Dell XPS 13 9360, updating from 
+> 6.14.0-11270-g08733088b566 to 6.14.0-12456-gacc4d5ff0b61, Linux logs the 
+> new warning below:
 > 
-> > @@ -235,6 +227,19 @@ nouveau_fence_emit(struct nouveau_fence *fence)
-> >  			       &fctx->lock, fctx->context, ++fctx->sequence);
-> >  	kref_get(&fctx->fence_ref);
-> >  
-> > +	fence->cb.func = nouveau_fence_cleanup_cb;
-> > +	/* Adding a callback runs into __dma_fence_enable_signaling(), which will
-> > +	 * ultimately run into nouveau_fence_no_signaling(), where a WARN_ON
-> > +	 * would fire because the refcount can be dropped there.
-> > +	 *
-> > +	 * Increment the refcount here temporarily to work around that.
-> > +	 */
-> > +	dma_fence_get(&fence->base);
-> > +	ret = dma_fence_add_callback(&fence->base, &fence->cb, nouveau_fence_cleanup_cb);
+>      cryptd: no symbol version for this_cpu_off
 > 
-> That looks like a really really awkward approach. The driver basically uses a the DMA fence infrastructure as middle layer and callbacks into itself to cleanup it's own structures.
-> 
-> Additional to that we don't guarantee any callback order for the DMA fence and so it can be that mix cleaning up the callback with other work which is certainly not good when you want to guarantee that the cleanup happens under the same lock.
-> 
-> Instead the call to dma_fence_signal_locked() should probably be removed from nouveau_fence_signal() and into nouveau_fence_context_kill() and nouveau_fence_update().
-> 
-> This way nouveau_fence_is_signaled() can call this function as well.
+> I haven’t bisected it, but could it be commit 06aa03056f90 (x86/smp: 
+> Move this_cpu_off to percpu hot section). It says to have no functional 
+> change though.
 
-Yes, I think this would work as well. It wouldn't work if only
-dma_fence_signal() is called on this fence, but that should be fine.
+`git bisect` led to commit 6a367577153a (percpu/x86: enable strict 
+percpu checks via named AS qualifiers).
 
-So, I agree that's probably the better approach.
+     $ git bisect start
+     $ git bisect good 08733088b566
+     $ git bisect bad acc4d5ff0b61
 
-> BTW: nouveau_fence_no_signaling() looks completely broken as well. It calls nouveau_fence_is_signaled() and then list_del() on the fence head.
+Kind regards,
 
-It does indeed look broken, as in the fence may not be signaled at all. If at
-all, it should call dma_fence_is_signaled() instead.
+Paul
 
-> As far as I can see that is completely superfluous and should probably be dropped. IIRC I once had a patch to clean that up but it was dropped for some reason.
 
-Agreed, to me it looks unnecessary as well.
+$ git bisect log
+git bisect start
+# status: waiting for both good and bad commits
+# good: [08733088b566b58283f0f12fb73f5db6a9a9de30] Merge tag 
+'rust-fixes-6.15-merge' of 
+git://git.kernel.org/pub/scm/linux/kernel/git/ojeda/linux
+git bisect good 08733088b566b58283f0f12fb73f5db6a9a9de30
+# status: waiting for bad commit, 1 good commit known
+# bad: [acc4d5ff0b61eb1715c498b6536c38c1feb7f3c1] Merge tag 
+'net-6.15-rc0' of git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net
+git bisect bad acc4d5ff0b61eb1715c498b6536c38c1feb7f3c1
+# bad: [2cd5769fb0b78b8ef583ab4c0015c2c48d525dac] Merge tag 
+'driver-core-6.15-rc1' of 
+git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core
+git bisect bad 2cd5769fb0b78b8ef583ab4c0015c2c48d525dac
+# bad: [0e2f80afcfa699ce722c01afc9286a942bd57211] fs/dax: ensure all 
+pages are idle prior to filesystem unmount
+git bisect bad 0e2f80afcfa699ce722c01afc9286a942bd57211
+# bad: [5b47c02967ab770aa7661c8863a21b2fd59e35ff] mm/hugetlb: convert 
+cmdline parameters from setup to early
+git bisect bad 5b47c02967ab770aa7661c8863a21b2fd59e35ff
+# bad: [94ba17adaba0f651fdcf745c8891a88e2e028cfa] mm/damon: avoid 
+applying DAMOS action to same entity multiple times
+git bisect bad 94ba17adaba0f651fdcf745c8891a88e2e028cfa
+# bad: [f495bd7e0d9bd00c9a76c49f792b532bbb0efd0a] mm/rmap: keep mapcount 
+untouched for device-exclusive entries
+git bisect bad f495bd7e0d9bd00c9a76c49f792b532bbb0efd0a
+# bad: [9b2f764933eb5e3ac9ebba26e3341529219c4401] mm/huge_memory: allow 
+split shmem large folio to any lower order
+git bisect bad 9b2f764933eb5e3ac9ebba26e3341529219c4401
+# bad: [1c81f1a699263aeae9aa1ac777058846c546e3c0] memcg: use 
+OFP_PEAK_UNSET instead of -1
+git bisect bad 1c81f1a699263aeae9aa1ac777058846c546e3c0
+# good: [8a3c392388c6a6e0c8937a24712b630ec9ac7016] percpu: use 
+TYPEOF_UNQUAL() in variable declarations
+git bisect good 8a3c392388c6a6e0c8937a24712b630ec9ac7016
+# good: [6cea5ae714ba47ea4807d15903baca9857a450e6] percpu: repurpose 
+__percpu tag as a named address space qualifier
+git bisect good 6cea5ae714ba47ea4807d15903baca9857a450e6
