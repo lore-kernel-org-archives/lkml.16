@@ -1,115 +1,108 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E8BB161320;
-	Thu,  3 Apr 2025 22:38:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF9DD1A317E;
+	Thu,  3 Apr 2025 22:40:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743719885; cv=none; b=mQBSZJwPbbI/9V4GZZbu9umaDpTwJFV7Qm4lzs3FBn06dB/rOxUVtf+9Ev56P9xif9wovlPEiFQTRixOpdJBbCHF86EANr1LbiN2trt+01MhKvbiXRUx5svFLgGSKqMftma+rx6uZe1wIwbP5Mt5GyDNPEu71unUzREJHO9ZoBY=
+	t=1743720021; cv=none; b=rL+H92BIcDGuXVRteA5SaCUnCcIP3FCWln1ElV37WY0YFrm1+KlJta/wHzp470tCTXbhDA9VsVRqr0HIKT2FcM5MwZYgWos0sWTlpurA6CBN7kK7m+JH1+YwxjeLOXVDk4ZZbEG9cn7s4nglxHjFxuqD+TZdaY7nAjrXj2IOgrs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743719885; c=relaxed/simple;
-	bh=zaM0dqs6hXmFjWycbkD0Nt/9XcQIztBGYBwn9DyGL3Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CJAQGzXsRDuwauw0XCv9tpZCvC+u/y8hmf9Q2y8Fj9k2tZ3o7c7W+Scc8Qpq3dnXdYFVkgNIsq0xtG6ofnu4gARjkZFFTLjkWF4kRe4MtDM/gAZ6tN2AZRhJ3/WdfZeDJquEAphNgC54/IwxbFqH1TvchoBfkMK0bsANKkYfDnQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kjpks8pd; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743720021; c=relaxed/simple;
+	bh=C0vdjRDJZakc74qJQQwFBMNl7Rcg1MWJAF0DjtgwOlY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nT25DJakRYhVr1ZYQ4X30pRKKh8hM9eHk9V5g1b9jTEI5mjol6aexaENGfEXU1kaq7MIAF7xuQbB0ccL2Ih+cu88u1xWw2kr3AiGhuYReTD9FH5vIzOAAxBCE/OrzC7xHeiopo+XSnM349AwkOikZnGc75pFUMRe0oyypkvQEKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=mBbfLtHu; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kjpks8pd"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5e6f4b3ebe5so2559681a12.0;
-        Thu, 03 Apr 2025 15:38:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="mBbfLtHu"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3912fdddf8fso1615474f8f.1;
+        Thu, 03 Apr 2025 15:40:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743719882; x=1744324682; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iZ6K1JP10UBnpc6DTNs7X/b6jJulOtNE7dgvrXsrjCI=;
-        b=kjpks8pdFay6vg+22AeRw0Y2LpttqyVqSqNX+DLjLUDh/h1snO2yGk96S22rzyFDuv
-         R5Z6k/qMh/kw/Ue9OJ6zAX3lm+Pbqf5Tin+YarvtzOF7TuG6/2/a+8CZeoZIHxA0fPf4
-         JF3I2m4e9C+F/Uz3SyFCfuWftKAoCRIAnwu+dKP2QIQp4RI6uVY/3envzdAp+z5Izl3f
-         XOP2BoX5IaBUKDLogmpXATLVMxZnBAz6J2WkoFv6+4X00LAP18zUaNRoniLkqyPqIy/5
-         WcyO0hZwJ+fPkL0rEjMAhWKZZ8u/9RGFIYgXlz8cYWfAv2XiBdZ+WALP6pqIUaPg/d8x
-         z7vQ==
+        d=googlemail.com; s=20230601; t=1743720017; x=1744324817; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=1OPzpbeROVt3iebNoDgfJuVub0bw6Mab3GZ6fxFNwb4=;
+        b=mBbfLtHuO2o0hJeh2X+Hq0nvJAuLSXOnRbowBTR78TGwjxAN73BmdrDRRo8c6G3EVw
+         BCsqjGC399ZY7cQc8xB/sUQZAjrbMnqbLeN3phMJj9Tws7kEK3UaXraQZUuNLadRhgcG
+         Ua/RCYaEUx2QYSjX35LVdIrOP7YVU/4W9NW0QPG5YazJgBSiSS86YIENz2Q5JOxcxaxS
+         gB64+awbuBM6eC+lnyl+Lg4DowpluOmBR3HxlgB/PXybHCqCfmXRwf2BmtGoxKBiqw0K
+         3NNURJ4O5dLElMsGI9IG+CPWZmOc/YTzFoGqc1iSJteukytpU75unU42bPyxNH68DkS8
+         EKTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743719882; x=1744324682;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iZ6K1JP10UBnpc6DTNs7X/b6jJulOtNE7dgvrXsrjCI=;
-        b=q/JOsrkE674Xl9McX3offlfm4Xq8AxZsFFLS/rh0D1fhGOsPy+xkUjnJma/vdfYjI1
-         vTOTGLNo0h6+G0bHygpeaC2Y0avlOhpXtE1VHlglirF8D23KqMjSF9lxDnCJRFeT/0j5
-         x/f+vtK05+v7w7VMkZMlggXrB+WmGpaJ2XNBqUMst+6Dn5LVgsOQswSXM3nkSufVCcJc
-         qRA+1oJu0jBxy/bZO8AUMWYZzgUEM33mjkyMXJS8DVG2ap/R5q/VYG0NfJdtmEwXOfVJ
-         q54NFfvSonvQ1u2+tEtUuo6VYZSEFauqJQBNoghj3AU2XfsVXjpRf+kOuYMZp9Nj4uIZ
-         CQkg==
-X-Forwarded-Encrypted: i=1; AJvYcCVBLnZLeb5qfD/eXCo5gfq/rdhiGp8qi/MLRuN+8BW4lPaqMM1nKfsWAp2xdFLb8KPynP8we9HLNWlrEBdG@vger.kernel.org, AJvYcCWBMLKqkLOGgpACioPs7KiwknRpz28ydaCim9hfjTSaUtT81qI2QcWCmER+lIRQSyU1W4kUCj0sCLO3hQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwIV3ZwXY4uBqF89JD93cF2BLrjzq/8tfooA0XTl+59kbEmB0w2
-	LsVtME/D8P04VAoSyRA/YzCDoCjL2D9HSQQzf5Sl8A47+wshkow3IJkLY8abFyHUCcZPjmfXa8Z
-	jkv9DVeODW45J4WO4z2UCtSS/kO8=
-X-Gm-Gg: ASbGncv9ZiIe7kv2nNDgTHsFQKu+aBk+A3SMNWfJ/2m2J0ZzpXTfEdXwOce+HKFzjQr
-	ae3jmkIO+wIkywI7mxR9Qo+S7KvCilZZrZPBfXXKe5yNDDsavU03m4qpGM7j6uuRZGpYBI1Ihu/
-	wWroUvIeI6JCbjtPC1uIgkAekIHA==
-X-Google-Smtp-Source: AGHT+IGEP7WnNSh6HYTyjnZSWPMhY0n5hrhx3hnSpfSMjdSZBItxJqvw71uEdf0SfOoYMMZBoucnZPVuVO9LWzm64Qw=
-X-Received: by 2002:a05:6402:2709:b0:5e1:8604:9a2d with SMTP id
- 4fb4d7f45d1cf-5f0b3b65912mr685521a12.4.1743719882267; Thu, 03 Apr 2025
- 15:38:02 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743720017; x=1744324817;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1OPzpbeROVt3iebNoDgfJuVub0bw6Mab3GZ6fxFNwb4=;
+        b=PngOnD2NtafWgx4dVYntPdwrj/WBaJU0fBr+0t7gaNB77+64sTBTA+ur/Fm5Qpw5RQ
+         1lpn+iMi5Q2WWs9KZJ1ysg0k3v7tcyOKor3DL3opbkrfrNU6HdHQOYr84Dt7puexiQmh
+         fTU6v666L9tmjU1GIe3fCXF1Xyj8I7/jMm/Ud5f4vPEANimTNIFf2sm5NFcqGy5pWdTJ
+         QGCbktMrUGpWN9jJ/ITpt7PU0uLHYXdcplcd9r5rFjjMlcxRNiL4vSfB9CW2zQCZ3cOv
+         N0j+H2pbsYy9jsOfvhFQV+F9Lmn16hHPMg9cAvrLJ9nf7OBC187awlMA4w5dtwGdG2kE
+         UFaA==
+X-Forwarded-Encrypted: i=1; AJvYcCVOg5sBD51jL4cOMo8gR4tyObf52hTL5HEnnbhY5Xc0u7W7n+UU616jGsgvYZjcIIMs2Rhoq14SPoAihiM=@vger.kernel.org, AJvYcCVOvWX+W+Jw8GegqvgOW4DaP0Qne4kx6Q5fKvMuPk568lmoUxMCAnVen9euERekYYAf4TM1qM/L@vger.kernel.org
+X-Gm-Message-State: AOJu0YxYDA+aTt8r8FMZR+1mdmmAa6ZOZtR3WoZr3LdIf6/98bbwHlw0
+	a3bEBogUui8BRfpZM4hdwTTe9KjMrHcVBdW4Efzfjkr84JCgYrLwra4r
+X-Gm-Gg: ASbGnctUiaN5em95WOPkKypM05hA4dtxnIX1SIc71kGAalQ5XO2042e9tL/kRoIaBIZ
+	iYkWu0Ff6t47DW9uLLc5guySGP2c1jEM5iZZj2tGbeT858xsKWlrIGHpXEGgbYmkv+mDewZBfLP
+	7xq6Z2FTs1o0N7ATO2iPmtZjzCj7Rv67Ph9AJrEnEc2yDCWQGyBjQPddfHkTKwfzeMlAZXMpp0d
+	+0z1wqwvs9WXsiNBz5UxUn45ppJV532nAYmnD5qE1T3+IpaEJ99HFaHZjl0LdWRTrYT/H4Yu/ku
+	6WflDb/fFRI8/+aVdeZQGuICkrGnJDM6J0zKhsjkSMRNjpI09GF+BjXAFMoz4d89eEQtc6YlkX7
+	YfiubWmeEQ11xSIk/O+mEtQY=
+X-Google-Smtp-Source: AGHT+IFOb6izVa62SvLGubqLsioOz8B+D5IB4XXfBBTooXiRS5/iI5bZDjKC0LfOU2ryXUUnVZHr8w==
+X-Received: by 2002:a5d:5848:0:b0:39c:1efb:f7c4 with SMTP id ffacd0b85a97d-39c2e65a54fmr4290054f8f.25.1743720016962;
+        Thu, 03 Apr 2025 15:40:16 -0700 (PDT)
+Received: from [192.168.1.3] (p5b2ac393.dip0.t-ipconnect.de. [91.42.195.147])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec364cb9asm29384235e9.31.2025.04.03.15.40.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Apr 2025 15:40:16 -0700 (PDT)
+Message-ID: <e4761e82-52ab-42a9-ba61-d95f46fd90ef@googlemail.com>
+Date: Fri, 4 Apr 2025 00:40:15 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <67ea5813.5d0a0220.293276.775e@mx.google.com> <2025040301-tightness-giveaway-a568@gregkh>
-In-Reply-To: <2025040301-tightness-giveaway-a568@gregkh>
-From: Richard Akintola <princerichard17a@gmail.com>
-Date: Thu, 3 Apr 2025 23:37:48 +0100
-X-Gm-Features: ATxdqUE7EuV8mvnSRPJ_5BA5rAr5h72HjMUScB12TVQyWh-pzOcniirw44ZMhXo
-Message-ID: <CAMyr_bL3sh3HyL0=Qb1h21_-5dqJy0M0Ewo0JMFPNr=x28oNgw@mail.gmail.com>
-Subject: Re: [PATCH] staging: sm750fb: modify function name to kernel code style
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: sudipm.mukherjee@gmail.com, teddy.wang@siliconmotion.com, 
-	linux-fbdev@vger.kernel.org, linux-staging@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, julia.lawall@inria.fr
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Betterbird (Windows)
+Subject: Re: [PATCH 6.6 00/26] 6.6.86-rc1 review
+Content-Language: de-DE
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250403151622.415201055@linuxfoundation.org>
+From: Peter Schneider <pschneider1968@googlemail.com>
+In-Reply-To: <20250403151622.415201055@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi,
+Am 03.04.2025 um 17:20 schrieb Greg Kroah-Hartman:
+> This is the start of the stable review cycle for the 6.6.86 release.
+> There are 26 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 
-Yes I did send two different patches (part of the reason I used
-different subject lines),
-they did similar things (change camelCase to snake_case,  I wanted to
-get all done in the file,
-but I learnt it is best done one at a time.
+Builds, boots and works on my 2-socket Ivy Bridge Xeon E5-2697 v2 server. No dmesg 
+oddities or regressions found.
 
-So should I have it all done in the file (there are more than 2
-camelCase CHECKs), or send it
-one after the other? (but you could take the first).
+Tested-by: Peter Schneider <pschneider1968@googlemail.com>
 
-Thanks
 
-Richard Akintola
+Beste Grüße,
+Peter Schneider
 
-On Thu, Apr 3, 2025 at 3:18=E2=80=AFPM Greg KH <gregkh@linuxfoundation.org>=
- wrote:
->
-> On Mon, Mar 31, 2025 at 09:53:36AM +0100, Richard Akintola wrote:
-> > Change camelCase function name sii164ResetChip to sii164_reset_chip
-> > as reported by checkpatch.pl
-> >
-> > CHECK: Avoid camelCase: <sii164ResetChip>
-> >
-> > Signed-off-by: Richard Akintola <princerichard17a@gmail.com>
-> > ---
-> >  drivers/staging/sm750fb/ddk750_dvi.c    | 2 +-
-> >  drivers/staging/sm750fb/ddk750_sii164.c | 4 ++--
-> >  drivers/staging/sm750fb/ddk750_sii164.h | 2 +-
-> >  3 files changed, 4 insertions(+), 4 deletions(-)
->
-> You sent 2 different patches with different subject lines, yet they
-> almost did the same thing?  Which one should I take or review?  Please
-> send a new one, as a version 3, and properly document what changed
-> between this one and the last 2 submissions.
->
-> thanks,
->
-> greg k-h
+-- 
+Climb the mountain not to plant your flag, but to embrace the challenge,
+enjoy the air and behold the view. Climb it so you can see the world,
+not so the world can see you.                    -- David McCullough Jr.
+
+OpenPGP:  0xA3828BD796CCE11A8CADE8866E3A92C92C3FF244
+Download: https://www.peters-netzplatz.de/download/pschneider1968_pub.asc
+https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@googlemail.com
+https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@gmail.com
