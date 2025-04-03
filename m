@@ -1,58 +1,56 @@
 Received: from mx0b-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0089E2581;
-	Thu,  3 Apr 2025 02:46:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A19A818DB34;
+	Thu,  3 Apr 2025 02:46:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743648411; cv=none; b=ht1lfkWhAzQUmkle7GeZKY+sSX4/r9coCB43axXOc2iH5yOiJ3oVC6OFFk6gSyMNf9WHDwE0gUIpOx4KC+jIjJlCaVxZ11EMThzilau98zNHpzGjmKrUtiEvT+/t+NLMAWvdOzXJAcQLuBhFm5KC+oIxGBAEmIgFAVRH0zgNz5k=
+	t=1743648413; cv=none; b=YeCTpHPruqMYWMjB4pT8LZgGeKdMeJAcIqODbIPQYs5mqDyQYSg8+APvliCa+D7Xl+T+coy1qXYXiEfTEMm7fmapcuGj0rEZlXuL/Clg+uv+zkLoLS3TxDvgN5fAClMwKEgOc6UK77UTOKiI5Ot0z8qhKj3IBzE41pVYTHhigso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743648411; c=relaxed/simple;
-	bh=j+/1UYNsq4n+kGzrKaYEN/yc62ghFdAAUEo8wG7406s=;
-	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=U7QDzUCvO4Gq53JgSxYav7iv74yjNCTJ7Tv246OKAb5uV5VA1xmaouElhaX0rCh4F4T69XgdSlI1ec7OTxvRzzr6Ce2JLZ8Pt5S/7Y8OJOdERv2R0WbmcF5ABl175TcvsujZH453Ba1I5t8zoinrJYKXdkcpJmjPBytdDe+vLSc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=1h0uL+DU; arc=none smtp.client-ip=148.163.135.77
+	s=arc-20240116; t=1743648413; c=relaxed/simple;
+	bh=YOzriDgRrk2tPyMiBrQt6htYSSYL1hXU2UICBS9d/Tc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=E3cRg6oOHtNrGoG0rXsxDlLuwKJuKTMYdtjZk57Nl0ABzS2BILVHV4Zays7ro7caOTV6Xm9UnYDtlnMvJxsd+EGGqhSPTCVwLNR0MyB71okxCSc7KIeAjby+Yr6ve+HTEwZ8/TftIWt3nIenuedDr5gWkleA3L3EGVQO7hbfl4s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=lsRpcMe6; arc=none smtp.client-ip=148.163.135.77
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="1h0uL+DU"
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="lsRpcMe6"
 Received: from pps.filterd (m0375855.ppops.net [127.0.0.1])
-	by mx0b-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5332TC4B023121;
-	Wed, 2 Apr 2025 22:46:40 -0400
+	by mx0b-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5332TVK3023392;
+	Wed, 2 Apr 2025 22:46:42 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
-	:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=DKIM; bh=jyywwe6Uo26eBN5L68rt8SUtDga
-	jQ+AF7rg1Z4V+2+c=; b=1h0uL+DU5EK46XWmPTYxZ3me2vvvqjtK+GX8Lj8PKPe
-	HANn+KvNnq5+83PMpzs1ESwGqR9XcqhA1Tane+WE9D7LS6JFr7KQj5k2t8g+cKi/
-	5UvqKgnO07jsPU2D6/P/jUfJD1n9Ss6wCzaFjVJaALWFAqL1brVcw5UIPHSP8m1Y
-	Rl90H7wP78SO2nAJ/ae5OMPeKkdU8NRlc4SmlhsAtjy6W7il55HPRjZs2OYM/ONr
-	vEcnrwjsWoIrn1i9l4xk3G+ZO0n3tnSot8sXJT5TpX65FnhZGlepUviK8YjTKb8+
-	KRytnuf8GuZbiNN7NsqIZWaw9ekz11n/DeJDuSQgyMw==
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-	by mx0b-00128a01.pphosted.com (PPS) with ESMTPS id 45shkd0222-1
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=DKIM; bh=O4KWb
+	t85tjufigcGItFSDoHHeybK267nB9Ih0HP3wRE=; b=lsRpcMe6zfQ6AaRHw96Mm
+	3inVMCcuwHeBUbX/SeG+44YdQ+z83ev4IIXkDmowf19jkzralgrnzFoqGFJuEb/u
+	8DQ4yhCKCXSzgA+jochsVLrt3ePqaoRskznZKT0yKpLGYjzK78kIXTQ0XhRnbcke
+	Wfmam5qwjKoqtdi6AF1Armzky5IUZ8H/m6C1217fx/HcgV3mA2zUvXgizKVS3UPB
+	rpfTPyNQ3mNpe7Mjxt1JZy347tB6ehFr6pPjLvDG3/JojaILfmbr5yvkShKmbX9p
+	v4I3iJ90+oAagE4zNmGZPIOeYeM8ka3STQy+ra1TGiHvFbVKguFGY24XZ6077Py1
+	Q==
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+	by mx0b-00128a01.pphosted.com (PPS) with ESMTPS id 45shkd022c-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 02 Apr 2025 22:46:39 -0400 (EDT)
-Received: from ASHBMBX8.ad.analog.com (ASHBMBX8.ad.analog.com [10.64.17.5])
-	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 5332kcqB035560
+	Wed, 02 Apr 2025 22:46:42 -0400 (EDT)
+Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
+	by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 5332kfLw060375
 	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 2 Apr 2025 22:46:38 -0400
-Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
- ASHBMBX8.ad.analog.com (10.64.17.5) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.14; Wed, 2 Apr 2025 22:46:38 -0400
-Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by
- ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.14; Wed, 2 Apr 2025 22:46:38 -0400
+	Wed, 2 Apr 2025 22:46:41 -0400
+Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by ASHBMBX9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.14; Wed, 2 Apr 2025
+ 22:46:40 -0400
 Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx9.ad.analog.com
  (10.64.17.10) with Microsoft SMTP Server id 15.2.986.14 via Frontend
- Transport; Wed, 2 Apr 2025 22:46:38 -0400
+ Transport; Wed, 2 Apr 2025 22:46:40 -0400
 Received: from ATORRENO-L02.ad.analog.com ([10.117.223.13])
-	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 5332kQpf031488;
-	Wed, 2 Apr 2025 22:46:29 -0400
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 5332kQpg031488;
+	Wed, 2 Apr 2025 22:46:34 -0400
 From: Alexis Czezar Torreno <alexisczezar.torreno@analog.com>
-Subject: [PATCH v3 0/2] Add support for ADP5055 triple buck regulator.
-Date: Thu, 3 Apr 2025 10:43:09 +0800
-Message-ID: <20250403-upstream-adp5055-v3-0-8eb170f4f94e@analog.com>
+Date: Thu, 3 Apr 2025 10:43:10 +0800
+Subject: [PATCH v3 1/2] regulator: dt-bindings: adi,adp5055-regulator: Add
+ adp5055 support
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,32 +59,31 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAL317WcC/33NwQ6CMAyA4VchOzszChvDk+9hPFQosETYsuGiI
- by7g4sxMZ6av0m/LiyQNxTYKVuYp2iCsVOK4pCxZsCpJ27a1AwESAEg+cOF2ROOHFsnhZRp3ki
- Bgq7WJUtnzlNnnjt5uaYeTJitf+0fYr5t/2Ax54KjxKrTVKpaqzNOeLf9sbEj27QIH6EA8UOAT
- cAG2qISUgv4EtZ1fQMf235o8wAAAA==
-X-Change-ID: 20250225-upstream-adp5055-adbe6262f984
+Message-ID: <20250403-upstream-adp5055-v3-1-8eb170f4f94e@analog.com>
+References: <20250403-upstream-adp5055-v3-0-8eb170f4f94e@analog.com>
+In-Reply-To: <20250403-upstream-adp5055-v3-0-8eb170f4f94e@analog.com>
 To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
-        "Rob
- Herring" <robh@kernel.org>,
+        Rob
+ Herring <robh@kernel.org>,
         Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        "Conor
- Dooley" <conor+dt@kernel.org>
+        Conor
+ Dooley <conor+dt@kernel.org>
 CC: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        "Alexis
- Czezar Torreno" <alexisczezar.torreno@analog.com>
+        Alexis
+ Czezar Torreno <alexisczezar.torreno@analog.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1743648386; l=2930;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1743648386; l=6606;
  i=alexisczezar.torreno@analog.com; s=20250213; h=from:subject:message-id;
- bh=j+/1UYNsq4n+kGzrKaYEN/yc62ghFdAAUEo8wG7406s=;
- b=fa6o4VeqXZdcVO7gsgjdAQIPhOPK6F2gA2USsyzcrxqkuOwBCrxkyKx1tlSRDSFixXzQwEoe3
- YNgb70iKiK1Ctcx2bMyGc3thcAjZHhI3qOHseySUa6TQc+dJNcjGWT7
+ bh=YOzriDgRrk2tPyMiBrQt6htYSSYL1hXU2UICBS9d/Tc=;
+ b=H1vbnjkJdQ/aXbyGdOkljjpZesexZnlCaxV0UsUweGvb+THnEvs16oRy8tlMzsE1ak/UbSmwH
+ 46viNxyrRYHBqRHXISQTpmhvbIbIjvtikLzTOKYsJsxBFkgdp6rLjao
 X-Developer-Key: i=alexisczezar.torreno@analog.com; a=ed25519;
  pk=XpXmJnRjnsKdDil6YpOlj9+44S+XYXVFnxvkbmaZ+10=
 X-ADIRuleOP-NewSCL: Rule Triggered
-X-Authority-Analysis: v=2.4 cv=N8cpF39B c=1 sm=1 tr=0 ts=67edf68f cx=c_pps a=PpDZqlmH/M8setHirZLBMw==:117 a=PpDZqlmH/M8setHirZLBMw==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=gAnH3GRIAAAA:8 a=Kpdrl5fn47ZIlBTKqEQA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: JdF_HRLn-ZsE2z5yk7PdKXtpioACHYtE
-X-Proofpoint-ORIG-GUID: JdF_HRLn-ZsE2z5yk7PdKXtpioACHYtE
+X-Authority-Analysis: v=2.4 cv=N8cpF39B c=1 sm=1 tr=0 ts=67edf692 cx=c_pps a=3WNzaoukacrqR9RwcOSAdA==:117 a=3WNzaoukacrqR9RwcOSAdA==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=gEfo2CItAAAA:8 a=gAnH3GRIAAAA:8 a=VwQbUJbxAAAA:8 a=LYgrlvm2vjqWaEuYVCwA:9
+ a=QEXdDO2ut3YA:10 a=sptkURWiP4Gy88Gu7hUp:22
+X-Proofpoint-GUID: O83FE1Usn28pmmTCX9tAsxWUnzzS5pHX
+X-Proofpoint-ORIG-GUID: O83FE1Usn28pmmTCX9tAsxWUnzzS5pHX
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-04-03_01,2025-04-02_03,2024-11-22_01
@@ -97,64 +94,197 @@ X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspect
  adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
  definitions=main-2504030012
 
-Introduce a regulator driver support for ADP5055. The device combines 3
-high performance buck regulators in a 43-termminal land grid array
-package. The device enables direct connection to high input voltages up
-to 18V with no preregulator. Channel 1 and 2 deliver a programmable
-output current of 3.5A or 7.5A or provide a single output with up to 14A
-in parallel operation. Channel 3 has a programmable output current of
-1.5A or 3A.
+Add documentation for devicetree bindings for ADP5055. The device consists
+of 3 buck regulators able to connect to high input voltages of up to 18V
+with no preregulators.
 
 Signed-off-by: Alexis Czezar Torreno <alexisczezar.torreno@analog.com>
 ---
-Changes in v3:
-- Improved commit message,
-- adp5055-regulator.c
-    - Regulator node names are now lowercase 
-    - Edited to support changes in bindings
-- adi,adp5055-regulator.yaml
-    - Improved property definitions
-    - Improved text wrapping
-    - Moved device 'adi,hw-en-array-gpios' to 'enable-gpios' per regulator
-    - Changed 'channels' to regulators named buck[0-2]
-    - Added missing ref to regulator schema
-- Link to v2: https://lore.kernel.org/r/20250320-upstream-adp5055-v2-0-aac2d3705802@analog.com
+ .../bindings/regulator/adi,adp5055-regulator.yaml  | 157 +++++++++++++++++++++
+ MAINTAINERS                                        |   6 +
+ 2 files changed, 163 insertions(+)
 
-Changes in v2:
-- Kconfig - fixed indention problem, occured due to using spaces rather tabs
-- adp5055-regulator.c
-  - Turned initial comment block into c++ style, using // per line
-  - Merged the similar read/write ranges variable called access_ranges_table
-  - Set max_register value correctly to 0xE0 instead of 0xFF
-  - Fixed issue where ndescs was an error code. replaced with -EINVAL
-  - Enable/disable ops functions, now use helpers like regulator_enable_regmap
-  - Added config.ena_gpiod for the regulator config  
-  - Used of_parse_cb to do per regulator properties, new function added
-  - Migrated some yaml properties to the core regulator function
--adi,adp5055-regulator.yaml
-  - Moved property power_saving_mode to set/get mode under 'IDLE' mode
-  - Moved property output-discharge-func to core func set_active_discharge
-  - Moved property enable-delay-us to core function set_ramp_delay.
-  - Removed property disable-delay-us, as suggested to not worry about
-  - adjusted sample device tree to match changes due to use of of_parse_cb
-- Link to v1: https://lore.kernel.org/r/20250225-upstream-adp5055-v1-0-a5a7f8e46986@analog.com
+diff --git a/Documentation/devicetree/bindings/regulator/adi,adp5055-regulator.yaml b/Documentation/devicetree/bindings/regulator/adi,adp5055-regulator.yaml
+new file mode 100644
+index 0000000000000000000000000000000000000000..a55d564d8d0783fe5d503d4c5e2f6a38fc0702cd
+--- /dev/null
++++ b/Documentation/devicetree/bindings/regulator/adi,adp5055-regulator.yaml
+@@ -0,0 +1,157 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/regulator/adi,adp5055-regulator.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Analog Devices ADP5055 Triple Buck Regulator
++
++maintainers:
++  - Alexis Czezar Torreno <alexisczezar.torreno@analog.com>
++
++description: |
++  The ADP5055 combines three high performance buck regulator. The device enables
++  direct connection to high input voltages up to 18 V with no preregulators.
++  https://www.analog.com/media/en/technical-documentation/data-sheets/adp5055.pdf
++
++properties:
++  compatible:
++    enum:
++      - adi,adp5055
++
++  reg:
++    enum:
++      - 0x70
++      - 0x71
++
++  adi,tset-us:
++    description:
++      Setting time used by the device. This is changed via soldering specific
++      resistor values on the CFG2 pin.
++    enum: [2600, 20800]
++    default: 2600
++
++  adi,ocp-blanking:
++    description:
++      If present, overcurrent protection (OCP) blanking for all regulator is on.
++    type: boolean
++
++  adi,delay-power-good:
++    description:
++      Configures delay timer of the power good (PWRGD) pin. Delay is based on
++      Tset which can be 2.6 ms or 20.8 ms.
++    type: boolean
++
++  '#address-cells':
++    const: 1
++
++  '#size-cells':
++    const: 0
++
++patternProperties:
++  "^buck[0-2]$":
++    type: object
++    $ref: regulator.yaml#
++    unevaluatedProperties: false
++
++    properties:
++      enable-gpios:
++        maxItems: 1
++        description:
++          GPIO specifier to enable the GPIO control for each regulator. The
++          driver supports two modes of enable, hardware only (GPIOs) or software
++          only (Registers). Pure hardware enabling requires each regulator to
++          contain this property. If at least one regulator does not have this,
++          the driver automatically switches to software only mode.
++
++      adi,dvs-limit-upper-microvolt:
++        description:
++          Configure the allowable upper side limit of the voltage output of each
++          regulator in microvolt. Relative to the default Vref trimming value.
++          Vref = 600 mV. Voltages are in 12 mV steps, value is autoadjusted.
++          Vout_high = Vref_trim + dvs-limit-upper.
++        minimum: 12000
++        maximum: 192000
++        default: 192000
++
++      adi,dvs-limit-lower-microvolt:
++        description:
++          Configure the allowable lower side limit of the voltage output of each
++          regulator in microvolt. Relative to the default Vref trimming value.
++          Vref = 600 mV. Voltages are in 12 mV steps, value is autoadjusted.
++          Vout_low = Vref_trim + dvs-limit-lower.
++        minimum: -190500
++        maximum: -10500
++        default: -190500
++
++      adi,fast-transient:
++        description:
++          Configures the fast transient sensitivity for each regulator.
++          "none"    - No fast transient.
++          "3G_1.5%" - 1.5% window with 3*350uA/V
++          "5G_1.5%" - 1.5% window with 5*350uA/V
++          "5G_2.5%" - 2.5% window with 5*350uA/V
++        enum: [none, 3G_1.5%, 5G_1.5%, 5G_2.5%]
++        default: 5G_2.5
++
++      adi,mask-power-good:
++        description:
++          If present, masks individual regulators PWRGD signal to the external
++          PWRGD hardware pin.
++        type: boolean
++
++    required:
++      - regulator-name
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        regulator@70 {
++            compatible = "adi,adp5055";
++            reg = <0x70>;
++            #address-cells = <1>;
++            #size-cells = <0>;
++
++            adi,tset-us = <2600>;
++            adi,ocp-blanking;
++            adi,delay-power-good;
++
++            buck0 {
++                regulator-name = "buck0";
++                enable-gpios = <&gpio 17 GPIO_ACTIVE_HIGH>;
++                adi,dvs-limit-upper-microvolt = <192000>;
++                adi,dvs-limit-lower-microvolt = <(-190500)>;
++                adi,fast-transient = "5G_2.5%";
++                adi,mask-power-good;
++            };
++
++            buck1 {
++                regulator-name = "buck1";
++                enable-gpios = <&gpio 18 GPIO_ACTIVE_HIGH>;
++                adi,dvs-limit-upper-microvolt = <192000>;
++                adi,dvs-limit-lower-microvolt = <(-190500)>;
++                adi,fast-transient = "5G_2.5%";
++                adi,mask-power-good;
++            };
++
++            buck2 {
++                regulator-name = "buck2";
++                enable-gpios = <&gpio 19 GPIO_ACTIVE_HIGH>;
++                adi,dvs-limit-upper-microvolt = <192000>;
++                adi,dvs-limit-lower-microvolt = <(-190500)>;
++                adi,fast-transient = "5G_2.5%";
++                adi,mask-power-good;
++            };
++        };
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 896a307fa06545e2861abe46ea7029f9b4d3628e..b2ec43f84d84765c319d8403fb5650afa273db83 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1525,6 +1525,12 @@ W:	https://ez.analog.com/linux-software-drivers
+ F:	Documentation/devicetree/bindings/iio/filter/adi,admv8818.yaml
+ F:	drivers/iio/filter/admv8818.c
+ 
++ANALOG DEVICES INC ADP5055 DRIVER
++M:	Alexis Czezar Torreno <alexisczezar.torreno@analog.com>
++S:	Supported
++W:	https://ez.analog.com/linux-software-drivers
++F:	Documentation/devicetree/bindings/regulator/adi,adp5055-regulator.yaml
++
+ ANALOG DEVICES INC ADP5061 DRIVER
+ M:	Michael Hennerich <Michael.Hennerich@analog.com>
+ L:	linux-pm@vger.kernel.org
 
----
-Alexis Czezar Torreno (2):
-      regulator: dt-bindings: adi,adp5055-regulator: Add adp5055 support
-      regulator: adp5055: Add driver for adp5055
-
- .../bindings/regulator/adi,adp5055-regulator.yaml  | 157 +++++++
- MAINTAINERS                                        |   7 +
- drivers/regulator/Kconfig                          |  11 +
- drivers/regulator/Makefile                         |   1 +
- drivers/regulator/adp5055-regulator.c              | 470 +++++++++++++++++++++
- 5 files changed, 646 insertions(+)
----
-base-commit: 7fef39f0e82ff02282797d9ae2589b39b16ab614
-change-id: 20250225-upstream-adp5055-adbe6262f984
-
-Best regards,
 -- 
-Alexis Czezar Torreno <alexisczezar.torreno@analog.com>
+2.34.1
 
