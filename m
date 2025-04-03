@@ -1,108 +1,157 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C9B7259CBD;
-	Thu,  3 Apr 2025 19:53:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A41325A2DE;
+	Thu,  3 Apr 2025 19:53:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743709992; cv=none; b=praaa90PreZsCuhgqe1NWm0RqiYHyOkrNPNTIOaxNFTJnGqSBmC/pboF6ZFvRq6i90YgeJ4ReKQFaHoK/U6iF8BnpfW22kT3zKKgvLV723gM8gd6JRdSunsoar9pjQQKruZou52eD0AjJRNMwWobTZMEqSiIuz0peMxRa3R5Mxo=
+	t=1743710001; cv=none; b=SIJTUhPVll2EXbOGYe69UDrKYTFMuiIo6OPHEISZGliQ1Ads04DTiuz9FcqV5V/DfeKdClaryvVwUPksVMFYElCqqgC2ljghn5XQMLM2Io/SSANqWNGjUajhGVQlY7MZVvy/oOUsILwEOzAzjWeIq/d8g7arXGfWzdNqUFYlSio=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743709992; c=relaxed/simple;
-	bh=EqrX3cvjeRiYPY6y27M2pPrYu3nuvoLp/+5WruydRCY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lyTZRhWNfHpKxS7q9W2f5psBIKBU7uDIdXwk0xCm/wgh+A6kitXlYSlADgBC3ZaTibN6ZgUZLA7zpA8Bs97vgy1rKY7i90ab49aH4Sn/NO28spxgnX9TXHo95rAHs9Bt6k+0tj0xIVBmXt56R1HCuVJBilMsGUcikZSfRIMCdKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=kdCzqjTv; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
+	s=arc-20240116; t=1743710001; c=relaxed/simple;
+	bh=+rx0GW1KDDOvxeHXkvPeapZddDRpOPK/Xtq4t67G4LI=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=DURZZxYQRqTCTq0zodnBR04Wi2PMGoDNDpl/gsOmO4KOaoi/pzfJrN73UYZpoo2E3mvCMRExH3Agm5QT5XQs7vavZgu8a62zIeTZheTRS7IrdW8lCPkuD3i9MTxhAieF+z+2PkOaxWUvG590WgPVCFlByStytc1rtec7fHwUd6M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V9x4/MEx; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="kdCzqjTv"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43cf58eea0fso6819655e9.0;
-        Thu, 03 Apr 2025 12:53:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V9x4/MEx"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-39c266c1389so903093f8f.1;
+        Thu, 03 Apr 2025 12:53:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20230601; t=1743709988; x=1744314788; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=6du6KAtTyYabq94pzb2wgfnhQXGYymn0VC+kdziS+Bk=;
-        b=kdCzqjTv5KPobFdYYrYUzaCDwir6Qj/FuW+cHs2VVxLOfb/HwYUtisL60uyo1H8Z4S
-         a9Fc/J9iwXFyfKTP7VtkMbumgWEVAba0BBrBlFjHYVsNJWxhsxxoLO1cZJchOg9Gk/ST
-         jXCbt5YWJD3rvPM5xW4Y1oLRe2gm7kGQsqagCbNJHPVlN28bAnOQYWoZzijoGl72G4KN
-         TIsFSrqEB9w7j4QluERje1JP96cjr4OcpfJ1uSPEK60Mp0UJW/quRxQ+3Tw1XGA9/MKQ
-         joBRLfG4uO0wedjEKnt3wCTxN4xlif00tIg7e4rsMKqjo84jOXKEcxSnx7GCvf0hzV1M
-         rOZg==
+        d=gmail.com; s=20230601; t=1743709996; x=1744314796; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=UCx9U48sN7s82eXli9pfvSHJhA15swjvCSV5I/aKGUE=;
+        b=V9x4/MEx/l6YGUvUPcnlNrr5NaKcetHWkbFYZMmxDpNswlIwXSSODZ+zdl5eaVImZs
+         /FzeUgR9ky92/Fuxdc2K5N0H0unhZubXP3bNA0O1i37nPIvVytKx9Kb1dSHU4sfwSjB/
+         DuoKBFqMg/c1YHIr+KwNSy0jwl2BvaSp8odhiGOsm3bqbCL73KT7Ei2dXHlMc33NLZgc
+         euPUBLzNTyUJVmeNtF26XYETa1mj5uj8g26etJ42FY5oM4DGYDKeLFHHUqQdOp0fz/eo
+         j6fI0mybyLYPKQgiugGpkPBZP9Zuzp2QdeQIWXxAh8MDrZBIiAwxuqEbPeaTDFVoXdlB
+         lK7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743709988; x=1744314788;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6du6KAtTyYabq94pzb2wgfnhQXGYymn0VC+kdziS+Bk=;
-        b=aXvZzG4sebPU99Cd2P4qZzTBr28Tv2tNVNnvIhq3Rmnx6rlJPVo6KVXIgD0wN7Qu9S
-         c35NtcV5+WHi2iW90RiRib29453BEnZ8Fn5rNWRMCpYhlWjzFIz6l4N6xSGtpIpZOaKJ
-         U2RDh2oddDCl6o6PMam39Tt8fHE+ZMjh8WxezJNHjYPPBzwFFzNtxwsqICLYdmkQoUB5
-         P26CENRUzSDJTOYZlgKtdpE+inB8T4l8Rs832IDqafsXSPmSyO/8vEJB+UPzSCDpZgV6
-         Y+6AgopbxvUsO7UjriliA9wn0LxMUqs36OELuTR+f+Yc1HMU5EP+dmk9XCpZUgj5c6ky
-         ggNQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU1AsFCFEG4vYMYrcOsEKPVXLQzqesLrAlPbfIA2d7NqL0Gt8Fvd4cdcLSpNUmtd32hYg79xBfDxUeC86s=@vger.kernel.org, AJvYcCV3WQrMhDn8wUOfyKFbdph1Sp62UTswlopnbUmziZcCsJln4NCp9Csj1lGZv8WkSRGpxEnNdFCN@vger.kernel.org
-X-Gm-Message-State: AOJu0YxhZ2sWymGv7NUpvi4kpYBwXElR0D61CCO/K4G1II96nkm6I0GX
-	hnfCbzOBzdjv7C/Bi0ziLV/Kn9958cQ9ybzz0PQBHoWcCKKt0Ic=
-X-Gm-Gg: ASbGncvhyEvAm2js/01HuZ6sgd2DccDqcC0M7NrboxfaFh4ozKQV+lE3TYwyjrxkyy/
-	P0OoL7lRpdYMAGJ2nrJb8VAZmLl1f8swRRUUAXN7WYvRfyZqPeBiVKNl3aVXMcFDMqSbgycpt8L
-	tFE2GC5pjyNALjLGE/J9/yJgMt7l4+S0WO2LRyQYGbFQkS0kZeekOZYJfJxJKVRv6PYAQPIUxqJ
-	CUAOF85IhWFQGX2zwGa6rx59fCtOWHR9laSSHxApxGsruzDTnHumtXNPWRnI1fWccgt/KKKsfoV
-	13s5M4CxM0tGbrResLzsqdjm+3kjeo4RsN9ZThGKmZAlYtTr3KgRJLcrd8ksF2MKx88iYOZ3zQ6
-	oF5ZxexQlBgt33+E2MvDxOFM=
-X-Google-Smtp-Source: AGHT+IGtsE86kbuUK/yEkO0/b3rX2k2QXtMhucX+uUUKI+GteGJnqYOo/i38OP3DqvE8R3eNi180+g==
-X-Received: by 2002:a05:600c:4ecc:b0:43d:2313:7b49 with SMTP id 5b1f17b1804b1-43ecf85f4d2mr3032015e9.12.1743709988208;
-        Thu, 03 Apr 2025 12:53:08 -0700 (PDT)
-Received: from [192.168.1.3] (p5b2ac393.dip0.t-ipconnect.de. [91.42.195.147])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec169abd7sm30040945e9.18.2025.04.03.12.53.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Apr 2025 12:53:06 -0700 (PDT)
-Message-ID: <22486e30-3b38-4361-a3eb-899103ceaff3@googlemail.com>
-Date: Thu, 3 Apr 2025 21:53:04 +0200
+        d=1e100.net; s=20230601; t=1743709996; x=1744314796;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=UCx9U48sN7s82eXli9pfvSHJhA15swjvCSV5I/aKGUE=;
+        b=s15QsJAFPlyKrW0aa7bXJV9TSPsmYbqea8BdobGlHLvddAfJie6XS+RxedRpZ9qkxg
+         g55YA310+2pT/e9kstB4iz6pBbVtMqtEDt5GQccL+YyfwsEI8DdMwqthWkxBEoXwOdyA
+         9tm3keDFsGZWAwESyPZh/cRTzJ9VTEE+L6O3cGgvC/yJzobrJjROGCZ4yo7FU6+vYIPd
+         zlUa6Su6ZX0IufIfsIopDqNtxzbKU5Ll9fgy2e4tNn7CLfbkPkGl3prLx7rvQYnvbQGF
+         vqLr+wb3+NBQ4YLWROUikNgAA5uqx4i3EZu1J6v0vGJVv9fEylonykiURQ42BHeD9F59
+         VF4g==
+X-Forwarded-Encrypted: i=1; AJvYcCUElBq+19pRPD0FTeYaL4nrz45Q6h8YcyxvJ5tKMYuP8N2jybEc/1p+TWmtlGVwIQGrBHBzavnNsvB6@vger.kernel.org, AJvYcCUxarqPS7fCG8XMy6GaGROqcxwswwt3oHwPk1IPNvOHCp3a+vHayXlwqZxj5/SR/T01TB+sUhoVPBfi8mSX@vger.kernel.org, AJvYcCVbYeccZBMn03/grHT6snS0+G1rEAudKf+pYzxlHg8QP/tpfx4E8+aw43S8LvU4B9I/TadecfMomyz8@vger.kernel.org, AJvYcCX0deaZnlp8ggM96KHaRA5nJ1dbQi3uaxDUHQfveAqfSrdYb6hgW17/nDE7KPBX1ffIPH+txb9sTCCS@vger.kernel.org
+X-Gm-Message-State: AOJu0YyzXvkZjfLc0pV9ClRK/XULWqJj67UTXUGfas6HaDa7huSbCCbP
+	fJYf+Q2C+GPyE0EgVDY+EQmd7jyxU7wCJUheJtJO5rnHSXWyEEBJ
+X-Gm-Gg: ASbGncv1t8ZwDpE3jBP966hSBv/R0vGKR/mn3QZlRv3gff7ZOIIjl0EYdHWkkIFQygi
+	yniNKlh+uF85rcM4nq7LgVP/Up4SAhoIkf8QxY2davD0i0nn3jmqfAwNPBazpTPy7fcCsCl2BTh
+	vJEIYyjGpUrkpYww1Uq+zOGd3Zf2yehNWtWr+oljXLHSnXuJ6Gwlr07J3uXWpzRM2mmSyYwtAKx
+	aPv6QuYGVpKaJMnzmMFV4okyGtbHTDrSp5K/pollYEVtowuixCdUIolTPL++J3waoodCTS/lUhe
+	K2SvITt42iV95ioffBUAuaMzwnc51FWI53Qj7kFkIMgmJT0wpNjYCoyBk1qfpihgj9UiLPUrZgC
+	k6r3DfLo/g8fe/+bUy+8=
+X-Google-Smtp-Source: AGHT+IEMN6NZ7m6VJxF1SCzwC8Wi2Ppth78oaT27iCTvthOsqvOJuk7AmvwLv91+IX2CRdmI4OAH3g==
+X-Received: by 2002:adf:b644:0:b0:39c:c64e:cf58 with SMTP id ffacd0b85a97d-39d146625c5mr68053f8f.55.1743709995392;
+        Thu, 03 Apr 2025 12:53:15 -0700 (PDT)
+Received: from ?IPv6:2001:818:ea56:d000:56e0:ceba:7da4:6673? ([2001:818:ea56:d000:56e0:ceba:7da4:6673])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c301b8ae1sm2638150f8f.51.2025.04.03.12.53.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Apr 2025 12:53:14 -0700 (PDT)
+Message-ID: <ccf7767e4c447aa5febad9c6139c1e76dbfd19f6.camel@gmail.com>
+Subject: Re: [PATCH 2/5] iio: adc: ad7380: rename internal_ref_only
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: David Lechner <dlechner@baylibre.com>, Jonathan Cameron
+ <jic23@kernel.org>,  Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+ linux-iio@vger.kernel.org
+Cc: Michael Hennerich <Michael.Hennerich@analog.com>, Nuno
+ =?ISO-8859-1?Q?S=E1?=
+	 <nuno.sa@analog.com>, Jonathan Corbet <corbet@lwn.net>, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org
+Date: Thu, 03 Apr 2025 19:53:32 +0100
+In-Reply-To: <20250401-iio-ad7380-add-ad7389-4-v1-2-23d2568aa24f@baylibre.com>
+References: 
+	<20250401-iio-ad7380-add-ad7389-4-v1-0-23d2568aa24f@baylibre.com>
+	 <20250401-iio-ad7380-add-ad7389-4-v1-2-23d2568aa24f@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Betterbird (Windows)
-Subject: Re: [PATCH 6.14 00/21] 6.14.1-rc1 review
-Content-Language: de-DE
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250403151621.130541515@linuxfoundation.org>
-From: Peter Schneider <pschneider1968@googlemail.com>
-In-Reply-To: <20250403151621.130541515@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
 
-Am 03.04.2025 um 17:20 schrieb Greg Kroah-Hartman:
-> This is the start of the stable review cycle for the 6.14.1 release.
-> There are 21 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Tue, 2025-04-01 at 17:50 -0500, David Lechner wrote:
+> Rename adaq_internal_ref_only to internal_ref_only_adaq. There are non-
+> ADAQ chips in the family that are also internal reference only, so the
+> adaq_ prefix is misleading.
+>=20
+> Signed-off-by: David Lechner <dlechner@baylibre.com>
+> ---
 
-Builds, boots and works on my 2-socket Ivy Bridge Xeon E5-2697 v2 server. No dmesg 
-oddities or regressions found.
+Reviewed-by: Nuno S=C3=A1 <nuno.sa@analog.com>
 
-Tested-by: Peter Schneider <pschneider1968@googlemail.com>
+> =C2=A0drivers/iio/adc/ad7380.c | 10 +++++-----
+> =C2=A01 file changed, 5 insertions(+), 5 deletions(-)
+>=20
+> diff --git a/drivers/iio/adc/ad7380.c b/drivers/iio/adc/ad7380.c
+> index
+> 4fcb49fdf56639784098f0147a9faef8dcb6b0f6..18ed07275be8e031e54f3595f70afe4=
+7514084cd
+> 100644
+> --- a/drivers/iio/adc/ad7380.c
+> +++ b/drivers/iio/adc/ad7380.c
+> @@ -119,7 +119,7 @@ struct ad7380_chip_info {
+> =C2=A0	const char * const *supplies;
+> =C2=A0	unsigned int num_supplies;
+> =C2=A0	bool external_ref_only;
+> -	bool adaq_internal_ref_only;
+> +	bool internal_ref_only;
+> =C2=A0	const char * const *vcm_supplies;
+> =C2=A0	unsigned int num_vcm_supplies;
+> =C2=A0	const unsigned long *available_scan_masks;
+> @@ -806,7 +806,7 @@ static const struct ad7380_chip_info adaq4370_4_chip_=
+info =3D {
+> =C2=A0	.num_simult_channels =3D 4,
+> =C2=A0	.supplies =3D adaq4380_supplies,
+> =C2=A0	.num_supplies =3D ARRAY_SIZE(adaq4380_supplies),
+> -	.adaq_internal_ref_only =3D true,
+> +	.internal_ref_only =3D true,
+> =C2=A0	.has_hardware_gain =3D true,
+> =C2=A0	.available_scan_masks =3D ad7380_4_channel_scan_masks,
+> =C2=A0	.timing_specs =3D &ad7380_4_timing,
+> @@ -821,7 +821,7 @@ static const struct ad7380_chip_info adaq4380_4_chip_=
+info =3D {
+> =C2=A0	.num_simult_channels =3D 4,
+> =C2=A0	.supplies =3D adaq4380_supplies,
+> =C2=A0	.num_supplies =3D ARRAY_SIZE(adaq4380_supplies),
+> -	.adaq_internal_ref_only =3D true,
+> +	.internal_ref_only =3D true,
+> =C2=A0	.has_hardware_gain =3D true,
+> =C2=A0	.available_scan_masks =3D ad7380_4_channel_scan_masks,
+> =C2=A0	.timing_specs =3D &ad7380_4_timing,
+> @@ -836,7 +836,7 @@ static const struct ad7380_chip_info adaq4381_4_chip_=
+info =3D {
+> =C2=A0	.num_simult_channels =3D 4,
+> =C2=A0	.supplies =3D adaq4380_supplies,
+> =C2=A0	.num_supplies =3D ARRAY_SIZE(adaq4380_supplies),
+> -	.adaq_internal_ref_only =3D true,
+> +	.internal_ref_only =3D true,
+> =C2=A0	.has_hardware_gain =3D true,
+> =C2=A0	.available_scan_masks =3D ad7380_4_channel_scan_masks,
+> =C2=A0	.timing_specs =3D &ad7380_4_timing,
+> @@ -1847,7 +1847,7 @@ static int ad7380_probe(struct spi_device *spi)
+> =C2=A0				=C2=A0=C2=A0=C2=A0=C2=A0 "Failed to enable power supplies\n");
+> =C2=A0	fsleep(T_POWERUP_US);
+> =C2=A0
+> -	if (st->chip_info->adaq_internal_ref_only) {
+> +	if (st->chip_info->internal_ref_only) {
+> =C2=A0		/*
+> =C2=A0		 * ADAQ chips use fixed internal reference but still
+> =C2=A0		 * require a specific reference supply to power it.
+>=20
 
-
-Beste Grüße,
-Peter Schneider
-
--- 
-Climb the mountain not to plant your flag, but to embrace the challenge,
-enjoy the air and behold the view. Climb it so you can see the world,
-not so the world can see you.                    -- David McCullough Jr.
-
-OpenPGP:  0xA3828BD796CCE11A8CADE8866E3A92C92C3FF244
-Download: https://www.peters-netzplatz.de/download/pschneider1968_pub.asc
-https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@googlemail.com
-https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@gmail.com
