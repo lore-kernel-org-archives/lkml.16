@@ -1,92 +1,61 @@
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B14423ED68
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 07:06:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47C484315F
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 07:06:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743663983; cv=none; b=Hk9aUK9FXI6izpXdmF4bv74Vj+nbp5YIiwM5tneASUJzOyuVPr/y/4Ip4rTKGSKc+eJSZas0Ifb/6hjSEiNAYlkPDZSSqgoBK5f2Ds5jzUpRGGuhF9txt+0QJF/r5bTDwNbBqTbjc8a4LPI5iJ0FW1yd+u8X/QDDwhJVzQhI9nk=
+	t=1743663993; cv=none; b=c/ga5xqO/OAmOpfFWXeuezH7pwl5SvdzpbBjn8xaQhJYXGm+gg3Z2qF+LYM10LFT/i/QEk5JMz5r2EOD+QHW+jKJF9HU+pbcNDPsmbzMeWry3pqZEjQFeFun3/IFahfKOJgmnKVnov/vRlGqxPlFJYepO8IlsZJb4AgzZlM1aqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743663983; c=relaxed/simple;
-	bh=msW4OHTqeQD5/fI6ollGmj6Zfe1iTA9RBCs+z2/02qQ=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=AjeK/usverPLMNeQdPSwz1LsUb4LSjZ3j4zzfxntRWNwFikg+tyh9puKZHFuQJsfp+jv0NXguw2L8nB01D7tDbwqCN+AwmObnhWwCZ15OxPUXWq3FjyEjEXesqFuNoke21AImartZKaulddAzURqgPpVIgJJXsV/d6X3Z2XTfn4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
+	s=arc-20240116; t=1743663993; c=relaxed/simple;
+	bh=fknTa8a8xDipkCYrePSsQTLagTPC4FM5VAA/rgPzynU=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=LQiMCN1RVVE4/hFzHgpmYQ9msF06j4p/XawtkNizXJlDjBOQN1c98dxe6LPN4Gg+gLox3iRZfY/ck5iZ8IEJOCyNWamRJylfUgtIk1JhQoacOlsk/1pZbV4nw9I/emp1vA4be5sv6ZZFL6UJJCczBMyhhll0j1024crIfMTI6gM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-849d26dd331so184495239f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 00:06:22 -0700 (PDT)
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3d585d76b79so6473445ab.1
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 00:06:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743663981; x=1744268781;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=7dubI7A+8/AJKZ0segSg1WSFAtvONQ9Ynr61IT2Yuew=;
-        b=qYea3HB6nD03LzzSUOFjMiiaacRKvR8sNvkSn8YulTBtdRI13LmMQ1ZB5c8euSe2eB
-         yU+81OUngSjLjuq34ZFwqQfv0tUU/OkQSy15odjY3q8fkTYZwP3OXKJlHwhWl/SGxu1E
-         WeUd9FwWBZ7uAixTX5bhIl9+/WOaZR6yomZ6OHBfyg+urUfzZiTamUkgWUETBXmUrB9D
-         aUATz5mtAti/PDlnl1Mwdqsq9h94FDITjuZnRIm/2gHvvmc931MepZNSNrhItadsrSWn
-         O3e9CfQQUaIRzWG1MDyHQ2v7WL3Sz4Ul5ikrsG7xQMTSL6pH5laHXdbKLS9CoQyEp0X1
-         9VxQ==
-X-Gm-Message-State: AOJu0YzT/tKPGwSn2v5Qzb6ARTDB32tCHj4M1nU1CXhU1Ko4klysZjvC
-	V0Q94zXa6BXyc/A0KP4g6bxMP7pGeOUlZc06qcH5n2JejHWuVo4sUUSS/3p8gTESIXaPvoGGcgI
-	8PeA4AlCRq3PFeNtaL148QebDQvHNc4nBkxhDr2e23z/PAnfPIyi9flc=
-X-Google-Smtp-Source: AGHT+IGCkEE4ER7Pe49pqx25rRb5anZsM1vJ2b3g7aVmetiRzKNlw0V9jaes2+k3d+BZAiHc3czOgy6irU/HdVYtcaCxZpYCL2z0
+        d=1e100.net; s=20230601; t=1743663991; x=1744268791;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6QhX9JfzOe0jyuZyP+4YKY9K8LKwJP5t7uxyVlFjHVM=;
+        b=d0oPeHgvV604N/KLiSIqM8NBbJAFE8ptCJXy2C+o133p7KH8qjYfQ1twwuGk8EqUls
+         FTyLcncumRFtvHgodgWuPXaFtZ4nQm7KPYPfk0xRu13HpYM6Uc9FbrL9Vya4Aj5tg2ro
+         LZ3cJusMmiXx195k4nnV2MdM+h8FldY4soU31741Hp0ILLKEXnm2gglQqvHdTYyj9Hsd
+         BNq2+aE/HaNHq1Ml/YA/rP7mmxrqDFB9qKk9KpNIvGp9acnfvtoez8Jofil+7Xo6u510
+         XHbNgMfi2sSpqpX6exMFQy9wZmXxLbv8+pRnee/uWJiO9iDo1qF+DKSsAJhJfccVR21S
+         rMbA==
+X-Gm-Message-State: AOJu0YzeY4TUf0rxtAkcwEwGjF+taJCx2YV+Gh6GHEYeHYWimDR4Aewz
+	Oc25n5fYwvKNOxIccsDdhzVachEmZMDWm6IY3p+VGKjM9PERfPDOBFENOMMvb+F7S8d0GdyjTLS
+	8zb8BnXbI90JnvVC/bI4aKaXsWp4j1MBh5ozzs5DxOD48hPJf2lutm6M=
+X-Google-Smtp-Source: AGHT+IEP0mPe4iAA5X6ntmP+T/BFWBcXWNSDrT7/+Ve6b5oX2lrJFWKEF6MGc53/WOYwU+BXWehTvrhHkC3USAzR7AQmHsxpFoX9
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:98c:b0:3d0:26a5:b2c with SMTP id
- e9e14a558f8ab-3d6dcb9deb9mr18124105ab.8.1743663981582; Thu, 03 Apr 2025
- 00:06:21 -0700 (PDT)
-Date: Thu, 03 Apr 2025 00:06:21 -0700
+X-Received: by 2002:a05:6e02:1848:b0:3d0:443d:a5c3 with SMTP id
+ e9e14a558f8ab-3d6d546a3e6mr61564355ab.3.1743663991426; Thu, 03 Apr 2025
+ 00:06:31 -0700 (PDT)
+Date: Thu, 03 Apr 2025 00:06:31 -0700
+In-Reply-To: <67e919c0.050a0220.1547ec.00a1.GAE@google.com>
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67ee336d.050a0220.9040b.0150.GAE@google.com>
-Subject: [syzbot] Monthly rdma report (Apr 2025)
-From: syzbot <syzbot+list35c2a04b7be876f280f0@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
+Message-ID: <67ee3377.050a0220.9040b.0151.GAE@google.com>
+Subject: Re: [syzbot] 
+From: syzbot <syzbot+8423775fd52d4cc7e5c9@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 
-Hello rdma maintainers/developers,
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
 
-This is a 31-day syzbot report for the rdma subsystem.
-All related reports/information can be found at:
-https://syzkaller.appspot.com/upstream/s/rdma
+***
 
-During the period, 0 new issues were detected and 1 were fixed.
-In total, 18 issues are still open and 63 have already been fixed.
+Subject: 
+Author: nogikh@google.com
 
-Some of the still happening issues:
-
-Ref Crashes Repro Title
-<1> 25924   Yes   possible deadlock in smc_switch_to_fallback (2)
-                  https://syzkaller.appspot.com/bug?extid=bef85a6996d1737c1a2f
-<2> 356     No    INFO: task hung in rdma_dev_change_netns
-                  https://syzkaller.appspot.com/bug?extid=73c5eab674c7e1e7012e
-<3> 259     Yes   general protection fault in smc_diag_dump_proto
-                  https://syzkaller.appspot.com/bug?extid=f69bfae0a4eb29976e44
-<4> 199     Yes   WARNING in rxe_pool_cleanup
-                  https://syzkaller.appspot.com/bug?extid=221e213bf17f17e0d6cd
-<5> 91      Yes   possible deadlock in sock_set_reuseaddr
-                  https://syzkaller.appspot.com/bug?extid=af5682e4f50cd6bce838
-<6> 70      No    INFO: task hung in add_one_compat_dev (3)
-                  https://syzkaller.appspot.com/bug?extid=6dee15fdb0606ef7b6ba
-<7> 13      Yes   KASAN: null-ptr-deref Read in smc_tcp_syn_recv_sock
-                  https://syzkaller.appspot.com/bug?extid=827ae2bfb3a3529333e9
-<8> 13      No    possible deadlock in smc_shutdown (2)
-                  https://syzkaller.appspot.com/bug?extid=3667d719a932ebc28119
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-To disable reminders for individual bugs, reply with the following command:
-#syz set <Ref> no-reminders
-
-To change bug's subsystems, reply with:
-#syz set <Ref> subsystems: new-subsystem
-
-You may send multiple commands in a single email message.
+#syz invalid
