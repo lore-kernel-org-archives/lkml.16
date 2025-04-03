@@ -1,302 +1,274 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8842124113C;
-	Thu,  3 Apr 2025 08:29:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA1CB2F4A;
+	Thu,  3 Apr 2025 08:31:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743668982; cv=none; b=KOmNw5idOfRs5omQ0StuXksQXrUq/Iet+py5j+1jMZYph6ZVgyjPFQI4NtH0a5+PacPSa0GSR1zh4oKjF/4cfj9QZoAvAlH1mwbGbgKmK4+zHogzrrXEUGJUyqBMy9uEc/EeCeGUjir/VJVN6PucuOnT/ItBUfuHAxi2Kt+ffCA=
+	t=1743669070; cv=none; b=dCpwutOuWwkQyFQhpamsQIj/5u+w4t0l0sKaJD7oJTwnwh1SANyQDWYf/R4e6Gsl+o91jTRFChu0VT+iF5Km3Y7sZkSkBoshsBZxCaNVIRevhjxji92UAuYtMk2x9VXMhIk7Pgr1/ibcM/TYqK+sI6fdRu4oWO9ThI2b7XIh43M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743668982; c=relaxed/simple;
-	bh=uGsMOr+hzaR5Ta4J6v62aPI6wt3KTWrKF9LmFBOrikw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aK/lXLs6KGrvdLf7S82Fiv85QFAkZKDTsBUKd5WUL5J96ukJIgY8ZmpOw0upTuQIuwFzbfUsJSJQvevpNdnf+psTs/yX47Wb/ckyCQclAeVD61O9uOoZkZn7UdsO889yCi+63RVwie7y8qBj9qnSRkZjOb8OjrYdpg33VOQXSKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TQ4QXInb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743669070; c=relaxed/simple;
+	bh=xxy4IB9V+YReFFQ75CIvILVkd625+dHYGZ3SClcB5ZA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=KIqlRqc4I3d/JzzmtBgc1n+xflBMXJlxxtsuT1XAAnqXyT020WtAaZxWVUNapd9dIkOS/+kgKCHh1dJMBLwGkc/3W9NSgEbMjhM+0JyoNRzzwuQ9ivjEvt2YKoGy/F80ti67+f2I7vvcAbwyd3IS0qVf3WT3BSDY4jkwm9qRT9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=qI/xXcjl; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=MFA2khVH reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TQ4QXInb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90A4EC4CEE3;
-	Thu,  3 Apr 2025 08:29:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743668982;
-	bh=uGsMOr+hzaR5Ta4J6v62aPI6wt3KTWrKF9LmFBOrikw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TQ4QXInb9muw5uYMD3cJV/6tfDv2t6loaKZG8XmHF7ggydxaGWtjsAIRbKrTB+8+u
-	 4swcoFzi50t8Hi4vdgOr8NALLns6CR5bIamLzc8FfIdydlGgWKfxxsGTfzJM7GEfdd
-	 N1SGqw8PIj6nDUUirop29jvNqrpMNGBXu+d1RsD6bAJHor5ncGK82tUd6hUEfvobIn
-	 gKeRl/nN5cF2Lnw7eEZUkrWZyPbk4JRqrHUji3rlryvJowjTWgfyjWlMqw4byYNFpg
-	 Svvng2DNG65ecsR+HvdRBNjd+cxZXJbccS67LS2gbAFYiLMBHzuEahYtYjdYsD2Lg5
-	 ponUKb0iYo5MA==
-Date: Thu, 3 Apr 2025 10:29:37 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Leon Romanovsky <leon@kernel.org>
-Cc: pr-tracker-bot@kernel.org, 
-	Linus Torvalds <torvalds@linux-foundation.org>, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [GIT PULL] vfs mount
-Message-ID: <20250403-bankintern-unsympathisch-03272ab45229@brauner>
-References: <20250322-vfs-mount-b08c842965f4@brauner>
- <174285005920.4171303.15547772549481189907.pr-tracker-bot@kernel.org>
- <20250401170715.GA112019@unreal>
+	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="qI/xXcjl";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="MFA2khVH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1743669067; x=1775205067;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=z30Hkz7WP91LKSi1mbcYaIhwFiizr5KX8hW+28FpYjM=;
+  b=qI/xXcjl7R/DWnLqs99s66PnF5zwSJZyt+i7A70D2a3zJNhur1MBrEXa
+   WaMH3cRvyTXdUhspLmWYWWAuBf+6jokK5AeYaao/DqGAaL30tYHCPq8Bc
+   TL49OvC0Qf1tPU93DXrbl96MiTvmGA/NIXSk/yFs6xefrQjcAQ8YB/OAE
+   fgfb9p+sSUVzvQUO7aeruvwhCWteoZYHuo7LdS/Qq9XzJDpmhyWF8nVNa
+   ysHevItix14BSmKKXXnKfM4oMzKxLsdh2fFbxURR/Ch/AplNy5EubB6Aw
+   U1NDVkMOcfVOsVSwTzIcELJR0f5q0BhTKBNMKkjJ2Imb6gmyUh6ZDMyW/
+   g==;
+X-CSE-ConnectionGUID: vMhXcl4PRBKz0akpcwaElA==
+X-CSE-MsgGUID: bvHI11ApQxCSbxlZcR24Gg==
+X-IronPort-AV: E=Sophos;i="6.15,184,1739833200"; 
+   d="scan'208";a="43316639"
+Received: from vmailcow01.tq-net.de ([10.150.86.48])
+  by mx1.tq-group.com with ESMTP; 03 Apr 2025 10:30:57 +0200
+X-CheckPoint: {67EE4741-18-903EAEAC-E04C76C8}
+X-MAIL-CPID: 08543546ED19CD2066CD1002AB8F1EFC_5
+X-Control-Analysis: str=0001.0A006398.67EE4741.0034,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id CB29C160A4C;
+	Thu,  3 Apr 2025 10:30:51 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
+	s=dkim; t=1743669052;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=z30Hkz7WP91LKSi1mbcYaIhwFiizr5KX8hW+28FpYjM=;
+	b=MFA2khVHsO9qV5hdk9cd0/pcVX682KD0GtS0M6VN3AxVm9+XSFCVn04K24B8iQNljR9cJj
+	G67QnYXLq+84Y7oOpvWOsPipUVPHdp6Z2fjxr5xPpEozOo/8I5Ag81ioDDdizDu2NzZvck
+	QStRpM0Dq9q5sBTSEaWb3rOfX0vqk7o2vSVlF4exzCjmQLiKLeVuSkG9d7hstguUx0XOHt
+	27DIa7zuLPkP2LTN2IP7v77YQ7Z7SgMNoB7bZ3wDaWBoeC0qJBACV+ReT+gfJ6sPuUVIP/
+	8P3cqLxozVoRjdkU/gq8cH8FY/oJ3OZkkXRoxvbeXvkQ9jwSMNSnBhypeVd0zQ==
+From: Alexander Stein <alexander.stein@ew.tq-group.com>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
+ Daniel Baluta <daniel.baluta@nxp.com>, Shengjiu Wang <shengjiu.wang@nxp.com>,
+ Frank Li <Frank.li@nxp.com>, Marco Felsch <m.felsch@pengutronix.de>,
+ Marc Kleine-Budde <mkl@pengutronix.de>, linux-arm-kernel@lists.infradead.org
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>,
+ devicetree@vger.kernel.org, imx@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Laurentiu Mihalcea <laurentiumihalcea111@gmail.com>
+Subject: Re: [PATCH v4 3/6] bus: add driver for IMX AIPSTZ bridge
+Date: Thu, 03 Apr 2025 10:30:51 +0200
+Message-ID: <12639974.O9o76ZdvQC@steina-w>
+Organization: TQ-Systems GmbH
+In-Reply-To: <20250401154404.45932-4-laurentiumihalcea111@gmail.com>
+References:
+ <20250401154404.45932-1-laurentiumihalcea111@gmail.com>
+ <20250401154404.45932-4-laurentiumihalcea111@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250401170715.GA112019@unreal>
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Tue, Apr 01, 2025 at 08:07:15PM +0300, Leon Romanovsky wrote:
-> On Mon, Mar 24, 2025 at 09:00:59PM +0000, pr-tracker-bot@kernel.org wrote:
-> > The pull request you sent on Sat, 22 Mar 2025 11:13:18 +0100:
-> > 
-> > > git@gitolite.kernel.org:pub/scm/linux/kernel/git/vfs/vfs tags/vfs-6.15-rc1.mount
-> > 
-> > has been merged into torvalds/linux.git:
-> > https://git.kernel.org/torvalds/c/fd101da676362aaa051b4f5d8a941bd308603041
-> 
-> I didn't bisect, but this PR looks like the most relevant candidate.
-> The latest Linus's master generates the following slab-use-after-free:
+Hi,
 
-Sorry, did just see this today. I'll take a look now.
+Am Dienstag, 1. April 2025, 17:44:01 CEST schrieb Laurentiu Mihalcea:
+> From: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
+>=20
+> The secure AHB to IP Slave (AIPSTZ) bus bridge provides access control
+> configurations meant to restrict access to certain peripherals.
+> Some of the configurations include:
+>=20
+> 	1) Marking masters as trusted for R/W. Based on this
+> 	(and the configuration of the accessed peripheral), the bridge
+> 	may choose to abort the R/W transactions issued by certain
+> 	masters.
+>=20
+> 	2) Allowing/disallowing write accesses to peripherals.
+>=20
+> Add driver for this IP. Since there's currently no framework for
+> access controllers (and since there's currently no need for having
+> flexibility w.r.t the configurations) all this driver does is it
+> applies a relaxed, "default" configuration, in which all masters
+> are trusted for R/W.
+>=20
+> Note that some instances of this IP (e.g: AIPSTZ5 on i.MX8MP) may be tied
+> to a power domain and may lose their configuration when the domain is
+> powered off. This is why the configuration has to be restored when the
+> domain is powered on.
+>=20
+> Co-developed-by: Daniel Baluta <daniel.baluta@nxp.com>
+> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+> Signed-off-by: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
+> ---
+>  drivers/bus/Kconfig      |  6 +++
+>  drivers/bus/Makefile     |  1 +
+>  drivers/bus/imx-aipstz.c | 92 ++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 99 insertions(+)
+>  create mode 100644 drivers/bus/imx-aipstz.c
+>=20
+> diff --git a/drivers/bus/Kconfig b/drivers/bus/Kconfig
+> index ff669a8ccad9..fe7600283e70 100644
+> --- a/drivers/bus/Kconfig
+> +++ b/drivers/bus/Kconfig
+> @@ -87,6 +87,12 @@ config HISILICON_LPC
+>  	  Driver to enable I/O access to devices attached to the Low Pin
+>  	  Count bus on the HiSilicon Hip06/7 SoC.
+> =20
+> +config IMX_AIPSTZ
+> +	tristate "Support for IMX Secure AHB to IP Slave bus (AIPSTZ) bridge"
+> +	depends on ARCH_MXC
+> +	help
+> +	  Enable support for IMX AIPSTZ bridge.
+> +
+>  config IMX_WEIM
+>  	bool "Freescale EIM DRIVER"
+>  	depends on ARCH_MXC || COMPILE_TEST
+> diff --git a/drivers/bus/Makefile b/drivers/bus/Makefile
+> index cddd4984d6af..8e693fe8a03a 100644
+> --- a/drivers/bus/Makefile
+> +++ b/drivers/bus/Makefile
+> @@ -15,6 +15,7 @@ obj-$(CONFIG_FSL_MC_BUS)	+=3D fsl-mc/
+> =20
+>  obj-$(CONFIG_BT1_APB)		+=3D bt1-apb.o
+>  obj-$(CONFIG_BT1_AXI)		+=3D bt1-axi.o
+> +obj-$(CONFIG_IMX_AIPSTZ)	+=3D imx-aipstz.o
+>  obj-$(CONFIG_IMX_WEIM)		+=3D imx-weim.o
+>  obj-$(CONFIG_INTEL_IXP4XX_EB)	+=3D intel-ixp4xx-eb.o
+>  obj-$(CONFIG_MIPS_CDMM)		+=3D mips_cdmm.o
+> diff --git a/drivers/bus/imx-aipstz.c b/drivers/bus/imx-aipstz.c
+> new file mode 100644
+> index 000000000000..44db40dae71b
+> --- /dev/null
+> +++ b/drivers/bus/imx-aipstz.c
+> @@ -0,0 +1,92 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright 2025 NXP
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pm_runtime.h>
+> +#include <linux/regmap.h>
+> +
+> +#define IMX_AIPSTZ_MPR0 0x0
+> +
+> +struct imx_aipstz_config {
+> +	u32 mpr0;
+> +};
+> +
+> +static void imx_aipstz_apply_default(void __iomem *base,
+> +				     const struct imx_aipstz_config *default_cfg)
+> +{
+> +	writel(default_cfg->mpr0, base + IMX_AIPSTZ_MPR0);
+> +}
+> +
+> +static int imx_aipstz_probe(struct platform_device *pdev)
+> +{
+> +	const struct imx_aipstz_config *default_cfg;
+> +	void __iomem *base;
+> +
+> +	base =3D devm_platform_get_and_ioremap_resource(pdev, 0, NULL);
+> +	if (IS_ERR(base))
+> +		return dev_err_probe(&pdev->dev, -ENOMEM,
+> +				     "failed to get/ioremap AC memory\n");
+> +
+> +	default_cfg =3D of_device_get_match_data(&pdev->dev);
 
-> 
->  [ 1845.404658] ==================================================================
->  [ 1845.405460] BUG: KASAN: slab-use-after-free in clone_private_mount+0x309/0x390
->  [ 1845.406205] Read of size 8 at addr ffff8881507b5ab0 by task dockerd/8697
->  [ 1845.406847]
->  [ 1845.407081] CPU: 5 UID: 0 PID: 8697 Comm: dockerd Not tainted 6.14.0master_fbece6d #1 NONE
->  [ 1845.407086] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.13.0-0-gf21b5a4aeb02-prebuilt.qemu.org 04/01/2014
->  [ 1845.407097] Call Trace:
->  [ 1845.407102]  <TASK>
->  [ 1845.407104]  dump_stack_lvl+0x69/0xa0
->  [ 1845.407114]  print_report+0x156/0x523
->  [ 1845.407120]  ? __virt_addr_valid+0x1de/0x3c0
->  [ 1845.407124]  ? clone_private_mount+0x309/0x390
->  [ 1845.407128]  kasan_report+0xc1/0xf0
->  [ 1845.407134]  ? clone_private_mount+0x309/0x390
->  [ 1845.407138]  clone_private_mount+0x309/0x390
->  [ 1845.407144]  ovl_fill_super+0x2965/0x59e0 [overlay]
->  [ 1845.407165]  ? ovl_workdir_create+0x900/0x900 [overlay]
->  [ 1845.407177]  ? wait_for_completion_io_timeout+0x20/0x20
->  [ 1845.407182]  ? lockdep_init_map_type+0x58/0x220
->  [ 1845.407186]  ? lockdep_init_map_type+0x58/0x220
->  [ 1845.407189]  ? shrinker_register+0x177/0x200
->  [ 1845.407194]  ? sget_fc+0x449/0xb30
->  [ 1845.407199]  ? ovl_workdir_create+0x900/0x900 [overlay]
->  [ 1845.407211]  ? get_tree_nodev+0xa5/0x130
->  [ 1845.407214]  get_tree_nodev+0xa5/0x130
->  [ 1845.407218]  ? cap_capable+0xd0/0x320
->  [ 1845.407223]  vfs_get_tree+0x83/0x2e0
->  [ 1845.407227]  ? ns_capable+0x55/0xb0
->  [ 1845.407232]  path_mount+0x891/0x1aa0
->  [ 1845.407237]  ? finish_automount+0x860/0x860
->  [ 1845.407240]  ? kmem_cache_free+0x14c/0x4f0
->  [ 1845.407245]  ? user_path_at+0x3d/0x50
->  [ 1845.407250]  __x64_sys_mount+0x2d4/0x3a0
->  [ 1845.407254]  ? path_mount+0x1aa0/0x1aa0
->  [ 1845.407259]  do_syscall_64+0x6d/0x140
->  [ 1845.407263]  entry_SYSCALL_64_after_hwframe+0x4b/0x53
->  [ 1845.407267] RIP: 0033:0x55e3487f1fea
->  [ 1845.407274] Code: e8 1b 96 fa ff 48 8b 7c 24 10 48 8b 74 24 18 48 8b 54 24 20 4c 8b 54 24 28 4c 8b 44 24 30 4c 8b 4c 24 38 48 8b 44 24 08 0f 05 <48> 3d 01 f0 ff ff 76 20 48 c7 44 24 40 ff ff ff ff 48 c7 44 24 48
->  [ 1845.407278] RSP: 002b:000000c000b563b8 EFLAGS: 00000212 ORIG_RAX: 00000000000000a5
->  [ 1845.407282] RAX: ffffffffffffffda RBX: 000000c00006c000 RCX: 000055e3487f1fea
->  [ 1845.407285] RDX: 000000c0012cf7d8 RSI: 000000c0012616c0 RDI: 000000c0012cf7d0
->  [ 1845.407287] RBP: 000000c000b56458 R08: 000000c0004fa600 R09: 0000000000000000
->  [ 1845.407289] R10: 0000000000000000 R11: 0000000000000212 R12: 000000c0012cf7d0
->  [ 1845.407291] R13: 0000000000000000 R14: 000000c00098b6c0 R15: ffffffffffffffff
->  [ 1845.407296]  </TASK>
->  [ 1845.407297]
->  [ 1845.431635] Allocated by task 17044:
->  [ 1845.432033]  kasan_save_stack+0x1e/0x40
->  [ 1845.432463]  kasan_save_track+0x10/0x30
->  [ 1845.432882]  __kasan_slab_alloc+0x62/0x70
->  [ 1845.433308]  kmem_cache_alloc_noprof+0x1a0/0x4a0
->  [ 1845.433781]  alloc_vfsmnt+0x23/0x6c0
->  [ 1845.434195]  vfs_create_mount+0x82/0x4a0
->  [ 1845.434623]  path_mount+0x939/0x1aa0
->  [ 1845.435018]  __x64_sys_mount+0x2d4/0x3a0
->  [ 1845.435440]  do_syscall_64+0x6d/0x140
->  [ 1845.435842]  entry_SYSCALL_64_after_hwframe+0x4b/0x53
->  [ 1845.436355]
->  [ 1845.436601] Freed by task 0:
->  [ 1845.436945]  kasan_save_stack+0x1e/0x40
->  [ 1845.437354]  kasan_save_track+0x10/0x30
->  [ 1845.437770]  kasan_save_free_info+0x37/0x60
->  [ 1845.438217]  __kasan_slab_free+0x33/0x40
->  [ 1845.438646]  kmem_cache_free+0x14c/0x4f0
->  [ 1845.439068]  rcu_core+0x605/0x1d50
->  [ 1845.439451]  handle_softirqs+0x192/0x810
->  [ 1845.439880]  irq_exit_rcu+0x106/0x190
->  [ 1845.440280]  sysvec_apic_timer_interrupt+0x7c/0xb0
->  [ 1845.440785]  asm_sysvec_apic_timer_interrupt+0x16/0x20
->  [ 1845.441300]
->  [ 1845.441544] Last potentially related work creation:
->  [ 1845.442048]  kasan_save_stack+0x1e/0x40
->  [ 1845.442465]  kasan_record_aux_stack+0x97/0xa0
->  [ 1845.442921]  __call_rcu_common.constprop.0+0x6d/0xb40
->  [ 1845.443437]  task_work_run+0x111/0x1f0
->  [ 1845.443851]  syscall_exit_to_user_mode+0x1df/0x1f0
->  [ 1845.444337]  do_syscall_64+0x79/0x140
->  [ 1845.444758]  entry_SYSCALL_64_after_hwframe+0x4b/0x53
->  [ 1845.445272]
->  [ 1845.445505] Second to last potentially related work creation:
->  [ 1845.446078]  kasan_save_stack+0x1e/0x40
->  [ 1845.446494]  kasan_record_aux_stack+0x97/0xa0
->  [ 1845.446947]  task_work_add+0x178/0x250
->  [ 1845.447356]  mntput_no_expire+0x4fc/0x9f0
->  [ 1845.447789]  path_umount+0x4ed/0x10d0
->  [ 1845.448190]  __x64_sys_umount+0xfb/0x120
->  [ 1845.448617]  do_syscall_64+0x6d/0x140
->  [ 1845.449016]  entry_SYSCALL_64_after_hwframe+0x4b/0x53
->  [ 1845.449529]
->  [ 1845.449766] The buggy address belongs to the object at ffff8881507b5a40
->  [ 1845.449766]  which belongs to the cache mnt_cache of size 368
->  [ 1845.450898] The buggy address is located 112 bytes inside of
->  [ 1845.450898]  freed 368-byte region [ffff8881507b5a40, ffff8881507b5bb0)
->  [ 1845.452009]
->  [ 1845.452250] The buggy address belongs to the physical page:
->  [ 1845.452808] page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x1507b4
->  [ 1845.453595] head: order:2 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
->  [ 1845.454363] anon flags: 0x200000000000040(head|node=0|zone=2)
->  [ 1845.454936] page_type: f5(slab)
->  [ 1845.455300] raw: 0200000000000040 ffff8881009f5680 0000000000000000 dead000000000001
->  [ 1845.456077] raw: 0000000000000000 0000000080240024 00000000f5000000 0000000000000000
->  [ 1845.456857] head: 0200000000000040 ffff8881009f5680 0000000000000000 dead000000000001
->  [ 1845.457616] head: 0000000000000000 0000000080240024 00000000f5000000 0000000000000000
->  [ 1845.458399] head: 0200000000000002 ffffea000541ed01 ffffffffffffffff 0000000000000000
->  [ 1845.459169] head: 0000000000000004 0000000000000000 00000000ffffffff 0000000000000000
->  [ 1845.459945] page dumped because: kasan: bad access detected
->  [ 1845.460506]
->  [ 1845.460745] Memory state around the buggy address:
->  [ 1845.461228]  ffff8881507b5980: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fc fc
->  [ 1845.461963]  ffff8881507b5a00: fc fc fc fc fc fc fc fc fa fb fb fb fb fb fb fb
->  [ 1845.462759] >ffff8881507b5a80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->  [ 1845.463480]                                      ^
->  [ 1845.463968]  ffff8881507b5b00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->  [ 1845.464704]  ffff8881507b5b80: fb fb fb fb fb fb fc fc fc fc fc fc fc fc fc fc
->  [ 1845.465430] ==================================================================
->  [ 1845.466181] Disabling lock debugging due to kernel taint
->  [ 1845.466717] ==================================================================
->  [ 1845.467443] BUG: KASAN: slab-use-after-free in clone_private_mount+0x313/0x390
->  [ 1845.468192] Read of size 8 at addr ffff8881507b5a58 by task dockerd/8697
->  [ 1845.468837]
->  [ 1845.469072] CPU: 5 UID: 0 PID: 8697 Comm: dockerd Tainted: G    B               6.14.0master_fbece6d #1 NONE
->  [ 1845.469078] Tainted: [B]=BAD_PAGE
->  [ 1845.469079] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.13.0-0-gf21b5a4aeb02-prebuilt.qemu.org 04/01/2014
->  [ 1845.469082] Call Trace:
->  [ 1845.469084]  <TASK>
->  [ 1845.469086]  dump_stack_lvl+0x69/0xa0
->  [ 1845.469093]  print_report+0x156/0x523
->  [ 1845.469098]  ? __virt_addr_valid+0x1de/0x3c0
->  [ 1845.469103]  ? clone_private_mount+0x313/0x390
->  [ 1845.469107]  kasan_report+0xc1/0xf0
->  [ 1845.469112]  ? clone_private_mount+0x313/0x390
->  [ 1845.469116]  clone_private_mount+0x313/0x390
->  [ 1845.469121]  ovl_fill_super+0x2965/0x59e0 [overlay]
->  [ 1845.469140]  ? ovl_workdir_create+0x900/0x900 [overlay]
->  [ 1845.469152]  ? wait_for_completion_io_timeout+0x20/0x20
->  [ 1845.469157]  ? lockdep_init_map_type+0x58/0x220
->  [ 1845.469161]  ? lockdep_init_map_type+0x58/0x220
->  [ 1845.469164]  ? shrinker_register+0x177/0x200
->  [ 1845.469169]  ? sget_fc+0x449/0xb30
->  [ 1845.469174]  ? ovl_workdir_create+0x900/0x900 [overlay]
->  [ 1845.469185]  ? get_tree_nodev+0xa5/0x130
->  [ 1845.469189]  get_tree_nodev+0xa5/0x130
->  [ 1845.469192]  ? cap_capable+0xd0/0x320
->  [ 1845.469198]  vfs_get_tree+0x83/0x2e0
->  [ 1845.469202]  ? ns_capable+0x55/0xb0
->  [ 1845.469206]  path_mount+0x891/0x1aa0
->  [ 1845.469210]  ? finish_automount+0x860/0x860
->  [ 1845.469217]  ? kmem_cache_free+0x14c/0x4f0
->  [ 1845.469221]  ? user_path_at+0x3d/0x50
->  [ 1845.469227]  __x64_sys_mount+0x2d4/0x3a0
->  [ 1845.469231]  ? path_mount+0x1aa0/0x1aa0
->  [ 1845.469235]  do_syscall_64+0x6d/0x140
->  [ 1845.469239]  entry_SYSCALL_64_after_hwframe+0x4b/0x53
->  [ 1845.469242] RIP: 0033:0x55e3487f1fea
->  [ 1845.469246] Code: e8 1b 96 fa ff 48 8b 7c 24 10 48 8b 74 24 18 48 8b 54 24 20 4c 8b 54 24 28 4c 8b 44 24 30 4c 8b 4c 24 38 48 8b 44 24 08 0f 05 <48> 3d 01 f0 ff ff 76 20 48 c7 44 24 40 ff ff ff ff 48 c7 44 24 48
->  [ 1845.469249] RSP: 002b:000000c000b563b8 EFLAGS: 00000212 ORIG_RAX: 00000000000000a5
->  [ 1845.469253] RAX: ffffffffffffffda RBX: 000000c00006c000 RCX: 000055e3487f1fea
->  [ 1845.469256] RDX: 000000c0012cf7d8 RSI: 000000c0012616c0 RDI: 000000c0012cf7d0
->  [ 1845.469260] RBP: 000000c000b56458 R08: 000000c0004fa600 R09: 0000000000000000
->  [ 1845.469261] R10: 0000000000000000 R11: 0000000000000212 R12: 000000c0012cf7d0
->  [ 1845.469263] R13: 0000000000000000 R14: 000000c00098b6c0 R15: ffffffffffffffff
->  [ 1845.469268]  </TASK>
->  [ 1845.469269]
->  [ 1845.494368] Allocated by task 17044:
->  [ 1845.494768]  kasan_save_stack+0x1e/0x40
->  [ 1845.495185]  kasan_save_track+0x10/0x30
->  [ 1845.495594]  __kasan_slab_alloc+0x62/0x70
->  [ 1845.496024]  kmem_cache_alloc_noprof+0x1a0/0x4a0
->  [ 1845.496518]  alloc_vfsmnt+0x23/0x6c0
->  [ 1845.496911]  vfs_create_mount+0x82/0x4a0
->  [ 1845.497333]  path_mount+0x939/0x1aa0
->  [ 1845.497728]  __x64_sys_mount+0x2d4/0x3a0
->  [ 1845.498167]  do_syscall_64+0x6d/0x140
->  [ 1845.498563]  entry_SYSCALL_64_after_hwframe+0x4b/0x53
->  [ 1845.499064]
->  [ 1845.499295] Freed by task 0:
->  [ 1845.499636]  kasan_save_stack+0x1e/0x40
->  [ 1845.500052]  kasan_save_track+0x10/0x30
->  [ 1845.500494]  kasan_save_free_info+0x37/0x60
->  [ 1845.500934]  __kasan_slab_free+0x33/0x40
->  [ 1845.501355]  kmem_cache_free+0x14c/0x4f0
->  [ 1845.501774]  rcu_core+0x605/0x1d50
->  [ 1845.502162]  handle_softirqs+0x192/0x810
->  [ 1845.502587]  irq_exit_rcu+0x106/0x190
->  [ 1845.502995]  sysvec_apic_timer_interrupt+0x7c/0xb0
->  [ 1845.503487]  asm_sysvec_apic_timer_interrupt+0x16/0x20
->  [ 1845.504002]
->  [ 1845.504236] Last potentially related work creation:
->  [ 1845.504748]  kasan_save_stack+0x1e/0x40
->  [ 1845.505164]  kasan_record_aux_stack+0x97/0xa0
->  [ 1845.505621]  __call_rcu_common.constprop.0+0x6d/0xb40
->  [ 1845.506136]  task_work_run+0x111/0x1f0
->  [ 1845.506545]  syscall_exit_to_user_mode+0x1df/0x1f0
->  [ 1845.507038]  do_syscall_64+0x79/0x140
->  [ 1845.507439]  entry_SYSCALL_64_after_hwframe+0x4b/0x53
->  [ 1845.507949]
->  [ 1845.508187] Second to last potentially related work creation:
->  [ 1845.508760]  kasan_save_stack+0x1e/0x40
->  [ 1845.509175]  kasan_record_aux_stack+0x97/0xa0
->  [ 1845.509630]  task_work_add+0x178/0x250
->  [ 1845.510040]  mntput_no_expire+0x4fc/0x9f0
->  [ 1845.510468]  path_umount+0x4ed/0x10d0
->  [ 1845.510870]  __x64_sys_umount+0xfb/0x120
->  [ 1845.511298]  do_syscall_64+0x6d/0x140
->  [ 1845.511700]  entry_SYSCALL_64_after_hwframe+0x4b/0x53
->  [ 1845.512210]
->  [ 1845.512442] The buggy address belongs to the object at ffff8881507b5a40
->  [ 1845.512442]  which belongs to the cache mnt_cache of size 368
->  [ 1845.513553] The buggy address is located 24 bytes inside of
->  [ 1845.513553]  freed 368-byte region [ffff8881507b5a40, ffff8881507b5bb0)
->  [ 1845.514650]
->  [ 1845.514883] The buggy address belongs to the physical page:
->  [ 1845.515436] page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x1507b4
->  [ 1845.516221] head: order:2 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
->  [ 1845.516986] anon flags: 0x200000000000040(head|node=0|zone=2)
->  [ 1845.517549] page_type: f5(slab)
->  [ 1845.517912] raw: 0200000000000040 ffff8881009f5680 0000000000000000 dead000000000001
->  [ 1845.518684] raw: 0000000000000000 0000000080240024 00000000f5000000 0000000000000000
->  [ 1845.519445] head: 0200000000000040 ffff8881009f5680 0000000000000000 dead000000000001
->  [ 1845.520220] head: 0000000000000000 0000000080240024 00000000f5000000 0000000000000000
->  [ 1845.521006] head: 0200000000000002 ffffea000541ed01 ffffffffffffffff 0000000000000000
->  [ 1845.521812] head: 0000000000000004 0000000000000000 00000000ffffffff 0000000000000000
->  [ 1845.522581] page dumped because: kasan: bad access detected
->  [ 1845.523131]
->  [ 1845.523362] Memory state around the buggy address:
->  [ 1845.523851]  ffff8881507b5900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->  [ 1845.524588]  ffff8881507b5980: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fc fc
->  [ 1845.525321] >ffff8881507b5a00: fc fc fc fc fc fc fc fc fa fb fb fb fb fb fb fb
->  [ 1845.526059]                                                     ^
->  [ 1845.526651]  ffff8881507b5a80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->  [ 1845.527378]  ffff8881507b5b00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->  [ 1845.528095] ==================================================================
-> 
-> > 
-> > Thank you!
-> > 
-> > -- 
-> > Deet-doot-dot, I am a bot.
-> > https://korg.docs.kernel.org/prtracker.html
+Shouldn't you use the configuration setup by trusted firmware (TF-A)?
+
+> +
+> +	imx_aipstz_apply_default(base, default_cfg);
+> +
+> +	dev_set_drvdata(&pdev->dev, base);
+> +
+> +	pm_runtime_set_active(&pdev->dev);
+> +	devm_pm_runtime_enable(&pdev->dev);
+> +
+> +	return devm_of_platform_populate(&pdev->dev);
+> +}
+> +
+> +static int imx_aipstz_runtime_resume(struct device *dev)
+> +{
+> +	const struct imx_aipstz_config *default_cfg;
+> +	void __iomem *base;
+> +
+> +	base =3D dev_get_drvdata(dev);
+> +	default_cfg =3D of_device_get_match_data(dev);
+> +
+> +	/* restore potentially lost configuration during domain power-off */
+> +	imx_aipstz_apply_default(base, default_cfg);
+
+Shouldn't you store the configuration at suspend and restore that one
+instead of this fixed one?
+
+What's going to happen if trusted firmware decides that Cortex-A53 domain
+is not allowed to access AIPSTZ?
+
+Best regards
+Alexander
+
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct dev_pm_ops imx_aipstz_pm_ops =3D {
+> +	RUNTIME_PM_OPS(NULL, imx_aipstz_runtime_resume, NULL)
+> +	SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend, pm_runtime_force_resume)
+> +};
+> +
+> +/*
+> + * following configuration is equivalent to:
+> + *	masters 0-7 =3D> trusted for R/W + use AHB's HPROT[1] to det. privile=
+ge
+> + */
+> +static const struct imx_aipstz_config imx8mp_aipstz_default_cfg =3D {
+> +	.mpr0 =3D 0x77777777,
+> +};
+> +
+> +static const struct of_device_id imx_aipstz_of_ids[] =3D {
+> +	{ .compatible =3D "fsl,imx8mp-aipstz", .data =3D &imx8mp_aipstz_default=
+_cfg },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, imx_aipstz_of_ids);
+> +
+> +static struct platform_driver imx_aipstz_of_driver =3D {
+> +	.probe =3D imx_aipstz_probe,
+> +	.driver =3D {
+> +		.name =3D "imx-aipstz",
+> +		.of_match_table =3D imx_aipstz_of_ids,
+> +		.pm =3D pm_ptr(&imx_aipstz_pm_ops),
+> +	},
+> +};
+> +module_platform_driver(imx_aipstz_of_driver);
+> +
+> +MODULE_LICENSE("GPL");
+> +MODULE_DESCRIPTION("IMX secure AHB to IP Slave bus (AIPSTZ) bridge drive=
+r");
+> +MODULE_AUTHOR("Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>");
+>=20
+
+
+=2D-=20
+TQ-Systems GmbH | M=FChlstra=DFe 2, Gut Delling | 82229 Seefeld, Germany
+Amtsgericht M=FCnchen, HRB 105018
+Gesch=E4ftsf=FChrer: Detlef Schneider, R=FCdiger Stahl, Stefan Schneider
+http://www.tq-group.com/
+
+
