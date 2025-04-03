@@ -1,161 +1,202 @@
-Received: from webmail.webked.de (webmail.webked.de [159.69.203.94])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42F97210FB;
-	Thu,  3 Apr 2025 13:51:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.203.94
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD3C2210FB
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 13:54:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743688281; cv=none; b=RlVZ4fnQpx0tC0SBwJ26KYwxIqkpwomNsxluxa7XbrAnwIuGyA4nZlVyvRCnUtU62FKiH2y7OOB4/9w0aKLHnlyLFI9hdI2TGp63CooixDVqorcazrT6h3n0k66zo0BQfmHA2vfOh3r5hCQeK0iShJyn3r/d/kUKOSlWSaGTJbU=
+	t=1743688451; cv=none; b=Epz+Tzb0YlHQLKK5T+u6XbVoGc5QmKSFrRbG9UYBARZR90+9YicZ2Smck73rw9a1wbeuqPCKqvIY9/KcoMCnOonR8iAlMjox1zwhx8YhjDpXUX2vJ5oGxH2WukGW7Vvhfl7COWDHSyxpvB9yxQvBgBPyAW8HFrZmmrjZK/5mWGk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743688281; c=relaxed/simple;
-	bh=PYOLKGBNbojeHf2wSjQRj8K0nWnUXCKnUDzo2jhYuVE=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=S0rGXymQNKO6CBJgCcw2M2OrroLtF44F/g1ch6c9PwAYroHsuR5NQELO6Dv2rgi0GsDde3xpeIqGccbklqa7FxdOmJ2gIMtNWfSE5IBlzcqiEeHJH+z8Ol0044RUBdcRrToep7VxX1cCxXaQnMPGkBdRB7sMngy7Pw2WzaliBdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=webked.de; spf=pass smtp.mailfrom=webked.de; arc=none smtp.client-ip=159.69.203.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=webked.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=webked.de
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 465FC62BDA;
-	Thu,  3 Apr 2025 15:51:02 +0200 (CEST)
-Message-ID: <f8909f5bbc2532ea234cdaa8dbdb46a48249803f.camel@webked.de>
-Subject: Re: [REGRESSION] Massive virtio-net throughput drop in guest VM
- with Linux 6.8+
-From: Markus Fohrer <markus.fohrer@webked.de>
-To: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: virtualization@lists.linux-foundation.org, jasowang@redhat.com, 
-	davem@davemloft.net, edumazet@google.com, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Date: Thu, 03 Apr 2025 15:51:01 +0200
-In-Reply-To: <20250403090001-mutt-send-email-mst@kernel.org>
-References: <1d388413ab9cfd765cd2c5e05b5e69cdb2ec5a10.camel@webked.de>
-	 <20250403090001-mutt-send-email-mst@kernel.org>
-Organization: WEBKED IT Markus Fohrer
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.3-0ubuntu1 
+	s=arc-20240116; t=1743688451; c=relaxed/simple;
+	bh=jsleVz6RlPhJ6njd+OaCl7+w8VCP3UYS3mLnSoD4Uzs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FCUGUzwDPfY69tYxOmM0NHpL724Hos6XjJUlCo+IluScHNTnUkGmIxnGFyXKvMs4UAaQvY3SPAWZLx/RKTWRWFmab1JNGE6HXOiAeH3MkSg72lRnyQPM8TQ+89nDX74b30zpIbpzvmK7Z4guHZPFo/DE5IZcML5gZpXjPi7pELE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=KqL/VT8I; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="KqL/VT8I"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF8B9C4CEE3;
+	Thu,  3 Apr 2025 13:54:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1743688451;
+	bh=jsleVz6RlPhJ6njd+OaCl7+w8VCP3UYS3mLnSoD4Uzs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KqL/VT8I0lYk9J4E2tqA3+oJFzTrffNbdYAl1gSET15FD6yrwkvssnm/5SNk9tJDx
+	 lHaPIsmnaFhlqJR/7ohgDqGKDLPX6/0RBq3NM8NXNVtAMsBWadQ43Ai+LC83T9DQPe
+	 xUOdC3f9ZfU4z3HkD0D3PGpqusxgm/wVdrduZ1IA=
+Date: Thu, 3 Apr 2025 14:52:43 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 00/13] nvmem: patches (set 1) for 6.15
+Message-ID: <2025040347-isolating-eastcoast-bfea@gregkh>
+References: <20250309145703.12974-1-srinivas.kandagatla@linaro.org>
+ <2025040143-espionage-poison-2345@gregkh>
+ <47a3a851-f737-4772-87c6-98613347435c@linaro.org>
+ <2025040230-showoff-spray-ac83@gregkh>
+ <283ac88b-c8d4-47c8-9ff7-935770eca566@linaro.org>
+ <b6e7abf3-b263-410a-8f4c-eb9a8e2efa2b@oss.qualcomm.com>
+ <e8c91706-1a94-4e3d-b2a9-9d670021bbc8@linaro.org>
+ <CAO9ioeVYYy-10ZBmNLMzZK2+mZ5mKf_ZtGwRVf__Dg8GA=Sf0Q@mail.gmail.com>
+ <56cbe0a0-048e-45a2-87f2-e2515c7e7414@linaro.org>
+ <139a5c4c-b984-4e32-aefb-81dfce2ea0af@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <139a5c4c-b984-4e32-aefb-81dfce2ea0af@oss.qualcomm.com>
 
-Am Donnerstag, dem 03.04.2025 um 09:04 -0400 schrieb Michael S.
-Tsirkin:
-> On Wed, Apr 02, 2025 at 11:12:07PM +0200, Markus Fohrer wrote:
-> > Hi,
-> >=20
-> > I'm observing a significant performance regression in KVM guest VMs
-> > using virtio-net with recent Linux kernels (6.8.1+ and 6.14).
-> >=20
-> > When running on a host system equipped with a Broadcom NetXtreme-E
-> > (bnxt_en) NIC and AMD EPYC CPUs, the network throughput in the
-> > guest drops to 100=E2=80=93200 KB/s. The same guest configuration perfo=
-rms
-> > normally (~100 MB/s) when using kernel 6.8.0 or when the VM is
-> > moved to a host with Intel NICs.
-> >=20
-> > Test environment:
-> > - Host: QEMU/KVM, Linux 6.8.1 and 6.14.0
-> > - Guest: Linux with virtio-net interface
-> > - NIC: Broadcom BCM57416 (bnxt_en driver, no issues at host level)
-> > - CPU: AMD EPYC
-> > - Storage: virtio-scsi
-> > - VM network: virtio-net, virtio-scsi (no CPU or IO bottlenecks)
-> > - Traffic test: iperf3, scp, wget consistently slow in guest
-> >=20
-> > This issue is not present:
-> > - On 6.8.0=20
-> > - On hosts with Intel NICs (same VM config)
-> >=20
-> > I have bisected the issue to the following upstream commit:
-> >=20
-> > =C2=A0 49d14b54a527 ("virtio-net: Suppress tx timeout warning for small
-> > tx")
-> > =C2=A0 https://git.kernel.org/linus/49d14b54a527
->=20
-> Thanks a lot for the info!
->=20
->=20
-> both the link and commit point at:
->=20
-> commit 49d14b54a527289d09a9480f214b8c586322310a
-> Author: Eric Dumazet <edumazet@google.com>
-> Date:=C2=A0=C2=A0 Thu Sep 26 16:58:36 2024 +0000
->=20
-> =C2=A0=C2=A0=C2=A0 net: test for not too small csum_start in virtio_net_h=
-dr_to_skb()
-> =C2=A0=C2=A0=C2=A0=20
->=20
-> is this what you mean?
->=20
-> I don't know which commit is "virtio-net: Suppress tx timeout warning
-> for small tx"
->=20
->=20
->=20
-> > Reverting this commit restores normal network performance in
-> > affected guest VMs.
-> >=20
-> > I=E2=80=99m happy to provide more data or assist with testing a potenti=
-al
-> > fix.
-> >=20
-> > Thanks,
-> > Markus Fohrer
->=20
->=20
-> Thanks! First I think it's worth checking what is the setup, e.g.
-> which offloads are enabled.
-> Besides that, I'd start by seeing what's doing on. Assuming I'm right
-> about
-> Eric's patch:
->=20
-> diff --git a/include/linux/virtio_net.h b/include/linux/virtio_net.h
-> index 276ca543ef44d8..02a9f4dc594d02 100644
-> --- a/include/linux/virtio_net.h
-> +++ b/include/linux/virtio_net.h
-> @@ -103,8 +103,10 @@ static inline int virtio_net_hdr_to_skb(struct
-> sk_buff *skb,
-> =C2=A0
-> =C2=A0		if (!skb_partial_csum_set(skb, start, off))
-> =C2=A0			return -EINVAL;
-> +		if (skb_transport_offset(skb) < nh_min_len)
-> +			return -EINVAL;
-> =C2=A0
-> -		nh_min_len =3D max_t(u32, nh_min_len,
-> skb_transport_offset(skb));
-> +		nh_min_len =3D skb_transport_offset(skb);
-> =C2=A0		p_off =3D nh_min_len + thlen;
-> =C2=A0		if (!pskb_may_pull(skb, p_off))
-> =C2=A0			return -EINVAL;
->=20
->=20
-> sticking a printk before return -EINVAL to show the offset and
-> nh_min_len
-> would be a good 1st step. Thanks!
->=20
+On Thu, Apr 03, 2025 at 12:38:03PM +0300, Dmitry Baryshkov wrote:
+> On 03/04/2025 12:35, Srinivas Kandagatla wrote:
+> > 
+> > 
+> > On 03/04/2025 10:31, Dmitry Baryshkov wrote:
+> > > On Thu, 3 Apr 2025 at 12:27, Srinivas Kandagatla
+> > > <srinivas.kandagatla@linaro.org> wrote:
+> > > > 
+> > > > 
+> > > > 
+> > > > On 03/04/2025 10:25, Dmitry Baryshkov wrote:
+> > > > > On 03/04/2025 12:18, Srinivas Kandagatla wrote:
+> > > > > > 
+> > > > > > 
+> > > > > > On 02/04/2025 12:31, Greg KH wrote:
+> > > > > > > On Wed, Apr 02, 2025 at 09:19:17AM +0100, Srinivas Kandagatla wrote:
+> > > > > > > > HI Greg,
+> > > > > > > > 
+> > > > > > > > On 01/04/2025 20:18, Greg KH wrote:
+> > > > > > > > > On Sun, Mar 09, 2025 at 02:56:50PM +0000,
+> > > > > > > > > srinivas.kandagatla@linaro.org wrote:
+> > > > > > > > > > From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> > > > > > > > > > 
+> > > > > > > > > > Hi Greg,
+> > > > > > > > > > 
+> > > > > > > > > > Here are few nvmem patches for 6.15, Could you queue
+> > > > > > > > > > these for 6.15.
+> > > > > > > > > > 
+> > > > > > > > > > patche include
+> > > > > > > > > >      - updates to bindings to include MSM8960, X1E80100, MS8937,
+> > > > > > > > > >        IPQ5018
+> > > > > > > > > >      - add support to bit offsets for register strides exceeding
+> > > > > > > > > >        single byte
+> > > > > > > > > >      - add rockchip-otp variants.
+> > > > > > > > > >      - Few enhancements in qfprom and rochchip nvmem providers.
+> > > > > > > > > 
+> > > > > > > > > Ok, I wanted to apply these, and tried to, but they fail horribly
+> > > > > > > > > because:
+> > > > > > > > > 
+> > > > > > > > > Commit: 1b14625bd6d4 ("nvmem: qfprom: switch
+> > > > > > > > > to 4-byte aligned reads")
+> > > > > > > > >      Fixes tag: Fixes: 11ccaa312111 ("nvmem: core: verify cell's
+> > > > > > > > > raw_len")
+> > > > > > > > >      Has these problem(s):
+> > > > > > > > >          - Target SHA1 does not exist
+> > > > > > > > > Commit: a8a7c7e34093 ("nvmem: core: update raw_len if the bit
+> > > > > > > > > reading is required")
+> > > > > > > > >      Fixes tag: Fixes: 11ccaa312111 ("nvmem: core: verify cell's
+> > > > > > > > > raw_len")
+> > > > > > > > >      Has these problem(s):
+> > > > > > > > >          - Target SHA1 does not exist
+> > > > > > > > > Commit: d44f60348d8c ("nvmem: core: fix bit offsets of more than
+> > > > > > > > > one byte")
+> > > > > > > > >      Fixes tag: Fixes: 11ccaa312111 ("nvmem: core: verify cell's
+> > > > > > > > > raw_len")
+> > > > > > > > >      Has these problem(s):
+> > > > > > > > >          - Target SHA1 does not exist
+> > > > > > > > 
+> > > > > > > > Looks some of your scripts or b4 is picking up
+> > > > > > > > older version v1 of the
+> > > > > > > > patchset
+> > > > > > > > 
+> > > > > > > > None of the above patches have Fixes tags in the V2 patches that I
+> > > > > > > > shared
+> > > > > > > > aswell as patches in linux-next.
+> > > > > > > 
+> > > > > > > Yes, that looks odd, it looks like b4 pulled in the
+> > > > > > > wrong series, yes.
+> > > > > > > 
+> > > > > > 
+> > > > > > Even that looked incorrect, as the v1 series only had one
+> > > > > > patch("[PATCH 12/14] nvmem: make the misaligned raw_len non-fatal")
+> > > > > > that had fixes tag. Not sure how these 3 patches are tagged as fixes.
+> > > > > > 
+> > > > > > > But, that's even worse.  Those "fixes" are now not actually marked as
+> > > > > > > fixes of the previous patch.  So that information is
+> > > > > > > totally lost, and
+> > > > > > 
+> > > > > > Its because this patch("PATCH 12/14] nvmem: make the misaligned
+> > > > > > raw_len non-fatal") is taken as fixup patch and wrapped into the
+> > > > > > original patch ("nvmem: core: verify cell's raw_len"), Also the sha
+> > > > > > will not be valid for linus or char-misc tree.
+> > > > > > 
+> > > > > > > again, the first commit here, "nvmem: core: verify cell's raw_len" is
+> > > > > > > broken so much that it took 3 other changes to fix it, which implies
+> > > > > > > that bisection would cause problems if you hit it in the middle here.
+> > > > > > > 
+> > > > > > 
+> > > > > > All the patches related to this are enhancements to nvmem core to
+> > > > > > allow specifying bit offsets for nvmem cell that have 4 bytes strides.
+> > > > > > 
+> > > > > > Specially this check is also an additional check in core to make sure
+> > > > > > that cell offsets are aligned to register strides.
+> > > > > > 
+> > > > > > > While fixing patches is great, and something we do
+> > > > > > > in the tree all the
+> > > > > > > time, let's not purposefully break things and then fix them up in the
+> > > > > > > same exact patch series please.  That's just sloppy engineering.
+> > > > > > > 
+> > > > > > > Please redo this series completely.  I can take the
+> > > > > > > "new device support"
+> > > > > > 
+> > > > > > I can send them but its going to be exactly same series, I dont think
+> > > > > > anything will change as all of these patches are enhancements and
+> > > > > > there are no fixes.
+> > > > > > 
+> > > > > > I hope this clarifies a bit, Please let me know if you still want me
+> > > > > > to resend this series, which is going to be exactly same.
+> > > > > 
+> > > > > I think Greg is asking to squash the fixup into the relevant patch.
+> > > > 
+> > > > Its already squashed up in v2.
+> > > 
+> > > Then there should be no Fixes tags. Is the series that you are sending
+> > > visible somewhere?
+> > 
+> > Yes, there is no fixes tags in v2 series,
+> > 
+> > Here is what is sent to as v2:
+> > https://lore.kernel.org/lkml/47a3a851-
+> > f737-4772-87c6-98613347435c@linaro.org/T/
+> > #r01449e17cf6f9396967a822a0460ad4b1245e914
+> 
+> LGTM, thanks. Then I don't understand what is causing the controversy from
+> Greg's side. The only piece of information that got lost is that Mark has
+> found an issue with the previous version of the patch (I'd have added that
+> information between the tags as you've squashed the patches).
 
+Yeah, I'm confused here as well.  In v1, there were 3 patches that were
+marked as "Fixes" for a previous patch in the series.  In v2, no Fixes
+were marked at all, BUT the patches were still in the series.
 
-Hi Eric,
+So what went wrong?  Was the v2 version of the original patch changed so
+that the 3 other ones were not needed somehow?  If so, why were they in
+the list again?
 
-thanks a lot for the quick response =E2=80=94 and yes, you're absolutely ri=
-ght.
+Anyway, I'm confused...
 
-Apologies for the confusion: I mistakenly wrote the wrong commit
-description in my initial mail.
+Please send a v3 of this series, NOT in response to any email thread so
+that b4 does NOT get confused in any way, and I'll be glad to review
+them and apply them to the proper branch after -rc1 is out next week or
+so.
 
-The correct commit is indeed:
+And document the heck out of what has changed in the series in the
+different patches please.
 
-commit 49d14b54a527289d09a9480f214b8c586322310a
-Author: Eric Dumazet <edumazet@google.com>
-Date:   Thu Sep 26 16:58:36 2024 +0000
+thanks,
 
-    net: test for not too small csum_start in virtio_net_hdr_to_skb()
-
-This is the one I bisected and which causes the performance regression
-in my environment.
-
-Thanks again,
-Markus
-
+greg k-h
