@@ -1,101 +1,107 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBA8E18BC1D
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 06:00:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 547FE194AC7;
+	Thu,  3 Apr 2025 06:00:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743660010; cv=none; b=KoEiB3TOydr6bM5+Ma2+02sUrhBQWw00jYVNxiBpGBxbw15NabVJ8UXd0xy5JQ5rieIgtwSFs+0hKJM7Og5+kLXlJz0mMsuU1Sr4D5l0seGFNStXvAofCrc/NFQRg7sXu2DbMQ3DYpC+UMhQdgTWy/KfGCAoeWIEbjVU4012Ii0=
+	t=1743660018; cv=none; b=TLbo4a+GIwNIBooaQ7PEiagHHHwKGvkhML4PnGOP4Myl+1jALlYY9mcktQ33fIOzk8wR8F+ghxAZDFUqI6oVanC/NaaIlg8oJ8ObGGQ44x3m7EvDjtwAgAQlLI7WwJnz7OCdL9DnNddc9oqD1WVq8yQbXHLGue93Ddj5tutR/MQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743660010; c=relaxed/simple;
-	bh=N4qJ8F58Pmv26ISrZ+OWnRoYbvHDgb6+p53DZug+Pdo=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=biKvZZKzeWVoA02YQ/eoJ/5+43/wJbeq7hVLzOHNBJY+u+P/iBNLW3lr0PnMAAjozJNS4+XvXQcxeN3GEBqy7l1oQvYXpmCqUnR7Ie1C7UKRXSFXmQdZ69pgX04HefSe0hu9pcmcqXrqXBhhHKOv4Ztd8oIOk6r8J5PyFIivgGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=H2FrmBML; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1743660018; c=relaxed/simple;
+	bh=GgGLK/JKAFdo0H9wSAMZLdeL31KlQxn4teieuzIC7e4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=KQRf57wG6QAS086LUr/ASYY18toHeX8UZcOV4K9vhuX2FaIU5uDq+HWldBKi3UEIlytLHlLibOzPELOidmj70RCHSybRLHxnigA2gZM5oFEA8gcA14bpSM2PjKtinmUqyKeqdFEFdNqk4r5mYN8F/cBoBTpeigHxSqoV7tdrMhw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=gdYF5TZd; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="H2FrmBML"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1743660005;
-	bh=N4qJ8F58Pmv26ISrZ+OWnRoYbvHDgb6+p53DZug+Pdo=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=H2FrmBMLrGb1XRd/bA0m1i7q5ilHh4zipP3wNfi0Cx13CRqaL8XzeoU6de81rJinB
-	 N+BSZf/ajXaWcNwsPgkH1T7NHY3RayBUjlmaI6QOiKBKgdBVBtrugN4YqY4qxXsO1E
-	 mJEIOYRM+sGVG4NBOQKUfb2xvFdTzH6CsGoTopjipepRqdm4EOApTFVxSwVdrkiZ5Z
-	 ak8JlVRqA4Q4rOrwUHyPwwFv/l3x7aIbNwwESJtndRsZug3dWUcdmcgg6IHmEL4VHe
-	 s4NAzPycXLTj7Zx63GyTULHdZAdKfIXJINP79jBgvhIKkKEbDEy0z+gqLC6icycG5l
-	 7cX419TVeTsTw==
-Received: from [192.168.50.250] (unknown [171.76.83.191])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: vignesh)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id EAD3417E0F47;
-	Thu,  3 Apr 2025 08:00:02 +0200 (CEST)
-Message-ID: <4cac94b9-2445-458c-a39f-5eb72537d6f6@collabora.com>
-Date: Thu, 3 Apr 2025 11:29:55 +0530
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="gdYF5TZd"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:Message-ID:Subject:Cc:To:
+	From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:References:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=5NwkqZuewG0v34YS2DSouf6H/+kIB+PU0H+C6MMnpBo=; b=gdYF5TZdvGh9Vwsn8O2FKNpeb4
+	UQ9rL8LYkC1s+dWDW0+bG+nYwSBEtkWifq11PtQTeIqvCmHfYpJxJDSH1io13BwcPqWxuWpankDqV
+	tXKofZLYSY1EPbR4v05KKktU6v3q2KLPBSqRosSSQlw+HHBIxa+m+yguVd2X6zqrAosfc0BBcPOTx
+	5//aIrcnM3WkGfnOT7CXJ1zGO+o9JSMciu/zMwEgbipJ6EeoDL/s3oPx6aOpgLD1EiQwXuolAGaER
+	THtitDTc94QXgCbx0U9wxtEroTG9WFv5eCImTRBuv12jshe42t/8SqoDuCrhSk6dxi32GUnxjgZ76
+	orbc10aQ==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1u0Dc4-00COSZ-0p;
+	Thu, 03 Apr 2025 13:59:41 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Thu, 03 Apr 2025 13:59:40 +0800
+Date: Thu, 3 Apr 2025 13:59:40 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: rostedt@goodmis.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, mhiramat@kernel.org,
+	mark.rutland@arm.com, mathieu.desnoyers@efficios.com,
+	akpm@linux-foundation.org, vdonnefort@google.com, vbabka@suse.cz,
+	rppt@kernel.org, kees@kernel.org, tony.luck@intel.com,
+	gpiccoli@igalia.com, linux-hardening@vger.kernel.org,
+	willy@infradead.org, Eric Biggers <ebiggers@kernel.org>,
+	Michael Ellerman <mpe@ellerman.id.au>
+Subject: Re: [PATCH v2 1/2] tracing: ring-buffer: Have the ring buffer code
+ do the vmap of physical memory
+Message-ID: <Z-4jzImykAbHK2Gz@gondor.apana.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 3/3] drm/ci: uprev mesa
-From: Vignesh Raman <vignesh.raman@collabora.com>
-To: Daniel Stone <daniel@fooishbar.org>
-Cc: dri-devel@lists.freedesktop.org, daniels@collabora.com,
- helen.fornazier@gmail.com, airlied@gmail.com, simona.vetter@ffwll.ch,
- robdclark@gmail.com, guilherme.gallo@collabora.com,
- sergi.blanch.torne@collabora.com, valentine.burley@collabora.com,
- lumag@kernel.org, quic_abhinavk@quicinc.com, mripard@kernel.org,
- maarten.lankhorst@linux.intel.com, tzimmermann@suse.de,
- linux-kernel@vger.kernel.org
-References: <20250328110239.993685-1-vignesh.raman@collabora.com>
- <20250328110239.993685-4-vignesh.raman@collabora.com>
- <CAPj87rOPHqLaFn3r4rkeMMrQ=OSRQUJ2LLrQ4ZDE6eA1S6zybw@mail.gmail.com>
- <3a3107d4-cc59-42ff-b3f8-2280a357208b@collabora.com>
-Content-Language: en-US
-In-Reply-To: <3a3107d4-cc59-42ff-b3f8-2280a357208b@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wg0wQb+CbUk2GY0CeVuTQvq67-oYR0nL8wGgySia3ce7g@mail.gmail.com>
+X-Newsgroups: apana.lists.os.linux.kernel
 
-Hi Daniel,
-
-On 28/03/25 17:29, Vignesh Raman wrote:
-> Hi Daniel,
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
+>
+> There's a flush_dcache_range() thing too, but I don't see a single use
+> of that function in generic code, so I suspect that one is currently
+> purely for architecture-specific drivers and doesn't work in egneral.
 > 
-> On 28/03/25 17:06, Daniel Stone wrote:
->> Hi Vignesh,
->>
->> On Fri, 28 Mar 2025 at 11:03, Vignesh Raman 
->> <vignesh.raman@collabora.com> wrote:
->>> The current s3cp implementation does not work anymore after the
->>> migration, and instead of fixing it and propagating the fix down to us,
->>> it's simpler to directly use curl. Uprev mesa [1][2] to adapt these
->>> changes. Also replace broken s3cp command with a curl wrapper call in
->>> drm-ci.
->>
->> Thanks a lot for fixing this. Sorry the fallout has been so bad.
->>
->> You can also upgrade ci-templates to get an s3cp which works again.
-> 
-> Thanks for fixing this. Will use the latest ci-templates and test it.
+> So *this* is the kind of "bad in a different way" I could imagine:
+> things that probably should be cleaned up and be available to generic
+> code, but very few people have cared, and so they are used in ad-hoc
+> places and haven't been sufficiently generalized and cleaned up.
 
-We need to update mesa to use the latest ci-templates and then uprev 
-mesa in drm-ci. I will send this in a separate series after fixing it in 
-mesa.
+There is no fallback implementation of flush_dcache_range for the
+architectures that don't need it.
 
-Regards,
-Vignesh
+It would be nice to have that, as doing it by hand is pretty silly:
 
-> 
-> Regards,
-> Vignesh
-> 
->>
->> Cheers,
->> Daniel
-> 
+static inline void scatterwalk_done_dst(struct scatter_walk *walk,
+					unsigned int nbytes)
+{
+	scatterwalk_unmap(walk);
+	/*
+	 * Explicitly check ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE instead of just
+	 * relying on flush_dcache_page() being a no-op when not implemented,
+	 * since otherwise the BUG_ON in sg_page() does not get optimized out.
+	 * This also avoids having to consider whether the loop would get
+	 * reliably optimized out or not.
+	 */
+	if (ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE) {
+		struct page *base_page;
+		unsigned int offset;
+		int start, end, i;
 
+		base_page = sg_page(walk->sg);
+		offset = walk->offset;
+		start = offset >> PAGE_SHIFT;
+		end = start + (nbytes >> PAGE_SHIFT);
+		end += (offset_in_page(offset) + offset_in_page(nbytes) +
+			PAGE_SIZE - 1) >> PAGE_SHIFT;
+		for (i = start; i < end; i++)
+			flush_dcache_page(nth_page(base_page, i));
+	}
+
+Cheers,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
