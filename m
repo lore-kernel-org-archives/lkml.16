@@ -1,41 +1,64 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8C0726AFB;
-	Thu,  3 Apr 2025 01:40:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C99CD73477
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 01:44:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743644421; cv=none; b=TYsZglw4J1rmLKcB5DQX13A0RyYm3JSP7fReCMo2fR4udvDEQLOcDxz3MbDTfBEj33IIC70QUTfZH5s4F4nigthbHUyfhzWdFTJw2cb8xgLxmlRGQLTgOdR/Qae/QVZo9Egl+IUgiFwxnJlDjAHcU1HRBNxR8+T4K+paLopv+KY=
+	t=1743644677; cv=none; b=Pq7KxM1e4Zf7Bk6VNLhBTsqN9tiUatnv30WduUdek9A9sqS819mBiITT7oQ1TDDfFgxkWxALDaKHXMZpQ+zZYV7MihhAXW+6R6iFhjD5R3Tmht6ZPg0WN72FCmwp5N8SaSWrAa6b/mp4Dt5DJtJ5xMcmKMqalr8uaUFCSTFckI8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743644421; c=relaxed/simple;
-	bh=s7u5mxYYwl1wKTrRuYQxaYNX/EYu1N1SvhKWLrv7dHI=;
+	s=arc-20240116; t=1743644677; c=relaxed/simple;
+	bh=LWQPkBkP9hDcVWXPZJtf7g3j0cR0nSkuarPCHngG7XI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sYr1FRXHf9TD+Q3OUbt4hPkZfsjFitvr8piVMRQHu68RM1XUZh+2WX+FeFOscQTXmthZ1n7jvja3SvI5Czi9QLdjZ9G8VddRmTd1dF9+4cHWb2PmnOK58kVU16BLetl0LirEP3w4xjtGtSS4cidCucyBQUwNqH+B3lUY8LklYjQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=LPMaM1Lv; arc=none smtp.client-ip=212.227.15.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	 In-Reply-To:Content-Type; b=G22AZs8ZbcT85WKL04qwaALo3Uoj7nnNYDsDaIpcHSkdb6r4QJw0zwUgtkxt86F2z7HA/+TpObUglEJQJFUjRFLF+q0A1BnxN6LPS/6R5OHzBxRboPvs87CUxe8yhbnvO1h+2a7KfvChHxxZ9At2hAIV7td5B297LD1QeD4EX78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=UPcx7GJ+; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="LPMaM1Lv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1743644414; x=1744249214; i=w_armin@gmx.de;
-	bh=M5+t7lkNn4b/GQ6zRwlMxmsQuZeGUjKsZmFP+02dGW8=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=LPMaM1LvWh2qrW04mzwaxrCtQMStbrnR/d91+AAmI1jjRLGCYimMUNN1mZMA78xh
-	 lIkqj0Z2LOeVjF/2IapeVzCt4KEWdLY9dMlfyLlUW6kXZes4rqUGgjrn/0jkeSQAA
-	 Eh+R011LbJcH9SgexAYb/nn11hKBFRe5iuPuojtvvRFo5qxrLAjtuyZscPoPq+oTK
-	 M4ZZNhf5dxoqKp6CcxMjP00c9zsj5SDyEdYJTKZtXIbBbV/+A7+0Ac+l2Qgvf8cTW
-	 NpMUz4o7V5ENvgKYV1i6nFybJS++AVJHgwjVe04U8HfWS0ZPJ8tZBbDPYMxFpkToi
-	 MXgvPV87ZVV+SsghXg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.69] ([87.177.78.219]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MGyxN-1tw0gX1mQl-008hKK; Thu, 03
- Apr 2025 03:40:14 +0200
-Message-ID: <d5920e7b-2e5e-4958-b7e4-5e1395aa0e24@gmx.de>
-Date: Thu, 3 Apr 2025 03:40:12 +0200
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="UPcx7GJ+"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43935d1321aso440335e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 18:44:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1743644673; x=1744249473; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=UUbxWhR/8GWhGNCmjPJ2Bd3Q1OUo+M8Y2p8qU8lApN4=;
+        b=UPcx7GJ+hlSPa5xOlcuoH3Rx0zQa1QNT42iWfKizeYp6NJMAHK5l0m5cw5+2MG/PFx
+         z4doACVfNVTzlCleD9qUCYA7NdA8VtI/X2DHmmjxvR2DELjummnkuWcg4NfVLRDn+BKo
+         piuZgsMEfvoSJu9O2IJpfwAZQpD8/2CaWv4RXcOY/OlTwLOb40FTv0SeFubZX8sGGaYq
+         Z/wiK7kR02piCosanzoVGWMt882ZEsoAwRqZttyx2mpeIxP+4HVlvHKSTEDE8tPjs3rV
+         SyqEqZvxmQvy/kcJJrLORX0zaCG7ceHFRxsSLrOVsPkYVXmAuwvJm+KRSVoktKJYG2p9
+         XCcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743644673; x=1744249473;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=UUbxWhR/8GWhGNCmjPJ2Bd3Q1OUo+M8Y2p8qU8lApN4=;
+        b=cg4bCBH6b82EEB4MAkobgQ+EewplTGtRurAkNoLsfTyYwPjCayixn7fCsxqLG7sQMo
+         jaintRYVjTpHCD2H/Z3Pv14Psvw6bpYWcpE8lvRBJDXjpmttU2hl9XqkF0LHreCymxOK
+         9id8OQGAipcmO8mNQ8SySWfEQNLCucXLSp8vJ22S3bZLQ/IMov2cDf3q9xWktdZUrC2z
+         RKGT46BUNk13Y1xPzyrGhK2H+5KxrKDyoNrDu/tXPuhfT27QiaqqSYLyIIAZw41NvwgM
+         fnDZudlHY7Hl24A9swqGhRRrXgVx5yPnnOplFBp/nnpyov09TJzHq7YtG09Mq0c2MIFm
+         xBHA==
+X-Forwarded-Encrypted: i=1; AJvYcCUz760iyBWBn1tFs1KWu4whO/7p33ZKLWH02TWJLcQ69RJRNz0Jc/yOR3RBJUMd6/l64SKWe/vDkDknCzM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzzneJKBtcsulUiKC4ILWWLSR5+dqOsTU/phrLYnZsPKHkfCvPJ
+	6mQ1HoymNCNmZuX41MryEg36yLaYs3a9hBMoLWIhZJdQgg4DvQVx815oLJKBpPA=
+X-Gm-Gg: ASbGnctnPp/9reY0qMGti0cXAukqdIvXfsW5h8ls/ji88iUsgVHbOy4nUegynoytuj3
+	0hiASdxymODitKilv2ry+vMsFnOv0iQ7tylsh4G9Eqx+wLST2tkeuAgJVb/T8AM6PI+oTzPEOpg
+	cKWfs3NoAz919+94p+GmYb7L7R982OgT1rruFbRBmGef4V9+RSoG2wTh6jfitJ82CzNXdqO5yQA
+	7Ze+s1DpLcnFSOuTF/MWEv14eYNbRdVqnIfNrVdmfYEyHGAn7ZlKDYcHY6iGu5MKLYVhF6Z0uPl
+	ui32Cl666J8gsKiZH8VTTKYbBa8GAcVmPE6VpHazy9e8gjba9OQ=
+X-Google-Smtp-Source: AGHT+IGivnZFI0zjwZJb/9NNdFq2nh3LEnQWupUU9OH0KBapBABtw+wdeBFslMb0jxlqdz1wV4tguQ==
+X-Received: by 2002:a05:600c:c17:b0:439:9a5a:d3bb with SMTP id 5b1f17b1804b1-43ea933d443mr35941075e9.2.1743644672993;
+        Wed, 02 Apr 2025 18:44:32 -0700 (PDT)
+Received: from [10.202.112.30] ([202.127.77.110])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3057ca8cffasm381189a91.26.2025.04.02.18.44.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Apr 2025 18:44:32 -0700 (PDT)
+Message-ID: <fee459fe-00ab-47f3-8a4f-2aba152202b6@suse.com>
+Date: Thu, 3 Apr 2025 09:44:27 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,309 +66,238 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 4/6 RESEND] platform/x86: Add Lenovo Capability Data 01
- WMI Driver
-To: Derek John Clark <derekjohn.clark@gmail.com>
-Cc: Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Jonathan Corbet <corbet@lwn.net>, Mario Limonciello <superm1@kernel.org>,
- Luke Jones <luke@ljones.dev>, Xino Ni <nijs1@lenovo.com>,
- Zhixin Zhang <zhangzx36@lenovo.com>, Mia Shao <shaohz1@lenovo.com>,
- Mark Pearson <mpearson-lenovo@squebb.ca>,
- "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
- "Cody T . -H . Chiu" <codyit@gmail.com>, John Martens <johnfanv2@gmail.com>,
- platform-driver-x86@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250317144326.5850-1-derekjohn.clark@gmail.com>
- <20250317144326.5850-5-derekjohn.clark@gmail.com>
- <de122cb5-e245-43e9-8bd7-2fcff1426203@gmx.de>
- <CAFqHKT=6iKG4UmF2-PUESCDDnLcgzon5Z3UqJd+vNrXLXf9CSQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] ocfs2: Fix deadlock in ocfs2_finish_quota_recovery
+To: Joseph Qi <joseph.qi@linux.alibaba.com>,
+ Murad Masimov <m.masimov@mt-integration.ru>, Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>, Jan Kara <jack@suse.cz>,
+ ocfs2-devel@lists.linux.dev, linux-kernel@vger.kernel.org,
+ lvc-project@linuxtesting.org,
+ syzbot+f59a1ae7b7227c859b8f@syzkaller.appspotmail.com
+References: <20250402065628.706359-1-m.masimov@mt-integration.ru>
+ <20250402065628.706359-3-m.masimov@mt-integration.ru>
+ <5e8fdecc-8003-4eae-8c90-94ecad20061c@linux.alibaba.com>
+From: Heming Zhao <heming.zhao@suse.com>
 Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <CAFqHKT=6iKG4UmF2-PUESCDDnLcgzon5Z3UqJd+vNrXLXf9CSQ@mail.gmail.com>
+In-Reply-To: <5e8fdecc-8003-4eae-8c90-94ecad20061c@linux.alibaba.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:nMbbHgZ5reRVKq8WBdcBxnwSH7sBiwiIpHoaNGAlm2o0DnyHSds
- lPpLGO7Z4CGDhc+KSU3i5pgWx17VB+zFH3Mz/glwe7N+yh+AzibVWFhObm1fTTOWs4rs8hu
- n+FHCcJv7KwGZm4Ij9KqSKoeQD+kmbwcjz5BnYd7SWvoV7OoxWNOhCOsuGkipnIpynQPfHc
- Z2mukPoZWP8SRxvjRExew==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:jGIiQEI7ogs=;BSrLYf6Sb8LxqJapn9T8oN5Iu6O
- qaZgJb/GQV3XkPSRlRAsDCpUBt2pkNWQDOZ70PNReTwRCASxrgZjtSbSPzwrL5PPyr576Mhtk
- 94XP7kGLMSv7qw8Od5CmF2T3JsQXa/yfBuXDCtbDa/meb52VK1HkdHzvONJemYapO4mjU53aX
- pZ3VPIF3/VxPsFpS4opCVyiLDBTy0cT9CLxA3g6nLpmMa5Y25CglpIBPm/tVLJdTeXKXoHzsP
- bnAxz3u6i+FOL6xu/DPL2F6G1A9vFWQYRS+l33PpbptDLeK32Xp+SIFNb8PjoPr42XQCdMN9W
- 6xrXtQg7KeoYTz4oM3x4D3lqoogmRjp/tZFnc4dOksS15UHLwR5e1wecSJ+frQmmiX88UhQxR
- WFKQ2T4YXtQ6nQxAgWEjXy6WbhxTjomNQ7tbnk0F7Zc91rfgKOujLRg7s5gBu4TNyKYxiJpxG
- TV8upn9oK/Ylg/g9IiNiOHqRnO36bVCPNVEmbH55US2YoljTdoTzfdXCRR4E5J2A5p29788yQ
- gZejcGqoatQFVQhb5AEb6MYcW7+iK1sU+7Q6OrECEfScLsRzpERdhCgQ9G7ds5QPD78mHWcfK
- qFf1iFPMdXISLnFPLmZ2pQHD3dQq7zxbRejMMG4sX3SjrkC1QtHW4mfQ9DlUgyECwfmUNdnAl
- HDOlLulsUh7ko13+lx6BBFdtCqKTnZmwH396jS8mGuG3+BACNnbkM0wfz2uayiewoG3oWKvIQ
- VCipO/qKXxB43seV94AO5gtlMJh4pPI3YQJWaijasOF+FeRd46VOvkA2KWMdKN+DqbZsgvCUw
- C+vq3iWNUeCTHc2aJqm2kbxC4Lvj9CkW6UuLjlCTiHoS7aLOrtJ8QWuRl5mZ3TnWWO0wQEKml
- SfRxqI9jBc/+A1uoJlRQebThrn4SUW3a8Gr+/5DZDr5dUyfh7xAxldG0V7LnjOnhNSLdz5AS4
- mLOLImiFEKAdJTGghOxQr4iPa/pD2mdRvtVhJ4AwHtbBUoeEz010bF3EVGIh6KvBJ+fHXajHU
- 9JxUDxkaK4a/SSLHywRWo6baIdSZBtmODQ6tKf2dsmDgM6masLX2F4ZWEABFobG2iYyjCnGPV
- JPgPe8ytG2eDSWSkVIg9G3r4jsET1Iq3ohePd/aVimPqRfdF634Hgq2x79AHt5Tx59nOYdOyb
- XgHIskAhfDhscCNQNCpNo2wNlRh60Chq4M0QG+60hbtBnXggd4Ph0TL9dB34bqj7g6r1mujge
- GIgVIQZtF6MtIHZELlyWcTZq+oCiTA0pkuXpGjKsl9g1dKFzxWoAkUHFE9DdfQ0yKEtuo/ytS
- 77hE5vdTbx/nkprUlA5Fb9bwv0c+F7rKGOnraDtmZ9CRaXxTjv3jsbM8KCa7SIPEeW6hEBGeK
- CNo6Ba5ChASmTRcU6SHIzuuFICAniSz/eUf7Jas4R/xFRwGzPIVbEWVcp476H3BSFogw7PK3F
- 2pDzgMsdPEn85H4cIQgpGMVtfUv0=
+Content-Transfer-Encoding: 7bit
 
-Am 02.04.25 um 22:47 schrieb Derek John Clark:
+Hi Joseph and Murad,
 
-> On Wed, Mar 26, 2025 at 6:29=E2=80=AFPM Armin Wolf <W_Armin@gmx.de> wrot=
-e:
->> Am 17.03.25 um 15:43 schrieb Derek J. Clark:
+On 4/3/25 09:28, Joseph Qi wrote:
+> 
+> 
+> On 2025/4/2 14:56, Murad Masimov wrote:
+>> When filesystem is unmounted all pending recovery work is processed. This
+>> may lead to a deadlock in ocfs2_finish_quota_recovery() as it locks the
+>> s_umount semaphore while it is already exclusively locked in
+>> deactivate_super().
 >>
->>> Adds lenovo-wmi-capdata01 driver which provides the
->>> LENOVO_CAPABILITY_DATA_01 WMI data block that comes on "Other Mode"
->>> enabled hardware. Provides an interface for querying if a given
->>> attribute is supported by the hardware, as well as its default_value,
->>> max_value, min_value, and step increment.
->>>
->>> Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
->>> ---
->>> v4:
->>>    - Make driver data a private struct, remove references from Other M=
-ode
->>>      driver.
->>>    - Don't cache data at device initialization. Instead, on component =
-bind,
->>>      cache the data on a member variable of the Other Mode driver data
->>>      passed as a void pointer.
->>>    - Add header file for capdata01 structs.
->>>    - Add new struct to pass capdata01 array data and array length to O=
-ther
->>>      Mode.
->>> v3:
->>> - Add as component to lenovo-wmi-other driver.
->>> v2:
->>> - Use devm_kmalloc to ensure driver can be instanced, remove global
->>>     reference.
->>> - Ensure reverse Christmas tree for all variable declarations.
->>> - Remove extra whitespace.
->>> - Use guard(mutex) in all mutex instances, global mutex.
->>> - Use pr_fmt instead of adding the driver name to each pr_err.
->>> - Remove noisy pr_info usage.
->>> - Rename capdata_wmi to lenovo_wmi_cd01_priv and cd01_wmi to priv.
->>> - Use list to get the lenovo_wmi_cd01_priv instance in
->>>     lenovo_wmi_capdata01_get as none of the data provided by the macro=
-s
->>>     that will use it can pass a member of the struct for use in
->>>     container_of.
->>> ---
->>>    MAINTAINERS                                 |   2 +
->>>    drivers/platform/x86/Kconfig                |   4 +
->>>    drivers/platform/x86/Makefile               |   1 +
->>>    drivers/platform/x86/lenovo-wmi-capdata01.c | 136 +++++++++++++++++=
-+++
->>>    drivers/platform/x86/lenovo-wmi-capdata01.h |  29 +++++
->>>    5 files changed, 172 insertions(+)
->>>    create mode 100644 drivers/platform/x86/lenovo-wmi-capdata01.c
->>>    create mode 100644 drivers/platform/x86/lenovo-wmi-capdata01.h
->>>
->>> diff --git a/MAINTAINERS b/MAINTAINERS
->>> index 6dde75922aaf..56ead241a053 100644
->>> --- a/MAINTAINERS
->>> +++ b/MAINTAINERS
->>> @@ -13164,6 +13164,8 @@ L:    platform-driver-x86@vger.kernel.org
->>>    S:  Maintained
->>>    F:  Documentation/wmi/devices/lenovo-wmi-gamezone.rst
->>>    F:  Documentation/wmi/devices/lenovo-wmi-other.rst
->>> +F:   drivers/platform/x86/lenovo-wmi-capdata01.c
->>> +F:   drivers/platform/x86/lenovo-wmi-capdata01.h
->>>    F:  drivers/platform/x86/lenovo-wmi-events.c
->>>    F:  drivers/platform/x86/lenovo-wmi-events.h
->>>    F:  drivers/platform/x86/lenovo-wmi-helpers.c
->>> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconf=
-ig
->>> index 13b8f4ac5dc5..64663667f0cb 100644
->>> --- a/drivers/platform/x86/Kconfig
->>> +++ b/drivers/platform/x86/Kconfig
->>> @@ -467,6 +467,10 @@ config LENOVO_WMI_HELPERS
->>>        tristate
->>>        depends on ACPI_WMI
->>>
->>> +config LENOVO_WMI_DATA01
->>> +     tristate
->>> +     depends on ACPI_WMI
->>> +
->>>    config IDEAPAD_LAPTOP
->>>        tristate "Lenovo IdeaPad Laptop Extras"
->>>        depends on ACPI
->>> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Make=
-file
->>> index fc039839286a..7a35c77221b7 100644
->>> --- a/drivers/platform/x86/Makefile
->>> +++ b/drivers/platform/x86/Makefile
->>> @@ -69,6 +69,7 @@ obj-$(CONFIG_THINKPAD_LMI)  +=3D think-lmi.o
->>>    obj-$(CONFIG_YOGABOOK)              +=3D lenovo-yogabook.o
->>>    obj-$(CONFIG_YT2_1380)              +=3D lenovo-yoga-tab2-pro-1380-=
-fastcharger.o
->>>    obj-$(CONFIG_LENOVO_WMI_CAMERA)     +=3D lenovo-wmi-camera.o
->>> +obj-$(CONFIG_LENOVO_WMI_DATA01)      +=3D lenovo-wmi-capdata01.o
->>>    obj-$(CONFIG_LENOVO_WMI_EVENTS)     +=3D lenovo-wmi-events.o
->>>    obj-$(CONFIG_LENOVO_WMI_HELPERS)    +=3D lenovo-wmi-helpers.o
->>>
->>> diff --git a/drivers/platform/x86/lenovo-wmi-capdata01.c b/drivers/pla=
-tform/x86/lenovo-wmi-capdata01.c
->>> new file mode 100644
->>> index 000000000000..b6876611ffd9
->>> --- /dev/null
->>> +++ b/drivers/platform/x86/lenovo-wmi-capdata01.c
->>> @@ -0,0 +1,136 @@
->>> +// SPDX-License-Identifier: GPL-2.0-or-later
->>> +/*
->>> + * LENOVO_CAPABILITY_DATA_01 WMI data block driver. This interface pr=
-ovides
->>> + * information on tunable attributes used by the "Other Mode" WMI int=
-erface,
->>> + * including if it is supported by the hardware, the default_value, m=
-ax_value,
->>> + * min_value, and step increment.
->>> + *
->>> + * Copyright(C) 2025 Derek J. Clark <derekjohn.clark@gmail.com>
->>> + */
->>> +
->>> +#include <linux/cleanup.h>
->>> +#include <linux/component.h>
->>> +#include <linux/container_of.h>
->>> +#include <linux/device.h>
->>> +#include <linux/gfp_types.h>
->>> +#include <linux/types.h>
->>> +#include <linux/wmi.h>
->>> +#include "lenovo-wmi-capdata01.h"
->> Hi,
+>> Use down_read_trylock() instead and return if it fails, since that possibly
+>> means that unmount may be in progress so it is not possible to finish quota
+>> recovery. According to the description of ocfs2_complete_recovery(), which
+>> is the caller of ocfs2_finish_quota_recovery(), by the point this job is
+>> started the node can already be considered recovered. There is also no
+>> error handling in ocfs2_complete_recovery() which indicates that fail is
+>> not critical in this context.
 >>
->> please also include linux/acpi.h, linux/export.h and linux/module.h.
+>> The following warning has been reported by Syzkaller:
 >>
->>> +
->>> +/* Interface GUIDs */
->>> +#define LENOVO_CAPABILITY_DATA_01_GUID "7A8F5407-CB67-4D6E-B547-39B3B=
-E018154"
->>> +
->>> +struct lwmi_cd01_priv {
->>> +     struct wmi_device *wdev;
->>> +};
->>> +
->>> +/*
->> /* -> /**
+>> ================================================================
+>> WARNING: possible circular locking dependency detected
+>> 6.14.0-rc6-syzkaller-00022-gb7f94fcf5546 #0 Not tainted
+>> ------------------------------------------------------
+>> kworker/u4:10/1087 is trying to acquire lock:
+>> ffff88803c49e0e0 (&type->s_umount_key#42){++++}-{4:4}, at: ocfs2_finish_quota_recovery+0x15c/0x22a0 fs/ocfs2/quota_local.c:603
 >>
->>> + * lenovo_cd01_component_bind() - On master bind, caches all capabili=
-ty data on
->>> + * the master device.
->>> + * @cd01_dev: Pointer to the capability data 01 parent device.
->>> + * @om_dev: Pointer to the other mode parent device.
->>> + * @data: capdata01_list object pointer to return the capability data=
- with.
->>> + *
->>> + * Returns: 0, or an error.
->>> + */
->>> +static int lenovo_cd01_component_bind(struct device *cd01_dev,
->>> +                                   struct device *om_dev, void *data)
->>> +{
->>> +     struct lwmi_cd01_priv *priv =3D dev_get_drvdata(cd01_dev);
->>> +     int count, idx;
->>> +
->>> +     if (!priv)
->>> +             return -ENODEV;
->> This check is unnecessary, please drop.
+>> but task is already holding lock:
+>> ffffc900026ffc60 ((work_completion)(&journal->j_recovery_work)){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3214 [inline]
+>> ffffc900026ffc60 ((work_completion)(&journal->j_recovery_work)){+.+.}-{0:0}, at: process_scheduled_works+0x9c6/0x18e0 kernel/workqueue.c:3319
 >>
-> Acked
->
->>> +
->>> +     count =3D wmidev_instance_count(priv->wdev);
->>> +
->>> +     if (count =3D=3D 0)
->>> +             return -EINVAL;
->> The WMI driver core already ensures that WMI devices with 0 instances a=
-re
->> rejected. Please drop this check.
+>> which lock already depends on the new lock.
 >>
-> Good to know, thanks.
->
->>> +
->>> +     ((struct cd01_list *)data)->count =3D count;
->>> +     ((struct cd01_list *)data)->data =3D devm_kmalloc_array(om_dev, =
-count,
->>> +                                                           sizeof(str=
-uct capdata01 *),
->>> +                                                           GFP_KERNEL=
-);
->> Two things:
+>> the existing dependency chain (in reverse order) is:
 >>
->>    - using a local variable with a type of struct cd01_list * results i=
-n cleaner source code here
+>> -> #2 ((work_completion)(&journal->j_recovery_work)){+.+.}-{0:0}:
+>>         lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5851
+>>         process_one_work kernel/workqueue.c:3214 [inline]
+>>         process_scheduled_works+0x9e4/0x18e0 kernel/workqueue.c:3319
+>>         worker_thread+0x870/0xd30 kernel/workqueue.c:3400
+>>         kthread+0x7a9/0x920 kernel/kthread.c:464
+>>         ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:148
+>>         ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
 >>
->>    - using devres is not possible inside the component callbacks, since=
- the lifetime of the component
->>      device is not necessarily tied to the lifetime of the underlying d=
-evice.
+>> -> #1 ((wq_completion)ocfs2_wq){+.+.}-{0:0}:
+>>         lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5851
+>>         touch_wq_lockdep_map+0xc7/0x170 kernel/workqueue.c:3907
+>>         __flush_workqueue+0x14a/0x1280 kernel/workqueue.c:3949
+>>         ocfs2_shutdown_local_alloc+0x109/0xa90 fs/ocfs2/localalloc.c:380
+>>         ocfs2_dismount_volume+0x202/0x910 fs/ocfs2/super.c:1822
+>>         generic_shutdown_super+0x139/0x2d0 fs/super.c:642
+>>         kill_block_super+0x44/0x90 fs/super.c:1710
+>>         deactivate_locked_super+0xc4/0x130 fs/super.c:473
+>>         cleanup_mnt+0x41f/0x4b0 fs/namespace.c:1413
+>>         task_work_run+0x24f/0x310 kernel/task_work.c:227
+>>         resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
+>>         exit_to_user_mode_loop kernel/entry/common.c:114 [inline]
+>>         exit_to_user_mode_prepare include/linux/entry-common.h:329 [inline]
+>>         __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
+>>         syscall_exit_to_user_mode+0x13f/0x340 kernel/entry/common.c:218
+>>         do_syscall_64+0x100/0x230 arch/x86/entry/common.c:89
+>>         entry_SYSCALL_64_after_hwframe+0x77/0x7f
 >>
->> I suggest you move the whole WMI data querying into lwmi_cd01_probe(), =
-because then you can keep using
->> devres.
+>> -> #0 (&type->s_umount_key#42){++++}-{4:4}:
+>>         check_prev_add kernel/locking/lockdep.c:3163 [inline]
+>>         check_prevs_add kernel/locking/lockdep.c:3282 [inline]
+>>         validate_chain+0x18ef/0x5920 kernel/locking/lockdep.c:3906
+>>         __lock_acquire+0x1397/0x2100 kernel/locking/lockdep.c:5228
+>>         lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5851
+>>         down_read+0xb1/0xa40 kernel/locking/rwsem.c:1524
+>>         ocfs2_finish_quota_recovery+0x15c/0x22a0 fs/ocfs2/quota_local.c:603
+>>         ocfs2_complete_recovery+0x17c1/0x25c0 fs/ocfs2/journal.c:1357
+>>         process_one_work kernel/workqueue.c:3238 [inline]
+>>         process_scheduled_works+0xabe/0x18e0 kernel/workqueue.c:3319
+>>         worker_thread+0x870/0xd30 kernel/workqueue.c:3400
+>>         kthread+0x7a9/0x920 kernel/kthread.c:464
+>>         ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:148
+>>         ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
 >>
-> Doing this in probe() puts the list on lwmi_cd01_priv. Should I copy
-> that data on bind, or pass back a pointer to the cd01 device struct
-> and use an exported function on cd01 and dev_get_drvdata to access
-> priv->list->data[idx] when needed? I prefer the latter as this avoids
-> needing to do devm memory allocation in component/master binds, then I
-> can check for NULL when accessing and clear the pointer on
-> master_unbind to avoid calling to a removed device driver.
+>> other info that might help us debug this:
+>>
+>> Chain exists of:
+>>    &type->s_umount_key#42 --> (wq_completion)ocfs2_wq --> (work_completion)(&journal->j_recovery_work)
+>>
+>>   Possible unsafe locking scenario:
+>>
+>>         CPU0                    CPU1
+>>         ----                    ----
+>>    lock((work_completion)(&journal->j_recovery_work));
+>>                                 lock((wq_completion)ocfs2_wq);
+>>                                 lock((work_completion)(&journal->j_recovery_work));
+>>    rlock(&type->s_umount_key#42);
+>>
+>>   *** DEADLOCK ***
+>>
+>> 2 locks held by kworker/u4:10/1087:
+>>   #0: ffff8880403eb148 ((wq_completion)ocfs2_wq){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3213 [inline]
+>>   #0: ffff8880403eb148 ((wq_completion)ocfs2_wq){+.+.}-{0:0}, at: process_scheduled_works+0x98b/0x18e0 kernel/workqueue.c:3319
+>>   #1: ffffc900026ffc60 ((work_completion)(&journal->j_recovery_work)){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3214 [inline]
+>>   #1: ffffc900026ffc60 ((work_completion)(&journal->j_recovery_work)){+.+.}-{0:0}, at: process_scheduled_works+0x9c6/0x18e0 kernel/workqueue.c:3319
+>>
+>> stack backtrace:
+>> CPU: 0 UID: 0 PID: 1087 Comm: kworker/u4:10 Not tainted 6.14.0-rc6-syzkaller-00022-gb7f94fcf5546 #0
+>> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+>> Workqueue: ocfs2_wq ocfs2_complete_recovery
+>> Call Trace:
+>>   <TASK>
+>>   __dump_stack lib/dump_stack.c:94 [inline]
+>>   dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
+>>   print_circular_bug+0x13a/0x1b0 kernel/locking/lockdep.c:2076
+>>   check_noncircular+0x36a/0x4a0 kernel/locking/lockdep.c:2208
+>>   check_prev_add kernel/locking/lockdep.c:3163 [inline]
+>>   check_prevs_add kernel/locking/lockdep.c:3282 [inline]
+>>   validate_chain+0x18ef/0x5920 kernel/locking/lockdep.c:3906
+>>   __lock_acquire+0x1397/0x2100 kernel/locking/lockdep.c:5228
+>>   lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5851
+>>   down_read+0xb1/0xa40 kernel/locking/rwsem.c:1524
+>>   ocfs2_finish_quota_recovery+0x15c/0x22a0 fs/ocfs2/quota_local.c:603
+>>   ocfs2_complete_recovery+0x17c1/0x25c0 fs/ocfs2/journal.c:1357
+>>   process_one_work kernel/workqueue.c:3238 [inline]
+>>   process_scheduled_works+0xabe/0x18e0 kernel/workqueue.c:3319
+>>   worker_thread+0x870/0xd30 kernel/workqueue.c:3400
+>>   kthread+0x7a9/0x920 kernel/kthread.c:464
+>>   ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:148
+>>   ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+>>   </TASK>
+>> ================================================================
+>>
+>> Found by Linux Verification Center (linuxtesting.org) with Syzkaller.
+>>
+>> Fixes: 5f530de63cfc ("ocfs2: Use s_umount for quota recovery protection")
+>> Reported-by: syzbot+f59a1ae7b7227c859b8f@syzkaller.appspotmail.com
+>> Closes: https://syzkaller.appspot.com/bug?extid=f59a1ae7b7227c859b8f
+>> Signed-off-by: Murad Masimov <m.masimov@mt-integration.ru>
+>> ---
+>>   fs/ocfs2/quota_local.c | 16 +++++++++++++---
+>>   1 file changed, 13 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/fs/ocfs2/quota_local.c b/fs/ocfs2/quota_local.c
+>> index e60383d6ecc1..d3304bb03163 100644
+>> --- a/fs/ocfs2/quota_local.c
+>> +++ b/fs/ocfs2/quota_local.c
+>> @@ -600,7 +600,16 @@ int ocfs2_finish_quota_recovery(struct ocfs2_super *osb,
+>>   	printk(KERN_NOTICE "ocfs2: Finishing quota recovery on device (%s) for "
+>>   	       "slot %u\n", osb->dev_str, slot_num);
+>>
+>> -	down_read(&sb->s_umount);
+>> +	/*
+>> +	 * We have to be careful here not to deadlock on s_umount as umount
+>> +	 * disabling quotas may be in progress and it waits for this work to
+>> +	 * complete. If trylock fails, we have to skip this step.
+>> +	 */
+> 
+> Seems we don't have a better way.
+> 
+>> +	if (!down_read_trylock(&sb->s_umount)) {
+>> +		status = -ENOENT;
+> 
+> Normally EAGAIN is a proper error code when trylock fails, though it
+> hasn't been handled in caller...
+> Also we'd better log an error in this case to indicate what happens.
+> 
+> Thanks,
+> Joseph
+> 
 
-Passing a pointer is OK, but please only pass a pointer to the struct cd01=
-_list itself,
-not the full cd01 device struct. Maybe you can also add a comment explaini=
-ng that this
-pointer will become invalid when unbinding from the component.
+According to the commit description, one CPU handles the mounting operation,
+while another handles the unmounting operation.
 
-Explicitly NULL-ing this pointer upon unbinding seems unnecessary to me.
+With this patch, the mounting thread discards the recovery job. What are the
+consequences?
 
-> (snip)
->
->>> +struct cd01_list {
->>> +     struct capdata01 **data;
->>> +     int count;
->>> +};
->> In order to save memory you could try something like this:
->>
->> struct cd01_list {
->>          size_t count;
->>          struct capdata01 data[];
->> };
->>
->> This way you
->>
->> 1. Avoid the memory fragmentation resulting from multiple memory alloca=
-tions.
->>
->> 2. Omit two pointers when accessing the data.
->>
->> You can use struct_size() from linux/overflow.h to calculate the size o=
-f such
->> an array with a trailing flexible array.
->>
->> Thanks,
->> Armin Wolf
->>
-> I think I have this part working in my branch. Using devm_kzalloc also
-> allows me to omit manually setting NULL in a few cases, which is
-> cleaner. Is it preferred to use struct_size() directly in the
-> devm_kzalloc call, or create a separate `size` variable to set the
-> result to and pass that into the function?
->
-> - Derek
->
-In most cases using struct_size() directly inside the devm_kzalloc() call =
-is preferred.
+Under this patch, the expected result is that the mounting operation should be
+aborted, and the unmounting operation should ultimately succeed.
+However, I am difficult to identify the abort point during the mounting phase.
 
-Thanks,
-Armin Wolf
+Is it reasonable/workable to set osb->vol_state to VOLUME_DISMOUNTING at
+the beginning of ocfs2_dismount_volume(), and then check the vol_state at every
+atomic_set(vol_state) point in ocfs2_fill_super()? If ocfs2_fill_super() detects
+the vol_state in VOLUME_DISMOUNTING state, should it return an error and
+abort the mounting phase?
+Or, at the beginning of ocfs2_dismount_volume(), it should check the vol_state
+against VOLUME_MOUNTED or VOLUME_MOUNTED_QUOTAS. If it does not match,
+the unmount process should be aborted.
 
->>> +
->>> +int lwmi_cd01_match(struct device *dev, void *data);
->>> +
->>> +#endif /* !_LENOVO_WMI_CAPDATA01_H_ */
+- Heming
+
+>> +		goto out;
+>> +	}
+>> +
+>>   	for (type = 0; type < OCFS2_MAXQUOTAS; type++) {
+>>   		if (list_empty(&(rec->r_list[type])))
+>>   			continue;
+>> @@ -608,7 +617,7 @@ int ocfs2_finish_quota_recovery(struct ocfs2_super *osb,
+>>   		lqinode = ocfs2_get_system_file_inode(osb, ino[type], slot_num);
+>>   		if (!lqinode) {
+>>   			status = -ENOENT;
+>> -			goto out;
+>> +			goto out_up;
+>>   		}
+>>   		status = ocfs2_inode_lock_full(lqinode, NULL, 1,
+>>   						       OCFS2_META_LOCK_NOQUEUE);
+>> @@ -676,8 +685,9 @@ int ocfs2_finish_quota_recovery(struct ocfs2_super *osb,
+>>   		if (status < 0)
+>>   			break;
+>>   	}
+>> -out:
+>> +out_up:
+>>   	up_read(&sb->s_umount);
+>> +out:
+>>   	ocfs2_free_quota_recovery(rec);
+>>   	return status;
+>>   }
+>> --
+>> 2.39.2
+> 
+> 
+
