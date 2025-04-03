@@ -1,146 +1,154 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f176.google.com (mail-vk1-f176.google.com [209.85.221.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF9BC1DF975;
-	Thu,  3 Apr 2025 11:07:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE3DC1DF975
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 11:08:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743678473; cv=none; b=iMBEwraGSib7P8j/BPo0eGTVZ3BvCxJCH+otEYKOWypkbBvZSAVbaMAZcNhTILHpL1ZC9pUpCU+oBq9qYqf171yPE2oRij56WlmH6a3WzXFfvsDS7yRUsbIHYBB2O5FjlOjC96d0B1nBXcppCf6B/bsHmmQY5ZZvsKEN6wa9cc0=
+	t=1743678493; cv=none; b=jsde4QpnG1WgPwSECpf18oAooT8OCOuiGnWjR7sjPfFa+okdWRMzQGV9csQDCTqhZhQNxK1XEbU2rtoR3zahMmzjQs4f2Tov2z+3DjDMmUrF9fm3IpY3/C9upPI6DA7JD8zBncloJ5f9QThLvyZJ72JZmnh6zH88B9/cVOGAiXg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743678473; c=relaxed/simple;
-	bh=A8Hwsi1G44gJPIiOLa/AHXgO9LNoAUdRYyjByFNRNMw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=l4QWe6J6L1Mx5wUyHpSxIUKjudpYT3egCKUItXAtHUv34O5d5j4jnTLt8vhPy0gl6506ZXRzAmV5DJfaw+cEn/ludWnxgYWtoL5IOXBlc9bSbNlioST73PJmGDxMjMzdpSI4fIq4WLXbmaj7N6Xd3Px5xeA24oBYeYbjhVC9IOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=QCKxcYRA; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1743678493; c=relaxed/simple;
+	bh=UeIf3gDzNnrDJ+aG9WHGpvz1ocmpXTtX+myrbYbpoIo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Anpwp2BF0vRUWaMbdVfNUwP3WawZP8SKODvPoGWA8WKwh1G5mYJA4HFa78GT9nyDA3IogiN6X+FJRRuyw+YXMI5Sa0d8YC3LhFaj5fDj1WtRvbGVs42TawD5mYcY+jTQafrCwjXPpgoH4eploLhZaGfeVVy5iYqVrMdbRrtnSc8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ElxV/OUV; arc=none smtp.client-ip=209.85.221.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="QCKxcYRA"
-Received: from [192.168.88.20] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 970A38FA;
-	Thu,  3 Apr 2025 13:05:55 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1743678356;
-	bh=A8Hwsi1G44gJPIiOLa/AHXgO9LNoAUdRYyjByFNRNMw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=QCKxcYRAke3UFBF1TpHnYaEckNce5LH8dCrsFGgPDr3YcNzf63rm7WuYmHLCIJwIb
-	 TD3IokCmcKuh3Is5LHZC8ia6/9hEUijZxXOCDmCzF9whIwCp8pMYZxPp+lLPCgsndW
-	 BdbQuYWF7cFhJWKdPjLrj+CY6JzrQcK0oMdB4kYI=
-Message-ID: <40f559cc-7d56-4e81-a6d8-6870d6df9fb5@ideasonboard.com>
-Date: Thu, 3 Apr 2025 14:07:45 +0300
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ElxV/OUV"
+Received: by mail-vk1-f176.google.com with SMTP id 71dfb90a1353d-524038ba657so837976e0c.0
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 04:08:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1743678490; x=1744283290; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=xlyDq4gIl9Lr6ROGOTackUkIONaMAtJFwwX5SOMUsOs=;
+        b=ElxV/OUVT5jp1AbAUd0ozHl4jZusXnEBFAAq3yJHUvgIFtgxJchwbRLtjtJJX0o3eD
+         biBhqP82uoBr7GTt+2Xh1rwGXVvh/2AfGtpEoh2vkU15dbvb7fGB6pHRbgFEiZ8oZ+bT
+         dLHCqic6EoqeWRNfRuWTx2I+srg3BTmn8XcPIqgJLIMU9qi9DOXo/AlJcuiLbmqCsiIm
+         hJskp3Xu+xy9H9nJI9jXX54lAXObWzCdCgNnz3ghDNYiFnUdQx+BKKb/aF2hARtpkBJm
+         3Hu1cEu8kGtzT1+SEIbDKQ13F8MMfDsZclXq4H8iWUps88j1ehfRwWz1kOKlI8l9tjM/
+         47BQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743678490; x=1744283290;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xlyDq4gIl9Lr6ROGOTackUkIONaMAtJFwwX5SOMUsOs=;
+        b=qEbI2keWj25WL5asN62SZfdB3Y7xlf0i0Li0hAad8alEb+M32mri1pbD0YTpYfy4yq
+         uzanK5fVdQjMDvPN5Uyjw8C8Gqo5SYsy/WyFGiyU9Qe8FwEbt51HsaP0ON0l5xjXlZsZ
+         Ukiuxt5pq55xgqIP6QEgOOX3DmldnZnhMXHjyHwBNCrYZ/+e2MzVjs/OjC1g1/MVEIbf
+         EyS2BFt2OyPQuap9muRVZcl5gN1bhyU86rVEOoFsnK2yaUAK0hhxm6XlP1YHdziVcjYb
+         tiYQlXKIyJtnmHqsF0V5vZhk8jokv2Au9zQK6hkhY5Hk6N3SZkPIQA/WxTXm5t4S3Jtv
+         RSHQ==
+X-Gm-Message-State: AOJu0Yz/Mn05GsAfObbA9CIcxjdfvfvLZEmjagKt748AYIyyDLdc4tNO
+	GunDi9WcXnzNpIU6KNnvz+bXcfulsP/N0bGhpAR5DTIPleORiLDs1ug5dS55E9nk9Py1AetPGNe
+	6Jbf4ht1V2twTglTDSRBgrSFYxnX4612ht7YhG1gwdbf4ieN4PE0=
+X-Gm-Gg: ASbGncunnA+VVnnHq3Es2PHLD8+autmp86R1DKcwPBGRTECtaKkEJAW93Y8WpBbjOza
+	WDlQ9YPFHkr3RwCBaxozsqi3e1GH3bkXsDj3ZnXXCP7if532VT+Y+NcJqtuRsvWpZXkTLcJu8O1
+	mgizkEq4SkK0SSU8UhQVd+U8C5rwFhwJA8m8TAxDxniqT4xSPDhDHwN5NzRw==
+X-Google-Smtp-Source: AGHT+IFA6KPAr/9JvLRrdPpJRg6g6D0xJChBb1HAxmoAW7jS9u/YJ2IJribqwlFitpYlfu7S/vxo5M+KHizDfy/TVbA=
+X-Received: by 2002:a05:6122:330d:b0:523:dbd5:4e7f with SMTP id
+ 71dfb90a1353d-52756b10bf3mr1945335e0c.3.1743678490066; Thu, 03 Apr 2025
+ 04:08:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] media: platform: rpi1-cfe: fix pad in call to
- get_mbus_config()
-To: Cosmin Tanislav <demonsingur@gmail.com>
-Cc: Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>,
- Florian Fainelli <florian.fainelli@broadcom.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, Hans Verkuil <hverkuil@xs4all.nl>,
- Sakari Ailus <sakari.ailus@linux.intel.com>,
- Naushir Patuck <naush@raspberrypi.com>,
- Benjamin Mugnier <benjamin.mugnier@foss.st.com>,
- linux-media@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20250225212031.188987-1-demonsingur@gmail.com>
- <04572f32-4203-4a9d-96dd-7974708f4088@gmail.com>
-Content-Language: en-US
-From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
- 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
-In-Reply-To: <04572f32-4203-4a9d-96dd-7974708f4088@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <CA+G9fYtzOxx1YWz2X4UYqvxB2vg7ptz6axmz-5HFLD9ieSjURw@mail.gmail.com>
+In-Reply-To: <CA+G9fYtzOxx1YWz2X4UYqvxB2vg7ptz6axmz-5HFLD9ieSjURw@mail.gmail.com>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Thu, 3 Apr 2025 16:37:58 +0530
+X-Gm-Features: ATxdqUH8OMQ6KdpRKZP5fv72MvdhOmm57r-0DZ0nSqzGCbCvwioKA-IrKMZ5GzY
+Message-ID: <CA+G9fYuPHQf2buj7BQ3myGnSQ3yvrhpeiT7LH5rDVtVz1v_cQA@mail.gmail.com>
+Subject: Re: next-20250403: x86_64 mwait.h:30:15: error: invalid operand for instruction
+To: open list <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>, 
+	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>
+Cc: Arnd Bergmann <arnd@arndb.de>, Anders Roxell <anders.roxell@linaro.org>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, Uros Bizjak <ubizjak@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi,
++ Uros Bizjak <ubizjak@gmail.com>
 
-On 25/02/2025 23:25, Cosmin Tanislav wrote:
-> 
-> 
-> On 2/25/25 11:20 PM, Cosmin Tanislav wrote:
->> The source subdevice might be using a source pad not equal to 0.
->>
->> Use the already existing source_pad field of cfe.
->>
->> Fixes: e7bad98c205d ("media: v4l: Convert the users of 
->> v4l2_get_link_freq to call it on a pad")
-> 
-> I used the wrong Fixes tag, this is the correct one:
-> Fixes: 6edb685abb2a ("media: raspberrypi: Add support for RP1-CFE")
-> 
->> Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
->> ---
->>   drivers/media/platform/raspberrypi/rp1-cfe/cfe.c | 4 ++--
->>   1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/media/platform/raspberrypi/rp1-cfe/cfe.c b/ 
->> drivers/media/platform/raspberrypi/rp1-cfe/cfe.c
->> index 69a5f23e7954..7db4fe5e0fd4 100644
->> --- a/drivers/media/platform/raspberrypi/rp1-cfe/cfe.c
->> +++ b/drivers/media/platform/raspberrypi/rp1-cfe/cfe.c
->> @@ -1206,8 +1206,8 @@ static int cfe_start_streaming(struct vb2_queue 
->> *vq, unsigned int count)
->>       cfg_reg_write(cfe, MIPICFG_INTE,
->>                 MIPICFG_INT_CSI_DMA | MIPICFG_INT_PISP_FE);
->> -    ret = v4l2_subdev_call(cfe->source_sd, pad, get_mbus_config, 0,
->> -                   &mbus_config);
->> +    ret = v4l2_subdev_call(cfe->source_sd, pad, get_mbus_config,
->> +                   cfe->source_pad, &mbus_config);
->>       if (ret < 0 && ret != -ENOIOCTLCMD) {
->>           cfe_err(cfe, "g_mbus_config failed\n");
->>           goto err_clear_inte;
-> 
+On Thu, 3 Apr 2025 at 15:50, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+>
+> Regressions on x86_64 builds tinyconfig, allnoconfig failed with toolchains
+> clang-20 and gcc-13 on the Linux next starting from next-20250403.
+>
+> First seen on the next-20250403
+>  Good: next-20250402
+>  Bad:  next-20250403
+>
+> Regressions found on x86_64:
+>   - build/gcc-13-tinyconfig
+>   - build/gcc-13-allnoconfig
+>   - build/clang-20-tinyconfig
+>   - build/clang-20-allnoconfig
+>
+> Regression Analysis:
+>  - New regression? Yes
+>  - Reproducibility? Yes
+>
+> Boot regression: x86_64 mwait.h:30:15: error: invalid operand for instruction
+>
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+>
+> ## Build log
+> In file included from arch/x86/kernel/process.c:36:
+> arch/x86/include/asm/mwait.h:30:15: error: invalid operand for instruction
+>    30 |         asm volatile("monitor %0, %1, %2" :: "a" (eax), "c"
+> (ecx), "d" (edx));
+>       |                      ^
+> <inline asm>:1:16: note: instantiated into assembly here
+>     1 |         monitor %rax, %ecx, %edx
+>       |                       ^~~~~
+> In file included from arch/x86/kernel/process.c:36:
+> arch/x86/include/asm/mwait.h:95:15: error: instruction requires: Not 64-bit mode
+>    95 |         asm volatile("sti; mwait %0, %1" :: "a" (eax), "c" (ecx));
+>       |                      ^
+> <inline asm>:1:7: note: instantiated into assembly here
+>     1 |         sti; mwait %eax, %ecx
+>       |              ^
+> 2 errors generated.
 
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Anders bisected this to,
 
-Please send a v2 with corrected description.
+# first bad commit:
+   [cd3b85b27542968198e3d588a2bc0591930ee2ee]
+   x86/idle: Use MONITOR and MWAIT mnemonics in <asm/mwait.h>
 
-  Tomi
 
+>
+> ## Source
+> * Kernel version: 6.14.0
+> * Git tree: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+> * Git sha: f0a16f5363325cc8d9382471cdc7b654c53254c9
+> * Git describe: next-20250403
+> * Project details:
+> https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250403/
+> * Architectures: x86_64
+> * Toolchains: clang-20, gcc-13
+> * Kconfigs: tinyconfig, allnoconfig, lkftconfig
+>
+> ## Build
+> * Build log: https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250403/testrun/27871165/suite/build/test/clang-20-allnoconfig/log
+> * Build history:
+> https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250403/testrun/27871165/suite/build/test/clang-20-allnoconfig/history/
+> * Build details:
+> https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250403/testrun/27871165/suite/build/test/clang-20-allnoconfig/
+> * Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2vCvvmy6fhzm3aMcptKXHvRi4Bp/
+> * Kernel config:
+> https://storage.tuxsuite.com/public/linaro/lkft/builds/2vCvvmy6fhzm3aMcptKXHvRi4Bp/config
+>
+> --
+> Linaro LKFT
+> https://lkft.linaro.org
+
+Links,
+ - https://lore.kernel.org/all/CA+G9fYtzOxx1YWz2X4UYqvxB2vg7ptz6axmz-5HFLD9ieSjURw@mail.gmail.com/
+
+- Naresh
