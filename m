@@ -1,103 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 242D92E3385;
-	Thu,  3 Apr 2025 10:54:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADF8A1624E0;
+	Thu,  3 Apr 2025 10:55:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743677696; cv=none; b=pV0NbWrVFi3XtxnC+RQ9rzb2FYeJDdQ9Q2JZCQjs3qmGhxrSBtCUpQVk3OsLLMUriSoJT86zfUJavHdjp5fs5qCB/Srhq4PNQSMzi+PC+jMIfllpwxahPubblKGWUrJK7XqvQuLlPynFNPqIgKEjrVoNKbLwT1H9nDR1gfXfyJw=
+	t=1743677742; cv=none; b=QG0JUIzDYsa9dcGS9wwzjmKoFaNTEGVuLRIu8qbokWUM9l3sb0oAnPVLZtIiuSCDoaFixxio+uRfcF27ldliS7D1JVNyyADk2RLx3OCQjMBJWn4i2ZBkeLhPfPXSHNu8W618RQ6NJoHub2mqmiVOIBGU2wUFRwW4k7fbAlh8cfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743677696; c=relaxed/simple;
-	bh=QvBZ5cyCcgLfkLnVqPUR4UnS84sKWcyrUwMg47MI12g=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=fbiyGhQPx5rAVoiGMRsSy8T2RTOMyzs02vfLBofspyPeB5X/64b69c7KSNlwh6dt/zvRFiAAexgsEw54kLBT7bZ/cUywxDfubC3VSwSSxssqVXuWi0AVnJZgkldLPnpeYP7zBXPe0FP6TbNvjJXj5WitcDNer+NZRVU+2yKhyMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FxA0WqbV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743677742; c=relaxed/simple;
+	bh=+Txho1X6kxtQ7ArayeLB/i6A0cBPRmvC3mL3UWxb1f0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QqYH/+nvH19JuDwj79mK7lnmHlOxg4nB66kl8bvtJpUb7JvA7v0CXOqaBHx+GT60N2PBpJg3203xCRuqC3Wd45A47LILC7hm7MVBfdwcFLmqY1ps9BUaxEHiZreNdNp9+4uWm2nf44cul+XRUVby+C6e9rEnifECHmcAzCP/QWQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TAY4vGly; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FxA0WqbV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59CB6C4CEE3;
-	Thu,  3 Apr 2025 10:54:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743677694;
-	bh=QvBZ5cyCcgLfkLnVqPUR4UnS84sKWcyrUwMg47MI12g=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=FxA0WqbVF19+zdRqfr6x5kfvdJ8YdjP5uyJ2p/z4+2NiyereeXESF4KB5CIT/cGuB
-	 vy96fQVrYb8WDNyGbxsJdY9Z7EuuES/q7zhfI+Yc5tnjm8X1oQV11oCGUzENisE1UH
-	 21tYkCZR5jKvNbubvUvnlFne3vi7PebKAezEvhyJcxjI2WCKrkBrOp6sstJqK/YHU7
-	 RUOFM/8J56RwjotFNqTAse1EpXvh+t+yR4rf562VwgPQJh+V8flTcU3ZkoZ7cveb0s
-	 3Omkr0evvEnoHJrnq/3b+V5R+9w22p41h/lc3DglBBa7/eVg2JlXKKsWOBzFxDXAZo
-	 6aGSBZjCuIDIw==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: "FUJITA Tomonori" <fujita.tomonori@gmail.com>
-Cc: <boqun.feng@gmail.com>,  <tglx@linutronix.de>,
-  <linux-kernel@vger.kernel.org>,  <rust-for-linux@vger.kernel.org>,
-  <netdev@vger.kernel.org>,  <andrew@lunn.ch>,  <hkallweit1@gmail.com>,
-  <tmgross@umich.edu>,  <ojeda@kernel.org>,  <alex.gaynor@gmail.com>,
-  <gary@garyguo.net>,  <bjorn3_gh@protonmail.com>,
-  <benno.lossin@proton.me>,  <a.hindborg@samsung.com>,
-  <aliceryhl@google.com>,  <anna-maria@linutronix.de>,
-  <frederic@kernel.org>,  <arnd@arndb.de>,  <jstultz@google.com>,
-  <sboyd@kernel.org>,  <mingo@redhat.com>,  <peterz@infradead.org>,
-  <juri.lelli@redhat.com>,  <vincent.guittot@linaro.org>,
-  <dietmar.eggemann@arm.com>,  <rostedt@goodmis.org>,
-  <bsegall@google.com>,  <mgorman@suse.de>,  <vschneid@redhat.com>,
-  <tgunders@redhat.com>,  <me@kloenk.dev>,  <david.laight.linux@gmail.com>
-Subject: Re: [PATCH v11 6/8] MAINTAINERS: rust: Add new sections for
- DELAY/SLEEP and TIMEKEEPING API
-In-Reply-To: <20250403.171809.1101736852312477056.fujita.tomonori@gmail.com>
-	(FUJITA Tomonori's message of "Thu, 03 Apr 2025 17:18:09 +0900")
-References: <RGjlasf3jfs3sL9TWhGeAJxH0MNvvn0DDqGl9FVo2JNvwTDpUqrr_V515QzLaEp0T4B1m6PJ0z7Jpw1obiG58w==@protonmail.internalid>
-	<Z-qgo5gl6Qly-Wur@Mac.home> <87ecyd3s09.fsf@kernel.org>
-	<RK_ErPB4YECyHEkLg8UNaclPYHIV40KuRFSNkYGroL8uT39vud-G3iRgR2a7c11Sb7mXgU6oeb_pukIeTOk9sQ==@protonmail.internalid>
-	<20250403.171809.1101736852312477056.fujita.tomonori@gmail.com>
-User-Agent: mu4e 1.12.7; emacs 29.4
-Date: Thu, 03 Apr 2025 12:54:40 +0200
-Message-ID: <877c41v7kf.fsf@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TAY4vGly"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-22403cbb47fso8108955ad.0;
+        Thu, 03 Apr 2025 03:55:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743677740; x=1744282540; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=sNlLWGdRtItnGdc2sw0oNRPSrhRzRsHpESstF1l2f68=;
+        b=TAY4vGlysrbPtQjr8H4zRF/trgoHcPGlsEO8AVh5Qm8MYfmR+yrH3FQtwM1sA6RJqr
+         Uja3dEz34voLGlMTv3Iem6PvPqUr2fFVfX68xL+BNSThY1YU3OyjHWtQ3hj3IOM3NdZ/
+         IOXemxBs7cYLHJGtoVlYbVBTO9F0WCFE3v74o1z3PrmNMqf7cA7IefSP90L9eXI8zCat
+         SHOMeTUQzRqtpbvFD/GIV55RrQc5L6DetlcR5OUDUGFZfiOnRxww2I1Ne8CDPepdnj3j
+         K14FKrOgO+j/7TJDKX2QVeYj9l+ctZo+aAJLXovy7g5nD8pUF22E2Pcokd51/33hZn64
+         Xmsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743677740; x=1744282540;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sNlLWGdRtItnGdc2sw0oNRPSrhRzRsHpESstF1l2f68=;
+        b=WApbvSwSmSB6s4IHzUMM40Pc49oPAdMYheq4yn9o+iwoTiUS8qK5Nkluv0FYTiQdkl
+         y/24S4XaHB9RkYUyv2PLlRVPuA7CqxldOYKzoIkGIUcUXAoEP92KW+icHAeqtgroSc8r
+         7OagFnatpuahQ49PDgXetMsRFaCzzeLmpXmhv13HXue4TW5iKTIc6SCQ6Ac+qgcgzef5
+         PSoa2SSGUGDK+V7tEYOX2f51OBSMgyoelp3kWIHE+poKk0GGwhj2WQviZRNl960JiB59
+         Ourtgz+n5nVEqkxByqLpfff/sz2IA0/8y5jdCUgkr1UBOtq5elsDpH+VuwWYHYIA51Ph
+         NkUg==
+X-Forwarded-Encrypted: i=1; AJvYcCWHktD73tqkvcnr4kv4QYd4aCUDO8gddNGgb15thZI2TjM1oF1Y912i8XRYPoS9aoI/8vWTLnvfKBXrMB1p@vger.kernel.org, AJvYcCWcyauqcBpOPGY1/MrSZiTyd3XXrZBhne97GqNE/3AriT2NoOSCFFi9MSsZ74kVBf9tiBsDGC8Ryq8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwIiYOu3tfBQOvkA6A5f12Fy7t/bq4KELC2lxGB7A0qplrf5YLj
+	kMxqTOzFbHo6dLvyZK2bYk3AhUVGEfES0r/3qa30HvxCqjFRKJ6b
+X-Gm-Gg: ASbGncu22yro4iutw2+EJ50F1Ndjz0jCMTRwXGje+rxVMi4Nj4R/qE5S5AWIPDaU5mN
+	GQtofzLUxDmSfLmw/GHSqbt7w9j5Sf7YLdZBIqukXSO2fjodyk7y/ouA1WukpXVSqjYmzrfvxX8
+	GJ+IyUaex55VWPyFssk/JLmI2zeD7hjBKa1XwSoyuWk/sofD6st7t5Jrb9EhBGkJSEcF6Myrs6b
+	+0bRnWIj4oPIcj5q6dXEKDxY1XCw/NvPuKg7u3u8X0EmoVwWeVCKEynimGaRu+zQHz+kOpTxI1j
+	WMDmkmdb+Q+vyx6N6TbxBry+ofURVqAff/58NeBptJ+0
+X-Google-Smtp-Source: AGHT+IE+gQXleRkvfL/4cfdA5b6Dbr2fmsHTRHz18hvqGG9oy+QNiixivlKQms0BXRWQfa03q8a36w==
+X-Received: by 2002:a17:902:f54a:b0:220:d79f:60f1 with SMTP id d9443c01a7336-2292f9f2bdcmr292546445ad.42.1743677739427;
+        Thu, 03 Apr 2025 03:55:39 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2297865e04bsm11402235ad.114.2025.04.03.03.55.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Apr 2025 03:55:38 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id EFE744208F7B; Thu, 03 Apr 2025 17:55:35 +0700 (WIB)
+Date: Thu, 3 Apr 2025 17:55:35 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: "Naveen N Rao (AMD)" <naveen@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Cc: Borislav Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@kernel.org>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Jonathan Corbet <corbet@lwn.net>, x86@kernel.org
+Subject: Re: [PATCH] Documentation/x86: Clarify naming of CPU features for
+ /proc/cpuinfo
+Message-ID: <Z-5pJ6iat-uptEh9@archie.me>
+References: <20250403094308.2297617-1-naveen@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-
-"FUJITA Tomonori" <fujita.tomonori@gmail.com> writes:
-
-> On Mon, 31 Mar 2025 21:43:50 +0200
-> Andreas Hindborg <a.hindborg@kernel.org> wrote:
->
->>>> If that is acceptable to everyone, it is very likely that I can pick 2-6
->>>> for v6.16.
->>>>
->>>
->>> You will need to fix something because patch 2-6 removes `Ktime` ;-)
->>
->> Yea, but `Instant` is almost a direct substitution, right? Anyway, Tomo
->> can send a new spin and change all the uses of Ktime, or I can do it. It
->> should be straight forward. Either way is fine with me.
->
-> `Delta`? Not `Instant`.
-
-It depends. Current hrtimer takes `Ktime` and supports
-`HrTimerMode::Absolute` and `HrTimerMode::Relative`. With `Delta` and
-`Instant` we should take `Instant` for `HrTimerMode::Absolute` and
-`Delta` for `HrTimerMode::Relative`. The API needs to be modified a bit
-to make that work though. Probably we need to make the start function
-generic over the expiration type or something.
-
-If you want to, you can fix that. If not, you can use `Instant` for the
-relative case as well, and we shall interpret it as duration. Then I
-will fix it up later. Your decision.
-
-> All Ktime in hrtimer are passed to hrtimer_start_range_ns(), right?
-
-Yes, that is where they end up.
-
-> I'll send a new version shortly.
-
-Great :)
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="RhAAMdodC1OlX4rj"
+Content-Disposition: inline
+In-Reply-To: <20250403094308.2297617-1-naveen@kernel.org>
 
 
-Best regards,
-Andreas Hindborg
+--RhAAMdodC1OlX4rj
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, Apr 03, 2025 at 03:13:08PM +0530, Naveen N Rao (AMD) wrote:
+>  If the comment on the line for the #define X86_FEATURE_* starts with a
+> -double-quote character (""), the string inside the double-quote characte=
+rs
+> -will be the name of the flags. For example, the flag "sse4_1" comes from
+> -the comment "sse4_1" following the X86_FEATURE_XMM4_1 definition.
+> +double-quote character (""), the string inside the double-quote characte=
+rs will
+                           "... the quoted string ..."
+> +be the name of the flag. For example, the flag "sse4_1" comes from the c=
+omment
+> +"sse4_1" following the X86_FEATURE_XMM4_1 definition. /proc/cpuinfo is a
+> +userspace interface and must remain constant. If, for some reason, the n=
+aming
+> +of X86_FEATURE_<name> changes, one shall retain the name already used in
+> +/proc/cpuinfo.
 
+Thanks.
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--RhAAMdodC1OlX4rj
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZ+5pJwAKCRD2uYlJVVFO
+o4VoAP9Dd/u1PorFRyEC/XHLuijWLg32I7km53KfdYi9N6GsvAEAl+P9pwvFptaG
+Se86hcc9DINWnPrw3KXrBBvZx2L9tQU=
+=F0td
+-----END PGP SIGNATURE-----
+
+--RhAAMdodC1OlX4rj--
