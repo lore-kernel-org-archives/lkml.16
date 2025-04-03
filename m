@@ -1,190 +1,84 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F5B81514F6;
-	Thu,  3 Apr 2025 16:32:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A01E1514F6
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 16:35:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743697969; cv=none; b=LikbNK0uItllGgRb7oPFcrUgIvz3fkqA38X1u2oe7+h5cSWrQqBski2VDh52YTUSFVqromWOg9oNE5JDvKbzymIvHbOiu1cm/jfRcml4WrRNGjNdbu1Kg0lJgLW1JOJPaFpkI9p5KwtNkaICdw37GAvBJSoZ8TfoDnX2N/lukSY=
+	t=1743698160; cv=none; b=l2JnBdbwv9QA6yb0dKY+p7DGoxM2TkYoeVlawBxvWQPU+cjAFM463AjHq3KcAvic4gqt0Nk7J+5rTeUKuJItNLYqiwn/THZcG6a4WKN4r2846isUIKDiF4c+xEuJLIB4xbhZnkCgEuCQIrH02/ITKGcva1yqgrZDgAsDHDP0Vbc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743697969; c=relaxed/simple;
-	bh=nMCJUD39JxPn8sbGvbI/xrwFl+jsJVFVNZQe/Lk07E8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qYa5JxHeU1pqTPoU3a/j03yXve0dFm6PXluDnaYdPy2Wc+42fvXAGqi+kKzSfkVd+zxXxDYJmW+tu5cyBe34OaVEp8aACJoePizVZqccpYmgyhJCB7QxbpFZMI+sms3OzJ2A7Ye55L15hqe4jPKeFvBLeFYR9a4UvYalkphYMRk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WGqtQ+cE; arc=none smtp.client-ip=209.85.215.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WGqtQ+cE"
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-af241f0a4beso1020305a12.2;
-        Thu, 03 Apr 2025 09:32:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743697966; x=1744302766; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7KJdAxOd/G0iqxROXI10DaNI9IIAFwi2MfAijcTTkYc=;
-        b=WGqtQ+cEdySJ6D2gzXYfXDcw/u+jYnwq8P5lpFeXUUdyyrQdmiIr4yk7SjI4fT8/iy
-         3x0Z6+01oJZl4bgqY3M4edE5APuKFy9sUXWwWHq0oAYCXW8NbrdljBdkXy+8shn1eNeD
-         cIcutsXNStFblFrk4+JmFGf7a2NgaUHFMiM5hRjRbIDAKKx4xusMfsN+qcOqB4Be2NHe
-         7XC4H4+oO05SAPyINxO9Qt0YV+VrTSjKFd+hZZ1fHqLTGWFRlHNAt+gLkBLQ9qZSqN+D
-         PtpwNdCTxuKJ8yNHgI7NaOBg4eTmJsjmqluy7namlvYXZ8cuV3V607r3CNVZKlCwOM0B
-         T3KQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743697966; x=1744302766;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7KJdAxOd/G0iqxROXI10DaNI9IIAFwi2MfAijcTTkYc=;
-        b=ZZDyyAJg2pnNdmykSkITwfqWbRdhsJsGHp6oUoxw6HeQeL9ACPzy384bB0/OUbQiBQ
-         +UMIXKGabicsz3/U2gIINBTob0r/acKJXMI2ku6UFnfwChhVOdTJRBVaFfvwl97VTLxY
-         fnlRh+0cSU44ATutZW3fWU87B2VnXsXAwP0rTFOb6Sf0DyVr6OSKGUOwWN3KuMBzMkKj
-         F8K6S3wo2SAoR5ucjpzx2/RjWBkJKMNdLxpLjTtoLZ/+tX4RX20XVjkvL5PqVr1LhMz3
-         v6iw71d21d/4gqNW0O/w5oY0lkbNxDI/lkg75eKbOjHeqLRrLUxn3RejKZWCMnbY9/Tp
-         /KWg==
-X-Forwarded-Encrypted: i=1; AJvYcCU1Xn+5W62idSAiRWgjb7GissTFbUzYEEDmxQi1eeTnVXVWGLcmhFDecuGT7y9Sx2rIMXvTwgtX2XeHpIE=@vger.kernel.org, AJvYcCWGabrbfpVeNmmuEYATi1RRCJXuz3OvVbIIZwj+RaOFej/XWVKaE4j25vMkt0Lo1vHvXgGwGibaRuU=@vger.kernel.org, AJvYcCXeewcdku5EvOVK9ObiXJZMOTt9coMh54n7AjINEJFHEQKcNkddX2A3nFeNm9614mShOfdVWRUFj9WY@vger.kernel.org, AJvYcCXevtq/rfbDC+XIqUO6COfbTAGxcvtikJ5gLindUR99hQB4wJ1jBNkRWiMtRlsSLIDZKpIF96V48N0OnIbK@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzc561kOmUAinADvKqVmtR/JUoEnHBlncZtEbPYfdsGCEyIDyw0
-	mlkk1G5KLgOY0JPCGZs2jctm3z11d0J/UZIRmtiYRc53HDistaHr
-X-Gm-Gg: ASbGncv3rzoMWKO/EJ+VT7scJnSuISbMxPFCvjuk6K0VldaOENo+etEr98Sse7LTRdf
-	LtT1RsEhkU1s6s+TxsiINS+WyGaZkfR+HjHBnhrzibc0lL34AEbpIZHJ7accBcLZkqkdAQKADWK
-	GGPoIlmJuo0a0+WOSP2XVdSCf0jQnMNYU3UT1LaZJJXfRAfuS8ar7Me+uEUfr/am3VsBAFxoK3t
-	r4mUiOu+43A6EDJt2AQjvtlSDWMYRO4d0i8mrW9BMYa6Qtvbp42Rwy7HIzBJIko+ZZ/20/jfA1/
-	8KGaV+Fzl6k1AZ7X6cLcYZGNXsWUiFqSZMHOx69EQtMdL3NVm6Ux9HeIGg==
-X-Google-Smtp-Source: AGHT+IGNyHx4nxR5tTiooAyFc+8Sh9HpSHaXhwKL4UKkSQzlutFbKuE/+7rfXHqUXEHQgUx/tXZDIA==
-X-Received: by 2002:a05:6a21:1583:b0:1f5:7eee:bb10 with SMTP id adf61e73a8af0-20104598389mr113569637.8.1743697966408;
-        Thu, 03 Apr 2025 09:32:46 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af9bc40098dsm1448971a12.48.2025.04.03.09.32.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Apr 2025 09:32:45 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Thu, 3 Apr 2025 09:32:44 -0700
-From: Guenter Roeck <linux@roeck-us.net>
-To: Alexis Czezar Torreno <alexisczezar.torreno@analog.com>
-Cc: Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>,
-	Delphine CC Chiu <Delphine_CC_Chiu@wiwynn.com>,
-	linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] hwmon: (pmbus/max34440): Fix support for max34451
-Message-ID: <2234425e-b676-4564-96c6-57c0a635292c@roeck-us.net>
-References: <20250403-dev_adpm12160-v2-0-bbf40faae988@analog.com>
- <20250403-dev_adpm12160-v2-1-bbf40faae988@analog.com>
+	s=arc-20240116; t=1743698160; c=relaxed/simple;
+	bh=K1FNdcFBqE84EbtEJKxo8KoJG/wUIPDsp4ufsPdFGYU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kwU1vlE9uBO2tBqQolKs8VLRRC/4b5inIbFaC5jjT3F1+lk9Tlj/keJWnJuZViv5JwUACtibKbq1MCwG+v6dFXkiQh5zkR42f8QwytM8tzhKh6NG/GwJ3pk3XYX3Kr6nlFQnM7OP7ZssOzi9vMDRou63xMQIqOWvFJqDHWlMS+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost.localdomain (unknown [221.222.48.127])
+	by APP-05 (Coremail) with SMTP id zQCowACHvgbnuO5n8zCJBQ--.6940S2;
+	Fri, 04 Apr 2025 00:35:53 +0800 (CST)
+From: Wentao Liang <vulab@iscas.ac.cn>
+To: abbotti@mev.co.uk,
+	hsweeten@visionengravers.com
+Cc: linux-kernel@vger.kernel.org,
+	Wentao Liang <vulab@iscas.ac.cn>
+Subject: [PATCH] Staging: comedi: Add DMA preparation before mite_dma_arm().
+Date: Fri,  4 Apr 2025 00:35:35 +0800
+Message-ID: <20250403163535.2494-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.42.0.windows.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250403-dev_adpm12160-v2-1-bbf40faae988@analog.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:zQCowACHvgbnuO5n8zCJBQ--.6940S2
+X-Coremail-Antispam: 1UD129KBjvdXoWruF4rWFyUKFyrZF17Zr15twb_yoWkGwc_CF
+	1fZryxCrsrKFy2vr1Ygw43u3sa9FWDZ3Z7WryaqrW3Xry7ZayxZr1vvr9xJw18Ar4vvasx
+	Jwn2qryfZryxCjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUb2kFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Jr0_
+	Gr1l84ACjcxK6I8E87Iv67AKxVWUJVW8JwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr0_Gr
+	1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
+	jxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr
+	1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkIecxEwVAFwVWUMxAI
+	w28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr
+	4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxG
+	rwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8Jw
+	CI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2
+	z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7sRRXdjtUUUUU==
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiBwwBA2fuaeLcHwAAsI
 
-On Thu, Apr 03, 2025 at 01:16:18PM +0800, Alexis Czezar Torreno wrote:
-> The max344** family has an issue with some PMBUS address being switched.
-> This includes max34451 however version MAX34451-NA6 and later has this
-> issue fixed and this commit supports that update.
-> 
-> Signed-off-by: Alexis Czezar Torreno <alexisczezar.torreno@analog.com>
-> ---
->  drivers/hwmon/pmbus/max34440.c | 55 +++++++++++++++++++++++++++++++++++++++---
->  1 file changed, 51 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/hwmon/pmbus/max34440.c b/drivers/hwmon/pmbus/max34440.c
-> index c9dda33831ff24e7b5e2fd1956a65e6bd2bfcbb9..585746806663409bc97042647f6c0aba4c6f520a 100644
-> --- a/drivers/hwmon/pmbus/max34440.c
-> +++ b/drivers/hwmon/pmbus/max34440.c
-> @@ -34,16 +34,22 @@ enum chips { max34440, max34441, max34446, max34451, max34460, max34461 };
->  /*
->   * The whole max344* family have IOUT_OC_WARN_LIMIT and IOUT_OC_FAULT_LIMIT
->   * swapped from the standard pmbus spec addresses.
-> + * For max34451, version MAX34451ETNA6+ and later has this issue fixed.
->   */
->  #define MAX34440_IOUT_OC_WARN_LIMIT	0x46
->  #define MAX34440_IOUT_OC_FAULT_LIMIT	0x4A
->  
-> +#define MAX34451ETNA6_MFR_REV		0x0012
-> +
->  #define MAX34451_MFR_CHANNEL_CONFIG	0xe4
->  #define MAX34451_MFR_CHANNEL_CONFIG_SEL_MASK	0x3f
->  
->  struct max34440_data {
->  	int id;
->  	struct pmbus_driver_info info;
-> +	bool pmbus_addr_fixed;
+The ni_tio_input_inttrig() calls mite_dma_arm() without calling
+mite_prep_dma() first. A proper implementation can be found in
+ni_cdo_inttrig() in ni_mio_common.c.
 
-Unnecessary. See below.
+Add mite_prep_dma() before mite_dma_arm().
 
-> +	u32 iout_oc_warn_limit;
-> +	u32 iout_oc_fault_limit;
+Fixes: cb7859a90af1 ("Staging: comedi: add National Instruments infrastructure")
+Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+---
+ drivers/comedi/drivers/ni_tiocmd.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-u8 would be sufficient.
+diff --git a/drivers/comedi/drivers/ni_tiocmd.c b/drivers/comedi/drivers/ni_tiocmd.c
+index ab6d9e8269f3..b943836ccf1a 100644
+--- a/drivers/comedi/drivers/ni_tiocmd.c
++++ b/drivers/comedi/drivers/ni_tiocmd.c
+@@ -84,9 +84,10 @@ static int ni_tio_input_inttrig(struct comedi_device *dev,
+ 		return -EINVAL;
+ 
+ 	spin_lock_irqsave(&counter->lock, flags);
+-	if (counter->mite_chan)
++	if (counter->mite_chan) {
++		mite_prep_dma(counter->mite_chan, 32, 32);
+ 		mite_dma_arm(counter->mite_chan);
+-	else
++	} else
+ 		ret = -EIO;
+ 	spin_unlock_irqrestore(&counter->lock, flags);
+ 	if (ret < 0)
+-- 
+2.42.0.windows.2
 
->  };
->  
->  #define to_max34440_data(x)  container_of(x, struct max34440_data, info)
-> @@ -60,11 +66,11 @@ static int max34440_read_word_data(struct i2c_client *client, int page,
->  	switch (reg) {
->  	case PMBUS_IOUT_OC_FAULT_LIMIT:
->  		ret = pmbus_read_word_data(client, page, phase,
-> -					   MAX34440_IOUT_OC_FAULT_LIMIT);
-> +					   data->iout_oc_fault_limit);
->  		break;
->  	case PMBUS_IOUT_OC_WARN_LIMIT:
->  		ret = pmbus_read_word_data(client, page, phase,
-> -					   MAX34440_IOUT_OC_WARN_LIMIT);
-> +					   data->iout_oc_warn_limit);
->  		break;
->  	case PMBUS_VIRT_READ_VOUT_MIN:
->  		ret = pmbus_read_word_data(client, page, phase,
-> @@ -133,11 +139,11 @@ static int max34440_write_word_data(struct i2c_client *client, int page,
->  
->  	switch (reg) {
->  	case PMBUS_IOUT_OC_FAULT_LIMIT:
-> -		ret = pmbus_write_word_data(client, page, MAX34440_IOUT_OC_FAULT_LIMIT,
-> +		ret = pmbus_write_word_data(client, page, data->iout_oc_fault_limit,
->  					    word);
->  		break;
->  	case PMBUS_IOUT_OC_WARN_LIMIT:
-> -		ret = pmbus_write_word_data(client, page, MAX34440_IOUT_OC_WARN_LIMIT,
-> +		ret = pmbus_write_word_data(client, page, data->iout_oc_warn_limit,
->  					    word);
->  		break;
->  	case PMBUS_VIRT_RESET_POUT_HISTORY:
-> @@ -235,6 +241,24 @@ static int max34451_set_supported_funcs(struct i2c_client *client,
->  	 */
->  
->  	int page, rv;
-> +	bool max34451_na6 = false;
-> +
-> +	rv = i2c_smbus_read_word_data(client, PMBUS_MFR_REVISION);
-> +	if (rv < 0)
-> +		return rv;
-> +
-> +	if (rv == MAX34451ETNA6_MFR_REV) {
-
-Sure that this is only one revision ?
-Would it be better to use ">=" instead of "==" ?
-
-> +		max34451_na6 = true;
-> +		data->pmbus_addr_fixed = true;
-> +		data->info.format[PSC_VOLTAGE_IN] = direct;
-> +		data->info.format[PSC_CURRENT_IN] = direct;
-> +		data->info.m[PSC_VOLTAGE_IN] = 1;
-> +		data->info.b[PSC_VOLTAGE_IN] = 0;
-> +		data->info.R[PSC_VOLTAGE_IN] = 3;
-> +		data->info.m[PSC_CURRENT_IN] = 1;
-> +		data->info.b[PSC_CURRENT_IN] = 0;
-> +		data->info.R[PSC_CURRENT_IN] = 2;
-
-Assign register addresses directly here.
-
-		data->iout_oc_fault_limit = PMBUS_IOUT_OC_FAULT_LIMIT;
-		data->iout_oc_warn_limit = PMBUS_IOUT_OC_WARN_LIMIT;
-	} else {
-		data->iout_oc_fault_limit = MAX34440_IOUT_OC_FAULT_LIMIT;
-		data->iout_oc_warn_limit = MAX34440_IOUT_OC_WARN_LIMIT;
-
-> +	}
-
-Thanks,
-Guenter
