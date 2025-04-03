@@ -1,339 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA248253333
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 13:33:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45DD324EF66
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 13:34:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743687234; cv=none; b=ouZObGvoN5jk7K9d358yO4uvA3lZ7DB00BbSopXwPlo/WpSMY6t8Vb1o5P/NrSHmazZlVLhMSoBMFW+k+OaBSHE1CoA6pVNvpBs0jgDshG/NQYtSudVCyjxvRUS2CfWQp/Tb6IUtsoqxm8c/zUTEQNaRD2Mub7NFKo0jTcqu0yA=
+	t=1743687251; cv=none; b=JGbXQr4IDV+fGcawqSYuvn9FUKEY9NkjrIXsDx1oFRuvZDt1wzfE+34XPIf6m7LqplDwodyuY04XPsfHx2UWz/5n8093P+oO9qFe8d4zWnJ67A4jQPXGvekPrSbScNF1pwstTNf9Tm8BhAdfeOhLQLy0g/+37Q3CQL+j9Px+P14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743687234; c=relaxed/simple;
-	bh=hMXyl/o28HCBQcio/Vf3sP3GQUcIbXdFe9WHjTM8Fjg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=RV9I3XUopwz9by2ldCcUnm8/kvlvPfp3xrcxAcFkwDxkJhHJJJMj4no6UmTwrqoYFMWQXa6A+TDXbokfxWomcOQVSPeCZb6QtN+FOnbIcwk3qYzsQ1DtY+KUc278LL2H/U7BcKCQGveOj4jukwdG0PAAtwbFGqOCNwTHmafmxmw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fFYDb8c+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743687251; c=relaxed/simple;
+	bh=xiOlszo95RrZ3LIb1/U+HCnGNexFRuJJsuvLKrx+d6w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rwlNc/TQv3a9BITW3IK/3I+IvcEYLDCuRlZqb2/0hjVBsxwWYJEkTkjMy/U+KMY88Dmcuw+lfrNqsDDqBQiCtqEFS07ffwtt63wZMNHuwGtdS3ielbjZojE2u4k4HJYD5VDW/x+oyo+wBOwyGzGLUBA6zxObwIyLxIMPQ0DZ5wM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Me140abe; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fFYDb8c+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1064C4CEE5;
-	Thu,  3 Apr 2025 13:33:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743687234;
-	bh=hMXyl/o28HCBQcio/Vf3sP3GQUcIbXdFe9WHjTM8Fjg=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=fFYDb8c+ymb+FThbz5S66LzuzIlEmTagnsBzHN+4WB/dn+oaKsnCtqOl/FKxUUAnj
-	 R3egR4ORvs/j+6eVL1V3vpLZM86m9aH+5lYQMVZzcmpUpq7N2qxBbeaywu/AKII1Wv
-	 xv7u/Q+Zva9F9hpoN259KRX1UubvPoL9sW81wSQEPFO1Xk9Q4AUK5g0v6wTtyQMI86
-	 26DF7vXWSSCFh+/r7Urrg+oBaghk32w6BJSvf1A4G/s29RGryB7aidJe5mBi+Lkke+
-	 4KsVzunC14pehqmyMtnPhi+aA3fZvndoiCDBm71q6+am357vEVUYjb0/JJcOlSiYQa
-	 U+bSPR9ix0uKA==
-From: Maxime Ripard <mripard@kernel.org>
-Date: Thu, 03 Apr 2025 15:33:33 +0200
-Subject: [PATCH v2 4/4] drm/vc4: tests: Retry pv-muxing tests when EDEADLK
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Me140abe"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43d0618746bso6250795e9.2
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 06:34:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1743687247; x=1744292047; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=xiOlszo95RrZ3LIb1/U+HCnGNexFRuJJsuvLKrx+d6w=;
+        b=Me140abeGqz+krODLLr2VPPxSqzreDTcOK6fbCInh9C9gS1jrylRb1GKX/TzI1kguq
+         P7o1bEIRm8l95dmdr/VzopwtIA+dFnWG3gRABWKeHfNboEq3+Gtbz5hfe3o5LkHUbVa2
+         LCiVUpUtNJFqfyTUX18/MC1wM84x43w0LCMCVBFr+vEnUWspAhGmCpmFf69SfMPjApCN
+         VUSKe06cGX94zv3Vkg9vdtfIpAVqea7yD4OXYLjkg6ak3EKkbT9CbRh4R/nl4sIUUU90
+         PsPmO1++sHH57//E+SkXMcN4u0Wh9TOpWSXRoolphHoIqtUTYT6sGeHdAT77S71Ss9Eu
+         EINA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743687247; x=1744292047;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xiOlszo95RrZ3LIb1/U+HCnGNexFRuJJsuvLKrx+d6w=;
+        b=q9vo888Knxf+LEpRvhDIT5tb2q6Xhngm4JPyVxtwip5dwNeR8XT+nHKmKALK3tqedN
+         lcv82q4n0wldiZGQh8q+qsO4t1dKw7mGWmJKSpfKfqq3azUZlxBvq33z80Rn9fovFdNK
+         J7cCa+G4svvHpqlhd5WxN/6mvZb1sL4eQqkjfl1XP4SOhYI5GCtDO0y3+mKuI/NZsj4O
+         VJ3wvYgJonhjfw2jqbBneYtv0mUES7TC2xIFn89az1S1hlhkuUSFmmiOpYDUp5CrGXmx
+         G1AklqZ/nMlqUjfa+KGgn4LHXvBWAhWRqXNHGAO4lge5fxBQjZoKPdwmiy5UGcUW0JvY
+         GQPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUCwLetfbpZYrUusL4bE7v2i8h/teZTgt/kGck0o4RxTKo52Y1jygNn4NctitZNFMBX6Fed61PzLPQkXn4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwpSPQk9nTtJDFwHY+X4GuoL1O0R6egJydXVxdHvs1ICTXG7cRx
+	jKoMUizmuviH0k8RRg8vdxFAHZGxhRTkwsx4a6pdOOxYNu+DA7TRJgauZmiddzc=
+X-Gm-Gg: ASbGnctF9PuZflJbBXwc1HxEgBL9dFeii+lCHSxeLY4aNnDl9si45/oAX0cfwkQTDnL
+	K9F+CTLkkgMe5WskKwQ328BNR6b/hqKLtsOgFN4/epKfpVRwF2yT0AKp4M+SCWVZRle7qi0CuqV
+	Irxws+02n6fS410BDc22AcA164hulgpRsH0nIGvXtAUgj+w8kSQYAXXFRlxMzMIKb4pxU1P8CZ9
+	hnBQlY6RpbAw6yEr2XK9qoc6sHqYrMn+V67wkzbXHfp7XLrdcfeB3B82nGCeIhxxbgjejA9/X/t
+	9RiA/Gl+tc9a4CpJMw3+PNJyo33Wpy31Uy9jnIJr+Nkvd68=
+X-Google-Smtp-Source: AGHT+IGP0oRY34V+cSf6iFZovfs1LwN6DYRliDiIlWREW6dwmZHpdy7zI1duz9gTK1+/IwIvLvwRsQ==
+X-Received: by 2002:a05:600c:b89:b0:43d:fa5d:9314 with SMTP id 5b1f17b1804b1-43ec153677cmr30397905e9.32.1743687247482;
+        Thu, 03 Apr 2025 06:34:07 -0700 (PDT)
+Received: from blackdock.suse.cz ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec364a0c7sm18497875e9.29.2025.04.03.06.34.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Apr 2025 06:34:07 -0700 (PDT)
+Date: Thu, 3 Apr 2025 15:34:05 +0200
+From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
+To: Tejun Heo <tj@kernel.org>
+Cc: Waiman Long <longman@redhat.com>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Shuah Khan <shuah@kernel.org>, cgroups@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 01/10] cgroup/cpuset: Fix race between newly created
+ partition and dying one
+Message-ID: <hsbn4pcb6gpipjfacn7tbutheolot6rfia2j6nyit3bpf4adys@mpaop37aps55>
+References: <20250330215248.3620801-1-longman@redhat.com>
+ <20250330215248.3620801-2-longman@redhat.com>
+ <Z-zsGazxeHK9uaA6@slm.duckdns.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250403-drm-vc4-kunit-failures-v2-4-e09195cc8840@kernel.org>
-References: <20250403-drm-vc4-kunit-failures-v2-0-e09195cc8840@kernel.org>
-In-Reply-To: <20250403-drm-vc4-kunit-failures-v2-0-e09195cc8840@kernel.org>
-To: Dave Stevenson <dave.stevenson@raspberrypi.com>, 
- =?utf-8?q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>, 
- Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
- Simona Vetter <simona@ffwll.ch>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
- Maxime Ripard <mripard@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=8413; i=mripard@kernel.org;
- h=from:subject:message-id; bh=hMXyl/o28HCBQcio/Vf3sP3GQUcIbXdFe9WHjTM8Fjg=;
- b=owGbwMvMwCX2+D1vfrpE4FHG02pJDOnv+oxazp7jtlO+vjvaklNjRUIw55wc6XLLI9GWv9erz
- 3tTIG3fUcrCIMbFICumyBIjbL4k7tSs151sfPNg5rAygQxh4OIUgIkEzWf4K7pIt+vamZv7Eq4z
- 7RQXu/0i/7pXi9muPzIh+zUfhoRu+cjw32tfJafSG5nvnI8bQ1TeLyy88Mo2J+YPh/f1N5PS5sy
- +wgIA
-X-Developer-Key: i=mripard@kernel.org; a=openpgp;
- fpr=BE5675C37E818C8B5764241C254BCFC56BF6CE8D
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="t4fu4hgrvs64iwmt"
+Content-Disposition: inline
+In-Reply-To: <Z-zsGazxeHK9uaA6@slm.duckdns.org>
 
-Some functions used by the HVS->PV muxing tests can return with EDEADLK,
-meaning the entire sequence should be restarted. It's not a fatal error
-and we should treat it as a recoverable error, and recover, instead of
-failing the test like we currently do.
 
-Fixes: 76ec18dc5afa ("drm/vc4: tests: Add unit test suite for the PV muxing")
-Signed-off-by: Maxime Ripard <mripard@kernel.org>
----
- drivers/gpu/drm/vc4/tests/vc4_test_pv_muxing.c | 113 ++++++++++++++++++++++++-
- 1 file changed, 112 insertions(+), 1 deletion(-)
+--t4fu4hgrvs64iwmt
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 01/10] cgroup/cpuset: Fix race between newly created
+ partition and dying one
+MIME-Version: 1.0
 
-diff --git a/drivers/gpu/drm/vc4/tests/vc4_test_pv_muxing.c b/drivers/gpu/drm/vc4/tests/vc4_test_pv_muxing.c
-index 52c04ef33206bf4f9e21e3c8b7cea932824a67fa..d1f694029169adf6a907a72614bc66afd745017e 100644
---- a/drivers/gpu/drm/vc4/tests/vc4_test_pv_muxing.c
-+++ b/drivers/gpu/drm/vc4/tests/vc4_test_pv_muxing.c
-@@ -685,20 +685,34 @@ static void drm_vc4_test_pv_muxing(struct kunit *test)
- 
- 	drm_modeset_acquire_init(&ctx, 0);
- 
- 	vc4 = priv->vc4;
- 	drm = &vc4->base;
-+
-+retry:
- 	state = drm_kunit_helper_atomic_state_alloc(test, drm, &ctx);
- 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, state);
- 	for (i = 0; i < params->nencoders; i++) {
- 		enum vc4_encoder_type enc_type = params->encoders[i];
- 
- 		ret = vc4_mock_atomic_add_output(test, state, enc_type);
-+		if (ret == -EDEADLK) {
-+			drm_atomic_state_clear(state);
-+			ret = drm_modeset_backoff(&ctx);
-+			if (!ret)
-+				goto retry;
-+		}
- 		KUNIT_ASSERT_EQ(test, ret, 0);
- 	}
- 
- 	ret = drm_atomic_check_only(state);
-+	if (ret == -EDEADLK) {
-+		drm_atomic_state_clear(state);
-+		ret = drm_modeset_backoff(&ctx);
-+		if (!ret)
-+			goto retry;
-+	}
- 	KUNIT_EXPECT_EQ(test, ret, 0);
- 
- 	KUNIT_EXPECT_TRUE(test,
- 			  check_fifo_conflict(test, state));
- 
-@@ -726,21 +740,35 @@ static void drm_vc4_test_pv_muxing_invalid(struct kunit *test)
- 
- 	drm_modeset_acquire_init(&ctx, 0);
- 
- 	vc4 = priv->vc4;
- 	drm = &vc4->base;
-+
-+retry:
- 	state = drm_kunit_helper_atomic_state_alloc(test, drm, &ctx);
- 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, state);
- 
- 	for (i = 0; i < params->nencoders; i++) {
- 		enum vc4_encoder_type enc_type = params->encoders[i];
- 
- 		ret = vc4_mock_atomic_add_output(test, state, enc_type);
-+		if (ret == -EDEADLK) {
-+			drm_atomic_state_clear(state);
-+			ret = drm_modeset_backoff(&ctx);
-+			if (!ret)
-+				goto retry;
-+		}
- 		KUNIT_ASSERT_EQ(test, ret, 0);
- 	}
- 
- 	ret = drm_atomic_check_only(state);
-+	if (ret == -EDEADLK) {
-+		drm_atomic_state_clear(state);
-+		ret = drm_modeset_backoff(&ctx);
-+		if (!ret)
-+			goto retry;
-+	}
- 	KUNIT_EXPECT_LT(test, ret, 0);
- 
- 	drm_modeset_drop_locks(&ctx);
- 	drm_modeset_acquire_fini(&ctx);
- }
-@@ -811,17 +839,30 @@ static void drm_test_vc5_pv_muxing_bugs_subsequent_crtc_enable(struct kunit *tes
- 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, vc4);
- 
- 	drm_modeset_acquire_init(&ctx, 0);
- 
- 	drm = &vc4->base;
-+retry_first:
- 	state = drm_kunit_helper_atomic_state_alloc(test, drm, &ctx);
- 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, state);
- 
- 	ret = vc4_mock_atomic_add_output(test, state, VC4_ENCODER_TYPE_HDMI0);
-+	if (ret == -EDEADLK) {
-+		drm_atomic_state_clear(state);
-+		ret = drm_modeset_backoff(&ctx);
-+		if (!ret)
-+			goto retry_first;
-+	}
- 	KUNIT_ASSERT_EQ(test, ret, 0);
- 
- 	ret = drm_atomic_check_only(state);
-+	if (ret == -EDEADLK) {
-+		drm_atomic_state_clear(state);
-+		ret = drm_modeset_backoff(&ctx);
-+		if (!ret)
-+			goto retry_first;
-+	}
- 	KUNIT_ASSERT_EQ(test, ret, 0);
- 
- 	new_hvs_state = vc4_hvs_get_new_global_state(state);
- 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, new_hvs_state);
- 
-@@ -834,17 +875,30 @@ static void drm_test_vc5_pv_muxing_bugs_subsequent_crtc_enable(struct kunit *tes
- 	KUNIT_ASSERT_TRUE(test, new_hvs_state->fifo_state[hdmi0_channel].in_use);
- 
- 	ret = drm_atomic_helper_swap_state(state, false);
- 	KUNIT_ASSERT_EQ(test, ret, 0);
- 
-+retry_second:
- 	state = drm_kunit_helper_atomic_state_alloc(test, drm, &ctx);
- 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, state);
- 
- 	ret = vc4_mock_atomic_add_output(test, state, VC4_ENCODER_TYPE_HDMI1);
-+	if (ret == -EDEADLK) {
-+		drm_atomic_state_clear(state);
-+		ret = drm_modeset_backoff(&ctx);
-+		if (!ret)
-+			goto retry_second;
-+	}
- 	KUNIT_ASSERT_EQ(test, ret, 0);
- 
- 	ret = drm_atomic_check_only(state);
-+	if (ret == -EDEADLK) {
-+		drm_atomic_state_clear(state);
-+		ret = drm_modeset_backoff(&ctx);
-+		if (!ret)
-+			goto retry_second;
-+	}
- 	KUNIT_ASSERT_EQ(test, ret, 0);
- 
- 	new_hvs_state = vc4_hvs_get_new_global_state(state);
- 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, new_hvs_state);
- 
-@@ -885,20 +939,39 @@ static void drm_test_vc5_pv_muxing_bugs_stable_fifo(struct kunit *test)
- 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, vc4);
- 
- 	drm_modeset_acquire_init(&ctx, 0);
- 
- 	drm = &vc4->base;
-+retry_first:
- 	state = drm_kunit_helper_atomic_state_alloc(test, drm, &ctx);
- 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, state);
- 
- 	ret = vc4_mock_atomic_add_output(test, state, VC4_ENCODER_TYPE_HDMI0);
-+	if (ret == -EDEADLK) {
-+		drm_atomic_state_clear(state);
-+		ret = drm_modeset_backoff(&ctx);
-+		if (!ret)
-+			goto retry_first;
-+	}
- 	KUNIT_ASSERT_EQ(test, ret, 0);
- 
- 	ret = vc4_mock_atomic_add_output(test, state, VC4_ENCODER_TYPE_HDMI1);
-+	if (ret == -EDEADLK) {
-+		drm_atomic_state_clear(state);
-+		ret = drm_modeset_backoff(&ctx);
-+		if (!ret)
-+			goto retry_first;
-+	}
- 	KUNIT_ASSERT_EQ(test, ret, 0);
- 
- 	ret = drm_atomic_check_only(state);
-+	if (ret == -EDEADLK) {
-+		drm_atomic_state_clear(state);
-+		ret = drm_modeset_backoff(&ctx);
-+		if (!ret)
-+			goto retry_first;
-+	}
- 	KUNIT_ASSERT_EQ(test, ret, 0);
- 
- 	new_hvs_state = vc4_hvs_get_new_global_state(state);
- 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, new_hvs_state);
- 
-@@ -919,17 +992,30 @@ static void drm_test_vc5_pv_muxing_bugs_stable_fifo(struct kunit *test)
- 	KUNIT_ASSERT_TRUE(test, new_hvs_state->fifo_state[old_hdmi1_channel].in_use);
- 
- 	ret = drm_atomic_helper_swap_state(state, false);
- 	KUNIT_ASSERT_EQ(test, ret, 0);
- 
-+retry_second:
- 	state = drm_kunit_helper_atomic_state_alloc(test, drm, &ctx);
- 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, state);
- 
- 	ret = vc4_mock_atomic_del_output(test, state, VC4_ENCODER_TYPE_HDMI0);
-+	if (ret == -EDEADLK) {
-+		drm_atomic_state_clear(state);
-+		ret = drm_modeset_backoff(&ctx);
-+		if (!ret)
-+			goto retry_second;
-+	}
- 	KUNIT_ASSERT_EQ(test, ret, 0);
- 
- 	ret = drm_atomic_check_only(state);
-+	if (ret == -EDEADLK) {
-+		drm_atomic_state_clear(state);
-+		ret = drm_modeset_backoff(&ctx);
-+		if (!ret)
-+			goto retry_second;
-+	}
- 	KUNIT_ASSERT_EQ(test, ret, 0);
- 
- 	new_hvs_state = vc4_hvs_get_new_global_state(state);
- 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, new_hvs_state);
- 
-@@ -979,29 +1065,54 @@ drm_test_vc5_pv_muxing_bugs_subsequent_crtc_enable_too_many_crtc_state(struct ku
- 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, vc4);
- 
- 	drm_modeset_acquire_init(&ctx, 0);
- 
- 	drm = &vc4->base;
-+retry_first:
- 	state = drm_kunit_helper_atomic_state_alloc(test, drm, &ctx);
- 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, state);
- 
- 	ret = vc4_mock_atomic_add_output(test, state, VC4_ENCODER_TYPE_HDMI0);
-+	if (ret == -EDEADLK) {
-+		drm_atomic_state_clear(state);
-+		ret = drm_modeset_backoff(&ctx);
-+		if (!ret)
-+			goto retry_first;
-+	}
- 	KUNIT_ASSERT_EQ(test, ret, 0);
- 
- 	ret = drm_atomic_check_only(state);
-+	if (ret == -EDEADLK) {
-+		drm_atomic_state_clear(state);
-+		ret = drm_modeset_backoff(&ctx);
-+		if (!ret)
-+			goto retry_first;
-+	}
- 	KUNIT_ASSERT_EQ(test, ret, 0);
--
- 	ret = drm_atomic_helper_swap_state(state, false);
- 	KUNIT_ASSERT_EQ(test, ret, 0);
- 
-+retry_second:
- 	state = drm_kunit_helper_atomic_state_alloc(test, drm, &ctx);
- 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, state);
- 
- 	ret = vc4_mock_atomic_add_output(test, state, VC4_ENCODER_TYPE_HDMI1);
-+	if (ret == -EDEADLK) {
-+		drm_atomic_state_clear(state);
-+		ret = drm_modeset_backoff(&ctx);
-+		if (!ret)
-+			goto retry_second;
-+	}
- 	KUNIT_ASSERT_EQ(test, ret, 0);
- 
- 	ret = drm_atomic_check_only(state);
-+	if (ret == -EDEADLK) {
-+		drm_atomic_state_clear(state);
-+		ret = drm_modeset_backoff(&ctx);
-+		if (!ret)
-+			goto retry_second;
-+	}
- 	KUNIT_ASSERT_EQ(test, ret, 0);
- 
- 	new_vc4_crtc_state = get_vc4_crtc_state_for_encoder(test, state,
- 							    VC4_ENCODER_TYPE_HDMI0);
- 	KUNIT_EXPECT_NULL(test, new_vc4_crtc_state);
+On Tue, Apr 01, 2025 at 09:49:45PM -1000, Tejun Heo <tj@kernel.org> wrote:
+> On Sun, Mar 30, 2025 at 05:52:39PM -0400, Waiman Long wrote:
+=2E..
+> > Add a new cpuset_css_killed() function to reset the partition state of
+> > a valid partition root if it is being killed.
+=2E..
+>=20
+> Applied to cgroup/for-6.15-fixes.
 
--- 
-2.49.0
+To be on the same page -- Tejun, this is a mistaken message, right?
+css_killed callback is unoptimal way to go.
 
+Michal
+
+--t4fu4hgrvs64iwmt
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQTd6mfF2PbEZnpdoAkt3Wney77BSQUCZ+6OSwAKCRAt3Wney77B
+SSclAP4gqtAuLackFi5Nlj57z7Muu5PrIFLfK4zkKKF/gZ5yYQEA/gVGnVQa8Dcq
+dIb6mJ6FOINsexbxmLhptB0vDt+lFAQ=
+=eHQo
+-----END PGP SIGNATURE-----
+
+--t4fu4hgrvs64iwmt--
