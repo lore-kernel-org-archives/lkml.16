@@ -1,116 +1,164 @@
-Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D18924BC14;
-	Thu,  3 Apr 2025 12:23:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3424624CEE1;
+	Thu,  3 Apr 2025 12:25:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743683020; cv=none; b=iLJS77Atw839LRps8g/069KgaaPpZ4a96LBMxD8wmas8nafE3TYkHZAZyHZm38berR5rs3+Ih8dNspKHJyEjMimc0fZNP8iPXp4sGy5zawWHL3BLEjX+GtjFg0cdrr3wb5clr/Xby8MgAM6EMWfMW9yrnZyvMXkcJnZHxh7/OcQ=
+	t=1743683146; cv=none; b=H5gzFF2/amXhzvyP5OjLBztPaiYemaWVdyL0LL2386/gmWbbfS0Kg/VGRFYPDoGm+bvDOT3LTQlhDiTRNJQnw+G4NNaM+3og6+eqhT67UnKRGafrvSV6ojfJ2bRL2/lMHrdN4StsP5lUG5yvFYg2wHJNUi0jKXSEoDX4Mys7GxY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743683020; c=relaxed/simple;
-	bh=75jP0jjWRAn+w4GK8dONkj/SHDBrOsKdM4Zl9GE0ymM=;
-	h=Date:Message-Id:To:Cc:Subject:From:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=Xzz3NY79VAzbvI+aefdohYBbWQe1ZG0H5dkZAYFNkQVXHn2r7f4TR2d/QiXYKWlYKd0MA+06CV2eFMJ/EyyWkTjlKVKsTe5ykvOPcmKUqfh6wTOdDxtdthIvnxzxO6aZ6GqgSux9/qwxHNdAY1LYy8dilALqEeMcyw8ZmaLTE9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jyAqiKtu; arc=none smtp.client-ip=209.85.215.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743683146; c=relaxed/simple;
+	bh=aYvnp3rjcHqgeu5q1Bg/myMR5Oa1l+xmSrX96Y1n/rY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=r1bbNUJNzhOvESfpJrpF2MGvmh/dm5AEvv4/KiTiHwHy14KJGgOVISRN5DPWaIcf/34Y5usagLhAeCpXehX4aAK/yJsTVXLazV+Laa6x5GR1HWbm2/GqHtUgBISOoBWynKSeutoYXSq3zd0WuTlqSBah0GQq1ClgQFXifNWJN+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=Ni8jksu1; arc=none smtp.client-ip=117.135.210.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jyAqiKtu"
-Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-af5cdf4a2f8so639582a12.3;
-        Thu, 03 Apr 2025 05:23:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743683019; x=1744287819; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to:from
-         :subject:cc:to:message-id:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=uWu7/YhckerqLoieu5Vj2zXv6+3iK41HvBe41obBUw4=;
-        b=jyAqiKtu2Nq9KUzyzazKO2AMKDORnCctGoB4YKRsR2I+r9nbF0KA50RA/oFzIvu9Gy
-         7wTXuGaEZuk52YKfhgH60l3ZAwqZlGhH5US4GVY7vsM8VzeE8pSdYdrzxFtYntc+PHCe
-         Xu4/Uuk489SYKEVZWly2eZLzvchKxvTowqhjiRexbGb+TOSW4voeGPLOgfWQQQYTHPbI
-         tLGxIsoTrJxGrfhnA7OgeGNJQLGQ7TmNGAMEhFRCiwVjvxVKRNl87nStZuHFc6/nXgXL
-         eTmN5Fz3qloAW7/8CBFh0Mw4Chzf+oK29liK+6cRc2aMUEWbYc7Vjbsmm0QjpSGIbbnV
-         GhEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743683019; x=1744287819;
-        h=content-transfer-encoding:mime-version:references:in-reply-to:from
-         :subject:cc:to:message-id:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=uWu7/YhckerqLoieu5Vj2zXv6+3iK41HvBe41obBUw4=;
-        b=OedKsfUAYo9ggL8rVxRA1J7QsCVoUIWk0tUaPsDWIE1hWOf78R0fZoCeYYU1OaWjBN
-         4+ZEIw63ce4ugAnjFw4tqByDosctO/NPmug1Vi2ogZZ+qD9JEbfbdY3jLGbLLK9PQjvg
-         mHStMSV/3WXqCDwMFf96ZlQqqUBux4se6tMN0TL+Sr9lPax7ZiY/VrJQ6XtXEyleiMQS
-         VgAJLWy88YVesZ9VDUrOiH7KVnQHmzO+rTUesn9BGZ8X0/Go6W+ux/8f6s0GEOh5zs83
-         ERpughKZ5CpTqh+8f7GkrNXtktkMo8ZZ+60+zHofbTKIPvafnOE3MXD1O+h0jyzf7N8l
-         1j0w==
-X-Forwarded-Encrypted: i=1; AJvYcCVb2HhDvpyN8e81bCGL9dKkVi3by7jp8eFXlcbfMkupoeesxLZD4LhQp714g5bdIqEhjYQlvRCttG1f8bA9IcA=@vger.kernel.org, AJvYcCW6ofGz6cKbhACrOUdtfHkNV4Hg0anH/liKap86q++HUI1HMVKz+/DtMyZY5RMZrBIdwvVDA8Ow@vger.kernel.org, AJvYcCXJGFSRIjozeQ788QYF3/WXW06aqVtWm8LWBT2SuNC3jHP289A+/k2X77OHYaJtR4j/e0l4A0f9LEzMRWc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxwHNG6LxDeXlwTh2p/q8oFhw7qZxZVSRgKhfiqP0DdbrcxhQBV
-	u2S+RFiMKlNxSlBejowEkYJRAsa6DnPhqIXEkcjZgIHCsP7mESfU
-X-Gm-Gg: ASbGncuxQooIH1KvbSfFgWwE8/ilAgRewf1AZEgEl6q2MhiqXq6zESCUOCDdfiwuKXN
-	G94EXyYa0ukIBK30RQgwbXRaOUuspcIm7uEEApd+2wC6ruN+MyGjcgk/o69R4FV6QpWDr0J7oHc
-	xsKPmUKrPudob1eLon6QwW9xHVFrcyorrv+KaoLtWjU2a1PX+tUZxUKxsz40hc8uJofEirGusX1
-	k3wmBOv/cstLOsFf01njtwwPeAZdN8bu8Tc2yDa9FPBqlPkrwTO0AMJnZLOTgeSycLU7JTnrNWu
-	05AXNCl+mtLB32pc6nb1xb/FpiAe62O++8DMB+jnthYlhv7i+LF6GQvQdLoFvDB/NuTO2iW5WFI
-	8H3Z+pWCdGa0oOg/LXzWfsAXN9G0=
-X-Google-Smtp-Source: AGHT+IHWLK7u10H6D/cVi4q6t3KxterddYAML60wsBpmngVZJjls9MS5MkrlB/PbbH20ExQsFasSFQ==
-X-Received: by 2002:a17:903:2a83:b0:223:fb3a:8631 with SMTP id d9443c01a7336-22993c1cc8emr33592245ad.24.1743683018706;
-        Thu, 03 Apr 2025 05:23:38 -0700 (PDT)
-Received: from localhost (p4204131-ipxg22701hodogaya.kanagawa.ocn.ne.jp. [153.160.176.131])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-229785adaf9sm12964285ad.27.2025.04.03.05.23.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Apr 2025 05:23:38 -0700 (PDT)
-Date: Thu, 03 Apr 2025 21:23:27 +0900 (JST)
-Message-Id: <20250403.212327.2029028318504480690.fujita.tomonori@gmail.com>
-To: a.hindborg@kernel.org
-Cc: fujita.tomonori@gmail.com, linux-kernel@vger.kernel.org,
- daniel.almeida@collabora.com, boqun.feng@gmail.com, gary@garyguo.net,
- me@kloenk.dev, rust-for-linux@vger.kernel.org, netdev@vger.kernel.org,
- andrew@lunn.ch, hkallweit1@gmail.com, tmgross@umich.edu, ojeda@kernel.org,
- alex.gaynor@gmail.com, bjorn3_gh@protonmail.com, benno.lossin@proton.me,
- a.hindborg@samsung.com, aliceryhl@google.com, anna-maria@linutronix.de,
- frederic@kernel.org, tglx@linutronix.de, arnd@arndb.de,
- jstultz@google.com, sboyd@kernel.org, mingo@redhat.com,
- peterz@infradead.org, juri.lelli@redhat.com, vincent.guittot@linaro.org,
- dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
- mgorman@suse.de, vschneid@redhat.com, tgunders@redhat.com,
- david.laight.linux@gmail.com
-Subject: Re: [PATCH v11 4/8] rust: time: Introduce Instant type
-From: FUJITA Tomonori <fujita.tomonori@gmail.com>
-In-Reply-To: <87cydtv85r.fsf@kernel.org>
-References: <pk-Wz6K7ID9UBJQ5yv7aHqGztuRNqPlZv0ACr8K6kOMOzdan60fYn3vqlQFrf4NwwY5cXXp0jnYlX1nKpdlaGA==@protonmail.internalid>
-	<20250403.134038.2188356790179825602.fujita.tomonori@gmail.com>
-	<87cydtv85r.fsf@kernel.org>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Ni8jksu1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=YOVGxu+Pa9F9S2YKMRxxQPidaydp1+plrOXzivuJhgI=;
+	b=Ni8jksu1UeXcQ5bdgkbl4cNlxi682KXN1OSfRg7bgdinuMZSU3nbasnbFf0Zqw
+	Nsu6dSF5P0KlCyYq86PYsFrVz1yyl3bV7WXPkttOHNUNSFZkGGFd/4vvVT3P1rXx
+	f3c+xIBjCz7TKrbTFPG+srxW6HDzQ8bxb0cMxPulOsyRE=
+Received: from [192.168.60.52] (unknown [])
+	by gzga-smtp-mtada-g1-4 (Coremail) with SMTP id _____wCH3Jb6fe5nIXo0Dw--.40417S2;
+	Thu, 03 Apr 2025 20:24:27 +0800 (CST)
+Message-ID: <f77f60a0-72d2-4a9c-864e-bd8c4ea8a514@163.com>
+Date: Thu, 3 Apr 2025 20:24:25 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [v7 2/5] PCI: Refactor capability search functions to eliminate
+ code duplication
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: lpieralisi@kernel.org, bhelgaas@google.com, kw@linux.com,
+ manivannan.sadhasivam@linaro.org, robh@kernel.org, jingoohan1@gmail.com,
+ thomas.richard@bootlin.com, linux-pci@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>
+References: <20250402042020.48681-1-18255117159@163.com>
+ <20250402042020.48681-3-18255117159@163.com>
+ <8b693bfc-73e0-2956-2ba3-1bfd639660b6@linux.intel.com>
+ <c6706073-86b0-445a-b39f-993ac9b054fa@163.com>
+ <bf6f0acb-9c48-05de-6d6d-efb0236e2d30@linux.intel.com>
+Content-Language: en-US
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <bf6f0acb-9c48-05de-6d6d-efb0236e2d30@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wCH3Jb6fe5nIXo0Dw--.40417S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxXw1fXr18KF1xWw1UCF17Jrb_yoW5tF4kpF
+	WUJF12krW8GF1UtF4qqay09r1aqas7tFyxGr48C3sIvF9FkasYvFy3Kr15Wr1SgrWDWF1x
+	Za1FgF9xCa4FyaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07Ul0PhUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOh0ko2fufCM1IQAAsi
 
-On Thu, 03 Apr 2025 12:41:52 +0200
-Andreas Hindborg <a.hindborg@kernel.org> wrote:
 
->>> As Boqun mentioned, we should make this generic over `ClockId` when the
->>> hrtimer patches land.
+
+On 2025/4/3 17:15, Ilpo Järvinen wrote:
+>>> I don't like how 1 & 2 patches are split into two. IMO, they mostly belong
+>>> together. However, (IMO) you can introduce the new all-size config space
+>>> accessor in a separate patch before the combined patch.
+>>>
 >>
->> Seems that I overlooked his mail. Can you give me a pointer?
+>> Ok. I'll change it to the following. The rest I'll combine into a patch.
 >>
->> I assume that you want the Instance type to vary depending on the
->> clock source.
+>> diff --git a/drivers/pci/access.c b/drivers/pci/access.c
+>> index b123da16b63b..bb2e26c2eb81 100644
+>> --- a/drivers/pci/access.c
+>> +++ b/drivers/pci/access.c
+>> @@ -85,6 +85,23 @@ EXPORT_SYMBOL(pci_bus_write_config_byte);
+>>   EXPORT_SYMBOL(pci_bus_write_config_word);
+>>   EXPORT_SYMBOL(pci_bus_write_config_dword);
+>>
+>> +
 > 
-> Yea, basically it is only okay to subtract instants if they are derived
-> from the same clock source. Boqun suggested here [1] before hrtimer
-> patches landed I think.
+> Extra newline
 > 
-> At any rate, now we have `kernel::time::ClockId`. It is an enum though,
-> so I am not sure how to go about it in practice. But we would want
-> `Instant<RealTime> - Instant<BootTime>` to give a compiler error.
 
-Understood, thanks!
+Hi Ilpo,
 
-If we need a compile error for this, I don't think that the enum
-works; I guess that we need a distinct type for each of RealTime,
-BootTime, and so on.
+Thanks your for reply. Will delete.
 
-Once the current patchset is merged, I'll work on that.
+>> +int pci_bus_read_config(void *priv, unsigned int devfn, int where, u32 size,
+>> +			u32 *val)
+>> +{
+>> +	struct pci_bus *bus = priv;
+>> +	int ret;
+>> +
+>> +	if (size == 1)
+>> +		ret = pci_bus_read_config_byte(bus, devfn, where, (u8 *)val);
+>> +	else if (size == 2)
+>> +		ret = pci_bus_read_config_word(bus, devfn, where, (u16 *)val);
+>> +	else
+>> +		ret = pci_bus_read_config_dword(bus, devfn, where, val);
+>> +
+>> +	return ret;
+>> +}
+>> +
+>>   int pci_generic_config_read(struct pci_bus *bus, unsigned int devfn,
+>>   			    int where, int size, u32 *val)
+>>   {
+>> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+>> index 2e9cf26a9ee9..6a7c88b9cd35 100644
+>> --- a/drivers/pci/pci.h
+>> +++ b/drivers/pci/pci.h
+>> @@ -88,6 +88,8 @@ extern bool pci_early_dump;
+>>   bool pcie_cap_has_lnkctl(const struct pci_dev *dev);
+>>   bool pcie_cap_has_lnkctl2(const struct pci_dev *dev);
+>>   bool pcie_cap_has_rtctl(const struct pci_dev *dev);
+>> +int pci_bus_read_config(void *priv, unsigned int devfn, int where, u32 size,
+>> +			u32 *val);
+>>
+>>   /* Functions internal to the PCI core code */
+>>
+>>
+>>>>    }
+>>>>    EXPORT_SYMBOL_GPL(pci_find_next_ext_capability);
+>>>>    @@ -648,7 +614,6 @@ EXPORT_SYMBOL_GPL(pci_get_dsn);
+>>>>      static u8 __pci_find_next_ht_cap(struct pci_dev *dev, u8 pos, int
+>>>> ht_cap)
+>>>>    {
+>>>> -	int rc, ttl = PCI_FIND_CAP_TTL;
+>>>>    	u8 cap, mask;
+>>>>      	if (ht_cap == HT_CAPTYPE_SLAVE || ht_cap == HT_CAPTYPE_HOST)
+>>>> @@ -657,7 +622,7 @@ static u8 __pci_find_next_ht_cap(struct pci_dev *dev,
+>>>> u8 pos, int ht_cap)
+>>>>    		mask = HT_5BIT_CAP_MASK;
+>>>>      	pos = __pci_find_next_cap_ttl(dev->bus, dev->devfn, pos,
+>>>> -				      PCI_CAP_ID_HT, &ttl);
+>>>> +				      PCI_CAP_ID_HT);
+>>>>    	while (pos) {
+>>>>    		rc = pci_read_config_byte(dev, pos + 3, &cap);
+>>>>    		if (rc != PCIBIOS_SUCCESSFUL)
+>>>> @@ -668,7 +633,7 @@ static u8 __pci_find_next_ht_cap(struct pci_dev *dev,
+>>>> u8 pos, int ht_cap)
+>>>>      		pos = __pci_find_next_cap_ttl(dev->bus, dev->devfn,
+>>>>    					      pos + PCI_CAP_LIST_NEXT,
+>>>> -					      PCI_CAP_ID_HT, &ttl);
+>>>> +					      PCI_CAP_ID_HT);
+>>>
+>>> This function kind of had the idea to share the ttl but I suppose that was
+>>> just a final safeguard to make sure the loop will always terminate in case
+>>> the config space is corrupted so the unsharing is not a big issue.
+>>>
+>>
+>> __pci_find_next_cap_ttl
+>>    // This macro definition already has ttl loop restrictions inside it.
+>>    PCI_FIND_NEXT_CAP_TTL
+>>
+>> Do I understand that you agree to remove ttl initialization and parameter
+>> passing?
+> 
+> Yes, I agree with it but doing anything like this (although I'd mention
+> the reasoning in the changelog myself).
+> 
+
+Ok, I see. I will give the reasons.
+
+Best regards,
+Hans
+
