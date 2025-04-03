@@ -1,198 +1,97 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40D9618DB10
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 09:27:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AC0018DB10
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 09:27:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743672429; cv=none; b=sldHp6XL0ZmJVOlGb5L5zRThkWsf0owPFWGAGnAMOi2KD0DYgQA1WH4zX8TPJnDlRFaJcxLaN/gIqNM82dQU8CS1ebp6WPVatmHlzfX9z2yVXcS67ClyGI7JgHyTFt4fsnz97O7ARqlM3kv5E0c/r/6BCPdtyiDBEgablmbS93M=
+	t=1743672438; cv=none; b=RFrkjEKzPUOJnbX8T2aWc3mzWsXB9v+fL6Jgo6Na+fUQPxMwWRC0wOD+fbxcnDn9kBT4ZGApJc/5bZDgTGPbMEO2REA9fhl6so3mim9jJYphYh9eyoBOTLs4K7vVFUK/WimSF3BBxNWYYqFzxGN3jsl/pLx/eZogl/aKLM2xHxY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743672429; c=relaxed/simple;
-	bh=DFXiNGsUZS/prZTX0AohzGMataOwoc1Yd+ldROPQS/U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=phR+x9kY4jJRdW+YfBMvVSepaJ4hbC6s9Q+s2DNNidu8nmyIJcHjlAbwQul41EBcAYatBquuxKrapWZrQ7ZcjZ6wRHYn9t5uBzSATwr088vhl1LRBFMm0vASCqvRL/84Ro5FzusARWBD0NvTENoYRXrtna3gleOVRqbWRDa6GqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=krARmDtl; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1743672438; c=relaxed/simple;
+	bh=8Wim55GQSSQZ3suXOPqnLbIRcIj+P05X/R3WrzXgTv0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sihZmRWwD4m5RU8DRb7gwx6sFHdciW+SApsi9ohI5knb0CmqDLFKtMvGEi/wmaFww2Rgwf3kHFflyAOFM9Ntu4jr5potjHMGbwpS0KJFGFvtwNlMtZhuBkdt6IyViZ2hgjUGX3E77lH/FWdNAd2vnSp6mOwyJ5M3hNN2MpktuAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SLtOwqSF; arc=none smtp.client-ip=209.85.219.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="krARmDtl"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43cfe574976so3831665e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 02:27:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SLtOwqSF"
+Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-e461015fbd4so544060276.2
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 02:27:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743672425; x=1744277225; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=iJGDJldsHHtphvbrRdY3xvo2/HKpWaaiy6mJGk4cOVw=;
-        b=krARmDtl2uaYY/adrrcdc4bByKoN3jbrmj8QFyYmQWS2izPbivZ7Ai+9Owj5ZpWXLI
-         wV2IuACZ2zSD/LsqMH8bDAQBGEJFSBmrlzfMxa3rRgIOrgWc5Xns/MaWYGDklnYbH2iq
-         QCXSQO4alMgA3vkTStFaHmdXHtX1HPv/C0yDAzvAHeWo238pUDX+0UhhMyN3ReCXkSzw
-         zof4qfXYSIMb1WIYPJ4PlCjZ1VRZuhRuVFQb2JVxNiC+Mg9kFEtRQ40FC98EC/mOhaBQ
-         hZjMQqJ8eJVatOyVpA72eVVy2HEUQMY+/EjW9RmxTykQjQvSJJk1VTkKOFHuClNCsNzZ
-         QZ8g==
+        d=gmail.com; s=20230601; t=1743672435; x=1744277235; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8Wim55GQSSQZ3suXOPqnLbIRcIj+P05X/R3WrzXgTv0=;
+        b=SLtOwqSFek8Z4T1fSR9uMN/MebB2w8tp6/uNgUUHU9+wAFc4REvhjw/jYBzMiVxZyd
+         lyFTXjkJGV/moMDQw29Hqw/5JXmkF9y0qsuDkswVOnEfSXOxE/FFUc9EQsAD81TaYRwL
+         YodD36YZ9DN4ef31C6qZIHUIe+bSjYU5gQT8GKr4V5UPUJjYweR8fTaDJXYf3lxtBOMI
+         VmnERUnZvVACqqhMlXNiuqUc69B3WxJ5fyaIZogp4oVcIyUGvarZ0S8faqoZHabHbm5p
+         ELfu3c7S2J/CcXr+1bnQwDe/4kuZQSqSrs860eIof+UkAd6gABB4Htofzx+0celkO1Ot
+         ALpA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743672425; x=1744277225;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=iJGDJldsHHtphvbrRdY3xvo2/HKpWaaiy6mJGk4cOVw=;
-        b=gCHD7QnEgEYK5tQB97uH9g+WwbttQBzUHuBXK5mfoOLMF7U2DyCM1ZAKXMAouUMmLe
-         7M2sfk/yyMbFrRYOxsvvFoQgAyOiDuetbfedAkxE/mzpbVUkBYoIlTU2UvK21r8YOd1C
-         vqVLULznZYFzIzrad9U3I6gVrgyTxVxF2GlsEpngRld8rXr3LHqBbPosihmaKyrR6xG4
-         dLhlC65F6NtT5PsFQvwUn0bJX4+88NmvgVsTtz4IPODrvKlZPsAr9P4CKwlwdYqgxG82
-         8UgsUbJFgfxwOdFgISDDZ9DWMmju/1a53Zd2FtJjb7+3DkZpdjOBocRg6ScVRXEgA5id
-         Yi8A==
-X-Gm-Message-State: AOJu0Yzqqf3nhEgca8i4y7oCbS47Usbvn0rADbT4RrFGdo9+yYDH8HE/
-	a+vDK5w8GDRURVO5PbT5wv43oBntXbbbxHwp8VON3Pp3rHwQOxZLKWMfGSLyo445ghoBIDewShW
-	CHWg=
-X-Gm-Gg: ASbGncvak6BRtSsf8e4DyqZ4CnUPAB03z/rBNC58LTieEihHnaj5XcJxVsdioS4RJFd
-	TC7FCaNXRRCKvYRlgX96kWVhq/lussKkB6B5spTQJLkm1A2HNwuyCn9m5ZxhupZMAv2ENDLmAoH
-	jJsFPGS6uJdn2KKxL+B9F2X53aFvFCN7QDsJWfAkyqo0/VLqvFehe2a9XAR2w0pHW3TXgjy5kyK
-	Yz+lVg+QMpTatC8SMj7iN4Xz5343aqDCPkE2yZIvswu0SaQYWvbAe+cXlb2XULKbJ6m7CNfIRdz
-	9YoI81IlRGQlOMb+/UmaQUJ7SlI/Z+e7ewQTSHzousWGeuiV5EfIC5nZcYS7NaU=
-X-Google-Smtp-Source: AGHT+IHb374ieUWPcmM3fn26V5cLpqAG9MCExKHt91U29Au+ntrDfznKTSKKncx3a2Q6TekchVXZxA==
-X-Received: by 2002:a05:600c:49aa:b0:43d:fa58:81d4 with SMTP id 5b1f17b1804b1-43ec775b29fmr4842305e9.33.1743672425502;
-        Thu, 03 Apr 2025 02:27:05 -0700 (PDT)
-Received: from [192.168.68.117] ([5.133.47.210])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-43ec364d071sm12563725e9.32.2025.04.03.02.27.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Apr 2025 02:27:05 -0700 (PDT)
-Message-ID: <e8c91706-1a94-4e3d-b2a9-9d670021bbc8@linaro.org>
-Date: Thu, 3 Apr 2025 10:27:04 +0100
+        d=1e100.net; s=20230601; t=1743672435; x=1744277235;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8Wim55GQSSQZ3suXOPqnLbIRcIj+P05X/R3WrzXgTv0=;
+        b=sf2qBP+JJJjKi4esjh/i7oft8vf06QFeD59cVb3RIiGXV0155s8k9FjnVJk5KMULpL
+         kZslw78o8X35Ysv2cOUmE523W8Imua0CsMjfB9low+/QDPFK7Ig4Dp1NHAzrhfvPg6lh
+         KcrwkcLXIenXdAV4R+G6e+ymoMSQkz6B2JISRVA8vS0dLH1SkNJx9ID1fTRCDpJbweZ2
+         YbftFlFDteG+1UZOaNa0buKW8RNtgmCYoe9maZNdvpuHnqsfqB0I34gjFcBy4+TZHx65
+         bZ+JaNW/wgwaI9iLLUGaS1wcKbgSRns9SmQBG//twWcRecssEwNFKhTwfIPVwF/+RlML
+         XuLw==
+X-Forwarded-Encrypted: i=1; AJvYcCUNvBqAzc0YXbWrKKLCx0DXGF89H9DUo4wg7S3MjHRMp3osu5xedPU/V4TIK6r3e3o6gKI59jcykpGW5nE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwEJ0tIXvhW4LFaU8+skqia2N4lF5TwmkfXMRHyJCtd77bLBONK
+	9f6b2aRKFtoHF263nSbI/HhFbDII91bHc1h1xj7ZQInCyqbvJGhF92ftGdiWybepbbIRPNG2ehU
+	1rRR/70fDbpwnnWGAEOCpjzkBct8=
+X-Gm-Gg: ASbGncs/W4cLrImo9SIGCYhty/ITTJWet/qdlvvhZahq0Tz7glyKhF4EMLVE2mjzTND
+	2hpXErb82DRrbiKw5MAh/hqDV8RjurgCS8cBofMYa/K2Ux/ImJxHKnetDUHio1wCzjc8UT+TBJP
+	EZhgFtYqV2LTGg96pxPIIIuCeccQ==
+X-Google-Smtp-Source: AGHT+IEb2HiPgljplXFT+AGKyQzvdUoVsPHVwifO2PILVLDJ7XXBDLb37Qwzbi2NclfrbSMIKi7vQhYJNNnzWtMxLBU=
+X-Received: by 2002:a05:6902:2012:b0:e6d:fc1f:3cb1 with SMTP id
+ 3f1490d57ef6-e6e0a233765mr2431715276.45.1743672435076; Thu, 03 Apr 2025
+ 02:27:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 00/13] nvmem: patches (set 1) for 6.15
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
- Greg KH <gregkh@linuxfoundation.org>
-Cc: linux-kernel@vger.kernel.org
-References: <20250309145703.12974-1-srinivas.kandagatla@linaro.org>
- <2025040143-espionage-poison-2345@gregkh>
- <47a3a851-f737-4772-87c6-98613347435c@linaro.org>
- <2025040230-showoff-spray-ac83@gregkh>
- <283ac88b-c8d4-47c8-9ff7-935770eca566@linaro.org>
- <b6e7abf3-b263-410a-8f4c-eb9a8e2efa2b@oss.qualcomm.com>
-Content-Language: en-US
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-In-Reply-To: <b6e7abf3-b263-410a-8f4c-eb9a8e2efa2b@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20250403070453.214190-1-ubizjak@gmail.com> <20250403082508.GAZ-5F5EMVZq3-6Zoo@fat_crate.local>
+ <CAFULd4a49RRMKrSVh3Q5zpeK4EJVW61tm=fCN4aOWX8=x8rKnw@mail.gmail.com> <20250403092218.GBZ-5TSiyjNRAcBxQo@fat_crate.local>
+In-Reply-To: <20250403092218.GBZ-5TSiyjNRAcBxQo@fat_crate.local>
+From: Uros Bizjak <ubizjak@gmail.com>
+Date: Thu, 3 Apr 2025 11:27:02 +0200
+X-Gm-Features: AQ5f1JoefwxlbkfyQlTfxdFEjY7L5dPAYmAuI3vBr7qkxaR9EbDEdxcUUI4oT_8
+Message-ID: <CAFULd4axo8ZOVJwRkqhi0nFYAveX6mBpd0Bwte+rYp=umHTP8Q@mail.gmail.com>
+Subject: Re: [PATCH -tip] x86/idle: Work around LLVM assembler bug with
+ MONITOR and MWAIT insn
+To: Borislav Petkov <bp@alien8.de>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	kernel test robot <lkp@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, Apr 3, 2025 at 11:22=E2=80=AFAM Borislav Petkov <bp@alien8.de> wrot=
+e:
+>
+> On Thu, Apr 03, 2025 at 11:06:02AM +0200, Uros Bizjak wrote:
+> > The least common denominator is an insn with implicit operands. I'll
+> > post V2 that fixes it that way.
+>
+> I guess.
+>
+> You don't need to post a patch ontop - your previous one should be remove=
+d and
+> the whole effort can start all over again.
 
+IMO, in this case the fixup also documents the LLVM bug, so perhaps
+the fixup on top is desirable for documentation purposes.
 
-On 03/04/2025 10:25, Dmitry Baryshkov wrote:
-> On 03/04/2025 12:18, Srinivas Kandagatla wrote:
->>
->>
->> On 02/04/2025 12:31, Greg KH wrote:
->>> On Wed, Apr 02, 2025 at 09:19:17AM +0100, Srinivas Kandagatla wrote:
->>>> HI Greg,
->>>>
->>>> On 01/04/2025 20:18, Greg KH wrote:
->>>>> On Sun, Mar 09, 2025 at 02:56:50PM +0000, 
->>>>> srinivas.kandagatla@linaro.org wrote:
->>>>>> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->>>>>>
->>>>>> Hi Greg,
->>>>>>
->>>>>> Here are few nvmem patches for 6.15, Could you queue
->>>>>> these for 6.15.
->>>>>>
->>>>>> patche include
->>>>>>     - updates to bindings to include MSM8960, X1E80100, MS8937,
->>>>>>       IPQ5018
->>>>>>     - add support to bit offsets for register strides exceeding
->>>>>>       single byte
->>>>>>     - add rockchip-otp variants.
->>>>>>     - Few enhancements in qfprom and rochchip nvmem providers.
->>>>>
->>>>> Ok, I wanted to apply these, and tried to, but they fail horribly
->>>>> because:
->>>>>
->>>>> Commit: 1b14625bd6d4 ("nvmem: qfprom: switch to 4-byte aligned reads")
->>>>>     Fixes tag: Fixes: 11ccaa312111 ("nvmem: core: verify cell's 
->>>>> raw_len")
->>>>>     Has these problem(s):
->>>>>         - Target SHA1 does not exist
->>>>> Commit: a8a7c7e34093 ("nvmem: core: update raw_len if the bit 
->>>>> reading is required")
->>>>>     Fixes tag: Fixes: 11ccaa312111 ("nvmem: core: verify cell's 
->>>>> raw_len")
->>>>>     Has these problem(s):
->>>>>         - Target SHA1 does not exist
->>>>> Commit: d44f60348d8c ("nvmem: core: fix bit offsets of more than 
->>>>> one byte")
->>>>>     Fixes tag: Fixes: 11ccaa312111 ("nvmem: core: verify cell's 
->>>>> raw_len")
->>>>>     Has these problem(s):
->>>>>         - Target SHA1 does not exist
->>>>
->>>> Looks some of your scripts or b4 is picking up older version v1 of the
->>>> patchset
->>>>
->>>> None of the above patches have Fixes tags in the V2 patches that I 
->>>> shared
->>>> aswell as patches in linux-next.
->>>
->>> Yes, that looks odd, it looks like b4 pulled in the wrong series, yes.
->>>
->>
->> Even that looked incorrect, as the v1 series only had one 
->> patch("[PATCH 12/14] nvmem: make the misaligned raw_len non-fatal") 
->> that had fixes tag. Not sure how these 3 patches are tagged as fixes.
->>
->>> But, that's even worse.  Those "fixes" are now not actually marked as
->>> fixes of the previous patch.  So that information is totally lost, and
->>
->> Its because this patch("PATCH 12/14] nvmem: make the misaligned 
->> raw_len non-fatal") is taken as fixup patch and wrapped into the 
->> original patch ("nvmem: core: verify cell's raw_len"), Also the sha 
->> will not be valid for linus or char-misc tree.
->>
->>> again, the first commit here, "nvmem: core: verify cell's raw_len" is
->>> broken so much that it took 3 other changes to fix it, which implies
->>> that bisection would cause problems if you hit it in the middle here.
->>>
->>
->> All the patches related to this are enhancements to nvmem core to 
->> allow specifying bit offsets for nvmem cell that have 4 bytes strides.
->>
->> Specially this check is also an additional check in core to make sure 
->> that cell offsets are aligned to register strides.
->>
->>> While fixing patches is great, and something we do in the tree all the
->>> time, let's not purposefully break things and then fix them up in the
->>> same exact patch series please.  That's just sloppy engineering.
->>>
->>> Please redo this series completely.  I can take the "new device support"
->>
->> I can send them but its going to be exactly same series, I dont think 
->> anything will change as all of these patches are enhancements and 
->> there are no fixes.
->>
->> I hope this clarifies a bit, Please let me know if you still want me 
->> to resend this series, which is going to be exactly same.
-> 
-> I think Greg is asking to squash the fixup into the relevant patch.
+BTW: The test with CC=3Dclang make argument didn't expose this issue.
 
-Its already squashed up in v2.
-
-thanks,
-Srini
-> 
->>
->> --srini
->>> patches at any time, and really, those should be marked with Cc: stable
->>> to get backported, right?  The other ones are written as if they are
->>> fixes, so again, I can take them any time, no need to wait for the -rc1
->>> merge cycle.
->>>
->>> thanks,
->>>
->>> greg k-h
-> 
-> 
+Uros.
