@@ -1,307 +1,597 @@
-Received: from YT6PR01CU002.outbound.protection.outlook.com (mail-canadacentralazon11022105.outbound.protection.outlook.com [40.107.193.105])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F3B22528EF;
-	Thu,  3 Apr 2025 17:59:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.193.105
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743703188; cv=fail; b=HBaz8NXwf4Uf6OSAl2bn5xIZbWOygqOmB2E8dyno07Cv7UHMkJkjnB0eM7Gz8TGqumMJfsK9puQtm67S0BoOw08gzhbV8gQ4+rQdQfBTta18T6BaXPdyNlXhHETUsFviz1UF3Sw42TvpH6dnm8sySJkHoAVkPvJG891QfB0abCg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743703188; c=relaxed/simple;
-	bh=IUd+MtQa9M4pbF1BufyPXKFGGHrQwYW+HJdKaEKFXrI=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=b6/jQwKZ1jrleYDZkWf0WnvajWwsN/Y8ltfy1DHhrsC9wSGhIVn+6fG5baFculfq7DAeBT5DncK/3MdWn/gI78idFFj0395uHNAQfwtwICqWI843cXqAwcheWqIjJGZP3oxOmI72MV00oW0JTRURjhkIXvr04fPnuI5m2QvcD7k=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=kaaAc6hy; arc=fail smtp.client-ip=40.107.193.105
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 539052517B5
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 18:01:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743703264; cv=none; b=k1eIWlQEnL6YiJeyj5wfHrVHnwMYGsBopw9QQe/Szk522Ln/r4IsggU4bxMlkBJNjIDRc0iYxvmnGVgkUb5TXfubrPDlQORumw4FocvH0IDOdYihI1DFAQ++jch4L94SCqCvnOBEDPbsetiUkAaq7lF/l87kvzg48kP03jlzjus=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743703264; c=relaxed/simple;
+	bh=4ykLBjACoxxDUxdlJXisDPXYF8nh2gUm3OaYFAIuPzI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gslLeYIFzpsfAkNzEZ7OFdXWoSYXU1ipu3DfqhBYCtxKWeIe61gZowqKXdHJyS2bwrHV1LmBcXhELFV2PnPtSeEX2OwavkkAd2siqQrPX/r+UVcCQfmmFf2S2WJAplz6i37h8A/dDIc1JNLXND1DGN3pNC+e7mWfr2ANVYK5cvM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fzKYrTp7; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="kaaAc6hy"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=b4N06myNr7nUGbak0zNypqgMKUrFgZBt/io2FK11l7x/vVwmiLsY8N6T1MWqxAc8gqqJIv8Uros/i7LKAE804wGP2QVO2mSpXsIuS3nQM9ngVY9qZrPDSp9pN1Hce0+Q9hqssAf8Zf4CLkdc9orOGKq8bpfOH9TxwdSBq0MnsDQ5GDeq7NFX0XUC5LF4g9IbrFXz7AV2ryh3jzMv8cy4YPcFcsoh7Usak28zRsLFg5QlFl5RlTQnUarWiAoRuRnvRj1JHAVUeidGnnNLJL21/Q+0rSgFB34RhcQu42+QKoF+ndJaYD9AGESQc+Rqk2O84FRSKo5F+xZhSxa+eVLK9Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=1l+ZrLKP68f48hejfsGtCIZBOe3+giq1cKge3+onjVc=;
- b=YLfJsh5qs1YMrzVzibmZpzifsHieF+W2Mdm1wam5J84AutFfoJDR0s1S9m6MOH5J9E61D7ldz8M9SioIqMtlf7ZyUWqwPrmnkAxcC7hAtyigFzY5QCGsppnQdWKvR7ccTmGOPMGbVUDQuRH+K3s5nyd7Lng6ld122jjkRkfyVJI7bz1+jeEimUDoK2WxdbbATeTgngEO2upMrxjRV47rZcBSp1cOkV4RsGM2TkORwf6o0D7xrtEPAcDYanBXQkpFJas8Zve5yv7OgdgvOATglCNU2f470mMQ373xs6f2j4Z9N3GYaP+HmvUm/2Z92RxCjFMitJbLtJRBFLL3NtGYRw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=efficios.com; dmarc=pass action=none header.from=efficios.com;
- dkim=pass header.d=efficios.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1l+ZrLKP68f48hejfsGtCIZBOe3+giq1cKge3+onjVc=;
- b=kaaAc6hy4QITy1X0SyC0KvkPUYK6JP/7ngDJQLjlgjVAfC8omG8u604mRd0xjpznBMEeyYl6ReEPv+FH5+4kTJgPxrDzsu9x/35djy6Zu4JNS5pvY3cUm2NvDsgjwUQsQO8ziRe0V9eeCzqdkXVtT2upaxejbUYiqyONKq7z3xlrNxQ78yK+Bs1Qvye65HCz5JsndWaWh1dagzgsrLhuYNOz564sGtI0Cea+U7i1/Yrnsh0gXRMtfwC3zW/qbs4knwv/m15EIUMLLWapv7WXliAFo0nvaUNI49gFvCcNk9dxcrc4iLfqv7i3VhC8vxwIT1ASNN88uRQuSmbkmvsF8Q==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=efficios.com;
-Received: from YT3PR01MB9171.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:a0::18)
- by YQBPR0101MB8895.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:c01:5a::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.51; Thu, 3 Apr
- 2025 17:59:41 +0000
-Received: from YT3PR01MB9171.CANPRD01.PROD.OUTLOOK.COM
- ([fe80::5393:fe91:357f:3ccf]) by YT3PR01MB9171.CANPRD01.PROD.OUTLOOK.COM
- ([fe80::5393:fe91:357f:3ccf%6]) with mapi id 15.20.8534.045; Thu, 3 Apr 2025
- 17:59:41 +0000
-Message-ID: <55c89f03-6120-43d1-a620-46d8ca8aba4e@efficios.com>
-Date: Thu, 3 Apr 2025 13:59:39 -0400
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2] mm: use per-numa-node atomics instead of
- percpu_counters
-To: Shakeel Butt <shakeel.butt@linux.dev>,
- Sweet Tea Dorminy <sweettea-kernel@dorminy.me>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Dennis Zhou <dennis@kernel.org>,
- Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@linux.com>,
- Martin Liu <liumartin@google.com>, David Rientjes <rientjes@google.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Johannes Weiner <hannes@cmpxchg.org>, Sweet Tea Dorminy
- <sweettea@google.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- "Liam R . Howlett" <Liam.Howlett@oracle.com>,
- Suren Baghdasaryan <surenb@google.com>, Vlastimil Babka <vbabka@suse.cz>,
- Christian Brauner <brauner@kernel.org>, Wei Yang
- <richard.weiyang@gmail.com>, David Hildenbrand <david@redhat.com>,
- Miaohe Lin <linmiaohe@huawei.com>, Al Viro <viro@zeniv.linux.org.uk>,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Yu Zhao <yuzhao@google.com>,
- Roman Gushchin <roman.gushchin@linux.dev>, Mateusz Guzik <mjguzik@gmail.com>
-References: <20250331223516.7810-2-sweettea-kernel@dorminy.me>
- <2m3wwqpha2jlo4zjn6xbucahfufej75gbaxxgh4j4h67pgrw7b@diodkog7ygk3>
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Content-Language: en-US
-In-Reply-To: <2m3wwqpha2jlo4zjn6xbucahfufej75gbaxxgh4j4h67pgrw7b@diodkog7ygk3>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: YQXPR0101CA0055.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:c00:14::32) To YT3PR01MB9171.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:a0::18)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fzKYrTp7"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ac25520a289so202144066b.3
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 11:01:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1743703258; x=1744308058; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=tSbwwWBv1wP8PbIZ+XWDV3wTTpk86HKdHfJh/sgtPqQ=;
+        b=fzKYrTp7dOL5qWy88xrqe1l5Yg/5suE4Kw+gr9ptP5FnFbfpC1KEytLIg2tW6Hc42a
+         z1X4w33/H6lXblDYCHLs/TDA5OhE5HMRMjlN3lBhpWGLhCdvci0t73BF5XTIXgMRAIHG
+         MOBi/Z5KgITPknK9r+kyz7C/OWMlcMtcld4h9kWEGUvFWk0AXWGIgjeuHH1XZf4/EnBl
+         nrgaRwAWqDmTKLCSY9rZqjxCQdIUHB8t1r7MMDaZoHdJDmm45q0EFxFS8w9LicSQXG+h
+         L0tOaiRA7D5MCh4afHq128xrRDDXqS6+uDgjNyhS50zXrbi7Ap9IiNsxkkP4qiwd7jr6
+         kmkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743703258; x=1744308058;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=tSbwwWBv1wP8PbIZ+XWDV3wTTpk86HKdHfJh/sgtPqQ=;
+        b=otmNc9q9vjxfTRav6IPKEoYBlUStV7Tnwgey5lIhxcI/QyKfwlQbwxBOwfC6c+qAzr
+         Pv+r9V4pzGWjUe9ffOAUTJ/LzADEi+Ol7U61D+BG1zgB0v6GC9pPjRxakX49COFoNSv6
+         06vF1XRUSjH9aL4a9bMfxQuhEXoUBhhFClDcHELQUu0+0bx5Ua8c/9L08Bi8uAqeKqiN
+         L6k6o8VzNehTdP4YjAmEUlm+f6CLD6vbV53z+iueQqF98azTMS7rnt+RnzEmqNPFgN7h
+         ZGuKhJR8u/Fs7juNhv92nuKyIP1K2+SNTh2i67ApDUtiTCiFcxhA7qRCzuhCvzrZcbUx
+         OBLg==
+X-Forwarded-Encrypted: i=1; AJvYcCU8AqkXZLeflC9TByJk0r1GegdRekZb4nxWO5SB95BpoF+pvFpS4A97yV/1zbItDyyCW6sRYPsbt/Rvn9s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwpJQdlL5yEg35KDKxRFOxUbIiyMdebzSNenZcs1DV4sUIcAElz
+	FzpvLS9Xd8prYNOUmQ4UzcNFkqN2TrfWvuESSnq+w5nbQZ33vmOq0xOyiRokQ3k=
+X-Gm-Gg: ASbGncuwIaF5tGp4vsbvFf7hKLeB6n4q4RhU6reyhkuSFGJ3qEU+YrklNhznay6j2f2
+	OopUVbaESS1VMhPoO3vgCRt9V765tOWslDuzqWnuIhpnhDdxgyywlEdlsNTG8WP/zPjsA7QjZXH
+	VERoFE3sdFopPJVWoIzHtGWBMBz6iahCy3w+FSc4QBFLyDWoSknfObJewhZKCNfVOfy9uJjsGEb
+	bNRMtwAzIp05emZ/eN/ZvYh344o8rmIS1bQDvTyMxH841xt3nkgJdtEUd0PM5zw1GUgNY0v+ED4
+	ErUzRZqicrNsL+6U1+uliv+0EqoSQwXT2Y7jDbwj8Q4N/pZudNm2U2Vh
+X-Google-Smtp-Source: AGHT+IFtxX3dMcxR7VWG+baPGO4m1vEAQrXum/smjPjgDcoAfwBKUaOeaH+qj6m5wwvVWLE/r+QQPg==
+X-Received: by 2002:a17:907:9443:b0:ac7:1350:e878 with SMTP id a640c23a62f3a-ac7d1beea51mr37620366b.46.1743703258138;
+        Thu, 03 Apr 2025 11:00:58 -0700 (PDT)
+Received: from linaro.org ([2a02:2454:ff21:ef30:6802:e744:38a7:72ee])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7bfee2591sm125555666b.79.2025.04.03.11.00.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Apr 2025 11:00:57 -0700 (PDT)
+Date: Thu, 3 Apr 2025 20:00:52 +0200
+From: Stephan Gerhold <stephan.gerhold@linaro.org>
+To: Wesley Cheng <quic_wcheng@quicinc.com>
+Cc: srinivas.kandagatla@linaro.org, mathias.nyman@intel.com, perex@perex.cz,
+	conor+dt@kernel.org, dmitry.torokhov@gmail.com, corbet@lwn.net,
+	broonie@kernel.org, lgirdwood@gmail.com, krzk+dt@kernel.org,
+	pierre-louis.bossart@linux.intel.com, Thinh.Nguyen@synopsys.com,
+	tiwai@suse.com, robh@kernel.org, gregkh@linuxfoundation.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-sound@vger.kernel.org, linux-input@vger.kernel.org,
+	linux-usb@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-doc@vger.kernel.org, Luca Weiss <luca.weiss@fairphone.com>
+Subject: Re: [PATCH v36 22/31] ASoC: qcom: qdsp6: Introduce USB AFE port to
+ q6dsp
+Message-ID: <Z-7M1IeKNk6ZBayS@linaro.org>
+References: <871827f0-94ba-4565-865f-775cab9501eb@quicinc.com>
+ <Z-PPlRD7gcUcNvNv@linaro.org>
+ <200c08f7-3637-c2fb-2caa-002604b957ed@quicinc.com>
+ <Z-ug3YFwff8hWIRl@linaro.org>
+ <378af3f1-b5b0-4f7a-ab62-f5c891feb7b5@quicinc.com>
+ <Z-1MtJjfVbUQFron@linaro.org>
+ <7d5fd3bf-c33e-4274-938b-2fb93c4b39d8@quicinc.com>
+ <a9e281d6-59c0-3615-9851-c33752b0620f@quicinc.com>
+ <Z-6Q_gaWsWyZcpLz@linaro.org>
+ <e1eac325-233e-43eb-9ca0-9746893462d7@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: YT3PR01MB9171:EE_|YQBPR0101MB8895:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6274b485-e291-4d48-2dec-08dd72d94ee7
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?ZERKR09mR1QrV1JIY09PNFRLU25ObXkybmFUT3A3VkxrczRrbEU0cHhkZlN1?=
- =?utf-8?B?b3pnVHhUWGM4T2VGSXZUYmlML0trRVJ6STVnM0VEWUZkRFRGdGdraVZoMDJF?=
- =?utf-8?B?TDhTMWZwSmNrNHJoQm9UbXZuWi9tUG1yT1JqOGdwamNucyswZE9hclZXb29o?=
- =?utf-8?B?R0VySVFtWk10eTMwUnhUR0lEa3ZaeDJPQkdMODM4SThSay9aZ0tvaDc4WXBG?=
- =?utf-8?B?YjN1V01BVXdtUmx2WFpOOEw5ZlhDRkxVUkdDS1BBNWlsS1BvRm1GRHZFMzE4?=
- =?utf-8?B?dFI0bThWUUR0Y3ZNK1BCMS9TYjQvdnZXQWxzNWd3OWlwUVByWU81a3lTcXk1?=
- =?utf-8?B?WlkzK1A4RHZqWE53Y3MwUmRMMFpRcWJ5VHNseWxOa3FQc3VxVGpnUlJTb2l3?=
- =?utf-8?B?blJtNkljNGZBME5LMkJOOU5rOWtucmhmenBCTW5vUXlhb0EzeHJTbkVtNi9Y?=
- =?utf-8?B?dk03Y25jZ0ZHN1RRSXRzKzc5ZjhCSmZDYTVqTGlacnZEbGNvUVBTU1FPS3NW?=
- =?utf-8?B?UXZUWklKYkwzUVl6M0FSLzhBbFhSY0RXc0pGMXVrdVQvN1QzdVZSdmVNSzFq?=
- =?utf-8?B?WXd2YXB1R2V2M2w1OTFVbW1jeWpYZW05WjJuQzMwWEpITmw1clcrV3RrYjBO?=
- =?utf-8?B?TnJQdWNGeDRkRmZ1UWhic25HTWI2TGVVWmJValk2c1hMS280Zjlvd3Bmazcw?=
- =?utf-8?B?L2xsNUEzVVZDbWRTaERpRlZBV3ZwQnEyYUxmdnRZNDNmNVFGMEg1dkNyWnVL?=
- =?utf-8?B?NmV1TW5aSGtLeFN3cWdjYU12QXVtS0VQV09kczRDRi93Q0QrT0FKOWwzZi9J?=
- =?utf-8?B?YTFLVkpJODI1ZmtBM1hyWElNai9rbTdlYlJYcVI3MTk4SkRCdW5YOTNIdEVt?=
- =?utf-8?B?U3dUNjZPNkZnMHZscThiL0pQZ1JjVlBwSE0zOGV4QkRHUUdyZmozNENBZ1BY?=
- =?utf-8?B?NVM2bFhOWE1DSEVmWkxuMVJEcmZFNUdzdTdSN1h6UmpxYTNRRzV6RG1OUUl4?=
- =?utf-8?B?ZFowSnJpSk5QZnViTzVYdkpmeXhTa1UrUC9Ta3RYZW5zelpESXNHL05JMm95?=
- =?utf-8?B?OXM1RlpxOUVZbkUxZklLbmV5c0VEUlQ4enlkZGxKZmlHUUs3SDg3MkQ4WFJQ?=
- =?utf-8?B?YkRoWUVpMTJjY28xeXlqUkt6WTF1ZUVGalh5S2dsdWVRbzBoRDRzK2thV25i?=
- =?utf-8?B?VTVUYnBkMkVXcTQ2OWYxRzdRQnFzbXVqYVoxZXMwN0NEdUVYQXZSSHN0Mlpr?=
- =?utf-8?B?ZUhZaVhqcFhUcnBWL0ZNaVFXSTZXaHpOSGRlTVZMTTY2UTFQRjhDSU5VTUdG?=
- =?utf-8?B?aFRPQ3N4WE5iK0RQcm9xMXdONDY1QndDOGZIVXJwWGExY0ZidWdkb3krWXZ3?=
- =?utf-8?B?MDVZZTJLK3BRNFB0K0s2MzNTWm1kWHlvcE13YXhHS09jNlpTTWxURU9WbXhG?=
- =?utf-8?B?Y3pDVXFxWkpiZVJIdjlVTE9Cc2U0ZXhuLzF2cFl2MkhwNyswajNNd1diYzU1?=
- =?utf-8?B?V3cvdUR1NHFybXp0TGRjdGZ5bldkQkFlaGExWE4vMmdWbkFhRnlmWk5LYzc0?=
- =?utf-8?B?YUVSalpXZmFTVStyS296WldZODFaQXY2YUZZWklYMkpWbFM2Zmpicngzd0Z6?=
- =?utf-8?B?WUhHaEtwTndNMVdYalI0RHVtaHRSTTRiSWl6aUlnYUFzbFVWUTFjb1RVaTBD?=
- =?utf-8?B?Sy9vNWZlZ0wyTDJJQ0FJUFp5SThpdkczT0l2VVhJK0NxRW9XcHRNMXo5YitN?=
- =?utf-8?Q?rzhcfiOA3pKySSAjpvMsjn/4Ep0xrgmfxLgrcM+?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:YT3PR01MB9171.CANPRD01.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?MGltSXBDbjgzN2FwTUtvSXBZdDBCWGxnNUdiaEw1WFY5M2tiM2Z3WURsNGVl?=
- =?utf-8?B?MkZsbmFvK1RlTkhZOTgzdm1vcnFEYW9ZUnZVOXc4dUJGSlFMRzI4Wm9UTm5E?=
- =?utf-8?B?QzBMNFplU21GMmgweENJVVQ3Rk5CNHNDeTRoWCszSlZ6NDFxZnU2dEJweG05?=
- =?utf-8?B?ckJPbUxQYlJvcHZxRHcyY042RGhhRTJKY1JsZ0FueG1IanRTdE9FaldUZmxs?=
- =?utf-8?B?R0NJNEtGbE1PZWtEVXhzSWE1YTY2akprMEtCODVqa25yMUVaNy9jMy84cldx?=
- =?utf-8?B?bVBHWXA2K1MzS1dHY2JEWEhqaDBKMGhwdFhRZkVSYzBaZ053bnhFbGw1dDlu?=
- =?utf-8?B?azF1aUV3bWxacW1nSFRYT3ExOEtyd2hzN0p2R05VVVExdW5CU3A5OG82dXo0?=
- =?utf-8?B?QVBtZU5sK2NMMFJxWm4xZ21ZL2FiV0pveVc1MU84eG95WWxTOGl1aXFENUtM?=
- =?utf-8?B?SGJ0c2JDeWsrMWpObS9BWVNBaVFvMHZzNGo2a0l2VFFad0xmd1M0QTVuTWNv?=
- =?utf-8?B?citDQ0swUjV2Sm1QK2tJakV6KzBRenptc3Yzejk1MWV6TmRGVkxXMlpRbFdG?=
- =?utf-8?B?eUtiWUhlU3Z6WmtjUVBtcmpXSTBuN2I0bVdURHB3Z2ppellzR0prR09QYUZV?=
- =?utf-8?B?RVFKWjl0Z3lJQnhyNXpsS1JOVzJ1LzgyYlYvQlhyUHo1VzNrTElITTJUZWVI?=
- =?utf-8?B?VDF2RlBzVUZKOVY4TkIxWStUR1E5bGFpTy9qckUwWENPMnVCdHJTSWl1SU9v?=
- =?utf-8?B?eCtLaWs0bDlIbVJLanhLNitBSDJoMDBtSmRhVnB3azhWeXJEZkF1MWd3bHR0?=
- =?utf-8?B?Z0M2enpxTlNIeDB2eGZFdlVPSS96ckFORWZ3Rm9rMytTVjFxdXI4bWZEUHRZ?=
- =?utf-8?B?Z2JidURWRjBJbXNJbTRyZ3VkQ0RDNUNRaUs1MmtJMlRERzFmNFhkeGdlaDI0?=
- =?utf-8?B?eGxGU21YaWw4TVFhd20wRXdWZ3ZsL01JRjA2MXBna3R1WHVQbFFpcGxPaEMy?=
- =?utf-8?B?dGNwb2gwSk5HSFhCRWU0MU55cloyS3dwQVNtVkNzTmlBY29KOGJhSVFBSnFs?=
- =?utf-8?B?T3RwODJrZHBETDBncFhCRFlGcFRKays0c3RZeklOTUtVU1JZODVyY3VJZVhM?=
- =?utf-8?B?ZFNFanFTdkx6ZENjMTNuTThkNVcydHdsWHpiZFdVYmtCRmRtd1lWV0NZbFdW?=
- =?utf-8?B?eHVabDVKRDhsNnlucDB5Vm1xa0ViVk9vVWVNR1hVZGJrMDl1ZDJCSWI5c2Vj?=
- =?utf-8?B?RzJKWHJvQUE1ck5QVVhzc0dxUTBHZjFjZXVtZjFENTF6bVhjeVl3dUlRUmNY?=
- =?utf-8?B?NW1LdHNTeGNSTmJPc056Wm4zTzV4ME93cjBrdlNWd2g4b0xLRXlwckZlMjhN?=
- =?utf-8?B?a3VETlFsNWdEby9tTlovbE9uMElJT3dQNGpCL3hlOEpGWCtieUVhYklBMDJt?=
- =?utf-8?B?bWRxeWhMSE5nV2pLZ1JmRlNQQzA4dk1xKzZYRWlkak50bzF4TjlLWWNldnQ4?=
- =?utf-8?B?RUgzUXNuaGpDOU5MYm5vbmNxNjBHcGJmWGlIUmR1YXk3SFM4aFdVRzIyM2VG?=
- =?utf-8?B?WFJ3RW1McXhPVDE0SjlqdUhkTk9KanFmVjZpeDQwVUNtZWJ1c2RvYThsTndH?=
- =?utf-8?B?aVZVbVZxK3N2VHg1WVZ1Y0lNSmFHNWRxTmF4cVl1NEJnNlBXTmt4dytTZlgx?=
- =?utf-8?B?UWtXNzJrSDJ4Tm9Wb20xTnM3MTdXbDYxeW9nZ2RlR3pzVWpHUUpVWHB4ejJh?=
- =?utf-8?B?TGQxdTltck1NdWJTaWNwS1hIanlXWkQxRk15QkRwQ3E4Lzg3a2dObzA4Tjdm?=
- =?utf-8?B?RDJ5WmE4Z015VW5ucC8zOEhvcHVZSkZ3dGtSejZhd2paOWp6ZFN6bDJSZGxo?=
- =?utf-8?B?VSsyQkY4cDFPWCtSanZnWk13bTdVWkxDUEExS201Yk5mOGxTM21YRDQrRksx?=
- =?utf-8?B?VHFVTlBobkUzVlBWcTh2L1hZbEFqam0zVlk2cTV1MFQrK0p0Nmo4TzZpWEx1?=
- =?utf-8?B?cTRiZC9OdHU3L3RVeDRXMk1Hc0Y4SnVJaEJhcWZGVTM1MFRJaVZLSjY5WWJJ?=
- =?utf-8?B?bzVxUHRYNXhrTjVHb3VReVhZNnQ2bHE4bGs0OG1CN0tSNjhqUDlVMzJpWktO?=
- =?utf-8?B?d0hpS1JGWnhGakJ0SmFkY0tueFdHTnVkMG5lcnNoR21CakQ2Tmoyc0JXVXNl?=
- =?utf-8?Q?Nv3ww+C9FBRRXH7jgfyVNgM=3D?=
-X-OriginatorOrg: efficios.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6274b485-e291-4d48-2dec-08dd72d94ee7
-X-MS-Exchange-CrossTenant-AuthSource: YT3PR01MB9171.CANPRD01.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Apr 2025 17:59:41.5197
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4f278736-4ab6-415c-957e-1f55336bd31e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: fz7cYmhEpNj9Ji7b5cWvC5Q8wsoWSwC4+zsnzy8hWPXQ9ed1Hd9V/T3UVd3VxQOa+fuCLl6jTD+Ay+WybYWrdEMK6fh9tvIAPD78IQRLGwc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: YQBPR0101MB8895
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <e1eac325-233e-43eb-9ca0-9746893462d7@quicinc.com>
 
-On 2025-04-02 20:00, Shakeel Butt wrote:
-> On Mon, Mar 31, 2025 at 06:35:14PM -0400, Sweet Tea Dorminy wrote:
-[...]
-> I am still not buying the 'good performance' point. To me we might need
-> to go with reduced batch size of existing approach or multi level
-> approach from Mathieu (I still have to see Mateusz and Kairui's
-> proposals).
+On Thu, Apr 03, 2025 at 08:58:11AM -0700, Wesley Cheng wrote:
+> On 4/3/2025 6:45 AM, Stephan Gerhold wrote:
+> > On Wed, Apr 02, 2025 at 05:54:45PM -0700, Wesley Cheng wrote:
+> >> On 4/2/2025 5:23 PM, Wesley Cheng wrote:
+> >>> On 4/2/2025 7:41 AM, Stephan Gerhold wrote:
+> >>>> On Tue, Apr 01, 2025 at 04:47:41PM -0700, Wesley Cheng wrote:
+> >>>>> On 4/1/2025 1:16 AM, Stephan Gerhold wrote:
+> >>>>>> On Mon, Mar 31, 2025 at 12:52:19PM -0700, Wesley Cheng wrote:
+> >>>>>>> On 3/26/2025 2:57 AM, Stephan Gerhold wrote:
+> >>>>>>>> On Tue, Mar 25, 2025 at 04:18:03PM -0700, Wesley Cheng wrote:
+> >>>>>>>>> On 3/25/2025 2:24 AM, Stephan Gerhold wrote:
+> >>>>>>>>>> On Tue, Mar 18, 2025 at 05:51:32PM -0700, Wesley Cheng wrote:
+> >>>>>>>>>>> The QC ADSP is able to support USB
+> >>>>>>>>>>> playback endpoints, so that the main
+> >>>>>>>>>>> application processor can be placed into
+> >>>>>>>>>>> lower CPU power modes.  This adds
+> >>>>>>>>>>> the required AFE port configurations and
+> >>>>>>>>>>> port start command to start an
+> >>>>>>>>>>> audio session.
+> >>>>>>>>>>>
+> >>>>>>>>>>> Specifically, the QC ADSP can support
+> >>>>>>>>>>> all potential endpoints that are
+> >>>>>>>>>>> exposed by the audio data interface. 
+> >>>>>>>>>>> This includes isochronous data
+> >>>>>>>>>>> endpoints, in either synchronous mode or
+> >>>>>>>>>>> asynchronous mode. In the latter
+> >>>>>>>>>>> case both implicit or explicit feedback
+> >>>>>>>>>>> endpoints are supported.  The size
+> >>>>>>>>>>> of audio samples sent per USB frame
+> >>>>>>>>>>> (microframe) will be adjusted based on
+> >>>>>>>>>>> information received on the feedback endpoint.
+> >>>>>>>>>>>
+> >>>>>>>>>>> Some pre-requisites are needed before
+> >>>>>>>>>>> issuing the AFE port start command,
+> >>>>>>>>>>> such as setting the USB AFE dev_token. 
+> >>>>>>>>>>> This carries information about the
+> >>>>>>>>>>> available USB SND cards and PCM devices
+> >>>>>>>>>>> that have been discovered on the
+> >>>>>>>>>>> USB bus.  The dev_token field is used by
+> >>>>>>>>>>> the audio DSP to notify the USB
+> >>>>>>>>>>> offload driver of which card and PCM index to enable playback on.
+> >>>>>>>>>>>
+> >>>>>>>>>>> Signed-off-by: Wesley Cheng <quic_wcheng@quicinc.com>
+> >>>>>>>>>>> ---
+> >>>>>>>>>>>   sound/soc/qcom/qdsp6/q6afe-dai.c         |  60 +++++++
+> >>>>>>>>>>>  
+> >>>>>>>>>>> sound/soc/qcom/qdsp6/q6afe.c            
+> >>>>>>>>>>> | 192 ++++++++++++++++++++++-
+> >>>>>>>>>>>   sound/soc/qcom/qdsp6/q6afe.h             |  36 ++++-
+> >>>>>>>>>>>   sound/soc/qcom/qdsp6/q6dsp-lpass-ports.c |  23 +++
+> >>>>>>>>>>>   sound/soc/qcom/qdsp6/q6dsp-lpass-ports.h |   1 +
+> >>>>>>>>>>>   sound/soc/qcom/qdsp6/q6routing.c         |  32 +++-
+> >>>>>>>>>>>   6 files changed, 341 insertions(+), 3 deletions(-)
+> >>>>>>>>>>>
+> >>>>>>>>> [...]
+> >>>>>>>>>>> diff --git
+> >>>>>>>>>>> a/sound/soc/qcom/qdsp6/q6routing.c
+> >>>>>>>>>>> b/sound/soc/qcom/qdsp6/q6routing.c
+> >>>>>>>>>>> index 90228699ba7d..b7439420b425 100644
+> >>>>>>>>>>> --- a/sound/soc/qcom/qdsp6/q6routing.c
+> >>>>>>>>>>> +++ b/sound/soc/qcom/qdsp6/q6routing.c
+> >>>>>>>>>>> @@ -435,6 +435,26 @@ static struct
+> >>>>>>>>>>> session_data *get_session_from_id(struct
+> >>>>>>>>>>> msm_routing_data *data,
+> >>>>>>>>>>>       return NULL;
+> >>>>>>>>>>>   }
+> >>>>>>>>>>> +
+> >>>>>>>>>>> +static bool is_usb_routing_enabled(struct msm_routing_data *data)
+> >>>>>>>>>>> +{
+> >>>>>>>>>>> +    int i;
+> >>>>>>>>>>> +
+> >>>>>>>>>>> +    /*
+> >>>>>>>>>>> +     * Loop through current sessions to
+> >>>>>>>>>>> see if there are active routes
+> >>>>>>>>>>> +     * to the USB_RX backend DAI.  The
+> >>>>>>>>>>> USB offload routing is designed
+> >>>>>>>>>>> +     * similarly to the non offload
+> >>>>>>>>>>> path.  If there are multiple PCM
+> >>>>>>>>>>> +     * devices associated with the ASoC
+> >>>>>>>>>>> platform card, only one active
+> >>>>>>>>>>> +     * path can be routed to the USB offloaded endpoint.
+> >>>>>>>>>>> +     */
+> >>>>>>>>>>> +    for (i = 0; i < MAX_SESSIONS; i++) {
+> >>>>>>>>>>> +        if (data->sessions[i].port_id == USB_RX)
+> >>>>>>>>>>> +            return true;
+> >>>>>>>>>>> +    }
+> >>>>>>>>>>> +
+> >>>>>>>>>>> +    return false;
+> >>>>>>>>>>> +}
+> >>>>>>>>>>
+> >>>>>>>>>> What is different about USB_RX compared to
+> >>>>>>>>>> other output ports we have in
+> >>>>>>>>>> Q6AFE? Obviously, we can only play one
+> >>>>>>>>>> stream on an output port. But
+> >>>>>>>>>> doesn't the ADSP mix streams together when
+> >>>>>>>>>> you have multiple routes?
+> >>>>>>>>>>
+> >>>>>>>>>
+> >>>>>>>>> This patch will limit the USB_RX from being able
+> >>>>>>>>> to be mixed to multiple
+> >>>>>>>>> q6adm paths.
+> >>>>>>>>>
+> >>>>>>>>>> Also, this doesn't actually check for *active* routes only. It just
+> >>>>>>>>>> looks if any other MultiMedia DAI is
+> >>>>>>>>>> configured to output to USB_RX.
+> >>>>>>>>>> That doesn't mean they will ever be active at the same time.
+> >>>>>>>>>>
+> >>>>>>>>>
+> >>>>>>>>> Yes, the main reason being that that is the
+> >>>>>>>>> mechanism we use to populate
+> >>>>>>>>> the active offload path within the USB SND card mixer.
+> >>>>>>>>>
+> >>>>>>>>>> I might for example want to have MultiMedia1 and MultiMedia2 both
+> >>>>>>>>>> configured to output to USB_RX. Let's assume
+> >>>>>>>>>> MultiMedia1 is a normal PCM
+> >>>>>>>>>> DAI, MultiMedia2 is a compress offload DAI. When I want to playback
+> >>>>>>>>>> normal audio, I go through MultiMedia1, when
+> >>>>>>>>>> I want to play compressed
+> >>>>>>>>>> audio, I go through MultiMedia2. Only one of them active at a time.
+> >>>>>>>>>> Why can't I set this up statically in the mixers?
+> >>>>>>>>>>
+> >>>>>>>>>> If you confirm that it is really impossible
+> >>>>>>>>>> to have multiple streams
+> >>>>>>>>>> mixed together to the USB_RX output in the
+> >>>>>>>>>> ADSP, then this should be a
+> >>>>>>>>>> runtime check instead when starting the stream IMO.
+> >>>>>>>>>>
+> >>>>>>>>>
+> >>>>>>>>> We can have multiple streams being mixed together, but it will get
+> >>>>>>>>> confusing because it changes the definition that
+> >>>>>>>>> we had discussed about in
+> >>>>>>>>> the past about the overall design for the interaction w/ userspace.
+> >>>>>>>>> Although we (QC) only support a single USB audio
+> >>>>>>>>> device for offloading,
+> >>>>>>>>> there could be other situations where the audio
+> >>>>>>>>> DSP can support multiple
+> >>>>>>>>> devices.  The assumption is that each MM path is
+> >>>>>>>>> assigned to a USB device.
+> >>>>>>>>>
+> >>>>>>>>
+> >>>>>>>> Are you referring to the "USB Offload Playback Route
+> >>>>>>>> PCM#*" mixers here?
+> >>>>>>>> They could just refer to first of the configured MM paths, if someone
+> >>>>>>>> decides to route multiple paths to the USB backend. Looking at
+> >>>>>>>> q6usb_update_offload_route(), I think the implementation does that
+> >>>>>>>> already.
+> >>>>>>>>
+> >>>>>>>> I think it's fine that the userspace API for
+> >>>>>>>> automatically "probing" the
+> >>>>>>>> PCM device supports only a single path to the USB backend. But if
+> >>>>>>>> someone wants to bypass the automatic probing and configure a more
+> >>>>>>>> advanced setup, do we need to forbid that?
+> >>>>>>>>
+> >>>>>>>> Asked differently: what would happen if we remove this check here and
+> >>>>>>>> handle USB_RX like any other Q6AFE output port?
+> >>>>>>>> Would anything break for
+> >>>>>>>> the userspace interface?
+> >>>>>>>>
+> >>>>>>>
+> >>>>>>> So I took a look at seeing how the Q6ADM/ASM
+> >>>>>>> interactions would work for
+> >>>>>>> the situation where if user tried to start both MM1/2
+> >>>>>>> streams at the same
+> >>>>>>> time over the USB offload path.  In this scenario, we
+> >>>>>>> see that the Q6USB BE
+> >>>>>>> DAI operations, ie startup, hw_params, etc... gets
+> >>>>>>> called one time for the
+> >>>>>>> initial stream.  For example, if I start playback on MM1, then that
+> >>>>>>> triggers the USB BE DAI to be brought up.
+> >>>>>>>
+> >>>>>>> When I start playback on MM2, since MM1 already called
+> >>>>>>> dpcm_be_dai_startup(), then be->dpcm[stream].users will
+> >>>>>>> be greater than
+> >>>>>>> zero.  This would cause the __soc_pcm_open() to be
+> >>>>>>> skipped for the USB BE
+> >>>>>>> DAI, so I wouldn't be able to check the runtime status
+> >>>>>>> at the Q6USB backend
+> >>>>>>> DAI.  However, we do track current streaming sessions
+> >>>>>>> done over Q6 ADM and
+> >>>>>>> it does save the AFE port associated to each COPP
+> >>>>>>> allocation, so I think its
+> >>>>>>> reasonable to see if there is already a COPP entry for
+> >>>>>>> the USB AFE port, to
+> >>>>>>> fail the open() call associated to the FE DAI.
+> >>>>>>>
+> >>>>>>
+> >>>>>> This sounds like a reasonable approach *if* we have to prevent multiple
+> >>>>>> MM DAIs from streaming to the USB AFE port at the same time.
+> >>>>>>
+> >>>>>> It's still unclear to me why we have to introduce this
+> >>>>>> limitation in the
+> >>>>>> first place. I think the questions from my previous email are still
+> >>>>>> open. Can you check them again?
+> >>>>>>
+> >>>>>
+> >>>>> So I checked with our audio DSP folks, and they mentioned there isn't
+> >>>>> technically a limitation from mixing multiple ADM streams from
+> >>>>> their end.
+> >>>>> My observations are as follows:
+> >>>>> - Using tinyplay to open and play on different FE PCM devices
+> >>>>> (ie MM1 and
+> >>>>> MM2), both streams are audible on the USB headset (intermixed).
+> >>>>> - If starting playback on MM1 first, before MM2, then once playback is
+> >>>>> complete on MM1, the ADM close is also affecting the MM2 stream.
+> >>>>> Basically, MM2 stops when the MM1 audio file is completed.
+> >>>>> - Due to the abrupt/incomplete closing of the MM2 ADM stream, looks like
+> >>>>> the audio DSP is not handling that case well, so subsequent
+> >>>>> playbacks fail.
+> >>>>>
+> >>>>
+> >>>> Thanks a lot for testing this!
+> >>>>
+> >>>>> I did find a possible reason for this, and it seems to be due to
+> >>>>> some code
+> >>>>> unrelated to the USB offload path directly.  It looks like the Q6ADM is
+> >>>>> currently built in a way that you can only route streams to a single
+> >>>>> endpoint, even though we do have reference counting for each
+> >>>>> COPP profile.
+> >>>>> So even after the first MM1 ADM stream completes and the PCM device is
+> >>>>> closed, the MM1 ADM close callback will issue a q6adm_device_close() for
+> >>>>> the USB AFE port.
+> >>>>
+> >>>> Yeah, this sounds like a bug to me...
+> >>>>
+> >>>>>
+> >>>>> I made some test changes to account for the refcount before issuing the
+> >>>>> q6adm_device_close(), and that seemed to work.  Once the MM1
+> >>>>> stream closes,
+> >>>>> it allows for the MM2 stream to close/finish before issuing the command,
+> >>>>> and that allows for proper cleanup of the audio data.
+> >>>>>
+> >>>>> IMO, I would like to keep the initial behavior (ie, blocking the
+> >>>>> additional
+> >>>>> stream open from the kernel) until I can get some more testing done, and
+> >>>>> figure out if this is the correct approach.  If it is, I can submit a
+> >>>>> follow up series to address it.
+> >>>>>
+> >>>>
+> >>>> I'm fine with this approach. My only two concerns/comments are:
+> >>>>
+> >>>>   1. Let's make sure we don't waste too much time finding the ideal
+> >>>>      approach to implement the additional blocking, if this will likely
+> >>>>      end up getting removed again anyway.
+> >>>>
+> >>>>   2. How can we justify making this change only for USB? Your analysis
+> >>>>      sounds like the issue applies to all types of output ports. This was
+> >>>>      exactly my main concern with the check you added in this patch:
+> >>>>      I would expect QDSP6 treats all ports exactly the same. This means
+> >>>>      we should add this additional check for all the output ports...
+> >>>>
+> >>>
+> >>> Fair points...I will extend this check across all ports until I get back
+> >>> with seeing how we can address the mixing situation.
+> >>>
+> >>
+> >> Sorry for replying again.  I think I'll at least limit this to the playback
+> >> path only for now.  I'm not sure how the behavior yet is for the record
+> >> path, since I don't really have that use case to test with yet :).  I will
+> >> see how it looks like when the record USB offload is done.
+> >>
+> > 
+> > FWIW, I tested this on MSM8916:
+> > 
+> >  - MultiMedia1 -> PRI_MI2S_RX
+> >  - MultiMedia3 -> PRI_MI2S_RX
+> >  - TERT_MI2S_TX -> MultiMedia2
+> >  - TERT_MI2S_TX -> MultiMedia5
+> > 
+> > 2x speaker-test to MultiMedia1 and MultiMedia3 (pink noise + sine wave):
+> >  -> Audio playback correctly mixed together
+> >  -> Playback aborts for both when stopping one of the processes
+> >       Write error: -5,I/O error
+> >       xrun_recovery failed: -5,I/O error
+> >       Transfer failed: I/O error
+> >  -> Kernel log:
+> >     [  585.679421] q6routing 4080000.remoteproc:smd-edge:apr:service@8:routing: Found Matching Copp 0x0
+> >     [  587.917135] qcom-q6adm aprsvc:service:4:8: cmd = 0x10327 return error = 0x2
+> >     [  587.917378] qcom-q6adm aprsvc:service:4:8: DSP returned error[2]
+> >     [  587.917409] qcom-q6adm aprsvc:service:4:8: Failed to close copp -22
+> > 
+> > 2x arecord from MultiMedia2 and MultiMedia5:
+> >  -> Both processes record audio as expected
+> >  -> Recording aborts for both when stopping one of the processes
+> >       arecord: pcm_read:2272: read error: I/O error
+> >  -> Kernel log:
+> >     [  646.125612] q6routing 4080000.remoteproc:smd-edge:apr:service@8:routing: Found Matching Copp 0x0
+> >     [  654.247867] q6asm-dai 4080000.remoteproc:smd-edge:apr:service@7:dais: command[0x10bdb] not expecting rsp
+> >     [  654.815474] q6asm-dai 4080000.remoteproc:smd-edge:apr:service@7:dais: command[0x10bdb] not expecting rsp
+> >     [  654.825568] qcom-q6adm aprsvc:service:4:8: cmd = 0x10327 return error = 0x2
+> >     [  654.825955] qcom-q6adm aprsvc:service:4:8: DSP returned error[2]
+> >     [  654.826013] qcom-q6adm aprsvc:service:4:8: Failed to close copp -22
+> > 
+> > => Both playback and recording are affected. As you suspected it's
+> >    unrelated to USB.
+> > 
+> 
+> Great, thanks for confirming both paths show the same issue :).
+> 
+> > This feels like a bug to me rather than an intentional limitation. If
+> > you can share the fix you made I can test it here.
+> > 
+> 
+> Change I tried was fairly straightforward.  Sharing it below:
+> 
+> diff --git a/sound/soc/qcom/qdsp6/q6adm.c b/sound/soc/qcom/qdsp6/q6adm.c
+> index fe719c4c32b3..7880fbbe815f 100644
+> --- a/sound/soc/qcom/qdsp6/q6adm.c
+> +++ b/sound/soc/qcom/qdsp6/q6adm.c
+> @@ -578,12 +579,13 @@ int q6adm_close(struct device *dev, struct q6copp *copp)
+>      struct q6adm *adm = dev_get_drvdata(dev->parent);
+>      int ret = 0;
+> 
+> -    ret = q6adm_device_close(adm, copp, copp->afe_port, copp->copp_idx);
+> -    if (ret < 0) {
+> -        dev_err(adm->dev, "Failed to close copp %d\n", ret);
+> -        return ret;
+> +    if (kref_read(&copp->refcount) == 1) {
+> +        ret = q6adm_device_close(adm, copp, copp->afe_port, copp->copp_idx);
+> +        if (ret < 0) {
+> +            dev_err(adm->dev, "Failed to close copp %d\n", ret);
+> +            return ret;
+> +        }
+>      }
+> -
+>      kref_put(&copp->refcount, q6adm_free_copp);
+> 
+>      return 0;
+> 
 
-Here is an initial userspace prototype of my hierarchical split counters:
+Hmm, yeah it looks like we need some reference counting for the
+open/close operation. I think checking the refcount like that is going
+to be prone to potential race conditions though. I'm not sure if we can
+guarantee that q6adm_close() isn't called concurrently.
 
-https://github.com/compudj/librseq/blob/percpu-counter/include/rseq/percpu-counter.h
-https://github.com/compudj/librseq/blob/percpu-counter/src/percpu-counter.c
+I played around a bit and came up with the two patches below. I think
+those should be good. Given the "Found Matching Copp" code path, it
+feels like this was the intended behavior all along. I can post these if
+you have no objections. You could then just go ahead with your series by
+removing the check I originally commented on in this patch.
 
-How to try it out:
-
-* Install liburcu
-* Clone & build  https://github.com/compudj/librseq branch: percpu-counter
-
-(note: it's currently a POC, very lightly tested.)
-
-Run tests/percpu_counter_test.tap :
-
-ok 1 - Registered current thread with rseq
-Counter init: approx: 0 precise: 0 inaccuracy: Â±2048
-Counter after sum: approx: 2998016 precise: 2996800 inaccuracy: Â±2048
-Counter after set=0: approx: 1216 precise: 0 inaccuracy: Â±2048
-ok 2 - Unregistered current thread with rseq
-1..2
-
-It implements the following operations:
-
-Fast paths:
-
-- counter_add
-- counter_approx_sum
-
-Function call APIs for:
-
-- counter_add_slowpath (approximation propagation to levels > 0),
-- counter_precise_sum (iterate on all per-cpu counters)
-- counter_set: Set a bias to bring precise sum to a given target value.
-- counter_inaccuracy: returns the maximum inaccuracy of approximation for this
-                       counter configuration.
-- counter_compare: Compare a counter against a value. Use approximation if value
-                    is further than inaccuracy limits, else use precise sum.
-
-Porting it to the Linux kernel and replacing lib/percpu_counter.c should be
-straightforward. AFAIU, the only thing I have not implemented is a replacement
-for percpu_counter_limited_add, and I'm not so sure how useful it is.
-
-The most relevant piece of the algorithm is within counter_add as follows:
-
-static inline
-void counter_add(struct percpu_counter *counter, long inc)
-{
-         unsigned long bit_mask = counter->level0_bit_mask;
-         intptr_t orig, res;
-         int ret, cpu;
-
-         if (!inc)
-                 return;
-	// This is basically a percpu_add_return() in userspace with rseq.
-         do {
-                 cpu = rseq_cpu_start();
-                 orig = *rseq_percpu_ptr(counter->level0, cpu);
-                 ret = rseq_load_cbne_store__ptr(RSEQ_MO_RELAXED, RSEQ_PERCPU_CPU_ID,
-                                 rseq_percpu_ptr(counter->level0, cpu),
-                                 orig, orig + inc, cpu);
-         } while (ret);
-         res = orig + inc;
-         counter_dbg_printf("counter_add: inc: %ld, bit_mask: %ld, orig %ld, res %ld\n",
-                            inc, bit_mask, orig, res);
-         if (inc < 0) {
-                 inc = -(-inc & ~((bit_mask << 1) - 1));
-                 /* xor bit_mask, same sign: underflow */
-                 if (((orig & bit_mask) ^ (res & bit_mask)) && __counter_same_sign(orig, res))
-                         inc -= bit_mask;
-         } else {
-                 inc &= ~((bit_mask << 1) - 1);
-                 /* xor bit_mask, same sign: overflow */
-                 if (((orig & bit_mask) ^ (res & bit_mask)) && __counter_same_sign(orig, res))
-                         inc += bit_mask;
-         }
-         if (inc)
-                 counter_add_slowpath(counter, inc);
-}
-
-void counter_add_slowpath(struct percpu_counter *counter, long inc)
-{
-         struct percpu_counter_level_item *item = counter->items;
-         unsigned int level_items = counter->nr_cpus >> 1;
-         unsigned int level, nr_levels = counter->nr_levels;
-         long bit_mask = counter->level0_bit_mask;
-         int cpu = rseq_current_cpu_raw();
-
-         for (level = 1; level < nr_levels; level++) {
-                 long orig, res;
-                 long *count = &item[cpu & (level_items - 1)].count;
-
-                 bit_mask <<= 1;
-                 res = uatomic_add_return(count, inc, CMM_RELAXED);
-                 orig = res - inc;
-                 counter_dbg_printf("counter_add_slowpath: level %d, inc: %ld, bit_mask: %ld, orig %ld, res %ld\n",
-                                    level, inc, bit_mask, orig, res);
-                 if (inc < 0) {
-                         inc = -(-inc & ~((bit_mask << 1) - 1));
-                         /* xor bit_mask, same sign: underflow */
-                         if (((orig & bit_mask) ^ (res & bit_mask)) && __counter_same_sign(orig, res))
-                                 inc -= bit_mask;
-                 } else {
-                         inc &= ~((bit_mask << 1) - 1);
-                         /* xor bit_mask, same sign: overflow */
-                         if (((orig & bit_mask) ^ (res & bit_mask)) && __counter_same_sign(orig, res))
-                                 inc += bit_mask;
-                 }
-                 item += level_items;
-                 level_items >>= 1;
-                 if (!inc)
-                         return;
-         }
-         counter_dbg_printf("counter_add_slowpath: last level add %ld\n", inc);
-         uatomic_add(&item->count, inc, CMM_RELAXED);
-}
-
-Feedback is welcome!
+Test results with the two patches below:
+ - 2x speaker-test: Audio playback mixed together correctly, processes
+   keep running independently, can start/stop new processes
+ - 2x arecord: Both processes record audio as expected, processes
+   keep running independently, can start/stop new processes
 
 Thanks,
+Stephan
 
-Mathieu
+From 0a74bded47436f6dd52bfed8a420c5cb84188f50 Mon Sep 17 00:00:00 2001
+From: Stephan Gerhold <stephan.gerhold@linaro.org>
+Date: Thu, 3 Apr 2025 19:37:50 +0200
+Subject: [PATCH 1/2] ASoC: qcom: qdsp6: q6adm: Finish initializing copp before
+ releasing lock
 
+---
+ sound/soc/qcom/qdsp6/q6adm.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/sound/soc/qcom/qdsp6/q6adm.c b/sound/soc/qcom/qdsp6/q6adm.c
+index 1530e98df165..b4879cac76a6 100644
+--- a/sound/soc/qcom/qdsp6/q6adm.c
++++ b/sound/soc/qcom/qdsp6/q6adm.c
+@@ -408,9 +408,6 @@ struct q6copp *q6adm_open(struct device *dev, int port_id, int path, int rate,
+ 		return ERR_CAST(copp);
+ 	}
+ 
+-	list_add_tail(&copp->node, &adm->copps_list);
+-	spin_unlock_irqrestore(&adm->copps_list_lock, flags);
+-
+ 	kref_init(&copp->refcount);
+ 	copp->topology = topology;
+ 	copp->mode = perf_mode;
+@@ -419,6 +416,9 @@ struct q6copp *q6adm_open(struct device *dev, int port_id, int path, int rate,
+ 	copp->bit_width = bit_width;
+ 	copp->app_type = app_type;
+ 
++	list_add_tail(&copp->node, &adm->copps_list);
++	spin_unlock_irqrestore(&adm->copps_list_lock, flags);
++
+ 	ret = q6adm_device_open(adm, copp, port_id, path, topology,
+ 				channel_mode, bit_width, rate);
+ 	if (ret < 0) {
 -- 
-Mathieu Desnoyers
-EfficiOS Inc.
-https://www.efficios.com
+2.47.2
+
+From 8e0cab2b66b053f3008eb2e117dcbec72b1a467c Mon Sep 17 00:00:00 2001
+From: Stephan Gerhold <stephan.gerhold@linaro.org>
+Date: Thu, 3 Apr 2025 19:38:49 +0200
+Subject: [PATCH 2/2] ASoC: qcom: qdsp6: q6adm: Add reference count for
+ opening/closing copps
+
+---
+ sound/soc/qcom/qdsp6/q6adm.c | 71 ++++++++++++++++++++++--------------
+ 1 file changed, 43 insertions(+), 28 deletions(-)
+
+diff --git a/sound/soc/qcom/qdsp6/q6adm.c b/sound/soc/qcom/qdsp6/q6adm.c
+index b4879cac76a6..b073980bb967 100644
+--- a/sound/soc/qcom/qdsp6/q6adm.c
++++ b/sound/soc/qcom/qdsp6/q6adm.c
+@@ -51,6 +51,9 @@ struct q6copp {
+ 	wait_queue_head_t wait;
+ 	struct list_head node;
+ 	struct q6adm *adm;
++
++	int open_count;
++	struct mutex open_lock;
+ };
+ 
+ struct q6adm {
+@@ -396,35 +399,43 @@ struct q6copp *q6adm_open(struct device *dev, int port_id, int path, int rate,
+ 
+ 	copp = q6adm_find_matching_copp(adm, port_id, topology, perf_mode,
+ 				      rate, channel_mode, bit_width, app_type);
+-	if (copp) {
+-		dev_err(dev, "Found Matching Copp 0x%x\n", copp->copp_idx);
+-		return copp;
+-	}
++	if (!copp) {
++		spin_lock_irqsave(&adm->copps_list_lock, flags);
++		copp = q6adm_alloc_copp(adm, port_id);
++		if (IS_ERR(copp)) {
++			spin_unlock_irqrestore(&adm->copps_list_lock, flags);
++			return ERR_CAST(copp);
++		}
+ 
+-	spin_lock_irqsave(&adm->copps_list_lock, flags);
+-	copp = q6adm_alloc_copp(adm, port_id);
+-	if (IS_ERR(copp)) {
++		kref_init(&copp->refcount);
++		copp->topology = topology;
++		copp->mode = perf_mode;
++		copp->rate = rate;
++		copp->channels = channel_mode;
++		copp->bit_width = bit_width;
++		copp->app_type = app_type;
++		mutex_init(&copp->open_lock);
++
++		list_add_tail(&copp->node, &adm->copps_list);
+ 		spin_unlock_irqrestore(&adm->copps_list_lock, flags);
+-		return ERR_CAST(copp);
++	} else {
++		dev_dbg(dev, "Found Matching Copp 0x%x\n", copp->copp_idx);
+ 	}
+ 
+-	kref_init(&copp->refcount);
+-	copp->topology = topology;
+-	copp->mode = perf_mode;
+-	copp->rate = rate;
+-	copp->channels = channel_mode;
+-	copp->bit_width = bit_width;
+-	copp->app_type = app_type;
+-
+-	list_add_tail(&copp->node, &adm->copps_list);
+-	spin_unlock_irqrestore(&adm->copps_list_lock, flags);
+-
+-	ret = q6adm_device_open(adm, copp, port_id, path, topology,
+-				channel_mode, bit_width, rate);
+-	if (ret < 0) {
+-		kref_put(&copp->refcount, q6adm_free_copp);
+-		return ERR_PTR(ret);
++	mutex_lock(&copp->open_lock);
++	if (copp->open_count == 0) {
++		ret = q6adm_device_open(adm, copp, port_id, path, topology,
++					channel_mode, bit_width, rate);
++		if (ret < 0) {
++			mutex_unlock(&copp->open_lock);
++			kref_put(&copp->refcount, q6adm_free_copp);
++			return ERR_PTR(ret);
++		}
++		copp->open_count = 1;
++	} else {
++		copp->open_count++;
+ 	}
++	mutex_unlock(&copp->open_lock);
+ 
+ 	return copp;
+ }
+@@ -570,11 +581,15 @@ int q6adm_close(struct device *dev, struct q6copp *copp)
+ 	struct q6adm *adm = dev_get_drvdata(dev->parent);
+ 	int ret = 0;
+ 
+-	ret = q6adm_device_close(adm, copp, copp->afe_port, copp->copp_idx);
+-	if (ret < 0) {
+-		dev_err(adm->dev, "Failed to close copp %d\n", ret);
+-		return ret;
++	mutex_lock(&copp->open_lock);
++	if (--copp->open_count == 0) {
++		ret = q6adm_device_close(adm, copp, copp->afe_port, copp->copp_idx);
++		if (ret < 0) {
++			dev_err(adm->dev, "Failed to close copp %d\n", ret);
++			return ret;
++		}
+ 	}
++	mutex_unlock(&copp->open_lock);
+ 
+ 	kref_put(&copp->refcount, q6adm_free_copp);
+ 
+-- 
+2.47.2
+
+
