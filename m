@@ -1,29 +1,29 @@
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1540D24E00D;
-	Thu,  3 Apr 2025 13:59:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0841924E4A7;
+	Thu,  3 Apr 2025 13:59:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743688775; cv=none; b=I1l2mKe8XZ/a0Osna8ddCG+pKOVtqFlv+MyYxJfFpUH0e1UkFdYAQXKlwkJYcMUH5HE7/pc38/+tauho7m4261EJ87NW57dNxqfjIiUhPkIAJmMRof0s3QkIpbRMwyLsw1IvtGsEVU9goDuofodJKfGuoXqtoc2Z/G7wir6PtZw=
+	t=1743688776; cv=none; b=j9LDZMmaE+cyn/VNlioHcoVcGrs0b45/43fbMhdYM5vFO2I3so+VFAuVBuDbDiN91VSTGC9C/ATmrfuvwd/vTjqfAQW3VlBJxNL2Ct4XJdOa1Ue5lat52Nxt8FZvHHVq9+TsHtkqzDkOPte1L7OYkAlD3Q7eZ//XHhKIgxqK0FA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743688775; c=relaxed/simple;
-	bh=ZT64E9vDOl3T0E1t51JkFyLP1D+hI/J8QvK0uSQWAdI=;
+	s=arc-20240116; t=1743688776; c=relaxed/simple;
+	bh=phohLvRdRa714i8FH/81n8i7pd4IZURhE1ZhxleuVbM=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=d5Ch6IWygG+/63fxuNcIyQqN6ldVpH8uxbRVCGkQUdY0w0izj1j1eTxSPqsf5gNcLq1WHsc78QluRnKj1jkvqEw7gGK3QWI/3JCW1H8wmADg1DXwk4UAxOYr9nSh8OloDA5byXRP5oXtZxoJMIZLpc07IOfkfe9VX4oDcdnTYzQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
+	 MIME-Version:Content-Type; b=MWadovJFftvKk/CvXpIh83EwhI8mii4O0jwfw0I9UKo5XNvmCb/J10fTHVFJQ9SQBufS6cuPBXlzqCIZhoAOMvZXCqRSdJgnlkN6d3HXULWmiC9OLN+IkiJejl0AMC1yoXptEJn6BDbG5vGLkXbIvKbMBDIP787bVYWyAZZETCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.254])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4ZT3Hj50WFz1d12x;
-	Thu,  3 Apr 2025 21:58:57 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.17])
+	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4ZT3K12SRrz27hFP;
+	Thu,  3 Apr 2025 22:00:05 +0800 (CST)
 Received: from kwepemk100013.china.huawei.com (unknown [7.202.194.61])
-	by mail.maildlp.com (Postfix) with ESMTPS id D417C18010B;
-	Thu,  3 Apr 2025 21:59:29 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 04DAD1A0188;
+	Thu,  3 Apr 2025 21:59:26 +0800 (CST)
 Received: from localhost.localdomain (10.90.30.45) by
  kwepemk100013.china.huawei.com (7.202.194.61) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Thu, 3 Apr 2025 21:59:29 +0800
+ 15.2.1544.11; Thu, 3 Apr 2025 21:59:25 +0800
 From: Jijie Shao <shaojijie@huawei.com>
 To: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
 	<pabeni@redhat.com>, <andrew+netdev@lunn.ch>, <horms@kernel.org>
@@ -32,9 +32,9 @@ CC: <shenjian15@huawei.com>, <wangpeiyang1@huawei.com>,
 	<jonathan.cameron@huawei.com>, <shameerali.kolothum.thodi@huawei.com>,
 	<salil.mehta@huawei.com>, <netdev@vger.kernel.org>,
 	<linux-kernel@vger.kernel.org>, <shaojijie@huawei.com>
-Subject: [PATCH net v2 7/7] net: hibmcge: fix multiple phy_stop() issue
-Date: Thu, 3 Apr 2025 21:53:11 +0800
-Message-ID: <20250403135311.545633-8-shaojijie@huawei.com>
+Subject: [PATCH net v2 1/7] net: hibmcge: fix incorrect pause frame statistics issue
+Date: Thu, 3 Apr 2025 21:53:05 +0800
+Message-ID: <20250403135311.545633-2-shaojijie@huawei.com>
 X-Mailer: git-send-email 2.30.0
 In-Reply-To: <20250403135311.545633-1-shaojijie@huawei.com>
 References: <20250403135311.545633-1-shaojijie@huawei.com>
@@ -49,95 +49,77 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
  kwepemk100013.china.huawei.com (7.202.194.61)
 
-After detecting the np_link_fail exception,
-the driver attempts to fix the exception by
-using phy_stop() and phy_start() in the scheduled task.
+The driver supports pause frames,
+but does not pass pause frames based on rx pause enable configuration,
+resulting in incorrect pause frame statistics.
 
-However, hbg_fix_np_link_fail() and .ndo_stop()
-may be concurrently executed. As a result,
-phy_stop() is executed twice, and the following Calltrace occurs:
+like this:
+mz eno3 '01 80 c2 00 00 01 00 18 2d 04 00 9c 88 08 00 01 ff ff' \
+	-p 64 -c 100
 
- hibmcge 0000:84:00.2 enp132s0f2: Link is Down
- hibmcge 0000:84:00.2: failed to link between MAC and PHY, try to fix...
- ------------[ cut here ]------------
- called from state HALTED
- WARNING: CPU: 71 PID: 23391 at drivers/net/phy/phy.c:1503 phy_stop...
- ...
- pc : phy_stop+0x138/0x180
- lr : phy_stop+0x138/0x180
- sp : ffff8000c76bbd40
- x29: ffff8000c76bbd40 x28: 0000000000000000 x27: 0000000000000000
- x26: ffff2020047358c0 x25: ffff202004735940 x24: ffff20200000e405
- x23: ffff2020060e5178 x22: ffff2020060e4000 x21: ffff2020060e49c0
- x20: ffff2020060e5170 x19: ffff20202538e000 x18: 0000000000000020
- x17: 0000000000000000 x16: ffffcede02e28f40 x15: ffffffffffffffff
- x14: 0000000000000000 x13: 205d313933333254 x12: 5b5d393430303233
- x11: ffffcede04555958 x10: ffffcede04495918 x9 : ffffcede0274fee0
- x8 : 00000000000bffe8 x7 : c0000000ffff7fff x6 : 0000000000000001
- x5 : 00000000002bffa8 x4 : 0000000000000000 x3 : 0000000000000000
- x2 : 0000000000000000 x1 : 0000000000000000 x0 : ffff20202e429480
- Call trace:
-  phy_stop+0x138/0x180
-  hbg_fix_np_link_fail+0x4c/0x90 [hibmcge]
-  hbg_service_task+0xfc/0x148 [hibmcge]
-  process_one_work+0x180/0x398
-  worker_thread+0x210/0x328
-  kthread+0xe0/0xf0
-  ret_from_fork+0x10/0x20
- ---[ end trace 0000000000000000 ]---
+ethtool -S enp132s0f2 | grep -v ": 0"
+NIC statistics:
+     rx_octets_total_filt_cnt: 6800
+     rx_filt_pkt_cnt: 100
 
-This patch adds the rtnl_lock to hbg_fix_np_link_fail()
-to ensure that other operations are not performed concurrently.
-In addition, np_link_fail exception can be fixed
-only when the PHY is link.
+The rx pause frames are filtered by the MAC hardware.
 
-Fixes: e0306637e85d ("net: hibmcge: Add support for mac link exception handling feature")
+This patch configures pass pause frames based on the
+rx puase enable status to ensure that
+rx pause frames are not filtered.
+
+mz eno3 '01 80 c2 00 00 01 00 18 2d 04 00 9c 88 08 00 01 ff ff' \
+        -p 64 -c 100
+
+ethtool --include-statistics -a enp132s0f2
+Pause parameters for enp132s0f2:
+Autonegotiate:	on
+RX:		on
+TX:		on
+RX negotiated: on
+TX negotiated: on
+Statistics:
+  tx_pause_frames: 0
+  rx_pause_frames: 100
+
+Fixes: 3a03763f3876 ("net: hibmcge: Add pauseparam supported in this module")
 Signed-off-by: Jijie Shao <shaojijie@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hibmcge/hbg_mdio.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ChangeLog:
+v1 -> v2:
+  - Add more details in commit log, suggested by Simon Horman.
+  v1: https://lore.kernel.org/all/20250402133905.895421-1-shaojijie@huawei.com/
+---
+ drivers/net/ethernet/hisilicon/hibmcge/hbg_hw.c  | 3 +++
+ drivers/net/ethernet/hisilicon/hibmcge/hbg_reg.h | 1 +
+ 2 files changed, 4 insertions(+)
 
-diff --git a/drivers/net/ethernet/hisilicon/hibmcge/hbg_mdio.c b/drivers/net/ethernet/hisilicon/hibmcge/hbg_mdio.c
-index f29a937ad087..42b0083c9193 100644
---- a/drivers/net/ethernet/hisilicon/hibmcge/hbg_mdio.c
-+++ b/drivers/net/ethernet/hisilicon/hibmcge/hbg_mdio.c
-@@ -2,6 +2,7 @@
- // Copyright (c) 2024 Hisilicon Limited.
- 
- #include <linux/phy.h>
-+#include <linux/rtnetlink.h>
- #include "hbg_common.h"
- #include "hbg_hw.h"
- #include "hbg_mdio.h"
-@@ -133,12 +134,17 @@ void hbg_fix_np_link_fail(struct hbg_priv *priv)
- {
- 	struct device *dev = &priv->pdev->dev;
- 
-+	rtnl_lock();
+diff --git a/drivers/net/ethernet/hisilicon/hibmcge/hbg_hw.c b/drivers/net/ethernet/hisilicon/hibmcge/hbg_hw.c
+index 74a18033b444..7d3bbd3e2adc 100644
+--- a/drivers/net/ethernet/hisilicon/hibmcge/hbg_hw.c
++++ b/drivers/net/ethernet/hisilicon/hibmcge/hbg_hw.c
+@@ -242,6 +242,9 @@ void hbg_hw_set_pause_enable(struct hbg_priv *priv, u32 tx_en, u32 rx_en)
+ 			    HBG_REG_PAUSE_ENABLE_TX_B, tx_en);
+ 	hbg_reg_write_field(priv, HBG_REG_PAUSE_ENABLE_ADDR,
+ 			    HBG_REG_PAUSE_ENABLE_RX_B, rx_en);
 +
- 	if (priv->stats.np_link_fail_cnt >= HBG_NP_LINK_FAIL_RETRY_TIMES) {
- 		dev_err(dev, "failed to fix the MAC link status\n");
- 		priv->stats.np_link_fail_cnt = 0;
--		return;
-+		goto unlock;
- 	}
- 
-+	if (!priv->mac.phydev->link)
-+		goto unlock;
-+
- 	priv->stats.np_link_fail_cnt++;
- 	dev_err(dev, "failed to link between MAC and PHY, try to fix...\n");
- 
-@@ -147,6 +153,9 @@ void hbg_fix_np_link_fail(struct hbg_priv *priv)
- 	 */
- 	hbg_phy_stop(priv);
- 	hbg_phy_start(priv);
-+
-+unlock:
-+	rtnl_unlock();
++	hbg_reg_write_field(priv, HBG_REG_REC_FILT_CTRL_ADDR,
++			    HBG_REG_REC_FILT_CTRL_PAUSE_FRM_PASS_B, rx_en);
  }
  
- static void hbg_phy_adjust_link(struct net_device *netdev)
+ void hbg_hw_get_pause_enable(struct hbg_priv *priv, u32 *tx_en, u32 *rx_en)
+diff --git a/drivers/net/ethernet/hisilicon/hibmcge/hbg_reg.h b/drivers/net/ethernet/hisilicon/hibmcge/hbg_reg.h
+index cc2cc612770d..fd623cfd13de 100644
+--- a/drivers/net/ethernet/hisilicon/hibmcge/hbg_reg.h
++++ b/drivers/net/ethernet/hisilicon/hibmcge/hbg_reg.h
+@@ -68,6 +68,7 @@
+ #define HBG_REG_TRANSMIT_CTRL_AN_EN_B		BIT(5)
+ #define HBG_REG_REC_FILT_CTRL_ADDR		(HBG_REG_SGMII_BASE + 0x0064)
+ #define HBG_REG_REC_FILT_CTRL_UC_MATCH_EN_B	BIT(0)
++#define HBG_REG_REC_FILT_CTRL_PAUSE_FRM_PASS_B	BIT(4)
+ #define HBG_REG_RX_OCTETS_TOTAL_OK_ADDR		(HBG_REG_SGMII_BASE + 0x0080)
+ #define HBG_REG_RX_OCTETS_BAD_ADDR		(HBG_REG_SGMII_BASE + 0x0084)
+ #define HBG_REG_RX_UC_PKTS_ADDR			(HBG_REG_SGMII_BASE + 0x0088)
 -- 
 2.33.0
 
