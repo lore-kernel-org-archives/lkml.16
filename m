@@ -1,231 +1,109 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0808A73477;
-	Thu,  3 Apr 2025 14:31:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4356224EF84
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 14:31:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743690703; cv=none; b=EQlV4oYailcRHHngMCasICqSqdJKXRGC+HDtk8MpNRUoounuHf0SAfr1twbe/UrbXb2f7vLJdnOhEKT2e+DTUFMfY+lGZl9qoWBFC7Wn1i4+zszMDrx9PGBRcJURiUXHk/vszypF03UPrIQQ6PiM1d11l1eleC69D3YrF/WaLI0=
+	t=1743690708; cv=none; b=G8SUIr3HYsAfTzYz7oxSdXxin4sBNH+DslO/j9iOr7CyzvyA0a/XwIvY98SXbe45CJEp9WgQtjBPxTX8O2F2+mbV9I0jjJxUUPfSe+5PfrykYGhpbCxuc0K+1wAdQ1o2QVY48/aKV9aclMmT1V2X4Xumt7fPQgmQSJ6P3OaX6Ss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743690703; c=relaxed/simple;
-	bh=Jm2l2+PkwAQ9E0WIwt6XgDiYx8IDoOrADkeg/qtEnZ8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tlbwnu2HUQ2+0VBpyewsvpNqXtokSi3CaipRW6tkUd2+Gw4PsK3UGE4TFIZesWNUv3THfL9dtQHfxlKcyIRsnMmPQpp2kaqUWGusVbN+mLjHwIiORTSOnZkWJlwqkL8Ig7lSySNFp9tB4CbP35xgBL6bsf7ExIOSSs78pSJAJY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d2jx8dFe; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743690708; c=relaxed/simple;
+	bh=LgifD2968ixmAiJt7CicKh+PelgJS8sP8k+61rZLcoE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=usK4dgeJVSkhT4cD8aCzI9QpE6IsfMi5894z8qSRUzWckEppMQOfXRvRDyp/kIhR8JuXyxgTJ0DmeYTB4JUU5h7+vV1VFHfxKBcrMJm+KlGjGHW3Sy4qvFbNV89lxa5sm235ldTVmTSDJ4tOj+jLtAWMlpa74WF8ha+YK4eH72Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hQqJqYxM; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d2jx8dFe"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5e61375c108so1370227a12.1;
-        Thu, 03 Apr 2025 07:31:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743690700; x=1744295500; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cK9/wkbg8zvAiAyI3GpEsZTlV7drMA2QZPU1sf6wwxU=;
-        b=d2jx8dFex1RHLQAfzDtvCgqFBR6AC5WF0hQKre4k01W04pi63Cntd50RMOixgGyGOl
-         bph4wogRiZrG9aGDjhYhicQLWgmNEcFUuiX5WZ0VQx38M32fbJlDpHSwPCTNRFA7baWk
-         GvTAzuClj7pkVgBKZiMes9CPf4TPgpsRrFNdk1Qrd4hSu467s5cT6ei/yH1EmWzWwOfQ
-         Cd3Xf9aEosulm7Y+QAMZnPOljrLKD6adT8ynV1LFupJe32m35K8AWSRiRxR3BuTGurlU
-         HwFyD4Mt2k0P04g0TSY6PSVFQVieAB9SKQX6sQx7yTl09fJzNNH0ZAM94xX6PXE4+sSv
-         mw1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743690700; x=1744295500;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cK9/wkbg8zvAiAyI3GpEsZTlV7drMA2QZPU1sf6wwxU=;
-        b=fkqHcgojdhffhheUaaXL8dWMWO8Q5iWlSeqCwSca05KYIrjSunGihSu+cWcEvfM71Q
-         oibvu4MDd1dIbQ/VhObYDhE9wwtbQsBrwZ4L6tXCaWblO9KGAbIUcabAblF0TL0v2W8m
-         yNoQIog5QkT5ttgP01KJ1BgdzQojVGsZDS8FHlbsPNdkAEcmQE7o/0fl6HrYZIbQGukF
-         VuihDmqvTlKnqYUFK7kstiwIfHFIgaRqvAPxMVyxzhTv2TuW9e1OWdRAJiuWiP0OhHky
-         Jr5lP1IObB2w7K4sijncvMtBZQydtNRfr/+hMJWF61bLSlOwprM6gPyp9Q3fbIFKgAx1
-         UYIw==
-X-Forwarded-Encrypted: i=1; AJvYcCX57m1IS6Ky8+M/3+1jGdZEZMH2cFfuiBAjMjdtFIcxoxxI+ZItwjD+OH9FgG1/nXh1IPTyS5ff42lMLRSjfzaU2kZd@vger.kernel.org, AJvYcCXjka81Mtwm+s8Ms1m4yn34LQge0Zq1Qv1T6n9/67GI1j5Joj1znTZ7AbIJqi7tAbYLEJ1BFt0lSNadWJU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+DeI2h5UcQR6tvs+Bkp5V5B8oP4KW+Cu3cFJHJct33p06GgB8
-	Yml4Hi+wxK04NcPRvekRcZgW7MDjg4NFUfIAW5vnvnbT3a1IHvr724ay/LGn82fmXt5ruZDKKAu
-	NPv9sckBa2VasugK0DAwpmSnKqZI=
-X-Gm-Gg: ASbGncsL9HAM4u1TskSf0H+I92CpY84kKtIFsSWAMnnG8HR8sk2o71kEL037dX3ArF+
-	WLhmGK1YqcFRnFCjYjXFqlepvGP3onlPE8DPCT1EAJVqDCLskznz+paX+nNT5rmKYFBNGBXUNIj
-	1S7RzHF9QTDPHAoDJUgYO9/cu8
-X-Google-Smtp-Source: AGHT+IHkJ4KaUGObBE6FKmfGZm5gTXO6nvY2/gUckZhrPo4HJ/GKOeBtA77J6m8VGj9ClwYiYfsjNg2+RSWj2GRIfVk=
-X-Received: by 2002:a05:6402:350b:b0:5e0:892f:89ae with SMTP id
- 4fb4d7f45d1cf-5edfcc27575mr17848743a12.4.1743690699939; Thu, 03 Apr 2025
- 07:31:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hQqJqYxM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743690708; x=1775226708;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=LgifD2968ixmAiJt7CicKh+PelgJS8sP8k+61rZLcoE=;
+  b=hQqJqYxMgAV/2bDxKhiLSRs7Exwl7Pku0VJYU8vyzl+APOHeBUQHgD8r
+   RCSsjztDzoqzXjY2/vlZad73IZdw140KgOYhue5z8WyPPzGShYDzHFefC
+   /uObdZBFSbRMvaTuAzUpgUx3fx3D4p0eLFItbo7BtL69rOaJ8GtwHdOa2
+   U1WhsThFfQr2wJypW3hel9rmdIimkZcYCCfXXNOIMkgN6weWU7d2XeaTz
+   5tHuZDDABOvyF2YvDklLrs+qK64XBd+HBev36EmI9q2zbCmrPidhKu6k4
+   a89qMdSyNhbXN5xZWrK4prHifx+yq2M57zGiYfIPTOCdb1A/OFnz9sYSF
+   g==;
+X-CSE-ConnectionGUID: 66co9IIoR8uRyvIa8B1eQw==
+X-CSE-MsgGUID: w8L3/voEQq6FNf14OgZM9A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11393"; a="45015450"
+X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
+   d="scan'208";a="45015450"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 07:31:47 -0700
+X-CSE-ConnectionGUID: C/0kh/vCSUWuxmYP9o/ufA==
+X-CSE-MsgGUID: DQ29dRfcRYqKmk3hAHy0ZA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
+   d="scan'208";a="131738660"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 07:31:45 -0700
+Date: Thu, 3 Apr 2025 17:31:41 +0300
+From: Raag Jadav <raag.jadav@intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>, david.m.ertman@intel.com,
+	ira.weiny@intel.com, lee@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] mfd: core: Support auxiliary device
+Message-ID: <Z-6bzTC5UMMFLS6S@black.fi.intel.com>
+References: <20250403110053.1274521-1-raag.jadav@intel.com>
+ <2025040336-ethically-regulate-3594@gregkh>
+ <Z-6YU24dhxF5PRaw@smile.fi.intel.com>
+ <Z-6Y6lbLSbe46-uQ@smile.fi.intel.com>
+ <2025040343-vascular-swung-f124@gregkh>
+ <Z-6amuPCmtRpUmxj@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250331223516.7810-2-sweettea-kernel@dorminy.me> <CAMgjq7AroDCKTfJzJRr++8H2b3eTd=MeUqwkPUX4ixRVqZw6-A@mail.gmail.com>
-In-Reply-To: <CAMgjq7AroDCKTfJzJRr++8H2b3eTd=MeUqwkPUX4ixRVqZw6-A@mail.gmail.com>
-From: Mateusz Guzik <mjguzik@gmail.com>
-Date: Thu, 3 Apr 2025 16:31:28 +0200
-X-Gm-Features: ATxdqUFbcuKJ9YYwfeWxR-IddzPF5kxU7naBcMCGt4TtUjwLbygy2hilEX9A1F4
-Message-ID: <CAGudoHH7OUHG2HHrjzqkiqgYXzLEtovCptHpxkyVNPwSMHWfrw@mail.gmail.com>
-Subject: Re: [RFC PATCH v2] mm: use per-numa-node atomics instead of percpu_counters
-To: Kairui Song <ryncsn@gmail.com>
-Cc: Sweet Tea Dorminy <sweettea-kernel@dorminy.me>, Andrew Morton <akpm@linux-foundation.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Dennis Zhou <dennis@kernel.org>, 
-	Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@linux.com>, Martin Liu <liumartin@google.com>, 
-	David Rientjes <rientjes@google.com>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Shakeel Butt <shakeel.butt@linux.dev>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Sweet Tea Dorminy <sweettea@google.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>, Suren Baghdasaryan <surenb@google.com>, 
-	Vlastimil Babka <vbabka@suse.cz>, Christian Brauner <brauner@kernel.org>, 
-	Wei Yang <richard.weiyang@gmail.com>, David Hildenbrand <david@redhat.com>, 
-	Miaohe Lin <linmiaohe@huawei.com>, Al Viro <viro@zeniv.linux.org.uk>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	Yu Zhao <yuzhao@google.com>, Roman Gushchin <roman.gushchin@linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z-6amuPCmtRpUmxj@smile.fi.intel.com>
 
-On Tue, Apr 1, 2025 at 5:27=E2=80=AFAM Kairui Song <ryncsn@gmail.com> wrote=
-:
->
-> On Tue, Apr 1, 2025 at 6:36=E2=80=AFAM Sweet Tea Dorminy
-> <sweettea-kernel@dorminy.me> wrote:
-> >
-> > [Resend as requested as RFC and minus prereq-patch-id junk]
-> >
-> > Recently, several internal services had an RSS usage regression as part=
- of a
-> > kernel upgrade. Previously, they were on a pre-6.2 kernel and were able=
- to
-> > read RSS statistics in a backup watchdog process to monitor and decide =
-if
-> > they'd overrun their memory budget. Now, however, a representative serv=
-ice
-> > with five threads, expected to use about a hundred MB of memory, on a 2=
-50-cpu
-> > machine had memory usage tens of megabytes different from the expected =
-amount
-> > -- this constituted a significant percentage of inaccuracy, causing the
-> > watchdog to act.
-> >
-> > This was a result of f1a7941243c1 ("mm: convert mm's rss stats into
-> > percpu_counter") [1].  Previously, the memory error was bounded by
-> > 64*nr_threads pages, a very livable megabyte. Now, however, as a result=
- of
-> > scheduler decisions moving the threads around the CPUs, the memory erro=
-r could
-> > be as large as a gigabyte.
-> >
-> > This is a really tremendous inaccuracy for any few-threaded program on =
-a
-> > large machine and impedes monitoring significantly. These stat counters=
- are
-> > also used to make OOM killing decisions, so this additional inaccuracy =
-could
-> > make a big difference in OOM situations -- either resulting in the wron=
-g
-> > process being killed, or in less memory being returned from an OOM-kill=
- than
-> > expected.
-> >
-> > Finally, while the change to percpu_counter does significantly improve =
-the
-> > accuracy over the previous per-thread error for many-threaded services,=
- it does
-> > also have performance implications - up to 12% slower for short-lived p=
-rocesses
-> > and 9% increased system time in make test workloads [2].
-> >
-> > A previous attempt to address this regression by Peng Zhang [3] used a =
-hybrid
-> > approach with delayed allocation of percpu memory for rss_stats, showin=
-g
-> > promising improvements of 2-4% for process operations and 6.7% for page
-> > faults.
-> >
-> > This RFC takes a different direction by replacing percpu_counters with =
-a
-> > more efficient set of per-NUMA-node atomics. The approach:
-> >
-> > - Uses one atomic per node up to a bound to reduce cross-node updates.
-> > - Keeps a similar batching mechanism, with a smaller batch size.
-> > - Eliminates the use of a spin lock during batch updates, bounding stat
-> >   update latency.
-> > - Reduces percpu memory usage and thus thread startup time.
-> >
-> > Most importantly, this bounds the total error to 32 times the number of=
- NUMA
-> > nodes, significantly smaller than previous error bounds.
-> >
-> > On a 112-core machine, lmbench showed comparable results before and aft=
-er this
-> > patch.  However, on a 224 core machine, performance improvements were
-> > significant over percpu_counter:
-> > - Pagefault latency improved by 8.91%
-> > - Process fork latency improved by 6.27%
-> > - Process fork/execve latency improved by 6.06%
-> > - Process fork/exit latency improved by 6.58%
-> >
-> > will-it-scale also showed significant improvements on these machines.
-> >
-> > [1] https://lore.kernel.org/all/20221024052841.3291983-1-shakeelb@googl=
-e.com/
-> > [2] https://lore.kernel.org/all/20230608111408.s2minsenlcjow7q3@quack3/
-> > [3] https://lore.kernel.org/all/20240418142008.2775308-1-zhangpeng362@h=
-uawei.com/
->
-> Hi, thanks for the idea.
->
-> I'd like to mention my previous work on this:
-> https://lwn.net/ml/linux-kernel/20220728204511.56348-1-ryncsn@gmail.com/
->
-> Basically using one global percpu counter instead of a per-task one, and
-> flush each CPU's sub-counter on context_switch (if next->active_mm !=3D
-> current->active_mm, no switch for IRQ or kthread).
-> More like a percpu stash.
->
-> Benchmark looks great and the fast path is super fast (just a
-> this_cpu_add). context_switch is also fine because the scheduler would
-> try to keep one task on the same CPU  to make better use of cache. And
-> it can leverage the cpu bitmap like tlb shootdown to optimize the
-> whole thing.
->
-> The error and total memory consumption are both lower than current design=
- too.
+On Thu, Apr 03, 2025 at 05:26:34PM +0300, Andy Shevchenko wrote:
+> On Thu, Apr 03, 2025 at 03:23:22PM +0100, Greg KH wrote:
+> > On Thu, Apr 03, 2025 at 05:19:22PM +0300, Andy Shevchenko wrote:
+> > > On Thu, Apr 03, 2025 at 05:16:51PM +0300, Andy Shevchenko wrote:
+> > > > On Thu, Apr 03, 2025 at 03:02:47PM +0100, Greg KH wrote:
+> > > > > On Thu, Apr 03, 2025 at 04:30:53PM +0530, Raag Jadav wrote:
+> 
+> ...
+> 
+> > > > > > 2. Should we allow auxiliary drivers to manage their own resources
+> > > > > >    (MEM, IO, IRQ etc)?
+> > > > > 
+> > > > > The resources are all shared by the "parent" device, that's what makes
+> > > > > aux drivers work, they need to handle this as there is no unique way to
+> > > > > carve up the resources here.
+> > > > > 
+> > > > > So I don't know how you would do this, sorry.
+> > > > 
+> > > > I think we should simply enforce the requirement that MFD on AUX bus must use
+> > > > regmap. This will solve the serialisation and common access to the resources.
+> > > 
+> > > That said, make an additional API call like
+> > > 
+> > > dev_mfd_add_aux_devices() which should enforce new infrastructure and convert
+> > > drivers one by one. Also with that you may add a warning to the existing (PCI)
+> > > drivers that are using old API
+> > > 
+> > > 	if (dev_is_pci(parent))
+> > > 		dev_warn(parent, "Uses old API, please switch to ...\n");
+> > 
+> > Don't add "warnings" like this if you aren't also going to actually
+> > convert the code.  Just convert it, otherwise you pester users with
+> > problems that they have no idea how to fix.
+> 
+> Good point. I'm wondering how many actually we have PCI MFD (ab)users right
+> now? 30? 100? More?
 
-Note there are 2 unrelated components in that patchset:
-- one per-cpu instance of rss counters which is rolled up on context
-switches, avoiding the costly counter alloc/free on mm
-creation/teardown
-- cpu iteration in get_mm_counter
+$ git grep "struct pci_driver" drivers/mfd/ | wc -l
+12
 
-The allocation problem is fixable without abandoning the counters, see
-my other e -mail (tl;dr let mm's hanging out in slab caches *keep* the
-counters). This aspect has to be solved anyway due to mm_alloc_cid().
-Providing a way to sort it out covers *both* the rss counters and the
-cid thing.
-
-In your patchset the accuracy increase comes at the expense of walking
-all CPUs every time, while a big part of the point of using percpu
-counters is to have a good enough approximation somewhere that this is
-not necessary.
-
-Indeed the stock kernel fails to achieve that at the moment and as you
-can see there is discussion how to tackle it. It is a general percpu
-counter problem.
-
-I verified get_mm_counter is issued in particular on mmap and munmap.
-On high core count boxes (hundreds of cores) the mandatory all CPU
-walk has to be a problem, especially if a given process is also highly
-multi-threaded and mmap/munmap heavy.
-
-Thus I think your patchset would also benefit from some form of
-distribution of the counter other than just per-cpu and the one
-centralized value. At the same time if RSS accuracy is your only
-concern and you don't care about walking the CPUs, then you could
-modify the current code to also do it.
-
-Or to put it differently, while it may be changing the scheme to have
-a local copy makes sense, the patchset is definitely not committable
-in the proposed form -- it really wants to have better quality caching
-of the state.
---
-Mateusz Guzik <mjguzik gmail.com>
+Raag
