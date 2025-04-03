@@ -1,55 +1,55 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 404251F3B9E
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 20:24:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E5911F4604
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 20:24:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743711892; cv=none; b=qU5PaSy5ciHxOwBlKOByruCTTEDyukS8Xam6pLUpDwZmgauoeJN8CzfFf+/4H8+81/CVw4i0DrsPwD/B5KNTORaK6I6imNn+AaARJLbm61KO+3pjXihKoamDvXbHc1oVsYQ+3xtdRYgE3BSqYvHR9Hy9herzjNKJQcrkVBX1bbg=
+	t=1743711895; cv=none; b=RfjK3vNtv2FjcZK+6ix/2LezYD2gDc78P7SunKL4IZcJWYkZ421vo41AeZ6foxmxzvFxRL+K+TD+4JfKAucmYxr2lB6srIaM+2g9KDxCm6+7SBaZ3OFRcpaZVOijPs2KmEa2M3e33fZOoi/cHTmTZqh0m9h37TRdGHxa5SQhiKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743711892; c=relaxed/simple;
-	bh=HRxknASP9NJ4vjMn11MtRE7n7ZMTlVait7+eCV8bpfo=;
+	s=arc-20240116; t=1743711895; c=relaxed/simple;
+	bh=90KggfginsQzDP95X+k629D/YxTbuK86i9pbsXIr3+g=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=KJn+jSXNqMaOgLg1VrtNCVZ3YUjvLgYkJbvqTH/nOKo1ysRLNcWTB1OxSpbQPMPOlvdNAfb3letfkIRfhAsQKqDb9GaMT/ytRFuoVFUdEYO+B0GFnG1+jZSgbbWvnEsYjPNh1UvTt158y72H8ux9lRKjNbK41KB1E2Sb/XL4PrI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IXG/B3ao; arc=none smtp.client-ip=209.85.216.74
+	 To:Cc:Content-Type; b=WWcBLjC9Tb/bzlZ63LJiJ5DtnoBu5qoHEQsbIBUNrYNPktFo6Q+tnEBp6u8Py79XCUhRI3646rb32hEkc7y/NbkWMOpQPu60AHykGVjehRDm4Z0Dhbl3/6Th+mJ4jK+N5r7M21DYucmrjFwc0JKewsCSGobnaYIVjllly1UvgUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1W7TrG0h; arc=none smtp.client-ip=209.85.215.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IXG/B3ao"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-3032f4eca83so1312714a91.3
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 13:24:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1W7TrG0h"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-af8e645a1d1so844714a12.3
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 13:24:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743711890; x=1744316690; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1743711892; x=1744316692; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Pil1LeiyQzc9Wfedi7qRLX2THzbN1bSqcXBycZBxx3E=;
-        b=IXG/B3ao6mce32Y4EGcUT55zcg6iswx7YV3PtmbRV82sA2SKnawyivwF5U0brDTQv8
-         Qeq6AIAQE3u66nCCIyH1j0ZfeX9r8+FrpMQVkjuo3fMcqQILIQhlhZ0xBDV4vvPxTz2r
-         XR72pjCmrNXG8prdrwW4yx/Ist6VHkUCYSnHOL0qXySJWTgjRLPc7Irq4RMTmJs9hBgQ
-         glUuCjhIpc7Tqv8wHf698j36V12nLFwMcnZQNlO7L0HRYXp8tGqfovN6SyyZ+XAtPYp6
-         aBMnbQtijmxSc2lrMBMWOasCI/AMvT59e1DX0hc9sK8dc5IdMb4Jtn4oac+g4iqN8/iS
-         ONXw==
+        bh=Tilk3aFHymzdwH/49hi2NVgSsKIEgE1zvVteMHXS+8s=;
+        b=1W7TrG0h2Ybjmbv94SZ9gSNLTeJLlOKtUKpm9w+Luj5BLFNpi54oITOSqXZtqEUxlI
+         RoWjM++Y7OiqVcRVQLXyeABQrDc9ECgKZCLLw+EQtrbLXlBa4BMhSe4JEFRfHY8MA/xE
+         JFFo7TeWV99Z6FQItNNWm8lHB/cCNKDXsGP+f/Pw1f021YDvvTl1k/sE9FTdHbCQHGDc
+         CGoxIA+YQ8DzGqRq77qFO3CDTLKqMSCSao/nE+hkolbydgEU8Z5EpKj1L6aeVJzkEZuV
+         qshUivyCPBL7JmaiRne9yF+iU1xqYNVDC4awwyKZcDHpGd2/Xqsy7ESlKGCZ3g28x4Ed
+         Iz/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743711890; x=1744316690;
+        d=1e100.net; s=20230601; t=1743711892; x=1744316692;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Pil1LeiyQzc9Wfedi7qRLX2THzbN1bSqcXBycZBxx3E=;
-        b=ky5a5fCyuDf+HXzpy3n6Qz0P8a7bbkRhY/QDZZLf/mKaxoimRjt+j5S1Bjf2l8aCod
-         CAbZQZYwt6gsWeBymtC3IaPsT5eN1PxexI5ymFWZFexAxuB7Wh9oT9rnlsPKIVtVYtbQ
-         bk77Od9jjuraTMwtoOgSSWLyib410fml3t436XB1ypHXECNdGUf0uNkimyt92iztwfp1
-         g1/UCdRW0fPd+53hagUF09fVMB3v8CIxBjTflwweKePYVo2BtHbvyJD5iBDSC8oAGMmb
-         uG6Q+V0q4wbJlI6/AwzAl/dQOc/1Mi8c5BWFW16OtOb0W2gz28pOfcd79Cxnc0UlRj2m
-         TVYw==
-X-Forwarded-Encrypted: i=1; AJvYcCVYcR1iPXGtuD9KaFVHQ/7vY2Wf8BMNpB5AI3EZzzungcCoBw+CnU49otigg0xyFV7L3bax/sRGLENkZxE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyS/9n6dNSO2kKNAAwD27zeBjFQsWGxVlGDmCrT4wS/pkjMPVWE
-	6TDb7vornV6tvrqABMk7JVvzwDT6tpC7CqyVEcaowD/dkty58+nBwnkTSzxp9yyrk1NpahCwY+C
-	LoXUQbg==
-X-Google-Smtp-Source: AGHT+IHECJgbaJYB5gyuhkerty/z5QcoT9YXQkYlH1mJyNC2bK+Z2YOQrOHG9csQbYSvdr6YjtqHqs0SwrVx
-X-Received: from pjg12.prod.google.com ([2002:a17:90b:3f4c:b0:301:1bf5:2efc])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:51cc:b0:2fa:1e3e:9be5
- with SMTP id 98e67ed59e1d1-306a4757ff7mr1693465a91.0.1743711890504; Thu, 03
- Apr 2025 13:24:50 -0700 (PDT)
-Date: Thu,  3 Apr 2025 13:24:36 -0700
+        bh=Tilk3aFHymzdwH/49hi2NVgSsKIEgE1zvVteMHXS+8s=;
+        b=u3MaPtB9Gp29gdvwxxqKqgey2aLNpGb5Chl38/O3WS+vtOqZOfRdXfKAgXjtPKB4i/
+         KGNaxV7bR0m8z9/JEZHKBNkUaG4kq09sR+NqeCoSbkeCgo1DDoHmaGRtC+NGwkSkRmr6
+         OSo/ZFsYliHnXVfNUEIIiBKH6uf5IlW6ft2dcYK0jcFjZHkn7Z5n4nX7zhrJQaXBWS7I
+         bSAoUQRmkTcHQz+PeP5uN9SpGCu+4DFNB1mszsRXuK2Bcoo56FBaESIxc400+nZM3w8p
+         AqdtBIU7Tbgp7tY5Y61HIDsQvvs5FcHaq7ZdPvBOOB6wAY7T1oCiYNFB8qB/FMmw6zHe
+         b60Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXMypAoGbtoKtXnCZzT5Kygt4TCWgqWoERZhIDvMgvJ8xEqxHVipFMhI006YUU7ZYRAX+h1zd0UDFVlFW4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzzGeUefnz1PVZEivWTL9yJ1IgCb9/KBzX77H7OalHFUb8NRiVp
+	NWsMjluA4WcAC1GEHrrch5vecplnG6ttwXbHREW0xaWrGeYJs105u1Ll1B2puRUW87HT/7J9UAA
+	IoR8Oxw==
+X-Google-Smtp-Source: AGHT+IEryC+x1Td+fTmPyBksTzhsJltkWaZNz7ZcV3ft48rRChAcFSC8nQC73Hy3G/qeYPy+qRrlXc4bl5d8
+X-Received: from pjbqn7.prod.google.com ([2002:a17:90b:3d47:b0:2ff:5f6a:835c])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:514e:b0:304:ec28:4437
+ with SMTP id 98e67ed59e1d1-306a4b70e72mr996487a91.22.1743711892605; Thu, 03
+ Apr 2025 13:24:52 -0700 (PDT)
+Date: Thu,  3 Apr 2025 13:24:37 -0700
 In-Reply-To: <20250403202439.57791-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,9 +59,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250403202439.57791-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
-Message-ID: <20250403202439.57791-2-irogers@google.com>
-Subject: [PATCH v3 1/4] perf parse-events: Avoid scanning PMUs that can't
- contain events
+Message-ID: <20250403202439.57791-3-irogers@google.com>
+Subject: [PATCH v3 2/4] perf parse-events: Avoid scanning PMUs that can't
+ match a wildcard
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -77,78 +77,116 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Cc: dri-devel@lists.freedesktop.org
 Content-Type: text/plain; charset="UTF-8"
 
-Add perf_pmus__scan_for_event that only reads sysfs for pmus that
-could contain a given event.
+Add perf_pmus__scan_matching_wildcard that only reads sysfs for pmus
+that could wildcard match. For example, if searching for the event
+'inst_retired.any/period=1000000/' first 'inst_retired.any' will try
+to be directly looked up as a PMU, then 'inst_retired.any' will try to
+be wildcard matched against all PMUs, finally it is assumed
+'inst_retired.any' is an event name and opened on all PMUs avoiding
+reading PMUs that can't have such an event. However, before this patch
+such a case would read all PMUs for the wildcard matching. Now if the
+wildcard can't be a hwmon PMU wildcard, reading hwmon PMUs is
+avoided. On my laptop this reduces 'perf stat -e inst_retired.any
+true' from performing 253 openat system calls down to 234.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/parse-events.c |  4 ++--
- tools/perf/util/pmus.c         | 35 ++++++++++++++++++++++++++++++++++
+ tools/perf/util/parse-events.c | 26 +++++++++++----------
+ tools/perf/util/pmus.c         | 42 ++++++++++++++++++++++++++++++++++
  tools/perf/util/pmus.h         |  1 +
- 3 files changed, 38 insertions(+), 2 deletions(-)
+ 3 files changed, 57 insertions(+), 12 deletions(-)
 
 diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 5152fd5a6ead..d77af1d24985 100644
+index d77af1d24985..19caf1ed9f5d 100644
 --- a/tools/perf/util/parse-events.c
 +++ b/tools/perf/util/parse-events.c
-@@ -434,7 +434,7 @@ int parse_events_add_cache(struct list_head *list, int *idx, const char *name,
- 	const char *config_name = get_config_name(parsed_terms);
- 	const char *metric_id = get_config_metric_id(parsed_terms);
+@@ -1664,18 +1664,20 @@ int parse_events_multi_pmu_add_or_add_pmu(struct parse_events_state *parse_state
  
+ 	pmu = NULL;
+ 	/* Failed to add, try wildcard expansion of event_or_pmu as a PMU name. */
 -	while ((pmu = perf_pmus__scan(pmu)) != NULL) {
-+	while ((pmu = perf_pmus__scan_for_event(pmu, name)) != NULL) {
- 		LIST_HEAD(config_terms);
- 		struct perf_event_attr attr;
- 		int ret;
-@@ -1585,7 +1585,7 @@ int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
- 
- 	INIT_LIST_HEAD(list);
- 
--	while ((pmu = perf_pmus__scan(pmu)) != NULL) {
-+	while ((pmu = perf_pmus__scan_for_event(pmu, event_name)) != NULL) {
- 		bool auto_merge_stats;
- 
- 		if (parse_events__filter_pmu(parse_state, pmu))
+-		if (!parse_events__filter_pmu(parse_state, pmu) &&
+-		    perf_pmu__wildcard_match(pmu, event_or_pmu)) {
+-			bool auto_merge_stats = perf_pmu__auto_merge_stats(pmu);
+-
+-			if (!parse_events_add_pmu(parse_state, *listp, pmu,
+-						  const_parsed_terms,
+-						  auto_merge_stats,
+-						  /*alternate_hw_config=*/PERF_COUNT_HW_MAX)) {
+-				ok++;
+-				parse_state->wild_card_pmus = true;
+-			}
++	while ((pmu = perf_pmus__scan_matching_wildcard(pmu, event_or_pmu)) != NULL) {
++		bool auto_merge_stats;
++
++		if (parse_events__filter_pmu(parse_state, pmu))
++			continue;
++
++		auto_merge_stats = perf_pmu__auto_merge_stats(pmu);
++
++		if (!parse_events_add_pmu(parse_state, *listp, pmu,
++					  const_parsed_terms,
++					  auto_merge_stats,
++					  /*alternate_hw_config=*/PERF_COUNT_HW_MAX)) {
++			ok++;
++			parse_state->wild_card_pmus = true;
+ 		}
+ 	}
+ 	if (ok)
 diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
-index b99292de7669..f2706c395509 100644
+index f2706c395509..93d5db1c89b4 100644
 --- a/tools/perf/util/pmus.c
 +++ b/tools/perf/util/pmus.c
-@@ -350,6 +350,41 @@ struct perf_pmu *perf_pmus__scan_core(struct perf_pmu *pmu)
+@@ -19,6 +19,7 @@
+ #include "tool_pmu.h"
+ #include "print-events.h"
+ #include "strbuf.h"
++#include "string2.h"
+ 
+ /*
+  * core_pmus:  A PMU belongs to core_pmus if it's name is "cpu" or it's sysfs
+@@ -385,6 +386,47 @@ struct perf_pmu *perf_pmus__scan_for_event(struct perf_pmu *pmu, const char *eve
  	return NULL;
  }
  
-+struct perf_pmu *perf_pmus__scan_for_event(struct perf_pmu *pmu, const char *event)
++struct perf_pmu *perf_pmus__scan_matching_wildcard(struct perf_pmu *pmu, const char *wildcard)
 +{
 +	bool use_core_pmus = !pmu || pmu->is_core;
 +
 +	if (!pmu) {
-+		/* Hwmon filename values that aren't used. */
-+		enum hwmon_type type;
-+		int number;
 +		/*
-+		 * Core PMUs, other sysfs PMUs and tool PMU can take all event
-+		 * types or aren't wother optimizing for.
++		 * Core PMUs, other sysfs PMUs and tool PMU can have any name or
++		 * aren't wother optimizing for.
 +		 */
 +		unsigned int to_read_pmus =  PERF_TOOL_PMU_TYPE_PE_CORE_MASK |
 +			PERF_TOOL_PMU_TYPE_PE_OTHER_MASK |
 +			PERF_TOOL_PMU_TYPE_TOOL_MASK;
 +
-+		/* Could the event be a hwmon event? */
-+		if (parse_hwmon_filename(event, &type, &number, /*item=*/NULL, /*alarm=*/NULL))
++		/*
++		 * Hwmon PMUs have an alias from a sysfs name like hwmon0,
++		 * hwmon1, etc. or have a name of hwmon_<name>. They therefore
++		 * can only have a wildcard match if the wildcard begins with
++		 * "hwmon".
++		 */
++		if (strisglob(wildcard) ||
++		    (strlen(wildcard) >= 5 && strncmp("hwmon", wildcard, 5) == 0))
 +			to_read_pmus |= PERF_TOOL_PMU_TYPE_HWMON_MASK;
 +
 +		pmu_read_sysfs(to_read_pmus);
 +		pmu = list_prepare_entry(pmu, &core_pmus, list);
 +	}
 +	if (use_core_pmus) {
-+		list_for_each_entry_continue(pmu, &core_pmus, list)
-+			return pmu;
-+
++		list_for_each_entry_continue(pmu, &core_pmus, list) {
++			if (perf_pmu__wildcard_match(pmu, wildcard))
++				return pmu;
++		}
 +		pmu = NULL;
 +		pmu = list_prepare_entry(pmu, &other_pmus, list);
 +	}
-+	list_for_each_entry_continue(pmu, &other_pmus, list)
-+		return pmu;
++	list_for_each_entry_continue(pmu, &other_pmus, list) {
++		if (perf_pmu__wildcard_match(pmu, wildcard))
++			return pmu;
++	}
 +	return NULL;
 +}
 +
@@ -156,14 +194,14 @@ index b99292de7669..f2706c395509 100644
  {
  	bool use_core_pmus = !pmu || pmu->is_core;
 diff --git a/tools/perf/util/pmus.h b/tools/perf/util/pmus.h
-index 8def20e615ad..213ee65306d6 100644
+index 213ee65306d6..2794d8c3a466 100644
 --- a/tools/perf/util/pmus.h
 +++ b/tools/perf/util/pmus.h
-@@ -19,6 +19,7 @@ struct perf_pmu *perf_pmus__find_by_type(unsigned int type);
- 
+@@ -20,6 +20,7 @@ struct perf_pmu *perf_pmus__find_by_type(unsigned int type);
  struct perf_pmu *perf_pmus__scan(struct perf_pmu *pmu);
  struct perf_pmu *perf_pmus__scan_core(struct perf_pmu *pmu);
-+struct perf_pmu *perf_pmus__scan_for_event(struct perf_pmu *pmu, const char *event);
+ struct perf_pmu *perf_pmus__scan_for_event(struct perf_pmu *pmu, const char *event);
++struct perf_pmu *perf_pmus__scan_matching_wildcard(struct perf_pmu *pmu, const char *wildcard);
  
  const struct perf_pmu *perf_pmus__pmu_for_pmu_filter(const char *str);
  
