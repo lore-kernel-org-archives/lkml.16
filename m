@@ -1,135 +1,148 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05F1219F41C;
-	Thu,  3 Apr 2025 07:04:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 266FC4315F
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 07:04:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743663872; cv=none; b=WGZfqjf2ARtrM+I34dx6boJa3u4yAb+mIyiZr+QZhgad3Au38Whpx6dMe9WxH31JxG24HnraQP9us2W/Ux2YEbaARsB+La0v5fpD3/6ew2r+ZhmunU5kyCZ2ynnh79yO1r3onlwWzBzcC8yYT8e7s+5QmhIBOYRgHnfB23EaPe0=
+	t=1743663900; cv=none; b=lAy551q+fKlpswDc0zYfYyL0JazCcmnNX+T5sanvpNYwCIag/hD5aczqRP9SFmzZT2A1Q+uFvoVZyU7hTgsrb32KmvHK+8woE4RZm/LVjrdZJoLeFZjqoXY3GHayMtxKLDPMXovHQvyNLFG9fZo7dr8ZeFIRra0WhWQqu+2G/gE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743663872; c=relaxed/simple;
-	bh=axQRKKtAZkQVbK9Zn3xtCbGhWKRBGumuitQB4lzISSI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VP9N7ePJxYnRvbuw9dcxtPu+V56At8eGsDgDKDYJGM0blYJP7HLOm6q38IUZ/EJb9NzbEoRByUDj0cz6b8FHSK3Q0d5MRaGyuN/UcY9PUfSUjyHTjhj/aKLQqNGpWeDBu9eOFvYN8mj4nvqO/7PtQAXe0i9B6dgHkKvTjk3wSkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DULEKQOb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743663900; c=relaxed/simple;
+	bh=qAMVftuvTioi0sDQPfPaDU8gUE2J9SoKnK+nb4/KLhg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YmN2KqFYvIr3LJa0gqkMXhcnCwH4Uo+Zm1QuiRgfKjZwelff596doeSXY14JYFOcvLQlFNWd5Qqzp1PlYgFuC/qiy1Rt+Ej1OAqAkS44/7a+VLim/Nc4RxRKAhNbiVZckBtR5GULV34EBliTNgMofpSZSSFOrwt/4KbUSOo3c4c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lsEdRX1n; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DULEKQOb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3B13C4CEE3;
-	Thu,  3 Apr 2025 07:04:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743663871;
-	bh=axQRKKtAZkQVbK9Zn3xtCbGhWKRBGumuitQB4lzISSI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DULEKQObjDOFleA0YwEKsQL8DNbEOgLvR49c2+gBEbLdWdpMCC1f9Dox3JsG2cD4+
-	 CV3eOs9orM6i4QNYHz12Zecw3Z9+h4Dgzm80uRCIBMcWoIHOlRE+VzwRqIuXI0rm+c
-	 VCi8vphgVRQzfnRBN3j390MUQJaMVBuKRUZjhXQgoyi9KBeGz3t5ovMFMm4SOty2Ic
-	 3j9rE379MF+9Asvbzy/W/w/7ubfZeTleHOGhUzHqVWdguzHRwCdRGfab9unGqXDH9P
-	 p06I3hpccJ1Qn1ACFCrYaLOU1N5guo6q8NKKDB+qdkH+gmFgtdPhQgsvrhKsSPpST1
-	 h4Ly07jbRBj4g==
-Date: Thu, 3 Apr 2025 09:04:28 +0200
-From: Maxime Ripard <mripard@kernel.org>
-To: Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>
-Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, 
-	Sumit Semwal <sumit.semwal@linaro.org>, Benjamin Gaignard <benjamin.gaignard@collabora.com>, 
-	Brian Starkey <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>, 
-	"T.J. Mercier" <tjmercier@google.com>, Mattijs Korpershoek <mkorpershoek@kernel.org>, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org
-Subject: Re: [PATCH v2 1/2] dma-buf: heaps: system: Remove global variable
-Message-ID: <20250403-elated-cinnamon-tortoise-7b6cb8@houat>
-References: <20250401-dma-buf-ecc-heap-v2-0-043fd006a1af@kernel.org>
- <20250401-dma-buf-ecc-heap-v2-1-043fd006a1af@kernel.org>
- <e268d75d-c75a-499e-872d-09f91defed6b@amd.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lsEdRX1n"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5ed43460d6bso891479a12.0
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 00:04:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743663897; x=1744268697; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=MrF8MRS6l1LfsFdDql+P3vqT33uif0E6R/hk0Jh7V/o=;
+        b=lsEdRX1nLohlnEjPy/8DdaERKKohhl1Hu5NyrFH9o3wu6Fzd2yq0nhz+/w8ZyWWbT4
+         KSD0BRTNiluSg+8Zko1DRkJA9JYyWURAqaucgNz+3Gv0LfYAzqsYlV580FOuhwicB2zU
+         X8A8thYBPgqBgyW1ixsl0TPcGN12IgTvjDCIdeegqw0pHpZHG/kF+goyg3eoOAnkDtPj
+         Kbrg0nF0k8vqTreIYWJC5MwP91LHFuwqJDNegYigCLjukI7ZpTnE24cJvsOX1XGtB5MW
+         9xzII8zjyj95V9OZsXuLoL8BKkJr5HqY92XiburN7TGBdzw2mJzMqcgC9Bsgh/oztKXv
+         9JLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743663897; x=1744268697;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=MrF8MRS6l1LfsFdDql+P3vqT33uif0E6R/hk0Jh7V/o=;
+        b=sglqwVQpuGNkP7N0fAiOZlsQCcvzWwR2IjrAwS/PQsah6HGt47elu0Vf0Z83dt8CKh
+         kYDWX4T9OOdmpUblsdoGOTQl5q+51qroWU8uWgw5S0P22+74HQm4/JJECGwkExWUharI
+         9dI1CLBK/eZWNbFzICMIxbRZRg1Z00x4U/3gUN0TdP9rU5GnwsOcde7+LQpid+rDJlMW
+         zcWSUniaxSXK5QWupF1DbF/B19u22rqiqa1yTpvbTcySB1jb2N0DdXUVvAKDPD0z3k35
+         k3uZ44154AyWFYo9Diun1aWnyyTOI5TwiWg8UBS80IYArxv/aDmfZzvCHNJhES5wl8EH
+         xa7g==
+X-Forwarded-Encrypted: i=1; AJvYcCXhobUNyoYGiCxFgWyyHRwwTkYUx4AoiozKmM3HHsC9q31I37+mAVoQrkpT3ZnITP7+Mhpsb0iYoYTD8Dw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxyF/wz/rDnhBn26rRVPGAtVe6ZRrqH5IeHWm4UJFBv6wonqBOy
+	MfZeWRbpT4tp00QhhDWC8UqQ9yZd74O2gUZcijk5EeFnHEMnSMXl
+X-Gm-Gg: ASbGncsNLd2uGc25LDnw12NgzJpvOwNMudmIll7p2Y9k1zOZtc1hBOXzDKKtA6jxZRn
+	BbKwW6QV10YhLQ864k0LslEfD+AFwG/cgvUtwWGfvpgvSl6fyMNtYSk5wxGR+lt9stsUCQuo7DM
+	UnQd8BTdrGFPeZNpEez073Xtw6LCDiebj+XNYxbgZrQfZtWJNV+rm/P1Ju01LvoZcNNuiutOfcu
+	x+c9dgPmsK8aKl7F7PUen/h6/9CPGPFbpXlw6kDA3TQzQI0tnBAEX8kSj4inwIQWOje/Ap8PJmd
+	caKYpSqWz9PGVrxL9E66NdefX8O7iKKkcFeX
+X-Google-Smtp-Source: AGHT+IFfGhd9UT+NWtQKYZrH9V0xiMNQBBL9loil5YmYLR5emOkwZ3bMYT1lUm9lSLvzrDepUKth1Q==
+X-Received: by 2002:a17:907:3e1d:b0:ac3:8537:903c with SMTP id a640c23a62f3a-ac738bc07d7mr1671280066b.37.1743663897280;
+        Thu, 03 Apr 2025 00:04:57 -0700 (PDT)
+Received: from fedora.. ([193.77.86.199])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7bfe5d44dsm47098766b.13.2025.04.03.00.04.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Apr 2025 00:04:56 -0700 (PDT)
+From: Uros Bizjak <ubizjak@gmail.com>
+To: x86@kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Uros Bizjak <ubizjak@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@kernel.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	kernel test robot <lkp@intel.com>
+Subject: [PATCH -tip] x86/idle: Work around LLVM assembler bug with MONITOR and MWAIT insn
+Date: Thu,  3 Apr 2025 09:04:37 +0200
+Message-ID: <20250403070453.214190-1-ubizjak@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="gld5fz6ykqjpt6sc"
-Content-Disposition: inline
-In-Reply-To: <e268d75d-c75a-499e-872d-09f91defed6b@amd.com>
+Content-Transfer-Encoding: 8bit
 
+LLVM assembler is not able to assemble correct forms of MONITOR
+and MWAIT instructions with explicit operands:
 
---gld5fz6ykqjpt6sc
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2 1/2] dma-buf: heaps: system: Remove global variable
-MIME-Version: 1.0
+  error: invalid operand for instruction
+          monitor %rax,%ecx,%edx
+                       ^~~~
 
-On Tue, Apr 01, 2025 at 05:28:43PM +0200, Christian K=F6nig wrote:
->=20
->=20
-> Am 01.04.25 um 17:12 schrieb Maxime Ripard:
-> > The system heap has been using its struct dma_heap pointer but wasn't
-> > using it anywhere.
-> >
-> > Since we'll need additional parameters to attach to that heap type,
-> > let's create a private structure and set it as the dma_heap drvdata,
-> > removing the global variable in the process.
-> >
-> > Signed-off-by: Maxime Ripard <mripard@kernel.org>
-> > ---
-> >  drivers/dma-buf/heaps/system_heap.c | 17 ++++++++++++-----
-> >  1 file changed, 12 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/drivers/dma-buf/heaps/system_heap.c b/drivers/dma-buf/heap=
-s/system_heap.c
-> > index 26d5dc89ea1663a0d078e3a5723ca3d8d12b935f..adf422eaa33a52794f952d9=
-d4260b8743d37f421 100644
-> > --- a/drivers/dma-buf/heaps/system_heap.c
-> > +++ b/drivers/dma-buf/heaps/system_heap.c
-> > @@ -19,11 +19,13 @@
-> >  #include <linux/module.h>
-> >  #include <linux/scatterlist.h>
-> >  #include <linux/slab.h>
-> >  #include <linux/vmalloc.h>
-> > =20
-> > -static struct dma_heap *sys_heap;
-> > +struct system_heap {
-> > +	struct dma_heap *heap;
-> > +};
-> > =20
-> >  struct system_heap_buffer {
-> >  	struct dma_heap *heap;
-> >  	struct list_head attachments;
-> >  	struct mutex lock;
-> > @@ -422,17 +424,22 @@ static const struct dma_heap_ops system_heap_ops =
-=3D {
-> >  };
-> > =20
-> >  static int __init system_heap_create(void)
-> >  {
-> >  	struct dma_heap_export_info exp_info;
-> > +	struct system_heap *sys_heap;
-> > +
-> > +	sys_heap =3D kzalloc(sizeof(*sys_heap), GFP_KERNEL);
-> > +	if (!sys_heap)
-> > +		return -ENOMEM;
-> > =20
-> >  	exp_info.name =3D "system";
-> >  	exp_info.ops =3D &system_heap_ops;
-> > -	exp_info.priv =3D NULL;
-> > +	exp_info.priv =3D sys_heap;
->=20
-> Why do you even need this?
+Use instruction mnemonics with implicit operands when LLVM assembler
+is detected to work around this issue.
 
-Urgh, sorry. I'm not even sure how I ended up with that patch, but
-you're correct. I'll send a much simpler version.
+Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Fixes: cd3b85b27542 ("x86/idle: Use MONITOR and MWAIT mnemonics in <asm/mwait.h>")
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202504030802.2lEVBSpN-lkp@intel.com/
+---
+ arch/x86/include/asm/mwait.h | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
-Maxime
+diff --git a/arch/x86/include/asm/mwait.h b/arch/x86/include/asm/mwait.h
+index 5141d2acc0ef..d956d1be4873 100644
+--- a/arch/x86/include/asm/mwait.h
++++ b/arch/x86/include/asm/mwait.h
+@@ -25,9 +25,18 @@
+ #define TPAUSE_C01_STATE		1
+ #define TPAUSE_C02_STATE		0
+ 
++#ifdef CONFIG_LD_IS_LLD
++# define ASM_MONITOR	"monitor"
++# define ASM_MWAIT	"mwait"
++#else
++# define ASM_MONITOR	"monitor %[eax], %[ecx], %[edx]"
++# define ASM_MWAIT	"mwait %[eax], %[ecx]"
++#endif
++
+ static __always_inline void __monitor(const void *eax, u32 ecx, u32 edx)
+ {
+-	asm volatile("monitor %0, %1, %2" :: "a" (eax), "c" (ecx), "d" (edx));
++	asm volatile(ASM_MONITOR
++		     :: [eax] "a" (eax), [ecx] "c" (ecx), [edx] "d" (edx));
+ }
+ 
+ static __always_inline void __monitorx(const void *eax, u32 ecx, u32 edx)
+@@ -41,7 +50,7 @@ static __always_inline void __mwait(u32 eax, u32 ecx)
+ {
+ 	mds_idle_clear_cpu_buffers();
+ 
+-	asm volatile("mwait %0, %1" :: "a" (eax), "c" (ecx));
++	asm volatile(ASM_MWAIT :: [eax] "a" (eax), [ecx] "c" (ecx));
+ }
+ 
+ /*
+@@ -92,7 +101,8 @@ static __always_inline void __sti_mwait(u32 eax, u32 ecx)
+ {
+ 	mds_idle_clear_cpu_buffers();
+ 
+-	asm volatile("sti; mwait %0, %1" :: "a" (eax), "c" (ecx));
++	asm volatile("sti\n\t"
++		     ASM_MWAIT :: [eax] "a" (eax), [ecx] "c" (ecx));
+ }
+ 
+ /*
+-- 
+2.49.0
 
---gld5fz6ykqjpt6sc
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCZ+4y+wAKCRDj7w1vZxhR
-xYtuAP9h8qpbfSL8QdI6gkSoBqCm6iJd/D34aA/O+lgHIZmeZAEA8kN4XsbG3As+
-6Hk8D0ZvINLOC3KUYPipNQqNfDSiewQ=
-=QlbU
------END PGP SIGNATURE-----
-
---gld5fz6ykqjpt6sc--
