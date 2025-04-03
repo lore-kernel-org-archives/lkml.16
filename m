@@ -1,91 +1,84 @@
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB47B2581;
-	Thu,  3 Apr 2025 03:50:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 254E22581
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 03:53:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743652247; cv=none; b=Rs0M/LTbXB4cf2HGL62/sBk2zziqtUI25uwQdf6ocuVCyLBy2SJOlv+JI7J+2aXTL7IytPc9uc7oHCnQbsSyYhBTu7nO4ga6ZEmLAhmH0jWwwwyfg2TOo0/l54Rm4abM9BXxbwyXU8fO316ZuEIQafS2P5dFriD8ZaTOC5V+HGk=
+	t=1743652385; cv=none; b=C2R39cxaZUnX7au4fgveZVkrgNMLM3nmeQLGCwJIaNiJGGVIWFO6/Ox0E4ueWyAMtf+0AgkqiQNpyDk+dpJfOz6nnzV6H755W7t72uByaIAjLdVxMxvt6GhRwdvG05n0pR2eFR/NcdmTHpnV8GJMFhlKOY2KeOh45/XgwpJKtUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743652247; c=relaxed/simple;
-	bh=bqZuM5lPtkFFl5BW3C27cWg9aVz5id/woq/3m2/1HII=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bcZkJTbnukZtTD/XYnesE/LuAY4kKHwB8qrY3ArkkSPgHd0mtgm4do7XgMACfZq0K/guteehXdad8qxV2NnuP2817JiKFz0Nq06wvuKRHSgB9abQeVrZLYhO+HwBMlc8glmrA7DwHmppRoBfDKJB1Zbfcui0vXyTkKlkiIsiAdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=hyOq+BzP; arc=none smtp.client-ip=62.89.141.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+	s=arc-20240116; t=1743652385; c=relaxed/simple;
+	bh=+bKOBr6oJ3CIXEd1XQ1fLFlp76U82a9LBBJ6ao3VyMY=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=VYQF/oy/06CHwn6l0Mrt8hubyYnymJPb7+pI28hL9L4vHsx7VqL+ZxsvbpPhJl6Xrl8W7BroTeATTO7XjOiiCaTeiLGusXPPqA8BHe5fvNXNENJJCOFhtvwvp/BoW4tu8Gd6Kuvet1F7+aWc0JFj9DiuvFtK0bHG9L6sI5FJEgk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=f/g8ECLL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="hyOq+BzP"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=DeK8Kuf5tprwuRtqHOlQKfmPUg7DzKRX9Vs7L5+3uEA=; b=hyOq+BzPufZTrboJE+EMz6Ov5Z
-	v2H9hxTCr8TCsvjt3qEX9eFde71Uyr2saAt2H5oQ5ErOdcCXvv4STcYKlHhOQFZCN5GjNwUGYjlFM
-	Is1qhsK3Aa9YsFFXuSG52pEZ+rGKe5UZdc6c73NtA7YscNXF5feOKfJWBvO9qPmLzVEj5FNLAgXNL
-	hhEJws4JiVHPJrYQLXdKGf2QhqyBs6G96Ytq5A8A24J0xFVrPLw7q0iDoyDZNjKQr0GEjAw0/mFzF
-	gZzm2/mVa5acrXfycjTwhH3pv2Evej6K1bIlxhZ2hCyTh1wz8shEuVIAEMCwzt+LcO8XHJ9YdklTw
-	A5P0D/3g==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u0BbE-0000000APBV-1SkC;
-	Thu, 03 Apr 2025 03:50:40 +0000
-Date: Thu, 3 Apr 2025 04:50:40 +0100
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: Xiaole He <hexiaole1994@126.com>
-Cc: James Bottomley <James.Bottomley@hansenpartnership.com>,
-	"brauner@kernel.org" <brauner@kernel.org>,
-	"jack@suse.cz" <jack@suse.cz>,
-	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1] fs/super.c: Add NULL check for type in
- iterate_supers_type
-Message-ID: <20250403035040.GM2023217@ZenIV>
-References: <20250402034529.12642-1-hexiaole1994@126.com>
- <35a8d2093ba4c4b60ce07f1efc17ff2595f6964d.camel@HansenPartnership.com>
- <4ee2fdcb.1854a.195f9828c86.Coremail.hexiaole1994@126.com>
- <20250403024756.GL2023217@ZenIV>
- <75a45193.18746.195f9a088c4.Coremail.hexiaole1994@126.com>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="f/g8ECLL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5618DC4CEE3;
+	Thu,  3 Apr 2025 03:53:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1743652384;
+	bh=+bKOBr6oJ3CIXEd1XQ1fLFlp76U82a9LBBJ6ao3VyMY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=f/g8ECLLssdRV6tGolsPoTRy7IWzCpgWUBDHNBdbTWeMblM2kypdLGk4uI0xsFOQI
+	 gQ9Vm7u1fq1I59V/0yVYB2EPUYCzu6Pxnbr82KYvqLQmeY2TS7Mmqihe7P/G+7Z4hZ
+	 /XxXTE2RvcqyqNqC37G+FTn1EtWdj7A3Tie58pTg=
+Date: Wed, 2 Apr 2025 20:53:03 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Liu Shixin <liushixin2@huawei.com>
+Cc: Muchun Song <muchun.song@linux.dev>, David Hildenbrand
+ <david@redhat.com>, Oscar Salvador <osalvador@suse.de>, Kefeng Wang
+ <wangkefeng.wang@huawei.com>, Peter Xu <peterx@redhat.com>,
+ <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3] mm/hugetlb: update nr_huge_pages and
+ surplus_huge_pages together
+Message-Id: <20250402205303.17846a389ee2ec2a9ee7ae13@linux-foundation.org>
+In-Reply-To: <8f63f6bd-41ab-c819-291c-f66c239da27b@huawei.com>
+References: <20250305035409.2391344-1-liushixin2@huawei.com>
+	<8f63f6bd-41ab-c819-291c-f66c239da27b@huawei.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <75a45193.18746.195f9a088c4.Coremail.hexiaole1994@126.com>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Apr 03, 2025 at 11:10:02AM +0800, Xiaole He wrote:
-> Thank you for your thoughtfully feedback.
-> I think you are right, and I'm sorry for my pedantic anxiety.
-> So if we just ignore this patch for now, or I should submit a bug
-> report to kernel community in order to invite more thorough fix?
-> Thanks for your patient again.
+On Tue, 1 Apr 2025 16:12:29 +0800 Liu Shixin <liushixin2@huawei.com> wrote:
 
-I don't believe that adding random checks would make any sense -
-same as for any library function, really.
+> > +	/*
+> > +	 * nr_huge_pages needs to be adjusted within the same lock cycle
+> > +	 * as surplus_pages, otherwise it might confuse
+> > +	 * persistent_huge_pages() momentarily.
+> > +	 */
+> > +	__prep_account_new_huge_page(h, nid);
+> > +
+> >  	/*
+> >  	 * We could have raced with the pool size change.
+> >  	 * Double check that and simply deallocate the new page
+> 
+> Hi,
+> 
+> Sorry, there's a mistake that the nid may be mismatch.
+> Please use the following code to fix it, or should I send a fix patch ?
+> 
+> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+> index 39f92aad7bd1..6670f9b9e07a 100644
+> --- a/mm/hugetlb.c
+> +++ b/mm/hugetlb.c
+> @@ -2271,7 +2271,7 @@ static struct folio *alloc_surplus_hugetlb_folio(struct hstate *h,
+>          * as surplus_pages, otherwise it might confuse
+>          * persistent_huge_pages() momentarily.
+>          */
+> -       __prep_account_new_huge_page(h, nid);
+> +       __prep_account_new_huge_page(h, folio_nid(folio));
+>  
+>         /*
+>          * We could have raced with the pool size change.
 
-Having the documentation slightly more clear would make sense,
-though; currently it's
+Yes, please send a formal patch, with
 
- *      iterate_supers_type - call function for superblocks of given type
- *      @type: fs type
- *      @f: function to call
- *      @arg: argument to pass to it
- *
- *      Scans the superblock list and calls given function, passing it
- *      locked superblock and given argument.
+Fixes: 2273dea6b1e1 ("mm/hugetlb: update nr_huge_pages and surplus_huge_pages together")
 
-and description could've been better.  The weakest part in there is,
-IMO, "the superblock list" - there is a global list of all superblocks
-(inventively called 'super_blocks'), but that's not what gets scanned;
-the list of superblocks of given type (type->fs_supers) we iterate
-through.
-
-Something along the lines of "Call given callback @f for all superblocks
-of given type.  The first argument passed to @f points to a locked superblock
-that belongs to @type; the second is a caller-supplied opaque pointer @arg.
-The caller is responsible for passing @arg that would make a valid second
-argument for @f - compiler can't help here" might be a starting point,
-but I'm not up to turning that into proper English.
