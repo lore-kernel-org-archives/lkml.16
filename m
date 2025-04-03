@@ -1,81 +1,79 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7001574E09;
-	Thu,  3 Apr 2025 00:24:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 303A21CD3F;
+	Thu,  3 Apr 2025 00:29:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743639889; cv=none; b=aeGhNEAVFHAvHd/EQjMwzxTd4Kv7hsERu19hA+Nv9d63bcXxTVBPbS8kRGQ8gpE3eY1hrHAIsXZ5biOmYv8qm58z0sqHogHHJxfQVe2WnhujFyILNDex9lJQSemPtgTiy/swu3OHyhLlh7yZV6GFtCUBrlKOZkcbrrRnug8SmtA=
+	t=1743640198; cv=none; b=AGFP6Ar6iJhbCoa12P4Z1XGLteCmZ9uWwHx03f3pDYTpx78F55Y4IDxgqJGZY+iuglGI7+CfBPDTbf7shuV1vQr6ueg7p7FzIYpa9OsJcNuccTUx6AiAG4bMIDEMoPM7GbI+mqPz/fP7wcUTBaux0k7jyIwsPL/tiHSKdO9HYao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743639889; c=relaxed/simple;
-	bh=mz5lyvN7h0nt/sY0f+AgxhZJiaKZQnYXi9YxDfQH9QA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GE9PEefTXDhCnLMGkZQFnH9uDMzUYGSf50W3HE7xYk/XDFOejhZeDSqNLMFCB7bZENt+KE1KHAeeOa0wqrUh/8l+r0S7eq3ytW00sN1+6gIGkRg3zsGgtF4kQfK7pY7WOy4iAtSrEkjo8Ai+uUme9gtZFRww1OEP4TnzO43KZMA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hUBQ8sUK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743640198; c=relaxed/simple;
+	bh=xO9f4a/9WuPC3/ni2fkmii8ud0YKfXLKcQsP1T8GuzA=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=oN/iBLHhvX3LWKNnVG9zPWht+sWtgOOJXHia9sfBefout/S/q7ci02BSkA04XepzCMhs+RlQ7slyzhRfhjUAbF/CxQ/kXPZy+0lv48jrgiJ1jQcV8+250OxEn8J7xSHkzcMBX+YuCvrbE04P7UCoDiThlJ7ZoM6d7or8yVVjLno=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WLAHl2ln; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hUBQ8sUK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFC06C4CEDD;
-	Thu,  3 Apr 2025 00:24:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WLAHl2ln"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E163C4CEEB;
+	Thu,  3 Apr 2025 00:29:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743639888;
-	bh=mz5lyvN7h0nt/sY0f+AgxhZJiaKZQnYXi9YxDfQH9QA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=hUBQ8sUK083D/NSf6uKRioMj2OOyOuQ71SxeXZrcdfIxsvc6p71V2o0wTm8gQ2RdI
-	 SMmbH8KjZdzQQozFuo1hm38a8xHSimfVP8QK2sV1++UaFMXy0r3z9cOpUFe/VF8SQJ
-	 /powehxfHXJuXe3Gpiy9ruUljnBpCgOR2TaM488Lxju4COyQqaJlyxNRVh+u1DbiwD
-	 hVSeKyjdzkvgIpxuliu5xZZBG6wkss9FVFr4Jj9jzIijDka2/lYM2gjuvP8U0e2bE0
-	 K/8gffs8AkSrPn06h2S34OLtyMjCrlzmhgbpvO7ku+YVjjQfWOVuiCMaXHzWhNev9I
-	 7xTAlnUnqqVtw==
-Date: Wed, 2 Apr 2025 17:24:47 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Jiayuan Chen <jiayuan.chen@linux.dev>
-Cc: bpf@vger.kernel.org, mrpre@163.com, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko
- <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, Eduard
- Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, Yonghong Song
- <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, KP
- Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo
- <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
- <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Jesper Dangaard
- Brouer <hawk@kernel.org>, Mykola Lysenko <mykolal@fb.com>, Shuah Khan
- <shuah@kernel.org>, Willem de Bruijn <willemb@google.com>, Jason Xing
- <kerneljasonxing@gmail.com>, Anton Protopopov <aspsk@isovalent.com>,
- Abhishek Chauhan <quic_abchauha@quicinc.com>, Jordan Rome
- <linux@jordanrome.com>, Martin Kelly <martin.kelly@crowdstrike.com>, David
- Lechner <dlechner@baylibre.com>, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH bpf v2 2/2] selftests/bpf: add perf test for
- adjust_{head,meta}
-Message-ID: <20250402172447.75ed447f@kernel.org>
-In-Reply-To: <20250331032354.75808-3-jiayuan.chen@linux.dev>
-References: <20250331032354.75808-1-jiayuan.chen@linux.dev>
-	<20250331032354.75808-3-jiayuan.chen@linux.dev>
+	s=k20201202; t=1743640197;
+	bh=xO9f4a/9WuPC3/ni2fkmii8ud0YKfXLKcQsP1T8GuzA=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=WLAHl2lnRjMlYIAv4qOQ4+6LNMVfiA+1pgkerdgr/i+cHV9gX2Irx8zvvN2wPR1Kl
+	 RJDId1DSsBOjeDJTK+4jBl/YupSPL/YLQwJamoRkvzyl+7x2AV7xQ4KlGwr6KGL9Ol
+	 /gH3Dua9H67t6BWI7lydsCIvC0nt9ivZjhB1ALwh7I0fGfBqQGRLQAtxqeOVkHpV8/
+	 RPZxMrp6EXTH1IHlZiMxEAkvJy7CX7qG2vcWEVoA1ITIZOcW/HHaXYHI/B4P8mnI8e
+	 4HrvPOjX11LfqvATv2HF6GsMfoNI5Q06cm11EQOcD+nMH65oyNBnu5xNPkb5h+Sad5
+	 WRNOdPrV0QfXQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AF77F380CEE3;
+	Thu,  3 Apr 2025 00:30:35 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net] vsock: avoid timeout during connect() if the socket is
+ closing
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174364023450.1731187.2572806115256964093.git-patchwork-notify@kernel.org>
+Date: Thu, 03 Apr 2025 00:30:34 +0000
+References: <20250328141528.420719-1-sgarzare@redhat.com>
+In-Reply-To: <20250328141528.420719-1-sgarzare@redhat.com>
+To: Stefano Garzarella <sgarzare@redhat.com>
+Cc: netdev@vger.kernel.org, mhal@rbox.co, pabeni@redhat.com,
+ georgezhang@vmware.com, virtualization@lists.linux.dev,
+ linux-kernel@vger.kernel.org, acking@vmware.com, edumazet@google.com,
+ davem@davemloft.net, kuba@kernel.org, dtor@vmware.com, horms@kernel.org,
+ leonardi@redhat.com
 
-On Mon, 31 Mar 2025 11:23:45 +0800 Jiayuan Chen wrote:
-> which is negligible for the net stack.
-> 
-> Before memset
-> ./test_progs -a xdp_adjust_head_perf -v
-> run adjust head with size 6 cost 56 ns
-> run adjust head with size 20 cost 56 ns
-> run adjust head with size 40 cost 56 ns
-> run adjust head with size 200 cost 56 ns
-> 
-> After memset
-> ./test_progs -a xdp_adjust_head_perf -v
-> run adjust head with size 6 cost 58 ns
-> run adjust head with size 20 cost 58 ns
-> run adjust head with size 40 cost 58 ns
-> run adjust head with size 200 cost 66 ns
+Hello:
 
-FWIW I'm not sure if this is "negligible" for XDP like you say,
-but I defer to Jesper :)
+This patch was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
+
+On Fri, 28 Mar 2025 15:15:28 +0100 you wrote:
+> From: Stefano Garzarella <sgarzare@redhat.com>
+> 
+> When a peer attempts to establish a connection, vsock_connect() contains
+> a loop that waits for the state to be TCP_ESTABLISHED. However, the
+> other peer can be fast enough to accept the connection and close it
+> immediately, thus moving the state to TCP_CLOSING.
+> 
+> [...]
+
+Here is the summary with links:
+  - [net] vsock: avoid timeout during connect() if the socket is closing
+    https://git.kernel.org/netdev/net/c/fccd2b711d96
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
