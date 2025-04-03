@@ -1,231 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE75E24CEE2;
-	Thu,  3 Apr 2025 15:38:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 600E2223708
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 15:38:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743694701; cv=none; b=SYX0HwiZ/qL4Rd2FTVjygm3FKWt+NbUEw2iSvXPmYCmp6RDtGl0rw3Z6JbgiMb5dNfVfPWebs+4l18TM48iFFJAf+qB63CnSrPa5IY9vVrjNvTrvBI1NACg5rkbRrdnlRrB4rYHD2iV7Y/0bpyzGOFIm/xl9uZf+H3+HIf1Slf4=
+	t=1743694742; cv=none; b=Fx6NoPn2o8kF6zSy9sgU2Jk+DyWODFeFkgiz8zgjsNKUGfAnT9enR7NKPHvWFbgDuybjJuZIOwhMMXfKxYMukR4wVC1QRB4LaIgxPxkApo87isxwGNlcr0SH4ixxV4bVXtXJtKotb+/MFx80K+Bxe24pEc7R7N2+gZ4S0dKUXYM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743694701; c=relaxed/simple;
-	bh=2N5zJZzgh/dw0zWS98Pu9N5UQnlHqwehklgdj1kUOUc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=XlRdClPSpxb7DYqNbFRZhe4/LHDkOAECXapXOTWzJRfjLcCKMPsLKS3xNRNJZd6eVjKtiyeaovY9JeHxFQZmcBVMx1FHXd5sIzRFq6jtgs1kk6DU840X6GoUIS3d7wV0k/3ahTAFamh4C+yJLzdbZ0RrmAOPFnwxsFPomdiH4IU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pVfswKyd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743694742; c=relaxed/simple;
+	bh=JKIe0+aIGjdecJpynSnkAswexl7oru3HsHNJpwNRFbw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=K/xiXhBRV+CRAwEt5H0tPs78Xv4ELatFI91/Vof8EGqYiOmjD9bPohXa1CkJHs1zdFKXtq3hIhWNlB6q57sIMjQRl17FCDQDigh1FSLuZbqh8kXhXIhwBT0wxluefquLkfzPrz8bLn5gVvVZGdszvSFA+Ln2BdxEBoT5vbmCjRs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=6nHCw1L9; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pVfswKyd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B467DC4CEE8;
-	Thu,  3 Apr 2025 15:38:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743694700;
-	bh=2N5zJZzgh/dw0zWS98Pu9N5UQnlHqwehklgdj1kUOUc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=pVfswKydAQlrnjX27RgoMq+mB1EDd5hh08ml1nJtEt3rkxJ9e4fLVI7MNELk2YTxt
-	 2HKMgrmb4pl5CpL4SB70v0a8PsY02koKUDFitA/Zun9qfF8V0wLW6SGVYOxtTv0KET
-	 fZnKj7MvzxvWWjLu2TYIkN4rPHesa7Nzyxyxj5u90E7Vh/lGsR916+zIu2l4qrVsCN
-	 FeHhls0zNi2XcBM+sX1l+OPWido96A70UXFa20IMcJKHvK68bfabdfDuX6OOvDZAbe
-	 BFL/q9qAUF0Ky9QJOtgjPmxhKtTZ8ip8M1Q6X7ZrM0AmIwqkYgHAY/zQSetem4+/vM
-	 tIKONxn5B+tYw==
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: David Howells <dhowells@redhat.com>
-Cc: keyrings@vger.kernel.org,
-	Jarkko Sakkinen <jarkko.sakkinen@opinsys.com>,
-	Jarkko Sakkinen <jarkko@kernel.org>,
-	Paul Moore <paul@paul-moore.com>,
-	James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	linux-kernel@vger.kernel.org,
-	linux-security-module@vger.kernel.org
-Subject: [RFC PATCH v4] KEYS: Add a list for unreferenced keys
-Date: Thu,  3 Apr 2025 18:38:09 +0300
-Message-Id: <20250403153809.213535-1-jarkko@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <Z-55p44u6rJRrY5A@kernel.org>
-References: <Z-55p44u6rJRrY5A@kernel.org>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="6nHCw1L9"
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 533CWoms014593;
+	Thu, 3 Apr 2025 17:38:31 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	JKIe0+aIGjdecJpynSnkAswexl7oru3HsHNJpwNRFbw=; b=6nHCw1L9nFIWS5Gd
+	TYAj222BoR7JXEUkMSPWZSsCotEjtgu5+XOiphXuJtW8swOhshEmEjKwxdxpL7/I
+	8oWkq6xiBvY5++2b15TVvgSY/EkNFtfuCGSB9Myw5raxTziMAcl6nVueib51KRNK
+	aFHalYRCUed7ZfAjUfDRbA//X/uUcKXHV8XLbt2IqCFoZjv8wjv1cjGKRv9UtuC4
+	a740IF9IONI7+2RAosC4HriCNKVb/1qLN7NBQP/CQb1N6NUBkmTcNKyPE8Z7epCv
+	KQif7J0nS7Smpnv4AVjc0tdSzvH6Eyu6tgnPhMR5DCY4O4c1UqN8Tjc0mq13cnnk
+	ESGLKg==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 45ryyfr53u-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 03 Apr 2025 17:38:31 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 3609840044;
+	Thu,  3 Apr 2025 17:37:27 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 61E0A8BF27C;
+	Thu,  3 Apr 2025 17:36:51 +0200 (CEST)
+Received: from [10.130.77.153] (10.130.77.153) by SHFDAG1NODE2.st.com
+ (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 3 Apr
+ 2025 17:36:50 +0200
+Message-ID: <018d4212-7465-42c2-82b6-8b9a4a9e2716@foss.st.com>
+Date: Thu, 3 Apr 2025 17:36:50 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] drm/sti: fix inconsistent indenting warning
+To: =?UTF-8?Q?Rapha=C3=ABl_Gallais-Pou?= <rgallaispou@gmail.com>,
+        Charles Han
+	<hanchunchao@inspur.com>, <alain.volmat@foss.st.com>,
+        <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
+        <tzimmermann@suse.de>, <airlied@gmail.com>, <simona@ffwll.ch>
+CC: <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+References: <20250305101641.2399-1-hanchunchao@inspur.com>
+ <ee3989a0-e03b-4947-acef-7174fef9d36b@gmail.com>
+Content-Language: en-US
+From: Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>
+In-Reply-To: <ee3989a0-e03b-4947-acef-7174fef9d36b@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE2.st.com
+ (10.75.129.70)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-03_06,2025-04-02_03,2024-11-22_01
 
-From: Jarkko Sakkinen <jarkko.sakkinen@opinsys.com>
 
-Add an isolated list of unreferenced keys to be queued for deletion, and
-try to pin the keys in the garbage collector before processing anything.
-Skip unpinnable keys.
 
-In effect this means that exactly from the point of time when the usage
-count is zeroed all of the GC collector processing will be skipped. Earlier
-this was done only when key_put() function had done its processing, meaning
-that keys with usage count in zero might get still processed.
+On 3/7/25 13:58, Raphaël Gallais-Pou wrote:
+>
+>
+> Le 05/03/2025 à 11:16, Charles Han a écrit :
+>> Fix below inconsistent indenting smatch warning.
+>> smatch warnings:
+>> drivers/gpu/drm/sti/sti_hda.c:696 sti_hda_bind() warn: inconsistent indenting
+>>
+>> Signed-off-by: Charles Han <hanchunchao@inspur.com>
+>
 
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@opinsys.com>
----
-v4:
-- Pin the key while processing key type teardown. Skip dead keys.
-- Revert key_gc_graveyard back key_gc_unused_keys.
-- Rewrote the commit message.
-- "unsigned long flags" declaration somehow did make to the previous
-  patch (sorry).
-v3:
-- Using spin_lock() fails since key_put() is executed inside IRQs.
-  Using spin_lock_irqsave() would neither work given the lock is
-  acquired for /proc/keys. Therefore, separate the lock for
-  graveyard and key_graveyard before reaping key_serial_tree.
-v2:
-- Rename key_gc_unused_keys as key_gc_graveyard, and re-document the
-  function.
----
- include/linux/key.h      |  7 ++-----
- security/keys/gc.c       | 36 ++++++++++++++++++++----------------
- security/keys/internal.h |  2 ++
- security/keys/key.c      |  7 +++++--
- 4 files changed, 29 insertions(+), 23 deletions(-)
+Hi,
 
-diff --git a/include/linux/key.h b/include/linux/key.h
-index ba05de8579ec..c50659184bdf 100644
---- a/include/linux/key.h
-+++ b/include/linux/key.h
-@@ -195,10 +195,8 @@ enum key_state {
- struct key {
- 	refcount_t		usage;		/* number of references */
- 	key_serial_t		serial;		/* key serial number */
--	union {
--		struct list_head graveyard_link;
--		struct rb_node	serial_node;
--	};
-+	struct list_head	graveyard_link; /* key->usage == 0 */
-+	struct rb_node		serial_node;
- #ifdef CONFIG_KEY_NOTIFICATIONS
- 	struct watch_list	*watchers;	/* Entities watching this key for changes */
- #endif
-@@ -236,7 +234,6 @@ struct key {
- #define KEY_FLAG_ROOT_CAN_INVAL	7	/* set if key can be invalidated by root without permission */
- #define KEY_FLAG_KEEP		8	/* set if key should not be removed */
- #define KEY_FLAG_UID_KEYRING	9	/* set if key is a user or user session keyring */
--#define KEY_FLAG_FINAL_PUT	10	/* set if final put has happened on key */
- 
- 	/* the key type and key description string
- 	 * - the desc is used to match a key against search criteria
-diff --git a/security/keys/gc.c b/security/keys/gc.c
-index f27223ea4578..9ccd8ee6fcdb 100644
---- a/security/keys/gc.c
-+++ b/security/keys/gc.c
-@@ -189,6 +189,7 @@ static void key_garbage_collector(struct work_struct *work)
- 	struct rb_node *cursor;
- 	struct key *key;
- 	time64_t new_timer, limit, expiry;
-+	unsigned long flags;
- 
- 	kenter("[%lx,%x]", key_gc_flags, gc_state);
- 
-@@ -206,21 +207,35 @@ static void key_garbage_collector(struct work_struct *work)
- 
- 	new_timer = TIME64_MAX;
- 
-+	spin_lock_irqsave(&key_graveyard_lock, flags);
-+	list_splice_init(&key_graveyard, &graveyard);
-+	spin_unlock_irqrestore(&key_graveyard_lock, flags);
-+
-+	list_for_each_entry(key, &graveyard, graveyard_link) {
-+		spin_lock(&key_serial_lock);
-+		kdebug("unrefd key %d", key->serial);
-+		rb_erase(&key->serial_node, &key_serial_tree);
-+		spin_unlock(&key_serial_lock);
-+	}
-+
- 	/* As only this function is permitted to remove things from the key
- 	 * serial tree, if cursor is non-NULL then it will always point to a
- 	 * valid node in the tree - even if lock got dropped.
- 	 */
- 	spin_lock(&key_serial_lock);
-+	key = NULL;
- 	cursor = rb_first(&key_serial_tree);
- 
- continue_scanning:
-+	key_put(key);
- 	while (cursor) {
- 		key = rb_entry(cursor, struct key, serial_node);
- 		cursor = rb_next(cursor);
--
--		if (test_bit(KEY_FLAG_FINAL_PUT, &key->flags)) {
--			smp_mb(); /* Clobber key->user after FINAL_PUT seen. */
--			goto found_unreferenced_key;
-+		/* key_get(), unless zero: */
-+		if (!refcount_inc_not_zero(&key->usage)) {
-+			key = NULL;
-+			gc_state |= KEY_GC_REAP_AGAIN;
-+			goto skip_dead_key;
- 		}
- 
- 		if (unlikely(gc_state & KEY_GC_REAPING_DEAD_1)) {
-@@ -274,6 +289,7 @@ static void key_garbage_collector(struct work_struct *work)
- 		spin_lock(&key_serial_lock);
- 		goto continue_scanning;
- 	}
-+	key_put(key);
- 
- 	/* We've completed the pass.  Set the timer if we need to and queue a
- 	 * new cycle if necessary.  We keep executing cycles until we find one
-@@ -328,18 +344,6 @@ static void key_garbage_collector(struct work_struct *work)
- 	kleave(" [end %x]", gc_state);
- 	return;
- 
--	/* We found an unreferenced key - once we've removed it from the tree,
--	 * we can safely drop the lock.
--	 */
--found_unreferenced_key:
--	kdebug("unrefd key %d", key->serial);
--	rb_erase(&key->serial_node, &key_serial_tree);
--	spin_unlock(&key_serial_lock);
--
--	list_add_tail(&key->graveyard_link, &graveyard);
--	gc_state |= KEY_GC_REAP_AGAIN;
--	goto maybe_resched;
--
- 	/* We found a restricted keyring and need to update the restriction if
- 	 * it is associated with the dead key type.
- 	 */
-diff --git a/security/keys/internal.h b/security/keys/internal.h
-index 2cffa6dc8255..08f356d04d78 100644
---- a/security/keys/internal.h
-+++ b/security/keys/internal.h
-@@ -66,6 +66,8 @@ struct key_user {
- extern struct rb_root	key_user_tree;
- extern spinlock_t	key_user_lock;
- extern struct key_user	root_key_user;
-+extern struct list_head	key_graveyard;
-+extern spinlock_t	key_graveyard_lock;
- 
- extern struct key_user *key_user_lookup(kuid_t uid);
- extern void key_user_put(struct key_user *user);
-diff --git a/security/keys/key.c b/security/keys/key.c
-index 7198cd2ac3a3..7511f2017b6b 100644
---- a/security/keys/key.c
-+++ b/security/keys/key.c
-@@ -22,6 +22,8 @@ DEFINE_SPINLOCK(key_serial_lock);
- 
- struct rb_root	key_user_tree; /* tree of quota records indexed by UID */
- DEFINE_SPINLOCK(key_user_lock);
-+LIST_HEAD(key_graveyard);
-+DEFINE_SPINLOCK(key_graveyard_lock);
- 
- unsigned int key_quota_root_maxkeys = 1000000;	/* root's key count quota */
- unsigned int key_quota_root_maxbytes = 25000000; /* root's key space quota */
-@@ -658,8 +660,9 @@ void key_put(struct key *key)
- 				key->user->qnbytes -= key->quotalen;
- 				spin_unlock_irqrestore(&key->user->lock, flags);
- 			}
--			smp_mb(); /* key->user before FINAL_PUT set. */
--			set_bit(KEY_FLAG_FINAL_PUT, &key->flags);
-+			spin_lock_irqsave(&key_graveyard_lock, flags);
-+			list_add_tail(&key->graveyard_link, &key_graveyard);
-+			spin_unlock_irqrestore(&key_graveyard_lock, flags);
- 			schedule_work(&key_gc_work);
- 		}
- 	}
--- 
-2.39.5
+Applied on drm-misc-next.
+
+Thanks,
+Raphaël Gallais-Pou
 
