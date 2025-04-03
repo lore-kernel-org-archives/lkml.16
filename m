@@ -1,108 +1,113 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDD9C2E62A6;
-	Thu,  3 Apr 2025 22:58:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C685619F464
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 23:02:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743721129; cv=none; b=Ps5xQ7ARIhW3slArvvUgttUjrE5pDC8AtyuFX3o/4PZIqz5E4FSNsXM7W2ss7sx2TSypWMI6U+Iw+6Z4OEkcxg1M8jztLY48MNNY48aEGm7X2XUCN6buC59bNDOl+wDRNhgaxcMWRTvp+qzeIGpWcg9ku7Od0Ybi2RFE/+IfCxc=
+	t=1743721346; cv=none; b=oC10FlWfKjJUhimGV7MlyKOQaRMOyK4+3Vn9Oij/2NlQjM1q6wQSv/ik7BetZUYzpkqMqnNOmfNCfTxF/AFV2dk7qcKa4kBwXzT3slUDpVGvSe8C/97YIfL3vzGPqe5gH3Su8DpHK+Hb06udt6gPDiuI3mcruhtU393Ja5cpu3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743721129; c=relaxed/simple;
-	bh=7SIN2hexdpw3G4S6tVVM2oDtFzqOWy0OdfmmHYgNtAY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UT1Nu58W/e9543AcOeW4jOtKO1CvgafR2S8EgcTJ+j40EadAfMjdI4Fzs/FdXgJp/84zWfkEHpAtN6d/JoYipPmPVkV5AtUaNE/kbJrwa0ttWxVfvp1UyLDBwXapAVd3zHuTVngw8XAbjW+ypNhiFbJPga1CoO+B0ZZlvwO3n74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=kwGRLbJK; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="kwGRLbJK"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3913b539aabso813730f8f.2;
-        Thu, 03 Apr 2025 15:58:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20230601; t=1743721126; x=1744325926; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=E+FFwcvDWoOyMhNi7mQy2ScAulCJ8ZyLMXd6mGjg58s=;
-        b=kwGRLbJKRwotox1QX2blQrOsgBTJ9uSTl12IL9kRMDdRUWaHx9qGmLhMRkSgbK7Imw
-         ZXcBh//SxdXab8NDAcSdlhAX5KQdu9fkvBc8s8CWfTD4rQ1iXVTtjN8cRK1ihdFU3EVj
-         ABGz6F0Uo3VQ4ZFm32EcezpgtvShpKaDCXXB1h0ziwP2Bij1KOknRf51NKzsOyYdf3ez
-         Buik2MBwrqeSZvh2xu+9zqT7wanhjXlOMG6cCgWdMcxuZwSEjxwxnSXOw2ULtuXX82Co
-         +99gNUj/KxAqRcL+MsPckX2oNdPKFhXAtDgLBMaaYjZivemE2UGNCThYr19Vh8oQISNY
-         zg2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743721126; x=1744325926;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=E+FFwcvDWoOyMhNi7mQy2ScAulCJ8ZyLMXd6mGjg58s=;
-        b=fx1KXmgkarLfNaE0wkNBXZfY/I2/YS9+ANzkadc5IWyCmYzUM784kkDtVb6IE5s52l
-         7xHW5tMFquP4stNcEvh29sxxK1n7VgPA0sXRJCuTdhoTYjfUDcqJSQHS8dHdH4etQ/MM
-         YiVr968kS0OK48uFq1ubdRTnvvh0yRqDYA7ODhxZQnRca0OTUGyq0stgTyHgxwZ/ENLF
-         pMkcgNcwRBw8KE/T7dNE3PmM82m8M6YQU2ceqE6sC9vL1fjvbbIjcitCrHwv4I/aZZJn
-         mtUi4vzM15q/b2CrlAHoSlEE0ILchF4/PtU7+JNVzjiw43t1gILzvV97/AhzLJDStuOH
-         5dbg==
-X-Forwarded-Encrypted: i=1; AJvYcCVHOso0wSirLnCERE8WV2/dSUHepx8s+x3OA4DNOyWuPIAp4IiwhDq9l/43/sOI0GgGYAxrjKBX43ZG2hI=@vger.kernel.org, AJvYcCVvya5cCRhvkkgF77ZkKfFhtSqTvall/1M4Y6GoJRSqUVjkg8JQrNfAZtptSa6CI9XEPe4Zdgo6@vger.kernel.org
-X-Gm-Message-State: AOJu0YwOIS5rkJ5d/gf2y5JjtblVJgHknT4mqgu6hgxhbqTpvuvUyYZ+
-	Folr7k5NHbYjNWdCcLTWIPJ7Tf6XH7+xm7G26ZxmAikaFEpQUAE=
-X-Gm-Gg: ASbGncsyrJ5Ung5ZVTljja+F1VbSDXLUqCrDBhYte2CU4/waabsQ7xtICOvnnictraV
-	mQXfIq08vZjSFcaG7fvtsYP5JeJYdOYGQcCoBb4dddn3upUCLVkTB581aihsbkhFe4ogm8HpYLF
-	Q/qRJlPTNp7/6W6AqY68iAGePBCdh/gFza1jYS7fsocyAdzYthcCM1LA4NpYFRvW+S6WOJiks8E
-	VUHbZWTWQLLqCxETIpv1oUlumd05h7aTKGqr2ZGpSQlbYqaBKF9++x2KMfnPMU9oroUkj4uYH9U
-	ANnRwLDFyPqP4AVm0dphbqC/fqvMpwZ+joDeniR3xsH+rWBIM5d6gl6sAFBn6vM6bcRYM1wVf/1
-	FYpKrh3QNI+6Uw1eOqSpQhBo=
-X-Google-Smtp-Source: AGHT+IHX5qW4P1LyaCQfghxnY+ihaAZCPiVt43gu3VGokfmKB378OdRT2OieZQoMLtHOlr9JnVZoqA==
-X-Received: by 2002:a05:6000:22c7:b0:391:29c0:83f5 with SMTP id ffacd0b85a97d-39cba933215mr697520f8f.44.1743721126075;
-        Thu, 03 Apr 2025 15:58:46 -0700 (PDT)
-Received: from [192.168.1.3] (p5b2ac393.dip0.t-ipconnect.de. [91.42.195.147])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c301b760bsm2915329f8f.55.2025.04.03.15.58.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Apr 2025 15:58:45 -0700 (PDT)
-Message-ID: <bda845da-63b5-4669-8ca1-f12ef49728b3@googlemail.com>
-Date: Fri, 4 Apr 2025 00:58:44 +0200
+	s=arc-20240116; t=1743721346; c=relaxed/simple;
+	bh=5gz+IKOc8N3R2ZPRZ8QLjEQogRib4lDUx76Z0fGIaoE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=FRh5xyUNvx4NZvJCHld8AT6mHAd3KscqSre7Z9SEcOXn6f4FNes5DK/sT2nRIe5ueI1/sxlAvPxh87LzZOt0jabdCdtrJVYRiHvOK0D9ec7mqb1zbdxd2QRRmojkDlkQgtyfOxrZF7tUhUiG73g/WrIiJkWFqVxxEZ6YEIoeS9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <m.grzeschik@pengutronix.de>)
+	id 1u0TZm-00020j-2a; Fri, 04 Apr 2025 01:02:22 +0200
+Received: from dude04.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::ac])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <m.grzeschik@pengutronix.de>)
+	id 1u0TZl-003AlB-08;
+	Fri, 04 Apr 2025 01:02:21 +0200
+Received: from localhost ([::1] helo=dude04.red.stw.pengutronix.de)
+	by dude04.red.stw.pengutronix.de with esmtp (Exim 4.96)
+	(envelope-from <m.grzeschik@pengutronix.de>)
+	id 1u0TZk-004d1L-3B;
+	Fri, 04 Apr 2025 01:02:20 +0200
+From: Michael Grzeschik <m.grzeschik@pengutronix.de>
+Date: Fri, 04 Apr 2025 01:02:20 +0200
+Subject: [PATCH] usb: typec: mux: fsa4480: add regulator support
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Betterbird (Windows)
-Subject: Re: [PATCH 6.1 00/22] 6.1.133-rc1 review
-Content-Language: de-DE
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250403151620.960551909@linuxfoundation.org>
-From: Peter Schneider <pschneider1968@googlemail.com>
-In-Reply-To: <20250403151620.960551909@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250404-ml-topic-typec-mux-fs4480-v1-1-475377ef22a3@pengutronix.de>
+X-B4-Tracking: v=1; b=H4sIAHsT72cC/x3MQQqDMBBA0avIrDswpiONXqW4kDhpBxoNiYpFv
+ LvB5Vv8f0CWpJKhqw5IsmnWeSqoHxW47zB9BHUsBkOmISbG8MNljupw+UdxGNYdfWa2hM/WML1
+ 8y94ylD4m8brf73d/nhfEvfVWawAAAA==
+To: Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ kernel@pengutronix.de, Michael Grzeschik <m.grzeschik@pengutronix.de>
+X-Mailer: b4 0.12.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1405;
+ i=m.grzeschik@pengutronix.de; h=from:subject:message-id;
+ bh=5gz+IKOc8N3R2ZPRZ8QLjEQogRib4lDUx76Z0fGIaoE=;
+ b=owEBbQKS/ZANAwAKAb9pWET5cfSrAcsmYgBn7xN8EiywtJhILSIHVsUv53/iqlpIIIdYB2VhW
+ NasEmAvg9+JAjMEAAEKAB0WIQQV2+2Fpbqd6fvv0Gi/aVhE+XH0qwUCZ+8TfAAKCRC/aVhE+XH0
+ q7ZwD/4u/xwXm3iubekHtT7RjkrbqscBQdjwM7EhYvz2WiFjNHTIcn2LBzCyHEZMagQuCSFPiW7
+ 1EBesBg9+KjkEy6byeiFYjxbREX7nTkADx/gXIDj8ryv30AYOzgDMQ5QKlmnzVXZpGWlb0JUEOd
+ IlI9sB1XZdzaf2L26BFgwsugQfEHKDs5b4Rw/Df8/iTYAfdOF5iJ3O6RU35qWRXKk6kQq1EAakV
+ U5iBqv/cdRpJ3QoJoiR0mR8YR3hLb7B2gVApPj0Hy33s+1oAQCYXW2z9LLrqYvYr9AXAsyZfbQf
+ C0Nr7cCtCF9aW1BIP93UISavhVp2Z76Mxm1WzixU8MjwZ+bgO/x5l84ATHyB07SnUXnhAa1j4yv
+ V9HTFTjqno8KE3OsFKHJnJywu0j04HNSLjj5i84tbfyry7TtQSxavCXYVrooNi/8ZwU3HuLD/jo
+ uYDEq4fIXqb1Suapx6kAXQDXufU7BXwKKLQr3s7Dl2niM9tx1rSNeKOy0PTLeNpXHEhU3gDMC9e
+ A6EWKMn+oVkDDBaZNSLKrIyw7iFS9PQazChJRYnsasvXUwOnLOt8wajI0H2zbsaw1oBk9M19GQS
+ NGwB6JHIex7xOGfQ8GYVNnyTIzsEVDARMfO4Z1xwNpyl2WHzCrAvsVXojBxJ33U7jODzkUieX0t
+ NTdVO0T7ull/yJg==
+X-Developer-Key: i=m.grzeschik@pengutronix.de; a=openpgp;
+ fpr=957BC452CE953D7EA60CF4FC0BE9E3157A1E2C64
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: m.grzeschik@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Am 03.04.2025 um 17:19 schrieb Greg Kroah-Hartman:
-> This is the start of the stable review cycle for the 6.1.133 release.
-> There are 22 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+The fsa4480 vcc lane could be driven by some external regulator.
+This patch is adding support to enable the regulator before probing.
 
-Builds, boots and works on my 2-socket Ivy Bridge Xeon E5-2697 v2 server. No dmesg 
-oddities or regressions found.
+Signed-off-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
+---
+ drivers/usb/typec/mux/fsa4480.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Tested-by: Peter Schneider <pschneider1968@googlemail.com>
+diff --git a/drivers/usb/typec/mux/fsa4480.c b/drivers/usb/typec/mux/fsa4480.c
+index f71dba8bf07c9..c54e42c7e6a16 100644
+--- a/drivers/usb/typec/mux/fsa4480.c
++++ b/drivers/usb/typec/mux/fsa4480.c
+@@ -12,6 +12,7 @@
+ #include <linux/regmap.h>
+ #include <linux/usb/typec_dp.h>
+ #include <linux/usb/typec_mux.h>
++#include <linux/regulator/consumer.h>
+ 
+ #define FSA4480_DEVICE_ID	0x00
+  #define FSA4480_DEVICE_ID_VENDOR_ID	GENMASK(7, 6)
+@@ -273,6 +274,10 @@ static int fsa4480_probe(struct i2c_client *client)
+ 	if (IS_ERR(fsa->regmap))
+ 		return dev_err_probe(dev, PTR_ERR(fsa->regmap), "failed to initialize regmap\n");
+ 
++	ret = devm_regulator_get_enable_optional(dev, "vcc");
++	if (ret && ret != -ENODEV)
++		return dev_err_probe(dev, ret, "Failed to get regulator\n");
++
+ 	ret = regmap_read(fsa->regmap, FSA4480_DEVICE_ID, &val);
+ 	if (ret)
+ 		return dev_err_probe(dev, -ENODEV, "FSA4480 not found\n");
 
+---
+base-commit: a1b5bd45d4ee58af4f56e49497b8c3db96d8f8a3
+change-id: 20250404-ml-topic-typec-mux-fs4480-392407f94f84
 
-Beste Grüße,
-Peter Schneider
-
+Best regards,
 -- 
-Climb the mountain not to plant your flag, but to embrace the challenge,
-enjoy the air and behold the view. Climb it so you can see the world,
-not so the world can see you.                    -- David McCullough Jr.
+Michael Grzeschik <m.grzeschik@pengutronix.de>
 
-OpenPGP:  0xA3828BD796CCE11A8CADE8866E3A92C92C3FF244
-Download: https://www.peters-netzplatz.de/download/pschneider1968_pub.asc
-https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@googlemail.com
-https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@gmail.com
