@@ -1,203 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CAE22528FC
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 13:33:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E7C22505C6
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 13:33:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743687231; cv=none; b=IsoaeBhT9SlzYgTV6bP0PAZT3Ix4gnAIuXhThSBVZT83QyHeC1Pcomui6SECvLO7rUkvqZYXBMbzGEMRTW61ve+Hfi8SrcYpXDUhDX/QNizVfj6qQf8j3My9yXp60RSAZQr1LRm/4pf7g90apfQL22roiKcrfqD3FApg2rGoNl8=
+	t=1743687235; cv=none; b=K9ZPbOtubmlCCl4xENHh/kcGkZ0xAzlPlMj7qpXBdiUOkT1h2HGLZU3yaoeq2T03dPgH/2gADonQFmWoRK/ByDTPi6UalPzeJgxtRZoVNyEIwlL4AMaNW2SY3eJ/KhKnTS8YgV//Ty6csvBROHvarm7WHzNC7f7FcG2ox4a+SEU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743687231; c=relaxed/simple;
-	bh=DcYcHvtr2QSHPcXF1G+Z6ruyDYsfnPIybNswZ8mMbsg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=khf7TueydvuSpL3aQr2zfu0a7rF9rzu3E/AL8XeW9t0J2pq0viY+PDvauZ2YrSmtmnLXsXgUa4YllMMj35JaX+MYhLvfPLjYP7KcnCtrjqLQWal1WVNR+ehhMjiIuHSqXxuLpWxVv61OFwLtNcNzJC3cuVjf7I3d/2hMNfgwNR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oneAda3h; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743687235; c=relaxed/simple;
+	bh=Q07mWvgDiSZF+9VUo0WcTnHiHZHGL0kzb9D3hs8lea4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QReBSXV1UUrztYdkUt+GOjCxm+P4PpqLhs5nXiERn9Uf8mu2r5O6PC7FyzT6IVzYd59sOFw5lkbc6rEYurOJhqBY9pg0phUxyBaflDQ30Q6FDg/SO7W3Ng+t0C1EOIgYVFsJt/Ls8jmGRVNp34erb8dCWutPXoarQOCIVMcm6+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=LfzWIVBo; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oneAda3h"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19FC7C4CEE5;
-	Thu,  3 Apr 2025 13:33:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743687231;
-	bh=DcYcHvtr2QSHPcXF1G+Z6ruyDYsfnPIybNswZ8mMbsg=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=oneAda3hrpHCbR3hQcJoUoLiraCqoA2k1eXrpWSg8z0VpKMOs9mgOiUSN//yC0iJR
-	 nUc7CYJZ5Ml+U458aN41pFYDEP2oych7gIOSBHN7W+bUsg9pF6Y5bqtDqT0MY4AHnG
-	 vxRUMwAuiINwWkm+k6WKCdA21OF5eWIdt8ueyekqAvYQimK8NsuLrIPFP3tnK75Io+
-	 g7r41jb/yNtKAEuhMX9opPC6tignNyhABywJMQxrfL1UmyiY6w55OtkZia7zInZB8L
-	 YyAwvrUDiN+h1wX82o+bUMH3KWLcY1BTk8ikMn7Do7VzQB6c885xQm31yGa6vidfCf
-	 mRrBBpDdaBenw==
-From: Maxime Ripard <mripard@kernel.org>
-Date: Thu, 03 Apr 2025 15:33:32 +0200
-Subject: [PATCH v2 3/4] drm/vc4: tests: Stop allocating the state in test
- init
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="LfzWIVBo"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-39c0dfad22aso570594f8f.2
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 06:33:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1743687230; x=1744292030; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Cb/KD7IWlOthI8ejHCX33gR2BZkT9SE1o2UTiT51BYM=;
+        b=LfzWIVBohE3rdoNwFpKbYWfTxDM12NPk/H0nZWVO748r0S9rQn2wt5iW9p7d3G4xD5
+         wXF1Z3QrQRGp20OtFnBIo6StQifkwHXX4+inBWfj9pSHtDrzkLabPUMsQHOCRPIkDe2+
+         7USNC7AcRj5YzmxSFVs30DRZSLyOcM+DDYUoDLWgtCSEqalLCnXYU7+PyCZErbqn0/UQ
+         jiqfQSoE8Or6XUiwdV+drlmQJByKNbCf8hpDnoMIE4GM5eahqvHBTeBvvK/vlnZ3yuH2
+         QZYoZvG+Wa8l5/a1eOl5cyX3RPvH+3Wjbu8FJmXnnIksKoqwSxFx9yPCJYgLRwmhucD/
+         Vigw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743687230; x=1744292030;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Cb/KD7IWlOthI8ejHCX33gR2BZkT9SE1o2UTiT51BYM=;
+        b=XYU/+4sDkJTdVpCbUm90FkFt4Glkayn8Im/gJWJbRSxfn8EkKuUzimQ4MFwkLSOrjc
+         gvbaXrRYp3dB1clPumjJWFG0tx9Extun0Kh9e9+/q1XfRfjljiB64ZuGzWaRi3SyCtG0
+         Igrm2d1dXROpClflqvpthnQDSiG2JXKjNAtJRTRHN4yoHu/qNRUU6X7w3jgyuVKtE1t3
+         PrhTGD+bIDzxi4NZLRsvBnvcH+xvGWIkFOmBCcz/lgB01fFMmgNmy5c2QZrOJf3MeTj/
+         7PZ4LKwBb4xt93GRG96l+ez1AEAyqbVK0f8U35YDKc+m6Z9hEV4nLDONZaNwGMobQuLE
+         O1fQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU86L2AYsDpgwNHZnOFyonoarjjx4YtiBTTSUpg6f0y7X5S0g6yhe3BvW8d4J6Wq0LjjEVnEoIe7WUMzyg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxYnLSPg8Bs0yHzCCXU9vZUSw6j0d13uCy0ugnGeV5/M/RxENFb
+	XF8wOxZoAm79R36DRCduvPuzyumv80ilbwFit3av/bRwpkg1+Q8GiwnnQz0Alus=
+X-Gm-Gg: ASbGncscjbgxAgoEsEVqLni9uaVba8Ra6wEzbfoKgxQS5U0Xm0WkDsYx7f1XO92RcJZ
+	8oJjqTQi7qupc3bPdlK/fBYCe+VsKs8NDbUh7NYr1ivZAcp/ruR/Vhj7+j/u+iSUEPk2PsEDqfS
+	U/HJsMLACB/yuAXhScBWhC67mH6+34cRHWkFerZbSyVibyoXMbUxAQRbQ7mIfengjPBeT0TBkAN
+	FGNgYAe7MNOigCh3HwknIznudNj5X120WunmAZX/x3SbEX8E04ToNHTKuHfpuLwH0j4iYA37N0d
+	uVbuvVyla9YoEXcixLtsT8Ac2kfbc2HjGIQqyMX1cMOxlH8=
+X-Google-Smtp-Source: AGHT+IGOeun1szqzJaIz2NJQIc9/iKO4ZbIcGfY69/y5m+JQZGEzXRK+PyNfyfrTvktlbhWekNevrQ==
+X-Received: by 2002:a05:6000:2902:b0:391:3157:7717 with SMTP id ffacd0b85a97d-39c3033ae28mr2293896f8f.34.1743687230579;
+        Thu, 03 Apr 2025 06:33:50 -0700 (PDT)
+Received: from blackdock.suse.cz ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c301a7225sm1816334f8f.26.2025.04.03.06.33.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Apr 2025 06:33:50 -0700 (PDT)
+Date: Thu, 3 Apr 2025 15:33:48 +0200
+From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
+To: Waiman Long <longman@redhat.com>
+Cc: Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Shuah Khan <shuah@kernel.org>, cgroups@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 07/10] cgroup/cpuset: Remove unneeded goto in
+ sched_partition_write() and rename it
+Message-ID: <t5gojwcnwdb36ppkhq6hpujmyatckg5wd5eigsnmt2kndfofe7@ymc7tiury62o>
+References: <20250330215248.3620801-1-longman@redhat.com>
+ <20250330215248.3620801-8-longman@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250403-drm-vc4-kunit-failures-v2-3-e09195cc8840@kernel.org>
-References: <20250403-drm-vc4-kunit-failures-v2-0-e09195cc8840@kernel.org>
-In-Reply-To: <20250403-drm-vc4-kunit-failures-v2-0-e09195cc8840@kernel.org>
-To: Dave Stevenson <dave.stevenson@raspberrypi.com>, 
- =?utf-8?q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>, 
- Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
- Simona Vetter <simona@ffwll.ch>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
- Maxime Ripard <mripard@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4608; i=mripard@kernel.org;
- h=from:subject:message-id; bh=DcYcHvtr2QSHPcXF1G+Z6ruyDYsfnPIybNswZ8mMbsg=;
- b=owGbwMvMwCX2+D1vfrpE4FHG02pJDOnv+owCH/LxLOXXZjQy+PTOm/9n63Kz3w+n7N9y9GuCC
- M8e8W1ZHaUsDGJcDLJiiiwxwuZL4k7Net3JxjcPZg4rE8gQBi5OAZhI2kmGf9adDbtqOB0d5H8c
- y2zWe1ShcWNP7r7Qwxe1Kj7Mcly06wwjQ9tZltMpJzSYqlbkHHB4s/St9T91ZpNp25ZrnJp9+MQ
- MZ14A
-X-Developer-Key: i=mripard@kernel.org; a=openpgp;
- fpr=BE5675C37E818C8B5764241C254BCFC56BF6CE8D
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="bgvd7fl2ji2twwup"
+Content-Disposition: inline
+In-Reply-To: <20250330215248.3620801-8-longman@redhat.com>
 
-The vc4-pv-muxing-combinations and vc5-pv-muxing-combinations test
-suites use a common test init function which, in part, allocates the
-drm atomic state the test will use.
 
-That allocation relies on  drm_kunit_helper_atomic_state_alloc(), and
-thus requires a struct drm_modeset_acquire_ctx. This context will then
-be stored in the allocated state->acquire_ctx field.
+--bgvd7fl2ji2twwup
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 07/10] cgroup/cpuset: Remove unneeded goto in
+ sched_partition_write() and rename it
+MIME-Version: 1.0
 
-However, the context is local to the test init function, and is cleared
-as soon as drm_kunit_helper_atomic_state_alloc() is done. We thus end up
-with an dangling pointer to a cleared context in state->acquire_ctx for
-our test to consumes.
+On Sun, Mar 30, 2025 at 05:52:45PM -0400, Waiman Long <longman@redhat.com> =
+wrote:
+> The goto statement in sched_partition_write() is not needed. Remove
+> it and rename sched_partition_write()/sched_partition_show() to
+> cpuset_partition_write()/cpuset_partition_show().
+>=20
+> Signed-off-by: Waiman Long <longman@redhat.com>
+> ---
+>  kernel/cgroup/cpuset.c | 15 ++++++---------
+>  1 file changed, 6 insertions(+), 9 deletions(-)
+=2E..
 
-We should really allocate the context and the state in the test
-functions, so we can also control when we're done with it.
+Also noticed (here or for the preceding comments&cleanup patch):
 
-Fixes: 30188df0c387 ("drm/tests: Drop drm_kunit_helper_acquire_ctx_alloc()")
-Reviewed-by: Maíra Canal <mcanal@igalia.com>
-Signed-off-by: Maxime Ripard <mripard@kernel.org>
----
- drivers/gpu/drm/vc4/tests/vc4_test_pv_muxing.c | 41 +++++++++++++++++---------
- 1 file changed, 27 insertions(+), 14 deletions(-)
+--- a/kernel/cgroup/cpuset.c
++++ b/kernel/cgroup/cpuset.c
+@@ -3525,8 +3525,8 @@ static int cpuset_css_online(struct cgroup_subsys_sta=
+te *css)
+  * in the default hierarchy where only changes in partition
+  * will cause repartitioning.
+  *
+- * If the cpuset has the 'sched.partition' flag enabled, simulate
+- * turning 'sched.partition" off.
++ * If the cpuset has the 'cpus.partition' flag enabled, simulate
++ * turning 'cpus.partition" off.
+  */
 
-diff --git a/drivers/gpu/drm/vc4/tests/vc4_test_pv_muxing.c b/drivers/gpu/drm/vc4/tests/vc4_test_pv_muxing.c
-index 992e8f5c5c6ea8d92338a8fe739fa1115ff85338..52c04ef33206bf4f9e21e3c8b7cea932824a67fa 100644
---- a/drivers/gpu/drm/vc4/tests/vc4_test_pv_muxing.c
-+++ b/drivers/gpu/drm/vc4/tests/vc4_test_pv_muxing.c
-@@ -18,11 +18,10 @@
- 
- #include "vc4_mock.h"
- 
- struct pv_muxing_priv {
- 	struct vc4_dev *vc4;
--	struct drm_atomic_state *state;
- };
- 
- static bool check_fifo_conflict(struct kunit *test,
- 				const struct drm_atomic_state *state)
- {
-@@ -675,14 +674,23 @@ KUNIT_ARRAY_PARAM(vc5_test_pv_muxing_invalid,
- 
- static void drm_vc4_test_pv_muxing(struct kunit *test)
- {
- 	const struct pv_muxing_param *params = test->param_value;
- 	const struct pv_muxing_priv *priv = test->priv;
--	struct drm_atomic_state *state = priv->state;
-+	struct drm_modeset_acquire_ctx ctx;
-+	struct drm_atomic_state *state;
-+	struct drm_device *drm;
-+	struct vc4_dev *vc4;
- 	unsigned int i;
- 	int ret;
- 
-+	drm_modeset_acquire_init(&ctx, 0);
-+
-+	vc4 = priv->vc4;
-+	drm = &vc4->base;
-+	state = drm_kunit_helper_atomic_state_alloc(test, drm, &ctx);
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, state);
- 	for (i = 0; i < params->nencoders; i++) {
- 		enum vc4_encoder_type enc_type = params->encoders[i];
- 
- 		ret = vc4_mock_atomic_add_output(test, state, enc_type);
- 		KUNIT_ASSERT_EQ(test, ret, 0);
-@@ -698,56 +706,61 @@ static void drm_vc4_test_pv_muxing(struct kunit *test)
- 		enum vc4_encoder_type enc_type = params->encoders[i];
- 
- 		KUNIT_EXPECT_TRUE(test, check_channel_for_encoder(test, state, enc_type,
- 								  params->check_fn));
- 	}
-+
-+	drm_modeset_drop_locks(&ctx);
-+	drm_modeset_acquire_fini(&ctx);
- }
- 
- static void drm_vc4_test_pv_muxing_invalid(struct kunit *test)
- {
- 	const struct pv_muxing_param *params = test->param_value;
- 	const struct pv_muxing_priv *priv = test->priv;
--	struct drm_atomic_state *state = priv->state;
-+	struct drm_modeset_acquire_ctx ctx;
-+	struct drm_atomic_state *state;
-+	struct drm_device *drm;
-+	struct vc4_dev *vc4;
- 	unsigned int i;
- 	int ret;
- 
-+	drm_modeset_acquire_init(&ctx, 0);
-+
-+	vc4 = priv->vc4;
-+	drm = &vc4->base;
-+	state = drm_kunit_helper_atomic_state_alloc(test, drm, &ctx);
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, state);
-+
- 	for (i = 0; i < params->nencoders; i++) {
- 		enum vc4_encoder_type enc_type = params->encoders[i];
- 
- 		ret = vc4_mock_atomic_add_output(test, state, enc_type);
- 		KUNIT_ASSERT_EQ(test, ret, 0);
- 	}
- 
- 	ret = drm_atomic_check_only(state);
- 	KUNIT_EXPECT_LT(test, ret, 0);
-+
-+	drm_modeset_drop_locks(&ctx);
-+	drm_modeset_acquire_fini(&ctx);
- }
- 
- static int vc4_pv_muxing_test_init(struct kunit *test)
- {
- 	const struct pv_muxing_param *params = test->param_value;
--	struct drm_modeset_acquire_ctx ctx;
- 	struct pv_muxing_priv *priv;
--	struct drm_device *drm;
- 	struct vc4_dev *vc4;
- 
- 	priv = kunit_kzalloc(test, sizeof(*priv), GFP_KERNEL);
- 	KUNIT_ASSERT_NOT_NULL(test, priv);
- 	test->priv = priv;
- 
- 	vc4 = params->mock_fn(test);
- 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, vc4);
- 	priv->vc4 = vc4;
- 
--	drm_modeset_acquire_init(&ctx, 0);
--
--	drm = &vc4->base;
--	priv->state = drm_kunit_helper_atomic_state_alloc(test, drm, &ctx);
--	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, priv->state);
--
--	drm_modeset_drop_locks(&ctx);
--	drm_modeset_acquire_fini(&ctx);
--
- 	return 0;
- }
- 
- static struct kunit_case vc4_pv_muxing_tests[] = {
- 	KUNIT_CASE_PARAM(drm_vc4_test_pv_muxing,
+ static void cpuset_css_offline(struct cgroup_subsys_state *css)
 
--- 
-2.49.0
 
+Next time...
+
+--bgvd7fl2ji2twwup
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQTd6mfF2PbEZnpdoAkt3Wney77BSQUCZ+6OOgAKCRAt3Wney77B
+Se2AAQDOabbdX+KFiR+uz9cakVFtI5Fcv68ZnaABDprIt9e9ZQEAhpLShxYbiO8G
+AVAavan6wMIIW9sN9bq1d6mXXD4Vjgk=
+=JSS+
+-----END PGP SIGNATURE-----
+
+--bgvd7fl2ji2twwup--
