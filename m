@@ -1,186 +1,659 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4726E2500D0;
-	Thu,  3 Apr 2025 14:55:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743692144; cv=fail; b=LIyD/UpBbxFSgDt3TZmfKh2ljqfNBJmQIV4BJMdyfegm58a7NRKZIjNHelH71ADOpuz20BQCBaFoIZGQMhwgQcD/Pb3/eMDJpVl96ECANT7AtfiB/ycCHGwNdqjAbY7Axx+RzFsN/8mw/I0iqvmbbQ7zCsAvEuhPikFQE6ASNnM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743692144; c=relaxed/simple;
-	bh=ek1QXrDBlRYz4RHH/fOYzubD7FkOyxgImemhhGHlSV0=;
-	h=To:Cc:Subject:From:In-Reply-To:Message-ID:References:Date:
-	 Content-Type:MIME-Version; b=mZzuGViOMggBAVyOm0KReAG9htIcnUOfLxLOQgKTyfSPtVdiFlb+FtUZZT2dlEfywSzTCOdD8LA7plA5443SDeBRrZAwY5AcOycMYT7PK2pVIp2+2bzT+2TCZOht7YfqEwxAYkFfBMjwRCagWXnVp2b2E0q8Z7VUKpGEcf3Ts4I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=CujKhtud; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=J2NoElYd; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29EDE2500C0
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 14:56:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743692222; cv=none; b=tIZYSGM+ofUaRaROEz2CDiv1BZHW+OHQEsZaOOCeWl+1RtutH+NGGczJcFKq4ZegKRHgMnJdnqWHFCENRfin5r20lqdrSIBmxf6LnvuVh3snpsBu40hGwZpAXVyJaQ9b/ye+zC02VSOsXTfMgxzhVoZ214JmsoawBaEspO4ik+M=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743692222; c=relaxed/simple;
+	bh=9pvGhxHphd4gNC65oRekQUrOgQySPR/08sAmdaRiXrM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MDvzyFQsrsqu2S9BLJHJI7CZjDQQuFe1cAKW/gPwOmtmGqCWRwpCRb0qa7zHY0joTWJkch8bm6c0AIRaPJDJlCHxsaTxU1RIarT3A3qP/MzmwwhttMVyyODuommauTbQYZNkXVjFe68pnQrVVWpbNJIu3MZlZgkBKCbPnjXVWuk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ZUl6bzy1; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=6I3GTAMv; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ZUl6bzy1; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=6I3GTAMv; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="CujKhtud";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="J2NoElYd"
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 533BHnKC013149;
-	Thu, 3 Apr 2025 14:55:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2023-11-20; bh=hlIKe1s+1UoC+o2DuA
-	bk1EvJ6tTiZWWEL+VR0N2NO/s=; b=CujKhtudXZn9sV8sVFEa5lai5rIHHcZakY
-	2wTFuBPMDREiZvmxX7ICmLm27pfFnYm+voiuQ+sIcJkdIKtxhNw3TEzlEvExPfXx
-	v/PqVXvFTOi24PY0+LZORho5L8rydd5tiIxJ1N7CdC07WlGkSwSBgdIMsOqdxZWa
-	mgL45D0LY85h8PJyHUGQps26OWF5M3verP+CtNZoxIWgZeBOmuXh9hP9JXA9nxdw
-	3OMPI53vaVqMLh4JIYlVczMTGQgRzLbo0JSyaQJLghgOjCdR12yiV+x55tOK7b7r
-	iNYDL8Zf0CISx1V0EzR0A4VCisP6FCy4lF2qxEAEv+/kDXRrpGYw==
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 45p9dtn0mn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 03 Apr 2025 14:55:40 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 533DSKR5017869;
-	Thu, 3 Apr 2025 14:55:39 GMT
-Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2045.outbound.protection.outlook.com [104.47.70.45])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 45p7ac9pra-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 03 Apr 2025 14:55:39 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=OdU8psB7LYFYFHucz5xp+qhOiaZ3OlhFOXAxyXZELVLjGly+HfcpjmDjSvWWrCjGN2Yf/MvtlEdQEwWQ1W+mT7ROp/0ZF6eKzzb/zmLBBWCMvF51BX+14uRVFUhuuRogMwlw+8Q5pI1kz3Yaz/YnwK6WpjSXRE90bh345Crspd+AeZfzAqtq58qER7H6ljlgXRQGHd/5ihXuz8s310rkBX5qbOUUBmYHBdfnPWcOCsjiMGEtyBufeI5zsLvDNFeJGmWpxu7dFR/AmBOxwPHJxHp2mGLvVFxHVbTohZCTOrL2d5PQahB3Z0NUZ811pm00VkdVDBnmzAVfAS0gZdyLXw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hlIKe1s+1UoC+o2DuAbk1EvJ6tTiZWWEL+VR0N2NO/s=;
- b=bGH25CimZ/vfn0/Jfc1U5ML2nqi0SpJJyUdRkJCNH1Uo2kcxmbXZIWoMa0pg7PVLD5AyubtgT92iI1xCwMZRug+OCKlbmOfcCVIxNTSz3m524A6oG49vSTdcQBua1/X9wkF4OoNyKVrhe22zjirnRbYHU/mKGdFauM603Tsq1cQfJFkOfByEvSAtd4cem9BMrFMcss8u77/LZ5dAHuI9yjVhknzxBsSSDmryY3gNuPUPmCXdGzrGAkjlqyVgmCD3RLZjAT83ij0Cdnrct5gBW2oTKmOyj5FXLoDUKeqq7dfcgD0bVbtQ5G6I9RnUpqKJEWt7zsAlcFOXoDwwPHJcTg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hlIKe1s+1UoC+o2DuAbk1EvJ6tTiZWWEL+VR0N2NO/s=;
- b=J2NoElYd8OR7K2YBbZOHgYZ7SeZQvb7LIqoa723JPtr+qkYVFRgVSByT/Qv+Sz7Ywc1tYTBVnjmFWMEcpos+A1ykI4EEWyjSvn029UlnOo+WTHZzph7HHcKGE8qBOaV7lqOhwIc7o/npx8iFWFUdHiu7sJU9QRJAX8jIwxUKdW4=
-Received: from CH0PR10MB5338.namprd10.prod.outlook.com (2603:10b6:610:cb::8)
- by SA1PR10MB7555.namprd10.prod.outlook.com (2603:10b6:806:378::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8583.41; Thu, 3 Apr
- 2025 14:55:36 +0000
-Received: from CH0PR10MB5338.namprd10.prod.outlook.com
- ([fe80::5cca:2bcc:cedb:d9bf]) by CH0PR10MB5338.namprd10.prod.outlook.com
- ([fe80::5cca:2bcc:cedb:d9bf%4]) with mapi id 15.20.8583.043; Thu, 3 Apr 2025
- 14:55:36 +0000
-To: <shao.mingyin@zte.com.cn>
-Cc: <james.bottomley@hansenpartnership.com>, <martin.petersen@oracle.com>,
-        <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <yang.yang29@zte.com.cn>, <xu.xin16@zte.com.cn>,
-        <ye.xingchen@zte.com.cn>, <li.haoran7@zte.com.cn>
-Subject: Re: [PATCH] scsi: scsi_transport_srp: replace min/max nesting with
-  clamp()
-From: "Martin K. Petersen" <martin.petersen@oracle.com>
-In-Reply-To: <202503311555115618U8Md16mKpRYOIy2TOmB6@zte.com.cn> (shao
-	mingyin's message of "Mon, 31 Mar 2025 15:55:11 +0800 (CST)")
-Organization: Oracle Corporation
-Message-ID: <yq1y0whthuq.fsf@ca-mkp.ca.oracle.com>
-References: <202503311555115618U8Md16mKpRYOIy2TOmB6@zte.com.cn>
-Date: Thu, 03 Apr 2025 10:55:34 -0400
-Content-Type: text/plain
-X-ClientProxiedBy: MN2PR08CA0001.namprd08.prod.outlook.com
- (2603:10b6:208:239::6) To CH0PR10MB5338.namprd10.prod.outlook.com
- (2603:10b6:610:cb::8)
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ZUl6bzy1";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="6I3GTAMv";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ZUl6bzy1";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="6I3GTAMv"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 5899D21179;
+	Thu,  3 Apr 2025 14:56:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1743692218; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=V71Ra5q2zwBQWvXg1kNQRbWBdam6qTMYuMwLFjOSaF4=;
+	b=ZUl6bzy1w0/vBIahOq4RAhQVcbxVd4aHPOjzvH3QGEnETsiHerdTTIE3CTa2t6M1qx5ICg
+	/trrWVJEHdr2yFIf1Hibly53ADtN2MBs1bbOQ+zq54Qy5mKuWuFER5Bx7OC6NipskamzT0
+	DYLMLvwcb3OiIXGX0nuWKQhF7eX/ktA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1743692218;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=V71Ra5q2zwBQWvXg1kNQRbWBdam6qTMYuMwLFjOSaF4=;
+	b=6I3GTAMvpMF/gRKVPpWcQ5JFl+bra9hwy0c+fmG7iKUvx7qMoVWJzJBFFl1mX2p0s00kL8
+	pdh+FkUZTbeDgYDg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1743692218; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=V71Ra5q2zwBQWvXg1kNQRbWBdam6qTMYuMwLFjOSaF4=;
+	b=ZUl6bzy1w0/vBIahOq4RAhQVcbxVd4aHPOjzvH3QGEnETsiHerdTTIE3CTa2t6M1qx5ICg
+	/trrWVJEHdr2yFIf1Hibly53ADtN2MBs1bbOQ+zq54Qy5mKuWuFER5Bx7OC6NipskamzT0
+	DYLMLvwcb3OiIXGX0nuWKQhF7eX/ktA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1743692218;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=V71Ra5q2zwBQWvXg1kNQRbWBdam6qTMYuMwLFjOSaF4=;
+	b=6I3GTAMvpMF/gRKVPpWcQ5JFl+bra9hwy0c+fmG7iKUvx7qMoVWJzJBFFl1mX2p0s00kL8
+	pdh+FkUZTbeDgYDg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3AFC11392A;
+	Thu,  3 Apr 2025 14:56:58 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id Qn9gDrqh7md6XwAAD6G6ig
+	(envelope-from <jack@suse.cz>); Thu, 03 Apr 2025 14:56:58 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id CAE57A07E6; Thu,  3 Apr 2025 16:56:57 +0200 (CEST)
+Date: Thu, 3 Apr 2025 16:56:57 +0200
+From: Jan Kara <jack@suse.cz>
+To: Christian Brauner <brauner@kernel.org>
+Cc: linux-fsdevel@vger.kernel.org, jack@suse.cz, 
+	Ard Biesheuvel <ardb@kernel.org>, linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	James Bottomley <James.Bottomley@hansenpartnership.com>, mcgrof@kernel.org, hch@infradead.org, david@fromorbit.com, 
+	rafael@kernel.org, djwong@kernel.org, pavel@kernel.org, peterz@infradead.org, 
+	mingo@redhat.com, will@kernel.org, boqun.feng@gmail.com
+Subject: Re: [PATCH v2 1/4] fs: add owner of freeze/thaw
+Message-ID: <ilwyxf34ixfkhbylev6d76tz5ufzg2sdxxhy6i3tr4ko5dbefr@57yuviqrftzr>
+References: <20250402-work-freeze-v2-0-6719a97b52ac@kernel.org>
+ <20250402-work-freeze-v2-1-6719a97b52ac@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH0PR10MB5338:EE_|SA1PR10MB7555:EE_
-X-MS-Office365-Filtering-Correlation-Id: f2293328-cf11-4087-c9a9-08dd72bf9766
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?uYjhBw9O5rwUsBtexjpyhZTgN2jjY3CtD4zpO65pIU3zuqEuXp6Pvk1b/DTu?=
- =?us-ascii?Q?0rR5nv2Yd2jJV5tqoneJJ+TQzkAvNgbY7YBBHAcjTQzwkYm7HsAEZBFkk9hI?=
- =?us-ascii?Q?msqwP8Odu+jqPNQ2VdOBp/tkgXvk/cCMd2t+FTKjZAjqLylT00GfRp7i+xcQ?=
- =?us-ascii?Q?DO+fEtd3WJsXriTS5fbORLS2K/1zgUt0ScCaDK2tIZya/lORQmvRzeZsTtpI?=
- =?us-ascii?Q?tNm2oXqiHp49SV41W1o8w8XXteZIqbaJQtrMusv4WFOSqmgyRnQZqSKxofuj?=
- =?us-ascii?Q?AzJxojA7jQ6WIeEbZges3aoEFrGfxhd4PomA0F7KAk1FOmKEWCCt7sxOOPpB?=
- =?us-ascii?Q?RDWOCS9y/095Q/VHR456VXk4jBl/POJzsyfrSsHpbn0WPoa0ASAzNIeUCl9/?=
- =?us-ascii?Q?trO2ej2/jrGiNhm5dHbCgaFsoOEWM5XKtnYr0UW/kPr+1LmTmdOF3u5agF4a?=
- =?us-ascii?Q?+S6/euSjdOzcShdAKvmg/ofgWJNFLlpbJeKDt3jxIAz97enBhS/6B3QRNfKm?=
- =?us-ascii?Q?3M7zhRj5M0hCjKo9lHWtOpNtM2bBSwVxqpnGnQSqS/ViMyihUPJ+qzKAperQ?=
- =?us-ascii?Q?a5Igi7+AeuCw6pstgN+vCzk5e8IrbEA62FwYozH/GaQIkE4bNAa/4XA11VGm?=
- =?us-ascii?Q?VHxbNNl5/WD3yd035W+YKcRIv7R26YkytolMscDXRDwPeQaFHqk4cJDGLMfn?=
- =?us-ascii?Q?PG84DNI1HieOousEoUH+adfYZzzhfsi8RlKYNRJgabm6JfifQvTeOd8pfmYY?=
- =?us-ascii?Q?pT0vynlaHHNTMA+UcM1NrYDqtN5Pp7Me0fDxpY+g4H2QOxXDjVTp+x1R6ykf?=
- =?us-ascii?Q?uisrL2LjJYL/VF5v4hmz2O9jXNc9GCLeVyjxkEegFcgCdwcY1ZMjM/CXGy0Q?=
- =?us-ascii?Q?821/dwbpCr345KDN1FyfjvcdXeIzCjeIWnckjT6pPu2C7G1ea9aLxkTKuTrO?=
- =?us-ascii?Q?OcK3ssfXsqH5/m4Qb2bJkzDV7vJ2WmxdcXtfUWn/a1VgiA74k+PUptL1zDtI?=
- =?us-ascii?Q?QCIswKqze5jbjvzzxGn+k7gI8wQye1GTwYdoPZXNFFZbTq5GYxUur9QK/3pD?=
- =?us-ascii?Q?H7KEI1Gk65zwqwyofrpe9z5gHn02iXjdAkP+9CzWKIZIrU/jcJ3LkQVvxP8q?=
- =?us-ascii?Q?joMvUjy/fA6MJ3hyoP1fufAf4ov19V9EITpevIcx7hqhSG8QIT6VDeaoVbyO?=
- =?us-ascii?Q?/YMlJNsr130E6d1vfYRms1MhWtuDLFgVshqLV6jHCYtAiT9J/llnyHUgOoxl?=
- =?us-ascii?Q?ti9gMeLpscC1zTnWSX4AaKo4MQgu2kfUw3PSj9L15ZtZYP70RM57vf1fBhLo?=
- =?us-ascii?Q?0Zlm5XD5nbzuKO+tRwOMDw9/0HSQe+jIXSAzRzA/dw0Ciig2XebLA91WIqN9?=
- =?us-ascii?Q?rxU0kH9rXe+jo0q4lrYDOcQpgTyc?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR10MB5338.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?hlsScJ4BDcmTQDD9V7TLOtoux1NlDU6qRjHEszBUCAix9iFMCai7S9D+WH7n?=
- =?us-ascii?Q?rriqFkEGrABlEBQFBr4ud1GF0ujWi1C2+vjNFotmw9xTbkgznBjLXntIQZht?=
- =?us-ascii?Q?HX+TEamjmG8vX7CpwAg0Qs4EtaU2vM4nyLhO7NM5621PW8pH81MH3VEmQdNB?=
- =?us-ascii?Q?lODmMoebJYaHldzrqH6SYJSDJBUdxvWDl0l03NN/7J8893pJ0QigGhcNT4h4?=
- =?us-ascii?Q?i8pvbmJJWGHTx54Da5lcG+PgvwNNa+lirj1OlkMKgkdPqpjLNaDtX6UYPoW9?=
- =?us-ascii?Q?n4jJU4uKRPxE8Qtq2lSnd+4klsrcxHAj69+JFyjkn0XaMLpXlDGti5uiOOvq?=
- =?us-ascii?Q?ZWWHqBtYUra04Q/VOyFywuq315jRGbaBDvoaArPuvJ78GH4vtKmo+asLbrpk?=
- =?us-ascii?Q?V6FwpjWVY9vnKeBcYNMr5bNpkBL5MHiNgy/ohXPiWlgZ2JS4Zyf3ZgqchNy/?=
- =?us-ascii?Q?dluXXXsdFkKL4pGcdHcAA9TjQ7stFP6sehEa+LyK8vdV7LsCxeYeTSUdrpvL?=
- =?us-ascii?Q?qKFWk+3zurAOvKxJSUyjdx4B4mxIW5p7ngcZ+l5hnuiBVOrlI1LW82EkrKp6?=
- =?us-ascii?Q?yLDfJLI6bkYwCgdSipHif9e+Yw125hkDTydNjr3QV/AY0FFXJHwkpyOh4xgp?=
- =?us-ascii?Q?kc7fOuPCMHzuRkUg3qnBG1CpERzN4gm5pT/S/Pe9SITgm4hPOjPhDxh62lOl?=
- =?us-ascii?Q?V3o1HWevcplLmZFNL4Ha65eL02pc05n6UJppl0kfPIAXhlsc8vhkJOlw9Iph?=
- =?us-ascii?Q?dK19DUYROj6OUeU2JjZnloadp1EsWuqkT2W12m0VDL1Hozw7btN72h1AarLl?=
- =?us-ascii?Q?vy7e/+FtVreXuDEMc0UsihFhfvxTwapMuyjHFGGOBYVds/90s7KenHNGGWat?=
- =?us-ascii?Q?oew9Vcb02cUTiOjAUsXTL/hXWTkcAkGr00ie51v9+uRO/1fmaKqEeCtTzYHv?=
- =?us-ascii?Q?QHL0ZG2J5z2mb+A2dowyCVlaoZIysTaP3qXOzvXspSQED/XFI4ErsmdwU+DD?=
- =?us-ascii?Q?Td75PcY4wL1BzVtD2zOBGqvax98IPJ5qJ110lDbaXGBEMnZNCfLEmLKlclud?=
- =?us-ascii?Q?inze53JjMw/hEgKfnRY42JSaz8PKLY3WDJPwz9AopsjRFtTrXn6jyUNwwUb9?=
- =?us-ascii?Q?8ZVIA/1NjwwNZe8TGDHQzOBSX66GJDghbPC/1Gyu8hDRru1sG58YsTCqsoY6?=
- =?us-ascii?Q?rROapHOmDgplz0nQ4d18grs5hZ6LjH2zDIlKPJlfBn1JUus7lZcddjsNXNOq?=
- =?us-ascii?Q?6XV7fYMRYWs+WTb20LQzQoRrn5blKCITORPttYbjr6+pDrNArnPgVEYrqpTt?=
- =?us-ascii?Q?CMK81QhPGhpsYdOu4ynp8wV3HfZsWzaHAbNjykdKMMODYXZoldu5HhqLBmmp?=
- =?us-ascii?Q?4n8h12/a79E+t7FaTcl/sht7guHjF8oOYut+JRuiVN+HuNGRpFdscRtCmGSE?=
- =?us-ascii?Q?x1XOyyw8/mb1ijLS9wOOGW5WoXHxq5hE6bTHvwsuXgmCSjMA/axKujL27saa?=
- =?us-ascii?Q?e39Yy2uWMlwxt8ZcrJ4Zv+o/8jjUpddRr6YiAhnipRroABzz8UAEMNxOz4Sc?=
- =?us-ascii?Q?iJyKXPOh6Vxo6MBu3HX2AJSKpHSFTNfbhHo5CmGbh4xS8TG75F01ynC/bcT/?=
- =?us-ascii?Q?3g=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	Qd4IIxZPqBVTdozqGuHQYJa26z3R2PXCCNrqkLgN77mNcoXWIV0w5pwL/CX+z9VBSI5vJm3cKiQQ++E0LnTCez21nfDR9z/U343QRr29EKBycXSPe1UnUl1UyNv3mh/NXmNyMcf6n1zFoycGKuSnbYwbTYzKl9ebeeF1kLJnsNrWnIBnPNLXd/9AJqP3yNzAoer31qEa0ZqX8oI7q8xN467YnA4q52x9MMFneuXG8n3JsHuaUA64VNv1ZFBT+BlCzLidG79OOJNt/nUjCzjW+hIiJefY7cVdDIVLxs5I0u86DCi4rDh5o6h7vBoCTwZvACFKdljgepVwjLTYqh3d84Q+f1JHiist+obmHubveOhaozoKSKdVWwBt/9j6HaL4iFeNhOpa5Nxx83sgvziuBoaUUQebkKlx3puM3Byc4ZJKTjdyoCzFO30B7omkGAvLmWNnudyhyVuBCXaNgYwMOzYCwQWQsHI7C2Ldb2Kgbv6A9idNnQ3RSKrdAU0zOmF5xqI/RM0ZOHzPj3XLHq0VtnrvBfoYazx9QThmF2AGgaNRZmUs/gFaDZx1ncVzxWZLS/xqgv367lluTU5zQUI+Gcz7WyozDiJj9OLsv+2iEAE=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f2293328-cf11-4087-c9a9-08dd72bf9766
-X-MS-Exchange-CrossTenant-AuthSource: CH0PR10MB5338.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Apr 2025 14:55:36.2278
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Lvb4w5A3A1gFvQD2huqTGpJnEFCPy0HezQxPKdWyTF+iMymc5wwX0Ov3Mb68i1Zs/tRIRY09GvQJtOo5oKJ8Bb57oZYLuJXRISRJPaVEKog=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR10MB7555
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-03_06,2025-04-02_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0 spamscore=0
- phishscore=0 mlxlogscore=628 suspectscore=0 adultscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2502280000
- definitions=main-2504030070
-X-Proofpoint-ORIG-GUID: ptEchmUU7b8z3sF4ZnG5pC5S_GHIknWT
-X-Proofpoint-GUID: ptEchmUU7b8z3sF4ZnG5pC5S_GHIknWT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250402-work-freeze-v2-1-6719a97b52ac@kernel.org>
+X-Spam-Score: -2.30
+X-Spamd-Result: default: False [-2.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_RCPT(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[17];
+	RCVD_COUNT_THREE(0.00)[3];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[vger.kernel.org,suse.cz,kernel.org,hansenpartnership.com,infradead.org,fromorbit.com,redhat.com,gmail.com];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
+On Wed 02-04-25 16:07:31, Christian Brauner wrote:
+> For some kernel subsystems it is paramount that they are guaranteed that
+> they are the owner of the freeze to avoid any risk of deadlocks. This is
+> the case for the power subsystem. Enable it to recognize whether it did
+> actually freeze the filesystem.
+> 
+> If userspace has 10 filesystems and suspend/hibernate manges to freeze 5
+> and then fails on the 6th for whatever odd reason (current or future)
+> then power needs to undo the freeze of the first 5 filesystems. It can't
+> just walk the list again because while it's unlikely that a new
+> filesystem got added in the meantime it still cannot tell which
+> filesystems the power subsystem actually managed to get a freeze
+> reference count on that needs to be dropped during thaw.
+> 
+> There's various ways out of this ugliness. For example, record the
+> filesystems the power subsystem managed to freeze on a temporary list in
+> the callbacks and then walk that list backwards during thaw to undo the
+> freezing or make sure that the power subsystem just actually exclusively
+> freezes things it can freeze and marking such filesystems as being owned
+> by power for the duration of the suspend or resume cycle. I opted for
+> the latter as that seemed the clean thing to do even if it means more
+> code changes.
+> 
+> Signed-off-by: Christian Brauner <brauner@kernel.org>
 
-> This patch replaces min(a, max(b, c)) by clamp(val, lo, hi) in the SRP
-> transport layer. The clamp() macro explicitly expresses the intent of
-> constraining a value within bounds, improving code readability.
+I have realized a slight catch with this approach that if hibernation races
+with filesystem freezing (e.g. DM reconfiguration), then hibernation need
+not freeze a filesystem because it's already frozen but userspace may thaw
+the filesystem before hibernation actually happens (relatively harmless).
+If the race happens the other way around, DM reconfiguration may
+unexpectedly fail with EBUSY (rather unexpected). So somehow tracking which
+fs was frozen by suspend while properly nesting with other freeze users may
+be actually a better approach (maybe just a sb flag even though it's
+somewhat hacky?).
 
-Applied to 6.15/scsi-staging, thanks!
+								Honza
 
+> ---
+>  fs/f2fs/gc.c                |  6 ++--
+>  fs/gfs2/super.c             | 20 ++++++------
+>  fs/gfs2/sys.c               |  4 +--
+>  fs/ioctl.c                  |  8 ++---
+>  fs/super.c                  | 76 ++++++++++++++++++++++++++++++++++++---------
+>  fs/xfs/scrub/fscounters.c   |  4 +--
+>  fs/xfs/xfs_notify_failure.c |  6 ++--
+>  include/linux/fs.h          | 13 +++++---
+>  8 files changed, 95 insertions(+), 42 deletions(-)
+> 
+> diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
+> index 2b8f9239bede..3e8af62c9e15 100644
+> --- a/fs/f2fs/gc.c
+> +++ b/fs/f2fs/gc.c
+> @@ -2271,12 +2271,12 @@ int f2fs_resize_fs(struct file *filp, __u64 block_count)
+>  	if (err)
+>  		return err;
+>  
+> -	err = freeze_super(sbi->sb, FREEZE_HOLDER_USERSPACE);
+> +	err = freeze_super(sbi->sb, FREEZE_HOLDER_USERSPACE, NULL);
+>  	if (err)
+>  		return err;
+>  
+>  	if (f2fs_readonly(sbi->sb)) {
+> -		err = thaw_super(sbi->sb, FREEZE_HOLDER_USERSPACE);
+> +		err = thaw_super(sbi->sb, FREEZE_HOLDER_USERSPACE, NULL);
+>  		if (err)
+>  			return err;
+>  		return -EROFS;
+> @@ -2333,6 +2333,6 @@ int f2fs_resize_fs(struct file *filp, __u64 block_count)
+>  out_err:
+>  	f2fs_up_write(&sbi->cp_global_sem);
+>  	f2fs_up_write(&sbi->gc_lock);
+> -	thaw_super(sbi->sb, FREEZE_HOLDER_USERSPACE);
+> +	thaw_super(sbi->sb, FREEZE_HOLDER_USERSPACE, NULL);
+>  	return err;
+>  }
+> diff --git a/fs/gfs2/super.c b/fs/gfs2/super.c
+> index 44e5658b896c..519943189109 100644
+> --- a/fs/gfs2/super.c
+> +++ b/fs/gfs2/super.c
+> @@ -674,7 +674,7 @@ static int gfs2_sync_fs(struct super_block *sb, int wait)
+>  	return sdp->sd_log_error;
+>  }
+>  
+> -static int gfs2_do_thaw(struct gfs2_sbd *sdp)
+> +static int gfs2_do_thaw(struct gfs2_sbd *sdp, enum freeze_holder who, const void *freeze_owner)
+>  {
+>  	struct super_block *sb = sdp->sd_vfs;
+>  	int error;
+> @@ -682,7 +682,7 @@ static int gfs2_do_thaw(struct gfs2_sbd *sdp)
+>  	error = gfs2_freeze_lock_shared(sdp);
+>  	if (error)
+>  		goto fail;
+> -	error = thaw_super(sb, FREEZE_HOLDER_USERSPACE);
+> +	error = thaw_super(sb, who, freeze_owner);
+>  	if (!error)
+>  		return 0;
+>  
+> @@ -703,14 +703,14 @@ void gfs2_freeze_func(struct work_struct *work)
+>  	if (test_bit(SDF_FROZEN, &sdp->sd_flags))
+>  		goto freeze_failed;
+>  
+> -	error = freeze_super(sb, FREEZE_HOLDER_USERSPACE);
+> +	error = freeze_super(sb, FREEZE_HOLDER_USERSPACE, NULL);
+>  	if (error)
+>  		goto freeze_failed;
+>  
+>  	gfs2_freeze_unlock(sdp);
+>  	set_bit(SDF_FROZEN, &sdp->sd_flags);
+>  
+> -	error = gfs2_do_thaw(sdp);
+> +	error = gfs2_do_thaw(sdp, FREEZE_HOLDER_USERSPACE, NULL);
+>  	if (error)
+>  		goto out;
+>  
+> @@ -731,7 +731,8 @@ void gfs2_freeze_func(struct work_struct *work)
+>   *
+>   */
+>  
+> -static int gfs2_freeze_super(struct super_block *sb, enum freeze_holder who)
+> +static int gfs2_freeze_super(struct super_block *sb, enum freeze_holder who,
+> +			     const void *freeze_owner)
+>  {
+>  	struct gfs2_sbd *sdp = sb->s_fs_info;
+>  	int error;
+> @@ -744,7 +745,7 @@ static int gfs2_freeze_super(struct super_block *sb, enum freeze_holder who)
+>  	}
+>  
+>  	for (;;) {
+> -		error = freeze_super(sb, FREEZE_HOLDER_USERSPACE);
+> +		error = freeze_super(sb, who, freeze_owner);
+>  		if (error) {
+>  			fs_info(sdp, "GFS2: couldn't freeze filesystem: %d\n",
+>  				error);
+> @@ -758,7 +759,7 @@ static int gfs2_freeze_super(struct super_block *sb, enum freeze_holder who)
+>  			break;
+>  		}
+>  
+> -		error = gfs2_do_thaw(sdp);
+> +		error = gfs2_do_thaw(sdp, who, freeze_owner);
+>  		if (error)
+>  			goto out;
+>  
+> @@ -799,7 +800,8 @@ static int gfs2_freeze_fs(struct super_block *sb)
+>   *
+>   */
+>  
+> -static int gfs2_thaw_super(struct super_block *sb, enum freeze_holder who)
+> +static int gfs2_thaw_super(struct super_block *sb, enum freeze_holder who,
+> +			   const void *freeze_owner)
+>  {
+>  	struct gfs2_sbd *sdp = sb->s_fs_info;
+>  	int error;
+> @@ -814,7 +816,7 @@ static int gfs2_thaw_super(struct super_block *sb, enum freeze_holder who)
+>  	atomic_inc(&sb->s_active);
+>  	gfs2_freeze_unlock(sdp);
+>  
+> -	error = gfs2_do_thaw(sdp);
+> +	error = gfs2_do_thaw(sdp, who, freeze_owner);
+>  
+>  	if (!error) {
+>  		clear_bit(SDF_FREEZE_INITIATOR, &sdp->sd_flags);
+> diff --git a/fs/gfs2/sys.c b/fs/gfs2/sys.c
+> index ecc699f8d9fc..748125653d6c 100644
+> --- a/fs/gfs2/sys.c
+> +++ b/fs/gfs2/sys.c
+> @@ -174,10 +174,10 @@ static ssize_t freeze_store(struct gfs2_sbd *sdp, const char *buf, size_t len)
+>  
+>  	switch (n) {
+>  	case 0:
+> -		error = thaw_super(sdp->sd_vfs, FREEZE_HOLDER_USERSPACE);
+> +		error = thaw_super(sdp->sd_vfs, FREEZE_HOLDER_USERSPACE, NULL);
+>  		break;
+>  	case 1:
+> -		error = freeze_super(sdp->sd_vfs, FREEZE_HOLDER_USERSPACE);
+> +		error = freeze_super(sdp->sd_vfs, FREEZE_HOLDER_USERSPACE, NULL);
+>  		break;
+>  	default:
+>  		return -EINVAL;
+> diff --git a/fs/ioctl.c b/fs/ioctl.c
+> index c91fd2b46a77..bedc83fc2f20 100644
+> --- a/fs/ioctl.c
+> +++ b/fs/ioctl.c
+> @@ -396,8 +396,8 @@ static int ioctl_fsfreeze(struct file *filp)
+>  
+>  	/* Freeze */
+>  	if (sb->s_op->freeze_super)
+> -		return sb->s_op->freeze_super(sb, FREEZE_HOLDER_USERSPACE);
+> -	return freeze_super(sb, FREEZE_HOLDER_USERSPACE);
+> +		return sb->s_op->freeze_super(sb, FREEZE_HOLDER_USERSPACE, NULL);
+> +	return freeze_super(sb, FREEZE_HOLDER_USERSPACE, NULL);
+>  }
+>  
+>  static int ioctl_fsthaw(struct file *filp)
+> @@ -409,8 +409,8 @@ static int ioctl_fsthaw(struct file *filp)
+>  
+>  	/* Thaw */
+>  	if (sb->s_op->thaw_super)
+> -		return sb->s_op->thaw_super(sb, FREEZE_HOLDER_USERSPACE);
+> -	return thaw_super(sb, FREEZE_HOLDER_USERSPACE);
+> +		return sb->s_op->thaw_super(sb, FREEZE_HOLDER_USERSPACE, NULL);
+> +	return thaw_super(sb, FREEZE_HOLDER_USERSPACE, NULL);
+>  }
+>  
+>  static int ioctl_file_dedupe_range(struct file *file,
+> diff --git a/fs/super.c b/fs/super.c
+> index 3c4a496d6438..3ddded4360c6 100644
+> --- a/fs/super.c
+> +++ b/fs/super.c
+> @@ -39,7 +39,8 @@
+>  #include <uapi/linux/mount.h>
+>  #include "internal.h"
+>  
+> -static int thaw_super_locked(struct super_block *sb, enum freeze_holder who);
+> +static int thaw_super_locked(struct super_block *sb, enum freeze_holder who,
+> +			     const void *freeze_owner);
+>  
+>  static LIST_HEAD(super_blocks);
+>  static DEFINE_SPINLOCK(sb_lock);
+> @@ -1148,7 +1149,7 @@ static void do_thaw_all_callback(struct super_block *sb, void *unused)
+>  	if (IS_ENABLED(CONFIG_BLOCK))
+>  		while (sb->s_bdev && !bdev_thaw(sb->s_bdev))
+>  			pr_warn("Emergency Thaw on %pg\n", sb->s_bdev);
+> -	thaw_super_locked(sb, FREEZE_HOLDER_USERSPACE);
+> +	thaw_super_locked(sb, FREEZE_HOLDER_USERSPACE, NULL);
+>  	return;
+>  }
+>  
+> @@ -1195,9 +1196,9 @@ static void filesystems_freeze_callback(struct super_block *sb, void *unused)
+>  		return;
+>  
+>  	if (sb->s_op->freeze_super)
+> -		sb->s_op->freeze_super(sb, FREEZE_MAY_NEST | FREEZE_HOLDER_KERNEL);
+> +		sb->s_op->freeze_super(sb, FREEZE_MAY_NEST | FREEZE_HOLDER_KERNEL, NULL);
+>  	else
+> -		freeze_super(sb, FREEZE_MAY_NEST | FREEZE_HOLDER_KERNEL);
+> +		freeze_super(sb, FREEZE_MAY_NEST | FREEZE_HOLDER_KERNEL, NULL);
+>  
+>  	deactivate_super(sb);
+>  }
+> @@ -1217,9 +1218,9 @@ static void filesystems_thaw_callback(struct super_block *sb, void *unused)
+>  		return;
+>  
+>  	if (sb->s_op->thaw_super)
+> -		sb->s_op->thaw_super(sb, FREEZE_MAY_NEST | FREEZE_HOLDER_KERNEL);
+> +		sb->s_op->thaw_super(sb, FREEZE_MAY_NEST | FREEZE_HOLDER_KERNEL, NULL);
+>  	else
+> -		thaw_super(sb, FREEZE_MAY_NEST | FREEZE_HOLDER_KERNEL);
+> +		thaw_super(sb, FREEZE_MAY_NEST | FREEZE_HOLDER_KERNEL, NULL);
+>  
+>  	deactivate_super(sb);
+>  }
+> @@ -1522,10 +1523,10 @@ static int fs_bdev_freeze(struct block_device *bdev)
+>  
+>  	if (sb->s_op->freeze_super)
+>  		error = sb->s_op->freeze_super(sb,
+> -				FREEZE_MAY_NEST | FREEZE_HOLDER_USERSPACE);
+> +				FREEZE_MAY_NEST | FREEZE_HOLDER_USERSPACE, NULL);
+>  	else
+>  		error = freeze_super(sb,
+> -				FREEZE_MAY_NEST | FREEZE_HOLDER_USERSPACE);
+> +				FREEZE_MAY_NEST | FREEZE_HOLDER_USERSPACE, NULL);
+>  	if (!error)
+>  		error = sync_blockdev(bdev);
+>  	deactivate_super(sb);
+> @@ -1571,10 +1572,10 @@ static int fs_bdev_thaw(struct block_device *bdev)
+>  
+>  	if (sb->s_op->thaw_super)
+>  		error = sb->s_op->thaw_super(sb,
+> -				FREEZE_MAY_NEST | FREEZE_HOLDER_USERSPACE);
+> +				FREEZE_MAY_NEST | FREEZE_HOLDER_USERSPACE, NULL);
+>  	else
+>  		error = thaw_super(sb,
+> -				FREEZE_MAY_NEST | FREEZE_HOLDER_USERSPACE);
+> +				FREEZE_MAY_NEST | FREEZE_HOLDER_USERSPACE, NULL);
+>  	deactivate_super(sb);
+>  	return error;
+>  }
+> @@ -1946,7 +1947,7 @@ static int wait_for_partially_frozen(struct super_block *sb)
+>  }
+>  
+>  #define FREEZE_HOLDERS (FREEZE_HOLDER_KERNEL | FREEZE_HOLDER_USERSPACE)
+> -#define FREEZE_FLAGS (FREEZE_HOLDERS | FREEZE_MAY_NEST)
+> +#define FREEZE_FLAGS (FREEZE_HOLDERS | FREEZE_MAY_NEST | FREEZE_EXCL)
+>  
+>  static inline int freeze_inc(struct super_block *sb, enum freeze_holder who)
+>  {
+> @@ -1977,6 +1978,21 @@ static inline bool may_freeze(struct super_block *sb, enum freeze_holder who)
+>  	WARN_ON_ONCE((who & ~FREEZE_FLAGS));
+>  	WARN_ON_ONCE(hweight32(who & FREEZE_HOLDERS) > 1);
+>  
+> +	if (who & FREEZE_EXCL) {
+> +		if (WARN_ON_ONCE(!(who & FREEZE_HOLDER_KERNEL)))
+> +			return false;
+> +
+> +		if (who & ~(FREEZE_EXCL | FREEZE_HOLDER_KERNEL))
+> +			return false;
+> +
+> +		return (sb->s_writers.freeze_kcount +
+> +			sb->s_writers.freeze_ucount) == 0;
+> +	}
+> +
+> +	/* This filesystem is already exclusively frozen. */
+> +	if (sb->s_writers.freeze_owner)
+> +		return false;
+> +
+>  	if (who & FREEZE_HOLDER_KERNEL)
+>  		return (who & FREEZE_MAY_NEST) ||
+>  		       sb->s_writers.freeze_kcount == 0;
+> @@ -1986,10 +2002,30 @@ static inline bool may_freeze(struct super_block *sb, enum freeze_holder who)
+>  	return false;
+>  }
+>  
+> +static inline bool may_unfreeze(struct super_block *sb, enum freeze_holder who,
+> +				const void *freeze_owner)
+> +{
+> +	WARN_ON_ONCE((who & ~FREEZE_FLAGS));
+> +	WARN_ON_ONCE(hweight32(who & FREEZE_HOLDERS) > 1);
+> +
+> +	if (who & FREEZE_EXCL) {
+> +		if (WARN_ON_ONCE(sb->s_writers.freeze_owner == NULL))
+> +			return false;
+> +		if (WARN_ON_ONCE(!(who & FREEZE_HOLDER_KERNEL)))
+> +			return false;
+> +		if (who & ~(FREEZE_EXCL | FREEZE_HOLDER_KERNEL))
+> +			return false;
+> +		return sb->s_writers.freeze_owner == freeze_owner;
+> +	}
+> +
+> +	return sb->s_writers.freeze_owner == NULL;
+> +}
+> +
+>  /**
+>   * freeze_super - lock the filesystem and force it into a consistent state
+>   * @sb: the super to lock
+>   * @who: context that wants to freeze
+> + * @freeze_owner: owner of the freeze
+>   *
+>   * Syncs the super to make sure the filesystem is consistent and calls the fs's
+>   * freeze_fs.  Subsequent calls to this without first thawing the fs may return
+> @@ -2041,7 +2077,7 @@ static inline bool may_freeze(struct super_block *sb, enum freeze_holder who)
+>   * Return: If the freeze was successful zero is returned. If the freeze
+>   *         failed a negative error code is returned.
+>   */
+> -int freeze_super(struct super_block *sb, enum freeze_holder who)
+> +int freeze_super(struct super_block *sb, enum freeze_holder who, const void *freeze_owner)
+>  {
+>  	int ret;
+>  
+> @@ -2075,6 +2111,7 @@ int freeze_super(struct super_block *sb, enum freeze_holder who)
+>  	if (sb_rdonly(sb)) {
+>  		/* Nothing to do really... */
+>  		WARN_ON_ONCE(freeze_inc(sb, who) > 1);
+> +		sb->s_writers.freeze_owner = freeze_owner;
+>  		sb->s_writers.frozen = SB_FREEZE_COMPLETE;
+>  		wake_up_var(&sb->s_writers.frozen);
+>  		super_unlock_excl(sb);
+> @@ -2122,6 +2159,7 @@ int freeze_super(struct super_block *sb, enum freeze_holder who)
+>  	 * when frozen is set to SB_FREEZE_COMPLETE, and for thaw_super().
+>  	 */
+>  	WARN_ON_ONCE(freeze_inc(sb, who) > 1);
+> +	sb->s_writers.freeze_owner = freeze_owner;
+>  	sb->s_writers.frozen = SB_FREEZE_COMPLETE;
+>  	wake_up_var(&sb->s_writers.frozen);
+>  	lockdep_sb_freeze_release(sb);
+> @@ -2136,13 +2174,17 @@ EXPORT_SYMBOL(freeze_super);
+>   * removes that state without releasing the other state or unlocking the
+>   * filesystem.
+>   */
+> -static int thaw_super_locked(struct super_block *sb, enum freeze_holder who)
+> +static int thaw_super_locked(struct super_block *sb, enum freeze_holder who,
+> +			     const void *freeze_owner)
+>  {
+>  	int error = -EINVAL;
+>  
+>  	if (sb->s_writers.frozen != SB_FREEZE_COMPLETE)
+>  		goto out_unlock;
+>  
+> +	if (!may_unfreeze(sb, who, freeze_owner))
+> +		goto out_unlock;
+> +
+>  	/*
+>  	 * All freezers share a single active reference.
+>  	 * So just unlock in case there are any left.
+> @@ -2152,6 +2194,7 @@ static int thaw_super_locked(struct super_block *sb, enum freeze_holder who)
+>  
+>  	if (sb_rdonly(sb)) {
+>  		sb->s_writers.frozen = SB_UNFROZEN;
+> +		sb->s_writers.freeze_owner = NULL;
+>  		wake_up_var(&sb->s_writers.frozen);
+>  		goto out_deactivate;
+>  	}
+> @@ -2169,6 +2212,7 @@ static int thaw_super_locked(struct super_block *sb, enum freeze_holder who)
+>  	}
+>  
+>  	sb->s_writers.frozen = SB_UNFROZEN;
+> +	sb->s_writers.freeze_owner = NULL;
+>  	wake_up_var(&sb->s_writers.frozen);
+>  	sb_freeze_unlock(sb, SB_FREEZE_FS);
+>  out_deactivate:
+> @@ -2184,6 +2228,7 @@ static int thaw_super_locked(struct super_block *sb, enum freeze_holder who)
+>   * thaw_super -- unlock filesystem
+>   * @sb: the super to thaw
+>   * @who: context that wants to freeze
+> + * @freeze_owner: owner of the freeze
+>   *
+>   * Unlocks the filesystem and marks it writeable again after freeze_super()
+>   * if there are no remaining freezes on the filesystem.
+> @@ -2197,13 +2242,14 @@ static int thaw_super_locked(struct super_block *sb, enum freeze_holder who)
+>   * have been frozen through the block layer via multiple block devices.
+>   * The filesystem remains frozen until all block devices are unfrozen.
+>   */
+> -int thaw_super(struct super_block *sb, enum freeze_holder who)
+> +int thaw_super(struct super_block *sb, enum freeze_holder who,
+> +	       const void *freeze_owner)
+>  {
+>  	if (!super_lock_excl(sb)) {
+>  		WARN_ON_ONCE("Dying superblock while thawing!");
+>  		return -EINVAL;
+>  	}
+> -	return thaw_super_locked(sb, who);
+> +	return thaw_super_locked(sb, who, freeze_owner);
+>  }
+>  EXPORT_SYMBOL(thaw_super);
+>  
+> diff --git a/fs/xfs/scrub/fscounters.c b/fs/xfs/scrub/fscounters.c
+> index e629663e460a..9b598c5790ad 100644
+> --- a/fs/xfs/scrub/fscounters.c
+> +++ b/fs/xfs/scrub/fscounters.c
+> @@ -123,7 +123,7 @@ xchk_fsfreeze(
+>  {
+>  	int			error;
+>  
+> -	error = freeze_super(sc->mp->m_super, FREEZE_HOLDER_KERNEL);
+> +	error = freeze_super(sc->mp->m_super, FREEZE_HOLDER_KERNEL, NULL);
+>  	trace_xchk_fsfreeze(sc, error);
+>  	return error;
+>  }
+> @@ -135,7 +135,7 @@ xchk_fsthaw(
+>  	int			error;
+>  
+>  	/* This should always succeed, we have a kernel freeze */
+> -	error = thaw_super(sc->mp->m_super, FREEZE_HOLDER_KERNEL);
+> +	error = thaw_super(sc->mp->m_super, FREEZE_HOLDER_KERNEL, NULL);
+>  	trace_xchk_fsthaw(sc, error);
+>  	return error;
+>  }
+> diff --git a/fs/xfs/xfs_notify_failure.c b/fs/xfs/xfs_notify_failure.c
+> index ed8d8ed42f0a..3545dc1d953c 100644
+> --- a/fs/xfs/xfs_notify_failure.c
+> +++ b/fs/xfs/xfs_notify_failure.c
+> @@ -127,7 +127,7 @@ xfs_dax_notify_failure_freeze(
+>  	struct super_block	*sb = mp->m_super;
+>  	int			error;
+>  
+> -	error = freeze_super(sb, FREEZE_HOLDER_KERNEL);
+> +	error = freeze_super(sb, FREEZE_HOLDER_KERNEL, NULL);
+>  	if (error)
+>  		xfs_emerg(mp, "already frozen by kernel, err=%d", error);
+>  
+> @@ -143,7 +143,7 @@ xfs_dax_notify_failure_thaw(
+>  	int			error;
+>  
+>  	if (kernel_frozen) {
+> -		error = thaw_super(sb, FREEZE_HOLDER_KERNEL);
+> +		error = thaw_super(sb, FREEZE_HOLDER_KERNEL, NULL);
+>  		if (error)
+>  			xfs_emerg(mp, "still frozen after notify failure, err=%d",
+>  				error);
+> @@ -153,7 +153,7 @@ xfs_dax_notify_failure_thaw(
+>  	 * Also thaw userspace call anyway because the device is about to be
+>  	 * removed immediately.
+>  	 */
+> -	thaw_super(sb, FREEZE_HOLDER_USERSPACE);
+> +	thaw_super(sb, FREEZE_HOLDER_USERSPACE, NULL);
+>  }
+>  
+>  static int
+> diff --git a/include/linux/fs.h b/include/linux/fs.h
+> index 1aa578412f1b..b379a46b5576 100644
+> --- a/include/linux/fs.h
+> +++ b/include/linux/fs.h
+> @@ -1307,6 +1307,7 @@ struct sb_writers {
+>  	unsigned short			frozen;		/* Is sb frozen? */
+>  	int				freeze_kcount;	/* How many kernel freeze requests? */
+>  	int				freeze_ucount;	/* How many userspace freeze requests? */
+> +	const void			*freeze_owner;	/* Owner of the freeze */
+>  	struct percpu_rw_semaphore	rw_sem[SB_FREEZE_LEVELS];
+>  };
+>  
+> @@ -2270,6 +2271,7 @@ extern loff_t vfs_dedupe_file_range_one(struct file *src_file, loff_t src_pos,
+>   * @FREEZE_HOLDER_KERNEL: kernel wants to freeze or thaw filesystem
+>   * @FREEZE_HOLDER_USERSPACE: userspace wants to freeze or thaw filesystem
+>   * @FREEZE_MAY_NEST: whether nesting freeze and thaw requests is allowed
+> + * @FREEZE_EXCL: whether actual freezing must be done by the caller
+>   *
+>   * Indicate who the owner of the freeze or thaw request is and whether
+>   * the freeze needs to be exclusive or can nest.
+> @@ -2283,6 +2285,7 @@ enum freeze_holder {
+>  	FREEZE_HOLDER_KERNEL	= (1U << 0),
+>  	FREEZE_HOLDER_USERSPACE	= (1U << 1),
+>  	FREEZE_MAY_NEST		= (1U << 2),
+> +	FREEZE_EXCL		= (1U << 3),
+>  };
+>  
+>  struct super_operations {
+> @@ -2296,9 +2299,9 @@ struct super_operations {
+>  	void (*evict_inode) (struct inode *);
+>  	void (*put_super) (struct super_block *);
+>  	int (*sync_fs)(struct super_block *sb, int wait);
+> -	int (*freeze_super) (struct super_block *, enum freeze_holder who);
+> +	int (*freeze_super) (struct super_block *, enum freeze_holder who, const void *owner);
+>  	int (*freeze_fs) (struct super_block *);
+> -	int (*thaw_super) (struct super_block *, enum freeze_holder who);
+> +	int (*thaw_super) (struct super_block *, enum freeze_holder who, const void *owner);
+>  	int (*unfreeze_fs) (struct super_block *);
+>  	int (*statfs) (struct dentry *, struct kstatfs *);
+>  	int (*remount_fs) (struct super_block *, int *, char *);
+> @@ -2706,8 +2709,10 @@ extern int unregister_filesystem(struct file_system_type *);
+>  extern int vfs_statfs(const struct path *, struct kstatfs *);
+>  extern int user_statfs(const char __user *, struct kstatfs *);
+>  extern int fd_statfs(int, struct kstatfs *);
+> -int freeze_super(struct super_block *super, enum freeze_holder who);
+> -int thaw_super(struct super_block *super, enum freeze_holder who);
+> +int freeze_super(struct super_block *super, enum freeze_holder who,
+> +		 const void *freeze_owner);
+> +int thaw_super(struct super_block *super, enum freeze_holder who,
+> +	       const void *freeze_owner);
+>  extern __printf(2, 3)
+>  int super_setup_bdi_name(struct super_block *sb, char *fmt, ...);
+>  extern int super_setup_bdi(struct super_block *sb);
+> 
+> -- 
+> 2.47.2
+> 
 -- 
-Martin K. Petersen
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
