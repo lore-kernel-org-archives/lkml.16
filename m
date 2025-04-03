@@ -1,146 +1,112 @@
-Received: from mout.web.de (mout.web.de [212.227.15.3])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC92124E004;
-	Thu,  3 Apr 2025 13:13:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 016CA24E004
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 13:14:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743686029; cv=none; b=eXXz+4LkoG1IVajozSG7EPnF8nBMKaS+vpWvajlpTu/a21LwSBM8Ddj72HeyCroGyiYKFX4l6bXIgICwcQQTuaVHJyhQgv6azuZKqUIy3+YkiIzayzRD98mKcKpRkqHlNVJU5sfwu15XGqX1ycZYq+5ENlHza6PTKJpSd4EtZqU=
+	t=1743686091; cv=none; b=VJx3HB3GyK1nPxTKT/2ohrg1K1Dipx8Krd8+lATgcXxIcV06t14Ft91W4AZfziy7nzPV8SHgpnoiSXUj2NiiqiG6MzolwxEkFgHSb2nchLkc+h6XmoIn5umRFkLyE5+CaO6Am7c3W0N04B4OSEcBomReSKuuPrJS5mIAzGU+Xw0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743686029; c=relaxed/simple;
-	bh=oO2YyQYecVr+L4x0Yq8tpuXt1Blol50iC56ZhetCIAw=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=WW7w/EQnT+3WNJA3b4Sqvilg6+N78IOHtSgNcA3E+ID7q4K69Pq2SY7mf9Qj7pumma8Lawfx3dkWS8w8/BmtEK4kk476Q93n4H10P0kyfE2hpFSTu+oWuQKe6fcGO/BSRgxt+BH4sQNfxFd/G5LY5ahqtk053us4/urMLR2nqlA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=frank.scheiner@web.de header.b=jfpaWPDn; arc=none smtp.client-ip=212.227.15.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1743686091; c=relaxed/simple;
+	bh=bt6gJlRwPdO08tG7YpNnHL783vydCw6J7TOqDlJK4lY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=H/WM7B33DOOLzqSiIu8jWnE4rB58kzHbW8w5++ehX06fgo5naCAIfDygiKuYoNDrStwyyyjLuKO0sgYOCR/PA02zSXBurG9nTOg/wOjf9JapKVdVfbXB/RN6yaZimAThDYMTLCE2N4wPuaMLfz3GRberuX8vOuAgpHd6/X/lw20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N/k4rMUo; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=frank.scheiner@web.de header.b="jfpaWPDn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1743686000; x=1744290800; i=frank.scheiner@web.de;
-	bh=tq7Ewy84FWklJ0DM2lQqRrm1CFpORg7fNcv68fsFdoI=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=jfpaWPDnqJlnn7d/eeKA+Q2dZ6gal+i27mW+REj0gdj86oe2hrp1rhPGmf7hy4Ps
-	 ucG7L7EDOF3MG/YJSYMNsvXaoeAKKiuPIFKvghBUxWs4T0rF+acXD/NDt/siXGzgj
-	 X8f+hJQZhTuPvqizGbwQAxuDK/ujk+GUPNZiM23PgGRC+xqSE/cfFEUrP53QV4RkI
-	 /N9DJ3bgz0roFD3YAqpyx7Bhmo015EwlCP2gSdoAbC8cJABBh/AsC+r5dxNClp5Tq
-	 L8ZyLbPeuNYG25J7trpGWIC1FtQp75NBD/OGH5SqZaeU8skoKP3ftavD+VnXM6vfa
-	 S+xM5OLloka1ig34xA==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.30] ([84.152.250.142]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MZSBG-1tco0U2pmQ-00IJ9N; Thu, 03
- Apr 2025 15:13:20 +0200
-Message-ID: <667d272f-2b51-49d6-84ea-1156027e00a7@web.de>
-Date: Thu, 3 Apr 2025 15:13:17 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N/k4rMUo"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-5493b5bc6e8so1093127e87.2
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 06:14:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743686088; x=1744290888; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mqMLUJ3h8FzGpd/ZaU/PCx5lcDAym3sCL++s8q8O5tA=;
+        b=N/k4rMUo32yUBXl9QVhTahgmmntNtbzKwpJ81Vy+7YsHBKmGkDTAaQTAuRJYWP0DbZ
+         XD2eN4F1zwv74KKnYljJi8we/x4i8vu7Es3AQnxiu8/l4TAzDsClFS4h6E7Vzp/De72T
+         sXZ++uHhebAneEXFCPxG5NUgjSjrIPhCF0eREkEnF1BqsXYQ8kN/Ru8/JfmyKN/xwPn3
+         E73gy8NdgxD+ALCjPUO7Oi0Vq/MRYCxawgA2fI27xp9bOS9G5FNyoyzhmZrBaXcwiQvP
+         N/rscgUpFBHBMm8OckZyX+vuOssv3oAXEorYRYdqnUGqHe9pFEESHVeH90ZEqJXNHbdS
+         W3fA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743686088; x=1744290888;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mqMLUJ3h8FzGpd/ZaU/PCx5lcDAym3sCL++s8q8O5tA=;
+        b=u8oIpgnJNUL6Y9D1YGagJpXMgvRawcW2ZiRjnuFh6wQO917sYfmt1Fhj+iSW1iRojX
+         afOVZTrfF+ag6o6murujEsx5hWyI5G5TUQOL+kUdHBoyfX1WLkc8iYOfY8S9WQIFjWgU
+         Ti/tGip8yuRzzkUAf5bYBf0Pzi+WqcQB0q97Q66m6/IznWc+OJS62FRBe0rXggNCuO5j
+         9GH1QIm7uR2MOJwV5P4d3Gy/C6AVwp0Yi1lkcgFpTIbBp/9IWLYOCAOt0ZBCrpp4Qa5W
+         kF/C1c3ftqB7dl5YcUIy6KoSeuk/JL3IMvOngwX1iiB9j21VfFB71G+o6T1L9gShTKIF
+         hVfA==
+X-Forwarded-Encrypted: i=1; AJvYcCWJCKRXXhsgWJzDVx3t6gDm2aEw95iAeGw1uZi6BLvuLt2I7AnZmebYyE+nuRlpKGA0V4VrnNZD6aeyRq0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwdEbdlg4BU7ni6w0Ssz+clCEMy6XAxq2fHe6caEjZYfLvMBqXL
+	i+5Dyn6Pqjb4tqf0dP+8l3ZUg5Wo3EweyUX0JVwrggyU8e9+KI/PPyKXthGfI4qjWsUEjpupq94
+	35muHPTbRhu0IFVKx18hF09ZdBCU=
+X-Gm-Gg: ASbGnctNUqlQEUlm8EbkKrGF6+Dy+gUpJ/JhW/ipwtG2ClGzWwBPTSB1dppMUIrEeWI
+	0/PGsRUmq6YDpK9tsa2rIYckg2MXN+ZtFeL87jrqVrPQg6fFshWnpgyCONTN6HCzstDQx6Nx4M/
+	XH6VwOsP9aKEmyZ3sfSghPc0wL6A==
+X-Google-Smtp-Source: AGHT+IH2kqjkmBjqUVw+MY6DzQ6KHWR2nn2MHZ+KZ+wf1sfvHxHjTtOFBN9OSvv16ji1RnKxxsfo9uZGmtKo39z6yEo=
+X-Received: by 2002:a2e:a803:0:b0:30b:d35c:4754 with SMTP id
+ 38308e7fff4ca-30de023b4d7mr75558381fa.10.1743686088024; Thu, 03 Apr 2025
+ 06:14:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: apatel@ventanamicro.com
-Cc: ajones@ventanamicro.com, andrew@lunn.ch, anup@brainfault.org,
- atishp@atishpatra.org, bp@alien8.de, dave.hansen@linux.intel.com,
- gregory.clement@bootlin.com, hpa@zytor.com, imx@lists.linux.dev,
- kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
- maz@kernel.org, mingo@redhat.com, palmer@dabbelt.com,
- paul.walmsley@sifive.com, s.hauer@pengutronix.de,
- sebastian.hesselbarth@gmail.com, shawnguo@kernel.org,
- sunilvl@ventanamicro.com, tglx@linutronix.de, x86@kernel.org,
- linux-ia64@vger.kernel.org
-References: <20250217085657.789309-5-apatel@ventanamicro.com>
-Subject: Re: [PATCH v6 04/10] genirq: Introduce common
- irq_force_complete_move() implementation
-Content-Language: en-US
-From: Frank Scheiner <frank.scheiner@web.de>
-In-Reply-To: <20250217085657.789309-5-apatel@ventanamicro.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:XEpgZJH4hjXKrAVtN6WYfb76caRsH3G/1YZh0k6iv/5gAuOD6JZ
- /5tde3RwkXrkd/Pey4Lz/oZqXIOJwitxEp+fORe/ccUTmOxTdKdt1JHSPo7f6gtuJfxNzDZ
- CT0pBBS+/1TDZFBQT8c7xRTvQ04Ld/hNbLksOh9snnDnKPRk4pMuFmuPo7JqqG7e0gsfnuM
- o7r8alGP5hXS3FrAzPIkg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:Of7XFgulvNQ=;OVh5LHzbZMeUCHWhdl2nXotRgit
- jM6j1jgD5opSeNE7yy/Joxn4dWxgFOVQNAKd/9JrMF5rl1I5wvE1WrzuIA55muGKCafDi+qNf
- VM/TKsQ5FYBPmRxIMIODE9vSzoN8nXhbs4547OCs/oQraFxSR2fQCUvX+/XD/H2fu07WZxDF5
- JiKyCXLZkwYuP49khkI1RPsWSuznFlZUD8xkeB8OkRIsOAAn1AmhQGeWaigIF8080IM0X8SJC
- /Q0MEC4U0PoYB6fVozKBItqDoDSyPT8v2xUPgpM4eqIEUz/mnXKAAbNZqlQhNx7VJQwkdljWy
- hanRggjC+qcyvNnLv4+wWV361WVPE0XqVtSWkPJVSerVB5ZvzYYDvKDy3rAZSunshNvPPkjjd
- nF2CDEmIkniaETkOsdfzv/bGnskgZxhNsUDmjt12xjJgtp7/OfqAJ4sV12Ni2o06jYqHCIntJ
- lAv1rJYy7HWdYf1eu5xtCgIz2GZossoQJvhoC6EMXI4aAS2+xuYfuaoQARne38XIb6Vp4yv7p
- LJ2UP9ONGwFBoW/2qaBKubFr/6edJ0npfgdLzR0HkovRPwe1Xw1xCOO6OOwvVoklqrUOZ2iQ3
- EJVg8HRlqql/7e0imy9xYuEaQpU6K7d9u4FYppWQILPTr0N8xW1vJ9P0YUf7Rf4znCKxsoS1F
- MKPB83tuLCXlQ5bG+q1Q9bxzHNyPNlhWh6AuWdY0+XbRKYXf1JTDJUlxSn3J464O2RPfPmqdH
- HDVSisM8e0I7C2Fzl9Gi2irOvjG78Pena6EpnNuhC2GbMVwM0HuEH9dVI8ZqtVQp9koggzIzA
- h126Bu/qYCnPX6wXzAfJAnf4X/8HbAQowX13W7CCxhdd4U+PioOYYWXHPkYx6nO5OiCCvJ6wC
- t4DcaQPA6IPUC2xmwpZ1iuyUMpNNT/3wbfPwE64sa6/CZXKN9f+9j4UnsQDKfw4okD1iQnwhd
- Me4LKEO/bYQrmX4ZB7PwRFV4KFK7498IYaO26+frpSRi3Qdo8SKDIS462jGpd0qsELf3rporN
- VSGoBRFYikvqgrNVjiF9ItOmcRROIjXooW4kWaQj0kEyKbuqUP/QBtx+e553himBLKWRbXQgL
- 2mT4LxpzgUB8pez1+EeTuoBBpnKPHLs8Lb5+MyIBhjxgyhlQcXmCWF8K/4PyimOqbld6BVBkB
- b9c897IE7qU4qZr4claegKPHTOt4zT3q3ERrHiC9shhf1l2jKNJAghCAwuQFOgZ2fudl7W8dH
- KvEZ3v9n2hpNTq6auTCW9guBFFRV8x/yI6TBWhZCNwS1me+uL8jO2BFF7UsXh1k0o21Lr6g01
- 9aVgDoQ7l/vgmrgyB4Q8U0n33dGHKGuujhqJuFENBBhBe/faxIMPYUI8/pmGoK9/KWTKz1rqf
- Mtr0mYNyydPx0M/YfvQCBhIITMLSUsU8z8F7zjYKtscMJFtszwQTLMRjqgV9A/k+5dxBAIvcW
- KOMwjXQ==
+References: <81a25a60-de78-43fb-b56a-131151e1c035@molgen.mpg.de> <f8ab4b21-0afc-4956-a324-12c0c67bb5de@molgen.mpg.de>
+In-Reply-To: <f8ab4b21-0afc-4956-a324-12c0c67bb5de@molgen.mpg.de>
+From: Uros Bizjak <ubizjak@gmail.com>
+Date: Thu, 3 Apr 2025 15:14:35 +0200
+X-Gm-Features: ATxdqUEKWFLktRli5xE5aIw6_0Thxu_wJ1HESz_7hFAvSvyvA3lIFGGomnedZ0o
+Message-ID: <CAFULd4Z48Vh_UW6+Q-BJ3c42eo7QaKhAbhZRX+Eegx0Te4+z6g@mail.gmail.com>
+Subject: Re: New warning `cryptd: no symbol version for this_cpu_off`
+To: Paul Menzel <pmenzel@molgen.mpg.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	LKML <linux-kernel@vger.kernel.org>, regressions@lists.linux.dev, 
+	Brian Gerst <brgerst@gmail.com>, Nadav Amit <nadav.amit@gmail.com>, 
+	Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi there,
+On Thu, Apr 3, 2025 at 2:30=E2=80=AFPM Paul Menzel <pmenzel@molgen.mpg.de> =
+wrote:
+>
+> #regzbot ^introduced: 6a367577153a
+>
+> [To: +Uros, Cc: +Nadav, +Andrew]
+>
+>
+> Dear Linux folks,
+>
+>
+> Am 03.04.25 um 09:35 schrieb Paul Menzel:
+>
+> > On the Intel Kaby Lake laptop Dell XPS 13 9360, updating from
+> > 6.14.0-11270-g08733088b566 to 6.14.0-12456-gacc4d5ff0b61, Linux logs th=
+e
+> > new warning below:
+> >
+> >      cryptd: no symbol version for this_cpu_off
+> >
+> > I haven=E2=80=99t bisected it, but could it be commit 06aa03056f90 (x86=
+/smp:
+> > Move this_cpu_off to percpu hot section). It says to have no functional
+> > change though.
+>
+> `git bisect` led to commit 6a367577153a (percpu/x86: enable strict
+> percpu checks via named AS qualifiers).
+>
+>      $ git bisect start
+>      $ git bisect good 08733088b566
+>      $ git bisect bad acc4d5ff0b61
 
-this change, specfically the introduction of irq_force_complete_move()
-to `kernel/irq/migration.c`, strangely breaks our builds for the hp-sim
-platform (i.e. Linux/ia64 for Ski):
+Can you please post your .config?
 
-```
-  CC      kernel/irq/affinity.o
-kernel/irq/migration.c: In function 'irq_force_complete_move':
-kernel/irq/migration.c:40:72: error: 'struct irq_data' has no member named 'parent_data'
-   40 |         for (struct irq_data *d = irq_desc_get_irq_data(desc); d; d = d->parent_data) {
-      |                                                                        ^~
-make[4]: *** [scripts/Makefile.build:207: kernel/irq/migration.o] Error 1
-```
-
-The reason seems to be that "d->parent_data" (i.e.
-"irq_data.parent_data") is used unguarded in this function:
-
-```
-void irq_force_complete_move(struct irq_desc *desc)
-{
-    for (struct irq_data *d = irq_desc_get_irq_data(desc); d; d = d->parent_data) {
-        if (d->chip && d->chip->irq_force_complete_move) {
-            d->chip->irq_force_complete_move(d);
-            return;
-        }
-    }
-}
-```
-
-...but "parent_data" is only present in `include/linux/irq.h` if
-`CONFIG_IRQ_DOMAIN_HIERARCHY` was selected.
-
-```
-struct irq_data {
-    u32            mask;
-    unsigned int        irq;
-    irq_hw_number_t        hwirq;
-    struct irq_common_data    *common;
-    struct irq_chip        *chip;
-    struct irq_domain    *domain;
-#ifdef    CONFIG_IRQ_DOMAIN_HIERARCHY
-    struct irq_data        *parent_data;
-#endif
-    void            *chip_data;
-};
-```
-
-So I guess, either the requirement in `linux/include/linux/irq.h` needs
-to go, or the use of "d->parent_data" or the whole of
-irq_force_complete_move() and its use needs to be guarded as well.
-
-Cheers,
-Frank
-
+Uros.
