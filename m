@@ -1,378 +1,174 @@
-Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 956F12512D9
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 18:30:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99CBF18BC1D;
+	Thu,  3 Apr 2025 18:30:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743705035; cv=none; b=nbP2Y/1NNtQLbgx6iQbSEQvrGNuCt97r7IKOmgPz1lWCyR7hJqj6vITBl9rPRll/EnT3guW+uhMkbEvw9Wsa32GqVh+B/nfBhE89nwvGTQJ59wq79FMMMEo4Sm0lRDekfmfmqd+qfg4e5r2vYwxKo7hWKrnAZAe/Qqu0nOd5RQ8=
+	t=1743705057; cv=none; b=KHp1WCXSzG+EMfDNl3Jdjt0UQ6iIMcgMnGTsE0ZQrjL9XxIVY6KUXIFGbB0WmGOvwnDDj0OpuZPKLtLdjd3cuHfknQ6PAP1WPkrPli0gnBE8NwqrSEqn3RhmplWoJBKA/FZatQA9YGdpjMth9YdLKv5msCtMHpWF3Vvk1CGAxiE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743705035; c=relaxed/simple;
-	bh=/oCj0Hk1g+sUvQ3GIO57Vo8U9NcTvnSSJUK+gndZU1w=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=nSckxeWi9sNaMmYK9HImNZm/1keaOl+QRHgGc4FL0PM7I+ZzscrVvW5iPE8LPV2iF6lHR1tZcIKwu/8mBJUV8XvIXdRbOZCO20sJoOLEKNAycfSd6ZnXSlcenwZICHme3bzXvQ0C1I/AVg1byFr6CwFWeDpQc+p5Y3YM2hv3x4I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=N8pW6y6H; arc=none smtp.client-ip=91.218.175.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1743705057; c=relaxed/simple;
+	bh=pTXRHDZut6BiauTObf1HmfWdawjo1n4+6THjTd6Jzzc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=S1hV5TkyBqgG1G8ERQssmNGq2OI/QHaNeQayKD5RViXOTcmoPkXP7jlxodmd34drfHXv8hOfd7CNCsGqAsRzlC1Wch/xDZt0aVdG7cryx8G2eLgrHOgUYAH0OBUmedHOhVNSsGzl1t3q1jgNl5M8HAEzBGZjpWvNxntcJ9ExKhY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Sgxm7gBt; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="N8pW6y6H"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1743705031;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UdDp1sO0IopfH7Iy+tgmsR53cIFBoLuTkzWc5BMhUC0=;
-	b=N8pW6y6HFbeE9hCyE1ExGSseCusV1hXW05RIrKkHvLtrxfI0VTomHeIxrLZT6ZmnQ3pmZh
-	lSJXxwl818uHQhTcRf7gnBYyXmnKddjhdtmAQLXBkvJhnGvL1/TCvKqwoRYKfZBYrMzjjA
-	ZKlIFMCwdhALDB+60jfyWeIu+JHt1/4=
-From: Sean Anderson <sean.anderson@linux.dev>
-To: netdev@vger.kernel.org,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Russell King <linux@armlinux.org.uk>
-Cc: Christian Marangi <ansuelsmth@gmail.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	upstream@airoha.com,
-	Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	devicetree@vger.kernel.org,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Naveen N Rao <naveen@kernel.org>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	linuxppc-dev@lists.ozlabs.org,
-	Sean Anderson <sean.anderson@linux.dev>
-Subject: [RFC net-next PATCH 13/13] powerpc: dts: Add compatible strings for Lynx PCSs
-Date: Thu,  3 Apr 2025 14:30:23 -0400
-Message-Id: <20250403183023.1948676-1-sean.anderson@linux.dev>
-In-Reply-To: <20250403181907.1947517-1-sean.anderson@linux.dev>
-References: <20250403181907.1947517-1-sean.anderson@linux.dev>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sgxm7gBt"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-227a8cdd241so15289595ad.3;
+        Thu, 03 Apr 2025 11:30:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743705055; x=1744309855; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8XQ5bzpPWGMno9H+d92L40wcGAI7ZaJD+7IW9W+Ughk=;
+        b=Sgxm7gBtWoAkBojTlLTi8/lR8NbviTk/afC18/QWVFFQHGw1XBS0TX5MptZmOyxeE/
+         s4s/CvJFYt5xEFJq4LkRySzbWAgDstkFpfKDvGcwQfufHUq28iy6sq03ZZNHscrUEjsV
+         VbSMS0bTRE4Q0wuc0jbGHg1WhvR3kpafUGp5BLuy/GNMLecq/nnU3EMwGvWAwitDwvJ9
+         wuyj0wToatqzPnFO1nFMN+OIsJ4MehkMlhv3u5sGLVHM+E01uK6bvTguUg8P98+9BAR5
+         9GYunHvBtq3dbGDjcK9u37l0A+fp6pRDHGL/PZYfPk2AK7VBADf8biQqMWQ6uXjBKkBL
+         jLDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743705055; x=1744309855;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8XQ5bzpPWGMno9H+d92L40wcGAI7ZaJD+7IW9W+Ughk=;
+        b=t+iosDyWrDEzfrxPCVRuFai+zrG+X56xb6r/ScL1Qr0q1IUZlrCa1CKpAfTtY7l74Y
+         l5w/U0YY0iVm7lmJxVPAZakS4GHUGHMeAGjNAubgoZVQlfe6y0I17d2tPpI1vLSa3vD5
+         evrGeW0W1qm5O2ZWpMIXG+kyJl8xXVBcepzbaFrxxeOfReV46GTb1vuhVHwmEmPUh443
+         rEtWPCn9MaEtvLZcwVMt1H76IZpmWnsWylA6f07oYuhPuboRmTMzQzTNSp0j+Lx0qarW
+         EJQlgXGHBdjhGVIgmz0/w+iRBPwrKQvhlhcyxMXaa0A5/3LK1EKzzC4X86MwSN1PHWnV
+         c2dw==
+X-Forwarded-Encrypted: i=1; AJvYcCVPxSQ+j7r/O1YW33FO3MflyrldElbH34fH8fQEGuJAcdg1q/temZCZ1jD+pBCBhporwOkRo1f4m+9C+fvqiRv/Ee+e@vger.kernel.org, AJvYcCW/HFcCjoS3MB5JKgZDFu5+hIB2b53K/f0Bz2J5MGhIKkpM+HMZjBo7+bZ2+KKT210LPY/EcTOQ5cjQBkGG@vger.kernel.org, AJvYcCXQ4y0Spz6gj3cpCd/YM4W8fCht6XfqNRhUxRIrJJHdS1IhpR1huOJ5qmNkMXggpc+P+tk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywcilm68nkP5MJrBoPEdqtafIQX0u4u1Iqc05SmlR9QMe1oQJ6I
+	YGZe5wOiqMxzYIgXW10rX3ntsXMrNKjHaMttQTwGOS6zJkV7kxCelCo6NKPokaa5vC2/25YR20K
+	pZqgX+SMR6zycMMWNhmIt7gk+5aQ=
+X-Gm-Gg: ASbGnctfmEHU50N/a2v9WzfJvhg5TexTHaYmdEHMYFKYSQDMgIfNQuXSggcDHI0VBu/
+	3yI8eNvoL3NINV4+xvoLgBIPn7Nh5YyyP1/OkuU8kAQL/EHOZYpVllml/NtjQykzwYd1G4DBk2Q
+	hFyx6cdFiuLExXt4mp+dLh7EsBzmMNrXw668bpy3K2Xg==
+X-Google-Smtp-Source: AGHT+IEAgBRhTJ2RoXuCvnO1B3Vh8Ne3y2Ag74MVg9aDQbB2SvvU6B27qseJuhIqC2kFrmiB57Ut/e4y6DgfJ+3Q56U=
+X-Received: by 2002:a17:902:f642:b0:220:e896:54e1 with SMTP id
+ d9443c01a7336-22a8a06af6amr2437155ad.26.1743705054733; Thu, 03 Apr 2025
+ 11:30:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+References: <20250403171831.3803479-1-andrii@kernel.org> <20250403174917.OLHfwBp-@linutronix.de>
+In-Reply-To: <20250403174917.OLHfwBp-@linutronix.de>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Thu, 3 Apr 2025 11:30:42 -0700
+X-Gm-Features: AQ5f1JpgARnocJIWAqdQmnruOiRITZ2QEWNn6_YQ6W5fcMcbnt9xaWvAxvTpFN4
+Message-ID: <CAEf4BzasxUn+Ywi-=TtP+S+i4VBLnKvYCkxPCz63o4zEXT9QZw@mail.gmail.com>
+Subject: Re: [PATCH tip/perf] uprobes: avoid false lockdep splat in uprobe
+ timer callback
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org, 
+	peterz@infradead.org, mingo@kernel.org, bpf@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, kernel-team@meta.com, rostedt@goodmis.org, 
+	oleg@redhat.com, mhiramat@kernel.org, ast@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This adds appropriate compatible strings for Lynx PCSs on PowerPC QorIQ
-platforms. This also changes the node name to avoid warnings from
-ethernet-phy.yaml.
+On Thu, Apr 3, 2025 at 10:49=E2=80=AFAM Sebastian Andrzej Siewior
+<bigeasy@linutronix.de> wrote:
+>
+> On 2025-04-03 10:18:31 [-0700], Andrii Nakryiko wrote:
+> > Avoid a false-positive lockdep warning in PREEMPT_RT configuration when
+> > using write_seqcount_begin() in uprobe timer callback by using
+> > raw_write_* APIs. Uprobe's use of timer callback is guaranteed to not
+> > race with itself, and as such seqcount's insistence on having hardirqs
+> preemption, not hardirqs
+>
+> > disabled on the writer side is irrelevant. So switch to raw_ variants o=
+f
+> > seqcount API instead of disabling hardirqs unnecessarily.
+> >
+> > Also, point out in the comments more explicitly why we use seqcount
+> > despite our reader side being rather simple and never retrying. We favo=
+r
+> > well-maintained kernel primitive in favor of open-coding our own memory
+> > barriers.
+>
+> Thank you.
+>
+> > Link: https://lore.kernel.org/bpf/CAADnVQLLOHZmPO4X_dQ+cTaSDvzdWHzA0qUq=
+QDhLFYL3D6xPxg@mail.gmail.com/
+> > Reported-by: Alexei Starovoitov <ast@kernel.org>
+> > Suggested-by: Sebastian Sewior <bigeasy@linutronix.de>
+> > Fixes: 8622e45b5da1 ("uprobes: Reuse return_instances between multiple =
+uretprobes within task")
+> > Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+> > ---
+> >  kernel/events/uprobes.c | 13 +++++++++++--
+> >  1 file changed, 11 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> > index 70c84b9d7be3..6d7e7da0fbbc 100644
+> > --- a/kernel/events/uprobes.c
+> > +++ b/kernel/events/uprobes.c
+> > @@ -1944,6 +1944,9 @@ static void free_ret_instance(struct uprobe_task =
+*utask,
+> >        * to-be-reused return instances for future uretprobes. If ri_tim=
+er()
+> >        * happens to be running right now, though, we fallback to safety=
+ and
+> >        * just perform RCU-delated freeing of ri.
+> > +      * Admittedly, this is a rather simple use of seqcount, but it ni=
+cely
+> > +      * abstracts away all the necessary memory barriers, so we use
+> > +      * a well-supported kernel primitive here.
+> >        */
+> >       if (raw_seqcount_try_begin(&utask->ri_seqcount, seq)) {
+> >               /* immediate reuse of ri without RCU GP is OK */
+> > @@ -2004,12 +2007,18 @@ static void ri_timer(struct timer_list *timer)
+> >       /* RCU protects return_instance from freeing. */
+> >       guard(rcu)();
+> >
+> > -     write_seqcount_begin(&utask->ri_seqcount);
+>
+> > +     /* See free_ret_instance() for notes on seqcount use.
+>
+> This is not a proper multi line comment.
 
-Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
----
+yep, will fix; no, uprobe is not networking, this style is just
+ingrained in my brain from working in BPF code base for a while
 
- arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-0-best-effort.dtsi | 3 ++-
- arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-0.dtsi             | 3 ++-
- arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-1-best-effort.dtsi | 3 ++-
- arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-1.dtsi             | 3 ++-
- arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-2.dtsi             | 3 ++-
- arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-3.dtsi             | 3 ++-
- arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-0.dtsi              | 3 ++-
- arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-1.dtsi              | 3 ++-
- arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-2.dtsi              | 3 ++-
- arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-3.dtsi              | 3 ++-
- arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-4.dtsi              | 3 ++-
- arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-5.dtsi              | 3 ++-
- arch/powerpc/boot/dts/fsl/qoriq-fman3-1-10g-0.dtsi             | 3 ++-
- arch/powerpc/boot/dts/fsl/qoriq-fman3-1-10g-1.dtsi             | 3 ++-
- arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-0.dtsi              | 3 ++-
- arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-1.dtsi              | 3 ++-
- arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-2.dtsi              | 3 ++-
- arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-3.dtsi              | 3 ++-
- arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-4.dtsi              | 3 ++-
- arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-5.dtsi              | 3 ++-
- 20 files changed, 40 insertions(+), 20 deletions(-)
+>
+> > +      * We also employ raw API variants to avoid lockdep false-positiv=
+e
+> > +      * warning complaining about hardirqs not being disabled. We have
+>
+> s/hardirqs/preemption. The warning is about missing disabled preemption.
 
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-0-best-effort.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-0-best-effort.dtsi
-index 7e70977f282a..61d52044e7b4 100644
---- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-0-best-effort.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-0-best-effort.dtsi
-@@ -66,7 +66,8 @@ mdio@e1000 {
- 		reg = <0xe1000 0x1000>;
- 		fsl,erratum-a011043; /* must ignore read errors */
- 
--		pcsphy0: ethernet-phy@0 {
-+		pcsphy0: ethernet-pcs@0 {
-+			compatible = "fsl,lynx-pcs";
- 			reg = <0x0>;
- 		};
- 	};
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-0.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-0.dtsi
-index 5f89f7c1761f..78d6e49655f4 100644
---- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-0.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-0.dtsi
-@@ -70,7 +70,8 @@ mdio@f1000 {
- 		reg = <0xf1000 0x1000>;
- 		fsl,erratum-a011043; /* must ignore read errors */
- 
--		pcsphy6: ethernet-phy@0 {
-+		pcsphy6: ethernet-pcs@0 {
-+			compatible = "fsl,lynx-pcs";
- 			reg = <0x0>;
- 		};
- 	};
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-1-best-effort.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-1-best-effort.dtsi
-index 71eb75e82c2e..5ffd1c2efaee 100644
---- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-1-best-effort.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-1-best-effort.dtsi
-@@ -73,7 +73,8 @@ mdio@e3000 {
- 		reg = <0xe3000 0x1000>;
- 		fsl,erratum-a011043; /* must ignore read errors */
- 
--		pcsphy1: ethernet-phy@0 {
-+		pcsphy1: ethernet-pcs@0 {
-+			compatible = "fsl,lynx-pcs";
- 			reg = <0x0>;
- 		};
- 	};
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-1.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-1.dtsi
-index fb7032ddb7fc..e0325f09ce5f 100644
---- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-1.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-1.dtsi
-@@ -70,7 +70,8 @@ mdio@f3000 {
- 		reg = <0xf3000 0x1000>;
- 		fsl,erratum-a011043; /* must ignore read errors */
- 
--		pcsphy7: ethernet-phy@0 {
-+		pcsphy7: ethernet-pcs@0 {
-+			compatible = "fsl,lynx-pcs";
- 			reg = <0x0>;
- 		};
- 	};
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-2.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-2.dtsi
-index 6b3609574b0f..8e6f6c5f0f2e 100644
---- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-2.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-2.dtsi
-@@ -38,7 +38,8 @@ mdio@e1000 {
- 		reg = <0xe1000 0x1000>;
- 		fsl,erratum-a011043; /* must ignore read errors */
- 
--		pcsphy0: ethernet-phy@0 {
-+		pcsphy0: ethernet-pcs@0 {
-+			compatible = "fsl,lynx-pcs";
- 			reg = <0x0>;
- 		};
- 	};
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-3.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-3.dtsi
-index 28ed1a85a436..2cd3f0688cb1 100644
---- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-3.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-3.dtsi
-@@ -38,7 +38,8 @@ mdio@e3000 {
- 		reg = <0xe3000 0x1000>;
- 		fsl,erratum-a011043; /* must ignore read errors */
- 
--		pcsphy1: ethernet-phy@0 {
-+		pcsphy1: ethernet-pcs@0 {
-+			compatible = "fsl,lynx-pcs";
- 			reg = <0x0>;
- 		};
- 	};
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-0.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-0.dtsi
-index 1089d6861bfb..9f8c38a629cb 100644
---- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-0.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-0.dtsi
-@@ -62,7 +62,8 @@ mdio@e1000 {
- 		reg = <0xe1000 0x1000>;
- 		fsl,erratum-a011043; /* must ignore read errors */
- 
--		pcsphy0: ethernet-phy@0 {
-+		pcsphy0: ethernet-pcs@0 {
-+			compatible = "fsl,lynx-pcs";
- 			reg = <0x0>;
- 		};
- 	};
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-1.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-1.dtsi
-index a95bbb4fc827..248a57129d40 100644
---- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-1.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-1.dtsi
-@@ -69,7 +69,8 @@ mdio@e3000 {
- 		reg = <0xe3000 0x1000>;
- 		fsl,erratum-a011043; /* must ignore read errors */
- 
--		pcsphy1: ethernet-phy@0 {
-+		pcsphy1: ethernet-pcs@0 {
-+			compatible = "fsl,lynx-pcs";
- 			reg = <0x0>;
- 		};
- 	};
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-2.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-2.dtsi
-index 7d5af0147a25..73cef28db890 100644
---- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-2.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-2.dtsi
-@@ -69,7 +69,8 @@ mdio@e5000 {
- 		reg = <0xe5000 0x1000>;
- 		fsl,erratum-a011043; /* must ignore read errors */
- 
--		pcsphy2: ethernet-phy@0 {
-+		pcsphy2: ethernet-pcs@0 {
-+			compatible = "fsl,lynx-pcs";
- 			reg = <0x0>;
- 		};
- 	};
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-3.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-3.dtsi
-index 61e5466ec854..4657b6a8fb78 100644
---- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-3.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-3.dtsi
-@@ -69,7 +69,8 @@ mdio@e7000 {
- 		reg = <0xe7000 0x1000>;
- 		fsl,erratum-a011043; /* must ignore read errors */
- 
--		pcsphy3: ethernet-phy@0 {
-+		pcsphy3: ethernet-pcs@0 {
-+			compatible = "fsl,lynx-pcs";
- 			reg = <0x0>;
- 		};
- 	};
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-4.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-4.dtsi
-index 3ba0cdafc069..ac322e5803c2 100644
---- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-4.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-4.dtsi
-@@ -62,7 +62,8 @@ mdio@e9000 {
- 		reg = <0xe9000 0x1000>;
- 		fsl,erratum-a011043; /* must ignore read errors */
- 
--		pcsphy4: ethernet-phy@0 {
-+		pcsphy4: ethernet-pcs@0 {
-+			compatible = "fsl,lynx-pcs";
- 			reg = <0x0>;
- 		};
- 	};
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-5.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-5.dtsi
-index 51748de0a289..68ffa2c65e03 100644
---- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-5.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-5.dtsi
-@@ -69,7 +69,8 @@ mdio@eb000 {
- 		reg = <0xeb000 0x1000>;
- 		fsl,erratum-a011043; /* must ignore read errors */
- 
--		pcsphy5: ethernet-phy@0 {
-+		pcsphy5: ethernet-pcs@0 {
-+			compatible = "fsl,lynx-pcs";
- 			reg = <0x0>;
- 		};
- 	};
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-10g-0.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-10g-0.dtsi
-index ee4f5170f632..caf28fcbd55c 100644
---- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-10g-0.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-10g-0.dtsi
-@@ -70,7 +70,8 @@ mdio@f1000 {
- 		reg = <0xf1000 0x1000>;
- 		fsl,erratum-a011043; /* must ignore read errors */
- 
--		pcsphy14: ethernet-phy@0 {
-+		pcsphy14: ethernet-pcs@0 {
-+			compatible = "fsl,lynx-pcs";
- 			reg = <0x0>;
- 		};
- 	};
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-10g-1.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-10g-1.dtsi
-index 83d2e0ce8f7b..6128b9fb5381 100644
---- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-10g-1.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-10g-1.dtsi
-@@ -70,7 +70,8 @@ mdio@f3000 {
- 		reg = <0xf3000 0x1000>;
- 		fsl,erratum-a011043; /* must ignore read errors */
- 
--		pcsphy15: ethernet-phy@0 {
-+		pcsphy15: ethernet-pcs@0 {
-+			compatible = "fsl,lynx-pcs";
- 			reg = <0x0>;
- 		};
- 	};
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-0.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-0.dtsi
-index 3132fc73f133..a7dffe6bbe5b 100644
---- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-0.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-0.dtsi
-@@ -62,7 +62,8 @@ mdio@e1000 {
- 		reg = <0xe1000 0x1000>;
- 		fsl,erratum-a011043; /* must ignore read errors */
- 
--		pcsphy8: ethernet-phy@0 {
-+		pcsphy8: ethernet-pcs@0 {
-+			compatible = "fsl,lynx-pcs";
- 			reg = <0x0>;
- 		};
- 	};
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-1.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-1.dtsi
-index 75e904d96602..d0ad92f2ca2d 100644
---- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-1.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-1.dtsi
-@@ -69,7 +69,8 @@ mdio@e3000 {
- 		reg = <0xe3000 0x1000>;
- 		fsl,erratum-a011043; /* must ignore read errors */
- 
--		pcsphy9: ethernet-phy@0 {
-+		pcsphy9: ethernet-pcs@0 {
-+			compatible = "fsl,lynx-pcs";
- 			reg = <0x0>;
- 		};
- 	};
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-2.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-2.dtsi
-index 69f2cc7b8f19..b4b893eead2a 100644
---- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-2.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-2.dtsi
-@@ -69,7 +69,8 @@ mdio@e5000 {
- 		reg = <0xe5000 0x1000>;
- 		fsl,erratum-a011043; /* must ignore read errors */
- 
--		pcsphy10: ethernet-phy@0 {
-+		pcsphy10: ethernet-pcs@0 {
-+			compatible = "fsl,lynx-pcs";
- 			reg = <0x0>;
- 		};
- 	};
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-3.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-3.dtsi
-index b3aaf01d7da0..6c15a6ff0926 100644
---- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-3.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-3.dtsi
-@@ -69,7 +69,8 @@ mdio@e7000 {
- 		reg = <0xe7000 0x1000>;
- 		fsl,erratum-a011043; /* must ignore read errors */
- 
--		pcsphy11: ethernet-phy@0 {
-+		pcsphy11: ethernet-pcs@0 {
-+			compatible = "fsl,lynx-pcs";
- 			reg = <0x0>;
- 		};
- 	};
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-4.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-4.dtsi
-index 18e020432807..14fa4d067ffd 100644
---- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-4.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-4.dtsi
-@@ -62,7 +62,8 @@ mdio@e9000 {
- 		reg = <0xe9000 0x1000>;
- 		fsl,erratum-a011043; /* must ignore read errors */
- 
--		pcsphy12: ethernet-phy@0 {
-+		pcsphy12: ethernet-pcs@0 {
-+			compatible = "fsl,lynx-pcs";
- 			reg = <0x0>;
- 		};
- 	};
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-5.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-5.dtsi
-index 55f329d13f19..64737187a577 100644
---- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-5.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-5.dtsi
-@@ -69,7 +69,8 @@ mdio@eb000 {
- 		reg = <0xeb000 0x1000>;
- 		fsl,erratum-a011043; /* must ignore read errors */
- 
--		pcsphy13: ethernet-phy@0 {
-+		pcsphy13: ethernet-pcs@0 {
-+			compatible = "fsl,lynx-pcs";
- 			reg = <0x0>;
- 		};
- 	};
--- 
-2.35.1.1320.gc452695387.dirty
+Right, sorry, the `this_cpu_read(hardirqs_enabled)` part of the check
+in lockdep_assert_preemption_disabled() made too strong an impression
+on me :) Will fix.
 
+>
+> > +      * a guarantee that this timer callback won't race with itself, s=
+o no
+> > +      * need to disable hardirqs.
+>
+> The timer can only be invoked once for a uprobe_task. Therefore there
+> can only be one writer. The reader does not require an even sequence
+> count so it is okay to remain preemptible on PREEMPT_RT.
+>
+> > +      */
+> > +     raw_write_seqcount_begin(&utask->ri_seqcount);
+> >
+> >       for_each_ret_instance_rcu(ri, utask->return_instances)
+> >               hprobe_expire(&ri->hprobe, false);
+> >
+> > -     write_seqcount_end(&utask->ri_seqcount);
+> > +     raw_write_seqcount_end(&utask->ri_seqcount);
+> >  }
+> >
+> >  static struct uprobe_task *alloc_utask(void)
+>
+> Sebastian
