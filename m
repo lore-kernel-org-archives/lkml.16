@@ -1,190 +1,158 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91F3C19885F
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 05:52:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9963198A11
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 05:53:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743659539; cv=none; b=gHQJtvq+7uwrJcxccVSH0SPaV15uez1Lce2zPxp4NTH2hlTqMsNtcYGec1pI6182EoUWDxtEo454ecP3mT5NHN919GRQxaQmKoQHNQ7ytLm63jvU80VtTKK649nxsQVAVHlHjwe+jnSB7TF9ZK7AUicfum8Jzb+AkXdfkVHHaow=
+	t=1743659592; cv=none; b=T91X28HjbC/zsNzCw9Pw7+iN16EEf5TD54hkBCYfmB3I2iG4+jaR3I7jlB+g83A9KiDVtAJULaih+zp3+fTCL8Mi3/gOzvX0+pr/1GTQuO2gZCkzIQK8mc1ZxKQUM9TzV7wXxth/1hsC+htIoLVdM1H9nBwATh3eWeXQei5SoQQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743659539; c=relaxed/simple;
-	bh=bOtOmwaf+d85oYpjpBLSTKA6Cj+ZdsJofatkPjD22No=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=T9KxuOe5jqRaREhGLC2WhoFl58vENJDjkwz+Q9ls5HIeEQOtTcTCfQ92Duc6o0EwskJMy3MDcmKDsH8j50CAtKicafcRPcDW9KyvUmcv3416Fbv0BXC77fkZUJKabRKoIk1cEHtZx8OAXw49WatOlRIHrIk/BkimTIEfueUo/4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TzuoTGQU; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743659592; c=relaxed/simple;
+	bh=4bS5onAMqnZXsH3MQL3fZNQzN/QQVysLsc6zj/UJdIQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MH4qbLCbzjNwTW60na6Vjtqu6SJB80Rmu3942hYZSTBMxDSOnw4R6JH966GPcOA+rAn0iniGxS5mKsopB194R475U+gd2HqfgjJ2bbFnZz0ewUMHWtEs6t3PJTZHf0tTNK72lIKyvEgHm7KLBcoZf+RIEaoRPfEp8PRrhM2kASA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=U5p7U2Xz; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TzuoTGQU"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5e673822f76so901609a12.2
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 22:52:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743659536; x=1744264336; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AKTRZmv77HTmpqOJnfj99p0xYiAgz1IADbNWkm67q0w=;
-        b=TzuoTGQUJ4hQGA476HNjL+RQfguPgxs0O4gvKBWBwqdgbJgCBMinOngbUjg30AAxKj
-         HMBb5JxKkaWarrgwEPhs4PIDUZfeNpgwmMvAFaCue7I2Qgn2QrGwv+f2Dsi5tEXpstwO
-         GHuc66HlxMmfqM2iGL/mzsZed/NHFC8GrEAFCuja8Qyf6LjZ0IB5qng+/59J3Tw3bWpm
-         xxRbPoeIEP6AfOjLIjF0WCuruT9eSnVv7+v5YND5BnHJTefRPvzhTYerAtBy0vtoWpnu
-         Ba80vCEcW/BWqJyFQ5+mP4pRpNUco8hJcHmX6vgUP8GmF6hQbtNEVPsLRWiuep7VikLP
-         kfvw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U5p7U2Xz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743659588;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=W3jbd2doY1NSOX00VkbRurvkdLq9F5tN6tB0xPnD0Og=;
+	b=U5p7U2XzKE/QDl8ZXuLr5dvZXS3Xh131BVbeK7JeAefhEMPfn0+AgXbsfJOMAI4/vcjn9p
+	hAThUNzOEMsfF/PH3hB2Y3GFy+VfFHv4zdqnSJjqN65pGXtSQsLnW++Zk5UHkbs7FEUcd+
+	qaQK1e8lrUTbzK6ytH8tAmSLuDeyixU=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-513-RLs-qN3tNfW296jZo-1W8g-1; Thu, 03 Apr 2025 01:53:07 -0400
+X-MC-Unique: RLs-qN3tNfW296jZo-1W8g-1
+X-Mimecast-MFC-AGG-ID: RLs-qN3tNfW296jZo-1W8g_1743659586
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-ac27f00a8a5so33647766b.3
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 22:53:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743659536; x=1744264336;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1743659586; x=1744264386;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=AKTRZmv77HTmpqOJnfj99p0xYiAgz1IADbNWkm67q0w=;
-        b=o5SVdpyXPAh438PUKp7LXIs/hsvILcPNyhyE4YsfyC8wNB3See2O65KcXM9YDw3NCg
-         t8SCN1GtYZ1p0fWkGgZUb4zQWHW8qg5eU9QmGHx6TegAduJfUr+oMw8pbal543knq10B
-         nI49q6cekj4AsuQ/9Fc4zyT6wIZ6WGGkz6nfhJct8gkcsy9UOexqdc6tpVgYecvDXJK9
-         XC0BeWjd0d4BheZd1QeWGw2Pt39l4dwlC6/29mntOYeZHOVb+qYG3jhyl6pye8xGwJR3
-         eqBKoQ+ONn1dZYtfiaePNmj4dsRXiWnmpZIv1OzTXIZNhmK/yN+RNqaFejxqBU1WpK8B
-         eUeQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWYsYIBq6dN8jwtOKYSwY1Ery9ObuMrW6b+h04aSXSFxJHyWMYktBS0JgH402Nkfn4iiE7cGDurBhWSIA4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwntDS2mYj9PhnwDfOvW04wjmTXGBOSit1quqIevgRNRNKa+Wvb
-	nsuDhp/V5ucwV/m0vAjBygpnpUefRqUg0Rcul1LO6WLhXtGax17y
-X-Gm-Gg: ASbGncs8dKDZx72ArTDWZ+FI7as4KhUK5fbJtbX27r9Y6aD6If/o/UhnKkH0KAF0exM
-	qepbvxEBx9ZOtYVXUVrzLIsvW+DigaVD9PnWgoR95SFOuhDctGwNraFlcR6QQV2f2fi2JWVp1l8
-	c8IV9dqZknrQ15OgaMtFhBtGchi2rTBtYCI49WhSme6MpvZPqMB9OZMhEYSqVLb7odBPN5o3gQN
-	VO1GdJTG9sHXVr3+PvTE9ubKdSkXGuxc8We3hXWpw0msDObZv1WfmGelSn5f053HZpBePLxweXs
-	7n9ogp6V38KqjEs9Qv/UjVc4tshvDI0er7BITHyId8plh6NB6YNLwVNwuExjlUN1/bDN/XmSkzJ
-	56xIWZFru0pJDa6aGbixD9wAXdKqr7M0=
-X-Google-Smtp-Source: AGHT+IErNtuWo09KLUdY+qpohmLzPpx+EJwT2QrMD64lmhMArDMJQJ6Z7Gp9MWYxCImCbb3JWo9XhQ==
-X-Received: by 2002:a05:6402:510a:b0:5e7:97d2:6d10 with SMTP id 4fb4d7f45d1cf-5edfdf190cdmr16383892a12.28.1743659535771;
-        Wed, 02 Apr 2025 22:52:15 -0700 (PDT)
-Received: from localhost.localdomain (146.10-240-81.adsl-dyn.isp.belgacom.be. [81.240.10.146])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f087714e11sm417236a12.6.2025.04.02.22.52.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Apr 2025 22:52:14 -0700 (PDT)
-From: Philippe Simons <simons.philippe@gmail.com>
-To: Boris Brezillon <boris.brezillon@collabora.com>,
-	Rob Herring <robh@kernel.org>,
-	Steven Price <steven.price@arm.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Philipp Zabel <p.zabel@pengutronix.de>
-Cc: dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	linux-sunxi@lists.linux.dev,
-	Andre Przywara <andre.przywara@arm.com>,
-	=?UTF-8?q?Jernej=20=C5=A0krabec?= <jernej.skrabec@gmail.com>
-Subject: [PATCH v2 3/3] drm/panfrost: reorder pd/clk/rst sequence
-Date: Thu,  3 Apr 2025 07:52:10 +0200
-Message-ID: <20250403055210.54486-4-simons.philippe@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250403055210.54486-1-simons.philippe@gmail.com>
-References: <20250403055210.54486-1-simons.philippe@gmail.com>
+        bh=W3jbd2doY1NSOX00VkbRurvkdLq9F5tN6tB0xPnD0Og=;
+        b=KJgpTeljFn2TFeVjzrbhmWSM14H8RfWRFCA0NMBtPc7sYNqYqJGDIwu9ZSjZkyrfvW
+         zMTX+NlKo4sxFomycjjDoRoH/NIfNarMDjOHlOWtkTMSI0NhOMdBvlckb4ztUhTvswSf
+         Eyxy9BG8/nLgw+vuuT+VpR3vl3x2WLjETGJkOgZVTxlowp0ZUFfSB9rih8dWo4IDZQYc
+         6w7za6UBVh1J2eb4rdOmrkglmThy3utSN3IOAm/NzVjEzGtxt0TEqtSwaJ/mDaPL4zGT
+         9DkiG6Ytj+pbl7vy1MR/ayuZXgb6Dm3KyIhAiMq7/OCB5SGRigMsf/pWpbMT1nmUTIxw
+         Mx0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXT5ewXmqhB+8Wf6bh6jTc88OvJOo5aX9hPpHdypNnlDYychXUcR+RIgIgps4widKZiY/CCrJqVG6jFTHc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxRKGCLY8CjxyfkcM9WNUtuTlUqiyx9i33MucVMb1RE9XzMTtIV
+	qUT1C70EEP3Nh6rXSmzU9L+Lf2q0aIe6OZBJuEMEZ0Jcd3GGAzRPsfb0Kwf1dB/tLLtuwJ57XcJ
+	/D7tDqscGMtHZKl3WbqalHmY7mBrEWUmGSFDZVyUcYlFwYuvR5qs27jtHOqJFgE0E2a6qSsoyon
+	r4H2KhvM5zOVkeFr3TQN+/pKr2l79nSQE8ZWbs
+X-Gm-Gg: ASbGncvrSFygg9BB9lKmszZouKjio+bD3beZaI4ymN1VQcROyV/sFu0tiyafsgGe3lZ
+	Pv8e2ctWqbzZ3G00VHYXSsk/cc5Di69SKkhD+5HPjdM1VMHMhocY7jw4U8av3HVb78r2cB8nsKw
+	==
+X-Received: by 2002:a17:907:7daa:b0:ac7:322c:fd0c with SMTP id a640c23a62f3a-ac738be4bc5mr1287977866b.40.1743659586302;
+        Wed, 02 Apr 2025 22:53:06 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH+Z7xb5HzuAp3VvTBF4XJMRYjpTwnMri/J3XyJV/X24GWV812YboBMK2hckDCVRlWhGZcOzWwt5e0C8UfpFi8=
+X-Received: by 2002:a17:907:7daa:b0:ac7:322c:fd0c with SMTP id
+ a640c23a62f3a-ac738be4bc5mr1287975866b.40.1743659585908; Wed, 02 Apr 2025
+ 22:53:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250328100359.1306072-1-lulu@redhat.com> <20250328100359.1306072-2-lulu@redhat.com>
+ <74u5ppfmuf4gwjup3eotpnd6bulocerdk4l54qvykfcnesf6hm@udabnuiw2v6y>
+In-Reply-To: <74u5ppfmuf4gwjup3eotpnd6bulocerdk4l54qvykfcnesf6hm@udabnuiw2v6y>
+From: Cindy Lu <lulu@redhat.com>
+Date: Thu, 3 Apr 2025 13:52:29 +0800
+X-Gm-Features: AQ5f1Jo1foH-PvZGrIRlU2VXTP0saZl6MC9BSYsmGgkgWtc7Py14P3qzqSSJo7E
+Message-ID: <CACLfguW+k0BJQMMU7fRKqJtidA=+p=Ky555bhcZ0kdU8fJOhhQ@mail.gmail.com>
+Subject: Re: [PATCH v8 1/8] vhost: Add a new parameter in vhost_dev to allow
+ user select kthread
+To: Stefano Garzarella <sgarzare@redhat.com>
+Cc: jasowang@redhat.com, mst@redhat.com, michael.christie@oracle.com, 
+	linux-kernel@vger.kernel.org, virtualization@lists.linux-foundation.org, 
+	netdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-According to Mali manuals, the powerup sequence should be
-enable pd, asserting the reset then enabling the clock and
-the reverse for powerdown.
-
-Signed-off-by: Philippe Simons <simons.philippe@gmail.com>
----
- drivers/gpu/drm/panfrost/panfrost_device.c | 38 +++++++++++-----------
- 1 file changed, 19 insertions(+), 19 deletions(-)
-
-diff --git a/drivers/gpu/drm/panfrost/panfrost_device.c b/drivers/gpu/drm/panfrost/panfrost_device.c
-index 93d48e97ce10..5d35076b2e6d 100644
---- a/drivers/gpu/drm/panfrost/panfrost_device.c
-+++ b/drivers/gpu/drm/panfrost/panfrost_device.c
-@@ -209,10 +209,20 @@ int panfrost_device_init(struct panfrost_device *pfdev)
- 
- 	spin_lock_init(&pfdev->cycle_counter.lock);
- 
-+	err = panfrost_pm_domain_init(pfdev);
-+	if (err)
-+		return err;
-+
-+	err = panfrost_reset_init(pfdev);
-+	if (err) {
-+		dev_err(pfdev->dev, "reset init failed %d\n", err);
-+		goto out_pm_domain;
-+	}
-+
- 	err = panfrost_clk_init(pfdev);
- 	if (err) {
- 		dev_err(pfdev->dev, "clk init failed %d\n", err);
--		return err;
-+		goto out_reset;
- 	}
- 
- 	err = panfrost_devfreq_init(pfdev);
-@@ -229,25 +239,15 @@ int panfrost_device_init(struct panfrost_device *pfdev)
- 			goto out_devfreq;
- 	}
- 
--	err = panfrost_reset_init(pfdev);
--	if (err) {
--		dev_err(pfdev->dev, "reset init failed %d\n", err);
--		goto out_regulator;
--	}
--
--	err = panfrost_pm_domain_init(pfdev);
--	if (err)
--		goto out_reset;
--
- 	pfdev->iomem = devm_platform_ioremap_resource(pfdev->pdev, 0);
- 	if (IS_ERR(pfdev->iomem)) {
- 		err = PTR_ERR(pfdev->iomem);
--		goto out_pm_domain;
-+		goto out_regulator;
- 	}
- 
- 	err = panfrost_gpu_init(pfdev);
- 	if (err)
--		goto out_pm_domain;
-+		goto out_regulator;
- 
- 	err = panfrost_mmu_init(pfdev);
- 	if (err)
-@@ -268,16 +268,16 @@ int panfrost_device_init(struct panfrost_device *pfdev)
- 	panfrost_mmu_fini(pfdev);
- out_gpu:
- 	panfrost_gpu_fini(pfdev);
--out_pm_domain:
--	panfrost_pm_domain_fini(pfdev);
--out_reset:
--	panfrost_reset_fini(pfdev);
- out_regulator:
- 	panfrost_regulator_fini(pfdev);
- out_devfreq:
- 	panfrost_devfreq_fini(pfdev);
- out_clk:
- 	panfrost_clk_fini(pfdev);
-+out_reset:
-+	panfrost_reset_fini(pfdev);
-+out_pm_domain:
-+	panfrost_pm_domain_fini(pfdev);
- 	return err;
- }
- 
-@@ -287,11 +287,11 @@ void panfrost_device_fini(struct panfrost_device *pfdev)
- 	panfrost_job_fini(pfdev);
- 	panfrost_mmu_fini(pfdev);
- 	panfrost_gpu_fini(pfdev);
--	panfrost_pm_domain_fini(pfdev);
--	panfrost_reset_fini(pfdev);
- 	panfrost_devfreq_fini(pfdev);
- 	panfrost_regulator_fini(pfdev);
- 	panfrost_clk_fini(pfdev);
-+	panfrost_reset_fini(pfdev);
-+	panfrost_pm_domain_fini(pfdev);
- }
- 
- #define PANFROST_EXCEPTION(id) \
--- 
-2.49.0
+On Tue, Apr 1, 2025 at 9:30=E2=80=AFPM Stefano Garzarella <sgarzare@redhat.=
+com> wrote:
+>
+> On Fri, Mar 28, 2025 at 06:02:45PM +0800, Cindy Lu wrote:
+> >The vhost now uses vhost_task and workers as a child of the owner thread=
+.
+> >While this aligns with containerization principles,it confuses some lega=
+cy
+>
+> nit: missing space "principles,it"
+>
+> >userspace app, Therefore, we are reintroducing kthread API support.
+>
+> nit: "userspace app, Therefore" -> "userspace app. Therefore"
+>
+> >
+> >Introduce a new parameter to enable users to choose between
+> >kthread and task mode.
+>
+> I would explain that by default this is true, and so we are not changing
+> the behavior with this patch.
+>
+Sure,I will change these
+Thanks
+Cindy
+> >
+> >Signed-off-by: Cindy Lu <lulu@redhat.com>
+> >---
+> > drivers/vhost/vhost.c | 1 +
+> > drivers/vhost/vhost.h | 9 +++++++++
+> > 2 files changed, 10 insertions(+)
+>
+> Anyway, the patch LGTM with or without the commit tweaks:
+>
+> Reviewed-by: Stefano Garzarella <sgarzare@redhat.com>
+>
+> >
+> >diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+> >index 63612faeab72..250dc43f1786 100644
+> >--- a/drivers/vhost/vhost.c
+> >+++ b/drivers/vhost/vhost.c
+> >@@ -552,6 +552,7 @@ void vhost_dev_init(struct vhost_dev *dev,
+> >       dev->byte_weight =3D byte_weight;
+> >       dev->use_worker =3D use_worker;
+> >       dev->msg_handler =3D msg_handler;
+> >+      dev->inherit_owner =3D true;
+> >       init_waitqueue_head(&dev->wait);
+> >       INIT_LIST_HEAD(&dev->read_list);
+> >       INIT_LIST_HEAD(&dev->pending_list);
+> >diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
+> >index bb75a292d50c..19bb94922a0e 100644
+> >--- a/drivers/vhost/vhost.h
+> >+++ b/drivers/vhost/vhost.h
+> >@@ -176,6 +176,15 @@ struct vhost_dev {
+> >       int byte_weight;
+> >       struct xarray worker_xa;
+> >       bool use_worker;
+> >+      /*
+> >+       * If inherit_owner is true we use vhost_tasks to create
+> >+       * the worker so all settings/limits like cgroups, NPROC,
+> >+       * scheduler, etc are inherited from the owner. If false,
+> >+       * we use kthreads and only attach to the same cgroups
+> >+       * as the owner for compat with older kernels.
+> >+       * here we use true as default value
+> >+       */
+> >+      bool inherit_owner;
+> >       int (*msg_handler)(struct vhost_dev *dev, u32 asid,
+> >                          struct vhost_iotlb_msg *msg);
+> > };
+> >--
+> >2.45.0
+> >
+>
 
