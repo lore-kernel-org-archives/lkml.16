@@ -1,129 +1,106 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.smtpout.orange.fr (smtp-81.smtpout.orange.fr [80.12.242.81])
+	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A31E12512CD
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 18:01:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD20C252906;
+	Thu,  3 Apr 2025 18:02:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743703305; cv=none; b=BQOQs5N5ILEUSmDEgrPFxLnWfAxdur37LdyylfY0Ts4DutCIvg0jK36dEuoS9JynlfLvnYs/YyTnFGAnqtbN+oIF68HvpRzcQMprreIzozlXHvTNa4I01xqlEMGtcL4u4VqyBaOJuBblvjXKQjorsweDVbZcopCypu59iuyvoIo=
+	t=1743703383; cv=none; b=IGf0DWjBpKu3bkUvsODKeG0UeXiy0s61OCHRhDHT+kXt6aOi8QCBgIRdI7ibqjE4a9OCCs6oEQh83vTvX+VYuWURkNzgGqfU52EVXofIFbdqR3HOsS8xhqzrjl34ITJpGo4df1KtLikjpDbPi+MGol4XBU2OpleASGJnTdgcfpM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743703305; c=relaxed/simple;
-	bh=1yDHNqjZIdxcylaKfZLuH3PFnsolGFsj+0GPacGBx+k=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=UeGqHVdAHdzI4MrfEinclUCTNUgYKdTXYV5q7tW+F2qZssm7M3J4HM3nMdZrc/l6N288qp+JkGMmXo6bBfUaXfGR9+XbcR3DbTEonstbDyvEUlgCVY8gbQ+E5h5iGRUvL4k1POQlakX6BzeD5rrV2AlmJXl6HocQCTfawt0ipGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5ed43460d6bso1941098a12.0
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 11:01:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743703302; x=1744308102;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=TSlvvlKCX4PgAkHg3RKqxIFkI+EouqWNtmXva6H0lTQ=;
-        b=PO197KfHu9KyFjeKESEw1Pj1UzibR/Xt5YjZpMgxPYQ3u/uOeEZUPEzFn75qG4v0b+
-         S6mVAW1EEEfKrycZP2/yESpDVp3rqEEWN3Aq+zSxfdwEbiS2t0fVeVvxts7XiJzinCJS
-         AJbcZRs/WPGwgwITvCKktFIqi0NefsxYV0mduIYV3oR4hjoAmnljb4jDNTfonspK80Sz
-         RU+OY4yLsxJRHdU4Yx77a0xizbrY3MX/VUsGLZ2UkfyGG9fueFwaqM8uIdCazKz0Nkde
-         FEvOBzbtAP5n8i7cUdym0S/RiKlbje5yL+i7RZMP4VWuI2qtaohKxQuvyNocNNFoxqj6
-         b78g==
-X-Gm-Message-State: AOJu0Yx6zB3fRjtFaQamRAEu2VB4d+G8QTKTNdKc9TplV5HXVpmHEtQS
-	Fy9t8m6F9VWW9Tn44OXG3uLoUJuRo8wfMsQLXLhpOXIZY3iF+Asu3zkJLA==
-X-Gm-Gg: ASbGncuK+x905pa//f9/cXcMz2WAcInpmG+e1W3TWiw0RzRCynhc7lJcm4Ar6J8jfBa
-	GKsleCwV01C8U058r8leof+lfALg5In06morUCjawT2pPsLcl/hMzLEb8wvIkZn79JolM+vBoKp
-	ZOI3CE0pqm6RcDcpjCa54p0r3ugeHcYoqKPAB0PnDrMJCGpThLxq7jV9kXLviVPVEWcR5mZqikQ
-	TfUJlYAsbd/tSw+tF1QLCQcRPzAGLpEI9yblqIaWnq3DjGLm3dfnR+PJb4HKFJX++IbUztH7Y/O
-	iwtR0/TUJ+x3n5D4Pnr88J1oaVCxhtJ+1NK4
-X-Google-Smtp-Source: AGHT+IG3fyPviomCWx1pVQdearZFFlxt5dXSvKcTp8OyYPwm81YYk877lQ2X0dx1UnBlKuY8DHNq6Q==
-X-Received: by 2002:a05:6402:13d2:b0:5e7:b081:aa7c with SMTP id 4fb4d7f45d1cf-5f0b3b8efc1mr71593a12.12.1743703301610;
-        Thu, 03 Apr 2025 11:01:41 -0700 (PDT)
-Received: from localhost ([2a03:2880:30ff:41::])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f0880a4054sm1256324a12.67.2025.04.03.11.01.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Apr 2025 11:01:40 -0700 (PDT)
-From: Breno Leitao <leitao@debian.org>
-Date: Thu, 03 Apr 2025 11:01:29 -0700
-Subject: [PATCH] exit: skip IRQ disabled warning during power off
+	s=arc-20240116; t=1743703383; c=relaxed/simple;
+	bh=EZ/3QHprMgvIbJAI0Y0yjBJviEcXYKgybQ1mJdA3yhc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mKexa18HQaSts9Ulkluht6PnG2/8QdHPfK7C+NLmUIqHYdZBjGXbFOd5mxMjeWsSy6GKxTf6MJ3eSfTglvVDMUhFBTXvFMlbUrmijirVm/volas8EXX0Mv/MPAJl09K36YR7zyDYl6YZyyhOcCyUc4gj31dfnqY5n9vZBosZeck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=f0Bkz4rX; arc=none smtp.client-ip=80.12.242.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="f0Bkz4rX"
+Received: from [192.168.1.37] ([90.11.132.44])
+	by smtp.orange.fr with ESMTPA
+	id 0OssuZpVk0cMk0OswuDZfg; Thu, 03 Apr 2025 20:01:50 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1743703310;
+	bh=2ieRkX52RZnkiUxos+tLtIvh5wxLHTwYQ58rulZe6Nw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=f0Bkz4rXfHt4jwzmXxEeB/ra0Hix9/iQPxRwd222i2NpjCp/5Df/kIAkXwGWlouZu
+	 FZR0Dwip4wIrq8G71UTWTGbHSMhBtmjrMYmEhMgg1B72ttSkyak9SZvXAf55SoIT2k
+	 FoFFi/LY5ZUF17mxJJrLfDjtRUR4ARVK5so8lJndTyQZ7bVjvPzCz+O/i6fW6RyKjy
+	 AaAtxu7q6teffMI6/rJeMOrGmph+0im8+Yr1duLpgYJuX/uwEgWqfxA5L4isREwZgb
+	 cG1ajxcYulRl9NYJwYX03bhDa7ir6LmZ5la4ujA9l0H1wHF5begWnoRQ0BkgMYzGh5
+	 uyTVUpyXOZj0w==
+X-ME-Helo: [192.168.1.37]
+X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
+X-ME-Date: Thu, 03 Apr 2025 20:01:50 +0200
+X-ME-IP: 90.11.132.44
+Message-ID: <eda0d691-93ac-4833-8978-6d39730c4db2@wanadoo.fr>
+Date: Thu, 3 Apr 2025 20:01:46 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250403-exit-v1-1-8e9266bfc4b7@debian.org>
-X-B4-Tracking: v=1; b=H4sIAPjM7mcC/x3MTQqAIBAG0KsM3zpBK1G8SrToZ6zZWGhEIN096
- B3gVRTOwgWBKjLfUuRICGQawrJPaWMlKwKh1a3Vve4UP3KpOXpjvXOTWVY0hDNzlOdvhvF9PzN
- OUG9WAAAA
-X-Change-ID: 20250403-exit-bf815877a1cd
-To: akpm@linux-foundation.org, brauner@kernel.org
-Cc: linux-kernel@vger.kernel.org, joel.granados@kernel.org, 
- kernel-team@meta.com, oleg@redhat.com, mjguzik@gmail.com, 
- Breno Leitao <leitao@debian.org>
-X-Mailer: b4 0.15-dev-42535
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1414; i=leitao@debian.org;
- h=from:subject:message-id; bh=1yDHNqjZIdxcylaKfZLuH3PFnsolGFsj+0GPacGBx+k=;
- b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBn7s0DfEswRvh8us+wX/4KjkV2q0bS9ma0Ybwxq
- d3qzA5/pLCJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCZ+7NAwAKCRA1o5Of/Hh3
- bVyrD/sGD9+ybM20xqGB2gfsb/TGzMQL3gzduA9qYafm5qK/DbWeDvm8ilxOu8ui/muVCKi3pPY
- gByA2YwLDDbU7Ka0QpsG0AoY3WWpfrmL5IfIEraCWB29IpOQo136AoJBOaQM1mTJsxm80DYc8H1
- tOt/J4auH5PHDF/M6srVLxZ+Dl2Ownvcaf5xBhpAJc5551mcl/tglaJcL4aKjT7RDJXrGJn4lC3
- L6P2lW7UDZQPNKVfK22C0UmztfI8txA/rILgHhBOVHIavGt7hq7bqnbRz/X5/4AoOmVoGv92eMD
- SvJyyNdRJtu30jpsy+zAP4zv15QMak929Aq/LDtAtu0rpiLpTOZQiWUNp87D1BdXOX1LpSAY0/3
- s16RSuIGPlyCTBDbe4Nik93gXocUwGpfzlp/m2N8W3Gl/2B1CpfzQcxkQnjRq/yCXPjy7PNzE7T
- sMQNOdgFCYVemVgcXHR3N4noq7LT9cL1GERs//NiKl0xjwE4uV5QFq8ApKrRTAxijyxKUWGRyU/
- vh/YB+TEif8CgNmucUdpxXIBmK1xR856PluPW1iljGB/kZRewWCvyC0/HDc50hjwKeYi8FYNuhe
- mltNhW6vi8XTnbIqluSOs5X9PdBFDdcaT+n/Me1k+zvfL2zzgGs+zLx8h7Qm5cBXoE20U5wJuUH
- zSHCdoeFmVkLJ5A==
-X-Developer-Key: i=leitao@debian.org; a=openpgp;
- fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/5] iio: light: al3010: Improve al3010_init error
+ handling with dev_err_probe()
+To: devnull+david.ixit.cz@kernel.org
+Cc: clamor95@gmail.com, david@ixit.cz, jic23@kernel.org, lars@metafoo.de,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ longnoserob@gmail.com
+References: <20250402-al3010-iio-regmap-v4-0-d189bea87261@ixit.cz>
+ <20250402-al3010-iio-regmap-v4-1-d189bea87261@ixit.cz>
+Content-Language: en-US, fr-FR
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20250402-al3010-iio-regmap-v4-1-d189bea87261@ixit.cz>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-When the system is shutting down due to pid 1 exiting, which is common
-on virtual machines, a warning message is printed.
+Le 02/04/2025 à 21:33, David Heidelberg via B4 Relay a écrit :
+> From: David Heidelberg <david-W22tF5X+A20@public.gmane.org>
+> 
+> Minor code simplifications and improved error reporting.
+> 
+> Signed-off-by: David Heidelberg <david-W22tF5X+A20@public.gmane.org>
+> ---
+>   drivers/iio/light/al3010.c | 10 ++++------
+>   1 file changed, 4 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/iio/light/al3010.c b/drivers/iio/light/al3010.c
+> index 8c004a9239aef246a8c6f6c3f4acd6b760ee8249..34a29a51c5f9e8aa143d3ba195b79a19793e4f88 100644
+> --- a/drivers/iio/light/al3010.c
+> +++ b/drivers/iio/light/al3010.c
+> @@ -92,8 +92,8 @@ static int al3010_init(struct al3010_data *data)
+>   	ret = devm_add_action_or_reset(&data->client->dev,
+>   				       al3010_set_pwr_off,
+>   				       data);
+> -	if (ret < 0)
+> -		return ret;
+> +	if (ret)
+> +		return dev_err_probe(&data->client->dev, ret, "failed to add action\n");
 
-	WARNING: CPU: 0 PID: 1 at kernel/exit.c:897 do_exit+0x7e3/0xab0
+Not sure this new message is needed.
 
-This occurs because do_exit() is called after kernel_power_off(), which
-disables interrupts. native_machine_shutdown() expliclty disable
-interrupt to avoid receiving the timer interrupt, forcing scheduler load
-balance during the power off phase.
+The error is unlikely, and kmalloc(), which is used in is 
+devm_add_action_or_reset(), is already verbose.
 
-This is the simplified code path:
+CJ
 
-	kernel_power_off()
-	  - native_machine_shutdown()
-	  	- local_irq_disable()
-	do_exit()
-
-Modify the warning condition in do_exit() to only trigger the warning if
-the system is not powering off, since it is expected to have the irq
-disabled in that case.
-
-Signed-off-by: Breno Leitao <leitao@debian.org>
----
- kernel/exit.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/kernel/exit.c b/kernel/exit.c
-index 3485e5fc499e4..97ec4f8bfd98f 100644
---- a/kernel/exit.c
-+++ b/kernel/exit.c
-@@ -878,7 +878,7 @@ void __noreturn do_exit(long code)
- 	struct task_struct *tsk = current;
- 	int group_dead;
- 
--	WARN_ON(irqs_disabled());
-+	WARN_ON(irqs_disabled() && system_state != SYSTEM_POWER_OFF);
- 
- 	synchronize_group_exit(tsk, code);
- 
-
----
-base-commit: bfc17c1658353f22843c7c13e27c2d31950f1887
-change-id: 20250403-exit-bf815877a1cd
-
-Best regards,
--- 
-Breno Leitao <leitao@debian.org>
+>   
+>   	ret = i2c_smbus_write_byte_data(data->client, AL3010_REG_CONFIG,
+>   					FIELD_PREP(AL3010_GAIN_MASK,
+> @@ -190,10 +190,8 @@ static int al3010_probe(struct i2c_client *client)
+>   	indio_dev->modes = INDIO_DIRECT_MODE;
+>   
+>   	ret = al3010_init(data);
+> -	if (ret < 0) {
+> -		dev_err(dev, "al3010 chip init failed\n");
+> -		return ret;
+> -	}
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "failed to init ALS\n");
+>   
+>   	return devm_iio_device_register(dev, indio_dev);
+>   }
+> 
 
