@@ -1,89 +1,132 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4610B2512D7;
-	Thu,  3 Apr 2025 17:41:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3958B2528E2;
+	Thu,  3 Apr 2025 17:41:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743702083; cv=none; b=OLUn6mw17OTAi2/qusASGb28Q8rYaVMC149XQ8ncbEhoLuEbs6gORfgKG5u/QXYmLpJCKVq7ATJy4LzoLp8I5JZCeX5QmP+QZjn2nqwNLFg1+B3yNdGS2JblUEtL+inaMLfm3zTf9HFxkA0AxRk4+TQEA/xNt5wJHmnj6jDZCrg=
+	t=1743702084; cv=none; b=h4QAwtiHcm75v8UyOilfRoyMa1M/MD6/RRqn89NuqDAEMpLLqA2tiCGZ/NiKTjOvdj5eLWHg5s7ArRKSH4SBRZgf2M65KzyDbiNvgV61e/tyTT7EZTG7E5uXtVN7GrwclIqsWoD/48L/0bib1kEm7Opp6e6aukV5qZ3RYDbB3JQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743702083; c=relaxed/simple;
-	bh=VqD/t5nfqw17dzit8tCO0MFU7uzAr2vAyVsp8uT21lA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=S3RDPaoR2ztGy9mwiWNWZlTm6gRKKNxkWN//XqdbtFeNU4mJ5Yily+Flxr3ldmg2rRQPXKqQIdCrHQUabrbDLtbRRfbduA0bPh/0jzap/ZJ7oE/Wlrd/7eEt0V9i1VUZP1HY0JoA4RmFHYFS8DEqZliephWsPU0ClKEuRH28K1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mLC3oJDD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743702084; c=relaxed/simple;
+	bh=8lR9ylBsfo7PBLZHWh9qmMylsgZ+XsmxjxGaNWbQYxA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=jx9I5ZCXLyy8YhA8X6T2QKBjxLWav9e96c0KMfMiwp1MIrmceY5O1OVOTd7VAriztyrPFhS0fPF1lbcCi6XhVqERMSQfKkNNMzFEkcRPyj4VtxB5PytgLp0MKLQUs8SC5MmiG2GTiSMPNQ1TTmUl/sSaCI3DkKek0Pm3crq97Mk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dPoLcU6S; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mLC3oJDD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A0FFC4CEE3;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dPoLcU6S"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EED42C4CEE7;
 	Thu,  3 Apr 2025 17:41:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743702082;
-	bh=VqD/t5nfqw17dzit8tCO0MFU7uzAr2vAyVsp8uT21lA=;
-	h=From:To:Cc:Subject:Date:From;
-	b=mLC3oJDD2SB7qBcpiuio99hpZYTBZSj/QQWL0jrta/VMOKjfkBQ/c+w8u4cCxfRML
-	 vkvbFT1+PBKvyWbcpBDCoqBWt8s++6GBimYGaXKoxUrPaM4YSJBd97j33Mh+2UMINl
-	 ENyb+BTI9sexh3lZp47Yp3UoPo0RXviGNqYKbPCFR/gjiUloQg+ny21IGwtzYAj0oB
-	 6M2MhIxpMk5/1nzgsuSBGx+Cd712KoKU2MpPjpgE8OTC5eZKVVBVf5qqdTm3R/5oKv
-	 DPjj38qpFB5DQrwZ/lp/XnOXbdPz0Q+jz31yzAtZnThBEUcSQCbl2+mLi9IFNkutci
-	 2D0OhinJ0oaxg==
-From: Andrii Nakryiko <andrii@kernel.org>
-To: linux-trace-kernel@vger.kernel.org,
-	peterz@infradead.org,
-	mingo@kernel.org
-Cc: bpf@vger.kernel.org,
+	s=k20201202; t=1743702083;
+	bh=8lR9ylBsfo7PBLZHWh9qmMylsgZ+XsmxjxGaNWbQYxA=;
+	h=Date:From:To:Cc:Subject:From;
+	b=dPoLcU6SLa7ZgTJZaHaiRDW64dPYRH3R0/kUgslJwP6Oc8Zk4UilUUJ+wx4HPhgf9
+	 PC+5aY3fNv3g0VpN+shYeyJMpiajZZ9sQ6nHWfFRDICVfbvbozCbJklIdl3GnJ/ZIK
+	 SZg7VIarvzNTFY7QwvkgrbUmcKhqG/uKyKWh3eDD15JnnIRBGDC24gcPTPpieWO0H8
+	 kcHvzqm9K4M2vSSmwdthaiiWzgKgJBBrfJtdU88EiN1ljDnX3iTgMgaFJdckCJ8y90
+	 YoNkIDTPGC9a1uk13aXXd0386xbs0TBu/Yw0XNJ/21lWmDmQco7jptuqkA8IhCPArs
+	 nCKRo+DLE/qUA==
+Date: Thu, 3 Apr 2025 11:41:21 -0600
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Lyude Paul <lyude@redhat.com>, Danilo Krummrich <dakr@kernel.org>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
+Cc: dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org,
-	kernel-team@meta.com,
-	mhocko@kernel.org,
-	rostedt@goodmis.org,
-	oleg@redhat.com,
-	brauner@kernel.org,
-	glider@google.com,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	akpm@linux-foundation.org,
-	Andrii Nakryiko <andrii@kernel.org>
-Subject: [PATCH] exit: document sched_process_exit and sched_process_template relation
-Date: Thu,  3 Apr 2025 10:41:20 -0700
-Message-ID: <20250403174120.4087794-1-andrii@kernel.org>
-X-Mailer: git-send-email 2.47.1
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH][next] drm/nouveau: fifo: Avoid
+ -Wflex-array-member-not-at-end warning
+Message-ID: <Z-7IQcWNePAMQEM0@kspp>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Add an explicit note pointing out that sched_process_exit tracepoint is,
-conceptually, related to sched_process_template and should be kept in
-sync (though, on the best effort basis).
+-Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+getting ready to enable it, globally.
 
-This is a follow-up to [0], and can hopefully be just folded in when applying.
+Use the `DEFINE_RAW_FLEX()` helper for an on-stack definition of
+a flexible structure where the size of the flexible-array member
+is known at compile-time, and refactor the rest of the code,
+accordingly.
 
-  [0] https://lore.kernel.org/linux-trace-kernel/20250402180925.90914-1-andrii@kernel.org/
+So, with these changes, fix the following warning:
 
-Suggested-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+drivers/gpu/drm/nouveau/nvif/fifo.c:29:42: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- include/trace/events/sched.h | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/nouveau/nvif/fifo.c | 32 ++++++++++++-----------------
+ 1 file changed, 13 insertions(+), 19 deletions(-)
 
-diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
-index 05a14f2b35c3..3bec9fb73a36 100644
---- a/include/trace/events/sched.h
-+++ b/include/trace/events/sched.h
-@@ -326,7 +326,11 @@ DEFINE_EVENT(sched_process_template, sched_process_free,
- 	     TP_ARGS(p));
+diff --git a/drivers/gpu/drm/nouveau/nvif/fifo.c b/drivers/gpu/drm/nouveau/nvif/fifo.c
+index a463289962b2..f8772340fec4 100644
+--- a/drivers/gpu/drm/nouveau/nvif/fifo.c
++++ b/drivers/gpu/drm/nouveau/nvif/fifo.c
+@@ -25,33 +25,28 @@ static int
+ nvif_fifo_runlists(struct nvif_device *device)
+ {
+ 	struct nvif_object *object = &device->object;
+-	struct {
+-		struct nv_device_info_v1 m;
+-		struct {
+-			struct nv_device_info_v1_data runlists;
+-			struct nv_device_info_v1_data runlist[64];
+-		} v;
+-	} *a;
++	DEFINE_RAW_FLEX(struct nv_device_info_v1, a, data, 65);
++	struct nv_device_info_v1_data *runlists = &a->data[0];
++	struct nv_device_info_v1_data *runlist = &a->data[1];
++	const u8 rl_cnt = (__struct_size(a) - sizeof(*a)) / sizeof(*a->data) - 1;
+ 	int ret, i;
  
- /*
-- * Tracepoint for a task exiting:
-+ * Tracepoint for a task exiting.
-+ * Note, it's a superset of sched_process_template and should be kept
-+ * compatible as much as possible. sched_process_exits has an extra
-+ * `group_dead` argument, so sched_process_template can't be used,
-+ * unfortunately, just like sched_migrate_task above.
-  */
- TRACE_EVENT(sched_process_exit,
+ 	if (device->runlist)
+ 		return 0;
+ 
+-	if (!(a = kmalloc(sizeof(*a), GFP_KERNEL)))
+-		return -ENOMEM;
+-	a->m.version = 1;
+-	a->m.count = sizeof(a->v) / sizeof(a->v.runlists);
+-	a->v.runlists.mthd = NV_DEVICE_HOST_RUNLISTS;
+-	for (i = 0; i < ARRAY_SIZE(a->v.runlist); i++) {
+-		a->v.runlist[i].mthd = NV_DEVICE_HOST_RUNLIST_ENGINES;
+-		a->v.runlist[i].data = i;
++	a->version = 1;
++	a->count = (__struct_size(a) - sizeof(*a)) / sizeof(*a->data);
++	runlists->mthd = NV_DEVICE_HOST_RUNLISTS;
++	for (i = 0; i < rl_cnt; i++) {
++		runlist[i].mthd = NV_DEVICE_HOST_RUNLIST_ENGINES;
++		runlist[i].data = i;
+ 	}
+ 
+ 	ret = nvif_object_mthd(object, NV_DEVICE_V0_INFO, a, sizeof(*a));
+ 	if (ret)
+ 		goto done;
+ 
+-	device->runlists = fls64(a->v.runlists.data);
++	device->runlists = fls64(runlists->data);
+ 	device->runlist = kcalloc(device->runlists, sizeof(*device->runlist),
+ 				  GFP_KERNEL);
+ 	if (!device->runlist) {
+@@ -60,12 +55,11 @@ nvif_fifo_runlists(struct nvif_device *device)
+ 	}
+ 
+ 	for (i = 0; i < device->runlists; i++) {
+-		if (a->v.runlist[i].mthd != NV_DEVICE_INFO_INVALID)
+-			device->runlist[i].engines = a->v.runlist[i].data;
++		if (runlist[i].mthd != NV_DEVICE_INFO_INVALID)
++			device->runlist[i].engines = runlist[i].data;
+ 	}
+ 
+ done:
+-	kfree(a);
+ 	return ret;
+ }
  
 -- 
-2.47.1
+2.43.0
 
