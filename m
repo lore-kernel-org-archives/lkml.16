@@ -1,183 +1,231 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E06762E3386;
-	Thu,  3 Apr 2025 14:39:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9488B2E3386
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 14:39:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743691157; cv=none; b=RjsbccIMbHhFIYGyZcdWroTK/wEdR9BbmKygPb4lSTQ8Ql4HGkR50w/jQw11Qi8bqFnMDiKHkZsZxFCD78uN2ej5elYJWh/A15s4VeegdxczJoz6UJnmg6QpDZOjcwQ6YM50uer7CUXFSN1s434VWEq2a6NGivDNC/mnUUnafqU=
+	t=1743691164; cv=none; b=M+4JygwNsoYy52dleSCQ0YBL/FdJiQMLVk6A47tjXj8gBp6gAG/6zVXvGzKqBRWWD1tBtT2Uph5aYz5imEiUdnbtddLEstO0DJpmck4VgU/3BOX3UpyqthwvFfFhyHuMWbF2GJGqGrmurXWQpAOIxypcm/I8v0XqGJlbzehFXhQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743691157; c=relaxed/simple;
-	bh=dmX8ClR6s2gT1VOXeNIIzH890lXaEbUlMlb3oILAje8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IBwfeOS4YfngygK02SN5AACj7zftNNAQval20PsfpjWo/0fc5KH/p/zqY0yDFuS24gnGHEuLnJLNzwww/bk/f9WBDWLFxyzCz1VWGy3nmvxRejO/gqjvU6QJ8bLao143GSaitXSU7lcQNA/bQLGu0EUyoXP88pLmITwH4CbdTlM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eAskKQkl; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743691164; c=relaxed/simple;
+	bh=1+CVJyPolg/HkeE1N9jZqboIyWDRnOxeMyrxfbjCZU8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ER2u04GZvMnawoQGRXabExeOhv7iCIZJEOJL5HKt3lwxuHzBTylyupAIF19WL2/duhl6tGCPmgeF/6qSVagA8Z+E8gaTWEYOIHE+TavvIYVYk8430zl38KO7kU1MFdkAd+wB7bYtq4jpAXRTT8Dd3Y2D/d2c29mr2TjkZpMtiZc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=NSEiueri; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eAskKQkl"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-736b98acaadso1027972b3a.1;
-        Thu, 03 Apr 2025 07:39:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="NSEiueri"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4393dc02b78so6759175e9.3
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 07:39:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743691155; x=1744295955; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Rvr0XxDHh05/lDdFnQkqZ5aBAiK03CfkHR41QzNZGHs=;
-        b=eAskKQklC12e/ry9l7cH1ctbUMIvWFD4TYd+Df4dYRw2MC0E39OFsWe5QTt/E3G8GJ
-         r1EWWiYTzJxHSZlI68BwRgwZ+46IkTs3uT4tcRHLY1j/z3zNwjzKXprH36WBLbMTvHnf
-         ULTyq8ufdIImCpA9cL8e3XGNqKwM3VCAldYVJlcYP3+BUbS2e0TdM1A5KI/Tyv1UzYg3
-         JvytZZaGh4Tf9RChBwXBGw/RINa4IV5SnSOvFXopClfhiHY47PwifbYgot1tB9KuYJmI
-         cDnULyHfKNVTfXN2XYwujI4dtEieH0toB5EB20D0Obc+6IRFsH8H0n2jFu8R9XdtV+Tz
-         okxA==
+        d=suse.com; s=google; t=1743691161; x=1744295961; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=rl3+XYEt97n5m7GHT74FzI9q0aNI5a78n1yW3rrYoOo=;
+        b=NSEiueri+ie+EfWNWhdpiAdg+Ubxk0DdilUP/VIw4rr2f0jjteU5Qk8ixXjZBVJORJ
+         W3fRQ6s5v3VJVVf0TxA0XVS/innvYYA8K/V2hwg+IT2HusRzxOj+r4tY/dNAB7FMf23q
+         t8hY2AuOiegTBdht4RGvLqLMshiEnE4FDE5QlP1rS2hGKa9p1xB1CeBhIfPO6u38nRcW
+         6og8dVAn4qsPfVbGXnA4KCKV5vtjfYx+i2Aki9/emfFxTp71u/SQqgjNw1AoZvvlFvZ5
+         4xXgZJuvtg2hQ84UL3cEUPsqFr8I3hTPnKxXhnbY7ayDSQxDGf1+dPFm/NgEqvDRGAoA
+         NZdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743691155; x=1744295955;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
+        d=1e100.net; s=20230601; t=1743691161; x=1744295961;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Rvr0XxDHh05/lDdFnQkqZ5aBAiK03CfkHR41QzNZGHs=;
-        b=QZpcmZ6rlls4IJSFgVD+R/YZrrxb9La8xo+Zzyjrwb/yjhOslL1irjMdXFHd1+Areq
-         f49god6HTJ+j3PnViha9kzO+aj7F6pCjcATWGhuUrbu2EAmQ9eZ4kVosVzEZrqD+di6r
-         36gPo3kLhVhFWxfc4TO0YuoHqZ9OlRN9Ti1S2WtoKowm+dyED4KDt+ukNsjkDmBQlZZL
-         /yjoNIkeBd9Sh3QuJMVUC2iO4N9WjS9IZWlbmbe/ZQCuD6KpvH/eT54a8H14Yrp1qIYg
-         Ae3+i4Nyg/bW+yYvb/qSe6d3aONoMRVCoQhl6nA1oi4Vqsv2d7e7bKHkRKS5z8yglDrB
-         YGVg==
-X-Forwarded-Encrypted: i=1; AJvYcCULsmrXYjV3MR8aKW5NGpQGcjvtbX4F4BBKNHzlpS3bMN3Hn6MX06LgrZjP3KwPc/Tr3E+YEOVZL3aANxct@vger.kernel.org, AJvYcCVVyDCqKTv/BVOXJ+ZAog2oZ8DwAeCrnDqvUViBOMJaaHqezE9WY7TkpB72h0SahbJ9hCU=@vger.kernel.org, AJvYcCVkj66LdSHEy530I8aZeqamjYlHjOAQC0YOorcQzb5uzQYa0hPxm17gqf+YcOsJXsZNCnNMgm9jnHqlgyBk6LA=@vger.kernel.org, AJvYcCWNpRm+bZ2OfwF03+IQzwg5IPkmBMz3VUk+ElB9szPqxtmAMMy1YF060H+0+NbJUVF0CyEH4PgoGrTBD88=@vger.kernel.org, AJvYcCXdFDrfQinB7VgtZUO6m4N68JX3qqA8SI8JjIbcMKbrh467BX2yrvUm/d/6RwIl7Rs/oR7zV4eQpdM79WY=@vger.kernel.org, AJvYcCXdosafBjnlO4vBbMVNH6aeN5rve+E5sStyeJq+/u+phIkm+A6YkNmzKNoPe7HayAk3Y7H8SZufmfz4E3Zy@vger.kernel.org, AJvYcCXffW0RFwDS2KuMuQKhgIBFeephHrqFyhlUmUubFc3LOdV0KP1WBvC7NvMwuWP02tVU/Gzo85t5@vger.kernel.org
-X-Gm-Message-State: AOJu0YxOSBzuInOu5hDkoYPKwMEZHPRLnl3GpMhl95fXRinQggvK4oDD
-	bWho26PoaldQOtHBbg4gPY26A88xr/h6C4VlDQMNVhyWj81yFoOT
-X-Gm-Gg: ASbGncuNQ0yG1NE8l6aaInEn9HvjEMCM5LffqR7KdGxE8ggeLV+9Oxhd+x9MxpUTUTo
-	7nNp4gktau9DA5l1rFId/phnTNKKFy3kuDa0CoJXPv5bUXQzllV4OEisf7YUNALiyRHPkAFeGxk
-	4z28sK3bSpMRRQ5CG3X+FFlFcJ2V6OTKLjSVC5EL9vMMqVcQk/fem9tZJcuvqi8iEw0iMG9kxBU
-	pnzkNh5Hsqc1D2OmGLD07lKcZZGDWr8bUHoTlS9uo/V8nu7Z4WSoub9K0rb+to5DPprljtQMQnl
-	UacM/tsauEhwUr33g0qoEFSlwtuuhT7fcTV3glcZrZPW8tl7jvrUrt1LsvWvIDWmW1w0cFD2
-X-Google-Smtp-Source: AGHT+IEBLhxF2I4CcVDE0Ip1aaBG/9qxfajK2d8loqdQY51JgxIHQayN0kr/iRs9O5E0K4MztoDo5g==
-X-Received: by 2002:a05:6a20:6f04:b0:1fd:e9c8:cf3b with SMTP id adf61e73a8af0-200e4cc69c1mr11499641637.30.1743691154910;
-        Thu, 03 Apr 2025 07:39:14 -0700 (PDT)
-Received: from visitorckw-System-Product-Name ([140.113.216.168])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af9bc2d331csm1285435a12.12.2025.04.03.07.39.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Apr 2025 07:39:13 -0700 (PDT)
-Date: Thu, 3 Apr 2025 22:39:03 +0800
-From: Kuan-Wei Chiu <visitorckw@gmail.com>
-To: "H. Peter Anvin" <hpa@zytor.com>, Yury Norov <yury.norov@gmail.com>
-Cc: Yury Norov <yury.norov@gmail.com>,
-	David Laight <david.laight.linux@gmail.com>,
-	Andrew Cooper <andrew.cooper3@citrix.com>,
-	Laurent.pinchart@ideasonboard.com, airlied@gmail.com,
-	akpm@linux-foundation.org, alistair@popple.id.au,
-	andrew+netdev@lunn.ch, andrzej.hajda@intel.com,
-	arend.vanspriel@broadcom.com, awalls@md.metrocast.net, bp@alien8.de,
-	bpf@vger.kernel.org, brcm80211-dev-list.pdl@broadcom.com,
-	brcm80211@lists.linux.dev, dave.hansen@linux.intel.com,
-	davem@davemloft.net, dmitry.torokhov@gmail.com,
-	dri-devel@lists.freedesktop.org, eajames@linux.ibm.com,
-	edumazet@google.com, eleanor15x@gmail.com,
-	gregkh@linuxfoundation.org, hverkuil@xs4all.nl,
-	jernej.skrabec@gmail.com, jirislaby@kernel.org, jk@ozlabs.org,
-	joel@jms.id.au, johannes@sipsolutions.net, jonas@kwiboo.se,
-	jserv@ccns.ncku.edu.tw, kuba@kernel.org, linux-fsi@lists.ozlabs.org,
-	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org, linux-mtd@lists.infradead.org,
-	linux-serial@vger.kernel.org, linux-wireless@vger.kernel.org,
-	linux@rasmusvillemoes.dk, louis.peens@corigine.com,
-	maarten.lankhorst@linux.intel.com, mchehab@kernel.org,
-	mingo@redhat.com, miquel.raynal@bootlin.com, mripard@kernel.org,
-	neil.armstrong@linaro.org, netdev@vger.kernel.org,
-	oss-drivers@corigine.com, pabeni@redhat.com,
-	parthiban.veerasooran@microchip.com, rfoss@kernel.org,
-	richard@nod.at, simona@ffwll.ch, tglx@linutronix.de,
-	tzimmermann@suse.de, vigneshr@ti.com, x86@kernel.org
-Subject: Re: [PATCH v3 00/16] Introduce and use generic parity16/32/64 helper
-Message-ID: <Z+6dh1ZVIKWWOKaP@visitorckw-System-Product-Name>
-References: <20250307195310.58abff8c@pumpkin>
- <EB85C3C1-8A0D-4CB9-B501-BFEABDF3E977@zytor.com>
- <Z824SgB9Dt5zdWYc@visitorckw-System-Product-Name>
- <Z9CyuowYsZyez36c@thinkpad>
- <80771542-476C-493E-858A-D2AF6A355CC1@zytor.com>
- <Z9GtcNJie8TRKywZ@thinkpad>
- <Z9G2Tyypb3iLoBjn@visitorckw-System-Product-Name>
- <Z9KMKwnZXA2mkD2s@visitorckw-System-Product-Name>
- <Z+AlyB461xwMxMtG@visitorckw-System-Product-Name>
- <eec0dfd7-5e4f-4a08-928c-b7714dbc4a17@zytor.com>
+        bh=rl3+XYEt97n5m7GHT74FzI9q0aNI5a78n1yW3rrYoOo=;
+        b=YI37wUheJRfQZX3ACaqKiBg+q3ITZHxFUfD2GnY4S9DnhmfH2q5rXwMvB3wlWGROkt
+         LzZvepI86gz5ziKHOXkkBDlTqvtxTNpfIyLyin7OmHjVEa4tEB1YUrkEM3cYAP3s1BH7
+         yAltu+FzsD8AINYs80t1QyTT4OYP5jlyKb1WWwBXtsr5BzjLif9m53H2PfVSplC8ME70
+         uv0+bU5o1ZY6gPN1GZm04FIdbc1y1kLi6kJhsv23dvHDufcWporKCou4yV36jR+h2AYP
+         A97MB4TDgyXrruCA/3Bcqi5jL7nNu9ImR+Kp33cszkz1uQoQXIACrwh/PP5PliYhLAFF
+         0+ag==
+X-Gm-Message-State: AOJu0YyZHfp7Ee/gLUI9rcwp601dL++ss3nCfl5X3VGgcAsBdw68tZ/F
+	ZB3/Z/pbTskyGfF2jd6CNkU/qyANqwuI1rdsIEMbyFTHWHYCLzA78sWMh0EYid0=
+X-Gm-Gg: ASbGncvWoG7x2f7Mz8Lo1cliJuu3ZyCmV4IXc651oLZhW/dkUydR5Q8A/4feoxwXZQ5
+	XkTVRko4O5zQnklnZLFrq8q7AnVAMzHc5l8UyAHY4sIEM1aEmYubmCJNaNheymf/mjZ0CLR4CvS
+	mWQey7m5RuZxVnTtB5OWOzoZgegyv/jMwxxqDE/8CjQwt471OX4NWyIBaJvSbHMum1OvM4ko6tn
+	++V+XcABHMAXns4UUDjOBh0hYp7ZjiQP2XUpKJ+1k/fntpbmkNRVCvLZGVzx5JACAaxbrZuQW4o
+	lYlQLem8K7YXkD8m7wJDIAqa6880m3l2OBcR/yH06bzvYACtrqElrb0uwc4n
+X-Google-Smtp-Source: AGHT+IH3Qpv0DzeTUQ2Kk2Ur5SAltLgBhLy9a4dFt5da09/M5184HqY3H/S3J4d0u4ema/cKSfsbiA==
+X-Received: by 2002:a05:600c:1384:b0:43c:f616:f08 with SMTP id 5b1f17b1804b1-43ec429ea3amr25621635e9.8.1743691160757;
+        Thu, 03 Apr 2025 07:39:20 -0700 (PDT)
+Received: from [192.168.0.20] ([212.21.159.224])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec16ba978sm23616965e9.23.2025.04.03.07.39.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Apr 2025 07:39:20 -0700 (PDT)
+Message-ID: <b0b87bd7-e104-4c9b-b9e2-0682dfef28e9@suse.com>
+Date: Thu, 3 Apr 2025 17:39:18 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 37/49] x86/alternatives: Move text_poke_array completion
+ from smp_text_poke_batch_finish() and smp_text_poke_batch_flush() to
+ smp_text_poke_batch_process()
+To: Ingo Molnar <mingo@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Juergen Gross <jgross@suse.com>,
+ "H . Peter Anvin" <hpa@zytor.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Peter Zijlstra <peterz@infradead.org>, Borislav Petkov <bp@alien8.de>,
+ Thomas Gleixner <tglx@linutronix.de>
+References: <20250328132704.1901674-1-mingo@kernel.org>
+ <20250328132704.1901674-38-mingo@kernel.org>
+ <65e8ed9d-0fff-4f70-b095-8df52493ebec@suse.com> <Z-6PWWyopb86UC6y@gmail.com>
+ <a64bc000-4226-4d5c-8486-a230f4ff5065@suse.com> <Z-6XkEpiXg4stqLY@gmail.com>
+Content-Language: en-US
+From: Nikolay Borisov <nik.borisov@suse.com>
+In-Reply-To: <Z-6XkEpiXg4stqLY@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <eec0dfd7-5e4f-4a08-928c-b7714dbc4a17@zytor.com>
 
-On Tue, Mar 25, 2025 at 12:43:25PM -0700, H. Peter Anvin wrote:
-> On 3/23/25 08:16, Kuan-Wei Chiu wrote:
-> > 
-> > Interface 3: Multiple Functions
-> > Description: bool parity_odd8/16/32/64()
-> > Pros: No need for explicit casting; easy to integrate
-> >        architecture-specific optimizations; except for parity8(), all
-> >        functions are one-liners with no significant code duplication
-> > Cons: More functions may increase maintenance burden
-> > Opinions: Only I support this approach
-> > 
-> 
-> OK, so I responded to this but I can't find my reply or any of the
-> followups, so let me go again:
-> 
-> I prefer this option, because:
-> 
-> a. Virtually all uses of parity is done in contexts where the sizes of the
-> items for which parity is to be taken are well-defined, but it is *really*
-> easy for integer promotion to cause a value to be extended to 32 bits
-> unnecessarily (sign or zero extend, although for parity it doesn't make any
-> difference -- if the compiler realizes it.)
-> 
-> b. It makes it easier to add arch-specific implementations, notably using
-> __builtin_parity on architectures where that is known to generate good code.
-> 
-> c. For architectures where only *some* parity implementations are
-> fast/practical, the generic fallbacks will either naturally synthesize them
-> from components via shift-xor, or they can be defined to use a larger
-> version; the function prototype acts like a cast.
-> 
-> d. If there is a reason in the future to add a generic version, it is really
-> easy to do using the size-specific functions as components; this is
-> something we do literally all over the place, using a pattern so common that
-> it, itself, probably should be macroized:
-> 
-> #define parity(x) 				\
-> ({						\
-> 	typeof(x) __x = (x);			\
-> 	bool __y;				\
-> 	switch (sizeof(__x)) {			\
-> 		case 1:				\
-> 			__y = parity8(__x);	\
-> 			break;			\
-> 		case 2:				\
-> 			__y = parity16(__x);	\
-> 			break;			\
-> 		case 4:				\
-> 			__y = parity32(__x);	\
-> 			break;			\
-> 		case 8:				\
-> 			__y = parity64(__x);	\
-> 			break;			\
-> 		default:			\
-> 			BUILD_BUG();		\
-> 			break;			\
-> 	}					\
-> 	__y;					\
-> })
->
-Thank you for your detailed response and for explaining the rationale
-behind your preference. The points you outlined in (a)–(d) all seem
-quite reasonable to me.
 
-Yury,
-do you have any feedback on this?
-Thank you.
 
-Regards,
-Kuan-Wei
+On 3.04.25 г. 17:13 ч., Ingo Molnar wrote:
+> 
+> * Nikolay Borisov <nik.borisov@suse.com> wrote:
+> 
+>>
+>>
+>> On 3.04.25 г. 16:38 ч., Ingo Molnar wrote:
+>>>
+>>> * Nikolay Borisov <nik.borisov@suse.com> wrote:
+>>>
+>>>>
+>>>>
+>>>> On 28.03.25 г. 15:26 ч., Ingo Molnar wrote:
+>>>>> Simplifies the code and improves code generation a bit:
+>>>>>
+>>>>>       text	   data	    bss	    dec	    hex	filename
+>>>>>      14769	   1017	   4112	  19898	   4dba	alternative.o.before
+>>>>>      14742	   1017	   4112	  19871	   4d9f	alternative.o.after
+>>>>>
+>>>>> Signed-off-by: Ingo Molnar <mingo@kernel.org>
+>>>>> ---
+>>>>>     arch/x86/kernel/alternative.c | 11 +++++------
+>>>>>     1 file changed, 5 insertions(+), 6 deletions(-)
+>>>>>
+>>>>> diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+>>>>> index 1df8fac6740d..5293929488f0 100644
+>>>>> --- a/arch/x86/kernel/alternative.c
+>>>>> +++ b/arch/x86/kernel/alternative.c
+>>>>> @@ -2750,6 +2750,9 @@ static void smp_text_poke_batch_process(void)
+>>>>>     		if (unlikely(!atomic_dec_and_test(refs)))
+>>>>>     			atomic_cond_read_acquire(refs, !VAL);
+>>>>>     	}
+>>>>> +
+>>>>> +	/* They are all completed: */
+>>>>> +	text_poke_array.nr_entries = 0;
+>>>>>     }
+>>>>>     static void __smp_text_poke_batch_add(void *addr, const void *opcode, size_t len, const void *emulate)
+>>>>> @@ -2857,20 +2860,16 @@ static bool text_poke_addr_ordered(void *addr)
+>>>>>     void smp_text_poke_batch_finish(void)
+>>>>>     {
+>>>>> -	if (text_poke_array.nr_entries) {
+>>>>> +	if (text_poke_array.nr_entries)
+>>>>>     		smp_text_poke_batch_process();
+>>>>> -		text_poke_array.nr_entries = 0;
+>>>>> -	}
+>>>>>     }
+>>>>
+>>>> This function becomes trivial, why not simply move the check into
+>>>> smp_text_poke_batch_process and rename it to smp_text_poke_batch_finish ?
+>>>
+>>> Yeah, that's pretty much what happens in patch #47:
+>>>
+>>>     x86/alternatives: Remove 'smp_text_poke_batch_flush()'
+>>
+>> Well, that patch removes poke_batch_flush but still retains
+>> poke_batch_finish + poke_batch_process. My suggestion is to eliminate
+>> poke_batch_process name and turn it into poke_batch_finish by moving the
+>> check from poke_batch_finish into poke_batch_process.
+> 
+> So, in the context of the full tree at:
+> 
+>    git://git.kernel.org/pub/scm/linux/kernel/git/mingo/tip.git WIP.x86/alternatives
+> 
+> Standalone smp_text_poke_batch_process() is still needed, because
+> smp_text_poke_batch_add() uses it to drive the whole 'batching'
+> machinery.
+> 
+> If smp_text_poke_batch_process() finishes for each call, if I
+> understand your suggestion correctly, that reduces the amount of
+> batching done, which is a disadvantage.
+> 
+> Note how right now it's possible to do something like this:
+> 
+> 	smp_text_poke_batch_add(1);
+> 	smp_text_poke_batch_add(1);
+> 	smp_text_poke_batch_add(1);
+> 	smp_text_poke_batch_add(1);
+> 	smp_text_poke_batch_finish();
+> 
+> This results in a single call to smp_text_poke_batch_process(), with 4
+> entries, a single 4-entry flush in essence.
+
+I meant doing this:
+
+diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+index 5b1a6252a4b9..b6a781b9de26 100644
+--- a/arch/x86/kernel/alternative.c
++++ b/arch/x86/kernel/alternative.c
+@@ -2587,12 +2587,16 @@ noinstr int 
+smp_text_poke_int3_trap_handler(struct pt_regs *regs)
+   *               replacing opcode
+   *     - SMP sync all CPUs
+   */
+-static void smp_text_poke_batch_process(void)
++void smp_text_poke_batch_finish(void)
+  {
+         unsigned char int3 = INT3_INSN_OPCODE;
+         unsigned int i;
+         int do_sync;
+
++
++       if (!text_poke_array.nr_entries)
++               return;
++
+         lockdep_assert_held(&text_mutex);
+
+         /*
+@@ -2832,12 +2836,6 @@ static bool text_poke_addr_ordered(void *addr)
+         return true;
+  }
+
+-void smp_text_poke_batch_finish(void)
+-{
+-       if (text_poke_array.nr_entries)
+-               smp_text_poke_batch_process();
+-}
+-
+  /**
+   * smp_text_poke_batch_add() -- update instruction on live kernel on 
+SMP, batched
+   * @addr:      address to patch
+@@ -2854,7 +2852,7 @@ void smp_text_poke_batch_finish(void)
+  void __ref smp_text_poke_batch_add(void *addr, const void *opcode, 
+size_t len, const void *emulate)
+  {
+         if (text_poke_array.nr_entries == TEXT_POKE_ARRAY_MAX || 
+!text_poke_addr_ordered(addr))
+-               smp_text_poke_batch_process();
++               smp_text_poke_batch_finish();
+         __smp_text_poke_batch_add(addr, opcode, len, emulate);
+  }
+
+
+AFAICS this doesn't change the semantics. I.e smp_text_poke_batch_add 
+will call poke_batch_finish iff the address to be added violates the 
+sorted order of text_poke_array. The net effect is we have 1 less 
+function name to care about.
+
+> 
+> Thanks,
+> 
+> 	Ingo
 
