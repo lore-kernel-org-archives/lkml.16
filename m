@@ -1,182 +1,194 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f177.google.com (mail-vk1-f177.google.com [209.85.221.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F063624C07C
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 10:47:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A33924E000
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 10:47:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743677273; cv=none; b=qu9G+uInc9qUbalpTzDKWGUFOTGA3ApP4FXsQE4xixApTmPEx9fNvHmn5a8shuJM4oE3TK4p8LPh2dgLPCIkhfUB+PmNwsAZYnAsjs/VnuAE5bFwwclLZsIw1BdiUDVH2Y89FqaS3QNVDcWZ8lbPkganbqXKjJ+XGR5BC38pwWs=
+	t=1743677278; cv=none; b=Fj9q8/L2/lmaSbkenjQQ+n+edFOLIqnnj20SQTfyaK3+KEk1ZQZ17mnqfEO9BV5Q2FhJ7DsdZ//D7ydF1wOMzoEUdVSAyeUBiQROx6ZcVf4Tqoz/0cehng+LZJpKlOApWSNgTD4H7toZcYa7W6RRzhQ3DGvbWPVm9MOwow520t4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743677273; c=relaxed/simple;
-	bh=x1wtdufQF5A9ff40c172tRf7AZns8UAMMhQfqRaFnN4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VRx1NNDxv3Ukw/dEWGYYm8WQRDDwi/rIKxpyf3/ZTzErJmIeGBbEOj2aUiCz1eb84g00i+55F5gmcY7jENZYexlglQEVHU1DN6iiNEnuEto//Tqw4VjAHV/qAIhmkO0HYsEtoDvW50OmiRjrSQsrdqbsVZj4XjJBT37MehiNBeg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=nsp7uBpe; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1743677278; c=relaxed/simple;
+	bh=1rSp8GUjQPXhDnQXL+D/PZL/CS3hVuRflE6/UX7tu6s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Cy8rvcemAsopXQEnA0UP41dFOxyu7LtGJO0WQshG3p3yAl7b11XUOMp7NFcCqgpvnNV9KBuvGL1cs0lJ6YcbAw4d8QD5Nfv0xO3DsiwZCFafiVbgonr1ZerQtIJEJIkL43D9NtKZImg8/CFutFWI6lU0U3pUOsBy+STqEvMgeGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TJVn8ltl; arc=none smtp.client-ip=209.85.221.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="nsp7uBpe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1743677270;
-	bh=x1wtdufQF5A9ff40c172tRf7AZns8UAMMhQfqRaFnN4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=nsp7uBpe5gwRIweVut4tJQ7obUSye6hB0kimMKqule2r8ctO9aEO+oMxU/x/nvHIu
-	 wZ/tOU0XABIePTkwo/gbBbUrUpxShlk+odCVU6ictUi4juIhyklynbntc4PmIhHKbG
-	 l9S2Y8NieIaXz8GDa+NkM9hv8EVrYyi6RDteJhOkbfZA24KhvctJO0Euip+K/JqlZc
-	 mH5r8gAeNo+gTO/g/4Oe/kXdjeDpnAn7cFSJP3JBbYCgoGACfKboqZHLXhM9BC9e7/
-	 QDFBcOXynMHmQaFZHcg3r8NqpqmXnKhNFI/BOprB5DFcqsZgDEXDoxUiWSDNdLQmp2
-	 /6eWTvhLoUmyw==
-Received: from IcarusMOD.eternityproject.eu (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 89D8317E0702;
-	Thu,  3 Apr 2025 12:47:49 +0200 (CEST)
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-To: chunkuang.hu@kernel.org
-Cc: p.zabel@pengutronix.de,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	matthias.bgg@gmail.com,
-	angelogioacchino.delregno@collabora.com,
-	nancy.lin@mediatek.com,
-	ck.hu@mediatek.com,
-	djkurtz@chromium.org,
-	littlecvr@chromium.org,
-	bibby.hsieh@mediatek.com,
-	dri-devel@lists.freedesktop.org,
-	linux-mediatek@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	wenst@chromium.org,
-	kernel@collabora.com
-Subject: [PATCH v2 5/5] drm/mediatek: mtk_disp_rdma: Enable/disable interrupt on bind/unbind
-Date: Thu,  3 Apr 2025 12:47:41 +0200
-Message-ID: <20250403104741.71045-6-angelogioacchino.delregno@collabora.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250403104741.71045-1-angelogioacchino.delregno@collabora.com>
-References: <20250403104741.71045-1-angelogioacchino.delregno@collabora.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TJVn8ltl"
+Received: by mail-vk1-f177.google.com with SMTP id 71dfb90a1353d-523edc385caso366042e0c.3
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 03:47:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1743677275; x=1744282075; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vAaNZ+6NXDNpsPuLfvCYG+9qWpEj8cIl19GUNWtS3+0=;
+        b=TJVn8ltlsvLP2VqpiA7BDyPBBL25jmmJdOb0koCkelTSQL8hL63eq7xHhLIQ6+9JKK
+         0LYUA3G9XOE0GAYZt4IiqQbri0T09d0gtVCTZ7n/L7dWOhVBoXHJ/W9XfegrmARmrxrw
+         HKs1j38KAM50dIaox4l0SBI8kLYS5qUr6IjoQ0y+u1VZjaaaDpSI4B/lwjmUqZuJvWOK
+         W0Yu0W8qG3YfJWJxBFVvISKu6u6lkOidKZbH+0Vm/FrbEFKxOXZ11CazYfSG2p+7lHYf
+         3PtcIuovv6jRB5NB0iVN0D3jTIO9TwRCFvX5CUtgOS7lgh1TS1p7zyvCMbnnuoC4jFDS
+         ey9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743677275; x=1744282075;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vAaNZ+6NXDNpsPuLfvCYG+9qWpEj8cIl19GUNWtS3+0=;
+        b=d8Sb6DHnw6OUdiGU0lSrKlWMTQY47owSH4c3QZ/wDYzOxMOILycQgYlj5HdWM/3UzD
+         cq9/hR8vhX5bY2JnmmTvqR3+DSdhN5X5Jw9gXrZybz9X63Fe3QAsFzEQEmLVWjKrRRFY
+         F4ExokLlVuTPUknWcU3G9RGcah+rs2XelaVfC91ER/IbwAdMroclysLLaIQu7Z1FOHFD
+         fM2hD7GUyUMFAHs9yJcMpVN654aHE+DUZmXTRKugqSSptZpOIRm0OMmhBb3nZyDtH5lA
+         g4nHSsbVwspI31VeK2xZ5wIObHgit5CDdU3kH85HXtGOxiJLiLfC+ya2TExttzRHgWF9
+         1D6w==
+X-Gm-Message-State: AOJu0YxzUVsQCvitl19NWYgBe5ZOgHRacbOb/s1TG5cOzgngjTrDMNa+
+	VLkPGsIhvhsN1KS/kwl+ZnlmuyLAEHoB3s526VcqAjbInwtwisPpJye+X+/KuULEcPhbXC37UfE
+	JH2I8nkEkBJ3dIdcPADP5BBslXGcN2/aTUM7FGw==
+X-Gm-Gg: ASbGncsFlp/5lfI8aSr2a0roDiJYKyY6wo0Wr6XkN+oAzKmc56KqNAbAev38OWHMzEo
+	bTy1perMnZ1XsLlYiAbXRqF+Kop6WV6GpmPL+Z2arHVfIP2gnMZeOflTU2ZSG3gF4OZO6eimvwM
+	ojkvepE3qZNZxGTvdDmKxFbGEkGZ8Gdpktrg2JzVYWtdrKLqHCGdwREgcusZvE+jHSmnCu
+X-Google-Smtp-Source: AGHT+IEAZl1Bq3/zu9vvbPR6m3Radye8loELaRqXD0AyDpOs+9n2p6f39NGtMiUIYfBcaZxZCiTPFXD5UyQrWFVswQo=
+X-Received: by 2002:a05:6102:3e06:b0:4c1:abaa:ad93 with SMTP id
+ ada2fe7eead31-4c8477c5c58mr1268689137.14.1743677275308; Thu, 03 Apr 2025
+ 03:47:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CA+G9fYve7+nXJNoV48TksXoMeVjgJuP8Gs=+1br+Qur1DPWV4A@mail.gmail.com>
+ <20250403011849.GA3138383@ax162>
+In-Reply-To: <20250403011849.GA3138383@ax162>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Thu, 3 Apr 2025 16:17:44 +0530
+X-Gm-Features: ATxdqUE4AkC2FOF6OY9aZNJrmty8hh4LW8Nc1vXRFFYdK231FvWNsG3UDqbvQK4
+Message-ID: <CA+G9fYtrsLHvMH=ofmdS3MMsMTEj3k0PD7=qsRsA4WkSqLkCzQ@mail.gmail.com>
+Subject: Re: v6.14-12245-g91e5bfe317d8: Boot regression: rk3399-rock-pi-4b
+ dragonboard-410c dragonboard-845c no console output
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: open list <linux-kernel@vger.kernel.org>, 
+	Linux ARM <linux-arm-kernel@lists.infradead.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>, clang-built-linux <llvm@lists.linux.dev>, 
+	Arnd Bergmann <arnd@arndb.de>, Ard Biesheuvel <ardb@kernel.org>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Anders Roxell <anders.roxell@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The RDMA driver is installing an ISR in the probe function but, if
-the component is not bound yet, the interrupt handler may call the
-vblank_cb ahead of time (while probing other drivers) or too late
-(while removing other drivers), possibly accessing memory that it
-should not try to access by reusing stale pointers.
+On Thu, 3 Apr 2025 at 06:48, Nathan Chancellor <nathan@kernel.org> wrote:
+>
+> Hi Naresh,
+>
+> On Wed, Apr 02, 2025 at 06:19:19PM +0530, Naresh Kamboju wrote:
+> > Regressions on rk3399-rock-pi-4b, dragonboard-410c and dragonboard-845c
+> > the lto-thing, hardening and lto-full config boot failed with toolchain
+> > clang-nightly on the mainline master branch with no console output.
+> >
+> > First seen on the v6.14-12245-g91e5bfe317d8
+> >  Good: v6.14-11270-g08733088b566
+> >  Bad: v6.14-12245-g91e5bfe317d8
+> >
+> > Regressions found on rk3399-rock-pi-4b:
+> >   - boot/clang-nightly-lkftconfig-kselftest
+> >   - boot/clang-nightly-lkftconfig-lto-thing
+> >   - boot/clang-nightly-lkftconfig-hardening
+> >   - boot/clang-nightly-lkftconfig-lto-full
+> >
+> > Regressions found on dragonboard-410c:
+> >   - boot/clang-nightly-lkftconfig-lto-thing
+> >   - boot/clang-nightly-lkftconfig-lto-full
+> >   - boot/clang-nightly-lkftconfig-hardening
+> >
+> > Regressions found on dragonboard-845c:
+> >   - boot/clang-nightly-lkftconfig-hardening
+> >   - boot/clang-nightly-lkftconfig-lto-thing
+> >
+> > Regression Analysis:
+> >  - New regression? Yes
+> >  - Reproducibility? Yes
+> >
+> > Boot regression: rk3399-rock-pi-4b dragonboard-410c dragonboard-845c
+> > no console output
+> >
+> > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> >
+> > ## Boot log
+> > Starting kernel
+> > ...
+> > <No console output>
+> >
+> >
+> > ## Source
+> > * Kernel version: 6.14.0
+> > * Git tree: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/li=
+nux.git
+> > * Git sha: 91e5bfe317d8f8471fbaa3e70cf66cae1314a516
+> > * Git describe: v6.14-12245-g91e5bfe317d8
+> > * Project details:
+> > https://qa-reports.linaro.org/lkft/linux-mainline-master/build/v6.14-12=
+245-g91e5bfe317d8/
+> > * Architectures: arm64 (rk3399-rock-pi-4b, dragonboard-410c, dragonboar=
+d-845c)
+> > * Toolchains: clang-nightly (Debian clang version 21.0.0 )
+>
+> The version string for the toolchain seems to be slightly truncated but
+> from the configuration it is:
+>
+>   Debian clang version 21.0.0 (++20250330105456+3b3d1a5c2614-1~exp1~20250=
+330225508.1357)
+>
+> which can be parsed with our parse-debian-clang.py [1] to get more
+> information:
+>
+>   $ scripts/parse-debian-clang.py -p -v 'Debian clang version 21.0.0 (++2=
+0250330105456+3b3d1a5c2614-1~exp1~20250330225508.1357)'
+>   clang checkout date: 2025-03-30 10:54 UTC (3 days, 14:17:24.134272 ago)
+>   clang revision: 3b3d1a5c2614
+>   clang revision link: https://github.com/llvm/llvm-project/commit/3b3d1a=
+5c2614
+>
+> Our CI is using a slightly newer version:
+>
+>   $ scripts/parse-debian-clang.py -p -v 'Debian clang version 21.0.0 (++2=
+0250401112529+290d7b82cb5d-1~exp1~20250401112547.1360)'
+>   clang checkout date: 2025-04-01 11:25 UTC (1 day, 13:49:39.394836 ago)
+>   clang revision: 290d7b82cb5d
+>   clang revision link: https://github.com/llvm/llvm-project/commit/290d7b=
+82cb5d
+>
+> Can you see if it is reproducible with that revision?
 
-In order to fix this, like done in the OVL driver, add a new `irq`
-member to struct mtk_disp_ovl and then add the IRQF_NO_AUTOEN flag
-to the irq while installing the ISR to manually disable and clear
-the hwirqs with register writes, and enable_irq() and disable_irq()
-in the bind and unbind callbacks respectively.
+I=E2=80=99ve re-run the tests to validate the boot behavior on the Rock Pi =
+4 board
+with different Clang nightly versions and the latest mainline kernel.
 
-Also, the call to devm_request_irq() was moved after the platform
-data and drvdata assignment, but in this specific case it is just
-to make it cosmetically correct, as with this change the ISR will
-not execute until the component is bound, hence no dev_get_drvdata
-happens before that.
+The combination using clang-nightly:20250319 successfully booted the
+Rock Pi 4 board.
+However, the combination using clang-nightly:20250401 failed to boot
+the same board.
 
-Note that since IRQF_TRIGGER_NONE is effectively 0 and doing nothing
-this (fake) flag was dropped.
+"name": "clang",
+"version": "21.0.0",
+"version_full": "Debian clang version 21.0.0
+(++20250401112529+290d7b82cb5d-1~exp1~20250401112547.1360)"
 
-Fixes: 119f5173628a ("drm/mediatek: Add DRM Driver for Mediatek SoC MT8173.")
-Link: https://lore.kernel.org/r/20250402083628.20111-6-angelogioacchino.delregno@collabora.com
-Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
----
- drivers/gpu/drm/mediatek/mtk_disp_rdma.c | 34 ++++++++++++++----------
- 1 file changed, 20 insertions(+), 14 deletions(-)
+Reference:
+ - https://lkft.validation.linaro.org/scheduler/job/8196258
+ - https://lkft.validation.linaro.org/scheduler/job/8196275
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_disp_rdma.c b/drivers/gpu/drm/mediatek/mtk_disp_rdma.c
-index bf47790e4d6b..c1bc1bbad86d 100644
---- a/drivers/gpu/drm/mediatek/mtk_disp_rdma.c
-+++ b/drivers/gpu/drm/mediatek/mtk_disp_rdma.c
-@@ -81,6 +81,7 @@ struct mtk_disp_rdma_data {
- struct mtk_disp_rdma {
- 	struct clk			*clk;
- 	void __iomem			*regs;
-+	int				irq;
- 	struct cmdq_client_reg		cmdq_reg;
- 	const struct mtk_disp_rdma_data	*data;
- 	void				(*vblank_cb)(void *data);
-@@ -295,13 +296,23 @@ void mtk_rdma_layer_config(struct device *dev, unsigned int idx,
- static int mtk_disp_rdma_bind(struct device *dev, struct device *master,
- 			      void *data)
- {
--	return 0;
-+	struct mtk_disp_rdma *priv = dev_get_drvdata(dev);
-+
-+	/* Disable and clear pending interrupts */
-+	writel(0x0, priv->regs + DISP_REG_RDMA_INT_ENABLE);
-+	writel(0x0, priv->regs + DISP_REG_RDMA_INT_STATUS);
-+
-+	enable_irq(priv->irq);
- 
-+	return 0;
- }
- 
- static void mtk_disp_rdma_unbind(struct device *dev, struct device *master,
- 				 void *data)
- {
-+	struct mtk_disp_rdma *priv = dev_get_drvdata(dev);
-+
-+	disable_irq(priv->irq);
- }
- 
- static const struct component_ops mtk_disp_rdma_component_ops = {
-@@ -314,16 +325,15 @@ static int mtk_disp_rdma_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	struct mtk_disp_rdma *priv;
- 	struct resource *res;
--	int irq;
- 	int ret;
- 
- 	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
- 	if (!priv)
- 		return -ENOMEM;
- 
--	irq = platform_get_irq(pdev, 0);
--	if (irq < 0)
--		return irq;
-+	priv->irq = platform_get_irq(pdev, 0);
-+	if (priv->irq < 0)
-+		return priv->irq;
- 
- 	priv->clk = devm_clk_get(dev, NULL);
- 	if (IS_ERR(priv->clk))
-@@ -347,21 +357,17 @@ static int mtk_disp_rdma_probe(struct platform_device *pdev)
- 	if (ret && (ret != -EINVAL))
- 		return dev_err_probe(dev, ret, "Failed to get rdma fifo size\n");
- 
--	/* Disable and clear pending interrupts */
--	writel(0x0, priv->regs + DISP_REG_RDMA_INT_ENABLE);
--	writel(0x0, priv->regs + DISP_REG_RDMA_INT_STATUS);
--
--	ret = devm_request_irq(dev, irq, mtk_disp_rdma_irq_handler,
--			       IRQF_TRIGGER_NONE, dev_name(dev), priv);
--	if (ret < 0)
--		return dev_err_probe(dev, ret, "Failed to request irq %d\n", irq);
--
- 	priv->data = of_device_get_match_data(dev);
- 
- 	platform_set_drvdata(pdev, priv);
- 
- 	pm_runtime_enable(dev);
- 
-+	ret = devm_request_irq(dev, priv->irq, mtk_disp_rdma_irq_handler,
-+			       IRQF_NO_AUTOEN, dev_name(dev), priv);
-+	if (ret < 0)
-+		return dev_err_probe(dev, ret, "Failed to request irq %d\n", priv->irq);
-+
- 	ret = component_add(dev, &mtk_disp_rdma_component_ops);
- 	if (ret) {
- 		pm_runtime_disable(dev);
--- 
-2.48.1
+- Naresh
 
+
+
+> For what it's
+> worth, both of the arm64 boxes I have can boot a ThinLTO kernel compiled
+> with a version of LLVM @ 749535ba2808e133682074f712ac6829335f8875, so it
+> could be something that was broken for a little bit but Debian happened
+> to sync before the fix was committed.
+>
+> [1]: https://github.com/ClangBuiltLinux/continuous-integration2/blob/fe48=
+44afc1be91d469fc162c8a179f23fafb9384/scripts/parse-debian-clang.py
+>
+> Cheers,
+> Nathan
