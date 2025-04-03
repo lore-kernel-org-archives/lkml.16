@@ -1,162 +1,130 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DEEC241691;
-	Thu,  3 Apr 2025 08:18:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63748241676
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 08:20:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743668332; cv=none; b=nDZcHnAVs13OTJsIM/QGvAUYfAvM7yPAC6FXDONHuapUpiRnBoUvd+nosltQVhWSYiBpj3phlZ+j8yijV+Yoq+p2YGbNcQ8NbaDPxx9lxBVlkG+tMevriT7ORkSL7yM0HKaKpbcImRZ8e5vPApSeaaCN+S3dLslZGFOfYHFSaJ4=
+	t=1743668423; cv=none; b=c3Oppbz2kNxyDv0j6v7hdTI6n2jbPeThGg0ZzMZEsem9k5lbp6MFn45aOGGSOSS4u+iTw6wQL+vEOyBWnxgCy/74IvgT4nyJUxOFLPrba6JV56A6BnUoCsU/Z1QBMWCtuXH/zo8fCmZ2mp+cQhhMItxSn8CJo4h5DRKY0SxprMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743668332; c=relaxed/simple;
-	bh=s6j21HcEMBF6v4lEmeuyhKZT66Img10/Z2kkgWSa1t4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PBEE5jQE8JVanco7HDgyKonD1mi1NFoK+ggh3mrtdQcaO0ThkkGYFlaGZQ53t1uP1S0v3zRBa/8sG8g7VpsgjOrDkCtyZtLL2HYHE0Y8hMmULkrzLa2x8cFZwg1CbNxXSdXPqFsAmOaYkRYBg5AFY43eBrCb2Gpv6Ows29KUA58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=k+D95KDv; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1743668423; c=relaxed/simple;
+	bh=WtU0K9gXSVbwK3uZYqz27sU+ErkGzv8fI/hhbeLAXNQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IDjeulhnICowoU1Ri/hS4U1k+C3PnonOFC0GYutSAoxrwdoRxHwRhD6eCfTrzo5O1UKfV7xROz1+5dFquFhun8P9RFhXNUYOJzftCNP6tg+UfzQ43E+DVjB+JTPE2ho9XUNewhqekfIKGczTLkZM/avSKTfbokY/o0vwhePYIu8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=sjFk2UQm; arc=none smtp.client-ip=209.85.208.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="k+D95KDv"
-Received: from [192.168.88.20] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id D80A0105D;
-	Thu,  3 Apr 2025 10:16:55 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1743668216;
-	bh=s6j21HcEMBF6v4lEmeuyhKZT66Img10/Z2kkgWSa1t4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=k+D95KDvLSkKCZA4UaXYyl7nmOv5qByQQ/KO7BL0dMLZaREJg0h04VIXpJKRDgZ88
-	 HeBaVBzNzRB1hmDJN7xmIz8i39Ur++kXZNkgygcnfHR1r+Sgmehq15P5aXREBbFp1U
-	 lF6TXKNLCT7AEmfM8QGrxkuoWNoW2PT2dmb7pAcM=
-Message-ID: <c037c38d-1056-4ced-b411-c3b8f04162f2@ideasonboard.com>
-Date: Thu, 3 Apr 2025 11:18:46 +0300
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="sjFk2UQm"
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-30c0517142bso5242231fa.1
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 01:20:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1743668419; x=1744273219; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WtU0K9gXSVbwK3uZYqz27sU+ErkGzv8fI/hhbeLAXNQ=;
+        b=sjFk2UQm3sgHfZVvdEeaf/nukjD0yUq0jTEvp+A5dofQrW+JtlCqDBtbIhFYHNJwLi
+         gM0jEbJ8jHh1vhUAehztMc8SswKnQxpXmyondA+TMEiZa2+fMSxScttccZNiAc2dz23Z
+         zXcOBzZdJ71OD2X8wYwocaqHi1iwyqj7nLFh7FaefkWQKNnUqSnX65LA1A0/1rZtFUGv
+         VVH4nkq9yaSQcbJLaBjVRpGsBYqRndgj+/1xvBW9sTuhMvJD/xxPbyznN4j+YiCEviug
+         Dnj1Bty49P+Lep6D22R2rM4rAQK1J+TieZN18xOY7K4dDtKPCpdLvnJQ4E6EqxYLZngs
+         Z/mQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743668419; x=1744273219;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WtU0K9gXSVbwK3uZYqz27sU+ErkGzv8fI/hhbeLAXNQ=;
+        b=ActVRY6U0XcuPUkg7/u2xrvC6/WHI5nrepSSu59NokrkcGfUjroXYbM4zuaB3Nzrqp
+         TsknCH9jkLoEqLaUxO6Wu1dFtOj+g/CHtmFc7ObjibV1cz7Ru3ljltC3W7MWLdRmQzUO
+         2NqxnO2LOlx8cTkJKj0bRt5gwCr6CqELbPGRLLseF5vhAcoxo7xuK2ZjzMB6yY6ajIw5
+         3XdNAM2edZ7DNilgsbCTHn+uBoNKIXR8I7srPxulQCJRX4vuFUUowOCjw6gtdD+2GFCx
+         72U8XgEV2W7XT5IXmSFFd8B42rOfYKfpL0lhXmtcmOLx0pKBLD7upy8ICl/P5EDYEATM
+         fDrg==
+X-Forwarded-Encrypted: i=1; AJvYcCX+y0+t8mjSH3rlvKbcHKaXupRcJwdeZxB4WjAFa//CZgd7uY+/6EwJzk6LT0rsqjZWmBpMu/65vQ/UkhA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwY9QASNqlrDXChuhBfiN2tl+qi37sGvzTEfKEctSShmv8GjEB6
+	sGaT7UE7jH8o3Tt5OxjZ5ouTDmsa8WteJQhxpa00gC+hLwfDdpJ8ZFpYHlPzscCbkkcditz4DQP
+	F6hXsUdzI/WTwNOlh5cINx2bxyf9VciR4rqWo0Q==
+X-Gm-Gg: ASbGncsbqw4NF75MdpwxUP4UrDRQv1l2GvmdZgdCekg1gpi6yZLWazE87Fpy+23s4Ay
+	EzMGq01PpzxRDc3bEXv5CboNmH9I9ktnr9sPOlfS+MO6cp0HSjTPDxGiHCXeqb+SiTXeklyKJgB
+	9OZ1pNscWVxvkWpwEQA0Fz88+e/oubN9R6qH2ZT3SQYGdpCiQ5nY4kipHX
+X-Google-Smtp-Source: AGHT+IFXDWgpi7fgc4MQ2tsjz70/KKFNjkKho3c6vYNifn3mFK6XrakHKOLgdFy1aXwb0t30Ek/o/iYmKSzDnTaDwjk=
+X-Received: by 2002:a2e:9a09:0:b0:30b:963e:9b1a with SMTP id
+ 38308e7fff4ca-30f02b974edmr5446951fa.23.1743668419465; Thu, 03 Apr 2025
+ 01:20:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] media: rcar-vin: Fix RAW10
-To: =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
- Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org,
- linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
- Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-References: <20250324-rcar-fix-raw-v1-0-ae56c1c7a2f6@ideasonboard.com>
- <20250324-rcar-fix-raw-v1-3-ae56c1c7a2f6@ideasonboard.com>
- <20250331211122.GA1240431@ragnatech.se>
-Content-Language: en-US
-From: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
-In-Reply-To: <20250331211122.GA1240431@ragnatech.se>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20250402152000.1572764-1-andriy.shevchenko@linux.intel.com>
+ <CAMRc=MfzRVy85NR_eSQc3ZX_OmgCRUKuBdd6TqCu=Adwh9drrA@mail.gmail.com> <Z-5BHzTEed607Afz@smile.fi.intel.com>
+In-Reply-To: <Z-5BHzTEed607Afz@smile.fi.intel.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Thu, 3 Apr 2025 10:20:08 +0200
+X-Gm-Features: AQ5f1Jr6MvHtO5d24SGEw18trMjEWdMN20_xEgQSTjeferZCCT3H-6FHaxyvrZ0
+Message-ID: <CAMRc=Mc12B-b-w6bJeOgwFvzbmaqzL+uT7vJssVYN4tMu3YpaQ@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] gpiolib: Make gpiod_put() error pointer aware
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, 
+	Florian Fainelli <florian.fainelli@broadcom.com>, Mark Brown <broonie@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Thu, Apr 3, 2025 at 10:04=E2=80=AFAM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Thu, Apr 03, 2025 at 08:58:09AM +0200, Bartosz Golaszewski wrote:
+> > On Wed, Apr 2, 2025 at 5:20=E2=80=AFPM Andy Shevchenko
+> > <andriy.shevchenko@linux.intel.com> wrote:
+> > >
+> > > When non-optional GPIO is requested and failed, the variable that hol=
+ds
+> > > the (invalid) descriptor can contain an error pointer. However, gpiod=
+_put()
+> > > ignores that fact and tries to cleanup never requested descriptor.
+> > > Make sure gpiod_put() ignores that as well.
+> > >
+> > > While at it, do the same for the gpiod_put_array().
+> > >
+> > > Note, it arguable needs to be present in the stubs as those are usual=
+ly
+> > > called when CONFIG_GPIOLIB=3Dn and GPIOs are requested using gpiod_ge=
+t_optional()
+> > > or similar APIs.
+>
+> > I'm not a fan of this. Silently ignoring NULL makes sense in the
+> > context of _optional() calls where we want to do nothing on GPIOs that
+> > aren't there.
+>
+> > But this encourages people to get sloppy and just ignore
+> > error pointers returned from gpiod_get()?
+>
+> From where did you come to this conclusion, please? We have many subsyste=
+ms
+> that ignore invalid resource on the release stage, starting from platform
+> device driver core.
+>
 
-On 01/04/2025 00:11, Niklas Söderlund wrote:
-> Hi Tomi,
-> 
-> Thanks for your work.
-> 
-> On 2025-03-24 13:48:54 +0200, Tomi Valkeinen wrote:
->> Fix the following to get RAW10 formats working:
->>
->> In rvin_formats, the bpp is set to 4 for RAW10. As VIN unpacks RAW10 to
->> 16-bit containers, the bpp should be 2.
->>
->> Don't set VNDMR_YC_THR to the VNDMR register. The YC_THR is "YC Data
->> Through Mode", used for YUV formats and should not be set for RAW10.
->>
->> Fix the check related to the RGB666 format and CSI-2 mode. The
->> VNMC_INF_RGB666 define is the same as used for RAW10 on Gen4, and RAW10
->> is allowed on CSI-2 (whereas RGB666 is not allowed on Gen3 on CSI-2).
->> This feels a bit hacky, though, and the formats should really have been
->> verified already earlier.
-> 
-> I agree, it feels hacky. I would rather just remove the while switch
-> then try to "fix" it by extending it more. When testing this series I
-> needed a similar fix for VNMC_INF_RAW8 check below to get it to work on
-> Gen4.
+The fact that many people do something does not mean it's correct.
+Many other subsystem scream loudly when that happens, so I would be ok
+with adding a big WARN_ON(IS_ERR(desc)).
 
-Also, I think it's fine to be a bit hacky to have a small fix for a 
-feature already in upstream, instead of doing a bigger restructuring to 
-fix it.
+> > Also: all other calls error out on IS_ERR(desc) so why would we make it=
+ an
+> > exception?
+>
+> Because it's _release_ stage that participates in the cleaning up of
+> the allocated resources in error paths. It's a common approach in
+> the kernel. I would rather ask what makes GPIOLIB so special about it?
+>
 
-All this should be cleaned up, but in my opinion it's better to do that 
-on top of a working upstream.
+Just because it's the release stage, does not mean you shouldn't care
+about the correctness of the consumer code. Passing an IS_ERR(descr)
+to any of the GPIO APIs can happen if the user ignores an error
+returned by gpiod_get(). That's not alright.
 
-  Tomi
-
->>
->> Fixes: 1b7e7240eaf3 ("media: rcar-vin: Add support for RAW10")
->> Signed-off-by: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
->> ---
->>   drivers/media/platform/renesas/rcar-vin/rcar-dma.c  | 9 +++++++--
->>   drivers/media/platform/renesas/rcar-vin/rcar-v4l2.c | 8 ++++----
->>   2 files changed, 11 insertions(+), 6 deletions(-)
->>
->> diff --git a/drivers/media/platform/renesas/rcar-vin/rcar-dma.c b/drivers/media/platform/renesas/rcar-vin/rcar-dma.c
->> index 53046614f7a1..f8394be8a922 100644
->> --- a/drivers/media/platform/renesas/rcar-vin/rcar-dma.c
->> +++ b/drivers/media/platform/renesas/rcar-vin/rcar-dma.c
->> @@ -811,12 +811,17 @@ static int rvin_setup(struct rvin_dev *vin)
->>   		case VNMC_INF_YUV8_BT656:
->>   		case VNMC_INF_YUV10_BT656:
->>   		case VNMC_INF_YUV16:
->> -		case VNMC_INF_RGB666:
->>   			if (vin->is_csi) {
->>   				vin_err(vin, "Invalid setting in MIPI CSI2\n");
->>   				return -EINVAL;
->>   			}
->>   			break;
->> +		case VNMC_INF_RGB666:
->> +			if (vin->info->model == RCAR_GEN3 && vin->is_csi) {
->> +				vin_err(vin, "Invalid setting in MIPI CSI2\n");
->> +				return -EINVAL;
->> +			}
->> +			break;
->>   		case VNMC_INF_RAW8:
->>   			if (!vin->is_csi) {
->>   				vin_err(vin, "Invalid setting in Digital Pins\n");
->> @@ -913,7 +918,7 @@ static int rvin_setup(struct rvin_dev *vin)
->>   	case V4L2_PIX_FMT_SGBRG10:
->>   	case V4L2_PIX_FMT_SGRBG10:
->>   	case V4L2_PIX_FMT_SRGGB10:
->> -		dmr = VNDMR_RMODE_RAW10 | VNDMR_YC_THR;
->> +		dmr = VNDMR_RMODE_RAW10;
->>   		break;
->>   	default:
->>   		vin_err(vin, "Invalid pixelformat (0x%x)\n",
->> diff --git a/drivers/media/platform/renesas/rcar-vin/rcar-v4l2.c b/drivers/media/platform/renesas/rcar-vin/rcar-v4l2.c
->> index 756fdfdbce61..65da8d513b52 100644
->> --- a/drivers/media/platform/renesas/rcar-vin/rcar-v4l2.c
->> +++ b/drivers/media/platform/renesas/rcar-vin/rcar-v4l2.c
->> @@ -88,19 +88,19 @@ static const struct rvin_video_format rvin_formats[] = {
->>   	},
->>   	{
->>   		.fourcc			= V4L2_PIX_FMT_SBGGR10,
->> -		.bpp			= 4,
->> +		.bpp			= 2,
->>   	},
->>   	{
->>   		.fourcc			= V4L2_PIX_FMT_SGBRG10,
->> -		.bpp			= 4,
->> +		.bpp			= 2,
->>   	},
->>   	{
->>   		.fourcc			= V4L2_PIX_FMT_SGRBG10,
->> -		.bpp			= 4,
->> +		.bpp			= 2,
->>   	},
->>   	{
->>   		.fourcc			= V4L2_PIX_FMT_SRGGB10,
->> -		.bpp			= 4,
->> +		.bpp			= 2,
->>   	},
->>   };
->>   
->>
->> -- 
->> 2.43.0
->>
-> 
-
+Bart
