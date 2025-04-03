@@ -1,94 +1,87 @@
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0B7C2505B7;
-	Thu,  3 Apr 2025 13:59:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
+Received: from smtp.cecloud.com (unknown [1.203.97.240])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB33A24EAB6
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 14:00:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=1.203.97.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743688778; cv=none; b=UVWyUXCSu/qPQbBX7+CNWqK5gqIyZSKU8Imqgf4GOwIIqT/UI6plp8K5Gx096szlKjmXn4aPSvLXeBMQ2Q+afqDZ1d6Q4FEfg0Uniy6VJQXoNnTEEBKy0No+FQvH4KjYIOYcIcqI6AJ0xD2MYmykhtLRPwzj7ySEB/VnzsuxvjM=
+	t=1743688809; cv=none; b=KU1O3M/ZKk+nJ8dEKWw1CEG2JzDTFPvoxXC5Irpqkzfk71gJgxgjEYc/GeNUUkIST7Mo47vlCLkOCmUlcF35SmqYAbs5UZfNcZY5wS+nEWPAcGDrM3pml1xzpDOIdWhLPuIsq4YJHJcarSIhsE+aAF7Z2M07gSWc8iHCMhW4kzs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743688778; c=relaxed/simple;
-	bh=oBEAqFWDdWO3OY9KeCPxwBkQnxRnPSDppcWNl3NRi3k=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iUaekZNXYtn81Ckhk20S2yTrMokzJhVizsA2pWVEtCcLdB1SsFQKwxrw9MDcDp1FzFMj2VvI/PWL5FTVONK6tp/UTTWS1fFeBYFd5ySP5tkpCj6FiCpqCz86xQz+hGmD43/6ynj6xpTii8vt2iGr116zuJkF/BFyEsja/RSORIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4ZT3DR5Dk3zHrKQ;
-	Thu,  3 Apr 2025 21:56:07 +0800 (CST)
-Received: from kwepemk100013.china.huawei.com (unknown [7.202.194.61])
-	by mail.maildlp.com (Postfix) with ESMTPS id 8CBDC180087;
-	Thu,  3 Apr 2025 21:59:28 +0800 (CST)
-Received: from localhost.localdomain (10.90.30.45) by
- kwepemk100013.china.huawei.com (7.202.194.61) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Thu, 3 Apr 2025 21:59:27 +0800
-From: Jijie Shao <shaojijie@huawei.com>
-To: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
-	<pabeni@redhat.com>, <andrew+netdev@lunn.ch>, <horms@kernel.org>
-CC: <shenjian15@huawei.com>, <wangpeiyang1@huawei.com>,
-	<liuyonglong@huawei.com>, <chenhao418@huawei.com>,
-	<jonathan.cameron@huawei.com>, <shameerali.kolothum.thodi@huawei.com>,
-	<salil.mehta@huawei.com>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <shaojijie@huawei.com>
-Subject: [PATCH net v2 5/7] net: hibmcge: fix the incorrect np_link fail state issue.
-Date: Thu, 3 Apr 2025 21:53:09 +0800
-Message-ID: <20250403135311.545633-6-shaojijie@huawei.com>
-X-Mailer: git-send-email 2.30.0
-In-Reply-To: <20250403135311.545633-1-shaojijie@huawei.com>
-References: <20250403135311.545633-1-shaojijie@huawei.com>
+	s=arc-20240116; t=1743688809; c=relaxed/simple;
+	bh=xWHMU7atFYKRvt30SxeQKgp2s6O7JU6wBzJoUtaUrJ4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XzAVmiYH44G4KJZOHUm+Xp8+c3Du8e90bW8TcDz9agGfADlP9Y4j/XTysxg8+xnDJ1gpB/X4+9wq+urNoCBRlS3udQ0RcN+y4D6uKhMO5vdWZ93DskXO98BApH+jWc2BqLtlNEQUD6aXRFAnURvNmYHw0PjT72TYtdq2xtbXp8I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cestc.cn; spf=pass smtp.mailfrom=cestc.cn; arc=none smtp.client-ip=1.203.97.240
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cestc.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cestc.cn
+Received: from localhost (localhost [127.0.0.1])
+	by smtp.cecloud.com (Postfix) with ESMTP id EA3EE900115;
+	Thu,  3 Apr 2025 21:59:54 +0800 (CST)
+X-MAIL-GRAY:0
+X-MAIL-DELIVERY:1
+X-SKE-CHECKED:1
+X-ABS-CHECKED:1
+X-ANTISPAM-LEVEL:2
+Received: from [10.32.170.7] (unknown [111.48.58.12])
+	by smtp.cecloud.com (postfix) whith ESMTP id P3907747T281458165674352S1743688793004956_;
+	Thu, 03 Apr 2025 21:59:53 +0800 (CST)
+X-IP-DOMAINF:1
+X-RL-SENDER:shaopeijie@cestc.cn
+X-SENDER:shaopeijie@cestc.cn
+X-LOGIN-NAME:shaopeijie@cestc.cn
+X-FST-TO:hch@lst.de
+X-RCPT-COUNT:8
+X-LOCAL-RCPT-COUNT:2
+X-MUTI-DOMAIN-COUNT:0
+X-SENDER-IP:111.48.58.12
+X-ATTACHMENT-NUM:0
+X-UNIQUE-TAG:<b8a06d17501ce1179f14244e491592d0>
+X-System-Flag:0
+Message-ID: <bd5f2f8a-94f0-43b0-af02-565422d12032@cestc.cn>
+Date: Thu, 3 Apr 2025 21:59:52 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemk100013.china.huawei.com (7.202.194.61)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] Fix netns UAF introduced by commit 1be52169c348
+To: Christoph Hellwig <hch@lst.de>
+Cc: kbusch@kernel.org, sagi@grimberg.me, axboe@kernel.dk,
+ linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
+ gechangzhong@cestc.cn, zhang.guanghui@cestc.cn
+References: <1f55b71d-8e28-4eac-b14e-d32a7e704578@cestc.cn>
+ <20250401061934.2304210-1-shaopeijie@cestc.cn>
+ <20250403043001.GA22526@lst.de> <20250403043034.GB22526@lst.de>
+Content-Language: en-US
+From: Peijie Shao <shaopeijie@cestc.cn>
+In-Reply-To: <20250403043034.GB22526@lst.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-In the debugfs file, the driver displays the np_link fail state
-based on the HBG_NIC_STATE_NP_LINK_FAIL.
+On 4/3/2025 12:30 PM, Christoph Hellwig wrote:
+> On Thu, Apr 03, 2025 at 06:30:01AM +0200, Christoph Hellwig wrote:
+>>> +	ret = sock_create_kern(&init_net,
+>>>   			ctrl->addr.ss_family, SOCK_STREAM,
+>>>   			IPPROTO_TCP, &queue->sock);
+>>
+>> This can be realigned:
+>>
+>> 	ret = sock_create_kern(&init_net, ctrl->addr.ss_family, SOCK_STREAM,
+>>   			IPPROTO_TCP, &queue->sock);
+> 
+> Also did the original patch get merged already?  If not please fold
+> both into a single one.
+> 
+> 
 
-However, HBG_NIC_STATE_NP_LINK_FAIL is cleared in hbg_service_task()
-So, this value of np_link fail is always false.
+Thanks!
 
-This patch directly reads the related register to display the real state.
+Yes,the patch is merged into 
+https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=1be52169c3488ef98582ed553ab35cefa3978817
 
-Fixes: e0306637e85d ("net: hibmcge: Add support for mac link exception handling feature")
-Signed-off-by: Jijie Shao <shaojijie@huawei.com>
-Reviewed-by: Simon Horman <horms@kernel.org>
----
- drivers/net/ethernet/hisilicon/hibmcge/hbg_debugfs.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+Style problems will be fixed in v2 version.
 
-diff --git a/drivers/net/ethernet/hisilicon/hibmcge/hbg_debugfs.c b/drivers/net/ethernet/hisilicon/hibmcge/hbg_debugfs.c
-index 9c09e4835990..01ad82d2f5cc 100644
---- a/drivers/net/ethernet/hisilicon/hibmcge/hbg_debugfs.c
-+++ b/drivers/net/ethernet/hisilicon/hibmcge/hbg_debugfs.c
-@@ -106,6 +106,7 @@ static int hbg_dbg_nic_state(struct seq_file *s, void *unused)
- {
- 	struct net_device *netdev = dev_get_drvdata(s->private);
- 	struct hbg_priv *priv = netdev_priv(netdev);
-+	bool np_link_fail;
- 
- 	seq_printf(s, "event handling state: %s\n",
- 		   state_str_true_false(priv, HBG_NIC_STATE_EVENT_HANDLING));
-@@ -117,8 +118,10 @@ static int hbg_dbg_nic_state(struct seq_file *s, void *unused)
- 		   reset_type_str[priv->reset_type]);
- 	seq_printf(s, "need reset state: %s\n",
- 		   state_str_true_false(priv, HBG_NIC_STATE_NEED_RESET));
--	seq_printf(s, "np_link fail state: %s\n",
--		   state_str_true_false(priv, HBG_NIC_STATE_NP_LINK_FAIL));
-+
-+	np_link_fail = !hbg_reg_read_field(priv, HBG_REG_AN_NEG_STATE_ADDR,
-+					   HBG_REG_AN_NEG_STATE_NP_LINK_OK_B);
-+	seq_printf(s, "np_link fail state: %s\n", str_true_false(np_link_fail));
- 
- 	return 0;
- }
--- 
-2.33.0
+
+
+
 
