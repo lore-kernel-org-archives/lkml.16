@@ -1,100 +1,133 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F1122500AA
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 14:48:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+Received: from smtp.cecloud.com (unknown [1.203.97.246])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6CD7A24EF97
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 14:48:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=1.203.97.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743691719; cv=none; b=mCf8iIEM5gw2rGeMFnT/MGDdJz3kEGlx330jd30sFOD6COnrcYSkGsIdRaBmn3FtUUOxNfglJBferhLDOjdGRh6dQF+jDPmIPt1D/zY1cKlCfu6Enl394fRLQlilnpL4qOxSx/q6/FjaRUmKwch58Zyiu8eKl7K62eNM/JxcHSc=
+	t=1743691736; cv=none; b=k9woDKs4B919HtvaWzUU9Bsj7Z2qvWgThotbft5KcKTdNiR92CsZi/+wlw2W6T+irgfRAiEScM0Cgctbqqlpv7F0ONrp11VoTyfD3eEV5tiVqVoY9yX440Y+h5vpmEWnKZxcllOKKGITh+RYKNVQgbW8gHVwosu/zxd1gWh5ogQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743691719; c=relaxed/simple;
-	bh=wmF3ASAu4l5e5QaPK3NSuhBM69OYwzUeQtDHQcn6MS4=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=qcvJ5/g7VEO8u1G69JZCg7cK7wEN9Xv3lnya8y+9ZMO6/NNMwIenxXn7IdFlGFA/VrIPbASvuJKLH1JsyU5KkS3+o/ogrRiBTa/KGm63zyACcmAUbwUboiqH1cSw0D392HTI2mf7bHVCU/dipdXxH55xwS5e/nflZtxqDZSxH1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EYk1fH69; arc=none smtp.client-ip=209.85.210.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EYk1fH69"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-736c89461d1so1573285b3a.3
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 07:48:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743691717; x=1744296517; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=igg3zobfFtydVGAelA7JZ01NRykTuhkzUPbgteiqM9Q=;
-        b=EYk1fH69tc4yf17oohqE/smapvx70QbTJXOdw3Oj/CBkroQgFazxXoiPtcfYcy30Ni
-         cbUahoZOzeiqR+osRxk3fws1H+8J2X4eOza+dSB3gyQI2o0boG6bwtB5FVHmY1GXrzxN
-         KtoR1P6d9k2mY06HQFV3wSM+cNGxt8sobihMT/QAr+ea/AyncRf1FlzFZtzxJmxQJD9l
-         S3uUO++mwmQMgTqpeSXYEt+EAIZFq80Qy7HAQXZeEPnNuThT4xtdMM2Vgyoj2GQ+5/OB
-         ZwnPnhie3oJ6/oQwLttkQxhtrnk/uKrSx+NI6bvQGyFsA8TdT1TgGTTgPXePvPqEbK+E
-         SX8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743691717; x=1744296517;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=igg3zobfFtydVGAelA7JZ01NRykTuhkzUPbgteiqM9Q=;
-        b=RlMohecOR8fN4aw2vKmQtTN2cbb6xhe5hMqTK3tqwDDM/vs0CSwd//Pxa8BsrpxjnZ
-         lbjMlvhK9P7RIxvB6IWkNxCQBBbLEAxhC6Am00QmYqQaflHvYWl9Osb297nX3xQt8IKh
-         jFz2MX0YeE94ZMK/qfSmAVnS/KbFaFqZrdgoZ6HPwmwb3d9SkIC/FueAJaok85L43P16
-         tQiCjrXhWWz6YJ8U6BsHP+8lmRc2VrLX6JX6AVkpsjhWB85YcVseRAPeLiB26vgDgXFQ
-         35pCuQA2yC9kW/aLBWoYI9dk3hwcOQFqyavZPwv8A0mRFBQqyL3pNKYfX29hCHR77pO4
-         2Qpg==
-X-Forwarded-Encrypted: i=1; AJvYcCUE/3+Uzb1RvDi2t5iWm3sg6KPlxiR13HcrGQAqN4RoIXZvjYOEFhGnyF6EhgAxjoP0sLSsQDiwYiVQV2g=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxpc2CsTFFmCuYKseQ6NdAXUiiRThLfZ1o+edmIPrmKaXJc+sb4
-	iMmSCKrN0eQLsI0yKCznpAn03LRgoNnsHvgp8c23Q0p+fh2enAK9WgA2yH79cXnDSdDPUVANEcV
-	hhA==
-X-Google-Smtp-Source: AGHT+IG9IJrC2WV7WLtmMSWgTecisx21a4/DmbtG4CGcCIp6FaiyOk56NSQtsUf8hBMYnyjC9Po0xvGrGdU=
-X-Received: from pfam26.prod.google.com ([2002:aa7:8a1a:0:b0:734:6f4e:794])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:848:b0:736:5b85:a911
- with SMTP id d2e1a72fcca58-73980399504mr32373172b3a.8.1743691716806; Thu, 03
- Apr 2025 07:48:36 -0700 (PDT)
-Date: Thu, 3 Apr 2025 07:48:35 -0700
-In-Reply-To: <Z0DOdTRAaK3whZKW@casper.infradead.org>
+	s=arc-20240116; t=1743691736; c=relaxed/simple;
+	bh=i7yUaupibuWSPGZFLZN+xpqWLFpTgCZVc6sr3Uk5OcY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=M7Bwm5kyAluv+PInzvhSh0Qr4cftnACeSjJEdEH8eRX1u89Z5pznTB6D2qCm6BZm8/fxdYZ1aJC2Cv6X57JyHDDt5oKZaUO9JMObe1sbgYtB+NIkR+AfuQDhLFAZ+JGa8suBxsv4kDC5aU9u9Fx9RdzVvxtSFmbCssvyNnsCGHM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cestc.cn; spf=pass smtp.mailfrom=cestc.cn; arc=none smtp.client-ip=1.203.97.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cestc.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cestc.cn
+Received: from localhost (localhost [127.0.0.1])
+	by smtp.cecloud.com (Postfix) with ESMTP id 22BE07C0112;
+	Thu,  3 Apr 2025 22:48:43 +0800 (CST)
+X-MAIL-GRAY:0
+X-MAIL-DELIVERY:1
+X-SKE-CHECKED:1
+X-ANTISPAM-LEVEL:2
+Received: from localhost.localdomain (unknown [111.48.58.12])
+	by smtp.cecloud.com (postfix) whith ESMTP id P1609374T281456773296496S1743691722030876_;
+	Thu, 03 Apr 2025 22:48:43 +0800 (CST)
+X-IP-DOMAINF:1
+X-RL-SENDER:shaopeijie@cestc.cn
+X-SENDER:shaopeijie@cestc.cn
+X-LOGIN-NAME:shaopeijie@cestc.cn
+X-FST-TO:kbusch@kernel.org
+X-RCPT-COUNT:9
+X-LOCAL-RCPT-COUNT:3
+X-MUTI-DOMAIN-COUNT:0
+X-SENDER-IP:111.48.58.12
+X-ATTACHMENT-NUM:0
+X-UNIQUE-TAG:<a40d0e84f2240df21e6bc4039f702bdc>
+X-System-Flag:0
+From: shaopeijie@cestc.cn
+To: kbusch@kernel.org,
+	sagi@grimberg.me,
+	axboe@kernel.dk,
+	hch@lst.de
+Cc: linux-nvme@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	gechangzhong@cestc.cn,
+	zhang.guanghui@cestc.cn,
+	Peijie Shao <shaopeijie@cestc.cn>
+Subject: [PATCH v2] nvme-tcp: Fix netns UAF introduced by commit 1be52169c348
+Date: Thu,  3 Apr 2025 22:47:48 +0800
+Message-ID: <20250403144748.3399661-1-shaopeijie@cestc.cn>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <bd5f2f8a-94f0-43b0-af02-565422d12032@cestc.cn>
+References: <bd5f2f8a-94f0-43b0-af02-565422d12032@cestc.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20241122-guestmem-library-v5-0-450e92951a15@quicinc.com>
- <20241122-guestmem-library-v5-2-450e92951a15@quicinc.com> <Z0DOdTRAaK3whZKW@casper.infradead.org>
-Message-ID: <Z-6fw8VuDTk4soN8@google.com>
-Subject: Re: [PATCH v5 2/2] mm: guestmem: Convert address_space operations to
- guestmem library
-From: Sean Christopherson <seanjc@google.com>
-To: Matthew Wilcox <willy@infradead.org>
-Cc: Elliot Berman <quic_eberman@quicinc.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Fuad Tabba <tabba@google.com>, 
-	Ackerley Tng <ackerleytng@google.com>, Mike Rapoport <rppt@kernel.org>, 
-	David Hildenbrand <david@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
-	Mike Marshall <hubcap@omnibond.com>, Martin Brandenburg <martin@omnibond.com>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	James Gowans <jgowans@amazon.com>, Mike Day <michael.day@amd.com>, linux-fsdevel@vger.kernel.org, 
-	kvm@vger.kernel.org, linux-coco@lists.linux.dev, 
-	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, linux-doc@vger.kernel.org, linux-nfs@vger.kernel.org, 
-	devel@lists.orangefs.org, linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Fri, Nov 22, 2024, Matthew Wilcox wrote:
-> On Fri, Nov 22, 2024 at 09:29:39AM -0800, Elliot Berman wrote:
-> > A few near-term features are coming to guest_memfd which make sense to
-> > create a built-in library.
-> 
-> You haven't created a library, you've created a middle-layer.  This
-> file primarily consists of functions which redispatch to a function
-> pointer.  I think you'd be better off creating a library!  That is,
-> have the consumers register their own address_space_operations and
-> have functions in this library which provide useful implementations.
+From: Peijie Shao <shaopeijie@cestc.cn>
 
-Or, go even further and move the overwhelming majority of guest_memfd code into
-mm/.  But I suspect that will be practically infeasible, in which case I think I
-agree with Matthew.
+The patch is for nvme-tcp host side.
 
-Either way, the Gunyah usage of the library/middle-layer needs to be included in
-the series.  It's impossible to review the code split and APIs without seeing
-both KVM's usage and Gunyah's usage.  E.g. this series allows
-__guestmem_invalidate_begin() to fail, without any explanation as to while that's
-legal or desirable.
+commit 1be52169c348
+("nvme-tcp: fix selinux denied when calling sock_sendmsg")
+uses sock_create_kern instead of sock_create to solve SELinux
+problem, however sock_create_kern does not take a reference of
+the given netns, which results in a use-after-free when the
+non-init_net netns is destroyed before sock_release.
+
+For example: a container not share with host's network namespace
+doing a 'nvme connect', and is stopped without 'nvme disconnect'.
+
+The patch changes parameter current->nsproxy->net_ns to init_net,
+makes the socket always belongs to the host. It also naturally
+avoids changing sock's netns from previous creator's netns to
+init_net when sock is re-created by nvme recovery path
+(workqueue is in init_net namespace).
+
+Signed-off-by: Peijie Shao <shaopeijie@cestc.cn>
+---
+
+Changes in v2:
+    1. Fix style problems reviewed by Christoph Hellwig, thanks!
+    2. Add 'nvme-tcp:' prefix for the patch.
+
+Version v1:
+Hi all,
+This is the v1 patch. Before this version, I tried to
+get_net(current->nsproxy->net_ns) in nvme_tcp_alloc_queue() to
+fix the issue, but failed to find a suitable placeto do
+put_net(). Because the socket is released by fput() internally.
+I think code like below:
+    nvme_tcp_free_queue() {
+        fput()
+        put_net()
+    }
+can not ensure the socket was released before put_net, since
+someone is still holding the file.
+
+So I would like to use the 'init_net' net namespace.
+
+---
+ drivers/nvme/host/tcp.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c
+index 26c459f0198d..9b1d0ad18b77 100644
+--- a/drivers/nvme/host/tcp.c
++++ b/drivers/nvme/host/tcp.c
+@@ -1789,8 +1789,14 @@ static int nvme_tcp_alloc_queue(struct nvme_ctrl *nctrl, int qid,
+ 		queue->cmnd_capsule_len = sizeof(struct nvme_command) +
+ 						NVME_TCP_ADMIN_CCSZ;
+ 
+-	ret = sock_create_kern(current->nsproxy->net_ns,
+-			ctrl->addr.ss_family, SOCK_STREAM,
++	/*
++	 * sock_create_kern() does not take a reference to
++	 * current->nsproxy->net_ns, use init_net instead.
++	 * This also avoid changing sock's netns from previous
++	 * creator's netns to init_net when sock is re-created
++	 * by nvme recovery path.
++	 */
++	ret = sock_create_kern(&init_net, ctrl->addr.ss_family, SOCK_STREAM,
+ 			IPPROTO_TCP, &queue->sock);
+ 	if (ret) {
+ 		dev_err(nctrl->device,
+-- 
+2.43.0
+
+
+
