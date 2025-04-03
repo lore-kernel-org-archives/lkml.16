@@ -1,102 +1,121 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B286433D1
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 14:19:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E71B24EA90
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 14:19:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743689969; cv=none; b=N+I5wMQCZOI1cB0Dr/whywLR4xvC69MftyqBT2luUwR3Kpyt0kAFyuULDIO0VNIpYnVD3C/R99PjYfvvrD4Ypyf0vYoqoT5OVE7/NCzg1uVgOfmvtsJT4XUmZBuxJgDMTj5h3d3HU5x5QHv5id6ZRZPvg1mpbXXYekP/HEDoSlY=
+	t=1743689993; cv=none; b=HYTKjD3SeDJlE9jqu+szVUtXdKN7QDIykTDC1Tg3rhT3uKkRPzqrPRof18uuCzqdKZ5ngtqbw257sJIY8bdH9FYwwVT3PSZTV6n1eAyTqU+gK+SBQY6YgPzx5mpPqrCuxXZui45yFoxVvM5I0pczfAGlZzcVoQXWg3GiczCCl3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743689969; c=relaxed/simple;
-	bh=hIxZ8DXbteEySXel5MzoSaZF1xDhFewUBhiOqfvIxLM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MO9ez3zcp9MJlPe+7M6PzSIpcVGb9WivkYyoJYbZWNA4+KotpovRdCGHDiSRhRRxk6G+fVIGsWq5IyEtjS4ntA/QqxKcXK0dq2PtMkixcF9Z713x8QwlqvemU06RJOqjda6W4vTmIWRcVsmXkwmKYf5youQm2i2lDhVqxrb29IU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IqmfwKh6; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1743689993; c=relaxed/simple;
+	bh=l32nJhWlvQpJaXMheQIHq7EaHrAGjn3ePH6vgGK3ZrM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MDUWEeahgyzqrIyuPS/zf3FItEQ5FsiasWqMMggIq0FTaY78XGiLnkKbKcErS/58K37Gh1geJjmJZUoudwkOUdSRVXvotcLMIxONaz5qy8lqhZkH2qi6NLS8ouxwV0XPmtKkaCQh1wd9C9zKajmPUI5SbFwAX2qyxYCBXJQ5nF8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GBCVS14u; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IqmfwKh6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743689968; x=1775225968;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=hIxZ8DXbteEySXel5MzoSaZF1xDhFewUBhiOqfvIxLM=;
-  b=IqmfwKh6Ujxtofr4tFP071C/eU+nrPUa7WICD4cJbFHqUx3GBwbIAGuH
-   h9hc4Ttk53vkU8v6xnolMkR83Kl/jVciIiM4UQLigbebRzx1GgyBkjha4
-   Sb7ZKuny4EktLMMjJ5GbV8JPui7JR6F1HcZIO79EO07vHdwJOdEzvA8f7
-   KaXXM9SBnqnIWSiC3V/xqQetAhAiEOwIjKaHPm6fQvmLjDQaSQRkQlgSV
-   C1mfe0KOr7KttW1/kRZ1m0RFVkKjIyYgeMP9OUrTgXTPJFkAv+/u/wyFf
-   HrlQOZAVeYigrvU0KoJSMx4flHDbckUH73A1YNOFYkEceUqvQImifyBB2
-   g==;
-X-CSE-ConnectionGUID: PL3wTvyQTS2Gn+k7vw+TLA==
-X-CSE-MsgGUID: oDcTxToUT1aGC4QhQpXTNQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11393"; a="70471409"
-X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
-   d="scan'208";a="70471409"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 07:19:27 -0700
-X-CSE-ConnectionGUID: WGTUO9I3RJugZ+moxd3ysw==
-X-CSE-MsgGUID: dCuTS7AVQsOL+p23m/gdfg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
-   d="scan'208";a="127306515"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 07:19:25 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1u0LPf-00000008prL-0ejI;
-	Thu, 03 Apr 2025 17:19:23 +0300
-Date: Thu, 3 Apr 2025 17:19:22 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Raag Jadav <raag.jadav@intel.com>, david.m.ertman@intel.com,
-	ira.weiny@intel.com, lee@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] mfd: core: Support auxiliary device
-Message-ID: <Z-6Y6lbLSbe46-uQ@smile.fi.intel.com>
-References: <20250403110053.1274521-1-raag.jadav@intel.com>
- <2025040336-ethically-regulate-3594@gregkh>
- <Z-6YU24dhxF5PRaw@smile.fi.intel.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GBCVS14u"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743689991;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HRj4duMKWuLhK3/1HC13xNiJuwQlUGnDJUVVcga109M=;
+	b=GBCVS14uVsZbkK27B8a3WRQuSa9JjcQa4Tzaa1NKasPHBGFprqBS0YhWVXn9yLAj80WOwr
+	jL6aGSZ17XIrRCdWDQHYHl8v2kHur49Hu6ajILaGsrPNnb61sZT3ZAgpEZ4p9+YD4BFfDj
+	Zi4taa8fyuVDvnfK33B8l3ZajKsOIIo=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-588-dGbjhJ80Pv23Y0cBETwT0g-1; Thu, 03 Apr 2025 10:19:49 -0400
+X-MC-Unique: dGbjhJ80Pv23Y0cBETwT0g-1
+X-Mimecast-MFC-AGG-ID: dGbjhJ80Pv23Y0cBETwT0g_1743689989
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-ac3d175fe71so67766466b.0
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 07:19:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743689988; x=1744294788;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=HRj4duMKWuLhK3/1HC13xNiJuwQlUGnDJUVVcga109M=;
+        b=NteAO2wKBtpKOvhoJ1cyFYvhke0Hrk1NDUsXHivIn4itz2TXk+1QVqcZb4XgKLrS46
+         IyV9Vz6MZ7U8PChKtagyhsLCh4jCPww2QFjBLwN0uvX9S/ynuCvZGDHeZmQy0tUgvoIC
+         1FoDz19VCL+Cuy+KC5Lq7/dNqDqUi+gWV15i5xV5hvOU7t8stE46XDaepCPgW3kyrB7p
+         pnzodSh82CVEhYfVYehAZ/XbWuU/1ED6UU55/NTIv2sAByN9wWpUgGoi5gR7iL9LtygD
+         aIWxymyr6g/v1yXFmE+ES58H+DuO0ndb21CbWcdZFucWSp9b7ZQMOWctL0HwED4zk2hu
+         RGDQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXOOtWf1SQaLEtjP4w5J5LW8yoCApjMp1GrNvk/3A5taiKEZvmkl9NAsvA5l+29VWuhivL97btzEG8YZqc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwOLGaWSQEKxmbGuvgPK1aVoxiAKs2cznpcnzOBrRnsxYWXP8vo
+	WC1jPngcEFI4BFEdMOc4Y7YOVxoIU7sMRLtX62dy7hlAbhXzq/UiEthbciNFycke6MOMrOtCNfS
+	uUi5tEwbHpKGg1tCR88X1pabMeIi2Gar6JIhKLbMZzXWjbVShKFBjtwTaUN4Kyg==
+X-Gm-Gg: ASbGncuMV9RDjA8zzE0FXOshJrg5Sz239MOi66XOwC9Cvt8hYq3RT6ejDDEg5vE7fzZ
+	JuuvbmrGVeVNR++WoJGA8hsBsZ996ZDNyBy/A40jiI1jI5CP4Ka6QMUlK93Yp/Mx6c5hn05VOM1
+	h40Y4AYo069BCy0EzCAwSJTD7l2ct1lXmNdyXb/W6Wk4slfSidYhRi1Q+8NdWl+fqa0QuUK6+KN
+	bBc9zaNv7UF9X254OLz9VjgOM5ePOHgTw11eU4SkWie1ISmYKik+8Dcvk3nkzAx7l3/l2GIGyS1
+	bqxwhWEACq6ihOElWExN/Ra2RWy2QFxBXLjMqc0lT2TyKSeJ3ZNm0E2NYpoEdR8xaQw9kS6mSQ+
+	WJDAXOLMuqUHWWlZHQWCV9XocL/+UQ9aFgkUkfG1q/WTXslwf4+bGGSNWA6/wjRr+xQ==
+X-Received: by 2002:a17:907:72d1:b0:ac2:b9c8:b7ba with SMTP id a640c23a62f3a-ac73895fbbemr1917788766b.10.1743689988668;
+        Thu, 03 Apr 2025 07:19:48 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE389JF5t/NVOtZsuHT6ZzEofdOeTC/k4+UGMGsxdz2+Ni5DDJM4CsvuVwaY3ElTZolYu+ZhQ==
+X-Received: by 2002:a17:907:72d1:b0:ac2:b9c8:b7ba with SMTP id a640c23a62f3a-ac73895fbbemr1917786166b.10.1743689988309;
+        Thu, 03 Apr 2025 07:19:48 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7bfe5d44dsm102241066b.13.2025.04.03.07.19.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Apr 2025 07:19:47 -0700 (PDT)
+Message-ID: <3beaf600-1670-44de-a782-6e34010061e3@redhat.com>
+Date: Thu, 3 Apr 2025 16:19:46 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z-6YU24dhxF5PRaw@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/3] staging: media: Remove duplicate NULL tests on a
+ value in pci
+To: Greg KH <gregkh@linuxfoundation.org>,
+ Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
+Cc: outreachy@lists.linux.dev, julia.lawall@inria.fr,
+ linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org,
+ andy@kernel.org, mchehab@kernel.org, sakari.ailus@linux.intel.com
+References: <cover.1743685415.git.abrahamadekunle50@gmail.com>
+ <26990d4a9d4419f9d4155a40595bc213acb671a0.1743685415.git.abrahamadekunle50@gmail.com>
+ <2025040320-fraction-bagel-ea64@gregkh>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <2025040320-fraction-bagel-ea64@gregkh>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Apr 03, 2025 at 05:16:51PM +0300, Andy Shevchenko wrote:
-> On Thu, Apr 03, 2025 at 03:02:47PM +0100, Greg KH wrote:
-> > On Thu, Apr 03, 2025 at 04:30:53PM +0530, Raag Jadav wrote:
+Hi,
 
-...
-
-> > > 2. Should we allow auxiliary drivers to manage their own resources
-> > >    (MEM, IO, IRQ etc)?
-> > 
-> > The resources are all shared by the "parent" device, that's what makes
-> > aux drivers work, they need to handle this as there is no unique way to
-> > carve up the resources here.
-> > 
-> > So I don't know how you would do this, sorry.
+On 3-Apr-25 3:54 PM, Greg KH wrote:
+> On Thu, Apr 03, 2025 at 02:26:41PM +0100, Abraham Samuel Adekunle wrote:
+>> When a value has been tested for NULL in an expression, a
+>> second NULL test on the same value in another expression
+>> is unnecessary when the value has not been assigned NULL.
+>>
+>> Remove unnecessary duplicate NULL tests on the same value that
+>> has previously been NULL tested.
+>>
+>> Found by Coccinelle
+>>
+>> Signed-off-by: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
+>> ---
+>>  drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c | 2 +-
 > 
-> I think we should simply enforce the requirement that MFD on AUX bus must use
-> regmap. This will solve the serialisation and common access to the resources.
+> I can't take any drivers/staging/media/ changes for outreachy
+> applications, sorry.  That should have been in the instructions
+> somewhere.
 
-That said, make an additional API call like
+I don't know if this helps wrt outreachy but I can pick
+up this atomisp (and I plan to do so).
 
-dev_mfd_add_aux_devices() which should enforce new infrastructure and convert
-drivers one by one. Also with that you may add a warning to the existing (PCI)
-drivers that are using old API
+Regards,
 
-	if (dev_is_pci(parent))
-		dev_warn(parent, "Uses old API, please switch to ...\n");
-
--- 
-With Best Regards,
-Andy Shevchenko
+Hans
 
 
