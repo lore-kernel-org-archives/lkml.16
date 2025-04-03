@@ -1,34 +1,34 @@
-Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [63.216.63.35])
+Received: from mxct.zte.com.cn (mxct.zte.com.cn [183.62.165.209])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAF3924061B;
-	Thu,  3 Apr 2025 07:41:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.216.63.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0B7F1CD1E1;
+	Thu,  3 Apr 2025 07:43:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=183.62.165.209
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743666120; cv=none; b=k6Fb8GVUJrEA/7PEUyGItNnMPnKG0g3vlGJzGDex6m9GtdGINZgwBSoTGV6UokYl7Aufw9Kkg6JfBRvPVG+6ux9RBC6OVncOJ2g/R9wT+/aLn7w1Ilm4WdwBZ9e10JHWJjxJFLVzbCobs1S0Hbp/22F1uV+qK7ciFsGiru8I+RY=
+	t=1743666221; cv=none; b=XLL2oEtIBXnq1mB5X8G5Wgoxh+VTqp/AHyKY5xYZe3KrLaEQ6ECqCeAbqvNCPfSIgXqFB/oro95VMWW1NfpvIJe7NjFlYTzPtS4kwZu6F7pJ4jSrGdz+zsp4ajjx5VtNJt3AxzH7fNVO8YOfXz38l2cwBTcsBO/BK2+HA3Yp/OU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743666120; c=relaxed/simple;
-	bh=Hup9x9im7FuBuCmdj3jOBedV8BlLfwaX1ES1aMw1J2Q=;
-	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=QayhXWZfu8Md+G4x8kbHqHkLwSZzYoQ6H+ynPyon613fB9LYx2hiKG8I1SKtRZJkBxkvTGhZSBpqPWvdpzk11dJKe/LtZ3o4Bc3LixALPd241R0S4d9M04V+m0Ddw8/Bi0A0N/aW6YZyYx1c6XqzQJZPHEHaAjpFzuS1li1JxGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=63.216.63.35
+	s=arc-20240116; t=1743666221; c=relaxed/simple;
+	bh=WD1TwJfSnJZyF+/epWcbS06+blHm8ZwXsxzo9muDIWg=;
+	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=gw7Jr6IsOSxueogAk3QrO9n3TZeTTACFljHVKtOO+Af3mtzgAOiL5B5oLojn9CJyibw+zjy39uQcKmPDjmOtMkkzRkVlh9Ipg2ygZ+mzFXfjwBF9CYdVcob9w1JeUVMsfug8+3ou1EaLo7uFfWz9DUMYBEe52GjCbs6bDsgKOTs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=183.62.165.209
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
+Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4ZStwd126qz5B1J4;
-	Thu,  3 Apr 2025 15:41:53 +0800 (CST)
+	by mxct.zte.com.cn (FangMail) with ESMTPS id 4ZStyY3n7Wz4xfxL;
+	Thu,  3 Apr 2025 15:43:33 +0800 (CST)
 Received: from xaxapp02.zte.com.cn ([10.88.97.241])
-	by mse-fl2.zte.com.cn with SMTP id 5337fetw066040;
-	Thu, 3 Apr 2025 15:41:40 +0800 (+08)
+	by mse-fl1.zte.com.cn with SMTP id 5337hNMG078468;
+	Thu, 3 Apr 2025 15:43:23 +0800 (+08)
 	(envelope-from shao.mingyin@zte.com.cn)
-Received: from mapi (xaxapp01[null])
+Received: from mapi (xaxapp04[null])
 	by mapi (Zmail) with MAPI id mid32;
-	Thu, 3 Apr 2025 15:41:42 +0800 (CST)
-Date: Thu, 3 Apr 2025 15:41:42 +0800 (CST)
-X-Zmail-TransId: 2af967ee3bb677c-3db59
+	Thu, 3 Apr 2025 15:43:26 +0800 (CST)
+Date: Thu, 3 Apr 2025 15:43:26 +0800 (CST)
+X-Zmail-TransId: 2afb67ee3c1effffffffc6e-36053
 X-Mailer: Zmail v1.0
-Message-ID: <20250403154142936Po-soX8Bifyvw_eWSbddT@zte.com.cn>
+Message-ID: <20250403154326411S4luMrK8A5RXovincATzF@zte.com.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -36,21 +36,20 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 From: <shao.mingyin@zte.com.cn>
-To: <olivier.moysan@foss.st.com>
-Cc: <arnaud.pouliquen@foss.st.com>, <lgirdwood@gmail.com>,
-        <broonie@kernel.org>, <perex@perex.cz>, <tiwai@suse.com>,
-        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@foss.st.com>,
-        <linux-sound@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
+To: <shawn.lin@rock-chips.com>
+Cc: <yang.yang29@zte.com.cn>, <xu.xin16@zte.com.cn>, <ye.xingchen@zte.com.cn>,
+        <lpieralisi@kernel.org>, <kw@linux.com>,
+        <manivannan.sadhasivam@linaro.org>, <robh@kernel.org>,
+        <bhelgaas@google.com>, <heiko@sntech.de>, <linux-pci@vger.kernel.org>,
+        <linux-rockchip@lists.infradead.org>,
         <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <yang.yang29@zte.com.cn>, <xu.xin16@zte.com.cn>,
-        <ye.xingchen@zte.com.cn>, <zhang.enpei@zte.com.cn>
-Subject: =?UTF-8?B?W1BBVENIXSBzb3VuZDogc29jOiBzdG06IHN0bTMyX3NhaTogVXNlIGRldl9lcnJfcHJvYmUoKQ==?=
+        <zhang.enpei@zte.com.cn>
+Subject: =?UTF-8?B?W1BBVENIXSBkcml2ZXJzOiBwY2k6IGNvbnRyb2xsZXI6IHBjaWUtcm9ja2NoaXA6IFVzZSBkZXZfZXJyX3Byb2JlKCk=?=
 Content-Type: text/plain;
 	charset="UTF-8"
-X-MAIL:mse-fl2.zte.com.cn 5337fetw066040
+X-MAIL:mse-fl1.zte.com.cn 5337hNMG078468
 X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 67EE3BC1.001/4ZStwd126qz5B1J4
+X-Fangmail-MID-QID: 67EE3C25.001/4ZStyY3n7Wz4xfxL
 
 From: Zhang Enpei <zhang.enpei@zte.com.cn>
 
@@ -59,39 +58,28 @@ Replace the open-code with dev_err_probe() to simplify the code.
 Signed-off-by: Zhang Enpei <zhang.enpei@zte.com.cn>
 Signed-off-by: Shao Mingyin <shao.mingyin@zte.com.cn>
 ---
- sound/soc/stm/stm32_sai.c | 18 ++++++------------
- 1 file changed, 6 insertions(+), 12 deletions(-)
+ drivers/pci/controller/pcie-rockchip.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-diff --git a/sound/soc/stm/stm32_sai.c b/sound/soc/stm/stm32_sai.c
-index 504a14584765..fa821e3fb427 100644
---- a/sound/soc/stm/stm32_sai.c
-+++ b/sound/soc/stm/stm32_sai.c
-@@ -169,20 +169,14 @@ static int stm32_sai_get_parent_clk(struct stm32_sai_data *sai)
- 	struct device *dev = &sai->pdev->dev;
+diff --git a/drivers/pci/controller/pcie-rockchip.c b/drivers/pci/controller/pcie-rockchip.c
+index 0f88da378805..9897824a81f8 100644
+--- a/drivers/pci/controller/pcie-rockchip.c
++++ b/drivers/pci/controller/pcie-rockchip.c
+@@ -230,12 +230,9 @@ int rockchip_pcie_get_phys(struct rockchip_pcie *rockchip)
+ 		phy = devm_of_phy_get(dev, dev->of_node, name);
+ 		kfree(name);
 
- 	sai->clk_x8k = devm_clk_get(dev, "x8k");
--	if (IS_ERR(sai->clk_x8k)) {
--		if (PTR_ERR(sai->clk_x8k) != -EPROBE_DEFER)
--			dev_err(dev, "missing x8k parent clock: %ld\n",
--				PTR_ERR(sai->clk_x8k));
--		return PTR_ERR(sai->clk_x8k);
--	}
-+	if (IS_ERR(sai->clk_x8k))
-+		return dev_err_probe(dev, PTR_ERR(sai->clk_x8k),
-+				     "missing x8k parent clock\n");
+-		if (IS_ERR(phy)) {
+-			if (PTR_ERR(phy) != -EPROBE_DEFER)
+-				dev_err(dev, "missing phy for lane %d: %ld\n",
+-					i, PTR_ERR(phy));
+-			return PTR_ERR(phy);
+-		}
++		if (IS_ERR(phy))
++			return dev_err_probe(dev, PTR_ERR(phy),
++					     "missing phy for lane %d\n", i);
 
- 	sai->clk_x11k = devm_clk_get(dev, "x11k");
--	if (IS_ERR(sai->clk_x11k)) {
--		if (PTR_ERR(sai->clk_x11k) != -EPROBE_DEFER)
--			dev_err(dev, "missing x11k parent clock: %ld\n",
--				PTR_ERR(sai->clk_x11k));
--		return PTR_ERR(sai->clk_x11k);
--	}
-+	if (IS_ERR(sai->clk_x11k))
-+		return dev_err_probe(dev, PTR_ERR(sai->clk_x11k),
-+				     "missing x11k parent clock\n");
-
- 	return 0;
- }
+ 		rockchip->phys[i] = phy;
+ 	}
 -- 
 2.25.1
