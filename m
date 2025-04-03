@@ -1,96 +1,174 @@
-Received: from mout.web.de (mout.web.de [217.72.192.78])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A894A13A244;
-	Thu,  3 Apr 2025 08:50:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A075A19E7D1
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 08:51:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743670251; cv=none; b=EjithZlaWR99TtOwgLV8BbXhVsSK7yP3Sk1B1yeNtFudeUdFZxv51m80EJrNBCMmypys7VXLYSGMxAYT2Aved4qUHIxDOgiY47Vx01AS81MMet577FcTVcpE7McCY3QHW8E2UNWr493Sha4I9miLJbf4izq9OfKGy544dWW8WUk=
+	t=1743670262; cv=none; b=ae1PLSgCusJYNO0avtEmPmTNgOpotmmGtbFV045vUkXjZwKIcTSVRrzJ30mwHdEdihbHMeAlqrjodhj8rAPFPyO8StcltzO5gqyooPNCaA0gJZ5E6dGJDFnqmj+C2VAd7QXCnenZh2YtVUvUTE0OLUIXPK504ke2Yn80SHLDIvA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743670251; c=relaxed/simple;
-	bh=hsm1NzR4usjbx6eO/EwG40atDxqPYD52GuN4cBVAfg0=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=TLIigdMpJSvQabasfKIFGv2joYlpOITbxQu4vr6gMSXwyPUqAI74c/+vQgq6B2M/n0lCAfRK15D6Z0zYO+HvJFMq/kY/R1YDcdoYVEsJLt5wyZeDTz0fXOWYl9dNLVu/3LGtfsqdNHkiHl1QIkNjDQnJsjfJgjpBw5CtGuYzJAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=T0YmZK2/; arc=none smtp.client-ip=217.72.192.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1743670262; c=relaxed/simple;
+	bh=VgJDFMUf0CnbGGng+slbh+GbKi51Jb9EAss+E3HtLCg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OY4+EhCOVgK/sSOvaTZXTPflGglzBOxn29CjP+Zxbv5R0SFgPoKhvkcZfB2bbksXMs18Yc2WJ/PsyoFKOpwoUYlQM+GTmhxSl/cAHXlbNOzF728aV1tyqoWXLogL9mO+Ha2AADBOF0/pPtgb7mFhSA6Jh/u82qqDR6d42fNh2Fg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=WkGC/YVm; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="T0YmZK2/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1743670239; x=1744275039; i=markus.elfring@web.de;
-	bh=hsm1NzR4usjbx6eO/EwG40atDxqPYD52GuN4cBVAfg0=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=T0YmZK2/pL9+WbMqmOXhvUo7+aEJ9PPrMuag5ZnelfrIFHE0Qne3yt30CZCJfTvV
-	 BvoNlcsUkWLUY9B55A9t20il17ol7L3ssLqSY2xaxnuylioYofYXwz2IisKsaZL5f
-	 gqhbybaQOHG/hZzZaqgqYHVfwY8PzkpBMtigzn8NkIw0g8ZTvOSKIVaGZHkvEQ4wk
-	 zahvddiKFphUty4Ub4vpG1NWTmLCK9fGON7abJnuuuBkxKGN7XeqjFn17KJzf10Xr
-	 QIABN0jQGu9QpA95VY3A2npeKxcWQsbk2DHYEYItSXm3vo9Mo2YBcF5RJClyCp3JC
-	 jxN2GxFJENsiJXz1Kg==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.70.50]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MsrhK-1t7KB53E2i-012IHI; Thu, 03
- Apr 2025 10:50:39 +0200
-Message-ID: <970e78d3-e3bc-4a34-9ba8-40df4823726f@web.de>
-Date: Thu, 3 Apr 2025 10:50:36 +0200
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="WkGC/YVm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1743670258;
+	bh=VgJDFMUf0CnbGGng+slbh+GbKi51Jb9EAss+E3HtLCg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=WkGC/YVmhvTAqNlr0Nur8sXSEX30OjNp9f0+9KFvLZjHFhq8jDeMn6Jl1/RQB9Tyf
+	 OXG8f18ipCqzmwTqSenogvbzM3qXxTMX/CujQJsR/olm/sPMYF8JSG0eiRQThfGv7K
+	 5afvJvu/cDnNo5cN6sgmnReT6FuGXYyFULUgfnrmdgR879CuWoWwdvPXs7t6ifcmnp
+	 8zPRhHvmNxB/HkCq6/6BA/cWElopLfZkJ4WBNFVUHLS7hBGVw1P6x2XWhwLLrkeu2h
+	 nUguuyYwLG77/AeBegAgaB5AnElOFBZSPSYZRqlQ9wDVOtQvs1BHbGZC0409e8J3Yd
+	 8OW8hmrEqIipg==
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bbrezillon)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 28D9217E00A3;
+	Thu,  3 Apr 2025 10:50:58 +0200 (CEST)
+Date: Thu, 3 Apr 2025 10:50:53 +0200
+From: Boris Brezillon <boris.brezillon@collabora.com>
+To: Thomas Zimmermann <tzimmermann@suse.de>
+Cc: Dmitry Osipenko <dmitry.osipenko@collabora.com>, David Airlie
+ <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+ Christian =?UTF-8?B?S8O2bmln?= <christian.koenig@amd.com>, Gerd Hoffmann
+ <kraxel@redhat.com>, Qiang Yu <yuq825@gmail.com>, Steven Price
+ <steven.price@arm.com>, Frank Binns <frank.binns@imgtec.com>, Matt Coster
+ <matt.coster@imgtec.com>, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, kernel@collabora.com
+Subject: Re: [PATCH v20 09/10] drm/shmem-helper: Switch
+ drm_gem_shmem_vmap/vunmap to use pin/unpin
+Message-ID: <20250403105053.788b0f6e@collabora.com>
+In-Reply-To: <a8ed4b8b-5116-4ac2-bfce-21b2751f7377@suse.de>
+References: <20250322212608.40511-1-dmitry.osipenko@collabora.com>
+	<20250322212608.40511-10-dmitry.osipenko@collabora.com>
+	<ea4f4059-7748-4bfd-9205-8e95222144da@suse.de>
+	<710cdbd4-2c6e-48b7-b12b-972ab6d12abf@collabora.com>
+	<20250402152102.01d9cfee@collabora.com>
+	<a8ed4b8b-5116-4ac2-bfce-21b2751f7377@suse.de>
+Organization: Collabora
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Henry Martin <bsdhenrymartin@gmail.com>, linux-serial@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
-Cc: stable@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Jiri Slaby <jirislaby@kernel.org>,
- Taichi Sugaya <sugaya.taichi@socionext.com>,
- Takao Orito <orito.takao@socionext.com>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-References: <20250403070339.64990-1-bsdhenrymartin@gmail.com>
-Subject: Re: [PATCH v2] serial: Fix null-ptr-deref in mlb_usio_probe()
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250403070339.64990-1-bsdhenrymartin@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:IyQRX81AoN2cTzefdi5EWIMxrAugxODoW9dQT5OAekcqd4WPkI9
- uAyGDMmtnVkQ+CGHwwmJEXvyk1lBr9sH1oGVSm3DkpcAv8mxPmgcr4mo6NhNv6gei7+AoeW
- xf1Dqy8Yn5/hldCS48DlmFr1Rd9cEUIquUONktOrroU/YUmPyDIskNzGnifPQyXEpY/h86q
- VZ5MxN/WcRGJS6JK/VPUQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:qn9RJRcmBMM=;K0Ku9YlURmKXZNnats0w/CadTYA
- vKAGlXpX1XsvOST4O8RjRWBFf7l42TmbhCD2myyNEdyPcu+IKJmWXKZzH89b8KSZqHofU76Bl
- b9kEYPKXRuS55dusEtsbExqAgjmKyKFFQyME3lkKyAGME7SBX1jWfNC08HerO6YoAG5W+Xyor
- 5/4stNSZo8QqyvvvCII8J+l8EQu72vFSfXguWNis0Q3R3Udl+9efliVaX0APrg3tPt3pidno1
- NBymGxEIT0AZOPDFiiVI5zynCmbacGqGE52Zi5N0iyvsd+p55+ku4U+m/CIx19MBz0p5ue3Of
- DQYUAmxxmEflrziNvYOz0TgUjqb7ylTxVGhwKsgxsLPY15eXu9ePxtl7NX3iHmeipbODQnCcI
- CLS66Sk3Hw8FpiAQIlbRvJmhyDLGsXo9vGFDHOFTZJ9kvOxRn+AjFEFsYWMX8fxBBN8nW1qOU
- /G3fyZN5R8nY+f1cEavSGNjnwxACgQ9IJg4YD3YYp0o6GeSCDhf0P97CnvplTTef9jkvvNIN/
- A1S+4Z0QDbESwgpO2HZi1OEeyXchBqCvSNbxKVCXZ4pqUeD5Q9WFOlRLZ1f9tTaD87Q5jllhf
- /TwByyImGs/BuibAOIJ5X5faqPvXFnvZxtmYLbugWms/YKkATL4NkAKYCqokV041dEE/fiTqw
- H1gQeSzCDBKtWs8Z8HCPvea7INzFwlLcI+u7rCEeiYorbauHa6eg6EbzLJIZLd5UXS2vOwdYm
- q/rp1txbM28XyJHEPG92V/mRa+rTaI9D05UbGN5N9kwgJtLxBBqR9i5IEegy9yrlU8tyzKPhR
- u7qv24hZmRGBm/0jf9tNBfEPYHuCF/OQpBjFti6Rgcpf5YWadnlzpzm+bBXvc4+uB2F++7UOj
- pTxu6CD3Unk1HVQJOYNzwr1oZ2G15ETzb2i1S6WTUz64vtowBKeRvv49SDpIPs9aP3M2Mxy4U
- LzWYhJymlXcRQ2je8KkQNvW0c7lx0OrZxgfJXPL10vEiuvtdqTwltKiWVvukv+xyKF3NdNS6h
- BbLrLsMTxIXPK6+K8SHrghcJ2ldOsblE78WeapCxCuHkOpttvdcoxIlWiCFt/IMvEYxPbNzSh
- /Gdo5fQVJYlgjylzFDZa61FYz06FYMFx9Q8nzLKMpYtZCqFjsgicnFWe/gnEkfcSzOXI/XkI2
- 5KKffcAIbr0s6tkmgSEb7ELob4e5i0VbSeuTNgAz7MXo5hqX6zVEDBqoVXa4rv6V1jUmAwOPi
- c6nLKaHUuUQdvWTpW4vGTg3138UdRpmrURH9ZTlI1FgNKtAkTzy/7er3iyLLwh97iGmbVtztC
- Bc3HBfoFrKAztJHjMb1OcB50nQfuiKh797bizMkjKbj7QSBgPRdbgb/asOaEUAAU0jeNqVx0+
- EwIcbe3MbnXjP9MMF9wHPqPl7CDYbdwbmn0weMDKMC5dSRKFGN5ecwMFXOImgJKbewHEKiPFg
- 5hYkRr7q/Driejx95rYgls4EpIyCgnJ5dNFuxWUbqFaTisuoq
 
-=E2=80=A6
-> Add NULL check after devm_ioremap() to prevent this issue.
+On Thu, 3 Apr 2025 09:20:00 +0200
+Thomas Zimmermann <tzimmermann@suse.de> wrote:
 
-Can a summary phrase like =E2=80=9CPrevent null pointer dereference in mlb=
-_usio_probe()=E2=80=9D
-be a bit nicer?
+> Hi
+>=20
+> Am 02.04.25 um 15:21 schrieb Boris Brezillon:
+> > On Wed, 2 Apr 2025 15:58:55 +0300
+> > Dmitry Osipenko <dmitry.osipenko@collabora.com> wrote:
+> > =20
+> >> On 4/2/25 15:47, Thomas Zimmermann wrote: =20
+> >>> Hi
+> >>>
+> >>> Am 22.03.25 um 22:26 schrieb Dmitry Osipenko: =20
+> >>>> The vmapped pages shall be pinned in memory and previously get/
+> >>>> put_pages()
+> >>>> were implicitly hard-pinning/unpinning the pages. This will no longe=
+r be
+> >>>> the case with addition of memory shrinker because pages_use_count > 0
+> >>>> won't
+> >>>> determine anymore whether pages are hard-pinned (they will be soft-
+> >>>> pinned),
+> >>>> while the new pages_pin_count will do the hard-pinning. Switch the
+> >>>> vmap/vunmap() to use pin/unpin() functions in a preparation of addit=
+ion
+> >>>> of the memory shrinker support to drm-shmem. =20
+> >>> I've meanwhile rediscovered this patch and I'm sure this is not corre=
+ct.
+> >>> Vmap should not pin AFAIK. It is possible to vmap if the buffer has b=
+een
+> >>> pinned, but that's not automatic.=C2=A0 For other vmaps it is necessa=
+ry to
+> >>> hold the reservation lock to prevent the buffer from moving. =20
+> > Hm, is this problematic though? If you want to vmap() inside a section
+> > that's protected by the resv lock, you can
+> >
+> > - drm_gem_shmem_vmap_locked()
+> > - do whatever you need to do with the vaddr,
+> > - drm_gem_shmem_vunmap_locked()
+> >
+> > and the {pin,page_use}_count will be back to their original values.
+> > Those are just ref counters, and I doubt the overhead of
+> > incrementing/decrementing them makes a difference compared to the heavy
+> > page-allocation/vmap operations... =20
+>=20
+> I once tried to add pin as part of vmap, so that pages stay in place.=20
+> Christian was very clear about not doing this. I found this made a lot=20
+> of sense: vmap means "make the memory available to the CPU". The memory=20
+> location doesn't matter much here. Pin means something like "make the=20
+> memory available to the GPU". But which GPU depends on the caller: calls=
+=20
+> via GEM refer to the local GPU, calls via dma-buf usually refer to the=20
+> importer's GPU. That GPU uncertainty makes pin problematic already.
 
-Regards,
-Markus
+Okay, so it looks more like a naming issue then. The intent here is to
+make sure the page array doesn't disappear while we have a kernel
+mapping active (address returned by vmap()). The reason we went from
+pages_count to pages_use_count+pin_count is because we have two kind of
+references in drm_gem_shmem:
+
+- weak references (tracked with pages_use_count). Those are
+  usually held by GPU VMs, and they are weak in the sense they
+  shouldn't prevent the shrinker to reclaim them if the GPU VM is idle.
+  The other user of weak references is userspace mappings of GEM
+  objects (mmap()), because then we can repopulate those with our fault
+  handler.
+- hard references (tracked with pin_count) which are used to prevent
+  the shrinker from even considering the GEM as reclaimable. And clearly
+  kernel mappings fall in that case, because otherwise we could reclaim
+  pages that might be dereferenced by the CPU later on. It's also used
+  to implement drm_gem_pin because it's the same mechanism really,
+  hence the name
+
+>=20
+> In your case, vmap an pin both intent to hold the shmem pages in memory.=
+=20
+> They might be build on top of the same implementation, but one should=20
+> not be implemented with the other because of their different meanings.
+
+But that's not what we do, is it? Sure, in drm_gem_shmem_vmap_locked(),
+we call drm_gem_shmem_pin_locked(), but that's an internal function to
+make sure the pages are allocated and stay around until
+drm_gem_shmem_vunmap_locked() is called.
+
+I guess we could rename pin_count into hard_refcount or
+page_residency_count or xxx_count, and change the pin/unpin_locked()
+function names accordingly, but that's just a naming detail, it doesn't
+force you to call drm_gem_pin() to vmap() your GEM, it's something we
+do internally.
+
+>=20
+> More generally speaking, I've meanwhile come to the conclusion that pin=20
+> should not even exist in the GEM interface. It's an internal operation=20
+> of TTM and reveals too much about what happens within the=20
+> implementation. Instead GEM should be free to move buffers around.
+
+Well, yes and no. There are situations where you simply can't move
+things around if there are active users, and vmap() is one of those
+AFAICT.
+=20
+> Dma-buf importers should only tell exporters to make buffers available=20
+> to them, but not how to do this. AFAIK that's what dma-buf's=20
+> attach/detach is for.
+
+And that's what they do, no? attach() tells the exporter to give the
+importer a way to access those buffers, and given the exporter has no
+clue about when/how the exporter will access those, there's no other way
+but to pin the pages. Am I missing something here?
