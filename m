@@ -1,188 +1,222 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B112198851
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 03:55:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2C74190676
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 03:55:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743652555; cv=none; b=pIrGKZH2el2+JVuRgm+PSqy6mQuPRSST6NzXRfZQONPHcG9BJKSmBW08yNdEtuJRGS0ryJFFEdo1ghvvjePuL0TRW6yDN+NiWWdIiXu+JQc9iAL0YFRNXO+bRW9UxJGX8u3FLBYrXup0X8aEJ+QGhAOnqM0zKSOEI23Lq6HNHm0=
+	t=1743652554; cv=none; b=l8U8ureYrWackW59q5+JoJh0ZWsvnmkA9U0R/R+X5YaF/STRJlaBAz+2Eg7yMOCROyA4/DYGWnXlQbHLKn+Zv31XrARDoPxQEIcgnXGNtI3T1xkFz7LMFm8P8vYTateHXCIC6Rr/wYUzLnx2yacjdNhs0epU0Jkj3rUng5fVBek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743652555; c=relaxed/simple;
-	bh=MamZ+s5U/GQFkoH+Mp8sirxtFiVP5tYx1rFIKRePfhA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sRreoK04LPI4B3VSlC3rn8bWIDDihuT8jzP5oerL1Tf+7i/2n9ifmYc/aCCxcunLHAwNvjXeRRsGF0O9Txrsl73KJDMHlUSes1SHXrOuGu4W3AR2A1u9z9o9VpcQbYqgAalpNdG30zWHlYbCeCgqTrVdOLip21vC/QRw6uX8PyE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=l4ucuxiy; arc=none smtp.client-ip=209.85.210.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1743652554; c=relaxed/simple;
+	bh=nqVB5uOqiFKCdpWccwDNjTPjd4j3yLd4tllbjZgjjLg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
+	 Content-Type:References; b=LTMslrsKgi1/CLtHW6qrPz996MOQ0RruftCgT+S2VRq5y65vmbZgBhUjf5mTNRv5JcpNWeBXI/pJAU/+Ex5yjBpM8i0mnq2ftOm3TXnakH9JushueXI684ZxxzE+f4byjtZwGURrzBdt0fqZAXl6Htk37xDGNmwiwYSq9c8PMz0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=rTSlV94Q; arc=none smtp.client-ip=203.254.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="l4ucuxiy"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-7359aca7ef2so524870b3a.2
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 20:55:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1743652553; x=1744257353; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=0v59Va1cFoo3feF/U2J6uerO13lHWMq+byB3hbt+oPk=;
-        b=l4ucuxiypTwwOX4MFwznP7RCJs2F3EAms5LCAISX/zjjT3HYQnazWl2faV8Km7aFQO
-         G9QOWW62tO0FVc/F2dMbf/7HZhSMOV3yvH+szF4Hsz065ErHfXBFoHfskVowp5QuOTca
-         74+DpKHw2+6nYhnHwHXoO6X2aGzj18OfY2Ul0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743652553; x=1744257353;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0v59Va1cFoo3feF/U2J6uerO13lHWMq+byB3hbt+oPk=;
-        b=qVrLIdbaeo6TbuXQcrOEqiM6NVhD816vrMn9kGFJxeC3yRCwbtrqdmVfeFnpo4Fp1c
-         unryiWux2x2bvaEdIeImJgBDxqHyTDsypXxuCKjmdx8HEFTzg4zjXJijrRyoiEkQEv4N
-         f2g56VYUwF9G88vnqYaqfS43EEWFu5F5M8pC/wDsb5Y2/wZd2R3ozMcplzZBFA8xODLt
-         AxqDyXb/vR2Tcm0fJFXjfPPINJvo0+PB85Fg0ZPjqCAujBGGX6BBSOC9svPMXecRV6fb
-         2hrfyCfzJdei9n3MgA2ovl8vbfvSphsM41SSz9TV00wdcmnJeZ0/CwrrQF2bUUzA9s9a
-         8ebw==
-X-Forwarded-Encrypted: i=1; AJvYcCUyabeRJ7J22csYbXpv4eUgZiaRWtBh9qVHTA90t0nz16JkLNIdsZnhY70gf20OnUa7I4rzK7X/S2gwjFg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx3EZ9qcI8F2ogBc0Faspf+IVmhA7yqvT58QcFscdUrGvnixXKn
-	293BDWd5/h/dYlFTfUgaFCk6YBux5c/PPRZO/I3DU/ic7oZMvjaWiu6vMJdESg==
-X-Gm-Gg: ASbGnctruWr6HuFKkmv+oPgNLywPWnfo7tnAoqhqHh8/nHFLCMWzqSEH0ZYtqQE/sgS
-	iXbmtT0wxKtfFlpfVlQa+d2aTu4f9WUQ/IfRBi1VY0HvsFG4NI20kBbHCv7TXsvzrWN5qHxe4Ax
-	XyewERpybR7lce80duZ0v0+dVo1Cy4TKjjF8qqPlCQ3RoDpM0ZscRPzJm9IKu5DYZlleAnEOMEc
-	3RU8VWe45UkrA1FD8BI1tKLwqAD82k45YXW0Qglyah5OTUjDcPR4aRQD8k6JRbGDZYei4RSfXFE
-	aP9GDmiDVv8w87b5Kdo5JscwwswpLLyJ32Mit1LqD5m7wbE=
-X-Google-Smtp-Source: AGHT+IEKyJYCmE/ssbDqw9p58PmbfU6BPpsf7THxBdkw3DrXon2fKE3Jl/zXGWBEVCqgwjGAvzv4JA==
-X-Received: by 2002:a05:6a00:180b:b0:736:baa0:2acd with SMTP id d2e1a72fcca58-73980487652mr31670164b3a.20.1743652552641;
-        Wed, 02 Apr 2025 20:55:52 -0700 (PDT)
-Received: from google.com ([2401:fa00:8f:203:bb3:abb1:21bc:a00c])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739da0b3ff9sm383401b3a.137.2025.04.02.20.55.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Apr 2025 20:55:52 -0700 (PDT)
-Date: Thu, 3 Apr 2025 12:55:46 +0900
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Nhat Pham <nphamcs@gmail.com>
-Cc: akpm@linux-foundation.org, hannes@cmpxchg.org, yosry.ahmed@linux.dev, 
-	chengming.zhou@linux.dev, sj@kernel.org, linux-mm@kvack.org, kernel-team@meta.com, 
-	linux-kernel@vger.kernel.org, gourry@gourry.net, ying.huang@linux.alibaba.com, 
-	jonathan.cameron@huawei.com, dan.j.williams@intel.com, linux-cxl@vger.kernel.org, 
-	minchan@kernel.org, senozhatsky@chromium.org
-Subject: Re: [PATCH v2] zsmalloc: prefer the the original page's node for
- compressed data
-Message-ID: <mnvexa7kseswglcqbhlot4zg3b3la2ypv2rimdl5mh5glbmhvz@wi6bgqn47hge>
-References: <20250402204416.3435994-1-nphamcs@gmail.com>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="rTSlV94Q"
+Received: from epcas2p2.samsung.com (unknown [182.195.41.54])
+	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20250403035544epoutp049f98550963c05081d2db974d8abac006~yssBa9I_Z0400604006epoutp04X
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 03:55:44 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20250403035544epoutp049f98550963c05081d2db974d8abac006~yssBa9I_Z0400604006epoutp04X
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1743652545;
+	bh=Ej6k3ZLWQF+05g7feuaoptHbKWegrmPgWjF8rs/7NXY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=rTSlV94QRiaBjdMyRMI6WMQNRVVqeSCgMnBhmnBKB5ZENFjdIngWy9b98jCYPn6fh
+	 A4uZUjHHheJ8WzwPFlhlscNxGVzYH43TUj5FB+feDHNLLxsmVq1wul4FCHm01bcDKx
+	 Kdrdy2Av+9paiVxwqCfzc+iIfl3oqDOtkr7tAiPA=
+Received: from epsnrtp03.localdomain (unknown [182.195.42.155]) by
+	epcas2p3.samsung.com (KnoxPortal) with ESMTPS id
+	20250403035544epcas2p3c55ebdc995a32e86804f8b0b2caaf468~yssA2RRGP2105821058epcas2p3P;
+	Thu,  3 Apr 2025 03:55:44 +0000 (GMT)
+Received: from epsmgec2p1.samsung.com (unknown [182.195.36.100]) by
+	epsnrtp03.localdomain (Postfix) with ESMTP id 4ZSnvg4Yzkz3hhT8; Thu,  3 Apr
+	2025 03:55:43 +0000 (GMT)
+Received: from epcas2p4.samsung.com ( [182.195.41.56]) by
+	epsmgec2p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+	8E.F1.09780.FB60EE76; Thu,  3 Apr 2025 12:55:43 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+	epcas2p2.samsung.com (KnoxPortal) with ESMTPA id
+	20250403035542epcas2p2da512aa29b7d9c68ad698399264e0d05~ysr-MEXyv2358523585epcas2p2o;
+	Thu,  3 Apr 2025 03:55:42 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20250403035542epsmtrp11d576aabebb09abda82ace4d6ca4cbaf~ysr-KwEhN2942429424epsmtrp1t;
+	Thu,  3 Apr 2025 03:55:42 +0000 (GMT)
+X-AuditID: b6c32a43-9b7fe70000002634-99-67ee06bf3b1c
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	78.8C.08766.EB60EE76; Thu,  3 Apr 2025 12:55:42 +0900 (KST)
+Received: from perf (unknown [10.229.95.91]) by epsmtip1.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20250403035542epsmtip1b91f8b8759e4cc8898b6b6c78a09a97e~ysr_6KM960228602286epsmtip1g;
+	Thu,  3 Apr 2025 03:55:42 +0000 (GMT)
+Date: Thu, 3 Apr 2025 12:59:57 +0900
+From: Youngmin Nam <youngmin.nam@samsung.com>
+To: William McVicker <willmcvicker@google.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon
+	<will@kernel.org>, Peter Griffin <peter.griffin@linaro.org>,
+	=?iso-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>, Tudor Ambarus
+	<tudor.ambarus@linaro.org>, Rob Herring <robh@kernel.org>, Krzysztof
+	Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Alim
+	Akhtar <alim.akhtar@samsung.com>, Daniel Lezcano
+	<daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Saravana
+	Kannan <saravanak@google.com>, kernel-team@android.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Will Deacon
+	<willdeacon@google.com>, Youngmin Nam <youngmin.nam@samsung.com>
+Subject: Re: [PATCH v1 4/6] arm64: dts: exynos: gs101: Add
+ 'local-timer-stop' to cpuidle nodes
+Message-ID: <Z+4Hve9pQoLeh9sZ@perf>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <Z-2zQ-PcvxFTBc6M@google.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Tf0xTVxTHd/teX1/R6hsyvWGDsMfCBhmlRaAXoUQjP+rmHyRblm0o0LVv
+	LWlpS18LssTJJhOpG8IU0YYUHDAdMnEFShXBpZDA3KgjW2Ajjun8EagburIZRAtrebr43+ec
+	+/3ec88995JY+C9EJFlisDBmg1JPE2G4azgeJV4i5jWS824aXXO4CNTr68HR3S8/Bahr0MtD
+	joUo1DLi5SN3fwSas88QyHljko9+utBMoONXhnjo3PFlHK1cdAuQzRMgUI+zEUP+6UJUfTUV
+	1Ty4g6NO/wpAbd/6BVsjFK4BF1/R5egCilanVeHsrCUUVycvEop5r1eg6Gnfp6jr7QSKBWd0
+	vvBdXaaWUaoZcwxjUBnVJQaNnH79jaLtRalpEmmiNB3J6BiDspSR09k78xNzS/TBruiYcqXe
+	GkzlK1mWTsrKNButFiZGa2QtcpoxqfUmmUnMKktZq0EjNjCWLVKJJDk1KCzWaTv8Dbjp16g9
+	Cw92V4H7m2yAJCGVAq+4C2wgjAyn3AAunFjkc4EfQN/ElMAGhMHgPoCOWvMTQ1NAw2kGAfx4
+	aJDHBdcBPP+PAwsZcOolaHPdIUJMUInQNbYMQuYISgwffbInpMeoOT6sc82CkGYDVQwnhnz8
+	EIuoWNj8hZ/g+Fn43YmbeIiFVAL87VETCJkhNUtCn61n1QCpbHh4fITH8QboG+0VcBwJ5w4f
+	eMwsrPp9GuPM1QBenprFuIXN0H67ZvUUGKWFrmsTGNdmLByZxrn0OnhwOCDg0iJ48EA454yD
+	S0fPAY5fgANtpx/vqIB9Ky6Cu5QAgN9/8xCrB9H2p/qxP1WN41dh64CfsAdLYNTz8NQyyWE8
+	7L6Q1Ar4nWAjY2JLNYwq2ST9f7wqY6kTrD7xhO1u8HPLstgDeCTwAEhidISoLOEvTbhIraz8
+	gDEbi8xWPcN6QGpwOA1Y5HMqY/CPGCxF0pR0SUpamlSWnCqR0ZtEnr9vacIpjdLC6BjGxJif
+	+HikMLKKl5FmF93LKz+082561o8Sf/ylk+m5vMWKwEq1bFBEyq2LyYP98/va6u/pZIXOJDtR
+	836Bs6/2lSN5Hc3r+zdP3soOHMstbP8o8NnwM853dhQf2zKrut43HCj7M/brioeVom2qxu5F
+	+RE8J2djx9tzayQnp9ZWlGTERXkv94mLDuF5r/0QtvZme1ymsCFrvLpgfq9OUyleChuLq3Ps
+	cAhbG2+fbmz50JdztgCs7Goor19TfjZrf9TM1ow/0Hqc9+KbdflTZ6rYM1FhevM69UKTN/ut
+	vdHjL9e3qkfz/zWdQkdndnWTnqVAuXXs8/2ewq9wcWGatWwRvndjW/WEWNA8Cty7aZzVKqUJ
+	mJlV/gddt0+8awQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrAIsWRmVeSWpSXmKPExsWy7bCSnO4+tnfpBi/eSVk8mLeNzWLLq80s
+	Fu+X9TBarNl7jsli3mdZi/lHzrFa7NguYvFy1j02i02Pr7FaXN41h81ixvl9TBYbZvxjsfi/
+	Zwe7Rdehv2wWmzdNZbb4dCvOouWOqUX7z9csFqs+/We0WHzgE7uDiMe23dtYPdbMW8PosWBT
+	qcemVZ1sHneu7WHzeHfuHLvH5iX1Hn1bVjF6fN4kF8AZxWWTkpqTWZZapG+XwJWx/OZStoKZ
+	0hXdf46wNTCeF+1i5OCQEDCRmP43vYuRi0NIYDejxMy9J9m6GDmB4jISt1deZoWwhSXutxxh
+	hSi6zyjxbOp9FpAEi4CKRNe212ANbAK6EttO/GMEGSoioCfxp7UCpJ5Z4DOrxNaOo8wgNcIC
+	CRKXOm4zgdi8AsoScxZ9YoMY+p9R4uXdPVAJQYmTM5+ALWAW0JK48e8lE8hQZgFpieX/OEDC
+	nEDhu3+mM05gFJiFpGMWko5ZCB0LGJlXMUqmFhTnpucWGxYY5qWW6xUn5haX5qXrJefnbmIE
+	R6KW5g7G7as+6B1iZOJgPMQowcGsJMJbqPU2XYg3JbGyKrUoP76oNCe1+BCjNAeLkjiv+Ive
+	FCGB9MSS1OzU1ILUIpgsEwenVAMTa0723LM2WRcbVtzZz71RTCcrROzgC2azaxddOV6kvg+e
+	2ROhdfP0fXtZn7JLP/ucrjccf5PxbUb8pc/nqp1eLzc++lZq1kbbWabS7dsFlBgUkyUvb4k6
+	cLqENytlRcgpTzNVtodz39rt0G9qVJlb82Lu1LsMN3svpq7e/CfvQsuE1fdNHn+7fy2r7ki3
+	c6Wrxjf1r7O4qw1u/39fmrCpb0LnW+4pyzLrPnRMr1/WdeXttPl9xRUvqlLa2UT4+7cUT74g
+	ETWjr/pImUcXe2DL0llTc4QjPukfPRjrP9WZgT0s2bShV/bK9T2cf1JezPKrtLLQsLNKimE3
+	np3QlHD1/Ez32d8mcGZPcjrwtnmjEktxRqKhFnNRcSIAx5ywPTMDAAA=
+X-CMS-MailID: 20250403035542epcas2p2da512aa29b7d9c68ad698399264e0d05
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+	boundary="----JAxyHCgdtJ96A8.Ok.gYWmZQmsTOHaTnMoXq.aDuWNAvXzgf=_81f4a_"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250331230151epcas2p486a7c6d7153737f4168cfef74249742f
+References: <20250331230034.806124-1-willmcvicker@google.com>
+	<CGME20250331230151epcas2p486a7c6d7153737f4168cfef74249742f@epcas2p4.samsung.com>
+	<20250331230034.806124-5-willmcvicker@google.com> <Z+y4zxfifkQqLxKF@perf>
+	<Z-2zQ-PcvxFTBc6M@google.com>
+
+------JAxyHCgdtJ96A8.Ok.gYWmZQmsTOHaTnMoXq.aDuWNAvXzgf=_81f4a_
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20250402204416.3435994-1-nphamcs@gmail.com>
 
-On (25/04/02 13:44), Nhat Pham wrote:
-[..]
-> @@ -1981,10 +1981,15 @@ static int recompress_slot(struct zram *zram, u32 index, struct page *page,
->  	 * We are holding per-CPU stream mutex and entry lock so better
->  	 * avoid direct reclaim.  Allocation error is not fatal since
->  	 * we still have the old object in the mem_pool.
-> +	 *
-> +	 * XXX: technically, the node we really want here is the node that holds
-> +	 * the original compressed data. But that would require us to modify
-> +	 * zsmalloc API to return this information. For now, we will make do with
-> +	 * the node of the page allocated for recompression.
->  	 */
->  	handle_new = zs_malloc(zram->mem_pool, comp_len_new,
->  			       GFP_NOIO | __GFP_NOWARN |
-> -			       __GFP_HIGHMEM | __GFP_MOVABLE);
-> +			       __GFP_HIGHMEM | __GFP_MOVABLE, page_to_nid(page));
+On Wed, Apr 02, 2025 at 02:59:31PM -0700, William McVicker wrote:
+> Hi Youngmin,
+> 
+> On 04/02/2025, Youngmin Nam wrote:
+> > On Mon, Mar 31, 2025 at 04:00:26PM -0700, Will McVicker wrote:
+> > > From: Will Deacon <willdeacon@google.com>
+> > > 
+> > > In preparation for switching to the architected timer as the primary
+> > > clockevents device, mark the cpuidle nodes with the 'local-timer-stop'
+> > > property to indicate that an alternative clockevents device must be
+> > > used for waking up from the "c2" idle state.
+> > > 
+> > > Signed-off-by: Will Deacon <willdeacon@google.com>
+> > > [Original commit from https://android.googlesource.com/kernel/gs/+/a896fd98638047989513d05556faebd28a62b27c]
+> > > Signed-off-by: Will McVicker <willmcvicker@google.com>
+> > > ---
+> > >  arch/arm64/boot/dts/exynos/google/gs101.dtsi | 3 +++
+> > >  1 file changed, 3 insertions(+)
+> > > 
+> > > diff --git a/arch/arm64/boot/dts/exynos/google/gs101.dtsi b/arch/arm64/boot/dts/exynos/google/gs101.dtsi
+> > > index 3de3a758f113..fd0badf24e6f 100644
+> > > --- a/arch/arm64/boot/dts/exynos/google/gs101.dtsi
+> > > +++ b/arch/arm64/boot/dts/exynos/google/gs101.dtsi
+> > > @@ -155,6 +155,7 @@ ananke_cpu_sleep: cpu-ananke-sleep {
+> > >  				idle-state-name = "c2";
+> > >  				compatible = "arm,idle-state";
+> > >  				arm,psci-suspend-param = <0x0010000>;
+> > > +				local-timer-stop;
+> > >  				entry-latency-us = <70>;
+> > >  				exit-latency-us = <160>;
+> > >  				min-residency-us = <2000>;
+> > > @@ -164,6 +165,7 @@ enyo_cpu_sleep: cpu-enyo-sleep {
+> > >  				idle-state-name = "c2";
+> > >  				compatible = "arm,idle-state";
+> > >  				arm,psci-suspend-param = <0x0010000>;
+> > > +				local-timer-stop;
+> > >  				entry-latency-us = <150>;
+> > >  				exit-latency-us = <190>;
+> > >  				min-residency-us = <2500>;
+> > > @@ -173,6 +175,7 @@ hera_cpu_sleep: cpu-hera-sleep {
+> > >  				idle-state-name = "c2";
+> > >  				compatible = "arm,idle-state";
+> > >  				arm,psci-suspend-param = <0x0010000>;
+> > > +				local-timer-stop;
+> > >  				entry-latency-us = <235>;
+> > >  				exit-latency-us = <220>;
+> > >  				min-residency-us = <3500>;
+> > > -- 
+> > > 2.49.0.472.ge94155a9ec-goog
+> > > 
+> > Hi Will.
+> > 
+> > Are you using this property in production?
+> > If so, have you noticed any performance improvements?
+> 
+> On Pixel 6, I have only recently switched to using the arch_timer as the
+> default clocksource. I haven't noticed any major perf improvements to the main
+> benchmarks, but also haven't seen any regressions. Based on the ChromeOS perf
+> analysis in [1,2], there was a significant perf difference found.
+> 
+> [1] https://lore.kernel.org/linux-samsung-soc/CAJFHJrrgWGc4XGQB0ysLufAg3Wouz-aYXu97Sy2Kp=HzK+akVQ@mail.gmail.com/
+> [2] https://lore.kernel.org/linux-samsung-soc/CAASgrz2Nr69tpfC8ka9gbs2OvjLEGsvgAj4vBCFxhsamuFum7w@mail.gmail.com/
+> 
+> If it helps, I found that Pixel 8 and 9 devices (didn't check Pixel 7)
+> are already using the arch_timer with this 'local-timer-stop' as the default
+> clocksource in the production kernel.
+> 
+> Thanks,
+> Will
+> 
+> [...]
+> 
 
-This works for me.  I saw in other threads (and sorry, I'm on a sick
-leave now, can't reply fast) that "zram people need to fix it"/etc.
-I guess I'm one of those zram people and I don't think I run any
-multi-node NUMA systems, so that problem probably has never occurred
-to me.  We can add a simple API extension to lookup node-id by
-zsmalloc handle, if anyone really needs it, but I'm okay with the
-status quo (and XXX) for the time being.
+Hi Will,
 
-[..]
-> -unsigned long zs_malloc(struct zs_pool *pool, size_t size, gfp_t gfp)
-> +unsigned long zs_malloc(struct zs_pool *pool, size_t size, gfp_t gfp,
-> +				const int nid)
->  {
+Thanks for sharing the status of Pixel devices.
 
-I'm not the zspool maintainer, but if I may ask, for new zsmalloc code my
-preference is to follow the kernel styles (yes, the old code doesn't follow
-any at all, whenever I touch the old code I fix it).
+I agree that using the arch_timer as a clock source device brings significant benefits.
+The links you shared are definitely related to that.
 
-Do you mind if we do something like below? (at least for zsmalloc)
+However, I would also like to know whether arch_timer is used as a clock event device in Pixel production.
 
-With this
-Acked-by: Sergey Senozhatsky <senozhatsky@chromium.org> #zram and zsmalloc
+Thanks,
+Youngmin
+
+------JAxyHCgdtJ96A8.Ok.gYWmZQmsTOHaTnMoXq.aDuWNAvXzgf=_81f4a_
+Content-Type: text/plain; charset="utf-8"
 
 
----
-
-diff --git a/include/linux/zpool.h b/include/linux/zpool.h
-index 697525cb00bd..369ef068fad8 100644
---- a/include/linux/zpool.h
-+++ b/include/linux/zpool.h
-@@ -22,7 +22,7 @@ const char *zpool_get_type(struct zpool *pool);
- void zpool_destroy_pool(struct zpool *pool);
- 
- int zpool_malloc(struct zpool *pool, size_t size, gfp_t gfp,
--			unsigned long *handle, const int nid);
-+		 unsigned long *handle, const int nid);
- 
- void zpool_free(struct zpool *pool, unsigned long handle);
- 
-@@ -64,7 +64,7 @@ struct zpool_driver {
- 	void (*destroy)(void *pool);
- 
- 	int (*malloc)(void *pool, size_t size, gfp_t gfp,
--				unsigned long *handle, const int nid);
-+		      unsigned long *handle, const int nid);
- 	void (*free)(void *pool, unsigned long handle);
- 
- 	void *(*obj_read_begin)(void *pool, unsigned long handle,
-diff --git a/mm/zpool.c b/mm/zpool.c
-index b99a7c03e735..0a71d03369f1 100644
---- a/mm/zpool.c
-+++ b/mm/zpool.c
-@@ -239,7 +239,7 @@ const char *zpool_get_type(struct zpool *zpool)
-  * Returns: 0 on success, negative value on error.
-  */
- int zpool_malloc(struct zpool *zpool, size_t size, gfp_t gfp,
--			unsigned long *handle, const int nid)
-+		 unsigned long *handle, const int nid)
- {
- 	return zpool->driver->malloc(zpool->pool, size, gfp, handle, nid);
- }
-diff --git a/mm/zsmalloc.c b/mm/zsmalloc.c
-index daa16ce4cf07..70406ac94bbd 100644
---- a/mm/zsmalloc.c
-+++ b/mm/zsmalloc.c
-@@ -452,7 +452,7 @@ static void zs_zpool_destroy(void *pool)
- }
- 
- static int zs_zpool_malloc(void *pool, size_t size, gfp_t gfp,
--			unsigned long *handle, const int nid)
-+			   unsigned long *handle, const int nid)
- {
- 	*handle = zs_malloc(pool, size, gfp, nid);
- 
-@@ -1033,8 +1033,8 @@ static void create_page_chain(struct size_class *class, struct zspage *zspage,
-  * Allocate a zspage for the given size class
-  */
- static struct zspage *alloc_zspage(struct zs_pool *pool,
--					struct size_class *class,
--					gfp_t gfp, const int nid)
-+				   struct size_class *class,
-+				   gfp_t gfp, const int nid)
- {
- 	int i;
- 	struct zpdesc *zpdescs[ZS_MAX_PAGES_PER_ZSPAGE];
-@@ -1333,7 +1333,7 @@ static unsigned long obj_malloc(struct zs_pool *pool,
-  * Allocation requests with size > ZS_MAX_ALLOC_SIZE will fail.
-  */
- unsigned long zs_malloc(struct zs_pool *pool, size_t size, gfp_t gfp,
--				const int nid)
-+			const int nid)
- {
- 	unsigned long handle;
- 	struct size_class *class;
+------JAxyHCgdtJ96A8.Ok.gYWmZQmsTOHaTnMoXq.aDuWNAvXzgf=_81f4a_--
