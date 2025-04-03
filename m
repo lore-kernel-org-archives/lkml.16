@@ -1,132 +1,231 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE8EE24CEE2;
-	Thu,  3 Apr 2025 15:35:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE75E24CEE2;
+	Thu,  3 Apr 2025 15:38:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743694513; cv=none; b=biYu5LFerHfJCY+ZjvvuzZqGvM1SXntGgcQkbmj72w/7itMJqFU+XnBbPu2tvVA39OMIZXlUNsq0b3esJ+9YzNkicmLiEaYk5xFSL7zMVw22MA5uSi8bk4TV7EEQp49C3X5j8GoqnqEeSAY0gRexI/fMI09UNMRtmR7+boILtSY=
+	t=1743694701; cv=none; b=SYX0HwiZ/qL4Rd2FTVjygm3FKWt+NbUEw2iSvXPmYCmp6RDtGl0rw3Z6JbgiMb5dNfVfPWebs+4l18TM48iFFJAf+qB63CnSrPa5IY9vVrjNvTrvBI1NACg5rkbRrdnlRrB4rYHD2iV7Y/0bpyzGOFIm/xl9uZf+H3+HIf1Slf4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743694513; c=relaxed/simple;
-	bh=tRX3QH54Z5E9JiOYMA8JSVKaog4d6TOs7no0XmWB1Cc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DNCGnWb3HkY8qSgFuNd/mgqOwBMM/4cuIRJG8IrzucE7yg2EawePBpzBliZy0J713+SiXx81CCRSEUeZcb9LhfKrNJa9NpAAc8fsg3z7MKMKIDZQuHjIN/OPejCCIBy7a0uVnermT6mmxeLHB2QjZGfauWsurAqSmuSMYythAdk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lookn/GP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743694701; c=relaxed/simple;
+	bh=2N5zJZzgh/dw0zWS98Pu9N5UQnlHqwehklgdj1kUOUc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=XlRdClPSpxb7DYqNbFRZhe4/LHDkOAECXapXOTWzJRfjLcCKMPsLKS3xNRNJZd6eVjKtiyeaovY9JeHxFQZmcBVMx1FHXd5sIzRFq6jtgs1kk6DU840X6GoUIS3d7wV0k/3ahTAFamh4C+yJLzdbZ0RrmAOPFnwxsFPomdiH4IU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pVfswKyd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lookn/GP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D06ACC4CEE3;
-	Thu,  3 Apr 2025 15:35:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pVfswKyd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B467DC4CEE8;
+	Thu,  3 Apr 2025 15:38:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743694513;
-	bh=tRX3QH54Z5E9JiOYMA8JSVKaog4d6TOs7no0XmWB1Cc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=lookn/GPc9dAFgHd7Mltpjg6WtYFxvOnW1hnQmt8gl8xBaMk+Se8p5yW+JoWM1kZ/
-	 dKfZZU+DQp6J7KNSeKaPxPw0f2zJXRllrCh5DiVEyb981f3LTwGgW4k+APi2/R6uOv
-	 tZU16CmzUnR+mb7n0xX9MtLiT5pxtwDRylnRg06WY0/74KVAuUiy5A9O+2n6jpAyQD
-	 W2Yqwdc+KF69Kdduw/toZ82kjzDcBEIdTsEUVsnkds1hUYUHGZmgWRhjNSI+RPeDEa
-	 gv4oSFuIKY5Cs4zdY2zZSOrE7MVLNm6ti+zLAcZvExlTI/TN63JXa1+i+nSaYX/2rC
-	 9DI1T6b+Iymzw==
-Message-ID: <a9115802-09da-4475-8957-eb74de3ee36a@kernel.org>
-Date: Thu, 3 Apr 2025 17:35:06 +0200
+	s=k20201202; t=1743694700;
+	bh=2N5zJZzgh/dw0zWS98Pu9N5UQnlHqwehklgdj1kUOUc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=pVfswKydAQlrnjX27RgoMq+mB1EDd5hh08ml1nJtEt3rkxJ9e4fLVI7MNELk2YTxt
+	 2HKMgrmb4pl5CpL4SB70v0a8PsY02koKUDFitA/Zun9qfF8V0wLW6SGVYOxtTv0KET
+	 fZnKj7MvzxvWWjLu2TYIkN4rPHesa7Nzyxyxj5u90E7Vh/lGsR916+zIu2l4qrVsCN
+	 FeHhls0zNi2XcBM+sX1l+OPWido96A70UXFa20IMcJKHvK68bfabdfDuX6OOvDZAbe
+	 BFL/q9qAUF0Ky9QJOtgjPmxhKtTZ8ip8M1Q6X7ZrM0AmIwqkYgHAY/zQSetem4+/vM
+	 tIKONxn5B+tYw==
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: David Howells <dhowells@redhat.com>
+Cc: keyrings@vger.kernel.org,
+	Jarkko Sakkinen <jarkko.sakkinen@opinsys.com>,
+	Jarkko Sakkinen <jarkko@kernel.org>,
+	Paul Moore <paul@paul-moore.com>,
+	James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	linux-kernel@vger.kernel.org,
+	linux-security-module@vger.kernel.org
+Subject: [RFC PATCH v4] KEYS: Add a list for unreferenced keys
+Date: Thu,  3 Apr 2025 18:38:09 +0300
+Message-Id: <20250403153809.213535-1-jarkko@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <Z-55p44u6rJRrY5A@kernel.org>
+References: <Z-55p44u6rJRrY5A@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] dt-bindings: watchdog: Add NXP Software Watchdog
- Timer
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, wim@linux-watchdog.org
-Cc: linux@roeck-us.net, linux-watchdog@vger.kernel.org,
- linux-kernel@vger.kernel.org, S32@nxp.com, ghennadi.procopciuc@nxp.com,
- thomas.fossati@linaro.org, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, devicetree@vger.kernel.org
-References: <20250402154942.3645283-1-daniel.lezcano@linaro.org>
- <20250402154942.3645283-2-daniel.lezcano@linaro.org>
- <ffe49998-f809-458e-8eda-002d0c0fc32a@kernel.org>
- <c449fba0-476e-495b-abbd-65ba2d44d590@linaro.org>
- <9c47cd4d-41c7-42b9-8f00-a1ea9b9f6ed8@kernel.org>
- <5c2def81-11c2-4e24-b633-aabdb50cab34@linaro.org>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <5c2def81-11c2-4e24-b633-aabdb50cab34@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 03/04/2025 17:33, Daniel Lezcano wrote:
-> On 03/04/2025 16:16, Krzysztof Kozlowski wrote:
->> On 03/04/2025 01:01, Daniel Lezcano wrote:
->>> On 02/04/2025 17:56, Krzysztof Kozlowski wrote:
->>>> On 02/04/2025 17:49, Daniel Lezcano wrote:
->>>>> Describe the Software Watchdog Timer available on the S32G platforms.
->>>>>
->>>>> Cc: Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>
->>>>> Cc: Thomas Fossati <thomas.fossati@linaro.org>
->>>>> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
->>>>
->>>> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->>>>
->>>> Best regards,
->>>> Krzysztof
->>>
->>> I ran the make dt_binding_check but inadvertently removed the "oneOf:"
->>> after :/
->> Other errors were also not fixed even though you got report on them on
->> 29th of March.
-> 
-> Which ones ?
-> 
-> All errors were coming from the oneOf removal, after re-adding it they 
-> are all gone
+From: Jarkko Sakkinen <jarkko.sakkinen@opinsys.com>
 
+Add an isolated list of unreferenced keys to be queued for deletion, and
+try to pin the keys in the garbage collector before processing anything.
+Skip unpinnable keys.
 
-The same as from previous patchset - wrong unit address, maybe more.
-> 
+In effect this means that exactly from the point of time when the usage
+count is zeroed all of the GC collector processing will be skipped. Earlier
+this was done only when key_put() function had done its processing, meaning
+that keys with usage count in zero might get still processed.
 
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@opinsys.com>
+---
+v4:
+- Pin the key while processing key type teardown. Skip dead keys.
+- Revert key_gc_graveyard back key_gc_unused_keys.
+- Rewrote the commit message.
+- "unsigned long flags" declaration somehow did make to the previous
+  patch (sorry).
+v3:
+- Using spin_lock() fails since key_put() is executed inside IRQs.
+  Using spin_lock_irqsave() would neither work given the lock is
+  acquired for /proc/keys. Therefore, separate the lock for
+  graveyard and key_graveyard before reaping key_serial_tree.
+v2:
+- Rename key_gc_unused_keys as key_gc_graveyard, and re-document the
+  function.
+---
+ include/linux/key.h      |  7 ++-----
+ security/keys/gc.c       | 36 ++++++++++++++++++++----------------
+ security/keys/internal.h |  2 ++
+ security/keys/key.c      |  7 +++++--
+ 4 files changed, 29 insertions(+), 23 deletions(-)
 
-Best regards,
-Krzysztof
+diff --git a/include/linux/key.h b/include/linux/key.h
+index ba05de8579ec..c50659184bdf 100644
+--- a/include/linux/key.h
++++ b/include/linux/key.h
+@@ -195,10 +195,8 @@ enum key_state {
+ struct key {
+ 	refcount_t		usage;		/* number of references */
+ 	key_serial_t		serial;		/* key serial number */
+-	union {
+-		struct list_head graveyard_link;
+-		struct rb_node	serial_node;
+-	};
++	struct list_head	graveyard_link; /* key->usage == 0 */
++	struct rb_node		serial_node;
+ #ifdef CONFIG_KEY_NOTIFICATIONS
+ 	struct watch_list	*watchers;	/* Entities watching this key for changes */
+ #endif
+@@ -236,7 +234,6 @@ struct key {
+ #define KEY_FLAG_ROOT_CAN_INVAL	7	/* set if key can be invalidated by root without permission */
+ #define KEY_FLAG_KEEP		8	/* set if key should not be removed */
+ #define KEY_FLAG_UID_KEYRING	9	/* set if key is a user or user session keyring */
+-#define KEY_FLAG_FINAL_PUT	10	/* set if final put has happened on key */
+ 
+ 	/* the key type and key description string
+ 	 * - the desc is used to match a key against search criteria
+diff --git a/security/keys/gc.c b/security/keys/gc.c
+index f27223ea4578..9ccd8ee6fcdb 100644
+--- a/security/keys/gc.c
++++ b/security/keys/gc.c
+@@ -189,6 +189,7 @@ static void key_garbage_collector(struct work_struct *work)
+ 	struct rb_node *cursor;
+ 	struct key *key;
+ 	time64_t new_timer, limit, expiry;
++	unsigned long flags;
+ 
+ 	kenter("[%lx,%x]", key_gc_flags, gc_state);
+ 
+@@ -206,21 +207,35 @@ static void key_garbage_collector(struct work_struct *work)
+ 
+ 	new_timer = TIME64_MAX;
+ 
++	spin_lock_irqsave(&key_graveyard_lock, flags);
++	list_splice_init(&key_graveyard, &graveyard);
++	spin_unlock_irqrestore(&key_graveyard_lock, flags);
++
++	list_for_each_entry(key, &graveyard, graveyard_link) {
++		spin_lock(&key_serial_lock);
++		kdebug("unrefd key %d", key->serial);
++		rb_erase(&key->serial_node, &key_serial_tree);
++		spin_unlock(&key_serial_lock);
++	}
++
+ 	/* As only this function is permitted to remove things from the key
+ 	 * serial tree, if cursor is non-NULL then it will always point to a
+ 	 * valid node in the tree - even if lock got dropped.
+ 	 */
+ 	spin_lock(&key_serial_lock);
++	key = NULL;
+ 	cursor = rb_first(&key_serial_tree);
+ 
+ continue_scanning:
++	key_put(key);
+ 	while (cursor) {
+ 		key = rb_entry(cursor, struct key, serial_node);
+ 		cursor = rb_next(cursor);
+-
+-		if (test_bit(KEY_FLAG_FINAL_PUT, &key->flags)) {
+-			smp_mb(); /* Clobber key->user after FINAL_PUT seen. */
+-			goto found_unreferenced_key;
++		/* key_get(), unless zero: */
++		if (!refcount_inc_not_zero(&key->usage)) {
++			key = NULL;
++			gc_state |= KEY_GC_REAP_AGAIN;
++			goto skip_dead_key;
+ 		}
+ 
+ 		if (unlikely(gc_state & KEY_GC_REAPING_DEAD_1)) {
+@@ -274,6 +289,7 @@ static void key_garbage_collector(struct work_struct *work)
+ 		spin_lock(&key_serial_lock);
+ 		goto continue_scanning;
+ 	}
++	key_put(key);
+ 
+ 	/* We've completed the pass.  Set the timer if we need to and queue a
+ 	 * new cycle if necessary.  We keep executing cycles until we find one
+@@ -328,18 +344,6 @@ static void key_garbage_collector(struct work_struct *work)
+ 	kleave(" [end %x]", gc_state);
+ 	return;
+ 
+-	/* We found an unreferenced key - once we've removed it from the tree,
+-	 * we can safely drop the lock.
+-	 */
+-found_unreferenced_key:
+-	kdebug("unrefd key %d", key->serial);
+-	rb_erase(&key->serial_node, &key_serial_tree);
+-	spin_unlock(&key_serial_lock);
+-
+-	list_add_tail(&key->graveyard_link, &graveyard);
+-	gc_state |= KEY_GC_REAP_AGAIN;
+-	goto maybe_resched;
+-
+ 	/* We found a restricted keyring and need to update the restriction if
+ 	 * it is associated with the dead key type.
+ 	 */
+diff --git a/security/keys/internal.h b/security/keys/internal.h
+index 2cffa6dc8255..08f356d04d78 100644
+--- a/security/keys/internal.h
++++ b/security/keys/internal.h
+@@ -66,6 +66,8 @@ struct key_user {
+ extern struct rb_root	key_user_tree;
+ extern spinlock_t	key_user_lock;
+ extern struct key_user	root_key_user;
++extern struct list_head	key_graveyard;
++extern spinlock_t	key_graveyard_lock;
+ 
+ extern struct key_user *key_user_lookup(kuid_t uid);
+ extern void key_user_put(struct key_user *user);
+diff --git a/security/keys/key.c b/security/keys/key.c
+index 7198cd2ac3a3..7511f2017b6b 100644
+--- a/security/keys/key.c
++++ b/security/keys/key.c
+@@ -22,6 +22,8 @@ DEFINE_SPINLOCK(key_serial_lock);
+ 
+ struct rb_root	key_user_tree; /* tree of quota records indexed by UID */
+ DEFINE_SPINLOCK(key_user_lock);
++LIST_HEAD(key_graveyard);
++DEFINE_SPINLOCK(key_graveyard_lock);
+ 
+ unsigned int key_quota_root_maxkeys = 1000000;	/* root's key count quota */
+ unsigned int key_quota_root_maxbytes = 25000000; /* root's key space quota */
+@@ -658,8 +660,9 @@ void key_put(struct key *key)
+ 				key->user->qnbytes -= key->quotalen;
+ 				spin_unlock_irqrestore(&key->user->lock, flags);
+ 			}
+-			smp_mb(); /* key->user before FINAL_PUT set. */
+-			set_bit(KEY_FLAG_FINAL_PUT, &key->flags);
++			spin_lock_irqsave(&key_graveyard_lock, flags);
++			list_add_tail(&key->graveyard_link, &key_graveyard);
++			spin_unlock_irqrestore(&key_graveyard_lock, flags);
+ 			schedule_work(&key_gc_work);
+ 		}
+ 	}
+-- 
+2.39.5
+
