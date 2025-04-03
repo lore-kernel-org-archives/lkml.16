@@ -1,46 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB36918DB20;
-	Thu,  3 Apr 2025 06:42:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A37319D891;
+	Thu,  3 Apr 2025 06:43:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743662544; cv=none; b=RplKDjIirfj46H3H6MREe0bwPTgosMAbV5Lz+qIiyvHgDyHywtizpd3TMwWBbuvrfdCVRNpgZUtV1ufwgO2G91DuE6S6XzIKQJGRhSgO61XxrSW061M3h9U1prRgdEF3R0nzqkwKqY8V3USmEeW+c5qpmuu1e0QbmfxycqCvpGg=
+	t=1743662618; cv=none; b=NyExCyV0zL/g9wA+pdLZWV3AkRwi4De4mXnNt1BdOfXhnV6rEAI8c4A4PUlRqtiK72p1cjMWWZX/JlkiyjIzsxayVUOCuTlp9JJ8qPU/hyhep7N91aFdYnN0gLL5RnKhBQYwDBr6+3emFD7IcXtfaLhgFxm8a4YTfAFotfw8iTU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743662544; c=relaxed/simple;
-	bh=Mm5UvShqJfS6Bo3gBY57Tk/+isrXqZzI84v5T2TgGyI=;
+	s=arc-20240116; t=1743662618; c=relaxed/simple;
+	bh=81W5cCvEQsw4XwZ7842BJKjtgGqao+5IOnW7y95VUBQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gqif3gMve/ZJSg72jUx/lth+RJrIah9o/z4beNGGVYGM4sFUGDAunWHmyW649fdLq6m6jz8Ydctf3mu/7zGZV2hE376I+P3+C/u6OJJHEMYpFeHbby432UmfyL4dtg2gs8tGFBlgm7f1uLD3UVpgI4TksNiGkjFrSa+6+vHiM6c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qgce0Ewg; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=bP5FUNmwS04EQKlqv8I96vyCy0M3KnUJ3MtnU3ndmhz3ehXLCQq+SO5EjfsW3kuv6DMEohadxEIXOidSrsRK1vrYkSgCMdqHjmzzyGFZFAAA2fpg1CpO7V9Lxf+BazAfv9WqSZwqLxrrMrDPxDXgV/Mbhnsr9/vGGxBV2skWG5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AvFHIHfj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qgce0Ewg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC26CC4CEE3;
-	Thu,  3 Apr 2025 06:42:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AvFHIHfj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D596C4CEE3;
+	Thu,  3 Apr 2025 06:43:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743662544;
-	bh=Mm5UvShqJfS6Bo3gBY57Tk/+isrXqZzI84v5T2TgGyI=;
+	s=k20201202; t=1743662618;
+	bh=81W5cCvEQsw4XwZ7842BJKjtgGqao+5IOnW7y95VUBQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Qgce0Ewgkd+Cumb5f6U4T1HhR7WHTnXMeJrlK6+7f+dxtNnJnHGzn4rG1Mh0jfzKG
-	 GYtkJizV2zO7Q72uwCvGV+9tZ7MjW203gozPMAbCeIkZnsgByXUV8z2r4qJ1sEcryJ
-	 0RX3uL8ze5r0AjY4Ymw5pMLgaJum8G4C9JgeHAZwZMjMg60yGnZf9DZiVvrnA2uncK
-	 TTDMv92scWRTufXVLVNFCgXkbUkZZHANAES+VwsOK7DGMrgpmPDjadzPqVXME1DnVt
-	 96T/3vhXiBiJsHJydOyNmnrUJcYxXPYniJ1sxotmez8xtYriIU6Ck4lRHhZfRByenT
-	 hz65jzoVWTjgg==
-Date: Thu, 3 Apr 2025 08:42:20 +0200
+	b=AvFHIHfjy0OboL5Wl2/rFkR/FmF9GOzkLJmNe4Uxs3e0HxE62O0lNsHNmCBnnLCus
+	 3bvqSdIbHpWtVrN9h2wSQ9fKSes7rHKkdmdMb8BETuYS5E6kCfNQxXYnmPMZ6oPfR+
+	 IQbys7rJxVnNmnjgu+irMEJFprgpOtXgEMf+60lWf8BYbmaQWe+giwnTwKBry1yGbR
+	 WWQ8bPqTYzikrMghw2fkZ8oJLvNCa+T55WeUHS3LTGUQrThlpF1f9OsAlzYfxw/2ng
+	 m6QrUKDT529Z3ZrhkhlAAYMSKi30DKKSx1HEkYG7LYZpeA+gcnwZMuGpIkkV7o6rvB
+	 YU5l0ZJUumWcQ==
+Date: Thu, 3 Apr 2025 08:43:34 +0200
 From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Andy Yan <andyshrk@163.com>
-Cc: dmitry.baryshkov@oss.qualcomm.com, heiko@sntech.de, hjc@rock-chips.com, 
-	mripard@kernel.org, naoki@radxa.com, stephen@radxa.com, 
-	cristian.ciocaltea@collabora.com, neil.armstrong@linaro.org, Laurent.pinchart@ideasonboard.com, 
-	yubing.zhang@rock-chips.com, krzk+dt@kernel.org, devicetree@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, robh@kernel.org, 
-	sebastian.reichel@collabora.com, Andy Yan <andy.yan@rock-chips.com>
-Subject: Re: [PATCH v3 4/9] dt-bindings: display: simple-bridge: Add ra620
- compatible
-Message-ID: <20250403-big-hog-from-ganymede-6aa617@krzk-bin>
-References: <20250403033748.245007-1-andyshrk@163.com>
- <20250403033748.245007-5-andyshrk@163.com>
+To: Kim Seer Paller <kimseer.paller@analog.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, 
+	Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 0/3] Add driver for AD3530R and AD3531R DACs
+Message-ID: <20250403-bison-of-glorious-force-4369b6@krzk-bin>
+References: <20250403-togreg-v3-0-d4b06a4af5a9@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,24 +45,32 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250403033748.245007-5-andyshrk@163.com>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250403-togreg-v3-0-d4b06a4af5a9@analog.com>
 
-On Thu, Apr 03, 2025 at 11:37:32AM +0800, Andy Yan wrote:
-> From: Andy Yan <andy.yan@rock-chips.com>
-> 
-> RA620 is a DP to HDMI bridge converter from RADXA, which first
-> found be used on ROCK 5 ITX.
-> 
-> This chip can be used without involving software.
-> 
-> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
-> 
+On Thu, Apr 03, 2025 at 01:33:54PM +0800, Kim Seer Paller wrote:
+> The AD3530/AD3530R (8-channel) and AD3531/AD3531R (4-channel) are
+> low-power, 16-bit, buffered voltage output DACs with software-
+> programmable gain controls, providing full-scale output spans of 2.5V or
+> 5V for reference voltages of 2.5V. These devices operate from a single
+> 2.7V to 5.5V supply and are guaranteed monotonic by design. The "R"
+> variants include a 2.5V, 5ppm/=C2=B0C internal reference, which is disabl=
+ed
+> by default.
+>=20
+> The AD3531R/AD3531 is not yet released, so the only available datasheet
+> for now is the AD3530R/AD3530. The only differences between the two is
+> the number of channels, and register addresses of some registers.
+>=20
+> Signed-off-by: Kim Seer Paller <kimseer.paller@analog.com>
 > ---
-> 
 > Changes in v3:
-> - First introduced in this version.
+> - Drop ABI docs.
+>=20
+> Bindings:
+> - Drop reviewer's tag.
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Why? Explain why you are dropping.
 
 Best regards,
 Krzysztof
