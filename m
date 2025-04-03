@@ -1,110 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [63.216.63.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE43619D090;
-	Thu,  3 Apr 2025 05:30:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABD0C11712;
+	Thu,  3 Apr 2025 05:30:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.216.63.40
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743658204; cv=none; b=WSe51gbxXdwi3D1jnoBcSlxcpDJfN1ln96gfa/BcwJsnWhgsSvUciqzMwt7gPsu6tttyt/ukR8IeK4pMVwQemOy9pfEcclkR/sCCnmobvhL6hsI14QnKbhAkZYdnSLKjPr0cX+UYyAUOCiUUxIRn+N19+Rv2GMjZ+VpxKvn/kpA=
+	t=1743658218; cv=none; b=oKmVGGmhwK6NdvZnUnPEFhpnpONDOr3YZsbnCVdsTkJgW3fo05A4I6jgOndMGHhInMuARcmf87yW3teZazK7VYbexnCo/F2bVrH/Nv1YCdYRM6Qx4eXBkpDeGGh0AFeOdq7WMh9JAWmnfHp+F9G9x78KmElfzMKz/vh66PdpMLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743658204; c=relaxed/simple;
-	bh=/uspCOkOssOjUIDVMc4Y03wLPniMm6VVD8oIR4aLFdA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KnGLTm7Oaraiu+5mh9fU9RJio2XXIzS/RkR++ty2OGgMjKCPiFEx3l28v+XDhFTLcG3WoP3T36FemP/g9JQKpAo4p/CCKUWCRYedctd2O8sBwX1khfe2oBCFG+LT08i/9Kh4ToMjrNvxV86bdpP6zp77pVhvxbXDez4oCfxAioA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kd3+inEn; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kd3+inEn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5AF7C4CEE9;
-	Thu,  3 Apr 2025 05:30:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743658204;
-	bh=/uspCOkOssOjUIDVMc4Y03wLPniMm6VVD8oIR4aLFdA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Kd3+inEniTBuMl56XBbqpo1sryrItBu7Y3DEux34nnquR2TjRed3bNaF+gpcOIprQ
-	 ZXhLU124QCKGGcm64YKUJcplubLHXZCkFFZv159WjD/5xZAyGzZP33oMSrWvgonFen
-	 uXlJa+VsTfWUe55h13PeuZQSldP2/88Lxvcyg7zBsOT2JOUaJTEhKXZv9sCrW9y0K/
-	 rrmAzjOhjeMeBwZM8zFV/eYsEowhn7LULrq30nwRO6HxTiPF1l2edebZfusOoMjgSF
-	 yyI+zNACHbr5ldASHrZcrkm4+3ZM3tkke6Dh++ykok2mo41NEf28jEnttTxI7NvwZ0
-	 7aJgelgomyC+A==
-Date: Wed, 2 Apr 2025 22:30:02 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Howard Chu <howardchu95@gmail.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] perf trace: Fix some leaks of struct thread
-Message-ID: <Z-4c2rZZzD59FFJn@google.com>
-References: <20250331184638.3856982-1-namhyung@kernel.org>
- <CAH0uvohL4cFXukxhY6G4WfAWXqPOi3HbEHv=_KWixBQmgon2KQ@mail.gmail.com>
+	s=arc-20240116; t=1743658218; c=relaxed/simple;
+	bh=BM2a4g1TbHQGRp0LZlYp70MEjNeMliYqZpPQB2oBxvc=;
+	h=Date:Message-ID:In-Reply-To:References:Mime-Version:From:To:Cc:
+	 Subject:Content-Type; b=Da2WL9rpOH4AHyOiNwDMVPAwsLtC0dC11cer+WZE8KtpTvZ/ivIjBk0oTXefYFJ2ng1OzN7FyHErPo4Shb7qv4DCoUXISOiqbGgriqbYqus08DJFSN7AWvYmfiFyCJ2tUvNplW3dQhsHgfjszfIiQJZ6Kni+0CfZC+LgCty8WIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=63.216.63.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
+Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4ZSr0f6xBDz8R042;
+	Thu,  3 Apr 2025 13:30:10 +0800 (CST)
+Received: from xaxapp01.zte.com.cn ([10.88.99.176])
+	by mse-fl1.zte.com.cn with SMTP id 5335U7at043271;
+	Thu, 3 Apr 2025 13:30:07 +0800 (+08)
+	(envelope-from xu.xin16@zte.com.cn)
+Received: from mapi (xaxapp02[null])
+	by mapi (Zmail) with MAPI id mid32;
+	Thu, 3 Apr 2025 13:30:09 +0800 (CST)
+Date: Thu, 3 Apr 2025 13:30:09 +0800 (CST)
+X-Zmail-TransId: 2afa67ee1ce1ffffffffd79-6c227
+X-Mailer: Zmail v1.0
+Message-ID: <20250403133009359JE5AjQxfNH7B3DWUgFHXi@zte.com.cn>
+In-Reply-To: <20250403132534636XLwK7CWiCj1J4-FENz0vk@zte.com.cn>
+References: 20250403132534636XLwK7CWiCj1J4-FENz0vk@zte.com.cn
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAH0uvohL4cFXukxhY6G4WfAWXqPOi3HbEHv=_KWixBQmgon2KQ@mail.gmail.com>
+Mime-Version: 1.0
+From: <xu.xin16@zte.com.cn>
+To: <akpm@linux-foundation.org>
+Cc: <mhocko@kernel.org>, <hannes@cmpxchg.org>, <roman.gushchin@linux.dev>,
+        <muchun.song@linux.dev>, <shakeel.butt@linux.dev>,
+        <cgroups@vger.kernel.org>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>, <yang.yang29@zte.com.cn>,
+        <chen.haonan2@zte.com.cn>, <wang.yaxin@zte.com.cn>,
+        <xu.xin16@zte.com.cn>
+Subject: =?UTF-8?B?W1BBVENIIGxpbnV4LW5leHQgMi82XSBtZW1jb250cm9sOiBpbnRyb2R1Y2UgdGhlIG5ldwoKIG1lbV9jZ3JvdXBfc2Nhbl90YXNrcygp?=
+Content-Type: text/plain;
+	charset="UTF-8"
+X-MAIL:mse-fl1.zte.com.cn 5335U7at043271
+X-Fangmail-Anti-Spam-Filtered: true
+X-Fangmail-MID-QID: 67EE1CE2.00B/4ZSr0f6xBDz8R042
 
-Hello Howard,
+From: xu xin <xu.xin16@zte.com.cn>
 
-On Tue, Apr 01, 2025 at 06:07:15PM -0700, Howard Chu wrote:
-> Hello Namhyung,
-> 
-> On Mon, Mar 31, 2025 at 11:46 AM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > I've found some leaks from 'perf trace -a'.  It seems there are more
-> > leaks but this is what I can find for now.
-> >
-> > Cc: Howard Chu <howardchu95@gmail.com>
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > ---
-> >  tools/perf/builtin-trace.c | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-> > index 3d0c0076884d34cb..10cd99888a9a11b5 100644
-> > --- a/tools/perf/builtin-trace.c
-> > +++ b/tools/perf/builtin-trace.c
-> > @@ -2835,7 +2835,7 @@ static int trace__fprintf_sys_enter(struct trace *trace, struct evsel *evsel,
-> >         e_machine = thread__e_machine(thread, trace->host);
-> >         sc = trace__syscall_info(trace, evsel, e_machine, id);
-> >         if (sc == NULL)
-> > -               return -1;
-> > +               goto out_put;
-> >         ttrace = thread__trace(thread, trace);
-> >         /*
-> >          * We need to get ttrace just to make sure it is there when syscall__scnprintf_args()
-> > @@ -4123,8 +4123,10 @@ static int trace__set_filter_loop_pids(struct trace *trace)
-> >                         pids[nr++] = thread__tid(parent);
-> 
-> I suggest adding a:
-> thread_put(parent);
-> here, just before the break.
+Introduce a new mem_cgroup_scan_tasks function that strictly iterates
+processes only within the current memcgroup, aligning its behavior with
+its name.
 
-You're right, will add it.
+Signed-off-by: xu xin <xu.xin16@zte.com.cn>
+---
+ include/linux/memcontrol.h |  7 +++++++
+ mm/memcontrol.c            | 24 ++++++++++++++++++++++++
+ 2 files changed, 31 insertions(+)
 
-Thanks,
-Namhyung
+diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
+index 232cea80e71f..3af34e124ce6 100644
+--- a/include/linux/memcontrol.h
++++ b/include/linux/memcontrol.h
+@@ -795,6 +795,8 @@ struct mem_cgroup *mem_cgroup_iter(struct mem_cgroup *,
+ 				   struct mem_cgroup *,
+ 				   struct mem_cgroup_reclaim_cookie *);
+ void mem_cgroup_iter_break(struct mem_cgroup *, struct mem_cgroup *);
++void mem_cgroup_scan_tasks(struct mem_cgroup *memcg,
++			   int (*)(struct task_struct *, void *), void *arg);
+ void mem_cgroup_tree_scan_tasks(struct mem_cgroup *memcg,
+ 			   int (*)(struct task_struct *, void *), void *arg);
 
-> 
-> >                         break;
-> >                 }
-> > +               thread__put(thread);
-> >                 thread = parent;
-> >         }
-> > +       thread__put(thread);
-> >
-> >         err = evlist__append_tp_filter_pids(trace->evlist, nr, pids);
-> >         if (!err && trace->filter_pids.map)
-> > --
-> > 2.49.0.472.ge94155a9ec-goog
-> >
-> 
-> Thanks,
-> Howard
+@@ -1289,6 +1291,11 @@ static inline void mem_cgroup_iter_break(struct mem_cgroup *root,
+ {
+ }
+
++static inline void mem_cgroup_scan_tasks(struct mem_cgroup *memcg,
++		int (*fn)(struct task_struct *, void *), void *arg)
++{
++}
++
+ static inline void mem_cgroup_tree_scan_tasks(struct mem_cgroup *memcg,
+ 		int (*fn)(struct task_struct *, void *), void *arg)
+ {
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 9af30fbfe819..aff5a095b9e4 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -1150,6 +1150,30 @@ static void invalidate_reclaim_iterators(struct mem_cgroup *dead_memcg)
+ 						dead_memcg);
+ }
+
++/* *
++ * mem_cgroup_scan_tasks - iterate over tasks of only this memory cgroup.
++ * @memcg: the specified memory cgroup.
++ * @fn: function to call for each task
++ * @arg: argument passed to @fn
++ *
++ * Unlike mem_cgroup_tree_scan_tasks(), this function only iterate over
++ * these tasks attached to @memcg, not including any of its descendants
++ * memcg. And this could be called for the root memory cgroup.
++ */
++void mem_cgroup_scan_tasks(struct mem_cgroup *memcg,
++			  int (*fn)(struct task_struct *, void *), void *arg)
++{
++	int ret = 0;
++	struct css_task_iter it;
++	struct task_struct *task;
++
++	css_task_iter_start(&memcg->css, CSS_TASK_ITER_PROCS, &it);
++	while (!ret && (task = css_task_iter_next(&it)))
++		ret = fn(task, arg);
++
++	css_task_iter_end(&it);
++}
++
+ /**
+  * mem_cgroup_tree_scan_tasks - iterate over tasks of a memory cgroup hierarchy
+  * @memcg: hierarchy root
+-- 
+2.15.
