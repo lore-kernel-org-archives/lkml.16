@@ -1,51 +1,51 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11F631FECA4
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 21:25:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDD901FECC0
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 21:25:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743715518; cv=none; b=kobK9dSK5a0G0O7jTdqApLhMfLu38LO8U/018rImQodZHjCXbc7HaZuTOIJS3Ba5Zd1GleQxir89rF/53oC3mLv8cdzIR+IuLUKzJ0Jr8AseFmnzp6EiORmrGipMGaKAzAb1T5uzoBFUl+S2v/3ulilUoCOS5f+khCz10e4p3jc=
+	t=1743715521; cv=none; b=UOdh7/O8el/aISEvzTuYWKqzbLvnlsI7MrP90zrk0k01D3XWOKlQzXu6/rse+Bus23adJ0lGva1z/cZSFRxhwFcnpBapW5qIP/X5lS9w/NFnek4ynwoWIWdGtJePyas4CFxMtv2DsrFNL0TbgCW8utcz736j6F+AxgVXBEK5Xdc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743715518; c=relaxed/simple;
-	bh=0/kXhDAduzOSSgTL+4Zi3+Km7r2/W7VB8G2TxN8OZo4=;
+	s=arc-20240116; t=1743715521; c=relaxed/simple;
+	bh=w+qxvuPGpSVbQugCSxy4NGN0pUw7kPAHuuLKPxsXbDE=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=dB/dpvLr1ua5XG3fwYugwUuPZ+Z/1R6P/5XWOGd4cWXrWxkqK3szKQxLNHPQn2AaC3zFE7Xl9/vjPTskbebfRM7BAk4ItlqKvXdgpQqAZ8sV02pbYlh6V5WIPgsTa50pI5zVqlMCUbMC10LJGIWgGGo6nuU8zLpfVgkq1ycEq4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ElZL8y6L; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:To:Cc; b=PsSsSWegp8zhA60P+Vg201Mi+w6A7IQd2/cvBfiou7QElfMdBYe3futI5Ebjeg19Y+T3fvDFwBINDrySTUS099EGNUbTkV6WJCQLTlzOXpDfun9uzedudJWGcdhXXZenGTXSc+B/K1zPO/R+kb/rQNyw8yAqP8+mlAFXGfU3m/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XrBHU9pr; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ElZL8y6L"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XrBHU9pr"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743715516;
+	s=mimecast20190719; t=1743715518;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=oZogQhu6L1XhZkbvs0tNuQg2uimzHUPkU3Z9auuq3EM=;
-	b=ElZL8y6LtVhiUL4M224HOxXfuy9QlLcpGXN5ktLjmjx/aKW9Ryce2JZVRdDd+2xFiGSJB0
-	+yGvbNTdpkr3qrNVzyTollz5yXnUcc9Bg82pmsP6JmwMQr89FAazRRMOgyY36Mmw6338vb
-	RaxyNCAx3cngQ8a73wa5tdCsW3isJKs=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+	bh=0hi2ORnBSLli+1bh1ed4Bn0wRQE+sdXnlG776tMGiVU=;
+	b=XrBHU9prcWov4xwYVlf/5QiHwMdnIldijY8wRO4qILeDYkRUOgr64f6ezpuKTJnwSwpWBC
+	XLHotgmuARSZcywzfM1NTtaRsFeALzE4jivze/wUsXMOJPefC5ZpXTmHh6qxMTlLhK5dWW
+	h54M1KryIeVvzRpvBBOq06bII5xE8yw=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-253-xOUKERzDMGumsLjLuqsv5g-1; Thu,
- 03 Apr 2025 17:25:11 -0400
-X-MC-Unique: xOUKERzDMGumsLjLuqsv5g-1
-X-Mimecast-MFC-AGG-ID: xOUKERzDMGumsLjLuqsv5g_1743715509
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-101-hRGvBQMROWCBxJjKwthB_w-1; Thu,
+ 03 Apr 2025 17:25:17 -0400
+X-MC-Unique: hRGvBQMROWCBxJjKwthB_w-1
+X-Mimecast-MFC-AGG-ID: hRGvBQMROWCBxJjKwthB_w_1743715513
 Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id F00C71800EC5;
-	Thu,  3 Apr 2025 21:25:08 +0000 (UTC)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 901A619560B3;
+	Thu,  3 Apr 2025 21:25:13 +0000 (UTC)
 Received: from asrivats-na.rmtustx.csb (unknown [10.2.16.30])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id A5B1A180A803;
-	Thu,  3 Apr 2025 21:25:04 +0000 (UTC)
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 4943D180A803;
+	Thu,  3 Apr 2025 21:25:09 +0000 (UTC)
 From: Anusha Srivatsa <asrivats@redhat.com>
-Date: Thu, 03 Apr 2025 16:21:07 -0400
-Subject: [PATCH 36/46] panel/tpo-tpg110: Use refcounted allocation in place
- of devm_kzalloc()
+Date: Thu, 03 Apr 2025 16:21:08 -0400
+Subject: [PATCH 37/46] panel/visionox-r66451: Use refcounted allocation in
+ place of devm_kzalloc()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,7 +54,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250403-b4-drm_panel_mass_driver_convert_part3-v1-36-965b15ad5b8e@redhat.com>
+Message-Id: <20250403-b4-drm_panel_mass_driver_convert_part3-v1-37-965b15ad5b8e@redhat.com>
 References: <20250403-b4-drm_panel_mass_driver_convert_part3-v1-0-965b15ad5b8e@redhat.com>
 In-Reply-To: <20250403-b4-drm_panel_mass_driver_convert_part3-v1-0-965b15ad5b8e@redhat.com>
 To: Neil Armstrong <neil.armstrong@linaro.org>, 
@@ -75,11 +75,11 @@ To: Neil Armstrong <neil.armstrong@linaro.org>,
  Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
  asahi@lists.linux.dev, Anusha Srivatsa <asrivats@redhat.com>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1743711639; l=1256;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1743711639; l=1491;
  i=asrivats@redhat.com; s=20250122; h=from:subject:message-id;
- bh=0/kXhDAduzOSSgTL+4Zi3+Km7r2/W7VB8G2TxN8OZo4=;
- b=/+zSXqIQwuMsfQCYR1gmY4Ew+e7nuP8k91qd5elC6ommAtALz7vQ1422Q/TajcBwVflSiCp+W
- zs2v2JlrALHCSq1/Hptk9MWIG5OWAWY+N+itEtVqwQ5+SAZAehkfy8J
+ bh=w+qxvuPGpSVbQugCSxy4NGN0pUw7kPAHuuLKPxsXbDE=;
+ b=oUCdSAcY+oTjczj9/YFiiCUogHeLBXfVd1Vo0dHRF27W34qmIDJS+bQ3eZUKvzO/Gp28N9kLj
+ uJs5HnndPXBCshTwgp7yPK1dWxqnxKGdIl22QnqxmIiILFmmgZdlozL
 X-Developer-Key: i=asrivats@redhat.com; a=ed25519;
  pk=brnIHkBsUZEhyW6Zyn0U92AeIZ1psws/q8VFbIkf1AU=
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
@@ -89,38 +89,36 @@ panel.
 
 Signed-off-by: Anusha Srivatsa <asrivats@redhat.com>
 ---
- drivers/gpu/drm/panel/panel-tpo-tpg110.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+ drivers/gpu/drm/panel/panel-visionox-r66451.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/panel/panel-tpo-tpg110.c b/drivers/gpu/drm/panel/panel-tpo-tpg110.c
-index f6a212e542cb9301cab1ad19c43e00e4ea07b128..0beba5c08956571aee5c253e460a9d020b800009 100644
---- a/drivers/gpu/drm/panel/panel-tpo-tpg110.c
-+++ b/drivers/gpu/drm/panel/panel-tpo-tpg110.c
-@@ -405,9 +405,11 @@ static int tpg110_probe(struct spi_device *spi)
- 	struct tpg110 *tpg;
- 	int ret;
+diff --git a/drivers/gpu/drm/panel/panel-visionox-r66451.c b/drivers/gpu/drm/panel/panel-visionox-r66451.c
+index 3ea0a86f6e69f3cf0c759d38a21582797bd379bd..690cccedd438fe000ab9b7b4e912988d64a9ad35 100644
+--- a/drivers/gpu/drm/panel/panel-visionox-r66451.c
++++ b/drivers/gpu/drm/panel/panel-visionox-r66451.c
+@@ -255,9 +255,11 @@ static int visionox_r66451_probe(struct mipi_dsi_device *dsi)
+ 	struct drm_dsc_config *dsc;
+ 	int ret = 0;
  
--	tpg = devm_kzalloc(dev, sizeof(*tpg), GFP_KERNEL);
--	if (!tpg)
+-	ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
+-	if (!ctx)
 -		return -ENOMEM;
-+	tpg = devm_drm_panel_alloc(dev, struct tpg110, panel,
-+				   &tpg110_drm_funcs, DRM_MODE_CONNECTOR_DPI);
-+	if (IS_ERR(tpg))
-+		return PTR_ERR(tpg);
-+
- 	tpg->dev = dev;
++	ctx = devm_drm_panel_alloc(dev, struct visionox_r66451, panel,
++				   &visionox_r66451_funcs,
++				   DRM_MODE_CONNECTOR_DSI);
++	if (IS_ERR(ctx))
++		return PTR_ERR(ctx);
  
- 	/* We get the physical display dimensions from the DT */
-@@ -438,9 +440,6 @@ static int tpg110_probe(struct spi_device *spi)
- 	if (ret)
- 		return ret;
+ 	dsc = devm_kzalloc(dev, sizeof(*dsc), GFP_KERNEL);
+ 	if (!dsc)
+@@ -297,7 +299,6 @@ static int visionox_r66451_probe(struct mipi_dsi_device *dsi)
+ 	dsi->mode_flags = MIPI_DSI_MODE_LPM | MIPI_DSI_CLOCK_NON_CONTINUOUS;
+ 	ctx->panel.prepare_prev_first = true;
  
--	drm_panel_init(&tpg->panel, dev, &tpg110_drm_funcs,
--		       DRM_MODE_CONNECTOR_DPI);
--
- 	ret = drm_panel_of_backlight(&tpg->panel);
- 	if (ret)
- 		return ret;
+-	drm_panel_init(&ctx->panel, dev, &visionox_r66451_funcs, DRM_MODE_CONNECTOR_DSI);
+ 	ctx->panel.backlight = visionox_r66451_create_backlight(dsi);
+ 	if (IS_ERR(ctx->panel.backlight))
+ 		return dev_err_probe(dev, PTR_ERR(ctx->panel.backlight),
 
 -- 
 2.48.1
