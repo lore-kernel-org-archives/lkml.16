@@ -1,65 +1,96 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 877F72475C8;
-	Thu,  3 Apr 2025 16:05:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE2EC2475C8;
+	Thu,  3 Apr 2025 16:05:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743696326; cv=none; b=ieBlWC3OqHVnvmBcldw/s0EoYXKvo5vWMdxnBR8EOVAoNFEgfEBKSJikho812ov684WOyCC6NUAoz6Y7g/iQHUhWX9bM6VKm6C+Yb8dXl7G4gNgfA6hv4lvrFd7i7/b3PagTN+RbC2RCdbN7yE3Kfn5W9mCrS5oH3JSz5aifz1M=
+	t=1743696344; cv=none; b=Ym1b7MGoDEqQu1jMhnGMjPidEZn9gG6G3Z0MJ+sV0IVoW3xRnjTjVinTLCPScaIU5d7p+6frNMUV3YnlPZgiKVwb2clmJgEOcU1SOcKW9vdXB2XStSa+L5AVHLk67leOm1DLL2SsES3mN89MW5+iRCH5L4Pd5rEin39uqRAAfk8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743696326; c=relaxed/simple;
-	bh=5oFcHW6fLd29eIcRqoPsjzMZUmyrM09yRwvZ8iioyDM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X0OWrzM5fTtKHyeRXx20qGqzRDVczUIuHcYJMionTYEYD6V2VRVQCWZqsOGyqXq/jO20+pqNN02F3jkQdT3N9zghVbD0ILjKtPXsWkXKowJLtlaCaTibrQpaueLAq6LEbH4tKjb5RBMPHiSJYiCHLX13BTuhBdDTZ1pbGbCZpJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=skrtmWUi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743696344; c=relaxed/simple;
+	bh=K4chVx16zdFxQ/zMx+rUA1zlJffuh94xSn7jfKJuOKM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UMFQMGtajB6vztw9xQV4VJbmmCJ4aiSbWw6N7wSjYZHLsDFJIFfARFl5pnLgEZlJOc3xqI2RDATb33YQroOWmCP0oQd0keI/S5eeJ33nHZCdDhuI+cZoPbPJrojRlCoztTE0r8gKisTs54glK2EReqMvJNs/vtoLhK5t7POdcXA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hfZlmIzq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="skrtmWUi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D61BC4CEE3;
-	Thu,  3 Apr 2025 16:05:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hfZlmIzq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 467ADC4CEF1;
+	Thu,  3 Apr 2025 16:05:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743696326;
-	bh=5oFcHW6fLd29eIcRqoPsjzMZUmyrM09yRwvZ8iioyDM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=skrtmWUihNf/PqlZuGanZNZp+U/xAbelfEDrx5yFHpDigUt/ASIliJMxTyfbzOlNb
-	 d6Hu2wGkLaRsNdJKSDYsbB9GECdTqPnwdWExUIez2hGEc85NpgCRmPUhzDqsUWR3Q3
-	 BciXmPjcBh1rZKm/FZSBPnRTiU/+MdKIfOfq+HWO/cXTqt/bvLJ44zLVrIs8uwdzjh
-	 mJzR8o+joVhWP7tm8dAfmN1yjIr5elAsFle7KT0xu17MDl6i/us3yHqy+haRgIefym
-	 BDK735N9AvySC7wI8Yn1sRmqeUDUm9XfUmVfeAYlaw0ZQHjPtekaXTv5Qc+/ccraq0
-	 kQ8pyER1N87hA==
-Date: Thu, 3 Apr 2025 18:05:21 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Lyude Paul <lyude@redhat.com>, David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>, dri-devel@lists.freedesktop.org,
-	nouveau@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2][next] drm/nouveau: disp: Avoid
- -Wflex-array-member-not-at-end warning
-Message-ID: <Z-6xwS3qXIyxE05G@pollux>
-References: <Z-2zI55Qf88jTfNK@kspp>
+	s=k20201202; t=1743696344;
+	bh=K4chVx16zdFxQ/zMx+rUA1zlJffuh94xSn7jfKJuOKM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=hfZlmIzqFMpr40rvVrb3zernzORrsdSaUSEc5Cen0b9Sa7I365hUE9PsjyBAEnKL2
+	 x1jHdckfbPPoauhQMPKKDaPo19kZYBlkdFaDPyLBuXT6vS8PgG84/B8EvOH0qyL8Fr
+	 ZZRuxvx4wy7PVzab9OHn0uw1D1HYsJ6YCNYD45ZTHMjqpPwQK8y1spIG5c1HlO2CFi
+	 TlX5eKRLN0cM0bFUQ2Ic1xvNZkXBa+s9S21NUL8RKW1SrnK/8u4QgIH0wGDQbI7BY4
+	 TdpaC1WAALgpLXHdz+ZRpFclXmIODpt/drgmHyIpvvV95RkQs7iJ77BMT9mbiX1eSt
+	 2EzT7p+JPNlEw==
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5efe8d9eb12so1714348a12.1;
+        Thu, 03 Apr 2025 09:05:44 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWcMNi2zSS8HC9PWoIGNbWYBaq2u0m7MPK0DmZ/IfO44/WYfdVTVZtbm9UfEch8lyKeV+LQwLPUSjUHWsa8TS4=@vger.kernel.org, AJvYcCWl8OL8TpE0RDqTod5mV45Sc81Lmc5e5uDTfE437gMdy6HWOmz+GthOmyFLwRKRQkShISFlcmWy817j@vger.kernel.org, AJvYcCXmAW3STzRmUiIKTtZLj6hsd+KyLSjjEKo34l1TfJeuQhMjB1RsvD/atX6QlWRYULWQTHPO+b2jAe/wPtyt@vger.kernel.org, AJvYcCXxLK5nfKWR4rYW43Opoqdu6xdnm9NkxP3A0/xlQpaWsNrSMmTmnrDo/onVB8wrzhmgvNhVxHIOvUBv0Q==@vger.kernel.org
+X-Gm-Message-State: AOJu0YziYvLQZiYnBKu6m3p6BCbgDjeiB4+TKY3Qi0iNURTXmF27IOcx
+	uBqjQYi44Mgpx9DZcKYJ/ENV9jk0o0n28M2t5ejTOw0yyl2gg1AghNTmzP5rMPMw2RZlhyRmRHp
+	wkEBOiHwgjNINu8eqDrigtJ06IA==
+X-Google-Smtp-Source: AGHT+IFS3bcl2DkBP6ddMY79BX/0/GPgj4JeHVuZiYZHa6CUJJ0v10ks6UBxpWk96/cGVBioxR3FepILQTugx8G6FvM=
+X-Received: by 2002:a05:6402:4404:b0:5ec:9545:74bd with SMTP id
+ 4fb4d7f45d1cf-5f087253323mr2667013a12.27.1743696342727; Thu, 03 Apr 2025
+ 09:05:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z-2zI55Qf88jTfNK@kspp>
+References: <20250326171411.590681-1-remo@buenzli.dev> <20250326171411.590681-4-remo@buenzli.dev>
+ <Z-UPJyD41LOMM3o2@smile.fi.intel.com>
+In-Reply-To: <Z-UPJyD41LOMM3o2@smile.fi.intel.com>
+From: Rob Herring <robh@kernel.org>
+Date: Thu, 3 Apr 2025 11:04:32 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+tJvGsbw1dGdgmBM8+cL4vN71OMTvX9tkmBLNk=6T9KQ@mail.gmail.com>
+X-Gm-Features: ATxdqUFYnosSxAW95KcCbZ0o0Yx-TM-nSD3poqFEmgDq0uJ6ZhgSuKCskNSHKI4
+Message-ID: <CAL_Jsq+tJvGsbw1dGdgmBM8+cL4vN71OMTvX9tkmBLNk=6T9KQ@mail.gmail.com>
+Subject: Re: [PATCH 03/10] device property: Add fwnode_property_read_int_array()
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Remo Senekowitsch <remo@buenzli.dev>, Daniel Scally <djrscally@gmail.com>, 
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, Dirk Behme <dirk.behme@de.bosch.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Saravana Kannan <saravanak@google.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, linux-kernel@vger.kernel.org, 
+	linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 02, 2025 at 03:58:59PM -0600, Gustavo A. R. Silva wrote:
-> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-> getting ready to enable it, globally.
-> 
-> Use the `DEFINE_RAW_FLEX()` helper for an on-stack definition of
-> a flexible structure where the size of the flexible-array member
-> is known at compile-time, and refactor the rest of the code,
-> accordingly.
-> 
-> So, with these changes, fix the following warning:
-> 
-> drivers/gpu/drm/nouveau/dispnv50/disp.c:779:47: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+On Thu, Mar 27, 2025 at 3:41=E2=80=AFAM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Wed, Mar 26, 2025 at 06:13:42PM +0100, Remo Senekowitsch wrote:
+> > The rust bindings for reading device properties has a single
+> > implementation supporting differing sizes of integers. The fwnode C API
+> > already has a similar interface, but it is not exposed with the
+> > fwnode_property_ API. Add the fwnode_property_read_int_array() wrapper.
+>
+> ...
+>
+> > +EXPORT_SYMBOL_GPL(fwnode_property_read_int_array);
+>
+> I'm not sure about this. We have a lot of assumptions in the code that th=
+e
+> arrays beneath are only represented by the selected number of integer typ=
+es.
+> This opens a Pandora's box, e.g., reading in u24, which is not supported =
+by
+> the upper layers..
 
-Applied this one (as well as the svm and fence one) to drm-misc-next, thanks!
+We can probably drop the export if it is just that which you object to.
+
+Without this function, the implementation is just multiple levels of
+switch statements to work-around what's needed for the nicest rust
+API.
+
+Rob
