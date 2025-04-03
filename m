@@ -1,167 +1,136 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCAD21854;
-	Thu,  3 Apr 2025 03:12:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB883195FEF
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 03:12:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743649973; cv=none; b=PChpVmBahfo8sjZ9kDpw/ztNkbfy2xy7s2aeaObiCURzwhMzOvEPqFDJ4sgRfiuCIKTcQj8m/rtYqvrbm63xuYbW++apcOYAa00YAuLVH1D4G96vkSyzCuVr8rHcEr0xINrZYboJ46uhi/EdVFG4uXkLrm5nJAuyzrcKsMQaizM=
+	t=1743649977; cv=none; b=bBE8pcop26umNYgvsYjFp4y5j0zGl4ZCSYDtkdXMK9E+mTXCCrQ8izC9YhZSsDTX6CuvZddmahJxRHT5yXCIQBNHZhrcio4Z5dRiJtTP/uAE9p288ggntOoMVuFccNZCb77eKivZJNlkwlJA0W21WrI006QO+4qCSFSc5FWc3aU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743649973; c=relaxed/simple;
-	bh=YdNEYByXpy+p25o+6gqrAJE7UbZXNce2qEd5iM0TBE4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hsiEu6mPj3AQjjj+xqD6Nzq4x9jcjhOak7RvNY+uJyH2/i4Y3dglp52/0bToHOIH21iyXGDr3QgIPEAyDEF592hkdaS1ps9N6+hYTRvZR2fhWOA8qJvv04yg8PMfPzWUPuTjDvyeexkkjk7WZwH9mGL1hxrz0eme7gC6D2gBtT4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iUTR4bAI; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1743649977; c=relaxed/simple;
+	bh=pSQIlSO4V2XllUgBP3J9byvX7GNKqbpUPy7+SqN7W/U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nGRImmv+2JPZkoG7vbHSCJCZ0SdSR3jHuIrXXlch8PQkqyayP2+kkMn4IAbnsGjIw1ws3d4rjDjCo4O3Bo4NLGzjSL3nUxth6dg32MLNtG6Hpd+/fdLg3t8qPe76hETHGF2d4kEC1UMgyD298/G8H7nJZ7kYQx4UB7rEQyauO54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=h28YYKy9; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iUTR4bAI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743649971; x=1775185971;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=YdNEYByXpy+p25o+6gqrAJE7UbZXNce2qEd5iM0TBE4=;
-  b=iUTR4bAIf+emBfQqecJlgEGP/yLyAU8vx3mBoVz5htqZd/pEe73mbhQI
-   TXTeVHVOGAbHmXV1lcaUSbN3OwFJwV1schrAUMj73gWDkc+g25sVv76DS
-   t6D/WvGBbXijsWzyfOT+gvrehnv4PAvutlPbcfSok2DqR2pYTQ9XDJumw
-   kw/pCrlflDM4nQBZI/Z5OnfwD+VrsyX2Fv/7EG//PAwhe3Y6Qsg6hdxLQ
-   6u/NZPPZIjf/FLKGUyJUPtput6NT3TMnPgAbTRIuDNf+f/KvY7Hop0oEN
-   Pu9XmIhUaVno58O0ET24WMUBKu3OKDbmEB4EC1NJaOzBUEvaeWE8AY9Ue
-   w==;
-X-CSE-ConnectionGUID: wcXyotbiQliI7f5CUBMFGA==
-X-CSE-MsgGUID: s7kXbsmoTJmbi6Ddvp3Gwg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11392"; a="44935535"
-X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
-   d="scan'208";a="44935535"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 20:12:50 -0700
-X-CSE-ConnectionGUID: ka3ORGejSiecYb5pL+m57A==
-X-CSE-MsgGUID: HZ0o/hq7TZiLjnpMOCnkVg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
-   d="scan'208";a="127376205"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 20:12:47 -0700
-Date: Thu, 3 Apr 2025 06:12:44 +0300
-From: Raag Jadav <raag.jadav@intel.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
-	lucas.demarchi@intel.com, rodrigo.vivi@intel.com,
-	"Nilawar, Badal" <badal.nilawar@intel.com>,
-	intel-xe@lists.freedesktop.org, anshuman.gupta@intel.com,
-	mahesh@linux.ibm.com, oohall@gmail.com, bhelgaas@google.com,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/xe/d3cold: Set power state to D3Cold during s2idle/s3
-Message-ID: <Z-38rPeN_j7YGiEl@black.fi.intel.com>
-References: <Z-WHYbhu1QdjUFPR@intel.com>
- <Z-bICZUBN_Fk0_mM@intel.com>
- <Z-eDJUtxjzIjGlJT@black.fi.intel.com>
- <Z-q_n1g9wIEZc-dm@intel.com>
- <2d3f3cbe-c33d-4ded-8c19-e2bd2e76a68b@intel.com>
- <Z-woHnrukI7qtB4m@black.fi.intel.com>
- <CAJZ5v0j7ob4YQ9weQ6e5iVbHyRwf-6Vk2MU4r9mK11-8wD09RQ@mail.gmail.com>
- <Z-znv8D3qIcVX-p1@black.fi.intel.com>
- <Z-z2fz97RwX2kBya@black.fi.intel.com>
- <CAJZ5v0hpkjH_Q7V70jWpC68YQxKkmh0wpwrPrHcUwQJ6uRGrOQ@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="h28YYKy9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743649973;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=tHphIEaw5gDaEtW0EdbaEwdklWHfbt6vvd4IdDuXcxU=;
+	b=h28YYKy91wtwhlSd2qOLBcRxu8R+DPWqstnK0Ie+TLKAnk85timM26DWmJhBNwc0W4kZQJ
+	tLBElbnea91fQdq5khzQFwg76m6P2uq6bDPVUQxHZksUW9bW7lReWag8wXHyCGS58CoqMD
+	TbIB6y4MOXcdpQNZroa2t45sPbdGRSY=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-367-FeCn6EObM2q3ZsXIDduRxg-1; Wed,
+ 02 Apr 2025 23:12:50 -0400
+X-MC-Unique: FeCn6EObM2q3ZsXIDduRxg-1
+X-Mimecast-MFC-AGG-ID: FeCn6EObM2q3ZsXIDduRxg_1743649969
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B50FA19560B3;
+	Thu,  3 Apr 2025 03:12:48 +0000 (UTC)
+Received: from llong-thinkpadp16vgen1.westford.csb (unknown [10.22.81.199])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id E991E1955BC2;
+	Thu,  3 Apr 2025 03:12:45 +0000 (UTC)
+From: Waiman Long <longman@redhat.com>
+To: Johannes Weiner <hannes@cmpxchg.org>,
+	Michal Hocko <mhocko@kernel.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Muchun Song <muchun.song@linux.dev>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org,
+	cgroups@vger.kernel.org,
+	linux-mm@kvack.org,
+	Waiman Long <longman@redhat.com>
+Subject: [PATCH] memcg: Don't generate low/min events if either low/min or elow/emin is 0
+Date: Wed,  2 Apr 2025 23:12:12 -0400
+Message-ID: <20250403031212.317837-1-longman@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJZ5v0hpkjH_Q7V70jWpC68YQxKkmh0wpwrPrHcUwQJ6uRGrOQ@mail.gmail.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-Cc: PCI maintainers
+The test_memcontrol selftest consistently fails its test_memcg_low
+sub-test because of the fact that two of its test child cgroups which
+have a memmory.low of 0 or an effective memory.low of 0 still have low
+events generated for them since mem_cgroup_below_low() use the ">="
+operator when comparing to elow.
 
-On Wed, Apr 02, 2025 at 12:31:48PM +0200, Rafael J. Wysocki wrote:
-> On Wed, Apr 2, 2025 at 10:34 AM Raag Jadav <raag.jadav@intel.com> wrote:
-> >
-> > On Wed, Apr 02, 2025 at 10:31:16AM +0300, Raag Jadav wrote:
-> > > On Tue, Apr 01, 2025 at 09:35:49PM +0200, Rafael J. Wysocki wrote:
-> > > > On Tue, Apr 1, 2025 at 7:53 PM Raag Jadav <raag.jadav@intel.com> wrote:
-> > >
-> > > ...
-> > >
-> > > > > That's not what I meant here. There are multiple issues at play.
-> > > > >
-> > > > > 1. An AER is reported[*] on root port during system suspend even before we
-> > > > >    reach any of the driver PM callback. From initial investigation it seems
-> > > > >    like a case of misbehaviour by some child device, but this is a different
-> > > > >    issue entirely.
-> > > > >
-> > > > > [*] irq/120-aerdrv-145     [002] .....  1264.981023: <stack trace>
-> > > > > => xe_pm_runtime_resume
-> > > > > => xe_pci_runtime_resume
-> > > > > => pci_pm_runtime_resume
-> > > > > => __rpm_callback
-> > > > > => rpm_callback
-> > > > > => rpm_resume
-> > > > > => __pm_runtime_resume
-> > > > > => pci_pm_runtime_get_sync
-> > > > > => __pci_walk_bus
-> > > > > => pci_walk_bus
-> > > > > => pcie_do_recovery
-> > > > > => aer_process_err_devices
-> > > > > => aer_isr
-> > > > >
-> > > > > 2. Setting explicit pci_set_power_state(pdev, PCI_D3cold) from xe_pm_suspend().
-> > > > >    Although we see many drivers do it for their case, it's quite a questionable
-> > > > >    choice (atleast IMHO) to hard suspend the device from driver PM callback
-> > > > >    without any regard to runtime_usage counter. It can hide potential issues
-> > > > >    like AER during system suspend (regardless of whether or not it is supported
-> > > > >    by the driver, since it is supposed to keep the device active on such a
-> > > > >    catastrophic failure anyway), but I'll leave it to the experts to decide.
-> > > >
-> > > > If the driver does not set DPM_FLAG_SMART_SUSPEND, and xe doesn't set
-> > > > it AFAICS (at least not in the mainline), pci_pm_suspend() will resume
-> > > > the device from runtime suspend before invoking its driver's callback.
-> > > >
-> > > > This guarantees that the device is always RPM_ACTIVE when
-> > > > xe_pci_suspend() runs and it cannot be runtime-suspended because the
-> > > > core is holding a runtime PM reference on it (and so the runtime PM
-> > > > usage counter is always greater than zero when xe_pci_suspend() runs).
-> > > >
-> > > > This means that neither xe_pci_runtime_suspend() nor
-> > > > xe_pci_runtime_resume() can run concurrently with respect to it, so
-> > > > xe_pci_suspend() can change the power state of the device etc. safely.
-> > >
-> > > Ah, I failed to notice that __pm_runtime_resume() is taking a spin_lock_irqsave().
-> > > Thanks for clearing this up.
-> >
-> > On second thought, pcie_do_recovery() can still race with xe_pci_suspend(),
-> > is this understanding correct?
-> 
-> Yes, it can, but this is an AER issue.
-> 
-> Apparently, somebody took runtime PM into account, but they failed to
-> take system suspend into account.
-> 
-> There are many drivers that do PCI PM in their ->suspend() callbacks
-> and this predates pcie_do_recovery() AFAICS.  Some of them don't even
-> support runtime PM.
-> 
-> > I'm assuming this is why it's much safer to do pci_save_state() and
-> > pci_prepare_to_sleep() only in ->noirq() callbacks like originally done
-> > by PCI PM, right?
-> 
-> Not really, but close.
-> 
-> The noirq phases were introduced because drivers often failed to
-> prevent their interrupt handlers from messing up with devices after
-> powering them down.
-> 
-> Recovery is kind of like hot-add, doing any of them during system
-> suspend is a bad idea because the outcome is hard to predict.
-> 
-> AER needs to be fixed.
+The simple fix of changing the operator to ">", however, changes the
+way memory reclaim works quite drastically leading to other failures.
+So we can't do that without some relatively riskier changes in memory
+reclaim.
 
-I agree it's a bad idea and should be fixed but even more unpredictable
-in such cases is resuming the device afterwards, which may or may not
-succeed depending on the fault that has happened. So perhaps just not
-let the device suspend to D3 at all?
+Another simpler alternative is to avoid reporting below_low failure
+if either memory.low or its effective equivalent is 0 which is done
+by this patch.
 
-Raag
+With this patch applied, the test_memcg_low sub-test finishes
+successfully without failure in most cases. Though both test_memcg_low
+and test_memcg_min sub-tests may fail occasionally if the memory.current
+values fall outside of the expected ranges.
+
+To be consistent, similar change is appled to mem_cgroup_below_min()
+as well.
+
+Signed-off-by: Waiman Long <longman@redhat.com>
+---
+ include/linux/memcontrol.h | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
+
+diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
+index 53364526d877..4d4a1f159eaa 100644
+--- a/include/linux/memcontrol.h
++++ b/include/linux/memcontrol.h
+@@ -601,21 +601,31 @@ static inline bool mem_cgroup_unprotected(struct mem_cgroup *target,
+ static inline bool mem_cgroup_below_low(struct mem_cgroup *target,
+ 					struct mem_cgroup *memcg)
+ {
++	unsigned long elow;
++
+ 	if (mem_cgroup_unprotected(target, memcg))
+ 		return false;
+ 
+-	return READ_ONCE(memcg->memory.elow) >=
+-		page_counter_read(&memcg->memory);
++	elow = READ_ONCE(memcg->memory.elow);
++	if (!elow || !READ_ONCE(memcg->memory.low))
++		return false;
++
++	return page_counter_read(&memcg->memory) <= elow;
+ }
+ 
+ static inline bool mem_cgroup_below_min(struct mem_cgroup *target,
+ 					struct mem_cgroup *memcg)
+ {
++	unsigned long emin;
++
+ 	if (mem_cgroup_unprotected(target, memcg))
+ 		return false;
+ 
+-	return READ_ONCE(memcg->memory.emin) >=
+-		page_counter_read(&memcg->memory);
++	emin = READ_ONCE(memcg->memory.emin);
++	if (!emin || !READ_ONCE(memcg->memory.min))
++		return false;
++
++	return page_counter_read(&memcg->memory) <= emin;
+ }
+ 
+ int __mem_cgroup_charge(struct folio *folio, struct mm_struct *mm, gfp_t gfp);
+-- 
+2.48.1
+
