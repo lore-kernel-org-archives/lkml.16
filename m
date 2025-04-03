@@ -1,168 +1,172 @@
-Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F62A13632B
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 01:36:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.113
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B096326AFB;
+	Thu,  3 Apr 2025 01:39:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743644179; cv=none; b=ZF0pXR1C3SxGTfZCvxTwCZUTHGz/768rdLZyLVvC+cCvEcfvDT4LCFYvaQNjdSfGSZeDBCBk+AS4/ql934Xhd5rXYA7Z+85R4oeZrAVobAgaB4RqqzSPq8ofYEUoSh5qh0Lpox4SXWx9e4PlkXi0uTq/oBfcRbzA0HjUnSmLwi4=
+	t=1743644342; cv=none; b=Z93dZPPDXFBn0afA+tUWUGRqg9YreaUrQU5MVZ6BC1PDihL2ty9xWTbUavGRXmkcJO+2vb+2eWY1zSL8NjuiznZq4wJ96FWmDJbU65Yt3IZTSbN+zLMpV1HVteFEYTFzN4Jb3ptF3EMYvTAy3HW4aweIK2LxXw4hYkMNNLmE6eU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743644179; c=relaxed/simple;
-	bh=9Z4dTyXsIEctgnvkm2Bsq46/YUdU6HnzVZmX1dguXSA=;
+	s=arc-20240116; t=1743644342; c=relaxed/simple;
+	bh=L+LOVKg8rjqy6R1x3DVxd//2w0iclMYWlpzEp/RzccY=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=pMPdgeHFVLE22NrzAjRECP5ZnhIQoGCwo7Uuv3N/wmdXIbDzFBNJz2p5Tz+tuH3Oa6Karta440m6sIB55XrlEILKSNyg2RzdRbB48btSWM18DWZVfsAYj84KqzuMJ2y4nGxgXLb0HQI9WH1D3t2sFkhMGJ1gXPjvvC8Bz5+Nh6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=a8wiqEfr; arc=none smtp.client-ip=115.124.30.113
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	 MIME-Version:Content-Type; b=WFDjyk4oTHipmYIrqCiv6t3FXd/tSu2Bmxv6T0vMIIgNFvLnxJhWLWqrS8LjfVs/7d3ktBZtgHljwPI7DHts7d0W0I9VDRNJ+2BKVwx5wuOS+Tu+997YserbZb4oL18wjsFweM25F3sVfUZERV8yQzjK/I0vsmEzLnLnR9HoPT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JaBcBIt/; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="a8wiqEfr"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1743644168; h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
-	bh=4zuhH53JmwK3MjZjhc7ETdHqf8vx/j+8xmJK3JZE744=;
-	b=a8wiqEfrAlv71wFb97c8PXAC15yUbNSTQS74lVYRQtIgKYXLd1/4QgZPSMeaxSwmr7t7vuBrO0cpbiPUpf+0EY1fffUlV+BEuK/hcbpuUjEFMZqfFSUJkX435qNfrocJ74JhMkdD8GnhEbdn1udoSLsx8jFaDvAqC04f5eonv6c=
-Received: from DESKTOP-5N7EMDA(mailfrom:ying.huang@linux.alibaba.com fp:SMTPD_---0WUXH76._1743644166 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Thu, 03 Apr 2025 09:36:07 +0800
-From: "Huang, Ying" <ying.huang@linux.alibaba.com>
-To: Nikhil Dhama <nikhil.dhama@amd.com>
-Cc: <akpm@linux-foundation.org>,  <bharata@amd.com>,
-  <huang.ying.caritas@gmail.com>,  <linux-kernel@vger.kernel.org>,
-  <linux-mm@kvack.org>,  <mgorman@techsingularity.net>,
-  <raghavendra.kodsarathimmappa@amd.com>,  <oe-lkp@lists.linux.dev>,
-  <lkp@intel.com>
-Subject: Re: [PATCH] mm: pcp: scale batch to reduce number of high order pcp
- flushes on deallocation
-In-Reply-To: <20250401135638.25436-1-nikhil.dhama@amd.com> (Nikhil Dhama's
-	message of "Tue, 1 Apr 2025 19:26:38 +0530")
-References: <202503312148.c74b0351-lkp@intel.com>
-	<20250401135638.25436-1-nikhil.dhama@amd.com>
-Date: Thu, 03 Apr 2025 09:36:14 +0800
-Message-ID: <875xjmuiup.fsf@DESKTOP-5N7EMDA>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JaBcBIt/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743644340; x=1775180340;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version:content-transfer-encoding;
+  bh=L+LOVKg8rjqy6R1x3DVxd//2w0iclMYWlpzEp/RzccY=;
+  b=JaBcBIt/u86jFzPm3r3yrthivvyv1g7DZqkKw60wnMqt7pW3vJca4s1h
+   4PUzN5bjOVDpJhD/pr2dmydetRq6YiQl59xnQOzSdgS18CMT/ONOTAtrw
+   IJoRHasBkzVUyoPhqHR2bVcQc2E8v01vs3pwIX+EEUt2m5Gi7rEfUQxFc
+   H4WbhKYtUaMhL2zvZRJkTK76LE9+j8HPRSeUmmd4J15K5etjYCt5by5F3
+   3G5gxZBhMvGiY+ANHlQ+3n2G/u9fJip1GqfbFiXh9UghxjqPUOFEveCqJ
+   pFsp1+XKmB3xEwp1T8n5ZIZOv+cQFMDZ021PDsM0A0GdpSVFpPRna0Xuu
+   g==;
+X-CSE-ConnectionGUID: dgrDzuz7Te6h6dqc8oaZag==
+X-CSE-MsgGUID: UOwg+gsnRASWqkP+aQfW4g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11392"; a="44743258"
+X-IronPort-AV: E=Sophos;i="6.15,183,1739865600"; 
+   d="scan'208";a="44743258"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 18:39:00 -0700
+X-CSE-ConnectionGUID: TrY4WBAZTFagp9NMiuG2SA==
+X-CSE-MsgGUID: oDx9EIkITT21SkKHOrEtHg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,183,1739865600"; 
+   d="scan'208";a="127772721"
+Received: from unknown (HELO vcostago-mobl3) ([10.241.225.148])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 18:39:00 -0700
+From: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+To: Fenghua Yu <fenghuay@nvidia.com>, Dave Jiang <dave.jiang@intel.com>,
+ Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: Anil Keshavamurthy <anil.s.keshavamurthy@intel.com>
+Subject: Re: [PATCH v1] dmaengine: idxd: Narrow the restriction on BATCH to
+ ver. 1 only
+In-Reply-To: <a1b7d7d8-4fc0-4faf-9938-57ccd1b861ab@nvidia.com>
+References: <20250312221511.277954-1-vinicius.gomes@intel.com>
+ <a1b7d7d8-4fc0-4faf-9938-57ccd1b861ab@nvidia.com>
+Date: Wed, 02 Apr 2025 18:38:59 -0700
+Message-ID: <87v7rmyqfg.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Nikhil Dhama <nikhil.dhama@amd.com> writes:
+Hi Fenghua,
 
-> On 3/30/2025 12:22 PM, Huang, Ying wrote:
+Fenghua Yu <fenghuay@nvidia.com> writes:
+
+> Hi, Vinicius,
 >
+> On 3/12/25 15:15, Vinicius Costa Gomes wrote:
+>> Allow BATCH operations to be submitted and the capability to be
+>> exposed for DSA version 2 (or later) devices.
 >>
->> Hi, Nikhil,
+>> DSA version 2 devices allow safe submission of BATCH operations.
 >>
->> Nikhil Dhama <nikhil.dhama@amd.com> writes:
+>> Signed-off-by: Anil Keshavamurthy <anil.s.keshavamurthy@intel.com>
+>> Signed-off-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+>> ---
+>>   drivers/dma/idxd/cdev.c  | 6 ++++--
+>>   drivers/dma/idxd/sysfs.c | 6 ++++--
+>>   2 files changed, 8 insertions(+), 4 deletions(-)
 >>
->>> In old pcp design, pcp->free_factor gets incremented in nr_pcp_free()
->>> which is invoked by free_pcppages_bulk(). So, it used to increase
->>> free_factor by 1 only when we try to reduce the size of pcp list or
->>> flush for high order.
->>> and free_high used to trigger only for order > 0 and order <
->>> costly_order and free_factor > 0.
->>>
->>> and free_factor used to scale down by a factor of 2 on every successful
->>> allocation.
->>>
->>> for iperf3 I noticed that with older design in kernel v6.6, pcp list was
->>> drained mostly when pcp->count > high (more often when count goes above
->>> 530). and most of the time free_factor was 0, triggering very few
->>> high order flushes.
->>>
->>> Whereas in the current design, free_factor is changed to free_count to keep
->>> track of the number of pages freed contiguously,
->>> and with this design for iperf3, pcp list is getting flushed more
->>> frequently because free_high heuristics is triggered more often now.
->>>
->>> In current design, free_count is incremented on every deallocation,
->>> irrespective of whether pcp list was reduced or not. And logic to
->>> trigger free_high is if free_count goes above batch (which is 63) and
->>> there are two contiguous page free without any allocation.
->>> (and with cache slice optimisation).
->>>
->>> With this design, I observed that high order pcp list is drained as soon
->>> as both count and free_count goes about 63.
->>>
->>> and due to this more aggressive high order flushing, applications
->>> doing contiguous high order allocation will require to go to global list
->>> more frequently.
->>>
->>> On a 2-node AMD machine with 384 vCPUs on each node,
->>> connected via Mellonox connectX-7, I am seeing a ~30% performance
->>> reduction if we scale number of iperf3 client/server pairs from 32 to 64.
->>>
->>> So, though this new design reduced the time to detect high order flushes,
->>> but for application which are allocating high order pages more
->>> frequently it may be flushing the high order list pre-maturely.
->>> This motivates towards tuning on how late or early we should flush
->>> high order lists.
->>>
->>> for free_high heuristics. I tried to scale batch and tune it,
->>> which will delay the free_high flushes.
->>>
->>>
->>>                       score   # free_high
->>> -----------           -----   -----------
->>> v6.6 (base)           100             4
->>> v6.12 (batch*1)        69           170
->>> batch*2                69           150
->>> batch*4                74           101
->>> batch*5               100            53
->>> batch*6               100            36
->>> batch*8               100             3
->>>
->>> scaling batch for free_high heuristics with a factor of 5 or above restores
->>> the performance, as it is reducing the number of high order flushes.
->>>
->>> On 2-node AMD server with 384 vCPUs each,score for other benchmarks with
->>> patch v2 along with iperf3 are as follows:
->>
->> Em..., IIUC, this may disable the free_high optimizations.  free_high
->> optimization is introduced by Mel Gorman in commit f26b3fa04611
->> ("mm/page_alloc: limit number of high-order pages on PCP during bulk
->> free").  So, this may trigger regression for the workloads in the
->> commit.  Can you try it too?
->>
+>> diff --git a/drivers/dma/idxd/cdev.c b/drivers/dma/idxd/cdev.c
+>> index ff94ee892339..6a1dc15ee485 100644
+>> --- a/drivers/dma/idxd/cdev.c
+>> +++ b/drivers/dma/idxd/cdev.c
+>> @@ -439,10 +439,12 @@ static int idxd_submit_user_descriptor(struct idxd=
+_user_context *ctx,
+>>   	 * DSA devices are capable of indirect ("batch") command submission.
+>>   	 * On devices where direct user submissions are not safe, we cannot
+>>   	 * allow this since there is no good way for us to verify these
+>> -	 * indirect commands.
+>> +	 * indirect commands. Narrow the restriction of operations with the
+>> +	 * BATCH opcode to only DSA version 1 devices.
+>>   	 */
+>>   	if (is_dsa_dev(idxd_dev) && descriptor.opcode =3D=3D DSA_OPCODE_BATCH=
+ &&
+>> -		!wq->idxd->user_submission_safe)
+>> +	    wq->idxd->hw.version =3D=3D DEVICE_VERSION_1 &&
+>> +	    !wq->idxd->user_submission_safe)
+>>   		return -EINVAL;
+>>   	/*
+>>   	 * As per the programming specification, the completion address must =
+be
+>> diff --git a/drivers/dma/idxd/sysfs.c b/drivers/dma/idxd/sysfs.c
+>> index 6af493f6ba77..9f0701021af0 100644
+>> --- a/drivers/dma/idxd/sysfs.c
+>> +++ b/drivers/dma/idxd/sysfs.c
+>> @@ -1208,9 +1208,11 @@ static ssize_t op_cap_show_common(struct device *=
+dev, char *buf, unsigned long *
+>>=20=20=20
+>>   		/* On systems where direct user submissions are not safe, we need to=
+ clear out
+>>   		 * the BATCH capability from the capability mask in sysfs since we c=
+annot support
+>> -		 * that command on such systems.
+>> +		 * that command on such systems. Narrow the restriction of operations=
+ with the
+>> +		 * BATCH opcode to only DSA version 1 devices.
+>>   		 */
+>> -		if (i =3D=3D DSA_OPCODE_BATCH/64 && !confdev_to_idxd(dev)->user_submi=
+ssion_safe)
+>> +		if (i =3D=3D DSA_OPCODE_BATCH/64 && !confdev_to_idxd(dev)->user_submi=
+ssion_safe &&
+>> +		    confdev_to_idxd(dev)->hw.version =3D=3D DEVICE_VERSION_1)
+>>   			clear_bit(DSA_OPCODE_BATCH % 64, &val);
+>>=20=20=20
+>>   		pos +=3D sysfs_emit_at(buf, pos, "%*pb", 64, &val)
 >
-> Hi, I ran netperf-tcp as in commit f26b3fa04611 ("mm/page_alloc: limit 
-> number of high-order pages on PCP during bulk free"),
+> Maybe folder the DEVICE_VERSION_1 check into user_submission_safe variabl=
+e?
 >
-> On a 2-node AMD server with 384 vCPUs, results I observed are as follows:
+> This way patch is a bit smaller, a bit faster in run-time,=C2=A0 and easi=
+er=20
+> to be extend in case there are other restriction changes in the future?
 >
->                                   6.12                     6.12
->                                vanilla   freehigh-heuristicsopt
-> Hmean     64         732.14 (   0.00%)        736.90 (   0.65%)
-> Hmean     128       1417.46 (   0.00%)       1421.54 (   0.29%)
-> Hmean     256       2679.67 (   0.00%)       2689.68 (   0.37%)
-> Hmean     1024      8328.52 (   0.00%)       8413.94 (   1.03%)
-> Hmean     2048     12716.98 (   0.00%)      12838.94 (   0.96%)
-> Hmean     3312     15787.79 (   0.00%)      15822.40 (   0.22%)
-> Hmean     4096     17311.91 (   0.00%)      17328.74 (   0.10%)
-> Hmean     8192     20310.73 (   0.00%)      20447.12 (   0.67%)
+> diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
+> index 86075cdc4420..80f95cb815c8 100644
+> --- a/drivers/dma/idxd/init.c
+> +++ b/drivers/dma/idxd/init.c
+> @@ -1258,7 +1258,8 @@ int idxd_pci_probe_alloc(struct idxd_device *idxd,=
+=20
+> struct pci_dev *pdev,
+>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 idxd->hw.version);
 >
-> It is not regressing for netperf-tcp. 
+>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (data)
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 idxd->user_submission_safe =3D data->user_submission_safe;
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 idxd->user_submission_safe =3D data->user_submission_safe |
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 (idxd->hw.version !=3D=20
+> DEVICE_VERSION_1);
+>
 
-Thanks a lot for your data!
+I don't think so, this would lift the restriction that we have on mmap()
+for regular userspace applications.
 
-Think about this again.  Compared with the pcp->free_factor solution,
-the pcp->free_count solution will trigger free_high heuristics more
-early, this causes performance regression in your workloads.  So, it's
-reasonable to raise the bar to trigger free_high.  And, it's also
-reasonable to use a stricter threshold, as you have done in this patch.
-However, "5 * batch" appears too magic and adapt to one type of machine.
+The reality is that the "only" change is that the submission of
+operations with the BATCH opcode is now allowed for regular applications
+(via write()) with V2 devices, mmap() should still be restricted.
 
-Let's step back to do some analysis.  In the original pcp->free_factor
-solution, free_high is triggered for contiguous freeing with size
-ranging from "batch" to "pcp->high + batch".  So, the average value is
-about "batch + pcp->high / 2".  While in the pcp->free_count solution,
-free_high will be triggered for contiguous freeing with size "batch".
-So, to restore the original behavior, it seems that we can use the
-threshold "batch + pcp->high_min / 2".  Do you think that this is
-reasonable?  If so, can you give it a try?
 
----
-Best Regards,
-Huang, Ying
+Cheers,
+--=20
+Vinicius
