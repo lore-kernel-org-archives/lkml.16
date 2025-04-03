@@ -1,134 +1,267 @@
-Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53219242928
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 10:20:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05759248883;
+	Thu,  3 Apr 2025 10:21:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743675661; cv=none; b=Syj8tCozyxEwYfjnMHhOaWDCaX1TZxBaSUFWXH4jNmjFYm3XxgFHKH2AEGRMvRObbK8NuVXmNKm3PBApwVqr+mQvda+N6Gcc8qOFp4nv1kBQP/tQz7B2d7a8gnHwg4GLqIXAegAqY6rIP6X8GtGBc9b1T5Sb8t+eazSfEF2a5h4=
+	t=1743675669; cv=none; b=MlFnjzcLYvc/rQlA2wvicM6JAUA2hDo1JabsdaMxKhU+1f45ubjqwnZW9/qmo/3UUPs1kizgifTQN1VpiC3WqPwMu2/LTky+/Je0x5S4iJdmIV+sihypiXT9JXK1gIHHTS86aBn7OmFxeBXeozu8mHSrEU4i8aY+iXE84p04L24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743675661; c=relaxed/simple;
-	bh=GezOMWTmbvUlmddSRUJtzgQ2URqpf4G0KrSTl9O1bbM=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=Loknie9T+nOkoqrl5hWD7Pwbk0wdjLpQ/bMu45MAiLblgd3BPK4oDpPhx6Byqu3/+EYt57NM66ewY9EUTGYcLrT0mYowQfKiwvZNkDG44ak09vzTPWYk2FEk2F+maS2RZk566fjFH0ehkuOD/JBx4hNtCI9J5VJj41HIQQ29pog=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IbJMr3mH; arc=none smtp.client-ip=209.85.221.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1743675669; c=relaxed/simple;
+	bh=WzPE+yc35G0Ukevwleocf1xZFNkNNZmTwRFnHBsa3R4=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=jvXlCgBAZ5DRfOcrxXsrQy6ybkR/DHmCg0zg23mxAwv77Mz84HcID+ByQWH5JxwAkg9l5fa0ZrOK43mjHUzKGpOnp40wud+O5odg9W+T5XNsG7fj9st3Ww/yXPbmvizkuHwLJ22uEuVRnsYwCgpobh3x53XUZWJNsLybEnsDf8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eVNbctpM; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IbJMr3mH"
-Received: by mail-vk1-f170.google.com with SMTP id 71dfb90a1353d-5242f137a1eso350821e0c.1
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 03:20:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743675657; x=1744280457; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=EFfDTMKsLOvbQi0ro5INzOuYGDYKTLhDyjOF8V3RES8=;
-        b=IbJMr3mHNGHRsZnXKyqK1XzwitXcokMIGsAdpCrCzPMHOr51mYl5bV7SvS/ID0Tgi9
-         AceADMEW+BtFemZOlfDSSdEffhSa4Cs/zBmPISj8IXWnr2xuRNOorOC7z5doLpvcxFnA
-         Kcdl6J/2LxhY424R3nh3V9zpKY32XrDiypTvdevRaBLPF8WInZHcXglRH89iSw88Aiwd
-         18yIEkz7RWR3FskBkFxqACefcDToggQUGo+uHIkFv8PiRkmZNagjWT6aVRS72oIppDrA
-         JkWWpN6OXtJvHr03LbGkoY6sj0HFJXwNrhiHmkFb83By1AJSdG49emkEsOg1dNmy1oxa
-         x1ag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743675657; x=1744280457;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=EFfDTMKsLOvbQi0ro5INzOuYGDYKTLhDyjOF8V3RES8=;
-        b=hiytJ5kJa6YPeRnp6xAEOokOb8/B+91wCGSo3Z/gI8CCXEfaeLGeOGQqhjoUweCG89
-         Oc3LmOzyyp98q4m7wucS+BERBxJoUMikvfgJL/DVJ0RNWmOUAO5/rGbJgxRUqxAIgxAU
-         DEyyaU1o79jhtaKfRTpYcIOX8W4e3mYREFIdmGapMV52KaXXk43+KgSMw7E5JLJQlnuC
-         G8IUE5RZid9JiwTI8IboWBr8WSQTkvKtKE26p5ET0WK28EXigBg1tBKGq/a89Kc8qnl0
-         vpJQW8KOn7zIpaHo3sRFhOOloPWgdU6S3IFd7VS+HOVmP+4K7fabDq6UpOGawP/mJQBX
-         ibow==
-X-Gm-Message-State: AOJu0YzXjFTIMdXc1uYEGyP+aNYZJ4vJU43prlhDrrZhNlK6afzkWO+W
-	fmRmUuocG3ApQZmsCNUNoorQ+jfiuehmaNSJJVR/cUJAjlTc9NZw//29+cNp8aA9aj0P0u9ACQv
-	LN3HjUC9OlxlGOX+8Ptl0An4+rMunOlzGLtr55AmB5wzP3B7+krc=
-X-Gm-Gg: ASbGncsKArtQWXJqL1612Wd+D5Zv+W94+WZjIHIy+gr11jMaTnZmKtqlR6zpvgS7EYt
-	hlwqAesiLfE8Y+RjP698h3cPpl8TwbXgmpEBo/UdXg4gTIViLTDm71PXEl6J76LNfGqftMfBLau
-	JIQpqsQCbRF8xGhRYrBGPG+QluKLn+FQ28cqiPUdyE96EnPRtkObcJB8u+Tg==
-X-Google-Smtp-Source: AGHT+IHjKBz8LLfkDN1C5xR8N2aNArNqGWfvvXVddkpcmhmRSktPMSHP6GCF1+dehAbnJ6v37EnE6gWHZbLivdA/PoU=
-X-Received: by 2002:a05:6122:1785:b0:520:3987:ce0b with SMTP id
- 71dfb90a1353d-52758c9eb35mr1160475e0c.2.1743675657436; Thu, 03 Apr 2025
- 03:20:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eVNbctpM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743675667; x=1775211667;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=WzPE+yc35G0Ukevwleocf1xZFNkNNZmTwRFnHBsa3R4=;
+  b=eVNbctpMWrW06mMfjaeVHw4uAp+axkDYO4MozWWSnFs+xe1shpx8GZxg
+   /epg/FJ1ksW1vbZ+zA1RmArJJWQM1fPRgMtVRYbBEWqt2/THNQsU5DwP3
+   4yrpEmMNwVeZeOUPYuxgJpAr5Yg3l0RSFjBVo9mHAeZKk6g7T4WCPG7MN
+   SclOIgtK+/qpDmhhuSokdaq2WHuYZVUXkadlWAAo6zpp68zQuZEODH5FU
+   TpOZjbh/o7bJbLGwityjHcMdXPp9VS446iEkp3ZF1eDYLLfc6oTxPeXlC
+   5JxcrkrayNATmgvN7l0SimlVH2wQ9USqVx11ZOQktEyynbIKXC7GWqeQ3
+   w==;
+X-CSE-ConnectionGUID: y7hW+0HgQOaTzByb0edL6A==
+X-CSE-MsgGUID: jUHr71hQS+ehLqXFlMkayA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11392"; a="55745496"
+X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
+   d="scan'208";a="55745496"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 03:21:06 -0700
+X-CSE-ConnectionGUID: E26iemQmTHK+vF7TmOFN3w==
+X-CSE-MsgGUID: buV1Yn3mT6KD5KN/3k38uQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
+   d="scan'208";a="164201212"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.152])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 03:21:01 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 3 Apr 2025 13:20:58 +0300 (EEST)
+To: =?ISO-8859-2?Q?Micha=B3_Winiarski?= <michal.winiarski@intel.com>
+cc: linux-pci@vger.kernel.org, intel-xe@lists.freedesktop.org, 
+    dri-devel@lists.freedesktop.org, LKML <linux-kernel@vger.kernel.org>, 
+    Bjorn Helgaas <bhelgaas@google.com>, 
+    =?ISO-8859-15?Q?Christian_K=F6nig?= <christian.koenig@amd.com>, 
+    =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>, 
+    Rodrigo Vivi <rodrigo.vivi@intel.com>, 
+    Michal Wajdeczko <michal.wajdeczko@intel.com>, 
+    Lucas De Marchi <lucas.demarchi@intel.com>, 
+    =?ISO-8859-15?Q?Thomas_Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>, 
+    Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+    Maxime Ripard <mripard@kernel.org>, 
+    Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+    Simona Vetter <simona@ffwll.ch>, Matt Roper <matthew.d.roper@intel.com>
+Subject: Re: [PATCH v7 5/6] PCI: Allow drivers to control VF BAR size
+In-Reply-To: <20250402141122.2818478-6-michal.winiarski@intel.com>
+Message-ID: <14a7c29e-31b9-2954-9142-0d1c49988b07@linux.intel.com>
+References: <20250402141122.2818478-1-michal.winiarski@intel.com> <20250402141122.2818478-6-michal.winiarski@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Thu, 3 Apr 2025 15:50:46 +0530
-X-Gm-Features: ATxdqUFcLm8EJq5bKx8BVwRxzBv71uPhfhvOEYclA0j-Xltycxe1onkZpRNwYYM
-Message-ID: <CA+G9fYtzOxx1YWz2X4UYqvxB2vg7ptz6axmz-5HFLD9ieSjURw@mail.gmail.com>
-Subject: next-20250403: x86_64 mwait.h:30:15: error: invalid operand for instruction
-To: open list <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>, 
-	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>
-Cc: Arnd Bergmann <arnd@arndb.de>, Anders Roxell <anders.roxell@linaro.org>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>, 
-	Dave Hansen <dave.hansen@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/mixed; boundary="8323328-1193295669-1743675658=:1302"
 
-Regressions on x86_64 builds tinyconfig, allnoconfig failed with toolchains
-clang-20 and gcc-13 on the Linux next starting from next-20250403.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-First seen on the next-20250403
- Good: next-20250402
- Bad:  next-20250403
+--8323328-1193295669-1743675658=:1302
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Regressions found on x86_64:
-  - build/gcc-13-tinyconfig
-  - build/gcc-13-allnoconfig
-  - build/clang-20-tinyconfig
-  - build/clang-20-allnoconfig
+On Wed, 2 Apr 2025, Micha=C5=82 Winiarski wrote:
 
-Regression Analysis:
- - New regression? Yes
- - Reproducibility? Yes
+> Drivers could leverage the fact that the VF BAR MMIO reservation is
+> created for total number of VFs supported by the device by resizing the
+> BAR to larger size when smaller number of VFs is enabled.
+>=20
+> Add a pci_iov_vf_bar_set_size() function to control the size and a
+> pci_iov_vf_bar_get_sizes() helper to get the VF BAR sizes that will
+> allow up to num_vfs to be successfully enabled with the current
+> underlying reservation size.
+>=20
+> Signed-off-by: Micha=C5=82 Winiarski <michal.winiarski@intel.com>
+> ---
+>  drivers/pci/iov.c   | 69 +++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/pci.h |  6 ++++
+>  2 files changed, 75 insertions(+)
+>=20
+> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+> index 2fafbd6a998f0..8a62049b56b41 100644
+> --- a/drivers/pci/iov.c
+> +++ b/drivers/pci/iov.c
+> @@ -1313,3 +1313,72 @@ int pci_sriov_configure_simple(struct pci_dev *dev=
+, int nr_virtfn)
+>  =09return nr_virtfn;
+>  }
+>  EXPORT_SYMBOL_GPL(pci_sriov_configure_simple);
+> +
+> +/**
+> + * pci_iov_vf_bar_set_size - set a new size for a VF BAR
+> + * @dev: the PCI device
+> + * @resno: the resource number
+> + * @size: new size as defined in the spec (0=3D1MB, 31=3D128TB)
+> + *
+> + * Set the new size of a VF BAR that supports VF resizable BAR capabilit=
+y.
+> + * Unlike pci_resize_resource(), this does not cause the resource that
+> + * reserves the MMIO space (originally up to total_VFs) to be resized, w=
+hich
+> + * means that following calls to pci_enable_sriov() can fail if the reso=
+urces
+> + * no longer fit.
+> + *
+> + * Return: 0 on success, or negative on failure.
+> + */
+> +int pci_iov_vf_bar_set_size(struct pci_dev *dev, int resno, int size)
+> +{
+> +=09int ret;
+> +=09u32 sizes;
 
-Boot regression: x86_64 mwait.h:30:15: error: invalid operand for instruction
+Please reverse the order of these variables.
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> +
+> +=09if (!pci_resource_is_iov(resno))
+> +=09=09return -EINVAL;
+> +
+> +=09if (pci_iov_is_memory_decoding_enabled(dev))
+> +=09=09return -EBUSY;
+> +
+> +=09sizes =3D pci_rebar_get_possible_sizes(dev, resno);
+> +=09if (!sizes)
+> +=09=09return -ENOTSUPP;
+> +
+> +=09if (!(sizes & BIT(size)))
 
-## Build log
-In file included from arch/x86/kernel/process.c:36:
-arch/x86/include/asm/mwait.h:30:15: error: invalid operand for instruction
-   30 |         asm volatile("monitor %0, %1, %2" :: "a" (eax), "c"
-(ecx), "d" (edx));
-      |                      ^
-<inline asm>:1:16: note: instantiated into assembly here
-    1 |         monitor %rax, %ecx, %edx
-      |                       ^~~~~
-In file included from arch/x86/kernel/process.c:36:
-arch/x86/include/asm/mwait.h:95:15: error: instruction requires: Not 64-bit mode
-   95 |         asm volatile("sti; mwait %0, %1" :: "a" (eax), "c" (ecx));
-      |                      ^
-<inline asm>:1:7: note: instantiated into assembly here
-    1 |         sti; mwait %eax, %ecx
-      |              ^
-2 errors generated.
+Add include for BIT().
 
+Although adding a helper like this would be helpful for multiple callers:
 
-## Source
-* Kernel version: 6.14.0
-* Git tree: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-* Git sha: f0a16f5363325cc8d9382471cdc7b654c53254c9
-* Git describe: next-20250403
-* Project details:
-https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250403/
-* Architectures: x86_64
-* Toolchains: clang-20, gcc-13
-* Kconfigs: tinyconfig, allnoconfig, lkftconfig
+@@ -3780,6 +3780,88 @@ u32 pci_rebar_get_possible_sizes(struct pci_dev *pde=
+v, int bar)
+ }
+ EXPORT_SYMBOL(pci_rebar_get_possible_sizes);
+=20
++/**
++ * pci_rebar_size_supported - check if size is supported for a resizable B=
+AR
++ * @pdev: PCI device
++ * @bar: BAR to check
++ * @size: size as defined in the spec (0=3D1MB, 31=3D128TB)
++ *
++ * Return: %0 if @size is supported for @bar,
++ *        %-EINVAL if @size is not supported,
++ *        %-ENOTSUPP if @bar is not resizable.
++ */
++int pci_rebar_size_supported(struct pci_dev *pdev, int bar, int size)
++{
++       u64 sizes;
++
++       sizes =3D pci_rebar_get_possible_sizes(pdev, bar);
++       if (!sizes)
++               return -ENOTSUPP;
++
++       return BIT(size) & sizes ? 0 : -EINVAL;
++}
++EXPORT_SYMBOL_GPL(pci_rebar_size_supported);
 
-## Build
-* Build log: https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250403/testrun/27871165/suite/build/test/clang-20-allnoconfig/log
-* Build history:
-https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250403/testrun/27871165/suite/build/test/clang-20-allnoconfig/history/
-* Build details:
-https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250403/testrun/27871165/suite/build/test/clang-20-allnoconfig/
-* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2vCvvmy6fhzm3aMcptKXHvRi4Bp/
-* Kernel config:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/2vCvvmy6fhzm3aMcptKXHvRi4Bp/config
+(Yes, I've some rebar helpers pending so this is extract from that.)
 
---
-Linaro LKFT
-https://lkft.linaro.org
+> +=09=09return -EINVAL;
+> +
+> +=09ret =3D pci_rebar_set_size(dev, resno, size);
+> +=09if (ret)
+> +=09=09return ret;
+> +
+> +=09pci_iov_resource_set_size(dev, resno, pci_rebar_size_to_bytes(size));
+> +
+> +=09return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(pci_iov_vf_bar_set_size);
+> +
+> +/**
+> + * pci_iov_vf_bar_get_sizes - get VF BAR sizes allowing to create up to =
+num_vfs
+> + * @dev: the PCI device
+> + * @resno: the resource number
+> + * @num_vfs: number of VFs
+> + *
+> + * Get the sizes of a VF resizable BAR that can accommodate @num_vfs wit=
+hin
+> + * the currently assigned size of the resource @resno.
+> + *
+> + * Return: A bitmask of sizes in format defined in the spec (bit 0=3D1MB=
+,
+> + * bit 31=3D128TB).
+> + */
+> +u32 pci_iov_vf_bar_get_sizes(struct pci_dev *dev, int resno, int num_vfs=
+)
+> +{
+> +=09resource_size_t vf_len =3D pci_resource_len(dev, resno);
+> +=09u32 sizes;
+> +
+> +=09if (!num_vfs)
+> +=09=09return 0;
+> +
+> +=09do_div(vf_len, num_vfs);
+
+Add include for do_div().
+
+> +=09sizes =3D (roundup_pow_of_two(vf_len + 1) - 1) >> ilog2(SZ_1M);
+
+Doesn't resource_size() already do that + 1 so why is a second one needed=
+=20
+here?
+
+Add include for ilog() and SZ_*.
+
+> +
+> +=09return sizes & pci_rebar_get_possible_sizes(dev, resno);
+> +}
+> +EXPORT_SYMBOL_GPL(pci_iov_vf_bar_get_sizes);
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 0e8e3fd77e967..c8708f3749757 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -2389,6 +2389,8 @@ int pci_sriov_set_totalvfs(struct pci_dev *dev, u16=
+ numvfs);
+>  int pci_sriov_get_totalvfs(struct pci_dev *dev);
+>  int pci_sriov_configure_simple(struct pci_dev *dev, int nr_virtfn);
+>  resource_size_t pci_iov_resource_size(struct pci_dev *dev, int resno);
+> +int pci_iov_vf_bar_set_size(struct pci_dev *dev, int resno, int size);
+> +u32 pci_iov_vf_bar_get_sizes(struct pci_dev *dev, int resno, int num_vfs=
+);
+>  void pci_vf_drivers_autoprobe(struct pci_dev *dev, bool probe);
+> =20
+>  /* Arch may override these (weak) */
+> @@ -2441,6 +2443,10 @@ static inline int pci_sriov_get_totalvfs(struct pc=
+i_dev *dev)
+>  #define pci_sriov_configure_simple=09NULL
+>  static inline resource_size_t pci_iov_resource_size(struct pci_dev *dev,=
+ int resno)
+>  { return 0; }
+> +static inline int pci_iov_vf_bar_set_size(struct pci_dev *dev, int resno=
+, int size)
+> +{ return -ENODEV; }
+> +static inline u32 pci_iov_vf_bar_get_sizes(struct pci_dev *dev, int resn=
+o, int num_vfs)
+> +{ return 0; }
+>  static inline void pci_vf_drivers_autoprobe(struct pci_dev *dev, bool pr=
+obe) { }
+>  #endif
+> =20
+>=20
+
+--=20
+ i.
+
+--8323328-1193295669-1743675658=:1302--
