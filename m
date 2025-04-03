@@ -1,150 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB753198E75;
-	Thu,  3 Apr 2025 06:54:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E886A224AF1
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 06:58:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743663260; cv=none; b=mxjVktPY5H26GCNC6rxJPUoPBTk7BKWe7L14Qa7M5FMgtBVYCsoIfqO1NIf3s6ARHgROEYYwJR1Etggu2GR1CO4mtH4L7qZUuUwhDWoA5R59+4xur2pTIX5vOqGtbba+fFVrJrzjPqfDNsKD0gzOsOSC+58RCqRfyyUhjPrbKyI=
+	t=1743663504; cv=none; b=ghXWgRBhmYpKOJmsj+ZC5dfZNQUj+DvVfU60lFn6cFQoQ92I1Hd6uGYKK265HCz/xMhgWNwUxYOuFkyxvqmQbrzMlQ5GoC93Noc5uyzGR6dDxGJ8NMuwPJkbu8SEas8643hJkMnutbl5ylZe9qQgMddNnFPTwb6ad36HaLpH660=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743663260; c=relaxed/simple;
-	bh=KHk0LlW3CtH57DvJVXX8I9LqP93HSfda2BD9pDiyaFo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pdYbVlPoLOUdvB5hbP2lVB2AbTLUvf0YxnAgxAlypo0EyfQ21zZIybp5f7h6V1IQMdloFHAn3vP1mbot9teIKqQFncroprcjtiUNMTO8V5NP50/gbVZhOYoDGBU3w6V10UB5ZTXABqsDKSik9fwZ0tGS/+IwJNJZVl4C509Ux+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PKTQZ4IA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743663504; c=relaxed/simple;
+	bh=Svo2A8r3Jmqe67aCC/m/jUEWnRUioDCWZy6BQcePGqc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lb20tMHD3EIuJDP9TjHeMMotnYB4JzeEzXcUK+UShNX633HeFwTILE9jBwMmGokzsu3ijBhGtd2z/lB8o8LYgC/tXHxxwn5F+P1bF7lfE9Tyv/ttrxuReNzIaRo/jYESF5+Zq0Lwj+JwjyG7s+zXwkTFZlzWxzSNwRoS7bs45K4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=EpeHucUu; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PKTQZ4IA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 731C0C4CEE3;
-	Thu,  3 Apr 2025 06:54:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743663260;
-	bh=KHk0LlW3CtH57DvJVXX8I9LqP93HSfda2BD9pDiyaFo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PKTQZ4IA9Il4jTt8qh8w6B+f1SH04MfsUYWxKERU4Y1mk6rdjSC36kSeU4r2LXqBB
-	 vspxyAxHnPMEkQPf2/Wf3XX9/ulGahuh2MXpZpuf+leOhuk68jhO6kwrwuG6XUvPJT
-	 hLzmZ2A7bOb0UXvdAu6qByBD2y+dtd74wQCAGJ5fX1IPwTV4DryMvC5fpeSnRiWIb/
-	 Hn2KdRZluYC+6RH0lr25X3fcMRCe0Nd26jFgcTes7uRFIynRzJZt7S+GUHWT441T7S
-	 YjK2DXlz7AuGqzJEsM7I02GUtOxF2YazAbUaR6RQU+YSt2oxGPmwKnCGIUHikc0ZCl
-	 92R2pnRZQoEKw==
-Date: Thu, 3 Apr 2025 08:54:16 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Justin Chen <justin.chen@broadcom.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	florian.fainelli@broadcom.com, conor+dt@kernel.org, krzk+dt@kernel.org, robh@kernel.org, 
-	jassisinghbrar@gmail.com, bcm-kernel-feedback-list@broadcom.com
-Subject: Re: [PATCH v2 1/2] dt-bindings: mailbox: Add devicetree binding for
- bcm74110 mbox
-Message-ID: <20250403-misty-jovial-duck-8f1cd8@krzk-bin>
-References: <20250402223619.358818-1-justin.chen@broadcom.com>
- <20250402223619.358818-2-justin.chen@broadcom.com>
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="EpeHucUu"
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-548409cd2a8so640422e87.3
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 23:58:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1743663501; x=1744268301; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Svo2A8r3Jmqe67aCC/m/jUEWnRUioDCWZy6BQcePGqc=;
+        b=EpeHucUumYabH7JABx9E71uk5YgSwLhYPp9hQhnTOhkkvbW2t64Kz5N5WaZOXAFb4p
+         P65QKDTP15d6YQpDmUG3wgHl6kTLIFyFaUglEruyRkklwP+uFEVA7W05qaMh8+ZXr7eI
+         Wz5vfP3Q/vP5ps/1mPla9PGLWkpghs57TYzMtu6zsXUdtjKewBGANuphps3RvgnajBxu
+         cyFVstLqg+uJcoYqN5nxnRwCuZSplQiaQ+fRzzRaOaNN8x+WINsYBXKDKPMNsyRd6UUf
+         UB/ssNKfSIz6SaGu1QN1W8KxyC3GVjeBZ6GfVpV5LPV54j6GGhnAkYXO/8HHTGCo+E+h
+         W3wQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743663501; x=1744268301;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Svo2A8r3Jmqe67aCC/m/jUEWnRUioDCWZy6BQcePGqc=;
+        b=VDO+aP0x3J4OJ2Swpt+XwaTTIb+eTSppLH6bXGbUAAPGf77VweldyyHKN8qyqx7I0j
+         d6BeT8xP0P7IeSAxyAvJ2KEqo0vnaHh5kwxxBou2uKC9IbnAwxqIwboEFCiwFlS/9Syv
+         uva6wRbB5TiFuqzxQZZ8nvIHl9oN6CXinqPUl5H+8JkK2umnAZFx8X1svnIXrCz2d3w+
+         q/erGMviCkn6zUf/J9YLSIxIFudaF94alGCrJ4tDtd7+6G6METwGR9JZgFtxTWw9iYdg
+         6tX39Jc6gEpx4T5AtY+qIcOszFw2MDFBjT5oDcFhHvpV5AbH/T6/joE9IVINaRAfK4Ua
+         KK9g==
+X-Forwarded-Encrypted: i=1; AJvYcCVhFUrZpnykb9ZFWZCX5MhW+Mx8qz5GU8txLz4+Ge95eonozJ+OVzbMewF1rYxD7ZUBM32eFVMY3otbgxA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzerpUihldnilfyNAQpBnKXyUFlKYUb4AHKoGq1H/OfBRYgo+s8
+	IdULPmrTH1B0V/dV5H0JA6BVHYVc+9LkoXM3E/I+O83GW4v8KuSvqzS1LRRrN7CS+9/+n9NVSBr
+	MeHRAI5UFhnUnydtJ31/O4NgxU3zSDFh+Je+HQA==
+X-Gm-Gg: ASbGnct13igtlLoW5Sah+xmy/KoGPBXmp2Aekequ/lYQ9FE3v/JQFGXxco5eBy8rZKy
+	JwCqdNZIRggPPwWjDpOjSS+TKYjGJdwaCbuE5g2c6ex2jlJKSnf3TL6tlIgGhIKXOhyEDvTXoal
+	dmF9PdunZrnB7SSt0RRS2wmIo3pOdsFO/iOWCI4B4rdmcM+dkoRfrsylpO
+X-Google-Smtp-Source: AGHT+IF7DQnLd2yHx8gCZKrzHn8zuC05BwBHsqp2Ajhws62+Hn5j+meHkLxz/EwnU3MjqUNm4hitHhMdcHo8xpr3WCI=
+X-Received: by 2002:a05:6512:33d3:b0:549:b0f3:43a1 with SMTP id
+ 2adb3069b0e04-54c1d8b0d5bmr432688e87.30.1743663499972; Wed, 02 Apr 2025
+ 23:58:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250402223619.358818-2-justin.chen@broadcom.com>
+References: <20250402152000.1572764-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20250402152000.1572764-1-andriy.shevchenko@linux.intel.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Thu, 3 Apr 2025 08:58:09 +0200
+X-Gm-Features: AQ5f1Jo3r-FtyKUu_Mjqi8jTXLCPKanSLeSOFmvxvJrLriGpTe_MF2mRs_QHx44
+Message-ID: <CAMRc=MfzRVy85NR_eSQc3ZX_OmgCRUKuBdd6TqCu=Adwh9drrA@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] gpiolib: Make gpiod_put() error pointer aware
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, 
+	Florian Fainelli <florian.fainelli@broadcom.com>, Mark Brown <broonie@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 02, 2025 at 03:36:18PM -0700, Justin Chen wrote:
-> diff --git a/Documentation/devicetree/bindings/mailbox/brcm,bcm74110-mbox.yaml b/Documentation/devicetree/bindings/mailbox/brcm,bcm74110-mbox.yaml
-> new file mode 100644
-> index 000000000000..8c3dfffa515f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mailbox/brcm,bcm74110-mbox.yaml
-> @@ -0,0 +1,70 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mailbox/brcm,bcm74110-mbox.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Broadcom BCM74110 Mailbox
-> +
+On Wed, Apr 2, 2025 at 5:20=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> When non-optional GPIO is requested and failed, the variable that holds
+> the (invalid) descriptor can contain an error pointer. However, gpiod_put=
+()
+> ignores that fact and tries to cleanup never requested descriptor.
+> Make sure gpiod_put() ignores that as well.
+>
+> While at it, do the same for the gpiod_put_array().
+>
+> Note, it arguable needs to be present in the stubs as those are usually
+> called when CONFIG_GPIOLIB=3Dn and GPIOs are requested using gpiod_get_op=
+tional()
+> or similar APIs.
+>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
 
-A nit, subject: drop second/last, redundant "devicetree binding for". The
-"dt-bindings" prefix is already stating that these are bindings.
-See also:
-https://elixir.bootlin.com/linux/v6.7-rc8/source/Documentation/devicetree/bindings/submitting-patches.rst#L18
+I'm not a fan of this. Silently ignoring NULL makes sense in the
+context of _optional() calls where we want to do nothing on GPIOs that
+aren't there. But this encourages people to get sloppy and just ignore
+error pointers returned from gpiod_get()? Also: all other calls error
+out on IS_ERR(desc) so why would we make it an exception? If anything,
+the broadcom SPI driver this is about should store the return value of
+gpiod_get() in a local variable, check it and then assign NULL to the
+actual descriptor stored in the driver data.
 
-> +maintainers:
-> +  - Justin Chen <justin.chen@broadcom.com>
-> +  - Florian Fainelli <florian.fainelli@broadcom.com>
-> +
-> +description: Broadcom mailbox hardware first introduced with 74110
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - brcm,bcm74110-mbox
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 2
+We return errors for a reason, I don't like the idea of just ignoring
+them in gpiod_put().
 
-This changed... You need now list items instead.
-
-> +
-> +  "#mbox-cells":
-> +    const: 2
-> +    description:
-> +      The first cell is channel type and second cell is shared memory slot
-> +
-> +  brcm,tx:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: Mailbox transmit doorbell
-> +
-> +  brcm,rx:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: Mailbox receive doorbell
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - "#mbox-cells"
-> +  - brcm,tx
-> +  - brcm,rx
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-
-... and where do you use it?
-
-> +
-> +    brcm_mailbox: brcm_mailbox@a552000 {
-
-Only partially improved.
-
-Node names should be generic. See also an explanation and list of
-examples (not exhaustive) in DT specification:
-https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#generic-names-recommendation
-
-> +        #mbox-cells = <0x2>;
-> +        brcm,rx = <0x7>;
-> +        brcm,tx = <0x6>;
-> +        compatible = "brcm,bcm74110-mbox";
-
-Nothing improved. Didi you read the DTS coding style?
-
-> +        reg = <0xa552000 0x1104>;
-> +        interrupts = <0x0 0x67 0x4>, /* DQM 7 */
-> +                     <0x0 0x66 0x4>; /* DQM 6 */
-
-Looks like standard flags, so use proper defines.
-
-> +    };
-> +
-> +    scmi {
-
-Drop the node, not related.
-
-Best regards,
-Krzysztof
-
+Bartosz
