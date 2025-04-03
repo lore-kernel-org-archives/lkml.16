@@ -1,90 +1,118 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 631AC2500AA;
-	Thu,  3 Apr 2025 14:15:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F87E24EA8D;
+	Thu,  3 Apr 2025 14:16:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743689751; cv=none; b=vDu0kguJrsjcz6zI/bB8WCgGLXIeV6mRAk0Y7FeowueWaDj/KgC3DKEmuNafd+4x17m3p1MWhotEk47nmMU2AH0fHNTc2gs0z8Af7yHzu8EI8K0NWibf/VGyuIyqCBBx/Jrl8WCfyk43OEXq2c09JJPPVqkxf9pZKnXk5hRnXZw=
+	t=1743689779; cv=none; b=SNK9vQYiD6/dGE362MucPkZKrOkk8YjVaYE2gDrqdpwGPut5dXGjWuI3j/elw9GiX8+qkBz2YT0LHgr5j7gnRvmhU6EalZlDHcUsPQdu7Ez7GUZIC3AgZMIt7uGRc0HCjwlWPo6hIJZwjw1Jo1bme2UHpe04fwhbLlCW2cXABjQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743689751; c=relaxed/simple;
-	bh=GmslQeJnel+/tjfSpT8PmCAKRMGRuhx9GKezcLoTBA8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=UmbNObyMnAvvq/Eygwsd5FKdGE+9s2CQVCkPI5J1BK/iwxwBEi/0+2eFqu56Axi0kCDPTzPb9zugNLdjDxATxjKR8YCc2o7bxsTAuASIOUQ1OtNOd1AajPtOV0wD/vfDXLRtFm+Va3C5UuiCTp52RJLBeNDIUCHinnCTsT9u1ug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 65B3F1C00;
-	Thu,  3 Apr 2025 07:15:52 -0700 (PDT)
-Received: from e129823.cambridge.arm.com (e129823.arm.com [10.1.197.6])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 0BB683F59E;
-	Thu,  3 Apr 2025 07:15:46 -0700 (PDT)
-From: Yeoreum Yun <yeoreum.yun@arm.com>
-To: catalin.marinas@arm.com,
-	will@kernel.org,
-	broonie@kernel.org,
-	anshuman.khandual@arm.com,
-	joey.gouly@arm.com,
-	yury.khrustalev@arm.com,
-	maz@kernel.org,
-	oliver.upton@linux.dev,
-	frederic@kernel.org,
-	shameerali.kolothum.thodi@huawei.com,
-	james.morse@arm.com,
-	mark.rutland@arm.com,
-	huangxiaojia2@huawei.com,
-	akpm@linux-foundation.org,
-	surenb@google.com,
-	robin.murphy@arm.com
-Cc: linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	Yeoreum Yun <yeoreum.yun@arm.com>
-Subject: [PATCH 3/3] Documentation/arm64: reflects FEAT_MTE_TAGGED_FAR description
-Date: Thu,  3 Apr 2025 15:15:35 +0100
-Message-Id: <20250403141535.23496-4-yeoreum.yun@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250403141535.23496-1-yeoreum.yun@arm.com>
-References: <20250403141535.23496-1-yeoreum.yun@arm.com>
+	s=arc-20240116; t=1743689779; c=relaxed/simple;
+	bh=GgdfiQ5y7mT7VYraEy9gS4DReUbj/UbBNo2YaSQqkB0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NRbZcRlUZW+Xv41m0//MdtdkVXNT25KQIg7IyXtaAkXcq0q+A1ljA8ejqtpzaZ8MsqsHgxmn7dcx6LP84Fm5m7p8FGwm7cOv5S/XX5nRrjiGZFGqYg1QiBTFWBf4UjHnKMzcjHBkrKWmglfNMI3Xo2IRTBkO8jRHbURsrNNOrZc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RH7LCW07; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RH7LCW07"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51B8DC4CEE3;
+	Thu,  3 Apr 2025 14:16:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743689778;
+	bh=GgdfiQ5y7mT7VYraEy9gS4DReUbj/UbBNo2YaSQqkB0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=RH7LCW07fTwpCP4aARZxpbeQQjLGly0mN4VZnQqQ7cTI88gVop3NT8nTLsSYFTGWW
+	 uQEzwrcdsrpCSqGLMV8omuYDowr3NlZQntng4D4zddvxNXjFPo4lk1+eVJ5nU5CsY5
+	 Sj8IZ6H7/vTBIiRuuEU3mDYbkPf/UT7Yl95FiRvPwIB+WFeH9i42MJxpcn6DALW7Ob
+	 ONFQnngHwhoc/MkcpKTeeyNQbKgf+l9JPoX1b0AKDF7ULOW5GX6k3v+Hw4akJ0iMHT
+	 rOzR54wZjvkknh5qBF6MZfgIMPzXst245UFByvP3mLD+LSIH9zLz9otfQ+z3zYPsc/
+	 2nyfeILPLOW8g==
+Message-ID: <9c47cd4d-41c7-42b9-8f00-a1ea9b9f6ed8@kernel.org>
+Date: Thu, 3 Apr 2025 16:16:11 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] dt-bindings: watchdog: Add NXP Software Watchdog
+ Timer
+To: Daniel Lezcano <daniel.lezcano@linaro.org>, wim@linux-watchdog.org
+Cc: linux@roeck-us.net, linux-watchdog@vger.kernel.org,
+ linux-kernel@vger.kernel.org, S32@nxp.com, ghennadi.procopciuc@nxp.com,
+ thomas.fossati@linaro.org, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, devicetree@vger.kernel.org
+References: <20250402154942.3645283-1-daniel.lezcano@linaro.org>
+ <20250402154942.3645283-2-daniel.lezcano@linaro.org>
+ <ffe49998-f809-458e-8eda-002d0c0fc32a@kernel.org>
+ <c449fba0-476e-495b-abbd-65ba2d44d590@linaro.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <c449fba0-476e-495b-abbd-65ba2d44d590@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-When FEAT_MTE_TAGGED_FAR feature is supported, the value of address bits
-[63:60] is preserved on synchronous tag check fault.
+On 03/04/2025 01:01, Daniel Lezcano wrote:
+> On 02/04/2025 17:56, Krzysztof Kozlowski wrote:
+>> On 02/04/2025 17:49, Daniel Lezcano wrote:
+>>> Describe the Software Watchdog Timer available on the S32G platforms.
+>>>
+>>> Cc: Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>
+>>> Cc: Thomas Fossati <thomas.fossati@linaro.org>
+>>> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+>>
+>> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>>
+>> Best regards,
+>> Krzysztof
+> 
+> I ran the make dt_binding_check but inadvertently removed the "oneOf:" 
+> after :/
+Other errors were also not fixed even though you got report on them on
+29th of March.
 
-This patch reflects the above feature in the documentation.
-
-Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
----
- Documentation/arch/arm64/tagged-pointers.rst | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
-
-diff --git a/Documentation/arch/arm64/tagged-pointers.rst b/Documentation/arch/arm64/tagged-pointers.rst
-index 81b6c2a770dd..73c59a9c7a63 100644
---- a/Documentation/arch/arm64/tagged-pointers.rst
-+++ b/Documentation/arch/arm64/tagged-pointers.rst
-@@ -60,11 +60,12 @@ that signal handlers in applications making use of tags cannot rely
- on the tag information for user virtual addresses being maintained
- in these fields unless the flag was set.
- 
--Due to architecture limitations, bits 63:60 of the fault address
--are not preserved in response to synchronous tag check faults
--(SEGV_MTESERR) even if SA_EXPOSE_TAGBITS was set. Applications should
--treat the values of these bits as undefined in order to accommodate
--future architecture revisions which may preserve the bits.
-+If FEAT_MTE_TAGGED_FAR (Armv8.9) is supported, bits 63:60 of the fault address
-+are preserved in response to synchronous tag check faults (SEGV_MTESERR)
-+otherwise not preserved even if SA_EXPOSE_TAGBITS was set.
-+Applications should interpret the values of these bits based on
-+the support for the 'mte_far' hwcap. If the support is not present,
-+the values of these bits should be considered as undefined otherwise valid.
- 
- For signals raised in response to watchpoint debug exceptions, the
- tag information will be preserved regardless of the SA_EXPOSE_TAGBITS
--- 
-LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
-
+Best regards,
+Krzysztof
