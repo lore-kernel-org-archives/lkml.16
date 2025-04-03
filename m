@@ -1,155 +1,393 @@
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f74.google.com (mail-oo1-f74.google.com [209.85.161.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90C762673B3;
-	Thu,  3 Apr 2025 19:44:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CB502673AF
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 19:44:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743709443; cv=none; b=k0Ezv0MotmCqfjTjdfT/Vr8U4o1YWzIptMRrv0XAgpd5u3jS7dlbdIEDIY1majxOHOSeKyn8E7N5gDGimUN/RgjCuYl2Rrps9O7GwE2nCN8hpcjwNGCczOEfhZGNgm3L/6ROgzGcKj9Sq8jciYJWWA1H8oc45LtTdONsvYINKqI=
+	t=1743709443; cv=none; b=ZEdJX8M4uoh0OeEu/Dyw1ZasPp7TJjCJ3MAVN0omxja3wcCjRPpCet/UBYCC1Tm5PlSBXioLafoU+4v9amyvRFcvvIpzYMPctphrokrUWQJo7gI+KZI2TwLZqme8zxuziO7+T8CYmE7LruIP/t2gZBdZLe2L0TO78M8D3H6h1YQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1743709443; c=relaxed/simple;
-	bh=qF9Zj3PjrQic1A7PpKJ4c/FD9M3b2SUmVmAcwCGxI0U=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Npfs+Q488812Q4KKmJTNCYe0eIm8j7GszGYSU9B0BkWFcublqsQFfA2DCWD5W7NfzicO8x/t4eBWWQ3DYRa7YyFQ0NlZ2gxTz1hBiuWH73RY9MBjm8vKcRiRYJPBk3a04n8Fc6SfXCy8XjxwuAZ8bc9bnRyGUTjCLpIIwL5LDxY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=6PHFAiaF; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	bh=Hb1LH8MWDKh/SBlCFGDKsTyfayTGu9osHdVeQkub7DA=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Content-Type; b=pPI+gzKpSqbAm2Oz/ZSZ+f5b+rV3VmOmqx1WvPFXpWZoOjT9HcwPQZDQfEiLGWxhwzubhFf0YqsEhi32zjfUV2G0PzAwNnTVD6J/kusvN8txUVbj4iaxUu0jSHVZGiiriaRk1B2y1oLqg3dF0RyZDMIo7K5MHQtK02lVHk8boSs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NyQA+zko; arc=none smtp.client-ip=209.85.161.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="6PHFAiaF"
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 533DHOKb014638;
-	Thu, 3 Apr 2025 21:43:47 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-type:date:from:message-id:mime-version:subject:to; s=
-	selector1; bh=Vz4wecqC/0d7dNYyMnoNHC/GR55ejTkOcvNdw4GzVz4=; b=6P
-	HFAiaFetkkl1X/U1ynu0SU1wbiGNPymgyNSbYyhtsUQJ4unZoVAESfFSipUfruF/
-	TR8wzc1GtyQoMJNzNcUBkr3zFXh/ACBBai8zGeEHf/GuqHSVDyzDJlzUc2s3+PpF
-	FgAbamN6PW+wQDQZ1n6eDpXQLnsrNs8K6d2YvGxn0Fnu+D1cJ8tc46APHGaThUot
-	VVpAJIYhojiRQzAEViIrYBpaELMdsEP9cIKAIEfnYLUMylQ2u/aP9JUtUchbeeOp
-	jtO1grKOPCytTK3VK6yT2x4oqJk/G7F/kfkN+Ykn8NDNi3+l2VcMloofhV8GDekd
-	yGPEKfZZwJX9xczfRg0w==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 45ryyfruvh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 03 Apr 2025 21:43:47 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 1946E4004C;
-	Thu,  3 Apr 2025 21:42:53 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 4ED0F90F8E6;
-	Thu,  3 Apr 2025 21:40:58 +0200 (CEST)
-Received: from localhost (10.130.72.242) by SHFDAG1NODE1.st.com (10.75.129.69)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 3 Apr
- 2025 21:40:58 +0200
-From: Sylvain Petinot <sylvain.petinot@foss.st.com>
-To: <benjamin.mugnier@foss.st.com>, <sylvain.petinot@foss.st.com>,
-        <mchehab@kernel.org>, <robh@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <sakari.ailus@linux.intel.com>
-CC: <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <tomm.merciai@gmail.com>
-Subject: [PATCH v4 0/2] media: Add driver for ST VD56G3 camera sensor
-Date: Thu, 3 Apr 2025 21:40:32 +0200
-Message-ID: <20250403194034.2324-1-sylvain.petinot@foss.st.com>
-X-Mailer: git-send-email 2.17.1
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NyQA+zko"
+Received: by mail-oo1-f74.google.com with SMTP id 006d021491bc7-6022020dd2bso325185eaf.2
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 12:44:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1743709440; x=1744314240; darn=vger.kernel.org;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=qBxUwTOgMQg7WWu2qDeWBrbygHx0f5AF8t2eYtXUGLw=;
+        b=NyQA+zkoEaw1WjMYk/kx4GPmD5qDoN9sU1dLTudfg+r5A4eGhafUpwxb5RQRxOijmB
+         40DuBpiXWi/AdgN0d7rYruIIL7n39vwsq+TcH0fQvvF2IuD1JISo4w2YXx/T2fNs258Z
+         yx5SWOJE+P+3ThNeLH/UIsXmKz6umcmWiramYj0UwToaNCj/ajaC0rK/Dl58Gx/cbq3V
+         sJbMC37SjicNLhoEXtpzVxf5mHctbAyidZCxRpYbdxsbAHZ6J+wUt11bJyTJpfmRxk+V
+         vbHhyGnfwHDAuEp05SsUEiz9P+mpRShKM+liWsqqX3ZuPlmzZbEw+3oaSb6opgGJVbA5
+         QHjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743709440; x=1744314240;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qBxUwTOgMQg7WWu2qDeWBrbygHx0f5AF8t2eYtXUGLw=;
+        b=gENknlTnZ3XcAeWHruoVnp07ZhEKgaMhlG/mVb3FEP52RxRzQQBwrojcnDE7bYm2jN
+         rvxhzmi/cJ42qtsde9Ccg1ovh13Dt9EOvlasmyo/Q8M9y6GvSD0yC2/oLIk0Jqb7u6Nz
+         WfN7+IZaUyL+9p0IgESrP8znSm4gXT++0RVE2ncYB+3Sg69j/dE2C3xkAKV9LyyGZkDR
+         /DXBSRkRy+vcKx8I47McbmO4GuDE6238LMRH6mLd10pKrZxt/+U9qR3QOlrDFKPb4Igg
+         BMeCjBz+3G5kEDoXOU5Cy5O+naSeUq+e9gtjXfD6QbjGkJa8G/AQlLOd2teOTnzf9ZRZ
+         Pajg==
+X-Forwarded-Encrypted: i=1; AJvYcCX7NMRIVEwPpDuXdj3XgIk2EfuAppxkRjvJPp52sW4sfCykc1i8u3rHxs7KRn/xDztarzKIAapVrN/Zox8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4IFPvUp6C+kZUYqW9hYwiotJRYhjn3UAOwlHSK65beUng6Biq
+	r9IWmsVmRNViu4UgQmkn1A1JLjNl1BVt7G79xJV3FydlbahTEfJwRItzGiSnMT+pNZIz0+5FTlO
+	MvdObFA==
+X-Google-Smtp-Source: AGHT+IGUJjNn+0SbWkVSjzPIxGq3rhm0m6MVrbcZaSE78IEupPzoHmRZEuq9Rf3qB5Am6SeFV807TECIhxOE
+X-Received: from oabpb6.prod.google.com ([2002:a05:6870:1e86:b0:2b8:ed65:d4c7])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6870:4e0c:b0:29e:76d1:db3b
+ with SMTP id 586e51a60fabf-2cc9e51de4cmr426200fac.5.1743709440581; Thu, 03
+ Apr 2025 12:44:00 -0700 (PDT)
+Date: Thu,  3 Apr 2025 12:43:37 -0700
+In-Reply-To: <20250403194337.40202-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-03_08,2025-04-03_03,2024-11-22_01
+Mime-Version: 1.0
+References: <20250403194337.40202-1-irogers@google.com>
+X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
+Message-ID: <20250403194337.40202-5-irogers@google.com>
+Subject: [PATCH v6 4/4] perf parse-events: Add "cpu" term to set the CPU an
+ event is recorded on
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Leo Yan <leo.yan@arm.com>, 
+	James Clark <james.clark@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Weilin Wang <weilin.wang@intel.com>, Andi Kleen <ak@linux.intel.com>, 
+	Dominique Martinet <asmadeus@codewreck.org>, Yicong Yang <yangyicong@hisilicon.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hello,
+The -C option allows the CPUs for a list of events to be specified but
+its not possible to set the CPU for a single event. Add a term to
+allow this. The term isn't a general CPU list due to ',' already being
+a special character in event parsing instead multiple cpu= terms may
+be provided and they will be merged/unioned together.
 
-This serie adds support for STMicroelectronics VD56G3 camera sensor.
-This is a 1.5M pixel global shutter camera available in both Mono (VD56G3) and
-colour (VD66GY) variants.
+An example of mixing different types of events counted on different CPUs:
+```
+$ perf stat -A -C 0,4-5,8 -e "instructions/cpu=0/,l1d-misses/cpu=4,cpu=5/,inst_retired.any/cpu=8/,cycles" -a sleep 0.1
 
-The following features are supported:
-- Auto exposure with expo bias or
-- Manual exposure with analog / digital gain
-- H/V flip
-- vblank/hblank/link freq
-- Test pattern
-- Supported resolutions in both raw8/raw10 :
-   - 1124x1364
-   - 1120x1360
-   - 1024x1280
-   - 1024x768
-   - 768x1024
-   - 720x1280
-   - 640x480
-   - 480x640
-   - 320x240
+ Performance counter stats for 'system wide':
 
-This driver supports coldstart parameters for internal AE feature.
-To make it work, the driver save gain/expo values in ctrl's cur.val during
-poweroff phase. This implementation transgress V4L2 rules... Any advice to make
-it proper would be greatly appreciated.
+CPU0            6,979,225      instructions/cpu=0/              #    0.89  insn per cycle
+CPU4               75,138      cpu/l1d-misses/
+CPU5            1,418,939      cpu/l1d-misses/
+CPU8              797,553      cpu/inst_retired.any,cpu=8/
+CPU0            7,845,302      cycles
+CPU4            6,546,859      cycles
+CPU5          185,915,438      cycles
+CPU8            2,065,668      cycles
 
-Driver tested on RB5 and RPI (with and without libcamera) for V1. V2, V3 and V4
-mainly tested on RPI.
+       0.112449242 seconds time elapsed
+```
 
+Signed-off-by: Ian Rogers <irogers@google.com>
 ---
+ tools/perf/Documentation/perf-list.txt |  9 +++
+ tools/perf/util/evsel_config.h         |  1 +
+ tools/perf/util/parse-events.c         | 76 +++++++++++++++++++++-----
+ tools/perf/util/parse-events.h         |  3 +-
+ tools/perf/util/parse-events.l         |  1 +
+ tools/perf/util/pmu.c                  |  3 +-
+ 6 files changed, 76 insertions(+), 17 deletions(-)
 
-v3 -> v4:
-- driver: Revert to pm_runtime_put_autosuspend()
-- driver: Drop HAS_EVENTS and event handlers
-- driver: Make native resolution the default one
-- driver: Implements get_frame_desc() operation
-- driver: Use enable_streams and disable_streams ops
-- driver: Move asm/unaligned.h to linux/unaligned.h
-- driver: Variable data read using cci_read() doesn't require initialization
-- driver: Drop enum vd56g3_expo_state definition
-
-v2 -> v3:
-- driver: Unify PM vd56g3_resume/suspend functions with vd56g3_power_on/off
-- driver: Add v4l2_fwnode ctrls parse and addition
-- driver: Exposure is bounded by a minimum number of lines
-- driver: Minor improvements while handling return values
-- driver: Move to __pm_runtime_put_autosuspend()
-- driver: Follow rules and convention for driver naming
-- dt-bindings: Improve st-leds description
-- dt-bindings: Add missing additionnalProperties on 'port'
-- dt-bindings: vd56g3 is a video-interface-device type of device 
-- dt-bindings: Follow rules and convention for bindings naming
-
-v1 -> v2:
-- driver: Drop VD56G3_NUM_SUPPLIES
-- driver: Rename 'ext_clock' to 'xclk_freq'
-- driver: Make use of 'container_of_const' instead of 'container_of'
-- driver: Drop usage of WARN()
-- driver: Move a few variables to unsigned int
-- driver: Add defines for the different Cut revisions
-- driver: Replace dev_warn() by dev_err() in situation we're returning errors
-- driver: Ensure sensor has dedicated 3.5ms to boot after reset
-- driver: Take into account return value of __v4l2_ctrl_modify_range() and
-  __v4l2_ctrl_s_ctrl() functions
-- driver: Merge vd56g3_power_on() and vd56g3_boot()
-- dt-bindings: Lowercase power supply names
-- dt-bindings: Drop clock-lanes property
-- dt-bindings: Drop unecessary 'items' contraint for lane-polarities
-- dt-bindings: Drop unused labels
-
-Sylvain Petinot (2):
-  media: dt-bindings: Add ST VD56G3 camera sensor
-  media: i2c: Add driver for ST VD56G3 camera sensor
-
- .../bindings/media/i2c/st,vd56g3.yaml         |  139 ++
- MAINTAINERS                                   |    9 +
- drivers/media/i2c/Kconfig                     |   11 +
- drivers/media/i2c/Makefile                    |    1 +
- drivers/media/i2c/vd56g3.c                    | 1569 +++++++++++++++++
- 5 files changed, 1729 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/st,vd56g3.yaml
- create mode 100644 drivers/media/i2c/vd56g3.c
-
+diff --git a/tools/perf/Documentation/perf-list.txt b/tools/perf/Documentation/perf-list.txt
+index 8914f12d2b85..ce0735021473 100644
+--- a/tools/perf/Documentation/perf-list.txt
++++ b/tools/perf/Documentation/perf-list.txt
+@@ -289,6 +289,15 @@ Sums up the event counts for all hardware threads in a core, e.g.:
+ 
+   perf stat -e cpu/event=0,umask=0x3,percore=1/
+ 
++cpu:
++
++Specifies the CPU to open the event upon. The value may be repeated to
++specify opening the event on multiple CPUs:
++
++
++  perf stat -e instructions/cpu=0,cpu=2/,cycles/cpu=1,cpu=2/ -a sleep 1
++  perf stat -e data_read/cpu=0/,data_write/cpu=1/ -a sleep 1
++
+ 
+ EVENT GROUPS
+ ------------
+diff --git a/tools/perf/util/evsel_config.h b/tools/perf/util/evsel_config.h
+index af52a1516d0b..94a1e9cf73d6 100644
+--- a/tools/perf/util/evsel_config.h
++++ b/tools/perf/util/evsel_config.h
+@@ -48,6 +48,7 @@ struct evsel_config_term {
+ 		u32	      aux_sample_size;
+ 		u64	      cfg_chg;
+ 		char	      *str;
++		int	      cpu;
+ 	} val;
+ 	bool weak;
+ };
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index 783177c5f140..0a57af03db5e 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -7,6 +7,7 @@
+ #include <errno.h>
+ #include <sys/ioctl.h>
+ #include <sys/param.h>
++#include "cpumap.h"
+ #include "term.h"
+ #include "env.h"
+ #include "evlist.h"
+@@ -179,6 +180,26 @@ static char *get_config_name(const struct parse_events_terms *head_terms)
+ 	return get_config_str(head_terms, PARSE_EVENTS__TERM_TYPE_NAME);
+ }
+ 
++static struct perf_cpu_map *get_config_cpu(const struct parse_events_terms *head_terms)
++{
++	struct parse_events_term *term;
++	struct perf_cpu_map *cpus = NULL;
++
++	if (!head_terms)
++		return NULL;
++
++	list_for_each_entry(term, &head_terms->terms, list) {
++		if (term->type_term == PARSE_EVENTS__TERM_TYPE_CPU) {
++			struct perf_cpu_map *cpu = perf_cpu_map__new_int(term->val.num);
++
++			perf_cpu_map__merge(&cpus, cpu);
++			perf_cpu_map__put(cpu);
++		}
++	}
++
++	return cpus;
++}
++
+ /**
+  * fix_raw - For each raw term see if there is an event (aka alias) in pmu that
+  *           matches the raw's string value. If the string value matches an
+@@ -442,11 +463,12 @@ int parse_events_add_cache(struct list_head *list, int *idx, const char *name,
+ 	bool found_supported = false;
+ 	const char *config_name = get_config_name(parsed_terms);
+ 	const char *metric_id = get_config_metric_id(parsed_terms);
++	struct perf_cpu_map *cpus = get_config_cpu(parsed_terms);
++	int ret = 0;
+ 
+ 	while ((pmu = perf_pmus__scan(pmu)) != NULL) {
+ 		LIST_HEAD(config_terms);
+ 		struct perf_event_attr attr;
+-		int ret;
+ 
+ 		if (parse_events__filter_pmu(parse_state, pmu))
+ 			continue;
+@@ -461,7 +483,7 @@ int parse_events_add_cache(struct list_head *list, int *idx, const char *name,
+ 						   perf_pmu__auto_merge_stats(pmu),
+ 						   /*alternate_hw_config=*/PERF_COUNT_HW_MAX);
+ 			if (ret)
+-				return ret;
++				goto out_err;
+ 			continue;
+ 		}
+ 
+@@ -481,21 +503,27 @@ int parse_events_add_cache(struct list_head *list, int *idx, const char *name,
+ 
+ 		if (parsed_terms) {
+ 			if (config_attr(&attr, parsed_terms, parse_state->error,
+-					config_term_common))
+-				return -EINVAL;
+-
+-			if (get_config_terms(parsed_terms, &config_terms))
+-				return -ENOMEM;
++					config_term_common)) {
++				ret = -EINVAL;
++				goto out_err;
++			}
++			if (get_config_terms(parsed_terms, &config_terms)) {
++				ret = -ENOMEM;
++				goto out_err;
++			}
+ 		}
+ 
+ 		if (__add_event(list, idx, &attr, /*init_attr*/true, config_name ?: name,
+ 				metric_id, pmu, &config_terms, /*auto_merge_stats=*/false,
+-				/*cpu_list=*/NULL,
+-				/*alternate_hw_config=*/PERF_COUNT_HW_MAX) == NULL)
+-			return -ENOMEM;
++				cpus, /*alternate_hw_config=*/PERF_COUNT_HW_MAX) == NULL)
++			ret = -ENOMEM;
+ 
+ 		free_config_terms(&config_terms);
++		if (ret)
++			goto out_err;
+ 	}
++out_err:
++	perf_cpu_map__put(cpus);
+ 	return found_supported ? 0 : -EINVAL;
+ }
+ 
+@@ -814,6 +842,7 @@ const char *parse_events__term_type_str(enum parse_events__term_type term_type)
+ 		[PARSE_EVENTS__TERM_TYPE_RAW]                   = "raw",
+ 		[PARSE_EVENTS__TERM_TYPE_LEGACY_CACHE]          = "legacy-cache",
+ 		[PARSE_EVENTS__TERM_TYPE_HARDWARE]              = "hardware",
++		[PARSE_EVENTS__TERM_TYPE_CPU]			= "cpu",
+ 	};
+ 	if ((unsigned int)term_type >= __PARSE_EVENTS__TERM_TYPE_NR)
+ 		return "unknown term";
+@@ -843,6 +872,7 @@ config_term_avail(enum parse_events__term_type term_type, struct parse_events_er
+ 	case PARSE_EVENTS__TERM_TYPE_METRIC_ID:
+ 	case PARSE_EVENTS__TERM_TYPE_SAMPLE_PERIOD:
+ 	case PARSE_EVENTS__TERM_TYPE_PERCORE:
++	case PARSE_EVENTS__TERM_TYPE_CPU:
+ 		return true;
+ 	case PARSE_EVENTS__TERM_TYPE_USER:
+ 	case PARSE_EVENTS__TERM_TYPE_SAMPLE_FREQ:
+@@ -990,6 +1020,15 @@ do {									   \
+ 			return -EINVAL;
+ 		}
+ 		break;
++	case PARSE_EVENTS__TERM_TYPE_CPU:
++		CHECK_TYPE_VAL(NUM);
++		if (term->val.num >= (u64)cpu__max_present_cpu().cpu) {
++			parse_events_error__handle(err, term->err_val,
++						strdup("too big"),
++						NULL);
++			return -EINVAL;
++		}
++		break;
+ 	case PARSE_EVENTS__TERM_TYPE_DRV_CFG:
+ 	case PARSE_EVENTS__TERM_TYPE_USER:
+ 	case PARSE_EVENTS__TERM_TYPE_LEGACY_CACHE:
+@@ -1117,6 +1156,7 @@ static int config_term_tracepoint(struct perf_event_attr *attr,
+ 	case PARSE_EVENTS__TERM_TYPE_RAW:
+ 	case PARSE_EVENTS__TERM_TYPE_LEGACY_CACHE:
+ 	case PARSE_EVENTS__TERM_TYPE_HARDWARE:
++	case PARSE_EVENTS__TERM_TYPE_CPU:
+ 	default:
+ 		if (err) {
+ 			parse_events_error__handle(err, term->err_term,
+@@ -1251,6 +1291,7 @@ do {								\
+ 		case PARSE_EVENTS__TERM_TYPE_RAW:
+ 		case PARSE_EVENTS__TERM_TYPE_LEGACY_CACHE:
+ 		case PARSE_EVENTS__TERM_TYPE_HARDWARE:
++		case PARSE_EVENTS__TERM_TYPE_CPU:
+ 		default:
+ 			break;
+ 		}
+@@ -1305,6 +1346,7 @@ static int get_config_chgs(struct perf_pmu *pmu, struct parse_events_terms *head
+ 		case PARSE_EVENTS__TERM_TYPE_RAW:
+ 		case PARSE_EVENTS__TERM_TYPE_LEGACY_CACHE:
+ 		case PARSE_EVENTS__TERM_TYPE_HARDWARE:
++		case PARSE_EVENTS__TERM_TYPE_CPU:
+ 		default:
+ 			break;
+ 		}
+@@ -1349,6 +1391,7 @@ static int __parse_events_add_numeric(struct parse_events_state *parse_state,
+ 	struct perf_event_attr attr;
+ 	LIST_HEAD(config_terms);
+ 	const char *name, *metric_id;
++	struct perf_cpu_map *cpus;
+ 	int ret;
+ 
+ 	memset(&attr, 0, sizeof(attr));
+@@ -1370,10 +1413,11 @@ static int __parse_events_add_numeric(struct parse_events_state *parse_state,
+ 
+ 	name = get_config_name(head_config);
+ 	metric_id = get_config_metric_id(head_config);
++	cpus = get_config_cpu(head_config);
+ 	ret = __add_event(list, &parse_state->idx, &attr, /*init_attr*/true, name,
+-			  metric_id, pmu, &config_terms, /*auto_merge_stats=*/false,
+-			  /*cpu_list=*/NULL, /*alternate_hw_config=*/PERF_COUNT_HW_MAX
+-		) == NULL ? -ENOMEM : 0;
++			metric_id, pmu, &config_terms, /*auto_merge_stats=*/false,
++			cpus, /*alternate_hw_config=*/PERF_COUNT_HW_MAX) ? 0 : -ENOMEM;
++	perf_cpu_map__put(cpus);
+ 	free_config_terms(&config_terms);
+ 	return ret;
+ }
+@@ -1433,6 +1477,7 @@ static int parse_events_add_pmu(struct parse_events_state *parse_state,
+ 	LIST_HEAD(config_terms);
+ 	struct parse_events_terms parsed_terms;
+ 	bool alias_rewrote_terms = false;
++	struct perf_cpu_map *term_cpu = NULL;
+ 
+ 	if (verbose > 1) {
+ 		struct strbuf sb;
+@@ -1527,11 +1572,12 @@ static int parse_events_add_pmu(struct parse_events_state *parse_state,
+ 		return -EINVAL;
+ 	}
+ 
++	term_cpu = get_config_cpu(&parsed_terms);
+ 	evsel = __add_event(list, &parse_state->idx, &attr, /*init_attr=*/true,
+ 			    get_config_name(&parsed_terms),
+ 			    get_config_metric_id(&parsed_terms), pmu,
+-			    &config_terms, auto_merge_stats, /*cpu_list=*/NULL,
+-			    alternate_hw_config);
++			    &config_terms, auto_merge_stats, term_cpu, alternate_hw_config);
++	perf_cpu_map__put(term_cpu);
+ 	if (!evsel) {
+ 		parse_events_terms__exit(&parsed_terms);
+ 		return -ENOMEM;
+diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
+index e176a34ab088..ab242f671031 100644
+--- a/tools/perf/util/parse-events.h
++++ b/tools/perf/util/parse-events.h
+@@ -80,7 +80,8 @@ enum parse_events__term_type {
+ 	PARSE_EVENTS__TERM_TYPE_RAW,
+ 	PARSE_EVENTS__TERM_TYPE_LEGACY_CACHE,
+ 	PARSE_EVENTS__TERM_TYPE_HARDWARE,
+-#define	__PARSE_EVENTS__TERM_TYPE_NR (PARSE_EVENTS__TERM_TYPE_HARDWARE + 1)
++	PARSE_EVENTS__TERM_TYPE_CPU,
++#define	__PARSE_EVENTS__TERM_TYPE_NR (PARSE_EVENTS__TERM_TYPE_CPU + 1)
+ };
+ 
+ struct parse_events_term {
+diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-events.l
+index 7ed86e3e34e3..4af7b9c1f44d 100644
+--- a/tools/perf/util/parse-events.l
++++ b/tools/perf/util/parse-events.l
+@@ -335,6 +335,7 @@ aux-output		{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_AUX_OUTPUT); }
+ aux-action		{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_AUX_ACTION); }
+ aux-sample-size		{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_AUX_SAMPLE_SIZE); }
+ metric-id		{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_METRIC_ID); }
++cpu			{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_CPU); }
+ cpu-cycles|cycles				{ return hw_term(yyscanner, PERF_COUNT_HW_CPU_CYCLES); }
+ stalled-cycles-frontend|idle-cycles-frontend	{ return hw_term(yyscanner, PERF_COUNT_HW_STALLED_CYCLES_FRONTEND); }
+ stalled-cycles-backend|idle-cycles-backend	{ return hw_term(yyscanner, PERF_COUNT_HW_STALLED_CYCLES_BACKEND); }
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index b7ebac5ab1d1..721a900b3c1d 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -1429,7 +1429,7 @@ static int pmu_config_term(const struct perf_pmu *pmu,
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_USER: /* Not hardcoded. */
+ 			return -EINVAL;
+-		case PARSE_EVENTS__TERM_TYPE_NAME ... PARSE_EVENTS__TERM_TYPE_HARDWARE:
++		case PARSE_EVENTS__TERM_TYPE_NAME ... PARSE_EVENTS__TERM_TYPE_CPU:
+ 			/* Skip non-config terms. */
+ 			break;
+ 		default:
+@@ -1804,6 +1804,7 @@ int perf_pmu__for_each_format(struct perf_pmu *pmu, void *state, pmu_format_call
+ 		"aux-output",
+ 		"aux-action=(pause|resume|start-paused)",
+ 		"aux-sample-size=number",
++		"cpu=number",
+ 	};
+ 	struct perf_pmu_format *format;
+ 	int ret;
 -- 
-2.17.1
+2.49.0.504.g3bcea36a83-goog
 
