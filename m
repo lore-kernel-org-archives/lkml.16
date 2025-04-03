@@ -1,111 +1,220 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15847347A2;
-	Thu,  3 Apr 2025 09:31:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A88971991B2
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 09:31:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743672710; cv=none; b=JYXdZaqsRR7kj0/eM29cpF+IoMvS0Tr5li0M/D4pT+3uuYG8FDt5UHHHDwwIZH+Tv9wc+Ee7NKw9c1ZG0sFVJL6tlHOF9iRxcIHZVCmaxA8TuJxdk01gjz50xGU7uVlyJ6ESxtRvRJ7PjM2t4JUOzko+w/2Zg0tElRFGiq/0Ftg=
+	t=1743672710; cv=none; b=I/zpslwHBK9eQq2MdBmHVtSl2BXyVkIZRppPsoPVUcAIza2H8chNsEtGURtIRrrY99Xt4Ae8Xmg6vD6oXFD+slF0qSNGchuPf72ErT3ouo41SRV9P7kciqEwno987/yMK6kTt1sjncpk0UD/dsxc0/Y7WvJuhwJtnLvhpulc89g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1743672710; c=relaxed/simple;
-	bh=sNndO7cE94SxIpOgsMIyRwMp9GIyL84y6xvqMUc0Suc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=fZrkDMC83MPwXpXCRK7pjqpJQb6ovU+ijK6ctF23Wrl4PPqr43dRf6srO/OSgfJMviLJM5yGFxcnX3108h3dclUEZnftHqQ3Ay/exxIEiYzHkYQtSTpexAjEag4ApDbImOFMLIkRQyWl3LFNl2bGSyO+oJJA7lop52UlhIuymcM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fTNE1Hy6; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	bh=+SF/+s0AwZwFtYJx7lltQg4XhO9govLh68y53K6ZV3k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nykqPWWA0GGehb47aT78sDWqe+JuxMH73iXmT8tbHK9/MslFIjoACiVxSBAozSoPhw13Aznqo5X5k5Hb8pa3Suxbt/oWZ+BjCs8aiIa52bdPdbaU21ysXRHQ589gBvbwY/xHcoGwTqQ7Z8xPr29yQCvFa+HBo7sz6L+GLDAhcps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=OOCvTGHn; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fTNE1Hy6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743672708; x=1775208708;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=sNndO7cE94SxIpOgsMIyRwMp9GIyL84y6xvqMUc0Suc=;
-  b=fTNE1Hy6lIje0QI+MaweN/tomb7bXlvLLPimrhkMQuSL4YiRYEdOCDYO
-   vgm4JEaN4eLHVEoBJl3jAxJuic15tkACUUE92lUJzFCYRhA2Rmm73ePGK
-   C+hB7tQ7Oh946Kq0yYfTmJTEizbBAAJHOSSPbtcZWVd/valoBCZiA1zZK
-   /IkMact0i16tvrs9MyIE3g7bn4JZaOJRv8dpzeMF93piPGiBiUAgGngde
-   jdBZX4g72GempMf4eXU+7sluwdyKWZiFv2vp65z4IuK6ml+5JN3SKMCPt
-   nLoKMrOtZmA3ArzrCILggCY3YqrOvqcD01I0lIZdhAsmjiJkUQZeBw+q0
-   w==;
-X-CSE-ConnectionGUID: qEnPp2rFS6CQoadc9l0FTw==
-X-CSE-MsgGUID: cmjmvE3mT/uekzsdgrgaPg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11392"; a="70438999"
-X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
-   d="scan'208";a="70438999"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 02:31:47 -0700
-X-CSE-ConnectionGUID: M9uV9PaHQN63ifnLL6Nc3w==
-X-CSE-MsgGUID: 68G1vPifR0mBTlxQ3yujxQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
-   d="scan'208";a="126757643"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.152])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 02:31:44 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Guenter Roeck <linux@roeck-us.net>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Igor Mammedov <imammedo@redhat.com>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	=?UTF-8?q?Micha=C5=82=20Winiarski?= <michal.winiarski@intel.com>
-Subject: [PATCH 1/1] PCI: Restore assigned resources fully after release
-Date: Thu,  3 Apr 2025 12:31:37 +0300
-Message-Id: <20250403093137.1481-1-ilpo.jarvinen@linux.intel.com>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="OOCvTGHn"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53383CUW014785
+	for <linux-kernel@vger.kernel.org>; Thu, 3 Apr 2025 09:31:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=G6Tl5Pc9EaXZPP1t5lfTzxUj
+	Kq7BA18xWb1OOnqLLI8=; b=OOCvTGHnB5DwQiUGqSshsQf2RrjhpL95JmqqTOyN
+	rnhNDe2uCC/dSGelUOx7YKiPqkBhQ6kKoqFuz9FJ0vbGBZ/U7D+xcHnJkkT86ke+
+	Br0dI8lxbdbVCVJ0JROm4KhwVk8J3/0ByOlz8qXULe+CadTw43/LKsqQ4uRxqnpc
+	PaGPdGl7GFVZrTfGkBjFPt4ev92lh/3bgqlTgF2OkzOqyw7gQE/lnX7lISqmZQOP
+	ctMj47F9Zk97nmkrKk+Tjhc4pEGhLSvFZdsxyGW/hQ7xqZxMutZ/t6eKowAehtCh
+	LXoIWUJREEBy8MMfhsDPQjJ8ikTQLIFTHsMa5TikH5QRRA==
+Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com [209.85.216.72])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45sc2yskgd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 09:31:47 +0000 (GMT)
+Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-2ff52e1c56fso1061439a91.2
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 02:31:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743672706; x=1744277506;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=G6Tl5Pc9EaXZPP1t5lfTzxUjKq7BA18xWb1OOnqLLI8=;
+        b=GIIL1V4KPTRgtl2f7pn68wZbRbzurs3NS1Tp2Y/avwxPoRlrIuEI/r05vQ5AMAF6jq
+         1yhOBAhQci0ljvMNByk8l69bXhaIRMdTSUwT/Llu9QnWFGwdB65bAiyAvWKnAsd/HHWg
+         mQi7Z+Ho9kbbag8TwvNehj5IdZlqTN9tkzgUGQJPCbe+T2WdW0BhOSrwrNAttGDO8dT5
+         8n6q82uRKCFBGl5qZc5sUXi2otcWuO3fkCAYiK7gOBlNCbldTv0jxHIiFAzu91DWiLUH
+         fGPRCQTB/aIp0bS1GzTHX20VBePV5isn714gYwjcLJpH7fSGMfQPOGQsnsqTfRo4Abxf
+         UNew==
+X-Forwarded-Encrypted: i=1; AJvYcCWf00l3r/BZrFx3DAEUXvIuVX4pzOEbe/TOk3yuV/eylPckxy4JvWge+hXjvfmRwztGZ0UBUTACparo4Zg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzKC5BPgfXYDx4l/R1gqxMWX+eM9lfcOwMsIoXWNffnM0yEYDNv
+	KbN/Z5mZdXmjGFmY70rQ1PvQyQCfq08fHY/KcdAahXVOeXZqOTz1STnpNtq2MSyeuM/jVLYUF6l
+	oNjGS4R+l2sxVWkpy+6K/KhBiS/TdeccIS+po+yd6e0yKybDlmGWNu7AgdjKPi2vwVgKrFJpJWE
+	Plq6P2zb7R5w2jQIoIJjbu174BNQlTruVDQDoMYg==
+X-Gm-Gg: ASbGncugqk7Cx6TQIi2n1AQbKTq5ETd3jzRn47B3eMRohlPYrFadqC8brPix+6dt9dx
+	hDEiCxS16XinUmiW1ztHuxjh+e4SweMRpCYibBWIu2P0FbIybGgqHCQiM4YHDhwD9DIAyhRU=
+X-Received: by 2002:a17:90b:274b:b0:2fe:b8b9:5aa6 with SMTP id 98e67ed59e1d1-3056ef46cb3mr7654795a91.31.1743672705754;
+        Thu, 03 Apr 2025 02:31:45 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE/pWE0+hoDB10ThQNautj+kM/9y+AplIxhr/WfG3y9TTyMnGbzLP4b2pswwNPJmGrwtexG4Nge1llNQZxXt94=
+X-Received: by 2002:a17:90b:274b:b0:2fe:b8b9:5aa6 with SMTP id
+ 98e67ed59e1d1-3056ef46cb3mr7654730a91.31.1743672705043; Thu, 03 Apr 2025
+ 02:31:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20250309145703.12974-1-srinivas.kandagatla@linaro.org>
+ <2025040143-espionage-poison-2345@gregkh> <47a3a851-f737-4772-87c6-98613347435c@linaro.org>
+ <2025040230-showoff-spray-ac83@gregkh> <283ac88b-c8d4-47c8-9ff7-935770eca566@linaro.org>
+ <b6e7abf3-b263-410a-8f4c-eb9a8e2efa2b@oss.qualcomm.com> <e8c91706-1a94-4e3d-b2a9-9d670021bbc8@linaro.org>
+In-Reply-To: <e8c91706-1a94-4e3d-b2a9-9d670021bbc8@linaro.org>
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Date: Thu, 3 Apr 2025 12:31:33 +0300
+X-Gm-Features: ATxdqUEMguFibUeBVRQVPHCTnU8QB_45FHrgKeB2Mc29jYcXJZn4tRrPEsDb2ms
+Message-ID: <CAO9ioeVYYy-10ZBmNLMzZK2+mZ5mKf_ZtGwRVf__Dg8GA=Sf0Q@mail.gmail.com>
+Subject: Re: [PATCH v2 00/13] nvmem: patches (set 1) for 6.15
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Greg KH <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Authority-Analysis: v=2.4 cv=AMoviu7M c=1 sm=1 tr=0 ts=67ee5583 cx=c_pps a=RP+M6JBNLl+fLTcSJhASfg==:117 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=KKAkSRfTAAAA:8 a=ehZioqFJNv_uvlhhW-oA:9 a=QEXdDO2ut3YA:10 a=iS9zxrgQBfv6-_F4QbHw:22 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-GUID: 9vS21J0DJxobvF0wCiKPey2gl1MIpO1N
+X-Proofpoint-ORIG-GUID: 9vS21J0DJxobvF0wCiKPey2gl1MIpO1N
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-03_03,2025-04-02_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ bulkscore=0 priorityscore=1501 malwarescore=0 mlxscore=0 impostorscore=0
+ clxscore=1015 spamscore=0 phishscore=0 mlxlogscore=999 adultscore=0
+ suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504030033
 
-PCI resource fitting code in __assign_resources_sorted() runs in
-multiple steps. A resource that was successfully assigned may have to
-be released before the next step attempts assignment again. The
-assign+release cycle is destructive to a start-aligned struct resource
-(bridge window or IOV resource) because the start field is overwritten
-with the real address when the resource got assigned.
+On Thu, 3 Apr 2025 at 12:27, Srinivas Kandagatla
+<srinivas.kandagatla@linaro.org> wrote:
+>
+>
+>
+> On 03/04/2025 10:25, Dmitry Baryshkov wrote:
+> > On 03/04/2025 12:18, Srinivas Kandagatla wrote:
+> >>
+> >>
+> >> On 02/04/2025 12:31, Greg KH wrote:
+> >>> On Wed, Apr 02, 2025 at 09:19:17AM +0100, Srinivas Kandagatla wrote:
+> >>>> HI Greg,
+> >>>>
+> >>>> On 01/04/2025 20:18, Greg KH wrote:
+> >>>>> On Sun, Mar 09, 2025 at 02:56:50PM +0000,
+> >>>>> srinivas.kandagatla@linaro.org wrote:
+> >>>>>> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> >>>>>>
+> >>>>>> Hi Greg,
+> >>>>>>
+> >>>>>> Here are few nvmem patches for 6.15, Could you queue
+> >>>>>> these for 6.15.
+> >>>>>>
+> >>>>>> patche include
+> >>>>>>     - updates to bindings to include MSM8960, X1E80100, MS8937,
+> >>>>>>       IPQ5018
+> >>>>>>     - add support to bit offsets for register strides exceeding
+> >>>>>>       single byte
+> >>>>>>     - add rockchip-otp variants.
+> >>>>>>     - Few enhancements in qfprom and rochchip nvmem providers.
+> >>>>>
+> >>>>> Ok, I wanted to apply these, and tried to, but they fail horribly
+> >>>>> because:
+> >>>>>
+> >>>>> Commit: 1b14625bd6d4 ("nvmem: qfprom: switch to 4-byte aligned reads")
+> >>>>>     Fixes tag: Fixes: 11ccaa312111 ("nvmem: core: verify cell's
+> >>>>> raw_len")
+> >>>>>     Has these problem(s):
+> >>>>>         - Target SHA1 does not exist
+> >>>>> Commit: a8a7c7e34093 ("nvmem: core: update raw_len if the bit
+> >>>>> reading is required")
+> >>>>>     Fixes tag: Fixes: 11ccaa312111 ("nvmem: core: verify cell's
+> >>>>> raw_len")
+> >>>>>     Has these problem(s):
+> >>>>>         - Target SHA1 does not exist
+> >>>>> Commit: d44f60348d8c ("nvmem: core: fix bit offsets of more than
+> >>>>> one byte")
+> >>>>>     Fixes tag: Fixes: 11ccaa312111 ("nvmem: core: verify cell's
+> >>>>> raw_len")
+> >>>>>     Has these problem(s):
+> >>>>>         - Target SHA1 does not exist
+> >>>>
+> >>>> Looks some of your scripts or b4 is picking up older version v1 of the
+> >>>> patchset
+> >>>>
+> >>>> None of the above patches have Fixes tags in the V2 patches that I
+> >>>> shared
+> >>>> aswell as patches in linux-next.
+> >>>
+> >>> Yes, that looks odd, it looks like b4 pulled in the wrong series, yes.
+> >>>
+> >>
+> >> Even that looked incorrect, as the v1 series only had one
+> >> patch("[PATCH 12/14] nvmem: make the misaligned raw_len non-fatal")
+> >> that had fixes tag. Not sure how these 3 patches are tagged as fixes.
+> >>
+> >>> But, that's even worse.  Those "fixes" are now not actually marked as
+> >>> fixes of the previous patch.  So that information is totally lost, and
+> >>
+> >> Its because this patch("PATCH 12/14] nvmem: make the misaligned
+> >> raw_len non-fatal") is taken as fixup patch and wrapped into the
+> >> original patch ("nvmem: core: verify cell's raw_len"), Also the sha
+> >> will not be valid for linus or char-misc tree.
+> >>
+> >>> again, the first commit here, "nvmem: core: verify cell's raw_len" is
+> >>> broken so much that it took 3 other changes to fix it, which implies
+> >>> that bisection would cause problems if you hit it in the middle here.
+> >>>
+> >>
+> >> All the patches related to this are enhancements to nvmem core to
+> >> allow specifying bit offsets for nvmem cell that have 4 bytes strides.
+> >>
+> >> Specially this check is also an additional check in core to make sure
+> >> that cell offsets are aligned to register strides.
+> >>
+> >>> While fixing patches is great, and something we do in the tree all the
+> >>> time, let's not purposefully break things and then fix them up in the
+> >>> same exact patch series please.  That's just sloppy engineering.
+> >>>
+> >>> Please redo this series completely.  I can take the "new device support"
+> >>
+> >> I can send them but its going to be exactly same series, I dont think
+> >> anything will change as all of these patches are enhancements and
+> >> there are no fixes.
+> >>
+> >> I hope this clarifies a bit, Please let me know if you still want me
+> >> to resend this series, which is going to be exactly same.
+> >
+> > I think Greg is asking to squash the fixup into the relevant patch.
+>
+> Its already squashed up in v2.
 
-Properly restore the resource after releasing it. The start, end, and
-flags fields must be stored into the related struct pci_dev_resource in
-order to be able to restore the resource to its original state.
+Then there should be no Fixes tags. Is the series that you are sending
+visible somewhere?
 
-Reported-by: Guenter Roeck <linux@roeck-us.net>
-Fixes: 96336ec70264 ("PCI: Perform reset_resource() and build fail list in sync")
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
----
- drivers/pci/setup-bus.c | 4 ++++
- 1 file changed, 4 insertions(+)
+>
+> thanks,
+> Srini
+> >
+> >>
+> >> --srini
+> >>> patches at any time, and really, those should be marked with Cc: stable
+> >>> to get backported, right?  The other ones are written as if they are
+> >>> fixes, so again, I can take them any time, no need to wait for the -rc1
+> >>> merge cycle.
+> >>>
+> >>> thanks,
+> >>>
+> >>> greg k-h
+> >
+> >
 
-diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index 54d6f4fa3ce1..e994c546422c 100644
---- a/drivers/pci/setup-bus.c
-+++ b/drivers/pci/setup-bus.c
-@@ -187,6 +187,9 @@ static void pdev_sort_resources(struct pci_dev *dev, struct list_head *head)
- 			panic("%s: kzalloc() failed!\n", __func__);
- 		tmp->res = r;
- 		tmp->dev = dev;
-+		tmp->start = r->start;
-+		tmp->end = r->end;
-+		tmp->flags = r->flags;
- 
- 		/* Fallback is smallest one or list is empty */
- 		n = head;
-@@ -545,6 +548,7 @@ static void __assign_resources_sorted(struct list_head *head,
- 		pci_dbg(dev, "%s %pR: releasing\n", res_name, res);
- 
- 		release_resource(res);
-+		restore_dev_resource(dev_res);
- 	}
- 	/* Restore start/end/flags from saved list */
- 	list_for_each_entry(save_res, &save_head, list)
 
-base-commit: 7d06015d936c861160803e020f68f413b5c3cd9d
+
 -- 
-2.39.5
-
+With best wishes
+Dmitry
