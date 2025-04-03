@@ -1,97 +1,173 @@
-Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from lx20.hoststar.hosting (lx20.hoststar.hosting [168.119.41.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AEF219E7D1;
-	Thu,  3 Apr 2025 08:48:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82F99243364;
+	Thu,  3 Apr 2025 08:48:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.41.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743670122; cv=none; b=Zmje+tFEMiD32DlvpyEKAsOK9SLwtr29MgoDpJWFmLDFWAnFN2x50E9ga21RL2qVVVM3LZ2fZ3d3O7zeDgNkLctRKX5ZVdjACr0lf7Ex/l3gZMU9CYcOcJSkc02F75FWe+NcFFvMO0cKV6SIBeR0GQIEbNLeWXDRF3GIG87086k=
+	t=1743670127; cv=none; b=c2atGShQct/pw0QTVn3c0K6AAIy1vEjps8H9loDIhfjhaVAHSdTBYtrAphzIjTlGHs/8M/WYTJw+f8l2H62ZVfrszp011cCOJdeuKkW8GpSIsA981fLd7n9Gcg1XBNKYTtLQErHGeEMHKP6Q/gYfpy/pH5JMLXcyv3KOTqBkEqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743670122; c=relaxed/simple;
-	bh=LMGWh7K8oa5KrX+W3kbg21yUcMQUNfXpXVe35Aqq1Mo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jPlSh0kBlJPaF35f4/NNx1gg8/GR3jLcMIC7/3TA9SGj8imaRU0lRZKKAdwkeCb67Z/XWaVqa6+t74FG1zgokIaqSEpovk939LanEZX4UO9TuyfHQZL2lM05KnmV7cQDf4P5ClPI4jDFgJ3Tqqzp2ctPlA64A+pw6CeunlZp2XM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost.localdomain (unknown [124.16.141.245])
-	by APP-01 (Coremail) with SMTP id qwCowACXPP1SS+5nfWhxBQ--.16368S2;
-	Thu, 03 Apr 2025 16:48:20 +0800 (CST)
-From: Wentao Liang <vulab@iscas.ac.cn>
-To: m.chetan.kumar@intel.com,
-	loic.poulain@linaro.org,
-	ryazanov.s.a@gmail.com,
-	johannes@sipsolutions.net,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com
-Cc: netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Wentao Liang <vulab@iscas.ac.cn>
-Subject: [PATCH v2] net: wwan: Add error handling for ipc_mux_dl_acb_send_cmds().
-Date: Thu,  3 Apr 2025 16:48:00 +0800
-Message-ID: <20250403084800.2247-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.42.0.windows.2
+	s=arc-20240116; t=1743670127; c=relaxed/simple;
+	bh=+XooyGt2dVGYls6E9SKzRgwsMgitmpBTzCfrtXBTXy8=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Jv5suAJifJr4Egp+/P84cATzrkGn64LWJsWKADo+uF6T22vuWRtUaxvuJP95d+uzdUqbNoAKZS7Rd1eU7OQ8dQ2WJQiVkeFb4ebt84C5z/YUivlhSIRNN4SrWkX9x4hmyKGa+0/xEwY5mzAQ/1jfvmdcsLmNrMn+Dg9JoqZmolE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=emfend.at; spf=pass smtp.mailfrom=emfend.at; dkim=pass (1024-bit key) header.d=emfend.at header.i=@emfend.at header.b=piDfCy/D; arc=none smtp.client-ip=168.119.41.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=emfend.at
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=emfend.at
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=emfend.at header.i=@emfend.at header.b="piDfCy/D"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=emfend.at;
+	 s=mail; h=Cc:To:Content-Transfer-Encoding:Content-Type:MIME-Version:
+	Message-Id:Date:Subject:From:Sender:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=r6I4XiqtVZt7DBJ14nT+0Clr3qn22US5uA2n7iNkMF4=; b=piDfCy/DyzHi7w/J3z/2vaQbGJ
+	v8Jr2pLhgE/6qk3HbK3/oFHq6kFpUZRNZcvYB4kfoUgNwf2EggU9Cdb5J5p1o8+ePebESIKSTV19s
+	0lvLP0YcH6pqIjQnjsika5bJhegBIJCCuxPq7GLIwtd9fuH8c+aIttEX1TFrFMQfCcFs=;
+Received: from 194-208-208-245.tele.net ([194.208.208.245]:60368 helo=[127.0.1.1])
+	by lx20.hoststar.hosting with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.93)
+	(envelope-from <matthias.fend@emfend.at>)
+	id 1u0Fbv-008Iud-HC; Thu, 03 Apr 2025 10:07:40 +0200
+From: Matthias Fend <matthias.fend@emfend.at>
+Subject: [PATCH 0/2] media: add Himax HM1246 image sensor
+Date: Thu, 03 Apr 2025 10:07:34 +0200
+Message-Id: <20250403-hm1246-v1-0-30990d71bc42@emfend.at>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qwCowACXPP1SS+5nfWhxBQ--.16368S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7Cw4DArW3JFyrKrWDKF48Zwb_yoW8Gry7pF
-	WrWw109F98AF4rAa18CrWDZa4YqayDXr97Kw1jv3Z5WFsrCr47trWxX3429rn7JF45W3Zr
-	Ar4jyry3G3WUGF7anT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUPjb7Iv0xC_tr1lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
-	0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-	A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xII
-	jxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwV
-	C2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
-	0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Gr0_Cr
-	1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IE
-	rcIFxwACI402YVCY1x02628vn2kIc2xKxwCY1x0262kKe7AKxVW8ZVWrXwCY02Avz4vE14
-	v_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AK
-	xVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrx
-	kI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v2
-	6r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8Jw
-	CI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjTR2hFcDUUU
-	U
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiCREBA2fuKvd1oAABsa
+X-B4-Tracking: v=1; b=H4sIAMZB7mcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDEwNj3YxcQyMTM11LsySD5JTEJHNz42QloOKCotS0zAqwQdGxtbUAOCp
+ m/FgAAAA=
+X-Change-ID: 20250403-hm1246-96b0cdab773c
+To: Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Matthias Fend <matthias.fend@emfend.at>, 
+ bsp-development.geo@leica-geosystems.com
+X-Mailer: b4 0.14.2
+X-Spam-Score: 
+X-Spam-Bar: 
+X-Spam-Report: 
 
-The ipc_mux_dl_acbcmd_decode() calls the ipc_mux_dl_acb_send_cmds(),
-but does not report the error if ipc_mux_dl_acb_send_cmds() fails.
-This makes it difficult to detect command sending failures. A proper
-implementation can be found in ipc_mux_dl_cmd_decode().
+Hello,
 
-Add error reporting to the call, logging an error message using dev_err()
-if the command sending fails.
+this series adds support for the Himax HM1246 image sensor.
+The Himax HM1246-AWD is a 1/3.7-Inch CMOS image sensor SoC with an active
+array size of 1296 x 976. The datasheet can b
+Currently, only the native RAW mode is supported. Other modes and the
+internal image signal processing pipeline are not currently supported.
+The data sheet is available on the manufacturer’s website [1].
+Tested on i.MX8MP hardware. A Toshiba TC358746 bridge was used to convert
+the sensor's parallel video output into MIPI signals for the i.MX8MP.
 
-Fixes: 1f52d7b62285 ("net: wwan: iosm: Enable M.2 7360 WWAN card support")
-Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
----
- drivers/net/wwan/iosm/iosm_ipc_mux_codec.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/wwan/iosm/iosm_ipc_mux_codec.c b/drivers/net/wwan/iosm/iosm_ipc_mux_codec.c
-index bff46f7ca59f..478c9c8b638b 100644
---- a/drivers/net/wwan/iosm/iosm_ipc_mux_codec.c
-+++ b/drivers/net/wwan/iosm/iosm_ipc_mux_codec.c
-@@ -509,8 +509,11 @@ static void ipc_mux_dl_acbcmd_decode(struct iosm_mux *ipc_mux,
- 			return;
- 			}
- 		trans_id = le32_to_cpu(cmdh->transaction_id);
--		ipc_mux_dl_acb_send_cmds(ipc_mux, cmd, cmdh->if_id,
--					 trans_id, cmd_p, size, false, true);
-+		if (ipc_mux_dl_acb_send_cmds(ipc_mux, cmd, cmdh->if_id,
-+					     trans_id, cmd_p, size, false, true))
-+			dev_err(ipc_mux->dev,
-+				"if_id %d: cmd send failed",
-+				cmdh->if_id);
- 	}
- }
+Best regards
+ ~Matthias
  
+[1] https://www.himax.com.tw/wp-content/uploads/2024/03/HM1246-AWD_DS_v01.pdf
+
+v4l2-compliance 1.28.1, 64 bits, 64-bit time_t
+
+Compliance test for device /dev/v4l-subdev4:
+
+Driver Info:
+        Driver version   : 6.12.0
+        Capabilities     : 0x00000000
+        Client Capabilities: 0x0000000000000003
+streams interval-uses-which
+Required ioctls:
+        test VIDIOC_SUDBEV_QUERYCAP: OK
+        test invalid ioctls: OK
+
+Allow for multiple opens:
+        test second /dev/v4l-subdev4 open: OK
+        test VIDIOC_SUBDEV_QUERYCAP: OK
+        test for unlimited opens: OK
+
+Debug ioctls:
+        test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+        test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+        test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+        test VIDIOC_ENUMAUDIO: OK (Not Supported)
+        test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+        test VIDIOC_G/S_AUDIO: OK (Not Supported)
+        Inputs: 0 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+        test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+        test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+        test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+        test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+        Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+        test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+        test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+        test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+        test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls:
+        test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
+        test VIDIOC_QUERYCTRL: OK
+        test VIDIOC_G/S_CTRL: OK
+        test VIDIOC_G/S/TRY_EXT_CTRLS: OK
+        test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
+        test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+        Standard Controls: 15 Private Controls: 0
+
+Format ioctls:
+        test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK (Not Supported)
+        test VIDIOC_G/S_PARM: OK (Not Supported)
+        test VIDIOC_G_FBUF: OK (Not Supported)
+        test VIDIOC_G_FMT: OK (Not Supported)
+        test VIDIOC_TRY_FMT: OK (Not Supported)
+        test VIDIOC_S_FMT: OK (Not Supported)
+        test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+        test Cropping: OK (Not Supported)
+        test Composing: OK (Not Supported)
+        test Scaling: OK (Not Supported)
+
+Codec ioctls:
+        test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+        test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+        test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+Buffer ioctls:
+        test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK (Not Supported)
+        test CREATE_BUFS maximum buffers: OK
+        test VIDIOC_REMOVE_BUFS: OK
+        test VIDIOC_EXPBUF: OK (Not Supported)
+        test Requests: OK (Not Supported)
+
+Total for device /dev/v4l-subdev4: 45, Succeeded: 45, Failed: 0, Warnings: 0
+
+Signed-off-by: Matthias Fend <matthias.fend@emfend.at>
+---
+Matthias Fend (2):
+      media: dt-bindings: i2c: add Himax HM1246 image sensor
+      media: i2c: add Himax HM1246 image sensor driver
+
+ .../bindings/media/i2c/himax,hm1246.yaml           |  111 ++
+ MAINTAINERS                                        |    8 +
+ drivers/media/i2c/Kconfig                          |    9 +
+ drivers/media/i2c/Makefile                         |    1 +
+ drivers/media/i2c/hm1246.c                         | 1417 ++++++++++++++++++++
+ 5 files changed, 1546 insertions(+)
+---
+base-commit: a2cc6ff5ec8f91bc463fd3b0c26b61166a07eb11
+change-id: 20250403-hm1246-96b0cdab773c
+
+Best regards,
 -- 
-2.42.0.windows.2
+Matthias Fend <matthias.fend@emfend.at>
 
