@@ -1,101 +1,91 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 815E5248862
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 10:21:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27AD618CC08
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 10:23:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743675686; cv=none; b=S+0J/NStu67M/gl/tpM/LXVwAOyyOaRrEn50fPFaaGIZcl+pkLisXBlEwNShIgCBtJ0w1obVsd2eiIu23ASTlli+rSuop3+ruSAt4Z6p1pbjfxLkuRhWpUl/XJajqwx/WZpzbFk4vpbxOMOjyegDEwD03sRJA3lWM91cq0pFwMc=
+	t=1743675786; cv=none; b=RkJmsWDEZcel4lAVgBG4oIB4y6imABJ1lQ4qLxck+JV0AcEr5QHD5690lBnJpXwCx1k5zIUMrM/k47RCUagMz797tlf9olX/XdyAP9Y4IlAC+GFtz3pYfUSduqAva3nhBanuP53QPT0CNgkIBfIh3M8fA10q6MLzuzKhcEFKDA4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743675686; c=relaxed/simple;
-	bh=0oE4lMdKbjGPtKZ/zki1hCNZrfNg91tWfdphSD8J1Nw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gBmLus+9bXVCXrIyFmal7IM5Bs0jEh+KM263nSh2w15HvYez9radMLxN13BJZjjl+Onhza3AJvxOimGRomuel8KWEYu0CnvJmVidjRoN+wAvtAZzQRV5RQmJI6awW/V7XPTpab42yCrAdombPtp0WdMKHPpDW9I2IYsxOsq/XEo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=YOMpwmEH; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1743675786; c=relaxed/simple;
+	bh=jkTC/wMDHWhCK4CIfSQkC51fMhB9HSzsUwcqjd4iOGo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=dbiuEsKlTbhl1+h3UsB4T7c3o1n73lukVZJCBaAhUL5BqQkj61aC3HZfEJvhilOZWMAE+oivNrD5zQfuvJczfSZ84Pxv+4SF96hSAdT/ek7/tL90VeuUB2oIYdx38ZQ6hfwnc3Nw/GI6UabKt3nw7A4CMXGiRIGKpFnms9JUYKc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=jadAHXUO; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="YOMpwmEH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1743675682;
-	bh=0oE4lMdKbjGPtKZ/zki1hCNZrfNg91tWfdphSD8J1Nw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=YOMpwmEH6WLl5/kP+yXKdKE0c29/hieX44XzQ4RsIYxxu3SwsDQ17jv6szsAdzoyE
-	 oABAy3C2DKTNPlg6FuaPa8CUQS7tcRNpzBN5byRJGF2KC9Mi+IQ+grVNxdoYfqm/HR
-	 dUhT/adw6a5M3thbMccMxadccDn/EdlBz5hVJsx63TexyCB8X0y1m3ruccKaKcutg5
-	 qxFBTlQlL7AihMPBkxV59weTtantbf6BM5CtJY4kwnZBfg6RvDt27QLJXuib/SqaC5
-	 CUjCJ1IlnaRwnIthCpnLv+6+2JFEyXplP1Al2+CT0Pah8v1LP8qVUiY1p8kM6S/aY/
-	 Pl6DhKuIpPfQw==
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id C28C817E0F47;
-	Thu,  3 Apr 2025 12:21:21 +0200 (CEST)
-Message-ID: <568517cc-7108-4e38-b208-43d4e305f663@collabora.com>
-Date: Thu, 3 Apr 2025 12:21:21 +0200
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="jadAHXUO"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 1F6FE4327B;
+	Thu,  3 Apr 2025 10:23:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1743675782;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=t5/K9HJKSTAwWcOGKvkV7Il6F2anBbyFZIJpq4YyIMM=;
+	b=jadAHXUOk0brAQoHqnG0ixpvW8VoN0Ho9IEDCHiOFKz9Ek2oHttCU+IDtOKG4iUIYN+nxH
+	ydjFmk5yx6QQv/1s29yBKMEqbwR3trwkCfTHTTiRsgrmgsAv7c/64d4PE1SQaXF4LQ7yHq
+	6i67blakCppBUDiiGU03aMz0s2EgPWP7SixsOQuG72q/ZI3mRiZkgGc6qiQ9FppHw7OhP0
+	uwea1nVsVBm1byRyo7CiWF1/tinsEWbHlaeJR6dOMOh+Y9U261BKZkKI87PmV6aDdAdaiv
+	7K2MB3wIIo85ATJrq5M+gddxfkDHiF+83GobeRAA/K33Z2mlzjAPvJGdCrsMig==
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: Tudor Ambarus <tudor.ambarus@linaro.org>
+Cc: Richard Weinberger <richard@nod.at>,  Vignesh Raghavendra
+ <vigneshr@ti.com>,  Santhosh Kumar K <s-k6@ti.com>,  Pratyush Yadav
+ <pratyush@kernel.org>,  Michael Walle <michael@walle.cc>,  Thomas
+ Petazzoni <thomas.petazzoni@bootlin.com>,  Steam Lin <stlin2@winbond.com>,
+  linux-mtd@lists.infradead.org,  linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 14/19] mtd: spinand: Use more specific naming for the
+ (quad) program load op
+In-Reply-To: <e1d8108f-50c1-4924-bb68-53436728e701@linaro.org> (Tudor
+	Ambarus's message of "Thu, 3 Apr 2025 11:00:46 +0100")
+References: <20250403-winbond-6-14-rc1-octal-v2-0-7846bd88fe83@bootlin.com>
+	<20250403-winbond-6-14-rc1-octal-v2-14-7846bd88fe83@bootlin.com>
+	<e1d8108f-50c1-4924-bb68-53436728e701@linaro.org>
+User-Agent: mu4e 1.12.7; emacs 29.4
+Date: Thu, 03 Apr 2025 12:23:00 +0200
+Message-ID: <87h63535ob.fsf@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm/mediatek: Replace custom compare_dev with
- component_compare_of
-To: shao.mingyin@zte.com.cn, chunkuang.hu@kernel.org
-Cc: p.zabel@pengutronix.de, airlied@gmail.com, simona@ffwll.ch,
- matthias.bgg@gmail.com, dri-devel@lists.freedesktop.org,
- linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, yang.yang29@zte.com.cn,
- xu.xin16@zte.com.cn, ye.xingchen@zte.com.cn, tang.dongxing@zte.com.cn
-References: <20250403155419406T5YhIJKId1FWor70EWWHG@zte.com.cn>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20250403155419406T5YhIJKId1FWor70EWWHG@zte.com.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddukeekfedtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufgjfhgffffkgggtsehttdertddtredtnecuhfhrohhmpefoihhquhgvlhcutfgrhihnrghluceomhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhephfelkedvveffleeuhfeigfdvvefhgfejgffghfeiteegteeiudegfedtjeehkeefnecukfhppeelvddrudekgedruddutddrudelleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeelvddrudekgedruddutddrudelledphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhepmhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddtpdhrtghpthhtohepthhuughorhdrrghmsggrrhhusheslhhinhgrrhhordhorhhgpdhrtghpthhtoheprhhitghhrghrugesnhhougdrrghtpdhrtghpthhtohepvhhighhnvghshhhrsehtihdrtghomhdprhgtphhtthhopehsqdhkieesthhirdgtohhmpdhrtghpthhtohepphhrrghthihushhhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehmihgthhgrvghlseifrghllhgvrdgttgdpr
+ hgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopehsthhlihhnvdesfihinhgsohhnugdrtghomh
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-Il 03/04/25 09:54, shao.mingyin@zte.com.cn ha scritto:
-> From: Tang Dongxing <tang.dongxing@zte.com.cn>
-> 
-> Remove the custom device comparison function compare_dev and replace it
-> with the existing kernel helper component_compare_of
-> 
-> Signed-off-by: Tang Dongxing <tang.dongxing@zte.com.cn>
-> Signed-off-by: Shao Mingyin <shao.mingyin@zte.com.cn>
+On 03/04/2025 at 11:00:46 +01, Tudor Ambarus <tudor.ambarus@linaro.org> wrote:
 
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+> On 4/3/25 10:19 AM, Miquel Raynal wrote:
+>> SPI operations have been initially described through macros implicitly
+>> implying the use of a single SPI SDR bus. Macros for supporting dual and
+>> quad I/O transfers have been added on top, generally inspired by vendor
+>> naming, followed by DTR operations. Soon we might see octal
+>> and even octal DTR operations as well (including the opcode byte).
+>> 
+>> Let's clarify what the macro really means by describing the expected bus
+>> topology in the (quad) program load macro name.
+>> 
+>> While at modifying it, better add the missing_ OP suffix to align with
+>> all the other macros of the same kind.
+>> 
+>> Acked-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+>> Reviewed-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+>
+> I don't remember giving R-b on this, not seeing it on ml as well, so
+> please drop it when applying.
+>
+> I used Acked-by and not R-b because I wanted to signify that I'm OK with
+> the general idea of the patches and that I'm OK with them landing, but I
+> may not have reviewed it as thoroughly as if a Reviewed-by: was
+> provided. Please use only the tags that I sent. And if by mistake I sent
+> both A-b and R-b, use just the latter. Thanks!
 
-> ---
->   drivers/gpu/drm/mediatek/mtk_disp_ovl_adaptor.c | 7 +------
->   1 file changed, 1 insertion(+), 6 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_disp_ovl_adaptor.c b/drivers/gpu/drm/mediatek/mtk_disp_ovl_adaptor.c
-> index fa0e95dd29a0..fe97bb97e004 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_disp_ovl_adaptor.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_disp_ovl_adaptor.c
-> @@ -492,11 +492,6 @@ static const struct of_device_id mtk_ovl_adaptor_comp_dt_ids[] = {
->   	{ /* sentinel */ }
->   };
-> 
-> -static int compare_of(struct device *dev, void *data)
-> -{
-> -	return dev->of_node == data;
-> -}
-> -
->   static int ovl_adaptor_of_get_ddp_comp_type(struct device_node *node,
->   					    enum mtk_ovl_adaptor_comp_type *ctype)
->   {
-> @@ -567,7 +562,7 @@ static int ovl_adaptor_comp_init(struct device *dev, struct component_match **ma
-> 
->   		priv->ovl_adaptor_comp[id] = &comp_pdev->dev;
-> 
-> -		drm_of_component_match_add(dev, match, compare_of, node);
-> +		drm_of_component_match_add(dev, match, component_compare_of, node);
->   		dev_dbg(dev, "Adding component match for %pOF\n", node);
->   	}
-> 
+I use b4 for collecting tags, but yeah that's strange.
 
-
+I will use your Acked-by here.
