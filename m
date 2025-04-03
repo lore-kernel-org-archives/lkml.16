@@ -1,251 +1,720 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E0FE14386D;
-	Thu,  3 Apr 2025 02:54:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.7
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743648863; cv=fail; b=I1O988WDl9YwFwIu0n7F76dTPbLDDA4H2+HacLtTWk3g25YsvLUdwp6CJ07zgl1kmYhJAaOjZKEKNRbGmQfRp8GPMz4SOcJfiSlWmqLBQbgs3yYzn7HdQ/0ebM3H6Xs8+0YqZkf2r745SKq4WnngDokQ/UYycY0036AsEfTpBsg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743648863; c=relaxed/simple;
-	bh=Aw1r/tSZmIg26oQjaRtRhBV5WJXFOVfMMKM+6Kh8wD0=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Q9Zf+JM6m8WoJYtWWbQfNHI5CoVd8SV2KjgvmwjREDFFLkVtZ4ppnttVlIBbtxnq8cho1em7pDJePGkqLDuc5E2HVY4oFt+r2uxWc/yyzMAswzS4Ne864PxRRTOSwnjguW44ktdl6ShyKHXVtCN4tBos/Ghxt1MEWYj5iMWSrB4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f9shY6Nr; arc=fail smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F27BC14386D;
+	Thu,  3 Apr 2025 02:55:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743648923; cv=none; b=lzb1a/mPgVzAA+EL34HYfESFdmz1g6NWsvtidoea9goL7lao98qjEnwP+6JHRP+ItE75FgKD8ruZ8e0jTE+LINsJBCM/HOPeFfk2lI5EH195EKI55ZA1OHyiegNP+3I5XDrwTEu4tjr9zPcv6fNlTAgApupHFDG7NvplrwHG8B4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743648923; c=relaxed/simple;
+	bh=lF7xCeqnu6WUxrYI8JZbzD65LPB+hMcDiQuyYdVeD1k=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=laYz0BJF0bwlXdqk54FUXAIpt9uKAlEkbWp/UEC4w6JZxKPKTmJWCXLN2g5qZ8bJA+vnwq76Dy4vvBSqg9sp7hgF/Pa4BrBoaH7apPz5OywTqu15JcEpJ0ridNDJ9nDllHPbzWIOiyFSCHFtX/UqMcgAzOmb+mvREzGBRp/80io=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zpx9pgme; arc=none smtp.client-ip=209.85.215.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f9shY6Nr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743648862; x=1775184862;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=Aw1r/tSZmIg26oQjaRtRhBV5WJXFOVfMMKM+6Kh8wD0=;
-  b=f9shY6NrnVAiEQaNCOSXaHMnOYGddSUTk42Y+OG9PULQiKB9DrrtZxxb
-   hHHvzcQRkOc0/EuPeoVCBWJhibcBzjBJiRiqkZv8/f3NSFQMS+Lmeb7Fr
-   0qguiVi+8UGyTmrBT2PS/h0js8QbBAokLWJVK+TvZFL2NdLo/GwYWVNRo
-   ZxS6ETY2yoGxol+jWr2MZIY2AfhFdNNVdoG16wBcz7z+tiwsW4d9LD9gW
-   c3YgAUM8SHA9mcPwSg2P1Q3TJBKlEsVuyeBLwO5KK44pPTSdIKpUn83Hv
-   J55HJxH8INL5kkqAuV2GNOz6vgirEBrSVKggDmqYh550IhgGY087YSuWT
-   A==;
-X-CSE-ConnectionGUID: 82yc1hTATXCAm2PZ4IPA3w==
-X-CSE-MsgGUID: tMR1la5eRGq1ljirEvHI5Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11392"; a="70406796"
-X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
-   d="scan'208";a="70406796"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 19:50:31 -0700
-X-CSE-ConnectionGUID: xAHLkZKhSj+xSuo7ebPmkg==
-X-CSE-MsgGUID: g0gwN9BlSLSSEjqqr5VHeg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
-   d="scan'208";a="131004049"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by fmviesa003.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 02 Apr 2025 19:48:30 -0700
-Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Wed, 2 Apr 2025 19:48:20 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Wed, 2 Apr 2025 19:48:20 -0700
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.43) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Wed, 2 Apr 2025 19:48:01 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=HZpxkS6MafBc+h+h14Lli1Vz8ytcJEmzRMLBwW7AxD/YZCKkDxXYZc2tkS33SGGijPPbYz5wmafcfmja45bPCE7OCLCdKkpK+slVgLvy7HvjLtgXzUgNgCmYgmda+AS47yrojvkuzLV+/g9Pl6g2TGV5MQKiBohlBJ7/8AkSNbLWIAYMI57+Y64v5tCE9OOQZdyjQRKQBiUJyGe1bwX0EOo8+EhUKUT6t9vyizgpeKLKAxPW6ZqA0rYxS204RAx0LJqVUw1THzH9Wp439eTFJiupZlv6iP2bUaJVBLO4VNd1svCYcpLF+ZQlmh0kBZw8BcZPLgKVUzSTIqNuE8+SqQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wYoHj2iA6XXS8DZTwkpYUmGi84Pf5lWRIwqD5JMYHd8=;
- b=GPJq/pLMfLnPZzwPrsmdsetN6fPY0IByekM5+TSKWD0V1xdg13gWm5EcGTeJt6Nf1wpVLSrmBzM3+MHbaVFK6RTS6ix1Ma+YCitJeRsBUbwur902bsGlg0emRaAp25ofqaDeezXvtNKAoqF+/Ff/3xnzJqErQvox37jAkxljD1PoafvhA0ymNUlf/3Cjf0qgeRbP1XiBh9mLRtGHmWOawMwSKQ5op67jmGmwuZQi8pde7evVCnVUTfWPt6G6PAsNJO+FunA/Ya5plg3EysphSl54vRseOZHYsoT+axoD7PCkug7W9mOkRbeD0WuG3dWf8nySyrU40Fk6x6WY2NtKMw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DM4PR11MB6020.namprd11.prod.outlook.com (2603:10b6:8:61::19) by
- CYYPR11MB8357.namprd11.prod.outlook.com (2603:10b6:930:c5::8) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8583.42; Thu, 3 Apr 2025 02:47:58 +0000
-Received: from DM4PR11MB6020.namprd11.prod.outlook.com
- ([fe80::4af6:d44e:b6b0:fdce]) by DM4PR11MB6020.namprd11.prod.outlook.com
- ([fe80::4af6:d44e:b6b0:fdce%7]) with mapi id 15.20.8534.048; Thu, 3 Apr 2025
- 02:47:58 +0000
-Message-ID: <7cbbbd8f-a4b4-491d-bb60-97defff6007c@intel.com>
-Date: Thu, 3 Apr 2025 10:47:44 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] sched/numa: Add statistics of numa balance task migration
- and swap
-To: =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>
-CC: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot
-	<vincent.guittot@linaro.org>, Mel Gorman <mgorman@suse.de>, Johannes Weiner
-	<hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, Roman Gushchin
-	<roman.gushchin@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, "Muchun
- Song" <muchun.song@linux.dev>, Andrew Morton <akpm@linux-foundation.org>,
-	"Tim Chen" <tim.c.chen@intel.com>, Aubrey Li <aubrey.li@intel.com>, Rik van
- Riel <riel@surriel.com>, Raghavendra K T <raghavendra.kt@amd.com>, K Prateek
- Nayak <kprateek.nayak@amd.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
-	"Xunlei Pang" <xlpang@linux.alibaba.com>, <linux-kernel@vger.kernel.org>,
-	<cgroups@vger.kernel.org>, <linux-mm@kvack.org>, Chen Yu
-	<yu.chen.surf@foxmail.com>
-References: <20250402010611.3204674-1-yu.c.chen@intel.com>
- <ufu5fuhwzzdhjoltgt5bpoqaonqur4t44phmz4oninzqlqpop7@hbwza7jri3ly>
-Content-Language: en-US
-From: "Chen, Yu C" <yu.c.chen@intel.com>
-In-Reply-To: <ufu5fuhwzzdhjoltgt5bpoqaonqur4t44phmz4oninzqlqpop7@hbwza7jri3ly>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SG2PR02CA0095.apcprd02.prod.outlook.com
- (2603:1096:4:90::35) To DM4PR11MB6020.namprd11.prod.outlook.com
- (2603:10b6:8:61::19)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zpx9pgme"
+Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-af51596da56so407097a12.0;
+        Wed, 02 Apr 2025 19:55:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743648919; x=1744253719; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=8HvJwspofL3opmVS7sNQqlC6na2Ox7veMaFc22izrMY=;
+        b=Zpx9pgmel2AcAcEE7r6QzXhFacZofMYPcfHqx0orS9nbkgmKZeWAEx6Xj7roXlSS31
+         +Qy3NlS79xCciWqvoX7pGp+nnxU5B4NF1EwnxAW1BnZGCE1W4metQXKj73qW1Yc5Y5EU
+         HJMelPUHTuGBUogofce24uJgIUqsRBG52SKOhrowIMnVxuntR/a+zg/Ki3XliwUflXlH
+         PKB4t0Suh+SMIkSZ2tIYZ3t9hCSVp4+n4kx9s8jJrbQi56PrAGZQx8RETUcLjXDNGm37
+         UuHsBWp04eYpyY5X1Qk/XIIjRtt016Mbno61gw/q1VAxV1FFiHYDzyuosZaE0gpC/IyM
+         iR8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743648919; x=1744253719;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8HvJwspofL3opmVS7sNQqlC6na2Ox7veMaFc22izrMY=;
+        b=GM1c5Nw+Fg+s6U7XrcwAuHBEPlFU604U70LgRgd1pHUQXkYRmDNuA4GNd9wn019VuU
+         dI7XNWsb5rUy3HR5bW8gdUD+mCmJmzufILfOkZGpwAwUu/s5+PwiZWWyr41VLptvX2p9
+         3PuHmoRkZd7PRMWVzGKW/PfqctL3FM9BBdQv3eZY0wfn4ZzIWJHQpUrkjXkItI8bG0b5
+         BxqzsKsFpIoxXbtJmhWaOeoi7feOsYxJ/RUMYwjecqZRgWVMbsLQLqbMMhDEJGQsiTOk
+         gv8PV7gUx/sPTezkJo7i8jVOy6EkblZL2PY0199N7F/RA+NAyn2JdYrFyu3yrwJSWpAC
+         vz2w==
+X-Forwarded-Encrypted: i=1; AJvYcCXuHR26YE+e+EIBUuYg6Qtsys1PtxTuDFl+mRX1/21XJybJeVnBTPzq+0nRrOYhe3B/kyx7r0ZxV1iYkYQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyXlMwvg0tBc0VqMM/HlDa4baBfrZ+S++pTUx6qTTsDbW7es3KG
+	mljM7lBHgX2bTRbpxOHFLXsNplGGw7bUvc9ZZ+zkmP3aftdcwEUGfnpRrw==
+X-Gm-Gg: ASbGncvAfhEFSfveKkrb/HE3BxffM2V0Md0QB1eA5hPPppzp7sqinKkvFR1pcx82Rc3
+	TYyppMnBm8lPMvaisrJ1WARO2x+SxzJi052e4abedZBtMyon5NRw6y/HgVCvCFg+96Rk6mxRsKh
+	lbbsSiFC3W9fWZHR0J/lj/XGTdNe+lHWX3QsQu0MQP4H8hnlH3jBevEkPjiGO2lgM2RVDqHopzC
+	PyzkeEFKob/SMyO3r6F0Cl2agRUSGbFZLLI5B2kRQATyqq9Eqyx6CpjGF8zpk+0tsoTBysxfTws
+	45heiDiNNL3MieeVVsZ2/iNeTDVvBlM2LsDqrF1YDSowrcjpE3+8ZYnNhvSFerkkamy4rq27
+X-Google-Smtp-Source: AGHT+IHGaLtu9bsoLEbQRzO5L3L4Hbaue1lHXQugDpLzSpRKTGCJVpwHHS1mONaC514HgcDbdsxsVA==
+X-Received: by 2002:a17:902:cec3:b0:21f:988d:5758 with SMTP id d9443c01a7336-2292f9dd7a0mr321172215ad.35.1743648919304;
+        Wed, 02 Apr 2025 19:55:19 -0700 (PDT)
+Received: from localhost.localdomain ([2620:10d:c090:400::5:22d1])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2297865dffcsm3345315ad.127.2025.04.02.19.55.17
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Wed, 02 Apr 2025 19:55:18 -0700 (PDT)
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To: bpf@vger.kernel.org,
+	linux-mm@kvack.org
+Cc: torvalds@linux-foundation.org,
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	martin.lau@kernel.org,
+	akpm@linux-foundation.org,
+	peterz@infradead.org,
+	vbabka@suse.cz,
+	bigeasy@linutronix.de,
+	rostedt@goodmis.org,
+	shakeel.butt@linux.dev,
+	mhocko@suse.com,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3] locking/local_lock, mm: Replace localtry_ helpers with local_trylock_t type
+Date: Wed,  2 Apr 2025 19:55:14 -0700
+Message-Id: <20250403025514.41186-1-alexei.starovoitov@gmail.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR11MB6020:EE_|CYYPR11MB8357:EE_
-X-MS-Office365-Filtering-Correlation-Id: 49cf8ff4-cef6-49e0-4a97-08dd7259f14d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?SkRheTNENWp0c2JsR2RvcFJJMkNSQjNUTUxDaGpWakJpd0Rxd1NLTkhOeTVm?=
- =?utf-8?B?elFSZDA5STZrZVdsLzNOckljLzY1NTZrWEtEbUhqNGRJWHpBcUQwdHFjTDNN?=
- =?utf-8?B?WUcySGhFWUd5Y1ppV1FFditpK0JmWnN3Zkx3ZGlncVhOVDJzdkR6c2kvV1RB?=
- =?utf-8?B?d1lmQnRDZjlDNTVPUE5ERjJvVlhOdjFXNEp5d0FOa2t5bGUvU2FySlZ3cUxt?=
- =?utf-8?B?RUtRQTR2QU9UVWppWi9xWGo2QmpvMmgrUS9jSUR2dXB0S05KYXdnMURYVjIr?=
- =?utf-8?B?ajdSaDc0Q2RIcWY2M09BVGxUSm5ZZXNxUkg2VmhHVHRGc0laY2QzSDNrRktU?=
- =?utf-8?B?UnlYcmFQSUdQNW5LSWlVSHVyR0dIeEJKbEdCOWU4b3RiaUtoUzcvWW05ZUFM?=
- =?utf-8?B?c25hVGYvSWpJN2pUaGV4bW5xWG5aZmd1elAwNzFXak14Z2J1OWczako1NHVn?=
- =?utf-8?B?alNBYUhFczNPNWxaNldNYjNWd05zcGFteUMvNGdES09scm84VHgzZ0dPN0Qx?=
- =?utf-8?B?a3dzei9ndldKbVp4OTVnVGhZeDRzcmQzN3dzWEpGVGRETWIwMDZsN0JXWFJF?=
- =?utf-8?B?SWgwSXYzdVJrRnhrYlRVK3pkZnZDNEsra2pWWjhXRUpzTHcwSGk2c2ZXTXB3?=
- =?utf-8?B?bFVVOHpzL0JGSzdrdHFOVlF6WE1JTlFXQk5ueUJYNEFrOWVhVS9Rdjl5MHRo?=
- =?utf-8?B?cElQTlRENlZvdXVSVy9panhSZlJRR0NTOG41dlRRZ3lkNjk2Q3BDcHd1YkpK?=
- =?utf-8?B?U0ZaK01lU3VDWmtaN2NBdlRoWGh1SGsxSHJKNzhEaTAwZW5RdzJGeWg5dHNn?=
- =?utf-8?B?TURvTGczM0RxTW0rMXhIYUhqenV0MnpsSjNRWFlrbnhOL2FmenVaSGpoNGJs?=
- =?utf-8?B?M29ad25nUmNOOE1FRHdxQzh0TE9KZDdIcGx0Y0NWOFdrRkcrUEI3eGFBaS8v?=
- =?utf-8?B?Y3BiRGdNcU9PeHNxWXd5OHRCZzhKUE1OVW1NcGpzUmZ1L1ZVTlRJdFFlWldV?=
- =?utf-8?B?QWdKeG9ZUXA1RVFuYTRwUW5wUGNJWXFMalhaRHhuYTMxc2Zwek15aWVrV1Mv?=
- =?utf-8?B?YUJidzZ4WTVZNWdOdDdLYVlDLzlXZldla0lFUjJkWXJoWlYxTmVYamUyRklI?=
- =?utf-8?B?bk5JRkVybi91TVVaU2dpbmFqdjJIWmFzUTE4SC9teW5RQTBtNVNJUDN6cmZM?=
- =?utf-8?B?elBHR2xWby9hbE1iRys4MWFJbWJ6WDU5dWNCRWhGWk1YeHk0STRGa1Q1VVBo?=
- =?utf-8?B?VVREZDZnb1dMbUd5d2VpdHUzQ3o5a1VPbXZRQmZ0eUJ3dXlkWE1CeDloVkV5?=
- =?utf-8?B?YVhVeEV6SS91anJTdWFhenRhUldPSWtTWWUxSGZBVC9iLy94Sk01S1VaMEUw?=
- =?utf-8?B?NjBOMzRDdENMb1daNUlaWmtQWWV5dkxnYVpqYmhEKytxOHJESlh5QVFEUXJJ?=
- =?utf-8?B?VHI4am9GcDVEdkVXejZnZXd4Y1o2WS9JRzN4bE53ZWxEaDJ5M29oZklhZTlj?=
- =?utf-8?B?SDJJRHJOb0oyeW5yYmFHNWlnbXN1S0lveXUrRHUyWjZ1VnI4NVI4QThCeWZj?=
- =?utf-8?B?b3JpZDhYWkhoVGM3NTQ5bk1XRm1heHNQQzhTZ09EMjVxWWNwTUZqRitFei9U?=
- =?utf-8?B?c3V0MHRHb2dxNURkSmxCK0hVZnRkNGdjSGFRQURqeW9GbTRMWEpodXNDQVpk?=
- =?utf-8?B?ellodjg1eGM5NHA3WGRYRDlkMi9mRWJPMXV4QTZ1ZGxsZGN3YkxFSk1Hajh0?=
- =?utf-8?B?V1YrZElSN2xLbmZlbUFnRUh0RXY0QWM1c3NRVmh2bG9XckUyTjJtR05oZDlU?=
- =?utf-8?B?QU9sVDdFbklNTUd3T0VreXA3T1FuQUZUdU5QTDdhek53QWNCM2FmNytjdFV5?=
- =?utf-8?Q?Ppcf1QZa7MyxP?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR11MB6020.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?cVlDaVg4MFlvdHA5aEVPUjJ1OStBNEJrdE4xTEw0VlhYUHZsYXlqV2d6T0k5?=
- =?utf-8?B?M3FjYjl5cVNJY1AxU25sTWE2cENYbVRFckZlV28vbE4rUmEzZXRpYUJheFJm?=
- =?utf-8?B?dGswczZkckVteVpJVURvVVNqODRLZHByM2RSZmtiYXRNc2NyeXgrYWdLUFRH?=
- =?utf-8?B?UU9GV3YwUUZ5K3lWL0psMXdjYnBBS1pndzJTUGhab3N1ZWtEYXJFZ2RMYmpN?=
- =?utf-8?B?Z2VJZGxQTTVpNE1kandqYlBqQzhZN2FsdWU5ZDNTVXB6SnhtWEFCemdPMUM3?=
- =?utf-8?B?KzBFV29uOFZtWTNjWTEzODQzd29YWks3dDg2M1VrZEp6ZUNCVkxsK3FhdFcx?=
- =?utf-8?B?VkJTdStoNWlCYk0xSzVjRnYwTzgxNUlCK2JuMUNhdUdsLzFYQnN6VjVGQmxT?=
- =?utf-8?B?eCtTTnJWYi93Q2tyK1N5YmUza2JXT3JLQW5xTVJDSUVvMEhFR1FHcHl0bXJn?=
- =?utf-8?B?aHlkTVBrL1VYUjZZaWNvcFA4VVpERHBDZFdFUm5NK21NS3o1Uzg1djlxS1kz?=
- =?utf-8?B?d0tRb3I0ejljaldGZ0s5SGFBam8ybjZSS09ybXRLcGVEaWdFYWFtcmp3OGQr?=
- =?utf-8?B?NmZoQ1NhSHRNU3ZHU0dLTHc5YzJLL0Y0Wk9jYUh4RkI3NDkvMEdMQ0pCbzR6?=
- =?utf-8?B?dXRqcHZBd2hsbEhhT2VsdVZlM2haS1dlZWM0c0Q0Vy9GN0Z0TFp5cHFjbFMv?=
- =?utf-8?B?MFpBallReE5EVVdvbVJlRGJKQmowUXM2a0ZCOXVNY3Q4TmdYOFlHcHhDNmg2?=
- =?utf-8?B?emtOekkvOXlnZjNSSGZjcElwUTVLZXoyT2VWMkYyaWZEbDdNbnp4SVNYeXg2?=
- =?utf-8?B?RUwxVksxSEpRUzdHUkxaZDR0emtGTHpJUEtxWkJRaHliVGJzMitrL2ZoMlBC?=
- =?utf-8?B?Mkw4NE5rczcvU1kyK3JGL1hJNHUzZERGQnFRN1ZOa0crNlNkbnpNS3VXZFlN?=
- =?utf-8?B?UFNmemZQR1lkZFVGeG40N2tkT0xPd3FPSUJFKzV0RHZNbldjQ0w3TkJFSEpi?=
- =?utf-8?B?WnVNaDdyRjZ5RzMwQ3hXdmVEcmtNYUVPaEdNR2ZlK21wWjE1VDk5M3cyQmxw?=
- =?utf-8?B?VXNudTdIc3VwclVZTWZBdjRtWm9pcVhUdTdyeERMMjRwblprN1d5aFFWeUlT?=
- =?utf-8?B?b045SG1MOUJlcDRNVk1iMlcwZHBlVTkrTGw3RXpoN0tJSS9QRzFocUpBU2Zs?=
- =?utf-8?B?MGFiNFFIZWl1Z0NMVWdTSmljMWt4Wk90WDFicFVPZURZL2xRQ2J4am51UGhZ?=
- =?utf-8?B?N1FML1MxRndqcUFLSkIwNFBJN0Y4Vmg2NFluMTRlUlpic0xjc29RVjRxSnlo?=
- =?utf-8?B?d1FHYk9BOStMcFRhN2ZTZmdsVHlZN1hweFZEaUM5d1hnMVNvOU5MWWw1bytx?=
- =?utf-8?B?clFRTmt1WjU5VzZwZ3hLMit6dE1xUmFkamphNG1vWTNvSjhudWNIWUhldVpz?=
- =?utf-8?B?UHBMUnV5dVdGQVMzRVdPZEtGbFdxSkQ4Ym5DcUNBVlNqVWxrTXQ0dC84dTVt?=
- =?utf-8?B?bHRuck04RUd3T1FHQ21rS0xiODMwdDd2MGJudmhwNFJGdHFIbUx4Rm82RFNw?=
- =?utf-8?B?bmtEbi9NQXhCaFh6aFFpYk8zV1o3b3dYYkhtQ3IwN3RES0NtKy8vWlRaNExJ?=
- =?utf-8?B?RzVXNzRLamJuRHloM0pTUUxmY1RyZ3Jjcm9vZnhyVmd5Qy8wRzRGMWkvVUNC?=
- =?utf-8?B?aW95ampiVnZJWG1hSDZEQzZ1cHVEN28zejlvMkNoY3RNYXZHZDNHNWkvN2VP?=
- =?utf-8?B?cWJCbFV6R25ycndVenVIZzJtMjZrUFZaUGgzMHUzNTNZeGVFbkpnaEZFVnVv?=
- =?utf-8?B?S3J2RTcyL1ZveWJ6ZGxqOFAySGJQM2NIL0g3ZkpXWit3S1BZZDEzTmRaQXAv?=
- =?utf-8?B?NzNSUHdyTEZqeUU1cTBHa1RkUzBGeDJGOG1WVm9YRDJTMTVoRFkrbFZOb0R2?=
- =?utf-8?B?RVBMWDREbko4R1ZtTUsrck43dHNYWnJkU3d5blZaOVhMUXZpY2ZaY2JsaGpy?=
- =?utf-8?B?dnkrV05MbHF3dmNvMDBRdVQwbUcrMzdSRml2a0xzYmdKZWd2aER2T1FEYU9m?=
- =?utf-8?B?NUx4SDhMd2dFQmxCOHdsUmtmcTRESUlZQjVOZWVWM2NWcXB3amVwa2d2cEpI?=
- =?utf-8?Q?RJGq+2UbsKrk5cjukW8LfBQ6Q?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 49cf8ff4-cef6-49e0-4a97-08dd7259f14d
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR11MB6020.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Apr 2025 02:47:58.5710
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: LGVDukPJgy6b6nszXMasJD6CvVAYbdq1H+5B2wPMnQXOVU904mYE44TwE50LZOq3tqLPnEGP9QVUd4qxlHv9Ew==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYYPR11MB8357
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 8bit
 
-Hi Michal,
+From: Alexei Starovoitov <ast@kernel.org>
 
-thanks for taking a look at this,
+Partially revert commit 0aaddfb06882 ("locking/local_lock: Introduce localtry_lock_t").
+Remove localtry_*() helpers, since localtry_lock() name might
+be misinterpreted as "try lock".
 
-On 4/2/2025 9:24 PM, Michal Koutný wrote:
-> Hello Chen.
-> 
-> On Wed, Apr 02, 2025 at 09:06:11AM +0800, Chen Yu <yu.c.chen@intel.com> wrote:
->> On system with NUMA balancing enabled, it is found that tracking
->> the task activities due to NUMA balancing is helpful.
-> ...
->> The following two new fields:
->>
->> numa_task_migrated
->> numa_task_swapped
->>
->> will be displayed in both
->> /sys/fs/cgroup/{GROUP}/memory.stat and /proc/{PID}/sched
-> 
-> Why is the field /proc/$pid/sched not enough?
-> 
+Introduce local_trylock[_irqsave]() helpers that only work
+with newly introduced local_trylock_t type.
+Note that attempt to use local_trylock[_irqsave]() with local_lock_t
+will cause compilation failure.
 
-In the context of NUMA balancing, it would be helpful to not only 
-monitor on the activities of individual task/thread but also the 
-resource usage and task migrations at the group level - which helps us 
-quickly evaluate the performance and resource usage of the container - 
-like per memcg numa_pages_migrated, numa_pte_updates introduced in
-commit f77f0c751478 ("mm,memcg: provide per-cgroup counters for NUMA 
-balancing operations"). Yes, we can iterate the /proc/$pid/sched to
-find the accumulated NUMA stat, and the introduction of per - cgroup 
-numa stat can help users more conveniently track the overall data of the 
-workload.
+Usage and behavior in !PREEMPT_RT:
 
-Besides, I'm considering evaluating the per - cgroup NUMA balance 
-control[1] to help users do fine - grain control per workload. This per 
-- cgroup NUMA balance stat could be used to evaluate the efficiency of 
-per - cgroup NUMA balance.
+local_lock_t lock;                     // sizeof(lock) == 0
+local_lock(&lock);                     // preempt disable
+local_lock_irqsave(&lock, ...);        // irq save
+if (local_trylock_irqsave(&lock, ...)) // compilation error
 
-> Also, you may want to update Documentation/admin-guide/cgroup-v2.rst
-> too.
+local_trylock_t lock;                  // sizeof(lock) == 4
+local_lock(&lock);                     // preempt disable, acquired = 1
+local_lock_irqsave(&lock, ...);        // irq save, acquired = 1
+if (local_trylock(&lock))              // if (!acquired) preempt disable, acquired = 1
+if (local_trylock_irqsave(&lock, ...)) // if (!acquired) irq save, acquired = 1
 
-Got it, will do in next version.
+The existing local_lock_*() macros can be used either with
+local_lock_t or local_trylock_t.
+With local_trylock_t they set acquired = 1 while local_unlock_*() clears it.
 
-[1] 
-https://lore.kernel.org/lkml/b3f1f6c478127a38b9091a8341374ba160d25c5a.1740483690.git.yu.c.chen@intel.com/
+In !PREEMPT_RT local_lock_irqsave(local_lock_t *) disables interrupts
+to protect critical section, but it doesn't prevent NMI, so the fully
+reentrant code cannot use local_lock_irqsave(local_lock_t *) for
+exclusive access.
 
-thanks,
-Chenyu
+The local_lock_irqsave(local_trylock_t *) helper disables interrupts
+and sets acquired=1, so local_trylock_irqsave(local_trylock_t *) from
+NMI attempting to acquire the same lock will return false.
 
-> 
-> Thanks,
-> Michal
+In PREEMPT_RT local_lock_irqsave() maps to preemptible spin_lock().
+Map local_trylock_irqsave() to preemptible spin_trylock().
+When in hard IRQ or NMI return false right away, since
+spin_trylock() is not safe due to explicit locking in the underneath
+rt_spin_trylock() implementation. Removing this explicit locking and
+attempting only "trylock" is undesired due to PI implications.
+
+The local_trylock() without _irqsave can be used to avoid the cost of
+disabling/enabling interrupts by only disabling preemption, so
+local_trylock() in an interrupt attempting to acquire the same
+lock will return false.
+
+Note there is no need to use local_inc for acquired variable,
+since it's a percpu variable with strict nesting scopes.
+
+Note that guard(local_lock)(&lock) works only for "local_lock_t lock".
+
+The patch also makes sure that local_lock_release(l) is called before
+WRITE_ONCE(l->acquired, 0). Though IRQs are disabled at this point
+the local_trylock() from NMI will succeed and local_lock_acquire(l)
+will warn.
+
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
+Acked-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Reviewed-by: Shakeel Butt <shakeel.butt@linux.dev>
+Fixes: 0aaddfb06882 ("locking/local_lock: Introduce localtry_lock_t")
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+---
+ include/linux/local_lock.h          |  58 ++------
+ include/linux/local_lock_internal.h | 207 ++++++++++++----------------
+ mm/memcontrol.c                     |  39 +++---
+ 3 files changed, 114 insertions(+), 190 deletions(-)
+
+diff --git a/include/linux/local_lock.h b/include/linux/local_lock.h
+index 1a0bc35839e3..16a2ee4f8310 100644
+--- a/include/linux/local_lock.h
++++ b/include/linux/local_lock.h
+@@ -52,44 +52,23 @@
+ 	__local_unlock_irqrestore(lock, flags)
+ 
+ /**
+- * localtry_lock_init - Runtime initialize a lock instance
+- */
+-#define localtry_lock_init(lock)		__localtry_lock_init(lock)
+-
+-/**
+- * localtry_lock - Acquire a per CPU local lock
+- * @lock:	The lock variable
+- */
+-#define localtry_lock(lock)		__localtry_lock(lock)
+-
+-/**
+- * localtry_lock_irq - Acquire a per CPU local lock and disable interrupts
+- * @lock:	The lock variable
+- */
+-#define localtry_lock_irq(lock)		__localtry_lock_irq(lock)
+-
+-/**
+- * localtry_lock_irqsave - Acquire a per CPU local lock, save and disable
+- *			 interrupts
+- * @lock:	The lock variable
+- * @flags:	Storage for interrupt flags
++ * local_lock_init - Runtime initialize a lock instance
+  */
+-#define localtry_lock_irqsave(lock, flags)				\
+-	__localtry_lock_irqsave(lock, flags)
++#define local_trylock_init(lock)	__local_trylock_init(lock)
+ 
+ /**
+- * localtry_trylock - Try to acquire a per CPU local lock.
++ * local_trylock - Try to acquire a per CPU local lock
+  * @lock:	The lock variable
+  *
+  * The function can be used in any context such as NMI or HARDIRQ. Due to
+  * locking constrains it will _always_ fail to acquire the lock in NMI or
+  * HARDIRQ context on PREEMPT_RT.
+  */
+-#define localtry_trylock(lock)		__localtry_trylock(lock)
++#define local_trylock(lock)		__local_trylock(lock)
+ 
+ /**
+- * localtry_trylock_irqsave - Try to acquire a per CPU local lock, save and disable
+- *			      interrupts if acquired
++ * local_trylock_irqsave - Try to acquire a per CPU local lock, save and disable
++ *			   interrupts if acquired
+  * @lock:	The lock variable
+  * @flags:	Storage for interrupt flags
+  *
+@@ -97,29 +76,8 @@
+  * locking constrains it will _always_ fail to acquire the lock in NMI or
+  * HARDIRQ context on PREEMPT_RT.
+  */
+-#define localtry_trylock_irqsave(lock, flags)				\
+-	__localtry_trylock_irqsave(lock, flags)
+-
+-/**
+- * local_unlock - Release a per CPU local lock
+- * @lock:	The lock variable
+- */
+-#define localtry_unlock(lock)		__localtry_unlock(lock)
+-
+-/**
+- * local_unlock_irq - Release a per CPU local lock and enable interrupts
+- * @lock:	The lock variable
+- */
+-#define localtry_unlock_irq(lock)		__localtry_unlock_irq(lock)
+-
+-/**
+- * localtry_unlock_irqrestore - Release a per CPU local lock and restore
+- *			      interrupt flags
+- * @lock:	The lock variable
+- * @flags:      Interrupt flags to restore
+- */
+-#define localtry_unlock_irqrestore(lock, flags)			\
+-	__localtry_unlock_irqrestore(lock, flags)
++#define local_trylock_irqsave(lock, flags)			\
++	__local_trylock_irqsave(lock, flags)
+ 
+ DEFINE_GUARD(local_lock, local_lock_t __percpu*,
+ 	     local_lock(_T),
+diff --git a/include/linux/local_lock_internal.h b/include/linux/local_lock_internal.h
+index 67bd13d142fa..bf2bf40d7b18 100644
+--- a/include/linux/local_lock_internal.h
++++ b/include/linux/local_lock_internal.h
+@@ -15,10 +15,11 @@ typedef struct {
+ #endif
+ } local_lock_t;
+ 
++/* local_trylock() and local_trylock_irqsave() only work with local_trylock_t */
+ typedef struct {
+ 	local_lock_t	llock;
+-	unsigned int	acquired;
+-} localtry_lock_t;
++	u8		acquired;
++} local_trylock_t;
+ 
+ #ifdef CONFIG_DEBUG_LOCK_ALLOC
+ # define LOCAL_LOCK_DEBUG_INIT(lockname)		\
+@@ -29,6 +30,9 @@ typedef struct {
+ 	},						\
+ 	.owner = NULL,
+ 
++# define LOCAL_TRYLOCK_DEBUG_INIT(lockname)		\
++	.llock = { LOCAL_LOCK_DEBUG_INIT((lockname).llock) },
++
+ static inline void local_lock_acquire(local_lock_t *l)
+ {
+ 	lock_map_acquire(&l->dep_map);
+@@ -56,6 +60,7 @@ static inline void local_lock_debug_init(local_lock_t *l)
+ }
+ #else /* CONFIG_DEBUG_LOCK_ALLOC */
+ # define LOCAL_LOCK_DEBUG_INIT(lockname)
++# define LOCAL_TRYLOCK_DEBUG_INIT(lockname)
+ static inline void local_lock_acquire(local_lock_t *l) { }
+ static inline void local_trylock_acquire(local_lock_t *l) { }
+ static inline void local_lock_release(local_lock_t *l) { }
+@@ -63,7 +68,7 @@ static inline void local_lock_debug_init(local_lock_t *l) { }
+ #endif /* !CONFIG_DEBUG_LOCK_ALLOC */
+ 
+ #define INIT_LOCAL_LOCK(lockname)	{ LOCAL_LOCK_DEBUG_INIT(lockname) }
+-#define INIT_LOCALTRY_LOCK(lockname)	{ .llock = { LOCAL_LOCK_DEBUG_INIT(lockname.llock) }}
++#define INIT_LOCAL_TRYLOCK(lockname)	{ LOCAL_TRYLOCK_DEBUG_INIT(lockname) }
+ 
+ #define __local_lock_init(lock)					\
+ do {								\
+@@ -76,6 +81,8 @@ do {								\
+ 	local_lock_debug_init(lock);				\
+ } while (0)
+ 
++#define __local_trylock_init(lock) __local_lock_init(lock.llock)
++
+ #define __spinlock_nested_bh_init(lock)				\
+ do {								\
+ 	static struct lock_class_key __key;			\
+@@ -87,149 +94,117 @@ do {								\
+ 	local_lock_debug_init(lock);				\
+ } while (0)
+ 
++#define __local_lock_acquire(lock)					\
++	do {								\
++		local_trylock_t *tl;					\
++		local_lock_t *l;					\
++									\
++		l = (local_lock_t *)this_cpu_ptr(lock);			\
++		tl = (local_trylock_t *)l;				\
++		_Generic((lock),					\
++			local_trylock_t *: ({				\
++				lockdep_assert(tl->acquired == 0);	\
++				WRITE_ONCE(tl->acquired, 1);		\
++			}),						\
++			default:(void)0);				\
++		local_lock_acquire(l);					\
++	} while (0)
++
+ #define __local_lock(lock)					\
+ 	do {							\
+ 		preempt_disable();				\
+-		local_lock_acquire(this_cpu_ptr(lock));		\
++		__local_lock_acquire(lock);			\
+ 	} while (0)
+ 
+ #define __local_lock_irq(lock)					\
+ 	do {							\
+ 		local_irq_disable();				\
+-		local_lock_acquire(this_cpu_ptr(lock));		\
++		__local_lock_acquire(lock);			\
+ 	} while (0)
+ 
+ #define __local_lock_irqsave(lock, flags)			\
+ 	do {							\
+ 		local_irq_save(flags);				\
+-		local_lock_acquire(this_cpu_ptr(lock));		\
+-	} while (0)
+-
+-#define __local_unlock(lock)					\
+-	do {							\
+-		local_lock_release(this_cpu_ptr(lock));		\
+-		preempt_enable();				\
++		__local_lock_acquire(lock);			\
+ 	} while (0)
+ 
+-#define __local_unlock_irq(lock)				\
+-	do {							\
+-		local_lock_release(this_cpu_ptr(lock));		\
+-		local_irq_enable();				\
+-	} while (0)
+-
+-#define __local_unlock_irqrestore(lock, flags)			\
+-	do {							\
+-		local_lock_release(this_cpu_ptr(lock));		\
+-		local_irq_restore(flags);			\
+-	} while (0)
+-
+-#define __local_lock_nested_bh(lock)				\
+-	do {							\
+-		lockdep_assert_in_softirq();			\
+-		local_lock_acquire(this_cpu_ptr(lock));	\
+-	} while (0)
+-
+-#define __local_unlock_nested_bh(lock)				\
+-	local_lock_release(this_cpu_ptr(lock))
+-
+-/* localtry_lock_t variants */
+-
+-#define __localtry_lock_init(lock)				\
+-do {								\
+-	__local_lock_init(&(lock)->llock);			\
+-	WRITE_ONCE((lock)->acquired, 0);			\
+-} while (0)
+-
+-#define __localtry_lock(lock)					\
+-	do {							\
+-		localtry_lock_t *lt;				\
+-		preempt_disable();				\
+-		lt = this_cpu_ptr(lock);			\
+-		local_lock_acquire(&lt->llock);			\
+-		WRITE_ONCE(lt->acquired, 1);			\
+-	} while (0)
+-
+-#define __localtry_lock_irq(lock)				\
+-	do {							\
+-		localtry_lock_t *lt;				\
+-		local_irq_disable();				\
+-		lt = this_cpu_ptr(lock);			\
+-		local_lock_acquire(&lt->llock);			\
+-		WRITE_ONCE(lt->acquired, 1);			\
+-	} while (0)
+-
+-#define __localtry_lock_irqsave(lock, flags)			\
+-	do {							\
+-		localtry_lock_t *lt;				\
+-		local_irq_save(flags);				\
+-		lt = this_cpu_ptr(lock);			\
+-		local_lock_acquire(&lt->llock);			\
+-		WRITE_ONCE(lt->acquired, 1);			\
+-	} while (0)
+-
+-#define __localtry_trylock(lock)				\
++#define __local_trylock(lock)					\
+ 	({							\
+-		localtry_lock_t *lt;				\
+-		bool _ret;					\
++		local_trylock_t *tl;				\
+ 								\
+ 		preempt_disable();				\
+-		lt = this_cpu_ptr(lock);			\
+-		if (!READ_ONCE(lt->acquired)) {			\
+-			WRITE_ONCE(lt->acquired, 1);		\
+-			local_trylock_acquire(&lt->llock);	\
+-			_ret = true;				\
+-		} else {					\
+-			_ret = false;				\
++		tl = this_cpu_ptr(lock);			\
++		if (READ_ONCE(tl->acquired)) {			\
+ 			preempt_enable();			\
++			tl = NULL;				\
++		} else {					\
++			WRITE_ONCE(tl->acquired, 1);		\
++			local_trylock_acquire(			\
++				(local_lock_t *)tl);		\
+ 		}						\
+-		_ret;						\
++		!!tl;						\
+ 	})
+ 
+-#define __localtry_trylock_irqsave(lock, flags)			\
++#define __local_trylock_irqsave(lock, flags)			\
+ 	({							\
+-		localtry_lock_t *lt;				\
+-		bool _ret;					\
++		local_trylock_t *tl;				\
+ 								\
+ 		local_irq_save(flags);				\
+-		lt = this_cpu_ptr(lock);			\
+-		if (!READ_ONCE(lt->acquired)) {			\
+-			WRITE_ONCE(lt->acquired, 1);		\
+-			local_trylock_acquire(&lt->llock);	\
+-			_ret = true;				\
+-		} else {					\
+-			_ret = false;				\
++		tl = this_cpu_ptr(lock);			\
++		if (READ_ONCE(tl->acquired)) {			\
+ 			local_irq_restore(flags);		\
++			tl = NULL;				\
++		} else {					\
++			WRITE_ONCE(tl->acquired, 1);		\
++			local_trylock_acquire(			\
++				(local_lock_t *)tl);		\
+ 		}						\
+-		_ret;						\
++		!!tl;						\
+ 	})
+ 
+-#define __localtry_unlock(lock)					\
++#define __local_lock_release(lock)					\
++	do {								\
++		local_trylock_t *tl;					\
++		local_lock_t *l;					\
++									\
++		l = (local_lock_t *)this_cpu_ptr(lock);			\
++		tl = (local_trylock_t *)l;				\
++		local_lock_release(l);					\
++		_Generic((lock),					\
++			local_trylock_t *: ({				\
++				lockdep_assert(tl->acquired == 1);	\
++				WRITE_ONCE(tl->acquired, 0);		\
++			}),						\
++			default:(void)0);				\
++	} while (0)
++
++#define __local_unlock(lock)					\
+ 	do {							\
+-		localtry_lock_t *lt;				\
+-		lt = this_cpu_ptr(lock);			\
+-		WRITE_ONCE(lt->acquired, 0);			\
+-		local_lock_release(&lt->llock);			\
++		__local_lock_release(lock);			\
+ 		preempt_enable();				\
+ 	} while (0)
+ 
+-#define __localtry_unlock_irq(lock)				\
++#define __local_unlock_irq(lock)				\
+ 	do {							\
+-		localtry_lock_t *lt;				\
+-		lt = this_cpu_ptr(lock);			\
+-		WRITE_ONCE(lt->acquired, 0);			\
+-		local_lock_release(&lt->llock);			\
++		__local_lock_release(lock);			\
+ 		local_irq_enable();				\
+ 	} while (0)
+ 
+-#define __localtry_unlock_irqrestore(lock, flags)		\
++#define __local_unlock_irqrestore(lock, flags)			\
+ 	do {							\
+-		localtry_lock_t *lt;				\
+-		lt = this_cpu_ptr(lock);			\
+-		WRITE_ONCE(lt->acquired, 0);			\
+-		local_lock_release(&lt->llock);			\
++		__local_lock_release(lock);			\
+ 		local_irq_restore(flags);			\
+ 	} while (0)
+ 
++#define __local_lock_nested_bh(lock)				\
++	do {							\
++		lockdep_assert_in_softirq();			\
++		local_lock_acquire(this_cpu_ptr(lock));	\
++	} while (0)
++
++#define __local_unlock_nested_bh(lock)				\
++	local_lock_release(this_cpu_ptr(lock))
++
+ #else /* !CONFIG_PREEMPT_RT */
+ 
+ /*
+@@ -237,16 +212,18 @@ do {								\
+  * critical section while staying preemptible.
+  */
+ typedef spinlock_t local_lock_t;
+-typedef spinlock_t localtry_lock_t;
++typedef spinlock_t local_trylock_t;
+ 
+ #define INIT_LOCAL_LOCK(lockname) __LOCAL_SPIN_LOCK_UNLOCKED((lockname))
+-#define INIT_LOCALTRY_LOCK(lockname) INIT_LOCAL_LOCK(lockname)
++#define INIT_LOCAL_TRYLOCK(lockname) __LOCAL_SPIN_LOCK_UNLOCKED((lockname))
+ 
+ #define __local_lock_init(l)					\
+ 	do {							\
+ 		local_spin_lock_init((l));			\
+ 	} while (0)
+ 
++#define __local_trylock_init(l)			__local_lock_init(l)
++
+ #define __local_lock(__lock)					\
+ 	do {							\
+ 		migrate_disable();				\
+@@ -283,17 +260,7 @@ do {								\
+ 	spin_unlock(this_cpu_ptr((lock)));			\
+ } while (0)
+ 
+-/* localtry_lock_t variants */
+-
+-#define __localtry_lock_init(lock)			__local_lock_init(lock)
+-#define __localtry_lock(lock)				__local_lock(lock)
+-#define __localtry_lock_irq(lock)			__local_lock(lock)
+-#define __localtry_lock_irqsave(lock, flags)		__local_lock_irqsave(lock, flags)
+-#define __localtry_unlock(lock)				__local_unlock(lock)
+-#define __localtry_unlock_irq(lock)			__local_unlock(lock)
+-#define __localtry_unlock_irqrestore(lock, flags)	__local_unlock_irqrestore(lock, flags)
+-
+-#define __localtry_trylock(lock)				\
++#define __local_trylock(lock)					\
+ 	({							\
+ 		int __locked;					\
+ 								\
+@@ -308,11 +275,11 @@ do {								\
+ 		__locked;					\
+ 	})
+ 
+-#define __localtry_trylock_irqsave(lock, flags)			\
++#define __local_trylock_irqsave(lock, flags)			\
+ 	({							\
+ 		typecheck(unsigned long, flags);		\
+ 		flags = 0;					\
+-		__localtry_trylock(lock);			\
++		__local_trylock(lock);				\
+ 	})
+ 
+ #endif /* CONFIG_PREEMPT_RT */
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 421740f1bcdc..c96c1f2b9cf5 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -1759,7 +1759,7 @@ void mem_cgroup_print_oom_group(struct mem_cgroup *memcg)
+ }
+ 
+ struct memcg_stock_pcp {
+-	localtry_lock_t stock_lock;
++	local_trylock_t stock_lock;
+ 	struct mem_cgroup *cached; /* this never be root cgroup */
+ 	unsigned int nr_pages;
+ 
+@@ -1774,7 +1774,7 @@ struct memcg_stock_pcp {
+ #define FLUSHING_CACHED_CHARGE	0
+ };
+ static DEFINE_PER_CPU(struct memcg_stock_pcp, memcg_stock) = {
+-	.stock_lock = INIT_LOCALTRY_LOCK(stock_lock),
++	.stock_lock = INIT_LOCAL_TRYLOCK(stock_lock),
+ };
+ static DEFINE_MUTEX(percpu_charge_mutex);
+ 
+@@ -1805,11 +1805,10 @@ static bool consume_stock(struct mem_cgroup *memcg, unsigned int nr_pages,
+ 	if (nr_pages > MEMCG_CHARGE_BATCH)
+ 		return ret;
+ 
+-	if (!localtry_trylock_irqsave(&memcg_stock.stock_lock, flags)) {
+-		if (!gfpflags_allow_spinning(gfp_mask))
+-			return ret;
+-		localtry_lock_irqsave(&memcg_stock.stock_lock, flags);
+-	}
++	if (gfpflags_allow_spinning(gfp_mask))
++		local_lock_irqsave(&memcg_stock.stock_lock, flags);
++	else if (!local_trylock_irqsave(&memcg_stock.stock_lock, flags))
++		return ret;
+ 
+ 	stock = this_cpu_ptr(&memcg_stock);
+ 	stock_pages = READ_ONCE(stock->nr_pages);
+@@ -1818,7 +1817,7 @@ static bool consume_stock(struct mem_cgroup *memcg, unsigned int nr_pages,
+ 		ret = true;
+ 	}
+ 
+-	localtry_unlock_irqrestore(&memcg_stock.stock_lock, flags);
++	local_unlock_irqrestore(&memcg_stock.stock_lock, flags);
+ 
+ 	return ret;
+ }
+@@ -1857,14 +1856,14 @@ static void drain_local_stock(struct work_struct *dummy)
+ 	 * drain_stock races is that we always operate on local CPU stock
+ 	 * here with IRQ disabled
+ 	 */
+-	localtry_lock_irqsave(&memcg_stock.stock_lock, flags);
++	local_lock_irqsave(&memcg_stock.stock_lock, flags);
+ 
+ 	stock = this_cpu_ptr(&memcg_stock);
+ 	old = drain_obj_stock(stock);
+ 	drain_stock(stock);
+ 	clear_bit(FLUSHING_CACHED_CHARGE, &stock->flags);
+ 
+-	localtry_unlock_irqrestore(&memcg_stock.stock_lock, flags);
++	local_unlock_irqrestore(&memcg_stock.stock_lock, flags);
+ 	obj_cgroup_put(old);
+ }
+ 
+@@ -1894,7 +1893,7 @@ static void refill_stock(struct mem_cgroup *memcg, unsigned int nr_pages)
+ {
+ 	unsigned long flags;
+ 
+-	if (!localtry_trylock_irqsave(&memcg_stock.stock_lock, flags)) {
++	if (!local_trylock_irqsave(&memcg_stock.stock_lock, flags)) {
+ 		/*
+ 		 * In case of unlikely failure to lock percpu stock_lock
+ 		 * uncharge memcg directly.
+@@ -1907,7 +1906,7 @@ static void refill_stock(struct mem_cgroup *memcg, unsigned int nr_pages)
+ 		return;
+ 	}
+ 	__refill_stock(memcg, nr_pages);
+-	localtry_unlock_irqrestore(&memcg_stock.stock_lock, flags);
++	local_unlock_irqrestore(&memcg_stock.stock_lock, flags);
+ }
+ 
+ /*
+@@ -1964,9 +1963,9 @@ static int memcg_hotplug_cpu_dead(unsigned int cpu)
+ 	stock = &per_cpu(memcg_stock, cpu);
+ 
+ 	/* drain_obj_stock requires stock_lock */
+-	localtry_lock_irqsave(&memcg_stock.stock_lock, flags);
++	local_lock_irqsave(&memcg_stock.stock_lock, flags);
+ 	old = drain_obj_stock(stock);
+-	localtry_unlock_irqrestore(&memcg_stock.stock_lock, flags);
++	local_unlock_irqrestore(&memcg_stock.stock_lock, flags);
+ 
+ 	drain_stock(stock);
+ 	obj_cgroup_put(old);
+@@ -2787,7 +2786,7 @@ static void mod_objcg_state(struct obj_cgroup *objcg, struct pglist_data *pgdat,
+ 	unsigned long flags;
+ 	int *bytes;
+ 
+-	localtry_lock_irqsave(&memcg_stock.stock_lock, flags);
++	local_lock_irqsave(&memcg_stock.stock_lock, flags);
+ 	stock = this_cpu_ptr(&memcg_stock);
+ 
+ 	/*
+@@ -2836,7 +2835,7 @@ static void mod_objcg_state(struct obj_cgroup *objcg, struct pglist_data *pgdat,
+ 	if (nr)
+ 		__mod_objcg_mlstate(objcg, pgdat, idx, nr);
+ 
+-	localtry_unlock_irqrestore(&memcg_stock.stock_lock, flags);
++	local_unlock_irqrestore(&memcg_stock.stock_lock, flags);
+ 	obj_cgroup_put(old);
+ }
+ 
+@@ -2846,7 +2845,7 @@ static bool consume_obj_stock(struct obj_cgroup *objcg, unsigned int nr_bytes)
+ 	unsigned long flags;
+ 	bool ret = false;
+ 
+-	localtry_lock_irqsave(&memcg_stock.stock_lock, flags);
++	local_lock_irqsave(&memcg_stock.stock_lock, flags);
+ 
+ 	stock = this_cpu_ptr(&memcg_stock);
+ 	if (objcg == READ_ONCE(stock->cached_objcg) && stock->nr_bytes >= nr_bytes) {
+@@ -2854,7 +2853,7 @@ static bool consume_obj_stock(struct obj_cgroup *objcg, unsigned int nr_bytes)
+ 		ret = true;
+ 	}
+ 
+-	localtry_unlock_irqrestore(&memcg_stock.stock_lock, flags);
++	local_unlock_irqrestore(&memcg_stock.stock_lock, flags);
+ 
+ 	return ret;
+ }
+@@ -2946,7 +2945,7 @@ static void refill_obj_stock(struct obj_cgroup *objcg, unsigned int nr_bytes,
+ 	unsigned long flags;
+ 	unsigned int nr_pages = 0;
+ 
+-	localtry_lock_irqsave(&memcg_stock.stock_lock, flags);
++	local_lock_irqsave(&memcg_stock.stock_lock, flags);
+ 
+ 	stock = this_cpu_ptr(&memcg_stock);
+ 	if (READ_ONCE(stock->cached_objcg) != objcg) { /* reset if necessary */
+@@ -2960,7 +2959,7 @@ static void refill_obj_stock(struct obj_cgroup *objcg, unsigned int nr_bytes,
+ 		stock->nr_bytes &= (PAGE_SIZE - 1);
+ 	}
+ 
+-	localtry_unlock_irqrestore(&memcg_stock.stock_lock, flags);
++	local_unlock_irqrestore(&memcg_stock.stock_lock, flags);
+ 	obj_cgroup_put(old);
+ 
+ 	if (nr_pages)
+-- 
+2.47.1
+
