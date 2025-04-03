@@ -1,23 +1,64 @@
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEB4E246348
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 09:58:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6E7D3C0B
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 10:00:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743674339; cv=none; b=XBKUjKO72ZagfsXj0+c4ODoUn42Ra5BMlK9XzuoUND4SqRSRJI2SYWgu8z0D26/3VweP0mHyO+qcJoGWPIVMnkY8NnRIVA8ileCg+1dPWJ/5abl9w+a38gNkaLT4+fJHp6/d6XpEb50tlnD96PJOhEKEMFQ/L8ncc0mpBYXMlUM=
+	t=1743674454; cv=none; b=M87JAWb5pa9BCN4tC6/fjSIkYeCyia1xtnarbFDRZQXyUppp1FXDY+vC2YK9pnp2Wm5lYoW2CfFxSZaYGhNZpqlOZvVp5L5z4PW+qfY4dYTfe8zIU6f/+i18sdi/MM5yTaXmgoHSCakfJZAFGfMxBTvDgmz37cT7K6avFcTOCxo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743674339; c=relaxed/simple;
-	bh=FEwNJo5t+BtzkVXN3mBYnuVN4gQ7esKaEacovNTnEf8=;
+	s=arc-20240116; t=1743674454; c=relaxed/simple;
+	bh=X91ve6Ah0Kg1e1dwtx44XDPRu+8PQbIaDdhH0M5KAck=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kXA4NdkDyi4M/yTNf/hQKvoeMqs5NlG+q+aCuID0JVeYXE2pQbIBIUiZ7YR1lUkNtuOlSZnmBYxVMH9TzlbKdTNYAzdMtkeQrTZebBb53+XH3GxVmjgMYD+/q6N/2jujKISL64QxxrRsnSr9oiamUDVY04GLJntn6AZXKiBIDec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 8AFF943231;
-	Thu,  3 Apr 2025 09:58:50 +0000 (UTC)
-Message-ID: <5b0adf9b-2b22-43fe-ab74-68df94115b9a@ghiti.fr>
-Date: Thu, 3 Apr 2025 11:58:50 +0200
+	 In-Reply-To:Content-Type; b=AWGUqjn1FenfSEFIynH+QoYFm0hfixpozggp86VHazQGJkUp5351U5WhiGjKNNIPUFxIl7aaewFb/SFOAyqfTHyTuvQ9hA0xj4AScIBeGcT13xANd59r8xpiKkuarC62oh7l4zyqaGrC5SNfz7KGNvKIrZ7ryEeHwUOF9uJB1Lo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZClJOx09; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZClJOx09"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43ce71582e9so4362355e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 03:00:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1743674451; x=1744279251; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=bPIHZcH7jsHk3BCGOsoXS/UMGxCNVe0vteMtqWkEZco=;
+        b=ZClJOx09n/Bn2HbgqsaovkQlUkvEFuZJMDSP+72k+f/K63odHNGXz079g+LWnCoX+9
+         d3bZngCa4btc61zKGKDmhKE8Vh7OGBcXAHqLvmT//q9B5/ADwLBbbr0OQIKfT54M//Kk
+         YVGh2XIetTVC8892RuvN5N7jHk5Cihz8jHETt90ncebZephgYvpPCRtCVJvcc1MLGsyZ
+         C5w1avJP9Tu0SO55H5B47i34mXCNEbFfFKiHbWnvaXFLNovJZEQ0V07YyR6DRfRdpTPy
+         ffNmCgRGSpg7rj4OQ5ErgXMdAlegIkmiJ8hKSE6pf9xU4WlA+G665qXYzX0pmT5cqYvZ
+         HvvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743674451; x=1744279251;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bPIHZcH7jsHk3BCGOsoXS/UMGxCNVe0vteMtqWkEZco=;
+        b=TZ0PfeuXwyFcBy+AzUapD73EFtt42FkgMnu6yJ6rMLE/qsiWyWq5BY+F6m3pskUPON
+         koNMdTLZS0x8CCgTjqL+lwPbcRTBrqEUdlClj8Ez/yFYn3JCiepKImOy5iGFLziIfIzM
+         Xgx5XocXwas4bBreqdySmQPQoHAEDSYV067nqdbT/JWXuEZ3XgcNfO4Y6HyC8+jPQFcU
+         sIWV9DYQnLqkleuFjDxMQBVKVBNXyxfKBIB9redSX5d82VzX+byVEH/wedCSqmdt3OOY
+         KvDKOmcHNWeeO0XWmuKki+yX6s67ekgPutDI3ii+kvJsuvVe/tFHlZubAqJp2RSSUb41
+         mDqw==
+X-Forwarded-Encrypted: i=1; AJvYcCVfkMjM1TFG7jzjIdVEAFe0JB7qf13lu9TVCyt8bazCc/jYcpBQgtDEjA1pYTMZqaxpceVMNkyIJUOzPpM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwY0RGxlCi/UozevrlasE6KpoZpWEMFSo8JuUFlzR1WvOQ9Iys1
+	a5FxoJSnu5AjnMNwlRiTu5M5XTidrUUae1pcnUhRSioNCilp2UB+iHYYOT20klU=
+X-Gm-Gg: ASbGnctPN9IH6RYvJlS9bPK6Z0UYt21WWzYsHzfPZnV684tvcR46RJUcU2HlkSUWeLM
+	WlV+6gONjdfQcdzP5Mv75z//JVLNDpdyzen8RRb8Fp+EIOK9OY5wrAE1/BVkfeWDOpAUGRWkBAM
+	YsoE2RfvlzdMRvezK/N54JX9VXAO+a9rEeYRFjVX2LZSHv1t0ZeLmiFuUdld6azz7eDSbiWMtMf
+	B4dXo3dxRy42CCtuZmfzNGrZEHL/01LLuFqgAb1ZztbiCNKqAdOcpz2tBA9qmqejXzYTnIrctgg
+	DKSwyclvNG2n2fGLYX1vkwcZOQF49HE6z1sH93Ec0sJ2rW69a97cKQ==
+X-Google-Smtp-Source: AGHT+IH0shxMDrYSFcYgFsaXsSZ9dGimeYXwNI38c1YfGi4Au1JKWd6AbU69jfYhfTtey+OesrvxBQ==
+X-Received: by 2002:a05:6000:4211:b0:39c:1efb:ec9a with SMTP id ffacd0b85a97d-39c1efbee21mr11054386f8f.6.1743674451013;
+        Thu, 03 Apr 2025 03:00:51 -0700 (PDT)
+Received: from [192.168.0.14] ([79.115.63.146])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c3009674bsm1341602f8f.3.2025.04.03.03.00.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Apr 2025 03:00:50 -0700 (PDT)
+Message-ID: <e1d8108f-50c1-4924-bb68-53436728e701@linaro.org>
+Date: Thu, 3 Apr 2025 11:00:46 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -25,111 +66,51 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] riscv: KGDB: Do not inline arch_kgdb_breakpoint()
+Subject: Re: [PATCH v2 14/19] mtd: spinand: Use more specific naming for the
+ (quad) program load op
+To: Miquel Raynal <miquel.raynal@bootlin.com>,
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
+ Santhosh Kumar K <s-k6@ti.com>
+Cc: Pratyush Yadav <pratyush@kernel.org>, Michael Walle <michael@walle.cc>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ Steam Lin <stlin2@winbond.com>, linux-mtd@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20250403-winbond-6-14-rc1-octal-v2-0-7846bd88fe83@bootlin.com>
+ <20250403-winbond-6-14-rc1-octal-v2-14-7846bd88fe83@bootlin.com>
 Content-Language: en-US
-To: WangYuli <wangyuli@uniontech.com>, paul.walmsley@sifive.com,
- palmer@dabbelt.com, aou@eecs.berkeley.edu
-Cc: chenhuacai@kernel.org, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, vincent.chen@sifive.com,
- palmerdabbelt@google.com, zhanjun@uniontech.com, niecheng1@uniontech.com,
- guanwentao@uniontech.com, Huacai Chen <chenhuacai@loongson.cn>
-References: <330B3BAFC6FDB763+20250402074247.64483-1-wangyuli@uniontech.com>
-From: Alexandre Ghiti <alex@ghiti.fr>
-In-Reply-To: <330B3BAFC6FDB763+20250402074247.64483-1-wangyuli@uniontech.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+In-Reply-To: <20250403-winbond-6-14-rc1-octal-v2-14-7846bd88fe83@bootlin.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddukeekvdeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthejredttddvjeenucfhrhhomheptehlvgigrghnughrvgcuifhhihhtihcuoegrlhgvgiesghhhihhtihdrfhhrqeenucggtffrrghtthgvrhhnpefhhfdutdevgeelgeegfeeltdduhfduledvteduhfegffffiefggfektefhjedujeenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppedvtddtudemkeeiudemfeefkedvmegvfheltdemjegtuddvmehffhdtieemugefgegrmegufegvleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvtddtudemkeeiudemfeefkedvmegvfheltdemjegtuddvmehffhdtieemugefgegrmegufegvledphhgvlhhopeglkffrggeimedvtddtudemkeeiudemfeefkedvmegvfheltdemjegtuddvmehffhdtieemugefgegrmegufegvlegnpdhmrghilhhfrhhomheprghlvgigsehghhhithhirdhfrhdpnhgspghrtghpthhtohepudefpdhrtghpthhtohepfigrnhhghihulhhisehunhhiohhnthgvtghhrdgtohhmpdhrtghpthhtohepphgruhhlrdifrghlmhhslhgvhiesshhifhhivhgvrdgtohhmpdhrtghpt
- hhtohepphgrlhhmvghrsegurggssggvlhhtrdgtohhmpdhrtghpthhtoheprghouhesvggvtghsrdgsvghrkhgvlhgvhidrvgguuhdprhgtphhtthhopegthhgvnhhhuhgrtggriheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqrhhishgtvheslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehvihhntggvnhhtrdgthhgvnhesshhifhhivhgvrdgtohhm
-X-GND-Sasl: alex@ghiti.fr
-
-Hi WangYuli,
-
-On 02/04/2025 09:42, WangYuli wrote:
-> The arch_kgdb_breakpoint() function defines the kgdb_compiled_break
-> symbol using inline assembly.
->
-> There's a potential issue where the compiler might inline
-> arch_kgdb_breakpoint(), which would then define the kgdb_breakinst
 
 
-I guess you meant kgdb_compiled_break.
+
+On 4/3/25 10:19 AM, Miquel Raynal wrote:
+> SPI operations have been initially described through macros implicitly
+> implying the use of a single SPI SDR bus. Macros for supporting dual and
+> quad I/O transfers have been added on top, generally inspired by vendor
+> naming, followed by DTR operations. Soon we might see octal
+> and even octal DTR operations as well (including the opcode byte).
+> 
+> Let's clarify what the macro really means by describing the expected bus
+> topology in the (quad) program load macro name.
+> 
+> While at modifying it, better add the missing_ OP suffix to align with
+> all the other macros of the same kind.
+> 
+> Acked-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+> Reviewed-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+
+I don't remember giving R-b on this, not seeing it on ml as well, so
+please drop it when applying.
+
+I used Acked-by and not R-b because I wanted to signify that I'm OK with
+the general idea of the patches and that I'm OK with them landing, but I
+may not have reviewed it as thoroughly as if a Reviewed-by: was
+provided. Please use only the tags that I sent. And if by mistake I sent
+both A-b and R-b, use just the latter. Thanks!
+
+ta
 
 
-> symbol multiple times, leading to fail to link vmlinux.o.
-> This isn't merely a potential compilation problem. The intent here
-> is to determine the global symbol address of kgdb_compiled_break,
-> and if this function is inlined multiple times, it would logically
-> be a grave error.
->
-> Link: https://lore.kernel.org/all/4b4187c1-77e5-44b7-885f-d6826723dd9a@sifive.com/
-> Fixes: fe89bd2be866 ("riscv: Add KGDB support")
-> Co-developed-by: Huacai Chen <chenhuacai@loongson.cn>
-> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> Signed-off-by: WangYuli <wangyuli@uniontech.com>
-> ---
-> Changelog:
->   *v1->v2: Add the missing __ASSEMBLY__ check and substitute
-> ".option rvc/norvc" with ".option push/pop".
-> ---
->   arch/riscv/include/asm/kgdb.h | 9 +--------
->   arch/riscv/kernel/kgdb.c      | 8 ++++++++
->   2 files changed, 9 insertions(+), 8 deletions(-)
->
-> diff --git a/arch/riscv/include/asm/kgdb.h b/arch/riscv/include/asm/kgdb.h
-> index 46677daf708b..d9f6a8fc387f 100644
-> --- a/arch/riscv/include/asm/kgdb.h
-> +++ b/arch/riscv/include/asm/kgdb.h
-> @@ -19,16 +19,9 @@
->   
->   #ifndef	__ASSEMBLY__
->   
-> +extern void arch_kgdb_breakpoint(void);
 
-
-The "extern" is not needed here.
-
-
->   extern unsigned long kgdb_compiled_break;
->   
-> -static inline void arch_kgdb_breakpoint(void)
-> -{
-> -	asm(".global kgdb_compiled_break\n"
-> -	    ".option norvc\n"
-> -	    "kgdb_compiled_break: ebreak\n"
-> -	    ".option rvc\n");
-> -}
-> -
->   #endif /* !__ASSEMBLY__ */
->   
->   #define DBG_REG_ZERO "zero"
-> diff --git a/arch/riscv/kernel/kgdb.c b/arch/riscv/kernel/kgdb.c
-> index 2e0266ae6bd7..5873d3970360 100644
-> --- a/arch/riscv/kernel/kgdb.c
-> +++ b/arch/riscv/kernel/kgdb.c
-> @@ -254,6 +254,14 @@ void kgdb_arch_set_pc(struct pt_regs *regs, unsigned long pc)
->   	regs->epc = pc;
->   }
->   
-> +noinline void arch_kgdb_breakpoint(void)
-> +{
-> +	asm(".global kgdb_compiled_break\n"
-> +	    ".option push\n"
-
-
-Here you forgot .option norvc. But this fix as mentioned by Samuel 
-should be in a separate patch.
-
-Thanks,
-
-Alex
-
-
-> +	    "kgdb_compiled_break: ebreak\n"
-> +	    ".option pop\n");
-> +}
-> +
->   void kgdb_arch_handle_qxfer_pkt(char *remcom_in_buffer,
->   				char *remcom_out_buffer)
->   {
