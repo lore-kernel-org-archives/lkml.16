@@ -1,339 +1,214 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2050.outbound.protection.outlook.com [40.107.223.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 068E924BBE9
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 12:21:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743682901; cv=none; b=HEAarZIiZb8rUu64Xe/LiwYDX32wNzWy5fU588Czhfxg7s8FkPbjAp4UT2OkNo3NHVvGItsNFVWIcVojsRAOLcw0//zn8yClvrDvRQH/l2Y7tAMhCS+xpjvl3+MUvjPQ+FRGp4uEYlC+on1nCeWbdZ2p9J0E+cJhPLWwDnfeeus=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743682901; c=relaxed/simple;
-	bh=F+Wjb2PAa2Zl8Fn/QXTMlBF4UDZm2GqA/wEyEtg/mLM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T4LoO51wx7daTcCAxaXe9gFxzzuJoZoKHr7jTbzK0M+BEwkR9f+cqY5j/fy4/jyIs+IF24g1+H+JtN4ML4ikwyrwm0ffTs3j7pYGhxbUj+ru6Jy9rWOfx01L2+lIbeK4NW35IRV5jR154hDbgYHND5eig2CBQuLehgC96gPnn5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ON6uxijy; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49BF11519A7;
+	Thu,  3 Apr 2025 12:22:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.50
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743682971; cv=fail; b=Haknt+Fs9D/NVxyqraJVuQSX9bhF38uBwb029S7Qjpq72w/nAcaEhs58BLbB661sRA2A/JV1RhsvPlCMJT9FXT/HdMgZyf8ap8ZCEShH1BckUmgu8wKovV5vlSv70lBaIozU/T0Lw9SUNI65M6/ZJ3b2pVFCKaLIlRAasXOPHQk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743682971; c=relaxed/simple;
+	bh=43NipuKDUcsa50yADPF3LerMpdzmdb+PTiilhpjqaqM=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=T5SDbyDJGfY4yp8WTj8R19paqgVWedvQ0EumT4L4ZkUfV5ogWxOj+fHQ/ZDbuuIoOKYAOSpRyMftImgo0VeI+298JbKNKDKuGzMVyWxpSyho0qCocBzzHbx1kTVbDzYk9HqRC2uwTZtZkAuLWXtdVNucd/e5Pnl6kVtn4VGDjtM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=yw8eayrw; arc=fail smtp.client-ip=40.107.223.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ON6uxijy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743682897;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=q8Gfcm+NFwIGjnVvm29jTb/bNX3kKJk81JDFkpl4GLw=;
-	b=ON6uxijykNWT236LkHc+NYrHvhuU+KHAXO0a+CxW+xLl6G6yqkjSXmVyZgF12oyrjIGKEq
-	KyHuKYUPbS9y4A26R+jw9OFnqSICIWAUBIE0imw/y6QQukfZ9IbaUWcbrvbCNl4gB9N5r6
-	vEPXuS78HTEwEqQV5Da+6KNpYJf5+84=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-688-TLSF4ewPOiSfwuVIips2WA-1; Thu, 03 Apr 2025 08:21:36 -0400
-X-MC-Unique: TLSF4ewPOiSfwuVIips2WA-1
-X-Mimecast-MFC-AGG-ID: TLSF4ewPOiSfwuVIips2WA_1743682895
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3912fe32a30so416584f8f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 05:21:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743682895; x=1744287695;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=q8Gfcm+NFwIGjnVvm29jTb/bNX3kKJk81JDFkpl4GLw=;
-        b=j4+Xfo6Fm8aTYHvdRmyYxckTQaWEfeRgzJK+WpvshIy+a1ZmoeTuZwsS5SBRXmGCpx
-         UMS1thii6kgLiiNIG+5ZKBlZuGHnQ1lIvbT+D0kMc+xoopTULZ4ihINEph0oBnAtSWFe
-         O0Timz+Cf1akOIcK/lwu4c5kwrJXOLSnIh/S9miyAjYpnD3Hv5Fcgf7gmmkUDzQvTtN4
-         vmOTGVzuX8CmH3j8F1P+UMfUirw+H56v+zCHmPf13zF6g3vVqhsG62JYC8g9M6HZK30J
-         M8Ve5CSastLpgwPYzgdR04ZA5bcgWA/xJd2qfRdAhrCnXGXFFaAcrR0eHqERHeb1PlEJ
-         dwTg==
-X-Forwarded-Encrypted: i=1; AJvYcCXuaBlFPRehG9+6yIGpB1tSsRaCNDfkC5SK49LLBysx4GrnLsmOwXybdFq7b8uKezcQJyerhTB1PFSC9hQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxOaXOib2VMGiOkN3iyEWVkgmD8K+cfUlDKh5aWPazTHgvKzjSg
-	lsyXkj8hmaohzulBF2yGZNLTBIujfSVbQq3oDtso1cyCybxdxNO1kyj5am3lcRPc2JVueE8+O99
-	JoxuUpLLPSEI/WG3R48Mlwsad5/wgXzBXXS/+ENjxuntFsFfGb6RPnt+R5PDavg==
-X-Gm-Gg: ASbGncuoTH89Ba58QkS56MOPZrn+RD8SB1q5Sb+ksxtWUlLSwTdmnz6De2sfG06GaL/
-	MStimmHffBqQtOYEXTtsRkapL2LQvD8xlKvQzHoKbd1sOWkUtOtgYegjV9h+XjVxZ198CFL7gY0
-	2kyPGlDfJYAJuopuUjTrmH06Tdzgl62gDm180+npD/nXZ/coOCjdWZDDxLCa6ztrx+VC/8dNZDk
-	ulHWuHzjpwXzobvKQsdUFUcgz1HU6kLyno3BGpxVToupRpW8Zw481ytIT+NGSSUAc5Oqv+hSDzA
-	C5FwuG+yEg==
-X-Received: by 2002:a05:6000:250e:b0:391:39fb:59c8 with SMTP id ffacd0b85a97d-39c30338008mr1939093f8f.25.1743682895233;
-        Thu, 03 Apr 2025 05:21:35 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFTJM52JwYnz0GT0/7IiYLnpZxDljYAqbP88387Bbsg8vdisAF7hoQrduxAOZGx+jEzKBRbmA==
-X-Received: by 2002:a05:6000:250e:b0:391:39fb:59c8 with SMTP id ffacd0b85a97d-39c30338008mr1939068f8f.25.1743682894821;
-        Thu, 03 Apr 2025 05:21:34 -0700 (PDT)
-Received: from redhat.com ([2a0d:6fc0:1517:1000:ea83:8e5f:3302:3575])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec163156asm20675695e9.7.2025.04.03.05.21.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Apr 2025 05:21:34 -0700 (PDT)
-Date: Thu, 3 Apr 2025 08:21:31 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Stefan Hajnoczi <stefanha@redhat.com>
-Cc: Alexander Graf <graf@amazon.com>, netdev@vger.kernel.org,
-	Stefano Garzarella <sgarzare@redhat.com>,
-	linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
-	kvm@vger.kernel.org, Asias He <asias@redhat.com>,
-	Paolo Abeni <pabeni@redhat.com>, Jakub Kicinski <kuba@kernel.org>,
-	Eric Dumazet <edumazet@google.com>,
-	"David S . Miller" <davem@davemloft.net>, nh-open-source@amazon.com
-Subject: Re: [PATCH v2] vsock/virtio: Remove queued_replies pushback logic
-Message-ID: <20250403073111-mutt-send-email-mst@kernel.org>
-References: <20250401201349.23867-1-graf@amazon.com>
- <20250402161424.GA305204@fedora>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="yw8eayrw"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=rFTHJssTHY5DWOAbaXqHaI+pmMDHeWsVYrJcoRDZVmE/4+QTv3V5Ku3+HgccSduCjMwBIz+OTTRWtPI3JZ59f0VoHR53rk9P8sAUwL5419r6M1RxRt5TUTUfR8INTakOvT4sifuIRvqPOpRuwNcN1iwqDpMUTEtjZfghvRiKq1ilG4dEjBruQ9wZ4MXEtGGIj9QAk7Glh6fxOwRqEJ6x6dXdNX8piGiBWfwbjxOcTEEG8a7gEos3lFqB4Opzylr2QpynfUX4yXItaXYQOXLenj3Qkaj3wH7MzUQym5SOkdDVc+4CfEPtb+/iBLCULquiGPhluTjEA6KrLk7OBqpNlA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=OltYQnaWPyrlEeNo+t0F7yYo4D31m3Eur4jIWsOD2V0=;
+ b=osbUjBoZ68sgFI6CHgDXvTLIgOVuktced+6ngcl89UyztXcNZryLyeu3h+qlrmTddrfKqPnt3QM2o2YUv8SIFfJ3Co8W7DwfRUmLVXoIYLNc1OSuasnTMkqIS1XRjFIHvZE1rtf/isnzF1C0jMiOekAY8cPzWJqhMVzxBR+bSE2gClPh5ptA8sDsgxIqkLcP94b8WfdENWQDqc1aY9wUUEA5LAirhC3oriSfYA8wiMZunJ6pNBEejaGIVWNtxP6KTZmCRZ+taqnBY8KZGL5eRkvYZa7Q41yz0U92+KPaJIt/3hZBotuiIVH4e/wcO19sGfhXFNXD4tuwYPmhF+LKjw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OltYQnaWPyrlEeNo+t0F7yYo4D31m3Eur4jIWsOD2V0=;
+ b=yw8eayrwZpTKUXriN1PkX5KLpAL94mt23N+57DXoLxFvBNkvfd0Cp8xPuhxSvZ/ekaE5xe+eZOWbI+PW+aAUUs8Vh1gpiEGxTOhEnr9h1U2/5h+PyqvzJL8lwinDdBJQvIaYPlK3DWaPxMLLpMFp9AIx6rHIZht8Z/gwbsMPloI=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from SJ0PR12MB5673.namprd12.prod.outlook.com (2603:10b6:a03:42b::13)
+ by DS0PR12MB6464.namprd12.prod.outlook.com (2603:10b6:8:c4::5) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8534.54; Thu, 3 Apr 2025 12:22:47 +0000
+Received: from SJ0PR12MB5673.namprd12.prod.outlook.com
+ ([fe80::ec7a:dd71:9d6c:3062]) by SJ0PR12MB5673.namprd12.prod.outlook.com
+ ([fe80::ec7a:dd71:9d6c:3062%3]) with mapi id 15.20.8534.045; Thu, 3 Apr 2025
+ 12:22:47 +0000
+Message-ID: <28343002-1a64-4409-b6c5-f9764705d939@amd.com>
+Date: Thu, 3 Apr 2025 14:22:41 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] drm/nouveau: Prevent signalled fences in pending list
+To: Danilo Krummrich <dakr@kernel.org>, phasta@kernel.org
+Cc: Lyude Paul <lyude@redhat.com>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Sumit Semwal <sumit.semwal@linaro.org>,
+ dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+ linaro-mm-sig@lists.linaro.org, stable@vger.kernel.org
+References: <20250403101353.42880-2-phasta@kernel.org>
+ <84b0db2de7a26aab00778bcaca15a0dffaa9c32a.camel@mailbox.org>
+ <Z-5iK-mIYPIhanX-@pollux>
+Content-Language: en-US
+From: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+In-Reply-To: <Z-5iK-mIYPIhanX-@pollux>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: FR2P281CA0052.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:93::15) To SJ0PR12MB5673.namprd12.prod.outlook.com
+ (2603:10b6:a03:42b::13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250402161424.GA305204@fedora>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ0PR12MB5673:EE_|DS0PR12MB6464:EE_
+X-MS-Office365-Filtering-Correlation-Id: 17c99835-90c0-43aa-94ed-08dd72aa3e69
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?L2dQanQ2bm1WSVZCdVJEMkE3c1BVdTNhdllOMzlJcTlJSy8wVm1uYnQxRk9P?=
+ =?utf-8?B?cUhGKzlJT1pMYTFaTHN0c0F3UkovYVJwL0FUYmpnbm80WkRpNW4xWWNHWFZv?=
+ =?utf-8?B?VUdhbUNhcURMRmNkVVJmNWNRbUVIdUFkTUZIU3A1Si93aUtoNlBoQndaQVlO?=
+ =?utf-8?B?aTdlcVdvbE9ZSmYxQWZFOUo2cnJBL0ZGR2k2TUF3SDdIenhPL1p3QWhQQk1J?=
+ =?utf-8?B?VXJHT2doWE84UFFmYk9JcVFnMkozbG91T1JZQkJZR081NkpvcS92WDNUL2RG?=
+ =?utf-8?B?Q013ZW1DZmNXbmxkcWZKWmgvbEJmazRqMXU5MDVtZEQ1Vll5ZXdtNEJNczNu?=
+ =?utf-8?B?ZjhoUjRWU3A4anVBaUN5NERlYlc1RE5WV2ZCWHBEYW5uV1JGSnk1Z0pMQ1Aw?=
+ =?utf-8?B?RzdTMVl3dXZtT3c4Z3RIN2J2ZSsvZVJJT2FaMlE2TndYZlFDKy9qbmtUckFx?=
+ =?utf-8?B?cUR0aS9IZzJvS0lnVVRDcjRBWSswS0JLMUJGTVRnL0IySk9YSjF5bmZiWmpl?=
+ =?utf-8?B?bFc4SUhqcXR6ZnhZeldvNk5Jdm1CcGh5cDMxODRYUW0zMUFtQmJvYnBTVjFF?=
+ =?utf-8?B?QjVFandHYnZJZStWek81d1JjbTJZN0xyREpYVnc2TG1ZR282WWw5bXQwYTZV?=
+ =?utf-8?B?cFN6dHE3UFhaSlB1RVVVaFZFNks5a29XY3ZiNmJDb09kbmx2VEcxbVdNTzBo?=
+ =?utf-8?B?d2ZPbUpZdjJBaHJjVW5oZTZZK1p5OUt2dnJKcjNraTB0KzdISzVjd05GeVFI?=
+ =?utf-8?B?eCtWR0xqMjd3ajE2Tzk5VFEvODFxa1prYnIrOGM5QXBvQXVselREZURHUWVO?=
+ =?utf-8?B?MVpxcCtQQ2x5bDliM21URFM4M1BwU29rRDBEck81ajZvNzJWSjlyNkM2bUlz?=
+ =?utf-8?B?eUJ2UWEzNEo1UzhtZzNtS2QrZmdGa1c0UWVKeG9uOUlzNXpidDhaQTVYWStQ?=
+ =?utf-8?B?QU1XOEQ2NHFhOUJKUTNhem8ybTRpcHF0KytxajdYTURYbS9CNEp1MXVZR3BU?=
+ =?utf-8?B?NUEwOENXZkxPWk5mVHd0dmRKRmVZQnpQQmlYZlVBRUMzN3p1WHFiRHhNT1BE?=
+ =?utf-8?B?R1VRczZMWjkzL0FXL2lTQkV0Y2swVXlBS1cvNHBaSXJya0lDeHZ2c29CQWRW?=
+ =?utf-8?B?WXRQcVpLUVB6L0JPeHN3ZmRNaER1eEZZN0dET21iZU5GczdpK0E5Kzg0QmZk?=
+ =?utf-8?B?K0FNM29ONldCbEgrQUN6WHdReHFva1MxcjVnc05ReDA5Wm9IT3pXZ053YkE4?=
+ =?utf-8?B?a3lYZlN4RWJSMTYrdEdvYllGQXZEeUhPWXQrNzU1QWxsNEdSTUVwTDhMczgz?=
+ =?utf-8?B?TFJtenBTTWErZ2FNbmc0MFNNczNONWhFQ3VIaE5VVjk2RDFKY3NyQXpPZlNi?=
+ =?utf-8?B?UkVCK2FJQ2pJOHJ3NnVQUjQ3a1h6dUNKSHFkS2lZNjZkTjBPT0JEZHpxNUgz?=
+ =?utf-8?B?WjRKZE1saWRkN3c2SlJQMzBPdlNvWEdZMDRzL25nK1ZXQXVSZ09QWERZK1VY?=
+ =?utf-8?B?eC85blRCU2JkRnpTekhRZWNqcDJSd1pjbWIvWnlJS1Jmcm1mWFhGQmxSb2xZ?=
+ =?utf-8?B?THBISjVGVmZlSk9keTZOU3dIU0ZDLzdUMzdwTjEwZHNETmN1eW9UKzhHTVpY?=
+ =?utf-8?B?UjgyTCt3a1dMdVlTbGJvRmdYcjBYT3IwZzFrc3BqYVNOempWRlY4MTVCL3JM?=
+ =?utf-8?B?VHJXM3NWc0FtOHU1NDhMeU00amx6dmx1V2x6VUlwM1V4eEtZMXl2VnhMUFhk?=
+ =?utf-8?B?MlRSNWdZbklnRWFrb1AwckVSQThHUnNuRTlEb1U2ZkNqc0dBVVk0OENBN2h0?=
+ =?utf-8?B?NXFQbnJQZXo1dWV6b3RDR1FBM1F5blZMVHA5bWJyWTAvYXVoNUNoUUpQNWQ1?=
+ =?utf-8?Q?tJlLWK/s5f3Fu?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR12MB5673.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?WkhiSkJISVlGRnVWK29NdFJ0aFFydUI5bC9ka0ZhV0p4TEc2U0kybmxXaUJZ?=
+ =?utf-8?B?ejhvVmhCWVVtS0FWcElHR0NLbXpWbVZBZ25CUGlrL2RuNWhubVNHYTdiVGw3?=
+ =?utf-8?B?dittVG9tQVBvN2dVNHdZelBpQ3ZNV1NFcFZ0WWlxN1Q4UnBDWk44a2dTR2lZ?=
+ =?utf-8?B?MmpHTHJBUm1USEVBTS8yMm5xNE13c2VHUjNBUXRqS3NiVHMrSzBDWlNjdkpr?=
+ =?utf-8?B?UmgrUkdUd2I0R0RPeVhIajA2MmdtRGdKQWREYU16ak9OWDlHT1NEK1RabGlW?=
+ =?utf-8?B?TnRubjNDcGF0dkJBRnpjTXoxUW1pOWJYNTA4aytQY2UxVFR2QklWcmMyL0tY?=
+ =?utf-8?B?RnlRdG9iTTNZR0RMbjJkWS9tazFaV2JyTkZoczlQZGZDWUh3eGtSOXBvMGxj?=
+ =?utf-8?B?NFQwTlRYS211b1BybStnalN2M2ZTTS9uMDN2ZSswT2NUVFRqUEFBcTFWclp5?=
+ =?utf-8?B?bk5td3NQQzB2YUlneitFZmZyMzZKS1F6SUFyQTJ6clBTaXZyL0lVaEY1RHZw?=
+ =?utf-8?B?SFA4Y1licUdOWEZaQmpGTkd5ZFl6cXk1YldzZ2R5dmJ6T0lPRnU5aHBPQXhV?=
+ =?utf-8?B?cFdGTUU1U1VJL3hyLzIvZlNKUDljNkdKNTB5UmhQdnNuMjRnSFNCTi9vUjEz?=
+ =?utf-8?B?QWZEWXBPYmRCU0ltSFh0Qm5Pcnp5U1hpbkxDSW1YRks5eS9WMkdZMWFrTDdr?=
+ =?utf-8?B?SEp6VkZuRDE3M3RPcjg1Qk8zV2xhekFZRjNGRm84N0gyMnhyS2FPL0l6Z3BX?=
+ =?utf-8?B?OGZwRVVXcmZOb2lBTVUrVjA0b1ZUblU0N3ZsZkorOTBITWJlcmVHSHlHdkhs?=
+ =?utf-8?B?N0xGWTBPZlNQOXVUQ3NxSjAvZUlNUW1acnp4U0IrS0xDUXYzb3lVWjZJQlRk?=
+ =?utf-8?B?cG51NXUwZTcxdWdSWC8waHZUYVpDaktxNEVYNGxGUlM0eHdOS0I1THlycmpX?=
+ =?utf-8?B?MCtiY2k2NE5Fa1BQOUNyY0xUUjJDd0lwOGZSdDhIZUxVSU8vZkRLYml3aVQy?=
+ =?utf-8?B?d21ZYkFPaHV4SWk4QXA4bWpZYkpISDZKMzY1YXRnT3UxZGlOSW9BcExvQU14?=
+ =?utf-8?B?bG4vK25HMlhKa0p2TWEyUmxsK1ByWEo2ZUJsM0x1UGw3bk11ZXZjVk5vWE1I?=
+ =?utf-8?B?OVZ1MTVJUDVBLzNvdnZFNnVlcE81ZVlObFVSVHh4emd5YlhaN01HbDR4Ly8x?=
+ =?utf-8?B?c1hseTI4UjkzM3hpOHlSdUNkZ0NmNVZSeTk0aVNKdGljUWFqRHZadm9Pbndq?=
+ =?utf-8?B?eEh0ZUw5aXdzd2szRk1JRURsSUQ4UDBQSUlRZndsU0NpbWhvb2pyaVNvWU1P?=
+ =?utf-8?B?SndYSTQ5NURETWNLMmZpcFAwSnp5K2JKcFJrNjVkWG5yT04rakFsaU5xT3NE?=
+ =?utf-8?B?Qmt5eHoxWWtGQ1FxOHRuUS9lWDBZcmlIRTY5SUlXL29VUFVIVUMxc3dncy9Z?=
+ =?utf-8?B?UHRhSFh4bzN5RTU4ZkVjdTVRd1RML2JPRFE5Z2hTeUJueWxnV3NBVVNjc3RR?=
+ =?utf-8?B?cjhQSXZxN0E4a1NQMjhadmtSRENPeThrQ0RKaG1sb0R5akl4d2dtUURxemFn?=
+ =?utf-8?B?YXh0a1AzOTA4TUNiblhHVm1RUFhFWU9LVWNJdjVjUUxsdHQ0cXh4QnNCdElL?=
+ =?utf-8?B?akYvOUhrOGVjYVBnMms0empoRXEvYk5JUjZrMmV3OVhLMTlZbEZFOTl5VWhE?=
+ =?utf-8?B?KzdralMxVGdqTDBiYWdDZ2lYRjl5OHdERFVvdWNrZUJDVDRWcEo1bHo4ZUZP?=
+ =?utf-8?B?TUlWNHRibGtkWHJtK05UWHRlM2NaaVpFNlZEM3NFRnNFVkt6SjZOU2hRWE9k?=
+ =?utf-8?B?RklraXVxSWpPU0V2UTVqT1crRUhRSmZwTUVzSU9venpWQVg4MGcrY2R2NHdM?=
+ =?utf-8?B?T20ya2ZiaGh0eDduaDc1QXR0NHJSbEU3Wmg0RldHMGtFMDVkcHBJQlZtKzhR?=
+ =?utf-8?B?ZStEd2VoZkZLbUw5K29ucWdZcVpVMDZTM0FLT1IzelRLcWlGVk9XUEVyamlR?=
+ =?utf-8?B?YmpiUDVPSU54bVhBQ1M1a0haM1o0eDFBN1dDY1dGM2I0UFNoNU4vcDBjNHNK?=
+ =?utf-8?B?N3VEQlkyQVNtTTZ6azk0MURuQmhJdlR6a3kzR25aOXZBdXVxTVM0TU5aMW5B?=
+ =?utf-8?Q?kSky2d6z2l3mYzhXmvRnmQcJP?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 17c99835-90c0-43aa-94ed-08dd72aa3e69
+X-MS-Exchange-CrossTenant-AuthSource: SJ0PR12MB5673.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Apr 2025 12:22:47.4809
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: HnifgguqHh/agpQVX9XH7GRLe0fbWL3VpgzK1fH5CWUPxxy7e4GoJFFjmDUpDNNJ
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB6464
 
-On Wed, Apr 02, 2025 at 12:14:24PM -0400, Stefan Hajnoczi wrote:
-> On Tue, Apr 01, 2025 at 08:13:49PM +0000, Alexander Graf wrote:
-> > Ever since the introduction of the virtio vsock driver, it included
-> > pushback logic that blocks it from taking any new RX packets until the
-> > TX queue backlog becomes shallower than the virtqueue size.
-> > 
-> > This logic works fine when you connect a user space application on the
-> > hypervisor with a virtio-vsock target, because the guest will stop
-> > receiving data until the host pulled all outstanding data from the VM.
-> > 
-> > With Nitro Enclaves however, we connect 2 VMs directly via vsock:
-> > 
-> >   Parent      Enclave
-> > 
-> >     RX -------- TX
-> >     TX -------- RX
-> > 
-> > This means we now have 2 virtio-vsock backends that both have the pushback
-> > logic. If the parent's TX queue runs full at the same time as the
-> > Enclave's, both virtio-vsock drivers fall into the pushback path and
-> > no longer accept RX traffic. However, that RX traffic is TX traffic on
-> > the other side which blocks that driver from making any forward
-> > progress. We're now in a deadlock.
-> > 
-> > To resolve this, let's remove that pushback logic altogether and rely on
-> > higher levels (like credits) to ensure we do not consume unbounded
-> > memory.
-> 
-> The reason for queued_replies is that rx packet processing may emit tx
-> packets. Therefore tx virtqueue space is required in order to process
-> the rx virtqueue.
-> 
-> queued_replies puts a bound on the amount of tx packets that can be
-> queued in memory so the other side cannot consume unlimited memory. Once
-> that bound has been reached, rx processing stops until the other side
-> frees up tx virtqueue space.
-> 
-> It's been a while since I looked at this problem, so I don't have a
-> solution ready. In fact, last time I thought about it I wondered if the
-> design of virtio-vsock fundamentally suffers from deadlocks.
-> 
-> I don't think removing queued_replies is possible without a replacement
-> for the bounded memory and virtqueue exhaustion issue though. Credits
-> are not a solution - they are about socket buffer space, not about
-> virtqueue space, which includes control packets that are not accounted
-> by socket buffer space.
+Am 03.04.25 um 12:25 schrieb Danilo Krummrich:
+> On Thu, Apr 03, 2025 at 12:17:29PM +0200, Philipp Stanner wrote:
+>> On Thu, 2025-04-03 at 12:13 +0200, Philipp Stanner wrote:
+>>> -static int
+>>> -nouveau_fence_signal(struct nouveau_fence *fence)
+>>> +static void
+>>> +nouveau_fence_cleanup_cb(struct dma_fence *dfence, struct
+>>> dma_fence_cb *cb)
+>>>  {
+>>> -	int drop = 0;
+>>> +	struct nouveau_fence_chan *fctx;
+>>> +	struct nouveau_fence *fence;
+>>> +
+>>> +	fence = container_of(dfence, struct nouveau_fence, base);
+>>> +	fctx = nouveau_fctx(fence);
+>>>  
+>>> -	dma_fence_signal_locked(&fence->base);
+>>>  	list_del(&fence->head);
+>>>  	rcu_assign_pointer(fence->channel, NULL);
+>>>  
+>>>  	if (test_bit(DMA_FENCE_FLAG_USER_BITS, &fence->base.flags))
+>>> {
+>>> -		struct nouveau_fence_chan *fctx =
+>>> nouveau_fctx(fence);
+>>> -
+>>>  		if (!--fctx->notify_ref)
+>>> -			drop = 1;
+>>> +			nvif_event_block(&fctx->event);
+>>>  	}
+>>>  
+>>>  	dma_fence_put(&fence->base);
+>> What I realized while coding this v2 is that we might want to think
+>> about whether we really want the dma_fence_put() in the fence callback?
+>>
+>> It should work fine, since it's exactly identical to the previous
+>> code's behavior – but effectively it means that the driver's reference
+>> will be dropped whenever it signals that fence.
+> Not quite, it's the reference of the fence context's pending list.
+>
+> When the fence is emitted, dma_fence_init() is called, which initializes the
+> reference count to 1. Subsequently, another reference is taken, when the fence
+> is added to the pending list. Once the fence is signaled and hence removed from
+> the pending list, we can (and have to) drop this reference.
 
+The general idea is that the caller must hold the reference until the signaling is completed.
 
-Hmm.
-Actually, let's think which packets require a response.
+So for signaling from the interrupt handler it means that you need to call dma_fence_put() for the list reference *after* you called dma_fence_signal_locked().
 
-VIRTIO_VSOCK_OP_REQUEST
-VIRTIO_VSOCK_OP_SHUTDOWN
-VIRTIO_VSOCK_OP_CREDIT_REQUEST
+For signaling from the .enable_signaling or .signaled callback you need to remove the fence from the linked list and call dma_fence_put() *before* you return (because the caller is holding the potential last reference).
 
+That's why I'm pretty sure that the approach with installing the callback won't work. As far as I know no other DMA fence implementation is doing that.
 
-the response to these always reports a state of an existing socket.
-and, only one type of response is relevant for each socket.
-
-So here's my suggestion:
-stop queueing replies on the vsock device, instead,
-simply store the response on the socket, and create a list of sockets
-that have replies to be transmitted
-
-
-WDYT?
-
-
-> > 
-> > RX and TX queues share the same work queue. To prevent starvation of TX
-> > by an RX flood and vice versa now that the pushback logic is gone, let's
-> > deliberately reschedule RX and TX work after a fixed threshold (256) of
-> > packets to process.
-> > 
-> > Fixes: 0ea9e1d3a9e3 ("VSOCK: Introduce virtio_transport.ko")
-> > Signed-off-by: Alexander Graf <graf@amazon.com>
-> > ---
-> >  net/vmw_vsock/virtio_transport.c | 70 +++++++++-----------------------
-> >  1 file changed, 19 insertions(+), 51 deletions(-)
-> > 
-> > diff --git a/net/vmw_vsock/virtio_transport.c b/net/vmw_vsock/virtio_transport.c
-> > index f0e48e6911fc..54030c729767 100644
-> > --- a/net/vmw_vsock/virtio_transport.c
-> > +++ b/net/vmw_vsock/virtio_transport.c
-> > @@ -26,6 +26,12 @@ static struct virtio_vsock __rcu *the_virtio_vsock;
-> >  static DEFINE_MUTEX(the_virtio_vsock_mutex); /* protects the_virtio_vsock */
-> >  static struct virtio_transport virtio_transport; /* forward declaration */
-> >  
-> > +/*
-> > + * Max number of RX packets transferred before requeueing so we do
-> > + * not starve TX traffic because they share the same work queue.
-> > + */
-> > +#define VSOCK_MAX_PKTS_PER_WORK 256
-> > +
-> >  struct virtio_vsock {
-> >  	struct virtio_device *vdev;
-> >  	struct virtqueue *vqs[VSOCK_VQ_MAX];
-> > @@ -44,8 +50,6 @@ struct virtio_vsock {
-> >  	struct work_struct send_pkt_work;
-> >  	struct sk_buff_head send_pkt_queue;
-> >  
-> > -	atomic_t queued_replies;
-> > -
-> >  	/* The following fields are protected by rx_lock.  vqs[VSOCK_VQ_RX]
-> >  	 * must be accessed with rx_lock held.
-> >  	 */
-> > @@ -158,7 +162,7 @@ virtio_transport_send_pkt_work(struct work_struct *work)
-> >  		container_of(work, struct virtio_vsock, send_pkt_work);
-> >  	struct virtqueue *vq;
-> >  	bool added = false;
-> > -	bool restart_rx = false;
-> > +	int pkts = 0;
-> >  
-> >  	mutex_lock(&vsock->tx_lock);
-> >  
-> > @@ -172,6 +176,12 @@ virtio_transport_send_pkt_work(struct work_struct *work)
-> >  		bool reply;
-> >  		int ret;
-> >  
-> > +		if (++pkts > VSOCK_MAX_PKTS_PER_WORK) {
-> > +			/* Allow other works on the same queue to run */
-> > +			queue_work(virtio_vsock_workqueue, work);
-> > +			break;
-> > +		}
-> > +
-> >  		skb = virtio_vsock_skb_dequeue(&vsock->send_pkt_queue);
-> >  		if (!skb)
-> >  			break;
-> > @@ -184,17 +194,6 @@ virtio_transport_send_pkt_work(struct work_struct *work)
-> >  			break;
-> >  		}
-> >  
-> > -		if (reply) {
-> > -			struct virtqueue *rx_vq = vsock->vqs[VSOCK_VQ_RX];
-> > -			int val;
-> > -
-> > -			val = atomic_dec_return(&vsock->queued_replies);
-> > -
-> > -			/* Do we now have resources to resume rx processing? */
-> > -			if (val + 1 == virtqueue_get_vring_size(rx_vq))
-> > -				restart_rx = true;
-> > -		}
-> > -
-> >  		added = true;
-> >  	}
-> >  
-> > @@ -203,9 +202,6 @@ virtio_transport_send_pkt_work(struct work_struct *work)
-> >  
-> >  out:
-> >  	mutex_unlock(&vsock->tx_lock);
-> > -
-> > -	if (restart_rx)
-> > -		queue_work(virtio_vsock_workqueue, &vsock->rx_work);
-> >  }
-> >  
-> >  /* Caller need to hold RCU for vsock.
-> > @@ -261,9 +257,6 @@ virtio_transport_send_pkt(struct sk_buff *skb)
-> >  	 */
-> >  	if (!skb_queue_empty_lockless(&vsock->send_pkt_queue) ||
-> >  	    virtio_transport_send_skb_fast_path(vsock, skb)) {
-> > -		if (virtio_vsock_skb_reply(skb))
-> > -			atomic_inc(&vsock->queued_replies);
-> > -
-> >  		virtio_vsock_skb_queue_tail(&vsock->send_pkt_queue, skb);
-> >  		queue_work(virtio_vsock_workqueue, &vsock->send_pkt_work);
-> >  	}
-> > @@ -277,7 +270,7 @@ static int
-> >  virtio_transport_cancel_pkt(struct vsock_sock *vsk)
-> >  {
-> >  	struct virtio_vsock *vsock;
-> > -	int cnt = 0, ret;
-> > +	int ret;
-> >  
-> >  	rcu_read_lock();
-> >  	vsock = rcu_dereference(the_virtio_vsock);
-> > @@ -286,17 +279,7 @@ virtio_transport_cancel_pkt(struct vsock_sock *vsk)
-> >  		goto out_rcu;
-> >  	}
-> >  
-> > -	cnt = virtio_transport_purge_skbs(vsk, &vsock->send_pkt_queue);
-> > -
-> > -	if (cnt) {
-> > -		struct virtqueue *rx_vq = vsock->vqs[VSOCK_VQ_RX];
-> > -		int new_cnt;
-> > -
-> > -		new_cnt = atomic_sub_return(cnt, &vsock->queued_replies);
-> > -		if (new_cnt + cnt >= virtqueue_get_vring_size(rx_vq) &&
-> > -		    new_cnt < virtqueue_get_vring_size(rx_vq))
-> > -			queue_work(virtio_vsock_workqueue, &vsock->rx_work);
-> > -	}
-> > +	virtio_transport_purge_skbs(vsk, &vsock->send_pkt_queue);
-> >  
-> >  	ret = 0;
-> >  
-> > @@ -367,18 +350,6 @@ static void virtio_transport_tx_work(struct work_struct *work)
-> >  		queue_work(virtio_vsock_workqueue, &vsock->send_pkt_work);
-> >  }
-> >  
-> > -/* Is there space left for replies to rx packets? */
-> > -static bool virtio_transport_more_replies(struct virtio_vsock *vsock)
-> > -{
-> > -	struct virtqueue *vq = vsock->vqs[VSOCK_VQ_RX];
-> > -	int val;
-> > -
-> > -	smp_rmb(); /* paired with atomic_inc() and atomic_dec_return() */
-> > -	val = atomic_read(&vsock->queued_replies);
-> > -
-> > -	return val < virtqueue_get_vring_size(vq);
-> > -}
-> > -
-> >  /* event_lock must be held */
-> >  static int virtio_vsock_event_fill_one(struct virtio_vsock *vsock,
-> >  				       struct virtio_vsock_event *event)
-> > @@ -613,6 +584,7 @@ static void virtio_transport_rx_work(struct work_struct *work)
-> >  	struct virtio_vsock *vsock =
-> >  		container_of(work, struct virtio_vsock, rx_work);
-> >  	struct virtqueue *vq;
-> > +	int pkts = 0;
-> >  
-> >  	vq = vsock->vqs[VSOCK_VQ_RX];
-> >  
-> > @@ -627,11 +599,9 @@ static void virtio_transport_rx_work(struct work_struct *work)
-> >  			struct sk_buff *skb;
-> >  			unsigned int len;
-> >  
-> > -			if (!virtio_transport_more_replies(vsock)) {
-> > -				/* Stop rx until the device processes already
-> > -				 * pending replies.  Leave rx virtqueue
-> > -				 * callbacks disabled.
-> > -				 */
-> > +			if (++pkts > VSOCK_MAX_PKTS_PER_WORK) {
-> > +				/* Allow other works on the same queue to run */
-> > +				queue_work(virtio_vsock_workqueue, work);
-> >  				goto out;
-> >  			}
-> >  
-> > @@ -675,8 +645,6 @@ static int virtio_vsock_vqs_init(struct virtio_vsock *vsock)
-> >  	vsock->rx_buf_max_nr = 0;
-> >  	mutex_unlock(&vsock->rx_lock);
-> >  
-> > -	atomic_set(&vsock->queued_replies, 0);
-> > -
-> >  	ret = virtio_find_vqs(vdev, VSOCK_VQ_MAX, vsock->vqs, vqs_info, NULL);
-> >  	if (ret < 0)
-> >  		return ret;
-> > -- 
-> > 2.47.1
-> > 
-
-
+Regards,
+Christian.
