@@ -1,65 +1,65 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CE7724EA99;
-	Thu,  3 Apr 2025 13:33:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDE1024FC1B;
+	Thu,  3 Apr 2025 13:33:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743687226; cv=none; b=SXbq+OMxhyYOwe3aUePJ6cKM7pYFdRAsSwd//FTSzPDPMwklwPyrX+DUGPTqee1M7X3zAK0oLVs9K3SmNs/uDFSQ4JP58U/aR+QXYKsVpFGG59GWqVRQt+kxeTr6DI8UeBF1GSMrXJvl8+mxEHLA3/YXyYbleDb6tzBn5xiPZXg=
+	t=1743687226; cv=none; b=IJdHsN1RIYbN5dssSQottl5MQlEU7dwTCD7XwEAb3+5+plAS/4xUZEg2jSGwcUbJYbeyaeMB7/wjext+E+FrNDzck2h030wG4aCXjBPw00Kdu+eEgDC68e59GAoNKL74oDYM9taAeo+pAP9l5rqDjR8L3+O1TKY1WamBhvAMV+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1743687226; c=relaxed/simple;
-	bh=Shb0iUGYo+PQuq5icSnRBhSoiaS34oA7cwPptXDQr+0=;
+	bh=ofF4Fp6jzzQLQONln1wWW5sDpudm/5qQ3U51lDJljjY=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=SBYpuCjtCvFgYCx2qlJ/ZKVDoODvUc7hNxeJ/z84e8BchIgFYX0aGcqHI7rMcip8te8ZsXDzo6cz7ZGF/EnDJcUHiZLXW8yLM16tEnYSPyDP/jpVbl0opKaZHQGUdPmX4XqEYJCZxiwr3F8EM6hmN8fCwRGtcqPBw/ND1uYCB3k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=EUBZVq/w; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Qv3ZMXyR; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=pVP5J3qDOuUIX1WY03IWzfX93xot4CkYNzPU1xM8WCDV7k/hxcv0ynKucz90Q3PI8dXXUc997B63XS396dde1kzor5UhXhPuKSp8Z6G0PtY7Q3WBT6aaMU6bLuiyeQMIJJrprUuxJxoJABX69iCOJVT+mSbK76OU2mSyVaEDW04=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gh+TdMhu; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=R1r88g4P; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="EUBZVq/w";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Qv3ZMXyR"
-Date: Thu, 03 Apr 2025 13:33:40 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gh+TdMhu";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="R1r88g4P"
+Date: Thu, 03 Apr 2025 13:33:42 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1743687221;
+	s=2020; t=1743687223;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=XpKcaxvmHwTgVORBijsdONeNBE/852PlzD5wFDCTTbY=;
-	b=EUBZVq/wgb04gMiwGwcSwWw0kqO4xaWc+H7meY9UEp6n0p+BSI4IEJeedj0dR2aAMWR+wL
-	c2z2/uMmkN4DvxBiM92O0fzB7DcJ+KMiFWJooC4Sb37MLc5pLtxfjl/eAim+NAVR+nfGFB
-	poQNu/NECviwoyr8rGx8TpiAAt3r4Rh3WfgmPh8dWybHUIKRdbLNmr953GZoj6ZQfoypcm
-	+P66M8d6KZbzC1hWUk/NaLH8bT4TPD6COqnspaCok5viBQU8nnLdS9QJ8hLdsJBFYrww7Q
-	aCfv4FY2d7N8laveQf3hooNLEMrnKHsQANHn1Bet0ZVH+XWyUr4vBDl94zriUA==
+	bh=8GjZuZ2gh7IHS7QsL3YL4g1HGvoZKhfdeW8Plm08L+4=;
+	b=gh+TdMhu9U1Z/ujx9+wKrUlAEG7bzdBBWmKOqj21ZNKhqNbExD9V5ldkMwfbJrEzT89yJx
+	v35DxOHhtDrcAGcoLzEjlkKdwT5VQBsr5PIbIbTLxUv91qq+Nr2TiPZqd5GRcloNmUzh4e
+	Q+dPezCT66F1mWcpolsv0X0dGBvq/bp2iu9Nq9+hqlICR4Q8YpJtotv73C9Q8j8d8EwTGB
+	PvmDgEDvKAetaaTbg+GRRql+3IfAMuaCPb75QTEYxmKlxYZFBViaB8Yev1lNOkJBcegvqf
+	QD868kADyqyXYlR/sXJFrQn/deKFP3TyX6nD+k5uBayrWVbzfcJi1kAsGS3R9A==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1743687221;
+	s=2020e; t=1743687223;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=XpKcaxvmHwTgVORBijsdONeNBE/852PlzD5wFDCTTbY=;
-	b=Qv3ZMXyRl46k2URBAI0wId8PLMxYYSTg9Up6e7XOKyEGQxXxu6HXPeg8RR1ysVO1EBVXPW
-	e9NgLFY9Gl8iiSAA==
+	bh=8GjZuZ2gh7IHS7QsL3YL4g1HGvoZKhfdeW8Plm08L+4=;
+	b=R1r88g4P5ockxSPb3d22UIkKWnRIBMl4ujz1D++QtRqnSFdiE/bqsIa8/+N2w+9h6Vmcwz
+	yPCm9Nu2/zi+wGDw==
 From: "tip-bot2 for Sohil Mehta" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/nmi] x86/nmi: Improve and relocate NMI handler comments
+Subject: [tip: x86/nmi] x86/nmi: Use a macro to initialize NMI descriptors
 Cc: Sohil Mehta <sohil.mehta@intel.com>, Ingo Molnar <mingo@kernel.org>,
  Kai Huang <kai.huang@intel.com>,
  "Peter Zijlstra (Intel)" <peterz@infradead.org>,
  Nikolay Borisov <nik.borisov@suse.com>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20250327234629.3953536-7-sohil.mehta@intel.com>
-References: <20250327234629.3953536-7-sohil.mehta@intel.com>
+In-Reply-To: <20250327234629.3953536-4-sohil.mehta@intel.com>
+References: <20250327234629.3953536-4-sohil.mehta@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174368722072.30396.2890770040949864219.tip-bot2@tip-bot2>
+Message-ID: <174368722263.30396.9811941615781877805.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -69,97 +69,83 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/nmi branch of tip:
 
-Commit-ID:     59cddd397accfa92fc36c223e3d532b47fdab841
-Gitweb:        https://git.kernel.org/tip/59cddd397accfa92fc36c223e3d532b47fdab841
+Commit-ID:     4a8fba4be879251fa010d248c179efbd42ec667d
+Gitweb:        https://git.kernel.org/tip/4a8fba4be879251fa010d248c179efbd42ec667d
 Author:        Sohil Mehta <sohil.mehta@intel.com>
-AuthorDate:    Thu, 27 Mar 2025 23:46:26 
+AuthorDate:    Thu, 27 Mar 2025 23:46:23 
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 01 Apr 2025 22:26:16 +02:00
+CommitterDate: Tue, 01 Apr 2025 22:26:01 +02:00
 
-x86/nmi: Improve and relocate NMI handler comments
+x86/nmi: Use a macro to initialize NMI descriptors
 
-Some of the comments in the default NMI handling code are out of place
-or inadequate. Move them to the appropriate locations and update them as
-needed.
+The NMI descriptors for each NMI type are stored in an array. However,
+they are currently initialized using raw numbers, which makes it
+difficult to understand the code.
 
-Move the comment related to CPU-specific NMIs closer to the actual code.
-Also, add more details about how back-to-back NMIs are detected since
-that isn't immediately obvious.
+Introduce a macro to initialize the NMI descriptors using the NMI type
+enum values to make the code more readable.
 
-Opportunistically, replace an #ifdef section in the vicinity with an
-IS_ENABLED() check to make the code easier to read.
+No functional change intended.
 
 Signed-off-by: Sohil Mehta <sohil.mehta@intel.com>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Acked-by: Kai Huang <kai.huang@intel.com>
+Reviewed-by: Kai Huang <kai.huang@intel.com>
 Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Reviewed-by: Nikolay Borisov <nik.borisov@suse.com>
-Link: https://lore.kernel.org/r/20250327234629.3953536-7-sohil.mehta@intel.com
+Link: https://lore.kernel.org/r/20250327234629.3953536-4-sohil.mehta@intel.com
 ---
- arch/x86/kernel/nmi.c | 35 +++++++++++++++++++++--------------
- 1 file changed, 21 insertions(+), 14 deletions(-)
+ arch/x86/kernel/nmi.c | 31 +++++++++++--------------------
+ 1 file changed, 11 insertions(+), 20 deletions(-)
 
 diff --git a/arch/x86/kernel/nmi.c b/arch/x86/kernel/nmi.c
-index 2a07c9a..59ed74e 100644
+index 671d846..6a5dc35 100644
 --- a/arch/x86/kernel/nmi.c
 +++ b/arch/x86/kernel/nmi.c
-@@ -359,17 +359,18 @@ static noinstr void default_do_nmi(struct pt_regs *regs)
- 	bool b2b = false;
+@@ -49,27 +49,20 @@ struct nmi_desc {
+ 	struct list_head head;
+ };
  
- 	/*
--	 * CPU-specific NMI must be processed before non-CPU-specific
--	 * NMI, otherwise we may lose it, because the CPU-specific
--	 * NMI can not be detected/processed on other CPUs.
--	 */
+-static struct nmi_desc nmi_desc[NMI_MAX] = 
+-{
+-	{
+-		.lock = __RAW_SPIN_LOCK_UNLOCKED(&nmi_desc[0].lock),
+-		.head = LIST_HEAD_INIT(nmi_desc[0].head),
+-	},
+-	{
+-		.lock = __RAW_SPIN_LOCK_UNLOCKED(&nmi_desc[1].lock),
+-		.head = LIST_HEAD_INIT(nmi_desc[1].head),
+-	},
+-	{
+-		.lock = __RAW_SPIN_LOCK_UNLOCKED(&nmi_desc[2].lock),
+-		.head = LIST_HEAD_INIT(nmi_desc[2].head),
+-	},
+-	{
+-		.lock = __RAW_SPIN_LOCK_UNLOCKED(&nmi_desc[3].lock),
+-		.head = LIST_HEAD_INIT(nmi_desc[3].head),
+-	},
++#define NMI_DESC_INIT(type) { \
++	.lock = __RAW_SPIN_LOCK_UNLOCKED(&nmi_desc[type].lock), \
++	.head = LIST_HEAD_INIT(nmi_desc[type].head), \
++}
+ 
++static struct nmi_desc nmi_desc[NMI_MAX] = {
++	NMI_DESC_INIT(NMI_LOCAL),
++	NMI_DESC_INIT(NMI_UNKNOWN),
++	NMI_DESC_INIT(NMI_SERR),
++	NMI_DESC_INIT(NMI_IO_CHECK),
+ };
+ 
++#define nmi_to_desc(type) (&nmi_desc[type])
++
+ struct nmi_stats {
+ 	unsigned int normal;
+ 	unsigned int unknown;
+@@ -107,8 +100,6 @@ static int __init setup_unknown_nmi_panic(char *str)
+ }
+ __setup("unknown_nmi_panic", setup_unknown_nmi_panic);
+ 
+-#define nmi_to_desc(type) (&nmi_desc[type])
 -
--	/*
--	 * Back-to-back NMIs are interesting because they can either
--	 * be two NMI or more than two NMIs (any thing over two is dropped
--	 * due to NMI being edge-triggered).  If this is the second half
--	 * of the back-to-back NMI, assume we dropped things and process
--	 * more handlers.  Otherwise reset the 'swallow' NMI behaviour
-+	 * Back-to-back NMIs are detected by comparing the RIP of the
-+	 * current NMI with that of the previous NMI. If it is the same,
-+	 * it is assumed that the CPU did not have a chance to jump back
-+	 * into a non-NMI context and execute code in between the two
-+	 * NMIs.
-+	 *
-+	 * They are interesting because even if there are more than two,
-+	 * only a maximum of two can be detected (anything over two is
-+	 * dropped due to NMI being edge-triggered). If this is the
-+	 * second half of the back-to-back NMI, assume we dropped things
-+	 * and process more handlers. Otherwise, reset the 'swallow' NMI
-+	 * behavior.
- 	 */
- 	if (regs->ip == __this_cpu_read(last_nmi_rip))
- 		b2b = true;
-@@ -383,6 +384,11 @@ static noinstr void default_do_nmi(struct pt_regs *regs)
- 	if (microcode_nmi_handler_enabled() && microcode_nmi_handler())
- 		goto out;
+ static u64 nmi_longest_ns = 1 * NSEC_PER_MSEC;
  
-+	/*
-+	 * CPU-specific NMI must be processed before non-CPU-specific
-+	 * NMI, otherwise we may lose it, because the CPU-specific
-+	 * NMI can not be detected/processed on other CPUs.
-+	 */
- 	handled = nmi_handle(NMI_LOCAL, regs);
- 	__this_cpu_add(nmi_stats.normal, handled);
- 	if (handled) {
-@@ -419,13 +425,14 @@ static noinstr void default_do_nmi(struct pt_regs *regs)
- 			pci_serr_error(reason, regs);
- 		else if (reason & NMI_REASON_IOCHK)
- 			io_check_error(reason, regs);
--#ifdef CONFIG_X86_32
-+
- 		/*
- 		 * Reassert NMI in case it became active
- 		 * meanwhile as it's edge-triggered:
- 		 */
--		reassert_nmi();
--#endif
-+		if (IS_ENABLED(CONFIG_X86_32))
-+			reassert_nmi();
-+
- 		__this_cpu_add(nmi_stats.external, 1);
- 		raw_spin_unlock(&nmi_reason_lock);
- 		goto out;
+ static int __init nmi_warning_debugfs(void)
