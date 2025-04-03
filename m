@@ -1,182 +1,139 @@
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 323ED8460;
-	Thu,  3 Apr 2025 05:16:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EE27158520;
+	Thu,  3 Apr 2025 05:17:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743657409; cv=none; b=m4cL4ak+bupfClNRVjcsAgujjtt9v9GItoanzPBU8mMrkgp5cLS8SnUkA4rNCdm/CU0hnjoTloBp8kaQ1nSby21DByCdxeWlJe8QtiMnM4+xGOEiQjkZyG6VAnllNgb4syxJrcVUK1sfikr2C9tlB4Jp6R+6V3AAXw05H+Rsbr8=
+	t=1743657423; cv=none; b=s/Bn0jkhhojSKGMnkHJxQOl+FyoP21OcGCoB7MouOgkhXdKlll4vJMxfWn0W3QG2dRaKYMCBkKiQ2OXY9p2POLFnjy4mGSjCeg7occLBFYtgRMdIaqtAIUiFW4r+Ir2h7ynrx5mzUceZOZsHmwD8EUV5yfnU4z8zvhdr8msDfe8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743657409; c=relaxed/simple;
-	bh=lNEwq541WDDDm2IgFe5/GIfhWT4xyzg68oQsT7TD30c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=i9lyG7ikv9WMHs1/4q+KxrIssSRQxIwjaoXz1s25qzEk3WWjIUl2FrwJZvvsXhxBW2k7Mc/WgxTy20pa7WOEjhlpM1f0SVidaa9PrM1a46x631fpHZ2NuOWoLmG0+69CZgLT08MkvTsDogmeYslaEaCYDNi28cVHLnuM6VaJz94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NNB/FTcK; arc=none smtp.client-ip=209.85.208.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743657423; c=relaxed/simple;
+	bh=GCg1kF66XI+C9z/bqQ1tqqz2NufD5JefHBWqWpgW0p4=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=XL4rdA4zarOyNveDeFtHmtQ33NdpgXRsoV1dNpBkk4r9KuwQHddfzaDFzyV/5JAMGIYa4VCQBSqdiUPLU9XctOMAOo6JJvkSIi14dB02IPDSa8Snsl8jTJZn/1FumaYgMNkHYS0Lk8CYITwTAJ8R8CGARQpdqlfUHaYYXYpmx2o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=wD2/Hg2y; arc=none smtp.client-ip=148.163.135.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NNB/FTcK"
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-30db1bc464dso4434851fa.0;
-        Wed, 02 Apr 2025 22:16:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743657405; x=1744262205; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=lUnfrWM8O0y0Hox6uRP5nfk3TnR4bWTw87hOsdjgoNg=;
-        b=NNB/FTcK+tMMyZ6dUau4j02MiRiTHzcKpMSXCDLBr1F5xUwfVQfZDj3cgn8MzwcS2I
-         qKHgMwfRkXmEmyPIPnOLRrHcem3UxpMwcAxzQoqEtbLeCTFJH4kiOQM+hVodU9Np1Wmh
-         6xbGPEjiANlS3p9P+v4eadfqwdIUOaEXZSByfUIccDuaiw0giRgUOfQTQiepj1naECP9
-         yK5tpvRLtYF8N41eWVVaxGul/+jx5lQRDzk6uEBBZOhPFREfeo/Sp96v4pBuWdOrw93p
-         mkbRy35rGVUzkaeGIShPIIS634MVxrYBgdmjvSSyWlIWeQnoZLP5OgPIA6nUqsfW8X5J
-         HoBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743657405; x=1744262205;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lUnfrWM8O0y0Hox6uRP5nfk3TnR4bWTw87hOsdjgoNg=;
-        b=To773Nr74UJOhCeDiHyP5hhfWjaVRtf283pRSbQakfYH9ha6VwDfpKd+nce0MtuREE
-         IH9igaEio2NSU9lYZMflVqoOHRyMo+lQmFD+tSswOJvWAQ7VHyqxUQ2n3k6NcGXzPFQa
-         LcMUFi3+U3/GUzlJ9olmnaZImV7p/B4X9Q2eSA4AG9cr3CNv0FcKAJPIV8uHDXDlnhi8
-         Ob9dlQpBOemqbfJdWiLO5thW1uxcDHNaGU8wCviKvbZX8eBkHzGnOpuMBkf2/fG5J65C
-         EF95GwF7kDAe2iEMsBn61GZ0oM0l+Mag+57D6jSuuRtgxXtlbqm9PNPf1aAFU/D7bIVI
-         EpCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVQr5dbfbI5jdckJG4r5ztbYNBqQreHObGvssDvm4PbjdOUUzgN/KqnX45T88w6IsCZnXx3b9UyMWMs@vger.kernel.org, AJvYcCVqIFa8vVOw6rJIq1lNmhdUr1Nr8nuAHlqQDyvVzJa4maERMh9X6GuoQ+jfS2R6l2xWcBlulK9tq45M@vger.kernel.org, AJvYcCWNv/U8Tm8m/D+SmUIRVaKEjgsgy+3elbj2b0OOt2+vqU9p07gmE93a6iihQEn/SKn5/bnj1naPWmOqHS6F@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+r/kaCwb5QcNhWpjroElLvxtRMqcy8ReRi+TFTxCDv22yEkst
-	23pJaVj0TclpOiZRkhP/iCj0CYQd7h2x5HeTsQTdk8GFv54zxgMW
-X-Gm-Gg: ASbGncsAojDXjcrLyrjVn4tbA5w0cj6DRylsEh4WSiZ0isw9LobTPWbRhi/+q5QkgnQ
-	ehidnNeQgJxeDhDrn4NsIv13IVBNDOEw0dDZFKg9F0gFpmO4FX7B073P4eHI/jyohoiQTWVr8d3
-	KNfiezYwgHa+lTtWu/EFZNM4PXY9tj28h1Y9+upGmu0quGVZIdzXVr328eoHAeEEcRPtWjwHeYl
-	nsPyySpGGAfLnbd7msLGEgCrbbmMWm66t0xVmo3CMv4ng73ZJvtYYQPRmHm4PSVAVCZ5I/YhSq9
-	SKN9q8OaLlCzbCdLKoO3s0xCa/ZSvDwegF63HsfqkhYvo+CP4EGN1HISP55DLCrhtWDRG4z6WN3
-	UnckdCe8pQI4WpVL7Qx+Jvd1J0Q==
-X-Google-Smtp-Source: AGHT+IGo6U30lLCPfVEYuHbUU2svN+XQS4RolYNy9mZ6oSYmU0C6mOzGLsPpQarJYB1Hd0HHA1mvyw==
-X-Received: by 2002:a2e:bc8f:0:b0:30c:4610:9e9e with SMTP id 38308e7fff4ca-30ef91cd073mr17825741fa.35.1743657405008;
-        Wed, 02 Apr 2025 22:16:45 -0700 (PDT)
-Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30f031bcdb1sm828641fa.80.2025.04.02.22.16.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Apr 2025 22:16:44 -0700 (PDT)
-Message-ID: <1189b539-adb4-46f9-9783-c6577b57a304@gmail.com>
-Date: Thu, 3 Apr 2025 08:16:43 +0300
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="wD2/Hg2y"
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5331jVBC018100;
+	Thu, 3 Apr 2025 01:16:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=DKIM; bh=9eUDDjGXl/ci034w0fw7vNxwPHh
+	e/NuPsGgZd5k0AlM=; b=wD2/Hg2yYzz/tOuGCFLXTQqUuFdrCtUczxAYMhmnYRK
+	ZeZnjXIh554zwfYCrTkpFh9eWszLMDAx5vBYqnHTUDgsPMxseOHboSrO8m3JktqS
+	OhyzFEAlHxH6iZnExNl9XR5VFgOywPsCFX5FDrC3WEl4vXqYNi0mfDZRExSzty04
+	hgk9ABKtdW7C9bvOkPjkH7inKavYJdTnTu2ezYXSIO74yF4AttvS6JihSkjJBfMh
+	GPIxnAY7Q999onRKCfJvWXlqTOld01XKdUnqigJg07z75qSuUuT5RcDerzXWXj3T
+	LohoZI85wrh6Oqi0/XqgTWK2QseUC88pkg3Y/LrUViw==
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 45rcrx3xfe-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 03 Apr 2025 01:16:47 -0400 (EDT)
+Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
+	by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 5335GkKp003062
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 3 Apr 2025 01:16:46 -0400
+Received: from ASHBCASHYB5.ad.analog.com (10.64.17.133) by
+ ASHBMBX9.ad.analog.com (10.64.17.10) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.14; Thu, 3 Apr 2025 01:16:46 -0400
+Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by
+ ASHBCASHYB5.ad.analog.com (10.64.17.133) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.14; Thu, 3 Apr 2025 01:16:45 -0400
+Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server id 15.2.986.14 via Frontend
+ Transport; Thu, 3 Apr 2025 01:16:45 -0400
+Received: from ATORRENO-L02.ad.analog.com ([10.117.223.13])
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 5335GSPS006832;
+	Thu, 3 Apr 2025 01:16:31 -0400
+From: Alexis Czezar Torreno <alexisczezar.torreno@analog.com>
+Subject: [PATCH v2 0/2] Add support for ADPM12160 a DC/DC Power Module
+Date: Thu, 3 Apr 2025 13:16:17 +0800
+Message-ID: <20250403-dev_adpm12160-v2-0-bbf40faae988@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/7] iio: adc: ti-adc128s052: Simplify using
- be16_to_cpu()
-To: David Lechner <dlechner@baylibre.com>,
- Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen
- <lars@metafoo.de>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Nuno Sa <nuno.sa@analog.com>,
- Javier Carrasco <javier.carrasco.cruz@gmail.com>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <cover.1743573284.git.mazziesaccount@gmail.com>
- <feeabbfd3d3916c7497dfd94423ff83ef5f654f1.1743573284.git.mazziesaccount@gmail.com>
- <4c3e0d23-2582-4acf-8e90-542c8f8c385f@baylibre.com>
-Content-Language: en-US, en-AU, en-GB, en-BW
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-In-Reply-To: <4c3e0d23-2582-4acf-8e90-542c8f8c385f@baylibre.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAKEZ7mcC/3XMQQrDIBCF4auEWdeiFjO1q9yjhGLMJBEaDVqkJ
+ Xj32uy7/B+8b4dE0VGCW7NDpOySC76GPDVgF+NnYm6sDZJLxS+Ss5Hyw4zbKqRoOVO65YRoUA8
+ E9bNFmtz78O597cWlV4ifg8/it/6TsmCcXSccNCoyFlVnvHmG+WzDCn0p5Quh83mxqwAAAA==
+X-Change-ID: 20250320-dev_adpm12160-5960e77a79be
+To: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Delphine CC Chiu
+	<Delphine_CC_Chiu@Wiwynn.com>
+CC: <linux-hwmon@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
+        "Alexis Czezar
+ Torreno" <alexisczezar.torreno@analog.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1743657389; l=1839;
+ i=alexisczezar.torreno@analog.com; s=20250213; h=from:subject:message-id;
+ bh=GCg1kF66XI+C9z/bqQ1tqqz2NufD5JefHBWqWpgW0p4=;
+ b=r6BTzrupN7uGww9Tb3VIO93HL0rfQ48Jm8jAWaEWBpWCaZP+MBgvV34MAN+c5R2YDIJJo9uiC
+ ARXJQkK6QaDAqyEgA558oiFC8Xj+rbinH/T4ZU1MbaGYPSTX97QiEl+
+X-Developer-Key: i=alexisczezar.torreno@analog.com; a=ed25519;
+ pk=XpXmJnRjnsKdDil6YpOlj9+44S+XYXVFnxvkbmaZ+10=
+X-ADIRuleOP-NewSCL: Rule Triggered
+X-Authority-Analysis: v=2.4 cv=KqVN2XWN c=1 sm=1 tr=0 ts=67ee19bf cx=c_pps a=3WNzaoukacrqR9RwcOSAdA==:117 a=3WNzaoukacrqR9RwcOSAdA==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=gAnH3GRIAAAA:8 a=r-qAA2OrMi8oRDqhcIUA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: ZqicfI_ikIDoev-44KVew2hsTD2xDRyc
+X-Proofpoint-ORIG-GUID: ZqicfI_ikIDoev-44KVew2hsTD2xDRyc
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-03_01,2025-04-02_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ lowpriorityscore=0 bulkscore=0 phishscore=0 impostorscore=0 malwarescore=0
+ clxscore=1015 mlxlogscore=964 adultscore=0 mlxscore=0 priorityscore=1501
+ suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504030026
 
-On 03/04/2025 00:04, David Lechner wrote:
-> On 4/2/25 1:09 AM, Matti Vaittinen wrote:
->> The register data is 12-bit big-endian data. Use be16_to_cpu() to do
->> the conversion, and simple bitwise AND for masking to make it more
->> obvious.
->>
->> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
->> ---
->> Revision history:
->> v1 => v2:
->>   - Fix commit msg to reflect the fact there was no bug
->>   - Drop Fixes tag
->>   - Use union for rx / tx buffer to avoid casting
->>   - Keep the shared message protected by the mutex
->> ---
->>   drivers/iio/adc/ti-adc128s052.c | 18 ++++++++++--------
->>   1 file changed, 10 insertions(+), 8 deletions(-)
->>
->> diff --git a/drivers/iio/adc/ti-adc128s052.c b/drivers/iio/adc/ti-adc128s052.c
->> index a456ea78462f..3e69a5fce010 100644
->> --- a/drivers/iio/adc/ti-adc128s052.c
->> +++ b/drivers/iio/adc/ti-adc128s052.c
->> @@ -28,32 +28,34 @@ struct adc128 {
->>   	struct regulator *reg;
->>   	struct mutex lock;
->>   
->> -	u8 buffer[2] __aligned(IIO_DMA_MINALIGN);
->> +	union {
->> +		__be16 rx_buffer;
->> +		u8 tx_buffer[2];
->> +	} __aligned(IIO_DMA_MINALIGN);
->>   };
->>   
->>   static int adc128_adc_conversion(struct adc128 *adc, u8 channel)
->>   {
->>   	int ret;
->> +	char *msg = &adc->tx_buffer[0];
->>   
->>   	mutex_lock(&adc->lock);
->>   
->> -	adc->buffer[0] = channel << 3;
->> -	adc->buffer[1] = 0;
->> +	msg[0] = channel << 3;
->> +	msg[1] = 0;
->>   
->> -	ret = spi_write(adc->spi, &adc->buffer, 2);
->> +	ret = spi_write(adc->spi, msg, sizeof(adc->tx_buffer));
->>   	if (ret < 0) {
->>   		mutex_unlock(&adc->lock);
->>   		return ret;
->>   	}
->>   
->> -	ret = spi_read(adc->spi, &adc->buffer, 2);
->> -
->> +	ret = spi_read(adc->spi, &adc->rx_buffer, 2);
->>   	mutex_unlock(&adc->lock);
->> -
->>   	if (ret < 0)
->>   		return ret;
->>   
->> -	return ((adc->buffer[0] << 8 | adc->buffer[1]) & 0xFFF);
->> +	return be16_to_cpu(adc->rx_buffer) & 0xFFF;
-> 
-> 
-> The cast isn't exactly beautiful, but this would save a lot of
-> lines of diff and a few lines of code by avoiding the need for
-> the union and the local msg variable.
-> 
-> 	return be16_to_cpup((__be16 *)adc->buffer) & 0xFFF;
+Before adding the support for ADPM12160, this series includes a commit
+to fix the issue with max34451. The family of max344** contains switched
+PMBUS addresses 0x46 and 0x4A. For max34451, the version MAX34451ETNA6+
+and later fixed this issue and this first commit supports this. The
+MFR_REVISION is used to differentiate the different max34451 chips.
 
-Thanks again for the review David :)
+The second commit adds the actual driver for adpm12160. ASPM12160 is a
+quarter brick DC/DC Power Module. It is a high power non-isolated
+converter capable of delivering a fully regulated 12V, with continuous
+power level of 1600W with peak power at 2400W for a limited time.
+Uses PMBus Configuration.
 
-I am unsure which way to go. I kind of like having the __be16 in the 
-struct, as it immediately yells "data from device is big-endian". OTOH, 
-I've never loved unions (and, it silences the above "yelling" quite a 
-bit). I still think this might be the first time I really see a valid 
-use-case for an union :) And, you're right this adds more lines, 
-besides, the cast doesn't look that ugly to me. Yet, I originally had a 
-cast probably as simple as this (and I also had the __be16 in the 
-struct), and Jonathan suggested using union to avoid it...
+Signed-off-by: Alexis Czezar Torreno <alexisczezar.torreno@analog.com>
+---
+Changes in v2:
+- Commit 1: MAX34451 Fix
+-   Added a flag to denote if the device has correct pmbus address
+-   Stored the pmbus address of concern inside max34440_data
+-   Removed separate chip ID for max344451etna6+, detects this version
+    via MFR_REVISION
+-   Reverted max34440.rst to original. No edit deemed necessary
+-   Supported READ_VIN, READ_IIN, and STATUS_INPUT for max34451etna6+
+- Commit 2: Add ADPM12160
+-   Adjusted code to base it on the new max34440.c
+- Link to v1: https://lore.kernel.org/r/20250320-dev_adpm12160-v1-0-8f7b975eac75@analog.com
 
-At the end of the day, I suppose I am Okay with any of these 3 
-approaches. Original cast, union or this cast you suggest. Jonathan, any 
-preferences on your side?
+---
+Alexis Czezar Torreno (2):
+      hwmon: (pmbus/max34440): Fix support for max34451
+      hwmon: (pmbus/max3440): add support adpm12160
 
-> 
->>   }
->>   
->>   static int adc128_read_raw(struct iio_dev *indio_dev,
-> 
+ Documentation/hwmon/max34440.rst |  30 ++++++++---
+ drivers/hwmon/pmbus/max34440.c   | 109 ++++++++++++++++++++++++++++++++++++---
+ 2 files changed, 124 insertions(+), 15 deletions(-)
+---
+base-commit: c812cc42f92d3d0b17c01b5db9a1dee5793a1491
+change-id: 20250320-dev_adpm12160-5960e77a79be
 
-Yours,
-	-- Matti
+Best regards,
+-- 
+Alexis Czezar Torreno <alexisczezar.torreno@analog.com>
 
