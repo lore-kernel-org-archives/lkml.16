@@ -1,276 +1,218 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2081.outbound.protection.outlook.com [40.107.95.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B97E198E75
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 06:08:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743660524; cv=none; b=JPQYHphaZPB2mO25YkESkEpWztzm2Gsa8XUjCPMqbAbpm+kuqbBxvwTaVrtHKCsqSdQCIuozew5pa8/f1jCoT6xAqPOIgH084JDduoX7De0cDlzNbZVZbPtCJKgvCITrseDobM+PdaHbNMsCHSeONwBPftRM/bqqInfp+Nmy/0I=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743660524; c=relaxed/simple;
-	bh=kSXHyaGkKCfT3DWWEDAff/JBbBKpI4DWn9x2YuyszIg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sotBTgPgHuTDtDblS6hSguZOjxUxttYi+G4HYVUBkwOF6kG6X7YxhDEfftrUltFevWY6TFwZHPmh743T9rqfWd8ndVLAmiWQ81g+aN7IsV/fJlKUMmM/9/58zFGyVq9AU3MdWJnwgCXVKuXl0DfNQO+P4gvJk2e/J4ZMG5bkqeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=v2Lij/5f; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE30F198E75;
+	Thu,  3 Apr 2025 06:09:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.81
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743660566; cv=fail; b=eAQgVvX8wlJ52/NKgUrSBB6JSwgID0LItzaQhjiWqsWZE76DmpYvpBI1zAds52r1hqr5Rv0Z+UG7Td1eWd67D4BY/hn6igrMDzOboZfFuiA2lpsIYpDhqCbR0jW0bcB8MbMCmUTwyEYHVqachf8xOnJ9DS/DhqXiVcWG+gAdoII=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743660566; c=relaxed/simple;
+	bh=J26X5DEHhsoiddHBhAvylGa5ascehO/gUpHgjMc4xdQ=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=q2XcahtlDZQAwI4a2diqOzkj0GijraUaW6a2dhFADN4iLYH59Qw12OPGISjSjSQPuE0xLxLtaYa1pHqIxTgE4qBkL96/FtU5r9jlUTDtqYH/YW385gIbb2OAPPK2oA6Clc7GskejJOr+gEes/Ih2ZfgfafPX0jJY/kk1/Mc5Zjk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=o2y/Mjl2; arc=fail smtp.client-ip=40.107.95.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="v2Lij/5f"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-abf3d64849dso69006666b.3
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 23:08:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1743660519; x=1744265319; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8wUfXthro4dK9Vk6W7jH0ILqAhuBvllRgp+IHiV0uMY=;
-        b=v2Lij/5fu1qoxinN5hi2kc99ppEBhuK9LrD4LCL1ZThye16vWBrTactnZbWYJWs1NY
-         UMLFZpE+m3pRgTJEwtWiOA1+GChQ+eZ87gM22mRDgQ3d+PQ0X5q2renJZQ5YFqUNGP0K
-         8/WWsQiRtvng/sHScgZr8FXasE++QFH5Z/BiPDnftEUCvAGJwrm4qs5MAVUaYY7GZi8V
-         0ZgSQySEPvHMZZ2wfwxBsy5AcZsbr+i9Kly5zSKBE89NeysU31+hbKBW1nFL8sUbqxOt
-         nvWaP0bdw9ehqz0e6SigIQibtmRpZaECx7OVo6VRt3v5d9UIxRrKchhOrsCOaK7oZZph
-         INXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743660519; x=1744265319;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8wUfXthro4dK9Vk6W7jH0ILqAhuBvllRgp+IHiV0uMY=;
-        b=t5lwgU4H4p6Jb9+Nd7rwCsUjVm6p5oBMDAiOE0CKw0En+XoCoF3alHw4PagHTXIyTR
-         sIu7HQFYV/kp13KYp+98jcmQGEYA2SJgfLm4H386BdZO90KNqDcEZvrjUThwz0HsyRx0
-         SiLxtgRHFyP3e+r9p8u0eZlO5ez1zjBLWHStrywUEDU5pZs1DbDWzpmGHUQwoom/rPC1
-         b3I9qyKnUNCUq0BRXYLJQUN/oMyEEpVUfZHJ//Eg+f1nZZWBQZhj71AXm8U818qd9M7R
-         em0dyHDj+2OtgrHKJq9hMt6TA2mWsylJSgwinMrnPx7YX8tKKKbLLANUX6GY4TrDoTGI
-         II3A==
-X-Forwarded-Encrypted: i=1; AJvYcCWziPLSYy4sAoAKvk/RpK4xmuz3mESotgQf+6vqnizuQECfn09wjy52qyKhL7q7PGUQCvd9DvHOhKIdiC0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxqUo+HHPSAeYYUyhGkeL/15gNHdokVcIicCH8XCfGp7YpwnE+T
-	FB7w/3fd9kkUGMW1+nzLOJ7de0H9QVu3Z/LPz2dp6oQPJbXDJt6zbjMLqEIZ2Xg=
-X-Gm-Gg: ASbGnctyn80M+7GdgE8KdB8oPewzQCpyclhTlFkkfn5udCjSmXYZ4mWy3CGRZ8xtBm2
-	A+6m5jqFyCsuLJ16qZBfde1zYF6mlchUYx7I+F02OYkYo/fbkgQALTVeP3I2Z1qX3GcO39EunHZ
-	07L2dcrlnpxshoQKTP9GpALexPfb6XWWGhEyhSMU1KKRyOJiVaVs5Pi+ZqxutY25m8W0X01qy7S
-	EySf4AjkoHcydBzER2oePc139JNNrVtJQxVwHQSn3KK291cJ2CH6fZrCbPdMlsjMYDNjD2vnZJ4
-	EULi2hFt7nAeyLfcZYByMF+qsGi0oa8E7r5j0p5mjCx8pCrfJw==
-X-Google-Smtp-Source: AGHT+IEWIoJqC3AqaGR73OI0CxR+LNG2PKoXsB8WFJ7lYRoRR+OC++EgaVRIGYf+L55z2w+ND8PWYg==
-X-Received: by 2002:a17:907:1b16:b0:ab7:6606:a8b9 with SMTP id a640c23a62f3a-ac7bc23444dmr134346466b.42.1743660519001;
-        Wed, 02 Apr 2025 23:08:39 -0700 (PDT)
-Received: from localhost ([2a02:8071:b783:6940:36f3:9aff:fec2:7e46])
-        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-ac7bfe5c45asm39166266b.1.2025.04.02.23.08.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Apr 2025 23:08:38 -0700 (PDT)
-Date: Thu, 3 Apr 2025 08:08:36 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: David Laight <david.laight.linux@gmail.com>
-Cc: Nicolas Pitre <nico@fluxnic.net>, 
-	Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] math64: Provide an uprounding variant of
- mul_u64_u64_div_u64()
-Message-ID: <iz5kp75bwhesaw7kxga7rq7m4oahl3wasnfrdrtxukpivhvy5g@3scc5272aybh>
-References: <20250331195357.012c221f@pumpkin>
- <mjqzvj6pujv3b3gnvo5rwgrb62gopysosg4r7su6hcssvys6sz@dzo7hpzqrgg2>
- <20250401202640.13342a97@pumpkin>
- <15qr98n0-q1q0-or1r-7r32-36rrq93p9oq6@onlyvoer.pbz>
- <46368602-13n7-s878-s7o2-76sr0q67n9q4@syhkavp.arg>
- <20250401223731.7102103d@pumpkin>
- <2wwrj6aid2elnnotzfkazierqmzmzpfywyf33ahqs36xh5xz32@rszeetrztsiz>
- <20250402135219.28b24e94@pumpkin>
- <gqqxuoz5jfrlsmrxdhwevfo7kflxjqhbkfy2ksnsdcadbk52hd@yaitrauy52xg>
- <20250402215919.2b933752@pumpkin>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="o2y/Mjl2"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=yrFU7IddJI698HKJyxTuOAUYgRWaCw7ijvAf4wswEih2yI362w+fNoNRZCKNEXLR/JXb8DJyqlFRs4nQRf3a4ethXuUDbuu2f2Zg5DG+c6/oz0aq9Cvt1wr7bZrB8uft9oZqw5vEAAuXJPuNukRc5AKCGctn1tTMMCLRkl8a2u7rp71s2nqFVwk6spsq5EYmfNceXoXEI2yy9zhdha8Y3IKUy3KONZyt7ubctfsUzsPIyTNygC1CaozX4C4oik8OjKV7Kx1nb93QQQZaT5erw/Sc197GLQWOLJnF/DQMJE7kHBwSpgVHCQ2kCDckWecdUDBNosIKc36nlWz0RkDoKA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=z+I0kNEG7+cPSApd/MI+RCWglu1hfaTCwGjTOC8b+uU=;
+ b=pVD+pW+5H69sQTjgbuUT8dTAZ+K3oAkzzj36qeqn8aZFJxq4eDJiqYFOZQWJzFEAWLeW5RCi+KLu2CZX7LpPnktLPz0eijSz8IhtHSgpUj0TiZsheqiin77ijrWgqfLBq9IMptlU4HnmuhvCojKNbKYNmngmQIt+c6H4AbxlmwXX+Nq+Hxtd1NapV0k2782mjusDUwTjzh0kymOpI5+NdggypZ2ApnL1iL7iXk9WR6QiAQ0RSxR7BgAlkgbFBJzlwCr6bouX/eFfmvnawxdPkjXg2EyTlOX5xkmkWyoBkZFZWOTgcUQtRyz5uKOLgeXwHc5odVzoMZ4LTflpN+ioyg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=z+I0kNEG7+cPSApd/MI+RCWglu1hfaTCwGjTOC8b+uU=;
+ b=o2y/Mjl2TkYR+aaRLxSvCvMLWntBMXeun6XCSgb2Jjcy+E6J5UsMuw+SMOWq6TV4Rxix3lqZePED2D0GGUsocSgPQ0WEcYkCOZGgjuyesTErzBkxN++DH0CRIDVpLVUnQFwzaW0byyIvHMsbREwm2hVuKPuBr2AiOYXJnL4mc3E=
+Received: from BY5PR13CA0011.namprd13.prod.outlook.com (2603:10b6:a03:180::24)
+ by MN0PR12MB6032.namprd12.prod.outlook.com (2603:10b6:208:3cc::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Thu, 3 Apr
+ 2025 06:09:21 +0000
+Received: from CO1PEPF000075F2.namprd03.prod.outlook.com
+ (2603:10b6:a03:180:cafe::24) by BY5PR13CA0011.outlook.office365.com
+ (2603:10b6:a03:180::24) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8606.24 via Frontend Transport; Thu,
+ 3 Apr 2025 06:09:20 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
+Received: from SATLEXMB03.amd.com (165.204.84.17) by
+ CO1PEPF000075F2.mail.protection.outlook.com (10.167.249.41) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8606.22 via Frontend Transport; Thu, 3 Apr 2025 06:09:20 +0000
+Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 3 Apr
+ 2025 01:09:17 -0500
+Received: from xhdmubinusm40.xilinx.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
+ Transport; Thu, 3 Apr 2025 01:09:13 -0500
+From: Mubin Sayyed <mubin.sayyed@amd.com>
+To: <dlemoal@kernel.org>, <cassel@kernel.org>, <robh@kernel.org>,
+	<krzk+dt@kernel.org>, <conor+dt@kernel.org>, <linus.walleij@linaro.org>,
+	<brgl@bgdev.pl>, <michal.simek@amd.com>, <p.zabel@pengutronix.de>,
+	<gregkh@linuxfoundation.org>, <radhey.shyam.pandey@amd.com>
+CC: <linux-ide@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-usb@vger.kernel.org>,
+	<git@amd.com>, Mubin Sayyed <mubin.sayyed@amd.com>
+Subject: [PATCH] dt-bindings: xilinx: Remove myself from maintainership
+Date: Thu, 3 Apr 2025 11:38:36 +0530
+Message-ID: <20250403060836.2602361-1-mubin.sayyed@amd.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="s3w3cnm76xj7iuqh"
-Content-Disposition: inline
-In-Reply-To: <20250402215919.2b933752@pumpkin>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+Received-SPF: None (SATLEXMB03.amd.com: mubin.sayyed@amd.com does not
+ designate permitted sender hosts)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PEPF000075F2:EE_|MN0PR12MB6032:EE_
+X-MS-Office365-Filtering-Correlation-Id: e81f7246-6488-4e46-7982-08dd727612b3
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|36860700013|376014|7416014|1800799024|13003099007|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?hzvDd3yI0TubJZ/+xwWFjU299gCO9ISgOtaJAt9UT+lh9lMmzJDFvpcKOdCs?=
+ =?us-ascii?Q?w/AKaZCDSY3Thm6WWQwj+A5JgI+GtafD/mb9kLJelXGhjjhuSp07AD0fFY5j?=
+ =?us-ascii?Q?5LJfA8rNwizgvmcOd45x2a5DlXwdfKNyj2j9+ozY7lG1ToNStrnxw73hhKRK?=
+ =?us-ascii?Q?YppvIt6JTn0XuSRY2IJXAOeQqBIWLgVq2G48tpVbcBKoAO2+h+5k8cQdRYg0?=
+ =?us-ascii?Q?VyEC6+ZY5B6C/P6yArX6IeUM8R/87my/4mtF26hqMgOy6EbPTchM7lzEtMFW?=
+ =?us-ascii?Q?HTHwGGLq4MBCRFGU9HMRAYTaziy/AECO6JdcHHPsggf5BPdVGbdGADXybdkf?=
+ =?us-ascii?Q?+2HHocw/o4kaT2qbM8RlxoHyEna9cKYrSjlU1ov9KquuyQVf8idZa9L0RegC?=
+ =?us-ascii?Q?JA4FPUEr9sRet5cQ4qio1/zC840/3AGhT0UR8Tz6blCDA7qYMPe7Cye7EzxH?=
+ =?us-ascii?Q?Gw9az6w164HIUO/OiqylHxL1c8a5XPFqO6fy1Z3QIo66Fk43tu7lndlWrThD?=
+ =?us-ascii?Q?XAjomhTar5FwMHNPeeNjqhOh/PXUbKoP8BFFahYBd1wJekaLpTKJDYEZ81Xd?=
+ =?us-ascii?Q?eH+CWzZ8lcM8kMmfsg/AOtuJ4XOjMtzxamnE6pothoHUZ+vVGIyvFdezQ9Mn?=
+ =?us-ascii?Q?erUFvoF92fMHz9WseIvOljeOM4z0ZzK9e9EJyXa4dv0edz6U5DOgiq4E4R5Q?=
+ =?us-ascii?Q?UxLPOe4+YPRtqrIn9Xj/1sCJWb/xUpDcDyUklyz1EEv/mu0796EjH4bgyz9R?=
+ =?us-ascii?Q?PsWb93i47fVlgdj5WGOgCkNgIOjhwa72xZXrppNO6pgjCwT/l22y3tcVRdhf?=
+ =?us-ascii?Q?QZWcDXx26K+/LgicliYJ2GKZ5y4OsYeeZsqhDlDtWyDjKhNYPJSuf5ngLUGp?=
+ =?us-ascii?Q?UFvhMpewHBoArADGhzuNzmrP3w78k6hYE22LUMseHBADnFpTZFn97twMgGIU?=
+ =?us-ascii?Q?/oDEgzy9dtr9DqgoOm10Zy5Ra7apQx3/9iO6bhtDRqucfJH6Z/MSAJcEi8hr?=
+ =?us-ascii?Q?D0L8uWdiVBMV4Hg4j1jON4N0SSTSKjPiUOMjyIkYjLtifogR+V8NFSV8yO/u?=
+ =?us-ascii?Q?Wwfj7Px5Qj0ds2lKxzbIK2EXGc9AhYXRuQw4Zcsf+29jaQbxAWgSujkcNQr9?=
+ =?us-ascii?Q?4+/TM6PSOYcCjV9sJ42RLDEZYTEZDf/JAQg+SsTnlg4acoZCCFOA5G7x00OI?=
+ =?us-ascii?Q?QYyCyNf1b3F5yyzCm/LAsljUK8s8DtYk9Xn9qHqnav2q6c9xcmTGcB7Mh3aF?=
+ =?us-ascii?Q?ymhFNCpw5HQ3T9hT5LmUamMl7nBH6sOLnoM++WmcnyyT+2BxYAPXO3aFVIKq?=
+ =?us-ascii?Q?9eA5gJ+cKOTMH/PwlM1eUYOKSnYm4D6bexF9unVOWtB8CpGqkMHBo/MFJwE5?=
+ =?us-ascii?Q?bJg1tQO3UJXvYchaPWRpdSvz+CyRMML9y+lmVN6gNFAE/scfgLnIHx9r37KP?=
+ =?us-ascii?Q?qSn3pkK8Op6vcJqAc/bBzifhlH76vzLZ?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(376014)(7416014)(1800799024)(13003099007)(921020);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Apr 2025 06:09:20.0531
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: e81f7246-6488-4e46-7982-08dd727612b3
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CO1PEPF000075F2.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB6032
 
+As I am leaving AMD and will no longer be maintaining
+these platform drivers, so removing myself from maintainership.
 
---s3w3cnm76xj7iuqh
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] math64: Provide an uprounding variant of
- mul_u64_u64_div_u64()
-MIME-Version: 1.0
+Signed-off-by: Mubin Sayyed <mubin.sayyed@amd.com>
+---
+ Documentation/devicetree/bindings/ata/ceva,ahci-1v84.yaml        | 1 -
+ .../devicetree/bindings/gpio/xlnx,zynqmp-gpio-modepin.yaml       | 1 -
+ Documentation/devicetree/bindings/reset/xlnx,zynqmp-reset.yaml   | 1 -
+ Documentation/devicetree/bindings/usb/dwc3-xilinx.yaml           | 1 -
+ Documentation/devicetree/bindings/usb/microchip,usb5744.yaml     | 1 -
+ Documentation/devicetree/bindings/usb/xlnx,usb2.yaml             | 1 -
+ 6 files changed, 6 deletions(-)
 
-On Wed, Apr 02, 2025 at 09:59:19PM +0100, David Laight wrote:
-> On Wed, 2 Apr 2025 17:01:49 +0200
-> Uwe Kleine-K=C3=B6nig <u.kleine-koenig@baylibre.com> wrote:
->=20
-> > Hello David,
-> >=20
-> > On Wed, Apr 02, 2025 at 01:52:19PM +0100, David Laight wrote:
-> > > On Wed, 2 Apr 2025 10:16:19 +0200
-> > > Uwe Kleine-K=C3=B6nig <u.kleine-koenig@baylibre.com> wrote:
-> > >  =20
-> > > > On Tue, Apr 01, 2025 at 10:37:31PM +0100, David Laight wrote: =20
-> > > > > On Tue, 1 Apr 2025 16:30:34 -0400 (EDT)
-> > > > > Nicolas Pitre <nico@fluxnic.net> wrote:
-> > > > >    =20
-> > > > > > On Tue, 1 Apr 2025, Nicolas Pitre wrote:
-> > > > > >    =20
-> > > > > > > On Tue, 1 Apr 2025, David Laight wrote:
-> > > > > > >      =20
-> > > > > > > > Looking at the C version, I wonder if the two ilog2() calls=
- are needed.
-> > > > > > > > They may not be cheap, and are the same as checking 'n_hi =
-=3D=3D 0'.     =20
-> > > > > > >=20
-> > > > > > > Which two calls? I see only one.     =20
-> > > > > >=20
-> > > > > > Hmmm, sorry. If by ilog2() you mean the clz's then those are ch=
-eap. Most=20
-> > > > > > CPUs have a dedicated instruction for that. The ctz, though, is=
- more=20
-> > > > > > expensive (unless it is ARMv7 and above with an RBIT instructio=
-n).   =20
-> > > > >=20
-> > > > > The code (6.14-rc6) starts:
-> > > > >=20
-> > > > > u64 mul_u64_u64_div_u64(u64 a, u64 b, u64 c)
-> > > > > {
-> > > > > 	if (ilog2(a) + ilog2(b) <=3D 62)
-> > > > > 		return div64_u64(a * b, c);
-> > > > >=20
-> > > > > Now ilog2() is (probably) much the same as clz - but not all cpu =
-have it.
-> > > > > Indeed clz(a) + clz(b) >=3D 64 would be a more obvious test.   =
-=20
-> > > >=20
-> > > > Ack, the more intuitive check might be
-> > > >=20
-> > > > 	if (fls64(a) + fls64(b) <=3D 64)
-> > > >  		return div64_u64(a * b, c);
-> > > >=20
-> > > > then, but maybe "intuitive" is subjective here? =20
-> > >=20
-> > > Depends on whether you grok 'clz' or 'fls' :-) =20
-> >=20
-> > And it also depends on the availability of the respective functions.
-> > There is a fls64 function provided by include/asm-generic/bitops/fls64.h
-> > and in several arch-specific arch/*/include/asm/bitops.h, but I didn't
-> > find a clz function apart from one for arch=3Darc.
-> >=20
-> > > > > On 32bit a check for a >> 32 | b >> 32 before the multiply might =
-be sane.   =20
-> > > >=20
-> > > > Not 100% sure I'm following. `a >> 32 | b >> 32` is just an indicat=
-or
-> > > > that a * b fits into an u64 and in that case the above check is the
-> > > > better one as this also catches e.g. a =3D (1ULL << 32) and b =3D 4=
-2. =20
-> > >=20
-> > > That is to optimise the multiple as well as the divide.
-> > > It is also a very cheap test. =20
-> >=20
-> > OK, so we have:
-> >=20
-> > 	                                 `a >> 32 | b >> 32` | `fls64(a) + fls=
-64(b) <=3D 64`
-> > 	cheap                          |          =E2=9C=93          |        =
-     =E2=9C=93
->=20
-> fls() isn't always cheap.
-> x86 has had bsr since the 386, but I don't remember seeing it in arm32 or=
- ppc.
+diff --git a/Documentation/devicetree/bindings/ata/ceva,ahci-1v84.yaml b/Documentation/devicetree/bindings/ata/ceva,ahci-1v84.yaml
+index 6ad78429dc74..c92341888a28 100644
+--- a/Documentation/devicetree/bindings/ata/ceva,ahci-1v84.yaml
++++ b/Documentation/devicetree/bindings/ata/ceva,ahci-1v84.yaml
+@@ -7,7 +7,6 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
+ title: Ceva AHCI SATA Controller
+ 
+ maintainers:
+-  - Mubin Sayyed <mubin.sayyed@amd.com>
+   - Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
+ 
+ description: |
+diff --git a/Documentation/devicetree/bindings/gpio/xlnx,zynqmp-gpio-modepin.yaml b/Documentation/devicetree/bindings/gpio/xlnx,zynqmp-gpio-modepin.yaml
+index bb93baa88879..e13e9d6dd148 100644
+--- a/Documentation/devicetree/bindings/gpio/xlnx,zynqmp-gpio-modepin.yaml
++++ b/Documentation/devicetree/bindings/gpio/xlnx,zynqmp-gpio-modepin.yaml
+@@ -12,7 +12,6 @@ description:
+   PS_MODE). Every pin can be configured as input/output.
+ 
+ maintainers:
+-  - Mubin Sayyed <mubin.sayyed@amd.com>
+   - Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
+ 
+ properties:
+diff --git a/Documentation/devicetree/bindings/reset/xlnx,zynqmp-reset.yaml b/Documentation/devicetree/bindings/reset/xlnx,zynqmp-reset.yaml
+index 1f1b42dde94d..1db85fc9966f 100644
+--- a/Documentation/devicetree/bindings/reset/xlnx,zynqmp-reset.yaml
++++ b/Documentation/devicetree/bindings/reset/xlnx,zynqmp-reset.yaml
+@@ -7,7 +7,6 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
+ title: Zynq UltraScale+ MPSoC and Versal reset
+ 
+ maintainers:
+-  - Mubin Sayyed <mubin.sayyed@amd.com>
+   - Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
+ 
+ description: |
+diff --git a/Documentation/devicetree/bindings/usb/dwc3-xilinx.yaml b/Documentation/devicetree/bindings/usb/dwc3-xilinx.yaml
+index b5843f4d17d8..379dacacb526 100644
+--- a/Documentation/devicetree/bindings/usb/dwc3-xilinx.yaml
++++ b/Documentation/devicetree/bindings/usb/dwc3-xilinx.yaml
+@@ -7,7 +7,6 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
+ title: Xilinx SuperSpeed DWC3 USB SoC controller
+ 
+ maintainers:
+-  - Mubin Sayyed <mubin.sayyed@amd.com>
+   - Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
+ 
+ properties:
+diff --git a/Documentation/devicetree/bindings/usb/microchip,usb5744.yaml b/Documentation/devicetree/bindings/usb/microchip,usb5744.yaml
+index e2a72deae776..c68c04da3399 100644
+--- a/Documentation/devicetree/bindings/usb/microchip,usb5744.yaml
++++ b/Documentation/devicetree/bindings/usb/microchip,usb5744.yaml
+@@ -17,7 +17,6 @@ description:
+ 
+ maintainers:
+   - Michal Simek <michal.simek@amd.com>
+-  - Mubin Sayyed <mubin.sayyed@amd.com>
+   - Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
+ 
+ properties:
+diff --git a/Documentation/devicetree/bindings/usb/xlnx,usb2.yaml b/Documentation/devicetree/bindings/usb/xlnx,usb2.yaml
+index a7f75fe36665..f295aa9d9ee7 100644
+--- a/Documentation/devicetree/bindings/usb/xlnx,usb2.yaml
++++ b/Documentation/devicetree/bindings/usb/xlnx,usb2.yaml
+@@ -7,7 +7,6 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
+ title: Xilinx udc controller
+ 
+ maintainers:
+-  - Mubin Sayyed <mubin.sayyed@amd.com>
+   - Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
+ 
+ properties:
+-- 
+2.25.1
 
-I don't know about ppc, but arm32 has a clz instruction. With the
-definition of fls64 for BITS_PER_LONG =3D=3D 32 in
-include/asm-generic/bitops/fls64.h:
-
-	static __always_inline int fls64(__u64 x)
-	{
-		__u32 h =3D x >> 32;
-		if (h)
-			return fls(h) + 32;
-		return fls(x);
-	}
-
-and fls from include/asm-generic/bitops/builtin-fls.h:
-
-	static __always_inline int fls(unsigned int x)
-	{
-		return x ? sizeof(x) * 8 - __builtin_clz(x) : 0;
-	}
-
-I'd claim this qualifies for "cheap". Agreed, it's still more expensive
-than a >> 32 | b >> 32, but its result is also better. I guess we cannot
-judge without a deeper analysis and profiling and a guess about likely
-values of a and b.
-
-[Side note: gcc also has a __builtin_clzll which might be a good fit to
-implement fls64.]
-
-> The 'a >> 32 | b >> 32' is very cheap on 32bit.
->=20
-> > 	allows to skip multiplication  |          =E2=9C=93          |        =
-     =E2=9C=93
-> > 	allows to skip 128bit division |          =E2=9C=93          |        =
-     =E2=9C=93
-> > 	catches all skip possibilities |          x          |             =E2=
-=9C=93
-> >=20
-> > > > > > > And please explain how it can be the same as checking 'n_hi =
-=3D=3D 0'.     =20
-> > > > > >=20
-> > > > > > This question still stands.   =20
-> > > > >=20
-> > > > > 'ni_hi =3D=3D 0' is exactly the condition under which you can do =
-a 64 bit divide.
-> > > > > Since it is when 'a * b' fits in 64 bits.
-> > > > >=20
-> > > > > If you assume that most calls need the 128bit product (or why use=
- the function)
-> > > > > then there is little point adding code to optimise for the unusua=
-l case.   =20
-> > > >=20
-> > > > n_hi won't be zero when the branch
-> > > >=20
-> > > > 	if (ilog2(a) + ilog2(b) <=3D 62)
-> > > > 		return div64_u64(a * b, c);
-> > > >=20
-> > > > wasn't taken? =20
-> > >=20
-> > > Right, but you can remove that test and check n_hi instead.
-> > > The multiplies are cheap compared to the divide loop.
-> > > (Especially when uint128 exists.) =20
-> >=20
-> > But you can check n_hi only after you completed the multiplication, so
-> > checking `ilog2(a) + ilog2(b) <=3D 62` (or `fls64(a) + fls64(b) <=3D 64=
-` or
-> > `clz(a) + clz(b) >=3D 64`) sounds like a good idea to me.
->=20
-> Depends on how much of the time you think the multiply is needed.
-> If it is needed most of the time you want to do it first.
-> If it is hardly ever needed then the initial check is likely to be a gain.
-
-It also depends on the costs of the two checks. If they are similar,
-doing the early check is better.
-
-Anyhow, this discussion is quite a bit away from what I want to achieve.
-My objective is to drop the local implementatino of
-mul_u64_u64_div_u64_roundup() from the pwm-stm32 driver. So I suggest we
-either add my suggested mul_u64_u64_div_u64_roundup() now or you care
-about adding an optimized variant of it (in a timely manner is
-welcomed).
-
-Best regards
-Uwe
-
---s3w3cnm76xj7iuqh
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmfuJeIACgkQj4D7WH0S
-/k7rgQgAoKkC/2hG+TjG/Re73zG/peBrwiZlA3nRUPRc0qujUlHnTXBGzjBQGdJy
-98+JI4DTqEGBTw/CCXjsD4Dq3hVYExcjuO9ckZ6Oqn9KTCby77Y/XfukjGp2DYsb
-BP7AJDfeIHidz52zyCYigOCnPT4cHhydbr48RqsFa22fad/zn2kol+JJ8NyP/mBb
-z2hKfe+s5XlyWJ9aLhUTX1k3TwdijKLsdsqbQIJp6NdsU2RjDpJUNNvc0EhFJ5NO
-Y5FcQGABUgmOxmalTnfuYeUgaMV1RETWRDI/ybqNyviMCM8928+1QEEB1KcEe5Js
-iG2hxsLSIevAv+Zb8RadeSuLJtQiqQ==
-=cK3w
------END PGP SIGNATURE-----
-
---s3w3cnm76xj7iuqh--
