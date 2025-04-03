@@ -1,185 +1,303 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8584119E7D1
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 09:10:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97D981F236B;
+	Thu,  3 Apr 2025 09:10:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743671407; cv=none; b=CLqTDvxSkMyFrnDpSr4Y/PMaA4ZtRaP55c0hKH3N/teqo/jBkpN8TDa25udUPyZ9k/455FwlsUdJ19VCIDHSs6hiWaOLzubrodICD5mrFu/4BLs5Y7e8u8Vhn/cjXCjIduaMIdOB1JDIiQBPpS2f0Y5cYAHEuYigGqM4wmx0bK8=
+	t=1743671451; cv=none; b=VFoLplnBEXBnCka/GIkKfaNHrdpFYPDfLE3z5mJ6Vlfnp1AfubirHMVVnIEQpC/luN4TFHnHhtcT3/SsH/kzA+tdBrERIVbkFHRq8lJFWu8KP0a7r9maV0eY2bFqdpOql6kaaYD1fso2iUywzFFMOSF4Bf2URxFtqtnPm1W9Kq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743671407; c=relaxed/simple;
-	bh=HHxZIAZcwZOnAq4xhrNoZfpUIfBIEeEfgyvQXZlNywg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KU72vSrGhq5b0Bj7dLtEUaPmUcpFPYTy+SBITKdNdvrcWTdXSUf37ogeVsR5u4CRePNUCSPgiYSgxj0uuqy9OKD1PXUQGb17fwFj8Bk8DjkZVh195IBptRwWBWLSDbugCAPcHphZXiUHMq0mPIf3BTP+Gi1Z9kXBoyuKbWrXBEQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Jf2ctPoL; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=r74Dtkjs; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Jf2ctPoL; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=r74Dtkjs; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1743671451; c=relaxed/simple;
+	bh=ZBG0Vv9MN4uDIzYRcVaSDYI9D8YaSDdVM57oQ7JZIXI=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Zx8Xc6Ij2ANO0l9UgoTte+CBCmq35uVj8Um80acEYyF9Rcq9ZWDSep2i587U2QKIAZ4Vn9iQpqTKYKfIqvgm9JtwSs3AOYdqVgPvs/jLaxtjDZk6bYqGiglsYZCjn/fvluSntzl4bl7p0zPIpDUswk8Jz78/MGtcdjYfap7YTfY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MwVjqdoQ; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Jf2ctPoL";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="r74Dtkjs";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Jf2ctPoL";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="r74Dtkjs"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 69F661F385;
-	Thu,  3 Apr 2025 09:09:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1743671398; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Zs6atIuqWpPN4lEFGJe1apHKHtKrhoP192orQSgXjdE=;
-	b=Jf2ctPoLw+9eqnbDiBxwHWRRYdaAokyiPC6zyUFxb394F715kljGMU5IHg2ZrFd3cHgLwi
-	2ScUKkUDX4RuD1EWBz0g78imjTFrVZ3rQuzl+pQjPXoIskbrx7SUOgj5zEvjZb/O9n90iS
-	JM95pblnr7x5kors/5rEQVbEudmW+4k=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1743671398;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Zs6atIuqWpPN4lEFGJe1apHKHtKrhoP192orQSgXjdE=;
-	b=r74Dtkjs4whoZ8fRok7/dhf+dGMIPKcf3Vj1vlBZptk1vRnrK8L13Vsr3bde6ds1S1HrSm
-	Io/aN/mAxspXMHAg==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1743671398; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Zs6atIuqWpPN4lEFGJe1apHKHtKrhoP192orQSgXjdE=;
-	b=Jf2ctPoLw+9eqnbDiBxwHWRRYdaAokyiPC6zyUFxb394F715kljGMU5IHg2ZrFd3cHgLwi
-	2ScUKkUDX4RuD1EWBz0g78imjTFrVZ3rQuzl+pQjPXoIskbrx7SUOgj5zEvjZb/O9n90iS
-	JM95pblnr7x5kors/5rEQVbEudmW+4k=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1743671398;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Zs6atIuqWpPN4lEFGJe1apHKHtKrhoP192orQSgXjdE=;
-	b=r74Dtkjs4whoZ8fRok7/dhf+dGMIPKcf3Vj1vlBZptk1vRnrK8L13Vsr3bde6ds1S1HrSm
-	Io/aN/mAxspXMHAg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4BFAE13A2C;
-	Thu,  3 Apr 2025 09:09:58 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id wRqNEGZQ7meBZwAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Thu, 03 Apr 2025 09:09:58 +0000
-Message-ID: <5feaf4c7-4970-4d9b-84a2-fcba2cbe0bc4@suse.cz>
-Date: Thu, 3 Apr 2025 11:09:57 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MwVjqdoQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743671450; x=1775207450;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=ZBG0Vv9MN4uDIzYRcVaSDYI9D8YaSDdVM57oQ7JZIXI=;
+  b=MwVjqdoQLUT0JgeZriML4NKjBJRZ6l0L+ddQtF3bL5OxjPM6uZc2RlVe
+   TIwas5rcSlqaRB5IjD3mBpz0AdLmU9KY3v80mB1dl4ujzWD2LjVfY1tsy
+   n1QN+bXNd3awa11bU9fmC+HLk1X+v1wAc520JMiUTD9+19Ip0EGMIYJEa
+   IPmHWz4zF3k62RMjQaxHWM8BSt0CbbHmP+kPfXUgY72Z6fjDpRc4CaSji
+   UEphXxsnmevGzSgb8uEUZ7R0L14sW+TkZvq8bOCSZaxqOiwLWJsowwA5z
+   kWmDJ+DnsjK1or+C1wXKNod88gyxTBA2/YQzzbB6Y4iX7u/aGoqAt6k7/
+   A==;
+X-CSE-ConnectionGUID: AVq+PpZyRViLAueWWLL/Ww==
+X-CSE-MsgGUID: m+BzlzHBRWqW4ReMUg7yKg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11392"; a="45079400"
+X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
+   d="scan'208";a="45079400"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 02:10:49 -0700
+X-CSE-ConnectionGUID: cyWztgi0SDW/r7dpo4J8xw==
+X-CSE-MsgGUID: 8xFd3C6oQ3KpnT1pjpkeyg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
+   d="scan'208";a="131925166"
+Received: from dhhellew-desk2.ger.corp.intel.com (HELO localhost) ([10.245.244.152])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 02:10:45 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 3 Apr 2025 12:10:41 +0300 (EEST)
+To: Hans Zhang <18255117159@163.com>
+cc: lpieralisi@kernel.org, bhelgaas@google.com, kw@linux.com, 
+    manivannan.sadhasivam@linaro.org, robh@kernel.org, jingoohan1@gmail.com, 
+    thomas.richard@bootlin.com, linux-pci@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [v7 1/5] PCI: Refactor capability search into common macros
+In-Reply-To: <6075b776-d2be-49d3-8321-e6af66781709@163.com>
+Message-ID: <9e9a68b1-8c3a-6132-d4fc-9f7b0b2d3e3a@linux.intel.com>
+References: <20250402042020.48681-1-18255117159@163.com> <20250402042020.48681-2-18255117159@163.com> <909653ac-7ba2-9da7-f519-3d849146f433@linux.intel.com> <6075b776-d2be-49d3-8321-e6af66781709@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] locking/local_lock, mm: Replace localtry_ helpers with
- local_trylock_t type
-Content-Language: en-US
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- Linus Torvalds <torvalds@linux-foundation.org>, bpf <bpf@vger.kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
- Martin KaFai Lau <martin.lau@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- Peter Zijlstra <peterz@infradead.org>, Steven Rostedt <rostedt@goodmis.org>,
- Shakeel Butt <shakeel.butt@linux.dev>, Michal Hocko <mhocko@suse.com>,
- linux-mm <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
-References: <20250401005134.14433-1-alexei.starovoitov@gmail.com>
- <20250402073032.rqsmPfJs@linutronix.de>
- <62dd026d-1290-49cb-a411-897f4d5f6ca7@suse.cz>
- <CAADnVQLce4pH4DJW2WW6W2-ct-17OnQE7D8q7KiwdNougis2BQ@mail.gmail.com>
-From: Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <CAADnVQLce4pH4DJW2WW6W2-ct-17OnQE7D8q7KiwdNougis2BQ@mail.gmail.com>
+Content-Type: multipart/mixed; boundary="8323328-560524903-1743671441=:1302"
+
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323328-560524903-1743671441=:1302
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Score: -2.80
-X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	TO_DN_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	ARC_NA(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[14];
-	RCVD_COUNT_TWO(0.00)[2];
-	TAGGED_RCPT(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
-X-Spam-Flag: NO
-X-Spam-Level: 
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-On 4/2/25 23:35, Alexei Starovoitov wrote:
-> On Wed, Apr 2, 2025 at 2:02 AM Vlastimil Babka <vbabka@suse.cz> wrote:
-> 
-> This is because the macro specifies the type:
-> DEFINE_GUARD(local_lock, local_lock_t __percpu*,
-> 
-> and that type is used to define two static inline functions
-> with that type,
-> so by the time our __local_lock_acquire() macro is used
-> it sees 'local_lock_t *' and not the actual type of memcg.stock_lock.
+On Wed, 2 Apr 2025, Hans Zhang wrote:
+> On 2025/4/2 20:42, Ilpo J=C3=A4rvinen wrote:
+> > On Wed, 2 Apr 2025, Hans Zhang wrote:
+> >=20
+> > > Introduce PCI_FIND_NEXT_CAP_TTL and PCI_FIND_NEXT_EXT_CAPABILITY macr=
+os
+> > > to consolidate duplicate PCI capability search logic found throughout=
+ the
+> > > driver tree. This refactoring:
+> > >=20
+> > >    1. Eliminates code duplication in capability scanning routines
+> > >    2. Provides a standardized, maintainable implementation
+> > >    3. Reduces error-prone copy-paste implementations
+> > >    4. Maintains identical functionality to existing code
+> > >=20
+> > > The macros abstract the low-level capability register scanning while
+> > > preserving the existing PCI configuration space access patterns. They=
+ will
+> > > enable future conversions of multiple capability search implementatio=
+ns
+> > > across various drivers (e.g., PCI core, controller drivers) to use
+> > > this centralized logic.
+> > >=20
+> > > Signed-off-by: Hans Zhang <18255117159@163.com>
+> > > ---
+> > >   drivers/pci/pci.h             | 81 ++++++++++++++++++++++++++++++++=
++++
+> > >   include/uapi/linux/pci_regs.h |  2 +
+> > >   2 files changed, 83 insertions(+)
+> > >=20
+> > > diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> > > index 2e9cf26a9ee9..f705b8bd3084 100644
+> > > --- a/drivers/pci/pci.h
+> > > +++ b/drivers/pci/pci.h
+> > > @@ -89,6 +89,87 @@ bool pcie_cap_has_lnkctl(const struct pci_dev *dev=
+);
+> > >   bool pcie_cap_has_lnkctl2(const struct pci_dev *dev);
+> > >   bool pcie_cap_has_rtctl(const struct pci_dev *dev);
+> > >   +/* Standard Capability finder */
+> > > +/**
+> > > + * PCI_FIND_NEXT_CAP_TTL - Find a PCI standard capability
+> > > + * @read_cfg: Function pointer for reading PCI config space
+> > > + * @start: Starting position to begin search
+> > > + * @cap: Capability ID to find
+> > > + * @args: Arguments to pass to read_cfg function
+> > > + *
+> > > + * Iterates through the capability list in PCI config space to find
+> > > + * the specified capability. Implements TTL (time-to-live) protectio=
+n
+> > > + * against infinite loops.
+> > > + *
+> > > + * Returns: Position of the capability if found, 0 otherwise.
+> > > + */
+> > > +#define PCI_FIND_NEXT_CAP_TTL(read_cfg, start, cap, args...)
+> > > \
+> > > +({=09=09=09=09=09=09=09=09=09\
+> > > +=09u8 __pos =3D (start);=09=09=09=09=09=09\
+> > > +=09int __ttl =3D PCI_FIND_CAP_TTL;=09=09=09=09=09\
+> > > +=09u16 __ent;=09=09=09=09=09=09=09\
+> > > +=09u8 __found_pos =3D 0;=09=09=09=09=09=09\
+> > > +=09u8 __id;=09=09=09=09=09=09=09\
+> > > +=09=09=09=09=09=09=09=09=09\
+> > > +=09read_cfg(args, __pos, 1, (u32 *)&__pos);=09=09=09\
+> > > +=09=09=09=09=09=09=09=09=09\
+> > > +=09while (__ttl--) {=09=09=09=09=09=09\
+> > > +=09=09if (__pos < PCI_STD_HEADER_SIZEOF)=09=09=09\
+> > > +=09=09=09break;=09=09=09=09=09=09\
+> > > +=09=09__pos =3D ALIGN_DOWN(__pos, 4);=09=09=09=09\
+> > > +=09=09read_cfg(args, __pos, 2, (u32 *)&__ent);=09=09\
+> > > +=09=09__id =3D FIELD_GET(PCI_CAP_ID_MASK, __ent);=09=09\
+> > > +=09=09if (__id =3D=3D 0xff)=09=09=09=09=09\
+> > > +=09=09=09break;=09=09=09=09=09=09\
+> > > +=09=09if (__id =3D=3D (cap)) {=09=09=09=09=09\
+> > > +=09=09=09__found_pos =3D __pos;=09=09=09=09\
+> > > +=09=09=09break;=09=09=09=09=09=09\
+> > > +=09=09}=09=09=09=09=09=09=09\
+> > > +=09=09__pos =3D FIELD_GET(PCI_CAP_LIST_NEXT_MASK, __ent);=09\
+> >=20
+> > Could you please separate the coding style cleanups into own patch that
+> > is before the actual move patch. IMO, all those cleanups can be in the
+> > same patch.
+> >=20
+>=20
+> Hi Ilpo,
+>=20
+> Thanks your for reply. I don't understand. Is it like this?
 
-Hm but I didn't even try to instantiate any guard. In fact the compilation
-didn't even error on compiling my slub.o but earlier in compiling
-arch/x86/kernel/asm-offsets.c
+Add a patch before the first patch which does only the cleanups to=20
+__pci_find_next_cap_ttl(). The patch that creates PCI_FIND_NEXT_CAP_TTL()=
+=20
+and converts its PCI core users (most of the patches 1&2) is to be based=20
+on top of that cleanup patch.
 
-I think the problem is rather that the guard creates static inline functions
-and _Generic() only works via macros as you pointed out in the reply to Andrew?
+> #define PCI_FIND_NEXT_CAP_TTL(read_cfg, start, cap, args...)=09=09\
+> ({=09=09=09=09=09=09=09=09=09\
+> =09int __ttl =3D PCI_FIND_CAP_TTL;=09=09=09=09=09\
+> =09u8 __id, __found_pos =3D 0;=09=09=09=09=09\
+> =09u8 __pos =3D (start);=09=09=09=09=09=09\
+> =09u16 __ent;=09=09=09=09=09=09=09\
+> =09=09=09=09=09=09=09=09=09\
+> =09read_cfg(args, __pos, 1, (u32 *)&__pos);=09=09=09\
+> =09=09=09=09=09=09=09=09=09\
+> =09while (__ttl--) {=09=09=09=09=09=09\
+> =09=09if (__pos < PCI_STD_HEADER_SIZEOF)=09=09=09\
+> =09=09=09break;=09=09=09=09=09=09\
+> =09=09=09=09=09=09=09=09=09\
+> =09=09__pos =3D ALIGN_DOWN(__pos, 4);=09=09=09=09\
+> =09=09read_cfg(args, __pos, 2, (u32 *)&__ent);=09=09\
+> =09=09=09=09=09=09=09=09=09\
+> =09=09__id =3D FIELD_GET(PCI_CAP_ID_MASK, __ent);=09=09\
+> =09=09if (__id =3D=3D 0xff)=09=09=09=09=09\
+> =09=09=09break;=09=09=09=09=09=09\
+> =09=09=09=09=09=09=09=09=09\
+> =09=09if (__id =3D=3D (cap)) {=09=09=09=09=09\
+> =09=09=09__found_pos =3D __pos;=09=09=09=09\
+> =09=09=09break;=09=09=09=09=09=09\
+> =09=09}=09=09=09=09=09=09=09\
+> =09=09=09=09=09=09=09=09=09\
+> =09=09__pos =3D FIELD_GET(PCI_CAP_LIST_NEXT_MASK, __ent);=09\
+> =09}=09=09=09=09=09=09=09=09\
+> =09__found_pos;=09=09=09=09=09=09=09\
+> })
+>=20
+> > You also need to add #includes for the defines you now started to use.
+> >=20
+>=20
+> Is that what you mean?
+>=20
+> +#include <linux/bitfield.h>
+> +#include <linux/align.h>
+> +#include <uapi/linux/pci_regs.h>
 
-I guess it's solvable if we care in the future, but it means more code
-duplication - move the _Generic() dispatch outside the whole implementation
-to choose between two variants, have guards use use the specific variant
-directly without _Generic()?
+Almost, including pci_regs.h is not strictly necessary as linux/pci.h will=
+=20
+always pull that one in (not that it would hurt).
 
-Or maybe there's a simpler way I'm just not familiar with both the guards
-and _Generic() enough.
+Also, sort the includes alphabetically.
 
-> Your macro can be hacked with addition of:
-> local_lock_t *l = NULL;
-> ...
-> l = (void *)this_cpu_ptr(lock);
-> ...
-> tl = (void *)this_cpu_ptr(lock);
-> ...
-> DEFINE_GUARD(local_lock, void __percpu*,
-> 
-> then
-> guard(local_lock)(&memcg_stock.stock_lock);
-> 
-> will compile without warnings with both
-> typeof(stock_lock) = local_lock_t and local_trylock_t,
-> 
-> but the generated code will take default:(void)0) path
-> and will pass NULL into local_lock_acquire(NULL);
-> 
-> In other words guard(local_lock) can only support one
-> specific type. It cannot be made polymorphic with _Generic() trick.
-> This is an unfortunate tradeoff with this approach.
-> Thankfully there are no users of it in the tree:
-> git grep 'guard(local'|wc -l
-> 0
-> 
-> so I think it's ok that guard(local_lock) can only be used with local_lock_t.
+--
+ i.
 
-
+>=20
+> Best regards,
+> Hans
+>=20
+> > > +=09}=09=09=09=09=09=09=09=09\
+> > > +=09__found_pos;=09=09=09=09=09=09=09\
+> > > +})
+> > > +
+> > > +/* Extended Capability finder */
+> > > +/**
+> > > + * PCI_FIND_NEXT_EXT_CAPABILITY - Find a PCI extended capability
+> > > + * @read_cfg: Function pointer for reading PCI config space
+> > > + * @start: Starting position to begin search (0 for initial search)
+> > > + * @cap: Extended capability ID to find
+> > > + * @args: Arguments to pass to read_cfg function
+> > > + *
+> > > + * Searches the extended capability space in PCI config registers
+> > > + * for the specified capability. Implements TTL protection against
+> > > + * infinite loops using a calculated maximum search count.
+> > > + *
+> > > + * Returns: Position of the capability if found, 0 otherwise.
+> > > + */
+> > > +#define PCI_FIND_NEXT_EXT_CAPABILITY(read_cfg, start, cap, args...)
+> > > \
+> > > +({
+> > > \
+> > > +=09u16 __pos =3D (start) ?: PCI_CFG_SPACE_SIZE;
+> > > \
+> > > +=09u16 __found_pos =3D 0;
+> > > \
+> > > +=09int __ttl, __ret;
+> > > \
+> > > +=09u32 __header;
+> > > \
+> > > +
+> > > \
+> > > +=09__ttl =3D (PCI_CFG_SPACE_EXP_SIZE - PCI_CFG_SPACE_SIZE) / 8;
+> > > \
+> > > +=09while (__ttl-- > 0 && __pos >=3D PCI_CFG_SPACE_SIZE) {
+> > > \
+> > > +=09=09__ret =3D read_cfg(args, __pos, 4, &__header);
+> > > \
+> > > +=09=09if (__ret !=3D PCIBIOS_SUCCESSFUL)
+> > > \
+> > > +=09=09=09break;
+> > > \
+> > > +
+> > > \
+> > > +=09=09if (__header =3D=3D 0)
+> > > \
+> > > +=09=09=09break;
+> > > \
+> > > +
+> > > \
+> > > +=09=09if (PCI_EXT_CAP_ID(__header) =3D=3D (cap) && __pos !=3D start)=
+ {
+> > > \
+> > > +=09=09=09__found_pos =3D __pos;
+> > > \
+> > > +=09=09=09break;
+> > > \
+> > > +=09=09}
+> > > \
+> > > +
+> > > \
+> > > +=09=09__pos =3D PCI_EXT_CAP_NEXT(__header);
+> > > \
+> > > +=09}
+> > > \
+> > > +=09__found_pos;
+> > > \
+> > > +})
+> > > +
+> > >   /* Functions internal to the PCI core code */
+> > >     #ifdef CONFIG_DMI
+> > > diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_r=
+egs.h
+> > > index 3445c4970e4d..a11ebbab99fc 100644
+> > > --- a/include/uapi/linux/pci_regs.h
+> > > +++ b/include/uapi/linux/pci_regs.h
+> > > @@ -206,6 +206,8 @@
+> > >   /* 0x48-0x7f reserved */
+> > >     /* Capability lists */
+> > > +#define PCI_CAP_ID_MASK=09=090x00ff
+> > > +#define PCI_CAP_LIST_NEXT_MASK=090xff00
+> > >     #define PCI_CAP_LIST_ID=09=090=09/* Capability ID */
+> > >   #define  PCI_CAP_ID_PM=09=090x01=09/* Power Management */
+> > >=20
+> >=20
+>=20
+--8323328-560524903-1743671441=:1302--
