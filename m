@@ -1,91 +1,70 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C6CF32417E6;
-	Thu,  3 Apr 2025 08:28:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 927492417E6;
+	Thu,  3 Apr 2025 08:28:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743668891; cv=none; b=U4WVXaaEH2swemizF1u0xqTUMhvn3B0yPSQjso2VMVCUzZ9Dk2ZTg7G3qjmduFGNPFke2+FD6S3qwiveGub0vjRTJitJMb6kIQiwHAq6TzUSeuLXjd8Yytb4HxdinwVNCMc87blGB/TWLKzjB9b88OHZX1gFzMsGYjjaNjKbGTg=
+	t=1743668906; cv=none; b=mGZ23Yw9R6VmJ7MuRIAXeB5vrqH7BGsrmMgg2W/zlEK+aqP6lMQtk4KJ3Dq9M+7d3S1m3g7dLzk/vEGdIfbusCWwlOYl2ZWn5NSctALWX6Zd4Fpwyd9zb+9ytv8VIQnKf1Wj0R5JPlkGakPnYDi2cY26rL6tHhwPRXMNufpv5EI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743668891; c=relaxed/simple;
-	bh=e9HGzNr+7rhA4wWr8t3Fv+wxJSE2qTuGRu7sNWZ6Sf8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=et4fhYnB3q3lQqKfUuF0jwEb2MyC0RAQTNNX8AfQbT6E+J0e5Cd5NOQOPyLEdVQKlI8qO1K09hRqUyGOSazctlERhozlgc6BkuzTtk8XDGa7MsVjthnZMxKIpZweimn5X56UadafWE38DSE0mLLuZlCesvxnFz+1WQuUji7jU9w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 35DA5106F;
-	Thu,  3 Apr 2025 01:28:11 -0700 (PDT)
-Received: from mazurka.cambridge.arm.com (mazurka.cambridge.arm.com [10.2.80.18])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 63B403F59E;
-	Thu,  3 Apr 2025 01:28:04 -0700 (PDT)
-Date: Thu, 3 Apr 2025 08:28:01 +0000
-From: =?utf-8?Q?Miko=C5=82aj?= Lenczewski <miko.lenczewski@arm.com>
-To: Ryan Roberts <ryan.roberts@arm.com>
-Cc: suzuki.poulose@arm.com, yang@os.amperecomputing.com, corbet@lwn.net,
-	catalin.marinas@arm.com, will@kernel.org, jean-philippe@linaro.org,
-	robin.murphy@arm.com, joro@8bytes.org, akpm@linux-foundation.org,
-	ardb@kernel.org, mark.rutland@arm.com, joey.gouly@arm.com,
-	maz@kernel.org, james.morse@arm.com, broonie@kernel.org,
-	oliver.upton@linux.dev, baohua@kernel.org, david@redhat.com,
-	ioworker0@gmail.com, jgg@ziepe.ca, nicolinc@nvidia.com,
-	mshavit@google.com, jsnitsel@redhat.com, smostafa@google.com,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev
-Subject: Re: [PATCH v5 3/3] arm64/mm: Elide tlbi in contpte_convert() under
- BBML2
-Message-ID: <20250403082801.GA14239@mazurka.cambridge.arm.com>
-References: <20250325093625.55184-1-miko.lenczewski@arm.com>
- <20250325093625.55184-4-miko.lenczewski@arm.com>
- <fc505d3f-8ee4-40ed-8b8e-9e1c07b21fe1@arm.com>
+	s=arc-20240116; t=1743668906; c=relaxed/simple;
+	bh=0N/rEQuyTC6PaZ4nhkwBNvr/kXRCa6azJUbuvQONoCI=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=qSB9UffVQcbs5XSJro3QDXb1KeMpxlD1I3D0mOoXqE6NrGCubLk6hZr8xMFV1qz8RNTFJFZNs7BcFa1em2+SSr9J3DO00sHarD77ddyAhW3LwJJr7BnU1HKB05F8V0StBPW7jHuUI9ioDcPhWavYyBYxcQZw/CIYpfEyW2kFFqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=ik/7ZNXR; arc=none smtp.client-ip=168.119.38.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="ik/7ZNXR"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+	Resent-Cc:Resent-Message-ID; bh=0N/rEQuyTC6PaZ4nhkwBNvr/kXRCa6azJUbuvQONoCI=;
+	t=1743668904; x=1744878504; b=ik/7ZNXRflWQrvT0snJYaYb/uBeK1vMt7O3ka4WUEs6WDfN
+	w5wHqkEH8Yq/JAFGSy/oLAqOxLMWu3rQ/cbJEuwlHzna9hWrHSTn1mMycuUuEBNIUy5PlojS8pegn
+	G1IQrbUsnyvfki2anbo5uxZO5s66QW9nWQsKYE4F088OuNLQnct5t555rBDTGdfuHOCrgajxar4r4
+	44V8ujeRTDCvsP/JRdhPDVL+B/HR5nTeonJzQGaGrf0EYOwF92GyX1Zi1qu7w9PwW9eUx08o2UMeQ
+	dPP8nWw6Sdjhp6Hj6nMFvb1+UgohZM3PilHff0h2ceqqjgPXtauUlBJVIlbQSEmg==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.98.1)
+	(envelope-from <johannes@sipsolutions.net>)
+	id 1u0Fvl-0000000Ejz9-2DwC;
+	Thu, 03 Apr 2025 10:28:10 +0200
+Message-ID: <694ac5d71aca5ea08674fbfa0b803589c3cea315.camel@sipsolutions.net>
+Subject: Re: [PATCH] IPC MUX: Add error handling for
+ ipc_mux_dl_acb_send_cmds().
+From: Johannes Berg <johannes@sipsolutions.net>
+To: Wentao Liang <vulab@iscas.ac.cn>, m.chetan.kumar@intel.com, 
+	loic.poulain@linaro.org, ryazanov.s.a@gmail.com, andrew+netdev@lunn.ch, 
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Thu, 03 Apr 2025 10:28:08 +0200
+In-Reply-To: <20250403082449.2183-1-vulab@iscas.ac.cn>
+References: <20250403082449.2183-1-vulab@iscas.ac.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <fc505d3f-8ee4-40ed-8b8e-9e1c07b21fe1@arm.com>
+X-malware-bazaar: not-scanned
 
-On Thu, Apr 03, 2025 at 09:14:43AM +0100, Ryan Roberts wrote:
-> On 25/03/2025 05:36, Mikołaj Lenczewski wrote:
-> > diff --git a/arch/arm64/mm/contpte.c b/arch/arm64/mm/contpte.c
-> > index 55107d27d3f8..77ed03b30b72 100644
-> > --- a/arch/arm64/mm/contpte.c
-> > +++ b/arch/arm64/mm/contpte.c
-> > @@ -68,7 +68,8 @@ static void contpte_convert(struct mm_struct *mm, unsigned long addr,
-> >  			pte = pte_mkyoung(pte);
-> >  	}
-> >  
-> > -	__flush_tlb_range(&vma, start_addr, addr, PAGE_SIZE, true, 3);
-> > +	if (!system_supports_bbml2_noabort())
-> > +		__flush_tlb_range(&vma, start_addr, addr, PAGE_SIZE, true, 3);
-> >  
-> >  	__set_ptes(mm, start_addr, start_ptep, pte, CONT_PTES);
-> 
-> Despite all the conversation we had about completely eliding the TLBI for the
-> BBML2 case, I've continued to be a bit uneasy about it. I had another chat with
-> Alex C and we concluded that it is safe, but there could be conceivable
-> implementations where it is not performant. Alex suggested doing a TLBI without
-> the DSB and I think that's a good idea. So after the __set_ptes(), I suggest adding:
-> 
-> 	if (system_supports_bbml2_noabort())
-> 		__flush_tlb_range_nosync(mm, start_addr, addr, PAGE_SIZE,
-> 					 true, 3);
-> 
-> That will issue the TLBI but won't wait for it to complete. So it should be very
-> fast. We are guranteed correctness immediately. We are guranteed performance
-> after the next DSB (worst-case; next context switch).
-> 
-> Thanks,
-> Ryan
+On Thu, 2025-04-03 at 16:24 +0800, Wentao Liang wrote:
+> The ipc_mux_dl_acbcmd_decode() calls the ipc_mux_dl_acb_send_cmds(),
+> but does not report the error if ipc_mux_dl_acb_send_cmds() fails.
+> This makes it difficult to detect command sending failures. A proper
+> implementation can be found in ipc_mux_dl_cmd_decode().
+>=20
+> Add error reporting to the call, logging an error message using dev_err()
+> if the command sending fails.
+>=20
+> Fixes: 1f52d7b62285 ("net: wwan: iosm: Enable M.2 7360 WWAN card support"=
+)
 
-Hi Ryan,
+That should've given you a hint for your own patch's subject :)
 
-Sure, perfectly happy to add that on. Will respin and add a note about
-this behaviour to the source code and to the patch / cover letter.
-
--- 
-Kind regards,
-Mikołaj Lenczewski
+johannes
