@@ -1,63 +1,64 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67D8B200B99
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 19:16:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0282B2040B9
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 19:16:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743707793; cv=none; b=l2G++nZ8wx1TNMoAU5/idmj1sFfY+Lj1yNRYHkg6mrCowMc0voL5fvI9tx6HuOmGLUOrK7AKYQyJHBSXI5rIGTE0K4ikMITXGrJus/xvCeZL/w8wWyp8YiosSa1zLBhRshREyGY519Tip+HO4zjaJNCfdXzxAGnPUoyuK0ZmI/E=
+	t=1743707795; cv=none; b=dZA6y/8eNH6+fonJ9qMxuG0x5lH0wmyv/Cm4K/DoIyfATg0UTaR5cC/dUuG46QzlgpIdW8VBXa8Kpnrl+Mp+5XsfZpz59E0aDFiz0Dqi8Qjd2d8kq5sXvWx2oUic47hCdVHzekZokPMom1kGSc5l+l/mDeLpHQ+oqpZ+jqNYVTI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743707793; c=relaxed/simple;
-	bh=rQ2v20Ddln+4BwZ1YiM0h0pDo1Qau2cCuH+bpTFZT9w=;
+	s=arc-20240116; t=1743707795; c=relaxed/simple;
+	bh=oIe/uWD/FQDzr1edh1CzgOk8NT19Av3Ax0Mu4QeYt0c=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=WxTi+ql8NmyIm3qMJbELhI4C976Lf9D64VpsT03uOjK2ZtuUN6zpOhqK+gpC8tINZ0lRMdnfeuDC06HNR9lCZAJFdG9To8EOtDWCNdLXQljKwnySnLIKeatCNQ7wcyDYsO5gfT9rBrEocf8rHL14utCsIhb/eH9o29RUV9AR8+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=dA+tqKgx; arc=none smtp.client-ip=209.85.167.51
+	 In-Reply-To:To:Cc; b=WhfXIpPx3Ve6EHRwyrAAZ9KHeUQJoj9FCzGpbMsssYFLzzJ5CAlWNXo/LETILnwSywXWaFKK29p3U+hDbwgufpMOZ6NzrT1Tq2SGABuPF+wcrFr9VDe5o/smPlD1fWasW5WaqiqurOvMR+FMW62EWZmGFFgGzmc5rZjDzaSQmeU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=KzcRrt6T; arc=none smtp.client-ip=209.85.167.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dA+tqKgx"
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-54298ec925bso1981526e87.3
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 12:16:29 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KzcRrt6T"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5499659e669so1342448e87.3
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 12:16:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1743707788; x=1744312588; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1743707791; x=1744312591; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=XTsIlDstX0o+Mbqya+IkMyfr6mBLbjzx0t4rQvZShfQ=;
-        b=dA+tqKgxMEyaBrWTZ+T7TXv+rs/eoD44/x4t7aWao13O3Gd7wAUFM4j25zZwpfUHFu
-         ZQXUUs0mPlvA5pz1LwM3Ua+rHXzFoZH4XJ2e1gHhsQ7izxa1P3QgR3MdVLokoebMRP0f
-         vCvsIUMwhvQWEHM5tPZl/sRAGTwB51FeYmlvY=
+        bh=dorrjSo0orF//5lS6H31AEnatOUG0VehlrElNg21OPo=;
+        b=KzcRrt6Tn4J4roTiElDsx6nBuxoqkw131eiq8KEj5G9YyO2hMWnVUXimaETLD+go38
+         8zmQjuyZ12i+Tow/1AKE/p/tPZLMpoTgwhacOV4EVTpyXKUGH/TLmrKD1uP866iZ9/xn
+         nH+JVdVFOpZ849qslDl0pHcfyaASPW8VTQ7+8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743707788; x=1744312588;
+        d=1e100.net; s=20230601; t=1743707791; x=1744312591;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=XTsIlDstX0o+Mbqya+IkMyfr6mBLbjzx0t4rQvZShfQ=;
-        b=nN4H6qhN4ILLRMCC7BaLxZoAvOUUvskPIz2UnfektFvycsSc23TzvFSp8k1eOUC0gO
-         hxjEmGgYBG9cdsFspQ1veCM7opG3SfS9LmIuzYt3G1eTgXB6vcK9PMZSENNLbsHe64Gd
-         kNeSC4mBRyD/kWGSY+9PlyVWJS2jlkMDGdrScKt/tHISs4fRiTHeuf1zJD+fx5D4aUdK
-         bGwxx54/voUsvtAurX4QwGWiYc+e9LU8n3S7jU9085HAb9UOW0hrD7FchXlo2RPIvBUs
-         etx6lbo83Lq0OTOsiHFiLI/ffquY5HOqr6AxTSJUoiZLmpp3ZQKl7wt5EkP1QhRGMclZ
-         mRfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUucOjQLPVVoV7x8gm1TMY7sGfnAJ1K6hoWmjBW7LogJb7hKSMrzwqcfi71tvhQiHzzAzcpl4Km0gR2aJA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw4O7Zer871Fwx3w01E6JRH3UK8aeFVgbe0wFX6aMZpi687FTXL
-	L+Ft80KezCr5X55WoD4+KI0jfem20v7O7o21p/xUSM0m2EGg8lkUFJdSNvI22Q==
-X-Gm-Gg: ASbGncvBQuJoHrUKXYmlDb5F85cfWGeDKEVi4s3y1UHI2UaiVlh3XSYBrM1Z3ag/bqE
-	TdK7c5ySGjDiKToZsnfykG42420AQKVPTp7dwe9+N+bw9GvJs/4LywEsX7t7SwVHwXOy22eykEP
-	SS0OF4X12XbCVbA7ohUqt6uVTRyQpWKM+LWXwhdEvJMV80gt0X76+AbT3ykN9Rr6nc20RK2QdQ7
-	UslHXksPF7y32dQ8C9ZstoUo5SgHsiYxIY6O3fbeGWKxFB6xMcufDawi5LTECaXgYv4clgxmppU
-	UUeZW1wvUTbrsJim04Ve88knhY+5529NC7iTCL0KMo3qa7xy8XBcX9ar+l/Q8mZPxpVlpTqwuF4
-	cyRl9M+pw0vQMc1rAP7Qsz1S8
-X-Google-Smtp-Source: AGHT+IHCXI3V2p507FEESs4oxanJZZsNHxyB6fAQHEoPMaOLxvmQtP8ckbT8u/hI65VR8pFcvY0x2A==
-X-Received: by 2002:a05:6512:2253:b0:549:7c13:e88f with SMTP id 2adb3069b0e04-54c22795803mr113406e87.30.1743707787714;
-        Thu, 03 Apr 2025 12:16:27 -0700 (PDT)
+        bh=dorrjSo0orF//5lS6H31AEnatOUG0VehlrElNg21OPo=;
+        b=mdpFQJSKjxytq4C+TFUMd5+Mb0xsNM/KhYIvj0xw9FETjJlJAN/qmMIgqSxhDkkFt+
+         MWddkp1QMb+UZtakRjhcZ79iZAhIJQqjX4GrQFoaAZWbg2xqgAiCvCj4YTsfpju3OY6/
+         FrgBqCXHH3A+nnaPCLvb7QCYJfnutK1EthpSXfZJ+qrKwCMXlCA5LmDkj79+NEvO7bXt
+         L6ohzEHOlPd/NSSnhGX8ZHg2wMGpKXysKVE7/KoQ16ltOr0RZQZKOVi2KtrwLR1hA2Uc
+         xnidmNJ9SsoywJGtbprdRy2haTG5KchinmRI5tEa2gxiAKDO6kgC75Rt4MgPKJ35mMdW
+         1xqw==
+X-Forwarded-Encrypted: i=1; AJvYcCW2I036fIkfvGp9+bwceTCBxLaEedcCkCPUBGKgZE0rHpCrzt5StnEi22EME30YP3yWBysJL3rdL2aPkws=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz9zCi9JTo5qZRHpdoUCLQrtNtDK/Ba6eMlfSqBwYUH22rCXepz
+	ZX1uzfXUZ3f+8Moc2XgCd1p15D71g3jGo8Cc7iHZwEwtTc1PlAdR/Kpze0goxw==
+X-Gm-Gg: ASbGncsOf75hE0y32GDUu88F4pzM4S3b86V41pRGT99AbgPt+H0YUfpTx3ekWTa1YZJ
+	YlONb8sHnCWImrqY9woiWty2UrhdVQRzxSBiZzPtZsRlxSsTfuex/PSQ4zkQMG+eU+RZ0g+G9gI
+	TQ3vqnU3ROImjzM8MtDkQwAZKLCHFTuav1+0ypEu1JrIS9dezauwkxhAXDcWEfLOzPUIjbZXvP4
+	Rx6eXne9AVfXUS8+ZzEzkjqKFfyyb2zO0Z3qyntX99umUp/pMYdnwTL+sDrSRNBoTy5u59EP8nB
+	nd0laXqEXlMK5Q0ySWMMvC3ACdTn+vLLHlwXAyx1QoMIKUJXaZkI5fL5yFjssjT7XdLyy6ybEYY
+	01nJr5aUlApg8+LujAUCQKLWK
+X-Google-Smtp-Source: AGHT+IGVY3EFg5KnHKmHO2hTamBaTkRj2xwhuyk+NEFXhuefJ9O4PY6IbapG0I2fVQxVv80RmqRT3w==
+X-Received: by 2002:a05:6512:a91:b0:545:cd5:84d9 with SMTP id 2adb3069b0e04-54c2276e9b2mr115584e87.12.1743707790862;
+        Thu, 03 Apr 2025 12:16:30 -0700 (PDT)
 Received: from ribalda.c.googlers.com (216.148.88.34.bc.googleusercontent.com. [34.88.148.216])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54c1e65d6b1sm230142e87.194.2025.04.03.12.16.27
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54c1e65d6b1sm230142e87.194.2025.04.03.12.16.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Apr 2025 12:16:27 -0700 (PDT)
+        Thu, 03 Apr 2025 12:16:29 -0700 (PDT)
 From: Ricardo Ribalda <ribalda@chromium.org>
-Date: Thu, 03 Apr 2025 19:16:16 +0000
-Subject: [PATCH 5/8] dt-bindings: usb: usb-device: Add orientation
+Date: Thu, 03 Apr 2025 19:16:19 +0000
+Subject: [PATCH 8/8] media: uvcvideo: Do not create MC entities for virtual
+ entities
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,7 +67,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250403-uvc-orientation-v1-5-1a0cc595a62d@chromium.org>
+Message-Id: <20250403-uvc-orientation-v1-8-1a0cc595a62d@chromium.org>
 References: <20250403-uvc-orientation-v1-0-1a0cc595a62d@chromium.org>
 In-Reply-To: <20250403-uvc-orientation-v1-0-1a0cc595a62d@chromium.org>
 To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
@@ -84,48 +85,44 @@ Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-gpio@vger.kernel.org, Ricardo Ribalda <ribalda@chromium.org>
 X-Mailer: b4 0.14.2
 
-For some devices, such as cameras, the OS needs to know where they are
-mounted.
+Neither the GPIO nor the FWNODE entities form part of the device
+pipeline. We just create them to hold emulated uvc controls.
 
-ACPI has a property for this purpose, which is parsed by
-acpi_get_physical_device_location():
-https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/06_Device_Configuration/Device_Configuration.html#pld-physical-location-of-device
+When the device initializes, a warning is thrown by the v4l2 core:
+uvcvideo 1-1:1.0: Entity type for entity FWNODE was not initialized!
 
-In DT we have similar property for video-interface-devices called
-orientation:
-Documentation/devicetree/bindings/media/video-interface-devices.yaml
+There are no entity function that matches what we are doing here, and
+it does not make to much sense to create a function for entities that
+do not really exist.
 
-Add a new property orientation for usb-devices that matches the already
-existing orientation property of video-interface-devices.
+Do not create MC entities for them and pretend nothing happened here.
 
 Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
 ---
- Documentation/devicetree/bindings/usb/usb-device.yaml | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/media/usb/uvc/uvc_entity.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/usb/usb-device.yaml b/Documentation/devicetree/bindings/usb/usb-device.yaml
-index da890ee60ce6e71a11910c565b6f805470782e4f..bbcda28ec7d5695307efa797f57180044afda77f 100644
---- a/Documentation/devicetree/bindings/usb/usb-device.yaml
-+++ b/Documentation/devicetree/bindings/usb/usb-device.yaml
-@@ -42,6 +42,10 @@ properties:
-       port to which this device is attached. The range is 1-255.
-     maxItems: 1
+diff --git a/drivers/media/usb/uvc/uvc_entity.c b/drivers/media/usb/uvc/uvc_entity.c
+index 01eeba2f049e9ebb25e091340a133656acbf28ca..4a0a083b4f58f041023710207a73e8fede8526e0 100644
+--- a/drivers/media/usb/uvc/uvc_entity.c
++++ b/drivers/media/usb/uvc/uvc_entity.c
+@@ -72,6 +72,16 @@ static int uvc_mc_init_entity(struct uvc_video_chain *chain,
+ {
+ 	int ret;
  
-+  orientation:
-+    description: If present, specifies the orientation of the usb device.
-+    $ref: /schemas/media/video-interface-devices.yaml#/properties/orientation
++	/*
++	 * Do not initialize virtual entities, they do not really exist
++	 * and are not connected to any other entities.
++	 */
++	switch (UVC_ENTITY_TYPE(entity)) {
++	case UVC_EXT_GPIO_UNIT:
++	case UVC_FWNODE_UNIT:
++		return 0;
++	}
 +
-   "#address-cells":
-     description: should be 1 for hub nodes with device nodes,
-       should be 2 for device nodes with interface nodes.
-@@ -101,6 +105,7 @@ examples:
-         device@2 {
-             compatible = "usb123,4567";
-             reg = <2>;
-+            orientation = <0>;
-         };
+ 	if (UVC_ENTITY_TYPE(entity) != UVC_TT_STREAMING) {
+ 		u32 function;
  
-         device@3 {
 
 -- 
 2.49.0.504.g3bcea36a83-goog
