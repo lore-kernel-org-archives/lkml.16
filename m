@@ -1,126 +1,115 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9D65161320
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 22:37:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E8BB161320;
+	Thu,  3 Apr 2025 22:38:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743719859; cv=none; b=Zc4OWe1pBBKrdS6yvJHYtE1NWkpkrm2Xm18mINQPTkUMng9H1vKb0wVBwYgAQg2+iiG2HqTildkmi7AI8H5XQ2/S2blPq49oN4gqFAfMLDG8wOnE6cqutubtF7EuGi3FDC2pcqi5hwAa0zvky8enS33F+I6hSApnjxZdVkWhSJQ=
+	t=1743719885; cv=none; b=mQBSZJwPbbI/9V4GZZbu9umaDpTwJFV7Qm4lzs3FBn06dB/rOxUVtf+9Ev56P9xif9wovlPEiFQTRixOpdJBbCHF86EANr1LbiN2trt+01MhKvbiXRUx5svFLgGSKqMftma+rx6uZe1wIwbP5Mt5GyDNPEu71unUzREJHO9ZoBY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743719859; c=relaxed/simple;
-	bh=At8uSe/LEVNX/ynY+/JK1XlphOknc3w2iRCiAYOjeM0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=tKckjoo20mnFyicud+3VXM0/YFyy5py/5oc5zH61s0f/ZDe+Nz3xQSEoU+sdZ/+qTQi+Mw85fMqbkcot2vojjzmuV16Ni5gI8a5pVkjicL41mQSBpBHd/yrtXJo9Yre9GLbpiywYhdHN4n53KWP8Y8AQPPGzHZA7B4+vAiuMi+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GcvDpDaQ; arc=none smtp.client-ip=209.85.160.176
+	s=arc-20240116; t=1743719885; c=relaxed/simple;
+	bh=zaM0dqs6hXmFjWycbkD0Nt/9XcQIztBGYBwn9DyGL3Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CJAQGzXsRDuwauw0XCv9tpZCvC+u/y8hmf9Q2y8Fj9k2tZ3o7c7W+Scc8Qpq3dnXdYFVkgNIsq0xtG6ofnu4gARjkZFFTLjkWF4kRe4MtDM/gAZ6tN2AZRhJ3/WdfZeDJquEAphNgC54/IwxbFqH1TvchoBfkMK0bsANKkYfDnQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kjpks8pd; arc=none smtp.client-ip=209.85.208.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GcvDpDaQ"
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-4768f90bf36so12849971cf.0
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 15:37:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kjpks8pd"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5e6f4b3ebe5so2559681a12.0;
+        Thu, 03 Apr 2025 15:38:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743719856; x=1744324656; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=iS5DlcsngnCJobVCdaTdFPwlcd069NhSqsAB1daMs48=;
-        b=GcvDpDaQXqHSh3R8d3dD7J1rdkcHos6ymoehZLIDtvdUldJlRoxjJKvpCHSCH/HL/v
-         OfY2nIFB7jBxQkfU/TVo8LYacCsVMvjGSlXB/jXJ9qNBPHz4DGTHYmZiAoYVHmo6IBkN
-         anHW0riwXuqfLUAcStWqJBt3QPqzhPndXnNBKXEPe4To0eSxnNzRIGgJCUH5qxKSzQwn
-         idZZJCCTs0I5zQKw1WZHCFeYvV/5if2faBzL9OQKjDvWmrhT2XCH6D2uCkP06EUO/xHP
-         SSl+cSq+xd9cJNjRUgnt/snsSqHekChSZzAvesfMWK6xyT7tYfoeb86HDq8kfDhbU94M
-         s/sQ==
+        d=gmail.com; s=20230601; t=1743719882; x=1744324682; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iZ6K1JP10UBnpc6DTNs7X/b6jJulOtNE7dgvrXsrjCI=;
+        b=kjpks8pdFay6vg+22AeRw0Y2LpttqyVqSqNX+DLjLUDh/h1snO2yGk96S22rzyFDuv
+         R5Z6k/qMh/kw/Ue9OJ6zAX3lm+Pbqf5Tin+YarvtzOF7TuG6/2/a+8CZeoZIHxA0fPf4
+         JF3I2m4e9C+F/Uz3SyFCfuWftKAoCRIAnwu+dKP2QIQp4RI6uVY/3envzdAp+z5Izl3f
+         XOP2BoX5IaBUKDLogmpXATLVMxZnBAz6J2WkoFv6+4X00LAP18zUaNRoniLkqyPqIy/5
+         WcyO0hZwJ+fPkL0rEjMAhWKZZ8u/9RGFIYgXlz8cYWfAv2XiBdZ+WALP6pqIUaPg/d8x
+         z7vQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743719856; x=1744324656;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=iS5DlcsngnCJobVCdaTdFPwlcd069NhSqsAB1daMs48=;
-        b=nZMJTr7ahVSa/kFQXhHnWpb3YEnVfOiQyuyg/NLtDT/kML3q0A4k5GXZUMev62iqu1
-         UzBgMj5c7wdtC0csVo5xbUdQje7itzy4Bn+XNDiJHgnzRf8aOIpwmXjAg3vFcx5FMkoK
-         oXjy5f+bdy0BTEQ/6P3CArLLp7AXcZyBElJT1ixIj7A6NQNssyJ4YQd9HMUj+4PNiRxz
-         PqD4tVIS1Sfa0P46/P6BuuTcYYtn7iGeYwGRPJeVCb/iyFffmdzkaoBMPSbWNC5iYCqS
-         FbFitf5xia1PCO77DcDfXjUeMxdS6hVBqe9JpV8cvurV0wN11SpCtiHAEvsh9+VFIAu/
-         6tmQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVflHj08CIJbPP1fR/WVTMBrFbCVlEMYnWHczQbAU46fHmLkLkUpSElqhH9ix7hHmWTL9GuacSnkjU3ml8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyifqu/wHdYBZn25JvKb0gJ2PI3qFVGqyEgAc7ShOyKf6avvxqw
-	SumrljK6nFI2+gqxPHbukHPZcv9mvIsSNMIMpVh6ypUPIr+PyMHm
-X-Gm-Gg: ASbGncuRCNeN/hfck8g1XrnLJHpIp6ulwfvhhzrdZjlSVEH61NortmhI5Cv8z6BxOem
-	0fTWvHJauCLQqYn0vlIYHDBRDaGIs+9d/y1GgYm8tgZ++vbvjzqdV9NSpKypLAcXw8XFOOxbfQ8
-	b+C58GTvKY/y1dg0dz1EzyF+QfniNnTE+t2Ah2iIJOZBrUowidPkssmzi4PCzWdMY1+UwJrhBdq
-	XLF10lfQ7KK/pFPSmQ/Viny/PFBMnNytOY6C284eYEevrMOVLAwmH2iOe2TI2g+LlRMZjl9o5FP
-	ZB4HdxcYPlTlqVm4cHV/Nir2nn47mrTgLki+OG5X7Pw3gfZS
-X-Google-Smtp-Source: AGHT+IHOYzS/ETMdRtbIcc2MnSQWpwELYBtALOBruownenEL6MzCzPF39/WnjxszG3KCe1lFNRrCqQ==
-X-Received: by 2002:a05:6214:da7:b0:6ed:14cd:d179 with SMTP id 6a1803df08f44-6f00debc935mr14074396d6.3.1743719856558;
-        Thu, 03 Apr 2025 15:37:36 -0700 (PDT)
-Received: from HP-650 ([105.112.123.50])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6ef0f14e827sm12758436d6.109.2025.04.03.15.37.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Apr 2025 15:37:36 -0700 (PDT)
-Date: Thu, 3 Apr 2025 23:37:24 +0100
-From: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Julia Lawall <julia.lawall@inria.fr>, outreachy@lists.linux.dev
-Cc: linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Dan Carpenter <dan.carpenter@linaro.org>
-Subject: [PATCH v3] staging: rtl8723bs: modify struct field to use standard
- bool type
-Message-ID: <Z+8NpFYvxPTvjGje@HP-650>
+        d=1e100.net; s=20230601; t=1743719882; x=1744324682;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=iZ6K1JP10UBnpc6DTNs7X/b6jJulOtNE7dgvrXsrjCI=;
+        b=q/JOsrkE674Xl9McX3offlfm4Xq8AxZsFFLS/rh0D1fhGOsPy+xkUjnJma/vdfYjI1
+         vTOTGLNo0h6+G0bHygpeaC2Y0avlOhpXtE1VHlglirF8D23KqMjSF9lxDnCJRFeT/0j5
+         x/f+vtK05+v7w7VMkZMlggXrB+WmGpaJ2XNBqUMst+6Dn5LVgsOQswSXM3nkSufVCcJc
+         qRA+1oJu0jBxy/bZO8AUMWYZzgUEM33mjkyMXJS8DVG2ap/R5q/VYG0NfJdtmEwXOfVJ
+         q54NFfvSonvQ1u2+tEtUuo6VYZSEFauqJQBNoghj3AU2XfsVXjpRf+kOuYMZp9Nj4uIZ
+         CQkg==
+X-Forwarded-Encrypted: i=1; AJvYcCVBLnZLeb5qfD/eXCo5gfq/rdhiGp8qi/MLRuN+8BW4lPaqMM1nKfsWAp2xdFLb8KPynP8we9HLNWlrEBdG@vger.kernel.org, AJvYcCWBMLKqkLOGgpACioPs7KiwknRpz28ydaCim9hfjTSaUtT81qI2QcWCmER+lIRQSyU1W4kUCj0sCLO3hQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwIV3ZwXY4uBqF89JD93cF2BLrjzq/8tfooA0XTl+59kbEmB0w2
+	LsVtME/D8P04VAoSyRA/YzCDoCjL2D9HSQQzf5Sl8A47+wshkow3IJkLY8abFyHUCcZPjmfXa8Z
+	jkv9DVeODW45J4WO4z2UCtSS/kO8=
+X-Gm-Gg: ASbGncv9ZiIe7kv2nNDgTHsFQKu+aBk+A3SMNWfJ/2m2J0ZzpXTfEdXwOce+HKFzjQr
+	ae3jmkIO+wIkywI7mxR9Qo+S7KvCilZZrZPBfXXKe5yNDDsavU03m4qpGM7j6uuRZGpYBI1Ihu/
+	wWroUvIeI6JCbjtPC1uIgkAekIHA==
+X-Google-Smtp-Source: AGHT+IGEP7WnNSh6HYTyjnZSWPMhY0n5hrhx3hnSpfSMjdSZBItxJqvw71uEdf0SfOoYMMZBoucnZPVuVO9LWzm64Qw=
+X-Received: by 2002:a05:6402:2709:b0:5e1:8604:9a2d with SMTP id
+ 4fb4d7f45d1cf-5f0b3b65912mr685521a12.4.1743719882267; Thu, 03 Apr 2025
+ 15:38:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <67ea5813.5d0a0220.293276.775e@mx.google.com> <2025040301-tightness-giveaway-a568@gregkh>
+In-Reply-To: <2025040301-tightness-giveaway-a568@gregkh>
+From: Richard Akintola <princerichard17a@gmail.com>
+Date: Thu, 3 Apr 2025 23:37:48 +0100
+X-Gm-Features: ATxdqUE7EuV8mvnSRPJ_5BA5rAr5h72HjMUScB12TVQyWh-pzOcniirw44ZMhXo
+Message-ID: <CAMyr_bL3sh3HyL0=Qb1h21_-5dqJy0M0Ewo0JMFPNr=x28oNgw@mail.gmail.com>
+Subject: Re: [PATCH] staging: sm750fb: modify function name to kernel code style
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: sudipm.mukherjee@gmail.com, teddy.wang@siliconmotion.com, 
+	linux-fbdev@vger.kernel.org, linux-staging@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, julia.lawall@inria.fr
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The struct field uses the uint values 0 and 1 to represent false and
-true values respectively.
+Hi,
 
-Convert cases to use the bool type instead to ensure consistency
-with other parts of the containing code where true or false has
-been used.
+Yes I did send two different patches (part of the reason I used
+different subject lines),
+they did similar things (change camelCase to snake_case,  I wanted to
+get all done in the file,
+but I learnt it is best done one at a time.
 
-reported by Coccinelle:
+So should I have it all done in the file (there are more than 2
+camelCase CHECKs), or send it
+one after the other? (but you could take the first).
 
-Signed-off-by: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
----
-Changes in v3:
-	- Added more patch recipients
-Changes in v2:
-	- Improved commit message based on suggestion from Julia Lawal
-	- Clarity was provided to Greg Kroah-Hartman by Dan Carpenter on why
-	it is safe to make the change to the struct.
+Thanks
 
- drivers/staging/rtl8723bs/core/rtw_ap.c      | 2 +-
- drivers/staging/rtl8723bs/include/sta_info.h | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+Richard Akintola
 
-diff --git a/drivers/staging/rtl8723bs/core/rtw_ap.c b/drivers/staging/rtl8723bs/core/rtw_ap.c
-index ed6942e289a5..82f54f769ed1 100644
---- a/drivers/staging/rtl8723bs/core/rtw_ap.c
-+++ b/drivers/staging/rtl8723bs/core/rtw_ap.c
-@@ -389,7 +389,7 @@ void update_bmc_sta(struct adapter *padapter)
- 		psta->qos_option = 0;
- 		psta->htpriv.ht_option = false;
- 
--		psta->ieee8021x_blocked = 0;
-+		psta->ieee8021x_blocked = false;
- 
- 		memset((void *)&psta->sta_stats, 0, sizeof(struct stainfo_stats));
- 
-diff --git a/drivers/staging/rtl8723bs/include/sta_info.h b/drivers/staging/rtl8723bs/include/sta_info.h
-index b3535fed3de7..63343998266a 100644
---- a/drivers/staging/rtl8723bs/include/sta_info.h
-+++ b/drivers/staging/rtl8723bs/include/sta_info.h
-@@ -86,7 +86,7 @@ struct sta_info {
- 	uint qos_option;
- 	u8 hwaddr[ETH_ALEN];
- 
--	uint	ieee8021x_blocked;	/* 0: allowed, 1:blocked */
-+	bool ieee8021x_blocked;
- 	uint	dot118021XPrivacy; /* aes, tkip... */
- 	union Keytype	dot11tkiptxmickey;
- 	union Keytype	dot11tkiprxmickey;
--- 
-2.34.1
-
+On Thu, Apr 3, 2025 at 3:18=E2=80=AFPM Greg KH <gregkh@linuxfoundation.org>=
+ wrote:
+>
+> On Mon, Mar 31, 2025 at 09:53:36AM +0100, Richard Akintola wrote:
+> > Change camelCase function name sii164ResetChip to sii164_reset_chip
+> > as reported by checkpatch.pl
+> >
+> > CHECK: Avoid camelCase: <sii164ResetChip>
+> >
+> > Signed-off-by: Richard Akintola <princerichard17a@gmail.com>
+> > ---
+> >  drivers/staging/sm750fb/ddk750_dvi.c    | 2 +-
+> >  drivers/staging/sm750fb/ddk750_sii164.c | 4 ++--
+> >  drivers/staging/sm750fb/ddk750_sii164.h | 2 +-
+> >  3 files changed, 4 insertions(+), 4 deletions(-)
+>
+> You sent 2 different patches with different subject lines, yet they
+> almost did the same thing?  Which one should I take or review?  Please
+> send a new one, as a version 3, and properly document what changed
+> between this one and the last 2 submissions.
+>
+> thanks,
+>
+> greg k-h
