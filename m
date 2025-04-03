@@ -1,290 +1,238 @@
-Received: from mx0b-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A19A818DB34;
-	Thu,  3 Apr 2025 02:46:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA601194A73;
+	Thu,  3 Apr 2025 02:46:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743648413; cv=none; b=YeCTpHPruqMYWMjB4pT8LZgGeKdMeJAcIqODbIPQYs5mqDyQYSg8+APvliCa+D7Xl+T+coy1qXYXiEfTEMm7fmapcuGj0rEZlXuL/Clg+uv+zkLoLS3TxDvgN5fAClMwKEgOc6UK77UTOKiI5Ot0z8qhKj3IBzE41pVYTHhigso=
+	t=1743648416; cv=none; b=nJpkBtXHK5nIyOB7vrzFpRtEtmafVSfjwmFZ42Nxcs7Xw/TDSlsugf5HOIuhanHKyDkMedK24bVT2455HU0nEcPJxcoCoK4rp9fDRAfOF8BYnm5ta8In3v0isEvY0RXwpic8Fv74qlxLZRRgeNFu99/S0eHYKSuT8Kl0CfjP3P4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743648413; c=relaxed/simple;
-	bh=YOzriDgRrk2tPyMiBrQt6htYSSYL1hXU2UICBS9d/Tc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=E3cRg6oOHtNrGoG0rXsxDlLuwKJuKTMYdtjZk57Nl0ABzS2BILVHV4Zays7ro7caOTV6Xm9UnYDtlnMvJxsd+EGGqhSPTCVwLNR0MyB71okxCSc7KIeAjby+Yr6ve+HTEwZ8/TftIWt3nIenuedDr5gWkleA3L3EGVQO7hbfl4s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=lsRpcMe6; arc=none smtp.client-ip=148.163.135.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="lsRpcMe6"
-Received: from pps.filterd (m0375855.ppops.net [127.0.0.1])
-	by mx0b-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5332TVK3023392;
-	Wed, 2 Apr 2025 22:46:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=DKIM; bh=O4KWb
-	t85tjufigcGItFSDoHHeybK267nB9Ih0HP3wRE=; b=lsRpcMe6zfQ6AaRHw96Mm
-	3inVMCcuwHeBUbX/SeG+44YdQ+z83ev4IIXkDmowf19jkzralgrnzFoqGFJuEb/u
-	8DQ4yhCKCXSzgA+jochsVLrt3ePqaoRskznZKT0yKpLGYjzK78kIXTQ0XhRnbcke
-	Wfmam5qwjKoqtdi6AF1Armzky5IUZ8H/m6C1217fx/HcgV3mA2zUvXgizKVS3UPB
-	rpfTPyNQ3mNpe7Mjxt1JZy347tB6ehFr6pPjLvDG3/JojaILfmbr5yvkShKmbX9p
-	v4I3iJ90+oAagE4zNmGZPIOeYeM8ka3STQy+ra1TGiHvFbVKguFGY24XZ6077Py1
-	Q==
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-	by mx0b-00128a01.pphosted.com (PPS) with ESMTPS id 45shkd022c-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 02 Apr 2025 22:46:42 -0400 (EDT)
-Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
-	by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 5332kfLw060375
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 2 Apr 2025 22:46:41 -0400
-Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by ASHBMBX9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.14; Wed, 2 Apr 2025
- 22:46:40 -0400
-Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server id 15.2.986.14 via Frontend
- Transport; Wed, 2 Apr 2025 22:46:40 -0400
-Received: from ATORRENO-L02.ad.analog.com ([10.117.223.13])
-	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 5332kQpg031488;
-	Wed, 2 Apr 2025 22:46:34 -0400
-From: Alexis Czezar Torreno <alexisczezar.torreno@analog.com>
-Date: Thu, 3 Apr 2025 10:43:10 +0800
-Subject: [PATCH v3 1/2] regulator: dt-bindings: adi,adp5055-regulator: Add
- adp5055 support
+	s=arc-20240116; t=1743648416; c=relaxed/simple;
+	bh=j96DN75Q9TvfZfL7/FAP9Tz80HzbJtXmCGTt4R+kQd4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=t3LhUY3buy2NEvfy8cOp3OTIpmbe7sR03bHtN6mBvqnyb9X3v/a45xmudEbuBa7smVZYSHovU3wNWoLoAapdPL7RkY8IH2X+UxR5jTdSBUYsH1Ex00T0a4Ob6v5dD8VTh3vgmU72YcybBkb4+C8oJX5LJYckgZhtWlcp4TQ5q1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.40.54.180])
+	by gateway (Coremail) with SMTP id _____8AxHHKc9u1nWsevAA--.31022S3;
+	Thu, 03 Apr 2025 10:46:52 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.40.54.180])
+	by front1 (Coremail) with SMTP id qMiowMCx7xua9u1ndyJtAA--.61678S2;
+	Thu, 03 Apr 2025 10:46:51 +0800 (CST)
+From: Qunqin Zhao <zhaoqunqin@loongson.cn>
+To: lee@kernel.org,
+	herbert@gondor.apana.org.au,
+	davem@davemloft.net,
+	peterhuewe@gmx.de,
+	jarkko@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-crypto@vger.kernel.org,
+	jgg@ziepe.ca,
+	linux-integrity@vger.kernel.org,
+	pmenzel@molgen.mpg.de,
+	Qunqin Zhao <zhaoqunqin@loongson.cn>,
+	Yinggang Gu <guyinggang@loongson.cn>,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [PATCH v7 5/6] tpm: Add a driver for Loongson TPM device
+Date: Thu,  3 Apr 2025 10:47:49 +0800
+Message-ID: <20250403024750.4448-1-zhaoqunqin@loongson.cn>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250403-upstream-adp5055-v3-1-8eb170f4f94e@analog.com>
-References: <20250403-upstream-adp5055-v3-0-8eb170f4f94e@analog.com>
-In-Reply-To: <20250403-upstream-adp5055-v3-0-8eb170f4f94e@analog.com>
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
-        Rob
- Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor
- Dooley <conor+dt@kernel.org>
-CC: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Alexis
- Czezar Torreno <alexisczezar.torreno@analog.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1743648386; l=6606;
- i=alexisczezar.torreno@analog.com; s=20250213; h=from:subject:message-id;
- bh=YOzriDgRrk2tPyMiBrQt6htYSSYL1hXU2UICBS9d/Tc=;
- b=H1vbnjkJdQ/aXbyGdOkljjpZesexZnlCaxV0UsUweGvb+THnEvs16oRy8tlMzsE1ak/UbSmwH
- 46viNxyrRYHBqRHXISQTpmhvbIbIjvtikLzTOKYsJsxBFkgdp6rLjao
-X-Developer-Key: i=alexisczezar.torreno@analog.com; a=ed25519;
- pk=XpXmJnRjnsKdDil6YpOlj9+44S+XYXVFnxvkbmaZ+10=
-X-ADIRuleOP-NewSCL: Rule Triggered
-X-Authority-Analysis: v=2.4 cv=N8cpF39B c=1 sm=1 tr=0 ts=67edf692 cx=c_pps a=3WNzaoukacrqR9RwcOSAdA==:117 a=3WNzaoukacrqR9RwcOSAdA==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=gEfo2CItAAAA:8 a=gAnH3GRIAAAA:8 a=VwQbUJbxAAAA:8 a=LYgrlvm2vjqWaEuYVCwA:9
- a=QEXdDO2ut3YA:10 a=sptkURWiP4Gy88Gu7hUp:22
-X-Proofpoint-GUID: O83FE1Usn28pmmTCX9tAsxWUnzzS5pHX
-X-Proofpoint-ORIG-GUID: O83FE1Usn28pmmTCX9tAsxWUnzzS5pHX
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-03_01,2025-04-02_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 clxscore=1015
- adultscore=0 impostorscore=0 bulkscore=0 mlxlogscore=999 spamscore=0
- lowpriorityscore=0 malwarescore=0 priorityscore=1501 phishscore=0
- mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504030012
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMCx7xua9u1ndyJtAA--.61678S2
+X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoW3Gw1kXFWxCF1kZF1rJr18WFX_yoW7Cr1DpF
+	W5Ca4Uur45Jr4UtwsxArWUuFsxZ34fXFZrKay7Jw15uryqy3s5XrWktFyUJa13ArWkGry2
+	qFZa9r45GF15uwcCm3ZEXasCq-sJn29KB7ZKAUJUUUU3529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUBIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AK
+	xVWxJr0_GcWln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
+	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26rWY
+	6Fy7McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
+	vIr41lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_
+	Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
+	xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0
+	cI8IcVAFwI0_Ar0_tr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwCI42IY6xAIw2
+	0EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x02
+	67AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0_WrPUUUUU==
 
-Add documentation for devicetree bindings for ADP5055. The device consists
-of 3 buck regulators able to connect to high input voltages of up to 18V
-with no preregulators.
+Loongson security engine supports random number generation, hash,
+symmetric encryption and asymmetric encryption. Based on these
+encryption functions, TPM2 have been implemented in the Loongson
+security engine firmware. This driver is responsible for copying data
+into the memory visible to the firmware and receiving data from the
+firmware.
 
-Signed-off-by: Alexis Czezar Torreno <alexisczezar.torreno@analog.com>
+Co-developed-by: Yinggang Gu <guyinggang@loongson.cn>
+Signed-off-by: Yinggang Gu <guyinggang@loongson.cn>
+Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
+Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
+Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
 ---
- .../bindings/regulator/adi,adp5055-regulator.yaml  | 157 +++++++++++++++++++++
- MAINTAINERS                                        |   6 +
- 2 files changed, 163 insertions(+)
+v7: Moved Kconfig entry between TCG_IBMVTPM and TCG_XEN.
+    Added Jarkko's tag(a little change, should be fine).
 
-diff --git a/Documentation/devicetree/bindings/regulator/adi,adp5055-regulator.yaml b/Documentation/devicetree/bindings/regulator/adi,adp5055-regulator.yaml
-new file mode 100644
-index 0000000000000000000000000000000000000000..a55d564d8d0783fe5d503d4c5e2f6a38fc0702cd
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/adi,adp5055-regulator.yaml
-@@ -0,0 +1,157 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/regulator/adi,adp5055-regulator.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Analog Devices ADP5055 Triple Buck Regulator
-+
-+maintainers:
-+  - Alexis Czezar Torreno <alexisczezar.torreno@analog.com>
-+
-+description: |
-+  The ADP5055 combines three high performance buck regulator. The device enables
-+  direct connection to high input voltages up to 18 V with no preregulators.
-+  https://www.analog.com/media/en/technical-documentation/data-sheets/adp5055.pdf
-+
-+properties:
-+  compatible:
-+    enum:
-+      - adi,adp5055
-+
-+  reg:
-+    enum:
-+      - 0x70
-+      - 0x71
-+
-+  adi,tset-us:
-+    description:
-+      Setting time used by the device. This is changed via soldering specific
-+      resistor values on the CFG2 pin.
-+    enum: [2600, 20800]
-+    default: 2600
-+
-+  adi,ocp-blanking:
-+    description:
-+      If present, overcurrent protection (OCP) blanking for all regulator is on.
-+    type: boolean
-+
-+  adi,delay-power-good:
-+    description:
-+      Configures delay timer of the power good (PWRGD) pin. Delay is based on
-+      Tset which can be 2.6 ms or 20.8 ms.
-+    type: boolean
-+
-+  '#address-cells':
-+    const: 1
-+
-+  '#size-cells':
-+    const: 0
-+
-+patternProperties:
-+  "^buck[0-2]$":
-+    type: object
-+    $ref: regulator.yaml#
-+    unevaluatedProperties: false
-+
-+    properties:
-+      enable-gpios:
-+        maxItems: 1
-+        description:
-+          GPIO specifier to enable the GPIO control for each regulator. The
-+          driver supports two modes of enable, hardware only (GPIOs) or software
-+          only (Registers). Pure hardware enabling requires each regulator to
-+          contain this property. If at least one regulator does not have this,
-+          the driver automatically switches to software only mode.
-+
-+      adi,dvs-limit-upper-microvolt:
-+        description:
-+          Configure the allowable upper side limit of the voltage output of each
-+          regulator in microvolt. Relative to the default Vref trimming value.
-+          Vref = 600 mV. Voltages are in 12 mV steps, value is autoadjusted.
-+          Vout_high = Vref_trim + dvs-limit-upper.
-+        minimum: 12000
-+        maximum: 192000
-+        default: 192000
-+
-+      adi,dvs-limit-lower-microvolt:
-+        description:
-+          Configure the allowable lower side limit of the voltage output of each
-+          regulator in microvolt. Relative to the default Vref trimming value.
-+          Vref = 600 mV. Voltages are in 12 mV steps, value is autoadjusted.
-+          Vout_low = Vref_trim + dvs-limit-lower.
-+        minimum: -190500
-+        maximum: -10500
-+        default: -190500
-+
-+      adi,fast-transient:
-+        description:
-+          Configures the fast transient sensitivity for each regulator.
-+          "none"    - No fast transient.
-+          "3G_1.5%" - 1.5% window with 3*350uA/V
-+          "5G_1.5%" - 1.5% window with 5*350uA/V
-+          "5G_2.5%" - 2.5% window with 5*350uA/V
-+        enum: [none, 3G_1.5%, 5G_1.5%, 5G_2.5%]
-+        default: 5G_2.5
-+
-+      adi,mask-power-good:
-+        description:
-+          If present, masks individual regulators PWRGD signal to the external
-+          PWRGD hardware pin.
-+        type: boolean
-+
-+    required:
-+      - regulator-name
-+
-+required:
-+  - compatible
-+  - reg
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        regulator@70 {
-+            compatible = "adi,adp5055";
-+            reg = <0x70>;
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+
-+            adi,tset-us = <2600>;
-+            adi,ocp-blanking;
-+            adi,delay-power-good;
-+
-+            buck0 {
-+                regulator-name = "buck0";
-+                enable-gpios = <&gpio 17 GPIO_ACTIVE_HIGH>;
-+                adi,dvs-limit-upper-microvolt = <192000>;
-+                adi,dvs-limit-lower-microvolt = <(-190500)>;
-+                adi,fast-transient = "5G_2.5%";
-+                adi,mask-power-good;
-+            };
-+
-+            buck1 {
-+                regulator-name = "buck1";
-+                enable-gpios = <&gpio 18 GPIO_ACTIVE_HIGH>;
-+                adi,dvs-limit-upper-microvolt = <192000>;
-+                adi,dvs-limit-lower-microvolt = <(-190500)>;
-+                adi,fast-transient = "5G_2.5%";
-+                adi,mask-power-good;
-+            };
-+
-+            buck2 {
-+                regulator-name = "buck2";
-+                enable-gpios = <&gpio 19 GPIO_ACTIVE_HIGH>;
-+                adi,dvs-limit-upper-microvolt = <192000>;
-+                adi,dvs-limit-lower-microvolt = <(-190500)>;
-+                adi,fast-transient = "5G_2.5%";
-+                adi,mask-power-good;
-+            };
-+        };
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 896a307fa06545e2861abe46ea7029f9b4d3628e..b2ec43f84d84765c319d8403fb5650afa273db83 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1525,6 +1525,12 @@ W:	https://ez.analog.com/linux-software-drivers
- F:	Documentation/devicetree/bindings/iio/filter/adi,admv8818.yaml
- F:	drivers/iio/filter/admv8818.c
+v6: Replace all "ls6000se" with "loongson"
+    Prefix all with tpm_loongson instead of tpm_lsse.
+    Removed Jarkko's tag cause there are some changes in v6
+
+v5: None
+v4: Prefix all with tpm_lsse instead of tpm.
+    Removed MODULE_AUTHOR fields.
  
-+ANALOG DEVICES INC ADP5055 DRIVER
-+M:	Alexis Czezar Torreno <alexisczezar.torreno@analog.com>
-+S:	Supported
-+W:	https://ez.analog.com/linux-software-drivers
-+F:	Documentation/devicetree/bindings/regulator/adi,adp5055-regulator.yaml
-+
- ANALOG DEVICES INC ADP5061 DRIVER
- M:	Michael Hennerich <Michael.Hennerich@analog.com>
- L:	linux-pm@vger.kernel.org
+v3: Added reminder about Loongson security engine to git log.
 
+ drivers/char/tpm/Kconfig        |   9 +++
+ drivers/char/tpm/Makefile       |   1 +
+ drivers/char/tpm/tpm_loongson.c | 103 ++++++++++++++++++++++++++++++++
+ 3 files changed, 113 insertions(+)
+ create mode 100644 drivers/char/tpm/tpm_loongson.c
+
+diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
+index 0fc9a510e..a5152e83a 100644
+--- a/drivers/char/tpm/Kconfig
++++ b/drivers/char/tpm/Kconfig
+@@ -189,6 +189,15 @@ config TCG_IBMVTPM
+ 	  will be accessible from within Linux.  To compile this driver
+ 	  as a module, choose M here; the module will be called tpm_ibmvtpm.
+ 
++config TCG_LOONGSON
++	tristate "Loongson TPM Interface"
++	depends on MFD_LOONGSON_SE
++	help
++	  If you want to make Loongson TPM support available, say Yes and
++	  it will be accessible from within Linux. To compile this
++	  driver as a module, choose M here; the module will be called
++	  tpm_loongson.
++
+ config TCG_XEN
+ 	tristate "XEN TPM Interface"
+ 	depends on TCG_TPM && XEN
+diff --git a/drivers/char/tpm/Makefile b/drivers/char/tpm/Makefile
+index 9bb142c75..e84a2f7a9 100644
+--- a/drivers/char/tpm/Makefile
++++ b/drivers/char/tpm/Makefile
+@@ -44,3 +44,4 @@ obj-$(CONFIG_TCG_XEN) += xen-tpmfront.o
+ obj-$(CONFIG_TCG_CRB) += tpm_crb.o
+ obj-$(CONFIG_TCG_VTPM_PROXY) += tpm_vtpm_proxy.o
+ obj-$(CONFIG_TCG_FTPM_TEE) += tpm_ftpm_tee.o
++obj-$(CONFIG_TCG_LOONGSON) += tpm_loongson.o
+diff --git a/drivers/char/tpm/tpm_loongson.c b/drivers/char/tpm/tpm_loongson.c
+new file mode 100644
+index 000000000..8b7da8cdd
+--- /dev/null
++++ b/drivers/char/tpm/tpm_loongson.c
+@@ -0,0 +1,103 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Copyright (c) 2025 Loongson Technology Corporation Limited. */
++
++#include <linux/device.h>
++#include <linux/mfd/loongson-se.h>
++#include <linux/platform_device.h>
++#include <linux/wait.h>
++
++#include "tpm.h"
++
++struct tpm_loongson_msg {
++	u32 cmd;
++	u32 data_off;
++	u32 data_len;
++	u32 info[5];
++};
++
++struct tpm_loongson_dev {
++	struct se_channel *se_ch;
++	struct completion tpm_loongson_completion;
++};
++
++static void tpm_loongson_complete(struct se_channel *ch)
++{
++	struct tpm_loongson_dev *td = ch->priv;
++
++	complete(&td->tpm_loongson_completion);
++}
++
++static int tpm_loongson_recv(struct tpm_chip *chip, u8 *buf, size_t count)
++{
++	struct tpm_loongson_dev *td = dev_get_drvdata(&chip->dev);
++	struct tpm_loongson_msg *rmsg;
++	int sig;
++
++	sig = wait_for_completion_interruptible(&td->tpm_loongson_completion);
++	if (sig)
++		return sig;
++
++	rmsg = td->se_ch->rmsg;
++	memcpy(buf, td->se_ch->data_buffer, rmsg->data_len);
++
++	return rmsg->data_len;
++}
++
++static int tpm_loongson_send(struct tpm_chip *chip, u8 *buf, size_t count)
++{
++	struct tpm_loongson_dev *td = dev_get_drvdata(&chip->dev);
++	struct tpm_loongson_msg *smsg = td->se_ch->smsg;
++
++	memcpy(td->se_ch->data_buffer, buf, count);
++	smsg->data_len = count;
++
++	return se_send_ch_requeset(td->se_ch);
++}
++
++static const struct tpm_class_ops tpm_loongson_ops = {
++	.flags = TPM_OPS_AUTO_STARTUP,
++	.recv = tpm_loongson_recv,
++	.send = tpm_loongson_send,
++};
++
++static int tpm_loongson_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct tpm_loongson_msg *smsg;
++	struct tpm_loongson_dev *td;
++	struct tpm_chip *chip;
++
++	td = devm_kzalloc(dev, sizeof(struct tpm_loongson_dev), GFP_KERNEL);
++	if (!td)
++		return -ENOMEM;
++
++	init_completion(&td->tpm_loongson_completion);
++	td->se_ch = se_init_ch(dev->parent, SE_CH_TPM, PAGE_SIZE,
++			       2 * sizeof(struct tpm_loongson_msg), td,
++			       tpm_loongson_complete);
++	if (!td->se_ch)
++		return -ENODEV;
++	smsg = td->se_ch->smsg;
++	smsg->cmd = SE_CMD_TPM;
++	smsg->data_off = td->se_ch->off;
++
++	chip = tpmm_chip_alloc(dev, &tpm_loongson_ops);
++	if (IS_ERR(chip))
++		return PTR_ERR(chip);
++	chip->flags = TPM_CHIP_FLAG_TPM2 | TPM_CHIP_FLAG_IRQ;
++	dev_set_drvdata(&chip->dev, td);
++
++	return tpm_chip_register(chip);
++}
++
++static struct platform_driver tpm_loongson_driver = {
++	.probe   = tpm_loongson_probe,
++	.driver  = {
++		.name  = "loongson-tpm",
++	},
++};
++module_platform_driver(tpm_loongson_driver);
++
++MODULE_ALIAS("platform:loongson-tpm");
++MODULE_LICENSE("GPL");
++MODULE_DESCRIPTION("Loongson TPM driver");
 -- 
-2.34.1
+2.45.2
 
