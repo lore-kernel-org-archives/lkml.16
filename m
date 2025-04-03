@@ -1,114 +1,170 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B0C924337D;
-	Thu,  3 Apr 2025 15:15:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 736B524337D;
+	Thu,  3 Apr 2025 15:17:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743693343; cv=none; b=J4mZjRvs4OFxL7fg87KFZW+sDKeEIdVYHnMC3YEg+PKN4+c9PAZzY6eVW8VXSxhrzIlh558wCyqU9wRoezu8AWANAXc0DQ8621g5NASZaBIL/i9nuO4kOA3U/1Nl5P7SFBxMnudN8pIwuBiaARJCjCi/v3UhCYWoHS/c8a5LI1o=
+	t=1743693426; cv=none; b=ZQSHdyjKALIbMuwhi2S+D7dtUNaEuosCBF8uki0dZ0iHZVD1lsh4E9eOvnZU4rlqlTDRtgApwnX+Fj/RFexlWElHfHCXc2M+NaNKKyOH+tlHH9tHf4td5lcNMmKBPvAqz/UZF641mpmOp0jbDPvfo7Vu6rjlEHBCK439FXJ9a1U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743693343; c=relaxed/simple;
-	bh=B5uvcDMbEl7DdURG7JgwbLJJzfTN1liXGBxF4DMAC4w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LEVbI+dAvvI4ihup3lWv7livDipDZWZMHahqqr61gNYnXuuw8fVBd8gfLOIGyRHogT4ojyp4Dox4nsB1dz5Lltovui3uG2v5Pem3wCtznPTam8frFLVm2JM80kURiVM1uZnfyCkEafYuOoD3BsUmde8StTdtkUqptzVfV0Pyzs8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UqtUrlHN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743693426; c=relaxed/simple;
+	bh=m3kC4tz7noRERlVMyBS8eOyyMWXXtshmKA59iy5yIFU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=ISSgf4jYTX95KXGn9yvGMW3QDYEuNUtaM2zc00wPv2w1afESNGOPqQ1vgr0j5S0WOJJr0G2XeNmB5dVtxeRZ9QcowRjKxUCVS9U6N0S5ycRxNre+FSJaQ6W/kb2MM0Jal2djd69lBKCxo1uj3rOIX1YzZi4MHEbn1dkk+CGPOtU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=M1vQiIOe; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UqtUrlHN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABC4CC4CEE3;
-	Thu,  3 Apr 2025 15:15:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743693343;
-	bh=B5uvcDMbEl7DdURG7JgwbLJJzfTN1liXGBxF4DMAC4w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UqtUrlHNoWWUrpfvNHRn/HS3X2CJmUpf+b1fD0DjlH+GzUWFJYFjvByZZ6SRCFCWV
-	 /50Xh/FJw6P59ZXKwOp+uAMpnTNaLJ9NlUpbCjhYOGoMrNC+YFVZG+zfmohlPpTRIX
-	 FUmwr8nKQwcLCJm9yNtHzOHJELiJs/WlpMrsef2R1jhTGgGGKUFx2yYs3QRw/G/Ioh
-	 ItAatKsmpOPVCN7/+VlmeCk7EVUzV/2MYyTj2I4jBOciqjhyctafORKzLGrI2lW/zC
-	 bWw+vX+8QHQQfgEK3mcKC4ngx486wxoMwwTBQEs6pTN4JXgt7sMeMYD1HV+c8qVqED
-	 hPrVIX69IkYwg==
-Date: Thu, 3 Apr 2025 17:15:38 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Leon Romanovsky <leon@kernel.org>, 
-	Linus Torvalds <torvalds@linux-foundation.org>
-Cc: pr-tracker-bot@kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [GIT PULL] vfs mount
-Message-ID: <20250403-quartal-kaltstart-eb56df61e784@brauner>
-References: <20250322-vfs-mount-b08c842965f4@brauner>
- <174285005920.4171303.15547772549481189907.pr-tracker-bot@kernel.org>
- <20250401170715.GA112019@unreal>
- <20250403-bankintern-unsympathisch-03272ab45229@brauner>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M1vQiIOe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743693424; x=1775229424;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=m3kC4tz7noRERlVMyBS8eOyyMWXXtshmKA59iy5yIFU=;
+  b=M1vQiIOeTQkxweY0aPxyXfadNxi17xL9prhz/x15FrL/Vn4ulvSf2NSY
+   kOxcNhEySO/CUfagJEXUEERvt/RXizgME9Eo8tpHuu5mC9v4NAiA+Abe6
+   efDXiaUq9xdyUtSVcr7aoK8tsNsXbCgl5Aaus5ez4g/kr3rKfRKeZrnLi
+   j1fd6k2U/SNOl9lS80XdPnMDqBVPCAcnU4cj4OcLkbEg95eOqAtGrGQ/0
+   /4Ti+/INUMCcbJDigZdYQQI+lknD4Uuma466t6HbKH1kON41/UW6oR7jJ
+   UcTMoAVOi38gZkwFJbZyywRBaqI/KIE/rhVqsSXLGvsVFM0+NoRiCz4ug
+   w==;
+X-CSE-ConnectionGUID: zDtoC5LVSGC6udWho5jzZA==
+X-CSE-MsgGUID: TCVLntgYQ1W+uKrWRTp35w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11393"; a="48974788"
+X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
+   d="scan'208";a="48974788"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 08:17:03 -0700
+X-CSE-ConnectionGUID: swrIOS9FSL2P447QyT0c2Q==
+X-CSE-MsgGUID: mWwZKqiiSqCw/9mtRwBuKw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
+   d="scan'208";a="131763763"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 08:17:03 -0700
+Received: from [10.246.136.14] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.14])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id C208F20B5736;
+	Thu,  3 Apr 2025 08:17:00 -0700 (PDT)
+Message-ID: <0924de97-67ec-4c8a-8c5c-66264bdd2748@linux.intel.com>
+Date: Thu, 3 Apr 2025 11:16:59 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="ffv6b5tmhodr33bb"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250403-bankintern-unsympathisch-03272ab45229@brauner>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 3/4] perf parse-events: Set is_pmu_core for legacy
+ hardware events
+To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Leo Yan <leo.yan@arm.com>, Yoshihiro Furudera <fj5100bi@fujitsu.com>,
+ Weilin Wang <weilin.wang@intel.com>, Andi Kleen <ak@linux.intel.com>,
+ James Clark <james.clark@linaro.org>,
+ Dominique Martinet <asmadeus@codewreck.org>,
+ Yicong Yang <yangyicong@hisilicon.com>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250210183808.130522-1-irogers@google.com>
+ <20250210183808.130522-4-irogers@google.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20250210183808.130522-4-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
---ffv6b5tmhodr33bb
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
 
-On Thu, Apr 03, 2025 at 10:29:37AM +0200, Christian Brauner wrote:
-> On Tue, Apr 01, 2025 at 08:07:15PM +0300, Leon Romanovsky wrote:
-> > On Mon, Mar 24, 2025 at 09:00:59PM +0000, pr-tracker-bot@kernel.org wrote:
-> > > The pull request you sent on Sat, 22 Mar 2025 11:13:18 +0100:
-> > > 
-> > > > git@gitolite.kernel.org:pub/scm/linux/kernel/git/vfs/vfs tags/vfs-6.15-rc1.mount
-> > > 
-> > > has been merged into torvalds/linux.git:
-> > > https://git.kernel.org/torvalds/c/fd101da676362aaa051b4f5d8a941bd308603041
-> > 
-> > I didn't bisect, but this PR looks like the most relevant candidate.
-> > The latest Linus's master generates the following slab-use-after-free:
+On 2025-02-10 1:38 p.m., Ian Rogers wrote:
+> Also set the CPU map to all online CPU maps. This is done so the
+> behavior of legacy hardware and hardware cache events better matches
+> that of sysfs and json events during
+> __perf_evlist__propagate_maps. Fix missing cpumap put in "Synthesize
+> attr update" test.
 > 
-> Sorry, did just see this today. I'll take a look now.
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/tests/event_update.c |  1 +
+>  tools/perf/util/parse-events.c  | 37 ++++++++++++++++++++-------------
+>  2 files changed, 24 insertions(+), 14 deletions(-)
+> 
+> diff --git a/tools/perf/tests/event_update.c b/tools/perf/tests/event_update.c
+> index d6b4ce3ef4ee..9301fde11366 100644
+> --- a/tools/perf/tests/event_update.c
+> +++ b/tools/perf/tests/event_update.c
+> @@ -109,6 +109,7 @@ static int test__event_update(struct test_suite *test __maybe_unused, int subtes
+>  	TEST_ASSERT_VAL("failed to synthesize attr update name",
+>  			!perf_event__synthesize_event_update_name(&tmp.tool, evsel, process_event_name));
+>  
+> +	perf_cpu_map__put(evsel->core.own_cpus);
+>  	evsel->core.own_cpus = perf_cpu_map__new("1,2,3");
+>  
+>  	TEST_ASSERT_VAL("failed to synthesize attr update cpus",
+> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+> index 6c36b98875bc..8cccf1e22cdf 100644
+> --- a/tools/perf/util/parse-events.c
+> +++ b/tools/perf/util/parse-events.c
+> @@ -231,21 +231,30 @@ __add_event(struct list_head *list, int *idx,
+>  	    struct perf_cpu_map *cpu_list, u64 alternate_hw_config)
+>  {
+>  	struct evsel *evsel;
+> -	struct perf_cpu_map *cpus = perf_cpu_map__is_empty(cpu_list) && pmu ? pmu->cpus : cpu_list;
+> +	bool is_pmu_core;
+> +	struct perf_cpu_map *cpus;
+>  
+> -	cpus = perf_cpu_map__get(cpus);
+> -	if (pmu)
+> +	if (pmu) {
+> +		is_pmu_core = pmu->is_core;
+> +		cpus = perf_cpu_map__get(perf_cpu_map__is_empty(cpu_list) ? pmu->cpus : cpu_list);
+>  		perf_pmu__warn_invalid_formats(pmu);
+> -
+> -	if (pmu && (attr->type == PERF_TYPE_RAW || attr->type >= PERF_TYPE_MAX)) {
+> -		perf_pmu__warn_invalid_config(pmu, attr->config, name,
+> -					      PERF_PMU_FORMAT_VALUE_CONFIG, "config");
+> -		perf_pmu__warn_invalid_config(pmu, attr->config1, name,
+> -					      PERF_PMU_FORMAT_VALUE_CONFIG1, "config1");
+> -		perf_pmu__warn_invalid_config(pmu, attr->config2, name,
+> -					      PERF_PMU_FORMAT_VALUE_CONFIG2, "config2");
+> -		perf_pmu__warn_invalid_config(pmu, attr->config3, name,
+> -					      PERF_PMU_FORMAT_VALUE_CONFIG3, "config3");
+> +		if (attr->type == PERF_TYPE_RAW || attr->type >= PERF_TYPE_MAX) {
+> +			perf_pmu__warn_invalid_config(pmu, attr->config, name,
+> +						PERF_PMU_FORMAT_VALUE_CONFIG, "config");
+> +			perf_pmu__warn_invalid_config(pmu, attr->config1, name,
+> +						PERF_PMU_FORMAT_VALUE_CONFIG1, "config1");
+> +			perf_pmu__warn_invalid_config(pmu, attr->config2, name,
+> +						PERF_PMU_FORMAT_VALUE_CONFIG2, "config2");
+> +			perf_pmu__warn_invalid_config(pmu, attr->config3, name,
+> +						PERF_PMU_FORMAT_VALUE_CONFIG3, "config3");
+> +		}
+> +	} else {
+> +		is_pmu_core = (attr->type == PERF_TYPE_HARDWARE ||
+> +			       attr->type == PERF_TYPE_HW_CACHE);
+> +		if (perf_cpu_map__is_empty(cpu_list))
+> +			cpus = is_pmu_core ? perf_cpu_map__new_online_cpus() : NULL;
 
-So in light of "Liberation Day" and the bug that caused this splat it's
-time to quote Max Liebermann:
+All online CPUs? Is there a problem for hybrid?
 
-"Ich kann nicht so viel fressen, wie ich kotzen möchte."
+Thanks,
+Kan> +		else
+> +			cpus = perf_cpu_map__get(cpu_list);
+>  	}
+>  	if (init_attr)
+>  		event_attr_init(attr);
+> @@ -260,7 +269,7 @@ __add_event(struct list_head *list, int *idx,
+>  	evsel->core.cpus = cpus;
+>  	evsel->core.own_cpus = perf_cpu_map__get(cpus);
+>  	evsel->core.requires_cpu = pmu ? pmu->is_uncore : false;
+> -	evsel->core.is_pmu_core = pmu ? pmu->is_core : false;
+> +	evsel->core.is_pmu_core = is_pmu_core;
+>  	evsel->auto_merge_stats = auto_merge_stats;
+>  	evsel->pmu = pmu;
+>  	evsel->alternate_hw_config = alternate_hw_config;
 
---ffv6b5tmhodr33bb
-Content-Type: text/x-diff; charset=utf-8
-Content-Disposition: attachment;
-	filename="0001-fs-actually-hold-the-namespace-semaphore.patch"
-
-From 8822177b7a8a7315446b4227c7eb7a36916a6d6d Mon Sep 17 00:00:00 2001
-From: Christian Brauner <brauner@kernel.org>
-Date: Thu, 3 Apr 2025 16:43:50 +0200
-Subject: [PATCH] fs: actually hold the namespace semaphore
-
-Don't use a scoped guard use a regular guard to make sure that the
-namespace semaphore is held across the whole function.
-
-Signed-off-by: Christian Brauner <brauner@kernel.org>
----
- fs/namespace.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/fs/namespace.c b/fs/namespace.c
-index 16292ff760c9..348008b9683b 100644
---- a/fs/namespace.c
-+++ b/fs/namespace.c
-@@ -2478,7 +2478,8 @@ struct vfsmount *clone_private_mount(const struct path *path)
- 	struct mount *old_mnt = real_mount(path->mnt);
- 	struct mount *new_mnt;
- 
--	scoped_guard(rwsem_read, &namespace_sem)
-+	guard(rwsem_read, &namespace_sem);
-+
- 	if (IS_MNT_UNBINDABLE(old_mnt))
- 		return ERR_PTR(-EINVAL);
- 
--- 
-2.47.2
-
-
---ffv6b5tmhodr33bb--
