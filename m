@@ -1,136 +1,274 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 436EB1C5D59;
-	Thu,  3 Apr 2025 09:45:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EEAA78F58;
+	Thu,  3 Apr 2025 09:46:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743673522; cv=none; b=H267JD8lxTxTm3mEi/bUQYO3fKp8M3+UJIlnDFEkBiAkflS+puihm8Ly6GqU/ww0EKbwPxbjAN63Fhb0tYbI8nh+tEoiadngDZAgmAd9IxKO0Jp/fRbFBhtSdCBKjgyNgPoqs05oVBjiPb3Ouk2r8W52VIawIXaeTucVeEz2zUg=
+	t=1743673583; cv=none; b=Gr+sGB4GNCbHhWc3+9bETS/XkSFtPGNy95iINe97QF55p8pf59UZJ63mWxxhmciU1azGkgRsp5dW4+vkoiTuUrK9qAH9mF1BkhZ4jdvUhxVTPOyDogWNxHpxiSJdM2+4hkN9QbN1J3D4+FyZzM6oKeH4UYmLpIBZOF66MX+p76Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743673522; c=relaxed/simple;
-	bh=Hkbh1T0Y//xnQiXOM5p/wa0YIvpNthyLn5AopuohWJM=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G+tH6u8Bg+piQ4PQNC9MMjmPnGnGHyDv5sHw0pzpbbg3sTLXz5Iunp0IWFOirzNo1f40zWAS9oQhhKadBp3NyK7ZnNuNU2T/MUOtaEHKoxqS1fDdrkNX8XaTHU5GUPhACfB6Cegd18+BWvaXn6wdqI4kij78jr3vUMdsqJ0a/cU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NDFYtSZe; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743673583; c=relaxed/simple;
+	bh=6XnoVg+yC7QQLKbDlRVIJmkNWMIJM7BWw4IEozsWanQ=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=fEG8PIa8/2N+Z+CtBh+HEb52wpX5xxMFRUYKqFMU6In/yu6u7g3HEKWmx194glN2WtSVCJXcw6PK/nZmOayzVX0mB8t1tmkdtiRUY5TQWlz24BNdXBCwhVTxw+2v3gHMsTgLYexJFpV7yQFl0fAZZlN9WiZi+w4q3FOg3KgBk1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KWmRDova; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NDFYtSZe"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43cf034d4abso7013685e9.3;
-        Thu, 03 Apr 2025 02:45:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743673518; x=1744278318; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=7cQrZqkdhiwNLAFMOTTMAadX+lXzWT8LKEz14mdHv68=;
-        b=NDFYtSZegVPyhPoVZGriE/cGI9XPI8hUhp9gzcWwwLpYrxNSB5MZKT7hOkyNKqtkvH
-         Jq4bJMqya5pgBmri1M6acRRlDzP2aQzMuHtpT1FM/Icv/0pXOHGInNOXwWCvWNycQ3wX
-         5j07Yd4khuoGQd/XRHavNi3oJiI6BpmVRv/0CD+PAUP6TtpqDrI46z7kOll0T8VtUl/x
-         mibDpT8NVVjB3UKyhiUkiLOzfTNMMf9DS20fGCdfhALB2Jov3klJbauJHgR1ccQWrhoL
-         jQb0SoCOTuns/PysMtb57tpf2tiqS0z9B0Q144FVmFmJFFD6zij6imDvDRULGYYjGSCN
-         esOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743673518; x=1744278318;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7cQrZqkdhiwNLAFMOTTMAadX+lXzWT8LKEz14mdHv68=;
-        b=qnGhRClTN18NVsDzVN+M4bOm3MGwpxxRNnSZNqvTmsaYg9AVscq5C9sgW6e8D76U+J
-         iEUy74CXe+K579/kuwz9NsehuezEwT6ftBydzFhew9yBw8n3IVgHh3I3J8rnvbNqskiU
-         Y6LeQrxL/mAdd9LYxqrfLpoPIy5aLJGwS+36IOejVCdPbEN5piZczz8iT8lSFl3o24Ma
-         zHN0ALz6BK0UcMNufnBFGcJDItI+HX7sn3cbg2wnL8xcBv0MeKc5RiaFp/wqn00fG/VS
-         cmppg772/11nNcz/ASV2i+8SiJOUTAc5R/Wdlp1djslw52AMx0IZHVpSjFKMbFFP+Orx
-         Uyfw==
-X-Forwarded-Encrypted: i=1; AJvYcCWYh4FjG2Hi3xFYqO5qL64n5sqC8mI3JBVApm4rCXa0Gas6up5iH8hvjCTf8/YqWMApEpM=@vger.kernel.org, AJvYcCWdFMlbjAQ7Ula2Oenc7ZUWQ1f+E2vvrZjxBPtShJ7snPS0RwiTmviVhqq1MX+SoLSY3ecQKDIfgQ+SGRUx@vger.kernel.org
-X-Gm-Message-State: AOJu0YwhqbH6FEo1SbPEusiGAMIwY7fDQpbYv0scYkYbsHQnhqDEpcvX
-	XKrAEgDvqjrEFG9vwldEv81kJr4kS/DKgG+vYYbHKp+LmEy9E83Y
-X-Gm-Gg: ASbGncthD91398XFEYZbvI9K+z08U+GIxLWLJ68+nwiuiqD/2Vo4vettx0nskvpAGFm
-	kGT0QgRBsWq2E78ajaoeA17ERWeItyDjW99MnL3fGMlIe+hN7emDhasHYJ6W6/kRryxTkE8/xq2
-	Z0/Xr5MOUK6xtBGmBwACCPp8Le0jcPO7xtB5oOwa4OQXCLwHQj5+AN0gci1Qg7Ez3zN2jX9CjYF
-	mDrCyqSRGd70OKXnb1BeeS6Yjn+gxF2E3mdRqPeroVBoFAc2FvyBcqP0fXj41G4Vtn15bkcuKMf
-	Vkd0jEugN9FwPcYUfgyV0laApwcWWvk=
-X-Google-Smtp-Source: AGHT+IFwlo0ek7OxvbALsx8w2WHdLp8+v8cTs628uEgW7h8WK/CsJeBGZJCcgQLhZB+4gbgaBe39MA==
-X-Received: by 2002:a05:600c:1e1b:b0:43d:49eb:9675 with SMTP id 5b1f17b1804b1-43eb5c9588cmr55984485e9.22.1743673518298;
-        Thu, 03 Apr 2025 02:45:18 -0700 (PDT)
-Received: from krava ([193.32.29.227])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec364d036sm12900835e9.26.2025.04.03.02.45.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Apr 2025 02:45:17 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Thu, 3 Apr 2025 11:45:15 +0200
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Mateusz Bieganski <bieganski.gm@gmail.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>,
-	"open list:BPF [LIBRARY] (libbpf)" <bpf@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] libbpf: fix multi-uprobe attach not working with dynamic
- symbols
-Message-ID: <Z-5Yq5q8ddkJUO0k@krava>
-References: <20250327100733.27881-1-bieganski.gm@gmail.com>
- <CAEf4BzbGbfhdanY0yZtRoRTZaiMG4ML1PYUz1m4QbG-Kw2tNtA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KWmRDova"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743673581; x=1775209581;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=6XnoVg+yC7QQLKbDlRVIJmkNWMIJM7BWw4IEozsWanQ=;
+  b=KWmRDova8GWUPjo5bFtauS53mEqIiY5B3njmqrnnxtNvfYRkkl3z64Aw
+   V4oeJJNSUqRrSCTnAijT7akvS+1Uby2TcjPPtv4huY4qQHwPYU/snkPjD
+   wmpmEo5i/7ZxzOUrZizPTA1MtdJU+kgN4kKl39hDTl2CC9l1AjDEhP3zq
+   +Nk/qANo+gQkHz5MeplFlL70btNLbouV5CHz8jC3a7WwMC5xZ3ccDSEr0
+   Cyk+oHYYFEY8LZ4hoS3o0DEDKKDmTwOKNX+vw0CCniWepXeuipzPJ2RRv
+   uuAeeqk56RRqgm9lcuRnnsKPNy3pFj3NWpCS3GbNTc9oMPu7Ylk8t0F23
+   g==;
+X-CSE-ConnectionGUID: uyCEPOjOTueKU/CjiTWIWQ==
+X-CSE-MsgGUID: Dg1PivzHR3eD/STYSwRcJw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11392"; a="55700869"
+X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
+   d="scan'208";a="55700869"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 02:45:54 -0700
+X-CSE-ConnectionGUID: jyG+Q7IsQ8Ol0yQpTWIevA==
+X-CSE-MsgGUID: ASjgkbMCR1OecHoGXGxgHw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
+   d="scan'208";a="126950855"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.152])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 02:45:48 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 3 Apr 2025 12:45:45 +0300 (EEST)
+To: =?ISO-8859-2?Q?Micha=B3_Winiarski?= <michal.winiarski@intel.com>
+cc: linux-pci@vger.kernel.org, intel-xe@lists.freedesktop.org, 
+    dri-devel@lists.freedesktop.org, LKML <linux-kernel@vger.kernel.org>, 
+    Bjorn Helgaas <bhelgaas@google.com>, 
+    =?ISO-8859-15?Q?Christian_K=F6nig?= <christian.koenig@amd.com>, 
+    =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>, 
+    Rodrigo Vivi <rodrigo.vivi@intel.com>, 
+    Michal Wajdeczko <michal.wajdeczko@intel.com>, 
+    Lucas De Marchi <lucas.demarchi@intel.com>, 
+    =?ISO-8859-15?Q?Thomas_Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>, 
+    Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+    Maxime Ripard <mripard@kernel.org>, 
+    Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+    Simona Vetter <simona@ffwll.ch>, Matt Roper <matthew.d.roper@intel.com>
+Subject: Re: [PATCH v7 3/6] PCI: Allow IOV resources to be resized in
+ pci_resize_resource()
+In-Reply-To: <20250402141122.2818478-4-michal.winiarski@intel.com>
+Message-ID: <31c9a59c-b90c-80e4-cd2f-2eb992ce8556@linux.intel.com>
+References: <20250402141122.2818478-1-michal.winiarski@intel.com> <20250402141122.2818478-4-michal.winiarski@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEf4BzbGbfhdanY0yZtRoRTZaiMG4ML1PYUz1m4QbG-Kw2tNtA@mail.gmail.com>
+Content-Type: multipart/mixed; boundary="8323328-154751121-1743673545=:1302"
 
-On Fri, Mar 28, 2025 at 11:14:54AM -0700, Andrii Nakryiko wrote:
-> On Thu, Mar 27, 2025 at 3:08 AM Mateusz Bieganski
-> <bieganski.gm@gmail.com> wrote:
-> >
-> > ENOENT is incorrectly propagated to caller, if requested symbol is
-> > present in dynamic linker symbol table and not present in symbol table.
-> >
-> > Signed-off-by: Mateusz Bieganski <bieganski.gm@gmail.com>
-> > ---
-> >  tools/lib/bpf/elf.c | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/tools/lib/bpf/elf.c b/tools/lib/bpf/elf.c
-> > index 823f83ad819c..41839ef5bc97 100644
-> > --- a/tools/lib/bpf/elf.c
-> > +++ b/tools/lib/bpf/elf.c
-> > @@ -439,8 +439,10 @@ int elf_resolve_syms_offsets(const char *binary_path, int cnt,
-> >                 struct elf_sym *sym;
-> >
-> >                 err = elf_sym_iter_new(&iter, elf_fd.elf, binary_path, sh_types[i], st_type);
-> > -               if (err == -ENOENT)
-> > +               if (err == -ENOENT) {
-> > +                       err = 0;
-> >                         continue;
-> > +               }
-> 
-> Don't we have the same problem in elf_resolve_pattern_offsets() as
-> well? Can you please fix both issues in one go?
-> 
-> It seems it's only elf_find_func_offset() that do want to preserve
-> that -ENOENT, all others are just error-prone implementations.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-+1, thanks for the fix
+--8323328-154751121-1743673545=:1302
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-jirka
+On Wed, 2 Apr 2025, Micha=C5=82 Winiarski wrote:
 
-> 
-> pw-bot: cr
-> 
-> >                 if (err)
-> >                         goto out;
-> >
-> > --
-> > 2.39.5
-> >
+> Similar to regular resizable BAR, VF BAR can also be resized.
+>=20
+> The capability layout is the same as PCI_EXT_CAP_ID_REBAR, which means
+> we can reuse most of the implementation, the only difference being
+> resource size calculation (which is multiplied by total VFs) and memory
+> decoding (which is controlled by a separate VF MSE field in SR-IOV cap).
+>=20
+> Extend the pci_resize_resource() function to accept IOV resources.
+>=20
+> See PCIe r6.2, sec 7.8.7.
+>=20
+> Signed-off-by: Micha=C5=82 Winiarski <michal.winiarski@intel.com>
+> ---
+>  drivers/pci/iov.c       | 21 +++++++++++++++++++++
+>  drivers/pci/pci.c       | 10 +++++++++-
+>  drivers/pci/pci.h       |  9 +++++++++
+>  drivers/pci/setup-res.c | 35 ++++++++++++++++++++++++++++++-----
+>  4 files changed, 69 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+> index 3d5da055c3dc1..fee99e15a943f 100644
+> --- a/drivers/pci/iov.c
+> +++ b/drivers/pci/iov.c
+> @@ -154,6 +154,27 @@ resource_size_t pci_iov_resource_size(struct pci_dev=
+ *dev, int resno)
+>  =09return dev->sriov->barsz[pci_resource_num_to_vf_bar(resno)];
+>  }
+> =20
+> +void pci_iov_resource_set_size(struct pci_dev *dev, int resno,
+> +=09=09=09       resource_size_t size)
+> +{
+> +=09if (!pci_resource_is_iov(resno)) {
+> +=09=09pci_warn(dev, "%s is not an IOV resource\n",
+> +=09=09=09 pci_resource_name(dev, resno));
+> +=09=09return;
+> +=09}
+> +
+> +=09dev->sriov->barsz[pci_resource_num_to_vf_bar(resno)] =3D size;
+> +}
+> +
+> +bool pci_iov_is_memory_decoding_enabled(struct pci_dev *dev)
+> +{
+> +=09u16 cmd;
+> +
+> +=09pci_read_config_word(dev, dev->sriov->pos + PCI_SRIOV_CTRL, &cmd);
+> +
+> +=09return cmd & PCI_SRIOV_CTRL_MSE;
+> +}
+> +
+>  static void pci_read_vf_config_common(struct pci_dev *virtfn)
+>  {
+>  =09struct pci_dev *physfn =3D virtfn->physfn;
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 4d7c9f64ea24e..6878e3b1e3fcf 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -3745,7 +3745,15 @@ static int pci_rebar_find_pos(struct pci_dev *pdev=
+, int bar)
+>  =09unsigned int pos, nbars, i;
+>  =09u32 ctrl;
+> =20
+> -=09pos =3D pdev->rebar_cap;
+> +=09if (pci_resource_is_iov(bar)) {
+> +=09=09if (!pdev->physfn)
+> +=09=09=09return -ENOTSUPP;
+> +=09=09pos =3D pdev->sriov->vf_rebar_cap;
+> +=09=09bar =3D pci_resource_num_to_vf_bar(bar);
+> +=09} else {
+> +=09=09pos =3D pdev->rebar_cap;
+> +=09}
+> +
+>  =09if (!pos)
+>  =09=09return -ENOTSUPP;
+> =20
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index f44840ee3c327..643cd8c737f66 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -689,6 +689,9 @@ void pci_iov_update_resource(struct pci_dev *dev, int=
+ resno);
+>  resource_size_t pci_sriov_resource_alignment(struct pci_dev *dev, int re=
+sno);
+>  void pci_restore_iov_state(struct pci_dev *dev);
+>  int pci_iov_bus_range(struct pci_bus *bus);
+> +void pci_iov_resource_set_size(struct pci_dev *dev, int resno,
+> +=09=09=09       resource_size_t size);
+> +bool pci_iov_is_memory_decoding_enabled(struct pci_dev *dev);
+>  static inline bool pci_resource_is_iov(int resno)
+>  {
+>  =09return resno >=3D PCI_IOV_RESOURCES && resno <=3D PCI_IOV_RESOURCE_EN=
+D;
+> @@ -722,6 +725,12 @@ static inline int pci_iov_bus_range(struct pci_bus *=
+bus)
+>  {
+>  =09return 0;
+>  }
+> +static inline void pci_iov_resource_set_size(struct pci_dev *dev, int re=
+sno,
+> +=09=09=09=09=09     resource_size_t size) { }
+> +static inline bool pci_iov_is_memory_decoding_enabled(struct pci_dev *de=
+v)
+> +{
+> +=09return false;
+> +}
+>  static inline bool pci_resource_is_iov(int resno)
+>  {
+>  =09return false;
+> diff --git a/drivers/pci/setup-res.c b/drivers/pci/setup-res.c
+> index c6657cdd06f67..d2b3ed51e8804 100644
+> --- a/drivers/pci/setup-res.c
+> +++ b/drivers/pci/setup-res.c
+> @@ -423,13 +423,39 @@ void pci_release_resource(struct pci_dev *dev, int =
+resno)
+>  }
+>  EXPORT_SYMBOL(pci_release_resource);
+> =20
+> +static bool pci_resize_is_memory_decoding_enabled(struct pci_dev *dev,
+> +=09=09=09=09=09=09  int resno)
+> +{
+> +=09u16 cmd;
+> +
+> +=09if (pci_resource_is_iov(resno))
+> +=09=09return pci_iov_is_memory_decoding_enabled(dev);
+> +
+> +=09pci_read_config_word(dev, PCI_COMMAND, &cmd);
+> +
+> +=09return cmd & PCI_COMMAND_MEMORY;
+> +}
+> +
+> +static void pci_resize_resource_set_size(struct pci_dev *dev, int resno,
+> +=09=09=09=09=09 int size)
+> +{
+> +=09resource_size_t res_size =3D pci_rebar_size_to_bytes(size);
+> +=09struct resource *res =3D pci_resource_n(dev, resno);
+> +
+> +=09if (!pci_resource_is_iov(resno)) {
+> +=09=09resource_set_size(res, res_size);
+> +=09} else {
+> +=09=09resource_set_size(res, res_size * pci_sriov_get_totalvfs(dev));
+> +=09=09pci_iov_resource_set_size(dev, resno, res_size);
+> +=09}
+> +}
+> +
+>  int pci_resize_resource(struct pci_dev *dev, int resno, int size)
+>  {
+>  =09struct resource *res =3D pci_resource_n(dev, resno);
+>  =09struct pci_host_bridge *host;
+>  =09int old, ret;
+>  =09u32 sizes;
+> -=09u16 cmd;
+> =20
+>  =09/* Check if we must preserve the firmware's resource assignment */
+>  =09host =3D pci_find_host_bridge(dev->bus);
+> @@ -440,8 +466,7 @@ int pci_resize_resource(struct pci_dev *dev, int resn=
+o, int size)
+>  =09if (!(res->flags & IORESOURCE_UNSET))
+>  =09=09return -EBUSY;
+> =20
+> -=09pci_read_config_word(dev, PCI_COMMAND, &cmd);
+> -=09if (cmd & PCI_COMMAND_MEMORY)
+> +=09if (pci_resize_is_memory_decoding_enabled(dev, resno))
+>  =09=09return -EBUSY;
+> =20
+>  =09sizes =3D pci_rebar_get_possible_sizes(dev, resno);
+> @@ -459,7 +484,7 @@ int pci_resize_resource(struct pci_dev *dev, int resn=
+o, int size)
+>  =09if (ret)
+>  =09=09return ret;
+> =20
+> -=09resource_set_size(res, pci_rebar_size_to_bytes(size));
+> +=09pci_resize_resource_set_size(dev, resno, size);
+> =20
+>  =09/* Check if the new config works by trying to assign everything. */
+>  =09if (dev->bus->self) {
+> @@ -471,7 +496,7 @@ int pci_resize_resource(struct pci_dev *dev, int resn=
+o, int size)
+> =20
+>  error_resize:
+>  =09pci_rebar_set_size(dev, resno, old);
+> -=09resource_set_size(res, pci_rebar_size_to_bytes(old));
+> +=09pci_resize_resource_set_size(dev, resno, old);
+>  =09return ret;
+>  }
+>  EXPORT_SYMBOL(pci_resize_resource);
+
+Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+
+--=20
+ i.
+
+--8323328-154751121-1743673545=:1302--
