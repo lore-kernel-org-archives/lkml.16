@@ -1,82 +1,54 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2712924CEE8;
-	Thu,  3 Apr 2025 17:55:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F95F24CEE8;
+	Thu,  3 Apr 2025 17:56:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743702907; cv=none; b=P+aUP376jX6CH5VuymRn4f1/pOPN29CTS4IVVBCdy6Vhw1AZ5cWSDPn5HH2yr5FNtP2k0Z5gomo5j83dS0GjXLuGd+d0Stdg4DQR1hWsif0JTm0O01GivtcNiOR06MQ7BW9oKKY9EW9faVbpIJTCQOHCdyyXh2N5D5XtAQUSnc8=
+	t=1743702984; cv=none; b=pVwagypwRKQOq10BgmoKVAg2c+uqfxWO2PfSsyhOkiLDKrksme88dwcHKcLtVpFM1ois2kLS/UB8pbgBKV/fJslKvO8BK06RzVpksKQf/JhlWKKwdsS646zHx6PRdVEP5/IzOztTWRT0/3GKmyJmF5uC20nkoVIr+veDw71PvKg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743702907; c=relaxed/simple;
-	bh=i7EwGuFwl7cxoGntAnpzoanOk0CDEIKNdoMN1vfuPCk=;
+	s=arc-20240116; t=1743702984; c=relaxed/simple;
+	bh=rizTYVIoWzIbYzn3OLqRG6dh4TQQiYzE9jAODYFdxhw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=USfl9N48YzFb1jIyIByAS+DtMCbsOmvM4+RSyrURb6ZIHWE+4UNGKtBST7YeKi/e/+h6B59Vbm2z5yk5OjtVPf2EkShDmxjPhY9+lDU57D8JOpcwFMNy71uvH57LFom5QLuYttykN0VQTmdmSgC1IfiRVG4sAzLPAYeuNTxq+VM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Pn2ybXL0; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=EGa9j0NOsxIL4OLDgvZvcZEtpjGp5Lsmq43eOR0Wquo3G3lf0WE/AhdP1CtDHvuMX6ePkwVllFE7F8IAMyIkGCWGrSC9qb1zdco0HIGs/pEsCdJ46PlEtCRvKsnt0a7sZSvFUuXSKkhJjPLHHeYzRfHSLsduU4bwaRjhmryyQN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=FaoI4BDn; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qZR7lnvb; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Pn2ybXL0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743702906; x=1775238906;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=i7EwGuFwl7cxoGntAnpzoanOk0CDEIKNdoMN1vfuPCk=;
-  b=Pn2ybXL0SN0I5uaeShEveU1rQyVuDjUqztN9y6lZ3W59qmA3C7nyHgNZ
-   19K9sEU+oEofrsO/k95K281oTmoc8QajbUF6S3FEyUPvIUPf73nIdf7eM
-   LBjjw59lubLcedX7QWNS6goTuNu7fYqMt/BO89o1I23M/ayjMTTRbKGkA
-   HOaU4VkrazEr1k4FDWETdnB3AOHjG5ihQ7rUnh6UKUOVyjUXHyCQ9zmyE
-   YYffqluE8eB6PYnMWLF6eCHTEtrdfQAkLRuXa14H1wswqejGe0EBTbcbU
-   JaEep/Gvdi0RvVA8fcCkQRMwuNd6mYbW0CTf7MO4P0XC8zDo1dTTLXnRX
-   w==;
-X-CSE-ConnectionGUID: E91Kj7ESQ4ulhBfAgZPJtw==
-X-CSE-MsgGUID: AdL34zbVTaGD8/ucQuzW9A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11393"; a="44381573"
-X-IronPort-AV: E=Sophos;i="6.15,186,1739865600"; 
-   d="scan'208";a="44381573"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 10:55:05 -0700
-X-CSE-ConnectionGUID: jpxGc3sWSNCcv1IrutrHKA==
-X-CSE-MsgGUID: DShBMFNNTBimd6qc3vw2xQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,186,1739865600"; 
-   d="scan'208";a="126881481"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 10:55:00 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1u0OmH-00000008szH-1Emp;
-	Thu, 03 Apr 2025 20:54:57 +0300
-Date: Thu, 3 Apr 2025 20:54:57 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Rob Herring <robh@kernel.org>
-Cc: Remo Senekowitsch <remo@buenzli.dev>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Dirk Behme <dirk.behme@de.bosch.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-	devicetree@vger.kernel.org, rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH 03/10] device property: Add
- fwnode_property_read_int_array()
-Message-ID: <Z-7LcXoGw7uNWBUE@smile.fi.intel.com>
-References: <20250326171411.590681-1-remo@buenzli.dev>
- <20250326171411.590681-4-remo@buenzli.dev>
- <Z-UPJyD41LOMM3o2@smile.fi.intel.com>
- <CAL_Jsq+tJvGsbw1dGdgmBM8+cL4vN71OMTvX9tkmBLNk=6T9KQ@mail.gmail.com>
- <Z-60LwRrw30cq4YE@smile.fi.intel.com>
- <CAL_JsqKiYCh7ukDoqc_toyn75=3wOM4WyOTGvogoOfdz9T_7Ow@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FaoI4BDn";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qZR7lnvb"
+Date: Thu, 3 Apr 2025 19:56:19 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1743702981;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LcthvqE88d5gy2Qcxi0NqD6LJiCHYdT8lPf3khfZem8=;
+	b=FaoI4BDnt2OjqHubUgAmbqWzK6+yscrpjDbWCSy64aOb82ttaeaGI3LonyNOLhrBmkOTBl
+	jT0po6WHVzFi2CVdWDsElaFlYZk1VensxacuRkdtbCoYimn9ABtJjXeFlWNkIEEY91U/mT
+	j0XzlYTjEJap4O5AaW8MYQjnYIgULvCTeDFRtu4bmTjF65hB0kD3US1ctlnAXeZcU52sJY
+	ROE0fNR7PTEKuN3TNHP0rTubi84FWltjfHvZfDQjd43u9udIpeBKNOJsyvez1ZVWRMieHu
+	fHa7WC948HCrqThjj7eO5cCiZKaxrkxabmakHR9SZ2yuTp6xHh3nYTvrzwvI9w==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1743702981;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LcthvqE88d5gy2Qcxi0NqD6LJiCHYdT8lPf3khfZem8=;
+	b=qZR7lnvbngGml9Vwc3jUbQjPQINWQgay3k0x0LQYlR5B2vH6TS5gnb+gQ/iQmHMa80Zi17
+	H2EcMcWEF0dCCLDg==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org,
+	peterz@infradead.org, mingo@kernel.org, bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kernel-team@meta.com, oleg@redhat.com,
+	mhiramat@kernel.org, ast@kernel.org
+Subject: Re: [PATCH tip/perf] uprobes: avoid false lockdep splat in uprobe
+ timer callback
+Message-ID: <20250403175619.2QB0oWe_@linutronix.de>
+References: <20250403171831.3803479-1-andrii@kernel.org>
+ <20250403174917.OLHfwBp-@linutronix.de>
+ <20250403135331.1b8e8fc0@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -85,66 +57,20 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAL_JsqKiYCh7ukDoqc_toyn75=3wOM4WyOTGvogoOfdz9T_7Ow@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20250403135331.1b8e8fc0@gandalf.local.home>
 
-On Thu, Apr 03, 2025 at 11:36:38AM -0500, Rob Herring wrote:
-> On Thu, Apr 3, 2025 at 11:15 AM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> > On Thu, Apr 03, 2025 at 11:04:32AM -0500, Rob Herring wrote:
-> > > On Thu, Mar 27, 2025 at 3:41 AM Andy Shevchenko
-> > > <andriy.shevchenko@linux.intel.com> wrote:
-> > > > On Wed, Mar 26, 2025 at 06:13:42PM +0100, Remo Senekowitsch wrote:
-> > > > > The rust bindings for reading device properties has a single
-> > > > > implementation supporting differing sizes of integers. The fwnode C API
-> > > > > already has a similar interface, but it is not exposed with the
-> > > > > fwnode_property_ API. Add the fwnode_property_read_int_array() wrapper.
-
-...
-
-> > > > > +EXPORT_SYMBOL_GPL(fwnode_property_read_int_array);
-> > > >
-> > > > I'm not sure about this. We have a lot of assumptions in the code that the
-> > > > arrays beneath are only represented by the selected number of integer types.
-> > > > This opens a Pandora's box, e.g., reading in u24, which is not supported by
-> > > > the upper layers..
-> > >
-> > > We can probably drop the export if it is just that which you object to.
-> >
-> > Yes, this is main point, but dropping it does not prevent from still using in
-> > the complied-in code. Is it possible to hide it better?
+On 2025-04-03 13:53:31 [-0400], Steven Rostedt wrote:
+> On Thu, 3 Apr 2025 19:49:17 +0200
+> Sebastian Andrzej Siewior <bigeasy@linutronix.de> wrote:
 > 
-> Don't put any declaration in the header and declare it in the rust
-> code? But lack of declaration generates warnings.
-
-Exactly. And I believe we have the typed versions of int_array for a reason.
-Otherwise what's the point in having them to begin with?
-(The first what comes to my mind is a compile time type checking, so we don't
- try to load u8 with u32 data or any other dirty tricks.)
-
-Maybe it deserves a header that can be included explicitly in the rust stuff
-and being checked at compile time to avoid people using that? Can we achieve
-something like C preprocessor
-
-#ifndef FOO
-#error This header must not be included directly
-#endif
-
-> Also, all the backends will reject an arbitrary size. So your worry
-> about u24 or other odd sizes isn't really valid. But if you want to be
-> doubly paranoid for when we add a new firmware backend (shoot me now),
-> you could move this from the swnode implementation to the fwnode
-> implementation:
+> > > +	/* See free_ret_instance() for notes on seqcount use.  
+> > 
+> > This is not a proper multi line comment.
 > 
->         if (!is_power_of_2(elem_size) || elem_size > sizeof(u64))
->                 return -ENXIO;
+> It's only proper in the networking code, but not the rest of the kernel.
 
-That might work. But still an interface of int_array seems lower by
-level than typed ones.
+I wasn't aware that uprobe is following networking standards here.
 
--- 
-With Best Regards,
-Andy Shevchenko
+> -- Steve
 
-
+Sebastian
