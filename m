@@ -1,87 +1,78 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AC0224BC1C;
-	Thu,  3 Apr 2025 11:10:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99D7C24BC00;
+	Thu,  3 Apr 2025 11:11:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743678611; cv=none; b=e6Vkw9+viT06oCieQ2uCrXShNa9KoK5/9m2rHGmkoaCYawYX7NOfDZ1wgX3R6nwg+1EuEkjF09ARhfWftsIRc5PXTn77neweI/YNzmG1poNHW68kyOJtjR6W+3h3WrHdLcGcT14GK266IN6p2dpRixHhGxV2PSrCLDFMzr3pvPQ=
+	t=1743678684; cv=none; b=gnpbUrsFzz8QftkoXNrc5p3OoMO1yxpI6CN1cCykpcBHXlwURodLOaO0bHdyZ9K5syBbmglDj96cSI9wv0HQn2A2QMGlWRNbkJlMkHWRlrQSQjaBuPebA+YsqygUysjErhrxPgAHO3QCjZV5f5U8ha8c+rR/vuC1wOcFVFU1j8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743678611; c=relaxed/simple;
-	bh=htwI5zsh8ZDaI94Lm8c3UJRY0TNj20AHOyFODzHrsRg=;
+	s=arc-20240116; t=1743678684; c=relaxed/simple;
+	bh=dDl5YLB8fWtodZLXtUrO0jZ7f1/8RsDRp5b/qyAhCPw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rpJ2xWRrtCFF/f22Jj/HZacawGTTBbEzH/mwn22Cv8+9nnjX1g69AuBFf8s86+X2ZyXzB+pl0/mbpspJlSf0gMZy4yN067dcObcR7NYFYwACTqMME74MvkHr+yHnBo0IxJHca3Imxh015AjAJRxNqwnS1Sg00/X1pzIReSlxBTk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JDOhLyn0; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZpO4JPnbBTLYoOMAzjFOnQWfYw3hYeyfTgFY8eLAr8WKF9btLx1p1ZHmH53sA+kCIPIa5qr2bHqqLC4wLyn1SGh7mM3P9zdtFlMrkPmveQ1uMtIhLkUw8ynk1+udHiB1F6b+Gd8ml6kXWi+ZZTPxZi52OYLgg7N3RCEXL2CROdQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=fpjm8wpL; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JDOhLyn0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11F2AC4CEE3;
-	Thu,  3 Apr 2025 11:10:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743678610;
-	bh=htwI5zsh8ZDaI94Lm8c3UJRY0TNj20AHOyFODzHrsRg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JDOhLyn0xYLRzSvccPU8EviC8cR6irF7BDJvH8ACOAdUQzHQH7oP/7wYujcxO+NjF
-	 GgY2xgBpssfWkG1WsjPDgdBi0nkVLNmQuj7vdHyeM2DsDwYSPD9qDsrfuYj0WWsPah
-	 G7FDtZORFO+rimKjF7CbjHQbT9uuROt2jdGtPEDeuW/dt5Kx2J1GvenawEct3O0SoS
-	 Uo8PX1xw/niwV9hUIuhDFfnkEKfrdyMd0X5Sf46MelotqgSxu2VVk6SA7mz/eOaFDJ
-	 HoPO9zn4Vc6zD+ANTRl/YKXupC3sqi6yHP4dPfKlO5jsS9+ko5WOXpbKrRmvIzhObh
-	 m92UasI15X0dw==
-Date: Thu, 3 Apr 2025 12:10:05 +0100
-From: Mark Brown <broonie@kernel.org>
-To: shao.mingyin@zte.com.cn
-Cc: olivier.moysan@foss.st.com, arnaud.pouliquen@foss.st.com,
-	lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
-	mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com,
-	linux-sound@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	yang.yang29@zte.com.cn, xu.xin16@zte.com.cn, ye.xingchen@zte.com.cn,
-	zhang.enpei@zte.com.cn
-Subject: Re: [PATCH] sound: soc: stm: stm32_sai: Use dev_err_probe()
-Message-ID: <f78f066f-2be6-47f3-bb06-03f1c2ed3d22@sirena.org.uk>
-References: <20250403154142936Po-soX8Bifyvw_eWSbddT@zte.com.cn>
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="fpjm8wpL"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=NUfddGO7yDhykOwJEI8UwCQ5Z0JTQ3F8HI60e3ORxAQ=; b=fpjm8wpLs/hPWMeHyqVFt7gcIl
+	PulxTSpl8DYOseNmo0pWTXlCgEIP+a5Lhw0MF2/RcMJs8IUDMz4BYqUFqBhXTcEXyy5ieTQ/iGKvI
+	dOZ8kvwR7ms83meDWx4wqypc7dIiSiid+vwTFrHqjSZJYCvP8kThgrpHcbbjmbEahMdcm0i4zFv9i
+	F24GAFutjhHe80Yqq5KkKp7PVtbrTAdp/fDb7fE0+dqHaBmjlA+qwNtJ3FXd+ixQZ5E49OEayAtlU
+	e9/i2o4PzNlOpdeU8i1sun/qphOvxuxIjyToTRQog+3ziTbnwMUUvXdjVk5/PO7RlRDWoltkvEKSs
+	Wxc9OAlw==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1u0ITU-00CSUK-2S;
+	Thu, 03 Apr 2025 19:11:09 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Thu, 03 Apr 2025 19:11:08 +0800
+Date: Thu, 3 Apr 2025 19:11:08 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Christian Marangi <ansuelsmth@gmail.com>
+Cc: Antoine Tenart <atenart@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Richard van Schagen <vschagen@icloud.com>,
+	linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH] crypto: inside-secure/eip93 - acquire lock on
+ eip93_put_descriptor hash
+Message-ID: <Z-5szPllytn7hQ03@gondor.apana.org.au>
+References: <20250401115735.11726-1-ansuelsmth@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="VJtFOiDls7d3k31G"
-Content-Disposition: inline
-In-Reply-To: <20250403154142936Po-soX8Bifyvw_eWSbddT@zte.com.cn>
-X-Cookie: Logic is the chastity belt of the mind!
-
-
---VJtFOiDls7d3k31G
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250401115735.11726-1-ansuelsmth@gmail.com>
 
-On Thu, Apr 03, 2025 at 03:41:42PM +0800, shao.mingyin@zte.com.cn wrote:
-> From: Zhang Enpei <zhang.enpei@zte.com.cn>
->=20
-> Replace the open-code with dev_err_probe() to simplify the code.
+On Tue, Apr 01, 2025 at 01:57:30PM +0200, Christian Marangi wrote:
+> In the EIP93 HASH functions, the eip93_put_descriptor is called without
+> acquiring lock. This is problematic when multiple thread execute hash
+> operations.
+> 
+> Correctly acquire ring write lock on calling eip93_put_descriptor to
+> prevent concurrent access and mess with the ring pointers.
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: 9739f5f93b78 ("crypto: eip93 - Add Inside Secure SafeXcel EIP-93 crypto engine support")
+> Reported-by: Herbert Xu <herbert@gondor.apana.org.au>
+> Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+> ---
+>  drivers/crypto/inside-secure/eip93/eip93-hash.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 
-Please submit patches using subject lines reflecting the style for the
-subsystem, this makes it easier for people to identify relevant patches.
-Look at what existing commits in the area you're changing are doing and
-make sure your subject lines visually resemble what they're doing.
-There's no need to resubmit to fix this alone.
-
---VJtFOiDls7d3k31G
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmfubIwACgkQJNaLcl1U
-h9CeLQf/R93pQE1PWEoaKn2ix4KLyiBG73yedrtnMdMp+o5mrdfBQ7mMCsCUr9D2
-OYklJCVdg5UGii26J9AHrpPFJ/maeTRCZLWSYi8jSkDvVOzITy74IiQN+3fMSyvo
-lG/EJg7WhDkLyGdQm3FM6/GD3QqppgcfzTFJkKTGxFwXeTCYJoanUdk2rn7iNqyO
-ZIfIQYS56l4O1FR/xTJG+n5iyS2HsYUACJRFyrnHW+CjpGpEVXRWEMOmhzhVl0TQ
-EjDsPh4BWWbOX2Cvca66T1c5mJ5SHEFBlcQEIJ+RaDP5koM9IiMMuRAKY98HA3rK
-mYbd3uFbhvGA9EVRiMkS/8iOsQJUTA==
-=LR/E
------END PGP SIGNATURE-----
-
---VJtFOiDls7d3k31G--
+Patch applied.  Thanks.
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
