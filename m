@@ -1,167 +1,121 @@
-Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B842024397B
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 17:46:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 342BC24BBE9;
+	Thu,  3 Apr 2025 17:46:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743702388; cv=none; b=ED7UC4JslxjvucyaJw6sIsTpbrtWPrgF7rzXhtHy4hf4UKnar9qQiQ04UeFIhwVTS4xNPgtie+zvAMLYb4w0+BuT5nRLCmft6w/i0WX2zRRn8GSRz9veSGrx0BpWLHh7WoJlv6zPkxqtGTNrVDVEhVc6Z5IGAZ5TUozZm8VvVhA=
+	t=1743702389; cv=none; b=aUrChNfC+ObQx8yBSkECJdUw7y2lcmwGYf3f+yBZ7X1NSxpJT5ClyP4h2ujMKTJ57C06yBbzgWnp2a59MicdpM410XMisYlVuEgABSXuvmUA0q18aX8K1Dv0hTibI6WP5TWPmAZ8pUaYZCQ0GsIgW7J91Uy6oWi/vC379kyEH/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743702388; c=relaxed/simple;
-	bh=7WAOF/PGgx1dnyD4FdX5UHymjIyHujyPwO0DPA9CwPw=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=A2f+u75CyOE2z4JsezM44BfNy+T5ksMMAHGbP4uuoHlGH6LTE4eMojVGyff/pTCnItGyK7iFsfK/xzSimfLqPQ06GZL7LuDkXNfy3sFIflB/mqEMXi7zGCenwoxYOCmV3MjDvcEwyohj7/stktHEnLRtmueDfP8i7doQTBaaawU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3ce843b51c3so26807505ab.0
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 10:46:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743702386; x=1744307186;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=5EIrOuna1iQfxkNQJAQ8SncT+rsXyyDd2SoWc/q5hWw=;
-        b=i94WX4/k/+xHsOSM7vecITXrQqF84gjHyKUBzukEXCEL56ylA9uY/13Mfgw5hUTcL4
-         dWuOHNUwVzPbVwJAUTeT20Unq8TuIAqFJf++UEugZzgFeoLqmeDlzQf66ME7I2KSkVXe
-         6B8thg4sI06Eisy1V7pyPuioBYPYF9uOw3PBzIx0QdAlb9pfH/kxTIhwkEeFbNfja5Zj
-         zGepq7uTKvbhHvMkftanrmHIgmFLpjz9c+Jx++O8PzVLY+kWGIrFiyNup590ifh8iBCh
-         CRxzoPFIpmRvx/uml8ZF12spFMbIMC4jCI+3CBPG+EvRqlEPvf6gKbSqBP9h62rwBdZQ
-         dFIw==
-X-Forwarded-Encrypted: i=1; AJvYcCX/v58nsF0iPLAKKbcjpopW9I4kXll5Cl8z522a0524BPgZLbHPpBAU4a9Jl00hGN5whDRVuh+Tmqka20Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzorirQRFhpY7AMuJCauI2GNJVyhrKU5I++pvE6gmV0pSXzWInH
-	OwXsQFh9ZHw+8pFEHYaVwQ++yNz83d9yZLBhx0w/kKGiUEL6yTEUs1Vzb+L9NfyFJV7KlhIONvo
-	I/zfTogzipfmHBYou1Rf1m689zBiKJ9jFBVN4bkUwcyytNhQSwJy/8d4=
-X-Google-Smtp-Source: AGHT+IHWtvoebqXEf/sTd+fBUcKziDtr+u+YE5y3cCnRiTHmaZrtU4hS05fyA0dhX1z7XLJmJkbbUGj8wTAOQujs4kPyffWIZKSC
+	s=arc-20240116; t=1743702389; c=relaxed/simple;
+	bh=CrVVJHvTACiAZiAbOqNpxsX5Sm/7YBaDo7amhX5eups=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=re6UXnE0xbOaRPkB5ShmevOX+w84S26sF8K3kktu9zTDsHDQKtaaiJ5VrozXPRSwU8FZUWEc81ZDAoGweC6Yq7dRsAoTJyUrEzNT21KZqqPLEZwgFsFJ0TkILq/k9CcuLhPcQxN87SxiCzdqL7PlRCtksWEIH9PrIOral4AYlaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZGZmO3yG; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZGZmO3yG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743702388; x=1775238388;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=CrVVJHvTACiAZiAbOqNpxsX5Sm/7YBaDo7amhX5eups=;
+  b=ZGZmO3yGH5xYed/hHCi6XnPYnhJHt5z+mSXCMEJV8aWe2oaHofjeIygd
+   KzOyLjJX49KZPBsX919wmk5TcbDHOHcyd09W7YlzlPg/PJKks3hLUvz0w
+   oV5Me9Ut42XEc6qYMtZG7CR7zJ41q574hAJfeSPTRVTpfsGKwwXLqjtOL
+   Cbjdija+y8AAHsCS8djEvP/JJKrCTSQpw3QwHSQcJ7nIBrA5iYtqh2TqX
+   G74E37OG6T5JmJ1KF9uf1Uoz6+aSLzfSKwW7Hos0P77SZZAXl/v+/bIuO
+   2uq4jYutnA2VCo5nYqLhTvDT4Jv+crpYpuf9IotDMeVkk8K/7T7AC8Y53
+   w==;
+X-CSE-ConnectionGUID: ZQ3GbaH6TzahkG/A5JKI+w==
+X-CSE-MsgGUID: Qs74iPb+RVaWSn7FWNcHaw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11393"; a="45247842"
+X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
+   d="scan'208";a="45247842"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 10:46:27 -0700
+X-CSE-ConnectionGUID: XL8V0+HVRweSrPe2l+1fFA==
+X-CSE-MsgGUID: fYhD+ywtTVC4LwHnZlU8Zg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
+   d="scan'208";a="164309309"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 10:46:24 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1u0Odw-00000008ssY-2AYW;
+	Thu, 03 Apr 2025 20:46:20 +0300
+Date: Thu, 3 Apr 2025 20:46:20 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Matthew Wilcox <willy@infradead.org>
+Cc: Kees Cook <kees@kernel.org>, Vlastimil Babka <vbabka@suse.cz>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	torvalds@linux-foundation.org, peterz@infradead.org,
+	Jann Horn <jannh@google.com>, intel-wired-lan@lists.osuosl.org,
+	netdev@vger.kernel.org, Harry Yoo <harry.yoo@oracle.com>,
+	Christoph Lameter <cl@gentwo.org>
+Subject: Re: [RFC] slab: introduce auto_kfree macro
+Message-ID: <Z-7JbPeMlnpspKM_@smile.fi.intel.com>
+References: <20250401134408.37312-1-przemyslaw.kitszel@intel.com>
+ <3f387b13-5482-46ed-9f52-4a9ed7001e67@suse.cz>
+ <202504030955.5C4B7D82@keescook>
+ <Z-7G6_jm4SKtSO7a@casper.infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1a89:b0:3d0:4a82:3f43 with SMTP id
- e9e14a558f8ab-3d6e3eeab17mr5099515ab.5.1743702385834; Thu, 03 Apr 2025
- 10:46:25 -0700 (PDT)
-Date: Thu, 03 Apr 2025 10:46:25 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67eec971.050a0220.9040b.0207.GAE@google.com>
-Subject: [syzbot] [bcachefs?] BUG: unable to handle kernel paging request in bch2_fs_release
-From: syzbot <syzbot+d35395c659ed8030c05d@syzkaller.appspotmail.com>
-To: kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z-7G6_jm4SKtSO7a@casper.infradead.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Hello,
+On Thu, Apr 03, 2025 at 06:35:39PM +0100, Matthew Wilcox wrote:
+> On Thu, Apr 03, 2025 at 09:59:41AM -0700, Kees Cook wrote:
+> > On Wed, Apr 02, 2025 at 12:44:50PM +0200, Vlastimil Babka wrote:
+> > > Cc Kees and others from his related efforts:
+> > > 
+> > > https://lore.kernel.org/all/20250321202620.work.175-kees@kernel.org/
+> > 
+> > I think, unfortunately, the consensus is that "invisible side-effects"
+> > are not going to be tolerated. After I finish with kmalloc_obj(), I'd
+> > like to take another run at this for basically providing something like:
+> > 
+> > static inline __must_check
+> > void *kfree(void *p) { __kfree(p); return NULL; }
+> > 
+> > And then switch all:
+> > 
+> > 	kfree(s->ptr);
+> > 
+> > to
+> > 
+> > 	s->ptr = kfree(s->ptr);
+> > 
+> > Where s->ptr isn't used again.
+> 
+> Umm ... kfree is now going to be __must_check?  That's a lot of churn.
+> 
+> I'd just go with making kfree() return NULL and leave off the
+> __must_check.  It doesn't need the __kfree() indirection either.
+> That lets individual functions opt into the new safety.
 
-syzbot found the following issue on:
+Maybe something like
 
-HEAD commit:    d6b13dbd03b7 Merge branch 'for-next/core' into for-kernelci
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
-console output: https://syzkaller.appspot.com/x/log.txt?x=1653f7b0580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=114db1c77c985e53
-dashboard link: https://syzkaller.appspot.com/bug?extid=d35395c659ed8030c05d
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-userspace arch: arm64
+void kfree_and_null(void **ptr)
+{
+	__kfree(*ptr);
+	*ptr = NULL;
+}
 
-Unfortunately, I don't have any reproducer for this issue yet.
+?
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/fd0bf9e74cb0/disk-d6b13dbd.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/50ade35a15e1/vmlinux-d6b13dbd.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/986cdc664ca4/Image-d6b13dbd.gz.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+d35395c659ed8030c05d@syzkaller.appspotmail.com
-
-Unable to handle kernel paging request at virtual address e1ff9fffe0001864
-KASAN: maybe wild-memory-access in range [0x1000ffff0000c320-0x1000ffff0000c327]
-Mem abort info:
-  ESR = 0x0000000096000004
-  EC = 0x25: DABT (current EL), IL = 32 bits
-  SET = 0, FnV = 0
-  EA = 0, S1PTW = 0
-  FSC = 0x04: level 0 translation fault
-Data abort info:
-  ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
-  CM = 0, WnR = 0, TnD = 0, TagAccess = 0
-  GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
-[e1ff9fffe0001864] address between user and kernel address ranges
-Internal error: Oops: 0000000096000004 [#1] PREEMPT SMP
-Modules linked in:
-CPU: 0 UID: 0 PID: 6672 Comm: syz.4.10 Not tainted 6.14.0-syzkaller-gd6b13dbd03b7 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-pstate: 804000c5 (Nzcv daIF +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-pc : __lock_acquire+0xfc/0x7904 kernel/locking/lockdep.c:5091
-lr : lock_acquire+0x23c/0x724 kernel/locking/lockdep.c:5851
-sp : ffff8000a46769a0
-x29: ffff8000a4676c60 x28: ffff80008036e1e8 x27: 0000000000000000
-x26: ffff0001b3737540 x25: 0000000000000000 x24: 0000000000000001
-x23: 0000000000000000 x22: 1ffff00011faa0cd x21: 1000ffff0000c322
-x20: 0000000000000001 x19: 0000000000000000 x18: 1fffe000366e6e86
-x17: ffff80008fd4d000 x16: ffff8000832bccd4 x15: 0000000000000001
-x14: 1ffff00011faa0cd x13: dfff800000000000 x12: ffff7000148ced5c
-x11: ffff80008046f030 x10: ffff80008fd50668 x9 : 00000000000000f3
-x8 : 02001fffe0001864 x7 : ffff80008036e1e8 x6 : 0000000000000000
-x5 : 0000000000000001 x4 : 0000000000000001 x3 : 0000000000000000
-x2 : 0000000000000000 x1 : 0000000000000000 x0 : 1000ffff0000c322
-Call trace:
- __lock_acquire+0xfc/0x7904 kernel/locking/lockdep.c:5091 (P)
- lock_acquire+0x23c/0x724 kernel/locking/lockdep.c:5851
- __raw_spin_lock_irq include/linux/spinlock_api_smp.h:119 [inline]
- _raw_spin_lock_irq+0x58/0x70 kernel/locking/spinlock.c:170
- put_pwq_unlocked kernel/workqueue.c:1662 [inline]
- destroy_workqueue+0x8d8/0xdc0 kernel/workqueue.c:5911
- __bch2_fs_free fs/bcachefs/super.c:613 [inline]
- bch2_fs_release+0x64c/0x708 fs/bcachefs/super.c:624
- kobject_cleanup lib/kobject.c:689 [inline]
- kobject_release lib/kobject.c:720 [inline]
- kref_put include/linux/kref.h:65 [inline]
- kobject_put+0x2a8/0x41c lib/kobject.c:737
- bch2_fs_free+0x2c4/0x334 fs/bcachefs/super.c:686
- bch2_fs_alloc fs/bcachefs/super.c:963 [inline]
- bch2_fs_open+0x18ac/0x299c fs/bcachefs/super.c:2065
- bch2_fs_get_tree+0x58c/0x11d4 fs/bcachefs/fs.c:2190
- vfs_get_tree+0x90/0x28c fs/super.c:1814
- do_new_mount+0x278/0x900 fs/namespace.c:3560
- path_mount+0x590/0xe04 fs/namespace.c:3887
- do_mount fs/namespace.c:3900 [inline]
- __do_sys_mount fs/namespace.c:4111 [inline]
- __se_sys_mount fs/namespace.c:4088 [inline]
- __arm64_sys_mount+0x4f4/0x5d0 fs/namespace.c:4088
- __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
- invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:49
- el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:132
- do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:151
- el0_svc+0x54/0x168 arch/arm64/kernel/entry-common.c:744
- el0t_64_sync_handler+0x84/0x108 arch/arm64/kernel/entry-common.c:762
- el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
-Code: b007c708 b9466908 340090a8 d343fea8 (386d6908) 
----[ end trace 0000000000000000 ]---
-----------------
-Code disassembly (best guess):
-   0:	b007c708 	adrp	x8, 0xf8e1000
-   4:	b9466908 	ldr	w8, [x8, #1640]
-   8:	340090a8 	cbz	w8, 0x121c
-   c:	d343fea8 	lsr	x8, x21, #3
-* 10:	386d6908 	ldrb	w8, [x8, x13] <-- trapping instruction
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
