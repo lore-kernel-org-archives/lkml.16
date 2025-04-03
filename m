@@ -1,184 +1,298 @@
-Received: from lamorak.hansenpartnership.com (lamorak.hansenpartnership.com [198.37.111.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5821F253F35;
-	Thu,  3 Apr 2025 19:38:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.37.111.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92A771F5825;
+	Thu,  3 Apr 2025 19:42:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743709105; cv=none; b=eHF8Swite5iOZgl5pHhpgDHe0t04e1g5UbZvuxyMjjiB5UDUOKPVVdn45aOdWELbO3JpU7WT7m/r66hKSij8S1/k3IHuxjbW5fsTBUtaScy3dGHfL18ul1x7/QZCk0PqU43rCuTHnRBFGqigFMCT6IfiV72F9GWFDa4g4/01Eg4=
+	t=1743709378; cv=none; b=FNTJo2Z6FnljTqOu2UWu822dSi2IJBByxVFdnmpysoUaoHEUAGmH0cZPbMU7rX3MgpHGz527EZvVQJCAc3JgHw08iXeZfeaBexpWZdmuvOLNCQqSrBRRSG3/jDPTUuuAlV0+s5Mwh6dulDxWiOQkOIqF2+e3jPUlVt+4S+3WmEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743709105; c=relaxed/simple;
-	bh=zKFlknUlnHjPW1lxtQQFmLsrSzzVgysyNep0Fx04MVQ=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ZpnlZ/ASs/57gZj+kpIBYGpvWp3ukCvKb5TfC5Mjs5EGI9d2tHyUnV8Tcbs1INcniwtW+Lg4ftFVxedGZMfXOvS7QyBER+ULVZM0/XRtO0co69LM6O3S9skYM+b1ITSllEkE7yei3vkhINVhgpLh6FH4d6kYOuILrNmjihzG8Dw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com; spf=pass smtp.mailfrom=HansenPartnership.com; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=BcQkDc/r; arc=none smtp.client-ip=198.37.111.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=HansenPartnership.com
+	s=arc-20240116; t=1743709378; c=relaxed/simple;
+	bh=OxFQkTUUwkX1q6k8xQRbHlDEFB1zaVhWsRAl9W5U5hU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=M68zz6J3nmXvrHmte6dGWc6pFepvmWkRjWmImhQVBZyehJ2MnW74JURkO18ibXjwdknpyJ4fsURk3UYjJ4cE6wQ5xSQRfGYtwm6ICFYRjWA3rkZWumP2wPbJWrRE3ACMX5/5YCXmu/8ocxnYMVYziU+hvL36luOpb8B2y1IGY2A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dp1adRtd; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="BcQkDc/r"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=hansenpartnership.com; s=20151216; t=1743709102;
-	bh=zKFlknUlnHjPW1lxtQQFmLsrSzzVgysyNep0Fx04MVQ=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
-	b=BcQkDc/rXdV8VDO1HJoVIanatOkLxZs7Djwkyt32r+fW6sgvZ2bhCp3+1DM+JV7M0
-	 Tf4JuowJwPnACoDdCAlhGTbIXbfYQa3Rver/C0d3oU8nICd9dzd6NI6MfTYhiFbIjJ
-	 Agl58YVhLkxPGpFlL3230ZESi/5KKVbjaVP2Qbps=
-Received: from lingrow.int.hansenpartnership.com (unknown [IPv6:2601:5c4:4302:c21::a774])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519)
-	(No client certificate requested)
-	by lamorak.hansenpartnership.com (Postfix) with ESMTPSA id E57DF1C033A;
-	Thu, 03 Apr 2025 15:38:21 -0400 (EDT)
-Message-ID: <7c74d5a93026d515a9e7a21ba5a0fcf962415662.camel@HansenPartnership.com>
-Subject: Re: [GIT PULL] vfs mount
-From: James Bottomley <James.Bottomley@HansenPartnership.com>
-To: Leon Romanovsky <leon@kernel.org>, Christian Brauner <brauner@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
- pr-tracker-bot@kernel.org,  linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Date: Thu, 03 Apr 2025 15:38:21 -0400
-In-Reply-To: <20250403182455.GI84568@unreal>
-References: <20250322-vfs-mount-b08c842965f4@brauner>
-	 <174285005920.4171303.15547772549481189907.pr-tracker-bot@kernel.org>
-	 <20250401170715.GA112019@unreal>
-	 <20250403-bankintern-unsympathisch-03272ab45229@brauner>
-	 <20250403-quartal-kaltstart-eb56df61e784@brauner>
-	 <20250403182455.GI84568@unreal>
-Autocrypt: addr=James.Bottomley@HansenPartnership.com;
- prefer-encrypt=mutual;
- keydata=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
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.3 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dp1adRtd"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-7398d65476eso1009320b3a.1;
+        Thu, 03 Apr 2025 12:42:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743709376; x=1744314176; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Dw5EaN/FeaV+PKwcwp5SEhnuatGIwWCjLsFP+3LpIU0=;
+        b=dp1adRtdYE2eSA9xWfdxtKi6OXD7ZBjeEGOr1P5GGbfUFePWgUc7mpXhdHBE/g9BEY
+         OqKz/eRTI5HTtYKq3+mGekG1KgB0KNSvz4aAw03O4PPj5OeX3Ql1T3dWyVsTb7/e5O8C
+         og8LVoi2AKsEkprcZfSiqXr3MyizIKrXM14ZPyHMaYm7mLEpV+TILCsdyj4KOo8ei0t/
+         f+qk9/Rf7Ql+1Ed//051SDYNOeUHhaVOcQguWDatBh0SNxDyEwjfl68ABLVb+hSB6nDH
+         svUerJXJ3KOqbIIVHehZdyhqRnzFq18miNN89cU84rwSI1ZzEb6zEVO83Bizm5ljLdWj
+         GhIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743709376; x=1744314176;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Dw5EaN/FeaV+PKwcwp5SEhnuatGIwWCjLsFP+3LpIU0=;
+        b=ayD5iaCjP/9ZemTrA4pAOBbZCxbEdyVm8OHbGfMNJntRDSsFxXgeJ7HzUq3TqdO0Te
+         scerTvTgtpCnejA0WazWnVVFDlozGXkEhdlQ4QuaWAXAlSHPXqHNtpCA/gC3Uo/fEnDD
+         626EKCTovlzjwSzwJ/Fk93Jh2KV+1/ynzLEBk3MaWAJX9gQD5MhqhF6vOTkJw57HMEfL
+         7hDm7sONq1YxoShtaufLIaDHmBtMbSsF6Udpd5xzbw2EEVT3/QB7RmUIMralpWovi2Hw
+         YtDnhcLuFEr+9qv/3I+6u61mgsGxum7AVDoIh+LvpRQ8nwo7RA87mUc2IpaJm+4zF4Su
+         WvGA==
+X-Forwarded-Encrypted: i=1; AJvYcCWaByS+UbiVukchjdKnBSwWYbYEP/98Ha6v7HdD71vZmkc0HrjbAlRfOoy3uCacbfpItHw6Yk+q@vger.kernel.org, AJvYcCXAT/UivivEib9LAEQ5PCgb+18GZEC3CNhgqDNeU8mNndgXIgo0ObeUUUuOAYWvgafni4PrghULytPooFya@vger.kernel.org, AJvYcCXChZPoiQd+jG775VJe/Ee/2/+leFLz3k3H1XTJfZn74AG6ek6d84Jg8eM5GEB3An69Gz3M7ZXbnxcJwMQl@vger.kernel.org, AJvYcCXzb3fi2EOC6BQhp4J4DEPqFq7fy3+mqVG6/ReqLFz1iD5L8JsBltWH5x1kS1/mEDy1NfM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzKuhHP4oyEEbcADzax+nnA4IP/eRcACfI2auKihbXj+Bjxy9qv
+	dz9mOtbkNCNUfyp6KlqbPnWfYjScUU6j7wMZtRjOrGt0XNNEloqv
+X-Gm-Gg: ASbGnctrjuuXGiO2oWUFb0DTyT0AZgC4q2It3VDdKug2ymmBmUqiAi/3GkkwTekrF/D
+	WOlgHnzRF/myCw5EMPcm8ZavwIwChLFg3Al4J8Rgywd6Og3iwzgTzVGnGUBgOHKFT/x3a9kh22v
+	T+d15auYxX6og7xKrzkZTa+rD6vi8juO5BmBRPg/JElwpLv4Bg9dt9jdBdwrmB+QyCOKybnsR58
+	AVXvTrPLPAph23rIu+1saa+z4jzwPbIh4vJvj2x4znCtC2YPr8YOSZG43ZJnLxdRkkDWRq1h+kW
+	ID2IW38ToGP+j+Lf64mdPvs1JA0JM1sQyxsDo3pK8hJqzinnsIpOnsH5vRuH4MhywAs1JsmkgHI
+	8
+X-Google-Smtp-Source: AGHT+IGTqm5ICR8EBlvvydBUIxaddn+H75GcdEQ/shNDpVkFY10lp50cz3ahcnw+0GlRzFfpgJP+zQ==
+X-Received: by 2002:a05:6a00:2e0f:b0:732:706c:c4ff with SMTP id d2e1a72fcca58-739d6457e97mr7220468b3a.7.1743709375559;
+        Thu, 03 Apr 2025 12:42:55 -0700 (PDT)
+Received: from devvm6277.cco0.facebook.com ([2a03:2880:2ff:3::])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739d98064fdsm1897473b3a.84.2025.04.03.12.42.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Apr 2025 12:42:54 -0700 (PDT)
+Date: Thu, 3 Apr 2025 12:42:46 -0700
+From: Bobby Eshleman <bobbyeshleman@gmail.com>
+To: Stefano Garzarella <sgarzare@redhat.com>
+Cc: Daniel =?iso-8859-1?Q?P=2E_Berrang=E9?= <berrange@redhat.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Stefan Hajnoczi <stefanha@redhat.com>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
+	Bryan Tan <bryan-bt.tan@broadcom.com>,
+	Vishnu Dasa <vishnu.dasa@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	virtualization@lists.linux.dev, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+	kvm@vger.kernel.org
+Subject: Re: [PATCH v2 0/3] vsock: add namespace support to vhost-vsock
+Message-ID: <Z+7ktkvIeNbf39D3@devvm6277.cco0.facebook.com>
+References: <20250312-vsock-netns-v2-0-84bffa1aa97a@gmail.com>
+ <r6a6ihjw3etlb5chqsb65u7uhcav6q6pjxu65iqpp76423w2wd@kmctvoaywmbu>
+ <Z-w47H3qUXZe4seQ@redhat.com>
+ <Z+yDCKt7GpubbTKJ@devvm6277.cco0.facebook.com>
+ <CAGxU2F7=64HHaAD+mYKYLqQD8rHg1CiF1YMDUULgSFw0WSY-Aw@mail.gmail.com>
+ <Z-0BoF4vkC2IS1W4@redhat.com>
+ <Z+23pbK9t5ckSmLl@devvm6277.cco0.facebook.com>
+ <Z+26A3sslT+w+wOI@devvm6277.cco0.facebook.com>
+ <4c2xz3xhpdjvb6jmdw7ctsebpza5lcs4gevr5wlwwyt64usr2i@o5qt2msfyvvw>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <4c2xz3xhpdjvb6jmdw7ctsebpza5lcs4gevr5wlwwyt64usr2i@o5qt2msfyvvw>
 
-On Thu, 2025-04-03 at 21:24 +0300, Leon Romanovsky wrote:
-> On Thu, Apr 03, 2025 at 05:15:38PM +0200, Christian Brauner wrote:
-> > On Thu, Apr 03, 2025 at 10:29:37AM +0200, Christian Brauner wrote:
-> > > On Tue, Apr 01, 2025 at 08:07:15PM +0300, Leon Romanovsky wrote:
-> > > > On Mon, Mar 24, 2025 at 09:00:59PM +0000,
-> > > > pr-tracker-bot@kernel.org=C2=A0wrote:
-> > > > > The pull request you sent on Sat, 22 Mar 2025 11:13:18 +0100:
-> > > > >=20
-> > > > > > git@gitolite.kernel.org:pub/scm/linux/kernel/git/vfs/vfs
-> > > > > > tags/vfs-6.15-rc1.mount
-> > > > >=20
-> > > > > has been merged into torvalds/linux.git:
-> > > > > https://git.kernel.org/torvalds/c/fd101da676362aaa051b4f5d8a941bd=
-308603041
-> > > >=20
-> > > > I didn't bisect, but this PR looks like the most relevant
-> > > > candidate.
-> > > > The latest Linus's master generates the following slab-use-
-> > > > after-free:
-> > >=20
-> > > Sorry, did just see this today. I'll take a look now.
-> >=20
-> > So in light of "Liberation Day" and the bug that caused this splat
-> > it's time to quote Max Liebermann:
-> >=20
-> > "Ich kann nicht so viel fressen, wie ich kotzen m=C3=B6chte."
->=20
-> > From 8822177b7a8a7315446b4227c7eb7a36916a6d6d Mon Sep 17 00:00:00
-> > 2001
-> > From: Christian Brauner <brauner@kernel.org>
-> > Date: Thu, 3 Apr 2025 16:43:50 +0200
-> > Subject: [PATCH] fs: actually hold the namespace semaphore
-> >=20
-> > Don't use a scoped guard use a regular guard to make sure that the
-> > namespace semaphore is held across the whole function.
-> >=20
-> > Signed-off-by: Christian Brauner <brauner@kernel.org>
-> > ---
-> > =C2=A0fs/namespace.c | 3 ++-
-> > =C2=A01 file changed, 2 insertions(+), 1 deletion(-)
-> >=20
-> > diff --git a/fs/namespace.c b/fs/namespace.c
-> > index 16292ff760c9..348008b9683b 100644
-> > --- a/fs/namespace.c
-> > +++ b/fs/namespace.c
-> > @@ -2478,7 +2478,8 @@ struct vfsmount *clone_private_mount(const
-> > struct path *path)
-> > =C2=A0	struct mount *old_mnt =3D real_mount(path->mnt);
-> > =C2=A0	struct mount *new_mnt;
-> > =C2=A0
-> > -	scoped_guard(rwsem_read, &namespace_sem)
-> > +	guard(rwsem_read, &namespace_sem);
->=20
-> I'm looking at Linus's master commit a2cc6ff5ec8f ("Merge tag
-> 'firewire-updates-6.15' of
-> git://git.kernel.org/pub/scm/linux/kernel/git/ieee1394/linux1394")
-> and guard is declared as macro which gets only one argument:
-> include/linux/cleanup.h
-> =C2=A0 318 #define guard(_name) \
-> =C2=A0 319=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 CLASS(_name, _=
-_UNIQUE_ID(guard))
->=20
->=20
->=20
-> 20:52:24=C2=A0 fs/namespace.c: In function 'clone_private_mount':
-> 20:52:24=C2=A0 fs/namespace.c:2481:41: error: macro "guard" passed 2
-> arguments, but takes just 1
-> 20:52:24=C2=A0=C2=A0 2481 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 guard(rwsem_read, &namespace_sem);
-> 20:52:24=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ^
-> 20:52:24=C2=A0 In file included from ./include/linux/preempt.h:11,
-> 20:52:24=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 from ./include/linux/spinlock=
-.h:56,
-> 20:52:24=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 from ./include/linux/wait.h:9=
-,
-> 20:52:24=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 from ./include/linux/wait_bit=
-.h:8,
-> 20:52:24=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 from ./include/linux/fs.h:7,
-> 20:52:24=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 from ./include/uapi/linux/aio=
-_abi.h:31,
-> 20:52:24=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 from ./include/linux/syscalls=
-.h:83,
-> 20:52:24=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 from fs/namespace.c:11:
-> 20:52:24=C2=A0 ./include/linux/cleanup.h:318:9: note: macro "guard"
-> defined here
-> 20:52:24=C2=A0=C2=A0=C2=A0 318 | #define guard(_name) \
-> 20:52:24=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 ^~~~~
-> 20:52:24=C2=A0 fs/namespace.c:2481:9: error: 'guard' undeclared (first us=
-e
-> in this function)
-> 20:52:24=C2=A0=C2=A0 2481 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 guard(rwsem_read, &namespace_sem);
-> 20:52:24=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 ^~~~~
-> 20:52:24=C2=A0 fs/namespace.c:2481:9: note: each undeclared identifier is
-> reported only once for each function it appears in
->=20
-> Do I need to apply extra patch?
+On Thu, Apr 03, 2025 at 11:33:14AM +0200, Stefano Garzarella wrote:
+> On Wed, Apr 02, 2025 at 03:28:19PM -0700, Bobby Eshleman wrote:
+> > On Wed, Apr 02, 2025 at 03:18:13PM -0700, Bobby Eshleman wrote:
+> > > On Wed, Apr 02, 2025 at 10:21:36AM +0100, Daniel P. Berrangé wrote:
+> > > > On Wed, Apr 02, 2025 at 10:13:43AM +0200, Stefano Garzarella wrote:
+> > > > > On Wed, 2 Apr 2025 at 02:21, Bobby Eshleman <bobbyeshleman@gmail.com> wrote:
+> > > > > >
+> > > > > > I do like Stefano's suggestion to add a sysctl for a "strict" mode,
+> > > > > > Since it offers the best of both worlds, and still tends conservative in
+> > > > > > protecting existing applications... but I agree, the non-strict mode
+> > > > > > vsock would be unique WRT the usual concept of namespaces.
+> > > > >
+> > > > > Maybe we could do the opposite, enable strict mode by default (I think
+> > > > > it was similar to what I had tried to do with the kernel module in v1, I
+> > > > > was young I know xD)
+> > > > > And provide a way to disable it for those use cases where the user wants
+> > > > > backward compatibility, while paying the cost of less isolation.
+> > > >
+> > > > I think backwards compatible has to be the default behaviour, otherwise
+> > > > the change has too high risk of breaking existing deployments that are
+> > > > already using netns and relying on VSOCK being global. Breakage has to
+> > > > be opt in.
+> > > >
+> > > > > I was thinking two options (not sure if the second one can be done):
+> > > > >
+> > > > >   1. provide a global sysfs/sysctl that disables strict mode, but this
+> > > > >   then applies to all namespaces
+> > > > >
+> > > > >   2. provide something that allows disabling strict mode by namespace.
+> > > > >   Maybe when it is created there are options, or something that can be
+> > > > >   set later.
+> > > > >
+> > > > > 2 would be ideal, but that might be too much, so 1 might be enough. In
+> > > > > any case, 2 could also be a next step.
+> > > > >
+> > > > > WDYT?
+> > > >
+> > > > It occured to me that the problem we face with the CID space usage is
+> > > > somewhat similar to the UID/GID space usage for user namespaces.
+> > > >
+> > > > In the latter case, userns has exposed /proc/$PID/uid_map & gid_map, to
+> > > > allow IDs in the namespace to be arbitrarily mapped onto IDs in the host.
+> > > >
+> > > > At the risk of being overkill, is it worth trying a similar kind of
+> > > > approach for the vsock CID space ?
+> > > >
+> > > > A simple variant would be a /proc/net/vsock_cid_outside specifying a set
+> > > > of CIDs which are exclusively referencing /dev/vhost-vsock associations
+> > > > created outside the namespace. Anything not listed would be exclusively
+> > > > referencing associations created inside the namespace.
+> > > >
+> > > > A more complex variant would be to allow a full remapping of CIDs as is
+> > > > done with userns, via a /proc/net/vsock_cid_map, which the same three
+> > > > parameters, so that CID=15 association outside the namespace could be
+> > > > remapped to CID=9015 inside the namespace, allow the inside namespace
+> > > > to define its out association for CID=15 without clashing.
+> > > >
+> > > > IOW, mapped CIDs would be exclusively referencing /dev/vhost-vsock
+> > > > associations created outside namespace, while unmapped CIDs would be
+> > > > exclusively referencing /dev/vhost-vsock associations inside the
+> > > > namespace.
+> > > >
+> > > > A likely benefit of relying on a kernel defined mapping/partition of
+> > > > the CID space is that apps like QEMU don't need changing, as there's
+> > > > no need to invent a new /dev/vhost-vsock-netns device node.
+> > > >
+> > > > Both approaches give the desirable security protection whereby the
+> > > > inside namespace can be prevented from accessing certain CIDs that
+> > > > were associated outside the namespace.
+> > > >
+> > > > Some rule would need to be defined for updating the /proc/net/vsock_cid_map
+> > > > file as it is the security control mechanism. If it is write-once then
+> > > > if the container mgmt app initializes it, nothing later could change
+> > > > it.
+> > > >
+> > > > A key question is do we need the "first come, first served" behaviour
+> > > > for CIDs where a CID can be arbitrarily used by outside or inside namespace
+> > > > according to whatever tries to associate a CID first ?
+> > > 
+> > > I think with /proc/net/vsock_cid_outside, instead of disallowing the CID
+> > > from being used, this could be solved by disallowing remapping the CID
+> > > while in use?
+> > > 
+> > > The thing I like about this is that users can check
+> > > /proc/net/vsock_cid_outside to figure out what might be going on,
+> > > instead of trying to check lsof or ps to figure out if the VMM processes
+> > > have used /dev/vhost-vsock vs /dev/vhost-vsock-netns.
+> 
+> Yes, although the user in theory should not care about this information,
+> right?
+> I mean I don't even know if it makes sense to expose the contents of
+> /proc/net/vsock_cid_outside in the namespace.
+> 
+> > > 
+> > > Just to check I am following... I suppose we would have a few typical
+> > > configurations for /proc/net/vsock_cid_outside. Following uid_map file
+> > > format of:
+> > > 	"<local cid start>		<global cid start>		<range size>"
+> 
+> This seems to relate more to /proc/net/vsock_cid_map, for
+> /proc/net/vsock_cid_outside I think 2 parameters are enough
+> (CID, range), right?
+> 
 
-I think the statement should be
+True, yes vsock_cid_map.
 
-guard(rwsem_read)(&namespace_sem);
+> > > 
+> > > 	1. Identity mapping, current namespace CID is global CID (default
+> > > 	setting for new namespaces):
+> > > 
+> > > 		# empty file
+> > > 
+> > > 				OR
+> > > 
+> > > 		0    0    4294967295
+> > > 
+> > > 	2. Complete isolation from global space (initialized, but no mappings):
+> > > 
+> > > 		0    0    0
+> > > 
+> > > 	3. Mapping in ranges of global CIDs
+> > > 
+> > > 	For example, global CID space starts at 7000, up to 32-bit max:
+> > > 
+> > > 		7000    0    4294960295
+> > > 	
+> > > 	Or for multiple mappings (0-100 map to 7000-7100, 1000-1100 map to
+> > > 	8000-8100) :
+> > > 
+> > > 		7000    0       100
+> > > 		8000    1000    100
+> > > 
+> > > 
+> > > One thing I don't love is that option 3 seems to not be addressing a
+> > > known use case. It doesn't necessarily hurt to have, but it will add
+> > > complexity to CID handling that might never get used?
+> 
+> Yes, as I also mentioned in the previous email, we could also do a
+> step-by-step thing.
+> 
+> IMHO we can define /proc/net/vsock_cid_map (with the structure you just
+> defined), but for now only support 1-1 mapping (with the ranges of
+> course, I mean the first two parameters should always be the same) and
+> then add option 3 in the future.
+> 
 
-Regards,
+makes sense, sgtm!
 
-James
+> > > 
+> > > Since options 1/2 could also be represented by a boolean (yes/no
+> > > "current ns shares CID with global"), I wonder if we could either A)
+> > > only support the first two options at first, or B) add just
+> > > /proc/net/vsock_ns_mode at first, which supports only "global" and
+> > > "local", and later add a "mapped" mode plus /proc/net/vsock_cid_outside
+> > > or the full mapping if the need arises?
+> 
+> I think option A is the same as I meant above :-)
+> 
 
+Indeed.
+
+> > > 
+> > > This could also be how we support Option 2 from Stefano's last email of
+> > > supporting per-namespace opt-in/opt-out.
+> 
+> Hmm, how can we do it by namespace? Isn't that global?
+> 
+
+I think the file path is global but the contents are tied per-namespace,
+according to the namespace of the process that called open() on it.
+This way the container mgr can write-once lock it, and the namespace
+processes can read it?
+
+> > > 
+> > > Any thoughts on this?
+> > > 
+> > 
+> > Stefano,
+> > 
+> > Would only supporting 1/2 still support the Kata use case?
+> 
+> I think so, actually I was thinking something similar in the message I just
+> sent.
+> 
+> By default (if the file is empty), nothing should change, so that's fine
+> IMO. As Paolo suggested, we absolutely have to have tests to verify these
+> things.
+> 
+
+Sounds like a plan! I'm working on the new vsock vmtest now and will
+include the new tests in the next rev.
+
+Also, I'm thinking we should protect vsock_cid_map behind a capability,
+but I'm not sure which one is correct (CAP_NET_ADMIN?). WDYT?
+
+Thanks!
