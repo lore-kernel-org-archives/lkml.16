@@ -1,77 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f194.google.com (mail-pg1-f194.google.com [209.85.215.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A37319D891;
-	Thu,  3 Apr 2025 06:43:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E83F2A8D0;
+	Thu,  3 Apr 2025 06:44:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743662618; cv=none; b=NyExCyV0zL/g9wA+pdLZWV3AkRwi4De4mXnNt1BdOfXhnV6rEAI8c4A4PUlRqtiK72p1cjMWWZX/JlkiyjIzsxayVUOCuTlp9JJ8qPU/hyhep7N91aFdYnN0gLL5RnKhBQYwDBr6+3emFD7IcXtfaLhgFxm8a4YTfAFotfw8iTU=
+	t=1743662642; cv=none; b=GEbAD0HrqHy+6TCxchjCoubEApk4yV8ZtacJbMB2nx8Dk7t5kIJtN6DvRK6hmyf3X7dPElFXNVgcjQKruSriUnqBhGytkKEzbmV7wRmdbIL1UGlWuZdrFkCy3InBzByj5ItfCEirbhY4SRAMtRnC1z5vbdBNwreWHHvFAyTxDag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743662618; c=relaxed/simple;
-	bh=81W5cCvEQsw4XwZ7842BJKjtgGqao+5IOnW7y95VUBQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bP5FUNmwS04EQKlqv8I96vyCy0M3KnUJ3MtnU3ndmhz3ehXLCQq+SO5EjfsW3kuv6DMEohadxEIXOidSrsRK1vrYkSgCMdqHjmzzyGFZFAAA2fpg1CpO7V9Lxf+BazAfv9WqSZwqLxrrMrDPxDXgV/Mbhnsr9/vGGxBV2skWG5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AvFHIHfj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743662642; c=relaxed/simple;
+	bh=+cSf/YtAy1gyRMqPmUnYy9gMN47COfJ3Xv8rENEjeEg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FGa3xLPrGdEe+ROo/NxPxJoyRWpkb0H/onqRo0avRDxin7lIiAWnLvylW6gGDl7aBrqrb9gqpITu4307/lDGDevXy0PkvEnsGpafNV83LSn7BZ89wG3x9JQOLI4Nqk3eiY2wfaUTXT5gvJVcu1UiTdoGccJNceme3lL5bsDgXII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bqxtM//E; arc=none smtp.client-ip=209.85.215.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AvFHIHfj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D596C4CEE3;
-	Thu,  3 Apr 2025 06:43:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743662618;
-	bh=81W5cCvEQsw4XwZ7842BJKjtgGqao+5IOnW7y95VUBQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AvFHIHfjy0OboL5Wl2/rFkR/FmF9GOzkLJmNe4Uxs3e0HxE62O0lNsHNmCBnnLCus
-	 3bvqSdIbHpWtVrN9h2wSQ9fKSes7rHKkdmdMb8BETuYS5E6kCfNQxXYnmPMZ6oPfR+
-	 IQbys7rJxVnNmnjgu+irMEJFprgpOtXgEMf+60lWf8BYbmaQWe+giwnTwKBry1yGbR
-	 WWQ8bPqTYzikrMghw2fkZ8oJLvNCa+T55WeUHS3LTGUQrThlpF1f9OsAlzYfxw/2ng
-	 m6QrUKDT529Z3ZrhkhlAAYMSKi30DKKSx1HEkYG7LYZpeA+gcnwZMuGpIkkV7o6rvB
-	 YU5l0ZJUumWcQ==
-Date: Thu, 3 Apr 2025 08:43:34 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Kim Seer Paller <kimseer.paller@analog.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, 
-	Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 0/3] Add driver for AD3530R and AD3531R DACs
-Message-ID: <20250403-bison-of-glorious-force-4369b6@krzk-bin>
-References: <20250403-togreg-v3-0-d4b06a4af5a9@analog.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bqxtM//E"
+Received: by mail-pg1-f194.google.com with SMTP id 41be03b00d2f7-aee773df955so698350a12.1;
+        Wed, 02 Apr 2025 23:44:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743662641; x=1744267441; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ykrR7iAx9ez7r09+03/1ZkDbNGh2pKfyFPnmAhHSaXs=;
+        b=bqxtM//Ed6rJyJOQT2Qb2POxpMtY/dJRVOTsr8Bh8RI0P1pfFiI09Cy5wfi4MzM4Rr
+         aNobpbBTQ3hl1riQruo0/09ducV9/Py3W1DgjW98lOD/Fpb3+kKCFg36qh4U3UqJs7W3
+         spmw9e8NLsqIJDj8khdIHUWrDQ98RC19nUWB+Kj7+LogWjWm2NedrtGwqM4wbWH708su
+         fqCveylY/KfNCAahLG3G8CEa4OzC6IqDqBaVm6qMJiSTHev/fzuByLQ+3b2qkHx9VvtE
+         0HOcvZT/6IjB7n6aQhiYakxMnGv2KodF5xP9ECCupjpSXZYjaLAohSpJf4DJNPEGwbqg
+         zEfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743662641; x=1744267441;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ykrR7iAx9ez7r09+03/1ZkDbNGh2pKfyFPnmAhHSaXs=;
+        b=HJK3/GJlMlgs6ypK49fYs3pWsuUOywmklV3asTtNlIX5Bs7/aicNLtDIa4RhmX1dgh
+         cKR3uD8Hu7BV6G7rHpIr8sal69LLIKc87i8nigve9WDfoSr+HmCDhe/vlEWbAy+Ndddx
+         aLG/IlP2MhuWpj8ycYEjVIgPgrDZJoVQyjxap/2eUSxKz1tn8whz1ffz3EbRX9sumYbf
+         iiavOTW0NXwHhcrLu3eNtarmJnpXD1DCZ4Lq8R7Tob0YjZixJ9KCBCkmakYlrSJ8sQSV
+         xwetLHy231hRytyHRVOS/f4QUHZ+B05QWxAsDeqk8WHG64gEMZQ0fKF6Dj9mEleZdcfz
+         vA6g==
+X-Forwarded-Encrypted: i=1; AJvYcCWix12CES84ys3tf7A09BEBXxu/ljOo1CULWlQ+fwKxxl/k0q265Zhx8CYAzRtbWRX/HM+9hO+BG1LGhlk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzIHIuKGHCySEcEh5O2oRtiAL5uPbQSKDb+7KINvPowhVXtLwjQ
+	6sNtWOxAxElKuQ0UfcF3ya06K8kEoGK3qagh8xhU3dyqscxu6AgB
+X-Gm-Gg: ASbGnctVcAE110V6ZAIjiYFTkh4Q1XhawuQcKPNjGOCGAvjV7crS2YswsWNkEYddGL8
+	YjIMGlhqhGb5TiYlgC6OsKioLLFfj4UWDGlCAR8jtpkNXQZw7tZhLXcF0gAGkRT6eJlrcbjFjzO
+	to6CQyL/j4a+kLiHa1DbHVPs+UuR//5fGpf+KV9hAiCqnXA9vg9dVRHB+jBmy38UpLM1AJDlsSJ
+	9D57WPcYWBo/cPVkRIPOduoBGcH/4/t5wpsSrQ4pMI96dcOrncHTQxcwutdzJThEqeH7Ig+t457
+	7B4c0F2m5gUWessOblTj8lRtRRdDBHIrlyhFh3yboaUEaBV6l+yDcEUK2r/TRjwMiOsDRao=
+X-Google-Smtp-Source: AGHT+IG83pAigN0u9fFp1U+1mHdp8ie0G+EShwD4mUh/8O4s3BJGqBMlbGS+xQCeTPBm2I+l1DLKGA==
+X-Received: by 2002:a17:903:3d04:b0:215:b1e3:c051 with SMTP id d9443c01a7336-229765eb309mr33330915ad.11.1743662640547;
+        Wed, 02 Apr 2025 23:44:00 -0700 (PDT)
+Received: from henry.localdomain ([111.202.148.167])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-229785c3819sm7055945ad.87.2025.04.02.23.43.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Apr 2025 23:44:00 -0700 (PDT)
+From: Henry Martin <bsdhenrymartin@gmail.com>
+To: nbd@nbd.name,
+	lorenzo@kernel.org,
+	ryder.lee@mediatek.com,
+	shayne.chen@mediatek.com,
+	sean.wang@mediatek.com,
+	matthias.bgg@gmail.com,
+	angelogioacchino.delregno@collabora.com,
+	wiagn233@outlook.com,
+	rex.lu@mediatek.com,
+	chui-hao.chiu@mediatek.com,
+	bsdhenrymartin@gmail.com
+Cc: linux-wireless@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Subject: [PATCH v1] wifi: mt76: mt7996: Fix null-ptr-deref in mt7996_mmio_wed_init()
+Date: Thu,  3 Apr 2025 14:43:44 +0800
+Message-Id: <20250403064344.64253-1-bsdhenrymartin@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20250403-togreg-v3-0-d4b06a4af5a9@analog.com>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Apr 03, 2025 at 01:33:54PM +0800, Kim Seer Paller wrote:
-> The AD3530/AD3530R (8-channel) and AD3531/AD3531R (4-channel) are
-> low-power, 16-bit, buffered voltage output DACs with software-
-> programmable gain controls, providing full-scale output spans of 2.5V or
-> 5V for reference voltages of 2.5V. These devices operate from a single
-> 2.7V to 5.5V supply and are guaranteed monotonic by design. The "R"
-> variants include a 2.5V, 5ppm/=C2=B0C internal reference, which is disabl=
-ed
-> by default.
->=20
-> The AD3531R/AD3531 is not yet released, so the only available datasheet
-> for now is the AD3530R/AD3530. The only differences between the two is
-> the number of channels, and register addresses of some registers.
->=20
-> Signed-off-by: Kim Seer Paller <kimseer.paller@analog.com>
-> ---
-> Changes in v3:
-> - Drop ABI docs.
->=20
-> Bindings:
-> - Drop reviewer's tag.
+devm_ioremap() returns NULL on error. Currently, mt7996_mmio_wed_init()
+does not check for this case, which results in a NULL pointer
+dereference.
 
-Why? Explain why you are dropping.
+Add NULL check after devm_ioremap() to prevent this issue.
 
-Best regards,
-Krzysztof
+Fixes: 83eafc9251d6 ("wifi: mt76: mt7996: add wed tx support")
+Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
+---
+ drivers/net/wireless/mediatek/mt76/mt7996/mmio.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7996/mmio.c b/drivers/net/wireless/mediatek/mt76/mt7996/mmio.c
+index 13b188e281bd..5bade83238bd 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7996/mmio.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7996/mmio.c
+@@ -323,6 +323,8 @@ int mt7996_mmio_wed_init(struct mt7996_dev *dev, void *pdev_ptr,
+ 	wed->wlan.base = devm_ioremap(dev->mt76.dev,
+ 				      pci_resource_start(pci_dev, 0),
+ 				      pci_resource_len(pci_dev, 0));
++	if (!wed->wlan.base)
++		return -ENOMEM;
+ 	wed->wlan.phy_base = pci_resource_start(pci_dev, 0);
+ 
+ 	if (hif2) {
+-- 
+2.34.1
 
