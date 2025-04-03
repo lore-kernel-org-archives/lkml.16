@@ -1,95 +1,93 @@
-Received: from smtp125.iad3b.emailsrvr.com (smtp125.iad3b.emailsrvr.com [146.20.161.125])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01A241A23BA
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 17:47:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=146.20.161.125
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F419A250C16
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 17:47:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743702422; cv=none; b=ITbAX3v2jRZSg7SFtW6TM8Fnd1DJcXZI1EQNxJOKk/A9vJy7djjW89JTm6puhqDgzRLv4pDs4XJ1spM3oL6JYNedIhKThCzz87JWLmGbIEST/dFljDIs7iA56+TWAtggbgNoKWLThokgUX0TUhl1xB5emeX+KWIc+U+IJs0qYFQ=
+	t=1743702432; cv=none; b=k401NyfXdijnQXcTM69+Ap9XhmIYs5JYREFYXGwOGZB3/iMEMOvQ9SapTQ5UPsBoj7jsBh9p+f2ZhtRFX1JfaBwd6GPeRIyXZiizTB2RiGyfT5CeaMUpAzMTOTRUPLKl4uZoP+/vmvgm/87IQaAXt5gKrHGA/OI8H3qzosPF5Yk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743702422; c=relaxed/simple;
-	bh=COtoD7jolTlfF8j7ress8ZnIElwqO7FuKlwpdurDr54=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=K4C8xYaaX0tSgebNPXmYXzzGrvIa8JJX22lxNYN7RmbPtnnBqjqQ07eiZsxlYKpFDDCB3zjaDpa6DuVlYb1qO8Hpwi6JMUNHQLFFIkyuHpIC/8owsX1Ye/PGvp+HE8vS3CQcYtw+ckhcZuZ43EOuykvKQMt4PyBeITo0AfW6LVs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mev.co.uk; spf=pass smtp.mailfrom=mev.co.uk; dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b=efszDDvy; arc=none smtp.client-ip=146.20.161.125
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mev.co.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mev.co.uk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b="efszDDvy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mev.co.uk;
-	s=20221208-6x11dpa4; t=1743701319;
-	bh=COtoD7jolTlfF8j7ress8ZnIElwqO7FuKlwpdurDr54=;
-	h=Date:Subject:To:From:From;
-	b=efszDDvyg7I1XSldU2MfL3/qyi5me1c/9uw1kqlgw3ueA/KJi+TG6o62LC3S9Ok5+
-	 ZFCQz5qcrAhBuIIHKyv3RcJI54I7mfSpSo+jBmxanqmBLHTGFuBmqr//WcC10pG2Gr
-	 I/oJy3wpPJuUiT+UDarud981ZNyVzkxNt2zIp9JI=
-X-Auth-ID: abbotti@mev.co.uk
-Received: by smtp16.relay.iad3b.emailsrvr.com (Authenticated sender: abbotti-AT-mev.co.uk) with ESMTPSA id 5646DC0087;
-	Thu,  3 Apr 2025 13:28:39 -0400 (EDT)
-Message-ID: <8f607a2b-3d99-4f3e-b370-b7e4793ad27c@mev.co.uk>
-Date: Thu, 3 Apr 2025 18:28:37 +0100
+	s=arc-20240116; t=1743702432; c=relaxed/simple;
+	bh=hvkr4bgfjRVp27m2lwx3g/wEt0pX8Yxg5gZ439eHWJA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=mH6DlpAHIoji36+LAPy7lZKrDa9cpNDCZfy3tgwYdAbxxuRpzv0C7GgmYGGsoi3oFkjYDO5WyWYSvN46lqpwZUaji5wGSlJj3VELU/stZ1/MQdO6rswG8jonBE3aCdGMbazUUtPriYC7W4n+9v2A/WPyimpMEmcEWIUGqAXKcNw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 87AB7106F;
+	Thu,  3 Apr 2025 10:47:10 -0700 (PDT)
+Received: from e129823.cambridge.arm.com (e129823.arm.com [10.1.197.6])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 2BA1A3F63F;
+	Thu,  3 Apr 2025 10:47:04 -0700 (PDT)
+From: Yeoreum Yun <yeoreum.yun@arm.com>
+To: catalin.marinas@arm.com,
+	will@kernel.org,
+	broonie@kernel.org,
+	anshuman.khandual@arm.com,
+	joey.gouly@arm.com,
+	maz@kernel.org,
+	oliver.upton@linux.dev,
+	frederic@kernel.org,
+	james.morse@arm.com,
+	hardevsinh.palaniya@siliconsignals.io,
+	shameerali.kolothum.thodi@huawei.com,
+	huangxiaojia2@huawei.com,
+	mark.rutland@arm.com,
+	samuel.holland@sifive.com,
+	palmer@rivosinc.com,
+	charlie@rivosinc.com,
+	thiago.bauermann@linaro.org,
+	bgray@linux.ibm.com,
+	tglx@linutronix.de,
+	puranjay@kernel.org,
+	david@redhat.com,
+	yang@os.amperecomputing.com,
+	mbenes@suse.cz,
+	joel.granados@kernel.org
+Cc: linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	nd@arm.com,
+	Yeoreum Yun <yeoreum.yun@arm.com>
+Subject: [PATCH v2 0/4] support FEAT_MTE_STORE_ONLY feature
+Date: Thu,  3 Apr 2025 18:46:57 +0100
+Message-Id: <20250403174701.74312-1-yeoreum.yun@arm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Staging: comedi: Add DMA preparation before
- mite_dma_arm().
-To: Wentao Liang <vulab@iscas.ac.cn>, hsweeten@visionengravers.com
-Cc: linux-kernel@vger.kernel.org
-References: <20250403163535.2494-1-vulab@iscas.ac.cn>
-Content-Language: en-GB
-From: Ian Abbott <abbotti@mev.co.uk>
-Organization: MEV Ltd.
-In-Reply-To: <20250403163535.2494-1-vulab@iscas.ac.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Classification-ID: 79b49608-5320-4be6-bcce-d25a9e60ac07-1-1
+Content-Transfer-Encoding: 8bit
 
-On 2025-04-03 17:35, Wentao Liang wrote:
-> The ni_tio_input_inttrig() calls mite_dma_arm() without calling
-> mite_prep_dma() first. A proper implementation can be found in
-> ni_cdo_inttrig() in ni_mio_common.c.
-> 
-> Add mite_prep_dma() before mite_dma_arm().
-> 
-> Fixes: cb7859a90af1 ("Staging: comedi: add National Instruments infrastructure")
-> Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
-> ---
->   drivers/comedi/drivers/ni_tiocmd.c | 5 +++--
->   1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/comedi/drivers/ni_tiocmd.c b/drivers/comedi/drivers/ni_tiocmd.c
-> index ab6d9e8269f3..b943836ccf1a 100644
-> --- a/drivers/comedi/drivers/ni_tiocmd.c
-> +++ b/drivers/comedi/drivers/ni_tiocmd.c
-> @@ -84,9 +84,10 @@ static int ni_tio_input_inttrig(struct comedi_device *dev,
->   		return -EINVAL;
->   
->   	spin_lock_irqsave(&counter->lock, flags);
-> -	if (counter->mite_chan)
-> +	if (counter->mite_chan) {
-> +		mite_prep_dma(counter->mite_chan, 32, 32);
->   		mite_dma_arm(counter->mite_chan);
-> -	else
-> +	} else
->   		ret = -EIO;
->   	spin_unlock_irqrestore(&counter->lock, flags);
->   	if (ret < 0)
+The FEAT_MTE_STORE_ONLY feature provides support for
+tag check for store operation only. read operation is considered
+as unchecked operation so it doesn't raise tag check fault.
 
-mite_prep_dma() will get called by ni_tio_input_cmd() at some arbitrary 
-time before ni_tio_input_inttrig() is called. (ni_tio_input_cmd() sets 
-up the software trigger function pointer that is called during 
-processing of a subsequent INSN_INTTRIG comedi instruction from 
-user-space. Also, the last two parameters of mite_prep_dma() are not 
-always 32 and 32 - it depends on the hardware, as can be seen in the 
-switch statement in ni_tio_input_cmd().
+NOTE:
+  This patches based on https://lore.kernel.org/linux-arm-kernel/20250403172758.67106-1-yeoreum.yun@arm.com/
 
--- 
--=( Ian Abbott <abbotti@mev.co.uk> || MEV Ltd. is a company  )=-
--=( registered in England & Wales.  Regd. number: 02862268.  )=-
--=( Regd. addr.: S11 & 12 Building 67, Europa Business Park, )=-
--=( Bird Hall Lane, STOCKPORT, SK3 0XA, UK. || www.mev.co.uk )=-
+Since v1:
+  - add doc to elf_hwcaps.rst
+  - add MTE_STORE_ONLY hwcap test
+
+Yeoreum Yun (4):
+  arm64/feature: add MTE_STORE_ONLY feature
+  prtcl: introduce PR_MTE_STORE_ONLY
+  arm64/kernel: support store-only mte tag check
+  tools/kselftest: add MTE_STORE_ONLY feature hwcap test
+
+ Documentation/arch/arm64/elf_hwcaps.rst   |  3 +++
+ arch/arm64/include/asm/hwcap.h            |  1 +
+ arch/arm64/include/asm/processor.h        |  2 ++
+ arch/arm64/include/uapi/asm/hwcap.h       |  1 +
+ arch/arm64/kernel/cpufeature.c            |  9 +++++++++
+ arch/arm64/kernel/cpuinfo.c               |  1 +
+ arch/arm64/kernel/mte.c                   | 11 ++++++++++-
+ arch/arm64/kernel/process.c               |  6 +++++-
+ arch/arm64/tools/cpucaps                  |  1 +
+ include/uapi/linux/prctl.h                |  2 ++
+ tools/testing/selftests/arm64/abi/hwcap.c |  6 ++++++
+ 11 files changed, 41 insertions(+), 2 deletions(-)
+
+--
+LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
 
