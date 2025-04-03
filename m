@@ -1,188 +1,190 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE9F22E3387;
-	Thu,  3 Apr 2025 16:32:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
+Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F5B81514F6;
+	Thu,  3 Apr 2025 16:32:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743697934; cv=none; b=Mu0KW7vQIlDODaH8XKywtxn8qXYdTQ+PlXaiBcVuPDuqleJkFCZAYFBFC/0xNcbw10m5tGcC3h1PDGLVAADOBnYtnRQZbAlEny2iNuCcfb+18lQPQLdy/h30zhQU6R86Xxvrrws036vKipQDkLPxMgNyK2aC54bX8AtwCxIU478=
+	t=1743697969; cv=none; b=LikbNK0uItllGgRb7oPFcrUgIvz3fkqA38X1u2oe7+h5cSWrQqBski2VDh52YTUSFVqromWOg9oNE5JDvKbzymIvHbOiu1cm/jfRcml4WrRNGjNdbu1Kg0lJgLW1JOJPaFpkI9p5KwtNkaICdw37GAvBJSoZ8TfoDnX2N/lukSY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743697934; c=relaxed/simple;
-	bh=mFTql2fQe91w/S3dMui9ACkHHSYRfXpfZMsRcDQHEeQ=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=TO/CoFJI2vryprsQ/28ecmAKXmVzLP5+ZAEDxJtx5ReYlREpPy8WaTH5TOJ33puKFG/ImOj+sjaDjTnHARVTdmRxxBrnhT1etDvkyBNTIabyzDrfv+cWNjexjOr/BcHMw5wp2iJqfzWLD5LTx/kSo5rrpsaIf3BM788YPjev5CA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=DnfYs7UI; arc=none smtp.client-ip=220.197.31.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1743697969; c=relaxed/simple;
+	bh=nMCJUD39JxPn8sbGvbI/xrwFl+jsJVFVNZQe/Lk07E8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qYa5JxHeU1pqTPoU3a/j03yXve0dFm6PXluDnaYdPy2Wc+42fvXAGqi+kKzSfkVd+zxXxDYJmW+tu5cyBe34OaVEp8aACJoePizVZqccpYmgyhJCB7QxbpFZMI+sms3OzJ2A7Ye55L15hqe4jPKeFvBLeFYR9a4UvYalkphYMRk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WGqtQ+cE; arc=none smtp.client-ip=209.85.215.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="DnfYs7UI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=OuP8ZQ+Mg9eSGX38jD1aAJeq1T8gEdgY9LWbVkC4DNs=;
-	b=DnfYs7UI6XR+t4Y88pZ69xmzEXdZCNgCFMDpUaM4GjBq0him9pycCJSB2PANeC
-	tluElMPLFr1aBGo2W2JW2p3nonX742aWypVwuh5IN4ij1PCQGTcswZDJkN1U3dKt
-	ZDC0X1zi9NaOj1+mVi7PgIN86st8wZKz79jUMlz2J18+c=
-Received: from [192.168.71.89] (unknown [])
-	by gzga-smtp-mtada-g1-0 (Coremail) with SMTP id _____wBHpZfet+5nYQYfBw--.36929S2;
-	Fri, 04 Apr 2025 00:31:27 +0800 (CST)
-Message-ID: <fffcd237-9084-4be3-8967-f012d981b3f5@163.com>
-Date: Fri, 4 Apr 2025 00:31:26 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WGqtQ+cE"
+Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-af241f0a4beso1020305a12.2;
+        Thu, 03 Apr 2025 09:32:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743697966; x=1744302766; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7KJdAxOd/G0iqxROXI10DaNI9IIAFwi2MfAijcTTkYc=;
+        b=WGqtQ+cEdySJ6D2gzXYfXDcw/u+jYnwq8P5lpFeXUUdyyrQdmiIr4yk7SjI4fT8/iy
+         3x0Z6+01oJZl4bgqY3M4edE5APuKFy9sUXWwWHq0oAYCXW8NbrdljBdkXy+8shn1eNeD
+         cIcutsXNStFblFrk4+JmFGf7a2NgaUHFMiM5hRjRbIDAKKx4xusMfsN+qcOqB4Be2NHe
+         7XC4H4+oO05SAPyINxO9Qt0YV+VrTSjKFd+hZZ1fHqLTGWFRlHNAt+gLkBLQ9qZSqN+D
+         PtpwNdCTxuKJ8yNHgI7NaOBg4eTmJsjmqluy7namlvYXZ8cuV3V607r3CNVZKlCwOM0B
+         T3KQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743697966; x=1744302766;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7KJdAxOd/G0iqxROXI10DaNI9IIAFwi2MfAijcTTkYc=;
+        b=ZZDyyAJg2pnNdmykSkITwfqWbRdhsJsGHp6oUoxw6HeQeL9ACPzy384bB0/OUbQiBQ
+         +UMIXKGabicsz3/U2gIINBTob0r/acKJXMI2ku6UFnfwChhVOdTJRBVaFfvwl97VTLxY
+         fnlRh+0cSU44ATutZW3fWU87B2VnXsXAwP0rTFOb6Sf0DyVr6OSKGUOwWN3KuMBzMkKj
+         F8K6S3wo2SAoR5ucjpzx2/RjWBkJKMNdLxpLjTtoLZ/+tX4RX20XVjkvL5PqVr1LhMz3
+         v6iw71d21d/4gqNW0O/w5oY0lkbNxDI/lkg75eKbOjHeqLRrLUxn3RejKZWCMnbY9/Tp
+         /KWg==
+X-Forwarded-Encrypted: i=1; AJvYcCU1Xn+5W62idSAiRWgjb7GissTFbUzYEEDmxQi1eeTnVXVWGLcmhFDecuGT7y9Sx2rIMXvTwgtX2XeHpIE=@vger.kernel.org, AJvYcCWGabrbfpVeNmmuEYATi1RRCJXuz3OvVbIIZwj+RaOFej/XWVKaE4j25vMkt0Lo1vHvXgGwGibaRuU=@vger.kernel.org, AJvYcCXeewcdku5EvOVK9ObiXJZMOTt9coMh54n7AjINEJFHEQKcNkddX2A3nFeNm9614mShOfdVWRUFj9WY@vger.kernel.org, AJvYcCXevtq/rfbDC+XIqUO6COfbTAGxcvtikJ5gLindUR99hQB4wJ1jBNkRWiMtRlsSLIDZKpIF96V48N0OnIbK@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzc561kOmUAinADvKqVmtR/JUoEnHBlncZtEbPYfdsGCEyIDyw0
+	mlkk1G5KLgOY0JPCGZs2jctm3z11d0J/UZIRmtiYRc53HDistaHr
+X-Gm-Gg: ASbGncv3rzoMWKO/EJ+VT7scJnSuISbMxPFCvjuk6K0VldaOENo+etEr98Sse7LTRdf
+	LtT1RsEhkU1s6s+TxsiINS+WyGaZkfR+HjHBnhrzibc0lL34AEbpIZHJ7accBcLZkqkdAQKADWK
+	GGPoIlmJuo0a0+WOSP2XVdSCf0jQnMNYU3UT1LaZJJXfRAfuS8ar7Me+uEUfr/am3VsBAFxoK3t
+	r4mUiOu+43A6EDJt2AQjvtlSDWMYRO4d0i8mrW9BMYa6Qtvbp42Rwy7HIzBJIko+ZZ/20/jfA1/
+	8KGaV+Fzl6k1AZ7X6cLcYZGNXsWUiFqSZMHOx69EQtMdL3NVm6Ux9HeIGg==
+X-Google-Smtp-Source: AGHT+IGNyHx4nxR5tTiooAyFc+8Sh9HpSHaXhwKL4UKkSQzlutFbKuE/+7rfXHqUXEHQgUx/tXZDIA==
+X-Received: by 2002:a05:6a21:1583:b0:1f5:7eee:bb10 with SMTP id adf61e73a8af0-20104598389mr113569637.8.1743697966408;
+        Thu, 03 Apr 2025 09:32:46 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af9bc40098dsm1448971a12.48.2025.04.03.09.32.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Apr 2025 09:32:45 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Thu, 3 Apr 2025 09:32:44 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+To: Alexis Czezar Torreno <alexisczezar.torreno@analog.com>
+Cc: Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>,
+	Delphine CC Chiu <Delphine_CC_Chiu@wiwynn.com>,
+	linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] hwmon: (pmbus/max34440): Fix support for max34451
+Message-ID: <2234425e-b676-4564-96c6-57c0a635292c@roeck-us.net>
+References: <20250403-dev_adpm12160-v2-0-bbf40faae988@analog.com>
+ <20250403-dev_adpm12160-v2-1-bbf40faae988@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [v7 1/5] PCI: Refactor capability search into common macros
-From: Hans Zhang <18255117159@163.com>
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: lpieralisi@kernel.org, bhelgaas@google.com, kw@linux.com,
- manivannan.sadhasivam@linaro.org, robh@kernel.org, jingoohan1@gmail.com,
- thomas.richard@bootlin.com, linux-pci@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>
-References: <20250402042020.48681-1-18255117159@163.com>
- <20250402042020.48681-2-18255117159@163.com>
- <909653ac-7ba2-9da7-f519-3d849146f433@linux.intel.com>
- <6075b776-d2be-49d3-8321-e6af66781709@163.com>
- <9e9a68b1-8c3a-6132-d4fc-9f7b0b2d3e3a@linux.intel.com>
- <a0483c8d-3cd4-4da2-aca5-586379870e3a@163.com>
-Content-Language: en-US
-In-Reply-To: <a0483c8d-3cd4-4da2-aca5-586379870e3a@163.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wBHpZfet+5nYQYfBw--.36929S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxXFyxJFy3GF43AFW5Aw1DKFg_yoWrGr4DpF
-	98C3WayrW8JF12krn29a4jywnFqFyDCayDW34fW3WDZF9FyF1xt392kr1agF17X397KF15
-	X34q9a4fGFWayFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UVOJ5UUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDxUko2fulgLOSAACsE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250403-dev_adpm12160-v2-1-bbf40faae988@analog.com>
 
-
-
-On 2025/4/3 20:22, Hans Zhang wrote:
->>>>> +#define PCI_FIND_NEXT_CAP_TTL(read_cfg, start, cap, args...)
->>>>> \
->>>>> +({                                    \
->>>>> +    u8 __pos = (start);                        \
->>>>> +    int __ttl = PCI_FIND_CAP_TTL;                    \
->>>>> +    u16 __ent;                            \
->>>>> +    u8 __found_pos = 0;                        \
->>>>> +    u8 __id;                            \
->>>>> +                                    \
->>>>> +    read_cfg(args, __pos, 1, (u32 *)&__pos);            \
->>>>> +                                    \
->>>>> +    while (__ttl--) {                        \
->>>>> +        if (__pos < PCI_STD_HEADER_SIZEOF)            \
->>>>> +            break;                        \
->>>>> +        __pos = ALIGN_DOWN(__pos, 4);                \
->>>>> +        read_cfg(args, __pos, 2, (u32 *)&__ent);        \
->>>>> +        __id = FIELD_GET(PCI_CAP_ID_MASK, __ent);        \
->>>>> +        if (__id == 0xff)                    \
->>>>> +            break;                        \
->>>>> +        if (__id == (cap)) {                    \
->>>>> +            __found_pos = __pos;                \
->>>>> +            break;                        \
->>>>> +        }                            \
->>>>> +        __pos = FIELD_GET(PCI_CAP_LIST_NEXT_MASK, __ent);    \
->>>>
->>>> Could you please separate the coding style cleanups into own patch that
->>>> is before the actual move patch. IMO, all those cleanups can be in the
->>>> same patch.
->>>>
->>>
->>> Thanks your for reply. I don't understand. Is it like this?
->>
->> Add a patch before the first patch which does only the cleanups to
->> __pci_find_next_cap_ttl(). The patch that creates PCI_FIND_NEXT_CAP_TTL()
->> and converts its PCI core users (most of the patches 1&2) is to be based
->> on top of that cleanup patch.
->>
+On Thu, Apr 03, 2025 at 01:16:18PM +0800, Alexis Czezar Torreno wrote:
+> The max344** family has an issue with some PMBUS address being switched.
+> This includes max34451 however version MAX34451-NA6 and later has this
+> issue fixed and this commit supports that update.
 > 
-> Thank you so much for your patience in explaining it to me.
+> Signed-off-by: Alexis Czezar Torreno <alexisczezar.torreno@analog.com>
+> ---
+>  drivers/hwmon/pmbus/max34440.c | 55 +++++++++++++++++++++++++++++++++++++++---
+>  1 file changed, 51 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/hwmon/pmbus/max34440.c b/drivers/hwmon/pmbus/max34440.c
+> index c9dda33831ff24e7b5e2fd1956a65e6bd2bfcbb9..585746806663409bc97042647f6c0aba4c6f520a 100644
+> --- a/drivers/hwmon/pmbus/max34440.c
+> +++ b/drivers/hwmon/pmbus/max34440.c
+> @@ -34,16 +34,22 @@ enum chips { max34440, max34441, max34446, max34451, max34460, max34461 };
+>  /*
+>   * The whole max344* family have IOUT_OC_WARN_LIMIT and IOUT_OC_FAULT_LIMIT
+>   * swapped from the standard pmbus spec addresses.
+> + * For max34451, version MAX34451ETNA6+ and later has this issue fixed.
+>   */
+>  #define MAX34440_IOUT_OC_WARN_LIMIT	0x46
+>  #define MAX34440_IOUT_OC_FAULT_LIMIT	0x4A
+>  
+> +#define MAX34451ETNA6_MFR_REV		0x0012
+> +
+>  #define MAX34451_MFR_CHANNEL_CONFIG	0xe4
+>  #define MAX34451_MFR_CHANNEL_CONFIG_SEL_MASK	0x3f
+>  
+>  struct max34440_data {
+>  	int id;
+>  	struct pmbus_driver_info info;
+> +	bool pmbus_addr_fixed;
 
-Hi Ilpo,
+Unnecessary. See below.
 
-The [v9 2/6]patch I plan to submit is as follows, please review it.
+> +	u32 iout_oc_warn_limit;
+> +	u32 iout_oc_fault_limit;
 
- From 300fe1f428930d0bf8a361ea1d1a3272a6153107 Mon Sep 17 00:00:00 2001
-From: Hans Zhang <18255117159@163.com>
-Date: Fri, 4 Apr 2025 00:20:03 +0800
-Subject: [v9 2/6] PCI: Clean up __pci_find_next_cap_ttl() readability
+u8 would be sufficient.
 
-Refactor the __pci_find_next_cap_ttl() to improve code clarity:
-- Replace magic number 0x40 with PCI_STD_HEADER_SIZEOF.
-- Use ALIGN_DOWN() for position alignment instead of manual bitmask.
-- Extract PCI capability fields via FIELD_GET() with standardized masks.
-- Add necessary headers (linux/align.h, uapi/linux/pci_regs.h).
+>  };
+>  
+>  #define to_max34440_data(x)  container_of(x, struct max34440_data, info)
+> @@ -60,11 +66,11 @@ static int max34440_read_word_data(struct i2c_client *client, int page,
+>  	switch (reg) {
+>  	case PMBUS_IOUT_OC_FAULT_LIMIT:
+>  		ret = pmbus_read_word_data(client, page, phase,
+> -					   MAX34440_IOUT_OC_FAULT_LIMIT);
+> +					   data->iout_oc_fault_limit);
+>  		break;
+>  	case PMBUS_IOUT_OC_WARN_LIMIT:
+>  		ret = pmbus_read_word_data(client, page, phase,
+> -					   MAX34440_IOUT_OC_WARN_LIMIT);
+> +					   data->iout_oc_warn_limit);
+>  		break;
+>  	case PMBUS_VIRT_READ_VOUT_MIN:
+>  		ret = pmbus_read_word_data(client, page, phase,
+> @@ -133,11 +139,11 @@ static int max34440_write_word_data(struct i2c_client *client, int page,
+>  
+>  	switch (reg) {
+>  	case PMBUS_IOUT_OC_FAULT_LIMIT:
+> -		ret = pmbus_write_word_data(client, page, MAX34440_IOUT_OC_FAULT_LIMIT,
+> +		ret = pmbus_write_word_data(client, page, data->iout_oc_fault_limit,
+>  					    word);
+>  		break;
+>  	case PMBUS_IOUT_OC_WARN_LIMIT:
+> -		ret = pmbus_write_word_data(client, page, MAX34440_IOUT_OC_WARN_LIMIT,
+> +		ret = pmbus_write_word_data(client, page, data->iout_oc_warn_limit,
+>  					    word);
+>  		break;
+>  	case PMBUS_VIRT_RESET_POUT_HISTORY:
+> @@ -235,6 +241,24 @@ static int max34451_set_supported_funcs(struct i2c_client *client,
+>  	 */
+>  
+>  	int page, rv;
+> +	bool max34451_na6 = false;
+> +
+> +	rv = i2c_smbus_read_word_data(client, PMBUS_MFR_REVISION);
+> +	if (rv < 0)
+> +		return rv;
+> +
+> +	if (rv == MAX34451ETNA6_MFR_REV) {
 
-The changes are purely non-functional cleanups, ensuring behavior remains
-identical to the original implementation.
+Sure that this is only one revision ?
+Would it be better to use ">=" instead of "==" ?
 
-Signed-off-by: Hans Zhang <18255117159@163.com>
----
-  drivers/pci/pci.c             | 10 ++++++----
-  include/uapi/linux/pci_regs.h |  2 ++
-  2 files changed, 8 insertions(+), 4 deletions(-)
+> +		max34451_na6 = true;
+> +		data->pmbus_addr_fixed = true;
+> +		data->info.format[PSC_VOLTAGE_IN] = direct;
+> +		data->info.format[PSC_CURRENT_IN] = direct;
+> +		data->info.m[PSC_VOLTAGE_IN] = 1;
+> +		data->info.b[PSC_VOLTAGE_IN] = 0;
+> +		data->info.R[PSC_VOLTAGE_IN] = 3;
+> +		data->info.m[PSC_CURRENT_IN] = 1;
+> +		data->info.b[PSC_CURRENT_IN] = 0;
+> +		data->info.R[PSC_CURRENT_IN] = 2;
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 869d204a70a3..e4d3719b653d 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -9,6 +9,7 @@
-   */
+Assign register addresses directly here.
 
-  #include <linux/acpi.h>
-+#include <linux/align.h>
-  #include <linux/kernel.h>
-  #include <linux/delay.h>
-  #include <linux/dmi.h>
-@@ -30,6 +31,7 @@
-  #include <asm/dma.h>
-  #include <linux/aer.h>
-  #include <linux/bitfield.h>
-+#include <uapi/linux/pci_regs.h>
-  #include "pci.h"
+		data->iout_oc_fault_limit = PMBUS_IOUT_OC_FAULT_LIMIT;
+		data->iout_oc_warn_limit = PMBUS_IOUT_OC_WARN_LIMIT;
+	} else {
+		data->iout_oc_fault_limit = MAX34440_IOUT_OC_FAULT_LIMIT;
+		data->iout_oc_warn_limit = MAX34440_IOUT_OC_WARN_LIMIT;
 
-  DEFINE_MUTEX(pci_slot_mutex);
-@@ -432,17 +434,17 @@ static u8 __pci_find_next_cap_ttl(struct pci_bus 
-*bus, unsigned int devfn,
-  	pci_bus_read_config_byte(bus, devfn, pos, &pos);
+> +	}
 
-  	while ((*ttl)--) {
--		if (pos < 0x40)
-+		if (pos < PCI_STD_HEADER_SIZEOF)
-  			break;
--		pos &= ~3;
-+		pos = ALIGN_DOWN(pos, 4);
-  		pci_bus_read_config_word(bus, devfn, pos, &ent);
-
--		id = ent & 0xff;
-+		id = FIELD_GET(PCI_CAP_ID_MASK, ent);
-  		if (id == 0xff)
-  			break;
-  		if (id == cap)
-  			return pos;
--		pos = (ent >> 8);
-+		pos = FIELD_GET(PCI_CAP_LIST_NEXT_MASK, ent);
-  	}
-  	return 0;
-  }
-diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-index 3445c4970e4d..a11ebbab99fc 100644
---- a/include/uapi/linux/pci_regs.h
-+++ b/include/uapi/linux/pci_regs.h
-@@ -206,6 +206,8 @@
-  /* 0x48-0x7f reserved */
-
-  /* Capability lists */
-+#define PCI_CAP_ID_MASK		0x00ff
-+#define PCI_CAP_LIST_NEXT_MASK	0xff00
-
-  #define PCI_CAP_LIST_ID		0	/* Capability ID */
-  #define  PCI_CAP_ID_PM		0x01	/* Power Management */
-
-
-
-
-Best regards,
-Hans
-
+Thanks,
+Guenter
