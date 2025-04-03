@@ -1,100 +1,188 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 193622E3366;
-	Thu,  3 Apr 2025 01:59:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47538610B;
+	Thu,  3 Apr 2025 02:00:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743645585; cv=none; b=HqJPFPBHJ9hiH0YOk/cVhGOiWAzTz/DthSQOpFvOGIKAFgB3v/b7MjC0J3t9V2LmHWPpRWJhiUM4TWPi14As/KIZCGxKYs5+AZsJ6G/hpYbpdKM91F5cBxHYrGZ1puN3m9SBaClS5esyRB7V0ubVA5HMdNWzC0VFPl11xbxZizM=
+	t=1743645650; cv=none; b=qKrDXnSlPYXicWwW5IpxAp4IeKtrtq4/nZ827evc7XzGIDHc5xU6pX9xeQVUNUzCtaGBEh99+qQQJEgXAWDtpVE3AWoHQXXLGWwDTLxyD98gc4/vRB43BfIC7F15UBtNhT2CMgCdcC/q9opF21z68pdNeH8i8FtU0Vub4luqdXg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743645585; c=relaxed/simple;
-	bh=hV3GC0woSDzt9yhjUxK5aAWmtD0lNceZ7A/yFqQTY6A=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=j4IApXQpx4NnyK5J+sn3oHsin+JoQBWjAbN0yRonp7xBOGrjQaULv4Jkm6XtoUV2iKmz8PGtcMAO+e7CSVAUrH1D2sfITKe06SyNVqfFb52iMjFUWZJaTEnQTknn5SvPLhb3FGwNXLXZKu0UnExh3thchDwsT4Dz7QBiD7km70k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4ZSlKC1d6Rz4f3kng;
-	Thu,  3 Apr 2025 09:59:11 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 6E6371A135B;
-	Thu,  3 Apr 2025 09:59:34 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP4 (Coremail) with SMTP id gCh0CgD3W2CE6+1nGUxnIQ--.45685S4;
-	Thu, 03 Apr 2025 09:59:34 +0800 (CST)
-From: Zheng Qixing <zhengqixing@huaweicloud.com>
-To: song@kernel.org,
-	yukuai3@huawei.com
-Cc: linux-raid@vger.kernel.org,
+	s=arc-20240116; t=1743645650; c=relaxed/simple;
+	bh=0ba+sRGF2jAkbc+QseTQRVmQ9JgKzPa2R2booIqtf0U=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=H2Bvan61P6FLEtU8LYe+lsTdn+8aYWn6LpH7MDEteTNjHz2vaQ/fSnMBxID8LkNhZakrk+WIUihhAa0pVS6ltNf4tD5KJ5xFmzEeQM4ixGAqW2iGqVhnwZszcJH2HhkLxJ3DISV2NR0oy1su/S8AOEhZO0DmWLd1pF5/9Y1ry3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YQ3L3+FL; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YQ3L3+FL"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-301e05b90caso381490a91.2;
+        Wed, 02 Apr 2025 19:00:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743645648; x=1744250448; darn=vger.kernel.org;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gcde5Nyi6TaMVAZ5o62Gx5sjG4xeY8R/Cdn03wkDkWw=;
+        b=YQ3L3+FLKFcQl6XiBmS+nezQPQVoXoGztN/6YCD4IulVs/KU0IrtaMtdGvTt1+451y
+         GdVNtOQXzBaBazKoo49xmMB/2ruCKNm3XeYiSN6H55MiYrGOmc6n8HNiRkNBhxQIocRn
+         ipXlT0fdamXMU7rwIj4/F/ddjVKBNbvm+nLegIZGwlNpbYnF6jr4nI01uCEPwiQk+ALS
+         i9JvaoUheh3zfeekE8Cw2x0Ot1Ter5yJMJ5Dc3tq5/X8dsD9SfxqqfD3sGU2/6XI2CnA
+         +lF9q5z5CG3s6+8SsXzdAsyFq46F5wUsOAZrrFHXHHYCLjQzojIrGOp1Vlcazzxct2t5
+         0FPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743645648; x=1744250448;
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gcde5Nyi6TaMVAZ5o62Gx5sjG4xeY8R/Cdn03wkDkWw=;
+        b=Uli1unKBSg4x9KanwDxVBzyaTJsnQj1UpczVla5rkBpqWk4xGyM21T96fFNNrdJs8O
+         A9ite7rgHf7ySOpSavktHm5SM691FSIrxSh6I8p5vHUcr1jB0IXIrjsQCNVMDqxCkA9+
+         VLF6GWNSvdAYCE3VZ2vBOaOVzYP4vHyAW/NGxu/6Fv8WfzxCzvP/CLT5t8vaLIk9C5wE
+         +PPwP2BTvLthlYogbCFM9/cUEtZvR3SrJdKtsuirYRpt03zCHccGfpM1lngotAisElGO
+         tp59Z+C4cpaj0nCMpy1Rp0tBQqXBVHt0Zm/DHu1tPojoe+c8CdPMVanvPDBYFWBmBCfQ
+         z78A==
+X-Forwarded-Encrypted: i=1; AJvYcCUjFBJDDAnFcMR2mcu/Oom2kUKIdFlV8t349zMaUrPgVcdLHfrjUe4N572NrVGJLF/P7byqPYmJakpGCygY@vger.kernel.org, AJvYcCUqAi8vZ0U/tWbqwqw/PVbxxQ102OPYVu/zUct2Wc5MZgdplM2L99pAYPT0nWe94l9l3GLoVswm1h4NF7dX@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyjw0E5PTjAGFHzlbBbxnx2uEN0qwyFv9dGD49PrhO5Top2gVxo
+	3oX3XRVrTjz8kv4aRFE0R2az4yIIZ9gGXgQ3b6/WZsxY/yyMHro1
+X-Gm-Gg: ASbGnctQIKkMxfDLsWqw28g8nxaCbWNnO2P6avKzXvnduwBPMwIAwZ5avjjyH+oJ/0Z
+	j83IsTSLtoMVLWtln/4cZ4nuqc2vb6Y+LGwIbLd/F6TCOvVWc30wtdt/2o9W1QKSaDParq6ogt2
+	6FZDlj+glGCECv7yV4lAFoHoGQdOCogOsUJz7GHkD7Uc4j8w2OIXWsOk4pXIS9n8XD+mIecSxDz
+	TCD7GX7NkRtdIArjMrIDF7jz/26ykUgdiOtwgyWoms41FACNOMeFGq71aVnTA3hGQbCMwXdsJxL
+	xMTP/IWHSgxiEUx5sF9+JOag7wCGVpGXKrsLJSAgbSEi8x3FhfsBPHSAsn+bwfE1XlLh1CfyBA=
+	=
+X-Google-Smtp-Source: AGHT+IHuQHtWHcO53kS5e5zZEuKi16tpySHAaverruz/vmyToXsfN39bOqzs8qlfsj43naZCs0Vs6w==
+X-Received: by 2002:a17:90b:51c7:b0:2ff:72f8:3708 with SMTP id 98e67ed59e1d1-3057cb39169mr1470671a91.17.1743645648421;
+        Wed, 02 Apr 2025 19:00:48 -0700 (PDT)
+Received: from localhost.localdomain ([221.214.202.225])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3057cb8dda5sm385727a91.40.2025.04.02.19.00.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Apr 2025 19:00:47 -0700 (PDT)
+From: Penglei Jiang <superman.xpt@gmail.com>
+To: viro@zeniv.linux.org.uk,
+	brauner@kernel.org
+Cc: jack@suse.cz,
+	linux-fsdevel@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	yi.zhang@huawei.com,
-	yangerkun@huawei.com,
-	zhengqixing@huawei.com
-Subject: [PATCH V2] md/md-bitmap: fix stats collection for external bitmaps
-Date: Thu,  3 Apr 2025 09:53:22 +0800
-Message-Id: <20250403015322.2873369-1-zhengqixing@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
+	syzbot+5d8e79d323a13aa0b248@syzkaller.appspotmail.com,
+	Penglei Jiang <superman.xpt@gmail.com>
+Subject: [PATCH 2/2] vfs: Fix anon_inode triggering VFS_BUG_ON_INODE in may_open()
+Date: Wed,  2 Apr 2025 18:59:46 -0700
+Message-Id: <20250403015946.5283-1-superman.xpt@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgD3W2CE6+1nGUxnIQ--.45685S4
-X-Coremail-Antispam: 1UD129KBjvJXoW7CF1xWF48ZFW3Wrykuw17Wrg_yoW8GrW5pr
-	ZxG3WY9ryrJr4Fqr1UZry8ZFy5X3ZxtrZrKr95C3s5ua47AF9xKr48GFyj9asIyryrZF4q
-	vrW5ta4UC34UuFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUyKb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI
-	7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxV
-	Cjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY
-	6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6x
-	AIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY
-	1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUwxhLUUUUU
-X-CM-SenderInfo: x2kh0wptl0x03j6k3tpzhluzxrxghudrp/
 
-From: Zheng Qixing <zhengqixing@huawei.com>
+may_open()
+{
+        ...
+        switch (inode->i_mode & S_IFMT) {
+        case S_IFLNK:
+        case S_IFDIR:
+        case S_IFBLK:
+        case S_IFCHR:
+        case S_IFIFO:
+        case S_IFSOCK:
+        case S_IFREG:
+        default:
+                VFS_BUG_ON_INODE(1, inode);
+        }
+        ...
+}
 
-The bitmap_get_stats() function incorrectly returns -ENOENT for external
-bitmaps.
+Since some anonymous inodes do not have S_IFLNK, S_IFDIR, S_IFBLK,
+S_IFCHR, S_IFIFO, S_IFSOCK, or S_IFREG flags set when created, they
+end up in the default case branch.
 
-Remove the external bitmap check as the statistics should be available
-regardless of bitmap storage location.
+When creating some anon_inode instances, the i_mode in the switch
+statement is not properly set, which causes the open operation to
+follow the default branch when opening anon_inode.
 
-Return -EINVAL only for invalid bitmap with no storage (neither in
-superblock nor in external file).
+We could check whether the inode is an anon_inode before VFS_BUG_ON_INODE
+and trigger the assertion only if it's not. However, a more reasonable
+approach might be to set a flag during creation in alloc_anon_inode(),
+such as inode->i_flags |= S_ANON, to explicitly mark anonymous inodes.
 
-Note: "bitmap_info.external" here refers to a bitmap stored in a separate
-file (bitmap_file), not to external metadata.
+The code that triggers the BUG:
 
-Fixes: 8d28d0ddb986 ("md/md-bitmap: Synchronize bitmap_get_stats() with bitmap lifetime")
-Signed-off-by: Zheng Qixing <zhengqixing@huawei.com>
+    #include <stdio.h>
+    #include <unistd.h>
+    #include <fcntl.h>
+    #include <sys/timerfd.h>
+
+    int main(int argc, char **argv) {
+        int fd = timerfd_create(CLOCK_MONOTONIC, 0);
+        if (fd != -1) {
+            char path[256];
+            sprintf(path, "/proc/self/fd/%d", fd);
+            open(path, O_RDONLY);
+        }
+
+        return 0;
+    }
+
+Thank you!
+
+Fixes: af153bb63a336 ("vfs: catch invalid modes in may_open()")
+Reported-by: syzbot+5d8e79d323a13aa0b248@syzkaller.appspotmail.com
+Closes: https://lore.kernel.org/all/67ed3fb3.050a0220.14623d.0009.GAE@google.com"
+Signed-off-by: Penglei Jiang <superman.xpt@gmail.com>
 ---
- drivers/md/md-bitmap.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ fs/anon_inodes.c            | 4 ++++
+ fs/namei.c                  | 5 ++++-
+ include/linux/anon_inodes.h | 1 +
+ 3 files changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/md/md-bitmap.c b/drivers/md/md-bitmap.c
-index 44ec9b17cfd3..37b08f26c62f 100644
---- a/drivers/md/md-bitmap.c
-+++ b/drivers/md/md-bitmap.c
-@@ -2357,9 +2357,8 @@ static int bitmap_get_stats(void *data, struct md_bitmap_stats *stats)
+diff --git a/fs/anon_inodes.c b/fs/anon_inodes.c
+index 583ac81669c2..c29eca6106d2 100644
+--- a/fs/anon_inodes.c
++++ b/fs/anon_inodes.c
+@@ -303,6 +303,10 @@ int anon_inode_create_getfd(const char *name, const struct file_operations *fops
+ 	return __anon_inode_getfd(name, fops, priv, flags, context_inode, true);
+ }
  
- 	if (!bitmap)
- 		return -ENOENT;
--	if (bitmap->mddev->bitmap_info.external)
--		return -ENOENT;
--	if (!bitmap->storage.sb_page) /* no superblock */
-+	if (!bitmap->mddev->bitmap_info.external &&
-+	    !bitmap->storage.sb_page)
- 		return -EINVAL;
- 	sb = kmap_local_page(bitmap->storage.sb_page);
- 	stats->sync_size = le64_to_cpu(sb->sync_size);
++inline bool is_default_anon_inode(const struct inode *inode)
++{
++    return anon_inode_inode == inode;
++}
+ 
+ static int __init anon_inode_init(void)
+ {
+diff --git a/fs/namei.c b/fs/namei.c
+index 360a86ca1f02..81cea4901a2f 100644
+--- a/fs/namei.c
++++ b/fs/namei.c
+@@ -40,6 +40,7 @@
+ #include <linux/bitops.h>
+ #include <linux/init_task.h>
+ #include <linux/uaccess.h>
++#include <linux/anon_inodes.h>
+ 
+ #include "internal.h"
+ #include "mount.h"
+@@ -3429,7 +3430,9 @@ static int may_open(struct mnt_idmap *idmap, const struct path *path,
+ 			return -EACCES;
+ 		break;
+ 	default:
+-		VFS_BUG_ON_INODE(1, inode);
++		if (!is_default_anon_inode(inode)
++			&& !(inode->i_flags & S_PRIVATE))
++			VFS_BUG_ON_INODE(1, inode);
+ 	}
+ 
+ 	error = inode_permission(idmap, inode, MAY_OPEN | acc_mode);
+diff --git a/include/linux/anon_inodes.h b/include/linux/anon_inodes.h
+index edef565c2a1a..eca4a3913ba7 100644
+--- a/include/linux/anon_inodes.h
++++ b/include/linux/anon_inodes.h
+@@ -30,6 +30,7 @@ int anon_inode_create_getfd(const char *name,
+ 			    const struct file_operations *fops,
+ 			    void *priv, int flags,
+ 			    const struct inode *context_inode);
++bool is_default_anon_inode(const struct inode *inode);
+ 
+ #endif /* _LINUX_ANON_INODES_H */
+ 
 -- 
-2.39.2
+2.17.1
 
