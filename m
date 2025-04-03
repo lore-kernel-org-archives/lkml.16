@@ -1,155 +1,275 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE2BA2673A0;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F276B2673A9;
 	Thu,  3 Apr 2025 19:05:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743707129; cv=none; b=lV6xaGwTWptQVocSHQWaRhpY15GnGKSSvk4CTwwT6BVVviTZv5+ecgXiEBNOFbwsC4Mw3uZu/cCpSJfA/7Oh2BCi7Uo5SFWNvgs5mxmvjeOl4QBFv1oyWch7obyUy+v+BZcsgLf62dGMlVlg0Rbci/F8I9Odr30x9q02wa9ugkU=
+	t=1743707130; cv=none; b=c1QZEe+jXMh/wUqw/6ihJ3rPUTf0SgVci0mErxD8JYOQd4ui5fTA9pu+GwualqddJclC7pp5/UdmWZmFpL5jgbqzFu+c/b+vUcj7b+LeByi5RhSXFJdMiNIpbnQK/niZPCztCwhsZk6TpgVqU4pgL4ow72Dq2879oMVVVh4gDsY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743707129; c=relaxed/simple;
-	bh=3J3hZkM/SZWxNodO3DllCHKUec55Vmh7HqP/UlOs3lI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=s7P3SZFfCBD0FSE7LerklYo3EhW+CVCNssMW/xUJR6TLeZG55EPQzv9lLV0qaIgl/Ti/aKrd85byhkk8bEb8QxR5YzArIFkoBMntfLPmMuZWqjOjHZOSxTHYnaGFx5kNrlzEcRVf7kUIa7i/2ragA+5APZNhC3Z3vH5aN9pvFnc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BtmjMxlc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743707130; c=relaxed/simple;
+	bh=UTSybPX9pm657Ejw52N4FlK3mRJy2RMZjRzMQdJm5jA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eklctM24GVIv3BM0e3asyoPxXd8wWJynZnro5GMCJPg6DduuSSnz18b8GiWFf30oC9cUKbq0B15vyn2IQspTt0yqtwRB9xQ/MZBMkygKhBZHxxxzqpp3ANGMXuo6utVzeHC1XFgeQus5pXsTAQNhcyHWYC7ssN+JaeC2Yo4YMdQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ik+7j6xB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BtmjMxlc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 791E1C4CEE3;
-	Thu,  3 Apr 2025 19:05:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ik+7j6xB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45A68C4CEEA;
+	Thu,  3 Apr 2025 19:05:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1743707129;
-	bh=3J3hZkM/SZWxNodO3DllCHKUec55Vmh7HqP/UlOs3lI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BtmjMxlcHDLmeY1uMu5dZ9Wmv6NAg8bkSkMLacUG577l5SNbFiT5oK2NNAW+rC6+/
-	 1MZkzwfZYkjCwIxrww/SK6JF+LcoqRkj3A9yddCCmeFXxq16t3w3fijYnFFHO1WXUB
-	 LviVSV6MQTpRdI/dEEPxNLDyG2BA+GYzAfppOCldRt4lia9lxjx/LqbHCfNnabSafc
-	 8tvqlmhu2ou8sH4D/TG/GvIfmjXKP3IBYxodhHTw61L9wlrHm19fcoQWCExfJkag+B
-	 ZaM0dZTUUSadUCiQwtAWSMCNfyjYQTqhwCMQEkbR4El+rZy94kkIzbAak1DrKcbmKu
-	 QK8sovIPww5nA==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Huacai Chen <chenhuacai@loongson.cn>,
-	Yuli Wang <wangyuli@uniontech.com>,
-	Jie Fan <fanjie@uniontech.com>,
-	Erpeng Xu <xuerpeng@uniontech.com>,
-	Niklas Cassel <cassel@kernel.org>,
-	Sasha Levin <sashal@kernel.org>,
-	dlemoal@kernel.org,
-	linux-ide@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.13 35/49] ahci: Marvell 88SE9215 controllers prefer DMA for ATAPI
-Date: Thu,  3 Apr 2025 15:03:54 -0400
-Message-Id: <20250403190408.2676344-35-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250403190408.2676344-1-sashal@kernel.org>
-References: <20250403190408.2676344-1-sashal@kernel.org>
+	bh=UTSybPX9pm657Ejw52N4FlK3mRJy2RMZjRzMQdJm5jA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ik+7j6xBNMmfDLKfAD1G4fEuwhRJQMKS7xjMqFSfXvS7q92adp2GswnvSbxASXLyc
+	 //99URLK+hhRYo3DOjpa0+yOI0qnsGmbElzHc6G4pCHr1hwzJCRFZm9xVO+rh7JDSJ
+	 aWRzF/CrSkDkbwwurTSXvdIvOYcnsy/VPToR6ugZXbmWxFw2LQgG6t6lC6ImiDdxzs
+	 NBjxh0RlyrJ/2w6VbIk7oLmz9bU2GjE1zHG351R39S0Wk566+S+/R3jINZA1SFeOVS
+	 njJ9L6/cI2mwEVizO7JLbEu/L1ZH14eKsfP3Gcs54QaEyav5QGk7Y90vIBZSvbk6EP
+	 vVjNyZc39xBcg==
+Date: Thu, 3 Apr 2025 22:05:25 +0300
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Stefano Garzarella <sgarzare@redhat.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>,
+	Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
+	"H. Peter Anvin" <hpa@zytor.com>, linux-coco@lists.linux.dev,
+	linux-integrity@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
+	Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	Joerg Roedel <jroedel@suse.de>,
+	Dionna Glaze <dionnaglaze@google.com>,
+	Claudio Carvalho <cclaudio@linux.ibm.com>,
+	James Bottomley <James.Bottomley@hansenpartnership.com>,
+	linux-kernel@vger.kernel.org, Dov Murik <dovmurik@linux.ibm.com>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v6 3/4] tpm: add SNP SVSM vTPM driver
+Message-ID: <Z-7b9VPEhmVYHjbX@kernel.org>
+References: <20250403100943.120738-1-sgarzare@redhat.com>
+ <20250403100943.120738-4-sgarzare@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.13.9
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250403100943.120738-4-sgarzare@redhat.com>
 
-From: Huacai Chen <chenhuacai@loongson.cn>
+On Thu, Apr 03, 2025 at 12:09:41PM +0200, Stefano Garzarella wrote:
+> From: Stefano Garzarella <sgarzare@redhat.com>
+> 
+> Add driver for the vTPM defined by the AMD SVSM spec [1].
+> 
+> The specification defines a protocol that a SEV-SNP guest OS can use to
+> discover and talk to a vTPM emulated by the Secure VM Service Module (SVSM)
+> in the guest context, but at a more privileged level (VMPL0).
+> 
+> The new tpm-svsm platform driver uses two functions exposed by x86/sev
+> to verify that the device is actually emulated by the platform and to
+> send commands and receive responses.
+> 
+> The device cannot be hot-plugged/unplugged as it is emulated by the
+> platform, so we can use module_platform_driver_probe(). The probe
+> function will only check whether in the current runtime configuration,
+> SVSM is present and provides a vTPM.
+> 
+> This device does not support interrupts and sends responses to commands
+> synchronously. In order to have .recv() called just after .send() in
+> tpm_try_transmit(), the .status() callback returns 0, and both
+> .req_complete_mask and .req_complete_val are set to 0.
+> 
+> [1] "Secure VM Service Module for SEV-SNP Guests"
+>     Publication # 58019 Revision: 1.00
+> 
+> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+> ---
+> v6:
+> - removed the `locality` field (set to 0) and the FIXME comment [Jarkko]
+> v5:
+> - removed cancel/status/req_* ops after rebase on master that cotains
+>   commit 980a573621ea ("tpm: Make chip->{status,cancel,req_canceled} opt")
+> v4:
+> - moved "asm" includes after the "linux" includes [Tom]
+> - allocated buffer separately [Tom/Jarkko/Jason]
+> v3:
+> - removed send_recv() ops and followed the ftpm driver implementing .status,
+>   .req_complete_mask, .req_complete_val, etc. [Jarkko]
+> - removed link to the spec because those URLs are unstable [Borislav]
+> ---
+>  drivers/char/tpm/tpm_svsm.c | 128 ++++++++++++++++++++++++++++++++++++
+>  drivers/char/tpm/Kconfig    |  10 +++
+>  drivers/char/tpm/Makefile   |   1 +
+>  3 files changed, 139 insertions(+)
+>  create mode 100644 drivers/char/tpm/tpm_svsm.c
+> 
+> diff --git a/drivers/char/tpm/tpm_svsm.c b/drivers/char/tpm/tpm_svsm.c
+> new file mode 100644
+> index 000000000000..b9242c9eab87
+> --- /dev/null
+> +++ b/drivers/char/tpm/tpm_svsm.c
+> @@ -0,0 +1,128 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (C) 2025 Red Hat, Inc. All Rights Reserved.
+> + *
+> + * Driver for the vTPM defined by the AMD SVSM spec [1].
+> + *
+> + * The specification defines a protocol that a SEV-SNP guest OS can use to
+> + * discover and talk to a vTPM emulated by the Secure VM Service Module (SVSM)
+> + * in the guest context, but at a more privileged level (usually VMPL0).
+> + *
+> + * [1] "Secure VM Service Module for SEV-SNP Guests"
+> + *     Publication # 58019 Revision: 1.00
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/kernel.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/tpm_svsm.h>
+> +
+> +#include <asm/sev.h>
+> +
+> +#include "tpm.h"
+> +
+> +struct tpm_svsm_priv {
+> +	void *buffer;
+> +};
+> +
+> +static int tpm_svsm_send(struct tpm_chip *chip, u8 *buf, size_t len)
+> +{
+> +	struct tpm_svsm_priv *priv = dev_get_drvdata(&chip->dev);
+> +	int ret;
+> +
+> +	ret = svsm_vtpm_cmd_request_fill(priv->buffer, 0, buf, len);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/*
+> +	 * The SVSM call uses the same buffer for the command and for the
+> +	 * response, so after this call, the buffer will contain the response
+> +	 * that can be used by .recv() op.
+> +	 */
+> +	return snp_svsm_vtpm_send_command(priv->buffer);
+> +}
+> +
+> +static int tpm_svsm_recv(struct tpm_chip *chip, u8 *buf, size_t len)
+> +{
+> +	struct tpm_svsm_priv *priv = dev_get_drvdata(&chip->dev);
+> +
+> +	/*
+> +	 * The internal buffer contains the response after we send the command
+> +	 * to SVSM.
+> +	 */
+> +	return svsm_vtpm_cmd_response_parse(priv->buffer, buf, len);
+> +}
+> +
+> +static struct tpm_class_ops tpm_chip_ops = {
+> +	.flags = TPM_OPS_AUTO_STARTUP,
+> +	.recv = tpm_svsm_recv,
+> +	.send = tpm_svsm_send,
+> +};
+> +
+> +static int __init tpm_svsm_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct tpm_svsm_priv *priv;
+> +	struct tpm_chip *chip;
+> +	int err;
+> +
+> +	if (!snp_svsm_vtpm_probe())
+> +		return -ENODEV;
+> +
+> +	priv = devm_kmalloc(dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	/*
+> +	 * The maximum buffer supported is one page (see SVSM_VTPM_MAX_BUFFER
+> +	 * in tpm_svsm.h).
+> +	 */
+> +	priv->buffer = (void *)devm_get_free_pages(dev, GFP_KERNEL, 0);
+> +	if (!priv->buffer)
+> +		return -ENOMEM;
+> +
+> +	chip = tpmm_chip_alloc(dev, &tpm_chip_ops);
+> +	if (IS_ERR(chip))
+> +		return PTR_ERR(chip);
+> +
+> +	dev_set_drvdata(&chip->dev, priv);
+> +
+> +	err = tpm2_probe(chip);
+> +	if (err)
+> +		return err;
+> +
+> +	err = tpm_chip_register(chip);
+> +	if (err)
+> +		return err;
+> +
+> +	dev_info(dev, "SNP SVSM vTPM %s device\n",
+> +		 (chip->flags & TPM_CHIP_FLAG_TPM2) ? "2.0" : "1.2");
+> +
+> +	return 0;
+> +}
+> +
+> +static void __exit tpm_svsm_remove(struct platform_device *pdev)
+> +{
+> +	struct tpm_chip *chip = platform_get_drvdata(pdev);
+> +
+> +	tpm_chip_unregister(chip);
+> +}
+> +
+> +/*
+> + * tpm_svsm_remove() lives in .exit.text. For drivers registered via
+> + * module_platform_driver_probe() this is ok because they cannot get unbound
+> + * at runtime. So mark the driver struct with __refdata to prevent modpost
+> + * triggering a section mismatch warning.
+> + */
+> +static struct platform_driver tpm_svsm_driver __refdata = {
+> +	.remove = __exit_p(tpm_svsm_remove),
+> +	.driver = {
+> +		.name = "tpm-svsm",
+> +	},
+> +};
+> +
+> +module_platform_driver_probe(tpm_svsm_driver, tpm_svsm_probe);
+> +
+> +MODULE_DESCRIPTION("SNP SVSM vTPM Driver");
+> +MODULE_LICENSE("GPL");
+> +MODULE_ALIAS("platform:tpm-svsm");
+> diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
+> index fe4f3a609934..dddd702b2454 100644
+> --- a/drivers/char/tpm/Kconfig
+> +++ b/drivers/char/tpm/Kconfig
+> @@ -234,5 +234,15 @@ config TCG_FTPM_TEE
+>  	help
+>  	  This driver proxies for firmware TPM running in TEE.
+>  
+> +config TCG_SVSM
+> +	tristate "SNP SVSM vTPM interface"
+> +	depends on AMD_MEM_ENCRYPT
+> +	help
+> +	  This is a driver for the AMD SVSM vTPM protocol that a SEV-SNP guest
+> +	  OS can use to discover and talk to a vTPM emulated by the Secure VM
+> +	  Service Module (SVSM) in the guest context, but at a more privileged
+> +	  level (usually VMPL0).  To compile this driver as a module, choose M
+> +	  here; the module will be called tpm_svsm.
+> +
+>  source "drivers/char/tpm/st33zp24/Kconfig"
+>  endif # TCG_TPM
+> diff --git a/drivers/char/tpm/Makefile b/drivers/char/tpm/Makefile
+> index 2b004df8c04b..9de1b3ea34a9 100644
+> --- a/drivers/char/tpm/Makefile
+> +++ b/drivers/char/tpm/Makefile
+> @@ -45,3 +45,4 @@ obj-$(CONFIG_TCG_CRB) += tpm_crb.o
+>  obj-$(CONFIG_TCG_ARM_CRB_FFA) += tpm_crb_ffa.o
+>  obj-$(CONFIG_TCG_VTPM_PROXY) += tpm_vtpm_proxy.o
+>  obj-$(CONFIG_TCG_FTPM_TEE) += tpm_ftpm_tee.o
+> +obj-$(CONFIG_TCG_SVSM) += tpm_svsm.o
+> -- 
+> 2.49.0
+> 
+> 
 
-[ Upstream commit 0507c777f5d8f9e34b137d28ee263599a7b81242 ]
+Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
 
-We use CD/DVD drives under Marvell 88SE9215 SATA controller on many
-Loongson-based machines. We found its PIO doesn't work well, and on the
-opposite its DMA seems work very well.
-
-We don't know the detail of the 88SE9215 SATA controller, but we have
-tested different CD/DVD drives and they all have problems under 88SE9215
-(but they all work well under an Intel SATA controller). So, we consider
-this problem is bound to 88SE9215 SATA controller rather than bound to
-CD/DVD drives.
-
-As a solution, we define a new dedicated AHCI board id which is named
-board_ahci_yes_fbs_atapi_dma for 88SE9215, and for this id we set the
-AHCI_HFLAG_ATAPI_DMA_QUIRK and ATA_QUIRK_ATAPI_MOD16_DMA flags on the
-SATA controller in order to prefer ATAPI DMA.
-
-Reported-by: Yuli Wang <wangyuli@uniontech.com>
-Tested-by: Jie Fan <fanjie@uniontech.com>
-Tested-by: Erpeng Xu <xuerpeng@uniontech.com>
-Tested-by: Yuli Wang <wangyuli@uniontech.com>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-Link: https://lore.kernel.org/r/20250318104314.2160526-1-chenhuacai@loongson.cn
-Signed-off-by: Niklas Cassel <cassel@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/ata/ahci.c    | 11 ++++++++++-
- drivers/ata/ahci.h    |  1 +
- drivers/ata/libahci.c |  4 ++++
- 3 files changed, 15 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/ata/ahci.c b/drivers/ata/ahci.c
-index f4cc57d7a6a65..6e81fa91e858b 100644
---- a/drivers/ata/ahci.c
-+++ b/drivers/ata/ahci.c
-@@ -63,6 +63,7 @@ enum board_ids {
- 	board_ahci_pcs_quirk_no_devslp,
- 	board_ahci_pcs_quirk_no_sntf,
- 	board_ahci_yes_fbs,
-+	board_ahci_yes_fbs_atapi_dma,
- 
- 	/* board IDs for specific chipsets in alphabetical order */
- 	board_ahci_al,
-@@ -188,6 +189,14 @@ static const struct ata_port_info ahci_port_info[] = {
- 		.udma_mask	= ATA_UDMA6,
- 		.port_ops	= &ahci_ops,
- 	},
-+	[board_ahci_yes_fbs_atapi_dma] = {
-+		AHCI_HFLAGS	(AHCI_HFLAG_YES_FBS |
-+				 AHCI_HFLAG_ATAPI_DMA_QUIRK),
-+		.flags		= AHCI_FLAG_COMMON,
-+		.pio_mask	= ATA_PIO4,
-+		.udma_mask	= ATA_UDMA6,
-+		.port_ops	= &ahci_ops,
-+	},
- 	/* by chipsets */
- 	[board_ahci_al] = {
- 		AHCI_HFLAGS	(AHCI_HFLAG_NO_PMP | AHCI_HFLAG_NO_MSI),
-@@ -590,7 +599,7 @@ static const struct pci_device_id ahci_pci_tbl[] = {
- 	{ PCI_DEVICE(PCI_VENDOR_ID_MARVELL_EXT, 0x91a3),
- 	  .driver_data = board_ahci_yes_fbs },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_MARVELL_EXT, 0x9215),
--	  .driver_data = board_ahci_yes_fbs },
-+	  .driver_data = board_ahci_yes_fbs_atapi_dma },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_MARVELL_EXT, 0x9230),
- 	  .driver_data = board_ahci_yes_fbs },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_MARVELL_EXT, 0x9235),
-diff --git a/drivers/ata/ahci.h b/drivers/ata/ahci.h
-index 8f40f75ba08cf..10a5fe02f0a45 100644
---- a/drivers/ata/ahci.h
-+++ b/drivers/ata/ahci.h
-@@ -246,6 +246,7 @@ enum {
- 	AHCI_HFLAG_NO_SXS		= BIT(26), /* SXS not supported */
- 	AHCI_HFLAG_43BIT_ONLY		= BIT(27), /* 43bit DMA addr limit */
- 	AHCI_HFLAG_INTEL_PCS_QUIRK	= BIT(28), /* apply Intel PCS quirk */
-+	AHCI_HFLAG_ATAPI_DMA_QUIRK	= BIT(29), /* force ATAPI to use DMA */
- 
- 	/* ap->flags bits */
- 
-diff --git a/drivers/ata/libahci.c b/drivers/ata/libahci.c
-index fdfa7b2662180..a28ffe1e59691 100644
---- a/drivers/ata/libahci.c
-+++ b/drivers/ata/libahci.c
-@@ -1321,6 +1321,10 @@ static void ahci_dev_config(struct ata_device *dev)
- {
- 	struct ahci_host_priv *hpriv = dev->link->ap->host->private_data;
- 
-+	if ((dev->class == ATA_DEV_ATAPI) &&
-+	    (hpriv->flags & AHCI_HFLAG_ATAPI_DMA_QUIRK))
-+		dev->quirks |= ATA_QUIRK_ATAPI_MOD16_DMA;
-+
- 	if (hpriv->flags & AHCI_HFLAG_SECT255) {
- 		dev->max_sectors = 255;
- 		ata_dev_info(dev,
--- 
-2.39.5
-
+BR, Jarkko
