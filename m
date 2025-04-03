@@ -1,42 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E5832857C3;
-	Thu,  3 Apr 2025 19:08:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70DC12857EB;
+	Thu,  3 Apr 2025 19:08:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743707323; cv=none; b=EpUexMsr4wPd5xxZpxkqjoGmPw3+CkZwGRDm0LxTKE7eFGdaF8aIrEw1u9S1ALDxW15iwd41UGyhAnS8qgr8mSDhAOsA2aF1vDEB11KXPUCQmlFYFaRkua84a98Tu22lLEThH0UexNC8S5HoMvYY7PLF/KCTbEsXKEMIq1sdyQo=
+	t=1743707324; cv=none; b=jmSHAfX5to7wolpCKkMtkcl3w8te0i7iLohQOOKPqt808LX5nt35YNlecdogO860EjdHQRAeptv0BaC0RnAKmWrmzB+GBiaoMeoLXcp1z3tF6rT1NiUeXOkduyyzBDufkH690FaZnaZyaDZGm30OZSVZy6hMvucWPzJ6EMHTB/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743707323; c=relaxed/simple;
-	bh=FmtfTcgXRwd5icoSyu2hOBExFaFZrMfBPbZexhhAIa4=;
+	s=arc-20240116; t=1743707324; c=relaxed/simple;
+	bh=7zBfxOeKowvILKEW1QSzrQZrveRRJM0g71wQQJo401k=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=qlvOBmebvcfDbmQ3WCGH4mIedqqckY/JJW/Zlio2LGzZLFUmmdY/J/buKkl8gd8e+n6VDKxnBZjAg91z7fQsX8iiAI8wFxiwJBVZbkPL3ZPGQsEMIOKO7VKIAmKX4tLx0x8I45UgAizNF0jZIq/UFzXseHa/Xc1k4HFjSJrJ92M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NOZpkSDy; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=hhROi5J2zC0k3WggMtohn+5CVYw1oSJiF1hFI/CED+Ndd7NQQR6GAxhE7BvB6vgyjeaD/yYx8USqhKgEMIUZhWJC83rDqYa5zPZLvky2NKZnmEsAw+fYGpgef3yzt8rJRxBgw7iMO7zjRzveyiuKvTGYblhOb2gJBqiJN8PxEe0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M5A32CgG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NOZpkSDy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A44C5C4CEEA;
-	Thu,  3 Apr 2025 19:08:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M5A32CgG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 538EFC4CEE9;
+	Thu,  3 Apr 2025 19:08:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743707321;
-	bh=FmtfTcgXRwd5icoSyu2hOBExFaFZrMfBPbZexhhAIa4=;
+	s=k20201202; t=1743707324;
+	bh=7zBfxOeKowvILKEW1QSzrQZrveRRJM0g71wQQJo401k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=NOZpkSDyAmfIJ3xZqo77xwcx9Jwrp0jR+Ghn6mAp+hUOBPunN/scVCD0jnePC3W8C
-	 YXXocMYubxSAI3gOcQmkDgdLRR6dPtehrWthLlg6kYcuJqH9XkzIlc4+CJkQwzQ4FA
-	 g+fBPMdRkuyDa+xtQ6mfwWnkObyodWKUN5Rc/Zh/YN1ltnnov5PEIYXPLa91IptOMc
-	 LhvDdM4Ssl2LgScTAo18xdQcj++WPDq5g0KaPMJP5/MClFfQXRV1jQ/R82lbgweLcb
-	 sHoSjpDSL/VbtDyBI0x8Dl/0KyJ8hq7MrpIGl5cTbTxbv4PU/6kqBTFbd1sTu2U5mo
-	 HsEEsM5YVpXRw==
+	b=M5A32CgG2boCZmt8otWIujz4BxW/Wc7jBUm/ULQ+KEo3CtN6eyiu6hLCJgk8VB9OC
+	 unJ6U9SBjtDaxshoU4sL3nSk6EIKSK6CNM8VZ2IHZDGcoSQJ+7Cx3uGG4RaNeVpwcf
+	 XWz5KiAMbz7r5YQYE9/V5njoMad8NuAL2ZhrzcrvfHPKJHLWOPSI9dxUGz9HElr0By
+	 f8eyhqORkCmOC5BIiE3FtgNXt4B92d/IzwrxKQxHSHLgQf1YTsyOKgmLGMK3rBULDb
+	 F2/fBOLA+QMQkzPkzv6+R9vCpMFr2b8ROxCOaUR0mXzOKoasl67J6RJ5M5Nh32nyr7
+	 AnqAfQCuSyUgw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Gabriele Paoloni <gpaoloni@redhat.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
+Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
 	Sasha Levin <sashal@kernel.org>,
-	mhiramat@kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 24/26] tracing: fix return value in __ftrace_event_enable_disable for TRACE_REG_UNREGISTER
-Date: Thu,  3 Apr 2025 15:07:43 -0400
-Message-Id: <20250403190745.2677620-24-sashal@kernel.org>
+	marcel@holtmann.org,
+	luiz.dentz@gmail.com,
+	linux-bluetooth@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 26/26] Bluetooth: qca: simplify WCN399x NVM loading
+Date: Thu,  3 Apr 2025 15:07:45 -0400
+Message-Id: <20250403190745.2677620-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250403190745.2677620-1-sashal@kernel.org>
 References: <20250403190745.2677620-1-sashal@kernel.org>
@@ -51,43 +52,53 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.85
 Content-Transfer-Encoding: 8bit
 
-From: Gabriele Paoloni <gpaoloni@redhat.com>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-[ Upstream commit 0c588ac0ca6c22b774d9ad4a6594681fdfa57d9d ]
+[ Upstream commit 1cc41b5092e3aa511454ec882c525af311bee631 ]
 
-When __ftrace_event_enable_disable invokes the class callback to
-unregister the event, the return value is not reported up to the
-caller, hence leading to event unregister failures being silently
-ignored.
+The WCN399x code has two separate cases for loading the NVM data. In
+preparation to adding support for WCN3950, which also requires similar
+quirk, split the "variant" to be specified explicitly and merge two
+snprintfs into a single one.
 
-This patch assigns the ret variable to the invocation of the
-event unregister callback, so that its return value is stored
-and reported to the caller, and it raises a warning in case
-of error.
-
-Link: https://lore.kernel.org/20250321170821.101403-1-gpaoloni@redhat.com
-Signed-off-by: Gabriele Paoloni <gpaoloni@redhat.com>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Signed-off-by: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/trace/trace_events.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/bluetooth/btqca.c | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index 9d22745cdea5a..b6fae597ee5ac 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -790,7 +790,9 @@ static int __ftrace_event_enable_disable(struct trace_event_file *file,
- 				clear_bit(EVENT_FILE_FL_RECORDED_TGID_BIT, &file->flags);
- 			}
- 
--			call->class->reg(call, TRACE_REG_UNREGISTER, file);
-+			ret = call->class->reg(call, TRACE_REG_UNREGISTER, file);
+diff --git a/drivers/bluetooth/btqca.c b/drivers/bluetooth/btqca.c
+index 892e2540f008a..5651f40db1736 100644
+--- a/drivers/bluetooth/btqca.c
++++ b/drivers/bluetooth/btqca.c
+@@ -807,6 +807,7 @@ int qca_uart_setup(struct hci_dev *hdev, uint8_t baudrate,
+ 		   const char *firmware_name)
+ {
+ 	struct qca_fw_config config = {};
++	const char *variant = "";
+ 	int err;
+ 	u8 rom_ver = 0;
+ 	u32 soc_ver;
+@@ -901,13 +902,11 @@ int qca_uart_setup(struct hci_dev *hdev, uint8_t baudrate,
+ 		case QCA_WCN3990:
+ 		case QCA_WCN3991:
+ 		case QCA_WCN3998:
+-			if (le32_to_cpu(ver.soc_id) == QCA_WCN3991_SOC_ID) {
+-				snprintf(config.fwname, sizeof(config.fwname),
+-					 "qca/crnv%02xu.bin", rom_ver);
+-			} else {
+-				snprintf(config.fwname, sizeof(config.fwname),
+-					 "qca/crnv%02x.bin", rom_ver);
+-			}
++			if (le32_to_cpu(ver.soc_id) == QCA_WCN3991_SOC_ID)
++				variant = "u";
 +
-+			WARN_ON_ONCE(ret);
- 		}
- 		/* If in SOFT_MODE, just set the SOFT_DISABLE_BIT, else clear it */
- 		if (file->flags & EVENT_FILE_FL_SOFT_MODE)
++			snprintf(config.fwname, sizeof(config.fwname),
++				 "qca/crnv%02x%s.bin", rom_ver, variant);
+ 			break;
+ 		case QCA_WCN3988:
+ 			snprintf(config.fwname, sizeof(config.fwname),
 -- 
 2.39.5
 
