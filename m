@@ -1,180 +1,103 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out162-62-58-216.mail.qq.com (out162-62-58-216.mail.qq.com [162.62.58.216])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4919823F422
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 07:20:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0560323F42D
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 07:21:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.216
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743664852; cv=none; b=g4H+lM0HUa2Avi0SgVSrV9XxcxRtDG4AJbz0EDtDSfJ3bupQC9uvzBUZ4bTytK5lQdrYi7ltQVUGJPZGD2OAOAxw3IMi37JdxhJ30ll3P6CNKcIvn997H9VvCau4eNCqti44EwI4dH9I+EJFQmyO7AtrORpbPi4eJW+9zijr1ho=
+	t=1743664876; cv=none; b=EWVy2z6DMlzAzffg7x4PYnSOpnrNerAnoxZPJSs10MuLmB5N0YS0nnWWhjkP/vO1XcibngxlCjvHWspfJxlH7jD9KO8jQW1VgavpfQc7uBxlLf2x7juMbAx8HyJycuy2foA7qTu4/oaVGITa1SGz2vhbU4JPZkS8+gsN7HNXZg8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743664852; c=relaxed/simple;
-	bh=TDd8xyaBgEDCBfuCTjYEiIFUCJncStQ1dkceRj+++oM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UEQ9ShRcwg5iv6SxZige/60vXKdomwxDou0TLp2XBOwgyvgfU9q+Q9/+S/ms32aDy4JCnVtorI7GdYpU7y5YoQ49laEkF3dkgdJ3YvfTGTvYb+8JqQj1ITemCeh0DViJKAmiPSERONtScy3/NwXCqQ+PLgt0bYt/3AdsY/wBXHw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=agKpocDz; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1743664876; c=relaxed/simple;
+	bh=t8LRvTdiBYb8hXqHpx+UHp8xb6coUEzGg4gDjL78BdI=;
+	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=pM19rl/+Hozh1stsAlwrf2l6kEC9b5Sd50ThvhkcblsgSwXJ3Sfvro5F629q5LjWPqFeRR+P5CFV59Mk3fcOuc8/jWX40v8rlVOXZUwMVxrHxtSJQw0X0kILcI1D7uIXCxGByKThrKeI6EQzXI5cV7VInXkv5gSlrIRAidysNUo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=vQ3gL+rU; arc=none smtp.client-ip=162.62.58.216
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="agKpocDz"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-391342fc1f6so458751f8f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 00:20:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1743664848; x=1744269648; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=BD756zHr8WEGmTWHUM//ivzbI/qlnCFevZCrnf/WSH0=;
-        b=agKpocDz+G3CdxzdhcmDvJ0LrcO/BzPV0zL3/zhw020oUIipit4+cBnA7Ppo0EVeEe
-         u8zfnJAfBg3tTgfqDCXwwYHDq9ezvk3xVgxeOLARfqLpg423sti3Yg1P66ZjSp/t1+4n
-         o/a7V/n/7h5jQvY66pRDFooBn43gBn3CwUI9RTnTWV1m4MOGYusHvdDu5n7sz0yQcZW4
-         mxj2YaWf2QKppsZU48utv1tZesINe4nb9bRuQMUA+256YgK2n1kF9xz33eJLB4msjDPZ
-         F24Xu4bTqYUaMJQaSgu8fjO6w3VigHSRTusah1S7UJbIimOrCcOrXImpdCr7FTBE69NS
-         ZZyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743664848; x=1744269648;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BD756zHr8WEGmTWHUM//ivzbI/qlnCFevZCrnf/WSH0=;
-        b=JsUQCz2WGs7KrL2oQP4KyHauCRdDWMWdmjcchQkb2ruy4yQEc45cFFtIbBFeJfhafe
-         l8l2oU299g7cmP5Q59biv1TCaoSyflUawAH8BeJdDb/64A6d2Tpu4IPIqGDYecNbXLwX
-         vJtBODO2Vi+sfT7hQTzckVYtJBLZ6iHWUSw2W1AsboU9mWTEupxZMzfG5q8gXK7OiUqe
-         2EGliR88iO19PAcjwIaAD1Etc9oVtwPetbRePOwmU9Mw0F5eeWf+D+chuylo9/f5luLT
-         yQta4kH+HFvrYaN1+s38oDffc8e6ZfQOYwnJJvL5ujPiZZCOBPOSBXOhuBOCKvby+BKV
-         mLLg==
-X-Forwarded-Encrypted: i=1; AJvYcCXvYl78uXJqosQhJUeXDJ9hkKaDOxpDcgpk/DUOkYaJudl7h9dwWoFKWFttRPGhcbfaakiNOcESpoI/h+I=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzma+FvxRyKrrvtIC2yWjIE8whycjXnEfSRRveta93eyh2tXRSU
-	KfS1aNAWG44depTt73YIyVpkJy3pYOmmCstac5iR1UM0s7Dd0S5oBaAvxReIYdk=
-X-Gm-Gg: ASbGncvHmp8NQ9QLztfNJJQzI9KGo5MG0sdlKOC+mbj13CL+O/MT3eWKwfXWTHHWlxU
-	jPB2mHC38qBBWH5HPSbzMltogMscB3WbkgUauJiKdAF5PFUeQgaetqzf7QVFlmxzP2uOYD9kTyM
-	Ne2oYjAYUKS7Fbg4/wFfpNR2RQcYlaOv10tUGSUrwhiUDx27Fbp7TLSW4Rk7v/d12X5JJt1M/Br
-	JzW/ADKS+1UlOG0sL7bmXLpNdcnLZRCS73o0i1tDHgaa0MSGrlVZrJd/L3vtwxiFA7HRuzUUgJP
-	stCocGBJc+q0y6YvGjvz+mFQ0JiEJaDn6iSwgx2KBMrFkd1sdwxAD1U=
-X-Google-Smtp-Source: AGHT+IESfTm4RoUHFqxbeSvl1MMbpOP8xDKxRWMnDQTPhoCmLYL/Nciczkpwk4voGMuKlOVx9Z7g9A==
-X-Received: by 2002:a05:6000:4021:b0:391:38a5:efa with SMTP id ffacd0b85a97d-39c120e07e4mr15863646f8f.23.1743664848526;
-        Thu, 03 Apr 2025 00:20:48 -0700 (PDT)
-Received: from localhost (109-81-82-69.rct.o2.cz. [109.81.82.69])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-43ec1663053sm13180535e9.15.2025.04.03.00.20.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Apr 2025 00:20:48 -0700 (PDT)
-Date: Thu, 3 Apr 2025 09:20:46 +0200
-From: Michal Hocko <mhocko@suse.com>
-To: Shakeel Butt <shakeel.butt@linux.dev>
-Cc: Dave Chinner <david@fromorbit.com>, Yafang Shao <laoar.shao@gmail.com>,
-	Harry Yoo <harry.yoo@oracle.com>, Kees Cook <kees@kernel.org>,
-	joel.granados@kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-	linux-mm@kvack.org, Vlastimil Babka <vbabka@suse.cz>
-Subject: Re: [PATCH] proc: Avoid costly high-order page allocations when
- reading proc files
-Message-ID: <Z-42znN1q7dVNM-h@tiehlicka>
-References: <20250401073046.51121-1-laoar.shao@gmail.com>
- <3315D21B-0772-4312-BCFB-402F408B0EF6@kernel.org>
- <Z-y50vEs_9MbjQhi@harry>
- <CALOAHbBSvMuZnKF_vy3kGGNOCg5N2CgomLhxMxjn8RNwMTrw7A@mail.gmail.com>
- <Z-0gPqHVto7PgM1K@dread.disaster.area>
- <Z-0sjd8SEtldbxB1@tiehlicka>
- <Z-2pSF7Zu0CrLBy_@dread.disaster.area>
- <b7qr6djsicpkecrkjk6473btzztfrvxifiy34u2vdb4cp5ktjf@lvg3rtwrbmsx>
- <Z-3i1wATGh6vI8x8@dread.disaster.area>
- <7gmvaxj5hpd7aal4xgcis7j7jicwxtlaqjatshrwrorit3jwn6@67j2mc6itkm6>
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="vQ3gL+rU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1743664868; bh=OpjX7re8NPi1tJd+wCQMYrDRx68gd4pxONw2WALjE4k=;
+	h=From:To:Cc:Subject:Date;
+	b=vQ3gL+rU1fAni7cLRr0SuWVwiv1Oy68SO2MI21iJaxp2zJtdXIrNAdC8Ce0wdyu2W
+	 rNwOq/uwLD6syqjOcQfG2Jg2/vH2XhZPIto1f9alQIqimAJOUGj6S0OL45NdAZYvLS
+	 I9i6nfsTvlq/1xHVzJ5IBnjsdnLld/sqxXQ/p9k0=
+Received: from localhost.localdomain ([116.128.244.169])
+	by newxmesmtplogicsvrszb20-0.qq.com (NewEsmtp) with SMTP
+	id 546986F6; Thu, 03 Apr 2025 15:21:06 +0800
+X-QQ-mid: xmsmtpt1743664866t9jej133b
+Message-ID: <tencent_A9D89C90E6484E0EBFED4F67D6EF4589F506@qq.com>
+X-QQ-XMAILINFO: MB5+LsFw85No9MP5Y6U8o890FzRKoBecWJRn708CXoeLJTvdfQvvMiZLSeSzyn
+	 2V8b2qwtUPGf1t9b4s+iugup7TxVZZ0hetYQhmK9IAhrDt9R8aFfTwpRJ6No+cWEUUSV39j8Xc8C
+	 08TCD3dqEDjlmfCLajaZAypaYiQCS0avAcRjqx+oiKTCWlqzYvjqkaBqYF03Xz0i8NYKDYq7IW+Q
+	 JUMoD4BvwEt5WtAQsmHhvU0WKYCAoL4lOjdvUmEEQikVT7pLHClcciVRWc4aKsL7z1uKOph9Z4U8
+	 5Yhkd2H+jF+K8ekUWBC0BSHZYvQRF92RQyAuIPlX1pCkZ7xIrNtr3h09B3Ou5qlBmMzJIiTEJoBR
+	 Dy0H6y6wjxvzmWKnSRDnNHceOqiAxSKQyz256q5bNHOvyu8UMaR2cete9J466xIFKYKt+xNbfNPx
+	 YARPEBik/vxsjqERMc9mx/iRFjAGaRjZ2bxrpsT8JVrEpizuLnKrt2oweCRxFElOBKfpoIBw0Ocf
+	 GCtmUjWjSVf75JSryVjkJlD9Awn3V6gTmUgU646ZZA5t5f96Ia7k0Y9LLbMi/WeOfoCmBYC5ulMY
+	 sG3j/IqMEprBhn01+NsEg7iWwmccToZ+xJkBG9kAvqHLSI1+JQ2GlwK6LCM+f/7bwgJt+YE/L7wd
+	 bdjmatFTal+o7eAN91UxNGFxy4kXAuX+y1IYOWmtjWwkYm5o32COYgRi7dLNEt3uuTIR9b239D5B
+	 dL3FMrTrStw6XtUCI5fO17tGdBNOfnQ9wtM7h/IApPjstEbp9h4LY668NH1PdAUzPcnhpWIED9JC
+	 ZMzmnsRhCN1zm7rEEo0Tj9nzNBUbvxZ3l2UoIkZgEpoyhYtqJ/nGtYhEA2DQZZFOjEdhjTS+VLXs
+	 0zk3ROCG2opeudrEUmV1092cdpEu2OqBSehKzYPDFseohTj5oN8QrtN0mnGRD0AfY4ZcjmZzQ+wM
+	 YUnwm3X7wWfyw/vTaE52t3FbxSR25W
+X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
+From: Yaxiong Tian <iambestgod@qq.com>
+To: kbusch@kernel.org,
+	axboe@kernel.dk,
+	hch@lst.de,
+	sagi@grimberg.me,
+	chaitanyak@nvidia.com
+Cc: linux-nvme@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Yaxiong Tian <tianyaxiong@kylinos.cn>
+Subject: [PATCH v4 0/3] nvme: Add sysfs interface for APST configuration management
+Date: Thu,  3 Apr 2025 15:21:02 +0800
+X-OQ-MSGID: <20250403072102.1204659-1-iambestgod@qq.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7gmvaxj5hpd7aal4xgcis7j7jicwxtlaqjatshrwrorit3jwn6@67j2mc6itkm6>
+Content-Transfer-Encoding: 8bit
 
-On Wed 02-04-25 22:05:57, Shakeel Butt wrote:
-> On Thu, Apr 03, 2025 at 12:22:31PM +1100, Dave Chinner wrote:
-> > On Wed, Apr 02, 2025 at 04:10:06PM -0700, Shakeel Butt wrote:
-> > > On Thu, Apr 03, 2025 at 08:16:56AM +1100, Dave Chinner wrote:
-> > > > On Wed, Apr 02, 2025 at 02:24:45PM +0200, Michal Hocko wrote:
-> > > > > On Wed 02-04-25 22:32:14, Dave Chinner wrote:
-> > > > > > Have a look at xlog_kvmalloc() in XFS. It implements a basic
-> > > > > > fast-fail, no retry high order kmalloc before it falls back to
-> > > > > > vmalloc by turning off direct reclaim for the kmalloc() call.
-> > > > > > Hence if the there isn't a high-order page on the free lists ready
-> > > > > > to allocate, it falls back to vmalloc() immediately.
-> > > > > > 
-> > > > > > For XFS, using xlog_kvmalloc() reduced the high-order per-allocation
-> > > > > > overhead by around 80% when compared to a standard kvmalloc()
-> > > > > > call. Numbers and profiles were documented in the commit message
-> > > > > > (reproduced in whole below)...
-> > > > > 
-> > > > > Btw. it would be really great to have such concerns to be posted to the
-> > > > > linux-mm ML so that we are aware of that.
-> > > > 
-> > > > I have brought it up in the past, along with all the other kvmalloc
-> > > > API problems that are mentioned in that commit message.
-> > > > Unfortunately, discussion focus always ended up on calling context
-> > > > and API flags (e.g. whether stuff like GFP_NOFS should be supported
-> > > > or not) no the fast-fail-then-no-fail behaviour we need.
-> > > > 
-> > > > Yes, these discussions have resulted in API changes that support
-> > > > some new subset of gfp flags, but the performance issues have never
-> > > > been addressed...
+From: Yaxiong Tian <tianyaxiong@kylinos.cn>
 
-I, at least, was not aware of the performance aspect. We are trying to
-make kvmalloc as usable as possible to prevent its open coded variants
-to grow in subystems.
+This series enhances NVMe APST (Autonomous Power State Transition) support by:
+1. Adding warnings for PST table allocation failures
+2. Exposing APST tables via sysfs for runtime inspection
+3. Providing per-controller sysfs interface for APST configuration
 
-> > > > > kvmalloc currently doesn't support GFP_NOWAIT semantic but it does allow
-> > > > > to express - I prefer SLAB allocator over vmalloc.
-> > > > 
-> > > > The conditional use of __GFP_NORETRY for the kmalloc call is broken
-> > > > if we try to use __GFP_NOFAIL with kvmalloc() - this causes the gfp
-> > > > mask to hold __GFP_NOFAIL | __GFP_NORETRY....
+The changes allow better visibility and control of power management settings
+through userspace tools while maintaining the existing functionality.
 
-Correct.
+Yaxiong Tian (3):
+  nvme: Add warning for PST table memory allocation failure in
+    nvme_configure_apst
+  nvme: add sysfs interface for APST table updates
+  nvme: add per-controller sysfs interface for APST configuration
 
-> > > > We have a hard requirement for xlog_kvmalloc() to provide
-> > > > __GFP_NOFAIL semantics.
-> > > > 
-> > > > IOWs, we need kvmalloc() to support kmalloc(GFP_NOWAIT) for
-> > > > performance with fallback to vmalloc(__GFP_NOFAIL) for
-> > > > correctness...
+Changes in v2
 
-Understood.
+Add mutex_lock in nvme_set_latency_tolerance() for Potential competition 
+between nvme_set_latency_tolerance() and apst_update_store().
 
-> > > Are you asking the above kvmalloc() semantics just for xfs or for all
-> > > the users of kvmalloc() api? 
-> > 
-> > I'm suggesting that fast-fail should be the default behaviour for
-> > everyone.
-> > 
-> > If you look at __vmalloc() internals, you'll see that it turns off
-> > __GFP_NOFAIL for high order allocations because "reclaim is too
-> > costly and it's far cheaper to fall back to order-0 pages".
-> > 
-> > That's pretty much exactly what we are doing with xlog_kvmalloc(),
-> > and what I'm suggesting that kvmalloc should be doing by default.
-> > 
-> > i.e. If it's necessary for mm internal implementations to avoid
-> > high-order reclaim when there is a faster order-0 allocation
-> > fallback path available for performance reasons, then we should be
-> > using that same behaviour anywhere optimisitic high-order allocation
-> > is used as an optimisation for those same performance reasons.
-> > 
-> 
-> I am convinced and I think Michal is onboard as well for the above. At
-> least we should try and see how it goes.
+Changes in v3
+In  PACH nvme: add sysfs interface for APST table updates,Add why dynamic APST 
+updates are needed in the commit message, fix code formatting issues. 
 
-If we find out that this doesn't really work because a fragmentation
-of page blocks is a real problem then we might need to reconsider this.
+https://lore.kernel.org/all/tencent_4612952C8C5109058CD8E688D81276A2FD0A@qq.com/
 
-> > The overall __GFP_NOFAIL requirement is something XFS needs, but it
-> > is most definitely not something that should be enabled by default.
-> > However, it needs to work with kvmalloc(), and it is not possible to
-> > do so right now.
-> 
-> After the kmalloc(GFP_NOWAIT) being default in kvmalloc(), what remains
-> to support kvmalloc(__GFP_NOFAIL)? (Yafang mentioned vmap_huge)
+Changes in v4
+Avoid the overly long line in patch (nvme: Add warning for PST table memory allocation 
+failure in nvme_configure_apst)
 
-We already do support kvmalloc(__GFP_NOFAIL) since 9376130c390a7 IIRC.
+ drivers/nvme/host/core.c  | 24 ++++++++++------
+ drivers/nvme/host/nvme.h  |  6 ++++
+ drivers/nvme/host/sysfs.c | 59 +++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 81 insertions(+), 8 deletions(-)
 
 -- 
-Michal Hocko
-SUSE Labs
+2.25.1
+
