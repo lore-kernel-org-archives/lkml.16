@@ -1,66 +1,66 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8305B24C689
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 08:59:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A108243951
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 08:59:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743670769; cv=none; b=W6bTd90n0Qnip3awXKImUP8yEJIGTxZgcPk2Cv2YLseOMvUUI1i/Z4HJ1V9g0K66KmybLO8UhN/rqSFL9yXEVxPqWV5hQteHkllBhdBQ2vZu50JScJqTiEEuogx/fHMLUc2cpszGM6YeUHGySkCuiZtzWV73vYN+5OIgkm5YgWg=
+	t=1743670770; cv=none; b=YgwyTRev7tOswrjb/25npa8lSqJD3Bez9WKOht5TInc2nxkCqZlZl4MZFNJnFoubWYSokHSEGAlOPS40RqUnaU1c0ZWEUB/CWGgptKKMhoqkF8rdUfvoIgkl9Cvhjxc3NNp/n9divUMHvQAlp/wCkkIF5JJ4+x5yAaxuNkrpC7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743670769; c=relaxed/simple;
-	bh=OstHPLtut+rInIwPbWUGG5F4uJhc1s8p9YL3Yn+eQfw=;
+	s=arc-20240116; t=1743670770; c=relaxed/simple;
+	bh=X823p7d8VeG19dJIhYLsSWA3HtswWk7j0eIGd+yYPcU=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=bYbtgIIeki062T2n3vqCiezKKHXd2gDIL2LKE0SZUyFDOO6TgG9buykb//B63VVLZFNKCBL3nQV5nXCMFIEe3qGr/pb+dDW8OwvNIeRpAcZ7qXCC58M45S8kgTnElKW/3Fd7MtonnzdpHNdOOQjYkfYHFSjhZU121ajWWyCq6cQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=a0/vvPQJ; arc=none smtp.client-ip=209.85.208.53
+	 In-Reply-To:To:Cc; b=P7ClEStqj3ZJRb3IT/doHXKrKTYKGItLX+WTd4+fCJ0E42adG8icpmvDJtiw6rfDFG27tWQ5ltSnrQD1Jo+lp0T4LVI1l/jZcKLU+3+vnPyoX8ZaoykF2F57pDVXhp/39ezy+VilcFCDSPrvo/gkReaW/q+uNjXmeoaRPPIrips=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Hhk8vDhb; arc=none smtp.client-ip=209.85.208.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="a0/vvPQJ"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5e686d39ba2so1271133a12.2
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 01:59:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Hhk8vDhb"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5e5e22e6ed2so1027425a12.3
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 01:59:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743670757; x=1744275557; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1743670758; x=1744275558; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=5zOrAobgqux207RdFFKdVSyI3bSrdsl4WaNtosICsko=;
-        b=a0/vvPQJ3FYrLA2YsMerto3UUJnPQNJcOSWbV78Xf/+9Y8scEybfd9wx0+nCwPBjoT
-         9/g7VDYzXVO9oOuheWQnlDIbcN/gyuvKFotrrLuYDNMTqHBxN4G/uMdq9/q/6qTA/191
-         a/M61ijIigm/uAaspNgGatMc8MBxlgAnooBdaorUGW1MyYIO/s2diRzqEqhIL4zkp15w
-         lPlxAocEKnkg3gRWneFoJLiKJLxH4MSsDNJJ8ygZwZzwHi/YCxLkJp8+dzFR4+iRh2JT
-         Xy4DnknyNT/9pW8Uzfwn2akXdYNcWkNmA2LvEXFWAp4d7/jhXjk/K3UQCnU7eZBcHWFo
-         BGsg==
+        bh=5TCn0wifCdb3UC3ucEx7Zkhg1UJ6ww+TPiSGCbm38yQ=;
+        b=Hhk8vDhbqcYUwCwLviKA6jMQYEXZJsFvuMh8G+Xqvfdnf2TKNr0cc1BjulGiJ/rXlj
+         GsFFn/4bG+va3UMLRfaFSkYMY3d84AKVFWFXQAU9SrSByg/0//BUbzK7J1OnXa7DGgKD
+         4hd0Jqcx1KpjeojwJCkAZfVLUU6UP2HIvkscBwtJJKDkauUVoJe1htL7wKTKwxZyS3PG
+         /lpiDyrO6MkTboVoXfTxqZTFbnc9mhizkOpLAhlVqVtASUfsPKc+1p4MiP6eCueamnsu
+         o5MO68lllCRJZEx6/2sIhoyqxKOqq34CkWBzSf85cX9eoWOrN3MeXfd0Df+BDtCmIiY6
+         6ygg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743670757; x=1744275557;
+        d=1e100.net; s=20230601; t=1743670758; x=1744275558;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=5zOrAobgqux207RdFFKdVSyI3bSrdsl4WaNtosICsko=;
-        b=TOpXj4IPq29cBXUNzOzpKVQXmQn8Zm6y5ywQdl9V8dL5dnEvjMHAEi9eR+1RgesHq9
-         fMCgtWSIBBVlDY0ZYD/rB7XAVozGxx/o4rBIJoulgYxu11aVCNkw1eQIWSq2TcEmDuPA
-         fNYQeHHekPT0kuw3lVw6qRUYAcM1tf727Wv48mXQoFpQAaF7nIuQLDhWusEoD/QvxO0Q
-         BNdeAzHqo9B5ePBb0adVDI3Qc9K+QxEUIdSwl30gYYiTeeKcWNOipTcv7wuVEFuynUxz
-         cBkm8G1cws81f1GVQTXUNyKUWnBtZgUz/t+2jMwR+ST+GMXRkCD9PjUwwlS78ItDuc5V
-         zvqA==
-X-Forwarded-Encrypted: i=1; AJvYcCVr0SMv3OkdSjQ5gs8qzPMHGtULYzDYIZnZTwI0mLFC1qjF6pCLx74EDpzrPmI4WpEBy2K9BJ/03j2UqTk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywz+x2hgN0Ah6Jf/mzW8Po91MU3jYvBvjXlqhEVVpoLOojyTjXS
-	nD6HEw+vzP3GNk5kCTsO6+BEYgG4ddMh7t8DbZoYVOcsIjfT/WQN48/QmETn/04=
-X-Gm-Gg: ASbGncttrTZKewXsyA9L52HVTxbIN5/QAKU7uV/Ief+XYRegQrqSnbQxlwa06LaeDt7
-	9jbXY05ufBwCLceD/v5VNscv962e1pHsGh1Mlwk54rQ7Hpx47ABlNaJtQFA/qKIIzr2AC0tkTaL
-	kOMcHtMxbg0lsDFhfACCqibZaK0h8dVmJGhVjGe/postlu9NEwLLlSHJNYBFAA+y5pBUYnnG2o6
-	KWjte/IECtZCwSywf/mO2ilRQ11Lx0b26oCzT/zTNdFTFjEkTJAHWc30Ak3em2+qs2CPXBaCyql
-	jIBHzHKoCB/SnqmmUwYj6oyeQJcNZDUpXDqRNc/30nsk23/S5j2d4sRYsaXEmMAAeT09kaXPjic
-	i6qpuFEFsr6eXaD+nd22hHDXl8GN4
-X-Google-Smtp-Source: AGHT+IHsXg/hWI5W6L2JAbs5tQ+hU9M5VZLzhEtJEwJ8sjShCEtp9J7Km89nFH/JtsSi3gQsvsWdtA==
-X-Received: by 2002:a05:6402:5114:b0:5e5:bb58:d6bd with SMTP id 4fb4d7f45d1cf-5f09300645cmr1255191a12.10.1743670757293;
+        bh=5TCn0wifCdb3UC3ucEx7Zkhg1UJ6ww+TPiSGCbm38yQ=;
+        b=SRB3Sz5F5sH50dNKc5RmL6N0mytsTbyVrv+MxPUHTIGzNLmZVYAO+wiM7Efi1Pl9w1
+         wTBhHP8TWfJl+YNSVZrY3ca86qmYzkNrquoGma6zqFoBGe4CkCKOT06Nl20+mp/KsMQ9
+         CirL6qRbQ8GcScWG5gtgrjB8TCxe+1zLLQG4Uv090/zVLmgYy/kgMHYTCBbCjHnAP1V+
+         uEm5+1VMRRCz+/DwC/aTrGefBXW70rBJUd6jbWuFp3lTkuafOaQMSerdPJk3kxbbwj5Q
+         5xZxZ3R0zxTKHc7uipPpQZZvek4PSblZceLKjFyFKTsgXLgCZKUP6A7zfznNkgSZKZgp
+         pSQg==
+X-Forwarded-Encrypted: i=1; AJvYcCWUfj70ltW3mz/3v9g6Lu2POIVvkYt3BbWoYdhpeOCvUMWGzb+VRP5cdz14kbd5wDp/p0Kghd+5X8b9rtM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxMtN9CEXSdPW4bvkOz3mra7HPUGtis+lUgVVool9M8ubJPD7lh
+	8ky2CmU5FJKHOpGZvJimUFoJfy9cTNdT0aCAe2aIgmtjYdDDVcD1VjyfIQDNls8=
+X-Gm-Gg: ASbGncs8Y5yUncPnGIGUOypWZ2udawM5rXMiaCVR4DSO80yfzr6u6l+sJMkDzt5L5j3
+	cpYrXJotjvVnx0wrZaMsrmOSm9KHEHPxShLaCvfJL0OaqzXHPEQ3J0omyBsK8P2jZkSj6loF88S
+	CZmDzB3jgumaLFeE42uxxdpbaSYZnln3nW7bz+eubLVbmCN+vmZ8TxObfQEBbjsg9KNACFhAIL1
+	7yMzTSmjLZZmC51GAUCWcKOh6njp1NxoEwjmPbb2bdaaVNVTSBvtlNPKf+Utm149VCJgny4vpXJ
+	GP4NgK+Nj3PhmOWVJ3CshwqlLL7I8xHcgwKn6X14UV3bwJcFY3ztJtTlkz7MkkwNzKKNO49CXT4
+	Y0fDqy3T7CQXwKYkPXl/3Ife/SbI96fX6/xhDrA4=
+X-Google-Smtp-Source: AGHT+IGkYnX6rQ6GWjWnABJsBjhI2LJzWv6z53In1ISOpBusxw5cuCX0wciz6W5/efFFB3SIsEOq4g==
+X-Received: by 2002:a17:907:d25:b0:abf:4708:8644 with SMTP id a640c23a62f3a-ac738bbebedmr1751267266b.43.1743670757782;
         Thu, 03 Apr 2025 01:59:17 -0700 (PDT)
 Received: from puffmais.c.googlers.com (8.239.204.35.bc.googleusercontent.com. [35.204.239.8])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f0880a535fsm637614a12.80.2025.04.03.01.59.16
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f0880a535fsm637614a12.80.2025.04.03.01.59.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Apr 2025 01:59:16 -0700 (PDT)
+        Thu, 03 Apr 2025 01:59:17 -0700 (PDT)
 From: =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
-Date: Thu, 03 Apr 2025 09:59:20 +0100
-Subject: [PATCH v3 28/32] rtc: s5m: fix a typo: peding -> pending
+Date: Thu, 03 Apr 2025 09:59:21 +0100
+Subject: [PATCH v3 29/32] rtc: s5m: switch to devm_device_init_wakeup
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,7 +69,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250403-s2mpg10-v3-28-b542b3505e68@linaro.org>
+Message-Id: <20250403-s2mpg10-v3-29-b542b3505e68@linaro.org>
 References: <20250403-s2mpg10-v3-0-b542b3505e68@linaro.org>
 In-Reply-To: <20250403-s2mpg10-v3-0-b542b3505e68@linaro.org>
 To: Krzysztof Kozlowski <krzk@kernel.org>, Lee Jones <lee@kernel.org>, 
@@ -89,38 +89,34 @@ Cc: Peter Griffin <peter.griffin@linaro.org>,
  =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
 X-Mailer: b4 0.14.2
 
-Fix this minor typo, and adjust the a related incorrect alignment to
-avoid a checkpatch error.
+To release memory allocated by device_init_wakeup(true), drivers have
+to call device_init_wakeup(false) in error paths and unbind.
+
+Switch to the new devres managed version devm_device_init_wakeup() to
+plug this memleak.
 
 Signed-off-by: André Draszik <andre.draszik@linaro.org>
 ---
- drivers/rtc/rtc-s5m.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/rtc/rtc-s5m.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/rtc/rtc-s5m.c b/drivers/rtc/rtc-s5m.c
-index 0d8783577bab4f4ebe61050dbd68387d970773bd..7b00e65bdd9c25b3426f92355f8ea36e66c3939f 100644
+index 7b00e65bdd9c25b3426f92355f8ea36e66c3939f..e8e442c503064eb4e570af5bf7dcff6bfa7f4656 100644
 --- a/drivers/rtc/rtc-s5m.c
 +++ b/drivers/rtc/rtc-s5m.c
-@@ -243,8 +243,8 @@ static int s5m8767_wait_for_udr_update(struct s5m_rtc_info *info)
- 	return ret;
- }
+@@ -779,7 +779,11 @@ static int s5m_rtc_probe(struct platform_device *pdev)
+ 			return dev_err_probe(&pdev->dev, ret,
+ 					     "Failed to request alarm IRQ %d\n",
+ 					     info->irq);
+-		device_init_wakeup(&pdev->dev, true);
++
++		ret = devm_device_init_wakeup(&pdev->dev);
++		if (ret < 0)
++			return dev_err_probe(&pdev->dev, ret,
++					     "Failed to init wakeup\n");
+ 	}
  
--static int s5m_check_peding_alarm_interrupt(struct s5m_rtc_info *info,
--		struct rtc_wkalrm *alarm)
-+static int s5m_check_pending_alarm_interrupt(struct s5m_rtc_info *info,
-+					     struct rtc_wkalrm *alarm)
- {
- 	int ret;
- 	unsigned int val;
-@@ -451,7 +451,7 @@ static int s5m_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alrm)
- 
- 	dev_dbg(dev, "%s: %ptR(%d)\n", __func__, &alrm->time, alrm->time.tm_wday);
- 
--	return s5m_check_peding_alarm_interrupt(info, alrm);
-+	return s5m_check_pending_alarm_interrupt(info, alrm);
- }
- 
- static int s5m_rtc_stop_alarm(struct s5m_rtc_info *info)
+ 	if (of_device_is_system_power_controller(pdev->dev.parent->of_node) &&
 
 -- 
 2.49.0.472.ge94155a9ec-goog
