@@ -1,61 +1,63 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49AC0241681
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 11:32:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9CAA24A06C
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 11:32:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743679936; cv=none; b=dgJYXovymwkCVIJOtYrxBVOK8yNkVhZCWlBPY1kUYFLRbDRINwiI6QBqOZAlrK640FGdXg97eShKXeUy3Matzy4nJknmbnElIlQhwbdl2z3rdDzq4p62pgihZ4CP4JBzce2MZJaRHm6VALaNLLMtFfDTyZpLAGiZJkda1JubDfg=
+	t=1743679935; cv=none; b=SZBJfnRlxdn/oNqDy61bAKu4XfYrDv0C3R2jE6qG03/xn3qO9s2RtxaZQ75ngJBayY6z/LHU6/WXqoOhtHBHRBybaWGwIgr0SBOJdIIwVgx/zaSUyafr5h6DpnN+8uZMaw1S/XkO8m6EsjHX0dcu/No9U8bhVwteka2BerlvhMA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743679936; c=relaxed/simple;
-	bh=81CpPwNVUGBQ1IoKRd80/VDp98uX+46nUa94lnHysns=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=IDuc0WpdNZuGs50mswBuobB+JvtxeWumd1Kw6WKik26mbEhNnuFlcs2D9hj+8CG9ZbPUhB8beduCOqtUTkmaR+dTpMHgqw67dgcUxQDVnH7k0DxLr64HeOoUhRthgtkRou0QBRxt3Tm6n8pP+wu1FGeR1PVBsr+JBY9tQkxBVkA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=oTL+AHk7; arc=none smtp.client-ip=209.85.221.44
+	s=arc-20240116; t=1743679935; c=relaxed/simple;
+	bh=jffCTzK2ifUcsRuyU60Vh5EyDsYilh1FFdL2XDp/iQo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SH6Z3bMkfuXOoxg1ZOk3dE1AfDj2zVKSJJV0MDhxvj1OddNJCVQ4qzbbRRzVhONDH5SCtMlLxdQ8w9girhVMikI9MQmjzu1o4mHRh6weZj4XUMMgaZ2svlnzKGwxWH6weC3+xRgllNzWMGyWz3v4fMFUveP1z0LYj6IHT6XYGCc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=QkYw8+K8; arc=none smtp.client-ip=209.85.221.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="oTL+AHk7"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3996683dd7bso101710f8f.3
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 04:32:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="QkYw8+K8"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3912a28e629so59555f8f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 04:32:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1743679931; x=1744284731; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=uzJLKlljfvfxPvPUZeysuKSPBVSnoaOxnTXwCnBbatE=;
-        b=oTL+AHk7+pdvW5O7QsSLK/sZQdf3BBDK02IqEFHix6agx98uX8T80Om0DHAqkdHpI9
-         nuHSyQ9vMDfGmcy5Nd1fYOqIp+28n6omrSLUQicbqSbCaEp2aA2OaO7jTg3SyulDnsDq
-         6G/jncpJskUQIWpvBcP36mCX+zSKzQFMKnUg5aukK+c+qKSNIN6zVzZ6zp52pK1yOrHv
-         OqAy+JUlv7XIkAfSKequUVwQwirUwY9s9XzZ5ZcxffQajs1rKaLcm9V+o+zkiwMBjaUu
-         gvfyIC1uJmsQalCasQTq/7NSeX0tESCI9XFRbgk2GhJrPHN8fc+sc1kNHjEjxZg4j9gM
-         J9VQ==
+        d=ventanamicro.com; s=google; t=1743679932; x=1744284732; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=M+bBWXikjKTcV8ccgilNOkXVbdx4GamWUb2bvML3ssQ=;
+        b=QkYw8+K8Y1aOHkQhVnDONrAN5/+jtuBP/vOoVOcOluUnlXSx2nXcK+dr0u9Q0YWrvW
+         67sdppl95BJWLI6Tw4gVIyx6EDhRyIgN4TKqCvRBlNcabHVpsjhZ5+Tk6NZUHTPTViiY
+         fy92jQwedB2hJ1e292umhzjbdRWI5pM1MGaUfN2Zr55Isrs1BewFInpv69FId6Q9Y/GL
+         L/rLTS7HCiUX5w3c5yvpM4FUEMOOwkIU4paO+QZDPh5q1XwTZiWSR5z6VM5ThxCY1UsD
+         +LEKzvC/RYKFQPRm/JOUP8IWoNEdOq+yyMtubegsxExpxmXoTi4z3JgA/dahzbUV/KEv
+         ehXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743679931; x=1744284731;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=uzJLKlljfvfxPvPUZeysuKSPBVSnoaOxnTXwCnBbatE=;
-        b=cgqmhmLLAalsWzExjNN0sS97udevTmAGmJgJd1KXgKqa+0CvGIFtiD1KvYGZaLzkoC
-         TBzbwrfWiF2nPza2gzTrA2NYkT86pzyLCqFr9pQV/cly7U3vUtMaFIwm2MApjf//4PuW
-         7dJeap46yLhafwiIUewMRDK2ruNJr/J8TeDadOQAxf5h6yaHw1uFvBr4VVFqHpS/0siI
-         yXEOIB95EvvPKFz+6XP+SuRxADmy9AT9J3LT6EgCBIZr7DvxUDAPyzF1l/ijQ5Yan8XR
-         qfb1LS08vkYw5ONh7F7ONz2YtGW/wJ/u4gMiLx/kGAs5aLZ/QPd0IwGIwRbxqbHTDynA
-         jSIg==
-X-Forwarded-Encrypted: i=1; AJvYcCUkEakpdkaxQWFUSq+wm+HfDSv/Lg9Mn1A9KlKs9eFl6mRq5n4fSULe0reFOimWTkLbZAjzMoyXGKgqUTg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwFz4Ii9v/gnU2QRyFX3N2dzziNxo1gCz0Etb4Ma6iI4l7nGgdj
-	NJWf3siYJpUK3d1K6kg/Q/1jeWzTLZlpyKHyXktyloEcegeiTNCSo6SLXcrMERk=
-X-Gm-Gg: ASbGnctWGj7j6dY3031gakhho9q27i0o7USGYxstLKmIMC6JimRR+drNKGxgFfSBABS
-	vU37e8CEI1zld+XEhBrNN0jdS7gzc4Ssa6YP87gHBgNdykQejnM29sohSMA3mCeM0zx0iATUwVU
-	oECLWIEOP9Q/dDVSP/zXRKIEmNMrWxuvZ+qXQxd9c602M7uLY1zAGuU+rjHr5qvhEraTdg+X8a7
-	YAPvzLfSweMi9vsAJc7iDCRRSbl7ccfG+ZNCmTsvUcoJecEfEdBKSwVyC9F5WW7V5ORxFbKkIT0
-	477XgTqjV8odPGVkXmKCpVYIHmg9pcOow97SdpxibIsKF650887wj389qQ6bH6mo2apzwHMcJ61
-	Pcw==
-X-Google-Smtp-Source: AGHT+IH6xifwXMVfMLClIlm2BzAh7GveRJDcwc65VzrAXzSC6fsdF3OjurjTLfO2TtkYTUXlVLDtBQ==
-X-Received: by 2002:a5d:64e9:0:b0:391:2a9a:47a6 with SMTP id ffacd0b85a97d-39c120db3demr6114098f8f.4.1743679931180;
-        Thu, 03 Apr 2025 04:32:11 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743679932; x=1744284732;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=M+bBWXikjKTcV8ccgilNOkXVbdx4GamWUb2bvML3ssQ=;
+        b=xEoTPEZGN0ce6S6idyqu5UmbEuV0i+EDq0wfqFw5mNECJ2WrKhS6FDaOowfBZccTwf
+         2xLaaq1qZADrfjR4WMQ6C4UQ9rVSjZROkBmAWTEQ+UiE21X/Ep0x1d5f7ZRf7tB30irl
+         BFJuvAAg4kYoVnonYC4gtWeK+mgQIo1AojEunTarzFlMY6ZoZpj+dBGG5YKin+vEE9Ri
+         v0SObRB4iHn5hhJVQFBPeJqXYgOOstd3BGCiWPPVxqhK8xV2IVJ02RvVnq8xixj90E0g
+         gek4sPHiksp0Pz9NO8KszCuvAzhhhsYwpKsw4GRc2BahDwNbIEb9ImetYuHDhxQCdG4G
+         Sflw==
+X-Forwarded-Encrypted: i=1; AJvYcCXsgocnffTNspwqc3cLzGBpQVZIXs5E/52XJWlkH3m2JNMNLzSMegczYiPtRrel/9Ho8ojXCwyNL6ExGt0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzCV0rTejUMhtaaPC03hV5LpWTq2EKqMh1m3qfU/CSiyCHeFsnO
+	DUgEw+08LNiyK/2CMnQ4dmt9jbGzaLAnWDdBHTMzdxBIPho8+8EN3wnVtqAK7oc=
+X-Gm-Gg: ASbGnctLuNJ0l+TWyfmBM8WkbndWALH+J2Z/FC5DImlC2XhDrB0QsxdbTFObi27yqjq
+	AIL1guGT+nlz8SNBqTcDoMBAeuO+mz9BtJbmona6hG19Hhc+a44f48eBmHrl10Fk2S2gYHhQ78D
+	98NUoiehL+wrAy5RGIc8/pneoI27+QnP39y3MyE/3/T0pBxrI0VjGDAn6nxxDrZv4xT+Xx3vJpX
+	MgeNroQW6Sb3/C7dwNig+g4pdLIp5J5czffa4sBcTn+NpGOjq7ggfWCgOpmmKlIkYMvA6O7vBA8
+	9yPpJHveifPWd8n9m2MqCjpwtSX1/jz4h0ALUcDAkVk4UoEFNDGkuu/I0pXEy2MEkVdL0bIPMB7
+	HjQ==
+X-Google-Smtp-Source: AGHT+IFKuI/VQYzBaPbrBORZ5Fz1t5HIbnJ+TER1Sbfneisom4goMlCFQ2arAW6gwbRupN7/O0Rx8w==
+X-Received: by 2002:a05:6000:144a:b0:391:29ab:c9df with SMTP id ffacd0b85a97d-39c2470802cmr3357803f8f.4.1743679932289;
+        Thu, 03 Apr 2025 04:32:12 -0700 (PDT)
 Received: from localhost (cst2-173-141.cust.vodafone.cz. [31.30.173.141])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec3669d0fsm15884455e9.36.2025.04.03.04.32.10
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec366a699sm15541695e9.38.2025.04.03.04.32.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Apr 2025 04:32:10 -0700 (PDT)
+        Thu, 03 Apr 2025 04:32:11 -0700 (PDT)
 From: =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@ventanamicro.com>
 To: kvm-riscv@lists.infradead.org
 Cc: kvm@vger.kernel.org,
@@ -69,10 +71,12 @@ Cc: kvm@vger.kernel.org,
 	Alexandre Ghiti <alex@ghiti.fr>,
 	Andrew Jones <ajones@ventanamicro.com>,
 	Mayuresh Chitale <mchitale@ventanamicro.com>
-Subject: [PATCH 0/5] KVM: RISC-V: VCPU reset fixes
-Date: Thu,  3 Apr 2025 13:25:19 +0200
-Message-ID: <20250403112522.1566629-3-rkrcmar@ventanamicro.com>
+Subject: [PATCH 1/5] KVM: RISC-V: refactor vector state reset
+Date: Thu,  3 Apr 2025 13:25:20 +0200
+Message-ID: <20250403112522.1566629-4-rkrcmar@ventanamicro.com>
 X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250403112522.1566629-3-rkrcmar@ventanamicro.com>
+References: <20250403112522.1566629-3-rkrcmar@ventanamicro.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -82,56 +86,112 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hello,
+Do not depend on the reset structures.
 
-this series started with a simple fix [5/5], which sadly didn't fix
-enough without [4/5].  [1-3/5] are refactors to make the reset a bit
-easier to follow.  ([1-3,5/5] are applicable without [4/5].)
+vector.datap is a kernel memory pointer that needs to be preserved as it
+is not a part of the guest vector data.
 
-[4/5] changes the userspace ABI and I'd like to gather your opinions on
-how the ABI is supposed to work.
+Signed-off-by: Radim Krčmář <rkrcmar@ventanamicro.com>
+---
+ arch/riscv/include/asm/kvm_vcpu_vector.h |  6 ++----
+ arch/riscv/kvm/vcpu.c                    |  5 ++++-
+ arch/riscv/kvm/vcpu_vector.c             | 13 +++++++------
+ 3 files changed, 13 insertions(+), 11 deletions(-)
 
-As another proposal, what do you think about an IOCTL that allows
-userspace to invoke any KVM SBI ecall?
-Userspace could call the KVM HSM implementation to reset and start a
-VCPU, but I think that kvm_mp_state is an SBI HSM interface, so we have
-an obscure IOCTL for it already.
-I was also thinking about using KVM_MP_STATE_UNINITIALIZED to
-distinguish that KVM should reset the state when becoming runnable.
-
-I recommend to start with the following hunk in [4/5], as it's the only
-significant part of this series:
-
-  @@ -520,6 +525,10 @@ int kvm_arch_vcpu_ioctl_set_mpstate(struct kvm_vcpu *vcpu,
-   
-   	switch (mp_state->mp_state) {
-   	case KVM_MP_STATE_RUNNABLE:
-  +		if (riscv_vcpu_supports_sbi_ext(vcpu, KVM_RISCV_SBI_EXT_HSM) &&
-  +				vcpu->arch.ran_atleast_once &&
-  +				kvm_riscv_vcpu_stopped(vcpu))
-  +			kvm_riscv_vcpu_sbi_request_reset_from_userspace(vcpu);
-
-Thanks.
-
-Radim Krčmář (5):
-  KVM: RISC-V: refactor vector state reset
-  KVM: RISC-V: refactor sbi reset request
-  KVM: RISC-V: remove unnecessary SBI reset state
-  KVM: RISC-V: reset VCPU state when becoming runnable
-  KVM: RISC-V: reset smstateen CSRs
-
- arch/riscv/include/asm/kvm_aia.h         |  3 --
- arch/riscv/include/asm/kvm_host.h        | 13 +++--
- arch/riscv/include/asm/kvm_vcpu_sbi.h    |  5 ++
- arch/riscv/include/asm/kvm_vcpu_vector.h |  6 +--
- arch/riscv/kvm/aia_device.c              |  4 +-
- arch/riscv/kvm/vcpu.c                    | 69 +++++++++++++++---------
- arch/riscv/kvm/vcpu_sbi.c                | 28 ++++++++++
- arch/riscv/kvm/vcpu_sbi_hsm.c            | 13 +----
- arch/riscv/kvm/vcpu_sbi_system.c         | 10 +---
- arch/riscv/kvm/vcpu_vector.c             | 13 ++---
- 10 files changed, 97 insertions(+), 67 deletions(-)
-
+diff --git a/arch/riscv/include/asm/kvm_vcpu_vector.h b/arch/riscv/include/asm/kvm_vcpu_vector.h
+index 27f5bccdd8b0..57a798a4cb0d 100644
+--- a/arch/riscv/include/asm/kvm_vcpu_vector.h
++++ b/arch/riscv/include/asm/kvm_vcpu_vector.h
+@@ -33,8 +33,7 @@ void kvm_riscv_vcpu_guest_vector_restore(struct kvm_cpu_context *cntx,
+ 					 unsigned long *isa);
+ void kvm_riscv_vcpu_host_vector_save(struct kvm_cpu_context *cntx);
+ void kvm_riscv_vcpu_host_vector_restore(struct kvm_cpu_context *cntx);
+-int kvm_riscv_vcpu_alloc_vector_context(struct kvm_vcpu *vcpu,
+-					struct kvm_cpu_context *cntx);
++int kvm_riscv_vcpu_alloc_vector_context(struct kvm_vcpu *vcpu);
+ void kvm_riscv_vcpu_free_vector_context(struct kvm_vcpu *vcpu);
+ #else
+ 
+@@ -62,8 +61,7 @@ static inline void kvm_riscv_vcpu_host_vector_restore(struct kvm_cpu_context *cn
+ {
+ }
+ 
+-static inline int kvm_riscv_vcpu_alloc_vector_context(struct kvm_vcpu *vcpu,
+-						      struct kvm_cpu_context *cntx)
++static inline int kvm_riscv_vcpu_alloc_vector_context(struct kvm_vcpu *vcpu)
+ {
+ 	return 0;
+ }
+diff --git a/arch/riscv/kvm/vcpu.c b/arch/riscv/kvm/vcpu.c
+index 60d684c76c58..2fb75288ecfe 100644
+--- a/arch/riscv/kvm/vcpu.c
++++ b/arch/riscv/kvm/vcpu.c
+@@ -57,6 +57,7 @@ static void kvm_riscv_reset_vcpu(struct kvm_vcpu *vcpu)
+ 	struct kvm_vcpu_csr *reset_csr = &vcpu->arch.guest_reset_csr;
+ 	struct kvm_cpu_context *cntx = &vcpu->arch.guest_context;
+ 	struct kvm_cpu_context *reset_cntx = &vcpu->arch.guest_reset_context;
++	void *vector_datap = cntx->vector.datap;
+ 	bool loaded;
+ 
+ 	/**
+@@ -79,6 +80,8 @@ static void kvm_riscv_reset_vcpu(struct kvm_vcpu *vcpu)
+ 
+ 	kvm_riscv_vcpu_fp_reset(vcpu);
+ 
++	/* Restore datap as it's not a part of the guest context. */
++	cntx->vector.datap = vector_datap;
+ 	kvm_riscv_vcpu_vector_reset(vcpu);
+ 
+ 	kvm_riscv_vcpu_timer_reset(vcpu);
+@@ -143,7 +146,7 @@ int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
+ 	cntx->hstatus |= HSTATUS_SPV;
+ 	spin_unlock(&vcpu->arch.reset_cntx_lock);
+ 
+-	if (kvm_riscv_vcpu_alloc_vector_context(vcpu, cntx))
++	if (kvm_riscv_vcpu_alloc_vector_context(vcpu))
+ 		return -ENOMEM;
+ 
+ 	/* By default, make CY, TM, and IR counters accessible in VU mode */
+diff --git a/arch/riscv/kvm/vcpu_vector.c b/arch/riscv/kvm/vcpu_vector.c
+index d92d1348045c..a5f88cb717f3 100644
+--- a/arch/riscv/kvm/vcpu_vector.c
++++ b/arch/riscv/kvm/vcpu_vector.c
+@@ -22,6 +22,9 @@ void kvm_riscv_vcpu_vector_reset(struct kvm_vcpu *vcpu)
+ 	struct kvm_cpu_context *cntx = &vcpu->arch.guest_context;
+ 
+ 	cntx->sstatus &= ~SR_VS;
++
++	cntx->vector.vlenb = riscv_v_vsize / 32;
++
+ 	if (riscv_isa_extension_available(isa, v)) {
+ 		cntx->sstatus |= SR_VS_INITIAL;
+ 		WARN_ON(!cntx->vector.datap);
+@@ -70,13 +73,11 @@ void kvm_riscv_vcpu_host_vector_restore(struct kvm_cpu_context *cntx)
+ 		__kvm_riscv_vector_restore(cntx);
+ }
+ 
+-int kvm_riscv_vcpu_alloc_vector_context(struct kvm_vcpu *vcpu,
+-					struct kvm_cpu_context *cntx)
++int kvm_riscv_vcpu_alloc_vector_context(struct kvm_vcpu *vcpu)
+ {
+-	cntx->vector.datap = kmalloc(riscv_v_vsize, GFP_KERNEL);
+-	if (!cntx->vector.datap)
++	vcpu->arch.guest_context.vector.datap = kzalloc(riscv_v_vsize, GFP_KERNEL);
++	if (!vcpu->arch.guest_context.vector.datap)
+ 		return -ENOMEM;
+-	cntx->vector.vlenb = riscv_v_vsize / 32;
+ 
+ 	vcpu->arch.host_context.vector.datap = kzalloc(riscv_v_vsize, GFP_KERNEL);
+ 	if (!vcpu->arch.host_context.vector.datap)
+@@ -87,7 +88,7 @@ int kvm_riscv_vcpu_alloc_vector_context(struct kvm_vcpu *vcpu,
+ 
+ void kvm_riscv_vcpu_free_vector_context(struct kvm_vcpu *vcpu)
+ {
+-	kfree(vcpu->arch.guest_reset_context.vector.datap);
++	kfree(vcpu->arch.guest_context.vector.datap);
+ 	kfree(vcpu->arch.host_context.vector.datap);
+ }
+ #endif
 -- 
 2.48.1
 
