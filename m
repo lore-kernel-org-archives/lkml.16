@@ -1,74 +1,60 @@
-Received: from mail-pj1-f67.google.com (mail-pj1-f67.google.com [209.85.216.67])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9CDF28FF;
-	Thu,  3 Apr 2025 06:28:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.67
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8328219F416;
+	Thu,  3 Apr 2025 06:32:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743661700; cv=none; b=pCSmje+h0F2KXzDpacJNM/YPfZYTP9NsJKQU8M/nvUjRaMDH3Bng7Vx5eiBiNSirGcrLTY9qm9GgUbfGzG8tkck2Y8zbmuOt6HGdpuNWrtwYllilGISGUV70ArbWKv9i4InCD9+F7Ehv/CRWM0QfRIp5wZprFOBQyYodFjpIzcE=
+	t=1743661958; cv=none; b=bSDaeHAhhvqExBurs9teAkgaHVP85OSSp8Mqs9sKnDtLuHGMFtlv5FTz4PUpT0X9w6TatY6oRSMOLhjUWtdm64rJOoQVUEaNmgrUMYtU6gF3LYO1rH+MpZIvbA7pXyHV2JnxPfoilVbk0hw+pLoO/QtXt9ldFjooibLF4HP6Zgg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743661700; c=relaxed/simple;
-	bh=x8cKCl7UMMbwrccfbeSRllIxdCYB9+ViYGvLRKmaVAA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lVOxYtbvYlZDmh9dJ7Uax7NDS5g6IrdpZhMdJ6kHONG5GnQileEu8eb/fVDSdwphofGU0ahOe99+vScFr/PPLZrL3Y47WSkSyMMHN6EMkSGrwB2KgFBCjmEQ4ETO1/DyQV5CkvTHtNtcKUUqvHsQsjSk9KHMmfmV8/LBYSx3oEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SMnQTYgx; arc=none smtp.client-ip=209.85.216.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743661958; c=relaxed/simple;
+	bh=j7Ru8mv8vnhUetnXdIui0NsBTj10RY4l3etu2Ql1sBw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tuYCb335O45tS5UQrSi3rlRUVer+yieXSHo/rp99kNkxPHRcmlsSpqEa9PPIfOYuoY0wP7Fi7nGUTtiK0+6bPhL8KtAoxxJvoRRTzyj2gpyQ5x3hwi3zIkCHv4qJxFBg9AuG56AuWT7xE5Qrza1uo+2RsvE2mR2oGjVH03wtho0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=Z45EOcJu; arc=none smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SMnQTYgx"
-Received: by mail-pj1-f67.google.com with SMTP id 98e67ed59e1d1-301918a4e3bso512254a91.3;
-        Wed, 02 Apr 2025 23:28:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743661697; x=1744266497; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=zv2Eim6EJxK+6ui7lY93m7UU37Cs8RrVaOWKjl9KmMc=;
-        b=SMnQTYgxz+BZ8jEv3v0sBuR9qT2AJGvYazfW70/pHreJ8hBPrRTKgxEujA7441E0T9
-         16WMu7ea4kw69ckQh1yNhJ22sRyj7JPQM1sWc6bFan959fPAKL00wHRsrK1P7lLbYs2k
-         b6Etzq1pPUvAUSopyWA+jUSz2lYv/F1CfNmIzvJhKjGmwGu6dvhnRvk6mZWVmuEbsWRE
-         vMXjslq5wrmq+3HXa/BIdkQpqqtO6pewbpgEl/GBMXFISoO16S0kjv6cQz7UzvhIV+w7
-         CInBeuIF2e4ql07NfvI2wp95MEfdGB2bnaJrn60PizgRqer/O+LjkTCqktoYwhi+FxSB
-         JElQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743661697; x=1744266497;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zv2Eim6EJxK+6ui7lY93m7UU37Cs8RrVaOWKjl9KmMc=;
-        b=gog6pzrHB4kiPb1Sh0PTu2RiqRnSJRbJepNho3zvJhy9rcTb+W7+Rlr6RQB3d7zbYW
-         bMWs5fr1v4wShOYqAl2g8Ab0i8cRWtppaSbyK3mlywOzQg0BWL0CFQ1aDcx7/WZ7TQl0
-         vm5A/xEMQW/akkYNjRqm769ZbffZy3bKNpSqvN1Kj5YsDGhR7t4gYmjd/SDJrySs3nru
-         SV8tIwKw84wCnYEm8P3PbvD57t/jFzImEh7m6a6Pi9OPJDDsjmCYmLte1YVWaiNm4fDY
-         7RSjNGsIoZmD0FMRf0KecgYPKXIY1xuGPiWbpv/fhnOkTcE/POpxfmFhNXAqQFhZ59tR
-         5WYA==
-X-Forwarded-Encrypted: i=1; AJvYcCXYlZq4AdiGXIehl6JQAcB8hN9SIV/Fv8Z/UW8y7oSG0P8YDN6uZk39Vke3sU7tvDSoOcmhoBBmg9qHGNY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz8C1Pi/CVwBXFfqpFhKRc3JmuGzPFmFz5hzmqffXXRLirPEH73
-	+Q2rsu+Ovd+uuvaHIRGpQAOL6+ICwUxybCq2fRizo1NKZC2SAzov
-X-Gm-Gg: ASbGncsjJF2S428Wp1fEe+Q20uSCtZDB4zsquJLl0Ry6889rcjjt5mHWc05U00Sgrvv
-	1GvHhDI2qVBxepwRb/8PRp1WWDGImsozO4k4AyB1CqO1b1wcfVjuTalAMp6hJaEp0HsivfUKIcK
-	XtrZNZsahf0EEg48pGq80WPX12h1LqFxS1/cs/U0BIikkRHJfQGtqo4jSeuR9XUDHr82LPmi+MZ
-	yQJZXDu0/b5aeWt9ybor5bSDlM7W9fkU6zBCwwo+s1pU0FOgaENki/pRNurA58BbQwOJC5lofDv
-	dZ8QZxi06AP4e9ZK/JHet5v2kQooL4jpZAMjHOPfgrmdQfn71mRhnV9sgx+T/2SurCyRtsA=
-X-Google-Smtp-Source: AGHT+IH3/7oQDppEuWcYDFvnSNSVp2KWqayWvGz4NpuF6q5e1fxmt66vYC1luZBtdcGvzxbf+Tt5KA==
-X-Received: by 2002:a17:90a:c88f:b0:2ff:5016:7fd2 with SMTP id 98e67ed59e1d1-3053215e085mr32933013a91.24.1743661696860;
-        Wed, 02 Apr 2025 23:28:16 -0700 (PDT)
-Received: from henry.localdomain ([111.202.148.167])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3057ca5163fsm926950a91.19.2025.04.02.23.28.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Apr 2025 23:28:16 -0700 (PDT)
-From: Henry Martin <bsdhenrymartin@gmail.com>
-To: gregkh@linuxfoundation.org,
-	jirislaby@kernel.org,
-	sugaya.taichi@socionext.com,
-	orito.takao@socionext.com,
-	u.kleine-koenig@baylibre.com
-Cc: linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Henry Martin <bsdhenrymartin@gmail.com>
-Subject: [PATCH v1] serial: Fix null-ptr-deref in mlb_usio_probe()
-Date: Thu,  3 Apr 2025 14:28:08 +0800
-Message-Id: <20250403062808.63428-1-bsdhenrymartin@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Z45EOcJu"
+Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 532NMpAn032002;
+	Thu, 3 Apr 2025 06:32:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=corp-2023-11-20; bh=TdjQnHvAXtYqsVzceeZ1eHE+nHufv
+	Tv/MEQX+acT2uQ=; b=Z45EOcJuDyVW5dcnnjqa0vSdflpHFBJkf4/iWEwd6O015
+	65r71ZjwnGWvql4qP1B6CjxiFhowVMHIzrINIeqW36GGcF14IbuFdfA2M5Lk1k3t
+	edWxamrk9IeaPQ8URk2vtlMACGrOpFH5FDoe8IwA031yM52ug2+CXb4FAJo29xmT
+	PWqy/CXmTxrWItZhrBCoXgoehFKYoVmurl7YcL2CAO7ViOb9WYEGdZ9XTzGU9PwZ
+	5MEeCZ6YUFDx749E6zC025mlAuR4UChICsirHp+UoONSFJiKSy1tweI68H7pkQUr
+	N5YXjROF1p5E8yK/pC86E94ec81SDz8LvpAtJ0TCw==
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 45p8fscgj4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 03 Apr 2025 06:32:31 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 5334ocZ4002579;
+	Thu, 3 Apr 2025 06:32:30 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 45pr8stj51-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 03 Apr 2025 06:32:30 +0000
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 5336WTx3032092;
+	Thu, 3 Apr 2025 06:32:30 GMT
+Received: from localhost.localdomain (ca-dev80.us.oracle.com [10.211.9.80])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 45pr8stj4h-1;
+	Thu, 03 Apr 2025 06:32:29 +0000
+From: Dongli Zhang <dongli.zhang@oracle.com>
+To: virtualization@lists.linux.dev, kvm@vger.kernel.org,
+        netdev@vger.kernel.org
+Cc: mst@redhat.com, jasowang@redhat.com, michael.christie@oracle.com,
+        pbonzini@redhat.com, stefanha@redhat.com, eperezma@redhat.com,
+        joao.m.martins@oracle.com, joe.jin@oracle.com, si-wei.liu@oracle.com,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/9] vhost-scsi: log write descriptors for live migration (and three bugfix) 
+Date: Wed,  2 Apr 2025 23:29:45 -0700
+Message-ID: <20250403063028.16045-1-dongli.zhang@oracle.com>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,34 +62,90 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-03_02,2025-04-02_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 adultscore=0
+ mlxlogscore=999 mlxscore=0 phishscore=0 suspectscore=0 spamscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2502280000 definitions=main-2504030033
+X-Proofpoint-ORIG-GUID: t6yg06fUEEFEuMNQhy6DMoBp1QzRoUiE
+X-Proofpoint-GUID: t6yg06fUEEFEuMNQhy6DMoBp1QzRoUiE
 
-devm_ioremap() returns NULL on error. Currently, mlb_usio_probe() does
-not check for this case, which results in a NULL pointer dereference.
+The live migration with vhost-scsi has been enabled by QEMU commit
+b3e89c941a85 ("vhost-scsi: Allow user to enable migration"), which
+thoroughly explains the workflow that QEMU collaborates with vhost-scsi on
+the live migration.
 
-Add NULL check after devm_ioremap() to prevent this issue.
+Although it logs dirty data for the used ring, it doesn't log any write
+descriptor (VRING_DESC_F_WRITE).
 
-Fixes: ba44dc043004 ("serial: Add Milbeaut serial control")
-Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
----
- drivers/tty/serial/milbeaut_usio.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+In comparison, vhost-net logs write descriptors via vhost_log_write(). The
+SPDK (vhost-user-scsi backend) also logs write descriptors via
+vhost_log_req_desc().
 
-diff --git a/drivers/tty/serial/milbeaut_usio.c b/drivers/tty/serial/milbeaut_usio.c
-index 059bea18dbab..4e47dca2c4ed 100644
---- a/drivers/tty/serial/milbeaut_usio.c
-+++ b/drivers/tty/serial/milbeaut_usio.c
-@@ -523,7 +523,10 @@ static int mlb_usio_probe(struct platform_device *pdev)
- 	}
- 	port->membase = devm_ioremap(&pdev->dev, res->start,
- 				resource_size(res));
--
-+	if (!port->membase) {
-+		ret = -ENOMEM;
-+		goto failed;
-+	}
- 	ret = platform_get_irq_byname(pdev, "rx");
- 	mlb_usio_irq[index][RX] = ret;
- 
--- 
-2.34.1
+As a result, there is likely data mismatch between memory and vhost-scsi
+disk during the live migration.
+
+1. Suppose there is high workload and high memory usage. Suppose some
+systemd userspace pages are swapped out to the swap disk.
+
+2. Upon request from systemd, the kernel reads some pages from the swap
+disk to the memory via vhost-scsi.
+
+3. Although those userspace pages' data are updated, they are not marked as
+dirty by vhost-scsi (this is the bug). They are not going to migrate to the
+target host during memory transfer iterations.
+
+4. Suppose systemd doesn't write to those pages any longer. Those pages
+never get the chance to be dirty or migrated any longer.
+
+5. Once the guest VM is resumed on the target host, because of the lack of
+those dirty pages' data, the systemd may run into abnormal status, i.e.,
+there may be systemd segfault.
+
+Log all write descriptors to fix the issue.
+
+In addition, the patchset also fixes three bugs in vhost-scsi.
+
+Changed since v1:
+  - Rebase on top of most recent vhost changes.
+  - Don't allocate log buffer during initialization. Allocate only once for
+    each command. Don't free until not used any longer.
+  - Add bugfix for vhost_scsi_send_status().
+Changed since v2:
+  - Document parameters of vhost_log_write().
+  - Use (len == U64_MAX) to indicate whether log all pages, instead of
+    introducing a new parameter.
+  - Merge PATCH 6 and PATCH 7 from v2 as one patch, to Allocate for only
+    once in submission path in runtime. Reclaim int
+    VHOST_SET_FEATURES/VHOST_SCSI_SET_ENDPOINT.
+  - Encapsulate the one-time on-demand per-cmd log buffer alloc/copy in a
+    helper, as suggested by Mike.
+
+Dongli Zhang (vhost-scsi bugfix):
+  vhost-scsi: protect vq->log_used with vq->mutex
+  vhost-scsi: Fix vhost_scsi_send_bad_target()
+  vhost-scsi: Fix vhost_scsi_send_status()
+
+Dongli Zhang (log descriptor, suggested by Joao Martins):
+  vhost: modify vhost_log_write() for broader users
+  vhost-scsi: adjust vhost_scsi_get_desc() to log vring descriptors
+  vhost-scsi: log I/O queue write descriptors
+  vhost-scsi: log control queue write descriptors
+  vhost-scsi: log event queue write descriptors
+  vhost: add WARNING if log_num is more than limit
+
+ drivers/vhost/scsi.c  | 264 ++++++++++++++++++++++++++++++++++++++++-----
+ drivers/vhost/vhost.c |  46 ++++++--
+ 2 files changed, 273 insertions(+), 37 deletions(-)
+
+
+base-commit: ac34bd6a617c03cad0fbb61f189f7c4dafbbddfb
+branch: remotes/origin/linux-next
+tree: https://git.kernel.org/pub/scm/linux/kernel/git/mst/vhost.git
+
+Thank you very much!
+
+Dongli Zhang
 
