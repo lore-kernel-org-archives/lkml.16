@@ -1,183 +1,183 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBC3524CEE5;
-	Thu,  3 Apr 2025 15:23:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0300A2505D6;
+	Thu,  3 Apr 2025 15:23:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743693800; cv=none; b=eGUKtxzXpxJNwAhrPPxuFvxrsGrmm62n68BgogqsIXFWNxzOv8dnScpfLomV2Er2kPEgf7FPiI9K5Kl8K38/W4RFUiU84/sA/Bd7r+lOQIzqK8+2EvX5mpdckwLQGuQf0MctcmBARj6Oq55o95Yf2OVlACyRCAmyMBrOSdQ29m0=
+	t=1743693825; cv=none; b=LDOwPLVG0kGytA2AceMewtQSaXL7D0Ml1qFJQuJspmlsngUzfsIiLAHGV8wMOfvIdf/tFElAqaw4GSPalmTedxyv04e+i30aYC2I9izs++rOUfHwDxmzKH5frXOTIY8/K939ETjlMtIg4FQGIq+xdUcqK6SSMb6EbNL0FrO5M8Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743693800; c=relaxed/simple;
-	bh=6ZFaM/Uvwrkarz4SIQ5+CwXUuMrp3QkS4FpU3Q8kCKU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=O0h6mcqovC3onpnvEQq/fMC86yECR4ZiWXaQNpi2rRp3i6r0rcmNkOBd55dd6JPvNgPXcmJUGLM/mNucc0Iwf41fUBgEHm7yLF8oHVZjFujZmV8fncQ0B1wYjpvZ+AZxtoW/3Bh/+b0XRBTbd9pmlw/JeCA+awi6ZfIXtUzpGZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=QiZ9KL90; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743693825; c=relaxed/simple;
+	bh=0rzr3+1EKy2s0lYSqwKrAgJ24jrlfxrDyurHnT3rTjo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MryQ+NkAHwaR+Xe29tYbpBeFqT72LI+vMlK/PmmHxPZzoTfsiUtbmwtk+G08JdFh+gO1Lz5gjF2ENHktA5efVYQqo+ejEejIa0BvP8myQgm8MGnnNw9IwnW51o4Ii3Aa4L9JcKTEp2AJLq3G1m39dBzjY/Nxm8Nm69xPPicV2eY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=is4MODbn; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="QiZ9KL90"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DE23C4CEE3;
-	Thu,  3 Apr 2025 15:23:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1743693799;
-	bh=6ZFaM/Uvwrkarz4SIQ5+CwXUuMrp3QkS4FpU3Q8kCKU=;
-	h=From:To:Cc:Subject:Date:From;
-	b=QiZ9KL90481kNW4i2W9iQvuJzEvjruf/nTcf4kWgSxiANkHQnAB22hnblsFMLWW3D
-	 CBCT3rldjvvDOWz+P/aUgaTl2hNKUMD+64tlhkUOaF2qekmYxJw4ff8Qoha8BXttm8
-	 Agq5TMAhoBDM9zfWGYbEzS9tMfkIY1df+yrsmDcw=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: stable@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	torvalds@linux-foundation.org,
-	akpm@linux-foundation.org,
-	linux@roeck-us.net,
-	shuah@kernel.org,
-	patches@kernelci.org,
-	lkft-triage@lists.linaro.org,
-	pavel@denx.de,
-	jonathanh@nvidia.com,
-	f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com,
-	srw@sladewatkins.net,
-	rwarsow@gmx.de,
-	conor@kernel.org,
-	hargar@microsoft.com,
-	broonie@kernel.org
-Subject: [PATCH 6.1 00/22] 6.1.133-rc1 review
-Date: Thu,  3 Apr 2025 16:19:55 +0100
-Message-ID: <20250403151620.960551909@linuxfoundation.org>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="is4MODbn"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-3032aa1b764so829962a91.1;
+        Thu, 03 Apr 2025 08:23:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743693823; x=1744298623; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=rdXwfXpVZ0DoDhTpXcomK86T+y8d/zsLL6G5IX+ENN4=;
+        b=is4MODbnqJ+hsJMF2UHBZ7ho+9pmNGZ3GBJDNATGBVzskn99ZW+OLsA16s7zRf15yC
+         60bFYIGR6ybMow7IfNT4FXJjabu1sP7BFbbDWal9XQzleOm54OIFhz8OqBrArKZaz1UE
+         uJpEq6OzLykGYpT4ddu8xNWZ0drcU9HIEdolSPdrCzF+4/pmZMjcTs6U4B7YlthgFej4
+         K06L+hYgnoaEfB+APAmSO7KEB+R3wdfbjf/1Yw1lAWuyWuv8Dr25vGknNZuWzpPwG0BO
+         CKEE8QQ+CChNVv0jJxFMdYdCbn/OkxTdypR1oJRkPgU1xllc20UOL68kIb1QWRykkJhb
+         vVxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743693823; x=1744298623;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=rdXwfXpVZ0DoDhTpXcomK86T+y8d/zsLL6G5IX+ENN4=;
+        b=VoP4RaYgWDgXOtRo6EWWN/b7BvBRHKgGuuTbi/Cqe3QHRwXAbaBnyjFkdGIuqoLBOE
+         PylH8DnzwoVzCam+XtT5cRXInIonw6I9UG0BH+VbLSmyq/PcwofypF4c7BCukr0rdUd/
+         RI67LareNnpSqYBR/ve0J5FSx7ZFH7v0rkPW0SJFHzPWw6l4K4+r3LV3wWyaqjR0uRU8
+         BuhD7ds0RUBSUZy0FYnr9EuspNNnRvEND7j0506YtuqAistHa3VfauWZFSajHjRRDb0p
+         wfFL3YDckDF1nITancoDtQ73jH/ML7XFyMgG9y83WGS6t/RFPMR/ah/FJsOBbA3q3coj
+         q65g==
+X-Forwarded-Encrypted: i=1; AJvYcCVo68Zun7MpjCqjawH5YNaEO+rQaftRxeJQ2HTroEHBG818CtxCv1MRIeI5psT0vBfxc+5lfhXSu/CFW7I=@vger.kernel.org, AJvYcCWYROlh6WUcG1sHFPR4qrufuf7I7pdYJ87QTd39bZb/pnzY9syJXFIYQ9D8+5bc9DRWFfBHDTrJX0UFRlkspAZ3Mw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZprdn++pvrnxXzGHiDyIm7Lv9lH60/kg51C5K6jfxvHvj7suv
+	WLZSqMQDxpBbqUKkN8udDACyC+NICPPmNmLvRuEybyMWjZWBP1am
+X-Gm-Gg: ASbGncsBwhC4Kw43Qi+iABHWRuFotSoXXFuZXqAf4jij9RXrFDw8LWxsHWT2+1HLMNx
+	wEdPUQu4WwDBlHPUULu2Xe0xBMvTyYlkz5sGg1l78zEQSKGdA2MUJRu0GQ6kmBj4WwUtZV2LbkB
+	rOwvzCvZpDMe61g7mm0/XBJcdKkpaBYf6ckVTAWHNxUrfnNUU5AWDLxsoyKMrmtCD3HgAr94TFm
+	vXNRyRWNhrSeZOgs9dR/h7xtvY6bgokGdPQFcfk9eMKm8Vam5GXtt78LnxSCom7suOmOyn2WmAw
+	maB9zkMu+4VEKR6yfnthXTk7nGyoOaxwDfonQKoxa3qQ
+X-Google-Smtp-Source: AGHT+IGgDqNSkiZ/1y0n4ex34i9tdTgxiA1kQ24PuisY0GpK5fEv6qK05oKY6Sj+Y5rZ3NPeA8r9JQ==
+X-Received: by 2002:a17:90b:35c2:b0:2ee:d63f:d8f with SMTP id 98e67ed59e1d1-30531fa5fbcmr30989502a91.13.1743693822517;
+        Thu, 03 Apr 2025 08:23:42 -0700 (PDT)
+Received: from localhost ([216.228.125.129])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30588a30f00sm1638289a91.26.2025.04.03.08.23.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Apr 2025 08:23:41 -0700 (PDT)
+Date: Thu, 3 Apr 2025 11:23:39 -0400
+From: Yury Norov <yury.norov@gmail.com>
+To: Ian Rogers <irogers@google.com>
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Darren Hart <dvhart@infradead.org>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	=?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>,
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+	James Clark <james.clark@linaro.org>,
+	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Al Viro <viro@zeniv.linux.org.uk>, Kyle Meyer <kyle.meyer@hpe.com>,
+	Ben Gainey <ben.gainey@arm.com>,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+	Kajol Jain <kjain@linux.ibm.com>,
+	Aditya Gupta <adityag@linux.ibm.com>,
+	Eder Zulian <ezulian@redhat.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	Kuan-Wei Chiu <visitorckw@gmail.com>, He Zhe <zhe.he@windriver.com>,
+	Dirk Gouders <dirk@gouders.net>, Brian Geffon <bgeffon@google.com>,
+	Ravi Bangoria <ravi.bangoria@amd.com>,
+	Howard Chu <howardchu95@gmail.com>,
+	Charlie Jenkins <charlie@rivosinc.com>,
+	Colin Ian King <colin.i.king@gmail.com>,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	Jann Horn <jannh@google.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Yang Jihong <yangjihong@bytedance.com>,
+	Dmitry Vyukov <dvyukov@google.com>, Andi Kleen <ak@linux.intel.com>,
+	Graham Woodward <graham.woodward@arm.com>,
+	Ilkka Koskinen <ilkka@os.amperecomputing.com>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Zhongqiu Han <quic_zhonhan@quicinc.com>, Hao Ge <gehao@kylinos.cn>,
+	Tengda Wu <wutengda@huaweicloud.com>,
+	Gabriele Monaco <gmonaco@redhat.com>,
+	Chun-Tse Shao <ctshao@google.com>,
+	Casey Chen <cachen@purestorage.com>,
+	"Dr. David Alan Gilbert" <linux@treblig.org>,
+	Li Huafei <lihuafei1@huawei.com>,
+	"Steinar H. Gunderson" <sesse@google.com>,
+	Levi Yun <yeoreum.yun@arm.com>, Weilin Wang <weilin.wang@intel.com>,
+	Thomas Falcon <thomas.falcon@intel.com>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	Andrew Kreimer <algonell@gmail.com>,
+	Krzysztof =?utf-8?Q?=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>,
+	Junhao He <hejunhao3@huawei.com>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	Xu Yang <xu.yang_2@nxp.com>,
+	Steve Clevenger <scclevenger@os.amperecomputing.com>,
+	Zixian Cai <fzczx123@gmail.com>,
+	Stephen Brennan <stephen.s.brennan@oracle.com>,
+	Yujie Liu <yujie.liu@intel.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev
+Subject: Re: [PATCH v1 02/48] tools headers: Silence -Wshorten-64-to-32
+ warnings
+Message-ID: <Z-6n-3ObiNNLQzFw@thinkpad>
+References: <20250401182347.3422199-1-irogers@google.com>
+ <20250401182347.3422199-3-irogers@google.com>
+ <Z-6WY4a6RV1bEbNU@thinkpad>
+ <Z-6aoJ3ohVHPsF0A@thinkpad>
+ <CAP-5=fU6E1_8Vzki1dVyb8hDEYOXaSNSrJJkR6AOU8xqvknT8w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: quilt/0.68
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.133-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-6.1.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 6.1.133-rc1
-X-KernelTest-Deadline: 2025-04-05T15:16+00:00
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fU6E1_8Vzki1dVyb8hDEYOXaSNSrJJkR6AOU8xqvknT8w@mail.gmail.com>
 
-This is the start of the stable review cycle for the 6.1.133 release.
-There are 22 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
+On Thu, Apr 03, 2025 at 07:52:45AM -0700, Ian Rogers wrote:
+> On Thu, Apr 3, 2025 at 7:26 AM Yury Norov <yury.norov@gmail.com> wrote:
+> >
+> > On Thu, Apr 03, 2025 at 10:08:39AM -0400, Yury Norov wrote:
+> > > On Tue, Apr 01, 2025 at 11:23:00AM -0700, Ian Rogers wrote:
+> > > > The clang warning -Wshorten-64-to-32 can be useful to catch
+> > > > inadvertent truncation. In some instances this truncation can lead to
+> > > > changing the sign of a result, for example, truncation to return an
+> > > > int to fit a sort routine. Silence the warning by making the implicit
+> > > > truncation explicit.
+> > > >
+> > > > Signed-off-by: Ian Rogers <irogers@google.com>
+> >
+> > I'm the first person in the To list, but only a couple patches in the
+> > series are related to my area. If you want to move it with me, can you
+> > send bitmaps, bitfields etc. separately?
+> 
+> Hi Yury,
+> 
+> If you think it is worthwhile. I did the series to see how prevalent a
+> bug was in perf's code - inspired by Leo Yan fixing an instance of it.
+> I would prefer not to be on the hook for all the kernel warnings :-)
+> Perhaps casts to avoid changing bitmap_weight's type. Unfortunately to
+> get to where the perf issues were I needed to clean up header files.
+> In the bitmap cases the change is just to make implicit casts explicit
+> and I don't know how much value you see in that.
 
-Responses should be made by Sat, 05 Apr 2025 15:16:11 +0000.
-Anything received after that time might be too late.
+Your changes  are technically correct (except for non-synced kernel and
+tools), make the code cleaner, at least to me, and address pretty valid
+compiler's concerns. To me, it's worth to apply.
 
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.133-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
-and the diffstat can be found below.
-
-thanks,
-
-greg k-h
-
--------------
-Pseudo-Shortlog of commits:
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 6.1.133-rc1
-
-Stefan Eichenberger <stefan.eichenberger@toradex.com>
-    ARM: dts: imx6qdl-apalis: Fix poweroff on Apalis iMX6
-
-Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-    media: i2c: et8ek8: Don't strip remove function when driver is builtin
-
-Andrei Kuchynski <akuchynski@chromium.org>
-    usb: typec: ucsi: Fix NULL pointer access
-
-Abhishek Tamboli <abhishektamboli9@gmail.com>
-    usb: gadget: uvc: Fix ERR_PTR dereference in uvc_v4l2.c
-
-John Keeping <jkeeping@inmusicbrands.com>
-    serial: 8250_dma: terminate correct DMA in tx_dma_flush()
-
-Luo Qiu <luoqiu@kylinsec.com.cn>
-    memstick: rtsx_usb_ms: Fix slab-use-after-free in rtsx_usb_ms_drv_remove
-
-Dominique Martinet <dominique.martinet@atmark-techno.com>
-    net: usb: usbnet: restore usb%d name exception for local mac addresses
-
-Fabio Porcedda <fabio.porcedda@gmail.com>
-    net: usb: qmi_wwan: add Telit Cinterion FE990B composition
-
-Fabio Porcedda <fabio.porcedda@gmail.com>
-    net: usb: qmi_wwan: add Telit Cinterion FN990B composition
-
-Cameron Williams <cang1@live.co.uk>
-    tty: serial: 8250: Add Brainboxes XC devices
-
-Cameron Williams <cang1@live.co.uk>
-    tty: serial: 8250: Add some more device IDs
-
-William Breathitt Gray <wbg@kernel.org>
-    counter: microchip-tcb-capture: Fix undefined counter channel state on probe
-
-Fabrice Gasnier <fabrice.gasnier@foss.st.com>
-    counter: stm32-lptimer-cnt: fix error handling when enabling
-
-Dhruv Deshpande <dhrv.d@proton.me>
-    ALSA: hda/realtek: Support mute LED on HP Laptop 15s-du3xxx
-
-Maxim Mikityanskiy <maxtram95@gmail.com>
-    netfilter: socket: Lookup orig tuple for IPv6 SNAT
-
-Alex Hung <alex.hung@amd.com>
-    drm/amd/display: Check denominator crb_pipes before used
-
-Yanjun Yang <yangyj.ee@gmail.com>
-    ARM: Remove address checking for MMUless devices
-
-Kees Cook <keescook@chromium.org>
-    ARM: 9351/1: fault: Add "cut here" line for prefetch aborts
-
-Kees Cook <keescook@chromium.org>
-    ARM: 9350/1: fault: Implement copy_from_kernel_nofault_allowed()
-
-Minjoong Kim <pwn9uin@gmail.com>
-    atm: Fix NULL pointer dereference
-
-Terry Junge <linuxhid@cosmicgizmosystems.com>
-    HID: hid-plantronics: Add mic mute mapping and generalize quirks
-
-Terry Junge <linuxhid@cosmicgizmosystems.com>
-    ALSA: usb-audio: Add quirk for Plantronics headsets to fix control names
-
-
--------------
-
-Diffstat:
-
- Makefile                                           |   4 +-
- arch/arm/boot/dts/imx6qdl-apalis.dtsi              |  10 +-
- arch/arm/mm/fault.c                                |   8 ++
- drivers/counter/microchip-tcb-capture.c            |  19 +++
- drivers/counter/stm32-lptimer-cnt.c                |  24 ++--
- .../drm/amd/display/dc/dcn315/dcn315_resource.c    |   2 +-
- drivers/hid/hid-plantronics.c                      | 144 ++++++++++-----------
- drivers/media/i2c/et8ek8/et8ek8_driver.c           |   4 +-
- drivers/memstick/host/rtsx_usb_ms.c                |   1 +
- drivers/net/usb/qmi_wwan.c                         |   2 +
- drivers/net/usb/usbnet.c                           |  21 ++-
- drivers/tty/serial/8250/8250_dma.c                 |   2 +-
- drivers/tty/serial/8250/8250_pci.c                 |  46 +++++++
- drivers/usb/gadget/function/uvc_v4l2.c             |  12 +-
- drivers/usb/typec/ucsi/ucsi.c                      |  13 +-
- net/atm/mpc.c                                      |   2 +
- net/ipv6/netfilter/nf_socket_ipv6.c                |  23 ++++
- sound/pci/hda/patch_realtek.c                      |   1 +
- sound/usb/mixer_quirks.c                           |  51 ++++++++
- 19 files changed, 279 insertions(+), 110 deletions(-)
-
-
+Thanks,
+Yury
