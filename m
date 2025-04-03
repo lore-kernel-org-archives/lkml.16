@@ -1,78 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B94E024BBF3
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 11:20:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97FFE746E;
+	Thu,  3 Apr 2025 11:25:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743679238; cv=none; b=paWqWfO0rAZfnG0gosBlah1/tq4K90Wzb21s0qYRp0aDzNCBRuYydbeoE7lYGgjuJ5GRXe52ydlBfLmgI+Lt6Da4R12NQRC5EUjMvw1MqARog661xwmcR951GGg6jwVkRaXrybBI4fW4AWxLJTm2vj+P2siTuo1YDO2ayupH3Vs=
+	t=1743679516; cv=none; b=fvl70JA9rHeUiiqtAqrIQ2+wCe6JHhDPq5nUCoTT4Wmp9BGQJDDwLJVHPhyO9zJWLJH4jEmKiDqCGrImSLedrkhsIiI6z+R+n78aBITN8RufqjWxKIJKUDYUvNU2O5h0DQ+C7BIl7+Jr7vTg/kgL1otbBARzWCFiu7ukRiHrk1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743679238; c=relaxed/simple;
-	bh=X/SyLeoANS34g/lp3+J2DRXD5Yj4/2j5Lj036FqX+QM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q+1i+WNhvmjogjvW/SQOERKZiwfubQ4y/LGW7O+6nab1Eg028PQmmj+GxzpvTNUnp9nP4rgJNMgT0XGoSjnyUBQwLps65+o0VhEqmPMNHLbXZpnDhjn+breqKTRd2Plw1vULEJYBvVy/4YpE5G3rPnWyxrBF0BlXfgMRSgDxZLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pzz7TVXC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743679516; c=relaxed/simple;
+	bh=EuZ+j/p5Kjpkon5TC1fOuctt/+lyQadTgl93X/5cuxU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=ZMEAvXOf/bYgkDf9k9gk4KMyqVQ8H7wV8EADJMhE8mscIHpEdZZqbnwxre57eDDHtffbjwJqPeNvDFnKLpIABWkB/0+L3SRBc+fj8kd6lXvWP4Y1XIiSIhojt/+mg7ipqItvyTJhyDBySWvTM9/CwSEyklT8UixdyJtcadI8WOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=n3AWHpfT; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4LpooKsa; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pzz7TVXC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48A3EC4CEE3;
-	Thu,  3 Apr 2025 11:20:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743679238;
-	bh=X/SyLeoANS34g/lp3+J2DRXD5Yj4/2j5Lj036FqX+QM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Pzz7TVXCtDisn5XSDpv4qUcrtcQgka6oDMMDGzrDg5mDLydxLlsxESyjlm/6GNCzl
-	 MlBafeoctKlhoVavlXN0LMzrrxzL5lkUuJmJKvAQcYXppEMHBFv5iB0jqdgfL/lerP
-	 bXf0aF9kB+PWZmzlehiON6NZQXrwhh0AyhU5dfdcRErF1eYTd4DePqLAOE3ipRiakO
-	 Z0sZ6+aDfQTVQWpKaawt2GK+hbv6vqkyEy8Ka6oEGqjNgAXvY/NV6Jd2y9exlLHfCR
-	 aviJ0ZB7qfi0e8KnAiAOeEUpeY0hn0oV9ZQI9ON78O/17a0MNtfaa3X4ZkhQTuMP7f
-	 YFlMYidZjCN0Q==
-Date: Thu, 3 Apr 2025 13:20:33 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Uros Bizjak <ubizjak@gmail.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH -tip v2] x86/idle: Work around LLVM assembler bug with
- MONITOR and MWAIT insn
-Message-ID: <Z-5vAThgDL9gts35@gmail.com>
-References: <20250403091737.344149-1-ubizjak@gmail.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="n3AWHpfT";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4LpooKsa"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1743679512;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1CU08XZD9aPjBvEmJkWRSp3wodCdCDRuOTIfkOuRKfY=;
+	b=n3AWHpfTTeNmOK7ECLxCEqFtm/rX8Szwt6FAYUHmky9T4h3S4CzG2oHBwGmenORLgvMuQ6
+	YVd6/zf0GHxsDTypI1zF/iTu+WRHQnKxgylcMbZXPbfVybpTB3Nv4frt5e36aeX8MoGx2c
+	AqjhqPKNp0OVMGJrEAsy7YdfIoJEynIztuWAx6Tf9ZzUdSnle7iw9RFL0NT+nxCqgZVHjO
+	WGQX0KQVFoxrj8OHzSLyuR26LwpvOdoVRjaFK5cm2G4RLQKInOpq8577VhJEoI3FtQLYpL
+	k9i/SFcr0raLMzagBZV1I1C0T8AwC1oxzAT/m6lqaowK2P8do8667xeHOnr66g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1743679512;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1CU08XZD9aPjBvEmJkWRSp3wodCdCDRuOTIfkOuRKfY=;
+	b=4LpooKsa4fho3VUxl0T760YjzVDkltIpk/yf3eEm+fCFUWwO7Vt2mPGw4yRYDhqCtB8TwW
+	gP6pjwft5ZwZwrAw==
+To: Lyude Paul <lyude@redhat.com>, rust-for-linux@vger.kernel.org, Andreas
+ Hindborg <a.hindborg@kernel.org>, linux-kernel@vger.kernel.org
+Cc: Boqun Feng <boqun.feng@gmail.com>, Frederic Weisbecker
+ <frederic@kernel.org>, Anna-Maria Behnsen <anna-maria@linutronix.de>,
+ Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Gary
+ Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
+ <bjorn3_gh@protonmail.com>, Benno
+ Lossin <benno.lossin@proton.me>, Alice Ryhl <aliceryhl@google.com>, Trevor
+ Gross <tmgross@umich.edu>
+Subject: Re: [PATCH 2/6] rust: hrtimer: Add HrTimerCallbackContext and
+ ::forward()
+In-Reply-To: <20250402214109.653341-3-lyude@redhat.com>
+References: <20250402214109.653341-1-lyude@redhat.com>
+ <20250402214109.653341-3-lyude@redhat.com>
+Date: Thu, 03 Apr 2025 13:25:11 +0200
+Message-ID: <87a58xwkq0.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250403091737.344149-1-ubizjak@gmail.com>
+Content-Type: text/plain
 
+On Wed, Apr 02 2025 at 17:40, Lyude Paul wrote:
 
-* Uros Bizjak <ubizjak@gmail.com> wrote:
+> With Linux's hrtimer API, certain functions require we either acquire
+> proper locking to call specific methods - or that we call said methods from
+> the context of the timer callback. hrtimer_forward() is one of these
+> functions, so we start by adding a new HrTimerCallbackContext type which
+> provides a way of calling these methods that is inaccessible outside of
+> hrtimer callbacks.
 
-> LLVM assembler is not able to assemble correct forms of MONITOR
-> and MWAIT instructions with explicit operands:
-> 
->   error: invalid operand for instruction
->           monitor %rax,%ecx,%edx
->                        ^~~~
-> 
-> Use instruction mnemonics with implicit operands to
-> work around this issue.
-> 
-> Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@kernel.org>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Fixes: cd3b85b27542 ("x86/idle: Use MONITOR and MWAIT mnemonics in <asm/mwait.h>")
-> Reported-by: kernel test robot <lkp@intel.com>
+Just for completeness:
 
-So I've zapped cd3b85b27542 instead - let's re-try it again and
-see if there's any code generation tradeoffs vs. the byte encodings?
+When hrtimer_forward() is invoked from non-callback context, then there
+is not necessarily a locking requirement. The caller has to make sure
+that the timer is neither armed, nor running the callback.
+
+     hrtimer_cancel();
+     hrtimer_forward();
+
+is a legitimate sequence, if there is no way that the timer is re-armed
+concurrently. That works just without locks.
+
+That said, I really like that callback context concept you are doing!
 
 Thanks,
 
-	Ingo
+        tglx
+
