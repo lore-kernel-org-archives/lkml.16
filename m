@@ -1,184 +1,136 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 506CC24E018
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 20:11:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7487419F416
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 20:15:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743711112; cv=none; b=X/IbkZ+gOPhxyLoIAMqUbjVvsiTWKi3097c09tRKo9FgK9Up8LHD4d3ubp0sR2X+m/+uhEEWq66j5gB+Cwmgm2vaq+LtYrlUxcOugfohReWVqaRjdZp0V0lMyAsQnxigRoElLljUNK7k1r8weAJPUUove2c/UPaSkxehEGZrTu0=
+	t=1743711343; cv=none; b=rl2eCOrE2QRZD6Jke/9pdOpYnKeFLoXwwWdgjvKpS/0Y15DHVEIT7xehUl76qLcmgot5TLCc0rP+/+GdhDKPN/hDBnRf2po+8/O4JsxBA65RRkdf09/0WJOnPLW0OEW0RxqIxVH6jAPOYUnMHUU9Nx41vLIgO0z562kgrdcuYIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743711112; c=relaxed/simple;
-	bh=ttNlm+gSJEcJOq5rABNpckTqxwtMmPs7GEXQ+yUg8PI=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ApYe7+jsWwgkLBPbLthfIDDDV0J57jSyE+iEQgj+RQIATGFSn354TqH105QjhO7cPQfORWRtOuYXzInRjBHejQkUDuF91gkBjzPybkLuMZXJ65LRBfKTW3vikNrD/Y7+TLvaibx4UM7TgmgKPYSm/E6SGELttiRmrxX1GxkcFik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UxtNE7js; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1743711343; c=relaxed/simple;
+	bh=7wlIWTYBu6l85jVG/NNzbm3gZW4+E1mdp1ATovPRdlE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DJoTgPGhvDIp6czQNIS6Tx7vU2qFA+gPMIhNviNd+AWdhed0Cd1tiTg8mCfUACJVDnhiY/C0eeEsYK5keb24FcSBQ6C2Ol0WIgIcthGl9bxX+GIfkKp/buN+UA1IwDX0TI2+FxfCkF7/JE6doo0OombEJNATM7dxhoFK71fq/0A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uiJebXTW; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UxtNE7js"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743711110;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2JjK2lSJyzrBkcD3tmnBpQOWlUj6xEy7/a1BNny+0HM=;
-	b=UxtNE7js3Cdp7RVD2dRpavI+IHHi/sNHBj6PcT4xSXzHNDzu1Fd/guCR7QQuPZQf3KEP/X
-	Lct/hgLG5joUTazxFT2jQkJUevQuhKJfLKrfIrjL9s6CjxoT5pIlVRTF+XYO2ZaGAtpQ8A
-	rZoTKVc4hiBgHcA4lBwOJYU7MJvlCe8=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-635-z_NwjL8EPBeSgDnKYm4UUA-1; Thu, 03 Apr 2025 16:11:49 -0400
-X-MC-Unique: z_NwjL8EPBeSgDnKYm4UUA-1
-X-Mimecast-MFC-AGG-ID: z_NwjL8EPBeSgDnKYm4UUA_1743711109
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7c5c9abdbd3so132517085a.1
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 13:11:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uiJebXTW"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2264c9d0295so53435ad.0
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 13:15:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1743711341; x=1744316141; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=+9FiIG9VAdbY9vvhPrckluTadBWrK7mI9etYkWzR0uM=;
+        b=uiJebXTWu8BsEKQ8WkTQXTcitTJlJzv38X2k2oHV9RVNPf5SkmRZAGmP3Agk5jJ05K
+         UwmKgXdHDixEP8TGPoWlHZ9XCQGIRtbuGH3hoXqIJGQ4F+VBczHGnU7cGgnngQ/JpRYs
+         9+FpmIY1TAWnAP18VRZpYoWZCGKOWZQdAR00aeb/Xb3AGUj1tZLx9PNDYtdlcrHh9tpk
+         vAbbJ+7bQmaQHzLziiqCz353l4lc3/HDOEozgR0eaquobzSm0Gk63dT8wrm+nDLkb5Le
+         AfXrMHoAl2+EeQqWmmFVd3IXQfACIGGL0o6nfN9jivQG7HEBq8fm9QaubsDXZe63YnHE
+         4TFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743711109; x=1744315909;
-        h=content-transfer-encoding:mime-version:user-agent:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=2JjK2lSJyzrBkcD3tmnBpQOWlUj6xEy7/a1BNny+0HM=;
-        b=L1iGAE/mgPQcXwJJHUMGDNWWnP8XxhOeqmamCBoOulwEZpJRQFyDAMlEU5dIDsdxUD
-         8gPYjRdWwxyX2+SPSoS5EAHigwaoom0CjiTvgUFYGoqTyIXdaz108yeCijy8KdYejKBg
-         bdlYiApJwCSctJ83gawbc6C5+7RQ+QZQNm4Wr1GdMUgGJSvvEGTtNTH0f7dUc/mb+w3V
-         Nq+F2MJntxcaIqhhF7qKZkAoR3FSRzhAg9EZCBaGVQ+/dric+EBrQWBc2UkAnwalERyV
-         1ZL4QS/Qv/4/UUu4Cx2u5oZCLrmnHscomXofQYKKnyCJr7rN07Hu0sKPQUGhe8uwRMn9
-         SQ8A==
-X-Forwarded-Encrypted: i=1; AJvYcCX1u/pXAXbbHpVVyU+BzC5PlGYG+yMelXxKm7ywLMuzvARNmsdqMkJkYX6ZS5TVy+OLAxJUa8uMC8/5JKA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxohnyl9OwnLTAbJ6cK6vBLXIiOBRdSjtyOEEMly7H6a1AV8CuT
-	J8nOQWIGaja3B+RC0FYTpwQB00MBN8Mft9dNe3eMdCs4C2q4wS1lRSUQgvsEpnpboIkHhsU9J3a
-	7SPtARN0mTDi+/EVN1CwzcQ41Qrq+kLdinTeFFAKKvc0Uq7FryrtlEaUl5hblqA==
-X-Gm-Gg: ASbGncvpeJJZt5rQoJ7xWsOnK8aYp+KyvihEWVcfP5VnQsIK5w506i1Pk0+SUo7zLke
-	JOe3l15LJTIGjqVQlama3usZOhhIM1RGlIbSoV10vFjMFk7udIslc06vb4EpdiC3QUbbt7BVU9t
-	swjXAuudwj3vSPMi2mPHHUAjWU2ftlDTivdgjo8yQbNNUAZC3i79qn5ykXgVrMgRHmBwa0rsjRC
-	JXP2czVzhKofjMkexDiYxoXuLQfW0Qu/DnJrIesi0q/0AAOGtb2Fjan42xbLjrQYcdf3JKk4gJO
-	HDOpwF9HEZOWTF4=
-X-Received: by 2002:a05:620a:f0e:b0:7c5:a435:8c98 with SMTP id af79cd13be357-7c7758951ecmr22338685a.0.1743711108703;
-        Thu, 03 Apr 2025 13:11:48 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGKPkIPW1VJjqFtzQQY4BZDQKcp6b4iFxg0ZhjtfUFoqySucUdGhdETv+oO5Xe6MjAlU7r0vA==
-X-Received: by 2002:a05:620a:f0e:b0:7c5:a435:8c98 with SMTP id af79cd13be357-7c7758951ecmr22335585a.0.1743711108355;
-        Thu, 03 Apr 2025 13:11:48 -0700 (PDT)
-Received: from starship ([2607:fea8:fc01:8d8d:6adb:55ff:feaa:b156])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4791b07125asm11785871cf.20.2025.04.03.13.11.47
+        d=1e100.net; s=20230601; t=1743711341; x=1744316141;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+9FiIG9VAdbY9vvhPrckluTadBWrK7mI9etYkWzR0uM=;
+        b=Ne5oWiaVnnAGLF2I5tmpYYV04Hl84GNOyHYjHUmmrsKcLxThVCkw6A63h7UhF6kLw6
+         w2hYJEMa+04qRuX9zEC6aPaanI6kCy7rXT3xnn8QSFEXio1mww99hUWh1xC2soDLIjK1
+         aRAM++rK92YNmpDfrayGsjfHx9uUmzB7ZzmYrUr4qwyo63Ggvk77nFkRQzxFwbyxtC/+
+         REB82qq5GPMjHBfkoBFtZl9sVnOzKvr/fiPJNpyFHvegYZnfbNPsZPEbltb6F0251WdY
+         shzPPLLAKhNAW6XNc8N4DHhexVmUkUuU6SPaOFzhgPYrGjNn+HUUQSxXkHJCHF6BEvit
+         gOzw==
+X-Forwarded-Encrypted: i=1; AJvYcCXPiIUBykEcnaKttFy86deTm/TV0sn0rKnvyiRFbZdVSx6haaGHm1+WdDxU85dO5mRsIDk/oqrJ0VyntWE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxpDCgi9mgy1MB/p/2NDxulbMCNXThLvtk41LlBjyl6CpiuvTJ+
+	cpDF5wPh6VgSFRfohrvfRs/5V/wGmdMwj+t+5yQDSHado5E33Q7p8aVbWv5mQg==
+X-Gm-Gg: ASbGncu+G9Mb8k8mq/J7/BkH3Uw9Qmvsdjigi/djxYTEcwMPvlkv1lvxuxNDelVN4J/
+	gNERVMw5nY2/V22gKCa6lPGOJkmZDfRQvANk7s7gm4zidhnwM9SK4MNz/GZnXEHfLXCKsut0fm+
+	dXzWqmlGGbC8++1Tcl7jUDZN6QKVAVutJQSVCgNhHJq7Y2K3DdjWNI/bXm8yrVCmQ7AVrsRcVcH
+	qAG73TX47zRbs1/uYPZqd1QcqldTWZH9OTQ457i1hjvvf6sCPbUlyn0ibN/Iin64ZFhZWomugEL
+	IZFdFJxsG77TvMH3Xi53zf36JuKLAwSZWL34g58S4YMcH5t42valK10MUJgxksOggu4oa5gF7P2
+	6wkPMuS8=
+X-Google-Smtp-Source: AGHT+IHjSj+UBbEWgXjBxDtxoLUefEdWlIf+aTvXEvObr0AnxhKwZTfr4leY27mrWcr7YIZG65soJw==
+X-Received: by 2002:a17:902:d487:b0:216:7aaa:4c5f with SMTP id d9443c01a7336-22a8b6b2832mr11915ad.3.1743711340284;
+        Thu, 03 Apr 2025 13:15:40 -0700 (PDT)
+Received: from google.com (69.8.247.35.bc.googleusercontent.com. [35.247.8.69])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739da0b41f1sm1978828b3a.147.2025.04.03.13.15.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Apr 2025 13:11:48 -0700 (PDT)
-Message-ID: <5f714d7fb68aef92f1bea58a10deb4de1a10a5b8.camel@redhat.com>
-Subject: Re: [RFC PATCH 23/24] KVM: nSVM: Allocate a new ASID for nested
- guests
-From: Maxim Levitsky <mlevitsk@redhat.com>
-To: Yosry Ahmed <yosry.ahmed@linux.dev>, Sean Christopherson
- <seanjc@google.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Jim Mattson <jmattson@google.com>, 
- Vitaly Kuznetsov <vkuznets@redhat.com>, Rik van Riel <riel@surriel.com>,
- Tom Lendacky <thomas.lendacky@amd.com>,  x86@kernel.org,
- kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Thu, 03 Apr 2025 16:11:47 -0400
-In-Reply-To: <20250326194423.3717668-4-yosry.ahmed@linux.dev>
-References: <20250326193619.3714986-1-yosry.ahmed@linux.dev>
-	 <20250326194423.3717668-1-yosry.ahmed@linux.dev>
-	 <20250326194423.3717668-4-yosry.ahmed@linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.5 (3.36.5-2.fc32) 
+        Thu, 03 Apr 2025 13:15:39 -0700 (PDT)
+Date: Thu, 3 Apr 2025 20:15:34 +0000
+From: Sami Tolvanen <samitolvanen@google.com>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, llvm@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	Fangrui Song <i@maskray.me>, Joao Moreira <joao@overdrivepizza.com>,
+	Josh Poimboeuf <jpoimboe@redhat.com>,
+	Kees Cook <keescook@chromium.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>
+Subject: Re: kCFI && patchable-function-entry=M,N
+Message-ID: <20250403201534.GA197065@google.com>
+References: <Y1LBGZPMfCZ8A1bl@FVFF77S0Q05N>
+ <Y1QEzk/A41PKLEPe@hirez.programming.kicks-ass.net>
+ <Y1Z12xuY9fDaHuCm@FVFF77S0Q05N>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Y1Z12xuY9fDaHuCm@FVFF77S0Q05N>
 
-On Wed, 2025-03-26 at 19:44 +0000, Yosry Ahmed wrote:
-> Now that nested TLB flushes are properly tracked, start allocating a
-> separate ASID for nested guests. This allows dropping the unconditional
-> TLB flushes on nested transitions and doing finer grained TLB flushing
-> when necessary.
+Hi folks,
+
+On Mon, Oct 24, 2022 at 12:24:11PM +0100, Mark Rutland wrote:
+> On Sat, Oct 22, 2022 at 04:57:18PM +0200, Peter Zijlstra wrote:
+> > On Fri, Oct 21, 2022 at 04:56:20PM +0100, Mark Rutland wrote:
+> > > Hi,
+> > > 
+> > > For arm64, I'd like to use -fatchable-function-entry=M,N (where N > 0), for our
+> > > ftrace implementation, which instruments *some* but not all functions.
+> > > Unfortuntately, this doesn't play nicely with -fsanitize=kcfi, as instrumented
+> > > and non-instrumented functions don't agree on where the type hash should live
+> > > relative to the function entry point, making them incompatible with one another.
+> > > AFAICT, there's no mechanism today to get them to agree.
+> > > 
+> > > Today we use -fatchable-function-entry=2, which happens to avoid this.
+> > 
+> > > ... but I understand that for x86, folk want the pre-function NOPs to
+> > > fall-through into the body of the function.
+> > 
+> > Yep.
+> > 
+> > > Is there any mechanism today that we could use to solve this, or could we
+> > > extend clang to have some options to control this behaviour?
+> > 
+> > So the main pain-point for you is differentiating between function with
+> > notrace and those without it, right?
+> > 
+> > That is; suppose you (like x86) globally do:
+> > -fpatchable-function-entry=4,2 to get a consistent function signature,
+> > you're up a creek because you use the __patchable_function_entries
+> > section to drive ftrace and now every function will have it.
+> > 
+> > So perhaps something like:
+> > 
+> >  -fpatchable-function-entry=N,M,sectionname
+> > 
+> > would help, then you can have notrace be the same layout, except a
+> > different section. Eg. something like:
+> > 
+> >  #define notrace __attribute__((patchable_function_entry(4,2,__notrace_function_entries)))
 > 
-> Signed-off-by: Yosry Ahmed <yosry.ahmed@linux.dev>
-> ---
->  arch/x86/kvm/svm/nested.c | 11 +++++++++--
->  arch/x86/kvm/svm/svm.c    |  5 +++--
->  arch/x86/kvm/svm/svm.h    |  3 +++
->  3 files changed, 15 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
-> index 544913461693c..0c887c91bd50d 100644
-> --- a/arch/x86/kvm/svm/nested.c
-> +++ b/arch/x86/kvm/svm/nested.c
-> @@ -1204,6 +1204,7 @@ int svm_allocate_nested(struct vcpu_svm *svm)
->  {
->  	struct kvm_svm *kvm_svm = to_kvm_svm(svm->vcpu.kvm);
->  	struct page *vmcb02_page;
-> +	unsigned int asid;
->  
->  	if (svm->nested.initialized)
->  		return 0;
-> @@ -1221,8 +1222,14 @@ int svm_allocate_nested(struct vcpu_svm *svm)
->  
->  	svm->nested.initialized = true;
->  
-> -	if (!kvm_svm->nested_asid)
-> -		kvm_svm->nested_asid = kvm_svm->asid;
-> +	if (!kvm_svm->nested_asid) {
-> +		asid = kvm_tlb_tags_alloc(&svm_asids);
-> +		if (asid && !svm_register_asid(asid)) {
-> +			kvm_tlb_tags_free(&svm_asids, asid);
-> +			asid = 0;
-> +		}
-> +		kvm_svm->nested_asid = asid ?: fallback_asid;
-> +	}
+> FWIW, I think that'd work for me, and that was roughly my original proposal on
+> IRC. My only concern with this approach is code size, since all uninstrumented
+> functions gain some point less prefix NOPs.
 
-Nitpick: AFAIK at least nested KVM doesn't enable EFER.SVME,
-unless it actually runs a guest thus most of the time we will waste a ASID on a VM
-which once did run a VM nested and since then doesn't run anything else.
+It took me a couple of years to find the time to look into this,
+but here's a Clang patch I committed yesterday that adds support
+for a section parameter:
 
-So maybe we want to free the nested ASID in the svm_free_nested?
+https://github.com/llvm/llvm-project/commit/acc6bcdc504ad2e8c09a628dc18de0067f7344b8
 
->  
->  	return 0;
->  
-> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-> index 4b95fd6b501e6..196f5bca57a0e 100644
-> --- a/arch/x86/kvm/svm/svm.c
-> +++ b/arch/x86/kvm/svm/svm.c
-> @@ -249,8 +249,8 @@ static unsigned long iopm_base;
->  
->  DEFINE_PER_CPU(struct svm_cpu_data, svm_data);
->  
-> -static struct kvm_tlb_tags svm_asids;
-> -static unsigned int fallback_asid;
-> +struct kvm_tlb_tags svm_asids;
-> +unsigned int fallback_asid;
->  
->  /*
->   * Only MSR_TSC_AUX is switched via the user return hook.  EFER is switched via
-> @@ -5127,6 +5127,7 @@ static void svm_vm_destroy(struct kvm *kvm)
->  	avic_vm_destroy(kvm);
->  	sev_vm_destroy(kvm);
->  	kvm_tlb_tags_free(&svm_asids, kvm_svm->asid);
-> +	kvm_tlb_tags_free(&svm_asids, kvm_svm->nested_asid);
->  }
->  
->  static int svm_vm_init(struct kvm *kvm)
-> diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
-> index 0c44133bc05ca..220d10d2b1a5c 100644
-> --- a/arch/x86/kvm/svm/svm.h
-> +++ b/arch/x86/kvm/svm/svm.h
-> @@ -630,6 +630,9 @@ static inline void svm_vmgexit_no_action(struct vcpu_svm *svm, u64 data)
->  
->  extern bool dump_invalid_vmcb;
->  
-> +extern struct kvm_tlb_tags svm_asids;
-> +extern unsigned int fallback_asid;
-> +
->  u32 svm_msrpm_offset(u32 msr);
->  u32 *svm_vcpu_alloc_msrpm(void);
->  void svm_vcpu_init_msrpm(struct kvm_vcpu *vcpu, u32 *msrpm);
-
-
-Best regards,
-	Maxim Levitsky
-
-
-
+Sami
