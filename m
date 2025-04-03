@@ -1,112 +1,78 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDF1624C075
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 11:20:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B94E024BBF3
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 11:20:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743679212; cv=none; b=qY/L6yOi8AtZZMxj40TNvWS2PuctYuNKQzcQRY9lzwgyRny49AJF66IIckjUPsN8LKAuupSQ9uFZyuGjrF2nAyudh0jWh5WfEdS0lOMgRCWIn51fGb9TPOxvsBvIfY4VIqrLkTqYO16JKVRrvJjxt6zQOslo20RGTFITGicarAM=
+	t=1743679238; cv=none; b=paWqWfO0rAZfnG0gosBlah1/tq4K90Wzb21s0qYRp0aDzNCBRuYydbeoE7lYGgjuJ5GRXe52ydlBfLmgI+Lt6Da4R12NQRC5EUjMvw1MqARog661xwmcR951GGg6jwVkRaXrybBI4fW4AWxLJTm2vj+P2siTuo1YDO2ayupH3Vs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743679212; c=relaxed/simple;
-	bh=xZr2b1Yr2ycIg/CW3ibrgZf/gEe4XUSNPljObyAf9E4=;
+	s=arc-20240116; t=1743679238; c=relaxed/simple;
+	bh=X/SyLeoANS34g/lp3+J2DRXD5Yj4/2j5Lj036FqX+QM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qtQXgdXlP8BGSU2gDuHQJ22z15zZhJMvXvNoLYMgECKovIEOPlLkQsT448wAbOOtRleNqrR38MasjGI1yj4SFJXayZ1xYKIcYSg5esGz2SDPJ69URt+7hYQIdACcSS1OLAHrwaky8dSNEFj2t0QnH/wTBqfUQ+dnhGBimBNmEDo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=b9jGx0n8; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=q+1i+WNhvmjogjvW/SQOERKZiwfubQ4y/LGW7O+6nab1Eg028PQmmj+GxzpvTNUnp9nP4rgJNMgT0XGoSjnyUBQwLps65+o0VhEqmPMNHLbXZpnDhjn+breqKTRd2Plw1vULEJYBvVy/4YpE5G3rPnWyxrBF0BlXfgMRSgDxZLQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pzz7TVXC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="b9jGx0n8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=xZr2
-	b1Yr2ycIg/CW3ibrgZf/gEe4XUSNPljObyAf9E4=; b=b9jGx0n8eKKRl6IOidXK
-	CjxbwTvSxWf+4vxut/Lop+k5H7ww+6sir+8p5hM6lTqQKHcj9pM/q208k2WSg+PV
-	5ce68OK5HdIgmmPkyWFVb4Fcmd/kxAZT+VI00r73jIEmaB5Qyj/sVeGRqsBcIZCd
-	e1wXxwMzEPZCHSaEqetXI5kdn7MZqJ6KPBEvKmK7ml0PyleNItyruzN0mCmfr6w8
-	Pst7XqubpVaVZSEBrgcIMoe8CcUDdtVPum73ndXgAhSL+ErL3zVSQ5InLcS+Qp5v
-	BdHUGSp09txcVrcrfqmLtVJHLjbrjxK8cEToeHQlqoMfwo9np8f7JkNkmwhbgwMu
-	ng==
-Received: (qmail 2358143 invoked from network); 3 Apr 2025 13:20:06 +0200
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 3 Apr 2025 13:20:06 +0200
-X-UD-Smtp-Session: l3s3148p1@UqOn890xc2BtKPG8
-Date: Thu, 3 Apr 2025 13:20:05 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-i2c@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [RFC PATCH 1/3] i2c: core: Follow i2c-parent when retrieving an
- adapter from node
-Message-ID: <Z-5u5bAnY8Y1DmFz@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-i2c@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-References: <20250205173918.600037-1-herve.codina@bootlin.com>
- <20250205173918.600037-2-herve.codina@bootlin.com>
- <Z-5O3-FSsHbn27lW@shikoro>
- <20250403125050.22db0349@bootlin.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pzz7TVXC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48A3EC4CEE3;
+	Thu,  3 Apr 2025 11:20:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743679238;
+	bh=X/SyLeoANS34g/lp3+J2DRXD5Yj4/2j5Lj036FqX+QM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Pzz7TVXCtDisn5XSDpv4qUcrtcQgka6oDMMDGzrDg5mDLydxLlsxESyjlm/6GNCzl
+	 MlBafeoctKlhoVavlXN0LMzrrxzL5lkUuJmJKvAQcYXppEMHBFv5iB0jqdgfL/lerP
+	 bXf0aF9kB+PWZmzlehiON6NZQXrwhh0AyhU5dfdcRErF1eYTd4DePqLAOE3ipRiakO
+	 Z0sZ6+aDfQTVQWpKaawt2GK+hbv6vqkyEy8Ka6oEGqjNgAXvY/NV6Jd2y9exlLHfCR
+	 aviJ0ZB7qfi0e8KnAiAOeEUpeY0hn0oV9ZQI9ON78O/17a0MNtfaa3X4ZkhQTuMP7f
+	 YFlMYidZjCN0Q==
+Date: Thu, 3 Apr 2025 13:20:33 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Uros Bizjak <ubizjak@gmail.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>, kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH -tip v2] x86/idle: Work around LLVM assembler bug with
+ MONITOR and MWAIT insn
+Message-ID: <Z-5vAThgDL9gts35@gmail.com>
+References: <20250403091737.344149-1-ubizjak@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="G9LojCKw4QqmBaKY"
-Content-Disposition: inline
-In-Reply-To: <20250403125050.22db0349@bootlin.com>
-
-
---G9LojCKw4QqmBaKY
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20250403091737.344149-1-ubizjak@gmail.com>
 
 
-> The debug message can be interesting when things went wrong and we want
-> to investigate potential issue with i2c-parent chain from the last device
-> up to the adapter.
+* Uros Bizjak <ubizjak@gmail.com> wrote:
 
-I thought so but couldn't estimate how often this is useful in reality.
-I agree that introducing 'dev' is too much hazzle, yet I think the
-message should have some id to disitnguish potential different adapter
-chains. Either that, or...
+> LLVM assembler is not able to assemble correct forms of MONITOR
+> and MWAIT instructions with explicit operands:
+> 
+>   error: invalid operand for instruction
+>           monitor %rax,%ecx,%edx
+>                        ^~~~
+> 
+> Use instruction mnemonics with implicit operands to
+> work around this issue.
+> 
+> Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@kernel.org>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Fixes: cd3b85b27542 ("x86/idle: Use MONITOR and MWAIT mnemonics in <asm/mwait.h>")
+> Reported-by: kernel test robot <lkp@intel.com>
 
-> I don't have a strong opinion about the need of this message and I can
-> simply remove it.
+So I've zapped cd3b85b27542 instead - let's re-try it again and
+see if there's any code generation tradeoffs vs. the byte encodings?
 
-... we just remove it and let people add their debug stuff while
-developing.
+Thanks,
 
-> What is your preference ?
-
-A tad more 'removing'.
-
-
---G9LojCKw4QqmBaKY
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmfubuEACgkQFA3kzBSg
-KbYDjhAAnEpQ7Lq325zgF0MXbuueTeNaleJHhNRlNnfmT3m1lUJ7aJ06Sme2xwu9
-kvCWEeTY9GxME8MpyusmI2p0LrHJowjNF+vGC70qC6P6LUemDlXzwTP8G0/nZUOU
-3lXg2Mzlgwqbyk6k1arQ6JiXLrFeHILIy5ZH4ol6LLAaMEjuzCMPYnga7w7hgF0r
-ZHBYLMJbUUH4VFInzsvPw1NjsHzivGYpPSkhq+hVM08hRFXGb4rhxV23m7Irqg4Q
-2PWPOhJNJem01G2HhqOEnnXadzveu+myxTf+g9BltHXgfnj9QqiLD95x4i9PWm1m
-zJ/4limYDwml2x/4VReDpbnpcqHhEgKNytXIox+ynWKTHTR3T0ymUydKK1OY+o84
-8mI2qySM2YGIo6figoL4md30TwRHuhjoXHW6zo6HjYdCL6GY73XNcHJMKJ82V5bf
-z+vbeyB+7cIoKP2ONNOCchUGJhb6ZXkjJWk9uuJtE60ILIhFXJA5/DXg4gV4z/02
-KAyJ7AyS6LGazJMZWaJ/68sbyVatanlGofihV8Y4K6bLjR8RZUfaRrYJ8AUR6rKt
-slSagnxdW2Pm2M9/5fApO6YC3Yo4O8gWOueFzEZLQHv2Dia6HnkyVavoXXtgp2zU
-JmFELo6mimchMaAJs0dbIXKsK78P7WXwMEpDWxMiyyxsrRDslic=
-=ZgW8
------END PGP SIGNATURE-----
-
---G9LojCKw4QqmBaKY--
+	Ingo
