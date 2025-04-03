@@ -1,227 +1,102 @@
-Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24476257ADB
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 19:36:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF7B5253F31;
+	Thu,  3 Apr 2025 19:37:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743708986; cv=none; b=fA5azUy2TMBPg46ZQB6OICU6kgl8gIurAW+bjW6gKF2anOpStRVo08f290vSWZEWCByWz96+a2uoaQxsgDGaG4qqKSjbWx3ijK3cj/M5fjuVonuH8yGubmVVnfetr+POdvXoQYmGYh1Rxju5axDQXxpIyIzV8g1US0cnz4IuF3k=
+	t=1743709024; cv=none; b=oCseCmhD7pKLpTpAf08pD8qkXazJGjcIdFqaCVDETBZM8uYSqlq6rF4PmCorpov7hPNnhuFfIzkC3uAUCOxMe7RiGhgiWeAXOSibWppP1u7H2+CUdtVPovMg84EcIGxcxXQIPzAh9tAsmcLVYfXH7sXHkAT6j6owPKcYymDftAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743708986; c=relaxed/simple;
-	bh=IzGHnbSKy9QS28KDdwSYE4m4fHdzMc0buR92jwueS2g=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=ZkUwqs6mAeTg1nDzbaUSEUmhayV5QUXOzeInbwu1615okwX+ttAZ1qvf9rkITKc+0X4ap5FsT0QIY/dpnYjTDegNebMPqD31phjSd0lPSKVNSgVQDkx6UVJ46R5BT0YdRgMRutBnfaNdkLJGyHQN1L39b1SysElGL7N060272Ng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3d5a9e7dd5aso16026125ab.3
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 12:36:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743708984; x=1744313784;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZJ3vF3m261vLwIGTgD2U8hST9APCzsBh/6KFnvzeTHw=;
-        b=iPhSLQjKlQQWFP4iJwnEKdVfEQ9h+CjjYlNuaPR73XUHdBhIFDTcU+SgJpHtraQEvg
-         CFyAd/0QuZAUQHg8R5IDrEnGux/6Q47RLnzUcLhbGqNtnPXk7+OrnbFEVMiLkp8u7smd
-         yXfrK28YmOKVxxgbu3DoQRAqWoEIRgf7SySGAw17pHH2bqpq5Bfd2EthIUlf0A92k4Mh
-         qoU2b0DO7yTHc0BIlWShvUUdQLDd3GWI99YiMqUK99LrWaQUs7RxI3nfQwAZP8628Fgg
-         449BvWcf/cKzdOZJ745ZEIXrm/UH0mdkpKc3PJLuXMligai8Cy9AlwbAwZji8S1HYP0c
-         0Dfg==
-X-Forwarded-Encrypted: i=1; AJvYcCV6ogKpOArq5CZICRuPldIXGHRB1rdX4cjfbkFLshT0+4vTFV0uMTC9DShbfhIgsugyULmYMJHH9RCqAaU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz0kQWyzjUcIoLLyeliKcFCa/D59oFYlRlXeB/uS4a3Oxps9pbe
-	0J/ZhwngznIcXmBQrx/TGreE2GoPqNSgMzcHfkf8nGWMNQ8/65VOLFBHae64rqY4CkAIlHgqUki
-	jKdD72ea4xpd1TouFFYyGw2dffJ73YBdRcG1iDdWKuMfPg1pk2qs2gYw=
-X-Google-Smtp-Source: AGHT+IFJUL7typZLI0KSHwcfJtAx+NqjslqbL9muBeS23N3HxZtVZBSO7PXl5314so18bhdFEyEoj1ZjmPUyYsSVSFFBQfASanfo
+	s=arc-20240116; t=1743709024; c=relaxed/simple;
+	bh=lVWZUHL2SxA42sAAgfdxWslhV3zimniyg1+cO9INlL8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ekhOs6mqLJb3vppnLqQzMnrwSVsXS+yjDn7Zyi4FL/WCLXu2mdG85tFwbZwFtEp3KhV6YFRTUXNR+WKKW73qrFxSZAInOO1Hhk5s/eSyhTQwJADPFegXqE2TpInv0ZdyJFoZH+V8oAuySHGfTYG0RsagTeeZXm0jjQ3jG3p2Rv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=VjQaj7pm; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=J7Yhczbb; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="VjQaj7pm";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="J7Yhczbb"
+Date: Thu, 3 Apr 2025 21:36:59 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1743709020;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XLJILlQSwjqq4ldd1DPe8cQpHFfbl0q04etSdbIwIKs=;
+	b=VjQaj7pmVy2ExbvdlFCBNAP8NICj+upZ8ERY37p35D9M3SfEqEDHr3BBY88qvLEdNEM19s
+	YSCMVr49fF5LrqDSalAPsujoYmdS1PPhCZw41JvFiyKrQPKNWCRGbSpi1PbXQWkc76jAO1
+	CAsDOQLth5KM30NmJNONmOOlKDfiIha2wS7F8FBHM11H8RKluRRO+Pw+sFNHkPL2UlfSKm
+	aQ5udNnx+m45T1WOXuBw3xOAqMeSNhbA+lsxRIxhcpvb5lLvLRu2ZoQctb2GkzHmmCf8qC
+	XxZTXGxYba7Wc53iTSnkxGWhnEAlHO5b20Msq4cSWGf0pOQhxaRSnilEX6JbJg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1743709020;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XLJILlQSwjqq4ldd1DPe8cQpHFfbl0q04etSdbIwIKs=;
+	b=J7YhczbbvBXIoKGHLAyYyPavKnJMp63bleM0UBWCW4TttxDTYsIFXzSUEeONNhCf4Lsigv
+	ujk8Mii5UImDbCBw==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Borislav Petkov <bp@alien8.de>, linux-rtc@vger.kernel.org,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Mateusz =?utf-8?Q?Jo=C5=84czyk?= <mat.jonczyk@o2.pl>,
+	lkml <linux-kernel@vger.kernel.org>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [ BUG: Invalid wait context ] rtc_lock at: mc146818_avoid_UIP
+Message-ID: <20250403193659.hhUTgJLH@linutronix.de>
+References: <20250330113202.GAZ-krsjAnurOlTcp-@fat_crate.local>
+ <87sempv17b.ffs@tglx>
+ <20250403135031.giGKVTEO@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:300a:b0:3d2:aa73:7b7a with SMTP id
- e9e14a558f8ab-3d6e535c466mr561315ab.12.1743708984060; Thu, 03 Apr 2025
- 12:36:24 -0700 (PDT)
-Date: Thu, 03 Apr 2025 12:36:24 -0700
-In-Reply-To: <6743b30d.050a0220.1cc393.004e.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67eee338.050a0220.9040b.023b.GAE@google.com>
-Subject: Re: [syzbot] [block?] possible deadlock in blk_mq_update_nr_hw_queues
-From: syzbot <syzbot+6279b273d888c2017726@syzkaller.appspotmail.com>
-To: axboe@kernel.dk, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250403135031.giGKVTEO@linutronix.de>
 
-syzbot has found a reproducer for the following issue on:
+On 2025-04-03 15:50:32 [+0200], To Thomas Gleixner wrote:
+> On 2025-04-03 15:12:08 [+0200], Thomas Gleixner wrote:
+> > Converting it to a raw lock "fixes" the problem, but RT people will hunt
+> > you down with a big latency bat.
+> > 
+> > But this is not related to the commit above and not new.
+> > 
+> > timekeeping_suspend() has always invoked mach_get_cmos_time() with the
+> > freeze lock held and mc146818_get_time() has always locked rtc_lock.
+> > 
+> > I wonder, why this splat hasn't popped before. On RT lockdep should have
+> > complained forever. Sebastian???
+> 
+> I sure haven't seen it. But it has to.
 
-HEAD commit:    a2cc6ff5ec8f Merge tag 'firewire-updates-6.15' of git://gi..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1007f7b0580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=adffebefc9feb9d6
-dashboard link: https://syzkaller.appspot.com/bug?extid=6279b273d888c2017726
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12202fb0580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1417e94c580000
+might_sleep() is quite because system_states is SYSTEM_SUSPEND.
+lockdep seems to be quiet because I don't have an outer lock while
+testing via
+	echo mem > /sys/power/state
 
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-a2cc6ff5.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/ebd4f463c5cb/vmlinux-a2cc6ff5.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/91fd93bd91b3/bzImage-a2cc6ff5.xz
+it is just
+| WARNING: CPU: 0 PID: 1007 at kernel/time/timekeeping.c:1858 timekeeping_suspend+0x3b/0x330
+| RIP: 0010:timekeeping_suspend+0x3b/0x330
+| Call Trace:
+|  <TASK>
+|  syscore_suspend+0x80/0x2f0
+|  suspend_devices_and_enter+0x21c/0xad0
+|  pm_suspend+0x25c/0x6b0
+|  state_store+0x68/0xd0
+|  kernfs_fop_write_iter+0x15e/0x210
+|  vfs_write+0x2bb/0x560
+|  ksys_write+0x73/0xf0
+|  do_syscall_64+0x91/0x1a0
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+6279b273d888c2017726@syzkaller.appspotmail.com
+> > Thanks,
+> > 
+> >         tglx
 
-======================================================
-WARNING: possible circular locking dependency detected
-6.14.0-syzkaller-12966-ga2cc6ff5ec8f #0 Not tainted
-------------------------------------------------------
-syz-executor876/5939 is trying to acquire lock:
-ffff8880261b2318 (&q->elevator_lock){+.+.}-{4:4}, at: blk_mq_elv_switch_none block/blk-mq.c:4942 [inline]
-ffff8880261b2318 (&q->elevator_lock){+.+.}-{4:4}, at: __blk_mq_update_nr_hw_queues block/blk-mq.c:5022 [inline]
-ffff8880261b2318 (&q->elevator_lock){+.+.}-{4:4}, at: blk_mq_update_nr_hw_queues+0x4a9/0x1360 block/blk-mq.c:5074
-
-but task is already holding lock:
-ffff8880261b1de8 (&q->q_usage_counter(io)#49){++++}-{0:0}, at: blk_mq_freeze_queue_nomemsave block/blk-mq.c:215 [inline]
-ffff8880261b1de8 (&q->q_usage_counter(io)#49){++++}-{0:0}, at: __blk_mq_update_nr_hw_queues block/blk-mq.c:5014 [inline]
-ffff8880261b1de8 (&q->q_usage_counter(io)#49){++++}-{0:0}, at: blk_mq_update_nr_hw_queues+0x263/0x1360 block/blk-mq.c:5074
-
-which lock already depends on the new lock.
-
-
-the existing dependency chain (in reverse order) is:
-
--> #2 (&q->q_usage_counter(io)#49){++++}-{0:0}:
-       blk_alloc_queue+0x619/0x760 block/blk-core.c:461
-       blk_mq_alloc_queue+0x179/0x290 block/blk-mq.c:4349
-       __blk_mq_alloc_disk+0x29/0x120 block/blk-mq.c:4396
-       nbd_dev_add+0x49d/0xbb0 drivers/block/nbd.c:1933
-       nbd_init+0x181/0x320 drivers/block/nbd.c:2670
-       do_one_initcall+0x120/0x6e0 init/main.c:1257
-       do_initcall_level init/main.c:1319 [inline]
-       do_initcalls init/main.c:1335 [inline]
-       do_basic_setup init/main.c:1354 [inline]
-       kernel_init_freeable+0x5c2/0x900 init/main.c:1567
-       kernel_init+0x1c/0x2b0 init/main.c:1457
-       ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:153
-       ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
-
--> #1 (fs_reclaim){+.+.}-{0:0}:
-       __fs_reclaim_acquire mm/page_alloc.c:4028 [inline]
-       fs_reclaim_acquire+0x102/0x150 mm/page_alloc.c:4042
-       might_alloc include/linux/sched/mm.h:318 [inline]
-       xa_insert include/linux/xarray.h:783 [inline]
-       blk_mq_init_hctx block/blk-mq.c:3924 [inline]
-       blk_mq_alloc_and_init_hctx+0x503/0x11c0 block/blk-mq.c:4457
-       blk_mq_realloc_hw_ctxs+0x8f6/0xc00 block/blk-mq.c:4486
-       blk_mq_init_allocated_queue+0x3af/0x1230 block/blk-mq.c:4540
-       blk_mq_alloc_queue+0x1c2/0x290 block/blk-mq.c:4353
-       __blk_mq_alloc_disk+0x29/0x120 block/blk-mq.c:4396
-       loop_add+0x496/0xb70 drivers/block/loop.c:2067
-       loop_init+0x164/0x270 drivers/block/loop.c:2302
-       do_one_initcall+0x120/0x6e0 init/main.c:1257
-       do_initcall_level init/main.c:1319 [inline]
-       do_initcalls init/main.c:1335 [inline]
-       do_basic_setup init/main.c:1354 [inline]
-       kernel_init_freeable+0x5c2/0x900 init/main.c:1567
-       kernel_init+0x1c/0x2b0 init/main.c:1457
-       ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:153
-       ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
-
--> #0 (&q->elevator_lock){+.+.}-{4:4}:
-       check_prev_add kernel/locking/lockdep.c:3166 [inline]
-       check_prevs_add kernel/locking/lockdep.c:3285 [inline]
-       validate_chain kernel/locking/lockdep.c:3909 [inline]
-       __lock_acquire+0x1173/0x1ba0 kernel/locking/lockdep.c:5235
-       lock_acquire kernel/locking/lockdep.c:5866 [inline]
-       lock_acquire+0x179/0x350 kernel/locking/lockdep.c:5823
-       __mutex_lock_common kernel/locking/mutex.c:601 [inline]
-       __mutex_lock+0x199/0xb90 kernel/locking/mutex.c:746
-       blk_mq_elv_switch_none block/blk-mq.c:4942 [inline]
-       __blk_mq_update_nr_hw_queues block/blk-mq.c:5022 [inline]
-       blk_mq_update_nr_hw_queues+0x4a9/0x1360 block/blk-mq.c:5074
-       nbd_start_device+0x172/0xcd0 drivers/block/nbd.c:1476
-       nbd_start_device_ioctl drivers/block/nbd.c:1527 [inline]
-       __nbd_ioctl drivers/block/nbd.c:1602 [inline]
-       nbd_ioctl+0x219/0xda0 drivers/block/nbd.c:1642
-       blkdev_ioctl+0x274/0x6d0 block/ioctl.c:698
-       vfs_ioctl fs/ioctl.c:51 [inline]
-       __do_sys_ioctl fs/ioctl.c:906 [inline]
-       __se_sys_ioctl fs/ioctl.c:892 [inline]
-       __x64_sys_ioctl+0x190/0x200 fs/ioctl.c:892
-       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-       do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-other info that might help us debug this:
-
-Chain exists of:
-  &q->elevator_lock --> fs_reclaim --> &q->q_usage_counter(io)#49
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(&q->q_usage_counter(io)#49);
-                               lock(fs_reclaim);
-                               lock(&q->q_usage_counter(io)#49);
-  lock(&q->elevator_lock);
-
- *** DEADLOCK ***
-
-4 locks held by syz-executor876/5939:
- #0: ffff8880261c3998 (&nbd->config_lock){+.+.}-{4:4}, at: nbd_ioctl+0x150/0xda0 drivers/block/nbd.c:1635
- #1: ffff8880261c38d8 (&set->tag_list_lock){+.+.}-{4:4}, at: blk_mq_update_nr_hw_queues+0x8e/0x1360 block/blk-mq.c:5073
- #2: ffff8880261b1de8 (&q->q_usage_counter(io)#49){++++}-{0:0}, at: blk_mq_freeze_queue_nomemsave block/blk-mq.c:215 [inline]
- #2: ffff8880261b1de8 (&q->q_usage_counter(io)#49){++++}-{0:0}, at: __blk_mq_update_nr_hw_queues block/blk-mq.c:5014 [inline]
- #2: ffff8880261b1de8 (&q->q_usage_counter(io)#49){++++}-{0:0}, at: blk_mq_update_nr_hw_queues+0x263/0x1360 block/blk-mq.c:5074
- #3: ffff8880261b1e20 (&q->q_usage_counter(queue)){+.+.}-{0:0}, at: blk_mq_freeze_queue_nomemsave block/blk-mq.c:215 [inline]
- #3: ffff8880261b1e20 (&q->q_usage_counter(queue)){+.+.}-{0:0}, at: __blk_mq_update_nr_hw_queues block/blk-mq.c:5014 [inline]
- #3: ffff8880261b1e20 (&q->q_usage_counter(queue)){+.+.}-{0:0}, at: blk_mq_update_nr_hw_queues+0x263/0x1360 block/blk-mq.c:5074
-
-stack backtrace:
-CPU: 3 UID: 0 PID: 5939 Comm: syz-executor876 Not tainted 6.14.0-syzkaller-12966-ga2cc6ff5ec8f #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
- print_circular_bug+0x275/0x350 kernel/locking/lockdep.c:2079
- check_noncircular+0x14c/0x170 kernel/locking/lockdep.c:2211
- check_prev_add kernel/locking/lockdep.c:3166 [inline]
- check_prevs_add kernel/locking/lockdep.c:3285 [inline]
- validate_chain kernel/locking/lockdep.c:3909 [inline]
- __lock_acquire+0x1173/0x1ba0 kernel/locking/lockdep.c:5235
- lock_acquire kernel/locking/lockdep.c:5866 [inline]
- lock_acquire+0x179/0x350 kernel/locking/lockdep.c:5823
- __mutex_lock_common kernel/locking/mutex.c:601 [inline]
- __mutex_lock+0x199/0xb90 kernel/locking/mutex.c:746
- blk_mq_elv_switch_none block/blk-mq.c:4942 [inline]
- __blk_mq_update_nr_hw_queues block/blk-mq.c:5022 [inline]
- blk_mq_update_nr_hw_queues+0x4a9/0x1360 block/blk-mq.c:5074
- nbd_start_device+0x172/0xcd0 drivers/block/nbd.c:1476
- nbd_start_device_ioctl drivers/block/nbd.c:1527 [inline]
- __nbd_ioctl drivers/block/nbd.c:1602 [inline]
- nbd_ioctl+0x219/0xda0 drivers/block/nbd.c:1642
- blkdev_ioctl+0x274/0x6d0 block/ioctl.c:698
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:906 [inline]
- __se_sys_ioctl fs/ioctl.c:892 [inline]
- __x64_sys_ioctl+0x190/0x200 fs/ioctl.c:892
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fe4217ab4a9
-Code: 48 83 c4 28 c3 e8 37 17 00 00 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ffe73ad6c28 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00007ffe73ad6df8 RCX: 00007fe4217ab4a9
-RDX: 0000000000000000 RSI: 000000000000ab03 RDI: 0000000000000003
-RBP: 00007fe42181e610 R08: 00007ffe73ad6df8 R09: 00007ffe73ad6df8
-R10: 00007ffe73ad6df8 R11: 0000000000000246 R12: 0000000000000001
-R13: 00007ffe73ad6de8 R14: 0000000000000001 R15: 0000000000000001
- </TASK>
-
-
----
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+Sebastian
