@@ -1,111 +1,106 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FF4A13A244;
-	Thu,  3 Apr 2025 03:42:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15625190676;
+	Thu,  3 Apr 2025 03:45:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743651762; cv=none; b=hVC8Ol8KA20/IsSR1npKQu/BPJQyBAkGVmqo/Tvcxan6x40x0NbgJ5hTeuEdrcW15PMIIulRrvdiBrWMHXFAFP3LITmGxfIL5vNQpHH4tarhKls3Mqdrg//XARHXgIPTEoQiSQVwdrRzY6bZf2M2v4avm4InqDwIJB+O8GDZmus=
+	t=1743651903; cv=none; b=bQB6dycE4fuBBVfc8nBNTijkqJu6GqRLVKRcKWj7ARxmWfDFKEw881Oc50nfw19R8+Ze0jGmGscaU9LhxWWGLMTJ1kefgNgXmCykUtjPD9wavSW0TcnffJHBoKzA361zejhlZKLaDtmeePjF9yY3LtgMlXoaFWCCHrSvVGbDdWI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743651762; c=relaxed/simple;
-	bh=nlEfIQXVFSXU2WXk90DKBYPjTtBBUFJlgKi+bnMnsNw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L5QO9y6AsKcrP8GySmtk17KrMm+4YzcGQahWFZ1VM5SQDJw/gjl4frer1g67CrSopwmioscUsRhgQtN+V+hGxbklt6RnzcGxb9AJ9txMR2i8i90A/zlYqOH6toqe5FyrAJFWXa2yUYaumFYJSuMVChOMd+omUwI46QS0KT+Mkug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=G6kyT1pn; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1743651903; c=relaxed/simple;
+	bh=g0eeMoCPhUHJLnB0FxQba7YP3aKMy2i0lfXOvJHYqhY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=rZpOfDawwkI+gmpUmyO5sQzKMRWeJjetz9hCesvIqGJQqzqGIjQcFXREPwcD1Ub1lW+BRbx/SGjow3mD4wOpN4n7Z5nX2YWP+DFsLli2u/oTeNV4+93VA72nBxIlMagbdIeonkuTQ93fzU6PRBI55msrQfKYOVZIHQq6OVP5r8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=egR0Qe7w; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="G6kyT1pn"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=vYeenMdn6I2y0o1BiN7xKeWa4HgHTA70mF73ckMYMbw=; b=G6kyT1pnZOdhnSovrf0UM4IfLk
-	tjwCogFC1Llkff4olUSBLWbnbyLL01v6OD8vhaA3uuTiNpKD99YEbS/T211vsL7WFwgG6vKpHaatT
-	hsfY0r3Cl/xQzcHHDlJRJ1EZjI82SDikhg64FVslk5xqqrGnDUphQ+i52sgAsTPL9J26H9FLnhvWE
-	l/iHId/CNmLVv3DJffZ8+ijuZtNgdyDAljNOAnKo1FtSUExiEZDVALERcBrfV8QdhrVo9RITO/kRm
-	9b2ElPxvCj8WLBiymk5+cyghFV9uldtMj1ih/L5qZql5VPUt/6gnt4CJKvMj4AluDhjUtAjLkzcop
-	W4GvaAOA==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1u0BTO-00CMAh-1W;
-	Thu, 03 Apr 2025 11:42:35 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Thu, 03 Apr 2025 11:42:34 +0800
-Date: Thu, 3 Apr 2025 11:42:34 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: Ard Biesheuvel <ardb@kernel.org>, linux-crypto@vger.kernel.org,
-	linux-kernel@vger.kernel.org, x86@kernel.org,
-	"Jason A. Donenfeld" <Jason@zx2c4.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Banning crypto in hardirq context (was: [PATCH v2 0/9] crypto: x86 -
- stop using the SIMD helper)
-Message-ID: <Z-4DqsRApwQi6Xju@gondor.apana.org.au>
-References: <20250402002420.89233-1-ebiggers@kernel.org>
- <Z-yrf_9D2rV1Q136@gondor.apana.org.au>
- <CAMj1kXEx__RLBriW0kVPrKnx6+DCpq8=6F-7Tmj2Us61gvGGaw@mail.gmail.com>
- <CAMj1kXE-vo7E1U++4mAqDH2SXfc=sRZs8KganedJk5z0QF49NA@mail.gmail.com>
- <Z-zzvXbjt3xzquXb@gondor.apana.org.au>
- <20250402171930.GD1235@sol.localdomain>
- <Z-3jkYNtZpTDtKGf@gondor.apana.org.au>
- <20250403021453.GA2872965@google.com>
- <Z-344xAsx1uTE9OK@gondor.apana.org.au>
- <20250403032008.GA129577@sol.localdomain>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="egR0Qe7w"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743651902; x=1775187902;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=g0eeMoCPhUHJLnB0FxQba7YP3aKMy2i0lfXOvJHYqhY=;
+  b=egR0Qe7wgeMKD+fvOqGWlY11f293GTdySLLMZl3SE+jpSL+cduIf9oJe
+   z3egFWwdBQZpHqSZMobmN25q+J4JOf6n7Ej+Rz1wnF9Jry8W7SPeJ15xn
+   +Nmac9am+AGRcgPOUqIiwV2MiSoc58zV9GPq8pjT4sHlUo5yWaBtZ0wM/
+   U9H9RlspVEQXG275x4G/j6cyxEw6vCZ2lNEK4PzAHkH7IsIFVJ9oDxEnl
+   0DFMcL2nOY4Iqu523Hf0M48JYDZ/Wa8ezwu/lAK+iU/yseLjdV8eFfwUT
+   jZBWOJ2m7IBHCVXNf9YsPz8oNmY2JG7NLMH50LLf8Cr1miZt7axZQkiXR
+   w==;
+X-CSE-ConnectionGUID: Zu18yyjpTmq4sV9N1UUoIQ==
+X-CSE-MsgGUID: Fm/jHXoMSsWK2drkQIMWWw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11392"; a="56406226"
+X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
+   d="scan'208";a="56406226"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 20:45:01 -0700
+X-CSE-ConnectionGUID: zggZ+9skQPu8Z6j+r+Pg3w==
+X-CSE-MsgGUID: 9TXUhqieQe2H8+kfyYs9HA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
+   d="scan'208";a="126646112"
+Received: from bjrankin-mobl3.amr.corp.intel.com (HELO vcostago-mobl3) ([10.124.222.157])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 20:45:00 -0700
+From: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+To: Nathan Lynch <nathan.lynch@amd.com>, Vinod Koul <vkoul@kernel.org>,
+ dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: dave.jiang@intel.com, kristen.c.accardi@intel.com, kernel test robot
+ <oliver.sang@intel.com>
+Subject: Re: [PATCH v1] dmaengine: dmatest: Fix dmatest waiting less when
+ interrupted
+In-Reply-To: <877c428yng.fsf@AUSNATLYNCH.amd.com>
+References: <20250305230007.590178-1-vinicius.gomes@intel.com>
+ <878qpa13fe.fsf@AUSNATLYNCH.amd.com> <87senhoq1k.fsf@intel.com>
+ <874izx10nx.fsf@AUSNATLYNCH.amd.com> <87wmcslwg4.fsf@intel.com>
+ <871pv01vaz.fsf@AUSNATLYNCH.amd.com> <87r030ldbw.fsf@intel.com>
+ <87y0x7z45p.fsf@AUSNATLYNCH.amd.com> <87ldt7l081.fsf@intel.com>
+ <877c428yng.fsf@AUSNATLYNCH.amd.com>
+Date: Wed, 02 Apr 2025 20:44:59 -0700
+Message-ID: <87o6xdzz5w.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250403032008.GA129577@sol.localdomain>
+Content-Type: text/plain
 
-On Wed, Apr 02, 2025 at 08:20:08PM -0700, Eric Biggers wrote:
+Nathan Lynch <nathan.lynch@amd.com> writes:
+
+> Vinicius Costa Gomes <vinicius.gomes@intel.com> writes:
+>> Nathan Lynch <nathan.lynch@amd.com> writes:
+>>
+>>> Vinicius Costa Gomes <vinicius.gomes@intel.com> writes:
+>>>> Nathan Lynch <nathan.lynch@amd.com> writes:
+>>>>> dmatest_callback() employs wake_up_all(), which means this change
+>>>>> introduces no beneficial difference in the wakeup behavior. The dmatest
+>>>>> thread gets woken on receipt of the completion interrupt either way.
+>>>>>
+>>>>> And to reiterate, the change regresses the combination of dmatest and
+>>>>> the task freezer, which is a use case people have cared about,
+>>>>> apparently.
+>>>>>
+>>>>
+>>>> If this change in behavior causes a regression for others, glad to send
+>>>> a revert and find another solution.
+>>>
+>>> Thanks - yes it should be reverted or dropped IMO.
+>>
+>> Here's what I am thinking, I'll work on this a few days and see if I can
+>> find an alternative solution and send the revert together with the fix.
+>> If I can't find another solution in a few days, I'll propose the revert
+>> anyway.
 >
-> Also, riscv has scalar AES instructions.  (They aren't used by the kernel yet,
-> but they could be.  The CRC code already uses scalar carryless multiplication.)
+> Just checking on this - I see this regression is in Linus's master
+> branch now.
 
-It still doesn't mean that it's a good idea to use AES in a
-hard IRQ handler, especially if the code is meant to be portable.
+I have a series with the revert, a (hopefully better) fix for this
+issue, and a couple of others that I found along the way, that I should
+be able to propose soon.
 
-> Also, as I said already, x86 does support SIMD instructions in hardirq context
-> in some cases.  Whether anyone actually uses that, I don't know, but it is
-> explicitly supported.  Check out irq_fpu_usable().
-
-This is more of an accident than some deliberate strategy of
-supporting FPU usage in hard IRQs.  This test was initially
-added for aesni:
-
-commit 54b6a1bd5364aca95cd6ffae00f2b64c6511122c
-Author: Ying Huang <huang.ying.caritas@gmail.com>
-Date:   Sun Jan 18 16:28:34 2009 +1100
-
-    crypto: aes-ni - Add support to Intel AES-NI instructions for x86_64 platform
-
-It was then improved by:
-
-Author: Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon Feb 13 13:56:14 2012 -0800
-
-    i387: make irq_fpu_usable() tests more robust
-    
-    Some code - especially the crypto layer - wants to use the x86
-    FP/MMX/AVX register set in what may be interrupt (typically softirq)
-    context.
-
-At no point was there any intention of using this in a hardirq
-context.
-
-Until such a time when you have a valid application for using
-lib/crypto code in a hardirq context, I don't think we should
-be supporting that at the expense of real users who are in
-process/softirq context only.
 
 Cheers,
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Vinicius
