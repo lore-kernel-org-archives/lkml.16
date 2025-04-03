@@ -1,69 +1,106 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 400E4746E
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 01:50:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AA9F746E;
+	Thu,  3 Apr 2025 01:53:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743645048; cv=none; b=XfFhF1O8M0UP9cPzQ7/6apENHt3msdUX4rLALMyuGX/WzkoOBY9BZPeHTyweRHHnYbv0fIFvhzJWnjRAfHw55/stAr7ZKsDOzJ13dsNiilQNvyuxYLARGnxJjLHE62FaFUxjbIIMIKPuO8gqyPX8deRz4e6r2WiqHm6N/cthU68=
+	t=1743645211; cv=none; b=G5r38TyESrq/ij/fw925ryXRQxkoAhWaE4/lry+8iRV5KnQvEdNZ43IuSylhEB8aPfUsmx35+SD2lVmbcbzXGs91Ep/2Qz+sDh9bMGpuwT7yJEMI/wVX/p8Uiy6otIWdDwDIqv6+JcFQNvhTerGh1wx8CatsUt5Zimaio1VzcVk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743645048; c=relaxed/simple;
-	bh=fvhrmqFxRW9iluUlEIEdINB9npE40ubf0w3F0jkTFnQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=Ncf4+/Kny8i0KM2mdOawzfeKQbohq/bVC5DGcouQMM4A48sGKeHowxaPsa7mB13BxbXs1394Nk5LOYXdrSmzL0buLKsGt5aNV+Vjgz6f9O+yaJraOQcV5y38Q8E04E9yJozrz1ptjuUl8mhYGZz4UqHJSbY3vBglQVBUMyBYZhA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=a5+8K1b8 reason="signature verification failed"; arc=none smtp.client-ip=220.197.31.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="a5+8K1b8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=vXp/4TYR9/zzfCV+PTqmdxbyCOY2QQST3egC5LaB1TE=; b=a
-	5+8K1b8XeCGZSR1RJ0SeJrDZlIfW8c1ZENEc8U225eTvwk9d0DPYxUghUFhW6qaI
-	Mrpo1e8WUrJt4HRyRI6en92vFMf4YnGmKMYH9SgP1ByRPXxsIovK+IT56LIxe4Lx
-	M9hr9+4fMTvynx3fSqQGK6kt6UflDwI3I7Iefom9/M=
-Received: from andyshrk$163.com ( [58.22.7.114] ) by
- ajax-webmail-wmsvr-40-114 (Coremail) ; Thu, 3 Apr 2025 09:49:35 +0800 (CST)
-Date: Thu, 3 Apr 2025 09:49:35 +0800 (CST)
-From: "Andy Yan" <andyshrk@163.com>
-To: lumag@kernel.org
-Cc: cristian.ciocaltea@collabora.com, mripard@kernel.org,
-	neil.armstrong@linaro.org, dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org, heiko@sntech.de,
-	"Andy Yan" <andy.yan@rock-chips.com>,
-	dmitry.baryshkov@oss.qualcomm.com
-Subject: Re:[PATCH] drm/bridge: dw-hdmi: Avoid including uapi headers
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
- Copyright (c) 2002-2025 www.mailtech.cn 163com
-In-Reply-To: <20250314075754.539221-1-andyshrk@163.com>
-References: <20250314075754.539221-1-andyshrk@163.com>
-X-NTES-SC: AL_Qu2fAfqfu0Es4yaYZukfmkcVgOw9UcO5v/Qk3oZXOJF8jDvp6CEgd21jJ0DK6eeEOiqAjTi3YBx39upQfaBdUrMAyVPhYVx7fETPIuJHQPI3Ag==
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	s=arc-20240116; t=1743645211; c=relaxed/simple;
+	bh=03URNyBY2K6MhHGMe8DPNLNqV+qjQQH5T363c8CEDKQ=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=C6YgamCnWd0yGchkMDHIYYYHTihHd/ucVjm3DKGJxoXs4xAL9dgbbcO8wDmUd9YunBHnvJyqqNVCx7fQBUG7uKkiBu3N2Y9auGxQ9uXucUCIguIDXWgFuJVZ2M/LbEGQ14b3J3SpFjA+XfHUhWk+uimB+VOFTcbx6imDQAy8JI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4ZSlB40qgLz4f3jZd;
+	Thu,  3 Apr 2025 09:53:00 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id E3BC51A06DC;
+	Thu,  3 Apr 2025 09:53:17 +0800 (CST)
+Received: from [10.174.179.143] (unknown [10.174.179.143])
+	by APP4 (Coremail) with SMTP id gCh0CgAni18M6u1nJtxmIQ--.59599S3;
+	Thu, 03 Apr 2025 09:53:17 +0800 (CST)
+Subject: Re: [PATCH] md/md-bitmap: fix stats collection for external bitmaps
+To: Zheng Qixing <zhengqixing@huaweicloud.com>, song@kernel.org
+Cc: linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
+ yi.zhang@huawei.com, yangerkun@huawei.com, zhengqixing@huawei.com,
+ "yukuai (C)" <yukuai3@huawei.com>
+References: <20250402011523.2271768-1-zhengqixing@huaweicloud.com>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <15c25e4f-97d1-a517-fcce-8ae4c87ef2ef@huaweicloud.com>
+Date: Thu, 3 Apr 2025 09:53:15 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <4d4460.1cc4.195f956e1f7.Coremail.andyshrk@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:cigvCgD3_zwv6e1nC6yNAA--.9840W
-X-CM-SenderInfo: 5dqg52xkunqiywtou0bp/1tbiqAskXmft4vBCUwABsR
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+In-Reply-To: <20250402011523.2271768-1-zhengqixing@huaweicloud.com>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgAni18M6u1nJtxmIQ--.59599S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7AFyxAry3CFW3Xw1kuFyDKFg_yoW8GrW8pF
+	Z8G3W5uw4rJry0grn8Zry8AFyrJ3Zxtr9rKr1rG3s5CFZrAF9xKr48Ga4UZ3Wq9ry8ZF4j
+	qrW5JFy2k3yjvFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkEb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AF
+	wI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
+	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43
+	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
+	0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
+	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07UK2N
+	tUUUUU=
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-CgogR2VudGxlIHBpbmcuLi4uLi4KCkF0IDIwMjUtMDMtMTQgMTU6NTc6NDcsICJBbmR5IFlhbiIg
-PGFuZHlzaHJrQDE2My5jb20+IHdyb3RlOgo+RnJvbTogQW5keSBZYW4gPGFuZHkueWFuQHJvY2st
-Y2hpcHMuY29tPgo+Cj5JdCBpcyBub3QgcmVjb21tZW5kZWQgZm9yIGRyaXZlcnMgdG8gaW5jbHVk
-ZSBVQVBJIGhlYWRlcgo+ZGlyZWN0bHkuCj4KPlNpZ25lZC1vZmYtYnk6IEFuZHkgWWFuIDxhbmR5
-LnlhbkByb2NrLWNoaXBzLmNvbT4KPi0tLQo+Cj4gZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9zeW5v
-cHN5cy9kdy1oZG1pLmMgfCA0ICsrLS0KPiAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCsp
-LCAyIGRlbGV0aW9ucygtKQo+Cj5kaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9z
-eW5vcHN5cy9kdy1oZG1pLmMgYi9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3N5bm9wc3lzL2R3LWhk
-bWkuYwo+aW5kZXggMDg5MGFkZDVmNzA3Li4zMDZlMDlhMjRhMWMgMTAwNjQ0Cj4tLS0gYS9kcml2
-ZXJzL2dwdS9kcm0vYnJpZGdlL3N5bm9wc3lzL2R3LWhkbWkuYwo+KysrIGIvZHJpdmVycy9ncHUv
-ZHJtL2JyaWRnZS9zeW5vcHN5cy9kdy1oZG1pLmMKPkBAIC0yMiw4ICsyMiw4IEBACj4gCj4gI2lu
-Y2x1ZGUgPG1lZGlhL2NlYy1ub3RpZmllci5oPgo+IAo+LSNpbmNsdWRlIDx1YXBpL2xpbnV4L21l
-ZGlhLWJ1cy1mb3JtYXQuaD4KPi0jaW5jbHVkZSA8dWFwaS9saW51eC92aWRlb2RldjIuaD4KPisj
-aW5jbHVkZSA8bGludXgvbWVkaWEtYnVzLWZvcm1hdC5oPgo+KyNpbmNsdWRlIDxsaW51eC92aWRl
-b2RldjIuaD4KPiAKPiAjaW5jbHVkZSA8ZHJtL2JyaWRnZS9kd19oZG1pLmg+Cj4gI2luY2x1ZGUg
-PGRybS9kaXNwbGF5L2RybV9oZG1pX2hlbHBlci5oPgo+LS0gCj4yLjM0LjEK
+Hi,
+
+ÔÚ 2025/04/02 9:15, Zheng Qixing Ð´µÀ:
+> From: Zheng Qixing <zhengqixing@huawei.com>
+> 
+> The bitmap_get_stats() function incorrectly returns -ENOENT for external
+> bitmaps, preventing statistics collection when a valid superblock page
+> exists.
+> 
+> Remove the external bitmap check as the statistics should be available
+> regardless of bitmap storage location when sb_page is present.
+> 
+> Note: "bitmap_info.external" here refers to a bitmap stored in a separate
+> file (bitmap_file), not to external metadata.
+> 
+> Fixes: 8d28d0ddb986 ("md/md-bitmap: Synchronize bitmap_get_stats() with bitmap lifetime")
+> Signed-off-by: Zheng Qixing <zhengqixing@huawei.com>
+> ---
+>   drivers/md/md-bitmap.c | 2 --
+>   1 file changed, 2 deletions(-)
+> 
+> diff --git a/drivers/md/md-bitmap.c b/drivers/md/md-bitmap.c
+> index 44ec9b17cfd3..afd01c93ddd9 100644
+> --- a/drivers/md/md-bitmap.c
+> +++ b/drivers/md/md-bitmap.c
+> @@ -2357,8 +2357,6 @@ static int bitmap_get_stats(void *data, struct md_bitmap_stats *stats)
+>   
+>   	if (!bitmap)
+>   		return -ENOENT;
+> -	if (bitmap->mddev->bitmap_info.external)
+> -		return -ENOENT;
+>   	if (!bitmap->storage.sb_page) /* no superblock */
+>   		return -EINVAL;
+
+bitmap_file doesn't have sb, so above condition still need to be fixed.
+
+Thanks,
+Kuai
+
+>   	sb = kmap_local_page(bitmap->storage.sb_page);
+> 
+
