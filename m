@@ -1,197 +1,221 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E832EAFA;
-	Thu,  3 Apr 2025 18:18:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A72E12517B5
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 18:19:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743704339; cv=none; b=uKm5scunfzGPPR08YLrTKSDqTGk+ezcDWbDYSDD5Tu5fVaSeI13gtXh9Kx6yW+M9R4ed3J9UvdVh+WL/9EO061PWBwIca9u6NWasOZ36XY//Z0FFUZh9/cE3VDZRJjVutaCg2n12YV/nBtf0DBb3FQz1fR3G8JJ1XOa5AYlIOOQ=
+	t=1743704370; cv=none; b=H2OLZdjIpXdZ3M7kU+Wr+aN8e+5+etRZiTV/RlL9RKH7+nzoAP5gSUWfH5aKNM4GJFa4KgtzCl7WWzGlZYUKetDw7VgrYNumeesEbBiSCyXmgQuRwE9bLVRwOk6b7Xd9qVkjR6qDnj4XBcbbrFiGh5Fzm3ekRQo25FPkeDnxWN8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743704339; c=relaxed/simple;
-	bh=M5N00HnKLSUan93thRh5WJ9MmhDcbNpowslPluoagg0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=swLuPAXmGi4XDJiCj+Zcp1kmzDL+JuaJ2W1gZF/y+8g0TByh4CPkLNdlUTBdu/Y+f7aAv1gtuSoQeE83hTQ7yTdLKHbeRepKO4dth8kO7A9/klEM0FgEySiU7lraptpiiC/blC/TErmwh+WxX5dtsK4dgOAlEaSpIK/G+FIQeZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lbNrx3dx; arc=none smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743704370; c=relaxed/simple;
+	bh=xVE2lXOKmBCKTcYCr499G6FhNYWBcLBfWfpnJWoEQT8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=YYx0sphNaW5UdTmGgTuQ5FjDs30iwBtSndOnC4oh+a6N7wUrCoeX2CyOYalURGN0aZoKyyn0yoKttQIZm0RYM/eXPtU4mIAf1gIRPl3AjN3cyrVa2zpi4d0zFEPL6ioRpxKkSyD6pAFaFfsui4SMDf02ti755Jwd8uwCaLrPatQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ZkOxBJId; arc=none smtp.client-ip=91.218.175.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lbNrx3dx"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2ff64550991so1001471a91.0;
-        Thu, 03 Apr 2025 11:18:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743704337; x=1744309137; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=oivgM/oU05SavlSk6ZyQtfDyxaVZ5/OSN3+HJvK9guw=;
-        b=lbNrx3dxWJG1mEfoIMxNDHN8vzQuHlxX625NPhDwW/QHsKJy3qiEYxXkTnud040q/b
-         uE8R+8GMcd3krMv0hSmgbQ6Asi3a18I5C/wMuU4Hyz3bQvjSVHSOQpnYn2ADXMk61Kev
-         syeWQXyH6RXFEUn/XxTP9cf12gxHqM7nSCFJen2/Bzn7LOya1zhPUHgTE1T9zGE+iYtz
-         L0GJ0gwWGebTd6n26iaMVoSgxFPmB+K9wxhkK/1KXmR0aMd/WP/D8zO+Y5n4gKWI95ax
-         kuyY3DQvkx50LTSCKN1F0jyya4/l3R4R8+KiJfMsAe5teAJLZ6wwif+D9mpf8OqPIbkp
-         3hiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743704337; x=1744309137;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=oivgM/oU05SavlSk6ZyQtfDyxaVZ5/OSN3+HJvK9guw=;
-        b=cq+gs/JmolN2tB+5Q2d+WlS4hZyFZPlGIsl6QrcPYXlDnhtR8uDJHq/O6+qXwmiSQf
-         l2S/+Nf68cA9tEGcfhilofekaQi/hUlXbtErrwQu68WQoYvlJWovDLL3aetDKYg17PJx
-         dg2MtBlj1eWCdAUbCWdizciTDhcE2txlB0YEQijdD3USR9l9G3/NzQmndNNRICJLDvN6
-         emPTWYnQYue3O4NhcbxEo4SMb3lkL3t5il+3xvX0n+d214fcsVHozweFD48NjVV6aWrY
-         EKDaS/GgIN6KFsQk85LaSnTSWVmshryPGTey4T7xS/B+pENsf/8hAEEBOI1zhcs3MR/v
-         x5jg==
-X-Forwarded-Encrypted: i=1; AJvYcCX65lpgMe08LNgINrYy7puIq4f87+UWxevJYrohfAJ0MZNQRk22iLTqxfBnCYAFDp56fS1HIQEXAyDYAqk=@vger.kernel.org, AJvYcCXpr/88v4bYkIpoQQYtNCiVtslvK3+t0UlwTMfDBkOLLCKUqmHVzipvZr1vKEj3m8J6KKTWQ1HVtMFo4yA/xUVlTw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJvtSEeltfvBQSRWMaQqr6wBpFRdsUD5ACpVU7D1wTIo2TQ1UH
-	zIVKToIMLcF2NHqj9ASmRHGj+7nbcOwLYeC3FIgAv5S7awB1CrDm
-X-Gm-Gg: ASbGncufRMjJnhz+sQ2FkD8yYLuooJIb0Ne/t1O8OjTIE/IMJl4Wpz61ZeiIdXcz3B4
-	8O8ogSV13RqXIfOP27hJ0Kx+qKOboC3SIFVRs+1LeHKd2Wlx+g3aDVYI9pbw0K0xl79phoizE1x
-	nyA4bSBeNSQy2tDJ6V+7xIGCNevKjdvUQ0NLuLIyOv9MBwL4Xu+t8ZY5e0ad9qUZs2UBph54weS
-	+1+2m+AjAylCwsgJ5Q7xKZJ2V8dABlF63nIBPBjzWhOyXooVScuCOMDSU6SmruJvmIkSHu0JUxH
-	DmEb+sYSv2UqgZdPBdAlWPk7lmZ1UhSbV+SgSkRzGJpj
-X-Google-Smtp-Source: AGHT+IFuaMbU+XKrkn5Ng28elo7CBSiie4K0f2h0FqN4hLafmF2c3xz6u0jjXgUkA6eub5kjms80YA==
-X-Received: by 2002:a17:90a:c890:b0:2ff:5ec1:6c6a with SMTP id 98e67ed59e1d1-306a48a9cc1mr937759a91.18.1743704337319;
-        Thu, 03 Apr 2025 11:18:57 -0700 (PDT)
-Received: from localhost ([216.228.125.131])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3057cb5a823sm2023497a91.34.2025.04.03.11.18.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Apr 2025 11:18:56 -0700 (PDT)
-Date: Thu, 3 Apr 2025 14:18:54 -0400
-From: Yury Norov <yury.norov@gmail.com>
-To: Ian Rogers <irogers@google.com>
-Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Darren Hart <dvhart@infradead.org>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	=?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>,
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
-	James Clark <james.clark@linaro.org>,
-	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
-	Yicong Yang <yangyicong@hisilicon.com>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Al Viro <viro@zeniv.linux.org.uk>, Kyle Meyer <kyle.meyer@hpe.com>,
-	Ben Gainey <ben.gainey@arm.com>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	Kajol Jain <kjain@linux.ibm.com>,
-	Aditya Gupta <adityag@linux.ibm.com>,
-	Eder Zulian <ezulian@redhat.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	Kuan-Wei Chiu <visitorckw@gmail.com>, He Zhe <zhe.he@windriver.com>,
-	Dirk Gouders <dirk@gouders.net>, Brian Geffon <bgeffon@google.com>,
-	Ravi Bangoria <ravi.bangoria@amd.com>,
-	Howard Chu <howardchu95@gmail.com>,
-	Charlie Jenkins <charlie@rivosinc.com>,
-	Colin Ian King <colin.i.king@gmail.com>,
-	Dominique Martinet <asmadeus@codewreck.org>,
-	Jann Horn <jannh@google.com>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Yang Jihong <yangjihong@bytedance.com>,
-	Dmitry Vyukov <dvyukov@google.com>, Andi Kleen <ak@linux.intel.com>,
-	Graham Woodward <graham.woodward@arm.com>,
-	Ilkka Koskinen <ilkka@os.amperecomputing.com>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Zhongqiu Han <quic_zhonhan@quicinc.com>, Hao Ge <gehao@kylinos.cn>,
-	Tengda Wu <wutengda@huaweicloud.com>,
-	Gabriele Monaco <gmonaco@redhat.com>,
-	Chun-Tse Shao <ctshao@google.com>,
-	Casey Chen <cachen@purestorage.com>,
-	"Dr. David Alan Gilbert" <linux@treblig.org>,
-	Li Huafei <lihuafei1@huawei.com>,
-	"Steinar H. Gunderson" <sesse@google.com>,
-	Levi Yun <yeoreum.yun@arm.com>, Weilin Wang <weilin.wang@intel.com>,
-	Thomas Falcon <thomas.falcon@intel.com>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	Andrew Kreimer <algonell@gmail.com>,
-	Krzysztof =?utf-8?Q?=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>,
-	Junhao He <hejunhao3@huawei.com>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	Xu Yang <xu.yang_2@nxp.com>,
-	Steve Clevenger <scclevenger@os.amperecomputing.com>,
-	Zixian Cai <fzczx123@gmail.com>,
-	Stephen Brennan <stephen.s.brennan@oracle.com>,
-	Yujie Liu <yujie.liu@intel.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v1 02/48] tools headers: Silence -Wshorten-64-to-32
- warnings
-Message-ID: <Z-7RDmHVWqJWS1aV@thinkpad>
-References: <20250401182347.3422199-1-irogers@google.com>
- <20250401182347.3422199-3-irogers@google.com>
- <Z-6WY4a6RV1bEbNU@thinkpad>
- <Z-6aoJ3ohVHPsF0A@thinkpad>
- <CAP-5=fU6E1_8Vzki1dVyb8hDEYOXaSNSrJJkR6AOU8xqvknT8w@mail.gmail.com>
- <Z-6n-3ObiNNLQzFw@thinkpad>
- <CAP-5=fUg_QmWBRUM4tc7zF-rCP9D5+=AqP_FPPYiFEybhcvbhA@mail.gmail.com>
- <CAP-5=fUkoiZXL3J7A_pjP07fY+vv3Gs0BHXMXxpo1NOngXKtrA@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ZkOxBJId"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1743704365;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iBvHqHOnFT/ZCUCG3ape7UEeqS5DfFtchmilRVe8jjI=;
+	b=ZkOxBJIdhSlhsgcEaEj1hjohe+Awg+08todA7TDEBfkIAzP7TT0L5LVg87dTo+S5KhNjkI
+	3MaLys214tLGmNyvX3yrD/tA1icqqNaus6rLCYxVcoOipQtd6NKFaPX7zNr+D+T9DZ8olp
+	I9elhS7m+uSmfkYq8wWFCK6/dr7XIjA=
+From: Sean Anderson <sean.anderson@linux.dev>
+To: netdev@vger.kernel.org,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Russell King <linux@armlinux.org.uk>
+Cc: linux-kernel@vger.kernel.org,
+	Christian Marangi <ansuelsmth@gmail.com>,
+	upstream@airoha.com,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Sean Anderson <sean.anderson@linux.dev>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Michal Simek <michal.simek@amd.com>,
+	Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>,
+	Rob Herring <robh@kernel.org>,
+	Robert Hancock <robert.hancock@calian.com>,
+	devicetree@vger.kernel.org
+Subject: [RFC net-next PATCH 01/13] dt-bindings: net: Add binding for Xilinx PCS
+Date: Thu,  3 Apr 2025 14:18:55 -0400
+Message-Id: <20250403181907.1947517-2-sean.anderson@linux.dev>
+In-Reply-To: <20250403181907.1947517-1-sean.anderson@linux.dev>
+References: <20250403181907.1947517-1-sean.anderson@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fUkoiZXL3J7A_pjP07fY+vv3Gs0BHXMXxpo1NOngXKtrA@mail.gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, Apr 03, 2025 at 11:12:30AM -0700, Ian Rogers wrote:
-> On Thu, Apr 3, 2025 at 8:45 AM Ian Rogers <irogers@google.com> wrote:
-> >
-> > On Thu, Apr 3, 2025 at 8:23 AM Yury Norov <yury.norov@gmail.com> wrote:
-> > >
-> > > On Thu, Apr 03, 2025 at 07:52:45AM -0700, Ian Rogers wrote:
-> > > > On Thu, Apr 3, 2025 at 7:26 AM Yury Norov <yury.norov@gmail.com> wrote:
-> > > > >
-> > > > > On Thu, Apr 03, 2025 at 10:08:39AM -0400, Yury Norov wrote:
-> > > > > > On Tue, Apr 01, 2025 at 11:23:00AM -0700, Ian Rogers wrote:
-> > > > > > > The clang warning -Wshorten-64-to-32 can be useful to catch
-> > > > > > > inadvertent truncation. In some instances this truncation can lead to
-> > > > > > > changing the sign of a result, for example, truncation to return an
-> > > > > > > int to fit a sort routine. Silence the warning by making the implicit
-> > > > > > > truncation explicit.
-> > > > > > >
-> > > > > > > Signed-off-by: Ian Rogers <irogers@google.com>
-> > > > >
-> > > > > I'm the first person in the To list, but only a couple patches in the
-> > > > > series are related to my area. If you want to move it with me, can you
-> > > > > send bitmaps, bitfields etc. separately?
-> > > >
-> > > > Hi Yury,
-> > > >
-> > > > If you think it is worthwhile. I did the series to see how prevalent a
-> > > > bug was in perf's code - inspired by Leo Yan fixing an instance of it.
-> > > > I would prefer not to be on the hook for all the kernel warnings :-)
-> > > > Perhaps casts to avoid changing bitmap_weight's type. Unfortunately to
-> > > > get to where the perf issues were I needed to clean up header files.
-> > > > In the bitmap cases the change is just to make implicit casts explicit
-> > > > and I don't know how much value you see in that.
-> > >
-> > > Your changes  are technically correct (except for non-synced kernel and
-> > > tools), make the code cleaner, at least to me, and address pretty valid
-> > > compiler's concerns. To me, it's worth to apply.
-> >
-> > Ok cool. I'll make a separate patch series for them. Sorry for giving
-> > you such a long patch series with limited signal to noise.
-> 
-> Posted here:
-> https://lore.kernel.org/lkml/20250403165702.396388-1-irogers@google.com/
+This adds a binding for the Xilinx 1G/2.5G Ethernet PCS/PMA or SGMII
+LogiCORE IP. This device is a soft device typically used to adapt
+between GMII and SGMII or 1000BASE-X (possbilty in combination with a
+serdes). pcs-modes reflects the modes available with the as configured
+when the device is synthesized. Multiple modes may be specified if
+dynamic reconfiguration is supported.
 
-Yep, I see. Let's wait for a while for any feedback? If all OK, I'll
-move it with my branch.
+One PCS may contain "shared logic in core" which can be connected to
+other PCSs with "shared logic in example design." This primarily refers
+to clocking resources, allowing a reference clock to be shared by a bank
+of PCSs. To support this, if #clock-cells is defined then the PCS will
+register itself as a clock provider for other PCSs.
+
+Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
+---
+
+ .../devicetree/bindings/net/xilinx,pcs.yaml   | 129 ++++++++++++++++++
+ 1 file changed, 129 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/xilinx,pcs.yaml
+
+diff --git a/Documentation/devicetree/bindings/net/xilinx,pcs.yaml b/Documentation/devicetree/bindings/net/xilinx,pcs.yaml
+new file mode 100644
+index 000000000000..56a3ce0c4ef0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/xilinx,pcs.yaml
+@@ -0,0 +1,129 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/net/xilinx,pcs.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Xilinx 1G/2.5G Ethernet PCS/PMA or SGMII LogiCORE IP
++
++maintainers:
++  - Sean Anderson <sean.anderson@seco.com>
++
++description:
++  This is a soft device which implements the PCS and (depending on
++  configuration) PMA layers of an IEEE Ethernet PHY. On the MAC side, it
++  implements GMII. It may have an attached SERDES (internal or external), or
++  may directly use LVDS IO resources. Depending on the configuration, it may
++  implement 1000BASE-X, SGMII, 2500BASE-X, or 2.5G SGMII.
++
++  This device has a notion of "shared logic" such as reset and clocking
++  resources which must be shared between multiple PCSs using the same I/O
++  banks. Each PCS can be configured to have the shared logic in the "core"
++  (instantiated internally and made available to other PCSs) or in the "example
++  design" (provided by another PCS). PCSs with shared logic in the core are
++  reset controllers, and generally provide several resets for other PCSs in the
++  same bank.
++
++allOf:
++  - $ref: ethernet-controller.yaml#
++
++properties:
++  compatible:
++    contains:
++      const: xilinx,pcs-16.2
++
++  reg:
++    maxItems: 1
++
++  "#clock-cells":
++    const: 0
++    description:
++      Register a clock representing the clocking resources shared with other
++      PCSs.
++
++  clocks:
++    items:
++      - description:
++          The reference clock for the PCS. Depending on your setup, this may be
++          the gtrefclk, refclk, clk125m signal, or clocks from another PCS.
++
++  clock-names:
++    const: refclk
++
++  done-gpios:
++    maxItems: 1
++    description:
++      GPIO connected to the reset-done output, if present.
++
++  interrupts:
++    items:
++      - description:
++          The an_interrupt autonegotiation-complete interrupt.
++
++  interrupt-names:
++    const: an
++
++  pcs-modes:
++    description:
++      The interfaces that the PCS supports.
++    oneOf:
++      - const: sgmii
++      - const: 1000base-x
++      - const: 2500base-x
++      - items:
++          - const: sgmii
++          - const: 1000base-x
++
++  reset-gpios:
++    maxItems: 1
++    description:
++      GPIO connected to the reset input.
++
++required:
++  - compatible
++  - reg
++  - pcs-modes
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    mdio {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        pcs0: ethernet-pcs@0 {
++            #clock-cells = <0>;
++            compatible = "xlnx,pcs-16.2";
++            reg = <0>;
++            clocks = <&si570>;
++            clock-names = "refclk";
++            interrupts-extended = <&gic GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>;
++            interrupt-names = "an";
++            reset-gpios = <&gpio 5 GPIO_ACTIVE_HIGH>;
++            done-gpios = <&gpio 6 GPIO_ACTIVE_HIGH>;
++            pcs-modes = "sgmii", "1000base-x";
++        };
++
++        pcs1: ethernet-pcs@1 {
++            compatible = "xlnx,pcs-16.2";
++            reg = <1>;
++            clocks = <&pcs0>;
++            clock-names = "refclk";
++            interrupts-extended = <&gic GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>;
++            interrupt-names = "an";
++            reset-gpios = <&gpio 7 GPIO_ACTIVE_HIGH>;
++            done-gpios = <&gpio 8 GPIO_ACTIVE_HIGH>;
++            pcs-modes = "sgmii", "1000base-x";
++        };
++
++        pcs2: ethernet-pcs@2 {
++            compatible = "xlnx,pcs-16.2";
++            reg = <2>;
++            pcs-modes = "sgmii";
++        };
++    };
+-- 
+2.35.1.1320.gc452695387.dirty
+
