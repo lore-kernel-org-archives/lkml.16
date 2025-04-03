@@ -1,97 +1,114 @@
-Received: from mx.denx.de (mx.denx.de [89.58.32.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF2231EEA42;
-	Thu,  3 Apr 2025 20:23:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30A001F30DD
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 20:24:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743711782; cv=none; b=qzPbF0v6L6gtP4XYT/ydvB0Knn2hhiEIrgGckFxAZgBdCE1UU9gQGcGuiIZvCKVcg9dyOTfq7tibPgwr5Vy6tuOz3aa8Nyw5kokayfoB8rYwufxSrc5qkgEN00Mqy6bOg0X4MwuksBd3iLCsU4n4YpsTTGwx/6pAFW+fGCxpDBU=
+	t=1743711890; cv=none; b=i4Ea5YCI/gJ5lNoIrfKuCcozlpmIVNjQNvsTx3WLOPpiEd+eohO5vW1LdfsnYJcdI+sANxQag8TCkD6UzvLsEZXlfnYbcmAMPDH3P2aMnve8pHC36VHqXm51BzGAyPQPNJa126qela7TjsqxirrD0RkK63RVKEEkYIJ3hXw1vcE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743711782; c=relaxed/simple;
-	bh=kv/27SbJuSIXTmhWnb+qdl98yr6+5eeCmGZTis71NNY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j+WgJCfnDOOE4EpVMyR4OHDM4YDWvYRHSR+YBkQQ4IrbeXb/LbJcbjToLglss++7yymIke6G02nvF62upl0DwvbsYTqHC/64wp3eOnXiqU6DxMb0+GTKDuyQk2Y/VCncUmNrIBZmRpX4dlA0q/RKdh75/zzPu6GqootZ/+JM020=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=DO7i7CQv; arc=none smtp.client-ip=89.58.32.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+	s=arc-20240116; t=1743711890; c=relaxed/simple;
+	bh=bJfB6u7Ba5L05AgA9wAe9Ds8TZ0wWwO/HWK+I789ioI=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=ZJgseJoV0yV1B8Umo50QTRLYxGHpgRCm0Ci2E/rWW9oqQlFXHITe7+MuWaE2DDybto0jb3Oy7CVsa69n28Z3sTgLtmOrAvRC/XRyR16D16lhafqn0r0hbAl5yQM7qrqTTE3B+WVTk0xY+INmYlnAP2I4R0dn3/D5vE0z7yNzgog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rrr93mPD; arc=none smtp.client-ip=209.85.214.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="DO7i7CQv"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 950041026A6C2;
-	Thu,  3 Apr 2025 22:22:53 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
-	t=1743711777; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 in-reply-to:references; bh=1ArlMQj8XeUapHC5sD+RKab7T/b16esGJcv/bEjH5F8=;
-	b=DO7i7CQv5w/dFaob6mQGKF0njph1dSN+yZiEHUgvsy11ZnsJCQ9N70DXau4xaiphIFSBcL
-	RJ7YYgir3PhyVgztMYl5gkExJIdz7p9pNGjEAe2kCb1R1XdjdigRd0mriHnLDRi1o7x3hs
-	miPRi6uc4mLBTzCmKBp3xl6oQi5ryk/cr6hB+RJynQVxRKLI6WV7JN1mbAWHOZKg2TALEB
-	09lplowOE7v/92hcXgw71E/gl+XaKqxiuZcuh+q4c/hV5RUCfg2UbFJLZqLIBly0YfUZOh
-	l/C0hj0yOXkl6+P0RAOMkYhFFyTxGktS/paOhdFiqNiEnWlr9D5OdL2VjbD4mg==
-Date: Thu, 3 Apr 2025 22:22:51 +0200
-From: Pavel Machek <pavel@denx.de>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-	patches@kernelci.org, lkft-triage@lists.linaro.org,
-	jonathanh@nvidia.com, f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-	conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-Subject: Re: [PATCH 6.13 00/23] 6.13.10-rc1 review
-Message-ID: <Z+7uG8SUFmksDP8w@duo.ucw.cz>
-References: <20250403151622.273788569@linuxfoundation.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rrr93mPD"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2254e500a73so10705045ad.0
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 13:24:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1743711888; x=1744316688; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=CRkNhQokk2FGmI6E6ywUdIUe2Ks9OEjNqCR63wcowWw=;
+        b=rrr93mPDiYC+NShie8K/XWv51CVFm3jOsIGquRG8S/qciq1slsk7UmvMA8/5Geqol2
+         YCO2Itn3fceJeLKSDbgXPSPK88cOUL0wPib87URBvKjYuYX0SDsfF7eevd9Xqza+tK3N
+         iXPx7VZH82JHfuokMnpioYNoJ/tSDuOUZTLtbXR4Sr5ZyqL3uESs2iZm+URTcu7ibNAh
+         Li6y6/b1kFuiMY+2h15o3LBBbhHsdaJSdvaCuA7T5TwB04HrIoMgrQxFokjsM8Go8KuP
+         1htXrIrA/lJTysHzRdgiKcHWquJJjvK21elxv4lCMj7hI90T+G9dNT8/CrXI9PpNLq/B
+         YqTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743711888; x=1744316688;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=CRkNhQokk2FGmI6E6ywUdIUe2Ks9OEjNqCR63wcowWw=;
+        b=bM2vS1ALObxDq1995Ur9NtA0b7mtrzav1tXAWzchQsCWHEFdA40HCCCivzsquu/a9w
+         d9+Df/5fQpfSaSDIwRnCMXY65mJe7ZcVTmXDzCG1GSG0reQoEC/c/TFJAbPMfXrQR/uW
+         HJ6PcdKhIoJ7Iexv4oFjsd2V8sFLJE1tnvEx2u+X/sorecHU6POEy2mfc0LkN0riOeqy
+         +eM5F4parGT1qzXV+6Y8BN9fDDKHY+PM5ZjxHm+9FHG96yqf7SB6H1PzHKGbmM3IZfQd
+         7mSfoCc8VdvOoeItpGKNyoGxKf6Id6Aq12qZ4RBoBFpxWtDBnSRz/LPZkEpEx9FSLJnr
+         I2fA==
+X-Forwarded-Encrypted: i=1; AJvYcCWAs0ph8DlZWzjN/fCbxVZV4kPaFzmSitiDcbbGPt3OhOLHH6uP3cVnAaPK9udOH0jyjyCFpGeZtc7wEC4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyYd/xYH4gdhaozcTFlSUCcKq1OWt6mx6452dhcXmwKDSdx+Mpu
+	zEQjFvh4DzzQTINViGu6BtxXGuVI1yciaIvJw/dNkUDNhatPrhNtNTxJSNS4Qel3WO5eykROnzb
+	mlJsqow==
+X-Google-Smtp-Source: AGHT+IHWDO/5M2fCSVHvmzRMrnuToohUfpuJh+UsPsfUghfHJeFXsbikUT0hXKvJp3jc7nt+shYR87GdY9k7
+X-Received: from plri2.prod.google.com ([2002:a17:903:32c2:b0:220:efca:379c])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:32c9:b0:220:ca39:d453
+ with SMTP id d9443c01a7336-22a8a05e77amr5995565ad.17.1743711888439; Thu, 03
+ Apr 2025 13:24:48 -0700 (PDT)
+Date: Thu,  3 Apr 2025 13:24:35 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="PpefqU26Knk83jul"
-Content-Disposition: inline
-In-Reply-To: <20250403151622.273788569@linuxfoundation.org>
-X-Last-TLS-Session-Version: TLSv1.3
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
+Message-ID: <20250403202439.57791-1-irogers@google.com>
+Subject: [PATCH v3 0/4] Add support for a DRM tool like PMU
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, 
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, James Clark <james.clark@linaro.org>, 
+	Weilin Wang <weilin.wang@intel.com>, Dominique Martinet <asmadeus@codewreck.org>, 
+	Thomas Richter <tmricht@linux.ibm.com>, Junhao He <hejunhao3@huawei.com>, 
+	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
+Cc: dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
 
+DRM clients expose information through usage stats as documented in
+Documentation/gpu/drm-usage-stats.rst (available online at
+https://docs.kernel.org/gpu/drm-usage-stats.html). Add a tool like
+PMU, similar to the hwmon PMU, that exposes DRM information.
 
---PpefqU26Knk83jul
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+v3: Minor tweak to the test so the skip (exit 2) doesn't trigger the
+    trap cleanup.
 
-Hi!
+v2: Add support to only scan hwmon and drm PMUs if the event or PMU
+wildcard can match. Add a test as requested by Namhyung. Add file
+comments.
 
-> This is the start of the stable review cycle for the 6.13.10 release.
-> There are 23 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+v1:
+https://lore.kernel.org/lkml/20250211071727.364389-1-irogers@google.com/
 
-CIP testing did not find any problems here:
+Ian Rogers (4):
+  perf parse-events: Avoid scanning PMUs that can't contain events
+  perf parse-events: Avoid scanning PMUs that can't match a wildcard
+  perf drm_pmu: Add a tool like PMU to expose DRM information
+  perf tests: Add a DRM PMU test
 
-https://gitlab.com/cip-project/cip-testing/linux-stable-rc-ci/-/tree/linux-=
-6.13.y
+ tools/perf/tests/shell/drm_pmu.sh |  78 ++++
+ tools/perf/util/Build             |   1 +
+ tools/perf/util/drm_pmu.c         | 689 ++++++++++++++++++++++++++++++
+ tools/perf/util/drm_pmu.h         |  39 ++
+ tools/perf/util/evsel.c           |   9 +
+ tools/perf/util/parse-events.c    |  30 +-
+ tools/perf/util/pmu.c             |  15 +
+ tools/perf/util/pmu.h             |   4 +-
+ tools/perf/util/pmus.c            | 101 ++++-
+ tools/perf/util/pmus.h            |   2 +
+ 10 files changed, 952 insertions(+), 16 deletions(-)
+ create mode 100755 tools/perf/tests/shell/drm_pmu.sh
+ create mode 100644 tools/perf/util/drm_pmu.c
+ create mode 100644 tools/perf/util/drm_pmu.h
 
-6.12 and 6.6 pass our testing, too:
+-- 
+2.49.0.504.g3bcea36a83-goog
 
-https://gitlab.com/cip-project/cip-testing/linux-stable-rc-ci/-/tree/linux-=
-6.12.y
-https://gitlab.com/cip-project/cip-testing/linux-stable-rc-ci/-/tree/linux-=
-6.6.y
-
-Tested-by: Pavel Machek (CIP) <pavel@denx.de>
-
-Best regards,
-                                                                Pavel
---=20
-DENX Software Engineering GmbH,        Managing Director: Erika Unter
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-
---PpefqU26Knk83jul
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCZ+7uGwAKCRAw5/Bqldv6
-8nI9AJ9n3dCc30mlD5FEu+5km7wAefpR/gCcCMS6ey3eUMOtWjN4CHpCMgwPgR0=
-=nTr+
------END PGP SIGNATURE-----
-
---PpefqU26Knk83jul--
