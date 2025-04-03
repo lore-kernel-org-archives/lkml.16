@@ -1,134 +1,299 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A7F924EF7E;
-	Thu,  3 Apr 2025 15:30:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FF6A2512CA
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 15:30:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743694211; cv=none; b=A5xCbm72Uo2dxPEaz4QtNaymJnPlT1lFAe874EbxHqb9QrIwqHal0ZBXJAC0Rk9Rg2O87tELsJQSRCzRuzEo7Nkxl6ujHsCfMGY8sqZMnAaec2qrlTgh056aHPMj1HLlElS/WXwwQZHeRNNd5f7H1tI5aC6gCICTYcSgnRjWBpk=
+	t=1743694212; cv=none; b=gbFLXSZCSPkYplQ7ZgFJnKx4zDYZgR7vZT6pONx/yfGVnvj/2zeVY7HAiJyzAZWWu/L8VIGTcamWqcEkkihcx86ofNUD9mgIdchGj8QUTeKwLymDsOt1jSP5GEzDkP8SR6M1hsUQ4NCBo+WD5pExn73iM/hBDkYLmXfBsd1eV8Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743694211; c=relaxed/simple;
-	bh=q4ROEx0k0EcOszxzPv3EkCrjgDjbH5aqcKwGDoSp5+c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VcvA2MPHgOOOvDp94B/oTLujMsBBZSaJVcAUKe6d9TDanArycdEuBEUm/5sQtP9QbNW+IAePOQggwZs35XziMObZHHvlISAhRvMaezvtMoRr4rfXAItLM1D594wJ8D2sqQoqo6vNJ75EIjTx8IcWgec3EOhkfbL/tBdP/NDWi74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jMzK8cwz; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jMzK8cwz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 569F4C4CEEB;
-	Thu,  3 Apr 2025 15:30:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743694211;
-	bh=q4ROEx0k0EcOszxzPv3EkCrjgDjbH5aqcKwGDoSp5+c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jMzK8cwzjq9uC/pC8ANF+KmdYBqLQvnFUUxyINaU6JRruJdCSamzVMRYZb6BgrQ7F
-	 IHDVXZ+J6YlKCt3FetCFAXdkukDoPcYIzQ2xPJJLh2xfnX9m/ZlSxf4X6/QLuirjaN
-	 U5rqIG8nevtMexftmBXD6igwydxqy3wSJNUEPZGbwcyrRwQV+vh5/MvN1IRtUW4FD2
-	 oWCIWbB1j49kpVlk03Vh/e4KFemlGPSRvPm8+ouN/GlPYDFkPKgssFIlTrrMR50Dr2
-	 SJCnEHW6nh8DrCxXCBRuvHku/Onj9sQhkpTagraOEjDI6WaVbXSwGLZ8PLqmuza3F/
-	 Y6tsDUe4oz/Dg==
-Date: Thu, 3 Apr 2025 20:56:26 +0530
-From: Naveen N Rao <naveen@kernel.org>
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, 
-	Shung-Hsi Yu <shung-hsi.yu@suse.com>, Hari Bathini <hbathini@linux.ibm.com>, bpf@vger.kernel.org, 
-	Michael Ellerman <mpe@ellerman.id.au>, Mark Rutland <mark.rutland@arm.com>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Masahiro Yamada <masahiroy@kernel.org>, 
-	Nicholas Piggin <npiggin@gmail.com>, Alexei Starovoitov <ast@kernel.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Andrii Nakryiko <andrii@kernel.org>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, Vishal Chourasia <vishalc@linux.ibm.com>, 
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Miroslav Benes <mbenes@suse.cz>, 
-	Michal =?utf-8?B?U3VjaMOhbmVr?= <msuchanek@suse.de>, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	linux-trace-kernel@vger.kernel.org, live-patching@vger.kernel.org, Song Liu <song@kernel.org>
-Subject: Re: [BUG?] ppc64le: fentry BPF not triggered after live patch (v6.14)
-Message-ID: <xcym3f3rnakaokcf55266czlm5iuh6gv32yl2hplr2hh4uknz3@jusk2mxbrcvw>
-References: <rwmwrvvtg3pd7qrnt3of6dideioohwhsplancoc2gdrjran7bg@j5tqng6loymr>
- <20250331100940.3dc5e23a@gandalf.local.home>
- <Z-vgigjuor5awkh-@krava>
+	s=arc-20240116; t=1743694212; c=relaxed/simple;
+	bh=JPOt6kU58B39SenEpIrnm7A+2d6zyy8q5p6umnUzlTY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=PeVnaAtgWX9bheKD0YkGXl215z9Wzs6D4JpPXQIs8TUm3I+xirQEs1iMMVMu1fyM79dZ3Hy8EcrDcIZeFPCtak0u4mDGaWe29j/8AKGxz5RtLKXlKfOWtCSCkd9I99r+a3uOMAmx6e+wJwwwnp8gbQ3m68O6a2FikqtgIWjD5pA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 474ACC4CEE3;
+	Thu,  3 Apr 2025 15:30:11 +0000 (UTC)
+Date: Thu, 3 Apr 2025 11:31:16 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Mike Rapoport <rppt@kernel.org>, Jann Horn <jannh@google.com>
+Subject: [GIT PULL] tracing: Cleanup and simplify the persistent ring buffer
+ for 6.15
+Message-ID: <20250403113116.5760d1d8@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z-vgigjuor5awkh-@krava>
-
-On Tue, Apr 01, 2025 at 02:48:10PM +0200, Jiri Olsa wrote:
-> On Mon, Mar 31, 2025 at 10:09:40AM -0400, Steven Rostedt wrote:
-> > On Mon, 31 Mar 2025 21:19:36 +0800
-> > Shung-Hsi Yu <shung-hsi.yu@suse.com> wrote:
-> > 
-> > > Hi all,
-> > > 
-> > > On ppc64le (v6.14, kernel config attached), I've observed that fentry
-> > > BPF programs stop being invoked after the target kernel function is live
-> > > patched. This occurs regardless of whether the BPF program was attached
-> > > before or after the live patch. I believe fentry/fprobe on ppc64le is
-> > > added with [1].
-> > > 
-> > > Steps to reproduce on ppc64le:
-> > > - Use bpftrace (v0.10.0+) to attach a BPF program to cmdline_proc_show
-> > >   with fentry (kfunc is the older name bpftrace used for fentry, used
-> > >   here for max compatability)
-> > > 
-> > >     bpftrace -e 'kfunc:cmdline_proc_show { printf("%lld: cmdline_proc_show() called by %s\n", nsecs(), comm) }'
-> > > 
-> > > - Run `cat /proc/cmdline` and observe bpftrace output
-> > > 
-> > > - Load samples/livepatch/livepatch-sample.ko
-> > > 
-> > > - Run `cat /proc/cmdline` again. Observe "this has been live patched" in
-> > >   output, but no new bpftrace output.
-> > > 
-> > > Note: once the live patching module is disabled through the sysfs interface
-> > > the BPF program invocation is restored.
-> > > 
-> > > Is this the expected interaction between fentry BPF and live patching?
-> > > On x86_64 it does _not_ happen, so I'd guess the behavior on ppc64le is
-> > > unintended. Any insights appreciated.
-
-We haven't addressed this particular interaction in the powerpc support 
-for ftrace direct and BPF trampolines. Right now, live patching takes 
-priority so we call the livepatch'ed function and skip further ftrace 
-direct calls.
-
-I'm curious if this works on arm64 with which we share support for 
-DYNAMIC_FTRACE_WITH_CALL_OPS.
-
-> > 
-> > Hmm, I'm not sure how well BPF function attachment and live patching
-> > interact. Can you see if on x86 the live patch is actually updated when a
-> > BPF program is attached?
-> 
-> above works for me on x86, there's both 'this has been live patched'
-> and bpftrace output
-> 
-> > 
-> > Would be even more interesting to see how BPF reading the return code works
-> > with live patching, as it calls the function directly from the BPF
-> > trampoline. I wonder, does it call the live patched function, or does it
-> > call the original one?
-> 
-> yes, that should work, Song fixed some time ago with:
->   00963a2e75a8 bpf: Support bpf_trampoline on functions with IPMODIFY (e.g. livepatch)
-
-We don't support BPF_TRAMP_F_ORIG_STACK today, and I am not sure that 
-will be easy to support with the out-of-line stubs we are using for 
-ftrace.
-
-Today, we support one of livepatch or a direct caller from 
-ftrace_caller. Livepatch takes priority. We could call the direct caller 
-first, but that will only work if it is guaranteed to call the 
-livepatched function (i.e., if the direct call is to a bpf trampoline 
-with BPF_TRAMP_F_CALL_ORIG). Otherwise, we will need to call the 
-livepatched function after that, but we don't return to ftrace_caller 
-from the livepatch handler.
-
-Not sure which of those interactions are valid between a livepatch and a 
-direct caller (with and without BPF_TRAMP_F_CALL_ORIG), and if all 
-combinations of those need to be supported.
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
 
-- Naveen
 
+Linus,
+
+Persistent buffer cleanups and simplifications for v6.15:
+
+It was mistaken that the physical memory returned from "reserve_mem" had to
+be vmap()'d to get to it from a virtual address. But reserve_mem already
+maps the memory to the virtual address of the kernel so a simple
+phys_to_virt() can be used to get to the virtual address from the physical
+memory returned by "reserve_mem". With this new found knowledge, the
+code can be cleaned up and simplified.
+
+- Enforce that the persistent memory is page aligned
+
+  As the buffers using the persistent memory are all going to be
+  mapped via pages, make sure that the memory given to the tracing
+  infrastructure is page aligned. If it is not, it will print a warning
+  and fail to map the buffer.
+
+- Use phys_to_virt() to get the virtual address from reserve_mem
+
+  Instead of calling vmap() on the physical memory returned from
+  "reserve_mem", use phys_to_virt() instead.
+
+  As the memory returned by "memmap" or any other means where a physical
+  address is given to the tracing infrastructure, it still needs to
+  be vmap(). Since this memory can never be returned back to the buddy
+  allocator nor should it ever be memmory mapped to user space, flag
+  this buffer and up the ref count. The ref count will keep it from
+  ever being freed, and the flag will prevent it from ever being memory
+  mapped to user space.
+
+- Use vmap_page_range() for memmap virtual address mapping
+
+  For the memmap buffer, instead of allocating an array of struct pages,
+  assigning them to the contiguous phsycial memory and then passing that to
+  vmap(), use vmap_page_range() instead
+
+- Replace flush_dcache_folio() with flush_kernel_vmap_range()
+
+  Instead of calling virt_to_folio() and passing that to
+  flush_dcache_folio(), just call flush_kernel_vmap_range() directly.
+  This also fixes a bug where if a subbuffer was bigger than PAGE_SIZE
+  only the PAGE_SIZE portion would be flushed.
+
+
+Please pull the latest trace-ringbuffer-v6.15-3 tree, which can be found at:
+
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
+trace-ringbuffer-v6.15-3
+
+Tag SHA1: 1d8e085f8031224ddb27fdc53a3928f89f6f3a99
+Head SHA1: e4d4b8670c44cdd22212cab3c576e2d317efa67c
+
+
+Steven Rostedt (4):
+      tracing: Enforce the persistent ring buffer to be page aligned
+      tracing: Have reserve_mem use phys_to_virt() and separate from memmap buffer
+      tracing: Use vmap_page_range() to map memmap ring buffer
+      ring-buffer: Use flush_kernel_vmap_range() over flush_dcache_folio()
+
+----
+ Documentation/admin-guide/kernel-parameters.txt |  2 +
+ Documentation/trace/debugging.rst               |  2 +
+ kernel/trace/ring_buffer.c                      |  5 +-
+ kernel/trace/trace.c                            | 66 ++++++++++++++++---------
+ kernel/trace/trace.h                            |  1 +
+ 5 files changed, 50 insertions(+), 26 deletions(-)
+---------------------------
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index fb8752b42ec8..71861643ef14 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -7241,6 +7241,8 @@
+ 			This is just one of many ways that can clear memory. Make sure your system
+ 			keeps the content of memory across reboots before relying on this option.
+ 
++			NB: Both the mapped address and size must be page aligned for the architecture.
++
+ 			See also Documentation/trace/debugging.rst
+ 
+ 
+diff --git a/Documentation/trace/debugging.rst b/Documentation/trace/debugging.rst
+index 54fb16239d70..d54bc500af80 100644
+--- a/Documentation/trace/debugging.rst
++++ b/Documentation/trace/debugging.rst
+@@ -136,6 +136,8 @@ kernel, so only the same kernel is guaranteed to work if the mapping is
+ preserved. Switching to a different kernel version may find a different
+ layout and mark the buffer as invalid.
+ 
++NB: Both the mapped address and size must be page aligned for the architecture.
++
+ Using trace_printk() in the boot instance
+ -----------------------------------------
+ By default, the content of trace_printk() goes into the top level tracing
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index f25966b3a1fc..d4b0f7b55cce 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -6016,7 +6016,7 @@ static void rb_update_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
+ 	meta->read = cpu_buffer->read;
+ 
+ 	/* Some archs do not have data cache coherency between kernel and user-space */
+-	flush_dcache_folio(virt_to_folio(cpu_buffer->meta_page));
++	flush_kernel_vmap_range(cpu_buffer->meta_page, PAGE_SIZE);
+ }
+ 
+ static void
+@@ -7319,7 +7319,8 @@ int ring_buffer_map_get_reader(struct trace_buffer *buffer, int cpu)
+ 
+ out:
+ 	/* Some archs do not have data cache coherency between kernel and user-space */
+-	flush_dcache_folio(virt_to_folio(cpu_buffer->reader_page->page));
++	flush_kernel_vmap_range(cpu_buffer->reader_page->page,
++				buffer->subbuf_size + BUF_PAGE_HDR_SIZE);
+ 
+ 	rb_update_meta_page(cpu_buffer);
+ 
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 14c38fcd6f9e..f6531cd3176b 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -50,6 +50,7 @@
+ #include <linux/irq_work.h>
+ #include <linux/workqueue.h>
+ #include <linux/sort.h>
++#include <linux/io.h> /* vmap_page_range() */
+ 
+ #include <asm/setup.h> /* COMMAND_LINE_SIZE */
+ 
+@@ -8492,6 +8493,10 @@ static int tracing_buffers_mmap(struct file *filp, struct vm_area_struct *vma)
+ 	struct trace_iterator *iter = &info->iter;
+ 	int ret = 0;
+ 
++	/* A memmap'ed buffer is not supported for user space mmap */
++	if (iter->tr->flags & TRACE_ARRAY_FL_MEMMAP)
++		return -ENODEV;
++
+ 	/* Currently the boot mapped buffer is not supported for mmap */
+ 	if (iter->tr->flags & TRACE_ARRAY_FL_BOOT)
+ 		return -ENODEV;
+@@ -9600,9 +9605,6 @@ static void free_trace_buffers(struct trace_array *tr)
+ #ifdef CONFIG_TRACER_MAX_TRACE
+ 	free_trace_buffer(&tr->max_buffer);
+ #endif
+-
+-	if (tr->range_addr_start)
+-		vunmap((void *)tr->range_addr_start);
+ }
+ 
+ static void init_trace_flags_index(struct trace_array *tr)
+@@ -9795,29 +9797,27 @@ static int instance_mkdir(const char *name)
+ 	return ret;
+ }
+ 
+-static u64 map_pages(u64 start, u64 size)
++static u64 map_pages(unsigned long start, unsigned long size)
+ {
+-	struct page **pages;
+-	phys_addr_t page_start;
+-	unsigned int page_count;
+-	unsigned int i;
+-	void *vaddr;
+-
+-	page_count = DIV_ROUND_UP(size, PAGE_SIZE);
++	unsigned long vmap_start, vmap_end;
++	struct vm_struct *area;
++	int ret;
+ 
+-	page_start = start;
+-	pages = kmalloc_array(page_count, sizeof(struct page *), GFP_KERNEL);
+-	if (!pages)
++	area = get_vm_area(size, VM_IOREMAP);
++	if (!area)
+ 		return 0;
+ 
+-	for (i = 0; i < page_count; i++) {
+-		phys_addr_t addr = page_start + i * PAGE_SIZE;
+-		pages[i] = pfn_to_page(addr >> PAGE_SHIFT);
++	vmap_start = (unsigned long) area->addr;
++	vmap_end = vmap_start + size;
++
++	ret = vmap_page_range(vmap_start, vmap_end,
++			      start, pgprot_nx(PAGE_KERNEL));
++	if (ret < 0) {
++		free_vm_area(area);
++		return 0;
+ 	}
+-	vaddr = vmap(pages, page_count, VM_MAP, PAGE_KERNEL);
+-	kfree(pages);
+ 
+-	return (u64)(unsigned long)vaddr;
++	return (u64)vmap_start;
+ }
+ 
+ /**
+@@ -10696,6 +10696,7 @@ static inline void do_allocate_snapshot(const char *name) { }
+ __init static void enable_instances(void)
+ {
+ 	struct trace_array *tr;
++	bool memmap_area = false;
+ 	char *curr_str;
+ 	char *name;
+ 	char *str;
+@@ -10764,6 +10765,7 @@ __init static void enable_instances(void)
+ 					name);
+ 				continue;
+ 			}
++			memmap_area = true;
+ 		} else if (tok) {
+ 			if (!reserve_mem_find_by_name(tok, &start, &size)) {
+ 				start = 0;
+@@ -10774,7 +10776,20 @@ __init static void enable_instances(void)
+ 		}
+ 
+ 		if (start) {
+-			addr = map_pages(start, size);
++			/* Start and size must be page aligned */
++			if (start & ~PAGE_MASK) {
++				pr_warn("Tracing: mapping start addr %pa is not page aligned\n", &start);
++				continue;
++			}
++			if (size & ~PAGE_MASK) {
++				pr_warn("Tracing: mapping size %pa is not page aligned\n", &size);
++				continue;
++			}
++
++			if (memmap_area)
++				addr = map_pages(start, size);
++			else
++				addr = (unsigned long)phys_to_virt(start);
+ 			if (addr) {
+ 				pr_info("Tracing: mapped boot instance %s at physical memory %pa of size 0x%lx\n",
+ 					name, &start, (unsigned long)size);
+@@ -10801,10 +10816,13 @@ __init static void enable_instances(void)
+ 			update_printk_trace(tr);
+ 
+ 		/*
+-		 * If start is set, then this is a mapped buffer, and
+-		 * cannot be deleted by user space, so keep the reference
+-		 * to it.
++		 * memmap'd buffers can not be freed.
+ 		 */
++		if (memmap_area) {
++			tr->flags |= TRACE_ARRAY_FL_MEMMAP;
++			tr->ref++;
++		}
++
+ 		if (start) {
+ 			tr->flags |= TRACE_ARRAY_FL_BOOT | TRACE_ARRAY_FL_LAST_BOOT;
+ 			tr->range_name = no_free_ptr(rname);
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index ab7c7a1930cc..9d9dcfad6269 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -446,6 +446,7 @@ enum {
+ 	TRACE_ARRAY_FL_BOOT		= BIT(1),
+ 	TRACE_ARRAY_FL_LAST_BOOT	= BIT(2),
+ 	TRACE_ARRAY_FL_MOD_INIT		= BIT(3),
++	TRACE_ARRAY_FL_MEMMAP		= BIT(4),
+ };
+ 
+ #ifdef CONFIG_MODULES
