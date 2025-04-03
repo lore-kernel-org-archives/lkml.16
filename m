@@ -1,171 +1,138 @@
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2064.outbound.protection.outlook.com [40.107.101.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4164199FC9;
-	Thu,  3 Apr 2025 16:24:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.64
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743697500; cv=fail; b=eUMMTHtNQmxcVIwsEebY2zf8ZW6nL7ESsrzdFfvwoNe16et+mifQq2Y6WSPkPOV+gDdUr6G+6iGoiz9BLSaIOunRVFLBTRzNweXAnrPho4N9ymhMdMG2rcdHuRd7/3cXsuV4m+cfFSNzAZyQHQvqIWdUFgxL8vSjhKErlRRQ+Jo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743697500; c=relaxed/simple;
-	bh=O20vy2oryTFdztnsCt/0oCRcwyz7aXFSPSqnG1+mcyQ=;
-	h=From:To:CC:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Ee4sxU3jGOhr1zBGMTq7Lztk2UmeJwhi0hXT/jn2uoOEd5DeiC7MYBnp+pUKqYXEsJdZRC2Qm8Vrje7iEgumiY7g1qq3ychnbCEHTQYcrQarGgFPbPGSVDUt7L/Ksf9bf4bYWaHgPUm9FVeuG9s5TOu9OmFOnXbcsSVuGBkIUjs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=lPndo74b; arc=fail smtp.client-ip=40.107.101.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61BF62505BB
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 16:26:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743697583; cv=none; b=HfUWt3F/a7eSSCod43p12brDlMv7JkfmIGPe0MWelRpW+NlUzQMfWNGYcW+iC2nYEKZS5loMrDNhc9HeE6lSUZuKosdzlGg02jyLpzbE7wgB1S9Wd1LHoe8vlcyDEborIKTDBotpoXamdCHDchz3jQIPETaWE0VeF/oVBkSsit0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743697583; c=relaxed/simple;
+	bh=+s8s3iJwvgJFaiQIGmpy8fRqd2r8FfQyKC/ROUIwOkk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jS5mVlTnQeaHB0OPb22/oj7gIlf1EwzxiKfRCj0hcKQhMzEjQgN7bgTO7+6sH0mMASYUqD1JPXEfv9qfXe9oBWrx0qEc0/1qZwcMC3/NzFZwtC2MVT2izLdXxfPyc8dv43a+0pinYc9JaR3bIlD2AIzDJuR6toj+PUo7mxynTCM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com; spf=pass smtp.mailfrom=raspberrypi.com; dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b=tgsxo7Lc; arc=none smtp.client-ip=209.85.128.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raspberrypi.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="lPndo74b"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Z6nPK0dal48oUxhOBgkKj+zRJLCixwUn/UZ3Uy+W7x12s0fWktmsIK+Gloihx70DbqHWF/iIdX/unnAK3oo8+M+TX2b35UA7Si7O1o4uLSVtd/yP3a28OEDaG81eDxGmSqb6m2D0E+JPw9vAVOi9jf1EnkDz49SrYLMxk0DNqPF4CKAPxyosEIhk3QOyRf0iYfAX/drfIsGYi7YExrWwGTCcRvgJXJLh9aexs1R2yyHaAlXAr/vH9Lg7yd+Y5vYw2PyJAmTgQXRsTAGIFiWJP5kYguP6hpGm6R9nX2g0KSfx2puG28z8htDkVhRUj2PQM1JgvBbnBGVPfo9JKADJFQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=O20vy2oryTFdztnsCt/0oCRcwyz7aXFSPSqnG1+mcyQ=;
- b=pvEgtO2//+J2rRhIc06Fs9kGcQrN1peZqWZbH2Nybm7yQGTjQACBGLDMYDOVuQhH0+lZc5dLd+Evbn4E3AOSkDegIDdOHl2/yawHXIAQWfDVjvHt5hppORu9UXoZaGauRILVKPoIUBTLfEzoghx/lurxrEodORe/9i/jBAuWya4cUC6yHCjsixoNmxUJ/yniBdkTpajWEhPJjR3xcoLOPOajFe1eQMm+gGbxSweK3jjDXwGSqK35qs01fkt5gcLUcaVLTJMw6cwyN1W3eALSFvL9mz3fhzbx3/nVGeDza6HliLNisg66iMXBmd+kS7DChm1jA+IJJZksBrJ0MAqzQw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=O20vy2oryTFdztnsCt/0oCRcwyz7aXFSPSqnG1+mcyQ=;
- b=lPndo74box3dx28JpOh6TNWqL13Yop9L4sWzQmWXhISYco2yol2/iUzXM10HdwIvXhK5MbxHk1/LvTv8d3y294wQfE77c12iTp6rK2YtRYZuJFgZ37A80mrnuL9TrFOpIiPhWqEGb7sZrtvXlFyv4Oj/mXqy1Q9d9IiqgevDNEA=
-Received: from SJ0PR13CA0180.namprd13.prod.outlook.com (2603:10b6:a03:2c7::35)
- by DS0PR12MB7827.namprd12.prod.outlook.com (2603:10b6:8:146::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Thu, 3 Apr
- 2025 16:24:56 +0000
-Received: from SJ5PEPF00000208.namprd05.prod.outlook.com
- (2603:10b6:a03:2c7:cafe::ac) by SJ0PR13CA0180.outlook.office365.com
- (2603:10b6:a03:2c7::35) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8632.10 via Frontend Transport; Thu,
- 3 Apr 2025 16:24:56 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SJ5PEPF00000208.mail.protection.outlook.com (10.167.244.41) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8606.22 via Frontend Transport; Thu, 3 Apr 2025 16:24:55 +0000
-Received: from localhost (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 3 Apr
- 2025 11:24:55 -0500
-From: Nathan Lynch <nathan.lynch@amd.com>
-To: Vinicius Costa Gomes <vinicius.gomes@intel.com>, Vinod Koul
-	<vkoul@kernel.org>, <dmaengine@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-CC: <dave.jiang@intel.com>, <kristen.c.accardi@intel.com>, kernel test robot
-	<oliver.sang@intel.com>
-Subject: Re: [PATCH v1] dmaengine: dmatest: Fix dmatest waiting less when
- interrupted
-In-Reply-To: <87o6xdzz5w.fsf@intel.com>
-References: <20250305230007.590178-1-vinicius.gomes@intel.com>
- <878qpa13fe.fsf@AUSNATLYNCH.amd.com> <87senhoq1k.fsf@intel.com>
- <874izx10nx.fsf@AUSNATLYNCH.amd.com> <87wmcslwg4.fsf@intel.com>
- <871pv01vaz.fsf@AUSNATLYNCH.amd.com> <87r030ldbw.fsf@intel.com>
- <87y0x7z45p.fsf@AUSNATLYNCH.amd.com> <87ldt7l081.fsf@intel.com>
- <877c428yng.fsf@AUSNATLYNCH.amd.com> <87o6xdzz5w.fsf@intel.com>
-Date: Thu, 3 Apr 2025 11:24:53 -0500
-Message-ID: <874iz58b6y.fsf@AUSNATLYNCH.amd.com>
+	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="tgsxo7Lc"
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-6f6ca9a3425so13620777b3.2
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 09:26:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=raspberrypi.com; s=google; t=1743697580; x=1744302380; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Gm8Etobzk8cCk6jshrfzA7BBUoXgq8Cf4UsElyUuFB0=;
+        b=tgsxo7LcZTdvY+zIoAEc6qjvQDNyrDG+Y1WwmkZIxQ8yzNNgnbZxdl8nP7w4GddLc2
+         vCv2YeH4OAGSc7VlvzX8Y36KKdQQhlBeNMM76yw/Lkfd6uiLc6YNog8IoXwxi005mrVm
+         6buLxH2oNBplZYHYfiAaKF1dK5L6S64Spzb8tT2X5L+vNaaA9Hk8jXMH7HRvCBsDRLhq
+         MNnSqk5qWD+uiLHE7qUFdn6fcfpo15f8sMdQoI6VFUR+WEGAECeSTs8cl9YjSJj0OnwF
+         b+gxqZF1MJDMjxo9jJLPXdp/17vbd8YBV1KWORzO5lngPWhfkPckdR1wmW0n7lBMlB/K
+         lEbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743697580; x=1744302380;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Gm8Etobzk8cCk6jshrfzA7BBUoXgq8Cf4UsElyUuFB0=;
+        b=TLaa+GeRfmnJXJDQIQr9A1Oul+ZrD3yNsP9x9hZIMj7EdJdqASc65P9gD4V9Z9C/0V
+         L9Lr0kLGX33o4p3uG/baM3WoebT5Rk5wpol9cc+TfVXDjHKz5LEXET/bVpKVOJjXY0Fy
+         JbVNuznvFYalM0cMxMof3CftyH2MvwDClQpgSqv4dzVvFYs3zpVggXpn4tDmom01pX+I
+         wUXwl1O3C3Frp7eXcUPGsKb9dTFbFHaKuqmWi17SSdTjj96OVXfXWs4R83Hd8MwgNLTq
+         aTviVRoymIjghXIk6o4jhu5B/5M+AyC4SNrRCHrOgTqNk5UZKN2YhaktAfltUA7gRrVG
+         1Teg==
+X-Forwarded-Encrypted: i=1; AJvYcCU4sq6TcDWFr0v9hT1/+q1HJl5nTtRq0s4v6NOd5/1YD+/mLbOASN2fLMsojgmJJ2oVgmQ/zLUoECN4x3Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxFz2WHLcw1DZKFAdmkWomDPvKgcZbFkWewPEBvAqEoVNY1jPq2
+	O9auv7sYgKVNxjtLd5szgvPAsYtxv52/aV2M7N3aS5l4adsEDN1j1qfnOEmFOB9q8yzCchG94MY
+	rUC8dmzFL753NMFrUeG3+XDMsdUTSOlUbxoxniQ==
+X-Gm-Gg: ASbGncvXQ9LmMCwh+Rw58aF3usy/Orpbiqz8QrRJ5VYmlXiZRr+/K6tivtYV1U5c8vB
+	4pSwJf/TCwQQ4qxevNG9tU4bsJ6bJg8I8SrC5FRqz6pG91Rp8tjLvT0Q6vNt1Fzkaan3zzjLzDx
+	J2+7KW+bfPcwYTMfmw3w7ao3YUTsnpDR9Ma+28oq4islTRIrjVIM1vzpmD+lD9gXEG83sm
+X-Google-Smtp-Source: AGHT+IGs/lOpJlBNxZfkClJkSSGiTQDpBO7ne5t+K8sFSvFVEpfHXiFzI6JjuxfYULF42IuuaAUSHa6+5r5ZRFQKL/0=
+X-Received: by 2002:a05:690c:a8b:b0:6fd:4849:62da with SMTP id
+ 00721157ae682-703e1581140mr850257b3.22.1743697580267; Thu, 03 Apr 2025
+ 09:26:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ5PEPF00000208:EE_|DS0PR12MB7827:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1fd03074-111f-4076-cc68-08dd72cc123c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|376014|36860700013|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?3W4igBH3UhvpjaJrh3gm0OQOnCUevB+pwsbrxNLhReKjm/1Nn2+i690cFnji?=
- =?us-ascii?Q?iJd7GsWgg3qyEVW4ScDYGw9vomAIanxUdWblktGHY0IB2d3vzOVkzHmiyViR?=
- =?us-ascii?Q?TrVRWROVgsggMTt9rJ1CAyXxDeyDUYcYLl4wkgZzvGm0xuAJzqIUUgzTkobF?=
- =?us-ascii?Q?1MaTv/Lyxk71g80tYxLnFx14U/z9hb+HdSPS3yG6oWpEwui9GZrqYbbAwqo1?=
- =?us-ascii?Q?nmxXhX/F6V/xBbmL9e+2FlH3Ptf8JRxOUrnS3LRUK96fkKkT/d1TCTvNfmjU?=
- =?us-ascii?Q?65DUpq4XcmAA/44mYUSy0VVs5HEIH5j3x6MsQ4N3hCAlgPYlzk96Y8w/d17v?=
- =?us-ascii?Q?YGaWHqto4bgx56M+tX7Vo8K3NhVUKhAAJemqcerWw/79vl2LduZj2aE/ao9j?=
- =?us-ascii?Q?GzhATAIXasu0nyKAcQPkEfLsAloblILBpkLoPIkJMm6CV+9oSICeNuBK10/v?=
- =?us-ascii?Q?/dssbPse9Led8tTuKQFQBKvkdEnGP0MpNO6m0p+SlVWkIRSLckVGBeCAVK56?=
- =?us-ascii?Q?4BAcAZPYDQubQzAGeMxkfxxAXSp9M3/mM+8oDKIDvwnXZ3UzPVBF312zRgKt?=
- =?us-ascii?Q?9l3vLkUZRyaQGZCllL60NB0SBakkIRBkqu/SPOU+EQSW989sJtySnpQ/BZmk?=
- =?us-ascii?Q?KYxm8h8OUyS0XR6loSxHNpQC0Gr7H3o7Os9Jz2kNtrPu9his1E6/4wTyGsoC?=
- =?us-ascii?Q?TXsMa97t/FkxeJ/zeOZeAeYVJPh76rfd96fyxR+caz4MlYqsKJ7D17341dMf?=
- =?us-ascii?Q?5juMbYOwL90Y1hxGf4mfZOe2maQDcwHfW+nDKa3pFw/MBN+QDVV92bEszZlC?=
- =?us-ascii?Q?SGDXce1sk1fonQzIJMlrJSlHxtVVLk653bCYZ3Zp1CQJrEBD2g8tu150/2yv?=
- =?us-ascii?Q?8yHGlkfa4dlcXFBGO0Sj4Coo5TBfVsWm3O2WESSklFWVFbIv9VochRo6biqQ?=
- =?us-ascii?Q?XXlYUQ3t5ZY7GDkNXG8BbexUsHKt8r101yT0IiArzufL5yhJb3zQHssvo2v2?=
- =?us-ascii?Q?Mc7rl3MJzzn+3G4INlTCkvfVvDuSX6bkzfRHrVDIgUmCAuAw0hcYvz5/s8Fv?=
- =?us-ascii?Q?24lhiZsr8d+T5m094GM01q1rDayhTPjp7rPhsv5UzAw8/iA2rNLTwNT38wyH?=
- =?us-ascii?Q?hsaFS8REeOd6+8IWeilTrEzeConO4JXlJy7/Hqt2104HtR8b3OOuK6dqArLP?=
- =?us-ascii?Q?UXuwrFYa41MuEXOtQ01p3zYPR6UYi/z3G+ZcBtSILrdYmtLvi09XEu3WzWfb?=
- =?us-ascii?Q?pQVv7eQIc4cLtySWMX6tfhpaV3PLV8f9i4qb58BuZm4Zp5A5gbM0KgKG3vXi?=
- =?us-ascii?Q?BXzcKR1mzdoEEhMlGms3Eeo6AxSiVVPRI7D9D2a1PRfnBeukn4OUQ9IJ9GLv?=
- =?us-ascii?Q?i7CxgN3TiwNjcYQBPcvBxOKMAsT+XTxdnNf1r0Y1QwRrDlgeEN/2n7KfBvQX?=
- =?us-ascii?Q?A+OiQrvwPdUV68vaO74ki167TtU5HM+13lHsyd4egB4jF+TgFRWuBN0eGuIs?=
- =?us-ascii?Q?cJ3GuUwBIQc5MEM=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(376014)(36860700013)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Apr 2025 16:24:55.9941
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1fd03074-111f-4076-cc68-08dd72cc123c
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ5PEPF00000208.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7827
+References: <ee4989e2-f55e-4d09-8a0d-306b78b9c9d0@stanley.mountain>
+In-Reply-To: <ee4989e2-f55e-4d09-8a0d-306b78b9c9d0@stanley.mountain>
+From: Dave Stevenson <dave.stevenson@raspberrypi.com>
+Date: Thu, 3 Apr 2025 16:25:55 +0000
+X-Gm-Features: AQ5f1JpvJpXj_gh69LgHu7W2pAa3-WCUx4V9ie5tB7F6PHPJUleIgDiNR0yj7Fo
+Message-ID: <CAPY8ntCCvXObQ_7GNwjqNMB-=1ucy9WsipvptgvPxk3p2R3Ryg@mail.gmail.com>
+Subject: Re: [PATCH v2] drm/vc4: release firmware on error paths in vc4_hvs_bind()
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Maxime Ripard <mripard@kernel.org>, =?UTF-8?B?TWHDrXJhIENhbmFs?= <mcanal@igalia.com>, 
+	Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Vinicius Costa Gomes <vinicius.gomes@intel.com> writes:
-> Nathan Lynch <nathan.lynch@amd.com> writes:
+On Thu, 3 Apr 2025 at 13:14, Dan Carpenter <dan.carpenter@linaro.org> wrote:
 >
->> Vinicius Costa Gomes <vinicius.gomes@intel.com> writes:
->>> Nathan Lynch <nathan.lynch@amd.com> writes:
->>>
->>>> Vinicius Costa Gomes <vinicius.gomes@intel.com> writes:
->>>>> Nathan Lynch <nathan.lynch@amd.com> writes:
->>>>>> dmatest_callback() employs wake_up_all(), which means this change
->>>>>> introduces no beneficial difference in the wakeup behavior. The dmatest
->>>>>> thread gets woken on receipt of the completion interrupt either way.
->>>>>>
->>>>>> And to reiterate, the change regresses the combination of dmatest and
->>>>>> the task freezer, which is a use case people have cared about,
->>>>>> apparently.
->>>>>>
->>>>>
->>>>> If this change in behavior causes a regression for others, glad to send
->>>>> a revert and find another solution.
->>>>
->>>> Thanks - yes it should be reverted or dropped IMO.
->>>
->>> Here's what I am thinking, I'll work on this a few days and see if I can
->>> find an alternative solution and send the revert together with the fix.
->>> If I can't find another solution in a few days, I'll propose the revert
->>> anyway.
->>
->> Just checking on this - I see this regression is in Linus's master
->> branch now.
+> There was a bug where we should have called rpi_firmware_put(firmware)
+> if devm_clk_get() failed.  Really, it's better and more readable to
+> move all the firmware code together so that we can release it one
+> time.
 >
-> I have a series with the revert, a (hopefully better) fix for this
-> issue, and a couple of others that I found along the way, that I should
-> be able to propose soon.
+> Fixes: 2fa4ef5fb943 ("drm/vc4: hvs: Create hw_init function")
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 
-Respectfully, I don't think that's how this should be handled. The
-revert should be standalone, not part of a larger series subject to its
-own cycle of review and revision.
+Thanks for the respin
 
-I've written it up and submitted it myself.
+Reviewed-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+
+> ---
+> v2: Use a cleaner solution
+>
+>  drivers/gpu/drm/vc4/vc4_hvs.c | 22 +++++++++++-----------
+>  1 file changed, 11 insertions(+), 11 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/vc4/vc4_hvs.c b/drivers/gpu/drm/vc4/vc4_hvs.c
+> index 4811d794001f..06aedd906d74 100644
+> --- a/drivers/gpu/drm/vc4/vc4_hvs.c
+> +++ b/drivers/gpu/drm/vc4/vc4_hvs.c
+> @@ -1675,6 +1675,17 @@ static int vc4_hvs_bind(struct device *dev, struct device *master, void *data)
+>                 if (!firmware)
+>                         return -EPROBE_DEFER;
+>
+> +               max_rate = rpi_firmware_clk_get_max_rate(firmware,
+> +                                                        RPI_FIRMWARE_CORE_CLK_ID);
+> +               rpi_firmware_put(firmware);
+> +               if (max_rate >= 550000000)
+> +                       hvs->vc5_hdmi_enable_hdmi_20 = true;
+> +
+> +               if (max_rate >= 600000000)
+> +                       hvs->vc5_hdmi_enable_4096by2160 = true;
+> +
+> +               hvs->max_core_rate = max_rate;
+> +
+>                 hvs->core_clk = devm_clk_get(&pdev->dev,
+>                                              (vc4->gen >= VC4_GEN_6_C) ? "core" : NULL);
+>                 if (IS_ERR(hvs->core_clk)) {
+> @@ -1689,17 +1700,6 @@ static int vc4_hvs_bind(struct device *dev, struct device *master, void *data)
+>                         return PTR_ERR(hvs->disp_clk);
+>                 }
+>
+> -               max_rate = rpi_firmware_clk_get_max_rate(firmware,
+> -                                                        RPI_FIRMWARE_CORE_CLK_ID);
+> -               rpi_firmware_put(firmware);
+> -               if (max_rate >= 550000000)
+> -                       hvs->vc5_hdmi_enable_hdmi_20 = true;
+> -
+> -               if (max_rate >= 600000000)
+> -                       hvs->vc5_hdmi_enable_4096by2160 = true;
+> -
+> -               hvs->max_core_rate = max_rate;
+> -
+>                 ret = clk_prepare_enable(hvs->core_clk);
+>                 if (ret) {
+>                         dev_err(&pdev->dev, "Couldn't enable the core clock\n");
+> --
+> 2.47.2
+>
