@@ -1,126 +1,192 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E26631F429C
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 21:26:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B7DD1DFF0
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 21:29:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743715567; cv=none; b=ZuD9sU4ReFzll3FH+w1SHEaj1MAKgd4jmMZqDgO+3fpn74A/7GqZSkcIKaPqGg2P/Yg10rLEuL31injZ1XhcKMyGxCN/Io1v5onbiqjEW6lyZkOgmF3Xiiiu41s2iGbw7is2a0s/tsZ/2HRsgubWThVuZGDrZWQsvQHND5p/55c=
+	t=1743715770; cv=none; b=k8z9NDmQOQ6Lr9dLZPkXWaWj1T+qfJOf/2l84fiG8n0iTYMymqx3DGgLZ1n8CgJ9taCPxb48IBpBgXc+fyh5KZwof4sbuvIYdna9NxdAKRn8QhdVJFE44dRaQFOuEsPpdLCxcvCXM2leDX7C5mZ7UsLK7dNPwGe81GmYScedRrY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743715567; c=relaxed/simple;
-	bh=zmk7pM4zUFxP8zRUkY8Z6LycAMaLij94htuAzyPh1gM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=OMd+h1eB1ouDADFyVMKjxrE9yQWCWn2T0hr584IvvmPwHv9pyUnuGukxu0JheP4ym30o6CWU9N4QP6lZN/Ng7W4KrMZ6rfUxrD2ZwUnby4u+7DiIEGvzSVQqgRjdHpQCkCi39m9aXvvI4jbo/6UfUNJ7fmaMxp/YauZGdARxaSk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cFSkF6po; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1743715770; c=relaxed/simple;
+	bh=nlwF+7zQGq2HUh16yYIyEZYJ+TKektWBRDNwXwNzVoQ=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=rzuP7MSAXbdGMlRWEGPP80mhdOyLDQzrVWtBFyLCh9VMC8QVlHzg1LavR526RiXjrdbgYRpoxkPek1s5iKMv6jj08Lglg9nRFM+s+HJR1Opa+zKali6qTO8m1By825wl4lNE5XVJvv9ICtcpa5k9s0z3GD9TEaz/IVDGNUUHqj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ipylypiv.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TR7qM9M1; arc=none smtp.client-ip=209.85.214.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ipylypiv.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cFSkF6po"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743715565;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VQZmoEoHHMWJOWX6FSnXoplhBUtLobxJ6QjeQfN5Yng=;
-	b=cFSkF6povIdp6cxmlbo2R76Q3orV/TN+RLq9gzjvq+UbnIi1B8yXE4ZfonOp1lvi+DWV8y
-	CUoC+mSQvXs+Icq47bFG7CNivY37ESTmeIMBU0r4IkexJypZJT1OGOGcpPeD8A3h6nxc5G
-	W5sOG7vjMaP2bKOo1mIzGF19NqGu4dU=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-17-9LWrhFxGNUyv8OyB5kxTvw-1; Thu,
- 03 Apr 2025 17:25:58 -0400
-X-MC-Unique: 9LWrhFxGNUyv8OyB5kxTvw-1
-X-Mimecast-MFC-AGG-ID: 9LWrhFxGNUyv8OyB5kxTvw_1743715555
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5101F1956050;
-	Thu,  3 Apr 2025 21:25:55 +0000 (UTC)
-Received: from asrivats-na.rmtustx.csb (unknown [10.2.16.30])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 05B2B180A803;
-	Thu,  3 Apr 2025 21:25:50 +0000 (UTC)
-From: Anusha Srivatsa <asrivats@redhat.com>
-Date: Thu, 03 Apr 2025 16:21:17 -0400
-Subject: [PATCH 46/46] panel/lg-lb035q02: Use refcounted allocation in
- place of devm_kzalloc()
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TR7qM9M1"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-225107fbdc7so13001765ad.0
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 14:29:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1743715768; x=1744320568; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=o0cnUQbWUsiUv5dGgvP3QCnvz4IYCWsIxDLFEGTUwHE=;
+        b=TR7qM9M15ZmRCZKmOPHJ88VMuP9GxN3mAue+N+19AM+cCiVhI6V4aoUqiEl0uWsJvm
+         UZ/JuGWEBGZMDxZpkqn7sthSMJH6MJypUT1Lxo2wu/zsr1Hy2RaYjhW4cf9jZ7A9IPJw
+         QZ7hCFqAXrzUvmDkklKrS7Jyn0Qzx5QeprPr3B6VzPVawIydAZ+jBPtAH+ed2t9EQ4V/
+         QS+zGGBqaoL7M8oqxLUHwsurVlzRa6W8fBaar/+ZltBS/58ZPTbtXzBn6V9tlmI57L7a
+         s433jzNySzEwzN3tpmbFgUtxGZue7SshgdFzNjszsWCp1I/Nm7fuXUfl8T8Ks0nbqlVW
+         0L4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743715768; x=1744320568;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=o0cnUQbWUsiUv5dGgvP3QCnvz4IYCWsIxDLFEGTUwHE=;
+        b=Okuh/JuDGb4S9w4Znt06B9wtSSiE79Dwx0ECpMNIZ1qshKe0L8ZoKpuWadIhtTOFGs
+         GDXI6vzIoF2AHYK5+6W21FkQgU35b0EX3MgzA3n3fSJBalra8qjqGM5wvx3Z28OgU92T
+         l8htKtVEhRLBmwm0CtbORvyG7Q4WjeqpirQq5sKT3Z7vYm9ZYOUOaO53wX1UAus+4BIP
+         qYk6+aCHQGeU7VlJcrCSkmcj/NNDLO81Y+kD4+N2xJY5DzBy6f+PGFXcnVXfX8mJv8dQ
+         ZmJBT4VzZOyoQx56h62IcQTnD+DUu6zX5dg7ZNlR6BXY9TR3YpPAqDOy+CFaI4VVNd2a
+         Ou0A==
+X-Forwarded-Encrypted: i=1; AJvYcCXS2ZX/p2ghO0Brv+ULWx7z2QiB0fWvr4aFwb0i2KC+M/UlD7mMnb7XRIICdITGk8zAsYeDgsrbhfgaWJg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyidkEBNXBK9Us7A3MVCHRDTxAFzhbuffCy2todn3XV62iiTojt
+	EUWAq5CqX2SKYgUOslHTm5Qd7+QOc2++z8BC+eVD6RR25KaI+WIt/+rvlTA/Gpdv2J13zbmNwg+
+	cKLaY1OlC1w==
+X-Google-Smtp-Source: AGHT+IHPtQAcMp97iUwO+iKmkYZGdnjkx3hYPOwQLgDFnvdTsvGov+e4Tx0+KFjRc+ZlGneeC+uKFiwmQdRIHw==
+X-Received: from pfblg21.prod.google.com ([2002:a05:6a00:7095:b0:737:69cc:5b41])
+ (user=ipylypiv job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:902:f544:b0:21f:8453:7484 with SMTP id d9443c01a7336-22a8a87ec03mr5663175ad.30.1743715768494;
+ Thu, 03 Apr 2025 14:29:28 -0700 (PDT)
+Date: Thu,  3 Apr 2025 14:29:24 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250403-b4-drm_panel_mass_driver_convert_part3-v1-46-965b15ad5b8e@redhat.com>
-References: <20250403-b4-drm_panel_mass_driver_convert_part3-v1-0-965b15ad5b8e@redhat.com>
-In-Reply-To: <20250403-b4-drm_panel_mass_driver_convert_part3-v1-0-965b15ad5b8e@redhat.com>
-To: Neil Armstrong <neil.armstrong@linaro.org>, 
- Jessica Zhang <quic_jesszhan@quicinc.com>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Robert Chiras <robert.chiras@nxp.com>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Markuss Broks <markuss.broks@gmail.com>, 
- Artur Weber <aweber.kernel@gmail.com>, 
- Dzmitry Sankouski <dsankouski@gmail.com>, 
- Jagan Teki <jagan@amarulasolutions.com>, 
- =?utf-8?q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>, 
- Purism Kernel Team <kernel@puri.sm>, Ondrej Jirman <megi@xff.cz>, 
- Sasha Finkelstein <fnkl.kernel@gmail.com>, Janne Grunau <j@jannau.net>, 
- Michael Trimarchi <michael@amarulasolutions.com>, 
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
- asahi@lists.linux.dev, Anusha Srivatsa <asrivats@redhat.com>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1743711639; l=1245;
- i=asrivats@redhat.com; s=20250122; h=from:subject:message-id;
- bh=zmk7pM4zUFxP8zRUkY8Z6LycAMaLij94htuAzyPh1gM=;
- b=7HxQoapcNJ/QWW1ObXq0uQfPoC2dJ23Wc1zGuVS0eU0EFP3OgFepBvQCXzMOl6CU1WTFmsQn8
- hgfbmMOGG0UD+KIZCsZSRhucCleVfoG6FFENAeEMq2bgwy4DwXZX+XS
-X-Developer-Key: i=asrivats@redhat.com; a=ed25519;
- pk=brnIHkBsUZEhyW6Zyn0U92AeIZ1psws/q8VFbIkf1AU=
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
+Message-ID: <20250403212924.306782-1-ipylypiv@google.com>
+Subject: [PATCH v2] ata: libata-scsi: Set INFORMATION sense data field consistently
+From: Igor Pylypiv <ipylypiv@google.com>
+To: Damien Le Moal <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>
+Cc: linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Igor Pylypiv <ipylypiv@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Move to using the new API devm_drm_panel_alloc() to allocate the
-panel.
+The INFORMATION field is not set when sense data is obtained using
+ata_eh_request_sense(). Move the ata_scsi_set_sense_information() call
+to ata_scsi_qc_complete() to consistently set the INFORMATION field
+regardless of the way how the sense data is obtained.
 
-Signed-off-by: Anusha Srivatsa <asrivats@redhat.com>
+This call should be limited to regular commands only, as the INFORMATION
+field is populated with different data for ATA PASS-THROUGH commands.
+
+Signed-off-by: Igor Pylypiv <ipylypiv@google.com>
 ---
- drivers/gpu/drm/panel/panel-lg-lb035q02.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/gpu/drm/panel/panel-lg-lb035q02.c b/drivers/gpu/drm/panel/panel-lg-lb035q02.c
-index 9d0d4faa3f58aa4950e48d082352e0013880ee30..b2be6727bf73d34c8a9fdc9ad2f52b11d22d3b28 100644
---- a/drivers/gpu/drm/panel/panel-lg-lb035q02.c
-+++ b/drivers/gpu/drm/panel/panel-lg-lb035q02.c
-@@ -178,9 +178,10 @@ static int lb035q02_probe(struct spi_device *spi)
- 	struct lb035q02_device *lcd;
- 	int ret;
+Changes in v2:
+- Rephrased commit message to make it clearer.
+- Dropped kernel-doc comment for the ata_scsi_set_sense_information().
+
+ drivers/ata/libata-sata.c |  2 --
+ drivers/ata/libata-scsi.c | 31 ++++++++++++++-----------------
+ drivers/ata/libata.h      |  3 ---
+ 3 files changed, 14 insertions(+), 22 deletions(-)
+
+diff --git a/drivers/ata/libata-sata.c b/drivers/ata/libata-sata.c
+index ba300cc0a3a3..b01b52e95352 100644
+--- a/drivers/ata/libata-sata.c
++++ b/drivers/ata/libata-sata.c
+@@ -1644,8 +1644,6 @@ void ata_eh_analyze_ncq_error(struct ata_link *link)
+ 		if (ata_scsi_sense_is_valid(sense_key, asc, ascq)) {
+ 			ata_scsi_set_sense(dev, qc->scsicmd, sense_key, asc,
+ 					   ascq);
+-			ata_scsi_set_sense_information(dev, qc->scsicmd,
+-						       &qc->result_tf);
+ 			qc->flags |= ATA_QCFLAG_SENSE_VALID;
+ 		}
+ 	}
+diff --git a/drivers/ata/libata-scsi.c b/drivers/ata/libata-scsi.c
+index 2796c0da8257..ef117a0bc248 100644
+--- a/drivers/ata/libata-scsi.c
++++ b/drivers/ata/libata-scsi.c
+@@ -216,17 +216,21 @@ void ata_scsi_set_sense(struct ata_device *dev, struct scsi_cmnd *cmd,
+ 	scsi_build_sense(cmd, d_sense, sk, asc, ascq);
+ }
  
--	lcd = devm_kzalloc(&spi->dev, sizeof(*lcd), GFP_KERNEL);
--	if (!lcd)
--		return -ENOMEM;
-+	lcd = devm_drm_panel_alloc(&spi->dev, struct lb035q02_device, panel,
-+				   &lb035q02_funcs, DRM_MODE_CONNECTOR_DPI);
-+	if (IS_ERR(lcd))
-+		return PTR_ERR(lcd);
+-void ata_scsi_set_sense_information(struct ata_device *dev,
+-				    struct scsi_cmnd *cmd,
+-				    const struct ata_taskfile *tf)
++static void ata_scsi_set_sense_information(struct ata_queued_cmd *qc)
+ {
+ 	u64 information;
  
- 	spi_set_drvdata(spi, lcd);
- 	lcd->spi = spi;
-@@ -195,9 +196,6 @@ static int lb035q02_probe(struct spi_device *spi)
- 	if (ret < 0)
- 		return ret;
+-	information = ata_tf_read_block(tf, dev);
++	if (!(qc->flags & ATA_QCFLAG_RTF_FILLED)) {
++		ata_dev_dbg(qc->dev,
++			    "missing result TF: can't set INFORMATION sense field\n");
++		return;
++	}
++
++	information = ata_tf_read_block(&qc->result_tf, qc->dev);
+ 	if (information == U64_MAX)
+ 		return;
  
--	drm_panel_init(&lcd->panel, &lcd->spi->dev, &lb035q02_funcs,
--		       DRM_MODE_CONNECTOR_DPI);
+-	scsi_set_sense_information(cmd->sense_buffer,
++	scsi_set_sense_information(qc->scsicmd->sense_buffer,
+ 				   SCSI_SENSE_BUFFERSIZE, information);
+ }
+ 
+@@ -971,8 +975,7 @@ static void ata_gen_passthru_sense(struct ata_queued_cmd *qc)
+  *	ata_gen_ata_sense - generate a SCSI fixed sense block
+  *	@qc: Command that we are erroring out
+  *
+- *	Generate sense block for a failed ATA command @qc.  Descriptor
+- *	format is used to accommodate LBA48 block address.
++ *	Generate sense block for a failed ATA command @qc.
+  *
+  *	LOCKING:
+  *	None.
+@@ -982,8 +985,6 @@ static void ata_gen_ata_sense(struct ata_queued_cmd *qc)
+ 	struct ata_device *dev = qc->dev;
+ 	struct scsi_cmnd *cmd = qc->scsicmd;
+ 	struct ata_taskfile *tf = &qc->result_tf;
+-	unsigned char *sb = cmd->sense_buffer;
+-	u64 block;
+ 	u8 sense_key, asc, ascq;
+ 
+ 	if (ata_dev_disabled(dev)) {
+@@ -1014,12 +1015,6 @@ static void ata_gen_ata_sense(struct ata_queued_cmd *qc)
+ 		ata_scsi_set_sense(dev, cmd, ABORTED_COMMAND, 0, 0);
+ 		return;
+ 	}
 -
- 	drm_panel_add(&lcd->panel);
+-	block = ata_tf_read_block(&qc->result_tf, dev);
+-	if (block == U64_MAX)
+-		return;
+-
+-	scsi_set_sense_information(sb, SCSI_SENSE_BUFFERSIZE, block);
+ }
  
- 	return 0;
-
+ void ata_scsi_sdev_config(struct scsi_device *sdev)
+@@ -1679,8 +1674,10 @@ static void ata_scsi_qc_complete(struct ata_queued_cmd *qc)
+ 		ata_scsi_set_passthru_sense_fields(qc);
+ 		if (is_ck_cond_request)
+ 			set_status_byte(qc->scsicmd, SAM_STAT_CHECK_CONDITION);
+-	} else if (is_error && !have_sense) {
+-		ata_gen_ata_sense(qc);
++	} else if (is_error) {
++		if (!have_sense)
++			ata_gen_ata_sense(qc);
++		ata_scsi_set_sense_information(qc);
+ 	}
+ 
+ 	ata_qc_done(qc);
+diff --git a/drivers/ata/libata.h b/drivers/ata/libata.h
+index 0337be4faec7..ce5c628fa6fd 100644
+--- a/drivers/ata/libata.h
++++ b/drivers/ata/libata.h
+@@ -141,9 +141,6 @@ extern int ata_scsi_offline_dev(struct ata_device *dev);
+ extern bool ata_scsi_sense_is_valid(u8 sk, u8 asc, u8 ascq);
+ extern void ata_scsi_set_sense(struct ata_device *dev,
+ 			       struct scsi_cmnd *cmd, u8 sk, u8 asc, u8 ascq);
+-extern void ata_scsi_set_sense_information(struct ata_device *dev,
+-					   struct scsi_cmnd *cmd,
+-					   const struct ata_taskfile *tf);
+ extern void ata_scsi_media_change_notify(struct ata_device *dev);
+ extern void ata_scsi_hotplug(struct work_struct *work);
+ extern void ata_scsi_dev_rescan(struct work_struct *work);
 -- 
-2.48.1
+2.49.0.504.g3bcea36a83-goog
 
