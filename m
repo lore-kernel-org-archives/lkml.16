@@ -1,282 +1,129 @@
-Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
+Received: from ksmg01.maxima.ru (ksmg01.mt-integration.ru [81.200.124.38])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D61CB1D5151;
-	Thu,  3 Apr 2025 10:17:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 543BC1D5151;
+	Thu,  3 Apr 2025 10:19:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.200.124.38
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743675459; cv=none; b=q0k0h7ETr+wmnzty/1/+zHQEDcrO05P1/JGJHAickoOEwJzqg0+YWkduJSw4mNyMaJJBOHwvkHRiftdx594FfV5ygH/eTp2jCS32iOUuqNUqd/CH6Zscs/tDVQIOcTyMWbD8dQIWrqX2k7u0iCBx835O2Wi20gHalcPDOw13Hsc=
+	t=1743675600; cv=none; b=mdjJtH8Jd+gbhcRMXJ7pmv6eWwDSgyqp1tj9lAOkDKZpJONEaVTv/Hb1FtQBlG6F5lTApYBEDDGpsvb2NHurDAVpzEO6Tx8LKKv5lXS8GVU4oorwk853voDSK1XKWrsoJbQuFELXJYxjU26l2FzWq7fiOD4fh9FyMQ9Zkfbj1mo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743675459; c=relaxed/simple;
-	bh=zDf3seQRF/AsbIBdyITiILoClAPocP0OipuRAQSLaKY=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=gblxp6ODV6TTVstNhcBniIrlf9nw1EFSshIptQeVbq0VD7nd5CGzSkLy9oPYS22AhvrGn4g+AKSjbJXRf3EHtx/FUQj+xOs2Vto0ZjE7sgMXXbIJdAdEA0EXAZsdro+W3eqoLyza0qfTbBQaVGAZXBrFdEbgL5bTkDGd/l44/Fk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=Ek+r28qN; arc=none smtp.client-ip=80.241.56.161
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+	s=arc-20240116; t=1743675600; c=relaxed/simple;
+	bh=MEgieEGu/DNGGosiku1sSeXKZZChjRLGqaUcfPw5g6g=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=YvHcqzVWSST82wrDAC8oKx9pPQpt4R/QL7cMz5Z7qVSLBN3QCxDSalBxE1niDvyaB90YhXSYPVt2ek5Nat3TbYY3tOnu2DVmrN4dl1QHikZzRfmOWmvaK053Lia0JSzgDYoK14pdlRC/RgulOwvyDC3WS7PKizdnZQpEJATbsxQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mt-integration.ru; spf=pass smtp.mailfrom=mt-integration.ru; dkim=pass (2048-bit key) header.d=mt-integration.ru header.i=@mt-integration.ru header.b=DMUN5n41; arc=none smtp.client-ip=81.200.124.38
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mt-integration.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mt-integration.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="Ek+r28qN"
-Received: from smtp202.mailbox.org (smtp202.mailbox.org [IPv6:2001:67c:2050:b231:465::202])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4ZSyNF0K1Jz9tXs;
-	Thu,  3 Apr 2025 12:17:33 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1743675453; h=from:from:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IbuCeSaYR73n/sLJzZvyflx5oDaQunwvpjdo2sxXDKY=;
-	b=Ek+r28qNYkvF+vrm5VPf/pAb4WCWPfErtyE2i9ub8FPKksW8HiQet+dZrPzzq0fhRlmJSm
-	56TsjVqG7tdGq0Uh0XRTcEsTAfRLAzFZV0tGbRxNvSVN/fyNmFzXHWzTcU2PYPG77sIUKZ
-	x3Fsh6gJJtgoKQnMGiAcA0ZxPllgD5FOT/jK+UAaC+C9PrxnGU6Lrbu/GpUUAq9iDW8uuN
-	MnSTVA9b2Cn1VYPYHp1ogKcvTx1UcamDU7ksI+i4pdEOIbJufN2cHCBK1p0o1uWNjyQA3z
-	KWL9dDANMeIk2g0KwA/YR4u9SqwaLh7mIJw5e50PkKkymO2zghKkMww1hT0Dog==
-Message-ID: <84b0db2de7a26aab00778bcaca15a0dffaa9c32a.camel@mailbox.org>
-Subject: Re: [PATCH v2] drm/nouveau: Prevent signalled fences in pending list
-From: Philipp Stanner <phasta@mailbox.org>
-Reply-To: phasta@kernel.org
-To: Philipp Stanner <phasta@kernel.org>, Lyude Paul <lyude@redhat.com>, 
- Danilo Krummrich
-	 <dakr@kernel.org>, David Airlie <airlied@gmail.com>, Simona Vetter
-	 <simona@ffwll.ch>, Sumit Semwal <sumit.semwal@linaro.org>, Christian
- =?ISO-8859-1?Q?K=F6nig?=
-	 <christian.koenig@amd.com>
-Cc: dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
-	linaro-mm-sig@lists.linaro.org, stable@vger.kernel.org
-Date: Thu, 03 Apr 2025 12:17:29 +0200
-In-Reply-To: <20250403101353.42880-2-phasta@kernel.org>
-References: <20250403101353.42880-2-phasta@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=mt-integration.ru header.i=@mt-integration.ru header.b="DMUN5n41"
+Received: from ksmg01.maxima.ru (localhost [127.0.0.1])
+	by ksmg01.maxima.ru (Postfix) with ESMTP id 0E859C000F;
+	Thu,  3 Apr 2025 13:19:53 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 ksmg01.maxima.ru 0E859C000F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mt-integration.ru;
+	s=sl; t=1743675593; bh=xu2/op96M4UZKUGOoZx6d80jkPfOQ7sA2Rj2U+BXhUg=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
+	b=DMUN5n41L5vvYqZY42SlXnoMyStJpyGmDvrrIGK2lDAhjfXwLzcqdMmfxP+yFn1fK
+	 owfsDny8NWkcPeHWsgSJVGGK7iazc0mWVE5tjJvgPjrPcA4PK8nJI6rS8WTVTPILA3
+	 psWi1akSPI6hGJvHwMOKrxxqL2L8/BhVIGxhJnDnFBnV2ZLG40RK+wN7oSY//Xyrcd
+	 PKecT7P0JL35fElbtPnuG4MFQ6rKZq7GTRHV6jr4o3Dw4Pfnyll/QFirlwyF7eF7gZ
+	 SO5FlrkIrdHF54gX+mJcTyrIhJKCSI8oiT0cl9iXbLDZ/y9xOlAAh30m8Er7oS9e6R
+	 MCXMEO80B8SBA==
+Received: from ksmg01.maxima.ru (mail.maxima.ru [81.200.124.61])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(Client CN "*.maxima.ru", Issuer "GlobalSign GCC R3 DV TLS CA 2020" (verified OK))
+	by ksmg01.maxima.ru (Postfix) with ESMTPS;
+	Thu,  3 Apr 2025 13:19:52 +0300 (MSK)
+Received: from db126-1-abramov-14-d-mosos.mti-lab.com (172.25.20.118) by
+ mmail-p-exch01.mt.ru (81.200.124.61) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Thu, 3 Apr 2025 13:19:52 +0300
+From: Ivan Abramov <i.abramov@mt-integration.ru>
+To: Alexander Aring <alex.aring@gmail.com>
+CC: Ivan Abramov <i.abramov@mt-integration.ru>, Stefan Schmidt
+	<stefan@datenfreihafen.org>, Miquel Raynal <miquel.raynal@bootlin.com>,
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon
+ Horman <horms@kernel.org>, <linux-wpan@vger.kernel.org>,
+	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<lvc-project@linuxtesting.org>
+Subject: [PATCH net v3 0/3] Avoid calling WARN_ON() on allocation failure in cfg802154_switch_netns()
+Date: Thu, 3 Apr 2025 13:19:31 +0300
+Message-ID: <20250403101935.991385-1-i.abramov@mt-integration.ru>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MBO-RS-META: uxieox9rrfhb7wiwaja9txij87nw5748
-X-MBO-RS-ID: f3ebb4b2b4aec552ea1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: mmail-p-exch02.mt.ru (81.200.124.62) To
+ mmail-p-exch01.mt.ru (81.200.124.61)
+X-KSMG-AntiPhishing: NotDetected
+X-KSMG-AntiSpam-Auth: dmarc=none header.from=mt-integration.ru;spf=none smtp.mailfrom=mt-integration.ru;dkim=none
+X-KSMG-AntiSpam-Envelope-From: i.abramov@mt-integration.ru
+X-KSMG-AntiSpam-Info: LuaCore: 54 0.3.54 464169e973265e881193cca5ab7aa5055e5b7016, {rep_avail}, {Tracking_from_domain_doesnt_match_to}, ksmg01.maxima.ru:7.1.1;mt-integration.ru:7.1.1;127.0.0.199:7.1.2;81.200.124.61:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1, FromAlignment: s, ApMailHostAddress: 81.200.124.61
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiSpam-Lua-Profiles: 192331 [Apr 03 2025]
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Version: 6.1.1.11
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.1.1.8310, bases: 2025/04/03 07:23:00 #27851719
+X-KSMG-AntiVirus-Status: NotDetected, skipped
+X-KSMG-LinksScanning: NotDetected
+X-KSMG-Message-Action: skipped
+X-KSMG-Rule-ID: 7
 
-On Thu, 2025-04-03 at 12:13 +0200, Philipp Stanner wrote:
-> Nouveau currently relies on the assumption that dma_fences will only
-> ever get signalled through nouveau_fence_signal(), which takes care
-> of
-> removing a signalled fence from the list nouveau_fence_chan.pending.
->=20
-> This self-imposed rule is violated in nouveau_fence_done(), where
-> dma_fence_is_signaled() can signal the fence without removing it from
-> the list. This enables accesses to already signalled fences through
-> the
-> list, which is a bug.
->=20
-> Furthermore, it must always be possible to use standard dma_fence
-> methods an a dma_fence and observe valid behavior. The canonical way
-> of
-> ensuring that signalling a fence has additional effects is to add
-> those
-> effects to a callback and register it on that fence.
->=20
-> Move the code from nouveau_fence_signal() into a dma_fence callback.
-> Register that callback when creating the fence.
->=20
-> Cc: <stable@vger.kernel.org> # 4.10+
-> Signed-off-by: Philipp Stanner <phasta@kernel.org>
-> ---
-> Changes in v2:
-> =C2=A0 - Remove Fixes: tag. (Danilo)
-> =C2=A0 - Remove integer "drop" and call nvif_event_block() in the fence
-> =C2=A0=C2=A0=C2=A0 callback. (Danilo)
-> ---
-> =C2=A0drivers/gpu/drm/nouveau/nouveau_fence.c | 52 +++++++++++++---------=
--
-> --
-> =C2=A0drivers/gpu/drm/nouveau/nouveau_fence.h |=C2=A0 1 +
-> =C2=A02 files changed, 29 insertions(+), 24 deletions(-)
->=20
-> diff --git a/drivers/gpu/drm/nouveau/nouveau_fence.c
-> b/drivers/gpu/drm/nouveau/nouveau_fence.c
-> index 7cc84472cece..cf510ef9641a 100644
-> --- a/drivers/gpu/drm/nouveau/nouveau_fence.c
-> +++ b/drivers/gpu/drm/nouveau/nouveau_fence.c
-> @@ -50,24 +50,24 @@ nouveau_fctx(struct nouveau_fence *fence)
-> =C2=A0	return container_of(fence->base.lock, struct
-> nouveau_fence_chan, lock);
-> =C2=A0}
-> =C2=A0
-> -static int
-> -nouveau_fence_signal(struct nouveau_fence *fence)
-> +static void
-> +nouveau_fence_cleanup_cb(struct dma_fence *dfence, struct
-> dma_fence_cb *cb)
-> =C2=A0{
-> -	int drop =3D 0;
-> +	struct nouveau_fence_chan *fctx;
-> +	struct nouveau_fence *fence;
-> +
-> +	fence =3D container_of(dfence, struct nouveau_fence, base);
-> +	fctx =3D nouveau_fctx(fence);
-> =C2=A0
-> -	dma_fence_signal_locked(&fence->base);
-> =C2=A0	list_del(&fence->head);
-> =C2=A0	rcu_assign_pointer(fence->channel, NULL);
-> =C2=A0
-> =C2=A0	if (test_bit(DMA_FENCE_FLAG_USER_BITS, &fence->base.flags))
-> {
-> -		struct nouveau_fence_chan *fctx =3D
-> nouveau_fctx(fence);
-> -
-> =C2=A0		if (!--fctx->notify_ref)
-> -			drop =3D 1;
-> +			nvif_event_block(&fctx->event);
-> =C2=A0	}
-> =C2=A0
-> =C2=A0	dma_fence_put(&fence->base);
+This series was inspired by Syzkaller report on warning in
+cfg802154_switch_netns().
 
-What I realized while coding this v2 is that we might want to think
-about whether we really want the dma_fence_put() in the fence callback?
+WARNING: CPU: 0 PID: 5837 at net/ieee802154/core.c:258 cfg802154_switch_netns+0x3c7/0x3d0 net/ieee802154/core.c:258
+Modules linked in:
+CPU: 0 UID: 0 PID: 5837 Comm: syz-executor125 Not tainted 6.13.0-rc6-syzkaller-00918-g7b24f164cf00 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 09/13/2024
+RIP: 0010:cfg802154_switch_netns+0x3c7/0x3d0 net/ieee802154/core.c:258
+Call Trace:
+ <TASK>
+ nl802154_wpan_phy_netns+0x13d/0x210 net/ieee802154/nl802154.c:1292
+ genl_family_rcv_msg_doit net/netlink/genetlink.c:1115 [inline]
+ genl_family_rcv_msg net/netlink/genetlink.c:1195 [inline]
+ genl_rcv_msg+0xb14/0xec0 net/netlink/genetlink.c:1210
+ netlink_rcv_skb+0x1e3/0x430 net/netlink/af_netlink.c:2543
+ genl_rcv+0x28/0x40 net/netlink/genetlink.c:1219
+ netlink_unicast_kernel net/netlink/af_netlink.c:1322 [inline]
+ netlink_unicast+0x7f6/0x990 net/netlink/af_netlink.c:1348
+ netlink_sendmsg+0x8e4/0xcb0 net/netlink/af_netlink.c:1892
+ sock_sendmsg_nosec net/socket.c:711 [inline]
+ __sock_sendmsg+0x221/0x270 net/socket.c:726
+ ____sys_sendmsg+0x52a/0x7e0 net/socket.c:2594
+ ___sys_sendmsg net/socket.c:2648 [inline]
+ __sys_sendmsg+0x269/0x350 net/socket.c:2680
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
 
-It should work fine, since it's exactly identical to the previous
-code's behavior =E2=80=93 but effectively it means that the driver's refere=
-nce
-will be dropped whenever it signals that fence.
+This warning is caused by Syzkaller's fault injection, which causes
+kstrdup() in device_rename() to fail, so device_rename() returns -ENOMEM.
 
-IDK
+Since practically such failure is not possible, avoid it, additionally
+fixing similar pointless allocation-related warnings.
 
-P.
+v3: Add Reviewed-by tags to patches as per Miquel Raynal's observation.
+v2: Add tags to patch 2. Also make sure to commit against latest
+netdev/net.
 
+Ivan Abramov (3):
+  ieee802154: Restore initial state on failed device_rename() in
+    cfg802154_switch_netns()
+  ieee802154: Avoid calling WARN_ON() on -ENOMEM in
+    cfg802154_switch_netns()
+  ieee802154: Remove WARN_ON() in cfg802154_pernet_exit()
 
-> -	return drop;
-> =C2=A0}
-> =C2=A0
-> =C2=A0static struct nouveau_fence *
-> @@ -93,8 +93,7 @@ nouveau_fence_context_kill(struct
-> nouveau_fence_chan *fctx, int error)
-> =C2=A0		if (error)
-> =C2=A0			dma_fence_set_error(&fence->base, error);
-> =C2=A0
-> -		if (nouveau_fence_signal(fence))
-> -			nvif_event_block(&fctx->event);
-> +		dma_fence_signal_locked(&fence->base);
-> =C2=A0	}
-> =C2=A0	fctx->killed =3D 1;
-> =C2=A0	spin_unlock_irqrestore(&fctx->lock, flags);
-> @@ -127,11 +126,10 @@ nouveau_fence_context_free(struct
-> nouveau_fence_chan *fctx)
-> =C2=A0	kref_put(&fctx->fence_ref, nouveau_fence_context_put);
-> =C2=A0}
-> =C2=A0
-> -static int
-> +static void
-> =C2=A0nouveau_fence_update(struct nouveau_channel *chan, struct
-> nouveau_fence_chan *fctx)
-> =C2=A0{
-> =C2=A0	struct nouveau_fence *fence;
-> -	int drop =3D 0;
-> =C2=A0	u32 seq =3D fctx->read(chan);
-> =C2=A0
-> =C2=A0	while (!list_empty(&fctx->pending)) {
-> @@ -140,10 +138,8 @@ nouveau_fence_update(struct nouveau_channel
-> *chan, struct nouveau_fence_chan *fc
-> =C2=A0		if ((int)(seq - fence->base.seqno) < 0)
-> =C2=A0			break;
-> =C2=A0
-> -		drop |=3D nouveau_fence_signal(fence);
-> +		dma_fence_signal_locked(&fence->base);
-> =C2=A0	}
-> -
-> -	return drop;
-> =C2=A0}
-> =C2=A0
-> =C2=A0static void
-> @@ -152,7 +148,6 @@ nouveau_fence_uevent_work(struct work_struct
-> *work)
-> =C2=A0	struct nouveau_fence_chan *fctx =3D container_of(work, struct
-> nouveau_fence_chan,
-> =C2=A0						=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 uevent_work);
-> =C2=A0	unsigned long flags;
-> -	int drop =3D 0;
-> =C2=A0
-> =C2=A0	spin_lock_irqsave(&fctx->lock, flags);
-> =C2=A0	if (!list_empty(&fctx->pending)) {
-> @@ -161,11 +156,8 @@ nouveau_fence_uevent_work(struct work_struct
-> *work)
-> =C2=A0
-> =C2=A0		fence =3D list_entry(fctx->pending.next,
-> typeof(*fence), head);
-> =C2=A0		chan =3D rcu_dereference_protected(fence->channel,
-> lockdep_is_held(&fctx->lock));
-> -		if (nouveau_fence_update(chan, fctx))
-> -			drop =3D 1;
-> +		nouveau_fence_update(chan, fctx);
-> =C2=A0	}
-> -	if (drop)
-> -		nvif_event_block(&fctx->event);
-> =C2=A0
-> =C2=A0	spin_unlock_irqrestore(&fctx->lock, flags);
-> =C2=A0}
-> @@ -235,6 +227,19 @@ nouveau_fence_emit(struct nouveau_fence *fence)
-> =C2=A0			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 &fctx->lock, fctx->context,=
- ++fctx-
-> >sequence);
-> =C2=A0	kref_get(&fctx->fence_ref);
-> =C2=A0
-> +	fence->cb.func =3D nouveau_fence_cleanup_cb;
-> +	/* Adding a callback runs into
-> __dma_fence_enable_signaling(), which will
-> +	 * ultimately run into nouveau_fence_no_signaling(), where a
-> WARN_ON
-> +	 * would fire because the refcount can be dropped there.
-> +	 *
-> +	 * Increment the refcount here temporarily to work around
-> that.
-> +	 */
-> +	dma_fence_get(&fence->base);
-> +	ret =3D dma_fence_add_callback(&fence->base, &fence->cb,
-> nouveau_fence_cleanup_cb);
-> +	dma_fence_put(&fence->base);
-> +	if (ret)
-> +		return ret;
-> +
-> =C2=A0	ret =3D fctx->emit(fence);
-> =C2=A0	if (!ret) {
-> =C2=A0		dma_fence_get(&fence->base);
-> @@ -246,8 +251,7 @@ nouveau_fence_emit(struct nouveau_fence *fence)
-> =C2=A0			return -ENODEV;
-> =C2=A0		}
-> =C2=A0
-> -		if (nouveau_fence_update(chan, fctx))
-> -			nvif_event_block(&fctx->event);
-> +		nouveau_fence_update(chan, fctx);
-> =C2=A0
-> =C2=A0		list_add_tail(&fence->head, &fctx->pending);
-> =C2=A0		spin_unlock_irq(&fctx->lock);
-> @@ -270,8 +274,8 @@ nouveau_fence_done(struct nouveau_fence *fence)
-> =C2=A0
-> =C2=A0		spin_lock_irqsave(&fctx->lock, flags);
-> =C2=A0		chan =3D rcu_dereference_protected(fence->channel,
-> lockdep_is_held(&fctx->lock));
-> -		if (chan && nouveau_fence_update(chan, fctx))
-> -			nvif_event_block(&fctx->event);
-> +		if (chan)
-> +			nouveau_fence_update(chan, fctx);
-> =C2=A0		spin_unlock_irqrestore(&fctx->lock, flags);
-> =C2=A0	}
-> =C2=A0	return dma_fence_is_signaled(&fence->base);
-> diff --git a/drivers/gpu/drm/nouveau/nouveau_fence.h
-> b/drivers/gpu/drm/nouveau/nouveau_fence.h
-> index 8bc065acfe35..e6b2df7fdc42 100644
-> --- a/drivers/gpu/drm/nouveau/nouveau_fence.h
-> +++ b/drivers/gpu/drm/nouveau/nouveau_fence.h
-> @@ -10,6 +10,7 @@ struct nouveau_bo;
-> =C2=A0
-> =C2=A0struct nouveau_fence {
-> =C2=A0	struct dma_fence base;
-> +	struct dma_fence_cb cb;
-> =C2=A0
-> =C2=A0	struct list_head head;
-> =C2=A0
+ net/ieee802154/core.c | 51 ++++++++++++++++++++++++-------------------
+ 1 file changed, 29 insertions(+), 22 deletions(-)
+
+-- 
+2.39.5
 
