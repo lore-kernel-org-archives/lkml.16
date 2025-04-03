@@ -1,105 +1,544 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77E51253339;
-	Thu,  3 Apr 2025 18:29:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27EFA25291D
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 18:29:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743704969; cv=none; b=koJaPIqely8JMR5n1HLZ0c27QsuKqjn3DTWIOrwMNG/sNZbkWOqThhcTzSrEegKBScV5z2kUDkHRzRwuAiLO7g6kC5c/miCZJhVQUoJ+XKLTy9uZam0IZHEqsgbDlUaYmXVeNCkSosUKVrt8PMNo45kxXpPYaRM68xp/Ux9ciPI=
+	t=1743704965; cv=none; b=be3LH5BnNehc4+IBxO9Am6xdMgtuJ1TghZ7alygUsa9UtPojd2/ExHZfg93MssC7DQmkfHVv93/xE6DjDQ2aJopkKvISKk8+0Z5mJFqmvaMMMFt+h2BB7Hd6pYJRxAWz+lNymmdFb+AFHWvetYQJSKxDbSUWccqIrjemk1MEMGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743704969; c=relaxed/simple;
-	bh=6NMfzsl+qbxslM1Q5CA3ElJX9ebSpetzhkAlaotbNOU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MKyNAIOY5AXitLfwG5ZBe35RJzDF/Wh+UBkO1GN72AIeeIwcKWh7S4bLWE+KKErGeBuw4QJ4RORaDQ1M+qjTY2XCzmQgJ141WSELHRst+d1/V11C21g5T89w+ikoXg1MTpPFO6tItr+n3u09ldJXfB+427BZszDo3kipsYGQzKc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [192.168.0.53] (ip5f5ae856.dynamic.kabel-deutschland.de [95.90.232.86])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 9C67A61E647B3;
-	Thu, 03 Apr 2025 20:28:57 +0200 (CEST)
-Message-ID: <4e4640bd-0313-4594-9667-82340ed9368a@molgen.mpg.de>
-Date: Thu, 3 Apr 2025 20:28:56 +0200
+	s=arc-20240116; t=1743704965; c=relaxed/simple;
+	bh=HN+XU8zxOY9v+u7xi1yyfNDtRZMv+NsuI/w5Pm9w0+I=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=pHgdMoOVybOVsTdgI1MTraNcQj7730Ksym6tDHhn1Fz+k44z9jrqvFi1BVrqEgh3xU+JJi9WuC5nCeqb1zqBppIptURBicNpEFlPG9Zzv6+gKaNykQVvHAF1n1QrK0tIWR4xgQsbF6N6pgORnEUFZ1j2cmU7hFLSOKvuWQkOHBc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=B8UEX75y; arc=none smtp.client-ip=95.215.58.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="B8UEX75y"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1743704947;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mXdo8X1aVFus8jE/gRSOm5/KUGBwL/O5S+xQKTEpQaY=;
+	b=B8UEX75yftNaMWqMjuzVMQ8ZtlkozjWueZndzzk4X6TgFgpCsRRqZqctcf0qXjOp7XPKGP
+	KH49HUHtCsx1vc6XrFCr02LYJNg/I3gULLOMAsI5HKMquOONmuBp/fNLMisW1XfnwuXBey
+	ZGlpAJQqWZqGlawBSrmO0BGHpBY0+Ic=
+From: Sean Anderson <sean.anderson@linux.dev>
+To: netdev@vger.kernel.org,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Russell King <linux@armlinux.org.uk>
+Cc: Christian Marangi <ansuelsmth@gmail.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	upstream@airoha.com,
+	Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Sean Anderson <sean.anderson@linux.dev>
+Subject: [RFC net-next PATCH 12/13] arm64: dts: Add compatible strings for Lynx PCSs
+Date: Thu,  3 Apr 2025 14:28:55 -0400
+Message-Id: <20250403182855.1948615-1-sean.anderson@linux.dev>
+In-Reply-To: <20250403181907.1947517-1-sean.anderson@linux.dev>
+References: <20250403181907.1947517-1-sean.anderson@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] tpm: tis: Increase the default for timeout B
-To: Michal Suchanek <msuchanek@suse.de>
-Cc: Peter Huewe <peterhuewe@gmx.de>, Jarkko Sakkinen <jarkko@kernel.org>,
- Jason Gunthorpe <jgg@ziepe.ca>, linux-integrity@vger.kernel.org,
- linux-kernel@vger.kernel.org, Jonathan McDowell <noodles@earth.li>
-References: <Z-6Gau3aCB7B3pB9@earth.li>
- <20250403182519.8412-1-msuchanek@suse.de>
-Content-Language: en-US
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <20250403182519.8412-1-msuchanek@suse.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Dear Michal,
+This adds appropriate compatible strings for Lynx PCSs on arm64 QorIQ
+platforms. This also changes the node name to avoid warnings from
+ethernet-phy.yaml.
 
+Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
+---
 
-Thank you for the patch. For the summary/title you could be more 
-specific by using *Double*:
+ .../arm64/boot/dts/freescale/fsl-ls208xa.dtsi | 48 +++++++++++------
+ .../arm64/boot/dts/freescale/fsl-lx2160a.dtsi | 54 ++++++++++++-------
+ .../dts/freescale/qoriq-fman3-0-10g-0.dtsi    |  3 +-
+ .../dts/freescale/qoriq-fman3-0-10g-1.dtsi    |  3 +-
+ .../dts/freescale/qoriq-fman3-0-1g-0.dtsi     |  3 +-
+ .../dts/freescale/qoriq-fman3-0-1g-1.dtsi     |  3 +-
+ .../dts/freescale/qoriq-fman3-0-1g-2.dtsi     |  3 +-
+ .../dts/freescale/qoriq-fman3-0-1g-3.dtsi     |  3 +-
+ .../dts/freescale/qoriq-fman3-0-1g-4.dtsi     |  3 +-
+ .../dts/freescale/qoriq-fman3-0-1g-5.dtsi     |  3 +-
+ 10 files changed, 84 insertions(+), 42 deletions(-)
 
-tpm: tis: Double default for timeout B to 4 s
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
+index 9421fdd7e30e..90c1631c958e 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
+@@ -554,7 +554,8 @@ pcs_mdio1: mdio@8c07000 {
+ 			#size-cells = <0>;
+ 			status = "disabled";
+ 
+-			pcs1: ethernet-phy@0 {
++			pcs1: ethernet-pcs@0 {
++				compatible = "fsl,lynx-pcs";
+ 				reg = <0>;
+ 			};
+ 		};
+@@ -567,7 +568,8 @@ pcs_mdio2: mdio@8c0b000 {
+ 			#size-cells = <0>;
+ 			status = "disabled";
+ 
+-			pcs2: ethernet-phy@0 {
++			pcs2: ethernet-pcs@0 {
++				compatible = "fsl,lynx-pcs";
+ 				reg = <0>;
+ 			};
+ 		};
+@@ -580,7 +582,8 @@ pcs_mdio3: mdio@8c0f000 {
+ 			#size-cells = <0>;
+ 			status = "disabled";
+ 
+-			pcs3: ethernet-phy@0 {
++			pcs3: ethernet-pcs@0 {
++				compatible = "fsl,lynx-pcs";
+ 				reg = <0>;
+ 			};
+ 		};
+@@ -593,7 +596,8 @@ pcs_mdio4: mdio@8c13000 {
+ 			#size-cells = <0>;
+ 			status = "disabled";
+ 
+-			pcs4: ethernet-phy@0 {
++			pcs4: ethernet-pcs@0 {
++				compatible = "fsl,lynx-pcs";
+ 				reg = <0>;
+ 			};
+ 		};
+@@ -606,7 +610,8 @@ pcs_mdio5: mdio@8c17000 {
+ 			#size-cells = <0>;
+ 			status = "disabled";
+ 
+-			pcs5: ethernet-phy@0 {
++			pcs5: ethernet-pcs@0 {
++				compatible = "fsl,lynx-pcs";
+ 				reg = <0>;
+ 			};
+ 		};
+@@ -619,7 +624,8 @@ pcs_mdio6: mdio@8c1b000 {
+ 			#size-cells = <0>;
+ 			status = "disabled";
+ 
+-			pcs6: ethernet-phy@0 {
++			pcs6: ethernet-pcs@0 {
++				compatible = "fsl,lynx-pcs";
+ 				reg = <0>;
+ 			};
+ 		};
+@@ -632,7 +638,8 @@ pcs_mdio7: mdio@8c1f000 {
+ 			#size-cells = <0>;
+ 			status = "disabled";
+ 
+-			pcs7: ethernet-phy@0 {
++			pcs7: ethernet-pcs@0 {
++				compatible = "fsl,lynx-pcs";
+ 				reg = <0>;
+ 			};
+ 		};
+@@ -645,7 +652,8 @@ pcs_mdio8: mdio@8c23000 {
+ 			#size-cells = <0>;
+ 			status = "disabled";
+ 
+-			pcs8: ethernet-phy@0 {
++			pcs8: ethernet-pcs@0 {
++				compatible = "fsl,lynx-pcs";
+ 				reg = <0>;
+ 			};
+ 		};
+@@ -658,7 +666,8 @@ pcs_mdio9: mdio@8c27000 {
+ 			#size-cells = <0>;
+ 			status = "disabled";
+ 
+-			pcs9: ethernet-phy@0 {
++			pcs9: ethernet-pcs@0 {
++				compatible = "fsl,lynx-pcs";
+ 				reg = <0>;
+ 			};
+ 		};
+@@ -671,7 +680,8 @@ pcs_mdio10: mdio@8c2b000 {
+ 			#size-cells = <0>;
+ 			status = "disabled";
+ 
+-			pcs10: ethernet-phy@0 {
++			pcs10: ethernet-pcs@0 {
++				compatible = "fsl,lynx-pcs";
+ 				reg = <0>;
+ 			};
+ 		};
+@@ -684,7 +694,8 @@ pcs_mdio11: mdio@8c2f000 {
+ 			#size-cells = <0>;
+ 			status = "disabled";
+ 
+-			pcs11: ethernet-phy@0 {
++			pcs11: ethernet-pcs@0 {
++				compatible = "fsl,lynx-pcs";
+ 				reg = <0>;
+ 			};
+ 		};
+@@ -697,7 +708,8 @@ pcs_mdio12: mdio@8c33000 {
+ 			#size-cells = <0>;
+ 			status = "disabled";
+ 
+-			pcs12: ethernet-phy@0 {
++			pcs12: ethernet-pcs@0 {
++				compatible = "fsl,lynx-pcs";
+ 				reg = <0>;
+ 			};
+ 		};
+@@ -710,7 +722,8 @@ pcs_mdio13: mdio@8c37000 {
+ 			#size-cells = <0>;
+ 			status = "disabled";
+ 
+-			pcs13: ethernet-phy@0 {
++			pcs13: ethernet-pcs@0 {
++				compatible = "fsl,lynx-pcs";
+ 				reg = <0>;
+ 			};
+ 		};
+@@ -723,7 +736,8 @@ pcs_mdio14: mdio@8c3b000 {
+ 			#size-cells = <0>;
+ 			status = "disabled";
+ 
+-			pcs14: ethernet-phy@0 {
++			pcs14: ethernet-pcs@0 {
++				compatible = "fsl,lynx-pcs";
+ 				reg = <0>;
+ 			};
+ 		};
+@@ -736,7 +750,8 @@ pcs_mdio15: mdio@8c3f000 {
+ 			#size-cells = <0>;
+ 			status = "disabled";
+ 
+-			pcs15: ethernet-phy@0 {
++			pcs15: ethernet-pcs@0 {
++				compatible = "fsl,lynx-pcs";
+ 				reg = <0>;
+ 			};
+ 		};
+@@ -749,7 +764,8 @@ pcs_mdio16: mdio@8c43000 {
+ 			#size-cells = <0>;
+ 			status = "disabled";
+ 
+-			pcs16: ethernet-phy@0 {
++			pcs16: ethernet-pcs@0 {
++				compatible = "fsl,lynx-pcs";
+ 				reg = <0>;
+ 			};
+ 		};
+diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
+index c9541403bcd8..f35da67b6e61 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
+@@ -1474,7 +1474,8 @@ pcs_mdio1: mdio@8c07000 {
+ 			#size-cells = <0>;
+ 			status = "disabled";
+ 
+-			pcs1: ethernet-phy@0 {
++			pcs1: ethernet-pcs@0 {
++				compatible = "fsl,lynx-pcs";
+ 				reg = <0>;
+ 			};
+ 		};
+@@ -1487,7 +1488,8 @@ pcs_mdio2: mdio@8c0b000 {
+ 			#size-cells = <0>;
+ 			status = "disabled";
+ 
+-			pcs2: ethernet-phy@0 {
++			pcs2: ethernet-pcs@0 {
++				compatible = "fsl,lynx-pcs";
+ 				reg = <0>;
+ 			};
+ 		};
+@@ -1500,7 +1502,8 @@ pcs_mdio3: mdio@8c0f000 {
+ 			#size-cells = <0>;
+ 			status = "disabled";
+ 
+-			pcs3: ethernet-phy@0 {
++			pcs3: ethernet-pcs@0 {
++				compatible = "fsl,lynx-pcs";
+ 				reg = <0>;
+ 			};
+ 		};
+@@ -1513,7 +1516,8 @@ pcs_mdio4: mdio@8c13000 {
+ 			#size-cells = <0>;
+ 			status = "disabled";
+ 
+-			pcs4: ethernet-phy@0 {
++			pcs4: ethernet-pcs@0 {
++				compatible = "fsl,lynx-pcs";
+ 				reg = <0>;
+ 			};
+ 		};
+@@ -1526,7 +1530,8 @@ pcs_mdio5: mdio@8c17000 {
+ 			#size-cells = <0>;
+ 			status = "disabled";
+ 
+-			pcs5: ethernet-phy@0 {
++			pcs5: ethernet-pcs@0 {
++				compatible = "fsl,lynx-pcs";
+ 				reg = <0>;
+ 			};
+ 		};
+@@ -1539,7 +1544,8 @@ pcs_mdio6: mdio@8c1b000 {
+ 			#size-cells = <0>;
+ 			status = "disabled";
+ 
+-			pcs6: ethernet-phy@0 {
++			pcs6: ethernet-pcs@0 {
++				compatible = "fsl,lynx-pcs";
+ 				reg = <0>;
+ 			};
+ 		};
+@@ -1552,7 +1558,8 @@ pcs_mdio7: mdio@8c1f000 {
+ 			#size-cells = <0>;
+ 			status = "disabled";
+ 
+-			pcs7: ethernet-phy@0 {
++			pcs7: ethernet-pcs@0 {
++				compatible = "fsl,lynx-pcs";
+ 				reg = <0>;
+ 			};
+ 		};
+@@ -1565,7 +1572,8 @@ pcs_mdio8: mdio@8c23000 {
+ 			#size-cells = <0>;
+ 			status = "disabled";
+ 
+-			pcs8: ethernet-phy@0 {
++			pcs8: ethernet-pcs@0 {
++				compatible = "fsl,lynx-pcs";
+ 				reg = <0>;
+ 			};
+ 		};
+@@ -1578,7 +1586,8 @@ pcs_mdio9: mdio@8c27000 {
+ 			#size-cells = <0>;
+ 			status = "disabled";
+ 
+-			pcs9: ethernet-phy@0 {
++			pcs9: ethernet-pcs@0 {
++				compatible = "fsl,lynx-pcs";
+ 				reg = <0>;
+ 			};
+ 		};
+@@ -1591,7 +1600,8 @@ pcs_mdio10: mdio@8c2b000 {
+ 			#size-cells = <0>;
+ 			status = "disabled";
+ 
+-			pcs10: ethernet-phy@0 {
++			pcs10: ethernet-pcs@0 {
++				compatible = "fsl,lynx-pcs";
+ 				reg = <0>;
+ 			};
+ 		};
+@@ -1604,7 +1614,8 @@ pcs_mdio11: mdio@8c2f000 {
+ 			#size-cells = <0>;
+ 			status = "disabled";
+ 
+-			pcs11: ethernet-phy@0 {
++			pcs11: ethernet-pcs@0 {
++				compatible = "fsl,lynx-pcs";
+ 				reg = <0>;
+ 			};
+ 		};
+@@ -1617,7 +1628,8 @@ pcs_mdio12: mdio@8c33000 {
+ 			#size-cells = <0>;
+ 			status = "disabled";
+ 
+-			pcs12: ethernet-phy@0 {
++			pcs12: ethernet-pcs@0 {
++				compatible = "fsl,lynx-pcs";
+ 				reg = <0>;
+ 			};
+ 		};
+@@ -1630,7 +1642,8 @@ pcs_mdio13: mdio@8c37000 {
+ 			#size-cells = <0>;
+ 			status = "disabled";
+ 
+-			pcs13: ethernet-phy@0 {
++			pcs13: ethernet-pcs@0 {
++				compatible = "fsl,lynx-pcs";
+ 				reg = <0>;
+ 			};
+ 		};
+@@ -1643,7 +1656,8 @@ pcs_mdio14: mdio@8c3b000 {
+ 			#size-cells = <0>;
+ 			status = "disabled";
+ 
+-			pcs14: ethernet-phy@0 {
++			pcs14: ethernet-pcs@0 {
++				compatible = "fsl,lynx-pcs";
+ 				reg = <0>;
+ 			};
+ 		};
+@@ -1656,7 +1670,8 @@ pcs_mdio15: mdio@8c3f000 {
+ 			#size-cells = <0>;
+ 			status = "disabled";
+ 
+-			pcs15: ethernet-phy@0 {
++			pcs15: ethernet-pcs@0 {
++				compatible = "fsl,lynx-pcs";
+ 				reg = <0>;
+ 			};
+ 		};
+@@ -1669,7 +1684,8 @@ pcs_mdio16: mdio@8c43000 {
+ 			#size-cells = <0>;
+ 			status = "disabled";
+ 
+-			pcs16: ethernet-phy@0 {
++			pcs16: ethernet-pcs@0 {
++				compatible = "fsl,lynx-pcs";
+ 				reg = <0>;
+ 			};
+ 		};
+@@ -1682,7 +1698,8 @@ pcs_mdio17: mdio@8c47000 {
+ 			#size-cells = <0>;
+ 			status = "disabled";
+ 
+-			pcs17: ethernet-phy@0 {
++			pcs17: ethernet-pcs@0 {
++				compatible = "fsl,lynx-pcs";
+ 				reg = <0>;
+ 			};
+ 		};
+@@ -1695,7 +1712,8 @@ pcs_mdio18: mdio@8c4b000 {
+ 			#size-cells = <0>;
+ 			status = "disabled";
+ 
+-			pcs18: ethernet-phy@0 {
++			pcs18: ethernet-pcs@0 {
++				compatible = "fsl,lynx-pcs";
+ 				reg = <0>;
+ 			};
+ 		};
+diff --git a/arch/arm64/boot/dts/freescale/qoriq-fman3-0-10g-0.dtsi b/arch/arm64/boot/dts/freescale/qoriq-fman3-0-10g-0.dtsi
+index 1b2b20c6126d..e11c6ddab457 100644
+--- a/arch/arm64/boot/dts/freescale/qoriq-fman3-0-10g-0.dtsi
++++ b/arch/arm64/boot/dts/freescale/qoriq-fman3-0-10g-0.dtsi
+@@ -36,7 +36,8 @@ mdio@f1000 {
+ 		compatible = "fsl,fman-memac-mdio";
+ 		reg = <0xf1000 0x1000>;
+ 
+-		pcsphy6: ethernet-phy@0 {
++		pcsphy6: ethernet-pcs@0 {
++			compatible = "fsl,lynx-pcs";
+ 			reg = <0x0>;
+ 		};
+ 	};
+diff --git a/arch/arm64/boot/dts/freescale/qoriq-fman3-0-10g-1.dtsi b/arch/arm64/boot/dts/freescale/qoriq-fman3-0-10g-1.dtsi
+index 55d78f6f7c6c..c8b7f2c61a8f 100644
+--- a/arch/arm64/boot/dts/freescale/qoriq-fman3-0-10g-1.dtsi
++++ b/arch/arm64/boot/dts/freescale/qoriq-fman3-0-10g-1.dtsi
+@@ -36,7 +36,8 @@ mdio@f3000 {
+ 		compatible = "fsl,fman-memac-mdio";
+ 		reg = <0xf3000 0x1000>;
+ 
+-		pcsphy7: ethernet-phy@0 {
++		pcsphy7: ethernet-pcs@0 {
++			compatible = "fsl,lynx-pcs";
+ 			reg = <0x0>;
+ 		};
+ 	};
+diff --git a/arch/arm64/boot/dts/freescale/qoriq-fman3-0-1g-0.dtsi b/arch/arm64/boot/dts/freescale/qoriq-fman3-0-1g-0.dtsi
+index 18916a860c2e..1a4bcb38646e 100644
+--- a/arch/arm64/boot/dts/freescale/qoriq-fman3-0-1g-0.dtsi
++++ b/arch/arm64/boot/dts/freescale/qoriq-fman3-0-1g-0.dtsi
+@@ -35,7 +35,8 @@ mdio@e1000 {
+ 		compatible = "fsl,fman-memac-mdio";
+ 		reg = <0xe1000 0x1000>;
+ 
+-		pcsphy0: ethernet-phy@0 {
++		pcsphy0: ethernet-pcs@0 {
++			compatible = "fsl,lynx-pcs";
+ 			reg = <0x0>;
+ 		};
+ 	};
+diff --git a/arch/arm64/boot/dts/freescale/qoriq-fman3-0-1g-1.dtsi b/arch/arm64/boot/dts/freescale/qoriq-fman3-0-1g-1.dtsi
+index e90af445a293..6a4d55f9d045 100644
+--- a/arch/arm64/boot/dts/freescale/qoriq-fman3-0-1g-1.dtsi
++++ b/arch/arm64/boot/dts/freescale/qoriq-fman3-0-1g-1.dtsi
+@@ -35,7 +35,8 @@ mdio@e3000 {
+ 		compatible = "fsl,fman-memac-mdio";
+ 		reg = <0xe3000 0x1000>;
+ 
+-		pcsphy1: ethernet-phy@0 {
++		pcsphy1: ethernet-pcs@0 {
++			compatible = "fsl,lynx-pcs";
+ 			reg = <0x0>;
+ 		};
+ 	};
+diff --git a/arch/arm64/boot/dts/freescale/qoriq-fman3-0-1g-2.dtsi b/arch/arm64/boot/dts/freescale/qoriq-fman3-0-1g-2.dtsi
+index fec93905bc81..0de30065aa3b 100644
+--- a/arch/arm64/boot/dts/freescale/qoriq-fman3-0-1g-2.dtsi
++++ b/arch/arm64/boot/dts/freescale/qoriq-fman3-0-1g-2.dtsi
+@@ -35,7 +35,8 @@ mdio@e5000 {
+ 		compatible = "fsl,fman-memac-mdio";
+ 		reg = <0xe5000 0x1000>;
+ 
+-		pcsphy2: ethernet-phy@0 {
++		pcsphy2: ethernet-pcs@0 {
++			compatible = "fsl,lynx-pcs";
+ 			reg = <0x0>;
+ 		};
+ 	};
+diff --git a/arch/arm64/boot/dts/freescale/qoriq-fman3-0-1g-3.dtsi b/arch/arm64/boot/dts/freescale/qoriq-fman3-0-1g-3.dtsi
+index 2aa953faa62b..2f8064b1039f 100644
+--- a/arch/arm64/boot/dts/freescale/qoriq-fman3-0-1g-3.dtsi
++++ b/arch/arm64/boot/dts/freescale/qoriq-fman3-0-1g-3.dtsi
+@@ -35,7 +35,8 @@ mdio@e7000 {
+ 		compatible = "fsl,fman-memac-mdio";
+ 		reg = <0xe7000 0x1000>;
+ 
+-		pcsphy3: ethernet-phy@0 {
++		pcsphy3: ethernet-pcs@0 {
++			compatible = "fsl,lynx-pcs";
+ 			reg = <0x0>;
+ 		};
+ 	};
+diff --git a/arch/arm64/boot/dts/freescale/qoriq-fman3-0-1g-4.dtsi b/arch/arm64/boot/dts/freescale/qoriq-fman3-0-1g-4.dtsi
+index 948e39411415..6246f1fdac2d 100644
+--- a/arch/arm64/boot/dts/freescale/qoriq-fman3-0-1g-4.dtsi
++++ b/arch/arm64/boot/dts/freescale/qoriq-fman3-0-1g-4.dtsi
+@@ -35,7 +35,8 @@ mdio@e9000 {
+ 		compatible = "fsl,fman-memac-mdio";
+ 		reg = <0xe9000 0x1000>;
+ 
+-		pcsphy4: ethernet-phy@0 {
++		pcsphy4: ethernet-pcs@0 {
++			compatible = "fsl,lynx-pcs";
+ 			reg = <0x0>;
+ 		};
+ 	};
+diff --git a/arch/arm64/boot/dts/freescale/qoriq-fman3-0-1g-5.dtsi b/arch/arm64/boot/dts/freescale/qoriq-fman3-0-1g-5.dtsi
+index 01b78c0463a7..c205e1e8bfc8 100644
+--- a/arch/arm64/boot/dts/freescale/qoriq-fman3-0-1g-5.dtsi
++++ b/arch/arm64/boot/dts/freescale/qoriq-fman3-0-1g-5.dtsi
+@@ -34,7 +34,8 @@ mdio@eb000 {
+ 		compatible = "fsl,fman-memac-mdio";
+ 		reg = <0xeb000 0x1000>;
+ 
+-		pcsphy5: ethernet-phy@0 {
++		pcsphy5: ethernet-pcs@0 {
++			compatible = "fsl,lynx-pcs";
+ 			reg = <0x0>;
+ 		};
+ 	};
+-- 
+2.35.1.1320.gc452695387.dirty
 
-Am 03.04.25 um 20:25 schrieb Michal Suchanek:
-> With some Infineon chips the timeouts in tpm_tis_send_data (both B and
-> C) can reach up to about 2250 ms.
-> 
-> Timeout C is retried since
-> commit de9e33df7762 ("tpm, tpm_tis: Workaround failed command reception on Infineon devices")
-> 
-> Timeout B still needs to be extended.
-
-It’d be great if you could amend the commit message and add the Infinion 
-device you have problems with, and maybe also add the error behavior.
-
-> Link: https://lore.kernel.org/linux-integrity/Z5pI07m0Muapyu9w@kitsune.suse.cz/
-> Signed-off-by: Michal Suchanek <msuchanek@suse.de>
-> ---
-> V2: Only extend timeout B
-> ---
->   drivers/char/tpm/tpm_tis_core.h | 2 +-
->   include/linux/tpm.h             | 2 +-
->   2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/char/tpm/tpm_tis_core.h b/drivers/char/tpm/tpm_tis_core.h
-> index 970d02c337c7..c272c25eb9d4 100644
-> --- a/drivers/char/tpm/tpm_tis_core.h
-> +++ b/drivers/char/tpm/tpm_tis_core.h
-> @@ -54,7 +54,7 @@ enum tis_int_flags {
->   enum tis_defaults {
->   	TIS_MEM_LEN = 0x5000,
->   	TIS_SHORT_TIMEOUT = 750,	/* ms */
-> -	TIS_LONG_TIMEOUT = 2000,	/* 2 sec */
-> +	TIS_LONG_TIMEOUT = 4000,	/* 4 sec */
->   	TIS_TIMEOUT_MIN_ATML = 14700,	/* usecs */
->   	TIS_TIMEOUT_MAX_ATML = 15000,	/* usecs */
->   };
-> diff --git a/include/linux/tpm.h b/include/linux/tpm.h
-> index 6c3125300c00..3db0b6a87d45 100644
-> --- a/include/linux/tpm.h
-> +++ b/include/linux/tpm.h
-> @@ -224,7 +224,7 @@ enum tpm2_const {
->   
->   enum tpm2_timeouts {
->   	TPM2_TIMEOUT_A          =    750,
-> -	TPM2_TIMEOUT_B          =   2000,
-> +	TPM2_TIMEOUT_B          =   4000,
->   	TPM2_TIMEOUT_C          =    200,
->   	TPM2_TIMEOUT_D          =     30,
->   	TPM2_DURATION_SHORT     =     20,
-
-
-Kind regards,
-
-Paul
