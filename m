@@ -1,81 +1,91 @@
-Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
+Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A711233993;
-	Thu,  3 Apr 2025 05:56:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CB5D33993
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 05:58:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743659786; cv=none; b=V9tP1ulbQpDhHPnJFGVDL5ZTGeixmaf0clBnG8IW+AHR+cQEVIvi53GIeYXnTGBVYtlJ5kyN+EKW82EVdad73du1qy7Z6PXORxM7Hq335RfXpxQKyB0cWP9BFbWObKm3otatp70a1iPD53IQwCRCfVYbEFOIuPtZxJDP2zAbgUo=
+	t=1743659912; cv=none; b=tjciA5DK2OaArSoSKD9D60HEaeldpr3jUGV1eiZZw+3Yos9HlGnrlWMuFxm1mcbC2d93TNy+P1czRSR5/l7zdGbvuwNdT9Ryh2tzMZBjxvte5WMovJqr5bHGA6Vtvo6cXEMV6LQ8TDDnvl94+loaAf1FbOrCscndHsTFIioKNiM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743659786; c=relaxed/simple;
-	bh=e+hB6TfsNEWsOBfPe7+0Du59DxYe84XYO03aEf1oq2w=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=NkUKydCDz8y2PS//QGU1yGnHdM9lES9B2qunYT6WPN9lN7GYYffPVPjEp/KulGj12osIvJTyLNsm0Wq4k0+60lyT/frkTpD0miIuqTtg14nq2mlSrYrBr9IlEg6FUrxjPUtaFUrhKn58E9H35+ldNqOlYgFWPK660OEQebI6h4o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=YeCqwMTk; arc=none smtp.client-ip=203.29.241.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
+	s=arc-20240116; t=1743659912; c=relaxed/simple;
+	bh=3Kni2oOnbEHyUAU3pgeBQOPNWlUqFyZ9wu5gIlDz/Gc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dVGnYNVChshO/EYSdgLy0aue/UKqJj69NfZ8dGOWmzMeTi1+xkG3WPOP8F4IRpqG9wKXvGfn6Fj8EvzcuHJF8kv/RSTZJhaQ8mk29O9t2Nkx6iKmjZadJ5eWX/ypGy6qaTvlhQoHilfcwjChhUtggfmCx2OLTZWXoKADIX3SNZo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=xayL+XCw; arc=none smtp.client-ip=95.215.58.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="YeCqwMTk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=codeconstruct.com.au; s=2022a; t=1743659775;
-	bh=e+hB6TfsNEWsOBfPe7+0Du59DxYe84XYO03aEf1oq2w=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=YeCqwMTkAaEXEzG3fK/V5nJFzmxl3eQwO96YkjdDajs7/4XBWpWWkpkVQreFkpou1
-	 nVMQFT9n7e2USYGg8wPzyjE3Z6I+DQ67V6uubhy/NZ1HPGIEvUJ3e2trugUKOj0z+J
-	 SbR4yaIks8jZJI7qZ4qENCQG1aLlcO/Jug21dgd/emU8StBtjUuCeRcj6N38rqK4EQ
-	 7BOPvqng/pk6T5qmR3zdUTwCuSdj330tEgtjfGzM/ajK02F+g615g7YpTVMG3jP9Sd
-	 HB40N5nrMRjJM21CtMtB0gdfFlpL7fYPvP13O0kKRL8B4X/aILvW8g+iqpeJG+yzm+
-	 GofwYelTCS5NQ==
-Received: from [192.168.68.112] (unknown [180.150.112.225])
-	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 60B3C7B352;
-	Thu,  3 Apr 2025 13:56:12 +0800 (AWST)
-Message-ID: <ca1f5dc3d0dd53dfe6abd9d6bea98838980f0840.camel@codeconstruct.com.au>
-Subject: Re: [PATCH v5 1/2] dt-bindings: arm: aspeed: add Nvidia's GB200NVL
- BMC
-From: Andrew Jeffery <andrew@codeconstruct.com.au>
-To: Krzysztof Kozlowski <krzk@kernel.org>, Willie Thai <wthai@nvidia.com>, 
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, joel@jms.id.au, 
-	kees@kernel.org, tony.luck@intel.com, gpiccoli@igalia.com, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, openbmc@lists.ozlabs.org
-Cc: leohu@nvidia.com, tingkaic@nvidia.com, dkodihalli@nvidia.com, Mars Yang
-	 <maryang@nvidia.com>
-Date: Thu, 03 Apr 2025 16:26:11 +1030
-In-Reply-To: <f563b33e-f552-4a3c-bb45-6b7add876fdd@kernel.org>
-References: <20250401153955.314860-1-wthai@nvidia.com>
-	 <20250401153955.314860-2-wthai@nvidia.com>
-	 <f563b33e-f552-4a3c-bb45-6b7add876fdd@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="xayL+XCw"
+Message-ID: <b6cd8306-5049-4e03-ac24-7f8f5bb381e2@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1743659906;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=z4j7PhN7Wup2fYwx3gBiSsMabuOB6a6FQW9/Vz5nkMk=;
+	b=xayL+XCw9AqSEOzvQvWTAwKzx9GstCLM1h1BXL2Si7vcCmNaWQRJEKCzJc+Q/EATqCRgbD
+	IB1w1EilAXBTs2x0toxWhPVLZXX2c+vUAfHwf8fnwLu4Z9DmiA64soBZkmeHuhUYhoLfVz
+	ZmsGloM3c0IbrAzzfcePV6eOuSQTi8I=
+Date: Thu, 3 Apr 2025 13:58:10 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Subject: Re: [PATCH v4] mm/page_alloc: Consolidate unlikely handling in
+ page_expected_state
+To: "Vishal Moola (Oracle)" <vishal.moola@gmail.com>
+Cc: Matthew Wilcox <willy@infradead.org>, akpm@linux-foundation.org,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org, Markus.Elfring@web.de,
+ Ye Liu <liuye@kylinos.cn>, Sidhartha Kumar <sidhartha.kumar@oracle.com>,
+ Anshuman Khandual <anshuman.khandual@arm.com>
+References: <20250328014757.1212737-1-ye.liu@linux.dev>
+ <Z-ayTt8o656AkGfz@casper.infradead.org>
+ <8720c775-c0fb-4fbf-a1a8-409fef2b67ad@linux.dev>
+ <Z-q71LlcCQ5I-2D-@casper.infradead.org>
+ <6cd78595-f9d3-4f26-8ca3-d1a0bf4e8dff@linux.dev> <Z-4GuZZ_BjFNm9Gq@fedora>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Ye Liu <ye.liu@linux.dev>
+In-Reply-To: <Z-4GuZZ_BjFNm9Gq@fedora>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, 2025-04-01 at 17:51 +0200, Krzysztof Kozlowski wrote:
-> On 01/04/2025 17:39, Willie Thai wrote:
-> > Add Nvidia's=C2=A0 GB200NVL BMC board compatible.
-> >=20
-> > Co-developed-by: Mars Yang <maryang@nvidia.com>
-> > Signed-off-by: Mars Yang <maryang@nvidia.com>
-> > Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
->=20
-> Why are you faking tags/email addresses? Read carefully submitting
-> patches. I really suggest using b4 instead of manually editing
-> things.
-> And if you decide for manual way, you must never, *never* edit
-> people's
-> tag. You can only copy and paste it.
 
-I've applied the series, fixing the tag in the process, along with the
-line-wrapping of the commit message in the second patch.
+在 2025/4/3 11:55, Vishal Moola (Oracle) 写道:
+> On Wed, Apr 02, 2025 at 10:49:17AM +0800, Ye Liu wrote:
+>> 在 2025/3/31 23:59, Matthew Wilcox 写道:
+>>> On Mon, Mar 31, 2025 at 08:08:01PM +0800, Ye Liu wrote:
+>>>> 在 2025/3/28 22:29, Matthew Wilcox 写道:
+>>>>> On Fri, Mar 28, 2025 at 09:47:57AM +0800, Ye Liu wrote:
+>>>>>> Consolidate the handling of unlikely conditions in the 
+>>>>>> page_expected_state() function to reduce code duplication and improve 
+>>>>>> readability.
+>>>>> I don't think this is an equivalent transformation.
+>>>> Could you explain it in detail?
+>>> page_expected_state() is called both at free and alloc.  I think
+>>> the correct behaviour on encountering a HWPOISON page should be
+>>> different at alloc and free, don't you?
+>> In the alloc process, this patch does not modify the code behavior.
+>> Regarding the free process, the if (unlikely(PageHWPoison(page)) && !order)
+>> code handles the case where order is 0. When order is not 0, it does not
+>> matter if __ClearPageBuddy is used to process the last page of the compound
+>> page, because page->flags &= ~PAGE_FLAGS_CHECK_AT_PREP; will also clear it.
+>> Is that right?                                                             
+> I believe a page's "Buddy" flag is stored in page->type, so maybe this
+> won't do what you expect?
 
-Willie: scripts/checkpatch.pl warns of some of these things. Please
-make sure to use it in the future, or if you adopt b4 as Krzysztof
-suggests, use `b4 prep --check`.
 
-Andrew
+Got it, thanks! I originally thought that page->page_type would also be
+cleared in the free process, meaning the free behavior wouldn't change,
+but that’s not actually the case. I need to look into what impact it
+would have if __ClearPageBuddy is also executed in the free process.   
+
+
+Thanks,
+Ye Liu
+
+
