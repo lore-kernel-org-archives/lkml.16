@@ -1,49 +1,39 @@
-Received: from xmbghk7.mail.qq.com (xmbghk7.mail.qq.com [43.163.128.54])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB52623F294
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 07:13:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=43.163.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7403E23F26A;
+	Thu,  3 Apr 2025 07:14:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743664465; cv=none; b=TTqoyJ9ZdTFfFDU2ziHV6DrzCZS2tVWNGbj2PuKYQL59cHME7kOMNC744h2bheONc3v8HbGfxds8oQdB1QyJP6Rdq4gafqGMXir4RxpxuUpMg3o4FTlwfxgIbd7nC0cOSDTCEpvw0w89mfcNn7oMbNxP6BpAdTgsawrB8P0kxOg=
+	t=1743664475; cv=none; b=RIzIufsVYgXIuRanLibrvbBN2E2AI+btWro1mNEcKFwPh24PTpYsg+o/8oWR80POCUObE8qNcExOof4fvmdWI7PegAxRCbHX22dGBUkGOivs9gTv7peDlPQzsPpiCrAutm6dsp8JUoGZmOTk3dxqfJA4bB0ZhdIwk+tB1+Fj0Hs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743664465; c=relaxed/simple;
-	bh=b0cOd9D0x0Kdaz1sApMlHu4zf5BC3nxYkE9+bZD3BT0=;
+	s=arc-20240116; t=1743664475; c=relaxed/simple;
+	bh=i9chyyVVA4u/5n6H3ot6TYnyHk7hwD1gNPF2JpU27pA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=f7mmnPqMPYI5s1Y6ypHU1dy8klm6c5AzBWq4EHC+fOtRvJtyG4aA8xdekbAADEwtxpNMktAjcJ48pHw3hP4Bt+qOvmMxGdOQ3tMV5M/SgKhhpu+tS/rxSSapWVEotjeXeO+w9qKwiR272txek/gISTN6tirNVKhv7PVgp3RntlQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=Dy3xfI6Z; arc=none smtp.client-ip=43.163.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	 In-Reply-To:Content-Type; b=WkU2IsrT/hmZ9X+Bd+CrarCA2ohHSGeVZ6+1vgiUctvz44RXKveLgFSEmA4GUSbN2hmRBdWraJi67fXZkJqAFqSi2GD9++vRuEvvCbv8dx30yyisz1gyG6mf6DFTSNlIEXYVGbtf44TcvWw5kwK+vPo4NYueqsAOOU+Xs8SAXi4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=LvUp7AXA; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="Dy3xfI6Z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1743664122; bh=GgThBuknXaD3lwbCXtPebulyQHktE8jqziVCkvGpKHg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=Dy3xfI6ZXkUloVh53iGY/z/AmxkNZgqQ3G3gmUMTTbaJrnIq8D55iEuWwS0tyVABd
-	 teYESDBWtvtvx1q2Ne+bXoMDhUKulMPKddHfuiZREbNL2kwHI/uVD7Rt9ZOA/b/lc2
-	 TMdHmTx1hpLTGHjDIJmIEZq+5uc8s41uKNribvX0=
-Received: from [10.42.13.21] ([116.128.244.169])
-	by newxmesmtplogicsvrsza36-0.qq.com (NewEsmtp) with SMTP
-	id 228A7AA3; Thu, 03 Apr 2025 15:08:40 +0800
-X-QQ-mid: xmsmtpt1743664120tjvpap32a
-Message-ID: <tencent_0B50E848464E942D6467F86F53C9DED88606@qq.com>
-X-QQ-XMAILINFO: OZZSS56D9fAjqmL7MHMzvCf4yMzMA6sLrx+XNuJIq/WDFmj19VAC4kGSYB/7QH
-	 QggSR3AujGjYwbL52QY+TV+B0Ithj54H3+ktR6TgNoX4DFiogfaRtnRhepCugfhfNXZfCK3TjlU0
-	 l+g18J4TBHWTlZUqOUGZ+B42osEFmv8SzZL5P+1umzFlAtEizNuRyux2CFzmQfkFDeA3HFyZuVPK
-	 gejinWdMxHKlZ/wPx2VhWqFdX6vis3LMNF0ixPXt2hZvjRZ9fWHAOu4UZMfXoF7aUaWVAEITkEQt
-	 DoIYwUjJ3PKXMVa1n0GqWhCSR5bp8KBIEyp8pqezKxGCTdppzRwRzv9QrK2qIXEW8Ha0U46ChP7X
-	 YqfqLLoUNtuFlKsWFLWeY77Z6fphU7j/Uq0n/HWI/ap2+d+0uJNCE+xqS9H/IjL7Mxamy6HYd1rU
-	 1JS3nrJl2LbLES3uEts+HoCby1O3OgLZJpf30R5w/DNeGINSH+PFhOe0q6uYbt5tQR3TXlVG8meJ
-	 dJA3mE5YIBU/yPRMFRWyjKprcR1UXMV3KHvZFQslMloY8zJE/CLdXn9f2bGyeTA9vM6YNqAGJzN8
-	 L8JDibWucgHIz+h9ZHMe/at1gq6afzDmVy7WddpvDczM7CsU9+ff5chuAUodROw1muGnM6JgGUJ6
-	 rgEBwh1omB03MCmowjaGXQ05KfWVK+PTfOiymz9jOFzTTmGj0yEjqXuyUw2d4Dd8NXiVmZQ7b5ie
-	 bUL8lG4Ff8ltbVmDY8DcpXRbvR9GEDDKjSIR7iixz/cRqjnY6qGlqOj/XhYkYBDtcdQreTypRN6R
-	 YO2ISJWNUXd9xb5iE0Ic9SRJC5ZTnD7InbDmGPLnvOjGc8lUoOfiCj4lyH1VhrydV1KGEl+UUyks
-	 OxnyevVhX3hOKKIXN7G/2hf9GHZLfhWlUDDqrF5RUjusW4QOMr6j4UKuqBgrTT/v9hcAF6WDOceu
-	 TIf2Z2J6zESpgxl/7TJKHl1q2DS4g1s8FH3JvXnRc=
-X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
-X-OQ-MSGID: <d7b88e2a-7090-40a0-8bdc-9b60678e204d@qq.com>
-Date: Thu, 3 Apr 2025 15:08:40 +0800
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="LvUp7AXA"
+Received: from [192.168.7.202] ([71.202.166.45])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 5337DaOj395784
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Thu, 3 Apr 2025 00:13:36 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 5337DaOj395784
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025032001; t=1743664419;
+	bh=dud2+LDxOfaRRcFmlvhcB6Zv69u4yGoWIvsFJ3yQaXY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=LvUp7AXAlEO7ZIoS25ITyVlvXptK8gf870o88D54rWCbMQJtullUs6cSr27rMyA/c
+	 e00XhjujppWmi0xvi52Gm5YkQ9UqdP9DhcXE4mt5uG56eLAwJBxdh7bKLKbRIqR2p0
+	 hxKa4VWv19GOJTD4k62M7VFYmdH3jsk65f7uqAnVJxOmWHStXYZEEGIcS6Niv2j2w8
+	 IpwtqFX6o9BUdi073LOjU6OWdKPza4N1Bv/d9TXdnTnKbzJm97DWYQJKY13xLxauZ1
+	 08EiDBm8bzmIvt+yzgcbSw7C5JTPomxa++o0v4ZpnafbOTywuWRfv+qFdLQxvDDbc8
+	 M3z/FLprqi4PA==
+Message-ID: <9618fccf-3620-4395-bdac-aa8999fe2437@zytor.com>
+Date: Thu, 3 Apr 2025 00:13:35 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,32 +41,86 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/3] nvme: Add warning for PST table memory allocation
- failure in nvme_configure_apst
-To: Christoph Hellwig <hch@lst.de>
-Cc: kbusch@kernel.org, axboe@kernel.dk, sagi@grimberg.me,
- chaitanyak@nvidia.com, linux-nvme@lists.infradead.org,
- linux-kernel@vger.kernel.org, Yaxiong Tian <tianyaxiong@kylinos.cn>,
- Chaitanya Kulkarni <kch@nvidia.com>
-References: <tencent_4612952C8C5109058CD8E688D81276A2FD0A@qq.com>
- <tencent_A06D513AE17E9D4B4AC66E84F447FE730C09@qq.com>
- <20250403042557.GD22360@lst.de>
+Subject: Re: [RFC PATCH v1 01/15] x86/msr: Replace __wrmsr() with
+ native_wrmsrl()
+To: Andrew Cooper <andrew.cooper3@citrix.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        virtualization@lists.linux.dev, linux-edac@vger.kernel.org,
+        kvm@vger.kernel.org, xen-devel@lists.xenproject.org,
+        linux-ide@vger.kernel.org, linux-pm@vger.kernel.org,
+        bpf@vger.kernel.org, llvm@lists.linux.dev
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        jgross@suse.com, peterz@infradead.org, acme@kernel.org,
+        namhyung@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
+        wei.liu@kernel.org, ajay.kaher@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
+        pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
+        luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
+        haiyangz@microsoft.com, decui@microsoft.com
+References: <20250331082251.3171276-1-xin@zytor.com>
+ <20250331082251.3171276-2-xin@zytor.com>
+ <0da43a86-81b0-4388-b47b-3a76b15f2a4c@citrix.com>
 Content-Language: en-US
-From: Yaxiong Tian <iambestgod@qq.com>
-In-Reply-To: <20250403042557.GD22360@lst.de>
+From: Xin Li <xin@zytor.com>
+Autocrypt: addr=xin@zytor.com; keydata=
+ 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
+ l75w1xInsg==
+In-Reply-To: <0da43a86-81b0-4388-b47b-3a76b15f2a4c@citrix.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-
-
-在 2025/4/3 12:25, Christoph Hellwig 写道:
-> On Tue, Apr 01, 2025 at 05:26:52PM +0800, Yaxiong Tian wrote:
->> +		dev_warn(ctrl->device, "Failed to allocate pst table; not using APST\n");
+On 3/31/2025 2:45 PM, Andrew Cooper wrote:
+> On 31/03/2025 9:22 am, Xin Li (Intel) wrote:
+>> __wrmsr() is the lowest level primitive MSR write API, and its direct
+>> use is NOT preferred.  Use its wrapper function native_wrmsrl() instead.
+>>
+>> No functional change intended.
+>>
+>> Signed-off-by: Xin Li (Intel) <xin@zytor.com>
 > 
-> Please avoid the overly long line:
+> The critical piece of information you're missing from the commit message
+> is that the MSR_IMM instructions take a single u64.
 > 
-> 		dev_warn(ctrl->device,
-> 			"Failed to allocate pst table; not using APST\n");
+> Therefore to use them, you've got to arrange for all callers to provide
+> a single u64, rather than a split u32 pair.
 
-Thanks, I Will fix in v4.
+You definitely caught me on how I was thinking it ;)
 
+Sometimes it is nice to see a change log with a thinking process.
+
+Thanks!
+     Xin
