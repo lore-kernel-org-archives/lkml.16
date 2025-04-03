@@ -1,106 +1,94 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C38A718DB10;
-	Thu,  3 Apr 2025 09:29:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D532A347A2
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 09:31:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743672558; cv=none; b=XF4p7Y912cYCYnOW52IC7alB7XTa9aCKI+BNrErv11guyv1YDLTwptUZm1T0FjmqVfmEsPVQo3wwLPwV17ID216LKfrZ0EPmz3jUhEoSiK2ijcVPZ1rO5W40BaMZbJ/72Ho5RlqxfPBzrztcln2PyuIzawyH2X8MhAwcqgKmcuo=
+	t=1743672678; cv=none; b=SoWzeRm6hqJo56ET/wLjcQ9J7TR2a7K89NorVJR1c7S486pKiNTpSxwfyW3oRJ5hmkisq6u8lqrsqHjF9M6LPqkjlASa0KBxMLpwwiezJY86emtDOF8RoW82d5Q2gKsrRMBs5Odv6l8NB3u63GdKiB23AmHYrBWxAII66JQWfzI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743672558; c=relaxed/simple;
-	bh=VM/cLfCgm577hl+3Nc9rRc0FiWM24kqgYPmrFcyaPJM=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=sHm322fF8Vi6SbRBP3pE2xWmnTmcPLTHjBb1MYgmdauiHg5gtcw8Z3f/nkMtLJZVK0H+XPwXNZ7yn/H0iRmi25X7nPZIemN4ly0TU0vSFV9s4r9F2SH0v3KPjcKCiHVMmiFR2cQfkI27r3pCMyPDoWIbeiUOqJY0gjsjKU0WjSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=bMhdXqRD; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="bMhdXqRD"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5338FV2v025054;
-	Thu, 3 Apr 2025 09:29:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=9tGsEa4qOhX/M1jjIfZ6sX
-	mDCAWmoTmJ0boB7K8AKrM=; b=bMhdXqRDcwe3yB+T1KZnic+UU63BFtQX7vC+ih
-	kGBWNpJwvq2Ajd5Fo+0wnjV5owmy0NARaVaKkgk9iLmhDBqkMyhuv2ngW3CjyIan
-	RF9nqDU3WFCU64E+nIH3bOdah061406Oe5ltAvhE1sn0sEbPNLbGrT8u3JNMh2hp
-	eRUWQxaVb5pzAJR5kqmrw1qBeqBnGQVaH4Y/GOOjsB2JRfaN4+2D/QQNN91Zbvv0
-	O3zU4Zr6WGBh625Q7Ty3tvIICE+AbYnaa9sksyvWUoO5M8dYIeBmphKBFiI6VIEH
-	amjAPS9gE0IGHKbMqHrBmKpMozV9oeyvx909V3ouMFj4pMjw==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45spnp073n-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 03 Apr 2025 09:29:08 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5339T7QQ032276
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 3 Apr 2025 09:29:07 GMT
-Received: from zhonhan-gv.qualcomm.com (10.80.80.8) by
- nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Thu, 3 Apr 2025 02:29:06 -0700
-From: Zhongqiu Han <quic_zhonhan@quicinc.com>
-To: <rafael@kernel.org>, <daniel.lezcano@linaro.org>,
-        <christian.loehle@arm.com>
-CC: <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <quic_zhonhan@quicinc.com>
-Subject: [PATCH] cpuidle: menu: Optimize bucket assignment when next_timer_ns equals KTIME_MAX
-Date: Thu, 3 Apr 2025 17:28:52 +0800
-Message-ID: <20250403092852.1072015-1-quic_zhonhan@quicinc.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1743672678; c=relaxed/simple;
+	bh=Zd6AJnU2BMeaWm/0mQRVGARbnLs5KgKjE7/uIfO6BS8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=V2JlidP5ttdGv4qqK2+LkuQytkk4vry/vvKqFUJEI4qMoxt2NFv0NTdFubRynoWgqZVn2IUS0HH6nuwFjfxUrQHAfSjUYRkuEtgVKfnvw/wDR0Sl6yUNc+Rp5WVisZ+oOsGkZoCbWffLLVVxfoEoYnyKG5ZC0+RKywDNRraJxJg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9718C106F;
+	Thu,  3 Apr 2025 02:31:17 -0700 (PDT)
+Received: from [10.163.48.25] (unknown [10.163.48.25])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1F60E3F63F;
+	Thu,  3 Apr 2025 02:31:07 -0700 (PDT)
+Message-ID: <36dcb5e3-4406-4763-87f1-8054c2246264@arm.com>
+Date: Thu, 3 Apr 2025 15:01:03 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: tGyUaV91xNkiQfUo-7cu3cd2svw5GMMY
-X-Authority-Analysis: v=2.4 cv=N/gpF39B c=1 sm=1 tr=0 ts=67ee54e5 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=oV2fX3CoP5SyQ73Pz8oA:9 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: tGyUaV91xNkiQfUo-7cu3cd2svw5GMMY
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-03_03,2025-04-02_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- clxscore=1011 adultscore=0 mlxscore=0 lowpriorityscore=0 bulkscore=0
- impostorscore=0 spamscore=0 phishscore=0 suspectscore=0 mlxlogscore=815
- malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504030033
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] arm64: pageattr: Explicitly bail out when changing
+ permissions for vmalloc_huge mappings
+To: Dev Jain <dev.jain@arm.com>, catalin.marinas@arm.com, will@kernel.org
+Cc: gshan@redhat.com, rppt@kernel.org, steven.price@arm.com,
+ suzuki.poulose@arm.com, tianyaxiong@kylinos.cn, ardb@kernel.org,
+ david@redhat.com, ryan.roberts@arm.com, urezki@gmail.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250403052844.61818-1-dev.jain@arm.com>
+Content-Language: en-US
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <20250403052844.61818-1-dev.jain@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Directly assign the last bucket value instead of calling which_bucket()
-when next_timer_ns equals KTIME_MAX, the largest possible value that
-always falls into the last bucket. This avoids unnecessary calculations
-and enhances performance.
 
-Signed-off-by: Zhongqiu Han <quic_zhonhan@quicinc.com>
----
- drivers/cpuidle/governors/menu.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/cpuidle/governors/menu.c b/drivers/cpuidle/governors/menu.c
-index 39aa0aea61c6..8fc7fbed0052 100644
---- a/drivers/cpuidle/governors/menu.c
-+++ b/drivers/cpuidle/governors/menu.c
-@@ -255,7 +255,12 @@ static int menu_select(struct cpuidle_driver *drv, struct cpuidle_device *dev,
- 		 */
- 		data->next_timer_ns = KTIME_MAX;
- 		delta_tick = TICK_NSEC / 2;
--		data->bucket = which_bucket(KTIME_MAX);
-+		/*
-+		 * Assign the last bucket value directly instead of calling
-+		 * which_bucket(), since KTIME_MAX is the largest possible
-+		 * value that always falls into the last bucket.
-+		 */
-+		data->bucket = BUCKETS - 1;
- 	}
- 
- 	if (unlikely(drv->state_count <= 1 || latency_req == 0) ||
--- 
-2.25.1
+On 4/3/25 10:58, Dev Jain wrote:
+> arm64 uses apply_to_page_range to change permissions for kernel vmalloc mappings,
+> which does not support changing permissions for block mappings. This function
+> will change permissions until it encounters a block mapping, and will bail
+> out with a warning. Since there are no reports of this triggering, it
+> implies that there are currently no cases of code doing a vmalloc_huge()
+> followed by partial permission change. But this is a footgun waiting to
+> go off, so let's detect it early and avoid the possibility of permissions
+> in an intermediate state. So,  explicitly disallow changing permissions
+> for VM_ALLOW_HUGE_VMAP mappings.
+> 
+> Reviewed-by: Ryan Roberts <ryan.roberts@arm.com>
+> Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> Signed-off-by: Dev Jain <dev.jain@arm.com>
+> ---
+> v1->v2:
+>  - Improve changelog, keep mention of page mappings in comment
+> 
+>  arch/arm64/mm/pageattr.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/arm64/mm/pageattr.c b/arch/arm64/mm/pageattr.c
+> index 39fd1f7ff02a..04d4a8f676db 100644
+> --- a/arch/arm64/mm/pageattr.c
+> +++ b/arch/arm64/mm/pageattr.c
+> @@ -96,8 +96,8 @@ static int change_memory_common(unsigned long addr, int numpages,
+>  	 * we are operating on does not result in such splitting.
+>  	 *
+>  	 * Let's restrict ourselves to mappings created by vmalloc (or vmap).
+> -	 * Those are guaranteed to consist entirely of page mappings, and
+> -	 * splitting is never needed.
+> +	 * Disallow VM_ALLOW_HUGE_VMAP mappings to guarantee that only page
+> +	 * mappings are updated and splitting is never needed.
+>  	 *
+>  	 * So check whether the [addr, addr + size) interval is entirely
+>  	 * covered by precisely one VM area that has the VM_ALLOC flag set.
+> @@ -105,7 +105,7 @@ static int change_memory_common(unsigned long addr, int numpages,
+>  	area = find_vm_area((void *)addr);
+>  	if (!area ||
+>  	    end > (unsigned long)kasan_reset_tag(area->addr) + area->size ||
+> -	    !(area->flags & VM_ALLOC))
+> +	    ((area->flags & (VM_ALLOC | VM_ALLOW_HUGE_VMAP)) != VM_ALLOC))
+>  		return -EINVAL;
+>  
+>  	if (!numpages)
 
+LGTM
+
+Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
