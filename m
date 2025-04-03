@@ -1,91 +1,239 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A399B1A254E
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 12:55:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 375B724C664
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 12:57:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743684955; cv=none; b=XC3sx54nSBaRxwAKEtOdTbKm/U0KUdedLkSdhe/a3nCxTK91e9l+Mrqbb7x6c97eAvXVGRnlcNMk5ppudhO3wVW/Yb4o1Zw3jvQv1RuOvoMXgjgZ9ueB58Cynq0FgR3513RL2OJjJXKCmdNdn2lURNwGLZw8EuQ3FDD6L9d6bZo=
+	t=1743685060; cv=none; b=uYCbhkgqTn7CGPE9u+C4ax6I7/rv3fOwqqCH7g++0vAruqZsvUkGmGJO+XORvwkr2fRPVyNkOuidjRkLp0lm2iQXelifjjRROKoQW1MzlsofKZsAcRk/lFWfc7iaTqZi6hS9ART7aMa/LtrwRvOakIzB+uIGCfEya9CizZ+ZZHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743684955; c=relaxed/simple;
-	bh=C10OdcGBn33pJXCZiUpVw+j3nj2oQmdNb4O0hwzPZF8=;
+	s=arc-20240116; t=1743685060; c=relaxed/simple;
+	bh=h6upok2UNXu6a8hbwBmkOZ2QnnvGNGbvXHfvfrECD7k=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PY9MASdDGUJuySdRT8i4j90G+Kk2lfHf5aHpEnHgvsIU0QVdoEUJFxqi0J8yiYno5fyvVAmcjAJbGfSqQPHl7Qoss/RHVVvJ5zi2vJVRf5OD49uoSt2LMox4WQxnCxoSWmlzvKppl9Ia6Qakndso0mux3u+lNMH+08L8k0q86Y4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=eUj8e+7p; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=qIr4dn3zte2TVUhXy8bGNcnQOZZYzztzdah7ubRydfw9wmN3a1V8Ii9V76LvQ+bjendNdZfJzwrWS424PP0QyeBcKBDfnAoq/KzR9i1TsV+3ovjb9TMXsGohL793jA/nt7F+GiYbYEPskeLGaEFTz3Va7SQj7I7hFk+1sxuM9nk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ixRK5UJD; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="eUj8e+7p"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 5A20940E023B;
-	Thu,  3 Apr 2025 12:55:40 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id j9LdIdIV-FA2; Thu,  3 Apr 2025 12:55:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1743684936; bh=QQeZ9ETgnT0tTFQs8mRusDd1YHuQGZf6nQMVjI+wCew=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eUj8e+7pqDTnV9wmh3ufWkyWy98zGx9yyja/z5DNtCw0gKg8yy6zFGYVdyywhUn+i
-	 OuTdw20hvnCQe1uomndxatgDEqWmUQmWjg353Q8c6Y6RS3o3gCR+ex1E/bui7JkfYX
-	 edV7rTWNCoDwblzP1kGOCuOkh6io51H9afuxNuaKUUbc3Xs4OUq+lFE9TlknWUyXOv
-	 SkBaow2ul1I2cb6fIIXG7xL9+lH8L8tvBygoxq7334P5MRWsh8WeeZOP+ZVSvzJlBS
-	 RkPplk1Ahhi1UZMt22Q7Ld37EJJ4i8Y/4I9mGFpjEV+as+pMwvUs4yvMU/ladt15cY
-	 MXz3oBJ/VvVsNZHfEIvGpM2XtB7xlOSJ2chekrhwpwxgR2SgAnt3qlBRNttWVjQEtX
-	 R0p0LsxPq1ZvfFJi7xgD80yW0+voAB/Jvt0w0IsVXasHhl07uXkqYBVjssyzdsa3F0
-	 KolKDEvHkGzIUYK/xc5eLDLwFu//Px7575kT+mNq1qq7ehRK5XXtnZHJ6jfJo4Q9RH
-	 Y0mBAqYPvtPgBcgv4I8wv7Ezzy8IaimjyPgu7wQip6Znak5r6bMFc6npupd/OCEmgs
-	 VpZs8/C82o5giySU6M6A23heqaEWlxI8YVUyqg3sbQhnQ/QH6md/xRqx7qE8eF7Slo
-	 w522pFVLws8buf3MQy5Zdvh0=
-Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 6998E40E0232;
-	Thu,  3 Apr 2025 12:55:29 +0000 (UTC)
-Date: Thu, 3 Apr 2025 14:55:23 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Uros Bizjak <ubizjak@gmail.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@kernel.org>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [PATCH -tip v3] x86/idle: Use MONITOR and MWAIT mnemonics in
- <asm/mwait.h>
-Message-ID: <20250403125523.GHZ-6FO2mNZcUta1RG@fat_crate.local>
-References: <20250403125111.429805-1-ubizjak@gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ixRK5UJD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743685056;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=07cCSo2B9aIbwxRVd8sNELEM0nr6NT8ZeyBNS30RCy8=;
+	b=ixRK5UJDxtngDfasRUo/HRtLyEu5fQ8CvlOdV8I6TMUW7gakpFgtWFEb1Fa9ZB/tllB6ad
+	aEoryZzHhwSTpPX0Ls94MdnCcmizuCLIQVjqEOU7KohSfOGZ83n1EXxvU5QLxMsgcnztOd
+	sHfb3PEpinVF82wzIx0JOfCrs5tCZAk=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-210-FmJFT5hoP4ibvP_QnD_mpQ-1; Thu, 03 Apr 2025 08:57:34 -0400
+X-MC-Unique: FmJFT5hoP4ibvP_QnD_mpQ-1
+X-Mimecast-MFC-AGG-ID: FmJFT5hoP4ibvP_QnD_mpQ_1743685052
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43d0a037f97so5093975e9.2
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 05:57:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743685052; x=1744289852;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=07cCSo2B9aIbwxRVd8sNELEM0nr6NT8ZeyBNS30RCy8=;
+        b=QovUTqX1bNo1WM4SONh+iM51fGZsCKWKhcDqTcsPzwAinnfF5XDrmiYeAbfTK60F38
+         JFmHJqvrhkgRIB66P6Njhk9ThVyA3ezIKVMxv1pwFPl3yIZM3NoF6Sz/2xHABD3Rj7b3
+         o0ge9Ve+WLY8h7jnRFDBjSRN8qu9WfVqBtDzLryOSfPYvx4o1gOgP4RZOkFg7Rs3I0IH
+         /EMT057Er0BGz16l8cRzWTpSQDpIJNfZVQjnqUY8U4QkYU5rp6kCDHJ1kGJC8fXyiXtC
+         QcjUfjy08TM/d8bbSnNr11UJD6+4zfzqj5X6YTvtGu9VQJEeYiIf9ITX2ggll5peI1wJ
+         sdDg==
+X-Gm-Message-State: AOJu0YwqG3gJ9KVEyOOL/dCsyMLbaHf4Ewj3VtLkTaTHjscqgwXF2UL5
+	Tp1stGED3NkID5m1H02Fz3ZCLTyVZRHdMPxJTaXFp62zgokXot3FupNSwhelGVZAHq4SlWifbbr
+	rUvp14QHzC2rj5ywRA6d8XmsWh+dJGhge08SSK7QNw/dbGOpAHJTVjcJ3s0pmRg==
+X-Gm-Gg: ASbGncu6jT+wkAXJWL+j2yke/7OksR656EU5BGwWkmq8f4tYL8xtbnXCTb5FHNatQKe
+	s5o4ZOLVJB1pPruFugya5Esl+wiicskR293FA4GoISo5yyq7ZMMdBGSSZ9SsJye8CHrcG7qFtcf
+	sLjVS9kxTgQJiy8AyylpBwLvmGwHLhToepd1yEA4mdsKtETFXzdnSeHTbVipJB0YVRvCkRcGaS8
+	mIr+25zfaHOsuPL55yqflZO0uGjjhQoP2tZvCD65xr5IJc4VG52iOuZ+jCgPGd6X+rv+kh7c01E
+	3WFIlc/lZQ==
+X-Received: by 2002:a05:600c:4708:b0:43d:7588:667b with SMTP id 5b1f17b1804b1-43ec139b6admr28421735e9.10.1743685052163;
+        Thu, 03 Apr 2025 05:57:32 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFj3KdFXqOkrApLxIkl3uzI14klWQC5RUU1qjAJxrr83aJQ/gFpzH2cPz5OLOhh6nW1riyB2Q==
+X-Received: by 2002:a05:600c:4708:b0:43d:7588:667b with SMTP id 5b1f17b1804b1-43ec139b6admr28421515e9.10.1743685051709;
+        Thu, 03 Apr 2025 05:57:31 -0700 (PDT)
+Received: from redhat.com ([2a0d:6fc0:1517:1000:ea83:8e5f:3302:3575])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec34be2f4sm17636075e9.19.2025.04.03.05.57.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Apr 2025 05:57:31 -0700 (PDT)
+Date: Thu, 3 Apr 2025 08:57:27 -0400
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+	virtualization@lists.linux.dev, kvm@vger.kernel.org,
+	Chandra Merla <cmerla@redhat.com>, Stable@vger.kernel.org,
+	Cornelia Huck <cohuck@redhat.com>, Thomas Huth <thuth@redhat.com>,
+	Halil Pasic <pasic@linux.ibm.com>,
+	Eric Farman <farman@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Wei Wang <wei.w.wang@intel.com>
+Subject: Re: [PATCH v1] s390/virtio_ccw: don't allocate/assign airqs for
+ non-existing queues
+Message-ID: <20250403085637-mutt-send-email-mst@kernel.org>
+References: <20250402203621.940090-1-david@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250403125111.429805-1-ubizjak@gmail.com>
+In-Reply-To: <20250402203621.940090-1-david@redhat.com>
 
-On Thu, Apr 03, 2025 at 02:50:45PM +0200, Uros Bizjak wrote:
->  static __always_inline void __monitor(const void *eax, u32 ecx, u32 edx)
+On Wed, Apr 02, 2025 at 10:36:21PM +0200, David Hildenbrand wrote:
+> If we finds a vq without a name in our input array in
+> virtio_ccw_find_vqs(), we treat it as "non-existing" and set the vq pointer
+> to NULL; we will not call virtio_ccw_setup_vq() to allocate/setup a vq.
+> 
+> Consequently, we create only a queue if it actually exists (name != NULL)
+> and assign an incremental queue index to each such existing queue.
+> 
+> However, in virtio_ccw_register_adapter_ind()->get_airq_indicator() we
+> will not ignore these "non-existing queues", but instead assign an airq
+> indicator to them.
+> 
+> Besides never releasing them in virtio_ccw_drop_indicators() (because
+> there is no virtqueue), the bigger issue seems to be that there will be a
+> disagreement between the device and the Linux guest about the airq
+> indicator to be used for notifying a queue, because the indicator bit
+> for adapter I/O interrupt is derived from the queue index.
+> 
+> The virtio spec states under "Setting Up Two-Stage Queue Indicators":
+> 
+> 	... indicator contains the guest address of an area wherein the
+> 	indicators for the devices are contained, starting at bit_nr, one
+> 	bit per virtqueue of the device.
+> 
+> And further in "Notification via Adapter I/O Interrupts":
+> 
+> 	For notifying the driver of virtqueue buffers, the device sets the
+> 	bit in the guest-provided indicator area at the corresponding
+> 	offset.
+> 
+> For example, QEMU uses in virtio_ccw_notify() the queue index (passed as
+> "vector") to select the relevant indicator bit. If a queue does not exist,
+> it does not have a corresponding indicator bit assigned, because it
+> effectively doesn't have a queue index.
+> 
+> Using a virtio-balloon-ccw device under QEMU with free-page-hinting
+> disabled ("free-page-hint=off") but free-page-reporting enabled
+> ("free-page-reporting=on") will result in free page reporting
+> not working as expected: in the virtio_balloon driver, we'll be stuck
+> forever in virtballoon_free_page_report()->wait_event(), because the
+> waitqueue will not be woken up as the notification from the device is
+> lost: it would use the wrong indicator bit.
+> 
+> Free page reporting stops working and we get splats (when configured to
+> detect hung wqs) like:
+> 
+>  INFO: task kworker/1:3:463 blocked for more than 61 seconds.
+>        Not tainted 6.14.0 #4
+>  "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+>  task:kworker/1:3 [...]
+>  Workqueue: events page_reporting_process
+>  Call Trace:
+>   [<000002f404e6dfb2>] __schedule+0x402/0x1640
+>   [<000002f404e6f22e>] schedule+0x3e/0xe0
+>   [<000002f3846a88fa>] virtballoon_free_page_report+0xaa/0x110 [virtio_balloon]
+>   [<000002f40435c8a4>] page_reporting_process+0x2e4/0x740
+>   [<000002f403fd3ee2>] process_one_work+0x1c2/0x400
+>   [<000002f403fd4b96>] worker_thread+0x296/0x420
+>   [<000002f403fe10b4>] kthread+0x124/0x290
+>   [<000002f403f4e0dc>] __ret_from_fork+0x3c/0x60
+>   [<000002f404e77272>] ret_from_fork+0xa/0x38
+> 
+> There was recently a discussion [1] whether the "holes" should be
+> treated differently again, effectively assigning also non-existing
+> queues a queue index: that should also fix the issue, but requires other
+> workarounds to not break existing setups.
+> 
+> Let's fix it without affecting existing setups for now by properly ignoring
+> the non-existing queues, so the indicator bits will match the queue
+> indexes.
+> 
+> [1] https://lore.kernel.org/all/cover.1720611677.git.mst@redhat.com/
+> 
+> Fixes: a229989d975e ("virtio: don't allocate vqs when names[i] = NULL")
+> Reported-by: Chandra Merla <cmerla@redhat.com>
+> Cc: <Stable@vger.kernel.org>
+> Cc: Cornelia Huck <cohuck@redhat.com>
+> Cc: Thomas Huth <thuth@redhat.com>
+> Cc: Halil Pasic <pasic@linux.ibm.com>
+> Cc: Eric Farman <farman@linux.ibm.com>
+> Cc: Heiko Carstens <hca@linux.ibm.com>
+> Cc: Vasily Gorbik <gor@linux.ibm.com>
+> Cc: Alexander Gordeev <agordeev@linux.ibm.com>
+> Cc: Christian Borntraeger <borntraeger@linux.ibm.com>
+> Cc: Sven Schnelle <svens@linux.ibm.com>
+> Cc: "Michael S. Tsirkin" <mst@redhat.com>
+> Cc: Wei Wang <wei.w.wang@intel.com>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+
+Acked-by: Michael S. Tsirkin <mst@redhat.com>
+
+
+feel free to merge.
+
+> ---
+>  drivers/s390/virtio/virtio_ccw.c | 16 ++++++++++++----
+>  1 file changed, 12 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/s390/virtio/virtio_ccw.c b/drivers/s390/virtio/virtio_ccw.c
+> index 21fa7ac849e5c..4904b831c0a75 100644
+> --- a/drivers/s390/virtio/virtio_ccw.c
+> +++ b/drivers/s390/virtio/virtio_ccw.c
+> @@ -302,11 +302,17 @@ static struct airq_info *new_airq_info(int index)
+>  static unsigned long *get_airq_indicator(struct virtqueue *vqs[], int nvqs,
+>  					 u64 *first, void **airq_info)
 >  {
-> -	/* "monitor %eax, %ecx, %edx;" */
-> -	asm volatile(".byte 0x0f, 0x01, 0xc8;"
-> -		     :: "a" (eax), "c" (ecx), "d"(edx));
-> +	/* Use the instruction mnemonic with implicit operands, as the LLVM
-> +	   assembler fails to assemble the mnemonic with explicit operands. */
+> -	int i, j;
+> +	int i, j, queue_idx, highest_queue_idx = -1;
+>  	struct airq_info *info;
+>  	unsigned long *indicator_addr = NULL;
+>  	unsigned long bit, flags;
+>  
+> +	/* Array entries without an actual queue pointer must be ignored. */
+> +	for (i = 0; i < nvqs; i++) {
+> +		if (vqs[i])
+> +			highest_queue_idx++;
+> +	}
+> +
+>  	for (i = 0; i < MAX_AIRQ_AREAS && !indicator_addr; i++) {
+>  		mutex_lock(&airq_areas_lock);
+>  		if (!airq_areas[i])
+> @@ -316,7 +322,7 @@ static unsigned long *get_airq_indicator(struct virtqueue *vqs[], int nvqs,
+>  		if (!info)
+>  			return NULL;
+>  		write_lock_irqsave(&info->lock, flags);
+> -		bit = airq_iv_alloc(info->aiv, nvqs);
+> +		bit = airq_iv_alloc(info->aiv, highest_queue_idx + 1);
+>  		if (bit == -1UL) {
+>  			/* Not enough vacancies. */
+>  			write_unlock_irqrestore(&info->lock, flags);
+> @@ -325,8 +331,10 @@ static unsigned long *get_airq_indicator(struct virtqueue *vqs[], int nvqs,
+>  		*first = bit;
+>  		*airq_info = info;
+>  		indicator_addr = info->aiv->vector;
+> -		for (j = 0; j < nvqs; j++) {
+> -			airq_iv_set_ptr(info->aiv, bit + j,
+> +		for (j = 0, queue_idx = 0; j < nvqs; j++) {
+> +			if (!vqs[j])
+> +				continue;
+> +			airq_iv_set_ptr(info->aiv, bit + queue_idx++,
+>  					(unsigned long)vqs[j]);
+>  		}
+>  		write_unlock_irqrestore(&info->lock, flags);
+> -- 
+> 2.48.1
 
-mingo, pls fix up that comment style and in the other spot when applying.
-
-Other than that:
-
-Acked-by: Borislav Petkov (AMD) <bp@alien8.de>
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
