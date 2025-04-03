@@ -1,97 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D908513A244;
-	Thu,  3 Apr 2025 08:46:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AEF219E7D1;
+	Thu,  3 Apr 2025 08:48:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743669991; cv=none; b=Ze5nuIozU5qtTqsqs/1CnbjUL3te00Q+4+2gci/ND/FXULs483IF5610X1vOE22fbrTeZ5u16eJ+SsYZcMGK4k+WkaBbv2kujv+sTGh7DztwhreyYHK1g8g+qGWD5DoD56NxXC5acaNv9lLOClV3ukWbLDQbKsk2mQmUQk6+Xb4=
+	t=1743670122; cv=none; b=Zmje+tFEMiD32DlvpyEKAsOK9SLwtr29MgoDpJWFmLDFWAnFN2x50E9ga21RL2qVVVM3LZ2fZ3d3O7zeDgNkLctRKX5ZVdjACr0lf7Ex/l3gZMU9CYcOcJSkc02F75FWe+NcFFvMO0cKV6SIBeR0GQIEbNLeWXDRF3GIG87086k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743669991; c=relaxed/simple;
-	bh=OAUpskNDlEMdIjdcsmy2MVzHDre7qQyW3PzLtSWjU8Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HgPja0sGUzwoEyB5LlYFyGw9qEcWvwGZr6nd2i6/hEAeU+eWM0IcmjlAadCj769jMqyfZd0L5IJbLLWDEE7U3xo37qsF6RUCshdBZFOcE31YZnAPRpjMRZL7m4VbkVv66YemYMXn7tgmbVsWU2bIiOtxGXwnJV3iMmCTvwXQXGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=csEhzXPp; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="csEhzXPp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7AE9C4CEE3;
-	Thu,  3 Apr 2025 08:46:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1743669990;
-	bh=OAUpskNDlEMdIjdcsmy2MVzHDre7qQyW3PzLtSWjU8Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=csEhzXPpHgKuamGzB2VOK4eFwOKB2HCIk7PEtqRLg8RzqL7lJpfrwwX92gf9tjW9Y
-	 GDM9OaGF8XeeX0wTe8A13UpY8BwPNGycNIP+IWDE2qOMJ/WmzP56gvNf1NootvsSNj
-	 5PbyQAicGYCN3rZ4GMDpCf9gFfESy6vq+0dilt/M=
-Date: Thu, 3 Apr 2025 09:45:02 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: xiaopeitux@foxmail.com
-Cc: jirislaby@kernel.org, linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org, Pei Xiao <xiaopei01@kylinos.cn>
-Subject: Re: [PATCH] tty/sysrq: make sysrq_replay_logs_op const
-Message-ID: <2025040349-antiques-reflex-30c5@gregkh>
-References: <tencent_E7CD9DB87A448073E350F9400678ED9F9C0A@qq.com>
+	s=arc-20240116; t=1743670122; c=relaxed/simple;
+	bh=LMGWh7K8oa5KrX+W3kbg21yUcMQUNfXpXVe35Aqq1Mo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jPlSh0kBlJPaF35f4/NNx1gg8/GR3jLcMIC7/3TA9SGj8imaRU0lRZKKAdwkeCb67Z/XWaVqa6+t74FG1zgokIaqSEpovk939LanEZX4UO9TuyfHQZL2lM05KnmV7cQDf4P5ClPI4jDFgJ3Tqqzp2ctPlA64A+pw6CeunlZp2XM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost.localdomain (unknown [124.16.141.245])
+	by APP-01 (Coremail) with SMTP id qwCowACXPP1SS+5nfWhxBQ--.16368S2;
+	Thu, 03 Apr 2025 16:48:20 +0800 (CST)
+From: Wentao Liang <vulab@iscas.ac.cn>
+To: m.chetan.kumar@intel.com,
+	loic.poulain@linaro.org,
+	ryazanov.s.a@gmail.com,
+	johannes@sipsolutions.net,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com
+Cc: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Wentao Liang <vulab@iscas.ac.cn>
+Subject: [PATCH v2] net: wwan: Add error handling for ipc_mux_dl_acb_send_cmds().
+Date: Thu,  3 Apr 2025 16:48:00 +0800
+Message-ID: <20250403084800.2247-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.42.0.windows.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <tencent_E7CD9DB87A448073E350F9400678ED9F9C0A@qq.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qwCowACXPP1SS+5nfWhxBQ--.16368S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7Cw4DArW3JFyrKrWDKF48Zwb_yoW8Gry7pF
+	WrWw109F98AF4rAa18CrWDZa4YqayDXr97Kw1jv3Z5WFsrCr47trWxX3429rn7JF45W3Zr
+	Ar4jyry3G3WUGF7anT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPjb7Iv0xC_tr1lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
+	0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+	A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xII
+	jxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwV
+	C2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
+	0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Gr0_Cr
+	1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IE
+	rcIFxwACI402YVCY1x02628vn2kIc2xKxwCY1x0262kKe7AKxVW8ZVWrXwCY02Avz4vE14
+	v_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AK
+	xVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrx
+	kI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v2
+	6r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8Jw
+	CI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjTR2hFcDUUU
+	U
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiCREBA2fuKvd1oAABsa
 
-On Thu, Apr 03, 2025 at 04:38:18PM +0800, xiaopeitux@foxmail.com wrote:
-> From: Pei Xiao <xiaopei01@kylinos.cn>
-> 
-> Mark sysrq_replay_logs_op as const, preventing accidental modification.
-> 
-> Signed-off-by: Pei Xiao <xiaopei01@kylinos.cn>
-> ---
->  drivers/tty/sysrq.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/tty/sysrq.c b/drivers/tty/sysrq.c
-> index f85ce02e4725..e9ada1c14e26 100644
-> --- a/drivers/tty/sysrq.c
-> +++ b/drivers/tty/sysrq.c
-> @@ -454,7 +454,7 @@ static void sysrq_handle_replay_logs(u8 key)
->  {
->  	console_try_replay_all();
->  }
-> -static struct sysrq_key_op sysrq_replay_logs_op = {
-> +static const struct sysrq_key_op sysrq_replay_logs_op = {
->  	.handler        = sysrq_handle_replay_logs,
->  	.help_msg       = "replay-kernel-logs(R)",
->  	.action_msg     = "Replay kernel logs on consoles",
-> -- 
-> 2.25.1
-> 
+The ipc_mux_dl_acbcmd_decode() calls the ipc_mux_dl_acb_send_cmds(),
+but does not report the error if ipc_mux_dl_acb_send_cmds() fails.
+This makes it difficult to detect command sending failures. A proper
+implementation can be found in ipc_mux_dl_cmd_decode().
 
-Hi,
+Add error reporting to the call, logging an error message using dev_err()
+if the command sending fails.
 
-This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
-a patch that has triggered this response.  He used to manually respond
-to these common problems, but in order to save his sanity (he kept
-writing the same thing over and over, yet to different people), I was
-created.  Hopefully you will not take offence and will fix the problem
-in your patch and resubmit it so that it can be accepted into the Linux
-kernel tree.
+Fixes: 1f52d7b62285 ("net: wwan: iosm: Enable M.2 7360 WWAN card support")
+Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+---
+ drivers/net/wwan/iosm/iosm_ipc_mux_codec.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-You are receiving this message because of the following common error(s)
-as indicated below:
+diff --git a/drivers/net/wwan/iosm/iosm_ipc_mux_codec.c b/drivers/net/wwan/iosm/iosm_ipc_mux_codec.c
+index bff46f7ca59f..478c9c8b638b 100644
+--- a/drivers/net/wwan/iosm/iosm_ipc_mux_codec.c
++++ b/drivers/net/wwan/iosm/iosm_ipc_mux_codec.c
+@@ -509,8 +509,11 @@ static void ipc_mux_dl_acbcmd_decode(struct iosm_mux *ipc_mux,
+ 			return;
+ 			}
+ 		trans_id = le32_to_cpu(cmdh->transaction_id);
+-		ipc_mux_dl_acb_send_cmds(ipc_mux, cmd, cmdh->if_id,
+-					 trans_id, cmd_p, size, false, true);
++		if (ipc_mux_dl_acb_send_cmds(ipc_mux, cmd, cmdh->if_id,
++					     trans_id, cmd_p, size, false, true))
++			dev_err(ipc_mux->dev,
++				"if_id %d: cmd send failed",
++				cmdh->if_id);
+ 	}
+ }
+ 
+-- 
+2.42.0.windows.2
 
-- This looks like a new version of a previously submitted patch, but you
-  did not list below the --- line any changes from the previous version.
-  Please read the section entitled "The canonical patch format" in the
-  kernel file, Documentation/process/submitting-patches.rst for what
-  needs to be done here to properly describe this.
-
-If you wish to discuss this problem further, or you have questions about
-how to resolve this issue, please feel free to respond to this email and
-Greg will reply once he has dug out from the pending patches received
-from other developers.
-
-thanks,
-
-greg k-h's patch email bot
