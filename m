@@ -1,98 +1,116 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B498CA6B;
-	Thu,  3 Apr 2025 06:02:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A76918DB18
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 06:02:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743660142; cv=none; b=p4sfFHd9+kJL3f50t1VWdW12YAoWKvGSwO159N27wUsSr0104EF4FLPB5BazBdQyJiYSR+HZXTohbIxVWitIQxwDQgMruTJMzSyvUKohs8zlRCfMpIE+CXNnMA1KDYQ6cZcaZxY1N2h6TGC8Pl8XFUfQVev1GuZFC2hO4x2vjgE=
+	t=1743660157; cv=none; b=NGbXRvxQGOhSTD3tkXsVucLeLlqXF9ich+Ymrc18RX81iq2tzWKd4tlNVGkdlArxkznjzGU6+k3I4qsWQDSPdw4TzPNI5xhRx9NJBn947boLxqlI7zXwATL57YHJsE2eoBaDAID0DwbyDs1aXkP5DxJ+qLE/Ozx1TdyqZQtXGP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743660142; c=relaxed/simple;
-	bh=HBSjt3ceb+310hVs/mwgzhbbqG3Jl2AAvf0AdIVfBLA=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=cqLCGjA2TT1uRNQ9h92X4RE/a1m0ws/XvpB5KSy/cK6dfrlCx13MyyAxWq78IG8YKInLGnsVU2Wz9bbZzB44Dlnw/t1sCpV5NgH0r95e3dty9OjBHWEBAEY7NXd6OptmLIb9jvMq8B5YCWTsYz5BAt3lhH7xQHrS9NRZ2B8AE5I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=WPP0bDZK; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1743660157; c=relaxed/simple;
+	bh=icMjSlKatgQx/TbsI4RIJckayqYv3CovYnZn2GdTQDQ=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=YvoY5Il4dQYOAOPoWkLQPbEGGzr9u2iz24gm4A0IXJanfNVEfqcMZoD1RtFmh8/vBvavyH7tzap0J04bZubH9GKC0eJOSTHm8617n09eFMepTGUV5aDSzUQQKa/pbyaAueWNDUlDv1891f+/XCU3zLGPMAbghdycF4U7nB0Fl8o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=KWoFBuzK; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="WPP0bDZK"
-Received: from [127.0.0.1] ([76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53361TVl369646
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Wed, 2 Apr 2025 23:01:30 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53361TVl369646
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025032001; t=1743660093;
-	bh=dlct/QjME2ZRc2GbrZa4+YEUwLyiwmon1oWoqtApkXY=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=WPP0bDZK1lApqNXdOtF12S5ARISaib9mLKSdGhnx3gf+KvTavErQMB5tHsDboEZaM
-	 dLsgA/Wr4k2VPAKvg4Q/jtE0gFB4ojRvE+oKmyqXmPeIVyoZtruCTjMkDVanwskwS+
-	 jiuGUYw2dmNjKOKZNCiNGXO9zxp8lWX1y5seDxftNeQHvt8RBeGECAiOxqTKUMgh1b
-	 zD9Kyl+NSFQ59y87oScNqVpMXyezROjMwevUzZS+FRy/CxOc3SftPfgsBUCB4x+623
-	 2LcVsu0VnYA1sp4yMqo6TRQHgTa6YRFjMp5wTke1MjTH1hw4LpEw+MZO87TrcY7Ja6
-	 ziwf36ftnA50g==
-Date: Wed, 02 Apr 2025 23:01:27 -0700
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: Xin Li <xin@zytor.com>, Ingo Molnar <mingo@kernel.org>
-CC: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
-        linux-edac@vger.kernel.org, kvm@vger.kernel.org,
-        xen-devel@lists.xenproject.org, linux-ide@vger.kernel.org,
-        linux-pm@vger.kernel.org, bpf@vger.kernel.org, llvm@lists.linux.dev,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, jgross@suse.com,
-        andrew.cooper3@citrix.com, peterz@infradead.org, acme@kernel.org,
-        namhyung@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
-        wei.liu@kernel.org, ajay.kaher@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
-        pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
-        luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
-        haiyangz@microsoft.com, decui@microsoft.com,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: =?US-ASCII?Q?Re=3A_=5BRFC_PATCH_v1_01/15=5D_x86/msr=3A_Re?=
- =?US-ASCII?Q?place_=5F=5Fwrmsr=28=29_with_native=5Fwrmsrl=28=29?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <c316a6c6-b97c-48b2-9598-d44e2ec72fbc@zytor.com>
-References: <20250331082251.3171276-1-xin@zytor.com> <20250331082251.3171276-2-xin@zytor.com> <Z-pruogreCuU66wm@gmail.com> <9D15DE81-2E68-4FCD-A133-4963602E18C9@zytor.com> <Z-ubVFyoOzwKhI53@gmail.com> <c316a6c6-b97c-48b2-9598-d44e2ec72fbc@zytor.com>
-Message-ID: <580DD4EE-8694-4525-AA73-A6823126FF9F@zytor.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="KWoFBuzK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1743660153;
+	bh=icMjSlKatgQx/TbsI4RIJckayqYv3CovYnZn2GdTQDQ=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=KWoFBuzKhUO2rIVo/tQbcH+RflY2dP9IgW9yhlHe3qg7S9OPrnU6c1fv5LE5HT1Pn
+	 SWN8aPuycGyRZA+S2P+f4ohIx8nwVqTFFFHjm0HwbRmSiDrrr9xymiZk0dUzYMcv3u
+	 knb7SGHinimZJoHcRwoVGwDE/59GGnA/jXGtrp/OowmflEUy6rsJRTxlPpJ0TsvLtJ
+	 1r6OGIOzRcxY+5SN9OQaDJ+EkS6Vh6LJ9N54f+BkAtLjeW9G+OT03AZWGjzEugZIIh
+	 cJr1BH5cYpvloYjT6Qt6RRQQyDnkuCWn9Sxt45KK7QA6sY5ZgL+K74dqqrA2W1vFU7
+	 faGDcQipGjLkQ==
+Received: from [192.168.50.250] (unknown [171.76.83.191])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	(Authenticated sender: vignesh)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 6E84117E0B0B;
+	Thu,  3 Apr 2025 08:02:30 +0200 (CEST)
+Message-ID: <544e78ca-4288-4d3f-97ce-0f8bda68bb19@collabora.com>
+Date: Thu, 3 Apr 2025 11:32:17 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 2/3] drm/ci: check-patch: unshallow repository before
+ fetching
+From: Vignesh Raman <vignesh.raman@collabora.com>
+To: Daniel Stone <daniel@fooishbar.org>
+Cc: dri-devel@lists.freedesktop.org, daniels@collabora.com,
+ helen.fornazier@gmail.com, airlied@gmail.com, simona.vetter@ffwll.ch,
+ robdclark@gmail.com, guilherme.gallo@collabora.com,
+ sergi.blanch.torne@collabora.com, valentine.burley@collabora.com,
+ lumag@kernel.org, quic_abhinavk@quicinc.com, mripard@kernel.org,
+ maarten.lankhorst@linux.intel.com, tzimmermann@suse.de,
+ linux-kernel@vger.kernel.org
+References: <20250328110239.993685-1-vignesh.raman@collabora.com>
+ <20250328110239.993685-3-vignesh.raman@collabora.com>
+ <CAPj87rNLqMxBgKGTSHMHT39agzu=GY-Dgk6Zma1oM1ztkTch3Q@mail.gmail.com>
+ <6da17cd3-77f2-4bf4-86b8-296c2f295960@collabora.com>
+Content-Language: en-US
+In-Reply-To: <6da17cd3-77f2-4bf4-86b8-296c2f295960@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On April 2, 2025 10:09:21 PM PDT, Xin Li <xin@zytor=2Ecom> wrote:
->On 4/1/2025 12:52 AM, Ingo Molnar wrote:
->>> Should we rename the *msrl() functions to *msrq() as part of this
->>> overhaul?
->> Yeah, that's a good idea, and because talk is cheap I just implemented
->> this in the tip:WIP=2Ex86/msr branch with a couple of other cleanups in
->> this area (see the shortlog & diffstat below), but the churn is high:
->>=20
->>    144 files changed, 1034 insertions(+), 1034 deletions(-)
->
->Hi Ingo,
->
->I noticed that you keep the type of MSR index in these patches as
->"unsigned int"=2E
->
->I'm thinking would it be better to standardize it as "u32"?
->
->Because:
->1) MSR index is placed in ECX to execute MSR instructions, and the
->   high-order 32 bits of RCX are ignored on 64-bit=2E
->2) MSR index is encoded as a 32-bit immediate in the new immediate form
->   MSR instructions=2E
->
->Thanks!
->    Xin
+Hi Daniel,
 
-"unsigned int" and "u32" are synonymous, but the latter is more explicit a=
-nd would be better=2E
+On 28/03/25 17:40, Vignesh Raman wrote:
+> Hi Daniel,
+> 
+> On 28/03/25 17:05, Daniel Stone wrote:
+>> Hi Vignesh,
+>>
+>> On Fri, 28 Mar 2025 at 11:03, Vignesh Raman 
+>> <vignesh.raman@collabora.com> wrote:
+>>> Ensure the repository is not shallow before fetching branches in
+>>> check-patch job. This prevents issues where git merge-base fails
+>>> due to incomplete history. Set the timeout of check-patch job to 1h.
+>>
+>> Ouch - an hour is pretty brutal. Is there a way to unshallow only back
+>> to the merge base?
+> 
+> I set it to 1h, but the job is completed in ~15min for
+> https://gitlab.freedesktop.org/vigneshraman/linux/-/merge_requests/18 
+> which has 486 commits.
+> 
+> I will check if we can unshallow only up to the merge base.
+
+I tried this and still checkpatch failed. Below is the sequence.
+
+- GitLab starts with a shallow fetch (depth=10).
+- Script fetches full commit history (--unshallow --filter=blob:none). 
+We need this to calculate the merge-base commit.
+- Calculates how much history to fetch using the merge-base commit.
+- Refetch with depth (--depth=N) until the merge-base commit
+- checkpatch.pl fails because the earlier blobless fetch (--unshallow 
+--filter=blob:none) skipped file contents.
+
+Please see the commit and pipeline,
+https://gitlab.freedesktop.org/vigneshraman/linux/-/commit/40a3fc31c2405f90f3fc3177a575a66a10b33324
+https://gitlab.freedesktop.org/vigneshraman/linux/-/jobs/73884148
+
+Looks like the reliable solution is to fully unshallow the repository 
+(without any --filter) and set a 30m timeout? Would this be acceptable?
+
+Regards,
+Vignesh
+
+> 
+> Regards,
+> Vignesh
+> 
+>>
+>> Cheers,
+>> Daniel
+> 
+
