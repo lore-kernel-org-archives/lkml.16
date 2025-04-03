@@ -1,63 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CA1018DB29;
-	Thu,  3 Apr 2025 23:24:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0EDF2E62B8
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 23:32:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743722644; cv=none; b=Ay0y7MJAGouCr+PwnmrPotiuO2BjU0QMOc4MzZkhoicJu81JKv1HI8biAuCAJ3UGHtv4xJqCR/UkvLUK0yJ0KdKU27MVYEuGSsqXwRCkA8KUImKAaRM/GAcvUBlSTMWVlhIoDlOMPuTbmXh/+i9R1+ytUlvUiTgn555MxrYN51o=
+	t=1743723134; cv=none; b=neF9tczkB3GywFfozuWX/R6N417DY7EnyW2WY+tB9DaXni6PGF88U2vwPEGl5Dn2KwRBZ+kV4KhRxdV2tF2xqMypyqjQ1GoyUcb/KC+5A9AWBP2S5Lm/twUySG48zbihny6KzFiNc6+4y9FuA5WaRGTAIv3O2JFjBGYjv4MqMXI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743722644; c=relaxed/simple;
-	bh=225QhKbWqeDMrkWI+TUb7k9GhuP8VuhonRSgQFXPplQ=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=qep+RCZJ4d5ldpNhqBfwAd14vibv2/qjywGmJoIvfJXIWxK9pRH2seSuk9Tf62pn8al8TR7vJ0IIivDcDFP/gJdKOqfzFOQaEZ6UdKJI1feh7VutOpoOzJoH+3EcPUcC03nO424iNQbkDwNNLrmSxv5Ev1lSzgs//X4IU+ouBuo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MsLaJ/e4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743723134; c=relaxed/simple;
+	bh=ConqJ9yxOfg51AtX2KXDQrRifAARBrdGYo8uEJMersE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YRBEYa0j/vA1BNqRmpuCb/kYQrTWvd2KYsa9IN2eGVB7AQ0TEpC1dqnLE/8Zc/icZcQRFovFE7rN8S1ehvgcyVXjz+bcyc+6AIRQIGdVV9gzoUbpG2U3QOczs72vwhORJlHRKbEsjmShJdEj0DMKyNJ6bQnKJsoSbZBLrCB/43c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cm9yUWEZ; arc=none smtp.client-ip=209.85.221.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MsLaJ/e4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3D39C4CEE3;
-	Thu,  3 Apr 2025 23:24:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743722644;
-	bh=225QhKbWqeDMrkWI+TUb7k9GhuP8VuhonRSgQFXPplQ=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=MsLaJ/e4vVBSYqDFHQYK2Qy10EQFhi2IvredQrBg6o1JbMMXp6dCrMMfV6+rnQgzt
-	 EnWklH+WoSf5lc8Yr8F7SBpUOA6tKXE/CtgfSDbdIR3X+tUPB7y/g9XmFIxbuotHr6
-	 16+mDKD7KMKaeokgbTZqoMIc2D/5jWIjF7Db/1fUxKpPtaMFeQ2BpjqTIg1CIEPNiY
-	 PJcmpaq2G3BudYVFjIfbf6zmoR/4GphQBfJqJ44JllvhuZuWiU+TRHXrS0j2oKEfzw
-	 9JGjcYVOlpn6eage1Rq8PxSP4PYzvx7LYoc8NmkwtTtqQ8tFHUSpGZq1VnIHuYpTx6
-	 rwl2dpzeh0MJA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33F45380664C;
-	Thu,  3 Apr 2025 23:24:42 +0000 (UTC)
-Subject: Re: [GIT PULL] ksmbd server fixes
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <CAH2r5mufSJAwwbVgNTy5eFLtEUNZGuRt9K8-LnKBTKd8A+Cu2w@mail.gmail.com>
-References: <CAH2r5mufSJAwwbVgNTy5eFLtEUNZGuRt9K8-LnKBTKd8A+Cu2w@mail.gmail.com>
-X-PR-Tracked-List-Id: <linux-cifs.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CAH2r5mufSJAwwbVgNTy5eFLtEUNZGuRt9K8-LnKBTKd8A+Cu2w@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.samba.org/ksmbd.git tags/v6.15rc-part2-ksmbd-server-fixes
-X-PR-Tracked-Commit-Id: c8b5b7c5da7d0c31c9b7190b4a7bba5281fc4780
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 06a22366d6a11ca8ed03c738171822ac9b714cfd
-Message-Id: <174372268062.2720155.8074107293907031995.pr-tracker-bot@kernel.org>
-Date: Thu, 03 Apr 2025 23:24:40 +0000
-To: Steve French <smfrench@gmail.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, LKML <linux-kernel@vger.kernel.org>, Namjae Jeon <linkinjeon@kernel.org>, CIFS <linux-cifs@vger.kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cm9yUWEZ"
+Received: by mail-vk1-f182.google.com with SMTP id 71dfb90a1353d-523edc385caso668326e0c.3
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 16:32:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743723131; x=1744327931; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ConqJ9yxOfg51AtX2KXDQrRifAARBrdGYo8uEJMersE=;
+        b=cm9yUWEZKsHsmv6Yw6EPDU+NyLGkXKcF4Lo0yw/4RdIGvHsPANaXmNqGyZbGvyfqk+
+         xkLgsxr/467QqG8ebzs/nIrk9v07VXwqKlCW1m3BvAtOlbqvixlM8hGGQfMtwzd8vu4y
+         hfmxgu8/80Y9cEnJZralDR6SSGqZ3DQNxMVjiDOUnzZL87sCqggxrbqF2/x/saeNDKnq
+         Baj8gNarCNTfOsrzMLK1L+RWsvtOjMM4mVkjwhJDr8aBFqg0q9wwQw7ZxExf1h9ad7vS
+         XQLDFsuyqWKka4KFbvwbzBktfBHdgRK9Vit/dMN5/WzG3qfxIaqBwcS+oGQoDcswsK/K
+         9Wgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743723131; x=1744327931;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ConqJ9yxOfg51AtX2KXDQrRifAARBrdGYo8uEJMersE=;
+        b=qnpAm1JG/O2T9FAavthpdpGe3n16V5D5zldLygKzwkK8c8cIRaNho14fxYGYkrHauK
+         JKfcZ72fVnnI99swroaAO0VcchwdmhjmUXyyFguWqEUFE6PxXagxE6RdOYMdsM4f5zRO
+         +oCwz7kGA/+u5KqW03DUnlbnWs70gYqcpiYOA7qDV5u0VfbrbMniqMrDGI7d4KYKiD8R
+         x0b1L8H9qyk+DhcUt1T5s6sdd+8M3R76/SKahO09xZKapFsucYeweqr7u4OCRbf7LGPI
+         WiHwEuzW/FHZgLfdJyOWbHxGC/Ua24oMyJrs9CWjY9DHpvVQjujKdaymwuVIAUXURpwb
+         LyaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWcw+kMZ2o68RQOH9KX0INnVpQiWB2hghn8SwCs88CJjlVJYuW8N43LGmThBv3OvwKsly3jyJo/nBeve8A=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxkte4AXj02VQL29+E0kXPqyd4p5kvouq0X203dhWi2fu5Fghjv
+	ZlnwBDIaLN8ixOPxTnQ4FRnoJMOz4rGWwsDsWfLMi2BQKyuaAxsvoc0GKbsjmPWT5cSrczhS+tp
+	13E/V5HTHm8REY8BV+GyUOe2M4vo=
+X-Gm-Gg: ASbGnctLoTs3bbefT9rkVVsybzc6qLQEIa2qoILOOUkllNAkl3mmw4oqs8gj+ApjKb9
+	vZa9iSwugKC31Ej+xfHjjGnyldbGfwv4g8715vOaHF3EnrtYWLvg5Q2S9XJcDHdgXH5EIR9WhKi
+	hdjDHo5fouZvH/pVXs+UdLkFmed04=
+X-Google-Smtp-Source: AGHT+IHG8yvd4/Gvzr9bsPGoHBMSRP7NVpPpyONIrTuFi15RTw1YFf2XgcnaKkTPRoWR1r0MApg+ICHPmv4tFtGyyWI=
+X-Received: by 2002:a05:6122:8c01:b0:523:7316:7f31 with SMTP id
+ 71dfb90a1353d-52764494388mr1303595e0c.5.1743723131626; Thu, 03 Apr 2025
+ 16:32:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <cover.1743685415.git.abrahamadekunle50@gmail.com>
+ <26990d4a9d4419f9d4155a40595bc213acb671a0.1743685415.git.abrahamadekunle50@gmail.com>
+ <Z-6Nwp5RUdgYt55B@smile.fi.intel.com>
+In-Reply-To: <Z-6Nwp5RUdgYt55B@smile.fi.intel.com>
+From: Samuel Abraham <abrahamadekunle50@gmail.com>
+Date: Fri, 4 Apr 2025 00:32:01 +0100
+X-Gm-Features: ATxdqUEbWVQJ00lu3HouPrhS-aMc9BZOWnPJCkk8kpjTlk_IjSIFvDUvpW1tCTw
+Message-ID: <CADYq+fa4FxmiynHg7BJRCusr3V-GqofEEddzP9Zzg1muPXGdqQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] staging: media: Remove duplicate NULL tests on a
+ value in pci
+To: Andy Shevchenko <andy@kernel.org>
+Cc: outreachy@lists.linux.dev, julia.lawall@inria.fr, 
+	gregkh@linuxfoundation.org, linux-staging@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, hdegoede@redhat.com, mchehab@kernel.org, 
+	sakari.ailus@linux.intel.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The pull request you sent on Thu, 3 Apr 2025 18:13:05 -0500:
+On Thu, Apr 3, 2025 at 2:31=E2=80=AFPM Andy Shevchenko <andy@kernel.org> wr=
+ote:
+>
+> On Thu, Apr 03, 2025 at 02:26:41PM +0100, Abraham Samuel Adekunle wrote:
+> > When a value has been tested for NULL in an expression, a
+> > second NULL test on the same value in another expression
+> > is unnecessary when the value has not been assigned NULL.
+> >
+> > Remove unnecessary duplicate NULL tests on the same value that
+> > has previously been NULL tested.
+> >
+> > Found by Coccinelle
+>
+> Missing period. And Subject should be as simple as
+>
+> "media: atomisp: Remove ..."
+>
+> ...
+>
+> Please, send this patch separately from the others.
+>
+> --
+Thank you very much for your review
+Unfortunately I have been told I cannot work on the media driver as an
+outreachy applicant.
+I do appreciate your apparent reviews.
+I will Cc your email when I apply your review to my rtl8723bs driver
+patch of the patchset.
+Thanks
 
-> git://git.samba.org/ksmbd.git tags/v6.15rc-part2-ksmbd-server-fixes
-
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/06a22366d6a11ca8ed03c738171822ac9b714cfd
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Adekunle
