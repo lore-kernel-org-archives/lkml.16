@@ -1,107 +1,99 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 297491F1500
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 09:06:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE2EE1A265E
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 09:07:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743671179; cv=none; b=foQNqhB77I5bL1ls6SxSnnLa9GR/630kPFpLYyon7N/AfaYyDm/deeKgq5zQIpAxEVPypfafiS2TYdQ4e5qfbbxv5ejA0jiZnr+I105cEbTx30fn12s9Ab4nebpoWw0ib1ik1OfAN3znj3QLJzzRScmCyp5jOrEJ2v4HdUmtgP0=
+	t=1743671239; cv=none; b=tVjvygKcjYhO0AxPqbTokY8DJ3l9qjEnwT8+J4BdZ5BcUu9MGQtRS5Ko0iwgZnSJ8mqH3BpzM/C//AoW/zKHE/YURMOSdle4dJHP2w0q2nvC/TFcr0X4nntGaSiwTcIEy/JpvC4I/5K+BoJo15IoVsVCgtLY3lajJ+0ZHswFR6I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743671179; c=relaxed/simple;
-	bh=B9hm1zTnA1AAiSjKQx3QFM2Ufknkorg6sAJWN0U6Opc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cM4iXBmSd8CrVHLWOa1MdSbltTVCTcCx5StLNuWBqt/c+T0UBA55iDsncP1w830WZcauIO2MnnTo/DInNVnWIELdBwO+AucCsKjBSyZD27NANM6oCEcMBQOs4sMa3hipmnX15C0X4cVGAwKrTsyGEBrwIk+/lTTDzlbxk67iVj0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D7ybYolr; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743671239; c=relaxed/simple;
+	bh=l8gTnU2dtKYUn276KVsPVVWPeUSFCVu4U25a1SBfu9c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GQGZ5ayazd2j0JwPauYQodb6H4nVzoEvfYELOfbU2xf2NNdKC6vKYWzRfq+Xl9phlztsb+jIj98uwyDyUJrY0VeaqVXj4bfGYc28PK+XEzf979exZfDysiPe3OAq9TsmP5LpuJVb61E0wXf+wWDcMsHLlYRZkS6O6j3KWNPTeks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=BjQUw+rR; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D7ybYolr"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5499d2134e8so829900e87.0
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 02:06:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743671174; x=1744275974; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cr+S22BZ2xcihPgrlA1tDa1VSuER27ezlNlGe9YDCYg=;
-        b=D7ybYolr0tEQ/LrEPakcjP8cBbAJ4pZ+DiKIVsoPc8dPZdBWGBT+IZXER8StuhtHow
-         CZGbtsIkjuJA18sSvYgvCeeBT0zCwEEydqw2OZ1cLyriJMh0zokrHa1HHKvZ1flIKIS5
-         WL96z2+aNpDwZWrIg2FncUMuywIeyUL47b+AG5Km2Xv/ZicTHP+s7OwTBxql8rpsm9Cl
-         5EIb86hZco3a8im3D1c1of9LMWvBM7ZSl4m1hUnDzBmUiZ1Nml+awsGg8uOxkZT+QAVN
-         1vS6U6TN439UmtXerz9LRnPy+vOlV49W3S1hcG3jHWJGLftU2hiTSUlt280GD0GPjLyQ
-         xHsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743671174; x=1744275974;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cr+S22BZ2xcihPgrlA1tDa1VSuER27ezlNlGe9YDCYg=;
-        b=GwGkScInObw2k3vfJ7zHvpw81GEfrRh7TKTkVoJhkeCzLpswsxkMHEJxpMtWaMMUfc
-         rBuXyXEdGPp2T9zxyzlhRCa+qF3UrHIv+Dqil1XhlyHlO4b7udhqFrqlYW3TM57mRdF9
-         i3wM0tqvsxFSDo7uqeHVW0vcsaos3e1ibvYXpT/N3kU5nuC+IrO7rJ+uJXDJJLOzVMqa
-         eN9dXnH+xFSH1gKFFUQBG3vZVBHomUE3z0RS6s9NkGChVM+EmXNgoEXqzrVGqKpQP0Ap
-         tu3pfv+BVbtgBKZ9DwYUXDB/5SEPFVe0UKy6QqxI093ga3d4YYZCe5TpFe2th3B8E1bQ
-         WfRA==
-X-Forwarded-Encrypted: i=1; AJvYcCWgQkl6LvuoH8GdzyMXKzd/vy1mfgGwWozahgY6K7nqsrXURCnyXJmezT7rj7B1H7tLRi6H4D+/ly6xaQQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YynJfT89Hze8U6/yKR46AHkwypeOy7wxWy2YmJ4dn5hNvk/flms
-	dQ3ovV2fx+Yl9rEOu0Bl6EW6DakQQZ0vpCnzVgzZlNwL+QZkZqRf9TADCJf/H4nvz9G2+3PnC0N
-	Pw4eaXLxdtWaJOXwFxMsFlue9XVLxGGOC
-X-Gm-Gg: ASbGncvsfO/etFKS9+gszLCbPP8HYQuRcw19HC6XpLROAS1Xd+2jvSd1qfUFwKfWmvE
-	8xsbDoOL4ZhdIGicc0CLGGOOCS6Anh8R/ldzhCV+WARagcaRd4EIoOoL3sFuF6LBfNTlIv20DkM
-	W73RE7vKmauCrVs7lhlWudWIVWxA==
-X-Google-Smtp-Source: AGHT+IH+TgOsUNNUoNyl98vYwpQty4AurG2YYizWi3fVq1o7Lzjtm+e+Euenpt07tyPy9GB4RlZ7z1UtQDM9eaFp8VA=
-X-Received: by 2002:a05:6512:a95:b0:549:5769:6aee with SMTP id
- 2adb3069b0e04-54c19c55c05mr1842751e87.7.1743671173903; Thu, 03 Apr 2025
- 02:06:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="BjQUw+rR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=VXvi
+	2mNF8xXuVLVH/4vQtoyPsrTNcyZMvZgZD0MbxLo=; b=BjQUw+rRjZdBNmlicGLL
+	MEXXNZfsdDO2rmu/p3p9d16VYoRxwH8ZukjIw0Put+Y1iiqJ1k6VVWlnGkY7swZO
+	VZNrGgNj3e8mOrwn0nz9lR9oJOP9hmrF0CG3glmM9IRJp2v90WNaoDqXkm0hvRJD
+	YLmdTCr+FHDoefwAmE9fsC22Yr4U46dEmnM0vc0jRJdQdmAiH15f1QHrQ1SwPUnS
+	C7KYqzQnGf6HwtRYbXfa5j+viZc/eNvsiMlCVgmXYg6RQ+jXuN9vbykajnCmyX6q
+	YdQfCxiKj7H8Tv2VX/HlOLay+Zd/qbJbd4o5mmu96ziIQBblKq+oMTWam0VOJmUN
+	xg==
+Received: (qmail 2312070 invoked from network); 3 Apr 2025 11:07:15 +0200
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 3 Apr 2025 11:07:15 +0200
+X-UD-Smtp-Session: l3s3148p1@Tw+ZGNwx9I4gAwDPXwaqAEtIN5mYkFJw
+Date: Thu, 3 Apr 2025 11:07:15 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-i2c@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [RFC PATCH 2/3] i2c: i2c-core-of: Move children registration in
+ a dedicated function
+Message-ID: <Z-5Pw8qyfuB2leG2@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-i2c@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+References: <20250205173918.600037-1-herve.codina@bootlin.com>
+ <20250205173918.600037-3-herve.codina@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250403070453.214190-1-ubizjak@gmail.com> <20250403082508.GAZ-5F5EMVZq3-6Zoo@fat_crate.local>
-In-Reply-To: <20250403082508.GAZ-5F5EMVZq3-6Zoo@fat_crate.local>
-From: Uros Bizjak <ubizjak@gmail.com>
-Date: Thu, 3 Apr 2025 11:06:02 +0200
-X-Gm-Features: AQ5f1JoW7LoWu2LYC_1JM7HqhdXhPjBBhY0jvYKgfTnND3Qc8mgGg_lVWAVrmTI
-Message-ID: <CAFULd4a49RRMKrSVh3Q5zpeK4EJVW61tm=fCN4aOWX8=x8rKnw@mail.gmail.com>
-Subject: Re: [PATCH -tip] x86/idle: Work around LLVM assembler bug with
- MONITOR and MWAIT insn
-To: Borislav Petkov <bp@alien8.de>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	kernel test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="UrlhrmKKNv6iAndD"
+Content-Disposition: inline
+In-Reply-To: <20250205173918.600037-3-herve.codina@bootlin.com>
 
-On Thu, Apr 3, 2025 at 10:25=E2=80=AFAM Borislav Petkov <bp@alien8.de> wrot=
-e:
->
-> On Thu, Apr 03, 2025 at 09:04:37AM +0200, Uros Bizjak wrote:
-> > LLVM assembler is not able to assemble correct forms of MONITOR
-> > and MWAIT instructions with explicit operands:
-> >
-> >   error: invalid operand for instruction
-> >           monitor %rax,%ecx,%edx
-> >                        ^~~~
-> >
-> > Use instruction mnemonics with implicit operands when LLVM assembler
-> > is detected to work around this issue.
-> >
-> > Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-> > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > Cc: Ingo Molnar <mingo@kernel.org>
-> > Cc: Borislav Petkov <bp@alien8.de>
-> > Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> > Cc: "H. Peter Anvin" <hpa@zytor.com>
-> > Fixes: cd3b85b27542 ("x86/idle: Use MONITOR and MWAIT mnemonics in <asm=
-/mwait.h>")
->
-> No, you should whack that one - the toolchains are clearly not ready yet.=
-..
 
-The least common denominator is an insn with implicit operands. I'll
-post V2 that fixes it that way.
+--UrlhrmKKNv6iAndD
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Uros.
+
+> -void of_i2c_register_devices(struct i2c_adapter *adap)
+> +static void of_i2c_register_children(struct i2c_adapter *adap,
+> +				     struct device_node *bus)
+
+Could you kindly add a little kdoc so it is easy to understand the
+difference between of_i2c_register_children() and
+of_i2c_register_devices()? It is not too obvious from the names alone.
+
+
+--UrlhrmKKNv6iAndD
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmfuT8MACgkQFA3kzBSg
+KbY0nRAAplNQaeD5IqrGZw/9auueghG82ZwrE/bCrjUDJWPyChvWw9Bd/b9SC/a7
+7YXifYW/ID8EejvdxNsfyQyI++a/bkXJMptt30SZZGtAHkJ3riiVC3NvUwRxbdud
+SsOSSOUbEY+7BGZMvnYjmLzw3PGSX8ezFkD3izMyBYNnBmA6wPYkTstI6qxFCBoi
+dJIe7GrLx0CJehgvhDGUPw1snQSizqGJGSjjTbNv/2RD/Y6ntJ4DZ84PNE+DBBGG
+/wApN+pgb/IzawZ8GaofQzKlfViG9Og/GxfWYXoYvId5FoUAw2yF/OLSJ5CV2T7m
+cmn1UYvmwyow//irO9G9SUB7EdXrGLhd1c6gYf4KlA66Cqd+DnU9shJqiaMCfSru
+beBPRcxk6Ss7oVIuC4r3dMi81DRsFc8XGeW+jXtDG8dUqkd6Gpc8wpb4fDODmuXM
+SHIWEDszgoWW9SDH4i2IhiHUO+uVXIJhMLMqzvJrV5eLzBuvCvD9+DdkYliRnZlP
+nUMV/eRXvjyPtbnOgsaB8osXw5/eG7tJX1ozoyFMf5YwdD4hd1w20LEvfQR+HjMQ
+OdgFdgKnl6cGYDnQ22FZsRrjJBLiL0EMmR2GiItlGwnj8P+x4jEKRzx5tgiW7qJq
+JvDrf6FevO1UyaeVeVxInxKW7d4fcw/ZHtLlsWA1Xx+RsTDCBeY=
+=aFtT
+-----END PGP SIGNATURE-----
+
+--UrlhrmKKNv6iAndD--
