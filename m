@@ -1,100 +1,172 @@
-Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
+Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CDB1156C72
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 05:33:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B05419CD1D;
+	Thu,  3 Apr 2025 05:34:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743658426; cv=none; b=GH72r/2wwqh/phsHSydgt7iyutvEiYeqBbPNgxhxfKgTOShev6PUHt5NiTL2tkZvsIZm2mBMlbbaNJFD00QzOz0gCsnZgoriE3n6rMQk3pZ/lfpZcBBc5ESDvE7iHRvp4zQb0p8WO3uVmlUkFUheoz5CORw20GhvsgBS7D21PzQ=
+	t=1743658490; cv=none; b=GZ6Qb5QzFf8XhsUq5+4giMBnGg08NPWBpR3GGWpyrgcPVP5pP48AMZTYDDSFwC5UUzKQGIcqMx9WQiuEMTX+Ex5rQYK4dDdR55FoCZdy0AcFYzhXekcz1RXgEQHvgq2WRuxFKMX2yk+RdRI04enABjZvHfaZ9iLVWQMmt+j2Uqg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743658426; c=relaxed/simple;
-	bh=YLFcV7bEiG7OVMaq5sdUT3UZmmLf5VxniO8wU6+/8Cs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=i149Mw8DGgPeUkIWnvKAvb13UF+Byq0YL7fxoCKjcktjjb0iWMAOpqHYEpW2wJBvw4JrWWG+fvyZUBWlceArfnBgJQmL90rfrIP6xq64Ks5iLnc6D0H9cn9axy1hDRKU19hgKlxnqAUyCWG7pmSXKWM8tkSvqBozmLVZ4m1iFa4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Sd7RZ3+1; arc=none smtp.client-ip=95.215.58.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1743658490; c=relaxed/simple;
+	bh=+KgRRrVkhdEH83dWq8VuVTcakbsmjiUG2cFGm5+d/H4=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=sO89xcnbxUVpi5svVyQzNJPpMQtqFUb/YCjKRUCDdMUDgf9vOO7QA+zaFOL+XVW0yKON0Nn0zSO5w9s7uWGJtWuZgPFJjjX+uSCj6sYy/zRtzCXkEgfak0RVDD/khrLz+ePEx0ukBh4CHhNOTGyXmpqXK0gKisyEYYuWmjhMP8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=iaRrqQ/w; arc=none smtp.client-ip=148.163.135.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Sd7RZ3+1"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1743658422;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=m82CvK78yYT/5lTQIxRkvnm+pZdrU14HxUh0Z7KEcQM=;
-	b=Sd7RZ3+1XIjf/4oyQaMfC5OG9cDChmzgoDmBmT9cTGZFAAsTFqXvT4B6Mht5mMBnTLLChf
-	2OJTzlLP2Nn624+VwKr3WxUZPnMYv7ejKI8VfK6pblRXU8ANwDkoTefKZJE35blzMJzpiE
-	5zOJyIYtJorWwQJCsjjYVP+pMSmDNwM=
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Uladzislau Rezki <urezki@gmail.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Michal Hocko <mhocko@kernel.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Muchun Song <muchun.song@linux.dev>,
-	linux-mm@kvack.org,
-	cgroups@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Meta kernel team <kernel-team@meta.com>
-Subject: [PATCH] memcg: vmalloc: simplify MEMCG_VMALLOC updates
-Date: Wed,  2 Apr 2025 22:33:26 -0700
-Message-ID: <20250403053326.26860-1-shakeel.butt@linux.dev>
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="iaRrqQ/w"
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5331alx6018304;
+	Thu, 3 Apr 2025 01:34:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=DKIM; bh=EdUHjytkp06SnWtxffVLQhd8UPa
+	yk/8Md4Cr471hBOQ=; b=iaRrqQ/wWika6Sa6yX7GGXDcaGWaw/n4cGMUKj1kRrW
+	+i5eZBkkkG0mGRbGkE202bzYZCdEafgtA9i+3lreVPLAOCPtXBvxFVMYnOsw0P6W
+	TqBCb0vrPQGjNRokbLbx0QcRmX9zHTYfnBjixN8TrxYa3CsjLuz7O9jlbuhtGfhD
+	a2U6araNnFAbbwFvR9C82fdlnWKexAmp8852YM0ReFBjsNaA8ckydOwd86zaN/jH
+	lXMwMwSifS9maNaGTAD+GTbs3BCiwxHTcF5uvHgSrAbc6Cphxs5M7plRJyrv+ftt
+	O/Iwe4uuLcqs/Qn4eMkcAawNalR0T9WPfjBVVJLIz8Q==
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 45rcrx40jg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 03 Apr 2025 01:34:34 -0400 (EDT)
+Received: from ASHBMBX8.ad.analog.com (ASHBMBX8.ad.analog.com [10.64.17.5])
+	by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 5335YWq0004207
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 3 Apr 2025 01:34:32 -0400
+Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
+ ASHBMBX8.ad.analog.com (10.64.17.5) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.14; Thu, 3 Apr 2025 01:34:32 -0400
+Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by
+ ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.14; Thu, 3 Apr 2025 01:34:32 -0400
+Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server id 15.2.986.14 via Frontend
+ Transport; Thu, 3 Apr 2025 01:34:32 -0400
+Received: from [10.0.2.15] (KPALLER2-L03.ad.analog.com [10.116.18.50])
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 5335YHaU007295;
+	Thu, 3 Apr 2025 01:34:20 -0400
+From: Kim Seer Paller <kimseer.paller@analog.com>
+Subject: [PATCH v3 0/3] Add driver for AD3530R and AD3531R DACs
+Date: Thu, 3 Apr 2025 13:33:54 +0800
+Message-ID: <20250403-togreg-v3-0-d4b06a4af5a9@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+X-B4-Tracking: v=1; b=H4sIAMId7mcC/2WMywrCMBBFf0VmbSQzfdi68j/ERUgmaUAbSUpQS
+ v/dtAtRXJ7LPWeGxNFzgtNuhsjZJx/GAtV+B3pQo2PhTWEgSY2ssBdTcJGdsLpVUtm+RTZQzo/
+ I1j+30OVaePBpCvG1dTOu618io5DCdFTXqpFkSZ/VqG7BHXS4w9rI9OVR/fGoeJYQzbHDnir+8
+ ZZleQM6GZOh1QAAAA==
+X-Change-ID: 20250319-togreg-fc6a0af961ed
+To: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>
+CC: <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        Kim Seer Paller <kimseer.paller@analog.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1743658457; l=2595;
+ i=kimseer.paller@analog.com; s=20250213; h=from:subject:message-id;
+ bh=+KgRRrVkhdEH83dWq8VuVTcakbsmjiUG2cFGm5+d/H4=;
+ b=dFul9Ito//sa9NmAdrXKeUKcbYmSrkkZ9IzoF2VwgC3C2QvXsv2V5yvZX5pBLJeKPqfIkV0aE
+ ds6CvXX5SkeAeVZHbwnFtUl/Gl/+nrRtebai0n/f3NB4P8XUy9tgetf
+X-Developer-Key: i=kimseer.paller@analog.com; a=ed25519;
+ pk=SPXIwGLg4GFKUNfuAavY+YhSDsx+Q+NwGLceiKwm8Ac=
+X-ADIRuleOP-NewSCL: Rule Triggered
+X-Authority-Analysis: v=2.4 cv=KqVN2XWN c=1 sm=1 tr=0 ts=67ee1dea cx=c_pps a=3WNzaoukacrqR9RwcOSAdA==:117 a=3WNzaoukacrqR9RwcOSAdA==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=gAnH3GRIAAAA:8 a=ABwU-0_bCvWcPI1q2z4A:9 a=3ZKOabzyN94A:10
+ a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: id4XuffdJ6nnyzGHI1qRR1dlgGp0X86V
+X-Proofpoint-ORIG-GUID: id4XuffdJ6nnyzGHI1qRR1dlgGp0X86V
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-03_01,2025-04-02_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ lowpriorityscore=0 bulkscore=0 phishscore=0 impostorscore=0 malwarescore=0
+ clxscore=1015 mlxlogscore=999 adultscore=0 mlxscore=0 priorityscore=1501
+ suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504030027
 
-The vmalloc region can either be charged to a single memcg or none. At
-the moment kernel traverses all the pages backing the vmalloc region to
-update the MEMCG_VMALLOC stat. However there is no need to look at all
-the pages as all those pages will be charged to a single memcg or none.
-Simplify the MEMCG_VMALLOC update by just looking at the first page of
-the vmalloc region.
+The AD3530/AD3530R (8-channel) and AD3531/AD3531R (4-channel) are
+low-power, 16-bit, buffered voltage output DACs with software-
+programmable gain controls, providing full-scale output spans of 2.5V or
+5V for reference voltages of 2.5V. These devices operate from a single
+2.7V to 5.5V supply and are guaranteed monotonic by design. The "R"
+variants include a 2.5V, 5ppm/°C internal reference, which is disabled
+by default.
 
-Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
+The AD3531R/AD3531 is not yet released, so the only available datasheet
+for now is the AD3530R/AD3530. The only differences between the two is
+the number of channels, and register addresses of some registers.
+
+Signed-off-by: Kim Seer Paller <kimseer.paller@analog.com>
 ---
- mm/vmalloc.c | 13 +++++--------
- 1 file changed, 5 insertions(+), 8 deletions(-)
+Changes in v3:
+- Drop ABI docs.
 
-diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index 3ed720a787ec..cdae76994488 100644
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -3370,12 +3370,12 @@ void vfree(const void *addr)
- 
- 	if (unlikely(vm->flags & VM_FLUSH_RESET_PERMS))
- 		vm_reset_perms(vm);
-+	if (vm->nr_pages && !(vm->flags & VM_MAP_PUT_PAGES))
-+		mod_memcg_page_state(vm->pages[0], MEMCG_VMALLOC, -vm->nr_pages);
- 	for (i = 0; i < vm->nr_pages; i++) {
- 		struct page *page = vm->pages[i];
- 
- 		BUG_ON(!page);
--		if (!(vm->flags & VM_MAP_PUT_PAGES))
--			mod_memcg_page_state(page, MEMCG_VMALLOC, -1);
- 		/*
- 		 * High-order allocs for huge vmallocs are split, so
- 		 * can be freed as an array of order-0 allocations
-@@ -3671,12 +3671,9 @@ static void *__vmalloc_area_node(struct vm_struct *area, gfp_t gfp_mask,
- 		node, page_order, nr_small_pages, area->pages);
- 
- 	atomic_long_add(area->nr_pages, &nr_vmalloc_pages);
--	if (gfp_mask & __GFP_ACCOUNT) {
--		int i;
--
--		for (i = 0; i < area->nr_pages; i++)
--			mod_memcg_page_state(area->pages[i], MEMCG_VMALLOC, 1);
--	}
-+	if (gfp_mask & __GFP_ACCOUNT && area->nr_pages)
-+		mod_memcg_page_state(area->pages[0], MEMCG_VMALLOC,
-+				     area->nr_pages);
- 
- 	/*
- 	 * If not enough pages were obtained to accomplish an
+Bindings:
+- Drop reviewer's tag.
+- Update commit message.
+- Add non-r variants to compatible list.
+- Add io-channels property to enable ADC channel support for MUXOUT
+  readings.
+- Switch to unevaluatedProperties: false.
+
+ad3530r:
+- Update commit message.
+- Drop spi field from ad3530r_state and use regmap to retrieve the device
+  pointer.
+- Update mutex lock comment and use devm_mutex_init().
+- Fix LDAC gpio pulse logic.
+- Replace usleep_range() with fsleep().
+- Use sizeof(reg_val) instead of hardcoded value in regmap_bulk_read.
+- Drop reporting of zero offset.
+- Add internal_ref_support chip_info parameter and modify reference
+  handling.
+
+- Link to v2: https://lore.kernel.org/r/20250324-togreg-v2-0-f211d781923e@analog.com
+
+Changes in v2:
+Bindings:
+- Updated commit message.
+- Changed adi,double-output-range to adi,range-double property.
+
+ad3530r:
+- Changed data type to __be16 to resolve sparse warnings related to
+  type mismatches.
+
+- Link to v1: https://lore.kernel.org/r/20250319-togreg-v1-0-d8244a502f2c@analog.com
+
+---
+Kim Seer Paller (3):
+      iio: ABI: add new DAC powerdown mode
+      dt-bindings: iio: dac: Add adi,ad3530r.yaml
+      iio: dac: ad3530r: Add driver for AD3530R and AD3531R
+
+ Documentation/ABI/testing/sysfs-bus-iio            |   2 +
+ .../devicetree/bindings/iio/dac/adi,ad3530r.yaml   |  99 ++++
+ MAINTAINERS                                        |   8 +
+ drivers/iio/dac/Kconfig                            |  11 +
+ drivers/iio/dac/Makefile                           |   1 +
+ drivers/iio/dac/ad3530r.c                          | 514 +++++++++++++++++++++
+ 6 files changed, 635 insertions(+)
+---
+base-commit: 8dbeb413806f9f810d97d25284f585b201aa3bdc
+change-id: 20250319-togreg-fc6a0af961ed
+
+Best regards,
 -- 
-2.47.1
+Kim Seer Paller <kimseer.paller@analog.com>
 
