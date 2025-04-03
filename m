@@ -1,111 +1,158 @@
-Received: from mout.web.de (mout.web.de [217.72.192.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f196.google.com (mail-pl1-f196.google.com [209.85.214.196])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D910513C67C;
-	Thu,  3 Apr 2025 10:13:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21A2224BBE1;
+	Thu,  3 Apr 2025 10:13:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743675237; cv=none; b=d6hvjFAiJ8ycvW6xx4xzrcQzbACXLDgdI3Ps2YJXe0BLhCM3zjNm8L/ZWYWCCOojxqrLIxHhy48gfFMchf00AtM9xbNt8ZripGV2G/oJ5ET6dhW6omoqYoTgf0UEukOiBK7yYcC5seHXoH81HDN2jA9dWTFPxnJHEvt8oR9HUFg=
+	t=1743675241; cv=none; b=dHqWphYNvX2IOUcgFcixg392MA9m1u0SmJVSwBL7v1hKI1N/WlYjykVVcVeBN47EjIdpUUGlBdlqikgG8XskS86m0C5FAom4RFSNBXaOGusNEeHY15LEWtTXAmtrjnu8rm0Ib4lnAqNSOgIJIEH7Eb69ZHUsLWaePauV+yAa9hk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743675237; c=relaxed/simple;
-	bh=iZfe9IKc/fwgyE69mtiki9lj76GS0qFqCnTdfkVXFfU=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=ue4se0wM3aHcetGAOnOxIpm2r3R82m1rl2+LO0N5Swwb6sdvGvlbavJX+zNlI6H2S9yhcpkv+PRjvAlwFeKDpYXQJZkQWpeGVBXVNs2MNScK0lYImStzzmFAt/hxQ+DDzow+xFY6CVoA+9VD2dEl7B4M7u54OeJrNEiwPyK/PP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=RvXf/cnK; arc=none smtp.client-ip=217.72.192.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1743675241; c=relaxed/simple;
+	bh=SoPWAEpaQZ+eWbfdqHjnaQXDxz5IohZvVnzt47Mtqjk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=epOZphWLuA6/R/xS7EufWsMOkTvfXp2E/vLdzrlkrW2KLnh9azQ5+oXjAKIZxH4iyj0Zf0y/ZdvdWwbGGWI0duWsaE4PnoGf97auRPgciaNVIR2keLirakR3E2+6/Jzgp7bzTAkM7dZ8E08neEtSge3QxhKicl1KbgV4OoJUWE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Pls1+a9f; arc=none smtp.client-ip=209.85.214.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="RvXf/cnK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1743675213; x=1744280013; i=markus.elfring@web.de;
-	bh=CARrPYNC+39nu2aCcF5f+6rCXN+MipGAP0Rp28eM2S8=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=RvXf/cnK4bKjLf+iiCwbERJtPdoEvch2sZiwMwLxp1yaey4Lnbm2xmShYZIXpgRj
-	 SXeDrauR7IyfW4jwpUAGiLERFE1IOYHEn9VhiZJ0Duxt2bV7vUtk1FGV4m0OM/RuU
-	 mWNMtRqMcf3MZAqM5YROzC8hBOOvrEUTqoOWKGEGmwNc1Q2ktRacY/s9cszx42dQz
-	 LOWQVcX6BVRZFw+MFajHK9fnSxZ9+ZlXLbSVtYH3UDQIJwDCw/oLuvOmhyI1WDH1A
-	 yUaOzNI1MvxH8gorkBVlKowACVhzWKuuSVx8gvv0Gbd9BHeGW8cPlAS/6T1reIe0i
-	 Uc/LCL8s0C9ZuRbcFg==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.70.50]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MFaui-1ts2Ff2PrK-009QNs; Thu, 03
- Apr 2025 12:13:33 +0200
-Message-ID: <db778d8c-0a56-4b01-b5b5-5610a68a4875@web.de>
-Date: Thu, 3 Apr 2025 12:13:30 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pls1+a9f"
+Received: by mail-pl1-f196.google.com with SMTP id d9443c01a7336-2240b4de12bso10138605ad.2;
+        Thu, 03 Apr 2025 03:13:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743675239; x=1744280039; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=i1jcYIDsgwV0QbwwcIaFrUZpYunSVhU3f2VZkEk3KyA=;
+        b=Pls1+a9fs0SkgYIL5rh05WaSa9DZIBNikALB4fnJHOLeNRpK9Dtu9p5Y/qjVuWV6Fi
+         7uWWJ/wXSS5APXi4efLlS4FdFBWxNgxRekTyF3t1wznloe+CAo3qt+Ez9Q6a+ECs6WWf
+         Stq5dj37FhztEt40nVidHZFFtjLfiFK8l6jLA46tZq5FBqZir7sZXOK8OvnRYCkL54HE
+         GPMy+FByzCTCtVhQNRdSJdEy9L6GEJyitOK8huWdTFz1hNKe/4rG+I7wl168Nw2fKNY8
+         xQtgLHEWawqb8QL7u1ThX32HPRWhn8FNR+O0rzt4nTMLeeZcly0oVpIrPqo+iRXvc/mz
+         eYOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743675239; x=1744280039;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=i1jcYIDsgwV0QbwwcIaFrUZpYunSVhU3f2VZkEk3KyA=;
+        b=BEzDL8NGkKw4UlBNCNIw/Iq9yMj9qd48KCqrN12L9GzXT92k/avnp1CVQohRpBEVmh
+         MUJQB09O+eP03UIyzkdkoQTdpeRP2MqdF9ReVzqNuA5BKUi6eUua2iVxNFa7762i4o5l
+         pwpaP7syYacE8iiQT+f6kenwaO1npdwSZT73PezASvWqZXcUWqTgL8slutYOXNfJoJHc
+         fRWOKSGBe1KlK7ff20IOHtvAyldqU+3o9YQLytW+Z5Rlq0geF2nfQPfqNAXQPJtWnUI9
+         JTa3RtqoKzw/1jaiLZTx3Mwzr0V3pDA4wsYlJJtekFSSxtChdyR8cGcfi9bzLzH4hEzB
+         +FWw==
+X-Forwarded-Encrypted: i=1; AJvYcCUN6lrMudWbzO5D0pnRFkNixvwLO3EFCMeIlfYNiEKdiWLIuNNaNmECInPZswk11sJ7TcrXj09UamR23WI=@vger.kernel.org, AJvYcCVPWcQLS9HNTiuG7GmF80koQuwVmIt+z+7oJUZlntrex9/jpN75CtR93m1ZF5jrDkGuHw7lb++uu2OQ4wVfBVDE@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZNT0yyla3Wyi2JtP82FH4aKz4d/2MIE0wM17h8IidkmhYFqiL
+	nZy3Ed1veuMynPjFQU6hCsOagS7TLeIIIRmZe8wjLX7NtD5gfQKU
+X-Gm-Gg: ASbGnctmnnSh3UB5i2jtvuJQyuek3+5RHAYX38VRw2xdq108UEFtPdV6Iwg7aEYTgTy
+	Ncc62yQSIBcvdt1wquRZk6uAXDAxYwuWWB39yM+4FjpXhY8E3fgxqy4lJtAocO5eX622fvg36WQ
+	rIBVA4EOwOUCP7Wy8f0vNVv5l5NZtdrn6DhBKHMETmEb00cvaNgMVqKoYtMc78mGe9ri7C+9VIK
+	kK69+M7dSTnexzOlhoJ/ThZPKmhE/5xj07jUtfJ+ogMf28LFb5Rx1vPFZfpQbtMYwlSPt0SJNL1
+	HDwnNdNTzTaRWN0NQppBoFHFTEOXbXrz3I4DB0adhbeb2qvEByQ0sKRALT+Xv3gfc/w=
+X-Google-Smtp-Source: AGHT+IHBEgySem7ZYEyvmalH7tBoil+1mmF1NNG09oSI2oZk3fzOSaRWrhjHXMxCEepBrEitJNny1g==
+X-Received: by 2002:a17:902:ebc3:b0:224:1579:5e91 with SMTP id d9443c01a7336-22977dfe34dmr28809205ad.47.1743675239264;
+        Thu, 03 Apr 2025 03:13:59 -0700 (PDT)
+Received: from sid-Inspiron-15-3525.. ([2401:4900:5084:2815:d682:e65a:7ee2:33e1])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30562c6d29dsm2773042a91.2.2025.04.03.03.13.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Apr 2025 03:13:58 -0700 (PDT)
+From: Siddarth G <siddarthsgml@gmail.com>
+To: shuah@kernel.org
+Cc: akpm@linux-foundation.org,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux-mm@kvack.org,
+	Siddarth G <siddarthsgml@gmail.com>,
+	David Binderman <dcb314@hotmail.com>
+Subject: [PATCH v3] selftests/mm: Convert page_size to unsigned long
+Date: Thu,  3 Apr 2025 15:43:45 +0530
+Message-ID: <20250403101345.29226-1-siddarthsgml@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Henry Martin <bsdhenrymartin@gmail.com>, linux-wireless@vger.kernel.org,
- linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Angelo Gioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Peter Chiu <chui-hao.chiu@mediatek.com>, Felix Fietkau <nbd@nbd.name>,
- Lorenzo Bianconi <lorenzo@kernel.org>,
- Matthias Brugger <matthias.bgg@gmail.com>, Rex Lu <rex.lu@mediatek.com>,
- Ryder Lee <ryder.lee@mediatek.com>, Sean Wang <sean.wang@mediatek.com>,
- Shayne Chen <shayne.chen@mediatek.com>, Shengyu Qu <wiagn233@outlook.com>
-References: <20250403064344.64253-1-bsdhenrymartin@gmail.com>
-Subject: Re: [PATCH] wifi: mt76: mt7996: Fix null-ptr-deref in
- mt7996_mmio_wed_init()
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250403064344.64253-1-bsdhenrymartin@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:FOtUCR65RPzrUtKtMJyZcNJ7HmqKEyao5W6mjn8SRcQgnfwYEcy
- Vo9lS/Mm9+uxpZGS1jxjpgrm/Lwx8EDmB6Epp1Y7Da9+NUjuBH+Z+SJ6VV2MadoSvhaZeif
- 040QMrQ9MFViVVPr/MuinG5f9ckItH7tO/YX3R5jQXIYkaESsA/mNxMIrtZ0dTWhGmyPFiK
- /p7IWI3WNtszVi0Su5vIg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:uDjs4CvjV+I=;wmRCD8VloVebfGs1/wtaZa1Jy7L
- 0VFTlya2kWdcaD8Dj8w/1Izj7gU2p5NAt+6lSZwpAXX9c6GiFlqs8Y5oT3C7h/CiVsDql9dgC
- lC5MmkYneB9E+orqTvaD29PoVqW493rJuft8/RHN49vxnDqKWw/61M081skmmgUbw7mieFh+i
- St4zsIRVxZBJLLOAkAHeNcSGhNMmPthKuRi7eUsbL/+ekADDqzRcn0gbyVJPBZkHcQ2t3hO6K
- r/OKZohys6m64AQFRDa4bARf1cR2Mb1G0j6wYJ7Gp6itDKB/eZaxwcRcBlnHZHEZeSChrTg7U
- QVgcQX/E1IaQS5P94/cJ4AH6iUhy3U58hvQLdPd4Bvh0tAK9deJDHzxAbnAxasC5dnP66FUMS
- rBYiZh+zlTOm3hkafqSPVk3S+rLM1EsRKW2mthCxB+ufYsOeawCLt6avyXpfPxjrcPmjyWlMO
- 2wWO8lZ8RTre1+nFr7hXlywiD1ysAIHzL7yXft7cqaby4GhFnLG4JY4JAt8bbeEJMrAo0R8xn
- 3xQuEaN+ITaoYcMALPFtAL752WQWr+gEKFXAXbHpK6ExpevEvltn2pXtGHt+JrI5lFhX/oBo7
- g7+Vs6Q4GxbIwsS7+E6/q4CYIM/zJCFsIXoyt223uW0h5XZJVBl0Ad/dLtgT6MKCpkR7bUqmN
- reAz0sqQXuFeWHCdfz+EUk4synUvwhbppfRPFmeQu+i09fUE9ZX7UYnWZTRqbRIHqDlG4h6Gn
- 23YKEec49x80SoMQIW7K+WSMgx3qaJhAPph9vW+i1kVkPJbZAurBE3Etk42YUrylWm2lgqFaS
- 9ceLCntgFQWN4tDZ5xQ/lTHftXNV64H2ZYmzk6IMw/PZHYQ1AOEkyFDdQxiglOjulBXzketsx
- vdms2/H0fz1QwG8gEKoxmrDSi9jVUrIK0c19K8V7YPUWo0F6Wl49/WSvBb1YxrrFuXdxM18HC
- f5Xx4Wk6O+HVt/JlbvbEHYck5Vz6cVxBdfOvJAMQvHljfKXu/ONrmXruxMLIRwYrAJESZPXl1
- aF+zmfty7/riduIL+Ao8QJV8tXatzPeiCsJ+/fYdvhF3UOg9hmDjbTNUUHb2UXPHbsrW12ocj
- 7Kp0C5huZMPnznzPUUQreQMW7eOanw1F9UlhbjDwGRtOVZJKB6q3K+nbjm2vn2sivkO81O9o8
- E/Enofk/+b3xjvhq0nSUBP5iW/JX9sjMFMCFZ8EIcF7cFoe64vGCB6aIgPQjCDRNbfa3Q9I43
- +iaeDaRDorYMbp4z+39bSwVRLpiBElEEAtXnKsZ0HSXtqDNRF38JpuTU7Ei3wd+hBXdyhpxpn
- zHs0AyGN8jX+m/J06rNbPNcW/4r1wluIMFHGoNl2uhuzvpjh6R0cvyMUbZ4PsIlSLXdMLv1xT
- 6NgfEKEf6mAFT8DZO8VuqzPkkqLapDW1pClSq9F4UT2wlnaLq19wV+nVbwIkhS401io4qDtqw
- gdDOIGj9nmTsphSflT1GKud+KzdbTGSgUhqFW/+Dtz4tMdGzSF//xhGuyxnyz1psq8Yh3fA==
+Content-Transfer-Encoding: 8bit
 
-=E2=80=A6
-> Add NULL check after devm_ioremap() to prevent this issue.
+Cppcheck warning:
+int result is assigned to long long variable. If the variable is long long
+to avoid loss of information, then you have loss of information.
 
-Can a summary phrase like =E2=80=9CPrevent null pointer dereference in mt7=
-996_mmio_wed_init()=E2=80=9D
-be a bit nicer?
+This patch changes the type of page_size from 'unsigned int' to
+'unsigned long' instead of using ULL suffixes. Changing hpage_size to
+'unsigned long' was considered, but since gethugepage() expects an int,
+this change was avoided.
 
+Reported-by: David Binderman <dcb314@hotmail.com>
+Closes: https://lore.kernel.org/all/AS8PR02MB10217315060BBFDB21F19643E9CA62@AS8PR02MB10217.eurprd02.prod.outlook.com/
 
-=E2=80=A6
-> +++ b/drivers/net/wireless/mediatek/mt76/mt7996/mmio.c
-> @@ -323,6 +323,8 @@ int mt7996_mmio_wed_init(struct mt7996_dev *dev, voi=
-d *pdev_ptr,
->  	wed->wlan.base =3D devm_ioremap(dev->mt76.dev,
->  				      pci_resource_start(pci_dev, 0),
->  				      pci_resource_len(pci_dev, 0));
-> +	if (!wed->wlan.base)
-> +		return -ENOMEM;
+Signed-off-by: Siddarth G <siddarthsgml@gmail.com>
+---
+Changes since v2:
+- v2 had conflict with current mainline, so this is a fresh patch
 
-Can a blank line be desirable after such a statement?
+ tools/testing/selftests/mm/pagemap_ioctl.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-Regards,
-Markus
+diff --git a/tools/testing/selftests/mm/pagemap_ioctl.c b/tools/testing/selftests/mm/pagemap_ioctl.c
+index 57b4bba2b45f..fe5ae8b25ff6 100644
+--- a/tools/testing/selftests/mm/pagemap_ioctl.c
++++ b/tools/testing/selftests/mm/pagemap_ioctl.c
+@@ -34,7 +34,7 @@
+ #define PAGEMAP "/proc/self/pagemap"
+ int pagemap_fd;
+ int uffd;
+-unsigned int page_size;
++unsigned long page_size;
+ unsigned int hpage_size;
+ const char *progname;
+ 
+@@ -184,7 +184,7 @@ void *gethugetlb_mem(int size, int *shmid)
+ 
+ int userfaultfd_tests(void)
+ {
+-	int mem_size, vec_size, written, num_pages = 16;
++	long mem_size, vec_size, written, num_pages = 16;
+ 	char *mem, *vec;
+ 
+ 	mem_size = num_pages * page_size;
+@@ -213,7 +213,7 @@ int userfaultfd_tests(void)
+ 	written = pagemap_ioctl(mem, mem_size, vec, 1, PM_SCAN_WP_MATCHING | PM_SCAN_CHECK_WPASYNC,
+ 				vec_size - 2, PAGE_IS_WRITTEN, 0, 0, PAGE_IS_WRITTEN);
+ 	if (written < 0)
+-		ksft_exit_fail_msg("error %d %d %s\n", written, errno, strerror(errno));
++		ksft_exit_fail_msg("error %ld %d %s\n", written, errno, strerror(errno));
+ 
+ 	ksft_test_result(written == 0, "%s all new pages must not be written (dirty)\n", __func__);
+ 
+@@ -995,7 +995,7 @@ int unmapped_region_tests(void)
+ {
+ 	void *start = (void *)0x10000000;
+ 	int written, len = 0x00040000;
+-	int vec_size = len / page_size;
++	long vec_size = len / page_size;
+ 	struct page_region *vec = malloc(sizeof(struct page_region) * vec_size);
+ 
+ 	/* 1. Get written pages */
+@@ -1051,7 +1051,7 @@ static void test_simple(void)
+ int sanity_tests(void)
+ {
+ 	unsigned long long mem_size, vec_size;
+-	int ret, fd, i, buf_size;
++	long ret, fd, i, buf_size;
+ 	struct page_region *vec;
+ 	char *mem, *fmem;
+ 	struct stat sbuf;
+@@ -1160,7 +1160,7 @@ int sanity_tests(void)
+ 
+ 	ret = stat(progname, &sbuf);
+ 	if (ret < 0)
+-		ksft_exit_fail_msg("error %d %d %s\n", ret, errno, strerror(errno));
++		ksft_exit_fail_msg("error %ld %d %s\n", ret, errno, strerror(errno));
+ 
+ 	fmem = mmap(NULL, sbuf.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
+ 	if (fmem == MAP_FAILED)
+-- 
+2.43.0
+
