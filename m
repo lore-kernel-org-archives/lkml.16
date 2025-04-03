@@ -1,324 +1,132 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD77C1A254E
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 12:59:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E93102475C8;
+	Thu,  3 Apr 2025 13:00:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743685150; cv=none; b=JIM2z6iga3h84dd5yUNGgNpB4RlXKwBHD//zDy8FWnHak0Xtheu6HM7w0VwS6vqiFoTRnVQHtxyKedJYNMGUrR2fOk17tROEFvONZAd85pbYlHBGkMNryaavuX+hajLYxPXHcC9pvTjorNaAPu8sKtMrgnT+iB421HNn3xrDL5I=
+	t=1743685219; cv=none; b=bT1vF40Tbhd1OfVjBwMYxV3oRikJJDC3VCZLzecyyN4nwMO8JJNFMaP8t8Q+4RAnSedC/8BxGYbbxaDWT8ybpz44GjTG839c60Bb34mxrcgz6i57gI3HGpfaoCOZFN8r0NFutnWKOK7nkjfhr/RcSw+qsJbOGrXoRpHaZza+7Nk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743685150; c=relaxed/simple;
-	bh=E8cD2LqBEwH80LYlUEP5hJnICxHO/0q+CzBvyHB7G2Q=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=qfKuqd0mLxQCIN2Ia5eHm3MzL/2rZ2UIwc0oQxdcagMo0zwv/5kIjccdjjZCkg9KYHljpqvW3Tor4jmSjvSMB9fABO8PxmrhDJpk0hnoaXYh6AwOsew8sp0gvT2o5sYpk6s2GQTlTCm/BjpU+BhTIntuaICgb85QDdJgnvRLIOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=l2nvZxwQ; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1743685219; c=relaxed/simple;
+	bh=IEhYObtxppx8CuRi68rU6PopuKt5DVUHoQXFKVtmvYM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kSYg8T3kIQn4xGd29BN42K5XhKRHaAY6O4/wGz2QRRv6ELgqVcumXAelfo7iL/qy1rXaTZ1skXqc7lWjqOT3tw9kr1TOuIJ1GmevsmfWZtBiOsyyDPKOLF626uRA463REO6OeXodbJDGvYtq5WkXEnsiXzo42Jbt501w/K4mZ8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=aZkc34u/; arc=none smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="l2nvZxwQ"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-54954fa61c9so1034283e87.1
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 05:59:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1743685147; x=1744289947; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=easAOJR60mQO+32dXUcDA5ZSVcUQN6ctW/HM++zF4Bc=;
-        b=l2nvZxwQyjpydWl+FUDtP/tKTxfOE2eSagVydaMdlzbbEAQlP4joaZVXGmflSaAY0x
-         +DA+T3w6wkg4xP/SpiXFnFDZEjNSxiNRzMjeGssnQSNzd0MXAZQqzQODymyl40ANdVCs
-         ZO70pu+pAUfbebU1XLkTnbGM7RizwsH7Bj4BU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743685147; x=1744289947;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=easAOJR60mQO+32dXUcDA5ZSVcUQN6ctW/HM++zF4Bc=;
-        b=GMqal5eM5X31tSIckRu3N2xjNdtlblwyQ2AXKiQLDiqajI2ND7SNc907FhO8rUyyXP
-         loGTEYaBx9mSqjaF9hLDKAhzu4qHJBKgobpGVehNYIWyFVc25sx3I3lP1jJ0cqoB8vSG
-         XT1xbjoe0y3t25hXlQ78701l3PuaoXzkhOyeP5AyuSzwpG8uGKK+0AN3cB0vP6p3DRGA
-         wfKMPI5L20YSW7PLPwDjM3cSKImuaVmKBHN7nNeiBYQkCzNVDrhHqe8Bg3gtr22W2/UZ
-         wkd7A4cCnspVr2AJ836M2RqqNwJ58PFZWZ/6UpTtYuv0jp6FLDpvdIoB7fBrVXG7yObZ
-         lY0A==
-X-Forwarded-Encrypted: i=1; AJvYcCXtllFyk05fDr2CHBfYudoyIBm/DCtiM0SJvOQrLT8HQHaAr9TgR+/HHMz+HKn+FZ327e2X2nw3IQspTc0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YziOWtGVtnpZ8U1fFvJp81jOUCVg9GyqnMAXHomoRo3pfy9Ev1k
-	qGuNXP/HZ9HJEs61AqzOTOyuRYtb02lsokyRmdlFWoW4Z+AtcB07LnUZCnwhOt3K+GJ7/PkZUq4
-	=
-X-Gm-Gg: ASbGnctLOg9xBcHsjkP0HtKoezMJ46f4NzX2IpjtMRLMilTOZvqp8pGNVkzfAr6Z5tP
-	Cn0j/Z0mqQ21rCe4QXOBOIl1zN9YWo1jsZ3xdohgDwV6kTeb48TDXa+yP6ZllNrzP0rwo7T1dyE
-	Drv9AZjAMddSO8dULON5O5Eiuy3KPDumx+m33MXhHY0q1kZPnA2BI4jvwcIhTBWamVE5x3sw8Jg
-	MRDK1peNHUSU06QAWd8B5vKCFOe2trxabpbf1C9TKYUGP6m/D0CXUWD13oV8peMk00ZxFi/5ujo
-	0NkXQyxgfxbeQ9j/q5Pct7OdMrrofOx0lIqqrH4H2vwLlQVQLacIDLoJQz4Mk3RPrvpexOqhKj9
-	5ZGTpLwC3jKkVDODkLZuzTynH
-X-Google-Smtp-Source: AGHT+IH6yktCrWOi+5Cwvwc4g3sOE/Ra9/trQ9/qaVk01UzJ/4ZE4d15vH6NuU3GPOugpNMAm3bWsQ==
-X-Received: by 2002:a05:6512:1088:b0:545:8c5:44cb with SMTP id 2adb3069b0e04-54c1d8ab9c3mr780443e87.31.1743685146593;
-        Thu, 03 Apr 2025 05:59:06 -0700 (PDT)
-Received: from ribalda.c.googlers.com (216.148.88.34.bc.googleusercontent.com. [34.88.148.216])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54c1e5c1a93sm151689e87.68.2025.04.03.05.59.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Apr 2025 05:59:05 -0700 (PDT)
-From: Ricardo Ribalda <ribalda@chromium.org>
-Date: Thu, 03 Apr 2025 12:59:02 +0000
-Subject: [PATCH v7] media: uvcvideo: Set V4L2_CTRL_FLAG_DISABLED during
- queryctrl errors
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="aZkc34u/"
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 533BHZtu026188;
+	Thu, 3 Apr 2025 13:00:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=corp-2023-11-20; bh=EP4qpoFtbIDYMe5jqR9VC/GJb0ApO
+	ZouTNUuNyEExxo=; b=aZkc34u/JQdGSuthywaVXAd5l+Ou/7QfLDwQs4eJ9jJCp
+	MwD8rlQAcWu/HUBH/yOHkJtQYiqf+rs46JCwVAiO/Ct8tPPag0fWcuY8tAqX9R63
+	kQJQ8sgcxS5Am3AyrYudWDSg3+zg0+Rkb+3WgQeE67yG9znP5V5wFIVfwFxLGXFY
+	5/ahgILcWAxf2GerKBd4610t+3/lf7FPtGCgz4zjIv49pkqt2bt8fXaUzfbt+cpz
+	Uq261tcqvSDCOkChtLsInUyl6k+uAwfHbId1v0Zzb5OYg36Uz92xJp1pYxGe0ZZU
+	YoyjJUdliLBea/YSGrHB9pivQrOA95Ezat/Dsbgvw==
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 45p79ccxhf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 03 Apr 2025 12:59:59 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 533CpQgN002582;
+	Thu, 3 Apr 2025 12:59:59 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 45pr8t6x82-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 03 Apr 2025 12:59:59 +0000
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 533CxwlR015628;
+	Thu, 3 Apr 2025 12:59:58 GMT
+Received: from ca-dev112.us.oracle.com (ca-dev112.us.oracle.com [10.129.136.47])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 45pr8t6x6x-1;
+	Thu, 03 Apr 2025 12:59:58 +0000
+From: Alok Tiwari <alok.a.tiwari@oracle.com>
+To: bvanassche@acm.org, dledford@redhat.com, jgg@ziepe.ca,
+        linux-rdma@vger.kernel.org, target-devel@vger.kernel.org
+Cc: alok.a.tiwari@oracle.com, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, darren.kenny@oracle.com
+Subject: [PATCH 5.4.y] RDMA/srpt: Support specifying the srpt_service_guid parameter
+Date: Thu,  3 Apr 2025 05:59:13 -0700
+Message-ID: <20250403125955.2553106-1-alok.a.tiwari@oracle.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250403-uvc-eaccess-v7-1-033d0c3d6368@chromium.org>
-X-B4-Tracking: v=1; b=H4sIABWG7mcC/1XMTQ6CMBBA4auQWTumP7QQV9zDuChlSmcBmFYaE
- 8LdbdwYl9/ivQMyJaYMt+aARIUzb2tFd2nAR7fOhDxVgxLKiFZo3ItHct5TztgHba2VRvZaQC2
- eiQK/v7f7ozqkbcFXTOR+Dy3F36NYlDiG1lgVOu/GafCxZrwv1y3NcJ4f1e+M/KMAAAA=
-X-Change-ID: 20250403-uvc-eaccess-8f3666151830
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
- Hans de Goede <hdegoede@redhat.com>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Hans Verkuil <hverkuil@xs4all.nl>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Ricardo Ribalda <ribalda@chromium.org>
-X-Mailer: b4 0.14.2
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-03_05,2025-04-02_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 adultscore=0
+ mlxlogscore=999 mlxscore=0 phishscore=0 suspectscore=0 spamscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2502280000 definitions=main-2504030057
+X-Proofpoint-GUID: 5MT97sSxaMMe9WjphYhxaFP_0cocvPxz
+X-Proofpoint-ORIG-GUID: 5MT97sSxaMMe9WjphYhxaFP_0cocvPxz
 
-To implement VIDIOC_QUERYCTRL, we need to know the minimum, maximum,
-step and flags of the control. For some of the controls, this involves
-querying the actual hardware.
+From: Bart Van Assche <bvanassche@acm.org>
 
-Some non-compliant cameras produce errors when we query them. These
-error can be triggered every time, sometimes, or when other controls do
-not have the "right value". Right now, we populate that error to userspace.
-When an error happens, the v4l2 framework does not copy the v4l2_queryctrl
-struct to userspace. Also, userspace apps are not ready to handle any
-other error than -EINVAL.
+[ Upstream commit fdfa083549de5d50ebf7f6811f33757781e838c0 ]
 
-One of the main usecases of VIDIOC_QUERYCTRL is enumerating the controls
-of a device. This is done using the V4L2_CTRL_FLAG_NEXT_CTRL flag. In
-that usecase, a non-compliant control will make it almost impossible to
-enumerate all controls of the device.
+Make loading ib_srpt with this parameter set work. The current behavior is
+that setting that parameter while loading the ib_srpt kernel module
+triggers the following kernel crash:
 
-A control with an invalid max/min/step/flags is better than non being
-able to enumerate the rest of the controls.
+BUG: kernel NULL pointer dereference, address: 0000000000000000
+Call Trace:
+ <TASK>
+ parse_one+0x18c/0x1d0
+ parse_args+0xe1/0x230
+ load_module+0x8de/0xa60
+ init_module_from_file+0x8b/0xd0
+ idempotent_init_module+0x181/0x240
+ __x64_sys_finit_module+0x5a/0xb0
+ do_syscall_64+0x5f/0xe0
+ entry_SYSCALL_64_after_hwframe+0x6e/0x76
 
-This patch:
-- Retries for an extra attempt to read the control, to avoid spurious
-  errors. More attempts do not seem to produce better results in the
-  tested hardware.
-- Makes VIDIOC_QUERYCTRL return 0 in all the error cases different than
-  -EINVAL.
-- Introduces a warning in dmesg so we can have a trace of what has happened
-  and sets the V4L2_CTRL_FLAG_DISABLED.
-- Makes sure we keep returning V4L2_CTRL_FLAG_DISABLED for all the next
-  attempts to query that control (other operations have the same
-  functionality as now).
-
-Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+Cc: LiHonggang <honggangli@163.com>
+Reported-by: LiHonggang <honggangli@163.com>
+Fixes: a42d985bd5b2 ("ib_srpt: Initial SRP Target merge for v3.3-rc1")
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Link: https://lore.kernel.org/r/20240205004207.17031-1-bvanassche@acm.org
+Signed-off-by: Leon Romanovsky <leon@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+[Alok: Backport to 5.4.y since the commit has already been backported to
+5.15y, 5.10.y, and 4.19.y]
+Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
 ---
-Hi 2*Hans and Laurent!
+ drivers/infiniband/ulp/srpt/ib_srpt.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-I came around a device that was listing just a couple of controls when
-it should be listing much more.
-
-Some debugging later I found that the device was returning -EIO when
-all the focal controls were read.
-
-Lots of good arguments in favor/against this patch in the v1. Please
-check!
-
-Without this patch:
-$ v4l2-ctl --list-ctrls
-User Controls
-
-                     brightness 0x00980900 (int)    : min=0 max=255 step=1 default=128 value=128
-                       contrast 0x00980901 (int)    : min=0 max=100 step=1 default=32 value=32
-                     saturation 0x00980902 (int)    : min=0 max=100 step=1 default=64 value=64
-                            hue 0x00980903 (int)    : min=-180 max=180 step=1 default=0 value=0
-        white_balance_automatic 0x0098090c (bool)   : default=1 value=1
-                          gamma 0x00980910 (int)    : min=90 max=150 step=1 default=120 value=120
-           power_line_frequency 0x00980918 (menu)   : min=0 max=2 default=2 value=2 (60 Hz)
-      white_balance_temperature 0x0098091a (int)    : min=2800 max=6500 step=1 default=4600 value=4600 flags=inactive
-
-With this patch:
-$ v4l2-ctl --list-ctrls
-
-User Controls
-
-                     brightness 0x00980900 (int)    : min=0 max=255 step=1 default=128 value=128
-                       contrast 0x00980901 (int)    : min=0 max=100 step=1 default=32 value=32
-                     saturation 0x00980902 (int)    : min=0 max=100 step=1 default=64 value=64
-                            hue 0x00980903 (int)    : min=-180 max=180 step=1 default=0 value=0
-        white_balance_automatic 0x0098090c (bool)   : default=1 value=1
-                          gamma 0x00980910 (int)    : min=90 max=150 step=1 default=120 value=120
-           power_line_frequency 0x00980918 (menu)   : min=0 max=2 default=2 value=2 (60 Hz)
-      white_balance_temperature 0x0098091a (int)    : min=2800 max=6500 step=1 default=4600 value=4600 flags=inactive
-                      sharpness 0x0098091b (int)    : min=0 max=7 step=1 default=3 value=3
-         backlight_compensation 0x0098091c (int)    : min=0 max=2 step=1 default=1 value=1
-[   32.777643] usb 3-6: UVC non compliance: permanently disabling control 98091b (Sharpness), due to error -5
-
-Camera Controls
-
-                  auto_exposure 0x009a0901 (menu)   : min=0 max=3 default=3 value=3 (Aperture Priority Mode)
-         exposure_time_absolute 0x009a0902 (int)    : min=2 max=1250 step=1 default=156 value=156 flags=inactive
-     exposure_dynamic_framerate 0x009a0903 (bool)   : default=0 value=0
-                        privacy 0x009a0910 (bool)   : default=0 value=0 flags=read-only
-   region_of_interest_rectangle 0x009a1901 (unknown): type=107 value=unsupported payload type flags=has-payload
-  region_of_interest_auto_ctrls 0x009a1902 (bitmask): max=0x00000001 default=0x00000001 value=1
-
-Emulating error with:
-+       if (cs == UVC_PU_SHARPNESS_CONTROL && query == UVC_GET_MAX) {
-+               printk(KERN_ERR "%s:%d %s\n", __FILE__, __LINE__, __func__);
-+               return -EIO;
-+       }
-In uvc_query_ctrl()
----
-Changes in v7:
-- Only retry on -EIO (Thanks Hans).
-- Add comment for retry (Thanks Hans).
-- Rebase patch
-- Check master_map->disabled before reading the master control.
-- Link to v6: https://lore.kernel.org/r/20250310-uvc-eaccess-v6-1-bf4562f7cabd@chromium.org
-
-Changes in v6:
-- Keep returning V4L2_CTRL_FLAG_DISABLED in future control queries.
-- Link to v5: https://lore.kernel.org/r/20250224-uvc-eaccess-v5-1-690d73bcef28@chromium.org
-
-Changes in v5:
-- Explain the retry in the commit message (Thanks Laurent).
-- Link to v4: https://lore.kernel.org/r/20250111-uvc-eaccess-v4-1-c7759bfd1bd4@chromium.org
-
-Changes in v4:
-- Display control name (Thanks Hans)
-- Link to v3: https://lore.kernel.org/r/20250107-uvc-eaccess-v3-1-99f3335d5133@chromium.org
-
-Changes in v3:
-- Add a retry mechanism during error.
-- Set V4L2_CTRL_FLAG_DISABLED flag.
-- Link to v2: https://lore.kernel.org/r/20241219-uvc-eaccess-v2-1-bf6520c8b86d@chromium.org
-
-Changes in v2:
-- Never return error, even if we are not enumerating the controls
-- Improve commit message.
-- Link to v1: https://lore.kernel.org/r/20241213-uvc-eaccess-v1-1-62e0b4fcc634@chromium.org
----
- drivers/media/usb/uvc/uvc_ctrl.c | 53 ++++++++++++++++++++++++++++++++++------
- drivers/media/usb/uvc/uvcvideo.h |  2 ++
- 2 files changed, 47 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/media/usb/uvc/uvc_ctrl.c b/drivers/media/usb/uvc/uvc_ctrl.c
-index cbf19aa1d82374a08cf79b6a6787fa348b83523a..b41fed364d54aefd7da72c47197cf9d9e3c1b176 100644
---- a/drivers/media/usb/uvc/uvc_ctrl.c
-+++ b/drivers/media/usb/uvc/uvc_ctrl.c
-@@ -1483,14 +1483,28 @@ static u32 uvc_get_ctrl_bitmap(struct uvc_control *ctrl,
- 	return ~0;
- }
+diff --git a/drivers/infiniband/ulp/srpt/ib_srpt.c b/drivers/infiniband/ulp/srpt/ib_srpt.c
+index d03a4f2e006f..f5fd8c1058ce 100644
+--- a/drivers/infiniband/ulp/srpt/ib_srpt.c
++++ b/drivers/infiniband/ulp/srpt/ib_srpt.c
+@@ -79,12 +79,16 @@ module_param(srpt_srq_size, int, 0444);
+ MODULE_PARM_DESC(srpt_srq_size,
+ 		 "Shared receive queue (SRQ) size.");
  
-+/*
-+ * Maximum retry count to avoid spurious errors with controls. Increase this
-+ * value does no seem to produce better results in the tested hardware.
-+ */
-+#define MAX_QUERY_RETRIES 2
-+
- static int __uvc_queryctrl_boundaries(struct uvc_video_chain *chain,
- 				      struct uvc_control *ctrl,
- 				      struct uvc_control_mapping *mapping,
- 				      struct v4l2_query_ext_ctrl *v4l2_ctrl)
++static int srpt_set_u64_x(const char *buffer, const struct kernel_param *kp)
++{
++	return kstrtou64(buffer, 16, (u64 *)kp->arg);
++}
+ static int srpt_get_u64_x(char *buffer, const struct kernel_param *kp)
  {
- 	if (!ctrl->cached) {
--		int ret = uvc_ctrl_populate_cache(chain, ctrl);
--		if (ret < 0)
-+		unsigned int retries;
-+		int ret;
-+
-+		for (retries = 0; retries < MAX_QUERY_RETRIES; retries++) {
-+			ret = uvc_ctrl_populate_cache(chain, ctrl);
-+			if (ret != -EIO)
-+				break;
-+		}
-+
-+		if (ret)
- 			return ret;
- 	}
- 
-@@ -1567,6 +1581,7 @@ static int __uvc_query_v4l2_ctrl(struct uvc_video_chain *chain,
- {
- 	struct uvc_control_mapping *master_map = NULL;
- 	struct uvc_control *master_ctrl = NULL;
-+	int ret;
- 
- 	memset(v4l2_ctrl, 0, sizeof(*v4l2_ctrl));
- 	v4l2_ctrl->id = mapping->id;
-@@ -1587,18 +1602,29 @@ static int __uvc_query_v4l2_ctrl(struct uvc_video_chain *chain,
- 		__uvc_find_control(ctrl->entity, mapping->master_id,
- 				   &master_map, &master_ctrl, 0, 0);
- 	if (master_ctrl && (master_ctrl->info.flags & UVC_CTRL_FLAG_GET_CUR)) {
-+		unsigned int retries;
- 		s32 val;
- 		int ret;
- 
- 		if (WARN_ON(uvc_ctrl_mapping_is_compound(master_map)))
- 			return -EIO;
- 
--		ret = __uvc_ctrl_get(chain, master_ctrl, master_map, &val);
--		if (ret < 0)
--			return ret;
-+		for (retries = 0; retries < MAX_QUERY_RETRIES; retries++) {
-+			ret = __uvc_ctrl_get(chain, master_ctrl, master_map,
-+					     &val);
-+			if (ret != -EIO)
-+				break;
-+		}
- 
--		if (val != mapping->master_manual)
--			v4l2_ctrl->flags |= V4L2_CTRL_FLAG_INACTIVE;
-+		if (ret < 0) {
-+			dev_warn_ratelimited(&chain->dev->udev->dev,
-+					     "UVC non compliance: Error %d querying master control %x (%s)\n",
-+					     ret, master_map->id,
-+					     uvc_map_get_name(master_map));
-+		} else {
-+			if (val != mapping->master_manual)
-+				v4l2_ctrl->flags |= V4L2_CTRL_FLAG_INACTIVE;
-+		}
- 	}
- 
- 	v4l2_ctrl->elem_size = uvc_mapping_v4l2_size(mapping);
-@@ -1613,7 +1639,18 @@ static int __uvc_query_v4l2_ctrl(struct uvc_video_chain *chain,
- 		return 0;
- 	}
- 
--	return __uvc_queryctrl_boundaries(chain, ctrl, mapping, v4l2_ctrl);
-+	ret = __uvc_queryctrl_boundaries(chain, ctrl, mapping, v4l2_ctrl);
-+	if (ret && !mapping->disabled) {
-+		dev_warn(&chain->dev->udev->dev,
-+			 "UVC non compliance: permanently disabling control %x (%s), due to error %d\n",
-+			 mapping->id, uvc_map_get_name(mapping), ret);
-+		mapping->disabled = true;
-+	}
-+
-+	if (mapping->disabled)
-+		v4l2_ctrl->flags |= V4L2_CTRL_FLAG_DISABLED;
-+
-+	return 0;
+ 	return sprintf(buffer, "0x%016llx", *(u64 *)kp->arg);
  }
+-module_param_call(srpt_service_guid, NULL, srpt_get_u64_x, &srpt_service_guid,
+-		  0444);
++module_param_call(srpt_service_guid, srpt_set_u64_x, srpt_get_u64_x,
++		  &srpt_service_guid, 0444);
+ MODULE_PARM_DESC(srpt_service_guid,
+ 		 "Using this value for ioc_guid, id_ext, and cm_listen_id instead of using the node_guid of the first HCA.");
  
- int uvc_query_v4l2_ctrl(struct uvc_video_chain *chain,
-diff --git a/drivers/media/usb/uvc/uvcvideo.h b/drivers/media/usb/uvc/uvcvideo.h
-index b4ee701835fc016474d2cd2a0b67b2aa915c1c60..8e3753896d42baddcc2192057e8c5786ddd79fa8 100644
---- a/drivers/media/usb/uvc/uvcvideo.h
-+++ b/drivers/media/usb/uvc/uvcvideo.h
-@@ -134,6 +134,8 @@ struct uvc_control_mapping {
- 	s32 master_manual;
- 	u32 slave_ids[2];
- 
-+	bool disabled;
-+
- 	const struct uvc_control_mapping *(*filter_mapping)
- 				(struct uvc_video_chain *chain,
- 				struct uvc_control *ctrl);
-
----
-base-commit: 4e82c87058f45e79eeaa4d5bcc3b38dd3dce7209
-change-id: 20250403-uvc-eaccess-8f3666151830
-
-Best regards,
 -- 
-Ricardo Ribalda <ribalda@chromium.org>
+2.46.0
 
