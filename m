@@ -1,68 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BC4129408;
-	Thu,  3 Apr 2025 13:56:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1259524DFF6;
+	Thu,  3 Apr 2025 13:56:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743688581; cv=none; b=Ak+cg2xJow+uQTs7JIXFAEX5y5wIlW9Zpm1WosVnrcLH4kU4PaCGRoKKM1W+JAOeBt4x9aRGCiFnL/tswY/bP2yka83p0UwbFYu7GLb3RFn1B/Q01+aPgaTPA6nE+ZcV3ugl/ynZ65ugsKDcwtU545E3lFEiT7ZVzsuQjy5VXUg=
+	t=1743688602; cv=none; b=cE6qfKnFFts7MabNgNvF53yBYRKN/ZixqmUaK0Q8ZUQI25wt1Mg+GVyhKBPQtctydXER8VK5QK1sz5LJJ50PBNDTViUD3HJMOCadehIbO70TzUh6UF4n2KVoMi7a7pCBHt6108Dy9wfRKrZsPGvCbx/QQC1aGmsAS2vdcPaZG74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743688581; c=relaxed/simple;
-	bh=62E5HgCKjcIT+fx8INJNpFFzLIytqfqtqbYBcHFud4g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R//d17Us+un+Hu6XDM0NnH8IeOZd3t+cLyrinE0KUyujbXZScXFRUP+ENsOUkenQiX0hfPFsLCa5reBpzyYfSp54+ZsiNX6TjeIb/AmfpdyZEjvq11ptzaWqq2Cab1HEOHQ7/iwnr2uPzXUHliEe5qMMcO9FGKnO6+7rhu/L5uk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=joU801Or; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743688602; c=relaxed/simple;
+	bh=suss+3KdxNtwu7lv5hZut4gmYE4qbfjUSZJJMIK0QII=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=aE13YDP+DPpMSnQKPE4x5zXlU7MfWWJ27+bOj8kQVyF6bb0khUqrVBgvhNh5Ex16KS8onQpvfLclXj33qYWvZFR2W1h7xzvkLN/gPh9s3jIGLQ2Fb7vB8iShdQ2JdFygxNnqvTnSO6NVKFxVUKkspREHniPOLISzRDOujwXX/GE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=TYZnvs7d; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BatiqPzR; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="joU801Or"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29477C4CEE3;
-	Thu,  3 Apr 2025 13:56:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1743688579;
-	bh=62E5HgCKjcIT+fx8INJNpFFzLIytqfqtqbYBcHFud4g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=joU801Oro2TYq10uNpSr6iVSiRaKGaI6juNlM9C3K0nB1H2lLgeAbuUNb+p5o6IQz
-	 SdE1sh0NzUx1GM02Ojn/rv9JxOjvG0Jmg7PTTuoNRbS14FKh3FEqrJAVMKmt5xB4Ly
-	 UNmc6fxXpNRjMJ38McM1otUP+Pby7Qu1oeu3MqrE=
-Date: Thu, 3 Apr 2025 14:54:52 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
-Cc: outreachy@lists.linux.dev, julia.lawall@inria.fr,
-	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org,
-	andy@kernel.org, hdegoede@redhat.com, mchehab@kernel.org,
-	sakari.ailus@linux.intel.com
-Subject: Re: [PATCH v2 1/3] staging: media: Remove duplicate NULL tests on a
- value in pci
-Message-ID: <2025040320-fraction-bagel-ea64@gregkh>
-References: <cover.1743685415.git.abrahamadekunle50@gmail.com>
- <26990d4a9d4419f9d4155a40595bc213acb671a0.1743685415.git.abrahamadekunle50@gmail.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TYZnvs7d";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BatiqPzR"
+Date: Thu, 03 Apr 2025 13:56:36 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1743688599;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Ycr9ur7Hw0si9YtJh0DzdUVV52Tx48gowXs9ced/4E8=;
+	b=TYZnvs7dvXG9uh4hTcV6J0HwgjlDcWCIUOJEWuMdt7rf1LT8KvQJoQpmzGNwRadF2FlF6S
+	bWVYtM6cVCnBpjGKTx1vqXl38T+jcywMM2xToG92sJCpSKbZC6I5fA4dzUq79yGGkXayXx
+	CVNNQ/fHr2DhwMPY4y2fiHUhdODuLMtEc7i2opa/8ORMkIoNGWe1eLd3wBykfyVcn0mcnS
+	4EbF+GIWiV9s8DAMHtgnBPovQ8c6r43SXMLWf4lhcaQwpbZLgB+WZB1HOWsJ1fYM4HqpaH
+	QPVAmDyboeefXNY20JXhDlURd4UnzEOEPGjmcTQOBo9KqPZLOB0sLnK02JPLLQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1743688599;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Ycr9ur7Hw0si9YtJh0DzdUVV52Tx48gowXs9ced/4E8=;
+	b=BatiqPzRAq58I9nfXgS4vPUKVyH+F79VPdE/xHr9ku1aFblF+LFxI6aI7Gst+bjwxYUm5t
+	Lxy9zyZ0n4P0ViBg==
+From: "tip-bot2 for Uros Bizjak" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject:
+ [tip: x86/mm] x86/idle: Use MONITOR and MWAIT mnemonics in <asm/mwait.h>
+Cc: kernel test robot <lkp@intel.com>, Uros Bizjak <ubizjak@gmail.com>,
+ Ingo Molnar <mingo@kernel.org>, "Borislav Petkov (AMD)" <bp@alien8.de>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250403125111.429805-1-ubizjak@gmail.com>
+References: <20250403125111.429805-1-ubizjak@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <26990d4a9d4419f9d4155a40595bc213acb671a0.1743685415.git.abrahamadekunle50@gmail.com>
+Message-ID: <174368859629.31282.7883834096892979215.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Thu, Apr 03, 2025 at 02:26:41PM +0100, Abraham Samuel Adekunle wrote:
-> When a value has been tested for NULL in an expression, a
-> second NULL test on the same value in another expression
-> is unnecessary when the value has not been assigned NULL.
-> 
-> Remove unnecessary duplicate NULL tests on the same value that
-> has previously been NULL tested.
-> 
-> Found by Coccinelle
-> 
-> Signed-off-by: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
-> ---
->  drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c | 2 +-
+The following commit has been merged into the x86/mm branch of tip:
 
-I can't take any drivers/staging/media/ changes for outreachy
-applications, sorry.  That should have been in the instructions
-somewhere.
+Commit-ID:     defea9e60d3f440ca8da070a478f668fec0ba659
+Gitweb:        https://git.kernel.org/tip/defea9e60d3f440ca8da070a478f668fec0ba659
+Author:        Uros Bizjak <ubizjak@gmail.com>
+AuthorDate:    Thu, 03 Apr 2025 14:50:45 +02:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Thu, 03 Apr 2025 15:27:50 +02:00
 
-thanks,
+x86/idle: Use MONITOR and MWAIT mnemonics in <asm/mwait.h>
 
-greg k-h
+Current minimum required version of binutils is 2.25,
+which supports MONITOR and MWAIT instruction mnemonics.
+
+Replace the byte-wise specification of MONITOR and
+MWAIT with these proper mnemonics.
+
+No functional change intended.
+
+Note: LLVM assembler is not able to assemble correct forms of MONITOR
+and MWAIT instructions with explicit operands and reports:
+
+  error: invalid operand for instruction
+          monitor %rax,%ecx,%edx
+                       ^~~~
+  # https://lore.kernel.org/oe-kbuild-all/202504030802.2lEVBSpN-lkp@intel.com/
+
+Use instruction mnemonics with implicit operands to
+work around this issue.
+
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Acked-by: Borislav Petkov (AMD) <bp@alien8.de>
+Link: https://lore.kernel.org/r/20250403125111.429805-1-ubizjak@gmail.com
+---
+ arch/x86/include/asm/mwait.h | 17 ++++++++---------
+ 1 file changed, 8 insertions(+), 9 deletions(-)
+
+diff --git a/arch/x86/include/asm/mwait.h b/arch/x86/include/asm/mwait.h
+index 6a2ec20..26b68ee 100644
+--- a/arch/x86/include/asm/mwait.h
++++ b/arch/x86/include/asm/mwait.h
+@@ -27,9 +27,9 @@
+ 
+ static __always_inline void __monitor(const void *eax, u32 ecx, u32 edx)
+ {
+-	/* "monitor %eax, %ecx, %edx;" */
+-	asm volatile(".byte 0x0f, 0x01, 0xc8;"
+-		     :: "a" (eax), "c" (ecx), "d"(edx));
++	/* Use the instruction mnemonic with implicit operands, as the LLVM
++	   assembler fails to assemble the mnemonic with explicit operands. */
++	asm volatile("monitor" :: "a" (eax), "c" (ecx), "d" (edx));
+ }
+ 
+ static __always_inline void __monitorx(const void *eax, u32 ecx, u32 edx)
+@@ -43,9 +43,9 @@ static __always_inline void __mwait(u32 eax, u32 ecx)
+ {
+ 	mds_idle_clear_cpu_buffers();
+ 
+-	/* "mwait %eax, %ecx;" */
+-	asm volatile(".byte 0x0f, 0x01, 0xc9;"
+-		     :: "a" (eax), "c" (ecx));
++	/* Use the instruction mnemonic with implicit operands, as the LLVM
++	   assembler fails to assemble the mnemonic with explicit operands. */
++	asm volatile("mwait" :: "a" (eax), "c" (ecx));
+ }
+ 
+ /*
+@@ -95,9 +95,8 @@ static __always_inline void __mwaitx(u32 eax, u32 ebx, u32 ecx)
+ static __always_inline void __sti_mwait(u32 eax, u32 ecx)
+ {
+ 	mds_idle_clear_cpu_buffers();
+-	/* "mwait %eax, %ecx;" */
+-	asm volatile("sti; .byte 0x0f, 0x01, 0xc9;"
+-		     :: "a" (eax), "c" (ecx));
++
++	asm volatile("sti; mwait" :: "a" (eax), "c" (ecx));
+ }
+ 
+ /*
