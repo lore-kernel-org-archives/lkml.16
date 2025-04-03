@@ -1,108 +1,108 @@
-Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E7C12E3385;
-	Thu,  3 Apr 2025 10:40:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0361B2E3385;
+	Thu,  3 Apr 2025 10:40:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743676830; cv=none; b=Jomf42lnXVUPv5HvEGKxt9fAAHoypWQ80bSlXTX/MBHIXSBts3JrL1xwSopzodRyFKomGFO6FmutpoLq1a+ub2scbF1SA/d5NCLIhPFJ2UZyy78dC36o/V+D1KnmtBJNRHa6qe0i1I9POg2U7qLu/wN1oPnMThOoShq7yVhNOgo=
+	t=1743676834; cv=none; b=Uz4mBiJqbjZZb9y2prM5cAvSFGE9YPDm3VNBO57ctr8qKjiViwJaP0f5yxwVt2yTaCZAn4sCbKKk97LdjVrEsVLobOg57C4ai0ToO9Nwpm7zRWWTrLf1vE5sRS/9hBbEUnoP2cEHkC2e7XuhDqpoe4oze2hWn2jtRa4564vOXMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743676830; c=relaxed/simple;
-	bh=hoYH4U5j+7N4XYJinzRVDfRiiFxe9jZtYpOZfODRWvs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YZfuFSgOwNIjJL0e6Zfv4YmXBrPG70F6WhtcG6FVPYE5B66VNA1WWr5d4JwkdkGnCVJYURM3f2vxA87MNNxpIW+Uqtp0mA8nft4a2juuLQs55AfKgh7bTuFjgJNpRFuen2kwp/zlnT28CJ6ACyOuW8QmNH469Yw8H7Ch2HLM4n8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost.localdomain (unknown [124.16.141.245])
-	by APP-03 (Coremail) with SMTP id rQCowABXA0CPZe5nlBB5BQ--.32803S2;
-	Thu, 03 Apr 2025 18:40:17 +0800 (CST)
-From: Wentao Liang <vulab@iscas.ac.cn>
-To: dlemoal@kernel.org,
-	cassel@kernel.org
-Cc: linux-ide@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Wentao Liang <vulab@iscas.ac.cn>
-Subject: [PATCH] libata: Add error handling for pdc20621_i2c_read().
-Date: Thu,  3 Apr 2025 18:39:57 +0800
-Message-ID: <20250403103957.2550-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.42.0.windows.2
+	s=arc-20240116; t=1743676834; c=relaxed/simple;
+	bh=QZV+Jwa06LV3pB3TnFEgDUTXRcBThFgYmeYH7w2JDSk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=aqNnEpYJZOSglWqsqxw2a1RPmpMHf0ln5xSKali+69Bqm5U3Ad5rsdk8Ssa8UD7YCC7IkTkVzsjAjESpgURFFSzl+B2UuGeMvHkDc2tpxQHym+CIAUxHwwAcgEyMEi3ufZG0lr9EPIgFW+PEOk3tI8YNk5k1ZXekMqOh+Jm6ldM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UMcGyA3s; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UMcGyA3s"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5e6f4b3ebe5so1407782a12.0;
+        Thu, 03 Apr 2025 03:40:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743676831; x=1744281631; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QZV+Jwa06LV3pB3TnFEgDUTXRcBThFgYmeYH7w2JDSk=;
+        b=UMcGyA3syGB3XAN89/cL5UN8yWDUNDSmFO027x8tX2kmwKCbXjhsNDHntxf1ijzlwS
+         TEEXyNJGn4Tt71aAH05g+tjaYHtlHR4FenVMWtaxGIIwNMxON4jf1fdQEesaDqgsRY2O
+         y9Qc+lIWDjxD0iKFIH3LlqF4PvX7OLnyURkWuRucC/RpFxSiYfZ80Ygxnl8BZmxIi4A5
+         8/+FqSHFbdH9C1/GT7k3KsjUjxkgzaOyVUvZlSO2OTw8Jw6iOsMMArCiYS8s8M83tN7a
+         fBaKy/0MIYkfCvhkf6JvM/8FGBwwCTfvAMGLfaOEE6wDot/vRn3XdXQwYop8jpK0BBF8
+         p7kQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743676831; x=1744281631;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QZV+Jwa06LV3pB3TnFEgDUTXRcBThFgYmeYH7w2JDSk=;
+        b=Fz4eSroRvg17H5syM7pQJEbNiEqbnE8VWTnX10m/tNV98vPoGhdPaOR1v2kD8+DKpN
+         DNAorkOSJU2zmxtIjP63icx5n8QlUgILmDFfc4JVnc8FoY12NFvnWe/bdlLqvZHCGijd
+         yIZmlBb4Yfxt5Ac5P8j1Q1mITW2QLEpgxLJH/t5+oAWkpTpF3QyGypUfRTD8oJ/T8BP5
+         ujhItuI1/TvMEZlxzgaXICx5YKpCwh6JOnkMlLWddloTevBodrbFWOTKwJBJAwbBhW0d
+         QUVwj4w7PjY/2BSRL0O0AAhwYpbp6iO4eEFfDuJCVA6sqZgBbKJN8qnXnZgU6q8zCnzv
+         3p9g==
+X-Forwarded-Encrypted: i=1; AJvYcCW6aX08jZx3l4dtIEUT2C81UPz9mDe53g7nZ3s1tCJSnGNgGUG5bm7K2GZ+RbAUoxcSKuwWygG42+cvDo4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyjzCk+NuYe4XaU0UIM43pCQ7pW6LUo7hxTPkIcebahi+TTDSnO
+	mI84a3vuGRJ+qI10XVoV8bsX18w9hFs0MJZqWFsyCXutK8G8xsYhn2OAVI5nPCA02Js/D7pDyXG
+	n1lk4PkVzYXDK1FXCHzPqiUuSI3tjoA==
+X-Gm-Gg: ASbGnctbpitWDevsswDbuQU6K7FjdDxQTQXfNPyle1VcEW2iD4xz/1BJewqHr7ltBgs
+	HRL8TJ7Xn1TylZSWLRv4E8DsZUBSbEXFRHMKRjq5Y2rY2/LOnIxD7OVajEy7BRh0ntO6WWbR/by
+	y4H+UISgIS0pTyhqoOCcB5RJ9N
+X-Google-Smtp-Source: AGHT+IEQPhBtGUdnoz3s0qNXLga18NaHdD4DE6ch+TIQ04QvVm4UhWe3gP+S8/DLGViop5zLgQnVqHBMZa+rUglvWiU=
+X-Received: by 2002:a05:6402:4407:b0:5e5:cb92:e760 with SMTP id
+ 4fb4d7f45d1cf-5f0871bde0bmr1742730a12.17.1743676830999; Thu, 03 Apr 2025
+ 03:40:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:rQCowABXA0CPZe5nlBB5BQ--.32803S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7WFykuFW7Zr1UCFW8Xw17Awb_yoW8trWxpr
-	4xKas8KryUW3W2vFy3JrsxXFyrWw4kGa42kFWkC34fZw1Sqws7ZFyIgayrt3WjkF17W3Wx
-	Z3W8tFWkCrWUXrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvv14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-	6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kKe7AKxVWU
-	AVWUtwCY02Avz4vE14v_Gw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr
-	1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE
-	14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7
-	IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E
-	87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73Uj
-	IFyTuYvjfUejgxUUUUU
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiBwoBA2fuKuvzSwAAs-
+References: <20250401050847.1071675-1-mjguzik@gmail.com> <20250401-erwehren-zornig-bc18d8f139e6@brauner>
+ <CAGudoHF_Nfjq1nLZhMbFr3GJz-z=9Z4goacCgXbifxrQX7yiwA@mail.gmail.com>
+ <20250403-tunnel-lethargisch-810d83030763@brauner> <CAGudoHFWrxxy8eMO1gz782aUA-7JobSTWYpuxuD-iR=UvYofmA@mail.gmail.com>
+In-Reply-To: <CAGudoHFWrxxy8eMO1gz782aUA-7JobSTWYpuxuD-iR=UvYofmA@mail.gmail.com>
+From: Mateusz Guzik <mjguzik@gmail.com>
+Date: Thu, 3 Apr 2025 12:40:18 +0200
+X-Gm-Features: ATxdqUFx5peadaURUYxhv1U4McCTJvNV5oXpbwVf0Nn5JFqMaD8yEEopUHiFlno
+Message-ID: <CAGudoHEkZfPNN9XeFo84OMMEoKXn+iSRF-iSVqKSH_c7NOKFwg@mail.gmail.com>
+Subject: Re: [PATCH] fs: remove stale log entries from fs/namei.c
+To: Christian Brauner <brauner@kernel.org>
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The pdc20621_prog_dimm0() calls the pdc20621_i2c_read(), but does not
-handle the error if the read fails. This could lead to process with
-invalid data. A proper inplementation can be found in
-pdc20621_prog_dimm_global(). As mentioned in its commit:
-bb44e154e25125bef31fa956785e90fccd24610b, the variable spd0 might be
-used uninitialized when pdc20621_i2c_read() fails.
+On Thu, Apr 3, 2025 at 12:39=E2=80=AFPM Mateusz Guzik <mjguzik@gmail.com> w=
+rote:
+>
+> On Thu, Apr 3, 2025 at 10:39=E2=80=AFAM Christian Brauner <brauner@kernel=
+.org> wrote:
+> > I'm thoroughly confused how this would be a meaningful April fools joke=
+?
+> >
+> > The comments in that file are literally 20+ years old and no one has
+> > ever bothered to add new updates there even though Al, Neil, Jeff,
+> > myself and a lot of others probably rewrote that file a gazillion numbe=
+r
+> > of times together or significantly or at least subtly changed the rules=
+.
+> >
+>
+> I agree they need to go. The joke part was not the removal, but the
+> addition my own log entry stating the removal has happened.
+>
+> A genuine removal might have ran into opposition and I'm happy it did not=
+.
+>
+> That said, my "submission" does not even have a commit message.
+>
+> Perhaps it would be most expedient if you committed the removal and
+> repurposed part of your response. No need to mention in any capacity
+> in such a change.
+> --
 
-Add error handling to the pdc20621_i2c_read(). If a read operation fails,
-an error message is logged via dev_err(), and return an under-zero value
-to represent error situlation.
-
-Add error handling to pdc20621_prog_dimm0() in pdc20621_dimm_init(), and
-return a none-zero value when pdc20621_prog_dimm0() fails.
-
-Fixes: 4447d3515616 ("libata: convert the remaining SATA drivers to new init model")
-Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
----
- drivers/ata/sata_sx4.c | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/ata/sata_sx4.c b/drivers/ata/sata_sx4.c
-index a482741eb181..a4027eb2fb66 100644
---- a/drivers/ata/sata_sx4.c
-+++ b/drivers/ata/sata_sx4.c
-@@ -1117,9 +1117,14 @@ static int pdc20621_prog_dimm0(struct ata_host *host)
- 	mmio += PDC_CHIP0_OFS;
- 
- 	for (i = 0; i < ARRAY_SIZE(pdc_i2c_read_data); i++)
--		pdc20621_i2c_read(host, PDC_DIMM0_SPD_DEV_ADDRESS,
--				  pdc_i2c_read_data[i].reg,
--				  &spd0[pdc_i2c_read_data[i].ofs]);
-+		if (!pdc20621_i2c_read(host, PDC_DIMM0_SPD_DEV_ADDRESS,
-+				       pdc_i2c_read_data[i].reg,
-+				       &spd0[pdc_i2c_read_data[i].ofs])){
-+			dev_err(host->dev,
-+				"Failed in i2c read at index %d: device=%#x, reg=%#x\n",
-+				i, PDC_DIMM0_SPD_DEV_ADDRESS, pdc_i2c_read_data[i].reg);
-+			return -1;
-+		}
- 
- 	data |= (spd0[4] - 8) | ((spd0[21] != 0) << 3) | ((spd0[3]-11) << 4);
- 	data |= ((spd0[17] / 4) << 6) | ((spd0[5] / 2) << 7) |
-@@ -1284,6 +1289,8 @@ static unsigned int pdc20621_dimm_init(struct ata_host *host)
- 
- 	/* Programming DIMM0 Module Control Register (index_CID0:80h) */
- 	size = pdc20621_prog_dimm0(host);
-+	if (size < 0)
-+		return 1;
- 	dev_dbg(host->dev, "Local DIMM Size = %dMB\n", size);
- 
- 	/* Programming DIMM Module Global Control Register (index_CID0:88h) */
--- 
-2.42.0.windows.2
-
+I see I dropped a word: no need to mention me in the commit, just in case :=
+)
+--=20
+Mateusz Guzik <mjguzik gmail.com>
