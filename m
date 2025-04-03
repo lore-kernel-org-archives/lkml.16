@@ -1,205 +1,177 @@
-Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE38F79F5
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 00:00:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CC547FD
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 00:06:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743638447; cv=none; b=Dk7KqMVxKvqq+h3vNUg8bIcrEucscmmXv6xKaNA7bLEHEkmQv2HZ8/twzPlq3nvgwsvL9v27fEoM3mPuhV2teejprKSpbpBU+7hHa+M5fM3zOZJxerqwBVW3bjgEn+789LwYB1vXw9JtSg+TnWQNCbeSDHLzDO4dABFuSeZXe5Q=
+	t=1743638792; cv=none; b=Efecz52WHNAmS/C1f5uEEIJ7K9k4yywDNfxHb4bCjd0Gu6CAJ7/dqKDk7Go7dYkUFpebEwO405yGVhwW6jP8oCdVjKXzukboSfZic2yj86FgYaYw+vP8MyN9SKK75SYas0HHg1nJ/2uGPDWNMKjCcUDYSKmHK6wI93Ze7EZdu+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743638447; c=relaxed/simple;
-	bh=N+5czGiKNIfXpcO8ryGWeAvIF9qFsbtnJ/AWcAjAtfk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JL1JqlRVDw85Po3tUaUvpabhvfMA2xBjx/bNpqpqK/d7oFjrT9TIuVcrd3xIawOFWlrRtswt1yO7BUkJNeu2ncjR0PC1OiHJ8Z4na1VN1CUfUalGwpRrpaPf5PJpHkVVl0QCPC9bI25uFTBkVuQMlIKSW+8z0NnpBMM6l3S4WL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=an8qUAGu; arc=none smtp.client-ip=91.218.175.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1743638792; c=relaxed/simple;
+	bh=nhly9Oo98XoTVMa6E6OYtYSm01eN5GH5P0vWzI1XMTg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VSb+BcEhI6JLS1xTQogucx854KBo/va/qCKcZGO5s+D0CeGIfQWv8jSXh5stkB3CLvZwAvGpsRi70kJFsAzVQy9lr6hor4xA6B5Iv3tniXpkKmvz5JYMtpV62Wx98zou1EmtRkXa5xvQeTiWXucZtIIFNxMCdqOYorEs8jnrmbk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=VZhxgYnK; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="an8qUAGu"
-Date: Wed, 2 Apr 2025 17:00:34 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1743638442;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NBVywoZb0NEn0WwM4pPg/B+f3OtNhSDn+vmBeEDlF7c=;
-	b=an8qUAGuyhMYlilculWrL5DNR/oDu+DDo0lVvJk2VlaXl0uFGifvakKKysQ5FnrJAy+pfv
-	UK13v7/PRjNor8WI6v3guxShOFydlWRmvq3erqHaDgQUNmRSWzRXicp0N1m4oSepfeLdGr
-	ohH+Nt2KE7OKUM0ih0pVYdvqTHDKgoo=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Sweet Tea Dorminy <sweettea-kernel@dorminy.me>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>, 
-	Christoph Lameter <cl@linux.com>, Martin Liu <liumartin@google.com>, 
-	David Rientjes <rientjes@google.com>, Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Sweet Tea Dorminy <sweettea@google.com>, 
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, "Liam R . Howlett" <Liam.Howlett@oracle.com>, 
-	Suren Baghdasaryan <surenb@google.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	Christian Brauner <brauner@kernel.org>, Wei Yang <richard.weiyang@gmail.com>, 
-	David Hildenbrand <david@redhat.com>, Miaohe Lin <linmiaohe@huawei.com>, 
-	Al Viro <viro@zeniv.linux.org.uk>, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, Yu Zhao <yuzhao@google.com>, 
-	Roman Gushchin <roman.gushchin@linux.dev>, Mateusz Guzik <mjguzik@gmail.com>
-Subject: Re: [RFC PATCH v2] mm: use per-numa-node atomics instead of
- percpu_counters
-Message-ID: <2m3wwqpha2jlo4zjn6xbucahfufej75gbaxxgh4j4h67pgrw7b@diodkog7ygk3>
-References: <20250331223516.7810-2-sweettea-kernel@dorminy.me>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="VZhxgYnK"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ac29af3382dso46612566b.2
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 17:06:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1743638788; x=1744243588; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=WDME24yiYohb1xBflLrOYtprUkMulUfhOxUWN86ggD8=;
+        b=VZhxgYnKigDkHmPaz3LTGq3drg4E1UMeUc//U5llagqf+Ps0/xGfFYnrj8OcZYfwjp
+         3AOM7Bz5AGFpHGp+sgTuP5MXkUCKpuXYjqkVRljtUkFXME6jPmW1FQY1KImQj1LJBoHt
+         k1Hp+gXkxa889onjKMRk5iM9TbhUfZMQP7XK8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743638788; x=1744243588;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WDME24yiYohb1xBflLrOYtprUkMulUfhOxUWN86ggD8=;
+        b=jfV7ThFLHTGCQwFmfS4MPcBmJwOtR5orCYiGWXaWmwwIVgvy5C7fjLaXG+YNEtRaOg
+         YvREV+7udwsmgyyFnNZ3UUl0cDZ6A5Xluz/LcaXmQJKWpOp1quWRzkfxDMtZqp45Ar1c
+         mdokHlBKez//NUIK+OwoMZIG8lWvEblD0kORkfc+uTt2pqISLOo2uQfR+3WXJMPa8gx8
+         PVGZ1BJpznghlb3X+pVOT9Ulk0sUvZ4rKsMU05rcNMBGCxjFjFOGUnesP/7mX/I1XThx
+         jtgb5JqzVvnlci3u8UXdhyuDRAVy82/4/3iNZr0ecEOaEYrsgUXvapxOczZ8KRfB2jVJ
+         /fgg==
+X-Forwarded-Encrypted: i=1; AJvYcCWGUMK4VbDt9ES20GFMPJxJ/Z3aJr/ouuMJwTe6wM7hqRuPlWvqDwR9jLLBEDw4qXJcrDgQedzzV4I6Ino=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywr/IkE9YHObRa7jhJYiRHDNKYirZxA9MzeDH3DJlgy1kYSqcxh
+	uQVz4NCS+uQKfrmkldO5o2IfR3ZLfh1rO3/bvSbjg5+tdp9CVW/Dk13FBSvdlVp0mb/jwOKvTE5
+	Xq0A=
+X-Gm-Gg: ASbGnct/sRmLexsc879Qz4G65cHzSUlIQ3JC3qWMXKTKsJBfYlz5KxZdgAUyKLuVuOw
+	3BQ+RyIVgYdJD26ffLxhmMP2pgIrVOI5NRZX78IZBz0tST3zyZI+Ybut6E7aN7rB16Si866DnOS
+	Xa2cn9p0Yk8ptL3Snoj8kCKjfZXCC41RzowD0du0JRK4LnQVJ6tbO/NuAFhmiCrN6ILdAYCtgwg
+	J90Vr+z5bu4nRAul3lLyEx5Pbvbsu/vej+s/UX5H1GRDjem6BXlfeIJ6lv19atLr1BebIViXdjG
+	iT19n7id2RkI67vUuio6Ih/krndwr48sHGbYi1Om+1h6LPxrVrgt9rIsVGy7pec3psoAAREpFCs
+	cSHRi40TlIPBUafJYzMI=
+X-Google-Smtp-Source: AGHT+IG9feLyDhgqETN7Xz9NMKD4EyWJMM47mcCEKkgvjPeINsufU543vMbXJuuoFD/C4fzFNRSRjA==
+X-Received: by 2002:a17:907:7d8c:b0:ac3:8790:ce75 with SMTP id a640c23a62f3a-ac7389ea3a2mr1599213866b.10.1743638788530;
+        Wed, 02 Apr 2025 17:06:28 -0700 (PDT)
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com. [209.85.218.49])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7c01c1028sm4833866b.172.2025.04.02.17.06.27
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Apr 2025 17:06:27 -0700 (PDT)
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-aaee2c5ee6eso42336566b.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 17:06:27 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWRASWv4dM5hmPwbsGixI7oKRnwPGlwGdXR5PxpmAENsmKOM/+567w/GvrX8CgCEp5RE25ULZFVZK1Iitw=@vger.kernel.org
+X-Received: by 2002:a17:907:3da9:b0:ac2:912d:5a80 with SMTP id
+ a640c23a62f3a-ac7389ea3e0mr1522405866b.5.1743638787221; Wed, 02 Apr 2025
+ 17:06:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250331223516.7810-2-sweettea-kernel@dorminy.me>
-X-Migadu-Flow: FLOW_OUT
+References: <CAJfpegsQDTYsEWHMK9skpNzUO=GA_DR7zGHftyO2sZH5wjaZLA@mail.gmail.com>
+In-Reply-To: <CAJfpegsQDTYsEWHMK9skpNzUO=GA_DR7zGHftyO2sZH5wjaZLA@mail.gmail.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Wed, 2 Apr 2025 17:06:09 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wihf7K7JhOsm2R6SSRbHuxzpMG+q87nVyD-jZnd+7-0gg@mail.gmail.com>
+X-Gm-Features: AQ5f1JqHxQ4y8QfdVOkyBy-Gm3oH8OTY9Em8Hq2QRv5vKqVBHYB0rPkvn3Y6piA
+Message-ID: <CAHk-=wihf7K7JhOsm2R6SSRbHuxzpMG+q87nVyD-jZnd+7-0gg@mail.gmail.com>
+Subject: Re: [GIT PULL] fuse update for 6.15
+To: Miklos Szeredi <miklos@szeredi.hu>
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Mar 31, 2025 at 06:35:14PM -0400, Sweet Tea Dorminy wrote:
-> [Resend as requested as RFC and minus prereq-patch-id junk]
-> 
-> Recently, several internal services had an RSS usage regression as part of a
-> kernel upgrade. Previously, they were on a pre-6.2 kernel and were able to
-> read RSS statistics in a backup watchdog process to monitor and decide if
-> they'd overrun their memory budget.
+On Tue, 1 Apr 2025 at 04:02, Miklos Szeredi <miklos@szeredi.hu> wrote:
+>
+> Commit 1dfe2a220e9c ("fuse: fix uring race condition for null
+> dereference of fc") in this queue has already been merged into
+> v6.14-final through Christian's tree (commit d9ecc77193ca).   For some
+> reason this causes a merge conflict, the resolution of which is to
+> just take the version from this pull (i.e. remove the atomic_set()).
 
-Any reason these applications are not using memcg stats/usage instead of
-RSS? RSS is not the only memory comsumption for these applications.
+Yup, those "made in both branches" kinds of conflicts are trivial to resolve.
 
-> Now, however, a representative service
-> with five threads, expected to use about a hundred MB of memory, on a 250-cpu
-> machine had memory usage tens of megabytes different from the expected amount
-> -- this constituted a significant percentage of inaccuracy, causing the
-> watchdog to act.
+In case you wonder about the "for some reason" part: I say that they
+are "trivial to resolve", but they are trivial to resolve only when
+it's clear that you should take the *other* changes that the other
+branch does.
 
-Are these 5 threads jump all over the 250 cpus?
+So put another way: both branches did X (that "fix race condition"
+thing) but as different commits, so they had separate history.
 
-> 
-> This was a result of f1a7941243c1 ("mm: convert mm's rss stats into
-> percpu_counter") [1].  Previously, the memory error was bounded by
-> 64*nr_threads pages, a very livable megabyte. Now, however, as a result of
-> scheduler decisions moving the threads around the CPUs, the memory error could
-> be as large as a gigabyte.
+But then only one branch did Y (the "remove unneeded atomic set in
+uring creation") that is right next to X.
 
-Applications with 10s of thousands of threads is very normal at Google.
-So, inaccuracy should be comparable for such applications.
+Now, when I look at it and understand the semantics of the patch, I go
+"oh, ok, both sides did X, but you also did Y, so I'll take that X+Y
+thing". Simple.
 
-> 
-> This is a really tremendous inaccuracy for any few-threaded program on a
-> large machine and impedes monitoring significantly. These stat counters are
-> also used to make OOM killing decisions, so this additional inaccuracy could
-> make a big difference in OOM situations -- either resulting in the wrong
-> process being killed, or in less memory being returned from an OOM-kill than
-> expected.
-> 
-> Finally, while the change to percpu_counter does significantly improve the
-> accuracy over the previous per-thread error for many-threaded services, it does
-> also have performance implications - up to 12% slower for short-lived processes
-> and 9% increased system time in make test workloads [2].
-> 
-> A previous attempt to address this regression by Peng Zhang [3] used a hybrid
-> approach with delayed allocation of percpu memory for rss_stats, showing
-> promising improvements of 2-4% for process operations and 6.7% for page
-> faults.
-> 
-> This RFC takes a different direction by replacing percpu_counters with a
-> more efficient set of per-NUMA-node atomics. The approach:
-> 
-> - Uses one atomic per node up to a bound to reduce cross-node updates.
-> - Keeps a similar batching mechanism, with a smaller batch size.
-> - Eliminates the use of a spin lock during batch updates, bounding stat
->   update latency.
-> - Reduces percpu memory usage and thus thread startup time.
+But it's simple only because I understand the semantics of the
+patches, and I see that I should take the union of the work.
 
-That one atomic per node will easily become a bottleneck for
-applications with a lot of threads particularly on the system where
-there are a lot of cpus per numa node.
+git won't do that, because while there are "patch queue" systems that
+do in fact use that exact logic of "both did patch X, the other side
+also did patch Y", git is not a patch queue system - and I think patch
+queue systems are actually wrong for anything more complicated.
 
-> 
-> Most importantly, this bounds the total error to 32 times the number of NUMA
-> nodes, significantly smaller than previous error bounds.
-> 
-> On a 112-core machine, lmbench showed comparable results before and after this
-> patch.  However, on a 224 core machine, performance improvements were
+So git will look at the original shared state, and the state of both
+sides at the *end*, and make the merge decisions on that basis
+(resolving things with a three-way merge if both sides did changes -
+that's the simplified case for the simple history situation, at
+least).
 
-How many cpus per node for each of these machines?
+And in that model, you don't have "both did X, and then one side did
+Y". You have "one side did A, the other side did B, and they weren't
+the same".
 
-> significant over percpu_counter:
-> - Pagefault latency improved by 8.91%
+I also will claim that it's the safer thing to do, because who knows
+*why* one side did Y and the other side didn't? Without understanding
+the semantics of Y, it's very much not clear.
 
-The following fork ones are understandable as percpu counter allocation
-is involved but the above page fault latency needs some explanation.
+For example, maybe the other side didn't do Y because Y was a quick
+hack bug-fix to get things working, and instead simply fixed it at
+some deeper level elsewhere that made the quick hack pointless and
+possibly even wrong.
 
-> - Process fork latency improved by 6.27%
-> - Process fork/execve latency improved by 6.06%
-> - Process fork/exit latency improved by 6.58%
-> 
-> will-it-scale also showed significant improvements on these machines.
+So just automatically doing some patch algebra can cause problems.
 
-Are these process ones or the threads ones?
+Of course, the git model of merging can *also* cause problems.
 
-> 
-> [1] https://lore.kernel.org/all/20221024052841.3291983-1-shakeelb@google.com/
-> [2] https://lore.kernel.org/all/20230608111408.s2minsenlcjow7q3@quack3/
-> [3] https://lore.kernel.org/all/20240418142008.2775308-1-zhangpeng362@huawei.com/
-> 
-> Signed-off-by: Sweet Tea Dorminy <sweettea-kernel@dorminy.me>
-> Cc: Yu Zhao <yuzhao@google.com>
-> Cc: Roman Gushchin <roman.gushchin@linux.dev>
-> Cc: Shakeel Butt <shakeel.butt@linux.dev>
-> Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-> Cc: Mateusz Guzik <mjguzik@gmail.com>
-> Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> 
-> ---
-> 
-> This is mostly a resend of an earlier patch, where I made an utter hash
-> of specifying a base commit (and forgot to update my commit text to not
-> call it an RFC, and forgot to update my email to the one I use for
-> upstream work...). This is based on akpm/mm-unstable as of today.
-> 
-> v1 can be found at
-> https://lore.kernel.org/lkml/20250325221550.396212-1-sweettea-kernel@dorminy.me/
-> 
-> Some interesting ideas came out of that discussion: Mathieu Desnoyers
-> has a design doc for a improved percpu counter, multi-level, with
-> constant drift, at 
-> https://lore.kernel.org/lkml/a89cb4d9-088e-4ed6-afde-f1b097de8db9@efficios.com/
-> and would like performance comparisons against just reducing the batch
-> size in the existing code;
+For an example of something that the git merge model will get wrong is
+if both sides do 'X', but one side notices that 'X' was horribly buggy
+and reverts it, and the other side doesn't.
 
-You can do the experiments with different batch sizes in the existing
-code without waiting for Mathieu's multi-level percpu counter.
+Now when you merge the two, git will see "one side made no changes at
+all, the other side did X" and at that point will merge 'X' and
+basically undo the revert.
 
-> and Mateusz Guzik would also like a more general solution and is also
-> working to fix the performance issues by caching mm state. Finally,
-> Lorenzo Stoakes nacks, as it's too speculative and needs more
-> discussion.
-> 
-> I think the important part is that this improves accuracy; the current
-> scheme is difficult to use on many-cored machines. It improves
-> performance, but there are tradeoffs; but it tightly bounds the
-> inaccuracy so that decisions can actually be reasonably made with the
-> resulting numbers.
-> 
-> This patch assumes that intra-NUMA node atomic updates are very cheap
+That *may* be the right thing to do. Again, maybe the other side
+didn't revert because the other side fixed the bug properly. But the
+*safe* thing would probably have been to treat it as that X+Y vs X
+thing, and ask for manual intervention by marking it as a conflict.
 
-The above statement/assumption needs experimental data.
+But git won't do that, because git will see X+Y as being no change at
+all, and then the logic is "one side did nothing, the other side did
+new development, when you merge the two you obviously take the new
+development".
 
-> and that
-> assigning CPUs to an atomic counter by numa_node_id() % 16 is suitably
-> balanced. However, if each atomic were shared by only, say, eight CPUs from the
-> same NUMA node, this would further reduce atomic contention at the cost of more
-> memory and more complicated assignment of CPU to atomic index. I don't think
-> that additional complication is worth it given that this scheme seems to get
-> good performance, but it might be. I do need to actually test the impact
-> on a many-cores-one-NUMA-node machine, and I look forward to testing out
-> Mathieu's heirarchical percpu counter with bounded error.
-> 
+And that's ignoring the whole issue with three-way merging that git
+then does for when there are changes on both sides: it's a traditional
+and generally very good strategy, but it can certainly also end up
+doing mis-merges when there are semantic conflicts that don't show up
+as overlapping changes.
 
-I am still not buying the 'good performance' point. To me we might need
-to go with reduced batch size of existing approach or multi level
-approach from Mathieu (I still have to see Mateusz and Kairui's
-proposals).
+End result: there are no automated merge models that always get the
+right answer. The git merge model does work well, but there is no
+perfect.
+
+One good thing about the git model is that it tends to be fairly
+simple to explain *why* it does something. It's not rocket science.
+Merge conflicts really are fairly simple: both sides changed the same
+area in different ways.
+
+Of course, things get complicated when code movement or complex
+history is involved. Or when the two changes simply clash on a
+fundamental level and weren't at all about that kind of "A+B" vs "just
+A" situation.
+
+         Linus
