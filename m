@@ -1,239 +1,122 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 375B724C664
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 12:57:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25BDB24C07E;
+	Thu,  3 Apr 2025 12:57:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743685060; cv=none; b=uYCbhkgqTn7CGPE9u+C4ax6I7/rv3fOwqqCH7g++0vAruqZsvUkGmGJO+XORvwkr2fRPVyNkOuidjRkLp0lm2iQXelifjjRROKoQW1MzlsofKZsAcRk/lFWfc7iaTqZi6hS9ART7aMa/LtrwRvOakIzB+uIGCfEya9CizZ+ZZHY=
+	t=1743685075; cv=none; b=fWwwRcZmJnwhZiN4ejSzfyE2gbLRQ3YGgYthosqril01oNkPrzKE9rPHyU/Yh5XIel8fvzToOMpkUOEP4XHJzYR0IICab//L5AN3rrdu0wSAtHOFcQozz20ccQHTu1Fm2fD69rsJalifkHJVOM7gJSIp/Nwn+jEDSDcxMNBWN9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743685060; c=relaxed/simple;
-	bh=h6upok2UNXu6a8hbwBmkOZ2QnnvGNGbvXHfvfrECD7k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qIr4dn3zte2TVUhXy8bGNcnQOZZYzztzdah7ubRydfw9wmN3a1V8Ii9V76LvQ+bjendNdZfJzwrWS424PP0QyeBcKBDfnAoq/KzR9i1TsV+3ovjb9TMXsGohL793jA/nt7F+GiYbYEPskeLGaEFTz3Va7SQj7I7hFk+1sxuM9nk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ixRK5UJD; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1743685075; c=relaxed/simple;
+	bh=/1YxCcRTRvpxQ9KkKuxghPk2ylXH2ipD9xLYdo4JcEU=;
+	h=Date:Message-Id:To:Cc:Subject:From:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=edWlphV4OuTR5YUnYdLd2lgp6Ml/xveG/9yyaNyEH3sDMVDas9NEUy7r+DsSjDPNGWlha7M8FLM/Zsk/PFiOspkiITU3wsAmLgXF0jvXAicJngx4UC4lAnQLt4AS64vquDl3lbPNt0bWxO6C1MqYuzj+MhAtz49bYn24wG+2j1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AvwLL3V1; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ixRK5UJD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743685056;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=07cCSo2B9aIbwxRVd8sNELEM0nr6NT8ZeyBNS30RCy8=;
-	b=ixRK5UJDxtngDfasRUo/HRtLyEu5fQ8CvlOdV8I6TMUW7gakpFgtWFEb1Fa9ZB/tllB6ad
-	aEoryZzHhwSTpPX0Ls94MdnCcmizuCLIQVjqEOU7KohSfOGZ83n1EXxvU5QLxMsgcnztOd
-	sHfb3PEpinVF82wzIx0JOfCrs5tCZAk=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-210-FmJFT5hoP4ibvP_QnD_mpQ-1; Thu, 03 Apr 2025 08:57:34 -0400
-X-MC-Unique: FmJFT5hoP4ibvP_QnD_mpQ-1
-X-Mimecast-MFC-AGG-ID: FmJFT5hoP4ibvP_QnD_mpQ_1743685052
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43d0a037f97so5093975e9.2
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 05:57:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AvwLL3V1"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-7396f13b750so912292b3a.1;
+        Thu, 03 Apr 2025 05:57:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743685073; x=1744289873; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to:from
+         :subject:cc:to:message-id:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xMvo80YrC/OUar0noVKvQwzuCcaGDRGPGFcmSwrZcwA=;
+        b=AvwLL3V1aQGnMZv3+csMYdrPTa0JoMc2a6yqDwIpIJhsnBrvtEM5S+7Iv8tQX+ZU+r
+         AzsdwR2xoVsZAwBo3jY7zlKCbhwOFGdKVrAejh45D7xDZDctuNbSKuwtljOBa/jD3MVt
+         j8gFd3Tl6qgA3e6v66jP4Wse2k3qfhqG6hRjUd6xxE6foeCXtNvcNLJRiaGd9i388pg8
+         Qj0dRiL3PbzbOtU2riNk5xtKIZ3O/EBT6OEcfp3c4h3cFeKHRnp43qejaMtnT8ot8+Vz
+         2WhGX2I/xsfmyvlJfFphB916ZHuMwJAwk6sSKSPJlBCgziAvXfmJwK9OMBLWmbQekpJa
+         Ir2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743685052; x=1744289852;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=07cCSo2B9aIbwxRVd8sNELEM0nr6NT8ZeyBNS30RCy8=;
-        b=QovUTqX1bNo1WM4SONh+iM51fGZsCKWKhcDqTcsPzwAinnfF5XDrmiYeAbfTK60F38
-         JFmHJqvrhkgRIB66P6Njhk9ThVyA3ezIKVMxv1pwFPl3yIZM3NoF6Sz/2xHABD3Rj7b3
-         o0ge9Ve+WLY8h7jnRFDBjSRN8qu9WfVqBtDzLryOSfPYvx4o1gOgP4RZOkFg7Rs3I0IH
-         /EMT057Er0BGz16l8cRzWTpSQDpIJNfZVQjnqUY8U4QkYU5rp6kCDHJ1kGJC8fXyiXtC
-         QcjUfjy08TM/d8bbSnNr11UJD6+4zfzqj5X6YTvtGu9VQJEeYiIf9ITX2ggll5peI1wJ
-         sdDg==
-X-Gm-Message-State: AOJu0YwqG3gJ9KVEyOOL/dCsyMLbaHf4Ewj3VtLkTaTHjscqgwXF2UL5
-	Tp1stGED3NkID5m1H02Fz3ZCLTyVZRHdMPxJTaXFp62zgokXot3FupNSwhelGVZAHq4SlWifbbr
-	rUvp14QHzC2rj5ywRA6d8XmsWh+dJGhge08SSK7QNw/dbGOpAHJTVjcJ3s0pmRg==
-X-Gm-Gg: ASbGncu6jT+wkAXJWL+j2yke/7OksR656EU5BGwWkmq8f4tYL8xtbnXCTb5FHNatQKe
-	s5o4ZOLVJB1pPruFugya5Esl+wiicskR293FA4GoISo5yyq7ZMMdBGSSZ9SsJye8CHrcG7qFtcf
-	sLjVS9kxTgQJiy8AyylpBwLvmGwHLhToepd1yEA4mdsKtETFXzdnSeHTbVipJB0YVRvCkRcGaS8
-	mIr+25zfaHOsuPL55yqflZO0uGjjhQoP2tZvCD65xr5IJc4VG52iOuZ+jCgPGd6X+rv+kh7c01E
-	3WFIlc/lZQ==
-X-Received: by 2002:a05:600c:4708:b0:43d:7588:667b with SMTP id 5b1f17b1804b1-43ec139b6admr28421735e9.10.1743685052163;
-        Thu, 03 Apr 2025 05:57:32 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFj3KdFXqOkrApLxIkl3uzI14klWQC5RUU1qjAJxrr83aJQ/gFpzH2cPz5OLOhh6nW1riyB2Q==
-X-Received: by 2002:a05:600c:4708:b0:43d:7588:667b with SMTP id 5b1f17b1804b1-43ec139b6admr28421515e9.10.1743685051709;
-        Thu, 03 Apr 2025 05:57:31 -0700 (PDT)
-Received: from redhat.com ([2a0d:6fc0:1517:1000:ea83:8e5f:3302:3575])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec34be2f4sm17636075e9.19.2025.04.03.05.57.29
+        d=1e100.net; s=20230601; t=1743685073; x=1744289873;
+        h=content-transfer-encoding:mime-version:references:in-reply-to:from
+         :subject:cc:to:message-id:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=xMvo80YrC/OUar0noVKvQwzuCcaGDRGPGFcmSwrZcwA=;
+        b=OL6/KcHGZPyciwmNKEdrQl8V3v2ybKaM+grCZr+foM/lNZP4yO0UtOWJacZuZqT7bC
+         RKybe5Lsge1IXGlTTXjhWriySviHH6+zyevbckBHtuHdD4rGSLwJege2+//sgCDN62K6
+         Nw6umMcUJWBrkyExU2vQ2Alqojf1KRiDkCMUpza2aOWachNaBdZ4taRDsH+BG6IaBn3d
+         ig/w0R1ciF30KWRv3qsWMhSaJsy6yALZCOhGPYx6fleyeMOp7opYK0O47u2+szXmrpHQ
+         5/YwHdUDPGqrP1UDXeC++ecXsmNZyR4Sssdb3tUE21kXhAfk0V8p4PCSwqPjQHKTl8q2
+         9i1A==
+X-Forwarded-Encrypted: i=1; AJvYcCUb3i/wfhz7ZVUSlhQ+cu18SeTxuDoWyaWpzPdcv+SiINCamE6HXPRZup+6ca1tQ7ifdyQn5GRE6h3OQvS9MvI=@vger.kernel.org, AJvYcCXIfunzFlLecWVxuWm5zfUuBmJTTciFfvaze8K70LE03ZtZ/E1GbxZO/LCiTIFcOxQeTRtoK8EyMbfpTl0=@vger.kernel.org, AJvYcCXj2GEGhnADq2lt+Hc2oxUSUr0l2TZdiNT3QoR+y/Bg29YxFa5ChrTAr2b/EraMuYEKqFhHn1uL@vger.kernel.org
+X-Gm-Message-State: AOJu0YzpRf4YlWFulImolciz39qQsNCfLlKe1a6popDnrQRiWoSZdeOl
+	c1K4bPxTE7fez2mHewpEKJlohY4aGV7YRqKUGkx0g+VRG76d1JAW
+X-Gm-Gg: ASbGncvE3TkR/XUW2K8K9PzQC2tklGZLhhErFioydn2U5dSx11G/9hksYjqxbhJPHuI
+	Jg4ZFtaUeoJIDSuLHIAa+sW3nJC31gvWbTmDHFi6Qd7P5nNLPCpKRQapUf6XQhHiWyoQuEQxwxi
+	MPlzOb35ergTMXpj+J9adYu7a9bPTAZtPkJqtv8n1HQA6qgZkkPRUou/Mbdg2IJVzSImkOnqxgn
+	6CfqcHLNLD6q6SHd+uXerBXN1gXg1Ur9sr7fdFAXUljF2dgc2GQieP05e/DgiF4IDIwHYbgWNBD
+	5T8bFWOfhF1qjZtBpUxA7Zkf8sKwBlBr7V61iNEQxnARsaJXjMUHbSlUscIcsijvLT5CgY5SGvF
+	JjU5fTXM2wxrbJUOhLvqZVDkUJVM=
+X-Google-Smtp-Source: AGHT+IHiovceFK2chizolznq/Ml1WNiyNYVynJX9L1MmVpIhUck/y8sRKLzHQWYsF3XMiynXIRoDvg==
+X-Received: by 2002:a05:6a00:238a:b0:736:5822:74b4 with SMTP id d2e1a72fcca58-739c7965d2dmr7803994b3a.21.1743685073171;
+        Thu, 03 Apr 2025 05:57:53 -0700 (PDT)
+Received: from localhost (p4204131-ipxg22701hodogaya.kanagawa.ocn.ne.jp. [153.160.176.131])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739d97ee7absm1415045b3a.58.2025.04.03.05.57.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Apr 2025 05:57:31 -0700 (PDT)
-Date: Thu, 3 Apr 2025 08:57:27 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-	virtualization@lists.linux.dev, kvm@vger.kernel.org,
-	Chandra Merla <cmerla@redhat.com>, Stable@vger.kernel.org,
-	Cornelia Huck <cohuck@redhat.com>, Thomas Huth <thuth@redhat.com>,
-	Halil Pasic <pasic@linux.ibm.com>,
-	Eric Farman <farman@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Wei Wang <wei.w.wang@intel.com>
-Subject: Re: [PATCH v1] s390/virtio_ccw: don't allocate/assign airqs for
- non-existing queues
-Message-ID: <20250403085637-mutt-send-email-mst@kernel.org>
-References: <20250402203621.940090-1-david@redhat.com>
+        Thu, 03 Apr 2025 05:57:52 -0700 (PDT)
+Date: Thu, 03 Apr 2025 21:57:45 +0900 (JST)
+Message-Id: <20250403.215745.2138534529135480572.fujita.tomonori@gmail.com>
+To: a.hindborg@kernel.org
+Cc: fujita.tomonori@gmail.com, boqun.feng@gmail.com, tglx@linutronix.de,
+ linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+ netdev@vger.kernel.org, andrew@lunn.ch, hkallweit1@gmail.com,
+ tmgross@umich.edu, ojeda@kernel.org, alex.gaynor@gmail.com,
+ gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me,
+ a.hindborg@samsung.com, aliceryhl@google.com, anna-maria@linutronix.de,
+ frederic@kernel.org, arnd@arndb.de, jstultz@google.com, sboyd@kernel.org,
+ mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+ vincent.guittot@linaro.org, dietmar.eggemann@arm.com, rostedt@goodmis.org,
+ bsegall@google.com, mgorman@suse.de, vschneid@redhat.com,
+ tgunders@redhat.com, me@kloenk.dev, david.laight.linux@gmail.com
+Subject: Re: [PATCH v11 6/8] MAINTAINERS: rust: Add new sections for
+ DELAY/SLEEP and TIMEKEEPING API
+From: FUJITA Tomonori <fujita.tomonori@gmail.com>
+In-Reply-To: <877c41v7kf.fsf@kernel.org>
+References: <RK_ErPB4YECyHEkLg8UNaclPYHIV40KuRFSNkYGroL8uT39vud-G3iRgR2a7c11Sb7mXgU6oeb_pukIeTOk9sQ==@protonmail.internalid>
+	<20250403.171809.1101736852312477056.fujita.tomonori@gmail.com>
+	<877c41v7kf.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250402203621.940090-1-david@redhat.com>
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 02, 2025 at 10:36:21PM +0200, David Hildenbrand wrote:
-> If we finds a vq without a name in our input array in
-> virtio_ccw_find_vqs(), we treat it as "non-existing" and set the vq pointer
-> to NULL; we will not call virtio_ccw_setup_vq() to allocate/setup a vq.
-> 
-> Consequently, we create only a queue if it actually exists (name != NULL)
-> and assign an incremental queue index to each such existing queue.
-> 
-> However, in virtio_ccw_register_adapter_ind()->get_airq_indicator() we
-> will not ignore these "non-existing queues", but instead assign an airq
-> indicator to them.
-> 
-> Besides never releasing them in virtio_ccw_drop_indicators() (because
-> there is no virtqueue), the bigger issue seems to be that there will be a
-> disagreement between the device and the Linux guest about the airq
-> indicator to be used for notifying a queue, because the indicator bit
-> for adapter I/O interrupt is derived from the queue index.
-> 
-> The virtio spec states under "Setting Up Two-Stage Queue Indicators":
-> 
-> 	... indicator contains the guest address of an area wherein the
-> 	indicators for the devices are contained, starting at bit_nr, one
-> 	bit per virtqueue of the device.
-> 
-> And further in "Notification via Adapter I/O Interrupts":
-> 
-> 	For notifying the driver of virtqueue buffers, the device sets the
-> 	bit in the guest-provided indicator area at the corresponding
-> 	offset.
-> 
-> For example, QEMU uses in virtio_ccw_notify() the queue index (passed as
-> "vector") to select the relevant indicator bit. If a queue does not exist,
-> it does not have a corresponding indicator bit assigned, because it
-> effectively doesn't have a queue index.
-> 
-> Using a virtio-balloon-ccw device under QEMU with free-page-hinting
-> disabled ("free-page-hint=off") but free-page-reporting enabled
-> ("free-page-reporting=on") will result in free page reporting
-> not working as expected: in the virtio_balloon driver, we'll be stuck
-> forever in virtballoon_free_page_report()->wait_event(), because the
-> waitqueue will not be woken up as the notification from the device is
-> lost: it would use the wrong indicator bit.
-> 
-> Free page reporting stops working and we get splats (when configured to
-> detect hung wqs) like:
-> 
->  INFO: task kworker/1:3:463 blocked for more than 61 seconds.
->        Not tainted 6.14.0 #4
->  "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
->  task:kworker/1:3 [...]
->  Workqueue: events page_reporting_process
->  Call Trace:
->   [<000002f404e6dfb2>] __schedule+0x402/0x1640
->   [<000002f404e6f22e>] schedule+0x3e/0xe0
->   [<000002f3846a88fa>] virtballoon_free_page_report+0xaa/0x110 [virtio_balloon]
->   [<000002f40435c8a4>] page_reporting_process+0x2e4/0x740
->   [<000002f403fd3ee2>] process_one_work+0x1c2/0x400
->   [<000002f403fd4b96>] worker_thread+0x296/0x420
->   [<000002f403fe10b4>] kthread+0x124/0x290
->   [<000002f403f4e0dc>] __ret_from_fork+0x3c/0x60
->   [<000002f404e77272>] ret_from_fork+0xa/0x38
-> 
-> There was recently a discussion [1] whether the "holes" should be
-> treated differently again, effectively assigning also non-existing
-> queues a queue index: that should also fix the issue, but requires other
-> workarounds to not break existing setups.
-> 
-> Let's fix it without affecting existing setups for now by properly ignoring
-> the non-existing queues, so the indicator bits will match the queue
-> indexes.
-> 
-> [1] https://lore.kernel.org/all/cover.1720611677.git.mst@redhat.com/
-> 
-> Fixes: a229989d975e ("virtio: don't allocate vqs when names[i] = NULL")
-> Reported-by: Chandra Merla <cmerla@redhat.com>
-> Cc: <Stable@vger.kernel.org>
-> Cc: Cornelia Huck <cohuck@redhat.com>
-> Cc: Thomas Huth <thuth@redhat.com>
-> Cc: Halil Pasic <pasic@linux.ibm.com>
-> Cc: Eric Farman <farman@linux.ibm.com>
-> Cc: Heiko Carstens <hca@linux.ibm.com>
-> Cc: Vasily Gorbik <gor@linux.ibm.com>
-> Cc: Alexander Gordeev <agordeev@linux.ibm.com>
-> Cc: Christian Borntraeger <borntraeger@linux.ibm.com>
-> Cc: Sven Schnelle <svens@linux.ibm.com>
-> Cc: "Michael S. Tsirkin" <mst@redhat.com>
-> Cc: Wei Wang <wei.w.wang@intel.com>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
+On Thu, 03 Apr 2025 12:54:40 +0200
+Andreas Hindborg <a.hindborg@kernel.org> wrote:
 
-Acked-by: Michael S. Tsirkin <mst@redhat.com>
-
-
-feel free to merge.
-
-> ---
->  drivers/s390/virtio/virtio_ccw.c | 16 ++++++++++++----
->  1 file changed, 12 insertions(+), 4 deletions(-)
+>>>> You will need to fix something because patch 2-6 removes `Ktime` ;-)
+>>>
+>>> Yea, but `Instant` is almost a direct substitution, right? Anyway, Tomo
+>>> can send a new spin and change all the uses of Ktime, or I can do it. It
+>>> should be straight forward. Either way is fine with me.
+>>
+>> `Delta`? Not `Instant`.
 > 
-> diff --git a/drivers/s390/virtio/virtio_ccw.c b/drivers/s390/virtio/virtio_ccw.c
-> index 21fa7ac849e5c..4904b831c0a75 100644
-> --- a/drivers/s390/virtio/virtio_ccw.c
-> +++ b/drivers/s390/virtio/virtio_ccw.c
-> @@ -302,11 +302,17 @@ static struct airq_info *new_airq_info(int index)
->  static unsigned long *get_airq_indicator(struct virtqueue *vqs[], int nvqs,
->  					 u64 *first, void **airq_info)
->  {
-> -	int i, j;
-> +	int i, j, queue_idx, highest_queue_idx = -1;
->  	struct airq_info *info;
->  	unsigned long *indicator_addr = NULL;
->  	unsigned long bit, flags;
->  
-> +	/* Array entries without an actual queue pointer must be ignored. */
-> +	for (i = 0; i < nvqs; i++) {
-> +		if (vqs[i])
-> +			highest_queue_idx++;
-> +	}
-> +
->  	for (i = 0; i < MAX_AIRQ_AREAS && !indicator_addr; i++) {
->  		mutex_lock(&airq_areas_lock);
->  		if (!airq_areas[i])
-> @@ -316,7 +322,7 @@ static unsigned long *get_airq_indicator(struct virtqueue *vqs[], int nvqs,
->  		if (!info)
->  			return NULL;
->  		write_lock_irqsave(&info->lock, flags);
-> -		bit = airq_iv_alloc(info->aiv, nvqs);
-> +		bit = airq_iv_alloc(info->aiv, highest_queue_idx + 1);
->  		if (bit == -1UL) {
->  			/* Not enough vacancies. */
->  			write_unlock_irqrestore(&info->lock, flags);
-> @@ -325,8 +331,10 @@ static unsigned long *get_airq_indicator(struct virtqueue *vqs[], int nvqs,
->  		*first = bit;
->  		*airq_info = info;
->  		indicator_addr = info->aiv->vector;
-> -		for (j = 0; j < nvqs; j++) {
-> -			airq_iv_set_ptr(info->aiv, bit + j,
-> +		for (j = 0, queue_idx = 0; j < nvqs; j++) {
-> +			if (!vqs[j])
-> +				continue;
-> +			airq_iv_set_ptr(info->aiv, bit + queue_idx++,
->  					(unsigned long)vqs[j]);
->  		}
->  		write_unlock_irqrestore(&info->lock, flags);
-> -- 
-> 2.48.1
+> It depends. Current hrtimer takes `Ktime` and supports
+> `HrTimerMode::Absolute` and `HrTimerMode::Relative`. With `Delta` and
+> `Instant` we should take `Instant` for `HrTimerMode::Absolute` and
+> `Delta` for `HrTimerMode::Relative`. The API needs to be modified a bit
+> to make that work though. Probably we need to make the start function
+> generic over the expiration type or something.
+> 
+> If you want to, you can fix that. If not, you can use `Instant` for the
+> relative case as well, and we shall interpret it as duration. Then I
+> will fix it up later. Your decision.
+> 
+>> All Ktime in hrtimer are passed to hrtimer_start_range_ns(), right?
+> 
+> Yes, that is where they end up.
+
+Ah, I found that __hrtimer_start_range_ns() handles ktime_t
+differently in HRTIMER_MODE_REL mode.
+
+As you said, looks like the API needs to be updated and I think that
+it's best to leave that to you. I'll just use `Instant` for all cases.
 
