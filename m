@@ -1,157 +1,122 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4528935949
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 05:50:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34D86190679
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 05:52:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743659450; cv=none; b=CZghkcPtdGDqin0YqeyUQVXf7z2DgWuyCMQM0Fa9OVLau1AO7L2mG+Hnk17/mCBGrw9D9No5/Z9Gdo5EcD20uTzjkt6SMCDRsCDkpST9MQBCCKoWg/pI/HAYngJl0fSI1ApM28m0N4bfhHVqXRPmXE81Qo0uSxeHkvybKe3WyTs=
+	t=1743659535; cv=none; b=K85SRUAWRtinutTcrbxt7Dxrh+KieuJWKwKBZyWiQi6F9agtHh2a+0XoZFQTokt7/2IfNrxt0Ocf5L1W83kU3MbNBalNsu+KVhQZEg3IIuDRPpG7B6qk4Pb34gevdjcrMB7KjhWFDruPxjbk6lksC3n6bJzGmr4fl0xzPmXc8+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743659450; c=relaxed/simple;
-	bh=nxK4yMEOf+OdXSnJrcPp5Mjs/aN9/YVBMiKNkhoUVPs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=dV8rErKYZVEZCu7M0fiRObtOuGIAvhXSyNDlQ9mwC6v3PZyZVzEix6N0suyrnV8e9S0UU+cK3fBGO4zMVqEjKKFXhIGE1MXMlpQS9navmjK0WTnqmwUbNeAUg4mP0M73sWQ1u/yOZiZkqziKU3b7JaXdszqE3qIazqgKJGa9Yss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F0F93106F;
-	Wed,  2 Apr 2025 22:50:49 -0700 (PDT)
-Received: from [10.163.48.25] (unknown [10.163.48.25])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8AC053F694;
-	Wed,  2 Apr 2025 22:50:41 -0700 (PDT)
-Message-ID: <b409c701-f126-4e07-ba14-75280529689b@arm.com>
-Date: Thu, 3 Apr 2025 11:20:38 +0530
+	s=arc-20240116; t=1743659535; c=relaxed/simple;
+	bh=zDE12dZbPquxzL4QXG7ftTQeZ/a+U3RrlIe4P2CgutM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=D6NnZQq/DD3qFQx6K9zMtZWtCZXmpE0n0AWHmU9WpuCn8+sTzkWOe2PTn34Z3JWGovcpu2dJhuYsUlEWIFdpFbocKXSTsC+3AAjIPobN3j7nrOVxpeTOTpLzh18DBrdEOfyxo3vCZSj9GT36jqym6ys9EHKcEj/GM0I/3BFu0qY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WxOmQe4x; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WxOmQe4x"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5e61d91a087so917209a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 22:52:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743659532; x=1744264332; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=17m4YPBaKG8yoX+eqXaayPR/DLuiNsoeilkLB3ayQyY=;
+        b=WxOmQe4xkjCljYqvwO2D4+8dB+J+riqSlOkuPJM7xbWbyT73ZGLBxdyRaFmGOxcYxD
+         0MwA1QKuTujDAmYrBbgjoYKk8WbFsxr8nb2gJaxikH/nA6M8Q3oYyZHcW11btDpzxTF2
+         4Dt97P6kW2uOIrKdij0EdShELT740Rkv5hn4h2vjqIhkqSv8QXntrUUUYFWv5ukVIlyx
+         EPp/XpdVrxwb/FQkErfjmgikQMGzMjQqXvcJJcVAtXN4DYPbj2/5AHWsXnikYMXi9st2
+         w3470NzGqaF+qnFyhxghhfQ4dHb4nHlO7uw6P7QReQpwBkR09ZFo807BdtTqs2qZEt+l
+         8SVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743659532; x=1744264332;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=17m4YPBaKG8yoX+eqXaayPR/DLuiNsoeilkLB3ayQyY=;
+        b=dgs5zz8BNWExizdKaVTY+xDybvQXt+IYyJz51Lnk3kq2S39K1WczMkpMzNqJdzFaZ+
+         Cnx7bmaCHhe9dcGW7gAjgqAYd1ZDViegcxyuTApscF+wKQSiBa+XgWt/SZI9zlH0074m
+         SWxiS4gveDzsonZTb+9W/ZtS0ddsg9w2zmEaxTmhISkAqUqqJflPwiZ3UT5iKjlgdy6q
+         OJgxvSOYRfZhynlS8b+YTn85h5aW4es2heOCEmURFoIDhC6S3dMLVCgt8SViLYvBsdTL
+         zBOxcv9hOuMR0pDbDrK2jmpXuvqsI5eQwH4nf9LS4g+CUmdDSWtIjH8y7PqTVaSRwxXa
+         cZCg==
+X-Forwarded-Encrypted: i=1; AJvYcCUV4AandbTFq1wOiMi0FFTL+j7wpEQv47lAhA4E4ClChEsGAxriJfd4L9bykxeqJMCouQFu6VkFWBq2qvY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyiYeKpDJTPRPorG3SoYtjG1zTXbXdg7K+bqhi8r6W2JDVZAVWj
+	+1D4+fsoKVSb6xJ0De4G+DFxWX8vKGnnqi8XLIwF+i/i7K75dHC5
+X-Gm-Gg: ASbGncv6IDFpOXgiYxFS2IDHGHfpSd/X6JDViBdnLp0QaZYc5yizwOhKD1XWG4V99Qg
+	hAseltDdRMV1oC7J8+MuvDXQRYPgjwoQ3+riv+FasgeyQ6eAUxnSY80B2aqxIeE97dlEo3++LRu
+	RUdzT0vHNqOaypN8/kWNHcMdCfoFbeVY1kJbEvdJaWzaViuM3yu0KK7XZ3LUKv0aJnGznjpiPrK
+	o5hZy1eOGfhrY2jVU3yVCN4pz2cy15Ewp0RZ9iIlTi0j5BLVQxYsIfSYrz9dB93khjAT/siilLK
+	ZUwRtQCCLi0xVik6OxAZH8WAlSqD/TtkPLjIkcZQEwDfrBWeXSiJwjpuQoc/EhHvtTrstySR3El
+	JnZwiHOCqsKcWSX5oFZK9AfQo3x106jo=
+X-Google-Smtp-Source: AGHT+IGn7WQedXxz0rx36gPTcBptmyeHmicMz4PPof+Ps0DnBpCvdMJcrUMxhz5G4Sp9jz8Aq1BLxg==
+X-Received: by 2002:a05:6402:40c5:b0:5e6:44d8:eced with SMTP id 4fb4d7f45d1cf-5f08716cc7amr836988a12.12.1743659532244;
+        Wed, 02 Apr 2025 22:52:12 -0700 (PDT)
+Received: from localhost.localdomain (146.10-240-81.adsl-dyn.isp.belgacom.be. [81.240.10.146])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f087714e11sm417236a12.6.2025.04.02.22.52.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Apr 2025 22:52:11 -0700 (PDT)
+From: Philippe Simons <simons.philippe@gmail.com>
+To: Boris Brezillon <boris.brezillon@collabora.com>,
+	Rob Herring <robh@kernel.org>,
+	Steven Price <steven.price@arm.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Philipp Zabel <p.zabel@pengutronix.de>
+Cc: dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	linux-sunxi@lists.linux.dev,
+	Andre Przywara <andre.przywara@arm.com>,
+	=?UTF-8?q?Jernej=20=C5=A0krabec?= <jernej.skrabec@gmail.com>
+Subject: [PATCH v2 0/3] drm/panfrost: enable G31 on H616
+Date: Thu,  3 Apr 2025 07:52:07 +0200
+Message-ID: <20250403055210.54486-1-simons.philippe@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/9] coresight: tmc: Support atclk
-To: Leo Yan <leo.yan@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>,
- Mike Leach <mike.leach@linaro.org>, James Clark <james.clark@linaro.org>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, coresight@lists.linaro.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com
-References: <20250327113803.1452108-1-leo.yan@arm.com>
- <20250327113803.1452108-2-leo.yan@arm.com>
-Content-Language: en-US
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <20250327113803.1452108-2-leo.yan@arm.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 3/27/25 17:07, Leo Yan wrote:
-> The atclk is an optional clock for the CoreSight TMC, but the driver
-> misses to initialize it.  In most cases, the TMC shares the same atclk
+Allwinner H616 has a dedicated power domain for its Mali G31.
 
-TMC shares the atclk or pclk clock with other coresight components ?
+Currently after probe, the GPU is put in runtime suspend which 
+disable the power domain.
+On first usage of GPU, the power domain enable hangs the system.
 
-> with other CoreSight components.  Since these components enable the
-> clock before the TMC device is initialized, the TMC continues properly,
-> which is why we don’t observe any lockup issues.
-> 
-> This change enables atclk in probe of the TMC driver.  Given the clock
-> is optional, it is possible to return NULL if the clock does not exist.
-> IS_ERR() is tolerant for this case.
+This series adds the necessary calls to enable the clocks and
+deasserting the reset line after the power domain enabling and
+asserting the reset line and disabling the clocks prior to the
+power domain disabling.
 
-Makes sense.
+This allows to use the Mali GPU on all Allwinner H616
+boards and devices.
 
-> 
-> Dynamically disable and enable atclk during suspend and resume.  The
-> clock pointers will never be error values if the driver has successfully
-> probed, and the case of a NULL pointer case will be handled by the clock
-> core layer.  The driver data is always valid after probe. Therefore,
-> remove the related checks.  Also in the resume flow adds error handling.
+Changelog v1 .. v2:
+- merge flags to a single GPU_PM_RT flag
+- reorder init/deinit powerup/down sequences according to
+  Mali manuals.
+Link to v1:
+https://lore.kernel.org/linux-sunxi/20250312232319.25712-1-simons.philippe@gmail.com/
 
-Probably a good clean up.
+Philippe Simons (3):
+  drm/panfrost: Add PM runtime flag
+  drm/panfrost: add h616 compatible string
+  drm/panfrost: reorder pd/clk/rst sequence
 
-> 
-> Fixes: bc4bf7fe98da ("coresight-tmc: add CoreSight TMC driver")
+ drivers/gpu/drm/panfrost/panfrost_device.c | 71 ++++++++++++++++------
+ drivers/gpu/drm/panfrost/panfrost_device.h |  3 +
+ drivers/gpu/drm/panfrost/panfrost_drv.c    |  8 +++
+ 3 files changed, 63 insertions(+), 19 deletions(-)
 
-Right commit to attribute.
 
-> Signed-off-by: Leo Yan <leo.yan@arm.com>
-> ---
->  drivers/hwtracing/coresight/coresight-tmc-core.c | 22 +++++++++++++++++-----
->  drivers/hwtracing/coresight/coresight-tmc.h      |  2 ++
->  2 files changed, 19 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/hwtracing/coresight/coresight-tmc-core.c b/drivers/hwtracing/coresight/coresight-tmc-core.c
-> index 5978bcda2556..6aad2acd0378 100644
-> --- a/drivers/hwtracing/coresight/coresight-tmc-core.c
-> +++ b/drivers/hwtracing/coresight/coresight-tmc-core.c
-> @@ -789,6 +789,10 @@ static int __tmc_probe(struct device *dev, struct resource *res)
->  	struct coresight_desc desc = { 0 };
->  	struct coresight_dev_list *dev_list = NULL;
->  
-> +	drvdata->atclk = devm_clk_get_optional_enabled(dev, "atclk");
-> +	if (IS_ERR(drvdata->atclk))
-> +		return PTR_ERR(drvdata->atclk);
-> +
+base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+prerequisite-patch-id: eb8a11e2b24bb282970d8b8528834dea7ee392cc
+-- 
+2.49.0
 
-Adding this check here in __tmc_probe() ensures that it gets called
-both during AMBA and platform probe methods.
-
->  	ret = -ENOMEM;
->  
->  	/* Validity for the resource is already checked by the AMBA core */
-> @@ -1019,18 +1023,26 @@ static int tmc_runtime_suspend(struct device *dev)
->  {
->  	struct tmc_drvdata *drvdata = dev_get_drvdata(dev);
->  
-> -	if (drvdata && !IS_ERR_OR_NULL(drvdata->pclk))
-> -		clk_disable_unprepare(drvdata->pclk);
-> +	clk_disable_unprepare(drvdata->atclk);
-> +	clk_disable_unprepare(drvdata->pclk);
-> +
->  	return 0;
->  }
->  
->  static int tmc_runtime_resume(struct device *dev)
->  {
->  	struct tmc_drvdata *drvdata = dev_get_drvdata(dev);
-> +	int ret;
->  
-> -	if (drvdata && !IS_ERR_OR_NULL(drvdata->pclk))
-> -		clk_prepare_enable(drvdata->pclk);
-> -	return 0;
-> +	ret = clk_prepare_enable(drvdata->pclk);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = clk_prepare_enable(drvdata->atclk);
-> +	if (ret)
-> +		clk_disable_unprepare(drvdata->pclk);
-> +
-> +	return ret;
->  }
->  #endif
->  
-> diff --git a/drivers/hwtracing/coresight/coresight-tmc.h b/drivers/hwtracing/coresight/coresight-tmc.h
-> index 6541a27a018e..cbb4ba439158 100644
-> --- a/drivers/hwtracing/coresight/coresight-tmc.h
-> +++ b/drivers/hwtracing/coresight/coresight-tmc.h
-> @@ -210,6 +210,7 @@ struct tmc_resrv_buf {
->  
->  /**
->   * struct tmc_drvdata - specifics associated to an TMC component
-> + * @atclk:	optional clock for the core parts of the TMC.
->   * @pclk:	APB clock if present, otherwise NULL
->   * @base:	memory mapped base address for this component.
->   * @csdev:	component vitals needed by the framework.
-> @@ -244,6 +245,7 @@ struct tmc_resrv_buf {
->   *		 Used by ETR/ETF.
->   */
->  struct tmc_drvdata {
-> +	struct clk		*atclk;
->  	struct clk		*pclk;
->  	void __iomem		*base;
->  	struct coresight_device	*csdev;
-
-Otherwise, LGTM.
-
-Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
