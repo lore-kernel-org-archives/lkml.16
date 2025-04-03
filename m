@@ -1,42 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8FD8267B7E;
-	Thu,  3 Apr 2025 19:05:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ED66267B95;
+	Thu,  3 Apr 2025 19:05:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743707143; cv=none; b=XqENd/MCwH87VHQtVdcP1Vj533xqzuCiOuZR7lntV1ou7p384V2CSmj79tpvAEv+fI+XufkxRlLHUsI6U2Tr/HmPncT2fUbtr5T6YPdpsXaoH8xQg9O1YE6xN5zYx9BB9Bs1g5dPJmprjGsLUjOiQibMkEB0X5tOBGItqG5wp6g=
+	t=1743707144; cv=none; b=OgidRHLPQDTxOAVHD+kwM4wTyBvb3wmohUm6Ft2TBfFiHN0gOWDYzcC8cG+yscLhD+6d0HHIAWs9LpQFMdgJcMkIMJ7BE0/+RN2sk7Q7rQDcKM2IJF7npZkAFMGCxsz0/YzR+dyGoJwCGRZUVwSNn0cVlkCm4q7pmCsgeF1s20M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743707143; c=relaxed/simple;
-	bh=MQUspQO7RbhBf6VrE3aC76TlO494LiaxWgiv3yMT5o0=;
+	s=arc-20240116; t=1743707144; c=relaxed/simple;
+	bh=iAQnrBu6LSTM1nsXnk/zLGKt+zO0cAMbsjmd/s0J32k=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=SgkQpWQyI28ndOgoXo+Nc/Qv6uZMpzZl6zkJzp+b9sPsuuqjfJ3VzntrZ9s9CIE2vKR89N2ocskU8DoRDzgJ9XP6EIMAj4VGIa2ocHKlcOVfEKB3U6FbvhWJD05DMh5h6zDS+LQKdAYn4LaBbTQDMGqnUlMgkm0TLr4iL2C2NeA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WlO6MgWH; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=dKMF8z+MolsHHXYVdFSt5Ar98ZSRgL9+ABiv7ork2TGrfeN2KCb89wAQfVL4jWOzq3DBG/0eRUlG1B2vZAF43clItso0KXiFirrxpAg+Foj15fe0tS1Zbjn06XEKf4ykG9lHhn+qmcbOtI6pFyUOLWj9knmjtj23XbQsVg5Tu3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qPTXDalg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WlO6MgWH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53336C4CEE9;
-	Thu,  3 Apr 2025 19:05:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qPTXDalg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60C17C4CEE8;
+	Thu,  3 Apr 2025 19:05:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743707140;
-	bh=MQUspQO7RbhBf6VrE3aC76TlO494LiaxWgiv3yMT5o0=;
+	s=k20201202; t=1743707144;
+	bh=iAQnrBu6LSTM1nsXnk/zLGKt+zO0cAMbsjmd/s0J32k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=WlO6MgWH623uBsUhmJhr5TcK1QVB00EitnNs1Y/UEo/5ViJyOQ6Ii78qs5aPnRvBj
-	 Mh5kMGLLFMzouYKj1FniyV8fenVWD/U0Z5eSUn27JgDsRPwW0CvniJcVXZFZS4gou2
-	 CTgYYK6/dadH5jr5MAO4koNXGXtkeb9yYI/Qd2xV/J2V7s2/cOaUgwTZDwNMycPv8M
-	 sBA6ahAAs4Iy2CADc6f/dhTioH8numiIcClDf4I/eiFfVh1tC7PenHyVs3KcAoepeV
-	 ggaKKarpmyK2ESLlQ5eo+Mugpkywu0mPn+UVhENAVNY9PSbLy97zrKyMfkBsKe9QtF
-	 Hwke8G/vaZN6w==
+	b=qPTXDalgb+nS0fnGFmZ9LSCtGnVTgke1fseCERCt9DqUejEpYt6d04LRLNspaCvf3
+	 ujdch2rtrNeYVweOPOVbq9/MiplbNWtNlauTdgHF9dEvikXIqKMbctzwgHgsFBrGRP
+	 4RvBN1AtgGk6pkJFUBowJ1x58ApUXsIPekKyb8bC8L4sjhjAE8R2N9c0ufacXvrMqv
+	 Ze6gOVljWsXPPamugJaYSUm+BTi8/GC0Dy6L/afmDNZzwWk4XVQH0Lhy66qAzrC6KN
+	 GsdjFWxhqEdKqI5a5UNG/sixT2scuTGPLCLzgLWyI3+5pXf097sKYadsSyBv5Ffcq6
+	 rt4hVrwK8wCuA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Gabriele Paoloni <gpaoloni@redhat.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
+Cc: Zijun Hu <quic_zijuhu@quicinc.com>,
+	Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
 	Sasha Levin <sashal@kernel.org>,
-	mhiramat@kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.13 40/49] tracing: fix return value in __ftrace_event_enable_disable for TRACE_REG_UNREGISTER
-Date: Thu,  3 Apr 2025 15:03:59 -0400
-Message-Id: <20250403190408.2676344-40-sashal@kernel.org>
+	marcel@holtmann.org,
+	luiz.dentz@gmail.com,
+	linux-bluetooth@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.13 43/49] Bluetooth: btusb: Add 13 USB device IDs for Qualcomm WCN785x
+Date: Thu,  3 Apr 2025 15:04:02 -0400
+Message-Id: <20250403190408.2676344-43-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250403190408.2676344-1-sashal@kernel.org>
 References: <20250403190408.2676344-1-sashal@kernel.org>
@@ -51,43 +52,64 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.13.9
 Content-Transfer-Encoding: 8bit
 
-From: Gabriele Paoloni <gpaoloni@redhat.com>
+From: Zijun Hu <quic_zijuhu@quicinc.com>
 
-[ Upstream commit 0c588ac0ca6c22b774d9ad4a6594681fdfa57d9d ]
+[ Upstream commit 2dd1c1eee3e496fcc16971be4db5bb792a36025c ]
 
-When __ftrace_event_enable_disable invokes the class callback to
-unregister the event, the return value is not reported up to the
-caller, hence leading to event unregister failures being silently
-ignored.
+Add 13 USB device IDs for Qualcomm WCN785x, and these IDs are
+extracted from Windows driver inf file for various types of
+WoS (Windows on Snapdragon) laptop.
 
-This patch assigns the ret variable to the invocation of the
-event unregister callback, so that its return value is stored
-and reported to the caller, and it raises a warning in case
-of error.
-
-Link: https://lore.kernel.org/20250321170821.101403-1-gpaoloni@redhat.com
-Signed-off-by: Gabriele Paoloni <gpaoloni@redhat.com>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
+Signed-off-by: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/trace/trace_events.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/bluetooth/btusb.c | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index 770e7ed917161..3f1beb64a768d 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -790,7 +790,9 @@ static int __ftrace_event_enable_disable(struct trace_event_file *file,
- 				clear_bit(EVENT_FILE_FL_RECORDED_TGID_BIT, &file->flags);
- 			}
+diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
+index cf15e18521607..11005d7d9cc0f 100644
+--- a/drivers/bluetooth/btusb.c
++++ b/drivers/bluetooth/btusb.c
+@@ -375,12 +375,38 @@ static const struct usb_device_id quirks_table[] = {
+ 						     BTUSB_WIDEBAND_SPEECH },
+ 	{ USB_DEVICE(0x0489, 0xe0f3), .driver_info = BTUSB_QCA_WCN6855 |
+ 						     BTUSB_WIDEBAND_SPEECH },
++	{ USB_DEVICE(0x0489, 0xe100), .driver_info = BTUSB_QCA_WCN6855 |
++						     BTUSB_WIDEBAND_SPEECH },
++	{ USB_DEVICE(0x0489, 0xe103), .driver_info = BTUSB_QCA_WCN6855 |
++						     BTUSB_WIDEBAND_SPEECH },
++	{ USB_DEVICE(0x0489, 0xe10a), .driver_info = BTUSB_QCA_WCN6855 |
++						     BTUSB_WIDEBAND_SPEECH },
+ 	{ USB_DEVICE(0x0489, 0xe10d), .driver_info = BTUSB_QCA_WCN6855 |
+ 						     BTUSB_WIDEBAND_SPEECH },
++	{ USB_DEVICE(0x0489, 0xe11b), .driver_info = BTUSB_QCA_WCN6855 |
++						     BTUSB_WIDEBAND_SPEECH },
++	{ USB_DEVICE(0x0489, 0xe11c), .driver_info = BTUSB_QCA_WCN6855 |
++						     BTUSB_WIDEBAND_SPEECH },
++	{ USB_DEVICE(0x0489, 0xe11f), .driver_info = BTUSB_QCA_WCN6855 |
++						     BTUSB_WIDEBAND_SPEECH },
++	{ USB_DEVICE(0x0489, 0xe141), .driver_info = BTUSB_QCA_WCN6855 |
++						     BTUSB_WIDEBAND_SPEECH },
++	{ USB_DEVICE(0x0489, 0xe14a), .driver_info = BTUSB_QCA_WCN6855 |
++						     BTUSB_WIDEBAND_SPEECH },
++	{ USB_DEVICE(0x0489, 0xe14b), .driver_info = BTUSB_QCA_WCN6855 |
++						     BTUSB_WIDEBAND_SPEECH },
++	{ USB_DEVICE(0x0489, 0xe14d), .driver_info = BTUSB_QCA_WCN6855 |
++						     BTUSB_WIDEBAND_SPEECH },
+ 	{ USB_DEVICE(0x13d3, 0x3623), .driver_info = BTUSB_QCA_WCN6855 |
+ 						     BTUSB_WIDEBAND_SPEECH },
++	{ USB_DEVICE(0x13d3, 0x3624), .driver_info = BTUSB_QCA_WCN6855 |
++						     BTUSB_WIDEBAND_SPEECH },
+ 	{ USB_DEVICE(0x2c7c, 0x0130), .driver_info = BTUSB_QCA_WCN6855 |
+ 						     BTUSB_WIDEBAND_SPEECH },
++	{ USB_DEVICE(0x2c7c, 0x0131), .driver_info = BTUSB_QCA_WCN6855 |
++						     BTUSB_WIDEBAND_SPEECH },
++	{ USB_DEVICE(0x2c7c, 0x0132), .driver_info = BTUSB_QCA_WCN6855 |
++						     BTUSB_WIDEBAND_SPEECH },
  
--			call->class->reg(call, TRACE_REG_UNREGISTER, file);
-+			ret = call->class->reg(call, TRACE_REG_UNREGISTER, file);
-+
-+			WARN_ON_ONCE(ret);
- 		}
- 		/* If in SOFT_MODE, just set the SOFT_DISABLE_BIT, else clear it */
- 		if (file->flags & EVENT_FILE_FL_SOFT_MODE)
+ 	/* Broadcom BCM2035 */
+ 	{ USB_DEVICE(0x0a5c, 0x2009), .driver_info = BTUSB_BCM92035 },
 -- 
 2.39.5
 
