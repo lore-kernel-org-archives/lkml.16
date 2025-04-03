@@ -1,111 +1,126 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA88E210FB
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 13:42:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D1C233981
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 13:43:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743687738; cv=none; b=uvFEQiaGtzkZSTuiKDxN46ybEHk+BsWdeL5DKvq3bGs4Myt8V3T09gOlTXrJSfHXWk13E2WP3EqduniQa1JUsZupDkMpL1D5K7QaicOQ4EqlulFfnSaLd6T9NDId0x1yZPHsqWjtIaOvEcjg1BSwMB5Rbqmo/kVEPmlUKzjs8eg=
+	t=1743687789; cv=none; b=AuEMrChmDe8pDjJLEa58vZV+1pNC43eNl+FCuhCXWi6qSCrSjxIV+SPGoGSjHijxgQyw/d5YAG9iiFm4Bydlnvu0oJE3pb7Ze9WrapsrzfVeEaV0nnLm55Ps60rM/Dvsx2ZKes3o3p20U4OvApCUcdbdC9Fm+a2LfFmmNFRzxyI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743687738; c=relaxed/simple;
-	bh=UwqrUYs/tDmcgi/laKzxLNjN2dD0BKH+uhvk77Z3gD0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=k6NnII58OlsF+1rfrt3wukR2J3n6iFwcGGYcpYv7DyJCLNAJRVfh0E6vKn6IB3xUI4WGIWvS1KAoRrxtB0DRAQhb/bEc8vz/ow+JTKA8hiO90xJyYpt8Vmu0lip0BDZxafpRcUgqi3p6nUdHBbOn8wYW+aiW01DINyeCIAu+bus=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=XhkYdDOi; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1743687789; c=relaxed/simple;
+	bh=Y+O3N0Mg3zjaodcgQv5X2X/SV9YJxv/zyZ6jTBFKrw4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TS13x03lpDGohfKEtp0jQ0sh0WwFGXgZUqiZHcgcFPz2+1wYvKdBhqWB8Cx+B5zqycGCUx9g8ReP7oE+VMII0D2Wagq+1+iXPzgZmpWMR/1JDIoL66A5ewh78b+/RMvlFN9E6gRpRanYTKgTQbO5LYwcoQ7lZpvtLB/zpRlzod8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MhBbZtLE; arc=none smtp.client-ip=209.85.208.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="XhkYdDOi"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-39c1ef4ae3aso565522f8f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 06:42:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MhBbZtLE"
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-30bfc8faef9so9067641fa.1
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 06:43:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1743687733; x=1744292533; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=KzSv22Tlh8b0C2DIJrcJuTRBaLWunIy9hBuJEBnkWz4=;
-        b=XhkYdDOi4gPRR6YKaqy/WNAmfxVbPfGBAef7k3aryC7X4LIWNzvb4UUQKcQVYD+nyC
-         53vHu2OAQ8Bam6hj6U/ijL5w6a1ux85KkYRR4zvtr5sVoSdWto9xqwBsBeSLXxINNGbU
-         kJZHX4pkxw21pCwIxjxQjw4h1q7SkC0raZtKnHvTl/WfQL6UdzQSkFXhjwF1GQ806brt
-         ZA8eWDW3YwSE9Alz8d7IDV/SpWYOfa8D4gY+2RhPqHG1vTsJ3fR4FAn44hk4TrrR0ABE
-         TNA7qvz5wEpKa+NeL4KtW0YMWs4Sn7ZbVUYmbug9NiEe90cd7iv/HaHM3Zdrd5fTASQx
-         QpnQ==
+        d=gmail.com; s=20230601; t=1743687785; x=1744292585; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pnHIJaJmPOTcWKy9/EQwvdOyTpiQOXrF4NYnsTEev8o=;
+        b=MhBbZtLE1RD9jW+fgxBP/+d3jyb+i5e1A2pCxowLCvakvGBLwwYvto4cSXDdYqpg2U
+         s06A6snfnH6KgxAj5cEkYyH91ZydhMhqTgjXpUpGt/4AJyxRUarGvuMhOGa5JMniGrcG
+         /oi1Dw/+zLR0KT+cPTN2vh1faAJA1erjQULgm+Jc4j3AhopBN/4behEuKBtBis1BrOP0
+         rVtr2LZLADjO5dQx55kJG/3JtXcXlIlwfxjMx4g/m3Zy9Ds5EEDM/Lt9aDEW7bhiXIIe
+         pPTfA8v4/GlA9ybOJCECQXtABsmE7613NdGcRrbNoF1jTPSrUm2xAFk0PhZbtp258a3k
+         Ezww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743687733; x=1744292533;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=KzSv22Tlh8b0C2DIJrcJuTRBaLWunIy9hBuJEBnkWz4=;
-        b=mk5t/yClpLpBDSQztNgALCUV0Mw8n6CCNOHKOZEqaB7ir1LBL+OoeD9BIo5GhIh/mk
-         OQOZ70a6tnXAXKc4oRPBR+SNlgId7cq9ZbkJ5S7paaeaZUZf+Z7K1znNSDBjvH+4IcYL
-         zXbMWqDda27m6eL56ut4H322fiumA3Ygwbrd+Km3xMbEuG6gHyJO+2WlQf+Jn6/Y4xUk
-         9CjXInOEBXLzm8rV/n8Cw4iRnTbv/Q6X3/Kh5YHLCFbgp/6RIlc1uj7li69OWkIYHMLH
-         lfjWuhbSAYRC0akClit5Jhgzf8SkZm3YzxsCaLCbeSyBGoyS3XFoLVf0y8/7jTV9mKTh
-         TxQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXxfk8oHP12MItVJ56GHd6XUPGQzcF2XuV8HfrEjQzN1b9iZleKUBK81HMp6aflc3r/FIwV9rVwuBgAS2M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzzlVfHBkxeFvXzsoh5TOOg1o3JO05XcMsYRVR3LapQPkvLorCD
-	p06AG97BALH8G9tp+61WgArIppaVQ3LCXc1fCRE/q2v6OP5Lps8dI39JyFFc1/M=
-X-Gm-Gg: ASbGncutoSNfkPlDQla8pEK+06f7bsmXI902krrxXJ87iHtOLIbB4Bf7cPF8Yms1JRm
-	swAgBbz6RGO4C6VPWh3WXqdVkbirI8FKcOCCIh/Ri4J/Y/pGXvpDDeOo+/BvYLL8mg5Q6ruH6c1
-	e6yEj9mtMILLmcYsm7z1dASDFqzIm038NhirCOivSYYCBrOJEc+QrRvGSc7s/PpBrZAcOO4ymnc
-	+DqlF2su7sI/5F6jSafvfoobVaGiOLotYVWBJB6cxlrJDr1W4lKJh0gb/XDzJUv39SM6+rB+Tsi
-	kRgDetzJoJLuzyTVao/wFB+PkXTnpDutTIA1VpA1M9bia6UjcCF+9SuReSxlrIC6BsMqri/Q4qw
-	=
-X-Google-Smtp-Source: AGHT+IGq/wOsMPKFUCVYs7nL4AsOHO70+LxMIkYWJmXF6+zZV/6eUJ+XSIteFv/WFh6+yfsrGoEdgg==
-X-Received: by 2002:a05:6000:1786:b0:39a:c9ae:9eea with SMTP id ffacd0b85a97d-39c2e617779mr3043553f8f.10.1743687733190;
-        Thu, 03 Apr 2025 06:42:13 -0700 (PDT)
-Received: from localhost.localdomain ([2001:861:3382:ef90:7c12:ff06:d34a:d3e9])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c301b76f2sm1854884f8f.53.2025.04.03.06.42.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Apr 2025 06:42:12 -0700 (PDT)
-From: Alexandre Ghiti <alexghiti@rivosinc.com>
-To: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@rivosinc.com>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas@fjasle.eu>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Charlie Jenkins <charlie@rivosinc.com>,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-kbuild@vger.kernel.org
-Cc: Alexandre Ghiti <alexghiti@rivosinc.com>
-Subject: [PATCH v2] scripts: Do not strip .rela.dyn section
-Date: Thu,  3 Apr 2025 15:42:00 +0200
-Message-Id: <20250403134200.385077-1-alexghiti@rivosinc.com>
-X-Mailer: git-send-email 2.39.2
+        d=1e100.net; s=20230601; t=1743687785; x=1744292585;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pnHIJaJmPOTcWKy9/EQwvdOyTpiQOXrF4NYnsTEev8o=;
+        b=SBaFx2uNbUsc2Ga88ILo/QO2CID02r1aqgO+ytTCpL2M0YXzONHmDF8bOg5BIMBz2N
+         oYSoyOrfgCBRj2htgbOkNvA2/zQEt2z3ULw2rgSu9InZxroyLeXi94dsI/5mPp0pbOVQ
+         Ys2QOz1WaxfhKcfC0irO5p6YbjJ4NSfVPUAEr2gGnXNSYpArh6eBxUP9WfLHVAn5vsH8
+         SwLxgyiUv3mirn5cbDrYTrq/Q11n3jwX3Yba2bMWs9Sc1X8Th27cRjAXFArNsJeon8kr
+         nUMHwZP1hYVWWXB+pEDiCDAjxxb1ah7BbS+rPLZIIj1zveUvKLpKvePtilR2Ku5YHQel
+         Xvew==
+X-Forwarded-Encrypted: i=1; AJvYcCVaxqxhxw06vQ7Rfp8PEceKwvbce7BTGYHiM+QOiRx7ovbBSdy0P5oUfTYw+9dRz1p01BkdF0fg3KHCCyc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyl1GwgWtADr3O66ewJA4hDe2nchz6VYL6uysX/8lrebvxXEMTp
+	/uAclbL3P8sZhuTU+tiYoE8uGL1ol4I3xHl3YSSDdUGClQZHAQBnlvLFv2KgBYGUMugmFkrOTxO
+	mppzudJXhYdxZNC1kXnKPAUTCNAs=
+X-Gm-Gg: ASbGncuN34zm32V217zGMDGJThfSolfxjDmmN697YgM4yvrr/KKenu+7ZGcAKCdmGq8
+	qycixeWh5YV6hvfmolWnYztXSLb5SMM+2pqZ7yUL3pyNcQuqA/4NxcacSaV8tkDWLILIE+qofkf
+	FMTXC4VvUfhDJIqOYRIGrVvlvMTg==
+X-Google-Smtp-Source: AGHT+IFyfXhmFsa7JKsAlAhlm/Om1WP7m3TIBLhWY8jq5PguFLmjfl4iYaC5GaCL3+/3iicC6GEmK9yIy98Bx66q/k8=
+X-Received: by 2002:a2e:bccb:0:b0:30c:2d44:c212 with SMTP id
+ 38308e7fff4ca-30f02112008mr11751511fa.9.1743687785394; Thu, 03 Apr 2025
+ 06:43:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <81a25a60-de78-43fb-b56a-131151e1c035@molgen.mpg.de>
+ <f8ab4b21-0afc-4956-a324-12c0c67bb5de@molgen.mpg.de> <CAFULd4Z48Vh_UW6+Q-BJ3c42eo7QaKhAbhZRX+Eegx0Te4+z6g@mail.gmail.com>
+ <dfb96de9-b28a-4eac-ac73-88bfb9c44245@molgen.mpg.de>
+In-Reply-To: <dfb96de9-b28a-4eac-ac73-88bfb9c44245@molgen.mpg.de>
+From: Uros Bizjak <ubizjak@gmail.com>
+Date: Thu, 3 Apr 2025 15:42:53 +0200
+X-Gm-Features: ATxdqUELqIx6TqVDVB-QHsT39SeAdZxL6RPUeS0vHCEbjJ6LN7BOK8GbO6AxP6Q
+Message-ID: <CAFULd4ZGWFN00AVQ3Y3yg4HJgdbb5o_hxERnskggFtxfCUBieA@mail.gmail.com>
+Subject: Re: New warning `cryptd: no symbol version for this_cpu_off`
+To: Paul Menzel <pmenzel@molgen.mpg.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	LKML <linux-kernel@vger.kernel.org>, regressions@lists.linux.dev, 
+	Brian Gerst <brgerst@gmail.com>, Nadav Amit <nadav.amit@gmail.com>, 
+	Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-riscv uses the .rela.dyn section to relocate the kernel at runtime but
-that section is stripped from vmlinux. That prevents kexec to
-successfully load vmlinux since it does not contain the relocations info
-needed.
+On Thu, Apr 3, 2025 at 3:20=E2=80=AFPM Paul Menzel <pmenzel@molgen.mpg.de> =
+wrote:
+>
+> Dear Uros,
+>
+>
+> Am 03.04.25 um 15:14 schrieb Uros Bizjak:
+> > On Thu, Apr 3, 2025 at 2:30=E2=80=AFPM Paul Menzel <pmenzel@molgen.mpg.=
+de> wrote:
+> >>
+> >> #regzbot ^introduced: 6a367577153a
+> >>
+> >> [To: +Uros, Cc: +Nadav, +Andrew]
+>
+> >> Am 03.04.25 um 09:35 schrieb Paul Menzel:
+> >>
+> >>> On the Intel Kaby Lake laptop Dell XPS 13 9360, updating from
+> >>> 6.14.0-11270-g08733088b566 to 6.14.0-12456-gacc4d5ff0b61, Linux logs =
+the
+> >>> new warning below:
+> >>>
+> >>>       cryptd: no symbol version for this_cpu_off
+> >>>
+> >>> I haven=E2=80=99t bisected it, but could it be commit 06aa03056f90 (x=
+86/smp:
+> >>> Move this_cpu_off to percpu hot section). It says to have no function=
+al
+> >>> change though.
+> >>
+> >> `git bisect` led to commit 6a367577153a (percpu/x86: enable strict
+> >> percpu checks via named AS qualifiers).
+> >>
+> >>       $ git bisect start
+> >>       $ git bisect good 08733088b566
+> >>       $ git bisect bad acc4d5ff0b61
+> >
+> > Can you please post your .config?
+>
+> Sorry, I didn=E2=80=99t attach it right away. It=E2=80=99s attached now.
 
-Fixes: 71d815bf5dfd ("kbuild: Strip runtime const RELA sections correctly")
-Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
----
- scripts/Makefile.lib | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Huh, it looks that modpost chokes on __seg_gs prefixed symbols.
 
-diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-index cad20f0e66ee..0a1f1e67a0ed 100644
---- a/scripts/Makefile.lib
-+++ b/scripts/Makefile.lib
-@@ -377,7 +377,7 @@ quiet_cmd_objcopy = OBJCOPY $@
- cmd_objcopy = $(OBJCOPY) $(OBJCOPYFLAGS) $(OBJCOPYFLAGS_$(@F)) $< $@
- 
- quiet_cmd_strip_relocs = RSTRIP  $@
--cmd_strip_relocs = $(OBJCOPY) --remove-section='.rel*' $@
-+cmd_strip_relocs = $(OBJCOPY) --remove-section='.rel*' --remove-section=!.rela.dyn $@
- 
- # Gzip
- # ---------------------------------------------------------------------------
--- 
-2.39.2
+WARNING: modpost: EXPORT symbol "this_cpu_off" [vmlinux] version
+generation failed, symbol will not be versioned.
+Is "this_cpu_off" prototyped in <asm/asm-prototypes.h>?
 
+Uros.
