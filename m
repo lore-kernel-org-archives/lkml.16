@@ -1,47 +1,51 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B445A28A3EE;
-	Thu,  3 Apr 2025 19:10:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0012E28A3EE;
+	Thu,  3 Apr 2025 19:10:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743707441; cv=none; b=c/qrLspKzy4gYHnRLb2j3+1XI+8l/Hb1g5hGzhCk/9MDbTweMEjUnmNrjnApimOzCJSCmAD24ULJDflwTm9uiuUnA5lFKyOwd9hSF6NUBmxBjlMPXGMWGjbRzqYcQ5ZUXjeh0BdS3yhFqA0tJoT2ZABfN+/xK97IfiC148OS/mI=
+	t=1743707445; cv=none; b=nZIOE8/nE3kSsKeNVevry6Wo36j9lg4PMeR6UwUtSBsySp2Q3qSreDl8tBG7jLYnsvIfbc7Mwx0W4yNmTRtA44/LP8FUzMRjaqOGxYDsQnD3eAQq/d+4rjGxNNN7ufYyKz2Q9jH5DdbLMPHNjro3ElphNL/66tuLanEbH7wwi+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743707441; c=relaxed/simple;
-	bh=M7lFV45Fx+2+0E22nSVxRdUTHbc4t70UypBkKOnWtR8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RmotBm5PBfOQFiCxN8/HiVG2RcOxbzQUC6fp7YOZ91CsWRCSYwg2BMa+iYcsQRLEJ/3qm/vG2yxGUuRh/0Zt0+q0CrGgrG1buWZT8QxEQ6v4u4CVYPdfw/chju7Ro+iAX3noaFxEvlIPajf562xe8LMKwHi1UEKN+jsOMa0RE1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oJUvs7dS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743707445; c=relaxed/simple;
+	bh=eBQc9PCYZrCjyx8p39U2MG6elWbeNnZFG9NajQGLrjc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=OfU1okL5+Ius9PxLkYgroYLV7c42twmEalRCm/EQMt+VtNGqmjmjDQ3k7VCUTVjbwdUAq4z2c6SBpynHr39dv+HejYT5bBG3pZORM1ShCXk/An7hIoR1Q9m3adQoD1OD5yT7sLWrPbKmXsuzrSxJuTtCPs5j04z+5gi+Ht4ZXl0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XijhNIfY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oJUvs7dS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D507C4CEE3;
-	Thu,  3 Apr 2025 19:10:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XijhNIfY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19A7EC4CEE8;
+	Thu,  3 Apr 2025 19:10:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743707441;
-	bh=M7lFV45Fx+2+0E22nSVxRdUTHbc4t70UypBkKOnWtR8=;
-	h=From:To:Cc:Subject:Date:From;
-	b=oJUvs7dSqSiAVgFqnYEKz53/CAUlAWYBlZ5O2P4pELOhef+ShMJo7YkLK0wi/16MH
-	 7YMydJK+UgeIz91ZyMMUnT9y/v4cznf8HD5yYj3ptP6TdXkukeoyTTzp5+zP+ISrrh
-	 +75YcF9PXLsb0s86RgNizwTn6E2mH3BVxdPl+5T/GxOtoOwRKGO4KUkiW2kS+pu3Yr
-	 zuvnd2ycmueWHMJgLA6U+HIOPaXek42JJ4Pn5Q9c6/xW33V+ck03CgdO6VL4OjIXPN
-	 lwtANlRIxSzbIRsk1ckqwuXqtrD3hxp6B/rjQ0waC53Y7XIZ6QyZ3Vp+G625tSbJTq
-	 4QbLtieb4hz7A==
+	s=k20201202; t=1743707444;
+	bh=eBQc9PCYZrCjyx8p39U2MG6elWbeNnZFG9NajQGLrjc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=XijhNIfYdzuW6H8O87CofRR7amBg71WtLFsjFPVu9nHDHXi5puPCw/qsiUp1Ei7FK
+	 T4s2qpREUBd7BKoDCLWejhmlFvfwXrVE1c/jCNmqF9SrV5hx2jUdjuVlC/ZMCAqgje
+	 zEBYiPmosxtExwfJeD45g/tK9EK6vkD13A79ux5uFYHk6rqof3BvLKUGU1Y35IQHnt
+	 sdaNg+iSBvShyKBioB62xmuZR4Luvkihc/dymfRdOZ+rpNmbnG/qx0oBOixYOl4Rc8
+	 cde+WxbOuTWgHIhAF1wQuNHO8tULFv+vsSRzhQWOe/6nP4D9Vqwpf5uozkr18LKK96
+	 lUQsM24vCxxQA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jason Xing <kerneljasonxing@gmail.com>,
-	Mina Almasry <almasrymina@google.com>,
-	Paolo Abeni <pabeni@redhat.com>,
+Cc: Rand Deeb <rand.sec96@gmail.com>,
+	Dave Kleikamp <dave.kleikamp@oracle.com>,
 	Sasha Levin <sashal@kernel.org>,
-	hawk@kernel.org,
-	ilias.apalodimas@linaro.org,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 01/14] page_pool: avoid infinite loop to schedule delayed worker
-Date: Thu,  3 Apr 2025 15:10:23 -0400
-Message-Id: <20250403191036.2678799-1-sashal@kernel.org>
+	shaggy@kernel.org,
+	eadavis@qq.com,
+	niharchaithanya@gmail.com,
+	rbrasga@uci.edu,
+	aha310510@gmail.com,
+	peili.dev@gmail.com,
+	ghanshyam1898@gmail.com,
+	jfs-discussion@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 5.4 02/14] fs/jfs: cast inactags to s64 to prevent potential overflow
+Date: Thu,  3 Apr 2025 15:10:24 -0400
+Message-Id: <20250403191036.2678799-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250403191036.2678799-1-sashal@kernel.org>
+References: <20250403191036.2678799-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,66 +57,49 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.4.291
 Content-Transfer-Encoding: 8bit
 
-From: Jason Xing <kerneljasonxing@gmail.com>
+From: Rand Deeb <rand.sec96@gmail.com>
 
-[ Upstream commit 43130d02baa137033c25297aaae95fd0edc41654 ]
+[ Upstream commit 70ca3246ad201b53a9f09380b3f29d8bac320383 ]
 
-We noticed the kworker in page_pool_release_retry() was waken
-up repeatedly and infinitely in production because of the
-buggy driver causing the inflight less than 0 and warning
-us in page_pool_inflight()[1].
+The expression "inactags << bmp->db_agl2size" in the function
+dbFinalizeBmap() is computed using int operands. Although the
+values (inactags and db_agl2size) are derived from filesystem
+parameters and are usually small, there is a theoretical risk that
+the shift could overflow a 32-bit int if extreme values occur.
 
-Since the inflight value goes negative, it means we should
-not expect the whole page_pool to get back to work normally.
+According to the C standard, shifting a signed 32-bit int can lead
+to undefined behavior if the result exceeds its range. In our
+case, an overflow could miscalculate free blocks, potentially
+leading to erroneous filesystem accounting.
 
-This patch mitigates the adverse effect by not rescheduling
-the kworker when detecting the inflight negative in
-page_pool_release_retry().
+To ensure the arithmetic is performed in 64-bit space, we cast
+"inactags" to s64 before shifting. This defensive fix prevents any
+risk of overflow and complies with kernel coding best practices.
 
-[1]
-[Mon Feb 10 20:36:11 2025] ------------[ cut here ]------------
-[Mon Feb 10 20:36:11 2025] Negative(-51446) inflight packet-pages
-...
-[Mon Feb 10 20:36:11 2025] Call Trace:
-[Mon Feb 10 20:36:11 2025]  page_pool_release_retry+0x23/0x70
-[Mon Feb 10 20:36:11 2025]  process_one_work+0x1b1/0x370
-[Mon Feb 10 20:36:11 2025]  worker_thread+0x37/0x3a0
-[Mon Feb 10 20:36:11 2025]  kthread+0x11a/0x140
-[Mon Feb 10 20:36:11 2025]  ? process_one_work+0x370/0x370
-[Mon Feb 10 20:36:11 2025]  ? __kthread_cancel_work+0x40/0x40
-[Mon Feb 10 20:36:11 2025]  ret_from_fork+0x35/0x40
-[Mon Feb 10 20:36:11 2025] ---[ end trace ebffe800f33e7e34 ]---
-Note: before this patch, the above calltrace would flood the
-dmesg due to repeated reschedule of release_dw kworker.
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
 
-Signed-off-by: Jason Xing <kerneljasonxing@gmail.com>
-Reviewed-by: Mina Almasry <almasrymina@google.com>
-Link: https://patch.msgid.link/20250214064250.85987-1-kerneljasonxing@gmail.com
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Signed-off-by: Rand Deeb <rand.sec96@gmail.com>
+Signed-off-by: Dave Kleikamp <dave.kleikamp@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/page_pool.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ fs/jfs/jfs_dmap.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/core/page_pool.c b/net/core/page_pool.c
-index 335f68eaaa05c..dbe0489e46035 100644
---- a/net/core/page_pool.c
-+++ b/net/core/page_pool.c
-@@ -387,7 +387,13 @@ static void page_pool_release_retry(struct work_struct *wq)
- 	int inflight;
+diff --git a/fs/jfs/jfs_dmap.c b/fs/jfs/jfs_dmap.c
+index 812945c8e3840..3bc304d4886e6 100644
+--- a/fs/jfs/jfs_dmap.c
++++ b/fs/jfs/jfs_dmap.c
+@@ -3728,8 +3728,8 @@ void dbFinalizeBmap(struct inode *ipbmap)
+ 	 * system size is not a multiple of the group size).
+ 	 */
+ 	inactfree = (inactags && ag_rem) ?
+-	    ((inactags - 1) << bmp->db_agl2size) + ag_rem
+-	    : inactags << bmp->db_agl2size;
++	    (((s64)inactags - 1) << bmp->db_agl2size) + ag_rem
++	    : ((s64)inactags << bmp->db_agl2size);
  
- 	inflight = page_pool_release(pool);
--	if (!inflight)
-+	/* In rare cases, a driver bug may cause inflight to go negative.
-+	 * Don't reschedule release if inflight is 0 or negative.
-+	 * - If 0, the page_pool has been destroyed
-+	 * - if negative, we will never recover
-+	 * in both cases no reschedule is necessary.
-+	 */
-+	if (inflight <= 0)
- 		return;
- 
- 	/* Periodic warning */
+ 	/* determine how many free blocks are in the active
+ 	 * allocation groups plus the average number of free blocks
 -- 
 2.39.5
 
