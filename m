@@ -1,137 +1,62 @@
-Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DB23433D1;
-	Thu,  3 Apr 2025 14:19:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B286433D1
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 14:19:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743689958; cv=none; b=cychoOKjs3adroCMNDzke607mLSggZkt6f60uOgw4DqETHbt6zm/oXKyxrmZXstK8eyuTYnr/GhgE7yUkveT216amfXumYkyrAil4XufzEzja1EnKf2yAMbLkq/5lFCuEHV07tC3DUboIK8PO4wYgFw2WTIuhcHymPjFbqq1li4=
+	t=1743689969; cv=none; b=N+I5wMQCZOI1cB0Dr/whywLR4xvC69MftyqBT2luUwR3Kpyt0kAFyuULDIO0VNIpYnVD3C/R99PjYfvvrD4Ypyf0vYoqoT5OVE7/NCzg1uVgOfmvtsJT4XUmZBuxJgDMTj5h3d3HU5x5QHv5id6ZRZPvg1mpbXXYekP/HEDoSlY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743689958; c=relaxed/simple;
-	bh=2r3U8ewcuEhS2Jqw1TNGNFLFh3bbW+ULJZIAPbc7h8g=;
+	s=arc-20240116; t=1743689969; c=relaxed/simple;
+	bh=hIxZ8DXbteEySXel5MzoSaZF1xDhFewUBhiOqfvIxLM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OWbIWT/a0hN0eYxjprsBbkF+1VV4nKb9gF34EE2da8F8apt85fOixkSPijgZPTswxN3grMeXv2ybH3oggXsO4IOYwZIZKPgJPyfE9hcukBxERXKhp+sykufjFLGZH/Jg2WET0dltF2KvzubDMmQ6KJfeTlaUZEhNdjOHAcmLvw8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hF7daB+/; arc=none smtp.client-ip=209.85.215.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=MO9ez3zcp9MJlPe+7M6PzSIpcVGb9WivkYyoJYbZWNA4+KotpovRdCGHDiSRhRRxk6G+fVIGsWq5IyEtjS4ntA/QqxKcXK0dq2PtMkixcF9Z713x8QwlqvemU06RJOqjda6W4vTmIWRcVsmXkwmKYf5youQm2i2lDhVqxrb29IU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IqmfwKh6; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hF7daB+/"
-Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-af19b9f4c8cso713238a12.2;
-        Thu, 03 Apr 2025 07:19:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743689957; x=1744294757; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=khXp6kOEsTlpiucdkkgdxNh1P5TojGz8UwRxJaqxnCw=;
-        b=hF7daB+/AkE7Y2g16TF5zbyArB4MzOAuBkkO44kfT6BhW1Z5GY18WT2QrEaG5w21zs
-         FFPdqxshRfvceHjLvRoO1d2v3z8MocHaEIfIC3NlHJGMFcVpXueyEjSa9TqTqXWO3BzS
-         LiFIJhGy7M0xfUvYpBPoYnyEV9falFc8Y+wfYkiSvN/7tF0Ckt4lizw5IX5uAQcps8Ev
-         PThT606dq79RCheV3ENBMcbWII2GFc+OcxNw6EVrr5dBpcF3MwpK7DcSDC56rHfZv3k1
-         d9KKkEo8xG3z3qRAdLsj8U2f2GG+nXiK4Q4e3sDwLOjqxVSbuQY1B+v1PriP53eIaWVs
-         C7Mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743689957; x=1744294757;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=khXp6kOEsTlpiucdkkgdxNh1P5TojGz8UwRxJaqxnCw=;
-        b=kaj1L3CbVw7OJ3ayx9+2QKLj9JIMb9nIkMR3msDPqGIGdAD3TXst34iPiry/IpUMSS
-         MjIZ+MfDRlib+gdsYWYO8rY2nwIHC1ohYhfZuG77zVAfAC7HPefrCAK/aqrAS6+VIaK4
-         w5DMexMya7DiB+YbznZ5kXzwSHwwxOheO5M1IFXxtO1wiouU9jr/wmAIzCnEdCE0HqtK
-         Twc1d3lQ+nWCwWM5g0Yr/iSCWi6eZpecytTHoCQmH+ur+XARwWg09vuQve8KJ1bsIrHV
-         6DP6yUaGwjY3Cu6OD94+XSYkAGLoGxVjWiq4C8qkCT+B1rBmxlOWNNHPZYqDnCFE7S1w
-         LUyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVPuofHEHrnn29czEaeixg7exqoattSwXXGlYyncr3S0gNo9q61pEDOcNHX+VKrK3pu43piR7vAtyR+jOl1oQEkfA==@vger.kernel.org, AJvYcCW0opmxmHgLx+fATb8U+ryVxxjAmPhhD3/HWsk5pjc0CFDc7xidBXN8KERW0ERKoUklr+lCGbzpPAOFTuU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YznAqhxPRBj+ixIBVGAoS9fcTVT6a/xpah+9WbkGeY7AQIXoC53
-	W5x0/YeMxzO+fOA1KCBiILhz8ajWJmt2e1XLUKoN8S/o+0rM4+98
-X-Gm-Gg: ASbGncucOyZnU5eJAhOxuZAed+rMcgrdvcrjZGR5fbk5NRFPxaKnvM7rRMPdScJqI8W
-	Un1XrF4yrWFQLD+728MpwMo8mg0eqeRTEFtiBBxAdSUeKCDmG5+3fMqpB2FTv5ai5dMYnT+JQvs
-	o5QbcEu5BPX07wTxg7VFaehZsmGzfmHGITpR985BsyJ+l2pWyWyEbFOpluF+wDJUyzVitZ+HSii
-	uAXfWSQQLVajUOH5y949RLIiZHE3O0I/x2f4aCc1pYLsJyFVqZLPmqWTKbRJsSkYmiIl61W7hZF
-	f0d1QgHniqBGq9bsyjJC6SKs71bqNcSJc3774vQ5o66x
-X-Google-Smtp-Source: AGHT+IFsE/53OqOyMfyP3T9KIucSDYD9e9PKK/5G+B7y8ncBc+uPWVYiOMM6K5nKTFIC+KJNWKGDsg==
-X-Received: by 2002:a05:6a20:9f4e:b0:1f5:8126:8a5d with SMTP id adf61e73a8af0-2009f5fdf88mr29869754637.17.1743689956462;
-        Thu, 03 Apr 2025 07:19:16 -0700 (PDT)
-Received: from localhost ([216.228.125.129])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af9bc2d331csm1252459a12.12.2025.04.03.07.19.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Apr 2025 07:19:15 -0700 (PDT)
-Date: Thu, 3 Apr 2025 10:19:13 -0400
-From: Yury Norov <yury.norov@gmail.com>
-To: Ian Rogers <irogers@google.com>
-Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Darren Hart <dvhart@infradead.org>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	=?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>,
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
-	James Clark <james.clark@linaro.org>,
-	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
-	Yicong Yang <yangyicong@hisilicon.com>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Al Viro <viro@zeniv.linux.org.uk>, Kyle Meyer <kyle.meyer@hpe.com>,
-	Ben Gainey <ben.gainey@arm.com>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	Kajol Jain <kjain@linux.ibm.com>,
-	Aditya Gupta <adityag@linux.ibm.com>,
-	Eder Zulian <ezulian@redhat.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	Kuan-Wei Chiu <visitorckw@gmail.com>, He Zhe <zhe.he@windriver.com>,
-	Dirk Gouders <dirk@gouders.net>, Brian Geffon <bgeffon@google.com>,
-	Ravi Bangoria <ravi.bangoria@amd.com>,
-	Howard Chu <howardchu95@gmail.com>,
-	Charlie Jenkins <charlie@rivosinc.com>,
-	Colin Ian King <colin.i.king@gmail.com>,
-	Dominique Martinet <asmadeus@codewreck.org>,
-	Jann Horn <jannh@google.com>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Yang Jihong <yangjihong@bytedance.com>,
-	Dmitry Vyukov <dvyukov@google.com>, Andi Kleen <ak@linux.intel.com>,
-	Graham Woodward <graham.woodward@arm.com>,
-	Ilkka Koskinen <ilkka@os.amperecomputing.com>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Zhongqiu Han <quic_zhonhan@quicinc.com>, Hao Ge <gehao@kylinos.cn>,
-	Tengda Wu <wutengda@huaweicloud.com>,
-	Gabriele Monaco <gmonaco@redhat.com>,
-	Chun-Tse Shao <ctshao@google.com>,
-	Casey Chen <cachen@purestorage.com>,
-	"Dr. David Alan Gilbert" <linux@treblig.org>,
-	Li Huafei <lihuafei1@huawei.com>,
-	"Steinar H. Gunderson" <sesse@google.com>,
-	Levi Yun <yeoreum.yun@arm.com>, Weilin Wang <weilin.wang@intel.com>,
-	Thomas Falcon <thomas.falcon@intel.com>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	Andrew Kreimer <algonell@gmail.com>,
-	Krzysztof =?utf-8?Q?=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>,
-	Junhao He <hejunhao3@huawei.com>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	Xu Yang <xu.yang_2@nxp.com>,
-	Steve Clevenger <scclevenger@os.amperecomputing.com>,
-	Zixian Cai <fzczx123@gmail.com>,
-	Stephen Brennan <stephen.s.brennan@oracle.com>,
-	Yujie Liu <yujie.liu@intel.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v1 05/48] tools lib: Silence -Wshorten-64-to-32 warnings
-Message-ID: <Z-6Y4dH0bhs6VXmj@thinkpad>
-References: <20250401182347.3422199-1-irogers@google.com>
- <20250401182347.3422199-6-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IqmfwKh6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743689968; x=1775225968;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=hIxZ8DXbteEySXel5MzoSaZF1xDhFewUBhiOqfvIxLM=;
+  b=IqmfwKh6Ujxtofr4tFP071C/eU+nrPUa7WICD4cJbFHqUx3GBwbIAGuH
+   h9hc4Ttk53vkU8v6xnolMkR83Kl/jVciIiM4UQLigbebRzx1GgyBkjha4
+   Sb7ZKuny4EktLMMjJ5GbV8JPui7JR6F1HcZIO79EO07vHdwJOdEzvA8f7
+   KaXXM9SBnqnIWSiC3V/xqQetAhAiEOwIjKaHPm6fQvmLjDQaSQRkQlgSV
+   C1mfe0KOr7KttW1/kRZ1m0RFVkKjIyYgeMP9OUrTgXTPJFkAv+/u/wyFf
+   HrlQOZAVeYigrvU0KoJSMx4flHDbckUH73A1YNOFYkEceUqvQImifyBB2
+   g==;
+X-CSE-ConnectionGUID: PL3wTvyQTS2Gn+k7vw+TLA==
+X-CSE-MsgGUID: oDcTxToUT1aGC4QhQpXTNQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11393"; a="70471409"
+X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
+   d="scan'208";a="70471409"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 07:19:27 -0700
+X-CSE-ConnectionGUID: WGTUO9I3RJugZ+moxd3ysw==
+X-CSE-MsgGUID: dCuTS7AVQsOL+p23m/gdfg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
+   d="scan'208";a="127306515"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 07:19:25 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1u0LPf-00000008prL-0ejI;
+	Thu, 03 Apr 2025 17:19:23 +0300
+Date: Thu, 3 Apr 2025 17:19:22 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Raag Jadav <raag.jadav@intel.com>, david.m.ertman@intel.com,
+	ira.weiny@intel.com, lee@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] mfd: core: Support auxiliary device
+Message-ID: <Z-6Y6lbLSbe46-uQ@smile.fi.intel.com>
+References: <20250403110053.1274521-1-raag.jadav@intel.com>
+ <2025040336-ethically-regulate-3594@gregkh>
+ <Z-6YU24dhxF5PRaw@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -140,35 +65,38 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250401182347.3422199-6-irogers@google.com>
+In-Reply-To: <Z-6YU24dhxF5PRaw@smile.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Tue, Apr 01, 2025 at 11:23:03AM -0700, Ian Rogers wrote:
-> The clang warning -Wshorten-64-to-32 can be useful to catch
-> inadvertent truncation. In some instances this truncation can lead to
-> changing the sign of a result, for example, truncation to return an
-> int to fit a sort routine. Silence the warning by making the implicit
-> truncation explicit.
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
+On Thu, Apr 03, 2025 at 05:16:51PM +0300, Andy Shevchenko wrote:
+> On Thu, Apr 03, 2025 at 03:02:47PM +0100, Greg KH wrote:
+> > On Thu, Apr 03, 2025 at 04:30:53PM +0530, Raag Jadav wrote:
 
 ...
 
-> diff --git a/tools/lib/bitmap.c b/tools/lib/bitmap.c
-> index 2178862bb114..87bd15e3968e 100644
-> --- a/tools/lib/bitmap.c
-> +++ b/tools/lib/bitmap.c
-> @@ -32,7 +32,7 @@ size_t bitmap_scnprintf(unsigned long *bitmap, unsigned int nbits,
->  			char *buf, size_t size)
->  {
->  	/* current bit is 'cur', most recently seen range is [rbot, rtop] */
-> -	unsigned int cur, rbot, rtop;
-> +	size_t cur, rbot, rtop;
->  	bool first = true;
->  	size_t ret = 0;
+> > > 2. Should we allow auxiliary drivers to manage their own resources
+> > >    (MEM, IO, IRQ etc)?
+> > 
+> > The resources are all shared by the "parent" device, that's what makes
+> > aux drivers work, they need to handle this as there is no unique way to
+> > carve up the resources here.
+> > 
+> > So I don't know how you would do this, sorry.
+> 
+> I think we should simply enforce the requirement that MFD on AUX bus must use
+> regmap. This will solve the serialisation and common access to the resources.
 
-Maybe instead typecast find_next_bit()? We don't expect any of those
-to overflow the 'unsigned int'.
+That said, make an additional API call like
 
-Thanks,
-Yury
+dev_mfd_add_aux_devices() which should enforce new infrastructure and convert
+drivers one by one. Also with that you may add a warning to the existing (PCI)
+drivers that are using old API
+
+	if (dev_is_pci(parent))
+		dev_warn(parent, "Uses old API, please switch to ...\n");
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
