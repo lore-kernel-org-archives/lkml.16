@@ -1,211 +1,173 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42BB924BC06;
-	Thu,  3 Apr 2025 16:14:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25BC62505DD
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 16:14:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743696849; cv=none; b=iEJAQa1sN0IDZeUF3QEu0ya+nDFxt9H7Wfbx0MDZwJYwnCZY6cMGRMisAPUmqB+BnQDKWyTTaN+/M57Nw7JgBDRjl/IjrRvz2AAsa4OU5yyMw/yTYEulsk9W3JEr2OScj5nMynYpgj/8qJOPaUH27mVIBFsE1+1PVzjcKiCnZfQ=
+	t=1743696887; cv=none; b=fOLnJICqsP0m5kEtzjKNvnATFDXlIrKYsLsLPK+9XwcHTpe7RRY4f/4Q3TgZSmropI4IJW7GNoDxNxZybSfZs+O3ouW9pYhY0UYI9mL8hpvviORuRIXY5GRISpCeXBAuTjhYohDGv4MbwAeukYuXzxww9ii88mwFNqsErahht6c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743696849; c=relaxed/simple;
-	bh=g4yIIhJXJS+2HpRtFLQZWDfTqppjtp/hIdH2G/MZEpY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LAUn17NXigHs4Tr6bbQZ8TO4yBH10u+K7BSUCJescHHgPb5jWgw3rNR1S/2P9dAI33+yz3u5D+9ZKGvnkQZ1wr4/COTuDprgykfLb1yb106dBD+F2cU27q8rtUkLqSJ+Flezu8rQaCzFE2wLBQekkHktaT/MRJ0+xdDHtvT+3no=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=brNiMAKg; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743696887; c=relaxed/simple;
+	bh=PuTFb6/AgrVS9kTvovIHTdR/gBQ7500V2Xy3T48EVQE=;
+	h=Date:Subject:In-Reply-To:CC:From:To:Message-ID:Mime-Version:
+	 Content-Type; b=foHjMoIdSxczCBmKPU8hmvw2386oM8YEug/9dt4HwNWhAMa9z5zFIh5ngZC3+3DqgFBnvsoFQmrjSFgwULLrYm8SwumISiA1nPLe+pqdVaJwjAGq/lSa5p3r9f9u6FZHJW1Z45utdYQBTC/i+g8wxLryATQaPA8hRuC7+l66gM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com; spf=pass smtp.mailfrom=dabbelt.com; dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b=2gB/Cf1Q; arc=none smtp.client-ip=209.85.215.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dabbelt.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="brNiMAKg"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-736dd9c4b40so1263891b3a.0;
-        Thu, 03 Apr 2025 09:14:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b="2gB/Cf1Q"
+Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-af519c159a8so1038187a12.3
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 09:14:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743696847; x=1744301647; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=NsvCi3xr0wqbxukv6gNk2KWJs6cd/sHgcwpQSSqpQSc=;
-        b=brNiMAKgQ5lYjAZkAYVtcNERGXdLqBOX+G5GqlptHN+NtWr2A9+2pgwWcZmYt9uVQ5
-         tTI5LDRiGRKUXzg3fKgL7A7rFW2a8VNuJ1fI39JaNuz1OAwTy4umz2X42OkPkw+6kDR/
-         CsNOSVR6n82KCKOU8D7yhUtocKIZxz9FoSRzKLlVxVuvlhockGwYc0BrrR3TM/lPHIWc
-         3EEQ2xgtyv7Zt5lqwSYezOMCEC3q5cPv7sbORbkWjvCI+GAZv3uqpoC3Ox642/1MxDdv
-         YOn0XQBSR0lnKqZ+AUjdkvNkHJJRV46yaP8BNWF3RbAkro+qNMaJnwOPxqtCsjaPHxx0
-         Jo2Q==
+        d=dabbelt-com.20230601.gappssmtp.com; s=20230601; t=1743696884; x=1744301684; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ef+pzV4C83e4SAj4to/6r+rMfPyJU1oBkUC+EMKeDMQ=;
+        b=2gB/Cf1Qjz84loEuVI/E5t1FVqxAEg7MJ/VklU3AxRc1dRZkV4vlzfe0vI5f+eCgFD
+         d7VhdYB/uqiWKiZbZ2+uCsqWOMZksa1UXhhpHqZJh44CcQhak0ffiLUjtBtNQkZh3PiS
+         gpGU9pHnlwkzEqHnVprIsqcH44eTg4dAlpF2JIFKbbMkwDwkMFXBnWFR9bRPsMIVXehE
+         TRv7R4i6KCca5iF80/7KrdtsEaeuefseRg5Ktug1IECodD9ImDjzjozwENQudc8w1NOE
+         J+DSs1e5PshaqeYAoOWO97VEUgrS987MixlxKfuOaVD3b8QnYlaxSH5Yof8UXXmGhV99
+         23TA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743696847; x=1744301647;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NsvCi3xr0wqbxukv6gNk2KWJs6cd/sHgcwpQSSqpQSc=;
-        b=finE4JZ6/YTDs3xq32zJNAiWJZdy72r8IS26MYxdiyMzsANnnr62T4eBbyJUt0d1Qh
-         VEFLmhDgXXyGffVeJrE8KAOLy9ybBAI2ILoYPxV09yCXWOaIdpHtXV1nwOGuKpAZTH8w
-         ue2pGjbRk5hVx+/j1y/7aMdn8Iy+SGWhItXHOQAolS+SebmrfKu9X722gFJMleUH3Qpa
-         DxU0CANnZImndiyLYiCSTARenp92cLCrlBpuYouMOWJgswu9Z6pTsMrdfvLcUy0iewLE
-         ZoD5HkNijrLtD1pSBVS3z+9LG+DT/PFtScA18veeulDK4PxneRe6zfp2NScoL6G/fQHv
-         qGGw==
-X-Forwarded-Encrypted: i=1; AJvYcCUMjLt6Lj+ERjWzezq6iS6+JPMrN2O5lyAxNGrV02TGfjQTlun9EKQEEI0YyXnVDbh8/A90nf0wQUGpgY4=@vger.kernel.org, AJvYcCUukxQ/WBEbsub/WfyUUjq3BbnyVcGLFuCEdUA/oug9j8GyX8RH9c4/+3rKg959EKeHtwYNgbGIb2XMh5Sm@vger.kernel.org, AJvYcCUzx8wFxPpmr4+OPhdEBVf+XhMkjRgBtVHzateiPZRypb1YP000uiXOmLoJt4RmWwX/Rq9DcAqx8hgsgyBD+i0=@vger.kernel.org, AJvYcCV+9FI+GQoyuZJ7iDKB9LI5v6M3ZGKL7EHjO6XwPa/aSinFxAeNR3n9cM9/Y5Q3jW4UROBthB+3vYa5MDJI@vger.kernel.org, AJvYcCWoyKQdZ2r3cA0hOtSry3DUsd7w2ZUp0Ah7l+Lr9RULrFcRehfP3eR24krDe9xGLPBFiTujXG0V@vger.kernel.org, AJvYcCWzuNPaQIsKxSx+tK+ucExPWy97ZDupiPjbTQdAKxor1/+/qJungRam7E5Kc8Z/CxHGxaY=@vger.kernel.org, AJvYcCXCB3hR1/XxvrRWL830rH+De7r7l9F2ewuKL9m4QQ7sifPvtjFsFkoI84ZTxUy9V2D+GZk+5jEuMjvsQus=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxhMJchLPNdKptWD56607MUA7M2lUHH6sq7pobwNHwjE/7lqkHi
-	Tpma00taXC9E0gDgH3tYeiUkugzZQSBERR+XVReDEMEOhSACssr4
-X-Gm-Gg: ASbGncsUFk13MZukUHAP2PUbnrEaCgI7DGbtGCiP3vpKDG5zunQDgISHshmCZxyz1AY
-	WU+tXwFF+7fsFPc0+6aKSsjc5nTrLs3nsggyzKTykSh0rzcc9+S6sPQII5PqAV51fchhWfwA3RU
-	1u3n2xp6zUF+bY0XjK8lskvUyVTpgdZKFeIdX+qRvasuMellp7WpFcOOZylxMPNvEJWiNZH6Yk+
-	kb6Pk8sWSlq0Q6GyiUuS4ynw6v1kuzRfL0ge5u2WYC3vI4tvJ5mVSLJL3GLA27ssKSfyYbYk36k
-	1QWFW2yRyNoAWKswgb9LAieFFlY85lNmQgXeCnvljwnQ
-X-Google-Smtp-Source: AGHT+IGVU2+2TkhGwc9XcrbXTU+jprAkGrGQEy4B9m6YI+h73paRxRK7YqS+QjyFE8ZrGike3yIkRw==
-X-Received: by 2002:a05:6a20:c886:b0:1ee:47e7:7e00 with SMTP id adf61e73a8af0-200f55ecf4dmr5333762637.13.1743696847264;
-        Thu, 03 Apr 2025 09:14:07 -0700 (PDT)
-Received: from localhost ([216.228.125.129])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af9bc3fd41dsm1416486a12.50.2025.04.03.09.14.05
+        d=1e100.net; s=20230601; t=1743696884; x=1744301684;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ef+pzV4C83e4SAj4to/6r+rMfPyJU1oBkUC+EMKeDMQ=;
+        b=JAIxVsweiKjvYRSL/lR6SmhqcX1oNCGwL+sSlIDMWDwEe2xDw5FHBqxy1iEVL0K4LP
+         6TaU2nCinPzCx3punpEVNdD6klclmYc2f3GDOnl2NZYp9YpXMC8WzMeFZ5wJrUquz+Ge
+         Bwssy0+Mdu8hax+HlZ6v8E9AzCLAZyP7C4ZQ0FVZY7pfBw/YSJwpF5+6afP2Ivo4OAyF
+         SCbHwf8JJ67S9enD1jTavH4fozAHRzvZDXSAUOM1Twcs6J0FQVyz3b3D6jPIk5eeiq1a
+         hTC4KCFsYqWZ6KTSnmcuOEoOjy75rgmu3EpspwZwfBte1TCzm4IwqxVr3YxoBVTP6NHk
+         6Lhw==
+X-Forwarded-Encrypted: i=1; AJvYcCViACdT32AxuNPUNG5+kprRswBJE9g3MLLPaQKrJQpMOZRM2BEaEpU9YJnYcgKYw/r/BD1gzkQn3tORQfM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyd9m85t0OtCmbNQKlgRhto+/AZHJUKj44wW+cqWk0yZfya8lin
+	YC4ZkR8BRKKMZpXRQqCZyJ1pvSLw2yChOX5EqbMPGLalLmLxDgsTj0tVp6F+xzI=
+X-Gm-Gg: ASbGncsiRSFbBO5be3AIuqgIo606b8Y9W6QrRUICIrBPWALdlOOpMi7x/D4Ra241/p3
+	JP+bQnHPm93DDw6KWKaVwxKzqsRvMzuamDKbq8IGhxgJWPh231ZVlez/3YwUgJmiwCNJEQERJwr
+	SRlvddC1xKXXgaU7YGS9CssZ/mFUbKeYtGttXnBhjvYvooRcGWIYHE15YNupx2YtKU4SJyymN3I
+	byCF6vPCWxJbXFc+tLGXlccnA3dmSPYY3ADpaw+1cvkNQf9ChipCsg59wYFJcT8X9FQi4FS6gqa
+	p1RANyJY8wNyxdkDCxIeqDz2PJx/9mMFZl2z+A==
+X-Google-Smtp-Source: AGHT+IELGoM2vuGwvs+CKuvhAKIXpRljIuAtDQQP6mgRfQoQftDtOy8EjZTD2p4+jkf5EebMeV65Kw==
+X-Received: by 2002:a17:90b:5444:b0:2fe:a545:4c85 with SMTP id 98e67ed59e1d1-306a4b7fc3amr116329a91.27.1743696884290;
+        Thu, 03 Apr 2025 09:14:44 -0700 (PDT)
+Received: from localhost ([50.145.13.30])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3057ca47ec7sm2086347a91.15.2025.04.03.09.14.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Apr 2025 09:14:06 -0700 (PDT)
-Date: Thu, 3 Apr 2025 12:14:04 -0400
-From: Yury Norov <yury.norov@gmail.com>
-To: Kuan-Wei Chiu <visitorckw@gmail.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>,
-	David Laight <david.laight.linux@gmail.com>,
-	Andrew Cooper <andrew.cooper3@citrix.com>,
-	Laurent.pinchart@ideasonboard.com, airlied@gmail.com,
-	akpm@linux-foundation.org, alistair@popple.id.au,
-	andrew+netdev@lunn.ch, andrzej.hajda@intel.com,
-	arend.vanspriel@broadcom.com, awalls@md.metrocast.net, bp@alien8.de,
-	bpf@vger.kernel.org, brcm80211-dev-list.pdl@broadcom.com,
-	brcm80211@lists.linux.dev, dave.hansen@linux.intel.com,
-	davem@davemloft.net, dmitry.torokhov@gmail.com,
-	dri-devel@lists.freedesktop.org, eajames@linux.ibm.com,
-	edumazet@google.com, eleanor15x@gmail.com,
-	gregkh@linuxfoundation.org, hverkuil@xs4all.nl,
-	jernej.skrabec@gmail.com, jirislaby@kernel.org, jk@ozlabs.org,
-	joel@jms.id.au, johannes@sipsolutions.net, jonas@kwiboo.se,
-	jserv@ccns.ncku.edu.tw, kuba@kernel.org, linux-fsi@lists.ozlabs.org,
-	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org, linux-mtd@lists.infradead.org,
-	linux-serial@vger.kernel.org, linux-wireless@vger.kernel.org,
-	linux@rasmusvillemoes.dk, louis.peens@corigine.com,
-	maarten.lankhorst@linux.intel.com, mchehab@kernel.org,
-	mingo@redhat.com, miquel.raynal@bootlin.com, mripard@kernel.org,
-	neil.armstrong@linaro.org, netdev@vger.kernel.org,
-	oss-drivers@corigine.com, pabeni@redhat.com,
-	parthiban.veerasooran@microchip.com, rfoss@kernel.org,
-	richard@nod.at, simona@ffwll.ch, tglx@linutronix.de,
-	tzimmermann@suse.de, vigneshr@ti.com, x86@kernel.org
-Subject: Re: [PATCH v3 00/16] Introduce and use generic parity16/32/64 helper
-Message-ID: <Z-6zzP2O-Q7zvTLt@thinkpad>
-References: <EB85C3C1-8A0D-4CB9-B501-BFEABDF3E977@zytor.com>
- <Z824SgB9Dt5zdWYc@visitorckw-System-Product-Name>
- <Z9CyuowYsZyez36c@thinkpad>
- <80771542-476C-493E-858A-D2AF6A355CC1@zytor.com>
- <Z9GtcNJie8TRKywZ@thinkpad>
- <Z9G2Tyypb3iLoBjn@visitorckw-System-Product-Name>
- <Z9KMKwnZXA2mkD2s@visitorckw-System-Product-Name>
- <Z+AlyB461xwMxMtG@visitorckw-System-Product-Name>
- <eec0dfd7-5e4f-4a08-928c-b7714dbc4a17@zytor.com>
- <Z+6dh1ZVIKWWOKaP@visitorckw-System-Product-Name>
+        Thu, 03 Apr 2025 09:14:43 -0700 (PDT)
+Date: Thu, 03 Apr 2025 09:14:43 -0700 (PDT)
+X-Google-Original-Date: Thu, 03 Apr 2025 09:14:41 PDT (-0700)
+Subject:     Re: [PATCH v2] riscv: KGDB: Do not inline arch_kgdb_breakpoint()
+In-Reply-To: <5b0adf9b-2b22-43fe-ab74-68df94115b9a@ghiti.fr>
+CC: wangyuli@uniontech.com, Paul Walmsley <paul.walmsley@sifive.com>,
+  aou@eecs.berkeley.edu, chenhuacai@kernel.org, linux-riscv@lists.infradead.org,
+  linux-kernel@vger.kernel.org, vincent.chen@sifive.com, palmerdabbelt@google.com, zhanjun@uniontech.com,
+  niecheng1@uniontech.com, guanwentao@uniontech.com, chenhuacai@loongson.cn
+From: Palmer Dabbelt <palmer@dabbelt.com>
+To: alex@ghiti.fr
+Message-ID: <mhng-69513841-5068-441d-be8f-2aeebdc56a08@palmer-ri-x1c9a>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z+6dh1ZVIKWWOKaP@visitorckw-System-Product-Name>
 
-On Thu, Apr 03, 2025 at 10:39:03PM +0800, Kuan-Wei Chiu wrote:
-> On Tue, Mar 25, 2025 at 12:43:25PM -0700, H. Peter Anvin wrote:
-> > On 3/23/25 08:16, Kuan-Wei Chiu wrote:
-> > > 
-> > > Interface 3: Multiple Functions
-> > > Description: bool parity_odd8/16/32/64()
-> > > Pros: No need for explicit casting; easy to integrate
-> > >        architecture-specific optimizations; except for parity8(), all
-> > >        functions are one-liners with no significant code duplication
-> > > Cons: More functions may increase maintenance burden
-> > > Opinions: Only I support this approach
-> > > 
-> > 
-> > OK, so I responded to this but I can't find my reply or any of the
-> > followups, so let me go again:
-> > 
-> > I prefer this option, because:
-> > 
-> > a. Virtually all uses of parity is done in contexts where the sizes of the
-> > items for which parity is to be taken are well-defined, but it is *really*
-> > easy for integer promotion to cause a value to be extended to 32 bits
-> > unnecessarily (sign or zero extend, although for parity it doesn't make any
-> > difference -- if the compiler realizes it.)
-> > 
-> > b. It makes it easier to add arch-specific implementations, notably using
-> > __builtin_parity on architectures where that is known to generate good code.
-> > 
-> > c. For architectures where only *some* parity implementations are
-> > fast/practical, the generic fallbacks will either naturally synthesize them
-> > from components via shift-xor, or they can be defined to use a larger
-> > version; the function prototype acts like a cast.
-> > 
-> > d. If there is a reason in the future to add a generic version, it is really
-> > easy to do using the size-specific functions as components; this is
-> > something we do literally all over the place, using a pattern so common that
-> > it, itself, probably should be macroized:
-> > 
-> > #define parity(x) 				\
-> > ({						\
-> > 	typeof(x) __x = (x);			\
-> > 	bool __y;				\
-> > 	switch (sizeof(__x)) {			\
-> > 		case 1:				\
-> > 			__y = parity8(__x);	\
-> > 			break;			\
-> > 		case 2:				\
-> > 			__y = parity16(__x);	\
-> > 			break;			\
-> > 		case 4:				\
-> > 			__y = parity32(__x);	\
-> > 			break;			\
-> > 		case 8:				\
-> > 			__y = parity64(__x);	\
-> > 			break;			\
-> > 		default:			\
-> > 			BUILD_BUG();		\
-> > 			break;			\
-> > 	}					\
-> > 	__y;					\
-> > })
-> >
-> Thank you for your detailed response and for explaining the rationale
-> behind your preference. The points you outlined in (a)–(d) all seem
-> quite reasonable to me.
-> 
-> Yury,
-> do you have any feedback on this?
-> Thank you.
+On Thu, 03 Apr 2025 02:58:50 PDT (-0700), alex@ghiti.fr wrote:
+> Hi WangYuli,
+>
+> On 02/04/2025 09:42, WangYuli wrote:
+>> The arch_kgdb_breakpoint() function defines the kgdb_compiled_break
+>> symbol using inline assembly.
+>>
+>> There's a potential issue where the compiler might inline
+>> arch_kgdb_breakpoint(), which would then define the kgdb_breakinst
+>
+>
+> I guess you meant kgdb_compiled_break.
+>
+>
+>> symbol multiple times, leading to fail to link vmlinux.o.
+>> This isn't merely a potential compilation problem. The intent here
+>> is to determine the global symbol address of kgdb_compiled_break,
+>> and if this function is inlined multiple times, it would logically
+>> be a grave error.
+>>
+>> Link: https://lore.kernel.org/all/4b4187c1-77e5-44b7-885f-d6826723dd9a@sifive.com/
+>> Fixes: fe89bd2be866 ("riscv: Add KGDB support")
+>> Co-developed-by: Huacai Chen <chenhuacai@loongson.cn>
+>> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+>> Signed-off-by: WangYuli <wangyuli@uniontech.com>
+>> ---
+>> Changelog:
+>>   *v1->v2: Add the missing __ASSEMBLY__ check and substitute
+>> ".option rvc/norvc" with ".option push/pop".
+>> ---
+>>   arch/riscv/include/asm/kgdb.h | 9 +--------
+>>   arch/riscv/kernel/kgdb.c      | 8 ++++++++
+>>   2 files changed, 9 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/arch/riscv/include/asm/kgdb.h b/arch/riscv/include/asm/kgdb.h
+>> index 46677daf708b..d9f6a8fc387f 100644
+>> --- a/arch/riscv/include/asm/kgdb.h
+>> +++ b/arch/riscv/include/asm/kgdb.h
+>> @@ -19,16 +19,9 @@
+>>
+>>   #ifndef	__ASSEMBLY__
+>>
+>> +extern void arch_kgdb_breakpoint(void);
+>
+>
+> The "extern" is not needed here.
+>
+>
+>>   extern unsigned long kgdb_compiled_break;
+>>
+>> -static inline void arch_kgdb_breakpoint(void)
+>> -{
+>> -	asm(".global kgdb_compiled_break\n"
+>> -	    ".option norvc\n"
+>> -	    "kgdb_compiled_break: ebreak\n"
+>> -	    ".option rvc\n");
+>> -}
+>> -
+>>   #endif /* !__ASSEMBLY__ */
+>>
+>>   #define DBG_REG_ZERO "zero"
+>> diff --git a/arch/riscv/kernel/kgdb.c b/arch/riscv/kernel/kgdb.c
+>> index 2e0266ae6bd7..5873d3970360 100644
+>> --- a/arch/riscv/kernel/kgdb.c
+>> +++ b/arch/riscv/kernel/kgdb.c
+>> @@ -254,6 +254,14 @@ void kgdb_arch_set_pc(struct pt_regs *regs, unsigned long pc)
+>>   	regs->epc = pc;
+>>   }
+>>
+>> +noinline void arch_kgdb_breakpoint(void)
+>> +{
+>> +	asm(".global kgdb_compiled_break\n"
+>> +	    ".option push\n"
+>
+>
+> Here you forgot .option norvc. But this fix as mentioned by Samuel
+> should be in a separate patch.
 
-My feedback to you:
+I don't think we actually need either here: we're just looking at the 
+address of kgdb_compiled_break, so it's fine if it ends up as a 
+c.ebreak.
 
-I asked you to share any numbers about each approach. Asm listings,
-performance tests, bloat-o-meter. But you did nothing or very little
-in that department. You move this series, and it means you should be
-very well aware of alternative solutions, their pros and cons.
-
-Instead, you started a poll to pick the best solution. This is not
-what I expected, and this is not how the best solution can be found.
-
-To H. Peter and everyone:
-
-Thank you for sharing your opinion on this fixed parity(). Your
-arguments may or may not be important, depending on what existing
-users actually need. Unfortunately, Kuan-Wei didn't collect
-performance numbers and opinions from those proposed users.
-
-I already told that, and I will say again: with the lack of any
-evidence that performance and/or code generation is important here,
-the best solution is one that minimizes maintainers' (my!) burden.
-
-In other words, bool parity(unsigned long long). I'm OK to maintain
-a macro, as well. I understand that more complicated solutions may be
-more effective. I will take them only if they will be well advocated.
-
-I hope this will help us to stop moving this discussion back and forth
-and save our time, guys.
-
-Thanks,
-Yury
+> Thanks,
+>
+> Alex
+>
+>
+>> +	    "kgdb_compiled_break: ebreak\n"
+>> +	    ".option pop\n");
+>> +}
+>> +
+>>   void kgdb_arch_handle_qxfer_pkt(char *remcom_in_buffer,
+>>   				char *remcom_out_buffer)
+>>   {
