@@ -1,152 +1,170 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E777E242936
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 10:10:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 234D61494D8;
+	Thu,  3 Apr 2025 10:13:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743675011; cv=none; b=sOXuvGgQFnSQFbjRowobAK29fL+LnCnulGgYtQ7PgFXWQ9KgvVNeWUts8LwsabSniRlwAph674r2fXmELhW8ebg0if9JHhYAVvJ9u/jKlbaSWJTFrwlJgi0P7YP52tiqb0d7w/jXEVmZrvxEhfFHPQ2TxeSBzOOLuhwVyqK4LPk=
+	t=1743675215; cv=none; b=qqQ4GjqCfZY8bi8mfd2Fw3DVJhgudK/br/sKFzNuopKL7CASWdzhUjh1GuQ4wziKcbCI9z38xAba5F9EFeQSgOIzjAk1F4+4ngtYKRrApURozHPd3CzJfsWI1gj5Jqun/JMNHXwtmREEodJfakVleY36un6ya/bykW3g+5WF4AE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743675011; c=relaxed/simple;
-	bh=95AbKM5/KwL2zVTjvGMvU2UbnZhLAbo6VoxnM/Vc07I=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=g+uI18ZJ9cMbsyCsCqiXO30ScgmWbI7Sf1etW8fUiOwZZ73wKuZHl2eCdjrORVGtJQ4PCvA+AoEqLGGg2yAWTjdx51IdcoPrmQrOsG0Zdz51x0KieUFVmBPHP7qClOBvxBqWrmrhGfqHZPyW9wmtLHdTsubKSfTi+3bg4c3ZcPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dGWnilcY; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1743675215; c=relaxed/simple;
+	bh=01MeoMdgRxAVrAckVIAvBLc/gYcrfZ7ucXaVfCHHKug=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=O62yehQUIMNOrRueKmPKvXlwDypEnT1JCuMah+j2dvvlh45gSitsz9/M3hMV104f9YXkna9uem9bndI8y4spyqnSInfLjWOEVh7d49NmbwpDm0oaMeB5uJ/45efZhqliYMVqgdlNEpyVGANI09ZxiAdglj8j31wcYDd/7KNV7oY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=JrpYDDl8; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dGWnilcY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743675008;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qB/CtSEwcy7NwseWKn2u4Fr2QuPsDAEv+lGIosiLsww=;
-	b=dGWnilcY6e6Q4wLc/9BfKyPmm6wst1sylrT4GvYEA6MyXmAnJ35j8a2WNY37Knh+ek+Z+E
-	FWTiIg9iMsZ1sDi5pEAqtFepOt/iZuVmVR0CANiLVHzSZ3GJK4fpKQLsJGETNGsP6ol9gr
-	Yii1gaGBApxkI6yQMc00gEBiuJAbL/Q=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-316-27zLWChLPsKUttsxsdtkzQ-1; Thu, 03 Apr 2025 06:10:07 -0400
-X-MC-Unique: 27zLWChLPsKUttsxsdtkzQ-1
-X-Mimecast-MFC-AGG-ID: 27zLWChLPsKUttsxsdtkzQ_1743675006
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-39ac9b0cb6aso567549f8f.2
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 03:10:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743675006; x=1744279806;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qB/CtSEwcy7NwseWKn2u4Fr2QuPsDAEv+lGIosiLsww=;
-        b=PCxcm0xjzzbgZoBm2QE1B9R2i/E1ABhFir37WmxwAwE0zUdHhxkiYY1SFXt7sl59CK
-         75rQYa3bMRB6oWPqaVQTsI+XG/3XacycwZM5SHfW3nKV+o5myXA23tNb24vtAP31mjau
-         R26yJOtrhiOqyjHhxgxNhuLG+X2tcQXVFCfkxYX7q9W4e2YopzrhJmKi7la9gH9qp6da
-         eWZGM1KeYSirCS6+8LBSneeoMyyPciRLOCrFBk8A+Kckv2g1usaTP8NIfjRff+ZSrNUg
-         Z+NTV1IKDvXEBbJCjhqq9KIJidPifxG/M2TKCmgtvoaNDiMxVCwcuoErw4gwcqtrtY15
-         AC3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWLNo/noDlnzsetvGeE5bWWrImYb1GdVbCOXSs6gsL7sWrcOrT/0YXzrzgzQrJAEygVOvZ9GccQ2WSUFBk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy5pWO8cWWMCjjAVsg5PI/1aAfurq0OLJj3SE5BCGCkyIar2556
-	O+MmiuF8FAtmX2x6iGp+mRzXKSv7J7Xgd+hMxr8cyks0RRhezah1GG2S6Sbhf3Y+XHcH8Quqbqe
-	q2DKsg8YYqLYLqZHYwrUJZf67rXPWvc2JDDPY8bcc0hDDsoybVrBVwjOofRKZGw==
-X-Gm-Gg: ASbGnctnR3x/tLXxs97gM7vnskJXGhssbVPhplY7Bd219ODzJ3/Tmbz9olj6MVBssFI
-	1VU4UAA3THG+ERk39tlg/6JHC09EA7mTFhf2MDb/BaZdaBGZ708/5OssgfdyIAWBb2FEEiHK4+m
-	iPiiE85Q1MGtvyEdOaRBSvoxkWwH4cIrTXtVdeXqQN645VD8ZjID0YGmjqHn/VFJHSfCgfiy8wN
-	ibABsn8PxzPzeY4gTFBtgqQlyFAaEt4+Pu8DfF0wA//3QnfNubLghLdVMSqsLSDRowmMeCTm16A
-	H4jn0w0pn3h/DegGotExvyW2+DU0H81w0gjZhHb8eZN56wTA1cDDS9twRTtp
-X-Received: by 2002:a05:6000:144d:b0:39c:268b:8b66 with SMTP id ffacd0b85a97d-39c297e3f7amr4552172f8f.43.1743675006270;
-        Thu, 03 Apr 2025 03:10:06 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IECepLnUWcbOzJjNcNGIqxQwtp6LRHNvjNkwMgWLkILIn8YR8+ktWlYOnrFo0WoqQvUci03UA==
-X-Received: by 2002:a05:6000:144d:b0:39c:268b:8b66 with SMTP id ffacd0b85a97d-39c297e3f7amr4552121f8f.43.1743675005738;
-        Thu, 03 Apr 2025 03:10:05 -0700 (PDT)
-Received: from stex1.redhat.com (host-87-11-6-59.retail.telecomitalia.it. [87.11.6.59])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec36691b3sm13702755e9.34.2025.04.03.03.10.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Apr 2025 03:10:04 -0700 (PDT)
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Jarkko Sakkinen <jarkko@kernel.org>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>,
-	Peter Huewe <peterhuewe@gmx.de>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	linux-coco@lists.linux.dev,
-	linux-integrity@vger.kernel.org,
-	Borislav Petkov <bp@alien8.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	x86@kernel.org,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Joerg Roedel <jroedel@suse.de>,
-	Dionna Glaze <dionnaglaze@google.com>,
-	Claudio Carvalho <cclaudio@linux.ibm.com>,
-	James Bottomley <James.Bottomley@HansenPartnership.com>,
-	linux-kernel@vger.kernel.org,
-	Dov Murik <dovmurik@linux.ibm.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Stefano Garzarella <sgarzare@redhat.com>
-Subject: [PATCH v6 4/4] x86/sev: register tpm-svsm platform device
-Date: Thu,  3 Apr 2025 12:09:42 +0200
-Message-ID: <20250403100943.120738-5-sgarzare@redhat.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250403100943.120738-1-sgarzare@redhat.com>
-References: <20250403100943.120738-1-sgarzare@redhat.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="JrpYDDl8"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5339rw6f021462;
+	Thu, 3 Apr 2025 10:13:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	+1tIqhAWCJvJ3CMT+y5CBlACyfbXSMkpcdM6/ucOvxU=; b=JrpYDDl8YNsCAZvc
+	gtCR8T7s2hvDqcMg6HzHwahmSP/aQWu7BMthXYHZHW4Y9uVnlbLt0lKEj86vHEaE
+	ieZApWzKyp36/eMKR2eMhtm1ojwsWT9JSSsgu2KQVNeLV8puf36Q2+vcwVqoMEvO
+	OmD3LVvXtyV+zgzf8Sg9FZ8Xo2/87f4rnCmeMg39noD1MaTakSOJclGgmXflwbB6
+	uJf9zlpg3+lk3tCkeNCDCrtGKrCRIGkulbLBTHTwOcGgiZOsx9dolrU6RT53nKPX
+	W5FpRpKBxOGRCoUYZqivdTheIsKvJ64Z2BddVoXHTzZ2G9bW9NtL+IFhnI9II1ch
+	YYONqg==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45sbxy1qrm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 03 Apr 2025 10:13:13 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 533ADCIq003801
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 3 Apr 2025 10:13:12 GMT
+Received: from [10.133.33.118] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 3 Apr 2025
+ 03:13:08 -0700
+Message-ID: <94dac340-2f92-40a3-be56-ba8bd2298328@quicinc.com>
+Date: Thu, 3 Apr 2025 18:13:05 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] PCI: Remove pcim_iounmap_regions()
+To: Philipp Stanner <phasta@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+        Jens Axboe <axboe@kernel.dk>, Bjorn Helgaas <bhelgaas@google.com>,
+        Mark Brown
+	<broonie@kernel.org>,
+        David Lechner <dlechner@baylibre.com>,
+        Philipp Stanner
+	<pstanner@redhat.com>,
+        Damien Le Moal <dlemoal@kernel.org>,
+        Andy Shevchenko
+	<andriy.shevchenko@linux.intel.com>,
+        Yang Yingliang
+	<yangyingliang@huawei.com>,
+        Hannes Reinecke <hare@suse.de>, Al Viro
+	<viro@zeniv.linux.org.uk>,
+        Li Zetao <lizetao1@huawei.com>, Anuj Gupta
+	<anuj20.g@samsung.com>
+CC: <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-block@vger.kernel.org>, <linux-pci@vger.kernel.org>
+References: <20250327110707.20025-2-phasta@kernel.org>
+ <20250327110707.20025-4-phasta@kernel.org>
+Content-Language: en-US
+From: Zijun Hu <quic_zijuhu@quicinc.com>
+In-Reply-To: <20250327110707.20025-4-phasta@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 3W9z93NkZwxm7a7kjWSLINJPYXmxd6Gc
+X-Proofpoint-ORIG-GUID: 3W9z93NkZwxm7a7kjWSLINJPYXmxd6Gc
+X-Authority-Analysis: v=2.4 cv=PNAP+eqC c=1 sm=1 tr=0 ts=67ee5f39 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=20KFwNOVAAAA:8 a=COk6AnOGAAAA:8 a=YDoAUpYN6iqzQeISu80A:9
+ a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-03_04,2025-04-02_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 suspectscore=0
+ malwarescore=0 adultscore=0 phishscore=0 clxscore=1011 mlxscore=0
+ lowpriorityscore=0 impostorscore=0 mlxlogscore=999 priorityscore=1501
+ bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504030036
 
-From: Stefano Garzarella <sgarzare@redhat.com>
+On 3/27/2025 7:07 PM, Philipp Stanner wrote:
+> From: Philipp Stanner <pstanner@redhat.com>
+> 
+> All users of the deprecated function pcim_iounmap_regions() have been
+> ported by now. Remove it.
+> 
+> Signed-off-by: Philipp Stanner <pstanner@redhat.com>
+> ---
+>  .../driver-api/driver-model/devres.rst        |  1 -
+>  drivers/pci/devres.c                          | 24 -------------------
+>  include/linux/pci.h                           |  1 -
+>  3 files changed, 26 deletions(-)
+> 
+> diff --git a/Documentation/driver-api/driver-model/devres.rst b/Documentation/driver-api/driver-model/devres.rst
+> index d75728eb05f8..601f1a74d34d 100644
+> --- a/Documentation/driver-api/driver-model/devres.rst
+> +++ b/Documentation/driver-api/driver-model/devres.rst
+> @@ -396,7 +396,6 @@ PCI
+>    pcim_iomap_regions()		: do request_region() and iomap() on multiple BARs
+>    pcim_iomap_table()		: array of mapped addresses indexed by BAR
+>    pcim_iounmap()		: do iounmap() on a single BAR
+> -  pcim_iounmap_regions()	: do iounmap() and release_region() on multiple BARs
+>    pcim_pin_device()		: keep PCI device enabled after release
+>    pcim_set_mwi()		: enable Memory-Write-Invalidate PCI transaction
+>  
+> diff --git a/drivers/pci/devres.c b/drivers/pci/devres.c
+> index 3431a7df3e0d..c60441555758 100644
+> --- a/drivers/pci/devres.c
+> +++ b/drivers/pci/devres.c
+> @@ -946,30 +946,6 @@ int pcim_request_all_regions(struct pci_dev *pdev, const char *name)
+>  }
+>  EXPORT_SYMBOL(pcim_request_all_regions);
+>  
+> -/**
+> - * pcim_iounmap_regions - Unmap and release PCI BARs (DEPRECATED)
+> - * @pdev: PCI device to map IO resources for
+> - * @mask: Mask of BARs to unmap and release
+> - *
+> - * Unmap and release regions specified by @mask.
+> - *
+> - * This function is DEPRECATED. Do not use it in new code.
+> - * Use pcim_iounmap_region() instead.
+> - */
+> -void pcim_iounmap_regions(struct pci_dev *pdev, int mask)
+> -{
+> -	int i;
+> -
+> -	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+> -		if (!mask_contains_bar(mask, i))
+> -			continue;
+> -
+> -		pcim_iounmap_region(pdev, i);
+> -		pcim_remove_bar_from_legacy_table(pdev, i);
+> -	}
+> -}
+> -EXPORT_SYMBOL(pcim_iounmap_regions);
+> -
+>  /**
+>   * pcim_iomap_range - Create a ranged __iomap mapping within a PCI BAR
+>   * @pdev: PCI device to map IO resources for
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 47b31ad724fa..7661f10913ca 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -2323,7 +2323,6 @@ void pcim_iounmap(struct pci_dev *pdev, void __iomem *addr);
+>  void __iomem * const *pcim_iomap_table(struct pci_dev *pdev);
+>  int pcim_request_region(struct pci_dev *pdev, int bar, const char *name);
+>  int pcim_iomap_regions(struct pci_dev *pdev, int mask, const char *name);
+> -void pcim_iounmap_regions(struct pci_dev *pdev, int mask);
+>  void __iomem *pcim_iomap_range(struct pci_dev *pdev, int bar,
+>  				unsigned long offset, unsigned long len);
+>  
 
-SNP platform can provide a vTPM device emulated by SVSM.
-
-The "tpm-svsm" device can be handled by the platform driver added
-by the previous commit in drivers/char/tpm/tpm_svsm.c
-
-Register the device unconditionally. The support check (e.g. SVSM, cmd)
-is in snp_svsm_vtpm_probe(), keeping all logic in one place.
-This function is called during the driver's probe along with other
-setup tasks like memory allocation.
-
-Reviewed-by: Tom Lendacky <thomas.lendacky@amd.com>
-Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
----
-v6:
-- added Tom's R-b
-v4:
-- explained better why we register it anyway in the commit message
----
- arch/x86/coco/sev/core.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/arch/x86/coco/sev/core.c b/arch/x86/coco/sev/core.c
-index efb43c9d3d30..acbd9bc526b1 100644
---- a/arch/x86/coco/sev/core.c
-+++ b/arch/x86/coco/sev/core.c
-@@ -2689,6 +2689,11 @@ static struct platform_device sev_guest_device = {
- 	.id		= -1,
- };
- 
-+static struct platform_device tpm_svsm_device = {
-+	.name		= "tpm-svsm",
-+	.id		= -1,
-+};
-+
- static int __init snp_init_platform_device(void)
- {
- 	if (!cc_platform_has(CC_ATTR_GUEST_SEV_SNP))
-@@ -2697,6 +2702,9 @@ static int __init snp_init_platform_device(void)
- 	if (platform_device_register(&sev_guest_device))
- 		return -ENODEV;
- 
-+	if (platform_device_register(&tpm_svsm_device))
-+		return -ENODEV;
-+
- 	pr_info("SNP guest platform device initialized.\n");
- 	return 0;
- }
--- 
-2.49.0
-
+Reviewed-by: Zijun Hu <quic_zijuhu@quicinc.com>
