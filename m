@@ -1,150 +1,99 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E8AC224B0C
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 11:56:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B86824A042
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 11:57:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743681402; cv=none; b=sHy8kd3Ky/7SsQkYkyqhaEkz8n7tA61JtPZokUX9l/IxLXmB1ERuUd0GQxepQqoiugi79NVwy73NSJBEYLh+zJ82KXrgrAq0JeluBSm663CVDNGaAzkTklnyi34CePAyaszPYQJJufPXYAHtSBrR0zFVEtxP85Je8zcn04HBpUE=
+	t=1743681456; cv=none; b=k1EGU0oCSPCcJ//KzZiGKtSMqfVq4Waew7vmG+sJ+EFZzIYsVR9gqGGPSbtPFdJzxtME/Lnv2Ft14r23/ptXONhX8hPKfggWRyuE0s8/B0D/Y2HyPi1rNp+JgpLribXiAsqtm3KCPfhlBfB86EKK7jYyGno1yCOdZ/EwWLhoBTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743681402; c=relaxed/simple;
-	bh=uE6TUg9SSfwfWTxS9UVB8fh1ZwpK7mmeuo86i1UfxV0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UoiNXrxNK/BV4YGAMDlfTpauG3IEf13FQGmHlMBYykqM90extJ0SBDLcatFSCMXE/atQq8Pb+/e2yWqOo6JrfWYBOVa4ZhNjT634DB6N1xRlA/UOgDxqOgX96r99HaJr+655ZwJgDgKoMXvN+Et6EFQsMo2jpSaRgjULt3HpmTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=uyGdJNwD; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=OvTY1j+b; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=uyGdJNwD; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=OvTY1j+b; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1743681456; c=relaxed/simple;
+	bh=7RumA3X5eB7LdNlJXXDsoSjZ7aj/drzqeBxe1DW71xw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=W8/q3msKW5JhX9l1Al16rWjfOORdrrYC7KIeN4k4ha70MlW4rbh+VcWue6FaeWepyyBCdHjgtfiJp9/1wA7/UaiMYOWXrzznPhc1iAEnY7W4aAbuCIjf+A83B56lW3iIn/tfP6ACT5K+J53O2SQyOHgpIKW3SDiBXzFDiBgwzmo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=nXN35pJV; arc=none smtp.client-ip=209.85.167.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="uyGdJNwD";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="OvTY1j+b";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="uyGdJNwD";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="OvTY1j+b"
-Received: from kitsune.suse.cz (unknown [10.100.12.127])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 92C81210F4;
-	Thu,  3 Apr 2025 11:56:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1743681398; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AyRZRinSYopgeFvRSMWDxmUB4Jb3pKVY5jc2GB5OZjc=;
-	b=uyGdJNwDqvl+8Xw3NRx25OJ63BcJCvzCpk02rxCWndo7OOm5qtNhkA+Vm6qd1kqv+1ZKSM
-	VFAz2GjvAK+Qkibw+PGlboQwTw0/QgELIW/nGa6JRAA7X11vYUmpW/3usXn4NPhkX0Dg2q
-	R5bP/DRmLGqDwqyjk6XcRoSq/okv/wE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1743681398;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AyRZRinSYopgeFvRSMWDxmUB4Jb3pKVY5jc2GB5OZjc=;
-	b=OvTY1j+b8mGbw+I2NDsWy3DvdwdJtkiYRzYwXucIifCTyx9obAJ0efb/tgtFdAhPc4Qn63
-	k/oAUSAlUPVb5eAQ==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1743681398; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AyRZRinSYopgeFvRSMWDxmUB4Jb3pKVY5jc2GB5OZjc=;
-	b=uyGdJNwDqvl+8Xw3NRx25OJ63BcJCvzCpk02rxCWndo7OOm5qtNhkA+Vm6qd1kqv+1ZKSM
-	VFAz2GjvAK+Qkibw+PGlboQwTw0/QgELIW/nGa6JRAA7X11vYUmpW/3usXn4NPhkX0Dg2q
-	R5bP/DRmLGqDwqyjk6XcRoSq/okv/wE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1743681398;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AyRZRinSYopgeFvRSMWDxmUB4Jb3pKVY5jc2GB5OZjc=;
-	b=OvTY1j+b8mGbw+I2NDsWy3DvdwdJtkiYRzYwXucIifCTyx9obAJ0efb/tgtFdAhPc4Qn63
-	k/oAUSAlUPVb5eAQ==
-Date: Thu, 3 Apr 2025 13:56:37 +0200
-From: Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
-To: Jonathan McDowell <noodles@earth.li>
-Cc: Peter Huewe <peterhuewe@gmx.de>, Jarkko Sakkinen <jarkko@kernel.org>,
-	Jason Gunthorpe <jgg@ziepe.ca>, linux-integrity@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] tpm: tis: Increase the default for timeouts B and C
-Message-ID: <Z-53dR25MT8OUDhW@kitsune.suse.cz>
-References: <20250402172134.7751-1-msuchanek@suse.de>
- <Z-13xOebA3LvQQ-8@earth.li>
- <Z-2ZC2Ew2EtNAW6-@kitsune.suse.cz>
- <Z-5qVBjeRfEdRAP5@earth.li>
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="nXN35pJV"
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-54998f865b8so802114e87.3
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 04:57:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1743681453; x=1744286253; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qkOktHGlzjAkXagwjlA6YI1+PYwTvY9/fqcii/7p6HI=;
+        b=nXN35pJV0C89hgcKghGD6dr09VFh51dAELeuUjSxYij76Sff1JpDDRgAuVzwzQM0E4
+         GbU4EsrCIycxe5pS+j+ZRCfTjecOqTKfpZKENBNYg3N7HlDD4CH0ky9RDcBVaA7YFwm6
+         oMgE0leusXNQl00mdUOXJxzhWK0WBot0jRjC4HBUFZSK2hb/Hp3oL3AqXzOMLYVfpL0b
+         nbJTRyPNlqgFNO4R6OWkQDSh/N5PPkvjh9lRL8yY71b6+EN0VWgaCKbKDkfXpAJ4m6ch
+         1EvO1+ne329l9bhy9+Ku9pbRyKUdjE+MoRK2IXvYDEuE9zWfY3Hv9p0G6g6jGBd7AZbt
+         ctKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743681453; x=1744286253;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qkOktHGlzjAkXagwjlA6YI1+PYwTvY9/fqcii/7p6HI=;
+        b=PzJu14KQ/qaIjL5mmi0xYatqUKVgTrMbZYmrqFtCTezEcmX1mvIBs7GoZr4b36WrOF
+         PfQnzvbIMv0rvQxdfR6Y7lIoenp28xpn2rPb4b3v2Y08+36Bfa6k2fs91Ga2zPUVzsTf
+         ym6XTqQi5Nmk5X7lUc9UgYWP7O90HQn2uES1fB5PXV3kbInuCEgx7gxST7vfwg3+kra5
+         oKq0GbJex3JTjQ6gkwoJ0RNeewTtwff432mnbMP2Z8creP8Evs1iR7G+oqV1q8Ah+hhB
+         Ezn8wtklh8NDdz550BPl90Veek592eH8Zxj1rvAQfOCpd1/1PsYYPcku94xahgIx8sWG
+         6Feg==
+X-Forwarded-Encrypted: i=1; AJvYcCVSROEPCWIxZk2GY9HTI58tHS8G/8n6MMw4yv36DBVo+4EgQkcDsahp3Lr8lmZdNnT3lNk2nv8le2cQVtI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyF4TdHeXkkq0qaW4LWEtEJlYYkxPzWJ6N4MkFJI8Hoj+yPF1gc
+	4cD9tSCmnaHVEzZV7srWQYYxoKpbYJprbqBo0LeAjiaNDbt+wfsMKY5xqDFeDWkq1yLG6DnhGLQ
+	71PSE1BQ32venBuoscivZ8yoxya0rf8XBcZf3eA==
+X-Gm-Gg: ASbGncs63Vk6r8prE0kdzOAuSI9KVATGBqmqX7/kbK9xyU1fv3a9lHMThM/FwkM3V45
+	AepyGyYS62WdjyYWd2ZzQrt2huiL00R0FLT+DAzhLz/OO8JjFe9ucB4rE9QI6BYJvUedTpSaNhQ
+	leM8UNdZfauBTkoNJhVM/ek/X1/473oiiyebgjNFTGQz1i91hjS3DC7U3z
+X-Google-Smtp-Source: AGHT+IEJOnKqMX5+dgmSPUxCOsMR6NccyLGkvgLJRbiRfJodYmSW6tCZcu76/+/XfCMur6jjpB+I1EXvHvccn5hkhG0=
+X-Received: by 2002:a05:6512:3b25:b0:545:c1e:65fb with SMTP id
+ 2adb3069b0e04-54c19c5c517mr1842371e87.18.1743681453030; Thu, 03 Apr 2025
+ 04:57:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z-5qVBjeRfEdRAP5@earth.li>
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.998];
-	MIME_GOOD(-0.10)[text/plain];
-	MIME_TRACE(0.00)[0:+];
-	MISSING_XM_UA(0.00)[];
-	RCVD_COUNT_ZERO(0.00)[0];
-	ARC_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmx.de];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FREEMAIL_CC(0.00)[gmx.de,kernel.org,ziepe.ca,vger.kernel.org];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6]
-X-Spam-Score: -4.30
-X-Spam-Flag: NO
+References: <20250402122301.1517463-1-andriy.shevchenko@linux.intel.com>
+ <20250402122301.1517463-5-andriy.shevchenko@linux.intel.com>
+ <20250403103506.GJ3152277@black.fi.intel.com> <Z-5rJDWaSJd58lTa@smile.fi.intel.com>
+In-Reply-To: <Z-5rJDWaSJd58lTa@smile.fi.intel.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Thu, 3 Apr 2025 13:57:22 +0200
+X-Gm-Features: AQ5f1JqR55KMuRFut8zPE2h0a1E_W5eZhlgdejLJXansH_I-MmaaezYhi6oZpYs
+Message-ID: <CAMRc=Mc3YUsLm5dX0b3rFsuCErf0WmyyYtXZgDYBt0w+xwqkCQ@mail.gmail.com>
+Subject: Re: [PATCH v1 4/5] gpiolib: acpi: Reuse struct acpi_gpio_params in
+ struct acpi_gpio_lookup
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, linux-gpio@vger.kernel.org, 
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Mika Westerberg <westeri@kernel.org>, Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 03, 2025 at 12:00:36PM +0100, Jonathan McDowell wrote:
-> On Wed, Apr 02, 2025 at 10:07:39PM +0200, Michal Suchánek wrote:
-> > On Wed, Apr 02, 2025 at 06:45:40PM +0100, Jonathan McDowell wrote:
-> > > On Wed, Apr 02, 2025 at 07:21:30PM +0200, Michal Suchanek wrote:
-> > > > With some Infineon chips the timeouts in tpm_tis_send_data (both B and
-> > > > C) can reach up to about 2250 ms.
-> > > >
-> > > > Extend the timeout duration to accommodate this.
-> > > 
-> > > The problem here is the bump of timeout_c is going to interact poorly with
-> > > the Infineon errata workaround, as now we'll wait 4s instead of 200ms to
-> > > detect the stuck status change.
-> > 
-> > Yes, that's problematic. Is it possible to detect the errata by anything
-> > other than waiting for the timeout to expire?
-> 
-> Not that I'm aware of, nor have seen in my experimentation. It's a "stuck"
-> status, so the timeout is how it's detected.
-> 
-> OOI, have you tried back porting the fixes that are in mainline for 6.15 to
-> your frankenkernel? I _think_ the errata fix might end up resolving at least
-> the timeout for valid for you, as a side effect? We're currently rolling
-> them out across our fleet, but I don't have enough runtime yet to be sure
-> they've sorted all the timeout instances we see.
+On Thu, Apr 3, 2025 at 1:04=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Thu, Apr 03, 2025 at 01:35:06PM +0300, Mika Westerberg wrote:
+> > On Wed, Apr 02, 2025 at 03:21:19PM +0300, Andy Shevchenko wrote:
+> > > Some of the contents of struct acpi_gpio_lookup repeats what we have
+> > > in the struct acpi_gpio_params. Reuse the latter in the former.
+>
+> > > +   struct acpi_gpio_params par;
+> >
+> > params is better name
+>
+> It's been already used elsewhere in the code. Do you want renaming there =
+as
+> well for consistency's sake?
+>
 
-When was that merged?
++1 for using param or params here and elsewhere. It's much better than par.
 
-The change I see is that sometimes EAGAIN is returned instead of ETIME
-but based on the previous discussion this is unlikely to help.
-
-Thanks
-
-Michal
-
-> 
-> J.
-> 
-> -- 
-> /-\                             | He's weird? It's ok, I'm fluent in
-> |@/  Debian GNU/Linux Developer |               weird.
-> \-                              |
+Bart
