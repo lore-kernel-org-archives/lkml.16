@@ -1,145 +1,111 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3194210FB
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 13:41:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA88E210FB
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 13:42:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743687677; cv=none; b=LLA3dzoal3jYN90X61xBZs9ELWSQEDrb9olUnoCzRCbxfCKrRT558p+7HngfSkiZpIgWd4P7XaniERTqB67/IOmPecGs/lQB8a8E49cSFSImPRmvmceIkUZXp1inex18f3P0h3/ozyQN+UhegABOpGRMe+GwPrmyxA6tzjZeseM=
+	t=1743687738; cv=none; b=uvFEQiaGtzkZSTuiKDxN46ybEHk+BsWdeL5DKvq3bGs4Myt8V3T09gOlTXrJSfHXWk13E2WP3EqduniQa1JUsZupDkMpL1D5K7QaicOQ4EqlulFfnSaLd6T9NDId0x1yZPHsqWjtIaOvEcjg1BSwMB5Rbqmo/kVEPmlUKzjs8eg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743687677; c=relaxed/simple;
-	bh=iS6mOEeajkZYtTYluSq6j68MuQ5x8jxFGkN2FSIISnw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=L76e8fUW2VCVpn5VTSEdU4aocTg82TjYS69WLww6D4dCnKz3gehu3umFTwArWDj7JIvGqrpO0gt+iQSipPpjIoiSRFQo1qE6pSSbm/HYqbDHytMlsvYuiFWA93CUqDm7RREnFllrR2qgtJyombe1xx96p9yrxoWjcy09pD+j4qo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Zg3xXINc; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1743687738; c=relaxed/simple;
+	bh=UwqrUYs/tDmcgi/laKzxLNjN2dD0BKH+uhvk77Z3gD0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=k6NnII58OlsF+1rfrt3wukR2J3n6iFwcGGYcpYv7DyJCLNAJRVfh0E6vKn6IB3xUI4WGIWvS1KAoRrxtB0DRAQhb/bEc8vz/ow+JTKA8hiO90xJyYpt8Vmu0lip0BDZxafpRcUgqi3p6nUdHBbOn8wYW+aiW01DINyeCIAu+bus=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=XhkYdDOi; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Zg3xXINc"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43cf257158fso5967095e9.2
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 06:41:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="XhkYdDOi"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-39c1ef4ae3aso565522f8f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 06:42:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1743687673; x=1744292473; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=XRjH9LUbXGXt0wyOzN5egHLn7xabuue3cHwKXGB5l2A=;
-        b=Zg3xXINcldjctgX0ke9kVA7H06BUKmhOwJ0TKJWZmwSOCV8i3CpTK4IvEESSKRJtpX
-         zFcTPqNv7KJJlTR0QjvgF8+Z1gFDYFMcqiTtSPn6w2nmAS7j4WekCYkaHtXrZh+epuSZ
-         6/aPTpEvxuj126Zpd+NoVrvUQJoyXHooHotRxkXTCnBmQsIvwTTKgMnwBthKpVw+62gv
-         LdeQemuu3t9F1n7gQckiPxkK5GRWfsdTCo4qLGSiAqbPd9vlxH4Axc1UAEWPLSqUisi8
-         M1A/i1LLY7Lqmwnpxld/QsXcfh4mZaN89+q3oCDRiKaey3i96m/WuD0dp5n6oD1Euz05
-         9JfA==
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1743687733; x=1744292533; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=KzSv22Tlh8b0C2DIJrcJuTRBaLWunIy9hBuJEBnkWz4=;
+        b=XhkYdDOi4gPRR6YKaqy/WNAmfxVbPfGBAef7k3aryC7X4LIWNzvb4UUQKcQVYD+nyC
+         53vHu2OAQ8Bam6hj6U/ijL5w6a1ux85KkYRR4zvtr5sVoSdWto9xqwBsBeSLXxINNGbU
+         kJZHX4pkxw21pCwIxjxQjw4h1q7SkC0raZtKnHvTl/WfQL6UdzQSkFXhjwF1GQ806brt
+         ZA8eWDW3YwSE9Alz8d7IDV/SpWYOfa8D4gY+2RhPqHG1vTsJ3fR4FAn44hk4TrrR0ABE
+         TNA7qvz5wEpKa+NeL4KtW0YMWs4Sn7ZbVUYmbug9NiEe90cd7iv/HaHM3Zdrd5fTASQx
+         QpnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743687673; x=1744292473;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XRjH9LUbXGXt0wyOzN5egHLn7xabuue3cHwKXGB5l2A=;
-        b=XCWi+tYflTowWD6rVIFcstyIuvUrWwjdH1plOkJwW0Qy83H1KkLc5xPYDmtqbMfY3/
-         pBBhN7RLCpgedQpPYsiH98lByVChB/1yZfrd0h5bOu99ty/ZP4iykIjaH23eK6r+l11V
-         jjsh8ox03Y2256jfL4KnfSVNnzHU5jILr4Hzsumeyi5HuZKHlaJLMwRcMOXIb4ogx3v7
-         MWmTyUzZBYNQL3qiEnkuWXbjoRs+umpx+jRfbT0O0ydWtfBh/IATJu6wiLqQfdkZY5Sz
-         8RKv32JnODyWbit4DkWce3hwix7eRRKWiLQJvMM0qMWEmEaTi09CFPgM8tsHDmiRAAvU
-         vNuA==
-X-Gm-Message-State: AOJu0YzaxF6f/a6E3GUQnUbkfBNynjofGxsGqzFvGf8b+WZhEPdB1W2R
-	Z6qM2g5YjGPZHxkOoKAhus3EotNQ6x1T5qA6XjScYN4+FUziBzUHAal6m2OnmT4=
-X-Gm-Gg: ASbGncs6Iu7bfsHO1MNg7EJHgm4zu73C+tO7SJtJTVlkBJab+X4kWoqhkxkeLh3qEN3
-	SN39qNpAdI1iNJDZVKNgUbeHWJFKsBRWAe0IkU4QRa6yqA73bqWF8BWYquzN+w3XNq3djNUdTAH
-	BvTnsWadHIbbbFNHIFGVDRB+UyKX9n/ZaDuMU0/ygaT4oOjbWgbRvK8YzB2s/KyE6Z4rVZogbrz
-	xKkhqRxdyDIWxq51HAUH6Fd3zW+KbJqMuoBCpfKuM/R1LubMtkArBhT3SZCnoq31h0Igqn4V7bg
-	7v0yh9AflDSd9LNBV4A/xJzBpD+/DzS2PNXFjUwWacQicjbP1A==
-X-Google-Smtp-Source: AGHT+IHtqmU85YUlm2aOX0BmfwMP9zVTg8UHep9vwFipsdX9bXNUCWRLGqY05jbqNPlIufvsn3Uxug==
-X-Received: by 2002:a05:600c:21d4:b0:43c:f8fc:f69a with SMTP id 5b1f17b1804b1-43ec9a8e72dmr9440735e9.4.1743687673199;
-        Thu, 03 Apr 2025 06:41:13 -0700 (PDT)
-Received: from [192.168.0.20] ([212.21.159.224])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c30226b23sm1793017f8f.86.2025.04.03.06.41.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Apr 2025 06:41:12 -0700 (PDT)
-Message-ID: <a64bc000-4226-4d5c-8486-a230f4ff5065@suse.com>
-Date: Thu, 3 Apr 2025 16:41:11 +0300
+        d=1e100.net; s=20230601; t=1743687733; x=1744292533;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KzSv22Tlh8b0C2DIJrcJuTRBaLWunIy9hBuJEBnkWz4=;
+        b=mk5t/yClpLpBDSQztNgALCUV0Mw8n6CCNOHKOZEqaB7ir1LBL+OoeD9BIo5GhIh/mk
+         OQOZ70a6tnXAXKc4oRPBR+SNlgId7cq9ZbkJ5S7paaeaZUZf+Z7K1znNSDBjvH+4IcYL
+         zXbMWqDda27m6eL56ut4H322fiumA3Ygwbrd+Km3xMbEuG6gHyJO+2WlQf+Jn6/Y4xUk
+         9CjXInOEBXLzm8rV/n8Cw4iRnTbv/Q6X3/Kh5YHLCFbgp/6RIlc1uj7li69OWkIYHMLH
+         lfjWuhbSAYRC0akClit5Jhgzf8SkZm3YzxsCaLCbeSyBGoyS3XFoLVf0y8/7jTV9mKTh
+         TxQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXxfk8oHP12MItVJ56GHd6XUPGQzcF2XuV8HfrEjQzN1b9iZleKUBK81HMp6aflc3r/FIwV9rVwuBgAS2M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzzlVfHBkxeFvXzsoh5TOOg1o3JO05XcMsYRVR3LapQPkvLorCD
+	p06AG97BALH8G9tp+61WgArIppaVQ3LCXc1fCRE/q2v6OP5Lps8dI39JyFFc1/M=
+X-Gm-Gg: ASbGncutoSNfkPlDQla8pEK+06f7bsmXI902krrxXJ87iHtOLIbB4Bf7cPF8Yms1JRm
+	swAgBbz6RGO4C6VPWh3WXqdVkbirI8FKcOCCIh/Ri4J/Y/pGXvpDDeOo+/BvYLL8mg5Q6ruH6c1
+	e6yEj9mtMILLmcYsm7z1dASDFqzIm038NhirCOivSYYCBrOJEc+QrRvGSc7s/PpBrZAcOO4ymnc
+	+DqlF2su7sI/5F6jSafvfoobVaGiOLotYVWBJB6cxlrJDr1W4lKJh0gb/XDzJUv39SM6+rB+Tsi
+	kRgDetzJoJLuzyTVao/wFB+PkXTnpDutTIA1VpA1M9bia6UjcCF+9SuReSxlrIC6BsMqri/Q4qw
+	=
+X-Google-Smtp-Source: AGHT+IGq/wOsMPKFUCVYs7nL4AsOHO70+LxMIkYWJmXF6+zZV/6eUJ+XSIteFv/WFh6+yfsrGoEdgg==
+X-Received: by 2002:a05:6000:1786:b0:39a:c9ae:9eea with SMTP id ffacd0b85a97d-39c2e617779mr3043553f8f.10.1743687733190;
+        Thu, 03 Apr 2025 06:42:13 -0700 (PDT)
+Received: from localhost.localdomain ([2001:861:3382:ef90:7c12:ff06:d34a:d3e9])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c301b76f2sm1854884f8f.53.2025.04.03.06.42.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Apr 2025 06:42:12 -0700 (PDT)
+From: Alexandre Ghiti <alexghiti@rivosinc.com>
+To: Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@rivosinc.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas@fjasle.eu>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Charlie Jenkins <charlie@rivosinc.com>,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-kbuild@vger.kernel.org
+Cc: Alexandre Ghiti <alexghiti@rivosinc.com>
+Subject: [PATCH v2] scripts: Do not strip .rela.dyn section
+Date: Thu,  3 Apr 2025 15:42:00 +0200
+Message-Id: <20250403134200.385077-1-alexghiti@rivosinc.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 37/49] x86/alternatives: Move text_poke_array completion
- from smp_text_poke_batch_finish() and smp_text_poke_batch_flush() to
- smp_text_poke_batch_process()
-To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Juergen Gross <jgross@suse.com>,
- "H . Peter Anvin" <hpa@zytor.com>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Peter Zijlstra <peterz@infradead.org>, Borislav Petkov <bp@alien8.de>,
- Thomas Gleixner <tglx@linutronix.de>
-References: <20250328132704.1901674-1-mingo@kernel.org>
- <20250328132704.1901674-38-mingo@kernel.org>
- <65e8ed9d-0fff-4f70-b095-8df52493ebec@suse.com> <Z-6PWWyopb86UC6y@gmail.com>
-From: Nikolay Borisov <nik.borisov@suse.com>
-Content-Language: en-US
-In-Reply-To: <Z-6PWWyopb86UC6y@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
+riscv uses the .rela.dyn section to relocate the kernel at runtime but
+that section is stripped from vmlinux. That prevents kexec to
+successfully load vmlinux since it does not contain the relocations info
+needed.
 
+Fixes: 71d815bf5dfd ("kbuild: Strip runtime const RELA sections correctly")
+Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+---
+ scripts/Makefile.lib | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On 3.04.25 г. 16:38 ч., Ingo Molnar wrote:
-> 
-> * Nikolay Borisov <nik.borisov@suse.com> wrote:
-> 
->>
->>
->> On 28.03.25 г. 15:26 ч., Ingo Molnar wrote:
->>> Simplifies the code and improves code generation a bit:
->>>
->>>      text	   data	    bss	    dec	    hex	filename
->>>     14769	   1017	   4112	  19898	   4dba	alternative.o.before
->>>     14742	   1017	   4112	  19871	   4d9f	alternative.o.after
->>>
->>> Signed-off-by: Ingo Molnar <mingo@kernel.org>
->>> ---
->>>    arch/x86/kernel/alternative.c | 11 +++++------
->>>    1 file changed, 5 insertions(+), 6 deletions(-)
->>>
->>> diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
->>> index 1df8fac6740d..5293929488f0 100644
->>> --- a/arch/x86/kernel/alternative.c
->>> +++ b/arch/x86/kernel/alternative.c
->>> @@ -2750,6 +2750,9 @@ static void smp_text_poke_batch_process(void)
->>>    		if (unlikely(!atomic_dec_and_test(refs)))
->>>    			atomic_cond_read_acquire(refs, !VAL);
->>>    	}
->>> +
->>> +	/* They are all completed: */
->>> +	text_poke_array.nr_entries = 0;
->>>    }
->>>    static void __smp_text_poke_batch_add(void *addr, const void *opcode, size_t len, const void *emulate)
->>> @@ -2857,20 +2860,16 @@ static bool text_poke_addr_ordered(void *addr)
->>>    void smp_text_poke_batch_finish(void)
->>>    {
->>> -	if (text_poke_array.nr_entries) {
->>> +	if (text_poke_array.nr_entries)
->>>    		smp_text_poke_batch_process();
->>> -		text_poke_array.nr_entries = 0;
->>> -	}
->>>    }
->>
->> This function becomes trivial, why not simply move the check into
->> smp_text_poke_batch_process and rename it to smp_text_poke_batch_finish ?
-> 
-> Yeah, that's pretty much what happens in patch #47:
-> 
->    x86/alternatives: Remove 'smp_text_poke_batch_flush()'
-
-Well, that patch removes poke_batch_flush but still retains 
-poke_batch_finish + poke_batch_process. My suggestion is to eliminate 
-poke_batch_process name and turn it into poke_batch_finish by moving the 
-check from poke_batch_finish into poke_batch_process.
-
-> 
-> Thanks,
-> 
-> 	Ingo
+diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+index cad20f0e66ee..0a1f1e67a0ed 100644
+--- a/scripts/Makefile.lib
++++ b/scripts/Makefile.lib
+@@ -377,7 +377,7 @@ quiet_cmd_objcopy = OBJCOPY $@
+ cmd_objcopy = $(OBJCOPY) $(OBJCOPYFLAGS) $(OBJCOPYFLAGS_$(@F)) $< $@
+ 
+ quiet_cmd_strip_relocs = RSTRIP  $@
+-cmd_strip_relocs = $(OBJCOPY) --remove-section='.rel*' $@
++cmd_strip_relocs = $(OBJCOPY) --remove-section='.rel*' --remove-section=!.rela.dyn $@
+ 
+ # Gzip
+ # ---------------------------------------------------------------------------
+-- 
+2.39.2
 
