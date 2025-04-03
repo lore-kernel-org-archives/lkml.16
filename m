@@ -1,218 +1,193 @@
-Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B40DD230985;
-	Thu,  3 Apr 2025 19:24:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB77B253B78
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 19:25:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743708299; cv=none; b=WG2nDPWszn3DNlJnuu4jzTqM9XjqeGzdLA4dCRxtUb28GEYfl7qRzVygn80GlktUlZ292b467ecCBdQYLenUa+18eTHVG5MifGdTJzqleCsp2Ft836wzRek3lqYJ9JA6mn0EHTt6DM0FymlHyHNrwFK+Mw5x1eegf1FMRf35fxU=
+	t=1743708351; cv=none; b=TMti4SD3nRycBCRHBWKN5Aa+MtXlv/EBbiWmaOdt3UW9E+fBNPH0iHxaR9nilknWcOZqU2P2ABsPZD/wnGGghUcBbcYdrTWKiwbLX4vBuoA44d4g1CpJQ+eYP/EXacFnwuw6dQg9CJieoexXD8B7V077VebdnEsynOfvjR6ZEDg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743708299; c=relaxed/simple;
-	bh=M0B7DYBkTlQRKyQ+laESOGNy2whZ2BwQqOZRb/DqqjE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=O4+XmQlW7AIbJxejZJAzmMiKwQRzMZrxm+Iz9Nu8Cn6qcGILC91b6M6+cOLCY/Co1D28HJB0OB3XR0udwG/IPKOhjv1bi+NuQtlr2aL7xmzYEyZqafQon7N2V8M49w5PAcTvWU/PpDG7IUfnTVDudqzNudU5sfjL2hC4dMVgovs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=XUasF8mO; arc=none smtp.client-ip=79.96.170.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
+	s=arc-20240116; t=1743708351; c=relaxed/simple;
+	bh=YRYgeYQSKEHiXrpTyUfWdnZFevy6BffJsGN8Akt6M4U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=X7Zde5Tetwqe/vxzfbpu2wJzbCLd/XREBw7g/wflxj3zlVYy37LcRdPS+WpAqIU2CIiMnxWJv9SfghDR2OMTmh6fwX+yQx28cw1A83DtZoNoIjJoJnXMr7161Gow3eXhJThrykz0buJUfbWPUrVXyHV8hFuWX57jDR8DPbns8uA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uNNBPw7m; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="XUasF8mO"
-Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
- by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 6.3.1)
- id 07fea8c86a4f491e; Thu, 3 Apr 2025 21:24:54 +0200
-Received: from kreacher.localnet (unknown [195.136.19.94])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 0E9B99014E8;
-	Thu,  3 Apr 2025 21:24:54 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
-	s=dkim; t=1743708294;
-	bh=M0B7DYBkTlQRKyQ+laESOGNy2whZ2BwQqOZRb/DqqjE=;
-	h=From:Subject:Date;
-	b=XUasF8mOaPYG+wQJtAcQbKOaZX6/9wTo0gU4Cf/n3azEHJc8ejngA2aWYUKmamOe8
-	 PGCz41VFLrUY6klUoL7+OGckJW37SZRudnEVagSiJVaP7U9ypakfAQAHhlrqiNU+Ou
-	 MJAFnCzxK8HP7GGEYG7pa2K0v9IFjPfN+03XX4zsk5MiN9AEFYCm9jF5wHLcqcmlZP
-	 yuO+CFTtH8wYqwYNxODxvPKsxiFnXCkr5OBOsY3kPi5Camw4QTTPBYZ16j4bs3yU4v
-	 tNSAubaNznEbEks5HPTdznLonOS3/DVQFM2eThkN/Bt6jsSlTd39JY1oMeUpIUNkJ5
-	 yrqfSGVEe73pg==
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To: Linux PM <linux-pm@vger.kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Daniel Lezcano <daniel.lezcano@linaro.org>,
- Christian Loehle <christian.loehle@arm.com>,
- Artem Bityutskiy <artem.bityutskiy@linux.intel.com>,
- Doug Smythies <dsmythies@telus.net>,
- Aboorva Devarajan <aboorvad@linux.ibm.com>
-Subject:
- [PATCH v1 1/2] cpuidle: teo: Move candidate state lookup to separate function
-Date: Thu, 03 Apr 2025 21:16:47 +0200
-Message-ID: <4991828.GXAFRqVoOG@rjwysocki.net>
-In-Reply-To: <4661520.LvFx2qVVIh@rjwysocki.net>
-References: <4661520.LvFx2qVVIh@rjwysocki.net>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uNNBPw7m"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2240aad70f2so45605ad.0
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 12:25:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1743708349; x=1744313149; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JPvfod2EQkGJmMMdAOg2BjArURxHw4Y566D3WCYMQmQ=;
+        b=uNNBPw7mv4Q6buf15nJ17+oXiEXKM/tGqsxbPx4ari1QvLwWMy5dvHQci30yiAa5jv
+         JKFbE5THlw6K9nrkV3AJc5FI5XjFyxZlKWhyo6YR15EPaFSW6fr88kPvn+X+n1B9i0HL
+         l6HqGwbulKx5OU/SMszCvWXuDE5ZX8TzgVm2fixrkSNoFyctG8YGk+bi9PY4WnWnQ4cR
+         qAbm0sobItFeQwP063wOkljaFP5L4zGw1u15AIxtz3NCBICSNZzfKChEP9tq7aU7cc5r
+         1GUph0Bc0gqtmxAFr/s9tBunCBtzX4SoSpbUOC/pXaPwA7FzzF8fS+TCk5mmyo+Eckfd
+         wlvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743708349; x=1744313149;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JPvfod2EQkGJmMMdAOg2BjArURxHw4Y566D3WCYMQmQ=;
+        b=OIVNnAjqYYE58A5UUtZsZjLZv4TcXB+vJiq7L0eyqx/evRDAqoYrXwjmI5TD3RP9C2
+         xX1U2cSGkz8bixMBWr6WWmizak0E1cC9FnheG2CgkPFMHSYk+pWUaBYnm1fKphQ6pa/a
+         lEfKv61KHJJagVidaqRyAE0QVGs9rSmcpUuIiTJ7lXICHYNxhChIrH5yCXw99IB97cxe
+         N+J0q+NCiLLQlzJuB5x77I63UWbSQ5US/NgP06k4Dfu4bVTrQMsQoLZmzCSatyaOIId8
+         Z2OP88HpoXxvuwlvcpiCYtQmCtDsUzX77lUoMbrlKGZ6P+GoDkJUtN1kwLsuUXw5+9Gu
+         VGqA==
+X-Gm-Message-State: AOJu0YwkR82ueVy5qNlD8D92hrTBGw+0nqeEjWZDmxNFtgm728N2zFll
+	62Ux6agC5An7tG6uYEc31V+yygFUTxbCkaFGdO57TsKiIeqtQ248lxqZ9vIIIH3NerTSCoL77ia
+	gLVQo8dgWcxK5G4dFNzSRaUgpvvQczti2GzSR
+X-Gm-Gg: ASbGncuTLNIJ18hoDlDzPRUyo3gnNQYwrGh2zXTbFt7LGXcXqZQoctHuayErGFIfx4Z
+	3IsMxfikEUFo1caj2VZA3RfgqmaUKnzEBaFfO7vbvI+FNiLoXvYHSsZ267jgqjUiuEur8Ou4MSO
+	tinvNczZgckYuskJqf9binHBGp5FeNBC+KGWjQTlgqFFadRwKPz++B
+X-Google-Smtp-Source: AGHT+IGeE5vqLWQN/fZPk9rHzFvK6lM4bgUROZNOY4HEeGZzv3ni4YTk2CUz6tJ/dpzj1TbrPnfdEN3AJ6kaS3kZ9/A=
+X-Received: by 2002:a17:902:cecc:b0:215:86bf:7e46 with SMTP id
+ d9443c01a7336-22a8a0b3330mr316915ad.7.1743708348732; Thu, 03 Apr 2025
+ 12:25:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
+References: <20250327225651.642965-1-ctshao@google.com> <20250327225651.642965-4-ctshao@google.com>
+In-Reply-To: <20250327225651.642965-4-ctshao@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 3 Apr 2025 12:25:37 -0700
+X-Gm-Features: AQ5f1JoLAY-0cavb_6d6-MpwT45J3yizJBaVL5nve2gtkYrURArsW8pQgPtBvyI
+Message-ID: <CAP-5=fU37XBFa-kft5JYPO+BCWP5zGnfZCkCqvzYW-yozF8o0g@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] perf test: Add stat uniquifying test
+To: Chun-Tse Shao <ctshao@google.com>
+Cc: linux-kernel@vger.kernel.org, peterz@infradead.org, mingo@redhat.com, 
+	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, adrian.hunter@intel.com, 
+	kan.liang@linux.intel.com, ak@linux.intel.com, howardchu95@gmail.com, 
+	linux@treblig.org, yeoreum.yun@arm.com, james.clark@linaro.org, 
+	weilin.wang@intel.com, asmadeus@codewreck.org, 
+	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-X-CLIENT-IP: 195.136.19.94
-X-CLIENT-HOSTNAME: 195.136.19.94
-X-VADE-SPAMSTATE: spam:low
-X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddukeelfeelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenogfuphgrmhfkphculdeftddtmdenucfjughrpefhvfevufffkfgjfhgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepvdffueeitdfgvddtudegueejtdffteetgeefkeffvdeftddttdeuhfegfedvjefhnecukfhppeduleehrddufeeirdduledrleegnecuufhprghmkfhppeduleehrddufeeirdduledrleegnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepudelhedrudefiedrudelrdelgedphhgvlhhopehkrhgvrggthhgvrhdrlhhotggrlhhnvghtpdhmrghilhhfrhhomheprhhjfiesrhhjfiihshhotghkihdrnhgvthdpnhgspghrtghpthhtohepjedprhgtphhtthhopehlihhnuhigqdhpmhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegurghnihgvlhdrlhgviigtrghnoheslhhinhgrrhhordhorhhgpdhrtghpthhtoheptghhrhhishhtihgrnhdrlhhovgh
-X-DCC--Metrics: v370.home.net.pl 1024; Body=14 Fuz1=14 Fuz2=14
+Content-Transfer-Encoding: quoted-printable
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On Thu, Mar 27, 2025 at 4:01=E2=80=AFPM Chun-Tse Shao <ctshao@google.com> w=
+rote:
+>
+> The `stat+uniquify.sh` test retrieves all uniquified `clockticks` events
+> from `perf list -v clockticks` and check if `perf stat -e clockticks -A`
+> contains all of them.
+>
+> Signed-off-by: Chun-Tse Shao <ctshao@google.com>
+> ---
+>  .../tests/shell/stat+event_uniquifying.sh     | 69 +++++++++++++++++++
+>  1 file changed, 69 insertions(+)
+>  create mode 100755 tools/perf/tests/shell/stat+event_uniquifying.sh
+>
+> diff --git a/tools/perf/tests/shell/stat+event_uniquifying.sh b/tools/per=
+f/tests/shell/stat+event_uniquifying.sh
+> new file mode 100755
+> index 000000000000..5ec35c52b7d9
+> --- /dev/null
+> +++ b/tools/perf/tests/shell/stat+event_uniquifying.sh
+> @@ -0,0 +1,69 @@
+> +#!/bin/bash
+> +# perf stat events uniquifying
+> +# SPDX-License-Identifier: GPL-2.0
+> +
+> +set -e
+> +
+> +stat_output=3D$(mktemp /tmp/__perf_test.stat_output.XXXXX)
+> +perf_tool=3Dperf
+> +err=3D0
+> +
+> +test_event_uniquifying() {
+> +  # We use `clockticks` to verify the uniquify behavior.
+> +  event=3D"clockticks"
 
-Move the code looking up a new candidate idle state in teo, after
-deciding that the initial candidate (the deepest enabled idle state) is
-likely too deep, into a separate function in preparation for subsequent
-changes.
+This event is generally only available on Intel, not AMD or ARM, so we
+will need to skip if it isn't present.
 
-No intentional functional impact.
+> +  # If the `-A` option is added, the event should be uniquified.
+> +  #
+> +  # $perf list -v clockticks
+> +  #
+> +  # List of pre-defined events (to be used in -e or -M):
+> +  #
+> +  #   uncore_imc_0/clockticks/                           [Kernel PMU eve=
+nt]
+> +  #   uncore_imc_1/clockticks/                           [Kernel PMU eve=
+nt]
+> +  #   uncore_imc_2/clockticks/                           [Kernel PMU eve=
+nt]
+> +  #   uncore_imc_3/clockticks/                           [Kernel PMU eve=
+nt]
+> +  #   uncore_imc_4/clockticks/                           [Kernel PMU eve=
+nt]
+> +  #   uncore_imc_5/clockticks/                           [Kernel PMU eve=
+nt]
+> +  #
+> +  #   ...
+> +  #
+> +  # $perf stat -e clockticks -A -- true
+> +  #
+> +  #  Performance counter stats for 'system wide':
+> +  #
+> +  # CPU0            3,773,018      uncore_imc_0/clockticks/
+> +  # CPU0            3,609,025      uncore_imc_1/clockticks/
+> +  # CPU0                    0      uncore_imc_2/clockticks/
+> +  # CPU0            3,230,009      uncore_imc_3/clockticks/
+> +  # CPU0            3,049,897      uncore_imc_4/clockticks/
+> +  # CPU0                    0      uncore_imc_5/clockticks/
+> +  #
+> +  #        0.002029828 seconds time elapsed
+> +
+> +  echo "stat event uniquifying test"
+> +  uniquified_event_array=3D()
+> +
+> +  # Check how many uniquified events.
+> +  while IFS=3D read -r line; do
+> +    uniquified_event=3D$(echo "$line" | awk '{print $1}')
+> +    uniquified_event_array+=3D("${uniquified_event}")
+> +  done < <(${perf_tool} list -v ${event} | grep "\[Kernel PMU event\]")
 
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
- drivers/cpuidle/governors/teo.c |  120 +++++++++++++++++++++-------------------
- 1 file changed, 63 insertions(+), 57 deletions(-)
+Shouldn't the array contain every sysfs event that doesn't have a json
+component? They may or may not be uniquified so I think the array name
+is misleading.
 
---- a/drivers/cpuidle/governors/teo.c
-+++ b/drivers/cpuidle/governors/teo.c
-@@ -259,6 +259,67 @@
- 	return state_idx;
- }
- 
-+static int teo_get_candidate(struct cpuidle_driver *drv,
-+			     struct cpuidle_device *dev,
-+			     struct teo_cpu *cpu_data,
-+			     int idx, unsigned int idx_intercepts)
-+{
-+	int first_suitable_idx = idx;
-+	unsigned int intercepts = 0;
-+	int i;
-+
-+	/*
-+	 * Look for the deepest idle state whose target residency had
-+	 * not exceeded the idle duration in over a half of the relevant
-+	 * cases in the past.
-+	 *
-+	 * Take the possible duration limitation present if the tick
-+	 * has been stopped already into account.
-+	 */
-+	for (i = idx - 1; i >= 0; i--) {
-+		intercepts += cpu_data->state_bins[i].intercepts;
-+		if (2 * intercepts > idx_intercepts) {
-+			/*
-+			 * Use the current state unless it is too
-+			 * shallow or disabled, in which case take the
-+			 * first enabled state that is deep enough.
-+			 */
-+			if (teo_state_ok(i, drv) && !dev->states_usage[i].disable) {
-+				idx = i;
-+				break;
-+			}
-+
-+			idx = first_suitable_idx;
-+			break;
-+		}
-+
-+		if (dev->states_usage[i].disable)
-+			continue;
-+
-+		if (teo_state_ok(i, drv)) {
-+			/*
-+			 * The current state is deep enough, but still
-+			 * there may be a better one.
-+			 */
-+			first_suitable_idx = i;
-+			continue;
-+		}
-+
-+		/*
-+		 * The current state is too shallow, so if no suitable
-+		 * states other than the initial candidate have been
-+		 * found, give up (the remaining states to check are
-+		 * shallower still), but otherwise the first suitable
-+		 * state other than the initial candidate may turn out
-+		 * to be preferable.
-+		 */
-+		if (first_suitable_idx == idx)
-+			break;
-+	}
-+
-+	return idx;
-+}
-+
- /**
-  * teo_select - Selects the next idle state to enter.
-  * @drv: cpuidle driver containing state data.
-@@ -355,63 +416,8 @@
- 	 * all of the deeper states, a shallower idle state is likely to be a
- 	 * better choice.
- 	 */
--	if (2 * idx_intercept_sum > cpu_data->total - idx_hit_sum) {
--		int first_suitable_idx = idx;
--
--		/*
--		 * Look for the deepest idle state whose target residency had
--		 * not exceeded the idle duration in over a half of the relevant
--		 * cases in the past.
--		 *
--		 * Take the possible duration limitation present if the tick
--		 * has been stopped already into account.
--		 */
--		intercept_sum = 0;
--
--		for (i = idx - 1; i >= 0; i--) {
--			struct teo_bin *bin = &cpu_data->state_bins[i];
--
--			intercept_sum += bin->intercepts;
--
--			if (2 * intercept_sum > idx_intercept_sum) {
--				/*
--				 * Use the current state unless it is too
--				 * shallow or disabled, in which case take the
--				 * first enabled state that is deep enough.
--				 */
--				if (teo_state_ok(i, drv) &&
--				    !dev->states_usage[i].disable) {
--					idx = i;
--					break;
--				}
--				idx = first_suitable_idx;
--				break;
--			}
--
--			if (dev->states_usage[i].disable)
--				continue;
--
--			if (teo_state_ok(i, drv)) {
--				/*
--				 * The current state is deep enough, but still
--				 * there may be a better one.
--				 */
--				first_suitable_idx = i;
--				continue;
--			}
--
--			/*
--			 * The current state is too shallow, so if no suitable
--			 * states other than the initial candidate have been
--			 * found, give up (the remaining states to check are
--			 * shallower still), but otherwise the first suitable
--			 * state other than the initial candidate may turn out
--			 * to be preferable.
--			 */
--			if (first_suitable_idx == idx)
--				break;
--		}
--	}
-+	if (2 * idx_intercept_sum > cpu_data->total - idx_hit_sum)
-+		idx = teo_get_candidate(drv, dev, cpu_data, idx, idx_intercept_sum);
- 
- 	/*
- 	 * If there is a latency constraint, it may be necessary to select an
+> +  perf_command=3D"${perf_tool} stat -e $event -A -o ${stat_output} -- tr=
+ue"
+> +  $perf_command
+> +
+> +  # Check the output contains all uniquified events.
+> +  for uniquified_event in "${uniquified_event_array[@]}"; do
+> +    if ! cat "${stat_output}" | grep -q "${uniquified_event}"; then
 
+Why not pass the file directly to grep?
+Should some of the events not show in the stat output as you only
+asked for the clockticks event? I'm not sure how this test can pass
+currently.
 
+Thanks,
+Ian
 
+> +      echo "Event is not uniquified [Failed]"
+> +      echo "${perf_command}"
+> +      cat "${stat_output}"
+> +      err=3D1
+> +      break
+> +    fi
+> +  done
+> +}
+> +
+> +test_event_uniquifying
+> +rm -f "${stat_output}"
+> +exit $err
+> --
+> 2.49.0.472.ge94155a9ec-goog
+>
