@@ -1,81 +1,75 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C64111E5B8B;
-	Thu,  3 Apr 2025 09:00:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A152243387
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 09:01:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743670845; cv=none; b=sGDlS4qClbGleRwaKMKY5Bf/xW60JLn2WqeLI1CElH63dVHXVulXhD7ODq3l40dSqW2/+GHh/sc6hVkiEAUL/ReXaKe6CFbvNZUiC2q2sYkBk5O4HBYOxwmBRp1sTMSI1uVDhyJNB4GNOVICRNfH4NdjQxBjTvJZLUd1Gemz6Yk=
+	t=1743670875; cv=none; b=DqrpX8/yS3ANx3xtptYPZnoMuH/fEsVItWCivvAsEDgXz6m1U5E8eojBva/2sFmfUo1NHDNdq5TK2YF5+yYYCkO54zN8OYWADjdkMummZFZbE8Bm1mkaqDbMm/5ahG2Rd68mHPckWFtxf237z5y2i1Z5if8TnkJM9pt3sXgGVPo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743670845; c=relaxed/simple;
-	bh=WieTwftKJ4wIoBz+4UXZMSRR5q3d/MG41Yn+IFrvBkc=;
+	s=arc-20240116; t=1743670875; c=relaxed/simple;
+	bh=sxw491Z8LMPDKSO+07agHSEfaaL/qFP44nfZQ2jYKxA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bTORRQslPSLW9co0PdImkUThjpVg72sio52oVYk4bYzw6tc8BHSksY7CwaATt3+Hqtmwf9Ab5CzumKdNxdqWR83YbK7xfFOCFDTzrfeTpFGCMU2/Yv8mhZMf9lANaUTiAj1YXHkiR9eYhXWhldVGkIor+fnkF8B4iKGqa9GwFSM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=lzPGB4Nt; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="lzPGB4Nt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7480C4CEE3;
-	Thu,  3 Apr 2025 09:00:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1743670844;
-	bh=WieTwftKJ4wIoBz+4UXZMSRR5q3d/MG41Yn+IFrvBkc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lzPGB4NtmFEwOJ+8kx/WZsDtdWgn1ueihPaqCjpqdxW+zYZichIiT5lD5FonrKK9K
-	 0jU69pjMuyyxdayEXay4SCYHtwrOYYKBxIGaLgY6fQZ8/UgKYR7kfs8Z4GKJgWuH56
-	 75tdHMRwBtVrHROXFf7U6JB54EMmX0PeiSnRTCDw=
-Date: Thu, 3 Apr 2025 09:59:16 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Markus Elfring <Markus.Elfring@web.de>
-Cc: Henry Martin <bsdhenrymartin@gmail.com>, linux-serial@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, stable@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Taichi Sugaya <sugaya.taichi@socionext.com>,
-	Takao Orito <orito.takao@socionext.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>
-Subject: Re: [PATCH v2] serial: Fix null-ptr-deref in mlb_usio_probe()
-Message-ID: <2025040310-gangway-obvious-5122@gregkh>
-References: <20250403070339.64990-1-bsdhenrymartin@gmail.com>
- <970e78d3-e3bc-4a34-9ba8-40df4823726f@web.de>
+	 Content-Type:Content-Disposition:In-Reply-To; b=roAjtl/N7JV8gY8SH3nO77P/dxSWIkPSOVt9jNu/NRFn4ZFzbFF+FxKATLNRe5AP9AbxRsRtR46AneiumQXam716WtlmmJZS3YjNscxDsdZ58aa+7fIRKBDhcjOmRlx5kQxgPsz80ZIk4S/DJUs6t3g8iU0kmpRcGFD/0xGurvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=arm.com; spf=none smtp.mailfrom=foss.arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=foss.arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2AA17106F;
+	Thu,  3 Apr 2025 02:01:16 -0700 (PDT)
+Received: from bogus (unknown [10.57.41.33])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5F51E3F63F;
+	Thu,  3 Apr 2025 02:01:11 -0700 (PDT)
+Date: Thu, 3 Apr 2025 10:01:08 +0100
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: Oliver Upton <oliver.upton@linux.dev>
+Cc: Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+	Sudeep Holla <sudeep.holla@arm.com>, kvmarm@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, maz@kernel.org,
+	mark.rutland@arm.com, lpieralisi@kernel.org,
+	catalin.marinas@arm.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] smccc/kvm_guest: Remove the accidental semicolon
+Message-ID: <20250403-steadfast-bold-puffin-f0d2ed@sudeepholla>
+References: <20250402134401.146156-1-shameerali.kolothum.thodi@huawei.com>
+ <20250402-independent-hyrax-of-honor-4515fb@sudeepholla>
+ <Z-1pPLI8HRjg-bSx@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <970e78d3-e3bc-4a34-9ba8-40df4823726f@web.de>
+In-Reply-To: <Z-1pPLI8HRjg-bSx@linux.dev>
 
-On Thu, Apr 03, 2025 at 10:50:36AM +0200, Markus Elfring wrote:
-> …
-> > Add NULL check after devm_ioremap() to prevent this issue.
+On Wed, Apr 02, 2025 at 09:43:40AM -0700, Oliver Upton wrote:
+> Hi Sudeep,
 > 
-> Can a summary phrase like “Prevent null pointer dereference in mlb_usio_probe()”
-> be a bit nicer?
+> On Wed, Apr 02, 2025 at 02:58:06PM +0100, Sudeep Holla wrote:
+> > On Wed, Apr 02, 2025 at 02:44:01PM +0100, Shameer Kolothum wrote:
+> > > Fixes cocci reported warning:Unneeded semicolon
+> > > 
+> > 
+> > There was similar patch on the list [1] few days ago.
+> > 
+> > > Fixes: 86edf6bdcf05 ("smccc/kvm_guest: Enable errata based on implementation CPUs")
+> > 
+> > ^^^ Is this really necessary as they get backported as well ?
 > 
-> Regards,
-> Markus
+> The blamed commit was introduced this release cycle so no concern about
+> backports.
 > 
 
-Hi,
+Ah OK, sorry didn't look at the details.
 
-This is the semi-friendly patch-bot of Greg Kroah-Hartman.
+> > Since, KVM maintainers are in cc-ed, let me know if you guys want to pick
+> > this ? Else I can send it as part of my firmware (ffa/scmi) fixes.
+> 
+> I can grab the fix here in a moment, I've already got one queued up [*]
+> for the KVM guest driver anyway.
+> 
 
-Markus, you seem to have sent a nonsensical or otherwise pointless
-review comment to a patch submission on a Linux kernel developer mailing
-list.  I strongly suggest that you not do this anymore.  Please do not
-bother developers who are actively working to produce patches and
-features with comments that, in the end, are a waste of time.
+Thanks!
 
-Patch submitter, please ignore Markus's suggestion; you do not need to
-follow it at all.  The person/bot/AI that sent it is being ignored by
-almost all Linux kernel maintainers for having a persistent pattern of
-behavior of producing distracting and pointless commentary, and
-inability to adapt to feedback.  Please feel free to also ignore emails
-from them.
-
-thanks,
-
-greg k-h's patch email bot
+-- 
+Regards,
+Sudeep
