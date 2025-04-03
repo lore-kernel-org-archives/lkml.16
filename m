@@ -1,228 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B41824C080;
-	Thu,  3 Apr 2025 15:01:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB4FA24F5A0;
+	Thu,  3 Apr 2025 15:03:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743692509; cv=none; b=l9js1b+Zdkd7bBuq0eHvn6J+vIQfcqI5ghce/1pgQiwTayv8DPAA8Cy6T+DFs2Gu6dn59ZbJLaEzCqugRykg6wZmvA2x+mDXDERP5WQqAu9QwwnnR6UYRS4VyUMc7UAp4QLi1eFMmOU9oGSo+8YwbmX77oWYz9/PhAEMzwTq0fs=
+	t=1743692631; cv=none; b=H+7x9mz/CdRAQAbNIYOGeLXYkgeX706CAPRUz/ZdaY++53CwzGb2ROKBYoqicx0Ub6axq3qajwliDajlD/u5GOQwd4PcSB+LSnqe0mKWxYmb4nYt1+CWoXd1NhVC793X27C+aN5IGi3GQAz3eb5gP7yXkgU7wSar3o7/CggrbBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743692509; c=relaxed/simple;
-	bh=xGkor64d/mAWwGW2M/uJgbBXlgSRrmMMXmJy4NWr2FM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fgYx7LGgti+wQmqqNir3l26A+SPlbVZBKSFIT8uJNTjxHh6R1YqCQ1MOrIHllSWClcmPoOR0/qu3y+N+sZUalcJejZeOLNUaKIVX++8D+3IKjaogzfO92ExTvecQlFLf/QCvrI9fglrq/jx7WCObXzPKh9vyAXsRdOsFPIwcs+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=niAfeKup; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743692631; c=relaxed/simple;
+	bh=KcyDK4uz+Y/Sokp66zbb4AM3+lCIWhqWPIEAVHmRr54=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=dz23GuVuR9PV9NXk5VbufRNbf4ORx0+cKd2eT6JNV6o47IfzxcIlSmUYb6V6ekNjOtafn8ggTk17QKh4Xf7+qQDUqDtC8gPFsIyBQvWxVD9DxlylDW7T6RH4qXfGAjNhiZLOUwrVR0Npy68L5tQON/gewfLvHT6FuwwYiIDbUFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=cAWc2c6X; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=aMNLw6Bi; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="niAfeKup"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFAFFC4CEE3;
-	Thu,  3 Apr 2025 15:01:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743692509;
-	bh=xGkor64d/mAWwGW2M/uJgbBXlgSRrmMMXmJy4NWr2FM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=niAfeKupZCdW/v65YRBZPto/AOg0FKIEGUVfqHuk/V917Zzv6RSe5h9TeA1y+2GwB
-	 y6jcV2yMl8jRWBUPnvCpdWetEOICZmbLZMplTkNmqajUmhLgbZ+wX1pscUly5hThcv
-	 00r8ZArknZbaBkQXYhFtsbHpa5D8UxnJgj0Wy4bQURVI/mMK/CgRRKcVMbsYt4V97v
-	 KVklRVaeWtWZpCuxX5EqvWpTR5he/cmVLQ6u41nGwGTLP7vooUvJo1ALxnwkgPVyuS
-	 qdktePCFV81JXCdQ944gP3TIO2f8H19vr4TYcfaVUtFuEHNXqULkH7XatvX8/1Mfcq
-	 WednCxmadBD0A==
-Date: Thu, 3 Apr 2025 17:01:46 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Christian Marangi <ansuelsmth@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, 
-	Benjamin Larsson <benjamin.larsson@genexis.eu>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Lorenzo Bianconi <lorenzo@kernel.org>
-Subject: Re: [RESEND PATCH v11] pwm: airoha: Add support for EN7581 SoC
-Message-ID: <zwckkfd6mzzjxfpitojcmhokhjbtc4u3brf34pcu4phdlipf3z@uijstw7daze2>
-References: <20250226002537.3752-1-ansuelsmth@gmail.com>
- <cdwttmqcvhetlf446gsaxsta76ojlqckxc253svho4xsm7qxhs@6otqm6yyuvfh>
- <67ee67f5.050a0220.38e02.5bc2@mx.google.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cAWc2c6X";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="aMNLw6Bi"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1743692627;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EHbCePX24dh6KDJ8X+RFQ5xBFtUQ6++YcFww5RU2/aM=;
+	b=cAWc2c6X5BJpIpgjOXnZKqynoDf4CCrEuzivOkx71QQg/6/melJAeT2Y0DX7p/hlhj9uPf
+	7bUp6mjwtjQlKwFOlixaVLeAx9I7JRykqitt+QPbBUWL9I3StpxaotwDB9q30gHnf7i9NA
+	LDhy/Pk3MgTqW6UUar4Eky5xJDAbbYJmE2ijdsz4KBB/jkHPNjncBzn7JE16phj7GPD6+l
+	WrLvwzbPTBqlF2vplEep3bug91J5/tFuP9szoX1LDmvvJpEK9epMer5BBawdO8X1yOPr54
+	WKujMmMS2NAHXP52D2ZQgKt+ppsKgPL9R9PHxynKL2RTQaFBujamNzGVP/Bifw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1743692627;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EHbCePX24dh6KDJ8X+RFQ5xBFtUQ6++YcFww5RU2/aM=;
+	b=aMNLw6BiyQBB/EaqECgC7EhDDvNwWSgmoZfQeRO5JsW6QuiIu5LwonVANOgI6USyH5VMS8
+	d0alF73jquU26hDA==
+To: Frank Scheiner <frank.scheiner@web.de>, apatel@ventanamicro.com
+Cc: ajones@ventanamicro.com, andrew@lunn.ch, anup@brainfault.org,
+ atishp@atishpatra.org, bp@alien8.de, dave.hansen@linux.intel.com,
+ gregory.clement@bootlin.com, hpa@zytor.com, imx@lists.linux.dev,
+ kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+ maz@kernel.org, mingo@redhat.com, palmer@dabbelt.com,
+ paul.walmsley@sifive.com, s.hauer@pengutronix.de,
+ sebastian.hesselbarth@gmail.com, shawnguo@kernel.org,
+ sunilvl@ventanamicro.com, x86@kernel.org, linux-ia64@vger.kernel.org
+Subject: Re: [PATCH v6 04/10] genirq: Introduce common
+ irq_force_complete_move() implementation
+In-Reply-To: <667d272f-2b51-49d6-84ea-1156027e00a7@web.de>
+References: <20250217085657.789309-5-apatel@ventanamicro.com>
+ <667d272f-2b51-49d6-84ea-1156027e00a7@web.de>
+Date: Thu, 03 Apr 2025 17:03:47 +0200
+Message-ID: <87plhtuw18.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="km3jrdcv4oe444nf"
-Content-Disposition: inline
-In-Reply-To: <67ee67f5.050a0220.38e02.5bc2@mx.google.com>
+Content-Type: text/plain
+
+On Thu, Apr 03 2025 at 15:13, Frank Scheiner wrote:
+> this change, specfically the introduction of irq_force_complete_move()
+> to `kernel/irq/migration.c`, strangely breaks our builds for the hp-sim
+> platform (i.e. Linux/ia64 for Ski):
+
+arch/itanic has hit the iceberg and sank with the release of v6.7...
+
+> So I guess, either the requirement in `linux/include/linux/irq.h` needs
+> to go, or the use of "d->parent_data" or the whole of
+> irq_force_complete_move() and its use needs to be guarded as well.
+
+Guessing is not a really good approach to solve a technical problem :)
+
+Thanks,
+
+        tglx
+---
+--- a/kernel/irq/migration.c
++++ b/kernel/irq/migration.c
+@@ -37,7 +37,7 @@ bool irq_fixup_move_pending(struct irq_d
+ 
+ void irq_force_complete_move(struct irq_desc *desc)
+ {
+-	for (struct irq_data *d = irq_desc_get_irq_data(desc); d; d = d->parent_data) {
++	for (struct irq_data *d = irq_desc_get_irq_data(desc); d; d = irqd_get_parent_data(d)) {
+ 		if (d->chip && d->chip->irq_force_complete_move) {
+ 			d->chip->irq_force_complete_move(d);
+ 			return;
 
 
---km3jrdcv4oe444nf
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [RESEND PATCH v11] pwm: airoha: Add support for EN7581 SoC
-MIME-Version: 1.0
 
-Hello,
 
-On Thu, Apr 03, 2025 at 12:50:27PM +0200, Christian Marangi wrote:
-> On Thu, Apr 03, 2025 at 11:58:48AM +0200, Uwe Kleine-K=F6nig wrote:
-> > > +	if (hwpwm >=3D AIROHA_PWM_NUM_GPIO)
-> > > +		offset -=3D AIROHA_PWM_NUM_GPIO;
-> > > +
-> > > +	/* One FLASH_MAP register handles 8 pins */
-> > > +	*shift =3D do_div(offset, AIROHA_PWM_PINS_PER_FLASH_MAP);
-> > > +	*shift =3D AIROHA_PWM_REG_GPIO_FLASH_MAP_SHIFT(*shift);
-> > > +
-> > > +	if (offset < AIROHA_PWM_NUM_GPIO)
-> > > +		*addr =3D AIROHA_PWM_REG_GPIO_FLASH_MAP(offset);
-> > > +	else
-> > > +		*addr =3D AIROHA_PWM_REG_SIPO_FLASH_MAP(offset);
-> >=20
-> > A single if would be a bit more straight forward. Something like:
-> >=20
-> > 	static void airoha_pwm_get_flash_map_addr_and_shift(unsigned int hwpwm,
-> > 							    unsigned int *addr, unsigned int *shift)
-> > 	{
-> > 		u64 offset =3D hwpwm;
-> > =09
-> > 		if (hwpwm >=3D AIROHA_PWM_NUM_GPIO) {
-> > 			unsigned sipohwpwm =3D hwpwm - AIROHA_PWM_NUM_GPIO;
-> >=20
-> > 			*shift =3D AIROHA_PWM_REG_GPIO_FLASH_MAP_SHIFT(sipohwpwm % AIROHA_PW=
-M_PINS_PER_FLASH_MAP)
-> > 			*addr =3D AIROHA_PWM_REG_SIPO_FLASH_MAP(sipohwpwm);
-> > 		} else {
-> > 			*shift =3D AIROHA_PWM_REG_GPIO_FLASH_MAP_SHIFT(hwpwm % AIROHA_PWM_PI=
-NS_PER_FLASH_MAP)
-> > 			*addr =3D AIROHA_PWM_REG_GPIO_FLASH_MAP(hwpwm);
-> > 		}
-> > 	}
-> >=20
->=20
-> I think you missed the do_div that do side effect on offset. Also that
-> needs to be / AIROHA_PWM_PINS_PER_FLASH_MAP.
-
-Ack. Luckily you got the idea anyhow. This double effect of do_div() is
-easy to miss, so getting rid of them sounds sensible.
-
-> > > +		if (duty_ns =3D=3D bucket->duty_ns &&
-> > > +		    period_ns =3D=3D bucket->period_ns)
-> > > +			return i;
-> >=20
-> > If period_ns =3D=3D 4010 and bucket->period_ns =3D=3D 4000 you're not
-> > considering *bucket even though it has the right period setting.
-> > (period_ns is the requested period and not the expected period actually
-> > implemented by HW, right?)
-> >=20
->=20
-> Doesn't that requires a different generator? The value we store in the
-> bucket is the requested period yes.
-
-No it doesn't. If I understood right the possible periods are: 4ms, 8ms,
-=2E.., so a request to do 4.01ms will be mapped to 4ms which allows to
-share the generator.
-
-> > > +				  AIROHA_PWM_GPIO_FLASH_EN << shift);
-> > > +		return;
-> > > +	}
-> > > +
-> > > +	regmap_update_bits(pc->regmap, addr,
-> > > +			   AIROHA_PWM_GPIO_FLASH_SET_ID << shift,
-> > > +			   FIELD_PREP(AIROHA_PWM_GPIO_FLASH_SET_ID, index) << shift);
-> >=20
-> > Huh, I'd prefer:
-> >=20
-> > 	regmap_update_bits(pc->regmap, addr,
-> > 			   AIROHA_PWM_GPIO_FLASH_SET_ID(hwpwm % 8)
-> > 			   FIELD_PREP(AIROHA_PWM_GPIO_FLASH_SET_ID(hwpwm % 8), index));
-> >=20
-> > (That probably doesn't work out of the box because of the
-> > __builtin_constant_p check on mask, so you might need a local
-> > alternative to FIELD_PREP without that check.)
->=20
-> Honestly it's not worth to introduce custom FIELD_PREP for this. Yes the
-> problem is that FIELD_PREP requires constant mask so hwpwm % 8 is
-> problematic. An old implementation had stuff in define but resulted in
-> very ugly and confusing define and macro. The shift and FIELD_PREP
-> permits a much cleaner description in the define part at the cost of
-> that additional << shift needed.
->=20
-> Hope you can understand why I think it's better to keep it this way.
-
-OK, I can live with that.
-
-> > > +	bucket =3D airoha_pwm_consume_generator(pc, duty_ns, period_ns,
-> > > +					      hwpwm);
-> > > +	if (bucket < 0)
-> > > +		return -EBUSY;
-> > > +
-> > > +	/*
-> > > +	 * For SIPO reinit is always needed to trigger the shift register c=
-hip
-> > > +	 * and apply the new flash configuration.
-> >=20
-> > I don't understand that sentence. What is the shift register chip? What
-> > is a flash configuration?
-> >=20
->=20
-> The SoC can have attached a shift register chip to supports multiple LEDs.
-> The handling of this chip and comunication is done internally to the SoC
-> and it's exposed to register with these additional register.
->=20
-> When such channel are used with an assumed shift register, to apply the
-> new configuration in airoha_pwm_config_flash_map(), the shift register
-> chip needs to be reinit to actually refresh the chip internal register
-> with the new "flash configuration" (aka the values for
-> AIROHA_PWM_GPIO_FLASH_SET_ID)
->=20
-> Will add more comments to this to make it more clear.
-
-Sounds good.
-
-> > > +	state->enabled =3D FIELD_GET(AIROHA_PWM_GPIO_FLASH_EN, val >> shift=
-);
-> > > +	if (!state->enabled)
-> > > +		return 0;
-> > > +
-> > > +	state->polarity =3D PWM_POLARITY_NORMAL;
-> > > +
-> > > +	bucket =3D FIELD_GET(AIROHA_PWM_GPIO_FLASH_SET_ID, val >> shift);
-> > > +	state->period =3D pc->buckets[bucket].period_ns;
-> >=20
-> > Does .period_ns hold the requested or the actual period? You should
-> > return the latter.
->=20
-> Problem is that putting .period_ns here cause error in the PWM_DEBUG
-> validations. This is caused by the conversion error of the various / and
-> * done to convert tick to ns. Also on applying the configuration we
-> already do all the validation to make sure the request value is the
-> expected one.
-
-Then there is a bug somewhere. I wouldn't completely rule out it's in
-the PWM_DEBUG logic, but my bet is on your driver then.
-=20
-> For the initial values, there is airoha_pwm_fill_bucket that read the
-> current PWM values at boot and fill the buckets with the current values.
->=20
-> This is the compromise I found to handle both pre-configured bucket and
-> also handle the division errors in the ns - tick conversion.
->=20
-> Hope this is acceptable, do you have hint on better handling this?
-
-I'd wait for the next iteration of your patch and then take a deeper
-look in the maths involved. It should be possible to make PWM_DEBUG
-happy and still report the actual configuration.
-
-Best regards
-Uwe
-
---km3jrdcv4oe444nf
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmfuotgACgkQj4D7WH0S
-/k4Wsgf/ckZc2RVC+cZTRSbPOpMS+evNOaG/4zAxD7Q3Nihq7+DtxuospwKQWuq9
-78YgPs7+GBWH3VxMMVcNeNBnPgpM8Kz3MfA0EvFV0AyYvweqoHFd9JY4Bhi1m6nf
-r8jelwl6BGOuxLunYexRnPsTSiLPK+QioTFX8LUc5k4LVDbBokiFGxMN5tv+ca9q
-dpKglieomzZR1QVWYZXVQAuUcYuvZV5UVHndqv6JxtNNAX8LU32m60tsUB/nIh9b
-7FIOvjrYwnAMoJNX0OpCt1GXdzEkpVtv4tGLLdREFzcyGxOO2IagywLly0emN4lw
-5REbrUS8yJpqOLGqXHcgTyCONWWDVg==
-=ILIJ
------END PGP SIGNATURE-----
-
---km3jrdcv4oe444nf--
