@@ -1,225 +1,351 @@
-Received: from mail-io1-f79.google.com (mail-io1-f79.google.com [209.85.166.79])
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDDBC1EF361
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 08:34:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.79
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A91171A01B0;
+	Thu,  3 Apr 2025 08:35:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743669267; cv=none; b=OIBxxb03w3ixNt4WsBZKcnn8s0bfZCkOxwXg78y6VDJMWEfYp7LNB9w3LMdbAiZgO+Fo1RmXJAMvhHfUBL7r0MzZmPIz6ZmtAQO846c0xeDRVZPdpPtWrvO6S7RaBJQBPbNkm/XmN0mviEVjEY1BzknTHCE8twUOZ6+eLV5pRT4=
+	t=1743669355; cv=none; b=rNlVftbkMZlUrA1RjmzasyqihVuWyaryfIFrNTYKEIPmMF2UiqmbMOiLfJmyl3gas74deIzVQzwVhox0tzY1X3nc0o8804Ox+My8IfZd2z/4QNA/lqpGG6LqYcXFUFPwpgoYi2mF19aJTW51V527uwVPJYPN0XyYAX9LVwSN/G8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743669267; c=relaxed/simple;
-	bh=Os64dDL4fdbaJ0OtgQLdb+EBopDm4qug5PRmFzn8/qw=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=T543K2D5LLssWdOKHK0yzwXqo5nCs5NtoLp1JC+vU2vSZjEfWgug1CZ8w2475Htzxk9wJgtgk329kDmnQ3h79CxuQLPUrs33klYKX5tSI8hzHwFuahIiGqIuqN2Txj2SmIkUgmsyTE3wGKuMQYwmgxLqoZQL9pjwzeaMdUETt70=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f79.google.com with SMTP id ca18e2360f4ac-849d26dd331so189979239f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 01:34:25 -0700 (PDT)
+	s=arc-20240116; t=1743669355; c=relaxed/simple;
+	bh=nB88aIuK+GXRGu/1hePx19gtUS3ySa203EKXV4Y3MRk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QTfpzZYbE2lsD7E6rgaKfyZWBN3DlTA9tPFoLbSFvkUOMtSvX6X1dEBXOPkguq8sdG49rUaKmV5fxPFnBIivj18mtN9bDCKPsBsq2WnZVPeMUo906AmkagdYsdRapkcHfNWlHWq1LYZjj9HRIKF7hTFlJEjL2aA1LyytJLBbKFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Bc46lm7H; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bc46lm7H"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4394a0c65fcso5542105e9.1;
+        Thu, 03 Apr 2025 01:35:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743669352; x=1744274152; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=r9lazPUWMeeXGDT8GL53BUL0dRgSLWRjWydFayIVnBY=;
+        b=Bc46lm7HBhFQ8nWIbH+Fuq0kHRucT0ydhwkcIk3s11PQ+8Jn3D3jXlgm5nO1jhsX1V
+         NpG08BLp6IS99cDW8JEydEQ5HPuijclET6rx2cIKlQPIB236bp90/WeOO7wDM1HgJYXu
+         b5pVEIc3C8qfCjPttwCZAePJKe5jP4QaArHKFWZKoQWbzYzjc0JJ722RLKO5TllhMHcy
+         tCj/AJTUznjEBbPGSFlFqCkVbuFe+5P7o5VOKoNnffF8qtqXmTr3MSKOGAx3R79+s1u1
+         MlEMJ9T3IjPb7+YV2qjdfpfVcJNAUdKfsG5HkJxIZ5mCfyZwRZpEJLj0eag1XL25ICZT
+         HrPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743669265; x=1744274065;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=cOMqihNPVzS31r1t9c+x+ekSMUYUpXWeipZaaZGDe4U=;
-        b=n1uiuWxASXJnVaVp6aJqyHSvLzbfShJSvwYpvKWQOpKwzeDddA/m71ljnvpJEwZWDE
-         EQIRC75fX+qnfK1lsW7sEmnH+A3cxICMYLx0RbbaPLA+KAqPo09WEhmAfW1M4T1oKWyF
-         jKav/YpNVVB/p6n5mcio/8Ub+FIYc3Mtu5NLf7C4BH/FI0PodCk1RcmWnQ1Sm6PyI2jp
-         vl+1iUnSBqngGyi23L09zQ7ZVKXwlPRygqzw5tB5f9cn7q67MAgKXXNWohiATVQUsD8r
-         GbzViMtHY8CD188PEopRcrJiOFqX6Zmx1RLbUTM5PhWJzXvuMR26Zor0KwZkZNuqx5SU
-         AQMA==
-X-Forwarded-Encrypted: i=1; AJvYcCWNkM3PLo5LDDAk0rjEaRAMqjU/gyYydX6wHh+kXCKvG/7ah1jvdTiliUlyl4P4zdOOMY4lB9AIjPulJSY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzXZsOyyfte724EYzQGkVDNFuXK/fDeAagZ15SDGR9OBsb/Ky08
-	ap0BwkHpUt/n98WVZ6M3UYDsBxcoqCyhmOIuq7ZHUMIjKUnz+lJydO/aQsjygKuk+v8Yw/Sjdpd
-	isw2ik/K40pg426Z/wraw76YAgxgKPVfc3d/YMViyFPuGq/lD9dUqFQQ=
-X-Google-Smtp-Source: AGHT+IF8666uAbezsqgMerCBMkWt+Hogg0famXNzMMnPgOPyRQRLhjZS4ylUC0XOJXjpzL0ykwyDkBYr1UeLmTknPB8ie5brafmE
+        d=1e100.net; s=20230601; t=1743669352; x=1744274152;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=r9lazPUWMeeXGDT8GL53BUL0dRgSLWRjWydFayIVnBY=;
+        b=pSv+SomQJ73aZczC8iZIDptgEdKo/O0Jf2SVkZfucUqOPWne6euPkOgmOlhVpEFtU3
+         2BF4rCLSWJvFpKMvgJfxzxo5oGlW1b2GEqcQDhwG9ylvDfCRBjzfwvUIn4F0DW7XQqUF
+         c2Ta9Z+91BBV4Q2cK31mwPnEErSuTsVSI0mr2i5sIUomrv7ZwT6RHT1YxnvV6Wc3YDam
+         nlB6a0MGWOpI887RsIT4tkNq2zEWNNe5s+F2FDK1NkOO0yMj4fAPOLrisNzFn+yn2RAY
+         XemKPZw5aZjso3YRSk06PpQjXJbPspZhmhd8UI7ZbjDCCKRJJkuFPa1D2H8m8/EeZiOq
+         0X1w==
+X-Forwarded-Encrypted: i=1; AJvYcCXIACsLdQDoDsjeSV8DhdK6nFyKUqaxPoKXXzzEXx5ly0HD6TNpftD3Fk0m9fnR45H07zxmY9hJLjcOzQsI@vger.kernel.org, AJvYcCXipTKFB421/upMd2hllAkwYT1b4nFOyHQK3bDhqKJKpN+Zaz0Agzy5PJFu9+QvC3sQDWzCecHFTbk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw0xQLaoXEycwSUmJc1aWVoy30ASDav3ZaGkxl3NFDH5gESYaDY
+	3OHfM2hgfonaVEhAfehK9aOscyB0KDEg3qslxf+vhFcxwFWPpGN7
+X-Gm-Gg: ASbGncvDBIJSvAGkNEhZBSirSpywdwVs1JRxqH7dPSppPD67z9CfKYP3Eose5FyD7Zs
+	0OlzDdT0Ysrsl6qP2Dyj2qiTY9qkbSjOG7IyQKI6ToUfNRz7GjYzLZt0R7clo3P+oavgvswNXr8
+	ckpKRS5jbhcAdp/Y1U3gH8ey0690sNOzoBAIujf71U5K9+XL6PveW8rQH78WflKU+XfWjJ6vlZ3
+	4WQ1gWSJv0HHdfIMvRdtGpGW7cVGlQV+KA9NDRz/JFnKmnL6KieCj9jWg5OFt7UnJkarEmvNfq2
+	KuymsPYvsYE+LQcDi4bO3hRHktRqAWC9UmNDZjKhr6da/yclIzSjGn3Z0nHURsXP5g==
+X-Google-Smtp-Source: AGHT+IEOn4903b+1QbZsryGx30m9Q2J6NlCejhHxkm19JdjJuGO18neb4wh5B6lAbiLZXvJ55LjHaw==
+X-Received: by 2002:a05:600c:1907:b0:43d:23fe:e8a6 with SMTP id 5b1f17b1804b1-43ec133ba19mr12651335e9.5.1743669351669;
+        Thu, 03 Apr 2025 01:35:51 -0700 (PDT)
+Received: from HYB-DlYm71t3hSl.ad.analog.com ([137.71.226.91])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec16602bbsm14873535e9.9.2025.04.03.01.35.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Apr 2025 01:35:51 -0700 (PDT)
+Date: Thu, 3 Apr 2025 10:35:48 +0200
+From: Jorge Marques <gastmaier@gmail.com>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, 
+	Jorge Marques <jorge.marques@analog.com>, Lars-Peter Clausen <lars@metafoo.de>, 
+	Michael.Hennerich@analog.com, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] Documentation: ABI: add oversampling frequency in
+ sysfs-bus-iio
+Message-ID: <pzqfq3w3phov244vnuxpl3t3bololdb3uqyx25ekvg3wzvbco3@jrokyjyc57fl>
+References: <20250321-abi-oversampling-events-frequency-v1-0-794c1ab2f079@analog.com>
+ <20250321-abi-oversampling-events-frequency-v1-2-794c1ab2f079@analog.com>
+ <20250330181320.0ec4351c@jic23-huawei>
+ <3ad6f137-5f67-4448-b0c9-2e760bd935a7@baylibre.com>
+ <20250330185353.150fc33a@jic23-huawei>
+ <hf5dwxs62oof3gom43c6rkdsq3gky6eplxej627t46ktt5blfr@kpmjpxku4inc>
+ <20e8538f-7a73-42a5-87b1-0c04b54375c6@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:b707:0:b0:3d4:2306:fbb6 with SMTP id
- e9e14a558f8ab-3d6dcbb773bmr22404045ab.10.1743669264809; Thu, 03 Apr 2025
- 01:34:24 -0700 (PDT)
-Date: Thu, 03 Apr 2025 01:34:24 -0700
-In-Reply-To: <67ea99e0.050a0220.3c3d88.0042.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67ee4810.050a0220.9040b.016e.GAE@google.com>
-Subject: Re: [syzbot] [block?] possible deadlock in blk_mq_freeze_queue_nomemsave
-From: syzbot <syzbot+9dd7dbb1a4b915dee638@syzkaller.appspotmail.com>
-To: axboe@kernel.dk, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20e8538f-7a73-42a5-87b1-0c04b54375c6@baylibre.com>
 
-syzbot has found a reproducer for the following issue on:
+On Wed, Apr 02, 2025 at 03:27:51PM -0500, David Lechner wrote:
+> On 4/2/25 8:47 AM, Jorge Marques wrote:
+> > On Sun, Mar 30, 2025 at 06:53:53PM +0100, Jonathan Cameron wrote:
+> >> On Sun, 30 Mar 2025 12:34:39 -0500
+> >> David Lechner <dlechner@baylibre.com> wrote:
+> >>
+> >>> On 3/30/25 12:13 PM, Jonathan Cameron wrote:
+> >>>> On Fri, 21 Mar 2025 15:50:02 +0100
+> >>>> Jorge Marques <jorge.marques@analog.com> wrote:
+> 
+> Once you dig into it, the current situation is even more complicated than
+> I expected. :-o
+> 
+> This reply has ended up being mostly a brain dump of my observations. I hope
+> it isn't too confusing. Consider this more of a brainstorm on a future
+> documentation page on sampling rates rather than commenting on what to do
+> on this particular patch. :-)
+> 
+> ---
+> 
+> To make sure we are clear, I think we need to define some precise terminology,
+> especially with regard to "sample rate" since that can be used to mean a
+> lot of different things.
+> 
+> There is the "IIO sample rate" (could also call it the "effective sample rate")
+> that is the rate that we push one complete set of data to an IIO buffer. In
+> many cases, this would be the frequency of the hrtimer trigger that is configured
+> as the trigger for the iio:deviceX.
 
-HEAD commit:    a1b5bd45d4ee Merge tag 'usb-6.15-rc1' of git://git.kernel...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1711cfb0580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=adffebefc9feb9d6
-dashboard link: https://syzkaller.appspot.com/bug?extid=9dd7dbb1a4b915dee638
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12ee494c580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13df5998580000
+Yes.
 
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-a1b5bd45.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/588b4d489b63/vmlinux-a1b5bd45.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/51ead797f7ae/bzImage-a1b5bd45.xz
+> 
+> On the other end of the spectrum, we have the "conversion rate" which is the
+> rate that individual ADC conversions can happen.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+9dd7dbb1a4b915dee638@syzkaller.appspotmail.com
+Yes.
 
-======================================================
-WARNING: possible circular locking dependency detected
-6.14.0-syzkaller-12886-ga1b5bd45d4ee #0 Not tainted
-------------------------------------------------------
-syz-executor170/5939 is trying to acquire lock:
-ffffffff906953a8 (uevent_sock_mutex){+.+.}-{4:4}, at: uevent_net_broadcast_untagged lib/kobject_uevent.c:317 [inline]
-ffffffff906953a8 (uevent_sock_mutex){+.+.}-{4:4}, at: kobject_uevent_net_broadcast lib/kobject_uevent.c:410 [inline]
-ffffffff906953a8 (uevent_sock_mutex){+.+.}-{4:4}, at: kobject_uevent_env+0xb36/0x1870 lib/kobject_uevent.c:608
+> 
+> What I had not seen before, but now I see in existing drivers, is that these
+> may actually be completely independent. In other words, the hrtimer trigger
+> only triggers reading the most recent set of conversions and conversions are
+> driven by a completely separate trigger, generally some sort of clock in the
+> ADC itself.
+> 
+> So I think we should expand the diagrams below to show more layers for the
+> completely general case.
+> 
+> >>>>   
+> >>>>> Some devices have an internal clock used to space out the conversion
+> >>>>> trigger for the oversampling filter,
+> >>>>> Consider an ADC with conversion and data ready pins topology:
+> >>>>>
+> >>>>>   Sampling trigger |       |       |       |       |
+> >>>>>   ADC conversion   ++++    ++++    ++++    ++++    ++++
+> >>>>>   ADC data ready      *       *       *       *       *
+> >>>>>
+> 
+> For terminology, let's call this "burst mode" oversampling (maybe also
+> referred to as "triggered mode" in some data sheets).
+> 
+> >>>>> With the oversampling frequency, conversions can be evenly space between
+> >>>>> the sampling edge:  
+> >>>>
+> >>>> I'm not sure what this second example is providing.  Are you suggesting
+> >>>> that if we don't provide oversampling frequency we should assume this
+> >>>> pattern?  i.e. it is the default?
+> >>>>   
+> > 
+> > The default is to do the n-conversions sequentially (n*t_conv),
+> > "left-aligned" as in the diagram above.
+> > The main application for oversampling is to average out the noise over a wider
+> > bandwidth.
+> > 
+> > I looked into some of the drivers with oversampling and the supported devices
+> > datasheets:
+> > 
+> > * ADS1298: Single field for sampling rate and oversampling,
+> >            I assume the values are the maximum values that the
+> > 	   oversampling time does not exceed the sampling period.
+> > * RTQ6056: Field for oversampling and conversion time,
+> >            maximum sampling period is roughly n*t_ovr.
+> > * MCP3561: Field for oversampling and conversion time.
+> >            maximum sampling period is roughly n*t_ovr.
+> > * AD7380:  Field for oversampling and fixed conversion time,
+> >            3 MSPS for the AD7380 and 4 MSPS for AD7381,
+> >            maximum sampling period is n*t_ovr, e.g. f_samp=(6/4MSPS).
+> > 
+> > None will or claim to stretch over the sampling period the oversampling
+> > conversions, but rather, do the n-conversions at oversampling rate,
+> > providing the conversion as soon as it is ready and idling until the
+> > next edge of the sampling frequency.
+> > 
+> >>>>>
+> >>>>>   Sampling trigger |       |       |       |       |
+> >>>>>   ADC conversion   + + + + + + + + + + + + + + + + + + + +
+> >>>>>   ADC data ready         *       *       *       *       *
+> >>>>> 
+> 
+> And let's call this one "continuous mode".
+> 
+> But as we will see, both of these are a bit ambiguous in their current
+> form. The complete picture is a bit more nuanced.
+> 
+> ---
+> 
+> Let's take the RTQ6056 case (since I actually looked at that one before
+> as inspiration for developing another driver).
+> 
+> The chip itself is programmable and can operate in either a burst/triggered
+> mode or in a continuous mode. However, the way the IIO driver is implemented,
+> it is configured in continuous mode to trigger ADC conversions. But uses an
+> independent IIO trigger that triggers reading sample data. So from the point of
+> view of the data in a buffered read, it looks like burst mode. But the value
+> of the sampling_frequency attribute (the ADC device attribute, not the hrtimer
+> trigger attribute) is for the hardware continuous mode.
+> 
+> Hardware:
+> sampling_frequency   |       |       |       |       |
+> ADC conversion       + + + + + + + + + + + + + + + + + + + +
+> ADC data ready             *       *       *       *       *
+> sample number              S0      S1      S2      S3      S4
+> 
+> IIO:
+> hrtimer frequency               |                     |
+> I2C read                         *                     *
+> push to buffer                   S0                    S3
+> 
+> The IIO (hrtimer) trigger only reads the most recently available data, it
+> doesn't trigger any conversion. The clocks are asynchronous.
 
-but task is already holding lock:
-ffff888025aa6228 (&q->q_usage_counter(io)#24){++++}-{0:0}, at: blk_mq_freeze_queue_nomemsave+0x15/0x20 block/blk-mq.c:215
+That implementation sure works for low-speed converters where power-consuption
+is not a concern.
 
-which lock already depends on the new lock.
+> I think adding an oversampling_frequency attribute to this driver could make
+> it easier to used/understand since oversampling_frequency would be exactly
+> the "conversion rate". Compared to the current situation where the "conversion
+> rate" is the sampling_frequency / oversampling_ratio.
 
+I agree.
+Applicable only for devices where sampling_frequency and
+oversampling_frequency are detached.
+Devices that provide a value for the fixed oversampling_frequency
+frequency could have the attribute as read-only (e.g AD7380).
 
-the existing dependency chain (in reverse order) is:
+> 
+> It is also interesting to consider that if someone decided to add SPI offload
+> support to this driver, then there would be the possibility of using burst/
+> trigggered mode or continuous mode and might want to support both even. In
+> fact this is exactly the possibility we have with ad7606 that I mentioned in
+> a previous reply. So we might even need an oversampling_mode attribute to allow
+> selecting one or the other. But that is something to save for a ad7606 patch
+> series.
 
--> #2 (&q->q_usage_counter(io)#24){++++}-{0:0}:
-       blk_alloc_queue+0x619/0x760 block/blk-core.c:461
-       blk_mq_alloc_queue+0x179/0x290 block/blk-mq.c:4349
-       __blk_mq_alloc_disk+0x29/0x120 block/blk-mq.c:4396
-       loop_add+0x496/0xb70 drivers/block/loop.c:2067
-       loop_init+0x164/0x270 drivers/block/loop.c:2302
-       do_one_initcall+0x120/0x6e0 init/main.c:1257
-       do_initcall_level init/main.c:1319 [inline]
-       do_initcalls init/main.c:1335 [inline]
-       do_basic_setup init/main.c:1354 [inline]
-       kernel_init_freeable+0x5c2/0x900 init/main.c:1567
-       kernel_init+0x1c/0x2b0 init/main.c:1457
-       ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:153
-       ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+For AD4052:
 
--> #1 (fs_reclaim){+.+.}-{0:0}:
-       __fs_reclaim_acquire mm/page_alloc.c:4028 [inline]
-       fs_reclaim_acquire+0x102/0x150 mm/page_alloc.c:4042
-       might_alloc include/linux/sched/mm.h:318 [inline]
-       slab_pre_alloc_hook mm/slub.c:4102 [inline]
-       slab_alloc_node mm/slub.c:4180 [inline]
-       kmem_cache_alloc_node_noprof+0x57/0x3b0 mm/slub.c:4252
-       __alloc_skb+0x2b2/0x380 net/core/skbuff.c:658
-       alloc_skb include/linux/skbuff.h:1340 [inline]
-       alloc_uevent_skb+0x7d/0x210 lib/kobject_uevent.c:289
-       uevent_net_broadcast_untagged lib/kobject_uevent.c:326 [inline]
-       kobject_uevent_net_broadcast lib/kobject_uevent.c:410 [inline]
-       kobject_uevent_env+0xca4/0x1870 lib/kobject_uevent.c:608
-       kobject_synth_uevent+0x7d4/0x8a0 lib/kobject_uevent.c:207
-       bus_uevent_store+0x3d/0x90 drivers/base/bus.c:832
-       bus_attr_store+0x71/0xb0 drivers/base/bus.c:172
-       sysfs_kf_write+0xef/0x150 fs/sysfs/file.c:145
-       kernfs_fop_write_iter+0x351/0x510 fs/kernfs/file.c:334
-       new_sync_write fs/read_write.c:591 [inline]
-       vfs_write+0x5ba/0x1180 fs/read_write.c:684
-       ksys_write+0x12a/0x240 fs/read_write.c:736
-       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-       do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
+* iio raw read is the usual low-speed, CNV->DRDY->Read.
+* iio buffer: uses offload, samp_freq is PWM node freq.
+  - iio triggered buffer: not included on proposed series,
+                          but doable as a fallback if offload
+                          not available.
+* iio events: monitor mode, device exits monitor mode on event
+              (device specific behaviour, cannot be changed),
+              the irq is propagated as iio event.
 
--> #0 (uevent_sock_mutex){+.+.}-{4:4}:
-       check_prev_add kernel/locking/lockdep.c:3166 [inline]
-       check_prevs_add kernel/locking/lockdep.c:3285 [inline]
-       validate_chain kernel/locking/lockdep.c:3909 [inline]
-       __lock_acquire+0x1173/0x1ba0 kernel/locking/lockdep.c:5235
-       lock_acquire kernel/locking/lockdep.c:5866 [inline]
-       lock_acquire+0x179/0x350 kernel/locking/lockdep.c:5823
-       __mutex_lock_common kernel/locking/mutex.c:601 [inline]
-       __mutex_lock+0x199/0xb90 kernel/locking/mutex.c:746
-       uevent_net_broadcast_untagged lib/kobject_uevent.c:317 [inline]
-       kobject_uevent_net_broadcast lib/kobject_uevent.c:410 [inline]
-       kobject_uevent_env+0xb36/0x1870 lib/kobject_uevent.c:608
-       loop_set_size drivers/block/loop.c:211 [inline]
-       loop_set_size drivers/block/loop.c:208 [inline]
-       loop_set_status+0x9c7/0xb90 drivers/block/loop.c:1306
-       loop_set_status_old+0x162/0x1d0 drivers/block/loop.c:1405
-       lo_ioctl+0x695/0x26d0 drivers/block/loop.c:1575
-       blkdev_ioctl+0x274/0x6d0 block/ioctl.c:698
-       vfs_ioctl fs/ioctl.c:51 [inline]
-       __do_sys_ioctl fs/ioctl.c:906 [inline]
-       __se_sys_ioctl fs/ioctl.c:892 [inline]
-       __x64_sys_ioctl+0x190/0x200 fs/ioctl.c:892
-       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-       do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
+iio oversampling changes the iio raw and iio buffer readings behaviour
+(takes longer to get a sample out).
 
-other info that might help us debug this:
+> 
+> ---
+> 
+> Another driver probably worth considering is ad4030. In this one, there is no
+> internal clock to drive conversions. So, for oversampling, the sample rate is
+> just "as fast as possible" (currently bit-banging a GPIO). So it doesn't actually
+> have an oversampling frequency.
+>
+>
+> If someone ever decided to hook it up to some hardware that could actually
+> trigger a finite number of pulses at a specific rate, then this new attribute
+> for oversampling_frequency would become useful. For this particular driver,
+> the presence or absence of an oversampling_frequency attribute would have
+> a meaning, but I don't think this generalizes to other ADCs.
+> 
 
-Chain exists of:
-  uevent_sock_mutex --> fs_reclaim --> &q->q_usage_counter(io)#24
+The hardware is the usual CNV trigger, so it is not really about hooking
+up more hardware, but changing the behaviour
+(takes n-CNV triggers to get a sample out).
 
- Possible unsafe locking scenario:
+The AD4052 also supports what you described, it is the "Averaging Mode" (p.31),
+while the implemented uses the "Burst Averaging Mode" (p.32).
+In the "Averaging Mode", effective sampling rate is
+sampling_frequency / oversampling_ratio, while in
+"Burst Averaging Mode" is sampling_frequency.
 
-       CPU0                    CPU1
-       ----                    ----
-  lock(&q->q_usage_counter(io)#24);
-                               lock(fs_reclaim);
-                               lock(&q->q_usage_counter(io)#24);
-  lock(uevent_sock_mutex);
+So, in "Burst Averaging Mode", the oversampling_frequency is *detached*
+from sampling_frequency.
 
- *** DEADLOCK ***
+The driver could hide away the effective sampling frequency discrepancy
+by reading the state and scaling sampling_frequency based on
+oversampling_ratio, exactly like RTQ6056.
 
-3 locks held by syz-executor170/5939:
- #0: ffff888025c4fb68 (&lo->lo_mutex){+.+.}-{4:4}, at: loop_set_status+0x2a/0xb90 drivers/block/loop.c:1275
- #1: ffff888025aa6228 (&q->q_usage_counter(io)#24){++++}-{0:0}, at: blk_mq_freeze_queue_nomemsave+0x15/0x20 block/blk-mq.c:215
- #2: ffff888025aa6260 (&q->q_usage_counter(queue)#20){+.+.}-{0:0}, at: blk_mq_freeze_queue_nomemsave+0x15/0x20 block/blk-mq.c:215
+> ---
+> 
+> AD4695 is an interesting case to consider as well. When used without SPI offload
+> support, we actually don't allow oversampling currently. If we did though, it
+> be similar to the ad4030 in that we could either make it "as fast as possible"
+> by banging a GPIO or the CS line depending on how the chip was wired up. Or it
+> could use some specialized hardware to generate a pulse train to actually get
+> a known conversion rate.
+> 
+> For now though, oversampling is only implemented when using a SPI offload.
+> It works like this:
+> 
+> Channel		1   2       3 1   2       3 1   2       3
+> OSR		2   4       1 2   4       1 2   4       1
+> Trigger		| | | | | | | | | | | | | | | | | | | | |
+> ADC Conversion	+ + + + + + + + + + + + + + + + + + + + +
+> ADC data ready	   *       * *   *       * *   *       * *
+> IIO sample                   S0            S1            S2
+> 
+> In this case, there isn't a "sample" trigger that triggers a burst of
+> samples. Rather, there is only a "conversion" trigger that triggers
+> individual conversion. In other words, we would call this "continuous mode".
+> And it also shows that some chips allow individual channels to have
+> different oversampling ratios.
 
-stack backtrace:
-CPU: 0 UID: 0 PID: 5939 Comm: syz-executor170 Not tainted 6.14.0-syzkaller-12886-ga1b5bd45d4ee #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
- print_circular_bug+0x275/0x350 kernel/locking/lockdep.c:2079
- check_noncircular+0x14c/0x170 kernel/locking/lockdep.c:2211
- check_prev_add kernel/locking/lockdep.c:3166 [inline]
- check_prevs_add kernel/locking/lockdep.c:3285 [inline]
- validate_chain kernel/locking/lockdep.c:3909 [inline]
- __lock_acquire+0x1173/0x1ba0 kernel/locking/lockdep.c:5235
- lock_acquire kernel/locking/lockdep.c:5866 [inline]
- lock_acquire+0x179/0x350 kernel/locking/lockdep.c:5823
- __mutex_lock_common kernel/locking/mutex.c:601 [inline]
- __mutex_lock+0x199/0xb90 kernel/locking/mutex.c:746
- uevent_net_broadcast_untagged lib/kobject_uevent.c:317 [inline]
- kobject_uevent_net_broadcast lib/kobject_uevent.c:410 [inline]
- kobject_uevent_env+0xb36/0x1870 lib/kobject_uevent.c:608
- loop_set_size drivers/block/loop.c:211 [inline]
- loop_set_size drivers/block/loop.c:208 [inline]
- loop_set_status+0x9c7/0xb90 drivers/block/loop.c:1306
- loop_set_status_old+0x162/0x1d0 drivers/block/loop.c:1405
- lo_ioctl+0x695/0x26d0 drivers/block/loop.c:1575
- blkdev_ioctl+0x274/0x6d0 block/ioctl.c:698
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:906 [inline]
- __se_sys_ioctl fs/ioctl.c:892 [inline]
- __x64_sys_ioctl+0x190/0x200 fs/ioctl.c:892
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f5b0284a229
-Code: 48 83 c4 28 c3 e8 37 17 00 00 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ffeda6302f8 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00007ffeda6304c8 RCX: 00007f5b0284a229
-RDX: 0000200000000080 RSI: 0000000000004c02 RDI: 0000000000000003
-RBP: 00007f5b028bd610 R08: 00007ffeda6304c8 R09: 00007ffeda6304c8
-R10: 00007ffeda6304c8 R11: 0000000000000246 R12: 0000000000000001
-R13: 00007ffeda6304b8 R14: 0000000000000001 R15: 0000000000000001
- </TASK>
+I find this "continuous mode" name confusing, maybe stick with
+"averaging mode", where each CNV pulse triggers a conversion and
+"burst averaging mode", where a CNV pulse triggers a burst of
+conversions.
 
+> 
+> In this case, it would be nice to have an oversampling_frequency
+> attribute as well because it would exactly correspond to the conversion
+> rate. Currently each channel has a sampling_frequency attribute that
+> is oversampling_frequency / oversampling_ratio (same as RTQ6056).
 
----
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+I don't mind that, is the "hide away" I mentioned earlier.
+I believe that, when oversampling is a driver feature,
+oversampling_frequency is either:
+ * The RW conversion frequency:
+   - averaging mode:       oversampling_frequency, sampling_frequency,
+                           and oversampling_ratio affect each other,
+                           due to "hide away" logic.
+                           One CNV one conversion.
+   - burst averaging mode: sampling frequency and conversion frequency
+                           are detached, doesn't need "hide away" logic.
+                           One CNV one sample.
+ * The RO conversion frequency with the role of maximum conversion frequency.
+
+> 
+> ---
+> 
+> So my conclusion here is that the new proposed oversampling_frequency
+> attribute has nothing to do with "burst mode" or "continuous mode" it
+> has the same meaning in both cases.
+
+It depends if it is detached from sampling_frequency or not.
+If the norm is to "hide away" with extra logic in "averaging mode",
+they become interdependent.
+If sampling frequency and conversion frequency are detached from each
+other, oversampling_frequency for sure needs to exist.
+
+>                                     It is effectively the rate for
+> individual ADC conversions.
+> 
+
+Yes.
