@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2ECF524EF84;
-	Thu,  3 Apr 2025 14:15:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 631AC2500AA;
+	Thu,  3 Apr 2025 14:15:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743689748; cv=none; b=KeDdHmh344G1Eqx7z8crSlNJ6L2ycNbWraKLbFvJVb3uZyOZfhIc4FUg2lkkux8Z7Ipv3Syq3LjzJeWXcrjPR4oq7BIp1sfUCnl87qbmKHJIsfln/MM2oBB1T/wSE3jmMN2K3jQ4JQNoYy+gDoNcFje5Zx1NHfedApSLOw2sWWc=
+	t=1743689751; cv=none; b=vDu0kguJrsjcz6zI/bB8WCgGLXIeV6mRAk0Y7FeowueWaDj/KgC3DKEmuNafd+4x17m3p1MWhotEk47nmMU2AH0fHNTc2gs0z8Af7yHzu8EI8K0NWibf/VGyuIyqCBBx/Jrl8WCfyk43OEXq2c09JJPPVqkxf9pZKnXk5hRnXZw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743689748; c=relaxed/simple;
-	bh=Cu6vyjAcsHGGnNxMtIE3kuLzydf3c25qwh03vaA9PuI=;
+	s=arc-20240116; t=1743689751; c=relaxed/simple;
+	bh=GmslQeJnel+/tjfSpT8PmCAKRMGRuhx9GKezcLoTBA8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=aC2htEolY/8HFrb5HzGwhg7DDkZFD6CtJ9zQ4JvSWjAqBIClUGmIkvoHcHIi0DU1VOKb/rxBQMPKQ5jJMjb9tINa1dGxQ4Ca0VM+SV1ZQ9N9Sef/umo6CZ5pharEQWeoN+apAvclsJYBPMMNyvmIehdHqH1LX1F2OggKNLxzRYU=
+	 MIME-Version; b=UmbNObyMnAvvq/Eygwsd5FKdGE+9s2CQVCkPI5J1BK/iwxwBEi/0+2eFqu56Axi0kCDPTzPb9zugNLdjDxATxjKR8YCc2o7bxsTAuASIOUQ1OtNOd1AajPtOV0wD/vfDXLRtFm+Va3C5UuiCTp52RJLBeNDIUCHinnCTsT9u1ug=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 58DCB1BF7;
-	Thu,  3 Apr 2025 07:15:49 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 65B3F1C00;
+	Thu,  3 Apr 2025 07:15:52 -0700 (PDT)
 Received: from e129823.cambridge.arm.com (e129823.arm.com [10.1.197.6])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id F35003F59E;
-	Thu,  3 Apr 2025 07:15:43 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 0BB683F59E;
+	Thu,  3 Apr 2025 07:15:46 -0700 (PDT)
 From: Yeoreum Yun <yeoreum.yun@arm.com>
 To: catalin.marinas@arm.com,
 	will@kernel.org,
@@ -39,9 +39,9 @@ Cc: linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	linux-doc@vger.kernel.org,
 	Yeoreum Yun <yeoreum.yun@arm.com>
-Subject: [PATCH 2/3] arm64/mm/fault: use original FAR_EL1 value when ARM64_MTE_FAR is supported
-Date: Thu,  3 Apr 2025 15:15:34 +0100
-Message-Id: <20250403141535.23496-3-yeoreum.yun@arm.com>
+Subject: [PATCH 3/3] Documentation/arm64: reflects FEAT_MTE_TAGGED_FAR description
+Date: Thu,  3 Apr 2025 15:15:35 +0100
+Message-Id: <20250403141535.23496-4-yeoreum.yun@arm.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250403141535.23496-1-yeoreum.yun@arm.com>
 References: <20250403141535.23496-1-yeoreum.yun@arm.com>
@@ -53,40 +53,38 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Use the original FAR_EL1 value when an MTE tag check fault occurs,
-if ARM64_MTE_FAR is supported.
-This allows reports to include not only the logical tag (memory tag)
-but also the address tag information.
+When FEAT_MTE_TAGGED_FAR feature is supported, the value of address bits
+[63:60] is preserved on synchronous tag check fault.
 
-Applications that require this information should install a signal handler with
-the SA_EXPOSE_TAGBITS flag.
-While this introduces a minor ABI change,
-most applications do not set this flag and therefore will not be affected.
+This patch reflects the above feature in the documentation.
 
 Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
 ---
- arch/arm64/mm/fault.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ Documentation/arch/arm64/tagged-pointers.rst | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
-index ec0a337891dd..8d10603e574f 100644
---- a/arch/arm64/mm/fault.c
-+++ b/arch/arm64/mm/fault.c
-@@ -837,9 +837,12 @@ static int do_tag_check_fault(unsigned long far, unsigned long esr,
- 	/*
- 	 * The architecture specifies that bits 63:60 of FAR_EL1 are UNKNOWN
- 	 * for tag check faults. Set them to corresponding bits in the untagged
--	 * address.
-+	 * address if ARM64_MTE_FAR doesn't support.
-+	 * Otherwise, bits 63:60 of FAR_EL1 are KNOWN.
- 	 */
--	far = (__untagged_addr(far) & ~MTE_TAG_MASK) | (far & MTE_TAG_MASK);
-+	if (!cpus_have_cap(ARM64_MTE_FAR))
-+		far = (__untagged_addr(far) & ~MTE_TAG_MASK) | (far & MTE_TAG_MASK);
-+
- 	do_bad_area(far, esr, regs);
- 	return 0;
- }
+diff --git a/Documentation/arch/arm64/tagged-pointers.rst b/Documentation/arch/arm64/tagged-pointers.rst
+index 81b6c2a770dd..73c59a9c7a63 100644
+--- a/Documentation/arch/arm64/tagged-pointers.rst
++++ b/Documentation/arch/arm64/tagged-pointers.rst
+@@ -60,11 +60,12 @@ that signal handlers in applications making use of tags cannot rely
+ on the tag information for user virtual addresses being maintained
+ in these fields unless the flag was set.
+ 
+-Due to architecture limitations, bits 63:60 of the fault address
+-are not preserved in response to synchronous tag check faults
+-(SEGV_MTESERR) even if SA_EXPOSE_TAGBITS was set. Applications should
+-treat the values of these bits as undefined in order to accommodate
+-future architecture revisions which may preserve the bits.
++If FEAT_MTE_TAGGED_FAR (Armv8.9) is supported, bits 63:60 of the fault address
++are preserved in response to synchronous tag check faults (SEGV_MTESERR)
++otherwise not preserved even if SA_EXPOSE_TAGBITS was set.
++Applications should interpret the values of these bits based on
++the support for the 'mte_far' hwcap. If the support is not present,
++the values of these bits should be considered as undefined otherwise valid.
+ 
+ For signals raised in response to watchpoint debug exceptions, the
+ tag information will be preserved regardless of the SA_EXPOSE_TAGBITS
 -- 
 LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
 
