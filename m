@@ -1,172 +1,99 @@
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81B051F4619
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 10:36:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 189002E3385;
+	Thu,  3 Apr 2025 10:38:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743676565; cv=none; b=XTXmMcqVU67HuI2ONPukllTjt86B7jugKsBoMgr44Z6oJ6oeezmfShvNA/CB66WMn0QdpRZ5WxOu6wzE7i1Ebv1Lr4U1qVcTOK/URivMlYe4BUCv12fPszSlZBgpuu5zHP22TFtdbfXoeT+pow9ovfV5Wf+mTJP3Q/nP+LKpGK4=
+	t=1743676698; cv=none; b=TblkngtxzdVA68E4TwfhNICg8WKyfCiy8GIQQxqE4A8qSs5jrO+ZmzFX4wWNEhfbTXxIuZppAeE4oeZJE5ZYNkDCOEjxo/A+vLOQqeEX5oqXJ4Q3P9FA8H2d5sb83dKaD69Mh79WV0MovSO39soHqUX7BzuiDfHW9ZZPhb74lK4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743676565; c=relaxed/simple;
-	bh=SVyRMOvqShyxvUphmfhBMzGZZWRZbGF7mY8qX+pxA+c=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Pn4Ylkm5bTkQlGu6Itwzid2KpSjg1k+7R1pMAAUJwl9X/QYCUrT6/ic6gJ+y4f3cvBK9TrXVGKriiW3Jhz3fEqUzXJ+webnJMwJy7QDvb0+kU8o6+O7qZ+pQz5NDxUCG9vTYXE7Tv09vV1ZXAQVH1U2+EU2J2fqNiYbCUrtvDmY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=C20eoSCK; arc=none smtp.client-ip=217.70.183.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1743676698; c=relaxed/simple;
+	bh=Z72AwzHJ4cbpRqtqDVuCMJ1Ie1ku2WoDMt1mydBBtWU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DuVMzfeyEXv5G4sobxIlOkVwWwDyFOwQNoQpXp3pcXNV3vkuHOedBbnS/1lwuM/NoL1bRJtEm0vGVSfawCbjLNAK/h8z0zKE2ufFgCFhkdjLX+qiYFGMBMrzu8dyfjIXZY35x8htlpOVamPmRSUD1csmpATEKSAgjnvbhsILXzk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com; spf=pass smtp.mailfrom=pankajraghav.com; dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b=ykqJVM+l; arc=none smtp.client-ip=80.241.56.161
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="C20eoSCK"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id E06E5432ED;
-	Thu,  3 Apr 2025 10:35:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1743676555;
+	dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b="ykqJVM+l"
+Received: from smtp102.mailbox.org (smtp102.mailbox.org [10.196.197.102])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4ZSyr42sfXz9t0t;
+	Thu,  3 Apr 2025 12:38:12 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
+	s=MBO0001; t=1743676692;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WHybtPrEE+zi5o3ljeKTwzS5wA2OXV70yRBDLljR35w=;
-	b=C20eoSCK8YmsgFGWX7ymeJwf/cLoORxjYSJC+1tfnDfd6nDamJk+Oh94R6Anjcy5qeoT6K
-	GpQS9iZYBRVH3/w7MegRlNwob+XJcbtO7+C9j75LwbdhYOnmZcecIyrdosCk6HTRIQly1p
-	X9yX+5tVhSfetuDHT7VUtMQ1rgIXsQKHUO5tIZsV4KfTMiUw7yyLb+G71xEc9206GwwxE9
-	ZPydJJuV5LIca/fmpNOfmJPH8awDgwdEmk8mB/eiLu2sk/91cFUvLf7A5TMXLvzeUwvy7q
-	kTx2+XKI0TnZHn/cfTSbO1sxUHAq0i14giWgkTTzTwCjuirjbfCfNqyge67hYw==
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: Tudor Ambarus <tudor.ambarus@linaro.org>
-Cc: Richard Weinberger <richard@nod.at>,  Vignesh Raghavendra
- <vigneshr@ti.com>,  Santhosh Kumar K <s-k6@ti.com>,  Pratyush Yadav
- <pratyush@kernel.org>,  Michael Walle <michael@walle.cc>,  Thomas
- Petazzoni <thomas.petazzoni@bootlin.com>,  Steam Lin <stlin2@winbond.com>,
-  linux-mtd@lists.infradead.org,  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 19/19] mtd: spinand: winbond: Add support for
- W35N02JW and W35N04JW chips
-In-Reply-To: <05c0fc18-f50f-4f62-bc64-a297cbf927fd@linaro.org> (Tudor
-	Ambarus's message of "Thu, 3 Apr 2025 11:13:36 +0100")
-References: <20250403-winbond-6-14-rc1-octal-v2-0-7846bd88fe83@bootlin.com>
-	<20250403-winbond-6-14-rc1-octal-v2-19-7846bd88fe83@bootlin.com>
-	<05c0fc18-f50f-4f62-bc64-a297cbf927fd@linaro.org>
-User-Agent: mu4e 1.12.7; emacs 29.4
-Date: Thu, 03 Apr 2025 12:35:51 +0200
-Message-ID: <875xjl352w.fsf@bootlin.com>
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=l+z1/Zyn5HmKuUJTv24M67f5IzWj0CacYuYhfJZ4e+M=;
+	b=ykqJVM+liavA+BklyaFz/qTCE1INxJagZrxrDAextxtobXTwLKKngkLlGMBAz+T4t/JMWF
+	eY5jTWiUHIz9K6mZD4k79yF7CvFI6N7cW1RZ2Ou1ZMbNnOdonQ3LUjNCela9yEflAA47fx
+	Qe69zUPV35avOcmymgZN/LB42qRdeaoWczKpbcppFmH2ZqA2+eIDcqFx1VBHzZZh0QzeXo
+	LbL8+LJ/IG7HZcIXb44B7CyOe5cE+g5svb7xO5PzsmBFx44QJRpJmZrVUokR3A3A0Oc2OM
+	4WLvFoiOz5Wujag+jlhoAt/8mUKkqoNfJvH9OgZefPFEAppRmnx5FmO7gNaWww==
+From: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	Jonathan Corbet <corbet@lwn.net>
+Cc: linux-kernel@vger.kernel.org,
+	willy@infradead.org,
+	linux-mm@kvack.org,
+	David Hildenbrand <david@redhat.com>,
+	da.gomez@kernel.org,
+	mcgrof@kernel.org,
+	gost.dev@samsung.com,
+	linux-doc@vger.kernel.org,
+	kernel@pankajraghav.com,
+	Pankaj Raghav <p.raghav@samsung.com>
+Subject: [PATCH] docs: update THP admin guide about non-tmpfs filesystem support
+Date: Thu,  3 Apr 2025 12:38:05 +0200
+Message-ID: <20250403103805.173761-1-kernel@pankajraghav.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddukeekfeefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufgjfhgffffkgggtgfesthhqredttderjeenucfhrhhomhepofhiqhhuvghlucftrgihnhgrlhcuoehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeejgeeftdefledvieegvdejlefgleegjefhgfeuleevgfdtjeehudffhedvheegueenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppeelvddrudekgedruddutddrudelleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeelvddrudekgedruddutddrudelledphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhepmhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddtpdhrtghpthhtohepthhuughorhdrrghmsggrrhhusheslhhinhgrrhhordhorhhgpdhrtghpthhtoheprhhitghhrghrugesnhhougdrrghtpdhrtghpthhtohepvhhighhnvghshhhrsehtihdrtghomhdprhgtphhtthhopehsqdhkieesthhirdgtohhmpdhrtghpthhtohepphhrrghthihushhhsehkvghrnhgvlhdrohhrghdprhgtphhtt
- hhopehmihgthhgrvghlseifrghllhgvrdgttgdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopehsthhlihhnvdesfihinhgsohhnugdrtghomh
-X-GND-Sasl: miquel.raynal@bootlin.com
+Content-Transfer-Encoding: 8bit
 
-On 03/04/2025 at 11:13:36 +01, Tudor Ambarus <tudor.ambarus@linaro.org> wro=
-te:
+From: Pankaj Raghav <p.raghav@samsung.com>
 
-> Hi, Miquel,
->
-> On 4/3/25 10:19 AM, Miquel Raynal wrote:
->> These chips support single SPI, octal SPI and octal DDR SPI.
->>=20
->> For now, only the SDR protocols are supported.
->>=20
->> Tested with the W35N02JW variant, but the 04 one just has twice more
->> dies and is described in the same datasheet, so we can reasonably expect
->> that it will behave identically.
->>=20
->> Reviewed-by: Tudor Ambarus <tudor.ambarus@linaro.org>
->> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
->
-> Checked patches 15-19 now, I'm ok with them. When applying, please
-> substitute my Reviewed-by tag with Acked-by for patches from 7 to 21.
-> I explained why in the reply of v2 14/19. Thanks.
+THP support for non-tmpfs filesystem has been around for some time now.
+Update the admin guide to reflect it.
 
-Duly noted.
-
-I checked the b4 log, I don't understand why it picked your R-by tag on
-all these commits:
-
-$ b4 trailers -Su
-Finding code-review trailers for 22 commits...
-Checking change-id "20250214-winbond-6-14-rc1-octal-6f7db6be0204"
-Grabbing search results from lore.kernel.org
-Analyzing 52 code-review messages
+Signed-off-by: Pankaj Raghav <p.raghav@samsung.com>
 ---
-  + Acked-by: Tudor Ambarus <tudor.ambarus@linaro.org>
-    https://lore.kernel.org/all/cdc38266-18a9-4eff-bdad-c88b316310b3@linaro=
-.org
-  + Reviewed-by: Tudor Ambarus <tudor.ambarus@linaro.org>
-    https://lore.kernel.org/all/4d36e51f-323c-451c-afeb-a6e378e3ed53@linaro=
-.org
----
-Press Enter to apply these trailers or Ctrl-C to abort
-  mtd: spinand: Use more specific naming for the (dual output) read from ca=
-che ops
-    + Acked-by: Tudor Ambarus <tudor.ambarus@linaro.org> (=E2=9C=93 DKIM/li=
-naro.org)
-    + Reviewed-by: Tudor Ambarus <tudor.ambarus@linaro.org> (=E2=9C=97 DKIM=
-/linaro.org)
-  mtd: spinand: Use more specific naming for the (dual IO) read from cache =
-ops
-    + Acked-by: Tudor Ambarus <tudor.ambarus@linaro.org> (=E2=9C=93 DKIM/li=
-naro.org)
-    + Reviewed-by: Tudor Ambarus <tudor.ambarus@linaro.org> (=E2=9C=97 DKIM=
-/linaro.org)
-  mtd: spinand: Use more specific naming for the (quad output) read from ca=
-che ops
-    + Acked-by: Tudor Ambarus <tudor.ambarus@linaro.org> (=E2=9C=93 DKIM/li=
-naro.org)
-    + Reviewed-by: Tudor Ambarus <tudor.ambarus@linaro.org> (=E2=9C=97 DKIM=
-/linaro.org)
-  mtd: spinand: Use more specific naming for the (quad IO) read from cache =
-ops
-    + Acked-by: Tudor Ambarus <tudor.ambarus@linaro.org> (=E2=9C=93 DKIM/li=
-naro.org)
-    + Reviewed-by: Tudor Ambarus <tudor.ambarus@linaro.org> (=E2=9C=97 DKIM=
-/linaro.org)
-  mtd: spinand: Use more specific naming for the program execution op
-    + Acked-by: Tudor Ambarus <tudor.ambarus@linaro.org> (=E2=9C=93 DKIM/li=
-naro.org)
-    + Reviewed-by: Tudor Ambarus <tudor.ambarus@linaro.org> (=E2=9C=97 DKIM=
-/linaro.org)
-  mtd: spinand: Use more specific naming for the (single) program load op
-    + Acked-by: Tudor Ambarus <tudor.ambarus@linaro.org> (=E2=9C=93 DKIM/li=
-naro.org)
-    + Reviewed-by: Tudor Ambarus <tudor.ambarus@linaro.org> (=E2=9C=97 DKIM=
-/linaro.org)
-  mtd: spinand: Use more specific naming for the (quad) program load op
-    + Acked-by: Tudor Ambarus <tudor.ambarus@linaro.org> (=E2=9C=93 DKIM/li=
-naro.org)
-    + Reviewed-by: Tudor Ambarus <tudor.ambarus@linaro.org> (=E2=9C=97 DKIM=
-/linaro.org)
-  mtd: spinand: winbond: Rename DTR variants
-    + Reviewed-by: Tudor Ambarus <tudor.ambarus@linaro.org> (=E2=9C=97 DKIM=
-/linaro.org)
-  mtd: spinand: winbond: Add support for W35N01JW in single mode
-    + Reviewed-by: Tudor Ambarus <tudor.ambarus@linaro.org> (=E2=9C=97 DKIM=
-/linaro.org)
-  mtd: spinand: Define octal read from cache operations
-    + Reviewed-by: Tudor Ambarus <tudor.ambarus@linaro.org> (=E2=9C=97 DKIM=
-/linaro.org)
-  mtd: spinand: winbond: Add octal read support
-    + Reviewed-by: Tudor Ambarus <tudor.ambarus@linaro.org> (=E2=9C=97 DKIM=
-/linaro.org)
-  mtd: spinand: Define octal load to cache operations
-    + Reviewed-by: Tudor Ambarus <tudor.ambarus@linaro.org> (=E2=9C=97 DKIM=
-/linaro.org)
-  mtd: spinand: winbond: Add octal program support
-    + Reviewed-by: Tudor Ambarus <tudor.ambarus@linaro.org> (=E2=9C=97 DKIM=
-/linaro.org)
-  mtd: spinand: winbond: Add support for W35N02JW and W35N04JW chips
-    + Reviewed-by: Tudor Ambarus <tudor.ambarus@linaro.org> (=E2=9C=97 DKIM=
-/linaro.org)
----
-Invoking git-filter-repo to update trailers.
-New history written in 0.17 seconds...
-Completely finished after 0.38 seconds.
-Trailers updated.
+ Documentation/admin-guide/mm/transhuge.rst | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
+diff --git a/Documentation/admin-guide/mm/transhuge.rst b/Documentation/admin-guide/mm/transhuge.rst
+index dff8d5985f0f..01b7ce90d693 100644
+--- a/Documentation/admin-guide/mm/transhuge.rst
++++ b/Documentation/admin-guide/mm/transhuge.rst
+@@ -12,8 +12,8 @@ using huge pages for the backing of virtual memory with huge pages
+ that supports the automatic promotion and demotion of page sizes and
+ without the shortcomings of hugetlbfs.
+ 
+-Currently THP only works for anonymous memory mappings and tmpfs/shmem.
+-But in the future it can expand to other filesystems.
++Currently, THP only works for anonymous memory mappings, tmpfs/shmem and
++filesystems that support large folios.
+ 
+ .. note::
+    in the examples below we presume that the basic page size is 4K and
+@@ -463,6 +463,10 @@ fields for each mapping. (Note that AnonHugePages only applies to traditional
+ PMD-sized THP for historical reasons and should have been called
+ AnonHugePmdMapped).
+ 
++The number of PMD-sized transparent huge pages currently used by
++filesystem data (page cache) is available by reading the FileHugePages field
++in ``/proc/meminfo``.
++
+ The number of file transparent huge pages mapped to userspace is available
+ by reading ShmemPmdMapped and ShmemHugePages fields in ``/proc/meminfo``.
+ To identify what applications are mapping file transparent huge pages, it
 
-Thanks,
-Miqu=C3=A8l
+base-commit: f0a16f5363325cc8d9382471cdc7b654c53254c9
+-- 
+2.44.1
+
