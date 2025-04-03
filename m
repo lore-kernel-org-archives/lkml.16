@@ -1,92 +1,150 @@
-Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B8E1134CF
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 04:37:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E1CE291E;
+	Thu,  3 Apr 2025 04:40:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743655071; cv=none; b=fHXyfIuCrKH245Bskc/5YV+jylookTFAxSBuFBptcgIBZ9+Dz4N6W5HRJ9lCslkzfKFFiFzhuBC/PXEpa0Ba46jDAaEt6jzRdATvkLqOOub2PO/Kz5ms1SjoGHNlxx5A+Zy2TbKU2GuSe3C2gb2SeBrMz21udo4H35xXspC3xYs=
+	t=1743655261; cv=none; b=UM7AbNnechfSddzQ4my82cVv9Z/r5MEiWsK+v+VragG46l0yDpe/YFOd5rU25PVaAN6GKEeHDTibkuZZDCWRcNsQjK897wQoYiBYWGd+cgdh9dIHLhrLGXnRoo9veH1lMIM2Gj9x02EraczzBLeNY9zW2/uZ41dmoSJZcSK4ze0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743655071; c=relaxed/simple;
-	bh=65mgTgXyakqVGK6V/KPoe6wVrJLNqccqmkDx6o1nmPQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DuQGJLHigGQyusDZhSkstNKSaZFh2BO67MrOIvTkyBk7KsK6mMITr2byyuHXi+oHvyPjkCYxSMJ74yETVn+c33QJ74hjGSQXcWZU14rNuPRMwEgqyvfVPnKgk80TvTBKVgfpnULmhVzBDVw6aAkQTFkjntur1VpUYYiGjY1dgDw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=FHn1TOTU; arc=none smtp.client-ip=91.218.175.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1743655261; c=relaxed/simple;
+	bh=7iWBNAI/+CExTBdUuMSTH+Xqb/9jtb1WR0tmAWGV63o=;
+	h=Date:Message-Id:To:Cc:Subject:From:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=sidDoePr23SQaF5IsJpMSsBS9pwUeB51hy8DGHOTwqFkMdNE+s2DPtjCzZcEfvOXEgAirG8KuWgWphCzF+1qjAAARIZugoIPI7IURCW9vyMcpsPNiiElKe90pBXqFvTrTf940rhqjEFjeO2Kebl9cH9eCiVsb97XpW18uqOGtO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IxPhKV/n; arc=none smtp.client-ip=209.85.215.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="FHn1TOTU"
-Date: Wed, 2 Apr 2025 21:37:40 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1743655065;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EqjBm8UI34Pk1sLBpujvX1ZrayvDU7fkd+T64DGWC1I=;
-	b=FHn1TOTUCWFWHcHkaAxmhzZeDrzOFzWqsKhKW3fEVlc/hkwtVMRbCYPazPt96dZRLud7YI
-	LwUaB+9kS65MHR1Pd526w0qNgsicQWtNt176kBUlBDT8rzbn2ZrG0SsaCmEJlvTI8v9qDg
-	x3SMNAhi+5Ko2pNLx+8BA6yjygsN56Q=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Michal Hocko <mhocko@suse.com>
-Cc: Dave Chinner <david@fromorbit.com>, Yafang Shao <laoar.shao@gmail.com>, 
-	Harry Yoo <harry.yoo@oracle.com>, Kees Cook <kees@kernel.org>, joel.granados@kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>, 
-	linux-mm@kvack.org, Vlastimil Babka <vbabka@suse.cz>
-Subject: Re: [PATCH] proc: Avoid costly high-order page allocations when
- reading proc files
-Message-ID: <zeuszr6ot5qdi46f5gvxa2c5efy4mc6eaea3au52nqnbhjek7o@l43ps2jtip7x>
-References: <20250401073046.51121-1-laoar.shao@gmail.com>
- <3315D21B-0772-4312-BCFB-402F408B0EF6@kernel.org>
- <Z-y50vEs_9MbjQhi@harry>
- <CALOAHbBSvMuZnKF_vy3kGGNOCg5N2CgomLhxMxjn8RNwMTrw7A@mail.gmail.com>
- <Z-0gPqHVto7PgM1K@dread.disaster.area>
- <Z-0sjd8SEtldbxB1@tiehlicka>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IxPhKV/n"
+Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-ae727e87c26so351928a12.0;
+        Wed, 02 Apr 2025 21:40:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743655257; x=1744260057; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to:from
+         :subject:cc:to:message-id:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KsNUEEOO2eyC/ozsW0Lb6009jV8VrjHo2FIvGisJgxM=;
+        b=IxPhKV/n2PKGKwKl/41zxO3c6RS6MbPItV1CHGHBYqVIGYnceuhdhbL0r0xz36h6un
+         9rrn961XjRlb5wCvkXCXmJU5SwZgx3b01xFLqIlghYgRmnsK8jiVJdYB7lWF60bwcfyn
+         A1NjEwS1D1MwxfnxnAg2eCnhSJLzJ85kWsN0RPxkEqTyHj88BrjCZQvVMbHmjEheA41w
+         ekEKQPTqPt4Pe5whk7W7ebZxq74XJ7cK5FH2iI8EWbzS3Gl9zAiBCRvnK0ZHH3d8lj0p
+         axlnchLEVIzhclcJCVVv4td3mTyCvl02QRQy5O41KPBX4ZU+QAQjOJh5NpjhuVTcTCXZ
+         dW6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743655257; x=1744260057;
+        h=content-transfer-encoding:mime-version:references:in-reply-to:from
+         :subject:cc:to:message-id:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=KsNUEEOO2eyC/ozsW0Lb6009jV8VrjHo2FIvGisJgxM=;
+        b=xHl4eRVgWMLvudcvIAHnpZyo78O1ccW2zrsLNxLNSkunuq8a9KPPeRo+0DrO4dx6R4
+         IHdLHDY+wzJBetTCnOApXQiATNVtvWWdWGH/TcU//ampPq6pedLJSQbrtZRfffuHyIuA
+         bdX5abVxk/ry35YcEkRgNuiGw2mCr+CoqYWPHLQ/ApBaJlivpM5+1lSHXW0wwc8kVqII
+         7jKq6F92xhFjL3I5zaY6Xsi2RHmoJTW++Wi3LMPL0z4BZS5PdISp0pVsQ3BZzXpk/B0x
+         vk52km0fSZtVaY81uU6e6pJng67o4TxV5BhZqHX9o2fRz+PoOxlDgw3c+3oFy2nqYYaE
+         P5VA==
+X-Forwarded-Encrypted: i=1; AJvYcCVpYGJtIk/JWb1tEvFD7zutlcSeoY6OsFpaV8kQQorBQCesCgGflacTQx9S9MVtWnyK2JVV0tZ7r04/Hroplsc=@vger.kernel.org, AJvYcCWKes3Ebeag08uOdF03lDQdqcB2RiQjzDpcsUdMDCLjuvGHiBiY+uTH+V4tAxWYxQ0jRYTjjGPQ@vger.kernel.org, AJvYcCXo24B9wy2nvN3t1xPZk4b3gFa4YKMp6BG7VbZJTxvkFn7e8pijGOcinVa+XmB+kpAUsDEGsLRR4v2jszI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxQvmY4zkmWkU+pRSAb2geEI9EA5yQyjK7v4dWnWESh9UGeGcbc
+	p2uVC6QKY+vz9PKj3nJllWe6nJ+3Lk1cEAk/bc4n/qdo0aHlqNzj
+X-Gm-Gg: ASbGncs3h73D8KwSL3oSVSTx7nsKsTGBFekjmazL8KowMoXAWLvx3JXP0vDjUO9zxWw
+	O0QFTw82YjrXKVbxTGpi2iQlwIwdO728hDOtgPojFegLV1Yqwpd/1ARhFSjtqPv6l5TInZa/fO6
+	pFlX9Xrkn/Aq/EJ9Rkz9JHO1fpjE9ySGu2xddl9ly2wCVFn5MiEQFq2LJboxJxIjO2kbYhjJP1H
+	nXiG6Npi2+sTZpYqe/a6w1ELdNMeSjmEKmiEmMp+eoiVQtSaNfhcFkGo7WptIxMGkOVO5ZoxmCw
+	LBuiQk7jXI+AiKoC/A1i+oXiXbNjIJ4j2bOiTGTtjGUjl26xScmA2kPddrEKO389kSJpOAWDstf
+	PBH0q3W4EDSfNwPmdys0ooH4ubxv4EQZHo7Mc7g==
+X-Google-Smtp-Source: AGHT+IHyo1NpjXY1BAIu2wxqeQNoZN2Gt6qoO6RTDu/Lyjjbv4pUP2sWS4FFj5LxJ3Mjf80VgL2BRw==
+X-Received: by 2002:a17:90b:5205:b0:2fc:3264:3666 with SMTP id 98e67ed59e1d1-3057de47ce2mr1368138a91.30.1743655257220;
+        Wed, 02 Apr 2025 21:40:57 -0700 (PDT)
+Received: from localhost (p4204131-ipxg22701hodogaya.kanagawa.ocn.ne.jp. [153.160.176.131])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30588a2f6b2sm410564a91.24.2025.04.02.21.40.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Apr 2025 21:40:56 -0700 (PDT)
+Date: Thu, 03 Apr 2025 13:40:38 +0900 (JST)
+Message-Id: <20250403.134038.2188356790179825602.fujita.tomonori@gmail.com>
+To: a.hindborg@kernel.org
+Cc: fujita.tomonori@gmail.com, linux-kernel@vger.kernel.org,
+ daniel.almeida@collabora.com, boqun.feng@gmail.com, gary@garyguo.net,
+ me@kloenk.dev, rust-for-linux@vger.kernel.org, netdev@vger.kernel.org,
+ andrew@lunn.ch, hkallweit1@gmail.com, tmgross@umich.edu, ojeda@kernel.org,
+ alex.gaynor@gmail.com, bjorn3_gh@protonmail.com, benno.lossin@proton.me,
+ a.hindborg@samsung.com, aliceryhl@google.com, anna-maria@linutronix.de,
+ frederic@kernel.org, tglx@linutronix.de, arnd@arndb.de,
+ jstultz@google.com, sboyd@kernel.org, mingo@redhat.com,
+ peterz@infradead.org, juri.lelli@redhat.com, vincent.guittot@linaro.org,
+ dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+ mgorman@suse.de, vschneid@redhat.com, tgunders@redhat.com,
+ david.laight.linux@gmail.com
+Subject: Re: [PATCH v11 4/8] rust: time: Introduce Instant type
+From: FUJITA Tomonori <fujita.tomonori@gmail.com>
+In-Reply-To: <87iko1b213.fsf@kernel.org>
+References: <20250220070611.214262-1-fujita.tomonori@gmail.com>
+	<20250220070611.214262-5-fujita.tomonori@gmail.com>
+	<87iko1b213.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z-0sjd8SEtldbxB1@tiehlicka>
-X-Migadu-Flow: FLOW_OUT
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 02, 2025 at 02:24:45PM +0200, Michal Hocko wrote:
-> diff --git a/mm/util.c b/mm/util.c
-> index 60aa40f612b8..8386f6976d7d 100644
-> --- a/mm/util.c
-> +++ b/mm/util.c
-> @@ -601,14 +601,18 @@ static gfp_t kmalloc_gfp_adjust(gfp_t flags, size_t size)
->  	 * We want to attempt a large physically contiguous block first because
->  	 * it is less likely to fragment multiple larger blocks and therefore
->  	 * contribute to a long term fragmentation less than vmalloc fallback.
-> -	 * However make sure that larger requests are not too disruptive - no
-> -	 * OOM killer and no allocation failure warnings as we have a fallback.
-> +	 * However make sure that larger requests are not too disruptive - i.e.
-> +	 * do not direct reclaim unless physically continuous memory is preferred
-> +	 * (__GFP_RETRY_MAYFAIL mode). We still kick in kswapd/kcompactd to start
-> +	 * working in the background but the allocation itself.
->  	 */
->  	if (size > PAGE_SIZE) {
->  		flags |= __GFP_NOWARN;
->  
->  		if (!(flags & __GFP_RETRY_MAYFAIL))
->  			flags |= __GFP_NORETRY;
-> +		else
-> +			flags &= ~__GFP_DIRECT_RECLAIM;
+On Sat, 22 Mar 2025 14:58:16 +0100
+Andreas Hindborg <a.hindborg@kernel.org> wrote:
 
-I think you wanted the following instead:
+> FUJITA Tomonori <fujita.tomonori@gmail.com> writes:
+> 
+>> Introduce a type representing a specific point in time. We could use
+>> the Ktime type but C's ktime_t is used for both timestamp and
+>> timedelta. To avoid confusion, introduce a new Instant type for
+>> timestamp.
+>>
+>> Rename Ktime to Instant and modify their methods for timestamp.
+>>
+>> Implement the subtraction operator for Instant:
+>>
+>> Delta = Instant A - Instant B
+>>
+>> Tested-by: Daniel Almeida <daniel.almeida@collabora.com>
+>> Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
+>> Reviewed-by: Gary Guo <gary@garyguo.net>
+>> Reviewed-by: Fiona Behrens <me@kloenk.dev>
+>> Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
+> 
+> 
+> Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
+> 
+> 
+> As Boqun mentioned, we should make this generic over `ClockId` when the
+> hrtimer patches land.
 
-		if (!(flags & __GFP_RETRY_MAYFAIL))
-			flags &= ~__GFP_DIRECT_RECLAIM;
+Seems that I overlooked his mail. Can you give me a pointer?
 
-This is what Dave is asking as well for kmalloc() case of kvmalloc().
+I assume that you want the Instance type to vary depending on the
+clock source.
 
->  
->  		/* nofail semantic is implemented by the vmalloc fallback */
->  		flags &= ~__GFP_NOFAIL;
-> -- 
-> Michal Hocko
-> SUSE Labs
+
+>> -/// Returns the number of milliseconds between two ktimes.
+>> -#[inline]
+>> -pub fn ktime_ms_delta(later: Ktime, earlier: Ktime) -> i64 {
+>> -    (later - earlier).to_ms()
+>> -}
+>> -
+>> -impl core::ops::Sub for Ktime {
+>> -    type Output = Ktime;
+>> +impl core::ops::Sub for Instant {
+>> +    type Output = Delta;
+>>  
+>> +    // By the type invariant, it never overflows.
+>>      #[inline]
+>> -    fn sub(self, other: Ktime) -> Ktime {
+>> -        Self {
+>> -            inner: self.inner - other.inner,
+>> +    fn sub(self, other: Instant) -> Delta {
+>> +        Delta {
+>> +            nanos: self.inner - other.inner,
+> 
+> If this never overflows by invariant, would it make sense to use
+> `unchecked_sub` or `wraping_sub`? That would remove the overflow check.
+
+Yeah, I think that it can. But I prefer to keep the code as is to
+catch a bug.
