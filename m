@@ -1,87 +1,378 @@
-Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
+Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1DB52505CE
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 18:30:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 956F12512D9
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 18:30:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743705034; cv=none; b=s0Fc7/RgR9EQcWQTNbDd1rb5BphAjVeSChSoj02v++PDpw31gZo0ErnJWZl/LkXYVsMfEnXu6fBeA7USPbcFGCagi35F5YUtbrDnc7oVZNVtBEdP5O0IYmSQI6LYzz/f1csmO9qV01Bie39fYkMSJAbsZ5OL1UiEUrlsLpdDQHI=
+	t=1743705035; cv=none; b=nbP2Y/1NNtQLbgx6iQbSEQvrGNuCt97r7IKOmgPz1lWCyR7hJqj6vITBl9rPRll/EnT3guW+uhMkbEvw9Wsa32GqVh+B/nfBhE89nwvGTQJ59wq79FMMMEo4Sm0lRDekfmfmqd+qfg4e5r2vYwxKo7hWKrnAZAe/Qqu0nOd5RQ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743705034; c=relaxed/simple;
-	bh=1HlXRlQ+sRx+EKY6oH+sBIE+XiXRr0ftEttdjZz/qLg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ttI7QvYLTqce/Xw3X04ZBi96IJeciZS5JoXDQ8/bPGZC3lMR5M/CaTKy1iLQJgULguS9RB3xaCmiO5t8LyiEgAXEXvucC4DtWlx/dEXv033Kh7lKflKNdzVGX8R3e1n3CaapLz7w/4r+Dl0CJKt1+Ox13JM+sDWgTep3fX+FBKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=pr/Hcdy5; arc=none smtp.client-ip=95.215.58.178
+	s=arc-20240116; t=1743705035; c=relaxed/simple;
+	bh=/oCj0Hk1g+sUvQ3GIO57Vo8U9NcTvnSSJUK+gndZU1w=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=nSckxeWi9sNaMmYK9HImNZm/1keaOl+QRHgGc4FL0PM7I+ZzscrVvW5iPE8LPV2iF6lHR1tZcIKwu/8mBJUV8XvIXdRbOZCO20sJoOLEKNAycfSd6ZnXSlcenwZICHme3bzXvQ0C1I/AVg1byFr6CwFWeDpQc+p5Y3YM2hv3x4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=N8pW6y6H; arc=none smtp.client-ip=91.218.175.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="pr/Hcdy5"
-Date: Thu, 3 Apr 2025 11:30:23 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1743705029;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ArYKiUFMnEOVml+ahZzr+rsVltz9Am8Fwrx6AQaomzI=;
-	b=pr/Hcdy5U+g8jz5usJ4LCnof/q9gv8w3IYRENXLye3PGpA1C+lLUknPgex7+yH2vJyb2Ar
-	kcUAn6OVbfkdg3+MQDBiq6/rE7BInTiX6vqujAODHnVOQucHSMbbszBa1fYHe5oERwY0mP
-	Ywxc1xrb4yQ+R3J0PxdhY1SFyMGISwM=
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="N8pW6y6H"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Michal Hocko <mhocko@suse.com>
-Cc: Dave Chinner <david@fromorbit.com>, Yafang Shao <laoar.shao@gmail.com>, 
-	Harry Yoo <harry.yoo@oracle.com>, Kees Cook <kees@kernel.org>, joel.granados@kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>, 
-	linux-mm@kvack.org, Vlastimil Babka <vbabka@suse.cz>
-Subject: Re: [PATCH] mm: kvmalloc: make kmalloc fast path real fast path
-Message-ID: <hqoa4rhguuzytikznc3xahhwv25w5wcafjquif5nzuhct7e5bc@7or627iuuf2g>
-References: <20250401073046.51121-1-laoar.shao@gmail.com>
- <3315D21B-0772-4312-BCFB-402F408B0EF6@kernel.org>
- <Z-y50vEs_9MbjQhi@harry>
- <CALOAHbBSvMuZnKF_vy3kGGNOCg5N2CgomLhxMxjn8RNwMTrw7A@mail.gmail.com>
- <Z-0gPqHVto7PgM1K@dread.disaster.area>
- <Z-0sjd8SEtldbxB1@tiehlicka>
- <zeuszr6ot5qdi46f5gvxa2c5efy4mc6eaea3au52nqnbhjek7o@l43ps2jtip7x>
- <Z-43Q__lSUta2IrM@tiehlicka>
- <Z-48K0OdNxZXcnkB@tiehlicka>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1743705031;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UdDp1sO0IopfH7Iy+tgmsR53cIFBoLuTkzWc5BMhUC0=;
+	b=N8pW6y6HFbeE9hCyE1ExGSseCusV1hXW05RIrKkHvLtrxfI0VTomHeIxrLZT6ZmnQ3pmZh
+	lSJXxwl818uHQhTcRf7gnBYyXmnKddjhdtmAQLXBkvJhnGvL1/TCvKqwoRYKfZBYrMzjjA
+	ZKlIFMCwdhALDB+60jfyWeIu+JHt1/4=
+From: Sean Anderson <sean.anderson@linux.dev>
+To: netdev@vger.kernel.org,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Russell King <linux@armlinux.org.uk>
+Cc: Christian Marangi <ansuelsmth@gmail.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	upstream@airoha.com,
+	Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	devicetree@vger.kernel.org,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Naveen N Rao <naveen@kernel.org>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	linuxppc-dev@lists.ozlabs.org,
+	Sean Anderson <sean.anderson@linux.dev>
+Subject: [RFC net-next PATCH 13/13] powerpc: dts: Add compatible strings for Lynx PCSs
+Date: Thu,  3 Apr 2025 14:30:23 -0400
+Message-Id: <20250403183023.1948676-1-sean.anderson@linux.dev>
+In-Reply-To: <20250403181907.1947517-1-sean.anderson@linux.dev>
+References: <20250403181907.1947517-1-sean.anderson@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z-48K0OdNxZXcnkB@tiehlicka>
+Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-On Thu, Apr 03, 2025 at 09:43:39AM +0200, Michal Hocko wrote:
-> There are users like xfs which need larger allocations with NOFAIL
-> sementic. They are not using kvmalloc currently because the current
-> implementation tries too hard to allocate through the kmalloc path
-> which causes a lot of direct reclaim and compaction and that hurts
-> performance a lot (see 8dc9384b7d75 ("xfs: reduce kvmalloc overhead for
-> CIL shadow buffers") for more details).
-> 
-> kvmalloc does support __GFP_RETRY_MAYFAIL semantic to express that
-> kmalloc (physically contiguous) allocation is preferred and we should go
-> more aggressive to make it happen. There is currently no way to express
-> that kmalloc should be very lightweight and as it has been argued [1]
-> this mode should be default to support kvmalloc(NOFAIL) with a
-> lightweight kmalloc path which is currently impossible to express as
-> __GFP_NOFAIL cannot be combined by any other reclaim modifiers.
-> 
-> This patch makes all kmalloc allocations GFP_NOWAIT unless
-> __GFP_RETRY_MAYFAIL is provided to kvmalloc. This allows to support both
-> fail fast and retry hard on physically contiguous memory with vmalloc
-> fallback.
-> 
-> There is a potential downside that relatively small allocations (smaller
-> than PAGE_ALLOC_COSTLY_ORDER) could fallback to vmalloc too easily and
-> cause page block fragmentation. We cannot really rule that out but it
-> seems that xlog_cil_kvmalloc use doesn't indicate this to be happening.
-> 
-> [1] https://lore.kernel.org/all/Z-3i1wATGh6vI8x8@dread.disaster.area/T/#u
-> Signed-off-by: Michal Hocko <mhocko@suse.com>
+This adds appropriate compatible strings for Lynx PCSs on PowerPC QorIQ
+platforms. This also changes the node name to avoid warnings from
+ethernet-phy.yaml.
 
-Acked-by: Shakeel Butt <shakeel.butt@linux.dev>
+Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
+---
+
+ arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-0-best-effort.dtsi | 3 ++-
+ arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-0.dtsi             | 3 ++-
+ arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-1-best-effort.dtsi | 3 ++-
+ arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-1.dtsi             | 3 ++-
+ arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-2.dtsi             | 3 ++-
+ arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-3.dtsi             | 3 ++-
+ arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-0.dtsi              | 3 ++-
+ arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-1.dtsi              | 3 ++-
+ arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-2.dtsi              | 3 ++-
+ arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-3.dtsi              | 3 ++-
+ arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-4.dtsi              | 3 ++-
+ arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-5.dtsi              | 3 ++-
+ arch/powerpc/boot/dts/fsl/qoriq-fman3-1-10g-0.dtsi             | 3 ++-
+ arch/powerpc/boot/dts/fsl/qoriq-fman3-1-10g-1.dtsi             | 3 ++-
+ arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-0.dtsi              | 3 ++-
+ arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-1.dtsi              | 3 ++-
+ arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-2.dtsi              | 3 ++-
+ arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-3.dtsi              | 3 ++-
+ arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-4.dtsi              | 3 ++-
+ arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-5.dtsi              | 3 ++-
+ 20 files changed, 40 insertions(+), 20 deletions(-)
+
+diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-0-best-effort.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-0-best-effort.dtsi
+index 7e70977f282a..61d52044e7b4 100644
+--- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-0-best-effort.dtsi
++++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-0-best-effort.dtsi
+@@ -66,7 +66,8 @@ mdio@e1000 {
+ 		reg = <0xe1000 0x1000>;
+ 		fsl,erratum-a011043; /* must ignore read errors */
+ 
+-		pcsphy0: ethernet-phy@0 {
++		pcsphy0: ethernet-pcs@0 {
++			compatible = "fsl,lynx-pcs";
+ 			reg = <0x0>;
+ 		};
+ 	};
+diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-0.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-0.dtsi
+index 5f89f7c1761f..78d6e49655f4 100644
+--- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-0.dtsi
++++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-0.dtsi
+@@ -70,7 +70,8 @@ mdio@f1000 {
+ 		reg = <0xf1000 0x1000>;
+ 		fsl,erratum-a011043; /* must ignore read errors */
+ 
+-		pcsphy6: ethernet-phy@0 {
++		pcsphy6: ethernet-pcs@0 {
++			compatible = "fsl,lynx-pcs";
+ 			reg = <0x0>;
+ 		};
+ 	};
+diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-1-best-effort.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-1-best-effort.dtsi
+index 71eb75e82c2e..5ffd1c2efaee 100644
+--- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-1-best-effort.dtsi
++++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-1-best-effort.dtsi
+@@ -73,7 +73,8 @@ mdio@e3000 {
+ 		reg = <0xe3000 0x1000>;
+ 		fsl,erratum-a011043; /* must ignore read errors */
+ 
+-		pcsphy1: ethernet-phy@0 {
++		pcsphy1: ethernet-pcs@0 {
++			compatible = "fsl,lynx-pcs";
+ 			reg = <0x0>;
+ 		};
+ 	};
+diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-1.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-1.dtsi
+index fb7032ddb7fc..e0325f09ce5f 100644
+--- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-1.dtsi
++++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-1.dtsi
+@@ -70,7 +70,8 @@ mdio@f3000 {
+ 		reg = <0xf3000 0x1000>;
+ 		fsl,erratum-a011043; /* must ignore read errors */
+ 
+-		pcsphy7: ethernet-phy@0 {
++		pcsphy7: ethernet-pcs@0 {
++			compatible = "fsl,lynx-pcs";
+ 			reg = <0x0>;
+ 		};
+ 	};
+diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-2.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-2.dtsi
+index 6b3609574b0f..8e6f6c5f0f2e 100644
+--- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-2.dtsi
++++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-2.dtsi
+@@ -38,7 +38,8 @@ mdio@e1000 {
+ 		reg = <0xe1000 0x1000>;
+ 		fsl,erratum-a011043; /* must ignore read errors */
+ 
+-		pcsphy0: ethernet-phy@0 {
++		pcsphy0: ethernet-pcs@0 {
++			compatible = "fsl,lynx-pcs";
+ 			reg = <0x0>;
+ 		};
+ 	};
+diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-3.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-3.dtsi
+index 28ed1a85a436..2cd3f0688cb1 100644
+--- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-3.dtsi
++++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-10g-3.dtsi
+@@ -38,7 +38,8 @@ mdio@e3000 {
+ 		reg = <0xe3000 0x1000>;
+ 		fsl,erratum-a011043; /* must ignore read errors */
+ 
+-		pcsphy1: ethernet-phy@0 {
++		pcsphy1: ethernet-pcs@0 {
++			compatible = "fsl,lynx-pcs";
+ 			reg = <0x0>;
+ 		};
+ 	};
+diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-0.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-0.dtsi
+index 1089d6861bfb..9f8c38a629cb 100644
+--- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-0.dtsi
++++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-0.dtsi
+@@ -62,7 +62,8 @@ mdio@e1000 {
+ 		reg = <0xe1000 0x1000>;
+ 		fsl,erratum-a011043; /* must ignore read errors */
+ 
+-		pcsphy0: ethernet-phy@0 {
++		pcsphy0: ethernet-pcs@0 {
++			compatible = "fsl,lynx-pcs";
+ 			reg = <0x0>;
+ 		};
+ 	};
+diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-1.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-1.dtsi
+index a95bbb4fc827..248a57129d40 100644
+--- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-1.dtsi
++++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-1.dtsi
+@@ -69,7 +69,8 @@ mdio@e3000 {
+ 		reg = <0xe3000 0x1000>;
+ 		fsl,erratum-a011043; /* must ignore read errors */
+ 
+-		pcsphy1: ethernet-phy@0 {
++		pcsphy1: ethernet-pcs@0 {
++			compatible = "fsl,lynx-pcs";
+ 			reg = <0x0>;
+ 		};
+ 	};
+diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-2.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-2.dtsi
+index 7d5af0147a25..73cef28db890 100644
+--- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-2.dtsi
++++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-2.dtsi
+@@ -69,7 +69,8 @@ mdio@e5000 {
+ 		reg = <0xe5000 0x1000>;
+ 		fsl,erratum-a011043; /* must ignore read errors */
+ 
+-		pcsphy2: ethernet-phy@0 {
++		pcsphy2: ethernet-pcs@0 {
++			compatible = "fsl,lynx-pcs";
+ 			reg = <0x0>;
+ 		};
+ 	};
+diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-3.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-3.dtsi
+index 61e5466ec854..4657b6a8fb78 100644
+--- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-3.dtsi
++++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-3.dtsi
+@@ -69,7 +69,8 @@ mdio@e7000 {
+ 		reg = <0xe7000 0x1000>;
+ 		fsl,erratum-a011043; /* must ignore read errors */
+ 
+-		pcsphy3: ethernet-phy@0 {
++		pcsphy3: ethernet-pcs@0 {
++			compatible = "fsl,lynx-pcs";
+ 			reg = <0x0>;
+ 		};
+ 	};
+diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-4.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-4.dtsi
+index 3ba0cdafc069..ac322e5803c2 100644
+--- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-4.dtsi
++++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-4.dtsi
+@@ -62,7 +62,8 @@ mdio@e9000 {
+ 		reg = <0xe9000 0x1000>;
+ 		fsl,erratum-a011043; /* must ignore read errors */
+ 
+-		pcsphy4: ethernet-phy@0 {
++		pcsphy4: ethernet-pcs@0 {
++			compatible = "fsl,lynx-pcs";
+ 			reg = <0x0>;
+ 		};
+ 	};
+diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-5.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-5.dtsi
+index 51748de0a289..68ffa2c65e03 100644
+--- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-5.dtsi
++++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-0-1g-5.dtsi
+@@ -69,7 +69,8 @@ mdio@eb000 {
+ 		reg = <0xeb000 0x1000>;
+ 		fsl,erratum-a011043; /* must ignore read errors */
+ 
+-		pcsphy5: ethernet-phy@0 {
++		pcsphy5: ethernet-pcs@0 {
++			compatible = "fsl,lynx-pcs";
+ 			reg = <0x0>;
+ 		};
+ 	};
+diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-10g-0.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-10g-0.dtsi
+index ee4f5170f632..caf28fcbd55c 100644
+--- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-10g-0.dtsi
++++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-10g-0.dtsi
+@@ -70,7 +70,8 @@ mdio@f1000 {
+ 		reg = <0xf1000 0x1000>;
+ 		fsl,erratum-a011043; /* must ignore read errors */
+ 
+-		pcsphy14: ethernet-phy@0 {
++		pcsphy14: ethernet-pcs@0 {
++			compatible = "fsl,lynx-pcs";
+ 			reg = <0x0>;
+ 		};
+ 	};
+diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-10g-1.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-10g-1.dtsi
+index 83d2e0ce8f7b..6128b9fb5381 100644
+--- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-10g-1.dtsi
++++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-10g-1.dtsi
+@@ -70,7 +70,8 @@ mdio@f3000 {
+ 		reg = <0xf3000 0x1000>;
+ 		fsl,erratum-a011043; /* must ignore read errors */
+ 
+-		pcsphy15: ethernet-phy@0 {
++		pcsphy15: ethernet-pcs@0 {
++			compatible = "fsl,lynx-pcs";
+ 			reg = <0x0>;
+ 		};
+ 	};
+diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-0.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-0.dtsi
+index 3132fc73f133..a7dffe6bbe5b 100644
+--- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-0.dtsi
++++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-0.dtsi
+@@ -62,7 +62,8 @@ mdio@e1000 {
+ 		reg = <0xe1000 0x1000>;
+ 		fsl,erratum-a011043; /* must ignore read errors */
+ 
+-		pcsphy8: ethernet-phy@0 {
++		pcsphy8: ethernet-pcs@0 {
++			compatible = "fsl,lynx-pcs";
+ 			reg = <0x0>;
+ 		};
+ 	};
+diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-1.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-1.dtsi
+index 75e904d96602..d0ad92f2ca2d 100644
+--- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-1.dtsi
++++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-1.dtsi
+@@ -69,7 +69,8 @@ mdio@e3000 {
+ 		reg = <0xe3000 0x1000>;
+ 		fsl,erratum-a011043; /* must ignore read errors */
+ 
+-		pcsphy9: ethernet-phy@0 {
++		pcsphy9: ethernet-pcs@0 {
++			compatible = "fsl,lynx-pcs";
+ 			reg = <0x0>;
+ 		};
+ 	};
+diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-2.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-2.dtsi
+index 69f2cc7b8f19..b4b893eead2a 100644
+--- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-2.dtsi
++++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-2.dtsi
+@@ -69,7 +69,8 @@ mdio@e5000 {
+ 		reg = <0xe5000 0x1000>;
+ 		fsl,erratum-a011043; /* must ignore read errors */
+ 
+-		pcsphy10: ethernet-phy@0 {
++		pcsphy10: ethernet-pcs@0 {
++			compatible = "fsl,lynx-pcs";
+ 			reg = <0x0>;
+ 		};
+ 	};
+diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-3.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-3.dtsi
+index b3aaf01d7da0..6c15a6ff0926 100644
+--- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-3.dtsi
++++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-3.dtsi
+@@ -69,7 +69,8 @@ mdio@e7000 {
+ 		reg = <0xe7000 0x1000>;
+ 		fsl,erratum-a011043; /* must ignore read errors */
+ 
+-		pcsphy11: ethernet-phy@0 {
++		pcsphy11: ethernet-pcs@0 {
++			compatible = "fsl,lynx-pcs";
+ 			reg = <0x0>;
+ 		};
+ 	};
+diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-4.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-4.dtsi
+index 18e020432807..14fa4d067ffd 100644
+--- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-4.dtsi
++++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-4.dtsi
+@@ -62,7 +62,8 @@ mdio@e9000 {
+ 		reg = <0xe9000 0x1000>;
+ 		fsl,erratum-a011043; /* must ignore read errors */
+ 
+-		pcsphy12: ethernet-phy@0 {
++		pcsphy12: ethernet-pcs@0 {
++			compatible = "fsl,lynx-pcs";
+ 			reg = <0x0>;
+ 		};
+ 	};
+diff --git a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-5.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-5.dtsi
+index 55f329d13f19..64737187a577 100644
+--- a/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-5.dtsi
++++ b/arch/powerpc/boot/dts/fsl/qoriq-fman3-1-1g-5.dtsi
+@@ -69,7 +69,8 @@ mdio@eb000 {
+ 		reg = <0xeb000 0x1000>;
+ 		fsl,erratum-a011043; /* must ignore read errors */
+ 
+-		pcsphy13: ethernet-phy@0 {
++		pcsphy13: ethernet-pcs@0 {
++			compatible = "fsl,lynx-pcs";
+ 			reg = <0x0>;
+ 		};
+ 	};
+-- 
+2.35.1.1320.gc452695387.dirty
+
