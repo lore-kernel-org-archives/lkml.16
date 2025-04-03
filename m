@@ -1,20 +1,20 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3199204683
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 20:47:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E941E204683
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 20:47:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743713255; cv=none; b=KmMbU2bd5uoySvAlUjYboS+uJFKTDhO+F2BV9MfM29UFCgZa0H2DPwT67iXzc1gD7M9/T9ToaIJo2ULwdlns2OOsJqR3Snd0loJOxZNVeteZbz6BpfVEAgjd5hdvkMeDp+Qvb5H5r/hZ8s3f4wEM/KPhCFDrduC3MGv6JrylF4c=
+	t=1743713270; cv=none; b=QCT+IbRhT4VMruZo6qzZDEJiBpe8Ee3vjQW7VzxdxwgsRTLJgx2BYMgExD8qHepdJtcJi2nDD8tzXAz1VAEXroecw/Y/wiGm5c8P5nhVTHfQrLiofNOlBakOv9pL8NvArk4B+/Z5GKIfgYpcVKHzK3mynQwlz8NCg0Mq4bKDHKg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743713255; c=relaxed/simple;
-	bh=Ie0PmPpy1vuBO9+b5GNtSA5V6mtQSL8iiRSdXYJZ2Kg=;
+	s=arc-20240116; t=1743713270; c=relaxed/simple;
+	bh=N+MgUSz8CuODs/2Lre/zDuoLNuL9qHCYfGQQ48zRhX0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qA15w9KO4HuFj7kNl2u7zXwHyl4ykqYYUzJy1kxvO6jHwCRGxsoxp4LSRu0+k8wxcf6bwkc+2tO1rp/7Kfdb1cdQRhW5Dahhyy9Gs80UFp1Pp9WrLDfs3h6QiuRWz6Rfil001I/5REsBu86IDRQhHtnTanPl6eo+cB2egkD7bmo=
+	 Content-Type:Content-Disposition:In-Reply-To; b=swMpYqVoBJcLDpSak/gMc/4MoG04D4tLVBqWcggBDo8Hc1jSbSJ2TULXmydOTdlsy1uMviyadxiXp+VTsmpE4mPt0RN2XBtYA2TaP+7ds2wNMQqSz/uM9tZUiKMox0Z2KJ3cKkbvkprJuCUVbRYD8WELZN+40Vsv8IAofu/+YvQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CFFAC4CEE3;
-	Thu,  3 Apr 2025 20:47:31 +0000 (UTC)
-Date: Thu, 3 Apr 2025 21:47:29 +0100
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55CD7C4CEE3;
+	Thu,  3 Apr 2025 20:47:47 +0000 (UTC)
+Date: Thu, 3 Apr 2025 21:47:44 +0100
 From: Catalin Marinas <catalin.marinas@arm.com>
 To: Ryan Roberts <ryan.roberts@arm.com>
 Cc: Will Deacon <will@kernel.org>,
@@ -30,11 +30,11 @@ Cc: Will Deacon <will@kernel.org>,
 	Kevin Brodsky <kevin.brodsky@arm.com>,
 	linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 05/11] arm64: hugetlb: Use set_ptes_anysz() and
- ptep_get_and_clear_anysz()
-Message-ID: <Z-7z4ZFGIZCrNq6h@arm.com>
+Subject: Re: [PATCH v3 10/11] mm/vmalloc: Enter lazy mmu mode while
+ manipulating vmalloc ptes
+Message-ID: <Z-7z8MXWJDz3kx2j@arm.com>
 References: <20250304150444.3788920-1-ryan.roberts@arm.com>
- <20250304150444.3788920-6-ryan.roberts@arm.com>
+ <20250304150444.3788920-11-ryan.roberts@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,32 +43,19 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250304150444.3788920-6-ryan.roberts@arm.com>
+In-Reply-To: <20250304150444.3788920-11-ryan.roberts@arm.com>
 
-On Tue, Mar 04, 2025 at 03:04:35PM +0000, Ryan Roberts wrote:
-> Refactor the huge_pte helpers to use the new common set_ptes_anysz() and
-> ptep_get_and_clear_anysz() APIs.
-
-Nitpick: maybe add underscores to this new API to suggest it's private.
-Up to you.
-
-> This provides 2 benefits; First, when page_table_check=on, hugetlb is
-> now properly/fully checked. Previously only the first page of a hugetlb
-> folio was checked. Second, instead of having to call __set_ptes(nr=1)
-> for each pte in a loop, the whole contiguous batch can now be set in one
-> go, which enables some efficiencies and cleans up the code.
+On Tue, Mar 04, 2025 at 03:04:40PM +0000, Ryan Roberts wrote:
+> Wrap vmalloc's pte table manipulation loops with
+> arch_enter_lazy_mmu_mode() / arch_leave_lazy_mmu_mode(). This provides
+> the arch code with the opportunity to optimize the pte manipulations.
 > 
-> One detail to note is that huge_ptep_clear_flush() was previously
-> calling ptep_clear_flush() for a non-contiguous pte (i.e. a pud or pmd
-> block mapping). This has a couple of disadvantages; first
-> ptep_clear_flush() calls ptep_get_and_clear() which transparently
-> handles contpte. Given we only call for non-contiguous ptes, it would be
-> safe, but a waste of effort. It's preferable to go straight to the layer
-> below. However, more problematic is that ptep_get_and_clear() is for
-> PAGE_SIZE entries so it calls page_table_check_pte_clear() and would not
-> clear the whole hugetlb folio. So let's stop special-casing the non-cont
-> case and just rely on get_clear_contig_flush() to do the right thing for
-> non-cont entries.
+> Note that vmap_pfn() already uses lazy mmu mode since it delegates to
+> apply_to_page_range() which enters lazy mmu mode for both user and
+> kernel mappings.
+> 
+> These hooks will shortly be used by arm64 to improve vmalloc
+> performance.
 > 
 > Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
 
