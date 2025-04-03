@@ -1,112 +1,275 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 245B878F4A
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 09:33:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFC6823F427
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 09:33:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743672803; cv=none; b=eyux2kaGL5mhvivb/WiBegiQiV6V51TnFvWWEOYULH93tytXMT6ulrrkIGzDREklCANX54/AGrNg0LXqzacI4OaIK1JRPS1C43qzD7Of9NxKWTkiQqhzcXfAcyGgVYqiJlJkotOAiDoyVwee3K9v7nv8MJE5f04tZFhNoxLCUiw=
+	t=1743672805; cv=none; b=Vbcz7Ftmt4E8RAwAualDVo4LMDC1VDFdA+ycb14MJNlyMS7n5sFWb/VAIOVeK41dhiBmkTwZzJ5RSwAHuU/ThLNPbFWB1vu9EGUaqyckgvIz7xnAzWY+cRwNlZUJmeVLqoir1biQqdVA+LLDrXDA+gekcmsuFfMATwAxtiMgkBc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743672803; c=relaxed/simple;
-	bh=ub5dIR0MadGwEmMkBhscZrATERyfT0UYkW0XODW7hYM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fStWcb7wntZWpcKhoZyffJrY28qopHd/JjoN3uFd2DyTSNF6aL8vfTYOTlFIqM2USVFwVKkPhT//ta+abnLdjSJHy5wrHiCi5w0yFJnzaiUdHELw19Mod5yL+6M4IFPTr2Aza9qCfOTnEGGQML3sJPmbmoioY+u224AA9mAHWhY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.198])
-	by gateway (Coremail) with SMTP id _____8CxG6zbVe5nahawAA--.64616S3;
-	Thu, 03 Apr 2025 17:33:15 +0800 (CST)
-Received: from localhost.localdomain (unknown [223.64.68.198])
-	by front1 (Coremail) with SMTP id qMiowMCxKcTWVe5nSIBtAA--.29648S2;
-	Thu, 03 Apr 2025 17:33:13 +0800 (CST)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	linux-kernel@vger.kernel.org,
-	loongson-kernel@lists.loongnix.cn,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Qihang Gao <gaoqihang@loongson.cn>,
-	Juxin Gao <gaojuxin@loongson.cn>
-Subject: [PATCH] LoongArch: Preserve firmware configuration when desired
-Date: Thu,  3 Apr 2025 17:32:57 +0800
-Message-ID: <20250403093257.1059912-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.47.1
+	s=arc-20240116; t=1743672805; c=relaxed/simple;
+	bh=LH9g7+QOO+5iyOXAKlu6xac6HnVSx+io/5yzLBo5fnY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WI48EI4T34WcMMtiOqpCUbCi5l+dNLS/r7bJKHXFVEsMkqljIPHdc725QeVjdAulZULXo1XVm8xTbEDME2eRJyE5k/c4OyupjYpZyf9i8vcIFNW/1jtL+WuHIgGOlQsJRPeSjfa3rHpqGXj2WBdDnZtHJLAhndy6JBXjFs3FX+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QmJncrsy; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QmJncrsy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743672802;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4sThZhr8FIHFH8ocyys2dja74pOa3boFKyAWA+JFfOI=;
+	b=QmJncrsyu8I5xAklFuwWqm+L7MjOQlEUetltPFfO/9xWbT7J6H1tFqPUxgi49+t01E6NtO
+	K9DRtsMOZFyUIk+buRmH6W5V3G2vFZYbtWoK/SdeJjYc3R6biQtHkLO0bhVSOsFALSxTvG
+	6sWLdmUEF1mK7tPlVPfk1epi2EaUy8M=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-651-khTZ2xf_NtCj0anVs5elSA-1; Thu, 03 Apr 2025 05:33:21 -0400
+X-MC-Unique: khTZ2xf_NtCj0anVs5elSA-1
+X-Mimecast-MFC-AGG-ID: khTZ2xf_NtCj0anVs5elSA_1743672800
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-39123912ff0so299326f8f.2
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 02:33:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743672800; x=1744277600;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4sThZhr8FIHFH8ocyys2dja74pOa3boFKyAWA+JFfOI=;
+        b=HAzPHqt7ajirTZ0L8nwNOXJV/Ed7o8YzxKfww9gtEbEavy0K038CchfrkhuDLOLQfb
+         4kiTN3DmrEiNtaD55pNYaE44mJdFoGAUqn/AkC0YTaJPY1Z0NaqiXPYjFf5FepqQwp/Z
+         bGTJS6odInQq6/nWSzzh4bLw/hG6K+QWWb6c2FVYlYaqeSqsIgY4cAUy1mlsEc0NDbhi
+         cDt+dGc8GokstSqXmoQQgRp5CG9zY7khQHrctqDMu3vcv2LhPAiCM4Kzx2QJ89p4PKEK
+         R4WTbZifuDF3L7AJEOKWLsT9ngNQe4pkA68FPHb3GYQxsgORjks4tklHByhkIhVHQLT+
+         GlSw==
+X-Forwarded-Encrypted: i=1; AJvYcCVm8qmRDfkvarwPw0HgaPCfNeAOeBDm3atsGsSBMI/Gut/b5bTTXW/uDRBapJRzcjha2HNftChOxkI8eSQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxLnpVd3T5rsiJAqmMh1k49M/SjncBMx5RVHJdG8vjBwzdJFXWT
+	g6ZjxP0bwSbBPxogqPz/H2TOGs2uIZkdAjGIU2sT7L9w1knNA5IBP/Os4isPwZhvBKGiP5i/pi5
+	qSzn1/ybste2xhQKYQ8SePAZXXK4wtJ0MwWkbabKNoPqDTFgKIp3y0bkRFgCu6w==
+X-Gm-Gg: ASbGncsNPd26bky6Ts+7QLB9SWaF91zkNoytyJQMWgxzed74ADEQYlWMoyo4tdlL6Ga
+	v1BzIBF684zi7KQqBxiY1eixuPHifBKb3X1XvIOurucLrzZyvFa2JcLdZk+DrjgrUOgKKdIqdZ7
+	1NPrcE3sIal4cu57BAWGN+tBISSxKY1HmBlQ+RlO7UWVPwf7nlhPOQ48ywgUQ6Y6hZYDqy+I9as
+	7KDSIYIrJRCbe5N/JPSHoSxZVZdmPK3djsAMN1pEBBEXaq+QCsp6HI/PUGcRTjoX8ZhlJmy/cdx
+	9UF1/Yjc1x6r87VemEEnvdKPcrlMtWMJPhgoiR+mjYgY+toTqnQmHR+91F4=
+X-Received: by 2002:a5d:59a9:0:b0:397:8f09:600 with SMTP id ffacd0b85a97d-39c120dc885mr17363652f8f.13.1743672800220;
+        Thu, 03 Apr 2025 02:33:20 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE4vxZl4LLon5hCph3Xcs7lAFUmmbHfNQzzEHDWPTgxlqRHCfjkIkKq1EFJXLE6RtiycnXaaQ==
+X-Received: by 2002:a5d:59a9:0:b0:397:8f09:600 with SMTP id ffacd0b85a97d-39c120dc885mr17363594f8f.13.1743672799604;
+        Thu, 03 Apr 2025 02:33:19 -0700 (PDT)
+Received: from sgarzare-redhat (host-87-11-6-59.retail.telecomitalia.it. [87.11.6.59])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c301a7586sm1307915f8f.38.2025.04.03.02.33.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Apr 2025 02:33:19 -0700 (PDT)
+Date: Thu, 3 Apr 2025 11:33:14 +0200
+From: Stefano Garzarella <sgarzare@redhat.com>
+To: Bobby Eshleman <bobbyeshleman@gmail.com>
+Cc: Daniel =?utf-8?B?UC4gQmVycmFuZ8Op?= <berrange@redhat.com>, 
+	Jakub Kicinski <kuba@kernel.org>, "K. Y. Srinivasan" <kys@microsoft.com>, 
+	Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, 
+	Stefan Hajnoczi <stefanha@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>, 
+	Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
+	Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>, Bryan Tan <bryan-bt.tan@broadcom.com>, 
+	Vishnu Dasa <vishnu.dasa@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, "David S. Miller" <davem@davemloft.net>, 
+	virtualization@lists.linux.dev, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hyperv@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH v2 0/3] vsock: add namespace support to vhost-vsock
+Message-ID: <4c2xz3xhpdjvb6jmdw7ctsebpza5lcs4gevr5wlwwyt64usr2i@o5qt2msfyvvw>
+References: <20250312-vsock-netns-v2-0-84bffa1aa97a@gmail.com>
+ <r6a6ihjw3etlb5chqsb65u7uhcav6q6pjxu65iqpp76423w2wd@kmctvoaywmbu>
+ <Z-w47H3qUXZe4seQ@redhat.com>
+ <Z+yDCKt7GpubbTKJ@devvm6277.cco0.facebook.com>
+ <CAGxU2F7=64HHaAD+mYKYLqQD8rHg1CiF1YMDUULgSFw0WSY-Aw@mail.gmail.com>
+ <Z-0BoF4vkC2IS1W4@redhat.com>
+ <Z+23pbK9t5ckSmLl@devvm6277.cco0.facebook.com>
+ <Z+26A3sslT+w+wOI@devvm6277.cco0.facebook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMCxKcTWVe5nSIBtAA--.29648S2
-X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7AF17JF18AF17ur4DtFW7ZFc_yoW8AF47pF
-	W3Zw1UGFW8Gr15GrZay3yrXFs09FZYkrWYqa13ZrZrAwsFvw10vryDA34qvFy5Can5Ka18
-	ZFZIyr1UGF4DA3XCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUU9jb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6rxl6s0DM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
-	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWU
-	AwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
-	8JMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1Y
-	6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7
-	AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE
-	2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcV
-	C2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2Kfnx
-	nUUI43ZEXa7IU8CksDUUUUU==
+In-Reply-To: <Z+26A3sslT+w+wOI@devvm6277.cco0.facebook.com>
 
-If we must preserve the firmware resource assignments, claim the existing
-resources rather than reassigning everything.
+On Wed, Apr 02, 2025 at 03:28:19PM -0700, Bobby Eshleman wrote:
+>On Wed, Apr 02, 2025 at 03:18:13PM -0700, Bobby Eshleman wrote:
+>> On Wed, Apr 02, 2025 at 10:21:36AM +0100, Daniel P. Berrangé wrote:
+>> > On Wed, Apr 02, 2025 at 10:13:43AM +0200, Stefano Garzarella wrote:
+>> > > On Wed, 2 Apr 2025 at 02:21, Bobby Eshleman <bobbyeshleman@gmail.com> wrote:
+>> > > >
+>> > > > I do like Stefano's suggestion to add a sysctl for a "strict" mode,
+>> > > > Since it offers the best of both worlds, and still tends conservative in
+>> > > > protecting existing applications... but I agree, the non-strict mode
+>> > > > vsock would be unique WRT the usual concept of namespaces.
+>> > >
+>> > > Maybe we could do the opposite, enable strict mode by default (I think
+>> > > it was similar to what I had tried to do with the kernel module in v1, I
+>> > > was young I know xD)
+>> > > And provide a way to disable it for those use cases where the user wants
+>> > > backward compatibility, while paying the cost of less isolation.
+>> >
+>> > I think backwards compatible has to be the default behaviour, otherwise
+>> > the change has too high risk of breaking existing deployments that are
+>> > already using netns and relying on VSOCK being global. Breakage has to
+>> > be opt in.
+>> >
+>> > > I was thinking two options (not sure if the second one can be done):
+>> > >
+>> > >   1. provide a global sysfs/sysctl that disables strict mode, but this
+>> > >   then applies to all namespaces
+>> > >
+>> > >   2. provide something that allows disabling strict mode by namespace.
+>> > >   Maybe when it is created there are options, or something that can be
+>> > >   set later.
+>> > >
+>> > > 2 would be ideal, but that might be too much, so 1 might be enough. In
+>> > > any case, 2 could also be a next step.
+>> > >
+>> > > WDYT?
+>> >
+>> > It occured to me that the problem we face with the CID space usage is
+>> > somewhat similar to the UID/GID space usage for user namespaces.
+>> >
+>> > In the latter case, userns has exposed /proc/$PID/uid_map & gid_map, to
+>> > allow IDs in the namespace to be arbitrarily mapped onto IDs in the host.
+>> >
+>> > At the risk of being overkill, is it worth trying a similar kind of
+>> > approach for the vsock CID space ?
+>> >
+>> > A simple variant would be a /proc/net/vsock_cid_outside specifying a set
+>> > of CIDs which are exclusively referencing /dev/vhost-vsock associations
+>> > created outside the namespace. Anything not listed would be exclusively
+>> > referencing associations created inside the namespace.
+>> >
+>> > A more complex variant would be to allow a full remapping of CIDs as is
+>> > done with userns, via a /proc/net/vsock_cid_map, which the same three
+>> > parameters, so that CID=15 association outside the namespace could be
+>> > remapped to CID=9015 inside the namespace, allow the inside namespace
+>> > to define its out association for CID=15 without clashing.
+>> >
+>> > IOW, mapped CIDs would be exclusively referencing /dev/vhost-vsock
+>> > associations created outside namespace, while unmapped CIDs would be
+>> > exclusively referencing /dev/vhost-vsock associations inside the
+>> > namespace.
+>> >
+>> > A likely benefit of relying on a kernel defined mapping/partition of
+>> > the CID space is that apps like QEMU don't need changing, as there's
+>> > no need to invent a new /dev/vhost-vsock-netns device node.
+>> >
+>> > Both approaches give the desirable security protection whereby the
+>> > inside namespace can be prevented from accessing certain CIDs that
+>> > were associated outside the namespace.
+>> >
+>> > Some rule would need to be defined for updating the /proc/net/vsock_cid_map
+>> > file as it is the security control mechanism. If it is write-once then
+>> > if the container mgmt app initializes it, nothing later could change
+>> > it.
+>> >
+>> > A key question is do we need the "first come, first served" behaviour
+>> > for CIDs where a CID can be arbitrarily used by outside or inside namespace
+>> > according to whatever tries to associate a CID first ?
+>>
+>> I think with /proc/net/vsock_cid_outside, instead of disallowing the CID
+>> from being used, this could be solved by disallowing remapping the CID
+>> while in use?
+>>
+>> The thing I like about this is that users can check
+>> /proc/net/vsock_cid_outside to figure out what might be going on,
+>> instead of trying to check lsof or ps to figure out if the VMM processes
+>> have used /dev/vhost-vsock vs /dev/vhost-vsock-netns.
 
-According to PCI Firmware Specification: if ACPI DSM#5 function returns
-0, the OS must retain the resource allocation for PCI in the firmware; if
-ACPI DSM#5 function returns 1, the OS can ignore the resource allocation
-for PCI and reallocate it.
+Yes, although the user in theory should not care about this information,
+right?
+I mean I don't even know if it makes sense to expose the contents of
+/proc/net/vsock_cid_outside in the namespace.
 
-Signed-off-by: Qihang Gao <gaoqihang@loongson.cn>
-Signed-off-by: Juxin Gao <gaojuxin@loongson.cn>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- arch/loongarch/pci/acpi.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+>>
+>> Just to check I am following... I suppose we would have a few typical
+>> configurations for /proc/net/vsock_cid_outside. Following uid_map file
+>> format of:
+>> 	"<local cid start>		<global cid start>		<range size>"
 
-diff --git a/arch/loongarch/pci/acpi.c b/arch/loongarch/pci/acpi.c
-index 1da4dc46df43..50c9016641a4 100644
---- a/arch/loongarch/pci/acpi.c
-+++ b/arch/loongarch/pci/acpi.c
-@@ -194,6 +194,7 @@ struct pci_bus *pci_acpi_scan_root(struct acpi_pci_root *root)
- {
- 	struct pci_bus *bus;
- 	struct pci_root_info *info;
-+	struct pci_host_bridge *host;
- 	struct acpi_pci_root_ops *root_ops;
- 	int domain = root->segment;
- 	int busnum = root->secondary.start;
-@@ -237,8 +238,17 @@ struct pci_bus *pci_acpi_scan_root(struct acpi_pci_root *root)
- 			return NULL;
- 		}
- 
--		pci_bus_size_bridges(bus);
--		pci_bus_assign_resources(bus);
-+		/* If we must preserve the resource configuration, claim now */
-+		host = pci_find_host_bridge(bus);
-+		if (host->preserve_config)
-+			pci_bus_claim_resources(bus);
-+
-+		/*
-+		 * Assign whatever was left unassigned. If we didn't claim above,
-+		 * this will reassign everything.
-+		 */
-+		pci_assign_unassigned_root_bus_resources(bus);
-+
- 		list_for_each_entry(child, &bus->children, node)
- 			pcie_bus_configure_settings(child);
- 	}
--- 
-2.47.1
+This seems to relate more to /proc/net/vsock_cid_map, for
+/proc/net/vsock_cid_outside I think 2 parameters are enough
+(CID, range), right?
+
+>>
+>> 	1. Identity mapping, current namespace CID is global CID (default
+>> 	setting for new namespaces):
+>>
+>> 		# empty file
+>>
+>> 				OR
+>>
+>> 		0    0    4294967295
+>>
+>> 	2. Complete isolation from global space (initialized, but no mappings):
+>>
+>> 		0    0    0
+>>
+>> 	3. Mapping in ranges of global CIDs
+>>
+>> 	For example, global CID space starts at 7000, up to 32-bit max:
+>>
+>> 		7000    0    4294960295
+>> 	
+>> 	Or for multiple mappings (0-100 map to 7000-7100, 1000-1100 map to
+>> 	8000-8100) :
+>>
+>> 		7000    0       100
+>> 		8000    1000    100
+>>
+>>
+>> One thing I don't love is that option 3 seems to not be addressing a
+>> known use case. It doesn't necessarily hurt to have, but it will add
+>> complexity to CID handling that might never get used?
+
+Yes, as I also mentioned in the previous email, we could also do a
+step-by-step thing.
+
+IMHO we can define /proc/net/vsock_cid_map (with the structure you just
+defined), but for now only support 1-1 mapping (with the ranges of
+course, I mean the first two parameters should always be the same) and
+then add option 3 in the future.
+
+>>
+>> Since options 1/2 could also be represented by a boolean (yes/no
+>> "current ns shares CID with global"), I wonder if we could either A)
+>> only support the first two options at first, or B) add just
+>> /proc/net/vsock_ns_mode at first, which supports only "global" and
+>> "local", and later add a "mapped" mode plus /proc/net/vsock_cid_outside
+>> or the full mapping if the need arises?
+
+I think option A is the same as I meant above :-)
+
+>>
+>> This could also be how we support Option 2 from Stefano's last email of
+>> supporting per-namespace opt-in/opt-out.
+
+Hmm, how can we do it by namespace? Isn't that global?
+
+>>
+>> Any thoughts on this?
+>>
+>
+>Stefano,
+>
+>Would only supporting 1/2 still support the Kata use case?
+
+I think so, actually I was thinking something similar in the message I 
+just sent.
+
+By default (if the file is empty), nothing should change, so that's fine 
+IMO. As Paolo suggested, we absolutely have to have tests to verify 
+these things.
+
+Thanks,
+Stefano
 
