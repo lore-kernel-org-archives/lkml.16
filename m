@@ -1,322 +1,285 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C5C224168A
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 08:27:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53D80241CA0
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 08:27:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743668834; cv=none; b=Cy2WSaXdSGSeXRcJp0pql++qWVmIpb7UhKEtzy4Mk6DEb7jzWR+8yzZ2D9s0KbyLLb9Zu+iRNn1txflKuRBKq3ZZrP4HBUedB2YSoexfmcJayPvmOLkBD51S1RPJyaGowd/i21ptqjQH7zty63JIpmgsfBTP+exrZDEipBohjK8=
+	t=1743668847; cv=none; b=H8+jeuOnZ+fscdqqRDoK45mVRA2wDPqy/z8DUMOvy+RkI+510LO7zNp8dcugUGKZaHpm+Tcnv8pK9lrz6TrbI6n9JzmDzjj4+5Ejz3WBOS/kZAsiuX5Cb9OIG/MnxEBWMmJvgdNoD1Zi7UmHxKYIN8YofME63SVOyy+uURZlcdU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743668834; c=relaxed/simple;
-	bh=mBEnZJfbHssNSwDuQ4ZoDefTpQJ0psPNYc+XIeueAiM=;
+	s=arc-20240116; t=1743668847; c=relaxed/simple;
+	bh=12oR6S8hqizhC2JzsMUHt5AD60AQYme5Jkz+Gstpjs0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Nu7hUKyOthqO32GqCK7EgBNTRswv0ftnDMOE/5Xdlxj5QXkg1eZa+guXH4rmzCSN6ffS82FvGgNKOYOaZBa5CVP6ORXTUYcwrqYfVeGzEFCYtHiK0WWDM/BURVmYdsD4dT5aMwc+MADWEjl4ox+82fkKbYldXfPRots/kW/PSvs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=I+XA+igo; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q6FMjYnMkUwA5QRUqWWRpUUYq04uYvUseGRJ9JsXUQWR1Z7OeMXIBiN89PeLMGLiz11HRuYW8B6D2IyN4zzRDtctkBbsfDvZ+Qvq8GiCxGZ7+QO6GrsBE9Qh93KCejqEQY43cTnCSvONtShPehc8ZOiCIM0nkzML/bf4O7h3apU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=H6rij/C3; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="I+XA+igo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743668831;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8H3/cfOpLLMF7vHGtp8a2sFO6dkZAsrx2IPt+e+ewfY=;
-	b=I+XA+igoaZibTp6iKCIujc4ZP5GT5kZLZqcrCop2QpTtXf9aa0j22TvRYFpV+5y7m+1plY
-	GCaeqf0ryCn9fjR2soUX7Y2SeZOz8HtMQ7GylKMGrVMh7Vdn8oeH7VUfn5jPy184GObQyM
-	xCkOYE9H4znKFCPUUzwlYtP3x2sdndk=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-695-tzDYepN0PgimKRUCA5KCKQ-1; Thu, 03 Apr 2025 04:27:10 -0400
-X-MC-Unique: tzDYepN0PgimKRUCA5KCKQ-1
-X-Mimecast-MFC-AGG-ID: tzDYepN0PgimKRUCA5KCKQ_1743668829
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-39ac9b0cb6aso483504f8f.2
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 01:27:10 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="H6rij/C3"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ac7bd86f637so69651766b.1
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 01:27:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google; t=1743668842; x=1744273642; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:mail-followup-to:message-id:subject:cc:to
+         :from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=o+Mp6jmtYK1H17CFfYiwi2sa1wA1pdf2H15LrCJwia8=;
+        b=H6rij/C37zCroHpD8D5hIQu0TWiqjeHv70DRl0kzPf38ek8ZQ0ywSHmZqFsh8Z4q+H
+         BTTKPCdCZnAjcx0BHJJXgkhVt+1aHtpRt8BfRr3VXYHvuRJgzmL+GtlimCIBXYfeuFTS
+         NgBvq3XJqB4kq6+c1UGphaY6UjLsoG5Theiqs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743668829; x=1744273629;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8H3/cfOpLLMF7vHGtp8a2sFO6dkZAsrx2IPt+e+ewfY=;
-        b=VeTfrSR39rmPr16JHDG1ilF0LbhN9Mx2kXlfhOORgBzwx4gIeV8PTYB/zybqdpGTwm
-         se/GRLO6FsWIcq26SUzIzzGgtL9Bc6+7MSVetSoLPRAdVYrxLIoimlFwbzIpT9QS0p/0
-         U9pBvEb3PqaWnGyPVovxMzq7H6zPjzGB+jJ7XDheFutzxfKYjSRGa9GTS1H/V0HTGpNE
-         rwJwkkucj5qnnegl0vPSMIyKK8dxMGyIw29DzPckEQSF+v6fIJTVlCYXJE8D4CLNo+Fa
-         jsjvGaBuK6nN8AfB/7OjwmWp3GRD1G2LzgBHqpmhtVBqSckkxPacabgaO4szUCW5jUUe
-         dnRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV/Y6r6DQAijO9f57zKhT4KONqmJdSjiuewMoqRIJCBBy/fSGrE9t0QVrF0BYLDcQA5msfHbIV3IYVbySg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwxDfhk3+c0dyfFr1KAp4hpIhwRsxToAssBFl5xx6TtQBQH5HJm
-	8RRR/ARLzp76lGs4WZGk7h5FcCDMa0gISdvsOhR6sD/NC7q6y0v02r3/68v+XsHA+9QZK/uC2re
-	kyy1YGokBpHNXZIQYd/niJ1VvL5CZa7tZjINEMosODfUc6ebGOf+/IfVv1HaUsA==
-X-Gm-Gg: ASbGnct9ugipkNVvyLsG/9k2HoJhQmODPFwBSDKJsN7WDdQPk+xvNe+OVlwCG6FbwHp
-	z77QdbIqe8OUWVAmJV7Zo0qqvsET1X3OIWEnC34QvhfDm73Om+4mcuZD0YekH5Mr2lAzjlhFV9o
-	th93VYyPvU+rtboQnLP5eVzrd/XI3GGo/XZsvPV0BYnp+Opw1PVkaJaxQ3Y5YZo77+wrIfD9dmd
-	FFoaiMXF3xj0PKPaE9AMNZRaAawGJ6JwBsm9DOjpmRIJzOme+h2zILE9Ph0i+5F5PDLCWyhKCAz
-	NBBiOgv+h14Aw0LHdQGmQIpssuSpfHNqzPK9LI3lIMedKfZ60CjoTk1tQns=
-X-Received: by 2002:a05:6000:1787:b0:38d:badf:9df5 with SMTP id ffacd0b85a97d-39c2975344dmr5198683f8f.17.1743668829067;
-        Thu, 03 Apr 2025 01:27:09 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEkJasUVCkOzYkOOW0hF0pl3+LvSOwHmjYa1Gj63xQYPYwtDCufaqDLic/I99b7VKxwX6pLBg==
-X-Received: by 2002:a05:6000:1787:b0:38d:badf:9df5 with SMTP id ffacd0b85a97d-39c2975344dmr5198641f8f.17.1743668828602;
-        Thu, 03 Apr 2025 01:27:08 -0700 (PDT)
-Received: from sgarzare-redhat (host-87-11-6-59.retail.telecomitalia.it. [87.11.6.59])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec364ce6esm11031055e9.30.2025.04.03.01.27.06
+        d=1e100.net; s=20230601; t=1743668842; x=1744273642;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:mail-followup-to:message-id:subject:cc:to
+         :from:date:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=o+Mp6jmtYK1H17CFfYiwi2sa1wA1pdf2H15LrCJwia8=;
+        b=BVxs38DWo79G/IVt/s0GuT1K0xf9aBPiQnkIyVIaHj72+E1yQTqkU5Pzo73AK+XPOs
+         MujKrZa7IwN1kkEnxc4uo6ngMWBMmnEMB5eVbPYZU6nLXdLVE/ob98VbSl/E/T0WRPsO
+         QZ+Enq+rQK3bJXTQgz+6nnP4rUsAX7mjrPcjp3tb6fp7mxQrx1f4Gb60RoOa6XUBdG2n
+         4JP7mctS4BoP+WUljvw7x23q1Py8kj7olpTMfPJSv/inH5TXTooJXeUCrFszb4TTktPj
+         WH8eZ8Nmln16+5f8Ui/hv4U4CL7wC86F8ycVQgWJaBxvTcWuStTyM1EhTjhB3Y/jXq4G
+         00aQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXkvE21CH1tQfKABtglJujPmH7GTeciqom4YQ6AShlQDaY3Yjd6h4nEbDDU8Wd9mHVvb5PyHeL8XlzHsfQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwTuBLcnE1GQNqZ80+aAtebevvUur15/BqKAwaQ8LaG6FDt79y0
+	ylUWASl0G0aTGOs8Fqnflwd2lOwdaDMUzawCQz2/hLLWExFZG+8Z5I6um41MZgQ=
+X-Gm-Gg: ASbGncuK+12lGTCSpT4aFVbRKHCBqWM8+qV9E9L2jaYTbz7o6VqrFmOi8paUqjH3Oj5
+	46pmZe+zgG+4CdI5r6jAU6EGwo0FlkaPtFLfZxtkB3o+Tns8Ja83pCWkcaVCWDLXaVrpAqF+u7N
+	5NsbG7mXw6dIRXVdosTYDJwtY4/CVT9mcWvR08Zz4T4HzyObw6qJoP47VzU+HPxaLAnXAGNENxT
+	BmxPTWO/UeJPuuRu8o+D3k2NtKLicdWiCPmk3AWgzcp2lqCsgqeFOTTQkdTHOP9u6sub7Q5ZXdN
+	SuqI/PmcpqnZFY1ZywMbblSPR+fpfyVMQLP8dEl6kLOxcxWFw8r79Y1Z
+X-Google-Smtp-Source: AGHT+IGcfR+2lbcGxpYCyqAi52EwdZb7Vb//nyaqQ4Ire5aanYllMG0HRfmeR5SThj3fwVAh+TVljw==
+X-Received: by 2002:a17:907:7f93:b0:ac3:ed4d:c9a1 with SMTP id a640c23a62f3a-ac7b6dd2448mr199507466b.17.1743668842335;
+        Thu, 03 Apr 2025 01:27:22 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:5485:d4b2:c087:b497])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7c01c2170sm55536566b.170.2025.04.03.01.27.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Apr 2025 01:27:07 -0700 (PDT)
-Date: Thu, 3 Apr 2025 10:27:03 +0200
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Alexander Graf <graf@amazon.com>
-Cc: netdev@vger.kernel.org, Stefan Hajnoczi <stefanha@redhat.com>, 
-	linux-kernel@vger.kernel.org, virtualization@lists.linux.dev, kvm@vger.kernel.org, 
-	Asias He <asias@redhat.com>, "Michael S . Tsirkin" <mst@redhat.com>, 
-	Paolo Abeni <pabeni@redhat.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Eric Dumazet <edumazet@google.com>, "David S . Miller" <davem@davemloft.net>, 
-	nh-open-source@amazon.com, Simon Horman <horms@kernel.org>
-Subject: Re: [PATCH v3] vsock/virtio: Remove queued_replies pushback logic
-Message-ID: <qmhbvdned3ozt366ndshqkrc4p3d22wuo5obpziuaj5oqfwvw7@4cxvxilmt4du>
-References: <20250402150646.42855-1-graf@amazon.com>
+        Thu, 03 Apr 2025 01:27:21 -0700 (PDT)
+Date: Thu, 3 Apr 2025 10:27:19 +0200
+From: Simona Vetter <simona.vetter@ffwll.ch>
+To: Maxime Ripard <mripard@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
+	Brian Starkey <Brian.Starkey@arm.com>,
+	John Stultz <jstultz@google.com>,
+	"T.J. Mercier" <tjmercier@google.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Tomasz Figa <tfiga@chromium.org>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Hans Verkuil <hverkuil@xs4all.nl>,
+	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	iommu@lists.linux.dev, linux-media@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org
+Subject: Re: [PATCH RFC 00/12] dma: Enable dmem cgroup tracking
+Message-ID: <Z-5GZ3kJDbhgVBPG@phenom.ffwll.local>
+Mail-Followup-To: Maxime Ripard <mripard@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
+	Brian Starkey <Brian.Starkey@arm.com>,
+	John Stultz <jstultz@google.com>,
+	"T.J. Mercier" <tjmercier@google.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Tomasz Figa <tfiga@chromium.org>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Hans Verkuil <hverkuil@xs4all.nl>,
+	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	iommu@lists.linux.dev, linux-media@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org
+References: <20250310-dmem-cgroups-v1-0-2984c1bc9312@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20250402150646.42855-1-graf@amazon.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250310-dmem-cgroups-v1-0-2984c1bc9312@kernel.org>
+X-Operating-System: Linux phenom 6.12.17-amd64 
 
-On Wed, Apr 02, 2025 at 03:06:46PM +0000, Alexander Graf wrote:
->Ever since the introduction of the virtio vsock driver, it included
->pushback logic that blocks it from taking any new RX packets until the
->TX queue backlog becomes shallower than the virtqueue size.
->
->This logic works fine when you connect a user space application on the
->hypervisor with a virtio-vsock target, because the guest will stop
->receiving data until the host pulled all outstanding data from the VM.
->
->With Nitro Enclaves however, we connect 2 VMs directly via vsock:
->
->  Parent      Enclave
->
->    RX -------- TX
->    TX -------- RX
->
->This means we now have 2 virtio-vsock backends that both have the pushback
->logic. If the parent's TX queue runs full at the same time as the
->Enclave's, both virtio-vsock drivers fall into the pushback path and
->no longer accept RX traffic. However, that RX traffic is TX traffic on
->the other side which blocks that driver from making any forward
->progress. We're now in a deadlock.
->
->To resolve this, let's remove that pushback logic altogether and rely on
->higher levels (like credits) to ensure we do not consume unbounded
->memory.
->
->RX and TX queues share the same work queue. To prevent starvation of TX
->by an RX flood and vice versa now that the pushback logic is gone, let's
->deliberately reschedule RX and TX work after a fixed threshold (256) of
->packets to process.
->
->Fixes: 0ea9e1d3a9e3 ("VSOCK: Introduce virtio_transport.ko")
->Signed-off-by: Alexander Graf <graf@amazon.com>
+On Mon, Mar 10, 2025 at 01:06:06PM +0100, Maxime Ripard wrote:
+> Hi,
+> 
+> Here's preliminary work to enable dmem tracking for heavy users of DMA
+> allocations on behalf of userspace: v4l2, DRM, and dma-buf heaps.
+> 
+> It's not really meant for inclusion at the moment, because I really
+> don't like it that much, and would like to discuss solutions on how to
+> make it nicer.
+> 
+> In particular, the dma dmem region accessors don't feel that great to
+> me. It duplicates the logic to select the proper accessor in
+> dma_alloc_attrs(), and it looks fragile and potentially buggy to me.
+> 
+> One solution I tried is to do the accounting in dma_alloc_attrs()
+> directly, depending on a flag being set, similar to what __GFP_ACCOUNT
+> is doing.
+> 
+> It didn't work because dmem initialises a state pointer when charging an
+> allocation to a region, and expects that state pointer to be passed back
+> when uncharging. Since dma_alloc_attrs() returns a void pointer to the
+> allocated buffer, we need to put that state into a higher-level
+> structure, such as drm_gem_object, or dma_buf.
+> 
+> Since we can't share the region selection logic, we need to get the
+> region through some other mean. Another thing I consider was to return
+> the region as part of the allocated buffer (through struct page or
+> folio), but those are lost across the calls and dma_alloc_attrs() will
+> only get a void pointer. So that's not doable without some heavy
+> rework, if it's a good idea at all.
+> 
+> So yeah, I went for the dumbest possible solution with the accessors,
+> hoping you could suggest a much smarter idea :)
 
-There is a good point from Stefan on v2:
-https://lore.kernel.org/virtualization/20250402161424.GA305204@fedora/
+I've had a private chat with Maxime to get him up to speed on hopefully a
+lot of the past discussions, but probably best I put my notes here too.
+Somewhat unstructured list of challenges with trying to account all the
+memory for gpu/isp/camera/whatever:
 
-So, I'm not sure we can merge this as it is.
+- At LPC in Dublin I think we've pretty much reached the conclusion that
+  normal struct page memory should be just accounted in memcg. Otherwise
+  you just get really nasty double-accounting chaos or issues where you
+  can exhaust reserves.
 
-Thanks,
-Stefano
+- We did not figure out what to do with mixed stuff like CMA, where we
+  probably want to account it both into memcg (because it's struct page)
+  but also separately into dmem (because the CMA region is a limited
+  resource and only using memcg will not help us manage it).
 
->
->---
->
->v1 -> v2:
->
->  - Rework to use fixed threshold
->
->v2 -> v3:
->
->  - Remove superfluous reply variable
->---
-> net/vmw_vsock/virtio_transport.c | 73 +++++++++-----------------------
-> 1 file changed, 19 insertions(+), 54 deletions(-)
->
->diff --git a/net/vmw_vsock/virtio_transport.c b/net/vmw_vsock/virtio_transport.c
->index f0e48e6911fc..6ae30bf8c85c 100644
->--- a/net/vmw_vsock/virtio_transport.c
->+++ b/net/vmw_vsock/virtio_transport.c
->@@ -26,6 +26,12 @@ static struct virtio_vsock __rcu *the_virtio_vsock;
-> static DEFINE_MUTEX(the_virtio_vsock_mutex); /* protects the_virtio_vsock */
-> static struct virtio_transport virtio_transport; /* forward declaration */
->
->+/*
->+ * Max number of RX packets transferred before requeueing so we do
->+ * not starve TX traffic because they share the same work queue.
->+ */
->+#define VSOCK_MAX_PKTS_PER_WORK 256
->+
-> struct virtio_vsock {
-> 	struct virtio_device *vdev;
-> 	struct virtqueue *vqs[VSOCK_VQ_MAX];
->@@ -44,8 +50,6 @@ struct virtio_vsock {
-> 	struct work_struct send_pkt_work;
-> 	struct sk_buff_head send_pkt_queue;
->
->-	atomic_t queued_replies;
->-
-> 	/* The following fields are protected by rx_lock.  vqs[VSOCK_VQ_RX]
-> 	 * must be accessed with rx_lock held.
-> 	 */
->@@ -158,7 +162,7 @@ virtio_transport_send_pkt_work(struct work_struct *work)
-> 		container_of(work, struct virtio_vsock, send_pkt_work);
-> 	struct virtqueue *vq;
-> 	bool added = false;
->-	bool restart_rx = false;
->+	int pkts = 0;
->
-> 	mutex_lock(&vsock->tx_lock);
->
->@@ -169,32 +173,24 @@ virtio_transport_send_pkt_work(struct work_struct *work)
->
-> 	for (;;) {
-> 		struct sk_buff *skb;
->-		bool reply;
-> 		int ret;
->
->+		if (++pkts > VSOCK_MAX_PKTS_PER_WORK) {
->+			/* Allow other works on the same queue to run */
->+			queue_work(virtio_vsock_workqueue, work);
->+			break;
->+		}
->+
-> 		skb = virtio_vsock_skb_dequeue(&vsock->send_pkt_queue);
-> 		if (!skb)
-> 			break;
->
->-		reply = virtio_vsock_skb_reply(skb);
->-
-> 		ret = virtio_transport_send_skb(skb, vq, vsock, GFP_KERNEL);
-> 		if (ret < 0) {
-> 			virtio_vsock_skb_queue_head(&vsock->send_pkt_queue, skb);
-> 			break;
-> 		}
->
->-		if (reply) {
->-			struct virtqueue *rx_vq = vsock->vqs[VSOCK_VQ_RX];
->-			int val;
->-
->-			val = atomic_dec_return(&vsock->queued_replies);
->-
->-			/* Do we now have resources to resume rx processing? */
->-			if (val + 1 == virtqueue_get_vring_size(rx_vq))
->-				restart_rx = true;
->-		}
->-
-> 		added = true;
-> 	}
->
->@@ -203,9 +199,6 @@ virtio_transport_send_pkt_work(struct work_struct *work)
->
-> out:
-> 	mutex_unlock(&vsock->tx_lock);
->-
->-	if (restart_rx)
->-		queue_work(virtio_vsock_workqueue, &vsock->rx_work);
-> }
->
-> /* Caller need to hold RCU for vsock.
->@@ -261,9 +254,6 @@ virtio_transport_send_pkt(struct sk_buff *skb)
-> 	 */
-> 	if (!skb_queue_empty_lockless(&vsock->send_pkt_queue) ||
-> 	    virtio_transport_send_skb_fast_path(vsock, skb)) {
->-		if (virtio_vsock_skb_reply(skb))
->-			atomic_inc(&vsock->queued_replies);
->-
-> 		virtio_vsock_skb_queue_tail(&vsock->send_pkt_queue, skb);
-> 		queue_work(virtio_vsock_workqueue, &vsock->send_pkt_work);
-> 	}
->@@ -277,7 +267,7 @@ static int
-> virtio_transport_cancel_pkt(struct vsock_sock *vsk)
-> {
-> 	struct virtio_vsock *vsock;
->-	int cnt = 0, ret;
->+	int ret;
->
-> 	rcu_read_lock();
-> 	vsock = rcu_dereference(the_virtio_vsock);
->@@ -286,17 +276,7 @@ virtio_transport_cancel_pkt(struct vsock_sock *vsk)
-> 		goto out_rcu;
-> 	}
->
->-	cnt = virtio_transport_purge_skbs(vsk, &vsock->send_pkt_queue);
->-
->-	if (cnt) {
->-		struct virtqueue *rx_vq = vsock->vqs[VSOCK_VQ_RX];
->-		int new_cnt;
->-
->-		new_cnt = atomic_sub_return(cnt, &vsock->queued_replies);
->-		if (new_cnt + cnt >= virtqueue_get_vring_size(rx_vq) &&
->-		    new_cnt < virtqueue_get_vring_size(rx_vq))
->-			queue_work(virtio_vsock_workqueue, &vsock->rx_work);
->-	}
->+	virtio_transport_purge_skbs(vsk, &vsock->send_pkt_queue);
->
-> 	ret = 0;
->
->@@ -367,18 +347,6 @@ static void virtio_transport_tx_work(struct work_struct *work)
-> 		queue_work(virtio_vsock_workqueue, &vsock->send_pkt_work);
-> }
->
->-/* Is there space left for replies to rx packets? */
->-static bool virtio_transport_more_replies(struct virtio_vsock *vsock)
->-{
->-	struct virtqueue *vq = vsock->vqs[VSOCK_VQ_RX];
->-	int val;
->-
->-	smp_rmb(); /* paired with atomic_inc() and atomic_dec_return() */
->-	val = atomic_read(&vsock->queued_replies);
->-
->-	return val < virtqueue_get_vring_size(vq);
->-}
->-
-> /* event_lock must be held */
-> static int virtio_vsock_event_fill_one(struct virtio_vsock *vsock,
-> 				       struct virtio_vsock_event *event)
->@@ -613,6 +581,7 @@ static void virtio_transport_rx_work(struct work_struct *work)
-> 	struct virtio_vsock *vsock =
-> 		container_of(work, struct virtio_vsock, rx_work);
-> 	struct virtqueue *vq;
->+	int pkts = 0;
->
-> 	vq = vsock->vqs[VSOCK_VQ_RX];
->
->@@ -627,11 +596,9 @@ static void virtio_transport_rx_work(struct work_struct *work)
-> 			struct sk_buff *skb;
-> 			unsigned int len;
->
->-			if (!virtio_transport_more_replies(vsock)) {
->-				/* Stop rx until the device processes already
->-				 * pending replies.  Leave rx virtqueue
->-				 * callbacks disabled.
->-				 */
->+			if (++pkts > VSOCK_MAX_PKTS_PER_WORK) {
->+				/* Allow other works on the same queue to run */
->+				queue_work(virtio_vsock_workqueue, work);
-> 				goto out;
-> 			}
->
->@@ -675,8 +642,6 @@ static int virtio_vsock_vqs_init(struct virtio_vsock *vsock)
-> 	vsock->rx_buf_max_nr = 0;
-> 	mutex_unlock(&vsock->rx_lock);
->
->-	atomic_set(&vsock->queued_replies, 0);
->-
-> 	ret = virtio_find_vqs(vdev, VSOCK_VQ_MAX, vsock->vqs, vqs_info, NULL);
-> 	if (ret < 0)
-> 		return ret;
->-- 
->2.47.1
->
->
+- There's the entire chaos of carve-out vs CMA and how userspace can
+  figure out how to set reasonable limits automatically. Maxime brought
+  the issue that limits need to be adjusted if carve-out/CMA/shmem aren't
+  accounted the same, which I think is a valid concern. But due to the
+  above conclusion around memcg accounting I think that's unavoidable, so
+  we need some means for userspace to autoconfigure reasonable limits.
+  Then that autoconfig can be done on each boot, and kernel (or dt or
+  whatever) changes between these three allocators don't matter anymore.
 
+- Autoconfiguration challenges also exist for split display/render SoC. It
+  gets even more fun if you also throw in camera and media codecs, and
+  even more fun if you have multiple CMA regions.
+
+- Discrete gpu also has a very fun autoconfiguration issue because you
+  have dmem limits for vram, and memcg limits for system memory. Vram
+  might be swapped out to system memory, so naively you might want to
+  assume that you need higher memcg limits than dmem limits. But there's
+  systems with more dmem and smem (because the cpu with its memory is
+  essentially just the co-processor that orchestrates the real compute
+  machine, which is all gpus).
+
+- We need a charge transfer, least for Android since there all memory is
+  allocated through binder. TJ Mercier did some patches:
+
+  https://lore.kernel.org/dri-devel/20230123191728.2928839-3-tjmercier@google.com/
+
+  Ofc with dmem this would need to work for both dmem and memcg charges,
+  since with CMA and discrete gpu we'll have bo that are tracked in both.
+
+- Hard limits for shmem/ttm drivers need a memcg-aware shrinker. TTM
+  doesn't even have a shrinker yet, but with xe we now have a
+  helper-library approach to enabling shrinking for TTM drivers.
+  memcg-aware shrinking will be a large step up in complexity on top (and
+  probably a good reason to switch over to the common shrinker lru instead
+  of hand-rolling).
+
+  See the various attempts at ttm shrinkers by Christian König and Thomas
+  Hellstrom over the past years on dri-devel.
+
+  This also means that most likely cgroup limit enforcement for ttm based
+  drivers will be per-driver or at least very uneven.
+
+- Hard limits for dmem vram means ttm eviction needs to be able to account
+  the evicted bo against the right memcg. Because this can happen in
+  random other threads (cs ioctl of another process, kernel threads)
+  accounting this correctly is going to be "fun". Plus I haven't thought
+  through interactions with memcg-aware shrinkers, which might cause some
+  really fundamental issues.
+
+- We also ideally need pin account, but I don't think we have any
+  consensus on how to do that for memcg memory. Thus far it's all
+  functionality-specific limits (e.g. mlock, rdma has its own for
+  long-term pinned memory), not sure it makes sense to push for a unified
+  tracking in memcg here?
+
+  For dmem I think it's pretty easy, but there the question is how to
+  differentiate between dmem that's always pinned (cma, I don't think
+  anyone bothered with a shrinker for cma memory, vc4 maybe?) and dmem
+  that generally has a shrinker and really wants a separate pin limit
+  (vram/ttm drivers).
+
+- Unfortunately on top of the sometimes very high individual complexity
+  these issues also all interact. Which means that we won't be able to
+  roll this out in one go, and we need to cope with very uneven
+  enforcement. I think trying to allow userspace to cope with changing
+  cgroup support through autoconfiguration is the most feasible way out of
+  this challenge.
+
+tldr; cgroup for device memory is a really complex mess
+
+Cheers, Sima
+
+> Thanks,
+> Maxime
+> 
+> Signed-off-by: Maxime Ripard <mripard@kernel.org>
+> ---
+> Maxime Ripard (12):
+>       cma: Register dmem region for each cma region
+>       cma: Provide accessor to cma dmem region
+>       dma: coherent: Register dmem region for each coherent region
+>       dma: coherent: Provide accessor to dmem region
+>       dma: contiguous: Provide accessor to dmem region
+>       dma: direct: Provide accessor to dmem region
+>       dma: Create default dmem region for DMA allocations
+>       dma: Provide accessor to dmem region
+>       dma-buf: Clear cgroup accounting on release
+>       dma-buf: cma: Account for allocations in dmem cgroup
+>       drm/gem: Add cgroup memory accounting
+>       media: videobuf2: Track buffer allocations through the dmem cgroup
+> 
+>  drivers/dma-buf/dma-buf.c                          |  7 ++++
+>  drivers/dma-buf/heaps/cma_heap.c                   | 18 ++++++++--
+>  drivers/gpu/drm/drm_gem.c                          |  5 +++
+>  drivers/gpu/drm/drm_gem_dma_helper.c               |  6 ++++
+>  .../media/common/videobuf2/videobuf2-dma-contig.c  | 19 +++++++++++
+>  include/drm/drm_device.h                           |  1 +
+>  include/drm/drm_gem.h                              |  2 ++
+>  include/linux/cma.h                                |  9 +++++
+>  include/linux/dma-buf.h                            |  5 +++
+>  include/linux/dma-direct.h                         |  2 ++
+>  include/linux/dma-map-ops.h                        | 32 ++++++++++++++++++
+>  include/linux/dma-mapping.h                        | 11 ++++++
+>  kernel/dma/coherent.c                              | 26 +++++++++++++++
+>  kernel/dma/direct.c                                |  8 +++++
+>  kernel/dma/mapping.c                               | 39 ++++++++++++++++++++++
+>  mm/cma.c                                           | 21 +++++++++++-
+>  mm/cma.h                                           |  3 ++
+>  17 files changed, 211 insertions(+), 3 deletions(-)
+> ---
+> base-commit: 55a2aa61ba59c138bd956afe0376ec412a7004cf
+> change-id: 20250307-dmem-cgroups-73febced0989
+> 
+> Best regards,
+> -- 
+> Maxime Ripard <mripard@kernel.org>
+> 
+
+-- 
+Simona Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
