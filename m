@@ -1,71 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F5F533DB;
-	Thu,  3 Apr 2025 18:45:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 181F0C8E0;
+	Thu,  3 Apr 2025 18:47:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743705927; cv=none; b=rsrNVpCzXO80glrW8RLC46rJMiaTTfqDRyPivk0Gz/lxq7OjOja2+eQBv+pHesYiCMkJnfFQSYU1eWv6JMVyn3VvJQi1PRTaFmajwrhKoajA/IFQsqxXOEFjUD8nF77bx9mIL4Yq4Rinrd1a94AJsXpkCewNWvbfdquONHdicZY=
+	t=1743706032; cv=none; b=A2IN5/RzJ8LfaBlm3MCzjArVeVcbdBZHbcbLMTZ/RMHhQmImgxYbLBVYwWiS4RQ2tMkIqSbFczagIvO3vudRXblLVubrr6OoiLEA4jjGasYvnVMQBzG1yhYVZICiim0OMv1454RDgbgSIE9ocXfnVIRoDsWOsm9wTJDyl59BRjM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743705927; c=relaxed/simple;
-	bh=9dNL4pCAgs9jbTVHrEb3W0UBUnJOcvasmy+RkmrFufw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=htIdgYa0l8qphVbaTMYd3p7qpWZrzJCT3qfqtrS7pCqnQAzPr+hoRk01VSpQzXTKXqn8SZ4HMJ4G5l/qK4EdqB7Xlqa4dLqdRwhtgo3tojFV588+ECCYn45g10kGzunuLxGV2Y4UOuhsU1A8PbTS1yjknUgenMQzWMnAqTA/elA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EoVO9pIi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743706032; c=relaxed/simple;
+	bh=S8lX3+2jjlV9EDSpRH8ptbR8hdsbyeTq5/HGywWkDqE=;
+	h=Message-ID:Date:MIME-Version:To:CC:References:Subject:From:
+	 In-Reply-To:Content-Type; b=pEpnOIlOBhIw+tntO0sgx7N4/Tz9C3DYam5g7nBzIeK3QC3kie1VF2+cPJXyh1IqfuNWosmyKFIPGulSz8bY3u1NOdz2Pv7HJOJfj2D77feLjQb0z9Ptj6SiN8m7HFox+2KRTU8FLLfqxpurUSp8oshmdXYIgYsHNY0c7Umx0O0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=h238Tgn9; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EoVO9pIi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 127B0C4CEE3;
-	Thu,  3 Apr 2025 18:45:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743705926;
-	bh=9dNL4pCAgs9jbTVHrEb3W0UBUnJOcvasmy+RkmrFufw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EoVO9pIiR9TUooL4uFUE02EkUiUdq607X5Aa6FNRZCnS145l/SrDPOU/U5QSsCvQB
-	 xyzb8MyRxlF27aBcsgN8Htgu+hbNIMBW5blkh7z8IRaH051cdOa/SHF5xGzJ7xdYOv
-	 v2bTGFJShBsgODHXvBlW66eB4QoNd7iMIDNVJ8/o1SBRnw0Y+D6Q0YH63SG1uzfDHB
-	 6LMUY0t4GNsbv2d94BGLCCLFZHAINBeaJnJBEDtzWawp1RXOxNbRDVbMXtk3dZ7JmC
-	 UUaX7fsvNc4F5+2UtALuZVp9+J6XKpzZlUY42Wdx2NMuZ5i0bLhceY9lUKUz/o3bIZ
-	 bn4DzaSh1x8Rg==
-Date: Thu, 3 Apr 2025 21:45:21 +0300
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: Jonathan McDowell <noodles@earth.li>
-Cc: Michal Suchanek <msuchanek@suse.de>, Peter Huewe <peterhuewe@gmx.de>,
-	Jason Gunthorpe <jgg@ziepe.ca>, linux-integrity@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] tpm: tis: Increase the default for timeouts B and C
-Message-ID: <Z-7XQYP7_tXYR2Ik@kernel.org>
-References: <20250402172134.7751-1-msuchanek@suse.de>
- <Z-13xOebA3LvQQ-8@earth.li>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="h238Tgn9"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 533IVSPY001346;
+	Thu, 3 Apr 2025 18:47:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	x1+5DE93SgzZCZ3haePFVy5C9q7r4YPsE5IK6TRqgwI=; b=h238Tgn9QeivoGYN
+	EL8S19fi059mR9qMzXxXMh9998ZXWAZBTKUpTlzM36DuoaWpaEAStXZwTmY1BRn7
+	Gr039q3TcbusntFbU25WUtPvRhqjRcsI4v6vgXI/J+RL7mQqX7e/FcYn2rRLcWf5
+	W8cyRjZx1GOlZVKptqZxmOBtDYmo8fKPmrUy9lKw0cNzWVpn42igCSwqFO04tNDA
+	mj26IIPHXlUrSvXkZDHEVPu7MD5/VJiacNltMjuBL2gndgVtTPyZ763Jy9WTyg6n
+	NLcp3/DaWgoXiFE9gIuR6Nk2CMwcgBA/c62KcAc8ek40Uzo7tLN1A48IyGJP7l7s
+	n0WHsg==
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45se4g2rjx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 03 Apr 2025 18:47:07 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 533Il7aC010710
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 3 Apr 2025 18:47:07 GMT
+Received: from [10.216.27.125] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 3 Apr 2025
+ 11:47:03 -0700
+Message-ID: <88c96fb0-0546-4642-a968-900ac3233909@quicinc.com>
+Date: Fri, 4 Apr 2025 00:16:37 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z-13xOebA3LvQQ-8@earth.li>
+User-Agent: Mozilla Thunderbird
+To: <andersson@kernel.org>
+CC: <conor+dt@kernel.org>, <devicetree@vger.kernel.org>,
+        <konrad.dybcio@oss.qualcomm.com>, <konradybcio@kernel.org>,
+        <krzk+dt@kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <lumag@kernel.org>, <robh@kernel.org>
+References: <79504e6d-5ccb-4909-a88e-307280c5d359@quicinc.com>
+Subject: Re: [PATCH] arm64: dts: qcom: qcs8300: add the pcie smmu node
+Content-Language: en-US
+From: Pratyush Brahma <quic_pbrahma@quicinc.com>
+In-Reply-To: <79504e6d-5ccb-4909-a88e-307280c5d359@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: H9QvqqFbBQJXz2wDq-e6AgrmwFPRvO_z
+X-Authority-Analysis: v=2.4 cv=a8Iw9VSF c=1 sm=1 tr=0 ts=67eed7ab cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=iUS7yFBv8MyuA1rBbmIA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: H9QvqqFbBQJXz2wDq-e6AgrmwFPRvO_z
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-03_08,2025-04-03_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 impostorscore=0
+ adultscore=0 phishscore=0 priorityscore=1501 mlxscore=0 lowpriorityscore=0
+ suspectscore=0 bulkscore=0 mlxlogscore=577 malwarescore=0 spamscore=0
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504030097
 
-On Wed, Apr 02, 2025 at 06:45:40PM +0100, Jonathan McDowell wrote:
-> On Wed, Apr 02, 2025 at 07:21:30PM +0200, Michal Suchanek wrote:
-> > With some Infineon chips the timeouts in tpm_tis_send_data (both B and
-> > C) can reach up to about 2250 ms.
-> > 
-> > Extend the timeout duration to accommodate this.
-> 
-> The problem here is the bump of timeout_c is going to interact poorly with
-> the Infineon errata workaround, as now we'll wait 4s instead of 200ms to
-> detect the stuck status change.
-> 
-> (Also shouldn't timeout_c already end up as 750ms, as it's
-> max(TIS_SHORT_TIMEOUT, TPM2_TIMEOUT_C), and TIS_SHORT_TIMEOUT is 750 vs 200
-> for TPM2_TIMEOUT_C? That doesn't seem to be borne out by your logs, nor my
-> results.)
+Hi Bjorn
 
-Just noticed that the commit did not end up having fixes etc. tags:
+Can this be considered for merge given that no concerns have been raised
+in the past few weeks?
 
-https://web.git.kernel.org/pub/scm/linux/kernel/git/jarkko/linux-tpmdd.git/commit/?id=de9e33df7762abbfc2a1568291f2c3a3154c6a9d
+-- 
+Thanks and Regards
+Pratyush Brahma
 
-Should we forward to stable?
-
-BR, Jarkko
