@@ -1,33 +1,25 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84687241CBA;
-	Thu,  3 Apr 2025 08:15:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65E82A933;
+	Thu,  3 Apr 2025 08:15:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743668111; cv=none; b=s/d7mpd6j9VX70FaZXjhxuqgnRGMVX6xTMofDErBTcQdV+IPH1uw1o87fv+ui101a/EXmookllNyyuevxfQ1apKTMZdzlOsJjgvUdyyr2vBMSbJdDJH8jDoWh39lktUJwHZvpYIQSqME86K5LZhwQ16ttsSlQpEnpFrQH4G7w1g=
+	t=1743668155; cv=none; b=YJhkT8u2sNYmHVmGJowu5PK8UoDaZUeP9l02vBAi40BHUEdAEbGrb+agz6K8dA/IPiC+BBAco+nG1JwBT9P+O0uukTm7R1xcdkdh6BTZJBX+ZeItGs6/wo9FbV/br9BuFArZFTyeygs8AHRNjRErXZtQuYC65bPYt9o3jkCq1Ik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743668111; c=relaxed/simple;
-	bh=ICN54ZvU91J/SfI9DgZT4PwZfQ2vgRqWzhU29u8932M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qxgHmJgfn7Hx2DZGb/GKOrkSEhhgHqWsQmq76DNBk4NdMq27a8JzPIcU2nH/9jsJ/1Q4LmOMmrBa8J/zZbfVCLNFxSjFm8I+FNgLmfBLH4arEWBX36/2uOd/0AshWdwITPgW337AnQ3J4ZNlhq4YrZfOPq4NnEbWiD3An09CdUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=uSuzEmO7; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="uSuzEmO7"
-Received: from [192.168.88.20] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 2647F105D;
-	Thu,  3 Apr 2025 10:13:14 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1743667994;
-	bh=ICN54ZvU91J/SfI9DgZT4PwZfQ2vgRqWzhU29u8932M=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=uSuzEmO7E/+sntwX5cwD2gORtgdy66VZcNtMOfX9LWE66vxOk4aAzVw5wGtvQg4Tv
-	 EofNXBRVR/Xyx2vNv0bz4S3AWjQYvX1i4dFuS4u4LuGHlwU9EXJHc05Hc9Uy7xwmxv
-	 aGnjj9qIKylkHDXXrup/JOPbEZRqayDVz2pITxQY=
-Message-ID: <5ebccf6a-3860-4643-9f92-735163552b7e@ideasonboard.com>
-Date: Thu, 3 Apr 2025 11:15:04 +0300
+	s=arc-20240116; t=1743668155; c=relaxed/simple;
+	bh=Rpq0m0qjya/Q/xgTFyLKb0oUW2bXmD5ISLwSd/nEL0Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=mzQhlELUZJThDI/zHBxGGqDe7EB/JzxZnoQ0oac6kQI1LNyQwFE1j2ZNU+lKGUAS21YCrtlu1n4WahgLaAx5SZ6bmpYvsMiJPEHK1yuLoIOGFpJ9JOvUzmQYwp7SU9Zh2pHX89RVOVDq4FbiQ2qd8yXq/8m2m9nbNu5WGvLbLq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 70571106F;
+	Thu,  3 Apr 2025 01:15:55 -0700 (PDT)
+Received: from [10.57.88.195] (unknown [10.57.88.195])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 434FD3F59E;
+	Thu,  3 Apr 2025 01:15:48 -0700 (PDT)
+Message-ID: <e6de28b9-4827-427f-96a3-c0732371d16c@arm.com>
+Date: Thu, 3 Apr 2025 09:15:46 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,123 +27,252 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] media: rcar-vin: Fix RAW10
-To: =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
- Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org,
- linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
- Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-References: <20250324-rcar-fix-raw-v1-0-ae56c1c7a2f6@ideasonboard.com>
- <20250324-rcar-fix-raw-v1-3-ae56c1c7a2f6@ideasonboard.com>
- <20250331211122.GA1240431@ragnatech.se>
-Content-Language: en-US
-From: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
-In-Reply-To: <20250331211122.GA1240431@ragnatech.se>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Subject: Re: [PATCH v5 1/3] arm64: Add BBM Level 2 cpu feature
+Content-Language: en-GB
+To: =?UTF-8?Q?Miko=C5=82aj_Lenczewski?= <miko.lenczewski@arm.com>,
+ suzuki.poulose@arm.com, yang@os.amperecomputing.com, corbet@lwn.net,
+ catalin.marinas@arm.com, will@kernel.org, jean-philippe@linaro.org,
+ robin.murphy@arm.com, joro@8bytes.org, akpm@linux-foundation.org,
+ ardb@kernel.org, mark.rutland@arm.com, joey.gouly@arm.com, maz@kernel.org,
+ james.morse@arm.com, broonie@kernel.org, oliver.upton@linux.dev,
+ baohua@kernel.org, david@redhat.com, ioworker0@gmail.com, jgg@ziepe.ca,
+ nicolinc@nvidia.com, mshavit@google.com, jsnitsel@redhat.com,
+ smostafa@google.com, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ iommu@lists.linux.dev
+References: <20250325093625.55184-1-miko.lenczewski@arm.com>
+ <20250325093625.55184-2-miko.lenczewski@arm.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <20250325093625.55184-2-miko.lenczewski@arm.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi,
-
-On 01/04/2025 00:11, Niklas Söderlund wrote:
-> Hi Tomi,
+On 25/03/2025 05:36, Mikołaj Lenczewski wrote:
+> The Break-Before-Make cpu feature supports multiple levels (levels 0-2),
+> and this commit adds a dedicated BBML2 cpufeature to test against
+> support for, as well as a kernel commandline parameter to optionally
+> disable BBML2 altogether.
 > 
-> Thanks for your work.
+> This is a system feature as we might have a big.LITTLE architecture
+> where some cores support BBML2 and some don't, but we want all cores to
+> be available and BBM to default to level 0 (as opposed to having cores
+> without BBML2 not coming online).
 > 
-> On 2025-03-24 13:48:54 +0200, Tomi Valkeinen wrote:
->> Fix the following to get RAW10 formats working:
->>
->> In rvin_formats, the bpp is set to 4 for RAW10. As VIN unpacks RAW10 to
->> 16-bit containers, the bpp should be 2.
->>
->> Don't set VNDMR_YC_THR to the VNDMR register. The YC_THR is "YC Data
->> Through Mode", used for YUV formats and should not be set for RAW10.
->>
->> Fix the check related to the RGB666 format and CSI-2 mode. The
->> VNMC_INF_RGB666 define is the same as used for RAW10 on Gen4, and RAW10
->> is allowed on CSI-2 (whereas RGB666 is not allowed on Gen3 on CSI-2).
->> This feels a bit hacky, though, and the formats should really have been
->> verified already earlier.
+> To support BBML2 in as wide a range of contexts as we can, we want not
+> only the architectural guarantees that BBML2 makes, but additionally
+> want BBML2 to not create TLB conflict aborts. Not causing aborts avoids
+> us having to prove that no recursive faults can be induced in any path
+> that uses BBML2, allowing its use for arbitrary kernel mappings.
+> Support detection of such CPUs.
 > 
-> I agree, it feels hacky. I would rather just remove the while switch
-> then try to "fix" it by extending it more. When testing this series I
-> needed a similar fix for VNMC_INF_RAW8 check below to get it to work on
-> Gen4.
+> Signed-off-by: Mikołaj Lenczewski <miko.lenczewski@arm.com>
 
-Why is that? What is VNMC_INF_RAW8 overlapping with?
+LGTM!
 
-  Tomi
+Reviewed-by: Ryan Roberts <ryan.roberts@arm.com>
 
->>
->> Fixes: 1b7e7240eaf3 ("media: rcar-vin: Add support for RAW10")
->> Signed-off-by: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
->> ---
->>   drivers/media/platform/renesas/rcar-vin/rcar-dma.c  | 9 +++++++--
->>   drivers/media/platform/renesas/rcar-vin/rcar-v4l2.c | 8 ++++----
->>   2 files changed, 11 insertions(+), 6 deletions(-)
->>
->> diff --git a/drivers/media/platform/renesas/rcar-vin/rcar-dma.c b/drivers/media/platform/renesas/rcar-vin/rcar-dma.c
->> index 53046614f7a1..f8394be8a922 100644
->> --- a/drivers/media/platform/renesas/rcar-vin/rcar-dma.c
->> +++ b/drivers/media/platform/renesas/rcar-vin/rcar-dma.c
->> @@ -811,12 +811,17 @@ static int rvin_setup(struct rvin_dev *vin)
->>   		case VNMC_INF_YUV8_BT656:
->>   		case VNMC_INF_YUV10_BT656:
->>   		case VNMC_INF_YUV16:
->> -		case VNMC_INF_RGB666:
->>   			if (vin->is_csi) {
->>   				vin_err(vin, "Invalid setting in MIPI CSI2\n");
->>   				return -EINVAL;
->>   			}
->>   			break;
->> +		case VNMC_INF_RGB666:
->> +			if (vin->info->model == RCAR_GEN3 && vin->is_csi) {
->> +				vin_err(vin, "Invalid setting in MIPI CSI2\n");
->> +				return -EINVAL;
->> +			}
->> +			break;
->>   		case VNMC_INF_RAW8:
->>   			if (!vin->is_csi) {
->>   				vin_err(vin, "Invalid setting in Digital Pins\n");
->> @@ -913,7 +918,7 @@ static int rvin_setup(struct rvin_dev *vin)
->>   	case V4L2_PIX_FMT_SGBRG10:
->>   	case V4L2_PIX_FMT_SGRBG10:
->>   	case V4L2_PIX_FMT_SRGGB10:
->> -		dmr = VNDMR_RMODE_RAW10 | VNDMR_YC_THR;
->> +		dmr = VNDMR_RMODE_RAW10;
->>   		break;
->>   	default:
->>   		vin_err(vin, "Invalid pixelformat (0x%x)\n",
->> diff --git a/drivers/media/platform/renesas/rcar-vin/rcar-v4l2.c b/drivers/media/platform/renesas/rcar-vin/rcar-v4l2.c
->> index 756fdfdbce61..65da8d513b52 100644
->> --- a/drivers/media/platform/renesas/rcar-vin/rcar-v4l2.c
->> +++ b/drivers/media/platform/renesas/rcar-vin/rcar-v4l2.c
->> @@ -88,19 +88,19 @@ static const struct rvin_video_format rvin_formats[] = {
->>   	},
->>   	{
->>   		.fourcc			= V4L2_PIX_FMT_SBGGR10,
->> -		.bpp			= 4,
->> +		.bpp			= 2,
->>   	},
->>   	{
->>   		.fourcc			= V4L2_PIX_FMT_SGBRG10,
->> -		.bpp			= 4,
->> +		.bpp			= 2,
->>   	},
->>   	{
->>   		.fourcc			= V4L2_PIX_FMT_SGRBG10,
->> -		.bpp			= 4,
->> +		.bpp			= 2,
->>   	},
->>   	{
->>   		.fourcc			= V4L2_PIX_FMT_SRGGB10,
->> -		.bpp			= 4,
->> +		.bpp			= 2,
->>   	},
->>   };
->>   
->>
->> -- 
->> 2.43.0
->>
+> ---
+>  .../admin-guide/kernel-parameters.txt         |  3 +
+>  arch/arm64/Kconfig                            | 19 +++++
+>  arch/arm64/include/asm/cpucaps.h              |  2 +
+>  arch/arm64/include/asm/cpufeature.h           |  5 ++
+>  arch/arm64/kernel/cpufeature.c                | 71 +++++++++++++++++++
+>  arch/arm64/kernel/pi/idreg-override.c         |  2 +
+>  arch/arm64/tools/cpucaps                      |  1 +
+>  7 files changed, 103 insertions(+)
 > 
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index fb8752b42ec8..3e4cc917a07e 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -453,6 +453,9 @@
+>  	arm64.no32bit_el0 [ARM64] Unconditionally disable the execution of
+>  			32 bit applications.
+>  
+> +	arm64.nobbml2	[ARM64] Unconditionally disable Break-Before-Make Level
+> +			2 support
+> +
+>  	arm64.nobti	[ARM64] Unconditionally disable Branch Target
+>  			Identification support
+>  
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index 940343beb3d4..db63e0d83492 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -2057,6 +2057,25 @@ config ARM64_TLB_RANGE
+>  	  The feature introduces new assembly instructions, and they were
+>  	  support when binutils >= 2.30.
+>  
+> +config ARM64_BBML2_NOABORT
+> +	bool "Enable support for Break-Before-Make Level 2 detection and usage"
+> +	default y
+> +	help
+> +	  FEAT_BBM provides detection of support levels for break-before-make
+> +	  sequences. If BBM level 2 is supported, some TLB maintenance requirements
+> +	  can be relaxed to improve performance. We additonally require the
+> +	  property that the implementation cannot ever raise TLB Conflict Aborts.
+> +	  Selecting N causes the kernel to fallback to BBM level 0 behaviour
+> +	  even if the system supports BBM level 2.
+> +
+> +	  To enable detection of BBML2 support, and to make use of it, say Y.
+> +
+> +	  Detection of and support for BBM level 2 can optionally be overridden
+> +	  at runtime via the use of the arm64.nobbml2 kernel commandline
+> +	  parameter. If your system claims support for BBML2, but is unstable
+> +	  with this option enabled, either say N or make use of the commandline
+> +	  parameter override to force BBML0.
+> +
+>  endmenu # "ARMv8.4 architectural features"
+>  
+>  menu "ARMv8.5 architectural features"
+> diff --git a/arch/arm64/include/asm/cpucaps.h b/arch/arm64/include/asm/cpucaps.h
+> index 0b5ca6e0eb09..2d6db33d4e45 100644
+> --- a/arch/arm64/include/asm/cpucaps.h
+> +++ b/arch/arm64/include/asm/cpucaps.h
+> @@ -23,6 +23,8 @@ cpucap_is_possible(const unsigned int cap)
+>  		return IS_ENABLED(CONFIG_ARM64_PAN);
+>  	case ARM64_HAS_EPAN:
+>  		return IS_ENABLED(CONFIG_ARM64_EPAN);
+> +	case ARM64_HAS_BBML2_NOABORT:
+> +		return IS_ENABLED(CONFIG_ARM64_BBML2_NOABORT);
+>  	case ARM64_SVE:
+>  		return IS_ENABLED(CONFIG_ARM64_SVE);
+>  	case ARM64_SME:
+> diff --git a/arch/arm64/include/asm/cpufeature.h b/arch/arm64/include/asm/cpufeature.h
+> index e0e4478f5fb5..108ef3fbbc00 100644
+> --- a/arch/arm64/include/asm/cpufeature.h
+> +++ b/arch/arm64/include/asm/cpufeature.h
+> @@ -866,6 +866,11 @@ static __always_inline bool system_supports_mpam_hcr(void)
+>  	return alternative_has_cap_unlikely(ARM64_MPAM_HCR);
+>  }
+>  
+> +static inline bool system_supports_bbml2_noabort(void)
+> +{
+> +	return alternative_has_cap_unlikely(ARM64_HAS_BBML2_NOABORT);
+> +}
+> +
+>  int do_emulate_mrs(struct pt_regs *regs, u32 sys_reg, u32 rt);
+>  bool try_emulate_mrs(struct pt_regs *regs, u32 isn);
+>  
+> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+> index d561cf3b8ac7..832b86fca542 100644
+> --- a/arch/arm64/kernel/cpufeature.c
+> +++ b/arch/arm64/kernel/cpufeature.c
+> @@ -2176,6 +2176,70 @@ static bool hvhe_possible(const struct arm64_cpu_capabilities *entry,
+>  	return arm64_test_sw_feature_override(ARM64_SW_FEATURE_OVERRIDE_HVHE);
+>  }
+>  
+> +static bool cpu_has_bbml2_noabort(unsigned int cpu_midr)
+> +{
+> +	/*
+> +	 * We want to allow usage of bbml2 in as wide a range of kernel contexts
+> +	 * as possible. This list is therefore an allow-list of known-good
+> +	 * implementations that both support bbml2 and additionally, fulfill the
+> +	 * extra constraint of never generating TLB conflict aborts when using
+> +	 * the relaxed bbml2 semantics (such aborts make use of bbml2 in certain
+> +	 * kernel contexts difficult to prove safe against recursive aborts).
+> +	 *
+> +	 * Note that implementations can only be considered "known-good" if their
+> +	 * implementors attest to the fact that the implementation never raises
+> +	 * TLBI conflict aborts for bbml2 mapping granularity changes.
+> +	 */
+> +	static const struct midr_range supports_bbml2_noabort_list[] = {
+> +		MIDR_REV_RANGE(MIDR_CORTEX_X4, 0, 3, 0xf),
+> +		MIDR_REV_RANGE(MIDR_NEOVERSE_V3, 0, 2, 0xf),
+> +		{}
+> +	};
+> +
+> +	return is_midr_in_range_list(cpu_midr, supports_bbml2_noabort_list);
+> +}
+> +
+> +static inline unsigned int cpu_read_midr(int cpu)
+> +{
+> +	WARN_ON_ONCE(!cpu_online(cpu));
+> +
+> +	return per_cpu(cpu_data, cpu).reg_midr;
+> +}
+> +
+> +static bool has_bbml2_noabort(const struct arm64_cpu_capabilities *caps, int scope)
+> +{
+> +	if (!IS_ENABLED(CONFIG_ARM64_BBML2_NOABORT))
+> +		return false;
+> +
+> +	if (scope & SCOPE_SYSTEM) {
+> +		int cpu;
+> +
+> +		/*
+> +		 * We are a boot CPU, and must verify that all enumerated boot
+> +		 * CPUs have MIDR values within our allowlist. Otherwise, we do
+> +		 * not allow the BBML2 feature to avoid potential faults when
+> +		 * the insufficient CPUs access memory regions using BBML2
+> +		 * semantics.
+> +		 */
+> +		for_each_online_cpu(cpu) {
+> +			if (!cpu_has_bbml2_noabort(cpu_read_midr(cpu)))
+> +				return false;
+> +		}
+> +	} else if (scope & SCOPE_LOCAL_CPU) {
+> +		/*
+> +		 * We are a hot-plugged CPU, so must only check our MIDR.
+> +		 * If we have the correct MIDR, but the kernel booted on an
+> +		 * insufficient CPU, we will not use BBML2 (this is safe). If
+> +		 * we have an incorrect MIDR, but the kernel booted on a
+> +		 * sufficient CPU, we will not bring up this CPU.
+> +		 */
+> +		if (!cpu_has_bbml2_noabort(read_cpuid_id()))
+> +			return false;
+> +	}
+> +
+> +	return has_cpuid_feature(caps, scope);
+> +}
+> +
+>  #ifdef CONFIG_ARM64_PAN
+>  static void cpu_enable_pan(const struct arm64_cpu_capabilities *__unused)
+>  {
+> @@ -2926,6 +2990,13 @@ static const struct arm64_cpu_capabilities arm64_features[] = {
+>  		.matches = has_cpuid_feature,
+>  		ARM64_CPUID_FIELDS(ID_AA64MMFR2_EL1, EVT, IMP)
+>  	},
+> +	{
+> +		.desc = "BBM Level 2 without conflict abort",
+> +		.capability = ARM64_HAS_BBML2_NOABORT,
+> +		.type = ARM64_CPUCAP_SYSTEM_FEATURE,
+> +		.matches = has_bbml2_noabort,
+> +		ARM64_CPUID_FIELDS(ID_AA64MMFR2_EL1, BBM, 2)
+> +	},
+>  	{
+>  		.desc = "52-bit Virtual Addressing for KVM (LPA2)",
+>  		.capability = ARM64_HAS_LPA2,
+> diff --git a/arch/arm64/kernel/pi/idreg-override.c b/arch/arm64/kernel/pi/idreg-override.c
+> index c6b185b885f7..803a0c99f7b4 100644
+> --- a/arch/arm64/kernel/pi/idreg-override.c
+> +++ b/arch/arm64/kernel/pi/idreg-override.c
+> @@ -102,6 +102,7 @@ static const struct ftr_set_desc mmfr2 __prel64_initconst = {
+>  	.override	= &id_aa64mmfr2_override,
+>  	.fields		= {
+>  		FIELD("varange", ID_AA64MMFR2_EL1_VARange_SHIFT, mmfr2_varange_filter),
+> +		FIELD("bbm", ID_AA64MMFR2_EL1_BBM_SHIFT, NULL),
+>  		{}
+>  	},
+>  };
+> @@ -246,6 +247,7 @@ static const struct {
+>  	{ "rodata=off",			"arm64_sw.rodataoff=1" },
+>  	{ "arm64.nolva",		"id_aa64mmfr2.varange=0" },
+>  	{ "arm64.no32bit_el0",		"id_aa64pfr0.el0=1" },
+> +	{ "arm64.nobbml2",		"id_aa64mmfr2.bbm=0" },
+>  };
+>  
+>  static int __init parse_hexdigit(const char *p, u64 *v)
+> diff --git a/arch/arm64/tools/cpucaps b/arch/arm64/tools/cpucaps
+> index 1e65f2fb45bd..b03a375e5507 100644
+> --- a/arch/arm64/tools/cpucaps
+> +++ b/arch/arm64/tools/cpucaps
+> @@ -14,6 +14,7 @@ HAS_ADDRESS_AUTH_ARCH_QARMA5
+>  HAS_ADDRESS_AUTH_IMP_DEF
+>  HAS_AMU_EXTN
+>  HAS_ARMv8_4_TTL
+> +HAS_BBML2_NOABORT
+>  HAS_CACHE_DIC
+>  HAS_CACHE_IDC
+>  HAS_CNP
 
