@@ -1,129 +1,114 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0282B2040B9
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 19:16:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 721DE205E1C;
+	Thu,  3 Apr 2025 19:16:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743707795; cv=none; b=dZA6y/8eNH6+fonJ9qMxuG0x5lH0wmyv/Cm4K/DoIyfATg0UTaR5cC/dUuG46QzlgpIdW8VBXa8Kpnrl+Mp+5XsfZpz59E0aDFiz0Dqi8Qjd2d8kq5sXvWx2oUic47hCdVHzekZokPMom1kGSc5l+l/mDeLpHQ+oqpZ+jqNYVTI=
+	t=1743707796; cv=none; b=rfu3Bf7R5MbwJN9CJ1cE0RS89VNqhkmmEBJ7hKg54f0YGTjVLnuP4WXKDInI+6dTSvyoL3NHlFkC1o7+1tHscEQQYeZ1rJ2YYDE6pNwaXHnCRaOwVUoqOLBg1B4QvX63UbcodM3IN3lHgmQ9D8EZthCAqvN3VscLs5EP0vF3sqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743707795; c=relaxed/simple;
-	bh=oIe/uWD/FQDzr1edh1CzgOk8NT19Av3Ax0Mu4QeYt0c=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=WhfXIpPx3Ve6EHRwyrAAZ9KHeUQJoj9FCzGpbMsssYFLzzJ5CAlWNXo/LETILnwSywXWaFKK29p3U+hDbwgufpMOZ6NzrT1Tq2SGABuPF+wcrFr9VDe5o/smPlD1fWasW5WaqiqurOvMR+FMW62EWZmGFFgGzmc5rZjDzaSQmeU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=KzcRrt6T; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1743707796; c=relaxed/simple;
+	bh=cK+5iYiEQTUO+ve4DctLYfKsSAI+8wfVuH0TwHq0GUc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=NR74mzhVO73t8GZ0dZtqrPkh77k/OgV0LeDUDMHywxtrehEmHjlyAK0Ot393roHXNLz6QEguwFDRV2iagSqQDaczsNuPNy+suvZMjN3CXBnf59DQDiTCYdQlw+Wm0705IKXOdHtiDiJ/E+YEoaa8P3SxQZnwM63NsZxeUrm+g9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WoEep89j; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KzcRrt6T"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5499659e669so1342448e87.3
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 12:16:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1743707791; x=1744312591; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=dorrjSo0orF//5lS6H31AEnatOUG0VehlrElNg21OPo=;
-        b=KzcRrt6Tn4J4roTiElDsx6nBuxoqkw131eiq8KEj5G9YyO2hMWnVUXimaETLD+go38
-         8zmQjuyZ12i+Tow/1AKE/p/tPZLMpoTgwhacOV4EVTpyXKUGH/TLmrKD1uP866iZ9/xn
-         nH+JVdVFOpZ849qslDl0pHcfyaASPW8VTQ7+8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743707791; x=1744312591;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dorrjSo0orF//5lS6H31AEnatOUG0VehlrElNg21OPo=;
-        b=mdpFQJSKjxytq4C+TFUMd5+Mb0xsNM/KhYIvj0xw9FETjJlJAN/qmMIgqSxhDkkFt+
-         MWddkp1QMb+UZtakRjhcZ79iZAhIJQqjX4GrQFoaAZWbg2xqgAiCvCj4YTsfpju3OY6/
-         FrgBqCXHH3A+nnaPCLvb7QCYJfnutK1EthpSXfZJ+qrKwCMXlCA5LmDkj79+NEvO7bXt
-         L6ohzEHOlPd/NSSnhGX8ZHg2wMGpKXysKVE7/KoQ16ltOr0RZQZKOVi2KtrwLR1hA2Uc
-         xnidmNJ9SsoywJGtbprdRy2haTG5KchinmRI5tEa2gxiAKDO6kgC75Rt4MgPKJ35mMdW
-         1xqw==
-X-Forwarded-Encrypted: i=1; AJvYcCW2I036fIkfvGp9+bwceTCBxLaEedcCkCPUBGKgZE0rHpCrzt5StnEi22EME30YP3yWBysJL3rdL2aPkws=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz9zCi9JTo5qZRHpdoUCLQrtNtDK/Ba6eMlfSqBwYUH22rCXepz
-	ZX1uzfXUZ3f+8Moc2XgCd1p15D71g3jGo8Cc7iHZwEwtTc1PlAdR/Kpze0goxw==
-X-Gm-Gg: ASbGncsOf75hE0y32GDUu88F4pzM4S3b86V41pRGT99AbgPt+H0YUfpTx3ekWTa1YZJ
-	YlONb8sHnCWImrqY9woiWty2UrhdVQRzxSBiZzPtZsRlxSsTfuex/PSQ4zkQMG+eU+RZ0g+G9gI
-	TQ3vqnU3ROImjzM8MtDkQwAZKLCHFTuav1+0ypEu1JrIS9dezauwkxhAXDcWEfLOzPUIjbZXvP4
-	Rx6eXne9AVfXUS8+ZzEzkjqKFfyyb2zO0Z3qyntX99umUp/pMYdnwTL+sDrSRNBoTy5u59EP8nB
-	nd0laXqEXlMK5Q0ySWMMvC3ACdTn+vLLHlwXAyx1QoMIKUJXaZkI5fL5yFjssjT7XdLyy6ybEYY
-	01nJr5aUlApg8+LujAUCQKLWK
-X-Google-Smtp-Source: AGHT+IGVY3EFg5KnHKmHO2hTamBaTkRj2xwhuyk+NEFXhuefJ9O4PY6IbapG0I2fVQxVv80RmqRT3w==
-X-Received: by 2002:a05:6512:a91:b0:545:cd5:84d9 with SMTP id 2adb3069b0e04-54c2276e9b2mr115584e87.12.1743707790862;
-        Thu, 03 Apr 2025 12:16:30 -0700 (PDT)
-Received: from ribalda.c.googlers.com (216.148.88.34.bc.googleusercontent.com. [34.88.148.216])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54c1e65d6b1sm230142e87.194.2025.04.03.12.16.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Apr 2025 12:16:29 -0700 (PDT)
-From: Ricardo Ribalda <ribalda@chromium.org>
-Date: Thu, 03 Apr 2025 19:16:19 +0000
-Subject: [PATCH 8/8] media: uvcvideo: Do not create MC entities for virtual
- entities
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WoEep89j"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA7A0C4AF0B;
+	Thu,  3 Apr 2025 19:16:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743707795;
+	bh=cK+5iYiEQTUO+ve4DctLYfKsSAI+8wfVuH0TwHq0GUc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=WoEep89j/BIJSh1tu2uuh7Bfw2nzj5wHNM0Ug19K786yRez0GwRkrgYXrwg/Il+W8
+	 TpYYfSqHGLtIhp8U4KGfflasVJygwpjghUGBYNjVHOr2HELE3aBP1RL6zkwAP1BMhO
+	 Ejc+tv1nFi5gMJGHZ78T0MerB4UVgg9NsnjJGgRpN2XacfqraYOblzHSZaj67xzZli
+	 RQUNSCrz0hX9XLuk0qgq6uQ1opPTv5oL+DKzd0G+XI52usVCIBH6ew8/a6d/swDjWg
+	 Kc0d1dV6zDTFoazbO12cPDbpjE+Muk3aJs4NYS6yxR223lrKOoUMmYQoN3lRRj2ZjZ
+	 MP7K8mrSy5SAA==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Ryan Seto <ryanseto@amd.com>,
+	Dillon Varone <dillon.varone@amd.com>,
+	Tom Chung <chiahsuan.chung@amd.com>,
+	Daniel Wheeler <daniel.wheeler@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Sasha Levin <sashal@kernel.org>,
+	austin.zheng@amd.com,
+	jun.lei@amd.com,
+	harry.wentland@amd.com,
+	sunpeng.li@amd.com,
+	christian.koenig@amd.com,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	siqueira@igalia.com,
+	alex.hung@amd.com,
+	colin.i.king@gmail.com,
+	aurabindo.pillai@amd.com,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 6.13 27/37] drm/amd/display: Prevent VStartup Overflow
+Date: Thu,  3 Apr 2025 15:15:03 -0400
+Message-Id: <20250403191513.2680235-27-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250403191513.2680235-1-sashal@kernel.org>
+References: <20250403191513.2680235-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250403-uvc-orientation-v1-8-1a0cc595a62d@chromium.org>
-References: <20250403-uvc-orientation-v1-0-1a0cc595a62d@chromium.org>
-In-Reply-To: <20250403-uvc-orientation-v1-0-1a0cc595a62d@chromium.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
- Hans de Goede <hdegoede@redhat.com>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Hans Verkuil <hverkuil@xs4all.nl>, 
- Sakari Ailus <sakari.ailus@linux.intel.com>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-usb@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-gpio@vger.kernel.org, Ricardo Ribalda <ribalda@chromium.org>
-X-Mailer: b4 0.14.2
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.13.9
+Content-Transfer-Encoding: 8bit
 
-Neither the GPIO nor the FWNODE entities form part of the device
-pipeline. We just create them to hold emulated uvc controls.
+From: Ryan Seto <ryanseto@amd.com>
 
-When the device initializes, a warning is thrown by the v4l2 core:
-uvcvideo 1-1:1.0: Entity type for entity FWNODE was not initialized!
+[ Upstream commit 29c1c20496a7a9bafe2bc2f833d69aa52e0f2c2d ]
 
-There are no entity function that matches what we are doing here, and
-it does not make to much sense to create a function for entities that
-do not really exist.
+[Why]
+For some VR headsets with large blanks, it's possible
+to overflow the OTG_VSTARTUP_PARAM:VSTARTUP_START
+register. This can lead to incorrect DML calculations
+and underflow downstream.
 
-Do not create MC entities for them and pretend nothing happened here.
+[How]
+Min the calcualted max_vstartup_lines with the max
+value of the register.
 
-Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+Reviewed-by: Dillon Varone <dillon.varone@amd.com>
+Signed-off-by: Ryan Seto <ryanseto@amd.com>
+Signed-off-by: Tom Chung <chiahsuan.chung@amd.com>
+Tested-by: Daniel Wheeler <daniel.wheeler@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/uvc/uvc_entity.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ .../display/dc/dml2/dml21/src/dml2_core/dml2_core_dcn4_calcs.c  | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/media/usb/uvc/uvc_entity.c b/drivers/media/usb/uvc/uvc_entity.c
-index 01eeba2f049e9ebb25e091340a133656acbf28ca..4a0a083b4f58f041023710207a73e8fede8526e0 100644
---- a/drivers/media/usb/uvc/uvc_entity.c
-+++ b/drivers/media/usb/uvc/uvc_entity.c
-@@ -72,6 +72,16 @@ static int uvc_mc_init_entity(struct uvc_video_chain *chain,
+diff --git a/drivers/gpu/drm/amd/display/dc/dml2/dml21/src/dml2_core/dml2_core_dcn4_calcs.c b/drivers/gpu/drm/amd/display/dc/dml2/dml21/src/dml2_core/dml2_core_dcn4_calcs.c
+index ecfa3c898e09d..4285cb7fcbe71 100644
+--- a/drivers/gpu/drm/amd/display/dc/dml2/dml21/src/dml2_core/dml2_core_dcn4_calcs.c
++++ b/drivers/gpu/drm/amd/display/dc/dml2/dml21/src/dml2_core/dml2_core_dcn4_calcs.c
+@@ -12,6 +12,7 @@
+ #define DML2_MAX_FMT_420_BUFFER_WIDTH 4096
+ #define DML_MAX_NUM_OF_SLICES_PER_DSC 4
+ #define ALLOW_SDPIF_RATE_LIMIT_PRE_CSTATE
++#define DML_MAX_VSTARTUP_START 1023
+ 
+ const char *dml2_core_internal_bw_type_str(enum dml2_core_internal_bw_type bw_type)
  {
- 	int ret;
+@@ -3648,6 +3649,7 @@ static unsigned int CalculateMaxVStartup(
+ 	dml2_printf("DML::%s: vblank_avail = %u\n", __func__, vblank_avail);
+ 	dml2_printf("DML::%s: max_vstartup_lines = %u\n", __func__, max_vstartup_lines);
+ #endif
++	max_vstartup_lines = (unsigned int)math_min2(max_vstartup_lines, DML_MAX_VSTARTUP_START);
+ 	return max_vstartup_lines;
+ }
  
-+	/*
-+	 * Do not initialize virtual entities, they do not really exist
-+	 * and are not connected to any other entities.
-+	 */
-+	switch (UVC_ENTITY_TYPE(entity)) {
-+	case UVC_EXT_GPIO_UNIT:
-+	case UVC_FWNODE_UNIT:
-+		return 0;
-+	}
-+
- 	if (UVC_ENTITY_TYPE(entity) != UVC_TT_STREAMING) {
- 		u32 function;
- 
-
 -- 
-2.49.0.504.g3bcea36a83-goog
+2.39.5
 
