@@ -1,78 +1,160 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from ksmg01.maxima.ru (ksmg01.mt-integration.ru [81.200.124.38])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEA8D242925;
-	Thu,  3 Apr 2025 08:20:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2EC81EF092;
+	Thu,  3 Apr 2025 08:20:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.200.124.38
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743668450; cv=none; b=szS/rYk3vczkAZ/+cyOwYHa7fE6l/arV6rQrEiYOoH1898Pp4+EZ3mPZEf1Z+v8+iWtvjnhjrVnjWkKkz3Matjl9fBkkdWXwuljFjqAZ2ogpp6ugcOdyr2KnaqWdnHNpTmlCTT8YYIRMWT628Nm9NxOOKz22i6SeIdpcjSl1Tlc=
+	t=1743668450; cv=none; b=NshUltrjcK7w/W4oQEnmcRB6GfYdJwwZevyKqrxrWWfMb+TlCv54pT4Cyv3jGxwVcV5CwG0VB04AweLTxKVziEifP/lF5gviE7q8MsMGINVWHhOVASVCLUAffidNs4+DCH898ip4knsVhJR9AGbH3N+oEaaK7QrLp33lx131xZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1743668450; c=relaxed/simple;
-	bh=UBSN/OHo4Q9PXbfUx0FETKktQcZxKW64BWiJbhHv1E4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dIAUowuWymN2482OJ+CwGVSw4HAw7NfV5s6+u/ItKsYxgMp8uWUyIt4wS8B0SeLMWOXJKzjyjwkHzr+zR8/W8we4xTwIqViXd+YFbaKJocuKZN5O1rj5iUJpG8fY4x9Q4K86BFeDLdORxoC53mVG66pOdv3zHll8BRNnPPomw+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=p8eIemwR; arc=none smtp.client-ip=10.30.226.201
+	bh=oOy9SaCetbLIxPQj/SNMUa2FKbe0MxO6KmEYLKcGSDE=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SijKz92KhGt9BpLVx97Eb6EaEFC7Ge9Q75JprWDbWU0UYrl8maGmffg7FjBApXGwXynPdBwEQIbTRP+TAM/9tr85oLBDiq65P1iebYe9FqfSs+/5UoQwe7yD3N1eZ4xEcSZlKh3EkEpuOEQi5wsWnXGjqR8MMZ4Xf70edZIocUw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mt-integration.ru; spf=pass smtp.mailfrom=mt-integration.ru; dkim=pass (2048-bit key) header.d=mt-integration.ru header.i=@mt-integration.ru header.b=geHrIMk1; arc=none smtp.client-ip=81.200.124.38
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mt-integration.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mt-integration.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="p8eIemwR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2702C4CEE9;
-	Thu,  3 Apr 2025 08:20:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1743668449;
-	bh=UBSN/OHo4Q9PXbfUx0FETKktQcZxKW64BWiJbhHv1E4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=p8eIemwR6PUi9NVX19hvj/l50jYttMzps0V25M1eqYTqntsul/t/FC579H+I1euoW
-	 VlmX6lLrg60d7Jx/wTMH0X0qnL8cRkjpfjZlCo7LbuF8zEscHclqLMkDA6DJJOoK41
-	 FBX9D2rCWj9LfK63ZnBvHr8MPT5V+bTpRvanI9KI=
-Date: Thu, 3 Apr 2025 09:19:21 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: xiaopeitux@foxmail.com
-Cc: jirislaby@kernel.org, linux-serial@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Pei Xiao <xiaopei01@kylinos.cn>
-Subject: Re: [PATCH] tty/sysrq: make sysrq_replay_logs_op const and refactor
- sysrq_mask()
-Message-ID: <2025040313-gem-nephew-2327@gregkh>
-References: <tencent_F413E4391B578208516E16AA0FC81F2FEC07@qq.com>
+	dkim=pass (2048-bit key) header.d=mt-integration.ru header.i=@mt-integration.ru header.b="geHrIMk1"
+Received: from ksmg01.maxima.ru (localhost [127.0.0.1])
+	by ksmg01.maxima.ru (Postfix) with ESMTP id CCCB8C0019;
+	Thu,  3 Apr 2025 11:20:39 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 ksmg01.maxima.ru CCCB8C0019
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mt-integration.ru;
+	s=sl; t=1743668439; bh=YTS2HHkGl6vv90e1u0OfipkGJc4P/NO4h3v6E9uRqq4=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
+	b=geHrIMk1MGDCl+aVe19qoNl946keFH3Np8EziP6hHBi2NgIICG6cAUi/XpTRUCQ5U
+	 G9frMkHkTw5Y7dDyeMeGfzeqMk2edT2K/2x2UGyyzgQ4M5xkt29Mwmlp2TL+nAb30q
+	 1nHltz/X5y/oZXp/bMeSwvNKN0ACrksGmGQhjr7k0kYF6ymRIWrBdYs9fJu4abrLpp
+	 28FduAw2yvOTnkcYON4HDy2PYxCzfBuW35+5XYwE6dbmLysiKbMGh+dLH6ZlyX0aJS
+	 CkzPOMahqac3Yi1EISt0ZvTLlFrysqVuBBqsEOtkGcLzCP2+Rg8VNg53A0t4F02fyB
+	 ZeH8BSGbFWG8Q==
+Received: from ksmg01.maxima.ru (autodiscover.maxima.ru [81.200.124.61])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(Client CN "*.maxima.ru", Issuer "GlobalSign GCC R3 DV TLS CA 2020" (verified OK))
+	by ksmg01.maxima.ru (Postfix) with ESMTPS;
+	Thu,  3 Apr 2025 11:20:39 +0300 (MSK)
+Received: from db126-1-abramov-14-d-mosos.mti-lab.com (172.25.20.118) by
+ mmail-p-exch01.mt.ru (81.200.124.61) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Thu, 3 Apr 2025 11:20:39 +0300
+From: Ivan Abramov <i.abramov@mt-integration.ru>
+To: Alexander Aring <alex.aring@gmail.com>
+CC: Ivan Abramov <i.abramov@mt-integration.ru>, Stefan Schmidt
+	<stefan@datenfreihafen.org>, Miquel Raynal <miquel.raynal@bootlin.com>,
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon
+ Horman <horms@kernel.org>, <linux-wpan@vger.kernel.org>,
+	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<lvc-project@linuxtesting.org>
+Subject: [PATCH net v2 1/3] ieee802154: Restore initial state on failed device_rename() in cfg802154_switch_netns()
+Date: Thu, 3 Apr 2025 11:20:19 +0300
+Message-ID: <20250403082021.990667-2-i.abramov@mt-integration.ru>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250403082021.990667-1-i.abramov@mt-integration.ru>
+References: <20250403082021.990667-1-i.abramov@mt-integration.ru>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <tencent_F413E4391B578208516E16AA0FC81F2FEC07@qq.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: mmail-p-exch02.mt.ru (81.200.124.62) To
+ mmail-p-exch01.mt.ru (81.200.124.61)
+X-KSMG-AntiPhishing: NotDetected
+X-KSMG-AntiSpam-Auth: dmarc=none header.from=mt-integration.ru;spf=none smtp.mailfrom=mt-integration.ru;dkim=none
+X-KSMG-AntiSpam-Envelope-From: i.abramov@mt-integration.ru
+X-KSMG-AntiSpam-Info: LuaCore: 54 0.3.54 464169e973265e881193cca5ab7aa5055e5b7016, {rep_avail}, {Tracking_from_domain_doesnt_match_to}, 81.200.124.61:7.1.2;ksmg01.maxima.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;mt-integration.ru:7.1.1;127.0.0.199:7.1.2, FromAlignment: s, ApMailHostAddress: 81.200.124.61
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiSpam-Lua-Profiles: 192326 [Apr 03 2025]
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Version: 6.1.1.11
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.1.1.8310, bases: 2025/04/03 03:59:00 #27851158
+X-KSMG-AntiVirus-Status: NotDetected, skipped
+X-KSMG-LinksScanning: NotDetected
+X-KSMG-Message-Action: skipped
+X-KSMG-Rule-ID: 7
 
-On Thu, Apr 03, 2025 at 03:15:35PM +0800, xiaopeitux@foxmail.com wrote:
-> From: Pei Xiao <xiaopei01@kylinos.cn>
-> 
-> Mark sysrq_replay_logs_op as const and simplify sysrq_mask().
-> 
-> Signed-off-by: Pei Xiao <xiaopei01@kylinos.cn>
-> ---
->  drivers/tty/sysrq.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/tty/sysrq.c b/drivers/tty/sysrq.c
-> index f85ce02e4725..c2a26abcb8cd 100644
-> --- a/drivers/tty/sysrq.c
-> +++ b/drivers/tty/sysrq.c
-> @@ -71,9 +71,7 @@ static bool sysrq_on(void)
->   */
->  int sysrq_mask(void)
->  {
-> -	if (sysrq_always_enabled)
-> -		return 1;
-> -	return sysrq_enabled;
-> +	return sysrq_always_enabled ? 1 : sysrq_enabled;
+Currently, the return value of device_rename() is not acted upon.
 
-That's not simpler, it's now harder to read and parse.  Only use ?: in C
-for places it has to be used, not for stuff like this where it's more
-obvious if you use an if () line.
+To avoid an inconsistent state in case of failure, roll back the changes
+made before the device_rename() call.
 
-We write code for people first, compilers second.
+Found by Linux Verification Center (linuxtesting.org) with Syzkaller.
 
-Also, you can't do two different things in the same commit, sorry.
+Fixes: 66e5c2672cd1 ("ieee802154: add netns support")
+Signed-off-by: Ivan Abramov <i.abramov@mt-integration.ru>
+---
+v2: Make sure to commit against latest netdev/net.
 
-thanks,
+ net/ieee802154/core.c | 45 ++++++++++++++++++++++++-------------------
+ 1 file changed, 25 insertions(+), 20 deletions(-)
 
-greg k-h
+diff --git a/net/ieee802154/core.c b/net/ieee802154/core.c
+index 89b671b12600..84d514430e45 100644
+--- a/net/ieee802154/core.c
++++ b/net/ieee802154/core.c
+@@ -233,31 +233,36 @@ int cfg802154_switch_netns(struct cfg802154_registered_device *rdev,
+ 		wpan_dev->netdev->netns_immutable = true;
+ 	}
+ 
+-	if (err) {
+-		/* failed -- clean up to old netns */
+-		net = wpan_phy_net(&rdev->wpan_phy);
+-
+-		list_for_each_entry_continue_reverse(wpan_dev,
+-						     &rdev->wpan_dev_list,
+-						     list) {
+-			if (!wpan_dev->netdev)
+-				continue;
+-			wpan_dev->netdev->netns_immutable = false;
+-			err = dev_change_net_namespace(wpan_dev->netdev, net,
+-						       "wpan%d");
+-			WARN_ON(err);
+-			wpan_dev->netdev->netns_immutable = true;
+-		}
+-
+-		return err;
+-	}
+-
+-	wpan_phy_net_set(&rdev->wpan_phy, net);
++	if (err)
++		goto errout;
+ 
+ 	err = device_rename(&rdev->wpan_phy.dev, dev_name(&rdev->wpan_phy.dev));
+ 	WARN_ON(err);
+ 
++	if (err)
++		goto errout;
++
++	wpan_phy_net_set(&rdev->wpan_phy, net);
++
+ 	return 0;
++
++errout:
++	/* failed -- clean up to old netns */
++	net = wpan_phy_net(&rdev->wpan_phy);
++
++	list_for_each_entry_continue_reverse(wpan_dev,
++					     &rdev->wpan_dev_list,
++					     list) {
++		if (!wpan_dev->netdev)
++			continue;
++		wpan_dev->netdev->netns_immutable = false;
++		err = dev_change_net_namespace(wpan_dev->netdev, net,
++					       "wpan%d");
++		WARN_ON(err);
++		wpan_dev->netdev->netns_immutable = true;
++	}
++
++	return err;
+ }
+ 
+ void cfg802154_dev_free(struct cfg802154_registered_device *rdev)
+-- 
+2.39.5
+
