@@ -1,183 +1,198 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from xmbghk7.mail.qq.com (xmbghk7.mail.qq.com [43.163.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8799221F2D
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 07:27:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D558C23F422
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 07:27:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=43.163.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743665232; cv=none; b=fRfKnX0V6u1/t8qtQEoJd8Is2uPB7mDk9w08L196BOqQDpsxo0r5rb4n+kYwH1wB+zk1pz+sVfzHmQjpJnoP9Qza0oGbxgNKTAJvbvgo0D87ZkEkP17RVVN1eBL6D99XtVBZ+o2W1v4jBx+N8VZBMfz1YSLJxQs+YHic3YLSBi8=
+	t=1743665254; cv=none; b=JYsOwiAGc5Kif4bj8DZ8EL9EdvMGuzUNX7I0JdLB6tH5HdYXbum7++V85PZlEwRGdxaUlaJdgI+ajbj44fIH9ehCp7XDAU0Ko6oWJBQYwTbjaQh0dfBg490zATXIpmHe5t9oA56p4FTGZHIpBsQaQBrBh9tnL+QhGCyO3Mr8BFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743665232; c=relaxed/simple;
-	bh=YiQE/rbxd6T+0Sl12/HPKQOH2Wjbican48ns51RS/Gg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KxgsdWyGrYKjVpXAmWDo4OgEeWp9SbiLb8FZrTN5aBCxJ/qYdAnKLK70EFCVtVd/MXVCFZqNfaeyrxtRXi8aZTJ3ytfh1sJNFmwD92pBP04JCspqRVUHORvfbBv35kqFOnD5VGyNMB1IzwkSr9R6+ZPy4Pueg0uul9zQGAiZSC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Lp3njvUm; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1743665254; c=relaxed/simple;
+	bh=xUhfi3gUw/QjVJbcUhIpWx5w9OxwRdvISb3WEdQ4YAY=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=ua4RqFdzole/JGaBasvVKqplFAnpx32VbVhdjsA159GBUMhzvJO2BMU0dJc+9fNXwAUwG5Re14iV7I+k7NcRWbXSiksKHzLkApiseF3OUbahMXaZxyBPS2fgqFGLhBef/i/kb31OX+DKwSaukxTu3G9XHSg+fpKzmr/gCKx0gdw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=UVQvVpKP; arc=none smtp.client-ip=43.163.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Lp3njvUm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743665229;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nC2q6NcPEOSq5O/QwSWUVvMEBJ0OfjzBc7t2dBxH+Kg=;
-	b=Lp3njvUmbrbxL0+7DL/0/z86UK+/TT1w/MCT0oVKk//ENSyTpprpySURxIlR79PtsieW0U
-	qE+8MYIVHSqe0pNzJXVcS9xG7lByaAcmRTQvoAT0B6PjfZvSkZ2GtpSzIkNmaREWcw8G6k
-	ht+UHBX8PaSDT1HM5OYcTm0XJb1nSjI=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-612-cyrSZuyjMo-G_PQ_WmtyrA-1; Thu, 03 Apr 2025 03:27:08 -0400
-X-MC-Unique: cyrSZuyjMo-G_PQ_WmtyrA-1
-X-Mimecast-MFC-AGG-ID: cyrSZuyjMo-G_PQ_WmtyrA_1743665227
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43ceb011ea5so3263825e9.2
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 00:27:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743665227; x=1744270027;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nC2q6NcPEOSq5O/QwSWUVvMEBJ0OfjzBc7t2dBxH+Kg=;
-        b=NA1M451Kj1jpasuuf5DWO+k6KBOzQIApK8x/ldHbMNvM3S+tV8AzkcTLSZZ2m6zHxp
-         1zLqQuIjjkdq5jMY9kv9SGvyRGwFOcvRZWEwm1TVOyu5pvrrpOkrSL3vvueZP+XjLnuC
-         B0QckLgGq9KRjxrklvJu9DG6UDo4EXUyaGmNudj7KON/5ZZcPEFapKdXjxnMmtn8zr6Y
-         5X/ZNz8RVK4ipMo8Lvs5JyY8DKfvstC39TUCXSnldytTUiLM60MOZs+xT78bqYMMAWzt
-         gB3jlAxyl4eBOGh7XgTZHbsej3bTtomadlmaxGBX8xhn+CqvNEi+VkgwC+YtV3dIzX6K
-         zy4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXDV8Hb6dm09Uv4z78Ry4rH9DvrDTwtFNBnqRoH7PI1mhZoQlDQsflVMgv2ONFGrzJNuzNbU8vbbQmyALM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwOS6uu6z8W3aRJK9FnpilPqDGg0uJv5TU99zhPNC+uneUMwkiC
-	hkPQNb4I6NVgRv/vUwLJ1n8QJ4YeTirNpzJPhHv5hot6UQcN1/usoqLpCEx1WhTOjN5/YTMJfsv
-	LSl/ieqMQqEfo1Swi/3wY4Cp9FxiiExrmt7DqR4DpJ+rNrfm2lqdxS/0hQDAhxg==
-X-Gm-Gg: ASbGnctmBTu/zzR50nz90RALAoQnFsJTnhrNxEm3iM3UNcnue1PUpek/9zwT5Jmf6Vg
-	inQcEDyrLjD/g8XP+gpNp9iA/B4uOzIqJXUd7sUMOcnyxmWcbpbk7/CJXwACAJJMPpxww03Cllv
-	a3H3ArozQZ3OoAXRAPkSDm4YU7qPriTY476m88H9N+uKtJH1svTLY0MmezwOTVS3AS3A3qcBNuW
-	rdUgK+sQbP5bn14vv1H9y0m6GOLSdeCKxxm7ig5NufRaKfgyMPI8Gs3YJVtdCaZSYRGqhcFLzAM
-	Duf3OtOEaQ==
-X-Received: by 2002:a05:600c:3ca4:b0:43c:f3e4:d6f6 with SMTP id 5b1f17b1804b1-43ec15363efmr13351695e9.31.1743665227182;
-        Thu, 03 Apr 2025 00:27:07 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH+6CSWPKPgeTjCe2MsfTh7Yn/OPPZT5EMebursV8pLb7slkNAelNKYRkjtjUZ6I5WEFJ9Hgw==
-X-Received: by 2002:a05:600c:3ca4:b0:43c:f3e4:d6f6 with SMTP id 5b1f17b1804b1-43ec15363efmr13351455e9.31.1743665226782;
-        Thu, 03 Apr 2025 00:27:06 -0700 (PDT)
-Received: from redhat.com ([2a0d:6fc0:1517:1000:ea83:8e5f:3302:3575])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec1663060sm13393335e9.14.2025.04.03.00.27.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Apr 2025 00:27:06 -0700 (PDT)
-Date: Thu, 3 Apr 2025 03:27:02 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: David Woodhouse <dwmw2@infradead.org>
-Cc: virtio-comment@lists.linux.dev, hch@infradead.org,
-	Claire Chang <tientzu@chromium.org>,
-	linux-devicetree <devicetree@vger.kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	=?iso-8859-1?Q?J=F6rg?= Roedel <joro@8bytes.org>,
-	iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-	graf@amazon.de, Zhu Lingshan <lingshan.zhu@amd.com>
-Subject: Re: [RFC PATCH 3/3] transport-pci: Add SWIOTLB bounce buffer
- capability
-Message-ID: <20250403032152-mutt-send-email-mst@kernel.org>
-References: <20250402112410.2086892-1-dwmw2@infradead.org>
- <20250402112410.2086892-4-dwmw2@infradead.org>
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="UVQvVpKP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1743664939; bh=PEO11pdJTf99eBXLbA9i5RAduuXXjkaH7AWwQjlYo8k=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=UVQvVpKP3Oa8O8BGJjaQ7rkxDhtAyGmMBbZhObZxjaaHitUoyvaSkcO2t/EBxY2F2
+	 Ypp9k/g1Miu30r94NeVYIZH2ip7vv56725u1kpI6Iaw6W5aP+jl1O1A8fj4+p+Z8BJ
+	 WzIwAaaTddhWP+l1z+DVo8CQWk+zRuVqOYOD9i+4=
+Received: from localhost.localdomain ([116.128.244.169])
+	by newxmesmtplogicsvrsza29-0.qq.com (NewEsmtp) with SMTP
+	id 591AD8D9; Thu, 03 Apr 2025 15:22:17 +0800
+X-QQ-mid: xmsmtpt1743664937toxqeymfr
+Message-ID: <tencent_776C8C1D08FD8F3CE58CD91E7572FEA6970A@qq.com>
+X-QQ-XMAILINFO: M+5cKLn0wXDtul2pnIgRndmKtcEfFHQLBP08+4LFHc7zPPxdtnlrz4wvl7nTIT
+	 Rcjd0i88/nIHeEkSVNC0bpHFcHp8mhcum5U+4+4LclAz/b0suif5RLln11sekyn7gu/NLEBIqrAj
+	 rbOXfPrqC1E3RqFRCxLGhFmqyp7OaXI044ef7i4dO6mvMKH3Ei3ccB3dfC2DIjyaz04JaBdGCchO
+	 HOYAwmlkWOVU2bXvDnOkId2XQi+jvKkfDj4WwSa7JEXQu5ODF8vgbuBMPq867RiQAvjfZpLEsnfc
+	 noWCenxCK/6fGFt5M5z16OblloX95lIbxy/lAjvFH0gANR/67TGN24UrCeR+WIHAatHyDOaH5Whn
+	 vjhPlvNeVeZC+r4tTmvbk3ydIfD3MaiU6qXnlO+g/JdoNJpoJVoNcLV1Azl5pUyOEn1djpABVnvs
+	 I+eer28ymaHAWK5FCiAuIlagt+I6agcw7Z5dYc7J53vbwsaEO0m3AkwmSS2CmL2ZRI7p1mOg2p3w
+	 ZRJYsyoQJ4Ci1itDnJw5TXek7gAWmRm/R0Aj+/uTOUr22yRhPWubsO3Nxbnhs2y58RSJM0rkkZwS
+	 Fdgk5aJv2SE44b8uSOjMWQc1RuPQXiIVaPaZJnlXIO4mund+3ksO2f1QlmHJJSdtgNpddT3bW4El
+	 QaTECJPjpFMcP+EGOdOX7rs5aTVHHKhYcQkj1YUP9MIYY2KC9ssUWekIIYGKPFlNSLq6+fmo648F
+	 6LuOOMuPnAWJ42LF5vW7X+fztiNyIU4hjfx9UE6JzNYFQWLg4TYf995AMkBvvMNt1cHDT7dQcEIJ
+	 gjF3WZG98JPlrN6xUnTkd9c5WJwp5OsOjRcTMTycO2mJVOAVD2Qx8Xcg8I6O6rLN9HjGAWzrDwGD
+	 q3kt1WvJwRf7c9Bl1K39cyuO3NMpSmG5mLIHVFPWk4lb5TPInA/8NSz16DgI8VdzFXV4KyQFJ8iD
+	 qrhb6Ocubv4/1vm7SewotkoA20BI5coNxn4ruX/CmfaNuwXSR6Bn5Ye7JvENBcJLoI4QJPvhQJTo
+	 9tkoZXBQ==
+X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
+From: Yaxiong Tian <iambestgod@qq.com>
+To: kbusch@kernel.org,
+	axboe@kernel.dk,
+	hch@lst.de,
+	sagi@grimberg.me,
+	chaitanyak@nvidia.com
+Cc: linux-nvme@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Yaxiong Tian <tianyaxiong@kylinos.cn>,
+	Chaitanya Kulkarni <kch@nvidia.com>
+Subject: [PATCH v4 2/3] nvme: add sysfs interface for APST table updates
+Date: Thu,  3 Apr 2025 15:22:16 +0800
+X-OQ-MSGID: <20250403072216.1208677-1-iambestgod@qq.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <tencent_A9D89C90E6484E0EBFED4F67D6EF4589F506@qq.com>
+References: <tencent_A9D89C90E6484E0EBFED4F67D6EF4589F506@qq.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250402112410.2086892-4-dwmw2@infradead.org>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 02, 2025 at 12:04:47PM +0100, David Woodhouse wrote:
-> From: David Woodhouse <dwmw@amazon.co.uk>
-> 
-> Add a VIRTIO_PCI_CAP_SWIOTLB capability which advertises a SWIOTLB bounce
-> buffer similar to the existing `restricted-dma-pool` device-tree feature.
-> 
-> The difference is that this is per-device; each device needs to have its
-> own. Perhaps we should add a UUID to the capability, and have a way for
-> a device to not *provide* its own buffer, but just to reference the UUID
-> of a buffer elsewhere?
-> 
-> Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
-> ---
->  transport-pci.tex | 33 +++++++++++++++++++++++++++++++++
->  1 file changed, 33 insertions(+)
-> 
-> diff --git a/transport-pci.tex b/transport-pci.tex
-> index a5c6719..23e0d57 100644
-> --- a/transport-pci.tex
-> +++ b/transport-pci.tex
-> @@ -129,6 +129,7 @@ \subsection{Virtio Structure PCI Capabilities}\label{sec:Virtio Transport Option
->  \item ISR Status
->  \item Device-specific configuration (optional)
->  \item PCI configuration access
-> +\item SWIOTLB bounce buffer
->  \end{itemize}
->  
->  Each structure can be mapped by a Base Address register (BAR) belonging to
-> @@ -188,6 +189,8 @@ \subsection{Virtio Structure PCI Capabilities}\label{sec:Virtio Transport Option
->  #define VIRTIO_PCI_CAP_SHARED_MEMORY_CFG 8
->  /* Vendor-specific data */
->  #define VIRTIO_PCI_CAP_VENDOR_CFG        9
-> +/* Software IOTLB bounce buffer */
-> +#define VIRTIO_PCI_CAP_SWIOTLB           10
->  \end{lstlisting}
->  
->          Any other value is reserved for future use.
-> @@ -744,6 +747,36 @@ \subsubsection{Vendor data capability}\label{sec:Virtio
->  The driver MUST qualify the \field{vendor_id} before
->  interpreting or writing into the Vendor data capability.
->  
-> +\subsubsection{Software IOTLB bounce buffer capability}\label{sec:Virtio
-> +Transport Options / Virtio Over PCI Bus / PCI Device Layout /
-> +Software IOTLB bounce buffer capability}
-> +
-> +The optional Software IOTLB bounce buffer capability allows the
-> +device to provide a memory region which can be used by the driver
-> +driver for bounce buffering. This allows a device on the PCI
-> +transport to operate without DMA access to system memory addresses.
-> +
-> +The Software IOTLB region is referenced by the
-> +VIRTIO_PCI_CAP_SWIOTLB capability. Bus addresses within the referenced
-> +range are not subject to the requirements of the VIRTIO_F_ORDER_PLATFORM
-> +capability, if negotiated.
-> +
-> +\devicenormative{\paragraph}{Software IOTLB bounce buffer capability}{Virtio
-> +Transport Options / Virtio Over PCI Bus / PCI Device Layout /
-> +Software IOTLB bounce buffer capability}
-> +
-> +Devices which present the Software IOTLB bounce buffer capability
-> +SHOULD also offer the VIRTIO_F_SWIOTLB feature.
-> +
-> +\drivernormative{\paragraph}{Software IOTLB bounce buffer capability}{Virtio
-> +Transport Options / Virtio Over PCI Bus / PCI Device Layout /
-> +Software IOTLB bounce buffer capability}
-> +
-> +The driver SHOULD use the offered buffer in preference to passing system
-> +memory addresses to the device. If the driver accepts the VIRTIO_F_SWIOTLB
-> +feature, then the driver MUST use the offered buffer and never pass system
-> +memory addresses to the device.
-> +
->  \subsubsection{PCI configuration access capability}\label{sec:Virtio Transport Options / Virtio Over PCI Bus / PCI Device Layout / PCI configuration access capability}
->  
->  The VIRTIO_PCI_CAP_PCI_CFG capability
-> -- 
-> 2.49.0
-> 
+From: Yaxiong Tian <tianyaxiong@kylinos.cn>
 
+In desktop systems, users can choose between power-saving mode and
+performance mode. These two modes involve different trade-offs between
+NVMe performance and power efficiency, thus requiring dynamic updates to APST.
 
+Currently, the APST (Autonomous Power State Transition) table can only be
+updated during module initialization via module parameters or indirectly
+by setting QoS latency requirements. This patch adds a direct sysfs
+interface to allow dynamic updates to the APST table at runtime.
 
-So on the PCI option. The normal mapping (ioremap) for BAR is uncached. If done
-like this, performance will suffer. But if you do normal WB, since device
-accesses do not go on the bus, they do not get synchronized with driver
-writes and there's really no way to synchronize them.
+The new sysfs entry is created at:
+/sys/class/nvme/<controller>/apst_update
 
-First, this needs to be addressed.
+This provides more flexibility in power management tuning without
+requiring module reload or QoS latency changes.
 
-In this age of accelerators for everything, building pci based
-interfaces that can't be efficiently accelerated seems shortsighted ...
+Example usage:
+update nvme module parameters.
+echo 1  > /sys/class/nvme/nvme0/apst_update
 
+Reviewed-by: Chaitanya Kulkarni <kch@nvidia.com>
+Signed-off-by: Yaxiong Tian  <tianyaxiong@kylinos.cn>
+---
+ drivers/nvme/host/core.c  |  9 +++++++--
+ drivers/nvme/host/nvme.h  |  2 ++
+ drivers/nvme/host/sysfs.c | 24 ++++++++++++++++++++++++
+ 3 files changed, 33 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index eca0d0d2c2b4..19438da102e5 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -2654,7 +2654,7 @@ static bool nvme_apst_get_transition_time(u64 total_latency,
+  *
+  * Users can set ps_max_latency_us to zero to turn off APST.
+  */
+-static int nvme_configure_apst(struct nvme_ctrl *ctrl)
++int nvme_configure_apst(struct nvme_ctrl *ctrl)
+ {
+ 	struct nvme_feat_auto_pst *table;
+ 	unsigned apste = 0;
+@@ -2779,8 +2779,11 @@ static void nvme_set_latency_tolerance(struct device *dev, s32 val)
+ 
+ 	if (ctrl->ps_max_latency_us != latency) {
+ 		ctrl->ps_max_latency_us = latency;
+-		if (nvme_ctrl_state(ctrl) == NVME_CTRL_LIVE)
++		if (nvme_ctrl_state(ctrl) == NVME_CTRL_LIVE) {
++			mutex_lock(&ctrl->apst_lock);
+ 			nvme_configure_apst(ctrl);
++			mutex_unlock(&ctrl->apst_lock);
++		}
+ 	}
+ }
+ 
+@@ -4853,6 +4856,8 @@ int nvme_init_ctrl(struct nvme_ctrl *ctrl, struct device *dev,
+ 	ctrl->ka_cmd.common.opcode = nvme_admin_keep_alive;
+ 	ctrl->ka_last_check_time = jiffies;
+ 
++	mutex_init(&ctrl->apst_lock);
++
+ 	BUILD_BUG_ON(NVME_DSM_MAX_RANGES * sizeof(struct nvme_dsm_range) >
+ 			PAGE_SIZE);
+ 	ctrl->discard_page = alloc_page(GFP_KERNEL);
+diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
+index 51e078642127..7f8e10f5bf7a 100644
+--- a/drivers/nvme/host/nvme.h
++++ b/drivers/nvme/host/nvme.h
+@@ -385,6 +385,7 @@ struct nvme_ctrl {
+ 	key_serial_t tls_pskid;
+ 
+ 	/* Power saving configuration */
++	struct mutex apst_lock;
+ 	u64 ps_max_latency_us;
+ 	bool apst_enabled;
+ 
+@@ -828,6 +829,7 @@ void nvme_unfreeze(struct nvme_ctrl *ctrl);
+ void nvme_wait_freeze(struct nvme_ctrl *ctrl);
+ int nvme_wait_freeze_timeout(struct nvme_ctrl *ctrl, long timeout);
+ void nvme_start_freeze(struct nvme_ctrl *ctrl);
++int nvme_configure_apst(struct nvme_ctrl *ctrl);
+ 
+ static inline enum req_op nvme_req_op(struct nvme_command *cmd)
+ {
+diff --git a/drivers/nvme/host/sysfs.c b/drivers/nvme/host/sysfs.c
+index 6d31226f7a4f..20146eb4c671 100644
+--- a/drivers/nvme/host/sysfs.c
++++ b/drivers/nvme/host/sysfs.c
+@@ -684,6 +684,29 @@ static DEVICE_ATTR(dhchap_ctrl_secret, S_IRUGO | S_IWUSR,
+ 	nvme_ctrl_dhchap_ctrl_secret_show, nvme_ctrl_dhchap_ctrl_secret_store);
+ #endif
+ 
++static ssize_t apst_update_store(struct device *dev,
++					      struct device_attribute *attr,
++					      const char *buf, size_t size)
++{
++	struct nvme_ctrl *ctrl = dev_get_drvdata(dev);
++	bool bool_data = false;
++	int err;
++
++	err = kstrtobool(buf, &bool_data);
++
++	if (err)
++		return err;
++
++	if (bool_data && nvme_ctrl_state(ctrl) == NVME_CTRL_LIVE) {
++		mutex_lock(&ctrl->apst_lock);
++		nvme_configure_apst(ctrl);
++		mutex_unlock(&ctrl->apst_lock);
++	}
++
++	return size;
++}
++static DEVICE_ATTR_WO(apst_update);
++
+ static struct attribute *nvme_dev_attrs[] = {
+ 	&dev_attr_reset_controller.attr,
+ 	&dev_attr_rescan_controller.attr,
+@@ -712,6 +735,7 @@ static struct attribute *nvme_dev_attrs[] = {
+ 	&dev_attr_dhchap_ctrl_secret.attr,
+ #endif
+ 	&dev_attr_adm_passthru_err_log_enabled.attr,
++	&dev_attr_apst_update.attr,
+ 	NULL
+ };
+ 
 -- 
-MST
+2.25.1
 
