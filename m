@@ -1,41 +1,76 @@
-Received: from antaris-organics.com (mail.antaris-organics.com [91.227.220.155])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D41D5250C06;
-	Thu,  3 Apr 2025 18:40:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.227.220.155
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACC2D253334;
+	Thu,  3 Apr 2025 18:40:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743705613; cv=none; b=V55IrD9tEd49ph7crFG8Uai6ubGsTf78GnDHPJnG7ihhDveNCqvEhMzZvd5jjoM4jqziWcroj3/3zz6nqAaj88ZFd2fPe4RU9NIdDjrkTvi+O5nUVlw6JUrivBmZV0XzvTuEUMmdtUyBoAEcxiPYC1otajnybrF68bBoG+lreyU=
+	t=1743705648; cv=none; b=ny66BZRxZMSOszD2T9nh8nQbw6MZt2SAKsBW/iJYRPjRM8iNkEHVif1P0UFqvHLvt4ixSJk3txyZ6RS+3LaUxXpdnxy86eSUaP3fmj4Yw9eDVQqdaLKJ60DsHZkSdaaOO6PB3LuQ3B/sbC1v1AFaI6b2/diCI3Z/m9owawDhO8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743705613; c=relaxed/simple;
-	bh=+c0lpL2GrWHDQBfqc/VRwWnEKjdbCVX9Kn9CXF/WVGU=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tB1EkPOm9cI8X0dtKmP2hen23KdJzQE48Ci+06MZuGsOpkup1DF11i2jNsnGgpADhzJ6XkawdKZ86CAhNUFb7gEQ2H4rZAH0wUVfIYssu79xIYeDYYdwm3TnGMni08JIkLqJJ5QBl1skU36jjojCEnN3ITxAwB3WCaHiliW1IxE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mareichelt.com; spf=pass smtp.mailfrom=mareichelt.com; dkim=pass (2048-bit key) header.d=mareichelt.com header.i=@mareichelt.com header.b=Sdn2T283; arc=none smtp.client-ip=91.227.220.155
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mareichelt.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mareichelt.com
+	s=arc-20240116; t=1743705648; c=relaxed/simple;
+	bh=+67JXDQx5zChjcnw+v0CCW6m/RXyD81jjti8pA7/2Gs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rVAK8P7jRUmAUW5ntzwug5q1qu0BTteM63iH7KPOG0+yJYOA4WbbfesmqZ+C6aSTvRiNDjsm2GAshwKedEQ7VYfyWtQ56yLU+VsQf6XGWuccq3WGkU+EtNkFIMlr1y2PavJhTTk31tzQlVbvErTipk11ScVSSlB19Z2jIhZaj98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HZ1cxQEE; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mareichelt.com header.i=@mareichelt.com header.b="Sdn2T283"
-Date: Thu, 3 Apr 2025 20:32:06 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mareichelt.com;
-	s=202107; t=1743705128;
-	bh=+c0lpL2GrWHDQBfqc/VRwWnEKjdbCVX9Kn9CXF/WVGU=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:In-Reply-To:Cc:content-type:date:From:from:
-	 in-reply-to:message-id:mime-version:references:reply-to:Sender:
-	 Subject:To;
-	b=Sdn2T283kHVUaY1Yy7sxXznBvMhyy48T8Dp2f0SpMDnsuZuT2DyDQb0dA4bFycH41
-	 TWIDKVInsPMjj9C5zZZGucLM4eTQ+FdyeVCAYh0xSnzEokDF3kqVoQ6O7bnPplxN8z
-	 T/bDe5dZATcELGtECSRtEh2SuMHq8AGDjj1pdJiu4nZN13cKsnMCTwtIE27XIqSc2B
-	 4Ryo2TKKl9dOAS6ubc64xIuZX7MJews2Myi78neIVCnqH1czBaF9O7dSe4UiXFIu5j
-	 jvAlnY2Tz6ob5aUAmMPb4aIazsPq4f4wuGoWIm21de32vFrvDWvxyq0QV1eVmTPExc
-	 DY4yNesC59pnA==
-From: Markus Reichelt <lkt+2023@mareichelt.com>
-To: stable@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 6.12 00/22] 6.12.22-rc1 review
-Message-ID: <20250403183206.GA30960@pc21.mareichelt.com>
-Mail-Followup-To: stable@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250403151622.055059925@linuxfoundation.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HZ1cxQEE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743705647; x=1775241647;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=+67JXDQx5zChjcnw+v0CCW6m/RXyD81jjti8pA7/2Gs=;
+  b=HZ1cxQEE9rs7++vCZFtAuNxaFSDCClfvBTuZKsQ/DKqKkQUL5X9zFkPv
+   ZQcsv1D/VsZ0sR60dA2n6FoZhC2DX/TYZ7Bwtjp9aFnpWddz3ay9AekBh
+   hs0WUIu2pm5Md1lfygKxu5cNg+MOPK8BX1V/Co5uwOO9PHxe9+Ztq9qWr
+   HvCcRgyPRafo1K0OhyWjBgcR2iPVsIoDHpXWoQXXwPbQo6SHMEi2P4kpg
+   C0W6yhiBJMQy93NqWQxVpEDtQiNHA1dte5Kzo+fLKhMxo8v5Be5rLl2n7
+   m5IjNLpLipJACJzG84+TAfqFGY7FyesTrxPoot6HUAjIB8QEbBzxEa9Tt
+   w==;
+X-CSE-ConnectionGUID: xWp9VgJQSWyNiNQYHmxZPg==
+X-CSE-MsgGUID: XsQtsyDSRNmLnDJ7IAFVeA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11393"; a="56499559"
+X-IronPort-AV: E=Sophos;i="6.15,186,1739865600"; 
+   d="scan'208";a="56499559"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 11:40:46 -0700
+X-CSE-ConnectionGUID: TVhG7cbDTtWeBxtqRj9yjw==
+X-CSE-MsgGUID: grr0MWSBT7SIPiKQr34ZDg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,186,1739865600"; 
+   d="scan'208";a="131215334"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 11:40:38 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1u0PUQ-00000008tz0-2eZc;
+	Thu, 03 Apr 2025 21:40:34 +0300
+Date: Thu, 3 Apr 2025 21:40:34 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Terry Bowman <terry.bowman@amd.com>
+Cc: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
+	alison.schofield@intel.com, vishal.l.verma@intel.com,
+	ira.weiny@intel.com, dan.j.williams@intel.com, willy@infradead.org,
+	jack@suse.cz, rafael@kernel.org, len.brown@intel.com, pavel@ucw.cz,
+	ming.li@zohomail.com, nathan.fontenot@amd.com,
+	Smita.KoralahalliChannabasappa@amd.com,
+	huang.ying.caritas@gmail.com, yaoxt.fnst@fujitsu.com,
+	peterz@infradead.org, gregkh@linuxfoundation.org,
+	quic_jjohnson@quicinc.com, ilpo.jarvinen@linux.intel.com,
+	bhelgaas@google.com, mika.westerberg@linux.intel.com,
+	akpm@linux-foundation.org, gourry@gourry.net,
+	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+	nvdimm@lists.linux.dev, linux-fsdevel@vger.kernel.org,
+	linux-pm@vger.kernel.org, rrichter@amd.com,
+	benjamin.cheatham@amd.com, PradeepVineshReddy.Kodamati@amd.com,
+	lizhijian@fujitsu.com
+Subject: Re: [PATCH v3 1/4] kernel/resource: Provide mem region release for
+ SOFT RESERVES
+Message-ID: <Z-7WImoc5Dg3Xtyq@smile.fi.intel.com>
+References: <20250403183315.286710-1-terry.bowman@amd.com>
+ <20250403183315.286710-2-terry.bowman@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,21 +79,57 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250403151622.055059925@linuxfoundation.org>
+In-Reply-To: <20250403183315.286710-2-terry.bowman@amd.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-* Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
-
-> This is the start of the stable review cycle for the 6.12.22 release.
-> There are 22 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Thu, Apr 03, 2025 at 01:33:12PM -0500, Terry Bowman wrote:
+> From: Nathan Fontenot <nathan.fontenot@amd.com>
 > 
-> Responses should be made by Sat, 05 Apr 2025 15:16:11 +0000.
-> Anything received after that time might be too late.
+> Add a release_Sam_region_adjustable() interface to allow for
+> removing SOFT RESERVE memory resources. This extracts out the code
+> to remove a mem region into a common __release_mem_region_adjustable()
+> routine, this routine takes additional parameters of an IORES
+> descriptor type to add checks for IORES_DESC_* and a flag to check
+> for IORESOURCE_BUSY to control it's behavior.
+> 
+> The existing release_mem_region_adjustable() is a front end to the
+> common code and a new release_srmem_region_adjustable() is added to
+> release SOFT RESERVE resources.
 
-Hi Greg
+...
 
-6.12.22-rc1 compiles, boots and runs here on x86_64 (AMD Ryzen 5 7520U,
-Slackware64-current), no regressions observed.
+> +void release_mem_region_adjustable(resource_size_t start, resource_size_t size)
+> +{
+> +	return __release_mem_region_adjustable(start, size,
 
-Tested-by: Markus Reichelt <lkt+2023@mareichelt.com>
+You have still room on the previous line for the parameters.
+
+> +					       true, IORES_DESC_NONE);
+
+Return on void?! Interesting... What do you want to do here?
+
+> +}
+> +EXPORT_SYMBOL(release_mem_region_adjustable);
+> +#endif
+> +
+> +#ifdef CONFIG_CXL_REGION
+> +void release_srmem_region_adjustable(resource_size_t start,
+> +				     resource_size_t size)
+
+This can be put on a single line.
+
+> +{
+> +	return __release_mem_region_adjustable(start, size,
+> +					       false, IORES_DESC_SOFT_RESERVED);
+
+Same comments as per above function.
+
+> +}
+> +EXPORT_SYMBOL(release_srmem_region_adjustable);
+> +#endif
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
