@@ -1,43 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A4D227BF8B;
-	Thu,  3 Apr 2025 19:07:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 768692580F5;
+	Thu,  3 Apr 2025 19:07:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743707256; cv=none; b=O9m92Uio4L8a+ULXVqAgP/shNOmYphr775osBZfRTc8xuv4UtTIok8Wns7meHWBqy2ycHeidiGP5f/wrs3flKY1l6uIDJB/5M0SXNl5uT562+gKPWfSvXY73FJxGvCPVEbgPRxu/0/Ol8Q/pcyZklQ8W13ZDCrsiFX7tOP/2q90=
+	t=1743707258; cv=none; b=owkksgImQRCohumVtZVwQO9q+2ypW+A+yu4ldPEv7rIv0+2ReWsdDiVUvp+cNLaZH6Ze86EpFrJiGh8nJyNZWBUBZrXyI/TiOhCwx2pLdDxRmXBEumWAkyXgvLHcB65HWx/TtH1inpe9FHEQdQJ5XQRKJNpj//9k9ykj3qTcjsY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743707256; c=relaxed/simple;
-	bh=QU5I1MrPAOwaDEuby5OorXeQKDacA3xDMuF6YRB00J0=;
+	s=arc-20240116; t=1743707258; c=relaxed/simple;
+	bh=TsMNKRZtD/Lt/aSoZyhCzfbpGiFdx00T4FRyJB57hNs=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=HXtH51FimtLW9mn1DdvKlcGfhwC6cJd4kgBS/6LnOUqNkSCOvmAznDzPewfyRBC4Semw7hi9W1CNyuDZpLdWzQz96ZGuxEfTJBA0G0t67cbGLsNutEVoKRntqXbHlS72Xu0Knq/O8sfluioB6brRCEEs0Ve4Xs3pwt7OyiqxzBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tbm0AJP3; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=iy1IwcJSmbmDmhApYTArYtbkNbW8oKF/s+igPF82GP4gFyFOVOPUAv+sdANzZrfpGBUgsWIs4EQVaRD0NhPthzZdwIJ5k4MxxQrXI7WsNtsPANKJefX6J9G1EuyUlGnbkAWXsqylZRWCfWyfKgPHCU4SSC9Q4bXxGPHdGNcgdtI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hVW8vL7e; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tbm0AJP3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3D58C4CEE9;
-	Thu,  3 Apr 2025 19:07:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hVW8vL7e"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0B3FC4CEE3;
+	Thu,  3 Apr 2025 19:07:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743707254;
-	bh=QU5I1MrPAOwaDEuby5OorXeQKDacA3xDMuF6YRB00J0=;
+	s=k20201202; t=1743707258;
+	bh=TsMNKRZtD/Lt/aSoZyhCzfbpGiFdx00T4FRyJB57hNs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tbm0AJP3NXxRiozrOGTZ/voMZ8pl2Q0nwWgyW3Ew4t6QHlfIceGXcspPbRJZAv7uw
-	 I+Ic5HsY2pWzzT+f/bCB2HWhm0trSK1KEgqBLynTwKrfvqWGqLMhz9NqUAuCAozizx
-	 LuybHhocyhYWlYUWkJwGqTzvB4RKWZgfehqyFCNaIeJA4OvoYKigA4mGPP4XA3iyrU
-	 YmQXqnrYKcxRsxT08DRXac8IIm4R9++TYXMyv2XiUsDmRFhHqwmASx182nZKy/5hwa
-	 1mWeTxaPYgA0eKRRY1NA5+GA6sqtH/pDTbJjK7AFdgTXl3slTjgXiA5ewvhom3OMyy
-	 8l62AONiQPN2g==
+	b=hVW8vL7e1xnObUq227NMjJMkJOUaftRNq5dX0NOSUO8m6XaCQTmHjfsUjW55v9Hkl
+	 QrlY213UHrrhqyAG2bX2f4q8YPaBU7bFZiO/DuKeCWezUSCs38x6e8KaBfeHtEOBHB
+	 W7wEGdnqiTDI7McNBG9PwMTh1VxzX//AM5VaVF4rqpSoENdmmyDkPJpU90o8NxGyxB
+	 jBlPDlbClZcbnTXnlSVykwOXk/gRQpHS5TGyFNQaYtlP3cuUqd6l/v0ZI4xvGmgAGt
+	 LS5p9wvM82qg03ohJQPGVMp3nacsu4dlttfShyKQJn1EfyzXsjNMVVHfz+jxejxHZa
+	 PX9OJ5mEyk6rA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Kiran K <kiran.k@intel.com>,
+Cc: Jiande Lu <jiande.lu@mediatek.com>,
 	Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
 	Sasha Levin <sashal@kernel.org>,
 	marcel@holtmann.org,
 	luiz.dentz@gmail.com,
-	linux-bluetooth@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 41/47] Bluetooth: btintel_pcie: Add device id of Whale Peak
-Date: Thu,  3 Apr 2025 15:05:49 -0400
-Message-Id: <20250403190555.2677001-41-sashal@kernel.org>
+	matthias.bgg@gmail.com,
+	angelogioacchino.delregno@collabora.com,
+	linux-bluetooth@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Subject: [PATCH AUTOSEL 6.12 43/47] Bluetooth: btusb: Add 2 HWIDs for MT7922
+Date: Thu,  3 Apr 2025 15:05:51 -0400
+Message-Id: <20250403190555.2677001-43-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250403190555.2677001-1-sashal@kernel.org>
 References: <20250403190555.2677001-1-sashal@kernel.org>
@@ -52,45 +56,57 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.21
 Content-Transfer-Encoding: 8bit
 
-From: Kiran K <kiran.k@intel.com>
+From: Jiande Lu <jiande.lu@mediatek.com>
 
-[ Upstream commit 6b8c05e52d66e4fe4ab1df4c6e15f339ecd9aa51 ]
+[ Upstream commit a88643b7e48506777e175e80c902c727ddd90851 ]
 
-Add device of Whale Peak.
+Add below HWIDs for MediaTek MT7922 USB Bluetooth chip.
+VID 0x0489, PID 0xe152
+VID 0x0489, PID 0xe153
 
-Output of sudo lspci -v  -s 00:14.7:
+Patch has been tested successfully and controller is recognized
+device pair successfully.
 
-00:14.7 Bluetooth: Intel Corporation Device e476
-        Subsystem: Intel Corporation Device 0011
-        Flags: bus master, fast devsel, latency 0, IRQ 16, IOMMU group 11
-        Memory at 11011c30000 (64-bit, non-prefetchable) [size=16K]
-        Capabilities: [c8] Power Management version 3
-        Capabilities: [d0] MSI: Enable- Count=1/1 Maskable- 64bit+
-        Capabilities: [40] Express Root Complex Integrated Endpoint, MSI 00
-        Capabilities: [80] MSI-X: Enable+ Count=32 Masked-
-        Capabilities: [100] Latency Tolerance Reporting
-        Kernel driver in use: btintel_pcie
-        Kernel modules: btintel_pcie
+MT7922 module bring up message as below.
+Bluetooth: Core ver 2.22
+Bluetooth: HCI device and connection manager initialized
+Bluetooth: HCI socket layer initialized
+Bluetooth: L2CAP socket layer initialized
+Bluetooth: SCO socket layer initialized
+Bluetooth: hci0: HW/SW Version: 0x008a008a, Build Time: 20241106163512
+Bluetooth: hci0: Device setup in 2284925 usecs
+Bluetooth: hci0: HCI Enhanced Setup Synchronous Connection command is advertised, but not supported.
+Bluetooth: hci0: AOSP extensions version v1.00
+Bluetooth: BNEP (Ethernet Emulation) ver 1.3
+Bluetooth: BNEP filters: protocol multicast
+Bluetooth: BNEP socket layer initialized
+Bluetooth: MGMT ver 1.22
+Bluetooth: RFCOMM TTY layer initialized
+Bluetooth: RFCOMM socket layer initialized
+Bluetooth: RFCOMM ver 1.11
 
-Signed-off-by: Kiran K <kiran.k@intel.com>
+Signed-off-by: Jiande Lu <jiande.lu@mediatek.com>
 Signed-off-by: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bluetooth/btintel_pcie.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/bluetooth/btusb.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/bluetooth/btintel_pcie.c b/drivers/bluetooth/btintel_pcie.c
-index 53f6b4f76bccd..ab465e13c1f60 100644
---- a/drivers/bluetooth/btintel_pcie.c
-+++ b/drivers/bluetooth/btintel_pcie.c
-@@ -36,6 +36,7 @@
- /* Intel Bluetooth PCIe device id table */
- static const struct pci_device_id btintel_pcie_table[] = {
- 	{ BTINTEL_PCI_DEVICE(0xA876, PCI_ANY_ID) },
-+	{ BTINTEL_PCI_DEVICE(0xE476, PCI_ANY_ID) },
- 	{ 0 }
- };
- MODULE_DEVICE_TABLE(pci, btintel_pcie_table);
+diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
+index 3a0b9dc98707f..151054a718522 100644
+--- a/drivers/bluetooth/btusb.c
++++ b/drivers/bluetooth/btusb.c
+@@ -626,6 +626,10 @@ static const struct usb_device_id quirks_table[] = {
+ 						     BTUSB_WIDEBAND_SPEECH },
+ 	{ USB_DEVICE(0x0489, 0xe102), .driver_info = BTUSB_MEDIATEK |
+ 						     BTUSB_WIDEBAND_SPEECH },
++	{ USB_DEVICE(0x0489, 0xe152), .driver_info = BTUSB_MEDIATEK |
++						     BTUSB_WIDEBAND_SPEECH },
++	{ USB_DEVICE(0x0489, 0xe153), .driver_info = BTUSB_MEDIATEK |
++						     BTUSB_WIDEBAND_SPEECH },
+ 	{ USB_DEVICE(0x04ca, 0x3804), .driver_info = BTUSB_MEDIATEK |
+ 						     BTUSB_WIDEBAND_SPEECH },
+ 	{ USB_DEVICE(0x04ca, 0x38e4), .driver_info = BTUSB_MEDIATEK |
 -- 
 2.39.5
 
