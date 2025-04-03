@@ -1,110 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49B7522E015;
-	Thu,  3 Apr 2025 19:19:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD35F22E403
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 19:19:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743707949; cv=none; b=dAxTIH+Vl0JP1oKN8sHfFVC996Q+rKVdxER00a0riKyDo72dL7B9dvDrFFla0ml0yxQufato+J/kvDyoHasV8oyiKOb2vnBAAOfgV+dfq8Ze4Al29gPerAn1W4ZSzZ6gcR2ajciVb/JwL1IB/VydrVWMmRrx6qs2HpI8PxphWHI=
+	t=1743707950; cv=none; b=Keq/ftpMln2pYSfBABIBtGEJi+6zF3zYkduvTa+UFtXJHxWbXbYDfFPCHPiozZ1MlecXq2KpZq6LUJZolCzZoticylYBBPSMK5VgkPOfjAtM5xuY+JLFOenlENaf93MiCQJAldgRezg5tz+hDnUnKkz1T785kEjHHVb+/kJTqOc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743707949; c=relaxed/simple;
-	bh=ZW6nkTxeTi7AM/XCNK9IYLEj3DtDQTUlapMmAPUPR88=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=mebIP7AyJLGvLtF93XaBSV2vjY7ZVAKL5kIB93t8Cjf4cEnkadZsT9FYFvQnZJvXqmSefJEwkdonIhRG42e4ni+mSWH7Q4laLgC3eSF5UGKMAVOzfY92DfndTxKg7JXEXwf+8QYV4N9URy5j7TY+513O6KRAzxX4CbGg09VF5So=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lGdiyoCh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743707950; c=relaxed/simple;
+	bh=T5uoDV9HKncHWI6WuWJr72wllf/CE9rQIuIo7jAU41E=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sGfHdXqLfgs1GXItKwpyHrpUPKY+Sgmhp+nQNA4Omxzv8ueHBZsjOsQrY1tW152x9C+S2PCvh3vkTQQhRNQ+/MYpCxb6ZYcerFrmiX8hzjMgqzlCfMHQuJmnF3H/Em5HANRQ7mTcUD3+KKovwKG+hWqyE3TYQtU84GFr6qS8THQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=A4QKqm0D; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lGdiyoCh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9237C4CEEB;
-	Thu,  3 Apr 2025 19:19:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743707949;
-	bh=ZW6nkTxeTi7AM/XCNK9IYLEj3DtDQTUlapMmAPUPR88=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=lGdiyoChgRev+1agK6BDJJFGTNU+0IF2H59BrloMckmfT1CvZ8BJQv+bJ1wJoqDoM
-	 boOSeEf2cTJbG52lesOaRs6NStvD1BD3t3jz7biNKK+UneX/NyfYVTc0040ANwaeXd
-	 d6xvDdpXcptoX03HUmHpwKlYEFVznHLrzKZdKylzfljaT7vqWTyIjUbWeTdeFizXsD
-	 RTEAHQpBG16ti+Plf5eoYVaWTjyjvg5RnHbnqOzzbgCyfj+D1UPSqobsLcXfOaaoBJ
-	 te3xfbbE6IN2+KcnYRkatk1MNUP7sYDiTOKlRV/JhbdSs4x3Onjh74JHJrHEEadBfT
-	 s/WvKxetfZyww==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Leonid Arapov <arapovl839@gmail.com>,
-	Helge Deller <deller@gmx.de>,
-	Sasha Levin <sashal@kernel.org>,
-	krzysztof.kozlowski@linaro.org,
-	linux@treblig.org,
-	tzimmermann@suse.de,
-	u.kleine-koenig@baylibre.com,
-	linux-omap@vger.kernel.org,
-	linux-fbdev@vger.kernel.org,
-	dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 6.6 20/23] fbdev: omapfb: Add 'plane' value check
-Date: Thu,  3 Apr 2025 15:18:13 -0400
-Message-Id: <20250403191816.2681439-20-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250403191816.2681439-1-sashal@kernel.org>
-References: <20250403191816.2681439-1-sashal@kernel.org>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="A4QKqm0D"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ac6e8cf9132so244677766b.2
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 12:19:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1743707944; x=1744312744; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=xOJ+a6c7HX+Aw8dr/wh7QGl7onl6cqWKpJLTwkfT2G8=;
+        b=A4QKqm0DKMkO8/9BQrvm3PoaYGAuSdnYKTO7weA7DN+7Ya0rqZPCMmWHmnPv/FBfx8
+         cWx7xoTDaPxSVbsC02Tb0OLWhh8Y6BKJMn5Fkayqtk3iF5pJiOLRPaEZqAW8LE2KPtnD
+         J8hL67DjpGQgms90Ys4QkJY8rlXN8JgEOCGek=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743707944; x=1744312744;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xOJ+a6c7HX+Aw8dr/wh7QGl7onl6cqWKpJLTwkfT2G8=;
+        b=XkyVFuScgCGAnHiLooXCJPOg/zeeJEDHvMh1RNdXPQGgbjBsklXsbKFtKhw8XEzo0k
+         ZTljaWGzjmtEx/1pIpr/3Dnj1opx8kTNZ052T/1g5vQRj9LCrPGzkJqIOahOdcx0mp6x
+         7RGlAFfFsNa1m7e5oBhJk4brJkH8Y8MIFGkMsZ7mNCcr/RRCQOWxDmWFI/eltNQu9vet
+         ZVtP4MLRwRikZEEPRj4/jLm5IxNqW0zHWx133NnfqoTeSCINsPd0IUOJXnYeNVNbmcpA
+         qUe+5CCRa/OFxpwNgFA4LX2NmxnyhPD4TMHBcL4kt/hBw9P8FhxRmk46gl04BQqY4GbQ
+         1Afg==
+X-Forwarded-Encrypted: i=1; AJvYcCX7BqqO9lEyZyn7c8RiWoNFLJ/kYdttou/y1j0SpV0xRPv/8Rv86er/bMABeoENVKXl1Fl4R8qTfqSrGDw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxA+uUXrn9inDR/9FeNrY7duLb/TFy49HVg5H/ISonhrnLrD1IB
+	BK8KwGqoS2tOr0wLmCn++6KFIM9oGqziIwX60zFVmpEEnRvXAsOBqBXdCVutOq+/YYE8/rDJ9c2
+	lew0=
+X-Gm-Gg: ASbGncuqbdUmhunvOQR1kmXnN7Yp3l+8ILG/7nx//Ja0FC87/jYm61nd6lyT5Z0WD8p
+	mvSbcZYJJCipUOyoZrrLyVQPwd1rS3NU2D8f/rE/hp9ZXYJIIGPBcT5POuR4SFL7KO7Qs0FbnKZ
+	KTWPuzhvFnzgPO3RxNPAyY44b1OUW/sKu0xkUUikMWgpTbB5vvzLI66Txv/76vHAbif2WSfvwU3
+	52GQ4K2kn8/Go8raQBmI68v/JK1iuGnrPj8wb21bcwZBhIFTmCdzzQ9kpxhuRsVMbf/e8i0VJos
+	Aar9Mi13/nJgSN8FMF/IwBQVmmgHQn4wxH4xcg3vUvLrbNyV5fS+5MX/8epqiIHLTO1NUVbYPqY
+	MpV/OUU3ax1wXDtLcizI=
+X-Google-Smtp-Source: AGHT+IGwvElIm8guevE6awAaOwvOgMQ6K9RqPCXQEu66OA9uXOo81HHLqpnCNCqfBnA46lFPQ8+bfw==
+X-Received: by 2002:a17:906:c153:b0:ac7:364b:7ec6 with SMTP id a640c23a62f3a-ac7d1306b84mr72286166b.0.1743707943862;
+        Thu, 03 Apr 2025 12:19:03 -0700 (PDT)
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com. [209.85.218.45])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7c013f660sm134197166b.89.2025.04.03.12.19.03
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Apr 2025 12:19:03 -0700 (PDT)
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ac3eb3fdd2eso221577166b.0
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 12:19:03 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXU12CJnpIbyrQ+d4cJbLQ0Aw66NPXhxrvCxCpvFHwoQpwsQXK+PF/3WQYmtA9Sp3tfmFy071vv8OUBKAU=@vger.kernel.org
+X-Received: by 2002:a17:907:9801:b0:ac7:33d0:dbe with SMTP id
+ a640c23a62f3a-ac7d18cb7f9mr80311566b.33.1743707942619; Thu, 03 Apr 2025
+ 12:19:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.85
-Content-Transfer-Encoding: 8bit
+References: <20250322-vfs-mount-b08c842965f4@brauner> <174285005920.4171303.15547772549481189907.pr-tracker-bot@kernel.org>
+ <20250401170715.GA112019@unreal> <20250403-bankintern-unsympathisch-03272ab45229@brauner>
+ <20250403-quartal-kaltstart-eb56df61e784@brauner> <20250403182455.GI84568@unreal>
+In-Reply-To: <20250403182455.GI84568@unreal>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Thu, 3 Apr 2025 12:18:45 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wj7wDF1FQL4TG1Bf-LrDr1RrXNwu0-cnOd4ZQRjFZB43A@mail.gmail.com>
+X-Gm-Features: ATxdqUFMslVpxLZQwg1CWi9MwTwtlcmOR2f0G9_2Lk6dEltjaQ2iJobffD6Dc_o
+Message-ID: <CAHk-=wj7wDF1FQL4TG1Bf-LrDr1RrXNwu0-cnOd4ZQRjFZB43A@mail.gmail.com>
+Subject: Re: [GIT PULL] vfs mount
+To: Leon Romanovsky <leon@kernel.org>
+Cc: Christian Brauner <brauner@kernel.org>, pr-tracker-bot@kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-From: Leonid Arapov <arapovl839@gmail.com>
+On Thu, 3 Apr 2025 at 11:25, Leon Romanovsky <leon@kernel.org> wrote:
+> >
+> > -     scoped_guard(rwsem_read, &namespace_sem)
+> > +     guard(rwsem_read, &namespace_sem);
+>
+> I'm looking at Linus's master commit a2cc6ff5ec8f ("Merge tag
+> 'firewire-updates-6.15' of git://git.kernel.org/pub/scm/linux/kernel/git/ieee1394/linux1394")
+> and guard is declared as macro which gets only one argument: include/linux/cleanup.h
+>   318 #define guard(_name) \
+>   319         CLASS(_name, __UNIQUE_ID(guard))
 
-[ Upstream commit 3e411827f31db7f938a30a3c7a7599839401ec30 ]
+Christian didn't test his patch, obviously.
 
-Function dispc_ovl_setup is not intended to work with the value OMAP_DSS_WB
-of the enum parameter plane.
+It should be
 
-The value of this parameter is initialized in dss_init_overlays and in the
-current state of the code it cannot take this value so it's not a real
-problem.
+        guard(rwsem_read)(&namespace_sem);
 
-For the purposes of defensive coding it wouldn't be superfluous to check
-the parameter value, because some functions down the call stack process
-this value correctly and some not.
+the guard() macro is kind of odd, but the oddity relates to how it
+kind of takes a "class" thing as it's argument, and that then expands
+to the constructor that may or may not take arguments itself.
 
-For example, in dispc_ovl_setup_global_alpha it may lead to buffer
-overflow.
+That made some of the macros simpler, although in retrospect the odd
+syntax probably wasn't worth it.
 
-Add check for this value.
-
-Found by Linux Verification Center (linuxtesting.org) with SVACE static
-analysis tool.
-
-Signed-off-by: Leonid Arapov <arapovl839@gmail.com>
-Signed-off-by: Helge Deller <deller@gmx.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/video/fbdev/omap2/omapfb/dss/dispc.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/video/fbdev/omap2/omapfb/dss/dispc.c b/drivers/video/fbdev/omap2/omapfb/dss/dispc.c
-index 21fef9db90d26..4f09111f8b57e 100644
---- a/drivers/video/fbdev/omap2/omapfb/dss/dispc.c
-+++ b/drivers/video/fbdev/omap2/omapfb/dss/dispc.c
-@@ -2749,9 +2749,13 @@ int dispc_ovl_setup(enum omap_plane plane, const struct omap_overlay_info *oi,
- 		bool mem_to_mem)
- {
- 	int r;
--	enum omap_overlay_caps caps = dss_feat_get_overlay_caps(plane);
-+	enum omap_overlay_caps caps;
- 	enum omap_channel channel;
- 
-+	if (plane == OMAP_DSS_WB)
-+		return -EINVAL;
-+
-+	caps = dss_feat_get_overlay_caps(plane);
- 	channel = dispc_ovl_get_channel_out(plane);
- 
- 	DSSDBG("dispc_ovl_setup %d, pa %pad, pa_uv %pad, sw %d, %d,%d, %dx%d ->"
--- 
-2.39.5
-
+            Linus
