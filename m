@@ -1,130 +1,128 @@
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from ksmg01.maxima.ru (ksmg01.maxima.ru [81.200.124.38])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63748241676
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 08:20:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87AB82417DD;
+	Thu,  3 Apr 2025 08:20:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.200.124.38
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743668423; cv=none; b=c3Oppbz2kNxyDv0j6v7hdTI6n2jbPeThGg0ZzMZEsem9k5lbp6MFn45aOGGSOSS4u+iTw6wQL+vEOyBWnxgCy/74IvgT4nyJUxOFLPrba6JV56A6BnUoCsU/Z1QBMWCtuXH/zo8fCmZ2mp+cQhhMItxSn8CJo4h5DRKY0SxprMc=
+	t=1743668448; cv=none; b=Jet538WVuGl9RgC3QiPbMmwMt0sOc/uB3mQH5xcEQwEwr17OxknpJtBq53dF4uxHpGV9wg05sxTHgMt1rd9QLknYc5x+oaq9wMOgSF9e6E8R6UerT6R2vdjNeBXiLt4bg87773lvtqyxSO0yEjq3/C06EMeL9o6Qe7LoVkq7YQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743668423; c=relaxed/simple;
-	bh=WtU0K9gXSVbwK3uZYqz27sU+ErkGzv8fI/hhbeLAXNQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IDjeulhnICowoU1Ri/hS4U1k+C3PnonOFC0GYutSAoxrwdoRxHwRhD6eCfTrzo5O1UKfV7xROz1+5dFquFhun8P9RFhXNUYOJzftCNP6tg+UfzQ43E+DVjB+JTPE2ho9XUNewhqekfIKGczTLkZM/avSKTfbokY/o0vwhePYIu8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=sjFk2UQm; arc=none smtp.client-ip=209.85.208.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1743668448; c=relaxed/simple;
+	bh=WJ51JsD3b6s+V/hEkDAk9Rl8dDqfB+TKiwWItWIoBW8=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=PHw0JaCPIHLRNOqjr5OEMaprO16EYazQqIKqSzt8IreBkQzXHV/fedyFHgUGAddVGi6NGCeHxE3YBXbPNhvYjVDWem6hCTvj63h7G6M8K/KYbTEzxEs2QeHWBrNBcjMzg3l0skiNZ4RsLUK3YX348RqnaUe4vNTnU4/Rkru3iHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mt-integration.ru; spf=pass smtp.mailfrom=mt-integration.ru; dkim=pass (2048-bit key) header.d=mt-integration.ru header.i=@mt-integration.ru header.b=oGx6box0; arc=none smtp.client-ip=81.200.124.38
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mt-integration.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mt-integration.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="sjFk2UQm"
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-30c0517142bso5242231fa.1
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 01:20:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1743668419; x=1744273219; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WtU0K9gXSVbwK3uZYqz27sU+ErkGzv8fI/hhbeLAXNQ=;
-        b=sjFk2UQm3sgHfZVvdEeaf/nukjD0yUq0jTEvp+A5dofQrW+JtlCqDBtbIhFYHNJwLi
-         gM0jEbJ8jHh1vhUAehztMc8SswKnQxpXmyondA+TMEiZa2+fMSxScttccZNiAc2dz23Z
-         zXcOBzZdJ71OD2X8wYwocaqHi1iwyqj7nLFh7FaefkWQKNnUqSnX65LA1A0/1rZtFUGv
-         VVH4nkq9yaSQcbJLaBjVRpGsBYqRndgj+/1xvBW9sTuhMvJD/xxPbyznN4j+YiCEviug
-         Dnj1Bty49P+Lep6D22R2rM4rAQK1J+TieZN18xOY7K4dDtKPCpdLvnJQ4E6EqxYLZngs
-         Z/mQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743668419; x=1744273219;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WtU0K9gXSVbwK3uZYqz27sU+ErkGzv8fI/hhbeLAXNQ=;
-        b=ActVRY6U0XcuPUkg7/u2xrvC6/WHI5nrepSSu59NokrkcGfUjroXYbM4zuaB3Nzrqp
-         TsknCH9jkLoEqLaUxO6Wu1dFtOj+g/CHtmFc7ObjibV1cz7Ru3ljltC3W7MWLdRmQzUO
-         2NqxnO2LOlx8cTkJKj0bRt5gwCr6CqELbPGRLLseF5vhAcoxo7xuK2ZjzMB6yY6ajIw5
-         3XdNAM2edZ7DNilgsbCTHn+uBoNKIXR8I7srPxulQCJRX4vuFUUowOCjw6gtdD+2GFCx
-         72U8XgEV2W7XT5IXmSFFd8B42rOfYKfpL0lhXmtcmOLx0pKBLD7upy8ICl/P5EDYEATM
-         fDrg==
-X-Forwarded-Encrypted: i=1; AJvYcCX+y0+t8mjSH3rlvKbcHKaXupRcJwdeZxB4WjAFa//CZgd7uY+/6EwJzk6LT0rsqjZWmBpMu/65vQ/UkhA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwY9QASNqlrDXChuhBfiN2tl+qi37sGvzTEfKEctSShmv8GjEB6
-	sGaT7UE7jH8o3Tt5OxjZ5ouTDmsa8WteJQhxpa00gC+hLwfDdpJ8ZFpYHlPzscCbkkcditz4DQP
-	F6hXsUdzI/WTwNOlh5cINx2bxyf9VciR4rqWo0Q==
-X-Gm-Gg: ASbGncsbqw4NF75MdpwxUP4UrDRQv1l2GvmdZgdCekg1gpi6yZLWazE87Fpy+23s4Ay
-	EzMGq01PpzxRDc3bEXv5CboNmH9I9ktnr9sPOlfS+MO6cp0HSjTPDxGiHCXeqb+SiTXeklyKJgB
-	9OZ1pNscWVxvkWpwEQA0Fz88+e/oubN9R6qH2ZT3SQYGdpCiQ5nY4kipHX
-X-Google-Smtp-Source: AGHT+IFXDWgpi7fgc4MQ2tsjz70/KKFNjkKho3c6vYNifn3mFK6XrakHKOLgdFy1aXwb0t30Ek/o/iYmKSzDnTaDwjk=
-X-Received: by 2002:a2e:9a09:0:b0:30b:963e:9b1a with SMTP id
- 38308e7fff4ca-30f02b974edmr5446951fa.23.1743668419465; Thu, 03 Apr 2025
- 01:20:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=mt-integration.ru header.i=@mt-integration.ru header.b="oGx6box0"
+Received: from ksmg01.maxima.ru (localhost [127.0.0.1])
+	by ksmg01.maxima.ru (Postfix) with ESMTP id 9712DC0004;
+	Thu,  3 Apr 2025 11:20:35 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 ksmg01.maxima.ru 9712DC0004
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mt-integration.ru;
+	s=sl; t=1743668435; bh=TeptcISo66cYrwTbg5r7b9qgrP/6fr4eK+YncGTZQew=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
+	b=oGx6box0EsxyTa2CTS0I5fMPopASgvfJ2zBAM24edXWvrP/c9RlSS+QCOzFSrG+hG
+	 eyoeiDZk5kNW5t+iqDN4hh966YbqsAooXGqUSvin+DWoZfQHH8fqyXZbwS+8iZqAfg
+	 nBAOrKtS3qjg72+h29wfu3mR/6Dxc3pPPi0RM9SLjrTyd60WLwjLiOI9jB4vsHvDTr
+	 NuXlf/jviSqGLZLJA1RrmQFI4tHcKqvzmr044VB8/8/kcSFWPqPSbDAsrvgSPXQetN
+	 MPqz7VWAJ8chJyr7uCWjhCwJZq30ctnmWLUpuh1EViwkCN9CKLLBE2oljkD9dMKfI7
+	 EOaxdd+ST/02Q==
+Received: from ksmg01.maxima.ru (autodiscover.maxima.ru [81.200.124.61])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(Client CN "*.maxima.ru", Issuer "GlobalSign GCC R3 DV TLS CA 2020" (verified OK))
+	by ksmg01.maxima.ru (Postfix) with ESMTPS;
+	Thu,  3 Apr 2025 11:20:35 +0300 (MSK)
+Received: from db126-1-abramov-14-d-mosos.mti-lab.com (172.25.20.118) by
+ mmail-p-exch01.mt.ru (81.200.124.61) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Thu, 3 Apr 2025 11:20:34 +0300
+From: Ivan Abramov <i.abramov@mt-integration.ru>
+To: Alexander Aring <alex.aring@gmail.com>
+CC: Ivan Abramov <i.abramov@mt-integration.ru>, Stefan Schmidt
+	<stefan@datenfreihafen.org>, Miquel Raynal <miquel.raynal@bootlin.com>,
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon
+ Horman <horms@kernel.org>, <linux-wpan@vger.kernel.org>,
+	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<lvc-project@linuxtesting.org>
+Subject: [PATCH net v2 0/3] Avoid calling WARN_ON() on allocation failure in cfg802154_switch_netns()
+Date: Thu, 3 Apr 2025 11:20:18 +0300
+Message-ID: <20250403082021.990667-1-i.abramov@mt-integration.ru>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250402152000.1572764-1-andriy.shevchenko@linux.intel.com>
- <CAMRc=MfzRVy85NR_eSQc3ZX_OmgCRUKuBdd6TqCu=Adwh9drrA@mail.gmail.com> <Z-5BHzTEed607Afz@smile.fi.intel.com>
-In-Reply-To: <Z-5BHzTEed607Afz@smile.fi.intel.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 3 Apr 2025 10:20:08 +0200
-X-Gm-Features: AQ5f1Jr6MvHtO5d24SGEw18trMjEWdMN20_xEgQSTjeferZCCT3H-6FHaxyvrZ0
-Message-ID: <CAMRc=Mc12B-b-w6bJeOgwFvzbmaqzL+uT7vJssVYN4tMu3YpaQ@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] gpiolib: Make gpiod_put() error pointer aware
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, 
-	Florian Fainelli <florian.fainelli@broadcom.com>, Mark Brown <broonie@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: mmail-p-exch02.mt.ru (81.200.124.62) To
+ mmail-p-exch01.mt.ru (81.200.124.61)
+X-KSMG-AntiPhishing: NotDetected
+X-KSMG-AntiSpam-Auth: dmarc=none header.from=mt-integration.ru;spf=none smtp.mailfrom=mt-integration.ru;dkim=none
+X-KSMG-AntiSpam-Envelope-From: i.abramov@mt-integration.ru
+X-KSMG-AntiSpam-Info: LuaCore: 54 0.3.54 464169e973265e881193cca5ab7aa5055e5b7016, {rep_avail}, {Tracking_from_domain_doesnt_match_to}, 81.200.124.61:7.1.2;ksmg01.maxima.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;mt-integration.ru:7.1.1;127.0.0.199:7.1.2, FromAlignment: s, ApMailHostAddress: 81.200.124.61
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiSpam-Lua-Profiles: 192326 [Apr 03 2025]
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Version: 6.1.1.11
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.1.1.8310, bases: 2025/04/03 03:59:00 #27851158
+X-KSMG-AntiVirus-Status: NotDetected, skipped
+X-KSMG-LinksScanning: NotDetected
+X-KSMG-Message-Action: skipped
+X-KSMG-Rule-ID: 7
 
-On Thu, Apr 3, 2025 at 10:04=E2=80=AFAM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Thu, Apr 03, 2025 at 08:58:09AM +0200, Bartosz Golaszewski wrote:
-> > On Wed, Apr 2, 2025 at 5:20=E2=80=AFPM Andy Shevchenko
-> > <andriy.shevchenko@linux.intel.com> wrote:
-> > >
-> > > When non-optional GPIO is requested and failed, the variable that hol=
-ds
-> > > the (invalid) descriptor can contain an error pointer. However, gpiod=
-_put()
-> > > ignores that fact and tries to cleanup never requested descriptor.
-> > > Make sure gpiod_put() ignores that as well.
-> > >
-> > > While at it, do the same for the gpiod_put_array().
-> > >
-> > > Note, it arguable needs to be present in the stubs as those are usual=
-ly
-> > > called when CONFIG_GPIOLIB=3Dn and GPIOs are requested using gpiod_ge=
-t_optional()
-> > > or similar APIs.
->
-> > I'm not a fan of this. Silently ignoring NULL makes sense in the
-> > context of _optional() calls where we want to do nothing on GPIOs that
-> > aren't there.
->
-> > But this encourages people to get sloppy and just ignore
-> > error pointers returned from gpiod_get()?
->
-> From where did you come to this conclusion, please? We have many subsyste=
-ms
-> that ignore invalid resource on the release stage, starting from platform
-> device driver core.
->
+This series was inspired by Syzkaller report on warning in
+cfg802154_switch_netns().
 
-The fact that many people do something does not mean it's correct.
-Many other subsystem scream loudly when that happens, so I would be ok
-with adding a big WARN_ON(IS_ERR(desc)).
+WARNING: CPU: 0 PID: 5837 at net/ieee802154/core.c:258 cfg802154_switch_netns+0x3c7/0x3d0 net/ieee802154/core.c:258
+Modules linked in:
+CPU: 0 UID: 0 PID: 5837 Comm: syz-executor125 Not tainted 6.13.0-rc6-syzkaller-00918-g7b24f164cf00 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 09/13/2024
+RIP: 0010:cfg802154_switch_netns+0x3c7/0x3d0 net/ieee802154/core.c:258
+Call Trace:
+ <TASK>
+ nl802154_wpan_phy_netns+0x13d/0x210 net/ieee802154/nl802154.c:1292
+ genl_family_rcv_msg_doit net/netlink/genetlink.c:1115 [inline]
+ genl_family_rcv_msg net/netlink/genetlink.c:1195 [inline]
+ genl_rcv_msg+0xb14/0xec0 net/netlink/genetlink.c:1210
+ netlink_rcv_skb+0x1e3/0x430 net/netlink/af_netlink.c:2543
+ genl_rcv+0x28/0x40 net/netlink/genetlink.c:1219
+ netlink_unicast_kernel net/netlink/af_netlink.c:1322 [inline]
+ netlink_unicast+0x7f6/0x990 net/netlink/af_netlink.c:1348
+ netlink_sendmsg+0x8e4/0xcb0 net/netlink/af_netlink.c:1892
+ sock_sendmsg_nosec net/socket.c:711 [inline]
+ __sock_sendmsg+0x221/0x270 net/socket.c:726
+ ____sys_sendmsg+0x52a/0x7e0 net/socket.c:2594
+ ___sys_sendmsg net/socket.c:2648 [inline]
+ __sys_sendmsg+0x269/0x350 net/socket.c:2680
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
 
-> > Also: all other calls error out on IS_ERR(desc) so why would we make it=
- an
-> > exception?
->
-> Because it's _release_ stage that participates in the cleaning up of
-> the allocated resources in error paths. It's a common approach in
-> the kernel. I would rather ask what makes GPIOLIB so special about it?
->
+This warning is caused by Syzkaller's fault injection, which causes
+kstrdup() in device_rename() to fail, so device_rename() returns -ENOMEM.
 
-Just because it's the release stage, does not mean you shouldn't care
-about the correctness of the consumer code. Passing an IS_ERR(descr)
-to any of the GPIO APIs can happen if the user ignores an error
-returned by gpiod_get(). That's not alright.
+Since practically such failure is not possible, avoid it, additionally
+fixing similar pointless allocation-related warnings.
 
-Bart
+v2: Add tags to patch 2. Also make sure to commit against latest
+netdev/net.
+
+Ivan Abramov (3):
+  ieee802154: Restore initial state on failed device_rename() in
+    cfg802154_switch_netns()
+  ieee802154: Avoid calling WARN_ON() on -ENOMEM in
+    cfg802154_switch_netns()
+  ieee802154: Remove WARN_ON() in cfg802154_pernet_exit()
+
+ net/ieee802154/core.c | 51 ++++++++++++++++++++++++-------------------
+ 1 file changed, 29 insertions(+), 22 deletions(-)
+
+-- 
+2.39.5
+
