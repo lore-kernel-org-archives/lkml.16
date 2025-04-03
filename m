@@ -1,57 +1,81 @@
-Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A10133997;
-	Thu,  3 Apr 2025 20:17:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.133.224.34
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 569FE1D6DB4;
+	Thu,  3 Apr 2025 20:20:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743711473; cv=none; b=Lt/WTojetb10IpBqbEg4ZaLvofyg9Lb2zKGK6HHk6D4aUg0zHKFD8AyjEZSmA1Ho1b9rCkI3ftCt5n25bNya55hYJfEqbRj6bGHxdybARHvdVFRuhgquk7hBZZCK4bX8jcDJFbKPJIj82kuV8H3HXTPgK5LE8WfVRPJ1RXLpleU=
+	t=1743711600; cv=none; b=oIm+MRUtcfahvoBtMEqlMoqpSNDqLozMdWQqCTPo2lFELq8YU+R4BFy5eBUXrhqipm95uJuD83jGZtjUO4/2NadhmDCboE3LPl992LPZ+w50h/Fy+jZMdnJweovijULe9jgPTHOOd79UsOkizXNCncifjItaTwdUhCFOSz7Rkgo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743711473; c=relaxed/simple;
-	bh=ejLLA06zLnyyVFtt9C0U6uklOKBjBiRO5UroAuh+hrM=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=tcj4zx954sCbQTHzJubDjGXtqIvn0r95F4Rj1FIlBcp0hvNKJMus3qHsDDthX8VwEGBRW52LY/AKJzI0r34TERYsLDMHmiOAGlXgkBp9ZlMrPesaGxlxc1YuyffK3MS2DcYiQFS8JQVLfZAqmVSL4I5QGnhZ7mgEThzDQm82hR4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk; spf=none smtp.mailfrom=orcam.me.uk; arc=none smtp.client-ip=78.133.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=orcam.me.uk
-Received: by angie.orcam.me.uk (Postfix, from userid 500)
-	id 6FC1F92009C; Thu,  3 Apr 2025 22:17:48 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by angie.orcam.me.uk (Postfix) with ESMTP id 68AB092009B;
-	Thu,  3 Apr 2025 21:17:48 +0100 (BST)
-Date: Thu, 3 Apr 2025 21:17:48 +0100 (BST)
-From: "Maciej W. Rozycki" <macro@orcam.me.uk>
-To: Marco Crivellari <marco.crivellari@suse.com>
-cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, 
-    Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-    Frederic Weisbecker <frederic@kernel.org>, 
-    Anna-Maria Behnsen <anna-maria@linutronix.de>, 
-    Thomas Gleixner <tglx@linutronix.de>, 
-    Peter Zijlstra <peterz@infradead.org>, Huacai Chen <chenhuacai@kernel.org>
-Subject: Re: [PATCH v6 1/1] MIPS: Fix idle VS timer enqueue
-In-Reply-To: <CAAofZF7YVK207bVYu5-p0CAKjpB7hHYomgd9wdV1J=5GkeNXbw@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.2504032112590.53907@angie.orcam.me.uk>
-References: <20250315194002.13778-1-marco.crivellari@suse.com> <20250315194002.13778-2-marco.crivellari@suse.com> <alpine.DEB.2.21.2503211146001.35806@angie.orcam.me.uk> <CAAofZF4gy6WJKLK4TzF5aV7+ca3gob5jVz3XQZyGrTpfnCsn_Q@mail.gmail.com>
- <alpine.DEB.2.21.2503211747150.35806@angie.orcam.me.uk> <CAAofZF5yaGMG0Kyax+ksfGngQ0T6AxvN5-60SnasQh7=OabaOg@mail.gmail.com> <alpine.DEB.2.21.2503260300290.29685@angie.orcam.me.uk> <alpine.DEB.2.21.2503281345010.47733@angie.orcam.me.uk>
- <CAAofZF65p+DnH8xA0+sfuZv=VO63Zgv4rQ6frrdEzQYoZ0MaWA@mail.gmail.com> <alpine.DEB.2.21.2503311348560.47733@angie.orcam.me.uk> <CAAofZF6Gnzm9isPt3NUuSPBmBWQsj56O43pPZAf64WEP8no2Rg@mail.gmail.com> <alpine.DEB.2.21.2504021933160.53907@angie.orcam.me.uk>
- <CAAofZF7YVK207bVYu5-p0CAKjpB7hHYomgd9wdV1J=5GkeNXbw@mail.gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+	s=arc-20240116; t=1743711600; c=relaxed/simple;
+	bh=Ep8fp0SBr9TkStJxxgW2ebyfhtZWt3yVe89HY0d+/Fs=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=CoCw5iZ2u7K4rvNy+R+8oJ9deIYL9GFyGkf5OoT5yHQDJd7EKdGaUFTKpS8peD1sEvuxaCPSq5i+MwE2jo8p3rzTk0QydKDoqxu0Ud5NZ3K3l0t2uqp3VMqKZSc20IUoG6Zs6uVrU6TUZahzuyNKo0JYiQoKcU1T+1WHxAOfJJc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=glurjIlh; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="glurjIlh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8123C4CEE8;
+	Thu,  3 Apr 2025 20:19:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743711599;
+	bh=Ep8fp0SBr9TkStJxxgW2ebyfhtZWt3yVe89HY0d+/Fs=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=glurjIlhgIbdc7HHpZ5kRJg9eYCAbtNEpJ+IJMnsHO1l7Sc3YKSgS0zWqUbfP0nWu
+	 shqlKosx9bjj6MeUJjGat33KkTaQfbhZMPtvQlB6hkjmmS5057Z+/sjaAJZG/6ulot
+	 catQe7RaGEqAShQszK7QugKn4wd4SAmezOiKOFQtDGfm4kTdWVSGrZvc22ts+zsSA6
+	 aQnnrqoISTlwTjvn0W6jvUKwAxZZ4rSP377O8PxKTvQHxcNWSAmN7hEuz6O5IDq5lI
+	 bkJkLf4L2xni+LmqhFcNdMC71Jbi+YpLGn3Je/4bvPr03awW/MN2PiTC6PjkhMUPJ8
+	 wgenG+SSl/Hjw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB304380664C;
+	Thu,  3 Apr 2025 20:20:36 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v1 1/2] Bluetooth: btnxpuart: Add msleep() after changing the
+ baudrate
+From: patchwork-bot+bluetooth@kernel.org
+Message-Id: 
+ <174371163549.2672071.11589670566595157295.git-patchwork-notify@kernel.org>
+Date: Thu, 03 Apr 2025 20:20:35 +0000
+References: <20250327182523.524534-1-neeraj.sanjaykale@nxp.com>
+In-Reply-To: <20250327182523.524534-1-neeraj.sanjaykale@nxp.com>
+To: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
+Cc: marcel@holtmann.org, luiz.dentz@gmail.com,
+ linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+ amitkumar.karwar@nxp.com, sherry.sun@nxp.com
 
-On Thu, 3 Apr 2025, Marco Crivellari wrote:
+Hello:
 
-> Great, so I think that I will send the v7 without the "rename" part,
-> so we can address this in the future, if it sounds reasonable,
-> and find an appropriate name.
+This series was applied to bluetooth/bluetooth-next.git (master)
+by Luiz Augusto von Dentz <luiz.von.dentz@intel.com>:
 
- Well, from experience "future" sounds like "never" to me, but if Thomas 
-is fine with that, I'm not going to fight a battle here.  I've got enough 
-stuff to do now, including some rather urgent discovered last month, as 
-far as the MIPS port is concerned, let alone other things.  Thank you for 
-your perseverance with this effort anyway.
+On Thu, 27 Mar 2025 23:55:22 +0530 you wrote:
+> This adds a 100 millisec sleep after change baudrate vendor command.
+> 
+> It is observed that when the baudrate change command changes the
+> baudrate from 3000000 to 115200, any immediate HCI command returns an
+> error -22 (Device Busy).
+> 
+> Adding a small delay after the change baudrate command complete event is
+> received helps fix the issue.
+> 
+> [...]
 
-  Maciej
+Here is the summary with links:
+  - [v1,1/2] Bluetooth: btnxpuart: Add msleep() after changing the baudrate
+    (no matching commit)
+  - [v1,2/2] Bluetooth: btnxpuart: Add an error message if FW dump trigger fails
+    https://git.kernel.org/bluetooth/bluetooth-next/c/061e4972c48c
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
