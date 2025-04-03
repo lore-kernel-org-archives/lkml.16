@@ -1,135 +1,249 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACC2D253334;
-	Thu,  3 Apr 2025 18:40:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A04D41A254E;
+	Thu,  3 Apr 2025 18:44:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743705648; cv=none; b=ny66BZRxZMSOszD2T9nh8nQbw6MZt2SAKsBW/iJYRPjRM8iNkEHVif1P0UFqvHLvt4ixSJk3txyZ6RS+3LaUxXpdnxy86eSUaP3fmj4Yw9eDVQqdaLKJ60DsHZkSdaaOO6PB3LuQ3B/sbC1v1AFaI6b2/diCI3Z/m9owawDhO8M=
+	t=1743705872; cv=none; b=NN4nrohwmm51uqwqE0i9dDJDKxAFbNrzKcwdtdUGgEdjCPLZUZkEDCGctqOuAXMTrFNvuU+yO/pFwvF765fuifsZvV2OjNeh9CWn5lXTCcxKSinGuxKCLyMwOuB9RjTLyMxUMv03czsfMzfnZIoUzsK7Kzo2iaqgEUUnEtQKZFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743705648; c=relaxed/simple;
-	bh=+67JXDQx5zChjcnw+v0CCW6m/RXyD81jjti8pA7/2Gs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rVAK8P7jRUmAUW5ntzwug5q1qu0BTteM63iH7KPOG0+yJYOA4WbbfesmqZ+C6aSTvRiNDjsm2GAshwKedEQ7VYfyWtQ56yLU+VsQf6XGWuccq3WGkU+EtNkFIMlr1y2PavJhTTk31tzQlVbvErTipk11ScVSSlB19Z2jIhZaj98=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HZ1cxQEE; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1743705872; c=relaxed/simple;
+	bh=ZnDAKb4E5SESrBZi2hnMBJ+G8kgc6x5Zm2X/BBtxvSM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LDGp35OpRdWb8XCDN10YR8H3kpAgVDm0oGitk4dJCJNOfyxgg+2m4uO632rgwRs/j125/EcXqkyZCSI1dVw86fmgv0uHACLE20aA8N9R4Oj/1Qrf6+FfNLtw5q3QSSyFY+3X7mP5kw3HC+VBs5zgywHabU3Nt75vNVr4HQCMaSM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b0zKHO7+; arc=none smtp.client-ip=209.85.166.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HZ1cxQEE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743705647; x=1775241647;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=+67JXDQx5zChjcnw+v0CCW6m/RXyD81jjti8pA7/2Gs=;
-  b=HZ1cxQEE9rs7++vCZFtAuNxaFSDCClfvBTuZKsQ/DKqKkQUL5X9zFkPv
-   ZQcsv1D/VsZ0sR60dA2n6FoZhC2DX/TYZ7Bwtjp9aFnpWddz3ay9AekBh
-   hs0WUIu2pm5Md1lfygKxu5cNg+MOPK8BX1V/Co5uwOO9PHxe9+Ztq9qWr
-   HvCcRgyPRafo1K0OhyWjBgcR2iPVsIoDHpXWoQXXwPbQo6SHMEi2P4kpg
-   C0W6yhiBJMQy93NqWQxVpEDtQiNHA1dte5Kzo+fLKhMxo8v5Be5rLl2n7
-   m5IjNLpLipJACJzG84+TAfqFGY7FyesTrxPoot6HUAjIB8QEbBzxEa9Tt
-   w==;
-X-CSE-ConnectionGUID: xWp9VgJQSWyNiNQYHmxZPg==
-X-CSE-MsgGUID: XsQtsyDSRNmLnDJ7IAFVeA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11393"; a="56499559"
-X-IronPort-AV: E=Sophos;i="6.15,186,1739865600"; 
-   d="scan'208";a="56499559"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 11:40:46 -0700
-X-CSE-ConnectionGUID: TVhG7cbDTtWeBxtqRj9yjw==
-X-CSE-MsgGUID: grr0MWSBT7SIPiKQr34ZDg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,186,1739865600"; 
-   d="scan'208";a="131215334"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 11:40:38 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1u0PUQ-00000008tz0-2eZc;
-	Thu, 03 Apr 2025 21:40:34 +0300
-Date: Thu, 3 Apr 2025 21:40:34 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Terry Bowman <terry.bowman@amd.com>
-Cc: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	alison.schofield@intel.com, vishal.l.verma@intel.com,
-	ira.weiny@intel.com, dan.j.williams@intel.com, willy@infradead.org,
-	jack@suse.cz, rafael@kernel.org, len.brown@intel.com, pavel@ucw.cz,
-	ming.li@zohomail.com, nathan.fontenot@amd.com,
-	Smita.KoralahalliChannabasappa@amd.com,
-	huang.ying.caritas@gmail.com, yaoxt.fnst@fujitsu.com,
-	peterz@infradead.org, gregkh@linuxfoundation.org,
-	quic_jjohnson@quicinc.com, ilpo.jarvinen@linux.intel.com,
-	bhelgaas@google.com, mika.westerberg@linux.intel.com,
-	akpm@linux-foundation.org, gourry@gourry.net,
-	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-	nvdimm@lists.linux.dev, linux-fsdevel@vger.kernel.org,
-	linux-pm@vger.kernel.org, rrichter@amd.com,
-	benjamin.cheatham@amd.com, PradeepVineshReddy.Kodamati@amd.com,
-	lizhijian@fujitsu.com
-Subject: Re: [PATCH v3 1/4] kernel/resource: Provide mem region release for
- SOFT RESERVES
-Message-ID: <Z-7WImoc5Dg3Xtyq@smile.fi.intel.com>
-References: <20250403183315.286710-1-terry.bowman@amd.com>
- <20250403183315.286710-2-terry.bowman@amd.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b0zKHO7+"
+Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-3d6d6d82633so3943025ab.0;
+        Thu, 03 Apr 2025 11:44:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743705870; x=1744310670; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ap0HUHPX7yXUq/lh+vMdCs7sdd0w6Sp3v7hjIJ93Fms=;
+        b=b0zKHO7+8Z82dJ+Xvn1FpFRQilI1Z4vgWO5MM4laO9lNrt2kCLULyiSaO//sGUrd1G
+         56ZaRJKtc418vQihE1UHZpFAJGj93e3VHuQrFevOSfFJS+Wvv4OqHJerwl2ikKgS7foC
+         IqDsUAzhm2/54kHmrUv9giEAbDKeaJuqlPtZqoR7YvpRH6Hga9dR/I/lvYqCRsAvDXQA
+         xX+DQuOYWAaW6KbYnoJ3Cc8TEEzc2l6VcJftSepcjYBiR0t9BOwF6yhijG/kIV95W94j
+         o5OCHlDQNF1YtSMnPzAUmEwFcgLAZeEKZHwykO40zpfjAsf5oOrZTkFqQJiz4Y3zuH9d
+         0Ktg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743705870; x=1744310670;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ap0HUHPX7yXUq/lh+vMdCs7sdd0w6Sp3v7hjIJ93Fms=;
+        b=OFzJl7FdJq14e5EYDg/81JlSIO+wYCLx4+TI8eR5qRTjAZj602IpE+W6RpD0ooJYGb
+         hPW6DimLtbsoOH/SocoFpkZjiHVWDQGPvvZTUTJKDY/eMB2WAYcwWzeTX5pVhCPRtwWp
+         LD2D3oIzM1emGkCVB2pd5Ye+Wwco53xvGy88rZAvY7d6iSiz4uBA7WrGYa3gfqwLHoeM
+         QeNDknkAKa/yTKL+JJl1ERAne9/a2C2cZT0Z+aWnmHVda7raif6nC8aJHHd91oFv3Vu9
+         mKnY8ARCeJ0VwiohmAJgPDd327s2tw+ZNRC4V328QNT3Pr3LP3O0RYY1E2+acH387w0V
+         m7Zw==
+X-Forwarded-Encrypted: i=1; AJvYcCUB3KsBkJK3aVmstXao8RMZ7Z6hi2PpXLxLz72bWW/CTIXY8o5up/VvWt8SpFNZ8xdcRez/0+gmAaPsPo0=@vger.kernel.org, AJvYcCVQrVytZRDzsKsgPKKS3HlwR8dap4siQpyLryFcvvMQu9nHb7be2042dPybdmQFWnR1NH6swsX45TCZiQ==@vger.kernel.org, AJvYcCVRuuv3h5hssXmvQ6cp+/8THI+48prBtiVuJfzOtI4zBUOFHgZ8J42s1QpZ2jBRBip/76iAEDzS@vger.kernel.org, AJvYcCXT3Ch2d41VT8SGZGCxf0vXBcYbB03ghufdbUlK6uTQUx24BAB5WzYZecmwj7o0/7RFknEv+yCf@vger.kernel.org
+X-Gm-Message-State: AOJu0YzMGYKMOJJiJ+jJe9lCBuU6ouv7HRt7JPoZIo02lLYc7hDVkh2P
+	oIOwlPElCKM8jRjAIn4oWX1iRpFu4zWVE2K/lcrspWBoGq9ZjagXOClYBoFQaw/l6QiKeL5OGLB
+	UnL8CvaGBZzClFNR7lGF2tEjOg5Y=
+X-Gm-Gg: ASbGncs3jx7CTbbwIoaOwYPtJ7rR4vch9GLJULNkEd0sUKLBH/6Fil2igtsDVs0G7+y
+	TOgtj1F05xWFyE2Jw2FG+/V2L/rLC9keLXCll2GoG7oDafw/ZkGOhxb6AGYPzyuGTUc74PY0xyy
+	IcS7EWqKZnezmsMrX7hp98Ll7VKXlHHcDl5G0QC2VXazXer5/AWKNt+DJHuQ==
+X-Google-Smtp-Source: AGHT+IGy9EpjSboQltyoKMDikw04CcYkoaMH/cZSG5fCTOWx22QAPIh/PUcBjfUk+1NqmiwA4oDxlfqv3yYsBcjaanA=
+X-Received: by 2002:a05:6e02:16cb:b0:3d0:4b3d:75ba with SMTP id
+ e9e14a558f8ab-3d6e3ee1632mr6821575ab.4.1743705869636; Thu, 03 Apr 2025
+ 11:44:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250403183315.286710-2-terry.bowman@amd.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20250402-kasan_slab-use-after-free_read_in_sctp_outq_select_transport-v1-1-da6f5f00f286@igalia.com>
+ <CADvbK_dTX3c9wgMa8bDW-Hg-5gGJ7sJzN5s8xtGwwYW9FE=rcg@mail.gmail.com>
+ <87tt75efdj.fsf@igalia.com> <CADvbK_c69AoVyFDX2YduebF9DG8YyZM7aP7aMrMyqJi7vMmiSA@mail.gmail.com>
+In-Reply-To: <CADvbK_c69AoVyFDX2YduebF9DG8YyZM7aP7aMrMyqJi7vMmiSA@mail.gmail.com>
+From: Xin Long <lucien.xin@gmail.com>
+Date: Thu, 3 Apr 2025 14:44:18 -0400
+X-Gm-Features: ATxdqUF6iNWCUFr5K6P8ICqDN6O1PHfQdnvpw-okfkrtHPA4T7S5O3Q6KScPzFs
+Message-ID: <CADvbK_d+vr-t7D1GZJ86gG6oS+Nzy7MDVh_+7Je6hqCdez4Axw@mail.gmail.com>
+Subject: Re: [PATCH] sctp: check transport existence before processing a send primitive
+To: =?UTF-8?Q?Ricardo_Ca=C3=B1uelo_Navarro?= <rcn@igalia.com>
+Cc: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Simon Horman <horms@kernel.org>, kernel-dev@igalia.com, linux-sctp@vger.kernel.org, 
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 03, 2025 at 01:33:12PM -0500, Terry Bowman wrote:
-> From: Nathan Fontenot <nathan.fontenot@amd.com>
-> 
-> Add a release_Sam_region_adjustable() interface to allow for
-> removing SOFT RESERVE memory resources. This extracts out the code
-> to remove a mem region into a common __release_mem_region_adjustable()
-> routine, this routine takes additional parameters of an IORES
-> descriptor type to add checks for IORES_DESC_* and a flag to check
-> for IORESOURCE_BUSY to control it's behavior.
-> 
-> The existing release_mem_region_adjustable() is a front end to the
-> common code and a new release_srmem_region_adjustable() is added to
-> release SOFT RESERVE resources.
+On Thu, Apr 3, 2025 at 10:42=E2=80=AFAM Xin Long <lucien.xin@gmail.com> wro=
+te:
+>
+> On Thu, Apr 3, 2025 at 5:58=E2=80=AFAM Ricardo Ca=C3=B1uelo Navarro <rcn@=
+igalia.com> wrote:
+> >
+> > Thanks for reviewing, answers below:
+> >
+> > On Wed, Apr 02 2025 at 15:40:56, Xin Long <lucien.xin@gmail.com> wrote:
+> > > The data send path:
+> > >
+> > >   sctp_endpoint_lookup_assoc() ->
+> > >   sctp_sendmsg_to_asoc()
+> > >
+> > > And the transport removal path:
+> > >
+> > >   sctp_sf_do_asconf() ->
+> > >   sctp_process_asconf() ->
+> > >   sctp_assoc_rm_peer()
+> > >
+> > > are both protected by the same socket lock.
+> > >
+> > > Additionally, when a path is removed, sctp_assoc_rm_peer() updates th=
+e
+> > > transport of all existing chunks in the send queues (peer->transmitte=
+d
+> > > and asoc->outqueue.out_chunk_list) to NULL.
+> > >
+> > > It will be great if you can reproduce the issue locally and help chec=
+k
+> > > how the potential race occurs.
+> >
+> > That's true but if there isn't enough space in the send buffer, then
+> > sctp_sendmsg_to_asoc() will release the lock temporarily.
+> >
+> Oh right, I missed that. Thanks.
+>
+> > The scenario that the reproducer generates is the following:
+> >
+> >         Thread A                                  Thread B
+> >         --------------------                      --------------------
+> > (1)     sctp_sendmsg()
+> >           lock_sock()
+> >           sctp_sendmsg_to_asoc()
+> >             sctp_wait_for_sndbuf()
+> >               release_sock()
+> >                                                   sctp_setsockopt(SCTP_=
+SOCKOPT_BINDX_REM)
+> >                                                     lock_sock()
+> >                                                     sctp_setsockopt_bin=
+dx()
+> >                                                     sctp_send_asconf_de=
+l_ip()
+> >                                                       ...
+> >                                                     release_sock()
+> >                                                       process rcv backl=
+og:
+> >                                                         sctp_do_sm()
+> >                                                           sctp_sf_do_as=
+conf()
+> >                                                             ...
+> >                                                               sctp_asso=
+c_rm_peer()
+> >               lock_sock()
+> > (2)          chunk->transport =3D transport
+> >              sctp_primitive_SEND()
+> >                ...
+> >                sctp_outq_select_transport()
+> > *BUG*            switch (new_transport->state)
+> >
+> >
+> > Notes:
+> > ------
+> >
+> > Both threads operate on the same socket.
+> >
+> > 1. Here, sctp_endpoint_lookup_assoc() finds and returns an existing
+> > association and transport.
+> >
+> > 2. At this point, `transport` is already deleted. chunk->transport is
+> > not set to NULL because sctp_assoc_rm_peer() ran _before_ the transport
+> > was assigned to the chunk.
+> >
+> > > We should avoid an extra hashtable lookup on this hot TX path, as it =
+would
+> > > negatively impact performance.
+> >
+> > Good point. I can't really tell the performance impact of the lookup
+> > here, my experience with the SCTP implementation is very limited. Do yo=
+u
+> > have any suggestions or alternatives about how to deal with this?
+> >
+> I think the correct approach is to follow how sctp_assoc_rm_peer()
+> handles this.
+>
+> You can use asoc->peer.last_sent_to (which isn't really used elsewhere)
+> to temporarily store the transport before releasing the socket lock and
+> sleeping in sctp_sendmsg_to_asoc(). After waking up and reacquiring the
+> lock, restore the transport back to asoc->peer.last_sent_to.
+>
+> Additionally, during an ASCONF update, ensure asoc->peer.last_sent_to
+> is set to a valid transport if it matches the transport being removed.
+>
+> For example:
+>
+> in sctp_wait_for_sndbuf():
+>
+>     asoc->peer.last_sent_to =3D *tp;
+>     release_sock(sk);
+>     current_timeo =3D schedule_timeout(current_timeo);
+>     lock_sock(sk);
+>     *tp =3D asoc->peer.last_sent_to;
+>     asoc->peer.last_sent_to =3D NULL;
+>
+> in sctp_assoc_rm_peer():
+>
+>     if (asoc->peer.last_sent_to =3D=3D peer)
+>         asoc->peer.last_sent_to =3D transport;
+This change introduces a side effect: when multiple threads send data
+on the same asoc using different daddrs, they may interfere with each
+other while waiting for buffer space, as each thread updates
+asoc->peer.last_sent_to.
 
-...
+You may consider holding a refcnt to the transport (similar to how the
+asoc refcnt is held) in sctp_wait_for_sndbuf(), as shown below:
 
-> +void release_mem_region_adjustable(resource_size_t start, resource_size_t size)
-> +{
-> +	return __release_mem_region_adjustable(start, size,
+@@ -9225,7 +9225,9 @@ static int sctp_wait_for_sndbuf(struct
+sctp_association *asoc, long *timeo_p,
+        pr_debug("%s: asoc:%p, timeo:%ld, msg_len:%zu\n", __func__, asoc,
+                 *timeo_p, msg_len);
 
-You have still room on the previous line for the parameters.
+-       /* Increment the association's refcnt.  */
++       /* Increment the transport and association's refcnt.  */
++       if (t)
++               sctp_transport_hold(t);
+        sctp_association_hold(asoc);
 
-> +					       true, IORES_DESC_NONE);
+        /* Wait on the association specific sndbuf space. */
+@@ -9234,7 +9236,7 @@ static int sctp_wait_for_sndbuf(struct
+sctp_association *asoc, long *timeo_p,
+                                          TASK_INTERRUPTIBLE);
+                if (asoc->base.dead)
+                        goto do_dead;
+-               if (!*timeo_p)
++               if (!*timeo_p || (t && t->dead))
+                        goto do_nonblock;
+                if (sk->sk_err || asoc->state >=3D SCTP_STATE_SHUTDOWN_PEND=
+ING)
+                        goto do_error;
+@@ -9259,7 +9261,9 @@ static int sctp_wait_for_sndbuf(struct
+sctp_association *asoc, long *timeo_p,
+ out:
+        finish_wait(&asoc->wait, &wait);
 
-Return on void?! Interesting... What do you want to do here?
-
-> +}
-> +EXPORT_SYMBOL(release_mem_region_adjustable);
-> +#endif
-> +
-> +#ifdef CONFIG_CXL_REGION
-> +void release_srmem_region_adjustable(resource_size_t start,
-> +				     resource_size_t size)
-
-This can be put on a single line.
-
-> +{
-> +	return __release_mem_region_adjustable(start, size,
-> +					       false, IORES_DESC_SOFT_RESERVED);
-
-Same comments as per above function.
-
-> +}
-> +EXPORT_SYMBOL(release_srmem_region_adjustable);
-> +#endif
-
--- 
-With Best Regards,
-Andy Shevchenko
+-       /* Release the association's refcnt.  */
++       /* Release the transport and association's refcnt.  */
++       if (t)
++               sctp_transport_put(t);
+        sctp_association_put(asoc);
 
 
+You will need to reintroduce the dead bit in struct sctp_transport and
+set it in sctp_transport_free(). Note this field was previously removed in:
+
+commit 47faa1e4c50ec26e6e75dcd1ce53f064bd45f729
+Author: Xin Long <lucien.xin@gmail.com>
+Date:   Fri Jan 22 01:49:09 2016 +0800
+
+    sctp: remove the dead field of sctp_transport
+
+Thanks.
