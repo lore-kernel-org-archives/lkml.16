@@ -1,185 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CD1024BBE1;
-	Thu,  3 Apr 2025 11:12:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D342624BC04;
+	Thu,  3 Apr 2025 11:12:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743678739; cv=none; b=Uc1zodBAUQO7BJ5KhHlpkQFh5wSvizAjH/+W+vnHJ9MAG837415Ps6fkOBF1FQF2X5z6Ch3/2qiadXDd8UXXx24reShk4Oo+u8dblKR7/MRLxyd2d+ehLiUu2a0mQrVUNaS+K/26+mmLv/6wlUpOuAXuXsxewIawxSNZHKeQ+ws=
+	t=1743678762; cv=none; b=kkuo+WRJBAgYwha8ohTOZ0Ib1r5a9db+ibH1dwBwyCBaihU5SoAi0Q+kQRKbzoS3+44ISgRLVis69ix1r53PL9aUDDUE5wojGr/pWnb+uchnD/67Xy2CrXBQHW2wf2p8N1XyXcIxQYm2PsSJavjOCS9sG/sunmV+sEHs/aAIVFk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743678739; c=relaxed/simple;
-	bh=ogSVMxgN72aBuU2o0uVtAe9d36Kre0+w8LLSPnvE4g4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WMcOssW0OqssTq7pJgTf9VYqdEtVOzf9PfX2eHqbQuLIJx9BQC3jDIHCKACs67v8Vamsq8DhvZN5Mlo0EAqN6DfK40qnfAHNwJKWGuztbyXJ8FCtB60dZxLhrepj+OXH4ehEmlsgHZtzz7jyGpFaduXtVqvg31fOG62LaLDUEMM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eyFg3Apd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743678762; c=relaxed/simple;
+	bh=4/aIbPlVUJb5I1OOF/VHKAkwFUzsF2LiycF0Dt3QCnw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KG6f1ejjcshQJBT6SY7WMPaZrYzfnW9sztv5u4nag4piFlUPJoHqOI4Yz2ZClX0gNyA+ivFtPQb59QINpGqLMZe/vkHTPaWYJXJlHduJOXQJek5xB56lmwdBwDNWs7K7t+MCU5sDeD4x0SBp+2traBuZoBt4bjO7IkBDg+wOqMg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PmhpLgle; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eyFg3Apd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71648C4AF09;
-	Thu,  3 Apr 2025 11:12:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743678739;
-	bh=ogSVMxgN72aBuU2o0uVtAe9d36Kre0+w8LLSPnvE4g4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=eyFg3ApdtYY/FTGhhijAAfZeL++T0Jd7VjIruDSWYHyQ4fdVhX1oykQXAUn7L6MeL
-	 CH4rdZwvbNCUKxvVxCTrGV0aeQDHR4N8EvU3WmVFcqiYg2ajrJj8N+WhQ12wwN9jBQ
-	 aN+wCS1U3jDAmGgBKxPdPdgRyPnmwX3neP3VI+UwAc21fLxt2QwG68cTSZ07r8ymYN
-	 4sd2eea/AP5M9umPa4D4iZlJlFGdcLoMjRTVWFpnjDE7UQAxWGMu70cYUE9Ly8Dp5H
-	 PFr4MpN1OVVJ56whCBbMzoR5002FYIL+qafgx19TufjeHQNArkDDIHxM0T8KOPfYWA
-	 7R/oHEdRJgLaQ==
-Received: by mail-ot1-f49.google.com with SMTP id 46e09a7af769-72b82c8230aso263256a34.2;
-        Thu, 03 Apr 2025 04:12:19 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWHNBInnTnB/aHNKlLoStaiLThSaqaDO6Ru1DhwT4f30tlKB+pZPijkOtGwrEn3guEkF8T6sDVFjWNhXng=@vger.kernel.org, AJvYcCXNiEozWSraibOExeTCVPd8AiEUIfQcKeJTxTQ7yPByGiPzcK7jMwJGJKEB0tRK7LJ4/a/Ztuwfepua@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw2RZtt4tmAbI4Gn3LDPX9FdnHadXKmI3OuOsundJ64Lpn8+iNo
-	iaeepg6Y9JPQCKNmRTGFcQW+wt1v4utstyPebsTG3SzEApYZGxvvHCaVnMaubqbWJSrHhCXcg+l
-	L44yV8ztTXeWlU7M+x5vRt5vchiY=
-X-Google-Smtp-Source: AGHT+IEZaf9Kl+KGCPc4RMkrG8ljVJ8T3vlm0+z8427y7Jf/gbdFQU7E+MxEXyI0mNiqV5fH4QQBcke9iEL9nHuImp4=
-X-Received: by 2002:a05:6830:3987:b0:72b:8c5a:7294 with SMTP id
- 46e09a7af769-72e2581eae7mr4265172a34.9.1743678738747; Thu, 03 Apr 2025
- 04:12:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PmhpLgle"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743678761; x=1775214761;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=4/aIbPlVUJb5I1OOF/VHKAkwFUzsF2LiycF0Dt3QCnw=;
+  b=PmhpLgleB0mUgu8zIdvGMdswCihWua8n6H3FGy6g0tbFMQTjFccC6uL/
+   XluWbiM+biAnoCyDLWlhn28Ptpm2Hzu+ev8FDSF7rHPSli2Oh1ASxAqoU
+   0qFUTTJT1aHa8auOVhk1f/btQiALKef/X/iLw7I8yWDniKcnXoHbPSKJq
+   ZKdH5Zt0tTUW2FD5cwYHlaeurn7lBxdahWZcVEF3W11OqDhhwdi/B0tLL
+   w1XAg52jZExssiuHz/WwipIfjeovikFG62VYCPWUp4izG3pCZOfageSfu
+   ZmzpESSZV8wg2bFQBT5ZGJZdbuwhAUi2KhbAuwm2M7KP4hHLjQaP/0ozF
+   A==;
+X-CSE-ConnectionGUID: QIfWYKSuQaKat0bSVtIbBA==
+X-CSE-MsgGUID: VsmGTbyoRkmZXV9ORBOwwQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11392"; a="62480791"
+X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
+   d="scan'208";a="62480791"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 04:12:40 -0700
+X-CSE-ConnectionGUID: 9g+PDe2WRg+iYP9BED3VNg==
+X-CSE-MsgGUID: fsgBnStYTlW6X71GsCzaRw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
+   d="scan'208";a="157953236"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 04:12:39 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1u0IUu-00000008mgy-0OEz;
+	Thu, 03 Apr 2025 14:12:36 +0300
+Date: Thu, 3 Apr 2025 14:12:35 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+	Jai Luthra <jai.luthra@ideasonboard.com>,
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Mauro Carvalho Chehab <mchehab@kernel.org>
+Subject: Re: [PATCH v1 1/1] media: i2c: ds90ub960: Remove of_node assignment
+Message-ID: <Z-5tI_WVF2YQQ837@smile.fi.intel.com>
+References: <20250312174123.4111661-1-andriy.shevchenko@linux.intel.com>
+ <2e6599fd-0b79-430b-9e94-f731b60e1705@ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <Z-WHYbhu1QdjUFPR@intel.com> <Z-bICZUBN_Fk0_mM@intel.com>
- <Z-eDJUtxjzIjGlJT@black.fi.intel.com> <Z-q_n1g9wIEZc-dm@intel.com>
- <2d3f3cbe-c33d-4ded-8c19-e2bd2e76a68b@intel.com> <Z-woHnrukI7qtB4m@black.fi.intel.com>
- <CAJZ5v0j7ob4YQ9weQ6e5iVbHyRwf-6Vk2MU4r9mK11-8wD09RQ@mail.gmail.com>
- <Z-znv8D3qIcVX-p1@black.fi.intel.com> <Z-z2fz97RwX2kBya@black.fi.intel.com>
- <CAJZ5v0hpkjH_Q7V70jWpC68YQxKkmh0wpwrPrHcUwQJ6uRGrOQ@mail.gmail.com> <Z-38rPeN_j7YGiEl@black.fi.intel.com>
-In-Reply-To: <Z-38rPeN_j7YGiEl@black.fi.intel.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 3 Apr 2025 13:12:07 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0g-aJXfVH+Uc=9eRPuW08t-6PwzdyMXsC6FZRKYJtY03Q@mail.gmail.com>
-X-Gm-Features: AQ5f1JoF4-_5bKfDoLWHC0gguPoQcwlvzlHYOMkAxTdchA5EAu6d_gDHqIb8Rng
-Message-ID: <CAJZ5v0g-aJXfVH+Uc=9eRPuW08t-6PwzdyMXsC6FZRKYJtY03Q@mail.gmail.com>
-Subject: Re: [PATCH] drm/xe/d3cold: Set power state to D3Cold during s2idle/s3
-To: Raag Jadav <raag.jadav@intel.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>, 
-	lucas.demarchi@intel.com, rodrigo.vivi@intel.com, 
-	"Nilawar, Badal" <badal.nilawar@intel.com>, intel-xe@lists.freedesktop.org, 
-	anshuman.gupta@intel.com, mahesh@linux.ibm.com, oohall@gmail.com, 
-	bhelgaas@google.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2e6599fd-0b79-430b-9e94-f731b60e1705@ideasonboard.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Thu, Apr 3, 2025 at 5:12=E2=80=AFAM Raag Jadav <raag.jadav@intel.com> wr=
-ote:
->
-> Cc: PCI maintainers
->
-> On Wed, Apr 02, 2025 at 12:31:48PM +0200, Rafael J. Wysocki wrote:
-> > On Wed, Apr 2, 2025 at 10:34=E2=80=AFAM Raag Jadav <raag.jadav@intel.co=
-m> wrote:
-> > >
-> > > On Wed, Apr 02, 2025 at 10:31:16AM +0300, Raag Jadav wrote:
-> > > > On Tue, Apr 01, 2025 at 09:35:49PM +0200, Rafael J. Wysocki wrote:
-> > > > > On Tue, Apr 1, 2025 at 7:53=E2=80=AFPM Raag Jadav <raag.jadav@int=
-el.com> wrote:
-> > > >
-> > > > ...
-> > > >
-> > > > > > That's not what I meant here. There are multiple issues at play=
-.
-> > > > > >
-> > > > > > 1. An AER is reported[*] on root port during system suspend eve=
-n before we
-> > > > > >    reach any of the driver PM callback. From initial investigat=
-ion it seems
-> > > > > >    like a case of misbehaviour by some child device, but this i=
-s a different
-> > > > > >    issue entirely.
-> > > > > >
-> > > > > > [*] irq/120-aerdrv-145     [002] .....  1264.981023: <stack tra=
-ce>
-> > > > > > =3D> xe_pm_runtime_resume
-> > > > > > =3D> xe_pci_runtime_resume
-> > > > > > =3D> pci_pm_runtime_resume
-> > > > > > =3D> __rpm_callback
-> > > > > > =3D> rpm_callback
-> > > > > > =3D> rpm_resume
-> > > > > > =3D> __pm_runtime_resume
-> > > > > > =3D> pci_pm_runtime_get_sync
-> > > > > > =3D> __pci_walk_bus
-> > > > > > =3D> pci_walk_bus
-> > > > > > =3D> pcie_do_recovery
-> > > > > > =3D> aer_process_err_devices
-> > > > > > =3D> aer_isr
-> > > > > >
-> > > > > > 2. Setting explicit pci_set_power_state(pdev, PCI_D3cold) from =
-xe_pm_suspend().
-> > > > > >    Although we see many drivers do it for their case, it's quit=
-e a questionable
-> > > > > >    choice (atleast IMHO) to hard suspend the device from driver=
- PM callback
-> > > > > >    without any regard to runtime_usage counter. It can hide pot=
-ential issues
-> > > > > >    like AER during system suspend (regardless of whether or not=
- it is supported
-> > > > > >    by the driver, since it is supposed to keep the device activ=
-e on such a
-> > > > > >    catastrophic failure anyway), but I'll leave it to the exper=
-ts to decide.
-> > > > >
-> > > > > If the driver does not set DPM_FLAG_SMART_SUSPEND, and xe doesn't=
- set
-> > > > > it AFAICS (at least not in the mainline), pci_pm_suspend() will r=
-esume
-> > > > > the device from runtime suspend before invoking its driver's call=
-back.
-> > > > >
-> > > > > This guarantees that the device is always RPM_ACTIVE when
-> > > > > xe_pci_suspend() runs and it cannot be runtime-suspended because =
-the
-> > > > > core is holding a runtime PM reference on it (and so the runtime =
-PM
-> > > > > usage counter is always greater than zero when xe_pci_suspend() r=
-uns).
-> > > > >
-> > > > > This means that neither xe_pci_runtime_suspend() nor
-> > > > > xe_pci_runtime_resume() can run concurrently with respect to it, =
-so
-> > > > > xe_pci_suspend() can change the power state of the device etc. sa=
-fely.
-> > > >
-> > > > Ah, I failed to notice that __pm_runtime_resume() is taking a spin_=
-lock_irqsave().
-> > > > Thanks for clearing this up.
-> > >
-> > > On second thought, pcie_do_recovery() can still race with xe_pci_susp=
-end(),
-> > > is this understanding correct?
-> >
-> > Yes, it can, but this is an AER issue.
-> >
-> > Apparently, somebody took runtime PM into account, but they failed to
-> > take system suspend into account.
-> >
-> > There are many drivers that do PCI PM in their ->suspend() callbacks
-> > and this predates pcie_do_recovery() AFAICS.  Some of them don't even
-> > support runtime PM.
-> >
-> > > I'm assuming this is why it's much safer to do pci_save_state() and
-> > > pci_prepare_to_sleep() only in ->noirq() callbacks like originally do=
-ne
-> > > by PCI PM, right?
-> >
-> > Not really, but close.
-> >
-> > The noirq phases were introduced because drivers often failed to
-> > prevent their interrupt handlers from messing up with devices after
-> > powering them down.
-> >
-> > Recovery is kind of like hot-add, doing any of them during system
-> > suspend is a bad idea because the outcome is hard to predict.
-> >
-> > AER needs to be fixed.
->
-> I agree it's a bad idea and should be fixed but even more unpredictable
-> in such cases is resuming the device afterwards, which may or may not
-> succeed depending on the fault that has happened. So perhaps just not
-> let the device suspend to D3 at all?
+On Thu, Apr 03, 2025 at 02:01:40PM +0300, Tomi Valkeinen wrote:
+> On 12/03/2025 19:41, Andy Shevchenko wrote:
+> > Remove of_node assignment which duplicates fwnode in struct i2c_board_info.
+> > In general drivers must not set both, it's quite confusing. The I²C core
+> > will consider fwnode with a priority and of_node is subject to remove from
+> > above mentioned data structure.
 
-Yes, it is better to leave the device in question in its current power
-state in that case.
+...
+
+> >   	struct device *dev = &priv->client->dev;
+> >   	struct ds90ub9xx_platform_data *ser_pdata = &rxport->ser.pdata;
+> >   	struct i2c_board_info ser_info = {
+> > -		.of_node = to_of_node(rxport->ser.fwnode),
+> >   		.fwnode = rxport->ser.fwnode,
+> >   		.platform_data = ser_pdata,
+> >   	};
+> 
+> This sounds logical, but breaks the driver for me.
+
+The above assignments are still confusing, but I think I understand what's
+going on. You run on OF based environment and some code uses of_*() APIs
+instead of fwnode ones. That's why the current implementation in the I²C core
+doesn't work.
+
+> I also couldn't find this documented and didn't immediately find this from
+> the i2c core implementation side.
+
+The current code does this:
+
+	client->dev.of_node = of_node_get(info->of_node);
+	client->dev.fwnode = info->fwnode;
+
+when it should do something like device_set_node() instead.
+
+> Or am I missing some patch (running on v6.14)?
+
+Yeah, there is a series in the mailing list [1], but it has no comments and
+no move so far...
+
+TL;DR: it seems in this change is incomplete.
+
+[1]: https://lore.kernel.org/r/20250312185137.4154173-1-andriy.shevchenko@linux.intel.com
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
