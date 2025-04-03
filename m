@@ -1,160 +1,119 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B713EAFA;
-	Thu,  3 Apr 2025 13:46:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 048A733F7;
+	Thu,  3 Apr 2025 13:47:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743687966; cv=none; b=gGw5Aj3DKVLl164da2WJdJ8gowmkfVqTUDbN+mlE05FN6Pf0n395gzS/qXSpRp3PWMusUpzE2QsFXlnOQYq0x+Wlp0wqxjlL1+gkL8uF7O+TPaXyypSkG5DUM9WeVBThKy0qXMIb52jmlqTrMTF1oIL154s+rqw75MU6cumMrHo=
+	t=1743688048; cv=none; b=JnTAWVcwi8o1TD/wYG9tGMZ/FAKkwNF4KoJjdvBbaGpkBB7kumrl55uBJmMXlZz6pMcYqFJkWe7iso4eok1et35jaedssBArtRhyB6mdPp8K9dteEv3lPGDix0bexKog3oZToQhaccfmF4hO/hqKPvw1mvtpyUvYI4rFZjiDHDo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743687966; c=relaxed/simple;
-	bh=8T3oj5qftOc5yR7rZEJRVCAEG1OT0Bw8oj7KVkE+K+Q=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=YOM+vPgtF6Eif9RwC+36/fazSagljUOi7Z8aLWS6FBmElfj4tIhpZe3i/jMXi4Wf3+/RmZL0Hw0WKu0b7a077//PagYB+5Nefx5+Om2JCHvRio4g8pgzUWzbwGJqcz3Mc6fQ2DIOAgM/8gssIdrEgeeWXscDDi1QMAUaaJxLV6E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gKdMUrRk; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=6if7d3ON; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1743688048; c=relaxed/simple;
+	bh=55gjNIGIW+U2dGtZipdrF6XglrcDDTwZqRnJymumiIc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=fe4HQYlwLM23frbUkVmHxqOis2o7wgMtOqLSB25T1YYnHRMMSqZVmRxDlqpWZWYfkSei0bDqCqyD8BJ6INRsIo3n+iCSlvmny2E/8xEwCH+28icJudEK8aSJOztbzrSj2IbkQ2lvroX1h+lAUuvkafn747HCwLSTSJwgp9dPpkU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=RLzyNwW3; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gKdMUrRk";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="6if7d3ON"
-From: John Ogness <john.ogness@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1743687962;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=joUQlRuw5q09H6+Otx+UiPvsgPa/pX5Q7pVi0WnRdDk=;
-	b=gKdMUrRkqHXAFdkRKI8q1u2BG1r2Rs5YxixPMt0iKtMA3Gj6oZifS6z7GWWtoKwxMmgr3B
-	oDTlw3qZ209yyCCkwUn7Xs7MWq0H5YpdK3pwdfBboWayzCh6hFDX/saGkMKMlQAveEpUiw
-	ALgKafyrkIyKnlYvmSUq804dqLTv907LrWExwq0l52akmaMSyrboVlxZ9UgKaX+C/Ob78e
-	cRxmANi+2CVlebI2TRsD/5PAvd/led1l9g7QRyWq/tVz/ZvGd1gdWbBmjQEHRsPh4EWWA+
-	21EvN6xc9Dg/1k0x5bc/xUWutgClVrpj/FFOnMQlx5fcvGgF3sHzw/4mIynq5Q==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1743687962;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=joUQlRuw5q09H6+Otx+UiPvsgPa/pX5Q7pVi0WnRdDk=;
-	b=6if7d3ONoxO5Xob6z2GTuX/hT6U9pfieuK1Sn2ac84VShOkHq9FKt7mSgndmzyu027qsjx
-	u1TgzllqMaqAR2CA==
-To: yunhui cui <cuiyunhui@bytedance.com>
-Cc: gregkh@linuxfoundation.org, jirislaby@kernel.org, pmladek@suse.com,
- arnd@arndb.de, andriy.shevchenko@linux.intel.com, namcao@linutronix.de,
- benjamin.larsson@genexis.eu, schnelle@linux.ibm.com,
- linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
-Subject: Re: [External] Re: [PATCH] serial: 8250: fix panic due to PSLVERR
-In-Reply-To: <CAEEQ3wkOQUh03Ggpf=mBWzNt1_Qtcv53gNXm7JH5Nban3tOtvQ@mail.gmail.com>
-References: <20250403090336.16643-1-cuiyunhui@bytedance.com>
- <84iknl5uex.fsf@jogness.linutronix.de>
- <CAEEQ3wkOQUh03Ggpf=mBWzNt1_Qtcv53gNXm7JH5Nban3tOtvQ@mail.gmail.com>
-Date: Thu, 03 Apr 2025 15:52:01 +0206
-Message-ID: <84cydt5peu.fsf@jogness.linutronix.de>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="RLzyNwW3"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 533A4UFv017256;
+	Thu, 3 Apr 2025 13:47:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=qcppdkim1; bh=c63I/ycZ6NN
+	qzoA9+qUGPU56vP2DlXK6DQqWrFBcBJc=; b=RLzyNwW3MHvazjLUej/Ux4dNtsH
+	oASXhX292l1ImUdrM7/u0PR79JmZ8jJS8zvw0A9kf0bhtNdeqfserTWSUit4/cyD
+	jU7GUJ6uQug28T/qA2rOPdP/NPAJpa9zDglpxbsaoGcBTPAcC7oYYhjDGtNJejFI
+	SmjmZN4s38f//QhBhiV0o6Ruxbs2cf7QXrxb+CfA7kVuUcwRc7jo+Eja77hotDXV
+	fHUUPOFA8up0yot7HaeVz+oRADSovlhOP+gJEo3kly2xKhwGvI0X+XPKNJmHjZLd
+	89ndtTnq0lRBDh8g8lRi+uXrhLpvbyo50skuE/Mvsd2qVDGQhrWxgh2XYDg==
+Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45sr8q0jsa-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 03 Apr 2025 13:47:00 +0000 (GMT)
+Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
+	by APBLRPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 533Dkv2l020647;
+	Thu, 3 Apr 2025 13:46:57 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 45p9xmx9mg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 03 Apr 2025 13:46:57 +0000
+Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 533DkvUV020639;
+	Thu, 3 Apr 2025 13:46:57 GMT
+Received: from hu-maiyas-hyd.qualcomm.com (hu-msavaliy-hyd.qualcomm.com [10.213.110.207])
+	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 533DkuYe020636
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 03 Apr 2025 13:46:57 +0000
+Received: by hu-maiyas-hyd.qualcomm.com (Postfix, from userid 429934)
+	id 1B5332484F; Thu,  3 Apr 2025 19:16:56 +0530 (+0530)
+From: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
+To: alexandre.belloni@bootlin.com, robh@kernel.org, krzk+dt@kernel.org,
+        conor+dt@kernel.org, jarkko.nikula@linux.intel.com,
+        linux-i3c@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: andersson@kernel.org, konradybcio@kernel.org,
+        Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
+Subject: [PATCH v3 3/3] MAINTAINERS: Add maintainer for Qualcomm's I3C controller driver
+Date: Thu,  3 Apr 2025 19:16:44 +0530
+Message-Id: <20250403134644.3935983-4-quic_msavaliy@quicinc.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250403134644.3935983-1-quic_msavaliy@quicinc.com>
+References: <20250403134644.3935983-1-quic_msavaliy@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: BJSx5JxyEqfYKIYdAgbIwQYSJKTicp5-
+X-Authority-Analysis: v=2.4 cv=Iu4ecK/g c=1 sm=1 tr=0 ts=67ee9154 cx=c_pps a=Ou0eQOY4+eZoSc0qltEV5Q==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=JfrnYn6hAAAA:8 a=VwQbUJbxAAAA:8 a=P-IC7800AAAA:8 a=8AirrxEcAAAA:8
+ a=cn7IUS33xWvMNiiCnpYA:9 a=TjNXssC_j7lpFel5tvFf:22 a=1CNFftbPRP8L7MoqJWF3:22 a=d3PnA9EDa4IxuAV0gXij:22 a=ST-jHhOKWsTCqRlWije3:22
+X-Proofpoint-ORIG-GUID: BJSx5JxyEqfYKIYdAgbIwQYSJKTicp5-
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-03_06,2025-04-02_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 impostorscore=0
+ adultscore=0 priorityscore=1501 suspectscore=0 mlxscore=0 malwarescore=0
+ bulkscore=0 spamscore=0 lowpriorityscore=0 clxscore=1015 mlxlogscore=999
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504030062
 
-On 2025-04-03, yunhui cui <cuiyunhui@bytedance.com> wrote:
->>> When the PSLVERR_RESP_EN parameter is set to 1, the device generates
->>> an error response if an attempt is made to read an empty RBR (Receive
->>> Buffer Register) while the FIFO is enabled.
->>>
->>> In serial8250_do_startup, calling serial_port_out(port, UART_LCR,
->>> UART_LCR_WLEN8) triggers dw8250_check_lcr(), which invokes
->>> dw8250_force_idle() and serial8250_clear_and_reinit_fifos(). The latter
->>> function enables the FIFO via serial_out(p, UART_FCR, p->fcr).
->>> Execution proceeds to the dont_test_tx_en label:
->>> ...
->>> serial_port_in(port, UART_RX);
->>> This satisfies the PSLVERR trigger condition.
->>>
->>> Because another CPU(e.g., using printk) is accessing the UART (UART
->>> is busy), the current CPU fails the check (value & ~UART_LCR_SPAR) ==
->>> (lcr & ~UART_LCR_SPAR), causing it to enter dw8250_force_idle().
->>
->> Didn't this[0] patch resolve this exact issue?
->>
->> John Ogness
->>
->> [0] https://lore.kernel.org/lkml/20220713131722.2316829-1-vamshigajjela@google.com
->
-> No, these are two separate issues. This[0] patch is necessary, as
-> expressed in this comment:
->
-> /*
-> * With PSLVERR_RESP_EN parameter set to 1, the device generates an
-> * error response when an attempt to read an empty RBR with FIFO
-> * enabled.
-> */
->
-> The current patch addresses the following scenario:
->
-> cpuA is accessing the UART via printk(), causing the UART to be busy.
-> cpuB follows the CallTrace path:
-> -serial8250_do_startup()
-> --serial_port_out(port, UART_LCR, UART_LCR_WLEN8);
-> ---dw8250_serial_out32
-> ----dw8250_check_lcr
-> -----dw8250_force_idle (triggered by UART busy)
-> ------serial8250_clear_and_reinit_fifos
-> -------serial_out(p, UART_FCR, p->fcr); (enables FIFO here)
-> cpuB proceeds to the dont_test_tx_en label:
->    ...
->    serial_port_in(port, UART_RX); //FIFO is enabled, and the UART has
-> no data to read, causing the device to generate a PSLVERR error and
-> panic.
->
-> Our solution:
-> Relevant serial_port_out operations should be placed in a critical section.
-> Before reading UART_RX, check if data is available (e.g., by verifying
-> the UART_LSR DR bit is set).
+Add a new entry for the I3C QCOM GENI driver to the MAINTAINERS file.
+This entry includes the maintainer's name and contact information,
+ensuring proper maintainership and communication for the new driver.
 
-OK, now I see. The problem is the explicit reads of UART_RX near the end
-of serial8250_do_startup().
+Signed-off-by: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
+---
+ MAINTAINERS | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
->> diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
->> index 3f256e96c722..6909c81109db 100644
->> --- a/drivers/tty/serial/8250/8250_port.c
->> +++ b/drivers/tty/serial/8250/8250_port.c
->> @@ -2264,13 +2264,16 @@ int serial8250_do_startup(struct uart_port *port)
->>  	 * Clear the FIFO buffers and disable them.
->>  	 * (they will be reenabled in set_termios())
->>  	 */
->> +	uart_port_lock_irqsave(port, &flags);
->>  	serial8250_clear_fifos(up);
->> +	uart_port_unlock_irqrestore(port, flags);
+diff --git a/MAINTAINERS b/MAINTAINERS
+index ce2b64f4568d..a8fcca5d234a 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -11254,6 +11254,14 @@ S:	Orphan
+ F:	Documentation/devicetree/bindings/i3c/snps,dw-i3c-master.yaml
+ F:	drivers/i3c/master/dw*
+ 
++I3C DRIVER FOR QUALCOMM GENI CONTROLLER IP
++M:	Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
++L:	linux-i3c@lists.infradead.org (moderated for non-subscribers)
++L:	linux-arm-msm@vger.kernel.org
++S:	Supported
++F:	Documentation/devicetree/bindings/i3c/qcom,geni-i3c.yaml
++F:	drivers/i3c/master/i3c-qcom-geni.c
++
+ I3C SUBSYSTEM
+ M:	Alexandre Belloni <alexandre.belloni@bootlin.com>
+ R:	Frank Li <Frank.Li@nxp.com>
+-- 
+2.25.1
 
-Can you clarify why serial8250_clear_fifos() needs to be in a critical
-section?
-
-serial8250_do_shutdown() and do_set_rxtrig() also call
-serial8250_clear_fifos() without holding the port lock.
-
->>>  	/*
->>>  	 * Clear the interrupt registers.
->>>  	 */
->>> -	serial_port_in(port, UART_LSR);
->>> -	serial_port_in(port, UART_RX);
->>> +	lsr = serial_port_in(port, UART_LSR);
->>> +	if (lsr & UART_LSR_DR)
->>> +		serial_port_in(port, UART_RX);
-
-Do we care about the unchecked UART_RX in serial8250_do_shutdown()?
-
-	/*
-	 * Read data port to reset things, and then unlink from
-	 * the IRQ chain.
-	 */
-	serial_port_in(port, UART_RX);
-	serial8250_rpm_put(up);
-
-	up->ops->release_irq(up);
-}
-
-Otherwise all other UART_RX reads are either checking UART_LSR_DR first
-or are under the port lock.
-
-John
