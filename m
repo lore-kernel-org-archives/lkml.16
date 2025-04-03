@@ -1,141 +1,137 @@
-Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8837C18732B
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 07:09:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E22523F289;
+	Thu,  3 Apr 2025 07:09:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743664158; cv=none; b=bc/xpRxDHeW4vmvEEYMQQ290Q0cV6S0MEfXegPaxLP4d8d9IhZ/heJ7HzZWGeeJB/DDvLxEntEIU7UF81nGc27rJE/jaGw0qauo/Q0icXvLey+tKXsSSatVIvrCF3FBt8S9M82HxtYfwIP8xEha2sEovhFFWWQP3SlZrT8pPrPs=
+	t=1743664161; cv=none; b=C84yd3Lo3ICXRsbH6KNEx7huGVrSbUK5GPz3cwSN+220Tcp9GiIfeuFQBBUGaqdm0pcHsVyFbVKVw+VLEQ+eREwlqIjc5k7yZaCEr2McPwhH+OXDPZ8xbbSNOyo99qCMixAsiEzpwI5fgjLYWE4CUS/th+Z/tCHO+/2Ni6ZHtVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743664158; c=relaxed/simple;
-	bh=DHnHqc7xTPXIbcMBbnMmP6LtCGcfSw0B37npJ6vzXxQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qdkzAXC5IJsg1T5skIXk4QgZnzzzvnWr0LaSokBsoR0QxZiLM7idtfLMIvA5QBtuHHUs5yTZHqP3swvsHb8ovojKaE9C4ept5OA6wFR/AksHxXKSV1gpkp9umfbOvFRMjzOPMlqCqx9PgUoG4mIZLMZQFLvKYLSzqdRsOhvhLik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iVXmLeM6; arc=none smtp.client-ip=209.85.221.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iVXmLeM6"
-Received: by mail-vk1-f171.google.com with SMTP id 71dfb90a1353d-523ee30e0d4so328869e0c.2
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 00:09:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743664155; x=1744268955; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RFoq87g3RUpItgd7yRqH4elpvnagnn7yUoA5hke1FAM=;
-        b=iVXmLeM6OtKhJSq/8TFEXdeVWNLhOlE8+ec60ClNtqGZMZpE/H9/iXJ///JIc7ZnAj
-         k4SDo1VVUUF2oDJStJa4mzxHJboyNLudOH99s2tfpK+dB5blbZYNUFPQQJ2gQerok5nV
-         iaVpcXERjFZFgX9wPewW4y4VBXTLfLJ0MuDNOYmfieNZB7Ypdsbpdz7c0chO9X/CiSjf
-         COjP7DcyoEU+O1O+wezEa61D1wKUEIqkQ7mDnrGYLghelOuSG2O9phorPvAhw3rusRFe
-         hluMnFwooChhbPw1yrICxYFcSDiE3XJN0t3eSZ4rUrBKI7taOPL0bwy7hI769w5QkWHn
-         ku3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743664155; x=1744268955;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RFoq87g3RUpItgd7yRqH4elpvnagnn7yUoA5hke1FAM=;
-        b=MCLRtc2NH6LMOcmk32IC7N1uLgMFZijIMLaBKviqx2vX5D9oXxrCGQ+AsvoWWSWtyM
-         wLT5mqUp4MpjH6aqW5mCzT8KFcFs4X64zEDXrS3U0mDOl1FJrz29quzT5AMhw7Gxk/bk
-         bzWEjT8jcb38CTmsSRl8pqEP5b4VHPwPswG24Wsrbb/K55CaMs95pvqG8RL95y/qiaAl
-         TGOeLPSkuCnsgg8zjGrNREE43o65ysMvikCCKsEvkSv7GXOWy92/TnCBdDNEfB+QodY+
-         p0FlZUSTn2YbVW8KEZUzZKFpK8bo0ByuXRpEv7INVewo2GQlGFP1ba+JYcx6NRYDpEtr
-         59VA==
-X-Forwarded-Encrypted: i=1; AJvYcCVTJmVsR5EY9Kl/vlfk2VApj9x4e3Hf9MyNNPN3KKa4PUimqpSS8wSWlI/Z3Fw4COdcmDsHvcszSXOqz7I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwpKJuvo55abYqZC6jVE5w+MgEtTq3ztLb/Iko2h7Q7dVl1UDd8
-	IrRAKUlEfYY6siQlhKspCPYCKs1MHZQkNrnCqEcvVzYdA0VFAzYjx5tI/NpzskTxsp6Lu/fGPq7
-	2s3ZryqeR5sJGas1LqyfLASUTeOk=
-X-Gm-Gg: ASbGncvC7jQm7cs0CNm1Ane3Vl8Nak2E+8hsaBKqtDarAbSATjtjwhGJUcFDR3amZ0L
-	dOnv1RE+ikM4IejSaqhBPIWGYL/N+gbclafU6aIWn9aseGTWgACkSaQOfiBwg6qjgV3XpvB8dX2
-	0fjORCHDHjLvfmGSeKJYDX/sYHMVTfRO1jr6x/4L4=
-X-Google-Smtp-Source: AGHT+IFOYY8o5OXC7BNOpL314Y2KkesOlD1Thnx9JW0TD8ulbkyEzlFqBnntu4H/6eYSqGX7s/EYQq9bM8bUmRQAYio=
-X-Received: by 2002:a05:6122:8295:b0:525:aeb7:f22e with SMTP id
- 71dfb90a1353d-52758da72d9mr1008296e0c.7.1743664155396; Thu, 03 Apr 2025
- 00:09:15 -0700 (PDT)
+	s=arc-20240116; t=1743664161; c=relaxed/simple;
+	bh=sLbbJwrNJuWZdLBKeEw5OjHjp4yxNXKpIbq8folZ0l8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=rsffKESi8xoC0MetHJ/f30vIICV5G2IB8mJLtGnuism38F1U+xNSjkyNeg8O/kjNanRE5rtfSftYpwuHLFFHrWi6AaPxuIRH/TF65LBYHDgB3IY+jEHh2v8UbhLfqS7aXIUfGZ3Bbf610RyMaD+imMpjoJTBEtcjj8lROScDwNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.17])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4ZSt5R0F0nz1k1Gy;
+	Thu,  3 Apr 2025 15:04:27 +0800 (CST)
+Received: from kwepemg200005.china.huawei.com (unknown [7.202.181.32])
+	by mail.maildlp.com (Postfix) with ESMTPS id 44BD31A0188;
+	Thu,  3 Apr 2025 15:09:16 +0800 (CST)
+Received: from [10.174.176.70] (10.174.176.70) by
+ kwepemg200005.china.huawei.com (7.202.181.32) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Thu, 3 Apr 2025 15:09:14 +0800
+Message-ID: <fd31d24b-8a34-4da5-b7ed-3ebf9aa30d1d@huawei.com>
+Date: Thu, 3 Apr 2025 15:09:13 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <Z+05IEjV3pczMLNQ@HP-650> <4c35ae41-c834-e25a-ccab-5cdd34aa4680@inria.fr>
-In-Reply-To: <4c35ae41-c834-e25a-ccab-5cdd34aa4680@inria.fr>
-From: Samuel Abraham <abrahamadekunle50@gmail.com>
-Date: Thu, 3 Apr 2025 08:09:07 +0100
-X-Gm-Features: AQ5f1JpGQqeJrBUB-VvSXTgpFhMBgMWSpDUjQtsyK6vTde3Vr4caK-xmt4hx0DE
-Message-ID: <CADYq+fb04joR=8b3zERT-K41y-+Czo=U0_M8GsQWPZbpAov=0Q@mail.gmail.com>
-Subject: Re: [PATCH] staging: rtl8723bs: modify struct field to use standard
- bool type
-To: Julia Lawall <julia.lawall@inria.fr>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, outreachy@lists.linux.dev, 
-	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net] net/smc: fix general protection fault in
+ __smc_diag_dump
+To: "D. Wythe" <alibuda@linux.alibaba.com>
+CC: Paolo Abeni <pabeni@redhat.com>, <wenjia@linux.ibm.com>,
+	<jaka@linux.ibm.com>, <tonylu@linux.alibaba.com>, <guwen@linux.alibaba.com>,
+	<davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
+	<horms@kernel.org>, <ubraun@linux.vnet.ibm.com>, <yanjun.zhu@linux.dev>,
+	<yuehaibing@huawei.com>, <zhangchangzhong@huawei.com>,
+	<linux-rdma@vger.kernel.org>, <linux-s390@vger.kernel.org>,
+	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20250331081003.1503211-1-wangliang74@huawei.com>
+ <37f86471-5abc-4f04-954e-c6fb5f2b653a@redhat.com>
+ <99f284be-bf1d-4bc4-a629-77b268522fff@huawei.com>
+ <20250402072010.GA110656@j66a10360.sqa.eu95>
+From: Wang Liang <wangliang74@huawei.com>
+In-Reply-To: <20250402072010.GA110656@j66a10360.sqa.eu95>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemg200005.china.huawei.com (7.202.181.32)
 
-On Thu, Apr 3, 2025 at 6:06=E2=80=AFAM Julia Lawall <julia.lawall@inria.fr>=
- wrote:
->
->
->
-> On Wed, 2 Apr 2025, Abraham Samuel Adekunle wrote:
->
-> > The struct field uses the uint values 0 and 1 to represent false and
-> > true values respectively.
-> >
-> > Convert cases to use the bool type instead to conform to Linux
-> > coding styles and ensure consistency.
->
-> This is vague.  Ensure consistency with what?  You can point out that tru=
-e
-> or false was already being used elsewhere in the code.
 
-Okay Noted.
+在 2025/4/2 15:20, D. Wythe 写道:
+> On Wed, Apr 02, 2025 at 10:37:24AM +0800, Wang Liang wrote:
+>> 在 2025/4/1 19:01, Paolo Abeni 写道:
+>>> On 3/31/25 10:10 AM, Wang Liang wrote:
+>>>> diff --git a/net/smc/af_smc.c b/net/smc/af_smc.c
+>>>> index 3e6cb35baf25..454801188514 100644
+>>>> --- a/net/smc/af_smc.c
+>>>> +++ b/net/smc/af_smc.c
+>>>> @@ -371,6 +371,7 @@ void smc_sk_init(struct net *net, struct sock *sk, int protocol)
+>>>>   	sk->sk_protocol = protocol;
+>>>>   	WRITE_ONCE(sk->sk_sndbuf, 2 * READ_ONCE(net->smc.sysctl_wmem));
+>>>>   	WRITE_ONCE(sk->sk_rcvbuf, 2 * READ_ONCE(net->smc.sysctl_rmem));
+>>>> +	smc->clcsock = NULL;
+>>>>   	INIT_WORK(&smc->tcp_listen_work, smc_tcp_listen_work);
+>>>>   	INIT_WORK(&smc->connect_work, smc_connect_work);
+>>>>   	INIT_DELAYED_WORK(&smc->conn.tx_work, smc_tx_work);
+>>> The syzkaller report has a few reproducers, have you tested this? AFAICS
+>>> the smc socket is already zeroed on allocation by sk_alloc().
+>>
+>> Yes, I test it by the C repro:
+>> https://syzkaller.appspot.com/text?tag=ReproC&x=13d2dc98580000
+>>
+>> The C repro is provided by the 2025/02/27 15:16 crash from
+>>    https://syzkaller.appspot.com/bug?extid=271fed3ed6f24600c364
+>>
+>> After apply my patch, the crash no longer happens when running the C repro.
+>>
+>> "the smc socket is already zeroed on allocation by sk_alloc()", That
+>> is right.
+>> However, smc->clcsock may be modified indirectly in inet6_create().
+>> The process like this:
+>>
+>>    __sys_socket
+>>      __sys_socket_create
+>>        sock_create
+>>          __sock_create
+>>            # pf->create
+>>            inet6_create
+>>              // init smc->clcsock = 0
+>>              sk = sk_alloc()
+>>
+>>              // set smc->clcsock to invalid address
+>>              inet = inet_sk(sk);
+>>              inet_assign_bit(IS_ICSK, sk, INET_PROTOSW_ICSK & answer_flags);
+>>              inet6_set_bit(MC6_LOOP, sk);
+>>              inet6_set_bit(MC6_ALL, sk);
+>>
+>>              smc_inet_init_sock
+>>                smc_sk_init
+>>                  // add sk to smc_hash
+>>                  smc_hash_sk
+>>                    sk_add_node(sk, head);
+>>                smc_create_clcsk
+>>                  // set smc->clcsock
+>>                  sock_create_kern(..., &smc->clcsock);)
+>>
+>> So initialize smc->clcsock to NULL explicitly in smc_sk_init() can fix
+>> this crash scene. If the problem can be reproduced after this patch, I
+>> guess it is not the same reason, and fix it by another patch is more
+>> appropriate.
+>>
+> This is actually because the current smc_sock is not an inet_sock,
+> leading to two modules simultaneously modifying the same offset in
+> memory but interpreting its structure differently. I previously proposed
+> embedding an inet(6)_sock at the beginning of smc_sock, but the
+> community had some objections...
 >
-> >
-> > reported by Coccinelle:
-> >
-> > Signed-off-by: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
-> > ---
-> >  drivers/staging/rtl8723bs/core/rtw_ap.c      | 2 +-
-> >  drivers/staging/rtl8723bs/include/sta_info.h | 2 +-
-> >  2 files changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/staging/rtl8723bs/core/rtw_ap.c b/drivers/staging/=
-rtl8723bs/core/rtw_ap.c
-> > index ed6942e289a5..82f54f769ed1 100644
-> > --- a/drivers/staging/rtl8723bs/core/rtw_ap.c
-> > +++ b/drivers/staging/rtl8723bs/core/rtw_ap.c
-> > @@ -389,7 +389,7 @@ void update_bmc_sta(struct adapter *padapter)
-> >               psta->qos_option =3D 0;
-> >               psta->htpriv.ht_option =3D false;
-> >
-> > -             psta->ieee8021x_blocked =3D 0;
-> > +             psta->ieee8021x_blocked =3D false;
-> >
-> >               memset((void *)&psta->sta_stats, 0, sizeof(struct stainfo=
-_stats));
-> >
-> > diff --git a/drivers/staging/rtl8723bs/include/sta_info.h b/drivers/sta=
-ging/rtl8723bs/include/sta_info.h
-> > index b3535fed3de7..63343998266a 100644
-> > --- a/drivers/staging/rtl8723bs/include/sta_info.h
-> > +++ b/drivers/staging/rtl8723bs/include/sta_info.h
-> > @@ -86,7 +86,7 @@ struct sta_info {
-> >       uint qos_option;
-> >       u8 hwaddr[ETH_ALEN];
-> >
-> > -     uint    ieee8021x_blocked;      /* 0: allowed, 1:blocked */
-> > +     bool ieee8021x_blocked;
+> I'm not sure on the community's current stance on this matter, but if a
+> fix is absolutely necessary, my recommendation would still be to embed
+> an inet(6)_sock within the smc_sock structure
 >
-> This declaration doesn't have the same alignment as the others.
->
-> You should also check whether this is a structure that is read from the
-> hardware.  In that case, it would be a concern if the bool field does not
-> have the same size as the uint one.
->
-> julia
+> D.
 
-Thank you very much. I will confirm and effect the changes
+At present, I think initializing the smc in smc_sk_init() may be the 
+most simple and effective method. :P
 
-Adekunle
+>
+>>> /P
+>>>
+>>>
