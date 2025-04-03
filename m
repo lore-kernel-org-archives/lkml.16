@@ -1,174 +1,114 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B98C24EA90;
-	Thu,  3 Apr 2025 14:25:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A31F4433D1
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 14:26:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743690315; cv=none; b=qdJdBn1OamqUP0NslYJRI2JRiwMd6JC3J3xvDxlgaWhMkff5niqenXDd8KCL33jzfKhs+PaYCovBKWBxbtrNkdLXB0CkFw2eRyFdJ3wEK/HIcBLTrU0ZqxJWtoqu57276HbOZKh6bJJch1JLBWKM5cJUc03FIJNW5WM3Ftg+mKw=
+	t=1743690401; cv=none; b=YkXrg8r/0M5BxeM2bDBjFda9Y1hNtiJU6ifTX8oq+UjmaCIsopiCR/L6RG0LFWITNWXkWf80/LyWO6V+OqNU1Pa1YaziCBcwDF9x3icYnhl43DJD4qjA5mSxymgAwUoCHlXQz2esYgpNO2PDb4uZT7a8Iw9bXRK7lm1SDo7RvKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743690315; c=relaxed/simple;
-	bh=tKG4mgxr/waIXYy3UE25TN/Cf98+hnU2uITZp+axu1Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=towyJEHmxYeaA5ZWm1XAILh2Zeysr1I+MclcqkHZ5urKbQnGl2HOpN6lD+pjV8b6KHLaN0xSF+NquMayoocY2Kgg5QooDPe9uuIvYuxsL8SQwhsT+W4iT48FQfVWv2SDqmF7yGWOwrbxqLiC2tgwi8WrLBhyJ1+I3moOd8xuZcU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CGts9A16; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743690401; c=relaxed/simple;
+	bh=8Oy+VaA23wXMT84oxyuP+BRVicWXXuU7IUUqLN1IYWM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BZiYZoTfoWaLlF/m95j8oPCTHfgU+wlLatby21pyCkUEA+eJr9jYjRS8CzPd7DypdcCcMxmg4O/OqNA4md7gV8WctJ486GSQnTwueWrL4kQaBnI8DCKb1SbD7osTwQUxPTasTnN/ZNogJeZ51/XEPjSEmR/7YpSlst26SAZvEBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XOz/sO83; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CGts9A16"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43d0782d787so6340625e9.0;
-        Thu, 03 Apr 2025 07:25:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743690312; x=1744295112; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bYt3/DwYVuXN5SPjLpQjF/KbDAzdmiI9+JL6XuVsme4=;
-        b=CGts9A16taOdsG7gm1S5QeyBfdl/JTbajDjeV8bO4RBcxL9lWd1FEL9SE8zC2dSplG
-         EMzy7B93b4v34nYprCYwTv0n/vCgnQ0pp4QIXZznGZtDSTNMmyDcCkyy6f+a9vYO/9aY
-         Q2KNJndfS8ObjqOfD2+9g90qRq2+GmFy/0DB8bumF3W0h358z6XxK+2B42iLhrj83kVB
-         8mBiv9uRvVjwCkJeU3vJhwlFQ5IClk20GUqgsGZBbXBSPAtuJ7KITASYLEP9l3/ibYDL
-         gSuGCWtuKgQbnBiqQU4FatFj1gkbN0u94z2sstImS5rbp5zggs/dKNhT0p2MX8eqvkzA
-         EHbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743690312; x=1744295112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bYt3/DwYVuXN5SPjLpQjF/KbDAzdmiI9+JL6XuVsme4=;
-        b=AXivcSxbACqfwfi6eOpMcvI5Bjh1VTHxD4xLIFF+O8COg6qGlijztF+Sr2wvFZ6oPY
-         TTmWFvt1pNkC91/kczTh+RFsTER586AKsx5hwgLDrCqsuOkihmjxhkYWC6QmN4r+EONC
-         OJTt8cPShcOjUI5Ky0nIMXStSVPVfcQHk8xGObCgdYrx5bKOdRAmpMk8jGO7fOVAVh8N
-         P+Hvjd2dsAvH/XOrdZqDKV2bPiHAvZF9zOU46kNbHe49l1oUuLjP29HlkKEhxyy5Leva
-         LbY6yPN0+prbiSI6YamtgzOI+eT54kDPTTOZ4XSqD9oafn90J8bTFYi1t0v2izenhq+t
-         dfYw==
-X-Forwarded-Encrypted: i=1; AJvYcCUmdh2IpD2pDTL/dG6Mdyf1OzG0L8+h4Q6yBt7r9w6N67KE8ChCbiayzISXml7yTqVIIW0tC8pCuHui/iAk1S2+@vger.kernel.org, AJvYcCUmgOA1ehczkB9hZEsmCs6gf16JN5WoyC8EyA+UF7I+KSyBRBLVg5ciAh7lqXS5p1Xdq/becMsM@vger.kernel.org, AJvYcCV0Z4EfcaBJPm02t1xKcx9KrPRvW8JEpqhiEF/qkgEgHRuRKKcowMzjnzk6msF72uzELl8i89L9HhTfP3I=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz3kCEEmg1/0C1jFHk+l5AOCZ5sy19+P9SvfkJJpyM82c+yntBy
-	WelkTAdq5VkXaRAHRfgtH8NmH96EeHLxXzp5Gpf0OgnWMagx7J6VFxk4OE/gW47JnuwonIDD9I8
-	NzY64c6JDoDKT/1kTKpc+Ova2Vrk=
-X-Gm-Gg: ASbGncv9UXOoIfpzk4sOquGBiPH7f3yl4UMmA37/3Dt2KiuksUtsshosNrhuOcVCamq
-	loYYlSp06RJH05scdGjqe/FPsZ+Qy6M2BLohru0sGWu/wv3zrgr9OLhGloNHjiSn6vns4Hisoz3
-	B3SPLXgZ2t8boDX/WLLnF6U5rucygk3+7jkuIQoCJRgw==
-X-Google-Smtp-Source: AGHT+IHUkOyw3ev23XqXHBt0KxfVIhLR/1X4BbNWvcbsg0kdXKegScCaWHDKnAMpZBX6hw7sIGdWPn1U4w8qAoQQkB0=
-X-Received: by 2002:a05:6000:1862:b0:390:f6aa:4e7c with SMTP id
- ffacd0b85a97d-39c120e0bc1mr17240592f8f.28.1743690312134; Thu, 03 Apr 2025
- 07:25:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XOz/sO83"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743690400; x=1775226400;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=8Oy+VaA23wXMT84oxyuP+BRVicWXXuU7IUUqLN1IYWM=;
+  b=XOz/sO83NES0p3Cm/TzyHI5BTLJfYfssfQlXVt2Xk+fFkyyJlQcmahJL
+   GQapkx7gayxb2Qf2quzCkGndJvQLNHsioNgwP6URlrb4cvJEI0fr+Np98
+   4p0ESNNKf2/TEEXhTfnwsw3O5IZh87gizvrxYCRcg2Jryspr8a/TYkw9N
+   2u0NDUjyVE53fQhnIXNRyCsfWXqjuF7eTlI5k1BCxrIBaUkhR/idBNu3q
+   r0YUp9U52CWlR0T9iNB+42oMtrIBbI8wBXtfP6m7azASlRuSMrzEOkU4u
+   tCZvvs27G5VnsfUVmenD1XEFA8Q6DZI5gjDQIw/RaGy1krTL5Ybvgts4M
+   w==;
+X-CSE-ConnectionGUID: fy6u3s6GTcO9iFB9yLoUOQ==
+X-CSE-MsgGUID: 1ZQGDSfUQgO/lrmFbDVGOQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11393"; a="62505841"
+X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
+   d="scan'208";a="62505841"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 07:26:39 -0700
+X-CSE-ConnectionGUID: o0F+MBApTx2hFUhW50THDw==
+X-CSE-MsgGUID: yMdWXaJ5Sj2a+A0YLPBfwQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
+   d="scan'208";a="158007997"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 07:26:37 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1u0LWc-00000008pyU-47jo;
+	Thu, 03 Apr 2025 17:26:34 +0300
+Date: Thu, 3 Apr 2025 17:26:34 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Raag Jadav <raag.jadav@intel.com>, david.m.ertman@intel.com,
+	ira.weiny@intel.com, lee@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] mfd: core: Support auxiliary device
+Message-ID: <Z-6amuPCmtRpUmxj@smile.fi.intel.com>
+References: <20250403110053.1274521-1-raag.jadav@intel.com>
+ <2025040336-ethically-regulate-3594@gregkh>
+ <Z-6YU24dhxF5PRaw@smile.fi.intel.com>
+ <Z-6Y6lbLSbe46-uQ@smile.fi.intel.com>
+ <2025040343-vascular-swung-f124@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250331032354.75808-1-jiayuan.chen@linux.dev> <20250331032354.75808-2-jiayuan.chen@linux.dev>
-In-Reply-To: <20250331032354.75808-2-jiayuan.chen@linux.dev>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Thu, 3 Apr 2025 07:24:58 -0700
-X-Gm-Features: ATxdqUHpnDryxsVQqbU7wXWf5I9AbRjQwuexib-K1AFMMQc4NlaNR5RWjUUlZVo
-Message-ID: <CAADnVQJ6NPGuY=c8kbpX_nLYq4oOxOBAxbDPFLuw+yr4WrQQOQ@mail.gmail.com>
-Subject: Re: [PATCH bpf v2 1/2] bpf, xdp: clean head/meta when expanding it
-To: Jiayuan Chen <jiayuan.chen@linux.dev>
-Cc: bpf <bpf@vger.kernel.org>, Jiayuan Chen <mrpre@163.com>, 
-	syzbot+0e6ddb1ef80986bdfe64@syzkaller.appspotmail.com, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Simon Horman <horms@kernel.org>, Jesper Dangaard Brouer <hawk@kernel.org>, Mykola Lysenko <mykolal@fb.com>, 
-	Shuah Khan <shuah@kernel.org>, Willem de Bruijn <willemb@google.com>, 
-	Jason Xing <kerneljasonxing@gmail.com>, Anton Protopopov <aspsk@isovalent.com>, 
-	Abhishek Chauhan <quic_abchauha@quicinc.com>, Jordan Rome <linux@jordanrome.com>, 
-	Martin Kelly <martin.kelly@crowdstrike.com>, David Lechner <dlechner@baylibre.com>, 
-	LKML <linux-kernel@vger.kernel.org>, Network Development <netdev@vger.kernel.org>, 
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2025040343-vascular-swung-f124@gregkh>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Sun, Mar 30, 2025 at 8:27=E2=80=AFPM Jiayuan Chen <jiayuan.chen@linux.de=
-v> wrote:
->
-> The device allocates an skb, it additionally allocates a prepad size
-> (usually equal to NET_SKB_PAD or XDP_PACKET_HEADROOM) but leaves it
-> uninitialized.
->
-> The bpf_xdp_adjust_head function moves skb->data forward, which allows
-> users to access data belonging to other programs, posing a security risk.
->
-> Reported-by: syzbot+0e6ddb1ef80986bdfe64@syzkaller.appspotmail.com
-> Closes: https://lore.kernel.org/all/00000000000067f65105edbd295d@google.c=
-om/T/
-> Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
-> ---
->  include/uapi/linux/bpf.h       | 8 +++++---
->  net/core/filter.c              | 5 ++++-
->  tools/include/uapi/linux/bpf.h | 6 ++++--
->  3 files changed, 13 insertions(+), 6 deletions(-)
->
-> diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
-> index defa5bb881f4..be01a848cbbf 100644
-> --- a/include/uapi/linux/bpf.h
-> +++ b/include/uapi/linux/bpf.h
-> @@ -2760,8 +2760,9 @@ union bpf_attr {
->   *
->   * long bpf_xdp_adjust_head(struct xdp_buff *xdp_md, int delta)
->   *     Description
-> - *             Adjust (move) *xdp_md*\ **->data** by *delta* bytes. Note=
- that
-> - *             it is possible to use a negative value for *delta*. This =
-helper
-> + *             Adjust (move) *xdp_md*\ **->data** by *delta* bytes. Note=
- that
-> + *             it is possible to use a negative value for *delta*. If *d=
-elta*
-> + *             is negative, the new header will be memset to zero. This =
-helper
->   *             can be used to prepare the packet for pushing or popping
->   *             headers.
->   *
-> @@ -2989,7 +2990,8 @@ union bpf_attr {
->   * long bpf_xdp_adjust_meta(struct xdp_buff *xdp_md, int delta)
->   *     Description
->   *             Adjust the address pointed by *xdp_md*\ **->data_meta** b=
-y
-> - *             *delta* (which can be positive or negative). Note that th=
-is
-> + *             *delta* (which can be positive or negative). If *delta* i=
-s
-> + *             negative, the new meta will be memset to zero. Note that =
-this
->   *             operation modifies the address stored in *xdp_md*\ **->da=
-ta**,
->   *             so the latter must be loaded only after the helper has be=
-en
->   *             called.
-> diff --git a/net/core/filter.c b/net/core/filter.c
-> index 46ae8eb7a03c..5f01d373b719 100644
-> --- a/net/core/filter.c
-> +++ b/net/core/filter.c
-> @@ -3947,6 +3947,8 @@ BPF_CALL_2(bpf_xdp_adjust_head, struct xdp_buff *, =
-xdp, int, offset)
->         if (metalen)
->                 memmove(xdp->data_meta + offset,
->                         xdp->data_meta, metalen);
-> +       if (offset < 0)
-> +               memset(data, 0, -offset);
->         xdp->data_meta +=3D offset;
->         xdp->data =3D data;
->
-> @@ -4239,7 +4241,8 @@ BPF_CALL_2(bpf_xdp_adjust_meta, struct xdp_buff *, =
-xdp, int, offset)
->                 return -EINVAL;
->         if (unlikely(xdp_metalen_invalid(metalen)))
->                 return -EACCES;
-> -
-> +       if (offset < 0)
-> +               memset(meta, 0, -offset);
+On Thu, Apr 03, 2025 at 03:23:22PM +0100, Greg KH wrote:
+> On Thu, Apr 03, 2025 at 05:19:22PM +0300, Andy Shevchenko wrote:
+> > On Thu, Apr 03, 2025 at 05:16:51PM +0300, Andy Shevchenko wrote:
+> > > On Thu, Apr 03, 2025 at 03:02:47PM +0100, Greg KH wrote:
+> > > > On Thu, Apr 03, 2025 at 04:30:53PM +0530, Raag Jadav wrote:
 
-Let's make everyone pay a performance penalty to silence
-KMSAN warning?
+...
 
-I don't think it's a good trade off.
+> > > > > 2. Should we allow auxiliary drivers to manage their own resources
+> > > > >    (MEM, IO, IRQ etc)?
+> > > > 
+> > > > The resources are all shared by the "parent" device, that's what makes
+> > > > aux drivers work, they need to handle this as there is no unique way to
+> > > > carve up the resources here.
+> > > > 
+> > > > So I don't know how you would do this, sorry.
+> > > 
+> > > I think we should simply enforce the requirement that MFD on AUX bus must use
+> > > regmap. This will solve the serialisation and common access to the resources.
+> > 
+> > That said, make an additional API call like
+> > 
+> > dev_mfd_add_aux_devices() which should enforce new infrastructure and convert
+> > drivers one by one. Also with that you may add a warning to the existing (PCI)
+> > drivers that are using old API
+> > 
+> > 	if (dev_is_pci(parent))
+> > 		dev_warn(parent, "Uses old API, please switch to ...\n");
+> 
+> Don't add "warnings" like this if you aren't also going to actually
+> convert the code.  Just convert it, otherwise you pester users with
+> problems that they have no idea how to fix.
 
-Soft nack.
+Good point. I'm wondering how many actually we have PCI MFD (ab)users right
+now? 30? 100? More?
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
