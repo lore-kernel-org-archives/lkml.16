@@ -1,137 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f195.google.com (mail-pf1-f195.google.com [209.85.210.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98DD9230BC0;
-	Thu,  3 Apr 2025 07:03:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FDC923F273;
+	Thu,  3 Apr 2025 07:03:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743663795; cv=none; b=Wa3GblY2gUWe0JSH5oNAaVNOfVXbPcQf/lnQACaUxS2iL5TXjDu0lS8vM43NuSiYe/NdHb6T3QXCd+GdSWk5GhKKowwak1y6ey8eeJojeCH+6uUDWM9zSI6NyANwBQ1AezLHRDHBhgOifhWTqfxzJ8etddO6MWH8knWygOxjlTU=
+	t=1743663830; cv=none; b=GKQ5DJdr0SVkZSry3bzzJ2YtBKrzo1y8IZdbCgoBN6HtIJBxMKbklbUj+NAtbGJ0PsT0LzP79tbsnXDMJI0sVx3C5kw2i4lUzWq/9BJEGJK5LXr951QXozTMFKBcAFPcBSVEzK58IzgiWlseAuh4fRBmqNagVHHFAOfsq8QV2g0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743663795; c=relaxed/simple;
-	bh=l0MLC3LjSRdSlGxzQJUnA2o45FMnz5uriKWfGAhpZ1M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gh1vI2CSO+Pzc/r8oLCMJmQyGPQiYNZBmfUms3npJcjlKhcRwxq1SEoTQQx20g77qoJmqd5my8r9zILnsRJ3PZ+cszSjGps/2H2sXdR4CrWkuYdptSh/HY0bSup+XD3Wsb8AL1mQEJIW84XlF8TVeHJZQFHEzwI9Bmp3IhqodKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KLXVwCO+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743663830; c=relaxed/simple;
+	bh=VqD21zug0bzNRIfh64ajCU8czSXSOItLcFIN3MXSFaE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=VUqzAzlLbTM3dg7KfRRRFRSAPxq9sFA8QBh4WSq4E/f0jzcjpBxM1JCPq2VEEfjNMmPBvnn/x+2VDKHcipyJGhKFCdxcvupzTHFZf6xTSnGkE2KmaHTqQSlIRqCXTOZyuKVyQFZZyytrYKlJZTz9Mp+yilnAUsShH3hoczhJQqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JkmQLBxD; arc=none smtp.client-ip=209.85.210.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KLXVwCO+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BBE8C4CEE3;
-	Thu,  3 Apr 2025 07:03:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743663795;
-	bh=l0MLC3LjSRdSlGxzQJUnA2o45FMnz5uriKWfGAhpZ1M=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=KLXVwCO+bVMklE7kYusSUnLK7+vPPkVA2GBEf23bDXUMvGs1jnLEgwEV0v4a1oqCV
-	 NxWekVzemIsXpTbwULg9TwbZAhiLw8UaaHRhhzJhB4AyiJ6aPRovCsPc1WHETfIG4N
-	 pUKrUHkrJ66ZC2LTD5qd97O+hHjlH2sud0lmHlkl17XR6qlsH/ZJGOxwi0pPDPzaw1
-	 ZRWeJ+8Ss7DOKM3AVV71s37gfaivRUDbjUZzOUNvrzKWtwwkJSNofgttbvXzNmphC9
-	 P3vIBpEc3rWq+aW5ciJVshEXpUGK3xAQLYvrLK1fsXWrhjF+tcj8RO8ax04EzkjImO
-	 drpT3bih3xx+A==
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-30db3f3c907so4452041fa.1;
-        Thu, 03 Apr 2025 00:03:15 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWo8hYqzpXajUbk+L94avbyzIttVSSyJpqWQwnNqj/RzPUHr1JEd7FD0nR215ipXu7NP0BMtEPM6rGTwzs=@vger.kernel.org, AJvYcCX9HafK3+paFuESd9b9eqnoDoR75634NVESY7lt4YG0nr8lKmDYBzQ7rDOSJN+ShoN1rChpwVlkHigw8er3@vger.kernel.org
-X-Gm-Message-State: AOJu0YygXU4gJdQAP9zNgjMfoa6bH6pUdwCS5bQYdGhP50+D3TCuTtCu
-	7q3O7jdxwwvO6hNfa9YYsrjncmWuqJyFYbdR3sDfyeTkRGinv4o+suaf1LJLcQIA8aAoS3UdmnR
-	QVJ5NSDdU9g7kMu8yLlGS9WcbRMU=
-X-Google-Smtp-Source: AGHT+IGG4ssKCRoG5dC97++m90adCNhEWJun+PLvmZ3Ya1OJJn752p8/HHSPqTqIThDqF5RoLpoT/qHIxeRbwSImqfw=
-X-Received: by 2002:a05:651c:997:b0:30b:a20b:eccc with SMTP id
- 38308e7fff4ca-30f021163fbmr4141991fa.11.1743663793438; Thu, 03 Apr 2025
- 00:03:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JkmQLBxD"
+Received: by mail-pf1-f195.google.com with SMTP id d2e1a72fcca58-736b98acaadso519751b3a.1;
+        Thu, 03 Apr 2025 00:03:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743663828; x=1744268628; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=igrrWjIKA7a8qvg8aOTq0yFxsHm/NBQIR20zcRQX2tE=;
+        b=JkmQLBxDBcpms768ZjrH2SRCZFkl+6IUN9LpQHDKQxpaaX8xSv0MIsK88sBEbeCF8a
+         F7siQ/1qPsNucZUlU9qBAYuX+2b8Fz8ZvpPrLOG98A0D2UkUCaq3oILe3t5rtSuu0F6Q
+         5Hq+Sdf6I1VlIXkZpO0dCgNHyEkR8CPLbHzZ9SPBTpsYsED8JN70wr+pQFJvAcmx2p4f
+         2+MLgQFGgaTN8rECI81fcMRX2zoebvKTFl4ndu38CwKic0Lr6VcPCHwcYRCRZuiBxP58
+         LM1V03G9ywS4X0zbC54WRGaTtlSugqGBuazCOGRlDT92cnc13adqpJ9N+RMPNwlays1r
+         n2wg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743663828; x=1744268628;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=igrrWjIKA7a8qvg8aOTq0yFxsHm/NBQIR20zcRQX2tE=;
+        b=IzHkMTjmN8UXYipNizl/gXudrghRTsL3zx1fTX/yQGrmHsUEhCBq7LMTul2em3MoWT
+         VEzGxxrPzXaK00J8XABqV2lQi5U3bibZwEo6q1Ls9vDSqpDjGrrH24IJ7choY6XhYUL1
+         LmUkvuJDr6JQnCVaiGwBhdd8pBwhW566JxpxYhsGBdyrfxIXPWFM3kSMkkYAZ+HZZ55e
+         F//BejGQgfkq+pN0GEwiz5HH4GGldCiaLXqL778ScQwdn5gQBr6eNWSgclJ1z8RZOqlq
+         gSVCKcdB5rOYsVRR+k6cxEUpTKPXfEQswUQKNwptcBAsQZMEhEK53Dj1csIxA7/o9gTK
+         5A6w==
+X-Forwarded-Encrypted: i=1; AJvYcCW7wJahkgcAsjockA+/4f2HZrHgwV4RC0fQXpyTdW68KNVAycIczsegBXk/CcVseC8UUu0acMk5@vger.kernel.org, AJvYcCWKhkojVc/ueg7/o0Uo+WFeEcNQACI38zeYvhDzIE7hA69OqhBOV6HWlQKlzqmRGwqa4YDqZ8JLxE4XAfE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzDG2HHsuZOMOPlpDRXbTDl1pTHKZQf+eUawc0xBp4h/PzfRcJ1
+	XzPAHwViGBziMN93yNT5vGBSsBqrHsoDVsVlf2/iANvVCIqvBWEu
+X-Gm-Gg: ASbGncsHnygAerBoPQ1+pO+heD1ynYJ70Ps2Ug1SjAunCRMffzm0XmbB0BHJdsZr49h
+	IfiDLL932PU9E5H5IMjmmKQ/uxiImpn4TY/v09omtGUjeqPo4i2KU7hAr6Rn8KJjbNewZbKJFty
+	+XOoWtV9q+sO+tSVjnqm4HsOr1dW3ivzKYgy63ALeY8S9VbGe/9QeWb2rMgvY+qXBdFVRrhDpQ6
+	btscZGBOmnIlg9TyenxXbCOrjTjze+oq99QmOz7EQN3ToF9ZIMS/4TxXfH9aJa8ZGpLri2yDRU7
+	/g9rZWWOJezw0mS8IDPhlRtJyXmW7Yc9+EDsPiaMIOvXVQGDNmYFX+7Ay2XKs3sXk/QKvmw=
+X-Google-Smtp-Source: AGHT+IGvBTDG64dD1aEu97XOwefwRvLxgmE2MZM8c2Q0z/ib3acvry/82BosJjBqsHs0ikDVPGaxLw==
+X-Received: by 2002:a05:6a00:130e:b0:736:a8db:93bb with SMTP id d2e1a72fcca58-739c7843529mr6441217b3a.5.1743663828066;
+        Thu, 03 Apr 2025 00:03:48 -0700 (PDT)
+Received: from henry.localdomain ([111.202.148.167])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739da0b3009sm717700b3a.123.2025.04.03.00.03.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Apr 2025 00:03:47 -0700 (PDT)
+From: Henry Martin <bsdhenrymartin@gmail.com>
+To: gregkh@linuxfoundation.org,
+	jirislaby@kernel.org,
+	sugaya.taichi@socionext.com,
+	orito.takao@socionext.com,
+	u.kleine-koenig@baylibre.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Henry Martin <bsdhenrymartin@gmail.com>,
+	stable@vger.kernel.org
+Subject: [PATCH v2] serial: Fix null-ptr-deref in mlb_usio_probe()
+Date: Thu,  3 Apr 2025 15:03:39 +0800
+Message-Id: <20250403070339.64990-1-bsdhenrymartin@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <2025040301-unmanned-lapdog-5446@gregkh>
+References: <2025040301-unmanned-lapdog-5446@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <Z-yrf_9D2rV1Q136@gondor.apana.org.au> <CAMj1kXEx__RLBriW0kVPrKnx6+DCpq8=6F-7Tmj2Us61gvGGaw@mail.gmail.com>
- <CAMj1kXE-vo7E1U++4mAqDH2SXfc=sRZs8KganedJk5z0QF49NA@mail.gmail.com>
- <Z-zzvXbjt3xzquXb@gondor.apana.org.au> <20250402171930.GD1235@sol.localdomain>
- <Z-3jkYNtZpTDtKGf@gondor.apana.org.au> <20250403021453.GA2872965@google.com>
- <Z-344xAsx1uTE9OK@gondor.apana.org.au> <20250403032008.GA129577@sol.localdomain>
- <Z-4DqsRApwQi6Xju@gondor.apana.org.au> <20250403035934.GB129577@sol.localdomain>
-In-Reply-To: <20250403035934.GB129577@sol.localdomain>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Thu, 3 Apr 2025 10:03:02 +0300
-X-Gmail-Original-Message-ID: <CAMj1kXHB5-ZFbi5TfuU_pfNJRdxH5-ZUY+k4azpvYgv1Py_Ocw@mail.gmail.com>
-X-Gm-Features: AQ5f1JooGG0PId6nG39bmLVotgubW1omncONlNucYGzQmxvf8Fro6Z3QmYKqbPk
-Message-ID: <CAMj1kXHB5-ZFbi5TfuU_pfNJRdxH5-ZUY+k4azpvYgv1Py_Ocw@mail.gmail.com>
-Subject: Re: Banning crypto in hardirq context (was: [PATCH v2 0/9] crypto:
- x86 - stop using the SIMD helper)
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>, linux-crypto@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, x86@kernel.org, 
-	"Jason A. Donenfeld" <Jason@zx2c4.com>, Linus Torvalds <torvalds@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Thu, 3 Apr 2025 at 06:59, Eric Biggers <ebiggers@kernel.org> wrote:
->
-> On Thu, Apr 03, 2025 at 11:42:34AM +0800, Herbert Xu wrote:
-> > On Wed, Apr 02, 2025 at 08:20:08PM -0700, Eric Biggers wrote:
-> > >
-> > > Also, riscv has scalar AES instructions.  (They aren't used by the kernel yet,
-> > > but they could be.  The CRC code already uses scalar carryless multiplication.)
-> >
-> > It still doesn't mean that it's a good idea to use AES in a
-> > hard IRQ handler, especially if the code is meant to be portable.
-> >
-> > > Also, as I said already, x86 does support SIMD instructions in hardirq context
-> > > in some cases.  Whether anyone actually uses that, I don't know, but it is
-> > > explicitly supported.  Check out irq_fpu_usable().
-> >
-> > This is more of an accident than some deliberate strategy of
-> > supporting FPU usage in hard IRQs.  This test was initially
-> > added for aesni:
-> >
-> > commit 54b6a1bd5364aca95cd6ffae00f2b64c6511122c
-> > Author: Ying Huang <huang.ying.caritas@gmail.com>
-> > Date:   Sun Jan 18 16:28:34 2009 +1100
-> >
-> >     crypto: aes-ni - Add support to Intel AES-NI instructions for x86_64 platform
-> >
-> > It was then improved by:
-> >
-> > Author: Linus Torvalds <torvalds@linux-foundation.org>
-> > Date:   Mon Feb 13 13:56:14 2012 -0800
-> >
-> >     i387: make irq_fpu_usable() tests more robust
-> >
-> >     Some code - especially the crypto layer - wants to use the x86
-> >     FP/MMX/AVX register set in what may be interrupt (typically softirq)
-> >     context.
-> >
-> > At no point was there any intention of using this in a hardirq
-> > context.
-> >
-> > Until such a time when you have a valid application for using
-> > lib/crypto code in a hardirq context, I don't think we should
-> > be supporting that at the expense of real users who are in
-> > process/softirq context only.
->
-> Whatever.  We agree that "crypto in hardirq" is not a good idea in general.  I'm
-> just pointing out that there are certain cases, like SipHash used in a hash
-> table, where it easily could happen and would be fine.  And all the shash and
-> crypto library functions currently work in any context, unlike e.g. skcipher and
-> aead which do not.  You seem to be trying to claim that it was never supported,
-> but that is incorrect.  Making it unsupported would be a change that needs to be
-> properly documented (the functions would no longer be simply "Any context")
-> *and* have proper debug assertions added to enforce it and prevent usage errors.
-> But in a lot of cases there is also no reason to even add that restriction.  I'm
-> not sure why you're so eager to make the library functions harder to use.
->
+devm_ioremap() returns NULL on error. Currently, mlb_usio_probe() does
+not check for this case, which results in a NULL pointer dereference.
 
-Agree with Eric.
+Add NULL check after devm_ioremap() to prevent this issue.
 
-There may be cases where some error condition (machine check etc) is
-hit while running in hard IRQ context or with IRQs disabled, and the
-code that produces the diagnostic, writes to pstore, generates the QR
-code for  etc etc may actually be where the library calls to crc32 etc
-originate from. So pedantically disallowing that rather than falling
-back to a non-SIMD code path make things worse, because now, the
-original diagnostic may get lost while the only information left to
-debug the issue is an OOPS complaining about a library call in hard
-IRQ context.
+Cc: stable@vger.kernel.org
+Fixes: ba44dc043004 ("serial: Add Milbeaut serial control")
+Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
+---
+V1 -> V2: Add cc: stable line.
 
-So while I agree that knowingly invoking library interfaces with IRQs
-disabled should be avoided, that is just a variation on the general
-adage that IRQs should only be disabled when absolutely necessary. But
-that necessity may derive from a condition that exists one or several
-layers up.
+ drivers/tty/serial/milbeaut_usio.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/tty/serial/milbeaut_usio.c b/drivers/tty/serial/milbeaut_usio.c
+index 059bea18dbab..4e47dca2c4ed 100644
+--- a/drivers/tty/serial/milbeaut_usio.c
++++ b/drivers/tty/serial/milbeaut_usio.c
+@@ -523,7 +523,10 @@ static int mlb_usio_probe(struct platform_device *pdev)
+ 	}
+ 	port->membase = devm_ioremap(&pdev->dev, res->start,
+ 				resource_size(res));
+-
++	if (!port->membase) {
++		ret = -ENOMEM;
++		goto failed;
++	}
+ 	ret = platform_get_irq_byname(pdev, "rx");
+ 	mlb_usio_irq[index][RX] = ret;
+ 
+-- 
+2.34.1
+
