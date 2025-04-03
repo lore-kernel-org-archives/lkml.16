@@ -1,69 +1,69 @@
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B67FF24C082
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 11:08:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2ACA24C67B
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 11:08:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743678499; cv=none; b=HVm4o90En2ks5ygElqw0WgLpzFHI8di+uHlmUKJ3C1qhkJcuh0SVJ/ywBn60UhMgo9r/vdGYBtIApztrPQAlEhP1wVOaKXKj0Upm23GJciwQvZxFlZDp6e60aiSrMJXbUEE2yhFuMNKtwpylb0PU2GKtqJHghrtwXYNRCWMp4cU=
+	t=1743678502; cv=none; b=HbRycD586YJZPFrMRnTH3Z99nzeXV42RJafBEglbWfRKFmictkvIrNBY2cDnr3EyOyZ1ZzJ5lEVMPZObIsI0JN9MFJQpSVEVX51xBCdIsU1njPIf0dYKJCfBMjxa1E6HrZm9960/UkhLvydg+PGTY2JbfG31G95bR8qZ93Iydrg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743678499; c=relaxed/simple;
-	bh=CKNZ75iDINw6MC6IL4iuJlsbLi60jIt9XSgEtpjGV8A=;
+	s=arc-20240116; t=1743678502; c=relaxed/simple;
+	bh=iPZJZhgAlU5iZDlQN3dGuWUiBkJLTIdPozs/hgajMKA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=V4pjiL7k9JQmoTq7HB5hUe1mQQ9DbKk/zGJ9B4KWlXGUKpxYcXigP3MtzKMBjvxOrVlWDQvSipCOzRrCDXs/t5PJVVCx4MbJhgmcNHrv3wxRMeRrmk0B//LB6zEh/CA1AOO54IvldkGUyk4OQdetgV5+CZWWejvzK7LJW6rqInw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=H11qWvkP; arc=none smtp.client-ip=205.220.180.131
+	 MIME-Version; b=un0/avvN0RqBW8dBqA/j0wb5tYAU2Q0nWzZPNGYWqCXI3iq8X77gKlj7x7mYPABorO02GDBb9T7M2Gs9M+8pKtpd3j5idS2wPks6XZIYnZM1kKEsppRzSxfOVqNTo2kbs6i9DHOM16M/vucGmgv/ZqiVzVA/HoCpky9aUfysRjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=lDss3DI5; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="H11qWvkP"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 533A4MAW016513
-	for <linux-kernel@vger.kernel.org>; Thu, 3 Apr 2025 11:08:16 GMT
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="lDss3DI5"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5339s1N9000651
+	for <linux-kernel@vger.kernel.org>; Thu, 3 Apr 2025 11:08:19 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=mOjHDkSlrc5
-	FA5+7P3anTxnDru4TLkY0T08z6RqNU0s=; b=H11qWvkPdqr1UeKyjB97NXNslSb
-	cQsMK0YhwzY50PgFnTkwsz6FaJ+DWpZAAe5K2T3V1qFQQXQe2kVEZyMz8kel0chi
-	HMx2IkxYjTITmC8ezBlQGGX5DYO0kEooDDBk2KY6VFhWrGQjK3CjjYDYhkw80emf
-	/GfDIL3US75LWBleMPAVI81R/Ma808Mt7cXi6neEzljAd0k5K97PKwODbxP3zKbl
-	HKjinxJ7IRlFBA244904pSVL9j1RV7u0CI0gy4meYL3uIFTLBbShIlgHziTNxgrW
-	zcgliOEJ9q8/dND9uv6rbIHiU9Nf7oms/OFuQDMc/vN1II+WZMd1qOMNRvQ==
-Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com [209.85.216.69])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45sr8q0652-1
+	:mime-version:references:subject:to; s=qcppdkim1; bh=tjtJKHAcSE6
+	96CjbJHC6LU7BN1JHFvzLRqVjN8Q8vIg=; b=lDss3DI5cllBSmQ83n0zPb9WSsQ
+	C91mZvX5Dz3SBo3143FtK1VtrbCkJ8+zYkuzDLqMFnXB1NqN9/1ptOwwXIwyHfMQ
+	nvwr34fMx8zUAC/w9eHxB/YH68Om3smj0zbvs9j/dQ+Xxt1YU1hZHgSvH4dtRl8t
+	4LhepOXvxloR4rIW4Jw50OLD5WkmcMvvlmjaCHWQstYKVgZWEdRT21iTtjYCK2BD
+	jCKMjZ/JAe6c2zBsMVAbYQ2BrptPFnYgLkN+0q5vcOAPo01derluflsaFVUCtlaL
+	IqWMjsGEmMcG5jdJCfVvChz2kYXCSdZSwtfyXMYokuzZtw9ul6G0jx2/tFw==
+Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com [209.85.214.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45s36a3e9y-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 11:08:16 +0000 (GMT)
-Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-3055f2e1486so1324029a91.0
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 04:08:16 -0700 (PDT)
+	for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 11:08:19 +0000 (GMT)
+Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-2241ae15dcbso10357935ad.0
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 04:08:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743678495; x=1744283295;
+        d=1e100.net; s=20230601; t=1743678498; x=1744283298;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=mOjHDkSlrc5FA5+7P3anTxnDru4TLkY0T08z6RqNU0s=;
-        b=vBaCNTli9FskD5jOqzBFO62Dj5bIVqKwv0GGo25TNMpPJ2tPGWVtRXrVHYo6TMEzqu
-         t4Xrf81cdw68v1Q1lYA4t9LVWXZ6upSc8PZ3KqUoeAqdtyi6XClL0vluta8ilDRJku36
-         1bssr4IyoSxc6fhKEeyL8OnLDA7UVCbNm+16jnbkGuZTq8HHMw44VfwKkJRfBhQU0d6N
-         eoYb/PeG7wEubbWrd9lpHhIVl73GzCMfTNpRlIFOWp+frcySA2a+3BZnNO/CXZcOSLvB
-         QgJlrVkl0ctFIXDr5AJFQTvFyXRKwXxJOKcGydiXhf1J50lEtdKVZAme1/Tky+5f/yau
-         9VYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWYUuWsWvmQZEhHekb6trSk3TJb5K0piH1i82B76kFzNVtpDH2jRNqM22Ny4BZpzeTYeHMjEWR0MA2YGjM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYnOqxUcxDNNcgimP5RdszJPRfzE4j/KRlnJro2Xxhzr6G8gCH
-	LUcm5dnKWNkv9aa6m/MWmmzjHAF1umLdG+s0KSkaDsv2hXxVJaDuB/sTnqDUbtK6/nrewCgpaMb
-	W92RNP0XUWsrvJHpZr3Caalf0OjpNLkPCdNrEfGFJTC8YF7XbMSv0vELDNxlnhm4=
-X-Gm-Gg: ASbGnctMXDXWN9hn+pq66o/8Qkqb1hZPUiTiCo7Bm6SVpaKcWCYiIdOLdWlUvmBoPIi
-	rkYbdjbac2m9ydRz/V5elfj5qwptkgFZa7lC8jB6Hm/+xq2lq6grTwJUJuD3YX44Fh6ULmCkWUJ
-	SvAxm4FtbS/oaI3ag4TgWKKhfI4XsM9HGII36y1hso7hMXeTpUa6q47gmfspjPd0MoxIBBh9gvn
-	uIaErN4cSSJYDpNJ/R+Jy0JDD+ql2E4yILEHNHNsymAyjp5EE3RJ6k4efwxjuuDKtIkasi++jhF
-	eKqnRMlOMTT0QUn9YsYsiG3s2PckhIjbqQDuYRsIlTE8
-X-Received: by 2002:a17:90b:37cd:b0:2ee:ad18:b309 with SMTP id 98e67ed59e1d1-3057caef387mr2934390a91.3.1743678495119;
-        Thu, 03 Apr 2025 04:08:15 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH8E/a1HuHsWYlyy2BuINk+4cWAPJuv7nvd6fNKuMTc43NmiB3NEnFpb/KfTZyr05CXxmsrIA==
-X-Received: by 2002:a17:90b:37cd:b0:2ee:ad18:b309 with SMTP id 98e67ed59e1d1-3057caef387mr2934358a91.3.1743678494736;
-        Thu, 03 Apr 2025 04:08:14 -0700 (PDT)
+        bh=tjtJKHAcSE696CjbJHC6LU7BN1JHFvzLRqVjN8Q8vIg=;
+        b=P3fZ+PiTSMmQDYR3IZPeoi6pijQQMvDAhSLL0DZBfziyYnDpVlL3oaB0YRwRg2Ij3s
+         M1z80sFzdMEDATBh2YQNBIHOp4RDZDpEWjHFEf19CljbT0WOdW/dKOsDweODaRM/fdbC
+         5/J7Kw+6OxrmBsUEK0VKJ6dMp3aVxfnMIp0N0O80vcHCEUHt+ikL9SJzzsXCdJscVFwF
+         /YFNLr77I4iEZYgA6DcTf4w5D2Pkl8eWudzLZch2QBWnk9c2/N39/8FUOvHT+g/9Mf2n
+         uUpf7vvz2p7x2pkgzPFeOEF09ZN96hGqH3bvfdDK8QFKQAS5ISAOUD31AZ++M3dO+K0I
+         0znw==
+X-Forwarded-Encrypted: i=1; AJvYcCUiPjkfkS/gAnc6oIz0NfYlcPOcdRoQbzlWA/oQo3rGhRRvsU7uDiYynBBACDn79t8Cjgif0jt22qyzB4w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZiPALyHDfYt5NqeIkTtT/0HoRCxHssny0kYb+BZSl4UeRpaxD
+	Ixor3IIXPPZb2h+w/N4V9xmxuSjXKjSzoEny3R6kibFExTgeCUmnieHCf2wB5Ff72YGvYiQUkdx
+	CQyqfckYN42QPuIVqCtMITvUyDSj2Z3e8UP0RyQaAdEmMSpp+JXqmIe7LqEUzxNI=
+X-Gm-Gg: ASbGncsfGsFczyc+326Wb4kvvVXXbpo4k8AHAZJvFMdtaPTFIi7PD5HVd9trW8lRyft
+	+W2/eSMBI+ANaaaQJ7+j9hDwOjbXTSVWN3YW8WBScZgGcaiNHhwOG2kYeyGs4KN/iZuBcIFb2RI
+	wdDGEncOlX+eXkCPdU8wS9Fh+3T51eVE1t7pDQ6i+cXM3iRNpKZvvwNpq716r6SfYIqo1HWuO5E
+	FQf8zmUthXG/cqndSaArMJWwNvpUm293CuFnYQtxk35nEFGCQhrzLoVzZtLVo86lgyp/rT9jpVG
+	H5HmYgNf0chO3WwPxT99B12TX5hrSog5RBBl4J31nZG4
+X-Received: by 2002:a17:902:cf03:b0:224:5a8:ba29 with SMTP id d9443c01a7336-22977dfb16bmr36579085ad.43.1743678498107;
+        Thu, 03 Apr 2025 04:08:18 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGILLThPDUBrOuD3kmcx/cqJobed8N0YzhkjNmdBDJFW2+3jklBbHy34QJXTm6cTH/zOrH1Jw==
+X-Received: by 2002:a17:902:cf03:b0:224:5a8:ba29 with SMTP id d9443c01a7336-22977dfb16bmr36578675ad.43.1743678497746;
+        Thu, 03 Apr 2025 04:08:17 -0700 (PDT)
 Received: from hu-prashk-hyd.qualcomm.com ([202.46.22.19])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30588a3c3a8sm1185414a91.28.2025.04.03.04.08.12
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30588a3c3a8sm1185414a91.28.2025.04.03.04.08.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Apr 2025 04:08:14 -0700 (PDT)
+        Thu, 03 Apr 2025 04:08:17 -0700 (PDT)
 From: Prashanth K <prashanth.k@oss.qualcomm.com>
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
@@ -72,9 +72,9 @@ To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Marek Szyprowski <m.szyprowski@samsung.com>
 Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
         Prashanth K <prashanth.k@oss.qualcomm.com>, stable@kernel.org
-Subject: [PATCH v1 1/3] usb: gadget: f_ecm: Add get_status callback
-Date: Thu,  3 Apr 2025 16:38:03 +0530
-Message-Id: <20250403110805.865311-2-prashanth.k@oss.qualcomm.com>
+Subject: [PATCH v1 2/3] usb: gadget: Use get_status callback to set remote wakeup capability
+Date: Thu,  3 Apr 2025 16:38:04 +0530
+Message-Id: <20250403110805.865311-3-prashanth.k@oss.qualcomm.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20250403110805.865311-1-prashanth.k@oss.qualcomm.com>
 References: <20250403110805.865311-1-prashanth.k@oss.qualcomm.com>
@@ -85,56 +85,72 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: AJxmQ2K3wfWTW8_k6046SWnXWzJ4bs4r
-X-Authority-Analysis: v=2.4 cv=Iu4ecK/g c=1 sm=1 tr=0 ts=67ee6c20 cx=c_pps a=vVfyC5vLCtgYJKYeQD43oA==:117 a=fChuTYTh2wq5r3m49p7fHw==:17 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=wSQy6ELrUcAAhET18-sA:9 a=rl5im9kqc5Lf4LNbBjHf:22
-X-Proofpoint-ORIG-GUID: AJxmQ2K3wfWTW8_k6046SWnXWzJ4bs4r
+X-Authority-Analysis: v=2.4 cv=W6M4VQWk c=1 sm=1 tr=0 ts=67ee6c23 cx=c_pps a=cmESyDAEBpBGqyK7t0alAg==:117 a=fChuTYTh2wq5r3m49p7fHw==:17 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=PifGtMdrkyiWus_n4FQA:9 a=1OuFwYUASf3TG4hYMiVC:22
+X-Proofpoint-ORIG-GUID: 9Q0MpzC6LYEMogLm3tp0kUxE2lfwc8m6
+X-Proofpoint-GUID: 9Q0MpzC6LYEMogLm3tp0kUxE2lfwc8m6
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-04-03_04,2025-04-02_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 impostorscore=0
- adultscore=0 priorityscore=1501 suspectscore=0 mlxscore=0 malwarescore=0
- bulkscore=0 spamscore=0 lowpriorityscore=0 clxscore=1015 mlxlogscore=999
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2502280000
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 suspectscore=0
+ adultscore=0 mlxlogscore=999 mlxscore=0 bulkscore=0 spamscore=0
+ priorityscore=1501 lowpriorityscore=0 impostorscore=0 phishscore=0
+ malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
  definitions=main-2504030043
 
-When host sends GET_STATUS to ECM interface, handle the request
-from the function driver. Since the interface is wakeup capable,
-set the corresponding bit, and set RW bit if the function is
-already armed for wakeup by the host.
+Currently when the host sends GET_STATUS request for an interface,
+we use get_status callbacks to set/clear remote wakeup capability
+of that interface. And if get_status callback isn't present for
+that interface, then we assume its remote wakeup capability based
+on bmAttributes.
+
+Now consider a scenario, where we have a USB configuration with
+multiple interfaces (say ECM + ADB), here ECM is remote wakeup
+capable and as of now ADB isn't. And bmAttributes will indicate
+the device as wakeup capable. With the current implementation,
+when host sends GET_STATUS request for both interfaces, we will
+set FUNC_RW_CAP for both. This results in USB3 CV Chapter 9.15
+(Function Remote Wakeup Test) failures as host expects remote
+wakeup from both interfaces.
+
+The above scenario is just an example, and the failure can be
+observed if we use configuration with any interface except ECM.
+Hence avoid configuring remote wakeup capability from composite
+driver based on bmAttributes, instead use get_status callbacks
+and let the function drivers decide this.
 
 Cc: stable@kernel.org
 Fixes: 481c225c4802 ("usb: gadget: Handle function suspend feature selector")
 Signed-off-by: Prashanth K <prashanth.k@oss.qualcomm.com>
 ---
- drivers/usb/gadget/function/f_ecm.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/usb/gadget/composite.c | 12 ++++--------
+ 1 file changed, 4 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/usb/gadget/function/f_ecm.c b/drivers/usb/gadget/function/f_ecm.c
-index 80841de845b0..027226325039 100644
---- a/drivers/usb/gadget/function/f_ecm.c
-+++ b/drivers/usb/gadget/function/f_ecm.c
-@@ -892,6 +892,12 @@ static void ecm_resume(struct usb_function *f)
- 	gether_resume(&ecm->port);
- }
+diff --git a/drivers/usb/gadget/composite.c b/drivers/usb/gadget/composite.c
+index 869ad99afb48..5c6da360e95b 100644
+--- a/drivers/usb/gadget/composite.c
++++ b/drivers/usb/gadget/composite.c
+@@ -2010,16 +2010,12 @@ composite_setup(struct usb_gadget *gadget, const struct usb_ctrlrequest *ctrl)
+ 			break;
  
-+static int ecm_get_status(struct usb_function *f)
-+{
-+	return (f->func_wakeup_armed ? USB_INTRF_STAT_FUNC_RW : 0) |
-+		USB_INTRF_STAT_FUNC_RW_CAP;
-+}
+ 		if (f->get_status) {
+-			status = f->get_status(f);
++			/* if D5 is not set, then device is not wakeup capable */
++			if (f->config->bmAttributes & USB_CONFIG_ATT_WAKEUP)
++				status = f->get_status(f);
 +
- static void ecm_free(struct usb_function *f)
- {
- 	struct f_ecm *ecm;
-@@ -960,6 +966,7 @@ static struct usb_function *ecm_alloc(struct usb_function_instance *fi)
- 	ecm->port.func.disable = ecm_disable;
- 	ecm->port.func.free_func = ecm_free;
- 	ecm->port.func.suspend = ecm_suspend;
-+	ecm->port.func.get_status = ecm_get_status;
- 	ecm->port.func.resume = ecm_resume;
+ 			if (status < 0)
+ 				break;
+-		} else {
+-			/* Set D0 and D1 bits based on func wakeup capability */
+-			if (f->config->bmAttributes & USB_CONFIG_ATT_WAKEUP) {
+-				status |= USB_INTRF_STAT_FUNC_RW_CAP;
+-				if (f->func_wakeup_armed)
+-					status |= USB_INTRF_STAT_FUNC_RW;
+-			}
+ 		}
  
- 	return &ecm->port.func;
+ 		put_unaligned_le16(status & 0x0000ffff, req->buf);
 -- 
 2.25.1
 
