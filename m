@@ -1,148 +1,142 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 266FC4315F
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 07:04:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30AF14315F
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 07:05:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743663900; cv=none; b=lAy551q+fKlpswDc0zYfYyL0JazCcmnNX+T5sanvpNYwCIag/hD5aczqRP9SFmzZT2A1Q+uFvoVZyU7hTgsrb32KmvHK+8woE4RZm/LVjrdZJoLeFZjqoXY3GHayMtxKLDPMXovHQvyNLFG9fZo7dr8ZeFIRra0WhWQqu+2G/gE=
+	t=1743663922; cv=none; b=eRUzOXxUCR5Y5RXzSlGzTpjOI+gR+jC30t8jftdd/oP7fHBw0QO3rLgDnn8WId0nxfS1mKukBqNM7Ef/M+6lPRmXAcIcjYEDFaQ1WWpTc8jwsjLNInJVURVfIKrPYSxEG5ezHpT2E7r7jD27nd/kd34MQJtkTlUttYRftL7g1NE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743663900; c=relaxed/simple;
-	bh=qAMVftuvTioi0sDQPfPaDU8gUE2J9SoKnK+nb4/KLhg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YmN2KqFYvIr3LJa0gqkMXhcnCwH4Uo+Zm1QuiRgfKjZwelff596doeSXY14JYFOcvLQlFNWd5Qqzp1PlYgFuC/qiy1Rt+Ej1OAqAkS44/7a+VLim/Nc4RxRKAhNbiVZckBtR5GULV34EBliTNgMofpSZSSFOrwt/4KbUSOo3c4c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lsEdRX1n; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lsEdRX1n"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5ed43460d6bso891479a12.0
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 00:04:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743663897; x=1744268697; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=MrF8MRS6l1LfsFdDql+P3vqT33uif0E6R/hk0Jh7V/o=;
-        b=lsEdRX1nLohlnEjPy/8DdaERKKohhl1Hu5NyrFH9o3wu6Fzd2yq0nhz+/w8ZyWWbT4
-         KSD0BRTNiluSg+8Zko1DRkJA9JYyWURAqaucgNz+3Gv0LfYAzqsYlV580FOuhwicB2zU
-         X8A8thYBPgqBgyW1ixsl0TPcGN12IgTvjDCIdeegqw0pHpZHG/kF+goyg3eoOAnkDtPj
-         Kbrg0nF0k8vqTreIYWJC5MwP91LHFuwqJDNegYigCLjukI7ZpTnE24cJvsOX1XGtB5MW
-         9xzII8zjyj95V9OZsXuLoL8BKkJr5HqY92XiburN7TGBdzw2mJzMqcgC9Bsgh/oztKXv
-         9JLg==
+	s=arc-20240116; t=1743663922; c=relaxed/simple;
+	bh=LyRbvRR1PR47B51jZJkIfAYFQaXDpwF6Wro3vdho5nM=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=KC0/kqH3MinrVYKYBB4pafO/9v9Jt+ywYjhycAlJs88lCntIhvLPWUaoul4ENXyfkgISoBFg+5454GbDU/7PUmxsm0nClM9gw37zymqe2EP56FwbexLcXLzm0tg9zGYBWdaRBGnLoDlmsdSgeLO/3vKYchYbENPVIwYLc0Ik29s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3d6e10f8747so306595ab.3
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 00:05:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743663897; x=1744268697;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=MrF8MRS6l1LfsFdDql+P3vqT33uif0E6R/hk0Jh7V/o=;
-        b=sglqwVQpuGNkP7N0fAiOZlsQCcvzWwR2IjrAwS/PQsah6HGt47elu0Vf0Z83dt8CKh
-         kYDWX4T9OOdmpUblsdoGOTQl5q+51qroWU8uWgw5S0P22+74HQm4/JJECGwkExWUharI
-         9dI1CLBK/eZWNbFzICMIxbRZRg1Z00x4U/3gUN0TdP9rU5GnwsOcde7+LQpid+rDJlMW
-         zcWSUniaxSXK5QWupF1DbF/B19u22rqiqa1yTpvbTcySB1jb2N0DdXUVvAKDPD0z3k35
-         k3uZ44154AyWFYo9Diun1aWnyyTOI5TwiWg8UBS80IYArxv/aDmfZzvCHNJhES5wl8EH
-         xa7g==
-X-Forwarded-Encrypted: i=1; AJvYcCXhobUNyoYGiCxFgWyyHRwwTkYUx4AoiozKmM3HHsC9q31I37+mAVoQrkpT3ZnITP7+Mhpsb0iYoYTD8Dw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxyF/wz/rDnhBn26rRVPGAtVe6ZRrqH5IeHWm4UJFBv6wonqBOy
-	MfZeWRbpT4tp00QhhDWC8UqQ9yZd74O2gUZcijk5EeFnHEMnSMXl
-X-Gm-Gg: ASbGncsNLd2uGc25LDnw12NgzJpvOwNMudmIll7p2Y9k1zOZtc1hBOXzDKKtA6jxZRn
-	BbKwW6QV10YhLQ864k0LslEfD+AFwG/cgvUtwWGfvpgvSl6fyMNtYSk5wxGR+lt9stsUCQuo7DM
-	UnQd8BTdrGFPeZNpEez073Xtw6LCDiebj+XNYxbgZrQfZtWJNV+rm/P1Ju01LvoZcNNuiutOfcu
-	x+c9dgPmsK8aKl7F7PUen/h6/9CPGPFbpXlw6kDA3TQzQI0tnBAEX8kSj4inwIQWOje/Ap8PJmd
-	caKYpSqWz9PGVrxL9E66NdefX8O7iKKkcFeX
-X-Google-Smtp-Source: AGHT+IFfGhd9UT+NWtQKYZrH9V0xiMNQBBL9loil5YmYLR5emOkwZ3bMYT1lUm9lSLvzrDepUKth1Q==
-X-Received: by 2002:a17:907:3e1d:b0:ac3:8537:903c with SMTP id a640c23a62f3a-ac738bc07d7mr1671280066b.37.1743663897280;
-        Thu, 03 Apr 2025 00:04:57 -0700 (PDT)
-Received: from fedora.. ([193.77.86.199])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7bfe5d44dsm47098766b.13.2025.04.03.00.04.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Apr 2025 00:04:56 -0700 (PDT)
-From: Uros Bizjak <ubizjak@gmail.com>
-To: x86@kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Uros Bizjak <ubizjak@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@kernel.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	kernel test robot <lkp@intel.com>
-Subject: [PATCH -tip] x86/idle: Work around LLVM assembler bug with MONITOR and MWAIT insn
-Date: Thu,  3 Apr 2025 09:04:37 +0200
-Message-ID: <20250403070453.214190-1-ubizjak@gmail.com>
-X-Mailer: git-send-email 2.49.0
+        d=1e100.net; s=20230601; t=1743663920; x=1744268720;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=WIrwn4PlzFwEEQ/BmYU5E8VeluGuJbpMKa8S5NcW2LY=;
+        b=xB0wJVYFG6zuyYrnk1HzZdOus4rbdIWiNDTijg+qofk9TZ2sUinWkSVa9LU29tnYdG
+         Az8EvztLXS/uP3LBestQM6wio4ahKTjc73z3HovVcXzy/aUMEx6BCWP3sLYsgyglAG5o
+         mreDRl7nwphnWeJFkfXCOaALa7DXVl6DYGns0w576JYBxCHDnrsBL2nyN9dv0eInl5op
+         amnrZonMghvjyB8rxBSrdG9ESz+gokuHa0zYbImaynNURtmG/vWy4OPwrdm1MAJQzwZd
+         YHRZ5YxlenKzGSVL04sS2eM9NV2CaQvfVEs3iGueiMHcY4qT5a2pE/6BwED0pkJx1MWQ
+         xODg==
+X-Forwarded-Encrypted: i=1; AJvYcCUsGKJCsdHL8wmYMxlutNNGbMkYleirR0oW0ih4D6xu6miUKHEP8Zy6P9kP3SRXnsj0v91GxhuF9f8oOh4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxkt4mGTk7eTCih1307yBIIYclLOXEo9bGp15paSXtsowV8w/kk
+	Kn3FuIPr+zwOIPucG6YwT5ZBbJPKUiNeZTEFVpyGaL3u3myVJAdYDvleOk614Ds0o7tPTijU/zi
+	KMiRrnXrCCd97VRiIDPFyfweryUmm/hBgdfTuO9HGDpSXfQN3hN/RCGs=
+X-Google-Smtp-Source: AGHT+IH6joD/Xwq1ac8siJhxQyjrw+RC5LvnS+SS/EvR4j0l6B3JhZ0l5RXJk09fbDl/2QS1KjAqzr5ldQ25TKEv4gV1Yao9aU7f
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:441a:20b0:3d6:cb9b:cbe9 with SMTP id
+ e9e14a558f8ab-3d6cb9bce19mr71596825ab.5.1743663920289; Thu, 03 Apr 2025
+ 00:05:20 -0700 (PDT)
+Date: Thu, 03 Apr 2025 00:05:20 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67ee3330.050a0220.9040b.014e.GAE@google.com>
+Subject: [syzbot] [mm?] KCSAN: data-race in getrusage / try_to_unmap_one (2)
+From: syzbot <syzbot+988c9343ca9f2c49b9c4@syzkaller.appspotmail.com>
+To: akpm@linux-foundation.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-LLVM assembler is not able to assemble correct forms of MONITOR
-and MWAIT instructions with explicit operands:
+Hello,
 
-  error: invalid operand for instruction
-          monitor %rax,%ecx,%edx
-                       ^~~~
+syzbot found the following issue on:
 
-Use instruction mnemonics with implicit operands when LLVM assembler
-is detected to work around this issue.
+HEAD commit:    92b71befc349 Merge tag 'objtool-urgent-2025-04-01' of git:..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=106d5274580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=a8120cade23cf14e
+dashboard link: https://syzkaller.appspot.com/bug?extid=988c9343ca9f2c49b9c4
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
 
-Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Fixes: cd3b85b27542 ("x86/idle: Use MONITOR and MWAIT mnemonics in <asm/mwait.h>")
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202504030802.2lEVBSpN-lkp@intel.com/
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/2e7df7bc2f52/disk-92b71bef.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/be59123d5efb/vmlinux-92b71bef.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/7c9eff86053e/bzImage-92b71bef.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+988c9343ca9f2c49b9c4@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KCSAN: data-race in getrusage / try_to_unmap_one
+
+write to 0xffff888104235900 of 8 bytes by task 3866 on cpu 0:
+ update_hiwater_rss include/linux/mm.h:2754 [inline]
+ try_to_unmap_one+0xebb/0x1f60 mm/rmap.c:2061
+ __rmap_walk_file+0x1c1/0x2c0 mm/rmap.c:2897
+ try_to_unmap+0x1b7/0x1e0 mm/rmap.c:-1
+ shrink_folio_list+0x11f6/0x2670 mm/vmscan.c:1373
+ reclaim_folio_list+0x83/0x2f0 mm/vmscan.c:2217
+ reclaim_pages+0x218/0x280 mm/vmscan.c:2254
+ madvise_cold_or_pageout_pte_range+0xd4f/0xdb0 mm/madvise.c:558
+ walk_pmd_range mm/pagewalk.c:130 [inline]
+ walk_pud_range mm/pagewalk.c:226 [inline]
+ walk_p4d_range mm/pagewalk.c:264 [inline]
+ walk_pgd_range+0x7e5/0x1120 mm/pagewalk.c:305
+ __walk_page_range+0xed/0x350 mm/pagewalk.c:412
+ walk_page_range_mm+0x369/0x4c0 mm/pagewalk.c:505
+ walk_page_range+0x56/0x70 mm/pagewalk.c:584
+ madvise_pageout_page_range mm/madvise.c:617 [inline]
+ madvise_pageout mm/madvise.c:644 [inline]
+ madvise_vma_behavior mm/madvise.c:1269 [inline]
+ madvise_walk_vmas mm/madvise.c:1530 [inline]
+ madvise_do_behavior+0x1aeb/0x2530 mm/madvise.c:1695
+ do_madvise mm/madvise.c:1782 [inline]
+ __do_sys_madvise mm/madvise.c:1790 [inline]
+ __se_sys_madvise mm/madvise.c:1788 [inline]
+ __x64_sys_madvise+0xcb/0x100 mm/madvise.c:1788
+ x64_sys_call+0x23b8/0x2e10 arch/x86/include/generated/asm/syscalls_64.h:29
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xc9/0x1c0 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+read to 0xffff888104235900 of 8 bytes by task 3858 on cpu 1:
+ get_mm_hiwater_rss include/linux/mm.h:2741 [inline]
+ setmax_mm_hiwater_rss include/linux/mm.h:2771 [inline]
+ getrusage+0xa17/0xb70 kernel/sys.c:1876
+ io_sq_thread+0x5e0/0x1140 io_uring/sqpoll.c:310
+ ret_from_fork+0x4b/0x60 arch/x86/kernel/process.c:153
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+value changed: 0x00000000000016f1 -> 0x0000000000001951
+
+Reported by Kernel Concurrency Sanitizer on:
+CPU: 1 UID: 0 PID: 3858 Comm: iou-sqp-3852 Not tainted 6.14.0-syzkaller-12508-g92b71befc349 #0 PREEMPT(voluntary) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+==================================================================
+
+
 ---
- arch/x86/include/asm/mwait.h | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/arch/x86/include/asm/mwait.h b/arch/x86/include/asm/mwait.h
-index 5141d2acc0ef..d956d1be4873 100644
---- a/arch/x86/include/asm/mwait.h
-+++ b/arch/x86/include/asm/mwait.h
-@@ -25,9 +25,18 @@
- #define TPAUSE_C01_STATE		1
- #define TPAUSE_C02_STATE		0
- 
-+#ifdef CONFIG_LD_IS_LLD
-+# define ASM_MONITOR	"monitor"
-+# define ASM_MWAIT	"mwait"
-+#else
-+# define ASM_MONITOR	"monitor %[eax], %[ecx], %[edx]"
-+# define ASM_MWAIT	"mwait %[eax], %[ecx]"
-+#endif
-+
- static __always_inline void __monitor(const void *eax, u32 ecx, u32 edx)
- {
--	asm volatile("monitor %0, %1, %2" :: "a" (eax), "c" (ecx), "d" (edx));
-+	asm volatile(ASM_MONITOR
-+		     :: [eax] "a" (eax), [ecx] "c" (ecx), [edx] "d" (edx));
- }
- 
- static __always_inline void __monitorx(const void *eax, u32 ecx, u32 edx)
-@@ -41,7 +50,7 @@ static __always_inline void __mwait(u32 eax, u32 ecx)
- {
- 	mds_idle_clear_cpu_buffers();
- 
--	asm volatile("mwait %0, %1" :: "a" (eax), "c" (ecx));
-+	asm volatile(ASM_MWAIT :: [eax] "a" (eax), [ecx] "c" (ecx));
- }
- 
- /*
-@@ -92,7 +101,8 @@ static __always_inline void __sti_mwait(u32 eax, u32 ecx)
- {
- 	mds_idle_clear_cpu_buffers();
- 
--	asm volatile("sti; mwait %0, %1" :: "a" (eax), "c" (ecx));
-+	asm volatile("sti\n\t"
-+		     ASM_MWAIT :: [eax] "a" (eax), [ecx] "c" (ecx));
- }
- 
- /*
--- 
-2.49.0
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
