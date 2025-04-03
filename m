@@ -1,83 +1,147 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F443161320;
-	Thu,  3 Apr 2025 11:27:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5224413C67C;
+	Thu,  3 Apr 2025 11:27:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743679653; cv=none; b=sg43c/vUDDz1flwvj2QTpgNW7D2jxDRiCfPXempVGDXM3utVPHbdaaNmH5lTTqXGOum+kjSznW2Ix9JxxY6oUiHn8aeexihJ0Jxr2SyK80L13reHry4uJ55QyYGXksnxcGEBjm1fC5JezK0YohvmuRiRvxyQOoFVPuyMCLHsQNA=
+	t=1743679682; cv=none; b=OWeeTdKTNhujTMJ1UcjRTnOm70qB6P1P42/2nkvursu2pL6jIcYIpun716VQQEhE+XIHpcjFZZ0vo5GfpIMSPDtYqtQTpvfCy4aMrSLfQLpmpWClXbf+34qD2OLbZOLmWPNP09TPNcmN0YLM6Ax2mqXgFTaSrBwtyy0j+qIowmg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743679653; c=relaxed/simple;
-	bh=9H/RuHZhkwwqX0QP7nKfLhISSU6qrdULzbXx5qh9w10=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EJoznmS3M4/N+js0nmCPs7HvAwM7XRggnK8/AiSQNWsW3bxmQYhWk78vSdpgSeUPgsc/iVmMKmLP9+dMEpVtgR1uJPsKlPB/ko3eL5hVuiPgPWrhSAQUgBs8Xca1GcQ/JT0RtzwyJyyZdUk9R7DsJsXc6mzL/K/j7J7+NO76+MY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PcWqeI5o; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743679682; c=relaxed/simple;
+	bh=YL0AWRTibRJfBCtHowp82d6IH5sUGm5xqCzqWZrzsBA=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=e8P9rA2KWc9o3lvW0VND8PK870Cv0ASzDsNsp2hZtoM/LBUJkV96n8a1wuFfNklUvvB0YFZUPOvjhR1zP0104oioFNidb8gLa4yRfTkKC7KnOB+D+Jetx2m6Yn+sc3t8aQaCKN/l+fruLh0KWBsifGPoTbHPWQHBFCevNE1tvBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=rYlHTvTb; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=w1+nycr+; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PcWqeI5o"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E71BBC4CEE3;
-	Thu,  3 Apr 2025 11:27:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743679651;
-	bh=9H/RuHZhkwwqX0QP7nKfLhISSU6qrdULzbXx5qh9w10=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PcWqeI5ok6kpIQF+b327W2fB6lk/09Gko6u7VHIU8DwiRdNK0IT/CsH2XK3FOavoh
-	 8ikYIJp89usEeRxfvlNCHq2tjuCobchiy4innF2xjadreOgP0ajAiAQTnNyWVdyzkc
-	 r2NocFdS6hgZx4YTEWULpsH/5SbjRoHO1qe7eMeA6vgtLmTcHdjW0F+20O8emLjtEo
-	 VKQax2C/Rg9FfiLdrmNgncYRzIJ+CtBOS1F3GgZqjZ0OSkpS2ocAIVO2br+jkQK1Un
-	 ZTG4GQTkn3zSDvsj2kPJcg9iAE/OotHyqozxTofVLqr0YFP5UNIxOBd1R0RVW/8zIk
-	 9aoN91j/jzRyg==
-Date: Thu, 3 Apr 2025 13:27:27 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Andreas Hindborg <a.hindborg@kernel.org>, 
-	Christoph Hellwig <hch@infradead.org>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Breno Leitao <leitao@debian.org>, Joel Becker <jlbec@evilplan.org>
-Subject: Re: [PATCH] MAINTAINERS: configfs: add Andreas Hindborg as maintainer
-Message-ID: <20250403-sauer-himmel-df90d0e9047c@brauner>
-References: <bHDR61l3TdaMVptxe5z4Q_3_EsRteMfNoygbiFYZ8AzNolk9DPRCG2YDD3_kKYP6kAYel9tPGsq9J8x7gpb-ww==@protonmail.internalid>
- <Z-aDV4ae3p8_C6k7@infradead.org>
- <87frix5dk3.fsf@kernel.org>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rYlHTvTb";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="w1+nycr+"
+Date: Thu, 03 Apr 2025 11:27:46 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1743679678;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6PFl1ENgNMMFg/59oiSMeO0V+WWshPr8xbhA3jSiVPM=;
+	b=rYlHTvTbypwz5CapPuaOppR6v7HWrT/+hCXzyjoaVrq/NB5i+n1v2JM+kTJlhi0mfrA3v9
+	1mnFLlOD7KeaofgBbdjOE1CW8gQNN2NenZaTXaP35eeSkq7en7Vql0VI6OJMNb9EpBNP54
+	rO/6QAx9dC/lEa4DEMhoih2q+0s5IFOcrm8qlC2sTUtM57TOVZwYrHXVohfBYExQkq2bBX
+	g1KK3gB9JnxLcCZBmOBLWDNg2HrX1gOX6mEKzGp+vFc9MorcLHyJ2zMX3NPIQhoONMPV+y
+	r1mKdEBoozwc//FklW6u+kH0xz+ef/PvVkMhorgU2Qh3vwM6xPVnzXffWGmSuA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1743679678;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6PFl1ENgNMMFg/59oiSMeO0V+WWshPr8xbhA3jSiVPM=;
+	b=w1+nycr+0qfwEsvalCzwpzHKWSGD4eCG8YpwQKwkdPzJQeQ03oW7AdAW6RGtwALVVUjDdw
+	HXeLVghNkfsCmTBQ==
+From: "tip-bot2 for Uros Bizjak" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/mm] x86/idle: Remove CONFIG_AS_TPAUSE
+Cc: Uros Bizjak <ubizjak@gmail.com>, Ingo Molnar <mingo@kernel.org>,
+ Andy Lutomirski <luto@kernel.org>, Brian Gerst <brgerst@gmail.com>,
+ Juergen Gross <jgross@suse.com>, Andrew Cooper <andrew.cooper3@citrix.com>,
+ Rik van Riel <riel@surriel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ Peter Zijlstra <peterz@infradead.org>,
+ "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250402180827.3762-4-ubizjak@gmail.com>
+References: <20250402180827.3762-4-ubizjak@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <87frix5dk3.fsf@kernel.org>
+Message-ID: <174367967740.14745.10059693585282358485.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Fri, Mar 28, 2025 at 05:23:56PM +0100, Andreas Hindborg wrote:
-> Hi Christoph,
-> 
-> "Christoph Hellwig" <hch@infradead.org> writes:
-> 
-> > On Wed, Mar 26, 2025 at 05:45:30PM +0100, Andreas Hindborg wrote:
-> >> As recommended in plenary session at LSF/MM plenary session on March 25 2025.
-> >> Joel is no longer active in the community.
-> >
-> > I'm not sure who decided that, but that's an exceptionally offensive move.
-> 
-> It was a recommendation given by several people in the plenary session I
-> had 10 AM local time on March 25 at LSF. There was agreement in the
-> sense that several people recommended this course action and nobody
-> objected.
-> 
-> > Joel has helped actually reviewing configfs patches even when I as running
-> > the tree, and I explicitly confirmed with him that he is willing to
-> > maintain it alone when I dropped the maintainership.  You've not even
-> > Ced him to tell him about how you force him out of the subsystem he
-> > created.
-> 
-> I am deeply sorry for not Cc'ing Joel, that is a mistake. I did not do
-> it out of disrespect or ill intent, I simply did not think about it.
-> Thank you for correcting this, I appreciate that.
-> 
-> I have sent emails to Joel at least 4 times since the first rust
-> configfs series was sent, and I have offered my assistance in
-> maintaining configfs if that is the reason of no response.
+The following commit has been merged into the x86/mm branch of tip:
 
-There's no need to get upset. Several people pointed out that Joel
-Becker retired and since he hasn't responded this felt like the right
-thing to do. Just send a patch to add him back. I see no reason to not
-have Andreas step up to maintain it.
+Commit-ID:     a72d55dc3bd6555cc1f97459b42b7f62ae480f13
+Gitweb:        https://git.kernel.org/tip/a72d55dc3bd6555cc1f97459b42b7f62ae480f13
+Author:        Uros Bizjak <ubizjak@gmail.com>
+AuthorDate:    Wed, 02 Apr 2025 20:08:08 +02:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Thu, 03 Apr 2025 13:19:18 +02:00
+
+x86/idle: Remove CONFIG_AS_TPAUSE
+
+There is not much point in CONFIG_AS_TPAUSE at all when the emitted
+assembly is always the same - it only obfuscates the __tpause() code
+in essence.
+
+Remove the TPAUSE insn mnemonic from __tpause() and leave only
+the equivalent byte-wise definition. This can then be changed
+back to insn mnemonic once binutils 2.31.1 is the minimum version
+to build the kernel. (Right now it's 2.25.)
+
+Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Brian Gerst <brgerst@gmail.com>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: Andrew Cooper <andrew.cooper3@citrix.com>
+Cc: Rik van Riel <riel@surriel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Link: https://lore.kernel.org/r/20250402180827.3762-4-ubizjak@gmail.com
+---
+ arch/x86/Kconfig.assembler   |  4 ----
+ arch/x86/include/asm/mwait.h | 11 ++---------
+ 2 files changed, 2 insertions(+), 13 deletions(-)
+
+diff --git a/arch/x86/Kconfig.assembler b/arch/x86/Kconfig.assembler
+index 6d20a6c..fa88585 100644
+--- a/arch/x86/Kconfig.assembler
++++ b/arch/x86/Kconfig.assembler
+@@ -15,10 +15,6 @@ config AS_SHA256_NI
+ 	def_bool $(as-instr,sha256msg1 %xmm0$(comma)%xmm1)
+ 	help
+ 	  Supported by binutils >= 2.24 and LLVM integrated assembler
+-config AS_TPAUSE
+-	def_bool $(as-instr,tpause %ecx)
+-	help
+-	  Supported by binutils >= 2.31.1 and LLVM integrated assembler >= V7
+ 
+ config AS_GFNI
+ 	def_bool $(as-instr,vgf2p8mulb %xmm0$(comma)%xmm1$(comma)%xmm2)
+diff --git a/arch/x86/include/asm/mwait.h b/arch/x86/include/asm/mwait.h
+index 0e020a6..6a2ec20 100644
+--- a/arch/x86/include/asm/mwait.h
++++ b/arch/x86/include/asm/mwait.h
+@@ -138,16 +138,9 @@ static __always_inline void mwait_idle_with_hints(unsigned long eax, unsigned lo
+  */
+ static inline void __tpause(u32 ecx, u32 edx, u32 eax)
+ {
+-	/* "tpause %ecx, %edx, %eax" */
+-	#ifdef CONFIG_AS_TPAUSE
+-	asm volatile("tpause %%ecx"
+-		     :
+-		     : "c"(ecx), "d"(edx), "a"(eax));
+-	#else
++	/* "tpause %ecx" */
+ 	asm volatile(".byte 0x66, 0x0f, 0xae, 0xf1"
+-		     :
+-		     : "c"(ecx), "d"(edx), "a"(eax));
+-	#endif
++		     :: "c" (ecx), "d" (edx), "a" (eax));
+ }
+ 
+ #endif /* _ASM_X86_MWAIT_H */
