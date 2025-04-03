@@ -1,68 +1,77 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1B3924BBE3;
-	Thu,  3 Apr 2025 12:12:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3163124BBE3
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 12:13:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743682337; cv=none; b=UP67KJn9eOAewYUSEtBk3fEfDbAfnFPKtvZejlbJGgZimA+k6cB68JEm8y14UvdfKWUqw6nlZaY+wrhaOVn4z74V86Fw39KpkevJ8rS8raQNpMUEuH0UqXfCuZ3m7R6mi2xJps0KPoYsrKo3eEN6mCPQAuEkJHotKoR/eD7PhSk=
+	t=1743682418; cv=none; b=ZY9uX4t/av3gtviicGopKtaccXT+XrObviJ7jmvCV/F2lA0pwlEJfh4rDJPDO2M79ToU2IwPqdNbWZJcOC65qeCL9tb/0VQ3dkMWsAlS16YJP7vaGXjnfRx8BDNGk+CLy84qtbETHYsvPbYL3q8+MuwnO5kD6Lqq7ADqtqlt/2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743682337; c=relaxed/simple;
-	bh=wfP32hGUDJLS7BIEMu7eBqsJmv6hR2C4VyHYiauDOUo=;
+	s=arc-20240116; t=1743682418; c=relaxed/simple;
+	bh=6HBSXgVJQpnXZ2wUeUNsTHZDwNlVPaiPU5s4ReCzWvc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZJeDViXifc05QwwaFZhnIz5NuUc1ckXL/OsgtfeuuwIXRAJkCEjzBTtNzvjKfDorTXVzH1J8euAzSpeXWDxfcmBYLm4ZlKOhuzxq+xM+EtSzLofrvHy0TVwwO3agY7SBZy1rvubtTSCowhbWiitd59A3D1G+s3F1C3DvxpHcpIU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NUxBJBPn; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=HWTQYPYACz+h2mWnoWc3Wi1GS9yCrz78tPP33UIh849fbPh0awze/NUDKpTY2oETZ6AtCrjR3bUEgtQf5e732ycXHO3qoLqWayQs4fimiyndPEwMrG52dC5ZkIqcDE5ALFByvg1DAQWH2IxJzcf54QS4Dmjl878MR0ze+LZF62Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=T3BxN9DI; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NUxBJBPn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743682336; x=1775218336;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=wfP32hGUDJLS7BIEMu7eBqsJmv6hR2C4VyHYiauDOUo=;
-  b=NUxBJBPnGzJRZ3oRNZvEweuXPtTmjTcD7ehkY1i0MECacu8qySQOREge
-   IIA5Wwa0wpKALmKUTJDMwUcsGwVIC+OCLXvHcGxFrhBXQCjAuN6P2FZVG
-   I6vtUnvvKGSPEtLOk79PXCgq9hJ9fsY8IusfHmHj2FPFqLWtFv8Tw6gol
-   NFB0Up6UZUxYrFsbO5rgLpdgRmUVrjRYsptT5CQMrHscHcJb3NtnLTJzC
-   t6UFVvsUn/Jh7SRNrbjKrW6Xw3d8h3LQvOay+KHMcJ8RwZXfR8c2LuUyw
-   CC0KHpblwnEY/q+AwEEAazHL6rMsruj/b/jXogccbNDimFj9LX0eLozAo
-   A==;
-X-CSE-ConnectionGUID: z9xeQGqTSPaIsALF9QM0Rg==
-X-CSE-MsgGUID: 6eG2orcyQCu83c4N5M4YzA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11393"; a="70455092"
-X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
-   d="scan'208";a="70455092"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 05:12:14 -0700
-X-CSE-ConnectionGUID: L3yn9IUzScOSAD31e8EBGw==
-X-CSE-MsgGUID: kIp9hziHQe6HiipGdXjO3A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
-   d="scan'208";a="131968745"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 05:12:11 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1u0JQW-00000008nfB-3i9Y;
-	Thu, 03 Apr 2025 15:12:08 +0300
-Date: Thu, 3 Apr 2025 15:12:08 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Mika Westerberg <westeri@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v1 4/5] gpiolib: acpi: Reuse struct acpi_gpio_params in
- struct acpi_gpio_lookup
-Message-ID: <Z-57GF_DWR8D-AZG@smile.fi.intel.com>
-References: <20250402122301.1517463-1-andriy.shevchenko@linux.intel.com>
- <20250402122301.1517463-5-andriy.shevchenko@linux.intel.com>
- <20250403103506.GJ3152277@black.fi.intel.com>
- <Z-5rJDWaSJd58lTa@smile.fi.intel.com>
- <CAMRc=Mc3YUsLm5dX0b3rFsuCErf0WmyyYtXZgDYBt0w+xwqkCQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="T3BxN9DI"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43cfe574976so5075185e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 05:13:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1743682413; x=1744287213; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=YoPotb8pXLLdqy0ZKPd2+Zf9wmiJLFly+WdaF3/DU0A=;
+        b=T3BxN9DI8vCE/lo3HmbPZxgCWEpt0CIJcBAFUDQtnWIdLCHjB7Av4J/zvMD/Sd0BiY
+         +N+8shWW4OZh/RGUYRO63+Npge2RMf5UZyxzYKNgbs+1T49JNTX8ZkwJjw+V0Cl1IJt4
+         1fHVXSTV4CfWZZTK9+yWrXBN7HdmZeGBRmDxEKAMD7I6nDwezCLwlDqSjurHQhP9jh8u
+         Qf2pjitckssRtb+QjqKlEGqo1bmeOIjaDvVPiZQwEN4Rr5GiKmeX6nnwUWc7gBWI7PmE
+         vQ6ugwtrB5Cs3em864Yje8uKoCfU7Sp3sWG+rkMWNcL5w2Bc4FH7LQEFXGvOKcXfeJJE
+         r7Hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743682413; x=1744287213;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=YoPotb8pXLLdqy0ZKPd2+Zf9wmiJLFly+WdaF3/DU0A=;
+        b=W609CoUF8OEvXBR0a829GPVZoFjQYw6iNO2ZykW4AOLopyBmCiDj6BLNFZnkhT1BRJ
+         lephprwh66dk+fiLsRsn6f2EAkj+rxOJVwUSGZouGMeHMBy0iE7VOH8hKdtcYN7D59Sh
+         uk1NNFs5Mhe+eeF9+O1nSt7uzKH/67bNEBjlBEz9Xn3WQAFF+0hT2ThzJ9Mzx/fwPFlF
+         IpI3EHwd14guLL4VjbM5ADpSm+LbETfCHT9YqYIsy/gjQeh051yP3lN6oEsjOMr6aVYy
+         LRUGA/oBPKAbsvuCU4QghKwinx+W/hHjRm0YhVOIpNhURpzNyHklGXNRME8jJqxf/ziz
+         JaQg==
+X-Forwarded-Encrypted: i=1; AJvYcCW9+gwgWSdfugbR6jKSQUHNgev0ZxfeuC+JeoVhrEfpqLvZR6bpxbcLk9BjaLOIPPcY45ykxehTNy9uxsY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzdcz+mS9ZbJQ6SA5nUQaNgdorqE7yvHw4/cxjXsS1/MwoWJVAb
+	1o3fWXzaW/JJ89vA4jqSwgwVC8ZsuRufbB1Im7WIfTe/nfG1e5OjIK8+L08GsVY=
+X-Gm-Gg: ASbGnct9yysgGkgyVZaxZrumQ1mHCEt88UhmL2pSqC8V/gC2h6j4Fpb+6KiD1uyfCCU
+	0poFIR00Iq0Rj1zaH5b16acqvRCQhzkwzhgm5VUEZUeI/FvO+SwmuaaLPpEu05eQNMDTKPdRSjn
+	pXmD8DsosUWrP8UJGEzrSkzbXHUFR0dDVB9QityInVEFc0uXU+/w2lu0OFd9Rre5DnL9ZQ8uF1U
+	HKRPj7L/sLKnAl39/3uR3vdAbly8eKkRR27/V3Cr+/eTgI5RwbrWFsYtKr8p2UpzPqHZNqLiO7/
+	xLsip3KoPk/IsDLqoZ0mSE0EmYJC2SBtSirvFAXkznw6yivEYg==
+X-Google-Smtp-Source: AGHT+IGBvPoR+oe6zc3Bkj+MZpGdnpSz1Fof/p26ip33prZb/K4xDmqMovA0IJ8E/rXDyTM9UmrROw==
+X-Received: by 2002:a05:600c:5117:b0:43c:e9f7:d6a3 with SMTP id 5b1f17b1804b1-43ec42a00b0mr23581235e9.13.1743682413384;
+        Thu, 03 Apr 2025 05:13:33 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-43ec1663060sm20483615e9.14.2025.04.03.05.13.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Apr 2025 05:13:32 -0700 (PDT)
+Date: Thu, 3 Apr 2025 15:13:29 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Julia Lawall <julia.lawall@inria.fr>,
+	Erick Karanja <karanja99erick@gmail.com>, outreachy@lists.linux.dev,
+	philipp.g.hortmann@gmail.com, linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] staging: rtl8723bs: Modify struct rx_pkt_attrib
+ attribute bdecrypted
+Message-ID: <Z-57aR3JYrdpHafs@stanley.mountain>
+References: <cover.1743613025.git.karanja99erick@gmail.com>
+ <00287fa9f40c643b8451a0d2df8e2fb97235ee46.1743613025.git.karanja99erick@gmail.com>
+ <2025040215-confusing-sibling-f99f@gregkh>
+ <3c235d91-efd6-ddf8-7c9-d8d35c7585@inria.fr>
+ <2025040246-series-tusk-bec1@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -72,31 +81,62 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=Mc3YUsLm5dX0b3rFsuCErf0WmyyYtXZgDYBt0w+xwqkCQ@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <2025040246-series-tusk-bec1@gregkh>
 
-On Thu, Apr 03, 2025 at 01:57:22PM +0200, Bartosz Golaszewski wrote:
-> On Thu, Apr 3, 2025 at 1:04 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> > On Thu, Apr 03, 2025 at 01:35:06PM +0300, Mika Westerberg wrote:
-> > > On Wed, Apr 02, 2025 at 03:21:19PM +0300, Andy Shevchenko wrote:
-> > > > Some of the contents of struct acpi_gpio_lookup repeats what we have
-> > > > in the struct acpi_gpio_params. Reuse the latter in the former.
-> >
-> > > > +   struct acpi_gpio_params par;
+On Wed, Apr 02, 2025 at 09:41:57PM +0100, Greg KH wrote:
+> On Wed, Apr 02, 2025 at 10:34:22PM +0200, Julia Lawall wrote:
+> > 
+> > 
+> > On Wed, 2 Apr 2025, Greg KH wrote:
+> > 
+> > > On Wed, Apr 02, 2025 at 08:16:42PM +0300, Erick Karanja wrote:
+> > > > Standardize boolean representation by ensuring consistency,
+> > > > replace instances of 1/0 with true/false where boolean logic is implied,
+> > > > as some definitions already use true/false.
+> > > > This improves code clarity and aligns with the kernel’s bool type usage.
+> > > >
+> > > > Signed-off-by: Erick Karanja <karanja99erick@gmail.com>
+> > > > ---
+> > > >  drivers/staging/rtl8723bs/core/rtw_recv.c | 2 +-
+> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/drivers/staging/rtl8723bs/core/rtw_recv.c b/drivers/staging/rtl8723bs/core/rtw_recv.c
+> > > > index a389ba5ecc6f..fd04dbacb50f 100644
+> > > > --- a/drivers/staging/rtl8723bs/core/rtw_recv.c
+> > > > +++ b/drivers/staging/rtl8723bs/core/rtw_recv.c
+> > > > @@ -1358,7 +1358,7 @@ static signed int validate_80211w_mgmt(struct adapter *adapter, union recv_frame
+> > > >  			u8 *mgmt_DATA;
+> > > >  			u32 data_len = 0;
+> > > >
+> > > > -			pattrib->bdecrypted = 0;
+> > > > +			pattrib->bdecrypted = false;
 > > >
-> > > params is better name
-> >
-> > It's been already used elsewhere in the code. Do you want renaming there as
-> > well for consistency's sake?
+> > > but bdecrypted is a u8, not a boolean type.  So setting it to "false"
+> > > does not seem correct here, right?
+> > 
+> > Is false different than 0?
 > 
-> +1 for using param or params here and elsewhere. It's much better than par.
+> Does C guarantee that?  I can never remember.  I don't think it
+> guarantees that a 'bool' will only be 8 bits, or am I mistaken there
+> too?
+> 
 
-Okay, will be an add-on in the next version. But I will wait for Mika and
-others to review the rest and give tags and/or comments where it applies.
+These patches are fine.  This does come from the hardware but the
+patches don't change the layout of the struct, just the right
+hand side of the assignment.
 
--- 
-With Best Regards,
-Andy Shevchenko
+The C standard doesn't specify the size of _Bool.  It just has to
+be unsigned and at least one bit large.  The surprising thing about
+_Bool type is that it doesn't truncate anything.  So you can do:
+"_Bool x = y & BIT(20);" and it works, but if we use unsigned char
+then we would have to add a !!.  "unsigned char x = !!(y & BIT(20));"
 
+Btw, true/false are not keywords in C.  They're defined in
+include/linux/stddef.h.
+
+The main review here is if there is a typo where we accidentally type
+true instead of false.
+
+regards,
+dan carpenter
 
