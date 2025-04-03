@@ -1,87 +1,171 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C325253342;
-	Thu,  3 Apr 2025 19:02:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E28AF253B51;
+	Thu,  3 Apr 2025 19:02:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743706938; cv=none; b=KTlSB2E3tyogLs4HXDQn+K1tu4tZ/20QRR34pR9J+to3lME4tBPevZFhncSKluUjtd/chrtt4oxTKjQ3unQvpXFh/GyC8myVBqVSSuvIhRV0A/2YyAw44mk07CkeKlXphvb3dtL3ZKcHmd5R5R6GnIKGbAbQVZ/ncaVwukpo9Xg=
+	t=1743706939; cv=none; b=RZ//ms+hnaZPgRZvGkdVcNn7YKrvoKCm1ndB98Ol+qXrlRE8vdcz5aUG62DE3I0WYccKFakps5XHoJwxVnWKil+S0px705q7vTH62PjadFkjmab15NdZVBj6pvw/kD61sSlxkUNBPbkelvooWpyj0V841Xprf5R/4L8TxEjdbUo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743706938; c=relaxed/simple;
-	bh=4jPalTCX1rcN6gPwd8+l4zwythtZrx1tpKadoOQC8sc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=BlyTqBV2nz7E32yU97m/uDxgeBBTVhznsKlDozSXdyCvajqKZKKq7ACDX0xK6JETBH2sxLskOtHbyFbEOWbQDNudDGYTw1Bp8rAxGsfk3N+sX8r7K1Uk7X+37HNuVtG6Gum67KU4fyzBk7cW5NbxwgCdjZKAStNzW36X42E7YvY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U9n5dyQi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743706939; c=relaxed/simple;
+	bh=EZMuhSshL8pIrS8Y4e3bN/RLqQj4uKA4K5ZJfOpenUM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=qVmTvdg8HSbaUQrcoVJbdobEd7cahSVeNEvPnoucBm9QccLhIac/Duqm0hx/hp0ua61lMAyPhMX0ATHwLh8P6vTIOYIcXOF4a34xPWxMohRG9PtLr7WsOXWWNBf+UqX3nolHFV3N3RFR3i7rW5WbJFVjlxdrjfNUBZbYCZaOgRk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UQnsXx0r; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U9n5dyQi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC402C4CEE3;
-	Thu,  3 Apr 2025 19:02:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UQnsXx0r"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3AD0C4CEE8;
+	Thu,  3 Apr 2025 19:02:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743706935;
-	bh=4jPalTCX1rcN6gPwd8+l4zwythtZrx1tpKadoOQC8sc=;
-	h=From:To:Cc:Subject:Date:From;
-	b=U9n5dyQiEmIWvVcJB/xs6+knEcuDSOcEz8ORhy2J0ld5CLEjdIhDeA4RrZ13X4Td4
-	 AfhseBRtD+zp1T1aV3FJ1aUhteF26GlwqE6fyCP5qZ9amETpRO8SHJH1oRad/cdWR+
-	 kcRNOpUUfR1dLEmxsKp8Jb6gXCifd79/iNcFqbZFfTvGw2vJoJkKv5WsRzwGlA1esv
-	 9pd/0Ra0j0AzdqOqS8dj7WTQrIQ0yT+FqR2CovnYDh+18zlL6WL81awGH7SGLctPmg
-	 /c0t9rRYIGspUgEW+YLNJySqzxbkoET0tH9hPwt05g5vWG2UiFMpJVgIYQziT/iUlg
-	 YMg575j0N1uLw==
+	s=k20201202; t=1743706938;
+	bh=EZMuhSshL8pIrS8Y4e3bN/RLqQj4uKA4K5ZJfOpenUM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=UQnsXx0rD305YW6p/vjJ+2fiLc5DUq4KUOwgbX36KJCqZuW1u98fGttj6AG0qtwun
+	 Hi7tBdUqMlQ/tKIBjbI2zspNq/48AqoTOrTmBtZrZ5DApZoGHdoBTQMU4rYetNq4Xt
+	 nK/2X/Io+4cGUGL/FeNONgmHc5uEltUA/w9lD1xDFFP1a8c5ms02HRMsIM5DUCDgHC
+	 cutuEnGv/jhFWpFu1nVSWUEH+pGxfW+Z/apUSHJllWqsZ97dVXFHycz+tI2lSVGHVn
+	 239zr7jwUGeS9Wdx9q29f1K6C0oDOKLQ7mAzrj8JcgFYKfYAiUbpp6hKDnsb/TL6gr
+	 iXxNDdVQP9rbQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Dmitry Antipov <dmantipov@yandex.ru>,
-	=?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@toke.dk>,
+Cc: Miaoqing Pan <quic_miaoqing@quicinc.com>,
+	Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>,
 	Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
 	Sasha Levin <sashal@kernel.org>,
-	nathan@kernel.org,
-	linux-wireless@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: [PATCH AUTOSEL 6.14 01/54] wifi: ath9k: use unsigned long for activity check timestamp
-Date: Thu,  3 Apr 2025 15:01:16 -0400
-Message-Id: <20250403190209.2675485-1-sashal@kernel.org>
+	jjohnson@kernel.org,
+	ath11k@lists.infradead.org
+Subject: [PATCH AUTOSEL 6.14 03/54] wifi: ath11k: fix memory leak in ath11k_xxx_remove()
+Date: Thu,  3 Apr 2025 15:01:18 -0400
+Message-Id: <20250403190209.2675485-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250403190209.2675485-1-sashal@kernel.org>
+References: <20250403190209.2675485-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.14
 Content-Transfer-Encoding: 8bit
 
-From: Dmitry Antipov <dmantipov@yandex.ru>
+From: Miaoqing Pan <quic_miaoqing@quicinc.com>
 
-[ Upstream commit 8fe64b0fedcb7348080529c46c71ae23f60c9d3e ]
+[ Upstream commit efb24b1f0d29537714dd3cc46fb335ac27855251 ]
 
-Since 'rx_active_check_time' of 'struct ath_softc' is in jiffies,
-prefer 'unsigned long' over 'u32' to avoid possible truncation in
-'ath_hw_rx_inactive_check()'. Found with clang's -Wshorten-64-to-32,
-compile tested only.
+The firmware memory was allocated in ath11k_pci_probe() or
+ath11k_ahb_probe(), but not freed in ath11k_xxx_remove() in case
+ATH11K_FLAG_QMI_FAIL bit is set. So call ath11k_fw_destroy() to
+free the memory.
 
-Signed-off-by: Dmitry Antipov <dmantipov@yandex.ru>
-Acked-by: Toke Høiland-Jørgensen <toke@toke.dk>
-Link: https://patch.msgid.link/20250115171750.259917-2-dmantipov@yandex.ru
+Found while fixing the same problem in ath12k:
+https://lore.kernel.org/linux-wireless/20240314012746.2729101-1-quic_miaoqing@quicinc.com
+
+Tested-on: WCN6855 hw2.1 PCI WLAN.HSP.1.1-04546-QCAHSPSWPL_V1_V2_SILICONZ_IOE-1
+
+Signed-off-by: Miaoqing Pan <quic_miaoqing@quicinc.com>
+Reviewed-by: Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>
+Link: https://patch.msgid.link/20250123084948.1124357-1-quic_miaoqing@quicinc.com
 Signed-off-by: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath9k/ath9k.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/ath/ath11k/ahb.c  | 4 +++-
+ drivers/net/wireless/ath/ath11k/core.c | 3 +--
+ drivers/net/wireless/ath/ath11k/fw.c   | 3 ++-
+ drivers/net/wireless/ath/ath11k/pci.c  | 3 ++-
+ 4 files changed, 8 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath9k/ath9k.h b/drivers/net/wireless/ath/ath9k/ath9k.h
-index a728cc0387df8..cbcf37008556f 100644
---- a/drivers/net/wireless/ath/ath9k/ath9k.h
-+++ b/drivers/net/wireless/ath/ath9k/ath9k.h
-@@ -1018,7 +1018,7 @@ struct ath_softc {
+diff --git a/drivers/net/wireless/ath/ath11k/ahb.c b/drivers/net/wireless/ath/ath11k/ahb.c
+index f2fc04596d481..eedba3766ba24 100644
+--- a/drivers/net/wireless/ath/ath11k/ahb.c
++++ b/drivers/net/wireless/ath/ath11k/ahb.c
+@@ -1,7 +1,7 @@
+ // SPDX-License-Identifier: BSD-3-Clause-Clear
+ /*
+  * Copyright (c) 2018-2019 The Linux Foundation. All rights reserved.
+- * Copyright (c) 2022-2024 Qualcomm Innovation Center, Inc. All rights reserved.
++ * Copyright (c) 2022-2025 Qualcomm Innovation Center, Inc. All rights reserved.
+  */
  
- 	u8 gtt_cnt;
- 	u32 intrstatus;
--	u32 rx_active_check_time;
-+	unsigned long rx_active_check_time;
- 	u32 rx_active_count;
- 	u16 ps_flags; /* PS_* */
- 	bool ps_enabled;
+ #include <linux/module.h>
+@@ -1290,6 +1290,7 @@ static void ath11k_ahb_remove(struct platform_device *pdev)
+ 	ath11k_core_deinit(ab);
+ 
+ qmi_fail:
++	ath11k_fw_destroy(ab);
+ 	ath11k_ahb_free_resources(ab);
+ }
+ 
+@@ -1309,6 +1310,7 @@ static void ath11k_ahb_shutdown(struct platform_device *pdev)
+ 	ath11k_core_deinit(ab);
+ 
+ free_resources:
++	ath11k_fw_destroy(ab);
+ 	ath11k_ahb_free_resources(ab);
+ }
+ 
+diff --git a/drivers/net/wireless/ath/ath11k/core.c b/drivers/net/wireless/ath/ath11k/core.c
+index c576bbba52bf1..85077247b0251 100644
+--- a/drivers/net/wireless/ath/ath11k/core.c
++++ b/drivers/net/wireless/ath/ath11k/core.c
+@@ -1,7 +1,7 @@
+ // SPDX-License-Identifier: BSD-3-Clause-Clear
+ /*
+  * Copyright (c) 2018-2019 The Linux Foundation. All rights reserved.
+- * Copyright (c) 2021-2024 Qualcomm Innovation Center, Inc. All rights reserved.
++ * Copyright (c) 2021-2025 Qualcomm Innovation Center, Inc. All rights reserved.
+  */
+ 
+ #include <linux/module.h>
+@@ -2346,7 +2346,6 @@ void ath11k_core_deinit(struct ath11k_base *ab)
+ 	ath11k_hif_power_down(ab);
+ 	ath11k_mac_destroy(ab);
+ 	ath11k_core_soc_destroy(ab);
+-	ath11k_fw_destroy(ab);
+ }
+ EXPORT_SYMBOL(ath11k_core_deinit);
+ 
+diff --git a/drivers/net/wireless/ath/ath11k/fw.c b/drivers/net/wireless/ath/ath11k/fw.c
+index 4e36292a79db8..cbbd8e57119f2 100644
+--- a/drivers/net/wireless/ath/ath11k/fw.c
++++ b/drivers/net/wireless/ath/ath11k/fw.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: BSD-3-Clause-Clear
+ /*
+- * Copyright (c) 2022-2023, Qualcomm Innovation Center, Inc. All rights reserved.
++ * Copyright (c) 2022-2025 Qualcomm Innovation Center, Inc. All rights reserved.
+  */
+ 
+ #include "core.h"
+@@ -166,3 +166,4 @@ void ath11k_fw_destroy(struct ath11k_base *ab)
+ {
+ 	release_firmware(ab->fw.fw);
+ }
++EXPORT_SYMBOL(ath11k_fw_destroy);
+diff --git a/drivers/net/wireless/ath/ath11k/pci.c b/drivers/net/wireless/ath/ath11k/pci.c
+index b93f04973ad79..f1121e3317194 100644
+--- a/drivers/net/wireless/ath/ath11k/pci.c
++++ b/drivers/net/wireless/ath/ath11k/pci.c
+@@ -1,7 +1,7 @@
+ // SPDX-License-Identifier: BSD-3-Clause-Clear
+ /*
+  * Copyright (c) 2019-2020 The Linux Foundation. All rights reserved.
+- * Copyright (c) 2021-2024 Qualcomm Innovation Center, Inc. All rights reserved.
++ * Copyright (c) 2021-2025 Qualcomm Innovation Center, Inc. All rights reserved.
+  */
+ 
+ #include <linux/module.h>
+@@ -984,6 +984,7 @@ static void ath11k_pci_remove(struct pci_dev *pdev)
+ 	ath11k_core_deinit(ab);
+ 
+ qmi_fail:
++	ath11k_fw_destroy(ab);
+ 	ath11k_mhi_unregister(ab_pci);
+ 
+ 	ath11k_pcic_free_irq(ab);
 -- 
 2.39.5
 
