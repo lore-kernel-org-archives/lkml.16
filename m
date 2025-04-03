@@ -1,396 +1,237 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from unicom145.biz-email.net (unicom145.biz-email.net [210.51.26.145])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB20F2E3385
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 09:51:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 243312E3385;
+	Thu,  3 Apr 2025 09:52:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.51.26.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743673872; cv=none; b=p883tA+ptWi2MxGUkWqtJhr3LQoWprySZ+6bek1cMWxk+6hLK/FK0laXCloG42VyVPfjAz057gxDKfz9vw7ZU3zSBt9bXuJaSYOdUFDheaCQ3auOS9LSnzJyHzH44QzxrjamWeeSXb40YW7szXTF4I3Z8PdVVLUMyNlYh0BP6Zs=
+	t=1743673963; cv=none; b=dxgJfu6eGlNE1GuVNnjjsqBL7XXsZhNingiBlWocsRsJEUa6ADsksguqJeowF3uku4AYkLApVzwGsNrUozk6/ut6bc2av8sQQ0u9HUxDg7y96VsJJreZq7FUtSMx/Q9FNaSEk/bjzBfnqRe4sELPNHQT7QSwrNlri+rf6d551eM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743673872; c=relaxed/simple;
-	bh=9PfqJfYENqfYnykzR4Vw/SrFtP+55BdHCpqVJs8rcCU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rL0cFzMr6zVNfU2bd6R49lshee5Hr+NCq8XwImLXHYXmTYrh3Bq3uWOqG9LXFxRmnIDbKl2OFX9wUJGH89duzrr0Pwm+qndEJwddTNzKisZnNIZ8MDo/xJP8eWmAATC6U7lXH4Qf2jmgPt6XlXDnba24eKiomse+t96rgJHf6w0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=b6fI9xPN; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="b6fI9xPN"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43d0c18e84eso2970725e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 02:51:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743673868; x=1744278668; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=qz+wTex84HxR9hjDkpBqo0t+c4uTz2yvssMo9Eniq78=;
-        b=b6fI9xPNNq9dTIVzCKy7ZfO+O8O9r3f35exf7DycLOLveQXqXdv52MLYT1BEnFaVXJ
-         DMHgc1wBPS2nUWGwkQoPzYVrgX7rSR8YGsOAH+ph2olcukSXlchEnCQQaXEzh7s+zfcy
-         qwOsa+LiPoZpLBHTDjkideTfU4//CJdRaNAbYpVIwGFvXU6teE/iXYp3WM06ZtBEANVu
-         lxQFyI7QfpeKBo+dKacE4q5nD00Hdp9UsCPEgEnnKkEFvjc/IXsXY0TN8/3mhEBga1bz
-         5cGht/3hpNva9yCrXFa96E/NXQUfCiwV1ndKIKW9HsrzKZDADx53Z53sxz5GBVQ/1yB9
-         gRuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743673868; x=1744278668;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qz+wTex84HxR9hjDkpBqo0t+c4uTz2yvssMo9Eniq78=;
-        b=ejE51pDqjRIovJZ+qT40YfzDrwVjjhMJ3vK+0Gbi7XuBHUrGqIIyEzNBVTkoDHP4Ry
-         kDqDr/n12VUMS79YHBho/X+pznAU6ZVr1uPms/d4/VXtGNGkRSJTvx338Sn/i/rKzboc
-         nzoOwkaM1ksUjtI5NdjOflRb9hjC1qinTyNzhp8/Zn7gy9LLpWmraEQcJ6/EjMvJlzFW
-         ayg8FMdE6SI3SarmbInfsf6CqI3y37JaGnabOGA8zW8G5P2qbyByvz7jcgZN+veEnsOw
-         gJueMtFGLuqBAxPr3bivGYn9mt0YES5RFJMcbJ4qAoyOxyDLut8/aQSUTJ2lvf1zz/MQ
-         YXgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUVMa78gCG20E5ORvYpm4BRX0lu62I9b+o0xY4EC2Yhfh7nBG6V0vpmnmTXjKWMauNT8ryUWudPoXn7myk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw4YKQN2Ez6Sl03eiArnViMsvB8srISdxP0HEPn/o74brv/yM5T
-	349JaYOTkGhdLM8MEWEwbR62HoogydDW/7SL1VhEKnbgotyRFTs9WtzQnNGH4h9+8QAsGK9xNjR
-	y
-X-Gm-Gg: ASbGncs5JjkUE5HvgDDtICgf6Jr1t97b7QtvZMFVN8vPNwEOI5GPL3PAzpkIedBs473
-	KqSXiq/N/Bxb+XBTJS9p7OhdBRIzbk3UaPA3C5+ngUtx5VkPoJ3DvsP7HPGAxa1jEylslYXYNtu
-	R7Rw8WSgkZVHL506E0qqFTMJC2hDjIcndsQehgxMmPNEVduq827DjLXfmqyXrK5mBn1HOjePpNX
-	fE2WVaZyB1a6HH8XBnyCEzY+z6SuOEsLXlNNiYkQqT8BeloJPTLmaJPh9AwaYepJRt4xFA7eQ3E
-	QaDQObNAn79p0ugFSRqozdmTAqHR5FDBc4i+P9M5SbkWsYHU6pgeQg==
-X-Google-Smtp-Source: AGHT+IEIXqJmQGNM4WrsnpKhF9Sm8XZJvJ7OgSqwDtk2VARx0U0o19gRdCAZ+vFE3HaVEb0xqdwcAw==
-X-Received: by 2002:a05:600c:468c:b0:43c:fa3f:8e5d with SMTP id 5b1f17b1804b1-43db61b52e5mr213840145e9.2.1743673867963;
-        Thu, 03 Apr 2025 02:51:07 -0700 (PDT)
-Received: from [192.168.0.14] ([79.115.63.146])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec366b571sm13288845e9.40.2025.04.03.02.51.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Apr 2025 02:51:07 -0700 (PDT)
-Message-ID: <4df5c39b-5692-4d71-b381-aa8df1ce1fd7@linaro.org>
-Date: Thu, 3 Apr 2025 10:51:03 +0100
+	s=arc-20240116; t=1743673963; c=relaxed/simple;
+	bh=3yiiA2JhKvLrYXs0WXZvH3KfWbuhniiLUzYYsdf6K0I=;
+	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=ZPQ6Cptu2tddExZGQp+0Oqm9fXUBY1ryQhUpz5c5TLUXjCQkgjl9ARQMSf4H2Vpd/6OfyiO0q/Rid4phMKAK/vs9eZ0AIFxUPLVWC7M0EO4BW2uMZWcDwbb+OGF/QlpzoMSiR4WLS7JN7tpiqIFES4CTPvBk79VnO6omsJj/mP0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com; spf=pass smtp.mailfrom=inspur.com; arc=none smtp.client-ip=210.51.26.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inspur.com
+Received: from jtjnmail201612.home.langchao.com
+        by unicom145.biz-email.net ((D)) with ASMTP (SSL) id 202504031752289983;
+        Thu, 03 Apr 2025 17:52:28 +0800
+Received: from jtjnmail201607.home.langchao.com (10.100.2.7) by
+ jtjnmail201612.home.langchao.com (10.100.2.12) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Thu, 3 Apr 2025 17:52:27 +0800
+Received: from jtjnmail201607.home.langchao.com ([fe80::c5ea:abc2:7a50:1de9])
+ by jtjnmail201607.home.langchao.com ([fe80::c5ea:abc2:7a50:1de9%8]) with mapi
+ id 15.01.2507.039; Thu, 3 Apr 2025 17:52:27 +0800
+From: =?utf-8?B?Q2hhcmxlcyBIYW4o6Z+p5pil6LaFKQ==?= <hanchunchao@inspur.com>
+To: "przemyslaw.kitszel@intel.com" <przemyslaw.kitszel@intel.com>
+CC: "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"saeedm@nvidia.com" <saeedm@nvidia.com>, "leon@kernel.org" <leon@kernel.org>,
+	"tariqt@nvidia.com" <tariqt@nvidia.com>, "andrew+netdev@lunn.ch"
+	<andrew+netdev@lunn.ch>, "davem@davemloft.net" <davem@davemloft.net>,
+	"edumazet@google.com" <edumazet@google.com>, "kuba@kernel.org"
+	<kuba@kernel.org>, "pabeni@redhat.com" <pabeni@redhat.com>,
+	"markzhang@nvidia.com" <markzhang@nvidia.com>, "mbloch@nvidia.com"
+	<mbloch@nvidia.com>
+Subject: Re: [PATCH] net/mlx5: fix potential null dereference when enable
+ shared FDB
+Thread-Topic: [PATCH] net/mlx5: fix potential null dereference when enable
+ shared FDB
+Thread-Index: AdukfhISoqHM3HXCoEeU3JbpPsETNA==
+Date: Thu, 3 Apr 2025 09:52:27 +0000
+Message-ID: <526e6240c8964fefa80b4bc759c44c04@inspur.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: yes
+X-MS-TNEF-Correlator:
+Content-Type: multipart/signed; protocol="application/x-pkcs7-signature";
+	micalg=SHA1; boundary="----=_NextPart_000_0006_01DBA4C1.28DD0B60"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 07/19] mtd: spinand: Use more specific naming for the
- (single) read from cache ops
-To: Miquel Raynal <miquel.raynal@bootlin.com>,
- Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
- Santhosh Kumar K <s-k6@ti.com>
-Cc: Pratyush Yadav <pratyush@kernel.org>, Michael Walle <michael@walle.cc>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
- Steam Lin <stlin2@winbond.com>, linux-mtd@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20250403-winbond-6-14-rc1-octal-v2-0-7846bd88fe83@bootlin.com>
- <20250403-winbond-6-14-rc1-octal-v2-7-7846bd88fe83@bootlin.com>
-Content-Language: en-US
-From: Tudor Ambarus <tudor.ambarus@linaro.org>
-In-Reply-To: <20250403-winbond-6-14-rc1-octal-v2-7-7846bd88fe83@bootlin.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+tUid: 2025403175228178847127886bb845e3717d21d93ef67
+X-Abuse-Reports-To: service@corp-email.com
+Abuse-Reports-To: service@corp-email.com
+X-Complaints-To: service@corp-email.com
+X-Report-Abuse-To: service@corp-email.com
 
+------=_NextPart_000_0006_01DBA4C1.28DD0B60
+Content-Type: text/plain;
+	charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
+-ENXIO indicates "No such device or address". I've found that in =
+mlx5/core, if mlx5_get_flow_namespace() returns null, it basically =
+returns -EOPNOTSUPP.
 
-On 4/3/25 10:19 AM, Miquel Raynal wrote:
-> SPI operations have been initially described through macros implicitly
-> implying the use of a single SPI SDR bus. Macros for supporting dual and
-> quad I/O transfers have been added on top, generally inspired by vendor
-> naming, followed by DTR operations. Soon we might see octal
-> and even octal DTR operations as well (including the opcode byte).
-> 
-> Let's clarify what the macro really mean by describing the expected bus
-> topology in the (single) read from cache macro names.
-> 
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+-----=E9=82=AE=E4=BB=B6=E5=8E=9F=E4=BB=B6-----
+=E5=8F=91=E4=BB=B6=E4=BA=BA: Przemek Kitszel =
+<przemyslaw.kitszel@intel.com>=20
+=E5=8F=91=E9=80=81=E6=97=B6=E9=97=B4: 2025=E5=B9=B44=E6=9C=882=E6=97=A5 =
+19:02
+=E6=94=B6=E4=BB=B6=E4=BA=BA: Charles Han(=E9=9F=A9=E6=98=A5=E8=B6=85) =
+<hanchunchao@inspur.com>
+=E6=8A=84=E9=80=81: netdev@vger.kernel.org; linux-rdma@vger.kernel.org; =
+linux-kernel@vger.kernel.org; saeedm@nvidia.com; leon@kernel.org; =
+tariqt@nvidia.com; andrew+netdev@lunn.ch; davem@davemloft.net; =
+edumazet@google.com; kuba@kernel.org; pabeni@redhat.com; =
+markzhang@nvidia.com; mbloch@nvidia.com
+=E4=B8=BB=E9=A2=98: Re: [PATCH] net/mlx5: fix potential null dereference =
+when enable shared FDB
 
-Acked-by: Tudor Ambarus <tudor.ambarus@linaro.org>
-
+On 4/2/25 11:43, Charles Han wrote:
+> mlx5_get_flow_namespace() may return a NULL pointer, dereferencing it=20
+> without NULL check may lead to NULL dereference.
+> Add a NULL check for ns.
+>=20
+> Fixes: db202995f503 ("net/mlx5: E-Switch, add logic to enable shared=20
+> FDB")
+> Signed-off-by: Charles Han <hanchunchao@inspur.com>
 > ---
->  drivers/mtd/nand/spi/alliancememory.c |  4 ++--
->  drivers/mtd/nand/spi/ato.c            |  4 ++--
->  drivers/mtd/nand/spi/esmt.c           |  4 ++--
->  drivers/mtd/nand/spi/foresee.c        |  4 ++--
->  drivers/mtd/nand/spi/gigadevice.c     | 16 ++++++++--------
->  drivers/mtd/nand/spi/macronix.c       |  4 ++--
->  drivers/mtd/nand/spi/micron.c         |  8 ++++----
->  drivers/mtd/nand/spi/paragon.c        |  4 ++--
->  drivers/mtd/nand/spi/skyhigh.c        |  4 ++--
->  drivers/mtd/nand/spi/toshiba.c        |  4 ++--
->  drivers/mtd/nand/spi/winbond.c        | 10 +++++-----
->  drivers/mtd/nand/spi/xtx.c            |  4 ++--
->  include/linux/mtd/spinand.h           | 12 ++++++------
->  13 files changed, 41 insertions(+), 41 deletions(-)
-> 
-> diff --git a/drivers/mtd/nand/spi/alliancememory.c b/drivers/mtd/nand/spi/alliancememory.c
-> index 6046c73f8424e9fb338ec3a1d35dc6fe30a2e1bc..723c740308d26e901fd3d9a402ddd48e8e69060f 100644
-> --- a/drivers/mtd/nand/spi/alliancememory.c
-> +++ b/drivers/mtd/nand/spi/alliancememory.c
-> @@ -21,8 +21,8 @@ static SPINAND_OP_VARIANTS(read_cache_variants,
->  		SPINAND_PAGE_READ_FROM_CACHE_X4_OP(0, 1, NULL, 0),
->  		SPINAND_PAGE_READ_FROM_CACHE_DUALIO_OP(0, 1, NULL, 0),
->  		SPINAND_PAGE_READ_FROM_CACHE_X2_OP(0, 1, NULL, 0),
-> -		SPINAND_PAGE_READ_FROM_CACHE_FAST_OP(0, 1, NULL, 0),
-> -		SPINAND_PAGE_READ_FROM_CACHE_OP(0, 1, NULL, 0));
-> +		SPINAND_PAGE_READ_FROM_CACHE_FAST_1S_1S_1S_OP(0, 1, NULL, 0),
-> +		SPINAND_PAGE_READ_FROM_CACHE_1S_1S_1S_OP(0, 1, NULL, 0));
->  
->  static SPINAND_OP_VARIANTS(write_cache_variants,
->  			   SPINAND_PROG_LOAD_X4(true, 0, NULL, 0),
-> diff --git a/drivers/mtd/nand/spi/ato.c b/drivers/mtd/nand/spi/ato.c
-> index bb5298911137f08c1793d244b33dddf1971e2fed..9026a14aca07ce011af151eb6dfe56797e0e70c0 100644
-> --- a/drivers/mtd/nand/spi/ato.c
-> +++ b/drivers/mtd/nand/spi/ato.c
-> @@ -15,8 +15,8 @@
->  
->  static SPINAND_OP_VARIANTS(read_cache_variants,
->  		SPINAND_PAGE_READ_FROM_CACHE_X4_OP(0, 1, NULL, 0),
-> -		SPINAND_PAGE_READ_FROM_CACHE_FAST_OP(0, 1, NULL, 0),
-> -		SPINAND_PAGE_READ_FROM_CACHE_OP(0, 1, NULL, 0));
-> +		SPINAND_PAGE_READ_FROM_CACHE_FAST_1S_1S_1S_OP(0, 1, NULL, 0),
-> +		SPINAND_PAGE_READ_FROM_CACHE_1S_1S_1S_OP(0, 1, NULL, 0));
->  
->  static SPINAND_OP_VARIANTS(write_cache_variants,
->  		SPINAND_PROG_LOAD_X4(true, 0, NULL, 0),
-> diff --git a/drivers/mtd/nand/spi/esmt.c b/drivers/mtd/nand/spi/esmt.c
-> index 323a20901fc9fcc252b8317d9434aabf5e30a495..aad751f95269b3f501aff01753c4bf0ff9484fbe 100644
-> --- a/drivers/mtd/nand/spi/esmt.c
-> +++ b/drivers/mtd/nand/spi/esmt.c
-> @@ -15,8 +15,8 @@
->  static SPINAND_OP_VARIANTS(read_cache_variants,
->  			   SPINAND_PAGE_READ_FROM_CACHE_X4_OP(0, 1, NULL, 0),
->  			   SPINAND_PAGE_READ_FROM_CACHE_X2_OP(0, 1, NULL, 0),
-> -			   SPINAND_PAGE_READ_FROM_CACHE_FAST_OP(0, 1, NULL, 0),
-> -			   SPINAND_PAGE_READ_FROM_CACHE_OP(0, 1, NULL, 0));
-> +			   SPINAND_PAGE_READ_FROM_CACHE_FAST_1S_1S_1S_OP(0, 1, NULL, 0),
-> +			   SPINAND_PAGE_READ_FROM_CACHE_1S_1S_1S_OP(0, 1, NULL, 0));
->  
->  static SPINAND_OP_VARIANTS(write_cache_variants,
->  			   SPINAND_PROG_LOAD_X4(true, 0, NULL, 0),
-> diff --git a/drivers/mtd/nand/spi/foresee.c b/drivers/mtd/nand/spi/foresee.c
-> index ecd5f6bffa33423abddf750b34b823a640fa2c23..8a9725ea29bac5901d67304db95ed5573bd7fa40 100644
-> --- a/drivers/mtd/nand/spi/foresee.c
-> +++ b/drivers/mtd/nand/spi/foresee.c
-> @@ -14,8 +14,8 @@
->  static SPINAND_OP_VARIANTS(read_cache_variants,
->  		SPINAND_PAGE_READ_FROM_CACHE_X4_OP(0, 1, NULL, 0),
->  		SPINAND_PAGE_READ_FROM_CACHE_X2_OP(0, 1, NULL, 0),
-> -		SPINAND_PAGE_READ_FROM_CACHE_FAST_OP(0, 1, NULL, 0),
-> -		SPINAND_PAGE_READ_FROM_CACHE_OP(0, 1, NULL, 0));
-> +		SPINAND_PAGE_READ_FROM_CACHE_FAST_1S_1S_1S_OP(0, 1, NULL, 0),
-> +		SPINAND_PAGE_READ_FROM_CACHE_1S_1S_1S_OP(0, 1, NULL, 0));
->  
->  static SPINAND_OP_VARIANTS(write_cache_variants,
->  		SPINAND_PROG_LOAD_X4(true, 0, NULL, 0),
-> diff --git a/drivers/mtd/nand/spi/gigadevice.c b/drivers/mtd/nand/spi/gigadevice.c
-> index 73a483227831518a480dc34de17efdaa398b5627..76856f1de8fefc6404345e363b2c873cc3c02e52 100644
-> --- a/drivers/mtd/nand/spi/gigadevice.c
-> +++ b/drivers/mtd/nand/spi/gigadevice.c
-> @@ -28,32 +28,32 @@ static SPINAND_OP_VARIANTS(read_cache_variants,
->  		SPINAND_PAGE_READ_FROM_CACHE_X4_OP(0, 1, NULL, 0),
->  		SPINAND_PAGE_READ_FROM_CACHE_DUALIO_OP(0, 1, NULL, 0),
->  		SPINAND_PAGE_READ_FROM_CACHE_X2_OP(0, 1, NULL, 0),
-> -		SPINAND_PAGE_READ_FROM_CACHE_FAST_OP(0, 1, NULL, 0),
-> -		SPINAND_PAGE_READ_FROM_CACHE_OP(0, 1, NULL, 0));
-> +		SPINAND_PAGE_READ_FROM_CACHE_FAST_1S_1S_1S_OP(0, 1, NULL, 0),
-> +		SPINAND_PAGE_READ_FROM_CACHE_1S_1S_1S_OP(0, 1, NULL, 0));
->  
->  static SPINAND_OP_VARIANTS(read_cache_variants_f,
->  		SPINAND_PAGE_READ_FROM_CACHE_QUADIO_OP(0, 1, NULL, 0),
->  		SPINAND_PAGE_READ_FROM_CACHE_X4_OP_3A(0, 1, NULL, 0),
->  		SPINAND_PAGE_READ_FROM_CACHE_DUALIO_OP(0, 1, NULL, 0),
->  		SPINAND_PAGE_READ_FROM_CACHE_X2_OP_3A(0, 1, NULL, 0),
-> -		SPINAND_PAGE_READ_FROM_CACHE_FAST_OP_3A(0, 1, NULL, 0),
-> -		SPINAND_PAGE_READ_FROM_CACHE_OP_3A(0, 0, NULL, 0));
-> +		SPINAND_PAGE_READ_FROM_CACHE_FAST_3A_1S_1S_1S_OP(0, 1, NULL, 0),
-> +		SPINAND_PAGE_READ_FROM_CACHE_3A_1S_1S_1S_OP(0, 0, NULL, 0));
->  
->  static SPINAND_OP_VARIANTS(read_cache_variants_1gq5,
->  		SPINAND_PAGE_READ_FROM_CACHE_QUADIO_OP(0, 2, NULL, 0),
->  		SPINAND_PAGE_READ_FROM_CACHE_X4_OP(0, 1, NULL, 0),
->  		SPINAND_PAGE_READ_FROM_CACHE_DUALIO_OP(0, 1, NULL, 0),
->  		SPINAND_PAGE_READ_FROM_CACHE_X2_OP(0, 1, NULL, 0),
-> -		SPINAND_PAGE_READ_FROM_CACHE_FAST_OP(0, 1, NULL, 0),
-> -		SPINAND_PAGE_READ_FROM_CACHE_OP(0, 1, NULL, 0));
-> +		SPINAND_PAGE_READ_FROM_CACHE_FAST_1S_1S_1S_OP(0, 1, NULL, 0),
-> +		SPINAND_PAGE_READ_FROM_CACHE_1S_1S_1S_OP(0, 1, NULL, 0));
->  
->  static SPINAND_OP_VARIANTS(read_cache_variants_2gq5,
->  		SPINAND_PAGE_READ_FROM_CACHE_QUADIO_OP(0, 4, NULL, 0),
->  		SPINAND_PAGE_READ_FROM_CACHE_X4_OP(0, 1, NULL, 0),
->  		SPINAND_PAGE_READ_FROM_CACHE_DUALIO_OP(0, 2, NULL, 0),
->  		SPINAND_PAGE_READ_FROM_CACHE_X2_OP(0, 1, NULL, 0),
-> -		SPINAND_PAGE_READ_FROM_CACHE_FAST_OP(0, 1, NULL, 0),
-> -		SPINAND_PAGE_READ_FROM_CACHE_OP(0, 1, NULL, 0));
-> +		SPINAND_PAGE_READ_FROM_CACHE_FAST_1S_1S_1S_OP(0, 1, NULL, 0),
-> +		SPINAND_PAGE_READ_FROM_CACHE_1S_1S_1S_OP(0, 1, NULL, 0));
->  
->  static SPINAND_OP_VARIANTS(write_cache_variants,
->  		SPINAND_PROG_LOAD_X4(true, 0, NULL, 0),
-> diff --git a/drivers/mtd/nand/spi/macronix.c b/drivers/mtd/nand/spi/macronix.c
-> index 3dc4d63d6832d0213387f335fd233f1c4306bfff..59bd476a29f03967a3f5a814872f9a6039b0a585 100644
-> --- a/drivers/mtd/nand/spi/macronix.c
-> +++ b/drivers/mtd/nand/spi/macronix.c
-> @@ -28,8 +28,8 @@ struct macronix_priv {
->  static SPINAND_OP_VARIANTS(read_cache_variants,
->  		SPINAND_PAGE_READ_FROM_CACHE_X4_OP(0, 1, NULL, 0),
->  		SPINAND_PAGE_READ_FROM_CACHE_X2_OP(0, 1, NULL, 0),
-> -		SPINAND_PAGE_READ_FROM_CACHE_FAST_OP(0, 1, NULL, 0),
-> -		SPINAND_PAGE_READ_FROM_CACHE_OP(0, 1, NULL, 0));
-> +		SPINAND_PAGE_READ_FROM_CACHE_FAST_1S_1S_1S_OP(0, 1, NULL, 0),
-> +		SPINAND_PAGE_READ_FROM_CACHE_1S_1S_1S_OP(0, 1, NULL, 0));
->  
->  static SPINAND_OP_VARIANTS(write_cache_variants,
->  		SPINAND_PROG_LOAD_X4(true, 0, NULL, 0),
-> diff --git a/drivers/mtd/nand/spi/micron.c b/drivers/mtd/nand/spi/micron.c
-> index 6ec20fad837bc534cfa0bc7cc629622a7dfab5da..d7dbd22db1a3f8457c8947f4044dd8442dc475cb 100644
-> --- a/drivers/mtd/nand/spi/micron.c
-> +++ b/drivers/mtd/nand/spi/micron.c
-> @@ -33,8 +33,8 @@ static SPINAND_OP_VARIANTS(quadio_read_cache_variants,
->  		SPINAND_PAGE_READ_FROM_CACHE_X4_OP(0, 1, NULL, 0),
->  		SPINAND_PAGE_READ_FROM_CACHE_DUALIO_OP(0, 1, NULL, 0),
->  		SPINAND_PAGE_READ_FROM_CACHE_X2_OP(0, 1, NULL, 0),
-> -		SPINAND_PAGE_READ_FROM_CACHE_FAST_OP(0, 1, NULL, 0),
-> -		SPINAND_PAGE_READ_FROM_CACHE_OP(0, 1, NULL, 0));
-> +		SPINAND_PAGE_READ_FROM_CACHE_FAST_1S_1S_1S_OP(0, 1, NULL, 0),
-> +		SPINAND_PAGE_READ_FROM_CACHE_1S_1S_1S_OP(0, 1, NULL, 0));
->  
->  static SPINAND_OP_VARIANTS(x4_write_cache_variants,
->  		SPINAND_PROG_LOAD_X4(true, 0, NULL, 0),
-> @@ -48,8 +48,8 @@ static SPINAND_OP_VARIANTS(x4_update_cache_variants,
->  static SPINAND_OP_VARIANTS(x4_read_cache_variants,
->  			   SPINAND_PAGE_READ_FROM_CACHE_X4_OP(0, 1, NULL, 0),
->  			   SPINAND_PAGE_READ_FROM_CACHE_X2_OP(0, 1, NULL, 0),
-> -			   SPINAND_PAGE_READ_FROM_CACHE_FAST_OP(0, 1, NULL, 0),
-> -			   SPINAND_PAGE_READ_FROM_CACHE_OP(0, 1, NULL, 0));
-> +			   SPINAND_PAGE_READ_FROM_CACHE_FAST_1S_1S_1S_OP(0, 1, NULL, 0),
-> +			   SPINAND_PAGE_READ_FROM_CACHE_1S_1S_1S_OP(0, 1, NULL, 0));
->  
->  static SPINAND_OP_VARIANTS(x1_write_cache_variants,
->  			   SPINAND_PROG_LOAD(true, 0, NULL, 0));
-> diff --git a/drivers/mtd/nand/spi/paragon.c b/drivers/mtd/nand/spi/paragon.c
-> index 6e7cc6995380c00ae40fe362f711a490ff463130..ae3527d6d5fa358be482eb8cf0ba4e1e2304e441 100644
-> --- a/drivers/mtd/nand/spi/paragon.c
-> +++ b/drivers/mtd/nand/spi/paragon.c
-> @@ -26,8 +26,8 @@ static SPINAND_OP_VARIANTS(read_cache_variants,
->  		SPINAND_PAGE_READ_FROM_CACHE_X4_OP(0, 1, NULL, 0),
->  		SPINAND_PAGE_READ_FROM_CACHE_DUALIO_OP(0, 1, NULL, 0),
->  		SPINAND_PAGE_READ_FROM_CACHE_X2_OP(0, 1, NULL, 0),
-> -		SPINAND_PAGE_READ_FROM_CACHE_FAST_OP(0, 1, NULL, 0),
-> -		SPINAND_PAGE_READ_FROM_CACHE_OP(0, 1, NULL, 0));
-> +		SPINAND_PAGE_READ_FROM_CACHE_FAST_1S_1S_1S_OP(0, 1, NULL, 0),
-> +		SPINAND_PAGE_READ_FROM_CACHE_1S_1S_1S_OP(0, 1, NULL, 0));
->  
->  static SPINAND_OP_VARIANTS(write_cache_variants,
->  		SPINAND_PROG_LOAD_X4(true, 0, NULL, 0),
-> diff --git a/drivers/mtd/nand/spi/skyhigh.c b/drivers/mtd/nand/spi/skyhigh.c
-> index 961df0d74984a8dc8484ac5d7323d172012058e5..ffbedb8d92f659967f6aa0c80d5b0aa7d088929c 100644
-> --- a/drivers/mtd/nand/spi/skyhigh.c
-> +++ b/drivers/mtd/nand/spi/skyhigh.c
-> @@ -21,8 +21,8 @@ static SPINAND_OP_VARIANTS(read_cache_variants,
->  		SPINAND_PAGE_READ_FROM_CACHE_X4_OP(0, 1, NULL, 0),
->  		SPINAND_PAGE_READ_FROM_CACHE_DUALIO_OP(0, 2, NULL, 0),
->  		SPINAND_PAGE_READ_FROM_CACHE_X2_OP(0, 1, NULL, 0),
-> -		SPINAND_PAGE_READ_FROM_CACHE_FAST_OP(0, 1, NULL, 0),
-> -		SPINAND_PAGE_READ_FROM_CACHE_OP(0, 1, NULL, 0));
-> +		SPINAND_PAGE_READ_FROM_CACHE_FAST_1S_1S_1S_OP(0, 1, NULL, 0),
-> +		SPINAND_PAGE_READ_FROM_CACHE_1S_1S_1S_OP(0, 1, NULL, 0));
->  
->  static SPINAND_OP_VARIANTS(write_cache_variants,
->  		SPINAND_PROG_LOAD_X4(true, 0, NULL, 0),
-> diff --git a/drivers/mtd/nand/spi/toshiba.c b/drivers/mtd/nand/spi/toshiba.c
-> index a600aa771519fa04a1caafb8c8e636eab10359c4..bc5adadf6084f48ff482d6846be1c6d2e9157e85 100644
-> --- a/drivers/mtd/nand/spi/toshiba.c
-> +++ b/drivers/mtd/nand/spi/toshiba.c
-> @@ -17,8 +17,8 @@
->  static SPINAND_OP_VARIANTS(read_cache_variants,
->  		SPINAND_PAGE_READ_FROM_CACHE_X4_OP(0, 1, NULL, 0),
->  		SPINAND_PAGE_READ_FROM_CACHE_X2_OP(0, 1, NULL, 0),
-> -		SPINAND_PAGE_READ_FROM_CACHE_FAST_OP(0, 1, NULL, 0),
-> -		SPINAND_PAGE_READ_FROM_CACHE_OP(0, 1, NULL, 0));
-> +		SPINAND_PAGE_READ_FROM_CACHE_FAST_1S_1S_1S_OP(0, 1, NULL, 0),
-> +		SPINAND_PAGE_READ_FROM_CACHE_1S_1S_1S_OP(0, 1, NULL, 0));
->  
->  static SPINAND_OP_VARIANTS(write_cache_x4_variants,
->  		SPINAND_PROG_LOAD_X4(true, 0, NULL, 0),
-> diff --git a/drivers/mtd/nand/spi/winbond.c b/drivers/mtd/nand/spi/winbond.c
-> index 5816b489b57b0070ddeda745cf17c04efc5080cd..8379a1d12dd563e573c6d37cf099759088176da4 100644
-> --- a/drivers/mtd/nand/spi/winbond.c
-> +++ b/drivers/mtd/nand/spi/winbond.c
-> @@ -32,17 +32,17 @@ static SPINAND_OP_VARIANTS(read_cache_dtr_variants,
->  		SPINAND_PAGE_READ_FROM_CACHE_X2_DTR_OP(0, 2, NULL, 0, 80 * HZ_PER_MHZ),
->  		SPINAND_PAGE_READ_FROM_CACHE_DUALIO_OP(0, 1, NULL, 0),
->  		SPINAND_PAGE_READ_FROM_CACHE_X2_OP(0, 1, NULL, 0),
-> -		SPINAND_PAGE_READ_FROM_CACHE_DTR_OP(0, 2, NULL, 0, 80 * HZ_PER_MHZ),
-> -		SPINAND_PAGE_READ_FROM_CACHE_FAST_OP(0, 1, NULL, 0),
-> -		SPINAND_PAGE_READ_FROM_CACHE_OP(0, 1, NULL, 0, 54 * HZ_PER_MHZ));
-> +		SPINAND_PAGE_READ_FROM_CACHE_1S_1D_1D_OP(0, 2, NULL, 0, 80 * HZ_PER_MHZ),
-> +		SPINAND_PAGE_READ_FROM_CACHE_FAST_1S_1S_1S_OP(0, 1, NULL, 0),
-> +		SPINAND_PAGE_READ_FROM_CACHE_1S_1S_1S_OP(0, 1, NULL, 0, 54 * HZ_PER_MHZ));
->  
->  static SPINAND_OP_VARIANTS(read_cache_variants,
->  		SPINAND_PAGE_READ_FROM_CACHE_QUADIO_OP(0, 2, NULL, 0),
->  		SPINAND_PAGE_READ_FROM_CACHE_X4_OP(0, 1, NULL, 0),
->  		SPINAND_PAGE_READ_FROM_CACHE_DUALIO_OP(0, 1, NULL, 0),
->  		SPINAND_PAGE_READ_FROM_CACHE_X2_OP(0, 1, NULL, 0),
-> -		SPINAND_PAGE_READ_FROM_CACHE_FAST_OP(0, 1, NULL, 0),
-> -		SPINAND_PAGE_READ_FROM_CACHE_OP(0, 1, NULL, 0));
-> +		SPINAND_PAGE_READ_FROM_CACHE_FAST_1S_1S_1S_OP(0, 1, NULL, 0),
-> +		SPINAND_PAGE_READ_FROM_CACHE_1S_1S_1S_OP(0, 1, NULL, 0));
->  
->  static SPINAND_OP_VARIANTS(write_cache_variants,
->  		SPINAND_PROG_LOAD_X4(true, 0, NULL, 0),
-> diff --git a/drivers/mtd/nand/spi/xtx.c b/drivers/mtd/nand/spi/xtx.c
-> index 3f539ca0de861c082217701607f96c2a6b7c5378..a0003f52ae8f52ab00374fedc457476136a78568 100644
-> --- a/drivers/mtd/nand/spi/xtx.c
-> +++ b/drivers/mtd/nand/spi/xtx.c
-> @@ -27,8 +27,8 @@ static SPINAND_OP_VARIANTS(read_cache_variants,
->  		SPINAND_PAGE_READ_FROM_CACHE_X4_OP(0, 1, NULL, 0),
->  		SPINAND_PAGE_READ_FROM_CACHE_DUALIO_OP(0, 1, NULL, 0),
->  		SPINAND_PAGE_READ_FROM_CACHE_X2_OP(0, 1, NULL, 0),
-> -		SPINAND_PAGE_READ_FROM_CACHE_FAST_OP(0, 1, NULL, 0),
-> -		SPINAND_PAGE_READ_FROM_CACHE_OP(0, 1, NULL, 0));
-> +		SPINAND_PAGE_READ_FROM_CACHE_FAST_1S_1S_1S_OP(0, 1, NULL, 0),
-> +		SPINAND_PAGE_READ_FROM_CACHE_1S_1S_1S_OP(0, 1, NULL, 0));
->  
->  static SPINAND_OP_VARIANTS(write_cache_variants,
->  		SPINAND_PROG_LOAD_X4(true, 0, NULL, 0),
-> diff --git a/include/linux/mtd/spinand.h b/include/linux/mtd/spinand.h
-> index 10b2c1279c0e2e0e3ddec3b4ce93e7fe25402c9f..868d983b4544d88965f9bd52830e39e8c8c34346 100644
-> --- a/include/linux/mtd/spinand.h
-> +++ b/include/linux/mtd/spinand.h
-> @@ -62,32 +62,32 @@
->  		   SPI_MEM_OP_NO_DUMMY,					\
->  		   SPI_MEM_OP_NO_DATA)
->  
-> -#define SPINAND_PAGE_READ_FROM_CACHE_OP(addr, ndummy, buf, len, ...) \
-> +#define SPINAND_PAGE_READ_FROM_CACHE_1S_1S_1S_OP(addr, ndummy, buf, len, ...) \
->  	SPI_MEM_OP(SPI_MEM_OP_CMD(0x03, 1),				\
->  		   SPI_MEM_OP_ADDR(2, addr, 1),				\
->  		   SPI_MEM_OP_DUMMY(ndummy, 1),				\
->  		   SPI_MEM_OP_DATA_IN(len, buf, 1),			\
->  		   SPI_MEM_OP_MAX_FREQ(__VA_ARGS__ + 0))
->  
-> -#define SPINAND_PAGE_READ_FROM_CACHE_FAST_OP(addr, ndummy, buf, len) \
-> -	SPI_MEM_OP(SPI_MEM_OP_CMD(0x0b, 1),			\
-> +#define SPINAND_PAGE_READ_FROM_CACHE_FAST_1S_1S_1S_OP(addr, ndummy, buf, len) \
-> +	SPI_MEM_OP(SPI_MEM_OP_CMD(0x0b, 1),				\
->  			 SPI_MEM_OP_ADDR(2, addr, 1),			\
->  			 SPI_MEM_OP_DUMMY(ndummy, 1),			\
->  			 SPI_MEM_OP_DATA_IN(len, buf, 1))
->  
-> -#define SPINAND_PAGE_READ_FROM_CACHE_OP_3A(addr, ndummy, buf, len) \
-> +#define SPINAND_PAGE_READ_FROM_CACHE_3A_1S_1S_1S_OP(addr, ndummy, buf, len) \
->  	SPI_MEM_OP(SPI_MEM_OP_CMD(0x03, 1),				\
->  		   SPI_MEM_OP_ADDR(3, addr, 1),				\
->  		   SPI_MEM_OP_DUMMY(ndummy, 1),				\
->  		   SPI_MEM_OP_DATA_IN(len, buf, 1))
->  
-> -#define SPINAND_PAGE_READ_FROM_CACHE_FAST_OP_3A(addr, ndummy, buf, len) \
-> +#define SPINAND_PAGE_READ_FROM_CACHE_FAST_3A_1S_1S_1S_OP(addr, ndummy, buf, len) \
->  	SPI_MEM_OP(SPI_MEM_OP_CMD(0x0b, 1),				\
->  		   SPI_MEM_OP_ADDR(3, addr, 1),				\
->  		   SPI_MEM_OP_DUMMY(ndummy, 1),				\
->  		   SPI_MEM_OP_DATA_IN(len, buf, 1))
->  
-> -#define SPINAND_PAGE_READ_FROM_CACHE_DTR_OP(addr, ndummy, buf, len, freq) \
-> +#define SPINAND_PAGE_READ_FROM_CACHE_1S_1D_1D_OP(addr, ndummy, buf, len, freq) \
->  	SPI_MEM_OP(SPI_MEM_OP_CMD(0x0d, 1),				\
->  		   SPI_MEM_DTR_OP_ADDR(2, addr, 1),			\
->  		   SPI_MEM_DTR_OP_DUMMY(ndummy, 1),			\
-> 
+>   .../net/ethernet/mellanox/mlx5/core/eswitch_offloads.c | 10 =
+++++++++++
+>   drivers/net/ethernet/mellanox/mlx5/core/fs_cmd.c       |  5 +++++
+>   2 files changed, 15 insertions(+)
+>=20
+> diff --git=20
+> a/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c=20
+> b/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c
+> index a6a8eea5980c..dc58e4c2d786 100644
+> --- a/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c
+> +++ b/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c
+> @@ -2667,6 +2667,11 @@ static int esw_set_slave_root_fdb(struct =
+mlx5_core_dev *master,
+>   	if (master) {
+>   		ns =3D mlx5_get_flow_namespace(master,
+>   					     MLX5_FLOW_NAMESPACE_FDB);
+> +		if (!ns) {
+> +			mlx5_core_warn(master, "Failed to get flow namespace\n");
+> +			return -EOPNOTSUPP;
 
+I would return -ENXIO in such cases, you were searching and not found =
+that.
+
+IOW it is obvious that dereferencing a null ptr is not supported.
+
+If you agree, please apply the same comment for your other patch:
+https://lore.kernel.org/netdev/20250402093221.3253-1-hanchunchao@inspur.c=
+om/T/#u
+
+> +		}
+> +
+>   		root =3D find_root(&ns->node);
+>   		mutex_lock(&root->chain_lock);
+>   		MLX5_SET(set_flow_table_root_in, in, @@ -2679,6 +2684,11 @@ static =
+
+> int esw_set_slave_root_fdb(struct mlx5_core_dev *master,
+>   	} else {
+>   		ns =3D mlx5_get_flow_namespace(slave,
+>   					     MLX5_FLOW_NAMESPACE_FDB);
+> +		if (!ns) {
+> +			mlx5_core_warn(slave, "Failed to get flow namespace\n");
+> +			return -EOPNOTSUPP;
+> +		}
+> +
+>   		root =3D find_root(&ns->node);
+>   		mutex_lock(&root->chain_lock);
+>   		MLX5_SET(set_flow_table_root_in, in, table_id, diff --git=20
+> a/drivers/net/ethernet/mellanox/mlx5/core/fs_cmd.c=20
+> b/drivers/net/ethernet/mellanox/mlx5/core/fs_cmd.c
+> index a47c29571f64..18e59f6a0f2d 100644
+> --- a/drivers/net/ethernet/mellanox/mlx5/core/fs_cmd.c
+> +++ b/drivers/net/ethernet/mellanox/mlx5/core/fs_cmd.c
+> @@ -186,6 +186,11 @@ static int mlx5_cmd_set_slave_root_fdb(struct =
+mlx5_core_dev *master,
+>   	} else {
+>   		ns =3D mlx5_get_flow_namespace(slave,
+>   					     MLX5_FLOW_NAMESPACE_FDB);
+> +		if (!ns) {
+> +			mlx5_core_warn(slave, "Failed to get flow namespace\n");
+> +			return -EOPNOTSUPP;
+> +		}
+> +
+>   		root =3D find_root(&ns->node);
+>   		MLX5_SET(set_flow_table_root_in, in, table_id,
+>   			 root->root_ft->id);
+
+
+------=_NextPart_000_0006_01DBA4C1.28DD0B60
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+
+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
+AQUFBwMEMAwGCisGAQQBgjcKAwQwRAYJKoZIhvcNAQkPBDcwNTAOBggqhkiG9w0DAgICAIAwDgYI
+KoZIhvcNAwQCAgCAMAcGBSsOAwIHMAoGCCqGSIb3DQMHMB0GA1UdDgQWBBT7zLhcTtRnG/DUzvnf
+bTyU6LH+GjAfBgNVHSMEGDAWgBReWQOmtExYYJFO9h61pTmmMsE1ajCCAQ8GA1UdHwSCAQYwggEC
+MIH/oIH8oIH5hoG6bGRhcDovLy9DTj1JTlNQVVItQ0EsQ049SlRDQTIwMTIsQ049Q0RQLENOPVB1
+YmxpYyUyMEtleSUyMFNlcnZpY2VzLENOPVNlcnZpY2VzLENOPUNvbmZpZ3VyYXRpb24sREM9aG9t
+ZSxEQz1sYW5nY2hhbyxEQz1jb20/Y2VydGlmaWNhdGVSZXZvY2F0aW9uTGlzdD9iYXNlP29iamVj
+dENsYXNzPWNSTERpc3RyaWJ1dGlvblBvaW50hjpodHRwOi8vSlRDQTIwMTIuaG9tZS5sYW5nY2hh
+by5jb20vQ2VydEVucm9sbC9JTlNQVVItQ0EuY3JsMIIBKQYIKwYBBQUHAQEEggEbMIIBFzCBsQYI
+KwYBBQUHMAKGgaRsZGFwOi8vL0NOPUlOU1BVUi1DQSxDTj1BSUEsQ049UHVibGljJTIwS2V5JTIw
+U2VydmljZXMsQ049U2VydmljZXMsQ049Q29uZmlndXJhdGlvbixEQz1ob21lLERDPWxhbmdjaGFv
+LERDPWNvbT9jQUNlcnRpZmljYXRlP2Jhc2U/b2JqZWN0Q2xhc3M9Y2VydGlmaWNhdGlvbkF1dGhv
+cml0eTBhBggrBgEFBQcwAoZVaHR0cDovL0pUQ0EyMDEyLmhvbWUubGFuZ2NoYW8uY29tL0NlcnRF
+bnJvbGwvSlRDQTIwMTIuaG9tZS5sYW5nY2hhby5jb21fSU5TUFVSLUNBLmNydDBJBgNVHREEQjBA
+oCYGCisGAQQBgjcUAgOgGAwWaGFuY2h1bmNoYW9AaW5zcHVyLmNvbYEWaGFuY2h1bmNoYW9AaW5z
+cHVyLmNvbTANBgkqhkiG9w0BAQsFAAOCAQEAMkzghq4SHO2Fi0jhZ+VOCkTi/CTHr498pTYAVLS0
+sn5HIh5mWwendN0n32AyOhH6rsbFvddJ0fpH3B86HtXSc20xlnq902GTXbW//53nIGrZ4h/JQvyd
+rEd/LXg7eg2MnGwRkF5+4FgA49bazD0rNDgrEWmJxZKw8AKtAbdPwxy1Ht1SnxmzK00VSG2z3SgI
+0Jm9SSBrytasx8AtE28UXL3uda2/agWd7LsHcApmqPBkdBxS4WotiWyEJfYbU4KQhdSB+v8utqmB
+akOC+gFarxuIilfCjNjh0b9jlTgRo5/vG6kpCUBiy1yiOQ9rTi6NjGzDfVCBJ745tySGx7xZYDGC
+A5MwggOPAgEBMHAwWTETMBEGCgmSJomT8ixkARkWA2NvbTEYMBYGCgmSJomT8ixkARkWCGxhbmdj
+aGFvMRQwEgYKCZImiZPyLGQBGRYEaG9tZTESMBAGA1UEAxMJSU5TUFVSLUNBAhN+AAC/VCtcoMk3
+ynmeAAAAAL9UMAkGBSsOAwIaBQCgggH4MBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZI
+hvcNAQkFMQ8XDTI1MDQwMzA5NTIyNVowIwYJKoZIhvcNAQkEMRYEFPuUhRywDRP65b+S7JnVjimR
+ADAtMH8GCSsGAQQBgjcQBDFyMHAwWTETMBEGCgmSJomT8ixkARkWA2NvbTEYMBYGCgmSJomT8ixk
+ARkWCGxhbmdjaGFvMRQwEgYKCZImiZPyLGQBGRYEaG9tZTESMBAGA1UEAxMJSU5TUFVSLUNBAhN+
+AAC/VCtcoMk3ynmeAAAAAL9UMIGBBgsqhkiG9w0BCRACCzFyoHAwWTETMBEGCgmSJomT8ixkARkW
+A2NvbTEYMBYGCgmSJomT8ixkARkWCGxhbmdjaGFvMRQwEgYKCZImiZPyLGQBGRYEaG9tZTESMBAG
+A1UEAxMJSU5TUFVSLUNBAhN+AAC/VCtcoMk3ynmeAAAAAL9UMIGTBgkqhkiG9w0BCQ8xgYUwgYIw
+CwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBFjAKBggqhkiG9w0DBzALBglghkgBZQMEAQIwDgYIKoZI
+hvcNAwICAgCAMA0GCCqGSIb3DQMCAgFAMAcGBSsOAwIaMAsGCWCGSAFlAwQCAzALBglghkgBZQME
+AgIwCwYJYIZIAWUDBAIBMA0GCSqGSIb3DQEBAQUABIIBAM4hrLUdN4eh5UgH8Jg8ZV1HomgvIpTi
+zXWcgc7A+8MQI4cGUMUNOdXLuS6TfXZY9cJIE4J2hOYimQlXCWXFFiB9HJyeTDNGne0ilDo+Cm9Y
+zzkPVCU+g3H+Tu2UDg26urtUhux6h0izVzw4W8GmiPLCBwb2rvfhawj42A891I6bB+VkrteODnOO
+7FtbPyskBHlTC/PEBTzfbJKf2Bivts0xre8e1fVHWZNfV8yYpjSvCLbDzWYROrJI0tTtFcssmCkb
+8RqahHZbVEkZ3mkn4n3tz0/5dEgRm7sb0IDhr4sYcGrkZ1Lnj6JSMsyuS3zE4wExafhHFUBEYCiE
+QsBWvAMAAAAAAAA=
+
+------=_NextPart_000_0006_01DBA4C1.28DD0B60--
