@@ -1,40 +1,71 @@
-Received: from mout.web.de (mout.web.de [212.227.17.12])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C3FE7F7FC;
-	Thu,  3 Apr 2025 14:02:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E502134CF
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 14:02:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743688939; cv=none; b=FKqAivU1lU92yJ3EyYqep6eTEttY7rNfHoqTQgZIe2WM9Ltb9YCrvjozEOG17I61S6tsKwS6D0NEepFHvOTsEpDsJEG4C6gFnHvaczeFlibS/EmKb3zXFDUnOWl9ijDpO4NQSkB1Q0DM3HFAy9V4+8rYWndMGtPjjoJgTrS/l4w=
+	t=1743688963; cv=none; b=H6OXEpV01wvnTva1EB2ysF9WleSoKY3X4uEtv2EUZox/PaEYrKRkMs2rHFdiIygRHdLuBph+cTzpwaHmbTkFVJDFDs+tHn2ZI19kFdCmW0va9mxyzVzkwppdskfEZ+ObGotmBXkeqEI/hqQPGFnFllZrlA3LhNftyCAtLOadIik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743688939; c=relaxed/simple;
-	bh=XqMDyOW2yJwv3psBvj5za4J5At4ABkybEXd0TlK6Q30=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=NY+bSraP6Jm/IodsLKLYAlZALxHzBZitkaezxr3Np4WVvqFtNwp/T8BU5xu3ls3KtLlcxighD/pr3c9lA3x+HmluqH2QoAXh1E88FOr1cxHb4qqpMvZTXY1i1yK4kCV3eictlHu9v0R12ytv08Jiql9XoioYz5HsV3obITPxtz0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=TUEv1Oem; arc=none smtp.client-ip=212.227.17.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1743688963; c=relaxed/simple;
+	bh=S2I5uMGMmzaswrHxMNr8vYNfkMq3kEcFyspItbcpvic=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oPa5FImG1g/pyR5SuwWStVG/FJGyBbILl1BPWJMsA/XuZlI354CxvwTTOvQN7UItfrZPaPbMy+nKRC0qiO3QpUR8PnX1tG88qVzGGvZhmRUeqIXL+Uo4quwR+niEi/wODooWdKZfZQZoWs1Ubkz0Y/mv4RTSlN4a2Xw/ZybXe40=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LXd5qort; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="TUEv1Oem"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1743688927; x=1744293727; i=markus.elfring@web.de;
-	bh=XqMDyOW2yJwv3psBvj5za4J5At4ABkybEXd0TlK6Q30=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=TUEv1Oem/XV4LfSsW23cBa/lGUUAKtogNZV78S8Fzkbev5XKUTcz/RDliuS3hh+V
-	 979YGjGbdLun4MLPTM4zPayjQIPBXyDYzUu/6lrg5WH4R8m+K31r8RnY2CMGoZj+j
-	 WK3+x/6udxv+QO4XZwbgTbCLicgjQ9nTFWoMGcfcHJcip3UvEIeccDHE/qYpiwBiw
-	 V29pYTkEagABJSLPeuq1Ila/TYqk8AFSIq3bgPQv7TKqJ+s3d4MNx1LYcEkYiFt/F
-	 XyqKPH44xpm1+cfRO88shIfjHAEgUdYFfvT1qmFFlyuS5o/PxiDFWJ7CGORUk4Ts2
-	 WJX+VVTBka5c5d3mpw==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.70.50]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MCGWe-1tr1kj1mh0-000t5L; Thu, 03
- Apr 2025 16:02:07 +0200
-Message-ID: <af37c1e6-4d94-4259-b5b3-0cbc60b6beb6@web.de>
-Date: Thu, 3 Apr 2025 16:02:05 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LXd5qort"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743688959;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3kWqXe38cLRXw8rlot99ne3jbC4BOsP79Qw7Xj1goMU=;
+	b=LXd5qortuvM3CTozhSiBpQQ93+w/ckXyB+acnhouNiK123OcaXJXlxpYjKuZtc5fZSfkOI
+	zLY6aWutK8GCcQWffmOa5wohcygaJioJmde09lSL4HLmrUQ/pAPzp5eS9P3wJyy9QkpUCo
+	pQszNWjrj8V430TbWAiFE1qC1LZUGMs=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-439-cMVQfG9eP6akGKAZCTHjJg-1; Thu, 03 Apr 2025 10:02:37 -0400
+X-MC-Unique: cMVQfG9eP6akGKAZCTHjJg-1
+X-Mimecast-MFC-AGG-ID: cMVQfG9eP6akGKAZCTHjJg_1743688956
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43bd0586b86so5307575e9.3
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 07:02:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743688956; x=1744293756;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=3kWqXe38cLRXw8rlot99ne3jbC4BOsP79Qw7Xj1goMU=;
+        b=Pat7dQiQvA1UetaAfJxkMtwGiQOAxEOpaIaqT8f0iO4CToymp4+WUoKx2hp+3ikNT4
+         ahsg2AzCpzX3iDMJwetox/ZRSaGC3Hi8NSKVWWaIPmgkGz4oEIIZn1/rLXlLG6Hrz5ke
+         GxiS1tyxpBuc0b4WAhrwUPrjiU7OISGl9xlzQ6+pmzZUPmqcHJRu4C7dYyAZZdb81t02
+         v89S0G0YncZVzDVHxdNGjBr4+8COq4v1ZWOiXonbIXd2fAf3wivFprtrn7s5CQBLYpZD
+         Z/UR5xICuHUj9RsRz1fGWlzILm0OpM7BWE4MVklMlkWc72ocbQoyqmlZDlUN2ZEciG49
+         2CFA==
+X-Forwarded-Encrypted: i=1; AJvYcCUeOcR/7W/KJ+DxbJneHWPri7LDz5Ifm/T0wz2ezi7xDO39wM14FNS+p5L1MDRBPxpd4ZjfDJ61/tRd6ZM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzzXGcNcZaCTHS5moIGiEwV3vWTR/Nlgd/nQ/o7XRYsNXYqRQQL
+	teAS6MwVDbKy5HrXgRNJE9BgXLjgKQSJ8g8q5QlOZMk2DGO1/lL36TM6eOVaJUhQIYRdSaU3Bz5
+	Ixb2NcdYgjmpSzSJWmwhEgYw1/j1SlS83x1cJJXLQhHDrVwyhrjf8rt1vl4mcWQ==
+X-Gm-Gg: ASbGncvIHgtWiVKwklC0Q0uSteDhRHzhwdY77mHzW7dV1xWv4NiC259qMJyfupFgSfZ
+	UXiYOaxrNDJsV46LImZ6NqAhG4x71hQwnvRtaChwdgc2tdAXGXVdMKgjs1vGEJrNI9f6vXtVnMh
+	yPTkLEtee/bJl0Hu3hrkLZhEOwoAoC83wHv0Te4oFbKlHnc8wS4bYn2qxCZpFJGXbH1R+vaGx5r
+	zr+XwHF/1rA+UUiwd6YRcOqNWfJNONNZc9ABPvotYkE71C+1RSSNYW2hgDujrwW4MUb9hc1tEHR
+	4ocwrgg7SjGMeQWVFiQDIhxs+70mjCyBl3DgbO7M+DZ08g==
+X-Received: by 2002:a05:600c:1e0d:b0:43d:2313:7b54 with SMTP id 5b1f17b1804b1-43db61d78c9mr209456355e9.3.1743688956066;
+        Thu, 03 Apr 2025 07:02:36 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHEcH3URdYpyXxENBkWaOZCl6SCATd9gstr45DnynhqDGmUUru1LNLrjf8EszoAacInIZ8pkg==
+X-Received: by 2002:a05:600c:1e0d:b0:43d:2313:7b54 with SMTP id 5b1f17b1804b1-43db61d78c9mr209455765e9.3.1743688955644;
+        Thu, 03 Apr 2025 07:02:35 -0700 (PDT)
+Received: from [192.168.88.253] (146-241-68-231.dyn.eolo.it. [146.241.68.231])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ea978378esm51169005e9.1.2025.04.03.07.02.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Apr 2025 07:02:35 -0700 (PDT)
+Message-ID: <d99b52d7-bdd7-4c67-9be5-f5c48edc8afa@redhat.com>
+Date: Thu, 3 Apr 2025 16:02:33 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,57 +73,50 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-To: Nuno Das Neves <nunodasneves@linux.microsoft.com>,
- linux-hyperv@vger.kernel.org
-Cc: LKML <linux-kernel@vger.kernel.org>, Dexuan Cui <decui@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, "K. Y. Srinivasan"
- <kys@microsoft.com>, Michael Kelley <mhklinux@outlook.com>,
- Wei Liu <wei.liu@kernel.org>
-References: <1743528737-20310-1-git-send-email-nunodasneves@linux.microsoft.com>
-Subject: Re: [PATCH] Drivers: hv: Fix bad pointer dereference in
- hv_get_partition_id
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <1743528737-20310-1-git-send-email-nunodasneves@linux.microsoft.com>
+Subject: Re: [PATCH net] bonding: use permanent address for MAC swapping if
+ device address is same
+To: Hangbin Liu <liuhangbin@gmail.com>, netdev@vger.kernel.org
+Cc: Jay Vosburgh <jv@jvosburgh.net>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Nikolay Aleksandrov <razor@blackwall.org>,
+ Simon Horman <horms@kernel.org>, Cosmin Ratiu <cratiu@nvidia.com>,
+ linux-kernel@vger.kernel.org, Liang Li <liali@redhat.com>
+References: <20250319080947.2001-1-liuhangbin@gmail.com>
+Content-Language: en-US
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <20250319080947.2001-1-liuhangbin@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:4soC8Y7HDAB2C+/opn93GBf/dFZc9OVykMt2hGl1RBl8RjC5+yB
- PNh1OxTNy9xsJ3qGpEV6XZ4RZUT1XxWbZBJefb+nA537oTIbVNbhkp4olmUZcnFkvPvCZEC
- H31rWxYyySNg3htu5Qo4GE0KwqVHBBKlkz0Mpqn100RUiAE/K3dGL30Ygp8rEhRui/wWS+n
- aft7zZuFUKe099aOFTTqg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:Bp8ihSXAuvs=;7UzbwVDmDIPJp6SaIUQzgzqcqLr
- Hiemp7hCBvmz8XsSzw/Z/vzcGdZ443hhztz6Ty3d+7/8rbUlqJ/f6F/livazNaZWbo3JGTyLg
- 3KgQwKltvqvijozV71yYTIoibQJC0B+SEeiNyEzUS1xDdjB0RG+lQPJBrK086qBqP4TaF7676
- UFGteWp4sFicZJIsH9LJDxnNyjO53rwB4C+4HqEIvFutYC0m9zRjsXmc0vNGkN6hCGrraH+uW
- KesXq2dumrzDPrX+FkQHNg8USV76jqv83FhcMrVqT+PRZDx58aZwJ0nWAROeJgNT3BjtFLZVG
- aUiq0eoUYyRNpErYwAHtQBazQ7BFC5sxly53JW5fVFMyz8AG/d61kzFjLuO3zOiTsZuimc0ZA
- zhTGEWoTwrtKmbC4Q0TK4djYu07tCgpZ4pZ7bhXPjR7d6lMtOxBJu7xQmRld1VRGm4lGFmv6E
- xn1EHjUbRdVzB2SBt7B6AYyW5RO9c7vvL9nETW+ltCnRcALWBr8+MqWNkz31KZ6AgfGhMGdJg
- 7UtUGA7MXmYsJkmNm9XTY69DcXTDMz6H7AOK+eaJfzteoq3O/qQs9aTuHGNp/uXXCbNEyQu/B
- qK7aM/WPNwmt3b5/HjFkvOMiOkXASF233I5JeLP2Td66uReZgQrjazVwxI1g03BUf6BtqJ23X
- 6YvHFJLM/twIqTuH5edDuEMo3oKew36Eid//7HxsDY+VPebQvmEp5sRwAUKmA2lqEaYvDW8Do
- WD07Eyuqt7WtZTzGtFout1illg46SuTKGcHRKZTbDhRvkAPiHhtwgg9+S0Vzu8qPJnM1WyYj+
- xtCZOx9lq3U9W1aq0Yq551TMIs+2t4w3QXLBVvoGdyILhCoF6vhV/UPabjBEd0a1yKDDdmh+t
- n0RMURdKS0OuYyVEROtdTWPkHjRw3d9ZSPk6EeIpm3ERWiaYRDoeZnfTt3VBJbQGK6YycCYp0
- E1v0rAF4xJU8PsFMwADACLXiLqgGpP8Qww11Nh2jSbKvT+LrkI5Z0Jf7tQNlroifAjvJBeyof
- obUAiAtrPt+6AT8T91owxytYUKRFH9i8OVlninuDaa9PWDWGVCHNNrmBQAYyFIfGm3PTXD7KW
- bE1kKej9WXbpqDA+AjUKzQMG2u2JeiIPULAdvMkq15UL14xVFsamLpRhv8PG35OAXU5xnt8o6
- f7NaLvV5mWMj1PjRYb4C9JWfg7xULGSFxx2tab9cUnenRc3M5ZZzSCwS3CosDBMA1wTW8SY+3
- a8UeZGEHrjxsTUmu/egaSx0il8sNu3x4t6dW5Lw8HxMbbM/4tsXlDB5neExI8mVjOyrR2ZOkJ
- 73wTMMgxt/mw1MuvNtZOvQ0MrJ20PSiKfv1jnqVRbKJSFzUiADxNzeGqtUEr0XifCqY8nmXIE
- 6lVqXo+0sDEI1uVMwPk3x4cze8UtYJ21yAvotCEkPc3vV6Pcx5m0p8wp8k70pY7hJr+m5OcT6
- 1QXfPQrRyj+mxuuviBcTpLgZb4bpdx3blECUH6zNYVMfiXKcy
 
-> 'output' is already a pointer to the output argument, it should be
-> passed directly to hv_do_hypercall() without the '&' operator.
+On 3/19/25 9:09 AM, Hangbin Liu wrote:
+> Similar with a951bc1e6ba5 ("bonding: correct the MAC address for "follow"
+> fail_over_mac policy"). The fail_over_mac follow mode requires the formerly
+> active slave to swap MAC addresses with the newly active slave during
+> failover. However, the slave's MAC address can be same under certain
+> conditions:
+> 
+> 1) ip link set eth0 master bond0
+>    bond0 adopts eth0's MAC address (MAC0).
+> 
+> 1) ip link set eth1 master bond0
+>    eth1 is added as a backup with its own MAC (MAC1).
+> 
+> 3) ip link set eth0 nomaster
+>    eth0 is released and restores its MAC (MAC0).
+>    eth1 becomes the active slave, and bond0 assigns MAC0 to eth1.
 
-See also:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?h=v6.14#n94
+It was not immediately clear to me that the mac-dance in the code below
+happens only at failover time.
 
+I second Jakub's doubt, I think it would be better to change eth0 mac
+address here (possibly to permanent eth1 mac, to preserve some consistency?)
 
-How do you think about to append parentheses to the function name
-in the summary phrase?
+Doing that in ndo_del_slave() should allow bonding to change the mac
+while still owning the old slave and avoid races with user-space.
 
-Regards,
-Markus
+WDYT?
+
+Thanks,
+
+Paolo
+
