@@ -1,224 +1,157 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB3C9250BED
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 14:53:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7C8D2475C8;
+	Thu,  3 Apr 2025 14:53:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743691982; cv=none; b=KuA+lgApwyO7a4d9Xt+EIgJ7gZb4fyZPgm5ggQMMtpi2fZYogl6Qj849DxeVRpM7gUssAKESb11ASttFLeTY0JHj9vYHtV0G+Ty2uvMaJ+f1Z9eQnpsMOLyHeQeyoAtfuLLmKE5JD6xrFplkSFIhLhnk2dJnH2SRBKUILy3ABFE=
+	t=1743692041; cv=none; b=sLrbrhUmJan7RLbbhHWezKC3JP0K9J10sqplq+WDrQ24mNd6c9E22WAZWxfIQfVAfb7hxt+Coah2IVDRAozK4u0xIZ/ilybQqAmQPB1da7fGO29iDEoS0d4fSzKHoy0pl/tYmJvQitzCn1edt3RTogpj7RjiEpcTGHpHYpFwAP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743691982; c=relaxed/simple;
-	bh=TwxUKv0HjQmyu3PqtYqNXw8LFD8vSrsVj95vtFrImdg=;
+	s=arc-20240116; t=1743692041; c=relaxed/simple;
+	bh=1HW2J9szfZcfQayWxnE0sHRZHkTM+3aadWMY9TyaNdU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n0yATq+7Oy91NOuIy95w35Oz6LZGj95avf0PqYQ/LygS+F8MYPCcANtM3xhL2FCXsSWUGpLZGQlFsvsRANwlmxoqL35YkCDtKC/SdIxn+EsgF9SnMjebK1QMk1YrWvrE4K4X++reevqk+8a48AFjjpyBCq7Rai4JDK/02FQI49Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O0gHZaz5; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=EIC0TG2ybkhTMyCRH2f0WPh1B863AzIszVALIxYBG9GWPM2pJHV4mwBMkgK7TEj2up3A4ieW1+wd0CCLh4UbhaN/sL3fQc7oZjQVVmONsn0hJ8A5DweFUzYfjtRUfoRLjwGriKHZSijJQS7XuxCbdZ/MfyIKG9AZ/LNBsVgfJW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KFaLoLcZ; arc=none smtp.client-ip=209.85.208.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O0gHZaz5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48C90C4CEE7;
-	Thu,  3 Apr 2025 14:53:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743691982;
-	bh=TwxUKv0HjQmyu3PqtYqNXw8LFD8vSrsVj95vtFrImdg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=O0gHZaz5RJkepwcCv/17xhxTUbixLwVPI1eHcclWmq2YJeuexK3rEqEimHcn0NRhP
-	 2cS7JVLZ9QqCzY+OZWuRsMtPJ9lnjM+/v7SGQC7e39u/LYVNQV9DKI+2WH872GB/9w
-	 04Qca2vyBzAfQBzM7NVwxdIQcwBqwVjR3W+pU3xDNXA0u27BCnq/36ECH/ikkleuGe
-	 qdl/dJeVJ3w1CYg9cYd+i49b+VGLFY6aCT2rJKWhnfRDI15yfh+79XGPgyi3k7/Ayh
-	 RdzgxYQjb0MJVyTt7Wdn86Q/b41sDg2kako3Y/g4H6z8klRiZ3Rq8RH5Jx6uwVIFHu
-	 MAgMNxurcghhA==
-Date: Thu, 3 Apr 2025 16:52:57 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-	linux-kernel@vger.kernel.org,
-	Peter Zijlstra <a.p.zijlstra@chello.nl>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [GIT PULL] objtool fixes
-Message-ID: <Z-6gyQk2WlHc4DNw@gmail.com>
-References: <Z-xFKa5hiQ5urVwS@gmail.com>
- <CAHk-=wgqa0B9OV+EAQ34-VOUAeVB2o2bXnZXQDG7u+Z=4Cmw8w@mail.gmail.com>
- <n7p2rtrq6vvfteu5szlubng4wj6akgn45suekjdxojrpuxr6dp@oxjfxawkv3xs>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KFaLoLcZ"
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-30bf5d7d107so7752951fa.2;
+        Thu, 03 Apr 2025 07:53:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743692038; x=1744296838; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Oh8FUFZnWO912SrVNU0z7oV+vIAYgIiMRfGsFdHpPvo=;
+        b=KFaLoLcZXXvrZo3ne3Amtu1PREPRkDVfgI/o9S7c7RLxgTmoji3bqR7v7dpB6X1YUX
+         fMtDa3Ls4bsDzAEjWkO3T3BVKzuWKHSxeUwS1j8YZ4hM+Te9RmdRBB7rnYT26X13pcxw
+         u3VMXVCrBsyIrw1Q9JBCBA1C4RPqFVGgdiIbdKOYTTI6RNmZCiFtkF4aZ/FHOmexKWkG
+         90bPZVCBv7db8O2E7cCaKgJwNuzEwGgCIGdHVOLYmCUGbGt4iBpsOgaiIaUZepxpvv/H
+         30aihxO9dbWlo8zuECFvKzR9AkTZ2HDbr2slWsLa/KGGa3fUYyfP7A6dGOMelYIgHDF1
+         Re1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743692038; x=1744296838;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Oh8FUFZnWO912SrVNU0z7oV+vIAYgIiMRfGsFdHpPvo=;
+        b=e38BYN1H+Clh4h4yh8HQlKCvXzvGXkJwyIELU+hEKgcAiyZXcjD4fu1OnEFW8Tssaw
+         MXalcSlkOBYoFcWRqMcSeV139CCx/LaLjBEJo7US9c511Uf0njTFo1+7u5eG5vdgfn5S
+         mLKH0zVAadycV7x3GuxAMfChVSCGUloYP/AyVL6Qsxntl2HqHzmBvNa/YhZsdbZF4D31
+         dRbjGlnTdR4COsOqg6aPD+TVW+LciTc+lFsenzfOVeYZDGEVa74+H6IiZWGK5bzxCVfn
+         hfDbvAfKh6AxczVfvTmlXtN5mDa8yhUpxg1vrIBEsMGio+PlW9U8HOkQ013eknaMNu5N
+         odOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU+IYuaOdyTuDaXyEhKU7bFZljU2Gwsmig4AO7kvWmci9Su/YVR0yfD/xaQ0GpkGTMRuZMny4iEqCGHOgHY@vger.kernel.org, AJvYcCWOVHE/YZfT7WZkdRvRNihOXeQ0ahXBxy51+T5nHPOysMa9jfjhWVn77RXCMvdPBQaEtYloRgrZoNTb@vger.kernel.org
+X-Gm-Message-State: AOJu0YzoD9NYdI/gtWSyUzG5HKCn3U9NsEzEtExnRr7rpunIdIv9qm4k
+	cFw1Bu0Bg/h+Xn5+nmIhuXy8s3j3Qh/ix4MoOIflXS6I+WyToK7/
+X-Gm-Gg: ASbGncsBBXwKhtaOQyy849gqdq/pZQwCfWID6Tp/X8qbTY9s8yoqUBTLuvZ6bRn+eZm
+	ispPZDIOFAH5yTZFAywrHMdMh8FscCWkqFgZwhHF4jcFITb9sXaVZZqEQmHqIH/H3YoGUBpNHYM
+	/Ql0WsncT84SivciXhCOdlDxXeSDmmTXUy7zmgFagvl+l8oFaetKD9IXtvrDK3Z3M8aE5FDI06h
+	qmbBQK/3jGxbm8COMZ+Zk40nc2mncI1RedPNVy2LTMIcBVxe5VOzyzUz/vVkqDoI4xlTczJQRrt
+	ObCuPYF8izYVEor8aihiNFYpolxg3QRrIXBQ9mIcEtdkkIlAlR627rhv83a3yN0TzbTdoTHpZRC
+	KATV0di9K6jg3YNU5
+X-Google-Smtp-Source: AGHT+IFr/ZQ8fQxwv6L85p0npeEqoBszB5XUE5CN/N6qEJuyXQpYUL11SZCknXJaO6nELi+XVOR9hQ==
+X-Received: by 2002:a05:651c:2122:b0:30c:12b8:fb76 with SMTP id 38308e7fff4ca-30de024ada2mr62681471fa.15.1743692037619;
+        Thu, 03 Apr 2025 07:53:57 -0700 (PDT)
+Received: from gmail.com (83-233-6-197.cust.bredband2.com. [83.233.6.197])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30f0314b58esm2398931fa.52.2025.04.03.07.53.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Apr 2025 07:53:56 -0700 (PDT)
+Date: Thu, 3 Apr 2025 16:53:55 +0200
+From: Marcus Folkesson <marcus.folkesson@gmail.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, dri-devel@lists.freedesktop.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] dt-bindings: st7571-i2c: Add Sitronix ST7571 panel
+ bindings
+Message-ID: <Z-6hAzDHm8zOOrrw@gmail.com>
+References: <20250402-st7571-v1-0-351d6b9eeb4a@gmail.com>
+ <20250402-st7571-v1-1-351d6b9eeb4a@gmail.com>
+ <20250402-rare-slick-carp-dbcab9@krzk-bin>
+ <Z-5jhrwTfu4WMk5n@gmail.com>
+ <4dbdea1f-dc22-4c66-b253-c3fd625edc67@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="BsHP1+c7dvF4bVP1"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <n7p2rtrq6vvfteu5szlubng4wj6akgn45suekjdxojrpuxr6dp@oxjfxawkv3xs>
+In-Reply-To: <4dbdea1f-dc22-4c66-b253-c3fd625edc67@kernel.org>
 
 
-* Josh Poimboeuf <jpoimboe@kernel.org> wrote:
+--BsHP1+c7dvF4bVP1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> On Wed, Apr 02, 2025 at 10:58:15AM -0700, Linus Torvalds wrote:
+On Thu, Apr 03, 2025 at 04:28:22PM +0200, Krzysztof Kozlowski wrote:
+> On 03/04/2025 12:31, Marcus Folkesson wrote:
+> >>> +    i2c {
+> >>> +        #address-cells =3D <1>;
+> >>> +        #size-cells =3D <0>;
+> >>> +
+> >>> +        display@3f {
+> >>
+> >> Look how this is called in other bindings... The binding and example a=
+re
+> >> not following existing code. Why? Why doing something entirely
+> >> different?
+> >=20
+> > Sorry, I'm not sure what you mean here.
+> You added code entirely different than existing code. Why doing
+> something entirely different? Open any other panel and look how it is
+> called.
 
-> > Apparently nobody else ever looks at generated code, but dammit, the
-> > clac/stac code generation has turned the ugly up to 11.
+This is still unclear to me.
 
-BTW., I do look at generated code, and I know others do too, but at the 
-.o most of the time, not at the .s code, via two ways:
+I assume you are referring to the display@3f?
+I can see many other panels use display@<address>, e.g.
+elgin,jg10309-01.yaml
+and=20
+sitronix,st7735r.yaml
 
-      1) objdump --disassemble-all .o
-    
-      2) perf top's live kernel function annotation and disassembler 
-         feature that uses /dev/mem. (While turning off KASLR, 
-         ptr-obfuscation, turning perf_event_paranoid up to 11^H -1, 
-         etc.)
+Those are using address 0, but that is because they are SPI devices,
+this is a I2C device and address 0 is not valid.=20
+There are plenty of examples of I2C devices using the real addresses in the
+node name.
 
-Such output is more readable to me:
+Or do you want me to call it panel@3f ?
+I can go with that if it is preferred.
 
-   # [ __memmove_avx_unaligned_erms annotated screen: ]
+>=20
+> Best regards,
+> Krzysztof
 
-   0.00  1ea:   vzeroupper      
-              ← retq            
-                nop             
-         1f0:   testq      %rcx,%rcx
-              ↑ je         1ea  
-         1f5:   vmovdqu    0x20(%rsi), %ymm5
-                vmovdqu    0x40(%rsi), %ymm6
-                leaq       -0x81(%rdi,%rdx),%rcx
-                vmovdqu    0x60(%rsi), %ymm7
-                vmovdqu    -0x20(%rsi,%rdx), %ymm8
-                subq       %rdi,%rsi
-                andq       $-0x20,%rcx
-                addq       %rcx,%rsi
-                nop             
-   5.87  220:   vmovdqu    0x60(%rsi), %ymm1
-   8.09         vmovdqu    0x40(%rsi), %ymm2
-  10.34         vmovdqu    0x20(%rsi), %ymm3
-  11.29         vmovdqu    (%rsi), %ymm4
-  13.45         addq       $-0x80,%rsi
-  13.47         vmovdqa    %ymm1,0x60(%rcx)
-  11.26         vmovdqa    %ymm2,0x40(%rcx)
-   9.16         vmovdqa    %ymm3,0x20(%rcx)
-   7.45         vmovdqa    %ymm4,(%rcx)
-   4.98         addq       $-0x80,%rcx
-   4.57         cmpq       %rcx,%rdi
-              ↑ jb         220  
-                vmovdqu    %ymm0, (%rdi)
-                vmovdqu    %ymm5, 0x20(%rdi)
-                vmovdqu    %ymm6, 0x40(%rdi)
-                vmovdqu    %ymm7, 0x60(%rdi)
-                vmovdqu    %ymm8, -0x20(%rdx,%rdi)
-                vzeroupper      
-              ← retq            
-                nop             
-                nop             
+Best regards,
+Marcus Folkesson
 
-( and the 'P' key within perf-top will print this out into the separate
-  __memmove_avx_unaligned_erms.annotation for editor based inspection.   )
+--BsHP1+c7dvF4bVP1
+Content-Type: application/pgp-signature; name=signature.asc
 
-because:
-    
-     - this kind of disassembler output is more standardized, 
-       regardless of compiler used,
-    
-     - it's generally less messy looking,
-    
-     - it gives ground-truth instead of being some intermediate layer
-       in the toolchain that might or might not be the real deal,
+-----BEGIN PGP SIGNATURE-----
 
-     - it shows alignment and the various other effects linkers may 
-       apply,
+iQIzBAEBCAAdFiEEBVGi6LZstU1kwSxliIBOb1ldUjIFAmfuoP4ACgkQiIBOb1ld
+UjL+dBAA0pHFn/eRrynPDT9PQ/BqIumgyZwTUV/jSUAJJoZjfDmo28iG47/Xg6LM
+D/eriitszDo6l9HvvTyESEqb3vPmi4xdVxN7RBErYdwFByyv4vQtquv9sNJNhiBP
+41mDv0m2H2yksn4iV3XY68i+mGrnf2V/cUhe+VaGWmnOQtxUXHjUi0goSt6PDxYX
+J3rMsJX1+U7E6Xh8U3JfAmeevOfzh1RjxdbksNN9gX2twMRPSyTMBPHJVUiPsEbr
+lb4V0OGI5XqzIcVkg3TFkKZz2gmkZf6XvxY9gFpYm7OUFEOehJZZyD7ZAsvDL2Kq
+DcxnJjmnsf9D8n5DlQGzVLTL8EcJpQPb5v578DrNXRKKyoV4m8oyW3ZSaOnhko65
+7HokSAtp2QoXlHfpEkmDcAZruD4/r5aZvb3Hkcxm83nv5UP/PxKV2xBnXMSLqtMY
+/9kI7YvrtifhhIoiWXXcy2SbY4+EazLnaVxgSN8NpCh7XI7MvLoHsq72wxndEz04
+pyw3rD4crtw0hlHrhgexb2hhPkeLofuccNMad0httVt5mLVNFseRABE2sQ++j6Zo
+R1IE0GB2GHx3bHwj9r9d15kzz5huQe09TLL4TVOPdYe3h77VsoXxqAmTvR0JpKuc
+LAbzjJzXNVlxuyyS61j3c1JrOVK7auCp/qT7tzkHWT14BJEMNgA=
+=rqvK
+-----END PGP SIGNATURE-----
 
-     - there's profiling data overlaid if it's a perf top run,
-
-     - and on a live kernel it also sees through the kernel's various
-       layers of runtime patching code obfuscation facilities, also
-       known as: alternative-instructions, tracepoints and jump labels.
-
-The compiler's .s is really a last-ditch way to look at generated 
-machine code, for me at least.
-
-> >
-> > Yes, the altinstruction replacement thing was already making the
-> > generated asm hard to read, but now it's *also* adding this garbage to
-> > it:
-> >
-> >         911:
-> >         .pushsection .discard.annotate_insn,"M",@progbits,8
-> >         .long 911b - .
-> >         .long 6
-> >         .popsection
-> > 
-> > which is just pure unadulterated pointless noise.
-> > 
-> > That "annotation #6" is WORTHLESS.
-> > 
-> > Dammit, objtool could have figured that annotation out ON ITS OWN
-> > without generating shit in our code. It's not like it doesn't already
-> > look at alternatives, and it's not like it couldn't just have seen
-> > "oh, look, it's a nop instruction with a clac/stac instruction as an
-> > alternative".
-> 
-> Ugh, fragile hard-coded special cases like that are exactly what we're
-> trying to get away from.  They make the code unmaintainable and they end
-> up triggering false positives, just like the one fixed by that patch in
-> the first place.
-
-So the problem is, by reducing objtool complexity a bit:
-
-   # 1154bbd326de objtool: Fix X86_FEATURE_SMAP alternative handling
-
-   8 files changed, 37 insertions(+), 89 deletions(-)
-
-and fixing these two false positive warnings where the 'objtool looks 
-at the alternatives code' heuristics failed:
-
-  arch/x86/mm/fault.o: warning: objtool: do_user_addr_fault+0x8ec: __stack_chk_fail() missing __noreturn in .c/.h or NORETURN() in noreturns.h
-  arch/x86/mm/fault.o: warning: objtool: do_user_addr_fault+0x8f1: unreachable instruction
-
-... we have now uglified the kernel's .s asm output space for all 
-affected stac()/clac() using functions:
-
-    starship:~/tip> diff -up usercopy.s.before usercopy.s.after
-    --- usercopy.s.before	2025-04-03 16:33:07.286944538 +0200
-    +++ usercopy.s.after	2025-04-03 16:32:41.770041092 +0200
-    @@ -78,11 +78,16 @@ copy_from_user_nmi:
-     # ./include/linux/uaccess.h:244: 	current->pagefault_disabled++;
-     	addl	$1, 2748(%rdx)	#, _25->pagefault_disabled
-     # ./include/linux/uaccess.h:266: 	barrier();
-    -# ./arch/x86/include/asm/smap.h:35: 	alternative("", "stac", X86_FEATURE_SMAP);
-    +# ./arch/x86/include/asm/smap.h:35: 	alternative(ANNOTATE_IGNORE_ALTERNATIVE "", "stac", X86_FEATURE_SMAP);
-     #APP
-     # 35 "./arch/x86/include/asm/smap.h" 1
-     	# ALT: oldinstr
-     771:
-    +	911:
-    +	.pushsection .discard.annotate_insn,"M",@progbits,8
-    +	.long 911b - .
-    +	.long 6
-    +	.popsection
-     	
-     772:
-     # ALT: padding
-    @@ -140,10 +145,15 @@ copy_from_user_nmi:
-      .popsection
-     
-     # 0 "" 2
-    -# ./arch/x86/include/asm/smap.h:29: 	alternative("", "clac", X86_FEATURE_SMAP);
-    +# ./arch/x86/include/asm/smap.h:29: 	alternative(ANNOTATE_IGNORE_ALTERNATIVE "", "clac", X86_FEATURE_SMAP);
-     # 29 "./arch/x86/include/asm/smap.h" 1
-     	# ALT: oldinstr
-     771:
-    +	911:
-    +	.pushsection .discard.annotate_insn,"M",@progbits,8
-    +	.long 911b - .
-    +	.long 6
-    +	.popsection
-     	
-     772:
-     # ALT: padding
-
-Is there a way to make this more compact, more readable?
-
-Or if not, we just have to do the more fragile thing I suspect?
-It's a tool after all.
-
-Thanks,
-
-	Ingo
+--BsHP1+c7dvF4bVP1--
