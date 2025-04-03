@@ -1,122 +1,165 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D17903C0B;
-	Thu,  3 Apr 2025 10:04:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F3DF242914;
+	Thu,  3 Apr 2025 10:05:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743674700; cv=none; b=e1+ROevHt6P1MJakutE1sc2EUbO/m7oQXu9kU31RiviFzA4d9PM3J7k16Kejq0K5gL8VEUI0oEs442oXgs2M+ZueLoXRiNrNW7P+ZOdg5orCVvY/UHfUFxl/pbSOVjywFwFfoho6tWLJXXqIL/jNG/144837ssDydc9zrdJup3Q=
+	t=1743674726; cv=none; b=E9Qrf9UpT8UEhgwiRs+RffdIJWMv0NreV0rZV6LbSMk7BdG+r7V+TORK0vKyWl3ZO97ft5xddOfTHZvvsmdskXC88Kw8dJz6TuqL94rlzZtHdcxjAL/rGf6j0fsCR1LzC9kVcEtSlpZMrGBIo5ODFWFqQawnKzO3jsNdjOOysdA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743674700; c=relaxed/simple;
-	bh=6TPulnYtAiORK9jNRV3kKjVicMssQCkIc+220wQrMvE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=jcMQ1F4HG/PQ8i58lOrmYPe0DeW7nvSz0o8UaO3gVcBJ+rq2gXpBdrZm7eU9HDNWxWfqVqLfkx1jM3fPu2WuJWqZuGs1QIBhBLmyky9Q/mlarIT75TS8Ym7G8MOtbNE/n9MuqbqMBCdqc9Stwrh/YI9W7huDjRAXy7EOkseMSiU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=YmpXCYSv; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1743674726; c=relaxed/simple;
+	bh=VZJ6WOI/SuQ08FQpls6TmDhOFgJH3ksO9l4DB+vGrAA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ux7wl0A4OHGkpj7CXQQQTFyzUKZ57L3OBBqaXXH5QC+kFJUFWa0fZrCY0rlUrBkZ/HYvqExq6IDeldvNqxjReSV14w/YfRG1er1/2xSdbE+29mTnjPhdp0xQJO3m5zHEh3b5vqEXTzeXEV3/4A4T1LvVSUZZ0xuNJjW84YN02ug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fA/pQvnl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="YmpXCYSv"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5339s17g013669;
-	Thu, 3 Apr 2025 10:04:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=vD9hWD4n2aJM0+NpJoWfA+
-	3ijVJmtaSWO2xbxMunyMo=; b=YmpXCYSvXkXdZnUjBWX3P409XXwpA0EGWj/ISy
-	Gh7KnBp+hAZ1iqx9/JhZpiTNXxKWIOMUbgGfJOTQN+9RO7rbl4XhSdxbSoZzvYes
-	6wJMI4VMbFECPNthBz3OHDD+VeZAiJSq9uhanHYXWEY0dsltUQIUEeY+W9arVl+D
-	zWRhyubm8rhQvHuy0zxwe69q/EZ6ooPe/mKWRiBxuPdTpA7zmnh5pA86yiRDVMGr
-	juqiqY/4BIja8Xu1AAsnbeZ/ITEc8BVb58ZC+gRii84/4CqAza83NM4wL9ZIEoyP
-	C/j8A6I6xrZhu1HnGN4PQHJWOzzTa860OyQM6xJ0ziQ3DamQ==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45spnp0a1r-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 03 Apr 2025 10:04:49 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 533A4mdI020500
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 3 Apr 2025 10:04:48 GMT
-Received: from hu-rajkbhag-blr.qualcomm.com (10.80.80.8) by
- nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Thu, 3 Apr 2025 03:04:45 -0700
-From: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
-Date: Thu, 3 Apr 2025 15:34:29 +0530
-Subject: [PATCH ath-next] wifi: ath12k: fix cleanup path after mhi init
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fA/pQvnl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E361C4CEE3;
+	Thu,  3 Apr 2025 10:05:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743674725;
+	bh=VZJ6WOI/SuQ08FQpls6TmDhOFgJH3ksO9l4DB+vGrAA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fA/pQvnlYR5k7TApr2skxozgAc4nIZwluPOEp9LbXP5aYaORp55ZlrSbC3e4OEHW0
+	 eTTMRGXdOOSJ+vbOAwGjpDLJY628FUmxzWibffIv2OxW9KbW8DNJ8f/j2f6Cqf38H3
+	 FwuP+YMOnNxYdFkDijgH7K4pKKskaigCHwN0evcvLPUFBBzhKRtMvnFYDnjlIbv3/8
+	 8Yu4/tM+6kSeT0D7BjHN1x6it/KqXwdS4nPuVH6pnLWXsKKUCCUVs0nZpHxaz+H/ge
+	 r3YGR0/wVcPo/dQtj1iLanajdYXtJY6nEGwEwZ6O7DyrFekjXSpOu4CqXgPGvNdLLx
+	 /JrjbijUFJzEA==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1u0HRy-000000000iG-1BL8;
+	Thu, 03 Apr 2025 12:05:30 +0200
+Date: Thu, 3 Apr 2025 12:05:30 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Cristian Marussi <cristian.marussi@arm.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	arm-scmi@vger.kernel.org, sudeep.holla@arm.com,
+	james.quinlan@broadcom.com, f.fainelli@gmail.com,
+	vincent.guittot@linaro.org, peng.fan@oss.nxp.com,
+	michal.simek@amd.com, quic_sibis@quicinc.com,
+	dan.carpenter@linaro.org, maz@kernel.org
+Subject: Re: [RFC PATCH 3/3] [NOT FOR UPSTREAM] firmware: arm_scmi: quirk:
+ Ignore FC bit in attributes
+Message-ID: <Z-5daoJn22XTprwk@hovoldconsulting.com>
+References: <20250401122545.1941755-1-cristian.marussi@arm.com>
+ <20250401122545.1941755-4-cristian.marussi@arm.com>
+ <Z-5F8eTaZB2gLTNs@hovoldconsulting.com>
+ <Z-5QGXj0wXMvtasf@pluto>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250403-ath12k-cleanup-v1-1-ad8f67b0e9cf@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIAC1d7mcC/x2MSQqAMAwAvyI5G0jrcvAr4qGkUYNSpVURxL9bP
- A7MzANJokqCrnggyqVJt5DBlAXw7MIkqD4zWLIN1VShO2ZjF+RVXDh3tNy0TGSc8Qw52qOMev/
- DHrKLQe4Dhvf9AMGh3JdqAAAA
-X-Change-ID: 20250403-ath12k-cleanup-2c56c001a1dc
-To: Johannes Berg <johannes@sipsolutions.net>,
-        Jeff Johnson
-	<jjohnson@kernel.org>, Kalle Valo <kvalo@kernel.org>,
-        Kang Yang
-	<quic_kangyang@quicinc.com>
-CC: Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
-        <linux-wireless@vger.kernel.org>, <ath12k@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
-X-Mailer: b4 0.14.2
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: d0EL3m6pxSUE0g61rW8D6xCndBoNlMc-
-X-Authority-Analysis: v=2.4 cv=N/gpF39B c=1 sm=1 tr=0 ts=67ee5d41 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=hDZruuR0RIJL45ME4G0A:9 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: d0EL3m6pxSUE0g61rW8D6xCndBoNlMc-
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-03_04,2025-04-02_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- clxscore=1015 adultscore=0 mlxscore=0 lowpriorityscore=0 bulkscore=0
- impostorscore=0 spamscore=0 phishscore=0 suspectscore=0 mlxlogscore=999
- malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504030035
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z-5QGXj0wXMvtasf@pluto>
 
-Currently, the 'err_pci_msi_free' label is misplaced, causing the cleanup
-sequence to be incorrect. Fix this by moving the 'err_pci_msi_free' label
-to the correct position after 'err_irq_affinity_cleanup'.
-
-Tested-on: QCN9274 hw2.0 PCI WLAN.WBE.1.3.1-00209-QCAHKSWPL_SILICONZ-1
-
-Fixes: a3012f206d07 ("wifi: ath12k: set IRQ affinity to CPU0 in case of one MSI vector")
-Signed-off-by: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
----
- drivers/net/wireless/ath/ath12k/pci.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/net/wireless/ath/ath12k/pci.c b/drivers/net/wireless/ath/ath12k/pci.c
-index 7f1bb150f326b317157f6721d990d61a27f38d6a..fcb9c40b227b7baaf49f6a590c495f47ca8d2f55 100644
---- a/drivers/net/wireless/ath/ath12k/pci.c
-+++ b/drivers/net/wireless/ath/ath12k/pci.c
-@@ -1706,12 +1706,12 @@ static int ath12k_pci_probe(struct pci_dev *pdev,
- err_mhi_unregister:
- 	ath12k_mhi_unregister(ab_pci);
+On Thu, Apr 03, 2025 at 10:08:41AM +0100, Cristian Marussi wrote:
+> On Thu, Apr 03, 2025 at 10:25:21AM +0200, Johan Hovold wrote:
+> > On Tue, Apr 01, 2025 at 01:25:45PM +0100, Cristian Marussi wrote:
  
--err_pci_msi_free:
--	ath12k_pci_msi_free(ab_pci);
--
- err_irq_affinity_cleanup:
- 	ath12k_pci_set_irq_affinity_hint(ab_pci, NULL);
- 
-+err_pci_msi_free:
-+	ath12k_pci_msi_free(ab_pci);
-+
- err_pci_free_region:
- 	ath12k_pci_free_region(ab_pci);
- 
+> > > +#define QUIRK_PERF_FC_FORCE						\
+> > > +	({								\
+> > > +		if (pi->proto->id == SCMI_PROTOCOL_PERF ||		\
+> > > +		    message_id == 0x5 /* PERF_LEVEL_GET */)		\
+> > 
+> > This should be logical AND and PERF_LEVEL_GET is 0x8 (currently
+> > fastchannel is enabled for all PERF messages).
+> 
+> ...right...not sure how I botched this condition completely...my bad...
+> (even the comment is wrong :P...)
 
----
-base-commit: c0d45354abf5763f3de37d0c59fd863d193c7275
-change-id: 20250403-ath12k-cleanup-2c56c001a1dc
+The PERF_LEVEL_GET comment? That one is correct, right? :)
 
+> > > +			attributes |= BIT(0);				\
+> > > +	})
+> > > +
+> > >  static void
+> > >  scmi_common_fastchannel_init(const struct scmi_protocol_handle *ph,
+> > >  			     u8 describe_id, u32 message_id, u32 valid_size,
+> > > @@ -1924,6 +1931,7 @@ scmi_common_fastchannel_init(const struct scmi_protocol_handle *ph,
+> > >  
+> > >  	/* Check if the MSG_ID supports fastchannel */
+> > >  	ret = scmi_protocol_msg_check(ph, message_id, &attributes);
+> > > +	SCMI_QUIRK(perf_level_get_fc_force, QUIRK_PERF_FC_FORCE);
+> > 
+> > This is cool and I assume can be used to minimise overhead in hot paths.
+> > Perhaps you can have concerns about readability and remembering to
+> > update the quirk implementation if the code here changes.
+> 
+> My main aim here was to be able to define the quirk code as much as
+> possible in the proximity of where it is used...so that is clear what it
+> does and dont get lost in some general common table....and the macro was
+> a way to uniform the treatment of the static keys...
+> 
+> ...but I am still not sure if all of these macros just degrade visibility
+> and we could get rid of them...would be really cool to somehow break the
+> build if the code "sorrounding" the SCMI_QUIRK changes and you dont update
+> (somehow) the quirk too...so as to be sure that the quirk is taking care of
+> and maintained...but I doubt that is feasible, because, really, how do you
+> even deternine which code changes are in proximity enough to the quirk to
+> justify a break...same block ? same functions ? you cannot really know
+> semantically where some changes can impact this part of the code...
+> ..I supppose reviews and testing is the key and the only possible answer
+> to this..
+
+Yeah, it goes both ways. Getting the quirk implementation out of the way
+makes it easier to follow the normal flow, but also makes it a bit
+harder to review the quirk. Your implementation may be a good trade-off.
+
+> > Does it even get compile tested if SCMI_QUIRKS is disabled?
+> 
+> It evaluates to nothing when CONFIG_ARM_SCMI_QUIRKS is disabled...
+> ...so maybe I could add a Kconfig dep on COMPILE_TEST ....if this is what
+> you mean..
+
+Perhaps there's some way to get the quirk code always compiled but
+discarded when CONFIG_ARM_SCMI_QUIRKS is disabled (e.g. by using
+IS_ENABLED() in the macro)?
+
+CONFIG_ARM_SCMI_QUIRKS may also need to be enabled by default as it can
+be hard to track down random crashes to a missing quirk.
+
+> > >  /* Global Quirks Definitions */
+> > > +DEFINE_SCMI_QUIRK(perf_level_get_fc_force,
+> > > +		  "your-bad-compatible", NULL, NULL, 0x0);
+> > 
+> > At first I tried matching on the SoC (fallback) compatible without
+> > success until I noticed you need to put the primary machine compatible
+> > here. For the SoC at hand, that would mean adding 10 or so entries since
+> > all current commercial devices would be affected by this.
+> > 
+> 
+> Ah right...I tested on a number of combinations BUT assumed only one
+> compatible was to be found...you can potentially add dozens of this
+> definitions for a number of platforms associating the same quirk to all
+> of them and let the match logic enabling only the proper on...BUT this
+> clearly does NOT scale indeed and you will have to endlessly add new
+> platform if fw does NOT get fixed ever...
+> 
+> > Matching on vendor and protocol works.
+> > 
+> 
+> That is abosutely the preferred way, BUT the match should be on
+> Vendor/SubVendor/ImplVersion ... if the platform properly uses
+> ImplementationVersion to differentiate between firmware builds...
+
+We don't seem to have a subvendor here and if IIUC the version has not
+been bumped (yet) after fixing the FC issue.
+
+> ...if not you will end up applying the quirk on ANY current and future
+> FW from this Vendor...maybe not an issue in this case...BUT they should
+> seriously thinking about using ImplementationVersion properly in their
+> future FW releases...especially if, as of now, no new fixed FW release
+> has ever been released...
+
+Right, in this case it would probably be OK.
+
+But what if the version is bumped for some other reason (e.g. before a
+bug has been identified)? Then you'd currently need an entry for each
+affected revision or does the implementation assume it applies to
+anything <= ImplVersion? Do we want to add support for version ranges?
+
+Johan
