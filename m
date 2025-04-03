@@ -1,154 +1,121 @@
-Received: from mail-vk1-f176.google.com (mail-vk1-f176.google.com [209.85.221.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE3DC1DF975
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 11:08:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC5FD24BD02
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 11:08:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743678493; cv=none; b=jsde4QpnG1WgPwSECpf18oAooT8OCOuiGnWjR7sjPfFa+okdWRMzQGV9csQDCTqhZhQNxK1XEbU2rtoR3zahMmzjQs4f2Tov2z+3DjDMmUrF9fm3IpY3/C9upPI6DA7JD8zBncloJ5f9QThLvyZJ72JZmnh6zH88B9/cVOGAiXg=
+	t=1743678497; cv=none; b=Gsxzq1k9D7ss98fUn+cq1W3v9r+cUhQu87yVzluAnbvVZEDlG9163FkgbmJJFtiZCh+DAEhvxyKUB/SVRE86y6QC03XBX9QxltvLlHN6AJwXxYm2f4j3XU2OXDXOxGHbhLI5MoMgGN0UvTPfYYm5dcMm9aiGS78ft6NsBrdroWo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743678493; c=relaxed/simple;
-	bh=UeIf3gDzNnrDJ+aG9WHGpvz1ocmpXTtX+myrbYbpoIo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Anpwp2BF0vRUWaMbdVfNUwP3WawZP8SKODvPoGWA8WKwh1G5mYJA4HFa78GT9nyDA3IogiN6X+FJRRuyw+YXMI5Sa0d8YC3LhFaj5fDj1WtRvbGVs42TawD5mYcY+jTQafrCwjXPpgoH4eploLhZaGfeVVy5iYqVrMdbRrtnSc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ElxV/OUV; arc=none smtp.client-ip=209.85.221.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1743678497; c=relaxed/simple;
+	bh=+INaQNpJ3+McLmQ2WaEXeW+09PVVAxkscQ51hTKfPaA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FO2SpZZBnMtJc6T36bjd8xn2czqrYlMvWk1LULGuf4MH9lS2zichooeUlGskCl273K2saNAvZefp5ZqDc6KJRUbMw8rCFnGvm1wMpmZzr5SebS67XKY16Fb58j4wbOY6OkaUtMNwzl2cz2Ud0HX3t4uiaCg4TdBqjRrWT8aYu70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=QDt7TI6y; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ElxV/OUV"
-Received: by mail-vk1-f176.google.com with SMTP id 71dfb90a1353d-524038ba657so837976e0c.0
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 04:08:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743678490; x=1744283290; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=xlyDq4gIl9Lr6ROGOTackUkIONaMAtJFwwX5SOMUsOs=;
-        b=ElxV/OUVT5jp1AbAUd0ozHl4jZusXnEBFAAq3yJHUvgIFtgxJchwbRLtjtJJX0o3eD
-         biBhqP82uoBr7GTt+2Xh1rwGXVvh/2AfGtpEoh2vkU15dbvb7fGB6pHRbgFEiZ8oZ+bT
-         dLHCqic6EoqeWRNfRuWTx2I+srg3BTmn8XcPIqgJLIMU9qi9DOXo/AlJcuiLbmqCsiIm
-         hJskp3Xu+xy9H9nJI9jXX54lAXObWzCdCgNnz3ghDNYiFnUdQx+BKKb/aF2hARtpkBJm
-         3Hu1cEu8kGtzT1+SEIbDKQ13F8MMfDsZclXq4H8iWUps88j1ehfRwWz1kOKlI8l9tjM/
-         47BQ==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="QDt7TI6y"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5339rx1o000546
+	for <linux-kernel@vger.kernel.org>; Thu, 3 Apr 2025 11:08:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=qcppdkim1; bh=/5UjTdO9fQkm/+gRvN0hBPemroKS9w9Zn/s
+	PI47gMYM=; b=QDt7TI6yRLQBzZRK01NIWc49GFgRsc1WP712ZM6eXq54BseGlVS
+	mYszHzE4fUeaHdleaK/tui8xq0EoLXwaF03i1Sin+Oh3ZAeuF0rjybl0cu1lbuKh
+	M6Q6QnDIFN5PPkxNxwNEshU5OEr9a6MMsWCbBOWMc0cN/AzhEJIH0txR/mrlkd+j
+	uBrRS25HP3efjZdHkD69NgYAirKQfcnq1OnrlvmurTA9fA+b4BUTe4wUSnOnJhIw
+	2j/X9VxoEbwsqaSUsIrmyBWcDmFSgOnMTw5hcBnsPLkbuU2KIlyQ0ddLg9k1N7NB
+	tEpxw7wIyKb0amMsmEb2VR0GD4sRKLlc2MQ==
+Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com [209.85.216.69])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45s36a3e9s-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 11:08:13 +0000 (GMT)
+Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-2ff5296726fso1276721a91.0
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 04:08:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743678490; x=1744283290;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1743678492; x=1744283292;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=xlyDq4gIl9Lr6ROGOTackUkIONaMAtJFwwX5SOMUsOs=;
-        b=qEbI2keWj25WL5asN62SZfdB3Y7xlf0i0Li0hAad8alEb+M32mri1pbD0YTpYfy4yq
-         uzanK5fVdQjMDvPN5Uyjw8C8Gqo5SYsy/WyFGiyU9Qe8FwEbt51HsaP0ON0l5xjXlZsZ
-         Ukiuxt5pq55xgqIP6QEgOOX3DmldnZnhMXHjyHwBNCrYZ/+e2MzVjs/OjC1g1/MVEIbf
-         EyS2BFt2OyPQuap9muRVZcl5gN1bhyU86rVEOoFsnK2yaUAK0hhxm6XlP1YHdziVcjYb
-         tiYQlXKIyJtnmHqsF0V5vZhk8jokv2Au9zQK6hkhY5Hk6N3SZkPIQA/WxTXm5t4S3Jtv
-         RSHQ==
-X-Gm-Message-State: AOJu0Yz/Mn05GsAfObbA9CIcxjdfvfvLZEmjagKt748AYIyyDLdc4tNO
-	GunDi9WcXnzNpIU6KNnvz+bXcfulsP/N0bGhpAR5DTIPleORiLDs1ug5dS55E9nk9Py1AetPGNe
-	6Jbf4ht1V2twTglTDSRBgrSFYxnX4612ht7YhG1gwdbf4ieN4PE0=
-X-Gm-Gg: ASbGncunnA+VVnnHq3Es2PHLD8+autmp86R1DKcwPBGRTECtaKkEJAW93Y8WpBbjOza
-	WDlQ9YPFHkr3RwCBaxozsqi3e1GH3bkXsDj3ZnXXCP7if532VT+Y+NcJqtuRsvWpZXkTLcJu8O1
-	mgizkEq4SkK0SSU8UhQVd+U8C5rwFhwJA8m8TAxDxniqT4xSPDhDHwN5NzRw==
-X-Google-Smtp-Source: AGHT+IFA6KPAr/9JvLRrdPpJRg6g6D0xJChBb1HAxmoAW7jS9u/YJ2IJribqwlFitpYlfu7S/vxo5M+KHizDfy/TVbA=
-X-Received: by 2002:a05:6122:330d:b0:523:dbd5:4e7f with SMTP id
- 71dfb90a1353d-52756b10bf3mr1945335e0c.3.1743678490066; Thu, 03 Apr 2025
- 04:08:10 -0700 (PDT)
+        bh=/5UjTdO9fQkm/+gRvN0hBPemroKS9w9Zn/sPI47gMYM=;
+        b=r/5qEJNiVASi6A3WumP3zsmfDJPPxhP0qw5nPowh4jWxcLmU7uAswULltqsAREKoAi
+         44nHiRTqegqPIff8OmixQqWpVAaV2amX8jS1iS4fvaSMimQvW/i/eY4jx+Ph/tGqbn4d
+         Opk3Zpn5D8EThr/QIHJdArlTgt9YMmdAKGTeAGu+JcpUKatwwqtStAvx5a8BG4bSa6YB
+         eR+hqKs5CYcPlNFAb2mPMZxsprUNNeaX7wM0XFZXohHimFpT8bMCR6ffB/yMdvkovvQI
+         LUO9MCjgBL6LoLwibhtGed5K8Scxz3sB847vV4pCKtJNjzswVgCOxTohXttwT/fmsCHw
+         etuw==
+X-Forwarded-Encrypted: i=1; AJvYcCUUVOd+qDfBTmBJj0glErxur1LOJgYo3LfQoxr4ElU0TFU75jKKsmOXBIN/xrZZQIdnw/c+2HYTpwEOc7g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzxvdwFyxZPWdt0IC4imExSewBywjbnumdPGgrD6el7zKsUVwN8
+	gxTDbwZcoL5NIJdCTzQ0Fj7Bu+Mbd7xOnWc+L6I39u010h54fEtq6kCRMIdAF7w+KcjRjGguA9x
+	wpiQKQ/5KLGu7TqxMGEAcrVDXMf6TXAkxXTnUaLutaWKi2aYQyuLjPVCIu2ehZOU=
+X-Gm-Gg: ASbGncuEeRjsyqATVJ9Ma8JaGnsqooZajR5tA83xcJaKu/L05XWg8Y2uO6Splebr71S
+	ew5cdopTnXUW/4N8ht9y2aWl2oAdKgxeR4vBPZdyPGsfO1Lba9OVjA9hr2AMgNxQ+SGgRuHvm2y
+	QYB6wV1XCNWQlo1Z2ZOA5wlNAqPP5hMOLHQxHIhlC/AbKI90Uv749kj9Nf26SxDc44+xDKihhKo
+	LF/UaNUpRhy04QLmt8AtvELKqwKY0sAIgmEy/MtR8WQDIAYtQbeKuSx5SiPsQh5Q7raQdT2NnXl
+	hJul5uozdMUX+ZayLGf7hiu/su4qyXMzs5gMboXyuD61
+X-Received: by 2002:a17:90b:5408:b0:2fe:a614:5cf7 with SMTP id 98e67ed59e1d1-3056ee232b3mr8035837a91.3.1743678492064;
+        Thu, 03 Apr 2025 04:08:12 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFkhAXnYOwjvj+ZraBFfoXaC3tWp9r16uIiKUeutTaKxnDtMCGTZqKvlqYWH/h1XArkbkcsDA==
+X-Received: by 2002:a17:90b:5408:b0:2fe:a614:5cf7 with SMTP id 98e67ed59e1d1-3056ee232b3mr8035814a91.3.1743678491686;
+        Thu, 03 Apr 2025 04:08:11 -0700 (PDT)
+Received: from hu-prashk-hyd.qualcomm.com ([202.46.22.19])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30588a3c3a8sm1185414a91.28.2025.04.03.04.08.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Apr 2025 04:08:11 -0700 (PDT)
+From: Prashanth K <prashanth.k@oss.qualcomm.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+        Kees Bakker <kees@ijzerbout.nl>,
+        William McVicker <willmcvicker@google.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Prashanth K <prashanth.k@oss.qualcomm.com>
+Subject: [PATCH v1 0/3] Fixes for USB3 CV Chapter 9.15 tests
+Date: Thu,  3 Apr 2025 16:38:02 +0530
+Message-Id: <20250403110805.865311-1-prashanth.k@oss.qualcomm.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CA+G9fYtzOxx1YWz2X4UYqvxB2vg7ptz6axmz-5HFLD9ieSjURw@mail.gmail.com>
-In-Reply-To: <CA+G9fYtzOxx1YWz2X4UYqvxB2vg7ptz6axmz-5HFLD9ieSjURw@mail.gmail.com>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Thu, 3 Apr 2025 16:37:58 +0530
-X-Gm-Features: ATxdqUH8OMQ6KdpRKZP5fv72MvdhOmm57r-0DZ0nSqzGCbCvwioKA-IrKMZ5GzY
-Message-ID: <CA+G9fYuPHQf2buj7BQ3myGnSQ3yvrhpeiT7LH5rDVtVz1v_cQA@mail.gmail.com>
-Subject: Re: next-20250403: x86_64 mwait.h:30:15: error: invalid operand for instruction
-To: open list <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>, 
-	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>
-Cc: Arnd Bergmann <arnd@arndb.de>, Anders Roxell <anders.roxell@linaro.org>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, Uros Bizjak <ubizjak@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Authority-Analysis: v=2.4 cv=W6M4VQWk c=1 sm=1 tr=0 ts=67ee6c1d cx=c_pps a=vVfyC5vLCtgYJKYeQD43oA==:117 a=fChuTYTh2wq5r3m49p7fHw==:17 a=XR8D0OoHHMoA:10 a=PWc0uLnFobKSz-olugQA:9 a=ZXulRonScM0A:10 a=rl5im9kqc5Lf4LNbBjHf:22
+X-Proofpoint-ORIG-GUID: DtAkdnNdbkHNH3aqxz6gmQX0YrNMSFxv
+X-Proofpoint-GUID: DtAkdnNdbkHNH3aqxz6gmQX0YrNMSFxv
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-03_04,2025-04-02_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 suspectscore=0
+ adultscore=0 mlxlogscore=870 mlxscore=0 bulkscore=0 spamscore=0
+ priorityscore=1501 lowpriorityscore=0 impostorscore=0 phishscore=0
+ malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504030043
 
-+ Uros Bizjak <ubizjak@gmail.com>
+While performing USB3 Command Verifier Chapter 9 tests, failures
+were observed during 9.15 ("Function Remote Wakeup Enabled Test").
+This is due to the following reasons,
 
-On Thu, 3 Apr 2025 at 15:50, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
->
-> Regressions on x86_64 builds tinyconfig, allnoconfig failed with toolchains
-> clang-20 and gcc-13 on the Linux next starting from next-20250403.
->
-> First seen on the next-20250403
->  Good: next-20250402
->  Bad:  next-20250403
->
-> Regressions found on x86_64:
->   - build/gcc-13-tinyconfig
->   - build/gcc-13-allnoconfig
->   - build/clang-20-tinyconfig
->   - build/clang-20-allnoconfig
->
-> Regression Analysis:
->  - New regression? Yes
->  - Reproducibility? Yes
->
-> Boot regression: x86_64 mwait.h:30:15: error: invalid operand for instruction
->
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
->
-> ## Build log
-> In file included from arch/x86/kernel/process.c:36:
-> arch/x86/include/asm/mwait.h:30:15: error: invalid operand for instruction
->    30 |         asm volatile("monitor %0, %1, %2" :: "a" (eax), "c"
-> (ecx), "d" (edx));
->       |                      ^
-> <inline asm>:1:16: note: instantiated into assembly here
->     1 |         monitor %rax, %ecx, %edx
->       |                       ^~~~~
-> In file included from arch/x86/kernel/process.c:36:
-> arch/x86/include/asm/mwait.h:95:15: error: instruction requires: Not 64-bit mode
->    95 |         asm volatile("sti; mwait %0, %1" :: "a" (eax), "c" (ecx));
->       |                      ^
-> <inline asm>:1:7: note: instantiated into assembly here
->     1 |         sti; mwait %eax, %ecx
->       |              ^
-> 2 errors generated.
+1. Interfaces were incorrectly reporting as remote wakeup capable
+   when host requested GET_STATUS.
+2. Remote wakeup failures from DWC3 driver due to timeouts.
 
-Anders bisected this to,
+Address them through this series.
 
-# first bad commit:
-   [cd3b85b27542968198e3d588a2bc0591930ee2ee]
-   x86/idle: Use MONITOR and MWAIT mnemonics in <asm/mwait.h>
+Prashanth K (3):
+  usb: gadget: f_ecm: Add get_status callback
+  usb: gadget: Use get_status callback to set remote wakeup capability
+  usb: dwc3: gadget: Make gadget_wakeup asynchronous
 
+ drivers/usb/dwc3/core.h             |  4 ++
+ drivers/usb/dwc3/gadget.c           | 60 ++++++++++++-----------------
+ drivers/usb/gadget/composite.c      | 12 ++----
+ drivers/usb/gadget/function/f_ecm.c |  7 ++++
+ 4 files changed, 39 insertions(+), 44 deletions(-)
 
->
-> ## Source
-> * Kernel version: 6.14.0
-> * Git tree: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-> * Git sha: f0a16f5363325cc8d9382471cdc7b654c53254c9
-> * Git describe: next-20250403
-> * Project details:
-> https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250403/
-> * Architectures: x86_64
-> * Toolchains: clang-20, gcc-13
-> * Kconfigs: tinyconfig, allnoconfig, lkftconfig
->
-> ## Build
-> * Build log: https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250403/testrun/27871165/suite/build/test/clang-20-allnoconfig/log
-> * Build history:
-> https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250403/testrun/27871165/suite/build/test/clang-20-allnoconfig/history/
-> * Build details:
-> https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250403/testrun/27871165/suite/build/test/clang-20-allnoconfig/
-> * Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2vCvvmy6fhzm3aMcptKXHvRi4Bp/
-> * Kernel config:
-> https://storage.tuxsuite.com/public/linaro/lkft/builds/2vCvvmy6fhzm3aMcptKXHvRi4Bp/config
->
-> --
-> Linaro LKFT
-> https://lkft.linaro.org
+-- 
+2.25.1
 
-Links,
- - https://lore.kernel.org/all/CA+G9fYtzOxx1YWz2X4UYqvxB2vg7ptz6axmz-5HFLD9ieSjURw@mail.gmail.com/
-
-- Naresh
