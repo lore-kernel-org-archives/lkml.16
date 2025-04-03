@@ -1,78 +1,185 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99D7C24BC00;
-	Thu,  3 Apr 2025 11:11:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CD1024BBE1;
+	Thu,  3 Apr 2025 11:12:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743678684; cv=none; b=gnpbUrsFzz8QftkoXNrc5p3OoMO1yxpI6CN1cCykpcBHXlwURodLOaO0bHdyZ9K5syBbmglDj96cSI9wv0HQn2A2QMGlWRNbkJlMkHWRlrQSQjaBuPebA+YsqygUysjErhrxPgAHO3QCjZV5f5U8ha8c+rR/vuC1wOcFVFU1j8U=
+	t=1743678739; cv=none; b=Uc1zodBAUQO7BJ5KhHlpkQFh5wSvizAjH/+W+vnHJ9MAG837415Ps6fkOBF1FQF2X5z6Ch3/2qiadXDd8UXXx24reShk4Oo+u8dblKR7/MRLxyd2d+ehLiUu2a0mQrVUNaS+K/26+mmLv/6wlUpOuAXuXsxewIawxSNZHKeQ+ws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743678684; c=relaxed/simple;
-	bh=dDl5YLB8fWtodZLXtUrO0jZ7f1/8RsDRp5b/qyAhCPw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZpO4JPnbBTLYoOMAzjFOnQWfYw3hYeyfTgFY8eLAr8WKF9btLx1p1ZHmH53sA+kCIPIa5qr2bHqqLC4wLyn1SGh7mM3P9zdtFlMrkPmveQ1uMtIhLkUw8ynk1+udHiB1F6b+Gd8ml6kXWi+ZZTPxZi52OYLgg7N3RCEXL2CROdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=fpjm8wpL; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1743678739; c=relaxed/simple;
+	bh=ogSVMxgN72aBuU2o0uVtAe9d36Kre0+w8LLSPnvE4g4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WMcOssW0OqssTq7pJgTf9VYqdEtVOzf9PfX2eHqbQuLIJx9BQC3jDIHCKACs67v8Vamsq8DhvZN5Mlo0EAqN6DfK40qnfAHNwJKWGuztbyXJ8FCtB60dZxLhrepj+OXH4ehEmlsgHZtzz7jyGpFaduXtVqvg31fOG62LaLDUEMM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eyFg3Apd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="fpjm8wpL"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=NUfddGO7yDhykOwJEI8UwCQ5Z0JTQ3F8HI60e3ORxAQ=; b=fpjm8wpLs/hPWMeHyqVFt7gcIl
-	PulxTSpl8DYOseNmo0pWTXlCgEIP+a5Lhw0MF2/RcMJs8IUDMz4BYqUFqBhXTcEXyy5ieTQ/iGKvI
-	dOZ8kvwR7ms83meDWx4wqypc7dIiSiid+vwTFrHqjSZJYCvP8kThgrpHcbbjmbEahMdcm0i4zFv9i
-	F24GAFutjhHe80Yqq5KkKp7PVtbrTAdp/fDb7fE0+dqHaBmjlA+qwNtJ3FXd+ixQZ5E49OEayAtlU
-	e9/i2o4PzNlOpdeU8i1sun/qphOvxuxIjyToTRQog+3ziTbnwMUUvXdjVk5/PO7RlRDWoltkvEKSs
-	Wxc9OAlw==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1u0ITU-00CSUK-2S;
-	Thu, 03 Apr 2025 19:11:09 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Thu, 03 Apr 2025 19:11:08 +0800
-Date: Thu, 3 Apr 2025 19:11:08 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Christian Marangi <ansuelsmth@gmail.com>
-Cc: Antoine Tenart <atenart@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Richard van Schagen <vschagen@icloud.com>,
-	linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] crypto: inside-secure/eip93 - acquire lock on
- eip93_put_descriptor hash
-Message-ID: <Z-5szPllytn7hQ03@gondor.apana.org.au>
-References: <20250401115735.11726-1-ansuelsmth@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eyFg3Apd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71648C4AF09;
+	Thu,  3 Apr 2025 11:12:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743678739;
+	bh=ogSVMxgN72aBuU2o0uVtAe9d36Kre0+w8LLSPnvE4g4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=eyFg3ApdtYY/FTGhhijAAfZeL++T0Jd7VjIruDSWYHyQ4fdVhX1oykQXAUn7L6MeL
+	 CH4rdZwvbNCUKxvVxCTrGV0aeQDHR4N8EvU3WmVFcqiYg2ajrJj8N+WhQ12wwN9jBQ
+	 aN+wCS1U3jDAmGgBKxPdPdgRyPnmwX3neP3VI+UwAc21fLxt2QwG68cTSZ07r8ymYN
+	 4sd2eea/AP5M9umPa4D4iZlJlFGdcLoMjRTVWFpnjDE7UQAxWGMu70cYUE9Ly8Dp5H
+	 PFr4MpN1OVVJ56whCBbMzoR5002FYIL+qafgx19TufjeHQNArkDDIHxM0T8KOPfYWA
+	 7R/oHEdRJgLaQ==
+Received: by mail-ot1-f49.google.com with SMTP id 46e09a7af769-72b82c8230aso263256a34.2;
+        Thu, 03 Apr 2025 04:12:19 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWHNBInnTnB/aHNKlLoStaiLThSaqaDO6Ru1DhwT4f30tlKB+pZPijkOtGwrEn3guEkF8T6sDVFjWNhXng=@vger.kernel.org, AJvYcCXNiEozWSraibOExeTCVPd8AiEUIfQcKeJTxTQ7yPByGiPzcK7jMwJGJKEB0tRK7LJ4/a/Ztuwfepua@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw2RZtt4tmAbI4Gn3LDPX9FdnHadXKmI3OuOsundJ64Lpn8+iNo
+	iaeepg6Y9JPQCKNmRTGFcQW+wt1v4utstyPebsTG3SzEApYZGxvvHCaVnMaubqbWJSrHhCXcg+l
+	L44yV8ztTXeWlU7M+x5vRt5vchiY=
+X-Google-Smtp-Source: AGHT+IEZaf9Kl+KGCPc4RMkrG8ljVJ8T3vlm0+z8427y7Jf/gbdFQU7E+MxEXyI0mNiqV5fH4QQBcke9iEL9nHuImp4=
+X-Received: by 2002:a05:6830:3987:b0:72b:8c5a:7294 with SMTP id
+ 46e09a7af769-72e2581eae7mr4265172a34.9.1743678738747; Thu, 03 Apr 2025
+ 04:12:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250401115735.11726-1-ansuelsmth@gmail.com>
+References: <Z-WHYbhu1QdjUFPR@intel.com> <Z-bICZUBN_Fk0_mM@intel.com>
+ <Z-eDJUtxjzIjGlJT@black.fi.intel.com> <Z-q_n1g9wIEZc-dm@intel.com>
+ <2d3f3cbe-c33d-4ded-8c19-e2bd2e76a68b@intel.com> <Z-woHnrukI7qtB4m@black.fi.intel.com>
+ <CAJZ5v0j7ob4YQ9weQ6e5iVbHyRwf-6Vk2MU4r9mK11-8wD09RQ@mail.gmail.com>
+ <Z-znv8D3qIcVX-p1@black.fi.intel.com> <Z-z2fz97RwX2kBya@black.fi.intel.com>
+ <CAJZ5v0hpkjH_Q7V70jWpC68YQxKkmh0wpwrPrHcUwQJ6uRGrOQ@mail.gmail.com> <Z-38rPeN_j7YGiEl@black.fi.intel.com>
+In-Reply-To: <Z-38rPeN_j7YGiEl@black.fi.intel.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 3 Apr 2025 13:12:07 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0g-aJXfVH+Uc=9eRPuW08t-6PwzdyMXsC6FZRKYJtY03Q@mail.gmail.com>
+X-Gm-Features: AQ5f1JoF4-_5bKfDoLWHC0gguPoQcwlvzlHYOMkAxTdchA5EAu6d_gDHqIb8Rng
+Message-ID: <CAJZ5v0g-aJXfVH+Uc=9eRPuW08t-6PwzdyMXsC6FZRKYJtY03Q@mail.gmail.com>
+Subject: Re: [PATCH] drm/xe/d3cold: Set power state to D3Cold during s2idle/s3
+To: Raag Jadav <raag.jadav@intel.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>, 
+	lucas.demarchi@intel.com, rodrigo.vivi@intel.com, 
+	"Nilawar, Badal" <badal.nilawar@intel.com>, intel-xe@lists.freedesktop.org, 
+	anshuman.gupta@intel.com, mahesh@linux.ibm.com, oohall@gmail.com, 
+	bhelgaas@google.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 01, 2025 at 01:57:30PM +0200, Christian Marangi wrote:
-> In the EIP93 HASH functions, the eip93_put_descriptor is called without
-> acquiring lock. This is problematic when multiple thread execute hash
-> operations.
-> 
-> Correctly acquire ring write lock on calling eip93_put_descriptor to
-> prevent concurrent access and mess with the ring pointers.
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: 9739f5f93b78 ("crypto: eip93 - Add Inside Secure SafeXcel EIP-93 crypto engine support")
-> Reported-by: Herbert Xu <herbert@gondor.apana.org.au>
-> Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
-> ---
->  drivers/crypto/inside-secure/eip93/eip93-hash.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+On Thu, Apr 3, 2025 at 5:12=E2=80=AFAM Raag Jadav <raag.jadav@intel.com> wr=
+ote:
+>
+> Cc: PCI maintainers
+>
+> On Wed, Apr 02, 2025 at 12:31:48PM +0200, Rafael J. Wysocki wrote:
+> > On Wed, Apr 2, 2025 at 10:34=E2=80=AFAM Raag Jadav <raag.jadav@intel.co=
+m> wrote:
+> > >
+> > > On Wed, Apr 02, 2025 at 10:31:16AM +0300, Raag Jadav wrote:
+> > > > On Tue, Apr 01, 2025 at 09:35:49PM +0200, Rafael J. Wysocki wrote:
+> > > > > On Tue, Apr 1, 2025 at 7:53=E2=80=AFPM Raag Jadav <raag.jadav@int=
+el.com> wrote:
+> > > >
+> > > > ...
+> > > >
+> > > > > > That's not what I meant here. There are multiple issues at play=
+.
+> > > > > >
+> > > > > > 1. An AER is reported[*] on root port during system suspend eve=
+n before we
+> > > > > >    reach any of the driver PM callback. From initial investigat=
+ion it seems
+> > > > > >    like a case of misbehaviour by some child device, but this i=
+s a different
+> > > > > >    issue entirely.
+> > > > > >
+> > > > > > [*] irq/120-aerdrv-145     [002] .....  1264.981023: <stack tra=
+ce>
+> > > > > > =3D> xe_pm_runtime_resume
+> > > > > > =3D> xe_pci_runtime_resume
+> > > > > > =3D> pci_pm_runtime_resume
+> > > > > > =3D> __rpm_callback
+> > > > > > =3D> rpm_callback
+> > > > > > =3D> rpm_resume
+> > > > > > =3D> __pm_runtime_resume
+> > > > > > =3D> pci_pm_runtime_get_sync
+> > > > > > =3D> __pci_walk_bus
+> > > > > > =3D> pci_walk_bus
+> > > > > > =3D> pcie_do_recovery
+> > > > > > =3D> aer_process_err_devices
+> > > > > > =3D> aer_isr
+> > > > > >
+> > > > > > 2. Setting explicit pci_set_power_state(pdev, PCI_D3cold) from =
+xe_pm_suspend().
+> > > > > >    Although we see many drivers do it for their case, it's quit=
+e a questionable
+> > > > > >    choice (atleast IMHO) to hard suspend the device from driver=
+ PM callback
+> > > > > >    without any regard to runtime_usage counter. It can hide pot=
+ential issues
+> > > > > >    like AER during system suspend (regardless of whether or not=
+ it is supported
+> > > > > >    by the driver, since it is supposed to keep the device activ=
+e on such a
+> > > > > >    catastrophic failure anyway), but I'll leave it to the exper=
+ts to decide.
+> > > > >
+> > > > > If the driver does not set DPM_FLAG_SMART_SUSPEND, and xe doesn't=
+ set
+> > > > > it AFAICS (at least not in the mainline), pci_pm_suspend() will r=
+esume
+> > > > > the device from runtime suspend before invoking its driver's call=
+back.
+> > > > >
+> > > > > This guarantees that the device is always RPM_ACTIVE when
+> > > > > xe_pci_suspend() runs and it cannot be runtime-suspended because =
+the
+> > > > > core is holding a runtime PM reference on it (and so the runtime =
+PM
+> > > > > usage counter is always greater than zero when xe_pci_suspend() r=
+uns).
+> > > > >
+> > > > > This means that neither xe_pci_runtime_suspend() nor
+> > > > > xe_pci_runtime_resume() can run concurrently with respect to it, =
+so
+> > > > > xe_pci_suspend() can change the power state of the device etc. sa=
+fely.
+> > > >
+> > > > Ah, I failed to notice that __pm_runtime_resume() is taking a spin_=
+lock_irqsave().
+> > > > Thanks for clearing this up.
+> > >
+> > > On second thought, pcie_do_recovery() can still race with xe_pci_susp=
+end(),
+> > > is this understanding correct?
+> >
+> > Yes, it can, but this is an AER issue.
+> >
+> > Apparently, somebody took runtime PM into account, but they failed to
+> > take system suspend into account.
+> >
+> > There are many drivers that do PCI PM in their ->suspend() callbacks
+> > and this predates pcie_do_recovery() AFAICS.  Some of them don't even
+> > support runtime PM.
+> >
+> > > I'm assuming this is why it's much safer to do pci_save_state() and
+> > > pci_prepare_to_sleep() only in ->noirq() callbacks like originally do=
+ne
+> > > by PCI PM, right?
+> >
+> > Not really, but close.
+> >
+> > The noirq phases were introduced because drivers often failed to
+> > prevent their interrupt handlers from messing up with devices after
+> > powering them down.
+> >
+> > Recovery is kind of like hot-add, doing any of them during system
+> > suspend is a bad idea because the outcome is hard to predict.
+> >
+> > AER needs to be fixed.
+>
+> I agree it's a bad idea and should be fixed but even more unpredictable
+> in such cases is resuming the device afterwards, which may or may not
+> succeed depending on the fault that has happened. So perhaps just not
+> let the device suspend to D3 at all?
 
-Patch applied.  Thanks.
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Yes, it is better to leave the device in question in its current power
+state in that case.
