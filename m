@@ -1,141 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9372A250C15;
-	Thu,  3 Apr 2025 16:59:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FFE924BC0F;
+	Thu,  3 Apr 2025 17:00:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743699584; cv=none; b=i5+V7RIvssp1bpFN1lpdQoxwwUV33QyDDAnXPyZ1Qn8WXfhdEan0beXOM3ppqu8aluLNBO+kYF36KsSk1U3CxYI4504q/9Kjlcd5SJz7qY9LCrduLrFjAUNz7mshvsKLTD6Yji2x/B9sWpHY3tfvCfvWYgN9CkRJtloMB0acrF0=
+	t=1743699643; cv=none; b=Mlt1Xe2Ot+r6/Jof6qaeuYaeGvSvRfkdS8kXrOkfEQ/ya++7amZQbeEzRZMPJhazTT8NPmZheUQ7eis8malQ9kgoqKLBaoeaDLXqRK1GAPkI6eUlFdvFCp901rAf9Kzwo3hG1WUl95j/1qZgPXz4s+ztQFPJnbD+I1Ik8CdJKP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743699584; c=relaxed/simple;
-	bh=lwCLOrKjqeBhvraMsNIzlF4vAoIOPP0pmmDtxveRJqg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=l68nO2gIRZsDDM4ZAq39js5urn5J5d8uegFXTypphiab+YbP+x7x5YP3Y8p4ojZ7q8rDdbQkXqzFWbtYb4QO1Cfcn5a0gPdCoZPt6nvBmWrFRC7OVZ2kdNgcPoWB8Ic2CfAl6LrIbpnDxt4qfBzAtsGKYhgnu4eVxCJPAcfphjU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OisHarl2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743699643; c=relaxed/simple;
+	bh=HtuFhXI63urBA3dRKYyXQ6GHreCYVeNttV6YM+zDLlM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dBnNoWRmH/ihnkk6VMVnm4QD19pVosnGRINvBEwPp4+tEzhOOGUOu0tF9iEeGRqHU/7Klf21GoVQLRnSPvHcyI+Y16pbZA2bxkbxLveL4Q5+RNtVMS6rgFLC1T7VUC//9LR8NYAUwSn9OizzLb3aYtgmGMYvZYpHrei9lyjzp/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=rwarsow@gmx.de header.b=Zms8i2fm; arc=none smtp.client-ip=212.227.15.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OisHarl2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BA35C4CEE3;
-	Thu,  3 Apr 2025 16:59:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743699584;
-	bh=lwCLOrKjqeBhvraMsNIzlF4vAoIOPP0pmmDtxveRJqg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OisHarl2Us9CgvsWT11VflIIAJ0QwjMDmVoWz4CDXVhOGuxfeXWJp60H92QVPkP7S
-	 Z/Ar2eg8aLxbxF5Xl5bniVmOvfrhJ80xpgphbJNPU4Xo63HromqJ3baeudaEJ7C7MV
-	 tsVmk6clyNFwj4K3OKSqIxzy19yhVTLB4XDboAtVEDcY3TWh/FI95zpVpSTGbPPmbB
-	 eB7h1JRHJE276B5g0fGUtu7Vpe61y6hL4NDyTEJDx3cpJ6t3v+QAz7UnTdzli+U5bL
-	 6rktoftwaMyE5uOIOIH/sGow2JtP41V/obKNb5K4NvGesWVB37ukxmSVYIHgGDKC61
-	 FYKQCpMYwUmgg==
-Date: Thu, 3 Apr 2025 09:59:41 -0700
-From: Kees Cook <kees@kernel.org>
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	torvalds@linux-foundation.org, peterz@infradead.org,
-	Jann Horn <jannh@google.com>, andriy.shevchenko@linux.intel.com,
-	intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-	Harry Yoo <harry.yoo@oracle.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Christoph Lameter <cl@gentwo.org>
-Subject: Re: [RFC] slab: introduce auto_kfree macro
-Message-ID: <202504030955.5C4B7D82@keescook>
-References: <20250401134408.37312-1-przemyslaw.kitszel@intel.com>
- <3f387b13-5482-46ed-9f52-4a9ed7001e67@suse.cz>
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=rwarsow@gmx.de header.b="Zms8i2fm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1743699630; x=1744304430; i=rwarsow@gmx.de;
+	bh=HtuFhXI63urBA3dRKYyXQ6GHreCYVeNttV6YM+zDLlM=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=Zms8i2fmEVHkNLvOVC772dTfq4BPp1GxXFZMDDzOPcpca7FDOEoKMR4PbKX5uSts
+	 a25CQrp1mrhEjmyTNu3T57OROnd916mp83UbQfiCs+41qzvOIG29Q//xW3JTdOWzk
+	 ZCPzhIYZkTypcKsrzC/fnfwCVMBIVh+4qQdRKqUg5hliA8lPF4FLSJPHpjC6/9n1L
+	 xT/lG6KtPTzHrJGMcFySOUlUEPxMetciwvovixi0Ag4bkh0N7esPFazbE883hDF1F
+	 w5mrssR8H5/NXR4kGIs5IL++1mrAaPAeyGXPmPyJqZodKB0SS2nDaBiir4wqSP6b6
+	 YdL1qfSqFcN6TtvW4g==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.200.20] ([46.142.33.101]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MDhlV-1tqAe10XAt-003MNp; Thu, 03
+ Apr 2025 19:00:30 +0200
+Message-ID: <a97032cb-a7ab-414c-90e5-6873c93b20a4@gmx.de>
+Date: Thu, 3 Apr 2025 19:00:28 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3f387b13-5482-46ed-9f52-4a9ed7001e67@suse.cz>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6.14 00/21] 6.14.1-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250403151621.130541515@linuxfoundation.org>
+From: Ronald Warsow <rwarsow@gmx.de>
+Content-Language: de-DE, en-US
+In-Reply-To: <20250403151621.130541515@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:Ork7G4DgS4w4ErC+0ebWd9FpEJ4Mmay2DPjVYMfJ1Hk6RzLrriU
+ kFg07LBbIMaYKm0lzskbYGYO0woOCLPutmHSfditdNZ5GgwQAfE/O5DrqDwOkQpinUfaxtR
+ kwlNAOkCVxJ9by6b2/DVw7sIgbXBdZ8Qf+KxQpS/lEv1C3f4YTejyjiffQHIPw4MP+jaJZ9
+ Z1Ha+FtjgFKsH3e3to7wQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:RyaGdigqWao=;rS2JsGpWwfC1mXnhqpc5Ff+d5Kf
+ /aFlpbhBVUekSUamhab+Dv58n1cg/1NVtA5Gq6UhW6UL5MpxwuG6OQqipe2vVnVKOB+vpzDsz
+ qzVfgpedgnOLcpefC9LBPCN7Qs+zbR0461t6RUKo/y/8KVAF8ei76GSGYAWQL4kkibRC2wpTC
+ 9AbsyuqOUHP7SrRODL67LX+nt9umhegoWoG0jzZ5GKv2RgN2HZBlVo2orObWThcO6nblXjSPw
+ xXKUozHWi14sa0bngBA2ZVp2VUcxu2+5OvPRM3PaztSBbW6VZ/GdC6074iM29AiFxkUwMoLsJ
+ MXia/yox0bKkoGmGHhtwCiDkEbNCz/NKk71HuP847a7FATUTyNuQdEO6ON7DiaiSWlX0+e8KX
+ QlT0lnKEjB3Wf137v+TC36qz5PN6W8ihGbAR8vlhRTpgcUMCv5JtKd6Yfxq6Itb9CMm4Tmwyc
+ ODfyVcJHIJ1C10B9Pajm0Cv7URFc8fQ1QlYwNRkOlZ0KPboYMrpmIAuavwHfFhYdSz2RVT0BR
+ GTXzvUJ/ngYdjDiB40nnvTGybnMFdQLEsa7lrd7pfR/RL/1Sl4A9dYP33pTHcdlJOEFCjL13L
+ GW/W2V/c7+kF6otlqZPd0qfhokRxp+Hb1Frjv7jow5xltUj2sL6PEUDSLI/znQNY2Mg2dTps6
+ MSpHYV3iLFpG15y12mGOmzamTGhBj6UcEVaNlFTPFOFUX3x2+JL7HoUqrnxsozewBkdqRUq+X
+ SgP2ZZunWQ/KDVlPN4Ry2mb+cIrY+b+qstEzE6V0TtWMJcHkSFVDLPg2/egk23lEpoMeH8y1X
+ 1yOL2DkUZVn9hkpsDQq6j8Lm30TAouYFZ5R/rBEvwAyNrAx17vC8pRZBrgypmdtjhOW/cKarB
+ UzTcRbwbrKCf2KUz1wgYlQJB1vJ37J5znG6+vfLL+hTYj7WYmr6gjF0z/uOj3XxEcLIpQ/YcT
+ HzQB7UWJkeLiaCOjshX9T3xHCMdjJ4UBcJqoYXT4JHNnuNLA8iw0ckN+Y9v2BYwWbsSGmTrQ+
+ yYDxp7xVnyir2h5HA1CzHQ9LiTBdXm1JA+uoVKakBEd1DQO6w6w5CnJsovxRYQKgEVwiTh0hr
+ b2kH5qBesYcDxKlaEvMuiVUAEKNw/JhgVes4Mhh+3JRzzbgDZ7A/Ykf83U8bEUdbh9j8f8rci
+ bNaSrvyp20FfLrhgGjsMtg1uHXZlfDfak/SV0OM/0uMwtikGbEpjyfc4Ur7vLkWE0Bt+06JKm
+ +OV+JrKEpzlwKBgjJPvegRHxsFEad2eJK4LFXtbndR8aSXtp09cd4TAwMM32D4H6PbIzi7nQk
+ +1CvL1GSpMuLrlzh+Zj1HFcXOu6a9wDOUM/Ftj2sdZX4dXGjor3WKCW6z7pk/3MWjqmHoR/68
+ SubqHcqEUCRCZxrd80P/aOHBskC2YUZHwjuvA48KRqHc6+M1D7W1ey88J8rQDPx2+VgGPKKPp
+ nM6yKMbt19p/ThKd1miGuPPv+wHU=
 
-On Wed, Apr 02, 2025 at 12:44:50PM +0200, Vlastimil Babka wrote:
-> Cc Kees and others from his related efforts:
-> 
-> https://lore.kernel.org/all/20250321202620.work.175-kees@kernel.org/
+Hi Greg
 
-I think, unfortunately, the consensus is that "invisible side-effects"
-are not going to be tolerated. After I finish with kmalloc_obj(), I'd
-like to take another run at this for basically providing something like:
+no regressions here on x86_64 (RKL, Intel 11th Gen. CPU)
 
-static inline __must_check
-void *kfree(void *p) { __kfree(p); return NULL; }
+Thanks
 
-And then switch all:
+Tested-by: Ronald Warsow <rwarsow@gmx.de>
 
-	kfree(s->ptr);
-
-to
-
-	s->ptr = kfree(s->ptr);
-
-Where s->ptr isn't used again.
-
--Kees
-
-> 
-> On 4/1/25 15:44, Przemek Kitszel wrote:
-> > Add auto_kfree macro that acts as a higher level wrapper for manual
-> > __free(kfree) invocation, and sets the pointer to NULL - to have both
-> > well defined behavior also for the case code would lack other assignement.
-> > 
-> > Consider the following code:
-> > int my_foo(int arg)
-> > {
-> > 	struct my_dev_foo *foo __free(kfree); /* no assignement */
-> > 
-> > 	foo = kzalloc(sizeof(*foo), GFP_KERNEL);
-> > 	/* ... */
-> > }
-> > 
-> > So far it is fine and even optimal in terms of not assigning when
-> > not needed. But it is typical to don't touch (and sadly to don't
-> > think about) code that is not related to the change, so let's consider
-> > an extension to the above, namely an "early return" style to check
-> > arg prior to allocation:
-> > int my_foo(int arg)
-> > {
-> >         struct my_dev_foo *foo __free(kfree); /* no assignement */
-> > +
-> > +	if (!arg)
-> > +		return -EINVAL;
-> >         foo = kzalloc(sizeof(*foo), GFP_KERNEL);
-> >         /* ... */
-> > }
-> > Now we have uninitialized foo passed to kfree, what likely will crash.
-> > One could argue that `= NULL` should be added to this patch, but it is
-> > easy to forgot, especially when the foo declaration is outside of the
-> > default git context.
-> > 
-> > With new auto_kfree, we simply will start with
-> > 	struct my_dev_foo *foo auto_kfree;
-> > and be safe against future extensions.
-> > 
-> > I believe this will open up way for broader adoption of Scope Based
-> > Resource Management, say in networking.
-> > I also believe that my proposed name is special enough that it will
-> > be easy to know/spot that the assignement is hidden.
-> > 
-> > Signed-off-by: Przemek Kitszel <przemyslaw.kitszel@intel.com>
-> > ---
-> >  include/linux/slab.h | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/include/linux/slab.h b/include/linux/slab.h
-> > index 98e07e9e9e58..b943be0ce626 100644
-> > --- a/include/linux/slab.h
-> > +++ b/include/linux/slab.h
-> > @@ -471,6 +471,7 @@ void kfree_sensitive(const void *objp);
-> >  size_t __ksize(const void *objp);
-> >  
-> >  DEFINE_FREE(kfree, void *, if (!IS_ERR_OR_NULL(_T)) kfree(_T))
-> > +#define auto_kfree __free(kfree) = NULL
-> >  DEFINE_FREE(kfree_sensitive, void *, if (_T) kfree_sensitive(_T))
-> >  
-> >  /**
-> 
-
--- 
-Kees Cook
