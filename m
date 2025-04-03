@@ -1,32 +1,30 @@
-Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
+Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0863F253B61
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 085D8253B60
 	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 18:19:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743704377; cv=none; b=YCOIvKilBtEl6Mu69vhSYL5Rf3zzQ/Sb0xJis+gtq3KmykQgB1m+9tJg0mqy78Lb+qmdBPQIdgUTf9xgRNt+3e6/ZGidhEcnemTJxP592Iy8kS4gdt7KTIYHsFKhAHqUJvLNQImhXb1hiE9ex0C9co2XjcjabK0A7UQCoKz05lI=
+	t=1743704377; cv=none; b=D6KizJWQox+N5RlTIyPYfYo8a2FwSgv9qc39iIKjRyk1ydsP5qplFm6sknclCIBv/AjJDe8D13zNJvSt+Y8qRrrop8IqvJBkDbI+mtXrvQM8oXKiOz73EpG3J1lwnsSqq8TEM92kO8fXh5TflXivz8Jbd9x26uaw3sgFDPNlJlA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1743704377; c=relaxed/simple;
-	bh=CeETfnzCyXMG4XEtCWVol8vt14JIrIYsxnGpZ2xl/BE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=iJZF1uSU/JcjhOaxlYe5WuspsrG980d8+LlVbz55vjuLSyrhJrKRpRyKzPZ9JvBRXSYx6enTz/tr8Qba86pMq2itJh1Yq6goKR6w+XrJznMHXQB4kM7GauQxWV01vqhsjwWixBIdtIUQmQbhtgaLQThblHpCg5fuBK2YQHON5y8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=WKkRd8EK; arc=none smtp.client-ip=91.218.175.171
+	bh=/+6DPyFwTnaFmg9nRktkNbaJvZmpgYXIP9E5uSGzYtU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pQb9ksgawCTFj5GDt+EM1Ph6hHKhPrd4gMZXHd+CLrqTjGNWEnc0Do+vgdF58G7OSnG+eYPuW+72c+ilpbTDoCL8l8k3mJ78Xhm2aQCwlWNw0j1mZl5yjLRUp/JAOc5t2sRTn37Z5ArUKD7hkfHOk+FTxKxQVv3UFBPFe4KPO5E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=oqJjLXic; arc=none smtp.client-ip=91.218.175.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="WKkRd8EK"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="oqJjLXic"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1743704372;
+	t=1743704362;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=phS1BrEwoCpumqFkbhdbyadxm6yPKvRhcIrB5404n+s=;
-	b=WKkRd8EK/ZK1z70/4o0buWubaw2DanWl0mQDuDgBu4DdpeKlWC1opJj9xIcWJpYAZ1+k2J
-	4X6kSHUUpdzEPwV4F+I4zJsROnEoVLtEqR4xV6Kp2X5q1Jc/+vZWXrocBl9AmS+UjtMlrU
-	qXHgr1idHru7DZYiIwoesMIyK9pthWk=
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=QQ9ehOHdnNhPXlhSQHsn/YYloB24QsMZgMcRBGUNIcw=;
+	b=oqJjLXicDLB2K2GOySnF9TOdTFATrWvb4Yu0Uym/Yvvbqo8wb2O/9nyu/3cfIgWnCgK1hR
+	5oGoOyc+pNZhKhE/DpxQtt2NKVH10DMj5/VWwcJoT1hJWj81a7OBX0yIUtc8sGk/q42wcm
+	QZOhFDml4siMzAGqTEOdE4tCtJ0IT9w=
 From: Sean Anderson <sean.anderson@linux.dev>
 To: netdev@vger.kernel.org,
 	Andrew Lunn <andrew+netdev@lunn.ch>,
@@ -39,16 +37,46 @@ Cc: linux-kernel@vger.kernel.org,
 	Christian Marangi <ansuelsmth@gmail.com>,
 	upstream@airoha.com,
 	Heiner Kallweit <hkallweit1@gmail.com>,
-	Vladimir Oltean <vladimir.oltean@nxp.com>,
 	Sean Anderson <sean.anderson@linux.dev>,
 	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Clark Wang <xiaoning.wang@nxp.com>,
+	Claudiu Beznea <claudiu.beznea@microchip.com>,
 	Claudiu Manoil <claudiu.manoil@nxp.com>,
-	UNGLinuxDriver@microchip.com
-Subject: [RFC net-next PATCH 04/13] net: dsa: ocelot: suppress PHY device scanning on the internal MDIO bus
-Date: Thu,  3 Apr 2025 14:18:58 -0400
-Message-Id: <20250403181907.1947517-5-sean.anderson@linux.dev>
-In-Reply-To: <20250403181907.1947517-1-sean.anderson@linux.dev>
-References: <20250403181907.1947517-1-sean.anderson@linux.dev>
+	Conor Dooley <conor+dt@kernel.org>,
+	Ioana Ciornei <ioana.ciornei@nxp.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Joyce Ooi <joyce.ooi@intel.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Li Yang <leoyang.li@nxp.com>,
+	Madalin Bucur <madalin.bucur@nxp.com>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Michal Simek <michal.simek@amd.com>,
+	Naveen N Rao <naveen@kernel.org>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Robert Hancock <robert.hancock@calian.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Shawn Guo <shawnguo@kernel.org>,
+	UNGLinuxDriver@microchip.com,
+	Vladimir Oltean <vladimir.oltean@nxp.com>,
+	Wei Fang <wei.fang@nxp.com>,
+	devicetree@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-doc@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linuxppc-dev@lists.ozlabs.org
+Subject: [RFC net-next PATCH 00/13] Add PCS core support
+Date: Thu,  3 Apr 2025 14:18:54 -0400
+Message-Id: <20250403181907.1947517-1-sean.anderson@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,59 +86,129 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-From: Vladimir Oltean <vladimir.oltean@nxp.com>
+This series adds support for creating PCSs as devices on a bus with a
+driver (patch 3). As initial users,
 
-This bus contains Lynx PCS devices, and if the lynx-pcs driver ever
-decided to call mdio_device_register(), it would fail due to
-mdiobus_scan() having created a dummy phydev for the same address
-(the PCS responds to standard clause 22 PHY ID registers and can
-therefore by autodetected by phylib which thinks it's a PHY).
+- The Lynx PCS (and all of its users) is converted to this system (patch 5)
+- The Xilinx PCS is broken out from the AXI Ethernet driver (patches 6-8)
+- The Cadence MACB driver is converted to support external PCSs (namely
+  the Xilinx PCS) (patches 9-10).
 
-On the Seville driver, things are a bit more complicated, since bus
-creation is handled by mscc_miim_setup() and that is shared with the
-dedicated mscc-miim driver. Suppress PHY scanning only for the Seville
-internal MDIO bus rather than for the whole mscc-miim driver, since we
-know that on NXP T1040, this bus only contains Lynx PCS devices.
+The last few patches add device links for pcs-handle to improve boot times,
+and add compatibles for all Lynx PCSs.
 
-Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
----
+Care has been taken to ensure backwards-compatibility. The main source
+of this is that many PCS devices lack compatibles and get detected as
+PHYs. To address this, pcs_get_by_fwnode_compat allows drivers to edit
+the devicetree to add appropriate compatibles.
 
- drivers/net/dsa/ocelot/felix_vsc9959.c   | 4 ++++
- drivers/net/dsa/ocelot/seville_vsc9953.c | 5 +++++
- 2 files changed, 9 insertions(+)
+This is technically a v3 (with [1,2] being v1 and v2, respectively), but
+there have been so many architectural changes that I didn't bother
+maintaining the series changelog. I think it is best to review this
+series independently of its past iterations. I submitted this as an RFC
+since net-next is closed, but I believe this series is fully tested and
+ready to be applied.
 
-diff --git a/drivers/net/dsa/ocelot/felix_vsc9959.c b/drivers/net/dsa/ocelot/felix_vsc9959.c
-index 940f1b71226d..2de12611ab57 100644
---- a/drivers/net/dsa/ocelot/felix_vsc9959.c
-+++ b/drivers/net/dsa/ocelot/felix_vsc9959.c
-@@ -1001,6 +1001,10 @@ static int vsc9959_mdio_bus_alloc(struct ocelot *ocelot)
- 	bus->read_c45 = enetc_mdio_read_c45;
- 	bus->write_c45 = enetc_mdio_write_c45;
- 	bus->parent = dev;
-+	/* Suppress PHY device creation in mdiobus_scan(),
-+	 * we have Lynx PCSs
-+	 */
-+	bus->phy_mask = ~0;
- 	mdio_priv = bus->priv;
- 	mdio_priv->hw = hw;
- 	/* This gets added to imdio_regs, which already maps addresses
-diff --git a/drivers/net/dsa/ocelot/seville_vsc9953.c b/drivers/net/dsa/ocelot/seville_vsc9953.c
-index eb3944ba2a72..28bcdef34a6c 100644
---- a/drivers/net/dsa/ocelot/seville_vsc9953.c
-+++ b/drivers/net/dsa/ocelot/seville_vsc9953.c
-@@ -901,6 +901,11 @@ static int vsc9953_mdio_bus_alloc(struct ocelot *ocelot)
- 		return rc;
- 	}
- 
-+	/* Suppress PHY device creation in mdiobus_scan(),
-+	 * we have Lynx PCSs
-+	 */
-+	bus->phy_mask = ~0;
-+
- 	/* Needed in order to initialize the bus mutex lock */
- 	rc = devm_of_mdiobus_register(dev, bus, NULL);
- 	if (rc < 0) {
+[1] https://lore.kernel.org/netdev/20211004191527.1610759-1-sean.anderson@seco.com/
+[2] https://lore.kernel.org/netdev/20221103210650.2325784-1-sean.anderson@seco.com/
+
+
+Sean Anderson (12):
+  dt-bindings: net: Add binding for Xilinx PCS
+  net: phylink: Support setting PCS link change callbacks
+  net: pcs: Add subsystem
+  net: pcs: lynx: Convert to an MDIO driver
+  net: phy: Export some functions
+  net: pcs: Add Xilinx PCS driver
+  net: axienet: Convert to use PCS subsystem
+  net: macb: Move most of mac_config to mac_prepare
+  net: macb: Support external PCSs
+  of: property: Add device link support for PCS
+  arm64: dts: Add compatible strings for Lynx PCSs
+  powerpc: dts: Add compatible strings for Lynx PCSs
+
+Vladimir Oltean (1):
+  net: dsa: ocelot: suppress PHY device scanning on the internal MDIO
+    bus
+
+ .../devicetree/bindings/net/xilinx,pcs.yaml   | 129 ++++
+ Documentation/networking/index.rst            |   1 +
+ Documentation/networking/kapi.rst             |   4 +
+ Documentation/networking/pcs.rst              |  99 +++
+ MAINTAINERS                                   |   8 +
+ .../arm64/boot/dts/freescale/fsl-ls208xa.dtsi |  48 +-
+ .../arm64/boot/dts/freescale/fsl-lx2160a.dtsi |  54 +-
+ .../dts/freescale/qoriq-fman3-0-10g-0.dtsi    |   3 +-
+ .../dts/freescale/qoriq-fman3-0-10g-1.dtsi    |   3 +-
+ .../dts/freescale/qoriq-fman3-0-1g-0.dtsi     |   3 +-
+ .../dts/freescale/qoriq-fman3-0-1g-1.dtsi     |   3 +-
+ .../dts/freescale/qoriq-fman3-0-1g-2.dtsi     |   3 +-
+ .../dts/freescale/qoriq-fman3-0-1g-3.dtsi     |   3 +-
+ .../dts/freescale/qoriq-fman3-0-1g-4.dtsi     |   3 +-
+ .../dts/freescale/qoriq-fman3-0-1g-5.dtsi     |   3 +-
+ .../fsl/qoriq-fman3-0-10g-0-best-effort.dtsi  |   3 +-
+ .../boot/dts/fsl/qoriq-fman3-0-10g-0.dtsi     |   3 +-
+ .../fsl/qoriq-fman3-0-10g-1-best-effort.dtsi  |   3 +-
+ .../boot/dts/fsl/qoriq-fman3-0-10g-1.dtsi     |   3 +-
+ .../boot/dts/fsl/qoriq-fman3-0-10g-2.dtsi     |   3 +-
+ .../boot/dts/fsl/qoriq-fman3-0-10g-3.dtsi     |   3 +-
+ .../boot/dts/fsl/qoriq-fman3-0-1g-0.dtsi      |   3 +-
+ .../boot/dts/fsl/qoriq-fman3-0-1g-1.dtsi      |   3 +-
+ .../boot/dts/fsl/qoriq-fman3-0-1g-2.dtsi      |   3 +-
+ .../boot/dts/fsl/qoriq-fman3-0-1g-3.dtsi      |   3 +-
+ .../boot/dts/fsl/qoriq-fman3-0-1g-4.dtsi      |   3 +-
+ .../boot/dts/fsl/qoriq-fman3-0-1g-5.dtsi      |   3 +-
+ .../boot/dts/fsl/qoriq-fman3-1-10g-0.dtsi     |   3 +-
+ .../boot/dts/fsl/qoriq-fman3-1-10g-1.dtsi     |   3 +-
+ .../boot/dts/fsl/qoriq-fman3-1-1g-0.dtsi      |   3 +-
+ .../boot/dts/fsl/qoriq-fman3-1-1g-1.dtsi      |   3 +-
+ .../boot/dts/fsl/qoriq-fman3-1-1g-2.dtsi      |   3 +-
+ .../boot/dts/fsl/qoriq-fman3-1-1g-3.dtsi      |   3 +-
+ .../boot/dts/fsl/qoriq-fman3-1-1g-4.dtsi      |   3 +-
+ .../boot/dts/fsl/qoriq-fman3-1-1g-5.dtsi      |   3 +-
+ drivers/net/dsa/ocelot/Kconfig                |   4 +
+ drivers/net/dsa/ocelot/felix_vsc9959.c        |  15 +-
+ drivers/net/dsa/ocelot/seville_vsc9953.c      |  16 +-
+ drivers/net/ethernet/altera/Kconfig           |   2 +
+ drivers/net/ethernet/altera/altera_tse_main.c |   7 +-
+ drivers/net/ethernet/cadence/macb.h           |   1 +
+ drivers/net/ethernet/cadence/macb_main.c      | 229 ++++--
+ drivers/net/ethernet/freescale/dpaa/Kconfig   |   2 +-
+ drivers/net/ethernet/freescale/dpaa2/Kconfig  |   3 +
+ .../net/ethernet/freescale/dpaa2/dpaa2-mac.c  |  11 +-
+ drivers/net/ethernet/freescale/enetc/Kconfig  |   2 +
+ .../net/ethernet/freescale/enetc/enetc_pf.c   |   8 +-
+ .../net/ethernet/freescale/enetc/enetc_pf.h   |   1 -
+ .../freescale/enetc/enetc_pf_common.c         |   4 +-
+ drivers/net/ethernet/freescale/fman/Kconfig   |   4 +-
+ .../net/ethernet/freescale/fman/fman_memac.c  |  27 +-
+ drivers/net/ethernet/stmicro/stmmac/Kconfig   |   3 +
+ .../ethernet/stmicro/stmmac/dwmac-socfpga.c   |   6 +-
+ drivers/net/ethernet/xilinx/Kconfig           |   1 +
+ drivers/net/ethernet/xilinx/xilinx_axienet.h  |   4 +-
+ .../net/ethernet/xilinx/xilinx_axienet_main.c | 104 +--
+ drivers/net/pcs/Kconfig                       |  51 +-
+ drivers/net/pcs/Makefile                      |   4 +
+ drivers/net/pcs/core.c                        | 701 ++++++++++++++++++
+ drivers/net/pcs/pcs-lynx.c                    | 115 +--
+ drivers/net/pcs/pcs-xilinx.c                  | 481 ++++++++++++
+ drivers/net/phy/mdio_device.c                 |   1 +
+ drivers/net/phy/phy_device.c                  |   3 +-
+ drivers/net/phy/phylink.c                     |  24 +-
+ drivers/of/property.c                         |   2 +
+ include/linux/pcs-lynx.h                      |  13 +-
+ include/linux/pcs-xilinx.h                    |  36 +
+ include/linux/pcs.h                           | 122 +++
+ include/linux/phy.h                           |   1 +
+ include/linux/phylink.h                       |  27 +-
+ 70 files changed, 2104 insertions(+), 358 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/xilinx,pcs.yaml
+ create mode 100644 Documentation/networking/pcs.rst
+ create mode 100644 drivers/net/pcs/core.c
+ create mode 100644 drivers/net/pcs/pcs-xilinx.c
+ create mode 100644 include/linux/pcs-xilinx.h
+ create mode 100644 include/linux/pcs.h
+
 -- 
 2.35.1.1320.gc452695387.dirty
 
