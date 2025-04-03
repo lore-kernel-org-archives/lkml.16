@@ -1,63 +1,67 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A760266591
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 19:33:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A822253F26;
+	Thu,  3 Apr 2025 19:35:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743708832; cv=none; b=GtC/l9KcklDRsThG23n7kyRlZs4TxGaO3+pI+6T39DiOW/KUF4XynqfHsQAEjByjXcnZ4rWd7uMV+dCpir95fPONdKKNRKfnlRhhwUyIiRDEse7gKyr+C2aj7IJS7jfTNAd4G8shucJShY7YhXmAgOKncrKVRYTdja/O+/GAYxo=
+	t=1743708947; cv=none; b=Ib1AH+84P61AVadT+n6+OpCrX1g1ZH7CKI6T8RCA9rTf+tDKjErJ5ATnfC/F6+SkoMQLrIO2jk8Vzq+VkCEuXFNDPO71JLOFPBkNTeCmxnNPAVNpB0Cn9uRo5K18SESBHTffrXY3pGuOoQtTzHcTGV45zfwN4CiLZGdEZVijnAA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743708832; c=relaxed/simple;
-	bh=/qsDzI2BiGi6+umdh2z2MoLNzeCV+8VCYvEDI/O2oro=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=Gm+BV6HAfexQOgL5Ex5RUt5SRw9NV1JgOtkK7pe39heS0Gx5/dG+AJ+viAqZfaZ/owMiZy6UBQJfL0EpCClLhN95M8Bz8fIDgAecbxWUcHy9yLZAdmzBLql2/3tQabPW8mQTuWg1V5ceP5R1EKROQlnvkaMY+bLpPMCEHS9Dm0M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r83br1bM; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r83br1bM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78C31C4CEE9;
-	Thu,  3 Apr 2025 19:33:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743708832;
-	bh=/qsDzI2BiGi6+umdh2z2MoLNzeCV+8VCYvEDI/O2oro=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=r83br1bMTCUlEEMPmq8NB+XKhqXMJfJal61y7PW4YB1fcDbKwKvf8VSJxpU72xlcp
-	 P6v/tgpf49czVmsrs1iNAvkD2uiPmQiqagtJLTB0yLLtaEx5yyqPUfVbKCAp9bsrOc
-	 +SButKlttB7tPTlne4z32TNTrYFxyMAZ72INP+q6b2B5ea7GFnVIKHUGyjiPKkXazQ
-	 2YfX6dV2bPkZNwNcBVtpu4ROHu2wkUE/iJ6Pyqk1NqqRnSsSZFiqaRSBETYqeGl/6k
-	 D/TPMy+7NHIxbng1jHZDj0gKAzF4BWbaA5hUOL9dAr4c7hFT7z+lAyHTG4mDnnC6dn
-	 HwHIl3OFuXvYA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADE8A380664C;
-	Thu,  3 Apr 2025 19:34:30 +0000 (UTC)
-Subject: Re: [GIT PULL] sched_ext: Fixes for v6.15-rc0
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <Z-29_RUhhuUhGLiv@slm.duckdns.org>
-References: <Z-29_RUhhuUhGLiv@slm.duckdns.org>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <Z-29_RUhhuUhGLiv@slm.duckdns.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tj/sched_ext.git/ tags/sched_ext-for-6.15-rc0-fixes
-X-PR-Tracked-Commit-Id: 2bac648dab395be0ad0d55b9c2ae7723e71e233e
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: ea59cb74234c8d658a4299b57156265f59977494
-Message-Id: <174370886935.2657822.12418273127561234726.pr-tracker-bot@kernel.org>
-Date: Thu, 03 Apr 2025 19:34:29 +0000
-To: Tejun Heo <tj@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, David Vernet <void@manifault.com>, Andrea Righi <arighi@nvidia.com>, Changwoo Min <changwoo@igalia.com>
+	s=arc-20240116; t=1743708947; c=relaxed/simple;
+	bh=SfudcGVvgUwCu02nkG9Exu6y8ntGP9LdeWrTt3lMa5A=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=D6z8B36xHcElE6oJ/Z90XdW56h/K/1oY9Da0eaP9WLVET/Fv4BUDQCw1uDZfWQHeKWzvnx4AydnglUqFwWvuA+e66TEsqHE9sIB/RvIkjBcvluIydo4+vapqArou/062bXSRAhn6OQK5KdRF/zL6rdGQQ0n9j7DWYxo2D5NXskQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9956C4CEE3;
+	Thu,  3 Apr 2025 19:35:45 +0000 (UTC)
+Date: Thu, 3 Apr 2025 15:36:51 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Devaansh Kumar <devaanshk840@gmail.com>
+Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ skhan@linuxfoundation.org, linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [PATCH] tracing: Replace deprecated strncpy() with memcpy() for
+ stack_trace_filter_buf
+Message-ID: <20250403153651.1188135b@gandalf.local.home>
+In-Reply-To: <20250403191342.1244863-1-devaanshk840@gmail.com>
+References: <20250403191342.1244863-1-devaanshk840@gmail.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-The pull request you sent on Wed, 2 Apr 2025 12:45:17 -1000:
+On Fri,  4 Apr 2025 00:43:40 +0530
+Devaansh Kumar <devaanshk840@gmail.com> wrote:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tj/sched_ext.git/ tags/sched_ext-for-6.15-rc0-fixes
+> @@ -537,14 +538,16 @@ stack_trace_sysctl(struct ctl_table *table, int write, void *buffer,
+>  	return ret;
+>  }
+>  
+> -static char stack_trace_filter_buf[COMMAND_LINE_SIZE+1] __initdata;
+> +static char stack_trace_filter_buf[COMMAND_LINE_SIZE+1] __initdata __nonstring;
+>  
+>  static __init int enable_stacktrace(char *str)
+>  {
+>  	int len;
+>  
+> -	if ((len = str_has_prefix(str, "_filter=")))
+> -		strncpy(stack_trace_filter_buf, str + len, COMMAND_LINE_SIZE);
+> +	len = str_has_prefix(str, "_filter=");
+> +
+> +	if (len)
+> +		memcpy(stack_trace_filter_buf, str + len, sizeof(stack_trace_filter_buf));
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/ea59cb74234c8d658a4299b57156265f59977494
+Hmm, this location looks like it can just use strscpy().
 
-Thank you!
+-- Steve
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+
+>  
+>  	stack_tracer_enabled = 1;
+>  	return 1;
+> -- 
