@@ -1,191 +1,151 @@
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 594CC1FF615
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 20:38:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A1891FFC56
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 20:39:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743712720; cv=none; b=dr3jmVCqp4iF0q1+Y6HK8Feb/mA3BLcnKWnNR3D2LLT8SfAong38L2bGbc5w+q3gl18XhVqyT4FvqEZWwpfj/LrdFNFsb+lzN7HhZaELouUvb9ldBRHwdunFxE/7Ty2t3cMGsXWRohHht7tyRv19pzMG4A+DnR/JG+EZSmMQp5U=
+	t=1743712765; cv=none; b=qJ0xCMQ8g9ipRrGdSH3NV/q5EWE0D+Fj6bpTgxb4ZaooDWJfvQfM/1P2iO9kmyFME+Zaba3Y60YrVxDjGUPCMeIvKuluNB9CSckb2zquGIJeemGsXI6AMkExjw4uoc0Hm1lYi/NMwi8aEZSxaSZnQrRz0zZOOC44wLVGugXIGUE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743712720; c=relaxed/simple;
-	bh=LQNorl+FxeZ9WjYAnsEddepH/Io+6JtiYR/y5xPvq+U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RYB0ABmeTTHAgEfHpQRyPj8IHzTlZBoUbm9O7U5j3GuQqP0Ptx0vwfkBtNgS5yIWtYksnNOqp18/TBIVzRHi4pZtF374G7cuf2otWgBTYrxHu3uCWfCqNJQPwu2mqwKx8y6XTkEhagv2cyDlSLZ7mUeeszMgkICPHUc5R4HHb2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eFN1twnp; arc=none smtp.client-ip=209.85.160.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743712765; c=relaxed/simple;
+	bh=ZKFPJnkH5cmy2Hcw7v2o0zv/8xKsrpwsfbr6qB8cQMs=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Xop6i8z9qWAWopWma5i9g76LPXvNHCG/kZhcr+bb4p90uYj3RHpMhVbZ4/NfbarCM2LHJIusAHGrQozvaHG47q5JIMnMmX9qp16yQBKCt5uRFdBKvhki3X5YoL0syYC8JGCqbazbRVjI/rlibFKTrU7MRBpP7s4J2foE8cvn3p0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=DMX1CcR7; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eFN1twnp"
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-47662449055so7375831cf.1
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 13:38:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743712717; x=1744317517; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CgJaLBC/vvLHRWUfTxP8meiFEnp76vjgOWeU9IZXJJ8=;
-        b=eFN1twnpUkAuAwHQQ1TnyKOtDJAsY71+gOiW4p+LY7OhbK+0BO2uTc40+9gCkP1AX9
-         YVfjYUA1ym3P+xxIzJPA1b6nC6w0ZrQskNcVEPmjFPHwKQZz+AOdUE/1q3IPlLERkVfF
-         +6GpCDTzCAMSjCqynwu/30DRkU6PShBf9v9KtyLHoDY6Mi4Nfo7LLINtHMFV0lveMfpM
-         dpLkjRgSe3TMxrwj/CghdFDqusfxNpGFtRUmDfjf6Pt7Q9xox0b/kv6k513lgmF4F8YN
-         MET7tp9Cz/X51Qqe065k3PEv/qjpsQWZAmqYlJf1yID5Vk8dhy+DqvPcD11dOnv3mxCg
-         Lpag==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="DMX1CcR7"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 533JhXqM011993
+	for <linux-kernel@vger.kernel.org>; Thu, 3 Apr 2025 20:39:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=ERTqFw99lQe4ymdVVi0XfW
+	QaFdEOwt0186MaC7JTYqw=; b=DMX1CcR784DWe0oVKnUl80n8WeDwZlMIcvHE8x
+	7PYrnShOnkkj5xfOQfhi2BTV1AUtLDRIYj3RJrVPIcDMubEOiV6d1/zbQrGmsMPG
+	MVtU7GYwksWnrdGfHho2YyAbQbNmCQ9IVyqAJj9BRvSsZwhMlG0sngGnJWS+/NWX
+	ZuBXbjwrkxwUZ/f8VlgsOFKHqwiZrdxC5Br+1J92FKddqXkAmHLUKw14iE1yGbkN
+	8iUK7caBzayOqYZkNg0MYYZ1jR0RbOeCDtr0GQ6WxFqdSzGVnjgejdNrBwctyeST
+	bpYVNlXzvPqhp8BXVNGK/zNxGl0cpho8YO69SKIm4y9j3kAg==
+Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com [209.85.210.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45ruadx6mb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 20:39:21 +0000 (GMT)
+Received: by mail-pf1-f200.google.com with SMTP id d2e1a72fcca58-736b5f9279cso1253549b3a.2
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 13:39:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743712717; x=1744317517;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CgJaLBC/vvLHRWUfTxP8meiFEnp76vjgOWeU9IZXJJ8=;
-        b=WRv4AtjlBeXdr5b8bnQUBQCZzKk+AV34ouh0fkD/3kEZa4Q2m/jnQe8PVNPCym5EJf
-         UPYh3a/PsHC3fPUEZozzpT0zNEAKRCXDMeA64tD+Tpu/pu2Wl8B4fDG12jJzKcvm5k+n
-         zxufJ1YRhdkJL/DoKNcpyvL0umrLQNKEMTZ7zVz8iRM5detmbf8B4ca9cdiSJfYX9P2M
-         SiGqWD8cpA8xdo0ICbPhbh5bSBmC8JECSWawVvQj3b6msLKP8SilApsLLZ4cbV7aw77e
-         O8DguVtzIM6rZEfoi5OkQVGinIxWMCy8L/1Swwjo84YYzOuc7SY+r2K9MQCY1PlXyvY7
-         eEIA==
-X-Forwarded-Encrypted: i=1; AJvYcCWJrYgWahuNrx2DmlQrU6mcg5qy0Kn2TnrEV03crJbIIxp4lbOcIZn4oznZBzKYjjzDv7V246TXNQywU6o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwPqNwQfHwSuIhhhoNHP42fzSxqERpJApQukDoi2mPDJ5/sYqtr
-	51SiM2cCp24bVF3ZSft2JKM5yYxRGaQJ6wOHht0mdLS/EDDSpBy4No44V2ADXgUu9QbVc98CXNw
-	ZWHT6C9r0Q0Oz23cEI+NkjiWQlSQ=
-X-Gm-Gg: ASbGncv/Ovz4zv6I5liR4+I34UlRFjk7EWFN7/Z7U578CG+WvpEebBskfcOhrUi31oQ
-	eqqErLVI8eJ4+72Lpi9moAgvgJBsWMLSPysszkdNXCxZBu5WGNAKVh7qgZiyfo2HSjRdPTAV9oA
-	B6bLt+ru+63OSNklgdPpmk3elNBJ09q5kZU5xPbmaQVA==
-X-Google-Smtp-Source: AGHT+IEMSliei2l649c31YPpt/ggB9tdVf1Zi3+20JU2QrQQbAiEI8KNTt9SsCchr9zSmEJqdJm0lS29wCdwTyhsG64=
-X-Received: by 2002:a05:6214:765:b0:6e8:955b:141e with SMTP id
- 6a1803df08f44-6f05852affdmr5326266d6.21.1743712716802; Thu, 03 Apr 2025
- 13:38:36 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743712760; x=1744317560;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ERTqFw99lQe4ymdVVi0XfWQaFdEOwt0186MaC7JTYqw=;
+        b=H+CLi9oXBJxdkQWSziTmZ75ndNF4g6+uybqU+ixBJJwhUH8yjMmjEBu+coyhPaznsN
+         6GFDN2lIBMXyraahoe2QpfijjwQfAroAa6Wzwx2Uk66JRRvcVzIej7NcXGMguDDiNmgI
+         jA99ubtl7aphZ050GYNQKVqOsDSxKnrS+ioJYgeh+pDVjH5QIxotSaUCIouMx9uA6cLP
+         1iKiVK3XWKeDHkbzH3LrZxnRgCE5A1YtvV87Oo07wZ9kEHGKh6ZFY8XluQJ/I20oF9do
+         vBK6xtzK+5uzAWn0HfUo9IHPZlHyL9uDJ0dusZK/Vu79XciicB8iae9jNU0Z+f49EJaX
+         qutQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXyWFPt71vK7bqPhD3iPnjapclxigA7Z3Nlh+s3LUxIUhFGI9GUz36dEVeqCGkgHXadpR506cSiE32Bjv0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxttodfAgKus9/GW5U1YEjKcIlCqgzDP4zeMPMAxcALIKl0Q5X9
+	pRWZpaqvArQdsIN+DTakJI1AVq7fO3Nr1bpaJQwynQffXTm/9kLWx5D7fx4ggeptHNhpud0BttW
+	yQZd365wkQPHRhA4J1kPQsJjBqaEKLT5ABcLD5c23AwAu7oFg+N/dSkpYkYKi1tU=
+X-Gm-Gg: ASbGnctaRU7cM4Cp8fym5PvRt9m3L/uEvHn2EBbm7/DO0gN5AISDaeKi/b8wBuGwphc
+	cOgVrOnTXViDqTpvXmY8sqJn2umJmkXY019tX7KoXXmsqdQx8kq3snBC+m0gRNbhwP+c4g7nF2C
+	BEgwBdtrD/3FJQBmgmfiLN8UlG+rKCT0PZDG+RVElvGPvUrVZzqqUO+XB+IfkIb4Ii70xLot7/O
+	q2llmk6h4ZcNLjyfWG3vUvBC2qG37B53s0xoyZ883ykiDQ8WCavUmhPtEkjMVkVQUxG9JAleWgn
+	IqNL4OtfO/aVwjUSyxvZBVf2CJzBHkZjffH4S0DfZcijHEg/CQkQKkvWvB7rZjjpmfscyZJUk4i
+	d4PiM0NQ=
+X-Received: by 2002:a05:6a21:7794:b0:1f5:7710:fd18 with SMTP id adf61e73a8af0-2010461cd6emr989747637.17.1743712760217;
+        Thu, 03 Apr 2025 13:39:20 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH30wcg6IUYNPzq+c1OsjGFHZabqoyu1Jtq+nS+/9NjU1pr36JgCCvFMewrTVBT1qWRO67YfQ==
+X-Received: by 2002:a05:6a21:7794:b0:1f5:7710:fd18 with SMTP id adf61e73a8af0-2010461cd6emr989725637.17.1743712759884;
+        Thu, 03 Apr 2025 13:39:19 -0700 (PDT)
+Received: from hu-uchalich-lv.qualcomm.com (Global_NAT1.qualcomm.com. [129.46.96.20])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af9bc323839sm1657530a12.30.2025.04.03.13.39.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Apr 2025 13:39:19 -0700 (PDT)
+From: Unnathi Chalicheemala <unnathi.chalicheemala@oss.qualcomm.com>
+Date: Thu, 03 Apr 2025 13:38:24 -0700
+Subject: [PATCH] docs: firmware: qcom_scm: Fix kernel-doc warning
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAJD7tka6XRyzYndRNEFZmi0Zj4DD2KnVzt=vMGhfF4iN2B4VKw@mail.gmail.com>
- <20250402200651.1224617-1-joshua.hahnjy@gmail.com>
-In-Reply-To: <20250402200651.1224617-1-joshua.hahnjy@gmail.com>
-From: Nhat Pham <nphamcs@gmail.com>
-Date: Thu, 3 Apr 2025 13:38:26 -0700
-X-Gm-Features: ATxdqUH27xjXKtpV6QHLDb42HuJLxsrQKEFDngpscMUoQkaQAzPemRQ1YdwdJqk
-Message-ID: <CAKEwX=Na6kgGLsnknkfsc75hk-Q690z0J9rh=S=BmK2qjVU3rw@mail.gmail.com>
-Subject: Re: [PATCH 0/2] minimize swapping on zswap store failure
-To: Joshua Hahn <joshua.hahnjy@gmail.com>
-Cc: Yosry Ahmed <yosryahmed@google.com>, akpm@linux-foundation.org, hannes@cmpxchg.org, 
-	cerasuolodomenico@gmail.com, sjenning@redhat.com, ddstreet@ieee.org, 
-	vitaly.wool@konsulko.com, hughd@google.com, corbet@lwn.net, 
-	konrad.wilk@oracle.com, senozhatsky@chromium.org, rppt@kernel.org, 
-	linux-mm@kvack.org, kernel-team@meta.com, linux-kernel@vger.kernel.org, 
-	david@ixit.cz, Minchan Kim <minchan@kernel.org>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Chengming Zhou <chengming.zhou@linux.dev>, Kairui Song <ryncsn@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250403-fix_scm_doc_warn-v1-1-9cd36345db77@oss.qualcomm.com>
+X-B4-Tracking: v=1; b=H4sIAMDx7mcC/x2MQQqAIBAAvyJ7TlCpyL4SIbVutYc0FCqI/p50H
+ JiZBzIlpgy9eCDRyZljKKArAbhNYSXJvjAYZRpVKy0Xvl3G3fmI7ppSkJ3ypm1xQTtbKNmRqDj
+ /chjf9wMUNOvyYgAAAA==
+X-Change-ID: 20250401-fix_scm_doc_warn-80d266cfc9b9
+To: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        quic_satyap@quicinc.com, kernel@oss.qualcomm.com,
+        Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
+        Unnathi Chalicheemala <unnathi.chalicheemala@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1743712758; l=1394;
+ i=unnathi.chalicheemala@oss.qualcomm.com; s=20240514;
+ h=from:subject:message-id; bh=ZKFPJnkH5cmy2Hcw7v2o0zv/8xKsrpwsfbr6qB8cQMs=;
+ b=oHny9g1HrYSo20lV2kB7j8fbRV+XAVRCUM8Yth2gGD0hhpBvA6jEvRkbgMLm+FEh9rXjsO5oC
+ /JUlfIso4+FCzIDaQ9E/jYdH/1eCuR4PngmJNDszL4MBZWNjaR9DdDQ
+X-Developer-Key: i=unnathi.chalicheemala@oss.qualcomm.com; a=ed25519;
+ pk=o+hVng49r5k2Gc/f9xiwzvR3y1q4kwLOASwo+cFowXI=
+X-Authority-Analysis: v=2.4 cv=VI/dn8PX c=1 sm=1 tr=0 ts=67eef1f9 cx=c_pps a=mDZGXZTwRPZaeRUbqKGCBw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=k3TILi5Bbk-7JZiMJ-QA:9 a=QEXdDO2ut3YA:10
+ a=zc0IvFSfCIW2DFIPzwfm:22
+X-Proofpoint-ORIG-GUID: GY7lukYHl8Va6HQ3gDJH_T9SaGDALJJd
+X-Proofpoint-GUID: GY7lukYHl8Va6HQ3gDJH_T9SaGDALJJd
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-03_09,2025-04-03_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1015
+ priorityscore=1501 mlxscore=0 adultscore=0 suspectscore=0 impostorscore=0
+ phishscore=0 lowpriorityscore=0 mlxlogscore=999 malwarescore=0 bulkscore=0
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504030109
 
-On Wed, Apr 2, 2025 at 1:06=E2=80=AFPM Joshua Hahn <joshua.hahnjy@gmail.com=
-> wrote:
->
-> On Mon, 16 Oct 2023 17:57:31 -0700 Yosry Ahmed <yosryahmed@google.com> wr=
-ote:
->
-> > On Mon, Oct 16, 2023 at 5:35=E2=80=AFPM Nhat Pham <nphamcs@gmail.com> w=
-rote:
->
-> > I thought before about having a special list_head that allows us to
-> > use the lower bits of the pointers as markers, similar to the xarray.
-> > The markers can be used to place different objects on the same list.
-> > We can have a list that is a mixture of struct page and struct
-> > zswap_entry. I never pursued this idea, and I am sure someone will
-> > scream at me for suggesting it. Maybe there is a less convoluted way
-> > to keep the LRU ordering intact without allocating memory on the
-> > reclaim path.
->
-> Hi Yosry,
->
-> Apologies for reviving an old thread, but I wasn't sure whether opening a=
-n
-> entirely new thread was a better choice : -)
->
-> So I've implemented your idea, using the lower 2 bits of the list_head's =
-prev
-> pointer (last bit indicates whether the list_head belongs to a page or a
-> zswap_entry, and the second to last bit was repurposed for the second cha=
-nce
-> algorithm).
->
-> For a very high level overview what I did in the patch:
-> - When a page fails to compress, I remove the page mapping and tag both t=
-he
->   xarray entry (tag =3D=3D set lowest bit to 1) and the page's list_head =
-prev ptr,
->   then store the page directly into the zswap LRU.
-> - In zswap_load, we take the entry out of the xarray and check if it's ta=
-gged.
->   - If it is tagged, then instead of decompressing, we just copy the page=
-'s
->     contents to the newly allocated page.
-> - (More details about how to teach vmscan / page_io / list iterators how =
-to
->   handle this, but we can gloss over those details for now)
->
-> I have a working version, but have been holding off because I have only b=
-een
-> seeing regressions. I wasn't really sure where they were coming from, but
-> after going through some perf traces with Nhat, found out that the regres=
-sions
-> come from the associated page faults that come from initially unmapping t=
-he
-> page, and then re-allocating it for every load. This causes (1) more memc=
-g
-> flushing, and (2) extra allocations =3D=3D> more pressure =3D=3D> more re=
-claim, even
-> though we only temporarily keep the extra page.
+Add description for members of qcom_scm_desc struct to avoid:
 
-Thanks for your effort on this idea :)
+drivers/firmware/qcom/qcom_scm.h:56: warning: Function parameter or struct
+member 'svc' not described in 'qcom_scm_desc'
 
->
-> Just wanted to put this here in case you were still thinking about this i=
-dea.
-> What do you think? Ideally, there would be a way to keep the page around =
-in
-> the zswap LRU, but do not have to re-allocate a new page on a fault, but =
-this
-> seems like a bigger task.
+drivers/firmware/qcom/qcom_scm.h:56: warning: Function parameter or struct
+member 'cmd' not described in 'qcom_scm_desc'
 
-I wonder if we can return the page in the event of a page fault. We'll
-need to keep it in the swap cache for this to work:
+drivers/firmware/qcom/qcom_scm.h:56: warning: Function parameter or struct
+member 'owner' not described in 'qcom_scm_desc'
 
-1. On reclaim, do the same thing as your prototype but keep the page
-in swap cache (i.e do not remove_mapping() it).
+Signed-off-by: Unnathi Chalicheemala <unnathi.chalicheemala@oss.qualcomm.com>
+---
+ drivers/firmware/qcom/qcom_scm.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-2. On page fault (do_swap_page), before returning check if the page is
-in zswap LRU. If it is, invalidate the zswap LRU linkage, and put it
-back to one of the proper LRUs.
+diff --git a/drivers/firmware/qcom/qcom_scm.h b/drivers/firmware/qcom/qcom_scm.h
+index 097369d38b84efbce5d672c4f36cc87373aac24b..3133d826f5fae8d135a8f03758173903a87e718b 100644
+--- a/drivers/firmware/qcom/qcom_scm.h
++++ b/drivers/firmware/qcom/qcom_scm.h
+@@ -44,8 +44,11 @@ enum qcom_scm_arg_types {
+ 
+ /**
+  * struct qcom_scm_desc
++ * @svc: Service identifier
++ * @cmd: Command identifier
+  * @arginfo:	Metadata describing the arguments in args[]
+  * @args:	The array of arguments for the secure syscall
++ * @owner: Owner identifier
+  */
+ struct qcom_scm_desc {
+ 	u32 svc;
 
-Johannes, do you feel like this is possible?
+---
+base-commit: 91e5bfe317d8f8471fbaa3e70cf66cae1314a516
+change-id: 20250401-fix_scm_doc_warn-80d266cfc9b9
 
->
-> Ultimately the goal is to prevent an incompressible page from hoarding th=
-e
-> compression algorithm on multiple reclaim attempts, but if we are spendin=
-g
-> more time by allocating new pages... maybe this isn't the correct approac=
-h :(
+Best regards,
+-- 
+Unnathi Chalicheemala <unnathi.chalicheemala@oss.qualcomm.com>
 
-Hmmm, IIUC this problem also exists with zram, since zram allocates a
-PAGE_SIZE sized buffer to hold the original page's content. I will
-note though that zram seems to favor these kinds of pages for
-writeback :) Maybe this is why...?
-
-(+ Minchan)
-
->
-> Please let me know if you have any thoughts on this : -)
-
-Well worst case scenario there is still the special incompressible LRU
-idea. We'll need some worker thread to check for write access to these
-pages to promote them though.
-
-(+ Shakeel)
-
-> Have a great day!
-> Joshua
->
-> Sent using hkml (https://github.com/sjp38/hackermail)
->
