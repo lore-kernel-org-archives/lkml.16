@@ -1,108 +1,162 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F20501854;
-	Thu,  3 Apr 2025 08:18:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DEEC241691;
+	Thu,  3 Apr 2025 08:18:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743668308; cv=none; b=P38asBp6Ecpg7T9ZcHTiFLh5Hw7a4w7OqBAHwS48sOGAyno8m1Bbi+4YMDWWqiV11EyoBefnBvCCQfqTHwkdVjYCYgoBe9MHPA+UH/4On1SRcECPybWZZZRAvQQJpHA+neXxstLeQSxtLsx/rh0o3BeDUzuOq8nETm1j1MNkl8g=
+	t=1743668332; cv=none; b=nDZcHnAVs13OTJsIM/QGvAUYfAvM7yPAC6FXDONHuapUpiRnBoUvd+nosltQVhWSYiBpj3phlZ+j8yijV+Yoq+p2YGbNcQ8NbaDPxx9lxBVlkG+tMevriT7ORkSL7yM0HKaKpbcImRZ8e5vPApSeaaCN+S3dLslZGFOfYHFSaJ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743668308; c=relaxed/simple;
-	bh=0I7n8T2Xw/5A+xGujo1SuJ10MG6MtVU4rlBZLisvIwc=;
-	h=Date:Message-Id:To:Cc:Subject:From:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=WBKfLFdiObsPvFwM5nm5Lo5lXBkGvw7ByCVwtxlT93N61S5qF6wXbFftow6NxJLxkCcnv34G6wMPGIHGm9y4yIVPCpLWvjLhf7U5YQEYfWV8Sq9mTguMyUs4Py+BL0l6u+nU++0g/sBTyTHaxcP8ca0TL/IH19c6qK2Q/afpsDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E673gJFe; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743668332; c=relaxed/simple;
+	bh=s6j21HcEMBF6v4lEmeuyhKZT66Img10/Z2kkgWSa1t4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PBEE5jQE8JVanco7HDgyKonD1mi1NFoK+ggh3mrtdQcaO0ThkkGYFlaGZQ53t1uP1S0v3zRBa/8sG8g7VpsgjOrDkCtyZtLL2HYHE0Y8hMmULkrzLa2x8cFZwg1CbNxXSdXPqFsAmOaYkRYBg5AFY43eBrCb2Gpv6Ows29KUA58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=k+D95KDv; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E673gJFe"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-22401f4d35aso6525155ad.2;
-        Thu, 03 Apr 2025 01:18:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743668306; x=1744273106; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to:from
-         :subject:cc:to:message-id:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=RoQiVDYJvAvzWCWcfK67WGk1iw1Tha7jczmy8QUPbMg=;
-        b=E673gJFeEMFp0YKO3CPohE6YVagnp+XCTPU3iCD4hYBdRMzfrfeNJY4uZMQEuN8R0w
-         Vv+pUfoDMGKpuJ77SvQKskXueJQbW5KvI/B7bPGMFC4DOFpnssrMIBkvT0XRH7WfNCip
-         Yd5qS4FfgCRandyKRLhsCMyCRCoyrfGeCtx/jfKqFkgQuAWI4izbPdzkEKttmabdPmfu
-         lvgCmYL9AliTwsuwEPe0N3tum3c+zJ1XBuQrjwSGCsbneWkffhzNFYsGSASD6fi1/sGZ
-         9elgxI/FceHcaTsXwjQqXDsWAuGEjhaj3V9Xjjy+3gV5kpsERPV8/FPSpWeLHJiMwMiF
-         mZjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743668306; x=1744273106;
-        h=content-transfer-encoding:mime-version:references:in-reply-to:from
-         :subject:cc:to:message-id:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=RoQiVDYJvAvzWCWcfK67WGk1iw1Tha7jczmy8QUPbMg=;
-        b=My2/Tv/dKof8iZBDZEj84hHEuaJa234kyiFqZp/WNY0UpiNYqJDZmoukOTTzkvLrkT
-         B1hUR3oicSs9I1766KvrmcuHYeZG5lEN24hlyWKdm1d31mE1MsaVG6E6hreElck2LvWB
-         CCyIHnInAawu2/A2VyVmab3pCDXLJGb2nYtaAZZdub4VRescfCsr2L2TO0Unztrm+M1g
-         odUV7y3+fwFrIsrXBgfC78Bt66oPdz9EbSemGb2bnJQEzZi+XeZWXuA5u5GLfVn1DsSY
-         Nu3Iq0KD3/5tIFONJLt4TB7/nl8TuLNZHOAbcIVAYqhv74Gh+ZjjtReVB2uyZCrybA/8
-         wFxA==
-X-Forwarded-Encrypted: i=1; AJvYcCU1+9r2oUCqtEGwPeBsqnyamHUJMovqVYLRnVV+5YlhNSl5pkW4eeAL1Qf0q8+5PkhmPuhE4UE2A7BXF+NSNkc=@vger.kernel.org, AJvYcCUrKsCrG3yrIzV5ttACWAWA3HU+aKPmSzGiPGFYJ/FZ4joV6UrKx7+iwdp9+3hrCb/SQmjYBCAB@vger.kernel.org, AJvYcCXE6jzXXROUWBYu1IsLlYi6jmpu0XciIm8LNQXSww28UfANCzorl5L3TikIulDR6DZjrBZSU+kb/e8cw0o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxDnLRaHGk9QrFFe0S5v188+JE9NyTAKHPoKhmOj1oMQYfwcsnp
-	n8xJ3BgcrKzaIfX2AFABWsZuNQpqpPB+sIudkQB3dduY10OAreVc15es2YH9
-X-Gm-Gg: ASbGnctYUxpkQFbYxTnKHFqY/DWYVvqmBmG2QetVwQ7hDno5k+LugqmXkPVlnnwN9Rx
-	U8XwVUOZwp+wgDZbi8OPJOSS9HO7Lc7A1vOYCUZ6GBlqs2wBSSj87M0a7jd4Tww79S6Y+HNOjLn
-	HXh5SZVFPaIjTOoYukEO8ax3+iIUpKC2fnBgXj7LoIXNSANjb8og7xN91oVPeh8rX9S1yCwL7kR
-	C8S5T3jXVGQ4hGB1MPcKsg2bezpB8w1H+ygohR4rs4Vn8Vb/WPsH7/tvXwuV4xSW6I8ufT1Ow/t
-	lna/fHqq89TJNGLSvOnRikrAZj+Y/OBVI+aRoNGD9mFcih3uG6Mb4RxccuHDIPWrUdTLzKol+19
-	Lw/uSY8GBn9+4l2ejvTHo1CBLfL557xONWlCfxQ==
-X-Google-Smtp-Source: AGHT+IHM0dK/CpadJel6XcHmo4OhKC1pr6HOLwIlhR7w4LsvgQpg3fMZtfMeebUstJnEdbcKq9w+3w==
-X-Received: by 2002:a17:903:3b84:b0:227:e980:919d with SMTP id d9443c01a7336-2296c86863dmr64173195ad.47.1743668306104;
-        Thu, 03 Apr 2025 01:18:26 -0700 (PDT)
-Received: from localhost (p4204131-ipxg22701hodogaya.kanagawa.ocn.ne.jp. [153.160.176.131])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-229785ada37sm8761335ad.32.2025.04.03.01.18.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Apr 2025 01:18:25 -0700 (PDT)
-Date: Thu, 03 Apr 2025 17:18:09 +0900 (JST)
-Message-Id: <20250403.171809.1101736852312477056.fujita.tomonori@gmail.com>
-To: a.hindborg@kernel.org
-Cc: boqun.feng@gmail.com, fujita.tomonori@gmail.com, tglx@linutronix.de,
- linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
- netdev@vger.kernel.org, andrew@lunn.ch, hkallweit1@gmail.com,
- tmgross@umich.edu, ojeda@kernel.org, alex.gaynor@gmail.com,
- gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me,
- a.hindborg@samsung.com, aliceryhl@google.com, anna-maria@linutronix.de,
- frederic@kernel.org, arnd@arndb.de, jstultz@google.com, sboyd@kernel.org,
- mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
- vincent.guittot@linaro.org, dietmar.eggemann@arm.com, rostedt@goodmis.org,
- bsegall@google.com, mgorman@suse.de, vschneid@redhat.com,
- tgunders@redhat.com, me@kloenk.dev, david.laight.linux@gmail.com
-Subject: Re: [PATCH v11 6/8] MAINTAINERS: rust: Add new sections for
- DELAY/SLEEP and TIMEKEEPING API
-From: FUJITA Tomonori <fujita.tomonori@gmail.com>
-In-Reply-To: <87ecyd3s09.fsf@kernel.org>
-References: <RGjlasf3jfs3sL9TWhGeAJxH0MNvvn0DDqGl9FVo2JNvwTDpUqrr_V515QzLaEp0T4B1m6PJ0z7Jpw1obiG58w==@protonmail.internalid>
-	<Z-qgo5gl6Qly-Wur@Mac.home>
-	<87ecyd3s09.fsf@kernel.org>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="k+D95KDv"
+Received: from [192.168.88.20] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id D80A0105D;
+	Thu,  3 Apr 2025 10:16:55 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1743668216;
+	bh=s6j21HcEMBF6v4lEmeuyhKZT66Img10/Z2kkgWSa1t4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=k+D95KDvLSkKCZA4UaXYyl7nmOv5qByQQ/KO7BL0dMLZaREJg0h04VIXpJKRDgZ88
+	 HeBaVBzNzRB1hmDJN7xmIz8i39Ur++kXZNkgygcnfHR1r+Sgmehq15P5aXREBbFp1U
+	 lF6TXKNLCT7AEmfM8QGrxkuoWNoW2PT2dmb7pAcM=
+Message-ID: <c037c38d-1056-4ced-b411-c3b8f04162f2@ideasonboard.com>
+Date: Thu, 3 Apr 2025 11:18:46 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/3] media: rcar-vin: Fix RAW10
+To: =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org,
+ linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+References: <20250324-rcar-fix-raw-v1-0-ae56c1c7a2f6@ideasonboard.com>
+ <20250324-rcar-fix-raw-v1-3-ae56c1c7a2f6@ideasonboard.com>
+ <20250331211122.GA1240431@ragnatech.se>
+Content-Language: en-US
+From: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
+In-Reply-To: <20250331211122.GA1240431@ragnatech.se>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Mon, 31 Mar 2025 21:43:50 +0200
-Andreas Hindborg <a.hindborg@kernel.org> wrote:
+Hi,
 
->>> If that is acceptable to everyone, it is very likely that I can pick 2-6
->>> for v6.16.
->>>
->>
->> You will need to fix something because patch 2-6 removes `Ktime` ;-)
+On 01/04/2025 00:11, Niklas Söderlund wrote:
+> Hi Tomi,
 > 
-> Yea, but `Instant` is almost a direct substitution, right? Anyway, Tomo
-> can send a new spin and change all the uses of Ktime, or I can do it. It
-> should be straight forward. Either way is fine with me.
+> Thanks for your work.
+> 
+> On 2025-03-24 13:48:54 +0200, Tomi Valkeinen wrote:
+>> Fix the following to get RAW10 formats working:
+>>
+>> In rvin_formats, the bpp is set to 4 for RAW10. As VIN unpacks RAW10 to
+>> 16-bit containers, the bpp should be 2.
+>>
+>> Don't set VNDMR_YC_THR to the VNDMR register. The YC_THR is "YC Data
+>> Through Mode", used for YUV formats and should not be set for RAW10.
+>>
+>> Fix the check related to the RGB666 format and CSI-2 mode. The
+>> VNMC_INF_RGB666 define is the same as used for RAW10 on Gen4, and RAW10
+>> is allowed on CSI-2 (whereas RGB666 is not allowed on Gen3 on CSI-2).
+>> This feels a bit hacky, though, and the formats should really have been
+>> verified already earlier.
+> 
+> I agree, it feels hacky. I would rather just remove the while switch
+> then try to "fix" it by extending it more. When testing this series I
+> needed a similar fix for VNMC_INF_RAW8 check below to get it to work on
+> Gen4.
 
-`Delta`? Not `Instant`.
+Also, I think it's fine to be a bit hacky to have a small fix for a 
+feature already in upstream, instead of doing a bigger restructuring to 
+fix it.
 
-All Ktime in hrtimer are passed to hrtimer_start_range_ns(), right?
+All this should be cleaned up, but in my opinion it's better to do that 
+on top of a working upstream.
 
-I'll send a new version shortly.
+  Tomi
+
+>>
+>> Fixes: 1b7e7240eaf3 ("media: rcar-vin: Add support for RAW10")
+>> Signed-off-by: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
+>> ---
+>>   drivers/media/platform/renesas/rcar-vin/rcar-dma.c  | 9 +++++++--
+>>   drivers/media/platform/renesas/rcar-vin/rcar-v4l2.c | 8 ++++----
+>>   2 files changed, 11 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/drivers/media/platform/renesas/rcar-vin/rcar-dma.c b/drivers/media/platform/renesas/rcar-vin/rcar-dma.c
+>> index 53046614f7a1..f8394be8a922 100644
+>> --- a/drivers/media/platform/renesas/rcar-vin/rcar-dma.c
+>> +++ b/drivers/media/platform/renesas/rcar-vin/rcar-dma.c
+>> @@ -811,12 +811,17 @@ static int rvin_setup(struct rvin_dev *vin)
+>>   		case VNMC_INF_YUV8_BT656:
+>>   		case VNMC_INF_YUV10_BT656:
+>>   		case VNMC_INF_YUV16:
+>> -		case VNMC_INF_RGB666:
+>>   			if (vin->is_csi) {
+>>   				vin_err(vin, "Invalid setting in MIPI CSI2\n");
+>>   				return -EINVAL;
+>>   			}
+>>   			break;
+>> +		case VNMC_INF_RGB666:
+>> +			if (vin->info->model == RCAR_GEN3 && vin->is_csi) {
+>> +				vin_err(vin, "Invalid setting in MIPI CSI2\n");
+>> +				return -EINVAL;
+>> +			}
+>> +			break;
+>>   		case VNMC_INF_RAW8:
+>>   			if (!vin->is_csi) {
+>>   				vin_err(vin, "Invalid setting in Digital Pins\n");
+>> @@ -913,7 +918,7 @@ static int rvin_setup(struct rvin_dev *vin)
+>>   	case V4L2_PIX_FMT_SGBRG10:
+>>   	case V4L2_PIX_FMT_SGRBG10:
+>>   	case V4L2_PIX_FMT_SRGGB10:
+>> -		dmr = VNDMR_RMODE_RAW10 | VNDMR_YC_THR;
+>> +		dmr = VNDMR_RMODE_RAW10;
+>>   		break;
+>>   	default:
+>>   		vin_err(vin, "Invalid pixelformat (0x%x)\n",
+>> diff --git a/drivers/media/platform/renesas/rcar-vin/rcar-v4l2.c b/drivers/media/platform/renesas/rcar-vin/rcar-v4l2.c
+>> index 756fdfdbce61..65da8d513b52 100644
+>> --- a/drivers/media/platform/renesas/rcar-vin/rcar-v4l2.c
+>> +++ b/drivers/media/platform/renesas/rcar-vin/rcar-v4l2.c
+>> @@ -88,19 +88,19 @@ static const struct rvin_video_format rvin_formats[] = {
+>>   	},
+>>   	{
+>>   		.fourcc			= V4L2_PIX_FMT_SBGGR10,
+>> -		.bpp			= 4,
+>> +		.bpp			= 2,
+>>   	},
+>>   	{
+>>   		.fourcc			= V4L2_PIX_FMT_SGBRG10,
+>> -		.bpp			= 4,
+>> +		.bpp			= 2,
+>>   	},
+>>   	{
+>>   		.fourcc			= V4L2_PIX_FMT_SGRBG10,
+>> -		.bpp			= 4,
+>> +		.bpp			= 2,
+>>   	},
+>>   	{
+>>   		.fourcc			= V4L2_PIX_FMT_SRGGB10,
+>> -		.bpp			= 4,
+>> +		.bpp			= 2,
+>>   	},
+>>   };
+>>   
+>>
+>> -- 
+>> 2.43.0
+>>
+> 
+
