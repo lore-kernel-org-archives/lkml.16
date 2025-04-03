@@ -1,263 +1,115 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mail.cab.de (mail.cab.de [46.232.229.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4E923597B;
-	Thu,  3 Apr 2025 11:48:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BFB73597B
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 11:48:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.232.229.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743680887; cv=none; b=boGvnSiIaDOnDKOIoZYXd7JtJDnGcmumjquhdJWrN1/gQR2DfTr/4GI6d48x+3DewfsrK6tne5GL6Hhzc1d1j6u8Eh5kf+SoRWSuFD+UBbg9BrKBLHrJ2jW4QtfyIvhVwWehdhp/s3HHX05rXwVgnkE44Hy14qHLB1bSMG0e2gI=
+	t=1743680925; cv=none; b=CVOT+oYQpyDQxC1o9DCanbof/LeZKhUX3G6YmccE5mIKTqa/gQjEAlkRDNp4qSpMVwsxJulvaCULT+J0HIMMKswWtblhePwjldMhIxyqhUxm88q5uUrIHdsq9DxKViT6jDhHfkOVFW+65qfEdBBVECdxTkgGCHubgm5tfGyj1gc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743680887; c=relaxed/simple;
-	bh=ggW3lyvMe1bWuHnE3AMIXxLY7h5nNcg/fnMxfgTH500=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=ZuTfZ8k+kRcDN1MXXYs4VUMqFXOvJbuW63JWB+hsLgyKRBX4LEQSizfZrcxO8Cx32DPH/A6IJKVWBOaLCh0zVG7cKhoL38DSeTn05hZO9zfxboizwWLZhpN/5Stguj9IEy7dzhgleYP/RU7ffLF/wjC5HtJ/JKz4xCV5A+Cv+ds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gnm0oEtk; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Q7ILPjwm; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1743680925; c=relaxed/simple;
+	bh=ibdwsjBsdXifOEzZI7wf3thLOsCm+G2z9JrJk0nAzT0=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=W449vhv6C4ZUT689V5r7VZGYTKVEAzw10YrXxshhwN/NxcClrf6qb3IUJnC1z4BqSV82rN4T2S5GpXh3VWuRZD6RY7qsK+lyGH2VB3zS/2yhfszFU5DyKHKv3gtOLbB2Ims7JY0lnvdbi1FRjD/Af+/UHKIPXr8LkgY92Njjr+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cab.de; spf=pass smtp.mailfrom=cab.de; dkim=pass (1024-bit key) header.d=cab.de header.i=@cab.de header.b=MttoAoSJ; arc=none smtp.client-ip=46.232.229.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cab.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cab.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gnm0oEtk";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Q7ILPjwm"
-Date: Thu, 03 Apr 2025 11:48:00 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1743680882;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SJVglrlTxtuulj7SgqjYpnjNjxD9NxeRelAx2kNse5Y=;
-	b=gnm0oEtkJLhmvObAhS0sudee6EjSEjQbBeEm2cjDj5zJR/ROi90wau2ghxOrduniaRTAYJ
-	nArmBIkA9Nhpgvlz2CgUFc2l2c2O3Kok/q5cmHajvIeqnPSBJJ1qMOTYpCdbJrjv1P/Wgf
-	W6UF+qqIItsJiYuetWlqy6MN9bEk11BNAEnnMxZ9Q7/0n8LVFwhaQXKUOz5OvsGeQsPD66
-	kmgK8qf+vlYNYxfBqZTmNS2e+joBthRQbpmHAv4dMfoaf0GYGUzwqDYoshcsJqRwmDoctk
-	wG/zkyK/ReWCs1vsfoR2Pjeh9Eo+TiWrcBDc2mJQ5x09cTChC1K0TeADzWhUZA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1743680882;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SJVglrlTxtuulj7SgqjYpnjNjxD9NxeRelAx2kNse5Y=;
-	b=Q7ILPjwm+3RwsFEzFC1b3IU0HuxG0e95IQfLHM7Al1OcRw3lgrhLTEosreKzeajYnKTwJ0
-	eg8FzwaYeExuDWAQ==
-From: "tip-bot2 for Borislav Petkov (AMD)" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: x86/mm] x86/tlb: Simplify choose_new_asid() and generate better code
-Cc: "Borislav Petkov (AMD)" <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>,
- Andy Lutomirski <luto@kernel.org>, Brian Gerst <brgerst@gmail.com>,
- Juergen Gross <jgross@suse.com>, Andrew Cooper <andrew.cooper3@citrix.com>,
- Uros Bizjak <ubizjak@gmail.com>, Rik van Riel <riel@surriel.com>,
- "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
- Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250403085623.20824-1-bp@kernel.org>
-References: <20250403085623.20824-1-bp@kernel.org>
+	dkim=pass (1024-bit key) header.d=cab.de header.i=@cab.de header.b="MttoAoSJ"
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.cab.de 4ZT0PH49bgzMvb0B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cab.de; s=default;
+	t=1743680915; bh=ibdwsjBsdXifOEzZI7wf3thLOsCm+G2z9JrJk0nAzT0=;
+	h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+	b=MttoAoSJwAfmQa5jIBGVuQIqOowG2rsEcP6ovgJU3PyHrhUTGbTqxg38NKkXPM+RT
+	 dVioakVFNDoG3UX++tXsBLJ7Rjni9wdceraIVNNO1KiNJMvwlHPEvXRyUcVjvaUvDG
+	 OGQqYuvBvHAVYb8X2TbgbReTxcqNnny4l+CvEdCM=
+X-cab-MailScanner-Watermark: 1744285714.50276@owngj8hKnBo/Eh4J88041g
+X-cab-MailScanner-From: m.heidelberg@cab.de
+X-cab-MailScanner: Found to be clean
+X-cab-MailScanner-ID: 4ZT0PD1wl6zMvb0B
+X-cab-MailScanner-Information: Please contact it@cab.de for more information
+Received: from Adranos.cab.de ([10.10.1.54] [10.10.1.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(no client certificate requested)
+	by hephaistos.cab.de (MailScanner Milter) with SMTP id 4ZT0PD1wl6zMvb0B;
+	Thu,  3 Apr 2025 13:48:32 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.cab.de 4ZT0PD1wl6zMvb0B
+Received: from Adranos.cab.de (10.10.1.54) by Adranos.cab.de (10.10.1.54) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Thu, 3 Apr
+ 2025 13:48:40 +0200
+Received: from Adranos.cab.de ([fe80::9298:8fc8:395c:3859]) by Adranos.cab.de
+ ([fe80::9298:8fc8:395c:3859%7]) with mapi id 15.02.1748.010; Thu, 3 Apr 2025
+ 13:48:40 +0200
+From: Markus Heidelberg <M.Heidelberg@cab.de>
+To: Christian Eggers <ceggers@arri.de>
+CC: Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>, Rob Herring <robh@kernel.org>, "Krzysztof
+ Kozlowski" <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, "Jiri
+ Prchal" <jiri.prchal@aksignal.cz>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>
+Subject: Re: [RFC PATCH 0/2] eeprom: at25: support Cypress FRAMs without
+ device ID
+Thread-Topic: [RFC PATCH 0/2] eeprom: at25: support Cypress FRAMs without
+ device ID
+Thread-Index: AQHbowqgaLSFUZ+nPkiC1HgANtwlcrOOsPoAgAEuuYCAADJ8AIABotmA
+Date: Thu, 3 Apr 2025 11:48:39 +0000
+Message-ID: <Z-51jz_A73rHq1w9@KAN23-025>
+References: <20250401133148.38330-1-m.heidelberg@cab.de>
+ <2759958.vuYhMxLoTh@n9w6sw14> <Z-zr2oj-hD28ccy3@KAN23-025>
+ <2293994.vFx2qVVIhK@n9w6sw14>
+In-Reply-To: <2293994.vFx2qVVIhK@n9w6sw14>
+Accept-Language: de-DE, en-US
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <C1E143F82CB89145973F6CA8C66C00CE@cab.de>
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174368088082.14745.4983728465451468180.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
 
-The following commit has been merged into the x86/mm branch of tip:
+On Wed, Apr 02, 2025 at 12:49:24PM +0200, Christian Eggers wrote:
+> maybe the "EEPROM" protocol used by at24 (I2C) and at25 (SPI) EEPROMs is
+> not smart enough to provide really useful detection of device capabilitie=
+s.
+> At least I remember that I2C eeproms of different sizes require a differe=
+nt
+> number of bytes for addressing. AFAIK, using a wrong number of addressing=
+ bytes
+> may accidentally overwrite data on the device. If this is the same for SP=
+I
+> eeproms / FRAMs, reliable auto-detection may be impossible or require
+> at least knowing the vendor in advance.
 
-Commit-ID:     2fb34b1566a386913b291d04f91ba6f6e6a5bb99
-Gitweb:        https://git.kernel.org/tip/2fb34b1566a386913b291d04f91ba6f6e6a5bb99
-Author:        Borislav Petkov (AMD) <bp@alien8.de>
-AuthorDate:    Thu, 03 Apr 2025 10:56:23 +02:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Thu, 03 Apr 2025 13:35:37 +02:00
+The "read device ID" command works without address, so it can be used to
+determine the memory size and thus the address length.
 
-x86/tlb: Simplify choose_new_asid() and generate better code
+If the response to this command is similar for various devices/vendors
+(in consideration of the variable length manufacturer ID using the 0x7F
+continuation code), auto-detection should be possible without having to
+know the manufacturer in advance and without having to interpret it from
+the read ID.
 
-Have it return the two things it does return:
+But the maximum possible response length increases by one byte with each
+new manufacturer bank of up to 126 manufacturers added to the JEDEC ID
+list.
 
- - a new ASID and
- - the need to flush the TLB or not,
+> Flash (MTD) devices provide much more powerful methods for enumerating th=
+e
+> device's geometry/capabilities than eeprom/fram. But even for ONFI there =
+are
+> extra tables for vendor/device specific workarounds. I am not sure whethe=
+r
+> adding such stuff for at24/at25 devices is really worth the trouble...
 
-in a struct which fits in a single 32-bit register and whack the IO
-parameters.
+I feel the same that this wouldn't be worth it, but I guess it's
+avoidable if further auto-detection should needed by someone.
 
-Beyond being easier to read, this also helps the compiler generate
-better, more compact code:
+Markus=
 
-  # arch/x86/mm/tlb.o:
-
-  text     data      bss      dec      hex  filename
-  9341      753      516    10610     2972  tlb.o.before
-  9213      753      516    10482     28f2  tlb.o.after
-
-No functional changes.
-
-Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Brian Gerst <brgerst@gmail.com>
-Cc: Juergen Gross <jgross@suse.com>
-Cc: Andrew Cooper <andrew.cooper3@citrix.com>
-Cc: Uros Bizjak <ubizjak@gmail.com>
-Cc: Rik van Riel <riel@surriel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Link: https://lore.kernel.org/r/20250403085623.20824-1-bp@kernel.org
----
- arch/x86/mm/tlb.c | 63 ++++++++++++++++++++++++----------------------
- 1 file changed, 34 insertions(+), 29 deletions(-)
-
-diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
-index e459d97..d00ae21 100644
---- a/arch/x86/mm/tlb.c
-+++ b/arch/x86/mm/tlb.c
-@@ -215,16 +215,20 @@ static void clear_asid_other(void)
- 
- atomic64_t last_mm_ctx_id = ATOMIC64_INIT(1);
- 
-+struct new_asid {
-+	unsigned int asid	: 16;
-+	unsigned int need_flush : 1;
-+};
- 
--static void choose_new_asid(struct mm_struct *next, u64 next_tlb_gen,
--			    u16 *new_asid, bool *need_flush)
-+static struct new_asid choose_new_asid(struct mm_struct *next, u64 next_tlb_gen)
- {
-+	struct new_asid ns;
- 	u16 asid;
- 
- 	if (!static_cpu_has(X86_FEATURE_PCID)) {
--		*new_asid = 0;
--		*need_flush = true;
--		return;
-+		ns.asid = 0;
-+		ns.need_flush = 1;
-+		return ns;
- 	}
- 
- 	/*
-@@ -235,9 +239,9 @@ static void choose_new_asid(struct mm_struct *next, u64 next_tlb_gen,
- 		u16 global_asid = mm_global_asid(next);
- 
- 		if (global_asid) {
--			*new_asid = global_asid;
--			*need_flush = false;
--			return;
-+			ns.asid = global_asid;
-+			ns.need_flush = 0;
-+			return ns;
- 		}
- 	}
- 
-@@ -249,22 +253,23 @@ static void choose_new_asid(struct mm_struct *next, u64 next_tlb_gen,
- 		    next->context.ctx_id)
- 			continue;
- 
--		*new_asid = asid;
--		*need_flush = (this_cpu_read(cpu_tlbstate.ctxs[asid].tlb_gen) <
--			       next_tlb_gen);
--		return;
-+		ns.asid = asid;
-+		ns.need_flush = (this_cpu_read(cpu_tlbstate.ctxs[asid].tlb_gen) < next_tlb_gen);
-+		return ns;
- 	}
- 
- 	/*
- 	 * We don't currently own an ASID slot on this CPU.
- 	 * Allocate a slot.
- 	 */
--	*new_asid = this_cpu_add_return(cpu_tlbstate.next_asid, 1) - 1;
--	if (*new_asid >= TLB_NR_DYN_ASIDS) {
--		*new_asid = 0;
-+	ns.asid = this_cpu_add_return(cpu_tlbstate.next_asid, 1) - 1;
-+	if (ns.asid >= TLB_NR_DYN_ASIDS) {
-+		ns.asid = 0;
- 		this_cpu_write(cpu_tlbstate.next_asid, 1);
- 	}
--	*need_flush = true;
-+	ns.need_flush = true;
-+
-+	return ns;
- }
- 
- /*
-@@ -781,9 +786,9 @@ void switch_mm_irqs_off(struct mm_struct *unused, struct mm_struct *next,
- 	bool was_lazy = this_cpu_read(cpu_tlbstate_shared.is_lazy);
- 	unsigned cpu = smp_processor_id();
- 	unsigned long new_lam;
-+	struct new_asid ns;
- 	u64 next_tlb_gen;
--	bool need_flush;
--	u16 new_asid;
-+
- 
- 	/* We don't want flush_tlb_func() to run concurrently with us. */
- 	if (IS_ENABLED(CONFIG_PROVE_LOCKING))
-@@ -854,7 +859,7 @@ void switch_mm_irqs_off(struct mm_struct *unused, struct mm_struct *next,
- 		/* Check if the current mm is transitioning to a global ASID */
- 		if (mm_needs_global_asid(next, prev_asid)) {
- 			next_tlb_gen = atomic64_read(&next->context.tlb_gen);
--			choose_new_asid(next, next_tlb_gen, &new_asid, &need_flush);
-+			ns = choose_new_asid(next, next_tlb_gen);
- 			goto reload_tlb;
- 		}
- 
-@@ -889,8 +894,8 @@ void switch_mm_irqs_off(struct mm_struct *unused, struct mm_struct *next,
- 		 * TLB contents went out of date while we were in lazy
- 		 * mode. Fall through to the TLB switching code below.
- 		 */
--		new_asid = prev_asid;
--		need_flush = true;
-+		ns.asid = prev_asid;
-+		ns.need_flush = true;
- 	} else {
- 		/*
- 		 * Apply process to process speculation vulnerability
-@@ -918,21 +923,21 @@ void switch_mm_irqs_off(struct mm_struct *unused, struct mm_struct *next,
- 			cpumask_set_cpu(cpu, mm_cpumask(next));
- 		next_tlb_gen = atomic64_read(&next->context.tlb_gen);
- 
--		choose_new_asid(next, next_tlb_gen, &new_asid, &need_flush);
-+		ns = choose_new_asid(next, next_tlb_gen);
- 	}
- 
- reload_tlb:
- 	new_lam = mm_lam_cr3_mask(next);
--	if (need_flush) {
--		VM_WARN_ON_ONCE(is_global_asid(new_asid));
--		this_cpu_write(cpu_tlbstate.ctxs[new_asid].ctx_id, next->context.ctx_id);
--		this_cpu_write(cpu_tlbstate.ctxs[new_asid].tlb_gen, next_tlb_gen);
--		load_new_mm_cr3(next->pgd, new_asid, new_lam, true);
-+	if (ns.need_flush) {
-+		VM_WARN_ON_ONCE(is_global_asid(ns.asid));
-+		this_cpu_write(cpu_tlbstate.ctxs[ns.asid].ctx_id, next->context.ctx_id);
-+		this_cpu_write(cpu_tlbstate.ctxs[ns.asid].tlb_gen, next_tlb_gen);
-+		load_new_mm_cr3(next->pgd, ns.asid, new_lam, true);
- 
- 		trace_tlb_flush(TLB_FLUSH_ON_TASK_SWITCH, TLB_FLUSH_ALL);
- 	} else {
- 		/* The new ASID is already up to date. */
--		load_new_mm_cr3(next->pgd, new_asid, new_lam, false);
-+		load_new_mm_cr3(next->pgd, ns.asid, new_lam, false);
- 
- 		trace_tlb_flush(TLB_FLUSH_ON_TASK_SWITCH, 0);
- 	}
-@@ -941,7 +946,7 @@ reload_tlb:
- 	barrier();
- 
- 	this_cpu_write(cpu_tlbstate.loaded_mm, next);
--	this_cpu_write(cpu_tlbstate.loaded_mm_asid, new_asid);
-+	this_cpu_write(cpu_tlbstate.loaded_mm_asid, ns.asid);
- 	cpu_tlbstate_update_lam(new_lam, mm_untag_mask(next));
- 
- 	if (next != prev) {
