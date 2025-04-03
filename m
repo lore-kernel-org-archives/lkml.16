@@ -1,131 +1,187 @@
-Received: from fhigh-a3-smtp.messagingengine.com (fhigh-a3-smtp.messagingengine.com [103.168.172.154])
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 399C22CA6;
-	Thu,  3 Apr 2025 04:09:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C3762CA6;
+	Thu,  3 Apr 2025 04:14:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743653368; cv=none; b=FSmWhHxGZ20M9lIe0j7it1hGKI7Z629ywx+Idvp6i923qSxE8BUm5PzQX1FTGSeQnusVe6IFWqMukIwFesAMHilvfuXFgW4c8prwSU1eBJHHIfZ4Dto9ZBpAhMYb/onoQh69lO90Ov0KHPMFetG4NCRdoGcdfxm9IrLnAkBtwAQ=
+	t=1743653697; cv=none; b=lcgxwIE782sNVepI4UjhrN7OFg9yzRIp/k3vmwbrLSjuPDBjpX8Cbsv+1naZDdFEESIjNKPMUvFrI7GwVb3KgOIumDx8lGKE/+ebWxNeHQrQdpNaTzMV+ogYT3DhvrZm1TTM/I9qCF0SVnwb+Mqb6nCwXwGIQHBjPJvLZu3YXWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743653368; c=relaxed/simple;
-	bh=c2RkKwq3/C/0PD/gh+liCMQ5jVdJrrvUA8Of0RdApvA=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=chI0rLTNlQ5vR3EIVvun620t7vqKjAaIxfVWBNj7yxNXi1yFBuAbNwpgUqNnCOWaB7eopcELp0Wm+Yc4fy9iMauyItAFizec+awZtHUxcZfktiFy/F1UFq3Hkeb5A+ycEZZVkFKuasvgApXQ+ybYNjzSGPGC0zWyAsGaRjfGer4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=arp242.net; spf=pass smtp.mailfrom=arp242.net; dkim=pass (2048-bit key) header.d=arp242.net header.i=@arp242.net header.b=LwBKeQUV; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=xgiUBazu; arc=none smtp.client-ip=103.168.172.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=arp242.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arp242.net
+	s=arc-20240116; t=1743653697; c=relaxed/simple;
+	bh=Rs5xl/Fyj2FcHnsISZfJGogORfTq3Uov3CoDy4mk1DM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=M49x5Ayr69LbzuCj736NfZmQAYSUYsOwrEKV3EnvQfAvg4aIX7MFQjWRWf+gIImDVvwqi90owqpe93Qz2XcDc1L8x1vYtROlbhQA59Mrn1qSfsMEEL3yBYFY0FTXhmTZBNfljKt+EC5IbNs0ZLKuyctTjzSLJ+B0coGrn8Gd+6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=jNW1JteO; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arp242.net header.i=@arp242.net header.b="LwBKeQUV";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="xgiUBazu"
-Received: from phl-compute-08.internal (phl-compute-08.phl.internal [10.202.2.48])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 1AF0111401D9;
-	Thu,  3 Apr 2025 00:09:24 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-08.internal (MEProxy); Thu, 03 Apr 2025 00:09:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arp242.net; h=cc
-	:content-transfer-encoding:content-type:date:date:from:from
-	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
-	:to; s=fm2; t=1743653364; x=1743739764; bh=ObwGaDyomkVUjntLDINpY
-	n/EaMWFq6k3+MIClMLrR24=; b=LwBKeQUVXQG1C7A8On7rdlGjAvMH9Djxt9j/d
-	GpVx+F+muL+aSiQHJHhFbmzSLssFr6aOp8VegxJZF8J7jQiRYr8FpNxwPK+q74Q4
-	th0CcCF/k/JhKjSkHY8vbnxmRYxEv6OoVn/WopBu7tZdwSGJnGPVyxOzwfjz3591
-	dRAWRkdRbZpCWne44UJvsFbuX/PwU86gpSWIPoq1jXwZFZANr4JbvQEyfRyYr9i9
-	HT5B5tgVfa4jJLy7X34V9jGxeL1xLo5roiCvtAhMTEXxFfv7sV/aSv1CCDjyBdBj
-	zezarRNagZpzfsYNzZLWSxa2dEBks1yVyGE5rQMvmhy724hJQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:content-transfer-encoding:content-type
-	:date:date:feedback-id:feedback-id:from:from:in-reply-to
-	:message-id:mime-version:reply-to:subject:subject:to:to
-	:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
-	1743653364; x=1743739764; bh=ObwGaDyomkVUjntLDINpYn/EaMWFq6k3+MI
-	ClMLrR24=; b=xgiUBazuCL6ORVu0QyjEE3G5qmOfWSI9a/PUryaCN1/wNjFWemz
-	k9IABBknS7lTJEF6mp8OnrXdR+jtcyC75bx5KQqbgwYiK0LFrU3SoZtdh5hN9fTB
-	nw9QqEzCvyJcK/oV5M0fe6CKDs7+yT2KVE8Qos0Rcw4f+/6zPInP3i0W/xtNAYsJ
-	ZH8hfwTrBJSbAIKdVjcEpNBH2ICnSH0LlaZmrpUT6h5tQDaJS7Hje5Ky29UrjpIi
-	cA9Wj13ysRFbPEXLFZ90/jeIpA5ES+U8yCATrP89eYXMNpbFlqODABAnE4uTtbEp
-	QXIrzZu0o9RWyjimoLYrrvgJsu60Q2Rhzmg==
-X-ME-Sender: <xms:8wnuZ9NfAHHXVmcV9tkCnmhrVUKfIAPaQuXT7ye_aYb4Bi8RHCUU1A>
-    <xme:8wnuZ_96ugsLu4IjL9htLucRm5l-kq2IHyC2LLZ9L1QvRV0FbRvSqAo6z2WCC0NBh
-    dVR2GosXVDPMzjvlg>
-X-ME-Received: <xmr:8wnuZ8TQWwUbzHIAr4USOY5JsSHxgkw0XnfGHeHLlAwUGhQuu_sHTQEqq7s2wQosbayqAM1uY4bBcGWCNFgF5M-PthrCCb0NHiBIgBRwJwpc-OH35wRIGEoKK3vleKn->
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddukeejheeiucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhephffvufffkffoggfgsedtkeertdertddtnecu
-    hfhrohhmpeforghrthhinhcuvfhouhhrnhhoihhjuceomhgrrhhtihhnsegrrhhpvdegvd
-    drnhgvtheqnecuggftrfgrthhtvghrnheptdehteekieeffefhjedvteeffeevleekhefh
-    veettdeufffhfeeuvdehtdfguddtnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
-    hmpehmrghilhhfrhhomhepmhgrrhhtihhnsegrrhhpvdegvddrnhgvthdpnhgspghrtghp
-    thhtohepjedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepmhgrrhhtihhnsegrrh
-    hpvdegvddrnhgvthdprhgtphhtthhopehhmhhhsehhmhhhrdgvnhhgrdgsrhdprhgtphht
-    thhopehhuggvghhovgguvgesrhgvughhrghtrdgtohhmpdhrtghpthhtohepihhlphhord
-    hjrghrvhhinhgvnheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehisghm
-    qdgrtghpihdquggvvhgvlheslhhishhtshdrshhouhhrtggvfhhorhhgvgdrnhgvthdprh
-    gtphhtthhopehplhgrthhfohhrmhdqughrihhvvghrqdigkeeisehvghgvrhdrkhgvrhhn
-    vghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrh
-    hnvghlrdhorhhg
-X-ME-Proxy: <xmx:8wnuZ5tnO3evJPBjdPWIeXSzuwmSgGlgvjY91zuZwmE4hagw43q3PA>
-    <xmx:8wnuZ1cjiEyBf8gvGTU_Ji41CJhKotAkncuZK6VQjDF2JvR8zovA1g>
-    <xmx:8wnuZ13S0WzAbwdPfC6bCthplg_yZ3X5spepJvOyOjH-Nez1T_WwPQ>
-    <xmx:8wnuZx-xr94YlQJKcOcj0y1F9iHhNySz252z2JiNRS_CTi6X8rWDIw>
-    <xmx:9AnuZz7WiTNm0trX80mv8-A-E_bsVuhfxes_LCp9PjHOd0NWYqGMnYKR>
-Feedback-ID: i27f8409c:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 3 Apr 2025 00:09:22 -0400 (EDT)
-From: Martin Tournoij <martin@arp242.net>
-To: Martin Tournoij <martin@arp242.net>,
-	Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	ibm-acpi-devel@lists.sourceforge.net,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/x86: thinkpad_acpi: Add charging indicator to the list of safe LEDs
-Date: Thu,  3 Apr 2025 05:08:46 +0100
-Message-ID: <20250403040846.7834-1-martin@arp242.net>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="jNW1JteO"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=W3IphvtrVw1WmLcdmbuxX8EIK6/vZzV10y7MlPqZZiA=; b=jNW1JteORzIMfXMrXgAxOE9GFs
+	mFybB3aVOGNSAWNxqUNGf3fg2sQW9a2Vo9S9YLlpUAEUTIgkrs6M/bgyh7B3A8JLWlFDFg/3laSIB
+	S2p/ewjwt/WOPFF3st72djDaEK+PRNEV0UkvUX2IG7ZP4ytSyyjTQ6smj5I5Ucj08B3vn0oheXDjx
+	4qbv1bfYO5yVScRAw1/JBZw+7N4efS+a1OtL50HoY3ovBP3IQMS+eGjqGIxWYwc6AEq88LWh1+sTQ
+	5hXg/yV3UojWcocS+BI6brXGB819ZwF6hl3dWoCVqT8MpRkW7+eZei8c4aFBB9ayXdf0+JHdwrtYp
+	UxlyLrdA==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1u0Byc-00CMNF-0m;
+	Thu, 03 Apr 2025 12:14:51 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Thu, 03 Apr 2025 12:14:50 +0800
+Date: Thu, 3 Apr 2025 12:14:50 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: Ard Biesheuvel <ardb@kernel.org>, linux-crypto@vger.kernel.org,
+	linux-kernel@vger.kernel.org, x86@kernel.org,
+	"Jason A. Donenfeld" <Jason@zx2c4.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH] crypto: x86/chacha - Remove SIMD fallback path
+Message-ID: <Z-4LOoynbEz3ZLuQ@gondor.apana.org.au>
+References: <CAMj1kXEx__RLBriW0kVPrKnx6+DCpq8=6F-7Tmj2Us61gvGGaw@mail.gmail.com>
+ <CAMj1kXE-vo7E1U++4mAqDH2SXfc=sRZs8KganedJk5z0QF49NA@mail.gmail.com>
+ <Z-zzvXbjt3xzquXb@gondor.apana.org.au>
+ <20250402171930.GD1235@sol.localdomain>
+ <Z-3jkYNtZpTDtKGf@gondor.apana.org.au>
+ <20250403021453.GA2872965@google.com>
+ <Z-344xAsx1uTE9OK@gondor.apana.org.au>
+ <20250403032008.GA129577@sol.localdomain>
+ <Z-4DqsRApwQi6Xju@gondor.apana.org.au>
+ <20250403035934.GB129577@sol.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250403035934.GB129577@sol.localdomain>
 
-Add "tpacpi:orange:batt" and "tpacpi:green:batt" to the list of safe
-LEDs. These LEDs are next to the charging port and indicate the status:
-"tpacpi:orange:batt" when charging the battery, and "tpacpi:green:batt"
-when it's near full (typically white these days, not green).
+On Wed, Apr 02, 2025 at 08:59:34PM -0700, Eric Biggers wrote:
+>
+> But in a lot of cases there is also no reason to even add that restriction.  I'm
+> not sure why you're so eager to make the library functions harder to use.
 
-I don't see why it would be unsafe to enable/disable these LEDs: the
-only thing you lose is a LED telling you if the battery is charging or
-full. These indicators are informational and not critical
+I have no intention of making any changes to siphash.  It doesn't
+even use SIMD.
 
-I got a new x13 a few months ago; on my old x280 the firmware would
-automatically turn off the light once charging stopped, but on more
-recent models it always stays on unless I disable it. I need to compile
-a custom kernel now just for that, which is rather a pain. So I would
-like to propose to expose these options.
+All I want to do is get rid of the crypto_simd_usable() fallback
+paths that we currently have in arch/x86/crypto.  This code is
+never used in hardirq context (and should never be).
 
-Tested on my x280 and x13 Gen 4 AMD.
+For example:
 
-Signed-off-by: Martin Tournoij <martin@arp242.net>
----
- drivers/platform/x86/thinkpad_acpi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+---8<---
+Get rid of the fallback path as SIMD is now always usable in softirq
+context.
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index 0384cf311878..edf7c97aeef9 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -5518,7 +5518,7 @@ static const char * const tpacpi_led_names[TPACPI_LED_NUMLEDS] = {
- 	"tpacpi::unknown_led3",
- 	"tpacpi::thinkvantage",
- };
--#define TPACPI_SAFE_LEDS	0x1481U
-+#define TPACPI_SAFE_LEDS	0x1487U
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+
+diff --git a/arch/x86/crypto/chacha_glue.c b/arch/x86/crypto/chacha_glue.c
+index 8bb74a272879..6a3d60cf3192 100644
+--- a/arch/x86/crypto/chacha_glue.c
++++ b/arch/x86/crypto/chacha_glue.c
+@@ -6,9 +6,7 @@
+  * Copyright (C) 2015 Martin Willi
+  */
  
- static inline bool tpacpi_is_led_restricted(const unsigned int led)
+-#include <crypto/algapi.h>
+ #include <crypto/internal/chacha.h>
+-#include <crypto/internal/simd.h>
+ #include <crypto/internal/skcipher.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+@@ -35,7 +33,6 @@ asmlinkage void chacha_4block_xor_avx512vl(u32 *state, u8 *dst, const u8 *src,
+ asmlinkage void chacha_8block_xor_avx512vl(u32 *state, u8 *dst, const u8 *src,
+ 					   unsigned int len, int nrounds);
+ 
+-static __ro_after_init DEFINE_STATIC_KEY_FALSE(chacha_use_simd);
+ static __ro_after_init DEFINE_STATIC_KEY_FALSE(chacha_use_avx2);
+ static __ro_after_init DEFINE_STATIC_KEY_FALSE(chacha_use_avx512vl);
+ 
+@@ -123,23 +120,15 @@ static void chacha_dosimd(u32 *state, u8 *dst, const u8 *src,
+ 
+ void hchacha_block_arch(const u32 *state, u32 *stream, int nrounds)
  {
+-	if (!static_branch_likely(&chacha_use_simd) || !crypto_simd_usable()) {
+-		hchacha_block_generic(state, stream, nrounds);
+-	} else {
+-		kernel_fpu_begin();
+-		hchacha_block_ssse3(state, stream, nrounds);
+-		kernel_fpu_end();
+-	}
++	kernel_fpu_begin();
++	hchacha_block_ssse3(state, stream, nrounds);
++	kernel_fpu_end();
+ }
+ EXPORT_SYMBOL(hchacha_block_arch);
+ 
+ void chacha_crypt_arch(u32 *state, u8 *dst, const u8 *src, unsigned int bytes,
+ 		       int nrounds)
+ {
+-	if (!static_branch_likely(&chacha_use_simd) || !crypto_simd_usable() ||
+-	    bytes <= CHACHA_BLOCK_SIZE)
+-		return chacha_crypt_generic(state, dst, src, bytes, nrounds);
+-
+ 	do {
+ 		unsigned int todo = min_t(unsigned int, bytes, SZ_4K);
+ 
+@@ -171,18 +160,11 @@ static int chacha_simd_stream_xor(struct skcipher_request *req,
+ 		if (nbytes < walk.total)
+ 			nbytes = round_down(nbytes, walk.stride);
+ 
+-		if (!static_branch_likely(&chacha_use_simd) ||
+-		    !crypto_simd_usable()) {
+-			chacha_crypt_generic(state, walk.dst.virt.addr,
+-					     walk.src.virt.addr, nbytes,
+-					     ctx->nrounds);
+-		} else {
+-			kernel_fpu_begin();
+-			chacha_dosimd(state, walk.dst.virt.addr,
+-				      walk.src.virt.addr, nbytes,
+-				      ctx->nrounds);
+-			kernel_fpu_end();
+-		}
++		kernel_fpu_begin();
++		chacha_dosimd(state, walk.dst.virt.addr,
++			      walk.src.virt.addr, nbytes,
++			      ctx->nrounds);
++		kernel_fpu_end();
+ 		err = skcipher_walk_done(&walk, walk.nbytes - nbytes);
+ 	}
+ 
+@@ -207,13 +189,9 @@ static int xchacha_simd(struct skcipher_request *req)
+ 
+ 	chacha_init(state, ctx->key, req->iv);
+ 
+-	if (req->cryptlen > CHACHA_BLOCK_SIZE && crypto_simd_usable()) {
+-		kernel_fpu_begin();
+-		hchacha_block_ssse3(state, subctx.key, ctx->nrounds);
+-		kernel_fpu_end();
+-	} else {
+-		hchacha_block_generic(state, subctx.key, ctx->nrounds);
+-	}
++	kernel_fpu_begin();
++	hchacha_block_ssse3(state, subctx.key, ctx->nrounds);
++	kernel_fpu_end();
+ 	subctx.nrounds = ctx->nrounds;
+ 
+ 	memcpy(&real_iv[0], req->iv + 24, 8);
+@@ -275,8 +253,6 @@ static int __init chacha_simd_mod_init(void)
+ 	if (!boot_cpu_has(X86_FEATURE_SSSE3))
+ 		return 0;
+ 
+-	static_branch_enable(&chacha_use_simd);
+-
+ 	if (boot_cpu_has(X86_FEATURE_AVX) &&
+ 	    boot_cpu_has(X86_FEATURE_AVX2) &&
+ 	    cpu_has_xfeatures(XFEATURE_MASK_SSE | XFEATURE_MASK_YMM, NULL)) {
 -- 
-2.49.0
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
