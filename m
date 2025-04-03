@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 841311CDFAC
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 22:50:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 511F21DB128
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 22:50:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743720635; cv=none; b=oNdvA007cUUclbDVlsREqMzYObGw+2ETn60xnwbs7gHIptYK1wJb1TnRy/bpLHJR+J8t20lvSi516gwTVL8CPc09QHdffwbUTVnqxkeEVe5rQbEvg8fY8bGpFZ6LWbbHXwIpDYTAZo4IgYwI7btRzyjkIppXLDSvsvC4IVSem4o=
+	t=1743720636; cv=none; b=Z8GFp16PGZ4W+8k2a1yI83U61DVpvBTXZPmIrzVyckCUOqZqJzb5CM3rYEeJapMxqjYkWfhOPGAfvJtuGZuMx5DqeS9ua5GmNo3oF5+v/AmbSXWuojDt4bpPL7+cdg1CToQZBzSZLEamWKXBg6+iPEo3rvfBT54+haErknBCjaA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743720635; c=relaxed/simple;
-	bh=BiQp5jjE7HbPFjcVTSHj/wwYyrJK8x5941YUevOD/dw=;
+	s=arc-20240116; t=1743720636; c=relaxed/simple;
+	bh=tnkhR4AjuZtNa1tFBwycGb/O9DZrGh6UGyCMwNvt0H8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PToZjI1BmMU/1aD6sJ4CiDHofjoWaJUIUioNtWV0AOmzldlAYYOYH2CM2Q5bYhXCd5Kh/3jq3wsdZtN+jdEw5PXDGYCWKOgD3YA4najHYa7gzZwt3qMIiToIwHPehEQ96CWcice/u58XuM3/gIAqkXrX2xED1/qHZBuYlKO7mWc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gmJIIXxK; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=tvvFIUIoTv14YuysAtJC8vaC5JxF+MU8+mtChrKgLKZ65FrLgOXPU/y+tbd/UUrN39jPvuN4i+6umF/LkH7mr+jQW4VD+liKeY9MNHNGDMQ6fYOE7HoqROdcX5vVDmcCb0dAaFqHjafp+iS3HsB5aR/fBGhcQvGzZfkvYvS3oqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hM6LClTB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gmJIIXxK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFC1EC4CEE3;
-	Thu,  3 Apr 2025 22:50:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hM6LClTB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0762CC4CEE3;
+	Thu,  3 Apr 2025 22:50:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743720634;
-	bh=BiQp5jjE7HbPFjcVTSHj/wwYyrJK8x5941YUevOD/dw=;
+	s=k20201202; t=1743720636;
+	bh=tnkhR4AjuZtNa1tFBwycGb/O9DZrGh6UGyCMwNvt0H8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gmJIIXxKz3RVoBsJtBKzNCMzTdHaBOE/FQlv7dWv8GZCe2PDFkfX0Tiqs5rWszGON
-	 l0SYWlenZC/fsMCk+bEyN9EdPSqAOfEiKp62ukyffM+5fyYNNCIyy39TdPgIvPc79H
-	 qFN1HxmbI3Ro4+wK3aw79VL55W1+bYdNqu4J6Ox7RQj6rf5vavs1RtxGQ5DVez39pG
-	 t9fMOiQIREykzSRM855VegtSdKkyt4x1wCsgFrmPz985nEiVJ19O2HssuKC/hlUic/
-	 9JRs7MP2zaHQr/ffiB3csQHFhUJ/txbypvQ4KyvwLZ86SOOR/aALJY+NGTasQBbUO5
-	 5k9YpCj004BGw==
+	b=hM6LClTBNeYm4K65DrR6SEaOQoCfnb/Xd3SNsU4ISsAb6hR5GOC/Zl0c9zPhV5PNH
+	 w+JgHnbGbR+G0SHc7Ws03N6uxjuenU1ZeWOm8UwgqRvbOkJdkjGR+Cc9VA1b0MHDIk
+	 sYJSi2RiQzv+XPDq+mmql0l7ewTbCvGryOHrNOxxt8adB0zLXQ4hA3cYWJ+zY2FLEu
+	 fegn5NPtsAfv9/156MhrSi/7RMi6AAwGcYxi4cma54E7DU6WdvBm1RCr/pXGdDOxx5
+	 DrFD9z8yZ6vCLIPXXKOrXmhRP7GFjRvnGvJ02qf1NAF5WhSRiONRhFiGjAnZ7hxI35
+	 4wYcybBwFi1cg==
 From: Tejun Heo <tj@kernel.org>
 To: void@manifault.com,
 	arighi@nvidia.com,
@@ -33,9 +33,9 @@ To: void@manifault.com,
 Cc: linux-kernel@vger.kernel.org,
 	sched-ext@meta.com,
 	Tejun Heo <tj@kernel.org>
-Subject: [PATCH 1/5] sched_ext: Drop "ops" from scx_ops_enable_state and friends
-Date: Thu,  3 Apr 2025 12:49:43 -1000
-Message-ID: <20250403225026.838987-2-tj@kernel.org>
+Subject: [PATCH 3/5] sched_ext: Drop "ops" from scx_ops_bypass(), scx_ops_breather() and friends
+Date: Thu,  3 Apr 2025 12:49:45 -1000
+Message-ID: <20250403225026.838987-4-tj@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250403225026.838987-1-tj@kernel.org>
 References: <20250403225026.838987-1-tj@kernel.org>
@@ -55,258 +55,252 @@ causes confusion rather than clarifying anything. For example,
 scx_ops_enable_state enums are named SCX_OPS_* and thus conflict with
 scx_ops_flags. Let's drop the second usages.
 
-Drop "ops" from scx_ops_enable_state and friends. Update scx_show_state.py
-accordingly.
+Drop "ops" from scx_ops_bypass(), scx_ops_breather() and friends. Update
+scx_show_state.py accordingly.
 
 Signed-off-by: Tejun Heo <tj@kernel.org>
 ---
- kernel/sched/ext.c                | 81 ++++++++++++++-----------------
- tools/sched_ext/scx_show_state.py |  8 +--
- 2 files changed, 41 insertions(+), 48 deletions(-)
+ kernel/sched/ext.c                | 69 +++++++++++++++----------------
+ tools/sched_ext/scx_show_state.py |  4 +-
+ 2 files changed, 36 insertions(+), 37 deletions(-)
 
 diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c
-index 66bcd40a28ca..07b07e89a578 100644
+index 51c875aee5ec..a837b24244a5 100644
 --- a/kernel/sched/ext.c
 +++ b/kernel/sched/ext.c
-@@ -838,18 +838,18 @@ enum scx_tg_flags {
- 	SCX_TG_INITED		= 1U << 1,
- };
- 
--enum scx_ops_enable_state {
--	SCX_OPS_ENABLING,
--	SCX_OPS_ENABLED,
--	SCX_OPS_DISABLING,
--	SCX_OPS_DISABLED,
-+enum scx_enable_state {
-+	SCX_ENABLING,
-+	SCX_ENABLED,
-+	SCX_DISABLING,
-+	SCX_DISABLED,
- };
- 
--static const char *scx_ops_enable_state_str[] = {
--	[SCX_OPS_ENABLING]	= "enabling",
--	[SCX_OPS_ENABLED]	= "enabled",
--	[SCX_OPS_DISABLING]	= "disabling",
--	[SCX_OPS_DISABLED]	= "disabled",
-+static const char *scx_enable_state_str[] = {
-+	[SCX_ENABLING]		= "enabling",
-+	[SCX_ENABLED]		= "enabled",
-+	[SCX_DISABLING]		= "disabling",
-+	[SCX_DISABLED]		= "disabled",
- };
- 
- /*
-@@ -911,7 +911,7 @@ static struct kthread_worker *scx_ops_helper;
- static DEFINE_MUTEX(scx_ops_enable_mutex);
- DEFINE_STATIC_KEY_FALSE(__scx_ops_enabled);
+@@ -913,8 +913,8 @@ DEFINE_STATIC_KEY_FALSE(__scx_enabled);
  DEFINE_STATIC_PERCPU_RWSEM(scx_fork_rwsem);
--static atomic_t scx_ops_enable_state_var = ATOMIC_INIT(SCX_OPS_DISABLED);
-+static atomic_t scx_enable_state_var = ATOMIC_INIT(SCX_DISABLED);
+ static atomic_t scx_enable_state_var = ATOMIC_INIT(SCX_DISABLED);
  static unsigned long scx_in_softlockup;
- static atomic_t scx_ops_breather_depth = ATOMIC_INIT(0);
- static int scx_ops_bypass_depth;
-@@ -1592,23 +1592,22 @@ static DEFINE_PER_CPU(struct scx_event_stats, event_stats_cpu);
- 
- static void scx_bpf_events(struct scx_event_stats *events, size_t events__sz);
- 
--static enum scx_ops_enable_state scx_ops_enable_state(void)
-+static enum scx_enable_state scx_enable_state(void)
- {
--	return atomic_read(&scx_ops_enable_state_var);
-+	return atomic_read(&scx_enable_state_var);
- }
- 
--static enum scx_ops_enable_state
--scx_ops_set_enable_state(enum scx_ops_enable_state to)
-+static enum scx_enable_state scx_set_enable_state(enum scx_enable_state to)
- {
--	return atomic_xchg(&scx_ops_enable_state_var, to);
-+	return atomic_xchg(&scx_enable_state_var, to);
- }
- 
--static bool scx_ops_tryset_enable_state(enum scx_ops_enable_state to,
--					enum scx_ops_enable_state from)
-+static bool scx_tryset_enable_state(enum scx_enable_state to,
-+				    enum scx_enable_state from)
- {
- 	int from_v = from;
- 
--	return atomic_try_cmpxchg(&scx_ops_enable_state_var, &from_v, to);
-+	return atomic_try_cmpxchg(&scx_enable_state_var, &from_v, to);
- }
- 
- static bool scx_rq_bypassing(struct rq *rq)
-@@ -3283,7 +3282,7 @@ static struct task_struct *pick_task_scx(struct rq *rq)
- 		 * Can happen while enabling as SCX_RQ_BAL_PENDING assertion is
- 		 * conditional on scx_enabled() and may have been skipped.
- 		 */
--		WARN_ON_ONCE(scx_ops_enable_state() == SCX_OPS_ENABLED);
-+		WARN_ON_ONCE(scx_enable_state() == SCX_ENABLED);
- 		keep_prev = false;
+-static atomic_t scx_ops_breather_depth = ATOMIC_INIT(0);
+-static int scx_ops_bypass_depth;
++static atomic_t scx_breather_depth = ATOMIC_INIT(0);
++static int scx_bypass_depth;
+ static bool scx_ops_init_task_enabled;
+ static bool scx_switching_all;
+ DEFINE_STATIC_KEY_FALSE(__scx_switched_all);
+@@ -2223,7 +2223,7 @@ static void set_task_runnable(struct rq *rq, struct task_struct *p)
  	}
- 
-@@ -3904,8 +3903,7 @@ static bool cgroup_warned_missing_idle;
- 
- static void scx_cgroup_warn_missing_weight(struct task_group *tg)
- {
--	if (scx_ops_enable_state() == SCX_OPS_DISABLED ||
--	    cgroup_warned_missing_weight)
-+	if (scx_enable_state() == SCX_DISABLED || cgroup_warned_missing_weight)
- 		return;
- 
- 	if ((scx_ops.flags & SCX_OPS_HAS_CGROUP_WEIGHT) || !tg->css.parent)
-@@ -4339,8 +4337,7 @@ static int scx_cgroup_init(void) { return 0; }
- static ssize_t scx_attr_state_show(struct kobject *kobj,
- 				   struct kobj_attribute *ka, char *buf)
- {
--	return sysfs_emit(buf, "%s\n",
--			  scx_ops_enable_state_str[scx_ops_enable_state()]);
-+	return sysfs_emit(buf, "%s\n", scx_enable_state_str[scx_enable_state()]);
- }
- SCX_ATTR(state);
- 
-@@ -4449,8 +4446,7 @@ static const struct kset_uevent_ops scx_uevent_ops = {
-  */
- bool task_should_scx(int policy)
- {
--	if (!scx_enabled() ||
--	    unlikely(scx_ops_enable_state() == SCX_OPS_DISABLING))
-+	if (!scx_enabled() || unlikely(scx_enable_state() == SCX_DISABLING))
- 		return false;
- 	if (READ_ONCE(scx_switching_all))
- 		return true;
-@@ -4469,9 +4465,9 @@ bool task_should_scx(int policy)
-  */
- void scx_softlockup(u32 dur_s)
- {
--	switch (scx_ops_enable_state()) {
--	case SCX_OPS_ENABLING:
--	case SCX_OPS_ENABLED:
-+	switch (scx_enable_state()) {
-+	case SCX_ENABLING:
-+	case SCX_ENABLED:
- 		break;
- 	default:
- 		return;
-@@ -4698,15 +4694,14 @@ static void scx_ops_disable_workfn(struct kthread_work *work)
- 	/* guarantee forward progress by bypassing scx_ops */
- 	scx_ops_bypass(true);
- 
--	switch (scx_ops_set_enable_state(SCX_OPS_DISABLING)) {
--	case SCX_OPS_DISABLING:
-+	switch (scx_set_enable_state(SCX_DISABLING)) {
-+	case SCX_DISABLING:
- 		WARN_ONCE(true, "sched_ext: duplicate disabling instance?");
- 		break;
--	case SCX_OPS_DISABLED:
-+	case SCX_DISABLED:
- 		pr_warn("sched_ext: ops error detected without ops (%s)\n",
- 			scx_exit_info->msg);
--		WARN_ON_ONCE(scx_ops_set_enable_state(SCX_OPS_DISABLED) !=
--			     SCX_OPS_DISABLING);
-+		WARN_ON_ONCE(scx_set_enable_state(SCX_DISABLED) != SCX_DISABLING);
- 		goto done;
- 	default:
- 		break;
-@@ -4833,8 +4828,7 @@ static void scx_ops_disable_workfn(struct kthread_work *work)
- 
- 	mutex_unlock(&scx_ops_enable_mutex);
- 
--	WARN_ON_ONCE(scx_ops_set_enable_state(SCX_OPS_DISABLED) !=
--		     SCX_OPS_DISABLING);
-+	WARN_ON_ONCE(scx_set_enable_state(SCX_DISABLED) != SCX_DISABLING);
- done:
- 	scx_ops_bypass(false);
- }
-@@ -5316,7 +5310,7 @@ static int scx_ops_enable(struct sched_ext_ops *ops, struct bpf_link *link)
- 		global_dsqs = dsqs;
- 	}
- 
--	if (scx_ops_enable_state() != SCX_OPS_DISABLED) {
-+	if (scx_enable_state() != SCX_DISABLED) {
- 		ret = -EBUSY;
- 		goto err_unlock;
- 	}
-@@ -5344,8 +5338,7 @@ static int scx_ops_enable(struct sched_ext_ops *ops, struct bpf_link *link)
- 	 */
- 	scx_ops = *ops;
- 
--	WARN_ON_ONCE(scx_ops_set_enable_state(SCX_OPS_ENABLING) !=
--		     SCX_OPS_DISABLED);
-+	WARN_ON_ONCE(scx_set_enable_state(SCX_ENABLING) != SCX_DISABLED);
- 
- 	atomic_set(&scx_exit_kind, SCX_EXIT_NONE);
- 	scx_warned_zero_slice = false;
-@@ -5525,7 +5518,7 @@ static int scx_ops_enable(struct sched_ext_ops *ops, struct bpf_link *link)
- 
- 	scx_ops_bypass(false);
- 
--	if (!scx_ops_tryset_enable_state(SCX_OPS_ENABLED, SCX_OPS_ENABLING)) {
-+	if (!scx_tryset_enable_state(SCX_ENABLED, SCX_ENABLING)) {
- 		WARN_ON_ONCE(atomic_read(&scx_exit_kind) == SCX_EXIT_NONE);
- 		goto err_disable;
- 	}
-@@ -5994,13 +5987,13 @@ static void kick_cpus_irq_workfn(struct irq_work *irq_work)
-  */
- void print_scx_info(const char *log_lvl, struct task_struct *p)
- {
--	enum scx_ops_enable_state state = scx_ops_enable_state();
-+	enum scx_enable_state state = scx_enable_state();
- 	const char *all = READ_ONCE(scx_switching_all) ? "+all" : "";
- 	char runnable_at_buf[22] = "?";
- 	struct sched_class *class;
- 	unsigned long runnable_at;
- 
--	if (state == SCX_OPS_DISABLED)
-+	if (state == SCX_DISABLED)
- 		return;
  
  	/*
-@@ -6010,7 +6003,7 @@ void print_scx_info(const char *log_lvl, struct task_struct *p)
- 	if (copy_from_kernel_nofault(&class, &p->sched_class, sizeof(class)) ||
- 	    class != &ext_sched_class) {
- 		printk("%sSched_ext: %s (%s%s)", log_lvl, scx_ops.name,
--		       scx_ops_enable_state_str[state], all);
-+		       scx_enable_state_str[state], all);
+-	 * list_add_tail() must be used. scx_ops_bypass() depends on tasks being
++	 * list_add_tail() must be used. scx_bypass() depends on tasks being
+ 	 * appended to the runnable_list.
+ 	 */
+ 	list_add_tail(&p->scx.runnable_node, &rq->scx.runnable_list);
+@@ -2657,13 +2657,13 @@ static struct rq *move_task_between_dsqs(struct task_struct *p, u64 enq_flags,
+  * to the bypass mode can take a long time. Inject artificial delays while the
+  * bypass mode is switching to guarantee timely completion.
+  */
+-static void scx_ops_breather(struct rq *rq)
++static void scx_breather(struct rq *rq)
+ {
+ 	u64 until;
+ 
+ 	lockdep_assert_rq_held(rq);
+ 
+-	if (likely(!atomic_read(&scx_ops_breather_depth)))
++	if (likely(!atomic_read(&scx_breather_depth)))
+ 		return;
+ 
+ 	raw_spin_rq_unlock(rq);
+@@ -2672,9 +2672,9 @@ static void scx_ops_breather(struct rq *rq)
+ 
+ 	do {
+ 		int cnt = 1024;
+-		while (atomic_read(&scx_ops_breather_depth) && --cnt)
++		while (atomic_read(&scx_breather_depth) && --cnt)
+ 			cpu_relax();
+-	} while (atomic_read(&scx_ops_breather_depth) &&
++	} while (atomic_read(&scx_breather_depth) &&
+ 		 time_before64(ktime_get_ns(), until));
+ 
+ 	raw_spin_rq_lock(rq);
+@@ -2685,12 +2685,12 @@ static bool consume_dispatch_q(struct rq *rq, struct scx_dispatch_q *dsq)
+ 	struct task_struct *p;
+ retry:
+ 	/*
+-	 * This retry loop can repeatedly race against scx_ops_bypass()
+-	 * dequeueing tasks from @dsq trying to put the system into the bypass
+-	 * mode. On some multi-socket machines (e.g. 2x Intel 8480c), this can
+-	 * live-lock the machine into soft lockups. Give a breather.
++	 * This retry loop can repeatedly race against scx_bypass() dequeueing
++	 * tasks from @dsq trying to put the system into the bypass mode. On
++	 * some multi-socket machines (e.g. 2x Intel 8480c), this can live-lock
++	 * the machine into soft lockups. Give a breather.
+ 	 */
+-	scx_ops_breather(rq);
++	scx_breather(rq);
+ 
+ 	/*
+ 	 * The caller can't expect to successfully consume a task if the task's
+@@ -4473,7 +4473,7 @@ void scx_softlockup(u32 dur_s)
  		return;
  	}
  
-@@ -6021,7 +6014,7 @@ void print_scx_info(const char *log_lvl, struct task_struct *p)
+-	/* allow only one instance, cleared at the end of scx_ops_bypass() */
++	/* allow only one instance, cleared at the end of scx_bypass() */
+ 	if (test_and_set_bit(0, &scx_in_softlockup))
+ 		return;
  
- 	/* print everything onto one line to conserve console space */
- 	printk("%sSched_ext: %s (%s%s), task: runnable_at=%s",
--	       log_lvl, scx_ops.name, scx_ops_enable_state_str[state], all,
-+	       log_lvl, scx_ops.name, scx_enable_state_str[state], all,
- 	       runnable_at_buf);
+@@ -4482,10 +4482,9 @@ void scx_softlockup(u32 dur_s)
+ 
+ 	/*
+ 	 * Some CPUs may be trapped in the dispatch paths. Enable breather
+-	 * immediately; otherwise, we might even be able to get to
+-	 * scx_ops_bypass().
++	 * immediately; otherwise, we might even be able to get to scx_bypass().
+ 	 */
+-	atomic_inc(&scx_ops_breather_depth);
++	atomic_inc(&scx_breather_depth);
+ 
+ 	scx_ops_error("soft lockup - CPU#%d stuck for %us",
+ 		      smp_processor_id(), dur_s);
+@@ -4494,11 +4493,11 @@ void scx_softlockup(u32 dur_s)
+ static void scx_clear_softlockup(void)
+ {
+ 	if (test_and_clear_bit(0, &scx_in_softlockup))
+-		atomic_dec(&scx_ops_breather_depth);
++		atomic_dec(&scx_breather_depth);
  }
  
+ /**
+- * scx_ops_bypass - [Un]bypass scx_ops and guarantee forward progress
++ * scx_bypass - [Un]bypass scx_ops and guarantee forward progress
+  * @bypass: true for bypass, false for unbypass
+  *
+  * Bypassing guarantees that all runnable tasks make forward progress without
+@@ -4528,7 +4527,7 @@ static void scx_clear_softlockup(void)
+  *
+  * - scx_prio_less() reverts to the default core_sched_at order.
+  */
+-static void scx_ops_bypass(bool bypass)
++static void scx_bypass(bool bypass)
+ {
+ 	static DEFINE_RAW_SPINLOCK(bypass_lock);
+ 	static unsigned long bypass_timestamp;
+@@ -4538,22 +4537,22 @@ static void scx_ops_bypass(bool bypass)
+ 
+ 	raw_spin_lock_irqsave(&bypass_lock, flags);
+ 	if (bypass) {
+-		scx_ops_bypass_depth++;
+-		WARN_ON_ONCE(scx_ops_bypass_depth <= 0);
+-		if (scx_ops_bypass_depth != 1)
++		scx_bypass_depth++;
++		WARN_ON_ONCE(scx_bypass_depth <= 0);
++		if (scx_bypass_depth != 1)
+ 			goto unlock;
+ 		bypass_timestamp = ktime_get_ns();
+ 		scx_add_event(SCX_EV_BYPASS_ACTIVATE, 1);
+ 	} else {
+-		scx_ops_bypass_depth--;
+-		WARN_ON_ONCE(scx_ops_bypass_depth < 0);
+-		if (scx_ops_bypass_depth != 0)
++		scx_bypass_depth--;
++		WARN_ON_ONCE(scx_bypass_depth < 0);
++		if (scx_bypass_depth != 0)
+ 			goto unlock;
+ 		scx_add_event(SCX_EV_BYPASS_DURATION,
+ 			      ktime_get_ns() - bypass_timestamp);
+ 	}
+ 
+-	atomic_inc(&scx_ops_breather_depth);
++	atomic_inc(&scx_breather_depth);
+ 
+ 	/*
+ 	 * No task property is changing. We just need to make sure all currently
+@@ -4611,7 +4610,7 @@ static void scx_ops_bypass(bool bypass)
+ 		raw_spin_rq_unlock(rq);
+ 	}
+ 
+-	atomic_dec(&scx_ops_breather_depth);
++	atomic_dec(&scx_breather_depth);
+ unlock:
+ 	raw_spin_unlock_irqrestore(&bypass_lock, flags);
+ 	scx_clear_softlockup();
+@@ -4692,7 +4691,7 @@ static void scx_ops_disable_workfn(struct kthread_work *work)
+ 	ei->reason = scx_exit_reason(ei->kind);
+ 
+ 	/* guarantee forward progress by bypassing scx_ops */
+-	scx_ops_bypass(true);
++	scx_bypass(true);
+ 
+ 	switch (scx_set_enable_state(SCX_DISABLING)) {
+ 	case SCX_DISABLING:
+@@ -4830,7 +4829,7 @@ static void scx_ops_disable_workfn(struct kthread_work *work)
+ 
+ 	WARN_ON_ONCE(scx_set_enable_state(SCX_DISABLED) != SCX_DISABLING);
+ done:
+-	scx_ops_bypass(false);
++	scx_bypass(false);
+ }
+ 
+ static DEFINE_KTHREAD_WORK(scx_ops_disable_work, scx_ops_disable_workfn);
+@@ -5404,7 +5403,7 @@ static int scx_ops_enable(struct sched_ext_ops *ops, struct bpf_link *link)
+ 	 * scheduling) may not function correctly before all tasks are switched.
+ 	 * Init in bypass mode to guarantee forward progress.
+ 	 */
+-	scx_ops_bypass(true);
++	scx_bypass(true);
+ 
+ 	for (i = SCX_OPI_NORMAL_BEGIN; i < SCX_OPI_NORMAL_END; i++)
+ 		if (((void (**)(void))ops)[i])
+@@ -5515,7 +5514,7 @@ static int scx_ops_enable(struct sched_ext_ops *ops, struct bpf_link *link)
+ 	scx_task_iter_stop(&sti);
+ 	percpu_up_write(&scx_fork_rwsem);
+ 
+-	scx_ops_bypass(false);
++	scx_bypass(false);
+ 
+ 	if (!scx_tryset_enable_state(SCX_ENABLED, SCX_ENABLING)) {
+ 		WARN_ON_ONCE(atomic_read(&scx_exit_kind) == SCX_EXIT_NONE);
+@@ -5550,7 +5549,7 @@ static int scx_ops_enable(struct sched_ext_ops *ops, struct bpf_link *link)
+ err_disable_unlock_all:
+ 	scx_cgroup_unlock();
+ 	percpu_up_write(&scx_fork_rwsem);
+-	scx_ops_bypass(false);
++	scx_bypass(false);
+ err_disable:
+ 	mutex_unlock(&scx_enable_mutex);
+ 	/*
+@@ -6029,12 +6028,12 @@ static int scx_pm_handler(struct notifier_block *nb, unsigned long event, void *
+ 	case PM_HIBERNATION_PREPARE:
+ 	case PM_SUSPEND_PREPARE:
+ 	case PM_RESTORE_PREPARE:
+-		scx_ops_bypass(true);
++		scx_bypass(true);
+ 		break;
+ 	case PM_POST_HIBERNATION:
+ 	case PM_POST_SUSPEND:
+ 	case PM_POST_RESTORE:
+-		scx_ops_bypass(false);
++		scx_bypass(false);
+ 		break;
+ 	}
+ 
+@@ -6292,7 +6291,7 @@ static bool scx_dsq_move(struct bpf_iter_scx_dsq_kern *kit,
+ 	 * cause similar live-lock conditions as consume_dispatch_q(). Insert a
+ 	 * breather if necessary.
+ 	 */
+-	scx_ops_breather(src_rq);
++	scx_breather(src_rq);
+ 
+ 	locked_rq = src_rq;
+ 	raw_spin_lock(&src_dsq->lock);
 diff --git a/tools/sched_ext/scx_show_state.py b/tools/sched_ext/scx_show_state.py
-index b800d4f5f2e9..9c658171c16b 100644
+index d3c81b92248a..7cdcc6729ea4 100644
 --- a/tools/sched_ext/scx_show_state.py
 +++ b/tools/sched_ext/scx_show_state.py
-@@ -24,17 +24,17 @@ import sys
- def read_static_key(name):
-     return prog[name].key.enabled.counter.value_()
- 
--def ops_state_str(state):
--    return prog['scx_ops_enable_state_str'][state].string_().decode()
-+def state_str(state):
-+    return prog['scx_enable_state_str'][state].string_().decode()
- 
- ops = prog['scx_ops']
--enable_state = read_atomic("scx_ops_enable_state_var")
-+enable_state = read_atomic("scx_enable_state_var")
- 
- print(f'ops           : {ops.name.string_().decode()}')
- print(f'enabled       : {read_static_key("__scx_ops_enabled")}')
- print(f'switching_all : {read_int("scx_switching_all")}')
+@@ -36,7 +36,7 @@ print(f'switching_all : {read_int("scx_switching_all")}')
  print(f'switched_all  : {read_static_key("__scx_switched_all")}')
--print(f'enable_state  : {ops_state_str(enable_state)} ({enable_state})')
-+print(f'enable_state  : {state_str(enable_state)} ({enable_state})')
+ print(f'enable_state  : {state_str(enable_state)} ({enable_state})')
  print(f'in_softlockup : {prog["scx_in_softlockup"].value_()}')
- print(f'breather_depth: {read_atomic("scx_ops_breather_depth")}')
- print(f'bypass_depth  : {prog["scx_ops_bypass_depth"].value_()}')
+-print(f'breather_depth: {read_atomic("scx_ops_breather_depth")}')
+-print(f'bypass_depth  : {prog["scx_ops_bypass_depth"].value_()}')
++print(f'breather_depth: {read_atomic("scx_breather_depth")}')
++print(f'bypass_depth  : {prog["scx_bypass_depth"].value_()}')
+ print(f'nr_rejected   : {read_atomic("scx_nr_rejected")}')
+ print(f'enable_seq    : {read_atomic("scx_enable_seq")}')
 -- 
 2.49.0
 
