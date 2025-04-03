@@ -1,455 +1,270 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01EC019EED2;
-	Thu,  3 Apr 2025 21:00:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743714061; cv=none; b=XsoFbn5tNAxkUYVS1HlniDvpcICajDQzjf7OLKY6pFYbL20PFdDTd9uAeuQh5+tTXlQwXkMXlqDhOwDFR/lpwuGRB6skGypFgqe2pOKqb1bWM4ZSgoTSKZov8ZFxmlZK4U0wFlKYgc4QtrM/e6kBhQzsKL6CP+XfVejXJfv2ujk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743714061; c=relaxed/simple;
-	bh=B085EWWX5gFYWgynI0EZlqmMdz5HDcR3MAu4aMcHvSc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=LkTWtagv2YO71VojtLvizseVoowK5El6c2iHLswQOWf5+H83qkV/bYV5Y83T5xxzRV/R++HB5zvyLsqTiIg/G9NvrslGeUJfOngfUTJWe2xy2BHsAmQ16W0qKiY3jXB4JnUlWvzP7DMK1jEP8Emm8eJ8VD6eHYsIC/y/J3BnSZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=WhAqgcoq; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 485EA1EE7D5;
+	Thu,  3 Apr 2025 21:01:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.13
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743714112; cv=fail; b=flhic05ADE9ETPmcrif73T1/7TS8XfwD7XGRi6bVuC2A5oJ9RNp+oXVomjsmnCIH3iJQ8LtEoNLCHHbUKIiI4i3HShqDArvxj1rCpCPRELAajVg+a/PVrPLfbqudsaG7C6DQZ2UWGlOqNnC3o/mRuq0s4tNdPD23hlcCqnvolrQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743714112; c=relaxed/simple;
+	bh=KUodNTW1X1mNht48GXRCp6GGy1L9c8oI58TZTNqet2M=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=qak0ym/dB0Bo3La19EQvPir/2CGpJQhvn5b1yPNeZ6Gl8RRkyFb+fT2Lnsv06fLc1mTdNfbcYuk2mehDX9GMqQeqUcEsG8Pk+TAcRnheLok8hkx4Z/n8kJ3DVw4M2RQ+3dCtZqa0lNiDE+Nj+56d0xQOIv1Jx1gVA+KvD7DST7U=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QuAWdIsf; arc=fail smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="WhAqgcoq"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 533Jhcwi013182;
-	Thu, 3 Apr 2025 21:00:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	c3lw9JY2tZNb0wqxI4HGqbaQXkvStcLSoePS2IwZaGo=; b=WhAqgcoqaB2dTh9E
-	kiy99wuEsiHjvrV1p+0ooC1WB8WY83T9K+8HUv6RLo5q6FzyArAso4pVUSG/4Czy
-	KLbPQjy0maT+B2glqj8BEyMxJoYE952IyYRYoUfsmUkfmdEvk7GKRWGTsrbvKkYj
-	9+W/k2oqRDnHNCFNpkmBfwM9F7ftHhYJB/vPMcSYj0WlrXYkZOh+7dLZUBLFl0I3
-	h+wCVzxGByJHLBWN54mc1vMjjJ8lBYqC5RirqGf6l9EQDEypzlFr0dx+PAP/udVl
-	nd9ORlWoKJ4aLChI6l1YOa3j7YrujgbCI2o56y05X7AuJTzxEVgKHV/iohaXXvLu
-	+fGQKA==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45sc7x38wr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 03 Apr 2025 21:00:35 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 533L0ZRD032394
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 3 Apr 2025 21:00:35 GMT
-Received: from [10.110.110.182] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 3 Apr 2025
- 14:00:34 -0700
-Message-ID: <e5b95522-baa1-414b-b16a-fe82e887a5de@quicinc.com>
-Date: Thu, 3 Apr 2025 14:00:33 -0700
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QuAWdIsf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743714111; x=1775250111;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=KUodNTW1X1mNht48GXRCp6GGy1L9c8oI58TZTNqet2M=;
+  b=QuAWdIsfVjrrfwKw12TVQAtQvPno5i4MX3RP7FdmHem7up24ylLHt4v2
+   3/jKYD/72Q6sruZ5qaHRCkPT5aW0ZYsBjalVfVNxueKeL1S+Zrwx/+wJi
+   hNX+9THxn7ru9TLV+NQZnTuunGBW3Q3hdev1Z+2Vq9CN3XuYJppHXyxmx
+   BkfR5rLT0CqA76pQz4qeMsvn/pV9aJXkZRLVSwYBr36wqPodeVPYzq8oV
+   mWCG53iZ1BMVeDDHpRL2V1CnboCTVT/6xh9cs7iO9kuYFkM65sDMNodjT
+   PeFFPBxCM4wq1F462SlbGoxSWGPFigCVSniLKStOY+eiSS3lY11ywqN0X
+   A==;
+X-CSE-ConnectionGUID: oIYosgbWRwG37XeY2Yoemg==
+X-CSE-MsgGUID: rOlwnlUNTqOsiffErpZsXQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11393"; a="56132702"
+X-IronPort-AV: E=Sophos;i="6.15,186,1739865600"; 
+   d="scan'208";a="56132702"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 14:01:50 -0700
+X-CSE-ConnectionGUID: n+0ef/BjS0GtEHzZiCVP0g==
+X-CSE-MsgGUID: UNFvUSUxS1O5RF27s3ZpYg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,186,1739865600"; 
+   d="scan'208";a="158112591"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 14:01:48 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Thu, 3 Apr 2025 14:01:47 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Thu, 3 Apr 2025 14:01:47 -0700
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.46) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Thu, 3 Apr 2025 14:01:45 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=LvFbhP0IE7lQmMpt2yZXtIp0clnIfPSAlajN+/XEl2BLYYbl5CfEscsuQRYsmfstTuaikZq31MBQ3v9tSwOZma32KUGI8SgFOJzDepOpsAPIUcRrfsVYdc99l6Glc60Oih086pSGrENduBuyIdj8uADDaKJaas0SIrspdLC2Na4Jza0cTstepW6LqdETGe/1byrTWQUTze6KXn3zt5xRNAoq3ivTxNwfRxwyuaDo3fYxxr4WF+co5T/hVhDZE3GgAjD//nlqUUmVjTj/Q5059zK90ETTxHNEPZTSEp3kM9sUjTgU5mTkPS05KjxtCB9pOvlt0OdFPoFFN0s8xDxwFA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=pIeW1Ux1GJ8FuGZdyMwpQoZHQERuQrn5ILkOOZL0pcw=;
+ b=aPPVAV1Q+hb9ZRpCY3+o0NH3gKUxnNDFuvEtLIz8v1HeDGeylUTWWRNLPs8XQGGupyuynoJDa0nCVhg2iD6Xa0X/Jc0ByqRs/qwub9oQBUNvN29gtB5pEXj0spXIMZyFmr4b44QTPtHSvV7Ap1cpyiy297zkP1/C92c3wIuS9hKvxsfvGrcTwYbjcWoMpNVoP2FJnynv6pe+0N9/4xAcBKJ+0s2TN/8jD8jkyp51XS9z6Ax35ISPCzo6gWqsdSnhvPosjw3DssLJKXTSM9rfVsSijmkj1U2HOgNC5Nm1r85MGoq5l27qup/tr6B+5auPi0FoUnCGSpxiHRMw11oX6g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by MW3PR11MB4601.namprd11.prod.outlook.com (2603:10b6:303:59::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Thu, 3 Apr
+ 2025 21:01:28 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8%3]) with mapi id 15.20.8583.041; Thu, 3 Apr 2025
+ 21:01:28 +0000
+Date: Thu, 3 Apr 2025 14:01:24 -0700
+From: Dan Williams <dan.j.williams@intel.com>
+To: kernel test robot <lkp@intel.com>, Yuquan Wang
+	<wangyuquan1236@phytium.com.cn>, <Jonathan.Cameron@huawei.com>,
+	<dan.j.williams@intel.com>, <rppt@kernel.org>, <rafael@kernel.org>,
+	<lenb@kernel.org>, <akpm@linux-foundation.org>, <alison.schofield@intel.com>,
+	<rrichter@amd.com>, <bfaccini@nvidia.com>, <haibo1.xu@intel.com>,
+	<david@redhat.com>
+CC: <oe-kbuild-all@lists.linux.dev>, <linux-acpi@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
+	<chenbaozi@phytium.com.cn>, Yuquan Wang <wangyuquan1236@phytium.com.cn>,
+	<linux-cxl@vger.kernel.org>, <loongarch@lists.linux.dev>,
+	<chenhuacai@kernel.org>, <kernel@xen0n.name>
+Subject: Re: [PATCH v2] mm: numa_memblks: introduce numa_add_reserved_memblk
+Message-ID: <67eef72411bec_464ec29434@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20250328092132.2695299-1-wangyuquan1236@phytium.com.cn>
+ <202503282026.QNaOAK79-lkp@intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <202503282026.QNaOAK79-lkp@intel.com>
+X-ClientProxiedBy: MW4PR04CA0178.namprd04.prod.outlook.com
+ (2603:10b6:303:85::33) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v36 22/31] ASoC: qcom: qdsp6: Introduce USB AFE port to
- q6dsp
-To: Stephan Gerhold <stephan.gerhold@linaro.org>
-CC: <srinivas.kandagatla@linaro.org>, <mathias.nyman@intel.com>,
-        <perex@perex.cz>, <conor+dt@kernel.org>, <dmitry.torokhov@gmail.com>,
-        <corbet@lwn.net>, <broonie@kernel.org>, <lgirdwood@gmail.com>,
-        <krzk+dt@kernel.org>, <pierre-louis.bossart@linux.intel.com>,
-        <Thinh.Nguyen@synopsys.com>, <tiwai@suse.com>, <robh@kernel.org>,
-        <gregkh@linuxfoundation.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-sound@vger.kernel.org>,
-        <linux-input@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        Luca Weiss
-	<luca.weiss@fairphone.com>
-References: <871827f0-94ba-4565-865f-775cab9501eb@quicinc.com>
- <Z-PPlRD7gcUcNvNv@linaro.org>
- <200c08f7-3637-c2fb-2caa-002604b957ed@quicinc.com>
- <Z-ug3YFwff8hWIRl@linaro.org>
- <378af3f1-b5b0-4f7a-ab62-f5c891feb7b5@quicinc.com>
- <Z-1MtJjfVbUQFron@linaro.org>
- <7d5fd3bf-c33e-4274-938b-2fb93c4b39d8@quicinc.com>
- <a9e281d6-59c0-3615-9851-c33752b0620f@quicinc.com>
- <Z-6Q_gaWsWyZcpLz@linaro.org>
- <e1eac325-233e-43eb-9ca0-9746893462d7@quicinc.com>
- <Z-7M1IeKNk6ZBayS@linaro.org>
-Content-Language: en-US
-From: Wesley Cheng <quic_wcheng@quicinc.com>
-In-Reply-To: <Z-7M1IeKNk6ZBayS@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: npZwLy4X00mIJ7RH5NbZ7QPK_DAas2YR
-X-Authority-Analysis: v=2.4 cv=XamJzJ55 c=1 sm=1 tr=0 ts=67eef6f3 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=5dSfeLAkA3Y8wAJoHGcA:9 a=3ZKOabzyN94A:10
- a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: npZwLy4X00mIJ7RH5NbZ7QPK_DAas2YR
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-03_09,2025-04-03_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxlogscore=999
- suspectscore=0 impostorscore=0 mlxscore=0 bulkscore=0 phishscore=0
- lowpriorityscore=0 malwarescore=0 adultscore=0 priorityscore=1501
- clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504030111
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|MW3PR11MB4601:EE_
+X-MS-Office365-Filtering-Correlation-Id: e78213a1-492b-4d88-d5d3-08dd72f2b3f3
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|1800799024|376014|921020;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?higcMwvAiNU1lisWu2dyidp5BNXYavcLXB8pjZyWSiSJk19wJvzBSEyqbze+?=
+ =?us-ascii?Q?cSAX0vSLFQSRLDPj1heQOMsP1sxgOFXWiREu7YmFXNw8UDwyjVRgRIOVSpI8?=
+ =?us-ascii?Q?gPfBvdxJQvc7eqGksVuWRe/qFOrYb40+Kulhvrv4mL+wn31xzktJqtG0M9IB?=
+ =?us-ascii?Q?dZr8e6JXS/6tSZwchKZNofO6DRutIkMjVhOsQ0Jb1RtrzrPBZIwL2Ttn2AON?=
+ =?us-ascii?Q?AZEqCBu2prnWRIUKr3D+aXBqbJ8L61MFm8IreJi6rcRCvQ2VQe1dzSwGjVty?=
+ =?us-ascii?Q?YuHWU7GdJhkLRGNWT+c9JGe/MwlZno8IB15Z8A95DoUKL5tfZ+n1MTYjjUu8?=
+ =?us-ascii?Q?d8GS8k3hp08ci1Dw8/eHDPcvXF8CyDJheAnsU/BVt1OWtVrvTbM8Lp9Fktrm?=
+ =?us-ascii?Q?sLnLSBavacqOoF9/MgXrDsqMUHcJDBjAgTnz5SyCLTyTh4WJD/Zh8ItJsp5L?=
+ =?us-ascii?Q?Hdb1hplJuWyovuMmzFTh7/Ee6QPoiA+gr9Q6rPrIvHl/ikdxT1HEMqtxUpUr?=
+ =?us-ascii?Q?+LO5iZkHaYClklU6WVturpyqUlbmMX3Owl1sexJ9dcPHTzFhnuyiwVaAoq2P?=
+ =?us-ascii?Q?Rxu8rk2pO6nb8+v/OUVnl73NPyPxyLepNwFvubeOEk4ShFTqjZrST5ybORS5?=
+ =?us-ascii?Q?Ey0IwTTu6nomvFQNO3WEoVlE3L24wjNBzpG2af27iovlRQ7BYjQNCLN6S74/?=
+ =?us-ascii?Q?M7EG+C6UWzayairUYthaYeSjW6H/FoKybewah8CLBLAw7OKW45OaAbFsc+os?=
+ =?us-ascii?Q?KxYV+6zpZr2F5lgXihM85Unw4RuP9jdnlEqswW1KkA9ZGY9K9J/MVbvd7d7f?=
+ =?us-ascii?Q?T7160CsYpK5UDQIcYkjj5S5zRcyvc+ELcfVjo2+xeq/xTIyOxapJpmlJ/15C?=
+ =?us-ascii?Q?eK/BtbELwKNOS/Icib8aBbdxvD4EwmR1g5zJyzHm8m4FvyjVjMLVVcRI/FTn?=
+ =?us-ascii?Q?Fsm1KQHTpovnZ17pUv4g273j6LOiUdiAw7PbRiZ7AhlRyXP+UizhPKicZ1fD?=
+ =?us-ascii?Q?Onoqj9mwkwXY0C3U/Fxj40jZiRGfvazlueHFZ2CUZLr3xKLgzp64jn4X5UE1?=
+ =?us-ascii?Q?dCuhvbLmW1icobTXS0JQ3V5wXH2lC/KBFp7HmJ8/+H2dk2AujNjSeiHr6lfa?=
+ =?us-ascii?Q?PCP6/W4LNWkNX00X949zIfdIIn5hXOOpku2dGQMVKe4+1zLp9Lxh6qyA7Jw7?=
+ =?us-ascii?Q?AluTcvBB9YdeaHiY2mGo+Hb9rpBPaH2mgUiisxRXnaupYEL2z/Puz5FBBsq5?=
+ =?us-ascii?Q?aT+sx2hVZZrEhzW7u4eGmuk5q/FGOW6Ifrga2B3DSMQoEFceO2BouJZ5ymDn?=
+ =?us-ascii?Q?Vxupv8yXshUOBaOkTTLW8nl7jaUWa2C0uBzsAJIRxHUt8Pw2TYZI4rcKErrh?=
+ =?us-ascii?Q?wUc2De1yd4VhA3HXEV1lAqClfygM?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(1800799024)(376014)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?X06mOzojTO3JOYOsltUcxoge3BNNdZJ5I1up5LeEChUiRc03FnZwkdWFBKsI?=
+ =?us-ascii?Q?uV3WUY/sOCdUfanIFF26C4k9AaQWif5ovJKQwNhLKdbC4Agoy7AG/m1eGL1T?=
+ =?us-ascii?Q?Ryk1Bnra5fhGUWLair5joXQKn+RudWkNXwEbZ0YSqgS63xhJi83s2Hubwmt6?=
+ =?us-ascii?Q?QZuUxbg6Ru0J31y7hko2OLlXi6IxTHgf3oA10lCG9EHErcnwHNjk+/xup+Dt?=
+ =?us-ascii?Q?sU7psE765iBpJfgZkE3W0hnbDs6ssMx+NWh07QL/lFYfUwVnL1NK1BAFzO0P?=
+ =?us-ascii?Q?TemUV+KeuEhWMNi818trvwnYFJ6iRXqjb3Rc5/v5jwXAu0tRS2YN15gYOKJu?=
+ =?us-ascii?Q?VA3CRGD3ht/wnfOx73MvNFIhEv4WeB/HlZbxgxp8IhZM2VjNfoBaMqF0FLnp?=
+ =?us-ascii?Q?faxoSEefxjROFkEQnpXvUx6hRH3YfcOANGYPGa5AbMCFkQezMRnnZ1QDerMq?=
+ =?us-ascii?Q?LH08v4xy7JSvTs+u7noZAycd77y2cl1cUfCYzFxZYFtAAdrUScmPG/lkPHpP?=
+ =?us-ascii?Q?tJs5immdbYrfUB6kKi2Aj+5vS5ut6KeJX4PHyjHLoMVKUXPjCWTC7URY59HF?=
+ =?us-ascii?Q?x+RAdRsodp4T92fyH9hI+M7zZYNS6JZjA5MOiLh75qfk/4rzyZp53p7WfutL?=
+ =?us-ascii?Q?bRlKL0T56XYgsnwHpn0iU+Wk4+HE8lSMhP4e6UaLE83zlXeysyuCWVTmhUaJ?=
+ =?us-ascii?Q?dxHoFgXiDFK4E9r/40mSGTvspLK+LeAuTAHFU7L/gMew3T7XTpwEFJWm6Olu?=
+ =?us-ascii?Q?CpRjPzVYyklIju0HUA/DCFipO1K4jp9RNCniGfWo2iZB/jQhFPgSUZTMju6t?=
+ =?us-ascii?Q?tfu0pMDMq+zeHzap12//WJy2856StcnojXH+fs+fxZPhKmu2SHjEz0kUnijo?=
+ =?us-ascii?Q?dvJGkrKhDfJfYvNmCwXUIdiIvreFhiq7xgXGMk/xGBGnjX9Bs/7wTSG0A4Qe?=
+ =?us-ascii?Q?LZISSKH/dwWgB/deOf3xwdeEf00m9N4/izh68mZjVIDt+LVmeDXIaKJHjlY0?=
+ =?us-ascii?Q?G44xhG9t/OtLjTm/4hdk0onkY4UykJ1dKej0Mk+rBf5vErns+A3YaZ/HKsdf?=
+ =?us-ascii?Q?y2/uX+5xpv+8/cW1ysl6/704u6kVam+ItBjRKL6Dsy26VPUPsFv0EBEocQ1C?=
+ =?us-ascii?Q?NuZzsa6CgABalQern9ojR9rSxXJxkvu4x/9LGLtHuOHexWZBYClvMs0fq38V?=
+ =?us-ascii?Q?k6M7UeMsHTFUSI0XvjQEscFAsKL8kKhtLZYPIoDnKBLw9pWmCyLWmpqjTEBs?=
+ =?us-ascii?Q?qYlgAzQlzdA67n46/a6t3tyGopcl0nYGcOmbu1LbUbADQkt9K3Ti6DPfKait?=
+ =?us-ascii?Q?IiGIVAhbKVTgAep63H6R6y8ZvDVTFPSkyfvKYZGnyx1D3yqmjgNnJlByAkl3?=
+ =?us-ascii?Q?N6gwG6+mUr9CfAAYqCFtOHNz1OxhEI4rr4yOCl3SIY4ogix1ODCEaYVfAn/c?=
+ =?us-ascii?Q?lB2IA1snmPAerjcJ4g7w1Lnlxz/UcicnwrF4vZXBxDlp+dwn0MyzkOdspZA8?=
+ =?us-ascii?Q?UlYaR/dwDumBRnuSJbuD3KHUJDuikZwXHL2TISnLt6yF1OoRGdGJE5hmR/Ol?=
+ =?us-ascii?Q?trHFhKcAm9nvVopu9lpvvhUDb9pWom3M59OX+xEEUd3PzVrRNVwALJbY/Kkd?=
+ =?us-ascii?Q?aw=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: e78213a1-492b-4d88-d5d3-08dd72f2b3f3
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Apr 2025 21:01:28.5229
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 7Qq7o97kvbyQaG6dkFMYtYVNQ3jMFiTtmDiz6EDv/Ro46Ba26wRMQQ4ZunEytg8SrXrX/Q+7o4cDzu2G+WDhJhKULuXratGsY+ccXRLsOZE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR11MB4601
+X-OriginatorOrg: intel.com
 
+[add loongarch folks, cc linux-cxl ]
 
-
-On 4/3/2025 11:00 AM, Stephan Gerhold wrote:
-> On Thu, Apr 03, 2025 at 08:58:11AM -0700, Wesley Cheng wrote:
->> On 4/3/2025 6:45 AM, Stephan Gerhold wrote:
->>> On Wed, Apr 02, 2025 at 05:54:45PM -0700, Wesley Cheng wrote:
->>>> On 4/2/2025 5:23 PM, Wesley Cheng wrote:
->>>>> On 4/2/2025 7:41 AM, Stephan Gerhold wrote:
->>>>>> On Tue, Apr 01, 2025 at 04:47:41PM -0700, Wesley Cheng wrote:
->>>>>>> On 4/1/2025 1:16 AM, Stephan Gerhold wrote:
->>>>>>>> On Mon, Mar 31, 2025 at 12:52:19PM -0700, Wesley Cheng wrote:
->>>>>>>>> On 3/26/2025 2:57 AM, Stephan Gerhold wrote:
->>>>>>>>>> On Tue, Mar 25, 2025 at 04:18:03PM -0700, Wesley Cheng wrote:
->>>>>>>>>>> On 3/25/2025 2:24 AM, Stephan Gerhold wrote:
->>>>>>>>>>>> On Tue, Mar 18, 2025 at 05:51:32PM -0700, Wesley Cheng wrote:
->>>>>>>>>>>>> The QC ADSP is able to support USB
->>>>>>>>>>>>> playback endpoints, so that the main
->>>>>>>>>>>>> application processor can be placed into
->>>>>>>>>>>>> lower CPU power modes.  This adds
->>>>>>>>>>>>> the required AFE port configurations and
->>>>>>>>>>>>> port start command to start an
->>>>>>>>>>>>> audio session.
->>>>>>>>>>>>>
->>>>>>>>>>>>> Specifically, the QC ADSP can support
->>>>>>>>>>>>> all potential endpoints that are
->>>>>>>>>>>>> exposed by the audio data interface. 
->>>>>>>>>>>>> This includes isochronous data
->>>>>>>>>>>>> endpoints, in either synchronous mode or
->>>>>>>>>>>>> asynchronous mode. In the latter
->>>>>>>>>>>>> case both implicit or explicit feedback
->>>>>>>>>>>>> endpoints are supported.  The size
->>>>>>>>>>>>> of audio samples sent per USB frame
->>>>>>>>>>>>> (microframe) will be adjusted based on
->>>>>>>>>>>>> information received on the feedback endpoint.
->>>>>>>>>>>>>
->>>>>>>>>>>>> Some pre-requisites are needed before
->>>>>>>>>>>>> issuing the AFE port start command,
->>>>>>>>>>>>> such as setting the USB AFE dev_token. 
->>>>>>>>>>>>> This carries information about the
->>>>>>>>>>>>> available USB SND cards and PCM devices
->>>>>>>>>>>>> that have been discovered on the
->>>>>>>>>>>>> USB bus.  The dev_token field is used by
->>>>>>>>>>>>> the audio DSP to notify the USB
->>>>>>>>>>>>> offload driver of which card and PCM index to enable playback on.
->>>>>>>>>>>>>
->>>>>>>>>>>>> Signed-off-by: Wesley Cheng <quic_wcheng@quicinc.com>
->>>>>>>>>>>>> ---
->>>>>>>>>>>>>   sound/soc/qcom/qdsp6/q6afe-dai.c         |  60 +++++++
->>>>>>>>>>>>>  
->>>>>>>>>>>>> sound/soc/qcom/qdsp6/q6afe.c            
->>>>>>>>>>>>> | 192 ++++++++++++++++++++++-
->>>>>>>>>>>>>   sound/soc/qcom/qdsp6/q6afe.h             |  36 ++++-
->>>>>>>>>>>>>   sound/soc/qcom/qdsp6/q6dsp-lpass-ports.c |  23 +++
->>>>>>>>>>>>>   sound/soc/qcom/qdsp6/q6dsp-lpass-ports.h |   1 +
->>>>>>>>>>>>>   sound/soc/qcom/qdsp6/q6routing.c         |  32 +++-
->>>>>>>>>>>>>   6 files changed, 341 insertions(+), 3 deletions(-)
->>>>>>>>>>>>>
->>>>>>>>>>> [...]
->>>>>>>>>>>>> diff --git
->>>>>>>>>>>>> a/sound/soc/qcom/qdsp6/q6routing.c
->>>>>>>>>>>>> b/sound/soc/qcom/qdsp6/q6routing.c
->>>>>>>>>>>>> index 90228699ba7d..b7439420b425 100644
->>>>>>>>>>>>> --- a/sound/soc/qcom/qdsp6/q6routing.c
->>>>>>>>>>>>> +++ b/sound/soc/qcom/qdsp6/q6routing.c
->>>>>>>>>>>>> @@ -435,6 +435,26 @@ static struct
->>>>>>>>>>>>> session_data *get_session_from_id(struct
->>>>>>>>>>>>> msm_routing_data *data,
->>>>>>>>>>>>>       return NULL;
->>>>>>>>>>>>>   }
->>>>>>>>>>>>> +
->>>>>>>>>>>>> +static bool is_usb_routing_enabled(struct msm_routing_data *data)
->>>>>>>>>>>>> +{
->>>>>>>>>>>>> +    int i;
->>>>>>>>>>>>> +
->>>>>>>>>>>>> +    /*
->>>>>>>>>>>>> +     * Loop through current sessions to
->>>>>>>>>>>>> see if there are active routes
->>>>>>>>>>>>> +     * to the USB_RX backend DAI.  The
->>>>>>>>>>>>> USB offload routing is designed
->>>>>>>>>>>>> +     * similarly to the non offload
->>>>>>>>>>>>> path.  If there are multiple PCM
->>>>>>>>>>>>> +     * devices associated with the ASoC
->>>>>>>>>>>>> platform card, only one active
->>>>>>>>>>>>> +     * path can be routed to the USB offloaded endpoint.
->>>>>>>>>>>>> +     */
->>>>>>>>>>>>> +    for (i = 0; i < MAX_SESSIONS; i++) {
->>>>>>>>>>>>> +        if (data->sessions[i].port_id == USB_RX)
->>>>>>>>>>>>> +            return true;
->>>>>>>>>>>>> +    }
->>>>>>>>>>>>> +
->>>>>>>>>>>>> +    return false;
->>>>>>>>>>>>> +}
->>>>>>>>>>>>
->>>>>>>>>>>> What is different about USB_RX compared to
->>>>>>>>>>>> other output ports we have in
->>>>>>>>>>>> Q6AFE? Obviously, we can only play one
->>>>>>>>>>>> stream on an output port. But
->>>>>>>>>>>> doesn't the ADSP mix streams together when
->>>>>>>>>>>> you have multiple routes?
->>>>>>>>>>>>
->>>>>>>>>>>
->>>>>>>>>>> This patch will limit the USB_RX from being able
->>>>>>>>>>> to be mixed to multiple
->>>>>>>>>>> q6adm paths.
->>>>>>>>>>>
->>>>>>>>>>>> Also, this doesn't actually check for *active* routes only. It just
->>>>>>>>>>>> looks if any other MultiMedia DAI is
->>>>>>>>>>>> configured to output to USB_RX.
->>>>>>>>>>>> That doesn't mean they will ever be active at the same time.
->>>>>>>>>>>>
->>>>>>>>>>>
->>>>>>>>>>> Yes, the main reason being that that is the
->>>>>>>>>>> mechanism we use to populate
->>>>>>>>>>> the active offload path within the USB SND card mixer.
->>>>>>>>>>>
->>>>>>>>>>>> I might for example want to have MultiMedia1 and MultiMedia2 both
->>>>>>>>>>>> configured to output to USB_RX. Let's assume
->>>>>>>>>>>> MultiMedia1 is a normal PCM
->>>>>>>>>>>> DAI, MultiMedia2 is a compress offload DAI. When I want to playback
->>>>>>>>>>>> normal audio, I go through MultiMedia1, when
->>>>>>>>>>>> I want to play compressed
->>>>>>>>>>>> audio, I go through MultiMedia2. Only one of them active at a time.
->>>>>>>>>>>> Why can't I set this up statically in the mixers?
->>>>>>>>>>>>
->>>>>>>>>>>> If you confirm that it is really impossible
->>>>>>>>>>>> to have multiple streams
->>>>>>>>>>>> mixed together to the USB_RX output in the
->>>>>>>>>>>> ADSP, then this should be a
->>>>>>>>>>>> runtime check instead when starting the stream IMO.
->>>>>>>>>>>>
->>>>>>>>>>>
->>>>>>>>>>> We can have multiple streams being mixed together, but it will get
->>>>>>>>>>> confusing because it changes the definition that
->>>>>>>>>>> we had discussed about in
->>>>>>>>>>> the past about the overall design for the interaction w/ userspace.
->>>>>>>>>>> Although we (QC) only support a single USB audio
->>>>>>>>>>> device for offloading,
->>>>>>>>>>> there could be other situations where the audio
->>>>>>>>>>> DSP can support multiple
->>>>>>>>>>> devices.  The assumption is that each MM path is
->>>>>>>>>>> assigned to a USB device.
->>>>>>>>>>>
->>>>>>>>>>
->>>>>>>>>> Are you referring to the "USB Offload Playback Route
->>>>>>>>>> PCM#*" mixers here?
->>>>>>>>>> They could just refer to first of the configured MM paths, if someone
->>>>>>>>>> decides to route multiple paths to the USB backend. Looking at
->>>>>>>>>> q6usb_update_offload_route(), I think the implementation does that
->>>>>>>>>> already.
->>>>>>>>>>
->>>>>>>>>> I think it's fine that the userspace API for
->>>>>>>>>> automatically "probing" the
->>>>>>>>>> PCM device supports only a single path to the USB backend. But if
->>>>>>>>>> someone wants to bypass the automatic probing and configure a more
->>>>>>>>>> advanced setup, do we need to forbid that?
->>>>>>>>>>
->>>>>>>>>> Asked differently: what would happen if we remove this check here and
->>>>>>>>>> handle USB_RX like any other Q6AFE output port?
->>>>>>>>>> Would anything break for
->>>>>>>>>> the userspace interface?
->>>>>>>>>>
->>>>>>>>>
->>>>>>>>> So I took a look at seeing how the Q6ADM/ASM
->>>>>>>>> interactions would work for
->>>>>>>>> the situation where if user tried to start both MM1/2
->>>>>>>>> streams at the same
->>>>>>>>> time over the USB offload path.  In this scenario, we
->>>>>>>>> see that the Q6USB BE
->>>>>>>>> DAI operations, ie startup, hw_params, etc... gets
->>>>>>>>> called one time for the
->>>>>>>>> initial stream.  For example, if I start playback on MM1, then that
->>>>>>>>> triggers the USB BE DAI to be brought up.
->>>>>>>>>
->>>>>>>>> When I start playback on MM2, since MM1 already called
->>>>>>>>> dpcm_be_dai_startup(), then be->dpcm[stream].users will
->>>>>>>>> be greater than
->>>>>>>>> zero.  This would cause the __soc_pcm_open() to be
->>>>>>>>> skipped for the USB BE
->>>>>>>>> DAI, so I wouldn't be able to check the runtime status
->>>>>>>>> at the Q6USB backend
->>>>>>>>> DAI.  However, we do track current streaming sessions
->>>>>>>>> done over Q6 ADM and
->>>>>>>>> it does save the AFE port associated to each COPP
->>>>>>>>> allocation, so I think its
->>>>>>>>> reasonable to see if there is already a COPP entry for
->>>>>>>>> the USB AFE port, to
->>>>>>>>> fail the open() call associated to the FE DAI.
->>>>>>>>>
->>>>>>>>
->>>>>>>> This sounds like a reasonable approach *if* we have to prevent multiple
->>>>>>>> MM DAIs from streaming to the USB AFE port at the same time.
->>>>>>>>
->>>>>>>> It's still unclear to me why we have to introduce this
->>>>>>>> limitation in the
->>>>>>>> first place. I think the questions from my previous email are still
->>>>>>>> open. Can you check them again?
->>>>>>>>
->>>>>>>
->>>>>>> So I checked with our audio DSP folks, and they mentioned there isn't
->>>>>>> technically a limitation from mixing multiple ADM streams from
->>>>>>> their end.
->>>>>>> My observations are as follows:
->>>>>>> - Using tinyplay to open and play on different FE PCM devices
->>>>>>> (ie MM1 and
->>>>>>> MM2), both streams are audible on the USB headset (intermixed).
->>>>>>> - If starting playback on MM1 first, before MM2, then once playback is
->>>>>>> complete on MM1, the ADM close is also affecting the MM2 stream.
->>>>>>> Basically, MM2 stops when the MM1 audio file is completed.
->>>>>>> - Due to the abrupt/incomplete closing of the MM2 ADM stream, looks like
->>>>>>> the audio DSP is not handling that case well, so subsequent
->>>>>>> playbacks fail.
->>>>>>>
->>>>>>
->>>>>> Thanks a lot for testing this!
->>>>>>
->>>>>>> I did find a possible reason for this, and it seems to be due to
->>>>>>> some code
->>>>>>> unrelated to the USB offload path directly.  It looks like the Q6ADM is
->>>>>>> currently built in a way that you can only route streams to a single
->>>>>>> endpoint, even though we do have reference counting for each
->>>>>>> COPP profile.
->>>>>>> So even after the first MM1 ADM stream completes and the PCM device is
->>>>>>> closed, the MM1 ADM close callback will issue a q6adm_device_close() for
->>>>>>> the USB AFE port.
->>>>>>
->>>>>> Yeah, this sounds like a bug to me...
->>>>>>
->>>>>>>
->>>>>>> I made some test changes to account for the refcount before issuing the
->>>>>>> q6adm_device_close(), and that seemed to work.  Once the MM1
->>>>>>> stream closes,
->>>>>>> it allows for the MM2 stream to close/finish before issuing the command,
->>>>>>> and that allows for proper cleanup of the audio data.
->>>>>>>
->>>>>>> IMO, I would like to keep the initial behavior (ie, blocking the
->>>>>>> additional
->>>>>>> stream open from the kernel) until I can get some more testing done, and
->>>>>>> figure out if this is the correct approach.  If it is, I can submit a
->>>>>>> follow up series to address it.
->>>>>>>
->>>>>>
->>>>>> I'm fine with this approach. My only two concerns/comments are:
->>>>>>
->>>>>>   1. Let's make sure we don't waste too much time finding the ideal
->>>>>>      approach to implement the additional blocking, if this will likely
->>>>>>      end up getting removed again anyway.
->>>>>>
->>>>>>   2. How can we justify making this change only for USB? Your analysis
->>>>>>      sounds like the issue applies to all types of output ports. This was
->>>>>>      exactly my main concern with the check you added in this patch:
->>>>>>      I would expect QDSP6 treats all ports exactly the same. This means
->>>>>>      we should add this additional check for all the output ports...
->>>>>>
->>>>>
->>>>> Fair points...I will extend this check across all ports until I get back
->>>>> with seeing how we can address the mixing situation.
->>>>>
->>>>
->>>> Sorry for replying again.  I think I'll at least limit this to the playback
->>>> path only for now.  I'm not sure how the behavior yet is for the record
->>>> path, since I don't really have that use case to test with yet :).  I will
->>>> see how it looks like when the record USB offload is done.
->>>>
->>>
->>> FWIW, I tested this on MSM8916:
->>>
->>>  - MultiMedia1 -> PRI_MI2S_RX
->>>  - MultiMedia3 -> PRI_MI2S_RX
->>>  - TERT_MI2S_TX -> MultiMedia2
->>>  - TERT_MI2S_TX -> MultiMedia5
->>>
->>> 2x speaker-test to MultiMedia1 and MultiMedia3 (pink noise + sine wave):
->>>  -> Audio playback correctly mixed together
->>>  -> Playback aborts for both when stopping one of the processes
->>>       Write error: -5,I/O error
->>>       xrun_recovery failed: -5,I/O error
->>>       Transfer failed: I/O error
->>>  -> Kernel log:
->>>     [  585.679421] q6routing 4080000.remoteproc:smd-edge:apr:service@8:routing: Found Matching Copp 0x0
->>>     [  587.917135] qcom-q6adm aprsvc:service:4:8: cmd = 0x10327 return error = 0x2
->>>     [  587.917378] qcom-q6adm aprsvc:service:4:8: DSP returned error[2]
->>>     [  587.917409] qcom-q6adm aprsvc:service:4:8: Failed to close copp -22
->>>
->>> 2x arecord from MultiMedia2 and MultiMedia5:
->>>  -> Both processes record audio as expected
->>>  -> Recording aborts for both when stopping one of the processes
->>>       arecord: pcm_read:2272: read error: I/O error
->>>  -> Kernel log:
->>>     [  646.125612] q6routing 4080000.remoteproc:smd-edge:apr:service@8:routing: Found Matching Copp 0x0
->>>     [  654.247867] q6asm-dai 4080000.remoteproc:smd-edge:apr:service@7:dais: command[0x10bdb] not expecting rsp
->>>     [  654.815474] q6asm-dai 4080000.remoteproc:smd-edge:apr:service@7:dais: command[0x10bdb] not expecting rsp
->>>     [  654.825568] qcom-q6adm aprsvc:service:4:8: cmd = 0x10327 return error = 0x2
->>>     [  654.825955] qcom-q6adm aprsvc:service:4:8: DSP returned error[2]
->>>     [  654.826013] qcom-q6adm aprsvc:service:4:8: Failed to close copp -22
->>>
->>> => Both playback and recording are affected. As you suspected it's
->>>    unrelated to USB.
->>>
->>
->> Great, thanks for confirming both paths show the same issue :).
->>
->>> This feels like a bug to me rather than an intentional limitation. If
->>> you can share the fix you made I can test it here.
->>>
->>
->> Change I tried was fairly straightforward.  Sharing it below:
->>
->> diff --git a/sound/soc/qcom/qdsp6/q6adm.c b/sound/soc/qcom/qdsp6/q6adm.c
->> index fe719c4c32b3..7880fbbe815f 100644
->> --- a/sound/soc/qcom/qdsp6/q6adm.c
->> +++ b/sound/soc/qcom/qdsp6/q6adm.c
->> @@ -578,12 +579,13 @@ int q6adm_close(struct device *dev, struct q6copp *copp)
->>      struct q6adm *adm = dev_get_drvdata(dev->parent);
->>      int ret = 0;
->>
->> -    ret = q6adm_device_close(adm, copp, copp->afe_port, copp->copp_idx);
->> -    if (ret < 0) {
->> -        dev_err(adm->dev, "Failed to close copp %d\n", ret);
->> -        return ret;
->> +    if (kref_read(&copp->refcount) == 1) {
->> +        ret = q6adm_device_close(adm, copp, copp->afe_port, copp->copp_idx);
->> +        if (ret < 0) {
->> +            dev_err(adm->dev, "Failed to close copp %d\n", ret);
->> +            return ret;
->> +        }
->>      }
->> -
->>      kref_put(&copp->refcount, q6adm_free_copp);
->>
->>      return 0;
->>
+kernel test robot wrote:
+> Hi Yuquan,
 > 
-> Hmm, yeah it looks like we need some reference counting for the
-> open/close operation. I think checking the refcount like that is going
-> to be prone to potential race conditions though. I'm not sure if we can
-> guarantee that q6adm_close() isn't called concurrently.
+> kernel test robot noticed the following build errors:
 > 
-
-Yeah, I was hoping there was some locking in the ASoC levels, but its going
-to be locking based on the runtime PCM stream, so that wouldn't prevent
-q6adm_close() running concurrently. (as MM1/2 are different RTDs)
-
-> I played around a bit and came up with the two patches below. I think
-> those should be good. Given the "Found Matching Copp" code path, it
-> feels like this was the intended behavior all along. I can post these if
-> you have no objections. You could then just go ahead with your series by
-> removing the check I originally commented on in this patch.
+> [auto build test ERROR on akpm-mm/mm-everything]
 > 
+> url:    https://github.com/intel-lab-lkp/linux/commits/Yuquan-Wang/mm-numa_memblks-introduce-numa_add_reserved_memblk/20250328-172428
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
+> patch link:    https://lore.kernel.org/r/20250328092132.2695299-1-wangyuquan1236%40phytium.com.cn
+> patch subject: [PATCH v2] mm: numa_memblks: introduce numa_add_reserved_memblk
+> config: loongarch-randconfig-002-20250328 (https://download.01.org/0day-ci/archive/20250328/202503282026.QNaOAK79-lkp@intel.com/config)
+> compiler: loongarch64-linux-gcc (GCC) 14.2.0
+> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250328/202503282026.QNaOAK79-lkp@intel.com/reproduce)
+> 
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202503282026.QNaOAK79-lkp@intel.com/
+> 
+> All errors (new ones prefixed by >>):
+> 
+>    In file included from include/linux/build_bug.h:5,
+>                     from include/linux/container_of.h:5,
+>                     from include/linux/list.h:5,
+>                     from include/linux/module.h:12,
+>                     from drivers/acpi/numa/srat.c:10:
+>    drivers/acpi/numa/srat.c: In function 'acpi_parse_cfmws':
+> >> drivers/acpi/numa/srat.c:461:13: error: implicit declaration of function 'numa_add_reserved_memblk' [-Wimplicit-function-declaration]
+>      461 |         if (numa_add_reserved_memblk(node, start, end) < 0) {
+>          |             ^~~~~~~~~~~~~~~~~~~~~~~~
 
-OK, that sounds good to me.  Thanks for helping out with this part of my
-series.  Definitely think its a good idea to have an explicit mutex that is
-managing the Q6ADM open/close ops.
+So it looks like loongarch was left out of the numa_memblks conversion:
+87482708210f ("mm: introduce numa_memblks")
 
-Thanks
-Wesley Cheng
+I think the update needed is something like this (untested):
+
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index 2b8bd27a852f..cac16c827159 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -183,6 +183,7 @@ config LOONGARCH
+ 	select MODULES_USE_ELF_RELA if MODULES
+ 	select NEED_PER_CPU_EMBED_FIRST_CHUNK
+ 	select NEED_PER_CPU_PAGE_FIRST_CHUNK
++	select NUMA_MEMBLKS
+ 	select OF
+ 	select OF_EARLY_FLATTREE
+ 	select PCI
+diff --git a/arch/loongarch/include/asm/numa.h b/arch/loongarch/include/asm/numa.h
+index b5f9de9f102e..bbf9f70bd25f 100644
+--- a/arch/loongarch/include/asm/numa.h
++++ b/arch/loongarch/include/asm/numa.h
+@@ -22,20 +22,6 @@ extern int numa_off;
+ extern s16 __cpuid_to_node[CONFIG_NR_CPUS];
+ extern nodemask_t numa_nodes_parsed __initdata;
+ 
+-struct numa_memblk {
+-	u64			start;
+-	u64			end;
+-	int			nid;
+-};
+-
+-#define NR_NODE_MEMBLKS		(MAX_NUMNODES*2)
+-struct numa_meminfo {
+-	int			nr_blks;
+-	struct numa_memblk	blk[NR_NODE_MEMBLKS];
+-};
+-
+-extern int __init numa_add_memblk(int nodeid, u64 start, u64 end);
+-
+ extern void __init early_numa_add_cpu(int cpuid, s16 node);
+ extern void numa_add_cpu(unsigned int cpu);
+ extern void numa_remove_cpu(unsigned int cpu);
+diff --git a/arch/loongarch/kernel/numa.c b/arch/loongarch/kernel/numa.c
+index 84fe7f854820..57b21082e893 100644
+--- a/arch/loongarch/kernel/numa.c
++++ b/arch/loongarch/kernel/numa.c
+@@ -18,6 +18,7 @@
+ #include <linux/efi.h>
+ #include <linux/irq.h>
+ #include <linux/pci.h>
++#include <linux/numa_memblks.h>
+ #include <asm/bootinfo.h>
+ #include <asm/loongson.h>
+ #include <asm/numa.h>
+
+Could someone from the loongarch side propose the fixups needed here so
+Yuquan can land this patch?
