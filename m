@@ -1,245 +1,104 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E455C24EAA8
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 14:11:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F7292505DB
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 14:11:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743689486; cv=none; b=X/+MoseZkF2OzQYx70ZuxMnoFcHRWLCYCj4F8Ud2rBDO7DQqosdhxpqWAfDq4By9sK0YWqzf4fRHhWxjWPY+HH0dL+fBu8eYloUfcOagwenWdunbWStuEHw6+Jw5eLpINn9NCWAplR2jY0OZRiopkLtKLCviJoxCHcpJovERuVg=
+	t=1743689492; cv=none; b=jzQ3teM3nFW6kTBzq9+jSWZQXGyi/GcmB/hAih6rwmGVfza4j08FnU++5Rwi7tBJKEfJhH04qcLr01gLPk2zmC7dJYoGjueFOlr5mb+pWb9vQYjdgWkjRWAk1O1FWymsWJHT3CuuOh9Aj+DtVp8exo8BpYdWfWXRZR0bNzgzsLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743689486; c=relaxed/simple;
-	bh=+WKjDzZj9IcTEhtSM9Sb8z9iwCc0GDB+JKmfQKdnd5k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=p2e+1s3OK4m0HxCtHtg9xngRF5UFgEFh0pDSyRTHg1nzsWSTlVCyZNQDgl8meFYbVtFsUL1MKjb8akQpXCey8L6wnuEOe3XKIgnU9ApArOJwmn+Zj4lFOX1+9+QLXw20YSeIAmsTpeT5+QLU1U+9aisN+2Mj2wxzwBvk404Hsqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=2l64JBxQ; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=kuc3/WQF; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=2l64JBxQ; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=kuc3/WQF; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1743689492; c=relaxed/simple;
+	bh=RGHJTQze7kvfvQj1ObUvTp1kIBQZdW9W32EHMDx/fp0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=c56Y9ATrSkT+MLPuv4x4GsTTdTicSo9k3jVe8ufpJQIAU4fxD/72Sa4VCstEdx3IRPN5BpWlgV6mERcfmDN/6dBbZ3YruUsIiWcLmRtiYllrproqDqAGQAfL6V7DeXdfvfW7tkap6g5s3u1cHQJpctkf7FJY2zToAyr2i0YvNbg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=OxrO0AnX; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="2l64JBxQ";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="kuc3/WQF";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="2l64JBxQ";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="kuc3/WQF"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 0CC531F390;
-	Thu,  3 Apr 2025 14:11:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1743689483; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IpKQJ1DZO4HDvv1M1OG+goh5mFQUpBNjEB6oS1DI/0Q=;
-	b=2l64JBxQfvX4U/Pp4BW677aGlOZFcFy558f1v4eM7STMGl4vU5EZgf6o/rUzVISL4dTOdM
-	X9WU/TYp6wuEYYRR26b0W2ZbsYy0u4arRo62Zlxs8sHm9kP8yp2UzYqU0SRnkUx+Nclxj7
-	f/Ye8MhAcsCShLTkVMbXJqFfKB0l1Jc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1743689483;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IpKQJ1DZO4HDvv1M1OG+goh5mFQUpBNjEB6oS1DI/0Q=;
-	b=kuc3/WQFmJXoAHMkRqgoLcY32DnurrQeMaYlD45gyuqrLCeQQXdZHwfSSHVm2BYzGYXpOW
-	F50N78k+LmAhtQAA==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1743689483; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IpKQJ1DZO4HDvv1M1OG+goh5mFQUpBNjEB6oS1DI/0Q=;
-	b=2l64JBxQfvX4U/Pp4BW677aGlOZFcFy558f1v4eM7STMGl4vU5EZgf6o/rUzVISL4dTOdM
-	X9WU/TYp6wuEYYRR26b0W2ZbsYy0u4arRo62Zlxs8sHm9kP8yp2UzYqU0SRnkUx+Nclxj7
-	f/Ye8MhAcsCShLTkVMbXJqFfKB0l1Jc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1743689483;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IpKQJ1DZO4HDvv1M1OG+goh5mFQUpBNjEB6oS1DI/0Q=;
-	b=kuc3/WQFmJXoAHMkRqgoLcY32DnurrQeMaYlD45gyuqrLCeQQXdZHwfSSHVm2BYzGYXpOW
-	F50N78k+LmAhtQAA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E55081392A;
-	Thu,  3 Apr 2025 14:11:22 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id gOGZNwqX7mePUAAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Thu, 03 Apr 2025 14:11:22 +0000
-Message-ID: <81ffcfee-8f18-4392-a9ce-ff3f60f7b5b1@suse.cz>
-Date: Thu, 3 Apr 2025 16:11:22 +0200
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="OxrO0AnX"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3912ebb8e88so133788f8f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 07:11:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1743689488; x=1744294288; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=K0VfW05t/iqaQhnmWEi7FoyTUAy7cc09x7Pm7VnpG3Y=;
+        b=OxrO0AnXGHB8utNy37mtE2tTBVzBHZ1hifZQxPpLbJdnpxj7oZq03u8SJZpcMfALpC
+         uqYyr4cKGJn0rvx44Cnh0UOuJBXNyzWiFFJ06UNY8xsxHGwKkVD0v3T4a/obHqb4KIXq
+         kuwym76/uTCW+hf4q1CFmYPjlQErwXmVrj92lZIkaYWoNfFSkn9P58PhdEPnhS7R5W9K
+         3mOPT/thnUWr9If11oDxJVg8g5BXzMmhI/9jp1ZsLJ7/oMPPeOV+9Kcawgm8RVCiPlIB
+         bNWI7DHkyyIqB5oS4hi9Yv7qZo20gD6FfJKKihKuYITnXbp48CmiXG6OF82LIm8rNYi7
+         kI7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743689488; x=1744294288;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=K0VfW05t/iqaQhnmWEi7FoyTUAy7cc09x7Pm7VnpG3Y=;
+        b=DWuz+g3CJ6C0YeFr0CXcDyZwK40bDzs4ckC788LF8qPGwwYZjLf1EbaY7KG2armo2T
+         fijib2NrVEwKnq+ozmRmUYvScDbVDDPkODcL1ToUeAZaPNCaL89DniW+NiqQdMgSf1i1
+         LL1JOBXzj6+VXkPYOt9iJh5mWGj0+wL6mE0ga/qgz/NziUPqR9GKemb4r9MFoyn5l3WW
+         YZ/jsR1XMejWPfH1J+n5HRp2Z7jFIlVOaIIyDoLu5n9B7lOprjiQhSjx/HJB8cmzY8WM
+         dynjhQpp8a9+SgCIi8xfAI9u0AFjiclq9qyMiDGTCE79T3l3u69/MjnNCSh4Zv4R5K8V
+         SSWw==
+X-Forwarded-Encrypted: i=1; AJvYcCUctzu0gOE+s6QDNJUU63lgMDIElv7RprB+Wug3L/s0HcTYV96UpC5TJme7Df2PnneqlUzUk8sE8+wzZWQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxAVtHpike3gKMiwKvOzGLqKGrdOVZdC/xmjva3dt4oEjY2BRKO
+	9k825pbDyH09ig8qb4niO89xH7NyICsSSp8SO44TrYPzZkk7Z0q0W1smynZjUWY=
+X-Gm-Gg: ASbGnctcoZkbaYeH6rp5CKT7sisZKd1L5hI3UX/C7of4xv2R+072UD1xziEdPpDD4EA
+	MV6RevrlPfcrG0nzvoaCFpbUyoWMGUJ0Ko6oPRlHNujLKSPLFKCzBG/9S7cmBhKavjzstz/OYMx
+	5BKvYa3oylSo++fWnYTttyNaHfUIIEtAfZDwSvYgaJT6HJ+Ejd4uyFl5QKLWMXjWmXoH4wdHx/y
+	AX765zWQ1HTNeCwh/yRCw7sdmaagNRt1kAxRYdsdycsLdXjqoAarWSjtQ6ZBmI6Smd/AJNNuw9I
+	ZfHWtBtNIBDB68lxCjDMDaoAWhPJ2a6BmBR0vPw5KKAipl48h54HEDzch+kSar2JyJiipJGXLpk
+	SQahE54G3hs32ZhxY+gXXprZGp1+COXVtOWw=
+X-Google-Smtp-Source: AGHT+IHiffo8Q7QbwNeKM3hUk+/mFfPZfaoRh6iLXZTeYovOPnPhwX5QouFrxPFyA5XS+S3AtKDdew==
+X-Received: by 2002:a05:6000:4582:b0:39c:1401:6ef5 with SMTP id ffacd0b85a97d-39c14016ff2mr4608687f8f.2.1743689488137;
+        Thu, 03 Apr 2025 07:11:28 -0700 (PDT)
+Received: from localhost (dynamic-2a00-1028-83b8-1e7a-3010-3bd6-8521-caf1.ipv6.o2.cz. [2a00:1028:83b8:1e7a:3010:3bd6:8521:caf1])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-39c301b6778sm1853301f8f.46.2025.04.03.07.11.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Apr 2025 07:11:27 -0700 (PDT)
+From: Petr Tesarik <ptesarik@suse.com>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Guo Weikang <guoweikang.kernel@gmail.com>
+Cc: "Mike Rapoport (Microsoft)" <rppt@kernel.org>,
+	Bibo Mao <maobibo@loongson.cn>,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Petr Tesarik <ptesarik@suse.com>
+Subject: [PATCH] LoongArch: Remove a bogus reference to ZONE_DMA
+Date: Thu,  3 Apr 2025 16:11:25 +0200
+Message-ID: <20250403141125.271047-1-ptesarik@suse.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC v3 2/8] slab: add opt-in caching layer of percpu
- sheaves
-Content-Language: en-US
-To: Harry Yoo <harry.yoo@oracle.com>
-Cc: Suren Baghdasaryan <surenb@google.com>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Christoph Lameter
- <cl@linux.com>, David Rientjes <rientjes@google.com>,
- Roman Gushchin <roman.gushchin@linux.dev>,
- Uladzislau Rezki <urezki@gmail.com>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
- maple-tree@lists.infradead.org
-References: <20250317-slub-percpu-caches-v3-0-9d9884d8b643@suse.cz>
- <20250317-slub-percpu-caches-v3-2-9d9884d8b643@suse.cz>
- <Z-5HWApFjrOr7Q8_@harry>
-From: Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <Z-5HWApFjrOr7Q8_@harry>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Score: -4.30
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.999];
-	MIME_GOOD(-0.10)[text/plain];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FREEMAIL_CC(0.00)[google.com,oracle.com,linux.com,linux.dev,gmail.com,kvack.org,vger.kernel.org,lists.infradead.org];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_TLS_ALL(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	MID_RHS_MATCH_FROM(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:mid,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Flag: NO
-X-Spam-Level: 
+Content-Transfer-Encoding: 8bit
 
-On 4/3/25 10:31, Harry Yoo wrote:
->> +/*
->> + * Bulk free objects to the percpu sheaves.
->> + * Unlike free_to_pcs() this includes the calls to all necessary hooks
->> + * and the fallback to freeing to slab pages.
->> + */
->> +static void free_to_pcs_bulk(struct kmem_cache *s, size_t size, void **p)
->> +{
-> 
-> [...snip...]
-> 
->> +next_batch:
->> +	if (!localtry_trylock(&s->cpu_sheaves->lock))
->> +		goto fallback;
->> +
->> +	pcs = this_cpu_ptr(s->cpu_sheaves);
->> +
->> +	if (unlikely(pcs->main->size == s->sheaf_capacity)) {
->> +
->> +		struct slab_sheaf *empty;
->> +
->> +		if (!pcs->spare) {
->> +			empty = barn_get_empty_sheaf(pcs->barn);
->> +			if (empty) {
->> +				pcs->spare = pcs->main;
->> +				pcs->main = empty;
->> +				goto do_free;
->> +			}
->> +			goto no_empty;
-> 
-> Maybe a silly question, but if neither of alloc_from_pcs_bulk() or
-> free_to_pcs_bulk() allocates empty sheaves (and sometimes put empty or full
-> sheaves in the barn), you should expect usually sheaves not to be in the barn
-> when using bulk interfces?
+Remove dead code. LoongArch does not have a DMA memory zone. The
+architecture does not even define MAX_DMA_PFN.
 
-Hm maybe, but with patch 5/8 it becomes cheap to check? And there might be
-caches mixing both bulk and individual allocs?
-But maybe I should at least add the free sheaf alloc with GFP_NOWAIT attempt
-to bulk free? Can't recall if I missed it intentionally or forgot.
+Signed-off-by: Petr Tesarik <ptesarik@suse.com>
+---
+ arch/loongarch/mm/init.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
->> -static void
->> -init_kmem_cache_node(struct kmem_cache_node *n)
->> +static bool
->> +init_kmem_cache_node(struct kmem_cache_node *n, struct node_barn *barn)
->>  {
-> 
-> Why is the return type bool, when it always succeeds?
-
-I guess leftover from earlier versions. Will fix.
-
->> @@ -5421,20 +6295,27 @@ static int init_kmem_cache_nodes(struct kmem_cache *s)
->>  
->>  	for_each_node_mask(node, slab_nodes) {
->>  		struct kmem_cache_node *n;
->> +		struct node_barn *barn = NULL;
->>  
->>  		if (slab_state == DOWN) {
->>  			early_kmem_cache_node_alloc(node);
->>  			continue;
->>  		}
->> +
->> +		if (s->cpu_sheaves) {
->> +			barn = kmalloc_node(sizeof(*barn), GFP_KERNEL, node);
->> +
->> +			if (!barn)
->> +				return 0;
->> +		}
->> +
->>  		n = kmem_cache_alloc_node(kmem_cache_node,
->>  						GFP_KERNEL, node);
->> -
->> -		if (!n) {
->> -			free_kmem_cache_nodes(s);
->> +		if (!n)
->>  			return 0;
->> -		}
-> 
-> Looks like it's leaking the barn
-> if the allocation of kmem_cache_node fails?
-
-Oops right, will add kfree(barn) before return 0;
-
-> 
->> -		init_kmem_cache_node(n);
->> +		init_kmem_cache_node(n, barn);
->> +
->>  		s->node[node] = n;
->>  	}
->>  	return 1;
->> @@ -6005,12 +6891,24 @@ static int slab_mem_going_online_callback(void *arg)
->>  	 */
->>  	mutex_lock(&slab_mutex);
->>  	list_for_each_entry(s, &slab_caches, list) {
->> +		struct node_barn *barn = NULL;
->> +
->>  		/*
->>  		 * The structure may already exist if the node was previously
->>  		 * onlined and offlined.
->>  		 */
->>  		if (get_node(s, nid))
->>  			continue;
->> +
->> +		if (s->cpu_sheaves) {
->> +			barn = kmalloc_node(sizeof(*barn), GFP_KERNEL, nid);
->> +
->> +			if (!barn) {
->> +				ret = -ENOMEM;
->> +				goto out;
->> +			}
->> +		}
->> +
-> 
-> Ditto.
-> 
-> Otherwise looks good to me :)
-
-Thanks a lot!
+diff --git a/arch/loongarch/mm/init.c b/arch/loongarch/mm/init.c
+index ca5aa5f46a9f..7fab370efa74 100644
+--- a/arch/loongarch/mm/init.c
++++ b/arch/loongarch/mm/init.c
+@@ -65,9 +65,6 @@ void __init paging_init(void)
+ {
+ 	unsigned long max_zone_pfns[MAX_NR_ZONES];
+ 
+-#ifdef CONFIG_ZONE_DMA
+-	max_zone_pfns[ZONE_DMA] = MAX_DMA_PFN;
+-#endif
+ #ifdef CONFIG_ZONE_DMA32
+ 	max_zone_pfns[ZONE_DMA32] = MAX_DMA32_PFN;
+ #endif
+-- 
+2.48.1
 
