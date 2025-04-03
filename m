@@ -1,213 +1,165 @@
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2329524C08A;
-	Thu,  3 Apr 2025 14:32:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1D2C24EABE
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 14:33:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743690733; cv=none; b=ivThEpJPkfjx6h6BcWngIgqPmmuk4Se7lpkOtD9JfdMID+CRybs4OVTE5UFBy5w2xKpIGe+uRnT28/L1Hp38sou/7grymiI9xQauF7THvUltWeOKu7xxVqfkz4WgboEUNqj90XxJrvwup3WFDUj81SmwwccGGVmmWK1b/FLeuVk=
+	t=1743690834; cv=none; b=KU/HN4q0aAJD9gn8jCe1WYBSDBYbcWBG+4sJ66lkToNOy7M44nRpDy84kChv4V/yHpiV4kGRBVAuz2JUfoQVLSFKzqX7Ok1hcvs8uaLBHDR0Csatv39NgJ0O6nujuKLnFbQiz/L6OX5YtUHepwk41L8XmYCYkh8cbAAAOcDZTKQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743690733; c=relaxed/simple;
-	bh=vVR4dzjbwximKMFz2GolQ+usgSrCBodydLu3KgERStE=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 Mime-Version:Content-Type; b=MOXoDMhT/2FvuvJoKM3UWJbwxQOkCLiwjgR0bDufB8rfAS0usVpydeb3f34mJQyfk02XygZxC/0n4m36EjHVXAjbjSGLfy5bcQG9HPwxxfm1rfFZz/n4R7/BT7vz82uvTtsfvREvhSBuefEk/TZQEpvehbtsePHVGu72fzar3UQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ak0LtGE7; arc=none smtp.client-ip=209.85.160.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743690834; c=relaxed/simple;
+	bh=2TDuYkbffUtZNscUeDutELeW6f7LQjrZgxY+nNhgpLE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QdzL9fHLvNn59FvwX4BxpWS94w11zk90n6abg/dPclimwBylzGrzoz7wBOUuOfuDxjnDHyaY0FOY0H8WeoIN3fjg/YtLR0GSQz+96w9LPhG+KoOHqfvVFnqkLL5sVzrQf1c7NlGtUhBvBSsCZ2rvNQR9IA0igv9K2z7WF+Ev7KI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=EdhPOjru; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ak0LtGE7"
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-4774d68c670so13065661cf.0;
-        Thu, 03 Apr 2025 07:32:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="EdhPOjru"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43d0c18e84eso4828085e9.3
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 07:33:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743690731; x=1744295531; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4cM/Hf3taQ82kW/fJqiW37cU3vX6rk2UxXpAJR5iIVQ=;
-        b=Ak0LtGE7xBASbInCTu1D7e/P4BQhde5JHbcAgyy5etK6a2oMLHxBooZGnoZTB7ytK2
-         cMBfuG2pRRlNnzbExHVI7mLBY3+nh2UOdinHNE13FOmYqqp5dhEUyZMsUsOJgXvAQGLW
-         lfuuKTZnR6DIaRI84Rl/6/bGQNelVl/TPSEjhkH49VcDs3uuq4R5OBkS/bnR5N8/7Efu
-         r93cWC6Ml6PWcmZTmpGtrb0qFX6BgH+MgZ2phE/DBmYIQo2zbH6VXB1INnTTBYBPDy2d
-         RC1jHR3segbex1Or8imL+4HeUUzAdHr3VOfC4wDU7E7HytrujghIWx1tsHudAt9cqIMX
-         /IuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743690731; x=1744295531;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
+        d=suse.com; s=google; t=1743690830; x=1744295630; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=4cM/Hf3taQ82kW/fJqiW37cU3vX6rk2UxXpAJR5iIVQ=;
-        b=WZLBrN7HvCaxgNr24FgL7KD+rIEqwpbDMNfYDvmXzx4aTmc8icTaM2UR4lB2JrHNpF
-         JDQn8wWyPlPNPKZnUPSh+e7QKgBkToahgsZme77b4qlNCOutwuhOxXsR8Q7GGHbPZTZI
-         VgxQAR5tWSIZL9KEBFbvJ6Ch6nbwvWy5J6fWVP+yIqY9JYzKYzZr50P4DOHp0HV48n2D
-         gqdwgxd6y5zaznLLEEfEsy0b/m/q29hxu02FVK5bfH3lx650QBD+3xLKYr58UggxO7wu
-         dK+467WN1hJmZj5cMGFvgd4R1TYDADIEtBwY5/BcBpyckwvpRYibKGm1wMhv+dOO5jsB
-         2YkA==
-X-Forwarded-Encrypted: i=1; AJvYcCVRpyn2jn3FuWeZsoZ9fc+fsDEVeWo+b/9lPBJAmKxJ24kubk0qx+pyPZ3G0oFk0a3Rjk10z2dw@vger.kernel.org, AJvYcCWRBaGRR8L2BF/7Okap/KqmZokGbIDP0FQsisoyqhWS6rIaNW0jElOWWNfAw75Bt5Rhd+y0vsxPWpE4SI8=@vger.kernel.org, AJvYcCXYKazXa5W07mhpiSJ9zFumUIb21DHhkiHTIvPrxSpHkP2RnB5Z1/VeC+FMMIj/XcywjatzJY0Lpp3VxCjhh/sO@vger.kernel.org
-X-Gm-Message-State: AOJu0YyK5Gx8Ajnn7v0Ays88IoxfHvhDLDasbh0SRCyfFGkaPO8rNS8v
-	kYPuSXq8x6kiKqhabVHfXOWZzgH6vOpC21ZMiIV7lhDX/YBP1VO+
-X-Gm-Gg: ASbGncuVZ+lEqDcU1kpDxEbjMLDHf4eG8iZXLWmhXphAk8qGQ9s1zvbmjmxywNyGPhz
-	QnV4ipCzwUMjwnb6MCj7bIhDhbOHUfB0FjDLj6RmoJvaBATNaQbucnvQO5j1m6MlkVvqfenrR7L
-	c7jiog1mCP1PdpvWH0I0p4ic9voFWsnvXk9VCJAW0eBywEsBn/oALoVBl0LAIxAMGpL4U5EmoMp
-	S4f+yIq9S8wzo23gRFXGuPmr63Wf32UIr5hpaEH0+1PrlVdXvUH3FolpULInIiw0SnY83gfFkAt
-	TWNkPeMnzVPytNo0BdxJGHM6p9thHNbFfaWydmUhV1swzmYlJfT3TR+t0Wy/c6tpp4rss3vrfGZ
-	Z3pqShvP8m8rYDEZ1pJ2YiA==
-X-Google-Smtp-Source: AGHT+IG5js78IwTVCo0mnbgZawwpmTGNCA/TG7sieG+24V1Gv+bkWWNlJPo/KnhB+g6blu3Sxt7EGg==
-X-Received: by 2002:ac8:59cf:0:b0:476:a4eb:10a5 with SMTP id d75a77b69052e-4791925bd09mr33748561cf.12.1743690730655;
-        Thu, 03 Apr 2025 07:32:10 -0700 (PDT)
-Received: from localhost (86.235.150.34.bc.googleusercontent.com. [34.150.235.86])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c76e734fc8sm83989885a.5.2025.04.03.07.32.10
+        bh=aVBsZKIQ13uHowU1y9quubDy59z6xGT4gKGYHYzC0SY=;
+        b=EdhPOjruny9SF+Om2FL286F5rm+MuPsGFewvXHKsr+8Q/rSyyyvMMTuT8Sc1kmfwNA
+         k5toU9M/MSyC2+aQrRAXqjOMwyg+iE4H/ulY6fuYFgYBOzkZclvolGeFzXKjJcYkOZHO
+         ypdUolKtJHegE8S4JsZ6AvgAWRDQhDniX958Kb+ZkSQCyMI+o5oZ3PzVkv5bmEPvfDzS
+         sGCzW+WRF1xSbUr+u2S9IAWLw5+XHltx1nzdPx6J+bV1Jsykv77CXnWOsKt33wYji45s
+         t2Br/yaBTHrybbBkpCGlsFka3kQrFj3nIASIorLUas6Ez0Yw2vebtf411e6Pdk+bKGFn
+         ecUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743690830; x=1744295630;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=aVBsZKIQ13uHowU1y9quubDy59z6xGT4gKGYHYzC0SY=;
+        b=kIf7OunD5dN4eVoBcafvctQS3CuzlEakAEvLly3E6+TLwh+VAnNz0+CriJLVS0str5
+         g+fR3Ja8kX9MEkI2fCpks3YONiFgBB6HeEaQpnxj1HPaUu8jII/Jt8mOAO7a/24AlmJQ
+         ZmEmWkxyfVxr9onSpdGzUi00Fc/s+wRsmuURStfBoY4sTZgunJwM3Aqds+mrmuELauMU
+         VqeUCgRpl0zxQcOvbvSzF3FcYxR+y2fELGZAQrImMHIQVcnzkhrITpbGEeapIo8bgVj2
+         7EQEAkYZ7hhtAuRqfAeytll5UZ2aYS8ruStmtU23dUsN5dich0UGV3jITmbHfndw4+0Q
+         wdMg==
+X-Forwarded-Encrypted: i=1; AJvYcCWe3lkv8IIOj+kDQAo/a34vzCzXui3mf7o8Mz6MjK1FGzRzWeBQdsVYgTNbIskZCsnSvN4SUYbR43EKkm0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwH42nVFdUjcGiSRhiZ91gq05v1si8iMmFMEDgEjcC8BB1SevHH
+	yozRUYbK3qlcoCvuXHKhFsa6siXfXEDl0VRspQs8XOLBptHT3QW68Zu05A8Evq8=
+X-Gm-Gg: ASbGncu5CZSnmJMbOKVHv6vnNNzrb5abehN5DXK9VIanqeFqLyo7fWEJlgYwojAVeDf
+	Fm82cdAEZDq5FlbX3Ik56+kenVoRHhMTPvn2Y24MBygU8fJidBlg5HZ7/oqVnvdQGKZpOO+9pxM
+	KIksdIKpBHN6k4pD9edWsQAxs7ErbOLWhC87XUhSY0woUKyZy6PiDzUJj851TzM7h8YIezamYch
+	zik6lWFIhjHnjmEo4ZLhUnNxO7a/npEhZhqYklT5JWPDmsnloCIxkjBxpTyS0rRYje1xqzAzYI8
+	gTIvrOqwIQl0zbA3Uw3bf9fZGHwnpvvQGBj+zdRdhUsgONVv7apuIKs=
+X-Google-Smtp-Source: AGHT+IEGiE0x1PAaWMGoC9ZFiaYEPiaIq/uegZ4wpDRjLqos6a0KnKZou0W0iioyFZ8bH2QBAeGB+w==
+X-Received: by 2002:a05:6000:2407:b0:39c:1424:3246 with SMTP id ffacd0b85a97d-39c142432d7mr17623759f8f.2.1743690829940;
+        Thu, 03 Apr 2025 07:33:49 -0700 (PDT)
+Received: from localhost (109-81-82-69.rct.o2.cz. [109.81.82.69])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-39c30096b9csm1987759f8f.13.2025.04.03.07.33.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Apr 2025 07:32:10 -0700 (PDT)
-Date: Thu, 03 Apr 2025 10:32:09 -0400
-From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>, 
- Jiayuan Chen <jiayuan.chen@linux.dev>
-Cc: bpf <bpf@vger.kernel.org>, 
- Jiayuan Chen <mrpre@163.com>, 
- syzbot+0e6ddb1ef80986bdfe64@syzkaller.appspotmail.com, 
- Alexei Starovoitov <ast@kernel.org>, 
- Daniel Borkmann <daniel@iogearbox.net>, 
- Andrii Nakryiko <andrii@kernel.org>, 
- Martin KaFai Lau <martin.lau@linux.dev>, 
- Eduard Zingerman <eddyz87@gmail.com>, 
- Song Liu <song@kernel.org>, 
- Yonghong Song <yonghong.song@linux.dev>, 
- John Fastabend <john.fastabend@gmail.com>, 
- KP Singh <kpsingh@kernel.org>, 
- Stanislav Fomichev <sdf@fomichev.me>, 
- Hao Luo <haoluo@google.com>, 
- Jiri Olsa <jolsa@kernel.org>, 
- "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, 
- Simon Horman <horms@kernel.org>, 
- Jesper Dangaard Brouer <hawk@kernel.org>, 
- Mykola Lysenko <mykolal@fb.com>, 
- Shuah Khan <shuah@kernel.org>, 
- Willem de Bruijn <willemb@google.com>, 
- Jason Xing <kerneljasonxing@gmail.com>, 
- Anton Protopopov <aspsk@isovalent.com>, 
- Abhishek Chauhan <quic_abchauha@quicinc.com>, 
- Jordan Rome <linux@jordanrome.com>, 
- Martin Kelly <martin.kelly@crowdstrike.com>, 
- David Lechner <dlechner@baylibre.com>, 
- LKML <linux-kernel@vger.kernel.org>, 
- Network Development <netdev@vger.kernel.org>, 
- "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>
-Message-ID: <67ee9be9db59b_138964294b7@willemb.c.googlers.com.notmuch>
-In-Reply-To: <CAADnVQJ6NPGuY=c8kbpX_nLYq4oOxOBAxbDPFLuw+yr4WrQQOQ@mail.gmail.com>
-References: <20250331032354.75808-1-jiayuan.chen@linux.dev>
- <20250331032354.75808-2-jiayuan.chen@linux.dev>
- <CAADnVQJ6NPGuY=c8kbpX_nLYq4oOxOBAxbDPFLuw+yr4WrQQOQ@mail.gmail.com>
-Subject: Re: [PATCH bpf v2 1/2] bpf, xdp: clean head/meta when expanding it
+        Thu, 03 Apr 2025 07:33:49 -0700 (PDT)
+Date: Thu, 3 Apr 2025 16:33:47 +0200
+From: Michal Hocko <mhocko@suse.com>
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Matt Fleming <matt@readmodwrite.com>, willy@infradead.org,
+	adilger.kernel@dilger.ca, akpm@linux-foundation.org,
+	linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	luka.2016.cs@gmail.com, tytso@mit.edu,
+	Barry Song <baohua@kernel.org>, kernel-team@cloudflare.com,
+	Miklos Szeredi <miklos@szeredi.hu>,
+	Amir Goldstein <amir73il@gmail.com>,
+	Dave Chinner <david@fromorbit.com>,
+	Qi Zheng <zhengqi.arch@bytedance.com>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Muchun Song <muchun.song@linux.dev>
+Subject: Re: Potential Linux Crash: WARNING in ext4_dirty_folio in Linux
+ kernel v6.13-rc5
+Message-ID: <Z-6cS9Cg1eN0w6XL@tiehlicka>
+References: <Z8kvDz70Wjh5By7c@casper.infradead.org>
+ <20250326105914.3803197-1-matt@readmodwrite.com>
+ <CAENh_SSbkoa3srjkAMmJuf-iTFxHOtwESHoXiPAu6bO7MLOkDA@mail.gmail.com>
+ <a751498e-0bde-4114-a9f3-9d3c755d8835@suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a751498e-0bde-4114-a9f3-9d3c755d8835@suse.cz>
 
-Alexei Starovoitov wrote:
-> On Sun, Mar 30, 2025 at 8:27=E2=80=AFPM Jiayuan Chen <jiayuan.chen@linu=
-x.dev> wrote:
-> >
-> > The device allocates an skb, it additionally allocates a prepad size
-> > (usually equal to NET_SKB_PAD or XDP_PACKET_HEADROOM) but leaves it
-> > uninitialized.
-> >
-> > The bpf_xdp_adjust_head function moves skb->data forward, which allow=
-s
-> > users to access data belonging to other programs, posing a security r=
-isk.
-> >
-> > Reported-by: syzbot+0e6ddb1ef80986bdfe64@syzkaller.appspotmail.com
-> > Closes: https://lore.kernel.org/all/00000000000067f65105edbd295d@goog=
-le.com/T/
-> > Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
-> > ---
-> >  include/uapi/linux/bpf.h       | 8 +++++---
-> >  net/core/filter.c              | 5 ++++-
-> >  tools/include/uapi/linux/bpf.h | 6 ++++--
-> >  3 files changed, 13 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
-> > index defa5bb881f4..be01a848cbbf 100644
-> > --- a/include/uapi/linux/bpf.h
-> > +++ b/include/uapi/linux/bpf.h
-> > @@ -2760,8 +2760,9 @@ union bpf_attr {
-> >   *
-> >   * long bpf_xdp_adjust_head(struct xdp_buff *xdp_md, int delta)
-> >   *     Description
-> > - *             Adjust (move) *xdp_md*\ **->data** by *delta* bytes. =
-Note that
-> > - *             it is possible to use a negative value for *delta*. T=
-his helper
-> > + *             Adjust (move) *xdp_md*\ **->data** by *delta* bytes. =
-Note that
-> > + *             it is possible to use a negative value for *delta*. I=
-f *delta*
-> > + *             is negative, the new header will be memset to zero. T=
-his helper
-> >   *             can be used to prepare the packet for pushing or popp=
-ing
-> >   *             headers.
-> >   *
-> > @@ -2989,7 +2990,8 @@ union bpf_attr {
-> >   * long bpf_xdp_adjust_meta(struct xdp_buff *xdp_md, int delta)
-> >   *     Description
-> >   *             Adjust the address pointed by *xdp_md*\ **->data_meta=
-** by
-> > - *             *delta* (which can be positive or negative). Note tha=
-t this
-> > + *             *delta* (which can be positive or negative). If *delt=
-a* is
-> > + *             negative, the new meta will be memset to zero. Note t=
-hat this
-> >   *             operation modifies the address stored in *xdp_md*\ **=
-->data**,
-> >   *             so the latter must be loaded only after the helper ha=
-s been
-> >   *             called.
-> > diff --git a/net/core/filter.c b/net/core/filter.c
-> > index 46ae8eb7a03c..5f01d373b719 100644
-> > --- a/net/core/filter.c
-> > +++ b/net/core/filter.c
-> > @@ -3947,6 +3947,8 @@ BPF_CALL_2(bpf_xdp_adjust_head, struct xdp_buff=
- *, xdp, int, offset)
-> >         if (metalen)
-> >                 memmove(xdp->data_meta + offset,
-> >                         xdp->data_meta, metalen);
-> > +       if (offset < 0)
-> > +               memset(data, 0, -offset);
-> >         xdp->data_meta +=3D offset;
-> >         xdp->data =3D data;
-> >
-> > @@ -4239,7 +4241,8 @@ BPF_CALL_2(bpf_xdp_adjust_meta, struct xdp_buff=
- *, xdp, int, offset)
-> >                 return -EINVAL;
-> >         if (unlikely(xdp_metalen_invalid(metalen)))
-> >                 return -EACCES;
-> > -
-> > +       if (offset < 0)
-> > +               memset(meta, 0, -offset);
-> =
+On Thu 03-04-25 14:58:25, Vlastimil Babka wrote:
+> On 4/3/25 14:29, Matt Fleming wrote:
+> > On Wed, Mar 26, 2025 at 10:59 AM Matt Fleming <matt@readmodwrite.com> wrote:
+> >>
+> >> Hi there,
+> 
+> + Cc also Michal
+> 
+> >> I'm also seeing this PF_MEMALLOC WARN triggered from kswapd in 6.12.19.
+> 
+> We're talking about __alloc_pages_slowpath() doing WARN_ON_ONCE(current-
+> >flags & PF_MEMALLOC); for __GFP_NOFAIL allocations.
+> 
+> kswapd() sets:
+> 
+> tsk->flags |= PF_MEMALLOC | PF_KSWAPD;
+> 
+> so any __GFP_NOFAIL allocation done in the kswapd context risks this
+> warning. It's also objectively bad IMHO because for direct reclaim we can
+> loop and hope kswapd rescues us, but kswapd would then have to rely on
+> direct reclaimers to get unstuck. I don't see an easy generic solution?
 
-> Let's make everyone pay a performance penalty to silence
-> KMSAN warning?
-> =
+Right. I do not think NOFAIL request from the reclaim context is really
+something we can commit to support. This really needs to be addressed on
+the shrinker side.
 
-> I don't think it's a good trade off.
-> =
+> >> Does overlayfs need some kind of background inode reclaim support?
+> > 
+> > Hey everyone, I know there was some off-list discussion last week at
+> > LSFMM, but I don't think a definite solution has been proposed for the
+> > below stacktrace.
+> > 
+> > What is the shrinker API policy wrt memory allocation and I/O? Should
+> > overlayfs do something more like XFS and background reclaim to avoid
+> > GFP_NOFAIL
+> > allocations when kswapd is shrinking caches?
+> > 
+> >>   Call Trace:
+> >>    <TASK>
+> >>    __alloc_pages_noprof+0x31c/0x330
+> >>    alloc_pages_mpol_noprof+0xe3/0x1d0
+> >>    folio_alloc_noprof+0x5b/0xa0
+> >>    __filemap_get_folio+0x1f3/0x380
+> >>    __getblk_slow+0xa3/0x1e0
+> >>    __ext4_get_inode_loc+0x121/0x4b0
+> >>    ext4_get_inode_loc+0x40/0xa0
+> >>    ext4_reserve_inode_write+0x39/0xc0
+> >>    __ext4_mark_inode_dirty+0x5b/0x220
+> >>    ext4_evict_inode+0x26d/0x690
+> >>    evict+0x112/0x2a0
+> >>    __dentry_kill+0x71/0x180
+> >>    dput+0xeb/0x1b0
+> >>    ovl_stack_put+0x2e/0x50 [overlay]
+> >>    ovl_destroy_inode+0x3a/0x60 [overlay]
+> >>    destroy_inode+0x3b/0x70
+> >>    __dentry_kill+0x71/0x180
+> >>    shrink_dentry_list+0x6b/0xe0
+> >>    prune_dcache_sb+0x56/0x80
+> >>    super_cache_scan+0x12c/0x1e0
+> >>    do_shrink_slab+0x13b/0x350
+> >>    shrink_slab+0x278/0x3a0
+> >>    shrink_node+0x328/0x880
+> >>    balance_pgdat+0x36d/0x740
+> >>    kswapd+0x1f0/0x380
+> >>    kthread+0xd2/0x100
+> >>    ret_from_fork+0x34/0x50
+> >>    ret_from_fork_asm+0x1a/0x30
+> >>    </TASK>
+> > 
 
-> Soft nack.
-
-I also assumed that this was known when the feature was originally
-introduced and left as is for performance reasons.
-
-Might be good to have that explicit. And that it is deemed safe by
-virtue of XDP requiring superuser privileges anyway. Or at least I
-guess that was the thought process?
+-- 
+Michal Hocko
+SUSE Labs
