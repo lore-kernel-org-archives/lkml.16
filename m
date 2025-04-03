@@ -1,284 +1,229 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFAD3291E;
-	Thu,  3 Apr 2025 04:43:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.15
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743655384; cv=fail; b=K/SxbqY5bvOzA86C3L7vMu3R31M277GSzRH6tTdJkunDWfJ1QGIggvSJFWkffupu8t7I43WWKHR0/L5Jrk+HjJTUcK8m1xcjdcCDDt74HNrjs4oaBH43iFa4ByRDb6ZvsCLrS+r+SIf2ZXm+eeU8v0ySGjJXofYiGZtp4ceWEV0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743655384; c=relaxed/simple;
-	bh=+BShT8BjHEK5zTJEi/OPFwzE9yRlyIdu3Nx8tG/MkXc=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=GfQbAmVG5YfiQg0oKi/fg/2kaoKC/OY5tYF4muSyoOWVE87QvvcY7AAPPCXZeHrBHdrBPUQuOCL/lljIg5DS2s6xbUW2pf3cXyJF5pOqdy5Zzb1a0wHx77nLXHNcolZTtF3RvSK0xGA5Y15L3DcqpA7ekKNtmubKfeaGwfWzwUQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HW2AOslL; arc=fail smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9876291E
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 04:44:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743655462; cv=none; b=OlUV2V7WUKXiy4OkJWItmzan2LoTbLRFrduqy93Fby9FR5kmsHGGrMmSebRIO/laaoG9VS9+m3Oe86UvW5Xmgdm8vF76ebOTeCIIbEG0CJOS1Sa6NeMiO3uQRIj16I7+XRtX1le6aSeYqh2nhhpz+SFjKUX2owkZwKLuFV/k4B0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743655462; c=relaxed/simple;
+	bh=pX3TOEkMVOu9UUOiX4XaUtgFr246gpwx4sz1hPNE5/I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BAVQcBkDxn7mOfEaIc0x0dBnYf61C43zxrkZphX2T8OABvfzrkuT8sZtr/SGGrMQHPdaJqnLlnmIVdk0juHRQvoqOjsAdi2IAZO6R5nGuCmLd7kyV9LfaEh1zZ/re4MJuAddcqKsmR+iTZKkSkde3cdjASBDk2K/DQIR5c6UEPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=XbkYFrlG; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HW2AOslL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743655383; x=1775191383;
-  h=date:from:to:cc:subject:message-id:references:
-   content-transfer-encoding:in-reply-to:mime-version;
-  bh=+BShT8BjHEK5zTJEi/OPFwzE9yRlyIdu3Nx8tG/MkXc=;
-  b=HW2AOslLrFdEQZE45VYM6FDUyopUzlHSJmiRJHNrx7NOZB57tRo4Xfp/
-   0fcCO6BIL5bspmd7xbUqfDgPd3r1kfM5tPILR25Xc060Lgw38enBR/0jT
-   4lFp8AtilNGdcoqv8wc5cNFnasWxfR+opxjX+hXCy/yX4wFM+eJw1O3Fv
-   RyeCltW5kM3AzwKcwGhl4xMf/NUX0etQxP7wOHTJ8le0TyrlYJ7ZjMqBD
-   tmkpgrM9yUZMP1v6jQprc7I7hFL4Zq0a//7e6UUpVFmiI47afZ1EAejIN
-   i2v9yu2c0GgSpEru8SUv4Foc5PCcJ+fUilG+f4JSTACBEVPA29zQWt4PQ
-   Q==;
-X-CSE-ConnectionGUID: 9pu0uxY0TV+InKxfKoiPWg==
-X-CSE-MsgGUID: sedXdWKsRfiWtzvZ3Tf7Ag==
-X-IronPort-AV: E=McAfee;i="6700,10204,11392"; a="45168649"
-X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
-   d="scan'208";a="45168649"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 21:43:01 -0700
-X-CSE-ConnectionGUID: ZIjmX/VMQrm107f/eJDCww==
-X-CSE-MsgGUID: icYEnHWORFuZ6XB8qgGJlw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
-   d="scan'208";a="126704219"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by fmviesa006.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 02 Apr 2025 21:43:01 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Wed, 2 Apr 2025 21:43:00 -0700
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Wed, 2 Apr 2025 21:43:00 -0700
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.47) by
- edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Wed, 2 Apr 2025 21:43:00 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=fvRc062hhgAgeU/spVNr85xwyW0ghtHLhBK8eaT1+Pn+s7tFGFmYmsgQYoQjx0qM9fJqV6gbzPiAIbbJXOBNHjn/TMKaBh5eWdXQ0HbG7TLJjClOsQo014kFNrIIVFFPcKv0cl7iUpLq0EuarYg88q04ffkEjJ+rr9smB+z/eVxwXMlIyL2skEHGRZBeY+GbnJoUKYjfpALESJmIgV12FOwLY3GYR/NtUluYbHFeS1set6kgRktBqPmF8JxV7u9tsG1Bn36Z28WhHsFGOndEulnL9lg64JvEn96On0pJrbkGi4HZZPIXVk1t7FjS7RQk6YeWZOX7ou1Hyz5EOAugog==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qnSVhrJC4sOtjQyeXzsG2F5LqavD0H0KxiKn+kZBNwI=;
- b=s58BL/o9dKcC2G0zjs+cDiZi8SB2DXy0vuk1q49pNdCJuBMPuYt0aYPGbQ3V7wHN3Hm0Tv1WHbU+1HrDoY6CBIeeYit1NaN/4UzCtOhaiSWHNdghfQTtge7wCbyFWqlxgZFr3MNV0fHBvtvizJAct8m013OSACGOHll2+bh/iGCt3cdRnkr/16iWeQUeP+JAFnrDM+8uu/tKifxMdcoAoKuKJXdGuupyz1LwPKeYTLS9JVMSap0Bd8HBbqQx4+Pw2E8DxPLTtea839BpoQJn7Lf/+GdOxVcPfERutQnHOS8BK2+/XTQKtAPb8MylqE12GzLfDdhxa28p4C5f3p70YA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by PH7PR11MB6723.namprd11.prod.outlook.com (2603:10b6:510:1af::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.50; Thu, 3 Apr
- 2025 04:42:58 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8%3]) with mapi id 15.20.8583.041; Thu, 3 Apr 2025
- 04:42:58 +0000
-Date: Wed, 2 Apr 2025 21:42:55 -0700
-From: Dan Williams <dan.j.williams@intel.com>
-To: "Zhijian Li (Fujitsu)" <lizhijian@fujitsu.com>, Gregory Price
-	<gourry@gourry.net>, "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
-CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"kernel-team@meta.com" <kernel-team@meta.com>, "dan.j.williams@intel.com"
-	<dan.j.williams@intel.com>, "vishal.l.verma@intel.com"
-	<vishal.l.verma@intel.com>, "dave.jiang@intel.com" <dave.jiang@intel.com>,
-	"dave@stgolabs.net" <dave@stgolabs.net>, "jonathan.cameron@huawei.com"
-	<jonathan.cameron@huawei.com>, "alison.schofield@intel.com"
-	<alison.schofield@intel.com>, "ira.weiny@intel.com" <ira.weiny@intel.com>,
-	"Yasunori Gotou (Fujitsu)" <y-goto@fujitsu.com>
-Subject: Re: [PATCH v2] cxl: core/region - ignore interleave granularity when
- ways=1
-Message-ID: <67ee11cf28f2e_464ec2949a@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20250402232552.999634-1-gourry@gourry.net>
- <2ce69e60-8a13-4e9f-b28f-1b30162a1ada@fujitsu.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2ce69e60-8a13-4e9f-b28f-1b30162a1ada@fujitsu.com>
-X-ClientProxiedBy: MW4PR03CA0061.namprd03.prod.outlook.com
- (2603:10b6:303:b6::6) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="XbkYFrlG"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5333miqt019205
+	for <linux-kernel@vger.kernel.org>; Thu, 3 Apr 2025 04:44:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	pX3TOEkMVOu9UUOiX4XaUtgFr246gpwx4sz1hPNE5/I=; b=XbkYFrlGKTw92IHN
+	ZXV0YoBN9LqG+Scptjmk8o26+AVGTJgkwRgolAY8LreC21qiA+rnm62AM22Vwzcm
+	XUqAS8lb/h+79odo7K9nCH6VWTeTyViQQ9sJ0q5Hm/lvu8ZH2UNSrIH8y92wDejt
+	YJhd1AZKbsrIvO6saX1piAgF6jtsNyTXkU+8+by5SSLql0Ol28tY0cbVZeebmqDS
+	MExppfpG+TXz9ZhVnIkpqFPTAeZ1znRe69aNRxD78SeK8md/MpAmEbtbjinCjm0j
+	EONPZ/eAI0DGMDP5eD46rBs8vS6DbTZkmhPLPwgOm/PoblxkMqdtylKyyKKMt0x5
+	xZcGhg==
+Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45p67qnsyr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 04:44:18 +0000 (GMT)
+Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-227e2faab6dso5124155ad.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 21:44:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743655457; x=1744260257;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=pX3TOEkMVOu9UUOiX4XaUtgFr246gpwx4sz1hPNE5/I=;
+        b=DlNpJ//NwJbP5vZeMv4v8apoVFhMzu0BJ0xPp/d4RPC1qf7gNjLlQHJ/Xozp1bquDK
+         m5wRVQAjVZZTv/AWbpqBACoAnV19CAe3DqmkpyiJvxDV9T5GJ4p7rfs+0zIOLNyGO/YB
+         9ByC3FZzn5eF1KkaO3pAVyS4aLuqShpWsg8qtXSS6cQbSlOiLW0ZSk9TQr9msZXZilMu
+         +JaogPDGT0stMC7RXpK1WbICqt6D1zlNaicnRovqBqJdAOTXVVExYhk7Ry/kGahPFNtT
+         xd1czkukJdRRwpZRFpVHTjjQBMHpEPebQmeA+dtMhGVOaYgYFhLa+spfmkW+1W91oUxT
+         30fA==
+X-Forwarded-Encrypted: i=1; AJvYcCX21XnXbsKKs0XLoTYv8HeFdFBj4XBavNiRAtsJkZ+9BJ6BJpcHvW6E6DsbUlUdmC2oXzig/nfBlCv4coM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxjrjJYHJZuV+OEDf2pY/jIsfqwn14Qw43jGhQvZMjXhwsdTk5l
+	gZjHEv/DfhahdDdZNwz3oGUsrRUH1nmmDWat/3kO2ZfCqMtCmUJ11yxPBoM6Jx8CdfRrdhklkUq
+	ZnQkGm/+u0lANUy2Do0FKg99Nh1bKPNcWNJ+V0tw0W9e6wAwizMikluNK26dMBUY=
+X-Gm-Gg: ASbGncuG+b6EZhdRlFn/x4sk1jZFnpXsbnhnmX6yBdNicY5bmvC3keh2M3h6A6C8nDi
+	aL52aNzXHm0K4Ay9MKVhg2NWs5ajSX2d7g4BDwp+AvGYVvc3BSFPyjwuMjn0UQYIfa3fa8DHkV3
+	Gqx3cxDcIT3zb77ipTFkvAblq9Cl6a6XDzFtewrp4GZuC7FNYOIWx2GtuF2NgkDt7AQxEIq/Uxw
+	jrQcIH7MeHrJIyPyYqXG9VDm4qzZ9Mlewlh4n2xw8ytf++2U3FQtaxtELvTjA+ilosJvp8tBx48
+	wagXaFib7Vfe4l6OertGA5TBBHuebn3TpECRM2wW
+X-Received: by 2002:a17:90b:50cf:b0:2fe:ba7f:8032 with SMTP id 98e67ed59e1d1-3057cbf6453mr2168290a91.9.1743655457077;
+        Wed, 02 Apr 2025 21:44:17 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFURruLAolWkOQKsQ1bALqNS/8BOoY/s1w8nLZO+Mu5Q1KYq91vpBymSAhfkYOYqUKT2i9PoQ==
+X-Received: by 2002:a17:90b:50cf:b0:2fe:ba7f:8032 with SMTP id 98e67ed59e1d1-3057cbf6453mr2168270a91.9.1743655456662;
+        Wed, 02 Apr 2025 21:44:16 -0700 (PDT)
+Received: from [10.204.65.49] ([202.46.23.25])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2297866e2b6sm4731025ad.191.2025.04.02.21.44.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Apr 2025 21:44:16 -0700 (PDT)
+Message-ID: <bfa29a76-f89a-4398-b6b3-1be7ae6cf8b3@oss.qualcomm.com>
+Date: Thu, 3 Apr 2025 10:14:11 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|PH7PR11MB6723:EE_
-X-MS-Office365-Filtering-Correlation-Id: 38dc02e0-f366-4ad5-5e28-08dd726a023a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?bU1jdU5PSWVKTmRZRHdpaTBLYkF1Wi9CdTM4TmtiNU5LQWpTbkpMMDJjQ0E4?=
- =?utf-8?B?djBTbitidWhCYWlVUlYxWHl6RGFOc1Y1ZGEyOXVYYzV1eERsSFpGS1VFUG1y?=
- =?utf-8?B?cDZtL3FJVGR6ZFg2ekUxcjNDK2RhNERpY2pIamtIeXFCVVVoeXRVOUljUCtR?=
- =?utf-8?B?WWUycFVSNHNuWkNHcllad3BFVnU4cXVnUThMYndBSFI3RU5QR3JZUmNUNzFI?=
- =?utf-8?B?a0xUZUtZekJxSThTU1ZRMWt3bi82SFdwQ1Bvb1gwaENJcm9XQ2FEaDUvQnFW?=
- =?utf-8?B?eTFZSk9JNjVFeWF5b0dTdmZzaUVqeUdvVmt2TEpJTGZGeGNvdU9QbVk1elp0?=
- =?utf-8?B?cTVBNEtpajAwWFNPWU02RjY1aXE3VUJqK0M5a2MvQ3dUdTU0ZllIZ1BLZVZ3?=
- =?utf-8?B?eDkxaExERDZJWE1OOWRxNUl1L1VpTnYrbVNVc2NCb2hjMnR4cHBsa0srT2E1?=
- =?utf-8?B?ck1sSnhyR1AxTm5sY3dweXVmQXVORUVIQUx0c1RFaHdZVkJqU3owUTBsQzJv?=
- =?utf-8?B?ZXh5RjFVaXl1MFFENzJiYjB0RzJYVllseDZvWFJadmVCcG01cFB2a3hWTFVu?=
- =?utf-8?B?dnB6Tm5BaGxvRVBJOHo4M1hTTXZvSDhJUUV6U01BNnNwMHNITnNPY2NRcnoz?=
- =?utf-8?B?cFA2Sk5zU1ViWnNGU1ZEOC9CcUt2UDZkMTE1UDA5Q2xoeGpNOVpCRzZVMHRK?=
- =?utf-8?B?c3ZWL1VXNkNwN3ZYSjNJSm02ckdjemN6SnArTk1YdXA2aUdSdkpjZVJ2QVFF?=
- =?utf-8?B?ZEN6MFI4Q2ZxMzNzei9qVDk5amlpQ1d3SHlOYXVndVA0cURMcXZHZTF3bXFZ?=
- =?utf-8?B?QkxOZ1NsSWVxRk5md040UDVEOXQ5dlo4dmVKOUx5UWtEYkRWd0E5Vlg5UGJj?=
- =?utf-8?B?eDlVOXJ1cTRsMU14OE11UTNiZlhWOUNJZi9UQTR3bUZtTmI5TmFRL21pZnUv?=
- =?utf-8?B?empmRG5kNnl1SDF4bTAvL3hqNTMrV3k0L3REcVlHbnl2UXd0MG5yZWtwMTVO?=
- =?utf-8?B?RXJUZ1JHcFcyb3BFUFNyWExiam0xNXFxamg4Ung3amN2bzZRMCtKT2w5VFQ5?=
- =?utf-8?B?NjRGaUxUWXprcjNzUmxkYlpCWEs1ZjJ1clRqOGVRVkpka0lNL05Mam4yRUp2?=
- =?utf-8?B?TzlFT0tlZ2xPZ3NWTTJOa2ROSW05a2ZscXpqNlV0WDRSK0ZFSTBBdUdPN1VW?=
- =?utf-8?B?N1hBMncyNG80bTA5bGIwangrT01OUFFLb0VZMndyK2VHeWtJMTV4a1lRNFl0?=
- =?utf-8?B?UHBkRGdlRm5Bc3NxU3F4VHJLSHY2UDdLRmZNeTEvVDJzdGhaVGVlNEVMVFB0?=
- =?utf-8?B?amxUSzhTZ0hCOTZHUVJuZlVNS2ZIOVlvWEtIcys5UThwdDhDL0NvdXNuMWN0?=
- =?utf-8?B?WStic1dLeTIxQ2ZJclFOd1EwNU9WdE1YQ1ZHaWVCMEpSL2dtZEdPbnBFNmhw?=
- =?utf-8?B?aDlVMDRJM1B3cUtEN1lxQUdwRW9nNGd6V2NWTEpWT1hSZk11aWQyNE9pY1Jj?=
- =?utf-8?B?SnFTcXBjUmUwY2VncmxkZ1ZCL0M1OGpnU28vazM1Ny9mNVhHdnJsdTRDYXZy?=
- =?utf-8?B?Q2NCcU1ESWZkRmsrWFBHTmJkN2RNUlJOdUFlR0R3SWJZNnBNNmEvSCtCR2Vl?=
- =?utf-8?B?NEVvTTVuYnN6T2ZpY29sWE1HQitxL2R6aXdiN1ovL2lDR3ZxS0RRWitXSnh4?=
- =?utf-8?B?ejgzell1S3FEQmd6Zlh3Ylp3dXJiT0ZjR0MxNnZodDJid0c2V0VDYk1PbDRE?=
- =?utf-8?B?ejU3dmZEanBVYVp1L3cyVVFlMlJMVEk1WjFnbkFiWVU1eTNHUEl0cVRWamk0?=
- =?utf-8?B?WVplT0pyelJ3WTlhNVRDQU1GdUlqcVd1bEdQR09hcmdJRTdja3Y2TjB2YTA2?=
- =?utf-8?Q?CzlFUKzx/khUM?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?SW4vaUtrSVpkRDkyenVyakc0bWxJSkR4eXpralE5S2ppNTl2M0xmVklrVFpS?=
- =?utf-8?B?NENtd3FMTTkxZkJFbWorK0hzY0huY3JYZUYyT20rOGJVZndaRWdqdzdwQVJq?=
- =?utf-8?B?Nnh3dE42RldSMm8yaWZ1dkJZK1E3Rko5SkwwaStEOGs5c3BXUzR2amJ5ZXRY?=
- =?utf-8?B?S3BYSFRpOTB1eXFLMHk3akdjNFNYT1FtS3FGNnZ6c0Uzc0xWQ3ZIU1BweVFN?=
- =?utf-8?B?TDJZWVRDK1hYMzVWNWFhbWxsM1pBK2lqWUZxNXczWWR4OU9qOHExTmFaTUpi?=
- =?utf-8?B?SUkxbjR2SWgyZGRwbnhNRjY0a2RaTjdNNXRLd0Z2aFBOcStLNnV5UnJ5YTI1?=
- =?utf-8?B?c2NDcHQyckhwUm5DMm5jaUdQVy9YckZ3Mmthc21ubWVzQlB1Tk9yQWk2Y1k5?=
- =?utf-8?B?OWJ0SGxkSTdocG02SXhuY015dXpCbHZiaWFUeEdMa3VwNWk4dHlBZm9UR2Vh?=
- =?utf-8?B?TEhrVTVhRktDd3VuS3lOdG5zY0FPMHlDTDFieGVIb213ZkM0VFAvcnorcEI2?=
- =?utf-8?B?ell5U1JkUVlBQWpoSDcxUnBKaHB0eS80WDRrNC9mUXZTaXM4d1hqMHJiRkR3?=
- =?utf-8?B?MzZJZDdNOCsxQkV5YjVwZGg5U2hFRWs5R1lpeExnT3MyZzdlaEhIclFvQUhx?=
- =?utf-8?B?Ym1oc2VMUnN3b1lFWVhubkVvSUxzVmZMamNBV29ZYjRpT0laUXU0aFBacVZP?=
- =?utf-8?B?dDRoLzJodEFNVzJVODAwQ3BYaWRadFJuM1F6MUQxV2xGZW11cm5kdU1FeTNn?=
- =?utf-8?B?bzFOYjliT05zcm02V2UxUC8xVXl3RVhHNDQwOXlENnd1T1NvTUZOaEVwN05k?=
- =?utf-8?B?TlB1T1IwcEhjMFViSTVVR0NjZEU5dDk0QmdJRGpEaTJubFlwUzdaZHBNa2Fz?=
- =?utf-8?B?eExvRkswVHZ3Z1RMSHhxaDc4UUUzUm96RXBnK0dqeHJJVjRKOVlpckVVYXhG?=
- =?utf-8?B?NXcvb3B4YmtWdXJUS0l0dDlxVEkzOERwQ09qRTlKQWFNaTg3bm8vNVlkbDNU?=
- =?utf-8?B?Q2pZTEtiZ0tYVlFuM2hsSFZJZ21UTHUxV0pXU2RLL1llYnpvYllvWjhHdjRo?=
- =?utf-8?B?akxQOWlyTFk4ak91RDU1MUkyckhsUjZFa3RqS1lZZFc5REdxaVhLUVhwNzZB?=
- =?utf-8?B?eStLeFN5dm9QMFlnUlRYWW9nOTlSUm9lMGpVMEJ0SFF1NEw1K1hHSURMQ05L?=
- =?utf-8?B?ZDV6anN0bnpNT213VE40ZXczNmF5ZkFFN0o2TlpPV2dUWHVVLzdlVDlISXBH?=
- =?utf-8?B?MWFueUpwUTdEbWdMb0tmM3N2empDd1dxSUJxOWFheFl1MHZyd3BWVGRFbWJl?=
- =?utf-8?B?ay9EOEk3Y29xMHNQb2V2N0JUYUZRS3ZtRkR3dURBTVkzajZWTmdHb1RqOHFF?=
- =?utf-8?B?MlBvUmZKSUp3NlRWc3FySlphV1lsL0YrYlNLcU51T2tEWnFqblRLOUdMWlJY?=
- =?utf-8?B?cEZrcDBoZ244Q2djNTJHWmUrTDZmaGFWOGNuYTZKeTFkL2lNSVJkZ1o2Rmow?=
- =?utf-8?B?cjBVMGFYZ1Jja1RwdFVQZmpSNUxnSUpCZWNnNDhIWFo0bk02TFN2YUJCcUxB?=
- =?utf-8?B?dGxyWnREaW5ka0V0bWI4Z2VlOUNvcFFXTHUyL1RVbWhvamtYMDZGcHhqZTU3?=
- =?utf-8?B?TXNTdCtWUG4xeEkrcm54ZURRSUc2UE0vT1pDZXAxcU9FbXZpZ0FqdTZxZ2JU?=
- =?utf-8?B?OSsvMkJJL3VPVVFNU3g5d1RaQUMyK0FTZWVtbmp2c3Q1Y2xrZy9CN1JQSVhV?=
- =?utf-8?B?QjF0a3ZxcjZsbGN3VkpTOXpYUnhqVmpuOWxuWENjbG1FczVFSnNpRlRGVDZ0?=
- =?utf-8?B?WTN6NDNNeHVvajN1U05zUDVOY3VTNS8yVDRaQ0ZoQkVpdWdRam12Qm55QjNz?=
- =?utf-8?B?RzV4azFiWnh2MnA0V3BMSlF1Q2tqeTdTcWxqNXJiSnJXOTFsamQ1SVJuZTkz?=
- =?utf-8?B?aytNODl0MmxhOXBSdTRJNUZUdy94L1hJdHBZeEdpRVVBdTBMZ2lneVo2RXRi?=
- =?utf-8?B?TXlYN2NkOTduTDFqL0N4SytnWXV4azliVGlndTZkOEUzdm04K1pYRUx4RFFo?=
- =?utf-8?B?OTZDSEdBM20vYlJNM2JQeGdUbzlRai9tZmx5WGFYWXViT1JEM0NHUUtxUTRs?=
- =?utf-8?B?NzU4VkRRVzcxeVVOZVVKbW4vczg0YWVFN3BDS0VRMFV6Z3ByVmRPMnRIcEt1?=
- =?utf-8?B?YkE9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 38dc02e0-f366-4ad5-5e28-08dd726a023a
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Apr 2025 04:42:58.7272
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: eRQyuNDfn3jLSrgxqwa8kA10V5qJQUTSvQyOk1X1BaCcjHjjl6ffaknHA/ht/T3JdQsdnGRD9OTeLwFUmO94VxEc3wgu7yGBnClNNMHNeMg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB6723
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/3] misc: fastrpc: add support for gpdsp remoteproc
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Ling Xu <quic_lxu5@quicinc.com>, andersson@kernel.org,
+        konradybcio@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+        conor+dt@kernel.org, amahesh@qti.qualcomm.com, arnd@arndb.de,
+        gregkh@linuxfoundation.org, quic_kuiw@quicinc.com,
+        quic_ekangupt@quicinc.com, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org
+References: <20250320091446.3647918-1-quic_lxu5@quicinc.com>
+ <20250320091446.3647918-3-quic_lxu5@quicinc.com>
+ <30bba296-8e6f-41ee-880e-2d5ecc8fe5a4@linaro.org>
+ <qhriqbm6fcy5vcclfounaaepxcvnck2lb7k2gcpbtrojqzehua@khv5lwdgbysc>
+ <9962c517-5c0e-4d46-ac0c-2a7bab550156@linaro.org>
+ <412fe24e-ce70-4733-ace5-d3fbe43476c4@oss.qualcomm.com>
+ <c27a97ed-c765-421a-a48c-3abbae3bac93@oss.qualcomm.com>
+Content-Language: en-US
+From: Ekansh Gupta <ekansh.gupta@oss.qualcomm.com>
+In-Reply-To: <c27a97ed-c765-421a-a48c-3abbae3bac93@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Authority-Analysis: v=2.4 cv=fMI53Yae c=1 sm=1 tr=0 ts=67ee1222 cx=c_pps a=IZJwPbhc+fLeJZngyXXI0A==:117 a=ZePRamnt/+rB5gQjfz0u9A==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=COk6AnOGAAAA:8 a=LwNrBaKUNq3Cb3izIMUA:9
+ a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=uG9DUKGECoFWVXl0Dc02:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: 8p3oGKuMSbyxkiU4tPG8U0OSTIrtfBVG
+X-Proofpoint-GUID: 8p3oGKuMSbyxkiU4tPG8U0OSTIrtfBVG
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-03_01,2025-04-02_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxscore=0
+ priorityscore=1501 phishscore=0 spamscore=0 impostorscore=0 clxscore=1015
+ mlxlogscore=999 bulkscore=0 malwarescore=0 suspectscore=0
+ lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504030023
 
-Zhijian Li (Fujitsu) wrote:
-> Hi Gregory and CXL community
-> Cc Goto-san
-> 
-> Wow, our platform has encountered a similar issue, and I am intending to consult
-> the community regarding this matter.
-> 
-> I drafted similar patch locally, but I wonder if we should "ignore" the IG
-> or "program" the IG to the decoder.
-> 
-> Let me post the mail(question) from my drafts in your thread(I hope you I hope you won't mind).
-> ======================================
-> [Question] granularity is a don't care if not interleaving?
-> I saw this sentence " granularity is a don't care if not interleaving" in this
-> patch "[ndctl PATCH 2/6] cxl/list: Add interleave parameters to decoder listings" [1]
-> 
-> This reminds me that our platform programed an unmatched interleave_granularity in HDM decoders
-> between endpoint and the host-bridge, see below:
-> 
->                                CXL  Root
->              CFMW0           /           \      CFMW1
->             decoder0.0                        decoder0.1
->        128 GiB       IW:1  IG:256           IW:1  IG:256      128 GiB
->                               \           /
->                                Host Bridge
->                               /           \
->                      decoder5.0           decoder5.1
->                   IW:1  IG:256            IW:1  IG:256
-> 	      /                                  \
->           Endpoint9                           Endpoint10
->                |                                   |
->           decoder9.0                           decoder10.0
->          IW:1 IG:1024                          IW:1 IG:1024
 
-Why 1024? Yes, the value does not matter, but attempting 1024 feels more
-like a unit test than a production use case.
 
-> 
-> With this setup, the Linux kernel attempts to create regions for Endpoint9 and Endpoint10
-> but fails because the endpoint decoders’ interleave granularity (IG=1024) does not
-> match their parent decoders’ IG (256). Ideally, the endpoint decoders are expected to be
-> configured for IG=256.
-> 
-> Currently, we learned that we have only special handling for the root decoders [2][3].
-> 
-> My question are:
-> Q1: whether "granularity is a don't care if not interleaving" is applied to
-> all HDM decoders(including root decoder and HDM decoder)
+On 4/2/2025 2:12 PM, Dmitry Baryshkov wrote:
+> On 02/04/2025 11:38, Ekansh Gupta wrote:
+>>
+>>
+>> On 3/21/2025 5:53 PM, Srinivas Kandagatla wrote:
+>>>
+>>>
+>>> On 20/03/2025 18:43, Dmitry Baryshkov wrote:
+>>>> On Thu, Mar 20, 2025 at 05:11:20PM +0000, Srinivas Kandagatla wrote:
+>>>>>
+>>>>>
+>>>>> On 20/03/2025 09:14, Ling Xu wrote:
+>>>>>> The fastrpc driver has support for 5 types of remoteprocs. There are
+>>>>>> some products which support GPDSP remoteprocs. Add changes to support
+>>>>>> GPDSP remoteprocs.
+>>>>>>
+>>>>>> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+>>>>>> Signed-off-by: Ling Xu <quic_lxu5@quicinc.com>
+>>>>>> ---
+>>>>>>     drivers/misc/fastrpc.c | 10 ++++++++--
+>>>>>>     1 file changed, 8 insertions(+), 2 deletions(-)
+>>>>>>
+>>>>>> diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
+>>>>>> index 7b7a22c91fe4..80aa554b3042 100644
+>>>>>> --- a/drivers/misc/fastrpc.c
+>>>>>> +++ b/drivers/misc/fastrpc.c
+>>>>>> @@ -28,7 +28,9 @@
+>>>>>>     #define SDSP_DOMAIN_ID (2)
+>>>>>>     #define CDSP_DOMAIN_ID (3)
+>>>>>>     #define CDSP1_DOMAIN_ID (4)
+>>>>>> -#define FASTRPC_DEV_MAX        5 /* adsp, mdsp, slpi, cdsp, cdsp1 */
+>>>>>> +#define GDSP0_DOMAIN_ID (5)
+>>>>>> +#define GDSP1_DOMAIN_ID (6)
+>>>>>
+>>>>> We have already made the driver look silly here, Lets not add domain ids for
+>>>>> each instance, which is not a scalable.
+>>>>>
+>>>>> Domain ids are strictly for a domain not each instance.
+>>>>
+>>>> Then CDSP1 should also be gone, correct?
+>>> Its already gone as part of the patch that I shared in this discussion.
+>>>
+>>> I will send a proper patch to list once Ling/Ekansh has agree with it.
+>>>
+>> Thanks, Srini, for sharing this clean-up patch. It looks proper to
+>> me, but I was thinking if we could remove the domain_id dependency
+>> from the fastrpc driver. The addition of any new DSP will frequently
+>> require changes in the driver. Currently, its usage is for creating
+>> different types of device nodes and transferring memory ownership to
+>> SLPI when a memory region is added.
+>>
+>> The actual intention behind different types of device nodes can be
+>> defined as follows:
+>>
+>> fastrpc-xdsp-secure: Used for signed (privileged) PD offload and for daemons.
+>> fastrpc-xdsp: Should be used only for unsigned (less privileged) PD offload.
+>>
+>> The reason for this constraint is to prevent any untrusted process
+>> from communicating with any privileged PD on DSP, which poses a security risk.
+>> The access to different device nodes can be provided/restricted based on UID/GID
+>> (still need to check more on this; on Android-like systems, this is controlled by
+>> SELinux).
+>>
+>> There is already a qcom,non-secure-domain device tree property[1] which doesn't
+>> have a proper definition as of today. The actual way to differentiate between
+>> secure and non-secure DSP should be based on its ability to support unsigned PD.
+>>
+>> One way to remove the domain_id dependency that I can think of is to use this
+>> property to create different types of device nodes. Essentially, if unsigned PD
+>> is supported (e.g., CDSP, GPDSP), we add this property to the DT node and create
+>> both types of device nodes based on this. Otherwise, only the secure device node
+>> is created.
+>
+> This sounds like breaking backwards compatibility on the userspace side. You can not do that.
+Okay, I thought if the property is added for all older platforms, that will ensure backward
+compatibility is maintained for old built applications.
 
-All decoders.
+From userspace, the expected device open sequence is to try with the secure device node and
+fallback to the default/non-secure node if the secure node is not available/accessible.
+I understand the ABI cannot be broken, and this expectation should be added for new
+applications/platforms.
 
-> In current cxl cli , it will not show any interleave_granularity at all when ways==1(no-interleaving)
-> $ cxl list -PDE | grep granularity  # show nothing when ways==1
+This is still a security issue that needs to be fixed in some way. I'll try to find out if any other
+approach can address this.
 
-Right, because the value theoretically has no functional impact in the
-ways==1 case. However, it errantly ends up having practical impact in
-these corners cases where code performs granularity comparisons without
-considering that ways may be 1.
+That being said, I'm fine with Srini's change for domain name clean-up.
 
-> Per the CXL Spec r3.1
-> IG: "The number of consecutive bytes that are assigned to each target in the Target List."
-> Q2: Does this imply a configuration where the number of ways>1?
+I would request Ling to test the patch.
 
-Right, the granularity is the boundary at which the decoder switches to
-the next target in the target list. When ways=1 granularity can be
-infinity or zero by that definition.
+--Ekansh
 
-> Q3: Does the IG also represent the device's capabilities? When programming, should one also
-> consider whether the device supports it?
+>
+>>
+>> This raises the question of backward compatibility, but I see that on most older
+>> platform DTs, this property is already added, so both device nodes will be created
+>> there, and applications will work as expected. If any old DT DSP node lacks this
+>> property, we can add it there as well.
+>>
+>> Going forward, the qcom-non-secure-property should be added only if unsigned PD
+>> is supported. This way, we can clean up the driver completely to remove the
+>> domain_id dependency.
+>>
+>> If this sounds good, I can work on this design and send out a patch.
+>>
+>> [1] https://web.git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/Documentation/devicetree/bindings/misc/qcom,fastrpc.yaml#n44
+>>
+>> --Ekansh
+>>
+>>> --srini
+>>>>
+>>>
+>>
+>
+>
 
-Yes, see bits [9:8] in the CXL HDM Decoder Capability Register (CXL 3.2
-8.2.4.20.1). So even though the math should not matter, I would still
-expect the driver to try to be careful to make sure that IG+8 is less
-than the address-bit max.
-
-> If "granularity is a don't care if not interleaving" is true, how about below changes
-
-Part of me says, "yes, that should be ok", another part of me says "what
-is the practical benefit of allowing any granularity to be specified?".
-
-So the fix from Gregory is limited to the case of "whoops, the platform
-BIOS thought this was a good idea even though it does not matter in
-practice, teach Linux to be lenient in this case.".
-
-The proposal to accept that in all case allows user-created regions to
-have odd large granularity sizes in the iw=1 case, and I am skeptical
-it is worth supporting that now.
