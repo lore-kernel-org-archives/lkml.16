@@ -1,115 +1,128 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76ADA23F403;
-	Thu,  3 Apr 2025 16:36:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 439A41514F6;
+	Thu,  3 Apr 2025 16:38:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743698212; cv=none; b=DOztxTyuzCUZ1Wn9i4O3PokES67FtvHUUtniJtIfHdOLyDmOn1DEEbQ5F4PcjYCpLbgh41ykuSp85FSHHZCLwzrm8K2R2mBJxVIe18niKC6R3WQc5AEPQ9ApLDIKZmYwc7JRp1gHjvVOCHnHVjfsauxSJ0MlN2jp40LvfAOFDsg=
+	t=1743698300; cv=none; b=rzhDiDJM297zuqoX2zsF4C1qPQxAOBpNNm7/luJrjjVY4ytNgKSXO+Rl0rXONpG7sjodvYQug4P/+GWOozNbb79+JgE6ahrtHq3/OIUhD2ISo5nOZakxZtj5rrLNORC6MfPoAfWRy3jG28oDn43CK61qqb9sB5aEdvDYks0YkZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743698212; c=relaxed/simple;
-	bh=rHQvrTRD9lw8HQVLfGzOcqqcO/H5rWQHLFBLB0wZyD4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FoknYX7C61TNeRoo10i/WqJYU5MO9b2APzp9viCWsZUMeSw66qBpolotMzrXAy6ediY5eYaQeZ6nHJTwYlNfa+l16RxeLmCG4KX2kS7EinyL1WPPFlSI94gXJ3WPXzY4awGz3NXmILZwg7l0DtliPl7pO5LCQ8wnyj6czpaJA24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dp5Lf/I8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743698300; c=relaxed/simple;
+	bh=KtUfjAG1/WEauaqQuciEUvXMo2dub6bMxhzIcaq1sR0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Hs/y6pGsackX6Jr4WY/0XDKVJU45l5DCK6NKGJTd0oyaoqn4FqPCoS1UJlEBeIll+olWEythBE/xsiJzIDx9YkY8pfKmAPMJkr10shyGmSd+RkusIYpgEzXx09UlzTiRQCtY56pfnVwqgq5/dv3z8p8h1mB4FV1kf60EGLZL/N4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dyb1tNEA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dp5Lf/I8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E24F0C4CEE3;
-	Thu,  3 Apr 2025 16:36:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dyb1tNEA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5AF80C4CEE3;
+	Thu,  3 Apr 2025 16:38:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743698211;
-	bh=rHQvrTRD9lw8HQVLfGzOcqqcO/H5rWQHLFBLB0wZyD4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=dp5Lf/I8Vwz/fTu+t0VA6NfWBk+w+7i+KnuEgYHWSaCRIpVBxETkf1HyJ0Gww5BaI
-	 Ro4nvDrTvMjuAk9L/42vbvWA13shG6KWzcK0aSwPpPlhQhbE+30BUPCyauCqTqll0P
-	 CjiGxCSAFse68HUBO53jquvUQBe1Eo71FjPSjH3QYlE+GkOcEiV69OiGoGmAEovnKm
-	 unsRq+GDuEJG8jhTUvhNBUjOSf0VfMAnBJBzR8CPYBuO54t7jQHGDWmr6AQLjGnhkc
-	 pnzAq6q3f8hxEdtVanG0X86dPOp+ydmpD14TiBotwUHFvXYHnFCTq0AiW5Q07T2WNH
-	 UQjwhVu/iqovQ==
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5eb92df4fcbso2126941a12.0;
-        Thu, 03 Apr 2025 09:36:51 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUl3aGOV2WxAqD+DRd6XI+rPsw0uuSGfEze4493c8rr9bwNICBE9Da4osgOrFn445GsmLaxdhanYY8t0wlR@vger.kernel.org, AJvYcCW5NrOZcxUoF0tbY+EGQHKmJ6glBsfjn1JJf8Q3agNt63TUUWeIergGVUnt30eTWQZhu4ce4S51dtus9g==@vger.kernel.org, AJvYcCXlB1vRaXmg8sJF1aqQUQDWwONSLiLZIwvvI4QOUy9HKHEAm0ayzbzaGXNjK7fZzSmYCUrir/yo9BlYueUuR2w=@vger.kernel.org, AJvYcCXxi/eFDSqVKEsq2ied1QZzB1T64u2J/TRVWfE0ANDdiKXx7nuqRlUWyJErmHQGBnOezwPZDMt1PTkh@vger.kernel.org
-X-Gm-Message-State: AOJu0YzbFyOJe13hoQkcn2PDjG4RS0+0Fop9WY7pw/jcKqoHcZ/ndU0N
-	b06GldlL1LkD/LnBflcywHZq9Bp6v4F5yzFcbfq9pKORC7TZ6tBqmXmG2XS4GX5QQmccVsc1Qsf
-	3l/k2o3CCUAle9eXHAXl1ERQCdg==
-X-Google-Smtp-Source: AGHT+IHon+pzrhvNsXMZduvE26T67ozKBFRk7/vc4tDRAuvWWErTIylHENbrBF1kJZB7zR9IjvY91WWEDmvpGtA682M=
-X-Received: by 2002:a17:907:7e8f:b0:ac7:cfe0:3014 with SMTP id
- a640c23a62f3a-ac7d1914808mr23737166b.25.1743698210484; Thu, 03 Apr 2025
- 09:36:50 -0700 (PDT)
+	s=k20201202; t=1743698299;
+	bh=KtUfjAG1/WEauaqQuciEUvXMo2dub6bMxhzIcaq1sR0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Dyb1tNEAiREoivi+HcddE7uM+5xkKAqaXKimQ8xAMYqnHxWd5mV/1NJhyLOBETnW4
+	 M8qOqq+DxgjSF8Tnkv7VJiiMVObDS86dPsFyLv2HvIgNAo3U4p7HBqXf8QLHxL6Gox
+	 neTTAZKOcayi+k9lQ47oSrcB4vNuK7VOIbqlfQ4EouNoEsmnSzAqFGDO8rigCcgFKv
+	 kZ2a10HJSGlT/yrsMooCvfeKoobktNtq1YKPx0aXf5GcPfoQl5cR4wKU8ssKGsMnuZ
+	 9VGUAVnqX6HpurACGpsGxjP6c22IC0j4AJ8f2AoG2GVLJH72bKkr/vToG250BSGWs5
+	 /7yy43JcQYYqw==
+From: Miguel Ojeda <ojeda@kernel.org>
+To: Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>
+Cc: Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Tamir Duberstein <tamird@gmail.com>,
+	rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	patches@lists.linux.dev
+Subject: [PATCH] rust: disable `clippy::needless_continue`
+Date: Thu,  3 Apr 2025 18:38:05 +0200
+Message-ID: <20250403163805.67770-1-ojeda@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250326171411.590681-1-remo@buenzli.dev> <20250326171411.590681-4-remo@buenzli.dev>
- <Z-UPJyD41LOMM3o2@smile.fi.intel.com> <CAL_Jsq+tJvGsbw1dGdgmBM8+cL4vN71OMTvX9tkmBLNk=6T9KQ@mail.gmail.com>
- <Z-60LwRrw30cq4YE@smile.fi.intel.com>
-In-Reply-To: <Z-60LwRrw30cq4YE@smile.fi.intel.com>
-From: Rob Herring <robh@kernel.org>
-Date: Thu, 3 Apr 2025 11:36:38 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqKiYCh7ukDoqc_toyn75=3wOM4WyOTGvogoOfdz9T_7Ow@mail.gmail.com>
-X-Gm-Features: ATxdqUHrR9f-M9Rc-icD8gFeAJeiwgk4wmkSQ4eYZoRilCIetdjLrpjtMC9KT6E
-Message-ID: <CAL_JsqKiYCh7ukDoqc_toyn75=3wOM4WyOTGvogoOfdz9T_7Ow@mail.gmail.com>
-Subject: Re: [PATCH 03/10] device property: Add fwnode_property_read_int_array()
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Remo Senekowitsch <remo@buenzli.dev>, Daniel Scally <djrscally@gmail.com>, 
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, Dirk Behme <dirk.behme@de.bosch.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Saravana Kannan <saravanak@google.com>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, linux-kernel@vger.kernel.org, 
-	linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Apr 3, 2025 at 11:15=E2=80=AFAM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Thu, Apr 03, 2025 at 11:04:32AM -0500, Rob Herring wrote:
-> > On Thu, Mar 27, 2025 at 3:41=E2=80=AFAM Andy Shevchenko
-> > <andriy.shevchenko@linux.intel.com> wrote:
-> > >
-> > > On Wed, Mar 26, 2025 at 06:13:42PM +0100, Remo Senekowitsch wrote:
-> > > > The rust bindings for reading device properties has a single
-> > > > implementation supporting differing sizes of integers. The fwnode C=
- API
-> > > > already has a similar interface, but it is not exposed with the
-> > > > fwnode_property_ API. Add the fwnode_property_read_int_array() wrap=
-per.
->
-> ...
->
-> > > > +EXPORT_SYMBOL_GPL(fwnode_property_read_int_array);
-> > >
-> > > I'm not sure about this. We have a lot of assumptions in the code tha=
-t the
-> > > arrays beneath are only represented by the selected number of integer=
- types.
-> > > This opens a Pandora's box, e.g., reading in u24, which is not suppor=
-ted by
-> > > the upper layers..
-> >
-> > We can probably drop the export if it is just that which you object to.
->
-> Yes, this is main point, but dropping it does not prevent from still usin=
-g in
-> the complied-in code. Is it possible to hide it better?
+Starting with Rust 1.86.0, Clippy's `needless_continue` lint complains
+about the last statement of a loop [1], including cases like:
 
-Don't put any declaration in the header and declare it in the rust
-code? But lack of declaration generates warnings.
+    while ... {
+        match ... {
+            ... if ... => {
+                ...
+                return ...;
+            }
+            _ => continue,
+        }
+    }
 
-Also, all the backends will reject an arbitrary size. So your worry
-about u24 or other odd sizes isn't really valid. But if you want to be
-doubly paranoid for when we add a new firmware backend (shoot me now),
-you could move this from the swnode implementation to the fwnode
-implementation:
+as well as nested `match`es in a loop.
 
-        if (!is_power_of_2(elem_size) || elem_size > sizeof(u64))
-                return -ENXIO;
+One solution is changing `continue` for `()` [2], but arguably using
+`continue` shows the intent better when it is alone in an arm like that.
 
-Rob
+Moreover, I am not sure we want to force people to try to find other
+ways to write the code either, in cases when that applies.
+
+In addition, the help text does not really apply in the new cases the
+lint has introduced, e.g. here one cannot simply "drop" the expression:
+
+    warning: this `continue` expression is redundant
+      --> rust/macros/helpers.rs:85:18
+       |
+    85 |             _ => continue,
+       |                  ^^^^^^^^
+       |
+       = help: consider dropping the `continue` expression
+       = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#needless_continue
+       = note: requested on the command line with `-W clippy::needless-continue`
+
+The examples in the documentation do not show a case like this, either,
+so the second "help" line does not help.
+
+In addition, locally disabling the lint is not possible with `expect`,
+since the behavior differs across versions. Using `allow` would be
+possible, but, even then, an extra line just for this is a bit too much,
+especially if there are other ways to satisfy the lint.
+
+Finally, the lint is still in the "pedantic" category and disabled by
+default by Clippy.
+
+Thus disable the lint, at least for the time being.
+
+Feedback was submitted to upstream Clippy, in case this can be improved
+or perhaps the lint split into several [3].
+
+Link: https://github.com/rust-lang/rust-clippy/pull/13891 [1]
+Link: https://lore.kernel.org/rust-for-linux/20250401221205.52381-1-ojeda@kernel.org/ [2]
+Link: https://github.com/rust-lang/rust-clippy/issues/14536 [3]
+Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
+---
+ Makefile | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/Makefile b/Makefile
+index d138b17b8840..2c33d25c505c 100644
+--- a/Makefile
++++ b/Makefile
+@@ -480,7 +480,6 @@ export rust_common_flags := --edition=2021 \
+ 			    -Wclippy::ignored_unit_patterns \
+ 			    -Wclippy::mut_mut \
+ 			    -Wclippy::needless_bitwise_bool \
+-			    -Wclippy::needless_continue \
+ 			    -Aclippy::needless_lifetimes \
+ 			    -Wclippy::no_mangle_with_rust_abi \
+ 			    -Wclippy::undocumented_unsafe_blocks \
+
+base-commit: a2cc6ff5ec8f91bc463fd3b0c26b61166a07eb11
+-- 
+2.49.0
+
