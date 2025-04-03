@@ -1,182 +1,188 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B18FF2D052;
-	Thu,  3 Apr 2025 16:30:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE9F22E3387;
+	Thu,  3 Apr 2025 16:32:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743697827; cv=none; b=NCFcR5R8mu/Rxs0RMXBtHdwNLFyxaIMWoHLK/xyDT+VJekOWCvO9R+Itogmh2WW9mXJmyrB4AYNujdNsm8Dbd5kzDY+zNiIp++CHRIlCYzcTz72XeNkbAjK4BlQXCJffQQpqGULSmCJSrpTsA4jT5n5w2U4J4wwmJR4TDSYjgzk=
+	t=1743697934; cv=none; b=Mu0KW7vQIlDODaH8XKywtxn8qXYdTQ+PlXaiBcVuPDuqleJkFCZAYFBFC/0xNcbw10m5tGcC3h1PDGLVAADOBnYtnRQZbAlEny2iNuCcfb+18lQPQLdy/h30zhQU6R86Xxvrrws036vKipQDkLPxMgNyK2aC54bX8AtwCxIU478=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743697827; c=relaxed/simple;
-	bh=od+jl7zVZvKgoDBSmlp+LMyewxJFQr/Zo9tM+HJKCps=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X34KOPXMWGCBMPecgu0koci/QUgC/I4hl57miQoA3ZasNdiDwpVsQ2uo8mz0XFluXKee69wHVRS2ibCKsmMFZ71eNKILUGzP3ouQp8RZ1Ea5k/IsuaBbAlS9RvheaFXEzjBIqU4RCRk9tUW2PfR8KYRaU2opLzL2n+LovlI6n4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bJxNpYzI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743697934; c=relaxed/simple;
+	bh=mFTql2fQe91w/S3dMui9ACkHHSYRfXpfZMsRcDQHEeQ=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=TO/CoFJI2vryprsQ/28ecmAKXmVzLP5+ZAEDxJtx5ReYlREpPy8WaTH5TOJ33puKFG/ImOj+sjaDjTnHARVTdmRxxBrnhT1etDvkyBNTIabyzDrfv+cWNjexjOr/BcHMw5wp2iJqfzWLD5LTx/kSo5rrpsaIf3BM788YPjev5CA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=DnfYs7UI; arc=none smtp.client-ip=220.197.31.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bJxNpYzI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 184DDC4CEE3;
-	Thu,  3 Apr 2025 16:30:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743697826;
-	bh=od+jl7zVZvKgoDBSmlp+LMyewxJFQr/Zo9tM+HJKCps=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bJxNpYzI0tSBL5Fd29YBqt79bpQuPHJNkgU4HWnA1ipoJVQQZT04gS6GlTXUNKCwy
-	 3rcJdbbtZ1g5w0e2VEc4waAwbeLBmoazhpr56/B+rqY2+09YmOSm3SK7rhCp68n+Lr
-	 R3G+z+RTFDsgCo2N5w5VeWUNyc9m/eisSE7A4xc0VMJ4DNcGiXJgqitCxfSFpKrmqM
-	 lpbZ7wkGZQgQbumA5YCATMoACJohz5/36tiJVZuB6+isXlsuNB3XJ80QqhbjYcEkut
-	 buu/3pAZLr+gH0MryQDouwotjTR47MnGIKmSAPS7JraCOv/Tq9a4zA0NG4H1RtoHU7
-	 yE9OI/ry0AzBg==
-Date: Thu, 3 Apr 2025 09:30:22 -0700
-From: Kees Cook <kees@kernel.org>
-To: Bhupesh <bhupesh@igalia.com>
-Cc: akpm@linux-foundation.org, kernel-dev@igalia.com,
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org, oliver.sang@intel.com, lkp@intel.com,
-	laoar.shao@gmail.com, pmladek@suse.com, rostedt@goodmis.org,
-	mathieu.desnoyers@efficios.com, arnaldo.melo@gmail.com,
-	alexei.starovoitov@gmail.com, andrii.nakryiko@gmail.com,
-	mirq-linux@rere.qmqm.pl, peterz@infradead.org, willy@infradead.org,
-	david@redhat.com, viro@zeniv.linux.org.uk, ebiederm@xmission.com,
-	brauner@kernel.org, jack@suse.cz, mingo@redhat.com,
-	juri.lelli@redhat.com, bsegall@google.com, mgorman@suse.de,
-	vschneid@redhat.com
-Subject: Re: [PATCH v2 1/3] exec: Dynamically allocate memory to store task's
- full name
-Message-ID: <202504030924.50896AD12@keescook>
-References: <20250331121820.455916-1-bhupesh@igalia.com>
- <20250331121820.455916-2-bhupesh@igalia.com>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="DnfYs7UI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=OuP8ZQ+Mg9eSGX38jD1aAJeq1T8gEdgY9LWbVkC4DNs=;
+	b=DnfYs7UI6XR+t4Y88pZ69xmzEXdZCNgCFMDpUaM4GjBq0him9pycCJSB2PANeC
+	tluElMPLFr1aBGo2W2JW2p3nonX742aWypVwuh5IN4ij1PCQGTcswZDJkN1U3dKt
+	ZDC0X1zi9NaOj1+mVi7PgIN86st8wZKz79jUMlz2J18+c=
+Received: from [192.168.71.89] (unknown [])
+	by gzga-smtp-mtada-g1-0 (Coremail) with SMTP id _____wBHpZfet+5nYQYfBw--.36929S2;
+	Fri, 04 Apr 2025 00:31:27 +0800 (CST)
+Message-ID: <fffcd237-9084-4be3-8967-f012d981b3f5@163.com>
+Date: Fri, 4 Apr 2025 00:31:26 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250331121820.455916-2-bhupesh@igalia.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [v7 1/5] PCI: Refactor capability search into common macros
+From: Hans Zhang <18255117159@163.com>
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: lpieralisi@kernel.org, bhelgaas@google.com, kw@linux.com,
+ manivannan.sadhasivam@linaro.org, robh@kernel.org, jingoohan1@gmail.com,
+ thomas.richard@bootlin.com, linux-pci@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>
+References: <20250402042020.48681-1-18255117159@163.com>
+ <20250402042020.48681-2-18255117159@163.com>
+ <909653ac-7ba2-9da7-f519-3d849146f433@linux.intel.com>
+ <6075b776-d2be-49d3-8321-e6af66781709@163.com>
+ <9e9a68b1-8c3a-6132-d4fc-9f7b0b2d3e3a@linux.intel.com>
+ <a0483c8d-3cd4-4da2-aca5-586379870e3a@163.com>
+Content-Language: en-US
+In-Reply-To: <a0483c8d-3cd4-4da2-aca5-586379870e3a@163.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wBHpZfet+5nYQYfBw--.36929S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxXFyxJFy3GF43AFW5Aw1DKFg_yoWrGr4DpF
+	98C3WayrW8JF12krn29a4jywnFqFyDCayDW34fW3WDZF9FyF1xt392kr1agF17X397KF15
+	X34q9a4fGFWayFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UVOJ5UUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDxUko2fulgLOSAACsE
 
-On Mon, Mar 31, 2025 at 05:48:18PM +0530, Bhupesh wrote:
-> Provide a parallel implementation for get_task_comm() called
-> get_task_full_name() which allows the dynamically allocated
-> and filled-in task's full name to be passed to interested
-> users such as 'gdb'.
-> 
-> Currently while running 'gdb', the 'task->comm' value of a long
-> task name is truncated due to the limitation of TASK_COMM_LEN.
-> 
-> For example using gdb to debug a simple app currently which generate
-> threads with long task names:
->   # gdb ./threadnames -ex "run info thread" -ex "detach" -ex "quit" > log
->   # cat log
-> 
->   NameThatIsTooLo
-> 
-> This patch does not touch 'TASK_COMM_LEN' at all, i.e.
-> 'TASK_COMM_LEN' and the 16-byte design remains untouched. Which means
-> that all the legacy / existing ABI, continue to work as before using
-> '/proc/$pid/task/$tid/comm'.
-> 
-> This patch only adds a parallel, dynamically-allocated
-> 'task->full_name' which can be used by interested users
-> via '/proc/$pid/task/$tid/full_name'.
-> 
-> After this change, gdb is able to show full name of the task:
->   # gdb ./threadnames -ex "run info thread" -ex "detach" -ex "quit" > log
->   # cat log
-> 
->   NameThatIsTooLongForComm[4662]
-> 
-> Signed-off-by: Bhupesh <bhupesh@igalia.com>
-> ---
->  fs/exec.c             | 21 ++++++++++++++++++---
->  include/linux/sched.h |  9 +++++++++
->  2 files changed, 27 insertions(+), 3 deletions(-)
-> 
-> diff --git a/fs/exec.c b/fs/exec.c
-> index f45859ad13ac..4219d77a519c 100644
-> --- a/fs/exec.c
-> +++ b/fs/exec.c
-> @@ -1208,6 +1208,9 @@ int begin_new_exec(struct linux_binprm * bprm)
->  {
->  	struct task_struct *me = current;
->  	int retval;
-> +	va_list args;
-> +	char *name;
-> +	const char *fmt;
->  
->  	/* Once we are committed compute the creds */
->  	retval = bprm_creds_from_file(bprm);
-> @@ -1348,11 +1351,22 @@ int begin_new_exec(struct linux_binprm * bprm)
->  		 * detecting a concurrent rename and just want a terminated name.
->  		 */
->  		rcu_read_lock();
-> -		__set_task_comm(me, smp_load_acquire(&bprm->file->f_path.dentry->d_name.name),
-> -				true);
-> +		fmt = smp_load_acquire(&bprm->file->f_path.dentry->d_name.name);
-> +		name = kvasprintf(GFP_KERNEL, fmt, args);
-> +		if (!name)
-> +			return -ENOMEM;
-> +
-> +		me->full_name = name;
-> +		__set_task_comm(me, fmt, true);
 
-I don't want to add new allocations to the default exec path unless we
-absolutely must.
 
-In the original proposal this was about setting thread names (after
-exec), and I think that'll be fine.
+On 2025/4/3 20:22, Hans Zhang wrote:
+>>>>> +#define PCI_FIND_NEXT_CAP_TTL(read_cfg, start, cap, args...)
+>>>>> \
+>>>>> +({                                    \
+>>>>> +    u8 __pos = (start);                        \
+>>>>> +    int __ttl = PCI_FIND_CAP_TTL;                    \
+>>>>> +    u16 __ent;                            \
+>>>>> +    u8 __found_pos = 0;                        \
+>>>>> +    u8 __id;                            \
+>>>>> +                                    \
+>>>>> +    read_cfg(args, __pos, 1, (u32 *)&__pos);            \
+>>>>> +                                    \
+>>>>> +    while (__ttl--) {                        \
+>>>>> +        if (__pos < PCI_STD_HEADER_SIZEOF)            \
+>>>>> +            break;                        \
+>>>>> +        __pos = ALIGN_DOWN(__pos, 4);                \
+>>>>> +        read_cfg(args, __pos, 2, (u32 *)&__ent);        \
+>>>>> +        __id = FIELD_GET(PCI_CAP_ID_MASK, __ent);        \
+>>>>> +        if (__id == 0xff)                    \
+>>>>> +            break;                        \
+>>>>> +        if (__id == (cap)) {                    \
+>>>>> +            __found_pos = __pos;                \
+>>>>> +            break;                        \
+>>>>> +        }                            \
+>>>>> +        __pos = FIELD_GET(PCI_CAP_LIST_NEXT_MASK, __ent);    \
+>>>>
+>>>> Could you please separate the coding style cleanups into own patch that
+>>>> is before the actual move patch. IMO, all those cleanups can be in the
+>>>> same patch.
+>>>>
+>>>
+>>> Thanks your for reply. I don't understand. Is it like this?
+>>
+>> Add a patch before the first patch which does only the cleanups to
+>> __pci_find_next_cap_ttl(). The patch that creates PCI_FIND_NEXT_CAP_TTL()
+>> and converts its PCI core users (most of the patches 1&2) is to be based
+>> on top of that cleanup patch.
+>>
+> 
+> Thank you so much for your patience in explaining it to me.
 
->  		rcu_read_unlock();
->  	} else {
-> -		__set_task_comm(me, kbasename(bprm->filename), true);
-> +		fmt = kbasename(bprm->filename);
-> +		name = kvasprintf(GFP_KERNEL, fmt, args);
-> +		if (!name)
-> +			return -ENOMEM;
-> +
-> +		me->full_name = name;
-> +		__set_task_comm(me, fmt, true);
->  	}
+Hi Ilpo,
 
-I think we can just set me->full_name = me->comm by default.
+The [v9 2/6]patch I plan to submit is as follows, please review it.
 
->  
->  	/* An exec changes our domain. We are no longer part of the thread
-> @@ -1399,6 +1413,7 @@ int begin_new_exec(struct linux_binprm * bprm)
->  	return 0;
->  
->  out_unlock:
-> +	kfree(me->full_name);
->  	up_write(&me->signal->exec_update_lock);
->  	if (!bprm->cred)
->  		mutex_unlock(&me->signal->cred_guard_mutex);
-> diff --git a/include/linux/sched.h b/include/linux/sched.h
-> index 56ddeb37b5cd..053b52606652 100644
-> --- a/include/linux/sched.h
-> +++ b/include/linux/sched.h
-> @@ -1166,6 +1166,9 @@ struct task_struct {
->  	 */
->  	char				comm[TASK_COMM_LEN];
->  
-> +	/* To store the full name if task comm is truncated. */
-> +	char				*full_name;
-> +
->  	struct nameidata		*nameidata;
->  
->  #ifdef CONFIG_SYSVIPC
-> @@ -2007,6 +2010,12 @@ extern void __set_task_comm(struct task_struct *tsk, const char *from, bool exec
->  	buf;						\
->  })
->  
-> +#define get_task_full_name(buf, buf_size, tsk) ({	\
-> +	BUILD_BUG_ON(sizeof(buf) < TASK_COMM_LEN);	\
-> +	strscpy_pad(buf, (tsk)->full_name, buf_size);	\
-> +	buf;						\
-> +})
+ From 300fe1f428930d0bf8a361ea1d1a3272a6153107 Mon Sep 17 00:00:00 2001
+From: Hans Zhang <18255117159@163.com>
+Date: Fri, 4 Apr 2025 00:20:03 +0800
+Subject: [v9 2/6] PCI: Clean up __pci_find_next_cap_ttl() readability
 
-I think it should be possible to just switch get_task_comm() to use
-(tsk)->full_name.
+Refactor the __pci_find_next_cap_ttl() to improve code clarity:
+- Replace magic number 0x40 with PCI_STD_HEADER_SIZEOF.
+- Use ALIGN_DOWN() for position alignment instead of manual bitmask.
+- Extract PCI capability fields via FIELD_GET() with standardized masks.
+- Add necessary headers (linux/align.h, uapi/linux/pci_regs.h).
 
--- 
-Kees Cook
+The changes are purely non-functional cleanups, ensuring behavior remains
+identical to the original implementation.
+
+Signed-off-by: Hans Zhang <18255117159@163.com>
+---
+  drivers/pci/pci.c             | 10 ++++++----
+  include/uapi/linux/pci_regs.h |  2 ++
+  2 files changed, 8 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 869d204a70a3..e4d3719b653d 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -9,6 +9,7 @@
+   */
+
+  #include <linux/acpi.h>
++#include <linux/align.h>
+  #include <linux/kernel.h>
+  #include <linux/delay.h>
+  #include <linux/dmi.h>
+@@ -30,6 +31,7 @@
+  #include <asm/dma.h>
+  #include <linux/aer.h>
+  #include <linux/bitfield.h>
++#include <uapi/linux/pci_regs.h>
+  #include "pci.h"
+
+  DEFINE_MUTEX(pci_slot_mutex);
+@@ -432,17 +434,17 @@ static u8 __pci_find_next_cap_ttl(struct pci_bus 
+*bus, unsigned int devfn,
+  	pci_bus_read_config_byte(bus, devfn, pos, &pos);
+
+  	while ((*ttl)--) {
+-		if (pos < 0x40)
++		if (pos < PCI_STD_HEADER_SIZEOF)
+  			break;
+-		pos &= ~3;
++		pos = ALIGN_DOWN(pos, 4);
+  		pci_bus_read_config_word(bus, devfn, pos, &ent);
+
+-		id = ent & 0xff;
++		id = FIELD_GET(PCI_CAP_ID_MASK, ent);
+  		if (id == 0xff)
+  			break;
+  		if (id == cap)
+  			return pos;
+-		pos = (ent >> 8);
++		pos = FIELD_GET(PCI_CAP_LIST_NEXT_MASK, ent);
+  	}
+  	return 0;
+  }
+diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+index 3445c4970e4d..a11ebbab99fc 100644
+--- a/include/uapi/linux/pci_regs.h
++++ b/include/uapi/linux/pci_regs.h
+@@ -206,6 +206,8 @@
+  /* 0x48-0x7f reserved */
+
+  /* Capability lists */
++#define PCI_CAP_ID_MASK		0x00ff
++#define PCI_CAP_LIST_NEXT_MASK	0xff00
+
+  #define PCI_CAP_LIST_ID		0	/* Capability ID */
+  #define  PCI_CAP_ID_PM		0x01	/* Power Management */
+
+
+
+
+Best regards,
+Hans
+
