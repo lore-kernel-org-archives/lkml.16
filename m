@@ -1,85 +1,141 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2AFF746E
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 11:26:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44AC9161320;
+	Thu,  3 Apr 2025 11:26:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743679572; cv=none; b=mRC48Yc2VPjpHmQoFCiujoxibiFxDrXrfduy+wYFtKqH8C1ivdWT/AnNRI5ggk+0DqtQ8oyBxVT4AEHB+TjoCgDkc/RfrZMbWBttPZKvIu1ogzWU8Us4rxDuR06RgY7bKjGVmPyuGnx51ABxT4Drhm9A0Vu8qb2JSW9hDb/TyYw=
+	t=1743679600; cv=none; b=HefGAPkuJIPH7SNZGP1FVQn18v5+VJG5eRFIBoe342tQPpHoQHDo9Re1Y14gHzU++T81qis4WZmbhMP93WHP7gV+GGZXtLcddJjL3wCgsck/dnBN7yVMhdwcDjvewZkvdAFXFwk6tIYAVkwjE3tvRnhF3w4x4N29ny8UY96zqdQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743679572; c=relaxed/simple;
-	bh=JSV35DhnKvLxdL79cciQOBuPD+T7aVlKbFdImsXeimM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Co9WUdmhEiXQgOsQdIqD7uB0nojWTfPetK6rWCsLtLVBW37g2vG7f5Om/FtVgoZCPMcD62uTai3zxED1DXnl7sHsFBwP10IGAjdffsTm4N36YIghqTPGnu7AXKJ8MyVJDjvxNwgaYxfw4TsXe2nocmC2DPchSt6t20/c0VOz+rE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=SpbDe2zX; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1743679600; c=relaxed/simple;
+	bh=rS3BIFhO7Scj/OffZVUYYibFEFSgamdlXu2+hANWw6Y=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=Bpcd8PnE5nge+uyJV42ILDl5NO2Pg6WF7FGsZbFOmZk6QDS63R6IbKZyupQeDnbANP76jMdWDhO/JwO+/MGE1bM7VWlvTe9zwwCuQ997tPlmtO2ba9sGL9FBqS5gE6Nf5E+Wy9sBxjCApe2dwXvak++ngLIOzkgd4dKTZR9YLVA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Hu2oZ9Y2; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=odzNzDws; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="SpbDe2zX"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 0612040E023C;
-	Thu,  3 Apr 2025 11:26:07 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id NAd6G61DjRS5; Thu,  3 Apr 2025 11:26:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1743679563; bh=R+WgVRoLy9Q4xKXjVtRETzCCZWHR1Ai2bOY2VSzi1hI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SpbDe2zXqZaicwZtO5flRCP0QUv2U8XzXlJ1egWVqrGFOf2w4/vuu8SSkoj/Io5bi
-	 XxF0489jRAh1GiwhaZ4JhRwuecDQWhT0bNB75th9eV7B8k7XszVgF8MfWi7j3xRasH
-	 pLVkMxl0MiObgnTbWIjluhxoIynFt4xFgJ4njt9eQaOXm0sQQA3nqSk8uJAeUlLIyt
-	 aUvXWQRMTVJpvEQ46fY+2yRbaJJ6w/aOxrddk25XvPMPXutbVhZ9fOBliM/xcqoxgS
-	 iV8T4edSrZMBQaQq80r53TBS9u2mzksXWxHHbcOMfhmR25bMYFRqlq700YMw/rjWWZ
-	 gbHyi+1/Rm4Q5iYpMUAyGi5y3Np9uQDCeLzZUVg8xTRlBXl7YmcyUr5j7OB3vk5p0/
-	 4cHyxtWZWLPn5AO8Qfs1xCA64sfWHwo+wca2BoDN2oZv8Sa1tYLf+KWT0iOxzec9/x
-	 uNd7AX815a5X1KPhi49EVYfNhAJnGAvpbzfFa/fEv03NeN7e8HJjicY1MNRtgna8x8
-	 I2PctvTEJFa1Af9YWlqOqSERqHSW+1hSbN0pWimwPVH6vENkpo3wz049Y8ZQ33bGV3
-	 D1pZmIZpGs65y8XSyL4TQ2CCGEDaK70BnOB4iX6WP4aMs+vH8ek6mg9crdYhoncYnp
-	 jN+hCISVJwo7Zsdzpdznedr4=
-Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B821B40E021F;
-	Thu,  3 Apr 2025 11:25:55 +0000 (UTC)
-Date: Thu, 3 Apr 2025 13:25:54 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Uros Bizjak <ubizjak@gmail.com>, x86@kernel.org,
-	linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH -tip v2] x86/idle: Work around LLVM assembler bug with
- MONITOR and MWAIT insn
-Message-ID: <20250403112554.GDZ-5wQsu0CzMMpBpZ@fat_crate.local>
-References: <20250403091737.344149-1-ubizjak@gmail.com>
- <Z-5vAThgDL9gts35@gmail.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Hu2oZ9Y2";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="odzNzDws"
+Date: Thu, 03 Apr 2025 11:26:32 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1743679597;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aWRQuXR+O4982s+lGdZM8l5ZKghIETw9NPkFGg+OkNM=;
+	b=Hu2oZ9Y2iI1t/3iQXm5dR1OFrtjocgmIqcv2tdEWTCObT0Qm4VVViioxB18ioEeybCf/5x
+	bMdFMbrbH9ylOVouH7CbrAjcCGabdlL0veCSy9taB/Z0pu4G7wKqllj3fwFGVSwspVHvhi
+	d/N9Z6giRpeFdZo0qT8FfUnh8+FIQ/FGKY5FWXtVd6KQ0MQO2Qgmy+3UdU1ZKdt7ltaw/B
+	kWO1X5tKgZoOe+Ujgj3YAsWc8zDJbZh639IlJCfSNOnnbaZf8HuDg1iXqU3t43wAUMlt5w
+	rf2UlKzU0EWgT0VnoRsJA99QjY2Gt/Y8aVbfz78av+b2Lr6spFbMSL/SqtLhIA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1743679597;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aWRQuXR+O4982s+lGdZM8l5ZKghIETw9NPkFGg+OkNM=;
+	b=odzNzDwsL1XGLerWVckFdR58eOYAg8SlSzDuq8Syr4NDMNWVkFLdc2O+BFsR5UXXo+T6v2
+	qZpz4dQwY/xj8KBQ==
+From: "tip-bot2 for Mathieu Desnoyers" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: sched/urgent] rseq: Eliminate useless task_work on execve
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Ingo Molnar <mingo@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250327132945.1558783-1-mathieu.desnoyers@efficios.com>
+References: <20250327132945.1558783-1-mathieu.desnoyers@efficios.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <Z-5vAThgDL9gts35@gmail.com>
+Message-ID: <174367959256.14745.905696151357329121.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Thu, Apr 03, 2025 at 01:20:33PM +0200, Ingo Molnar wrote:
-> So I've zapped cd3b85b27542 instead - let's re-try it again and
-> see if there's any code generation tradeoffs vs. the byte encodings?
+The following commit has been merged into the sched/urgent branch of tip:
 
-Please.
+Commit-ID:     169eae7711ea4b745e2d33d53e7b88689b10e1a0
+Gitweb:        https://git.kernel.org/tip/169eae7711ea4b745e2d33d53e7b88689b10e1a0
+Author:        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+AuthorDate:    Thu, 27 Mar 2025 09:29:45 -04:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Thu, 03 Apr 2025 13:10:47 +02:00
 
-And give the test bots some time to chew on them before committing and/or
-build-test with clang too.
+rseq: Eliminate useless task_work on execve
 
-Thx.
+Eliminate a useless task_work on execve by moving the call to
+rseq_set_notify_resume() from sched_mm_cid_after_execve() to the error
+path of bprm_execve().
 
--- 
-Regards/Gruss,
-    Boris.
+The call to rseq_set_notify_resume() from sched_mm_cid_after_execve() is
+pointless in the success case, because rseq_execve() will clear the rseq
+pointer before returning to userspace.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+sched_mm_cid_after_execve() is called from both the success and error
+paths of bprm_execve(). The call to rseq_set_notify_resume() is needed
+on error because the mm_cid may have changed.
+
+Also move the rseq_execve() to right after sched_mm_cid_after_execve()
+in bprm_execve().
+
+[ mingo: Merged to a recent upstream kernel, extended the changelog. ]
+
+Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Link: https://lore.kernel.org/r/20250327132945.1558783-1-mathieu.desnoyers@efficios.com
+---
+ fs/exec.c           | 3 ++-
+ kernel/sched/core.c | 1 -
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/fs/exec.c b/fs/exec.c
+index 5d1c0d2..8e4ea5f 100644
+--- a/fs/exec.c
++++ b/fs/exec.c
+@@ -1864,9 +1864,9 @@ static int bprm_execve(struct linux_binprm *bprm)
+ 		goto out;
+ 
+ 	sched_mm_cid_after_execve(current);
++	rseq_execve(current);
+ 	/* execve succeeded */
+ 	current->in_execve = 0;
+-	rseq_execve(current);
+ 	user_events_execve(current);
+ 	acct_update_integrals(current);
+ 	task_numa_free(current, false);
+@@ -1883,6 +1883,7 @@ out:
+ 		force_fatal_sig(SIGSEGV);
+ 
+ 	sched_mm_cid_after_execve(current);
++	rseq_set_notify_resume(current);
+ 	current->in_execve = 0;
+ 
+ 	return retval;
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index cfaca30..c81cf64 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -10703,7 +10703,6 @@ void sched_mm_cid_after_execve(struct task_struct *t)
+ 		smp_mb();
+ 		t->last_mm_cid = t->mm_cid = mm_cid_get(rq, t, mm);
+ 	}
+-	rseq_set_notify_resume(t);
+ }
+ 
+ void sched_mm_cid_fork(struct task_struct *t)
