@@ -1,137 +1,107 @@
-Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9DB01A317E;
-	Thu,  3 Apr 2025 06:50:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.166.238
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D76B81A5B91;
+	Thu,  3 Apr 2025 06:50:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743663003; cv=none; b=NvBOrfHe4rZNIkVeeoCKWJ2nKXsOb5GNh4v9mx6W5B7kob73nmvcHycuSVfhTjANfWz13gnoH+ZwGAMXYnLN9Uz/saDF4q4Vg6+warFSaRPl7jo8iRl7K9sIh+h4bwwJQz6n4d356qJJDFVdUoFvCS/hJKgLUpxTDX04C14wdzk=
+	t=1743663041; cv=none; b=llZ422bqeFFBsq4sa4czonI9OshmaUCFxZ0s97Rswmq6pjt0kHDmdU0PickenzP1Fnh0A0b5e5Bi4IxydGsGKwIpJEyMibwoLXinhFavCKQ8HrvDCafsJeq+wLn9kj2AyT6UkjwX8mpegGIR258x42MCChhS3y/9xA0zKuXOXRY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743663003; c=relaxed/simple;
-	bh=51AyStNrNztTeEQnw76esYXCUc6hXZdkbZ+IyVSnUWU=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=s3Byn9i/PFArQbuoKl94jVL6/onM6wwvn+KiVYjQtgu7psNcMWWFp4sHuTlKByH91H4dTSwDm1DWRXHP1SkKGcliSIbTbAG5yWEC6TeNzXJe9My0JRdESe8EheGUoelNZJolvL7SYlOZmRFWnXIwZnmbgqnSVptelSJhvovf3xg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=none smtp.client-ip=205.220.166.238
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
-Received: from pps.filterd (m0250809.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5334aGiQ007487;
-	Wed, 2 Apr 2025 23:49:51 -0700
-Received: from ala-exchng02.corp.ad.wrs.com (ala-exchng02.wrs.com [147.11.82.254])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 45sg1u8bap-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Wed, 02 Apr 2025 23:49:51 -0700 (PDT)
-Received: from ala-exchng01.corp.ad.wrs.com (147.11.82.252) by
- ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.43; Wed, 2 Apr 2025 23:49:51 -0700
-Received: from pek-lpg-core1.wrs.com (147.11.136.210) by
- ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server id
- 15.1.2507.43 via Frontend Transport; Wed, 2 Apr 2025 23:49:48 -0700
-From: <jianqi.ren.cn@windriver.com>
-To: <stable@vger.kernel.org>
-CC: <patches@lists.linux.dev>, <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>, <jianqi.ren.cn@windriver.com>,
-        <laurent.pinchart@ideasonboard.com>, <dan.scally@ideasonboard.com>,
-        <linux-usb@vger.kernel.org>, <abhishektamboli9@gmail.com>
-Subject: [PATCH 6.1.y] usb: gadget: uvc: Fix ERR_PTR dereference in uvc_v4l2.c
-Date: Thu, 3 Apr 2025 14:49:47 +0800
-Message-ID: <20250403064947.51317-1-jianqi.ren.cn@windriver.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1743663041; c=relaxed/simple;
+	bh=Jh/rY+EfIjSo98Z/ve5BziCFk7Rx6+VKfxCcaVbDtEs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rFd13bvK3E2ARUJ9SlhQfs++Tn3bIKsFldIGp8aXJnNW4a2jMGiWgJ7EE6ez7QSLUxtnTkrPKNkWidniip7SzVEdqJyfJTUCjVUxVzM2CV3kSNrpO2UnSCilYA0yW13LfNQtue0SLuJ4G6Q6yhAl5041ECnEBeKdV38YIkjXW7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=fCYukXs5; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="fCYukXs5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C66E5C4CEE8;
+	Thu,  3 Apr 2025 06:50:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1743663040;
+	bh=Jh/rY+EfIjSo98Z/ve5BziCFk7Rx6+VKfxCcaVbDtEs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fCYukXs5RtwOJrW0aHvACYhB+w3VtDovh0h0XSAhtrAwlJkHFzQeCCHaQraayIh3I
+	 dHdEbfeqNFPw1YeIa6iNSkmi8yws9CsIqRuoBjddeX78VdjQpufEHWDCXbxm0J1WD3
+	 2h82qoGnao1EdRCrUrGeUG54x30CxU0kNJqj5Dxo=
+Date: Thu, 3 Apr 2025 07:49:13 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Henry Martin <bsdhenrymartin@gmail.com>
+Cc: jirislaby@kernel.org, sugaya.taichi@socionext.com,
+	orito.takao@socionext.com, u.kleine-koenig@baylibre.com,
+	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v1] serial: Fix null-ptr-deref in mlb_usio_probe()
+Message-ID: <2025040301-unmanned-lapdog-5446@gregkh>
+References: <20250403062808.63428-1-bsdhenrymartin@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: 1JhZngRbH0zePc2-NqpBWPa2zO1bb18Y
-X-Authority-Analysis: v=2.4 cv=Aqnu3P9P c=1 sm=1 tr=0 ts=67ee2f8f cx=c_pps a=K4BcnWQioVPsTJd46EJO2w==:117 a=K4BcnWQioVPsTJd46EJO2w==:17 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=pGLkceISAAAA:8 a=ag1SF4gXAAAA:8 a=t7CeM3EgAAAA:8 a=REYqGfaRdox0a-FwMx0A:9
- a=Yupwre4RP9_Eg_Bd0iYG:22 a=FdTzh2GWekK77mhwV6Dw:22
-X-Proofpoint-GUID: 1JhZngRbH0zePc2-NqpBWPa2zO1bb18Y
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-03_02,2025-04-02_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 mlxscore=0
- mlxlogscore=999 adultscore=0 spamscore=0 priorityscore=1501 phishscore=0
- clxscore=1015 malwarescore=0 lowpriorityscore=0 bulkscore=0
- impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.21.0-2502280000
- definitions=main-2504030033
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250403062808.63428-1-bsdhenrymartin@gmail.com>
 
-From: Abhishek Tamboli <abhishektamboli9@gmail.com>
+On Thu, Apr 03, 2025 at 02:28:08PM +0800, Henry Martin wrote:
+> devm_ioremap() returns NULL on error. Currently, mlb_usio_probe() does
+> not check for this case, which results in a NULL pointer dereference.
+> 
+> Add NULL check after devm_ioremap() to prevent this issue.
+> 
+> Fixes: ba44dc043004 ("serial: Add Milbeaut serial control")
+> Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
+> ---
+>  drivers/tty/serial/milbeaut_usio.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/tty/serial/milbeaut_usio.c b/drivers/tty/serial/milbeaut_usio.c
+> index 059bea18dbab..4e47dca2c4ed 100644
+> --- a/drivers/tty/serial/milbeaut_usio.c
+> +++ b/drivers/tty/serial/milbeaut_usio.c
+> @@ -523,7 +523,10 @@ static int mlb_usio_probe(struct platform_device *pdev)
+>  	}
+>  	port->membase = devm_ioremap(&pdev->dev, res->start,
+>  				resource_size(res));
+> -
+> +	if (!port->membase) {
+> +		ret = -ENOMEM;
+> +		goto failed;
+> +	}
+>  	ret = platform_get_irq_byname(pdev, "rx");
+>  	mlb_usio_irq[index][RX] = ret;
+>  
+> -- 
+> 2.34.1
+> 
+> 
 
-[ Upstream commit a7bb96b18864225a694e3887ac2733159489e4b0 ]
+Hi,
 
-Fix potential dereferencing of ERR_PTR() in find_format_by_pix()
-and uvc_v4l2_enum_format().
+This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
+a patch that has triggered this response.  He used to manually respond
+to these common problems, but in order to save his sanity (he kept
+writing the same thing over and over, yet to different people), I was
+created.  Hopefully you will not take offence and will fix the problem
+in your patch and resubmit it so that it can be accepted into the Linux
+kernel tree.
 
-Fix the following smatch errors:
+You are receiving this message because of the following common error(s)
+as indicated below:
 
-drivers/usb/gadget/function/uvc_v4l2.c:124 find_format_by_pix()
-error: 'fmtdesc' dereferencing possible ERR_PTR()
+- You have marked a patch with a "Fixes:" tag for a commit that is in an
+  older released kernel, yet you do not have a cc: stable line in the
+  signed-off-by area at all, which means that the patch will not be
+  applied to any older kernel releases.  To properly fix this, please
+  follow the documented rules in the
+  Documentation/process/stable-kernel-rules.rst file for how to resolve
+  this.
 
-drivers/usb/gadget/function/uvc_v4l2.c:392 uvc_v4l2_enum_format()
-error: 'fmtdesc' dereferencing possible ERR_PTR()
+If you wish to discuss this problem further, or you have questions about
+how to resolve this issue, please feel free to respond to this email and
+Greg will reply once he has dug out from the pending patches received
+from other developers.
 
-Also, fix similar issue in uvc_v4l2_try_format() for potential
-dereferencing of ERR_PTR().
+thanks,
 
-Signed-off-by: Abhishek Tamboli <abhishektamboli9@gmail.com>
-Link: https://lore.kernel.org/r/20240815102202.594812-1-abhishektamboli9@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Jianqi Ren <jianqi.ren.cn@windriver.com>
-Signed-off-by: He Zhe <zhe.he@windriver.com>
----
-Verified the build test
----
- drivers/usb/gadget/function/uvc_v4l2.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/usb/gadget/function/uvc_v4l2.c b/drivers/usb/gadget/function/uvc_v4l2.c
-index a189b08bba80..5aeeaff7b283 100644
---- a/drivers/usb/gadget/function/uvc_v4l2.c
-+++ b/drivers/usb/gadget/function/uvc_v4l2.c
-@@ -121,6 +121,9 @@ static struct uvcg_format *find_format_by_pix(struct uvc_device *uvc,
- 	list_for_each_entry(format, &uvc->header->formats, entry) {
- 		struct uvc_format_desc *fmtdesc = to_uvc_format(format->fmt);
- 
-+		if (IS_ERR(fmtdesc))
-+			continue;
-+
- 		if (fmtdesc->fcc == pixelformat) {
- 			uformat = format->fmt;
- 			break;
-@@ -240,6 +243,7 @@ uvc_v4l2_try_format(struct file *file, void *fh, struct v4l2_format *fmt)
- 	struct uvc_video *video = &uvc->video;
- 	struct uvcg_format *uformat;
- 	struct uvcg_frame *uframe;
-+	const struct uvc_format_desc *fmtdesc;
- 	u8 *fcc;
- 
- 	if (fmt->type != video->queue.queue.type)
-@@ -265,7 +269,10 @@ uvc_v4l2_try_format(struct file *file, void *fh, struct v4l2_format *fmt)
- 	fmt->fmt.pix.field = V4L2_FIELD_NONE;
- 	fmt->fmt.pix.bytesperline = uvc_v4l2_get_bytesperline(uformat, uframe);
- 	fmt->fmt.pix.sizeimage = uvc_get_frame_size(uformat, uframe);
--	fmt->fmt.pix.pixelformat = to_uvc_format(uformat)->fcc;
-+	fmtdesc = to_uvc_format(uformat);
-+	if (IS_ERR(fmtdesc))
-+		return PTR_ERR(fmtdesc);
-+	fmt->fmt.pix.pixelformat = fmtdesc->fcc;
- 	fmt->fmt.pix.colorspace = V4L2_COLORSPACE_SRGB;
- 	fmt->fmt.pix.priv = 0;
- 
-@@ -378,6 +385,9 @@ uvc_v4l2_enum_format(struct file *file, void *fh, struct v4l2_fmtdesc *f)
- 		f->flags |= V4L2_FMT_FLAG_COMPRESSED;
- 
- 	fmtdesc = to_uvc_format(uformat);
-+	if (IS_ERR(fmtdesc))
-+		return PTR_ERR(fmtdesc);
-+
- 	f->pixelformat = fmtdesc->fcc;
- 
- 	strscpy(f->description, fmtdesc->name, sizeof(f->description));
--- 
-2.34.1
-
+greg k-h's patch email bot
