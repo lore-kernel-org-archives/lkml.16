@@ -1,94 +1,111 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D532A347A2
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 09:31:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15847347A2;
+	Thu,  3 Apr 2025 09:31:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743672678; cv=none; b=SoWzeRm6hqJo56ET/wLjcQ9J7TR2a7K89NorVJR1c7S486pKiNTpSxwfyW3oRJ5hmkisq6u8lqrsqHjF9M6LPqkjlASa0KBxMLpwwiezJY86emtDOF8RoW82d5Q2gKsrRMBs5Odv6l8NB3u63GdKiB23AmHYrBWxAII66JQWfzI=
+	t=1743672710; cv=none; b=JYXdZaqsRR7kj0/eM29cpF+IoMvS0Tr5li0M/D4pT+3uuYG8FDt5UHHHDwwIZH+Tv9wc+Ee7NKw9c1ZG0sFVJL6tlHOF9iRxcIHZVCmaxA8TuJxdk01gjz50xGU7uVlyJ6ESxtRvRJ7PjM2t4JUOzko+w/2Zg0tElRFGiq/0Ftg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743672678; c=relaxed/simple;
-	bh=Zd6AJnU2BMeaWm/0mQRVGARbnLs5KgKjE7/uIfO6BS8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=V2JlidP5ttdGv4qqK2+LkuQytkk4vry/vvKqFUJEI4qMoxt2NFv0NTdFubRynoWgqZVn2IUS0HH6nuwFjfxUrQHAfSjUYRkuEtgVKfnvw/wDR0Sl6yUNc+Rp5WVisZ+oOsGkZoCbWffLLVVxfoEoYnyKG5ZC0+RKywDNRraJxJg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9718C106F;
-	Thu,  3 Apr 2025 02:31:17 -0700 (PDT)
-Received: from [10.163.48.25] (unknown [10.163.48.25])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1F60E3F63F;
-	Thu,  3 Apr 2025 02:31:07 -0700 (PDT)
-Message-ID: <36dcb5e3-4406-4763-87f1-8054c2246264@arm.com>
-Date: Thu, 3 Apr 2025 15:01:03 +0530
+	s=arc-20240116; t=1743672710; c=relaxed/simple;
+	bh=sNndO7cE94SxIpOgsMIyRwMp9GIyL84y6xvqMUc0Suc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=fZrkDMC83MPwXpXCRK7pjqpJQb6ovU+ijK6ctF23Wrl4PPqr43dRf6srO/OSgfJMviLJM5yGFxcnX3108h3dclUEZnftHqQ3Ay/exxIEiYzHkYQtSTpexAjEag4ApDbImOFMLIkRQyWl3LFNl2bGSyO+oJJA7lop52UlhIuymcM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fTNE1Hy6; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fTNE1Hy6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743672708; x=1775208708;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=sNndO7cE94SxIpOgsMIyRwMp9GIyL84y6xvqMUc0Suc=;
+  b=fTNE1Hy6lIje0QI+MaweN/tomb7bXlvLLPimrhkMQuSL4YiRYEdOCDYO
+   vgm4JEaN4eLHVEoBJl3jAxJuic15tkACUUE92lUJzFCYRhA2Rmm73ePGK
+   C+hB7tQ7Oh946Kq0yYfTmJTEizbBAAJHOSSPbtcZWVd/valoBCZiA1zZK
+   /IkMact0i16tvrs9MyIE3g7bn4JZaOJRv8dpzeMF93piPGiBiUAgGngde
+   jdBZX4g72GempMf4eXU+7sluwdyKWZiFv2vp65z4IuK6ml+5JN3SKMCPt
+   nLoKMrOtZmA3ArzrCILggCY3YqrOvqcD01I0lIZdhAsmjiJkUQZeBw+q0
+   w==;
+X-CSE-ConnectionGUID: qEnPp2rFS6CQoadc9l0FTw==
+X-CSE-MsgGUID: cmjmvE3mT/uekzsdgrgaPg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11392"; a="70438999"
+X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
+   d="scan'208";a="70438999"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 02:31:47 -0700
+X-CSE-ConnectionGUID: M9uV9PaHQN63ifnLL6Nc3w==
+X-CSE-MsgGUID: 68G1vPifR0mBTlxQ3yujxQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
+   d="scan'208";a="126757643"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.152])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 02:31:44 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Guenter Roeck <linux@roeck-us.net>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Igor Mammedov <imammedo@redhat.com>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	=?UTF-8?q?Micha=C5=82=20Winiarski?= <michal.winiarski@intel.com>
+Subject: [PATCH 1/1] PCI: Restore assigned resources fully after release
+Date: Thu,  3 Apr 2025 12:31:37 +0300
+Message-Id: <20250403093137.1481-1-ilpo.jarvinen@linux.intel.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] arm64: pageattr: Explicitly bail out when changing
- permissions for vmalloc_huge mappings
-To: Dev Jain <dev.jain@arm.com>, catalin.marinas@arm.com, will@kernel.org
-Cc: gshan@redhat.com, rppt@kernel.org, steven.price@arm.com,
- suzuki.poulose@arm.com, tianyaxiong@kylinos.cn, ardb@kernel.org,
- david@redhat.com, ryan.roberts@arm.com, urezki@gmail.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20250403052844.61818-1-dev.jain@arm.com>
-Content-Language: en-US
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <20250403052844.61818-1-dev.jain@arm.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+PCI resource fitting code in __assign_resources_sorted() runs in
+multiple steps. A resource that was successfully assigned may have to
+be released before the next step attempts assignment again. The
+assign+release cycle is destructive to a start-aligned struct resource
+(bridge window or IOV resource) because the start field is overwritten
+with the real address when the resource got assigned.
 
+Properly restore the resource after releasing it. The start, end, and
+flags fields must be stored into the related struct pci_dev_resource in
+order to be able to restore the resource to its original state.
 
-On 4/3/25 10:58, Dev Jain wrote:
-> arm64 uses apply_to_page_range to change permissions for kernel vmalloc mappings,
-> which does not support changing permissions for block mappings. This function
-> will change permissions until it encounters a block mapping, and will bail
-> out with a warning. Since there are no reports of this triggering, it
-> implies that there are currently no cases of code doing a vmalloc_huge()
-> followed by partial permission change. But this is a footgun waiting to
-> go off, so let's detect it early and avoid the possibility of permissions
-> in an intermediate state. So,  explicitly disallow changing permissions
-> for VM_ALLOW_HUGE_VMAP mappings.
-> 
-> Reviewed-by: Ryan Roberts <ryan.roberts@arm.com>
-> Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> Signed-off-by: Dev Jain <dev.jain@arm.com>
-> ---
-> v1->v2:
->  - Improve changelog, keep mention of page mappings in comment
-> 
->  arch/arm64/mm/pageattr.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/arm64/mm/pageattr.c b/arch/arm64/mm/pageattr.c
-> index 39fd1f7ff02a..04d4a8f676db 100644
-> --- a/arch/arm64/mm/pageattr.c
-> +++ b/arch/arm64/mm/pageattr.c
-> @@ -96,8 +96,8 @@ static int change_memory_common(unsigned long addr, int numpages,
->  	 * we are operating on does not result in such splitting.
->  	 *
->  	 * Let's restrict ourselves to mappings created by vmalloc (or vmap).
-> -	 * Those are guaranteed to consist entirely of page mappings, and
-> -	 * splitting is never needed.
-> +	 * Disallow VM_ALLOW_HUGE_VMAP mappings to guarantee that only page
-> +	 * mappings are updated and splitting is never needed.
->  	 *
->  	 * So check whether the [addr, addr + size) interval is entirely
->  	 * covered by precisely one VM area that has the VM_ALLOC flag set.
-> @@ -105,7 +105,7 @@ static int change_memory_common(unsigned long addr, int numpages,
->  	area = find_vm_area((void *)addr);
->  	if (!area ||
->  	    end > (unsigned long)kasan_reset_tag(area->addr) + area->size ||
-> -	    !(area->flags & VM_ALLOC))
-> +	    ((area->flags & (VM_ALLOC | VM_ALLOW_HUGE_VMAP)) != VM_ALLOC))
->  		return -EINVAL;
->  
->  	if (!numpages)
+Reported-by: Guenter Roeck <linux@roeck-us.net>
+Fixes: 96336ec70264 ("PCI: Perform reset_resource() and build fail list in sync")
+Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+---
+ drivers/pci/setup-bus.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-LGTM
+diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+index 54d6f4fa3ce1..e994c546422c 100644
+--- a/drivers/pci/setup-bus.c
++++ b/drivers/pci/setup-bus.c
+@@ -187,6 +187,9 @@ static void pdev_sort_resources(struct pci_dev *dev, struct list_head *head)
+ 			panic("%s: kzalloc() failed!\n", __func__);
+ 		tmp->res = r;
+ 		tmp->dev = dev;
++		tmp->start = r->start;
++		tmp->end = r->end;
++		tmp->flags = r->flags;
+ 
+ 		/* Fallback is smallest one or list is empty */
+ 		n = head;
+@@ -545,6 +548,7 @@ static void __assign_resources_sorted(struct list_head *head,
+ 		pci_dbg(dev, "%s %pR: releasing\n", res_name, res);
+ 
+ 		release_resource(res);
++		restore_dev_resource(dev_res);
+ 	}
+ 	/* Restore start/end/flags from saved list */
+ 	list_for_each_entry(save_res, &save_head, list)
 
-Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
+base-commit: 7d06015d936c861160803e020f68f413b5c3cd9d
+-- 
+2.39.5
+
