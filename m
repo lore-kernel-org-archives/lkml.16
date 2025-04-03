@@ -1,118 +1,213 @@
-Received: from out-170.mta1.migadu.com (out-170.mta1.migadu.com [95.215.58.170])
+Received: from webmail.webked.de (webmail.webked.de [159.69.203.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BB191FCFF2
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 20:34:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 863501FECA0;
+	Thu,  3 Apr 2025 20:35:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.203.94
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743712487; cv=none; b=ac3KxXVi86m3Aw7OSBWGXaE/2PY9bfK9rMLEeb//e7C5vZERBiXZClLqW0yUJXs4AjOggSvc5Ab6J2xHLJ0ySTInIBFF00GHh9wgHhpaRQKaZsNT3ggXFMXwvX26RkkCPBM01KKUiqgUDYDtS5Ap6Dz2Ya2f+Td3jW/ikqL0Dbo=
+	t=1743712516; cv=none; b=TYeb3R9RK9t+ZmOnVfY5s5MUyGz3bILDC6Sjlh/WPBVLR7NXTpHSaeWOWSA/nvgo7wJDuDsrB83QDccQxT3NOzAGzoq5MyanFJL+h+Q3JwXyB8Ybuxszo4Ijlot9KeJwWy7PpLY9+xnjiXU9hrEbVe1lPJI4qM7vtY7B5xYARQY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743712487; c=relaxed/simple;
-	bh=acATyRUbnpdnRgGAcaAXJ3uINgKjESC2cn6Yqi7GuBg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=VHOR7qiBf/+2TnGnH7Nf4ZOc+yUymPerPdbi8Y3m4728NGS8SOdmwCpi8txrpkvFyeI8bD6AK47c91Qgosv4rW0ZUUDLMZAE85gmCJ8bopqm3LAe62cPjPZMFNnMGLMZaG4CI8xE7wGmx/ghKDiwQRV09vgmVXHa7pB8uLSbPOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=iencinas.com; spf=pass smtp.mailfrom=iencinas.com; dkim=pass (2048-bit key) header.d=iencinas.com header.i=@iencinas.com header.b=MIwNf3ea; arc=none smtp.client-ip=95.215.58.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=iencinas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iencinas.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=iencinas.com header.i=@iencinas.com header.b="MIwNf3ea"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=iencinas.com;
-	s=key1; t=1743712482;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uD5iR3j3WFLeggCmYAp0dLJAKr7cyaVudV3J9Ga4myY=;
-	b=MIwNf3eaBPBrPG9omxufAUV6tnp5q3ry1N627DcdtUnMzfiH67FN+ZUm12lE2dQVJVcjiB
-	bVZjU2tDudJbqxqc0ig1fsk1ti9GkNNbfEUmnqClXrVzOaOJz4JImFPCTJJ5WkBl968Bf1
-	8QZScsUZwv/RnH+AELw1It1J4QmMxg5SBRqAEnw2YJATgdsSie8QNRXnB2SAxGKGeCdgZU
-	MamUC6LihnbhVDyj1xCzw3rbsqExVOW1/u4kyMKzLyvQx08MVZhaTOnqONnt/kiQbAyrYq
-	povq+FHVJouPcG32144mW5tOJKBiWbMzBL7Ex204tZIR77KFOlAYzLRjRTC46w==
-From: Ignacio Encinas <ignacio@iencinas.com>
-Date: Thu, 03 Apr 2025 22:34:18 +0200
-Subject: [PATCH v3 2/2] riscv: introduce asm/swab.h
+	s=arc-20240116; t=1743712516; c=relaxed/simple;
+	bh=6vNUGhiNPVvK0fjXn2B0OinFpjaznSGI+S3gqkfojt4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=uv4LhrrqbQVLIOyWlW5m0PJl5XMiuXtth2jrAGy+JbW+C24ZLQsqin0g1IlIANh14+uXu6l7ZQJ0iA/aI3+z/omInEFo3cLf+kqhNBiwPTLPZHcP/MROCNGa6632MV0lEUH6HzB3I8uzQppaVFBKenqG4Mf9qN3FIQHX6SmRdzk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=webked.de; spf=pass smtp.mailfrom=webked.de; arc=none smtp.client-ip=159.69.203.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=webked.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=webked.de
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id C45226200E;
+	Thu,  3 Apr 2025 22:35:05 +0200 (CEST)
+Message-ID: <f20968b4fd5c5f4e124021c86eba17d89b93afff.camel@webked.de>
+Subject: Re: [REGRESSION] Massive virtio-net throughput drop in guest VM
+ with Linux 6.8+
+From: Markus Fohrer <markus.fohrer@webked.de>
+To: Willem de Bruijn <willemdebruijn.kernel@gmail.com>, "Michael S. Tsirkin"
+	 <mst@redhat.com>
+Cc: virtualization@lists.linux-foundation.org, jasowang@redhat.com, 
+	davem@davemloft.net, edumazet@google.com, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Date: Thu, 03 Apr 2025 22:35:05 +0200
+In-Reply-To: <67ee9ab0a1665_136b7c29412@willemb.c.googlers.com.notmuch>
+References: <1d388413ab9cfd765cd2c5e05b5e69cdb2ec5a10.camel@webked.de>
+	 <20250403090001-mutt-send-email-mst@kernel.org>
+	 <f8909f5bbc2532ea234cdaa8dbdb46a48249803f.camel@webked.de>
+	 <20250403100206-mutt-send-email-mst@kernel.org>
+	 <67ee9ab0a1665_136b7c29412@willemb.c.googlers.com.notmuch>
+Organization: WEBKED IT Markus Fohrer
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250403-riscv-swab-v3-2-3bf705d80e33@iencinas.com>
-References: <20250403-riscv-swab-v3-0-3bf705d80e33@iencinas.com>
-In-Reply-To: <20250403-riscv-swab-v3-0-3bf705d80e33@iencinas.com>
-To: Paul Walmsley <paul.walmsley@sifive.com>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Alexandre Ghiti <alex@ghiti.fr>, 
- Arnd Bergmann <arnd@arndb.de>
-Cc: Eric Biggers <ebiggers@kernel.org>, linux-riscv@lists.infradead.org, 
- linux-kernel@vger.kernel.org, linux-kernel-mentees@lists.linux.dev, 
- skhan@linuxfoundation.org, Zhihang Shao <zhihang.shao.iscas@gmail.com>, 
- =?utf-8?q?Bj=C3=B6rn_T=C3=B6pel?= <bjorn@kernel.org>, 
- linux-arch@vger.kernel.org, Ignacio Encinas <ignacio@iencinas.com>
-X-Migadu-Flow: FLOW_OUT
+X-Last-TLS-Session-Version: TLSv1.3
 
-Implement endianness swap macros for RISC-V.
+Am Donnerstag, dem 03.04.2025 um 10:26 -0400 schrieb Willem de Bruijn:
+> Michael S. Tsirkin wrote:
+> > On Thu, Apr 03, 2025 at 03:51:01PM +0200, Markus Fohrer wrote:
+> > > Am Donnerstag, dem 03.04.2025 um 09:04 -0400 schrieb Michael S.
+> > > Tsirkin:
+> > > > On Wed, Apr 02, 2025 at 11:12:07PM +0200, Markus Fohrer wrote:
+> > > > > Hi,
+> > > > >=20
+> > > > > I'm observing a significant performance regression in KVM
+> > > > > guest VMs
+> > > > > using virtio-net with recent Linux kernels (6.8.1+ and 6.14).
+> > > > >=20
+> > > > > When running on a host system equipped with a Broadcom
+> > > > > NetXtreme-E
+> > > > > (bnxt_en) NIC and AMD EPYC CPUs, the network throughput in
+> > > > > the
+> > > > > guest drops to 100=E2=80=93200 KB/s. The same guest configuration
+> > > > > performs
+> > > > > normally (~100 MB/s) when using kernel 6.8.0 or when the VM
+> > > > > is
+> > > > > moved to a host with Intel NICs.
+> > > > >=20
+> > > > > Test environment:
+> > > > > - Host: QEMU/KVM, Linux 6.8.1 and 6.14.0
+> > > > > - Guest: Linux with virtio-net interface
+> > > > > - NIC: Broadcom BCM57416 (bnxt_en driver, no issues at host
+> > > > > level)
+> > > > > - CPU: AMD EPYC
+> > > > > - Storage: virtio-scsi
+> > > > > - VM network: virtio-net, virtio-scsi (no CPU or IO
+> > > > > bottlenecks)
+> > > > > - Traffic test: iperf3, scp, wget consistently slow in guest
+> > > > >=20
+> > > > > This issue is not present:
+> > > > > - On 6.8.0=20
+> > > > > - On hosts with Intel NICs (same VM config)
+> > > > >=20
+> > > > > I have bisected the issue to the following upstream commit:
+> > > > >=20
+> > > > > =C2=A0 49d14b54a527 ("virtio-net: Suppress tx timeout warning for
+> > > > > small
+> > > > > tx")
+> > > > > =C2=A0 https://git.kernel.org/linus/49d14b54a527
+> > > >=20
+> > > > Thanks a lot for the info!
+> > > >=20
+> > > >=20
+> > > > both the link and commit point at:
+> > > >=20
+> > > > commit 49d14b54a527289d09a9480f214b8c586322310a
+> > > > Author: Eric Dumazet <edumazet@google.com>
+> > > > Date:=C2=A0=C2=A0 Thu Sep 26 16:58:36 2024 +0000
+> > > >=20
+> > > > =C2=A0=C2=A0=C2=A0 net: test for not too small csum_start in
+> > > > virtio_net_hdr_to_skb()
+> > > > =C2=A0=C2=A0=C2=A0=20
+> > > >=20
+> > > > is this what you mean?
+> > > >=20
+> > > > I don't know which commit is "virtio-net: Suppress tx timeout
+> > > > warning
+> > > > for small tx"
+> > > >=20
+> > > >=20
+> > > >=20
+> > > > > Reverting this commit restores normal network performance in
+> > > > > affected guest VMs.
+> > > > >=20
+> > > > > I=E2=80=99m happy to provide more data or assist with testing a
+> > > > > potential
+> > > > > fix.
+> > > > >=20
+> > > > > Thanks,
+> > > > > Markus Fohrer
+> > > >=20
+> > > >=20
+> > > > Thanks! First I think it's worth checking what is the setup,
+> > > > e.g.
+> > > > which offloads are enabled.
+> > > > Besides that, I'd start by seeing what's doing on. Assuming I'm
+> > > > right
+> > > > about
+> > > > Eric's patch:
+> > > >=20
+> > > > diff --git a/include/linux/virtio_net.h
+> > > > b/include/linux/virtio_net.h
+> > > > index 276ca543ef44d8..02a9f4dc594d02 100644
+> > > > --- a/include/linux/virtio_net.h
+> > > > +++ b/include/linux/virtio_net.h
+> > > > @@ -103,8 +103,10 @@ static inline int
+> > > > virtio_net_hdr_to_skb(struct
+> > > > sk_buff *skb,
+> > > > =C2=A0
+> > > > =C2=A0		if (!skb_partial_csum_set(skb, start, off))
+> > > > =C2=A0			return -EINVAL;
+> > > > +		if (skb_transport_offset(skb) < nh_min_len)
+> > > > +			return -EINVAL;
+> > > > =C2=A0
+> > > > -		nh_min_len =3D max_t(u32, nh_min_len,
+> > > > skb_transport_offset(skb));
+> > > > +		nh_min_len =3D skb_transport_offset(skb);
+> > > > =C2=A0		p_off =3D nh_min_len + thlen;
+> > > > =C2=A0		if (!pskb_may_pull(skb, p_off))
+> > > > =C2=A0			return -EINVAL;
+> > > >=20
+> > > >=20
+> > > > sticking a printk before return -EINVAL to show the offset and
+> > > > nh_min_len
+> > > > would be a good 1st step. Thanks!
+> > > >=20
+> > >=20
+> > >=20
+> > > Hi Eric,
+> > >=20
+> > > thanks a lot for the quick response =E2=80=94 and yes, you're absolut=
+ely
+> > > right.
+> > >=20
+> > > Apologies for the confusion: I mistakenly wrote the wrong commit
+> > > description in my initial mail.
+> > >=20
+> > > The correct commit is indeed:
+> > >=20
+> > > commit 49d14b54a527289d09a9480f214b8c586322310a
+> > > Author: Eric Dumazet <edumazet@google.com>
+> > > Date:=C2=A0=C2=A0 Thu Sep 26 16:58:36 2024 +0000
+> > >=20
+> > > =C2=A0=C2=A0=C2=A0 net: test for not too small csum_start in
+> > > virtio_net_hdr_to_skb()
+> > >=20
+> > > This is the one I bisected and which causes the performance
+> > > regression
+> > > in my environment.
+>=20
+> This commit is introduced in v6.12.
+>=20
+> You say 6.8 is good, but 6.8.1 is bad. This commit is not in 6.8.1.
+> Nor any virtio-net related change:
+>=20
+> $ git log --oneline linux/v6.8..linux/v6.8.1 --
+> include/linux/virtio_net.h drivers/net/virtio_net.c | wc -l
+> 0
+>=20
+> Is it perhaps a 6.8.1 derived distro kernel?
+>=20
+> That patch detects silly packets created by a fuzzer. It should not
+> affect sane traffic. Not saying your analysis is wrong. We just need
+> more data to understand the regression better.
 
-Use the rev8 instruction when Zbb is available. Otherwise, rely on the
-default mask-and-shift implementation.
 
-Signed-off-by: Ignacio Encinas <ignacio@iencinas.com>
----
- arch/riscv/include/asm/swab.h | 43 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
+To clarify: my earlier tests were based on Ubuntu-patched kernels
+(e.g., 6.8.0-31 to 6.8.0-53).
 
-diff --git a/arch/riscv/include/asm/swab.h b/arch/riscv/include/asm/swab.h
-new file mode 100644
-index 000000000000..7352e8405a99
---- /dev/null
-+++ b/arch/riscv/include/asm/swab.h
-@@ -0,0 +1,43 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+#ifndef _ASM_RISCV_SWAB_H
-+#define _ASM_RISCV_SWAB_H
-+
-+#include <linux/types.h>
-+#include <linux/compiler.h>
-+#include <asm/cpufeature-macros.h>
-+#include <asm/hwcap.h>
-+#include <asm-generic/swab.h>
-+
-+#if defined(CONFIG_RISCV_ISA_ZBB) && !defined(NO_ALTERNATIVE)
-+
-+#define ARCH_SWAB(size) \
-+static __always_inline unsigned long __arch_swab##size(__u##size value) \
-+{									\
-+	unsigned long x = value;					\
-+									\
-+	if (riscv_has_extension_likely(RISCV_ISA_EXT_ZBB)) {            \
-+		asm volatile (".option push\n"				\
-+			      ".option arch,+zbb\n"			\
-+			      "rev8 %0, %1\n"				\
-+			      ".option pop\n"				\
-+			      : "=r" (x) : "r" (x));			\
-+		return x >> (BITS_PER_LONG - size);			\
-+	}                                                               \
-+	return  ___constant_swab##size(value);				\
-+}
-+
-+#ifdef CONFIG_64BIT
-+ARCH_SWAB(64)
-+#define __arch_swab64 __arch_swab64
-+#endif
-+
-+ARCH_SWAB(32)
-+#define __arch_swab32 __arch_swab32
-+
-+ARCH_SWAB(16)
-+#define __arch_swab16 __arch_swab16
-+
-+#undef ARCH_SWAB
-+
-+#endif /* defined(CONFIG_RISCV_ISA_ZBB) && !defined(NO_ALTERNATIVE) */
-+#endif /* _ASM_RISCV_SWAB_H */
+I've now repeated the tests using clean mainline kernels from
+kernel.org.
 
--- 
-2.49.0
+Download speed was measured using:
+  wget -O /dev/null http://speedtest.belwue.net/10G
+
+Results:
+- Kernel 6.11: ~85 MB/s
+- Kernel 6.12 and 6.14: < 200 KB/s
+
+This confirms that the regression was introduced between v6.11 and
+v6.12 in upstream.
+
 
