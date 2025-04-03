@@ -1,292 +1,153 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D95C72505DA
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 14:35:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96DF62E3386;
+	Thu,  3 Apr 2025 14:37:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743690943; cv=none; b=sipI/W00DuLq2xWJ6G8KizQ7270QD/xNzuu3BS7hOmVRtdZp06BFijZdELd1Bk4URBHoKZaGINJpizddWl9Kl+2tK1HSlA8d6M8IQrOHj1QRBtuqTm/4T/jD5jWD1uvKvYifGt03eVWqKUF+M4APorCigsJ8Gu3tI4AnoHJYlTg=
+	t=1743691064; cv=none; b=QzK+1VLRUgiqJ0in7Yh1lab9U1WOztOqzQD4N2Yp1bofkurZMi6d3zRVfaCwf/NY2p5QCv6Hcp/hZNaA/+wCNJiqWgIj6ASJVVZEio1PE7RNIfUqKpUUEkYutPrAQQFyZPua2KfcgLryCjcBnPZsPT/62paOstCUMalX0Lr+kzY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743690943; c=relaxed/simple;
-	bh=1m2wGs6FTluWBIvWlKVwLPxk4luQTmy7WAhmXP544B4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JWvmiHbra3eqYYx06iSM3mME+/zc5+JqFE+iz/3V03A4WT8qrtsaD8DfANV8rHjhSAd11tO2SOvOZGXyef6EQt6xAQOVejEb5y1PD+yN5x5W1QWBQc1W50rGSRNfMMx89wmHOzmTIzm8GxrkRdFTzOxAI3zJvNMLmB875WQzlxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=nBsb+/3A; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1743691064; c=relaxed/simple;
+	bh=5fX/888S1gFD/JlM4lX3pgKNr7kh3kTzxsJIlceexLo=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=bgJD9SkZ4pU+ESP0BZrgjqA5CZ+2G1aifqG0TPo1AOn/5XTv8dGfa2sXVGqOnNbXGjfDczWcJOkONFOrZtYSriWHgAYAnDF7v7hLlL0U3XqLvpgpdwmjOAUFFvk4cGNccW8Kbw/Wxlo5YIiR0sS9rDgdhqB1kcSZ7xO0vqXBAgU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=V0RWSGDF; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qz8WtDZK; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="nBsb+/3A"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5339s0e4027455
-	for <linux-kernel@vger.kernel.org>; Thu, 3 Apr 2025 14:35:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=FSEa9SjkeYFg5a//J4P8CuYM
-	wRw2YqG0kU/I+1N7Dhc=; b=nBsb+/3AxIlWu+/64RWUL8B+g3pXC8PcHkk/GuHM
-	cccqYDfPaHRkS2KxsWbk+djIDsisgZouQI+k2E4uMoHeY8qtZMPBM2YcEAkjlHhR
-	I/viDr0kpEABjH0DHG5/Jq1bk4A6RAeuUtMB15byZN2iNpnz621Qy3ewJvXxbP3J
-	QuwsbMB1wm6CR3GUqKfMtGhjUs+QrRZfkC/zI4KCQREIg26d/QDk4yQHExXzaqxq
-	EGUztEqeNfa3ztXj/X/2X3LCYdsD1r8EZYuCeZY6DJ36k+cA+UzwlyR/WztM+Crn
-	6fibKvzTNoGdylGaMJFG+Z/vLpxpVL77NyRd/buX0XdWkg==
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45rxapvxcq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 14:35:40 +0000 (GMT)
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c5c77aff78so270325785a.0
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 07:35:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743690939; x=1744295739;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FSEa9SjkeYFg5a//J4P8CuYMwRw2YqG0kU/I+1N7Dhc=;
-        b=FfBqmleXqNKsA20ZhBmkZHNbw3gpvy9U5pT+BPbcdFunct2fU2wLo6m4c9k4TqlGzA
-         +w4Q4d/IkyyMa9s8yjR3lKZyTOKAqS1Mj+OVGQ0J4m3AUCV3iAn7riGlLwWF+87P/wmn
-         MQwqg5Av9Eh8lrcYcPL8rWnBcsE3kd7TT8OfWcZLt3oEdZ11hj2ZYZh0OWMsU2r1xyXz
-         W4suM0a9WpI10E7G1FQJ69SEL/0b+cqi05w+a1ASjPs5u8e2OR3FPRpUwx6fsc9sMYuK
-         J59bduH2DZ2ssCP9keTaai7QxF5KF49Ac7stYOEfbp6JnEQbbJMSwJ+jHqNYXvslv0On
-         nqlQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXP8vxvZ+FprMucKSdP8e3N4XBhgH4b+RcDpaDquaFQ/Ul8BlBUmgw58RAT/a6u6seW+6GUDHQ0R9FAx8k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzrGZWc3v2mHg/Lp05VY4n3ae8zevCRiQCyNchr2h2mKKiemiVy
-	OHpqCYO4EGyQmzguQiQbyRHeE+MyTJM02aFtMeCDyQPNz2GU4894ietkFXYHa3VeNm3lYSp1SOw
-	BOTlcZAvfZTy4mQjrkG3JYqcKw4/J2e9saassC4fFZ3cPREd4+Yb3HzGlRwLWpUc=
-X-Gm-Gg: ASbGnctBtNPNlhiBz0J1M8YpJBnd/muvF3teOOu+4Efl6hZNr2SxypbqkRsKQHpDdB1
-	cV3YjFSE+pXH+RDmei9DBFM7IodZi+GnkKul6wzzFPtrr2WWm7YWSWTfOzKGiY9RLFHZlAGoao0
-	bv/prvTqTXKx5siAGiPnnv0sy8IcnmprkkIV+L5MtfgS1KUf75mgCVr8NjBrWWNmqP6cfjfR0iQ
-	utPNGAXAweDzO5nbQvK18NUabGVw/Mq9cjkl3iiJVYdN7s//MyjLrJXmYcuFXEOt5abyx+zphT1
-	uRi/EOyrA6ExnsAByDYK10RYgfr5C0BENDffaIAP9m+dOMAJqxVQMs9fUbmLQY4uW8hQ3CpXYa8
-	rXVQ=
-X-Received: by 2002:a05:620a:468b:b0:7c5:5f38:ba59 with SMTP id af79cd13be357-7c76df517e8mr348234485a.3.1743690939489;
-        Thu, 03 Apr 2025 07:35:39 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGc/cEfWzx2Wfy64eS8G1A7dG8YoCCPzhDGIItveQ5Hmu8uSfR/I3Ew3NmsqMJkdBvpIZR0lw==
-X-Received: by 2002:a05:620a:468b:b0:7c5:5f38:ba59 with SMTP id af79cd13be357-7c76df517e8mr348231385a.3.1743690939090;
-        Thu, 03 Apr 2025 07:35:39 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54c1e5c1a7csm174057e87.70.2025.04.03.07.35.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Apr 2025 07:35:38 -0700 (PDT)
-Date: Thu, 3 Apr 2025 17:35:36 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: srinivas.kandagatla@linaro.org
-Cc: broonie@kernel.org, lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
-        pierre-louis.bossart@linux.dev, linux-sound@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, Manikantan R <quic_manrav@quicinc.com>
-Subject: Re: [PATCH v3 2/2] ASoC: codecs:lpass-wsa-macro: Fix logic of
- enabling vi channels
-Message-ID: <pzyw3swuj4gqynxtp7kxbludyf6qq7fdfjaphw73tezzqocrda@i3f2knhbocme>
-References: <20250403124247.7313-1-srinivas.kandagatla@linaro.org>
- <20250403124247.7313-3-srinivas.kandagatla@linaro.org>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="V0RWSGDF";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qz8WtDZK"
+Date: Thu, 03 Apr 2025 14:37:36 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1743691060;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SJeXxVtTiBmq+wIFSuA1D6F7MGhoLP9p1B+aLoiNQTg=;
+	b=V0RWSGDFuq+NhW8/JkN0Ggk9hN0gNVOHuDCUcaRMjM8/hq62nhaWvHX0qUCTMVh1+eol+k
+	qR0jQgZXx0PK7s0/6lPzsnV7rnXU4Be3y7fkd0SidqXIz22vk/fsln3XPo6fpnQxGXznXO
+	2h/4HXTUox9hKYeR9XKuqDJGdo2BO67HXtDYGU+LYhgpThMV7C1gelYmoatEd1tL1Jw8tR
+	gPEgxZi2rwi5FB3i6gNOBTZSdWWcQrYYPafrcNi9bZHraNzxyBTW8x9WpTOxwkHN90brLq
+	mlrBf9W48zL1HzYTiYk1M9AMYODFuKqoA4TpqcfRrxVSDvlOorqLkudrbcjs1w==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1743691060;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SJeXxVtTiBmq+wIFSuA1D6F7MGhoLP9p1B+aLoiNQTg=;
+	b=qz8WtDZK26QudMnBE/PAl7cLkoW6EQPZkc73iCX6mms/pC/iGaObTZEbK6sFdMQzZqB22f
+	jDdWT6Zu4EoqzDBA==
+From: "tip-bot2 for Uros Bizjak" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject:
+ [tip: x86/mm] x86/idle: Use MONITOR and MWAIT mnemonics in <asm/mwait.h>
+Cc: kernel test robot <lkp@intel.com>, Uros Bizjak <ubizjak@gmail.com>,
+ Ingo Molnar <mingo@kernel.org>, "Borislav Petkov (AMD)" <bp@alien8.de>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250403125111.429805-1-ubizjak@gmail.com>
+References: <20250403125111.429805-1-ubizjak@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250403124247.7313-3-srinivas.kandagatla@linaro.org>
-X-Authority-Analysis: v=2.4 cv=Vbj3PEp9 c=1 sm=1 tr=0 ts=67ee9cbc cx=c_pps a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=KKAkSRfTAAAA:8 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=kyQVAf1Qy8rE2pkpK9oA:9 a=CjuIK1q_8ugA:10
- a=bTQJ7kPSJx9SKPbeHEYW:22 a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: IbQB5SazKojkdmgCsjIEDon-hynifv2r
-X-Proofpoint-GUID: IbQB5SazKojkdmgCsjIEDon-hynifv2r
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-03_06,2025-04-02_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
- suspectscore=0 clxscore=1015 mlxscore=0 phishscore=0 bulkscore=0
- priorityscore=1501 spamscore=0 lowpriorityscore=0 mlxlogscore=999
- impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504030068
+Message-ID: <174369105677.31282.6911743949151587283.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Thu, Apr 03, 2025 at 01:42:47PM +0100, srinivas.kandagatla@linaro.org wrote:
-> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> 
-> Existing code only configures one of WSA_MACRO_TX0 or WSA_MACRO_TX1
-> paths eventhough we enable both of them. Fix this bug by adding proper
-> checks and rearranging some of the common code to able to allow setting
-> both TX0 and TX1 paths
-> 
-> Without this patch only one channel gets enabled in VI path instead of 2
-> channels. End result would be 1 channel recording instead of 2.
+The following commit has been merged into the x86/mm branch of tip:
 
-Could you please rearrange the code to make the patch more obvious?
+Commit-ID:     fc1cd60042b3df1d162278461c7a87f0362502b8
+Gitweb:        https://git.kernel.org/tip/fc1cd60042b3df1d162278461c7a87f0362502b8
+Author:        Uros Bizjak <ubizjak@gmail.com>
+AuthorDate:    Thu, 03 Apr 2025 14:50:45 +02:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Thu, 03 Apr 2025 16:28:38 +02:00
 
-> 
-> Fixes: 2c4066e5d428 ("ASoC: codecs: lpass-wsa-macro: add dapm widgets and route")
-> Cc: stable@vger.kernel.org
-> Co-developed-by: Manikantan R <quic_manrav@quicinc.com>
-> Signed-off-by: Manikantan R <quic_manrav@quicinc.com>
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> ---
->  sound/soc/codecs/lpass-wsa-macro.c | 112 +++++++++++++++++------------
->  1 file changed, 68 insertions(+), 44 deletions(-)
-> 
-> diff --git a/sound/soc/codecs/lpass-wsa-macro.c b/sound/soc/codecs/lpass-wsa-macro.c
-> index ac119847bc22..c9e7f185f2bc 100644
-> --- a/sound/soc/codecs/lpass-wsa-macro.c
-> +++ b/sound/soc/codecs/lpass-wsa-macro.c
-> @@ -1469,46 +1469,11 @@ static int wsa_macro_mclk_event(struct snd_soc_dapm_widget *w,
->  	return 0;
->  }
->  
-> -static int wsa_macro_enable_vi_feedback(struct snd_soc_dapm_widget *w,
-> -					struct snd_kcontrol *kcontrol,
-> -					int event)
-> -{
-> -	struct snd_soc_component *component = snd_soc_dapm_to_component(w->dapm);
-> -	struct wsa_macro *wsa = snd_soc_component_get_drvdata(component);
-> -	u32 tx_reg0, tx_reg1;
-> -	u32 rate_val;
->  
-> -	switch (wsa->pcm_rate_vi) {
-> -	case 8000:
-> -		rate_val = CDC_WSA_TX_SPKR_PROT_PCM_RATE_8K;
-> -		break;
-> -	case 16000:
-> -		rate_val = CDC_WSA_TX_SPKR_PROT_PCM_RATE_16K;
-> -		break;
-> -	case 24000:
-> -		rate_val = CDC_WSA_TX_SPKR_PROT_PCM_RATE_24K;
-> -		break;
-> -	case 32000:
-> -		rate_val = CDC_WSA_TX_SPKR_PROT_PCM_RATE_32K;
-> -		break;
-> -	case 48000:
-> -		rate_val = CDC_WSA_TX_SPKR_PROT_PCM_RATE_48K;
-> -		break;
-> -	default:
-> -		rate_val = CDC_WSA_TX_SPKR_PROT_PCM_RATE_8K;
-> -		break;
-> -	}
+x86/idle: Use MONITOR and MWAIT mnemonics in <asm/mwait.h>
 
-This can go to the wsa_macro_enable_disable_vi_sense().
+Current minimum required version of binutils is 2.25,
+which supports MONITOR and MWAIT instruction mnemonics.
 
-> -
-> -	if (test_bit(WSA_MACRO_TX0, &wsa->active_ch_mask[WSA_MACRO_AIF_VI])) {
-> -		tx_reg0 = CDC_WSA_TX0_SPKR_PROT_PATH_CTL;
-> -		tx_reg1 = CDC_WSA_TX1_SPKR_PROT_PATH_CTL;
-> -	} else if (test_bit(WSA_MACRO_TX1, &wsa->active_ch_mask[WSA_MACRO_AIF_VI])) {
-> -		tx_reg0 = CDC_WSA_TX2_SPKR_PROT_PATH_CTL;
-> -		tx_reg1 = CDC_WSA_TX3_SPKR_PROT_PATH_CTL;
-> -	}
-> -
-> -	switch (event) {
-> -	case SND_SOC_DAPM_POST_PMU:
-> +static void wsa_macro_enable_disable_vi_sense(struct snd_soc_component *component, bool enable,
-> +						u32 tx_reg0, u32 tx_reg1, u32 val)
-> +{
-> +	if (enable) {
->  		/* Enable V&I sensing */
->  		snd_soc_component_update_bits(component, tx_reg0,
->  					      CDC_WSA_TX_SPKR_PROT_RESET_MASK,
-> @@ -1518,10 +1483,10 @@ static int wsa_macro_enable_vi_feedback(struct snd_soc_dapm_widget *w,
->  					      CDC_WSA_TX_SPKR_PROT_RESET);
->  		snd_soc_component_update_bits(component, tx_reg0,
->  					      CDC_WSA_TX_SPKR_PROT_PCM_RATE_MASK,
-> -					      rate_val);
-> +					      val);
+Replace the byte-wise specification of MONITOR and
+MWAIT with these proper mnemonics.
 
-No need for extra renames, they complicate reviewing.
+No functional change intended.
 
->  		snd_soc_component_update_bits(component, tx_reg1,
->  					      CDC_WSA_TX_SPKR_PROT_PCM_RATE_MASK,
-> -					      rate_val);
-> +					      val);
->  		snd_soc_component_update_bits(component, tx_reg0,
->  					      CDC_WSA_TX_SPKR_PROT_CLK_EN_MASK,
->  					      CDC_WSA_TX_SPKR_PROT_CLK_ENABLE);
-> @@ -1534,9 +1499,7 @@ static int wsa_macro_enable_vi_feedback(struct snd_soc_dapm_widget *w,
->  		snd_soc_component_update_bits(component, tx_reg1,
->  					      CDC_WSA_TX_SPKR_PROT_RESET_MASK,
->  					      CDC_WSA_TX_SPKR_PROT_NO_RESET);
-> -		break;
-> -	case SND_SOC_DAPM_POST_PMD:
-> -		/* Disable V&I sensing */
-> +	} else {
->  		snd_soc_component_update_bits(component, tx_reg0,
->  					      CDC_WSA_TX_SPKR_PROT_RESET_MASK,
->  					      CDC_WSA_TX_SPKR_PROT_RESET);
-> @@ -1549,6 +1512,67 @@ static int wsa_macro_enable_vi_feedback(struct snd_soc_dapm_widget *w,
->  		snd_soc_component_update_bits(component, tx_reg1,
->  					      CDC_WSA_TX_SPKR_PROT_CLK_EN_MASK,
->  					      CDC_WSA_TX_SPKR_PROT_CLK_DISABLE);
-> +	}
-> +}
-> +
-> +static void wsa_macro_enable_disable_vi_feedback(struct snd_soc_component *component,
-> +						 bool enable, u32 rate)
-> +{
-> +	struct wsa_macro *wsa = snd_soc_component_get_drvdata(component);
-> +	u32 tx_reg0, tx_reg1;
-> +
-> +	if (test_bit(WSA_MACRO_TX0, &wsa->active_ch_mask[WSA_MACRO_AIF_VI])) {
-> +		tx_reg0 = CDC_WSA_TX0_SPKR_PROT_PATH_CTL;
-> +		tx_reg1 = CDC_WSA_TX1_SPKR_PROT_PATH_CTL;
-> +		wsa_macro_enable_disable_vi_sense(component, enable, tx_reg0, tx_reg1, rate);
+Note: LLVM assembler is not able to assemble correct forms of MONITOR
+and MWAIT instructions with explicit operands and reports:
 
-As you are refactoring this piece of code, do you need tx_reg0 / tx_reg1
-variables? Can you inline them instead?
+  error: invalid operand for instruction
+          monitor %rax,%ecx,%edx
+                       ^~~~
+  # https://lore.kernel.org/oe-kbuild-all/202504030802.2lEVBSpN-lkp@intel.com/
 
-> +	}
-> +
-> +	if (test_bit(WSA_MACRO_TX1, &wsa->active_ch_mask[WSA_MACRO_AIF_VI])) {
-> +		tx_reg0 = CDC_WSA_TX2_SPKR_PROT_PATH_CTL;
-> +		tx_reg1 = CDC_WSA_TX3_SPKR_PROT_PATH_CTL;
-> +		wsa_macro_enable_disable_vi_sense(component, enable, tx_reg0, tx_reg1, rate);
-> +
-> +	}
-> +
+Use instruction mnemonics with implicit operands to
+work around this issue.
 
-Extra empty line.
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Acked-by: Borislav Petkov (AMD) <bp@alien8.de>
+Link: https://lore.kernel.org/r/20250403125111.429805-1-ubizjak@gmail.com
+---
+ arch/x86/include/asm/mwait.h | 21 ++++++++++++---------
+ 1 file changed, 12 insertions(+), 9 deletions(-)
 
-> +}
-> +
-> +static int wsa_macro_enable_vi_feedback(struct snd_soc_dapm_widget *w,
-> +					struct snd_kcontrol *kcontrol,
-> +					int event)
-> +{
-> +	struct snd_soc_component *component = snd_soc_dapm_to_component(w->dapm);
-> +	struct wsa_macro *wsa = snd_soc_component_get_drvdata(component);
-> +	u32 rate_val;
-> +
-> +	switch (wsa->pcm_rate_vi) {
-> +	case 8000:
-> +		rate_val = CDC_WSA_TX_SPKR_PROT_PCM_RATE_8K;
-> +		break;
-> +	case 16000:
-> +		rate_val = CDC_WSA_TX_SPKR_PROT_PCM_RATE_16K;
-> +		break;
-> +	case 24000:
-> +		rate_val = CDC_WSA_TX_SPKR_PROT_PCM_RATE_24K;
-> +		break;
-> +	case 32000:
-> +		rate_val = CDC_WSA_TX_SPKR_PROT_PCM_RATE_32K;
-> +		break;
-> +	case 48000:
-> +		rate_val = CDC_WSA_TX_SPKR_PROT_PCM_RATE_48K;
-> +		break;
-> +	default:
-> +		rate_val = CDC_WSA_TX_SPKR_PROT_PCM_RATE_8K;
-> +		break;
-> +	}
-> +
-> +	switch (event) {
-> +	case SND_SOC_DAPM_POST_PMU:
-> +		/* Enable V&I sensing */
-> +		wsa_macro_enable_disable_vi_feedback(component, true, rate_val);
-> +		break;
-> +	case SND_SOC_DAPM_POST_PMD:
-> +		/* Disable V&I sensing */
-> +		wsa_macro_enable_disable_vi_feedback(component, false, rate_val);
->  		break;
->  	}
->  
-> -- 
-> 2.39.5
-> 
-
--- 
-With best wishes
-Dmitry
+diff --git a/arch/x86/include/asm/mwait.h b/arch/x86/include/asm/mwait.h
+index 44d3bb2..dd2b129 100644
+--- a/arch/x86/include/asm/mwait.h
++++ b/arch/x86/include/asm/mwait.h
+@@ -27,9 +27,11 @@
+ 
+ static __always_inline void __monitor(const void *eax, u32 ecx, u32 edx)
+ {
+-	/* "monitor %eax, %ecx, %edx;" */
+-	asm volatile(".byte 0x0f, 0x01, 0xc8;"
+-		     :: "a" (eax), "c" (ecx), "d"(edx));
++	/*
++	 * Use the instruction mnemonic with implicit operands, as the LLVM
++	 * assembler fails to assemble the mnemonic with explicit operands:
++	 */
++	asm volatile("monitor" :: "a" (eax), "c" (ecx), "d" (edx));
+ }
+ 
+ static __always_inline void __monitorx(const void *eax, u32 ecx, u32 edx)
+@@ -43,9 +45,11 @@ static __always_inline void __mwait(u32 eax, u32 ecx)
+ {
+ 	mds_idle_clear_cpu_buffers();
+ 
+-	/* "mwait %eax, %ecx;" */
+-	asm volatile(".byte 0x0f, 0x01, 0xc9;"
+-		     :: "a" (eax), "c" (ecx));
++	/*
++	 * Use the instruction mnemonic with implicit operands, as the LLVM
++	 * assembler fails to assemble the mnemonic with explicit operands:
++	 */
++	asm volatile("mwait" :: "a" (eax), "c" (ecx));
+ }
+ 
+ /*
+@@ -95,9 +99,8 @@ static __always_inline void __mwaitx(u32 eax, u32 ebx, u32 ecx)
+ static __always_inline void __sti_mwait(u32 eax, u32 ecx)
+ {
+ 	mds_idle_clear_cpu_buffers();
+-	/* "mwait %eax, %ecx;" */
+-	asm volatile("sti; .byte 0x0f, 0x01, 0xc9;"
+-		     :: "a" (eax), "c" (ecx));
++
++	asm volatile("sti; mwait" :: "a" (eax), "c" (ecx));
+ }
+ 
+ /*
