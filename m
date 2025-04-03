@@ -1,64 +1,48 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B86C2E3385
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 09:48:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2E73291E;
+	Thu,  3 Apr 2025 09:49:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743673736; cv=none; b=Scwrzz306o79FLB4/6Gi9M8/sYvskZUmc0d4d8nuItZO+cjWWFpyDNm7TFuKZPqL4Q3nlfPazkwr7goPBM3siaSwp7tF2QdCH6PTyErGZ1c45KJlElZovbTNEuCByAl88ODcyNxvxRL7Hvmdaz03i1mVmRdSJeQ0Ll6YTQdECVE=
+	t=1743673762; cv=none; b=UFbAAgqumMNmLb8fOkM8SN1oMOwBWpPHUT3GAHQR4bOzRwoD09yHIwb7+CULx/XM+XeYVto61aiAkpnbQiZkb4Fq59DkPzRiYKW8aAvQhKjR7gQUHyTrAC0vX6LXcxpE6XxrT7dCXPWiOjnoyuwk8BokMrfWFEDKF5ZlaCnMdK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743673736; c=relaxed/simple;
-	bh=D1u3Dw16nTQapd7dwi6wT8AkSNR7lRJ/GJGmaBis954=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=S5xTUNtYGRyBdNIk92j9Ma+3VfufamETaKmKJc1sCAFS27gA2gw8S+8lCMBOYCembaf+h4yIoAsKQ1aH5FgN4MpzFV+BRudi4rd60BRJnyGvCEz7TW3mG0bn6ok+5I9HH+EILPFPgMQ+yu86w9VYw0pTzvkp0h+e97Xli6VT0tg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=enYYufhc; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1743673762; c=relaxed/simple;
+	bh=9alqNsiZeBD5aX1yAF7RkW94VKhRRdL7yj3CDBqapp4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=I0PRWnC1P3QkylQRdN25SGGw3G34gR5EXTLUFP1FBgtUITU+08z0xhkBFwAj0AI3EBCk0Z61U1+zV6+E11i40Kqn1rGblBL1jlE0NkwWMe5Q+dQ3FQtWGrPJqrVD6CYp1UdZ6U/e7VA/MIjwCTpcmYR6sI1cr60NjRPFfchp3b4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=hu7/tlJ1; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="enYYufhc"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3912d2c89ecso623362f8f.2
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 02:48:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743673732; x=1744278532; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=/Psp9hh/unXclzKLtQPwrGIUeNhodK6mFG+ltXehZxM=;
-        b=enYYufhcB1BwSLrAHsU2mQ+Zs4y9fg4X7nTBIrGQT23ESPAL6By3gyYgZJFSnywr17
-         vS09HAEJGoSnUCgSUXPUMunNdFnbzUMHTSbE2d4wDm+YuGtZz4oiyw4ZK8YC46lTxF0M
-         wo13SGfUIApFDVPhU2+4+f0hEaPBSLQDkoAlWsLNXABYgEjQj0TyxaHbLeH1HgB2r0Zp
-         txzehRIA4BllvHY3B6kYCMRNFp0hV7XYXOySKyC/xUt3Ueza0Yy8z8McYUwYn/FUq2hA
-         ZicpE6l2Te0uuW6axjBhvF6xPhcem8yYYI4CiWHcMH77UgG1bJBWu9Mx/0ebWHdfWv3f
-         TwmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743673732; x=1744278532;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/Psp9hh/unXclzKLtQPwrGIUeNhodK6mFG+ltXehZxM=;
-        b=BEC5uoJyKaygrejP83vfx9nEd3gJOjN/1esoeUlmLZV9cC22i3WgTX/X1SuR+ZjrAu
-         SSDEmLnCtDZJo10wJIv4k010dhW6v+Zf9UbqAXPmYr7KE/ymOPunZ/Ca5v/fG4lGn/wb
-         JxJtXsjoe8cUVdSRfmsFGZnPiwquKNOYOEnsp0cd0p/sVzd8WCxMxn8KWfRrQEwHo8Q2
-         uDd19vYT2UbPff7YlbqtJDjSopVX5Rnvf37FBtdJF2JtAkKUAbkJHV8Xy0OOFaEUrWlA
-         fRt1qZF5BU19eVvTOlOSTEBR3eWQsxlSxK1KGjJKsnGSurdVEI8e5A13O6iJHz7aBSB2
-         Y99g==
-X-Forwarded-Encrypted: i=1; AJvYcCVZ6A9JmshLGrqW+h6ybafpPixyPkJkuxCnhS8KyAaMnQVcH1YSv8EfFo1EyWHiE1x1qzIP8z5CGyo7xTA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy4lIgHULDVdBtjYS8r6hITJUSz7lgvuubCfANpYLcv2vY3OhVS
-	YDbxPYizIX5t+KvvgQsVYyMrt7PZ8qNPKeoGiCb0mAcoRj+iFA4SUtW5Nt2Z75M=
-X-Gm-Gg: ASbGncvukfcLQkXV9puZ7127UFJrJ6k9GdXBNgkva+pynNbmZcYQ45MML6Z9/+u9M/+
-	V0QBw63MdtEzkh2C3b/JNj1mKElQC3nthCz+Q1Q5sDudVPvL14ug8t80XUxZlEFFPCpuuC6pA4C
-	qldOlPxfGHNIgn8M7CIhk7M69jhcV8plIz37svqvToopnNc4lN1lxTzxTCw3SWBio7pUywNyanp
-	4d0mlcA7LXchVF3JFGm1WtmENopXc7XLXqm47rWI7mqjpSWnQO8Tb++F5bhnAN8HcyNDbBvm0Dq
-	vi0yjwGsfXX92yD0NIuMMaWXuAwzIa6RLVfWcNcQ96miv7rOi+vztg==
-X-Google-Smtp-Source: AGHT+IF+EMQjdfUWsTac/ovnxYjZzhDsNs9ysnYZoiG5v9tCt9Pm/x1O8yqeEMQfzytKgbQ5jjGzWQ==
-X-Received: by 2002:a05:6000:1aca:b0:391:1458:2233 with SMTP id ffacd0b85a97d-39c120cb5b1mr16167141f8f.11.1743673732414;
-        Thu, 03 Apr 2025 02:48:52 -0700 (PDT)
-Received: from [192.168.0.14] ([79.115.63.146])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c300968a1sm1340663f8f.11.2025.04.03.02.48.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Apr 2025 02:48:51 -0700 (PDT)
-Message-ID: <3078c954-7863-4d32-aa03-3dc75a129592@linaro.org>
-Date: Thu, 3 Apr 2025 10:48:48 +0100
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="hu7/tlJ1"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53382mSZ013721;
+	Thu, 3 Apr 2025 09:49:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	9alqNsiZeBD5aX1yAF7RkW94VKhRRdL7yj3CDBqapp4=; b=hu7/tlJ1FgGmjnra
+	dRJj2wxTN7VmtVV5U6W41hANLDlpAUGy9l/ZfYSKOx9LO13GYCHIYRRVTGp2ZhNG
+	7nLbsc2Xctt+1YaLRNulqlDuvImvaLpY8smJN0S0UYXlAS31i80+xDqn961P66Nx
+	jevkkPsfSp9F7tnTa7FaE68yFuvd92EN4EzeJGRvNHZvATu/P+JAfN5rMoU+cjoD
+	wCExtBFB0h9aCCVTydw33jp/283EeaWq8fRuG2JGLLLI2urqyJ3xbVUKHzbEJatT
+	LT/1IR1hWayTWlJS2lUgnBdORE1KXL/QMRkBD6hwddJjrG2cXFN+fQJcB0xrxRjp
+	0xj2zw==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45sc7x1mhw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 03 Apr 2025 09:49:06 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5339n5S2018163
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 3 Apr 2025 09:49:05 GMT
+Received: from [10.204.66.137] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 3 Apr 2025
+ 02:48:58 -0700
+Message-ID: <1d8b006e-83ba-4fd1-8ef1-1c5b016d33ef@quicinc.com>
+Date: Thu, 3 Apr 2025 15:18:55 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,90 +50,59 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 15/21] mtd: spinand: winbond: Rename DTR variants
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Richard Weinberger <richard@nod.at>, Vignesh Raghavendra
- <vigneshr@ti.com>, Santhosh Kumar K <s-k6@ti.com>,
- Pratyush Yadav <pratyush@kernel.org>, Michael Walle <michael@walle.cc>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
- Steam Lin <stlin2@winbond.com>, linux-mtd@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20250307-winbond-6-14-rc1-octal-v1-0-45c1e074ad74@bootlin.com>
- <20250307-winbond-6-14-rc1-octal-v1-15-45c1e074ad74@bootlin.com>
- <3ebd53ef-c7fd-4c8c-96f3-32e97b355b6b@linaro.org>
- <871puaqz6m.fsf@bootlin.com>
- <5463acad-ee29-45de-9d22-16eb7947002c@linaro.org>
- <87cydty6aq.fsf@bootlin.com>
+Subject: Re: [PATCH v2 07/10] arm64: dts: qcom: sa8775p-ride: add anx7625 DSI
+ to DP bridge nodes
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+        Krzysztof Kozlowski
+	<krzk@kernel.org>
+CC: <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <freedreno@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <robdclark@gmail.com>,
+        <dmitry.baryshkov@linaro.org>, <sean@poorly.run>,
+        <marijn.suijten@somainline.org>, <andersson@kernel.org>,
+        <robh@kernel.org>, <robh+dt@kernel.org>, <krzk+dt@kernel.org>,
+        <konradybcio@kernel.org>, <conor+dt@kernel.org>,
+        <andrzej.hajda@intel.com>, <neil.armstrong@linaro.org>,
+        <rfoss@kernel.org>, <Laurent.pinchart@ideasonboard.com>,
+        <jonas@kwiboo.se>, <jernej.skrabec@gmail.com>,
+        <quic_abhinavk@quicinc.com>, <quic_rajeevny@quicinc.com>,
+        <quic_vproddut@quicinc.com>, <quic_jesszhan@quicinc.com>
+References: <20250311122445.3597100-1-quic_amakhija@quicinc.com>
+ <20250311122445.3597100-8-quic_amakhija@quicinc.com>
+ <20250312-athletic-cockle-of-happiness-e88a3a@krzk-bin>
+ <d64bf3b3-7c4d-490e-8bd7-1ad889aa7472@quicinc.com>
+ <4aebd1f6-5098-4548-adae-843db8f45aa5@kernel.org>
+ <mki4de5adulxmmpi756bi5frnsa5yx2ng2vh22q7sz6ijsc5kw@oyvb5xuu547c>
 Content-Language: en-US
-From: Tudor Ambarus <tudor.ambarus@linaro.org>
-In-Reply-To: <87cydty6aq.fsf@bootlin.com>
-Content-Type: text/plain; charset=UTF-8
+From: Ayushi Makhija <quic_amakhija@quicinc.com>
+In-Reply-To: <mki4de5adulxmmpi756bi5frnsa5yx2ng2vh22q7sz6ijsc5kw@oyvb5xuu547c>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: uXx4jFA_GGwybtJHpfaRd-ij221f_MaC
+X-Authority-Analysis: v=2.4 cv=XamJzJ55 c=1 sm=1 tr=0 ts=67ee5992 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=wxuxDv2QtqyPaxEmgx4A:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: uXx4jFA_GGwybtJHpfaRd-ij221f_MaC
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-03_04,2025-04-02_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxlogscore=812
+ suspectscore=0 impostorscore=0 mlxscore=0 bulkscore=0 phishscore=0
+ lowpriorityscore=0 malwarescore=0 adultscore=0 priorityscore=1501
+ clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504030034
 
+> Ayushi: mediatek DT are a bad example here. Please use bridge@58 as node
+> name.
 
+Hi Dmitry,
+Thanks for the review.
 
-On 4/3/25 9:53 AM, Miquel Raynal wrote:
-> Hello Tudor,
-> 
+Previously, I was referencing the mediatek DT, I will be using bridge@58 as node name. Will upload the change in next patch.
 
-Hi, Miquel!
+Thanks,
+Ayushi
 
-> On 03/04/2025 at 07:19:15 +01, Tudor Ambarus <tudor.ambarus@linaro.org> wrote:
-> 
->> On 4/2/25 5:57 PM, Miquel Raynal wrote:
->>> Hello Tudor,
->>>
->>> First, thanks a lot for the time spent reviewing, much appreciated.
->>>
->>> On 02/04/2025 at 16:19:00 +01, Tudor Ambarus <tudor.ambarus@linaro.org> wrote:
->>>
->>>> Hi, Miquel,
->>>>
->>>> On 3/7/25 3:08 PM, Miquel Raynal wrote:
->>>>> -static SPINAND_OP_VARIANTS(read_cache_dtr_variants,
->>>>> +static SPINAND_OP_VARIANTS(read_cache_dual_quad_dtr_variants,
->>>>
->>>> why not read_cache_single_dual_quad_dtr_variants? I see single dtr too
->>>> in the supported ops.
->>>
->>> That's true, but single modes are literally always supported, so it is
->>
->> literally, meaning from experience I guess, or is it mandatory that
->> dual, quad or octal dtr to imply single dtr as well? That's fine either
->> way, just curious.
-> 
-> Yes, I do not know any chip not supporting single SDR mode, just because
-> we need a common ground to perform the discovery? The core would anyway
-> not be ready for such chips if they were about to come.
-
-okay
-
-> 
->> Does quad dtr imply dual dtr? And octal dtr imply quad dtr and dual dtr?
->> If so, then maybe name it by the maximum IO dtr supported.
-> 
-> Unfortunately not. Chips supporting quad may also support dual, but not
-> always. These chips flagged 'dual_quad' indeed support both. However in
-> this particular case, octal chips do not support dual or quad
-> opcodes. Hence my idea to name the variants about what is supported,
-> behind 1S opcodes.
-
-sounds good. It's common in SPI NOR too to have octal/single dtr but no
-dual or quad dtr.
-
-> 
->> btw, not strictly related to this patch, but for the overall
->> architecture picture, why do the SPI NAND flashes need to define their
->> supported ops? SPI NORs for example are capable of discovering their
->> supported ops by parsing at runtime some SFDP tables that describe most
->> of the flash parameters and setting. I see SFDP standard (jesd216g)
->> mentions SPI NAND devices as well. Have you or anybody else played with
->> SPI NANDs SFDP?
-> 
-> Not at all! SPI NANDs commonly advertise a parameter page which is way
-> more succinct, but no SFDP table.
-
-okay, the ONFI table I guess.
-
-Cheers,
-ta
