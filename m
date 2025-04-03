@@ -1,319 +1,286 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2065.outbound.protection.outlook.com [40.107.93.65])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2046.outbound.protection.outlook.com [40.107.94.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B09E253354;
-	Thu,  3 Apr 2025 18:34:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE0472528F9;
+	Thu,  3 Apr 2025 18:35:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.46
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743705260; cv=fail; b=brEa7fFRLpB3D1DtlJlQoQLOvQXwj3fzdy+wu52sRWVECKZ9ntXpQwI3cfyyOIYLtSqlPhVTPoANCeCjwIXbt0tl9xMujrpgRXKFA8AWNd7hqzZeUyHAlz42jyxI4bgFCUlWuK6Q7CO84NJlQLvczGp4lJEgk/hnOnFSOYEOdmU=
+	t=1743705353; cv=fail; b=RnGmLCDR6FrJx02EPSCN4wh1eY29JPig6cNN1jzvPB1Wmpccez1bSdbjMucucWEc7vnVEwZI/3zA+DHx7zPNp70EnbnDJvsGrrBxuowPwkI0ri/R3gtodSScpKlDvus+7wTlFsqpxpK8ECaMjZIxf3gBAC053/BXj+UYX6p1OHE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743705260; c=relaxed/simple;
-	bh=G3c0tHgzlvHJ/3FvYX3yOz67ej/rNF/u4xOVL6yUB64=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=T1B+SVZTSkmJfHbKFdZp8dAME3oJlH/QlRrtScTVnuECMfUkgUpbIXLucR7ObdAth7LrOv8whi9ysauhVLojwK9J3igEPrptig0IomIxLnBkUbO0lwUUpfl8BRxyU5sjzyMQLZnJmURkEu+FGFyj7ML6XQwPSu8UFDFmAikqhZ8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ZM9/aZMO; arc=fail smtp.client-ip=40.107.93.65
+	s=arc-20240116; t=1743705353; c=relaxed/simple;
+	bh=VkSPRfyh3whShKxnvrSJG/p+LPnBrwcBkHRnv0/1eRo=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=elHOyWOkawp97T7axxmfmKs10hhonVDmb3IkQizuFI9TQouqWOoapOcm7eJjJX63Y1Wo0v2y3xZn44P3lGGJJIYEVlVPzZXEAmR/y5biSuQEitYi99fOWTCppo/+SSe53qPlAwk6PVj9gtY2ihnDmG3xwfyGQqxRJSEChbWphfk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=05EG+6AX; arc=fail smtp.client-ip=40.107.94.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ZM9/aZMO"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="05EG+6AX"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=asmtTMVCxZWphFK+QE9VEoZCpPzN0lV0ICyW1xegSRM5lf4QdGekXPFSjZVbz3TeWDp0Rwk3NWoq5LWM1Fs34VFQT98gikdRE8e8s8mFJm23ZOzrWJKYeVOqIb+rnwNnWKPfXFkuR3zWv+SbJjeacHqY6l/Zf2CmjP0pPGiEm+wxzyhNJp0up7V7piDE4DF5v85oWT/AmqosyNuNeT3JbLHPHIROXOO0uYeZ/KjGzPDpTuRAMZ392M/NCdly1KZY5DdylRFklcNdzrkF7CPr18u/71b+aIAnjkGFAnmluDw9fM2pcADN4Fy/bW9Gw0zF+8YtWF05/kFuTjRhqNSbOg==
+ b=FacAVpK1b/BD0ci2AArup90QqeUTF5J+Wed4gSvcw0e8SVysd5F8OY+nzRwy8t2MwUgafs4i1sSlJzGV8iPATUeanQIa0GH7++czMeBvC4liOJwHxubaESbWVvm089CJZ6fBSUjqzQakkrQE1vSr+SNewvEtlbxK4mogV3GpZWgY31V2X1vqvlwEpumHyZznyo5Jxymu2xIO9geM45CUf28VSOS5eg7jv1a5L/Jxqo9DXepQE91olnV12CObd74I0+JaBNqxr/Q6CK10hFaJOEybpPUcTqWR8KgCEnN+70wPURx3UwmKyZoMG7DvZaxyfG08L5FkWRk4i63IEfSs+A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=fY+xdnr5O6gTc+IhEpoy46Ls+W70O7ZGJaHQ964CO1g=;
- b=cTJeOO2p4U/nI/3wZr5tApPmRxa5Oob+kold4QdCZjdbJJYOv68Be4iEcYcagx404U6lIhJXTRllHkih8IV740WXsPC/tbM/xvrIbWvfdfL51y4Mxidl1fMtQVwtxinoSuCKmdz7eBh7jJ2x7CRuuBw9ZPxbKHzNkuKCHs3sDu0+gCxRwmWYZouQ/GAIrpQj4sK4YT6yHIP0a4NxYKSjyBxECUkKddHXn/RA/tx2uSMEp4r6zpVQTzgvulQRjsvbt+6KQaW0mTF7AAa8TkdNKWRcFDHA/mdhrx6V5JXuQCKHe8rYVBR9UDAo/uAwLYCvutounX8khTVlNjHdIxK5QQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=stgolabs.net smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
+ bh=vLtg1WMpwwMozs54nCdZRfAW0MctDwEi1jvEceT/Efw=;
+ b=EbZE6ryipmVS2nIpEnCJ/IPCYf99WWxLQ+plFOomCzUq1PqBflQi5NbF07xvHx0EyQTnLBILXxMbmB4HYNM62z4npSRdSy9wThrMvHwKGYl2BoY6AkVRZjF25Baf/7RsKcIfQh7Oj3D9IPCIGZGjMXTvM2mWjMSVOC6QEhC59Y6EN8HFHGZbfqslY+FjexSTb9afEWf7p01lv+AAzZsUacwwDtpeNuLfu5LKvkIRI+OxhAp465YdyIvbTU+3nMTDDLgfPSJ5cCduocEP5LvM54zfMr702SCpuuWCL4HDyVNrLXgh65bwD9oOlbTKbNkdT9QcuMAK+M9gJ3Wxa+nJpQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fY+xdnr5O6gTc+IhEpoy46Ls+W70O7ZGJaHQ964CO1g=;
- b=ZM9/aZMOGPBHQ68ytRrOpS08LGy5tFzPiBHqm+Z+QQwexNuVv295PF7zeJiNVq+o9SEii+jHRljfc8b0iTCBBpbsIdQotpmmj6TY9qtAbAZjD9VB2dJSxWPmQxaCSx9UXvW4y04XQSFFA/RbWFzuQXegSpolgvbXlJPIYn7ZvyE=
-Received: from BYAPR07CA0006.namprd07.prod.outlook.com (2603:10b6:a02:bc::19)
- by DS0PR12MB8319.namprd12.prod.outlook.com (2603:10b6:8:f7::11) with
+ bh=vLtg1WMpwwMozs54nCdZRfAW0MctDwEi1jvEceT/Efw=;
+ b=05EG+6AXLE/ZXMEnCOkExIc7csIl9HeMdGs+9NV0SDg4DOHj6AzwPpYf6hCbEbCzkkBbOt4LyZDTYF2K2JlclXgp/03QT6tmp41Z2jkSE5gJvT4pEZnL7YycdMySrEwLbxiRkTnSd/aGwG0It1W+lDWSNTRE9wDSWeioHz4J5gk=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MW6PR12MB7087.namprd12.prod.outlook.com (2603:10b6:303:238::14)
+ by CY5PR12MB6033.namprd12.prod.outlook.com (2603:10b6:930:2f::19) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.49; Thu, 3 Apr
- 2025 18:34:12 +0000
-Received: from MWH0EPF000971E8.namprd02.prod.outlook.com
- (2603:10b6:a02:bc:cafe::6d) by BYAPR07CA0006.outlook.office365.com
- (2603:10b6:a02:bc::19) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8583.42 via Frontend Transport; Thu,
- 3 Apr 2025 18:34:09 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- MWH0EPF000971E8.mail.protection.outlook.com (10.167.243.68) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8606.22 via Frontend Transport; Thu, 3 Apr 2025 18:34:09 +0000
-Received: from ethanolx7ea3host.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 3 Apr
- 2025 13:34:07 -0500
-From: Terry Bowman <terry.bowman@amd.com>
-To: <dave@stgolabs.net>, <jonathan.cameron@huawei.com>,
-	<dave.jiang@intel.com>, <alison.schofield@intel.com>,
-	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
-	<dan.j.williams@intel.com>, <willy@infradead.org>, <jack@suse.cz>,
-	<rafael@kernel.org>, <len.brown@intel.com>, <pavel@ucw.cz>,
-	<ming.li@zohomail.com>, <nathan.fontenot@amd.com>,
-	<Smita.KoralahalliChannabasappa@amd.com>, <huang.ying.caritas@gmail.com>,
-	<yaoxt.fnst@fujitsu.com>, <peterz@infradead.org>,
-	<gregkh@linuxfoundation.org>, <quic_jjohnson@quicinc.com>,
-	<ilpo.jarvinen@linux.intel.com>, <bhelgaas@google.com>,
-	<andriy.shevchenko@linux.intel.com>, <mika.westerberg@linux.intel.com>,
-	<akpm@linux-foundation.org>, <gourry@gourry.net>,
-	<linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<nvdimm@lists.linux.dev>, <linux-fsdevel@vger.kernel.org>,
-	<linux-pm@vger.kernel.org>, <rrichter@amd.com>, <benjamin.cheatham@amd.com>,
-	<PradeepVineshReddy.Kodamati@amd.com>, <lizhijian@fujitsu.com>
-Subject: [PATCH v3 4/4] cxl/dax: Delay consumption of SOFT RESERVE resources
-Date: Thu, 3 Apr 2025 13:33:15 -0500
-Message-ID: <20250403183315.286710-5-terry.bowman@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250403183315.286710-1-terry.bowman@amd.com>
-References: <20250403183315.286710-1-terry.bowman@amd.com>
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.52; Thu, 3 Apr
+ 2025 18:35:50 +0000
+Received: from MW6PR12MB7087.namprd12.prod.outlook.com
+ ([fe80::41ae:52ce:aaf4:eda]) by MW6PR12MB7087.namprd12.prod.outlook.com
+ ([fe80::41ae:52ce:aaf4:eda%4]) with mapi id 15.20.8534.043; Thu, 3 Apr 2025
+ 18:35:49 +0000
+Message-ID: <d61bac99-a0d9-459a-994d-20a5cfa6dd52@amd.com>
+Date: Thu, 3 Apr 2025 13:35:46 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 00/10] Basic SEV-SNP Selftests
+To: linux-kernel@vger.kernel.org, x86@kernel.org, kvm@vger.kernel.org,
+ linux-kselftest@vger.kernel.org
+Cc: seanjc@google.com, pbonzini@redhat.com, thomas.lendacky@amd.com,
+ tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, shuah@kernel.org, pgonda@google.com,
+ ashish.kalra@amd.com, nikunj@amd.com, pankaj.gupta@amd.com,
+ michael.roth@amd.com, sraithal@amd.com
+References: <20250305230000.231025-1-prsampat@amd.com>
+Content-Language: en-US
+From: "Pratik R. Sampat" <prsampat@amd.com>
+In-Reply-To: <20250305230000.231025-1-prsampat@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SA1P222CA0149.NAMP222.PROD.OUTLOOK.COM
+ (2603:10b6:806:3c2::26) To MW6PR12MB7087.namprd12.prod.outlook.com
+ (2603:10b6:303:238::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MWH0EPF000971E8:EE_|DS0PR12MB8319:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4def0378-e14e-4595-d805-08dd72de1faa
+X-MS-TrafficTypeDiagnostic: MW6PR12MB7087:EE_|CY5PR12MB6033:EE_
+X-MS-Office365-Filtering-Correlation-Id: f8652e9d-8e16-46d8-806b-08dd72de5b31
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|1800799024|82310400026|376014|36860700013|921020;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?CNvYzSJyrB2zRTgzSZ1ueUXea751EXAF2o5Uqzgj1hEPxMhea3K6T1Mqw6iw?=
- =?us-ascii?Q?5D0J7rCMsWfz6F5Ay7bl5AN4Za9kg0gTIUzqNRLi1opxLyj42SbZ7Wya0MuU?=
- =?us-ascii?Q?Dhih591ud0aklSm9UEId6VtThpuwOYAFvl9YJNIylKy5htD+wXjFDj+4WS0Q?=
- =?us-ascii?Q?k5vFImNr8RJWWtxHK5QCDDGLwB47cZ57ZIZwjdNCiy1uA5dPf/RE16KBtbCN?=
- =?us-ascii?Q?eNS1iK3RL0cBnEe2Qlg1v3aWawBfgI9XwIsURGZaT+a4J3TRaPssPLmTbzKm?=
- =?us-ascii?Q?ueHqDEZGT1kPFrVkZaPBl8Na1rX2+2jYFnDwdqjn8Jy/vO9f5p4qVRS1M1BV?=
- =?us-ascii?Q?TRe2cQ/BK7J9Ncv3/nevtPO85vWEAMM5rmWq6XHk8qoW6dL9akYZVxNIIEnK?=
- =?us-ascii?Q?KoAH40Wy8Jfx+f3lyNk3RACapsKj/TyHG/YOeFKgwTwStcPoA8JsiHFAObcC?=
- =?us-ascii?Q?t1inMDfXrFwEo7PxAh+tq7KuUFBZ5nLYJQwM0sTVXy3FYpBqxDAAQvccrvR/?=
- =?us-ascii?Q?XkqLR6p5QcYu495zD5Lvl1jepa4YJprHmYaT6sCL772esky3hcq1yyLipg5C?=
- =?us-ascii?Q?pIGORS7/OCeka6oiXRN3OhWRuGjgC0zmvq/6P212unkRyHb6flgjmzXRex7u?=
- =?us-ascii?Q?/ydCo6xqWpdMnOdrTxm6WHQqpp9Tl6Ul75E52xDyGaJOr5PdtzvvVwG2GJb6?=
- =?us-ascii?Q?US/P12EEFhuTTUcRJA8QRDZMmMPmZjglnec+48v5HWofKk9DSkqd0aA1qjir?=
- =?us-ascii?Q?dkwPcJ1aMuQlI4DNYyOmC2xJN407BWXwZ94jHL4eNLADwda34o1X6n/vtxOi?=
- =?us-ascii?Q?hu7YOtTp+IMXKZiVGdN4a2jrnusuPD7tX4y/mjw9BZlYuzuvlkvxbm+CtdS4?=
- =?us-ascii?Q?jDsySHFvKVNLSLayvRi8pQeu/glIFfnL+Y5t73wL0h9f4GfSqdLf0vdckANv?=
- =?us-ascii?Q?Mj+zSCcXiFs1af230o/N0xF6nLJqN7CJNAy1mRMxq2pjzSgLsYQaN89KulK8?=
- =?us-ascii?Q?yic4pB/aAB2qhz7xIJoU0T5OwDQKw4C7ellmv5Ag3e5le6LrUBLu/QI/BbfU?=
- =?us-ascii?Q?UKdD0IuFn6CZhqG41PBp0T+DuGIUZVAlrbd+Tp1YUcEYCn5oepJu6xcipzPI?=
- =?us-ascii?Q?radVUpiJexsZf+5w2pdfl7eCC2spEsxU3dI8y/7TCAfgnwTiN7A+9zNfUCvC?=
- =?us-ascii?Q?xCNIItrNUwqb2TRd0nZAlTb97mtViSp7Lvnm4scOCJcfnv4VbOAomS5V6H73?=
- =?us-ascii?Q?WzRXOp7p4eHs3N7N08tbVIyDUn9pUG1PjfGonJJWHE3Dpc8HT194vPRx70zr?=
- =?us-ascii?Q?guyIb+aLZWBFhKkZqqLbMrEN2UO2h9b6Lz6ud5nueTO3+pYW8LiN5ELOAxEB?=
- =?us-ascii?Q?W7y0/a5s9qznhZxLC+UMNKrQvmyuxsYioeogtwvA3XwrLnQmj+utyHYSz5Rk?=
- =?us-ascii?Q?0+svC0J/y6GJoDsGO+MmseTswLTJLoCqfucqY0lxy07YRBlrAiY3unPi3xzF?=
- =?us-ascii?Q?VQX3fmi2CLGzuG4=3D?=
+	=?utf-8?B?aVB6TW12UmJkclhlWjkrZzBLWUttTHBQVHBRb0kxazcrYjd6b2RwcjlGZ01J?=
+ =?utf-8?B?VVRWanZRdGlSNlRYY1JtZ3czME1FNFlpMUVpYVc3d1UrR3FmMjhXWE5IZ2Fh?=
+ =?utf-8?B?T2VMbi9rT1JzTEU1MFlDQ0tGNmtTRlBYRVd5bW1yVGNMT09jRWhoVC9xQXdP?=
+ =?utf-8?B?TnNpSGRvU0FVR1hOL1I1cUdBSDkxbEwxUTJEUjQ4STYxRjRCcm85SzRRM3Jx?=
+ =?utf-8?B?L3hqSzkrNWRnTDN6U1gxdGhTeXZYbjUzNmVDYlBlNEQ0bWw1ZjcxMjc0djFs?=
+ =?utf-8?B?V0FKakdwNXBoYXM1clNzMWNIUldZRjZiNnBwZCtSYjREV0I3ZGx2emhtdERW?=
+ =?utf-8?B?RFBsSmpLRFNrUTJ1aHhkZWlhVnVmdDZxanlEelU3YStzVFkySzI2Q3dqYmE1?=
+ =?utf-8?B?UC9Dcm80ZEhHVTNxa0FKS2dJM2tybXRnQzZFcDlhY0M5QkhybDcwTWxUWTkx?=
+ =?utf-8?B?cGY5aXJFcXVlaVhZZ3ZSTXpnZmk5WlZXWGhRWUpPWDhKUmRmYWE4U0RyaTNv?=
+ =?utf-8?B?R3ZFYUdCL0Q2MmR3M015bld6bGJpR2doOEpEL1hXdmNESTJHOUkyYUMrMGVl?=
+ =?utf-8?B?OU1nRDVrSzJLQUJsYmw4Mlk4NmNoRWprNmNEYkx1ZGI2aFdFakJnanYvNFFQ?=
+ =?utf-8?B?UlFqT2ZUOXlFeVd6cFNoaEdkNTN2bUdzM3pWdGZZREk2aHVFb3o0dVB0Vlpl?=
+ =?utf-8?B?bHhlM0Y0K0VsVGRMQzdDelRyY0E5RUE2Q3BtV2lsWlR3UWNudm00eWFEZm5X?=
+ =?utf-8?B?ckdrLy85RWZFbHhYRExQdTRRVmpZNUhJOFpOQmxJT2lFNTFvZVJCL1hMdWxL?=
+ =?utf-8?B?bXBLVkpDS2R1ZVZaVk1uRTdaWDlpTldlaHF0U1c1a2QrQnBjdVMxdVRRU05N?=
+ =?utf-8?B?ZjUzSDlMNkpwbmdBOUlmN3hMMk95bVorK1MzVHdoQkQ5bFlmTTJzaTNvVHRC?=
+ =?utf-8?B?b2VzNjhXV2hTUVVnRkFiTndSYzVQR3lHcnMxSmJBWmh2a3UyR0Y3VXdlWEV3?=
+ =?utf-8?B?QkZZTUNIRS9iL1hSb3Exc0tXNTJGN2dNWW5jTXp1clB1SVpxK2NZRTVhelFG?=
+ =?utf-8?B?SE1ZN2xoUkpyRVNFc1JGUzNVdHNqL1YzZ1VmeEVCTy9sZ1BHMFJDSU52WU1L?=
+ =?utf-8?B?SGJTOEJUcFovWmVIQXBzNHJWOUI0c1o5S0pLT2xSdDN3NGdHZUZEUG5iNHgz?=
+ =?utf-8?B?OFJQajlYclZ2ZjhBOWIrZnByWENIdjhGVHNEYjJGU2p1Y1Y4MDdwMUR6K0lE?=
+ =?utf-8?B?emNJZmgrQmVjZEtHM3pkNEhWM25lano3U1VGV2daTGFYUVMyb05Pb2ErQ3Rz?=
+ =?utf-8?B?WWFkQzl1RGdrUjdBRUpMRjFTbG5PVzRldmpqdDNPQ2VLWnBSVVhqSHdGVHEx?=
+ =?utf-8?B?Tk5JNmQ2N3Q2ZHhHWm1vdzVBWGNVZUxrYVdZenh2Q3c4RDFaTUg1cTlKZ1Av?=
+ =?utf-8?B?SzZDRVZBZ0FmM1FWdXZsQkI2ZldoTC92WWIrb1BaV1lVUkNVSkFnWGZGaUMz?=
+ =?utf-8?B?WTYxRlhKWFRpamRQcVZBS05QVEZWeG1jNWkyek0yQlR3b0d2TnY4RmNDM3Bu?=
+ =?utf-8?B?VlhoUG9XRUtzdFhOQzZmTHI2S2tTK2pxcXYvd0hrSm9nTVRXN2xRbE9lMWxU?=
+ =?utf-8?B?R2p6K1BYMmRyRjBJUnZNMU5hSkJFYzQxNmZrR0hWNnovSWJjWUtwVklUZFF5?=
+ =?utf-8?B?V1JtRWZwQzN1ZTI2RnZ3M3NrYVhScnppOFFtL05LOWhpczQ0R0Q0NVhUZE5a?=
+ =?utf-8?B?U3hIcTkrWGE4cE5rQkUxMW5jSmxzNStIc1JwalZLSGRmN2ZqOWtYV1dMSmEy?=
+ =?utf-8?B?bnQzeFdQbllPYk1wc1lkdz09?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(82310400026)(376014)(36860700013)(921020);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW6PR12MB7087.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?cUlTSUltTk11QVdkbHlrZStMMlIrV0RCSkJIU00yRC93MEpSMk02UnE2VXBt?=
+ =?utf-8?B?blR4dDJYM3dqRFBaL3kzRXJUd1F1REZHYUNUMlpERWpwdVVjM3l2Nmo4Rkto?=
+ =?utf-8?B?am1YY0NNSEQ3ZjhwZFMyTjNJbGs0R2lKQlUzNEFiT0tmTUYxV3ZiS0dpN3NU?=
+ =?utf-8?B?K09UQkVyV2haeG9LdGoyb2lhc05LK0luRk5uOTQvZGFpYVhpc01xY3hHc1M4?=
+ =?utf-8?B?b29kNk9OejgzSFdSTngzcGFESEFVSDZuYW15OU0zMGRRU3lrS1JGZTM0RTNK?=
+ =?utf-8?B?V0dEWm1PN0hOQndXV0NjWEw2OXRKSG11a3RwVXd0T0doZlJoTGNmSHhEOUJK?=
+ =?utf-8?B?ZzM4YnlhVGZabi9wU042SlBpc2RvdnlhWm5lTHBkV0JCdTVsNU9LZVpBb3Z6?=
+ =?utf-8?B?UGxTcXFEMjFhUGZ6ZmRqaklmNXdjNzZhS1padlFRREozaUxYZWprS2Nnei94?=
+ =?utf-8?B?TFF0WFh5bXYwVHBEUSs5Q2J1TEZQa3UybnhEZ0J2bk9COVZPL1Q0MkdOMHVB?=
+ =?utf-8?B?Ym9qSHdLb0FtM0Y3TGY5TUhNdVFqWjhpcUZPR1N1UkxiRDRNbm9DSmFiVWln?=
+ =?utf-8?B?S0xYRWJlSVpwTjZlMTdJM2E3T3diSWNpQXdSeW9xUDZYcXVlMC9idkp0N09k?=
+ =?utf-8?B?aVE2RW1hNG80N0E3SmpaT2YvQlo0NG9xb3pPcHUyL2s3RGt6WUdJbC9pVUJx?=
+ =?utf-8?B?Q0RndlV0TEI4eDY1TXNIdkMxc1ZrUm1rVXRuRitmeE5JWlpxb215TXN6V0pS?=
+ =?utf-8?B?SWhUWURXUnZuRUFzL0s3YzNybjJ0RTNXdHJ4ekxuWEYzalkwbFM0T2hRaWNH?=
+ =?utf-8?B?UDd6amdpd3c3UW5QM2ZmOW5LN3pSS25qSnJpUXJFZ3ZpQm5jWm9WM1VPYi9O?=
+ =?utf-8?B?QUxQOWlTRHdPU0hGNEhMT0M0VGR1OCtkSTJQR0tUci9VdXBMSFNDaXQ1UEJQ?=
+ =?utf-8?B?TlJYTlMwakJoL3UyK2JyVHRvYkdKaWtIQVJpNktoRXk3Qm1NWEo0eHpORGJB?=
+ =?utf-8?B?QUFNazNzNy9XdEs2blU2M2ZHZmU4a3BaaU84RjhmUjJBUURxQkJIbFpKL3Ez?=
+ =?utf-8?B?WlBSWDFpTEREbkNuRE1OaHlUR2RkSW9ib0xvaFNVd20yYUZveHRLSjlmeWdn?=
+ =?utf-8?B?SldzSWRQYjJLSDJzcjFDRWtjU0NyVHBrcXRNa1RTbEhHUWZLMzlMdU82Vk1u?=
+ =?utf-8?B?azJhUGVpNXFmUjhFb0s0dHROWklJVFFyTERmOXdmRDUycWJlUHV6bmF4Ui9K?=
+ =?utf-8?B?ODJaZ3B1eUNEaDM1TUVQWEZHUHdnKzFIMFpGeUtVSysyejRMVVkvVFNDeTh6?=
+ =?utf-8?B?YWRHVmI1Nk5GcFllZGtXK3ZFZGtGdVJBbHFGMnZlZW0wRzNRQ0RKL3hWa2Nl?=
+ =?utf-8?B?dFYxKzVtSWhzN2U3STF3d3p6c0JRd1ByczJiajZET3h3ckFXUEhIQ3dzdy9D?=
+ =?utf-8?B?Wi9DL2tJWFRCNzU4QWFTZ2lkckZ4dVhWbENBU2hwLzdCa2wvY1ZBUW91Z29P?=
+ =?utf-8?B?T3BHOEZBdjVDN2tWRUJHVXdDWU1FbHRrbHY3RjJ1RXFUMHY2UTJoSTl2STNP?=
+ =?utf-8?B?ZkE0TE1wbHFmNkFhbHZFeVg1VWJGSUZ3ZE15RkJyay9kZWVmL2l2NnBMQk9V?=
+ =?utf-8?B?OXNHRGp1NmR4bDdmTW0xclNIa29oMWNGZnJIVmIvSjcvZTlod2F1WG8vb1FH?=
+ =?utf-8?B?YzN1akRkRnp2WTI4Nzc2WHlNcHVyemxleEhxR1h6MUdZMFFWa0dvQ0dKb3Fk?=
+ =?utf-8?B?emREcXZ2eWRlVkRzQnkzQytCRVJDeThUT0t2SEs0NU9NTXRmYkJEVFM3SHNp?=
+ =?utf-8?B?VnZpTkhPbTk1b0dBTHJIdzdaaUtxLzZCYkQ4WDhid2cwQ1ozUk82Tkhjdzlj?=
+ =?utf-8?B?bVNTdXhUdW5GaU84dzA4Sm04RDlTZHd0V0FUZ1B5S1NGdEhmS0xPZG85UDQy?=
+ =?utf-8?B?VTVoZEZPTjB5Y3MxdFFLckpuRWhYdjhjcmtjYTQ1dlgzdGlaTlpXSmhIRDJX?=
+ =?utf-8?B?MGNSWjQ3NHpIU2dJYVFDS2VnanV4NFJPQUMxbUpoOWt0Nlo3aDg5ckdwcXZn?=
+ =?utf-8?B?V2xKM1BTOHNDb0RYSXRUUWc0UkM2eW41TDBtNi82QlZuQzNvKyt4VTFZemYw?=
+ =?utf-8?Q?yhbZ1HYaSUeUE9wDvwC84gwrh?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Apr 2025 18:34:09.4512
+X-MS-Exchange-CrossTenant-Network-Message-Id: f8652e9d-8e16-46d8-806b-08dd72de5b31
+X-MS-Exchange-CrossTenant-AuthSource: MW6PR12MB7087.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Apr 2025 18:35:49.6555
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4def0378-e14e-4595-d805-08dd72de1faa
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	MWH0EPF000971E8.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8319
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: iwHLxGGKpZpD+71vCwl9UtcyTPg1E9G1BT7uNouks3qZEX/stWSf1FsqgoIKMhphyQBy+Xm5VGBCpOjCSH1SHQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6033
 
-From: Nathan Fontenot <nathan.fontenot@amd.com>
+A very gentle ping on this series.
 
-The dax hmem device initialization will consume any iomem
-SOFT RESERVE resources prior to CXL region creation. To allow
-for the CXL driver to complete region creation and trim any
-SOFT RESERVE resources before the dax driver consumes them
-we need to delay the dax driver's search for SOFT RESERVEs.
+Thanks
+Pratik
 
-To do this the dax driver hmem device initialization code
-skips the walk of the iomem resource tree if the CXL ACPI
-driver is enabled. This allows the CXL driver to complete
-region creation and trim any SOFT RESERVES. Once the CXL
-driver completes this, the CXL driver then registers any
-remaining SOFT RESERVE resources with the dax hmem driver.
-
-Signed-off-by: Nathan Fontenot <nathan.fontenot@amd.com>
-Signed-off-by: Terry Bowman <terry.bowman@amd.com>
----
- drivers/cxl/core/region.c | 10 +++++++++
- drivers/dax/hmem/device.c | 43 ++++++++++++++++++++-------------------
- drivers/dax/hmem/hmem.c   |  3 ++-
- include/linux/dax.h       |  6 ++++++
- 4 files changed, 40 insertions(+), 22 deletions(-)
-
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index 25d70175f204..bf4a4371d98b 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -11,6 +11,7 @@
- #include <linux/idr.h>
- #include <linux/memory-tiers.h>
- #include <linux/ioport.h>
-+#include <linux/dax.h>
- #include <cxlmem.h>
- #include <cxl.h>
- #include "core.h"
-@@ -3444,6 +3445,11 @@ int cxl_add_to_region(struct cxl_port *root, struct cxl_endpoint_decoder *cxled)
- }
- EXPORT_SYMBOL_NS_GPL(cxl_add_to_region, "CXL");
- 
-+static int cxl_srmem_register(struct resource *res, void *unused)
-+{
-+	return hmem_register_device(phys_to_target_node(res->start), res);
-+}
-+
- int cxl_region_srmem_update(void)
- {
- 	struct device *dev = NULL;
-@@ -3461,6 +3467,10 @@ int cxl_region_srmem_update(void)
- 		put_device(dev);
- 	} while (dev);
- 
-+	/* Now register any remaining SOFT RESERVES with dax */
-+	walk_iomem_res_desc(IORES_DESC_SOFT_RESERVED, IORESOURCE_MEM,
-+			    0, -1, NULL, cxl_srmem_register);
-+
- 	return 0;
- }
- EXPORT_SYMBOL_NS_GPL(cxl_region_srmem_update, "CXL");
-diff --git a/drivers/dax/hmem/device.c b/drivers/dax/hmem/device.c
-index 59ad44761191..cc1ed7bbdb1a 100644
---- a/drivers/dax/hmem/device.c
-+++ b/drivers/dax/hmem/device.c
-@@ -8,7 +8,6 @@
- static bool nohmem;
- module_param_named(disable, nohmem, bool, 0444);
- 
--static bool platform_initialized;
- static DEFINE_MUTEX(hmem_resource_lock);
- static struct resource hmem_active = {
- 	.name = "HMEM devices",
-@@ -35,9 +34,7 @@ EXPORT_SYMBOL_GPL(walk_hmem_resources);
- 
- static void __hmem_register_resource(int target_nid, struct resource *res)
- {
--	struct platform_device *pdev;
- 	struct resource *new;
--	int rc;
- 
- 	new = __request_region(&hmem_active, res->start, resource_size(res), "",
- 			       0);
-@@ -47,21 +44,6 @@ static void __hmem_register_resource(int target_nid, struct resource *res)
- 	}
- 
- 	new->desc = target_nid;
--
--	if (platform_initialized)
--		return;
--
--	pdev = platform_device_alloc("hmem_platform", 0);
--	if (!pdev) {
--		pr_err_once("failed to register device-dax hmem_platform device\n");
--		return;
--	}
--
--	rc = platform_device_add(pdev);
--	if (rc)
--		platform_device_put(pdev);
--	else
--		platform_initialized = true;
- }
- 
- void hmem_register_resource(int target_nid, struct resource *res)
-@@ -83,9 +65,28 @@ static __init int hmem_register_one(struct resource *res, void *data)
- 
- static __init int hmem_init(void)
- {
--	walk_iomem_res_desc(IORES_DESC_SOFT_RESERVED,
--			IORESOURCE_MEM, 0, -1, NULL, hmem_register_one);
--	return 0;
-+	struct platform_device *pdev;
-+	int rc;
-+
-+	if (!IS_ENABLED(CONFIG_CXL_ACPI)) {
-+		walk_iomem_res_desc(IORES_DESC_SOFT_RESERVED,
-+				    IORESOURCE_MEM, 0, -1, NULL,
-+				    hmem_register_one);
-+	}
-+
-+	pdev = platform_device_alloc("hmem_platform", 0);
-+	if (!pdev) {
-+		pr_err("failed to register device-dax hmem_platform device\n");
-+		return -1;
-+	}
-+
-+	rc = platform_device_add(pdev);
-+	if (rc) {
-+		pr_err("failed to add device-dax hmem_platform device\n");
-+		platform_device_put(pdev);
-+	}
-+
-+	return rc;
- }
- 
- /*
-diff --git a/drivers/dax/hmem/hmem.c b/drivers/dax/hmem/hmem.c
-index 3aedef5f1be1..a206b9b383e4 100644
---- a/drivers/dax/hmem/hmem.c
-+++ b/drivers/dax/hmem/hmem.c
-@@ -61,7 +61,7 @@ static void release_hmem(void *pdev)
- 	platform_device_unregister(pdev);
- }
- 
--static int hmem_register_device(int target_nid, const struct resource *res)
-+int hmem_register_device(int target_nid, const struct resource *res)
- {
- 	struct device *host = &dax_hmem_pdev->dev;
- 	struct platform_device *pdev;
-@@ -124,6 +124,7 @@ static int hmem_register_device(int target_nid, const struct resource *res)
- 	platform_device_put(pdev);
- 	return rc;
- }
-+EXPORT_SYMBOL_GPL(hmem_register_device);
- 
- static int dax_hmem_platform_probe(struct platform_device *pdev)
- {
-diff --git a/include/linux/dax.h b/include/linux/dax.h
-index 4b4d16f94898..a1a75ade9ea7 100644
---- a/include/linux/dax.h
-+++ b/include/linux/dax.h
-@@ -271,10 +271,16 @@ static inline int dax_mem2blk_err(int err)
- 
- #ifdef CONFIG_DEV_DAX_HMEM_DEVICES
- void hmem_register_resource(int target_nid, struct resource *r);
-+int hmem_register_device(int target_nid, const struct resource *res);
- #else
- static inline void hmem_register_resource(int target_nid, struct resource *r)
- {
- }
-+
-+static inline int hmem_register_device(int target_nid, const struct resource *res)
-+{
-+	return 0;
-+}
- #endif
- 
- typedef int (*walk_hmem_fn)(int target_nid, const struct resource *res);
--- 
-2.34.1
-
+On 3/5/25 4:59 PM, Pratik R. Sampat wrote:
+> This patch series extends the sev_init2 and the sev_smoke test to
+> exercise the SEV-SNP VM launch workflow.
+>
+> Primarily, it introduces the architectural defines, its support in the
+> SEV library and extends the tests to interact with the SEV-SNP ioctl()
+> wrappers.
+>
+> Patch 1  - Do not advertise SNP on initialization failure
+> Patch 2  - SNP test for KVM_SEV_INIT2
+> Patch 3  - Add vmgexit helper
+> Patch 4  - Add SMT control interface helper
+> Patch 5  - Replace assert() with TEST_ASSERT_EQ()
+> Patch 6  - Introduce SEV+ VM type check
+> Patch 7  - SNP iotcl() plumbing for the SEV library
+> Patch 8  - Force set GUEST_MEMFD for SNP
+> Patch 9  - Cleanups of smoke test - Decouple policy from type
+> Patch 10 - SNP smoke test
+>
+> The series is based on
+>          git.kernel.org/pub/scm/virt/kvm/kvm.git next
+>
+> v7..v8:
+> * Dropped exporting the SNP initialized API from ccp to KVM. Instead
+>    call SNP_PLATFORM_STATUS within KVM to query the initialization. (Tom)
+>    
+>    While it may be cheaper to query sev->snp_initialized from ccp, making
+>    the SNP platform call within KVM does away with any dependencies.
+>
+> v6..v7:
+> https://lore.kernel.org/kvm/20250221210200.244405-7-prsampat@amd.com/
+> Based on comments from Sean -
+> * Replaced FW check with sev->snp_initialized
+> * Dropped the patch which removes SEV+ KVM advertisement if INIT fails.
+>    This should be now be resolved by the combination of the patches [1,2]
+>    from Ashish.
+> * Change vmgexit to an inline function
+> * Export SMT control parsing interface to kvm_util
+>    Note: hyperv_cpuid KST only compile tested
+> * Replace assert() with TEST_ASSERT_EQ() within SEV library
+> * Define KVM_SEV_PAGE_TYPE_INVALID for SEV call of encrypt_region()
+> * Parameterize encrypt_region() to include privatize_region()
+> * Deduplication of sev test calls between SEV,SEV-ES and SNP
+> * Removed FW version tests for SNP
+> * Included testing of SNP_POLICY_DBG
+> * Dropped most tags from patches that have been changed or indirectly
+>    affected
+>
+> [1] https://lore.kernel.org/all/d6d08c6b-9602-4f3d-92c2-8db6d50a1b92@amd.com
+> [2] https://lore.kernel.org/all/f78ddb64087df27e7bcb1ae0ab53f55aa0804fab.1739226950.git.ashish.kalra@amd.com
+>
+> v5..v6:
+> https://lore.kernel.org/kvm/ab433246-e97c-495b-ab67-b0cb1721fb99@amd.com/
+> * Rename is_sev_platform_init to sev_fw_initialized (Nikunj)
+> * Rename KVM CPU feature X86_FEATURE_SNP to X86_FEATURE_SEV_SNP (Nikunj)
+> * Collected Tags from Nikunj, Pankaj, Srikanth.
+>
+> v4..v5:
+> https://lore.kernel.org/kvm/8e7d8172-879e-4a28-8438-343b1c386ec9@amd.com/
+> * Introduced a check to disable advertising support for SEV, SEV-ES
+>    and SNP when platform initialization fails (Nikunj)
+> * Remove the redundant SNP check within is_sev_vm() (Nikunj)
+> * Cleanup of the encrypt_region flow for better readability (Nikunj)
+> * Refactor paths to use the canonical $(ARCH) to rebase for kvm/next
+>
+> v3..v4:
+> https://lore.kernel.org/kvm/20241114234104.128532-1-pratikrajesh.sampat@amd.com/
+> * Remove SNP FW API version check in the test and ensure the KVM
+>    capability advertises the presence of the feature. Retain the minimum
+>    version definitions to exercise these API versions in the smoke test
+> * Retained only the SNP smoke test and SNP_INIT2 test
+> * The SNP architectural defined merged with SNP_INIT2 test patch
+> * SNP shutdown merged with SNP smoke test patch
+> * Add SEV VM type check to abstract comparisons and reduce clutter
+> * Define a SNP default policy which sets bits based on the presence of
+>    SMT
+> * Decouple privatization and encryption for it to be SNP agnostic
+> * Assert for only positive tests using vm_ioctl()
+> * Dropped tested-by tags
+>
+> In summary - based on comments from Sean, I have primarily reduced the
+> scope of this patch series to focus on breaking down the SNP smoke test
+> patch (v3 - patch2) to first introduce SEV-SNP support and use this
+> interface to extend the sev_init2 and the sev_smoke test.
+>
+> The rest of the v3 patchset that introduces ioctl, pre fault, fallocate
+> and negative tests, will be re-worked and re-introduced subsequently in
+> future patch series post addressing the issues discussed.
+>
+> v2..v3:
+> https://lore.kernel.org/kvm/20240905124107.6954-1-pratikrajesh.sampat@amd.com/
+> * Remove the assignments for the prefault and fallocate test type
+>    enums.
+> * Fix error message for sev launch measure and finish.
+> * Collect tested-by tags [Peter, Srikanth]
+>
+> Pratik R. Sampat (10):
+>    KVM: SEV: Disable SEV-SNP support on initialization failure
+>    KVM: selftests: SEV-SNP test for KVM_SEV_INIT2
+>    KVM: selftests: Add vmgexit helper
+>    KVM: selftests: Add SMT control state helper
+>    KVM: selftests: Replace assert() with TEST_ASSERT_EQ()
+>    KVM: selftests: Introduce SEV VM type check
+>    KVM: selftests: Add library support for interacting with SNP
+>    KVM: selftests: Force GUEST_MEMFD flag for SNP VM type
+>    KVM: selftests: Abstractions for SEV to decouple policy from type
+>    KVM: selftests: Add a basic SEV-SNP smoke test
+>
+>   arch/x86/include/uapi/asm/kvm.h               |  1 +
+>   arch/x86/kvm/svm/sev.c                        | 30 +++++-
+>   tools/arch/x86/include/uapi/asm/kvm.h         |  1 +
+>   .../testing/selftests/kvm/include/kvm_util.h  | 35 +++++++
+>   .../selftests/kvm/include/x86/processor.h     |  1 +
+>   tools/testing/selftests/kvm/include/x86/sev.h | 42 ++++++++-
+>   tools/testing/selftests/kvm/lib/kvm_util.c    |  7 +-
+>   .../testing/selftests/kvm/lib/x86/processor.c |  4 +-
+>   tools/testing/selftests/kvm/lib/x86/sev.c     | 93 +++++++++++++++++--
+>   .../testing/selftests/kvm/x86/hyperv_cpuid.c  | 19 ----
+>   .../selftests/kvm/x86/sev_init2_tests.c       | 13 +++
+>   .../selftests/kvm/x86/sev_smoke_test.c        | 75 +++++++++------
+>   12 files changed, 261 insertions(+), 60 deletions(-)
+>
