@@ -1,115 +1,167 @@
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA5FB24E4B2
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 13:56:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED06924C08D;
+	Thu,  3 Apr 2025 13:57:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743688612; cv=none; b=TuZr9ijiWGgrGSLl31iwQ7+6frH7RZOeIWvz6cgT6elAACSmu+APwimaN+l8rm849iT2pMck1i4wVX5eUkIXXgO6qLOucryzQx61sadsZ4KJQnPS2DbEjELjX2xm3jZiibUkvzanGGdk8ZLspZPj8gmmrDHSQKCCZDkolGvBq5k=
+	t=1743688663; cv=none; b=Ai9/rmzdxvBInFX7T67tnlKIHBBA1TyUkmp2vmprvLb204hJrdby+DCinS2OwA8Pidh9v05ZLf0ACS9p6Ylb92FWUJdRyAG3lj8Glu2whKeVd2IQK1Oe5U4RQsh415v3ZUV238CBQOiksKRLUqul7HA4p35wmpWJAAb8il5mdwE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743688612; c=relaxed/simple;
-	bh=vL1Fbgp526X3IYUv3jqvaisXbeRKQFXoMWoQUDtRM58=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XU6VQHIICgOLRukgRMKRfLTdhc0oWpbGYYiF/v/VFbxeWuzwXURMN7wSfcq2gmLtg9o5pgqsnM3hMog92nVFtXU/JmS9kOOg3yQO7PiJfqsIUxSo+c6fPlpM7uGNfnnvUrWDNXahYoQm+5xvBEXA1LcRuRiE1XiF93+WiV25DKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=gnLvg6sS; arc=none smtp.client-ip=209.85.208.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1743688663; c=relaxed/simple;
+	bh=5SR2KTBI1kKtfOBINvsox0Z0ryfiIm93Ekm8MRv/a4I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FsTkbb+Yij7uikSc51AhenUM4qz+wd/9N+wZwM2wFI2c/hMaB9qbWk+zFnSCHBrFwkKtOQ1cv//K2Qe6P4iKN6O6bqI2QPM5Q38DCUp1SX5C6LReluDM41pOZxV8wvJLX8e++awfHQ3jFSkbl7fJO66sBsOpteGP+4Uen4t9cCw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iW7Kcl6M; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="gnLvg6sS"
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-30db2c2c609so8936211fa.3
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 06:56:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1743688609; x=1744293409; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vL1Fbgp526X3IYUv3jqvaisXbeRKQFXoMWoQUDtRM58=;
-        b=gnLvg6sS/676/EWEUTXuLojLRftFFoGXwlZsb4uMzhR8XYCPUXE1kNfzGx4+sfcQyg
-         72QEWNvUc83iXaOwVuDlHiWXmjepK9NKhMoU+cK0AB8C0kANVBLOBgZ3EBUizzK3EHaU
-         0WUsgR2XozY3eGZMyvVU6b9+TIR7OENrsWyV5ScgoQ18UNjJ6OH/FCatZIG7Z6xR2cXa
-         s3JYlHFfGfWi+2szzC7du3PrJLz0WInrsfDh/k8XnMfs0wtq+wQi6rQLPOe5CCZRA7cA
-         NamEVCDilZUfzQeir90wLEbTErKRTroIvOTguFoLY9YpxtAtQx/iRjdeR6kRHGrOELER
-         JPyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743688609; x=1744293409;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vL1Fbgp526X3IYUv3jqvaisXbeRKQFXoMWoQUDtRM58=;
-        b=QndFNOY99IKt+t5XbabbKGWSTFV5VVbaNK9Hpdr0Mm4RA5eQ/rPTk+3rJeUzoIAh/e
-         ttpL6+hiKk1iuRINCdnmoyvq9E03ur25oAJ7BhIYuIaO6g9vkbdIqBUHjKE1j2dCpP2K
-         C1ndjTvrKuTJjNLMUfl2VcHBXaP1OQYCAnx2DONsEpLoVD3AqMy9LIGDcFVy5Oh0XiwQ
-         0EpIfLmohfG/iYBbg8NmnT2jLjvJLwa7e2sDysb1uwPNvp0AIkPXz79TT9hmgbkKVDbo
-         mkKpqNmAkfS5RvuWeg3smOEudXKJg4KDH+DpyGj+AFGNqsIQU5ZB/ux9Cq7KfH2B5DL6
-         w0TA==
-X-Forwarded-Encrypted: i=1; AJvYcCWU9F2m1NoYIgP/V8FPL9kzAsknl4dvJuxTA4WGjHEPxQyUd7RFf37bNUdCBLBbZ4C/4aRRtgUgNbSm+Ng=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQHn2LSI+1N8UkOgxJMfj+IpoivkcVgXj/7vTHfbvy9PS/UJz/
-	3+Inamd+7T6R9hblqwy0HdCKYBMyNsN/AMEcV1Kkaj/dcEUE6zu59s3z2Y/cz4F2KEukRzREqkv
-	p5XsONSyuplDLNu2q1NXBekSIM4tbgicrEcuYZw==
-X-Gm-Gg: ASbGnctgi6d9gPu6g2ur53VAS/7CG/Gp+Nz7RkQxiHOqOe1xQFEcA7nZUN+GpqD3Ftt
-	fZUC4vCY9uFUeJxi7wvmdgqfT44xb3ubznx1oby91xVq/eyDnAeRNIDWEnOgPD3LQomHkcnEBvT
-	yt8PQvvq2YtzuNOpN3vdQwbWi7oHEE8Co10zz4EBmqdXq1vVGgE5Au03MA
-X-Google-Smtp-Source: AGHT+IEZq8E9hUMdI8woaEMXoL4h1fGDLU3IWtKUPdoaZP6pLIF3F/ze7rrIOIyIeiS4I9dFtpAdyL29xHsoa9HtLBw=
-X-Received: by 2002:a2e:a106:0:b0:30b:d474:12d1 with SMTP id
- 38308e7fff4ca-30f02c0049bmr10396971fa.30.1743688608736; Thu, 03 Apr 2025
- 06:56:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iW7Kcl6M"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A24EC4CEE3;
+	Thu,  3 Apr 2025 13:57:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743688661;
+	bh=5SR2KTBI1kKtfOBINvsox0Z0ryfiIm93Ekm8MRv/a4I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=iW7Kcl6McmBEbJ1JPZ4u0Huxc2f6LpTnxB8SXB6QM6RbBFXxP9bN9E8qyknVSdeu+
+	 l/b+SAQ0QWM3fR8hQqvYA7ZOXApBXeYHLHS2dOtEI4U4eNVuZ996rcgf9L1vOMk1VK
+	 fsR+piAc8w0Tw7dC/yfcWpuGp/3Zm0/Hg6A4cnGFfj20+RRAL0D7bzGlvX7pR+TyEM
+	 MNWnWibgibRxnmAdvGDG7Qxe1hwAugVpYoRsDOYU8Dz9TOIZ3hKlDJrJ32IqaHfWrO
+	 0gY5wz+zFvE4o6h1f3Wor+aFDgX4QJbAEqle0OkXvoDBz/9rl4ykSomefNEMfNRYWa
+	 D3h05S20MooXA==
+Date: Thu, 3 Apr 2025 16:57:25 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Pratyush Yadav <ptyadav@amazon.de>
+Cc: Changyuan Lyu <changyuanl@google.com>, linux-kernel@vger.kernel.org,
+	graf@amazon.com, akpm@linux-foundation.org, luto@kernel.org,
+	anthony.yznaga@oracle.com, arnd@arndb.de, ashish.kalra@amd.com,
+	benh@kernel.crashing.org, bp@alien8.de, catalin.marinas@arm.com,
+	dave.hansen@linux.intel.com, dwmw2@infradead.org,
+	ebiederm@xmission.com, mingo@redhat.com, jgowans@amazon.com,
+	corbet@lwn.net, krzk@kernel.org, mark.rutland@arm.com,
+	pbonzini@redhat.com, pasha.tatashin@soleen.com, hpa@zytor.com,
+	peterz@infradead.org, robh+dt@kernel.org, robh@kernel.org,
+	saravanak@google.com, skinsburskii@linux.microsoft.com,
+	rostedt@goodmis.org, tglx@linutronix.de, thomas.lendacky@amd.com,
+	usama.arif@bytedance.com, will@kernel.org,
+	devicetree@vger.kernel.org, kexec@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+	linux-mm@kvack.org, x86@kernel.org,
+	Jason Gunthorpe <jgg@nvidia.com>
+Subject: Re: [PATCH v5 09/16] kexec: enable KHO support for memory
+ preservation
+Message-ID: <Z-6TxZWEWbKSCqfh@kernel.org>
+References: <20250320015551.2157511-1-changyuanl@google.com>
+ <20250320015551.2157511-10-changyuanl@google.com>
+ <mafs05xjmqsqc.fsf@amazon.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250326173838.4617-1-francesco@dolcini.it> <174368202234.27533.1000100252310062471.b4-ty@linaro.org>
- <Z-6TGnGUEd4JkANQ@black.fi.intel.com>
-In-Reply-To: <Z-6TGnGUEd4JkANQ@black.fi.intel.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 3 Apr 2025 15:56:37 +0200
-X-Gm-Features: AQ5f1JoNS8eoE-Q6tSfDVMvkGBz_l6XQrBcrR5WM1qQ5o9XFEN8_s2-duQ2N2l0
-Message-ID: <CAMRc=Me15MyNJiU9E-E2R9yHZ4XaS=zAuETvzKFh8=K0B4rKPw@mail.gmail.com>
-Subject: Re: [PATCH v1] gpio: pca953x: fix IRQ storm on system wake up
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Linus Walleij <linus.walleij@linaro.org>, 
-	Francesco Dolcini <francesco@dolcini.it>, Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
-	Emanuele Ghidoli <emanuele.ghidoli@toradex.com>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>, 
-	stable@vger.kernel.org, Francesco Dolcini <francesco.dolcini@toradex.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <mafs05xjmqsqc.fsf@amazon.de>
 
-On Thu, Apr 3, 2025 at 3:54=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@intel.com> wrote:
->
-> +Cc: Geert
->
-> On Thu, Apr 03, 2025 at 02:07:05PM +0200, Bartosz Golaszewski wrote:
-> > On Wed, 26 Mar 2025 18:38:38 +0100, Francesco Dolcini wrote:
->
-> > > If an input changes state during wake-up and is used as an interrupt
-> > > source, the IRQ handler reads the volatile input register to clear th=
-e
-> > > interrupt mask and deassert the IRQ line. However, the IRQ handler is
-> > > triggered before access to the register is granted, causing the read
-> > > operation to fail.
-> > >
-> > > As a result, the IRQ handler enters a loop, repeatedly printing the
-> > > "failed reading register" message, until `pca953x_resume` is eventual=
-ly
-> > > called, which restores the driver context and enables access to
-> > > registers.
->
+On Wed, Apr 02, 2025 at 07:16:27PM +0000, Pratyush Yadav wrote:
+> Hi Changyuan,
+> 
+> On Wed, Mar 19 2025, Changyuan Lyu wrote:
+> 
+> > From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+> >
+> > Introduce APIs allowing KHO users to preserve memory across kexec and
+> > get access to that memory after boot of the kexeced kernel
+> >
+> > kho_preserve_folio() - record a folio to be preserved over kexec
+> > kho_restore_folio() - recreates the folio from the preserved memory
+> > kho_preserve_phys() - record physically contiguous range to be
+> > preserved over kexec.
+> > kho_restore_phys() - recreates order-0 pages corresponding to the
+> > preserved physical range
+> >
+> > The memory preservations are tracked by two levels of xarrays to manage
+> > chunks of per-order 512 byte bitmaps. For instance the entire 1G order
+> > of a 1TB x86 system would fit inside a single 512 byte bitmap. For
+> > order 0 allocations each bitmap will cover 16M of address space. Thus,
+> > for 16G of memory at most 512K of bitmap memory will be needed for order 0.
+> >
+> > At serialization time all bitmaps are recorded in a linked list of pages
+> > for the next kernel to process and the physical address of the list is
+> > recorded in KHO FDT.
+> >
+> > The next kernel then processes that list, reserves the memory ranges and
+> > later, when a user requests a folio or a physical range, KHO restores
+> > corresponding memory map entries.
+> >
+> > Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
+> > Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> > Co-developed-by: Changyuan Lyu <changyuanl@google.com>
+> > Signed-off-by: Changyuan Lyu <changyuanl@google.com>
+> > ---
+> >  include/linux/kexec_handover.h |  38 +++
+> >  kernel/kexec_handover.c        | 486 ++++++++++++++++++++++++++++++++-
+> >  2 files changed, 522 insertions(+), 2 deletions(-)
 > [...]
->
-> > Applied, thanks!
->
-> Won't this regress as it happens the last time [1]?
->
-> [1]: https://lore.kernel.org/linux-gpio/CAMuHMdVnKX23yi7ir1LVxfXAMeeWMFzM=
-+cdgSSTNjpn1OnC2xw@mail.gmail.com/
->
+> > +int kho_preserve_phys(phys_addr_t phys, size_t size)
+> > +{
+> > +	unsigned long pfn = PHYS_PFN(phys), end_pfn = PHYS_PFN(phys + size);
+> > +	unsigned int order = ilog2(end_pfn - pfn);
+> 
+> This caught my eye when playing around with the code. It does not put
+> any limit on the order, so it can exceed NR_PAGE_ORDERS. Also, when
 
-Ah, good catch. I'm wondering what the right fix here is but don't
-really have any ideas at the moment. Any hints are appreciated.
+I don't see a problem with this
 
-For now, I'm dropping it.
+> initializing the page after KHO, we pass the order directly to
+> prep_compound_page() without sanity checking it. The next kernel might
+> not support all the orders the current one supports. Perhaps something
+> to fix?
 
-Bart
+And this needs to be fixed and we should refuse to create folios larger
+than MAX_ORDER.
+ 
+> > +	unsigned long failed_pfn;
+> > +	int err = 0;
+> > +
+> > +	if (!kho_enable)
+> > +		return -EOPNOTSUPP;
+> > +
+> > +	down_read(&kho_out.tree_lock);
+> > +	if (kho_out.fdt) {
+> > +		err = -EBUSY;
+> > +		goto unlock;
+> > +	}
+> > +
+> > +	for (; pfn < end_pfn;
+> > +	     pfn += (1 << order), order = ilog2(end_pfn - pfn)) {
+> > +		err = __kho_preserve(&kho_mem_track, pfn, order);
+> > +		if (err) {
+> > +			failed_pfn = pfn;
+> > +			break;
+> > +		}
+> > +	}
+> [...
+> > +struct folio *kho_restore_folio(phys_addr_t phys)
+> > +{
+> > +	struct page *page = pfn_to_online_page(PHYS_PFN(phys));
+> > +	unsigned long order = page->private;
+> > +
+> > +	if (!page)
+> > +		return NULL;
+> > +
+> > +	order = page->private;
+> > +	if (order)
+> > +		prep_compound_page(page, order);
+> > +	else
+> > +		kho_restore_page(page);
+> > +
+> > +	return page_folio(page);
+> > +}
+> [...]
+> 
+> -- 
+> Regards,
+> Pratyush Yadav
+
+-- 
+Sincerely yours,
+Mike.
