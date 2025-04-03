@@ -1,112 +1,73 @@
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 016CA24E004
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 13:14:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5E16D529;
+	Thu,  3 Apr 2025 13:15:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743686091; cv=none; b=VJx3HB3GyK1nPxTKT/2ohrg1K1Dipx8Krd8+lATgcXxIcV06t14Ft91W4AZfziy7nzPV8SHgpnoiSXUj2NiiqiG6MzolwxEkFgHSb2nchLkc+h6XmoIn5umRFkLyE5+CaO6Am7c3W0N04B4OSEcBomReSKuuPrJS5mIAzGU+Xw0=
+	t=1743686132; cv=none; b=DJjvLwkIuDfFyT4naejRXuk8Srquk8yJ4c0jxMJpJ9eod9C8HRx+GdMDsxh8ySBJcflfmAh9Iid4eKLV2ZcQGr9lJENN7yvSVwN8hFfIKYJiqf7V590AmjU6CIqa9ri63K7HM73zpzPRkCpRjlAsi1a8I9Oi8e5mmU6c7LqMpwc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743686091; c=relaxed/simple;
-	bh=bt6gJlRwPdO08tG7YpNnHL783vydCw6J7TOqDlJK4lY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=H/WM7B33DOOLzqSiIu8jWnE4rB58kzHbW8w5++ehX06fgo5naCAIfDygiKuYoNDrStwyyyjLuKO0sgYOCR/PA02zSXBurG9nTOg/wOjf9JapKVdVfbXB/RN6yaZimAThDYMTLCE2N4wPuaMLfz3GRberuX8vOuAgpHd6/X/lw20=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N/k4rMUo; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743686132; c=relaxed/simple;
+	bh=r4n/nElshuEC+N/oCbbDCl2TaTMzeqJvA0E1GhChm2s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NPqvyhZhAe7bLJb2yCIb7/hev4nul60olypF8h01lvpRESUoWxy3riFiWViUaEV+42BX83gMK02kpy+Cz/CSFMNW/M/lavXzFNan9tuFIrwmZFFXcb/PUx7pJeBBOIWtlDmz39U7w/dNjbIDCQk57stzQg1oTmRw69mcxyBLuqo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JvbDGYOR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N/k4rMUo"
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-5493b5bc6e8so1093127e87.2
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 06:14:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743686088; x=1744290888; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mqMLUJ3h8FzGpd/ZaU/PCx5lcDAym3sCL++s8q8O5tA=;
-        b=N/k4rMUo32yUBXl9QVhTahgmmntNtbzKwpJ81Vy+7YsHBKmGkDTAaQTAuRJYWP0DbZ
-         XD2eN4F1zwv74KKnYljJi8we/x4i8vu7Es3AQnxiu8/l4TAzDsClFS4h6E7Vzp/De72T
-         sXZ++uHhebAneEXFCPxG5NUgjSjrIPhCF0eREkEnF1BqsXYQ8kN/Ru8/JfmyKN/xwPn3
-         E73gy8NdgxD+ALCjPUO7Oi0Vq/MRYCxawgA2fI27xp9bOS9G5FNyoyzhmZrBaXcwiQvP
-         N/rscgUpFBHBMm8OckZyX+vuOssv3oAXEorYRYdqnUGqHe9pFEESHVeH90ZEqJXNHbdS
-         W3fA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743686088; x=1744290888;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mqMLUJ3h8FzGpd/ZaU/PCx5lcDAym3sCL++s8q8O5tA=;
-        b=u8oIpgnJNUL6Y9D1YGagJpXMgvRawcW2ZiRjnuFh6wQO917sYfmt1Fhj+iSW1iRojX
-         afOVZTrfF+ag6o6murujEsx5hWyI5G5TUQOL+kUdHBoyfX1WLkc8iYOfY8S9WQIFjWgU
-         Ti/tGip8yuRzzkUAf5bYBf0Pzi+WqcQB0q97Q66m6/IznWc+OJS62FRBe0rXggNCuO5j
-         9GH1QIm7uR2MOJwV5P4d3Gy/C6AVwp0Yi1lkcgFpTIbBp/9IWLYOCAOt0ZBCrpp4Qa5W
-         kF/C1c3ftqB7dl5YcUIy6KoSeuk/JL3IMvOngwX1iiB9j21VfFB71G+o6T1L9gShTKIF
-         hVfA==
-X-Forwarded-Encrypted: i=1; AJvYcCWJCKRXXhsgWJzDVx3t6gDm2aEw95iAeGw1uZi6BLvuLt2I7AnZmebYyE+nuRlpKGA0V4VrnNZD6aeyRq0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwdEbdlg4BU7ni6w0Ssz+clCEMy6XAxq2fHe6caEjZYfLvMBqXL
-	i+5Dyn6Pqjb4tqf0dP+8l3ZUg5Wo3EweyUX0JVwrggyU8e9+KI/PPyKXthGfI4qjWsUEjpupq94
-	35muHPTbRhu0IFVKx18hF09ZdBCU=
-X-Gm-Gg: ASbGnctNUqlQEUlm8EbkKrGF6+Dy+gUpJ/JhW/ipwtG2ClGzWwBPTSB1dppMUIrEeWI
-	0/PGsRUmq6YDpK9tsa2rIYckg2MXN+ZtFeL87jrqVrPQg6fFshWnpgyCONTN6HCzstDQx6Nx4M/
-	XH6VwOsP9aKEmyZ3sfSghPc0wL6A==
-X-Google-Smtp-Source: AGHT+IH2kqjkmBjqUVw+MY6DzQ6KHWR2nn2MHZ+KZ+wf1sfvHxHjTtOFBN9OSvv16ji1RnKxxsfo9uZGmtKo39z6yEo=
-X-Received: by 2002:a2e:a803:0:b0:30b:d35c:4754 with SMTP id
- 38308e7fff4ca-30de023b4d7mr75558381fa.10.1743686088024; Thu, 03 Apr 2025
- 06:14:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JvbDGYOR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D4D6C4CEE3;
+	Thu,  3 Apr 2025 13:15:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743686131;
+	bh=r4n/nElshuEC+N/oCbbDCl2TaTMzeqJvA0E1GhChm2s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JvbDGYORWxXFYqROzffePhwsr3Gp9fXm75EwuFZpPa1CWJ0B/HHQXNKE8FFykhtuN
+	 ABrrdG1HJW9UFSzkn5f4amdVgsn1ckORpYuX/JUBNNhEs9HrXaBjefz4+iMoAtTawS
+	 fQyiuoGferImQDO+gcmNi2laXyu0uc5zrTkAgOAGejOOMBxfXSq4PKt4rdW8kHi8BY
+	 6fmnxStLeYEjFgssbD5NuRFupOZVAliz+iiyqmZMv1GxzSBDyqCZxa2e4zGdD8P2N9
+	 RpNGNyf/+fIhKKwCQHfCLtTb5nPcsulrdrPV7rF0Lfy0uvDGl/e5z4So0rA0C+075A
+	 CxD5w/7dDFVFA==
+Date: Thu, 3 Apr 2025 15:15:25 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: phasta@kernel.org
+Cc: Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	Lyude Paul <lyude@redhat.com>, David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+	linaro-mm-sig@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH v2] drm/nouveau: Prevent signalled fences in pending list
+Message-ID: <Z-6J7bngU2JtfMMN@pollux>
+References: <20250403101353.42880-2-phasta@kernel.org>
+ <c779bc2f-06af-4278-8bb5-08afc074b580@amd.com>
+ <2558c9cf0cf28867238eb21950ce2a3f862c15c3.camel@mailbox.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <81a25a60-de78-43fb-b56a-131151e1c035@molgen.mpg.de> <f8ab4b21-0afc-4956-a324-12c0c67bb5de@molgen.mpg.de>
-In-Reply-To: <f8ab4b21-0afc-4956-a324-12c0c67bb5de@molgen.mpg.de>
-From: Uros Bizjak <ubizjak@gmail.com>
-Date: Thu, 3 Apr 2025 15:14:35 +0200
-X-Gm-Features: ATxdqUEKWFLktRli5xE5aIw6_0Thxu_wJ1HESz_7hFAvSvyvA3lIFGGomnedZ0o
-Message-ID: <CAFULd4Z48Vh_UW6+Q-BJ3c42eo7QaKhAbhZRX+Eegx0Te4+z6g@mail.gmail.com>
-Subject: Re: New warning `cryptd: no symbol version for this_cpu_off`
-To: Paul Menzel <pmenzel@molgen.mpg.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	LKML <linux-kernel@vger.kernel.org>, regressions@lists.linux.dev, 
-	Brian Gerst <brgerst@gmail.com>, Nadav Amit <nadav.amit@gmail.com>, 
-	Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2558c9cf0cf28867238eb21950ce2a3f862c15c3.camel@mailbox.org>
 
-On Thu, Apr 3, 2025 at 2:30=E2=80=AFPM Paul Menzel <pmenzel@molgen.mpg.de> =
-wrote:
->
-> #regzbot ^introduced: 6a367577153a
->
-> [To: +Uros, Cc: +Nadav, +Andrew]
->
->
-> Dear Linux folks,
->
->
-> Am 03.04.25 um 09:35 schrieb Paul Menzel:
->
-> > On the Intel Kaby Lake laptop Dell XPS 13 9360, updating from
-> > 6.14.0-11270-g08733088b566 to 6.14.0-12456-gacc4d5ff0b61, Linux logs th=
-e
-> > new warning below:
-> >
-> >      cryptd: no symbol version for this_cpu_off
-> >
-> > I haven=E2=80=99t bisected it, but could it be commit 06aa03056f90 (x86=
-/smp:
-> > Move this_cpu_off to percpu hot section). It says to have no functional
-> > change though.
->
-> `git bisect` led to commit 6a367577153a (percpu/x86: enable strict
-> percpu checks via named AS qualifiers).
->
->      $ git bisect start
->      $ git bisect good 08733088b566
->      $ git bisect bad acc4d5ff0b61
+On Thu, Apr 03, 2025 at 02:58:13PM +0200, Philipp Stanner wrote:
+> On Thu, 2025-04-03 at 14:08 +0200, Christian König wrote:
+> > Am 03.04.25 um 12:13 schrieb Philipp Stanner:
+> 
+> > BTW: nouveau_fence_no_signaling() looks completely broken as well. It
+> > calls nouveau_fence_is_signaled() and then list_del() on the fence
+> > head.
+> 
+> I can assure you that a great many things in Nouveau look completely
+> broken.
+> 
+> The question for us is always the cost-benefit-ratio when fixing bugs.
+> There are fixes that solve the bug with reasonable effort, and there
+> are great reworks towards an ideal state.
 
-Can you please post your .config?
+That's just an additional thing that Christian noticed. It isn't really directly
+related to what you want to fix with your patch.
 
-Uros.
+I think the function can simply be dropped.
