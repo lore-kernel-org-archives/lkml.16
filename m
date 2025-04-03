@@ -1,112 +1,69 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C336E2505BC;
-	Thu,  3 Apr 2025 17:12:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D992A24EF61;
+	Thu,  3 Apr 2025 17:14:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743700360; cv=none; b=ptpJnkeioBvDSc5beNvIpLlUWswb1W5UItZ3maHLJysKzHwkbegLJZSfUypA5DcGC3xyAV9oCpAs6BnUBqREvaS0QxIeG1969+BvYtgcPCMVpOjYkF5pi1jYbolXIhX62A3+SmloP1SdvEUNZEgi6Bs+sFnfdqXc129irLJNvUY=
+	t=1743700483; cv=none; b=bQ9BkdC4V/58+5pn8RpqFir6EHTHX60f8tS1MsFTyT5ujFVNDxG+WcmHJKTXCGtgW8n7FRt/nlYyHIg27xzIk5OfW7OHKQTqzTEk91jMidlujsaQj4xu6SNfK8g8F/kNrvMe7p9LY3gDb3UXUjFthh2l3Sv2YkfDYHGoOc2I2w8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743700360; c=relaxed/simple;
-	bh=n3MLm048L/1tThdw/l7NAqBQKdRTct3UQQPeLerYNkE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P2oKVskZeY3XiB+LwrydQTnfx2kCKoPDrlKDBUkfI3LUR/N2TPwAe8IeWzOgoIOklsVQzmWRZbRd2wOXnrDX57dQgW6RmwbgKvNuwQQiXuEIvhpdL8P3bgLAJ+SFkoE2ybh5VihUb9UJAalmQSCyji79ovmia0qXfie+S4C5kFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Lff1NApR; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Lff1NApR"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=F/Huv1u3N8Ic31zYcjSkVat6RRJDswmpX0g1d52/EhY=; b=Lff1NApRveWFI0pHa7VtFfnSIL
-	YonUoUpFlqcynPi+DSS5aZ0uLB1NlbC8JB8YynvwvDpFnj4GawFv9pOPtaSeSaxkMkNxez62iitoR
-	EGDbRyhQciYbKDm9la7lGll9DZpY1oBCE0S8a/zh6C29reHXyzugC/cvfQa+uws1ft97SuRAdakMD
-	AfJgkHa+pxL6mlN+YmivT++4mfax91L2OA83qGV8i/XhbMXgYzolnQP+GZz524JPSw5qeBEyZAWVD
-	co0rkj4yRcCk4JsB/Yq9IgWBKlKcg/0mtu3sG86wckKXTI6X2joIolQYIYS9YsLj0uqLn23R4mWrF
-	mDapSljg==;
-Received: from willy by casper.infradead.org with local (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u0O78-0000000DMVH-41Zr;
-	Thu, 03 Apr 2025 17:12:27 +0000
-Date: Thu, 3 Apr 2025 18:12:26 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Matt Fleming <matt@readmodwrite.com>
-Cc: adilger.kernel@dilger.ca, akpm@linux-foundation.org,
-	linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	luka.2016.cs@gmail.com, tytso@mit.edu,
-	Barry Song <baohua@kernel.org>, kernel-team@cloudflare.com,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Miklos Szeredi <miklos@szeredi.hu>,
-	Amir Goldstein <amir73il@gmail.com>,
-	Dave Chinner <david@fromorbit.com>,
-	Qi Zheng <zhengqi.arch@bytedance.com>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Muchun Song <muchun.song@linux.dev>
-Subject: Re: Potential Linux Crash: WARNING in ext4_dirty_folio in Linux
- kernel v6.13-rc5
-Message-ID: <Z-7BengoC1j6WQBE@casper.infradead.org>
-References: <Z8kvDz70Wjh5By7c@casper.infradead.org>
- <20250326105914.3803197-1-matt@readmodwrite.com>
- <CAENh_SSbkoa3srjkAMmJuf-iTFxHOtwESHoXiPAu6bO7MLOkDA@mail.gmail.com>
+	s=arc-20240116; t=1743700483; c=relaxed/simple;
+	bh=gqwYvtEyH9bZc8SVi3WGRDr6dqRlGgOB/+RdusFlMmk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GrPKmP5oQ9g0tx9uwhAY9PptzCpec6dtTFSEJ/MTwYPyqQJ2qmByiPFnbUc+kgO5zkbk2fJXOMt7dOjP67d70d80VKXWdKET1dMy44uEEKhFLLXRAjix/P3Cs0S4spXn97LLRzvwFTs5kVMdX19gQVWxaySPLFO/H3WRFE1hzzE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C357CC4CEE3;
+	Thu,  3 Apr 2025 17:14:40 +0000 (UTC)
+Date: Thu, 3 Apr 2025 13:15:46 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Kees Cook <kees@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Vincent Donnefort <vdonnefort@google.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, Tony
+ Luck <tony.luck@intel.com>, "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+ linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] tracing: ring-buffer: Have the ring buffer code
+ do the vmap of physical memory
+Message-ID: <20250403131546.74596048@gandalf.local.home>
+In-Reply-To: <CAHk-=wgwSx8Bm6c=UEe0Xh6MvkZ9aAYhYBTwUxYk3Fu6GehHVg@mail.gmail.com>
+References: <20250331143426.947281958@goodmis.org>
+	<20250331143532.459810712@goodmis.org>
+	<CAHk-=whUOfVucfJRt7E0AH+GV41ELmS4wJqxHDnui6Giddfkzw@mail.gmail.com>
+	<20250331133906.48e115f5@gandalf.local.home>
+	<202504030941.E0AA2E023@keescook>
+	<CAHk-=wgwSx8Bm6c=UEe0Xh6MvkZ9aAYhYBTwUxYk3Fu6GehHVg@mail.gmail.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAENh_SSbkoa3srjkAMmJuf-iTFxHOtwESHoXiPAu6bO7MLOkDA@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Apr 03, 2025 at 01:29:44PM +0100, Matt Fleming wrote:
-> On Wed, Mar 26, 2025 at 10:59 AM Matt Fleming <matt@readmodwrite.com> wrote:
-> >
-> > Hi there,
-> >
-> > I'm also seeing this PF_MEMALLOC WARN triggered from kswapd in 6.12.19.
-> >
-> > Does overlayfs need some kind of background inode reclaim support?
+On Thu, 3 Apr 2025 09:51:51 -0700
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
+
+> I *suspect* the history is simply that 'vmap()' predates 'vmap_page_range()'.
 > 
-> Hey everyone, I know there was some off-list discussion last week at
-> LSFMM, but I don't think a definite solution has been proposed for the
-> below stacktrace.
 
-Hi Matt,
+Doing some git archeology, it appears vmap_page_range() was added last
+year, to replace some ioremap_page_range() use cases, by Alexei.
 
-We did have a substantial discussion at LSFMM and we just had another
-discussion on the ext4 call.  I'm going to try to summarise those
-discussions here, and people can jump in to correct me (I'm not really
-an expert on this part of MM-FS interaction).
+In 2021, Christoph moved ioremap_page_range() to vmalloc.c replacing
+vmap_range().
 
-At LSFMM, we came up with a solution that doesn't work, so let's start
-with ideas that don't work:
+Also in 2021, Nick changed the ioremap_*range to vmap_*_range(), basically
+making this full circle.
 
- - Allow PF_MEMALLOC to dip into the atomic reserves.  With large block
-   devices, we might end up doing emergency high-order allocations, and
-   that makes everybody nervous
- - Only allow inode reclaim from kswapd and not from direct reclaim.
-   Your stack trace here is from kswapd, so obviously that doesn't work.
- - Allow ->evict_inode to return an error.  At this point the inode has
-   been taken off the lists which means that somebody else may have
-   started to start constructing it again, and we can't just put it back
-   on the lists.
+The ioremap_page_range() was introduced in 2006.
 
-Jan explained that _usually_ the reclaim path is not the last holder of
-a reference to the inode.  What's happening here is that we've lost a
-race where the dentry is being turned negative by somebody else at the
-same time, and usually they'd have the last reference and call evict.
-But if the shrinker has the last reference, it has to do the eviction.
+vmap() looks to have been there before you started git.
 
-Jan does not think that Overlayfs is a factor here.  It may change the
-timing somewhat but should not make the race wider (nor narrower).
+The vmap() usage in pstore was introduced in 2012.
 
-Ideas still on the table:
-
- - Convert all filesystems to use the XFS inode management scheme.
-   Nobody is thrilled by this large amount of work.
- - Find a simpler version of the XFS scheme to implement for other
-   filesystems.
-
+-- Steve
