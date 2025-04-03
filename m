@@ -1,211 +1,170 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 665B21854
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 08:16:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 202F21854;
+	Thu,  3 Apr 2025 08:17:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743668193; cv=none; b=K0HI+PmK9YaqMndczVTpGu/snpZQxxi9T4V7XziCkbtOAwikER89CAk5aToetVCRGr2/8NHG13wZ2sJG5teL9LqrzLHP5mt2LxS5vUVSP9C0PRZgDZmxFoN9DGVsjI2FQ6to32Gmet1OD+oRknXTCguaenp6jOayTWP1dJ2ioK4=
+	t=1743668235; cv=none; b=gF4+4npLemMmsU5gQb5cryYgnwlgflKImgmn0tmOGWpfXi74XlNZmqIlxqMAs6P0k9zcZG//occ07PXxyC+Kgcm1SIZSQMHpzsjSvuq1PVMwjc6YhZqgdj0Eq0I6avP2Cv5QBN/Lub6uaLjbKPhCWj3PoJ0/pVMb4nyQAdiFejM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743668193; c=relaxed/simple;
-	bh=GWwbMSZcEnPjv8a/YQDtHhLzZikLoFIojw/ld2qRZwk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aV/UeczfsmpucBNOfDwO26lAOBoMHk0skJrCiFRqX/tkPyj/JR+Q3aQOH9ZojZIJu2C9DXEderQYdiLddQJS1P0EagbkOb0ON/V7Q/cbsg+JeOCQIdaPkhMxgfZQhKAz52inCuCK40RNvNIsW46OaFpLMmszdK9WQnEdmBQEmRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WN6pG0Zz; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1743668235; c=relaxed/simple;
+	bh=NH6Xl6My3uB8VV7ts3K3V3CB2w3gDVGSyxth+G2YtOA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=H8TNRp3H8Ps+Q05EevGRrfbT9R6cbDnREmyqHC1HE3zB1LNJ96ji65K1Zwx/Qg8rNYDgh3TM4e093mTfUAZZR0/Mt4yo2Ep6nL4X8L1xSLpbEA7p3TXwOUi++/2kzsIxjHH7H17RB0Qkh491ou8tzg5IK30umRd+J4ZZax/qWjQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tav1fUh6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WN6pG0Zz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743668190;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AMjMT1SJKidKNaVJP0NOddv08RtyFnxBqT7a9qmfnH4=;
-	b=WN6pG0ZzlTB73ZYS49/8nbdNbRd0ZZrR5tXpkFbtMDxJfRPY6sGPAw5WkgcTuqDGhzGR5z
-	VoqzkM0tF7nD9ZY1TY084i/lC7MIiynMkcSWpwE7xaJIMlpzVVKR4AAc97WeX4C2YF1U1l
-	/DVkcU8qGYaPRo3vPOAo/4AIW42CxL4=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-554-6zajAlvmO-e2_vAOs9fhjQ-1; Thu, 03 Apr 2025 04:16:29 -0400
-X-MC-Unique: 6zajAlvmO-e2_vAOs9fhjQ-1
-X-Mimecast-MFC-AGG-ID: 6zajAlvmO-e2_vAOs9fhjQ_1743668188
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3912a0439afso269227f8f.3
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 01:16:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743668188; x=1744272988;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AMjMT1SJKidKNaVJP0NOddv08RtyFnxBqT7a9qmfnH4=;
-        b=Mv+1j/dfR1t/5OfRUBlARszQUGR5ErIKUtTa/8PYOiZGGZJw9Jm7Pw6jVRK5lpFS9x
-         0zovFjg+JezrIMXDfXao3kh/iXsJuqZ6iIs1yPQ7kMywVTL5QRupMXqAOur/Hp62UqwS
-         C286V5tyG6+IYKunG4mOoqLAK5RHqyp/oYYhAkzQhkUh0GTZO1gZk9kgySfImG3TaI5w
-         Nd9ho6NxfMJF8V0vluDNsPHr33aHRm5sFugwnREftBlAFMkU0YnrhcjIn9hNp+HrMPHg
-         Hlkf2qJfK/vX7Qe/XJeaQLVw0jCtGdhdXgPuu7kBeDKPP/uzeIkZQadEbtXaO4aFRysB
-         f+dw==
-X-Forwarded-Encrypted: i=1; AJvYcCUK6G2W/+Gj2TuSm9YmatEYC+pUnd+l3pYezAtmCVk/KD17y5S24/qhtOKEpzGAAH6nIfSD03FS23cri/8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwIdXeXHNXoIKm0obwUiUlFTlp1adkC0tqJFQoi8H6pFPb1Wfgp
-	El/OfJd0TzYm7ypF/zdkY4TkR+yVTliTcm+Oa169ADn5NUplzonDLb6zSmCFMwiIigxutfkY4wL
-	K3At2FhxwkfzYSWd5VrsI/yKB8CV152HGYpXRq4ifR2UmTDpAd9IFF03e1C1Llg==
-X-Gm-Gg: ASbGnctRNS3jPeEoVnvC4JxYQuVk3FA+uBoh5Fac4DhlRbTZwJT+mH4MgpycJschPQW
-	1hs7mL1mf5RgN0ygLm84r99mt+4VRa81TjARdzjSYQtmHlg3xZoAFvXw/ftcE3dkwCQDVY4Kwjp
-	zlShMV5qa26aTHKpn6rR3AubUTg+OCGCNOcAvnERj6vah0C62A3fn1eUOGE35JEu9A+g9cb6sME
-	3lIHJ9MJqEns5L9H/JD7LcBI3lRgI7mmJDEEXGZgztXWdrFohXk1MF5wztyvzXARKczbtUqQhTR
-	Pc+af2PdEw==
-X-Received: by 2002:a5d:64c9:0:b0:39c:1f10:ba54 with SMTP id ffacd0b85a97d-39c29769561mr4806602f8f.35.1743668187996;
-        Thu, 03 Apr 2025 01:16:27 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEfoZZSHHa6ypQcxrzlOMGNw4qiS4wPoWXMjv/Vi3mNeeAHklcIJVDTjhIMU8Wa13rlzMTysw==
-X-Received: by 2002:a5d:64c9:0:b0:39c:1f10:ba54 with SMTP id ffacd0b85a97d-39c29769561mr4806574f8f.35.1743668187615;
-        Thu, 03 Apr 2025 01:16:27 -0700 (PDT)
-Received: from redhat.com ([2a0d:6fc0:1517:1000:ea83:8e5f:3302:3575])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c30096bb2sm1118566f8f.12.2025.04.03.01.16.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Apr 2025 01:16:26 -0700 (PDT)
-Date: Thu, 3 Apr 2025 04:16:24 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Zhu Lingshan <lingshan.zhu@amd.com>
-Cc: David Woodhouse <dwmw2@infradead.org>, virtio-comment@lists.linux.dev,
-	hch@infradead.org, Claire Chang <tientzu@chromium.org>,
-	linux-devicetree <devicetree@vger.kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	=?iso-8859-1?Q?J=F6rg?= Roedel <joro@8bytes.org>,
-	iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-	graf@amazon.de
-Subject: Re: [RFC PATCH 3/3] transport-pci: Add SWIOTLB bounce buffer
- capability
-Message-ID: <20250403041519-mutt-send-email-mst@kernel.org>
-References: <20250402112410.2086892-1-dwmw2@infradead.org>
- <20250402112410.2086892-4-dwmw2@infradead.org>
- <20250403032152-mutt-send-email-mst@kernel.org>
- <9635c502-3635-4875-ae1f-53b4b7aed855@amd.com>
- <20250403033718-mutt-send-email-mst@kernel.org>
- <d151e78f-aed2-49c7-8f59-abb23db4cbf4@amd.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tav1fUh6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47B72C4CEE3;
+	Thu,  3 Apr 2025 08:17:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743668234;
+	bh=NH6Xl6My3uB8VV7ts3K3V3CB2w3gDVGSyxth+G2YtOA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Tav1fUh6tkOTHKpkrkVLElZqk32bmwq6XVYJI7Z0Amp2fEqeapHSbiPFOpzZukK1m
+	 pcsOAfZoXS2U0/dbqS3VwoaJP7V79/pu/anR5KyQfmMqyql486AHPXIBYgbyBedI4P
+	 slUtZguyHTw1V0Hw5EAinpRnK175mvTcUutIPJFjXLw/5Fdk/x22EyN9wteAhjtjaz
+	 JMa6ec/yXiOjIh/jFKfNVn3VpUcnoAVWRFPaU3Bl9H2I2gt36is+zDtpYb9/U6JbcL
+	 Gp60qiiBC53h1D3EpT/aB7iWMSmlyzfIA6YL7s+SOHNq4eBe55Jzs9QI5eK2pelXVL
+	 TH5977Wmx9M/A==
+Message-ID: <75f49cbc-2d54-480e-b67d-35ef53c4421b@kernel.org>
+Date: Thu, 3 Apr 2025 10:17:05 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d151e78f-aed2-49c7-8f59-abb23db4cbf4@amd.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH bpf v2 1/2] bpf, xdp: clean head/meta when expanding it
+To: Jiayuan Chen <jiayuan.chen@linux.dev>, bpf@vger.kernel.org
+Cc: mrpre@163.com, syzbot+0e6ddb1ef80986bdfe64@syzkaller.appspotmail.com,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau
+ <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>,
+ Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
+ Willem de Bruijn <willemb@google.com>, Jason Xing
+ <kerneljasonxing@gmail.com>, Anton Protopopov <aspsk@isovalent.com>,
+ Abhishek Chauhan <quic_abchauha@quicinc.com>,
+ Jordan Rome <linux@jordanrome.com>,
+ Martin Kelly <martin.kelly@crowdstrike.com>,
+ David Lechner <dlechner@baylibre.com>, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org, linux-kselftest@vger.kernel.org
+References: <20250331032354.75808-1-jiayuan.chen@linux.dev>
+ <20250331032354.75808-2-jiayuan.chen@linux.dev>
+Content-Language: en-US
+From: Jesper Dangaard Brouer <hawk@kernel.org>
+In-Reply-To: <20250331032354.75808-2-jiayuan.chen@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Apr 03, 2025 at 04:12:20PM +0800, Zhu Lingshan wrote:
-> On 4/3/2025 3:37 PM, Michael S. Tsirkin wrote:
-> > On Thu, Apr 03, 2025 at 03:36:04PM +0800, Zhu Lingshan wrote:
-> >> On 4/3/2025 3:27 PM, Michael S. Tsirkin wrote:
-> >>> On Wed, Apr 02, 2025 at 12:04:47PM +0100, David Woodhouse wrote:
-> >>>> From: David Woodhouse <dwmw@amazon.co.uk>
-> >>>>
-> >>>> Add a VIRTIO_PCI_CAP_SWIOTLB capability which advertises a SWIOTLB bounce
-> >>>> buffer similar to the existing `restricted-dma-pool` device-tree feature.
-> >>>>
-> >>>> The difference is that this is per-device; each device needs to have its
-> >>>> own. Perhaps we should add a UUID to the capability, and have a way for
-> >>>> a device to not *provide* its own buffer, but just to reference the UUID
-> >>>> of a buffer elsewhere?
-> >>>>
-> >>>> Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
-> >>>> ---
-> >>>>  transport-pci.tex | 33 +++++++++++++++++++++++++++++++++
-> >>>>  1 file changed, 33 insertions(+)
-> >>>>
-> >>>> diff --git a/transport-pci.tex b/transport-pci.tex
-> >>>> index a5c6719..23e0d57 100644
-> >>>> --- a/transport-pci.tex
-> >>>> +++ b/transport-pci.tex
-> >>>> @@ -129,6 +129,7 @@ \subsection{Virtio Structure PCI Capabilities}\label{sec:Virtio Transport Option
-> >>>>  \item ISR Status
-> >>>>  \item Device-specific configuration (optional)
-> >>>>  \item PCI configuration access
-> >>>> +\item SWIOTLB bounce buffer
-> >>>>  \end{itemize}
-> >>>>  
-> >>>>  Each structure can be mapped by a Base Address register (BAR) belonging to
-> >>>> @@ -188,6 +189,8 @@ \subsection{Virtio Structure PCI Capabilities}\label{sec:Virtio Transport Option
-> >>>>  #define VIRTIO_PCI_CAP_SHARED_MEMORY_CFG 8
-> >>>>  /* Vendor-specific data */
-> >>>>  #define VIRTIO_PCI_CAP_VENDOR_CFG        9
-> >>>> +/* Software IOTLB bounce buffer */
-> >>>> +#define VIRTIO_PCI_CAP_SWIOTLB           10
-> >>>>  \end{lstlisting}
-> >>>>  
-> >>>>          Any other value is reserved for future use.
-> >>>> @@ -744,6 +747,36 @@ \subsubsection{Vendor data capability}\label{sec:Virtio
-> >>>>  The driver MUST qualify the \field{vendor_id} before
-> >>>>  interpreting or writing into the Vendor data capability.
-> >>>>  
-> >>>> +\subsubsection{Software IOTLB bounce buffer capability}\label{sec:Virtio
-> >>>> +Transport Options / Virtio Over PCI Bus / PCI Device Layout /
-> >>>> +Software IOTLB bounce buffer capability}
-> >>>> +
-> >>>> +The optional Software IOTLB bounce buffer capability allows the
-> >>>> +device to provide a memory region which can be used by the driver
-> >>>> +driver for bounce buffering. This allows a device on the PCI
-> >>>> +transport to operate without DMA access to system memory addresses.
-> >>>> +
-> >>>> +The Software IOTLB region is referenced by the
-> >>>> +VIRTIO_PCI_CAP_SWIOTLB capability. Bus addresses within the referenced
-> >>>> +range are not subject to the requirements of the VIRTIO_F_ORDER_PLATFORM
-> >>>> +capability, if negotiated.
-> >>>> +
-> >>>> +\devicenormative{\paragraph}{Software IOTLB bounce buffer capability}{Virtio
-> >>>> +Transport Options / Virtio Over PCI Bus / PCI Device Layout /
-> >>>> +Software IOTLB bounce buffer capability}
-> >>>> +
-> >>>> +Devices which present the Software IOTLB bounce buffer capability
-> >>>> +SHOULD also offer the VIRTIO_F_SWIOTLB feature.
-> >>>> +
-> >>>> +\drivernormative{\paragraph}{Software IOTLB bounce buffer capability}{Virtio
-> >>>> +Transport Options / Virtio Over PCI Bus / PCI Device Layout /
-> >>>> +Software IOTLB bounce buffer capability}
-> >>>> +
-> >>>> +The driver SHOULD use the offered buffer in preference to passing system
-> >>>> +memory addresses to the device. If the driver accepts the VIRTIO_F_SWIOTLB
-> >>>> +feature, then the driver MUST use the offered buffer and never pass system
-> >>>> +memory addresses to the device.
-> >>>> +
-> >>>>  \subsubsection{PCI configuration access capability}\label{sec:Virtio Transport Options / Virtio Over PCI Bus / PCI Device Layout / PCI configuration access capability}
-> >>>>  
-> >>>>  The VIRTIO_PCI_CAP_PCI_CFG capability
-> >>>> -- 
-> >>>> 2.49.0
-> >>>>
-> >>>
-> >>> So on the PCI option. The normal mapping (ioremap) for BAR is uncached. If done
-> >>> like this, performance will suffer. But if you do normal WB, since device
-> >> and this even possibly can cause TLB thrashing.... which is a worse case.
-> >>
-> >> Thanks
-> >> Zhu Lingshan
-> >
-> > Hmm which TLB? I don't get it.
-> CPU TLB, because a device side bounce buffer design requires mapping
-> device memory to CPU address space, so that CPU to help copy data,
-> and causing a more frequent TLB switch.
 
-Lost me here. It's mapped, why switch?
 
-> TLB thrashing will occur when many devices doing DMA through
-> the device side bounce buffer, or scattered DMA.
-
-Yea I don't think this idea even works. Each device can only use
-its own swiotlb.
-
-> If the bounce buffer resides in the hypervisor, for example QEMU,
-> then TLB switch while QEMU process context switch which already occur all the time.
+On 31/03/2025 05.23, Jiayuan Chen wrote:
+> The device allocates an skb, it additionally allocates a prepad size
+> (usually equal to NET_SKB_PAD or XDP_PACKET_HEADROOM) but leaves it
+> uninitialized.
 > 
-> Thanks
-> Zhu Lingshan
-> >
-> >>> accesses do not go on the bus, they do not get synchronized with driver
-> >>> writes and there's really no way to synchronize them.
-> >>>
-> >>> First, this needs to be addressed.
-> >>>
-> >>> In this age of accelerators for everything, building pci based
-> >>> interfaces that can't be efficiently accelerated seems shortsighted ...
-> >>>
+> The bpf_xdp_adjust_head function moves skb->data forward, which allows
+> users to access data belonging to other programs, posing a security risk.
 
+I find your description confusing, and it needs to be improved to avoid 
+people interpenetrating this when reading the commit log in the future.
+
+It is part of the UAPI that BPF programs access data belonging to other 
+BPF programs.  It is the concept behind data_meta, e.g. that XDP set 
+information in this memory and TC-BPF reads it again (chained XDP progs 
+also have R/W access).  I hope/assume this is not the desired 
+interpretation of your text.
+
+I guess you want to say, that the intention is to avoid BPF programs 
+accessing uninitialized data?
+(... which is also what the code does at a glance)
+
+> Reported-by: syzbot+0e6ddb1ef80986bdfe64@syzkaller.appspotmail.com
+> Closes: https://lore.kernel.org/all/00000000000067f65105edbd295d@google.com/T/
+> Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
+> ---
+>   include/uapi/linux/bpf.h       | 8 +++++---
+>   net/core/filter.c              | 5 ++++-
+>   tools/include/uapi/linux/bpf.h | 6 ++++--
+>   3 files changed, 13 insertions(+), 6 deletions(-)
+> 
+> diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
+> index defa5bb881f4..be01a848cbbf 100644
+> --- a/include/uapi/linux/bpf.h
+> +++ b/include/uapi/linux/bpf.h
+> @@ -2760,8 +2760,9 @@ union bpf_attr {
+>    *
+>    * long bpf_xdp_adjust_head(struct xdp_buff *xdp_md, int delta)
+>    * 	Description
+> - * 		Adjust (move) *xdp_md*\ **->data** by *delta* bytes. Note that
+> - * 		it is possible to use a negative value for *delta*. This helper
+> + *		Adjust (move) *xdp_md*\ **->data** by *delta* bytes. Note that
+> + *		it is possible to use a negative value for *delta*. If *delta*
+> + *		is negative, the new header will be memset to zero. This helper
+>    * 		can be used to prepare the packet for pushing or popping
+>    * 		headers.
+>    *
+> @@ -2989,7 +2990,8 @@ union bpf_attr {
+>    * long bpf_xdp_adjust_meta(struct xdp_buff *xdp_md, int delta)
+>    * 	Description
+>    * 		Adjust the address pointed by *xdp_md*\ **->data_meta** by
+> - * 		*delta* (which can be positive or negative). Note that this
+> + *		*delta* (which can be positive or negative). If *delta* is
+> + *		negative, the new meta will be memset to zero. Note that this
+>    * 		operation modifies the address stored in *xdp_md*\ **->data**,
+>    * 		so the latter must be loaded only after the helper has been
+>    * 		called.
+> diff --git a/net/core/filter.c b/net/core/filter.c
+> index 46ae8eb7a03c..5f01d373b719 100644
+> --- a/net/core/filter.c
+> +++ b/net/core/filter.c
+> @@ -3947,6 +3947,8 @@ BPF_CALL_2(bpf_xdp_adjust_head, struct xdp_buff *, xdp, int, offset)
+>   	if (metalen)
+>   		memmove(xdp->data_meta + offset,
+>   			xdp->data_meta, metalen);
+> +	if (offset < 0)
+> +		memset(data, 0, -offset);
+>   	xdp->data_meta += offset;
+>   	xdp->data = data;
+>   
+> @@ -4239,7 +4241,8 @@ BPF_CALL_2(bpf_xdp_adjust_meta, struct xdp_buff *, xdp, int, offset)
+>   		return -EINVAL;
+>   	if (unlikely(xdp_metalen_invalid(metalen)))
+>   		return -EACCES;
+> -
+> +	if (offset < 0)
+> +		memset(meta, 0, -offset);
+>   	xdp->data_meta = meta;
+>   
+>   	return 0;
+> diff --git a/tools/include/uapi/linux/bpf.h b/tools/include/uapi/linux/bpf.h
+> index defa5bb881f4..7b1871f2eccf 100644
+> --- a/tools/include/uapi/linux/bpf.h
+> +++ b/tools/include/uapi/linux/bpf.h
+> @@ -2761,7 +2761,8 @@ union bpf_attr {
+>    * long bpf_xdp_adjust_head(struct xdp_buff *xdp_md, int delta)
+>    * 	Description
+>    * 		Adjust (move) *xdp_md*\ **->data** by *delta* bytes. Note that
+> - * 		it is possible to use a negative value for *delta*. This helper
+> + *		it is possible to use a negative value for *delta*. If *delta*
+> + *		is negative, the new header will be memset to zero. This helper
+>    * 		can be used to prepare the packet for pushing or popping
+>    * 		headers.
+>    *
+> @@ -2989,7 +2990,8 @@ union bpf_attr {
+>    * long bpf_xdp_adjust_meta(struct xdp_buff *xdp_md, int delta)
+>    * 	Description
+>    * 		Adjust the address pointed by *xdp_md*\ **->data_meta** by
+> - * 		*delta* (which can be positive or negative). Note that this
+> + *		*delta* (which can be positive or negative). If *delta* is
+> + *		negative, the new meta will be memset to zero. Note that this
+>    * 		operation modifies the address stored in *xdp_md*\ **->data**,
+>    * 		so the latter must be loaded only after the helper has been
+>    * 		called.
