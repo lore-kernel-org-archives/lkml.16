@@ -1,115 +1,98 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B02A209F43;
-	Thu,  3 Apr 2025 19:16:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F640209F43;
+	Thu,  3 Apr 2025 19:17:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743707815; cv=none; b=VqjaAYrMLMTt30RuCsRyvGBl+fjIZvG3QWz2s77ax8UIVz38DFbeWCo2N3k7PeePJ6RsLXEJr1jgHJ7tcXYDboUVOudunxoVjDov1IRXPs6tkuDLb/nr9MbBC8KZIqy33cS5KgLOPAR5lBSMtKjKXoN60lCqMJrn5Qs9Xhi9wv8=
+	t=1743707826; cv=none; b=F5UiRJQR9bLCF/M1LW06DSVu0Z8cIvW5cSeY3uiZBye4GC+gPVEvNOfncB3LnDBG6MldyWUHUYfoxESCBU4JMMO+NmIoS+fQxKmyt4oJbjse5suH9ixqgEPiNTZc9VcdIk5W45Rv+yRTuxy28LqtGbTBT5/FWC+i7BjW/ZPiVIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743707815; c=relaxed/simple;
-	bh=0VF2LzGBub+hBJUyzP6SWup11ZhL4r4nVCB1/CkpoRs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KjsUieI6q7hvNNVVf1MDuP8Qzn6GwNFEh4P5COs0kLTGMzZGJ7//ks4mv5tCJ/Umd8bdn3AXqX5vqcfF7KEkdeUGioNJtrLoa57x9264wLVNSk87YDlP+3u4vckEDoaYHrQjfhuRjtBf2SZbw32hTNrfy2EZeXZgKjpDbasyp/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FfFIbtbj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743707826; c=relaxed/simple;
+	bh=AS4RaIshtcU30uLBqrbLWUqtMzDm0R+BHz6wn5S4PGo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=oktfiI0yTAsoRwvoE0WN0dwmhWsVX0qWzE34/C7D3BqR+JrjOmhIci4tQ/q+6ROC9SqZIcB+83UHlFcs4C+2pXx2tif6OnRL9zdmZul4ytEOS93P7zFZiNMm1USXU7v/+dXtQe07psIBkQrlGxWYRHbZq5VPEM1OogF/hZp4oUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RYzd6ca/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FfFIbtbj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A8A9C4CEE9;
-	Thu,  3 Apr 2025 19:16:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RYzd6ca/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 603C3C4CEE3;
+	Thu,  3 Apr 2025 19:17:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743707815;
-	bh=0VF2LzGBub+hBJUyzP6SWup11ZhL4r4nVCB1/CkpoRs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=FfFIbtbjuLp5dyaLga1llnqzORM3rPRSicqCTnsnn6Uqnx+DPicBjY6vj9A592E+C
-	 YBD/6l5xjJ9mUozyukqQX5EgCLbObaN+a/iXUzD9+EyWxsRtS1Cg8WQ4hD/rhHTDqL
-	 uEpiXcqPp7NnAl4i0SDCn0WQLRNJyNedV/hPFdanM3b4Ngg6fnSdOeApxwBtRVibAn
-	 WaVpiBBjZkcDpBBrd9vuYyJ6+28FEkO1USyQzpunXbIqaG/+K6BdXwdx0DQqcmUqox
-	 tF8BtfMKaw2jBzmqMJrlwj0ZVjynFLURvdBW/lDK5ko9PBwSe0AaI++sGz+4jMOAMd
-	 0WPnxayo/KoNQ==
+	s=k20201202; t=1743707824;
+	bh=AS4RaIshtcU30uLBqrbLWUqtMzDm0R+BHz6wn5S4PGo=;
+	h=From:To:Cc:Subject:Date:From;
+	b=RYzd6ca/Q6LpGHgN8dn+/15GDY6Sfxahu/v9J+88YvV7bEYWyJ6RJfozr9F2qMBM+
+	 WegpFYd8tGZQVxKrhufJeT32kmLqzgQ/zZTnzXdvtbJZtFXHZb0XnqMgxZRpdmAMa5
+	 Vj9V13/Dc43aeyH8vv5q+xeGq/Nrba9WXYJrqL3QyjLPhopIcW+T03YZ/F4GWnluKm
+	 eCOSZpCBNSWAPh/cDDy4VxkcfHLcaXR1yzE4gsiVqibv1yycduqCcuJ0Gp3wLqhg3d
+	 HztyFbZ7nX9ziwDJpQOpLBu0JmzTcJrwF2eIEgs5ypK0eBvXh0PnaRFMcl1/xrZ+9l
+	 LxqsTmwygN9zg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jonathan McDowell <noodles@meta.com>,
-	Jarkko Sakkinen <jarkko@kernel.org>,
+Cc: Abhinav Kumar <quic_abhinavk@quicinc.com>,
+	Jessica Zhang <quic_jesszhan@quicinc.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
 	Sasha Levin <sashal@kernel.org>,
-	peterhuewe@gmx.de,
-	linux-integrity@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.13 37/37] tpm: End any active auth session before shutdown
-Date: Thu,  3 Apr 2025 15:15:13 -0400
-Message-Id: <20250403191513.2680235-37-sashal@kernel.org>
+	maarten.lankhorst@linux.intel.com,
+	tzimmermann@suse.de,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 6.12 01/33] drm: allow encoder mode_set even when connectors change for crtc
+Date: Thu,  3 Apr 2025 15:16:24 -0400
+Message-Id: <20250403191656.2680995-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250403191513.2680235-1-sashal@kernel.org>
-References: <20250403191513.2680235-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.13.9
+X-stable-base: Linux 6.12.21
 Content-Transfer-Encoding: 8bit
 
-From: Jonathan McDowell <noodles@meta.com>
+From: Abhinav Kumar <quic_abhinavk@quicinc.com>
 
-[ Upstream commit 1dbf74e00a5f882b04b398399b6def65cd51ef21 ]
+[ Upstream commit 7e182cb4f5567f53417b762ec0d679f0b6f0039d ]
 
-Lazy flushing of TPM auth sessions can interact badly with IMA + kexec,
-resulting in loaded session handles being leaked across the kexec and
-not cleaned up. Fix by ensuring any active auth session is ended before
-the TPM is told about the shutdown, matching what is done when
-suspending.
+In certain use-cases, a CRTC could switch between two encoders
+and because the mode being programmed on the CRTC remains
+the same during this switch, the CRTC's mode_changed remains false.
+In such cases, the encoder's mode_set also gets skipped.
 
-Before:
+Skipping mode_set on the encoder for such cases could cause an issue
+because even though the same CRTC mode was being used, the encoder
+type could have changed like the CRTC could have switched from a
+real time encoder to a writeback encoder OR vice-versa.
 
-root@debian-qemu-efi:~# tpm2_getcap handles-loaded-session
-root@debian-qemu-efi:~# tpm2_getcap handles-saved-session
-root@debian-qemu-efi:~# kexec --load --kexec-file-syscall …
-root@debian-qemu-efi:~# systemctl kexec
-…
-root@debian-qemu-efi:~# tpm2_getcap handles-loaded-session
-- 0x2000000
-root@debian-qemu-efi:~# tpm2_getcap handles-saved-session
-root@debian-qemu-efi:~#
-(repeat kexec steps)
-root@debian-qemu-efi:~# tpm2_getcap handles-loaded-session
-- 0x2000000
-- 0x2000001
-root@debian-qemu-efi:~# tpm2_getcap handles-saved-session
-root@debian-qemu-efi:~#
+Allow encoder's mode_set to happen even when connectors changed on a
+CRTC and not just when the mode changed.
 
-After:
-
-root@debian-qemu-efi:~# tpm2_getcap handles-loaded-session
-root@debian-qemu-efi:~# tpm2_getcap handles-saved-session
-root@debian-qemu-efi:~# kexec --load --kexec-file-syscall …
-root@debian-qemu-efi:~# systemctl kexec
-…
-root@debian-qemu-efi:~# tpm2_getcap handles-loaded-session
-root@debian-qemu-efi:~# tpm2_getcap handles-saved-session
-root@debian-qemu-efi:~#
-
-Signed-off-by: Jonathan McDowell <noodles@meta.com>
-Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
+Signed-off-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
+Signed-off-by: Jessica Zhang <quic_jesszhan@quicinc.com>
+Reviewed-by: Maxime Ripard <mripard@kernel.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20241211-abhinavk-modeset-fix-v3-1-0de4bf3e7c32@quicinc.com
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/char/tpm/tpm-chip.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/drm_atomic_helper.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/char/tpm/tpm-chip.c b/drivers/char/tpm/tpm-chip.c
-index 7df7abaf3e526..87f01269b9b53 100644
---- a/drivers/char/tpm/tpm-chip.c
-+++ b/drivers/char/tpm/tpm-chip.c
-@@ -300,6 +300,7 @@ int tpm_class_shutdown(struct device *dev)
- 	down_write(&chip->ops_sem);
- 	if (chip->flags & TPM_CHIP_FLAG_TPM2) {
- 		if (!tpm_chip_start(chip)) {
-+			tpm2_end_auth_session(chip);
- 			tpm2_shutdown(chip, TPM2_SU_CLEAR);
- 			tpm_chip_stop(chip);
- 		}
+diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
+index 5186d2114a503..32902f77f00dd 100644
+--- a/drivers/gpu/drm/drm_atomic_helper.c
++++ b/drivers/gpu/drm/drm_atomic_helper.c
+@@ -1376,7 +1376,7 @@ crtc_set_mode(struct drm_device *dev, struct drm_atomic_state *old_state)
+ 		mode = &new_crtc_state->mode;
+ 		adjusted_mode = &new_crtc_state->adjusted_mode;
+ 
+-		if (!new_crtc_state->mode_changed)
++		if (!new_crtc_state->mode_changed && !new_crtc_state->connectors_changed)
+ 			continue;
+ 
+ 		drm_dbg_atomic(dev, "modeset on [ENCODER:%d:%s]\n",
 -- 
 2.39.5
 
