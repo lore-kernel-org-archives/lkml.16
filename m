@@ -1,136 +1,94 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [63.216.63.35])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6852519CCEC
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 05:19:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA12B5339D;
+	Thu,  3 Apr 2025 05:25:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.216.63.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743657567; cv=none; b=iaHQd8MZwpVLKyXXQFGEUf4cYmJOAe/M0FtTA42lRLULgGC++bEDpzOTQy9kwIymRtY26VG+/XA+uWRA6t6xJFbERST2CKIwnJlqGFC7WnGzZU9VKqdb2KUL0qqVplZW2YikA4ahonkoigtBRV2VF/a18+8ViQRWGfASDKX6v5Y=
+	t=1743657947; cv=none; b=NjjVOw/b4oUDTdg9MWXhLdv/rYMKZFQCRfTkImAUDsjGN17tnjeQmaZ1xiLFDobumBNv0AfdXB2bJateN9yv8Vpm6GBGmWaOEB/gaT5c5kLtnKm83sxSman8DPgV4q9jxFJFW1Wx7c6HdkfD6+vTQ7SUiV5wODD7GLTh74tPpgg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743657567; c=relaxed/simple;
-	bh=LBDXDYPwVBltf6WpjfM/sVy0wUZu9uYUl4MhDaGqzfg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ei5r5IzzAhRGCpYFKJ/fGmCcuXZZj8CzfxPOmBkfVZT/0QU4144htHMx8CoDdNaAioDToQIX2eaTcFZpHZhLiPMrqJLi/Fs/waEiZorDEn4yFQwB7kpQ+FkRTsSSVlT3xG/Ein5SIGLcaOC0io05Ufy6cOy4qDEK4lAHyXzrXv8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ghAljArU; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ghAljArU"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5e8be1c6ff8so991410a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 22:19:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743657564; x=1744262364; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4E+iZYcCPNYOvmbdSSEK90MoKd4i8WPkQ7UDbg2N7Zw=;
-        b=ghAljArUUHmSELreDfX3tn7tx3zHeoog4HEriQipHK4Ugjg9OUFW3NwD9h6sVErTil
-         Y61oL2P9n7Jl7oqaW0oZ7Ljg9oZZw5nV8dqSeYmsrHBoPNrWleBEX4678PHsxVzEZOY6
-         OKTkgJOmZsmEB9ehOe0Fq6l+WXDtruSz3TFFJlU9q859STGisG6mzl/hZTxuJhrGgBwG
-         zWhKexbQi2Qw1SJg8+2KTqJusNEsAV4iqEtero4FSl9mRClkCbKx9QwMdocVziQaMmbO
-         n0pY2cqJmMfcJ3kkPAnKD0U9deVtnaH2T3yCmT05xzPW0tgWU6GYCPJ5ZiMiCiVdl5AS
-         VpDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743657564; x=1744262364;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4E+iZYcCPNYOvmbdSSEK90MoKd4i8WPkQ7UDbg2N7Zw=;
-        b=KFXcKr83LYAVQ9q7QfTxkwPByPtwSW8xmY7HcG+Xzhh3nz2wVmhRnDuZWPNlvAGXsl
-         cZ7j5C5lk4s2LXuQVir6V4fDpsl/vSvzOfUXUUIqAakq/8mGi8jmvD9WoqXnltfoOhZN
-         cxBVHb0rLU5p6e9/dx9ejn9+G1YeBbWJBa9wLSTtI0aOXzt06DuhPqWWA0cxFVOE5D2u
-         s5nPxzzcP3jJjjTurys5XYTyCpcejesLWwiq50WaesQXcgkMcs/Wn+DbA3oqI+V9pmF7
-         wq2XTUKSaSqLGZFXRuqvWaa1SNwBsaWIsADClLa4ePXv+PKZ7ZpPhuscmAIfLsWTIixe
-         asEQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXK1ODfPuiqy74tMgh3VS7BeLHYwE4OORZZuyFNTHt16OCFOqLvKGSWigw8RR05A3RvOshSCziZ2HyDecI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzKY0Oi3GHBqpUtc1/yPYcOgauZ308zo74up3WQEABn5csQcnz/
-	rTM254Ocqh9mAk4ZmLTevalo+qx7EDobxa7yeB40gHI4MCLZ7tkzMve0YfzuXBogad1e9R6l9VU
-	L3xR7Q3on7Kt4aCXvPysG3WiRc5w=
-X-Gm-Gg: ASbGncs3JrL86R/56iG3B088Vh+okLCuLBkWHdUhBFgfltWoZWEkWHgB4u8thluVsOx
-	uAY3Eb67gy25d11SkrJxA9pg6bbgBf8FXx6VZx644tjMHXhv++k2yXNf+cJ4hMZnyZxa4o5L4Lm
-	sPzOuqvcJ1PSIdokzMSLvODNlZsw==
-X-Google-Smtp-Source: AGHT+IG5EbBLfk+a++Lf1d8KLuWy5t9OVqcVAdEepuVcJDL9Q2EPpXL8y9V/ZJv+B4xR2onXjAG+ZpfsrPoPmqJ9TeQ=
-X-Received: by 2002:a17:907:7d8c:b0:ac3:1373:8a3d with SMTP id
- a640c23a62f3a-ac738a01edfmr1554380866b.20.1743657563398; Wed, 02 Apr 2025
- 22:19:23 -0700 (PDT)
+	s=arc-20240116; t=1743657947; c=relaxed/simple;
+	bh=gMAjSp48Ugj5wxq2Lyt6sD3ImTh42BsXs7Jo1laFeWg=;
+	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=fJ5TTI3N4XMg9UceweBPScF0pGt/Rl6AgWqDrIDC1AgD/eM2dTcPX1KVZxI49pzPqUhb7Q1+X4VsjaPO9JUt9XhEWudh6nepfzCiEYkV5BG9WEKNgOHqCS3oH3kepBL55330YgTxpSgFwml64+g4MUfibwbhfdEx/z1HdqDCIs0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=63.216.63.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
+Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4ZSqvS4D7yz5B1Jb;
+	Thu,  3 Apr 2025 13:25:40 +0800 (CST)
+Received: from xaxapp05.zte.com.cn ([10.99.98.109])
+	by mse-fl2.zte.com.cn with SMTP id 5335PWS5010892;
+	Thu, 3 Apr 2025 13:25:33 +0800 (+08)
+	(envelope-from xu.xin16@zte.com.cn)
+Received: from mapi (xaxapp05[null])
+	by mapi (Zmail) with MAPI id mid32;
+	Thu, 3 Apr 2025 13:25:34 +0800 (CST)
+Date: Thu, 3 Apr 2025 13:25:34 +0800 (CST)
+X-Zmail-TransId: 2afc67ee1bceffffffffc76-6612a
+X-Mailer: Zmail v1.0
+Message-ID: <20250403132534636XLwK7CWiCj1J4-FENz0vk@zte.com.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <cover.1743635480.git.abrahamadekunle50@gmail.com> <9ce32e62672197f63448e98a41902fdf6b40a79e.1743635480.git.abrahamadekunle50@gmail.com>
-In-Reply-To: <9ce32e62672197f63448e98a41902fdf6b40a79e.1743635480.git.abrahamadekunle50@gmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Thu, 3 Apr 2025 08:18:47 +0300
-X-Gm-Features: AQ5f1JrAee71IeO5RCFI5zeCzsyf3Lq4mvs_EnjRXEAk6UlxP5mxjnKIxryxluA
-Message-ID: <CAHp75VcT5OBxo2jMTYK6Vw8MB+h+jBWT42GVtS27YTkq-JZoLA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] staging: media: Remove NULL test on an already tested value
-To: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
-Cc: outreachy@lists.linux.dev, julia.lawall@inria.fr, hdegoede@redhat.com, 
-	mchehab@kernel.org, sakari.ailus@linux.intel.com, andy@kernel.org, 
-	gregkh@linuxfoundation.org, linux-staging@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+From: <xu.xin16@zte.com.cn>
+To: <akpm@linux-foundation.org>, <mhocko@kernel.org>
+Cc: <hannes@cmpxchg.org>, <roman.gushchin@linux.dev>, <muchun.song@linux.dev>,
+        <shakeel.butt@linux.dev>, <cgroups@vger.kernel.org>,
+        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        <xu.xin16@zte.com.cn>, <yang.yang29@zte.com.cn>,
+        <chen.haonan2@zte.com.cn>, <wang.yaxin@zte.com.cn>
+Subject: =?UTF-8?B?W1BBVENIIGxpbnV4LW5leHQgMC82XSBzdXBwb3J0IGtzbV9zdGF0IHNob3dpbmcgYXQgY2dyb3Vw?=
+Content-Type: text/plain;
+	charset="UTF-8"
+X-MAIL:mse-fl2.zte.com.cn 5335PWS5010892
+X-Fangmail-Anti-Spam-Filtered: true
+X-Fangmail-MID-QID: 67EE1BD4.002/4ZSqvS4D7yz5B1Jb
 
-On Thu, Apr 3, 2025 at 2:30=E2=80=AFAM Abraham Samuel Adekunle
-<abrahamadekunle50@gmail.com> wrote:
->
-> When a value has been tested for NULL in an expression, a
-> second NULL test on the same value in another expression
-> is unnecessary when the value has not been assigned NULL.
->
-> Remove unnecessary duplicate NULL tests on the same value that
-> has previously been NULL tested.
+From: xu xin <xu.xin16@zte.com.cn>
 
->  drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c | 2 +-
->  drivers/staging/media/av7110/sp8870.c                     | 2 +-
+With the enablement of container-level KSM (e.g., via prctl [1]), there is
+a growing demand for container-level observability of KSM behavior. However,
+current cgroup implementations lack support for exposing KSM-related
+metrics.
 
-Please, split this on per driver basis, as they have different
-maintainers and trees to go through.
+This patch introduces a new interface named ksm_stat
+at the cgroup hierarchy level, enabling users to monitor KSM merging
+statistics specifically for containers where this feature has been
+activated, eliminating the need to manually inspect KSM information for
+each individual process within the cgroup.
 
-...
+Users can obtain the KSM information of a cgroup just by:
 
-> --- a/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c
-> +++ b/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c
-> @@ -1292,7 +1292,7 @@ static int gmin_get_config_dsm_var(struct device *d=
-ev,
->          * if it founds something different than string, letting it
->          * to fall back to the old code.
->          */
-> -       if (cur && cur->type !=3D ACPI_TYPE_STRING) {
-> +       if (cur->type !=3D ACPI_TYPE_STRING) {
->                 dev_info(dev, "found non-string _DSM entry for '%s'\n", v=
-ar);
->                 ACPI_FREE(obj);
->                 return -EINVAL;
+# cat /sys/fs/cgroup/memory.ksm_stat
+ksm_rmap_items 76800
+ksm_zero_pages 0
+ksm_merging_pages 76800
+ksm_process_profit 309657600
 
-This change is good.
+Current implementation supports cgroup v1 temporarily; cgroup v2
+compatibility is planned for future versions.
 
-...
+---
+[1] commit d7597f59d1d3 ("mm: add new api to enable ksm per process").
 
-> diff --git a/drivers/staging/media/av7110/sp8870.c b/drivers/staging/medi=
-a/av7110/sp8870.c
-> index 0c813860f5b2..8c5fa5ed5340 100644
-> --- a/drivers/staging/media/av7110/sp8870.c
-> +++ b/drivers/staging/media/av7110/sp8870.c
-> @@ -508,7 +508,7 @@ static int sp8870_set_frontend(struct dvb_frontend *f=
-e)
->         }
->
->         if (debug) {
-> -               if (valid) {
-> +               {
->                         if (trials > 1) {
->                                 pr_info("%s(): firmware lockup!!!\n", __f=
-unc__);
->                                 pr_info("%s(): recovered after %i trial(s=
-))\n",  __func__, trials - 1);
+xu xin (6):
+  memcontrol: rename mem_cgroup_scan_tasks()
+  memcontrol: introduce the new mem_cgroup_scan_tasks()
+  memcontrol-v1: introduce ksm_stat at cgroup level
+  memcontrol-v1: add ksm_zero_pages in cgroup/memory.ksm_stat
+  memcontrol-v1: add ksm_merging_pages in cgroup/memory.ksm_stat
+  memcontrol-v1: add ksm_profit in cgroup/memory.ksm_stat
 
-But this is not fully done. Why do we need to keep {}? Just shift left
-the code and remove those {} altogether.
+ include/linux/memcontrol.h |  7 ++++++
+ mm/memcontrol-v1.c         | 55 ++++++++++++++++++++++++++++++++++++++++++++++
+ mm/memcontrol.c            | 28 +++++++++++++++++++++--
+ mm/oom_kill.c              |  6 ++---
+ 4 files changed, 91 insertions(+), 5 deletions(-)
 
---=20
-With Best Regards,
-Andy Shevchenko
+-- 
+2.15.2
