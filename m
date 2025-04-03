@@ -1,195 +1,139 @@
-Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AAE92E62A0
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 20:50:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0743E2E62BB
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 20:51:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743713424; cv=none; b=Gxk9XMEbK5yK9Gxk5cXP6wlKNcsadvWIYmai7gJGw7hwZRT9CIv/Kxvn+JLt9zqSQ9gCTu6QiEisoHFrTUHlDUXQwute31c7OM2HKy/dIw/T9fduNzZO7ate6L2/CHabb7eD4bngsz8NiOYpE97s+rYl0L2H4od8NDUruez+UNE=
+	t=1743713510; cv=none; b=f1kQiUvLvJf7ZbHLqIw+ZMOHwo7zHoMFb1k/uJHfoAdc0dsC4FHWyyQT6h9NCUyaEHmG0SFKsrGuhQ+1moW1o608c00CMzKXxPt0C5dO+2UbHOzWLNSBqbWhUquePxO/u51XocAaR4MdCq+L+RaMJWRtnKVr28Z4sqKhfm3mozY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743713424; c=relaxed/simple;
-	bh=sgqb28suoVfHMMzBlJyy9wO1Z5VDQ+DKGssa0c3nyNA=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Av9MFthm1KFSl6NcJOneK5HoTC0FRPjagjAReKEuCJCq4uMcWEELs6t3eBUcIbXeh2TXV4SJjw3Ul5V3dAwZbfZnZ+4qDwVskEKLdsUxhkkxtFR2Yog9QsJx/IjHEsKm6itZ8MuUvqT/6EgMTOJ4I5T2dzohPYM8HCdz3h8YNfo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3d5b381656dso31124475ab.2
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 13:50:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743713421; x=1744318221;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=qCxNO/wj+OGDObYICYck8puXYXkoDJ5yVmBZfl+FJKw=;
-        b=Q0FWoITnITrORp+lCG3SSxtsopJyvCQb5eqamkTXUu3Qe5NEI7KFtO2yjkPj8qYpK0
-         9IDKOCyOs1PJrj/hz7o0TGxkSfnypDO3Yxc3utxIE70mkhwiKZ/L0ziFsN38vfet7qv5
-         nN+GC3zQTDkVvTwf47B3rnNd+RMddHhCUDExUhR3uH4jJ35WnyFYdXzoK/GVRqe3cSm/
-         zTn8aJ1EgvPQGwt6ldqudQ5aFR8QH6Xxrx73PKo9FR0VuOJ7HQu5hpeM438Wa226Kcid
-         gyn/OkGqmu0YbBeQOVbxwYwTu/iDAuSqSKsCMlkI87/vicg+ZLQGPHlQLkcQW6d6X46g
-         oaAg==
-X-Forwarded-Encrypted: i=1; AJvYcCWlGDyxJ8fVjSoxPREV80CiRjxmdGKmA7sL/Oub4WtFdMSM7Zip8xdS70OtsLiDzmwMYLIRsiw9sxpcfUI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQ1ZoXvgmxMQ7et1Y4FW43yZjE4mJvcGyl6E+VamOPiizhGSpD
-	HdNgE8EW6mtL3f+khrm6F0UdGdJ4H/itVdKmR+Ykm3Ux/W3Mc6SLFMmOu4TPjKSEMxmXBX/f6h2
-	xv08aUR42i05skkxRULpedSoVmirwgsbKeh/0igaTtFtPbOalc83TXxc=
-X-Google-Smtp-Source: AGHT+IH2SP7oqdPR154EMfw0t+YQbXEaaARss25Ao4kq70IANKV/m9842xzDsrNK/TksxWwaMFLn9ct5OGK4zrFXeu9rMQrmTMEc
+	s=arc-20240116; t=1743713510; c=relaxed/simple;
+	bh=qR0BN8zygPj833XKcZhKGDt/M7Fne6j13JD9702Jrqs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Sp7a7dTQ9PrVuJ6IglWXyzR23z65XE5K371mlVfRyZl2POTJUMwCGN9SB6FVn7IAZTx6cYrf0GgYN64TcE0lj6+W/Q66dEie7NdR1+MzQC01NCwBgWJE3u8NJpGpss2XN3sHuZEZp4PJxi9/mI9GGud9rwfeMeZ2ExQ+GQxetkE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=cMkY1rnL; arc=none smtp.client-ip=91.218.175.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="cMkY1rnL"
+Message-ID: <528bb5d2-e0ce-4125-b11b-8b873230b0fc@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1743713505;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jqnZi9xNGdDH/jnXjuRYKr/qyvU7hVYZoGPox9WqvZQ=;
+	b=cMkY1rnLjoCSutN0LnPrIIbeiylbgHUF5siqjvtpqrEHhbFlfd8tJGNtFZasaXQ/yxzbhW
+	rkY68sQU1f29x398O13gAAraIgukeEYGwwK/Dl+zcdHn8UgLAL9iQK0jEE8/veZde+0LEZ
+	BTBjSb6S0sqhRd2HfKeRKtiYSgY0NEk=
+Date: Thu, 3 Apr 2025 16:51:39 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:19cf:b0:3d3:d00c:3602 with SMTP id
- e9e14a558f8ab-3d6e3f056a2mr10364025ab.10.1743713421693; Thu, 03 Apr 2025
- 13:50:21 -0700 (PDT)
-Date: Thu, 03 Apr 2025 13:50:21 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67eef48d.050a0220.9040b.0262.GAE@google.com>
-Subject: [syzbot] [bcachefs?] general protection fault in bch2_snapshot_tree_oldest_subvol
-From: syzbot <syzbot+baee8591f336cab0958b@syzkaller.appspotmail.com>
-To: kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [RFC net-next PATCH 07/13] net: pcs: Add Xilinx PCS driver
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: netdev@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S . Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, linux-kernel@vger.kernel.org,
+ Christian Marangi <ansuelsmth@gmail.com>, upstream@airoha.com,
+ Heiner Kallweit <hkallweit1@gmail.com>, Michal Simek <michal.simek@amd.com>,
+ Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>,
+ Robert Hancock <robert.hancock@calian.com>,
+ linux-arm-kernel@lists.infradead.org
+References: <20250403181907.1947517-1-sean.anderson@linux.dev>
+ <20250403181907.1947517-8-sean.anderson@linux.dev>
+ <Z-7vIbvtjIGS5hzr@shell.armlinux.org.uk>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Sean Anderson <sean.anderson@linux.dev>
+In-Reply-To: <Z-7vIbvtjIGS5hzr@shell.armlinux.org.uk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-Hello,
+On 4/3/25 16:27, Russell King (Oracle) wrote:
+> On Thu, Apr 03, 2025 at 02:19:01PM -0400, Sean Anderson wrote:
+>> +static int xilinx_pcs_validate(struct phylink_pcs *pcs,
+>> +			       unsigned long *supported,
+>> +			       const struct phylink_link_state *state)
+>> +{
+>> +	__ETHTOOL_DECLARE_LINK_MODE_MASK(xilinx_supported) = { 0 };
+>> +
+>> +	phylink_set_port_modes(xilinx_supported);
+>> +	phylink_set(xilinx_supported, Autoneg);
+>> +	phylink_set(xilinx_supported, Pause);
+>> +	phylink_set(xilinx_supported, Asym_Pause);
+>> +	switch (state->interface) {
+>> +	case PHY_INTERFACE_MODE_SGMII:
+>> +		/* Half duplex not supported */
+>> +		phylink_set(xilinx_supported, 10baseT_Full);
+>> +		phylink_set(xilinx_supported, 100baseT_Full);
+>> +		phylink_set(xilinx_supported, 1000baseT_Full);
+>> +		break;
+>> +	case PHY_INTERFACE_MODE_1000BASEX:
+>> +		phylink_set(xilinx_supported, 1000baseX_Full);
+>> +		break;
+>> +	case PHY_INTERFACE_MODE_2500BASEX:
+>> +		phylink_set(xilinx_supported, 2500baseX_Full);
+>> +		break;
+>> +	default:
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	linkmode_and(supported, supported, xilinx_supported);
+>> +	return 0;
+> 
+> You can not assume that an interface mode implies any particular media.
+> For example, you can not assume that just because you have SGMII, that
+> the only supported media is BaseT. This has been a fundamental principle
+> in phylink's validation since day one.
+> 
+> Phylink documentation for the pcs_validate() callback states:
+> 
+>  * Validate the interface mode, and advertising's autoneg bit, removing any
+>  * media ethtool link modes that would not be supportable from the supported
+>  * mask. Phylink will propagate the changes to the advertising mask. See the
+>  * &struct phylink_mac_ops validate() method.
+> 
+> and if we look at the MAC ops validate (before it was removed):
+> 
+> - * Clear bits in the @supported and @state->advertising masks that
+> - * are not supportable by the MAC.
+> - *
+> - * Note that the PHY may be able to transform from one connection
+> - * technology to another, so, eg, don't clear 1000BaseX just
+> - * because the MAC is unable to BaseX mode. This is more about
+> - * clearing unsupported speeds and duplex settings. The port modes
+> - * should not be cleared; phylink_set_port_modes() will help with this.
+> 
+> PHYs can and do take SGMII and provide both BaseT and BaseX or BaseR
+> connections. A PCS that is not directly media facing can not dictate
+> the link modes.
+> 
 
-syzbot found the following issue on:
+OK, how about this:
 
-HEAD commit:    a2cc6ff5ec8f Merge tag 'firewire-updates-6.15' of git://gi..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=12482fb0580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=6fe3b5e6a2cb1cc2
-dashboard link: https://syzkaller.appspot.com/bug?extid=baee8591f336cab0958b
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10530be4580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13d6d404580000
+static int xilinx_pcs_validate(struct phylink_pcs *pcs,
+			       unsigned long *supported,
+			       const struct phylink_link_state *state)
+{
+	__ETHTOOL_DECLARE_LINK_MODE_MASK(xilinx_supported) = { 0 };
+	unsigned long caps = phy_caps_from_interface(state->interface);
 
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-a2cc6ff5.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/c58c1555aab7/vmlinux-a2cc6ff5.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/61fb9d013359/bzImage-a2cc6ff5.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/86cf46d3a5d9/mount_0.gz
+	phylink_set_port_modes(xilinx_supported);
+	phylink_set(xilinx_supported, Autoneg);
+	phylink_set(xilinx_supported, Pause);
+	phylink_set(xilinx_supported, Asym_Pause);
+	/* Half duplex not supported */
+	caps &= ~(LINK_CAPA_10HD | LINK_CAPA_100HD | LINK_CAPA_1000HD);
+	phy_caps_linkmodes(caps, xilinx_supported);
+	linkmode_and(supported, supported, xilinx_supported);
+	return 0;
+}
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+baee8591f336cab0958b@syzkaller.appspotmail.com
-
- done
-bcachefs (loop0): accounting_read... done
-bcachefs (loop0): alloc_read... done
-bcachefs (loop0): snapshots_read... done
-bcachefs (loop0): check_allocations...
-Oops: general protection fault, probably for non-canonical address 0xdffffc0000000004: 0000 [#1] SMP KASAN NOPTI
-KASAN: null-ptr-deref in range [0x0000000000000020-0x0000000000000027]
-CPU: 0 UID: 0 PID: 5318 Comm: syz-executor394 Not tainted 6.14.0-syzkaller-12966-ga2cc6ff5ec8f #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-RIP: 0010:bch2_snapshot_tree_oldest_subvol+0x1d3/0x6a0 fs/bcachefs/snapshot.c:400
-Code: e6 e8 81 dd 36 fd 4c 39 e5 0f 86 c9 03 00 00 e8 13 db 36 fd 49 6b c4 38 49 01 c6 49 83 c6 18 49 83 c6 20 4c 89 f0 48 c1 e8 03 <42> 0f b6 04 28 84 c0 0f 85 c6 03 00 00 41 8b 2e 31 ff 89 ee e8 24
-RSP: 0018:ffffc9000d46e020 EFLAGS: 00010202
-RAX: 0000000000000004 RBX: 0000000000000001 RCX: ffff888000f98000
-RDX: 0000000000000000 RSI: 00000000ffeb487f RDI: 0000000000000001
-RBP: 0000000000000001 R08: ffffffff848c7c5f R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: 00000000ffeb487f
-R13: dffffc0000000000 R14: 0000000000000020 R15: 000000000014b780
-FS:  0000555584fe3380(0000) GS:ffff88808c599000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000055835cf3c000 CR3: 0000000044318000 CR4: 0000000000352ef0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- bch2_inum_snap_offset_err_msg_trans+0x374/0x680 fs/bcachefs/error.c:691
- bch2_indirect_extent_missing_error+0x411/0x1290 fs/bcachefs/reflink.c:192
- gc_trigger_reflink_p_segment fs/bcachefs/reflink.c:392 [inline]
- __trigger_reflink_p+0x196c/0x1cc0 fs/bcachefs/reflink.c:432
- bch2_trigger_reflink_p+0x299/0x380 fs/bcachefs/reflink.c:451
- bch2_key_trigger fs/bcachefs/bkey_methods.h:88 [inline]
- bch2_gc_mark_key+0x6bd/0x1180 fs/bcachefs/btree_gc.c:639
- bch2_gc_btree fs/bcachefs/btree_gc.c:677 [inline]
- bch2_gc_btrees fs/bcachefs/btree_gc.c:740 [inline]
- bch2_check_allocations+0x1488/0x6ab0 fs/bcachefs/btree_gc.c:1042
- bch2_run_recovery_pass+0xf0/0x1e0 fs/bcachefs/recovery_passes.c:226
- bch2_run_recovery_passes+0x2ad/0xa90 fs/bcachefs/recovery_passes.c:285
- bch2_fs_recovery+0x292a/0x3e20 fs/bcachefs/recovery.c:936
- bch2_fs_start+0x2fb/0x610 fs/bcachefs/super.c:1060
- bch2_fs_get_tree+0x113e/0x18f0 fs/bcachefs/fs.c:2253
- vfs_get_tree+0x90/0x2b0 fs/super.c:1759
- do_new_mount+0x2cf/0xb70 fs/namespace.c:3878
- do_mount fs/namespace.c:4218 [inline]
- __do_sys_mount fs/namespace.c:4429 [inline]
- __se_sys_mount+0x38c/0x400 fs/namespace.c:4406
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f22f815ae2a
-Code: d8 64 89 02 48 c7 c0 ff ff ff ff eb a6 e8 5e 04 00 00 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ffd84c61a58 EFLAGS: 00000282 ORIG_RAX: 00000000000000a5
-RAX: ffffffffffffffda RBX: 00007ffd84c61a70 RCX: 00007f22f815ae2a
-RDX: 0000200000000040 RSI: 0000200000000000 RDI: 00007ffd84c61a70
-RBP: 0000200000000000 R08: 00007ffd84c61ab0 R09: 0000000000005995
-R10: 0000000000800001 R11: 0000000000000282 R12: 0000200000000040
-R13: 0000000000000004 R14: 0000000000000003 R15: 00007ffd84c61ab0
- </TASK>
-Modules linked in:
----[ end trace 0000000000000000 ]---
-RIP: 0010:bch2_snapshot_tree_oldest_subvol+0x1d3/0x6a0 fs/bcachefs/snapshot.c:400
-Code: e6 e8 81 dd 36 fd 4c 39 e5 0f 86 c9 03 00 00 e8 13 db 36 fd 49 6b c4 38 49 01 c6 49 83 c6 18 49 83 c6 20 4c 89 f0 48 c1 e8 03 <42> 0f b6 04 28 84 c0 0f 85 c6 03 00 00 41 8b 2e 31 ff 89 ee e8 24
-RSP: 0018:ffffc9000d46e020 EFLAGS: 00010202
-RAX: 0000000000000004 RBX: 0000000000000001 RCX: ffff888000f98000
-RDX: 0000000000000000 RSI: 00000000ffeb487f RDI: 0000000000000001
-RBP: 0000000000000001 R08: ffffffff848c7c5f R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: 00000000ffeb487f
-R13: dffffc0000000000 R14: 0000000000000020 R15: 000000000014b780
-FS:  0000555584fe3380(0000) GS:ffff88808c599000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000556b9781f0c8 CR3: 0000000044318000 CR4: 0000000000352ef0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-----------------
-Code disassembly (best guess):
-   0:	e6 e8                	out    %al,$0xe8
-   2:	81 dd 36 fd 4c 39    	sbb    $0x394cfd36,%ebp
-   8:	e5 0f                	in     $0xf,%eax
-   a:	86 c9                	xchg   %cl,%cl
-   c:	03 00                	add    (%rax),%eax
-   e:	00 e8                	add    %ch,%al
-  10:	13 db                	adc    %ebx,%ebx
-  12:	36 fd                	ss std
-  14:	49 6b c4 38          	imul   $0x38,%r12,%rax
-  18:	49 01 c6             	add    %rax,%r14
-  1b:	49 83 c6 18          	add    $0x18,%r14
-  1f:	49 83 c6 20          	add    $0x20,%r14
-  23:	4c 89 f0             	mov    %r14,%rax
-  26:	48 c1 e8 03          	shr    $0x3,%rax
-* 2a:	42 0f b6 04 28       	movzbl (%rax,%r13,1),%eax <-- trapping instruction
-  2f:	84 c0                	test   %al,%al
-  31:	0f 85 c6 03 00 00    	jne    0x3fd
-  37:	41 8b 2e             	mov    (%r14),%ebp
-  3a:	31 ff                	xor    %edi,%edi
-  3c:	89 ee                	mov    %ebp,%esi
-  3e:	e8                   	.byte 0xe8
-  3f:	24                   	.byte 0x24
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+--Sean
