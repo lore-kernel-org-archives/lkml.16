@@ -1,38 +1,75 @@
-Received: from lx20.hoststar.hosting (lx20.hoststar.hosting [168.119.41.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 692B024418E;
-	Thu,  3 Apr 2025 08:48:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.41.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 935D819E7D1
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 08:49:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743670131; cv=none; b=PS6rILZAy4moNcWzlJNvflCkmE9vZ8tDv1aSjo8oKl8G0JlbE54oR+dDZQJRpdLipnZB8hrk9uxQGtSx/s0dpskcZZBtcZJqJL8GkgTjdGG25M1RbHdnsPLqD2NMbXs7eipzhjYExHZGRJwwnOtgKTDhDwLB8ijdqY68UwrdKx8=
+	t=1743670189; cv=none; b=bNgNTtC89hwgUy2+Ksy7ZgyFIYP6O+hYta7F/anmxnK+IjVK0Cxa14y74FWTecPXpkLctR/7zwl+gk14BNuspyN03jQwROLI8bWFnNIwouS0pgmFrvBwFdN6xBEWZRGYcYkGf2yQl2gIhq40xk+VX9Hh81lq1KKURH0dwI3PueY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743670131; c=relaxed/simple;
-	bh=6UeImrUjl37SdxyeuQAJYtZXHbr2tkKpxiL+FtEBn8M=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ThiH/CmijvOCxpmtRrMtmd/QYiO1QVijWo74ogkk4EkC+b0gqrGeClzsfphReLA7ipH6VEtlKxZGFfgJYa08msARkVVAnAfSSRBTKVdIo25FIg6+bALYLN0HFLrCWCj5iSqEr8gLJBdZFBq0WlWoS8H4dJENcLLRrfczwDDWfTw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=emfend.at; spf=pass smtp.mailfrom=emfend.at; dkim=pass (1024-bit key) header.d=emfend.at header.i=@emfend.at header.b=pHOV/i/v; arc=none smtp.client-ip=168.119.41.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=emfend.at
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=emfend.at
+	s=arc-20240116; t=1743670189; c=relaxed/simple;
+	bh=soxayd4c4IiDLMOfZJwndk9fJPj+0hKVhHlYZta+Z0k=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=K1tCRGWx4JcudeRdvHExlyAXj18CLOeLkRQKWFqFxVycKlrO/JJX6DV6kkYq1WNL1xrwyPitGWKUneK+UYOXMjXGMFq81kDexIn3CH2yhUB/WHKhOGy1L8P+bNZayTpzOw0hkOMXUhmm6c1q+993nzPyRmgFyD5ly7uDn5kRTa0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AkomH2ry; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=emfend.at header.i=@emfend.at header.b="pHOV/i/v"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=emfend.at;
-	 s=mail; h=Cc:To:In-Reply-To:References:Message-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:Subject:Date:From:Sender:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=s+mVNH2Jzd5MpfRtJUFYaiaXymEwxkO8BqeNglQXZ1Q=; b=pHOV/i/vLrKquhdOPpRXyP5gmY
-	Uf4v95z2aHElcgJyYkax/Ckyvjnm4Olbit7bclKUFJo3VH7c/EU2mLguwHG1NLrsZwIa9zjiEduBn
-	IDCwZfDzmwlXlctFAqIAL5eMAX50ONhDbBNGcYSdi7mRAd5pLYEkh0W5M12RRHM0+Tq4=;
-Received: from 194-208-208-245.tele.net ([194.208.208.245]:60368 helo=[127.0.1.1])
-	by lx20.hoststar.hosting with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.93)
-	(envelope-from <matthias.fend@emfend.at>)
-	id 1u0Fbw-008Iud-9R; Thu, 03 Apr 2025 10:07:40 +0200
-From: Matthias Fend <matthias.fend@emfend.at>
-Date: Thu, 03 Apr 2025 10:07:35 +0200
-Subject: [PATCH 1/2] media: dt-bindings: i2c: add Himax HM1246 image sensor
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AkomH2ry"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43d2d952eb1so3657475e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 01:49:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1743670186; x=1744274986; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VBu8J27ftlzEshktz7zCJQ/1Jp+jqvvKxGVjR8a7qWQ=;
+        b=AkomH2ryrfE8NaImqKT6rj+SR2M0rg/pv4t/xEll6/xyBDSfbfNUyHAj/tSjWlHAfy
+         m36HoUSiPMkl4DnD24Am6IfFAtYh3J0jM7FiX2rPE//GdPjuH04LdIXxKjxCe7yikbkg
+         iE4xQIysBiy5Q6YtgWCuWCi4MiNeWnAmjWVVvJIEWWZVgJAuDHlyYAZPPGl+coOLZIid
+         E+tyjj5CZFuwN2YOm00Om7WIsGkABCmR6wEbDTegKoPVkgXY4KNnwAw/FWWvfwmBxLKy
+         qMiKHlB8Ja7RO65Y5T2u0du/NPPztfiL2R216kuQN0v3Eg1LZaViZ3IpfGh8wpwhA5YK
+         1+Zw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743670186; x=1744274986;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VBu8J27ftlzEshktz7zCJQ/1Jp+jqvvKxGVjR8a7qWQ=;
+        b=pZEkERqcTF0W6DTk7LvitH+/uJe0NWfwWXdTqFdp2Cuoa1aB9mZpE5JSvGa6odYdvh
+         dlQcqpLZ3mOhvnKVQLn7D314WjAjtQEksL72sxTqpF9eFkEUJm5ySKN2VkalcjpsDFYq
+         9d/ofS0ec/PS6lwUSpRv9iECGNbtQJVK5GIvjIUp0/Qshgx7xcDt8zTSAqLRGF4xaHWA
+         qW07rpXqDSn6qIAKL+ElMeQALXZYBvTMIEycE5+IV9K46xtionuexgKpgGSoyzN8ZTFu
+         edKjLPXcmGXhyBjJZuvGqmZJVzG/GP9om/8CO7dF48vWcok4yJUJxrjMEtW8LB9DjQAr
+         i5kg==
+X-Forwarded-Encrypted: i=1; AJvYcCV3JOylJobBcHN30+YfYsBuZHb0/FoB4D7pNlS9yo2k5F8fF6B1eupB7AEK6YPKTQ5GEx1Yo19jVuR3rf0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzo3LFU1ZjqijS9ewb+9Td4GkhS2UA6lsx7PcNsRfqBk/mVHceD
+	KLfS19K2/8z0b75LEI3dUQ3KwlmcyeRHo9kTWoC7rxg/ceE5j21sI0GmDGR8OlI=
+X-Gm-Gg: ASbGncu7ifphgqUWrwa4t4UcaPnLSgWWjSWsQ+vBs+zuU4wNfnU+tYLdYo7cSgRc5p8
+	q6F39OYlMe3k56qwZjbrkV8mbUxPa2Ep8Zs2ghM4ibKOTyYHB2bRIVIR4nJ6bJ/Ko9JYamaVxZx
+	0tQ/rOQny886HB2MCdpFW4eXUPGsqPdByB6/prcaW29l970xcTgmmsSDitVQVmaw8cnlaUFgYyC
+	s2lxpXmTbHhrpFGP6okmeqayn6WwAwjmPw1jhtgKt92Infk0o4p4yRn5pSudI2lfkUn4OFGG+nz
+	K5tGbPW9KXjmjJIT1HVM2umvDgz77f0XYP4dwF++0pSQ0njb7KW8ryaAmdzpeYU+NQ==
+X-Google-Smtp-Source: AGHT+IHXc5iNcd+rK/nAzT2TA4Y/VmWE4yJGK6u8qDCUGXOzUoFZeO8r9utVgQgnH5ORrul8GFjY2w==
+X-Received: by 2002:a05:600c:1c22:b0:43b:c5a3:2e1a with SMTP id 5b1f17b1804b1-43eb5bfc50cmr55015725e9.2.1743670185785;
+        Thu, 03 Apr 2025 01:49:45 -0700 (PDT)
+Received: from arrakeen.starnux.net ([2a01:e0a:3d9:2080:52eb:f6ff:feb3:451a])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec364d07csm11578105e9.28.2025.04.03.01.49.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Apr 2025 01:49:45 -0700 (PDT)
+From: Neil Armstrong <neil.armstrong@linaro.org>
+To: Kevin Hilman <khilman@baylibre.com>, 
+ Jerome Brunet <jbrunet@baylibre.com>, 
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
+ Chuan Liu <chuan.liu@amlogic.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, 
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250205-optimize_memory_size_of_clk_measure-v2-1-4f546053495d@amlogic.com>
+References: <20250205-optimize_memory_size_of_clk_measure-v2-1-4f546053495d@amlogic.com>
+Subject: Re: [PATCH v2] soc: amlogic: clk-measure: Optimize the memory size
+ of clk-measure
+Message-Id: <174367018513.531300.4479678290582017713.b4-ty@linaro.org>
+Date: Thu, 03 Apr 2025 10:49:45 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,179 +78,44 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250403-hm1246-v1-1-30990d71bc42@emfend.at>
-References: <20250403-hm1246-v1-0-30990d71bc42@emfend.at>
-In-Reply-To: <20250403-hm1246-v1-0-30990d71bc42@emfend.at>
-To: Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Matthias Fend <matthias.fend@emfend.at>, 
- bsp-development.geo@leica-geosystems.com
 X-Mailer: b4 0.14.2
-X-Spam-Score: -1.0
-X-Spam-Bar: -
-X-Spam-Report: Spam detection software, running on the system "lx20.hoststar.hosting",
- has NOT identified this incoming email as spam.  The original
- message has been attached to this so you can view it or label
- similar future email.  If you have any questions, see
- the administrator of that system for details.
- 
- Content preview:  Hello, this series adds support for the Himax HM1246 image
-    sensor. The Himax HM1246-AWD is a 1/3.7-Inch CMOS image sensor SoC with an
-    active array size of 1296 x 976. The datasheet can b Currently, only the
-   [...] 
- 
- Content analysis details:   (-1.0 points, 5.0 required)
- 
-  pts rule name              description
- ---- ---------------------- --------------------------------------------------
-  0.0 URIBL_BLOCKED          ADMINISTRATOR NOTICE: The query to URIBL was
-                             blocked.  See
-                             http://wiki.apache.org/spamassassin/DnsBlocklists#dnsbl-block
-                              for more information.
-                             [URIs: himax.com.tw]
-  0.0 URIBL_DBL_BLOCKED_OPENDNS ADMINISTRATOR NOTICE: The query to
-                             dbl.spamhaus.org was blocked due to usage
-                             of an open resolver. See
-                             https://www.spamhaus.org/returnc/pub/
-                             [URIs: himax.com.tw]
-  0.0 URIBL_ZEN_BLOCKED_OPENDNS ADMINISTRATOR NOTICE: The query to
-                             zen.spamhaus.org was blocked due to usage
-                             of an open resolver. See
-                             https://www.spamhaus.org/returnc/pub/
-                             [URIs: himax.com.tw]
- -1.0 ALL_TRUSTED            Passed through trusted hosts only via SMTP
-  0.0 TVD_RCVD_IP            Message was received from an IP address
-  0.0 Local_hs1_NotHoststar  Sender is not from hoststar.ch|de|com
-  0.0 KAM_DMARC_STATUS       Test Rule for DKIM or SPF Failure with Strict
-                             Alignment
 
-Add YAML device tree binding for Himax HM1246 image sensor.
+Hi,
 
-Signed-off-by: Matthias Fend <matthias.fend@emfend.at>
----
- .../bindings/media/i2c/himax,hm1246.yaml           | 111 +++++++++++++++++++++
- 1 file changed, 111 insertions(+)
+On Wed, 05 Feb 2025 15:58:43 +0800, Chuan Liu wrote:
+> Drop "CLK_MSR_MAX" and replace it with adding a member "msr_count" in
+> the structure to specify the count of msr_id.
+> 
+> Mark the table of msr_id as const.
+> 
+> 
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/himax,hm1246.yaml b/Documentation/devicetree/bindings/media/i2c/himax,hm1246.yaml
-new file mode 100644
-index 0000000000000000000000000000000000000000..8a67de7e3ffcaa9f1acfe443b1e36fffb79dbacf
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/himax,hm1246.yaml
-@@ -0,0 +1,111 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+# Copyright 2025 Matthias Fend <matthias.fend@emfend.at>
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/media/i2c/himax,hm1246.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Himax HM1246-AWD 1/3.7-Inch megapixel SoC image sensor
-+
-+maintainers:
-+  - Matthias Fend <matthias.fend@emfend.at>
-+
-+description:
-+  The Himax HM1246-AWD is a 1/3.7-Inch CMOS image sensor SoC with an active
-+  array size of 1296 x 976. It is programmable through an I2C interface and
-+  connected via parallel bus.
-+
-+allOf:
-+  - $ref: /schemas/media/video-interface-devices.yaml#
-+
-+properties:
-+  compatible:
-+    const: himax,hm1246
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    description: Input reference clock (6 - 27 MHz)
-+    maxItems: 1
-+
-+  reset-gpios:
-+    description: Active low XSHUTDOWN pin
-+    maxItems: 1
-+
-+  avdd-supply:
-+    description: Power for analog circuit (3.0 - 3.6 V)
-+
-+  iovdd-supply:
-+    description: Power for I/O circuit (1.7 - 3.6 V)
-+
-+  dvdd-supply:
-+    description: Power for digital circuit (1.5 / 1.8 V)
-+
-+  port:
-+    $ref: /schemas/graph.yaml#/$defs/port-base
-+    additionalProperties: false
-+    description: Parallel video output port
-+
-+    properties:
-+      endpoint:
-+        $ref: /schemas/media/video-interfaces.yaml#
-+        unevaluatedProperties: false
-+
-+        properties:
-+          bus-type:
-+            const: 5
-+
-+        required:
-+          - bus-type
-+
-+    required:
-+      - endpoint
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - avdd-supply
-+  - iovdd-supply
-+  - dvdd-supply
-+  - port
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    #include <dt-bindings/media/video-interfaces.h>
-+
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        sensor@24 {
-+            compatible =  "himax,hm1246";
-+            reg = <0x24>;
-+
-+            clocks = <&hm1246_clk>;
-+
-+            reset-gpios = <&gpio0 0 GPIO_ACTIVE_LOW>;
-+
-+            avdd-supply = <&hm1246_avdd>;
-+            iovdd-supply = <&hm1246_iovdd>;
-+            dvdd-supply = <&hm1246_dvdd>;
-+
-+            orientation = <2>;
-+            rotation = <0>;
-+
-+            port {
-+                endpoint {
-+                    remote-endpoint = <&isp_par_in>;
-+                    bus-type = <MEDIA_BUS_TYPE_PARALLEL>;
-+                    bus-width = <10>;
-+                    hsync-active = <1>; /* active high */
-+                    vsync-active = <1>; /* active high */
-+                    pclk-sample = <1>; /* sample on rising edge */
-+                };
-+            };
-+        };
-+    };
+Thanks, Applied to https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git (v6.16/drivers)
+
+[1/1] soc: amlogic: clk-measure: Optimize the memory size of clk-measure
+      https://git.kernel.org/amlogic/c/37021be47d02d2913d6767795a6f4c72b4e63a4f
+
+These changes has been applied on the intermediate git tree [1].
+
+The v6.16/drivers branch will then be sent via a formal Pull Request to the Linux SoC maintainers
+for inclusion in their intermediate git branches in order to be sent to Linus during
+the next merge window, or sooner if it's a set of fixes.
+
+In the cases of fixes, those will be merged in the current release candidate
+kernel and as soon they appear on the Linux master branch they will be
+backported to the previous Stable and Long-Stable kernels [2].
+
+The intermediate git branches are merged daily in the linux-next tree [3],
+people are encouraged testing these pre-release kernels and report issues on the
+relevant mailing-lists.
+
+If problems are discovered on those changes, please submit a signed-off-by revert
+patch followed by a corrective changeset.
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
+[3] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
 
 -- 
-2.34.1
+Neil
 
