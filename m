@@ -1,140 +1,107 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47A42250C18;
-	Thu,  3 Apr 2025 16:06:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3C1024EF7B
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 16:06:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743696375; cv=none; b=SDXhT85Ob+s1ZKlE6LcZnFP51Jj0fzd0QnCtFlzeAYHKdy8nWUFGPkRbvdlmubyJp07630UMPdLco+qJvBx5yikovzYKhzEm97kzspyng3fED7wDPmKZ5KGqoHk2D+jZ8HpjRjS29LQ0XInJNxWxSKk97+YosAmA3ke0YQLpVlI=
+	t=1743696394; cv=none; b=Klzd9UGNvK5yAA5UQgVqJ6Y9tcU2NobQn2SdAl33r3s3NHixctScXYP0DNYpcN0OShcrsrUraDjUHI6dz2W6mABKVEBZCTT3q/HagIQQNUm6iYqDwRoBQ8KwEvcUwhF4BPf1I+yzueGI9Wy/aChhKDfyRpjWGCxNXHWs4ebFN5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743696375; c=relaxed/simple;
-	bh=2bb6Ld60XxrGe0E0RuTu+nVe0hVCJMLe31QcComJ1fY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IhofXRBWdVOa1LBEQupCXZP/qUpx8biYfhCEdsPwsgzQMLEYbRfI5nUo3JWzISbaZfVYo7MoVZ/Tq/D5Oj2ZytV0KQPDUBkOd3PBKFZTMo/s2l1LN9KAD1XB8hkT/UkJPa0qoYkRU4C8OCILpciY7nM++fj6R/rrk3KPT8GXr94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lkosQB/V; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743696394; c=relaxed/simple;
+	bh=rrhANOPG/mURHbTGtrf3YMdkKB3nTA2YvICGzH9Kpbs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BVCka1xKHBFbDOXkw2UJtKjQvrvZjuX7Tv1ylPpASOBiW7qYuLslK+ReWMF7CJ8W9I4FumsnmXkqpL0GV94FUmYtLlgmFVY0ZJ8Rk5wwMR0XQb5i0GrtTQP8zUbr18GDUbBcxlTLK6TB1aoOcmR45DMhOVNNdngdp+x4DPyK4S4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=RmVlYlKe; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lkosQB/V"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-22928d629faso12230805ad.3;
-        Thu, 03 Apr 2025 09:06:12 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="RmVlYlKe"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ac298c8fa50so181457266b.1
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 09:06:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743696371; x=1744301171; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:sender
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Ymem3tx1RtUYQNeKWESyhB5mrJPO3NU+wgpTLwBG5zw=;
-        b=lkosQB/V/LKPc6cV66V4uiVEy9ctFVWm735NZpPOrsgQ/JylJIUfc1RIEOi/hNrVWx
-         byQMKIaprqHDWYkcXAeQx27wYf5mm5VXsOG47JUqxak70UyuUZ3ntAgavA6hvjRHtzdp
-         SSt20Zk5R1OqTRgylIuH+0Y2+VkNNHGHykxatGxDhcQZimSB9rxvSqI+ad3Le2D+rDxd
-         cIZkqFYL9feKvpMCjKOelKp665VVQ40x2X0HXN8BdOsL99pCe2GwfQZdlWg7Fc6ENinV
-         KgVGMBTsNXFh3QuWV3tOdvU652tJOJy0SAI44hpP9qaXNeYx9ZtDHHreb1KwbdAcmGF5
-         zG5Q==
+        d=linux-foundation.org; s=google; t=1743696390; x=1744301190; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=XPVI13HQrunGU/IvN8XS/1QE+4YARD/DsjfX5tTYxjw=;
+        b=RmVlYlKejb4tp0sKTn9hSfNLBzkllQpfbdCZUha91cEXWqrC7J3R9BzAaLA7H76zMv
+         KzkuNNEBbXW/Qzb7e29Jo5lBKClbllzRirc4CRGdrQUM8KjBMcSTIrqdKwp4tOZYIveC
+         WjLnmINqsm9bssy/yq9L0XwyN+ubSpTUgIyYA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743696371; x=1744301171;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:sender
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ymem3tx1RtUYQNeKWESyhB5mrJPO3NU+wgpTLwBG5zw=;
-        b=R7scFLckNhFpXbHX0q1oQGZeJ+tQ988wxpln6MgXDwbLuhQ+BhDyO0nEpm0pUmENdG
-         omGM3HOC0KsTldWzlyNOHmEMqtvceUII2n3I7osK4N/PIEJRM7eroECviLcMgAnEC0Sg
-         Q/F4llxh3toSc5SDwrCAPq43bq3ItUD0XFpHJulNiCT8wg1QqwBoQqlMRt+lfY49gsmx
-         K5Jr7ohrTZrAzA/zdSA6kKAEUsoIsBwR5Gdu5jkQKAij0nZe/NYoAOPL/s9PgES8xDxD
-         hYlNZc/YTPSC1NIXZmUrPj0ikKNfbUZWySzmPczsFoZn7f7puF975PlrGyj0nSJ2dU4i
-         Mh9A==
-X-Forwarded-Encrypted: i=1; AJvYcCXTHGV5xiIpHbLqFGphvux3z2cNOCaymYy20/hXVkcPUI2dFO0YwqFoIoR0ANSbl+z9wpyW5RCjFFTH9D2A@vger.kernel.org, AJvYcCXs4G/08vo+wjgIXTtbGyVoivpUvWR379P3ihXLbQbNZufX50g8L/7/FWzA/1DM+Fz1A140w5YR3uiK+Q==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz6Kf9SDfEN7VINV41Tbcj3rUv+Tw/YboMcxN06ER1EoOtoJ5t2
-	9WRX46xnm04as2x7Gp6lQZknDPXSHOz0nBkoMhqkJAsS0+e/ADX0
-X-Gm-Gg: ASbGncvxsb0OYOVhcuHGEp0lYHRf77yIASTurVIRlrfR5KRsTTH285v3F8mHCoX8UUo
-	XP4mlEerwRBwU7Z4Zspx8QITHq8W6CGAj5niDe8dLbHVblFGa4E1l/RehmaaqaDUtaw7Bt2yzX3
-	O8G+cXbPcJr8xfDKDjmAIZb1rcgeGjD0QCjyyW2zwJGGZ97Ep9M4GXoDXIoVwXdORK5h1UMVXTx
-	8xb+ztrt89JVoJcAv5VrMY7s3MS7wZbAcEs8KG/vnmf0OQ++TbSHvALFlV2pT71bU82G6RHhbOZ
-	FLnZ3XJ8oBY3u8ObdqTmiesfMybx7p9sckfJOnS4b5Vk5ZGmTY7uy7tNCw==
-X-Google-Smtp-Source: AGHT+IFZkonlx+6d8LKTvVVrgjpNIPXSRTv3sgQYVB8/1U4DEhJPtbnWrrEfecPZfpwRnFXq86U+5g==
-X-Received: by 2002:a17:902:cec2:b0:223:fabd:4f99 with SMTP id d9443c01a7336-2292f94a06emr338298535ad.5.1743696371495;
-        Thu, 03 Apr 2025 09:06:11 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739d97effe5sm1727414b3a.61.2025.04.03.09.06.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Apr 2025 09:06:10 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Thu, 3 Apr 2025 09:06:09 -0700
-From: Guenter Roeck <linux@roeck-us.net>
-To: Ciprian Marian Costea <ciprianmarian.costea@oss.nxp.com>
-Cc: Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
-	linux-kernel@vger.kernel.org, NXP S32 Linux <s32@nxp.com>,
-	imx@lists.linux.dev, Christophe Lizzi <clizzi@redhat.com>,
-	Alberto Ruiz <aruizrui@redhat.com>,
-	Enric Balletbo <eballetb@redhat.com>,
-	Eric Chanudet <echanude@redhat.com>,
-	Florin Buica <florin.buica@nxp.com>
-Subject: Re: [PATCH] hwmon: (ina2xx) make regulator 'vs' support optional
-Message-ID: <2a12e6be-c253-4542-86a0-aacb71671ed6@roeck-us.net>
-References: <20250403101516.3047802-1-ciprianmarian.costea@oss.nxp.com>
- <dab2f459-240f-4e4c-9bf6-8c0285354cfb@roeck-us.net>
- <4efff19d-b5e6-49b5-9a15-e4af622c6ebf@oss.nxp.com>
+        d=1e100.net; s=20230601; t=1743696390; x=1744301190;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XPVI13HQrunGU/IvN8XS/1QE+4YARD/DsjfX5tTYxjw=;
+        b=aIGd9pKSqt38ES/32Ex0KrDq/tzOvFge4hjru8XaGBhznJ9dS3vG2ttnpOuvInMXxB
+         253JrqO4auCKYoxEjLV8yKgML8lFaILBWlU6uQPq0jDPo8fORCANTsBymJAJDkE+Ru1s
+         GCk8NFEnL9z14rzV/iiY6LIp5DJTZo6R0fMaiH9om5N7EdUShuh/NgL2tqAkywjwABbG
+         UOBzew286F44ZW/FAQfOjw1AIEJ1CW7KBFLufai3epPRLeTuIeG9+jGGtJ579PwTvwef
+         fdJqjAGzji2ZeF7hWmG6ulNsZPtgKaLTA6C3mT2gE62yOk13iegAoOzfTcD6c6YEpejV
+         Ts4w==
+X-Forwarded-Encrypted: i=1; AJvYcCXUE3d2ert+YHJUB/tlw9vnicNpM0mPresPg1TxTJE2Um2IiWcC2RJZTRL2DmMSor/Auw2JlnQQjzIFkJY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzh0OPYxrmo0MANK1s60s6/B/4/muGwPYRRtel6BYsTXhfGK8BL
+	7JIeZKx2XPLS4pAwhO3wNJg2g3H4Kpgn+Apt4AnLTiQpuMpL2VD0nu+kYglBi0BVB+8LmLvNRLw
+	cZr0=
+X-Gm-Gg: ASbGncuFqTBnO2zfPSc568hjFAyho7K9wYZWF44+fGeYVDI9dhk3QO7tkHhux5lBKpW
+	8X/LN4xWicuvKk+Us7TJJPF7T0VWm19GOD5mNVxWBkJY/QRME93PQbUi5W51DVYnommeb4DHh0u
+	OprwqIlZJbU5bucWu1odeqXAvy9PpRo/YG7WKmQTlxP542qCgoT4OGIDh7u3xSC5OR4wMSz2oja
+	d6cbmZ89NkJynXRqS1IQgAKEfS6U5c40OFUnQpUzwU4CXH7HFqfGQR4ief/ilMbxhTbje9LiNol
+	2SS2ToYXj1YWJK1YKF1eAJPBlSrkbZ8/PSFLrRanMQeArLiu/pgk2ysRItwvbI5cRphait9zkoY
+	B2/oE7bEMW2C1eq0hYXAsGWh/doWIUw==
+X-Google-Smtp-Source: AGHT+IEjetBh5hDIC9bE5S1ss+O5S3H7Gk13DAiNIK+FCKVasvNoan8SIN+HqM3l1aJ1EQJH6ujpmQ==
+X-Received: by 2002:a17:907:1c27:b0:ac7:391b:e684 with SMTP id a640c23a62f3a-ac7d19fbafamr12613466b.58.1743696389812;
+        Thu, 03 Apr 2025 09:06:29 -0700 (PDT)
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com. [209.85.208.51])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7c013f32csm112608566b.104.2025.04.03.09.06.28
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Apr 2025 09:06:28 -0700 (PDT)
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5e5e8274a74so1796260a12.1
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 09:06:28 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWMXoCelcY9xnICJMj5rmj3tiDsfswVX/rYudgkJXqrmWHv2iwkq2Cah+svf0Gbfv3vB9APtaLtg38RBpM=@vger.kernel.org
+X-Received: by 2002:a17:907:970c:b0:ac7:970b:8ee5 with SMTP id
+ a640c23a62f3a-ac7d17d1cb8mr16085266b.27.1743696387758; Thu, 03 Apr 2025
+ 09:06:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <4efff19d-b5e6-49b5-9a15-e4af622c6ebf@oss.nxp.com>
+References: <Z-xFKa5hiQ5urVwS@gmail.com> <CAHk-=wgqa0B9OV+EAQ34-VOUAeVB2o2bXnZXQDG7u+Z=4Cmw8w@mail.gmail.com>
+ <n7p2rtrq6vvfteu5szlubng4wj6akgn45suekjdxojrpuxr6dp@oxjfxawkv3xs>
+ <Z-6gyQk2WlHc4DNw@gmail.com> <aanudixqjhm7asrp5tzsx5vc7pctei5bskdhdxk5up2g6gvqbz@z7owxfn6krgt>
+ <sqn3nlc6q26h5dnwnrsikg3mthxv4o7litoilsgufq4sdhcfqd@hp4goo43hdof>
+In-Reply-To: <sqn3nlc6q26h5dnwnrsikg3mthxv4o7litoilsgufq4sdhcfqd@hp4goo43hdof>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Thu, 3 Apr 2025 09:06:11 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wh2WtMskQ7ASnDJ_n0ZJs4hueEXsurwQpEvzmx-aZKFag@mail.gmail.com>
+X-Gm-Features: ATxdqUH9TF0VFn6lpqQlCGjZDLtfDBGhFWPb8_gd-ivzU_3OWn_1FdBtxvqg61U
+Message-ID: <CAHk-=wh2WtMskQ7ASnDJ_n0ZJs4hueEXsurwQpEvzmx-aZKFag@mail.gmail.com>
+Subject: Re: [GIT PULL] objtool fixes
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org, 
+	Peter Zijlstra <a.p.zijlstra@chello.nl>, Thomas Gleixner <tglx@linutronix.de>, 
+	Borislav Petkov <bp@alien8.de>, Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Apr 03, 2025 at 05:29:26PM +0300, Ciprian Marian Costea wrote:
-> On 4/3/2025 3:15 PM, Guenter Roeck wrote:
-> > On 4/3/25 03:15, Ciprian Costea wrote:
-> > > From: Ciprian Marian Costea <ciprianmarian.costea@oss.nxp.com>
-> > > 
-> > > S32G2/S32G3 based boards which integrate the ina231 sensor do not have a
-> > > dedicated voltage regulator.
-> > > 
-> > > Co-developed-by: Florin Buica <florin.buica@nxp.com>
-> > > Signed-off-by: Florin Buica <florin.buica@nxp.com>
-> > > Signed-off-by: Ciprian Marian Costea <ciprianmarian.costea@oss.nxp.com>
-> > > ---
-> > >   drivers/hwmon/ina2xx.c | 4 ++--
-> > >   1 file changed, 2 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/drivers/hwmon/ina2xx.c b/drivers/hwmon/ina2xx.c
-> > > index 345fe7db9de9..ab4972f94a8c 100644
-> > > --- a/drivers/hwmon/ina2xx.c
-> > > +++ b/drivers/hwmon/ina2xx.c
-> > > @@ -959,8 +959,8 @@ static int ina2xx_probe(struct i2c_client *client)
-> > >           return PTR_ERR(data->regmap);
-> > >       }
-> > > -    ret = (dev, "vs");
-> > > -    if (ret)
-> > > +    ret = devm_regulator_get_enable_optional(dev, "vs");
-> > 
-> > devm_regulator_get_enable() should provide a dummy regulator if there is
-> > no explicit regulator. Why does this not work ?
-> > 
-> > > +    if (ret < 0 && ret != -ENODEV)
-> > 
-> > Why this added check ?
-> > 
-> > I know it used to be necessary if regulator support is disabled,
-> > but that is no longer the case.
-> > 
-> > Guenter
-> > 
-> 
-> Hello Guenter,
-> 
-> I've just tested and devm_regulator_get_enable() does work as you've
-> described, providing a dummy regulator.
-> 
-> But, according to the 'ti,ina2xx' binding [1] I see that the `vs-supply`
-> property is not required. Hence wouldn't it be correct for `vs-supply` to be
-> optional ? Using 'devm_regulator_get_enable_optional()'
-> 
-Yes, but the reasoning you provided is different and suggested that the
-current code would not work. Since that is not the case, the change would
-be purely cosmetic. Also, I still don't see why the -ENODEV check would be
-necessary.
+On Thu, 3 Apr 2025 at 08:43, Josh Poimboeuf <jpoimboe@kernel.org> wrote:
+>
+> # OBJTOOL ANNOTATION
+> 911: .pushsection .discard.annotate_insn,"M",@progbits,8; .long 911b - .; .long 6; .popsection
 
-Guenter
+Josh, what's wrong with just disassembling the damn instruction?
+
+It's what objtool does.
+
+By all means add annotations for when the kernel does something
+*special*, and the annotation is "this violates the usual rules".
+Those kinds of annotations make perfect sense, and are a "don't
+complain about this, because I know I'm doing something odd".
+
+So annotations for things like non-standard stack frames etc are a good thing.
+
+But dammit, clac/stac is *not* that. Quite the reverse. clac/stac *is*
+the usual rule. clac/stac *is* the annotation.
+
+             Linus
