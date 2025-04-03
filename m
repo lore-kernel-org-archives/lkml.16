@@ -1,102 +1,85 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C1AE1F4CB1;
-	Thu,  3 Apr 2025 14:37:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D4241F4CB1;
+	Thu,  3 Apr 2025 14:37:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743691065; cv=none; b=jutuOs1XbPeOJIDy+ahBIiWF9acyGp2DWsa7fAMAcaplVae6jfW4RdVB91EChOnWzd6SBJIgbABDznzGyHSBHknzdbB1JzlpO1cSYDET5xZTTvMBD25iIppGh+iGdSXaMA7L27jB6t9+2ydFJm8xhkE33oA6syrOPcikYS2PVqI=
+	t=1743691077; cv=none; b=MMvClMvddA4nyigViMTzfSRdoEWyucm9sJcseKT5IhFjdpXWeFeUKAnPbAl33QJaYRviQVHsQjBsrslOW9+xDf4qZOA5qlnNa/1qNxtsg63rI4hZxNpjpKrULC5V/v0DhrWZscmRwW0nu5+IJKZUGkAw4Kd27NfG4arjDfG8r1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743691065; c=relaxed/simple;
-	bh=etZhFOEsCa1IJ7BOreRTj6oZJjmWti6+SONBqdXSi3A=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=JdbqGiClipimOpW2JtLmtW6UZqQ61wOoNL0/4DuB+uKbpxjzfjO0hxh/xDNmDFGYjwXrO3i24bbpge+5+uxFJQ3cQE+rST8bkSkdQQcSKAOVtAWk7qJYtqkBLphaaCHVOnkIPBgTL7UJy50NWO+Tb+GKMV5VR1ptuprDAQYO1dU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4dh7oGKo; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=G0njzRPA; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1743691077; c=relaxed/simple;
+	bh=HwJlTt/e0qaK+PhaHQ1s/8UlFlBGWC9KoWIgqNb5+0c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hsjsBb/D6nJE9VdSP5gngo8W7jG2Xozxfv+8x7sJxgXtW08PeKEi7Eocb9o0HlTRtXgP/fLX2yCA/CT376ITBO/dlAbyiA6JHbzjdd9xqvLiwOF3EFMVkOhMgl6GsZTsCqyyAU9s7p4aPwl5opWYOoAB8iuJ2NCBik2VQiNomsU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f7fnG9L6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4dh7oGKo";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="G0njzRPA"
-Date: Thu, 03 Apr 2025 14:37:40 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1743691061;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=o8t8/m7qaqizj+efDQB4BdtOfd2V+Pqca1n3K+1BsIo=;
-	b=4dh7oGKo7+j3BeMgqxFjrsXyhfdSp9rKtrd/zbHM4RY64kycedpqD3su018mBVxMam4rwO
-	afodvnX28MT1mWcLX3ytvrRjEP8LOCjrSrSK5cwdA+8LrjciFx/N7ew6GeXOwNt2AjTIKC
-	9pRXkhKqviy7L3ZsvS8tKCel8GiygKc7yXwPgt9fFAWZ+S9wx5rY/6/kvUGgtnPAG3a42p
-	mkcmP7IMkkX8PwMBczanG7OzbzfoDO7cQOeugfyHgYMiFDSTKWSND8FA0Cy/DxrG3NkbCd
-	jyOg7q6a0uvnbDE0TkaD9X0iFwRZoiL2j7tUW/APmPY9GTNAZfYZJIgknz4v6g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1743691061;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=o8t8/m7qaqizj+efDQB4BdtOfd2V+Pqca1n3K+1BsIo=;
-	b=G0njzRPAA6P3REtvhPsXZhVEdWMFpUmyDfT76RqhAVLpZ9XYgMYCiwx8VR9TjE+GpGJ3Vl
-	LIVxy21clVT/ehAQ==
-From: "tip-bot2 for Uros Bizjak" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: x86/mm] x86/idle: Change arguments of mwait_idle_with_hints() to u32
-Cc: Andrew Cooper <andrew.cooper3@citrix.com>, Uros Bizjak <ubizjak@gmail.com>,
- Ingo Molnar <mingo@kernel.org>, x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250403073105.245987-1-ubizjak@gmail.com>
-References: <20250403073105.245987-1-ubizjak@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f7fnG9L6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 146E1C4CEE3;
+	Thu,  3 Apr 2025 14:37:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743691077;
+	bh=HwJlTt/e0qaK+PhaHQ1s/8UlFlBGWC9KoWIgqNb5+0c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=f7fnG9L61AcTg5asIweNwtN59M2R1LZjVkrqxDDvY8s8Iudgdv2CnDs8j8NRJA0LH
+	 GnWBRapes85/eDUZbAf1jgMs0kgMPgIT6yGz+Yg54xkzXJrkr5IMMCPxj9Kryirlw5
+	 JLXn8dj/z6cZwsHECZCsDGvrveEd9oWnQOj3nrq6+ad+mxUQ4FaOa/+Ae0lOdwwWqR
+	 1YSnMjWhSfcD+mXJ0nGzq8y1VwDzjrynHIBptYzndo4G5LPn7tEaL1TnRvz5SiEO69
+	 dRi+M0PYq6+RTNyxPONilRMt++JeAXrLgW60m7/r549GgjlCDRVxMuV+2HaP8VCvJ9
+	 hRsPcxKhX6ETg==
+Date: Thu, 3 Apr 2025 07:37:54 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Philip Li <philip.li@intel.com>, kernel test robot <lkp@intel.com>, 
+	Guenter Roeck <linux@roeck-us.net>, oe-kbuild-all@lists.linux.dev, 
+	Andrew Morton <akpm@linux-foundation.org>, Linux Memory Management List <linux-mm@kvack.org>, 
+	Alessandro Carminati <acarmina@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev
+Subject: Re: [linux-next:master 12681/13861] drivers/i2c/i2c-core-base.o:
+ warning: objtool: __i2c_transfer+0x120: stack state mismatch: reg1[24]=-1+0
+ reg2[24]=-2-24
+Message-ID: <lcozyamcrcuff6a3pgly7sptluuj7ubzvy4na2vrus7hfmwmb6@zv7tooy3pmkh>
+References: <202504011011.jyZ6NtXx-lkp@intel.com>
+ <Z+ttzRArSBMqfABz@rli9-mobl>
+ <xqfrt2rueezh3upug2umvuw2r44luoaxfqycnmvkh5sezaosw6@h77yjfio4ws6>
+ <348cdb14-f8cf-1e7b-44b2-79dc4dda4e35@loongson.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174369106060.31282.12847582125121166988.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <348cdb14-f8cf-1e7b-44b2-79dc4dda4e35@loongson.cn>
 
-The following commit has been merged into the x86/mm branch of tip:
+On Thu, Apr 03, 2025 at 05:35:51PM +0800, Tiezhu Yang wrote:
+> On 04/02/2025 03:45 AM, Josh Poimboeuf wrote:
+> > On Tue, Apr 01, 2025 at 12:38:37PM +0800, Philip Li wrote:
+> > > On Tue, Apr 01, 2025 at 10:44:57AM +0800, kernel test robot wrote:
+> > > > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
+> > > > head:   405e2241def89c88f008dcb899eb5b6d4be8b43c
+> > > > commit: 9016dad4dca4bbe61c48ffd5a273cad980caa0d1 [12681/13861] loongarch: add support for suppressing warning backtraces
+> > > > config: loongarch-randconfig-001-20250401 (https://download.01.org/0day-ci/archive/20250401/202504011011.jyZ6NtXx-lkp@intel.com/config)
+> > > > compiler: loongarch64-linux-gcc (GCC) 14.2.0
+> > > > reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250401/202504011011.jyZ6NtXx-lkp@intel.com/reproduce)
+> > > > 
+> > > > If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> > > > the same patch/commit), kindly add following tags
+> > > > | Reported-by: kernel test robot <lkp@intel.com>
+> > > > | Closes: https://lore.kernel.org/oe-kbuild-all/202504011011.jyZ6NtXx-lkp@intel.com/
+> > > > 
+> > > > All warnings (new ones prefixed by >>):
+> > > > 
+> > > > > > drivers/i2c/i2c-core-base.o: warning: objtool: __i2c_transfer+0x120: stack state mismatch: reg1[24]=-1+0 reg2[24]=-2-24
+> > 
+> > Tiezhu, this looks like a loongarch GCC bug with asm goto, or am I
+> > confused?  See analysis below.
+> 
+> This is related with GCC optimization "-fshrink-wrap" which is default y
+> on LoongArch, use "-fno-shrink-wrap" can avoid such issues, like this:
 
-Commit-ID:     a17b37a3f416c9e385bbd2b5fc603d337eab76eb
-Gitweb:        https://git.kernel.org/tip/a17b37a3f416c9e385bbd2b5fc603d337eab76eb
-Author:        Uros Bizjak <ubizjak@gmail.com>
-AuthorDate:    Thu, 03 Apr 2025 09:30:49 +02:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Thu, 03 Apr 2025 16:27:42 +02:00
+As I showed, it looks like an actual runtime bug, not an objtool false
+positive.  Disabling it only for CONFIG_OBJTOOLonly wouldn't fix that.
 
-x86/idle: Change arguments of mwait_idle_with_hints() to u32
-
-All functions in mwait_idle_with_hints() cast eax and ecx arguments
-to u32. Propagate argument type to the enclosing function.
-
-Suggested-by: Andrew Cooper <andrew.cooper3@citrix.com>
-Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/20250403073105.245987-1-ubizjak@gmail.com
----
- arch/x86/include/asm/mwait.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/x86/include/asm/mwait.h b/arch/x86/include/asm/mwait.h
-index 6a2ec20..44d3bb2 100644
---- a/arch/x86/include/asm/mwait.h
-+++ b/arch/x86/include/asm/mwait.h
-@@ -110,7 +110,7 @@ static __always_inline void __sti_mwait(u32 eax, u32 ecx)
-  * New with Core Duo processors, MWAIT can take some hints based on CPU
-  * capability.
-  */
--static __always_inline void mwait_idle_with_hints(unsigned long eax, unsigned long ecx)
-+static __always_inline void mwait_idle_with_hints(u32 eax, u32 ecx)
- {
- 	if (static_cpu_has_bug(X86_BUG_MONITOR) || !current_set_polling_and_test()) {
- 		const void *addr = &current_thread_info()->flags;
+-- 
+Josh
