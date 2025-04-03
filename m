@@ -1,347 +1,355 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C5FE19D065
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 21:06:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D3B433993
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 21:06:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743714371; cv=none; b=SsxdBB+wLZwgYEB+ylaN8TM1ers8t/9zuc7y+4nPKONbjhgEchLUncf1InMjlYFVEFZ4OAIXHjK+GzcynLJY45umvaaryxnA2ulUbSqmGSxThk4Ce6hjlteMmIqgOf4xMUYFS4i1fEoKFNp9csmiB4UZqcynxbXvL/INzeMuw3Y=
+	t=1743714420; cv=none; b=N4YJX6NMklIwWrUGgLiZR3gmbtIL5P8zcfruCNpdxjDAA/gzU51VCamcbAzZmLAmMuW0S+UK2Zk+O9InHjilASxxbS/LVtYBPtOpXtyC3WEJSprqJ8o4VLuH32KNSJur2xt6x6xp6p2EMgYBd/ZfhMCiM9J8sgmZdp0dyFBBw3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743714371; c=relaxed/simple;
-	bh=gJ5wrIvReAv5QqxtqNCJ9FujkFKj0dFoDyjRW8MTRmI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NmBULdFRZ+MRKfazMwaguGyDQSAMzjhT6nIBO7fTSWdQISR7Jt7J0o89qN3m0odcy3gz19ZZzoeepJFkT1ln75RBL2n2zXdQ5n1fyfP0rOeatuO1BUGT8/C2B3c8dotjB61elo62xFjTWBQfUuraqiRKrpVlBlklEYsQ/HazGx8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GKoUdlKs; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1743714420; c=relaxed/simple;
+	bh=tVBvnd/7YLHozsuPAQF5ZCG5JR6KXKV+F5OgNWGLOBM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=q5LQm3Ol3Puuc+0mqUNP7j8NBoGY7sxEjPxJ6rG1UTPlgQIRbBrzBCl3SZKRE98/fJXHZ3edn7RzSC2SV46ANC57pjLEudL8b/RLGnHKFgWH4cPzQdtYJ9fdWF1TJ3weTzhC1AiHvWFWYXv/CQhgOS/8kc1N9OcYTjE7CBH4GiI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wkennington.com; spf=none smtp.mailfrom=wkennington.com; dkim=pass (2048-bit key) header.d=wkennington-com.20230601.gappssmtp.com header.i=@wkennington-com.20230601.gappssmtp.com header.b=quzLL7QY; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wkennington.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=wkennington.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GKoUdlKs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743714368;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VQPSgYV8xh79P5dCNHj8YipiJGf0W9F/2BqM6SXAVZc=;
-	b=GKoUdlKshdKsThZbK5zOqZbl78Sjg3Ump3tG/GZlZdXFRr3vXK/J5CxnyIbwzm74Plcipd
-	YVayzEU+FPjYZ7IBTKW3CYFmFyau1i5KgYHzzNQ0kqLjrXQmj8g/ViB98boDrRS4oBJQZU
-	sNQs5Lm8AyVXOKgkmTLRWUC5lGbB0wk=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-449-eTZDf_6WOraG59RNqqlpHA-1; Thu, 03 Apr 2025 17:06:07 -0400
-X-MC-Unique: eTZDf_6WOraG59RNqqlpHA-1
-X-Mimecast-MFC-AGG-ID: eTZDf_6WOraG59RNqqlpHA_1743714366
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43cf446681cso9156685e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 14:06:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=wkennington-com.20230601.gappssmtp.com header.i=@wkennington-com.20230601.gappssmtp.com header.b="quzLL7QY"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2260c915749so10396425ad.3
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 14:06:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=wkennington-com.20230601.gappssmtp.com; s=20230601; t=1743714417; x=1744319217; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gYmBiZPgtPm+fTNFRpxiV4Ltg0qHt2/Bty1RuY/WW1I=;
+        b=quzLL7QY2Q+qSHDKd7w2UEwZPFcVVgRcbvF13N65XsCecUBmeD7puqPPG+VsiUqvcr
+         thRiGl202hdI5UcGvNXWKRewR7dHs6wJGyT3tx0yW6cLXxd2wd/Q/4jHRKTVA7JrNLiI
+         kB8u2Lww5DhZ0PLzvQ8lMzKPR7aa7Dzqog4cbCcLh255ABXp1Xw42toLYRZXAgHB/XKg
+         iBhw86088KOhR3mEY3vERn1oW+6n1F7403Xkx1ISEBWCQqEWMy8KZQTveHdtapBotxho
+         hwVmLVabUL31VlU90hBYgiMSX/ghvl76pyDz3QaBTvehuQM6Ie5TWpzfi9TdiAR9xxgH
+         2+lA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743714365; x=1744319165;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=VQPSgYV8xh79P5dCNHj8YipiJGf0W9F/2BqM6SXAVZc=;
-        b=piPXo3IOTAHOh2kxkyEvv4YuQivTB4T4Tl08L4dVoN4jgWhYZw1pOItLZEduJNIYZ9
-         rA9B6BnSp97haxfvkcR0JECdLLywK2Px+IEKHRGhxO+l9tF9syfsFXhz6HL/A/kQHJeH
-         fURvU33LW7hZaLVO6eOA4cRT6rPxQYVP2nvdqOQzV8WDsL6/1kOtK1I30I9mpH/z6PoP
-         ueelVTj0CNVHfWcMeb3XQRSAHz7TP1ZYBReCVGzkfeQQ6w+TjNAx9h9lZwXMzq8dKB75
-         FcGB8wVjR/49phyblG3cEv4QhePRhOYrJl6W0IxLx9oBiC2X7W67q7UzSph6X2Lvy3FU
-         ZExQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXCH1u4FT+v5niglS4CfanWsxLA6gZV0/44g/g5E3l9SQevw3a8wcHIwv7l3kU6vUTI1DScdece7Kzxp5Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxobjL9LjNtFRGDahknp7/qwBirOFn2jFR0nFfRDJrZE7/V+0Dp
-	qnYUqhujjCd+EM06pit2+4n2M39YQwhppCtmyzQkUdthLxr6fi+PbJHgDwWFWRGYW7hSH8SlWWo
-	ekRsphKbIxOn6NP+/Ya95tMNtwBcxvlNk6kT2POzd5n/4fySDW+7yxiht8bStREuAzF5KOA==
-X-Gm-Gg: ASbGncsS7YoBCLYq+pOySiNeTg514AW7NmqAOlPDVAFgvMiEvPQQYy7gd9LDb+zKKQd
-	clvHUJSD9jKuqM5gWhin8+5EthJABBJyVJUH1VEwSMqD1c9zMkG0G+oYfKrGizaBahyqLed8+1o
-	jpKoCJ/pwd1yqzfH/YMX0gyOZfdVJwpl2kgxdXvwg1ww2fZRIITj+SGTJ7xYc9Xa3G/Hc53Z5Ku
-	I5eHjCMzVjom7Zpn/ojB1In4q4c/5oQZn773znK7Mh5hcrQabvAWiElwG/MuwXxTsQmKKXiw5Rs
-	5X6r0O+U7g==
-X-Received: by 2002:a05:600c:4695:b0:43d:8ea:8d7a with SMTP id 5b1f17b1804b1-43ed0db3646mr1629485e9.28.1743714365526;
-        Thu, 03 Apr 2025 14:06:05 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGKIXS5hwbzfgThNhAktLRgRbRw/FEpi7tWXoj6bda4No5E7hvlK67fZzMkXDe5GScLwGcYoA==
-X-Received: by 2002:a05:600c:4695:b0:43d:8ea:8d7a with SMTP id 5b1f17b1804b1-43ed0db3646mr1629325e9.28.1743714365119;
-        Thu, 03 Apr 2025 14:06:05 -0700 (PDT)
-Received: from redhat.com ([2a0d:6fc0:1517:1000:ea83:8e5f:3302:3575])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c30226da7sm2788385f8f.98.2025.04.03.14.06.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Apr 2025 14:06:04 -0700 (PDT)
-Date: Thu, 3 Apr 2025 17:06:01 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Markus Fohrer <markus.fohrer@webked.de>
-Cc: virtualization@lists.linux-foundation.org, jasowang@redhat.com,
-	davem@davemloft.net, edumazet@google.com, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [REGRESSION] Massive virtio-net throughput drop in guest VM with
- Linux 6.8+
-Message-ID: <20250403170543-mutt-send-email-mst@kernel.org>
-References: <1d388413ab9cfd765cd2c5e05b5e69cdb2ec5a10.camel@webked.de>
- <20250403090001-mutt-send-email-mst@kernel.org>
- <f8909f5bbc2532ea234cdaa8dbdb46a48249803f.camel@webked.de>
- <20250403100206-mutt-send-email-mst@kernel.org>
- <da1c8647c4efcfcf7e7d2ba7e6235afc7b0f63ae.camel@webked.de>
+        d=1e100.net; s=20230601; t=1743714417; x=1744319217;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gYmBiZPgtPm+fTNFRpxiV4Ltg0qHt2/Bty1RuY/WW1I=;
+        b=cNrP//oznULeaV5R+s/U7iSWdfAaTXNf2cF6CthJRQdV3Yplegh5Of8sAeBPLWdmJv
+         F+A4iPCkUytTfrXkOMFc/LVBGdb1qeX1T6ZU8LEhNyqBBgkC3byMlvSOl2ilt6gKtOp3
+         KtdRXR05PpbvT/bJ/hIzbCYpS3VnmGkvuONVFY7ml8mGZ70ET3nCHAQO7JkCfctFExlA
+         LOulIaBbVQgLgGAVGfxZEY1+BPUnmx4XAfrS0469W1YDHZkctvDHTULL+re+prkKLTZg
+         4j0NgjjGvBYkn6bPiqhevizEsx0IrE00kHCxOQk5+X3TiLQA/3xJhuocZQ+VIrsGo35H
+         wBYg==
+X-Forwarded-Encrypted: i=1; AJvYcCVPEmD8Vofh4VdOTyDQDORqAaoYupYyocZkHlg29ZbDXxCoDrwWxkeZi4NWncGr//+/b/6XHrNMr9eg8dA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw27vS8n5HQup1N8GSvt4g3Oq50pVFFxG3qx+4StY1Bk1gmbUZg
+	KjJL+stft6bM73gGWhf1Z1SdOY8JPXIcbM8/cWxrypbQTqux2yXgfHPhQVxbKE78CXlmwSTwWKk
+	Mz49+1qVVAlPDx2UGdrEGBxCT9rIX6WZmJzYflw==
+X-Gm-Gg: ASbGnctb+EZWTT63Bjtil2ziQSU0r51sPT80WWAZJ8c++P9ZSlmq91T+p9GKdqW7a/k
+	YFZhVD3xA79pnMkPUMSBIY9c2fHra3f7COTvMl0p8WpPBp9QEK16As78ybMFL5O1Htg5n5IpQAB
+	isKu/AEM1At3TqPc5vzjvNrhmr9m4fGBDn8LrudX///IOA0AeOVF1cMqRdzx4q
+X-Google-Smtp-Source: AGHT+IFDh0StEqe8xu7nUxjvKFKRBNctwbbvEWD4V5L9tyGSGREj1ztuh6Atx2N4L0KKGtE0hEVlWRMG9ORCkv8/hE8=
+X-Received: by 2002:a17:902:e745:b0:224:10a2:cae1 with SMTP id
+ d9443c01a7336-22a8a8ca2b4mr4826765ad.37.1743714416952; Thu, 03 Apr 2025
+ 14:06:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <da1c8647c4efcfcf7e7d2ba7e6235afc7b0f63ae.camel@webked.de>
+References: <20250402193452.3571888-1-william@wkennington.com> <81462799-6ef6-4079-9ebe-5b886d6e1eab@roeck-us.net>
+In-Reply-To: <81462799-6ef6-4079-9ebe-5b886d6e1eab@roeck-us.net>
+From: William Kennington <william@wkennington.com>
+Date: Thu, 3 Apr 2025 14:06:45 -0700
+X-Gm-Features: ATxdqUH5g7XsdKqLscZwrTmfuiLQldKTW-PETzxori14yipg1xiHL7LcEJQcIN8
+Message-ID: <CAD_4BXiaHEndVCKYOHnA9=CcZ7jRFzFEs_+A=09duhzuf2X9+w@mail.gmail.com>
+Subject: Re: [PATCH] hwmon: (pmbus): Introduce page_change_delay
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 03, 2025 at 10:07:12PM +0200, Markus Fohrer wrote:
-> Am Donnerstag, dem 03.04.2025 um 10:03 -0400 schrieb Michael S.
-> Tsirkin:
-> > On Thu, Apr 03, 2025 at 03:51:01PM +0200, Markus Fohrer wrote:
-> > > Am Donnerstag, dem 03.04.2025 um 09:04 -0400 schrieb Michael S.
-> > > Tsirkin:
-> > > > On Wed, Apr 02, 2025 at 11:12:07PM +0200, Markus Fohrer wrote:
-> > > > > Hi,
-> > > > > 
-> > > > > I'm observing a significant performance regression in KVM guest
-> > > > > VMs
-> > > > > using virtio-net with recent Linux kernels (6.8.1+ and 6.14).
-> > > > > 
-> > > > > When running on a host system equipped with a Broadcom
-> > > > > NetXtreme-E
-> > > > > (bnxt_en) NIC and AMD EPYC CPUs, the network throughput in the
-> > > > > guest drops to 100–200 KB/s. The same guest configuration
-> > > > > performs
-> > > > > normally (~100 MB/s) when using kernel 6.8.0 or when the VM is
-> > > > > moved to a host with Intel NICs.
-> > > > > 
-> > > > > Test environment:
-> > > > > - Host: QEMU/KVM, Linux 6.8.1 and 6.14.0
-> > > > > - Guest: Linux with virtio-net interface
-> > > > > - NIC: Broadcom BCM57416 (bnxt_en driver, no issues at host
-> > > > > level)
-> > > > > - CPU: AMD EPYC
-> > > > > - Storage: virtio-scsi
-> > > > > - VM network: virtio-net, virtio-scsi (no CPU or IO
-> > > > > bottlenecks)
-> > > > > - Traffic test: iperf3, scp, wget consistently slow in guest
-> > > > > 
-> > > > > This issue is not present:
-> > > > > - On 6.8.0 
-> > > > > - On hosts with Intel NICs (same VM config)
-> > > > > 
-> > > > > I have bisected the issue to the following upstream commit:
-> > > > > 
-> > > > >   49d14b54a527 ("virtio-net: Suppress tx timeout warning for
-> > > > > small
-> > > > > tx")
-> > > > >   https://git.kernel.org/linus/49d14b54a527
-> > > > 
-> > > > Thanks a lot for the info!
-> > > > 
-> > > > 
-> > > > both the link and commit point at:
-> > > > 
-> > > > commit 49d14b54a527289d09a9480f214b8c586322310a
-> > > > Author: Eric Dumazet <edumazet@google.com>
-> > > > Date:   Thu Sep 26 16:58:36 2024 +0000
-> > > > 
-> > > >     net: test for not too small csum_start in
-> > > > virtio_net_hdr_to_skb()
-> > > >     
-> > > > 
-> > > > is this what you mean?
-> > > > 
-> > > > I don't know which commit is "virtio-net: Suppress tx timeout
-> > > > warning
-> > > > for small tx"
-> > > > 
-> > > > 
-> > > > 
-> > > > > Reverting this commit restores normal network performance in
-> > > > > affected guest VMs.
-> > > > > 
-> > > > > I’m happy to provide more data or assist with testing a
-> > > > > potential
-> > > > > fix.
-> > > > > 
-> > > > > Thanks,
-> > > > > Markus Fohrer
-> > > > 
-> > > > 
-> > > > Thanks! First I think it's worth checking what is the setup, e.g.
-> > > > which offloads are enabled.
-> > > > Besides that, I'd start by seeing what's doing on. Assuming I'm
-> > > > right
-> > > > about
-> > > > Eric's patch:
-> > > > 
-> > > > diff --git a/include/linux/virtio_net.h
-> > > > b/include/linux/virtio_net.h
-> > > > index 276ca543ef44d8..02a9f4dc594d02 100644
-> > > > --- a/include/linux/virtio_net.h
-> > > > +++ b/include/linux/virtio_net.h
-> > > > @@ -103,8 +103,10 @@ static inline int
-> > > > virtio_net_hdr_to_skb(struct
-> > > > sk_buff *skb,
-> > > >  
-> > > >  		if (!skb_partial_csum_set(skb, start, off))
-> > > >  			return -EINVAL;
-> > > > +		if (skb_transport_offset(skb) < nh_min_len)
-> > > > +			return -EINVAL;
-> > > >  
-> > > > -		nh_min_len = max_t(u32, nh_min_len,
-> > > > skb_transport_offset(skb));
-> > > > +		nh_min_len = skb_transport_offset(skb);
-> > > >  		p_off = nh_min_len + thlen;
-> > > >  		if (!pskb_may_pull(skb, p_off))
-> > > >  			return -EINVAL;
-> > > > 
-> > > > 
-> > > > sticking a printk before return -EINVAL to show the offset and
-> > > > nh_min_len
-> > > > would be a good 1st step. Thanks!
-> > > > 
-> > > 
-> > > 
-> > > Hi Eric,
-> > > 
-> > > thanks a lot for the quick response — and yes, you're absolutely
-> > > right.
-> > > 
-> > > Apologies for the confusion: I mistakenly wrote the wrong commit
-> > > description in my initial mail.
-> > > 
-> > > The correct commit is indeed:
-> > > 
-> > > commit 49d14b54a527289d09a9480f214b8c586322310a
-> > > Author: Eric Dumazet <edumazet@google.com>
-> > > Date:   Thu Sep 26 16:58:36 2024 +0000
-> > > 
-> > >     net: test for not too small csum_start in
-> > > virtio_net_hdr_to_skb()
-> > > 
-> > > This is the one I bisected and which causes the performance
-> > > regression
-> > > in my environment.
-> > > 
-> > > Thanks again,
-> > > Markus
-> > 
-> > 
-> > I'm not Eric but good to know.
-> > Alright, so I would start with the two items: device features and
-> > printk.
-> > 
-> 
-> as requested, here’s the device/feature information from the guest
-> running kernel 6.14 (mainline):
-> 
-> Interface: ens18
-> 
-> ethtool -i ens18:
-> driver: virtio_net
-> version: 1.0.0
-> firmware-version: 
-> expansion-rom-version: 
-> bus-info: 0000:00:12.0
-> supports-statistics: yes
-> supports-test: no
-> supports-eeprom-access: no
-> supports-register-dump: no
-> supports-priv-flags: no
-> 
-> 
-> ethtool -k ens18:
-> Features for ens18:
-> rx-checksumming: on [fixed]
-> tx-checksumming: on
-> 	tx-checksum-ipv4: off [fixed]
-> 	tx-checksum-ip-generic: on
-> 	tx-checksum-ipv6: off [fixed]
-> 	tx-checksum-fcoe-crc: off [fixed]
-> 	tx-checksum-sctp: off [fixed]
-> scatter-gather: on
-> 	tx-scatter-gather: on
-> 	tx-scatter-gather-fraglist: off [fixed]
-> tcp-segmentation-offload: on
-> 	tx-tcp-segmentation: on
-> 	tx-tcp-ecn-segmentation: on
-> 	tx-tcp-mangleid-segmentation: off
-> 	tx-tcp6-segmentation: on
-> generic-segmentation-offload: on
-> generic-receive-offload: on
-> large-receive-offload: off [fixed]
-> rx-vlan-offload: off [fixed]
-> tx-vlan-offload: off [fixed]
-> ntuple-filters: off [fixed]
-> receive-hashing: off [fixed]
-> highdma: on [fixed]
-> rx-vlan-filter: on [fixed]
-> vlan-challenged: off [fixed]
-> tx-gso-robust: on [fixed]
-> tx-fcoe-segmentation: off [fixed]
-> tx-gre-segmentation: off [fixed]
-> tx-gre-csum-segmentation: off [fixed]
-> tx-ipxip4-segmentation: off [fixed]
-> tx-ipxip6-segmentation: off [fixed]
-> tx-udp_tnl-segmentation: off [fixed]
-> tx-udp_tnl-csum-segmentation: off [fixed]
-> tx-gso-partial: off [fixed]
-> tx-tunnel-remcsum-segmentation: off [fixed]
-> tx-sctp-segmentation: off [fixed]
-> tx-esp-segmentation: off [fixed]
-> tx-udp-segmentation: off
-> tx-gso-list: off [fixed]
-> tx-nocache-copy: off
-> loopback: off [fixed]
-> rx-fcs: off [fixed]
-> rx-all: off [fixed]
-> tx-vlan-stag-hw-insert: off [fixed]
-> rx-vlan-stag-hw-parse: off [fixed]
-> rx-vlan-stag-filter: off [fixed]
-> l2-fwd-offload: off [fixed]
-> hw-tc-offload: off [fixed]
-> esp-hw-offload: off [fixed]
-> esp-tx-csum-hw-offload: off [fixed]
-> rx-udp_tunnel-port-offload: off [fixed]
-> tls-hw-tx-offload: off [fixed]
-> tls-hw-rx-offload: off [fixed]
-> rx-gro-hw: on
-> tls-hw-record: off [fixed]
-> rx-gro-list: off
-> macsec-hw-offload: off [fixed]
-> rx-udp-gro-forwarding: off
-> hsr-tag-ins-offload: off [fixed]
-> hsr-tag-rm-offload: off [fixed]
-> hsr-fwd-offload: off [fixed]
-> hsr-dup-offload: off [fixed]
-> 
-> ethtool ens18:
-> Settings for ens18:
-> 	Supported ports: [  ]
-> 	Supported link modes:   Not reported
-> 	Supported pause frame use: No
-> 	Supports auto-negotiation: No
-> 	Supported FEC modes: Not reported
-> 	Advertised link modes:  Not reported
-> 	Advertised pause frame use: No
-> 	Advertised auto-negotiation: No
-> 	Advertised FEC modes: Not reported
-> 	Speed: Unknown!
-> 	Duplex: Unknown! (255)
-> 	Auto-negotiation: off
-> 	Port: Other
-> 	PHYAD: 0
-> 	Transceiver: internal
-> netlink error: Operation not permitted
-> 	Link detected: yes
-> 
-> 
-> Kernel log (journalctl -k):
-> Apr 03 19:50:37 kb-test.allod.com kernel: virtio_scsi virtio2: 4/0/0
-> default/read/poll queues  
-> Apr 03 19:50:37 kb-test.allod.com kernel: virtio_net virtio1 ens18:
-> renamed from eth0
-> 
-> Let me know if you’d like comparison data from kernel 6.11 or any
-> additional tests
+On Wed, Apr 2, 2025 at 3:18=E2=80=AFPM Guenter Roeck <linux@roeck-us.net> w=
+rote:
+>
+> On 4/2/25 12:34, William A. Kennington III wrote:
+> > We have some buggy pmbus devices that require a delay after performing =
+a
+> > page change operation before trying to issue more commands to the
+> > device.
+> >
+> > This allows for a configurable delay after page changes, but not
+> > affecting other read or write operations.
+> >
+> > Signed-off-by: William A. Kennington III <william@wkennington.com>
+> > ---
+> >   drivers/hwmon/pmbus/pmbus.h      |  1 +
+> >   drivers/hwmon/pmbus/pmbus_core.c | 59 ++++++++++++++++++++++---------=
+-
+> >   2 files changed, 41 insertions(+), 19 deletions(-)
+> >
+> > diff --git a/drivers/hwmon/pmbus/pmbus.h b/drivers/hwmon/pmbus/pmbus.h
+> > index ddb19c9726d6..742dafc44390 100644
+> > --- a/drivers/hwmon/pmbus/pmbus.h
+> > +++ b/drivers/hwmon/pmbus/pmbus.h
+> > @@ -482,6 +482,7 @@ struct pmbus_driver_info {
+> >        */
+> >       int access_delay;               /* in microseconds */
+> >       int write_delay;                /* in microseconds */
+> > +     int page_change_delay;          /* in microseconds */
+> >   };
+> >
+> >   /* Regulator ops */
+> > diff --git a/drivers/hwmon/pmbus/pmbus_core.c b/drivers/hwmon/pmbus/pmb=
+us_core.c
+> > index 787683e83db6..cfb724a8718b 100644
+> > --- a/drivers/hwmon/pmbus/pmbus_core.c
+> > +++ b/drivers/hwmon/pmbus/pmbus_core.c
+> > @@ -116,6 +116,7 @@ struct pmbus_data {
+> >       int vout_high[PMBUS_PAGES];     /* voltage high margin */
+> >       ktime_t write_time;             /* Last SMBUS write timestamp */
+> >       ktime_t access_time;            /* Last SMBUS access timestamp */
+> > +     ktime_t page_change_time;       /* Last SMBUS page change timesta=
+mp */
+> >   };
+> >
+> >   struct pmbus_debugfs_entry {
+> > @@ -178,24 +179,44 @@ static void pmbus_wait(struct i2c_client *client)
+> >
+> >               if (delta < info->access_delay)
+> >                       fsleep(info->access_delay - delta);
+> > -     } else if (info->write_delay) {
+> > +     }
+> > +     if (info->write_delay) {
+> >               delta =3D ktime_us_delta(ktime_get(), data->write_time);
+> >
+> >               if (delta < info->write_delay)
+> >                       fsleep(info->write_delay - delta);
+> >       }
+> > +     if (info->page_change_delay) {
+> > +             delta =3D ktime_us_delta(ktime_get(), data->page_change_t=
+ime);
+> > +
+>
+> page_change_time isn't actually set. I suggest to just use data->write_ti=
+me.
+> Also see below.
 
+Yeah, I consolidated the times in v2 and will keep it in v3
 
-I think let's redo bisect first then I will suggest which traces to add.
+>
+> > +             if (delta < info->page_change_delay)
+> > +                     fsleep(info->page_change_delay - delta);
+> > +     }
+> >   }
+> >
+> > -/* Sets the last accessed timestamp for pmbus_wait */
+> > -static void pmbus_update_ts(struct i2c_client *client, bool write_op)
+> > +#define PMBUS_OP_READ_BIT 1
+> > +#define PMBUS_OP_WRITE_BIT 2
+> > +#define PMBUS_OP_PAGE_CHANGE_BIT 4
+>
+> #define<space>NAME<tab>BIT(...)
+>
+> > +
+> > +#define PMBUS_OP_READ PMBUS_OP_READ_BIT
+> > +#define PMBUS_OP_WRITE PMBUS_OP_WRITE_BIT
+> > +#define PMBUS_OP_PAGE_CHANGE (PMBUS_OP_PAGE_CHANGE_BIT | PMBUS_OP_WRIT=
+E)
+>
+> That is way too complicated. Just make it
+>
+> #define PMBUS_OP_READ           BIT(0)
+> #define PMBUS_OP_WRITE          BIT(1)
+> #define PMBUS_OP_PAGE_CHANGE    BIT(2)
+>
+> A page change implies a write, so it is not necessary to combine the bits=
+.
 
+Yeah, I combined then here to make the function working with the
+delays consider both delays. I'll make this simpler.
+
+>
+> > +
+> > +/* Sets the last operation timestamp for pmbus_wait */
+> > +static void pmbus_update_ts(struct i2c_client *client, int op)
+> >   {
+> >       struct pmbus_data *data =3D i2c_get_clientdata(client);
+> >       const struct pmbus_driver_info *info =3D data->info;
+> > +     ktime_t now =3D ktime_get();
+> >
+> >       if (info->access_delay) {
+> > -             data->access_time =3D ktime_get();
+> > -     } else if (info->write_delay && write_op) {
+> > -             data->write_time =3D ktime_get();
+> > +             data->access_time =3D now;
+> > +     }
+> > +     if (info->write_delay && (op & PMBUS_OP_WRITE_BIT)) {
+> > +             data->write_time =3D now;
+> > +     }
+> > +     if (info->page_change_delay && (op & PMBUS_OP_PAGE_CHANGE_BIT)) {
+> > +             data->write_time =3D now;
+> >       }
+>
+> Seems to me that we should only need write_time and not
+> page_change_time since both will always be set together.
+>
+> I also think this can be simplified if ktime_get() is always called anywa=
+y.
+>
+>         ktime_t now =3D ktime_get();
+>
+>         data->access_time =3D now;
+>         if (op & (PMBUS_OP_WRITE | PMBUS_OP_PAGE_CHANGE))
+>                 data->write_time =3D now;
+>
+> It doesn't matter if the values are set unnecessarily if there is no dela=
+y
+> because they won't be used in that case.
+
+Yes, I think v2 (and shortly v3) makes this better
+
+>
+> >   }
+> >
+> > @@ -211,13 +232,13 @@ int pmbus_set_page(struct i2c_client *client, int=
+ page, int phase)
+> >           data->info->pages > 1 && page !=3D data->currpage) {
+> >               pmbus_wait(client);
+> >               rv =3D i2c_smbus_write_byte_data(client, PMBUS_PAGE, page=
+);
+> > -             pmbus_update_ts(client, true);
+> > +             pmbus_update_ts(client, PMBUS_OP_PAGE_CHANGE);
+> >               if (rv < 0)
+> >                       return rv;
+> >
+> >               pmbus_wait(client);
+> >               rv =3D i2c_smbus_read_byte_data(client, PMBUS_PAGE);
+> > -             pmbus_update_ts(client, false);
+> > +             pmbus_update_ts(client, PMBUS_OP_READ);
+> >               if (rv < 0)
+> >                       return rv;
+> >
+> > @@ -231,7 +252,7 @@ int pmbus_set_page(struct i2c_client *client, int p=
+age, int phase)
+> >               pmbus_wait(client);
+> >               rv =3D i2c_smbus_write_byte_data(client, PMBUS_PHASE,
+> >                                              phase);
+> > -             pmbus_update_ts(client, true);
+> > +             pmbus_update_ts(client, PMBUS_OP_WRITE);
+> >               if (rv)
+> >                       return rv;
+> >       }
+> > @@ -251,7 +272,7 @@ int pmbus_write_byte(struct i2c_client *client, int=
+ page, u8 value)
+> >
+> >       pmbus_wait(client);
+> >       rv =3D i2c_smbus_write_byte(client, value);
+> > -     pmbus_update_ts(client, true);
+> > +     pmbus_update_ts(client, PMBUS_OP_WRITE);
+> >
+> >       return rv;
+> >   }
+> > @@ -286,7 +307,7 @@ int pmbus_write_word_data(struct i2c_client *client=
+, int page, u8 reg,
+> >
+> >       pmbus_wait(client);
+> >       rv =3D i2c_smbus_write_word_data(client, reg, word);
+> > -     pmbus_update_ts(client, true);
+> > +     pmbus_update_ts(client, PMBUS_OP_WRITE);
+> >
+> >       return rv;
+> >   }
+> > @@ -408,7 +429,7 @@ int pmbus_read_word_data(struct i2c_client *client,=
+ int page, int phase, u8 reg)
+> >
+> >       pmbus_wait(client);
+> >       rv =3D i2c_smbus_read_word_data(client, reg);
+> > -     pmbus_update_ts(client, false);
+> > +     pmbus_update_ts(client, PMBUS_OP_READ);
+> >
+> >       return rv;
+> >   }
+> > @@ -471,7 +492,7 @@ int pmbus_read_byte_data(struct i2c_client *client,=
+ int page, u8 reg)
+> >
+> >       pmbus_wait(client);
+> >       rv =3D i2c_smbus_read_byte_data(client, reg);
+> > -     pmbus_update_ts(client, false);
+> > +     pmbus_update_ts(client, PMBUS_OP_READ);
+> >
+> >       return rv;
+> >   }
+> > @@ -487,7 +508,7 @@ int pmbus_write_byte_data(struct i2c_client *client=
+, int page, u8 reg, u8 value)
+> >
+> >       pmbus_wait(client);
+> >       rv =3D i2c_smbus_write_byte_data(client, reg, value);
+> > -     pmbus_update_ts(client, true);
+> > +     pmbus_update_ts(client, PMBUS_OP_WRITE);
+> >
+> >       return rv;
+> >   }
+> > @@ -523,7 +544,7 @@ static int pmbus_read_block_data(struct i2c_client =
+*client, int page, u8 reg,
+> >
+> >       pmbus_wait(client);
+> >       rv =3D i2c_smbus_read_block_data(client, reg, data_buf);
+> > -     pmbus_update_ts(client, false);
+> > +     pmbus_update_ts(client, PMBUS_OP_READ);
+> >
+> >       return rv;
+> >   }
+> > @@ -2530,7 +2551,7 @@ static int pmbus_read_coefficients(struct i2c_cli=
+ent *client,
+> >       rv =3D i2c_smbus_xfer(client->adapter, client->addr, client->flag=
+s,
+> >                           I2C_SMBUS_WRITE, PMBUS_COEFFICIENTS,
+> >                           I2C_SMBUS_BLOCK_PROC_CALL, &data);
+> > -     pmbus_update_ts(client, true);
+> > +     pmbus_update_ts(client, PMBUS_OP_READ | PMBUS_OP_WRITE);
+>
+> I don't immediately follow the reason for adding PMBUS_OP_READ.
+
+I can just remove it, I just added it for clarity as opposed to having
+it just be 0.
+
+>
+> >
+> >       if (rv < 0)
+> >               return rv;
+> > @@ -2734,7 +2755,7 @@ static int pmbus_init_common(struct i2c_client *c=
+lient, struct pmbus_data *data,
+> >       if (!(data->flags & PMBUS_NO_CAPABILITY)) {
+> >               pmbus_wait(client);
+> >               ret =3D i2c_smbus_read_byte_data(client, PMBUS_CAPABILITY=
+);
+> > -             pmbus_update_ts(client, false);
+> > +             pmbus_update_ts(client, PMBUS_OP_READ);
+> >
+> >               if (ret >=3D 0 && (ret & PB_CAPABILITY_ERROR_CHECK)) {
+> >                       if (i2c_check_functionality(client->adapter, I2C_=
+FUNC_SMBUS_PEC))
+> > @@ -2750,13 +2771,13 @@ static int pmbus_init_common(struct i2c_client =
+*client, struct pmbus_data *data,
+> >       data->read_status =3D pmbus_read_status_word;
+> >       pmbus_wait(client);
+> >       ret =3D i2c_smbus_read_word_data(client, PMBUS_STATUS_WORD);
+> > -     pmbus_update_ts(client, false);
+> > +     pmbus_update_ts(client, PMBUS_OP_READ);
+> >
+> >       if (ret < 0 || ret =3D=3D 0xffff) {
+> >               data->read_status =3D pmbus_read_status_byte;
+> >               pmbus_wait(client);
+> >               ret =3D i2c_smbus_read_byte_data(client, PMBUS_STATUS_BYT=
+E);
+> > -             pmbus_update_ts(client, false);
+> > +             pmbus_update_ts(client, PMBUS_OP_READ);
+> >
+> >               if (ret < 0 || ret =3D=3D 0xff) {
+> >                       dev_err(dev, "PMBus status register not found\n")=
+;
+>
