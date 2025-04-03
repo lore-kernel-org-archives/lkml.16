@@ -1,98 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f67.google.com (mail-pj1-f67.google.com [209.85.216.67])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 192941DFF7;
-	Thu,  3 Apr 2025 06:27:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9CDF28FF;
+	Thu,  3 Apr 2025 06:28:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.67
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743661638; cv=none; b=HEiDzgzOY++c/v2UA9FPlMzrEWV1Uhr6JyBbDZxqUHv0eR+QIUN5nq74kzbckvGPNp0utsF/WI1cZzjMVT01iss0tW0iCV6MCxD5oMOwf4ohePOaD3VDe9NjhlvGz7Kc6FROn5Hoywm7kHhlSzOHZ8AH1JHO+blItQ1ZzaaBxf8=
+	t=1743661700; cv=none; b=pCSmje+h0F2KXzDpacJNM/YPfZYTP9NsJKQU8M/nvUjRaMDH3Bng7Vx5eiBiNSirGcrLTY9qm9GgUbfGzG8tkck2Y8zbmuOt6HGdpuNWrtwYllilGISGUV70ArbWKv9i4InCD9+F7Ehv/CRWM0QfRIp5wZprFOBQyYodFjpIzcE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743661638; c=relaxed/simple;
-	bh=X8V6uIOiffOO7xHmNHXIgtQraGK/QDMtWqEVtPA3lXQ=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=R6G2S9NAbvk1JwY5rWgHBVsQMav+WuTXR7+zrBPYdLLBShMoVxoJ6s2c8POUNgRUe5KTPmrzi2caXvYf5BBQU3vDPAxq2uSjxNzWB9yhvBTYTiFH3F/rQWp7LFhWPL8J6CF4qQ9dm+XQjWYnISzA191FW87BxaROeNMbwEnBuDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GZ86fbcj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743661700; c=relaxed/simple;
+	bh=x8cKCl7UMMbwrccfbeSRllIxdCYB9+ViYGvLRKmaVAA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lVOxYtbvYlZDmh9dJ7Uax7NDS5g6IrdpZhMdJ6kHONG5GnQileEu8eb/fVDSdwphofGU0ahOe99+vScFr/PPLZrL3Y47WSkSyMMHN6EMkSGrwB2KgFBCjmEQ4ETO1/DyQV5CkvTHtNtcKUUqvHsQsjSk9KHMmfmV8/LBYSx3oEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SMnQTYgx; arc=none smtp.client-ip=209.85.216.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GZ86fbcj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A8F2C4CEE8;
-	Thu,  3 Apr 2025 06:27:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743661637;
-	bh=X8V6uIOiffOO7xHmNHXIgtQraGK/QDMtWqEVtPA3lXQ=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=GZ86fbcjQcd7Oqk1o64brBniMeBX1Vz/gd30Ooo19UlPV/oA39fduqzKMEv52sKpd
-	 2tFFYqNsS0z56Bhnm/VgABGFjjx1d+34T7uMoCUdbdnvGSzuFK0ycMftFzyf8b+II8
-	 yxJid/4TEKAZfDz5TyqNI9lfrOXCLimGCLIEq6K93OnF1I2L5qo2cKTbv1gcr3E2jE
-	 L5rfcNQVkPibGkEG5wRE2wWd2fjztFuFIv5fVwCy5ssizxarHTozgKqyQlJSmBGTGk
-	 tQCX7PiPdeQe4UV0DYl8DYc07zKXh72LhcQcDQXN32Jw0ljSP6t6Ps9ueBp+SutpCt
-	 Lec083sKmnzBg==
-Date: Thu, 03 Apr 2025 01:27:16 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SMnQTYgx"
+Received: by mail-pj1-f67.google.com with SMTP id 98e67ed59e1d1-301918a4e3bso512254a91.3;
+        Wed, 02 Apr 2025 23:28:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743661697; x=1744266497; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=zv2Eim6EJxK+6ui7lY93m7UU37Cs8RrVaOWKjl9KmMc=;
+        b=SMnQTYgxz+BZ8jEv3v0sBuR9qT2AJGvYazfW70/pHreJ8hBPrRTKgxEujA7441E0T9
+         16WMu7ea4kw69ckQh1yNhJ22sRyj7JPQM1sWc6bFan959fPAKL00wHRsrK1P7lLbYs2k
+         b6Etzq1pPUvAUSopyWA+jUSz2lYv/F1CfNmIzvJhKjGmwGu6dvhnRvk6mZWVmuEbsWRE
+         vMXjslq5wrmq+3HXa/BIdkQpqqtO6pewbpgEl/GBMXFISoO16S0kjv6cQz7UzvhIV+w7
+         CInBeuIF2e4ql07NfvI2wp95MEfdGB2bnaJrn60PizgRqer/O+LjkTCqktoYwhi+FxSB
+         JElQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743661697; x=1744266497;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zv2Eim6EJxK+6ui7lY93m7UU37Cs8RrVaOWKjl9KmMc=;
+        b=gog6pzrHB4kiPb1Sh0PTu2RiqRnSJRbJepNho3zvJhy9rcTb+W7+Rlr6RQB3d7zbYW
+         bMWs5fr1v4wShOYqAl2g8Ab0i8cRWtppaSbyK3mlywOzQg0BWL0CFQ1aDcx7/WZ7TQl0
+         vm5A/xEMQW/akkYNjRqm769ZbffZy3bKNpSqvN1Kj5YsDGhR7t4gYmjd/SDJrySs3nru
+         SV8tIwKw84wCnYEm8P3PbvD57t/jFzImEh7m6a6Pi9OPJDDsjmCYmLte1YVWaiNm4fDY
+         7RSjNGsIoZmD0FMRf0KecgYPKXIY1xuGPiWbpv/fhnOkTcE/POpxfmFhNXAqQFhZ59tR
+         5WYA==
+X-Forwarded-Encrypted: i=1; AJvYcCXYlZq4AdiGXIehl6JQAcB8hN9SIV/Fv8Z/UW8y7oSG0P8YDN6uZk39Vke3sU7tvDSoOcmhoBBmg9qHGNY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz8C1Pi/CVwBXFfqpFhKRc3JmuGzPFmFz5hzmqffXXRLirPEH73
+	+Q2rsu+Ovd+uuvaHIRGpQAOL6+ICwUxybCq2fRizo1NKZC2SAzov
+X-Gm-Gg: ASbGncsjJF2S428Wp1fEe+Q20uSCtZDB4zsquJLl0Ry6889rcjjt5mHWc05U00Sgrvv
+	1GvHhDI2qVBxepwRb/8PRp1WWDGImsozO4k4AyB1CqO1b1wcfVjuTalAMp6hJaEp0HsivfUKIcK
+	XtrZNZsahf0EEg48pGq80WPX12h1LqFxS1/cs/U0BIikkRHJfQGtqo4jSeuR9XUDHr82LPmi+MZ
+	yQJZXDu0/b5aeWt9ybor5bSDlM7W9fkU6zBCwwo+s1pU0FOgaENki/pRNurA58BbQwOJC5lofDv
+	dZ8QZxi06AP4e9ZK/JHet5v2kQooL4jpZAMjHOPfgrmdQfn71mRhnV9sgx+T/2SurCyRtsA=
+X-Google-Smtp-Source: AGHT+IH3/7oQDppEuWcYDFvnSNSVp2KWqayWvGz4NpuF6q5e1fxmt66vYC1luZBtdcGvzxbf+Tt5KA==
+X-Received: by 2002:a17:90a:c88f:b0:2ff:5016:7fd2 with SMTP id 98e67ed59e1d1-3053215e085mr32933013a91.24.1743661696860;
+        Wed, 02 Apr 2025 23:28:16 -0700 (PDT)
+Received: from henry.localdomain ([111.202.148.167])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3057ca5163fsm926950a91.19.2025.04.02.23.28.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Apr 2025 23:28:16 -0700 (PDT)
+From: Henry Martin <bsdhenrymartin@gmail.com>
+To: gregkh@linuxfoundation.org,
+	jirislaby@kernel.org,
+	sugaya.taichi@socionext.com,
+	orito.takao@socionext.com,
+	u.kleine-koenig@baylibre.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Henry Martin <bsdhenrymartin@gmail.com>
+Subject: [PATCH v1] serial: Fix null-ptr-deref in mlb_usio_probe()
+Date: Thu,  3 Apr 2025 14:28:08 +0800
+Message-Id: <20250403062808.63428-1-bsdhenrymartin@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Michael Hennerich <Michael.Hennerich@analog.com>, 
- Lars-Peter Clausen <lars@metafoo.de>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-iio@vger.kernel.org, 
- Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>
-To: Kim Seer Paller <kimseer.paller@analog.com>
-In-Reply-To: <20250403-togreg-v3-2-d4b06a4af5a9@analog.com>
-References: <20250403-togreg-v3-0-d4b06a4af5a9@analog.com>
- <20250403-togreg-v3-2-d4b06a4af5a9@analog.com>
-Message-Id: <174366163644.1411732.10426808100774096920.robh@kernel.org>
-Subject: Re: [PATCH v3 2/3] dt-bindings: iio: dac: Add adi,ad3530r.yaml
+Content-Transfer-Encoding: 8bit
 
+devm_ioremap() returns NULL on error. Currently, mlb_usio_probe() does
+not check for this case, which results in a NULL pointer dereference.
 
-On Thu, 03 Apr 2025 13:33:56 +0800, Kim Seer Paller wrote:
-> Document the AD3530/AD3530R (8-channel) and AD3531/AD3531R (4-channel)
-> low-power, 16-bit, buffered voltage output DACs with software-
-> programmable gain controls. They provide full-scale output spans of 2.5V
-> or 5V for reference voltages of 2.5V. These devices operate on a single
-> 2.7V to 5.5V supply and are guaranteed to be monotonic by design.
-> The "R" variants include a 2.5V, 5ppm/°C internal reference, which is
-> disabled by default.
-> 
-> Signed-off-by: Kim Seer Paller <kimseer.paller@analog.com>
-> ---
->  .../devicetree/bindings/iio/dac/adi,ad3530r.yaml   | 99 ++++++++++++++++++++++
->  MAINTAINERS                                        |  7 ++
->  2 files changed, 106 insertions(+)
-> 
+Add NULL check after devm_ioremap() to prevent this issue.
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Fixes: ba44dc043004 ("serial: Add Milbeaut serial control")
+Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
+---
+ drivers/tty/serial/milbeaut_usio.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-yamllint warnings/errors:
-
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/iio/adc/adi,axi-adc.example.dtb: adc@0: pwm-names: ['convst1'] is too short
-	from schema $id: http://devicetree.org/schemas/iio/adc/adi,ad7606.yaml#
-
-doc reference errors (make refcheckdocs):
-Warning: Documentation/arch/powerpc/cxl.rst references a file that doesn't exist: Documentation/ABI/testing/sysfs-class-cxl
-Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
-Warning: lib/Kconfig.debug references a file that doesn't exist: Documentation/dev-tools/fault-injection/fault-injection.rst
-Documentation/arch/powerpc/cxl.rst: Documentation/ABI/testing/sysfs-class-cxl
-MAINTAINERS: Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
-lib/Kconfig.debug: Documentation/dev-tools/fault-injection/fault-injection.rst
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250403-togreg-v3-2-d4b06a4af5a9@analog.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
+diff --git a/drivers/tty/serial/milbeaut_usio.c b/drivers/tty/serial/milbeaut_usio.c
+index 059bea18dbab..4e47dca2c4ed 100644
+--- a/drivers/tty/serial/milbeaut_usio.c
++++ b/drivers/tty/serial/milbeaut_usio.c
+@@ -523,7 +523,10 @@ static int mlb_usio_probe(struct platform_device *pdev)
+ 	}
+ 	port->membase = devm_ioremap(&pdev->dev, res->start,
+ 				resource_size(res));
+-
++	if (!port->membase) {
++		ret = -ENOMEM;
++		goto failed;
++	}
+ 	ret = platform_get_irq_byname(pdev, "rx");
+ 	mlb_usio_irq[index][RX] = ret;
+ 
+-- 
+2.34.1
 
