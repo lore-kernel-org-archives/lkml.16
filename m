@@ -1,111 +1,127 @@
-Received: from mail3-relais-sop.national.inria.fr (mail3-relais-sop.national.inria.fr [192.134.164.104])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6B65149C6F
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 05:07:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.134.164.104
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5B8218DB16;
+	Thu,  3 Apr 2025 05:08:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743656823; cv=none; b=VXyDhJ2PyZTb2jJf52MZ+rcKtsMXExtM7C3KwTAjJQ/QSZQI3kWxWii8X9q+WhPXGvfZpHc4YRD6vavxntltwljqmLBK15ERUDD1mayeTO8sXJZT5nOl6niNjMeCdMXujslh/bKvWVgDM7wKdHMDjVZ3Y+lxA9bAQUTk4VKveqI=
+	t=1743656899; cv=none; b=DkUhJP35Zq87sZu74Jj/AgsK22T+K1YI2K6rhH+2c5C3Qv78vi9UtAGZMcYKYPCRFtc4wRIHR6VDMKRiN3CFqBlOBinJ7eqh7BqGglTcf40WBd5Fd6SKgzRsD6NBaFR50ln0qb4ICcBXoZe7hGZ6jE+vVPSRd/70xXEXllALYUo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743656823; c=relaxed/simple;
-	bh=8VKgCgBHxrdknUaI1Mw9feNtY3afR2pJyF2xF2EdXt0=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=IOHAqOLcqJ/PB1MDEQS/ueeEep1l0U456nUajYeNoaOVpEL52Sife7CfnyU+geMYKEXBk8o46ndy6j8d0dmOwm5iNzcncWHAB8JjCTuuM1DrtBr2usht4TPKJQ5uiJzIw615lJpMr3f1/hAdJvQEOJSQfJ+ihI7vlMoQGaz4MR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr; spf=pass smtp.mailfrom=inria.fr; dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b=AqFJERTd; arc=none smtp.client-ip=192.134.164.104
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inria.fr
+	s=arc-20240116; t=1743656899; c=relaxed/simple;
+	bh=2gdDUGzlGVNBfMhF2TU8tbvOT7CrmGcKCSnB4smnKaE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=AL9NjtsR1ZWmEq7xdcyKkTI/UWt/Wgvq3IfIAAavwqynpyUr2P3f1jlbXEa9OPX9VR6fxxMhYQhss0rrolNqxjXb/AMMi55+6J7xMTtgK5JgPBP4WAGWc5zEvVWC7KZJtK3tUkN+VxT6ljEAxei35vn5NoCpDEUv8QOt6Ful5hc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Y2YEE+8G; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b="AqFJERTd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=inria.fr; s=dc;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=6V8kIiJooYD9onhg8eupmQyigeizgedRchvQTk4+eOA=;
-  b=AqFJERTdzp3Z7S/TbpncZRMnKlNca427TKeeZQaXOUNHVNxK3j4swm18
-   mothcXV9rzR5jtBc59foAsB0dryO8+2MFQdcSQOd0bVLKk8H4v/Z8wuE4
-   KvwvcutJx5XezNHfbM3O+CowSfDA3JwPps6eSWKW8H7+O6WCAvw/zZdNH
-   Y=;
-Authentication-Results: mail3-relais-sop.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=julia.lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
-X-IronPort-AV: E=Sophos;i="6.15,184,1739833200"; 
-   d="scan'208";a="113317727"
-Received: from powered-by.xenosite.net (HELO hadrien) ([89.255.17.162])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 07:06:53 +0200
-Date: Thu, 3 Apr 2025 07:06:52 +0200 (CEST)
-From: Julia Lawall <julia.lawall@inria.fr>
-To: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
-cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, outreachy@lists.linux.dev, 
-    linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: rtl8723bs: modify struct field to use standard
- bool type
-In-Reply-To: <Z+05IEjV3pczMLNQ@HP-650>
-Message-ID: <4c35ae41-c834-e25a-ccab-5cdd34aa4680@inria.fr>
-References: <Z+05IEjV3pczMLNQ@HP-650>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Y2YEE+8G"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5333mlAm031730;
+	Thu, 3 Apr 2025 05:08:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	Xje1eMsyvhZuOhbcBq7OJz15zbYdM9P9BLGcPsjMtsA=; b=Y2YEE+8G03TLSJs/
+	SpdKPNbvm2/0cA6FxILGdXD5Noq3jTvbh1X/0aTg47D36CbKXiU/Vvb2vBpCUuhE
+	H7IzqCeLDz6ZyOMnu91NZE6gocVhNIkSzqo2kVpJciRRY1C7Ks8qSNmsezHeFwMd
+	L+qrHr87xCfIA7k4mN0gUH7yqUTWv+KW5YsSfnkIPom2zjPo6ydtdEfV+cSvc1P/
+	IrB9lQ4NguoJlqSKExpSmwHUx+ZUa6EH+lIO3EFbJ3VjUNklsVGmp73WrKTbOXvK
+	zQh6bdk17iG1DPacaaVcEYMCvEgQapIDl0JGutUhP37mzv8XiRx4S54OByi/cacV
+	WUYveg==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45rh7yndt2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 03 Apr 2025 05:08:13 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53358CVw007839
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 3 Apr 2025 05:08:12 GMT
+Received: from [10.152.195.140] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 2 Apr 2025
+ 22:08:08 -0700
+Message-ID: <bcbd2f83-2599-4a2e-ad69-64edcb97dfbe@quicinc.com>
+Date: Thu, 3 Apr 2025 10:38:05 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 2/2] arm64: dts: qcom: ipq5424: Enable PCIe PHYs and
+ controllers
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+CC: <andersson@kernel.org>, <konradybcio@kernel.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <quic_varada@quicinc.com>,
+        <quic_srichara@quicinc.com>
+References: <20250402102723.219960-1-quic_mmanikan@quicinc.com>
+ <20250402102723.219960-3-quic_mmanikan@quicinc.com>
+ <ezodm6qh63fs43xx6cw3smspfqkwqb5qscwfee36k5vtktguc4@tlqhuvjg2bly>
+Content-Language: en-US
+From: Manikanta Mylavarapu <quic_mmanikan@quicinc.com>
+In-Reply-To: <ezodm6qh63fs43xx6cw3smspfqkwqb5qscwfee36k5vtktguc4@tlqhuvjg2bly>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=IYWHWXqa c=1 sm=1 tr=0 ts=67ee17bd cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=kx6ie2_k--WTlmwe1CQA:9 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: Wdy5-CVMtC4Pm24fZ-ny0zLZ7rijNuCw
+X-Proofpoint-ORIG-GUID: Wdy5-CVMtC4Pm24fZ-ny0zLZ7rijNuCw
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-03_01,2025-04-02_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=765
+ priorityscore=1501 mlxscore=0 malwarescore=0 bulkscore=0 suspectscore=0
+ lowpriorityscore=0 adultscore=0 impostorscore=0 clxscore=1015 spamscore=0
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504030025
 
 
 
-On Wed, 2 Apr 2025, Abraham Samuel Adekunle wrote:
+On 4/2/2025 7:50 PM, Dmitry Baryshkov wrote:
+> On Wed, Apr 02, 2025 at 03:57:23PM +0530, Manikanta Mylavarapu wrote:
+>> Enable the PCIe controller and PHY nodes corresponding to RDP466.
+>>
+>> Signed-off-by: Manikanta Mylavarapu <quic_mmanikan@quicinc.com>
+>> ---
+>> Changes in V6:
+>> 	- No change.
+>>
+>>  arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts | 41 ++++++++++++++++++++-
+>>  1 file changed, 40 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts b/arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts
+>> index 0fd0ebe0251d..1f89530cb035 100644
+>> --- a/arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts
+>> +++ b/arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts
+>> @@ -82,6 +82,32 @@ &dwc_1 {
+>>  	dr_mode = "host";
+>>  };
+>>  
+>> +&pcie2 {
+>> +	pinctrl-0 = <&pcie2_default_state>;
+>> +	pinctrl-names = "default";
+>> +
+>> +	perst-gpios = <&tlmm 31 GPIO_ACTIVE_LOW>;
+> 
+> 
+> No wake-gpios? Please document it in the commit message.
+> 
 
-> The struct field uses the uint values 0 and 1 to represent false and
-> true values respectively.
->
-> Convert cases to use the bool type instead to conform to Linux
-> coding styles and ensure consistency.
+Hi Dmitry,
 
-This is vague.  Ensure consistency with what?  You can point out that true
-or false was already being used elsewhere in the code.
+Thank you for reviewing the patch.
 
->
-> reported by Coccinelle:
->
-> Signed-off-by: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
-> ---
->  drivers/staging/rtl8723bs/core/rtw_ap.c      | 2 +-
->  drivers/staging/rtl8723bs/include/sta_info.h | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/staging/rtl8723bs/core/rtw_ap.c b/drivers/staging/rtl8723bs/core/rtw_ap.c
-> index ed6942e289a5..82f54f769ed1 100644
-> --- a/drivers/staging/rtl8723bs/core/rtw_ap.c
-> +++ b/drivers/staging/rtl8723bs/core/rtw_ap.c
-> @@ -389,7 +389,7 @@ void update_bmc_sta(struct adapter *padapter)
->  		psta->qos_option = 0;
->  		psta->htpriv.ht_option = false;
->
-> -		psta->ieee8021x_blocked = 0;
-> +		psta->ieee8021x_blocked = false;
->
->  		memset((void *)&psta->sta_stats, 0, sizeof(struct stainfo_stats));
->
-> diff --git a/drivers/staging/rtl8723bs/include/sta_info.h b/drivers/staging/rtl8723bs/include/sta_info.h
-> index b3535fed3de7..63343998266a 100644
-> --- a/drivers/staging/rtl8723bs/include/sta_info.h
-> +++ b/drivers/staging/rtl8723bs/include/sta_info.h
-> @@ -86,7 +86,7 @@ struct sta_info {
->  	uint qos_option;
->  	u8 hwaddr[ETH_ALEN];
->
-> -	uint	ieee8021x_blocked;	/* 0: allowed, 1:blocked */
-> +	bool ieee8021x_blocked;
+The wake GPIO is dropped because the PCIe on the IPQ5424 doesn't support low power mode.
+I will document this information in the commit message and post the next version.
 
-This declaration doesn't have the same alignment as the others.
-
-You should also check whether this is a structure that is read from the
-hardware.  In that case, it would be a concern if the bool field does not
-have the same size as the uint one.
-
-julia
-
->  	uint	dot118021XPrivacy; /* aes, tkip... */
->  	union Keytype	dot11tkiptxmickey;
->  	union Keytype	dot11tkiprxmickey;
-> --
-> 2.34.1
->
->
+Thanks & Regards,
+Manikanta.
