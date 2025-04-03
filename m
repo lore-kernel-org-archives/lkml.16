@@ -1,45 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BBB525BAD9;
-	Thu,  3 Apr 2025 19:03:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 822D625C6EE;
+	Thu,  3 Apr 2025 19:03:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743707023; cv=none; b=tj/iNGZeQhlHiMyNh44Mau31wEIPu84+76RV9NcuDtIjhKjV/fSAWWHy3O+P8WaP1pkHQ35xq7d9Eqp00HKHJee57NFzvDzaCkkQ5lU64U2YOYEC98+Xe7Ibffsnv4vD+7XA9BvkwaoNBkmQ0f+9oZjDSHY8Rzd6shrgBezNxs8=
+	t=1743707024; cv=none; b=DJ3t1x+V9qNLzBUCvhmwX8rE9HNGshkRIe/lQcuUyrqANr326SmJx0nQQDlRZxRkgTtJ7Hd555a+xLIBe4IHuOG5OODI2mNA9i68IKgm8mjU9LO0nvr0+8zYs9KkPkmoEyHxI6eytR3+qCIZE7w36nYWrG06kVBWhXu3cAI08dU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743707023; c=relaxed/simple;
-	bh=HmL04c1OL0uLWY/7X0wZF9nM76VL9rCxFElPMSxOXBc=;
+	s=arc-20240116; t=1743707024; c=relaxed/simple;
+	bh=ocUmumNNqTn8lwXlmZIoT+GwMG8uU3C5LnKpYpZ+rKc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=DHBLgPE19mzJn6l72AcQqBKHQz+hSUuexxgTrWUX1DTHs06Un+9EtrWCWcIgSjC+9hFp8UfPi8HiCINY6uav6sOEQnM+oS0MSeL7t56zTcZBGizIC51ADsA8HDBjjh9NCfroQajXz/8jiGKDlAw/JKYGVkOt3jNaUiSoJWCiuIU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tln7d6qV; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=IBXOTpP0xeff3QYxuyoQr6u0INsMMb7MlKXRODz8fgWvDV+3eSBRPbrhIghJbeBhwmyS2C3FJI4r7hH1JYo7DM82lpiu7XmJcCc8n8nHUm1qPJ71rIf2Wua4FcONhB/Zdrd1pg+lNgxYDRbyEF4Fr4ajbRkCFOmQQL/fXT78aVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MaiGOzT6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tln7d6qV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE187C4CEE3;
-	Thu,  3 Apr 2025 19:03:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MaiGOzT6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7F49C4CEE9;
+	Thu,  3 Apr 2025 19:03:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743707021;
-	bh=HmL04c1OL0uLWY/7X0wZF9nM76VL9rCxFElPMSxOXBc=;
+	s=k20201202; t=1743707024;
+	bh=ocUmumNNqTn8lwXlmZIoT+GwMG8uU3C5LnKpYpZ+rKc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tln7d6qVarMBpypw+w7/cb/cB+dj67QVA7lZioYrPtWSNuxcd2dC18o6lss9EMCym
-	 hINwtlwunCQP0bLa7RAAHZ8kNCxUtDmz3Akn4FXVpuBI2DSJjottDdrHjDUEWHEUlR
-	 vMVgd9zUX5bC3AHRTTQ2ETwJ9Z3K9YT0XXTRO/G2G/yQpKgRSy7yktzsCfrtKImbyX
-	 6wFbVPwq2pK4Em1puqn08wFtU28CSTOrNBbJpJ/PoSXIjM+fd9kwmsek0gSNTxsElm
-	 FhXk8ice+NWoi9qw4AhYPYbRh0be6p5HjuDw1QWevqGAS+O72Ofw+lFlcZIxRZ7Urq
-	 sSK6Rb0RB1oOA==
+	b=MaiGOzT6YEDeOAHSFt5JFavP98pkaVYGuDEEC0uxMYLlc5/Qvv6wE7defhXXhWIuj
+	 H9PIgQrVCLYa4oF/2gz8OFH3LmvsZaP0rTrds2gmgA/3w9ffIi/OuSCmcf6oMQ8wtf
+	 AXP7rEGcADiJKv54hKh/UElK52Sx6BNNV2Vhe3xIAV1j4zKS0ASVraTzTXOQGReG/J
+	 nhQ4c/nXaJOxKERWt6VFhwTk2DMdflBbpmLa9q/JZSggQ+KHqEL6H1dej3XHSh9smI
+	 8spUUszMzwsTX2+qS31+NbWzsISPPJp0ipc1huI9LxISJTEuEO+G4XfuOTbx5A7hfZ
+	 EVzq6QXYnIypw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Huacai Chen <chenhuacai@loongson.cn>,
-	Yuli Wang <wangyuli@uniontech.com>,
-	Jie Fan <fanjie@uniontech.com>,
-	Erpeng Xu <xuerpeng@uniontech.com>,
-	Niklas Cassel <cassel@kernel.org>,
+Cc: Boris Burkov <boris@bur.io>,
+	Qu Wenruo <wqu@suse.com>,
+	Filipe Manana <fdmanana@suse.com>,
+	David Sterba <dsterba@suse.com>,
 	Sasha Levin <sashal@kernel.org>,
-	dlemoal@kernel.org,
-	linux-ide@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.14 39/54] ahci: Marvell 88SE9215 controllers prefer DMA for ATAPI
-Date: Thu,  3 Apr 2025 15:01:54 -0400
-Message-Id: <20250403190209.2675485-39-sashal@kernel.org>
+	clm@fb.com,
+	josef@toxicpanda.com,
+	linux-btrfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.14 41/54] btrfs: harden block_group::bg_list against list_del() races
+Date: Thu,  3 Apr 2025 15:01:56 -0400
+Message-Id: <20250403190209.2675485-41-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250403190209.2675485-1-sashal@kernel.org>
 References: <20250403190209.2675485-1-sashal@kernel.org>
@@ -54,102 +54,96 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.14
 Content-Transfer-Encoding: 8bit
 
-From: Huacai Chen <chenhuacai@loongson.cn>
+From: Boris Burkov <boris@bur.io>
 
-[ Upstream commit 0507c777f5d8f9e34b137d28ee263599a7b81242 ]
+[ Upstream commit 7511e29cf1355b2c47d0effb39e463119913e2f6 ]
 
-We use CD/DVD drives under Marvell 88SE9215 SATA controller on many
-Loongson-based machines. We found its PIO doesn't work well, and on the
-opposite its DMA seems work very well.
+As far as I can tell, these calls of list_del_init() on bg_list cannot
+run concurrently with btrfs_mark_bg_unused() or btrfs_mark_bg_to_reclaim(),
+as they are in transaction error paths and situations where the block
+group is readonly.
 
-We don't know the detail of the 88SE9215 SATA controller, but we have
-tested different CD/DVD drives and they all have problems under 88SE9215
-(but they all work well under an Intel SATA controller). So, we consider
-this problem is bound to 88SE9215 SATA controller rather than bound to
-CD/DVD drives.
+However, if there is any chance at all of racing with mark_bg_unused(),
+or a different future user of bg_list, better to be safe than sorry.
 
-As a solution, we define a new dedicated AHCI board id which is named
-board_ahci_yes_fbs_atapi_dma for 88SE9215, and for this id we set the
-AHCI_HFLAG_ATAPI_DMA_QUIRK and ATA_QUIRK_ATAPI_MOD16_DMA flags on the
-SATA controller in order to prefer ATAPI DMA.
+Otherwise we risk the following interleaving (bg_list refcount in parens)
 
-Reported-by: Yuli Wang <wangyuli@uniontech.com>
-Tested-by: Jie Fan <fanjie@uniontech.com>
-Tested-by: Erpeng Xu <xuerpeng@uniontech.com>
-Tested-by: Yuli Wang <wangyuli@uniontech.com>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-Link: https://lore.kernel.org/r/20250318104314.2160526-1-chenhuacai@loongson.cn
-Signed-off-by: Niklas Cassel <cassel@kernel.org>
+T1 (some random op)                       T2 (btrfs_mark_bg_unused)
+                                        !list_empty(&bg->bg_list); (1)
+list_del_init(&bg->bg_list); (1)
+                                        list_move_tail (1)
+btrfs_put_block_group (0)
+                                        btrfs_delete_unused_bgs
+                                             bg = list_first_entry
+                                             list_del_init(&bg->bg_list);
+                                             btrfs_put_block_group(bg); (-1)
+
+Ultimately, this results in a broken ref count that hits zero one deref
+early and the real final deref underflows the refcount, resulting in a WARNING.
+
+Reviewed-by: Qu Wenruo <wqu@suse.com>
+Reviewed-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: Boris Burkov <boris@bur.io>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ata/ahci.c    | 11 ++++++++++-
- drivers/ata/ahci.h    |  1 +
- drivers/ata/libahci.c |  4 ++++
- 3 files changed, 15 insertions(+), 1 deletion(-)
+ fs/btrfs/extent-tree.c |  8 ++++++++
+ fs/btrfs/transaction.c | 12 ++++++++++++
+ 2 files changed, 20 insertions(+)
 
-diff --git a/drivers/ata/ahci.c b/drivers/ata/ahci.c
-index 52ae8f9a7dd61..f3a6bfe098cd4 100644
---- a/drivers/ata/ahci.c
-+++ b/drivers/ata/ahci.c
-@@ -63,6 +63,7 @@ enum board_ids {
- 	board_ahci_pcs_quirk_no_devslp,
- 	board_ahci_pcs_quirk_no_sntf,
- 	board_ahci_yes_fbs,
-+	board_ahci_yes_fbs_atapi_dma,
+diff --git a/fs/btrfs/extent-tree.c b/fs/btrfs/extent-tree.c
+index 3014a1a23efdb..6d615711f0400 100644
+--- a/fs/btrfs/extent-tree.c
++++ b/fs/btrfs/extent-tree.c
+@@ -2874,7 +2874,15 @@ int btrfs_finish_extent_commit(struct btrfs_trans_handle *trans)
+ 						   block_group->length,
+ 						   &trimmed);
  
- 	/* board IDs for specific chipsets in alphabetical order */
- 	board_ahci_al,
-@@ -188,6 +189,14 @@ static const struct ata_port_info ahci_port_info[] = {
- 		.udma_mask	= ATA_UDMA6,
- 		.port_ops	= &ahci_ops,
- 	},
-+	[board_ahci_yes_fbs_atapi_dma] = {
-+		AHCI_HFLAGS	(AHCI_HFLAG_YES_FBS |
-+				 AHCI_HFLAG_ATAPI_DMA_QUIRK),
-+		.flags		= AHCI_FLAG_COMMON,
-+		.pio_mask	= ATA_PIO4,
-+		.udma_mask	= ATA_UDMA6,
-+		.port_ops	= &ahci_ops,
-+	},
- 	/* by chipsets */
- 	[board_ahci_al] = {
- 		AHCI_HFLAGS	(AHCI_HFLAG_NO_PMP | AHCI_HFLAG_NO_MSI),
-@@ -590,7 +599,7 @@ static const struct pci_device_id ahci_pci_tbl[] = {
- 	{ PCI_DEVICE(PCI_VENDOR_ID_MARVELL_EXT, 0x91a3),
- 	  .driver_data = board_ahci_yes_fbs },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_MARVELL_EXT, 0x9215),
--	  .driver_data = board_ahci_yes_fbs },
-+	  .driver_data = board_ahci_yes_fbs_atapi_dma },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_MARVELL_EXT, 0x9230),
- 	  .driver_data = board_ahci_yes_fbs },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_MARVELL_EXT, 0x9235),
-diff --git a/drivers/ata/ahci.h b/drivers/ata/ahci.h
-index c842e2de6ef98..2c10c8f440d12 100644
---- a/drivers/ata/ahci.h
-+++ b/drivers/ata/ahci.h
-@@ -246,6 +246,7 @@ enum {
- 	AHCI_HFLAG_NO_SXS		= BIT(26), /* SXS not supported */
- 	AHCI_HFLAG_43BIT_ONLY		= BIT(27), /* 43bit DMA addr limit */
- 	AHCI_HFLAG_INTEL_PCS_QUIRK	= BIT(28), /* apply Intel PCS quirk */
-+	AHCI_HFLAG_ATAPI_DMA_QUIRK	= BIT(29), /* force ATAPI to use DMA */
- 
- 	/* ap->flags bits */
- 
-diff --git a/drivers/ata/libahci.c b/drivers/ata/libahci.c
-index e7ace4b10f15b..22afa4ff860d1 100644
---- a/drivers/ata/libahci.c
-+++ b/drivers/ata/libahci.c
-@@ -1322,6 +1322,10 @@ static void ahci_dev_config(struct ata_device *dev)
- {
- 	struct ahci_host_priv *hpriv = dev->link->ap->host->private_data;
- 
-+	if ((dev->class == ATA_DEV_ATAPI) &&
-+	    (hpriv->flags & AHCI_HFLAG_ATAPI_DMA_QUIRK))
-+		dev->quirks |= ATA_QUIRK_ATAPI_MOD16_DMA;
++		/*
++		 * Not strictly necessary to lock, as the block_group should be
++		 * read-only from btrfs_delete_unused_bgs().
++		 */
++		ASSERT(block_group->ro);
++		spin_lock(&fs_info->unused_bgs_lock);
+ 		list_del_init(&block_group->bg_list);
++		spin_unlock(&fs_info->unused_bgs_lock);
 +
- 	if (hpriv->flags & AHCI_HFLAG_SECT255) {
- 		dev->max_sectors = 255;
- 		ata_dev_info(dev,
+ 		btrfs_unfreeze_block_group(block_group);
+ 		btrfs_put_block_group(block_group);
+ 
+diff --git a/fs/btrfs/transaction.c b/fs/btrfs/transaction.c
+index aca83a98b75a2..c0e9d4bbe380d 100644
+--- a/fs/btrfs/transaction.c
++++ b/fs/btrfs/transaction.c
+@@ -160,7 +160,13 @@ void btrfs_put_transaction(struct btrfs_transaction *transaction)
+ 			cache = list_first_entry(&transaction->deleted_bgs,
+ 						 struct btrfs_block_group,
+ 						 bg_list);
++			/*
++			 * Not strictly necessary to lock, as no other task will be using a
++			 * block_group on the deleted_bgs list during a transaction abort.
++			 */
++			spin_lock(&transaction->fs_info->unused_bgs_lock);
+ 			list_del_init(&cache->bg_list);
++			spin_unlock(&transaction->fs_info->unused_bgs_lock);
+ 			btrfs_unfreeze_block_group(cache);
+ 			btrfs_put_block_group(cache);
+ 		}
+@@ -2096,7 +2102,13 @@ static void btrfs_cleanup_pending_block_groups(struct btrfs_trans_handle *trans)
+ 
+        list_for_each_entry_safe(block_group, tmp, &trans->new_bgs, bg_list) {
+                btrfs_dec_delayed_refs_rsv_bg_inserts(fs_info);
++		/*
++		* Not strictly necessary to lock, as no other task will be using a
++		* block_group on the new_bgs list during a transaction abort.
++		*/
++	       spin_lock(&fs_info->unused_bgs_lock);
+                list_del_init(&block_group->bg_list);
++	       spin_unlock(&fs_info->unused_bgs_lock);
+        }
+ }
+ 
 -- 
 2.39.5
 
