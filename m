@@ -1,97 +1,106 @@
-Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AC0018DB10
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 09:27:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C38A718DB10;
+	Thu,  3 Apr 2025 09:29:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743672438; cv=none; b=RFrkjEKzPUOJnbX8T2aWc3mzWsXB9v+fL6Jgo6Na+fUQPxMwWRC0wOD+fbxcnDn9kBT4ZGApJc/5bZDgTGPbMEO2REA9fhl6so3mim9jJYphYh9eyoBOTLs4K7vVFUK/WimSF3BBxNWYYqFzxGN3jsl/pLx/eZogl/aKLM2xHxY=
+	t=1743672558; cv=none; b=XF4p7Y912cYCYnOW52IC7alB7XTa9aCKI+BNrErv11guyv1YDLTwptUZm1T0FjmqVfmEsPVQo3wwLPwV17ID216LKfrZ0EPmz3jUhEoSiK2ijcVPZ1rO5W40BaMZbJ/72Ho5RlqxfPBzrztcln2PyuIzawyH2X8MhAwcqgKmcuo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743672438; c=relaxed/simple;
-	bh=8Wim55GQSSQZ3suXOPqnLbIRcIj+P05X/R3WrzXgTv0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sihZmRWwD4m5RU8DRb7gwx6sFHdciW+SApsi9ohI5knb0CmqDLFKtMvGEi/wmaFww2Rgwf3kHFflyAOFM9Ntu4jr5potjHMGbwpS0KJFGFvtwNlMtZhuBkdt6IyViZ2hgjUGX3E77lH/FWdNAd2vnSp6mOwyJ5M3hNN2MpktuAs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SLtOwqSF; arc=none smtp.client-ip=209.85.219.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743672558; c=relaxed/simple;
+	bh=VM/cLfCgm577hl+3Nc9rRc0FiWM24kqgYPmrFcyaPJM=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=sHm322fF8Vi6SbRBP3pE2xWmnTmcPLTHjBb1MYgmdauiHg5gtcw8Z3f/nkMtLJZVK0H+XPwXNZ7yn/H0iRmi25X7nPZIemN4ly0TU0vSFV9s4r9F2SH0v3KPjcKCiHVMmiFR2cQfkI27r3pCMyPDoWIbeiUOqJY0gjsjKU0WjSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=bMhdXqRD; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SLtOwqSF"
-Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-e461015fbd4so544060276.2
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 02:27:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743672435; x=1744277235; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8Wim55GQSSQZ3suXOPqnLbIRcIj+P05X/R3WrzXgTv0=;
-        b=SLtOwqSFek8Z4T1fSR9uMN/MebB2w8tp6/uNgUUHU9+wAFc4REvhjw/jYBzMiVxZyd
-         lyFTXjkJGV/moMDQw29Hqw/5JXmkF9y0qsuDkswVOnEfSXOxE/FFUc9EQsAD81TaYRwL
-         YodD36YZ9DN4ef31C6qZIHUIe+bSjYU5gQT8GKr4V5UPUJjYweR8fTaDJXYf3lxtBOMI
-         VmnERUnZvVACqqhMlXNiuqUc69B3WxJ5fyaIZogp4oVcIyUGvarZ0S8faqoZHabHbm5p
-         ELfu3c7S2J/CcXr+1bnQwDe/4kuZQSqSrs860eIof+UkAd6gABB4Htofzx+0celkO1Ot
-         ALpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743672435; x=1744277235;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8Wim55GQSSQZ3suXOPqnLbIRcIj+P05X/R3WrzXgTv0=;
-        b=sf2qBP+JJJjKi4esjh/i7oft8vf06QFeD59cVb3RIiGXV0155s8k9FjnVJk5KMULpL
-         kZslw78o8X35Ysv2cOUmE523W8Imua0CsMjfB9low+/QDPFK7Ig4Dp1NHAzrhfvPg6lh
-         KcrwkcLXIenXdAV4R+G6e+ymoMSQkz6B2JISRVA8vS0dLH1SkNJx9ID1fTRCDpJbweZ2
-         YbftFlFDteG+1UZOaNa0buKW8RNtgmCYoe9maZNdvpuHnqsfqB0I34gjFcBy4+TZHx65
-         bZ+JaNW/wgwaI9iLLUGaS1wcKbgSRns9SmQBG//twWcRecssEwNFKhTwfIPVwF/+RlML
-         XuLw==
-X-Forwarded-Encrypted: i=1; AJvYcCUNvBqAzc0YXbWrKKLCx0DXGF89H9DUo4wg7S3MjHRMp3osu5xedPU/V4TIK6r3e3o6gKI59jcykpGW5nE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwEJ0tIXvhW4LFaU8+skqia2N4lF5TwmkfXMRHyJCtd77bLBONK
-	9f6b2aRKFtoHF263nSbI/HhFbDII91bHc1h1xj7ZQInCyqbvJGhF92ftGdiWybepbbIRPNG2ehU
-	1rRR/70fDbpwnnWGAEOCpjzkBct8=
-X-Gm-Gg: ASbGncs/W4cLrImo9SIGCYhty/ITTJWet/qdlvvhZahq0Tz7glyKhF4EMLVE2mjzTND
-	2hpXErb82DRrbiKw5MAh/hqDV8RjurgCS8cBofMYa/K2Ux/ImJxHKnetDUHio1wCzjc8UT+TBJP
-	EZhgFtYqV2LTGg96pxPIIIuCeccQ==
-X-Google-Smtp-Source: AGHT+IEb2HiPgljplXFT+AGKyQzvdUoVsPHVwifO2PILVLDJ7XXBDLb37Qwzbi2NclfrbSMIKi7vQhYJNNnzWtMxLBU=
-X-Received: by 2002:a05:6902:2012:b0:e6d:fc1f:3cb1 with SMTP id
- 3f1490d57ef6-e6e0a233765mr2431715276.45.1743672435076; Thu, 03 Apr 2025
- 02:27:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="bMhdXqRD"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5338FV2v025054;
+	Thu, 3 Apr 2025 09:29:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=9tGsEa4qOhX/M1jjIfZ6sX
+	mDCAWmoTmJ0boB7K8AKrM=; b=bMhdXqRDcwe3yB+T1KZnic+UU63BFtQX7vC+ih
+	kGBWNpJwvq2Ajd5Fo+0wnjV5owmy0NARaVaKkgk9iLmhDBqkMyhuv2ngW3CjyIan
+	RF9nqDU3WFCU64E+nIH3bOdah061406Oe5ltAvhE1sn0sEbPNLbGrT8u3JNMh2hp
+	eRUWQxaVb5pzAJR5kqmrw1qBeqBnGQVaH4Y/GOOjsB2JRfaN4+2D/QQNN91Zbvv0
+	O3zU4Zr6WGBh625Q7Ty3tvIICE+AbYnaa9sksyvWUoO5M8dYIeBmphKBFiI6VIEH
+	amjAPS9gE0IGHKbMqHrBmKpMozV9oeyvx909V3ouMFj4pMjw==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45spnp073n-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 03 Apr 2025 09:29:08 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5339T7QQ032276
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 3 Apr 2025 09:29:07 GMT
+Received: from zhonhan-gv.qualcomm.com (10.80.80.8) by
+ nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Thu, 3 Apr 2025 02:29:06 -0700
+From: Zhongqiu Han <quic_zhonhan@quicinc.com>
+To: <rafael@kernel.org>, <daniel.lezcano@linaro.org>,
+        <christian.loehle@arm.com>
+CC: <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <quic_zhonhan@quicinc.com>
+Subject: [PATCH] cpuidle: menu: Optimize bucket assignment when next_timer_ns equals KTIME_MAX
+Date: Thu, 3 Apr 2025 17:28:52 +0800
+Message-ID: <20250403092852.1072015-1-quic_zhonhan@quicinc.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250403070453.214190-1-ubizjak@gmail.com> <20250403082508.GAZ-5F5EMVZq3-6Zoo@fat_crate.local>
- <CAFULd4a49RRMKrSVh3Q5zpeK4EJVW61tm=fCN4aOWX8=x8rKnw@mail.gmail.com> <20250403092218.GBZ-5TSiyjNRAcBxQo@fat_crate.local>
-In-Reply-To: <20250403092218.GBZ-5TSiyjNRAcBxQo@fat_crate.local>
-From: Uros Bizjak <ubizjak@gmail.com>
-Date: Thu, 3 Apr 2025 11:27:02 +0200
-X-Gm-Features: AQ5f1JoefwxlbkfyQlTfxdFEjY7L5dPAYmAuI3vBr7qkxaR9EbDEdxcUUI4oT_8
-Message-ID: <CAFULd4axo8ZOVJwRkqhi0nFYAveX6mBpd0Bwte+rYp=umHTP8Q@mail.gmail.com>
-Subject: Re: [PATCH -tip] x86/idle: Work around LLVM assembler bug with
- MONITOR and MWAIT insn
-To: Borislav Petkov <bp@alien8.de>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	kernel test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: tGyUaV91xNkiQfUo-7cu3cd2svw5GMMY
+X-Authority-Analysis: v=2.4 cv=N/gpF39B c=1 sm=1 tr=0 ts=67ee54e5 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=oV2fX3CoP5SyQ73Pz8oA:9 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: tGyUaV91xNkiQfUo-7cu3cd2svw5GMMY
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-03_03,2025-04-02_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ clxscore=1011 adultscore=0 mlxscore=0 lowpriorityscore=0 bulkscore=0
+ impostorscore=0 spamscore=0 phishscore=0 suspectscore=0 mlxlogscore=815
+ malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504030033
 
-On Thu, Apr 3, 2025 at 11:22=E2=80=AFAM Borislav Petkov <bp@alien8.de> wrot=
-e:
->
-> On Thu, Apr 03, 2025 at 11:06:02AM +0200, Uros Bizjak wrote:
-> > The least common denominator is an insn with implicit operands. I'll
-> > post V2 that fixes it that way.
->
-> I guess.
->
-> You don't need to post a patch ontop - your previous one should be remove=
-d and
-> the whole effort can start all over again.
+Directly assign the last bucket value instead of calling which_bucket()
+when next_timer_ns equals KTIME_MAX, the largest possible value that
+always falls into the last bucket. This avoids unnecessary calculations
+and enhances performance.
 
-IMO, in this case the fixup also documents the LLVM bug, so perhaps
-the fixup on top is desirable for documentation purposes.
+Signed-off-by: Zhongqiu Han <quic_zhonhan@quicinc.com>
+---
+ drivers/cpuidle/governors/menu.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-BTW: The test with CC=3Dclang make argument didn't expose this issue.
+diff --git a/drivers/cpuidle/governors/menu.c b/drivers/cpuidle/governors/menu.c
+index 39aa0aea61c6..8fc7fbed0052 100644
+--- a/drivers/cpuidle/governors/menu.c
++++ b/drivers/cpuidle/governors/menu.c
+@@ -255,7 +255,12 @@ static int menu_select(struct cpuidle_driver *drv, struct cpuidle_device *dev,
+ 		 */
+ 		data->next_timer_ns = KTIME_MAX;
+ 		delta_tick = TICK_NSEC / 2;
+-		data->bucket = which_bucket(KTIME_MAX);
++		/*
++		 * Assign the last bucket value directly instead of calling
++		 * which_bucket(), since KTIME_MAX is the largest possible
++		 * value that always falls into the last bucket.
++		 */
++		data->bucket = BUCKETS - 1;
+ 	}
+ 
+ 	if (unlikely(drv->state_count <= 1 || latency_req == 0) ||
+-- 
+2.25.1
 
-Uros.
