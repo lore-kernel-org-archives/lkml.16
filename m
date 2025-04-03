@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0BB2433D1;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BAE724EA88;
 	Thu,  3 Apr 2025 14:07:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743689275; cv=none; b=FXc+LIEANXI14ND9YgZcAVseG4d1KlY3Jg1OMV221+f9oLECMry32DXVHFtOmFwhaaU5jr2z7A8+FaiIbRT46BXqzmhXgMpDz6a8HRkDv3ngFioRGlWFbzh2tukNMaVONo0y+vTGw5WbF8FzGXcU5POW2my2N0ELv/IZC+Wmb9A=
+	t=1743689276; cv=none; b=qFCQnpuMNhWaTzGBTOtxpDGhU2PP+WK5FHlrQhGwJ/bZgf6rMhMDwZEJ3+ia61gLapI12Uj/lmlRL2sfXMl2GbneuONDYS7pV9w2rX4HbBFpGVj2f9VVCY/vt5IdtOZRJnXeq4n/JK/33pOnC7FErdIK1mKJGAsB2L7RRAZEZ6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743689275; c=relaxed/simple;
-	bh=CdfUb+Gx495PVB48hHNxzZmMWdZExGRDPCHUi+zDxJQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=U3v6lkKGz7tZ1KVPMo3NhBB2vWGz8E9ETC5xbrXDYfu2uVW3i2KROQnkAWTLKZSdMNAx0n+nO88fXR5GzzU3Q5HUh7Nkp7s5EVckzSL8byS0mm0COLtsPmq89OCwZjJK2oBqeIzYzzXGWDQzsJ9Eg+2dI9V3w8bQr7GJigxjbB0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rdYXCYR4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743689276; c=relaxed/simple;
+	bh=39VMYhU+74mMPI9DI3V/VxZjDFcE/1tMwt7m4qa+2nU=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=RLR6ToEwsW844Alx5zmQo6S85LPpp4bnAx8LCTZ70evTzIZ2PpFBRDXePaWYh9xQ9LMz4t0fDs01u/w8XdQNXf/Kn2F5mTcj+e07jqFYuj9HK4aaGU95MUgyxux/2NP6YVduxqT4Nu6YubUOOfT3EK5cuuO7uyZPkHHc66syZas=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lZh2tGRX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rdYXCYR4"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 918FBC4CEE5;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lZh2tGRX"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 78660C4CEE3;
 	Thu,  3 Apr 2025 14:07:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1743689275;
-	bh=CdfUb+Gx495PVB48hHNxzZmMWdZExGRDPCHUi+zDxJQ=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=rdYXCYR4AwrCJU5SZcBL8nQNI/rsFaGkMDCl9NwjJVX4ASq6IG+YjDlN5nl/BhhB5
-	 zDqr4ak+HDqbQ/UxmZTXkloaKgzufAj65PzlmYCP/wn6WzxVmLG13TGh0iCuS1M6r1
-	 rgDKI+JN4MjB3MsvoD03r/JguQ8Z0qjkp0UTPIkGo7hSaNKLawrESTFSbmANjioCsh
-	 VWuT1ORtGdcLDmyaTzpil3Y/HEuun5Wx9wJG7JZqx2UrrQD9yPagDQ2iRV1KQdA2Pi
-	 P7UwsRpB07dZUlSYAw4MMMkoPJbRdzAFBAN1spo4Z52x7Aurv1xoIoFXLQwQJrvcmZ
-	 XclgVngKDOPSg==
+	bh=39VMYhU+74mMPI9DI3V/VxZjDFcE/1tMwt7m4qa+2nU=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=lZh2tGRXFrMH7vxDqCnyXt8z75iA2JMWeOKYtV+SV8WFAR5Jeof8bCbDWLXAs97OQ
+	 xdFz4nV4UUufzWKLJ7ZS54+e05h51S2x5EbLuSGYixNAddc0053ZQnykPCwk+Pp6vW
+	 pbfxyqwaDs7OoAdjp7maTuqO3CZEXJgDyoPMadyIy/mhKs0psXkgfaq85VjwF2y+iC
+	 5y4I/uqjl9DBC5mUQW8iGgc4owmlDHX02xtIWxwM8Y0w+vmvOor7MrzAWsAEf7/gZY
+	 7GcaIvxmErcA+hS4aRngkTm49MMG0lIyIOWlbbtX7j+27HWA14AGZlkDxT/E/9RCd7
+	 JKIbTHiPleHGA==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B0E3C3601E;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 648BDC3600C;
 	Thu,  3 Apr 2025 14:07:55 +0000 (UTC)
 From: =?utf-8?q?J=2E_Neusch=C3=A4fer_via_B4_Relay?= <devnull+j.ne.posteo.net@kernel.org>
-Date: Thu, 03 Apr 2025 16:07:48 +0200
-Subject: [PATCH 1/2] dt-bindings: net: wireless: Add Realtek RTL8188 USB
- WiFi
+Subject: [PATCH 0/2] Onboard USB device support for RTL8188 2.4GHz USB WiFi
+ module
+Date: Thu, 03 Apr 2025 16:07:47 +0200
+Message-Id: <20250403-rtl-onboard-v1-0-10ca9a6a4ee0@posteo.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,9 +41,10 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250403-rtl-onboard-v1-1-10ca9a6a4ee0@posteo.net>
-References: <20250403-rtl-onboard-v1-0-10ca9a6a4ee0@posteo.net>
-In-Reply-To: <20250403-rtl-onboard-v1-0-10ca9a6a4ee0@posteo.net>
+X-B4-Tracking: v=1; b=H4sIADOW7mcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDEwNj3aKSHN38vKT8xKIU3TRjC2NTkzSDJEOTJCWgjoKi1LTMCrBp0bG
+ 1tQB8OGQZXQAAAA==
+X-Change-ID: 20250403-rtl-onboard-f38354f0b14b
 To: Johannes Berg <johannes@sipsolutions.net>, 
  Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
  Conor Dooley <conor+dt@kernel.org>, 
@@ -56,11 +57,11 @@ Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
  linux-usb@vger.kernel.org, 
  =?utf-8?q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1743689273; l=1657;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1743689273; l=886;
  i=j.ne@posteo.net; s=20240329; h=from:subject:message-id;
- bh=6b1it+r1AmIIbl9MaNmUVNJ7dqm/3ZZS4M5ZCpj+F30=;
- b=YDrrRB67eDRetNqSjtCKWOBuVpglvJnAwdFk9FRsZxPSlWBLXb2QLQpdO4Coc2iJyUZVpCj99
- BguwI22F9v+Dt7+EJp0PmVOUy58EegxjWqnkphLZu27KL4mR7ZcOqYU
+ bh=39VMYhU+74mMPI9DI3V/VxZjDFcE/1tMwt7m4qa+2nU=;
+ b=GBtBg4J3jFJRTewN2BJhs+xjZvDIbF3WaNoVycTobq+8M+1FCplFQjhzYoe7LKvp7cOnCZZQn
+ J1i+FWjzMRFAP9zWIkQuT5OMKg/oKA3Iw3DhlMNPK2EfO2MHeNGPhRr
 X-Developer-Key: i=j.ne@posteo.net; a=ed25519;
  pk=NIe0bK42wNaX/C4bi6ezm7NJK0IQE+8MKBm7igFMIS4=
 X-Endpoint-Received: by B4 Relay for j.ne@posteo.net/20240329 with
@@ -68,74 +69,28 @@ X-Endpoint-Received: by B4 Relay for j.ne@posteo.net/20240329 with
 X-Original-From: =?utf-8?q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
 Reply-To: j.ne@posteo.net
 
-From: "J. Neuschäfer" <j.ne@posteo.net>
+This patchset adds rtl8188 (usbbda,179) to the onboard_usb_dev driver.
+It is found in a set-top box called "Fernsehfee 3.0".
 
-This is an on-board USB device that requires a 3.3V supply.
+As a side note, this device is currently marked untested in the RTL8XXXU
+driver. In my experience it works (tested with a WPA2 home network).
 
 Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
 ---
+J. Neuschäfer (2):
+      dt-bindings: net: wireless: Add Realtek RTL8188 USB WiFi
+      usb: misc: onboard_dev: Add Realtek RTL8188 WiFi (0bda:0179)
+
  .../bindings/net/wireless/realtek,rtl8188.yaml     | 51 ++++++++++++++++++++++
- 1 file changed, 51 insertions(+)
+ drivers/usb/misc/onboard_usb_dev.c                 |  1 +
+ drivers/usb/misc/onboard_usb_dev.h                 |  8 ++++
+ 3 files changed, 60 insertions(+)
+---
+base-commit: 38fec10eb60d687e30c8c6b5420d86e8149f7557
+change-id: 20250403-rtl-onboard-f38354f0b14b
 
-diff --git a/Documentation/devicetree/bindings/net/wireless/realtek,rtl8188.yaml b/Documentation/devicetree/bindings/net/wireless/realtek,rtl8188.yaml
-new file mode 100644
-index 0000000000000000000000000000000000000000..b637c71e3c4d81b47d338394b2e0a7772035c2c7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/wireless/realtek,rtl8188.yaml
-@@ -0,0 +1,51 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/net/wireless/realtek,rtl8188.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Realtek RTL8188 USB WiFi
-+
-+maintainers:
-+  - J. Neuschäfer <j.neuschaefer@gmx.net>
-+
-+description:
-+  The Realtek RTL8188 is a USB-connected 2.4 GHz WiFi module.
-+  TODO- website or soemthing
-+
-+allOf:
-+  - $ref: /schemas/usb/usb-device.yaml#
-+
-+properties:
-+  compatible:
-+    const: usbbda,179
-+
-+  reg: true
-+
-+  vdd-supply:
-+    description:
-+      Regulator for the 3V3 supply.
-+
-+required:
-+  - compatible
-+  - reg
-+  - vdd-supply
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+
-+    usb {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        wifi: wifi@1 {
-+            compatible = "usbbda,179";
-+            reg = <1>;
-+            vdd-supply = <&vcc3v3>;
-+        };
-+    };
-+
-+...
-
+Best regards,
 -- 
-2.48.0.rc1.219.gb6b6757d772
+J. Neuschäfer <j.ne@posteo.net>
 
 
