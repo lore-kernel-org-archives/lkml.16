@@ -1,95 +1,85 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2FE01547C3;
-	Thu,  3 Apr 2025 17:27:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95C881547C3;
+	Thu,  3 Apr 2025 17:28:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743701276; cv=none; b=TPmt2fbroyjRvejK/e4nkzCzGhF8O9zSavEZX3kdVY1CjucNLAXRZwVQSvdQi5iGcUQHPSjoJNQH+M2MihgRt9zIEC02B1cb/bI8i64zhhR54ZlYC5eB05lvXESOw5Ii1OFw+J/2KONdgnJZ1ODDb28cbYi7tGKA9cLDux/OEJQ=
+	t=1743701285; cv=none; b=jQy5P1+3iGh8vXiHYwZEiCxeskb35llE6iOeI9uYx4qxkR7OxPw7XGGKf9brUtkEZW71LfDlQSnbJDCuXJjZ8WjCnztNSc7SvRnTAkAj4UXt0ngyZZfVxI2BlL81ZGgSmdrnh2pzDEQkka+W728uzAPJ3aFaJ3ZYtBJMpPhTtis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743701276; c=relaxed/simple;
-	bh=bYRGDxwUgmJOdrUaQaMSOv+cxYHSKhylhTsWPM09ziw=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LsEsPfU2+wTLepitCHhSlOPrp5Uq6b8O3HsQYB6bsZgOvN1gZh+1jUxTzGCOOIgH6vs6xSOEzD9sefAfgtx5wlpa4ZSgWT1OXpj64fV8h8NnJswr7lgjkvFviGsbeH93tWK8wFLZBNm32o/dJ1igJ3jAU/AD9C4i+sTfIy/UFGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uTy9IWnZ; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uTy9IWnZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11BB5C4CEE3;
-	Thu,  3 Apr 2025 17:27:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743701276;
-	bh=bYRGDxwUgmJOdrUaQaMSOv+cxYHSKhylhTsWPM09ziw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=uTy9IWnZfGwj/kOhXEx60AAN+jzV4EcbW45eoOMKQf2yLE48fMFvIx+wyTf0eyIGn
-	 rVTUe1L26I6oh1IKpyXZy1ZL2+5peL3p9EDWNTmIIR7yBo+sS56xGY/K2Ri1KTxpGD
-	 m4J+ta6FC7L6M2IE8e/vJz13uEvUN6i/E7yuxffoXJGSA1UuMPMtYNQsnonLM249q4
-	 rAUYwI5ZCT/IL8Betqt01DBc0D8MqlJKTBcWUFX5IVRSrpc28QeTupRm9jol3oWB6i
-	 U/oRgG2O4Dmovd4zjyGpfjAcK7DhYe0ZXaRq0yxzWAldZmLUxhOPqnqwLATPlCD0IK
-	 0sDrtAMzw1aIg==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=lobster-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1u0OM5-0021yp-KD;
-	Thu, 03 Apr 2025 18:27:53 +0100
-Date: Thu, 03 Apr 2025 18:27:55 +0100
-Message-ID: <874iz5yx2c.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Christian Bruel <christian.bruel@foss.st.com>
-Cc: <tglx@linutronix.de>,
-	<robh@kernel.org>,
-	<krzk+dt@kernel.org>,
-	<conor+dt@kernel.org>,
-	<mcoquelin.stm32@gmail.com>,
-	<alexandre.torgue@foss.st.com>,
-	<linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>,
-	<devicetree@vger.kernel.org>,
-	<linux-stm32@st-md-mailman.stormreply.com>
-Subject: Re: [PATCH 3/3] arm64: dts: st: add st,stm32mp2-cortex-a7-gic in intc node in stm32mp251.dtsi
-In-Reply-To: <20250403122805.1574086-4-christian.bruel@foss.st.com>
-References: <20250403122805.1574086-1-christian.bruel@foss.st.com>
-	<20250403122805.1574086-4-christian.bruel@foss.st.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	s=arc-20240116; t=1743701285; c=relaxed/simple;
+	bh=BV+gNen3qvEmhMZvOXrTqKED8oZH7+Obarx19a/WXqw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=UyaxGAT2Gkqyi9XwbET2xmA58lMBgyQVvv5d7JTX97/PXR0AtCNq41eHaf9eBs34Svr67leUzyHQUzjQ4L5K+z3VkDXS/Ql4hylPsWR+LqEyAttfJydgNiC6KD8t9Dr2TyfDdh/E0VqzD1CVyd7DZhGzkMs7zQYwO6N9ogfytFM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 67BA9106F;
+	Thu,  3 Apr 2025 10:28:05 -0700 (PDT)
+Received: from e129823.cambridge.arm.com (e129823.arm.com [10.1.197.6])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E38103F63F;
+	Thu,  3 Apr 2025 10:27:59 -0700 (PDT)
+From: Yeoreum Yun <yeoreum.yun@arm.com>
+To: catalin.marinas@arm.com,
+	will@kernel.org,
+	broonie@kernel.org,
+	anshuman.khandual@arm.com,
+	joey.gouly@arm.com,
+	yury.khrustalev@arm.com,
+	maz@kernel.org,
+	oliver.upton@linux.dev,
+	frederic@kernel.org,
+	shameerali.kolothum.thodi@huawei.com,
+	james.morse@arm.com,
+	mark.rutland@arm.com,
+	huangxiaojia2@huawei.com,
+	akpm@linux-foundation.org,
+	surenb@google.com,
+	robin.murphy@arm.com
+Cc: linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	nd@arm.com,
+	Yeoreum Yun <yeoreum.yun@arm.com>
+Subject: [PATCH v2 0/3] support FEAT_MTE_TAGGED_FAR feature
+Date: Thu,  3 Apr 2025 18:27:55 +0100
+Message-Id: <20250403172758.67106-1-yeoreum.yun@arm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: christian.bruel@foss.st.com, tglx@linutronix.de, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Thu, 03 Apr 2025 13:28:05 +0100,
-Christian Bruel <christian.bruel@foss.st.com> wrote:
-> 
-> Add st,stm32mp2-cortex-a7-gic to enable the GICC_DIR register remap
-> 
-> Signed-off-by: Christian Bruel <christian.bruel@foss.st.com>
-> ---
->  arch/arm64/boot/dts/st/stm32mp251.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/boot/dts/st/stm32mp251.dtsi b/arch/arm64/boot/dts/st/stm32mp251.dtsi
-> index f3c6cdfd7008..030e5da67a7e 100644
-> --- a/arch/arm64/boot/dts/st/stm32mp251.dtsi
-> +++ b/arch/arm64/boot/dts/st/stm32mp251.dtsi
-> @@ -115,7 +115,7 @@ scmi_vdda18adc: regulator@7 {
->  	};
->  
->  	intc: interrupt-controller@4ac00000 {
-> -		compatible = "arm,cortex-a7-gic";
-> +		compatible = "st,stm32mp2-cortex-a7-gic", "arm,cortex-a7-gic";
+The FEAT_MTE_TAGGED_FAR feature provides support for
+reporting all non-address bits during a synchronous MTE tag check fault.
 
-What nonsense is this? This is an *arm64* machine, with I expect a
-GIC400. Where is this A7 compat coming from?
+This patchset extends the reporting tag to include
+not only the memory tag (logical tag) but also the address tag via
+si_addr when FEAT_MTE_TAGGED_FAR feature is supported.
 
-	M.
+Since v1:
+  - add hwcap test for MTE_FAR feature.
+  - add MTE_FAR doc into elf_hwcap.rst
 
--- 
-Jazz isn't dead. It just smells funny.
+
+Yeoreum Yun (3):
+  arm64: add FEAT_MTE_TAGGED_FAR feature
+  arm64/mm/fault: use original FAR_EL1 value when ARM64_MTE_FAR is
+    supported
+  tools/kselftest: add MTE_FAR hwcap test
+
+ Documentation/arch/arm64/elf_hwcaps.rst      |  3 +++
+ Documentation/arch/arm64/tagged-pointers.rst | 11 ++++++-----
+ arch/arm64/include/asm/hwcap.h               |  1 +
+ arch/arm64/include/uapi/asm/hwcap.h          |  1 +
+ arch/arm64/kernel/cpufeature.c               |  9 +++++++++
+ arch/arm64/kernel/cpuinfo.c                  |  1 +
+ arch/arm64/mm/fault.c                        |  7 +++++--
+ arch/arm64/tools/cpucaps                     |  1 +
+ tools/testing/selftests/arm64/abi/hwcap.c    |  6 ++++++
+ 9 files changed, 33 insertions(+), 7 deletions(-)
+
+--
+LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
+
