@@ -1,166 +1,226 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 232F72517A4;
-	Thu,  3 Apr 2025 19:19:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743707991; cv=none; b=J0KtN+pFEXaMRuBlp3YIo7w+3h2qG8E6D1oL0IViK2QJYjI+ZILfwBOSCC0Wq4ek/8gXB+Ii5R9sFM9gIxmd4gyTwpeDCGnqR1/4cFCDEMwux6mDsvn6YvdX89nznxtLGh+2ck+y2ru8YhR4YGRofMF0ZhCOiRGa6SRSoLbMGXA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743707991; c=relaxed/simple;
-	bh=78MUgiVbVwd1OxI6YiH2mF5g9hU6Z/waZfajiKooUtg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TkHLGINoQNMhgLyKijMiLEARkxIDGq4CBWatIiz+TD/VzB9jWXBV8C4oOiAdtxpJZLj25redOXrprVAcCQrVS97/O1XXO+hBCK5fnLuYZsnSW5jkmecLFWWVXgT29gg3AYGwq/gzOqtxkn6qWlou0Z4PuCg7YuW/XquRfZTX9jM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KKqCr9WB; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KKqCr9WB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B37FC4CEE3;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9C202512CE;
 	Thu,  3 Apr 2025 19:19:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743707991;
-	bh=78MUgiVbVwd1OxI6YiH2mF5g9hU6Z/waZfajiKooUtg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KKqCr9WBgGMqez6rTzHCtBOUvx+FKDlwDhhwf4tA3GPhgAjuSdd6ywwlQ/vY/kM4I
-	 J57RFNqPmolwU1ax6525ZK7jOo7zSLjSMjLrNqot78PI6SesUZygilw+tzqvNn09cZ
-	 JU+i1iVX1F5ijRMIadgKXvWeaH1RJuW7VyreRDSzEO9UcjOZXQp1rz73egnSavnYxF
-	 s7cTF3wyEWklUIdQYGHLt2T1wX6H/0fAwYRUuH6MZXOYTvCLkaJaYmWI4BFH1bPGi+
-	 bAOBfga8qp63ZPa804xC7FDkaSiPQObqTP4C/LQlgigcL2CNeNV8oVf6yxKuvEqlqb
-	 tvusM7LxZemtg==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Ryo Takakura <ryotkkr98@gmail.com>,
-	"Luis Claudio R . Goncalves" <lgoncalv@redhat.com>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Sasha Levin <sashal@kernel.org>,
-	nirmal.patel@linux.intel.com,
-	lpieralisi@kernel.org,
-	kw@linux.com,
-	clrkwllms@kernel.org,
-	rostedt@goodmis.org,
-	linux-pci@vger.kernel.org,
-	linux-rt-devel@lists.linux.dev
-Subject: [PATCH AUTOSEL 6.1 16/20] PCI: vmd: Make vmd_dev::cfg_lock a raw_spinlock_t type
-Date: Thu,  3 Apr 2025 15:19:09 -0400
-Message-Id: <20250403191913.2681831-16-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250403191913.2681831-1-sashal@kernel.org>
-References: <20250403191913.2681831-1-sashal@kernel.org>
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743707992; cv=none; b=lIZRykkob9VKTaPcoCx7/u7hlc6g8x2aVwkJU2yIYpw4Esh7LTcCuxIX1lVuBJcoAD0t1R7BvZL2tVhDr+dKHBpxJuhjoWh5Vwng9zCkqC0tyfJMv3sg4uFP35dhQ+WVuZWfe6T6JTu8ejfaQRxkAKsdtquKqafhM6lkeiCHQdE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743707992; c=relaxed/simple;
+	bh=uPpUnikI6V5BZQyx2/t+prng46nejSRfS5Mgvb/auw4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tFM2SiJ0ggqkSeQAyHppG7xqAJWTVQTIu1C1SjiQF36Fmq37M2DWon9BDzynggMGoXLY7EjQE0aiJ5tYlb0M7pUAp/IJKu0sPeo2IdYQClgvT1qo0qUKPWZJc3g7Voo/bsMlIr4/elwqVS2ET7CeXZ7GFCTCgipOS3KQY/W/XEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=RPXWsdw0; arc=none smtp.client-ip=79.96.170.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="RPXWsdw0"
+Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
+ by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 6.3.1)
+ id c2c9616ba3bbde8e; Thu, 3 Apr 2025 21:19:42 +0200
+Received: from kreacher.localnet (unknown [195.136.19.94])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 912619014E8;
+	Thu,  3 Apr 2025 21:19:41 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
+	s=dkim; t=1743707982;
+	bh=uPpUnikI6V5BZQyx2/t+prng46nejSRfS5Mgvb/auw4=;
+	h=From:Subject:Date;
+	b=RPXWsdw0a+vIwjm/6lop6uh0ejJMTyc6IUyX1aVNUFzzfGYYerrcPdzZu/h2vbDnN
+	 LLcRRwSzUIVcMWE46NrL3Mhq7CzTZa+hO4NZDOvfKzdMe41ibGekEz6j9oVWAKA1du
+	 T2qCy3Ry65bip5gr/R0PwLEcxSUWECgZbiUEhKPX8wazD1FOF2YsqsWTF+KlKz9PbO
+	 BPEAeyaq4C/yAEvhBoU+Dx2NTjGzIy9dPzwnzR9wKErsmXGwB1Hlhv9Pn2zByvmnQk
+	 P/PrVlKDG88QER8dc6wTxasf9hXlp22ytX/QJf+ubGSsIEKnmq6Uq4W5ryWV8N6keM
+	 gtXfwgNboJKCA==
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To: Linux PM <linux-pm@vger.kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>,
+ Christian Loehle <christian.loehle@arm.com>,
+ Artem Bityutskiy <artem.bityutskiy@linux.intel.com>,
+ Doug Smythies <dsmythies@telus.net>,
+ Aboorva Devarajan <aboorvad@linux.ibm.com>
+Subject: [PATCH v1 2/2] cpuidle: teo: Refine handling of short idle intervals
+Date: Thu, 03 Apr 2025 21:18:38 +0200
+Message-ID: <2239639.irdbgypaU6@rjwysocki.net>
+In-Reply-To: <4661520.LvFx2qVVIh@rjwysocki.net>
+References: <4661520.LvFx2qVVIh@rjwysocki.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.1.132
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
+X-CLIENT-IP: 195.136.19.94
+X-CLIENT-HOSTNAME: 195.136.19.94
+X-VADE-SPAMSTATE: spam:low
+X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddukeelfeekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenogfuphgrmhfkphculdeftddtmdenucfjughrpefhvfevufffkfgjfhgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepvdffueeitdfgvddtudegueejtdffteetgeefkeffvdeftddttdeuhfegfedvjefhnecukfhppeduleehrddufeeirdduledrleegnecuufhprghmkfhppeduleehrddufeeirdduledrleegnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepudelhedrudefiedrudelrdelgedphhgvlhhopehkrhgvrggthhgvrhdrlhhotggrlhhnvghtpdhmrghilhhfrhhomheprhhjfiesrhhjfiihshhotghkihdrnhgvthdpnhgspghrtghpthhtohepjedprhgtphhtthhopehlihhnuhigqdhpmhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegurghnihgvlhdrlhgviigtrghnoheslhhinhgrrhhordhorhhgpdhrtghpthhtoheptghhrhhishhtihgrnhdrlhhovgh
+X-DCC--Metrics: v370.home.net.pl 1024; Body=7 Fuz1=7 Fuz2=7
 
-From: Ryo Takakura <ryotkkr98@gmail.com>
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-[ Upstream commit 18056a48669a040bef491e63b25896561ee14d90 ]
+Make teo take all recent wakeups (both timer and non-timer) into
+account when looking for a new candidate idle state in the cases
+when the majority of recent idle intervals are within the
+LATENCY_THRESHOLD_NS range or the latency limit is within the
+LATENCY_THRESHOLD_NS range.
 
-The access to the PCI config space via pci_ops::read and pci_ops::write is
-a low-level hardware access. The functions can be accessed with disabled
-interrupts even on PREEMPT_RT. The pci_lock is a raw_spinlock_t for this
-purpose.
+Since the tick_nohz_get_sleep_length() invocation is likely to be
+skipped in those cases, timer wakeups should arguably be taken into
+account somehow in case they are significant while the current code
+mostly looks at non-timer wakeups under the assumption that frequent
+timer wakeups are unlikely in the given idle duration range which
+may or may not be accurate.
 
-A spinlock_t becomes a sleeping lock on PREEMPT_RT, so it cannot be
-acquired with disabled interrupts. The vmd_dev::cfg_lock is accessed in
-the same context as the pci_lock.
+The most natural way to do that is to add the "hits" metric to the
+sums used during the new candidate idle state lookup which effectively
+means the above.
 
-Make vmd_dev::cfg_lock a raw_spinlock_t type so it can be used with
-interrupts disabled.
-
-This was reported as:
-
-  BUG: sleeping function called from invalid context at kernel/locking/spinlock_rt.c:48
-  Call Trace:
-   rt_spin_lock+0x4e/0x130
-   vmd_pci_read+0x8d/0x100 [vmd]
-   pci_user_read_config_byte+0x6f/0xe0
-   pci_read_config+0xfe/0x290
-   sysfs_kf_bin_read+0x68/0x90
-
-Signed-off-by: Ryo Takakura <ryotkkr98@gmail.com>
-Tested-by: Luis Claudio R. Goncalves <lgoncalv@redhat.com>
-Acked-by: Luis Claudio R. Goncalves <lgoncalv@redhat.com>
-[bigeasy: reword commit message]
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Tested-off-by: Luis Claudio R. Goncalves <lgoncalv@redhat.com>
-Link: https://lore.kernel.org/r/20250218080830.ufw3IgyX@linutronix.de
-[kwilczynski: commit log]
-Signed-off-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
-[bhelgaas: add back report info from
-https://lore.kernel.org/lkml/20241218115951.83062-1-ryotkkr98@gmail.com/]
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
- drivers/pci/controller/vmd.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/cpuidle/governors/teo.c |   99 ++++++++++++++++++++++------------------
+ 1 file changed, 55 insertions(+), 44 deletions(-)
 
-diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-index a1dd614bdc324..09995b6e73bcc 100644
---- a/drivers/pci/controller/vmd.c
-+++ b/drivers/pci/controller/vmd.c
-@@ -110,7 +110,7 @@ struct vmd_irq_list {
- struct vmd_dev {
- 	struct pci_dev		*dev;
+--- a/drivers/cpuidle/governors/teo.c
++++ b/drivers/cpuidle/governors/teo.c
+@@ -261,11 +261,12 @@
  
--	spinlock_t		cfg_lock;
-+	raw_spinlock_t		cfg_lock;
- 	void __iomem		*cfgbar;
+ static int teo_get_candidate(struct cpuidle_driver *drv,
+ 			     struct cpuidle_device *dev,
+-			     struct teo_cpu *cpu_data,
+-			     int idx, unsigned int idx_intercepts)
++			     struct teo_cpu *cpu_data, int constraint_idx,
++			     int idx, unsigned int idx_events,
++			     bool count_all_events)
+ {
+ 	int first_suitable_idx = idx;
+-	unsigned int intercepts = 0;
++	unsigned int events = 0;
+ 	int i;
  
- 	int msix_count;
-@@ -387,7 +387,7 @@ static int vmd_pci_read(struct pci_bus *bus, unsigned int devfn, int reg,
- 	if (!addr)
- 		return -EFAULT;
- 
--	spin_lock_irqsave(&vmd->cfg_lock, flags);
-+	raw_spin_lock_irqsave(&vmd->cfg_lock, flags);
- 	switch (len) {
- 	case 1:
- 		*value = readb(addr);
-@@ -402,7 +402,7 @@ static int vmd_pci_read(struct pci_bus *bus, unsigned int devfn, int reg,
- 		ret = -EINVAL;
- 		break;
+ 	/*
+@@ -277,8 +278,11 @@
+ 	 * has been stopped already into account.
+ 	 */
+ 	for (i = idx - 1; i >= 0; i--) {
+-		intercepts += cpu_data->state_bins[i].intercepts;
+-		if (2 * intercepts > idx_intercepts) {
++		events += cpu_data->state_bins[i].intercepts;
++		if (count_all_events)
++			events += cpu_data->state_bins[i].hits;
++
++		if (2 * events > idx_events) {
+ 			/*
+ 			 * Use the current state unless it is too
+ 			 * shallow or disabled, in which case take the
+@@ -316,6 +320,12 @@
+ 		if (first_suitable_idx == idx)
+ 			break;
  	}
--	spin_unlock_irqrestore(&vmd->cfg_lock, flags);
-+	raw_spin_unlock_irqrestore(&vmd->cfg_lock, flags);
- 	return ret;
++	/*
++	 * If there is a latency constraint, it may be necessary to select an
++	 * idle state shallower than the current candidate one.
++	 */
++	if (idx > constraint_idx)
++		return constraint_idx;
+ 
+ 	return idx;
  }
- 
-@@ -422,7 +422,7 @@ static int vmd_pci_write(struct pci_bus *bus, unsigned int devfn, int reg,
- 	if (!addr)
- 		return -EFAULT;
- 
--	spin_lock_irqsave(&vmd->cfg_lock, flags);
-+	raw_spin_lock_irqsave(&vmd->cfg_lock, flags);
- 	switch (len) {
- 	case 1:
- 		writeb(value, addr);
-@@ -440,7 +440,7 @@ static int vmd_pci_write(struct pci_bus *bus, unsigned int devfn, int reg,
- 		ret = -EINVAL;
- 		break;
+@@ -410,49 +420,50 @@
  	}
--	spin_unlock_irqrestore(&vmd->cfg_lock, flags);
-+	raw_spin_unlock_irqrestore(&vmd->cfg_lock, flags);
- 	return ret;
- }
  
-@@ -958,7 +958,7 @@ static int vmd_probe(struct pci_dev *dev, const struct pci_device_id *id)
- 	if (features & VMD_FEAT_OFFSET_FIRST_VECTOR)
- 		vmd->first_vec = 1;
+ 	/*
+-	 * If the sum of the intercepts metric for all of the idle states
+-	 * shallower than the current candidate one (idx) is greater than the
+-	 * sum of the intercepts and hits metrics for the candidate state and
+-	 * all of the deeper states, a shallower idle state is likely to be a
+-	 * better choice.
+-	 */
+-	if (2 * idx_intercept_sum > cpu_data->total - idx_hit_sum)
+-		idx = teo_get_candidate(drv, dev, cpu_data, idx, idx_intercept_sum);
+-
+-	/*
+-	 * If there is a latency constraint, it may be necessary to select an
+-	 * idle state shallower than the current candidate one.
+-	 */
+-	if (idx > constraint_idx)
+-		idx = constraint_idx;
+-
+-	/*
+-	 * If either the candidate state is state 0 or its target residency is
+-	 * low enough, there is basically nothing more to do, but if the sleep
+-	 * length is not updated, the subsequent wakeup will be counted as an
+-	 * "intercept" which may be problematic in the cases when timer wakeups
+-	 * are dominant.  Namely, it may effectively prevent deeper idle states
+-	 * from being selected at one point even if no imminent timers are
+-	 * scheduled.
+-	 *
+-	 * However, frequent timers in the RESIDENCY_THRESHOLD_NS range on one
+-	 * CPU are unlikely (user space has a default 50 us slack value for
+-	 * hrtimers and there are relatively few timers with a lower deadline
+-	 * value in the kernel), and even if they did happen, the potential
+-	 * benefit from using a deep idle state in that case would be
+-	 * questionable anyway for latency reasons.  Thus if the measured idle
+-	 * duration falls into that range in the majority of cases, assume
+-	 * non-timer wakeups to be dominant and skip updating the sleep length
+-	 * to reduce latency.
++	 * If the measured idle duration has fallen into the
++	 * RESIDENCY_THRESHOLD_NS range in the majority of recent cases, it is
++	 * likely to fall into that range next time, so it is better to avoid
++	 * adding latency to the idle state selection path.  Accordingly, aim
++	 * for skipping the sleep length update in that case.
+ 	 *
+ 	 * Also, if the latency constraint is sufficiently low, it will force
+ 	 * shallow idle states regardless of the wakeup type, so the sleep
+-	 * length need not be known in that case.
++	 * length need not be known in that case either.
+ 	 */
+-	if ((!idx || drv->states[idx].target_residency_ns < RESIDENCY_THRESHOLD_NS) &&
+-	    (2 * cpu_data->short_idles >= cpu_data->total ||
+-	     latency_req < LATENCY_THRESHOLD_NS))
+-		goto out_tick;
++	if (2 * cpu_data->short_idles >= cpu_data->total ||
++	    latency_req < LATENCY_THRESHOLD_NS) {
++		/*
++		 * Look for a new candidate idle state and use all events (both
++		 * "intercepts" and "hits") because the sleep length update is
++		 * likely to be skipped and timer wakeups need to be taken into
++		 * account in a different way in case they are significant.
++		 */
++		idx = teo_get_candidate(drv, dev, cpu_data, idx, constraint_idx,
++					idx_intercept_sum + idx_hit_sum, true);
++		/*
++		 * If the new candidate state is state 0 or its target residency
++		 * is low enough, return it right away without stopping the
++		 * scheduler tick.
++		 */
++		if (!idx || drv->states[idx].target_residency_ns < RESIDENCY_THRESHOLD_NS)
++			goto out_tick;
++	} else if (2 * idx_intercept_sum > cpu_data->total - idx_hit_sum) {
++		/*
++		 * Look for a new candidate state because the current one is
++		 * likely too deep, but use the "intercepts" metric only because
++		 * the sleep length is going to be determined later and for now
++		 * it is only necessary to find a state that will be suitable
++		 * in case the CPU is "intercepted".
++		 */
++		idx = teo_get_candidate(drv, dev, cpu_data, idx, constraint_idx,
++					idx_intercept_sum, false);
++	} else if (idx > constraint_idx) {
++		/*
++		 * The current candidate state is too deep for the latency
++		 * constraint at hand, so change it to a suitable one.
++		 */
++		idx = constraint_idx;
++	}
  
--	spin_lock_init(&vmd->cfg_lock);
-+	raw_spin_lock_init(&vmd->cfg_lock);
- 	pci_set_drvdata(dev, vmd);
- 	err = vmd_enable_domain(vmd, features);
- 	if (err)
--- 
-2.39.5
+ 	duration_ns = tick_nohz_get_sleep_length(&delta_tick);
+ 	cpu_data->sleep_length_ns = duration_ns;
+
+
 
