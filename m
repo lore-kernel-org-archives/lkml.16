@@ -1,115 +1,97 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 192BF2441A7;
-	Thu,  3 Apr 2025 13:33:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF74824EA8F
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 13:33:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743687221; cv=none; b=Rhydq9Cgqj9HNGMb2FhR4SeOGJ+ZW+zWcmJnavqnDrTc+f5nfT5USXpDVhbZfcmrd6KGlVzlzoi8eXBISLl7lNfAWB3nBOPCLcp5qFKzSoBL1TvGnW+ZvsbEZdAlgvI4bf4ZVSYu531b4gH+8UvFFU6e3T7YVbiuxlobpWwwVgc=
+	t=1743687222; cv=none; b=EcnTwtrPVB3TNjzx1k7X487W/nfRVwetlU+58frX/HEW0z6gON94t8sXyUhSmDKPnK9aYB04SwiHjy6vaSpk3jLPqo+1ELtggWDnc+N5BL58C4Tj7wXsyWI1gCiTKmwkkPWZ1c6wGpJeaa9xO2mbqaPspMflx1qOim6msFFefp8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743687221; c=relaxed/simple;
-	bh=V09QYGy9WvMyptysyuxnjEZNRDE5mU1Edv5d/IFvE2Y=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=brk1BWYqQ1IaXK23jTHAYOO/TgBwsfAtQhVdpy35v/1oiL9SC2M9y23ItRQGTdcQ7W56IUbXYd68M48ZVQMdFKGUOwjoF2aspFtmcCJ1ftjc0e7znACzTv7ZL3L8KsTzAmVbABFuH3QpFsxfKwo7Nhq3DmgFFyP52ZD8aipt2sE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=l+/G1Ytl; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=oi7ANQvo; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1743687222; c=relaxed/simple;
+	bh=rl01/FdFtTK1ESwz6xo4DRwQE6TYQX0rQmwJ/UODmaM=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Sdv/I8eQScL6NNAumXn7/z1fLBWJJVUJFe6DTfuoVp9g99Nv3UG46bK+Z+dfrz5ptsb3y06X/pBr5AA5GMllJkpPa4XcpFg7vDS0/hyoD3ui4u4yIzzhDsTu8Dst711jEH5vOaSBVX/mlupWiLsEoFDcLajSR1oN+DBlnhKY36I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eghYFj7m; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="l+/G1Ytl";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="oi7ANQvo"
-Date: Thu, 03 Apr 2025 13:33:37 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1743687218;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Bqo3zAorG1aMhSEebspaI0g5rNtRC8E11v6m4l17RnI=;
-	b=l+/G1Ytlg6q5gtQqJhwatiZl5Gr7U40+G1Bq38ES8crO2qL7QXr4ul3TL9x+bRs79NE0T3
-	UzfoCaTxK15/uQEU9LladbX9yjPUGLxA05LH9KEMFO4it1weHwOUe70AxE89wghop6yPrp
-	KsniKrJDdYnZ2YIt4EGUwOraeXkUbkG+gF4rusWnzGLggPQ3vWmU72ezlYPFsi6HGSji97
-	3wjoyLM5jGJ0MlrykY+1aP6fUVQWadcYjxLQAuBmd6gUP1TUo2BQjs+F3B5SVWmPvUFqjy
-	DoRLTn1zePTzePxiRzGT1Ihe5ZkMLY+w0qYo8TvjOlJeC+lpwopEZFvSg65Gxg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1743687218;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Bqo3zAorG1aMhSEebspaI0g5rNtRC8E11v6m4l17RnI=;
-	b=oi7ANQvojYXSJEOTPiUown0JvSrLmXYMea5xPAM3wD4cR3TbdRqVC4BFtccop7vUfPLNRb
-	fmk31touXteLkmCA==
-From: "tip-bot2 for Sohil Mehta" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/nmi] x86/nmi: Improve NMI duration console printouts
-Cc: Sohil Mehta <sohil.mehta@intel.com>, Ingo Molnar <mingo@kernel.org>,
- Kai Huang <kai.huang@intel.com>,
- "Peter Zijlstra (Intel)" <peterz@infradead.org>,
- Nikolay Borisov <nik.borisov@suse.com>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250327234629.3953536-10-sohil.mehta@intel.com>
-References: <20250327234629.3953536-10-sohil.mehta@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eghYFj7m"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0AA1C4CEEB;
+	Thu,  3 Apr 2025 13:33:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743687222;
+	bh=rl01/FdFtTK1ESwz6xo4DRwQE6TYQX0rQmwJ/UODmaM=;
+	h=From:Subject:Date:To:Cc:From;
+	b=eghYFj7m1Ar1NSkqJGxsJJdqsFzr66HttynSzabWV/sRjxIe6KMH2Zs7QCTvEPU1g
+	 pBuL/a4fIGafl3FLWZ/5dfSZ3yORSZfzH7jQqGJWP1GHUdG7QlMV6ob6xU02d200EY
+	 CnQLigRfhAHY9zmWpprNCwjda5T7O6L2gK0mJkJy3Ld2XKFSZfGqFkP04ZyUe6t8WX
+	 qP7XffRLaMsY8r+sUWCqJJ/YAgj+EkkSDYoGSOma0XH4pu2FQ0krSsjyQpjYnAaSwC
+	 DZmEtew5XJFcKfgyppWlHFQJGZWsdvk2OaF4paZn044CovJeR9RUBMXzVQLwrlEEPo
+	 kIl2Y32lZCeDQ==
+From: Maxime Ripard <mripard@kernel.org>
+Subject: [PATCH v2 0/4] drm/vc4: tests: Fix locking failures
+Date: Thu, 03 Apr 2025 15:33:29 +0200
+Message-Id: <20250403-drm-vc4-kunit-failures-v2-0-e09195cc8840@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174368721780.30396.7072042211093296234.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIACmO7mcC/4WNTQ6CMBBGr0Jm7RhKiwVX3sOw4GeACVjMFBoN4
+ e5WL+DyveR73w6ehMnDNdlBKLDnxUXITgm0Y+0GQu4iQ5ZmeapVgZ08MLQGp83xin3N8ybkUSv
+ dGGvz1ugC4vgp1PPrF75XkUf26yLv309QX/s3GRSmaG1ZXExX1o22t4nE0XxeZIDqOI4Pf/+T+
+ r0AAAA=
+X-Change-ID: 20250318-drm-vc4-kunit-failures-313b4775c438
+To: Dave Stevenson <dave.stevenson@raspberrypi.com>, 
+ =?utf-8?q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>, 
+ Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+ Simona Vetter <simona@ffwll.ch>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ Maxime Ripard <mripard@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1038; i=mripard@kernel.org;
+ h=from:subject:message-id; bh=rl01/FdFtTK1ESwz6xo4DRwQE6TYQX0rQmwJ/UODmaM=;
+ b=owGbwMvMwCX2+D1vfrpE4FHG02pJDOnv+vRvTnm0d8eEkzyff9lzVl2ak7c/pkpc3EVQWGPW4
+ i/SQbYhHaUsDGJcDLJiiiwxwuZL4k7Net3JxjcPZg4rE8gQBi5OAZiIeCgjQ8dN7b935afoffNQ
+ XfheI/9phkJTzcuktXa/5/1fM0HCg43hn05cTtv+x9lHArYWGOz+IXJps3vkPOupW3gvnY5YPt2
+ 5khcA
+X-Developer-Key: i=mripard@kernel.org; a=openpgp;
+ fpr=BE5675C37E818C8B5764241C254BCFC56BF6CE8D
 
-The following commit has been merged into the x86/nmi branch of tip:
+Hi,
 
-Commit-ID:     f2e01dcf6df2d12e86c363ea9c37d53994d89dd6
-Gitweb:        https://git.kernel.org/tip/f2e01dcf6df2d12e86c363ea9c37d53994d89dd6
-Author:        Sohil Mehta <sohil.mehta@intel.com>
-AuthorDate:    Thu, 27 Mar 2025 23:46:29 
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 01 Apr 2025 22:26:38 +02:00
+This series deals with (lack of) EDEADLK handling in vc4 PV muxing
+tests.
 
-x86/nmi: Improve NMI duration console printouts
+This was leading to failures with CONFIG_DEBUG_WW_MUTEX_SLOWPATH
+enabled.
 
-Convert the last remaining printk() in nmi.c to pr_info(). Along with
-it, use timespec macros to calculate the NMI handler duration.
+Maxime
 
-Signed-off-by: Sohil Mehta <sohil.mehta@intel.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Reviewed-by: Kai Huang <kai.huang@intel.com>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Nikolay Borisov <nik.borisov@suse.com>
-Link: https://lore.kernel.org/r/20250327234629.3953536-10-sohil.mehta@intel.com
+Signed-off-by: Maxime Ripard <mripard@kernel.org>
 ---
- arch/x86/kernel/nmi.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+Changes in v2:
+- Fix typo in commit log.
+- Enhance the backoff code 
+- Link to v1: https://lore.kernel.org/r/20250318-drm-vc4-kunit-failures-v1-0-779864d9ab37@kernel.org
 
-diff --git a/arch/x86/kernel/nmi.c b/arch/x86/kernel/nmi.c
-index 59ed74e..be93ec7 100644
---- a/arch/x86/kernel/nmi.c
-+++ b/arch/x86/kernel/nmi.c
-@@ -119,12 +119,12 @@ static void nmi_check_duration(struct nmiaction *action, u64 duration)
- 
- 	action->max_duration = duration;
- 
--	remainder_ns = do_div(duration, (1000 * 1000));
--	decimal_msecs = remainder_ns / 1000;
-+	/* Convert duration from nsec to msec */
-+	remainder_ns = do_div(duration, NSEC_PER_MSEC);
-+	decimal_msecs = remainder_ns / NSEC_PER_USEC;
- 
--	printk_ratelimited(KERN_INFO
--		"INFO: NMI handler (%ps) took too long to run: %lld.%03d msecs\n",
--		action->handler, duration, decimal_msecs);
-+	pr_info_ratelimited("INFO: NMI handler (%ps) took too long to run: %lld.%03d msecs\n",
-+			    action->handler, duration, decimal_msecs);
- }
- 
- static int nmi_handle(unsigned int type, struct pt_regs *regs)
+---
+Maxime Ripard (4):
+      drm/vc4: tests: Use return instead of assert
+      drm/vc4: tests: Document output handling functions
+      drm/vc4: tests: Stop allocating the state in test init
+      drm/vc4: tests: Retry pv-muxing tests when EDEADLK
+
+ drivers/gpu/drm/vc4/tests/vc4_mock_output.c    |  62 ++++++++--
+ drivers/gpu/drm/vc4/tests/vc4_test_pv_muxing.c | 154 ++++++++++++++++++++++---
+ 2 files changed, 189 insertions(+), 27 deletions(-)
+---
+base-commit: c0988d693eb10e115d95747f8a0cccc83babb3fc
+change-id: 20250318-drm-vc4-kunit-failures-313b4775c438
+
+Best regards,
+-- 
+Maxime Ripard <mripard@kernel.org>
+
