@@ -1,118 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F87E24EA8D;
-	Thu,  3 Apr 2025 14:16:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F099F24BC06
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 14:17:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743689779; cv=none; b=SNK9vQYiD6/dGE362MucPkZKrOkk8YjVaYE2gDrqdpwGPut5dXGjWuI3j/elw9GiX8+qkBz2YT0LHgr5j7gnRvmhU6EalZlDHcUsPQdu7Ez7GUZIC3AgZMIt7uGRc0HCjwlWPo6hIJZwjw1Jo1bme2UHpe04fwhbLlCW2cXABjQ=
+	t=1743689841; cv=none; b=U/YRj9DJeXEFCKLTcvk59Q6IPoZkVp3NxEH1UkXuNwm5+XBCjH5/VbMnLr8a+oq9FhfYG1zBB79Grdcqj1ar5lCJA29l1wS2LL3s9d6HcvwW15U4Nj/JByxblswP1Pqjng79OoF0S9NUrvgzkYsKtpoyyfoBtJNUU2m8hSwPvKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743689779; c=relaxed/simple;
-	bh=GgdfiQ5y7mT7VYraEy9gS4DReUbj/UbBNo2YaSQqkB0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NRbZcRlUZW+Xv41m0//MdtdkVXNT25KQIg7IyXtaAkXcq0q+A1ljA8ejqtpzaZ8MsqsHgxmn7dcx6LP84Fm5m7p8FGwm7cOv5S/XX5nRrjiGZFGqYg1QiBTFWBf4UjHnKMzcjHBkrKWmglfNMI3Xo2IRTBkO8jRHbURsrNNOrZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RH7LCW07; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743689841; c=relaxed/simple;
+	bh=3s67qkqoQqNkuesiE7hgp2pDfwLSFJPyKnMd3yiQubY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SKXaiW2mwv/gTqtz/JeDmxTj5n0It8b4cMSkGpg1rwR4LrPODxO3cPVhglKGv2aw70uqH6KRAoiXk5O9l922U5MOxFL4WD6KTkvsvWRl+wv/aY5zeNhYAl7ykElnFE4rdMvbhFofb+zuhQuSiJP9uTYl7TT1vkJLUrdfQF7AktU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OMb5NLUK; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RH7LCW07"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51B8DC4CEE3;
-	Thu,  3 Apr 2025 14:16:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743689778;
-	bh=GgdfiQ5y7mT7VYraEy9gS4DReUbj/UbBNo2YaSQqkB0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=RH7LCW07fTwpCP4aARZxpbeQQjLGly0mN4VZnQqQ7cTI88gVop3NT8nTLsSYFTGWW
-	 uQEzwrcdsrpCSqGLMV8omuYDowr3NlZQntng4D4zddvxNXjFPo4lk1+eVJ5nU5CsY5
-	 Sj8IZ6H7/vTBIiRuuEU3mDYbkPf/UT7Yl95FiRvPwIB+WFeH9i42MJxpcn6DALW7Ob
-	 ONFQnngHwhoc/MkcpKTeeyNQbKgf+l9JPoX1b0AKDF7ULOW5GX6k3v+Hw4akJ0iMHT
-	 rOzR54wZjvkknh5qBF6MZfgIMPzXst245UFByvP3mLD+LSIH9zLz9otfQ+z3zYPsc/
-	 2nyfeILPLOW8g==
-Message-ID: <9c47cd4d-41c7-42b9-8f00-a1ea9b9f6ed8@kernel.org>
-Date: Thu, 3 Apr 2025 16:16:11 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OMb5NLUK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743689840; x=1775225840;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=3s67qkqoQqNkuesiE7hgp2pDfwLSFJPyKnMd3yiQubY=;
+  b=OMb5NLUKfUboyvq07uJxmfGxg2hIHTY6b4E/D4UNwIeEt5bmnc73KJUT
+   yn6weh04E98YoHlLuyHO9XhifwpOX670iEL9qI9QyL69gNvO+A0zTJswX
+   kq7g0j+e8glARjQJ17klFAzyvXsQxDAB7mebjNLILXXT4ygbFAeB4JgI9
+   EG1U67Oy52wPUoSJczKaU6cqQFk3Fz6n3GBwxdgqHULFNFMAo9ylFFIPg
+   3oqGIcNc/KhbZb98yfvuzhmh+lP/GXIrkCUPbWRCFyt+MLV5H0eFi3V8R
+   noSXk52p8bp7BjaUCjzdqb70+6kVc8yRFnKdSaPgwqNr/FEh2+HUq8YY2
+   w==;
+X-CSE-ConnectionGUID: 4U4cQZyPSg2pm77TtnXcRA==
+X-CSE-MsgGUID: vunuSRmZRFeK5NB0dJj3ow==
+X-IronPort-AV: E=McAfee;i="6700,10204,11393"; a="44356646"
+X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
+   d="scan'208";a="44356646"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 07:16:58 -0700
+X-CSE-ConnectionGUID: MGDt3Qi+QqaxeBZTezr1WA==
+X-CSE-MsgGUID: 6ergrmBORR6/r0o3/TDBbw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
+   d="scan'208";a="131736007"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 07:16:54 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1u0LND-00000008pol-3dxJ;
+	Thu, 03 Apr 2025 17:16:51 +0300
+Date: Thu, 3 Apr 2025 17:16:51 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Raag Jadav <raag.jadav@intel.com>, david.m.ertman@intel.com,
+	ira.weiny@intel.com, lee@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] mfd: core: Support auxiliary device
+Message-ID: <Z-6YU24dhxF5PRaw@smile.fi.intel.com>
+References: <20250403110053.1274521-1-raag.jadav@intel.com>
+ <2025040336-ethically-regulate-3594@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] dt-bindings: watchdog: Add NXP Software Watchdog
- Timer
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, wim@linux-watchdog.org
-Cc: linux@roeck-us.net, linux-watchdog@vger.kernel.org,
- linux-kernel@vger.kernel.org, S32@nxp.com, ghennadi.procopciuc@nxp.com,
- thomas.fossati@linaro.org, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, devicetree@vger.kernel.org
-References: <20250402154942.3645283-1-daniel.lezcano@linaro.org>
- <20250402154942.3645283-2-daniel.lezcano@linaro.org>
- <ffe49998-f809-458e-8eda-002d0c0fc32a@kernel.org>
- <c449fba0-476e-495b-abbd-65ba2d44d590@linaro.org>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <c449fba0-476e-495b-abbd-65ba2d44d590@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2025040336-ethically-regulate-3594@gregkh>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On 03/04/2025 01:01, Daniel Lezcano wrote:
-> On 02/04/2025 17:56, Krzysztof Kozlowski wrote:
->> On 02/04/2025 17:49, Daniel Lezcano wrote:
->>> Describe the Software Watchdog Timer available on the S32G platforms.
->>>
->>> Cc: Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>
->>> Cc: Thomas Fossati <thomas.fossati@linaro.org>
->>> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
->>
->> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->>
->> Best regards,
->> Krzysztof
+On Thu, Apr 03, 2025 at 03:02:47PM +0100, Greg KH wrote:
+> On Thu, Apr 03, 2025 at 04:30:53PM +0530, Raag Jadav wrote:
+
+...
+
+> > 2. Should we allow auxiliary drivers to manage their own resources
+> >    (MEM, IO, IRQ etc)?
 > 
-> I ran the make dt_binding_check but inadvertently removed the "oneOf:" 
-> after :/
-Other errors were also not fixed even though you got report on them on
-29th of March.
+> The resources are all shared by the "parent" device, that's what makes
+> aux drivers work, they need to handle this as there is no unique way to
+> carve up the resources here.
+> 
+> So I don't know how you would do this, sorry.
 
-Best regards,
-Krzysztof
+I think we should simply enforce the requirement that MFD on AUX bus must use
+regmap. This will solve the serialisation and common access to the resources.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
