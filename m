@@ -1,115 +1,98 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62BE526A0D5;
-	Thu,  3 Apr 2025 19:06:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3823326A0F7;
+	Thu,  3 Apr 2025 19:06:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743707180; cv=none; b=CBfgCKUe5u+bHXSSreOWyv+f4KidGzCUjdyYmZUcAdRzbiug2XZDMeb4Dq+U9QE58VO1BjuvaG+kmVZmcUUJsHMNq9Dqfq4bJEQFVGZRQf1B14H1XkB/jWKdlndOMtLoEsOvxmS1aKVjtfb4g/9Vmj9PgbLND3uKzr0LCuEtnSw=
+	t=1743707181; cv=none; b=PS9d9PCf7EecsTX6cbdK3QVDE3OmwPX+PUOYlxVLRjjKtazlk7DMMUh3JT/iO05qiXrv2R4LFHluVlny/kl22wzaeHIVgbbyq5jgq79XDDa6c3ZD6QrGZxyYDGHzzcgnTaeTaFmbZOHFzQlUJQin54H/d6nMEd9DBZj745NrOlQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743707180; c=relaxed/simple;
-	bh=oNNjA8EC+8Tze8+EjqGh3HwWCcanNkzZDN6YsmK0UfY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lLZsd52AaE3T4lxeNFqMMSA3Y0bIB3Kh5qnibtXeeI1hnu9PpDeofy+hNlAue54VZe1n+q3QhcVXeA3Cyi0+5bA/5cUEdn9SlPO11VkNIF0dyG4bjwVt3nrzqHe0GWSvENASYsB7o4mz5lin7CgkN2AFiRh5kyHxppfJl9IQbQM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sjyQtAk5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743707181; c=relaxed/simple;
+	bh=mDYpLGljLMv3xA0BiRkGDSNlyUx8EaUoAYoGIdWRQZk=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=fFVi44EM3ml6XlTn1+LPzCthtgcEeqK4XaAFBW4GtxsNH+P4sO0znfnfo+vht2EpRrGAXtVp4MR3xxIHexUur2Bx/u9wZVFfbXhKiGf1woBBwa7tEeEaxbNVdZJeE+GctBoaR/cIpG7gExMFtzcEAkNFT5vGreuokXYkYaY1/V4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UHeTfNe5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sjyQtAk5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2E1BC4CEE8;
-	Thu,  3 Apr 2025 19:06:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UHeTfNe5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45C7EC4CEE3;
+	Thu,  3 Apr 2025 19:06:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743707180;
-	bh=oNNjA8EC+8Tze8+EjqGh3HwWCcanNkzZDN6YsmK0UfY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sjyQtAk5SiQP0qmcsCbTK/1US2OVDIxOkxm4hOmOfP+0OKZNpm5TO04oiD6fEUo9m
-	 OkUMjeL+GrFSvLDWIy2N372ogBwF4dZJ3AI/jIun8Yb4gdKlhOoyKjP7Wh0CBjRVEy
-	 M5KsJuWXiIksRZBeVoB4P2HgGDk30tM0c7rzsvfnN1hn2agZgNHXGfsd21PUa8ChX7
-	 J9RZ+eH1bo5nKmsEwzh72UNKPE96x1aBUBduolDOQ+vFdrq+1Kegyv2RKHlom7Cxgq
-	 eU5wZdzgmQJxnzJM5bR5HEENjggrvE6KIT1ObuHMsZWvXO3HCstHt13Gx3vG+FTB93
-	 4pZrzh1E3TELw==
-Date: Thu, 3 Apr 2025 22:06:15 +0300
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: Stefano Garzarella <sgarzare@redhat.com>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>,
-	Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
-	"H. Peter Anvin" <hpa@zytor.com>, linux-coco@lists.linux.dev,
-	linux-integrity@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
-	Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Joerg Roedel <jroedel@suse.de>,
-	Dionna Glaze <dionnaglaze@google.com>,
-	Claudio Carvalho <cclaudio@linux.ibm.com>,
-	James Bottomley <James.Bottomley@hansenpartnership.com>,
-	linux-kernel@vger.kernel.org, Dov Murik <dovmurik@linux.ibm.com>,
-	Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v6 4/4] x86/sev: register tpm-svsm platform device
-Message-ID: <Z-7cJyB1LXi75Z0F@kernel.org>
-References: <20250403100943.120738-1-sgarzare@redhat.com>
- <20250403100943.120738-5-sgarzare@redhat.com>
+	s=k20201202; t=1743707181;
+	bh=mDYpLGljLMv3xA0BiRkGDSNlyUx8EaUoAYoGIdWRQZk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=UHeTfNe5Pr/jABr3WzNSVi4BCAgdCc3CxdvmGoyEpa3gEu3ZuaTyG/FtVzcGNfU9h
+	 Bq+S54P/i9+CM7SbEpg+tvqON/pjzJuOAig1bSIA8Ws5SrN/P8IkznoObgEUzp2KAJ
+	 RDpC87YIXLj3HPiaaGdLv7BFV+892wmYBvgN8FjfMNx6E+jjVNmyjMshDkE+B08EUp
+	 dtVO/xesc51741B0eVZb9PGzRHuDix1bc8Su3CkSdoO294DvfENp056IbNZpF6ug/Y
+	 easXeVZKLac+Jph0soZdizgOjefVen7PXSQX2bYPcsFu/BTRXtUKGZA+u1NZogoSSW
+	 bVRWqkbJOJe+g==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Miri Korenblit <miriam.rachel.korenblit@intel.com>,
+	Johannes Berg <johannes.berg@intel.com>,
+	Sasha Levin <sashal@kernel.org>,
+	johannes@sipsolutions.net,
+	linux-wireless@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 11/47] wifi: mac80211: ensure sdata->work is canceled before initialized.
+Date: Thu,  3 Apr 2025 15:05:19 -0400
+Message-Id: <20250403190555.2677001-11-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250403190555.2677001-1-sashal@kernel.org>
+References: <20250403190555.2677001-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250403100943.120738-5-sgarzare@redhat.com>
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.12.21
+Content-Transfer-Encoding: 8bit
 
-On Thu, Apr 03, 2025 at 12:09:42PM +0200, Stefano Garzarella wrote:
-> From: Stefano Garzarella <sgarzare@redhat.com>
-> 
-> SNP platform can provide a vTPM device emulated by SVSM.
-> 
-> The "tpm-svsm" device can be handled by the platform driver added
-> by the previous commit in drivers/char/tpm/tpm_svsm.c
-> 
-> Register the device unconditionally. The support check (e.g. SVSM, cmd)
-> is in snp_svsm_vtpm_probe(), keeping all logic in one place.
-> This function is called during the driver's probe along with other
-> setup tasks like memory allocation.
-> 
-> Reviewed-by: Tom Lendacky <thomas.lendacky@amd.com>
-> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
-> ---
-> v6:
-> - added Tom's R-b
-> v4:
-> - explained better why we register it anyway in the commit message
-> ---
->  arch/x86/coco/sev/core.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/arch/x86/coco/sev/core.c b/arch/x86/coco/sev/core.c
-> index efb43c9d3d30..acbd9bc526b1 100644
-> --- a/arch/x86/coco/sev/core.c
-> +++ b/arch/x86/coco/sev/core.c
-> @@ -2689,6 +2689,11 @@ static struct platform_device sev_guest_device = {
->  	.id		= -1,
->  };
->  
-> +static struct platform_device tpm_svsm_device = {
-> +	.name		= "tpm-svsm",
-> +	.id		= -1,
-> +};
-> +
->  static int __init snp_init_platform_device(void)
->  {
->  	if (!cc_platform_has(CC_ATTR_GUEST_SEV_SNP))
-> @@ -2697,6 +2702,9 @@ static int __init snp_init_platform_device(void)
->  	if (platform_device_register(&sev_guest_device))
->  		return -ENODEV;
->  
-> +	if (platform_device_register(&tpm_svsm_device))
-> +		return -ENODEV;
-> +
->  	pr_info("SNP guest platform device initialized.\n");
->  	return 0;
->  }
-> -- 
-> 2.49.0
-> 
-> 
+From: Miri Korenblit <miriam.rachel.korenblit@intel.com>
 
-Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
+[ Upstream commit 6c93fd502023dd919b5987ccbe990735410edd49 ]
 
-BR, Jarkko
+This wiphy work is canceled when the iface is stopped,
+and shouldn't be queued for a non-running iface.
+If it happens to be queued for a non-running iface (due to a bug)
+it can cause a corruption of wiphy_work_list when ieee80211_setup_sdata
+is called. Make sure to cancel it in this case and warn on.
+
+Signed-off-by: Miri Korenblit <miriam.rachel.korenblit@intel.com>
+Reviewed-by: Johannes Berg <johannes.berg@intel.com>
+Link: https://patch.msgid.link/20250205110958.99204c767c10.I84ce27a239059f6009cee197b252549a11426046@changeid
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ net/mac80211/iface.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/net/mac80211/iface.c b/net/mac80211/iface.c
+index af9055252e6df..82eb53ea9464d 100644
+--- a/net/mac80211/iface.c
++++ b/net/mac80211/iface.c
+@@ -8,7 +8,7 @@
+  * Copyright 2008, Johannes Berg <johannes@sipsolutions.net>
+  * Copyright 2013-2014  Intel Mobile Communications GmbH
+  * Copyright (c) 2016        Intel Deutschland GmbH
+- * Copyright (C) 2018-2024 Intel Corporation
++ * Copyright (C) 2018-2025 Intel Corporation
+  */
+ #include <linux/slab.h>
+ #include <linux/kernel.h>
+@@ -812,6 +812,9 @@ static void ieee80211_set_multicast_list(struct net_device *dev)
+  */
+ static void ieee80211_teardown_sdata(struct ieee80211_sub_if_data *sdata)
+ {
++	if (WARN_ON(!list_empty(&sdata->work.entry)))
++		wiphy_work_cancel(sdata->local->hw.wiphy, &sdata->work);
++
+ 	/* free extra data */
+ 	ieee80211_free_keys(sdata, false);
+ 
+-- 
+2.39.5
+
