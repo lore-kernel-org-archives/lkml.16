@@ -1,236 +1,187 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 335D224500A
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 09:44:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EC2524500E
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 09:44:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743673475; cv=none; b=WxVaj9mTo5D1C6XWLD3bBXIojegjfW6qyORBJtx3OiJcTzyXjueldbfFBhJI2SfQZhJvJG/cYcmfbHPJhQ44ixcghe3HMG+OCGubAUJCx+DfFb+pqLH4YKHK+PH38J60IW9DVvNcOEUN8pQROEzNIsYnf83zBAfP3gDNz/9BGKc=
+	t=1743673480; cv=none; b=nBFbXuPILk7+w24Wm6TAPTbH/NcACCx+cLj19CcEeHsxr93WhCdb3PTQxXh6dHwxiEgoOSPzYZv0kXKO3lrY6Lx4wlu+Xd2XrljGYL9mPCADuQSX/v5CKhlA1FE4lzVKPzixwdctX+C8DVVnSGwmmdUJgx1qmfuCB1UX+OcoKl4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743673475; c=relaxed/simple;
-	bh=3RucRNF7f/0e4O35Hd5elBCl4Zt1WkVLOuvSALfHk/0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cPU6aBCFDiyw8VNGID+DtYSjHb9WbN6/TVDr5s/X/MExsGB6RLtH+gFnBXogg2KYKQIWWmubgjK9g8RRaMepQi2uErY68d8i1zcK7WJ9TgS9K/WTV73T99UgHf6ULLSuWj3xblY2fhvwbeBNimopHQT7cQsa1sVlE9HoXqpLbec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FhbMdtEz; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1743673480; c=relaxed/simple;
+	bh=tvNgtlGvnFOszr/ZtpqsOaEmuzi1gJuz4eAo8q+Ei5M=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
+	 References; b=cNue+yYsPYlzEsxIr0PvBELvx0HwvK41CRoikQ6KaI9j+gZkyqNpJXnNYvhZGu9Dat3KHvCM1JJntIXIWbvrGkrJwAU9S0O1WqRQIbyKwOhj7r2/bDMJ+vwtId1DucewVGHz3adT7/3GcLEGjPmdZrGzLgBmZwl48mob2af0M0A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=m6FMzYYs; arc=none smtp.client-ip=210.118.77.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FhbMdtEz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743673473;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=gSdqZyMN/qA57u0AZakL5zHE5rHAQPvR1lJKkRz1QYQ=;
-	b=FhbMdtEz3mV4CmE6GHg6ifirg9zPOfKIWDqTHZ/PEgMaiOOX++TYeTXVs2qLSLq3XfkSWJ
-	sQFFiyHYnr4U696BrNaPloLSn2ZaV2QIrk/JOg8dVC46VaGMarxuMJKO11anhoByQJK2do
-	jLU+7w7aNvsVyfwiJrlj3JAD0VSFmxQ=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-177-_W-v3SLTPRu8nRYaArpPDQ-1; Thu, 03 Apr 2025 05:44:30 -0400
-X-MC-Unique: _W-v3SLTPRu8nRYaArpPDQ-1
-X-Mimecast-MFC-AGG-ID: _W-v3SLTPRu8nRYaArpPDQ_1743673469
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3912b54611dso454787f8f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 02:44:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743673469; x=1744278269;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=gSdqZyMN/qA57u0AZakL5zHE5rHAQPvR1lJKkRz1QYQ=;
-        b=Radqo6Pme2kiB5mYqNaeBMoMLTysRUPlU0aCcbdEz7K7AzcPeWPI6OQ5SXaRT+Ufcr
-         ona3PNP/3utzuWPoKqFOOTPNG07/NUBzHjAtvu3gBVeFai6P4lSWaLo4bbXBpB9lewdP
-         0odjpMDM9WjrY2XbTgQo824mV9TEJl4h5Cr0EvH0Er9UHTuz2kEIjXRP/ILIjC00CemP
-         4TEhrjQ3oyrX0jw7Oz9TBKgpWWnGAds3Ae6N5MHxK8YvfrVGOTfGwJBqiTVPqiT16Ypk
-         UZXgNxIZszDp5pyMjjR/jFu/lUtb8cu4lRKpMJSABG9oSXXQxnmn5N2gz8D/z+DVAeQZ
-         lbVg==
-X-Forwarded-Encrypted: i=1; AJvYcCVRxfYXlDpPIlWfZPzouOj5gkKCxXEzL8wDXtzO+N3zrALNKO5TBES0mZKgz3K7zElZ67GW27vQpjiq3R8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwGc9/Q7iYJuzwl/gnve5AbBJPVrWPgKkku0BPPx4P+pbRT2GYY
-	AgmYZ16WHK/GWYxilxy6/dCU9AMvmyCX5MbZSMY5t4ykDRFMBeF2amslJLLjfWEz/WaNGaNnE2b
-	3m14CG/RX/r1B5h/rJ9HuySuDHYiDzVN0BBNzoK9bDTijElCceVocwzEUXa9gMw==
-X-Gm-Gg: ASbGncs4ybIyyTIei7UvO8CPeJGNEPrDvQY75adHJjDOQSm+apLTyQJ2BonGPFE8rfB
-	cpV4NLOHSR/SjgZuq+8mv7T/BhXzJi2IlDlF9fciYlm7YBdq1ql/ZeUZoi7lfA87bZvyduLR7By
-	eG+wfTqNKvZZRBVr/D0Dqhow63f+Is/2ogXYEE7JAswtqVwmakI/nBUI9SLD/cM3eWCHFbrUeZh
-	Z/bORTzz/OxBkrR9zfpGsQGiPaK+wAoRc5jKK3nPoZVHWdZ1uqn/lUjKl0qjr7g84pkBU8Goody
-	g4M9XBoitFGGgvSygwtnLHeGNkgayNPfxbOBMW6DFo8l
-X-Received: by 2002:a5d:6dab:0:b0:391:4889:5045 with SMTP id ffacd0b85a97d-39c12114fccmr17337044f8f.36.1743673468931;
-        Thu, 03 Apr 2025 02:44:28 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG/7cEdSHfURTDRVGlG5T0lSpAh1Bd8WT5kQ0J3SBrbGbJ5bEbAFPspWelmdDFLWhEf9/DFjg==
-X-Received: by 2002:a5d:6dab:0:b0:391:4889:5045 with SMTP id ffacd0b85a97d-39c12114fccmr17337011f8f.36.1743673468511;
-        Thu, 03 Apr 2025 02:44:28 -0700 (PDT)
-Received: from [192.168.0.7] (ip-109-42-51-76.web.vodafone.de. [109.42.51.76])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c30226e9asm1320216f8f.94.2025.04.03.02.44.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Apr 2025 02:44:28 -0700 (PDT)
-Message-ID: <9daf03e4-4526-428c-b584-ede6cb77cada@redhat.com>
-Date: Thu, 3 Apr 2025 11:44:15 +0200
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="m6FMzYYs"
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250403094431euoutp022d23874e6a3b906b5fb69df75c164ae9~yxci076jr0298502985euoutp02a
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 09:44:31 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250403094431euoutp022d23874e6a3b906b5fb69df75c164ae9~yxci076jr0298502985euoutp02a
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1743673471;
+	bh=y9G9MUG9DOc1uZ5WKtQOjEgCXiNWPK+QYyIpZCzngsE=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=m6FMzYYswm4JLVO0Yp15gpIt6BptqFfhGwcDRBpmn1Hn2fH9hXaYEc0KGb0ypM7JQ
+	 1h2Hy9zxvB5i9z23/byNron+lLJzOVbhiwT5HhnM1wg9k51zBJbrknipaS6De0Ne86
+	 ihc8MhXgo6+XwXkyGY9g/ThorCPQwuvocfct5wT4=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+	20250403094431eucas1p19c31006cd90ab2c50f40ce7c802573c4~yxcibnPDY2581425814eucas1p10;
+	Thu,  3 Apr 2025 09:44:31 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+	eusmges3new.samsung.com (EUCPMTA) with SMTP id 79.93.20397.E785EE76; Thu,  3
+	Apr 2025 10:44:31 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+	20250403094430eucas1p21515d7f693708fc2ad0cd399cb0b81aa~yxch6_uH51408514085eucas1p20;
+	Thu,  3 Apr 2025 09:44:30 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+	eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20250403094430eusmtrp2ac6b311646012c10afdb6ac5bd5b41dc~yxch6AdC31352013520eusmtrp2i;
+	Thu,  3 Apr 2025 09:44:30 +0000 (GMT)
+X-AuditID: cbfec7f5-ed1d670000004fad-f4-67ee587e6ff5
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+	eusmgms2.samsung.com (EUCPMTA) with SMTP id B0.FF.19654.E785EE76; Thu,  3
+	Apr 2025 10:44:30 +0100 (BST)
+Received: from AMDC4942.home (unknown [106.210.136.40]) by
+	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20250403094429eusmtip21d7935307107ee4f08337db645936e5a~yxcg3ryH82665526655eusmtip2e;
+	Thu,  3 Apr 2025 09:44:29 +0000 (GMT)
+From: Michal Wilczynski <m.wilczynski@samsung.com>
+To: mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, drew@pdp7.com, guoren@kernel.org,
+	wefu@redhat.com, paul.walmsley@sifive.com, palmer@dabbelt.com,
+	aou@eecs.berkeley.edu, alex@ghiti.fr, jszhang@kernel.org,
+	p.zabel@pengutronix.de, m.szyprowski@samsung.com
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, Michal
+	Wilczynski <m.wilczynski@samsung.com>
+Subject: [PATCH v7 0/3] Add T-HEAD TH1520 VO clock support for LicheePi 4A
+ GPU enablement
+Date: Thu,  3 Apr 2025 11:44:22 +0200
+Message-Id: <20250403094425.876981-1-m.wilczynski@samsung.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] s390/virtio_ccw: don't allocate/assign airqs for
- non-existing queues
-To: David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org
-Cc: linux-s390@vger.kernel.org, virtualization@lists.linux.dev,
- kvm@vger.kernel.org, Chandra Merla <cmerla@redhat.com>,
- Stable@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>,
- Halil Pasic <pasic@linux.ibm.com>, Eric Farman <farman@linux.ibm.com>,
- Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Sven Schnelle <svens@linux.ibm.com>, "Michael S. Tsirkin" <mst@redhat.com>,
- Wei Wang <wei.w.wang@intel.com>
-References: <20250402203621.940090-1-david@redhat.com>
-From: Thomas Huth <thuth@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=thuth@redhat.com; keydata=
- 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
-In-Reply-To: <20250402203621.940090-1-david@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrEKsWRmVeSWpSXmKPExsWy7djP87r1Ee/SDV5cZbJ4ducrq8XW37PY
+	LdbsPcdkMf/IOVaLe5e2MFm82NvIYtF8bD2bxctZ99gsPvbcY7W4vGsOm8W2zy1sFmuP3GW3
+	WP91PpPFxVOuFnfvnWCxeHm5h9mibRa/xf89O9gt/l3byGLRsn8Ki4OIx/sbreweb16+ZPE4
+	3PGF3ePeiWmsHptWdbJ5bF5S79Gy9hiTR/9fA4/3+66yefRtWcXocan5OrvH501yATxRXDYp
+	qTmZZalF+nYJXBmf5kxnKlglVXHq2m+WBsZlol2MnBwSAiYSs4/3snUxcnEICaxglDi39T8L
+	hPOFUeLno5esEM5nRomj/yeywrTMb38GVbWcUaLp1Wao/jeMEtsnTmYBqWITMJJ4sHw+WLuI
+	wB4mie/ffzKDOMwCqxglnnz7yA5SJSwQLXGhbxsbiM0ioCpx4vsBZhCbV8BOov3aEmaIffIS
+	+w+ehYoLSpyc+QRsAzNQvHnrbKia9ZwSa28wQdguEq9fXWaHsIUlXh3fAmXLSPzfOR+qJl/i
+	wdZPUL01Ejt7jkPZ1hJ3zv0CuocDaL6mxPpd+hBhR4mzF/oYQcISAnwSN94KQlzAJzFp23Rm
+	iDCvREebEES1msTUnl64pedWbINa6iGx8vpBsGeFBGIlzs38xTaBUWEWkr9mIflrFsINCxiZ
+	VzGKp5YW56anFhvnpZbrFSfmFpfmpesl5+duYgQmy9P/jn/dwbji1Ue9Q4xMHIyHGCU4mJVE
+	eAu13qYL8aYkVlalFuXHF5XmpBYfYpTmYFES5120vzVdSCA9sSQ1OzW1ILUIJsvEwSnVwMTi
+	PPkHh2ZKqfO/3xNVeNSmu3Ry8cUJ3QjUXCjE+f/RPr5Ll4vXds+aeOqXzbz1c7VO3Pnhyu/D
+	7+z7pjD3naP7BOHdnqeT2pOebnvGdpa1d/eqta8P1thM7lHvOiq5zaay4N7Ek4c1+w6mf3kQ
+	znPrpk3KlqtFbLa3TaLXhy43/Si4ab/ZH2sWsZcfpG59Mq1im2x75b+W5NxUwT7Xddd9/85u
+	CNGUEIgXVvpx9fqbtf9PMbBdOvX1rPP9H3esb2n+ZPMUn1sTJHHG8/r7hEOBm1uk+zNUvgVI
+	OobJWIqv+pi+4aOd/cxX96+7Bgd9F5sXuEJD7tHDuOiU9LmbPgeme5y5yLP1Yq3xRderXkJK
+	LMUZiYZazEXFiQDbd8sABQQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrOIsWRmVeSWpSXmKPExsVy+t/xe7p1Ee/SDY4el7R4ducrq8XW37PY
+	LdbsPcdkMf/IOVaLe5e2MFm82NvIYtF8bD2bxctZ99gsPvbcY7W4vGsOm8W2zy1sFmuP3GW3
+	WP91PpPFxVOuFnfvnWCxeHm5h9mibRa/xf89O9gt/l3byGLRsn8Ki4OIx/sbreweb16+ZPE4
+	3PGF3ePeiWmsHptWdbJ5bF5S79Gy9hiTR/9fA4/3+66yefRtWcXocan5OrvH501yATxRejZF
+	+aUlqQoZ+cUltkrRhhZGeoaWFnpGJpZ6hsbmsVZGpkr6djYpqTmZZalF+nYJehmf5kxnKlgl
+	VXHq2m+WBsZlol2MnBwSAiYS89ufsYDYQgJLGSU+7OOBiMtIXOt+yQJhC0v8udbF1sXIBVTz
+	ilHi+u5esASbgJHEg+XzWUESIgIXmCR2rVvNBOIwC6xjlJiyfQeQw84hLBApsSofpJ5FQFXi
+	xPcDzCA2r4CdRPu1JcwQC+Ql9h88CxUXlDg58wnYfGagePPW2cwTGPlmIUnNQpJawMi0ilEk
+	tbQ4Nz232EivODG3uDQvXS85P3cTIzBGtx37uWUH48pXH/UOMTJxMB5ilOBgVhLhLdR6my7E
+	m5JYWZValB9fVJqTWnyI0RTovonMUqLJ+cAkkVcSb2hmYGpoYmZpYGppZqwkzst25XyakEB6
+	YklqdmpqQWoRTB8TB6dUAxNz1yPe+nvtNetvs5yX2WPjeKYvIy3t2FOTjXznj0/7Fzh99WJ2
+	MyvvzUZ/ywXXy7XteuW4o0OHmeVcUUjBbIkK7oNsTy6cO3zfqjiTfQLf/HXubwWTNCuDLyh+
+	naQn/rbXpiPzl7RSwpLm9xe7FLdyVG4P/iXxqjv11/NFe30t952a/M6r5q8986qoq4V/W86t
+	vL5DO9F9ucqX5af0myyrDRL+8x2RjG8JXMNs0r90yblPkwxuN77kdJh2Kkhztdqb/0eeP6o9
+	HfDkoJyuxz+m5z3pByJP3TepmPqjVmrV+mnnbZLuOruZzQv8uuin2rZlvd2ffxyRaZPYorq1
+	TNM3ozVy+ZP7Av77ZOLFqjqUWIozEg21mIuKEwGS1Nm2WgMAAA==
+X-CMS-MailID: 20250403094430eucas1p21515d7f693708fc2ad0cd399cb0b81aa
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20250403094430eucas1p21515d7f693708fc2ad0cd399cb0b81aa
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20250403094430eucas1p21515d7f693708fc2ad0cd399cb0b81aa
+References: <CGME20250403094430eucas1p21515d7f693708fc2ad0cd399cb0b81aa@eucas1p2.samsung.com>
 
-On 02/04/2025 22.36, David Hildenbrand wrote:
-> If we finds a vq without a name in our input array in
-> virtio_ccw_find_vqs(), we treat it as "non-existing" and set the vq pointer
-> to NULL; we will not call virtio_ccw_setup_vq() to allocate/setup a vq.
-> 
-> Consequently, we create only a queue if it actually exists (name != NULL)
-> and assign an incremental queue index to each such existing queue.
-> 
-> However, in virtio_ccw_register_adapter_ind()->get_airq_indicator() we
-> will not ignore these "non-existing queues", but instead assign an airq
-> indicator to them.
-> 
-> Besides never releasing them in virtio_ccw_drop_indicators() (because
-> there is no virtqueue), the bigger issue seems to be that there will be a
-> disagreement between the device and the Linux guest about the airq
-> indicator to be used for notifying a queue, because the indicator bit
-> for adapter I/O interrupt is derived from the queue index.
-> 
-> The virtio spec states under "Setting Up Two-Stage Queue Indicators":
-> 
-> 	... indicator contains the guest address of an area wherein the
-> 	indicators for the devices are contained, starting at bit_nr, one
-> 	bit per virtqueue of the device.
-> 
-> And further in "Notification via Adapter I/O Interrupts":
-> 
-> 	For notifying the driver of virtqueue buffers, the device sets the
-> 	bit in the guest-provided indicator area at the corresponding
-> 	offset.
-> 
-> For example, QEMU uses in virtio_ccw_notify() the queue index (passed as
-> "vector") to select the relevant indicator bit. If a queue does not exist,
-> it does not have a corresponding indicator bit assigned, because it
-> effectively doesn't have a queue index.
-> 
-> Using a virtio-balloon-ccw device under QEMU with free-page-hinting
-> disabled ("free-page-hint=off") but free-page-reporting enabled
-> ("free-page-reporting=on") will result in free page reporting
-> not working as expected: in the virtio_balloon driver, we'll be stuck
-> forever in virtballoon_free_page_report()->wait_event(), because the
-> waitqueue will not be woken up as the notification from the device is
-> lost: it would use the wrong indicator bit.
-> 
-> Free page reporting stops working and we get splats (when configured to
-> detect hung wqs) like:
-> 
->   INFO: task kworker/1:3:463 blocked for more than 61 seconds.
->         Not tainted 6.14.0 #4
->   "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
->   task:kworker/1:3 [...]
->   Workqueue: events page_reporting_process
->   Call Trace:
->    [<000002f404e6dfb2>] __schedule+0x402/0x1640
->    [<000002f404e6f22e>] schedule+0x3e/0xe0
->    [<000002f3846a88fa>] virtballoon_free_page_report+0xaa/0x110 [virtio_balloon]
->    [<000002f40435c8a4>] page_reporting_process+0x2e4/0x740
->    [<000002f403fd3ee2>] process_one_work+0x1c2/0x400
->    [<000002f403fd4b96>] worker_thread+0x296/0x420
->    [<000002f403fe10b4>] kthread+0x124/0x290
->    [<000002f403f4e0dc>] __ret_from_fork+0x3c/0x60
->    [<000002f404e77272>] ret_from_fork+0xa/0x38
-> 
-> There was recently a discussion [1] whether the "holes" should be
-> treated differently again, effectively assigning also non-existing
-> queues a queue index: that should also fix the issue, but requires other
-> workarounds to not break existing setups.
-> 
-> Let's fix it without affecting existing setups for now by properly ignoring
-> the non-existing queues, so the indicator bits will match the queue
-> indexes.
-> 
-> [1] https://lore.kernel.org/all/cover.1720611677.git.mst@redhat.com/
-> 
-> Fixes: a229989d975e ("virtio: don't allocate vqs when names[i] = NULL")
-> Reported-by: Chandra Merla <cmerla@redhat.com>
-> Cc: <Stable@vger.kernel.org>
-> Cc: Cornelia Huck <cohuck@redhat.com>
-> Cc: Thomas Huth <thuth@redhat.com>
-> Cc: Halil Pasic <pasic@linux.ibm.com>
-> Cc: Eric Farman <farman@linux.ibm.com>
-> Cc: Heiko Carstens <hca@linux.ibm.com>
-> Cc: Vasily Gorbik <gor@linux.ibm.com>
-> Cc: Alexander Gordeev <agordeev@linux.ibm.com>
-> Cc: Christian Borntraeger <borntraeger@linux.ibm.com>
-> Cc: Sven Schnelle <svens@linux.ibm.com>
-> Cc: "Michael S. Tsirkin" <mst@redhat.com>
-> Cc: Wei Wang <wei.w.wang@intel.com>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-> ---
->   drivers/s390/virtio/virtio_ccw.c | 16 ++++++++++++----
->   1 file changed, 12 insertions(+), 4 deletions(-)
+This is a subset of a larger patch series enabling the Imagination BXM-4-64 GPU
+on the LicheePi 4A board, which is powered by the T-HEAD TH1520 SoC. While the
+full series includes power-domain, reset, and firmware changes, this part
+focuses solely on the clock subsystem needed for the GPU and other VO (video
+output) blocks. By merging these clock patches independently, we prepare the
+groundwork for future GPU integration via the `drm/imagination` driver.
 
-Thanks for tackling this, David!
+The T-HEAD TH1520 SoC features multiple clock controllers. Initially, only the
+AP clock controller was supported upstream. The patches below add support for
+the VO (video output) clock controller, which manages GPU-related gates, HDMI,
+and other multimedia clocks.
 
-I tested the patch and the problems are gone now, indeed!
+Bigger series cover letter:
+https://lore.kernel.org/all/20250219140239.1378758-1-m.wilczynski@samsung.com/
 
-Tested-by: Thomas Huth <thuth@redhat.com>
-Reviewed-by: Thomas Huth <thuth@redhat.com>
+v7:
+- remove commits 3,4 from the patch series, those would handle empty MEM clock
+  stub, and reset management. It's not necessary anymore, as this would be
+  implemented in power-domain driver
+- added the device tree patch at the end for the SoC maintainers to take after
+  the other patches get OK-ed
+- added Acked-by, from Connor for the dt-binding patch
+- re-added Reviewed-by from Krzysztof, as the dt-binding patch is the same as
+  for the v5
+
+v6:
+- squashed the "dt-bindings: clock: thead: Add GPU clkgen reset property"
+  with the "dt-bindings: clock: thead: Add TH1520 VO clock controller". As
+  a result, also removed the Reviewed-by from Krzysztof, since the new
+  resets property has been introduced, which is mandatory in the VO
+  case
+
+v5:
+- introduced a new macro CCU_GATE_CLK_OPS, which allows providing custom clk_ops.
+  In the case of the 'MEM' clock, it provides empty clk_nops. Later, this clock
+  is provided to the GPU node, thereby avoiding any ABI breakage
+- used the CCU_GATE_CLK_OPS macro to implement a workaround for de-asserting
+  the clkgen reset only after both core and sys clocks are enabled. This
+  sequence is required to properly initialize the GPU
+
+v4:
+ - enhanced documentation for new Video Output (VO) clock inputs in device tree
+   bindings
+
+v3:
+ - reworked driver to support multiple clock controllers through .compatible
+   and .data instead of using multiple address spaces in dt-binding. This change
+   allows to re-use the driver code for multiple clock controllers
+
+v2:
+ - removed AP_SUBSYS clock refactoring commits (1-6):
+ - instead of refactoring, I opted to extend the current driver and its
+   associated device tree node to include support for a second address space.
+ - resolved all checkpatch issues using --strict, except for the call to
+   devm_clk_hw_register_gate_parent_data().  The current implementation remains
+   preferable in this context, and clang-format aligns with this choice
+
+Michal Wilczynski (3):
+  dt-bindings: clock: thead: Add TH1520 VO clock controller
+  clk: thead: Add clock support for VO subsystem in T-HEAD TH1520 SoC
+  riscv: dts: thead: Add device tree VO clock controller
+
+ .../bindings/clock/thead,th1520-clk-ap.yaml   |  17 +-
+ arch/riscv/boot/dts/thead/th1520.dtsi         |   7 +
+ drivers/clk/thead/clk-th1520-ap.c             | 196 +++++++++++++++---
+ .../dt-bindings/clock/thead,th1520-clk-ap.h   |  34 +++
+ 4 files changed, 223 insertions(+), 31 deletions(-)
+
+-- 
+2.34.1
 
