@@ -1,201 +1,104 @@
-Received: from qs51p00im-qukt01071901.me.com (qs51p00im-qukt01071901.me.com [17.57.155.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E27B9136E37
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 06:48:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.57.155.8
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61FAB15575C
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 06:49:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743662935; cv=none; b=XhEUs5DED2O633OnSwQl9e/DOofI8pMjcrP88O9MwgOSD0BX3qklgUKU09Lxqjdu1o2FJSOCEjFlqDNkp23r5kDmK0LcWCmDt13/s3GMSxQijm81D9PpQUGbWISaNnBg0MOuWLBly6ond4ZZePL7Y+g1GY+Wn2yu9CJ1Ah5qYC8=
+	t=1743662947; cv=none; b=q8bXIAiJpW1oRQfu15LLSfDgi6s+VD6/xtJ0iQ+Gid26TViUTR0SLzPPsowe2huLbk1vfpzWl7CV+UcEXBAPHVW4LK4LQIchdpO3+SKN+S5m5LRcS9l/riYmK97lryR+D396McyN8EY+9fPranVIyEHQCiMRmqg2j7gtgRcorNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743662935; c=relaxed/simple;
-	bh=T6FT3LsKTfwsij3YFljc92NUt4JS1kmzCAfKT0pcqNs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MTbNyjNXcxBd8QFYtdRihSWm0yDhV0/Mo6iSSfjQxWXe7imF+8r/Nf900UG2hcB1MYEFS5yo1vIfI/7mtfbXRu31297Xuxs5TCBPifzfruKpIdlwCfrYWae1FzlCZ1RyWTbsfGqW6dBnuDj2oPWE5uQqZfMxF7jVbDnZvBhj8JY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=etehtsea.me; spf=pass smtp.mailfrom=etehtsea.me; dkim=pass (2048-bit key) header.d=etehtsea.me header.i=@etehtsea.me header.b=WNBc/xzq; arc=none smtp.client-ip=17.57.155.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=etehtsea.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=etehtsea.me
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=etehtsea.me header.i=@etehtsea.me header.b="WNBc/xzq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=etehtsea.me; s=sig1;
-	bh=vX1nStTTyA2W3EtaX3VYwa1Dfg3sYgIY5n0SdMP1A9E=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:x-icloud-hme;
-	b=WNBc/xzqW6hc1w1xvZmvNkALMThcoORtpqWzc7S6k7HpLwRWJ7z0ZwCosnW2DI84q
-	 WNlBe//viYmPWvRelVykEW34qz7BL8uEXH8iwMXxGT8xWjXc3biR0LqjTI0S7Tr46+
-	 qmsAYrIEQkBImg0HFe2zGG18uVPPPwAMstTBZGP30uABvJC+33/NoP6jAjcAcBeHCZ
-	 cZccEECTodC9jTwSognP9wksu5sSbQFh1KaeEJgof1JDJkSWNGPbJjaoFti9h55x61
-	 GIGpDRkit07NAIRTsNEOZQnjiSoWE+e0ovF+v+6mg4GtnHehGwRyPzDHPs8H19eFk+
-	 JVrHi/7I9YRwg==
-Received: from localhost (qs51p00im-dlb-asmtp-mailmevip.me.com [17.57.155.28])
-	by qs51p00im-qukt01071901.me.com (Postfix) with ESMTPSA id DC75962801F9;
-	Thu,  3 Apr 2025 06:48:50 +0000 (UTC)
-From: Konstantin Shabanov <mail@etehtsea.me>
-To: Sandy Huang <hjc@rock-chips.com>,
-	=?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>,
-	Andy Yan <andy.yan@rock-chips.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>
-Cc: Konstantin Shabanov <mail@etehtsea.me>,
-	dri-devel@lists.freedesktop.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH RESEND] (drm/rockchip): Consistently use rk3399 registers consts
-Date: Thu,  3 Apr 2025 06:47:39 +0000
-Message-ID: <20250403064740.4016-1-mail@etehtsea.me>
-X-Mailer: git-send-email 2.48.1
+	s=arc-20240116; t=1743662947; c=relaxed/simple;
+	bh=HdnJUqHmISB3FjuAikp1AtKeC/xQ9PigPiyQSezv5GQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=dVEINns6R6Tf/YjsMhxRTDyTp6hVD8qgYMiV0g4nn8piaAhdVsArkxNalWQsNUliHvIHa8NuU0V0M7rESwYM4iUUY/6sZq0LtgKnVnp9fR1ZRFQFI8OcjA2b2jcMrGGZDoK/mr4cTKmtLhpw3uFKqqnlvi+sHXrRpuz2ENN5Dko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2F605106F;
+	Wed,  2 Apr 2025 23:49:07 -0700 (PDT)
+Received: from [10.163.48.25] (unknown [10.163.48.25])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9444B3F59E;
+	Wed,  2 Apr 2025 23:48:59 -0700 (PDT)
+Message-ID: <5a8aaa17-cc36-4e03-95b3-24c3a16dd987@arm.com>
+Date: Thu, 3 Apr 2025 12:18:56 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: F5HyCAe8Rgl6mAQE-0KnVlkmIu4GVdCO
-X-Proofpoint-ORIG-GUID: F5HyCAe8Rgl6mAQE-0KnVlkmIu4GVdCO
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-03_02,2025-04-02_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=386
- phishscore=0 bulkscore=0 suspectscore=0 malwarescore=0 mlxscore=0
- adultscore=0 spamscore=0 clxscore=1030 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.22.0-2503100000 definitions=main-2504030033
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 5/9] coresight: Avoid enable programming clock
+ duplicately
+To: Leo Yan <leo.yan@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>,
+ Mike Leach <mike.leach@linaro.org>, James Clark <james.clark@linaro.org>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, coresight@lists.linaro.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com
+References: <20250327113803.1452108-1-leo.yan@arm.com>
+ <20250327113803.1452108-6-leo.yan@arm.com>
+Content-Language: en-US
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <20250327113803.1452108-6-leo.yan@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-As rk3399 has its own registers definitions, update related structs to
-use them.
-There are no changes in behaviour as updated constants values are the
- for rk3288/rk3368/rk3399 chips.
 
-Signed-off-by: Konstantin Shabanov <mail@etehtsea.me>
----
-Apologies for resend. The first email hadn't reached the mailing list for some reason.
 
- drivers/gpu/drm/rockchip/rockchip_vop_reg.c | 94 ++++++++++-----------
- 1 file changed, 47 insertions(+), 47 deletions(-)
+On 3/27/25 17:07, Leo Yan wrote:
+> The programming clock is enabled by AMBA bus driver before a dynamic
+> probe.  As a result, a CoreSight driver may redundantly enable the same
+> clock.
+> 
+> To avoid this, add a check for device type and skip enabling the
+> programming clock for AMBA devices.  The returned NULL pointer will be
+> tolerated by the drivers.
+> 
+> Fixes: 73d779a03a76 ("coresight: etm4x: Change etm4_platform_driver driver for MMIO devices")
+> Signed-off-by: Leo Yan <leo.yan@arm.com>
+> ---
+>  include/linux/coresight.h | 11 +++++++----
+>  1 file changed, 7 insertions(+), 4 deletions(-)
+> 
+> diff --git a/include/linux/coresight.h b/include/linux/coresight.h
+> index b888f6ed59b2..26eb4a61b992 100644
+> --- a/include/linux/coresight.h
+> +++ b/include/linux/coresight.h
+> @@ -476,15 +476,18 @@ static inline bool is_coresight_device(void __iomem *base)
+>   * Returns:
+>   *
+>   * clk   - Clock is found and enabled
+> + * NULL  - Clock is not needed as it is managed by the AMBA bus driver
+>   * ERROR - Clock is found but failed to enable
+>   */
+>  static inline struct clk *coresight_get_enable_apb_pclk(struct device *dev)
+>  {
+> -	struct clk *pclk;
+> +	struct clk *pclk = NULL;
+>  
+> -	pclk = devm_clk_get_enabled(dev, "apb_pclk");
+> -	if (IS_ERR(pclk))
+> -		pclk = devm_clk_get_enabled(dev, "apb");
+> +	if (!dev_is_amba(dev)) {
+> +		pclk = devm_clk_get_enabled(dev, "apb_pclk");
+> +		if (IS_ERR(pclk))
+> +			pclk = devm_clk_get_enabled(dev, "apb");
+> +	}
+>  
+>  	return pclk;
+>  }
 
-diff --git a/drivers/gpu/drm/rockchip/rockchip_vop_reg.c b/drivers/gpu/drm/rockchip/rockchip_vop_reg.c
-index 4e2099d86517..d1f788763318 100644
---- a/drivers/gpu/drm/rockchip/rockchip_vop_reg.c
-+++ b/drivers/gpu/drm/rockchip/rockchip_vop_reg.c
-@@ -906,21 +906,21 @@ static const struct vop_data rk3366_vop = {
+coresight_get_enable_apb_pclk() mostly gets called in the platform driver
+probe paths but they are also present in some AMBA probe paths. Hence why
+cannot the callers in AMBA probe paths get fixed instead ? Besides return
+value never gets checked for NULL, which would have to be changed as well
+if coresight_get_enable_apb_pclk() starts returning NULL values for AMBA
+devices.
 
- static const struct vop_output rk3399_output = {
- 	.dp_dclk_pol = VOP_REG(RK3399_DSP_CTRL1, 0x1, 19),
--	.rgb_dclk_pol = VOP_REG(RK3368_DSP_CTRL1, 0x1, 19),
--	.hdmi_dclk_pol = VOP_REG(RK3368_DSP_CTRL1, 0x1, 23),
--	.edp_dclk_pol = VOP_REG(RK3368_DSP_CTRL1, 0x1, 27),
--	.mipi_dclk_pol = VOP_REG(RK3368_DSP_CTRL1, 0x1, 31),
-+	.rgb_dclk_pol = VOP_REG(RK3399_DSP_CTRL1, 0x1, 19),
-+	.hdmi_dclk_pol = VOP_REG(RK3399_DSP_CTRL1, 0x1, 23),
-+	.edp_dclk_pol = VOP_REG(RK3399_DSP_CTRL1, 0x1, 27),
-+	.mipi_dclk_pol = VOP_REG(RK3399_DSP_CTRL1, 0x1, 31),
- 	.dp_pin_pol = VOP_REG(RK3399_DSP_CTRL1, 0x7, 16),
--	.rgb_pin_pol = VOP_REG(RK3368_DSP_CTRL1, 0x7, 16),
--	.hdmi_pin_pol = VOP_REG(RK3368_DSP_CTRL1, 0x7, 20),
--	.edp_pin_pol = VOP_REG(RK3368_DSP_CTRL1, 0x7, 24),
--	.mipi_pin_pol = VOP_REG(RK3368_DSP_CTRL1, 0x7, 28),
-+	.rgb_pin_pol = VOP_REG(RK3399_DSP_CTRL1, 0x7, 16),
-+	.hdmi_pin_pol = VOP_REG(RK3399_DSP_CTRL1, 0x7, 20),
-+	.edp_pin_pol = VOP_REG(RK3399_DSP_CTRL1, 0x7, 24),
-+	.mipi_pin_pol = VOP_REG(RK3399_DSP_CTRL1, 0x7, 28),
- 	.dp_en = VOP_REG(RK3399_SYS_CTRL, 0x1, 11),
--	.rgb_en = VOP_REG(RK3288_SYS_CTRL, 0x1, 12),
--	.hdmi_en = VOP_REG(RK3288_SYS_CTRL, 0x1, 13),
--	.edp_en = VOP_REG(RK3288_SYS_CTRL, 0x1, 14),
--	.mipi_en = VOP_REG(RK3288_SYS_CTRL, 0x1, 15),
--	.mipi_dual_channel_en = VOP_REG(RK3288_SYS_CTRL, 0x1, 3),
-+	.rgb_en = VOP_REG(RK3399_SYS_CTRL, 0x1, 12),
-+	.hdmi_en = VOP_REG(RK3399_SYS_CTRL, 0x1, 13),
-+	.edp_en = VOP_REG(RK3399_SYS_CTRL, 0x1, 14),
-+	.mipi_en = VOP_REG(RK3399_SYS_CTRL, 0x1, 15),
-+	.mipi_dual_channel_en = VOP_REG(RK3399_SYS_CTRL, 0x1, 3),
- };
+	drvdata->pclk = coresight_get_enable_apb_pclk(&pdev->dev);
+	if (IS_ERR(drvdata->pclk))
+		return -ENODEV;
 
- static const struct vop_common rk3399_common = {
-@@ -975,23 +975,23 @@ static const struct vop_win_phy rk3399_win0_data = {
- 	.data_formats = formats_win_full_10,
- 	.nformats = ARRAY_SIZE(formats_win_full_10),
- 	.format_modifiers = format_modifiers_win_full_afbc,
--	.enable = VOP_REG(RK3288_WIN0_CTRL0, 0x1, 0),
--	.format = VOP_REG(RK3288_WIN0_CTRL0, 0x7, 1),
--	.fmt_10 = VOP_REG(RK3288_WIN0_CTRL0, 0x1, 4),
--	.rb_swap = VOP_REG(RK3288_WIN0_CTRL0, 0x1, 12),
--	.uv_swap = VOP_REG(RK3288_WIN0_CTRL0, 0x1, 15),
--	.x_mir_en = VOP_REG(RK3288_WIN0_CTRL0, 0x1, 21),
--	.y_mir_en = VOP_REG(RK3288_WIN0_CTRL0, 0x1, 22),
--	.act_info = VOP_REG(RK3288_WIN0_ACT_INFO, 0x1fff1fff, 0),
--	.dsp_info = VOP_REG(RK3288_WIN0_DSP_INFO, 0x0fff0fff, 0),
--	.dsp_st = VOP_REG(RK3288_WIN0_DSP_ST, 0x1fff1fff, 0),
--	.yrgb_mst = VOP_REG(RK3288_WIN0_YRGB_MST, 0xffffffff, 0),
--	.uv_mst = VOP_REG(RK3288_WIN0_CBR_MST, 0xffffffff, 0),
--	.yrgb_vir = VOP_REG(RK3288_WIN0_VIR, 0x3fff, 0),
--	.uv_vir = VOP_REG(RK3288_WIN0_VIR, 0x3fff, 16),
--	.src_alpha_ctl = VOP_REG(RK3288_WIN0_SRC_ALPHA_CTRL, 0xff, 0),
--	.dst_alpha_ctl = VOP_REG(RK3288_WIN0_DST_ALPHA_CTRL, 0xff, 0),
--	.channel = VOP_REG(RK3288_WIN0_CTRL2, 0xff, 0),
-+	.enable = VOP_REG(RK3399_WIN0_CTRL0, 0x1, 0),
-+	.format = VOP_REG(RK3399_WIN0_CTRL0, 0x7, 1),
-+	.fmt_10 = VOP_REG(RK3399_WIN0_CTRL0, 0x1, 4),
-+	.rb_swap = VOP_REG(RK3399_WIN0_CTRL0, 0x1, 12),
-+	.uv_swap = VOP_REG(RK3399_WIN0_CTRL0, 0x1, 15),
-+	.x_mir_en = VOP_REG(RK3399_WIN0_CTRL0, 0x1, 21),
-+	.y_mir_en = VOP_REG(RK3399_WIN0_CTRL0, 0x1, 22),
-+	.act_info = VOP_REG(RK3399_WIN0_ACT_INFO, 0x1fff1fff, 0),
-+	.dsp_info = VOP_REG(RK3399_WIN0_DSP_INFO, 0x0fff0fff, 0),
-+	.dsp_st = VOP_REG(RK3399_WIN0_DSP_ST, 0x1fff1fff, 0),
-+	.yrgb_mst = VOP_REG(RK3399_WIN0_YRGB_MST, 0xffffffff, 0),
-+	.uv_mst = VOP_REG(RK3399_WIN0_CBR_MST, 0xffffffff, 0),
-+	.yrgb_vir = VOP_REG(RK3399_WIN0_VIR, 0x3fff, 0),
-+	.uv_vir = VOP_REG(RK3399_WIN0_VIR, 0x3fff, 16),
-+	.src_alpha_ctl = VOP_REG(RK3399_WIN0_SRC_ALPHA_CTRL, 0xff, 0),
-+	.dst_alpha_ctl = VOP_REG(RK3399_WIN0_DST_ALPHA_CTRL, 0xff, 0),
-+	.channel = VOP_REG(RK3399_WIN0_CTRL2, 0xff, 0),
- };
-
- static const struct vop_win_phy rk3399_win1_data = {
-@@ -999,23 +999,23 @@ static const struct vop_win_phy rk3399_win1_data = {
- 	.data_formats = formats_win_full_10,
- 	.nformats = ARRAY_SIZE(formats_win_full_10),
- 	.format_modifiers = format_modifiers_win_full,
--	.enable = VOP_REG(RK3288_WIN0_CTRL0, 0x1, 0),
--	.format = VOP_REG(RK3288_WIN0_CTRL0, 0x7, 1),
--	.fmt_10 = VOP_REG(RK3288_WIN0_CTRL0, 0x1, 4),
--	.rb_swap = VOP_REG(RK3288_WIN0_CTRL0, 0x1, 12),
--	.uv_swap = VOP_REG(RK3288_WIN0_CTRL0, 0x1, 15),
--	.x_mir_en = VOP_REG(RK3288_WIN0_CTRL0, 0x1, 21),
--	.y_mir_en = VOP_REG(RK3288_WIN0_CTRL0, 0x1, 22),
--	.act_info = VOP_REG(RK3288_WIN0_ACT_INFO, 0x1fff1fff, 0),
--	.dsp_info = VOP_REG(RK3288_WIN0_DSP_INFO, 0x0fff0fff, 0),
--	.dsp_st = VOP_REG(RK3288_WIN0_DSP_ST, 0x1fff1fff, 0),
--	.yrgb_mst = VOP_REG(RK3288_WIN0_YRGB_MST, 0xffffffff, 0),
--	.uv_mst = VOP_REG(RK3288_WIN0_CBR_MST, 0xffffffff, 0),
--	.yrgb_vir = VOP_REG(RK3288_WIN0_VIR, 0x3fff, 0),
--	.uv_vir = VOP_REG(RK3288_WIN0_VIR, 0x3fff, 16),
--	.src_alpha_ctl = VOP_REG(RK3288_WIN0_SRC_ALPHA_CTRL, 0xff, 0),
--	.dst_alpha_ctl = VOP_REG(RK3288_WIN0_DST_ALPHA_CTRL, 0xff, 0),
--	.channel = VOP_REG(RK3288_WIN0_CTRL2, 0xff, 0),
-+	.enable = VOP_REG(RK3399_WIN0_CTRL0, 0x1, 0),
-+	.format = VOP_REG(RK3399_WIN0_CTRL0, 0x7, 1),
-+	.fmt_10 = VOP_REG(RK3399_WIN0_CTRL0, 0x1, 4),
-+	.rb_swap = VOP_REG(RK3399_WIN0_CTRL0, 0x1, 12),
-+	.uv_swap = VOP_REG(RK3399_WIN0_CTRL0, 0x1, 15),
-+	.x_mir_en = VOP_REG(RK3399_WIN0_CTRL0, 0x1, 21),
-+	.y_mir_en = VOP_REG(RK3399_WIN0_CTRL0, 0x1, 22),
-+	.act_info = VOP_REG(RK3399_WIN0_ACT_INFO, 0x1fff1fff, 0),
-+	.dsp_info = VOP_REG(RK3399_WIN0_DSP_INFO, 0x0fff0fff, 0),
-+	.dsp_st = VOP_REG(RK3399_WIN0_DSP_ST, 0x1fff1fff, 0),
-+	.yrgb_mst = VOP_REG(RK3399_WIN0_YRGB_MST, 0xffffffff, 0),
-+	.uv_mst = VOP_REG(RK3399_WIN0_CBR_MST, 0xffffffff, 0),
-+	.yrgb_vir = VOP_REG(RK3399_WIN0_VIR, 0x3fff, 0),
-+	.uv_vir = VOP_REG(RK3399_WIN0_VIR, 0x3fff, 16),
-+	.src_alpha_ctl = VOP_REG(RK3399_WIN0_SRC_ALPHA_CTRL, 0xff, 0),
-+	.dst_alpha_ctl = VOP_REG(RK3399_WIN0_DST_ALPHA_CTRL, 0xff, 0),
-+	.channel = VOP_REG(RK3399_WIN0_CTRL2, 0xff, 0),
- };
-
- /*
-
-base-commit: 6b60c282330c46954be9ae1d33cd5c7e5acb315c
---
-2.48.1
+I guess this redundancy should be fixed at the AMBA probe callers.
