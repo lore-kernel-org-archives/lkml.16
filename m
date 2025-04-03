@@ -1,303 +1,98 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C99CD73477
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 01:44:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22BEF74E09;
+	Thu,  3 Apr 2025 01:45:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743644677; cv=none; b=Pq7KxM1e4Zf7Bk6VNLhBTsqN9tiUatnv30WduUdek9A9sqS819mBiITT7oQ1TDDfFgxkWxALDaKHXMZpQ+zZYV7MihhAXW+6R6iFhjD5R3Tmht6ZPg0WN72FCmwp5N8SaSWrAa6b/mp4Dt5DJtJ5xMcmKMqalr8uaUFCSTFckI8=
+	t=1743644709; cv=none; b=eodkXz6PvPsMx6Crq9KNiRmtTato/TTrMWEDLB72jWcENgJJFYQs/LSSaXBeDt4H/Ws7Z7u6O596mkHkvvuXbV12njJb3l1zVowHqmmuBfwDtsdGJphAFyQdzgkKJTQdvev38oUpdmGvZ44Nd76cNr6Duws8QS93JCLwSMewYPw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743644677; c=relaxed/simple;
-	bh=LWQPkBkP9hDcVWXPZJtf7g3j0cR0nSkuarPCHngG7XI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=G22AZs8ZbcT85WKL04qwaALo3Uoj7nnNYDsDaIpcHSkdb6r4QJw0zwUgtkxt86F2z7HA/+TpObUglEJQJFUjRFLF+q0A1BnxN6LPS/6R5OHzBxRboPvs87CUxe8yhbnvO1h+2a7KfvChHxxZ9At2hAIV7td5B297LD1QeD4EX78=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=UPcx7GJ+; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1743644709; c=relaxed/simple;
+	bh=su+mNSMtgXzI+Fmgk4ZUci9vLOX4EVeLf1sbpfbqXb4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=fYg0Ax+drZ3k9Uo8YBVB1qMcZiGLBLt/FYksehPMxdtcJhKQQ+yz9zWWH3jRee6vHbNeoaN4N5qKEGDgiSivp8zf8p+78iuivAuCMBfcTD2Azk9TgmY8LK96lBBU8aJhFSpEVUDDLhbUovN7xysGbby8dyVGBqMivjVDXmU55TI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RVFf6ifu; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="UPcx7GJ+"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43935d1321aso440335e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 18:44:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1743644673; x=1744249473; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=UUbxWhR/8GWhGNCmjPJ2Bd3Q1OUo+M8Y2p8qU8lApN4=;
-        b=UPcx7GJ+hlSPa5xOlcuoH3Rx0zQa1QNT42iWfKizeYp6NJMAHK5l0m5cw5+2MG/PFx
-         z4doACVfNVTzlCleD9qUCYA7NdA8VtI/X2DHmmjxvR2DELjummnkuWcg4NfVLRDn+BKo
-         piuZgsMEfvoSJu9O2IJpfwAZQpD8/2CaWv4RXcOY/OlTwLOb40FTv0SeFubZX8sGGaYq
-         Z/wiK7kR02piCosanzoVGWMt882ZEsoAwRqZttyx2mpeIxP+4HVlvHKSTEDE8tPjs3rV
-         SyqEqZvxmQvy/kcJJrLORX0zaCG7ceHFRxsSLrOVsPkYVXmAuwvJm+KRSVoktKJYG2p9
-         XCcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743644673; x=1744249473;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UUbxWhR/8GWhGNCmjPJ2Bd3Q1OUo+M8Y2p8qU8lApN4=;
-        b=cg4bCBH6b82EEB4MAkobgQ+EewplTGtRurAkNoLsfTyYwPjCayixn7fCsxqLG7sQMo
-         jaintRYVjTpHCD2H/Z3Pv14Psvw6bpYWcpE8lvRBJDXjpmttU2hl9XqkF0LHreCymxOK
-         9id8OQGAipcmO8mNQ8SySWfEQNLCucXLSp8vJ22S3bZLQ/IMov2cDf3q9xWktdZUrC2z
-         RKGT46BUNk13Y1xPzyrGhK2H+5KxrKDyoNrDu/tXPuhfT27QiaqqSYLyIIAZw41NvwgM
-         fnDZudlHY7Hl24A9swqGhRRrXgVx5yPnnOplFBp/nnpyov09TJzHq7YtG09Mq0c2MIFm
-         xBHA==
-X-Forwarded-Encrypted: i=1; AJvYcCUz760iyBWBn1tFs1KWu4whO/7p33ZKLWH02TWJLcQ69RJRNz0Jc/yOR3RBJUMd6/l64SKWe/vDkDknCzM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzzneJKBtcsulUiKC4ILWWLSR5+dqOsTU/phrLYnZsPKHkfCvPJ
-	6mQ1HoymNCNmZuX41MryEg36yLaYs3a9hBMoLWIhZJdQgg4DvQVx815oLJKBpPA=
-X-Gm-Gg: ASbGnctnPp/9reY0qMGti0cXAukqdIvXfsW5h8ls/ji88iUsgVHbOy4nUegynoytuj3
-	0hiASdxymODitKilv2ry+vMsFnOv0iQ7tylsh4G9Eqx+wLST2tkeuAgJVb/T8AM6PI+oTzPEOpg
-	cKWfs3NoAz919+94p+GmYb7L7R982OgT1rruFbRBmGef4V9+RSoG2wTh6jfitJ82CzNXdqO5yQA
-	7Ze+s1DpLcnFSOuTF/MWEv14eYNbRdVqnIfNrVdmfYEyHGAn7ZlKDYcHY6iGu5MKLYVhF6Z0uPl
-	ui32Cl666J8gsKiZH8VTTKYbBa8GAcVmPE6VpHazy9e8gjba9OQ=
-X-Google-Smtp-Source: AGHT+IGivnZFI0zjwZJb/9NNdFq2nh3LEnQWupUU9OH0KBapBABtw+wdeBFslMb0jxlqdz1wV4tguQ==
-X-Received: by 2002:a05:600c:c17:b0:439:9a5a:d3bb with SMTP id 5b1f17b1804b1-43ea933d443mr35941075e9.2.1743644672993;
-        Wed, 02 Apr 2025 18:44:32 -0700 (PDT)
-Received: from [10.202.112.30] ([202.127.77.110])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3057ca8cffasm381189a91.26.2025.04.02.18.44.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Apr 2025 18:44:32 -0700 (PDT)
-Message-ID: <fee459fe-00ab-47f3-8a4f-2aba152202b6@suse.com>
-Date: Thu, 3 Apr 2025 09:44:27 +0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RVFf6ifu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743644708; x=1775180708;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=su+mNSMtgXzI+Fmgk4ZUci9vLOX4EVeLf1sbpfbqXb4=;
+  b=RVFf6ifu7VUtXzoq4URCsWQSruDWBWlNcEGyDLCFNnhXKZmzs46gNwBn
+   GdUifVvVg+RORtyrh2oGiCIDkZx6cbQvchizIoS/b9jR1aSzu1lpUMWxN
+   EULNAu3tDtKYml69VCuMk1gvMNfFbC4kXSjh711imWFvpUcCafl2c+WKt
+   Yf8PxMy26JW8XRg0DIABlbS1cIrvFnbc3uE11e2dPwBncHUfTUOtxwBlT
+   pfkmYV4VxREgMN2/ZZ2S/DcyjFK2eV/q+7C+w8mPFOiPZpqK49UxbF5nI
+   m4JtvfPb+6KhFPksvPitptYb0BzNpOADXGhCeUaO+OBlNMmJ+2eNtqwM4
+   Q==;
+X-CSE-ConnectionGUID: +ufhPB0ZQaGkHG+/UHJX0A==
+X-CSE-MsgGUID: wQBSLWSVQwOAQQwX4y+CSw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11392"; a="32641385"
+X-IronPort-AV: E=Sophos;i="6.15,183,1739865600"; 
+   d="scan'208";a="32641385"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 18:45:07 -0700
+X-CSE-ConnectionGUID: ATZV+vayRk+lTcbrbo1i8w==
+X-CSE-MsgGUID: NK2q+WKLSrOpTboRPZ4hGQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,183,1739865600"; 
+   d="scan'208";a="157858370"
+Received: from emr.sh.intel.com ([10.112.229.56])
+  by fmviesa001.fm.intel.com with ESMTP; 02 Apr 2025 18:45:04 -0700
+From: Dapeng Mi <dapeng1.mi@linux.intel.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Dapeng Mi <dapeng1.mi@intel.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>
+Subject: [Patch v2] perf tools: Fix incorrect --user-regs comments
+Date: Thu,  3 Apr 2025 06:08:10 +0000
+Message-Id: <20250403060810.196028-1-dapeng1.mi@linux.intel.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] ocfs2: Fix deadlock in ocfs2_finish_quota_recovery
-To: Joseph Qi <joseph.qi@linux.alibaba.com>,
- Murad Masimov <m.masimov@mt-integration.ru>, Mark Fasheh <mark@fasheh.com>
-Cc: Joel Becker <jlbec@evilplan.org>, Jan Kara <jack@suse.cz>,
- ocfs2-devel@lists.linux.dev, linux-kernel@vger.kernel.org,
- lvc-project@linuxtesting.org,
- syzbot+f59a1ae7b7227c859b8f@syzkaller.appspotmail.com
-References: <20250402065628.706359-1-m.masimov@mt-integration.ru>
- <20250402065628.706359-3-m.masimov@mt-integration.ru>
- <5e8fdecc-8003-4eae-8c90-94ecad20061c@linux.alibaba.com>
-From: Heming Zhao <heming.zhao@suse.com>
-Content-Language: en-US
-In-Reply-To: <5e8fdecc-8003-4eae-8c90-94ecad20061c@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Joseph and Murad,
+The comment of "--user-regs" option is not correct, fix it.
 
-On 4/3/25 09:28, Joseph Qi wrote:
-> 
-> 
-> On 2025/4/2 14:56, Murad Masimov wrote:
->> When filesystem is unmounted all pending recovery work is processed. This
->> may lead to a deadlock in ocfs2_finish_quota_recovery() as it locks the
->> s_umount semaphore while it is already exclusively locked in
->> deactivate_super().
->>
->> Use down_read_trylock() instead and return if it fails, since that possibly
->> means that unmount may be in progress so it is not possible to finish quota
->> recovery. According to the description of ocfs2_complete_recovery(), which
->> is the caller of ocfs2_finish_quota_recovery(), by the point this job is
->> started the node can already be considered recovered. There is also no
->> error handling in ocfs2_complete_recovery() which indicates that fail is
->> not critical in this context.
->>
->> The following warning has been reported by Syzkaller:
->>
->> ================================================================
->> WARNING: possible circular locking dependency detected
->> 6.14.0-rc6-syzkaller-00022-gb7f94fcf5546 #0 Not tainted
->> ------------------------------------------------------
->> kworker/u4:10/1087 is trying to acquire lock:
->> ffff88803c49e0e0 (&type->s_umount_key#42){++++}-{4:4}, at: ocfs2_finish_quota_recovery+0x15c/0x22a0 fs/ocfs2/quota_local.c:603
->>
->> but task is already holding lock:
->> ffffc900026ffc60 ((work_completion)(&journal->j_recovery_work)){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3214 [inline]
->> ffffc900026ffc60 ((work_completion)(&journal->j_recovery_work)){+.+.}-{0:0}, at: process_scheduled_works+0x9c6/0x18e0 kernel/workqueue.c:3319
->>
->> which lock already depends on the new lock.
->>
->> the existing dependency chain (in reverse order) is:
->>
->> -> #2 ((work_completion)(&journal->j_recovery_work)){+.+.}-{0:0}:
->>         lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5851
->>         process_one_work kernel/workqueue.c:3214 [inline]
->>         process_scheduled_works+0x9e4/0x18e0 kernel/workqueue.c:3319
->>         worker_thread+0x870/0xd30 kernel/workqueue.c:3400
->>         kthread+0x7a9/0x920 kernel/kthread.c:464
->>         ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:148
->>         ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
->>
->> -> #1 ((wq_completion)ocfs2_wq){+.+.}-{0:0}:
->>         lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5851
->>         touch_wq_lockdep_map+0xc7/0x170 kernel/workqueue.c:3907
->>         __flush_workqueue+0x14a/0x1280 kernel/workqueue.c:3949
->>         ocfs2_shutdown_local_alloc+0x109/0xa90 fs/ocfs2/localalloc.c:380
->>         ocfs2_dismount_volume+0x202/0x910 fs/ocfs2/super.c:1822
->>         generic_shutdown_super+0x139/0x2d0 fs/super.c:642
->>         kill_block_super+0x44/0x90 fs/super.c:1710
->>         deactivate_locked_super+0xc4/0x130 fs/super.c:473
->>         cleanup_mnt+0x41f/0x4b0 fs/namespace.c:1413
->>         task_work_run+0x24f/0x310 kernel/task_work.c:227
->>         resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
->>         exit_to_user_mode_loop kernel/entry/common.c:114 [inline]
->>         exit_to_user_mode_prepare include/linux/entry-common.h:329 [inline]
->>         __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
->>         syscall_exit_to_user_mode+0x13f/0x340 kernel/entry/common.c:218
->>         do_syscall_64+0x100/0x230 arch/x86/entry/common.c:89
->>         entry_SYSCALL_64_after_hwframe+0x77/0x7f
->>
->> -> #0 (&type->s_umount_key#42){++++}-{4:4}:
->>         check_prev_add kernel/locking/lockdep.c:3163 [inline]
->>         check_prevs_add kernel/locking/lockdep.c:3282 [inline]
->>         validate_chain+0x18ef/0x5920 kernel/locking/lockdep.c:3906
->>         __lock_acquire+0x1397/0x2100 kernel/locking/lockdep.c:5228
->>         lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5851
->>         down_read+0xb1/0xa40 kernel/locking/rwsem.c:1524
->>         ocfs2_finish_quota_recovery+0x15c/0x22a0 fs/ocfs2/quota_local.c:603
->>         ocfs2_complete_recovery+0x17c1/0x25c0 fs/ocfs2/journal.c:1357
->>         process_one_work kernel/workqueue.c:3238 [inline]
->>         process_scheduled_works+0xabe/0x18e0 kernel/workqueue.c:3319
->>         worker_thread+0x870/0xd30 kernel/workqueue.c:3400
->>         kthread+0x7a9/0x920 kernel/kthread.c:464
->>         ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:148
->>         ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
->>
->> other info that might help us debug this:
->>
->> Chain exists of:
->>    &type->s_umount_key#42 --> (wq_completion)ocfs2_wq --> (work_completion)(&journal->j_recovery_work)
->>
->>   Possible unsafe locking scenario:
->>
->>         CPU0                    CPU1
->>         ----                    ----
->>    lock((work_completion)(&journal->j_recovery_work));
->>                                 lock((wq_completion)ocfs2_wq);
->>                                 lock((work_completion)(&journal->j_recovery_work));
->>    rlock(&type->s_umount_key#42);
->>
->>   *** DEADLOCK ***
->>
->> 2 locks held by kworker/u4:10/1087:
->>   #0: ffff8880403eb148 ((wq_completion)ocfs2_wq){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3213 [inline]
->>   #0: ffff8880403eb148 ((wq_completion)ocfs2_wq){+.+.}-{0:0}, at: process_scheduled_works+0x98b/0x18e0 kernel/workqueue.c:3319
->>   #1: ffffc900026ffc60 ((work_completion)(&journal->j_recovery_work)){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3214 [inline]
->>   #1: ffffc900026ffc60 ((work_completion)(&journal->j_recovery_work)){+.+.}-{0:0}, at: process_scheduled_works+0x9c6/0x18e0 kernel/workqueue.c:3319
->>
->> stack backtrace:
->> CPU: 0 UID: 0 PID: 1087 Comm: kworker/u4:10 Not tainted 6.14.0-rc6-syzkaller-00022-gb7f94fcf5546 #0
->> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
->> Workqueue: ocfs2_wq ocfs2_complete_recovery
->> Call Trace:
->>   <TASK>
->>   __dump_stack lib/dump_stack.c:94 [inline]
->>   dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
->>   print_circular_bug+0x13a/0x1b0 kernel/locking/lockdep.c:2076
->>   check_noncircular+0x36a/0x4a0 kernel/locking/lockdep.c:2208
->>   check_prev_add kernel/locking/lockdep.c:3163 [inline]
->>   check_prevs_add kernel/locking/lockdep.c:3282 [inline]
->>   validate_chain+0x18ef/0x5920 kernel/locking/lockdep.c:3906
->>   __lock_acquire+0x1397/0x2100 kernel/locking/lockdep.c:5228
->>   lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5851
->>   down_read+0xb1/0xa40 kernel/locking/rwsem.c:1524
->>   ocfs2_finish_quota_recovery+0x15c/0x22a0 fs/ocfs2/quota_local.c:603
->>   ocfs2_complete_recovery+0x17c1/0x25c0 fs/ocfs2/journal.c:1357
->>   process_one_work kernel/workqueue.c:3238 [inline]
->>   process_scheduled_works+0xabe/0x18e0 kernel/workqueue.c:3319
->>   worker_thread+0x870/0xd30 kernel/workqueue.c:3400
->>   kthread+0x7a9/0x920 kernel/kthread.c:464
->>   ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:148
->>   ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
->>   </TASK>
->> ================================================================
->>
->> Found by Linux Verification Center (linuxtesting.org) with Syzkaller.
->>
->> Fixes: 5f530de63cfc ("ocfs2: Use s_umount for quota recovery protection")
->> Reported-by: syzbot+f59a1ae7b7227c859b8f@syzkaller.appspotmail.com
->> Closes: https://syzkaller.appspot.com/bug?extid=f59a1ae7b7227c859b8f
->> Signed-off-by: Murad Masimov <m.masimov@mt-integration.ru>
->> ---
->>   fs/ocfs2/quota_local.c | 16 +++++++++++++---
->>   1 file changed, 13 insertions(+), 3 deletions(-)
->>
->> diff --git a/fs/ocfs2/quota_local.c b/fs/ocfs2/quota_local.c
->> index e60383d6ecc1..d3304bb03163 100644
->> --- a/fs/ocfs2/quota_local.c
->> +++ b/fs/ocfs2/quota_local.c
->> @@ -600,7 +600,16 @@ int ocfs2_finish_quota_recovery(struct ocfs2_super *osb,
->>   	printk(KERN_NOTICE "ocfs2: Finishing quota recovery on device (%s) for "
->>   	       "slot %u\n", osb->dev_str, slot_num);
->>
->> -	down_read(&sb->s_umount);
->> +	/*
->> +	 * We have to be careful here not to deadlock on s_umount as umount
->> +	 * disabling quotas may be in progress and it waits for this work to
->> +	 * complete. If trylock fails, we have to skip this step.
->> +	 */
-> 
-> Seems we don't have a better way.
-> 
->> +	if (!down_read_trylock(&sb->s_umount)) {
->> +		status = -ENOENT;
-> 
-> Normally EAGAIN is a proper error code when trylock fails, though it
-> hasn't been handled in caller...
-> Also we'd better log an error in this case to indicate what happens.
-> 
-> Thanks,
-> Joseph
-> 
+"on interrupt," -> "in user space,"
 
-According to the commit description, one CPU handles the mounting operation,
-while another handles the unmounting operation.
+Fixes: 84c417422798 ("perf record: Support direct --user-regs arguments")
+Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Reviewed-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/builtin-record.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-With this patch, the mounting thread discards the recovery job. What are the
-consequences?
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index ba20bf7c011d..d56273a0e241 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -3480,7 +3480,7 @@ static struct option __record_options[] = {
+ 		    "sample selected machine registers on interrupt,"
+ 		    " use '-I?' to list register names", parse_intr_regs),
+ 	OPT_CALLBACK_OPTARG(0, "user-regs", &record.opts.sample_user_regs, NULL, "any register",
+-		    "sample selected machine registers on interrupt,"
++		    "sample selected machine registers in user space,"
+ 		    " use '--user-regs=?' to list register names", parse_user_regs),
+ 	OPT_BOOLEAN(0, "running-time", &record.opts.running_time,
+ 		    "Record running/enabled time of read (:S) events"),
 
-Under this patch, the expected result is that the mounting operation should be
-aborted, and the unmounting operation should ultimately succeed.
-However, I am difficult to identify the abort point during the mounting phase.
-
-Is it reasonable/workable to set osb->vol_state to VOLUME_DISMOUNTING at
-the beginning of ocfs2_dismount_volume(), and then check the vol_state at every
-atomic_set(vol_state) point in ocfs2_fill_super()? If ocfs2_fill_super() detects
-the vol_state in VOLUME_DISMOUNTING state, should it return an error and
-abort the mounting phase?
-Or, at the beginning of ocfs2_dismount_volume(), it should check the vol_state
-against VOLUME_MOUNTED or VOLUME_MOUNTED_QUOTAS. If it does not match,
-the unmount process should be aborted.
-
-- Heming
-
->> +		goto out;
->> +	}
->> +
->>   	for (type = 0; type < OCFS2_MAXQUOTAS; type++) {
->>   		if (list_empty(&(rec->r_list[type])))
->>   			continue;
->> @@ -608,7 +617,7 @@ int ocfs2_finish_quota_recovery(struct ocfs2_super *osb,
->>   		lqinode = ocfs2_get_system_file_inode(osb, ino[type], slot_num);
->>   		if (!lqinode) {
->>   			status = -ENOENT;
->> -			goto out;
->> +			goto out_up;
->>   		}
->>   		status = ocfs2_inode_lock_full(lqinode, NULL, 1,
->>   						       OCFS2_META_LOCK_NOQUEUE);
->> @@ -676,8 +685,9 @@ int ocfs2_finish_quota_recovery(struct ocfs2_super *osb,
->>   		if (status < 0)
->>   			break;
->>   	}
->> -out:
->> +out_up:
->>   	up_read(&sb->s_umount);
->> +out:
->>   	ocfs2_free_quota_recovery(rec);
->>   	return status;
->>   }
->> --
->> 2.39.2
-> 
-> 
+base-commit: 35d13f841a3d8159ef20d5e32a9ed3faa27875bc
+-- 
+2.40.1
 
