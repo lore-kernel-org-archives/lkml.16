@@ -1,228 +1,291 @@
-Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B0AA7081A;
-	Thu,  3 Apr 2025 06:59:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=148.163.135.77
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743663581; cv=fail; b=E7DxibcejhvKl4L0A1DhZyxiKmyGYrAVR9Qjq4/Ng3Ku0wgbNGLG26aJbyCrrC+1snvZ5ZfevbHkWAtHR7a58rJQ22SeL8NW8jef1MRoJ265AjCeDkXKOd6sMOKOiG5Um/UYxtWIpOlJntBT4K2ty8kwYIH/cs7APVRjHfk3Mu4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743663581; c=relaxed/simple;
-	bh=piDLey359jA6zw0nuawrswoFO3Y3y2Kz2IS3qI/oXRg=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=QrzSTeji9/JyS9m87/5jI/JusDKmu73W7azCku5rhlL29gkO1kkmzFCfsBSJRa1DyI/RxXDnZVP+kbyRu1AFZh9p6bnepeKHFsQO9Lra2egnRalFmt4RBmTGcjJH0pDLOY4xfsvBh1+FI8tIQUiQWBYFa+2JMonkKzxJBRBo5hE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=OM+d9FmH; arc=fail smtp.client-ip=148.163.135.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="OM+d9FmH"
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5336mO7W023310;
-	Thu, 3 Apr 2025 02:59:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=DKIM; bh=piDLe
-	y359jA6zw0nuawrswoFO3Y3y2Kz2IS3qI/oXRg=; b=OM+d9FmHnTIRQoUsPYb75
-	k+X1QuCRO0whsrSaiAmPF0y561yeSuh1nVAGJPwP6CeLPmj+f65I/jlQ6smUsceo
-	3TNfdIzaCoZ2stwUAzK22SA5I1oQB2Na7UpBiHvklB0hMqm0nUM0qBRp2BIr6y/3
-	OcwdnmK4J4ECtz9LiV6ShK//SlHSTAmEf27YM/UaJzRM9zBd8dKF9/xlYtgCaBd1
-	89EHKVcW3aMFAtKW5Am48EPJzVpiZl/TPSNrUeqmy46972L19989m3OauiWh6yvs
-	bJSAehMxkJ9swmIIdogBnv1VtO3yXKSMCLH0wcXlwQWExRSxo5cFXhDyWqLTixsp
-	Q==
-Received: from dm5pr21cu001.outbound.protection.outlook.com (mail-centralusazlp17011027.outbound.protection.outlook.com [40.93.13.27])
-	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 45rcrwm8he-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 03 Apr 2025 02:59:26 -0400 (EDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=QHVr2Bj0L+gyl6Fphnj1kve51QdkQLtH1ugH7viKTp1jl+ktUC4rgZ8TKDL5GCmIyuX1Gtz6qirtoWTUzvvXCj3Y+B3NoZUkJ66Y1PmZrw2W8MEpGR5fAJRebgr93hrfU2BTpkYHd26J1WfncWliU9kydNJe5tZM2NsEBiSAA/HRHBDUMLbajwb5KdEKaNP/Nls7sQsvy6GN8ZhR13eHvnauAj1wt5gjh1BIWA8rz7SFTrrtedJHZMyn/J2f4uJtyhPN3BWFaZHiMkGr+WsmWLhK4siluhyKLDmy01wTBU+oU6Gw11gaf3UfjPDqjEirkDQhZ+RhATWbNwiH17VZXg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=piDLey359jA6zw0nuawrswoFO3Y3y2Kz2IS3qI/oXRg=;
- b=CHFXQV6VLkusuU5UO0ohKjeNyMa5eOVXecaGS4yMhef2LXdxET+egvMKMEFgqW/RGZH7ymdESPmkHvBQoAEVQtKy3GH8X8t3kNqA5hXr6l4+ee7X5+HQRWZnswglGLEKKqWYSAsnTAn6UDE33lDjw+TgWUl6AID9YeraPD1ZnnSe/YqUxHIPwbeycx6ah9ioCpzGnu6XP7+g2wIs7EsaYvoH02UPaT9mrEHiXcOQ/jfjIiWg6e8xqYHODd8zXe4E2VtqLvCRV5YIal7jTaJeCPsakNfJYT4CV8idZQXI7aDdR/pCvG3jOKRpSjWX3RRojy/sMJnnB6rQdlNEXzhHBg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
- dkim=pass header.d=analog.com; arc=none
-Received: from PH0PR03MB7141.namprd03.prod.outlook.com (2603:10b6:510:296::20)
- by LV8PR03MB8139.namprd03.prod.outlook.com (2603:10b6:408:295::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8583.41; Thu, 3 Apr
- 2025 06:59:23 +0000
-Received: from PH0PR03MB7141.namprd03.prod.outlook.com
- ([fe80::c559:3d31:1af3:b01]) by PH0PR03MB7141.namprd03.prod.outlook.com
- ([fe80::c559:3d31:1af3:b01%4]) with mapi id 15.20.8534.048; Thu, 3 Apr 2025
- 06:59:23 +0000
-From: "Paller, Kim Seer" <KimSeer.Paller@analog.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-CC: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
-        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
-        Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        "linux-iio@vger.kernel.org"
-	<linux-iio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org"
-	<devicetree@vger.kernel.org>
-Subject: RE: [PATCH v3 2/3] dt-bindings: iio: dac: Add adi,ad3530r.yaml
-Thread-Topic: [PATCH v3 2/3] dt-bindings: iio: dac: Add adi,ad3530r.yaml
-Thread-Index: AQHbpFob7Hc6S0T3qEa/cXOHdHkI6bORfuaAgAAEA3A=
-Date: Thu, 3 Apr 2025 06:59:23 +0000
-Message-ID:
- <PH0PR03MB7141FEBAD45D612440B85698F9AE2@PH0PR03MB7141.namprd03.prod.outlook.com>
-References: <20250403-togreg-v3-0-d4b06a4af5a9@analog.com>
- <20250403-togreg-v3-2-d4b06a4af5a9@analog.com>
- <20250403-ebony-coua-of-tornado-71d4ad@krzk-bin>
-In-Reply-To: <20250403-ebony-coua-of-tornado-71d4ad@krzk-bin>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-dg-rorf: true
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PH0PR03MB7141:EE_|LV8PR03MB8139:EE_
-x-ms-office365-filtering-correlation-id: 61516c7c-b445-4f7a-54a1-08dd727d10aa
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|376014|366016|1800799024|38070700018;
-x-microsoft-antispam-message-info:
- =?utf-8?B?YVNUS0tFQmowYVVJVDl3U0c2VmlHSWZWdGF4VnhwdDNidjRNRk03RFBSejkv?=
- =?utf-8?B?eFJ5SUh5RFBuc3ZvZ0VmM3NrK0hLSlFXOEJhZEpjY0phclFLNFhlZUtnRXZB?=
- =?utf-8?B?M041K3p2QjRWbGJtVzNKbXdWT0treDNhbDhoR1ZNZ002RVJ0bWJEQUswVEZI?=
- =?utf-8?B?NDRCaXVkeG8xeVlMdGh6N1VscnRkeUowOFRHL2ZOWVZESFlQZU51SGYyRDZD?=
- =?utf-8?B?V1psSC9nKzBpVWJGQU5PSGtZMUorYzF5L3dIRCtpUVMvSXdlcGFmb3orbmt4?=
- =?utf-8?B?Y0JZQ3ZHSVA1eFM3WDJ1aFhBUTBoU2l1U2FVZDAzMXJKRGkvcUswSmNITXd0?=
- =?utf-8?B?RjRYYkc3UTVvd2VQOGQ5Y3RzdjNHZUZzV081aWFad3U0ZlNrZ0svN2hlSDNF?=
- =?utf-8?B?SDNuaU9xR0F1UTc0S1g3KysrS2N2end2RFB4eVdXbkJlQzcxWXIyUFhHUUNY?=
- =?utf-8?B?SHZQRTVidEFQd1Uwa2cyK2NOWG15VlRxd1NBYTh5ZFlJcnhYeDdkTFh2bFlJ?=
- =?utf-8?B?Ujd2OHFYR3FoN01xNVpIKzU1Skdsd1R1emd4R1lWTEQ3NmxHeVMwTEFZOEFk?=
- =?utf-8?B?WHpYYUNxcVFqN2x0TkpBa0RzZkc3dkgzT1B4YnJXZ2s1YzFWMVE0b3NrdW9k?=
- =?utf-8?B?VlJPWk1PVVFiR3FHT0pVcHJ3a3BrN1BVMVBxdVhEUUt4ZTNZc1FVMGhzQXhj?=
- =?utf-8?B?MVFJNEZFOEw3dy9GZEp4emp5WkJCcmYyamVZZU5TWmtyQUZFVjUrMTdTNlRw?=
- =?utf-8?B?YkFCTVVSVi96U2lCSkJtTkJoTU5JNUg2MmgvaHljOWgzYTN6N1lhL0N0RURq?=
- =?utf-8?B?a3BvL0JWVkFyZTgzR253SExqOWI4aHNjN2o0d3dXanpxaDVYck90eVI1OUNW?=
- =?utf-8?B?amgraUVsTFIxQ1lqNEpVQ3k5VkNLSWpIUFNNbmxlalA1YjFKQUZyd3VqVnFq?=
- =?utf-8?B?MGpyV0M4VnpxdVUyZ3cwYjMxK1RSa1pKSFJtTC8rTS8yODkydFIrbysxdjhY?=
- =?utf-8?B?aHBSdm9rUThRUDRpWU5IOWYvRVBlNjBheWVvZnFobjQ2VTdNTTdHWkF2NXF3?=
- =?utf-8?B?OUZTMTBmaHlIVUhMUThvZmFLSFFCL21oaDBpM29TdEtSeGJvZmlQOW05bnNE?=
- =?utf-8?B?V3dXY2JUOHNDci96Vm5sc2NFN1prbjdTM3NyaXZEWHE2Y2QvWm40SzJkTDhH?=
- =?utf-8?B?N2VOZ3MrZmZSdUFyN3YrOHRGOWFFa1NwNWx1Q1dqMkpJSlZqRHh6UGhaRXcz?=
- =?utf-8?B?UVRTazBrUEZybWhxMGt1Uk5XMzNiTHFxT1gzZ2J6WlJRV0tEeE9rcC9KL0R6?=
- =?utf-8?B?dFB3c0dFbUdKamU2d2JESzBEbE9FTUp4U1krL04vVnR4a1VzVGlvVENscVdW?=
- =?utf-8?B?TnNiVjRFL0ZrYVMzQS9xTWV4S0VMS3hJVWlZQkdkUE5mNXhvVzQzbXVwM2dS?=
- =?utf-8?B?YXEzSzI2ZXcwbjZ2SW1MRHNqZHl2aVc3VjIxSnNkTHovWnJXU3NTVGd3WHdq?=
- =?utf-8?B?ekpzZW4wdWtsWFMzRng0TWRQNllCRFQzREFjUUlsc0JMZjVOYVZOVnV4Q1BC?=
- =?utf-8?B?b0dLTS9qOWUxM0o3VkdpOEM4WW82YWNOUGtvSDd2YktOUE1ZY1dHUDUvNU9r?=
- =?utf-8?B?OGpvWXp1VWRlOEFoSno1S003RXFmczhVU0EwMGtFazZGZnArcE5ma0E5TUtl?=
- =?utf-8?B?WXdnc09hN0w5Zm9rTTJyZXYzM1VxQXp1RnVHNHJiblR2dGV3Z3ZrcDF6ZEgr?=
- =?utf-8?B?VDJaZFBDbG5wUjliUGdpc2tqZUhQNm5rQUlmeGVqLytDZnd5Z3M3cndZa1RE?=
- =?utf-8?B?RDlKM2FSbHVhVnNoMnRidGMzbWhGREo1VVVHWWVBbmwvY1pscWFGbWNob0d5?=
- =?utf-8?B?TFRSZ3pQSWhZYUdIWFhPQlhUN0tSMFdrOU1oYlF0UlhHY1RzM3NyaTViUmRS?=
- =?utf-8?Q?hCKv5L1KasUXNN44mqeYylFNSjcGHQqt?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR03MB7141.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?aEdCTUtQd1hhN1h6OFVJcmpHcnBRWEtUU1JXOExHcWFLSHdrNlk0amdXL2I5?=
- =?utf-8?B?Yi9QTkgwMUk1R2YvdEs0dHB3T1ZMOUR0RWRjZldheTl2Rk9sZWxkNUh2K2pW?=
- =?utf-8?B?bmkvQ3V1RU84RUtDL3RpNUIxS1V4STdKMWVRYmNSNVMvUzh6Qy9OSE1HZHFJ?=
- =?utf-8?B?MURoWkNWTHhwRUttK25VbnVKOUNvUHNvNDhWa3ZlRlBJRTUxUlR0aUI2UWRB?=
- =?utf-8?B?NitlbzQrMVBOb2t5QTBoVFFydEpkNXdwYloxWE1NdkkyeDNCclhNZjlKOHkv?=
- =?utf-8?B?bkNrcHpOWHkwbkJCTXRVTExZa1BkZmVwd3dEWUFDN2d6MWxaL3Ayb1RmOS9l?=
- =?utf-8?B?QXVCMCt5OHdjcFI3L3N1dFFxdGM0VEZ5SEVkZVpuRHVHKzJDdVJ6MGNtaitT?=
- =?utf-8?B?cFk4dHVuMnFmeW1Gb1FMbjdPYUFnWWpONE5wS0NvUWJHWVpTNGorMDdURG9F?=
- =?utf-8?B?U2hCL3c3NmpkVVZxWmhxa2U1WUVkak1IbDkwLzFmbEpCTUY0bU5CbVJGKy9D?=
- =?utf-8?B?Umk0WWtuakNuNVpsUG00S20wKzJ3cVFKQ1M4aFdLdU1TZncrKzJJVWV6YUw5?=
- =?utf-8?B?Q1lUTFd1eHpQMUljQm5weVZFaHNYV1l5OXZNTkttb2NIQmlnb2RPc1FiQmdp?=
- =?utf-8?B?d3FkcjRFd1RwKzdvcVZyYTBkZHJWd0g3VVBkUlRkdFlsSGlxS0huWURwZ1JM?=
- =?utf-8?B?d2VqMUlrZkZ0bStHb2dCb3VvZ08rVjVCYmxVaDllbU9GaXFRMmtHZzVZSnlq?=
- =?utf-8?B?VzFPNzA3UTdCemVNUWpGcFBtU1QwTGJvTkJ3eFVGaXJPVEhqOXpBaHgxMnJW?=
- =?utf-8?B?ZWdBcDhEL0J6QVpUa2QzRy9EaHR5SlVjZDJUdGxjb1hkWWdFZG5uNS9QdzYx?=
- =?utf-8?B?Q3RHZ2JTNEJXa1JoZE4rZ3NwbkJSdGoxU01kN0hJellsY1Z4NnZJWWtkOThV?=
- =?utf-8?B?UFZqZTJKOWpvQWJodDhiOUV4WUl0eFdLcDUwVEkvNFFQOW05VnVMNjNQczRo?=
- =?utf-8?B?V0FaYW1hU3N1czZNY21OdU5uSkV3TnlTNDQ5K0J5TVRuNmFhdHRrRXFwZkdL?=
- =?utf-8?B?Q3Qrd0E3eGJ5dE9YSldJU3VkeE55dHo3UVpybEdqYk5HT05OVXVsOFVLcUJr?=
- =?utf-8?B?ZytnSzNPUHJuczhyZ0hKMTd1WnVZazRuZkhGYTg1Y1RZRWhidE16Z1R3dnhB?=
- =?utf-8?B?RzFranRMYVlBc3FOUWtuUjRvZ1g1dk9MSk52WFdYSEpWZjk5aEtRSWFaZ0JT?=
- =?utf-8?B?eVpPZU40NlAvNW4vRDFLbzRNUUpPK3dZYUtiR3J0Uk9Zd20vTUZPeUcvU0Fs?=
- =?utf-8?B?WGEzOEFTQWlmem9yNjc1THB0MDVzQ1hvdHFFcTlnY2l4czAyRWFGdFd6WGF6?=
- =?utf-8?B?eXdMQ3h6UGhEYW9VeWJmWGlzZ21nMS82ZjBpcEdIck4vMnhiWlgzM0xVMjBN?=
- =?utf-8?B?VVJiS2hGQ1BZTkNsNTBtZmg0VmVvd2l6Y0kxU2tINFQvWWVNTENVM2JRbmlQ?=
- =?utf-8?B?T0x1aHkrekZWQTI1ak1za2RBWFYxYjROaEFiMWRLV0dsODBkSlZGRGNpTGo4?=
- =?utf-8?B?VnpabEdQdy9wTVNQeWJuS1lBcnBMdWpobGhDSUNjdmg5MkpOV1YwSFRJMGty?=
- =?utf-8?B?Wi9rVGVYb0FZZm1nUlVlNFMwZUo2TEpkcWNxVysvMWZQY3dZNlFqWno5L1B5?=
- =?utf-8?B?VndyUzVyN1huUWpOTzk4dWJKWDdjSXowOG9XT0owVDFEZkxXYVZrdDdmN3JU?=
- =?utf-8?B?SGxxQllyNEVuNkxXcCsrMDY3Z3V2cVVxOWNualVVcHlzYnlMOGloWEhjejJO?=
- =?utf-8?B?VWJFR2ovVHpoLy9PTG1wNnhLY1l4dU91VklVNGdwUVhIVnhGS0prME9tVitI?=
- =?utf-8?B?L1FSN0VpRXhBOEVJTWs0cmVCWlJqWDVKV0hMK3dLOE1kYjREK0lGSXFhY2N5?=
- =?utf-8?B?ZHJVNUhwbE10WnE4UDBlbzFLMUgwbVRxakc0NTMySGNDSFBRaXR6eXFraDFl?=
- =?utf-8?B?dkprVHFPZkpxRUNhTnR0bXFvaEN1UWFId2o1eDgxWnF2aGs2U3NyYlNtSkNm?=
- =?utf-8?B?OXRzMTZBa1lJNmhZN2g3dzhIclRSbWFzcHRUMjhndndhdG53cjcvUnIweUto?=
- =?utf-8?Q?QF/avLUln/rUqKmkzrfRrLR7W?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4593224B15;
+	Thu,  3 Apr 2025 07:01:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743663669; cv=none; b=rzwEVPlb0UA+GXotyhr/zfBBRaenBv1ce5PLnT07FjgJa+IwqpSVdp/Vg+GQYkIza2GHK0hrSogqvhYk7Xv2MMwobnD9/LZIqP/RSjig9kWz5G8GF0tq/3HjLXUYGfr3CPh5DfzTb12YUekhNh1KeSzhCosgOuhogp91aJb6wro=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743663669; c=relaxed/simple;
+	bh=A7HYwQIaKbJK66wgZlgHdSiWDHIMD4c9XaZdbf3qF9M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HVO8QUEuupdyXa6Sn952suuPE1rXnsOF7X5R6RSMmtx61JpkQkQkek/YiJLgEeQj9seru/dNZ4vZeCCzxU/wVszO4DiD3rstOO8y4lNVHRXH5iZZ7Xzi+tp+5S1hzcxUGAO56onWw6lb9z0n7wUoUWtKFPG+pvhmVBSS8VrCf1c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2155C4CEE3;
+	Thu,  3 Apr 2025 07:01:07 +0000 (UTC)
+Message-ID: <332fce27-8a11-4c70-9753-1da968c3e45a@xs4all.nl>
+Date: Thu, 3 Apr 2025 09:01:06 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR03MB7141.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 61516c7c-b445-4f7a-54a1-08dd727d10aa
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Apr 2025 06:59:23.2106
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 20ssNCAthk1i8M/S6Hx51qKffxroZBRrEyJPO+bPN/RAaE0ALStYuCTRX/Hajz49ZhTlEjbaOwPnJKsWCspyw3RXbeIZ93IP9Zm94STEMl8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR03MB8139
-X-Proofpoint-GUID: Q9nbd5CN9fUIWRqf7USkwk6BJwO-nJBx
-X-Proofpoint-ORIG-GUID: Q9nbd5CN9fUIWRqf7USkwk6BJwO-nJBx
-X-Authority-Analysis: v=2.4 cv=Aszu3P9P c=1 sm=1 tr=0 ts=67ee31ce cx=c_pps a=U0KzkmEawxegXmCr7eTojA==:117 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=gAnH3GRIAAAA:8 a=iaTKId3JprsDQznB3a8A:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-03_02,2025-04-02_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxscore=0
- malwarescore=0 mlxlogscore=999 spamscore=0 clxscore=1015 impostorscore=0
- bulkscore=0 priorityscore=1501 phishscore=0 suspectscore=0
- lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504030033
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6] media: uvcvideo: Set V4L2_CTRL_FLAG_DISABLED during
+ queryctrl errors
+To: Ricardo Ribalda <ribalda@chromium.org>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Hans de Goede <hdegoede@redhat.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250310-uvc-eaccess-v6-1-bf4562f7cabd@chromium.org>
+Content-Language: en-US, nl
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Autocrypt: addr=hverkuil@xs4all.nl; keydata=
+ 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
+In-Reply-To: <20250310-uvc-eaccess-v6-1-bf4562f7cabd@chromium.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogS3J6eXN6dG9mIEtvemxv
-d3NraSA8a3J6a0BrZXJuZWwub3JnPg0KPiBTZW50OiBUaHVyc2RheSwgQXByaWwgMywgMjAyNSAy
-OjQ0IFBNDQo+IFRvOiBQYWxsZXIsIEtpbSBTZWVyIDxLaW1TZWVyLlBhbGxlckBhbmFsb2cuY29t
-Pg0KPiBDYzogSm9uYXRoYW4gQ2FtZXJvbiA8amljMjNAa2VybmVsLm9yZz47IExhcnMtUGV0ZXIg
-Q2xhdXNlbg0KPiA8bGFyc0BtZXRhZm9vLmRlPjsgSGVubmVyaWNoLCBNaWNoYWVsIDxNaWNoYWVs
-Lkhlbm5lcmljaEBhbmFsb2cuY29tPjsNCj4gUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz47
-IEtyenlzenRvZiBLb3psb3dza2kgPGtyemsrZHRAa2VybmVsLm9yZz47DQo+IENvbm9yIERvb2xl
-eSA8Y29ub3IrZHRAa2VybmVsLm9yZz47IGxpbnV4LWlpb0B2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4
-LQ0KPiBrZXJuZWxAdmdlci5rZXJuZWwub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZw0K
-PiBTdWJqZWN0OiBSZTogW1BBVENIIHYzIDIvM10gZHQtYmluZGluZ3M6IGlpbzogZGFjOiBBZGQg
-YWRpLGFkMzUzMHIueWFtbA0KPiANCj4gW0V4dGVybmFsXQ0KPiANCj4gT24gVGh1LCBBcHIgMDMs
-IDIwMjUgYXQgMDE6MzM6NTZQTSArMDgwMCwgS2ltIFNlZXIgUGFsbGVyIHdyb3RlOg0KPiA+IERv
-Y3VtZW50IHRoZSBBRDM1MzAvQUQzNTMwUiAoOC1jaGFubmVsKSBhbmQgQUQzNTMxL0FEMzUzMVIg
-KDQtDQo+IGNoYW5uZWwpDQo+ID4gbG93LXBvd2VyLCAxNi1iaXQsIGJ1ZmZlcmVkIHZvbHRhZ2Ug
-b3V0cHV0IERBQ3Mgd2l0aCBzb2Z0d2FyZS0NCj4gPiBwcm9ncmFtbWFibGUgZ2FpbiBjb250cm9s
-cy4gVGhleSBwcm92aWRlIGZ1bGwtc2NhbGUgb3V0cHV0IHNwYW5zIG9mDQo+ID4gMi41ViBvciA1
-ViBmb3IgcmVmZXJlbmNlIHZvbHRhZ2VzIG9mIDIuNVYuIFRoZXNlIGRldmljZXMgb3BlcmF0ZSBv
-biBhDQo+ID4gc2luZ2xlIDIuN1YgdG8gNS41ViBzdXBwbHkgYW5kIGFyZSBndWFyYW50ZWVkIHRv
-IGJlIG1vbm90b25pYyBieSBkZXNpZ24uDQo+ID4gVGhlICJSIiB2YXJpYW50cyBpbmNsdWRlIGEg
-Mi41ViwgNXBwbS/CsEMgaW50ZXJuYWwgcmVmZXJlbmNlLCB3aGljaCBpcw0KPiA+IGRpc2FibGVk
-IGJ5IGRlZmF1bHQuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBLaW0gU2VlciBQYWxsZXIgPGtp
-bXNlZXIucGFsbGVyQGFuYWxvZy5jb20+DQo+ID4gLS0tDQo+ID4gIC4uLi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2lpby9kYWMvYWRpLGFkMzUzMHIueWFtbCAgIHwgOTkNCj4gKysrKysrKysrKysrKysr
-KysrKysrKw0KPiA+ICBNQUlOVEFJTkVSUyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICB8ICA3ICsrDQo+ID4gIDIgZmlsZXMgY2hhbmdlZCwgMTA2IGluc2VydGlvbnMoKykN
-Cj4gDQo+IFlvdSBnb3QgcmVwb3J0IGFib3V0IGVycm9yIGluIHYyLCB3aGljaCB5b3UgZGlkIG5v
-dCByZXNwb25kIHRvLg0KPiANCj4gWW91IHNlbmQgdjMuLi4gd2l0aCBzYW1lIGVycm9yLiBJIGRv
-bid0IHVuZGVyc3RhbmQgdGhpcy4NCg0KSSdtIG5vdCBzdXJlLCBidXQgYmFzZWQgb24gdGhlIGlu
-Zm9ybWF0aW9uIHByb3ZpZGVkLCB0aGUgZXJyb3JzIG1pZ2h0IGJlDQp1bnJlbGF0ZWQgdG8gdGhl
-IGRyaXZlciwgb3IgSSBtaWdodCBoYXZlIG1pc3NlZCBzb21ldGhpbmcuDQoNCj4gDQo+IEJlc3Qg
-cmVnYXJkcywNCj4gS3J6eXN6dG9mDQoNCg==
+On 10/03/2025 14:21, Ricardo Ribalda wrote:
+> To implement VIDIOC_QUERYCTRL, we need to know the minimum, maximum,
+> step and flags of the control. For some of the controls, this involves
+> querying the actual hardware.
+> 
+> Some non-compliant cameras produce errors when we query them. These
+> error can be triggered every time, sometimes, or when other controls do
+> not have the "right value". Right now, we populate that error to userspace.
+> When an error happens, the v4l2 framework does not copy the v4l2_queryctrl
+> struct to userspace. Also, userspace apps are not ready to handle any
+> other error than -EINVAL.
+> 
+> One of the main usecases of VIDIOC_QUERYCTRL is enumerating the controls
+> of a device. This is done using the V4L2_CTRL_FLAG_NEXT_CTRL flag. In
+> that usecase, a non-compliant control will make it almost impossible to
+> enumerate all controls of the device.
+> 
+> A control with an invalid max/min/step/flags is better than non being
+> able to enumerate the rest of the controls.
+> 
+> This patch:
+> - Retries for an extra attempt to read the control, to avoid spurious
+>   errors. More attempts do not seem to produce better results in the
+>   tested hardware.
+> - Makes VIDIOC_QUERYCTRL return 0 in all the error cases different than
+>   -EINVAL.
+> - Introduces a warning in dmesg so we can have a trace of what has happened
+>   and sets the V4L2_CTRL_FLAG_DISABLED.
+> - Makes sure we keep returning V4L2_CTRL_FLAG_DISABLED for all the next
+>   attempts to query that control (other operations have the same
+>   functionality as now).
+> 
+> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+> ---
+> Hi 2*Hans and Laurent!
+> 
+> I came around a device that was listing just a couple of controls when
+> it should be listing much more.
+> 
+> Some debugging latter I found that the device was returning -EIO when
+> all the focal controls were read.
+> 
+> Lots of good arguments in favor/against this patch in the v1. Please
+> check!
+> 
+> Without this patch:
+> $ v4l2-ctl --list-ctrls
+>                   auto_exposure 0x009a0901 (menu)   : min=0 max=3 default=3 value=3 (Aperture Priority Mode)
+>          exposure_time_absolute 0x009a0902 (int)    : min=50 max=10000 step=1 default=166 value=166 flags=inactive
+>      exposure_dynamic_framerate 0x009a0903 (bool)   : default=0 value=0
+> region_of_interest_auto_control 0x009a1902 (bitmask): max=0x00000001 default=0x00000001 value=1
+> 
+> With this patch:
+> $ v4l2-ctl --list-ctrls
+>                   auto_exposure 0x009a0901 (menu)   : min=0 max=3 default=3 value=3 (Aperture Priority Mode)
+>          exposure_time_absolute 0x009a0902 (int)    : min=50 max=10000 step=1 default=166 value=166 flags=inactive
+>      exposure_dynamic_framerate 0x009a0903 (bool)   : default=0 value=0
+> error 5 getting ext_ctrl Focus, Absolute
+> error 5 getting ext_ctrl Focus, Automatic Continuous
+>    region_of_interest_rectangle 0x009a1901 (unknown): type=107 value=unsupported payload type flags=has-payload
+> region_of_interest_auto_control 0x009a1902 (bitmask): max=0x00000001 default=0x00000001 value=1
+
+This output still refers to the result from the v1 patch (I think).
+Can you redo this test with this v6 applied? You probably want to update these
+comments anyway.
+
+> --
+> ---
+> Changes in v6:
+> - Keep returning V4L2_CTRL_FLAG_DISABLED in future control queries.
+> - Link to v5: https://lore.kernel.org/r/20250224-uvc-eaccess-v5-1-690d73bcef28@chromium.org
+> 
+> Changes in v5:
+> - Explain the retry in the commit message (Thanks Laurent).
+> - Link to v4: https://lore.kernel.org/r/20250111-uvc-eaccess-v4-1-c7759bfd1bd4@chromium.org
+> 
+> Changes in v4:
+> - Display control name (Thanks Hans)
+> - Link to v3: https://lore.kernel.org/r/20250107-uvc-eaccess-v3-1-99f3335d5133@chromium.org
+> 
+> Changes in v3:
+> - Add a retry mechanism during error.
+> - Set V4L2_CTRL_FLAG_DISABLED flag.
+> - Link to v2: https://lore.kernel.org/r/20241219-uvc-eaccess-v2-1-bf6520c8b86d@chromium.org
+> 
+> Changes in v2:
+> - Never return error, even if we are not enumerating the controls
+> - Improve commit message.
+> - Link to v1: https://lore.kernel.org/r/20241213-uvc-eaccess-v1-1-62e0b4fcc634@chromium.org
+> ---
+>  drivers/media/usb/uvc/uvc_ctrl.c | 46 +++++++++++++++++++++++++++++++++-------
+>  drivers/media/usb/uvc/uvcvideo.h |  2 ++
+>  2 files changed, 40 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/media/usb/uvc/uvc_ctrl.c b/drivers/media/usb/uvc/uvc_ctrl.c
+> index 4e58476d305efddac331417feda8cb064e340a13..4b282ac714220b26581fe468d9ecb1109a28483f 100644
+> --- a/drivers/media/usb/uvc/uvc_ctrl.c
+> +++ b/drivers/media/usb/uvc/uvc_ctrl.c
+> @@ -1280,6 +1280,8 @@ static u32 uvc_get_ctrl_bitmap(struct uvc_control *ctrl,
+>  	return ~0;
+>  }
+>  
+> +#define MAX_QUERY_RETRIES 2
+
+As you mentioned in the commit log, trying more times didn't make a difference.
+Add that as a comment here as well, it is good to have that documented in the code.
+
+> +
+>  static int __uvc_query_v4l2_ctrl(struct uvc_video_chain *chain,
+>  	struct uvc_control *ctrl,
+>  	struct uvc_control_mapping *mapping,
+> @@ -1305,19 +1307,44 @@ static int __uvc_query_v4l2_ctrl(struct uvc_video_chain *chain,
+>  		__uvc_find_control(ctrl->entity, mapping->master_id,
+>  				   &master_map, &master_ctrl, 0);
+>  	if (master_ctrl && (master_ctrl->info.flags & UVC_CTRL_FLAG_GET_CUR)) {
+> +		unsigned int retries;
+>  		s32 val;
+> -		int ret = __uvc_ctrl_get(chain, master_ctrl, master_map, &val);
+> -		if (ret < 0)
+> -			return ret;
+> +		int ret;
+>  
+> -		if (val != mapping->master_manual)
+> -				v4l2_ctrl->flags |= V4L2_CTRL_FLAG_INACTIVE;
+> +		for (retries = 0; retries < MAX_QUERY_RETRIES; retries++) {
+> +			ret = __uvc_ctrl_get(chain, master_ctrl, master_map,
+> +					     &val);
+> +			if (ret >= 0)
+> +				break;
+
+This retries regardless of the error code. Isn't a retry only needed for -EIO?
+Are there other error codes that need a retry? Or, perhaps easier, are there
+errors codes for which a retry is *not* appropriate? E.g. -EACCESS, -ERANGE.
+
+> +		}
+> +
+> +		if (ret < 0) {
+> +			dev_warn_ratelimited(&chain->dev->udev->dev,
+> +					     "UVC non compliance: Error %d querying master control %x (%s)\n",
+> +					     ret, master_map->id,
+> +					     uvc_map_get_name(master_map));
+
+Shouldn't you mark this control as disabled and return here instead of
+continuing?
+
+> +		} else if (val != mapping->master_manual) {
+> +			v4l2_ctrl->flags |= V4L2_CTRL_FLAG_INACTIVE;
+> +		}
+>  	}
+>  
+>  	if (!ctrl->cached) {
+> -		int ret = uvc_ctrl_populate_cache(chain, ctrl);
+> -		if (ret < 0)
+> -			return ret;
+> +		unsigned int retries;
+> +		int ret;
+> +
+> +		for (retries = 0; retries < MAX_QUERY_RETRIES; retries++) {
+> +			ret = uvc_ctrl_populate_cache(chain, ctrl);
+> +			if (ret >= 0)
+> +				break;
+
+Same question about the error code as above.
+
+> +		}
+> +
+> +		if (ret < 0) {
+> +			dev_warn_ratelimited(&chain->dev->udev->dev,
+> +					     "UVC non compliance: permanently disabling control %x (%s), due to error %d\n",
+> +					     mapping->id,
+> +					     uvc_map_get_name(mapping), ret);
+> +			mapping->disabled = true;
+> +		}
+>  	}
+>  
+>  	if (ctrl->info.flags & UVC_CTRL_FLAG_GET_DEF) {
+> @@ -1325,6 +1352,9 @@ static int __uvc_query_v4l2_ctrl(struct uvc_video_chain *chain,
+>  				uvc_ctrl_data(ctrl, UVC_CTRL_DATA_DEF));
+>  	}
+>  
+> +	if (mapping->disabled)
+> +		v4l2_ctrl->flags |= V4L2_CTRL_FLAG_DISABLED;
+> +
+>  	switch (mapping->v4l2_type) {
+>  	case V4L2_CTRL_TYPE_MENU:
+>  		v4l2_ctrl->minimum = ffs(mapping->menu_mask) - 1;
+> diff --git a/drivers/media/usb/uvc/uvcvideo.h b/drivers/media/usb/uvc/uvcvideo.h
+> index 5e388f05f3fcaf0e4c503a34745d05837ecb0184..63687d7e97738a50d037b1f456f5215241909c13 100644
+> --- a/drivers/media/usb/uvc/uvcvideo.h
+> +++ b/drivers/media/usb/uvc/uvcvideo.h
+> @@ -129,6 +129,8 @@ struct uvc_control_mapping {
+>  	s32 master_manual;
+>  	u32 slave_ids[2];
+>  
+> +	bool disabled;
+> +
+>  	const struct uvc_control_mapping *(*filter_mapping)
+>  				(struct uvc_video_chain *chain,
+>  				struct uvc_control *ctrl);
+> 
+> ---
+> base-commit: c2b96a6818159fba8a3bcc38262da9e77f9b3ec7
+> change-id: 20241213-uvc-eaccess-755cc061a360
+> 
+> Best regards,
+
+Regards,
+
+	Hans
