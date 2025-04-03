@@ -1,121 +1,95 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from smtp125.iad3b.emailsrvr.com (smtp125.iad3b.emailsrvr.com [146.20.161.125])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 342BC24BBE9;
-	Thu,  3 Apr 2025 17:46:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01A241A23BA
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 17:47:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=146.20.161.125
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743702389; cv=none; b=aUrChNfC+ObQx8yBSkECJdUw7y2lcmwGYf3f+yBZ7X1NSxpJT5ClyP4h2ujMKTJ57C06yBbzgWnp2a59MicdpM410XMisYlVuEgABSXuvmUA0q18aX8K1Dv0hTibI6WP5TWPmAZ8pUaYZCQ0GsIgW7J91Uy6oWi/vC379kyEH/w=
+	t=1743702422; cv=none; b=ITbAX3v2jRZSg7SFtW6TM8Fnd1DJcXZI1EQNxJOKk/A9vJy7djjW89JTm6puhqDgzRLv4pDs4XJ1spM3oL6JYNedIhKThCzz87JWLmGbIEST/dFljDIs7iA56+TWAtggbgNoKWLThokgUX0TUhl1xB5emeX+KWIc+U+IJs0qYFQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743702389; c=relaxed/simple;
-	bh=CrVVJHvTACiAZiAbOqNpxsX5Sm/7YBaDo7amhX5eups=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=re6UXnE0xbOaRPkB5ShmevOX+w84S26sF8K3kktu9zTDsHDQKtaaiJ5VrozXPRSwU8FZUWEc81ZDAoGweC6Yq7dRsAoTJyUrEzNT21KZqqPLEZwgFsFJ0TkILq/k9CcuLhPcQxN87SxiCzdqL7PlRCtksWEIH9PrIOral4AYlaM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZGZmO3yG; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1743702422; c=relaxed/simple;
+	bh=COtoD7jolTlfF8j7ress8ZnIElwqO7FuKlwpdurDr54=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=K4C8xYaaX0tSgebNPXmYXzzGrvIa8JJX22lxNYN7RmbPtnnBqjqQ07eiZsxlYKpFDDCB3zjaDpa6DuVlYb1qO8Hpwi6JMUNHQLFFIkyuHpIC/8owsX1Ye/PGvp+HE8vS3CQcYtw+ckhcZuZ43EOuykvKQMt4PyBeITo0AfW6LVs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mev.co.uk; spf=pass smtp.mailfrom=mev.co.uk; dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b=efszDDvy; arc=none smtp.client-ip=146.20.161.125
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mev.co.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mev.co.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZGZmO3yG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743702388; x=1775238388;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=CrVVJHvTACiAZiAbOqNpxsX5Sm/7YBaDo7amhX5eups=;
-  b=ZGZmO3yGH5xYed/hHCi6XnPYnhJHt5z+mSXCMEJV8aWe2oaHofjeIygd
-   KzOyLjJX49KZPBsX919wmk5TcbDHOHcyd09W7YlzlPg/PJKks3hLUvz0w
-   oV5Me9Ut42XEc6qYMtZG7CR7zJ41q574hAJfeSPTRVTpfsGKwwXLqjtOL
-   Cbjdija+y8AAHsCS8djEvP/JJKrCTSQpw3QwHSQcJ7nIBrA5iYtqh2TqX
-   G74E37OG6T5JmJ1KF9uf1Uoz6+aSLzfSKwW7Hos0P77SZZAXl/v+/bIuO
-   2uq4jYutnA2VCo5nYqLhTvDT4Jv+crpYpuf9IotDMeVkk8K/7T7AC8Y53
-   w==;
-X-CSE-ConnectionGUID: ZQ3GbaH6TzahkG/A5JKI+w==
-X-CSE-MsgGUID: Qs74iPb+RVaWSn7FWNcHaw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11393"; a="45247842"
-X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
-   d="scan'208";a="45247842"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 10:46:27 -0700
-X-CSE-ConnectionGUID: XL8V0+HVRweSrPe2l+1fFA==
-X-CSE-MsgGUID: fYhD+ywtTVC4LwHnZlU8Zg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
-   d="scan'208";a="164309309"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 10:46:24 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1u0Odw-00000008ssY-2AYW;
-	Thu, 03 Apr 2025 20:46:20 +0300
-Date: Thu, 3 Apr 2025 20:46:20 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Matthew Wilcox <willy@infradead.org>
-Cc: Kees Cook <kees@kernel.org>, Vlastimil Babka <vbabka@suse.cz>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	torvalds@linux-foundation.org, peterz@infradead.org,
-	Jann Horn <jannh@google.com>, intel-wired-lan@lists.osuosl.org,
-	netdev@vger.kernel.org, Harry Yoo <harry.yoo@oracle.com>,
-	Christoph Lameter <cl@gentwo.org>
-Subject: Re: [RFC] slab: introduce auto_kfree macro
-Message-ID: <Z-7JbPeMlnpspKM_@smile.fi.intel.com>
-References: <20250401134408.37312-1-przemyslaw.kitszel@intel.com>
- <3f387b13-5482-46ed-9f52-4a9ed7001e67@suse.cz>
- <202504030955.5C4B7D82@keescook>
- <Z-7G6_jm4SKtSO7a@casper.infradead.org>
+	dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b="efszDDvy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mev.co.uk;
+	s=20221208-6x11dpa4; t=1743701319;
+	bh=COtoD7jolTlfF8j7ress8ZnIElwqO7FuKlwpdurDr54=;
+	h=Date:Subject:To:From:From;
+	b=efszDDvyg7I1XSldU2MfL3/qyi5me1c/9uw1kqlgw3ueA/KJi+TG6o62LC3S9Ok5+
+	 ZFCQz5qcrAhBuIIHKyv3RcJI54I7mfSpSo+jBmxanqmBLHTGFuBmqr//WcC10pG2Gr
+	 I/oJy3wpPJuUiT+UDarud981ZNyVzkxNt2zIp9JI=
+X-Auth-ID: abbotti@mev.co.uk
+Received: by smtp16.relay.iad3b.emailsrvr.com (Authenticated sender: abbotti-AT-mev.co.uk) with ESMTPSA id 5646DC0087;
+	Thu,  3 Apr 2025 13:28:39 -0400 (EDT)
+Message-ID: <8f607a2b-3d99-4f3e-b370-b7e4793ad27c@mev.co.uk>
+Date: Thu, 3 Apr 2025 18:28:37 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z-7G6_jm4SKtSO7a@casper.infradead.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] Staging: comedi: Add DMA preparation before
+ mite_dma_arm().
+To: Wentao Liang <vulab@iscas.ac.cn>, hsweeten@visionengravers.com
+Cc: linux-kernel@vger.kernel.org
+References: <20250403163535.2494-1-vulab@iscas.ac.cn>
+Content-Language: en-GB
+From: Ian Abbott <abbotti@mev.co.uk>
+Organization: MEV Ltd.
+In-Reply-To: <20250403163535.2494-1-vulab@iscas.ac.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Classification-ID: 79b49608-5320-4be6-bcce-d25a9e60ac07-1-1
 
-On Thu, Apr 03, 2025 at 06:35:39PM +0100, Matthew Wilcox wrote:
-> On Thu, Apr 03, 2025 at 09:59:41AM -0700, Kees Cook wrote:
-> > On Wed, Apr 02, 2025 at 12:44:50PM +0200, Vlastimil Babka wrote:
-> > > Cc Kees and others from his related efforts:
-> > > 
-> > > https://lore.kernel.org/all/20250321202620.work.175-kees@kernel.org/
-> > 
-> > I think, unfortunately, the consensus is that "invisible side-effects"
-> > are not going to be tolerated. After I finish with kmalloc_obj(), I'd
-> > like to take another run at this for basically providing something like:
-> > 
-> > static inline __must_check
-> > void *kfree(void *p) { __kfree(p); return NULL; }
-> > 
-> > And then switch all:
-> > 
-> > 	kfree(s->ptr);
-> > 
-> > to
-> > 
-> > 	s->ptr = kfree(s->ptr);
-> > 
-> > Where s->ptr isn't used again.
+On 2025-04-03 17:35, Wentao Liang wrote:
+> The ni_tio_input_inttrig() calls mite_dma_arm() without calling
+> mite_prep_dma() first. A proper implementation can be found in
+> ni_cdo_inttrig() in ni_mio_common.c.
 > 
-> Umm ... kfree is now going to be __must_check?  That's a lot of churn.
+> Add mite_prep_dma() before mite_dma_arm().
 > 
-> I'd just go with making kfree() return NULL and leave off the
-> __must_check.  It doesn't need the __kfree() indirection either.
-> That lets individual functions opt into the new safety.
+> Fixes: cb7859a90af1 ("Staging: comedi: add National Instruments infrastructure")
+> Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+> ---
+>   drivers/comedi/drivers/ni_tiocmd.c | 5 +++--
+>   1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/comedi/drivers/ni_tiocmd.c b/drivers/comedi/drivers/ni_tiocmd.c
+> index ab6d9e8269f3..b943836ccf1a 100644
+> --- a/drivers/comedi/drivers/ni_tiocmd.c
+> +++ b/drivers/comedi/drivers/ni_tiocmd.c
+> @@ -84,9 +84,10 @@ static int ni_tio_input_inttrig(struct comedi_device *dev,
+>   		return -EINVAL;
+>   
+>   	spin_lock_irqsave(&counter->lock, flags);
+> -	if (counter->mite_chan)
+> +	if (counter->mite_chan) {
+> +		mite_prep_dma(counter->mite_chan, 32, 32);
+>   		mite_dma_arm(counter->mite_chan);
+> -	else
+> +	} else
+>   		ret = -EIO;
+>   	spin_unlock_irqrestore(&counter->lock, flags);
+>   	if (ret < 0)
 
-Maybe something like
-
-void kfree_and_null(void **ptr)
-{
-	__kfree(*ptr);
-	*ptr = NULL;
-}
-
-?
+mite_prep_dma() will get called by ni_tio_input_cmd() at some arbitrary 
+time before ni_tio_input_inttrig() is called. (ni_tio_input_cmd() sets 
+up the software trigger function pointer that is called during 
+processing of a subsequent INSN_INTTRIG comedi instruction from 
+user-space. Also, the last two parameters of mite_prep_dma() are not 
+always 32 and 32 - it depends on the hardware, as can be seen in the 
+switch statement in ni_tio_input_cmd().
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+-=( Ian Abbott <abbotti@mev.co.uk> || MEV Ltd. is a company  )=-
+-=( registered in England & Wales.  Regd. number: 02862268.  )=-
+-=( Regd. addr.: S11 & 12 Building 67, Europa Business Park, )=-
+-=( Bird Hall Lane, STOCKPORT, SK3 0XA, UK. || www.mev.co.uk )=-
 
