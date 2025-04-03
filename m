@@ -1,140 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D63124290E;
-	Thu,  3 Apr 2025 08:25:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C206F241672
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 08:25:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743668717; cv=none; b=h5viU+pzF6lCKd6pJfRMKzPrbQ9BGLbby5Ll03Y1aDAEhnlDaXuBTWzugael+g29A4itTX5tSxKtAz907aGJ7k1BlOnVYcWQwz0o2P1a4nyrXi71S4yjadxsTErdlw4TRiAl6miqtQKjKR231AgxHKwsOaf4P22acXtMCqy9kbw=
+	t=1743668744; cv=none; b=nPGOX3eyTSRvDSJJCOdpO5jHvvTKKgl/AylKRZK5uyFzqdN81G20im5bVnd9keS5rXfD0PgvPqEs4sRJQ8/Vu+Bo8QjoDT0D6VrKRfW20AAATCGbmcBQJPT0rgALSe9wyEPPjEwi39a+9XiL3Yoj6poBtKwn3Br7Vvy06HDc4l4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743668717; c=relaxed/simple;
-	bh=W2GXp//p/lyuftqtpov8Pw3eTDvdK9rmsYuGvtyrxpM=;
+	s=arc-20240116; t=1743668744; c=relaxed/simple;
+	bh=iHVyqDu7ZmLIy0mAMdQVNnQdgdMxjHIppXpD2G31IRU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ITyJpaauGutqrTWVYg+IlBn+nnbWq0eQKsRtKWWBmRWr6loYtK0D8x7IC+cLJ9ihBqnZZmFnV+YjIsh//gSZvKf+J2GvvCHZLB2UB2LxPPchiqpYsxI4GYZKaOuqwyOdXi4ijXEt/w5FcXMSTLms4oBrLOhmiWIiI4JLcYtvlCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JMjtYpqM; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=rxXFmD0VTPGkq1UMjIxhLCoUvDdw2LH68L32ugXawXYcmbmztpwQzwM5k4XLBvYNTWarq1uyP3gcMdglfaXLF+kbGOtgFFQM7/xbrVzh2DPIB3UZG2dkZdK2NU56yGyxQ1mJAkC9AVXTy+f8Pqjwvd/bxRPuanYq2MK30u8zYzI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=ACKjWkDC; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JMjtYpqM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95F6DC4CEE3;
-	Thu,  3 Apr 2025 08:25:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743668716;
-	bh=W2GXp//p/lyuftqtpov8Pw3eTDvdK9rmsYuGvtyrxpM=;
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="ACKjWkDC"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id DEDFC40E021F;
+	Thu,  3 Apr 2025 08:25:30 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id I2rWiXDhLeqd; Thu,  3 Apr 2025 08:25:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1743668726; bh=hn536CbXmIM5vZ++pXIE0RVpfCDzNyPlJJt6MUVv9wE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JMjtYpqMUn0oZ4P/Y4Smk3o+lWbC/knZQSwyjheBq5wGC0wmQ6Yx3+wtz0e7EEelX
-	 VSrBFnBzZ3julRuM78hF0MhjTQ4AUv6hweaGE6KMkt9Qr31tC593ltRz51wttaEGwu
-	 WDmTfEigYH41o8GhZHXqIKa8WCoI/4QyfhQVQkSHQfspAXCoTNeHKhBlrwjFj3P1f9
-	 H6oiTUIUQvhG9vWolXusW/Pth7woOu1w55QO5odOShuMo/vghEFCCvIMSaT37PfLu5
-	 bBA3wgIzq0i9Hc0cO1LLy/16yISa17qwNtkFW50ebtfkrPJul0TlRDezXfRqx85B+c
-	 NDEvRzH/YFpuw==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1u0Ft3-00000000757-0kce;
-	Thu, 03 Apr 2025 10:25:21 +0200
-Date: Thu, 3 Apr 2025 10:25:21 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Cristian Marussi <cristian.marussi@arm.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	arm-scmi@vger.kernel.org, sudeep.holla@arm.com,
-	james.quinlan@broadcom.com, f.fainelli@gmail.com,
-	vincent.guittot@linaro.org, peng.fan@oss.nxp.com,
-	michal.simek@amd.com, quic_sibis@quicinc.com,
-	dan.carpenter@linaro.org, maz@kernel.org
-Subject: Re: [RFC PATCH 3/3] [NOT FOR UPSTREAM] firmware: arm_scmi: quirk:
- Ignore FC bit in attributes
-Message-ID: <Z-5F8eTaZB2gLTNs@hovoldconsulting.com>
-References: <20250401122545.1941755-1-cristian.marussi@arm.com>
- <20250401122545.1941755-4-cristian.marussi@arm.com>
+	b=ACKjWkDCGbUz4uHWs3e9PxX0SYCimu+DwOovUQ0ikYIBbkjEqr/ZI5xH3blZlZAxe
+	 IbUp8Qz37ixgTuLckb/QNyiu9+IvYmy90M+8qts6p1XTdA68q73xZlpqRAJaaQczjH
+	 IwhyAQD05DxFi4V5Gmx4jA69QBbbL56oyJadMV/J1O2alxzBdLCZrNgRKS+xBD1cc6
+	 YtoLCIr/i1LXO+hG2qPfG6HofkN/eFKJ4xyYGl2pOpRAVhm+1JcS2oGoPl3DbnJhTw
+	 Cadt0LchZTMCmOxOat+APcDEMVX5Mf3Xk7CPuIveMWYI+zIn8TkOPeGKxzGUGYEL+K
+	 WYYus1bF2k+P6Ap+76HheFYhVYl4pCa3k8gZmuCHrjJnlueiO+EWUHVjKhkbxJlzC/
+	 XOUZa1fzlOG8XinfRW9nTmBT8NHKfnTLZNtvcUVathcWT9DQcSGgQQTO5IIgC7UeYB
+	 PXDsZigr88cMAcuUNbG3kydnz/COODQODna+EsOISfyfQxHqwgaGBLi42CDSXEsZ9z
+	 EDVC1P5hjxmaBRPwZLNObAN8RmCL6XRccgawKmFxt6TVFoW+l/fgfTwVi5ApBKdih3
+	 5KV6O4wKE0oKgGWH+YwNQqMFHouW8hvrexgEXMM5LZOIDvooRPwEGJCHjZ7BDnLvGC
+	 opcOVotpheWxIi0ZuKhSYYEY=
+Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 27D2640E0232;
+	Thu,  3 Apr 2025 08:25:18 +0000 (UTC)
+Date: Thu, 3 Apr 2025 10:25:08 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Uros Bizjak <ubizjak@gmail.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@kernel.org>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>, kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH -tip] x86/idle: Work around LLVM assembler bug with
+ MONITOR and MWAIT insn
+Message-ID: <20250403082508.GAZ-5F5EMVZq3-6Zoo@fat_crate.local>
+References: <20250403070453.214190-1-ubizjak@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250401122545.1941755-4-cristian.marussi@arm.com>
+In-Reply-To: <20250403070453.214190-1-ubizjak@gmail.com>
 
-On Tue, Apr 01, 2025 at 01:25:45PM +0100, Cristian Marussi wrote:
-> Some platform misreported the support of FastChannel when queried: ignore
-> that bit on selected platforms.
+On Thu, Apr 03, 2025 at 09:04:37AM +0200, Uros Bizjak wrote:
+> LLVM assembler is not able to assemble correct forms of MONITOR
+> and MWAIT instructions with explicit operands:
 > 
-> Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
-> ---
-> Match features has to be set-up properly before upstreaming this.
-> Ideally the out-of-spec firmware should be matched with a quirk matching
-> pattern based on Vendor/SubVendor/ImplVersion....but it is NOT clear if the
-> platform at hand will ship with future fixed firmwares where the ImplVersion
-> field is properly handled.
-> If we cannot be sure about that, we should fallback to a compatible match.
-> ---
->  drivers/firmware/arm_scmi/driver.c | 8 ++++++++
->  drivers/firmware/arm_scmi/quirks.c | 3 +++
->  drivers/firmware/arm_scmi/quirks.h | 3 +++
->  3 files changed, 14 insertions(+)
+>   error: invalid operand for instruction
+>           monitor %rax,%ecx,%edx
+>                        ^~~~
 > 
-> diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
-> index 4266ef852c48..212456305bc9 100644
-> --- a/drivers/firmware/arm_scmi/driver.c
-> +++ b/drivers/firmware/arm_scmi/driver.c
-> @@ -1904,6 +1904,13 @@ struct scmi_msg_resp_desc_fc {
->  	__le32 db_preserve_hmask;
->  };
->  
-> +#define QUIRK_PERF_FC_FORCE						\
-> +	({								\
-> +		if (pi->proto->id == SCMI_PROTOCOL_PERF ||		\
-> +		    message_id == 0x5 /* PERF_LEVEL_GET */)		\
+> Use instruction mnemonics with implicit operands when LLVM assembler
+> is detected to work around this issue.
+> 
+> Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@kernel.org>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Fixes: cd3b85b27542 ("x86/idle: Use MONITOR and MWAIT mnemonics in <asm/mwait.h>")
 
-This should be logical AND and PERF_LEVEL_GET is 0x8 (currently
-fastchannel is enabled for all PERF messages).
+No, you should whack that one - the toolchains are clearly not ready yet...
 
-> +			attributes |= BIT(0);				\
-> +	})
-> +
->  static void
->  scmi_common_fastchannel_init(const struct scmi_protocol_handle *ph,
->  			     u8 describe_id, u32 message_id, u32 valid_size,
-> @@ -1924,6 +1931,7 @@ scmi_common_fastchannel_init(const struct scmi_protocol_handle *ph,
->  
->  	/* Check if the MSG_ID supports fastchannel */
->  	ret = scmi_protocol_msg_check(ph, message_id, &attributes);
-> +	SCMI_QUIRK(perf_level_get_fc_force, QUIRK_PERF_FC_FORCE);
+> +#ifdef CONFIG_LD_IS_LLD
+> +# define ASM_MONITOR	"monitor"
+> +# define ASM_MWAIT	"mwait"
+> +#else
+> +# define ASM_MONITOR	"monitor %[eax], %[ecx], %[edx]"
+> +# define ASM_MWAIT	"mwait %[eax], %[ecx]"
+> +#endif
 
-This is cool and I assume can be used to minimise overhead in hot paths.
-Perhaps you can have concerns about readability and remembering to
-update the quirk implementation if the code here changes.
+... instead of piling more ifdeffery ontop and making the code uglier than
+before.
 
-Does it even get compile tested if SCMI_QUIRKS is disabled?
+Go fix the LLVM assembler to deal with explicit operands or GCC and LLVM
+should agree on common syntax they both assemble or whatever and the kernel
+should do *one* thing exactly and not carry toolchain-specific ifdeffery at
+every spot.
 
->  	if (ret || !MSG_SUPPORTS_FASTCHANNEL(attributes)) {
->  		dev_dbg(ph->dev,
->  			"Skip FC init for 0x%02X/%d  domain:%d - ret:%d\n",
-> diff --git a/drivers/firmware/arm_scmi/quirks.c b/drivers/firmware/arm_scmi/quirks.c
-> index 83798bc3b043..78d51bd0e5b5 100644
-> --- a/drivers/firmware/arm_scmi/quirks.c
-> +++ b/drivers/firmware/arm_scmi/quirks.c
-> @@ -70,6 +70,8 @@ struct scmi_quirk {
->  	__DEFINE_SCMI_QUIRK_ENTRY(_qn, _comp, _ven, _sub, _impl)
->  
->  /* Global Quirks Definitions */
-> +DEFINE_SCMI_QUIRK(perf_level_get_fc_force,
-> +		  "your-bad-compatible", NULL, NULL, 0x0);
+-- 
+Regards/Gruss,
+    Boris.
 
-At first I tried matching on the SoC (fallback) compatible without
-success until I noticed you need to put the primary machine compatible
-here. For the SoC at hand, that would mean adding 10 or so entries since
-all current commercial devices would be affected by this.
-
-Matching on vendor and protocol works.
-
->  /*
->   * Quirks Pointers Array
-> @@ -78,6 +80,7 @@ struct scmi_quirk {
->   * defined quirks descriptors.
->   */
->  static struct scmi_quirk *scmi_quirks_table[] = {
-> +	__DECLARE_SCMI_QUIRK_ENTRY(perf_level_get_fc_force),
->  	NULL
->  };
-
-Johan
+https://people.kernel.org/tglx/notes-about-netiquette
