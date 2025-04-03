@@ -1,164 +1,134 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0AC084D08
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 13:04:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F1E218DB17;
+	Thu,  3 Apr 2025 13:05:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743685487; cv=none; b=RlLQaGYx4m5qdNqzCFEC1uz7lo4oMkiJZXcHhRvxe6OKL4HAHQ3U31E7N+sWr7iV0CnOnlq/jslzj9gvXxvkWj6FI+4opaIwW92t2BywNuvu7WSSEr1YxhKIMPezG/G2hk8TEdmuB+QIs89zbW/s4qATrBsCAQ1AHT/YCoCKPqk=
+	t=1743685503; cv=none; b=Y/xqDfJE1YqFkQyn8Oksqks3QPgo6x76Zuw1+KZYGQXMPThWOaMfi8DvOhMmeNa4RCk2I96UMa0VaftuFLmUfKm3GT156XAqbr+SduOjz3naNLToNm273Q5C+3xjLpRxF8oprz1aJMIfycnFbfRC1n/UbxXuwwhdZwbi+1i736c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743685487; c=relaxed/simple;
-	bh=xTHY4RqEjxr86dYlWDDlxCi7O3MBBVTaufQtaP1th6U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VhOx6I1+QohZ0ugO0lGmBqA4vBfF34s7Otj7ajOBUMThEDPvxLHTpxyMN5llZ3G1erkkBQV1e6eLGDcU53FO1WMwL8NfFdidndAClx3TEnH5o3BB/F1fAyHHsB2wwwDno2k29LPRzlnF7RZ+cZQTNMarRLhceX84S70sDtR5rXU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NpWrolEl; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1743685503; c=relaxed/simple;
+	bh=DtW9p7sIFn3Lr0thD0opZfYZCvln0+vg+bFmQmtjCb4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=uSmSfJXuL4+nq778T55dBy2oPH6cGgUrsFhJ6xT0amtttQMmL2k/7uk8RlIakfkEaACVv+qOqOd6jxZOqoCx/lhjvONsVi4jWhKoE3C8a7n9dDVaXOIoVsx8FtCIwSro4FCG+YjK34mGA1VFWWI1nF5FriB8P1w6OtU4RIQe3qg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iWQ3skjl; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NpWrolEl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743685484;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iiWiLDEE7GXuot+rO5fuKhXP+Y+h9zA73k2z71ZTW1I=;
-	b=NpWrolElrooxQY+WBR4seSfVf3iSqJQcndxWyYJ56PBcMm5LDcwHELwdJJFWA4GP/bziBC
-	lrYka9c6BRRcKQv0GrW2uYghqo3LTBjMUXXECotypZwo1npQ9i9NEkLBwca6O4cJ5X4cub
-	6eaR7LERvwB5hr1z2g5To79hADy+zIg=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-396-bX-LhIO1OymOhXSs7wP2Qg-1; Thu, 03 Apr 2025 09:04:43 -0400
-X-MC-Unique: bX-LhIO1OymOhXSs7wP2Qg-1
-X-Mimecast-MFC-AGG-ID: bX-LhIO1OymOhXSs7wP2Qg_1743685482
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-391315098b2so435125f8f.2
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 06:04:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iWQ3skjl"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43cef035a3bso5926505e9.1;
+        Thu, 03 Apr 2025 06:05:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743685500; x=1744290300; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=9+8olWxBi1dycgdk6iFY3F5FhW2cFaD8o5hGv/hrFiY=;
+        b=iWQ3skjlOeCAInjQMo0jXA7pqx2GeWM+FzkB6piaXjaAUI+MMnUVlAMqQIGAtP43Yw
+         0or+r0TkMkcc2S4XtYvn73Zh8jYHAz3BmeNToCinzAD2QIFPJPPsEBnUW559QR5jMneW
+         /7dQX/euv264qcSlTkeLIgIuhRz2CkSNYjcVYz8Z04DRCV0lp2hM4lFJXa+Ue8TlmNBu
+         NfmKIgdwukOFb5Hk/8qQmDgBfbIjn6GnlVhOzMsdsYMKJFJ9SI6GVpROin3iHo31TifD
+         N+kf0DCpt7mbI2o2pjmfFYSEFQa4G/0mDm8Ia4zasNAb+FD4NgBs2ZR66uA3rBMq1uv7
+         0P6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743685482; x=1744290282;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=iiWiLDEE7GXuot+rO5fuKhXP+Y+h9zA73k2z71ZTW1I=;
-        b=wy46jgHF4OwtnFVhKqnBcyTJR8r3Zof+jn1o8SyUqBZ5Nx3WEA0JimVrESCnWxNXp5
-         bBJjPAmxZpzXIwtY/Cgsep/AWPjiWiVsJZ92PD1boraso8jM1sd7kPlkWhwTbvjaNle1
-         stp3OGUH4kMYxQt5l8Gg7+1VE4DlIMLFvSWFfPbA4kkLJvZVgs8yvAWx4JNEOWKs7iIh
-         u/K/BBlvhnONh/HiReJz1hWwmApxNO9bxw2+wvfrAu6uM3BUnDfUg6hkQT3ZMqpBlis1
-         HnAq/7s4WUNjSKPfOBbHefvi9ojrzeNqvdPoqi5KvacLt8fPLxYvsw+hMUB2wV2eX/Jm
-         ZN0g==
-X-Forwarded-Encrypted: i=1; AJvYcCV4JLJX1TVSDcmo9GFtZLvAAvlWuhTEtnc+v4NXUav7ZWRoH1NMlwG3/xurorlazSo2TKPQ5sH8zeRYElU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw791jIhKESOn5IUqP/IA48VbM1f21dhN2v7q8nAjzoV710QoMT
-	w+bFxsqwwVfa3JaTMtR9x+SaCm5+yQA0I57pji4Jt/lKriJkphdiezgVv6swgT8rgHjU9EDqLO2
-	rcel4om74QfTZ7IpI+mU/PQG+D45X1hW5vXDewwQwd8B9NqKEigDGqy0vkbTrzQ==
-X-Gm-Gg: ASbGncsj/Rjx6FmixSeQrGYNLc5eb1r/Tw6XwcPVef/6WIbYt+kQqO1VxgeI1C5+v1U
-	OOrmVtJz+RDjCvFDYS2FAIHT8vpdB2gDDv8PjOt8kLn7red3u8pMeTKo0DfzV911Qa3yXg2EFxm
-	sqQZdO9tdp5+iPlqFzQnb5oBYvgdljzMjaogLQS4iZxHSOVQ1w0Ov0Lxlcq0tOKhnKaM4AnUZ46
-	/lz2/iqWjpomlGGHpiZUHl/PoutP0yL6YTclxHjdIZp1TWmsPIAw1tcV0a8AhufWIv/5DdM+ctb
-	fXYOWa/khw==
-X-Received: by 2002:adf:9c84:0:b0:39c:1257:c96d with SMTP id ffacd0b85a97d-39c2f966641mr1596390f8f.57.1743685482162;
-        Thu, 03 Apr 2025 06:04:42 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHyvtZMESrru/rDb7nkZxZrQw7eiIgzM7eJY1ncVRnEeIZHyQ07e7ml/r0pMPgg9T3VfQ2QCA==
-X-Received: by 2002:adf:9c84:0:b0:39c:1257:c96d with SMTP id ffacd0b85a97d-39c2f966641mr1596357f8f.57.1743685481755;
-        Thu, 03 Apr 2025 06:04:41 -0700 (PDT)
-Received: from redhat.com ([2a0d:6fc0:1517:1000:ea83:8e5f:3302:3575])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec364ec90sm17785675e9.27.2025.04.03.06.04.40
+        d=1e100.net; s=20230601; t=1743685500; x=1744290300;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9+8olWxBi1dycgdk6iFY3F5FhW2cFaD8o5hGv/hrFiY=;
+        b=aZ1TjCAEGyobWrIglZt+QMRXaTKEysZdRsaAEI0sgssqSewfhK141u4CjZih876HOx
+         /qTQSK9WvaIjspMcCappfOk6smHLiXZ6SBDbYdQI0B3/Thl42EIcOopbzTdYGWshF82p
+         qq7BfAl4OjnM8NpmULX/TETsTM4YcqaBYtcxklpSSSyOuBE7YRQ662I5WaoPhYjDvx2J
+         Wiggkc2vlZEI1deh5+FM06sgNItbQMhHQU3IbazY3hbhuyE17iu8hq/2NmkSLqsVnW1P
+         dShviNVQLAYMyk1K/Rz40KJrlcNftC2Xvfl4bHLKOfUiUO2g3hnPPZ+5C9Z95HVEeugf
+         y37A==
+X-Forwarded-Encrypted: i=1; AJvYcCVzAiHZxJTn69e5N5pUGKiX/MojNLPzHFJ1v0wSe8L8nfDUa3P4L3Zq14/HpfRKJcpMagGrcWUomlJc/8w=@vger.kernel.org, AJvYcCWaw4BHsMSpQZXGDGGEAW2K3l7n56l9vfMCiS6Oe4LxTmpidi1l9MPdTIKGBhF6pgoImhbASJaCHMFP0GFjJiomkD03FQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx0+Sy1PFykEtR4wfink4JqInBYPps/6ZcIAF4MZxZUpLJnRJ0R
+	fAH+dXNEIDDJyb+rQZuumfqh5FyLUZRU9SwpptBgoji5DRXeDDNO
+X-Gm-Gg: ASbGncsKZ1axZyJ4jZL7uHhtYd67FbDCB4SspAEjro0mAZNnhnDgqITAnC2KhFRmKVY
+	vJViQekbaA7a09wLF5sSut/VlvvLr4JT/p2ncWp4XKWBgbmNrIDk4ycIG72DKkDy2/1kNl8VzAZ
+	QfRItBU7vZlYs7iyWXx9jWQe1q7BtPD3E0O3rTedadJo45G4RnHCNYha/CZrDqfCTTgseTIkV9/
+	EVnnYeF42nrMlNP7FhMCPdyHN8wRd7WUrMPYWP5eqffQ5P7ASMyX1Nd7dQ4bjzn++I4fimI5yUu
+	A87DSdQ3uZl60KqUaXPoNbifrzhuQm7Emzrc+gLIlxOHbcACIf3uUWQfur24XJdefvU=
+X-Google-Smtp-Source: AGHT+IF36mXfPM6LXf1+QB4CuMc7FZc2Txv9gwkUvWzcwTVAsbLY7z9AlkUqyPOVCZxDFff/gFSJDw==
+X-Received: by 2002:a5d:64ed:0:b0:39c:1257:c7a2 with SMTP id ffacd0b85a97d-39c2f96b901mr1945534f8f.58.1743685499593;
+        Thu, 03 Apr 2025 06:04:59 -0700 (PDT)
+Received: from pop-os.fkkt.uni-lj.si ([2001:1470:ffef:fe01:1a5c:bca6:cf6d:45c2])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c301b76f2sm1767672f8f.53.2025.04.03.06.04.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Apr 2025 06:04:41 -0700 (PDT)
-Date: Thu, 3 Apr 2025 09:04:37 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Markus Fohrer <markus.fohrer@webked.de>
-Cc: virtualization@lists.linux-foundation.org, jasowang@redhat.com,
-	davem@davemloft.net, edumazet@google.com, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [REGRESSION] Massive virtio-net throughput drop in guest VM with
- Linux 6.8+
-Message-ID: <20250403090001-mutt-send-email-mst@kernel.org>
-References: <1d388413ab9cfd765cd2c5e05b5e69cdb2ec5a10.camel@webked.de>
+        Thu, 03 Apr 2025 06:04:59 -0700 (PDT)
+From: =?UTF-8?q?Ga=C5=A1per=20Nemgar?= <gasper.nemgar@gmail.com>
+To: ikepanhc@gmail.com
+Cc: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	=?UTF-8?q?Ga=C5=A1per=20Nemgar?= <gasper.nemgar@gmail.com>
+Subject: [PATCHv4] platform/x86: ideapad-laptop: added support for some new buttons
+Date: Thu,  3 Apr 2025 15:04:48 +0200
+Message-Id: <20250403130448.16242-1-gasper.nemgar@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1d388413ab9cfd765cd2c5e05b5e69cdb2ec5a10.camel@webked.de>
 
-On Wed, Apr 02, 2025 at 11:12:07PM +0200, Markus Fohrer wrote:
-> Hi,
-> 
-> I'm observing a significant performance regression in KVM guest VMs using virtio-net with recent Linux kernels (6.8.1+ and 6.14).
-> 
-> When running on a host system equipped with a Broadcom NetXtreme-E (bnxt_en) NIC and AMD EPYC CPUs, the network throughput in the guest drops to 100–200 KB/s. The same guest configuration performs normally (~100 MB/s) when using kernel 6.8.0 or when the VM is moved to a host with Intel NICs.
-> 
-> Test environment:
-> - Host: QEMU/KVM, Linux 6.8.1 and 6.14.0
-> - Guest: Linux with virtio-net interface
-> - NIC: Broadcom BCM57416 (bnxt_en driver, no issues at host level)
-> - CPU: AMD EPYC
-> - Storage: virtio-scsi
-> - VM network: virtio-net, virtio-scsi (no CPU or IO bottlenecks)
-> - Traffic test: iperf3, scp, wget consistently slow in guest
-> 
-> This issue is not present:
-> - On 6.8.0 
-> - On hosts with Intel NICs (same VM config)
-> 
-> I have bisected the issue to the following upstream commit:
-> 
->   49d14b54a527 ("virtio-net: Suppress tx timeout warning for small tx")
->   https://git.kernel.org/linus/49d14b54a527
+Added entries to unsuported wmi codes in ideapad_keymap[]
+and one check in wmi_nofify in order to get wmi code 0x13d to trigger platform_profile_cycle
 
-Thanks a lot for the info!
+Signed-off-by: Gašper Nemgar <gasper.nemgar@gmail.com>"
+---
+Changes in v4:
+ - Changed performace button to KE_IGNORE
+Changes in v3:
+ - Minor changes
+Changes in v2:
+ - Added more codes that trigger with key combos (Fn+N, Fn+M, ...)
+ - Added performence toggle in wmi_notify()
+Changes in v1:
+ - Added codes for buttons on laptop(performance, star, ...)
+---
+ drivers/platform/x86/ideapad-laptop.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-
-both the link and commit point at:
-
-commit 49d14b54a527289d09a9480f214b8c586322310a
-Author: Eric Dumazet <edumazet@google.com>
-Date:   Thu Sep 26 16:58:36 2024 +0000
-
-    net: test for not too small csum_start in virtio_net_hdr_to_skb()
-    
-
-is this what you mean?
-
-I don't know which commit is "virtio-net: Suppress tx timeout warning for small tx"
-
-
-
-> Reverting this commit restores normal network performance in affected guest VMs.
-> 
-> I’m happy to provide more data or assist with testing a potential fix.
-> 
-> Thanks,
-> Markus Fohrer
-
-
-Thanks! First I think it's worth checking what is the setup, e.g.
-which offloads are enabled.
-Besides that, I'd start by seeing what's doing on. Assuming I'm right about
-Eric's patch:
-
-diff --git a/include/linux/virtio_net.h b/include/linux/virtio_net.h
-index 276ca543ef44d8..02a9f4dc594d02 100644
---- a/include/linux/virtio_net.h
-+++ b/include/linux/virtio_net.h
-@@ -103,8 +103,10 @@ static inline int virtio_net_hdr_to_skb(struct sk_buff *skb,
+diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+index 17a09b778..72d3306ef 100644
+--- a/drivers/platform/x86/ideapad-laptop.c
++++ b/drivers/platform/x86/ideapad-laptop.c
+@@ -1294,6 +1294,16 @@ static const struct key_entry ideapad_keymap[] = {
+ 	/* Specific to some newer models */
+ 	{ KE_KEY,	0x3e | IDEAPAD_WMI_KEY, { KEY_MICMUTE } },
+ 	{ KE_KEY,	0x3f | IDEAPAD_WMI_KEY, { KEY_RFKILL } },
++	/* Star- (User Asignable Key) */
++	{ KE_KEY,	0x44 | IDEAPAD_WMI_KEY, { KEY_PROG1 } },
++	/* Eye */
++	{ KE_KEY,	0x45 | IDEAPAD_WMI_KEY, { KEY_PROG3 } },
++	/* Performance toggle also Fn+Q, handled inside ideapad_wmi_notify() */
++	{ KE_IGNORE,	0x3d | IDEAPAD_WMI_KEY, { KEY_PROG4 } },
++	/* shift + prtsc */
++	{ KE_KEY,   0x2d | IDEAPAD_WMI_KEY, { KEY_CUT } },
++	{ KE_KEY,   0x29 | IDEAPAD_WMI_KEY, { KEY_TOUCHPAD_TOGGLE } },
++	{ KE_KEY,   0x2a | IDEAPAD_WMI_KEY, { KEY_ROOT_MENU } },
  
- 		if (!skb_partial_csum_set(skb, start, off))
- 			return -EINVAL;
-+		if (skb_transport_offset(skb) < nh_min_len)
-+			return -EINVAL;
+ 	{ KE_END },
+ };
+@@ -2080,6 +2090,14 @@ static void ideapad_wmi_notify(struct wmi_device *wdev, union acpi_object *data)
+ 		dev_dbg(&wdev->dev, "WMI fn-key event: 0x%llx\n",
+ 			data->integer.value);
  
--		nh_min_len = max_t(u32, nh_min_len, skb_transport_offset(skb));
-+		nh_min_len = skb_transport_offset(skb);
- 		p_off = nh_min_len + thlen;
- 		if (!pskb_may_pull(skb, p_off))
- 			return -EINVAL;
-
-
-sticking a printk before return -EINVAL to show the offset and nh_min_len
-would be a good 1st step. Thanks!
++		/* performance button triggered by 0x3d  */
++		if (data->integer.value == 0x3d) {
++			if (priv->dytc) {
++				platform_profile_cycle();
++				break;
++			}
++		}
++
+ 		/* 0x02 FnLock, 0x03 Esc */
+ 		if (data->integer.value == 0x02 || data->integer.value == 0x03)
+ 			ideapad_fn_lock_led_notify(priv, data->integer.value == 0x02);
+-- 
+2.34.1
 
