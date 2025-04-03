@@ -1,183 +1,120 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2EA31F584E
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 11:45:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E2CFEAD7
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 11:47:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743680763; cv=none; b=so4bTpUxpGGAkfL0OnzC1SUACa2iK2R7nO5nEye2cSM56NbHGq7uvdPYV0ylnBJu60Yqz8duAwNqKFsAwnUo09OpU13E5PWv3ZUDY7r+WaxI4VSIIO5a+GUnjwvm2d/hX6wUuQUDQ06QypDPQCwrXYvXcXkJ3WIPD2IZiIGULwQ=
+	t=1743680828; cv=none; b=SlHSAL904iEgM/KeH3TmOq0H9n5lt/gVqtRkWCDui/JbhBnGW0vQ+u8CoBRhgQweUrSzt9P0Xz3wOvJya1Gt4HC7NVK5JfQwvIHrivTWwcedCDl8yWuHYOOgACmhsxy7jShIUiYVAa0Nuw8EYDzg/3eNYKwnzoVbQSjhMfPpxCY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743680763; c=relaxed/simple;
-	bh=6seZVMT4mxgUw2pvw23TXxODsiaG8bqs2GuUNLWPHfM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jtiI+WQRUxGJkBgi94wAxoym++ZJFFkGCTtPp9MOn7b7UAmmC4OVh5vmncJibv4Icgm8x0w6/r2e2CaAcFben0i9ui1HeF5irdNLv9lQn6eSy47quMTCHibFL8qb7DjImND3ivGRxGqrzEtHpMEL22Fl46q1nWmHHyfnTqTYPxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=NoZEQAO7; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1743680828; c=relaxed/simple;
+	bh=bVCLsaxLXWbChut3pmQ9NWbwS6gpz4qyTGWJxKtSsVM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=L8QLTvtrcQQ+ZzHQA9eMx8O9LiS/kEjWol41OjtxspqMsbKrqeqFmBX1uREYzRlUR+zFYDNz60W1l3HcOQYuvpEFi/HEcfpdv3fuPXEpJo+d5WvX+D7kC5M6DbyvhFR0RKA+KIOaJYMFr+ePaYDZgCmAGRJvprB/NB4d17oF+Ow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=MqVpCI2m; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="NoZEQAO7"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ac345bd8e13so133611266b.0
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 04:45:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1743680758; x=1744285558; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xT0elqA6Ab35N4vIgDBgG0DeM4CG/y6atakTcDGWwVY=;
-        b=NoZEQAO7c8wzygUE1SPK8/X/r8K/LGLGO2dhpAxNUWSzn5XtszJnaaiGQ4unlVDXv5
-         ONsFyJgAA0/HrnCUWQR0zKTz7tFYwHkc/mjG1TEUsB/u0EXEqEq8z17dz3qlDDR49rsA
-         Gcjz024pgSbXCBcx6rIPUR8gV1Zx4g0QADjc2mjJ8yoHhndQtENB/hTDjF/kliRkyBSD
-         8nbPGJWMnyo443urzDXOMlML+Dw0udz8uIV2xjwyrowWe1VTW5jWRHj1Vf+FIGn1W0F1
-         2GXYV2PdkYVwlZpv/CSASob6oCa6iGdUA9ScrCfrnuhYO1lYGDrd4Db5E+i6dscaPf/F
-         UlBg==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="MqVpCI2m"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5339sCOG010101
+	for <linux-kernel@vger.kernel.org>; Thu, 3 Apr 2025 11:47:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=aGDDQ0jFQhPbqbOdDbGahC5H
+	PEzlI0t4a/oQTJyUEaA=; b=MqVpCI2mqWZp8Lj0wC0y/WMu8WD/S5b1LcuxFpno
+	GEwxvFPt8DgXb+0YAkVXre9vkPId3PV4Jj5tYfd1vDK0rhZL/eg0ad99GpaJw165
+	uJW0nya9aAYvd7tHD4UrVgohOn9M3fJi6IIN2ybVM9Sh5RZniPcklh8bUXUD+y77
+	C9cDQYwcxme3wepARo9Q4lvoBRGaJJQcuFz6GE399d0IzUSUJUkbySk63ZDh0Xa/
+	2hZA6ccQj6EpAUiLzy2wA6kuqVUDWaxUZxsuu52UF7Qnp5+Fe00I4rTsb++kQynB
+	mmv5SAiFi6WITFVZvGzPUTh8E+n6po2sJJZCaa6o+f91gg==
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45se4g1qr4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 11:47:06 +0000 (GMT)
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c5d608e703so131361385a.3
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 04:47:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743680758; x=1744285558;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xT0elqA6Ab35N4vIgDBgG0DeM4CG/y6atakTcDGWwVY=;
-        b=STgoWNuHdkwdZd/T3f89rlitTXq0dFNLhNwv22PBnoroB76MvbaufiOEE4Dl7UGECs
-         UQJRMr2wUxGYFyPfE3gIu23gopjfc+H1k8yGYAQNPde2WMmpTOr5wJo1xPaN6NHwlT6S
-         OM+aLiaR1ig1/ZWk13ag7McBqo6+P4JAyIYM77o9A2byXSgjtZVjkNG9VnHidypoKpTb
-         6JKwJHAVdRni49ksVWS6uwRDc5GWEpLx0yD4fD1v3o8miOtWeoFf5c6sgyNPKdzpt6IC
-         t6KpJpy4Fc0R0bpzfLHjJwnIxwgv7+/Vg2VAPxCGNDqh52ZwTlq2um3uqVE3XrYrvxuL
-         /N7w==
-X-Forwarded-Encrypted: i=1; AJvYcCXqJ7+Ks2koIorWDsOH3JqS7jyTPqOkqxWqg+n9eSE9jR4x26LKxEKpkRy1Hk1AyNKFoJ0nnPnotFoXutI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzCzkp7r8iTEQh8bpjYS33bUeJoLwd4YPyzrPmZi+7m+8BOPlvF
-	Wvvu0GLa81Wl2pbEsb6mReFuQzf+OEwzAPiFw4QWEL+6Mf2SIv3Gmp0NEfeF/VKJl4AOptbLhu3
-	DQqmITBdJ5fBXUI0BmDb1b58i4WCvRJBWRo/vB2fCyqz8FfYgCHw=
-X-Gm-Gg: ASbGncu6um+/tLib51rVW9keZwDX+PN23OJrMUlRxQ8dBs6fzeYMuWlCO1Pcy2jjwsa
-	EfMqXoTv7KSFXwT6NZxxGzuS09SputV2Nc2gC61fuXmym3Q1cuHw1Ps34DviEXboM5NRUX3G+WU
-	29bFmcKHBvZgJctaxwEmBP6CCvyA+Td152OWkq7Gau1pvtTAaI8y8AH14aNxQ=
-X-Google-Smtp-Source: AGHT+IFEoSrJqV3CuTWmq5VUsEKTKD2aQ7X1u8XmIfa8FBxx9myROHVSeAT9MVg3SGJ6Q068sZDIjLAYp1E/afFvhsQ=
-X-Received: by 2002:a17:907:2cc5:b0:ac6:d142:2c64 with SMTP id
- a640c23a62f3a-ac7a16c1272mr538034766b.18.1743680757983; Thu, 03 Apr 2025
- 04:45:57 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743680825; x=1744285625;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aGDDQ0jFQhPbqbOdDbGahC5HPEzlI0t4a/oQTJyUEaA=;
+        b=ZlP6eZAxwbD5tMBr0xHM9VIDHqf3fi+WPuGbNxhDE1UvZT8KWsj1DaUznJhNSOqqFd
+         eqXOoqE3vmqYMyHka+CNUkoIh3+igEIq5PYjyIxE9Vb/EZSZqUaIRX68LnVQKeVxlnKv
+         05Clq3XmOw/4niLwrYQtInoYsYth6YbZ0fJCl8Y/qz0bqI0d/JFpVPUvYpRomebmHiGF
+         QhmlQH8tjvSiVHOtLUk9tODGd+4iFTBTZOw9T3YY06Bq9oSIh5SX4p+rsx85m/F24o+q
+         e6sOUg/UCmH4r4lac0WgO50Zw3hlery4avXreUx4IKhZmeavR8P7CuC98CYVwH19HhvL
+         Wchg==
+X-Forwarded-Encrypted: i=1; AJvYcCW2K8JqOdZriSBOvQkCdtKwiitg3gykVaByvI94l0u8c6z2V7srnN6pWyTJC2ac0klFPSJNgu4PqiTtbS0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyFZ3rPWuj6sPTHuMNjVtwYe6LkwnblRaBxpgi+4akuphOz8AJm
+	Pv/4XpHmQFcw7/pMUxwKrTC5zN1UgJnKvg1X/QQbSuRElmpZLZRyYWGp2kFEsS2SwkAURdI3/9Z
+	bZNgMbY5PXJbjJ9yHatO62J6htQNopsH9vko8W1tXHUKNa1m95ZZ2TWmc1u8bYBA=
+X-Gm-Gg: ASbGncsX/eomXvrsikZPE3s/PmW76zyIbyMhU7rBrq9YM4PbNnl47mU7IdPX2Vnc849
+	5gePzH1x5La3MnoQWa5pSlsDl5OraK8GXs5szSmLRvp/8L7xIGDUKZva3a1nDrL5ZkVWC/TUzmn
+	dtAVG86PbTenEuK3BJPnPfNtK+i3KzaUhAS/bFkQi91w4l3ipPnOqrIruHT/iatxqUT3gxMHsnz
+	GxTA4QTSITenPnYrUJtQexH4otBOXa5qOAvzJhYoGxpt9J6OHf9ebaGVkBLz67M1ueZO5SoLlVZ
+	aH2IECvufGEpx3jCmAwuY62PONbO1Ow4Yudm+dKunKsIuUQ2VkdTYjPXJne3T+7vzmpEhpY0X0O
+	Ty70=
+X-Received: by 2002:a05:620a:4081:b0:7c5:4adb:7819 with SMTP id af79cd13be357-7c76df69886mr231439285a.16.1743680825065;
+        Thu, 03 Apr 2025 04:47:05 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHvB3vmejuvkvpwELxt6ofgBobQEqwcfxb76F9Sa70Rld/6kujkTtCtv4H2O+UpMOZfBwLcHg==
+X-Received: by 2002:a05:620a:4081:b0:7c5:4adb:7819 with SMTP id af79cd13be357-7c76df69886mr231436585a.16.1743680824698;
+        Thu, 03 Apr 2025 04:47:04 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54c1e5ab9easm134722e87.38.2025.04.03.04.47.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Apr 2025 04:47:02 -0700 (PDT)
+Date: Thu, 3 Apr 2025 14:46:59 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] remoteproc: qcom_wcnss_iris: Add missing put_device() on
+ error in probe
+Message-ID: <3zxqrofeg6b4xewituh3aesixmlirwuy5mvzng74y7srr57i26@xw2w3rvwk2pg>
+References: <4604f7e0-3217-4095-b28a-3ff8b5afad3a@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250402-iio-adc-ad7380-fix-event-threshold-shift-v1-1-ad4975c296b2@baylibre.com>
-In-Reply-To: <20250402-iio-adc-ad7380-fix-event-threshold-shift-v1-1-ad4975c296b2@baylibre.com>
-From: Julien Stephan <jstephan@baylibre.com>
-Date: Thu, 3 Apr 2025 13:45:41 +0200
-X-Gm-Features: AQ5f1JrIaOCDhWTTME3ilw0spgYzdZsMYgvmtZS5ARs3HjvqzcXVm1pdZCCYC84
-Message-ID: <CAEHHSvbt7v7OCbW4PEwgop74n_5NW8Una1-R3w3yUqu8-22=Dg@mail.gmail.com>
-Subject: Re: [PATCH] iio: adc: ad7380: fix event threshold shift
-To: David Lechner <dlechner@baylibre.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, Michael Hennerich <michael.hennerich@analog.com>, 
-	=?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, linux-iio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4604f7e0-3217-4095-b28a-3ff8b5afad3a@stanley.mountain>
+X-Proofpoint-GUID: ea4x3dMJrX3jtJEZw3j44MOpyk2H57JU
+X-Authority-Analysis: v=2.4 cv=a8Iw9VSF c=1 sm=1 tr=0 ts=67ee753a cx=c_pps a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8 a=-lOYY9mtbGAmBqhMW_wA:9 a=CjuIK1q_8ugA:10
+ a=bTQJ7kPSJx9SKPbeHEYW:22 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-ORIG-GUID: ea4x3dMJrX3jtJEZw3j44MOpyk2H57JU
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-03_05,2025-04-02_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 impostorscore=0
+ adultscore=0 phishscore=0 priorityscore=1501 mlxscore=0 lowpriorityscore=0
+ suspectscore=0 bulkscore=0 mlxlogscore=999 malwarescore=0 spamscore=0
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504030047
 
-Le jeu. 3 avr. 2025 =C3=A0 01:56, David Lechner <dlechner@baylibre.com> a =
-=C3=A9crit :
->
-> Add required bit shift to the event threshold read function to get
-> correct scaling.
->
-> When alert support was added, the write function correctly included the
-> required shift needed to convert the threshold register value to the
-> same scale as the raw ADC value. However, the shift got missed in the
-> read function.
-
-Hi David,
-
-Thank you for fixing that. LGTM
-
-Reviewed-by: Julien Stephan <jstephan@baylibre.com>
-
->
-> Fixes: 27d1a4dbe1e1 ("iio: adc: ad7380: add alert support")
-> Signed-off-by: David Lechner <dlechner@baylibre.com>
+On Wed, Apr 02, 2025 at 01:59:51PM +0300, Dan Carpenter wrote:
+> The device_del() call matches with the device_add() but we also need
+> to call put_device() to trigger the qcom_iris_release().
+> 
+> Fixes: 1fcef985c8bd ("remoteproc: qcom: wcnss: Fix race with iris probe")
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 > ---
->  drivers/iio/adc/ad7380.c | 25 +++++++++++++++++++------
->  1 file changed, 19 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/iio/adc/ad7380.c b/drivers/iio/adc/ad7380.c
-> index 4fcb49fdf56639784098f0147a9faef8dcb6b0f6..f3962a45e1e5b88cebf712cc8=
-67fbb576d3ca058 100644
-> --- a/drivers/iio/adc/ad7380.c
-> +++ b/drivers/iio/adc/ad7380.c
-> @@ -1611,11 +1611,25 @@ static int ad7380_write_event_config(struct iio_d=
-ev *indio_dev,
->         return ret;
->  }
->
-> -static int ad7380_get_alert_th(struct ad7380_state *st,
-> +static int ad7380_get_alert_th(struct iio_dev *indio_dev,
-> +                              const struct iio_chan_spec *chan,
->                                enum iio_event_direction dir,
->                                int *val)
->  {
-> -       int ret, tmp;
-> +       struct ad7380_state *st =3D iio_priv(indio_dev);
-> +       const struct iio_scan_type *scan_type;
-> +       int ret, tmp, shift;
-> +
-> +       scan_type =3D iio_get_current_scan_type(indio_dev, chan);
-> +       if (IS_ERR(scan_type))
-> +               return PTR_ERR(scan_type);
-> +
-> +       /*
-> +        * The register value is 12-bits and is compared to the most sign=
-ificant
-> +        * bits of raw value, therefore a shift is required to convert th=
-is to
-> +        * the same scale as the raw value.
-> +        */
-> +       shift =3D scan_type->realbits - 12;
->
->         switch (dir) {
->         case IIO_EV_DIR_RISING:
-> @@ -1625,7 +1639,7 @@ static int ad7380_get_alert_th(struct ad7380_state =
-*st,
->                 if (ret)
->                         return ret;
->
-> -               *val =3D FIELD_GET(AD7380_ALERT_HIGH_TH, tmp);
-> +               *val =3D FIELD_GET(AD7380_ALERT_HIGH_TH, tmp) << shift;
->                 return IIO_VAL_INT;
->         case IIO_EV_DIR_FALLING:
->                 ret =3D regmap_read(st->regmap,
-> @@ -1634,7 +1648,7 @@ static int ad7380_get_alert_th(struct ad7380_state =
-*st,
->                 if (ret)
->                         return ret;
->
-> -               *val =3D FIELD_GET(AD7380_ALERT_LOW_TH, tmp);
-> +               *val =3D FIELD_GET(AD7380_ALERT_LOW_TH, tmp) << shift;
->                 return IIO_VAL_INT;
->         default:
->                 return -EINVAL;
-> @@ -1648,7 +1662,6 @@ static int ad7380_read_event_value(struct iio_dev *=
-indio_dev,
->                                    enum iio_event_info info,
->                                    int *val, int *val2)
->  {
-> -       struct ad7380_state *st =3D iio_priv(indio_dev);
->         int ret;
->
->         switch (info) {
-> @@ -1656,7 +1669,7 @@ static int ad7380_read_event_value(struct iio_dev *=
-indio_dev,
->                 if (!iio_device_claim_direct(indio_dev))
->                         return -EBUSY;
->
-> -               ret =3D ad7380_get_alert_th(st, dir, val);
-> +               ret =3D ad7380_get_alert_th(indio_dev, chan, dir, val);
->
->                 iio_device_release_direct(indio_dev);
->                 return ret;
->
-> ---
-> base-commit: f8ffc92ae9052e6615896052f0c5b808bfc17520
-> change-id: 20250402-iio-adc-ad7380-fix-event-threshold-shift-b614db1a307f
->
-> Best regards,
-> --
-> David Lechner <dlechner@baylibre.com>
->
+> This patch is based on static analysis and has not been tested.  Please
+> review carefully, etc.  Another option would be to call device_unregister()
+> 
+>  drivers/remoteproc/qcom_wcnss_iris.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+
+-- 
+With best wishes
+Dmitry
