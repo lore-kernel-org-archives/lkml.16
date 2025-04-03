@@ -1,93 +1,110 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 301D718B464
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 05:29:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE43619D090;
+	Thu,  3 Apr 2025 05:30:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743658151; cv=none; b=D2euNz4s3Nf9dIvARyX0ADbmOvJVm3WPD19qayJAaUwOq1W003XyeH4UY6NcYAx/d75ju/HkuO/5RXdXXuLjUTCH5P8fX/vpm6dfUNeB0nb3GKT6e2a+M2wq1Rlin3G7ekS6jLDVYjYrgdhwRx92zPBYXQuqIo9rUIqTMrp6LpU=
+	t=1743658204; cv=none; b=WSe51gbxXdwi3D1jnoBcSlxcpDJfN1ln96gfa/BcwJsnWhgsSvUciqzMwt7gPsu6tttyt/ukR8IeK4pMVwQemOy9pfEcclkR/sCCnmobvhL6hsI14QnKbhAkZYdnSLKjPr0cX+UYyAUOCiUUxIRn+N19+Rv2GMjZ+VpxKvn/kpA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743658151; c=relaxed/simple;
-	bh=D1TYYNwMGMW3cQvKYmEcax+Gzo3gffvUGzBkP7tjcU8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=H8Aj7TWiNTBa7FunPaIiVQIh721gv0povW6ghJGHSzdaAO1co0WuPZBsUmC0pkulbwGxZzEGgIIPbHbeQZOKScurc0221mFvZVBKMjLpACc+TzTfkkKP+Yd+viqIrc6H7l5fCgMViaAb331KOecKo6ITH6b7h4BpVSqyLVNGZ+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A11FF106F;
-	Wed,  2 Apr 2025 22:29:10 -0700 (PDT)
-Received: from K4MQJ0H1H2.arm.com (unknown [10.163.46.203])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id AF28C3F694;
-	Wed,  2 Apr 2025 22:29:02 -0700 (PDT)
-From: Dev Jain <dev.jain@arm.com>
-To: catalin.marinas@arm.com,
-	will@kernel.org
-Cc: gshan@redhat.com,
-	rppt@kernel.org,
-	steven.price@arm.com,
-	suzuki.poulose@arm.com,
-	tianyaxiong@kylinos.cn,
-	ardb@kernel.org,
-	david@redhat.com,
-	ryan.roberts@arm.com,
-	urezki@gmail.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Dev Jain <dev.jain@arm.com>
-Subject: [PATCH v2] arm64: pageattr: Explicitly bail out when changing permissions for vmalloc_huge mappings
-Date: Thu,  3 Apr 2025 10:58:44 +0530
-Message-Id: <20250403052844.61818-1-dev.jain@arm.com>
-X-Mailer: git-send-email 2.39.3 (Apple Git-146)
+	s=arc-20240116; t=1743658204; c=relaxed/simple;
+	bh=/uspCOkOssOjUIDVMc4Y03wLPniMm6VVD8oIR4aLFdA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KnGLTm7Oaraiu+5mh9fU9RJio2XXIzS/RkR++ty2OGgMjKCPiFEx3l28v+XDhFTLcG3WoP3T36FemP/g9JQKpAo4p/CCKUWCRYedctd2O8sBwX1khfe2oBCFG+LT08i/9Kh4ToMjrNvxV86bdpP6zp77pVhvxbXDez4oCfxAioA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kd3+inEn; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kd3+inEn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5AF7C4CEE9;
+	Thu,  3 Apr 2025 05:30:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743658204;
+	bh=/uspCOkOssOjUIDVMc4Y03wLPniMm6VVD8oIR4aLFdA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Kd3+inEniTBuMl56XBbqpo1sryrItBu7Y3DEux34nnquR2TjRed3bNaF+gpcOIprQ
+	 ZXhLU124QCKGGcm64YKUJcplubLHXZCkFFZv159WjD/5xZAyGzZP33oMSrWvgonFen
+	 uXlJa+VsTfWUe55h13PeuZQSldP2/88Lxvcyg7zBsOT2JOUaJTEhKXZv9sCrW9y0K/
+	 rrmAzjOhjeMeBwZM8zFV/eYsEowhn7LULrq30nwRO6HxTiPF1l2edebZfusOoMjgSF
+	 yyI+zNACHbr5ldASHrZcrkm4+3ZM3tkke6Dh++ykok2mo41NEf28jEnttTxI7NvwZ0
+	 7aJgelgomyC+A==
+Date: Wed, 2 Apr 2025 22:30:02 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Howard Chu <howardchu95@gmail.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] perf trace: Fix some leaks of struct thread
+Message-ID: <Z-4c2rZZzD59FFJn@google.com>
+References: <20250331184638.3856982-1-namhyung@kernel.org>
+ <CAH0uvohL4cFXukxhY6G4WfAWXqPOi3HbEHv=_KWixBQmgon2KQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAH0uvohL4cFXukxhY6G4WfAWXqPOi3HbEHv=_KWixBQmgon2KQ@mail.gmail.com>
 
-arm64 uses apply_to_page_range to change permissions for kernel vmalloc mappings,
-which does not support changing permissions for block mappings. This function
-will change permissions until it encounters a block mapping, and will bail
-out with a warning. Since there are no reports of this triggering, it
-implies that there are currently no cases of code doing a vmalloc_huge()
-followed by partial permission change. But this is a footgun waiting to
-go off, so let's detect it early and avoid the possibility of permissions
-in an intermediate state. So,  explicitly disallow changing permissions
-for VM_ALLOW_HUGE_VMAP mappings.
+Hello Howard,
 
-Reviewed-by: Ryan Roberts <ryan.roberts@arm.com>
-Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-Signed-off-by: Dev Jain <dev.jain@arm.com>
----
-v1->v2:
- - Improve changelog, keep mention of page mappings in comment
+On Tue, Apr 01, 2025 at 06:07:15PM -0700, Howard Chu wrote:
+> Hello Namhyung,
+> 
+> On Mon, Mar 31, 2025 at 11:46 AM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > I've found some leaks from 'perf trace -a'.  It seems there are more
+> > leaks but this is what I can find for now.
+> >
+> > Cc: Howard Chu <howardchu95@gmail.com>
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> > ---
+> >  tools/perf/builtin-trace.c | 4 +++-
+> >  1 file changed, 3 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+> > index 3d0c0076884d34cb..10cd99888a9a11b5 100644
+> > --- a/tools/perf/builtin-trace.c
+> > +++ b/tools/perf/builtin-trace.c
+> > @@ -2835,7 +2835,7 @@ static int trace__fprintf_sys_enter(struct trace *trace, struct evsel *evsel,
+> >         e_machine = thread__e_machine(thread, trace->host);
+> >         sc = trace__syscall_info(trace, evsel, e_machine, id);
+> >         if (sc == NULL)
+> > -               return -1;
+> > +               goto out_put;
+> >         ttrace = thread__trace(thread, trace);
+> >         /*
+> >          * We need to get ttrace just to make sure it is there when syscall__scnprintf_args()
+> > @@ -4123,8 +4123,10 @@ static int trace__set_filter_loop_pids(struct trace *trace)
+> >                         pids[nr++] = thread__tid(parent);
+> 
+> I suggest adding a:
+> thread_put(parent);
+> here, just before the break.
 
- arch/arm64/mm/pageattr.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+You're right, will add it.
 
-diff --git a/arch/arm64/mm/pageattr.c b/arch/arm64/mm/pageattr.c
-index 39fd1f7ff02a..04d4a8f676db 100644
---- a/arch/arm64/mm/pageattr.c
-+++ b/arch/arm64/mm/pageattr.c
-@@ -96,8 +96,8 @@ static int change_memory_common(unsigned long addr, int numpages,
- 	 * we are operating on does not result in such splitting.
- 	 *
- 	 * Let's restrict ourselves to mappings created by vmalloc (or vmap).
--	 * Those are guaranteed to consist entirely of page mappings, and
--	 * splitting is never needed.
-+	 * Disallow VM_ALLOW_HUGE_VMAP mappings to guarantee that only page
-+	 * mappings are updated and splitting is never needed.
- 	 *
- 	 * So check whether the [addr, addr + size) interval is entirely
- 	 * covered by precisely one VM area that has the VM_ALLOC flag set.
-@@ -105,7 +105,7 @@ static int change_memory_common(unsigned long addr, int numpages,
- 	area = find_vm_area((void *)addr);
- 	if (!area ||
- 	    end > (unsigned long)kasan_reset_tag(area->addr) + area->size ||
--	    !(area->flags & VM_ALLOC))
-+	    ((area->flags & (VM_ALLOC | VM_ALLOW_HUGE_VMAP)) != VM_ALLOC))
- 		return -EINVAL;
- 
- 	if (!numpages)
--- 
-2.30.2
+Thanks,
+Namhyung
 
+> 
+> >                         break;
+> >                 }
+> > +               thread__put(thread);
+> >                 thread = parent;
+> >         }
+> > +       thread__put(thread);
+> >
+> >         err = evlist__append_tp_filter_pids(trace->evlist, nr, pids);
+> >         if (!err && trace->filter_pids.map)
+> > --
+> > 2.49.0.472.ge94155a9ec-goog
+> >
+> 
+> Thanks,
+> Howard
