@@ -1,157 +1,99 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A41325A2DE;
-	Thu,  3 Apr 2025 19:53:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A65A025290E;
+	Thu,  3 Apr 2025 19:53:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743710001; cv=none; b=SIJTUhPVll2EXbOGYe69UDrKYTFMuiIo6OPHEISZGliQ1Ads04DTiuz9FcqV5V/DfeKdClaryvVwUPksVMFYElCqqgC2ljghn5XQMLM2Io/SSANqWNGjUajhGVQlY7MZVvy/oOUsILwEOzAzjWeIq/d8g7arXGfWzdNqUFYlSio=
+	t=1743710002; cv=none; b=TX3gGEemgpssAfLzo2xbc7vVJUkekilbxD5jLkos9d4dO+SYD1pFziXQ/l/cMaoVK5GbloP0uTOUYeLirTQra9Im6Umn1atppiOulz03DCFXETTIiXcc24x8wobmovDcRNGKrIux/3KLNjS8Qi2IRfoLm6vZhu3MB4vtTjQnj40=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743710001; c=relaxed/simple;
-	bh=+rx0GW1KDDOvxeHXkvPeapZddDRpOPK/Xtq4t67G4LI=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=DURZZxYQRqTCTq0zodnBR04Wi2PMGoDNDpl/gsOmO4KOaoi/pzfJrN73UYZpoo2E3mvCMRExH3Agm5QT5XQs7vavZgu8a62zIeTZheTRS7IrdW8lCPkuD3i9MTxhAieF+z+2PkOaxWUvG590WgPVCFlByStytc1rtec7fHwUd6M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V9x4/MEx; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743710002; c=relaxed/simple;
+	bh=SUI00eySafeyd6YAdaNfDWXQziyjQoigDH+2+g1acA8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OVAoipemilos2N52gIhnyUav0VdugyU9l15Zs2RciNGxicJeAv1kRfUCvim/yrQMvK2+KPDHlGxS69XJ6ga4ixRO+epgVVkisB34H+h43l6gN9NkQxsLGVR5ytBdZgOvvkQSBQHHUMPgG5QvGQjHvPruzVApFfVNMmPyU2cOv5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=MUnYnC4/; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V9x4/MEx"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-39c266c1389so903093f8f.1;
-        Thu, 03 Apr 2025 12:53:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743709996; x=1744314796; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=UCx9U48sN7s82eXli9pfvSHJhA15swjvCSV5I/aKGUE=;
-        b=V9x4/MEx/l6YGUvUPcnlNrr5NaKcetHWkbFYZMmxDpNswlIwXSSODZ+zdl5eaVImZs
-         /FzeUgR9ky92/Fuxdc2K5N0H0unhZubXP3bNA0O1i37nPIvVytKx9Kb1dSHU4sfwSjB/
-         DuoKBFqMg/c1YHIr+KwNSy0jwl2BvaSp8odhiGOsm3bqbCL73KT7Ei2dXHlMc33NLZgc
-         euPUBLzNTyUJVmeNtF26XYETa1mj5uj8g26etJ42FY5oM4DGYDKeLFHHUqQdOp0fz/eo
-         j6fI0mybyLYPKQgiugGpkPBZP9Zuzp2QdeQIWXxAh8MDrZBIiAwxuqEbPeaTDFVoXdlB
-         lK7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743709996; x=1744314796;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=UCx9U48sN7s82eXli9pfvSHJhA15swjvCSV5I/aKGUE=;
-        b=s15QsJAFPlyKrW0aa7bXJV9TSPsmYbqea8BdobGlHLvddAfJie6XS+RxedRpZ9qkxg
-         g55YA310+2pT/e9kstB4iz6pBbVtMqtEDt5GQccL+YyfwsEI8DdMwqthWkxBEoXwOdyA
-         9tm3keDFsGZWAwESyPZh/cRTzJ9VTEE+L6O3cGgvC/yJzobrJjROGCZ4yo7FU6+vYIPd
-         zlUa6Su6ZX0IufIfsIopDqNtxzbKU5Ll9fgy2e4tNn7CLfbkPkGl3prLx7rvQYnvbQGF
-         vqLr+wb3+NBQ4YLWROUikNgAA5uqx4i3EZu1J6v0vGJVv9fEylonykiURQ42BHeD9F59
-         VF4g==
-X-Forwarded-Encrypted: i=1; AJvYcCUElBq+19pRPD0FTeYaL4nrz45Q6h8YcyxvJ5tKMYuP8N2jybEc/1p+TWmtlGVwIQGrBHBzavnNsvB6@vger.kernel.org, AJvYcCUxarqPS7fCG8XMy6GaGROqcxwswwt3oHwPk1IPNvOHCp3a+vHayXlwqZxj5/SR/T01TB+sUhoVPBfi8mSX@vger.kernel.org, AJvYcCVbYeccZBMn03/grHT6snS0+G1rEAudKf+pYzxlHg8QP/tpfx4E8+aw43S8LvU4B9I/TadecfMomyz8@vger.kernel.org, AJvYcCX0deaZnlp8ggM96KHaRA5nJ1dbQi3uaxDUHQfveAqfSrdYb6hgW17/nDE7KPBX1ffIPH+txb9sTCCS@vger.kernel.org
-X-Gm-Message-State: AOJu0YyzXvkZjfLc0pV9ClRK/XULWqJj67UTXUGfas6HaDa7huSbCCbP
-	fJYf+Q2C+GPyE0EgVDY+EQmd7jyxU7wCJUheJtJO5rnHSXWyEEBJ
-X-Gm-Gg: ASbGncv1t8ZwDpE3jBP966hSBv/R0vGKR/mn3QZlRv3gff7ZOIIjl0EYdHWkkIFQygi
-	yniNKlh+uF85rcM4nq7LgVP/Up4SAhoIkf8QxY2davD0i0nn3jmqfAwNPBazpTPy7fcCsCl2BTh
-	vJEIYyjGpUrkpYww1Uq+zOGd3Zf2yehNWtWr+oljXLHSnXuJ6Gwlr07J3uXWpzRM2mmSyYwtAKx
-	aPv6QuYGVpKaJMnzmMFV4okyGtbHTDrSp5K/pollYEVtowuixCdUIolTPL++J3waoodCTS/lUhe
-	K2SvITt42iV95ioffBUAuaMzwnc51FWI53Qj7kFkIMgmJT0wpNjYCoyBk1qfpihgj9UiLPUrZgC
-	k6r3DfLo/g8fe/+bUy+8=
-X-Google-Smtp-Source: AGHT+IEMN6NZ7m6VJxF1SCzwC8Wi2Ppth78oaT27iCTvthOsqvOJuk7AmvwLv91+IX2CRdmI4OAH3g==
-X-Received: by 2002:adf:b644:0:b0:39c:c64e:cf58 with SMTP id ffacd0b85a97d-39d146625c5mr68053f8f.55.1743709995392;
-        Thu, 03 Apr 2025 12:53:15 -0700 (PDT)
-Received: from ?IPv6:2001:818:ea56:d000:56e0:ceba:7da4:6673? ([2001:818:ea56:d000:56e0:ceba:7da4:6673])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c301b8ae1sm2638150f8f.51.2025.04.03.12.53.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Apr 2025 12:53:14 -0700 (PDT)
-Message-ID: <ccf7767e4c447aa5febad9c6139c1e76dbfd19f6.camel@gmail.com>
-Subject: Re: [PATCH 2/5] iio: adc: ad7380: rename internal_ref_only
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: David Lechner <dlechner@baylibre.com>, Jonathan Cameron
- <jic23@kernel.org>,  Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
- linux-iio@vger.kernel.org
-Cc: Michael Hennerich <Michael.Hennerich@analog.com>, Nuno
- =?ISO-8859-1?Q?S=E1?=
-	 <nuno.sa@analog.com>, Jonathan Corbet <corbet@lwn.net>, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org
-Date: Thu, 03 Apr 2025 19:53:32 +0100
-In-Reply-To: <20250401-iio-ad7380-add-ad7389-4-v1-2-23d2568aa24f@baylibre.com>
-References: 
-	<20250401-iio-ad7380-add-ad7389-4-v1-0-23d2568aa24f@baylibre.com>
-	 <20250401-iio-ad7380-add-ad7389-4-v1-2-23d2568aa24f@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="MUnYnC4/"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id CCC9A6D5;
+	Thu,  3 Apr 2025 21:51:18 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1743709879;
+	bh=SUI00eySafeyd6YAdaNfDWXQziyjQoigDH+2+g1acA8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MUnYnC4/T7y59yd7JqupnWgY/lfEQmBWcuoJjXqyH85TohAEaGA0FFOCxpzLCFQpk
+	 SUOFxXNM2imOOXTaKxEH9wLHmZJdm2wrMN2qnQvFEd1ns/MILZNCF+73MOD57uF4Y8
+	 dQD16bRmfllhOplVvgbCcI+wmXdpO4acq/abUVpE=
+Date: Thu, 3 Apr 2025 22:52:47 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: "bo.kong" <bo.kong@mediatek.com>
+Cc: Rob Herring <robh@kernel.org>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org, zhaoyuan.chen@mediatek.com,
+	Teddy.Chen@mediatek.com,
+	Project_Global_Chrome_Upstream_Group@mediatek.com
+Subject: Re: [PATCH v5 0/4] Add AIE driver support for mt8188
+Message-ID: <20250403195247.GA12280@pendragon.ideasonboard.com>
+References: <20250403074005.21472-1-bo.kong@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250403074005.21472-1-bo.kong@mediatek.com>
 
-On Tue, 2025-04-01 at 17:50 -0500, David Lechner wrote:
-> Rename adaq_internal_ref_only to internal_ref_only_adaq. There are non-
-> ADAQ chips in the family that are also internal reference only, so the
-> adaq_ prefix is misleading.
->=20
-> Signed-off-by: David Lechner <dlechner@baylibre.com>
-> ---
+Hi Bo,
 
-Reviewed-by: Nuno S=C3=A1 <nuno.sa@analog.com>
+Thank you for the patches.
 
-> =C2=A0drivers/iio/adc/ad7380.c | 10 +++++-----
-> =C2=A01 file changed, 5 insertions(+), 5 deletions(-)
->=20
-> diff --git a/drivers/iio/adc/ad7380.c b/drivers/iio/adc/ad7380.c
-> index
-> 4fcb49fdf56639784098f0147a9faef8dcb6b0f6..18ed07275be8e031e54f3595f70afe4=
-7514084cd
-> 100644
-> --- a/drivers/iio/adc/ad7380.c
-> +++ b/drivers/iio/adc/ad7380.c
-> @@ -119,7 +119,7 @@ struct ad7380_chip_info {
-> =C2=A0	const char * const *supplies;
-> =C2=A0	unsigned int num_supplies;
-> =C2=A0	bool external_ref_only;
-> -	bool adaq_internal_ref_only;
-> +	bool internal_ref_only;
-> =C2=A0	const char * const *vcm_supplies;
-> =C2=A0	unsigned int num_vcm_supplies;
-> =C2=A0	const unsigned long *available_scan_masks;
-> @@ -806,7 +806,7 @@ static const struct ad7380_chip_info adaq4370_4_chip_=
-info =3D {
-> =C2=A0	.num_simult_channels =3D 4,
-> =C2=A0	.supplies =3D adaq4380_supplies,
-> =C2=A0	.num_supplies =3D ARRAY_SIZE(adaq4380_supplies),
-> -	.adaq_internal_ref_only =3D true,
-> +	.internal_ref_only =3D true,
-> =C2=A0	.has_hardware_gain =3D true,
-> =C2=A0	.available_scan_masks =3D ad7380_4_channel_scan_masks,
-> =C2=A0	.timing_specs =3D &ad7380_4_timing,
-> @@ -821,7 +821,7 @@ static const struct ad7380_chip_info adaq4380_4_chip_=
-info =3D {
-> =C2=A0	.num_simult_channels =3D 4,
-> =C2=A0	.supplies =3D adaq4380_supplies,
-> =C2=A0	.num_supplies =3D ARRAY_SIZE(adaq4380_supplies),
-> -	.adaq_internal_ref_only =3D true,
-> +	.internal_ref_only =3D true,
-> =C2=A0	.has_hardware_gain =3D true,
-> =C2=A0	.available_scan_masks =3D ad7380_4_channel_scan_masks,
-> =C2=A0	.timing_specs =3D &ad7380_4_timing,
-> @@ -836,7 +836,7 @@ static const struct ad7380_chip_info adaq4381_4_chip_=
-info =3D {
-> =C2=A0	.num_simult_channels =3D 4,
-> =C2=A0	.supplies =3D adaq4380_supplies,
-> =C2=A0	.num_supplies =3D ARRAY_SIZE(adaq4380_supplies),
-> -	.adaq_internal_ref_only =3D true,
-> +	.internal_ref_only =3D true,
-> =C2=A0	.has_hardware_gain =3D true,
-> =C2=A0	.available_scan_masks =3D ad7380_4_channel_scan_masks,
-> =C2=A0	.timing_specs =3D &ad7380_4_timing,
-> @@ -1847,7 +1847,7 @@ static int ad7380_probe(struct spi_device *spi)
-> =C2=A0				=C2=A0=C2=A0=C2=A0=C2=A0 "Failed to enable power supplies\n");
-> =C2=A0	fsleep(T_POWERUP_US);
-> =C2=A0
-> -	if (st->chip_info->adaq_internal_ref_only) {
-> +	if (st->chip_info->internal_ref_only) {
-> =C2=A0		/*
-> =C2=A0		 * ADAQ chips use fixed internal reference but still
-> =C2=A0		 * require a specific reference supply to power it.
->=20
+On Thu, Apr 03, 2025 at 03:38:32PM +0800, bo.kong wrote:
+> From: Bo Kong <Bo.Kong@mediatek.com>
+> 
+> AIE(AI Engine) is one of the units in mt8188 ISP which provides hardware accelerated face detection function, it can detect different sizes of faces in a raw image.
 
+This series is missing:
+
+- The v4l2-compliance report
+- Documentation of the UAPI
+- A pointer to an open-source userspace implementation using the device,
+  in a project relevant to the field of use
+
+> Bo Kong (4):
+>   media: dt-bindings: add MT8188 AIE
+>   arm64: dts: mt8188: add aie node
+>   uapi: linux: add MT8188 AIE
+>   media: mediatek: add MT8188 AIE driver
+> 
+>  .../bindings/media/mediatek,mt8188-aie.yaml   |   78 +
+>  arch/arm64/boot/dts/mediatek/mt8188.dtsi      |   33 +
+>  drivers/media/platform/mediatek/Kconfig       |    1 +
+>  drivers/media/platform/mediatek/Makefile      |    1 +
+>  drivers/media/platform/mediatek/aie/Kconfig   |   12 +
+>  drivers/media/platform/mediatek/aie/Makefile  |    5 +
+>  drivers/media/platform/mediatek/aie/mtk_aie.h |  870 ++++++
+>  .../media/platform/mediatek/aie/mtk_aie_drv.c | 2398 +++++++++++++++++
+>  .../platform/mediatek/aie/mtk_aie_v4l2.c      | 1295 +++++++++
+>  drivers/media/v4l2-core/v4l2-ioctl.c          |    3 +
+>  include/uapi/linux/mtk_aie_v4l2_controls.h    |  308 +++
+>  include/uapi/linux/videodev2.h                |    6 +
+>  12 files changed, 5010 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/mediatek,mt8188-aie.yaml
+>  create mode 100644 drivers/media/platform/mediatek/aie/Kconfig
+>  create mode 100644 drivers/media/platform/mediatek/aie/Makefile
+>  create mode 100644 drivers/media/platform/mediatek/aie/mtk_aie.h
+>  create mode 100644 drivers/media/platform/mediatek/aie/mtk_aie_drv.c
+>  create mode 100644 drivers/media/platform/mediatek/aie/mtk_aie_v4l2.c
+>  create mode 100644 include/uapi/linux/mtk_aie_v4l2_controls.h
+
+-- 
+Regards,
+
+Laurent Pinchart
