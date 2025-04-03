@@ -1,36 +1,59 @@
-Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4991C1F9AA6
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 20:27:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58E9D1A3165;
+	Thu,  3 Apr 2025 20:31:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743712079; cv=none; b=S90N23Hij3RrOE3f0FDoa09ZYZwwtgYyHJGG/hY5U8U8IfT5MiTEJtwEu1m0jGchmVID6J3DEGt0O9ti96HioRbUU3gIGKhmVSYEO8QRofK1q4jrtJVmoEmXko6I9XsHFwLbvT1lb+eg80bM4E5Av+bmUdDREEimDcFi4HA3FMk=
+	t=1743712304; cv=none; b=YZbC8Qlw5n3xWZg6adWfVpDRJOv3sjNHk09C+RqpYc7RFyDGp6qNAq6Djz29bfVwlyAzL/WtNwdZEMmdOxZqAo4ANswwO8X4nn5Q3hpYr4MB/uEBR67s4OFEIehobOoAegIPS2R7DVncpjFnVy91fYdoHvjsC6fsNNvjzqGfAf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743712079; c=relaxed/simple;
-	bh=o34Wm7N9yvonWKFJ1FAFCqSY8wLl2H0sf0PCziZvgZ4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=j8qsQ95Gq4i4NKPAUgXVgRyQ2+G0B/28pcwk2PdZK5mlv5VGEP3AR8DHcmtWht5uzWXqAmIsisW7mgFPvWMjRFdq7c9fnNKjh5yiKbS65xp0AZSStxDykBU4FaQd4lVlG1rOuY9/R1s0dW9Q4ck5hTg2WM3dnenUlzlJgKY4NwY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=VYIFNzKn; arc=none smtp.client-ip=91.218.175.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1743712304; c=relaxed/simple;
+	bh=Vf+Da0nJh73QnmQaNOviZW4RMvdwcqv1ubXHJDMSPao=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OkvXCoZ+ayVqZ26MbZ75UsYxx0JvmDyo3RVdztPTp28jJMfkW63y2YiL9CSHUbjgx5a5HOBjp46YeD5qFprAXoVOZNbu9Iz92eN9IgydIf26U6fx+3uGdi7VxT6Ojxuf6yFI3tjT8T2nHViEkSP2h4xh9SV54O5CXCimU7piprA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=Iy0H/rss; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="VYIFNzKn"
-Date: Thu, 3 Apr 2025 16:27:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1743712073;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-	bh=Qfyn75EUB+C3hjqxdtPQcTgA+wSvijx5zHVJq88++QU=;
-	b=VYIFNzKn5YY6Ntl+YyuuRgwQaGalweqhxWmlJr2gsfXjFkjhE7WOQ+bcrX5srLnZo2aDQZ
-	ArgUlsO/WbX2fhqGFygp9dH6PwOLl++ATE9T41izB5nzBv4EzXGiMWL4ivN5q/oDyQEmLm
-	NQQrFxdxibMeOP64dls3q0Zjuhu36Rs=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] bcachefs fixes for 6.15-rc1
-Message-ID: <6xmil47xtrx6n7aimj4jf3yvobcyfqqfljj2d2fju7etuguquy@r4j6oyqaicmo>
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="Iy0H/rss"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=6VaocAaYXzq3AkdQCMflNa8ivfGUAvjzmVp41S6UU7E=; b=Iy0H/rssUaeMOYg1i4b/QTMuYp
+	qC3nt29f6E6ZniQDui662ygBM2g7VYlQyQYR8M2ZdKNe8OnrbX30HOmFjIou4vhekynnqVxpM5A36
+	3vLK0Nqmxro+5p9euI66RjpVpRgMC46H7CrBVMVEc3PKI8F+wQrd6cOg3CMyfTpE1mz1+dpuhQFqw
+	tEoVfN4LZIaRACl7Uvv4gOLlhlsCEmxoNrHAPf/s87lWhVlEP3Hp5cyKq67LQISkM6O1OMOB96KSJ
+	19Y1+ilgtGOpvA4+1OdNOWc0GfdYsJmItLBJ4IT+yvcRitVFIj9e/oF52sCLl66etGQXSup39h62J
+	Fci6nMOw==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:50786)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1u0RDv-0000uQ-1A;
+	Thu, 03 Apr 2025 21:31:39 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1u0RDt-00053R-27;
+	Thu, 03 Apr 2025 21:31:37 +0100
+Date: Thu, 3 Apr 2025 21:31:37 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Sean Anderson <sean.anderson@linux.dev>
+Cc: netdev@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Christian Marangi <ansuelsmth@gmail.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	linux-kernel@vger.kernel.org, upstream@airoha.com,
+	Claudiu Beznea <claudiu.beznea@microchip.com>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>
+Subject: Re: [RFC net-next PATCH 10/13] net: macb: Support external PCSs
+Message-ID: <Z-7wKfjhAv6CJiuz@shell.armlinux.org.uk>
+References: <20250403181907.1947517-1-sean.anderson@linux.dev>
+ <20250403182706.1948535-1-sean.anderson@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -39,116 +62,22 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <20250403182706.1948535-1-sean.anderson@linux.dev>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-this looks bigger than it is, thanks to the 'kill btree_iter.trans'
-patch...
+On Thu, Apr 03, 2025 at 02:27:06PM -0400, Sean Anderson wrote:
+> -static void macb_pcs_get_state(struct phylink_pcs *pcs,
+> +static void macb_pcs_get_state(struct phylink_pcs *pcs, unsigned int neg_mode,
+>  			       struct phylink_link_state *state)
+>  {
+>  	struct macb *bp = container_of(pcs, struct macb, phylink_sgmii_pcs);
+>  
+> -	phylink_mii_c22_pcs_decode_state(state, gem_readl(bp, PCSSTS),
+> +	phylink_mii_c22_pcs_decode_state(state, neg_mode, gem_readl(bp, PCSSTS),
+>  					 gem_readl(bp, PCSANLPBASE));
 
-The following changes since commit 650f5353dcc9b6e690a1c763754fa1e98d217bfc:
+Looks like this should be in the previous patch.
 
-  bcachefs: fix bch2_write_point_to_text() units (2025-03-30 20:04:16 -0400)
-
-are available in the Git repository at:
-
-  git://evilpiepirate.org/bcachefs.git tags/bcachefs-2025-04-03
-
-for you to fetch changes up to 77ad1df82b9e8d169e3ec9ee8b7caabfa45872ce:
-
-  bcachefs: Fix "journal stuck" during recovery (2025-04-03 12:11:43 -0400)
-
-----------------------------------------------------------------
-bcachefs fixes for 6.15-rc1
-
-More notable fixes:
-
-- Fix for striping behaviour on tiering filesystems where replicas
-  exceeds durability on destination target
-- Fix a race in device removal where deleting alloc info races with the
-  discard worker
-- Some small stack usage improvements: this is just enough for KMSAN
-  builds to not blow the stack, more is queued up for 6.16.
-
-----------------------------------------------------------------
-Bharadwaj Raju (1):
-      bcachefs: use nonblocking variant of print_string_as_lines in error path
-
-Eric Biggers (1):
-      bcachefs: add missing selection of XARRAY_MULTI
-
-Kent Overstreet (13):
-      bcachefs: Fix striping behaviour
-      bcachefs: Fix field spanning write warning
-      bcachefs: Fix null ptr deref in bch2_write_endio()
-      bcachefs: fix ref leak in btree_node_read_all_replicas
-      bcachefs: Split up bch_dev.io_ref
-      bcachefs: do_trace_key_cache_fill()
-      bcachefs: Kill btree_iter.trans
-      bcachefs: bch_dev_usage_full
-      bcachefs: Fix scheduling while atomic from logging changes
-      bcachefs: Fix check_snapshot_exists() restart handling
-      bcachefs: Fix null ptr deref in invalidate_one_bucket()
-      bcachefs: backpointer_get_key: check for null from peek_slot()
-      bcachefs: Fix "journal stuck" during recovery
-
-Wentao Liang (1):
-      bcachefs: Add error handling for zlib_deflateInit2()
-
- fs/bcachefs/Kconfig                 |   1 +
- fs/bcachefs/acl.c                   |   4 +-
- fs/bcachefs/alloc_background.c      |  95 +++++++++---------
- fs/bcachefs/alloc_background.h      |   6 +-
- fs/bcachefs/alloc_foreground.c      |  79 +++++++++++----
- fs/bcachefs/backpointers.c          |  24 +++--
- fs/bcachefs/bcachefs.h              |   7 +-
- fs/bcachefs/btree_gc.c              |   4 +-
- fs/bcachefs/btree_io.c              |  17 +++-
- fs/bcachefs/btree_iter.c            | 188 ++++++++++++++++++------------------
- fs/bcachefs/btree_iter.h            | 122 ++++++++++++-----------
- fs/bcachefs/btree_key_cache.c       |  32 +++---
- fs/bcachefs/btree_node_scan.c       |   8 +-
- fs/bcachefs/btree_types.h           |   1 -
- fs/bcachefs/btree_update.c          |  26 ++---
- fs/bcachefs/btree_update_interior.c |  12 +--
- fs/bcachefs/btree_write_buffer.c    |  10 +-
- fs/bcachefs/buckets.c               |  16 ++-
- fs/bcachefs/buckets.h               |  21 ++--
- fs/bcachefs/buckets_types.h         |   5 +
- fs/bcachefs/chardev.c               |  14 +--
- fs/bcachefs/compress.c              |   5 +-
- fs/bcachefs/data_update.c           |   8 +-
- fs/bcachefs/debug.c                 |   4 +-
- fs/bcachefs/dirent.c                |  16 +--
- fs/bcachefs/disk_accounting.c       |   4 +-
- fs/bcachefs/disk_groups.c           |   4 +-
- fs/bcachefs/ec.c                    |  18 ++--
- fs/bcachefs/error.c                 |   7 +-
- fs/bcachefs/extent_update.c         |   6 +-
- fs/bcachefs/fs-io-buffered.c        |   6 +-
- fs/bcachefs/fs-io.c                 |  14 +--
- fs/bcachefs/fs.c                    |  24 ++---
- fs/bcachefs/fsck.c                  |  30 +++---
- fs/bcachefs/inode.c                 |  18 ++--
- fs/bcachefs/io_misc.c               |  18 ++--
- fs/bcachefs/io_read.c               |  14 +--
- fs/bcachefs/io_write.c              |  40 +++++---
- fs/bcachefs/journal.c               |  14 ++-
- fs/bcachefs/journal_io.c            |   8 +-
- fs/bcachefs/migrate.c               |   4 +-
- fs/bcachefs/move.c                  |  14 +--
- fs/bcachefs/movinggc.c              |   8 +-
- fs/bcachefs/namei.c                 |  38 ++++----
- fs/bcachefs/quota.c                 |   2 +-
- fs/bcachefs/rebalance.c             |  12 +--
- fs/bcachefs/recovery.c              |   6 +-
- fs/bcachefs/reflink.c               |  23 ++---
- fs/bcachefs/sb-members.h            |  23 ++---
- fs/bcachefs/snapshot.c              |  13 +--
- fs/bcachefs/str_hash.c              |   2 +-
- fs/bcachefs/str_hash.h              |   8 +-
- fs/bcachefs/subvolume.c             |   4 +-
- fs/bcachefs/subvolume.h             |  14 +--
- fs/bcachefs/super-io.c              |  21 ++--
- fs/bcachefs/super.c                 |  85 +++++++++++-----
- fs/bcachefs/tests.c                 |  30 +++---
- fs/bcachefs/xattr.c                 |   2 +-
- 58 files changed, 710 insertions(+), 549 deletions(-)
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
