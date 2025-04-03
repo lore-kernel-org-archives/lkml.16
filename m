@@ -1,139 +1,126 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 957F643AA4
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 06:23:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDB4C1DFF7
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 06:24:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743661433; cv=none; b=Y8zqmg9EX2MFXO1bD3rtRn/3R4FY3BbCpGWJuBQ+QZM3pQlQsD4jUDbVbOC1JMld7cAdvvmulnv7JmPeeFfDQMsN3DQhna7ezL0PPBiqM0/rjcd8es/O6Up8wmYUlNewjit9kTDEQfvRlf9Uw5VrXnDuQsbtdgXeyhY4AV8pe2s=
+	t=1743661452; cv=none; b=Ei53un763icLP0q57cjm3KqHbQNcgflEUtyxbTmgclIfZrE0Y5tBAoRZjStn/RH0aWSnVFeUh6OeWg0lbMiLnOJyu++1r/HiMBZN4Dk1T4lpMThijT3A5RPix3jEcU+Xq4g7CWJpPEP+oHTvzzdZ+wgIUM5SULsYW/JcFt+tw5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743661433; c=relaxed/simple;
-	bh=QTnL+RZgTFHVo/9Z1vHSxwwQcNDeI0RtYV8zIGXFrjQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=ilxtvngqSZi+UgB8dg/2J/3KpyCyjrYrVZ6Qsf93jblFpSQAW7CHYzxjmW/Yo7MNmLHc8o3oyG8rvdwyo8HYEzToCXvWxpRfxcS0asFpw3d2QGhRr4uBabn3qX7gSRZq5K8iG2LoF8tP9zYmNk421Z0TffRZA1+Z34GGkP5FfVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 81689106F;
-	Wed,  2 Apr 2025 23:23:52 -0700 (PDT)
-Received: from [10.163.48.25] (unknown [10.163.48.25])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 309253F59E;
-	Wed,  2 Apr 2025 23:23:44 -0700 (PDT)
-Message-ID: <e5abeb48-daf7-4d07-821e-93ef50a1d403@arm.com>
-Date: Thu, 3 Apr 2025 11:53:42 +0530
+	s=arc-20240116; t=1743661452; c=relaxed/simple;
+	bh=GFvYpsXQvk6dxCYwoiQKJ2z5FTbh5QigoUHrYN255FY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hpkXO0ccA2IKjvs73wFam6S0Iea0niIxBaltmOrs+i76V13fID+sjSnxE4mPNyia7yLetggi8o3WknMelXnAfRaEJcHgYvhN2PeWU30LBSRmW0ev7pmWhY4/htvztOIQUqre1oz5FSuxobM+tHdMw8viHKIRuGrfHNfbyqx8tm4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eZTi5Dzq; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eZTi5Dzq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8FC1C4CEE3;
+	Thu,  3 Apr 2025 06:24:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743661452;
+	bh=GFvYpsXQvk6dxCYwoiQKJ2z5FTbh5QigoUHrYN255FY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=eZTi5DzqiJVNB71Vp/b930nyv5R8JfheUpK2OUGe1zHqos2M5ckAZcuY0uXHL+/jk
+	 DSAAIg82wRixkfZy/2bZhUh+HAAZDTqK0vEmPAmIFDiAjRd96Xtx2ls9KkfsPID+oq
+	 yDy2IYeCxaPpeVO8BgDj9OlUi6pQCcf1/W0Z/BzTxB0WQ2VuG0AoR97Di3EEjiqSao
+	 3UnxDWVvLXaRZ7uIyV+YaV+/A8m8fGzIkYCHF6NIaiQaNstSr2tbbe6ojUUSuralnr
+	 RFoqPo9+1Q3ynv4rcDpmUZeo8pqV2XWrpmPAIQtuFxMggirlmwSUAbODKTzgr4/vbo
+	 WjKfBlqSGs4UA==
+Date: Thu, 3 Apr 2025 09:24:04 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: David Woodhouse <dwmw2@infradead.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	"Sauerwein, David" <dssauerw@amazon.de>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	David Hildenbrand <david@redhat.com>, Marc Zyngier <maz@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mike Rapoport <rppt@linux.ibm.com>, Will Deacon <will@kernel.org>,
+	kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [RFC PATCH 3/3] mm: Implement for_each_valid_pfn() for
+ CONFIG_SPARSEMEM
+Message-ID: <Z-4phOInXZlxFwk9@kernel.org>
+References: <Z-vn-sMtNfwyJ9VW@kernel.org>
+ <20250402201841.3245371-1-dwmw2@infradead.org>
+ <20250402201841.3245371-3-dwmw2@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 3/9] coresight: etm4x: Support atclk
-To: Leo Yan <leo.yan@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>,
- Mike Leach <mike.leach@linaro.org>, James Clark <james.clark@linaro.org>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, coresight@lists.linaro.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com
-References: <20250327113803.1452108-1-leo.yan@arm.com>
- <20250327113803.1452108-4-leo.yan@arm.com>
-Content-Language: en-US
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <20250327113803.1452108-4-leo.yan@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250402201841.3245371-3-dwmw2@infradead.org>
 
+On Wed, Apr 02, 2025 at 09:18:41PM +0100, David Woodhouse wrote:
+> From: David Woodhouse <dwmw@amazon.co.uk>
+> 
+> Introduce a pfn_first_valid() helper which takes a pointer to the PFN and
+> updates it to point to the first valid PFN starting from that point, and
+> returns true if a valid PFN was found.
+> 
+> This largely mirrors pfn_valid(), calling into a pfn_section_first_valid()
+> helper which is trivial for the !CONFIG_SPARSEMEM_VMEMMAP case, and in
+> the VMEMMAP case will skip to the next subsection as needed.
+> 
+> Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
 
+Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 
-On 3/27/25 17:07, Leo Yan wrote:
-> The atclk is an optional clock for the CoreSight ETMv4, but the driver
-> misses to initialize it.
-> 
-> This change enables atclk in probe of the ETMv4 driver, and dynamically
-> control the clock during suspend and resume.
-> 
-> No need to check the driver data and clock pointer in the runtime
-> suspend and resume, so remove checks.  And add error handling in the
-> resume function.
-> 
-> Add a minor fix to the comment format when adding the atclk field.
-> 
-> Fixes: 2e1cdfe184b5 ("coresight-etm4x: Adding CoreSight ETM4x driver")
-> Signed-off-by: Leo Yan <leo.yan@arm.com>
-> ---
->  drivers/hwtracing/coresight/coresight-etm4x-core.c | 20 +++++++++++++++-----
->  drivers/hwtracing/coresight/coresight-etm4x.h      |  4 +++-
->  2 files changed, 18 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/hwtracing/coresight/coresight-etm4x-core.c b/drivers/hwtracing/coresight/coresight-etm4x-core.c
-> index e5972f16abff..537d57006a25 100644
-> --- a/drivers/hwtracing/coresight/coresight-etm4x-core.c
-> +++ b/drivers/hwtracing/coresight/coresight-etm4x-core.c
-> @@ -2149,6 +2149,10 @@ static int etm4_probe(struct device *dev)
->  	if (WARN_ON(!drvdata))
->  		return -ENOMEM;
->  
-> +	drvdata->atclk = devm_clk_get_optional_enabled(dev, "atclk");
-> +	if (IS_ERR(drvdata->atclk))
-> +		return PTR_ERR(drvdata->atclk);
+with a small nit below
+
+> +static inline bool first_valid_pfn(unsigned long *p_pfn)
+> +{
+> +	unsigned long pfn = *p_pfn;
+> +	unsigned long nr = pfn_to_section_nr(pfn);
+> +	struct mem_section *ms;
+> +	bool ret = false;
 > +
->  	if (pm_save_enable == PARAM_PM_SAVE_FIRMWARE)
->  		pm_save_enable = coresight_loses_context_with_cpu(dev) ?
->  			       PARAM_PM_SAVE_SELF_HOSTED : PARAM_PM_SAVE_NEVER;
-> @@ -2397,8 +2401,8 @@ static int etm4_runtime_suspend(struct device *dev)
->  {
->  	struct etmv4_drvdata *drvdata = dev_get_drvdata(dev);
->  
-> -	if (drvdata->pclk && !IS_ERR(drvdata->pclk))
-> -		clk_disable_unprepare(drvdata->pclk);
-> +	clk_disable_unprepare(drvdata->atclk);
-> +	clk_disable_unprepare(drvdata->pclk);
->  
->  	return 0;
->  }
-> @@ -2406,11 +2410,17 @@ static int etm4_runtime_suspend(struct device *dev)
->  static int etm4_runtime_resume(struct device *dev)
->  {
->  	struct etmv4_drvdata *drvdata = dev_get_drvdata(dev);
-> +	int ret;
+> +	ms = __pfn_to_section(pfn);
 > +
-> +	ret = clk_prepare_enable(drvdata->pclk);
-> +	if (ret)
-> +		return ret;
->  
-> -	if (drvdata->pclk && !IS_ERR(drvdata->pclk))
-> -		clk_prepare_enable(drvdata->pclk);
-> +	ret = clk_prepare_enable(drvdata->atclk);
-> +	if (ret)
-> +		clk_disable_unprepare(drvdata->pclk);
->  
-> -	return 0;
+> +	rcu_read_lock_sched();
+> +
+> +	while (!ret && nr <= __highest_present_section_nr) {
+
+This could be just for(;;), we anyway break when ret becomes true or we get
+past last present section.
+
+> +		if (valid_section(ms) &&
+> +		    (early_section(ms) || pfn_section_first_valid(ms, &pfn))) {
+> +			ret = true;
+> +			break;
+> +		}
+> +
+> +		nr++;
+> +		if (nr > __highest_present_section_nr)
+> +			break;
+> +
+> +		pfn = section_nr_to_pfn(nr);
+> +		ms = __pfn_to_section(pfn);
+> +	}
+> +
+> +	rcu_read_unlock_sched();
+> +
+> +	*p_pfn = pfn;
+> +
 > +	return ret;
->  }
+> +}
+> +
+> +#define for_each_valid_pfn(_pfn, _start_pfn, _end_pfn)	       \
+> +	for ((_pfn) = (_start_pfn);			       \
+> +	     first_valid_pfn(&(_pfn)) && (_pfn) < (_end_pfn);  \
+> +	     (_pfn)++)
+> +
 >  #endif
 >  
-> diff --git a/drivers/hwtracing/coresight/coresight-etm4x.h b/drivers/hwtracing/coresight/coresight-etm4x.h
-> index bd7db36ba197..0c21832b5d69 100644
-> --- a/drivers/hwtracing/coresight/coresight-etm4x.h
-> +++ b/drivers/hwtracing/coresight/coresight-etm4x.h
-> @@ -919,7 +919,8 @@ struct etmv4_save_state {
->  
->  /**
->   * struct etm4_drvdata - specifics associated to an ETM component
-> - * @pclk        APB clock if present, otherwise NULL
-> + * @pclk:       APB clock if present, otherwise NULL
-> + * @atclk:      Optional clock for the core parts of the ETMv4.
->   * @base:       Memory mapped base address for this component.
->   * @csdev:      Component vitals needed by the framework.
->   * @spinlock:   Only one at a time pls.
-> @@ -987,6 +988,7 @@ struct etmv4_save_state {
->   */
->  struct etmv4_drvdata {
->  	struct clk			*pclk;
-> +	struct clk			*atclk;
->  	void __iomem			*base;
->  	struct coresight_device		*csdev;
->  	raw_spinlock_t			spinlock;
+>  static inline int pfn_in_present_section(unsigned long pfn)
+> -- 
+> 2.49.0
+> 
 
-Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
+-- 
+Sincerely yours,
+Mike.
