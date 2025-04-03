@@ -1,225 +1,320 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D11424E000
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 11:32:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB9D15D738
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 11:33:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743679940; cv=none; b=M612WLabGLp7DsSiRaflPm7LkeooWK6Idy22fqu60ozHIu2lk6lRlPXhNc9H73a4X1KwGp6xUPgZS6+I3tKT0DqWBVIJ0WiyFCdOPxX3YKkzA0C/rTndT+Sc9aCBQkSRvfZsrXXl94ej2gbcQLnMRz2sL7fvHQVZKEEG6d/8tk8=
+	t=1743679992; cv=none; b=mpZRwS7DCqYrXsf5JO96FFKXZXZVgm0YUQu2+ZHu+UJYAcnco0Bo7mnWqQJBrehccffAcNf8wEFfB7r2K69W0ASDmYfC6+IP9PyLVdwXi9qX5uw+Ac2NmNjBIGmKva6DB7+BLYwSwwwE6YPRjSqDogSXticyW1gsKXiAK3zfCFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743679940; c=relaxed/simple;
-	bh=Azh59wZxXw0yOcy654yOp1KBuheFNdxSily/oCO2cqE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dy6X6thqLUoHdN3AGuFIndgGoS3OEplAVOypZgchnriAqSXrHWo+Wrkr8qsj0ebDZ0CRJflW4qOgQsBp542ihqPj5wJDQbRDb7eqQtHsNWQmF5lMqdE9LJZ/Aj1E90+iVVde30AMTF4xzZTOgt1oTleC66TIxLXW8h/6Whq3bHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=TcrRN4mY; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1743679992; c=relaxed/simple;
+	bh=fvFNYyiL3jHgoGPm5sLJkOGdN7KGA8zjp3LJSrv2Ge0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=V9O0BnPHNyTOQzD0QJQmtjR0hnEUpe4sI0xFsC3EFEqPck+SEMVU/7sE7JslbPbNpmzvdazUVD/ukFeGc884hr6FQrQKkppltJjFlcOZa/G1wEw5OXAcX0gfqaSTekLzKvIajEyk1PMubElA1sTkAkq5LSk9I5aPzRmI9hmTSSQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=oQ6wmXag; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=TTnzvejB; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Dy4YDhnF; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=7IAPh+TM; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="TcrRN4mY"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-39973c72e8cso69057f8f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 04:32:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1743679936; x=1744284736; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=v4I41IipITScJpjVRL6TprMAJ/XjTheyblDpzSa8c88=;
-        b=TcrRN4mYeUgNsDn/+x9gXg2oR+Oz5B25LI6av3I7R6/E8fY28yeVrv3Xg9pjJZtaO8
-         FFQp6GdInoGSj4kqFMpdCXae9zqQuy+P+e5Ru8kGg+oFCq1pb30IpYYTD2L3DJsNvzO0
-         Y5Ph69Q7IGlu0dqmx4FZtWQUesRBJoGMDFeVXhVTWyeXGvooTvimCAmDY9vbLQEbBaKL
-         mnb0WjJEN/ag9xoP4/jS8FH9SqIYXIC1A44D6mku0LA8EwHLTvDovvx6a4jR3FO5Q4IK
-         3iGvWaU5so2DofrVXZT186ByU9IrsI5GO+sstW/qjly4WdSOukdkh6+q1PEBmHPGT7J+
-         f7aQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743679936; x=1744284736;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=v4I41IipITScJpjVRL6TprMAJ/XjTheyblDpzSa8c88=;
-        b=ixodHLlmNuzxaMmQdxrJPoIUrRkZ1OUgUq1Dy3/i5IuWIKFqy9SGBSKwPumlsqwypw
-         8x5fl72NWMVna5pB1lm/2ZsTAX/JbOf2pIx2K/F2f/1HfQZfzD++1IlVTuWHMgHD3Vcu
-         MZom6q7D2UoN6BhwJ+mnlVbWkhPJWIasBhqRHYZ4xjWtbfFoG1a2GJaVKXpRfxPuxsy+
-         5ZMVtMEeR0asMgknugw5sQU5JSGN1Wdf/LxNcEZFX95kn9i0wIdhY9c7B9NqFvk2Sh+x
-         E4HCUlZSEOkxrV0fNTDcfht2KYZkR4qp9t6+2fhp3G+KwdXpdZ/tSgUhD3ABm6otxj7Y
-         A35w==
-X-Forwarded-Encrypted: i=1; AJvYcCUmCg7VNP7vdVTtjJrFa0AENVe3/vDUgj+iYby8WLSdlW70u1FdHQLLp87BJTwvs7KX+00hjzV4cB7Zz7s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxFMKAEXhASSAv81jgP4pgKQyBK0ON/g0XJpsp1YyqoD3cd7A1G
-	oLmMeAQELCa6rhCiV/VEvr/v100NUYUEz98FXd/k9QpnBuiiiyX6Da7WbZzLHBU=
-X-Gm-Gg: ASbGncvdrDibgcSSuEJ4+z56nvIBBtTe9KKveM2NjEsxUPdg6/GeTbKjrZw/TPwpEn3
-	I8PfGO8J6UFiz4q1nD4aGbMS/nWRJiyzZ6qtZoKUHUW8ghBNHiEWBGgvZ3XAF4dRcAqQc25d5py
-	gN+Hc0KJxfaePft0oc4gHf5JkJkMInAG9miRFdQBzaZju7ToBY5U/H3dULC3Ect65WE4EHKewC5
-	2n4Xuc9y6LPFOUxNjXNmbBWuinCrumNgHUi8tq31YTIcuIsOgTVSnCqAnd8/w5MIxt1y89DvQ55
-	qDPnUqTpzFCz+Eb4nC/1W/BD4d/yHeuhVH/Y6bVHxeV1uRyvK9M494o9phya/YRgvndIEkqJsxO
-	EXQ==
-X-Google-Smtp-Source: AGHT+IG37Xf9B62VUcljGsX2nc8emFPUfOIiPgop6kaEA0XU1nktX/EDvfLlLGCqE6Qni7LwKqU1Ng==
-X-Received: by 2002:a5d:59ad:0:b0:39c:1258:17d5 with SMTP id ffacd0b85a97d-39c2483abcfmr3137958f8f.14.1743679935688;
-        Thu, 03 Apr 2025 04:32:15 -0700 (PDT)
-Received: from localhost (cst2-173-141.cust.vodafone.cz. [31.30.173.141])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c3020d6b1sm1575928f8f.62.2025.04.03.04.32.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Apr 2025 04:32:14 -0700 (PDT)
-From: =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@ventanamicro.com>
-To: kvm-riscv@lists.infradead.org
-Cc: kvm@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Anup Patel <anup@brainfault.org>,
-	Atish Patra <atishp@atishpatra.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Mayuresh Chitale <mchitale@ventanamicro.com>
-Subject: [PATCH 4/5] KVM: RISC-V: reset VCPU state when becoming runnable
-Date: Thu,  3 Apr 2025 13:25:23 +0200
-Message-ID: <20250403112522.1566629-7-rkrcmar@ventanamicro.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250403112522.1566629-3-rkrcmar@ventanamicro.com>
-References: <20250403112522.1566629-3-rkrcmar@ventanamicro.com>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="oQ6wmXag";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="TTnzvejB";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Dy4YDhnF";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="7IAPh+TM"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id ED307211CD;
+	Thu,  3 Apr 2025 11:33:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1743679989; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SRpp3RRIIbWts3o24hnHo7jwYeOjLd2wCZq6OBJgS0I=;
+	b=oQ6wmXag+GGi4pl28RKD7yhuDZFl1ICgqj4zSRdvkFa/5FWv9vyCoHy6/FxXX01PTgc+Lh
+	rknL4QfkGMfN/Qp0fQQfuiiJxsJtaV10ER3+JI04HVEl1cmxQAfT5Tay+Z9K8zRT+tSC90
+	ll/8KyRgmNGUY0dn3cKA6dIXGUS0iNA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1743679989;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SRpp3RRIIbWts3o24hnHo7jwYeOjLd2wCZq6OBJgS0I=;
+	b=TTnzvejBan7BxYRwe8CJyFuO90EsU4wS/afbdXlvaTjVCBV9Q36RQWR2jLSRElUEFa9H3X
+	1hpv3aFOQEDn2sCg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1743679988; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SRpp3RRIIbWts3o24hnHo7jwYeOjLd2wCZq6OBJgS0I=;
+	b=Dy4YDhnFJV+td24a1iNw3W8ldpBj7U/9i0SEl3QQdPIQI5QplxvDJtlB0yTUuqlCMwYHjx
+	qgQbulmpi5N9m5WG4dzqJ+z4jiL9+0o0+8Xiv0wtekRzvpJgRNeIRORyPDh1geQ6HPz/OL
+	Q9ZNa3b+0ws3jeL7t0EkQRyvSi/ezYA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1743679988;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SRpp3RRIIbWts3o24hnHo7jwYeOjLd2wCZq6OBJgS0I=;
+	b=7IAPh+TMOy8g8uJApAfp5FY3BESnAck5AtmpSlcpmFncszSPg4WsXiUO/VUyynuKrMlDFo
+	XRh4NMILjgVZfUAQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D5D1D13A2C;
+	Thu,  3 Apr 2025 11:33:08 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id PbkmNPRx7mckGwAAD6G6ig
+	(envelope-from <jack@suse.cz>); Thu, 03 Apr 2025 11:33:08 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 8FD12A07E6; Thu,  3 Apr 2025 13:33:08 +0200 (CEST)
+Date: Thu, 3 Apr 2025 13:33:08 +0200
+From: Jan Kara <jack@suse.cz>
+To: Murad Masimov <m.masimov@mt-integration.ru>
+Cc: Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>, 
+	Joseph Qi <joseph.qi@linux.alibaba.com>, Jan Kara <jack@suse.cz>, ocfs2-devel@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, lvc-project@linuxtesting.org, 
+	syzbot+f59a1ae7b7227c859b8f@syzkaller.appspotmail.com
+Subject: Re: [PATCH 2/2] ocfs2: Fix deadlock in ocfs2_finish_quota_recovery
+Message-ID: <vrxva7wxxd4ajtkvrtltggqfhjvs34xtt7jyrney6g7tlmlw7n@dxwzinbmsumu>
+References: <20250402065628.706359-1-m.masimov@mt-integration.ru>
+ <20250402065628.706359-3-m.masimov@mt-integration.ru>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250402065628.706359-3-m.masimov@mt-integration.ru>
+X-Spam-Level: 
+X-Spamd-Result: default: False [-2.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MISSING_XM_UA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[f59a1ae7b7227c859b8f];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_COUNT_THREE(0.00)[3];
+	RCVD_TLS_LAST(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,imap1.dmz-prg2.suse.org:helo]
+X-Spam-Score: -2.30
+X-Spam-Flag: NO
 
-Beware, this patch is "breaking" the userspace interface, because it
-fixes a KVM/QEMU bug where the boot VCPU is not being reset by KVM.
+On Wed 02-04-25 09:56:28, Murad Masimov wrote:
+> When filesystem is unmounted all pending recovery work is processed. This
+> may lead to a deadlock in ocfs2_finish_quota_recovery() as it locks the
+> s_umount semaphore while it is already exclusively locked in
+> deactivate_super().
+> 
+> Use down_read_trylock() instead and return if it fails, since that possibly
+> means that unmount may be in progress so it is not possible to finish quota
+> recovery. According to the description of ocfs2_complete_recovery(), which
+> is the caller of ocfs2_finish_quota_recovery(), by the point this job is
+> started the node can already be considered recovered. There is also no
+> error handling in ocfs2_complete_recovery() which indicates that fail is
+> not critical in this context.
+> 
+> The following warning has been reported by Syzkaller:
+> 
+> ================================================================
+> WARNING: possible circular locking dependency detected
+> 6.14.0-rc6-syzkaller-00022-gb7f94fcf5546 #0 Not tainted
+> ------------------------------------------------------
+> kworker/u4:10/1087 is trying to acquire lock:
+> ffff88803c49e0e0 (&type->s_umount_key#42){++++}-{4:4}, at: ocfs2_finish_quota_recovery+0x15c/0x22a0 fs/ocfs2/quota_local.c:603
+> 
+> but task is already holding lock:
+> ffffc900026ffc60 ((work_completion)(&journal->j_recovery_work)){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3214 [inline]
+> ffffc900026ffc60 ((work_completion)(&journal->j_recovery_work)){+.+.}-{0:0}, at: process_scheduled_works+0x9c6/0x18e0 kernel/workqueue.c:3319
+> 
+> which lock already depends on the new lock.
+> 
+> the existing dependency chain (in reverse order) is:
+> 
+> -> #2 ((work_completion)(&journal->j_recovery_work)){+.+.}-{0:0}:
+>        lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5851
+>        process_one_work kernel/workqueue.c:3214 [inline]
+>        process_scheduled_works+0x9e4/0x18e0 kernel/workqueue.c:3319
+>        worker_thread+0x870/0xd30 kernel/workqueue.c:3400
+>        kthread+0x7a9/0x920 kernel/kthread.c:464
+>        ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:148
+>        ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+> 
+> -> #1 ((wq_completion)ocfs2_wq){+.+.}-{0:0}:
+>        lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5851
+>        touch_wq_lockdep_map+0xc7/0x170 kernel/workqueue.c:3907
+>        __flush_workqueue+0x14a/0x1280 kernel/workqueue.c:3949
+>        ocfs2_shutdown_local_alloc+0x109/0xa90 fs/ocfs2/localalloc.c:380
+>        ocfs2_dismount_volume+0x202/0x910 fs/ocfs2/super.c:1822
+>        generic_shutdown_super+0x139/0x2d0 fs/super.c:642
+>        kill_block_super+0x44/0x90 fs/super.c:1710
+>        deactivate_locked_super+0xc4/0x130 fs/super.c:473
+>        cleanup_mnt+0x41f/0x4b0 fs/namespace.c:1413
+>        task_work_run+0x24f/0x310 kernel/task_work.c:227
+>        resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
+>        exit_to_user_mode_loop kernel/entry/common.c:114 [inline]
+>        exit_to_user_mode_prepare include/linux/entry-common.h:329 [inline]
+>        __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
+>        syscall_exit_to_user_mode+0x13f/0x340 kernel/entry/common.c:218
+>        do_syscall_64+0x100/0x230 arch/x86/entry/common.c:89
+>        entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> 
+> -> #0 (&type->s_umount_key#42){++++}-{4:4}:
+>        check_prev_add kernel/locking/lockdep.c:3163 [inline]
+>        check_prevs_add kernel/locking/lockdep.c:3282 [inline]
+>        validate_chain+0x18ef/0x5920 kernel/locking/lockdep.c:3906
+>        __lock_acquire+0x1397/0x2100 kernel/locking/lockdep.c:5228
+>        lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5851
+>        down_read+0xb1/0xa40 kernel/locking/rwsem.c:1524
+>        ocfs2_finish_quota_recovery+0x15c/0x22a0 fs/ocfs2/quota_local.c:603
+>        ocfs2_complete_recovery+0x17c1/0x25c0 fs/ocfs2/journal.c:1357
+>        process_one_work kernel/workqueue.c:3238 [inline]
+>        process_scheduled_works+0xabe/0x18e0 kernel/workqueue.c:3319
+>        worker_thread+0x870/0xd30 kernel/workqueue.c:3400
+>        kthread+0x7a9/0x920 kernel/kthread.c:464
+>        ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:148
+>        ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+> 
+> other info that might help us debug this:
+> 
+> Chain exists of:
+>   &type->s_umount_key#42 --> (wq_completion)ocfs2_wq --> (work_completion)(&journal->j_recovery_work)
+> 
+>  Possible unsafe locking scenario:
+> 
+>        CPU0                    CPU1
+>        ----                    ----
+>   lock((work_completion)(&journal->j_recovery_work));
+>                                lock((wq_completion)ocfs2_wq);
+>                                lock((work_completion)(&journal->j_recovery_work));
+>   rlock(&type->s_umount_key#42);
+> 
+>  *** DEADLOCK ***
+> 
+> 2 locks held by kworker/u4:10/1087:
+>  #0: ffff8880403eb148 ((wq_completion)ocfs2_wq){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3213 [inline]
+>  #0: ffff8880403eb148 ((wq_completion)ocfs2_wq){+.+.}-{0:0}, at: process_scheduled_works+0x98b/0x18e0 kernel/workqueue.c:3319
+>  #1: ffffc900026ffc60 ((work_completion)(&journal->j_recovery_work)){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3214 [inline]
+>  #1: ffffc900026ffc60 ((work_completion)(&journal->j_recovery_work)){+.+.}-{0:0}, at: process_scheduled_works+0x9c6/0x18e0 kernel/workqueue.c:3319
+> 
+> stack backtrace:
+> CPU: 0 UID: 0 PID: 1087 Comm: kworker/u4:10 Not tainted 6.14.0-rc6-syzkaller-00022-gb7f94fcf5546 #0
+> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+> Workqueue: ocfs2_wq ocfs2_complete_recovery
+> Call Trace:
+>  <TASK>
+>  __dump_stack lib/dump_stack.c:94 [inline]
+>  dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
+>  print_circular_bug+0x13a/0x1b0 kernel/locking/lockdep.c:2076
+>  check_noncircular+0x36a/0x4a0 kernel/locking/lockdep.c:2208
+>  check_prev_add kernel/locking/lockdep.c:3163 [inline]
+>  check_prevs_add kernel/locking/lockdep.c:3282 [inline]
+>  validate_chain+0x18ef/0x5920 kernel/locking/lockdep.c:3906
+>  __lock_acquire+0x1397/0x2100 kernel/locking/lockdep.c:5228
+>  lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5851
+>  down_read+0xb1/0xa40 kernel/locking/rwsem.c:1524
+>  ocfs2_finish_quota_recovery+0x15c/0x22a0 fs/ocfs2/quota_local.c:603
+>  ocfs2_complete_recovery+0x17c1/0x25c0 fs/ocfs2/journal.c:1357
+>  process_one_work kernel/workqueue.c:3238 [inline]
+>  process_scheduled_works+0xabe/0x18e0 kernel/workqueue.c:3319
+>  worker_thread+0x870/0xd30 kernel/workqueue.c:3400
+>  kthread+0x7a9/0x920 kernel/kthread.c:464
+>  ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:148
+>  ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+>  </TASK>
+> ================================================================
+> 
+> Found by Linux Verification Center (linuxtesting.org) with Syzkaller.
+> 
+> Fixes: 5f530de63cfc ("ocfs2: Use s_umount for quota recovery protection")
+> Reported-by: syzbot+f59a1ae7b7227c859b8f@syzkaller.appspotmail.com
+> Closes: https://syzkaller.appspot.com/bug?extid=f59a1ae7b7227c859b8f
+> Signed-off-by: Murad Masimov <m.masimov@mt-integration.ru>
 
-The VCPU reset paths are inconsistent right now.  KVM resets VCPUs that
-are brought up by KVM-accelerated SBI calls, but does nothing for VCPUs
-brought up through ioctls.
+Thanks for looking into this. I have one comment:
 
-We need to perform a KVM reset even when the VCPU is started through an
-ioctl.  This patch is one of the ways we can achieve it.
+> diff --git a/fs/ocfs2/quota_local.c b/fs/ocfs2/quota_local.c
+> index e60383d6ecc1..d3304bb03163 100644
+> --- a/fs/ocfs2/quota_local.c
+> +++ b/fs/ocfs2/quota_local.c
+> @@ -600,7 +600,16 @@ int ocfs2_finish_quota_recovery(struct ocfs2_super *osb,
+>  	printk(KERN_NOTICE "ocfs2: Finishing quota recovery on device (%s) for "
+>  	       "slot %u\n", osb->dev_str, slot_num);
+> 
+> -	down_read(&sb->s_umount);
+> +	/*
+> +	 * We have to be careful here not to deadlock on s_umount as umount
+> +	 * disabling quotas may be in progress and it waits for this work to
+> +	 * complete. If trylock fails, we have to skip this step.
+> +	 */
+> +	if (!down_read_trylock(&sb->s_umount)) {
+> +		status = -ENOENT;
+> +		goto out;
+> +	}
 
-Assume that userspace has no business setting the post-reset state.
-KVM is de-facto the SBI implementation, as the SBI HSM acceleration
-cannot be disabled and userspace cannot control the reset state, so KVM
-should be in full control of the post-reset state.
+So this could skip recovering quotas when we are remounting the superblock
+as well and that would result in quotas being off (for modifications stored
+in unrecovered local quota file) for the duration of the mount. In fact, we
+almost don't need s_umount in ocfs2_finish_quota_recovery() so I think
+proper solution is actually to remove it. *But* there's one catch: we need
+to make sure quota recovery work cannot happen after ocfs2_disable_quotas()
+called from ocfs2_dismount_volume(). I have proposed a solution here [1]
+many years ago but it didn't work and then I never got to writing something
+better. Looking at it now I think we should implement disabling just quota
+recovery in the recovery thread. I've sent patches for that now [2]. I
+gave them some basic testing on local mode but that does not stress
+recovery code much. It would be great if someone could give them testing in
+cluster mode where nodes get killed and recovery happens (I currently don't
+have test setup for that).
 
-Do not reset the pc and a1 registers, because SBI reset is expected to
-provide them and KVM has no idea what these registers should be -- only
-the userspace knows where it put the data.
+								Honza
 
-An important consideration is resume.  Userspace might want to start
-with non-reset state.  Check ran_atleast_once to allow this, because
-KVM-SBI HSM creates some VCPUs as STOPPED.
-
-The drawback is that userspace can still start the boot VCPU with an
-incorrect reset state, because there is no way to distinguish a freshly
-reset new VCPU on the KVM side (userspace might set some values by
-mistake) from a restored VCPU (userspace must set all values).
-
-The advantage of this solution is that it fixes current QEMU and makes
-some sense with the assumption that KVM implements SBI HSM.
-I do not like it too much, so I'd be in favor of a different solution if
-we can still afford to drop support for current userspaces.
-
-For a cleaner solution, we should add interfaces to perform the KVM-SBI
-reset request on userspace demand.  I think it would also be much better
-if userspace was in control of the post-reset state.
-
-Signed-off-by: Radim Krčmář <rkrcmar@ventanamicro.com>
----
- arch/riscv/include/asm/kvm_host.h     |  1 +
- arch/riscv/include/asm/kvm_vcpu_sbi.h |  3 +++
- arch/riscv/kvm/vcpu.c                 |  9 +++++++++
- arch/riscv/kvm/vcpu_sbi.c             | 21 +++++++++++++++++++--
- 4 files changed, 32 insertions(+), 2 deletions(-)
-
-diff --git a/arch/riscv/include/asm/kvm_host.h b/arch/riscv/include/asm/kvm_host.h
-index 0c8c9c05af91..9bbf8c4a286b 100644
---- a/arch/riscv/include/asm/kvm_host.h
-+++ b/arch/riscv/include/asm/kvm_host.h
-@@ -195,6 +195,7 @@ struct kvm_vcpu_smstateen_csr {
- 
- struct kvm_vcpu_reset_state {
- 	spinlock_t lock;
-+	bool active;
- 	unsigned long pc;
- 	unsigned long a1;
- };
-diff --git a/arch/riscv/include/asm/kvm_vcpu_sbi.h b/arch/riscv/include/asm/kvm_vcpu_sbi.h
-index aaaa81355276..2c334a87e02a 100644
---- a/arch/riscv/include/asm/kvm_vcpu_sbi.h
-+++ b/arch/riscv/include/asm/kvm_vcpu_sbi.h
-@@ -57,6 +57,9 @@ void kvm_riscv_vcpu_sbi_system_reset(struct kvm_vcpu *vcpu,
- 				     u32 type, u64 flags);
- void kvm_riscv_vcpu_sbi_request_reset(struct kvm_vcpu *vcpu,
-                                       unsigned long pc, unsigned long a1);
-+void __kvm_riscv_vcpu_set_reset_state(struct kvm_vcpu *vcpu,
-+                                      unsigned long pc, unsigned long a1);
-+void kvm_riscv_vcpu_sbi_request_reset_from_userspace(struct kvm_vcpu *vcpu);
- int kvm_riscv_vcpu_sbi_return(struct kvm_vcpu *vcpu, struct kvm_run *run);
- int kvm_riscv_vcpu_set_reg_sbi_ext(struct kvm_vcpu *vcpu,
- 				   const struct kvm_one_reg *reg);
-diff --git a/arch/riscv/kvm/vcpu.c b/arch/riscv/kvm/vcpu.c
-index b8485c1c1ce4..4578863a39e3 100644
---- a/arch/riscv/kvm/vcpu.c
-+++ b/arch/riscv/kvm/vcpu.c
-@@ -58,6 +58,11 @@ static void kvm_riscv_vcpu_context_reset(struct kvm_vcpu *vcpu)
- 	struct kvm_vcpu_reset_state *reset_state = &vcpu->arch.reset_state;
- 	void *vector_datap = cntx->vector.datap;
- 
-+	spin_lock(&reset_state->lock);
-+	if (!reset_state->active)
-+		__kvm_riscv_vcpu_set_reset_state(vcpu, cntx->sepc, cntx->a1);
-+	spin_unlock(&reset_state->lock);
-+
- 	memset(cntx, 0, sizeof(*cntx));
- 	memset(csr, 0, sizeof(*csr));
- 
-@@ -520,6 +525,10 @@ int kvm_arch_vcpu_ioctl_set_mpstate(struct kvm_vcpu *vcpu,
- 
- 	switch (mp_state->mp_state) {
- 	case KVM_MP_STATE_RUNNABLE:
-+		if (riscv_vcpu_supports_sbi_ext(vcpu, KVM_RISCV_SBI_EXT_HSM) &&
-+				vcpu->arch.ran_atleast_once &&
-+				kvm_riscv_vcpu_stopped(vcpu))
-+			kvm_riscv_vcpu_sbi_request_reset_from_userspace(vcpu);
- 		WRITE_ONCE(vcpu->arch.mp_state, *mp_state);
- 		break;
- 	case KVM_MP_STATE_STOPPED:
-diff --git a/arch/riscv/kvm/vcpu_sbi.c b/arch/riscv/kvm/vcpu_sbi.c
-index 3d7955e05cc3..77f9f0bd3842 100644
---- a/arch/riscv/kvm/vcpu_sbi.c
-+++ b/arch/riscv/kvm/vcpu_sbi.c
-@@ -156,12 +156,29 @@ void kvm_riscv_vcpu_sbi_system_reset(struct kvm_vcpu *vcpu,
- 	run->exit_reason = KVM_EXIT_SYSTEM_EVENT;
- }
- 
-+/* must be called with held vcpu->arch.reset_state.lock */
-+void __kvm_riscv_vcpu_set_reset_state(struct kvm_vcpu *vcpu,
-+                                      unsigned long pc, unsigned long a1)
-+{
-+	vcpu->arch.reset_state.active = true;
-+	vcpu->arch.reset_state.pc = pc;
-+	vcpu->arch.reset_state.a1 = a1;
-+}
-+
- void kvm_riscv_vcpu_sbi_request_reset(struct kvm_vcpu *vcpu,
-                                       unsigned long pc, unsigned long a1)
- {
- 	spin_lock(&vcpu->arch.reset_state.lock);
--	vcpu->arch.reset_state.pc = pc;
--	vcpu->arch.reset_state.a1 = a1;
-+	__kvm_riscv_vcpu_set_reset_state(vcpu, pc, a1);
-+	spin_unlock(&vcpu->arch.reset_state.lock);
-+
-+	kvm_make_request(KVM_REQ_VCPU_RESET, vcpu);
-+}
-+
-+void kvm_riscv_vcpu_sbi_request_reset_from_userspace(struct kvm_vcpu *vcpu)
-+{
-+	spin_lock(&vcpu->arch.reset_state.lock);
-+	vcpu->arch.reset_state.active = false;
- 	spin_unlock(&vcpu->arch.reset_state.lock);
- 
- 	kvm_make_request(KVM_REQ_VCPU_RESET, vcpu);
+[1] https://lore.kernel.org/all/20180228111802.23967-1-jack@suse.cz/
+[2] https://lore.kernel.org/all/20250403112908.13750-1-jack@suse.cz/
+> +
+>  	for (type = 0; type < OCFS2_MAXQUOTAS; type++) {
+>  		if (list_empty(&(rec->r_list[type])))
+>  			continue;
+> @@ -608,7 +617,7 @@ int ocfs2_finish_quota_recovery(struct ocfs2_super *osb,
+>  		lqinode = ocfs2_get_system_file_inode(osb, ino[type], slot_num);
+>  		if (!lqinode) {
+>  			status = -ENOENT;
+> -			goto out;
+> +			goto out_up;
+>  		}
+>  		status = ocfs2_inode_lock_full(lqinode, NULL, 1,
+>  						       OCFS2_META_LOCK_NOQUEUE);
+> @@ -676,8 +685,9 @@ int ocfs2_finish_quota_recovery(struct ocfs2_super *osb,
+>  		if (status < 0)
+>  			break;
+>  	}
+> -out:
+> +out_up:
+>  	up_read(&sb->s_umount);
+> +out:
+>  	ocfs2_free_quota_recovery(rec);
+>  	return status;
+>  }
+> --
+> 2.39.2
+> 
 -- 
-2.48.1
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
