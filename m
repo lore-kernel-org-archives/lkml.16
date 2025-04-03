@@ -1,157 +1,171 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2064.outbound.protection.outlook.com [40.107.101.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A953F2512D5
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 16:24:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743697477; cv=none; b=PuyXGW8YFHdURmZwVw6ayulxATM4u4fluAqL9GB/kLUje6zH48cfeCKsIwMUyLxBOK6iHjFb6ZCDmcthvTKQRfbTNKVfjZleQ2kkzmmA3s1RriV5YVt+v6Rpnu1baGiF3Nq1e5kUc3N6sPLkXAQhlA3gDJz6anirHIOn4SWi8+8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743697477; c=relaxed/simple;
-	bh=ZxbRwQpKz0uC4rWFiP68dkqAQz2gSJboA0Xfn/m9gpQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QQUo47/MDGImg/DFjKbzMemDBzQadiL52NVzpeoyae0Z/CuXSx4+lm9h8TL2z33jPZBy7JgulgIDw7w8Rybn9rBo/W4HmDdc0+50y+GgABfgEdLjKI6KJkHAhiT4s/9B3h4YuM3YFetO7DCLO9e887k0klGDZ25UziedYNRpIuw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dZcotJdH; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4164199FC9;
+	Thu,  3 Apr 2025 16:24:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.64
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743697500; cv=fail; b=eUMMTHtNQmxcVIwsEebY2zf8ZW6nL7ESsrzdFfvwoNe16et+mifQq2Y6WSPkPOV+gDdUr6G+6iGoiz9BLSaIOunRVFLBTRzNweXAnrPho4N9ymhMdMG2rcdHuRd7/3cXsuV4m+cfFSNzAZyQHQvqIWdUFgxL8vSjhKErlRRQ+Jo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743697500; c=relaxed/simple;
+	bh=O20vy2oryTFdztnsCt/0oCRcwyz7aXFSPSqnG1+mcyQ=;
+	h=From:To:CC:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Ee4sxU3jGOhr1zBGMTq7Lztk2UmeJwhi0hXT/jn2uoOEd5DeiC7MYBnp+pUKqYXEsJdZRC2Qm8Vrje7iEgumiY7g1qq3ychnbCEHTQYcrQarGgFPbPGSVDUt7L/Ksf9bf4bYWaHgPUm9FVeuG9s5TOu9OmFOnXbcsSVuGBkIUjs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=lPndo74b; arc=fail smtp.client-ip=40.107.101.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dZcotJdH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743697475; x=1775233475;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ZxbRwQpKz0uC4rWFiP68dkqAQz2gSJboA0Xfn/m9gpQ=;
-  b=dZcotJdHhh6Vm1PVGRHCjjAfV5s5dDT+3i0yARzRaLOZ6yzbfBbftoAR
-   JB2+uQeEJCbdOOB4yFTO5cDxQ9MFWy0gjrpbTwmDciB5SN94qtcd/2joZ
-   h88v3an19wciMsMgIyW6f5g7GFEWt4UNTCCU+yJg7ELW593Xe5GgYHEkn
-   L4Bx3RwDFAGkJRQZk7pKJWhCLXwNVHxPweIp0BiR8GvJdSN4KILi92rQm
-   BmU6jfgFHx16l8EkPgQYrr1LRqrREgrAK8Gq1dihoJNhhnVhMaLHhKDfs
-   IHuVQ0ZLbO1KNB0OwfuNWmm+0lgjHa5ogKGKLy4J+mV5z4z93IX2A/0N9
-   w==;
-X-CSE-ConnectionGUID: OxQsNTrlQW67+qn73HSBnQ==
-X-CSE-MsgGUID: C9lqyTptRmGj+qQ21OxiSA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11393"; a="48775517"
-X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
-   d="scan'208";a="48775517"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 09:24:35 -0700
-X-CSE-ConnectionGUID: xxB70RBJQwGRvlAWi+WJjA==
-X-CSE-MsgGUID: OvWiObj2RCWfp9Nfg6CGAQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
-   d="scan'208";a="131180637"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by fmviesa003.fm.intel.com with ESMTP; 03 Apr 2025 09:24:33 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u0NMj-0000fT-33;
-	Thu, 03 Apr 2025 16:24:29 +0000
-Date: Fri, 4 Apr 2025 00:23:57 +0800
-From: kernel test robot <lkp@intel.com>
-To: "yohan.joung" <yohan.joung@sk.com>, jaegeuk@kernel.org, chao@kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-f2fs-devel@lists.sourceforge.net,
-	linux-kernel@vger.kernel.org, pilhyun.kim@sk.com,
-	yohan.joung@sk.com
-Subject: Re: [PATCH v4] f2fs: prevent the current section from being selected
- as a victim during GC
-Message-ID: <202504032346.pFNGrse7-lkp@intel.com>
-References: <20250403071016.2940-1-yohan.joung@sk.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="lPndo74b"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Z6nPK0dal48oUxhOBgkKj+zRJLCixwUn/UZ3Uy+W7x12s0fWktmsIK+Gloihx70DbqHWF/iIdX/unnAK3oo8+M+TX2b35UA7Si7O1o4uLSVtd/yP3a28OEDaG81eDxGmSqb6m2D0E+JPw9vAVOi9jf1EnkDz49SrYLMxk0DNqPF4CKAPxyosEIhk3QOyRf0iYfAX/drfIsGYi7YExrWwGTCcRvgJXJLh9aexs1R2yyHaAlXAr/vH9Lg7yd+Y5vYw2PyJAmTgQXRsTAGIFiWJP5kYguP6hpGm6R9nX2g0KSfx2puG28z8htDkVhRUj2PQM1JgvBbnBGVPfo9JKADJFQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=O20vy2oryTFdztnsCt/0oCRcwyz7aXFSPSqnG1+mcyQ=;
+ b=pvEgtO2//+J2rRhIc06Fs9kGcQrN1peZqWZbH2Nybm7yQGTjQACBGLDMYDOVuQhH0+lZc5dLd+Evbn4E3AOSkDegIDdOHl2/yawHXIAQWfDVjvHt5hppORu9UXoZaGauRILVKPoIUBTLfEzoghx/lurxrEodORe/9i/jBAuWya4cUC6yHCjsixoNmxUJ/yniBdkTpajWEhPJjR3xcoLOPOajFe1eQMm+gGbxSweK3jjDXwGSqK35qs01fkt5gcLUcaVLTJMw6cwyN1W3eALSFvL9mz3fhzbx3/nVGeDza6HliLNisg66iMXBmd+kS7DChm1jA+IJJZksBrJ0MAqzQw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=O20vy2oryTFdztnsCt/0oCRcwyz7aXFSPSqnG1+mcyQ=;
+ b=lPndo74box3dx28JpOh6TNWqL13Yop9L4sWzQmWXhISYco2yol2/iUzXM10HdwIvXhK5MbxHk1/LvTv8d3y294wQfE77c12iTp6rK2YtRYZuJFgZ37A80mrnuL9TrFOpIiPhWqEGb7sZrtvXlFyv4Oj/mXqy1Q9d9IiqgevDNEA=
+Received: from SJ0PR13CA0180.namprd13.prod.outlook.com (2603:10b6:a03:2c7::35)
+ by DS0PR12MB7827.namprd12.prod.outlook.com (2603:10b6:8:146::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Thu, 3 Apr
+ 2025 16:24:56 +0000
+Received: from SJ5PEPF00000208.namprd05.prod.outlook.com
+ (2603:10b6:a03:2c7:cafe::ac) by SJ0PR13CA0180.outlook.office365.com
+ (2603:10b6:a03:2c7::35) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8632.10 via Frontend Transport; Thu,
+ 3 Apr 2025 16:24:56 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SJ5PEPF00000208.mail.protection.outlook.com (10.167.244.41) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8606.22 via Frontend Transport; Thu, 3 Apr 2025 16:24:55 +0000
+Received: from localhost (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 3 Apr
+ 2025 11:24:55 -0500
+From: Nathan Lynch <nathan.lynch@amd.com>
+To: Vinicius Costa Gomes <vinicius.gomes@intel.com>, Vinod Koul
+	<vkoul@kernel.org>, <dmaengine@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+CC: <dave.jiang@intel.com>, <kristen.c.accardi@intel.com>, kernel test robot
+	<oliver.sang@intel.com>
+Subject: Re: [PATCH v1] dmaengine: dmatest: Fix dmatest waiting less when
+ interrupted
+In-Reply-To: <87o6xdzz5w.fsf@intel.com>
+References: <20250305230007.590178-1-vinicius.gomes@intel.com>
+ <878qpa13fe.fsf@AUSNATLYNCH.amd.com> <87senhoq1k.fsf@intel.com>
+ <874izx10nx.fsf@AUSNATLYNCH.amd.com> <87wmcslwg4.fsf@intel.com>
+ <871pv01vaz.fsf@AUSNATLYNCH.amd.com> <87r030ldbw.fsf@intel.com>
+ <87y0x7z45p.fsf@AUSNATLYNCH.amd.com> <87ldt7l081.fsf@intel.com>
+ <877c428yng.fsf@AUSNATLYNCH.amd.com> <87o6xdzz5w.fsf@intel.com>
+Date: Thu, 3 Apr 2025 11:24:53 -0500
+Message-ID: <874iz58b6y.fsf@AUSNATLYNCH.amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250403071016.2940-1-yohan.joung@sk.com>
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ5PEPF00000208:EE_|DS0PR12MB7827:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1fd03074-111f-4076-cc68-08dd72cc123c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|376014|36860700013|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?3W4igBH3UhvpjaJrh3gm0OQOnCUevB+pwsbrxNLhReKjm/1Nn2+i690cFnji?=
+ =?us-ascii?Q?iJd7GsWgg3qyEVW4ScDYGw9vomAIanxUdWblktGHY0IB2d3vzOVkzHmiyViR?=
+ =?us-ascii?Q?TrVRWROVgsggMTt9rJ1CAyXxDeyDUYcYLl4wkgZzvGm0xuAJzqIUUgzTkobF?=
+ =?us-ascii?Q?1MaTv/Lyxk71g80tYxLnFx14U/z9hb+HdSPS3yG6oWpEwui9GZrqYbbAwqo1?=
+ =?us-ascii?Q?nmxXhX/F6V/xBbmL9e+2FlH3Ptf8JRxOUrnS3LRUK96fkKkT/d1TCTvNfmjU?=
+ =?us-ascii?Q?65DUpq4XcmAA/44mYUSy0VVs5HEIH5j3x6MsQ4N3hCAlgPYlzk96Y8w/d17v?=
+ =?us-ascii?Q?YGaWHqto4bgx56M+tX7Vo8K3NhVUKhAAJemqcerWw/79vl2LduZj2aE/ao9j?=
+ =?us-ascii?Q?GzhATAIXasu0nyKAcQPkEfLsAloblILBpkLoPIkJMm6CV+9oSICeNuBK10/v?=
+ =?us-ascii?Q?/dssbPse9Led8tTuKQFQBKvkdEnGP0MpNO6m0p+SlVWkIRSLckVGBeCAVK56?=
+ =?us-ascii?Q?4BAcAZPYDQubQzAGeMxkfxxAXSp9M3/mM+8oDKIDvwnXZ3UzPVBF312zRgKt?=
+ =?us-ascii?Q?9l3vLkUZRyaQGZCllL60NB0SBakkIRBkqu/SPOU+EQSW989sJtySnpQ/BZmk?=
+ =?us-ascii?Q?KYxm8h8OUyS0XR6loSxHNpQC0Gr7H3o7Os9Jz2kNtrPu9his1E6/4wTyGsoC?=
+ =?us-ascii?Q?TXsMa97t/FkxeJ/zeOZeAeYVJPh76rfd96fyxR+caz4MlYqsKJ7D17341dMf?=
+ =?us-ascii?Q?5juMbYOwL90Y1hxGf4mfZOe2maQDcwHfW+nDKa3pFw/MBN+QDVV92bEszZlC?=
+ =?us-ascii?Q?SGDXce1sk1fonQzIJMlrJSlHxtVVLk653bCYZ3Zp1CQJrEBD2g8tu150/2yv?=
+ =?us-ascii?Q?8yHGlkfa4dlcXFBGO0Sj4Coo5TBfVsWm3O2WESSklFWVFbIv9VochRo6biqQ?=
+ =?us-ascii?Q?XXlYUQ3t5ZY7GDkNXG8BbexUsHKt8r101yT0IiArzufL5yhJb3zQHssvo2v2?=
+ =?us-ascii?Q?Mc7rl3MJzzn+3G4INlTCkvfVvDuSX6bkzfRHrVDIgUmCAuAw0hcYvz5/s8Fv?=
+ =?us-ascii?Q?24lhiZsr8d+T5m094GM01q1rDayhTPjp7rPhsv5UzAw8/iA2rNLTwNT38wyH?=
+ =?us-ascii?Q?hsaFS8REeOd6+8IWeilTrEzeConO4JXlJy7/Hqt2104HtR8b3OOuK6dqArLP?=
+ =?us-ascii?Q?UXuwrFYa41MuEXOtQ01p3zYPR6UYi/z3G+ZcBtSILrdYmtLvi09XEu3WzWfb?=
+ =?us-ascii?Q?pQVv7eQIc4cLtySWMX6tfhpaV3PLV8f9i4qb58BuZm4Zp5A5gbM0KgKG3vXi?=
+ =?us-ascii?Q?BXzcKR1mzdoEEhMlGms3Eeo6AxSiVVPRI7D9D2a1PRfnBeukn4OUQ9IJ9GLv?=
+ =?us-ascii?Q?i7CxgN3TiwNjcYQBPcvBxOKMAsT+XTxdnNf1r0Y1QwRrDlgeEN/2n7KfBvQX?=
+ =?us-ascii?Q?A+OiQrvwPdUV68vaO74ki167TtU5HM+13lHsyd4egB4jF+TgFRWuBN0eGuIs?=
+ =?us-ascii?Q?cJ3GuUwBIQc5MEM=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(376014)(36860700013)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Apr 2025 16:24:55.9941
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1fd03074-111f-4076-cc68-08dd72cc123c
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ5PEPF00000208.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7827
 
-Hi yohan.joung,
+Vinicius Costa Gomes <vinicius.gomes@intel.com> writes:
+> Nathan Lynch <nathan.lynch@amd.com> writes:
+>
+>> Vinicius Costa Gomes <vinicius.gomes@intel.com> writes:
+>>> Nathan Lynch <nathan.lynch@amd.com> writes:
+>>>
+>>>> Vinicius Costa Gomes <vinicius.gomes@intel.com> writes:
+>>>>> Nathan Lynch <nathan.lynch@amd.com> writes:
+>>>>>> dmatest_callback() employs wake_up_all(), which means this change
+>>>>>> introduces no beneficial difference in the wakeup behavior. The dmatest
+>>>>>> thread gets woken on receipt of the completion interrupt either way.
+>>>>>>
+>>>>>> And to reiterate, the change regresses the combination of dmatest and
+>>>>>> the task freezer, which is a use case people have cared about,
+>>>>>> apparently.
+>>>>>>
+>>>>>
+>>>>> If this change in behavior causes a regression for others, glad to send
+>>>>> a revert and find another solution.
+>>>>
+>>>> Thanks - yes it should be reverted or dropped IMO.
+>>>
+>>> Here's what I am thinking, I'll work on this a few days and see if I can
+>>> find an alternative solution and send the revert together with the fix.
+>>> If I can't find another solution in a few days, I'll propose the revert
+>>> anyway.
+>>
+>> Just checking on this - I see this regression is in Linus's master
+>> branch now.
+>
+> I have a series with the revert, a (hopefully better) fix for this
+> issue, and a couple of others that I found along the way, that I should
+> be able to propose soon.
 
-kernel test robot noticed the following build errors:
+Respectfully, I don't think that's how this should be handled. The
+revert should be standalone, not part of a larger series subject to its
+own cycle of review and revision.
 
-[auto build test ERROR on jaegeuk-f2fs/dev-test]
-[also build test ERROR on jaegeuk-f2fs/dev linus/master v6.14 next-20250403]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/yohan-joung/f2fs-prevent-the-current-section-from-being-selected-as-a-victim-during-GC/20250403-151057
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/jaegeuk/f2fs.git dev-test
-patch link:    https://lore.kernel.org/r/20250403071016.2940-1-yohan.joung%40sk.com
-patch subject: [PATCH v4] f2fs: prevent the current section from being selected as a victim during GC
-config: i386-buildonly-randconfig-003-20250403 (https://download.01.org/0day-ci/archive/20250403/202504032346.pFNGrse7-lkp@intel.com/config)
-compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250403/202504032346.pFNGrse7-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504032346.pFNGrse7-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   In file included from fs/f2fs/file.c:30:
->> fs/f2fs/segment.h:480:53: error: too few arguments provided to function-like macro invocation
-     480 |                                 if (GET_SEC_FROM_SEG(sbi->next_victim_seg[BG_GC]) == secno)
-         |                                                                                 ^
-   fs/f2fs/segment.h:105:9: note: macro 'GET_SEC_FROM_SEG' defined here
-     105 | #define GET_SEC_FROM_SEG(sbi, segno)                            \
-         |         ^
->> fs/f2fs/segment.h:480:9: error: use of undeclared identifier 'GET_SEC_FROM_SEG'
-     480 |                                 if (GET_SEC_FROM_SEG(sbi->next_victim_seg[BG_GC]) == secno)
-         |                                     ^
-   fs/f2fs/segment.h:483:53: error: too few arguments provided to function-like macro invocation
-     483 |                                 if (GET_SEC_FROM_SEG(sbi->next_victim_seg[FG_GC]) == secno)
-         |                                                                                 ^
-   fs/f2fs/segment.h:105:9: note: macro 'GET_SEC_FROM_SEG' defined here
-     105 | #define GET_SEC_FROM_SEG(sbi, segno)                            \
-         |         ^
-   fs/f2fs/segment.h:483:9: error: use of undeclared identifier 'GET_SEC_FROM_SEG'
-     483 |                                 if (GET_SEC_FROM_SEG(sbi->next_victim_seg[FG_GC]) == secno)
-         |                                     ^
-   4 errors generated.
-
-
-vim +480 fs/f2fs/segment.h
-
-   458	
-   459	static inline void __set_test_and_free(struct f2fs_sb_info *sbi,
-   460			unsigned int segno, bool inmem)
-   461	{
-   462		struct free_segmap_info *free_i = FREE_I(sbi);
-   463		unsigned int secno = GET_SEC_FROM_SEG(sbi, segno);
-   464		unsigned int start_segno = GET_SEG_FROM_SEC(sbi, secno);
-   465		unsigned int next;
-   466		unsigned int usable_segs = f2fs_usable_segs_in_sec(sbi);
-   467	
-   468		spin_lock(&free_i->segmap_lock);
-   469		if (test_and_clear_bit(segno, free_i->free_segmap)) {
-   470			free_i->free_segments++;
-   471	
-   472			if (!inmem && IS_CURSEC(sbi, secno))
-   473				goto skip_free;
-   474			next = find_next_bit(free_i->free_segmap,
-   475					start_segno + SEGS_PER_SEC(sbi), start_segno);
-   476			if (next >= start_segno + usable_segs) {
-   477				if (test_and_clear_bit(secno, free_i->free_secmap)) {
-   478					free_i->free_sections++;
-   479	
- > 480					if (GET_SEC_FROM_SEG(sbi->next_victim_seg[BG_GC]) == secno)
-   481						sbi->next_victim_seg[BG_GC] = NULL_SEGNO;
-   482	
-   483					if (GET_SEC_FROM_SEG(sbi->next_victim_seg[FG_GC]) == secno)
-   484						sbi->next_victim_seg[FG_GC] = NULL_SEGNO;
-   485				}
-   486			}
-   487		}
-   488	skip_free:
-   489		spin_unlock(&free_i->segmap_lock);
-   490	}
-   491	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+I've written it up and submitted it myself.
