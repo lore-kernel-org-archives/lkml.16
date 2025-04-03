@@ -1,159 +1,87 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2383D24BC00
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 11:09:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AC0224BC1C;
+	Thu,  3 Apr 2025 11:10:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743678565; cv=none; b=YVC6qqdX8bYGUQppIbt+D1T6vNmusvNZ4amPX4nnx8KzNW7sPO0TmRWdbe9gEMaR3E9D6wSu8f+AJBUnfmGSTkmqcpu1EU80O3IkqK5mfQuZgppFAnleClbnAyOXNV7p0uVpmDs5eoUjQweYRpppvnziQQXrlE4XQeTm/TTQ+wo=
+	t=1743678611; cv=none; b=e6Vkw9+viT06oCieQ2uCrXShNa9KoK5/9m2rHGmkoaCYawYX7NOfDZ1wgX3R6nwg+1EuEkjF09ARhfWftsIRc5PXTn77neweI/YNzmG1poNHW68kyOJtjR6W+3h3WrHdLcGcT14GK266IN6p2dpRixHhGxV2PSrCLDFMzr3pvPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743678565; c=relaxed/simple;
-	bh=6U0cHRYsd8YJZVPQS4TWK9TB+mTlNZFERJhRe89GdgA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=X5LsArOQvKzyxvXBX+J8sT6OLi0jcjNd19tSd3dYYVEDrqQOf3pDXZFdKsdy+Jy8YFQcHWiuEQFZaZrB7b0ALN385sgghKZQX7BLUzbZrzVvvEQwny5Gx0/ihL7G85HaBLoeygrBzllJA6mhcmvCFZbsYjtncmfMO1bMoFQPpY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=hGUVqqWW; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1743678611; c=relaxed/simple;
+	bh=htwI5zsh8ZDaI94Lm8c3UJRY0TNj20AHOyFODzHrsRg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rpJ2xWRrtCFF/f22Jj/HZacawGTTBbEzH/mwn22Cv8+9nnjX1g69AuBFf8s86+X2ZyXzB+pl0/mbpspJlSf0gMZy4yN067dcObcR7NYFYwACTqMME74MvkHr+yHnBo0IxJHca3Imxh015AjAJRxNqwnS1Sg00/X1pzIReSlxBTk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JDOhLyn0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="hGUVqqWW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1743678561;
-	bh=6U0cHRYsd8YJZVPQS4TWK9TB+mTlNZFERJhRe89GdgA=;
-	h=From:To:Cc:Subject:Date:From;
-	b=hGUVqqWWvT6HZ8wy3gVVJ99WBr//wGvHfNckq266fh3RrwSdsFjfCOTVRxuWCRkDj
-	 eNBwVRzUNd5vi72D7vnYUxYFhnT8JI7X3G+ZaMzmREmV0D/HaTDtb4XDwfGDJx8K3C
-	 SYng2KuqoY6AblI0COl23ewcoHiMv6CW9UYpPpVFOLMdSr5713KbC+NgbvSo+S9w7j
-	 YDxWTv2bYw5L1fsfZojKUHEKPfrN+zXHtc30/7RjMLMFjUK1kNjYP0u0vQXUmfkM4r
-	 u6ag4br80yBZZ8oxTV4oey8BmG85ck560VjpuJqGboYudnEMRdXQHnKGH9l83kCuyO
-	 gWHGzPIyWBovQ==
-Received: from IcarusMOD.eternityproject.eu (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 4F51517E00A3;
-	Thu,  3 Apr 2025 13:09:20 +0200 (CEST)
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-To: chunkuang.hu@kernel.org
-Cc: p.zabel@pengutronix.de,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	matthias.bgg@gmail.com,
-	angelogioacchino.delregno@collabora.com,
-	nancy.lin@mediatek.com,
-	ck.hu@mediatek.com,
-	djkurtz@chromium.org,
-	littlecvr@chromium.org,
-	bibby.hsieh@mediatek.com,
-	dri-devel@lists.freedesktop.org,
-	linux-mediatek@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	wenst@chromium.org,
-	kernel@collabora.com
-Subject: [PATCH] drm/mediatek: mtk_dp: Fix hdmi codec and phy driver unregistration
-Date: Thu,  3 Apr 2025 13:09:15 +0200
-Message-ID: <20250403110915.75322-1-angelogioacchino.delregno@collabora.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JDOhLyn0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11F2AC4CEE3;
+	Thu,  3 Apr 2025 11:10:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743678610;
+	bh=htwI5zsh8ZDaI94Lm8c3UJRY0TNj20AHOyFODzHrsRg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JDOhLyn0xYLRzSvccPU8EviC8cR6irF7BDJvH8ACOAdUQzHQH7oP/7wYujcxO+NjF
+	 GgY2xgBpssfWkG1WsjPDgdBi0nkVLNmQuj7vdHyeM2DsDwYSPD9qDsrfuYj0WWsPah
+	 G7FDtZORFO+rimKjF7CbjHQbT9uuROt2jdGtPEDeuW/dt5Kx2J1GvenawEct3O0SoS
+	 Uo8PX1xw/niwV9hUIuhDFfnkEKfrdyMd0X5Sf46MelotqgSxu2VVk6SA7mz/eOaFDJ
+	 HoPO9zn4Vc6zD+ANTRl/YKXupC3sqi6yHP4dPfKlO5jsS9+ko5WOXpbKrRmvIzhObh
+	 m92UasI15X0dw==
+Date: Thu, 3 Apr 2025 12:10:05 +0100
+From: Mark Brown <broonie@kernel.org>
+To: shao.mingyin@zte.com.cn
+Cc: olivier.moysan@foss.st.com, arnaud.pouliquen@foss.st.com,
+	lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
+	mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com,
+	linux-sound@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	yang.yang29@zte.com.cn, xu.xin16@zte.com.cn, ye.xingchen@zte.com.cn,
+	zhang.enpei@zte.com.cn
+Subject: Re: [PATCH] sound: soc: stm: stm32_sai: Use dev_err_probe()
+Message-ID: <f78f066f-2be6-47f3-bb06-03f1c2ed3d22@sirena.org.uk>
+References: <20250403154142936Po-soX8Bifyvw_eWSbddT@zte.com.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="VJtFOiDls7d3k31G"
+Content-Disposition: inline
+In-Reply-To: <20250403154142936Po-soX8Bifyvw_eWSbddT@zte.com.cn>
+X-Cookie: Logic is the chastity belt of the mind!
 
-During probe, this driver is registering two platform devices: one
-for the HDMI Codec driver and one for the DisplayPort PHY driver.
 
-In the probe function, none of the error cases are unregistering
-any of the two platform devices and this may cause registration
-of multiple instances of those in case this driver returns one or
-more probe deferral(s) in the "wrong" spots.
+--VJtFOiDls7d3k31G
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-In order to fix this, add devm actions to unregister those and
-remove the manual calls to platform_device_unregister in the
-mtk_dp_remove() function, as those would otherwise be redundant.
+On Thu, Apr 03, 2025 at 03:41:42PM +0800, shao.mingyin@zte.com.cn wrote:
+> From: Zhang Enpei <zhang.enpei@zte.com.cn>
+>=20
+> Replace the open-code with dev_err_probe() to simplify the code.
 
-Fixes: e71a8ebbe086 ("drm/mediatek: dp: Audio support for MT8195")
-Fixes: caf2ae486742 ("drm/mediatek: dp: Add support for embedded DisplayPort aux-bus")
-Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
----
- drivers/gpu/drm/mediatek/mtk_dp.c | 30 ++++++++++++++++++++++++++----
- 1 file changed, 26 insertions(+), 4 deletions(-)
+Please submit patches using subject lines reflecting the style for the
+subsystem, this makes it easier for people to identify relevant patches.
+Look at what existing commits in the area you're changing are doing and
+make sure your subject lines visually resemble what they're doing.
+There's no need to resubmit to fix this alone.
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_dp.c b/drivers/gpu/drm/mediatek/mtk_dp.c
-index 3d4648d2e15f..3eb685a46d99 100644
---- a/drivers/gpu/drm/mediatek/mtk_dp.c
-+++ b/drivers/gpu/drm/mediatek/mtk_dp.c
-@@ -2648,6 +2648,13 @@ static const struct hdmi_codec_ops mtk_dp_audio_codec_ops = {
- 	.hook_plugged_cb = mtk_dp_audio_hook_plugged_cb,
- };
- 
-+static void mtk_dp_unregister_pdevs(void *data)
-+{
-+	struct platform_device *ext_pdev = data;
-+
-+	platform_device_unregister(ext_pdev);
-+}
-+
- static int mtk_dp_register_audio_driver(struct device *dev)
- {
- 	struct mtk_dp *mtk_dp = dev_get_drvdata(dev);
-@@ -2658,18 +2665,29 @@ static int mtk_dp_register_audio_driver(struct device *dev)
- 		.data = mtk_dp,
- 		.no_capture_mute = 1,
- 	};
-+	int ret;
- 
- 	mtk_dp->audio_pdev = platform_device_register_data(dev,
- 							   HDMI_CODEC_DRV_NAME,
- 							   PLATFORM_DEVID_AUTO,
- 							   &codec_data,
- 							   sizeof(codec_data));
--	return PTR_ERR_OR_ZERO(mtk_dp->audio_pdev);
-+	if (IS_ERR(mtk_dp->audio_pdev))
-+		return PTR_ERR(mtk_dp->audio_pdev);
-+
-+	ret = devm_add_action_or_reset(dev, mtk_dp_unregister_pdevs, mtk_dp->phy_dev);
-+	if (ret) {
-+		platform_device_unregister(mtk_dp->audio_pdev);
-+		return dev_err_probe(dev, ret,
-+				     "Failed to add codec unregister devm action");
-+	}
-+	return 0;
- }
- 
- static int mtk_dp_register_phy(struct mtk_dp *mtk_dp)
- {
- 	struct device *dev = mtk_dp->dev;
-+	int ret;
- 
- 	mtk_dp->phy_dev = platform_device_register_data(dev, "mediatek-dp-phy",
- 							PLATFORM_DEVID_AUTO,
-@@ -2679,6 +2697,13 @@ static int mtk_dp_register_phy(struct mtk_dp *mtk_dp)
- 		return dev_err_probe(dev, PTR_ERR(mtk_dp->phy_dev),
- 				     "Failed to create device mediatek-dp-phy\n");
- 
-+	ret = devm_add_action_or_reset(dev, mtk_dp_unregister_pdevs, mtk_dp->phy_dev);
-+	if (ret) {
-+		platform_device_unregister(mtk_dp->phy_dev);
-+		return dev_err_probe(dev, ret,
-+				     "Failed to add phy unregister devm action");
-+	}
-+
- 	mtk_dp_get_calibration_data(mtk_dp);
- 
- 	mtk_dp->phy = devm_phy_get(&mtk_dp->phy_dev->dev, "dp");
-@@ -2848,9 +2873,6 @@ static void mtk_dp_remove(struct platform_device *pdev)
- 	pm_runtime_disable(&pdev->dev);
- 	if (mtk_dp->data->bridge_type != DRM_MODE_CONNECTOR_eDP)
- 		del_timer_sync(&mtk_dp->debounce_timer);
--	platform_device_unregister(mtk_dp->phy_dev);
--	if (mtk_dp->audio_pdev)
--		platform_device_unregister(mtk_dp->audio_pdev);
- }
- 
- #ifdef CONFIG_PM_SLEEP
--- 
-2.48.1
+--VJtFOiDls7d3k31G
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmfubIwACgkQJNaLcl1U
+h9CeLQf/R93pQE1PWEoaKn2ix4KLyiBG73yedrtnMdMp+o5mrdfBQ7mMCsCUr9D2
+OYklJCVdg5UGii26J9AHrpPFJ/maeTRCZLWSYi8jSkDvVOzITy74IiQN+3fMSyvo
+lG/EJg7WhDkLyGdQm3FM6/GD3QqppgcfzTFJkKTGxFwXeTCYJoanUdk2rn7iNqyO
+ZIfIQYS56l4O1FR/xTJG+n5iyS2HsYUACJRFyrnHW+CjpGpEVXRWEMOmhzhVl0TQ
+EjDsPh4BWWbOX2Cvca66T1c5mJ5SHEFBlcQEIJ+RaDP5koM9IiMMuRAKY98HA3rK
+mYbd3uFbhvGA9EVRiMkS/8iOsQJUTA==
+=LR/E
+-----END PGP SIGNATURE-----
+
+--VJtFOiDls7d3k31G--
