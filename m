@@ -1,275 +1,207 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F276B2673A9;
-	Thu,  3 Apr 2025 19:05:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34EB6267398;
+	Thu,  3 Apr 2025 19:05:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743707130; cv=none; b=c1QZEe+jXMh/wUqw/6ihJ3rPUTf0SgVci0mErxD8JYOQd4ui5fTA9pu+GwualqddJclC7pp5/UdmWZmFpL5jgbqzFu+c/b+vUcj7b+LeByi5RhSXFJdMiNIpbnQK/niZPCztCwhsZk6TpgVqU4pgL4ow72Dq2879oMVVVh4gDsY=
+	t=1743707131; cv=none; b=s7WSyyqGoazoKk6Tg5u2LJ0CkDLHDOLxioTNeQ0mbRS+H7+naHI8Z+KtHXnWlDxbO8KXqhkJ1gLdmX6aQyckI2W+kZ4chUsjTQqP07mTtW00iuuPcgwVZlW7cZcyiHnbap1T4GZNSY8qAU0dE30EH1fepYVgO4nDBSkCrhYjIIk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743707130; c=relaxed/simple;
-	bh=UTSybPX9pm657Ejw52N4FlK3mRJy2RMZjRzMQdJm5jA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eklctM24GVIv3BM0e3asyoPxXd8wWJynZnro5GMCJPg6DduuSSnz18b8GiWFf30oC9cUKbq0B15vyn2IQspTt0yqtwRB9xQ/MZBMkygKhBZHxxxzqpp3ANGMXuo6utVzeHC1XFgeQus5pXsTAQNhcyHWYC7ssN+JaeC2Yo4YMdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ik+7j6xB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743707131; c=relaxed/simple;
+	bh=ePURtSpA1U+2aAC+6iPVCJE4ede696nUnEyd3K/kgvw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=NiuekXV6ejwjko39UsXsYaWFP2MJp8xIZaQ90rUonc82y6lIjILhLY7sCQmweTPSIUqFkD6XOyAUK1GIvpEO4D5kNaa+umFJIqYqtOONqxv7gHTJxxtL4qoqRiUyDggzDTvVIX4/cAmhk66u4Vp7M1koSy1EgxrreYXuP96VV4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XiT0xYCa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ik+7j6xB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45A68C4CEEA;
-	Thu,  3 Apr 2025 19:05:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XiT0xYCa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C1A9C4CEE8;
+	Thu,  3 Apr 2025 19:05:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743707129;
-	bh=UTSybPX9pm657Ejw52N4FlK3mRJy2RMZjRzMQdJm5jA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ik+7j6xBNMmfDLKfAD1G4fEuwhRJQMKS7xjMqFSfXvS7q92adp2GswnvSbxASXLyc
-	 //99URLK+hhRYo3DOjpa0+yOI0qnsGmbElzHc6G4pCHr1hwzJCRFZm9xVO+rh7JDSJ
-	 aWRzF/CrSkDkbwwurTSXvdIvOYcnsy/VPToR6ugZXbmWxFw2LQgG6t6lC6ImiDdxzs
-	 NBjxh0RlyrJ/2w6VbIk7oLmz9bU2GjE1zHG351R39S0Wk566+S+/R3jINZA1SFeOVS
-	 njJ9L6/cI2mwEVizO7JLbEu/L1ZH14eKsfP3Gcs54QaEyav5QGk7Y90vIBZSvbk6EP
-	 vVjNyZc39xBcg==
-Date: Thu, 3 Apr 2025 22:05:25 +0300
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: Stefano Garzarella <sgarzare@redhat.com>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>,
-	Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
-	"H. Peter Anvin" <hpa@zytor.com>, linux-coco@lists.linux.dev,
-	linux-integrity@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
-	Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Joerg Roedel <jroedel@suse.de>,
-	Dionna Glaze <dionnaglaze@google.com>,
-	Claudio Carvalho <cclaudio@linux.ibm.com>,
-	James Bottomley <James.Bottomley@hansenpartnership.com>,
-	linux-kernel@vger.kernel.org, Dov Murik <dovmurik@linux.ibm.com>,
-	Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v6 3/4] tpm: add SNP SVSM vTPM driver
-Message-ID: <Z-7b9VPEhmVYHjbX@kernel.org>
-References: <20250403100943.120738-1-sgarzare@redhat.com>
- <20250403100943.120738-4-sgarzare@redhat.com>
+	s=k20201202; t=1743707131;
+	bh=ePURtSpA1U+2aAC+6iPVCJE4ede696nUnEyd3K/kgvw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=XiT0xYCanZ1GlJQOPsb9OkG2GjBYnZ3M2FAR9NP+h3rx6l8B4xqcXLsupcYYCyyIv
+	 an6wZ3cZU3fXZvd6LC7az7yJDofr5WFTIT9GDqbSQ7dyCyH+gUKZh9TCgY6Sx2KbgA
+	 3tKw/BJ93FiHmjvwLlBf3hM7DRDN4Wz8f+1mavIZDGY0+RWeyLTzzUMqO0HW5aSDNj
+	 IB4ufsGsL7u/YBWBBBX9asrcOOe9WfbdZvLswjf5ON1np/XIWSZfU5mOA+gPF84QE9
+	 JlZjCgveSwfiRoQiqIarU78mAAZMx2cXBYSzSpnLeakRMLUnYFUJ83L1w9PBcX8ypH
+	 tMN8JbnAEhksQ==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Qu Wenruo <wqu@suse.com>,
+	David Sterba <dsterba@suse.com>,
+	Sasha Levin <sashal@kernel.org>,
+	clm@fb.com,
+	josef@toxicpanda.com,
+	linux-btrfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.13 36/49] btrfs: reject out-of-band dirty folios during writeback
+Date: Thu,  3 Apr 2025 15:03:55 -0400
+Message-Id: <20250403190408.2676344-36-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250403190408.2676344-1-sashal@kernel.org>
+References: <20250403190408.2676344-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250403100943.120738-4-sgarzare@redhat.com>
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.13.9
+Content-Transfer-Encoding: 8bit
 
-On Thu, Apr 03, 2025 at 12:09:41PM +0200, Stefano Garzarella wrote:
-> From: Stefano Garzarella <sgarzare@redhat.com>
-> 
-> Add driver for the vTPM defined by the AMD SVSM spec [1].
-> 
-> The specification defines a protocol that a SEV-SNP guest OS can use to
-> discover and talk to a vTPM emulated by the Secure VM Service Module (SVSM)
-> in the guest context, but at a more privileged level (VMPL0).
-> 
-> The new tpm-svsm platform driver uses two functions exposed by x86/sev
-> to verify that the device is actually emulated by the platform and to
-> send commands and receive responses.
-> 
-> The device cannot be hot-plugged/unplugged as it is emulated by the
-> platform, so we can use module_platform_driver_probe(). The probe
-> function will only check whether in the current runtime configuration,
-> SVSM is present and provides a vTPM.
-> 
-> This device does not support interrupts and sends responses to commands
-> synchronously. In order to have .recv() called just after .send() in
-> tpm_try_transmit(), the .status() callback returns 0, and both
-> .req_complete_mask and .req_complete_val are set to 0.
-> 
-> [1] "Secure VM Service Module for SEV-SNP Guests"
->     Publication # 58019 Revision: 1.00
-> 
-> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
-> ---
-> v6:
-> - removed the `locality` field (set to 0) and the FIXME comment [Jarkko]
-> v5:
-> - removed cancel/status/req_* ops after rebase on master that cotains
->   commit 980a573621ea ("tpm: Make chip->{status,cancel,req_canceled} opt")
-> v4:
-> - moved "asm" includes after the "linux" includes [Tom]
-> - allocated buffer separately [Tom/Jarkko/Jason]
-> v3:
-> - removed send_recv() ops and followed the ftpm driver implementing .status,
->   .req_complete_mask, .req_complete_val, etc. [Jarkko]
-> - removed link to the spec because those URLs are unstable [Borislav]
-> ---
->  drivers/char/tpm/tpm_svsm.c | 128 ++++++++++++++++++++++++++++++++++++
->  drivers/char/tpm/Kconfig    |  10 +++
->  drivers/char/tpm/Makefile   |   1 +
->  3 files changed, 139 insertions(+)
->  create mode 100644 drivers/char/tpm/tpm_svsm.c
-> 
-> diff --git a/drivers/char/tpm/tpm_svsm.c b/drivers/char/tpm/tpm_svsm.c
-> new file mode 100644
-> index 000000000000..b9242c9eab87
-> --- /dev/null
-> +++ b/drivers/char/tpm/tpm_svsm.c
-> @@ -0,0 +1,128 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright (C) 2025 Red Hat, Inc. All Rights Reserved.
-> + *
-> + * Driver for the vTPM defined by the AMD SVSM spec [1].
-> + *
-> + * The specification defines a protocol that a SEV-SNP guest OS can use to
-> + * discover and talk to a vTPM emulated by the Secure VM Service Module (SVSM)
-> + * in the guest context, but at a more privileged level (usually VMPL0).
-> + *
-> + * [1] "Secure VM Service Module for SEV-SNP Guests"
-> + *     Publication # 58019 Revision: 1.00
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/kernel.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/tpm_svsm.h>
-> +
-> +#include <asm/sev.h>
-> +
-> +#include "tpm.h"
-> +
-> +struct tpm_svsm_priv {
-> +	void *buffer;
-> +};
-> +
-> +static int tpm_svsm_send(struct tpm_chip *chip, u8 *buf, size_t len)
-> +{
-> +	struct tpm_svsm_priv *priv = dev_get_drvdata(&chip->dev);
-> +	int ret;
-> +
-> +	ret = svsm_vtpm_cmd_request_fill(priv->buffer, 0, buf, len);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/*
-> +	 * The SVSM call uses the same buffer for the command and for the
-> +	 * response, so after this call, the buffer will contain the response
-> +	 * that can be used by .recv() op.
-> +	 */
-> +	return snp_svsm_vtpm_send_command(priv->buffer);
-> +}
-> +
-> +static int tpm_svsm_recv(struct tpm_chip *chip, u8 *buf, size_t len)
-> +{
-> +	struct tpm_svsm_priv *priv = dev_get_drvdata(&chip->dev);
-> +
-> +	/*
-> +	 * The internal buffer contains the response after we send the command
-> +	 * to SVSM.
-> +	 */
-> +	return svsm_vtpm_cmd_response_parse(priv->buffer, buf, len);
-> +}
-> +
-> +static struct tpm_class_ops tpm_chip_ops = {
-> +	.flags = TPM_OPS_AUTO_STARTUP,
-> +	.recv = tpm_svsm_recv,
-> +	.send = tpm_svsm_send,
-> +};
-> +
-> +static int __init tpm_svsm_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct tpm_svsm_priv *priv;
-> +	struct tpm_chip *chip;
-> +	int err;
-> +
-> +	if (!snp_svsm_vtpm_probe())
-> +		return -ENODEV;
-> +
-> +	priv = devm_kmalloc(dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	/*
-> +	 * The maximum buffer supported is one page (see SVSM_VTPM_MAX_BUFFER
-> +	 * in tpm_svsm.h).
-> +	 */
-> +	priv->buffer = (void *)devm_get_free_pages(dev, GFP_KERNEL, 0);
-> +	if (!priv->buffer)
-> +		return -ENOMEM;
-> +
-> +	chip = tpmm_chip_alloc(dev, &tpm_chip_ops);
-> +	if (IS_ERR(chip))
-> +		return PTR_ERR(chip);
-> +
-> +	dev_set_drvdata(&chip->dev, priv);
-> +
-> +	err = tpm2_probe(chip);
-> +	if (err)
-> +		return err;
-> +
-> +	err = tpm_chip_register(chip);
-> +	if (err)
-> +		return err;
-> +
-> +	dev_info(dev, "SNP SVSM vTPM %s device\n",
-> +		 (chip->flags & TPM_CHIP_FLAG_TPM2) ? "2.0" : "1.2");
-> +
-> +	return 0;
-> +}
-> +
-> +static void __exit tpm_svsm_remove(struct platform_device *pdev)
-> +{
-> +	struct tpm_chip *chip = platform_get_drvdata(pdev);
-> +
-> +	tpm_chip_unregister(chip);
-> +}
-> +
-> +/*
-> + * tpm_svsm_remove() lives in .exit.text. For drivers registered via
-> + * module_platform_driver_probe() this is ok because they cannot get unbound
-> + * at runtime. So mark the driver struct with __refdata to prevent modpost
-> + * triggering a section mismatch warning.
-> + */
-> +static struct platform_driver tpm_svsm_driver __refdata = {
-> +	.remove = __exit_p(tpm_svsm_remove),
-> +	.driver = {
-> +		.name = "tpm-svsm",
-> +	},
-> +};
-> +
-> +module_platform_driver_probe(tpm_svsm_driver, tpm_svsm_probe);
-> +
-> +MODULE_DESCRIPTION("SNP SVSM vTPM Driver");
-> +MODULE_LICENSE("GPL");
-> +MODULE_ALIAS("platform:tpm-svsm");
-> diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
-> index fe4f3a609934..dddd702b2454 100644
-> --- a/drivers/char/tpm/Kconfig
-> +++ b/drivers/char/tpm/Kconfig
-> @@ -234,5 +234,15 @@ config TCG_FTPM_TEE
->  	help
->  	  This driver proxies for firmware TPM running in TEE.
->  
-> +config TCG_SVSM
-> +	tristate "SNP SVSM vTPM interface"
-> +	depends on AMD_MEM_ENCRYPT
-> +	help
-> +	  This is a driver for the AMD SVSM vTPM protocol that a SEV-SNP guest
-> +	  OS can use to discover and talk to a vTPM emulated by the Secure VM
-> +	  Service Module (SVSM) in the guest context, but at a more privileged
-> +	  level (usually VMPL0).  To compile this driver as a module, choose M
-> +	  here; the module will be called tpm_svsm.
-> +
->  source "drivers/char/tpm/st33zp24/Kconfig"
->  endif # TCG_TPM
-> diff --git a/drivers/char/tpm/Makefile b/drivers/char/tpm/Makefile
-> index 2b004df8c04b..9de1b3ea34a9 100644
-> --- a/drivers/char/tpm/Makefile
-> +++ b/drivers/char/tpm/Makefile
-> @@ -45,3 +45,4 @@ obj-$(CONFIG_TCG_CRB) += tpm_crb.o
->  obj-$(CONFIG_TCG_ARM_CRB_FFA) += tpm_crb_ffa.o
->  obj-$(CONFIG_TCG_VTPM_PROXY) += tpm_vtpm_proxy.o
->  obj-$(CONFIG_TCG_FTPM_TEE) += tpm_ftpm_tee.o
-> +obj-$(CONFIG_TCG_SVSM) += tpm_svsm.o
-> -- 
-> 2.49.0
-> 
-> 
+From: Qu Wenruo <wqu@suse.com>
 
-Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
+[ Upstream commit 7ca3e84980ef6484a5c6f004aa180b61ce0c37d9 ]
 
-BR, Jarkko
+[OUT-OF-BAND DIRTY FOLIOS]
+An out-of-band folio means the folio is marked dirty but without
+notifying the filesystem.
+
+This can lead to various problems, not limited to:
+
+- No folio::private to track per block status
+
+- No proper space reserved for such a dirty folio
+
+[HISTORY IN BTRFS]
+This used to be a problem related to get_user_page(), but with the
+introduction of pin_user_pages*(), we should no longer hit such
+case anymore.
+
+In btrfs, we have a long history of catching such out-of-band dirty
+folios by:
+
+- Mark the folio ordered during delayed allocation
+
+- Check the folio ordered flag during writeback
+  If the folio has no ordered flag, it means it doesn't go through
+  delayed allocation, thus it's definitely an out-of-band
+  one.
+
+  If we got one, we go through COW fixup, which will re-dirty the folio
+  with proper handling in another workqueue.
+
+[PROBLEMS OF COW-FIXUP]
+Such workaround is a blockage for us to migrate to iomap (it requires
+extra flags to trace if a folio is dirtied by the fs or not) and I'd
+argue it's not data checksum safe, since if a folio can be marked dirty
+without informing the fs, the content can also change at any time.
+
+But with the introduction of pin_user_pages*() during v5.8 merge
+window, such out-of-band dirty folio such be treated as a bug.
+Ext4 has treated such case by warning and erroring out even before
+pin_user_pages*().
+
+Furthermore, there are already proofs that such folio ordered flag
+tracking can be screwed up by incorrect error handling, check the commit
+messages of the following commits:
+
+ 06f364284794 ("btrfs: do proper folio cleanup when cow_file_range() failed")
+ c2b47df81c8e ("btrfs: do proper folio cleanup when run_delalloc_nocow() failed")
+
+[FIXES]
+Unlike btrfs, ext4 and xfs (iomap) never bother handling such
+out-of-band dirty folios.
+
+- Ext4 just warns and errors out
+- Iomap always follows the folio/block dirty flags
+
+And there is nothing really COW specific, xfs also supports COW too.
+
+Here we take one step towards ext4 by doing warning and erroring out.
+But since the cow fixup thing is introduced from the beginning, we keep
+the old behavior for non-experimental builds, and only do the new warning
+for experimental builds before we're 100% sure and remove cow fixup.
+
+Signed-off-by: Qu Wenruo <wqu@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/btrfs/extent_io.c | 28 +++++++++++++++++++++++++++-
+ fs/btrfs/inode.c     | 15 +++++++++++++++
+ 2 files changed, 42 insertions(+), 1 deletion(-)
+
+diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
+index 95d3cf2e15c84..33998bae09720 100644
+--- a/fs/btrfs/extent_io.c
++++ b/fs/btrfs/extent_io.c
+@@ -1440,12 +1440,14 @@ static noinline_for_stack int extent_writepage_io(struct btrfs_inode *inode,
+ 	       start + len <= folio_start + folio_size(folio));
+ 
+ 	ret = btrfs_writepage_cow_fixup(folio);
+-	if (ret) {
++	if (ret == -EAGAIN) {
+ 		/* Fixup worker will requeue */
+ 		folio_redirty_for_writepage(bio_ctrl->wbc, folio);
+ 		folio_unlock(folio);
+ 		return 1;
+ 	}
++	if (ret < 0)
++		return ret;
+ 
+ 	for (cur = start; cur < start + len; cur += fs_info->sectorsize)
+ 		set_bit((cur - folio_start) >> fs_info->sectorsize_bits, &range_bitmap);
+@@ -1549,6 +1551,30 @@ static int extent_writepage(struct folio *folio, struct btrfs_bio_ctrl *bio_ctrl
+ 	 * The proper bitmap can only be initialized until writepage_delalloc().
+ 	 */
+ 	bio_ctrl->submit_bitmap = (unsigned long)-1;
++
++	/*
++	 * If the page is dirty but without private set, it's marked dirty
++	 * without informing the fs.
++	 * Nowadays that is a bug, since the introduction of
++	 * pin_user_pages*().
++	 *
++	 * So here we check if the page has private set to rule out such
++	 * case.
++	 * But we also have a long history of relying on the COW fixup,
++	 * so here we only enable this check for experimental builds until
++	 * we're sure it's safe.
++	 */
++	if (IS_ENABLED(CONFIG_BTRFS_EXPERIMENTAL) &&
++	    unlikely(!folio_test_private(folio))) {
++		WARN_ON(IS_ENABLED(CONFIG_BTRFS_DEBUG));
++		btrfs_err_rl(fs_info,
++	"root %lld ino %llu folio %llu is marked dirty without notifying the fs",
++			     inode->root->root_key.objectid,
++			     btrfs_ino(inode), folio_pos(folio));
++		ret = -EUCLEAN;
++		goto done;
++	}
++
+ 	ret = set_folio_extent_mapped(folio);
+ 	if (ret < 0)
+ 		goto done;
+diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
+index d1acae2d6d33d..550dd1d997162 100644
+--- a/fs/btrfs/inode.c
++++ b/fs/btrfs/inode.c
+@@ -2916,6 +2916,21 @@ int btrfs_writepage_cow_fixup(struct folio *folio)
+ 	if (folio_test_ordered(folio))
+ 		return 0;
+ 
++	/*
++	 * For experimental build, we error out instead of EAGAIN.
++	 *
++	 * We should not hit such out-of-band dirty folios anymore.
++	 */
++	if (IS_ENABLED(CONFIG_BTRFS_EXPERIMENTAL)) {
++		WARN_ON(IS_ENABLED(CONFIG_BTRFS_DEBUG));
++		btrfs_err_rl(fs_info,
++	"root %lld ino %llu folio %llu is marked dirty without notifying the fs",
++			     BTRFS_I(inode)->root->root_key.objectid,
++			     btrfs_ino(BTRFS_I(inode)),
++			     folio_pos(folio));
++		return -EUCLEAN;
++	}
++
+ 	/*
+ 	 * folio_checked is set below when we create a fixup worker for this
+ 	 * folio, don't try to create another one if we're already
+-- 
+2.39.5
+
