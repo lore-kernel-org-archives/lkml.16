@@ -1,33 +1,33 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEDA51E5B8B;
-	Thu,  3 Apr 2025 09:12:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21CB21E5B8B;
+	Thu,  3 Apr 2025 09:13:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743671534; cv=none; b=fdvJ0EGoKSdLrL17jg7cvS903QorcgNzxixoVCDafVWP6Ye5K5cwV4iRsi5w7dDp1nUA4E37ory0tye+Ybnomo3WjmF3UQqKJFqu25zbxQG4l/L9MDFvi7JP5v7DXhVW2BgjlWqFUq9LvRNOCRaIjAYj8wOJVyWRksQNntxpfiE=
+	t=1743671617; cv=none; b=lj2dLKKEu3ZXZeBH2OCaDOTUKyAeEtrdtWeVOvZiFyfhEqa5qyAUbLdwuSAJGTASwHoVIitZFpabjwNj3Rb4zoHZzQQRpJoNrC2tGDojUMpgu9pQxoEzg7RTsdc8mt6bj7qNjfqZidsaO3HR1kOG5stWvhjHHyMahOtpuAewjXg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743671534; c=relaxed/simple;
-	bh=qN5NuKW9bCITUNwlVwxSeZIuSUwLmASsSCtiWs2SMMA=;
+	s=arc-20240116; t=1743671617; c=relaxed/simple;
+	bh=g8Tn9kpxzOYVVMT2sZ0pC2g7fw98Nf18dQr4IvtP60A=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=k9YhNNOSxlrVDYwRVoPD906Yf2BLB5xGq6628nvu186MvSndCoNw2N0PNDQdpGzbJC0Rw3RMkaheH8oQ48d92RifrV2fBJwb3Yq+SfLkgmXT998BHGYHmS0YofmND0O3vpWW2eSZLrJWh3bO0hoQkXivGNJgM7ctDUmojeqUf6Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=YabtVy9F; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	 In-Reply-To:Content-Type; b=e2eltkUVOK9+ZyRSfwdCh1WnfXqDgNsMCiVf8U6HjvRDnH9eoAcNd7c3QiowvMOpAVkQJ0HGv4a2/8TFc8M5BkId98gbDCih3FfSdbUvd+pXYW8vGcvC0WEzboyDoqQbIByR6/tyTuCwXqNH6k42aQY8zeAbYfC0A0mBUIadyIc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ilyiNqlL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="YabtVy9F"
-Received: from [192.168.88.20] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 53CA18FA;
-	Thu,  3 Apr 2025 11:10:16 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1743671416;
-	bh=qN5NuKW9bCITUNwlVwxSeZIuSUwLmASsSCtiWs2SMMA=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ilyiNqlL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83E52C4CEE3;
+	Thu,  3 Apr 2025 09:13:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743671616;
+	bh=g8Tn9kpxzOYVVMT2sZ0pC2g7fw98Nf18dQr4IvtP60A=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=YabtVy9FlnjEB8aHB64uccNPUWVi6/SOh5caS23k3TI0Ynf9BWETg+Ix1R8jL8GCa
-	 0wOqXzDfqk781S+Y1xqOqZQMttnLs17SdTYBnSpkffSxDsN5v3kEU+yqauizoFXTZW
-	 f2LoeACo8Ad8R9uaJBatK0Xz5fY7iC0AFiROrKY0=
-Message-ID: <e1a770cb-8767-4251-9d96-599240d0efa8@ideasonboard.com>
-Date: Thu, 3 Apr 2025 12:12:06 +0300
+	b=ilyiNqlLaF8FA1CgMu89NXwNcPBksk2/CKOZLDUMYKW4FiiDiRuqsdOoYnZZwOt38
+	 TbCkyke49U9xVgwoRCx22aM5rHn1qrc1nlrlIS9/RZjIKfZKeRBglGw+k1zEYrdYUT
+	 FPUwEghKsrAlFS+UeF+ME+s11kyxBxrUSGJilJfkErRZiGYuMDuv4W0X586txsk7s3
+	 GutnUcxMH32Y0kjDvHZtBFYquHijYg+onfMu1r4cl76O3MvpQxxPu8Y0/KuGdxsol0
+	 3SsVeID3EUtmW7aG/+QV2T1x1Wf1J4OdpbD25VVua0mq1spDhLaIhZ7lsmpUccbKe7
+	 hv1bED1CdYk9w==
+Message-ID: <c0dc0efd-193b-4441-8971-35eae28b87b4@kernel.org>
+Date: Thu, 3 Apr 2025 11:13:25 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,165 +35,81 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] media: rcar-vin: Fix RAW10
-To: =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
- Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org,
- linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
- Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-References: <20250324-rcar-fix-raw-v1-0-ae56c1c7a2f6@ideasonboard.com>
- <20250324-rcar-fix-raw-v1-3-ae56c1c7a2f6@ideasonboard.com>
- <20250331211122.GA1240431@ragnatech.se>
- <5ebccf6a-3860-4643-9f92-735163552b7e@ideasonboard.com>
- <20250403085700.GU1240431@ragnatech.se>
+Subject: Re: [PATCH v3 00/32] Samsung S2MPG10 PMIC MFD-based drivers
+To: =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>,
+ Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Sylwester Nawrocki <s.nawrocki@samsung.com>,
+ Chanwoo Choi <cw00.choi@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Russell King <linux@armlinux.org.uk>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Peter Griffin <peter.griffin@linaro.org>,
+ Tudor Ambarus <tudor.ambarus@linaro.org>,
+ Will McVicker <willmcvicker@google.com>, kernel-team@android.com,
+ linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-rtc@vger.kernel.org,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+References: <20250403-s2mpg10-v3-0-b542b3505e68@linaro.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-From: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
-In-Reply-To: <20250403085700.GU1240431@ragnatech.se>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250403-s2mpg10-v3-0-b542b3505e68@linaro.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi,
-
-On 03/04/2025 11:57, Niklas Söderlund wrote:
-> Hi Tomi,
+On 03/04/2025 10:58, André Draszik wrote:
+> This series adds initial support for the Samsung S2MPG10 PMIC using the
+> MFD framework. This is a PMIC for mobile applications and is used on
+> the Google Pixel 6 and 6 Pro (oriole / raven).
 > 
-> On 2025-04-03 11:15:04 +0300, Tomi Valkeinen wrote:
->> Hi,
->>
->> On 01/04/2025 00:11, Niklas Söderlund wrote:
->>> Hi Tomi,
->>>
->>> Thanks for your work.
->>>
->>> On 2025-03-24 13:48:54 +0200, Tomi Valkeinen wrote:
->>>> Fix the following to get RAW10 formats working:
->>>>
->>>> In rvin_formats, the bpp is set to 4 for RAW10. As VIN unpacks RAW10 to
->>>> 16-bit containers, the bpp should be 2.
->>>>
->>>> Don't set VNDMR_YC_THR to the VNDMR register. The YC_THR is "YC Data
->>>> Through Mode", used for YUV formats and should not be set for RAW10.
->>>>
->>>> Fix the check related to the RGB666 format and CSI-2 mode. The
->>>> VNMC_INF_RGB666 define is the same as used for RAW10 on Gen4, and RAW10
->>>> is allowed on CSI-2 (whereas RGB666 is not allowed on Gen3 on CSI-2).
->>>> This feels a bit hacky, though, and the formats should really have been
->>>> verified already earlier.
->>>
->>> I agree, it feels hacky. I would rather just remove the while switch
->>> then try to "fix" it by extending it more. When testing this series I
->>> needed a similar fix for VNMC_INF_RAW8 check below to get it to work on
->>> Gen4.
->>
->> Why is that? What is VNMC_INF_RAW8 overlapping with?
-> 
-> VNMC_INF_RAW8 is not overlapping the issue is the "if (!vin->is_csi)"
-> check. On Gen3 RAW8 was supposedly only supported on the CSI-2 input,
-> and not on the parallel bus available on some VIN instances.
-> 
-> On Gen4 the checks around vin->is_csi becomes skewed and as you point
-> out should be cloned up. The effect at the moment however is that o Gen4
-> when trying to capture RAW8 is_csi is not set (as this is a gen3 thing)
-> and the "Invalid setting in Digital Pins" error path is hit.
+We are still in merge window and you just posted v3 of this huge patch
+bomb. Basically three versions within the merge window is too much. Give
+reviewers time to actually review your code.
 
-Ok. I was wondering why it worked for me. But maybe the reason it worked 
-for me was the extra series from you, which also changed these checks to 
-rvin_remote_is_parallel(). And perhaps that function works fine, while 
-the older vin->is_csi didn't.
-
-> Locally I have now removed this whole swtich, as you point out the
-> formats should already be checked, and as far as I can tell they are.
-> This check is a relic from early Gen3 support. And really proves after
-> the Gen2 media graph clenups are done we should split rcar-dma.c ->
-> rcar-dma-gen{2,3,4}.c to get rid of this mess ;-)
-> 
-> I would change this patch to just remove the whole switch. If you want
-> to keep this fix as is I'm ok with that. I can submit a patch removing
-> the switch if you like on top.
-
-Ok, if you think removing the switch is fine, we can do that. I wasn't 
-sure of the flow in the driver so I wasn't confident I could just drop 
-it (especially considering pre-gen4, with which I have no experience). 
-Thus this patch.
-
-  Tomi
-
-> 
->>
->>   Tomi
->>
->>>>
->>>> Fixes: 1b7e7240eaf3 ("media: rcar-vin: Add support for RAW10")
->>>> Signed-off-by: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
->>>> ---
->>>>    drivers/media/platform/renesas/rcar-vin/rcar-dma.c  | 9 +++++++--
->>>>    drivers/media/platform/renesas/rcar-vin/rcar-v4l2.c | 8 ++++----
->>>>    2 files changed, 11 insertions(+), 6 deletions(-)
->>>>
->>>> diff --git a/drivers/media/platform/renesas/rcar-vin/rcar-dma.c b/drivers/media/platform/renesas/rcar-vin/rcar-dma.c
->>>> index 53046614f7a1..f8394be8a922 100644
->>>> --- a/drivers/media/platform/renesas/rcar-vin/rcar-dma.c
->>>> +++ b/drivers/media/platform/renesas/rcar-vin/rcar-dma.c
->>>> @@ -811,12 +811,17 @@ static int rvin_setup(struct rvin_dev *vin)
->>>>    		case VNMC_INF_YUV8_BT656:
->>>>    		case VNMC_INF_YUV10_BT656:
->>>>    		case VNMC_INF_YUV16:
->>>> -		case VNMC_INF_RGB666:
->>>>    			if (vin->is_csi) {
->>>>    				vin_err(vin, "Invalid setting in MIPI CSI2\n");
->>>>    				return -EINVAL;
->>>>    			}
->>>>    			break;
->>>> +		case VNMC_INF_RGB666:
->>>> +			if (vin->info->model == RCAR_GEN3 && vin->is_csi) {
->>>> +				vin_err(vin, "Invalid setting in MIPI CSI2\n");
->>>> +				return -EINVAL;
->>>> +			}
->>>> +			break;
->>>>    		case VNMC_INF_RAW8:
->>>>    			if (!vin->is_csi) {
->>>>    				vin_err(vin, "Invalid setting in Digital Pins\n");
->>>> @@ -913,7 +918,7 @@ static int rvin_setup(struct rvin_dev *vin)
->>>>    	case V4L2_PIX_FMT_SGBRG10:
->>>>    	case V4L2_PIX_FMT_SGRBG10:
->>>>    	case V4L2_PIX_FMT_SRGGB10:
->>>> -		dmr = VNDMR_RMODE_RAW10 | VNDMR_YC_THR;
->>>> +		dmr = VNDMR_RMODE_RAW10;
->>>>    		break;
->>>>    	default:
->>>>    		vin_err(vin, "Invalid pixelformat (0x%x)\n",
->>>> diff --git a/drivers/media/platform/renesas/rcar-vin/rcar-v4l2.c b/drivers/media/platform/renesas/rcar-vin/rcar-v4l2.c
->>>> index 756fdfdbce61..65da8d513b52 100644
->>>> --- a/drivers/media/platform/renesas/rcar-vin/rcar-v4l2.c
->>>> +++ b/drivers/media/platform/renesas/rcar-vin/rcar-v4l2.c
->>>> @@ -88,19 +88,19 @@ static const struct rvin_video_format rvin_formats[] = {
->>>>    	},
->>>>    	{
->>>>    		.fourcc			= V4L2_PIX_FMT_SBGGR10,
->>>> -		.bpp			= 4,
->>>> +		.bpp			= 2,
->>>>    	},
->>>>    	{
->>>>    		.fourcc			= V4L2_PIX_FMT_SGBRG10,
->>>> -		.bpp			= 4,
->>>> +		.bpp			= 2,
->>>>    	},
->>>>    	{
->>>>    		.fourcc			= V4L2_PIX_FMT_SGRBG10,
->>>> -		.bpp			= 4,
->>>> +		.bpp			= 2,
->>>>    	},
->>>>    	{
->>>>    		.fourcc			= V4L2_PIX_FMT_SRGGB10,
->>>> -		.bpp			= 4,
->>>> +		.bpp			= 2,
->>>>    	},
->>>>    };
->>>>
->>>> -- 
->>>> 2.43.0
->>>>
->>>
->>
-> 
-
+Best regards,
+Krzysztof
