@@ -1,108 +1,138 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC0102E62D4;
-	Thu,  3 Apr 2025 21:44:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32E981494CC;
+	Thu,  3 Apr 2025 21:46:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743716696; cv=none; b=mLr2FcfIme+Ltv4TnwLYbwgAuZIisVx/wkFvJqKQ01iBUY24nLUyAuNbxsKdahuN5BTFDh4e/DyICc+XTPxkhOcTOWEPpjjdqddGA9BIOOKVInervR9Mf76CMlTO//BPrvcPd5S6swWyYpwx53s1Mjh6/6Qtuxvjm5129pc9irg=
+	t=1743716799; cv=none; b=Mfjt215B38x7/1y7p9VUzY5Px8ySdtMys29lq23ojM1NbYNP6K1zY7zW2mtwiy7Jl9HDK2f4HPUs6RQthlReyVwOi0aBAxcglKTm47Ilb3StPQaYGwChHZmxrsLHXJ6WeUCwhZZpNwGvOd9QwjJVbJ9tnl8W4ucMjykfKIYNmUg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743716696; c=relaxed/simple;
-	bh=VsKeWx/5z9BSGQhMr+QuyPGurWoYs8YeA6BMBWvYqcA=;
+	s=arc-20240116; t=1743716799; c=relaxed/simple;
+	bh=UoHi17w8zgHvpFGQto+G13hZRwmTH8OcIzC9cvweJ94=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=T4fjJ1mxg2JY8FwbM2NDOZh31g7Nma+SpDeabrfTq8Sn1a3jcjBPebzQwyA93hYV7TWXtl9xm7TYCr6tYU+r6/zX4I6h+jSSOwvvQ8SMNHwmH+YzjfQ1gkwCNGgTJIrlQOFFBz7aVEwx56mOPBBhEVRLeNTSnVyKUN40e3/Obdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=cKHQfY7C; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
+	 In-Reply-To:Content-Type; b=k/yE0ExhFegSk2qAYx5hpcGsSnUc/F4roKdH21S8jzxWUppk186ROrLzGcrn8Z74PjZ5/m3a22qgUnY3ehpCIN4Z3Zh27u+RIS77O3yfMR11GlCVgHywrX48mypur6kvqvQVRNU88KryWrMy0ZJSnJnOHzfBADXeaSmXg90pqhA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iUrRfy1W; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="cKHQfY7C"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43cf257158fso9301535e9.2;
-        Thu, 03 Apr 2025 14:44:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iUrRfy1W"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43ce71582e9so9529495e9.1;
+        Thu, 03 Apr 2025 14:46:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20230601; t=1743716693; x=1744321493; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
+        d=gmail.com; s=20230601; t=1743716796; x=1744321596; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=37i28HC0qMX+6A6d+lctFmGy/UQvwqNYdMvj7tEDVvQ=;
-        b=cKHQfY7CePiPK4WnUdKtbllGR3zri2GNqk3OJuRC3kNiWwOeuHyE9CtdnpOi7nYtMo
-         4ADoLv48lOlXCyA01SNirup01MUorU+62tAJ9kORbljp+VW7Myuh9NEZFNGjmxcVQYmp
-         QuS8Vu1xdDF9IgEyFUXfSpsehvhjySni7I0k63ELrY8LGcheqr5sDrZTGtsk3WqtzZ51
-         y9aip4T0n4AJ0XjlDIdOdwSDaDOKV70SWOGuDEQcXwCPBl1XeALjA+n5aEIwuATlIu6g
-         YlxYl5qTd+53hWKAoRODtvuV7AWciiu5RgvwOqbLP72N8hKIP/17RjynO/mLwcsDYsRJ
-         pkCQ==
+        bh=KDLT5jaOfTvnXrHcbjmxYiedZsavDNsVTNdUJK4Wfl8=;
+        b=iUrRfy1Wmpgodg/UJzrDsD4g5H6fiotEQ5YmUlhWVGHsJQNgXES/1uqHdL6Slkpbcz
+         WdBnxnsle+MaVPMvc+z/hqQ0cU6FeMtvor0scjWivwcrukxwF5RTk+nlwbGfjVG+mj48
+         UzLRe9Y/IDsuXoSTQJhAAWAUkr7zXWiekoMYR6EXfmrL+JjFPQSVxTPucxMDIqsf4MyH
+         xldk+/mkxoH4wSpgvS9qkaKVfOi8RC7Pd/JggUzqq5lyHmpcEifobiCj8y2CLqH252Il
+         saGmsrT/SpNQPrm/fIqRnt1QUM3VPsp8BFnMGO7euGEM9kajDalsEBLzdu7xdkntjMLR
+         ZH2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743716693; x=1744321493;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1743716796; x=1744321596;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=37i28HC0qMX+6A6d+lctFmGy/UQvwqNYdMvj7tEDVvQ=;
-        b=sHn1zWaDvd/B6drI6iBmqS2dOykinkMvOzTYH6dT4D5n0Kx0o6ppVhLJDOAOMay0He
-         OqlCUcG7nHt5B/4LPMJ+GZ2dpSpicAqU0OUE/qnldDxEFWf5HWlaaMnP0IvGfvlriZ6M
-         SXOcmziyUXqmh6RFl/hTSyUg4rATgdAqoKLqyu3F/6Ifc31gkV8Vm1IMVbl2taGIYTEt
-         ogpEri2dk/vL4PVdxhVmIcU2qKpg9Acu8GGwBpmro2otmLLtrdUi3Jjzvk0n2uzQMazC
-         ug/T5Ct//UoM3E3k89MJoX32UCgHBq+0omqP4xDNOYnYjcOOJnv76RwO5IwXIo4Rvdhq
-         ofWg==
-X-Forwarded-Encrypted: i=1; AJvYcCXezQYKKq8hJdodzGA9i9VqZxTbeO3vyx/8Wxr1clzvc1K5kSd5OBOcwlc7B/NjI+3oZodjVaKK@vger.kernel.org, AJvYcCXy012mAp2+Q4IgaBDl/gVrzot2q8VCm5dsdMQmYh7Cd/p3QoIOwwRWghCLliXPTYI0Sm9Yu+XFy6ROhwY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YynA/hGBMESwTzai/zpt85k0YSZqi4Fg5muNWUgQH/PKUvXCjwR
-	NzOKAdcpn0D4UlEITq1H1MGaLwPj15OmjdpYuti3RqhiE/wZSRQ=
-X-Gm-Gg: ASbGnctvIt+G5kKqMxqSYCe1NsNfo6mmayCME1HyNrbjb4IRBEn9bZfAKDiEChTYqG5
-	BsEG7qZk/iTUiwPBfgRUGWg0M02Ho5gFsMME6qBWlKwBHxy6rnbeKvj9A6WAuMsxCUzM8N9QDwY
-	wIRmW1bJsskLjSpc6H9gcapJVFJoNGTuTzrpQK0pIZEdmODI2VJ1Dws4bnx0JvhLV41+v3kUHew
-	Fbt2Dt+//ChvyCd5m+u/+VdvtPJ/n1S3wBOQ+KYWmLXH7sipvo4ufX0OLKGfYw+j9LdptAH4dcr
-	LJzYQ+kT4PvJ2ZLupbKBMxUErs/iM7C2jMMZRLyyDPXqQb30/LLMHcJqJTgr6+aR3kpIC83qOQ1
-	wg7oAsa9YRjOHImSXaNMuY+k=
-X-Google-Smtp-Source: AGHT+IFLgVvUktsx3KtqIiNk8P/LU11g7Dn00Oo0wTs5GCHL77EF+7bVU8+AjuqbTJBpFlLBso07MA==
-X-Received: by 2002:a5d:6da1:0:b0:38f:3224:65ff with SMTP id ffacd0b85a97d-39cb357585amr623532f8f.5.1743716693050;
-        Thu, 03 Apr 2025 14:44:53 -0700 (PDT)
-Received: from [192.168.1.3] (p5b2ac393.dip0.t-ipconnect.de. [91.42.195.147])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec34a92desm28441915e9.14.2025.04.03.14.44.50
+        bh=KDLT5jaOfTvnXrHcbjmxYiedZsavDNsVTNdUJK4Wfl8=;
+        b=vbJBKtg45OtZErigGqTCKC8zrolj6u57pDauhgKGy02jV1g9K0lDFspF/A2QMfFweM
+         Eiwk3riSjPo6G2N+1kdj0WmG69572dW2I1SuGoZiLNRfeRi2r5LgkLi4D31fnJlXH9tC
+         j2qFHvvTvxgVAILRkHaxL6Hhn0WgTHZgHdwv/OtJk6r7wPolcBwb3ke3iHlxNC0Pg9Rn
+         xBi4Qx0jxKcKcoQL/DrNxUPz5HYGyaEasCgeVOLzU/ctv/4/Y7pV4oyOcgQNnGf1mt4J
+         eqHhuLgdh+eGmpDvO4S5VMvQOtwxMoNZBpCpo7aBISjjNUWuIcnDh2cDFl8W8mAl9ltT
+         XdPA==
+X-Forwarded-Encrypted: i=1; AJvYcCULI1tVethUEb+iCThqXaZ/hFQD+fx0xkCTducu6N19rieQaCzsw5afP7Oh+YbGZW/3eEsxAvQj@vger.kernel.org, AJvYcCXMmQzXsW9N4dSXmFqD18K6RBneP5vPInrrnMY9UwJ4CqKzjKeNwrJWfsc9FmGdHdEvH5DM+fYjqtnLc9k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzQdeGgFiAdpiPh7UalCEIje46PEX38Z98t0DyqYGJZDUBvkfmM
+	AXVbYJdpZ4pIDZLVFK4GMWyA3VEhiv4CUttqIpeZCf8RTKAAh0tv
+X-Gm-Gg: ASbGncsDqXkA96baBKRlleHWFttKDmbSZ8EvK9iH7i2UAZAznE5sJaCKq9MOi/YNV/S
+	jGhd9FyZ17BDm5pXr037eaEuepGGqB9Lio2TfxPc3ORi/bdVve5Td2ksV1F89FnE2JdpEQjN08D
+	RivzUd499bW+SQ7KLswkVUZqLCixYod/Hj1tnfRC6PoQpXzNYy/jQL5LfRe5Z3hz3t+m/z25hVN
+	GkmdOAy3FGJRB3agVZB8uNFPBWPHzJ7hOi7JBu8Ix5WJBwPDi1lu+Q018T0+jbzJTQrkeb6zPbx
+	vg0U/MEHVob1Gqeyqy6SZljduYYRQhVhIHV0tjfFbluPtn4ep/tDGy2Cej0=
+X-Google-Smtp-Source: AGHT+IFtF/KVAoDcggALyJa6yUnhhZ7LhPdgH+LEEouPBpTHX9lLc/XZJT72W1VXptDBNhM5KaENqg==
+X-Received: by 2002:a05:600c:1d12:b0:43c:fd72:f028 with SMTP id 5b1f17b1804b1-43ed0db3ba4mr2585675e9.29.1743716796219;
+        Thu, 03 Apr 2025 14:46:36 -0700 (PDT)
+Received: from [192.168.0.2] ([212.50.121.5])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c301b76f2sm2788425f8f.53.2025.04.03.14.46.33
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Apr 2025 14:44:52 -0700 (PDT)
-Message-ID: <d918b7db-9e6d-4330-bc86-3bcf0c3825a6@googlemail.com>
-Date: Thu, 3 Apr 2025 23:44:50 +0200
+        Thu, 03 Apr 2025 14:46:34 -0700 (PDT)
+Message-ID: <f0798724-d5dd-498b-89be-7d7521ac4930@gmail.com>
+Date: Fri, 4 Apr 2025 00:47:01 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Betterbird (Windows)
-Subject: Re: [PATCH 6.12 00/22] 6.12.22-rc1 review
-Content-Language: de-DE
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250403151622.055059925@linuxfoundation.org>
-From: Peter Schneider <pschneider1968@googlemail.com>
-In-Reply-To: <20250403151622.055059925@linuxfoundation.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: GNSS support for Qualcomm PCIe modem device
+To: Muhammad Nuzaihan <zaihan@unrealasia.net>, Slark Xiao <slark_xiao@163.com>
+Cc: Loic Poulain <loic.poulain@linaro.org>, manivannan.sadhasivam@linaro.org,
+ netdev@vger.kernel.org, Qiang Yu <quic_qianyu@quicinc.com>,
+ johan@kernel.org, mhi@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <2703842b.58be.195fa426e5e.Coremail.slark_xiao@163.com>
+ <DBU4US.LSH9IZJH4Q933@unrealasia.net> <W6W4US.MQDIW3EU4I8R2@unrealasia.net>
+Content-Language: en-US
+From: Sergey Ryazanov <ryazanov.s.a@gmail.com>
+In-Reply-To: <W6W4US.MQDIW3EU4I8R2@unrealasia.net>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Am 03.04.2025 um 17:20 schrieb Greg Kroah-Hartman:
-> This is the start of the stable review cycle for the 6.12.22 release.
-> There are 22 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+Hi Slark, Zaihan,
 
-Builds, boots and works on my 2-socket Ivy Bridge Xeon E5-2697 v2 server. No dmesg 
-oddities or regressions found.
+Zaihn, congratulations with the progress, curious to see the result.
 
-Tested-by: Peter Schneider <pschneider1968@googlemail.com>
+Slark, thank you for remind me. It's a good moment. Lets see how we can 
+prototype it. Will try to do it this weekend and send some RFC next week.
 
+On 03.04.2025 11:42, Muhammad Nuzaihan wrote:
+> Hi Slark,
+> 
+> I just implemented it in the wwan subsystem since it works for me (even 
+> without flow control). I wanted to port it to use GPS subsystem, 
+> however, debugging in GPS subsystem is too troublesome, especially when 
+> the driver crashes.
+> 
+> Unless i can have some VM with direct access to the Quectel hardware so 
+> i don't need to keep rebooting my machine if it crashes.
+> 
+> For now, i am getting GNSS/NMEA data from Quectel with MHI wwan 
+> modifications.
+> 
+> Regards,
+> Zaihan
+> 
+> 
+> On Thu, Apr 3 2025 at 04:02:01 PM +0800, Muhammad Nuzaihan 
+> <zaihan@unrealasia.net> wrote:
+>> Hi Slark,
+>>
+>> I just implemented it in the wwan subsystem since it works for me 
+>> (even without flow control). I wanted to port it to use GPS subsystem, 
+>> however, debugging in GPS subsystem is too troublesome, especially 
+>> when the driver crashes.
+>>
+>> Unless i can have some VM with direct access to the Quectel hardware 
+>> so i don't need to keep rebooting my machine if it crashes.
+>>
+>> For now, i am getting GNSS/NMEA data from Quectel with MHI wwan 
+>> modifications.
+>>
+>> Regards,
+>> Zaihan
+>>
+>> On Thu, Apr 3 2025 at 02:06:52 PM +0800, Slark Xiao 
+>> <slark_xiao@163.com> wrote:
+>>>
+>>> Hi Sergey, Muhammad,
+>>> This is Slark. We have a discussion about the feature of GNSS/NMEA 
+>>> over QC PCIe modem
+>>> device since 2024/12.May I know if we have any progress on this feature?
+>>>
+>>> It's really a common requirement for modem device since we have 
+>>> received some complaint
+>>> from our customer. Please help provide your advice.
 
-Beste Grüße,
-Peter Schneider
-
--- 
-Climb the mountain not to plant your flag, but to embrace the challenge,
-enjoy the air and behold the view. Climb it so you can see the world,
-not so the world can see you.                    -- David McCullough Jr.
-
-OpenPGP:  0xA3828BD796CCE11A8CADE8866E3A92C92C3FF244
-Download: https://www.peters-netzplatz.de/download/pschneider1968_pub.asc
-https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@googlemail.com
-https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@gmail.com
+--
+Sergey
