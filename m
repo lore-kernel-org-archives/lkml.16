@@ -1,128 +1,359 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDDF01DF975;
-	Thu,  3 Apr 2025 11:01:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79F751DF975
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 11:02:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743678108; cv=none; b=tx5dSryfRFvxYj3nF7kVnw31IcsWQrjFxXq5FnUbSBnF+y5MpJJKO++fCKQta7CBaXrjeVhR/LZ3sVASpJbj+ceIASvy+qlbWbUbk5fTqM/qjV80Clk/Ke8XbgYExb6ubYg5/fa7QxXUk1lMn0PmBjrjj2nFB3DWi7/tpcyXNwc=
+	t=1743678123; cv=none; b=ufuJmTgA30uq41P5nuCIZC5SimGrn9S3191B+6esAx5sZf6+ppRlSmXYlIdbd6Sq3q1wb6YQUQbyQG/HDL517WiU/TkS9Lh1Ik46S7kOjtrML/5PvjoWMehOwu3Ta1xQmh8hTfW9WbpGvXDQgdf0rLq+3sQT3V30AEuN7e6DHQw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743678108; c=relaxed/simple;
-	bh=PP9g6jzvIPxAlf87q3KdMWuq2oEhYVAfdIMHTSalPLg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CyBKuJiKTiXiqgCnbt2X9gWX7FO2DP/eq4OZDB9X6oIT3OxSTH5rGJjYqqK6rZMjHWvwJrU7yQDiAdYBkRITT5+VJMb/DG/MN+UdpfvJdaZ7RnDd1m0nR6pE9B4VeuNC7BXWCWC/s8iu28n5Upaesn3ewKpRc6UD5SHneYslxc4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=C6GLhmjD; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1743678123; c=relaxed/simple;
+	bh=c/A55fIx11MxdVpvLdWlhNxgqd+FNKeSKE+b0rKyKps=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=CCkBM8k4IBDC8ptcw53DViiHtv4ND+brtVuXpErRAoCT9b4MO0Fgj69C5L+3HXP1Og6kDsGyundMt5qdZqPil6uQM17Q8/3ksKvtXle/rkN0Pb4e4taYe3UgfluDG+jmdgH9ndhvtkamt8ZQ8Uf4ZNJmUEO0/eRNANUSmNmdNds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VuI0jKNh; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="C6GLhmjD"
-Received: from [192.168.88.20] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id CB1D5105D;
-	Thu,  3 Apr 2025 12:59:50 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1743677991;
-	bh=PP9g6jzvIPxAlf87q3KdMWuq2oEhYVAfdIMHTSalPLg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=C6GLhmjDTVMRi8kssWq8hv8j7gZfcWhEwJVq7J1mRmum7OID69Ufz2NxPJJW0Z5QY
-	 uNydEn6xKDDgIyWv3uSTtAc8L1mjO5vxb5X0NTXt0PL0iIHyD9qbo6U7EPZEIQjiI3
-	 wxotLItXzLbZKgHDq2yfGFutPnlaz1vc8j4VasfE=
-Message-ID: <2e6599fd-0b79-430b-9e94-f731b60e1705@ideasonboard.com>
-Date: Thu, 3 Apr 2025 14:01:40 +0300
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VuI0jKNh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743678121; x=1775214121;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=c/A55fIx11MxdVpvLdWlhNxgqd+FNKeSKE+b0rKyKps=;
+  b=VuI0jKNheK+w/IRiVgVtejyBczLr2H/6UTg6UOd9IP5aFufzYzBevUUa
+   vAd9BQYXS3zCPo6kEezLp2xzHzUN7ji7x8sSs+USHXwvO8R+KR8v1ut87
+   b6epZ2F9B6JJBOd0/x3h9q6QbkypvjS7EYePtGq083UYYoHt083gqRP4t
+   vSKjpv/EfRSUwBzIXA0wLUuXf5JE/1RDYImPybUzg5KJFSyPcqIQeR01W
+   hzsEu4oKVQ3Z9LJG09kJpW1d37oarlpj7q6mlkEbgG2jbcsPq7VsP4RiE
+   qulxiv3lBFKb6A2YOWLXQgF9RB9bdMAAKkG9N/IkaokhWZpprqdl/5xMU
+   w==;
+X-CSE-ConnectionGUID: mh4PSJ2vQlernoIoRRtqsg==
+X-CSE-MsgGUID: WZB0tzXTQFqBey3Z1TG9kQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11392"; a="70446200"
+X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
+   d="scan'208";a="70446200"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 04:01:58 -0700
+X-CSE-ConnectionGUID: zekwptUhQ1azRsBO8b9kNQ==
+X-CSE-MsgGUID: TrutdP6USTSJBfT1UhBVQA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
+   d="scan'208";a="126930720"
+Received: from jraag-z790m-itx-wifi.iind.intel.com ([10.190.239.23])
+  by orviesa006.jf.intel.com with ESMTP; 03 Apr 2025 04:01:56 -0700
+From: Raag Jadav <raag.jadav@intel.com>
+To: gregkh@linuxfoundation.org,
+	david.m.ertman@intel.com,
+	ira.weiny@intel.com,
+	lee@kernel.org,
+	andriy.shevchenko@linux.intel.com
+Cc: linux-kernel@vger.kernel.org,
+	Raag Jadav <raag.jadav@intel.com>
+Subject: [PATCH v1] mfd: core: Support auxiliary device
+Date: Thu,  3 Apr 2025 16:30:53 +0530
+Message-Id: <20250403110053.1274521-1-raag.jadav@intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/1] media: i2c: ds90ub960: Remove of_node assignment
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Sakari Ailus <sakari.ailus@linux.intel.com>,
- Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
- Jai Luthra <jai.luthra@ideasonboard.com>, linux-media@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-References: <20250312174123.4111661-1-andriy.shevchenko@linux.intel.com>
-Content-Language: en-US
-From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
- 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
-In-Reply-To: <20250312174123.4111661-1-andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Hi,
+Extend MFD subsystem to support auxiliary child device. This is useful for
+MFD usecases where parent device is on a discoverable bus and doesn't fit
+into the platform device criteria. Current support is limited to just PCI
+devices, but this can be further extended to support other types like USB
+in the future.
 
-On 12/03/2025 19:41, Andy Shevchenko wrote:
-> Remove of_node assignment which duplicates fwnode in struct i2c_board_info.
-> In general drivers must not set both, it's quite confusing. The I²C core
-> will consider fwnode with a priority and of_node is subject to remove from
-> above mentioned data structure.
-> 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->   drivers/media/i2c/ds90ub960.c | 1 -
->   1 file changed, 1 deletion(-)
-> 
-> diff --git a/drivers/media/i2c/ds90ub960.c b/drivers/media/i2c/ds90ub960.c
-> index 5dde8452739b..5afdbbad9ff4 100644
-> --- a/drivers/media/i2c/ds90ub960.c
-> +++ b/drivers/media/i2c/ds90ub960.c
-> @@ -1682,7 +1682,6 @@ static int ub960_rxport_add_serializer(struct ub960_data *priv, u8 nport)
->   	struct device *dev = &priv->client->dev;
->   	struct ds90ub9xx_platform_data *ser_pdata = &rxport->ser.pdata;
->   	struct i2c_board_info ser_info = {
-> -		.of_node = to_of_node(rxport->ser.fwnode),
->   		.fwnode = rxport->ser.fwnode,
->   		.platform_data = ser_pdata,
->   	};
+Signed-off-by: Raag Jadav <raag.jadav@intel.com>
+---
 
-This sounds logical, but breaks the driver for me. I also couldn't find 
-this documented and didn't immediately find this from the i2c core 
-implementation side.
+I've been cooking this on my spare time during merge window. I'm not
+very confident about this but thought I'd share it. It might be
+controversial since I stole quite a bit from platform infrastructure,
+so please consider this an RFC and let's discuss how to approach this.
 
-Or am I missing some patch (running on v6.14)?
+More discussion at [*].
+[*] https://lore.kernel.org/r/2025032609-query-limit-491b@gregkh
 
-  Tomi
+A few things that are still open,
+
+1. Since we're doing it for PCI devices (Greg's recommendation), how do
+   we force the existing ones to use their original platform path?
+
+2. Should we allow auxiliary drivers to manage their own resources
+   (MEM, IO, IRQ etc)?
+
+ drivers/base/auxiliary.c      |  23 ++++++
+ drivers/mfd/mfd-core.c        | 137 +++++++++++++++++++++++++++++++---
+ include/linux/auxiliary_bus.h |   7 ++
+ 3 files changed, 156 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/base/auxiliary.c b/drivers/base/auxiliary.c
+index afa4df4c5a3f..16cfb615ac2b 100644
+--- a/drivers/base/auxiliary.c
++++ b/drivers/base/auxiliary.c
+@@ -335,6 +335,29 @@ int __auxiliary_device_add(struct auxiliary_device *auxdev, const char *modname)
+ }
+ EXPORT_SYMBOL_GPL(__auxiliary_device_add);
+ 
++/**
++ * auxiliary_get_resource - get a resource for a device
++ * @auxdev: auxiliary device
++ * @type: resource type
++ * @num: resource index
++ *
++ * Return: a pointer to the resource or NULL on failure.
++ */
++struct resource *auxiliary_get_resource(struct auxiliary_device *auxdev, unsigned int type,
++					unsigned int num)
++{
++	u32 i;
++
++	for (i = 0; i < auxdev->num_resources; i++) {
++		struct resource *r = &auxdev->resource[i];
++
++		if (type == resource_type(r) && num-- == 0)
++			return r;
++	}
++	return NULL;
++}
++EXPORT_SYMBOL_GPL(auxiliary_get_resource);
++
+ /**
+  * __auxiliary_driver_register - register a driver for auxiliary bus devices
+  * @auxdrv: auxiliary_driver structure
+diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
+index 76bd316a50af..414ef086ea1d 100644
+--- a/drivers/mfd/mfd-core.c
++++ b/drivers/mfd/mfd-core.c
+@@ -10,6 +10,8 @@
+ #include <linux/kernel.h>
+ #include <linux/platform_device.h>
+ #include <linux/acpi.h>
++#include <linux/auxiliary_bus.h>
++#include <linux/pci.h>
+ #include <linux/list.h>
+ #include <linux/property.h>
+ #include <linux/mfd/core.h>
+@@ -29,8 +31,15 @@ struct mfd_of_node_entry {
+ 	struct device_node *np;
+ };
+ 
+-static const struct device_type mfd_dev_type = {
+-	.name	= "mfd_device",
++enum mfd_dev {
++	MFD_AUX_DEV,
++	MFD_PLAT_DEV,
++	MFD_MAX_DEV
++};
++
++static const struct device_type mfd_dev_type[MFD_MAX_DEV] = {
++	[MFD_AUX_DEV]	= { .name = "mfd_auxiliary_device" },
++	[MFD_PLAT_DEV]	= { .name = "mfd_platform_device" },
+ };
+ 
+ #if IS_ENABLED(CONFIG_ACPI)
+@@ -136,10 +145,91 @@ static int mfd_match_of_node_to_dev(struct platform_device *pdev,
+ 	return 0;
+ }
+ 
+-static int mfd_add_device(struct device *parent, int id,
+-			  const struct mfd_cell *cell,
+-			  struct resource *mem_base,
+-			  int irq_base, struct irq_domain *domain)
++static void mfd_release_auxiliary_device(struct device *dev)
++{
++	struct auxiliary_device *auxdev = to_auxiliary_dev(dev);
++
++	kfree(auxdev);
++}
++
++static int mfd_add_auxiliary_device(struct device *parent, int id, const struct mfd_cell *cell,
++				    struct resource *mem_base, int irq_base,
++				    struct irq_domain *domain)
++{
++	struct auxiliary_device *auxdev;
++	struct resource *res;
++	int r, ret = -ENOMEM;
++
++	auxdev = kzalloc(sizeof(*auxdev), GFP_KERNEL);
++	if (!auxdev)
++		return ret;
++
++	res = kcalloc(cell->num_resources, sizeof(*res), GFP_KERNEL);
++	if (!res)
++		goto fail_alloc;
++
++	for (r = 0; r < cell->num_resources; r++) {
++		res[r].name = cell->resources[r].name;
++		res[r].flags = cell->resources[r].flags;
++
++		/* Find out base to use */
++		if ((cell->resources[r].flags & IORESOURCE_MEM) && mem_base) {
++			res[r].parent = mem_base;
++			res[r].start = mem_base->start +
++				cell->resources[r].start;
++			res[r].end = mem_base->start +
++				cell->resources[r].end;
++		} else if (cell->resources[r].flags & IORESOURCE_IRQ) {
++			if (domain) {
++				/* Unable to create mappings for IRQ ranges. */
++				WARN_ON(cell->resources[r].start !=
++					cell->resources[r].end);
++				res[r].start = res[r].end = irq_create_mapping(
++					domain, cell->resources[r].start);
++			} else {
++				res[r].start = irq_base +
++					cell->resources[r].start;
++				res[r].end   = irq_base +
++					cell->resources[r].end;
++			}
++		} else {
++			res[r].parent = cell->resources[r].parent;
++			res[r].start = cell->resources[r].start;
++			res[r].end   = cell->resources[r].end;
++		}
++	}
++
++	auxdev->name = cell->name;
++	auxdev->id = cell->id;
++	auxdev->resource = res;
++	auxdev->num_resources = cell->num_resources;
++	auxdev->dev.parent = parent;
++	auxdev->dev.type = &mfd_dev_type[MFD_AUX_DEV];
++	auxdev->dev.release = mfd_release_auxiliary_device;
++
++	ret = auxiliary_device_init(auxdev);
++	if (ret)
++		goto fail_aux_init;
++
++	ret = auxiliary_device_add(auxdev);
++	if (ret)
++		goto fail_aux_add;
++
++	return 0;
++
++fail_aux_add:
++	/* auxdev will be freed with the put_device() and .release sequence */
++	auxiliary_device_uninit(auxdev);
++fail_aux_init:
++	kfree(res);
++fail_alloc:
++	kfree(auxdev);
++	return ret;
++}
++
++static int mfd_add_platform_device(struct device *parent, int id, const struct mfd_cell *cell,
++				   struct resource *mem_base, int irq_base,
++				   struct irq_domain *domain)
+ {
+ 	struct resource *res;
+ 	struct platform_device *pdev;
+@@ -168,7 +258,7 @@ static int mfd_add_device(struct device *parent, int id,
+ 		goto fail_device;
+ 
+ 	pdev->dev.parent = parent;
+-	pdev->dev.type = &mfd_dev_type;
++	pdev->dev.type = &mfd_dev_type[MFD_PLAT_DEV];
+ 	pdev->dev.dma_mask = parent->dma_mask;
+ 	pdev->dev.dma_parms = parent->dma_parms;
+ 	pdev->dev.coherent_dma_mask = parent->coherent_dma_mask;
+@@ -302,6 +392,15 @@ static int mfd_add_device(struct device *parent, int id,
+ 	return ret;
+ }
+ 
++static int mfd_add_device(struct device *parent, int id, const struct mfd_cell *cells,
++			  struct resource *mem_base, int irq_base, struct irq_domain *domain)
++{
++	if (dev_is_pci(parent))
++		return mfd_add_auxiliary_device(parent, id, cells, mem_base, irq_base, domain);
++	else
++		return mfd_add_platform_device(parent, id, cells, mem_base, irq_base, domain);
++}
++
+ /**
+  * mfd_add_devices - register child devices
+  *
+@@ -340,16 +439,22 @@ int mfd_add_devices(struct device *parent, int id,
+ }
+ EXPORT_SYMBOL(mfd_add_devices);
+ 
+-static int mfd_remove_devices_fn(struct device *dev, void *data)
++static int mfd_remove_auxiliary_device(struct device *dev)
++{
++	struct auxiliary_device *auxdev = to_auxiliary_dev(dev);
++
++	auxiliary_device_delete(auxdev);
++	auxiliary_device_uninit(auxdev);
++	return 0;
++}
++
++static int mfd_remove_platform_device(struct device *dev, void *data)
+ {
+ 	struct platform_device *pdev;
+ 	const struct mfd_cell *cell;
+ 	struct mfd_of_node_entry *of_entry, *tmp;
+ 	int *level = data;
+ 
+-	if (dev->type != &mfd_dev_type)
+-		return 0;
+-
+ 	pdev = to_platform_device(dev);
+ 	cell = mfd_get_cell(pdev);
+ 
+@@ -372,6 +477,16 @@ static int mfd_remove_devices_fn(struct device *dev, void *data)
+ 	return 0;
+ }
+ 
++static int mfd_remove_devices_fn(struct device *dev, void *data)
++{
++	if (dev->type == &mfd_dev_type[MFD_AUX_DEV])
++		return mfd_remove_auxiliary_device(dev);
++	else if (dev->type == &mfd_dev_type[MFD_PLAT_DEV])
++		return mfd_remove_platform_device(dev, data);
++	else
++		return 0;
++}
++
+ void mfd_remove_devices_late(struct device *parent)
+ {
+ 	int level = MFD_DEP_LEVEL_HIGH;
+diff --git a/include/linux/auxiliary_bus.h b/include/linux/auxiliary_bus.h
+index 65dd7f154374..11c058e49a3c 100644
+--- a/include/linux/auxiliary_bus.h
++++ b/include/linux/auxiliary_bus.h
+@@ -148,6 +148,8 @@ struct auxiliary_device {
+ 		struct mutex lock; /* Synchronize irq sysfs creation */
+ 		bool irq_dir_exists;
+ 	} sysfs;
++	u32 num_resources;
++	struct resource	*resource;
+ };
+ 
+ /**
+@@ -220,6 +222,8 @@ static inline const struct auxiliary_driver *to_auxiliary_drv(const struct devic
+ int auxiliary_device_init(struct auxiliary_device *auxdev);
+ int __auxiliary_device_add(struct auxiliary_device *auxdev, const char *modname);
+ #define auxiliary_device_add(auxdev) __auxiliary_device_add(auxdev, KBUILD_MODNAME)
++struct resource *auxiliary_get_resource(struct auxiliary_device *auxdev, unsigned int type,
++					unsigned int num);
+ 
+ #ifdef CONFIG_SYSFS
+ int auxiliary_device_sysfs_irq_add(struct auxiliary_device *auxdev, int irq);
+@@ -238,6 +242,9 @@ auxiliary_device_sysfs_irq_remove(struct auxiliary_device *auxdev, int irq) {}
+ 
+ static inline void auxiliary_device_uninit(struct auxiliary_device *auxdev)
+ {
++	if (auxdev->resource)
++		kfree(auxdev->resource);
++
+ 	mutex_destroy(&auxdev->sysfs.lock);
+ 	put_device(&auxdev->dev);
+ }
+-- 
+2.34.1
 
