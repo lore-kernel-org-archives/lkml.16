@@ -1,63 +1,51 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FCA524C077
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 15:28:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42328188A3A
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 15:29:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743694099; cv=none; b=okJ7SO5VqR0mO5ajiaxYUIOzV33j6GOdh7TJ6SCiG+/guCVIEiyg8VNAbJlExJSB18jF3amDYe+GivtYa7dzTf5bNOJo2E4/z6El/l2lNACRRdXnnzgzCDTOGkqTC+4L84Xeg+aFzX136tdmUCGKFfH5QxA9WwQK4K+RBrKHMV8=
+	t=1743694149; cv=none; b=dL6XK6e69dX7cTB/vdiHEhQv6zMlzZOJ8/MmH2uSOE8CVluLbCXD4gC4+3I7P1anSm5HcBc17yhGQbo7jtKCXDwGZqmguj9H34zbSQlAsF0eAV96cQGS9sMCL5HsXIG9IKW2vRNEgrBsIBr1ovv6ec6Zg6sVGy6qmie0AHyyT68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743694099; c=relaxed/simple;
-	bh=yTFqoTPWLE/L61xmCORPTtNj4dUC8CDKMqJCWYrZP9w=;
+	s=arc-20240116; t=1743694149; c=relaxed/simple;
+	bh=1soCiRYfYgFYJkqcHhSND4Hu+3WH6iJ7mCH3l5a9bdE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O//0NRuyW30dP4yMyg+EDQYPDh24Mrz0mYbL1/7YqiYdZzQNUMdBTVu5Z6m/5BGc2Jy4cNXgBL0oHDMZ7nHDwFrH2BRTK2PPE8ZNHt+1GL1Ka2D+zL0CZOUxIYxkTyXSw1cJofpNP2kuK++1AWPyPPsoFpgrH7Qel/eExjiAq18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IojviI0d; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=F5W2F4RSCPGZMTOWlda1lB0wSIJaOHUf848YLmoH+H4CXD87C1dYDjbcjGAzOSoMdFWmFdNY8GBo7oYUptxxPjDYGqg/4Nks5JJbqrDEePLN5Z54wYXsCRcOqV+JgsRuVx04CH+dPIhNmr332yYKdqFBzqUVYECWqNecrxAKGX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GY3RWa+C; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IojviI0d"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743694097; x=1775230097;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=yTFqoTPWLE/L61xmCORPTtNj4dUC8CDKMqJCWYrZP9w=;
-  b=IojviI0duEyWxDkEoOvAU61+PQoerJ/wM/f0T5C4j1eMLP6KvGsDdeN/
-   FTUomEnRx2HHnixsUpCeT4XrkWBX+GPn9qHDA8ZTIgVFpGWuDht2xu3Dg
-   3FqYcPuDUaj7wSEm+DwciXnKaEWXV132XR6Ml9wcJaBwPEe2bivSBzTnN
-   sZF2AbxL7+Wx19/Hq1y1UwVYVzSLq9rGPw56PaptDfSRW4myWjA84Ig/X
-   BgThpHeadymS6svikXT4TjPSKW91F2Bh4m9wCxdGIFaEcCq3Z/+7kT37G
-   1UVeGCHNMt/KmqewTGdS0Fi4wTHmLZdNmd/4ik/389RerEoqJdUK7b5ns
-   g==;
-X-CSE-ConnectionGUID: F2Rq914MS2SwaqA7jpOm9g==
-X-CSE-MsgGUID: UJ09gBnLToiNs39ByRF9wA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11393"; a="44264451"
-X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
-   d="scan'208";a="44264451"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 08:28:16 -0700
-X-CSE-ConnectionGUID: DQ6ba/fdSUC9LaKY03Ndvw==
-X-CSE-MsgGUID: PZ+1Pk5TQqehvJvTQFsX6w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
-   d="scan'208";a="127029583"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa007.fm.intel.com with ESMTP; 03 Apr 2025 08:28:14 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 12AA4109; Thu, 03 Apr 2025 18:28:12 +0300 (EEST)
-Date: Thu, 3 Apr 2025 18:28:12 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Uros Bizjak <ubizjak@gmail.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [PATCH -tip 2/4] x86/idle: Use MONITOR and MWAIT mnemonics in
- <asm/mwait.h>
-Message-ID: <Z-6pDGR0pQavVQfq@black.fi.intel.com>
-References: <20250402180827.3762-1-ubizjak@gmail.com>
- <20250402180827.3762-2-ubizjak@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GY3RWa+C"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8FC7C4CEE3;
+	Thu,  3 Apr 2025 15:29:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743694148;
+	bh=1soCiRYfYgFYJkqcHhSND4Hu+3WH6iJ7mCH3l5a9bdE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GY3RWa+CxqL2KozO6NIHBPISPK83QrfVWmlzHqrVhRR88WkARuuh5VLhl3qqsJROA
+	 KMSQI5YF04Ypc3oRskIAv6LukjToU0d38TL2+oFMFonjrWLlHbkSLQwVQuBarCWH3c
+	 dh8vsU3nvMsPP7vzmA+hQFabXDQWz6sR7j4Yp73lhDj0A7YJ9XjTYuTyItccfmQWKM
+	 0BsRPOsxx7YQIVdIMBW/Go+KaYRIVFi6W38LRz/oNiBaFAyu6IFO2rOkP2k+MvcK00
+	 EsA/hWFu13Hp1na4OhXD5504d+D4UXSlBMsr9yCaD5N/yW/sG+Mh249D7xEJ2Ep7pF
+	 CV3iPyqEG4MoA==
+Date: Thu, 3 Apr 2025 17:29:04 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Nikolay Borisov <nik.borisov@suse.com>
+Cc: linux-kernel@vger.kernel.org, Juergen Gross <jgross@suse.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH 37/49] x86/alternatives: Move text_poke_array completion
+ from smp_text_poke_batch_finish() and smp_text_poke_batch_flush() to
+ smp_text_poke_batch_process()
+Message-ID: <Z-6pQPDuNkshB04F@gmail.com>
+References: <20250328132704.1901674-1-mingo@kernel.org>
+ <20250328132704.1901674-38-mingo@kernel.org>
+ <65e8ed9d-0fff-4f70-b095-8df52493ebec@suse.com>
+ <Z-6PWWyopb86UC6y@gmail.com>
+ <a64bc000-4226-4d5c-8486-a230f4ff5065@suse.com>
+ <Z-6XkEpiXg4stqLY@gmail.com>
+ <b0b87bd7-e104-4c9b-b9e2-0682dfef28e9@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,37 +54,51 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250402180827.3762-2-ubizjak@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <b0b87bd7-e104-4c9b-b9e2-0682dfef28e9@suse.com>
 
-On Wed, Apr 02, 2025 at 08:08:06PM +0200, Uros Bizjak wrote:
-> Current minimum required version of binutils is 2.25,
-> which supports MONITOR and MWAIT instruction mnemonics.
+
+* Nikolay Borisov <nik.borisov@suse.com> wrote:
+
+> I meant doing this:
 > 
-> Replace the byte-wise specification of MONITOR and
-> MWAIT with these proper mnemonics.
+> diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+> index 5b1a6252a4b9..b6a781b9de26 100644
+> --- a/arch/x86/kernel/alternative.c
+> +++ b/arch/x86/kernel/alternative.c
+> @@ -2587,12 +2587,16 @@ noinstr int smp_text_poke_int3_trap_handler(struct
+> pt_regs *regs)
+>   *               replacing opcode
+>   *     - SMP sync all CPUs
+>   */
+> -static void smp_text_poke_batch_process(void)
+> +void smp_text_poke_batch_finish(void)
+>  {
+>         unsigned char int3 = INT3_INSN_OPCODE;
+>         unsigned int i;
+>         int do_sync;
 > 
-> No functional change intended.
+> +
+> +       if (!text_poke_array.nr_entries)
+> +               return;
 
-Hmm... Is it only me who gets these, please?
+> -               smp_text_poke_batch_process();
+> +               smp_text_poke_batch_finish();
 
-In file included from acpi/cstate.c:18:
-asm/mwait.h:30:15: error: invalid operand for instruction
-   30 |         asm volatile("monitor %0, %1, %2" :: "a" (eax), "c" (ecx), "d" (edx));
-      |                      ^
-<inline asm>:1:16: note: instantiated into assembly here
-    1 |         monitor %rax, %ecx, %edx
-      |                       ^~~~~
-In file included from acpi/cstate.c:18:
-asm/mwait.h:95:15: error: instruction requires: Not 64-bit mode
-   95 |         asm volatile("sti; mwait %0, %1" :: "a" (eax), "c" (ecx));
-      |                      ^
-<inline asm>:1:7: note: instantiated into assembly here
-    1 |         sti; mwait %eax, %ecx
-      |              ^
+I suppose we could do this - it adds one more check to 
+smp_text_poke_batch_add() though.
 
--- 
-With Best Regards,
-Andy Shevchenko
+> AFAICS this doesn't change the semantics. I.e smp_text_poke_batch_add 
+> will call poke_batch_finish iff the address to be added violates the 
+> sorted order of text_poke_array. The net effect is we have 1 less 
+> function name to care about.
 
+Yeah, it doesn't change semantics, but it's a very small 
+deoptimization.
 
+Mind sending a patch? It does simplify the facility some more and that 
+single branch will wash away against costs like the CR3 flushes done 
+...
+
+Thanks,
+
+	Ingo
