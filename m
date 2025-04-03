@@ -1,118 +1,133 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55D0C1F12F1
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 09:19:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EFBB1F5832
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 09:19:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743671941; cv=none; b=FB1yRZM+3bZDZppmjoUkjGw369Xy2ts7ehcJQqwLDGhj/R+hCTb+s37HZ3iuRif3ZUxpmIEyyGg9hx2jgZNnFNaui8SFbfUwPRewsFzhI5d2Um4lXXajRjqGIy+iexcJGR7yp3JXY5LPVS1NYTQBBEPXMBBkpgiM3jmNLUhR2Vc=
+	t=1743671964; cv=none; b=PL8FDWwBJcm5+gLqB4EzcXgB1a+Oj08dPk9DVnuiCFRl7hfIrElAFKaTM7k8i3pUnZUCTm02L6sAr8ZgA8hwFeuZqyWH5r95IBRWgPkWBm9mFnOCw5XrPiENJBqLJJeuxgaS2N5AKYX07O3UaUI7cZWH7na2usNKMCdum5xdRLs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743671941; c=relaxed/simple;
-	bh=HjXwZjrWSWpTGn0Xh3Tw/Q7l0FTJDuJ3AB9KN8lNfyA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V9FKap5h7tnUWTz13qcxLxpAb5aZ0tiL3HbnZ2W6Z8l0syKO8EIZRp9y8UsABdMmRUeEQwVNzqB4ZOkq24r+Eza4n7S/XKk5B3n3cr6ZvOBhqurBLjEIfsxgpO2hs2agz/iesnidyzr13QR93GP0lhgAw8hJbZqR78Jrskq9a8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=arm.com; spf=none smtp.mailfrom=foss.arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=foss.arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D7C6D106F;
-	Thu,  3 Apr 2025 02:19:01 -0700 (PDT)
-Received: from bogus (unknown [10.57.41.33])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 09C813F63F;
-	Thu,  3 Apr 2025 02:18:56 -0700 (PDT)
-Date: Thu, 3 Apr 2025 10:18:54 +0100
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: Youngmin Nam <youngmin.nam@samsung.com>
-Cc: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Saravana Kannan <saravanak@google.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	kernel-team@android.com, hajun.sung@samsung.com,
-	d7271.choe@samsung.com, joonki.min@samsung.com, ne.yoo@samsung.com
-Subject: Re: [GICv3 ITS]S2IDLE framework does not invoke syscore_ops in GICv3
- ITS driver
-Message-ID: <20250403-rare-wasp-of-management-9bce59@sudeepholla>
-References: <CGME20250326030527epcas2p33aa30e62cc8a00c9e151c35bee71dac5@epcas2p3.samsung.com>
- <Z+Nv8U/4P3taDpUq@perf>
- <8634f0mall.wl-maz@kernel.org>
- <Z+TEa8CVAYnbD/Tu@perf>
- <20250402-messy-wild-squid-7b4da9@sudeepholla>
- <Z+3kwsesiXyC0hbO@perf>
+	s=arc-20240116; t=1743671964; c=relaxed/simple;
+	bh=1Ti6PVCDV+WT6nQjWv2q2+1ji94pltfyHm8sw3Lz6SE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Cqv30lhFK+EiUhYH+sVWDVPnHPmPpJAn7MEVEBEttqLL+TGkYLv4OwHXSNuG76OPijuHBpQkPtKTuThyVRn9pyVZNQEJ1LnCrpv0mP3+lVAIyrXyoY1KAhLlPzAa+SKnLy7sotp9AxFgnELzQ4L3NlDENs6PG/p8TXGgGU/7gIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=I9qyCkid; arc=none smtp.client-ip=217.70.183.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="I9qyCkid"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id CFF364320C;
+	Thu,  3 Apr 2025 09:19:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1743671960;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=7V6qA/XzHVTroIuI74KJrCBJRdORiBQvGuNFthjMmGU=;
+	b=I9qyCkidT4PpfUmPTyguFUulUTwjlKBkhiedEUJ3qT3gMlqtIIIrvyLmFuzvsNWXmPHQda
+	dQ9QgAn5JRFHFnM7NI2iPB5ieOMmzJeBzIuYBW6aycVI/C5WfoSUEf/WfwNeGeInviauGd
+	IKlQQ3LjFFQPaaXwEMdvrXKpwqCjX0PZsU9i2L83NAs1X/5pD9ZVnugSLIk4RDU77rNife
+	GmR2vYFjn7p/svhbv8/2LGAkWlpVE/8gQVoNvOte4KiQ5wzMioJYsTqx1NoFH7hi2E/1mG
+	LzDnOiBcOJ3TDBQG7rbS7dmPeQKfvPULV0PMRKY5fAQib4fD5tHf1qH78ONNnA==
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH v2 00/19] mtd: spinand: Add octal support
+Date: Thu, 03 Apr 2025 11:19:10 +0200
+Message-Id: <20250403-winbond-6-14-rc1-octal-v2-0-7846bd88fe83@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z+3kwsesiXyC0hbO@perf>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAI9S7mcC/3XNQQ7CIBCF4as0rB0DSEviynuYLgpM7SSVMUCqp
+ undxbp2+b1k/llFxkSYxblZRcKFMnGs0IdG+GmINwQK1UJL3UqtDDwpOo4BOqhIXgH7MszQjTa
+ 4zqHU0oh6/Eg40msPX/vqiXLh9N7/LOq7/pInaf8lFwUSTOsVSmuGYM3FMZeZ4tHzXfTbtn0Ap
+ 63Frb4AAAA=
+X-Change-ID: 20250214-winbond-6-14-rc1-octal-6f7db6be0204
+To: Richard Weinberger <richard@nod.at>, 
+ Vignesh Raghavendra <vigneshr@ti.com>, Santhosh Kumar K <s-k6@ti.com>
+Cc: Tudor Ambarus <tudor.ambarus@linaro.org>, 
+ Pratyush Yadav <pratyush@kernel.org>, Michael Walle <michael@walle.cc>, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ Steam Lin <stlin2@winbond.com>, linux-mtd@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>
+X-Mailer: b4 0.15-dev
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddukeekudelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhufffkfggtgfgvfevofesthejredtredtjeenucfhrhhomhepofhiqhhuvghlucftrgihnhgrlhcuoehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpedugfefveegtdfhvdehudfgkefgheetveefvdelheeuiedukefgfeejheefheevueenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppeelvddrudekgedruddutddrudelleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeelvddrudekgedruddutddrudelledphhgvlhhopegludelvddrudeikedruddruddtiegnpdhmrghilhhfrhhomhepmhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddupdhrtghpthhtohepshhtlhhinhdvseifihhnsghonhgurdgtohhmpdhrtghpthhtohepphhrrghthihushhhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhmthgusehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhor
+ hhgpdhrtghpthhtoheprhhitghhrghrugesnhhougdrrghtpdhrtghpthhtohepmhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomhdprhgtphhtthhopehtuhguohhrrdgrmhgsrghruhhssehlihhnrghrohdrohhrghdprhgtphhtthhopehsqdhkieesthhirdgtohhm
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-On Thu, Apr 03, 2025 at 10:30:42AM +0900, Youngmin Nam wrote:
-> On Wed, Apr 02, 2025 at 12:56:53PM +0100, Sudeep Holla wrote:
-> > (Failed to find the original email, so reply on this instead)
-> > 
-> > On Thu, Mar 27, 2025 at 12:22:19PM +0900, Youngmin Nam wrote:
-> > > 
-> > > The problem is that syscore_ops is not invoked during the S2IDLE scenario,
-> > > so we cannot rely on it in that context.
-> > > We would like to use these suspend/resume functions during S2IDLE as well.
-> > 
-> > I have one orthogonal question. The s2idle will just use the deepest
-> > cpuidle state registered. So if s2idle needs this save/restore of GICv3
-> > ITS, how does that work when all the CPUs enter that idle state.
-> > 
-> > With respect to the PSCI CPU_SUSPEND call, it doesn't change. So I am
-> > bit confused as how it can work fine in normal cpuidle paths but no in
-> > s2idle path. What am I missing ? I do psci_enter_domain_idle_state handles
-> > s2idle little different but nothing to change this GICv3 ITS save/restore
-> > requirement between cpuidle and s2idle.
-> > 
-> Hi Sudeep,
-> 
-> Thanks for asking.
-> As a SoC vendor, we are using the Android kernel, which includes a vendor
-> hook like the one below.
-> 
-> In this function, a vendor-specific handler attached to
-> trace_android_vh_cpuidle_psci_enter is called.
-> 
-> 54 static __cpuidle int __psci_enter_domain_idle_state(struct cpuidle_device *dev,
-> 55                                                     struct cpuidle_driver *drv, int idx,
-> 56                                                     bool s2idle)
-> 57 {
-> 58         struct psci_cpuidle_data *data = this_cpu_ptr(&psci_cpuidle_data);
-> 59         u32 *states = data->psci_states;
-> 60         struct device *pd_dev = data->dev;
-> 61         u32 state;
-> 62         int ret;
-> 63
-> 64         ret = cpu_pm_enter();
-> 65         if (ret)
-> 66                 return -1;
-> 67
-> 68         /* Do runtime PM to manage a hierarchical CPU toplogy. */
-> 69         trace_android_vh_cpuidle_psci_enter(dev, s2idle);
-> 
-> Within the vendor-specific handler, if the current mode is S2IDLE and the
-> CPU logical number is 0, the GIC ITS suspend function is executed.
-> 
+spi-mem and SPI NOR already have octal support, but there are octal SPI
+NAND chips as well, which will be supported after this series. For now
+we focus on SDR modes or mixed modes, where the opcode indicates the
+content of the operation.
 
-/me more confused.
+Support for three Winbond chips is added: W35NxxJW (xx: 01, 02, 04).
 
-Are you saying you have some cpuidle platform specific logic inside
-trace_android_vh_cpuidle_psci_enter(). I would assume it was just to
-trace the entry into the state and nothing more.
+The series is mostly split into two parts:
 
-In fact, it was recently added upstream as well.
-Commit 7b7644831e72 ("cpuidle: psci: Add trace for PSCI domain idle")
+- Renaming the op macros to clearly indicate the number of lines and
+  whether each subpart of the operation is SDR or DTR, in order to
+  clarify them.
 
-Further you didn't explicitly answer my question. IIUC are you calling
-GIC ITS suspend function unconditionally if its boot cpu ? Or is it
-done only for s2idle ? If done only for s2idle, how does it work for
-normal cpuidle entry to deepest idle state that matches the one entered
-during s2idle.
+  This has been discussed and agreed upon with Tudor in a
+  previous discussion:
+  https://lore.kernel.org/linux-mtd/4ca13ef9-062f-4952-9588-c14f22867bf3@linaro.org/
 
+- Adding support for the various octal operations which can be
+  supported and using them in the Winbond driver.
+
+---
+Changes in v2:
+- Collected tags.
+- Squashed and re-organized the order of some patches following the
+  discussion with Tudor.
+- Link to v1: https://lore.kernel.org/r/20250307-winbond-6-14-rc1-octal-v1-0-45c1e074ad74@bootlin.com
+
+---
+Miquel Raynal (19):
+      mtd: spinand: Use more specific naming for the reset op
+      mtd: spinand: Use more specific naming for the write enable/disable op
+      mtd: spinand: Use more specific naming for the read ID op
+      mtd: spinand: Use more specific naming for the get/set feature ops
+      mtd: spinand: Use more specific naming for the erase op
+      mtd: spinand: Use more specific naming for the page read op
+      mtd: spinand: Use more specific naming for the (single) read from cache ops
+      mtd: spinand: Use more specific naming for the (dual output) read from cache ops
+      mtd: spinand: Use more specific naming for the (dual IO) read from cache ops
+      mtd: spinand: Use more specific naming for the (quad output) read from cache ops
+      mtd: spinand: Use more specific naming for the (quad IO) read from cache ops
+      mtd: spinand: Use more specific naming for the program execution op
+      mtd: spinand: Use more specific naming for the (single) program load op
+      mtd: spinand: Use more specific naming for the (quad) program load op
+      mtd: spinand: Define octal operations
+      mtd: spinand: winbond: Rename DTR variants
+      mtd: spinand: winbond: Add support for W35N01JW in single mode
+      mtd: spinand: winbond: Add octal support
+      mtd: spinand: winbond: Add support for W35N02JW and W35N04JW chips
+
+ drivers/mtd/nand/spi/alliancememory.c |  20 +++---
+ drivers/mtd/nand/spi/ato.c            |  14 ++--
+ drivers/mtd/nand/spi/core.c           |  18 ++---
+ drivers/mtd/nand/spi/esmt.c           |  16 ++---
+ drivers/mtd/nand/spi/foresee.c        |  16 ++---
+ drivers/mtd/nand/spi/gigadevice.c     |  60 ++++++++--------
+ drivers/mtd/nand/spi/macronix.c       |  16 ++---
+ drivers/mtd/nand/spi/micron.c         |  34 ++++-----
+ drivers/mtd/nand/spi/paragon.c        |  20 +++---
+ drivers/mtd/nand/spi/skyhigh.c        |  20 +++---
+ drivers/mtd/nand/spi/toshiba.c        |  22 +++---
+ drivers/mtd/nand/spi/winbond.c        | 128 +++++++++++++++++++++++++++-------
+ drivers/mtd/nand/spi/xtx.c            |  20 +++---
+ include/linux/mtd/spinand.h           | 121 ++++++++++++++++++++------------
+ 14 files changed, 318 insertions(+), 207 deletions(-)
+---
+base-commit: fec9f7d6629901decc7b4ecb6170913c02c2f213
+change-id: 20250214-winbond-6-14-rc1-octal-6f7db6be0204
+
+Best regards,
 -- 
-Regards,
-Sudeep
+Miquel Raynal <miquel.raynal@bootlin.com>
+
