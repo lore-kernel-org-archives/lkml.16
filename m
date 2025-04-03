@@ -1,111 +1,96 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C206F241672
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 08:25:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01DA4241CB2;
+	Thu,  3 Apr 2025 08:25:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743668744; cv=none; b=nPGOX3eyTSRvDSJJCOdpO5jHvvTKKgl/AylKRZK5uyFzqdN81G20im5bVnd9keS5rXfD0PgvPqEs4sRJQ8/Vu+Bo8QjoDT0D6VrKRfW20AAATCGbmcBQJPT0rgALSe9wyEPPjEwi39a+9XiL3Yoj6poBtKwn3Br7Vvy06HDc4l4=
+	t=1743668755; cv=none; b=f5yTzElpw+fob74AyWPe7dV3Gr4JaNmlv7JWX5jA7vR5MQYMxJPW7ZgMmT/zyEQ1jwg6G72fzAXc7slV9vPNiPi6+VdS3as65Wpo8NpnRykXWVmd5cQtheBl4aMkB4aEwBGutK+saDmAyNBDfKQTjYco6Q6Yc+J4/HIRkexG9N8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743668744; c=relaxed/simple;
-	bh=iHVyqDu7ZmLIy0mAMdQVNnQdgdMxjHIppXpD2G31IRU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rxXFmD0VTPGkq1UMjIxhLCoUvDdw2LH68L32ugXawXYcmbmztpwQzwM5k4XLBvYNTWarq1uyP3gcMdglfaXLF+kbGOtgFFQM7/xbrVzh2DPIB3UZG2dkZdK2NU56yGyxQ1mJAkC9AVXTy+f8Pqjwvd/bxRPuanYq2MK30u8zYzI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=ACKjWkDC; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="ACKjWkDC"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id DEDFC40E021F;
-	Thu,  3 Apr 2025 08:25:30 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id I2rWiXDhLeqd; Thu,  3 Apr 2025 08:25:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1743668726; bh=hn536CbXmIM5vZ++pXIE0RVpfCDzNyPlJJt6MUVv9wE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ACKjWkDCGbUz4uHWs3e9PxX0SYCimu+DwOovUQ0ikYIBbkjEqr/ZI5xH3blZlZAxe
-	 IbUp8Qz37ixgTuLckb/QNyiu9+IvYmy90M+8qts6p1XTdA68q73xZlpqRAJaaQczjH
-	 IwhyAQD05DxFi4V5Gmx4jA69QBbbL56oyJadMV/J1O2alxzBdLCZrNgRKS+xBD1cc6
-	 YtoLCIr/i1LXO+hG2qPfG6HofkN/eFKJ4xyYGl2pOpRAVhm+1JcS2oGoPl3DbnJhTw
-	 Cadt0LchZTMCmOxOat+APcDEMVX5Mf3Xk7CPuIveMWYI+zIn8TkOPeGKxzGUGYEL+K
-	 WYYus1bF2k+P6Ap+76HheFYhVYl4pCa3k8gZmuCHrjJnlueiO+EWUHVjKhkbxJlzC/
-	 XOUZa1fzlOG8XinfRW9nTmBT8NHKfnTLZNtvcUVathcWT9DQcSGgQQTO5IIgC7UeYB
-	 PXDsZigr88cMAcuUNbG3kydnz/COODQODna+EsOISfyfQxHqwgaGBLi42CDSXEsZ9z
-	 EDVC1P5hjxmaBRPwZLNObAN8RmCL6XRccgawKmFxt6TVFoW+l/fgfTwVi5ApBKdih3
-	 5KV6O4wKE0oKgGWH+YwNQqMFHouW8hvrexgEXMM5LZOIDvooRPwEGJCHjZ7BDnLvGC
-	 opcOVotpheWxIi0ZuKhSYYEY=
-Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 27D2640E0232;
-	Thu,  3 Apr 2025 08:25:18 +0000 (UTC)
-Date: Thu, 3 Apr 2025 10:25:08 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Uros Bizjak <ubizjak@gmail.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@kernel.org>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH -tip] x86/idle: Work around LLVM assembler bug with
- MONITOR and MWAIT insn
-Message-ID: <20250403082508.GAZ-5F5EMVZq3-6Zoo@fat_crate.local>
-References: <20250403070453.214190-1-ubizjak@gmail.com>
+	s=arc-20240116; t=1743668755; c=relaxed/simple;
+	bh=LMGWh7K8oa5KrX+W3kbg21yUcMQUNfXpXVe35Aqq1Mo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nvUHYn1qTtLQCTr4yfsdxeEaJsmNaBDBji3pTzYnFRJG7NoQgDhUGZS4vi6nr5YcnXszKnxL23sIyHCjtExZ/E6lHYONzfdCDIHSD8gOGJH8ewcJ1HS+aFV1vfiq8B1JGJLUOUaCSkUZ2cztEw/galAa9s7Idk9ra/50YlbTq80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost.localdomain (unknown [124.16.141.245])
+	by APP-01 (Coremail) with SMTP id qwCowAA32vr1Re5ndMVvBQ--.37834S2;
+	Thu, 03 Apr 2025 16:25:30 +0800 (CST)
+From: Wentao Liang <vulab@iscas.ac.cn>
+To: m.chetan.kumar@intel.com,
+	loic.poulain@linaro.org,
+	ryazanov.s.a@gmail.com,
+	johannes@sipsolutions.net,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com
+Cc: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Wentao Liang <vulab@iscas.ac.cn>
+Subject: [PATCH] IPC MUX: Add error handling for ipc_mux_dl_acb_send_cmds().
+Date: Thu,  3 Apr 2025 16:24:49 +0800
+Message-ID: <20250403082449.2183-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.42.0.windows.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250403070453.214190-1-ubizjak@gmail.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qwCowAA32vr1Re5ndMVvBQ--.37834S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7Cw4DArW3JFyrKrWDKF48Zwb_yoW8Gry7pF
+	WrWw109F98AF4rAa18CrWDZa4YqayDXr97Kw1jv3Z5WFsrCr47trWxX3429rn7JF45W3Zr
+	Ar4jyry3G3WUGF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9F14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+	6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r
+	xl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
+	6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr
+	0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E
+	8cxan2IY04v7MxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFV
+	Cjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWl
+	x4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r
+	1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_
+	JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcS
+	sGvfC2KfnxnUUI43ZEXa7VUb8hL5UUUUU==
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiBgwBA2fuKah3xQAAsy
 
-On Thu, Apr 03, 2025 at 09:04:37AM +0200, Uros Bizjak wrote:
-> LLVM assembler is not able to assemble correct forms of MONITOR
-> and MWAIT instructions with explicit operands:
-> 
->   error: invalid operand for instruction
->           monitor %rax,%ecx,%edx
->                        ^~~~
-> 
-> Use instruction mnemonics with implicit operands when LLVM assembler
-> is detected to work around this issue.
-> 
-> Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@kernel.org>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Fixes: cd3b85b27542 ("x86/idle: Use MONITOR and MWAIT mnemonics in <asm/mwait.h>")
+The ipc_mux_dl_acbcmd_decode() calls the ipc_mux_dl_acb_send_cmds(),
+but does not report the error if ipc_mux_dl_acb_send_cmds() fails.
+This makes it difficult to detect command sending failures. A proper
+implementation can be found in ipc_mux_dl_cmd_decode().
 
-No, you should whack that one - the toolchains are clearly not ready yet...
+Add error reporting to the call, logging an error message using dev_err()
+if the command sending fails.
 
-> +#ifdef CONFIG_LD_IS_LLD
-> +# define ASM_MONITOR	"monitor"
-> +# define ASM_MWAIT	"mwait"
-> +#else
-> +# define ASM_MONITOR	"monitor %[eax], %[ecx], %[edx]"
-> +# define ASM_MWAIT	"mwait %[eax], %[ecx]"
-> +#endif
+Fixes: 1f52d7b62285 ("net: wwan: iosm: Enable M.2 7360 WWAN card support")
+Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+---
+ drivers/net/wwan/iosm/iosm_ipc_mux_codec.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-... instead of piling more ifdeffery ontop and making the code uglier than
-before.
-
-Go fix the LLVM assembler to deal with explicit operands or GCC and LLVM
-should agree on common syntax they both assemble or whatever and the kernel
-should do *one* thing exactly and not carry toolchain-specific ifdeffery at
-every spot.
-
+diff --git a/drivers/net/wwan/iosm/iosm_ipc_mux_codec.c b/drivers/net/wwan/iosm/iosm_ipc_mux_codec.c
+index bff46f7ca59f..478c9c8b638b 100644
+--- a/drivers/net/wwan/iosm/iosm_ipc_mux_codec.c
++++ b/drivers/net/wwan/iosm/iosm_ipc_mux_codec.c
+@@ -509,8 +509,11 @@ static void ipc_mux_dl_acbcmd_decode(struct iosm_mux *ipc_mux,
+ 			return;
+ 			}
+ 		trans_id = le32_to_cpu(cmdh->transaction_id);
+-		ipc_mux_dl_acb_send_cmds(ipc_mux, cmd, cmdh->if_id,
+-					 trans_id, cmd_p, size, false, true);
++		if (ipc_mux_dl_acb_send_cmds(ipc_mux, cmd, cmdh->if_id,
++					     trans_id, cmd_p, size, false, true))
++			dev_err(ipc_mux->dev,
++				"if_id %d: cmd send failed",
++				cmdh->if_id);
+ 	}
+ }
+ 
 -- 
-Regards/Gruss,
-    Boris.
+2.42.0.windows.2
 
-https://people.kernel.org/tglx/notes-about-netiquette
