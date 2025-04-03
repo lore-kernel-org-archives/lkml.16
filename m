@@ -1,303 +1,199 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97D981F236B;
-	Thu,  3 Apr 2025 09:10:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEDA51E5B8B;
+	Thu,  3 Apr 2025 09:12:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743671451; cv=none; b=VFoLplnBEXBnCka/GIkKfaNHrdpFYPDfLE3z5mJ6Vlfnp1AfubirHMVVnIEQpC/luN4TFHnHhtcT3/SsH/kzA+tdBrERIVbkFHRq8lJFWu8KP0a7r9maV0eY2bFqdpOql6kaaYD1fso2iUywzFFMOSF4Bf2URxFtqtnPm1W9Kq8=
+	t=1743671534; cv=none; b=fdvJ0EGoKSdLrL17jg7cvS903QorcgNzxixoVCDafVWP6Ye5K5cwV4iRsi5w7dDp1nUA4E37ory0tye+Ybnomo3WjmF3UQqKJFqu25zbxQG4l/L9MDFvi7JP5v7DXhVW2BgjlWqFUq9LvRNOCRaIjAYj8wOJVyWRksQNntxpfiE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743671451; c=relaxed/simple;
-	bh=ZBG0Vv9MN4uDIzYRcVaSDYI9D8YaSDdVM57oQ7JZIXI=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Zx8Xc6Ij2ANO0l9UgoTte+CBCmq35uVj8Um80acEYyF9Rcq9ZWDSep2i587U2QKIAZ4Vn9iQpqTKYKfIqvgm9JtwSs3AOYdqVgPvs/jLaxtjDZk6bYqGiglsYZCjn/fvluSntzl4bl7p0zPIpDUswk8Jz78/MGtcdjYfap7YTfY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MwVjqdoQ; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1743671534; c=relaxed/simple;
+	bh=qN5NuKW9bCITUNwlVwxSeZIuSUwLmASsSCtiWs2SMMA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=k9YhNNOSxlrVDYwRVoPD906Yf2BLB5xGq6628nvu186MvSndCoNw2N0PNDQdpGzbJC0Rw3RMkaheH8oQ48d92RifrV2fBJwb3Yq+SfLkgmXT998BHGYHmS0YofmND0O3vpWW2eSZLrJWh3bO0hoQkXivGNJgM7ctDUmojeqUf6Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=YabtVy9F; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MwVjqdoQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743671450; x=1775207450;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=ZBG0Vv9MN4uDIzYRcVaSDYI9D8YaSDdVM57oQ7JZIXI=;
-  b=MwVjqdoQLUT0JgeZriML4NKjBJRZ6l0L+ddQtF3bL5OxjPM6uZc2RlVe
-   TIwas5rcSlqaRB5IjD3mBpz0AdLmU9KY3v80mB1dl4ujzWD2LjVfY1tsy
-   n1QN+bXNd3awa11bU9fmC+HLk1X+v1wAc520JMiUTD9+19Ip0EGMIYJEa
-   IPmHWz4zF3k62RMjQaxHWM8BSt0CbbHmP+kPfXUgY72Z6fjDpRc4CaSji
-   UEphXxsnmevGzSgb8uEUZ7R0L14sW+TkZvq8bOCSZaxqOiwLWJsowwA5z
-   kWmDJ+DnsjK1or+C1wXKNod88gyxTBA2/YQzzbB6Y4iX7u/aGoqAt6k7/
-   A==;
-X-CSE-ConnectionGUID: AVq+PpZyRViLAueWWLL/Ww==
-X-CSE-MsgGUID: m+BzlzHBRWqW4ReMUg7yKg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11392"; a="45079400"
-X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
-   d="scan'208";a="45079400"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 02:10:49 -0700
-X-CSE-ConnectionGUID: cyWztgi0SDW/r7dpo4J8xw==
-X-CSE-MsgGUID: 8xFd3C6oQ3KpnT1pjpkeyg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
-   d="scan'208";a="131925166"
-Received: from dhhellew-desk2.ger.corp.intel.com (HELO localhost) ([10.245.244.152])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 02:10:45 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 3 Apr 2025 12:10:41 +0300 (EEST)
-To: Hans Zhang <18255117159@163.com>
-cc: lpieralisi@kernel.org, bhelgaas@google.com, kw@linux.com, 
-    manivannan.sadhasivam@linaro.org, robh@kernel.org, jingoohan1@gmail.com, 
-    thomas.richard@bootlin.com, linux-pci@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [v7 1/5] PCI: Refactor capability search into common macros
-In-Reply-To: <6075b776-d2be-49d3-8321-e6af66781709@163.com>
-Message-ID: <9e9a68b1-8c3a-6132-d4fc-9f7b0b2d3e3a@linux.intel.com>
-References: <20250402042020.48681-1-18255117159@163.com> <20250402042020.48681-2-18255117159@163.com> <909653ac-7ba2-9da7-f519-3d849146f433@linux.intel.com> <6075b776-d2be-49d3-8321-e6af66781709@163.com>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="YabtVy9F"
+Received: from [192.168.88.20] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 53CA18FA;
+	Thu,  3 Apr 2025 11:10:16 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1743671416;
+	bh=qN5NuKW9bCITUNwlVwxSeZIuSUwLmASsSCtiWs2SMMA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=YabtVy9FlnjEB8aHB64uccNPUWVi6/SOh5caS23k3TI0Ynf9BWETg+Ix1R8jL8GCa
+	 0wOqXzDfqk781S+Y1xqOqZQMttnLs17SdTYBnSpkffSxDsN5v3kEU+yqauizoFXTZW
+	 f2LoeACo8Ad8R9uaJBatK0Xz5fY7iC0AFiROrKY0=
+Message-ID: <e1a770cb-8767-4251-9d96-599240d0efa8@ideasonboard.com>
+Date: Thu, 3 Apr 2025 12:12:06 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-560524903-1743671441=:1302"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/3] media: rcar-vin: Fix RAW10
+To: =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org,
+ linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+References: <20250324-rcar-fix-raw-v1-0-ae56c1c7a2f6@ideasonboard.com>
+ <20250324-rcar-fix-raw-v1-3-ae56c1c7a2f6@ideasonboard.com>
+ <20250331211122.GA1240431@ragnatech.se>
+ <5ebccf6a-3860-4643-9f92-735163552b7e@ideasonboard.com>
+ <20250403085700.GU1240431@ragnatech.se>
+Content-Language: en-US
+From: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
+In-Reply-To: <20250403085700.GU1240431@ragnatech.se>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hi,
 
---8323328-560524903-1743671441=:1302
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+On 03/04/2025 11:57, Niklas Söderlund wrote:
+> Hi Tomi,
+> 
+> On 2025-04-03 11:15:04 +0300, Tomi Valkeinen wrote:
+>> Hi,
+>>
+>> On 01/04/2025 00:11, Niklas Söderlund wrote:
+>>> Hi Tomi,
+>>>
+>>> Thanks for your work.
+>>>
+>>> On 2025-03-24 13:48:54 +0200, Tomi Valkeinen wrote:
+>>>> Fix the following to get RAW10 formats working:
+>>>>
+>>>> In rvin_formats, the bpp is set to 4 for RAW10. As VIN unpacks RAW10 to
+>>>> 16-bit containers, the bpp should be 2.
+>>>>
+>>>> Don't set VNDMR_YC_THR to the VNDMR register. The YC_THR is "YC Data
+>>>> Through Mode", used for YUV formats and should not be set for RAW10.
+>>>>
+>>>> Fix the check related to the RGB666 format and CSI-2 mode. The
+>>>> VNMC_INF_RGB666 define is the same as used for RAW10 on Gen4, and RAW10
+>>>> is allowed on CSI-2 (whereas RGB666 is not allowed on Gen3 on CSI-2).
+>>>> This feels a bit hacky, though, and the formats should really have been
+>>>> verified already earlier.
+>>>
+>>> I agree, it feels hacky. I would rather just remove the while switch
+>>> then try to "fix" it by extending it more. When testing this series I
+>>> needed a similar fix for VNMC_INF_RAW8 check below to get it to work on
+>>> Gen4.
+>>
+>> Why is that? What is VNMC_INF_RAW8 overlapping with?
+> 
+> VNMC_INF_RAW8 is not overlapping the issue is the "if (!vin->is_csi)"
+> check. On Gen3 RAW8 was supposedly only supported on the CSI-2 input,
+> and not on the parallel bus available on some VIN instances.
+> 
+> On Gen4 the checks around vin->is_csi becomes skewed and as you point
+> out should be cloned up. The effect at the moment however is that o Gen4
+> when trying to capture RAW8 is_csi is not set (as this is a gen3 thing)
+> and the "Invalid setting in Digital Pins" error path is hit.
 
-On Wed, 2 Apr 2025, Hans Zhang wrote:
-> On 2025/4/2 20:42, Ilpo J=C3=A4rvinen wrote:
-> > On Wed, 2 Apr 2025, Hans Zhang wrote:
-> >=20
-> > > Introduce PCI_FIND_NEXT_CAP_TTL and PCI_FIND_NEXT_EXT_CAPABILITY macr=
-os
-> > > to consolidate duplicate PCI capability search logic found throughout=
- the
-> > > driver tree. This refactoring:
-> > >=20
-> > >    1. Eliminates code duplication in capability scanning routines
-> > >    2. Provides a standardized, maintainable implementation
-> > >    3. Reduces error-prone copy-paste implementations
-> > >    4. Maintains identical functionality to existing code
-> > >=20
-> > > The macros abstract the low-level capability register scanning while
-> > > preserving the existing PCI configuration space access patterns. They=
- will
-> > > enable future conversions of multiple capability search implementatio=
-ns
-> > > across various drivers (e.g., PCI core, controller drivers) to use
-> > > this centralized logic.
-> > >=20
-> > > Signed-off-by: Hans Zhang <18255117159@163.com>
-> > > ---
-> > >   drivers/pci/pci.h             | 81 ++++++++++++++++++++++++++++++++=
-+++
-> > >   include/uapi/linux/pci_regs.h |  2 +
-> > >   2 files changed, 83 insertions(+)
-> > >=20
-> > > diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> > > index 2e9cf26a9ee9..f705b8bd3084 100644
-> > > --- a/drivers/pci/pci.h
-> > > +++ b/drivers/pci/pci.h
-> > > @@ -89,6 +89,87 @@ bool pcie_cap_has_lnkctl(const struct pci_dev *dev=
-);
-> > >   bool pcie_cap_has_lnkctl2(const struct pci_dev *dev);
-> > >   bool pcie_cap_has_rtctl(const struct pci_dev *dev);
-> > >   +/* Standard Capability finder */
-> > > +/**
-> > > + * PCI_FIND_NEXT_CAP_TTL - Find a PCI standard capability
-> > > + * @read_cfg: Function pointer for reading PCI config space
-> > > + * @start: Starting position to begin search
-> > > + * @cap: Capability ID to find
-> > > + * @args: Arguments to pass to read_cfg function
-> > > + *
-> > > + * Iterates through the capability list in PCI config space to find
-> > > + * the specified capability. Implements TTL (time-to-live) protectio=
-n
-> > > + * against infinite loops.
-> > > + *
-> > > + * Returns: Position of the capability if found, 0 otherwise.
-> > > + */
-> > > +#define PCI_FIND_NEXT_CAP_TTL(read_cfg, start, cap, args...)
-> > > \
-> > > +({=09=09=09=09=09=09=09=09=09\
-> > > +=09u8 __pos =3D (start);=09=09=09=09=09=09\
-> > > +=09int __ttl =3D PCI_FIND_CAP_TTL;=09=09=09=09=09\
-> > > +=09u16 __ent;=09=09=09=09=09=09=09\
-> > > +=09u8 __found_pos =3D 0;=09=09=09=09=09=09\
-> > > +=09u8 __id;=09=09=09=09=09=09=09\
-> > > +=09=09=09=09=09=09=09=09=09\
-> > > +=09read_cfg(args, __pos, 1, (u32 *)&__pos);=09=09=09\
-> > > +=09=09=09=09=09=09=09=09=09\
-> > > +=09while (__ttl--) {=09=09=09=09=09=09\
-> > > +=09=09if (__pos < PCI_STD_HEADER_SIZEOF)=09=09=09\
-> > > +=09=09=09break;=09=09=09=09=09=09\
-> > > +=09=09__pos =3D ALIGN_DOWN(__pos, 4);=09=09=09=09\
-> > > +=09=09read_cfg(args, __pos, 2, (u32 *)&__ent);=09=09\
-> > > +=09=09__id =3D FIELD_GET(PCI_CAP_ID_MASK, __ent);=09=09\
-> > > +=09=09if (__id =3D=3D 0xff)=09=09=09=09=09\
-> > > +=09=09=09break;=09=09=09=09=09=09\
-> > > +=09=09if (__id =3D=3D (cap)) {=09=09=09=09=09\
-> > > +=09=09=09__found_pos =3D __pos;=09=09=09=09\
-> > > +=09=09=09break;=09=09=09=09=09=09\
-> > > +=09=09}=09=09=09=09=09=09=09\
-> > > +=09=09__pos =3D FIELD_GET(PCI_CAP_LIST_NEXT_MASK, __ent);=09\
-> >=20
-> > Could you please separate the coding style cleanups into own patch that
-> > is before the actual move patch. IMO, all those cleanups can be in the
-> > same patch.
-> >=20
->=20
-> Hi Ilpo,
->=20
-> Thanks your for reply. I don't understand. Is it like this?
+Ok. I was wondering why it worked for me. But maybe the reason it worked 
+for me was the extra series from you, which also changed these checks to 
+rvin_remote_is_parallel(). And perhaps that function works fine, while 
+the older vin->is_csi didn't.
 
-Add a patch before the first patch which does only the cleanups to=20
-__pci_find_next_cap_ttl(). The patch that creates PCI_FIND_NEXT_CAP_TTL()=
-=20
-and converts its PCI core users (most of the patches 1&2) is to be based=20
-on top of that cleanup patch.
+> Locally I have now removed this whole swtich, as you point out the
+> formats should already be checked, and as far as I can tell they are.
+> This check is a relic from early Gen3 support. And really proves after
+> the Gen2 media graph clenups are done we should split rcar-dma.c ->
+> rcar-dma-gen{2,3,4}.c to get rid of this mess ;-)
+> 
+> I would change this patch to just remove the whole switch. If you want
+> to keep this fix as is I'm ok with that. I can submit a patch removing
+> the switch if you like on top.
 
-> #define PCI_FIND_NEXT_CAP_TTL(read_cfg, start, cap, args...)=09=09\
-> ({=09=09=09=09=09=09=09=09=09\
-> =09int __ttl =3D PCI_FIND_CAP_TTL;=09=09=09=09=09\
-> =09u8 __id, __found_pos =3D 0;=09=09=09=09=09\
-> =09u8 __pos =3D (start);=09=09=09=09=09=09\
-> =09u16 __ent;=09=09=09=09=09=09=09\
-> =09=09=09=09=09=09=09=09=09\
-> =09read_cfg(args, __pos, 1, (u32 *)&__pos);=09=09=09\
-> =09=09=09=09=09=09=09=09=09\
-> =09while (__ttl--) {=09=09=09=09=09=09\
-> =09=09if (__pos < PCI_STD_HEADER_SIZEOF)=09=09=09\
-> =09=09=09break;=09=09=09=09=09=09\
-> =09=09=09=09=09=09=09=09=09\
-> =09=09__pos =3D ALIGN_DOWN(__pos, 4);=09=09=09=09\
-> =09=09read_cfg(args, __pos, 2, (u32 *)&__ent);=09=09\
-> =09=09=09=09=09=09=09=09=09\
-> =09=09__id =3D FIELD_GET(PCI_CAP_ID_MASK, __ent);=09=09\
-> =09=09if (__id =3D=3D 0xff)=09=09=09=09=09\
-> =09=09=09break;=09=09=09=09=09=09\
-> =09=09=09=09=09=09=09=09=09\
-> =09=09if (__id =3D=3D (cap)) {=09=09=09=09=09\
-> =09=09=09__found_pos =3D __pos;=09=09=09=09\
-> =09=09=09break;=09=09=09=09=09=09\
-> =09=09}=09=09=09=09=09=09=09\
-> =09=09=09=09=09=09=09=09=09\
-> =09=09__pos =3D FIELD_GET(PCI_CAP_LIST_NEXT_MASK, __ent);=09\
-> =09}=09=09=09=09=09=09=09=09\
-> =09__found_pos;=09=09=09=09=09=09=09\
-> })
->=20
-> > You also need to add #includes for the defines you now started to use.
-> >=20
->=20
-> Is that what you mean?
->=20
-> +#include <linux/bitfield.h>
-> +#include <linux/align.h>
-> +#include <uapi/linux/pci_regs.h>
+Ok, if you think removing the switch is fine, we can do that. I wasn't 
+sure of the flow in the driver so I wasn't confident I could just drop 
+it (especially considering pre-gen4, with which I have no experience). 
+Thus this patch.
 
-Almost, including pci_regs.h is not strictly necessary as linux/pci.h will=
-=20
-always pull that one in (not that it would hurt).
+  Tomi
 
-Also, sort the includes alphabetically.
+> 
+>>
+>>   Tomi
+>>
+>>>>
+>>>> Fixes: 1b7e7240eaf3 ("media: rcar-vin: Add support for RAW10")
+>>>> Signed-off-by: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
+>>>> ---
+>>>>    drivers/media/platform/renesas/rcar-vin/rcar-dma.c  | 9 +++++++--
+>>>>    drivers/media/platform/renesas/rcar-vin/rcar-v4l2.c | 8 ++++----
+>>>>    2 files changed, 11 insertions(+), 6 deletions(-)
+>>>>
+>>>> diff --git a/drivers/media/platform/renesas/rcar-vin/rcar-dma.c b/drivers/media/platform/renesas/rcar-vin/rcar-dma.c
+>>>> index 53046614f7a1..f8394be8a922 100644
+>>>> --- a/drivers/media/platform/renesas/rcar-vin/rcar-dma.c
+>>>> +++ b/drivers/media/platform/renesas/rcar-vin/rcar-dma.c
+>>>> @@ -811,12 +811,17 @@ static int rvin_setup(struct rvin_dev *vin)
+>>>>    		case VNMC_INF_YUV8_BT656:
+>>>>    		case VNMC_INF_YUV10_BT656:
+>>>>    		case VNMC_INF_YUV16:
+>>>> -		case VNMC_INF_RGB666:
+>>>>    			if (vin->is_csi) {
+>>>>    				vin_err(vin, "Invalid setting in MIPI CSI2\n");
+>>>>    				return -EINVAL;
+>>>>    			}
+>>>>    			break;
+>>>> +		case VNMC_INF_RGB666:
+>>>> +			if (vin->info->model == RCAR_GEN3 && vin->is_csi) {
+>>>> +				vin_err(vin, "Invalid setting in MIPI CSI2\n");
+>>>> +				return -EINVAL;
+>>>> +			}
+>>>> +			break;
+>>>>    		case VNMC_INF_RAW8:
+>>>>    			if (!vin->is_csi) {
+>>>>    				vin_err(vin, "Invalid setting in Digital Pins\n");
+>>>> @@ -913,7 +918,7 @@ static int rvin_setup(struct rvin_dev *vin)
+>>>>    	case V4L2_PIX_FMT_SGBRG10:
+>>>>    	case V4L2_PIX_FMT_SGRBG10:
+>>>>    	case V4L2_PIX_FMT_SRGGB10:
+>>>> -		dmr = VNDMR_RMODE_RAW10 | VNDMR_YC_THR;
+>>>> +		dmr = VNDMR_RMODE_RAW10;
+>>>>    		break;
+>>>>    	default:
+>>>>    		vin_err(vin, "Invalid pixelformat (0x%x)\n",
+>>>> diff --git a/drivers/media/platform/renesas/rcar-vin/rcar-v4l2.c b/drivers/media/platform/renesas/rcar-vin/rcar-v4l2.c
+>>>> index 756fdfdbce61..65da8d513b52 100644
+>>>> --- a/drivers/media/platform/renesas/rcar-vin/rcar-v4l2.c
+>>>> +++ b/drivers/media/platform/renesas/rcar-vin/rcar-v4l2.c
+>>>> @@ -88,19 +88,19 @@ static const struct rvin_video_format rvin_formats[] = {
+>>>>    	},
+>>>>    	{
+>>>>    		.fourcc			= V4L2_PIX_FMT_SBGGR10,
+>>>> -		.bpp			= 4,
+>>>> +		.bpp			= 2,
+>>>>    	},
+>>>>    	{
+>>>>    		.fourcc			= V4L2_PIX_FMT_SGBRG10,
+>>>> -		.bpp			= 4,
+>>>> +		.bpp			= 2,
+>>>>    	},
+>>>>    	{
+>>>>    		.fourcc			= V4L2_PIX_FMT_SGRBG10,
+>>>> -		.bpp			= 4,
+>>>> +		.bpp			= 2,
+>>>>    	},
+>>>>    	{
+>>>>    		.fourcc			= V4L2_PIX_FMT_SRGGB10,
+>>>> -		.bpp			= 4,
+>>>> +		.bpp			= 2,
+>>>>    	},
+>>>>    };
+>>>>
+>>>> -- 
+>>>> 2.43.0
+>>>>
+>>>
+>>
+> 
 
---
- i.
-
->=20
-> Best regards,
-> Hans
->=20
-> > > +=09}=09=09=09=09=09=09=09=09\
-> > > +=09__found_pos;=09=09=09=09=09=09=09\
-> > > +})
-> > > +
-> > > +/* Extended Capability finder */
-> > > +/**
-> > > + * PCI_FIND_NEXT_EXT_CAPABILITY - Find a PCI extended capability
-> > > + * @read_cfg: Function pointer for reading PCI config space
-> > > + * @start: Starting position to begin search (0 for initial search)
-> > > + * @cap: Extended capability ID to find
-> > > + * @args: Arguments to pass to read_cfg function
-> > > + *
-> > > + * Searches the extended capability space in PCI config registers
-> > > + * for the specified capability. Implements TTL protection against
-> > > + * infinite loops using a calculated maximum search count.
-> > > + *
-> > > + * Returns: Position of the capability if found, 0 otherwise.
-> > > + */
-> > > +#define PCI_FIND_NEXT_EXT_CAPABILITY(read_cfg, start, cap, args...)
-> > > \
-> > > +({
-> > > \
-> > > +=09u16 __pos =3D (start) ?: PCI_CFG_SPACE_SIZE;
-> > > \
-> > > +=09u16 __found_pos =3D 0;
-> > > \
-> > > +=09int __ttl, __ret;
-> > > \
-> > > +=09u32 __header;
-> > > \
-> > > +
-> > > \
-> > > +=09__ttl =3D (PCI_CFG_SPACE_EXP_SIZE - PCI_CFG_SPACE_SIZE) / 8;
-> > > \
-> > > +=09while (__ttl-- > 0 && __pos >=3D PCI_CFG_SPACE_SIZE) {
-> > > \
-> > > +=09=09__ret =3D read_cfg(args, __pos, 4, &__header);
-> > > \
-> > > +=09=09if (__ret !=3D PCIBIOS_SUCCESSFUL)
-> > > \
-> > > +=09=09=09break;
-> > > \
-> > > +
-> > > \
-> > > +=09=09if (__header =3D=3D 0)
-> > > \
-> > > +=09=09=09break;
-> > > \
-> > > +
-> > > \
-> > > +=09=09if (PCI_EXT_CAP_ID(__header) =3D=3D (cap) && __pos !=3D start)=
- {
-> > > \
-> > > +=09=09=09__found_pos =3D __pos;
-> > > \
-> > > +=09=09=09break;
-> > > \
-> > > +=09=09}
-> > > \
-> > > +
-> > > \
-> > > +=09=09__pos =3D PCI_EXT_CAP_NEXT(__header);
-> > > \
-> > > +=09}
-> > > \
-> > > +=09__found_pos;
-> > > \
-> > > +})
-> > > +
-> > >   /* Functions internal to the PCI core code */
-> > >     #ifdef CONFIG_DMI
-> > > diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_r=
-egs.h
-> > > index 3445c4970e4d..a11ebbab99fc 100644
-> > > --- a/include/uapi/linux/pci_regs.h
-> > > +++ b/include/uapi/linux/pci_regs.h
-> > > @@ -206,6 +206,8 @@
-> > >   /* 0x48-0x7f reserved */
-> > >     /* Capability lists */
-> > > +#define PCI_CAP_ID_MASK=09=090x00ff
-> > > +#define PCI_CAP_LIST_NEXT_MASK=090xff00
-> > >     #define PCI_CAP_LIST_ID=09=090=09/* Capability ID */
-> > >   #define  PCI_CAP_ID_PM=09=090x01=09/* Power Management */
-> > >=20
-> >=20
->=20
---8323328-560524903-1743671441=:1302--
