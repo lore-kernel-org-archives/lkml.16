@@ -1,62 +1,67 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A422D1624E0;
-	Thu,  3 Apr 2025 10:58:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B4FC746E;
+	Thu,  3 Apr 2025 11:00:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743677899; cv=none; b=tTaeYcQyomSoO35uqyR3fF56CZOkP6tWW3m8Earzal+dz6UdGO+tVJCj4XljQcA/7L0t7pSuwZJHsnoKo30kudEeC9ckw59r1mjJi+5N+RNRUzyLnZKGlNRF3cEiN6Uj+rJME3EwzcbFm8Y6VPUXtGXzC9Od9ke9hlABtUrkJdY=
+	t=1743678029; cv=none; b=L8z4DcJWsRJSpFiHBn2msKq8BDfCINELptTqwyryX92FBSwByqUlri/fhmB2dSWgHfSIZaoHSKOVd9ogusYpsspqumoQ9kRUW0CXbAskr+dCpt2OszEQQtT4f2t6brrT+IgVmoY/mMpkhDWJvV7oSJrOCUIc2RAnXliONlQfLJs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743677899; c=relaxed/simple;
-	bh=9H/006uzT4PZBYnGc5gHSBDp37+pIiZD8lI/MwS4PhQ=;
+	s=arc-20240116; t=1743678029; c=relaxed/simple;
+	bh=beaVveygs+qfYECCLnMCgrn+MXb99wkqNXYEFw9FN0o=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GBYXSaQ8e4Xb6mB+0WKsFJqLukO2QTTQ75s2OIDDdPkQXAMQOB2F8aOqUJkuSyreiamlCEvi+39gqnshWHNVillahJsir8SOuwyX4VBgxOHTDre+lY5Zsuhx3mJXi/aW8wyYYFwm5Gl4Tspq4n7D57Rgtr5oq+1NFOPN29AjyQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=em4UAbTB; arc=none smtp.client-ip=198.175.65.20
+	 Content-Type:Content-Disposition:In-Reply-To; b=kXrJVLtW8PQOEp52XDE+dcONjJuk8ql/Ugc58WszxmnTHNjS2RYsy1l3oiSB8rvOC9vB4H5ImfDJAFip0+bwk2ml6rzv9qc0sWnnt/n28x6j5wiEdBQvVuHbVTX1rcCTFxurzNj/BqfSrXUzQlEYUBGUIR6ow22hMn8mfC1UWs0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Z7Be9HbU; arc=none smtp.client-ip=198.175.65.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="em4UAbTB"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Z7Be9HbU"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743677898; x=1775213898;
+  t=1743678027; x=1775214027;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=9H/006uzT4PZBYnGc5gHSBDp37+pIiZD8lI/MwS4PhQ=;
-  b=em4UAbTBolhaS078hJN6tYl7b//rQsIDLzmLt/mM2H4IMtRzi7dCF6JI
-   tV42VGcspdx43TmPw+pxv4Ts9cmMS/SgLxvebJN9cF1Dpjvo9pFNZO/ZW
-   28/NgwsiB6e3/ZG313JE4USGbQjLwsOyJ+LsJu1I6NohWNbXvdYn8dyBH
-   19se+yh07Z6rbJfMrtA/Z+XK1vqXxyQ/rXwtaSamj+xicx2TXeDIQrgBB
-   S+yyfIBoNnBrYi43v/gfCz8cKtSlrNOdnW2+plFlNdyy7ET0HXZ3k0s4c
-   IihHDK9aCabqZ4UcobPGP5nEzA8Y4ADABmwiL+DzxuvBfo9Wp0kru2BgK
+  bh=beaVveygs+qfYECCLnMCgrn+MXb99wkqNXYEFw9FN0o=;
+  b=Z7Be9HbU5fq+iR4VcM8FEQYCf3GEPgW3ZI7rFbsiBips1H6oB0LKfUHx
+   VKMCOKZMvVbh6AefxYPkoVDQpUe0aV690LimUeFmR5eWqugaRJQeWYHhV
+   dqhLV8wPFRjZCKRBcf1U0IN8DG7lD2dwq16Mpr8EtU1D6DCVtR8xTwdwX
+   js+vNMAzPjq1aoy/jjQkL8mjAU31wNHEnzvnjeU2BtVoKFNnZFLRWMDJ6
+   SfCs2/uYd8iz1UJlQSNICiYmDc1JhSKBTZBrTC4Zu8TspnUgY7yWTnske
+   Sxcpor3+i+HWfJLTeVhCo4iFCeKtlJn1Hnaiwi6xz9bwkAWoC4SGqVIBr
    g==;
-X-CSE-ConnectionGUID: M41QbXgnQbiceWQrNkhEYg==
-X-CSE-MsgGUID: DY0vusqZTYKu4SVVVK3IGQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11392"; a="44791940"
+X-CSE-ConnectionGUID: tvvk/jwCQBiDwbk5kM3XaA==
+X-CSE-MsgGUID: Ya+bO4elTh21rX92RkaLdg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11392"; a="45091600"
 X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
-   d="scan'208";a="44791940"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 03:58:17 -0700
-X-CSE-ConnectionGUID: HYqabUctR+aelXQnabZ4eg==
-X-CSE-MsgGUID: liPbEOD6QlWXYBPCMEwHIQ==
+   d="scan'208";a="45091600"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 04:00:27 -0700
+X-CSE-ConnectionGUID: I79Me/uLTv+M9nKB/GSSBA==
+X-CSE-MsgGUID: HO4ryJl8S4SIJw6mnU0CDQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
-   d="scan'208";a="127485117"
+   d="scan'208";a="126876456"
 Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 03:58:15 -0700
+  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 04:00:24 -0700
 Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
 	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1u0IGw-00000008mUF-26eN;
-	Thu, 03 Apr 2025 13:58:10 +0300
-Date: Thu, 3 Apr 2025 13:58:10 +0300
+	id 1u0IJ3-00000008mVd-1vbG;
+	Thu, 03 Apr 2025 14:00:21 +0300
+Date: Thu, 3 Apr 2025 14:00:21 +0300
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Mauro Carvalho Chehab <mchehab@kernel.org>
-Subject: Re: [PATCH v1 1/1] media: i2c: ds90ub9x3: Remove unneeded
- of_gpio_n_cells assignment
-Message-ID: <Z-5pwpoYEKKmtmPA@smile.fi.intel.com>
-References: <20250331070200.3985562-1-andriy.shevchenko@linux.intel.com>
- <c7fd0bd4-4fc8-43f0-b980-b49472e76445@ideasonboard.com>
+To: Zijun Hu <quic_zijuhu@quicinc.com>
+Cc: linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2 1/1] device property: Add a note to the fwnode.h
+Message-ID: <Z-5qRcBOK8x__Ry7@smile.fi.intel.com>
+References: <20250331163540.280606-1-andriy.shevchenko@linux.intel.com>
+ <b2f13a6d-e876-4cd2-b814-6cbc0b5f862e@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,21 +70,24 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <c7fd0bd4-4fc8-43f0-b980-b49472e76445@ideasonboard.com>
+In-Reply-To: <b2f13a6d-e876-4cd2-b814-6cbc0b5f862e@quicinc.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Thu, Apr 03, 2025 at 11:07:40AM +0300, Tomi Valkeinen wrote:
-> On 31/03/2025 10:02, Andy Shevchenko wrote:
-> > The default for of_gpio_n_cells is 2, no need to assign the same
-> > in the user.
+On Thu, Apr 03, 2025 at 06:03:57PM +0800, Zijun Hu wrote:
+> On 4/1/2025 12:35 AM, Andy Shevchenko wrote:
+> > + * Note, this header is not meant to be used by the leaf drivers.
+> > + * It provides the low level data types and definitions for the firmware
+> > + * and device property providers. The respective API headers should
+> > + * guarantee all the required data types and definitions without including
+> > + * this header directly into the driver.
 > 
-> Where is this documented? I'm also having trouble finding the
-> implementation.
+> sorry, i don't understand both "leaf drivers" and "respective API
+> headers". could you have examples ?
 
-The idea was introduced back in 391c970c0dd1 ("of/gpio: add default of_xlate
-function if device has a node pointer"). But now I realised that it was never
-assumed that default is 2 for the cases when the ->of_xlate() explicitly
-provided. So, this is wrong patch, thanks for the review!
+leaf driver is like almost anything under drivers/iio, for example.
+The respective API headers is usually: of.h or property.h (the latter
+is highly preferred in a new code). TL;DR: the rule of thumb is
+do not include this until you know exactly what you are doing.
 
 -- 
 With Best Regards,
