@@ -1,145 +1,104 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+Received: from mail-wr1-f68.google.com (mail-wr1-f68.google.com [209.85.221.68])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C3A32512E7
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 18:10:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6A23171E49
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 18:12:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.68
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743703804; cv=none; b=o4G8XJ2V6gbe2hP3ea3OZP61i6m/3s3SZJ+6v22PH7VyIipcfDb7BHFBOHRsbUk/9YFbh/Lrnpdt6Ar5NHu7B+uFS2flNkEbXvC9LIrfFLJ4AKufbEabbtLPzYbOQmnAQtLoWwSIWOcstPZ9QAFvQENPY5keo+PUVQi/LoUH7ac=
+	t=1743703955; cv=none; b=VzGME9kCDMx4ZslUw34f6Bh5FSbA9lqVpLv9Puh3KsXHtFoFo6Abs6yzdrTUApFGp2RXzINdhU5MgRoxXTamMunrnUCdbyKwBLfdTS0LNB02QnbQHPTbEpBBL8flX1pnJUeYW7qAN5yXZn0xPB7yM7eUVDmVjGqrWpDptGca268=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743703804; c=relaxed/simple;
-	bh=tRaMCDQsFxTh97DR7LSJJp2UP+PKxOH/yGDNF3oor4Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WnlOM24NLOZV6CuVBP8kx7ouJ2AG4EePDPL4azvt0jCUPWa9NPmY+fMKg1jb9ytCl678F5mAm/jSTBSgHgDRd802f4MG34C7y/Be2+DfkOfFv+FRcJV4zLD/9BAeGFVqVryMGBFTcn3lpvh04puf1hlyvYoesyM/Ay3/wTImokg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=C7WEIsNz; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1743703955; c=relaxed/simple;
+	bh=7f40mJ8LnqL7CspekV7TYFbVToX0I2pz85INXUfPxGs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WTqOK8ZHq/UTyMxNBf+xou/zkBBVXCw3CiZOHDWUwsU3ZwxcUfzjxJ0Fw2hmT51onxH4D+FxBIW/JxizNvhzBG5Bcy09voo4IOUVfBgxamqXRfrK0iBKQeHSgJsYTHbVN/lENn1tG2JodH3quxPMYOuvK0Y9ijKuLmHpAV5lCVc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZTcG/Zcp; arc=none smtp.client-ip=209.85.221.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="C7WEIsNz"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ab78e6edb99so174904466b.2
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 11:10:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZTcG/Zcp"
+Received: by mail-wr1-f68.google.com with SMTP id ffacd0b85a97d-3914aba1ce4so1037388f8f.2
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 11:12:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1743703800; x=1744308600; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=HcEDrrFsrxiP1Wl9E660bs5VgrcHtAAgyYumdG4aXRY=;
-        b=C7WEIsNztGwdeyW70eWkzmRnk9zqvnh+JCVBxlCAJNwCr9zgXBU37z79jepUoyDdqp
-         tRrXMgf8LlZkabMEFIrbud8PBGlBxRF7ULkN9riQO4I5b3InmGajvV0TTogsNSWXafpe
-         Zke32bhEuUW3ZhZLoC9AMYrFBsBnnODxifPEg=
+        d=gmail.com; s=20230601; t=1743703952; x=1744308752; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Cylaq/MJ4Q4v84obWEALM9f5r/Eyjhy9D/KWsJ7EmiM=;
+        b=ZTcG/ZcpeCa5CZAqkGmGdozc3g7WOrCLODj8vgsq/10aijMv3Y7cWa2kRKvkJtxv5Z
+         q4QirlLozUTl14ABXf2nfhTjkjq5c4bl09WUnD6jGj2eyh5U2YN9EnQXuhkJT454hNSM
+         eCHkGDtW4mgCkiYRfpWmUtkqh1aZBwn7+jBOQqli3QbzefAgSFAymWp6hkDbCeDYkoL9
+         3FSGPzG3NyH2kFA2YlZjsB4GAnnnU2wZ0SEWst0VjvBD97xLC0TzD2wcaE+EgBKBilC7
+         kUFItrftAS12Q6lT2OCDZAFXveDe8+P85iQ+f5n7MvT2k1r/ipjRQocV4fxDwZVo9E1x
+         GS2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743703800; x=1744308600;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1743703952; x=1744308752;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=HcEDrrFsrxiP1Wl9E660bs5VgrcHtAAgyYumdG4aXRY=;
-        b=Q1Xvnfiuea4c0Tc5KrpS7jtVBvT2/tD0b03jHsD7FRd9LKRp4fkA5EyocK005PHroN
-         qAcM56FeV/aJwxpBjRlixd5mJLWegfSF4hyTZn/pPhZ9/Jp0Hp4Mv9rgGjZtSWhdY0mq
-         eZTKMrSSAJhuOqANVvQVZqrG1Kf4fxZ8ZNin0ys70RLatNe14HqweenS2uDEK03nJ+iC
-         yxmBvSVzZXRlTFpZ5+yA4Klflh9f5TDzjuPlPL3dQEJ3x6iYoBYmQKdDAM0M1+ffd3G7
-         TqbYYjBAt0MfDB+pfzeNdbrosVxuTbGusKLhUW0pxjPLBWZjFnTy13h5+6J0kFWz5BED
-         1IBg==
-X-Forwarded-Encrypted: i=1; AJvYcCUZDMr+rC9DBeG/sc71ugtqp30+Uv0RFK0x2hMCw8xXrjMpV6Qjb5Ko8lU5IRq3pyZU/QEbi2XNi/998kg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyXe2albRWiJP48x0RQb+VWb4fBasSSU1oR7PaxzP63llGZSenG
-	g+wPk71yqW2UoEuxSgkekMJ/5JBx8wGQUZtMIdGr3yqrhW6+eeooxTkdXgP8uZHdCA+bGkHfvOn
-	uMTM=
-X-Gm-Gg: ASbGncvNUKCHQi7SndPYOWmv2nnL1PaShMkfNRH2njojwzcySkT+Jp9SJn9FCSMKkXU
-	KC+QkqYpG3WkMFhADQ2HmsrxXfwZWfRHpB1Yg8xZBF2Izxs/DiLEpcI1//6i/0qdrdAVfLoe7Rv
-	wpu/SKYsHhPeKbUaOGcWn3w+hUClXc7Mtrl7lquVPC2MW8wMgwVqk0lkrQBE/6C5ZjxTMqwaIZF
-	sk1hDwietuacQ3JcEBDZZd1IoWOMO7wp2KafccCI76o52Id0TAdPhHyZ9eAjsk5e4PWvfRnt3oq
-	qkb+smyeNMvWAmeYFHj8FdKBJoEz2ys8F9lt+y0EPFY6f7n+nA0RDHKagWVoWCJO1XYAExB7vOT
-	26mWoEFw2yd6EzXFjEkU=
-X-Google-Smtp-Source: AGHT+IHCodMIBmboTv6a60mDwUgukM1p+s4eolivHS2UAinIE6gUP9NJmwo0fUaTe0XEfbEyVvE+rQ==
-X-Received: by 2002:a17:906:dc8a:b0:ac4:4d2:3867 with SMTP id a640c23a62f3a-ac7d188b8aemr55806266b.23.1743703800371;
-        Thu, 03 Apr 2025 11:10:00 -0700 (PDT)
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com. [209.85.218.54])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7bfe5bd17sm130985066b.10.2025.04.03.11.09.59
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Apr 2025 11:09:59 -0700 (PDT)
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ac2bdea5a38so197257366b.0
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 11:09:59 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWCcEpMS057Y2DpBKCFREGemauvaAN+QCMxQtWjEq8kGJsHYrWLo5i+j/0tTqfXsJyl4BIFonBAJQfN+yo=@vger.kernel.org
-X-Received: by 2002:a17:907:971c:b0:ac3:84d5:a911 with SMTP id
- a640c23a62f3a-ac7d18e240emr44635266b.28.1743703798814; Thu, 03 Apr 2025
- 11:09:58 -0700 (PDT)
+        bh=Cylaq/MJ4Q4v84obWEALM9f5r/Eyjhy9D/KWsJ7EmiM=;
+        b=u5lhe9w0gXxHaVDbyb6h8L11XzMIxYoc+LRWIJaxcraVzcY1ryt0q95/R/WWA766AJ
+         j3FDaRpzGkZrI9hNnmzKAIuC/xArAk5ZbtG52Q0rOjmojEiTDT1ZQeyCDuIsR6S8JD2U
+         Gt0p/4wOfpU/WjopP+kmjCmff8YH0f2oCn1iceP3GkzPA2U/aBRXfD+IUp6kJu03L+ZQ
+         1QL6R0AFaanToLqBs2ibOUej7bDD9nYIoPfHA6zPdbZ0/oDdVQo9LOZBvEWRJahE4nBz
+         0lP4SyDyGUKM71QLXHcAVq/mfmJhRTFNsKEmYpzKBmrOtlYrTMJX2zrvNQcPkn+RxlCg
+         oFLA==
+X-Forwarded-Encrypted: i=1; AJvYcCW5C+PmwlFWc3gSu0JXgzk9zU5d4Uf7p8lm8a4XUeo5PB//jhTtxqH9PSxt4Cym8zMe70FpMXgbc2x2vnQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywx9Q6PQpSdJIu+h8I7W/VvljAKl4xK0xhuXoq7CZ/K7hSoEfvj
+	tHHg1oZK9DM5f6eAEOsdGM9LOYv1M8PSuVyTYhryHqhoYxieHwgq+pOlQxD5w+tGAx8rYtQ=
+X-Gm-Gg: ASbGncv2vWwmDz9KkuZM73V0z16lRETUT3l04TNbHFsWZrJgJNvSKdAws9X6FR7WJkL
+	d3PyKj/ulg3zThpAfB3oQrlGjeGYAqUlPcVvHhS6D5KWcFQbko6ITr1RG/jGiKnEst1mxCTOMd9
+	A6BMgdFQDzr+c1LDjY+F6wz/FBW219xl4LFVI7vNpXGj+zbY00Gva9+OShVhAoxmmq49Ndn/+vz
+	hfzEWK0+wHYhUv7tthj1Tr19vvWIuGHYYQqnAYTWd3s/NHKcAROIdme4G1w2ZXaPAPQg9gHzniS
+	0JR7gTO+UDfnIFjOcIZIXzfFoEP3osJYw9KJFdhXyPV05K2b0hBd8YgjwcgZ3I97Hw==
+X-Google-Smtp-Source: AGHT+IHyXAUeqGJBGFg7iPU2HIIZy892949Sn08g2mxKXvCfsycA+m0o+Md+hRj6Zysr32oFr5cyPQ==
+X-Received: by 2002:a05:6000:184d:b0:390:f358:85db with SMTP id ffacd0b85a97d-39cba93531emr209714f8f.30.1743703951905;
+        Thu, 03 Apr 2025 11:12:31 -0700 (PDT)
+Received: from localhost.localdomain ([87.106.214.162])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c3020d975sm2438079f8f.75.2025.04.03.11.12.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Apr 2025 11:12:31 -0700 (PDT)
+From: Mohammad Mahdi Anbaraki <m.mahdianbaraki@gmail.com>
+To: geert@linux-m68k.org
+Cc: linux-m68k@lists.linux-m68k.org,
+	linux-kernel@vger.kernel.org,
+	Mohammad Mahdi Anbaraki <m.mahdianbaraki@gmail.com>
+Subject: [PATCH v2] m68k/kernel: replace strncpy() with strscpy()
+Date: Thu,  3 Apr 2025 21:41:59 +0330
+Message-ID: <20250403181200.34418-1-m.mahdianbaraki@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250322-vfs-mount-b08c842965f4@brauner> <174285005920.4171303.15547772549481189907.pr-tracker-bot@kernel.org>
- <20250401170715.GA112019@unreal> <20250403-bankintern-unsympathisch-03272ab45229@brauner>
- <20250403-quartal-kaltstart-eb56df61e784@brauner> <196c53c26e8f3862567d72ed610da6323e3dba83.camel@HansenPartnership.com>
- <6pfbsqikuizxezhevr2ltp6lk6vqbbmgomwbgqfz256osjwky5@irmbenbudp2s>
-In-Reply-To: <6pfbsqikuizxezhevr2ltp6lk6vqbbmgomwbgqfz256osjwky5@irmbenbudp2s>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Thu, 3 Apr 2025 11:09:41 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjksLMWq8At_atu6uqHEY9MnPRu2EuRpQtAC8ANGg82zw@mail.gmail.com>
-X-Gm-Features: AQ5f1JqNbQoAaPP_wXcc41hTXOvOxh-9Wv4SKJz_lr5r38JumKJCxYASdK1ME88
-Message-ID: <CAHk-=wjksLMWq8At_atu6uqHEY9MnPRu2EuRpQtAC8ANGg82zw@mail.gmail.com>
-Subject: Re: [GIT PULL] vfs mount
-To: Mateusz Guzik <mjguzik@gmail.com>
-Cc: James Bottomley <James.Bottomley@hansenpartnership.com>, 
-	Christian Brauner <brauner@kernel.org>, Leon Romanovsky <leon@kernel.org>, pr-tracker-bot@kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Thu, 3 Apr 2025 at 10:21, Mateusz Guzik <mjguzik@gmail.com> wrote:
->
-> I would argue it would be best if a language wizard came up with a way
-> to *demand* explicit use of { } and fail compilation if not present.
+Swapped out strncpy() for strscpy() in parse_uboot_commandline() while
+copying to commandp. strscpy() makes sure the string is properly null-
+terminated and gives a more useful return value so it's just a safer 
+choice overall.
 
-I tried to think of some sane model for it, but there isn't any good syntax.
+Link: https://github.com/KSPP/linux/issues/90
+Signed-off-by: Mohammad Mahdi Anbaraki <m.mahdianbaraki@gmail.com>
+---
+Changes in v2:
+- s/m64/m68
 
-The only way to enforce it would be to also have a "end" marker, ie do
-something like
+ arch/m68k/kernel/uboot.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-        scoped_guard(x) {
-                ...
-        } end_scoped_guard;
+diff --git a/arch/m68k/kernel/uboot.c b/arch/m68k/kernel/uboot.c
+index 5e52ea150..fa7c279ea 100644
+--- a/arch/m68k/kernel/uboot.c
++++ b/arch/m68k/kernel/uboot.c
+@@ -73,7 +73,7 @@ static void __init parse_uboot_commandline(char *commandp, int size)
+ 	uboot_cmd_end = sp[5];
+ 
+ 	if (uboot_cmd_start && uboot_cmd_end)
+-		strncpy(commandp, (const char *)uboot_cmd_start, size);
++		strscpy(commandp, (const char *)uboot_cmd_start, size);
+ 
+ #if defined(CONFIG_BLK_DEV_INITRD)
+ 	uboot_initrd_start = sp[2];
+-- 
+2.43.0
 
-and that you could more-or-less enforce by having
-
-    #define scoped_guard(..) ... real guard stuff .. \
-                do {
-
-    #define end_scope } while (0)
-
-where in addition we could add some dummy variable declaration inside
-scoped_guard(), and have a dummy use of that variable in the
-end_scope, just to further make sure the two pair up.
-
-It does have the advantage of allowing more flexibility with fewer
-tricks when you can define your scope in the macros. Right now
-"scoped_guard()" plays some rather ugly games internally, just in
-order to avoid this pattern.
-
-And that pattern isn't actually new. We *used* to have this pattern in
-
-        do_each_thread(g, t) {
-                ...
-        } while_each_thread(g, t);
-
-and honestly, people seemed to hate it.
-
-(Also, sparse has that pattern as
-
-        FOR_EACH_PTR(filelist, file) {
-                ...
-        } END_FOR_EACH_PTR(file);
-
-and it actually works quite well and once you get used to it it's
-nice, but I do think people tend to find it really really odd)
-
-> This would also provide a nice side effect of explicitly delineating
-> what's protected.
-
-Sadly, I think we have too many uses for this to be worth it any more.
-And I do suspect people would hate the odd "both beginning and end"
-thing even if it adds some safety.
-
-I dunno. I personally don't mind the "delineate both the beginning and
-the end", but we don't have a great history of it.
-
-               Linus
