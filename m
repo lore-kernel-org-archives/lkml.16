@@ -1,232 +1,180 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8A4523FC5B
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 07:20:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4919823F422
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 07:20:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743664805; cv=none; b=sk0/po5Ph/G2gIr+y8cQPPo6n1u+8iTfnCeO8kn7oil9NyFPAgl+tIoQi+rXCh0TtI0o4DSzKeh6cyXhsFbOD6NQE18qwGfYR7FJjovjnQbCIL18f6sAlQwCj4GtsxZ2Zig4Cn7NZLKQIGJ3E7N+44Sly4FDKbIVzvKcxdXlvEM=
+	t=1743664852; cv=none; b=g4H+lM0HUa2Avi0SgVSrV9XxcxRtDG4AJbz0EDtDSfJ3bupQC9uvzBUZ4bTytK5lQdrYi7ltQVUGJPZGD2OAOAxw3IMi37JdxhJ30ll3P6CNKcIvn997H9VvCau4eNCqti44EwI4dH9I+EJFQmyO7AtrORpbPi4eJW+9zijr1ho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743664805; c=relaxed/simple;
-	bh=hR2qnMYArBWrImUQauuRyISgEnWeJAYvWiAH4OKO1Cc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EIRnFdODq+CfCeEXRdyFqXiCuChDQ0v1/RZwo4+ROqw/S/omjXzFlqXDFdwCHA1rwwFyAnDU4N19Iw8yMdDYvSAsWCw/TEG6izBNxvvTkB8r5lxmuDOvUTGFTw05EcGpzy4UPNnUv6gYem51zYr8nW+uKlXh0Rud1Vg35KOQIMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=kafsgcyB; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=u+dqcxcx; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=kafsgcyB; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=u+dqcxcx; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1743664852; c=relaxed/simple;
+	bh=TDd8xyaBgEDCBfuCTjYEiIFUCJncStQ1dkceRj+++oM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UEQ9ShRcwg5iv6SxZige/60vXKdomwxDou0TLp2XBOwgyvgfU9q+Q9/+S/ms32aDy4JCnVtorI7GdYpU7y5YoQ49laEkF3dkgdJ3YvfTGTvYb+8JqQj1ITemCeh0DViJKAmiPSERONtScy3/NwXCqQ+PLgt0bYt/3AdsY/wBXHw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=agKpocDz; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="kafsgcyB";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="u+dqcxcx";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="kafsgcyB";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="u+dqcxcx"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id C5B532111F;
-	Thu,  3 Apr 2025 07:20:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1743664800; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=IjUuxmyLLydMPRGY19/rc8L3qYmteDVcM/l7eeJ2GX8=;
-	b=kafsgcyBblkr02SLymkLzWpi5NgIzUYwxkli7acazrEyzDS8itfXHWBn/82zzw2c+6xMLv
-	mp1Do+u/jfnx1aOHnAEIpoqj5rIEatv6slP623AA2caw8GBBj/6WaBeVNTYQXeGWpjwDky
-	ClwV32qt6K35kjRZ+uPfH9UVk2qyQhU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1743664800;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=IjUuxmyLLydMPRGY19/rc8L3qYmteDVcM/l7eeJ2GX8=;
-	b=u+dqcxcx44npny0FgEAB6xUPtl9mo2HLXt7/drLYRhtyVtW4kPHk+DuO8fo/r4Dkme8cql
-	8sO+wsVin1mPofDA==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=kafsgcyB;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=u+dqcxcx
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1743664800; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=IjUuxmyLLydMPRGY19/rc8L3qYmteDVcM/l7eeJ2GX8=;
-	b=kafsgcyBblkr02SLymkLzWpi5NgIzUYwxkli7acazrEyzDS8itfXHWBn/82zzw2c+6xMLv
-	mp1Do+u/jfnx1aOHnAEIpoqj5rIEatv6slP623AA2caw8GBBj/6WaBeVNTYQXeGWpjwDky
-	ClwV32qt6K35kjRZ+uPfH9UVk2qyQhU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1743664800;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=IjUuxmyLLydMPRGY19/rc8L3qYmteDVcM/l7eeJ2GX8=;
-	b=u+dqcxcx44npny0FgEAB6xUPtl9mo2HLXt7/drLYRhtyVtW4kPHk+DuO8fo/r4Dkme8cql
-	8sO+wsVin1mPofDA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 65A0413A2C;
-	Thu,  3 Apr 2025 07:20:00 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id VAh2F6A27mflQwAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Thu, 03 Apr 2025 07:20:00 +0000
-Message-ID: <a8ed4b8b-5116-4ac2-bfce-21b2751f7377@suse.de>
-Date: Thu, 3 Apr 2025 09:20:00 +0200
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="agKpocDz"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-391342fc1f6so458751f8f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 00:20:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1743664848; x=1744269648; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=BD756zHr8WEGmTWHUM//ivzbI/qlnCFevZCrnf/WSH0=;
+        b=agKpocDz+G3CdxzdhcmDvJ0LrcO/BzPV0zL3/zhw020oUIipit4+cBnA7Ppo0EVeEe
+         u8zfnJAfBg3tTgfqDCXwwYHDq9ezvk3xVgxeOLARfqLpg423sti3Yg1P66ZjSp/t1+4n
+         o/a7V/n/7h5jQvY66pRDFooBn43gBn3CwUI9RTnTWV1m4MOGYusHvdDu5n7sz0yQcZW4
+         mxj2YaWf2QKppsZU48utv1tZesINe4nb9bRuQMUA+256YgK2n1kF9xz33eJLB4msjDPZ
+         F24Xu4bTqYUaMJQaSgu8fjO6w3VigHSRTusah1S7UJbIimOrCcOrXImpdCr7FTBE69NS
+         ZZyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743664848; x=1744269648;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BD756zHr8WEGmTWHUM//ivzbI/qlnCFevZCrnf/WSH0=;
+        b=JsUQCz2WGs7KrL2oQP4KyHauCRdDWMWdmjcchQkb2ruy4yQEc45cFFtIbBFeJfhafe
+         l8l2oU299g7cmP5Q59biv1TCaoSyflUawAH8BeJdDb/64A6d2Tpu4IPIqGDYecNbXLwX
+         vJtBODO2Vi+sfT7hQTzckVYtJBLZ6iHWUSw2W1AsboU9mWTEupxZMzfG5q8gXK7OiUqe
+         2EGliR88iO19PAcjwIaAD1Etc9oVtwPetbRePOwmU9Mw0F5eeWf+D+chuylo9/f5luLT
+         yQta4kH+HFvrYaN1+s38oDffc8e6ZfQOYwnJJvL5ujPiZZCOBPOSBXOhuBOCKvby+BKV
+         mLLg==
+X-Forwarded-Encrypted: i=1; AJvYcCXvYl78uXJqosQhJUeXDJ9hkKaDOxpDcgpk/DUOkYaJudl7h9dwWoFKWFttRPGhcbfaakiNOcESpoI/h+I=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzma+FvxRyKrrvtIC2yWjIE8whycjXnEfSRRveta93eyh2tXRSU
+	KfS1aNAWG44depTt73YIyVpkJy3pYOmmCstac5iR1UM0s7Dd0S5oBaAvxReIYdk=
+X-Gm-Gg: ASbGncvHmp8NQ9QLztfNJJQzI9KGo5MG0sdlKOC+mbj13CL+O/MT3eWKwfXWTHHWlxU
+	jPB2mHC38qBBWH5HPSbzMltogMscB3WbkgUauJiKdAF5PFUeQgaetqzf7QVFlmxzP2uOYD9kTyM
+	Ne2oYjAYUKS7Fbg4/wFfpNR2RQcYlaOv10tUGSUrwhiUDx27Fbp7TLSW4Rk7v/d12X5JJt1M/Br
+	JzW/ADKS+1UlOG0sL7bmXLpNdcnLZRCS73o0i1tDHgaa0MSGrlVZrJd/L3vtwxiFA7HRuzUUgJP
+	stCocGBJc+q0y6YvGjvz+mFQ0JiEJaDn6iSwgx2KBMrFkd1sdwxAD1U=
+X-Google-Smtp-Source: AGHT+IESfTm4RoUHFqxbeSvl1MMbpOP8xDKxRWMnDQTPhoCmLYL/Nciczkpwk4voGMuKlOVx9Z7g9A==
+X-Received: by 2002:a05:6000:4021:b0:391:38a5:efa with SMTP id ffacd0b85a97d-39c120e07e4mr15863646f8f.23.1743664848526;
+        Thu, 03 Apr 2025 00:20:48 -0700 (PDT)
+Received: from localhost (109-81-82-69.rct.o2.cz. [109.81.82.69])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-43ec1663053sm13180535e9.15.2025.04.03.00.20.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Apr 2025 00:20:48 -0700 (PDT)
+Date: Thu, 3 Apr 2025 09:20:46 +0200
+From: Michal Hocko <mhocko@suse.com>
+To: Shakeel Butt <shakeel.butt@linux.dev>
+Cc: Dave Chinner <david@fromorbit.com>, Yafang Shao <laoar.shao@gmail.com>,
+	Harry Yoo <harry.yoo@oracle.com>, Kees Cook <kees@kernel.org>,
+	joel.granados@kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+	linux-mm@kvack.org, Vlastimil Babka <vbabka@suse.cz>
+Subject: Re: [PATCH] proc: Avoid costly high-order page allocations when
+ reading proc files
+Message-ID: <Z-42znN1q7dVNM-h@tiehlicka>
+References: <20250401073046.51121-1-laoar.shao@gmail.com>
+ <3315D21B-0772-4312-BCFB-402F408B0EF6@kernel.org>
+ <Z-y50vEs_9MbjQhi@harry>
+ <CALOAHbBSvMuZnKF_vy3kGGNOCg5N2CgomLhxMxjn8RNwMTrw7A@mail.gmail.com>
+ <Z-0gPqHVto7PgM1K@dread.disaster.area>
+ <Z-0sjd8SEtldbxB1@tiehlicka>
+ <Z-2pSF7Zu0CrLBy_@dread.disaster.area>
+ <b7qr6djsicpkecrkjk6473btzztfrvxifiy34u2vdb4cp5ktjf@lvg3rtwrbmsx>
+ <Z-3i1wATGh6vI8x8@dread.disaster.area>
+ <7gmvaxj5hpd7aal4xgcis7j7jicwxtlaqjatshrwrorit3jwn6@67j2mc6itkm6>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v20 09/10] drm/shmem-helper: Switch
- drm_gem_shmem_vmap/vunmap to use pin/unpin
-To: Boris Brezillon <boris.brezillon@collabora.com>,
- Dmitry Osipenko <dmitry.osipenko@collabora.com>
-Cc: David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Gerd Hoffmann <kraxel@redhat.com>, Qiang Yu <yuq825@gmail.com>,
- Steven Price <steven.price@arm.com>, Frank Binns <frank.binns@imgtec.com>,
- Matt Coster <matt.coster@imgtec.com>, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, kernel@collabora.com
-References: <20250322212608.40511-1-dmitry.osipenko@collabora.com>
- <20250322212608.40511-10-dmitry.osipenko@collabora.com>
- <ea4f4059-7748-4bfd-9205-8e95222144da@suse.de>
- <710cdbd4-2c6e-48b7-b12b-972ab6d12abf@collabora.com>
- <20250402152102.01d9cfee@collabora.com>
-Content-Language: en-US
-From: Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
- AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
- AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
- lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
- U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
- vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
- 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
- j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
- T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
- 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
- GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
- hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
- EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
- C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
- yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
- SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
- Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
- 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
-In-Reply-To: <20250402152102.01d9cfee@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: C5B532111F
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-0.998];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[15];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	RCVD_TLS_ALL(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[gmail.com,ffwll.ch,linux.intel.com,kernel.org,amd.com,redhat.com,arm.com,imgtec.com,lists.freedesktop.org,vger.kernel.org,collabora.com];
-	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:mid]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -4.51
-X-Spam-Flag: NO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7gmvaxj5hpd7aal4xgcis7j7jicwxtlaqjatshrwrorit3jwn6@67j2mc6itkm6>
 
-Hi
+On Wed 02-04-25 22:05:57, Shakeel Butt wrote:
+> On Thu, Apr 03, 2025 at 12:22:31PM +1100, Dave Chinner wrote:
+> > On Wed, Apr 02, 2025 at 04:10:06PM -0700, Shakeel Butt wrote:
+> > > On Thu, Apr 03, 2025 at 08:16:56AM +1100, Dave Chinner wrote:
+> > > > On Wed, Apr 02, 2025 at 02:24:45PM +0200, Michal Hocko wrote:
+> > > > > On Wed 02-04-25 22:32:14, Dave Chinner wrote:
+> > > > > > Have a look at xlog_kvmalloc() in XFS. It implements a basic
+> > > > > > fast-fail, no retry high order kmalloc before it falls back to
+> > > > > > vmalloc by turning off direct reclaim for the kmalloc() call.
+> > > > > > Hence if the there isn't a high-order page on the free lists ready
+> > > > > > to allocate, it falls back to vmalloc() immediately.
+> > > > > > 
+> > > > > > For XFS, using xlog_kvmalloc() reduced the high-order per-allocation
+> > > > > > overhead by around 80% when compared to a standard kvmalloc()
+> > > > > > call. Numbers and profiles were documented in the commit message
+> > > > > > (reproduced in whole below)...
+> > > > > 
+> > > > > Btw. it would be really great to have such concerns to be posted to the
+> > > > > linux-mm ML so that we are aware of that.
+> > > > 
+> > > > I have brought it up in the past, along with all the other kvmalloc
+> > > > API problems that are mentioned in that commit message.
+> > > > Unfortunately, discussion focus always ended up on calling context
+> > > > and API flags (e.g. whether stuff like GFP_NOFS should be supported
+> > > > or not) no the fast-fail-then-no-fail behaviour we need.
+> > > > 
+> > > > Yes, these discussions have resulted in API changes that support
+> > > > some new subset of gfp flags, but the performance issues have never
+> > > > been addressed...
 
-Am 02.04.25 um 15:21 schrieb Boris Brezillon:
-> On Wed, 2 Apr 2025 15:58:55 +0300
-> Dmitry Osipenko <dmitry.osipenko@collabora.com> wrote:
->
->> On 4/2/25 15:47, Thomas Zimmermann wrote:
->>> Hi
->>>
->>> Am 22.03.25 um 22:26 schrieb Dmitry Osipenko:
->>>> The vmapped pages shall be pinned in memory and previously get/
->>>> put_pages()
->>>> were implicitly hard-pinning/unpinning the pages. This will no longer be
->>>> the case with addition of memory shrinker because pages_use_count > 0
->>>> won't
->>>> determine anymore whether pages are hard-pinned (they will be soft-
->>>> pinned),
->>>> while the new pages_pin_count will do the hard-pinning. Switch the
->>>> vmap/vunmap() to use pin/unpin() functions in a preparation of addition
->>>> of the memory shrinker support to drm-shmem.
->>> I've meanwhile rediscovered this patch and I'm sure this is not correct.
->>> Vmap should not pin AFAIK. It is possible to vmap if the buffer has been
->>> pinned, but that's not automatic.  For other vmaps it is necessary to
->>> hold the reservation lock to prevent the buffer from moving.
-> Hm, is this problematic though? If you want to vmap() inside a section
-> that's protected by the resv lock, you can
->
-> - drm_gem_shmem_vmap_locked()
-> - do whatever you need to do with the vaddr,
-> - drm_gem_shmem_vunmap_locked()
->
-> and the {pin,page_use}_count will be back to their original values.
-> Those are just ref counters, and I doubt the overhead of
-> incrementing/decrementing them makes a difference compared to the heavy
-> page-allocation/vmap operations...
+I, at least, was not aware of the performance aspect. We are trying to
+make kvmalloc as usable as possible to prevent its open coded variants
+to grow in subystems.
 
-I once tried to add pin as part of vmap, so that pages stay in place. 
-Christian was very clear about not doing this. I found this made a lot 
-of sense: vmap means "make the memory available to the CPU". The memory 
-location doesn't matter much here. Pin means something like "make the 
-memory available to the GPU". But which GPU depends on the caller: calls 
-via GEM refer to the local GPU, calls via dma-buf usually refer to the 
-importer's GPU. That GPU uncertainty makes pin problematic already.
+> > > > > kvmalloc currently doesn't support GFP_NOWAIT semantic but it does allow
+> > > > > to express - I prefer SLAB allocator over vmalloc.
+> > > > 
+> > > > The conditional use of __GFP_NORETRY for the kmalloc call is broken
+> > > > if we try to use __GFP_NOFAIL with kvmalloc() - this causes the gfp
+> > > > mask to hold __GFP_NOFAIL | __GFP_NORETRY....
 
-In your case, vmap an pin both intent to hold the shmem pages in memory. 
-They might be build on top of the same implementation, but one should 
-not be implemented with the other because of their different meanings.
+Correct.
 
-More generally speaking, I've meanwhile come to the conclusion that pin 
-should not even exist in the GEM interface. It's an internal operation 
-of TTM and reveals too much about what happens within the 
-implementation. Instead GEM should be free to move buffers around. 
-Dma-buf importers should only tell exporters to make buffers available 
-to them, but not how to do this. AFAIK that's what dma-buf's 
-attach/detach is for.
+> > > > We have a hard requirement for xlog_kvmalloc() to provide
+> > > > __GFP_NOFAIL semantics.
+> > > > 
+> > > > IOWs, we need kvmalloc() to support kmalloc(GFP_NOWAIT) for
+> > > > performance with fallback to vmalloc(__GFP_NOFAIL) for
+> > > > correctness...
 
-Best regards
-Thomas
+Understood.
 
+> > > Are you asking the above kvmalloc() semantics just for xfs or for all
+> > > the users of kvmalloc() api? 
+> > 
+> > I'm suggesting that fast-fail should be the default behaviour for
+> > everyone.
+> > 
+> > If you look at __vmalloc() internals, you'll see that it turns off
+> > __GFP_NOFAIL for high order allocations because "reclaim is too
+> > costly and it's far cheaper to fall back to order-0 pages".
+> > 
+> > That's pretty much exactly what we are doing with xlog_kvmalloc(),
+> > and what I'm suggesting that kvmalloc should be doing by default.
+> > 
+> > i.e. If it's necessary for mm internal implementations to avoid
+> > high-order reclaim when there is a faster order-0 allocation
+> > fallback path available for performance reasons, then we should be
+> > using that same behaviour anywhere optimisitic high-order allocation
+> > is used as an optimisation for those same performance reasons.
+> > 
+> 
+> I am convinced and I think Michal is onboard as well for the above. At
+> least we should try and see how it goes.
+
+If we find out that this doesn't really work because a fragmentation
+of page blocks is a real problem then we might need to reconsider this.
+
+> > The overall __GFP_NOFAIL requirement is something XFS needs, but it
+> > is most definitely not something that should be enabled by default.
+> > However, it needs to work with kvmalloc(), and it is not possible to
+> > do so right now.
+> 
+> After the kmalloc(GFP_NOWAIT) being default in kvmalloc(), what remains
+> to support kvmalloc(__GFP_NOFAIL)? (Yafang mentioned vmap_huge)
+
+We already do support kvmalloc(__GFP_NOFAIL) since 9376130c390a7 IIRC.
 
 -- 
---
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Frankenstrasse 146, 90461 Nuernberg, Germany
-GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
-HRB 36809 (AG Nuernberg)
-
+Michal Hocko
+SUSE Labs
