@@ -1,81 +1,91 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 300F624EF7E
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 14:24:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98A5F24EA95
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 14:25:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743690290; cv=none; b=i5LtSETvFlYGJQRtL38AsTAf6QQIQFQOlN9kciWC1+oDfjZN79W6obLpdixnBFrWqRe9uXgLx+lb7BcM81SMPbu6rezqhDp5YHqwC+M8OV7yarm9v/1FRzyvW2aJsczz60mxfM2rbpgU1iiqseR4/KlDoGHRrVGiEoQvCEC95jI=
+	t=1743690315; cv=none; b=Uq7U+luK2nr5JDambkbobWOnmjlg6NlQsoztj9J/OyC2ByBFNedV8Fu1YnFrmUiPlxYJPhnw5KPz9OwToSqriY2fMrvYS964rpwiGfOzqCTHVGjd0M23djCqMOxPlEWT/W9ZXNvWFRpEtdHRhwKyFBB7h5ZUJwYXf+mIdRtM1uo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743690290; c=relaxed/simple;
-	bh=ULh4LiwYDnoWTct7omJfi80raYIjgsafQ/+mOn4NKcQ=;
+	s=arc-20240116; t=1743690315; c=relaxed/simple;
+	bh=tkMdYu9t5824/EU4dyTb0cxwDhM/gxde1CbSplGldzM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DudAV0YXawpGP0iMNcWYaZMjN4rK+Iu+A72nBL4HrMWq6Ybrz0EYnd9hYrTH6y1o/y8wYyBZi2hMFm/yjCuHvltpov7o6ySOJROZ4O5BZ/vXRDY1l8liSKyIFw+pCD3GT/vSvLuMfh8A1dZtHQGSCUG4QPnAdnJ3di1euyKWOkU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=GU8llk2h; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=udacb6Q2U0N4kltAFGkgtLmTCG/AvI/AzQWtE37n0l2HV5sGGqGqB2/MzPmtM3Xx8cLZCVAWAdVvp0CdgSgvJ4jKFIq6y6DwlgVhHd77Qhkbqu6TbQu6Lh7+5dAsZ+9Z3Y9erN9WHHpGPifi4tux/rhdBSGmJB9FcRY04Op80vI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ka40iZjP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="GU8llk2h"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36F36C4CEE7;
-	Thu,  3 Apr 2025 14:24:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1743690289;
-	bh=ULh4LiwYDnoWTct7omJfi80raYIjgsafQ/+mOn4NKcQ=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ka40iZjP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 908ADC4CEE3;
+	Thu,  3 Apr 2025 14:25:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743690315;
+	bh=tkMdYu9t5824/EU4dyTb0cxwDhM/gxde1CbSplGldzM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GU8llk2h+13k4nu1+zl+CXUhQiNV9YWOcz87Pe/dPRmmRRnFqHZ5jHh6KiIQboJ8D
-	 iLfaolKJY4mUybcQ3e0NWxAEU1NQ2usHqWtkmYiz4JR86duS3N8nF4sI0Ofzju4qiV
-	 wiaYvT05X7hp4HT1oFzzh7QriKh8tEgHs1KSGGYw=
-Date: Thu, 3 Apr 2025 15:23:22 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Raag Jadav <raag.jadav@intel.com>, david.m.ertman@intel.com,
-	ira.weiny@intel.com, lee@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] mfd: core: Support auxiliary device
-Message-ID: <2025040343-vascular-swung-f124@gregkh>
-References: <20250403110053.1274521-1-raag.jadav@intel.com>
- <2025040336-ethically-regulate-3594@gregkh>
- <Z-6YU24dhxF5PRaw@smile.fi.intel.com>
- <Z-6Y6lbLSbe46-uQ@smile.fi.intel.com>
+	b=ka40iZjPw89KP7aEPQCTzPyRorfgRmK7zTLjMQrT4UuOS8V2Bbk/H20fNhAlXnUvt
+	 mOAyIGNrj/h0x0BxRGyLZ3CLoNKMQ4UKu2PcRBnC98hblDubLwHjV5NTv/ZiQ2xggF
+	 bydhXqc2xYMsTTG5PBELGVSAomByAJbFYT1KsFupzIsBPw0MJ8YybS0T2xAOb2uYwU
+	 LHnoy8zABqx9FxwcvkcCzb+aWKu4BWGaQuzCpzq3Z2lG5GToYbBTt41AAD8bOZfF50
+	 Xjg49Bl0RfFtF77JKdgvgirBQlNJL/qgQFCxudletSKhQ+MJ76sO5fJBVD2pnuUgf1
+	 SGTkEH3ZqJ1fg==
+Date: Thu, 3 Apr 2025 17:25:06 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: David Woodhouse <dwmw2@infradead.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	"Sauerwein, David" <dssauerw@amazon.de>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	David Hildenbrand <david@redhat.com>, Marc Zyngier <maz@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mike Rapoport <rppt@linux.ibm.com>, Will Deacon <will@kernel.org>,
+	kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [RFC PATCH 3/3] mm: Implement for_each_valid_pfn() for
+ CONFIG_SPARSEMEM
+Message-ID: <Z-6aQjOB_aU4CEAp@kernel.org>
+References: <Z-vn-sMtNfwyJ9VW@kernel.org>
+ <20250402201841.3245371-1-dwmw2@infradead.org>
+ <20250402201841.3245371-3-dwmw2@infradead.org>
+ <Z-4phOInXZlxFwk9@kernel.org>
+ <e465ba32fb34b31eddb18890587960671b73234f.camel@infradead.org>
+ <380d9bff359150f67ca6e0468f99ee746c1abdea.camel@infradead.org>
+ <Z-6XexJWecbxnrmK@kernel.org>
+ <0d89238f3ad9444abfc905a79ff14388a61cf00d.camel@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <Z-6Y6lbLSbe46-uQ@smile.fi.intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <0d89238f3ad9444abfc905a79ff14388a61cf00d.camel@infradead.org>
 
-On Thu, Apr 03, 2025 at 05:19:22PM +0300, Andy Shevchenko wrote:
-> On Thu, Apr 03, 2025 at 05:16:51PM +0300, Andy Shevchenko wrote:
-> > On Thu, Apr 03, 2025 at 03:02:47PM +0100, Greg KH wrote:
-> > > On Thu, Apr 03, 2025 at 04:30:53PM +0530, Raag Jadav wrote:
-> 
-> ...
-> 
-> > > > 2. Should we allow auxiliary drivers to manage their own resources
-> > > >    (MEM, IO, IRQ etc)?
+On Thu, Apr 03, 2025 at 03:17:44PM +0100, David Woodhouse wrote:
+> On Thu, 2025-04-03 at 17:13 +0300, Mike Rapoport wrote:
+> >  
+> > > static inline bool first_valid_pfn(unsigned long *p_pfn)
+> > > {
+> > >  	unsigned long pfn = *p_pfn;
+> > >  	unsigned long nr = pfn_to_section_nr(pfn);
+> > >  	struct mem_section *ms;
 > > > 
-> > > The resources are all shared by the "parent" device, that's what makes
-> > > aux drivers work, they need to handle this as there is no unique way to
-> > > carve up the resources here.
+> > >  	rcu_read_lock_sched();
 > > > 
-> > > So I don't know how you would do this, sorry.
+> > >  	while (nr <= __highest_present_section_nr) {
+> > >  		ms = __pfn_to_section(pfn);
 > > 
-> > I think we should simply enforce the requirement that MFD on AUX bus must use
-> > regmap. This will solve the serialisation and common access to the resources.
+> > Maybe move the declaration here:
+> > 
+> >  	struct mem_section *ms = __pfn_to_section(pfn);
 > 
-> That said, make an additional API call like
+> Ack.
 > 
-> dev_mfd_add_aux_devices() which should enforce new infrastructure and convert
-> drivers one by one. Also with that you may add a warning to the existing (PCI)
-> drivers that are using old API
-> 
-> 	if (dev_is_pci(parent))
-> 		dev_warn(parent, "Uses old API, please switch to ...\n");
+> https://git.infradead.org/users/dwmw2/linux.git/shortlog/refs/heads/for_each_valid_pfn
 
-Don't add "warnings" like this if you aren't also going to actually
-convert the code.  Just convert it, otherwise you pester users with
-problems that they have no idea how to fix.
+Fine with me, keep the RB tag :)
 
-thanks,
 
-greg k-h
+-- 
+Sincerely yours,
+Mike.
