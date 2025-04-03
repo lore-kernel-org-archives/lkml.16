@@ -1,146 +1,169 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51CFB8828
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 02:32:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C424C8828;
+	Thu,  3 Apr 2025 02:33:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743647540; cv=none; b=VoxQ8G6Xm5vc8ibnuWThOg5aPvWR2Q6Sce8/Jqj99S2jSrvXMhPhSrOxD+rhNUZCI12G9U4aI+D9A5KyLcMZJam2rX/RwyxtdGOCLX4ruT2skCKmmxNVG44J5KAoSIVb/z/tIJJMNO+uSdSqof8Wr0CLy083EV04cL2vUXyLSb8=
+	t=1743647620; cv=none; b=dS0e2gCmXIa1D9ZKNZGU508Jb/8l8lXtvcMXo4L3NSNCl+IBca2i/ypuhje3AAukbX1In0CLPCcLCXvyvP2Ky74akdRfgAQOL9RZ8WM0NmFA/UH4eLYgX+pYVbYhLADNrGMGoOT9wITNz2exXbI6R6CrXnj68TWdfbBwjnsL7jw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743647540; c=relaxed/simple;
-	bh=xXnYZQ5jMf6nhqCdS6uW6efKNxrmzpOpJ2V1JKalSDM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=KUb4uFqmukFOlEkse4e3ogoxoc3Z4xxTIF3cT2eXP/p/1JJQ0Bmxf9q2ao3isCG66Q0Lg4xknkullv7OVZskCcRBmiV8AnCNMwlpV3t9o5MjKCU8fn+DpEiWgOcZDPprhkrInJAwxl1QRwAQ9sQ3azWpRM9dR8m+4bBrR2k8wEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FdCa/+Yi; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1743647620; c=relaxed/simple;
+	bh=mZEH9KP0rG4OJgz7xRS+8Enm0WcKmn8TTdTEu7MCrrg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GcKxKn385dir9OyuFpntU8YeKvPLK7ae02+pXedMtmR9iOftHDbmmfMGFY+ypCBt0UhJKS3qQ5sbSu3oygA2pGVjqU+fxSQS8cBFU53E4uo+yoEnnu8PPI8AbQHAVLnFi4BLAboVJkOtF/ZPsqTENBtYiArmzuVa5jr2aaewF+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=AKZC5Y+S; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FdCa/+Yi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743647539; x=1775183539;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=xXnYZQ5jMf6nhqCdS6uW6efKNxrmzpOpJ2V1JKalSDM=;
-  b=FdCa/+Yi141/bA5KiVOeCfQ8LKpmF15xbmm/YuvOiv43/plVsnFba+cF
-   3eUqvPUS/RCnrqYeb19uuZhBW310tpOd5so95PbFChtp0bwzmUd+/2efB
-   MnEDXOqMyABUpC631ZsQA+br+MuEcHKR3WcZnW7ldNSHiLfhgUElSAiNi
-   AkGEFKc5/jvJ6Bxo8WOIX2nZ++6Ih4mvqz9CVLCJ47IXzQthKsNXyYPLF
-   CwaDMdKo/wD3reUYj+I/dzr1dJhvSPntncPh388FitLKIJgPRA2XqTBgZ
-   x3uK11agpaSB6gld7YARvI+A+B/9+Us3DMbVBTeefPMMJaEBeOOkzWP85
-   w==;
-X-CSE-ConnectionGUID: qldafW34T7iXwHYJHPHlOg==
-X-CSE-MsgGUID: iyc5RDiNSdy7NriTU9lEVw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11392"; a="44746639"
-X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
-   d="scan'208";a="44746639"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 19:32:16 -0700
-X-CSE-ConnectionGUID: uimG9/XdQdWzJwA7doj0vg==
-X-CSE-MsgGUID: MMLPcXoOSV6oYTdKOJdZ9A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
-   d="scan'208";a="127368911"
-Received: from zhiquan-linux-dev.bj.intel.com ([10.238.156.102])
-  by fmviesa010.fm.intel.com with ESMTP; 02 Apr 2025 19:32:13 -0700
-From: Zhiquan Li <zhiquan1.li@intel.com>
-To: bhe@redhat.com,
-	vgoyal@redhat.com,
-	dyoung@redhat.com,
-	kirill.shutemov@linux.intel.com
-Cc: kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	zhiquan1.li@intel.com
-Subject: [PATCH v2 RESEND] crash: Export PAGE_UNACCEPTED_MAPCOUNT_VALUE to vmcoreinfo
-Date: Thu,  3 Apr 2025 11:08:01 +0800
-Message-Id: <20250403030801.758687-1-zhiquan1.li@intel.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="AKZC5Y+S"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=qfn0RHsgPDoPqoC1r7+j/kf0VdcV4uMNStpbKM8IwAg=; b=AKZC5Y+SClnmFFLkweM4OMgI7K
+	HFk3lR2DT3eHmAGjXiQkqsPTRFl8IIa2K+zdHV/u2CFhWM9C3qAC6h1DF5VZZ09OjqLmQm6HUMRlp
+	s73wgoTECsRocTd1n3lqIk1F1efFLj8XSUCbdHCN4fltV+56zmdoOiZtWGmnAg4uSHL9AaTvzKlhl
+	2/gal++M30IbdBzOoTOzvXRrSHZ4XyrWi/z5htDI8Px7MB21nGV48951WdBnYl/9TlKHW0NOGnU6i
+	fFk9bkeywPvhlJGjyW2P6cDlsyXP16+niO4gSW9kWzIn/Agjl4x0QcLbrZ11Pg586w2avpg3R0rk3
+	i+mUHy0Q==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1u0AOa-00CL1E-0C;
+	Thu, 03 Apr 2025 10:33:33 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Thu, 03 Apr 2025 10:33:32 +0800
+Date: Thu, 3 Apr 2025 10:33:32 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: Ard Biesheuvel <ardb@kernel.org>, linux-crypto@vger.kernel.org,
+	linux-kernel@vger.kernel.org, x86@kernel.org,
+	"Jason A. Donenfeld" <Jason@zx2c4.com>
+Subject: [PATCH] crypto: hash - Do not use shash in hard IRQs
+Message-ID: <Z-3zfJ5hRl3_tZxJ@gondor.apana.org.au>
+References: <20250402002420.89233-1-ebiggers@kernel.org>
+ <Z-yrf_9D2rV1Q136@gondor.apana.org.au>
+ <CAMj1kXEx__RLBriW0kVPrKnx6+DCpq8=6F-7Tmj2Us61gvGGaw@mail.gmail.com>
+ <CAMj1kXE-vo7E1U++4mAqDH2SXfc=sRZs8KganedJk5z0QF49NA@mail.gmail.com>
+ <Z-zzvXbjt3xzquXb@gondor.apana.org.au>
+ <20250402171930.GD1235@sol.localdomain>
+ <Z-3jkYNtZpTDtKGf@gondor.apana.org.au>
+ <20250403021453.GA2872965@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250403021453.GA2872965@google.com>
 
-On Intel TDX guest, unaccepted memory is unusable free memory which is
-not managed by buddy, until it's accepted by guest.  Before that, it
-cannot be accessed by the first kernel as well as the kexec'ed kernel.
-The kexec'ed kernel will skip these pages and fill in zero data for the
-reader of vmcore.
+On Thu, Apr 03, 2025 at 02:14:53AM +0000, Eric Biggers wrote:
+>
+> The thing I actually have more of a problem with is that you tend to start
+> making random API changes without any of the necessary prerequisites like
+> updating documentation, or adding debug assertions to catch violations of new
+> requirements.  You've already started removing the fallbacks from shash (commit
+> 3846c01d42526bc31), but neither of those things have been done.  So we're
+> currently in a weird state where the shash API is explicitly documented to work
+> in all contexts, but you've broken that.
 
-The dump tool like makedumpfile creates a page descriptor (size 24
-bytes) for each non-free page, including zero data page, but it will not
-create descriptor for free pages.  If it is not able to distinguish
-these unaccepted pages with zero data pages, a certain amount of space
-will be wasted in proportion (~1/170).  In fact, as a special kind of
-free page the unaccepted pages should be excluded, like the real free
-pages.
+The documentation is easy enough to fix.
 
-Export the page type PAGE_UNACCEPTED_MAPCOUNT_VALUE to vmcoreinfo, so
-that dump tool can identify whether a page is unaccepted.
+---8<---
+Update the documentation to be consistent with the fact that shash
+may not be used in hard IRQs.
 
-Link: https://lore.kernel.org/all/20240809114854.3745464-5-kirill.shutemov@linux.intel.com/
+Reported-by: Eric Biggers <ebiggers@kernel.org>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 
-Signed-off-by: Zhiquan Li <zhiquan1.li@intel.com>
-Reviewed-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-
----
-Vmcore size statistic of a freshly booted TD VM with different memory
-sizes:
-
-  VM.mem | Before  After
-  -------+----------------
-  512G   | ~4.9G   ~2.0G
-  256G   | ~2.0G   ~1.1G
-
-Most of changes are done by makedumpfile, but the prerequisite is kernel
-needs to export an indicator to identify unaccepted pages in vmcoreinfo.
-
-V2 RESEND note:
-- No changes on this, just rebasd to v6.14.
-
-V1: https://lore.kernel.org/all/20250103074941.3651765-1-zhiquan1.li@intel.com/
-
-Changes since V1:
-- Rebase to v6.14-rc5.
-- Added document into admin-guide/kdump/vmcoreinfo.rst per Dave's
-  suggestion.
-- Add Kirill's Reviewed-by tag.
----
- Documentation/admin-guide/kdump/vmcoreinfo.rst | 2 +-
- kernel/vmcore_info.c                           | 4 ++++
- 2 files changed, 5 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/admin-guide/kdump/vmcoreinfo.rst b/Documentation/admin-guide/kdump/vmcoreinfo.rst
-index 0f714fc945ac..3b47916f1856 100644
---- a/Documentation/admin-guide/kdump/vmcoreinfo.rst
-+++ b/Documentation/admin-guide/kdump/vmcoreinfo.rst
-@@ -331,7 +331,7 @@ PG_lru|PG_private|PG_swapcache|PG_swapbacked|PG_slab|PG_hwpoision|PG_head_mask|P
- Page attributes. These flags are used to filter various unnecessary for
- dumping pages.
- 
--PAGE_BUDDY_MAPCOUNT_VALUE(~PG_buddy)|PAGE_OFFLINE_MAPCOUNT_VALUE(~PG_offline)
-+PAGE_BUDDY_MAPCOUNT_VALUE(~PG_buddy)|PAGE_OFFLINE_MAPCOUNT_VALUE(~PG_offline)|PAGE_OFFLINE_MAPCOUNT_VALUE(~PG_unaccepted)
- -----------------------------------------------------------------------------
- 
- More page attributes. These flags are used to filter various unnecessary for
-diff --git a/kernel/vmcore_info.c b/kernel/vmcore_info.c
-index 1fec61603ef3..e066d31d08f8 100644
---- a/kernel/vmcore_info.c
-+++ b/kernel/vmcore_info.c
-@@ -210,6 +210,10 @@ static int __init crash_save_vmcoreinfo_init(void)
- 	VMCOREINFO_NUMBER(PAGE_HUGETLB_MAPCOUNT_VALUE);
- #define PAGE_OFFLINE_MAPCOUNT_VALUE	(PGTY_offline << 24)
- 	VMCOREINFO_NUMBER(PAGE_OFFLINE_MAPCOUNT_VALUE);
-+#ifdef CONFIG_UNACCEPTED_MEMORY
-+#define PAGE_UNACCEPTED_MAPCOUNT_VALUE	(PGTY_unaccepted << 24)
-+	VMCOREINFO_NUMBER(PAGE_UNACCEPTED_MAPCOUNT_VALUE);
-+#endif
- 
- #ifdef CONFIG_KALLSYMS
- 	VMCOREINFO_SYMBOL(kallsyms_names);
-
-base-commit: 38fec10eb60d687e30c8c6b5420d86e8149f7557
+diff --git a/include/crypto/hash.h b/include/crypto/hash.h
+index 58f9d3c9d006..5fde27039a06 100644
+--- a/include/crypto/hash.h
++++ b/include/crypto/hash.h
+@@ -847,7 +847,7 @@ static inline void *shash_desc_ctx(struct shash_desc *desc)
+  * cipher handle must point to a keyed message digest cipher in order for this
+  * function to succeed.
+  *
+- * Context: Any context.
++ * Context: Softirq or process context.
+  * Return: 0 if the setting of the key was successful; < 0 if an error occurred
+  */
+ int crypto_shash_setkey(struct crypto_shash *tfm, const u8 *key,
+@@ -864,7 +864,7 @@ int crypto_shash_setkey(struct crypto_shash *tfm, const u8 *key,
+  * crypto_shash_update and crypto_shash_final. The parameters have the same
+  * meaning as discussed for those separate three functions.
+  *
+- * Context: Any context.
++ * Context: Softirq or process context.
+  * Return: 0 if the message digest creation was successful; < 0 if an error
+  *	   occurred
+  */
+@@ -884,7 +884,7 @@ int crypto_shash_digest(struct shash_desc *desc, const u8 *data,
+  * directly, and it allocates a hash descriptor on the stack internally.
+  * Note that this stack allocation may be fairly large.
+  *
+- * Context: Any context.
++ * Context: Softirq or process context.
+  * Return: 0 on success; < 0 if an error occurred.
+  */
+ int crypto_shash_tfm_digest(struct crypto_shash *tfm, const u8 *data,
+@@ -902,7 +902,7 @@ int crypto_hash_digest(struct crypto_ahash *tfm, const u8 *data,
+  * caller-allocated output buffer out which must have sufficient size (e.g. by
+  * calling crypto_shash_descsize).
+  *
+- * Context: Any context.
++ * Context: Softirq or process context.
+  * Return: 0 if the export creation was successful; < 0 if an error occurred
+  */
+ int crypto_shash_export(struct shash_desc *desc, void *out);
+@@ -916,7 +916,7 @@ int crypto_shash_export(struct shash_desc *desc, void *out);
+  * the input buffer. That buffer should have been generated with the
+  * crypto_ahash_export function.
+  *
+- * Context: Any context.
++ * Context: Softirq or process context.
+  * Return: 0 if the import was successful; < 0 if an error occurred
+  */
+ int crypto_shash_import(struct shash_desc *desc, const void *in);
+@@ -929,7 +929,7 @@ int crypto_shash_import(struct shash_desc *desc, const void *in);
+  * operational state handle. Any potentially existing state created by
+  * previous operations is discarded.
+  *
+- * Context: Any context.
++ * Context: Softirq or process context.
+  * Return: 0 if the message digest initialization was successful; < 0 if an
+  *	   error occurred
+  */
+@@ -951,7 +951,7 @@ static inline int crypto_shash_init(struct shash_desc *desc)
+  *
+  * Updates the message digest state of the operational state handle.
+  *
+- * Context: Any context.
++ * Context: Softirq or process context.
+  * Return: 0 if the message digest update was successful; < 0 if an error
+  *	   occurred
+  */
+@@ -968,7 +968,7 @@ int crypto_shash_update(struct shash_desc *desc, const u8 *data,
+  * into the output buffer. The caller must ensure that the output buffer is
+  * large enough by using crypto_shash_digestsize.
+  *
+- * Context: Any context.
++ * Context: Softirq or process context.
+  * Return: 0 if the message digest creation was successful; < 0 if an error
+  *	   occurred
+  */
+@@ -985,7 +985,7 @@ int crypto_shash_final(struct shash_desc *desc, u8 *out);
+  * crypto_shash_update and crypto_shash_final. The parameters have the same
+  * meaning as discussed for those separate functions.
+  *
+- * Context: Any context.
++ * Context: Softirq or process context.
+  * Return: 0 if the message digest creation was successful; < 0 if an error
+  *	   occurred
+  */
 -- 
-2.25.1
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
