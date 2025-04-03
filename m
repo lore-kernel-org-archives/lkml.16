@@ -1,139 +1,108 @@
-Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0743E2E62BB
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 20:51:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5756F1F4626;
+	Thu,  3 Apr 2025 20:52:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743713510; cv=none; b=f1kQiUvLvJf7ZbHLqIw+ZMOHwo7zHoMFb1k/uJHfoAdc0dsC4FHWyyQT6h9NCUyaEHmG0SFKsrGuhQ+1moW1o608c00CMzKXxPt0C5dO+2UbHOzWLNSBqbWhUquePxO/u51XocAaR4MdCq+L+RaMJWRtnKVr28Z4sqKhfm3mozY=
+	t=1743713548; cv=none; b=bPWmZjl8qOV2n5sJG15RBkB22hBwn/mms8xU2X7T59KXgADYC7ZdeZFFcJC8AUccFcSWb+gFKk6pbXwCqFPtRKkm59OlUPNr3FY7sHRHmZWiFRr5nKl8gjJmZoLPGb8sRApIcVQDL8Mfqnx7Ln/wI1dt0UZiWjwBJ1sqZMvk3Yc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743713510; c=relaxed/simple;
-	bh=qR0BN8zygPj833XKcZhKGDt/M7Fne6j13JD9702Jrqs=;
+	s=arc-20240116; t=1743713548; c=relaxed/simple;
+	bh=wzaX8x8CN4VuzMeZu7Ro/jNwfZNPTLEs3cKtF1c9NmQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Sp7a7dTQ9PrVuJ6IglWXyzR23z65XE5K371mlVfRyZl2POTJUMwCGN9SB6FVn7IAZTx6cYrf0GgYN64TcE0lj6+W/Q66dEie7NdR1+MzQC01NCwBgWJE3u8NJpGpss2XN3sHuZEZp4PJxi9/mI9GGud9rwfeMeZ2ExQ+GQxetkE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=cMkY1rnL; arc=none smtp.client-ip=91.218.175.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 In-Reply-To:Content-Type; b=KsLRKYJLOubPS4p14jggGylLNzxqMxYojhE97FO4j9JM0UFC2X1HfknCa69eGw/nEC6M9eLWBVb691vn/VNSmz/LkFQ4gHgMJcP7+2GXbo4dVZklXawp6zw+CYFYIzHVAvyI8lt5wlmrTfm0oJdCtaI8dvuH4kruLEne9QcWOpI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=RMaebZs5; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="cMkY1rnL"
-Message-ID: <528bb5d2-e0ce-4125-b11b-8b873230b0fc@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1743713505;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jqnZi9xNGdDH/jnXjuRYKr/qyvU7hVYZoGPox9WqvZQ=;
-	b=cMkY1rnLjoCSutN0LnPrIIbeiylbgHUF5siqjvtpqrEHhbFlfd8tJGNtFZasaXQ/yxzbhW
-	rkY68sQU1f29x398O13gAAraIgukeEYGwwK/Dl+zcdHn8UgLAL9iQK0jEE8/veZde+0LEZ
-	BTBjSb6S0sqhRd2HfKeRKtiYSgY0NEk=
-Date: Thu, 3 Apr 2025 16:51:39 -0400
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="RMaebZs5"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43690d4605dso9531525e9.0;
+        Thu, 03 Apr 2025 13:52:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20230601; t=1743713544; x=1744318344; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Dh1lmyVMoTxI6QhxvGlPI3b4b7IHb16ssKSrLJcEUZk=;
+        b=RMaebZs5YH+Yl3fSLOl3g5eSmBiH7D+4vNquMC3HL23N4iPz+M5WgqYt6Q8Vbzpjhm
+         Kq2QntN+IwJnXyUU4rqvighLnppep9DtrDwPypdCoFiD1VSMxD6fSc1RhsC0GSzrDIRX
+         PtcMWf0F01OhB7+ZYTg6fehVc2CRliw/eyzC+pgpqhRm1QejoOXRC38nlhn6KWxQbSAz
+         suLTrgkr7OuXbqnMEuGfTA0pBdgpBtnJaEffRq8WbkxAIC/fNRQXO9PplmYJIuQpT1BS
+         PDnsseg0p5/CnYhwzVj/N60T8JC5Kf3yI7qDRhBFg1eUmTmR6rvP6xdp4aq/uhSGWe8L
+         vrgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743713544; x=1744318344;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Dh1lmyVMoTxI6QhxvGlPI3b4b7IHb16ssKSrLJcEUZk=;
+        b=p98xcRzMjatTFXK00mUs/uVlhsFxYSDLZEFLGFeslIorJcCjeC2W8kq7Y9gn2MqNo4
+         DQwL5mChchduGBMjGQNat684kNhkTxL3llz04TeQqLsjK2FTlqR3UC9CtHpVNVvBqlfn
+         oExWFfRFJuZYUdXdx6omCcFc/dupx6MKb3FjpFHz982VAXD18J8/Ih7k32El7DEbLyyU
+         EuWi6fqjiWxp2o0Pnf2DdMEqqvVzljlzRI5AyJxQksSWrh+E4KDLRogySRd7oC/hMNbN
+         ce/CKSGrnG+lEwSh9EL+40k10euArQol3aOTFUIIW1oQUn3/Yd/MTJMCeR9mMrjcZgie
+         rjGg==
+X-Forwarded-Encrypted: i=1; AJvYcCUpQatugA09+Hcpiue//6S3lU0xs9YEWI8/z5cDsNPZUXRjmVkXpSiN2TPsh0khG3+9fcSGSn6I@vger.kernel.org, AJvYcCUulv1LyCcgtgMdq4U46ZWeUykPRYlejhXZsXWRAIhdqu30btDsrM1HExgQw2W1PkZVTJyQTGFJgX0uDYc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyLkDGYd4DvyOl3JCVyFJAVN/C35PvGtr4d/P2kaWt8UAmV7MU5
+	ccOONw8ajTTdFQdE+YR1rlupZqVG31fm4YiDami6exRkJQ/0Ltg=
+X-Gm-Gg: ASbGncuXUeXp5CYFiEbpsVWQFciYcsg58G8+QpB4sC/c4gHtJzyesShMk/hrzJ29IDK
+	Lo97+Gx96crmoy/mDOdsQoR+XNrsAGDeVFwT1Mw9UV8Zkr2oL7+y7gywqdM3hSdACwfxmS3qcKo
+	601rIswHX27huxJd7uvEpY+TvSuNyN4Z0yMe/IGurG/hAIxkgJKq/WJ45IQXeidfwIlvDN/KT8o
+	wqAtvxWthMyYtw8fN5BRStprHgbizA6SCNPpSzUFc0weT/s/C5HYkzegZAQQEsr5/UrE+p+upj4
+	LIHuRTzNlsaXrygLeemFU/KDxwftMnLZXMj5a1JlqfdDWC4yUWnBqH/fN/x0gSXdWX6jB8ZRut5
+	dZmWZOnBpoM1sCTfGy+czdgI=
+X-Google-Smtp-Source: AGHT+IFKoqfuumt404ay/WdLI8M3vO1YnKQYh/NFzH+vQ/dp43SsSpIIC6flE8Gw/mHBQqDnya+SQg==
+X-Received: by 2002:a05:600c:510d:b0:43d:2230:303b with SMTP id 5b1f17b1804b1-43ecf9c3e5emr3445025e9.20.1743713544422;
+        Thu, 03 Apr 2025 13:52:24 -0700 (PDT)
+Received: from [192.168.1.3] (p5b2ac393.dip0.t-ipconnect.de. [91.42.195.147])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c30226acfsm2618227f8f.88.2025.04.03.13.52.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Apr 2025 13:52:23 -0700 (PDT)
+Message-ID: <0d22ae96-d1ba-4925-88fc-3a225743e468@googlemail.com>
+Date: Thu, 3 Apr 2025 22:52:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [RFC net-next PATCH 07/13] net: pcs: Add Xilinx PCS driver
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: netdev@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S . Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, linux-kernel@vger.kernel.org,
- Christian Marangi <ansuelsmth@gmail.com>, upstream@airoha.com,
- Heiner Kallweit <hkallweit1@gmail.com>, Michal Simek <michal.simek@amd.com>,
- Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>,
- Robert Hancock <robert.hancock@calian.com>,
- linux-arm-kernel@lists.infradead.org
-References: <20250403181907.1947517-1-sean.anderson@linux.dev>
- <20250403181907.1947517-8-sean.anderson@linux.dev>
- <Z-7vIbvtjIGS5hzr@shell.armlinux.org.uk>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Sean Anderson <sean.anderson@linux.dev>
-In-Reply-To: <Z-7vIbvtjIGS5hzr@shell.armlinux.org.uk>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Betterbird (Windows)
+Subject: Re: [PATCH 6.13 00/23] 6.13.10-rc1 review
+Content-Language: de-DE
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250403151622.273788569@linuxfoundation.org>
+From: Peter Schneider <pschneider1968@googlemail.com>
+In-Reply-To: <20250403151622.273788569@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 4/3/25 16:27, Russell King (Oracle) wrote:
-> On Thu, Apr 03, 2025 at 02:19:01PM -0400, Sean Anderson wrote:
->> +static int xilinx_pcs_validate(struct phylink_pcs *pcs,
->> +			       unsigned long *supported,
->> +			       const struct phylink_link_state *state)
->> +{
->> +	__ETHTOOL_DECLARE_LINK_MODE_MASK(xilinx_supported) = { 0 };
->> +
->> +	phylink_set_port_modes(xilinx_supported);
->> +	phylink_set(xilinx_supported, Autoneg);
->> +	phylink_set(xilinx_supported, Pause);
->> +	phylink_set(xilinx_supported, Asym_Pause);
->> +	switch (state->interface) {
->> +	case PHY_INTERFACE_MODE_SGMII:
->> +		/* Half duplex not supported */
->> +		phylink_set(xilinx_supported, 10baseT_Full);
->> +		phylink_set(xilinx_supported, 100baseT_Full);
->> +		phylink_set(xilinx_supported, 1000baseT_Full);
->> +		break;
->> +	case PHY_INTERFACE_MODE_1000BASEX:
->> +		phylink_set(xilinx_supported, 1000baseX_Full);
->> +		break;
->> +	case PHY_INTERFACE_MODE_2500BASEX:
->> +		phylink_set(xilinx_supported, 2500baseX_Full);
->> +		break;
->> +	default:
->> +		return -EINVAL;
->> +	}
->> +
->> +	linkmode_and(supported, supported, xilinx_supported);
->> +	return 0;
-> 
-> You can not assume that an interface mode implies any particular media.
-> For example, you can not assume that just because you have SGMII, that
-> the only supported media is BaseT. This has been a fundamental principle
-> in phylink's validation since day one.
-> 
-> Phylink documentation for the pcs_validate() callback states:
-> 
->  * Validate the interface mode, and advertising's autoneg bit, removing any
->  * media ethtool link modes that would not be supportable from the supported
->  * mask. Phylink will propagate the changes to the advertising mask. See the
->  * &struct phylink_mac_ops validate() method.
-> 
-> and if we look at the MAC ops validate (before it was removed):
-> 
-> - * Clear bits in the @supported and @state->advertising masks that
-> - * are not supportable by the MAC.
-> - *
-> - * Note that the PHY may be able to transform from one connection
-> - * technology to another, so, eg, don't clear 1000BaseX just
-> - * because the MAC is unable to BaseX mode. This is more about
-> - * clearing unsupported speeds and duplex settings. The port modes
-> - * should not be cleared; phylink_set_port_modes() will help with this.
-> 
-> PHYs can and do take SGMII and provide both BaseT and BaseX or BaseR
-> connections. A PCS that is not directly media facing can not dictate
-> the link modes.
-> 
+Am 03.04.2025 um 17:20 schrieb Greg Kroah-Hartman:
+> This is the start of the stable review cycle for the 6.13.10 release.
+> There are 23 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 
-OK, how about this:
+Builds, boots and works on my 2-socket Ivy Bridge Xeon E5-2697 v2 server. No dmesg 
+oddities or regressions found.
 
-static int xilinx_pcs_validate(struct phylink_pcs *pcs,
-			       unsigned long *supported,
-			       const struct phylink_link_state *state)
-{
-	__ETHTOOL_DECLARE_LINK_MODE_MASK(xilinx_supported) = { 0 };
-	unsigned long caps = phy_caps_from_interface(state->interface);
+Tested-by: Peter Schneider <pschneider1968@googlemail.com>
 
-	phylink_set_port_modes(xilinx_supported);
-	phylink_set(xilinx_supported, Autoneg);
-	phylink_set(xilinx_supported, Pause);
-	phylink_set(xilinx_supported, Asym_Pause);
-	/* Half duplex not supported */
-	caps &= ~(LINK_CAPA_10HD | LINK_CAPA_100HD | LINK_CAPA_1000HD);
-	phy_caps_linkmodes(caps, xilinx_supported);
-	linkmode_and(supported, supported, xilinx_supported);
-	return 0;
-}
 
---Sean
+Beste Grüße,
+Peter Schneider
+
+-- 
+Climb the mountain not to plant your flag, but to embrace the challenge,
+enjoy the air and behold the view. Climb it so you can see the world,
+not so the world can see you.                    -- David McCullough Jr.
+
+OpenPGP:  0xA3828BD796CCE11A8CADE8866E3A92C92C3FF244
+Download: https://www.peters-netzplatz.de/download/pschneider1968_pub.asc
+https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@googlemail.com
+https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@gmail.com
