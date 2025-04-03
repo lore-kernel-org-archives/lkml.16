@@ -1,39 +1,39 @@
 Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 533A124339C
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 09:19:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5378B24503B
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 09:19:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743671968; cv=none; b=N0JnbN/bDCD2+irjYaNuLG2Z0q1SqgjcHZmk13oHELuYPW1QjtyrqYZ0zQDHDfDzhlBxAZ8z8kBvjilgmKhDLDJWYLDcxs5ZWxAaFrmNB7pfhYqrt8cpmHZtsb9mcSVvskzA7f7/BHfcZIeE3rY2+Czod4xAoyaoF/JwV4rOt9Y=
+	t=1743671971; cv=none; b=WmI/qp/1waihGqMxiurBb/rd2EDYjLnwEgQ0IkM3rstK0yByefTWXxqwOVLoU0V+Da1e8ElFtFpbggIPPcRbB3W2kbsZ48v60PfKdfdJ0QxqJCFqycsjxlHCPEl85MHrNVeNyo5QKe7ySOv9+uLoFbq4LbVimJY4M7P5uw0/tNQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743671968; c=relaxed/simple;
-	bh=6Zhe0I2iQgt6PlnRBjQcmFf1X5c4D+JcK/hYTI0doQg=;
+	s=arc-20240116; t=1743671971; c=relaxed/simple;
+	bh=I7YVCLQ23ahjblB/aT+agncYGkwKeWoXWho9lG8Z2+g=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=IvhhK8lVP5RksDMFoEUpGvAa3cCvwJFzPhqNOMXFGfDIL6FWUTFtu+LmQbCJS/hCuwTdH8d68wlsawouaC8RFBOs21VhxyT/Tw/epWfWMQWk/HaiQFNvLu8PElSqiP/Intr4rcS9N0j8+0m/hqfvksMX2WK2wb/93YlHzNlO9vs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=hYGsM1cL; arc=none smtp.client-ip=217.70.183.200
+	 In-Reply-To:To:Cc; b=QzxW9H1PqAjTK9gYNNjlKlJ5263Mr+Mx9LnW4bMFaGlhgi89D4BDw8s5y3GFjd3vT/tG05JxXdohoVnXPSeotFLNEKDGwSXLJoMKYO5p4INPtjlQ+V7zjw8J+Xe85y7oy3CZImy+hwyZEheG3SsNZ16WEWWSq79HHhJZjQuuv4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=pu/Tya8I; arc=none smtp.client-ip=217.70.183.200
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="hYGsM1cL"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 7595543230;
-	Thu,  3 Apr 2025 09:19:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="pu/Tya8I"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 8851B43229;
+	Thu,  3 Apr 2025 09:19:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1743671964;
+	t=1743671967;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=DgbyTBEil3THxolEwGq86sbK1ICKDQIFcTImL0o1a7c=;
-	b=hYGsM1cL3jBqyCg8AGga4H/uHGCcNVx/RvMOv1iijTh6PAHH4Ryp2p5on+fNW8Z5KOthSy
-	nn2r8+L4KUqw8Gxak9T/445FxAObiOs0Qf2jVA+DnWIc0alvFcqFM4QstJkqv7oYnwa2+p
-	RbiEp4mQqwBAV8qEnHNUpVHsySk8KSEMxQg4Kg9LYYbimfA5DQldBnt6s3OqnlYmzSWHTD
-	UMonCAtWHFMQ4rg9cK7MfhfVv5sEkQq8mXPs1WA7Y9Y8sj2o1CPaXGEyHhDLflE6eaE1H+
-	oJgCcNVLL6nsB+F2egYRcHaLoMVcxtd3DyCA4m6JeYMOzhSz9+vOvtSz3aDyPQ==
+	bh=r6F19xsrfcjvm1+Kgpchw0zwnGPEmUts0SlL1DoOvE8=;
+	b=pu/Tya8ILhoHkxd9Zqsc/L/6AfOAHS4LvxdjmcT+MBWnBFBPoOvBq6bbwtq7LbvQLehxKe
+	Mv/aYZ4/EvmXDlCu4M/tpN2MogrgIRmASFFXdXX3499YAFFrsIHqc5EJXBXkLpJlXciEzo
+	b6yG06K292iGZavWKpL+FsSLxTFo6nnul4PUHr/2+OaIRo0h3pGpfihiolE8B0ox9+Z9zl
+	y6XPzCmWdVfU+m+n9On/s2rm5oe1yJxC1OUrNEnzTXm0E02XqiZInEaO2TpAe9DaGFEDiX
+	rzu6bNCpK9LzmdGWNhF98gUwBmYJ0FYk+wMa9H6lJxolu8FRuoZ0/cWsLOZdUg==
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Date: Thu, 03 Apr 2025 11:19:13 +0200
-Subject: [PATCH v2 03/19] mtd: spinand: Use more specific naming for the
- read ID op
+Date: Thu, 03 Apr 2025 11:19:15 +0200
+Subject: [PATCH v2 05/19] mtd: spinand: Use more specific naming for the
+ erase op
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,7 +42,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250403-winbond-6-14-rc1-octal-v2-3-7846bd88fe83@bootlin.com>
+Message-Id: <20250403-winbond-6-14-rc1-octal-v2-5-7846bd88fe83@bootlin.com>
 References: <20250403-winbond-6-14-rc1-octal-v2-0-7846bd88fe83@bootlin.com>
 In-Reply-To: <20250403-winbond-6-14-rc1-octal-v2-0-7846bd88fe83@bootlin.com>
 To: Richard Weinberger <richard@nod.at>, 
@@ -66,41 +66,41 @@ naming, followed by DTR operations. Soon we might see octal
 and even octal DTR operations as well (including the opcode byte).
 
 Let's clarify what the macro really means by describing the expected bus
-topology in the read ID macro name.
+topology in the erase macro name.
 
-Reviewed-by: Tudor Ambarus <tudor.ambarus@linaro.org>
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Reviewed-by: Tudor Ambarus <tudor.ambarus@linaro.org>
 ---
  drivers/mtd/nand/spi/core.c | 2 +-
  include/linux/mtd/spinand.h | 2 +-
  2 files changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/mtd/nand/spi/core.c b/drivers/mtd/nand/spi/core.c
-index bbf0048104aac86e90b0706793db8503c8fc2a3b..cde7f0f08c1e45106ebba3b027b620fb8bb7cc51 100644
+index b6c0993206ebab1dcee715ea6de33efe7d5af3a2..1959e8d9c64be004c71a0d6ac6454fde08e708fa 100644
 --- a/drivers/mtd/nand/spi/core.c
 +++ b/drivers/mtd/nand/spi/core.c
-@@ -573,7 +573,7 @@ static int spinand_wait(struct spinand_device *spinand,
- static int spinand_read_id_op(struct spinand_device *spinand, u8 naddr,
- 			      u8 ndummy, u8 *buf)
+@@ -529,7 +529,7 @@ static int spinand_erase_op(struct spinand_device *spinand,
  {
--	struct spi_mem_op op = SPINAND_READID_OP(
-+	struct spi_mem_op op = SPINAND_READID_1S_1S_1S_OP(
- 		naddr, ndummy, spinand->scratchbuf, SPINAND_MAX_ID_LEN);
- 	int ret;
+ 	struct nand_device *nand = spinand_to_nand(spinand);
+ 	unsigned int row = nanddev_pos_to_row(nand, pos);
+-	struct spi_mem_op op = SPINAND_BLK_ERASE_OP(row);
++	struct spi_mem_op op = SPINAND_BLK_ERASE_1S_1S_0_OP(row);
  
+ 	return spi_mem_exec_op(spinand->spimem, &op);
+ }
 diff --git a/include/linux/mtd/spinand.h b/include/linux/mtd/spinand.h
-index a69feaec711b585b1fd95d8a699be9230c13c324..47c8c148a019396134ddd2aa3f5c6ddd039a4af6 100644
+index a9e2500d941ecd68891c5dd324944fc8950f1dba..09f374d2a27c30a2b1334c2ef2c56a93f6726c56 100644
 --- a/include/linux/mtd/spinand.h
 +++ b/include/linux/mtd/spinand.h
-@@ -32,7 +32,7 @@
+@@ -50,7 +50,7 @@
  		   SPI_MEM_OP_NO_DUMMY,					\
- 		   SPI_MEM_OP_NO_DATA)
+ 		   SPI_MEM_OP_DATA_IN(1, valptr, 1))
  
--#define SPINAND_READID_OP(naddr, ndummy, buf, len)			\
-+#define SPINAND_READID_1S_1S_1S_OP(naddr, ndummy, buf, len)		\
- 	SPI_MEM_OP(SPI_MEM_OP_CMD(0x9f, 1),				\
- 		   SPI_MEM_OP_ADDR(naddr, 0, 1),			\
- 		   SPI_MEM_OP_DUMMY(ndummy, 1),				\
+-#define SPINAND_BLK_ERASE_OP(addr)					\
++#define SPINAND_BLK_ERASE_1S_1S_0_OP(addr)				\
+ 	SPI_MEM_OP(SPI_MEM_OP_CMD(0xd8, 1),				\
+ 		   SPI_MEM_OP_ADDR(3, addr, 1),				\
+ 		   SPI_MEM_OP_NO_DUMMY,					\
 
 -- 
 2.48.1
