@@ -1,80 +1,125 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E5BF210FB
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 13:31:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1142F2066DB;
+	Thu,  3 Apr 2025 13:33:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743687114; cv=none; b=mJ6GGI3VJWaKSGtZ4G98hvKV2U0h31ZZCz0NXseLl4pnXjcm9nVKMQpvKBsFYqhZXHiFpnIIPkwRCEjbGDPuik30xnDtJZacvpWG4tRrqFuYh5FD6x8KmoS03xAGxEQpMM6wgJU6XFT5Nd/xyFo2Hhf3JvApPnjE30BFRyP4lGs=
+	t=1743687208; cv=none; b=sF83YMiqFl0NrTEk7619tLVOc/TGp6RcLEUdMSLe5d300JJ+2GXf3YCHPa7wBzWMP0bR+e0XvITkzsA3ohGE2kND5MNaIe+4TNb7h7OyoX3vqalbyXwrOQc52jLzc/2Z0tKf2Kw1upa0o9YJF1gcYJNM9rE2OcCUNJi0QAu4B44=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743687114; c=relaxed/simple;
-	bh=Qy+WAD6qwidvTKc5AAMY2Gps0d4LuxHSNmmZhDTIFOI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CfVY4SfYWaDQaDGF3FmS/pDBW/V+BAFX4izzw5MVsnUNXJ+JuOE+QH9grbu0ArQNyfrnRW+Uk3RA3SK7JAhZ+E5QKkVxB1EnDvPg4XA+jgBxE0p1wpEMjvuLB3O0uOZJE19EiHuBp+Mu6AcHiGTxT3eOG/78Cy56woIc1ICzVJk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-CSE-ConnectionGUID: eDbty31ERHujrhBfn1E2pA==
-X-CSE-MsgGUID: HccBqJUWQ5Oqj54JY16VUg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11393"; a="32697553"
-X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
-   d="scan'208";a="32697553"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 06:31:51 -0700
-X-CSE-ConnectionGUID: 4myEwy5jSDKm34R8stvP3Q==
-X-CSE-MsgGUID: 9S2/4JkCSCqXQtP0na2pVw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
-   d="scan'208";a="131867368"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 06:31:49 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andy@kernel.org>)
-	id 1u0Kfa-00000008p28-2D1I;
-	Thu, 03 Apr 2025 16:31:46 +0300
-Date: Thu, 3 Apr 2025 16:31:46 +0300
-From: Andy Shevchenko <andy@kernel.org>
-To: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
-Cc: outreachy@lists.linux.dev, julia.lawall@inria.fr,
-	gregkh@linuxfoundation.org, linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org, hdegoede@redhat.com,
-	mchehab@kernel.org, sakari.ailus@linux.intel.com
-Subject: Re: [PATCH v2 1/3] staging: media: Remove duplicate NULL tests on a
- value in pci
-Message-ID: <Z-6Nwp5RUdgYt55B@smile.fi.intel.com>
-References: <cover.1743685415.git.abrahamadekunle50@gmail.com>
- <26990d4a9d4419f9d4155a40595bc213acb671a0.1743685415.git.abrahamadekunle50@gmail.com>
+	s=arc-20240116; t=1743687208; c=relaxed/simple;
+	bh=xsV8cuNuBCwEg8E/ibRrQyVGLg0YS/zeFrnyD/zu+Lg=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=sXgdU4QNu5ucfMVwoamdnQLB0cWoUCEPJuEbywDPsmhM5cOya2CYWbDxoD1ptLSc7szmfaZfoiGVDao14C1DZ699DsDDOMalXNvrVoGGM3ahMv7sSpJhUqstTHQ/FUjEnHs3sY0JHDwFe0kS09F5np5O6l5xKAn9QKrQczV1fKo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Bvo8OC8m; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NDWhMSdE; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Bvo8OC8m";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NDWhMSdE"
+Date: Thu, 03 Apr 2025 13:33:24 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1743687205;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8REwVvz+MfRciet4lgb/OqymK+vKnqnfiK2HSzaYS6A=;
+	b=Bvo8OC8mEh0VJslgOrFPx2uZoandu1dGlk4SLuqoJbkZqsp+5ePcJgYjOaTv5rx5WxnKEZ
+	T2cZtPTbM0BdpD0VWVzGqnU1oTG0KqBXj9zG5WCzaCzuXT+gr2y7/HUY6HHqwSXILz8IPd
+	qx9TrAf6HGwyy2U79/a1ZGOm3MMHkycI7ZTXpN7Ua/DSDGnNdq90tTsVIFd3JtkfAqEHka
+	cDhT1kI2g8pB3oKdZLYcSWdJCUbmmPneobFc76nUohPQkxE0radNczJGEHUY0NNMEcr+5j
+	ER/VOS+Pq+meKtJ45cQtrhquyTAXSLYQxs3qEQnPNSlL3UuBlYvvfrv2VlVBvA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1743687205;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8REwVvz+MfRciet4lgb/OqymK+vKnqnfiK2HSzaYS6A=;
+	b=NDWhMSdEzYM5h59JJ5A64CUkJne2HAF5L9ttiOsqoJekN9Ch/cb0c5h4onFxhv4kHDbTvx
+	OE4ksjkCacD+HXBw==
+From: "tip-bot2 for Ingo Molnar" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/kconfig] x86/kbuild/64: Test for the availability of the
+ -mtune=native compiler flag
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Ingo Molnar <mingo@kernel.org>,
+ Tor Vic <torvic9@mailbox.org>, Andy Lutomirski <luto@kernel.org>,
+ Brian Gerst <brgerst@gmail.com>, Juergen Gross <jgross@suse.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, Kees Cook <keescook@chromium.org>,
+ Josh Poimboeuf <jpoimboe@redhat.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250324172723.49fb0416@canb.auug.org.au>
+References: <20250324172723.49fb0416@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <26990d4a9d4419f9d4155a40595bc213acb671a0.1743685415.git.abrahamadekunle50@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Message-ID: <174368720454.30396.11966787075140474975.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Thu, Apr 03, 2025 at 02:26:41PM +0100, Abraham Samuel Adekunle wrote:
-> When a value has been tested for NULL in an expression, a
-> second NULL test on the same value in another expression
-> is unnecessary when the value has not been assigned NULL.
-> 
-> Remove unnecessary duplicate NULL tests on the same value that
-> has previously been NULL tested.
-> 
-> Found by Coccinelle
+The following commit has been merged into the x86/kconfig branch of tip:
 
-Missing period. And Subject should be as simple as
+Commit-ID:     01412081863aa81db47423d5719f2726d2a00a32
+Gitweb:        https://git.kernel.org/tip/01412081863aa81db47423d5719f2726d2a00a32
+Author:        Ingo Molnar <mingo@kernel.org>
+AuthorDate:    Mon, 24 Mar 2025 08:05:19 +01:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Tue, 25 Mar 2025 08:24:06 +01:00
 
-"media: atomisp: Remove ..."
+x86/kbuild/64: Test for the availability of the -mtune=native compiler flag
 
-...
+Stephen reported this build failure when cross-compiling:
 
-Please, send this patch separately from the others.
+  cc1: error: bad value 'native' for '-march=' switch
 
--- 
-With Best Regards,
-Andy Shevchenko
+Test for the availability of the -march=native flag.
 
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Tested-by: Stephen Rothwell <sfr@canb.auug.org.au> # build test
+Cc: Tor Vic <torvic9@mailbox.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Brian Gerst <brgerst@gmail.com>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Link: https://lore.kernel.org/r/20250324172723.49fb0416@canb.auug.org.au
+---
+ arch/x86/Kconfig.cpu | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
+diff --git a/arch/x86/Kconfig.cpu b/arch/x86/Kconfig.cpu
+index 9d108a5..87bede9 100644
+--- a/arch/x86/Kconfig.cpu
++++ b/arch/x86/Kconfig.cpu
+@@ -245,10 +245,14 @@ config MATOM
+ 
+ endchoice
+ 
++config CC_HAS_MARCH_NATIVE
++	# This flag might not be available in cross-compilers:
++	def_bool $(cc-option, -march=native)
++
+ config X86_NATIVE_CPU
+ 	bool "Build and optimize for local/native CPU"
+ 	depends on X86_64
+-	default n
++	depends on CC_HAS_MARCH_NATIVE
+ 	help
+ 	  Optimize for the current CPU used to compile the kernel.
+ 	  Use this option if you intend to build the kernel for your
