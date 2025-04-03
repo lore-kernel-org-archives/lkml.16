@@ -1,259 +1,759 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2088.outbound.protection.outlook.com [40.107.223.88])
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2124.outbound.protection.outlook.com [40.107.20.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32C341F03FF;
-	Thu,  3 Apr 2025 07:36:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.88
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DDF424113D;
+	Thu,  3 Apr 2025 07:36:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.124
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743665777; cv=fail; b=plsg+LNNtOXcHPp1h0JDDq9u2oWNUPNaS815p2YqUTUQQENTB/+RvXgEzEm1FrS82APUcvjQbipsmJfFrMdPehPgYS1r8TT1n3ZRIHM2CDZbvB58Xx+eS/PSOP3T+1UJRJ8qEvtn3ZMD7Vsidae735txXeyobi6MAOMGkarO+sE=
+	t=1743665794; cv=fail; b=P/WKqnSpAL103fccpwh4Y7PTDaQLF1W+yLaX5PURvecX5Q3Cq6WlPhriJ1YXB09q6U/cZCCXY8Uq9CzzDewuOC6Gx6gkMWroBbaGV1o327FwHyyRnUkUtYi5JNR5reWe+NavjAQeKdK4FUkb238DECOQVMBPpmWGexJUPnCRVvU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743665777; c=relaxed/simple;
-	bh=5WLl8nt2WfPbz/zJJH8PGWbWOVgSBJL+p4UkSuqKwss=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=rMgnjBaXMnIegxCM3dyTbiBHSXzEuCIq4FNkPBRwBKyGawH1ik76iJ1KY7xXoNdEP0nCrA1W0gN6awyuG40BmYFl8x/K6HIHfVyuWuxzv1DG2dQei+VXf+XhHMvQYK8hY8UdiAPg6JeSdQXinIj36+5tAMbJ77uSAEbo8ZndaFQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=SOB71eyb; arc=fail smtp.client-ip=40.107.223.88
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1743665794; c=relaxed/simple;
+	bh=okirV3Rr2dvCKv/mkVqxyuff6W5z394X2UaJmHfc8Uo=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=nvrqsB73LCIFzKNdRQolf0M7zIX4LAVfShWgp34fFHhUtEYm7uCx7Wj/VSWWo3sDfsVLerlzdxeXXIoanpMGEewLjc4vHuAOyno92KA2nHe1QGfuVzRh45KBoLChMTVDndT80ZSJjZD+e11keozbh2/MTxzS5uaz62PNRHxM7xs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gocontroll.com; spf=pass smtp.mailfrom=gocontroll.com; dkim=pass (2048-bit key) header.d=gocontrollcom.onmicrosoft.com header.i=@gocontrollcom.onmicrosoft.com header.b=XQqARJBl; arc=fail smtp.client-ip=40.107.20.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gocontroll.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gocontroll.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="SOB71eyb"
+	dkim=pass (2048-bit key) header.d=gocontrollcom.onmicrosoft.com header.i=@gocontrollcom.onmicrosoft.com header.b="XQqARJBl"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=FtHih2dILTP+WduBCkXVr/C659hLu4CJVbD+X24cwYsGSKkMWMYIiB5o0D5Gd9csIwsta40mpVthJj3/3RMCwfa4926wH/WyYIDZSteM2LR39EfBDkUXXQcnvRn9OkoV0Xjq0D0yeN0db8YDxJvgjhcPYK1fRQMLgbE/t2W3eWEol+E0DuWiy6dA7ygybcwVm+heRSTTDrWFzlc9Fvpg96Bmad+fg+Ztsuj5p/PUtabO+MIk9/LDZoCZL/lMYGp09Ttljoi+QGvSPp9ds0wRJ9i1TpXXt16fye14/gszu9AwXpnN44u09wxs36RuVqfRmq4pCkcRwoHqTIIihmADbg==
+ b=TtzfBdjPL988ZDG3yea3FLZg5apWaxnyHsKgF+Cu7z0n6T/hrxgfYheJscboEdbSbLq5R+08SER1VCB+76JrSFhZdmQKku5IW66detw955BBSH10iFGfsfDE/6s29nkMfi1npsTU6WLkGsT4D7yqnZCg0DIiutA6x4v8YV/lZsXxNEiNRcjytTzWrKuO3S/P+G7gJ7wiU6TxoDTgWZswiSFpy3Wpxn5W6gqDbEeM6CV5Vm8rw78Cdqc/sbdEW9DtP5BsMzbtsPxgLzHvy7dkuICby16k3zbb8Inqkpwh2B2Dixo1ImA6QQDxsfccKnumnqOgNLJtIotRj5AhSzWpJA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=L4S4HRHMw0wMmtsGwfRfPK4h3nvd0ZtY7Yu3xZhWgXQ=;
- b=Gl7OOtKDoxU9Y9kgIxh44LN+ZryNITuJMLCFQ7Pq2MwpJAG/MvQYNmF13N9AGsatrMYmA4eeuvLnHI0zxXYxm4fGnpMYVLBIpiDy3ifJGI7YLiovxYnpfLpRyf6q35BcBHDtQqWjEKXoBfKJzXrmw3C7VnQtT89IWwghSefefXI4fVLANgmSlGR0ulhaw+zgNaDqI5GldmNN5flcvlNw6mq2zyKGg/RBeFeQe/Rv92lWTB3I9YmfEeTlarryLefJEiBZ2XwHpFdCnyEGowXIoB5VCK1MziXwPLd8Ub5SsHu1YsVdupV/KrXtZZRcERzX1JrFyg0cwDFq1OApQcw6jg==
+ bh=3g4pYG/4Z0DV2XFO5ur7nVnL5cwlqxyf8sEm3YrEm0Q=;
+ b=S/ihyu6yCmi4kXQryigdZ80F5Jp5NcF08Xx4Re5fzl616f3iI8lZhUzgWFcfqTFeG/2253+PJRI9s/lzYT0nvg0+1ZQ5NoASB6/deZFDSXk6xxGOTtR72NCOF7HTcIqjlB+8vj4VWNAHg+k7sSfFhYsGTHBfH3jimZt2CkxBafseN5YRqfDPcezaIggIwMtb/4fH3VcFW0/eD/3bDYbQqxy3L52/51Yr3eI47d6TNhOaqKZ5cUOTAyJzJqD2zXvE7jYxw3zTEnJ39wNCiGm5pkpuff7hPYXKXyHGZqPQyLga8+SrAFPKi8AChBjRXjCHkGeCjB0349THH9zjVGurAw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ smtp.mailfrom=gocontroll.com; dmarc=pass action=none
+ header.from=gocontroll.com; dkim=pass header.d=gocontroll.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=gocontrollcom.onmicrosoft.com; s=selector1-gocontrollcom-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=L4S4HRHMw0wMmtsGwfRfPK4h3nvd0ZtY7Yu3xZhWgXQ=;
- b=SOB71eyb/Tou1qI8zx+pZr77eU/UnolZdxFT9nkIaWqIg3MuLV//O58ERwsOAsfpplOY1vWnXvxRiy0sCrI3L7JcxNHNExl/ZLW/kqpF8e+9W4KNxDO9kRzReODMXGSFnJ64syyvPZhfHRYNnc3xr0W54RIrFazAvVPG41foqpw=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from SN7PR12MB7835.namprd12.prod.outlook.com (2603:10b6:806:328::22)
- by CH3PR12MB9395.namprd12.prod.outlook.com (2603:10b6:610:1ce::18) with
+ bh=3g4pYG/4Z0DV2XFO5ur7nVnL5cwlqxyf8sEm3YrEm0Q=;
+ b=XQqARJBlvPOhLXcKhVn9RUOAiA5tvwNpC2/kJvnER2p8ywO2wGLydqwCA/mKxZvQOYb/3aER96y0KXCWdZji3E2WQLQecAbtkWO+HRhiT8FmFfxk14JrnjcIMl6yoQ3ogwcge3snHsjPxgc0eYUooAGxaQ1kWST8Oh8BnHatWQnYE/yMUPvNoG+W2tn5DCoKHpd2kVjvg9VdaOjKNMV1t3qyKL0ae0OQJ7jeS0Qy9kBmux6Kl7qEStooUf/0wO/gJG0XWvt3rZ6HF64mkGf1rmOV1eDtv/yTz5hBRCzLq3Ts5rYNEMx+rpbVB6g0PmRBWdNjaZ4Biz33mLlemO0dUQ==
+Received: from PA4PR04MB7630.eurprd04.prod.outlook.com (2603:10a6:102:ec::16)
+ by DB9PR04MB10067.eurprd04.prod.outlook.com (2603:10a6:10:4c8::10) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8583.41; Thu, 3 Apr
- 2025 07:36:12 +0000
-Received: from SN7PR12MB7835.namprd12.prod.outlook.com
- ([fe80::ea3a:4720:99cb:32d8]) by SN7PR12MB7835.namprd12.prod.outlook.com
- ([fe80::ea3a:4720:99cb:32d8%7]) with mapi id 15.20.8534.043; Thu, 3 Apr 2025
- 07:36:12 +0000
-Message-ID: <9635c502-3635-4875-ae1f-53b4b7aed855@amd.com>
-Date: Thu, 3 Apr 2025 15:36:04 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 3/3] transport-pci: Add SWIOTLB bounce buffer
- capability
-To: "Michael S. Tsirkin" <mst@redhat.com>,
- David Woodhouse <dwmw2@infradead.org>
-Cc: virtio-comment@lists.linux.dev, hch@infradead.org,
- Claire Chang <tientzu@chromium.org>,
- linux-devicetree <devicetree@vger.kernel.org>,
- Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?J=C3=B6rg_Roedel?=
- <joro@8bytes.org>, iommu@lists.linux-foundation.org,
- linux-kernel@vger.kernel.org, graf@amazon.de
-References: <20250402112410.2086892-1-dwmw2@infradead.org>
- <20250402112410.2086892-4-dwmw2@infradead.org>
- <20250403032152-mutt-send-email-mst@kernel.org>
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.50; Thu, 3 Apr
+ 2025 07:36:25 +0000
+Received: from PA4PR04MB7630.eurprd04.prod.outlook.com
+ ([fe80::311b:ad3a:4a62:7b5f]) by PA4PR04MB7630.eurprd04.prod.outlook.com
+ ([fe80::311b:ad3a:4a62:7b5f%4]) with mapi id 15.20.8534.043; Thu, 3 Apr 2025
+ 07:36:24 +0000
+From: Maud Spierings | GOcontroll <maudspierings@gocontroll.com>
+To: Frank Li <Frank.li@nxp.com>
+CC: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha
+ Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team
+	<kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"imx@lists.linux.dev" <imx@lists.linux.dev>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v4 5/9] arm64: dts: freescale: add Ka-Ro Electronics
+ tx8p-ml81 COMy
+Thread-Topic: [PATCH v4 5/9] arm64: dts: freescale: add Ka-Ro Electronics
+ tx8p-ml81 COMy
+Thread-Index: AQHbpATYHQy6ZlVHS0Oim8hxs5J+S7ORjbGc
+Date: Thu, 3 Apr 2025 07:36:24 +0000
+Message-ID:
+ <PA4PR04MB763033995576A03705DB2FBFC5AE2@PA4PR04MB7630.eurprd04.prod.outlook.com>
+References: <20250402-initial_display-v4-0-9f898838a864@gocontroll.com>
+ <20250402-initial_display-v4-5-9f898838a864@gocontroll.com>
+ <Z+2O0MeWOz/MeKOS@lizhi-Precision-Tower-5810>
+In-Reply-To: <Z+2O0MeWOz/MeKOS@lizhi-Precision-Tower-5810>
+Accept-Language: en-US
 Content-Language: en-US
-From: Zhu Lingshan <lingshan.zhu@amd.com>
-In-Reply-To: <20250403032152-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SI2P153CA0022.APCP153.PROD.OUTLOOK.COM (2603:1096:4:190::8)
- To SN7PR12MB7835.namprd12.prod.outlook.com (2603:10b6:806:328::22)
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=gocontroll.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PA4PR04MB7630:EE_|DB9PR04MB10067:EE_
+x-ms-office365-filtering-correlation-id: 76c8cf6f-5cec-4baa-a794-08dd72823cba
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|366016|7416014|376014|1800799024|10070799003|38070700018;
+x-microsoft-antispam-message-info:
+ =?iso-8859-1?Q?ncD9bPnj2HrsoW/Gltqs7q0iB5Vxisffe8IaQ9EhFAeB7lgsn9R8DTbQSl?=
+ =?iso-8859-1?Q?C7LC85tQlWKJr46BBrJk5e0TS5tXQTT8CaYpunaCdXgeyhL3xe8KVJ4Za1?=
+ =?iso-8859-1?Q?GDbAq2qz72eDJQa+hfP0TDT+ob1PeIB6IrAB6iAUNOyQKWjQa4DW2qYmgQ?=
+ =?iso-8859-1?Q?kW3FDp+R3orVxL87LdDY7yAdtErgpdyh889p+/aI+0yzFc1l0J2OVxYdcC?=
+ =?iso-8859-1?Q?s0XyxUj56PyuYsUVgXtQTTJ1l/333NeFBfZa7JhiIdTHcziwfp3gQQPMu0?=
+ =?iso-8859-1?Q?dNO/uqLt9A+nhSlgZj/yTS9WeVQwhGy5aMZO9mHbCIaQkH3R8Zb6uBZyiM?=
+ =?iso-8859-1?Q?mkCodgzcQHbF7I2w4YgtnHXSg4TRAw8VHPQyoNdm0TcSjiV2POc/xLuvyQ?=
+ =?iso-8859-1?Q?g5qMoqzq50SevM2QUYOHJfR+r00cWwkSfnHYAWEJQPwOU8kgEtHi8LhnZw?=
+ =?iso-8859-1?Q?d7QA7HWQbEm7qQ6sr4jCYWCj1mnVcpVQoYwlBWOUrp+ce/SBbqxbsm3a/Q?=
+ =?iso-8859-1?Q?e6NSwqzuxoAPYASlFh4hDtociXcibtcgrjxMr97e30ENNLeuM5LR/tGrAt?=
+ =?iso-8859-1?Q?D/SfPiPI8v5gKmTtHM29IqZCYqm5Dish877MSBbDZRuZqrnmVfETfgRB5J?=
+ =?iso-8859-1?Q?oKVU4Wl5VVJfH/Jm1dolmYPARxgzbse7hQl2is03eFNL2wTdcTSfL7NL+3?=
+ =?iso-8859-1?Q?YxIz1cFXELTuHKNcj3YXbdtW68YlU/sixv4INgQnlAn2ZOqVjbaMahKAlf?=
+ =?iso-8859-1?Q?jXutIIbZGDQpy7g0St+XW2Z7wrykKJ2ormZc0leHtdY2QC/arQTAe+q3yx?=
+ =?iso-8859-1?Q?ZM0tJmz1SR8ev11M5PuCrnUrlJnWfl/vOvsR0OLJo910fhP4lpeSLoXqAT?=
+ =?iso-8859-1?Q?vVAhUhTOjV9G+gC/vVmpKq+ZufA2nOj38LPIepan2e/v4bDkUNkGyDUSSH?=
+ =?iso-8859-1?Q?GrsifqSVGMBjSp5jEyy1H/bdgxaBGmiRTDW1tCYTG6HRKp1fM1CBVDHyc+?=
+ =?iso-8859-1?Q?OSohV7AbaUnlah2GZ20PkD+OPcxyOYYcnIpsHv+hzKEWp4l68ZMpZsqlg8?=
+ =?iso-8859-1?Q?sLZQrVbPt8G3M2o1ieEt7tKJ1zCcU8utrinf64UJzpK5MoWhFNqqZpvgfs?=
+ =?iso-8859-1?Q?w+U8N1kZDaufXp5P6NVsXGs6TNewn+ZD38kaJRqOcC4KvzQncYiGp0DzBu?=
+ =?iso-8859-1?Q?yXn8dL+Cul65jDX0E6NE9cmWTZO1QHsF34OfJaInLSG1D5LiL99EFwNpNf?=
+ =?iso-8859-1?Q?SjeIwmBlyxh8Z4F/MSRCHejxpDTZtPE4ctEMWrVYrM+3JmBfitlOr1rezl?=
+ =?iso-8859-1?Q?rnM9lCz0e3EpTxnu3URmpc6T9jvyfwA0Wbb+MiW2nYvW+qEHXcK+XT5Kc0?=
+ =?iso-8859-1?Q?UZKyiFte4JDgb5mVYkxg1SWD7u7+vp6b00NkAMCmPo9sAxpDf7BLgJsHjk?=
+ =?iso-8859-1?Q?sQvWNccml8uzkPvcJgV0FRNhxDX925X4ni2w5Allc+ANXKQn0CiRRpUhV8?=
+ =?iso-8859-1?Q?ZHCogrIpPix8ooovFtAxYa?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR04MB7630.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(10070799003)(38070700018);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-1?Q?1PaOUSLRLX+GMIVkzJz6T7Tn0WKQabSH2ydOM+ydeKftG7pTlLXThOUaVh?=
+ =?iso-8859-1?Q?NQHhvgIqvKmBQYYFUZL/RsEIji7wK4Pp/roUUD9wSh5GCTVQX32iX4tF3o?=
+ =?iso-8859-1?Q?SyJeXZZFK248AWuOL8ln9M97cbjoYEDtglfgb3yFXju1IdEqIzvYrLyOAX?=
+ =?iso-8859-1?Q?rhMQwoNBzqTUrrFR2x5xQ73bYBb5HPQriBIbyyOc3afmbFCcdKuCw+RwkV?=
+ =?iso-8859-1?Q?Wrn4nneUVfddCp6m5QJO72jaD49yxU7agG9+ZhfSB5zSyEYF9JA/GhEsgR?=
+ =?iso-8859-1?Q?7pLJK6hePIajNTBobAnfuOS3c8wuh4n//kNLNy6rKSQDWhwuYwjRh0FPk/?=
+ =?iso-8859-1?Q?O3GxwlxoUqfVgzQlkPhaawLrZnLndncBneJ/zBCPgDOWZs99kWZMiTTO4y?=
+ =?iso-8859-1?Q?0bWaYyH+Ssawxkdlk0lt/BcwEKz0RPgjVV+H0+YKMH/bv6rrhSh8DDU0/V?=
+ =?iso-8859-1?Q?4eHLQPynBVxXPjMoQj6Aw3Yc6YG8zTznXGVw02Srh+2EYYgxa3ljARnb+j?=
+ =?iso-8859-1?Q?GFW+P+S0cXLrfi52qyFjH6s7EqyTbjNQNT62rzKFVLjuvGA4TGYTRUksTY?=
+ =?iso-8859-1?Q?26TWoJKZ1eYlMibwdnIM1Lbo+zHhAUDfJyf9M9kvDVljTg80PrVJbP91nD?=
+ =?iso-8859-1?Q?5OQj6wjOKv3Jtp/KJlHohb8rePyj8q7uwRLQ18zM3gUumaIJ34YMhZDyQQ?=
+ =?iso-8859-1?Q?qiSfkI7anurueSVw7YzqvnRv63BIo119UkyV3kw0wtXe+F6sJQf5r+05AS?=
+ =?iso-8859-1?Q?vJcguarOqPoU8YYnyCIaGN7qnVEmhN2cMyK2SNtQMyQZaDytNEd/kTwMr8?=
+ =?iso-8859-1?Q?uTAyAYV+vPi0pHoClmTHUYEbRM+d456iZm+PsjuwtXB+PIMnd8kp6CNlup?=
+ =?iso-8859-1?Q?k/oM9+ZL/As2hxtR8CbUdAq9iDkw5RHCiyUhfyMDRT1vkSVsdkwQYIwpG6?=
+ =?iso-8859-1?Q?kzDOmluDthnY5POe45eu6osBtm33GlFLdY4JcTveza8rEbZIztoFEcSDbX?=
+ =?iso-8859-1?Q?mDGciiMZRSRpXE9oCsDNQVhYavXJXG0uE8tMwFLPlnKItGDgS57cREeHRW?=
+ =?iso-8859-1?Q?c2JhE8RDFk859T1kMlEzBx/GI6TCKHlVMjvJmK1ih6XkIvYeFfVc6y+pdV?=
+ =?iso-8859-1?Q?XujtxPE9Qp5swEQgQYe8RJ4WbcPizY/1bTGOGzYwsK3e6kqVmVY2XpVIQq?=
+ =?iso-8859-1?Q?VppfxgWUuQN/to4KJcrzxy7wI2eY9dhNzhDvpln3ILeognCYLjaawMeCP1?=
+ =?iso-8859-1?Q?fxVlHGhyWENYhnxJxsojDTbIvdarVJL9T/7m8y38S1EGc9RGF0DV2F6Rpo?=
+ =?iso-8859-1?Q?sIDh3N+2iKdfg6aR76T+6anZY33ch5m+3ipGk9BgPOboeGR4vKuVjZaR3L?=
+ =?iso-8859-1?Q?OGjmk8hTIqgHnx3cCrEy5rhI8xIdsDrgh+jTtRCi3Bp58SS/2waBJBeauZ?=
+ =?iso-8859-1?Q?CZF5JX52jkgsOMPua4FOY2onUK1YWETE6sQVy9kcQEngeHZJKuYtMiwZKW?=
+ =?iso-8859-1?Q?YDm0TwPHkEWNNjiF8WUsGO1bJUR19enJ8LGlUvZmm7Iura55XCwM3t3Ldq?=
+ =?iso-8859-1?Q?e3DgtM4D3iPNcy8iH9rqN3Tad2z5YQN0POcqQ5HVAynKSCXq6Y2xrLPzac?=
+ =?iso-8859-1?Q?m7fFmuv8hAMfMsMJ2+LkqCrRgKdKgvk98XOsI8M313gEhzS4oOgL+KMIBf?=
+ =?iso-8859-1?Q?zuZGTCpiGhR85u7CmD93YxwhyZUqZwiXyYtvp+qhfdkZwEoFrYFdCKpDRj?=
+ =?iso-8859-1?Q?37vA=3D=3D?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN7PR12MB7835:EE_|CH3PR12MB9395:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8634a022-0b66-453e-6891-08dd7282357a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?K2J4MTRFSGd0TEdTTUR4Q3VWVXN6VENSNEgvY0ZNRXc2ZzM1SXlaNDRHb0V1?=
- =?utf-8?B?UUxmM09vekJGOEFUWU1RRW9oeFN6aGc2VFVwblhxZUZuYnhUQWVqSnBMdnN2?=
- =?utf-8?B?K1ZEL1NTR2swaWIrUlVtazVkekNOdmhocVZ4Z2lmaDYrNFA3TXFVcS9JNmIr?=
- =?utf-8?B?Rkp5RkJSLzk0ck5Lbk9FcDNKdkRiT3pBTFh6amhsWUtUdTNwNUc1N3p5bURs?=
- =?utf-8?B?TmVIUEsvdzJBOGF5b1JIaHIrbkFKQ2JCTXI2ODFWZVBmQW9qS2lkTk1GWUFI?=
- =?utf-8?B?bUlYT2JNaWprTXdJelArclZFZlNhdzBLWGdwSVFCMFhFdTdYWFAvMVZ1QVhS?=
- =?utf-8?B?cmFhcUdKOGVBT0tlWnRDNGgxY2tuSXdvTnNhNk5rRFZJM3d6cmYxbFpHWStB?=
- =?utf-8?B?YU43NlR6RGJOMDlOS2JZcmd6Yjh3ZUhKU2w2M1JQT1R1akgrL2xGS0V0WnBh?=
- =?utf-8?B?d0EvTmdhM2p2NkZSVXNzTkRrT1hEOHNtV1FWSmxvTFluaHNWMEtkVlVWeTFP?=
- =?utf-8?B?eTRqTkROMXpqM1NTbFQ4YUExRjZ0eEQrYXZRTlNvS0tsa1dpd0lleERnaTd2?=
- =?utf-8?B?MGthbzh1QStBRG5xeTNtTWRKNkhNL1N0RTg1R2RxQ25GZlNidTIwWGU5WFly?=
- =?utf-8?B?Zmg1S3JsYThMeGR6R29henE3V3NDTDQwUGpXSlVoL2g5eFFHbnVjN3RCbnJC?=
- =?utf-8?B?WHRvUnFudnJMMkdBdzhRa1c5WDg4Z0JPWHVZWXg2dkFRZ1ZoVUlSYTJFK0N6?=
- =?utf-8?B?WEtVZEdjZTZjSnRxc1ZyMjVrUnlhUHhhMDZNNVpBS3ZVeUVyZkdvcnRVZjdK?=
- =?utf-8?B?Q3A0YjZ4QUhtTmNncEtyemRUdkp6SmorUVhLSDdWak5zQ0dwTUdUWHU4bG9E?=
- =?utf-8?B?TWFTdTRWT3lTMW15UnZWMVpMTFk0dmp5elVNK1pqY1V2T0w3TCtMZS9jUDJu?=
- =?utf-8?B?aDIwbXVvaCt2NHlkQU03TEhyTmRuV1grYnhQM1RkMzRBRnc2bXdEbnhHWmJu?=
- =?utf-8?B?azNvMFZIbm9zKzBVMk9VSXVvV21xZjF5WVNyUnl0UlB6eWRKRUpnUmU2L2NQ?=
- =?utf-8?B?M3paNWk1aEtZOXA3WWtucDYyRndXUFVSMmFIWWk1VkJoNGZlTnFrdXIrb3dk?=
- =?utf-8?B?NlhjOXdBdzZxSHFSdDVFWWlpa01RNE9PaStGN1BYVi9hRUt3U05OTGpFdkd2?=
- =?utf-8?B?aFNlK0V3eFZHQnA5SjR6Q3M5SG85RE5nTFEyVzdxOXhGWkpDVTNqajB4TWIz?=
- =?utf-8?B?YlJsbk1XVm9YVjRpd01XeDBlWGNqdFZYTFpkbEw5dktZZjN3TTd4TmVPdDZh?=
- =?utf-8?B?ZUtyUFJRS3pyemIxeTZhZlUweXJ2bDJSQWlBRDM5aWdwczN4TDhqbHpWbHRy?=
- =?utf-8?B?VllRU0ZsR1R4Q3dNOVdvSzNldEJHc2xoQ003K2Voc2dnQTFvNjVNRjFJR0wv?=
- =?utf-8?B?RkhCTVF2amFRVHAyZkFIeFdvenFhdGNkdlNtZTF6M3RqSjRNQzNZQVFBaG02?=
- =?utf-8?B?WitOWE9ONFhPWHpjRFdhdjM0RllyUzUydU9GbElhMWJ1dWJVTGVKdXc3SFNY?=
- =?utf-8?B?MzlaOVMzMEhYa0wveVBqSGtLanlad2Z4WTB0cE1lenVUVkg0NW5laUhHNzdt?=
- =?utf-8?B?QU1la3VtbmlFME1QKzR4UEs3aUpyUHlXVnM4MHVOeUo4VkxOc3hMN3JpUzJO?=
- =?utf-8?B?QS9WQ2VWY3dTaDZ5YVo4cFBwUFdvMFFMV0o2dHYvb2h4TFB4YjgyVmptR1M1?=
- =?utf-8?B?WDFWQTdzOUpqQWdySFV3RE9IaGpxTkp6Y1czalNxcVdCZUVRdkFydHZ4UjlO?=
- =?utf-8?B?ck1aaEFEcVpKTkpRU1Mxd0ZtWEtPanM0Rys0TGF0c3AzYzFRM3lLbnJzWndV?=
- =?utf-8?B?TDJrYTRRL1o3Q3hKejFldFhMVGVYK3RITFE0SkpFVTd1QTFGd3B0dnVJczkx?=
- =?utf-8?Q?fBIVIClA/Yk=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR12MB7835.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?cXRyb2w1OFNvSG1OZUVtdVFSNFdnZGVGMDlBWmZGYzNGWFZLbGJ0Ukw5RExG?=
- =?utf-8?B?ajNjU09hSHczN0JvdFNQNjZjbW95WTcrU3VwSXJYQ3RPVnpkeXJWS0JSemM1?=
- =?utf-8?B?VWJwdGo0cmxmZ1dhdUVlQ2E2eWlrMWo2Q0NDS2tKMlpwTHRHdXFUbGNEbHE0?=
- =?utf-8?B?N3lHZ2pmWi8vNnVpdmRYdlhub0J6SThsQmoxRnRWdmNsT1NTVk15eTJLSmJQ?=
- =?utf-8?B?Q3JacmJ1NlNjRjBPc3pkWDNKdlk0SXZuVVBVbmRuT2tLL29aTnlWU2ZRelFp?=
- =?utf-8?B?N1d4Z0x3NkoweW9VcW9UZnRmQ3dTTVpRcmNSSWlyODg5ZXFNV3Jpa2RmUExN?=
- =?utf-8?B?SFFGdytoeTdQa3p1RlZPWmpSajZCa3lHb0xsVFRDSEs2anBMdHdPa2IxUmRK?=
- =?utf-8?B?eEh1QWFtRnZGYkFONWlwRmNxcjhhZXFxTjFRQ2lzcDRBWlY5NFJUYWVZR05m?=
- =?utf-8?B?eW1qOU1CYTNFVWdhOVVrb0FzcEIzRkRFdEJWN3FPdEozdzkyUmE4ZWhCemYw?=
- =?utf-8?B?SlFaUityVmd5LzNhakhlQndRdW51U3JMSFNDdU1TWEVtM0hXaVg3K3hPeXU4?=
- =?utf-8?B?Vk5GQ3dKaVpLWnAyWTRtdFppazhHeVplRVVsYmhXOGZWbWROU3VyNUlNdkRi?=
- =?utf-8?B?OTJ1Z2g0dkJuWlNBMEdVbTcva0hnelFyK0E4TG5PT0lUVlozRGNWWFJ5Rll2?=
- =?utf-8?B?bnExLzF0ZEFRTFpwdUoyUmNNcTdramhld2Z6UndWR2ZUc2F0R3hZS0o2RDRU?=
- =?utf-8?B?Ky9zeTBhM3hUanR3ckYzM3ViVnh5amN0R244SlJ4RXgyVmVYMmhaQ2FyeWtM?=
- =?utf-8?B?dEZGT1lLakJXbUQ1ZWtpRmZkWWxVMldrMVZSMHJDUVRkSVczanVXQU1nSnow?=
- =?utf-8?B?OURZY0piODBLRk13VVpLUHZRMFZtMzN6c0Zuc3FkSzBPYWVjM3M3TFFIMUxh?=
- =?utf-8?B?cy9wSmxJTUVxclQzV1ZsK0Znd0t0eE45UjVBWXdsU1VVY0JhNytlaklVcExF?=
- =?utf-8?B?dEtpazJmaTFCSklEMlRuTExlM1pHbk1EUW1OelhCZjJ1b1lBckk1aHBodTBi?=
- =?utf-8?B?bEhKWnNzQWM4S2tYeW5nZ3BUS1pRL3daUzF6eTJ2RDdMd3p0QlVBbk1qeXlD?=
- =?utf-8?B?eERqSzhVYVRZMTBac3I2SUdBVE9KU0JYV3J5b2R2dkZtS21xTGM2MXNVaWds?=
- =?utf-8?B?dUVDQUVsdkdNS1JQU0VTRjE3UU9tRUJqQmVMYjJoYnBUaVI3MUN4WTNheEpE?=
- =?utf-8?B?eGF0R0ZYaVRrajV0Sm0rT2xNZXBUaVJ5Z053Y3JRWXZGVU04U2NGdVlHSlZr?=
- =?utf-8?B?QVNWbW1QQkpWRTk3ZkRtRVFna09QWkg3K2dveHNSMUs0NFBwT0VzVHRDV3dM?=
- =?utf-8?B?V2lORE5nbWRYSDViMHk5T095ZS9NSElKNXJZcC9wajNQYkZmQkViTUVMNS85?=
- =?utf-8?B?ZXpPM1BqYXkyekM5RGFQdGRIUmRmZ0t1TmlDNjZDVGRuWHh4RUZkOXJPWVNK?=
- =?utf-8?B?aFQ4YjQvUU1ha2lpRDFkSkQ0VGZFNVQ3NTJlaXdoWmtuem5SbGZxOVdldnZs?=
- =?utf-8?B?ZmpCMmFWa1J6VSt5OEIrcDJveHVkeVVJOGpySW13bVl2dXY0aWhaYnZaY3lX?=
- =?utf-8?B?L0R4N0M3WlgvWU10ZlZpQUpsd0ZSY095RGJKVmRnOUV5T3czdFg4TE1pRWY2?=
- =?utf-8?B?ZmtwRVM0MkNCbDZsSnk3Q2cwTzFtc3ZQc0pLZ3MwbkM3a0JRbkp4MmlhSm9C?=
- =?utf-8?B?NzJ2eW5saFpGWU8rdld4WFBLRE9JZW85bTlSNjhkTTNnS0JZMk1uLzI3STk2?=
- =?utf-8?B?cCtJenY1WHorZ2xLdVVvVi8xTC9PUng1bmRhb3owRDkremF2WXl0K0JIbHgv?=
- =?utf-8?B?YXRqMXZkVW5kWDVKYk1EekZ2N3dtR0VaUEFCUGRNZnR5K1h6c1RHS0ZXSzhx?=
- =?utf-8?B?M2RBY3J2ckF3amlsdThBODZXaDBXSUNsZnZlNkVZWVcrZTdjelRHZ3I0eWRR?=
- =?utf-8?B?SFZ3OWxzcVV1SElzdVM4am9Lc0ZRbHV3ZEdnajFMWXhtaU1RRHpGZnE5cmph?=
- =?utf-8?B?OVF0RHdmRHNPajJ3eDN5eTIveHlSTndIRElQM3hTSjhUWHdueVhsaGZEemc5?=
- =?utf-8?Q?7Zv8Vz3mSU2rUA1kiHSDMUP4c?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8634a022-0b66-453e-6891-08dd7282357a
-X-MS-Exchange-CrossTenant-AuthSource: SN7PR12MB7835.namprd12.prod.outlook.com
+X-OriginatorOrg: gocontroll.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Apr 2025 07:36:12.7881
+X-MS-Exchange-CrossTenant-AuthSource: PA4PR04MB7630.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 76c8cf6f-5cec-4baa-a794-08dd72823cba
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Apr 2025 07:36:24.6346
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: haeC1+2vt30zxenhBiOBTC2lYWp2Viy/sX1FZWcJBb0Yg86Ch8r6cla+41F+nXzPyjuuYmY5br92hud7WOTa9g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB9395
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4c8512ff-bac0-4d26-919a-ee6a4cecfc9d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: BYMqerjXuuJyMMepVQ7NUmlBlhNLYpEVt1oA6T6+f/ggVc67g/X0+PtSR6l29J67awM3IMzJancnwed+U1e6Dq33lLqNJaG5nCvjrSGMXwo=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR04MB10067
 
-On 4/3/2025 3:27 PM, Michael S. Tsirkin wrote:
-> On Wed, Apr 02, 2025 at 12:04:47PM +0100, David Woodhouse wrote:
->> From: David Woodhouse <dwmw@amazon.co.uk>
->>
->> Add a VIRTIO_PCI_CAP_SWIOTLB capability which advertises a SWIOTLB bounce
->> buffer similar to the existing `restricted-dma-pool` device-tree feature.
->>
->> The difference is that this is per-device; each device needs to have its
->> own. Perhaps we should add a UUID to the capability, and have a way for
->> a device to not *provide* its own buffer, but just to reference the UUID
->> of a buffer elsewhere?
->>
->> Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
->> ---
->>  transport-pci.tex | 33 +++++++++++++++++++++++++++++++++
->>  1 file changed, 33 insertions(+)
->>
->> diff --git a/transport-pci.tex b/transport-pci.tex
->> index a5c6719..23e0d57 100644
->> --- a/transport-pci.tex
->> +++ b/transport-pci.tex
->> @@ -129,6 +129,7 @@ \subsection{Virtio Structure PCI Capabilities}\label{sec:Virtio Transport Option
->>  \item ISR Status
->>  \item Device-specific configuration (optional)
->>  \item PCI configuration access
->> +\item SWIOTLB bounce buffer
->>  \end{itemize}
->>  
->>  Each structure can be mapped by a Base Address register (BAR) belonging to
->> @@ -188,6 +189,8 @@ \subsection{Virtio Structure PCI Capabilities}\label{sec:Virtio Transport Option
->>  #define VIRTIO_PCI_CAP_SHARED_MEMORY_CFG 8
->>  /* Vendor-specific data */
->>  #define VIRTIO_PCI_CAP_VENDOR_CFG        9
->> +/* Software IOTLB bounce buffer */
->> +#define VIRTIO_PCI_CAP_SWIOTLB           10
->>  \end{lstlisting}
->>  
->>          Any other value is reserved for future use.
->> @@ -744,6 +747,36 @@ \subsubsection{Vendor data capability}\label{sec:Virtio
->>  The driver MUST qualify the \field{vendor_id} before
->>  interpreting or writing into the Vendor data capability.
->>  
->> +\subsubsection{Software IOTLB bounce buffer capability}\label{sec:Virtio
->> +Transport Options / Virtio Over PCI Bus / PCI Device Layout /
->> +Software IOTLB bounce buffer capability}
->> +
->> +The optional Software IOTLB bounce buffer capability allows the
->> +device to provide a memory region which can be used by the driver
->> +driver for bounce buffering. This allows a device on the PCI
->> +transport to operate without DMA access to system memory addresses.
->> +
->> +The Software IOTLB region is referenced by the
->> +VIRTIO_PCI_CAP_SWIOTLB capability. Bus addresses within the referenced
->> +range are not subject to the requirements of the VIRTIO_F_ORDER_PLATFORM
->> +capability, if negotiated.
->> +
->> +\devicenormative{\paragraph}{Software IOTLB bounce buffer capability}{Virtio
->> +Transport Options / Virtio Over PCI Bus / PCI Device Layout /
->> +Software IOTLB bounce buffer capability}
->> +
->> +Devices which present the Software IOTLB bounce buffer capability
->> +SHOULD also offer the VIRTIO_F_SWIOTLB feature.
->> +
->> +\drivernormative{\paragraph}{Software IOTLB bounce buffer capability}{Virtio
->> +Transport Options / Virtio Over PCI Bus / PCI Device Layout /
->> +Software IOTLB bounce buffer capability}
->> +
->> +The driver SHOULD use the offered buffer in preference to passing system
->> +memory addresses to the device. If the driver accepts the VIRTIO_F_SWIOTLB
->> +feature, then the driver MUST use the offered buffer and never pass system
->> +memory addresses to the device.
->> +
->>  \subsubsection{PCI configuration access capability}\label{sec:Virtio Transport Options / Virtio Over PCI Bus / PCI Device Layout / PCI configuration access capability}
->>  
->>  The VIRTIO_PCI_CAP_PCI_CFG capability
->> -- 
->> 2.49.0
->>
->
->
-> So on the PCI option. The normal mapping (ioremap) for BAR is uncached. If done
-> like this, performance will suffer. But if you do normal WB, since device
-and this even possibly can cause TLB thrashing.... which is a worse case.
-
-Thanks
-Zhu Lingshan
-> accesses do not go on the bus, they do not get synchronized with driver
-> writes and there's really no way to synchronize them.
->
-> First, this needs to be addressed.
->
-> In this age of accelerators for everything, building pci based
-> interfaces that can't be efficiently accelerated seems shortsighted ...
->
-
+=0A=
+On 4/2/25 21:24, Frank Li wrote:=0A=
+> On Wed, Apr 02, 2025 at 09:07:08AM +0200, Maud Spierings via B4 Relay wro=
+te:=0A=
+>> From: Maud Spierings <maudspierings@gocontroll.com>=0A=
+>>=0A=
+>> The Ka-Ro Electronics tx8p-ml81 is a COM based on the imx8mp SOC. It has=
+=0A=
+>> 2 GB or ram and 8 GB of eMMC storage on board.=0A=
+>>=0A=
+>> Add it to enable boards based on this Module=0A=
+>>=0A=
+>> Signed-off-by: Maud Spierings <maudspierings@gocontroll.com>=0A=
+>> ---=0A=
+>>   .../arm64/boot/dts/freescale/imx8mp-tx8p-ml81.dtsi | 548 +++++++++++++=
+++++++++=0A=
+>>   1 file changed, 548 insertions(+)=0A=
+>>=0A=
+>> diff --git a/arch/arm64/boot/dts/freescale/imx8mp-tx8p-ml81.dtsi b/arch/=
+arm64/boot/dts/freescale/imx8mp-tx8p-ml81.dtsi=0A=
+>> new file mode 100644=0A=
+>> index 0000000000000000000000000000000000000000..9c69228a2cd28ce767fa4054=
+d10b19a196668ea2=0A=
+>> --- /dev/null=0A=
+>> +++ b/arch/arm64/boot/dts/freescale/imx8mp-tx8p-ml81.dtsi=0A=
+>> @@ -0,0 +1,548 @@=0A=
+>> +// SPDX-License-Identifier: (GPL-2.0 OR MIT)=0A=
+>> +/*=0A=
+>> + * Copyright (C) 2020 Lothar Wa=DFmann <LW@KARO-electronics.de>=0A=
+>> + * 2025 Maud Spierings <maudspierings@gocontroll.com>=0A=
+>> + */=0A=
+>> +=0A=
+>> +#include "imx8mp.dtsi"=0A=
+>> +=0A=
+>> +/ {=0A=
+>> +	/* PHY regulator */=0A=
+>> +	regulator-3v3-etn {=0A=
+>> +		compatible =3D "regulator-fixed";=0A=
+>> +		gpios =3D <&gpio1 23 GPIO_ACTIVE_HIGH>;=0A=
+>> +		pinctrl-0 =3D <&pinctrl_reg_3v3_etn>;=0A=
+>> +		pinctrl-names =3D "default";=0A=
+>> +		regulator-always-on;=0A=
+>> +		regulator-boot-on;=0A=
+>> +		regulator-max-microvolt =3D <3300000>;=0A=
+>> +		regulator-min-microvolt =3D <3300000>;=0A=
+>> +		regulator-name =3D "3v3-etn";=0A=
+>> +		vin-supply =3D <&reg_vdd_3v3>;=0A=
+>> +		enable-active-high;=0A=
+>> +	};=0A=
+>> +};=0A=
+>> +=0A=
+>> +&A53_0 {=0A=
+>> +	cpu-supply =3D <&reg_vdd_arm>;=0A=
+>> +};=0A=
+>> +=0A=
+>> +&A53_1 {=0A=
+>> +	cpu-supply =3D <&reg_vdd_arm>;=0A=
+>> +};=0A=
+>> +=0A=
+>> +&A53_2 {=0A=
+>> +	cpu-supply =3D <&reg_vdd_arm>;=0A=
+>> +};=0A=
+>> +=0A=
+>> +&A53_3 {=0A=
+>> +	cpu-supply =3D <&reg_vdd_arm>;=0A=
+>> +};=0A=
+>> +=0A=
+>> +&eqos {=0A=
+>> +	assigned-clocks =3D <&clk IMX8MP_CLK_ENET_AXI>,=0A=
+>> +			  <&clk IMX8MP_CLK_ENET_QOS_TIMER>,=0A=
+>> +			  <&clk IMX8MP_CLK_ENET_QOS>;=0A=
+>> +	assigned-clock-parents =3D <&clk IMX8MP_SYS_PLL1_266M>,=0A=
+>> +				 <&clk IMX8MP_SYS_PLL2_100M>,=0A=
+>> +				 <&clk IMX8MP_SYS_PLL2_50M>;=0A=
+>> +	assigned-clock-rates =3D <0>, <100000000>, <50000000>;=0A=
+> =0A=
+> clock rate 0 is quite strange, do you means 266000000?=0A=
+=0A=
+I must admit I blindly copied that from the source, it does make more=0A=
+sense given the name of the parent clock. I changed it and it does seem=0A=
+to work fine.=0A=
+=0A=
+It seems that in imx8mp.dtsi it is also set to 0, so I think that is=0A=
+where it comes from.=0A=
+=0A=
+>> +	phy-handle =3D <&ethphy0>;=0A=
+>> +	phy-mode =3D "rmii";=0A=
+>> +	pinctrl-0 =3D <&pinctrl_eqos>;=0A=
+>> +	pinctrl-1 =3D <&pinctrl_eqos_sleep>;=0A=
+>> +	pinctrl-names =3D "default", "sleep";=0A=
+>> +	status =3D "okay";=0A=
+>> +=0A=
+>> +	mdio {=0A=
+>> +		compatible =3D "snps,dwmac-mdio";=0A=
+>> +		#address-cells =3D <1>;=0A=
+>> +		#size-cells =3D <0>;=0A=
+>> +		pinctrl-0 =3D <&pinctrl_ethphy_rst_b>;=0A=
+>> +		pinctrl-names =3D "default";=0A=
+>> +		reset-delay-us =3D <25000>;=0A=
+>> +		reset-gpios =3D <&gpio4 22 GPIO_ACTIVE_LOW>;=0A=
+>> +=0A=
+>> +		ethphy0: ethernet-phy@0 {=0A=
+>> +			reg =3D <0>;=0A=
+>> +			interrupt-parent =3D <&gpio4>;=0A=
+>> +			interrupts =3D <21 IRQ_TYPE_EDGE_FALLING>;=0A=
+>> +			clocks =3D <&clk IMX8MP_CLK_ENET_QOS>;=0A=
+>> +			pinctrl-0 =3D <&pinctrl_ethphy_int_b>;=0A=
+>> +			pinctrl-names =3D "default";=0A=
+>> +			smsc,disable-energy-detect;=0A=
+>> +		};=0A=
+>> +	};=0A=
+>> +};=0A=
+>> +=0A=
+>> +&gpio1 {=0A=
+>> +	gpio-line-names =3D "SODIMM_152",=0A=
+>> +		"SODIMM_42",=0A=
+> =0A=
+> Please align to "SODIMM_152"=0A=
+will do=0A=
+=0A=
+Met vriendelijke groeten/with kind regards,=0A=
+Maud Spierings =0A=
+> Frank=0A=
+>> +		"PMIC_WDOG_B SODIMM_153",=0A=
+>> +		"PMIC_IRQ_B",=0A=
+>> +		"SODIMM_154",=0A=
+>> +		"SODIMM_155",=0A=
+>> +		"SODIMM_156",=0A=
+>> +		"SODIMM_157",=0A=
+>> +		"SODIMM_158",=0A=
+>> +		"SODIMM_159",=0A=
+>> +		"SODIMM_161",=0A=
+>> +		"SODIMM_162",=0A=
+>> +		"SODIMM_34",=0A=
+>> +		"SODIMM_36",=0A=
+>> +		"SODIMM_27",=0A=
+>> +		"SODIMM_28",=0A=
+>> +		"ENET_MDC",=0A=
+>> +		"ENET_MDIO",=0A=
+>> +		"",=0A=
+>> +		"ENET_XTAL1/CLKIN",=0A=
+>> +		"ENET_TXD1",=0A=
+>> +		"ENET_TXD0",=0A=
+>> +		"ENET_TXEN",=0A=
+>> +		"ENET_POWER",=0A=
+>> +		"ENET_COL/CRS_DV",=0A=
+>> +		"ENET_RXER",=0A=
+>> +		"ENET_RXD0",=0A=
+>> +		"ENET_RXD1",=0A=
+>> +		"",=0A=
+>> +		"",=0A=
+>> +		"",=0A=
+>> +		"";=0A=
+>> +};=0A=
+>> +=0A=
+>> +&gpio2 {=0A=
+>> +	gpio-line-names =3D "",=0A=
+>> +		"",=0A=
+>> +		"",=0A=
+>> +		"",=0A=
+>> +		"",=0A=
+>> +		"",=0A=
+>> +		"",=0A=
+>> +		"",=0A=
+>> +		"",=0A=
+>> +		"",=0A=
+>> +		"",=0A=
+>> +		"",=0A=
+>> +		"SODIMM_51",=0A=
+>> +		"SODIMM_57",=0A=
+>> +		"SODIMM_56",=0A=
+>> +		"SODIMM_52",=0A=
+>> +		"SODIMM_53",=0A=
+>> +		"SODIMM_54",=0A=
+>> +		"SODIMM_55",=0A=
+>> +		"SODIMM_15",=0A=
+>> +		"",=0A=
+>> +		"",=0A=
+>> +		"",=0A=
+>> +		"",=0A=
+>> +		"",=0A=
+>> +		"",=0A=
+>> +		"",=0A=
+>> +		"",=0A=
+>> +		"",=0A=
+>> +		"",=0A=
+>> +		"",=0A=
+>> +		"";=0A=
+>> +};=0A=
+>> +=0A=
+>> +&gpio3 {=0A=
+>> +	gpio-line-names =3D "",=0A=
+>> +		"",=0A=
+>> +		"EMMC_DS",=0A=
+>> +		"EMMC_DAT5",=0A=
+>> +		"EMMC_DAT6",=0A=
+>> +		"EMMC_DAT7",=0A=
+>> +		"",=0A=
+>> +		"",=0A=
+>> +		"",=0A=
+>> +		"",=0A=
+>> +		"EMMC_DAT0",=0A=
+>> +		"EMMC_DAT1",=0A=
+>> +		"EMMC_DAT2",=0A=
+>> +		"EMMC_DAT3",=0A=
+>> +		"",=0A=
+>> +		"EMMC_DAT4",=0A=
+>> +		"",=0A=
+>> +		"EMMC_CLK",=0A=
+>> +		"EMMC_CMD",=0A=
+>> +		"SODIMM_75",=0A=
+>> +		"SODIMM_145",=0A=
+>> +		"SODIMM_163",=0A=
+>> +		"SODIMM_164",=0A=
+>> +		"SODIMM_165",=0A=
+>> +		"SODIMM_143",=0A=
+>> +		"SODIMM_144",=0A=
+>> +		"SODIMM_72",=0A=
+>> +		"SODIMM_73",=0A=
+>> +		"SODIMM_74",=0A=
+>> +		"SODIMM_93",=0A=
+>> +		"",=0A=
+>> +		"";=0A=
+>> +};=0A=
+>> +=0A=
+>> +&gpio4 {=0A=
+>> +	gpio-line-names =3D "SODIMM_98",=0A=
+>> +		"SODIMM_99",=0A=
+>> +		"SODIMM_100",=0A=
+>> +		"SODIMM_101",=0A=
+>> +		"SODIMM_45",=0A=
+>> +		"SODIMM_43",=0A=
+>> +		"SODIMM_105",=0A=
+>> +		"SODIMM_106",=0A=
+>> +		"SODIMM_107",=0A=
+>> +		"SODIMM_108",=0A=
+>> +		"SODIMM_104",=0A=
+>> +		"SODIMM_103",=0A=
+>> +		"SODIMM_115",=0A=
+>> +		"SODIMM_114",=0A=
+>> +		"SODIMM_113",=0A=
+>> +		"SODIMM_112",=0A=
+>> +		"SODIMM_109",=0A=
+>> +		"SODIMM_110",=0A=
+>> +		"SODIMM_95",=0A=
+>> +		"SODIMM_96",=0A=
+>> +		"SODIMM_97",=0A=
+>> +		"ENET_nINT",=0A=
+>> +		"ENET_nRST",=0A=
+>> +		"SODIMM_84",=0A=
+>> +		"SODIMM_87",=0A=
+>> +		"SODIMM_86",=0A=
+>> +		"SODIMM_85",=0A=
+>> +		"SODIMM_83",=0A=
+>> +		"",=0A=
+>> +		"SODIMM_66",=0A=
+>> +		"SODIMM_65",=0A=
+>> +		"";=0A=
+>> +};=0A=
+>> +=0A=
+>> +&gpio5 {=0A=
+>> +	gpio-line-names =3D "",=0A=
+>> +		"",=0A=
+>> +		"",=0A=
+>> +		"SODIMM_76",=0A=
+>> +		"SODIMM_81",=0A=
+>> +		"SODIMM_146",=0A=
+>> +		"SODIMM_48",=0A=
+>> +		"SODIMM_46",=0A=
+>> +		"SODIMM_47",=0A=
+>> +		"SODIMM_44",=0A=
+>> +		"SODIMM_49",=0A=
+>> +		"",=0A=
+>> +		"SODIMM_70",=0A=
+>> +		"SODIMM_69",=0A=
+>> +		"PMIC_SCL",=0A=
+>> +		"PMIC_SDA",=0A=
+>> +		"SODIMM_41",=0A=
+>> +		"SODIMM_40",=0A=
+>> +		"SODIMM_148",=0A=
+>> +		"SODIMM_149",=0A=
+>> +		"SODIMM_150",=0A=
+>> +		"SODIMM_151",=0A=
+>> +		"SODIMM_60",=0A=
+>> +		"SODIMM_59",=0A=
+>> +		"SODIMM_64",=0A=
+>> +		"SODIMM_63",=0A=
+>> +		"SODIMM_62",=0A=
+>> +		"SODIMM_61",=0A=
+>> +		"SODIMM_68",=0A=
+>> +		"SODIMM_67",=0A=
+>> +		"",=0A=
+>> +		"";=0A=
+>> +};=0A=
+>> +=0A=
+>> +&i2c1 {=0A=
+>> +	clock-frequency =3D <400000>;=0A=
+>> +	pinctrl-0 =3D <&pinctrl_i2c1>;=0A=
+>> +	pinctrl-1 =3D <&pinctrl_i2c1_gpio>;=0A=
+>> +	pinctrl-names =3D "default", "gpio";=0A=
+>> +	scl-gpios =3D <&gpio5 14 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;=0A=
+>> +	sda-gpios =3D <&gpio5 15 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;=0A=
+>> +	status =3D "okay";=0A=
+>> +=0A=
+>> +	pmic@25 {=0A=
+>> +		compatible =3D "nxp,pca9450c";=0A=
+>> +		reg =3D <0x25>;=0A=
+>> +		interrupt-parent =3D <&gpio1>;=0A=
+>> +		interrupts =3D <3 IRQ_TYPE_EDGE_FALLING>;=0A=
+>> +		pinctrl-0 =3D <&pinctrl_pmic>;=0A=
+>> +		pinctrl-names =3D "default";=0A=
+>> +=0A=
+>> +		regulators {=0A=
+>> +			reg_vdd_soc: BUCK1 {=0A=
+>> +				regulator-always-on;=0A=
+>> +				regulator-boot-on;=0A=
+>> +				regulator-max-microvolt =3D <900000>;=0A=
+>> +				regulator-min-microvolt =3D <805000>;=0A=
+>> +				regulator-name =3D "vdd-soc";=0A=
+>> +				regulator-ramp-delay =3D <3125>;=0A=
+>> +			};=0A=
+>> +=0A=
+>> +			reg_vdd_arm: BUCK2 {=0A=
+>> +				regulator-always-on;=0A=
+>> +				regulator-boot-on;=0A=
+>> +				regulator-max-microvolt =3D <950000>;=0A=
+>> +				regulator-min-microvolt =3D <805000>;=0A=
+>> +				regulator-name =3D "vdd-core";=0A=
+>> +				regulator-ramp-delay =3D <3125>;=0A=
+>> +				nxp,dvs-run-voltage =3D <950000>;=0A=
+>> +				nxp,dvs-standby-voltage =3D <850000>;=0A=
+>> +			};=0A=
+>> +=0A=
+>> +			reg_vdd_3v3: BUCK4 {=0A=
+>> +				regulator-always-on;=0A=
+>> +				regulator-boot-on;=0A=
+>> +				regulator-max-microvolt =3D <3300000>;=0A=
+>> +				regulator-min-microvolt =3D <3300000>;=0A=
+>> +				regulator-name =3D "3v3";=0A=
+>> +			};=0A=
+>> +=0A=
+>> +			reg_nvcc_nand: BUCK5 {=0A=
+>> +				regulator-always-on;=0A=
+>> +				regulator-boot-on;=0A=
+>> +				regulator-max-microvolt =3D <1800000>;=0A=
+>> +				regulator-min-microvolt =3D <1800000>;=0A=
+>> +				regulator-name =3D "nvcc-nand";=0A=
+>> +			};=0A=
+>> +=0A=
+>> +			reg_nvcc_dram: BUCK6 {=0A=
+>> +				regulator-always-on;=0A=
+>> +				regulator-boot-on;=0A=
+>> +				regulator-max-microvolt =3D <1100000>;=0A=
+>> +				regulator-min-microvolt =3D <1100000>;=0A=
+>> +				regulator-name =3D "nvcc-dram";=0A=
+>> +			};=0A=
+>> +=0A=
+>> +			reg_snvs_1v8: LDO1 {=0A=
+>> +				regulator-always-on;=0A=
+>> +				regulator-boot-on;=0A=
+>> +				regulator-max-microvolt =3D <1800000>;=0A=
+>> +				regulator-min-microvolt =3D <1800000>;=0A=
+>> +				regulator-name =3D "snvs-1v8";=0A=
+>> +			};=0A=
+>> +=0A=
+>> +			ldo2_reg: LDO2 {=0A=
+>> +				regulator-always-on;=0A=
+>> +				regulator-max-microvolt =3D <1150000>;=0A=
+>> +				regulator-min-microvolt =3D <800000>;=0A=
+>> +				regulator-name =3D "LDO2";=0A=
+>> +			};=0A=
+>> +=0A=
+>> +			reg_vdda_1v8: LDO3 {=0A=
+>> +				regulator-always-on;=0A=
+>> +				regulator-boot-on;=0A=
+>> +				regulator-max-microvolt =3D <1800000>;=0A=
+>> +				regulator-min-microvolt =3D <1800000>;=0A=
+>> +				regulator-name =3D "vdda-1v8";=0A=
+>> +			};=0A=
+>> +=0A=
+>> +			ldo4_reg: LDO4 {=0A=
+>> +				regulator-max-microvolt =3D <3300000>;=0A=
+>> +				regulator-min-microvolt =3D <800000>;=0A=
+>> +				regulator-name =3D "LDO4";=0A=
+>> +			};=0A=
+>> +=0A=
+>> +			ldo5_reg: LDO5 {=0A=
+>> +				regulator-always-on;=0A=
+>> +				regulator-boot-on;=0A=
+>> +				regulator-max-microvolt =3D <3300000>;=0A=
+>> +				regulator-min-microvolt =3D <1800000>;=0A=
+>> +				regulator-name =3D "LDO5";=0A=
+>> +			};=0A=
+>> +		};=0A=
+>> +	};=0A=
+>> +};=0A=
+>> +=0A=
+>> +&iomuxc {=0A=
+>> +	pinctrl_eqos: eqosgrp {=0A=
+>> +		fsl,pins =3D <=0A=
+>> +			MX8MP_IOMUXC_ENET_TD2__CCM_ENET_QOS_CLOCK_GENERATE_REF_CLK=0A=
+>> +			(MX8MP_DSE_X4 | MX8MP_PULL_UP | MX8MP_PULL_ENABLE | MX8MP_SION)=0A=
+>> +			MX8MP_IOMUXC_ENET_MDC__ENET_QOS_MDC=0A=
+>> +			(MX8MP_DSE_X4 | MX8MP_PULL_UP | MX8MP_PULL_ENABLE)=0A=
+>> +			MX8MP_IOMUXC_ENET_MDIO__ENET_QOS_MDIO=0A=
+>> +			(MX8MP_DSE_X4 | MX8MP_PULL_UP | MX8MP_PULL_ENABLE)=0A=
+>> +			MX8MP_IOMUXC_ENET_TD0__ENET_QOS_RGMII_TD0=0A=
+>> +			(MX8MP_DSE_X6 | MX8MP_FSEL_FAST)=0A=
+>> +			MX8MP_IOMUXC_ENET_TD1__ENET_QOS_RGMII_TD1=0A=
+>> +			(MX8MP_DSE_X6 | MX8MP_FSEL_FAST)=0A=
+>> +			MX8MP_IOMUXC_ENET_RD0__ENET_QOS_RGMII_RD0=0A=
+>> +			(MX8MP_FSEL_FAST | MX8MP_PULL_UP | MX8MP_PULL_ENABLE)=0A=
+>> +			MX8MP_IOMUXC_ENET_RD1__ENET_QOS_RGMII_RD1=0A=
+>> +			(MX8MP_FSEL_FAST | MX8MP_PULL_UP | MX8MP_PULL_ENABLE)=0A=
+>> +			MX8MP_IOMUXC_ENET_RXC__ENET_QOS_RX_ER=0A=
+>> +			(MX8MP_FSEL_FAST | MX8MP_PULL_ENABLE)=0A=
+>> +			MX8MP_IOMUXC_ENET_RX_CTL__ENET_QOS_RGMII_RX_CTL=0A=
+>> +			(MX8MP_DSE_X6 | MX8MP_FSEL_FAST | MX8MP_PULL_ENABLE)=0A=
+>> +			MX8MP_IOMUXC_ENET_TX_CTL__ENET_QOS_RGMII_TX_CTL=0A=
+>> +			(MX8MP_DSE_X6 | MX8MP_FSEL_FAST)=0A=
+>> +		>;=0A=
+>> +	};=0A=
+>> +=0A=
+>> +	pinctrl_eqos_sleep: eqos-sleep-grp {=0A=
+>> +		fsl,pins =3D <=0A=
+>> +			MX8MP_IOMUXC_ENET_TD2__GPIO1_IO19=0A=
+>> +			(MX8MP_ODE_ENABLE | MX8MP_PULL_ENABLE)=0A=
+>> +			MX8MP_IOMUXC_ENET_MDC__GPIO1_IO16=0A=
+>> +			(MX8MP_ODE_ENABLE | MX8MP_PULL_ENABLE)=0A=
+>> +			MX8MP_IOMUXC_ENET_MDIO__GPIO1_IO17=0A=
+>> +			(MX8MP_ODE_ENABLE | MX8MP_PULL_ENABLE)=0A=
+>> +			MX8MP_IOMUXC_ENET_TD0__GPIO1_IO21=0A=
+>> +			(MX8MP_ODE_ENABLE | MX8MP_PULL_ENABLE)=0A=
+>> +			MX8MP_IOMUXC_ENET_TD1__GPIO1_IO20=0A=
+>> +			(MX8MP_ODE_ENABLE | MX8MP_PULL_ENABLE)=0A=
+>> +			MX8MP_IOMUXC_ENET_RD0__GPIO1_IO26=0A=
+>> +			(MX8MP_ODE_ENABLE | MX8MP_PULL_ENABLE)=0A=
+>> +			MX8MP_IOMUXC_ENET_RD1__GPIO1_IO27=0A=
+>> +			(MX8MP_ODE_ENABLE | MX8MP_PULL_ENABLE)=0A=
+>> +			MX8MP_IOMUXC_ENET_RXC__GPIO1_IO25=0A=
+>> +			(MX8MP_ODE_ENABLE | MX8MP_PULL_ENABLE)=0A=
+>> +			MX8MP_IOMUXC_ENET_RX_CTL__GPIO1_IO24=0A=
+>> +			(MX8MP_ODE_ENABLE | MX8MP_PULL_ENABLE)=0A=
+>> +			MX8MP_IOMUXC_ENET_TX_CTL__GPIO1_IO22=0A=
+>> +			(MX8MP_ODE_ENABLE | MX8MP_PULL_ENABLE)=0A=
+>> +		>;=0A=
+>> +	};=0A=
+>> +=0A=
+>> +	pinctrl_ethphy_int_b: ethphy-int-bgrp {=0A=
+>> +		fsl,pins =3D <=0A=
+>> +			MX8MP_IOMUXC_SAI2_RXFS__GPIO4_IO21=0A=
+>> +			(MX8MP_FSEL_FAST | MX8MP_HYS_SCHMITT)=0A=
+>> +		>;=0A=
+>> +	};=0A=
+>> +=0A=
+>> +	pinctrl_ethphy_rst_b: ethphy-rst-bgrp {=0A=
+>> +		fsl,pins =3D <=0A=
+>> +			MX8MP_IOMUXC_SAI2_RXC__GPIO4_IO22=0A=
+>> +			(MX8MP_PULL_UP | MX8MP_PULL_ENABLE)=0A=
+>> +		>;=0A=
+>> +	};=0A=
+>> +=0A=
+>> +	pinctrl_i2c1: i2c1grp {=0A=
+>> +		fsl,pins =3D <=0A=
+>> +			MX8MP_IOMUXC_I2C1_SCL__I2C1_SCL=0A=
+>> +			MX8MP_I2C_DEFAULT=0A=
+>> +			MX8MP_IOMUXC_I2C1_SDA__I2C1_SDA=0A=
+>> +			MX8MP_I2C_DEFAULT=0A=
+>> +		>;=0A=
+>> +	};=0A=
+>> +=0A=
+>> +	pinctrl_i2c1_gpio: i2c1-gpiogrp {=0A=
+>> +		fsl,pins =3D <=0A=
+>> +			MX8MP_IOMUXC_I2C1_SCL__GPIO5_IO14=0A=
+>> +			MX8MP_I2C_DEFAULT=0A=
+>> +			MX8MP_IOMUXC_I2C1_SDA__GPIO5_IO15=0A=
+>> +			MX8MP_I2C_DEFAULT=0A=
+>> +		>;=0A=
+>> +	};=0A=
+>> +=0A=
+>> +	pinctrl_pmic: pmicgrp {=0A=
+>> +		fsl,pins =3D <=0A=
+>> +			MX8MP_IOMUXC_GPIO1_IO03__GPIO1_IO03=0A=
+>> +			(MX8MP_PULL_UP | MX8MP_HYS_SCHMITT | MX8MP_PULL_ENABLE)=0A=
+>> +		>;=0A=
+>> +	};=0A=
+>> +=0A=
+>> +	pinctrl_reg_3v3_etn: reg-3v3-etngrp {=0A=
+>> +		fsl,pins =3D <=0A=
+>> +			MX8MP_IOMUXC_ENET_TXC__GPIO1_IO23=0A=
+>> +			(MX8MP_PULL_UP | MX8MP_PULL_ENABLE)=0A=
+>> +		>;=0A=
+>> +	};=0A=
+>> +=0A=
+>> +	pinctrl_usdhc3: usdhc3grp {=0A=
+>> +		fsl,pins =3D <=0A=
+>> +			MX8MP_IOMUXC_NAND_WE_B__USDHC3_CLK=0A=
+>> +			(MX8MP_FSEL_FAST | MX8MP_HYS_SCHMITT | MX8MP_PULL_ENABLE)=0A=
+>> +			MX8MP_IOMUXC_NAND_WP_B__USDHC3_CMD=0A=
+>> +			MX8MP_USDHC_DATA_DEFAULT=0A=
+>> +			MX8MP_IOMUXC_NAND_DATA04__USDHC3_DATA0=0A=
+>> +			MX8MP_USDHC_DATA_DEFAULT=0A=
+>> +			MX8MP_IOMUXC_NAND_DATA05__USDHC3_DATA1=0A=
+>> +			MX8MP_USDHC_DATA_DEFAULT=0A=
+>> +			MX8MP_IOMUXC_NAND_DATA06__USDHC3_DATA2=0A=
+>> +			MX8MP_USDHC_DATA_DEFAULT=0A=
+>> +			MX8MP_IOMUXC_NAND_DATA07__USDHC3_DATA3=0A=
+>> +			MX8MP_USDHC_DATA_DEFAULT=0A=
+>> +			MX8MP_IOMUXC_NAND_RE_B__USDHC3_DATA4=0A=
+>> +			MX8MP_USDHC_DATA_DEFAULT=0A=
+>> +			MX8MP_IOMUXC_NAND_CE2_B__USDHC3_DATA5=0A=
+>> +			MX8MP_USDHC_DATA_DEFAULT=0A=
+>> +			MX8MP_IOMUXC_NAND_CE3_B__USDHC3_DATA6=0A=
+>> +			MX8MP_USDHC_DATA_DEFAULT=0A=
+>> +			MX8MP_IOMUXC_NAND_CLE__USDHC3_DATA7=0A=
+>> +			MX8MP_USDHC_DATA_DEFAULT=0A=
+>> +			MX8MP_IOMUXC_NAND_CE1_B__USDHC3_STROBE=0A=
+>> +			(MX8MP_FSEL_FAST | MX8MP_HYS_SCHMITT | MX8MP_PULL_ENABLE)=0A=
+>> +		>;=0A=
+>> +	};=0A=
+>> +=0A=
+>> +	pinctrl_usdhc3_100mhz: usdhc3-100mhzgrp {=0A=
+>> +		fsl,pins =3D <=0A=
+>> +			MX8MP_IOMUXC_NAND_WE_B__USDHC3_CLK=0A=
+>> +			(MX8MP_DSE_X2 | MX8MP_FSEL_FAST | MX8MP_HYS_SCHMITT | MX8MP_PULL_ENA=
+BLE)=0A=
+>> +			MX8MP_IOMUXC_NAND_WP_B__USDHC3_CMD=0A=
+>> +			(MX8MP_DSE_X2 | MX8MP_USDHC_DATA_DEFAULT)=0A=
+>> +			MX8MP_IOMUXC_NAND_DATA04__USDHC3_DATA0=0A=
+>> +			(MX8MP_DSE_X2 | MX8MP_USDHC_DATA_DEFAULT)=0A=
+>> +			MX8MP_IOMUXC_NAND_DATA05__USDHC3_DATA1=0A=
+>> +			(MX8MP_DSE_X2 | MX8MP_USDHC_DATA_DEFAULT)=0A=
+>> +			MX8MP_IOMUXC_NAND_DATA06__USDHC3_DATA2=0A=
+>> +			(MX8MP_DSE_X2 | MX8MP_USDHC_DATA_DEFAULT)=0A=
+>> +			MX8MP_IOMUXC_NAND_DATA07__USDHC3_DATA3=0A=
+>> +			(MX8MP_DSE_X2 | MX8MP_USDHC_DATA_DEFAULT)=0A=
+>> +			MX8MP_IOMUXC_NAND_RE_B__USDHC3_DATA4=0A=
+>> +			(MX8MP_DSE_X2 | MX8MP_USDHC_DATA_DEFAULT)=0A=
+>> +			MX8MP_IOMUXC_NAND_CE2_B__USDHC3_DATA5=0A=
+>> +			(MX8MP_DSE_X2 | MX8MP_USDHC_DATA_DEFAULT)=0A=
+>> +			MX8MP_IOMUXC_NAND_CE3_B__USDHC3_DATA6=0A=
+>> +			(MX8MP_DSE_X2 | MX8MP_USDHC_DATA_DEFAULT)=0A=
+>> +			MX8MP_IOMUXC_NAND_CLE__USDHC3_DATA7=0A=
+>> +			(MX8MP_DSE_X2 | MX8MP_USDHC_DATA_DEFAULT)=0A=
+>> +			MX8MP_IOMUXC_NAND_CE1_B__USDHC3_STROBE=0A=
+>> +			(MX8MP_DSE_X2 | MX8MP_FSEL_FAST | MX8MP_HYS_SCHMITT | MX8MP_PULL_ENA=
+BLE)=0A=
+>> +		>;=0A=
+>> +	};=0A=
+>> +=0A=
+>> +	pinctrl_usdhc3_200mhz: usdhc3-200mhzgrp {=0A=
+>> +		fsl,pins =3D <=0A=
+>> +			MX8MP_IOMUXC_NAND_WE_B__USDHC3_CLK=0A=
+>> +			(MX8MP_DSE_X6 | MX8MP_FSEL_FAST | MX8MP_HYS_SCHMITT | MX8MP_PULL_ENA=
+BLE)=0A=
+>> +			MX8MP_IOMUXC_NAND_WP_B__USDHC3_CMD=0A=
+>> +			(MX8MP_DSE_X6 | MX8MP_USDHC_DATA_DEFAULT)=0A=
+>> +			MX8MP_IOMUXC_NAND_DATA04__USDHC3_DATA0=0A=
+>> +			(MX8MP_DSE_X6 | MX8MP_USDHC_DATA_DEFAULT)=0A=
+>> +			MX8MP_IOMUXC_NAND_DATA05__USDHC3_DATA1=0A=
+>> +			(MX8MP_DSE_X6 | MX8MP_USDHC_DATA_DEFAULT)=0A=
+>> +			MX8MP_IOMUXC_NAND_DATA06__USDHC3_DATA2=0A=
+>> +			(MX8MP_DSE_X6 | MX8MP_USDHC_DATA_DEFAULT)=0A=
+>> +			MX8MP_IOMUXC_NAND_DATA07__USDHC3_DATA3=0A=
+>> +			(MX8MP_DSE_X6 | MX8MP_USDHC_DATA_DEFAULT)=0A=
+>> +			MX8MP_IOMUXC_NAND_RE_B__USDHC3_DATA4=0A=
+>> +			(MX8MP_DSE_X6 | MX8MP_USDHC_DATA_DEFAULT)=0A=
+>> +			MX8MP_IOMUXC_NAND_CE2_B__USDHC3_DATA5=0A=
+>> +			(MX8MP_DSE_X6 | MX8MP_USDHC_DATA_DEFAULT)=0A=
+>> +			MX8MP_IOMUXC_NAND_CE3_B__USDHC3_DATA6=0A=
+>> +			(MX8MP_DSE_X6 | MX8MP_USDHC_DATA_DEFAULT)=0A=
+>> +			MX8MP_IOMUXC_NAND_CLE__USDHC3_DATA7=0A=
+>> +			(MX8MP_DSE_X6 | MX8MP_USDHC_DATA_DEFAULT)=0A=
+>> +			MX8MP_IOMUXC_NAND_CE1_B__USDHC3_STROBE=0A=
+>> +			(MX8MP_DSE_X6 | MX8MP_FSEL_FAST | MX8MP_HYS_SCHMITT | MX8MP_PULL_ENA=
+BLE)=0A=
+>> +		>;=0A=
+>> +	};=0A=
+>> +};=0A=
+>> +=0A=
+>> +&usdhc3 {=0A=
+>> +	assigned-clocks =3D <&clk IMX8MP_CLK_USDHC3>;=0A=
+>> +	assigned-clock-rates =3D <200000000>;=0A=
+>> +	bus-width =3D <8>;=0A=
+>> +	max-frequency =3D <200000000>;=0A=
+>> +	non-removable;=0A=
+>> +	pinctrl-0 =3D <&pinctrl_usdhc3>;=0A=
+>> +	pinctrl-1 =3D <&pinctrl_usdhc3_100mhz>;=0A=
+>> +	pinctrl-2 =3D <&pinctrl_usdhc3_200mhz>;=0A=
+>> +	pinctrl-names =3D "default", "state_100mhz", "state_200mhz";=0A=
+>> +	vmmc-supply =3D <&reg_vdd_3v3>;=0A=
+>> +	voltage-ranges =3D <3300 3300>;=0A=
+>> +	vqmmc-supply =3D <&reg_nvcc_nand>;=0A=
+>> +	status =3D "okay";=0A=
+>> +};=0A=
+>>=0A=
+>> --=0A=
+>> 2.49.0=0A=
+>>=0A=
+>>=
