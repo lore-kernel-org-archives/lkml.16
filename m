@@ -1,87 +1,115 @@
-Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E1EE324BBEF;
-	Thu,  3 Apr 2025 12:00:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.133.224.34
+Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78B741F8720;
+	Thu,  3 Apr 2025 12:03:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743681620; cv=none; b=tM2YYMH/7gAtaw7OoCXLd0nCwU+E9Nne+DgshUe/c0GUzYca564PuQdTVChv5/SIhG8HBqKd07GG7Oop23p8Dlioi/wNyT3fCzVv2TS38zoePekjsyvyLLz+uv44KKsV/VMh+Tw0+pCXlBtiZUWc2tydDel8jWkrRjzaY5ZAcTA=
+	t=1743681813; cv=none; b=U//p/JPexnJ/Wt8eaqmuYEXJ4+GE0TAxWQQF/YeyKpGl910XUYHeTblSv7k0qERboiThGiwIZmP74mgzxjOFLxJa/lTivfnKILUqFPSjlbxnIk8+Mld0nsvj7TLD2EGAolKK6b63i3Kd84YeAVnBGZoIUJ87FtXlltgZBf31VU4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743681620; c=relaxed/simple;
-	bh=gXrlk+N/fddEZ+Yp09kpJuBWkM1jXBr5Bdjrwjx0C6E=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=V46iEdeJmsAteSU4rY6ZmHSOTExq5F1RdzvyBrftpqtiLvBDGUOwCyFkTfowZcFageLfesL+iIg6jtwff8EzYhUUwBKceJRTL2mR1MvWUrCwiPb7vSl3k6EBISvLYIORNif2BgkzMarZTf6v61yMBO/Dwh9DrQ2Ovu6HqmRlxCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk; spf=none smtp.mailfrom=orcam.me.uk; arc=none smtp.client-ip=78.133.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=orcam.me.uk
-Received: by angie.orcam.me.uk (Postfix, from userid 500)
-	id B2AF292009C; Thu,  3 Apr 2025 14:00:15 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by angie.orcam.me.uk (Postfix) with ESMTP id AC37E92009B;
-	Thu,  3 Apr 2025 13:00:15 +0100 (BST)
-Date: Thu, 3 Apr 2025 13:00:15 +0100 (BST)
-From: "Maciej W. Rozycki" <macro@orcam.me.uk>
-To: Marco Crivellari <marco.crivellari@suse.com>
-cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, 
-    Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-    Frederic Weisbecker <frederic@kernel.org>, 
-    Anna-Maria Behnsen <anna-maria@linutronix.de>, 
-    Thomas Gleixner <tglx@linutronix.de>, 
-    Peter Zijlstra <peterz@infradead.org>, Huacai Chen <chenhuacai@kernel.org>
-Subject: Re: [PATCH v6 1/1] MIPS: Fix idle VS timer enqueue
-In-Reply-To: <CAAofZF6Gnzm9isPt3NUuSPBmBWQsj56O43pPZAf64WEP8no2Rg@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.2504021933160.53907@angie.orcam.me.uk>
-References: <20250315194002.13778-1-marco.crivellari@suse.com> <20250315194002.13778-2-marco.crivellari@suse.com> <alpine.DEB.2.21.2503211146001.35806@angie.orcam.me.uk> <CAAofZF4gy6WJKLK4TzF5aV7+ca3gob5jVz3XQZyGrTpfnCsn_Q@mail.gmail.com>
- <alpine.DEB.2.21.2503211747150.35806@angie.orcam.me.uk> <CAAofZF5yaGMG0Kyax+ksfGngQ0T6AxvN5-60SnasQh7=OabaOg@mail.gmail.com> <alpine.DEB.2.21.2503260300290.29685@angie.orcam.me.uk> <alpine.DEB.2.21.2503281345010.47733@angie.orcam.me.uk>
- <CAAofZF65p+DnH8xA0+sfuZv=VO63Zgv4rQ6frrdEzQYoZ0MaWA@mail.gmail.com> <alpine.DEB.2.21.2503311348560.47733@angie.orcam.me.uk> <CAAofZF6Gnzm9isPt3NUuSPBmBWQsj56O43pPZAf64WEP8no2Rg@mail.gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+	s=arc-20240116; t=1743681813; c=relaxed/simple;
+	bh=SmFSfMH1zuOCKlMXXMjeBT+fbXqopLDp2knFLkKUL58=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JFFUE+TlZxkd2GFH+D2et6eMHKXExj5KiryWfelF2N7Yge1o7/nCsxUfS8g3Thcso0s3ciJi+YjrTIMatRS7LDGnAZY/teJpSxLoXbwOT25bttwZT7np2U6dKEhVeSYOlDzFXPOd4THkH1UaWriTYg1tThcRvMdUBtrADCGaDZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=LGGkfrci; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="LGGkfrci"
+Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 533BhN17024322;
+	Thu, 3 Apr 2025 14:02:53 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	d2tu0ByRnyxdayf0QkwM6OVmQDJiDkXd1NnW9iA9mLs=; b=LGGkfrciWfSBxuxh
+	AnfnOhrmx1GA9eTwjyf6POlitH39xejGNnW6rlxxnwy78JYyeTDyfYuwcdg0Fo0E
+	xdZC7AF2WoGecpgpS5gChMQw0y3l469cYFsq0Uq+Jofbz2zOTz6qDLPyp5EvBdrF
+	JI8N6Fp8JsVOnUO1skz524pcegRBnNW3ErdVxl0SH3x3/YnrwP0nfnb0NJNzhwrg
+	gdCU2rEFmKkylY5e0lMDNgesTeCM/BfwcQaWCwoh6zT8Sx8CAjsyHpEmdkMhVYR3
+	a51BVmot7phHiA/ZYHu4Ew/33pQF+AVq+Y+RMaS6xKFbsnEaWzZWAtkeUSlst9jB
+	cXuTLg==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 45s2c7ea4a-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 03 Apr 2025 14:02:53 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 9A63A40085;
+	Thu,  3 Apr 2025 14:01:26 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 77EAF8E3165;
+	Thu,  3 Apr 2025 14:00:13 +0200 (CEST)
+Received: from localhost (10.48.87.151) by SHFDAG1NODE1.st.com (10.75.129.69)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 3 Apr
+ 2025 14:00:13 +0200
+From: Olivier Moysan <olivier.moysan@foss.st.com>
+To: <fabrice.gasnier@foss.st.com>, Rob Herring <robh@kernel.org>,
+        Krzysztof
+ Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Maxime
+ Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue
+	<alexandre.torgue@foss.st.com>
+CC: Olivier Moysan <olivier.moysan@foss.st.com>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH 2/2] ARM: dts: stm32: add vrefint support to adc on stm32mp13
+Date: Thu, 3 Apr 2025 13:59:54 +0200
+Message-ID: <20250403115954.1061528-3-olivier.moysan@foss.st.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250403115954.1061528-1-olivier.moysan@foss.st.com>
+References: <20250403115954.1061528-1-olivier.moysan@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-03_05,2025-04-02_03,2024-11-22_01
 
-On Wed, 2 Apr 2025, Marco Crivellari wrote:
+Set STM32 ADC1&2 as consumers of BSEC, to retrieve vrefint calibration
+data on STM32MP13x SoCs.
 
-> > Well, you should be able to set a breakpoint at `rollback_handle_int' and
-> > fiddle with $epc by hand to see if the code sequence correctly skips over
-> > WAIT.  Though I reckon QEMU used to have an issue with presenting the MIPS
-> > privileged context over its debug stub.  Has the issue been fixed?  Either
-> > way you should be able to just operate on the copy in $k0 retrieved with
-> > (D)MFC0.
-> 
-> Nope, seems not fixed so far. But yes, changing $k0 is working fine.
-> With the cpu in idle code (executing "wait"), ctrl+c, then placed a bp
-> in rollback_handle_init+4. Then "c" to hit the bp.
-> When the bp is hit, I can see $k0 = r4k_wait_exit.
-> 
-> I changed $k0 with an address inside the region, and setting a bp on "bne",
->  the value is equal to $k1. I'm assuming the value is also saved
-> correctly in $epc,
-> considering it points correctly to r4k_wait_exit.
+Signed-off-by: Olivier Moysan <olivier.moysan@foss.st.com>
+---
+ arch/arm/boot/dts/st/stm32mp131.dtsi | 2 ++
+ arch/arm/boot/dts/st/stm32mp133.dtsi | 2 ++
+ 2 files changed, 4 insertions(+)
 
- I think it's enough evidence to prove the code works as expected.
+diff --git a/arch/arm/boot/dts/st/stm32mp131.dtsi b/arch/arm/boot/dts/st/stm32mp131.dtsi
+index 3cc5623d52ca..492bcf586361 100644
+--- a/arch/arm/boot/dts/st/stm32mp131.dtsi
++++ b/arch/arm/boot/dts/st/stm32mp131.dtsi
+@@ -1066,6 +1066,8 @@ adc2: adc@0 {
+ 					interrupts = <0>;
+ 					dmas = <&dmamux1 10 0x400 0x80000001>;
+ 					dma-names = "rx";
++					nvmem-cells = <&vrefint>;
++					nvmem-cell-names = "vrefint";
+ 					status = "disabled";
+ 
+ 					channel@13 {
+diff --git a/arch/arm/boot/dts/st/stm32mp133.dtsi b/arch/arm/boot/dts/st/stm32mp133.dtsi
+index 73e470019ce4..e48838374f0d 100644
+--- a/arch/arm/boot/dts/st/stm32mp133.dtsi
++++ b/arch/arm/boot/dts/st/stm32mp133.dtsi
+@@ -60,6 +60,8 @@ adc1: adc@0 {
+ 			interrupts = <0>;
+ 			dmas = <&dmamux1 9 0x400 0x80000001>;
+ 			dma-names = "rx";
++			nvmem-cells = <&vrefint>;
++			nvmem-cell-names = "vrefint";
+ 			status = "disabled";
+ 
+ 			channel@18 {
+-- 
+2.25.1
 
->  > Hmm, "skipover" maybe?
-> 
-> Now that I'm looking at the code, shouldn't it be better to address this in a
-> separate patch or another time?
-> 
-> I can see the rollback_handler* is exported also in arch/mips/kernel/traps.c
-> And there are a few parts that makes use of the "rollback" name; I'm
-> wondering if also
-> the code should be refactored a bit then,
-> eg arch/mips /include/asm/idle.h:using_rollback_handler()
-
- Yeah, I agree cluttering the semantics change with the rename is not the 
-best idea, so a follow-up patch approach will be better.
-
- Also I wonder if we could come up with yet another name that does not 
-have the exact semantics implied, so that if in 20 years' time we change 
-our minds again and decide: "Oh, let's do the rollback thing after all," 
-we don't have to do the rename again.  Though it's like I'm diverging into 
-the bikeshedding area here, so perhaps please just use whatever name you 
-have found most reasonable at the time you're about to wrap up with this 
-effort.
-
-  Maciej
