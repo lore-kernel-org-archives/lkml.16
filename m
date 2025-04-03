@@ -1,41 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AEA125525C;
-	Thu,  3 Apr 2025 19:02:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CB00253B6E;
+	Thu,  3 Apr 2025 19:02:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743706956; cv=none; b=r+tbwYIfH4jKVci2dZYue88A3gHC+R4ueF94Fitp7nK6MYJ6uN0frt6mJ8BKm1pqUtJQu2RGjtEF7syhsfYs1w+fpIj9Zbpbmgzyf4O8m3Bm94aGlyILXhLN1fchEWc64MfG1giySj7ckoEAwtfmvaO9gz3GQB/Xcsvm0r3zth0=
+	t=1743706959; cv=none; b=qAzv7iJa/ETJF+gX2FITdVw3gRfAhbVxAJ6XDC9lQaHTehYJJ66+OppR/mLXpZWOsOMkJiQCZnTVxOJW+Byu35i27kCbGxKTDe7SRV0cpglzC9oxC54ehdFA918ofRfrQdXsjM5syzJWXZRY5RQ8NLWyyiZkKrKTX7FjM/Mo1cQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743706956; c=relaxed/simple;
-	bh=ktphqHlHc+qHY+dP4whpQVX97Exe5E0m0Nbmj+5KDJE=;
+	s=arc-20240116; t=1743706959; c=relaxed/simple;
+	bh=Hr8jxDpVQqNKw09qnAHqDGLlOF048gJxHmZ2OIOWl8s=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=PWNl2XtoCYU0iT9dqJsrxxRVzOI5gkqS7T8x9UpqZXjunARCCtvZHLEeh2xPPfFI0mDpY1cg39nV2FGDAp5tiYJFO+iEXeQoy52c3ou4yI/sphtzQla5tuSknR7SB2muBFcnvvmtRS+IUkz55hnptWT0iePSJT/N77MiYwLNNZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=poQ7a+9+; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=hB3yZw2/GmGVFK2Q+WarByW9YYE/XqN2512VT8jep2YnKFTvfVGYuTa/IJvUX4aY6IyP34+0GShTLmHMRD7Tw+K96WxBTfO1bvzFLSpdszjaRQZzxe4tDWGY8ldzv80NVg9SkWrpUZQnrtbZUwHyxWZ1qegkqXPhKsN34P4//fg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q3rYHcqx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="poQ7a+9+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FCCEC4CEE8;
-	Thu,  3 Apr 2025 19:02:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q3rYHcqx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5888FC4CEE3;
+	Thu,  3 Apr 2025 19:02:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743706956;
-	bh=ktphqHlHc+qHY+dP4whpQVX97Exe5E0m0Nbmj+5KDJE=;
+	s=k20201202; t=1743706959;
+	bh=Hr8jxDpVQqNKw09qnAHqDGLlOF048gJxHmZ2OIOWl8s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=poQ7a+9+w/PR8EVTQF8w96pd9U5V0gC0Looga2RWiY4L0Ikptvx255gsSKtqG6Oxy
-	 T0PxG9WVaKZ6lFEgDlvWiVfi4SgdPJoel9eBQihET2JlBpmmkk5C53teG/ZcmlKLrJ
-	 ElEHtFpQGbv8r1SHtiU/F4HxS7ZZzuWVusmxXQlXVtd3IDPt6eZ1a8T+AcekY4q9qA
-	 sGR6azeLKINw8KL+6s8k6f00tI8Pp5/Vp1oX9XCo8NH4gLD/7IgKGGmzEaXKuCb080
-	 NTGljzCX8BwgGuIN6yQ02gEJtLxgMgHMP/VAaZn0EXDmGTJjxYBOfkvDbBk0hq1yGs
-	 9Jcql9d5PuNlQ==
+	b=q3rYHcqxdS6d//KoRctO1A6NXXYkaaQMMJ8G5SGWQVmjCZTW+MYb/JPfuBgD4Bx5b
+	 1YWKhbN5DtOpBXC08YKy1z3jxABVCb4R8xDqrG1dqdY5lkcVHoudGGCUP8WshZQ9hF
+	 1p4t0bogYLQaeCLOVE1mjKDSF5n3to/MB4CeSrMitR/bG39WTUN05+9HtsbkvlJ3x7
+	 22n8b2kb0PdFltuo8i8ydeToh31Fq6rrywDV8XWMeDOIIr0toabZPu0G78KrU7aY8V
+	 7/WKOBwv37sKs22TII5ZtlyObaetOi0ESVmNNhv1LqXlAwsIOw949qt3fliwMnfrMJ
+	 vK16n1VN/sNwA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Chao Yu <chao@kernel.org>,
-	Jaegeuk Kim <jaegeuk@kernel.org>,
+Cc: Miri Korenblit <miriam.rachel.korenblit@intel.com>,
+	Johannes Berg <johannes.berg@intel.com>,
 	Sasha Levin <sashal@kernel.org>,
-	linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 6.14 11/54] f2fs: don't retry IO for corrupted data scenario
-Date: Thu,  3 Apr 2025 15:01:26 -0400
-Message-Id: <20250403190209.2675485-11-sashal@kernel.org>
+	johannes@sipsolutions.net,
+	linux-wireless@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.14 13/54] wifi: mac80211: ensure sdata->work is canceled before initialized.
+Date: Thu,  3 Apr 2025 15:01:28 -0400
+Message-Id: <20250403190209.2675485-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250403190209.2675485-1-sashal@kernel.org>
 References: <20250403190209.2675485-1-sashal@kernel.org>
@@ -50,48 +51,48 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.14
 Content-Transfer-Encoding: 8bit
 
-From: Chao Yu <chao@kernel.org>
+From: Miri Korenblit <miriam.rachel.korenblit@intel.com>
 
-[ Upstream commit 1534747d3170646ddeb9ea5f7caaac90359707cf ]
+[ Upstream commit 6c93fd502023dd919b5987ccbe990735410edd49 ]
 
-F2FS-fs (dm-105): inconsistent node block, nid:430, node_footer[nid:2198964142,ino:598252782,ofs:118300154,cpver:5409237455940746069,blkaddr:2125070942]
-F2FS-fs (dm-105): inconsistent node block, nid:430, node_footer[nid:2198964142,ino:598252782,ofs:118300154,cpver:5409237455940746069,blkaddr:2125070942]
-F2FS-fs (dm-105): inconsistent node block, nid:430, node_footer[nid:2198964142,ino:598252782,ofs:118300154,cpver:5409237455940746069,blkaddr:2125070942]
-F2FS-fs (dm-105): inconsistent node block, nid:430, node_footer[nid:2198964142,ino:598252782,ofs:118300154,cpver:5409237455940746069,blkaddr:2125070942]
-F2FS-fs (dm-105): inconsistent node block, nid:430, node_footer[nid:2198964142,ino:598252782,ofs:118300154,cpver:5409237455940746069,blkaddr:2125070942]
-F2FS-fs (dm-105): inconsistent node block, nid:430, node_footer[nid:2198964142,ino:598252782,ofs:118300154,cpver:5409237455940746069,blkaddr:2125070942]
-F2FS-fs (dm-105): inconsistent node block, nid:430, node_footer[nid:2198964142,ino:598252782,ofs:118300154,cpver:5409237455940746069,blkaddr:2125070942]
-F2FS-fs (dm-105): inconsistent node block, nid:430, node_footer[nid:2198964142,ino:598252782,ofs:118300154,cpver:5409237455940746069,blkaddr:2125070942]
-F2FS-fs (dm-105): inconsistent node block, nid:430, node_footer[nid:2198964142,ino:598252782,ofs:118300154,cpver:5409237455940746069,blkaddr:2125070942]
-F2FS-fs (dm-105): inconsistent node block, nid:430, node_footer[nid:2198964142,ino:598252782,ofs:118300154,cpver:5409237455940746069,blkaddr:2125070942]
+This wiphy work is canceled when the iface is stopped,
+and shouldn't be queued for a non-running iface.
+If it happens to be queued for a non-running iface (due to a bug)
+it can cause a corruption of wiphy_work_list when ieee80211_setup_sdata
+is called. Make sure to cancel it in this case and warn on.
 
-If node block is loaded successfully, but its content is inconsistent, it
-doesn't need to retry IO.
-
-Signed-off-by: Chao Yu <chao@kernel.org>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Signed-off-by: Miri Korenblit <miriam.rachel.korenblit@intel.com>
+Reviewed-by: Johannes Berg <johannes.berg@intel.com>
+Link: https://patch.msgid.link/20250205110958.99204c767c10.I84ce27a239059f6009cee197b252549a11426046@changeid
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/inode.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ net/mac80211/iface.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
-index 3dd25f64d6f1e..f238be29a70b0 100644
---- a/fs/f2fs/inode.c
-+++ b/fs/f2fs/inode.c
-@@ -765,8 +765,12 @@ void f2fs_update_inode_page(struct inode *inode)
- 		if (err == -ENOENT)
- 			return;
- 
-+		if (err == -EFSCORRUPTED)
-+			goto stop_checkpoint;
+diff --git a/net/mac80211/iface.c b/net/mac80211/iface.c
+index 738de269e13f0..459fc391a4d93 100644
+--- a/net/mac80211/iface.c
++++ b/net/mac80211/iface.c
+@@ -8,7 +8,7 @@
+  * Copyright 2008, Johannes Berg <johannes@sipsolutions.net>
+  * Copyright 2013-2014  Intel Mobile Communications GmbH
+  * Copyright (c) 2016        Intel Deutschland GmbH
+- * Copyright (C) 2018-2024 Intel Corporation
++ * Copyright (C) 2018-2025 Intel Corporation
+  */
+ #include <linux/slab.h>
+ #include <linux/kernel.h>
+@@ -807,6 +807,9 @@ static void ieee80211_set_multicast_list(struct net_device *dev)
+  */
+ static void ieee80211_teardown_sdata(struct ieee80211_sub_if_data *sdata)
+ {
++	if (WARN_ON(!list_empty(&sdata->work.entry)))
++		wiphy_work_cancel(sdata->local->hw.wiphy, &sdata->work);
 +
- 		if (err == -ENOMEM || ++count <= DEFAULT_RETRY_IO_COUNT)
- 			goto retry;
-+stop_checkpoint:
- 		f2fs_stop_checkpoint(sbi, false, STOP_CP_REASON_UPDATE_INODE);
- 		return;
- 	}
+ 	/* free extra data */
+ 	ieee80211_free_keys(sdata, false);
+ 
 -- 
 2.39.5
 
