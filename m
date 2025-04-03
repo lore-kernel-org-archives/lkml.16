@@ -1,162 +1,126 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 483D424CEFD;
-	Thu,  3 Apr 2025 13:33:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E397251780
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 13:33:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743687227; cv=none; b=soA4wy8yQISAb7XvIvGqAdib7omJFSVXXP6iB5ui+DaKBqMdd2aHCMGsGvyTojts11YyAWeLsIeUcTHKIffomyTiLusANSodGIYh9hP1qh5VvIMImC0eMqNwtqxoO8RwFWrJBYo749WQ+O8NguHxjnszBwWT7VFH97kQm7RJCto=
+	t=1743687229; cv=none; b=YfpXyA6C5KDFlNl8GECaWFrBS35x7skiuaFdn8nvCm9323Uk6V2+MzRX7ZNXBAsJ49HWwdaFJfVPTcHk3sNd3lSayrxJq9kmnMXYdtCSzWbQNJlHuDScnC3PMP40DCqrwuHJq6CCUxwzVLqhpoPpkSTcp3+aB1H+x7bnCoIempE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743687227; c=relaxed/simple;
-	bh=4ryOs7+w3B0bc7UmRjHkHqLLwg/ZtnfyB8P+6MfMuCU=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=lURXJ9iMxXvD/AU8gp4Nl//pOgKwFdCMjwJq8dFKsYMe/dna/0idTYpyy5Djv6ueRJDGnL6c5vWg/52VON0XnCktQ/QtYjOxHFq5T+YjQ83UL00KA/U3EsnmK4SM3vWI6RfCwzdX6s5R4o5e0bMThChaD6SNC9WW23T39Eyj2K8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1kEu4hzS; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4uCljcYU; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1743687229; c=relaxed/simple;
+	bh=bUeXH/Wwdj4sAGXZMnX8uO5zLm5ZlWDOVT0q62t00aY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Vp8uIACDb9Uk+3jgKqv+DIVzEfr/Ylr6nRrVLgQrO94xWE7+xexJ11sc/ogUTQ3UKS0T9tKWfVsiVsAZ2koYlDb4rl0DjUKg48pjUw1hreHEr8r+lCxomCeg0Krpb8pWKhFuobF18xyvuUOFzkrIWw5Iya6LmcuSaMuj0rQd4v4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W2Jg+8bL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1kEu4hzS";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4uCljcYU"
-Date: Thu, 03 Apr 2025 13:33:43 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1743687224;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uvTREFsQytXa3UXlBuevz1DVEQSfk6wLoJqcrSZH21s=;
-	b=1kEu4hzSRtbBh8/kjMZJ4NHxkfv9q3MaAJp/LhUBteI7Hk1dFZmAWIcB5YnKelqqbmxFeI
-	m1BG8rVd12FqBHPCxSnqgtA8LROKPZBSBm93JMDAK49xVGX+Vqt4ysCeQn1MnpQby4AQiR
-	6IHxn6lC3Hx1OxVrhfiyFJUqF0xCKhbPXYWktEUbw9PlSAbxN0ryeLLGYjyWo3tdiJnIbM
-	bMQ3Amshny39p7zYkp5BRRKGhZulHfApT+nOq2i20oB4iriyTqpr13pI37ja/a3K2z7yq8
-	JkNlpnCiFfEIbl6tNq1yjy3TM0tENX4Mt1rMIXvQ1OM0IE8DD2xDpU19kooEXg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1743687224;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uvTREFsQytXa3UXlBuevz1DVEQSfk6wLoJqcrSZH21s=;
-	b=4uCljcYUwYzSlMumcy+hKIZUcwCiDkwU13IQU/LS68CukeoF0CL6/YJFhNE/mJAeCFeqVJ
-	aWBBx/sEnxFITSCQ==
-From: "tip-bot2 for Sohil Mehta" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/nmi] x86/nmi: Consolidate NMI panic variables
-Cc: Sohil Mehta <sohil.mehta@intel.com>, Ingo Molnar <mingo@kernel.org>,
- Kai Huang <kai.huang@intel.com>,
- "Peter Zijlstra (Intel)" <peterz@infradead.org>,
- Nikolay Borisov <nik.borisov@suse.com>,
- Joel Granados <joel.granados@kernel.org>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250327234629.3953536-3-sohil.mehta@intel.com>
-References: <20250327234629.3953536-3-sohil.mehta@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W2Jg+8bL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38033C4CEE5;
+	Thu,  3 Apr 2025 13:33:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743687228;
+	bh=bUeXH/Wwdj4sAGXZMnX8uO5zLm5ZlWDOVT0q62t00aY=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=W2Jg+8bLEje7Ib31DEYv5NlcbQ4c29t9zWQ16iXiBvn0k2FbAhJX9SwUBDzxblhz9
+	 qDDtuCshshgxbQK719bD5GVjVROMaBwyGk8u2kJzDY8uGmPFOBFhiNjVSAhJ+xzPXw
+	 45QfQkrg/CamteDliPtJgBXZGfGig/hiAvubojWOEFuadMT+GIh8chI7hHs2ADtuhE
+	 i6YgZXt25gfbWLMgutO/cMHfc6HxcgzOxhTC068nUaXpHwKOoVysTO0p4An3hMBSVT
+	 1dmtvbTGb3OmwmTkrUkU3dWjbHga7JcyL1sk/VIAtjLVakGY64Fbl/u7PEAPriNpim
+	 qQ2gfeBpBgWZw==
+From: Maxime Ripard <mripard@kernel.org>
+Date: Thu, 03 Apr 2025 15:33:31 +0200
+Subject: [PATCH v2 2/4] drm/vc4: tests: Document output handling functions
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174368722325.30396.2387319486878115024.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20250403-drm-vc4-kunit-failures-v2-2-e09195cc8840@kernel.org>
+References: <20250403-drm-vc4-kunit-failures-v2-0-e09195cc8840@kernel.org>
+In-Reply-To: <20250403-drm-vc4-kunit-failures-v2-0-e09195cc8840@kernel.org>
+To: Dave Stevenson <dave.stevenson@raspberrypi.com>, 
+ =?utf-8?q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>, 
+ Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+ Simona Vetter <simona@ffwll.ch>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ Maxime Ripard <mripard@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2286; i=mripard@kernel.org;
+ h=from:subject:message-id; bh=bUeXH/Wwdj4sAGXZMnX8uO5zLm5ZlWDOVT0q62t00aY=;
+ b=owGbwMvMwCX2+D1vfrpE4FHG02pJDOnv+gz/HhUKeDzXV2aDuMFiTWXmuq1HHBILhba7a8kUb
+ hdt2GDeUcrCIMbFICumyBIjbL4k7tSs151sfPNg5rAygQxh4OIUgIlEBjL80zftCknMs5BYP9n3
+ +N79gZuFd2vxRhnHls+x2RYrnMzXzsjwRZzz5ZHUtalzXk4M3PnUhaM6Jat71seM4Ctrjy760bm
+ WHQA=
+X-Developer-Key: i=mripard@kernel.org; a=openpgp;
+ fpr=BE5675C37E818C8B5764241C254BCFC56BF6CE8D
 
-The following commit has been merged into the x86/nmi branch of tip:
+vc4_mock_atomic_add_output() and vc4_mock_atomic_del_output() are public
+but aren't documented. Let's provide the documentation.
 
-Commit-ID:     78a0323506f01e8017a5826cd7e91951c13184fa
-Gitweb:        https://git.kernel.org/tip/78a0323506f01e8017a5826cd7e91951c13184fa
-Author:        Sohil Mehta <sohil.mehta@intel.com>
-AuthorDate:    Thu, 27 Mar 2025 23:46:22 
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 01 Apr 2025 22:25:56 +02:00
+In particular, special care should be taken to deal with EDEADLK.
 
-x86/nmi: Consolidate NMI panic variables
-
-Commit:
-
-  c305a4e98378 ("x86: Move sysctls into arch/x86")
-
-recently moved the sysctl handling of panic_on_unrecovered_nmi and
-panic_on_io_nmi to x86-specific code. These variables no longer need to
-be declared in the generic header file.
-
-Relocate the variable definitions and declarations closer to where they
-are used. This makes all the NMI panic options consistent and easier to
-track.
-
-[ mingo: Fixed up the SHA1 of the commit reference. ]
-
-Signed-off-by: Sohil Mehta <sohil.mehta@intel.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Reviewed-by: Kai Huang <kai.huang@intel.com>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Nikolay Borisov <nik.borisov@suse.com>
-Cc: Joel Granados <joel.granados@kernel.org>
-Link: https://lore.kernel.org/r/20250327234629.3953536-3-sohil.mehta@intel.com
+Signed-off-by: Maxime Ripard <mripard@kernel.org>
 ---
- arch/x86/include/asm/nmi.h  | 2 ++
- arch/x86/kernel/dumpstack.c | 2 --
- arch/x86/kernel/nmi.c       | 3 +++
- include/linux/panic.h       | 2 --
- 4 files changed, 5 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/vc4/tests/vc4_mock_output.c | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-diff --git a/arch/x86/include/asm/nmi.h b/arch/x86/include/asm/nmi.h
-index 9cf96cc..f85aea7 100644
---- a/arch/x86/include/asm/nmi.h
-+++ b/arch/x86/include/asm/nmi.h
-@@ -17,6 +17,8 @@ extern void release_evntsel_nmi(unsigned int);
- #endif /* CONFIG_X86_LOCAL_APIC */
+diff --git a/drivers/gpu/drm/vc4/tests/vc4_mock_output.c b/drivers/gpu/drm/vc4/tests/vc4_mock_output.c
+index f0ddc223c1f839e8a14f37fdcbb72e7b2c836aa1..577d9a9563696791632aec614c381a214886bf27 100644
+--- a/drivers/gpu/drm/vc4/tests/vc4_mock_output.c
++++ b/drivers/gpu/drm/vc4/tests/vc4_mock_output.c
+@@ -59,10 +59,23 @@ struct vc4_dummy_output *vc4_dummy_output(struct kunit *test,
  
- extern int unknown_nmi_panic;
-+extern int panic_on_unrecovered_nmi;
-+extern int panic_on_io_nmi;
+ static const struct drm_display_mode default_mode = {
+ 	DRM_SIMPLE_MODE(640, 480, 64, 48)
+ };
  
- #define NMI_FLAG_FIRST	1
++/**
++ * vc4_mock_atomic_add_output() - Enables an output in a state
++ * @test: The test context object
++ * @state: Atomic state to enable the output in.
++ * @type: Type of the output encoder
++ *
++ * Adds an output CRTC and connector to a state, and enables them.
++ *
++ * Returns:
++ * 0 on success, a negative error code on failure. If the error is
++ * EDEADLK, the entire atomic sequence must be restarted. All other
++ * errors are fatal.
++ */
+ int vc4_mock_atomic_add_output(struct kunit *test,
+ 			       struct drm_atomic_state *state,
+ 			       enum vc4_encoder_type type)
+ {
+ 	struct drm_device *drm = state->dev;
+@@ -103,10 +116,23 @@ int vc4_mock_atomic_add_output(struct kunit *test,
+ 	crtc_state->active = true;
  
-diff --git a/arch/x86/kernel/dumpstack.c b/arch/x86/kernel/dumpstack.c
-index c6fefd4..71ee201 100644
---- a/arch/x86/kernel/dumpstack.c
-+++ b/arch/x86/kernel/dumpstack.c
-@@ -23,8 +23,6 @@
- #include <asm/stacktrace.h>
- #include <asm/unwind.h>
+ 	return 0;
+ }
  
--int panic_on_unrecovered_nmi;
--int panic_on_io_nmi;
- static int die_counter;
- 
- static struct pt_regs exec_summary_regs;
-diff --git a/arch/x86/kernel/nmi.c b/arch/x86/kernel/nmi.c
-index 9a95d00..671d846 100644
---- a/arch/x86/kernel/nmi.c
-+++ b/arch/x86/kernel/nmi.c
-@@ -91,6 +91,9 @@ static DEFINE_PER_CPU(struct nmi_stats, nmi_stats);
- static int ignore_nmis __read_mostly;
- 
- int unknown_nmi_panic;
-+int panic_on_unrecovered_nmi;
-+int panic_on_io_nmi;
-+
- /*
-  * Prevent NMI reason port (0x61) being accessed simultaneously, can
-  * only be used in NMI handler.
-diff --git a/include/linux/panic.h b/include/linux/panic.h
-index 2494d51..4adc657 100644
---- a/include/linux/panic.h
-+++ b/include/linux/panic.h
-@@ -20,8 +20,6 @@ extern bool panic_triggering_all_cpu_backtrace;
- extern int panic_timeout;
- extern unsigned long panic_print;
- extern int panic_on_oops;
--extern int panic_on_unrecovered_nmi;
--extern int panic_on_io_nmi;
- extern int panic_on_warn;
- 
- extern unsigned long panic_on_taint;
++/**
++ * vc4_mock_atomic_del_output() - Disables an output in a state
++ * @test: The test context object
++ * @state: Atomic state to disable the output in.
++ * @type: Type of the output encoder
++ *
++ * Adds an output CRTC and connector to a state, and disables them.
++ *
++ * Returns:
++ * 0 on success, a negative error code on failure. If the error is
++ * EDEADLK, the entire atomic sequence must be restarted. All other
++ * errors are fatal.
++ */
+ int vc4_mock_atomic_del_output(struct kunit *test,
+ 			       struct drm_atomic_state *state,
+ 			       enum vc4_encoder_type type)
+ {
+ 	struct drm_device *drm = state->dev;
+
+-- 
+2.49.0
+
