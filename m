@@ -1,62 +1,62 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5985A288A2
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 15:11:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BBB32505BF
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 15:11:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743693087; cv=none; b=H9uJTHiw+OcyCpWdgnuq2ZI7XkOTyAdSuDoQZERL+IQbxFRgVcBlLMagjOZMVDuD/LLr4kroDY5iTu+59ONZQesXyoeCyWN7uYDEuXrXYOZOq9cftvgZY3+xHDp5p+jPdExS/rppDijhCv3Vz/pE7rm1Lql51iL4OIXAQTJLYOA=
+	t=1743693089; cv=none; b=ke5P723PRa1+dUyHbYD1BW3yZuUK37AEizsBOPGPs6JtaAZ2qKQAjJ9KzD+4VrIz9SpBF5uy+8yM9p4DmoPivHT4dX8qOosHPB5xNFL0Tpyvxs6t/Y0ll/NRmJOtymLHWn9viIGgd3nyHmZTMo3iHQKWdL1ah5RqC3tF3By+Esg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743693087; c=relaxed/simple;
-	bh=IKZ1DTGASCABruDhUchsyFcZbv/+51upenQAGloOzeI=;
+	s=arc-20240116; t=1743693089; c=relaxed/simple;
+	bh=pazXNSNFRwcbem0gEd5+HAWBBg0Pc62HTCAJjOo1360=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ryp6rPU+sJ4+Uj3iLncAy8dz2WD6tyuq6zgaoHH0ZzycQWC6gYo6gA9KfrOvCZ7guqpetKLu6srkSjGArJgUTEV2dpT+6V26Do67O91AZ79GXtUb75cOpVa81VA94rVWi44AemSKr19Xughw+mhARrqL2D6Qmcm1R2grwnylKkI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FJDUhEV6; arc=none smtp.client-ip=192.198.163.9
+	 Content-Type:Content-Disposition:In-Reply-To; b=TPuupLEAWahaiyLtWJfccAaZ2wWb61NQCWnLGBwLtoKhNiiLsZJDzhGQ0czrw/3qFt47CPIaObsKXaDj/RA9k7bamBZ1uOYYHryfXSIRBa603+f2LdkVksB44axFMKHEV/PJ1v7TQSGK+5khCufxITArtzGz9b+mVWnq0umQsJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Hp2b9VfH; arc=none smtp.client-ip=192.198.163.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FJDUhEV6"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Hp2b9VfH"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743693085; x=1775229085;
+  t=1743693088; x=1775229088;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=IKZ1DTGASCABruDhUchsyFcZbv/+51upenQAGloOzeI=;
-  b=FJDUhEV6OyHVSdpPN0wo5PEa7Da/dUprFvC0RIPRA/+apoWCd8Q5GbbE
-   w+9E+kc4JZtGp5oVrMesJOe69msC7xKrmUrMGsRV+BIv9C91cA87CXPEE
-   RCAa1GDlzxPai0Xy6DTRHeX5NyiIww/RLBsiSZhN1FDBfK+ssoDoO5WGh
-   +3+iDXMYERC7c2RwbuOLePaeT0I28+NKgK8yrWbAqA3D385J/e9FgS/j1
-   3ATOylCez9rV3vwizMDXIzz8h4rMJrdOxJWQctyvtGnVHlxMtbkn0mZhW
-   jeBmVy6IlALtYQXTAN5e2KXIZ5dWIKSwyoH5ceLmj6gpiIy69f2zgyL91
-   Q==;
-X-CSE-ConnectionGUID: CY9+AOKvRYCjFeJkjVAVYQ==
-X-CSE-MsgGUID: MMifWyEtQIyMy8hU2V6aqw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11393"; a="55738643"
+  bh=pazXNSNFRwcbem0gEd5+HAWBBg0Pc62HTCAJjOo1360=;
+  b=Hp2b9VfHDx22SRBlSA7V83YRaF4PMtoErMOrVxH5xeUdZqQeabFUOJmn
+   9MlN2n7e4RCCa0KMVaEwFE3QD5tV9rPhEvGM5rESTlgE5A5n+tDa5eqJB
+   ggCDsRLFlXgnHFd4mp+MhWEhFEZgBLdTVy1WLxLZRTsPUHTHQ3N51PLbE
+   W5NGPoq3SviZDt8j9pl/Qb6ugx28Xs9+4+kTvEY6YGwRNyhQZ2kJP+5xt
+   YzQVD2k5k1XwNe1oQjG5KXaCc2naKBFN0R8WpbpYvcvHpqsa7LdLSH+x3
+   7Pgnmk663wC8OapL/r40PR3qxHFIbQToVYA5/UBuHVcLZuCkX6+NwVhnl
+   A==;
+X-CSE-ConnectionGUID: 9fhy7RIOTLCy95UKGLOc0Q==
+X-CSE-MsgGUID: X/KQEsIGTC+xEPdcJFgFTg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11393"; a="55738647"
 X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
-   d="scan'208";a="55738643"
+   d="scan'208";a="55738647"
 Received: from orviesa005.jf.intel.com ([10.64.159.145])
   by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 08:11:25 -0700
-X-CSE-ConnectionGUID: 782DhgRuR6C6o5QqtirVrA==
-X-CSE-MsgGUID: 3OPoHHurQumYHKuQkgFfRg==
+X-CSE-ConnectionGUID: TzyCgRpwS9Ci2czWVDkHYw==
+X-CSE-MsgGUID: ihRpxO2bRmmQt9iUym/Wvg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
-   d="scan'208";a="132242666"
+   d="scan'208";a="132242656"
 Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
   by orviesa005.jf.intel.com with ESMTP; 03 Apr 2025 08:11:22 -0700
 Received: from kbuild by b207828170a5 with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1u0MDu-0000V5-2m;
+	id 1u0MDu-0000V7-2v;
 	Thu, 03 Apr 2025 15:11:18 +0000
 Date: Thu, 3 Apr 2025 23:11:12 +0800
 From: kernel test robot <lkp@intel.com>
-To: Raag Jadav <raag.jadav@intel.com>, gregkh@linuxfoundation.org,
-	david.m.ertman@intel.com, ira.weiny@intel.com, lee@kernel.org,
-	andriy.shevchenko@linux.intel.com
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Raag Jadav <raag.jadav@intel.com>
-Subject: Re: [PATCH v1] mfd: core: Support auxiliary device
-Message-ID: <202504032326.2F62UbVV-lkp@intel.com>
-References: <20250403110053.1274521-1-raag.jadav@intel.com>
+To: "yohan.joung" <yohan.joung@sk.com>, jaegeuk@kernel.org, chao@kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, linux-f2fs-devel@lists.sourceforge.net,
+	linux-kernel@vger.kernel.org, pilhyun.kim@sk.com,
+	yohan.joung@sk.com
+Subject: Re: [PATCH v4] f2fs: prevent the current section from being selected
+ as a victim during GC
+Message-ID: <202504032206.xzJoHkRX-lkp@intel.com>
+References: <20250403071016.2940-1-yohan.joung@sk.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,59 +65,89 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250403110053.1274521-1-raag.jadav@intel.com>
+In-Reply-To: <20250403071016.2940-1-yohan.joung@sk.com>
 
-Hi Raag,
+Hi yohan.joung,
 
-kernel test robot noticed the following build warnings:
+kernel test robot noticed the following build errors:
 
-[auto build test WARNING on driver-core/driver-core-testing]
-[also build test WARNING on driver-core/driver-core-next driver-core/driver-core-linus lee-mfd/for-mfd-next lee-leds/for-leds-next linus/master v6.14 next-20250403]
-[cannot apply to lee-mfd/for-mfd-fixes]
+[auto build test ERROR on jaegeuk-f2fs/dev-test]
+[also build test ERROR on jaegeuk-f2fs/dev linus/master v6.14 next-20250403]
 [If your patch is applied to the wrong git tree, kindly drop us a note.
 And when submitting patch, we suggest to use '--base' as documented in
 https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Raag-Jadav/mfd-core-Support-auxiliary-device/20250403-190322
-base:   driver-core/driver-core-testing
-patch link:    https://lore.kernel.org/r/20250403110053.1274521-1-raag.jadav%40intel.com
-patch subject: [PATCH v1] mfd: core: Support auxiliary device
-config: arm-randconfig-002-20250403 (https://download.01.org/0day-ci/archive/20250403/202504032326.2F62UbVV-lkp@intel.com/config)
-compiler: arm-linux-gnueabi-gcc (GCC) 8.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250403/202504032326.2F62UbVV-lkp@intel.com/reproduce)
+url:    https://github.com/intel-lab-lkp/linux/commits/yohan-joung/f2fs-prevent-the-current-section-from-being-selected-as-a-victim-during-GC/20250403-151057
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/jaegeuk/f2fs.git dev-test
+patch link:    https://lore.kernel.org/r/20250403071016.2940-1-yohan.joung%40sk.com
+patch subject: [PATCH v4] f2fs: prevent the current section from being selected as a victim during GC
+config: i386-buildonly-randconfig-005-20250403 (https://download.01.org/0day-ci/archive/20250403/202504032206.xzJoHkRX-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250403/202504032206.xzJoHkRX-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504032326.2F62UbVV-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504032206.xzJoHkRX-lkp@intel.com/
 
-All warnings (new ones prefixed by >>):
+All errors (new ones prefixed by >>):
 
-   In file included from drivers/peci/cpu.c:4:
-   include/linux/auxiliary_bus.h: In function 'auxiliary_device_uninit':
-   include/linux/auxiliary_bus.h:246:3: error: implicit declaration of function 'kfree'; did you mean 'ida_free'? [-Werror=implicit-function-declaration]
-      kfree(auxdev->resource);
-      ^~~~~
-      ida_free
-   In file included from drivers/peci/cpu.c:8:
-   include/linux/slab.h: At top level:
->> include/linux/slab.h:472:6: warning: conflicting types for 'kfree'
-    void kfree(const void *objp);
-         ^~~~~
-   In file included from drivers/peci/cpu.c:4:
-   include/linux/auxiliary_bus.h:246:3: note: previous implicit declaration of 'kfree' was here
-      kfree(auxdev->resource);
-      ^~~~~
-   cc1: some warnings being treated as errors
+   In file included from fs/f2fs/checkpoint.c:20:
+   fs/f2fs/segment.h: In function '__set_test_and_free':
+>> fs/f2fs/segment.h:480:81: error: macro "GET_SEC_FROM_SEG" requires 2 arguments, but only 1 given
+     480 |                                 if (GET_SEC_FROM_SEG(sbi->next_victim_seg[BG_GC]) == secno)
+         |                                                                                 ^
+   fs/f2fs/segment.h:105: note: macro "GET_SEC_FROM_SEG" defined here
+     105 | #define GET_SEC_FROM_SEG(sbi, segno)                            \
+         | 
+>> fs/f2fs/segment.h:480:37: error: 'GET_SEC_FROM_SEG' undeclared (first use in this function)
+     480 |                                 if (GET_SEC_FROM_SEG(sbi->next_victim_seg[BG_GC]) == secno)
+         |                                     ^~~~~~~~~~~~~~~~
+   fs/f2fs/segment.h:480:37: note: each undeclared identifier is reported only once for each function it appears in
+   fs/f2fs/segment.h:483:81: error: macro "GET_SEC_FROM_SEG" requires 2 arguments, but only 1 given
+     483 |                                 if (GET_SEC_FROM_SEG(sbi->next_victim_seg[FG_GC]) == secno)
+         |                                                                                 ^
+   fs/f2fs/segment.h:105: note: macro "GET_SEC_FROM_SEG" defined here
+     105 | #define GET_SEC_FROM_SEG(sbi, segno)                            \
+         | 
 
 
-vim +/kfree +472 include/linux/slab.h
+vim +/GET_SEC_FROM_SEG +480 fs/f2fs/segment.h
 
-7bd230a26648ac Suren Baghdasaryan 2024-03-21  471  
-72d67229f522e3 Kees Cook          2021-11-05 @472  void kfree(const void *objp);
-72d67229f522e3 Kees Cook          2021-11-05  473  void kfree_sensitive(const void *objp);
-72d67229f522e3 Kees Cook          2021-11-05  474  size_t __ksize(const void *objp);
-05a940656e1eb2 Kees Cook          2022-09-23  475  
+   458	
+   459	static inline void __set_test_and_free(struct f2fs_sb_info *sbi,
+   460			unsigned int segno, bool inmem)
+   461	{
+   462		struct free_segmap_info *free_i = FREE_I(sbi);
+   463		unsigned int secno = GET_SEC_FROM_SEG(sbi, segno);
+   464		unsigned int start_segno = GET_SEG_FROM_SEC(sbi, secno);
+   465		unsigned int next;
+   466		unsigned int usable_segs = f2fs_usable_segs_in_sec(sbi);
+   467	
+   468		spin_lock(&free_i->segmap_lock);
+   469		if (test_and_clear_bit(segno, free_i->free_segmap)) {
+   470			free_i->free_segments++;
+   471	
+   472			if (!inmem && IS_CURSEC(sbi, secno))
+   473				goto skip_free;
+   474			next = find_next_bit(free_i->free_segmap,
+   475					start_segno + SEGS_PER_SEC(sbi), start_segno);
+   476			if (next >= start_segno + usable_segs) {
+   477				if (test_and_clear_bit(secno, free_i->free_secmap)) {
+   478					free_i->free_sections++;
+   479	
+ > 480					if (GET_SEC_FROM_SEG(sbi->next_victim_seg[BG_GC]) == secno)
+   481						sbi->next_victim_seg[BG_GC] = NULL_SEGNO;
+   482	
+   483					if (GET_SEC_FROM_SEG(sbi->next_victim_seg[FG_GC]) == secno)
+   484						sbi->next_victim_seg[FG_GC] = NULL_SEGNO;
+   485				}
+   486			}
+   487		}
+   488	skip_free:
+   489		spin_unlock(&free_i->segmap_lock);
+   490	}
+   491	
 
 -- 
 0-DAY CI Kernel Test Service
