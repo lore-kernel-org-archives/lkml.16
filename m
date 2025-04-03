@@ -1,20 +1,20 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E43C19E806
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 20:46:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1442C19E806
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 20:46:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743713181; cv=none; b=IFOYMuSz6j7n/yjsHXa3vTKimPW3Rbhuk20jRHssgpos3Enx6OUxBcRPwvhnPqxSAMD1WGfZ7GP0y5Ti0fxleKXsIt864XlVY4qvTv/vLKNHOq1IxPQ91vjEMyPff+HeEBKUO+r1FpbXGQF5veT3DdpbfURnVgzZUEanT5DoYvA=
+	t=1743713194; cv=none; b=IK7YK0C70vX5O1YuGYzFTubok/6FSxSJLegTs+g+2X7VkVrdULkRFDzd3Yd27GsBPFotaITOOZAnDykx7GJTkXFzrXCY+NZmr8EtndkkpUvWOLFbEUVxkOGHd1VGsk6FWnmcM2dYsBDbd0ES6SolHuu6cMusPUAjoF0LhJNTzgA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743713181; c=relaxed/simple;
-	bh=Szc8VnwQoP4VqpeVJiUuu+aMgDMRlaq2GQXDBHTkSfE=;
+	s=arc-20240116; t=1743713194; c=relaxed/simple;
+	bh=pQI2Sx6hjzfs7N++F3llg3rmxqFtMvl/NyjMvkx2tOM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=a71G31ZluKAEuAo5imBF87xAjCiQ/RkkLflCDUSnVEkCPlbvVqZ0F/2IYrYqczXVNVrLByNsrg7pGOsHpRtx1L0lbnwxI4CprazON5b19/1XOXc/V2qTX4VIgjBR1DFY9LV3U2xa3OkFl1rmaHwnpUElzpFv6AF/+9DA0d43CJY=
+	 Content-Type:Content-Disposition:In-Reply-To; b=n1n32XPraSR/fuF/kXAQq/tWmsxB96aab2uKJ/D3x4Y4+emMdwm2FDETawdicbTEaB0C8ryjXOla9FtpWbqNqTs4OOQcfdlg+t2Yj1x2eYrqhemIVTrvXWQUQ1TY1cQSor3ud5Mep7m+LHCGe6QAjWJVxnBOwYBVvD/tWH2JweE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A795EC4CEE3;
-	Thu,  3 Apr 2025 20:46:16 +0000 (UTC)
-Date: Thu, 3 Apr 2025 21:46:13 +0100
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43CF8C4CEE3;
+	Thu,  3 Apr 2025 20:46:30 +0000 (UTC)
+Date: Thu, 3 Apr 2025 21:46:27 +0100
 From: Catalin Marinas <catalin.marinas@arm.com>
 To: Ryan Roberts <ryan.roberts@arm.com>
 Cc: Will Deacon <will@kernel.org>,
@@ -30,11 +30,11 @@ Cc: Will Deacon <will@kernel.org>,
 	Kevin Brodsky <kevin.brodsky@arm.com>,
 	linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 01/11] arm64: hugetlb: Cleanup huge_pte size discovery
- mechanisms
-Message-ID: <Z-7zlcVCrsw4SkwX@arm.com>
+Subject: Re: [PATCH v3 03/11] mm/page_table_check: Batch-check pmds/puds just
+ like ptes
+Message-ID: <Z-7zo5ahsqLaKxUX@arm.com>
 References: <20250304150444.3788920-1-ryan.roberts@arm.com>
- <20250304150444.3788920-2-ryan.roberts@arm.com>
+ <20250304150444.3788920-4-ryan.roberts@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,41 +43,20 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250304150444.3788920-2-ryan.roberts@arm.com>
+In-Reply-To: <20250304150444.3788920-4-ryan.roberts@arm.com>
 
-On Tue, Mar 04, 2025 at 03:04:31PM +0000, Ryan Roberts wrote:
-> Not all huge_pte helper APIs explicitly provide the size of the
-> huge_pte. So the helpers have to depend on various methods to determine
-> the size of the huge_pte. Some of these methods are dubious.
+On Tue, Mar 04, 2025 at 03:04:33PM +0000, Ryan Roberts wrote:
+> Convert page_table_check_p[mu]d_set(...) to
+> page_table_check_p[mu]ds_set(..., nr) to allow checking a contiguous set
+> of pmds/puds in single batch. We retain page_table_check_p[mu]d_set(...)
+> as macros that call new batch functions with nr=1 for compatibility.
 > 
-> Let's clean up the code to use preferred methods and retire the dubious
-> ones. The options in order of preference:
+> arm64 is about to reorganise its pte/pmd/pud helpers to reuse more code
+> and to allow the implementation for huge_pte to more efficiently set
+> ptes/pmds/puds in batches. We need these batch-helpers to make the
+> refactoring possible.
 > 
->  - If size is provided as parameter, use it together with
->    num_contig_ptes(). This is explicit and works for both present and
->    non-present ptes.
-> 
->  - If vma is provided as a parameter, retrieve size via
->    huge_page_size(hstate_vma(vma)) and use it together with
->    num_contig_ptes(). This is explicit and works for both present and
->    non-present ptes.
-> 
->  - If the pte is present and contiguous, use find_num_contig() to walk
->    the pgtable to find the level and infer the number of ptes from
->    level. Only works for *present* ptes.
-> 
->  - If the pte is present and not contiguous and you can infer from this
->    that only 1 pte needs to be operated on. This is ok if you don't care
->    about the absolute size, and just want to know the number of ptes.
-> 
->  - NEVER rely on resolving the PFN of a present pte to a folio and
->    getting the folio's size. This is fragile at best, because there is
->    nothing to stop the core-mm from allocating a folio twice as big as
->    the huge_pte then mapping it across 2 consecutive huge_ptes. Or just
->    partially mapping it.
-> 
-> Where we require that the pte is present, add warnings if not-present.
-> 
+> Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
 > Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
 
 Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
