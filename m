@@ -1,145 +1,96 @@
-Received: from mail-vk1-f176.google.com (mail-vk1-f176.google.com [209.85.221.176])
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA0F118732B
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 07:11:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB90023F266
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 07:11:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743664270; cv=none; b=kTq0zPXUMzwAl/DfXl0sgBWljFhqdIooKBB/TsmmmwpLQoU2HfrjP2FkcBcqyyoyWXGySZxwbdvviWa8aUVcGKVpqptrWSbMq4rfiznyT0MKPaxdX9b9wn4HcjooBGtD01/O9p5FKfz0rxOUxXd2sM9SIvt6gNjccKnXDmwnu9E=
+	t=1743664281; cv=none; b=PW8/8QgAZNBSZkVDvhI9CRV1IBGQg2z58NtJ7OqJdGSBas+Q/1JdHFAc85rtNHavLvFwqUAntKPTzvChz0EhZW+c7TT36Y9K42p7NaOtG+vjG6GcdL82v+r+2pU7Zi8pVLIYE/n6lKhl1OJ7rMVijc+74NFhUsHU1vwpEH0Z7To=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743664270; c=relaxed/simple;
-	bh=nNEojZgXwHTA6iMCyGgj9QMJPGIDSyQ4Bji0m/IGoIE=;
+	s=arc-20240116; t=1743664281; c=relaxed/simple;
+	bh=vJ0Do/5yInpJts5TcS9oFarGP2cYAYOdQDj3i6kaNC8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=t3DoXo8CESf2/ooQx+XS1leYXNICXm0i2q6zLC2ZYz2YEn8cZbje1JDM6H+pbP7LXiXvOKjwLGNj/QaaqkGx3d7q3akexb0zfKQCGgLRtxSowH+PyKLzLyUCw4Ssu6IO663pt9jyB40j/72Fb3bG2dqS+LDS3TlDkGIBHjEZbBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aUJeGcjR; arc=none smtp.client-ip=209.85.221.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=HzEBnIF1KLCU2zr3g7f+G4XOi4uNGMigMg4rw+zvOSo3w5dDFiptUZ4Sh2ek0MYm/r8PP18Rj5WpZHie5bLrro99+QgVzGL2XmFRRcWmTKo3zDZBY3y3MVr565Ek8UUulxr16ikiOzOpq/Io4SVFqlsGXHxed57XCnF5cuTouyY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=riYps+6s; arc=none smtp.client-ip=209.85.208.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aUJeGcjR"
-Received: by mail-vk1-f176.google.com with SMTP id 71dfb90a1353d-525da75d902so286870e0c.3
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 00:11:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="riYps+6s"
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-3061513d353so5758671fa.2
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 00:11:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743664268; x=1744269068; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1743664278; x=1744269078; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=QaV5irKzB8BTG4VmEVwkCDqvoExYXKgjyGLGtsXXpO8=;
-        b=aUJeGcjRdjqNhAusdFxQR6zVIwKPhualGwhBcqafdOQSce1RYc0rqp9vI8AyVmBe5d
-         q+2lTZWtjCErvZ0ovSi1PPEHaYE7vRx3O1Me91nGx0JKaclwODJvK/anm4sp9T7xrDTh
-         Ti1a82MkkKTdiWzqLQLUw2dBb1RL55BKrBdhf8MI657IhXsBmtuuufQlds4X76x3mBdP
-         dXcE3VnFbvZOkOdSTPRPbkQE9V0P0hmoC5fF7h+nSY3ngsYQGeBZiD2X3c513f1Uo+/x
-         zAnp7WjhEWWTrd/Ab0rGC/+MkMHZorx97NdUNhauLC6GsUbHpvWOHE5iLZu1pDMsbxeT
-         ODDA==
+        bh=vJ0Do/5yInpJts5TcS9oFarGP2cYAYOdQDj3i6kaNC8=;
+        b=riYps+6sKJPSvRgNGshxMnSp0eYbkkbCMuLByP48sowp/ixmosWHsFey7dzgyiHwEy
+         JGpIucDX3a16ZATLwQ1OkfFwq1vHTrAE2XIAGsHy4y4vM09N8q9RHPeHkH1jPCh5O8sT
+         TN92hj+RqjgYOjIfbA+U/i6DKsBKWgutvh0Bd9T24zsfQ082k+9He3XLM+SDgtPL1w/V
+         nUVN3JPq3wDtUDC9DtGfPPasLmpNMM6Wz6uLdwv6Jeey2rQy8sj3xPNxe6D2f8FxEoql
+         ouAtd77f/tvehFO/8kqi8VVRnK11ZOE+zuKzWjH5pWk7Wvp121PgcsGgvJs6QrB9B+iK
+         mieg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743664268; x=1744269068;
+        d=1e100.net; s=20230601; t=1743664278; x=1744269078;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=QaV5irKzB8BTG4VmEVwkCDqvoExYXKgjyGLGtsXXpO8=;
-        b=p21QJn6I2Ak08K5cp7AstiLVqlUWW56sIpf/czUKyuVnVPqy3Z08WZNWRXizq6sWgz
-         yvf0vE8mEcRn9Ax29O2yRZg17u4Pgt0YI6/Q2m2Fsp0Tav8n/2fgxNUl8Y25R1YMJgBT
-         npMXBIEXbUoj1Vc/Gl143NWsd/Gsk5LhLwnDLiQXdLJ6hO+FhB/Z0D6vWTYnkae4oXFa
-         XQbt1xvnTPDv4E0ZpYZe1HxSMuyKNg8PTcGWsbMMXrtqUN2RL7/QfocwwKK5F4d6mQbo
-         FIYdHS0GdbcLJyNJZ11dihKQlhCDzpU3YincIIJXbuDRtR8p4tyLwoMQeTDmuktaqnFW
-         bXGQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV940YBDM/TpscpLC6qHetSYbPyGP8Sju6u9eLgRYD0lSudnS0U2vfkQ9D5Ceo4QYSPI/AAOOQw0kwoJmc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzmdRkgS3b6SA1NndnP0xPJ5qN2IZSCbRRwmgUwHmuVitixTOPS
-	R9AhU0P2rA0j1nQgWdFEbqdNobGd72K4fZWU28cIlhPm7Jhd8X58Hws0I+25HGpEW98K4TifqQ/
-	mTCMkw7wMVDLRGUIHjErIorw9GQ8=
-X-Gm-Gg: ASbGncs0ZIo5e3yBpQCEfZ9mEM2n4gdG2kfkDmFTpjn4EAFIEzBuXSLy4R4yALoQ35g
-	9rpEW1OwTXTRau4Nh3rATTNgoTUDw7HNNq7mmA3N+PeOhh4I7DVlBeYHc9plDxKovAb9ITlGZf1
-	BDCqjkAWU33PmwRE0EHOxAgB4//i3V
-X-Google-Smtp-Source: AGHT+IEFtq3RywPNdwWjkvGe9eVUznDe+xyDkg1iSC1HqRGKAOJRt2mkytbKTwyDbxJvXUWhOqWMKxHqw+X8CqnNESg=
-X-Received: by 2002:a05:6122:2502:b0:523:a88b:9bfd with SMTP id
- 71dfb90a1353d-5274cf62070mr3679907e0c.7.1743664267846; Thu, 03 Apr 2025
- 00:11:07 -0700 (PDT)
+        bh=vJ0Do/5yInpJts5TcS9oFarGP2cYAYOdQDj3i6kaNC8=;
+        b=k0+sHr9kOYElNa8UN6xfZZhsBEoOsYWzY5dMa0iGonl1kByWNn0azHBzq5HxBrqERr
+         9w7M9uOMEqHnqRxxKDbuRDB6Tmnn7WQ/VJvNSLuaNfUzma9xtPDuE87LcFFBhCx0DwKt
+         OGZ2Q//QLnR6PtT73bT4MXBpowfsuEulTJL80W4WlsMtsjQLE7F9zLQ69NBJEyQDekb3
+         LRatkosjHUa+d/4ods34k38c+oeYjaQixG4IUoaYLoW/3cdZZtXstSjAofyNgxPZfp6B
+         8wWOdj90CxYJ24qfh4mUErT4EhSPw2t9kRZris0gE0eAyDjubCRNQ5Sy+Y8/X+d1SYrb
+         SLKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX8PH+kMXFfoirFUDwy9zo1DkHu/n9rVrduBU2CB/DCNw8pvXzqdidZU77YSvW/HGzg+7av924LYb/8HY8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz+vAZOOuWdOyKm2aNCzNgKux9MJgS2/m4H6osWYy9Bbya8rjZt
+	dDFGSqxbo02rZfYUNUyg1QNAw7P2bJ02/NOcJSE5m5RO0flvOwAcNZd9ig/GS91h0rbLqglIHpx
+	Jh4YEiQojI1mNmzWUilE4niIO1j8fbtrVPjqQGg==
+X-Gm-Gg: ASbGnctMGlj3D8EzSXgAjU0ogmapKouX/4YIvgmLwovXxQscHK6bsx//0YTvQNXaOxG
+	fDaA4ok6AugpGS5k58jP+e7UzxnWKEiPgMas/DwseYDdyEYGta4dB6drVFZrxTA3857r8uLwluR
+	MbQx3Q+cMQUHKpk2xjkFmks96q/q8/9l9rWl3b6msLqMm2R+bzMfHo3HUN
+X-Google-Smtp-Source: AGHT+IFkpl28huUxLnkOG8+JoZRPAuyoYj8fAmCyXd4tv38/gNFXW7fiJiUp5ulgWcmnVTNmKGEylZ2WlPrLdyIQcMA=
+X-Received: by 2002:a05:651c:1475:b0:30c:7a7:e87c with SMTP id
+ 38308e7fff4ca-30ef91e9c23mr19952681fa.35.1743664277849; Thu, 03 Apr 2025
+ 00:11:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1743635480.git.abrahamadekunle50@gmail.com>
- <9ce32e62672197f63448e98a41902fdf6b40a79e.1743635480.git.abrahamadekunle50@gmail.com>
- <CAHp75VcT5OBxo2jMTYK6Vw8MB+h+jBWT42GVtS27YTkq-JZoLA@mail.gmail.com>
-In-Reply-To: <CAHp75VcT5OBxo2jMTYK6Vw8MB+h+jBWT42GVtS27YTkq-JZoLA@mail.gmail.com>
-From: Samuel Abraham <abrahamadekunle50@gmail.com>
-Date: Thu, 3 Apr 2025 08:10:59 +0100
-X-Gm-Features: AQ5f1JrdIw9HQ4TSfs7WivtPCCN0nofQeoT22ynNGA9vi8Iq5s2F2H8gzyFXZn8
-Message-ID: <CADYq+fY2mOHortr_K+9OwXRP3n6TRZB-ZUu9RytXnWObNDSM1Q@mail.gmail.com>
-Subject: Re: [PATCH 1/2] staging: media: Remove NULL test on an already tested value
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: outreachy@lists.linux.dev, julia.lawall@inria.fr, hdegoede@redhat.com, 
-	mchehab@kernel.org, sakari.ailus@linux.intel.com, andy@kernel.org, 
-	gregkh@linuxfoundation.org, linux-staging@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
+References: <20250402132634.18065-1-johan+linaro@kernel.org>
+In-Reply-To: <20250402132634.18065-1-johan+linaro@kernel.org>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Thu, 3 Apr 2025 09:11:07 +0200
+X-Gm-Features: AQ5f1JoNoWRTnOEMbH9dyhhofmJuk8_vYCLRQWl_3nQ0kPEBcd2NI2XoNIkV_Zo
+Message-ID: <CAMRc=Mfpm8=q1mkfNfjPtogbh1S9PKU+w_2yMP+oE_Gj7-qemQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/4] PCI/arm64/ath11k/ath12k: Rename pwrctrl Kconfig symbols
+To: Johan Hovold <johan+linaro@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Jeff Johnson <jjohnson@kernel.org>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Jonas Gorski <jonas.gorski@gmail.com>, 
+	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	ath11k@lists.infradead.org, ath12k@lists.infradead.org, 
+	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 3, 2025 at 6:19=E2=80=AFAM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
+On Wed, Apr 2, 2025 at 3:27=E2=80=AFPM Johan Hovold <johan+linaro@kernel.or=
+g> wrote:
 >
-> On Thu, Apr 3, 2025 at 2:30=E2=80=AFAM Abraham Samuel Adekunle
-> <abrahamadekunle50@gmail.com> wrote:
-> >
-> > When a value has been tested for NULL in an expression, a
-> > second NULL test on the same value in another expression
-> > is unnecessary when the value has not been assigned NULL.
-> >
-> > Remove unnecessary duplicate NULL tests on the same value that
-> > has previously been NULL tested.
+> The PCI pwrctrl framework was renamed after being merged, but the
+> Kconfig symbols still reflect the old name ("pwrctl" without an "r").
 >
-> >  drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c | 2 +-
-> >  drivers/staging/media/av7110/sp8870.c                     | 2 +-
+> This leads to people not knowing how to refer to the framework in
+> writing, inconsistencies in module naming, etc.
 >
-> Please, split this on per driver basis, as they have different
-> maintainers and trees to go through.
+> Let's rename also the Kconfig symbols before this gets any worse.
+>
 
-Thank you for your review.
-I will do that.
->
-> ...
->
-> > --- a/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c
-> > +++ b/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c
-> > @@ -1292,7 +1292,7 @@ static int gmin_get_config_dsm_var(struct device =
-*dev,
-> >          * if it founds something different than string, letting it
-> >          * to fall back to the old code.
-> >          */
-> > -       if (cur && cur->type !=3D ACPI_TYPE_STRING) {
-> > +       if (cur->type !=3D ACPI_TYPE_STRING) {
-> >                 dev_info(dev, "found non-string _DSM entry for '%s'\n",=
- var);
-> >                 ACPI_FREE(obj);
-> >                 return -EINVAL;
->
-> This change is good.
->
-> ...
->
-> > diff --git a/drivers/staging/media/av7110/sp8870.c b/drivers/staging/me=
-dia/av7110/sp8870.c
-> > index 0c813860f5b2..8c5fa5ed5340 100644
-> > --- a/drivers/staging/media/av7110/sp8870.c
-> > +++ b/drivers/staging/media/av7110/sp8870.c
-> > @@ -508,7 +508,7 @@ static int sp8870_set_frontend(struct dvb_frontend =
-*fe)
-> >         }
-> >
-> >         if (debug) {
-> > -               if (valid) {
-> > +               {
-> >                         if (trials > 1) {
-> >                                 pr_info("%s(): firmware lockup!!!\n", _=
-_func__);
-> >                                 pr_info("%s(): recovered after %i trial=
-(s))\n",  __func__, trials - 1);
->
-> But this is not fully done. Why do we need to keep {}? Just shift left
-> the code and remove those {} altogether.
+Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Okay I will effect the change.
-Thanks
+I'm re-adding the tag here as otherwise b4 will only pick it up for
+patch 4/4 on v2 of the series.
 
-Adekunle
+Bartosz
