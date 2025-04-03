@@ -1,119 +1,124 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0A102E62AE
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 22:21:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBB951A23AA
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 22:28:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743718888; cv=none; b=jRpYIhF6O0RHUPH+/ZUmpGY2PEbnRMapeDifeN07pPZ0AyqDeSpSpMBI1A2/GVKQplSlJeg2bC9piTdcNYWj4SQyR9zwZGlpCsQIqlnsK4unlppzQrcSqfPcawg0W4IBVpVAwXzQqw6oUh1iVFW5a71rRJoU7YMnkJ6BNz/2x0o=
+	t=1743719341; cv=none; b=WlsTWG3pR1eRVF4qL9yn1LjH60ph/Csc+tGaMHmMXd+WUccgcG1Xc/Js9ix0VDAHxipJujqqX2V6NbTKo9Z97mT3jzvPAKSdpBE3FsoSkJz+tzoLOSVbAQSHHL1sNfEjOB/pJfUoi83CI8nw2Xasfj10DvVQMDzAiPduMs1r9xc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743718888; c=relaxed/simple;
-	bh=xZbKHATwgzlto9VB+6ctPn+t/pyRlRiza9WY5y99mjI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=f2cJLeSKG9fUav51MNTajy8F0jV8VJhIYTJbeX/a5tAxvbpXtxzCiKV4KXbC/EyznCeO+a8P9YcwGvmUJnJ7YakzDBJjRmZuXa8VXUge6p2D9NNto5bK9WetVnok6Rz5SviKmoMGA6pEwdpdTDVihZdmsd+yr/9wBDThh2RKBrc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <m.grzeschik@pengutronix.de>)
-	id 1u0Sw0-0007zP-Nh; Fri, 04 Apr 2025 00:21:16 +0200
-Received: from dude04.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::ac])
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <m.grzeschik@pengutronix.de>)
-	id 1u0Svz-003Ad9-29;
-	Fri, 04 Apr 2025 00:21:15 +0200
-Received: from localhost ([::1] helo=dude04.red.stw.pengutronix.de)
-	by dude04.red.stw.pengutronix.de with esmtp (Exim 4.96)
-	(envelope-from <m.grzeschik@pengutronix.de>)
-	id 1u0Svz-004X5f-1x;
-	Fri, 04 Apr 2025 00:21:15 +0200
-From: Michael Grzeschik <m.grzeschik@pengutronix.de>
-Date: Fri, 04 Apr 2025 00:21:01 +0200
-Subject: [PATCH] usb: typec: mux: do not return on EOPNOTSUPP in {mux,
- switch}_set
+	s=arc-20240116; t=1743719341; c=relaxed/simple;
+	bh=VNOHXYzanmqg7O/00y98gBzoYRvCo/KtlZ8xLKauaR8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=PO54GHu5M+pfhA3jdL46ZVN1E+KhNekxoTJ2nWq4Y0IYjnfQZ/1fFVwPzjVlyr3NI20t+xMxZ5GIpVHQU9HgiAduz3jO5pAK4FaApUNp81pp9/U1MpEOxUUm/nptAmxCdBHfRIl4QWtYiRMAJXQtqomgdHVijjxeUyQsUDTVe0U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KfAIgQnU; arc=none smtp.client-ip=209.85.160.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KfAIgQnU"
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-4766631a6a4so13978731cf.2
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 15:28:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743719338; x=1744324138; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=spI9PNT3CiPhRFNnxyIZwUOLBX1aSj6NeXw6KtRgKRA=;
+        b=KfAIgQnU9y1tZSGigwSNLTT74PJRSQmOkA/BJqGxhSPwxJ5euRAyGY4tjKq35vEutC
+         46CH6wOuSo3BkE/Jntm0YSpDT8z8qfQFRzA0FED2py8bD7Wq/RanR2Zu+Ln/2GoAdny8
+         0zTr+dJNcpVVjR2zoZuQzrIf3O8DyDWzk/ZQ/lVOC9BBY3BUxk30ma+ncgO+kYy3/xHn
+         G3nuUHU7foSnpHYD8zMzG198vDmKX/nWdr0cbyemgfLeHJ/48JxlblBvl7tj+g5c8oOM
+         9TfLusjR5VT7hZdlHrihe3aFQ8CnYjFLCSAZjJWYu025LUuxMPd9r3IU3cgl6FskkCof
+         oKyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743719338; x=1744324138;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=spI9PNT3CiPhRFNnxyIZwUOLBX1aSj6NeXw6KtRgKRA=;
+        b=wv9cFS1eYzGdD4naG4FJ/pI0nrH730jPoFhaxywVz3lQMTZa2GEMSpf8y5x/NvMsn4
+         zXdsNQ+nPUaHwDsf5cK560Eo2P6SESPUmueTsR9lh+V99MbYWnA0BEUfOFQ64PYG329l
+         gd52NmqeD5Q0WLuz56vPr+xhiruJie7SB4zgd5wGZXUkQoJ85oEyzuW6Z1rwztlXi4Ua
+         0FDAkwhUeIHNmX5qb8gSHzOX3zdKyR+XHcXzHW0jUzACn/K3dae14FuJR781zE9LrWRV
+         pNJs6PP355aMYd0fWBFMfM/F6OND8EzKvEaeJRprg8Yze2+yoScfMpNWXUTMxCu1nBcH
+         7l3g==
+X-Forwarded-Encrypted: i=1; AJvYcCU3CTMmgo3NQufMtJue7CGuFV909Tq9u1+AuxifEL3oMI3RpQUJ1ujbMmirpF6dOid0IaGQBVwfD1oGxhc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxtD1RzP/t76yrjFswx4hVhUG5lJgkw/8y8vMtEFJJX4XDCpsp6
+	0tEEJWMM7dXhr7rlyJRQkaQw6FDKtP7ceX+SF2nBxHXwiOXNtB8M
+X-Gm-Gg: ASbGnctwDapAp9DOk7/tFCCDGZohTQm2bpIehTM7O7ikHDOoVek80ubDJMj4uOzdnnH
+	xDFHS5a16czDpMPO8ezwWfHCt7V44WaUDxGCmdiYFtLoQa1ohgrp5Wbre8a3h9sM+vKCBiHVsGJ
+	jGXLps2EYq6FnOT7f1LF8NkLxiM4KpZMboeCTMUYs3LojIJGkI2cOYDkvi0W0R9bUHwGsK6OHrE
+	/UwnwiW1mfmP6amhV5/67tPy3rRZpfZqEHqV1Mkmn5hzGR+6WGi2yIK8VY6U/FjGwgKlIv4W8c6
+	EGIhXKvAyElgVeP9brCGXUeE/euJQdBAsUXCpAtXjxKVN/tP
+X-Google-Smtp-Source: AGHT+IE9WgGCJ2iSics3es7U5UWvXNoEZFFhxKCgKyK/HuseosMRyE2bue6YHDURYTFx8izS281UYQ==
+X-Received: by 2002:a05:622a:1102:b0:476:fde3:8a63 with SMTP id d75a77b69052e-479249d5d28mr16541771cf.33.1743719337778;
+        Thu, 03 Apr 2025 15:28:57 -0700 (PDT)
+Received: from HP-650 ([105.112.123.50])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c76e96e566sm129960585a.63.2025.04.03.15.28.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Apr 2025 15:28:57 -0700 (PDT)
+Date: Thu, 3 Apr 2025 23:28:42 +0100
+From: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Julia Lawall <julia.lawall@inria.fr>
+Cc: linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Dan Carpenter <dan.carpenter@linaro.org>
+Subject: [PATCH v2] staging: rtl8723bs: modify struct field to use standard
+ bool type
+Message-ID: <Z+8LmpgIIWlfhmSX@HP-650>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250404-ml-topic-typec-mux-v1-1-22c0526381ba@pengutronix.de>
-X-B4-Tracking: v=1; b=H4sIAMwJ72cC/x3MQQqAIBBA0avErBvQ0EVdJVqkTjWQJVphRHdPW
- r7F/w8kikwJuuqBSBcn3rcCWVdgl3GbCdkVQyMaLZRQ6Fc89sAWjzuQRX9m1KY1QqpJOuOghCH
- SxPmf9sP7fgGoWc1kAAAA
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
- kernel@pengutronix.de, Michael Grzeschik <m.grzeschik@pengutronix.de>
-X-Mailer: b4 0.12.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1449;
- i=m.grzeschik@pengutronix.de; h=from:subject:message-id;
- bh=xZbKHATwgzlto9VB+6ctPn+t/pyRlRiza9WY5y99mjI=;
- b=owEBbQKS/ZANAwAKAb9pWET5cfSrAcsmYgBn7wnbkw5mBibVC8FpLe0vWnFk1fo/DOGTDNl0R
- iE+yLCPMr2JAjMEAAEKAB0WIQQV2+2Fpbqd6fvv0Gi/aVhE+XH0qwUCZ+8J2wAKCRC/aVhE+XH0
- q7PTEACABzO6rbbad/vQgrwL7mlVSJ+EFD1x7mk5h72i2f6fppE8RXgKwABTOChplCbI3VltZvq
- Jsj8V5dOs0zLaPo3I/SiNnL/P5jH/TjTVEGjVG15wsig4O4Fi2QQZ96x9tdFNL9TXlv5dDbC7lO
- GtPR6lViZL0sSQX6Uo1jOwUyrrUEKk+Ak2yroBqSdCwEo9zmBx1P20QihxYg2+xeHNMaO+UfjYg
- KC5RA4HFF2dwFRs864IOvXH6IEOipQpyBSrlzkvrcimkijrQUvDsgYnbrdYMmOPf6iA+0BsLUy1
- UP+xL7XyEvPV5d7PqQlM6gd/quy8ojm4KBn+V3lxDNItktqmeXHmyQ85yLxpW1VvGNQgw8c3C9R
- 1M3sACtB3S9oanpflWFN5tG8jirYz8Zct6VReyem1rIXWs8suAEmDQxLUjFN5IuvegCwh4qNwT9
- 46kinrdJNWQufLJMCtxy6xCTuBNyYSRfqZF3T23BmuIoYHU5HqyOdzPSmqaQ7faAhqpEXaba4PW
- sB7oUStKBunv/sX2IFQVNgc1xbkw8mOzUrbFH282/rLvRv9pXqtVF2RImyf6EtldCB6aXW1/cN9
- pS8gMbOVXBXP2H97sg6I9tCeXvcRSCV3NBDq8cNqd/m5ROTMxim9FchHHj1rkhA7EOWJjDZJGTj
- vO4HhnQlAgQoTIg==
-X-Developer-Key: i=m.grzeschik@pengutronix.de; a=openpgp;
- fpr=957BC452CE953D7EA60CF4FC0BE9E3157A1E2C64
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: m.grzeschik@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Since the typec connectors can have many muxes or switches for different
-lanes (sbu, usb2, usb3) going into different modal states (usb2, usb3,
-audio, debug) all of them will be called on typec_switch_set and
-typec_mux_set. But not all of them will be handling the expected mode.
+The struct sta_info field uses the uint values 0 and 1 to represent false
+and true values respectively.
 
-If one of the mux or switch will come back with EOPTNOSUPP this is no
-reason to stop running through the next ones. Therefor we skip this
-particular error value and continue calling the next.
+Convert cases to use the bool type instead to ensure consistency
+with other parts of the containing code where true or false has
+been used.
 
-Signed-off-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
+reported by Coccinelle.
+
+Signed-off-by: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
 ---
- drivers/usb/typec/mux.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Changes since v2:
+* Improved commit message based on suggestion from Julia Lawall
+* Clarity was provided to Greg Kroah-Hartman by Dan Carpenter on why
+  it is safe to make the change to the struct.
 
-diff --git a/drivers/usb/typec/mux.c b/drivers/usb/typec/mux.c
-index 49926d6e72c71..182c902c42f61 100644
---- a/drivers/usb/typec/mux.c
-+++ b/drivers/usb/typec/mux.c
-@@ -214,7 +214,7 @@ int typec_switch_set(struct typec_switch *sw,
- 		sw_dev = sw->sw_devs[i];
- 
- 		ret = sw_dev->set(sw_dev, orientation);
--		if (ret)
-+		if (ret && ret != -EOPNOTSUPP)
- 			return ret;
- 	}
- 
-@@ -378,7 +378,7 @@ int typec_mux_set(struct typec_mux *mux, struct typec_mux_state *state)
- 		mux_dev = mux->mux_devs[i];
- 
- 		ret = mux_dev->set(mux_dev, state);
--		if (ret)
-+		if (ret && ret != -EOPNOTSUPP)
- 			return ret;
- 	}
- 
+ drivers/staging/rtl8723bs/core/rtw_ap.c      | 2 +-
+ drivers/staging/rtl8723bs/include/sta_info.h | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
----
-base-commit: a1b5bd45d4ee58af4f56e49497b8c3db96d8f8a3
-change-id: 20250404-ml-topic-typec-mux-5b9b014f1dbd
-
-Best regards,
+diff --git a/drivers/staging/rtl8723bs/core/rtw_ap.c b/drivers/staging/rtl8723bs/core/rtw_ap.c
+index ed6942e289a5..82f54f769ed1 100644
+--- a/drivers/staging/rtl8723bs/core/rtw_ap.c
++++ b/drivers/staging/rtl8723bs/core/rtw_ap.c
+@@ -389,7 +389,7 @@ void update_bmc_sta(struct adapter *padapter)
+ 		psta->qos_option = 0;
+ 		psta->htpriv.ht_option = false;
+ 
+-		psta->ieee8021x_blocked = 0;
++		psta->ieee8021x_blocked = false;
+ 
+ 		memset((void *)&psta->sta_stats, 0, sizeof(struct stainfo_stats));
+ 
+diff --git a/drivers/staging/rtl8723bs/include/sta_info.h b/drivers/staging/rtl8723bs/include/sta_info.h
+index b3535fed3de7..63343998266a 100644
+--- a/drivers/staging/rtl8723bs/include/sta_info.h
++++ b/drivers/staging/rtl8723bs/include/sta_info.h
+@@ -86,7 +86,7 @@ struct sta_info {
+ 	uint qos_option;
+ 	u8 hwaddr[ETH_ALEN];
+ 
+-	uint	ieee8021x_blocked;	/* 0: allowed, 1:blocked */
++	bool ieee8021x_blocked;
+ 	uint	dot118021XPrivacy; /* aes, tkip... */
+ 	union Keytype	dot11tkiptxmickey;
+ 	union Keytype	dot11tkiprxmickey;
 -- 
-Michael Grzeschik <m.grzeschik@pengutronix.de>
+2.34.1
 
