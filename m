@@ -1,145 +1,224 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CFBA2500D0
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 14:52:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB3C9250BED
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 14:53:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743691979; cv=none; b=Vs0epflU5r3nDVy2SylsT0zbQ9MvwmDr58DNFouvzhh8IthinKumZzi+Xk57D/2Gng5BsgVuLJu583lHC1UjCswjWq0eCmu9wippOc76wa+iiLX3JQx/f6I7FwdSsPOGhXQzbgKGHyJ0vYccnsO8vGZgTlqHJHtOIQH7n4dGAf8=
+	t=1743691982; cv=none; b=KuA+lgApwyO7a4d9Xt+EIgJ7gZb4fyZPgm5ggQMMtpi2fZYogl6Qj849DxeVRpM7gUssAKESb11ASttFLeTY0JHj9vYHtV0G+Ty2uvMaJ+f1Z9eQnpsMOLyHeQeyoAtfuLLmKE5JD6xrFplkSFIhLhnk2dJnH2SRBKUILy3ABFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743691979; c=relaxed/simple;
-	bh=y/OB6K/Bt9NHwRPTlL/+qoZXBtgHIxGLUDZgy2E3y7U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Q+uNtmUK2VEXTjQtH1ovcZ2kBDJSZuzzl5xM6IsRqQ2gxQ+F37A/Me6NQClW7ds78NBvY7uSmBfiEQgYpS8aDlnLbEeYMeBKk9mkb1JDdpRB9Z21/3ufHEsjGRA+sjFMnMN0coZuSVTqRpWNKitkedTndy1jbUyZAAjb+x1eYlE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=p9vh2Kug; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1743691982; c=relaxed/simple;
+	bh=TwxUKv0HjQmyu3PqtYqNXw8LFD8vSrsVj95vtFrImdg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=n0yATq+7Oy91NOuIy95w35Oz6LZGj95avf0PqYQ/LygS+F8MYPCcANtM3xhL2FCXsSWUGpLZGQlFsvsRANwlmxoqL35YkCDtKC/SdIxn+EsgF9SnMjebK1QMk1YrWvrE4K4X++reevqk+8a48AFjjpyBCq7Rai4JDK/02FQI49Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O0gHZaz5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="p9vh2Kug"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2264c9d0295so467435ad.0
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 07:52:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743691977; x=1744296777; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=y/OB6K/Bt9NHwRPTlL/+qoZXBtgHIxGLUDZgy2E3y7U=;
-        b=p9vh2KugLICC88VACCLx97S8CKRoAqKDKfpV4wClzstSr5hSOvQdbw2pIOW9bLOhxN
-         mKWZy0Uo1nFv83KOgqP4GbzJD3kP4N13LoSka7annmAjCoQQ5wa9SHlK316W+psePYN/
-         9mLl5lGxqEXkSpEBy/JAE5sLZS2JBrOx8MNSn6rsWnLSUJjISiIOsCMEtvmHKqJclwO5
-         DNJVRsdBvl0BW6BHvjpuxEX+3H+paqQoNnnBl/E/e/KGAtyRJzIYHhouoCWWsLaPaCqf
-         C6hUhrLRhR/v593XKWZJYcBCbMfTUSpswTit5b27QyJExBvFeGjamdiV0GyZyxPHMIQS
-         WRgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743691977; x=1744296777;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=y/OB6K/Bt9NHwRPTlL/+qoZXBtgHIxGLUDZgy2E3y7U=;
-        b=tvJcs+B5cDHnJ31gN0EpHj2W8v1Aj5Z+RsKgF8Rw8VSFj2xUQPdBeIupNs86WPBSma
-         MYMyN8+r/nJUmh8n10VYOA0vu/KYPIj4oBejq5WfJJVcSVJTHWsc+kViflXWM9ZdIAGk
-         kluS9h9bTX70qnTzfpS/tWUA5xJ0Z48SZtOwakFxSyidwC6CEHdxYFc5cj6Gfi4ybJW1
-         IYDGGA0z2H/OseZp1zucDQ5CfBwz/sGT+bI1CBobjdrWousOh5TeWng/h/N5fUCMBVWp
-         9ZCBXDCMYsGT/bLFm1i9oP/vi/iIhQrEZk2a907vGHEL8Wpa81vZU6Yil6O7NN5fR4VM
-         jYjg==
-X-Forwarded-Encrypted: i=1; AJvYcCUzW7AsLjRoEPzAKDqCLO/aWKLFiazLSmfcVBHeqSfXsjeJQu3vhwh833xOOc+mlZN/uyDIx2pITEoy+uc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywggmd1/eo9doYwM+suA0R9JzDyi2vOQDbBE82fx1FANnP3Cw+I
-	CimD5Hi2YL4mRfVXfsA37XaBuBkygdxKY4WYT3EP4hrSu0Su/WtKItk6OZ9xHM7CEl9Z8M7sQa8
-	NovR46GITEJJ6wdKH6mpf9jLO+qfLOrpWA+5p
-X-Gm-Gg: ASbGnculWjs3bDNxjOLcMIZnqcWZBY3OFRg+FVBysit7QEA30+Joq5jt++0QC0FWMTc
-	jFpqB+5sT+9tlXPnS8FWQ/0bZvyssqOcRc2gzhkZKh1tX6PmPczp1/mHsKl0KehSJ+6KEKIURk4
-	3z33ObGwmdHljGgYxCsEZz4XILHKI37RnnQWmyhkAt4Y4KlNKKZChqAGUJxPbbP1w=
-X-Google-Smtp-Source: AGHT+IGBznY/8m5rawZtAo3k2V++TsAKT/0vx3dFqX9aObHv2lNamccGJt6Wk28kpxn8mM8r33MXa1pRk8VeuY1C0/k=
-X-Received: by 2002:a17:903:2284:b0:21f:9f4:4a03 with SMTP id
- d9443c01a7336-22978359fc0mr2645425ad.21.1743691976467; Thu, 03 Apr 2025
- 07:52:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O0gHZaz5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48C90C4CEE7;
+	Thu,  3 Apr 2025 14:53:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743691982;
+	bh=TwxUKv0HjQmyu3PqtYqNXw8LFD8vSrsVj95vtFrImdg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=O0gHZaz5RJkepwcCv/17xhxTUbixLwVPI1eHcclWmq2YJeuexK3rEqEimHcn0NRhP
+	 2cS7JVLZ9QqCzY+OZWuRsMtPJ9lnjM+/v7SGQC7e39u/LYVNQV9DKI+2WH872GB/9w
+	 04Qca2vyBzAfQBzM7NVwxdIQcwBqwVjR3W+pU3xDNXA0u27BCnq/36ECH/ikkleuGe
+	 qdl/dJeVJ3w1CYg9cYd+i49b+VGLFY6aCT2rJKWhnfRDI15yfh+79XGPgyi3k7/Ayh
+	 RdzgxYQjb0MJVyTt7Wdn86Q/b41sDg2kako3Y/g4H6z8klRiZ3Rq8RH5Jx6uwVIFHu
+	 MAgMNxurcghhA==
+Date: Thu, 3 Apr 2025 16:52:57 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+	linux-kernel@vger.kernel.org,
+	Peter Zijlstra <a.p.zijlstra@chello.nl>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [GIT PULL] objtool fixes
+Message-ID: <Z-6gyQk2WlHc4DNw@gmail.com>
+References: <Z-xFKa5hiQ5urVwS@gmail.com>
+ <CAHk-=wgqa0B9OV+EAQ34-VOUAeVB2o2bXnZXQDG7u+Z=4Cmw8w@mail.gmail.com>
+ <n7p2rtrq6vvfteu5szlubng4wj6akgn45suekjdxojrpuxr6dp@oxjfxawkv3xs>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250401182347.3422199-1-irogers@google.com> <20250401182347.3422199-3-irogers@google.com>
- <Z-6WY4a6RV1bEbNU@thinkpad> <Z-6aoJ3ohVHPsF0A@thinkpad>
-In-Reply-To: <Z-6aoJ3ohVHPsF0A@thinkpad>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 3 Apr 2025 07:52:45 -0700
-X-Gm-Features: AQ5f1JpXXdneR9py5d-4DyJqYcvkSLXJ0YA323VzpF-AA2iLPosnMDICafKsgoE
-Message-ID: <CAP-5=fU6E1_8Vzki1dVyb8hDEYOXaSNSrJJkR6AOU8xqvknT8w@mail.gmail.com>
-Subject: Re: [PATCH v1 02/48] tools headers: Silence -Wshorten-64-to-32 warnings
-To: Yury Norov <yury.norov@gmail.com>
-Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Darren Hart <dvhart@infradead.org>, 
-	Davidlohr Bueso <dave@stgolabs.net>, =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>, 
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
-	James Clark <james.clark@linaro.org>, Mike Leach <mike.leach@linaro.org>, 
-	Leo Yan <leo.yan@linux.dev>, Yicong Yang <yangyicong@hisilicon.com>, 
-	Jonathan Cameron <jonathan.cameron@huawei.com>, Nathan Chancellor <nathan@kernel.org>, 
-	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
-	Josh Poimboeuf <jpoimboe@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, 
-	Kyle Meyer <kyle.meyer@hpe.com>, Ben Gainey <ben.gainey@arm.com>, 
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>, Kajol Jain <kjain@linux.ibm.com>, 
-	Aditya Gupta <adityag@linux.ibm.com>, Eder Zulian <ezulian@redhat.com>, 
-	Dapeng Mi <dapeng1.mi@linux.intel.com>, Kuan-Wei Chiu <visitorckw@gmail.com>, 
-	He Zhe <zhe.he@windriver.com>, Dirk Gouders <dirk@gouders.net>, 
-	Brian Geffon <bgeffon@google.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
-	Howard Chu <howardchu95@gmail.com>, Charlie Jenkins <charlie@rivosinc.com>, 
-	Colin Ian King <colin.i.king@gmail.com>, Dominique Martinet <asmadeus@codewreck.org>, 
-	Jann Horn <jannh@google.com>, Masahiro Yamada <masahiroy@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Yang Jihong <yangjihong@bytedance.com>, Dmitry Vyukov <dvyukov@google.com>, 
-	Andi Kleen <ak@linux.intel.com>, Graham Woodward <graham.woodward@arm.com>, 
-	Ilkka Koskinen <ilkka@os.amperecomputing.com>, 
-	Anshuman Khandual <anshuman.khandual@arm.com>, Zhongqiu Han <quic_zhonhan@quicinc.com>, 
-	Hao Ge <gehao@kylinos.cn>, Tengda Wu <wutengda@huaweicloud.com>, 
-	Gabriele Monaco <gmonaco@redhat.com>, Chun-Tse Shao <ctshao@google.com>, 
-	Casey Chen <cachen@purestorage.com>, "Dr. David Alan Gilbert" <linux@treblig.org>, 
-	Li Huafei <lihuafei1@huawei.com>, "Steinar H. Gunderson" <sesse@google.com>, Levi Yun <yeoreum.yun@arm.com>, 
-	Weilin Wang <weilin.wang@intel.com>, Thomas Falcon <thomas.falcon@intel.com>, 
-	Thomas Richter <tmricht@linux.ibm.com>, Andrew Kreimer <algonell@gmail.com>, 
-	=?UTF-8?Q?Krzysztof_=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>, Junhao He <hejunhao3@huawei.com>, 
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Xu Yang <xu.yang_2@nxp.com>, 
-	Steve Clevenger <scclevenger@os.amperecomputing.com>, Zixian Cai <fzczx123@gmail.com>, 
-	Stephen Brennan <stephen.s.brennan@oracle.com>, Yujie Liu <yujie.liu@intel.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <n7p2rtrq6vvfteu5szlubng4wj6akgn45suekjdxojrpuxr6dp@oxjfxawkv3xs>
 
-On Thu, Apr 3, 2025 at 7:26=E2=80=AFAM Yury Norov <yury.norov@gmail.com> wr=
-ote:
->
-> On Thu, Apr 03, 2025 at 10:08:39AM -0400, Yury Norov wrote:
-> > On Tue, Apr 01, 2025 at 11:23:00AM -0700, Ian Rogers wrote:
-> > > The clang warning -Wshorten-64-to-32 can be useful to catch
-> > > inadvertent truncation. In some instances this truncation can lead to
-> > > changing the sign of a result, for example, truncation to return an
-> > > int to fit a sort routine. Silence the warning by making the implicit
-> > > truncation explicit.
-> > >
-> > > Signed-off-by: Ian Rogers <irogers@google.com>
->
-> I'm the first person in the To list, but only a couple patches in the
-> series are related to my area. If you want to move it with me, can you
-> send bitmaps, bitfields etc. separately?
 
-Hi Yury,
+* Josh Poimboeuf <jpoimboe@kernel.org> wrote:
 
-If you think it is worthwhile. I did the series to see how prevalent a
-bug was in perf's code - inspired by Leo Yan fixing an instance of it.
-I would prefer not to be on the hook for all the kernel warnings :-)
-Perhaps casts to avoid changing bitmap_weight's type. Unfortunately to
-get to where the perf issues were I needed to clean up header files.
-In the bitmap cases the change is just to make implicit casts explicit
-and I don't know how much value you see in that.
+> On Wed, Apr 02, 2025 at 10:58:15AM -0700, Linus Torvalds wrote:
+
+> > Apparently nobody else ever looks at generated code, but dammit, the
+> > clac/stac code generation has turned the ugly up to 11.
+
+BTW., I do look at generated code, and I know others do too, but at the 
+.o most of the time, not at the .s code, via two ways:
+
+      1) objdump --disassemble-all .o
+    
+      2) perf top's live kernel function annotation and disassembler 
+         feature that uses /dev/mem. (While turning off KASLR, 
+         ptr-obfuscation, turning perf_event_paranoid up to 11^H -1, 
+         etc.)
+
+Such output is more readable to me:
+
+   # [ __memmove_avx_unaligned_erms annotated screen: ]
+
+   0.00  1ea:   vzeroupper      
+              ← retq            
+                nop             
+         1f0:   testq      %rcx,%rcx
+              ↑ je         1ea  
+         1f5:   vmovdqu    0x20(%rsi), %ymm5
+                vmovdqu    0x40(%rsi), %ymm6
+                leaq       -0x81(%rdi,%rdx),%rcx
+                vmovdqu    0x60(%rsi), %ymm7
+                vmovdqu    -0x20(%rsi,%rdx), %ymm8
+                subq       %rdi,%rsi
+                andq       $-0x20,%rcx
+                addq       %rcx,%rsi
+                nop             
+   5.87  220:   vmovdqu    0x60(%rsi), %ymm1
+   8.09         vmovdqu    0x40(%rsi), %ymm2
+  10.34         vmovdqu    0x20(%rsi), %ymm3
+  11.29         vmovdqu    (%rsi), %ymm4
+  13.45         addq       $-0x80,%rsi
+  13.47         vmovdqa    %ymm1,0x60(%rcx)
+  11.26         vmovdqa    %ymm2,0x40(%rcx)
+   9.16         vmovdqa    %ymm3,0x20(%rcx)
+   7.45         vmovdqa    %ymm4,(%rcx)
+   4.98         addq       $-0x80,%rcx
+   4.57         cmpq       %rcx,%rdi
+              ↑ jb         220  
+                vmovdqu    %ymm0, (%rdi)
+                vmovdqu    %ymm5, 0x20(%rdi)
+                vmovdqu    %ymm6, 0x40(%rdi)
+                vmovdqu    %ymm7, 0x60(%rdi)
+                vmovdqu    %ymm8, -0x20(%rdx,%rdi)
+                vzeroupper      
+              ← retq            
+                nop             
+                nop             
+
+( and the 'P' key within perf-top will print this out into the separate
+  __memmove_avx_unaligned_erms.annotation for editor based inspection.   )
+
+because:
+    
+     - this kind of disassembler output is more standardized, 
+       regardless of compiler used,
+    
+     - it's generally less messy looking,
+    
+     - it gives ground-truth instead of being some intermediate layer
+       in the toolchain that might or might not be the real deal,
+
+     - it shows alignment and the various other effects linkers may 
+       apply,
+
+     - there's profiling data overlaid if it's a perf top run,
+
+     - and on a live kernel it also sees through the kernel's various
+       layers of runtime patching code obfuscation facilities, also
+       known as: alternative-instructions, tracepoints and jump labels.
+
+The compiler's .s is really a last-ditch way to look at generated 
+machine code, for me at least.
+
+> >
+> > Yes, the altinstruction replacement thing was already making the
+> > generated asm hard to read, but now it's *also* adding this garbage to
+> > it:
+> >
+> >         911:
+> >         .pushsection .discard.annotate_insn,"M",@progbits,8
+> >         .long 911b - .
+> >         .long 6
+> >         .popsection
+> > 
+> > which is just pure unadulterated pointless noise.
+> > 
+> > That "annotation #6" is WORTHLESS.
+> > 
+> > Dammit, objtool could have figured that annotation out ON ITS OWN
+> > without generating shit in our code. It's not like it doesn't already
+> > look at alternatives, and it's not like it couldn't just have seen
+> > "oh, look, it's a nop instruction with a clac/stac instruction as an
+> > alternative".
+> 
+> Ugh, fragile hard-coded special cases like that are exactly what we're
+> trying to get away from.  They make the code unmaintainable and they end
+> up triggering false positives, just like the one fixed by that patch in
+> the first place.
+
+So the problem is, by reducing objtool complexity a bit:
+
+   # 1154bbd326de objtool: Fix X86_FEATURE_SMAP alternative handling
+
+   8 files changed, 37 insertions(+), 89 deletions(-)
+
+and fixing these two false positive warnings where the 'objtool looks 
+at the alternatives code' heuristics failed:
+
+  arch/x86/mm/fault.o: warning: objtool: do_user_addr_fault+0x8ec: __stack_chk_fail() missing __noreturn in .c/.h or NORETURN() in noreturns.h
+  arch/x86/mm/fault.o: warning: objtool: do_user_addr_fault+0x8f1: unreachable instruction
+
+... we have now uglified the kernel's .s asm output space for all 
+affected stac()/clac() using functions:
+
+    starship:~/tip> diff -up usercopy.s.before usercopy.s.after
+    --- usercopy.s.before	2025-04-03 16:33:07.286944538 +0200
+    +++ usercopy.s.after	2025-04-03 16:32:41.770041092 +0200
+    @@ -78,11 +78,16 @@ copy_from_user_nmi:
+     # ./include/linux/uaccess.h:244: 	current->pagefault_disabled++;
+     	addl	$1, 2748(%rdx)	#, _25->pagefault_disabled
+     # ./include/linux/uaccess.h:266: 	barrier();
+    -# ./arch/x86/include/asm/smap.h:35: 	alternative("", "stac", X86_FEATURE_SMAP);
+    +# ./arch/x86/include/asm/smap.h:35: 	alternative(ANNOTATE_IGNORE_ALTERNATIVE "", "stac", X86_FEATURE_SMAP);
+     #APP
+     # 35 "./arch/x86/include/asm/smap.h" 1
+     	# ALT: oldinstr
+     771:
+    +	911:
+    +	.pushsection .discard.annotate_insn,"M",@progbits,8
+    +	.long 911b - .
+    +	.long 6
+    +	.popsection
+     	
+     772:
+     # ALT: padding
+    @@ -140,10 +145,15 @@ copy_from_user_nmi:
+      .popsection
+     
+     # 0 "" 2
+    -# ./arch/x86/include/asm/smap.h:29: 	alternative("", "clac", X86_FEATURE_SMAP);
+    +# ./arch/x86/include/asm/smap.h:29: 	alternative(ANNOTATE_IGNORE_ALTERNATIVE "", "clac", X86_FEATURE_SMAP);
+     # 29 "./arch/x86/include/asm/smap.h" 1
+     	# ALT: oldinstr
+     771:
+    +	911:
+    +	.pushsection .discard.annotate_insn,"M",@progbits,8
+    +	.long 911b - .
+    +	.long 6
+    +	.popsection
+     	
+     772:
+     # ALT: padding
+
+Is there a way to make this more compact, more readable?
+
+Or if not, we just have to do the more fragile thing I suspect?
+It's a tool after all.
 
 Thanks,
-Ian
 
-> Thanks,
-> Yury
+	Ingo
