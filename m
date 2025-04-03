@@ -1,109 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A61BC3C0B
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 10:03:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8931C3C0B;
+	Thu,  3 Apr 2025 10:04:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743674606; cv=none; b=N4/eYcRRW8w4w/JMuIfS1V9uWSKjteGq+SDxx94pMeSyUlxGqQrgeKsA5Ig9ExElUUq80K0vVa1qaoBUTqASq6PTzGNif3tLRGrZKGE3numeLl31HJtr53fowG7/ioRP2I1h4EFbChPeKkxion0U0LzpZtZFKB6eObc+HlFoNBk=
+	t=1743674652; cv=none; b=VOai8XpGqcd10HO/KHkBhXGAFW8tnO7SjJG8zePhh0/TB70kLJgZS/Y9fYl2XfxN1hnzWJbj6+g/lRguh1bUf2d6TOYLBADqgBDPHRC5KQx50cW00YS99ILja9S7q0ci8b6uEPGjx8E8Am9zHBjID4aIn+lUa3lXORsn5fkUNmA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743674606; c=relaxed/simple;
-	bh=o7gzNeABQTu7OlUf8+Hv1cJWigvJUHCi3CLLd/mdR1s=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=KJcUFrzitil7zm3uy6uTGyvriflG52jlu3srHptm6GB46g3Lm/G0Y7tlPndQ0IPpnO866Y/m3oH+9g2hfWrJ+cTirYQ1IfE1ZO6aAn5Socrl6xi9lwKXIyiKi58SsPqcTurbxaRe8JAJEjC+pn95MYAOvzfRBOIR0//66DWWd2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NQeCrPCt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743674652; c=relaxed/simple;
+	bh=ZiOGN/OBjYN9SLKaZnhOxhyU1UOpniwU2ApSXRy0phU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=K6BJNriPRDh6xRwnC3ETHA2fMPofHx9XZ0x0umK3aIow33Y3mbFYO/xjS9DfCB4sP9kRR8QpE4kPY77o+KJ5l299bMUsq/1PWoYySmwCyK8sQJbMmZYONEPonvvMQT4GxXNFv7nq798nACSrMovOmSi6BHkwClloVOhftyqr1QA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=TGMt9W7q; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NQeCrPCt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4357CC4CEE3;
-	Thu,  3 Apr 2025 10:03:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743674606;
-	bh=o7gzNeABQTu7OlUf8+Hv1cJWigvJUHCi3CLLd/mdR1s=;
-	h=Date:From:To:Cc:Subject:From;
-	b=NQeCrPCtpbjiB4Vq8izbENwfUgsFlt6Mos9L1Gf6iKqkgu70pb05ycku5bB5CjAEZ
-	 9uOSE9dmTQnrVxL6Kbr+hBsvfkearDcQdiEQVGN987ORMBwcRvijCaGE1ebLsLpmUf
-	 vHZm3uYsCh7CtFmYw6/ZtgebBPLN4rPthTyTqePvsj6dLENZ9sdIyb4sKIAPnB3fUJ
-	 KF+QDxCABmnM1eTwKbJ+g1VRoDLUzQtTOG1S/YBD/HozejnR/axaZfpJNEZXP8ygVU
-	 kQwLd5Ktozt/3iJXnx5Rq8kMlgPIkK28xuieskdcOGwsDvWJ90w1oLzIUr5yk7BCfE
-	 KafUpQPPd3Zog==
-Date: Thu, 3 Apr 2025 11:03:22 +0100
-From: Catalin Marinas <cmarinas@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [GIT PULL] arm64 fixes for 6.15-rc1
-Message-ID: <Z-5c6hCqQb3s5GxI@arm.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="TGMt9W7q"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5339sEqC029964;
+	Thu, 3 Apr 2025 10:04:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	ZiOGN/OBjYN9SLKaZnhOxhyU1UOpniwU2ApSXRy0phU=; b=TGMt9W7qrlRXQzUI
+	XvGPhEWkGZNwQU8K9NNy+I5ltUafAokMz6sMKZ9bJeLPbY0ua+08ioAGyS0dYj2I
+	j/BbnbtG5SYc6EQKfSLklWH9P6/+WvGQmpKlN0dJFOYx6Vtrfur1h2u/2nMU0wFi
+	TBMUTrcH98yCf+qtnbwnS5naldC8AlF3d5IrOTAZ/OpA1yNdRy2ddokJUhwMtYeE
+	xbxwL4T0nUn77Q0fVUQRpymEua7sa4f0JuGZ9fcvBqEx0iLrKS5C5YktIakJt8k4
+	u0MOJzm8g1xEu5Ia0J/AjkiQwdEUXt8iohiYsOU+PNXooQmMarqcIFX75RMrlJ7z
+	ccuLHg==
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45rbpyycdv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 03 Apr 2025 10:04:04 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 533A43Jl016439
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 3 Apr 2025 10:04:03 GMT
+Received: from [10.133.33.118] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 3 Apr 2025
+ 03:04:00 -0700
+Message-ID: <b2f13a6d-e876-4cd2-b814-6cbc0b5f862e@quicinc.com>
+Date: Thu, 3 Apr 2025 18:03:57 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/1] device property: Add a note to the fwnode.h
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+        Daniel Scally <djrscally@gmail.com>,
+        Heikki Krogerus
+	<heikki.krogerus@linux.intel.com>,
+        Sakari Ailus
+	<sakari.ailus@linux.intel.com>,
+        Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>,
+        Danilo Krummrich <dakr@kernel.org>,
+        Laurent
+ Pinchart <laurent.pinchart@ideasonboard.com>
+References: <20250331163540.280606-1-andriy.shevchenko@linux.intel.com>
+Content-Language: en-US
+From: Zijun Hu <quic_zijuhu@quicinc.com>
+In-Reply-To: <20250331163540.280606-1-andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: xbljt1kvYHgqpeK5RPT4rt33JbyO5TAD
+X-Proofpoint-ORIG-GUID: xbljt1kvYHgqpeK5RPT4rt33JbyO5TAD
+X-Authority-Analysis: v=2.4 cv=ZNLXmW7b c=1 sm=1 tr=0 ts=67ee5d14 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=owBPNj5rwqKd82W3GFkA:9 a=QEXdDO2ut3YA:10 a=QYH75iMubAgA:10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-03_04,2025-04-02_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ lowpriorityscore=0 clxscore=1011 mlxscore=0 adultscore=0 mlxlogscore=733
+ priorityscore=1501 bulkscore=0 suspectscore=0 malwarescore=0 phishscore=0
+ impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504030035
 
-Hi Linus,
+On 4/1/2025 12:35 AM, Andy Shevchenko wrote:
+> + * Note, this header is not meant to be used by the leaf drivers.
+> + * It provides the low level data types and definitions for the firmware
+> + * and device property providers. The respective API headers should
+> + * guarantee all the required data types and definitions without including
+> + * this header directly into the driver.
+> + *
 
-Please pull the arm64 fixes below that turned up during or shortly
-before the merging window. They are based on top of the previous arm64
-updates pull request (6.14-rc3).
+sorry, i don't understand both "leaf drivers" and "respective API
+headers". could you have examples ?
 
-(sending with my kernel.org address, hopefully not ending in spam this
-time around)
 
-Thanks.
-
-The following changes since commit 64fa6b9322a904198589c0479dca6f2ed7f2eb04:
-
-  Merge branch 'for-next/el2-enable-feat-pmuv3p9' into for-next/core (2025-03-25 19:32:32 +0000)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux tags/arm64-fixes
-
-for you to fetch changes up to c28f31deeacda307acfee2f18c0ad904e5123aac:
-
-  arm64: Don't call NULL in do_compat_alignment_fixup() (2025-04-01 14:13:11 +0100)
-
-----------------------------------------------------------------
-arm64 fixes:
-
- - Fix max_pfn calculation when hotplugging memory so that it never
-   decreases
-
- - Fix dereference of unused source register in the MOPS SET operation
-   fault handling
-
- - Fix NULL calling in do_compat_alignment_fixup() when the 32-bit user
-   space does an unaligned LDREX/STREX
-
- - Add the HiSilicon HIP09 processor to the Spectre-BHB affected CPUs
-
- - Drop unused code pud accessors (special/mkspecial)
-
-----------------------------------------------------------------
-Angelos Oikonomopoulos (1):
-      arm64: Don't call NULL in do_compat_alignment_fixup()
-
-Jinqian Yang (1):
-      arm64: Add support for HIP09 Spectre-BHB mitigation
-
-Keir Fraser (1):
-      arm64: mops: Do not dereference src reg for a set operation
-
-Peter Xu (1):
-      arm64: mm: Drop dead code for pud special bit handling
-
-Zhenhua Huang (1):
-      arm64: mm: Correct the update of max_pfn
-
- arch/arm64/include/asm/cputype.h     | 2 ++
- arch/arm64/include/asm/pgtable.h     | 5 -----
- arch/arm64/include/asm/traps.h       | 4 ++--
- arch/arm64/kernel/compat_alignment.c | 2 ++
- arch/arm64/kernel/proton-pack.c      | 1 +
- arch/arm64/mm/mmu.c                  | 3 ++-
- 6 files changed, 9 insertions(+), 8 deletions(-)
-
--- 
-Catalin
