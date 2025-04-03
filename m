@@ -1,177 +1,266 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CC547FD
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 00:06:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13484D26D;
+	Thu,  3 Apr 2025 00:06:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743638792; cv=none; b=Efecz52WHNAmS/C1f5uEEIJ7K9k4yywDNfxHb4bCjd0Gu6CAJ7/dqKDk7Go7dYkUFpebEwO405yGVhwW6jP8oCdVjKXzukboSfZic2yj86FgYaYw+vP8MyN9SKK75SYas0HHg1nJ/2uGPDWNMKjCcUDYSKmHK6wI93Ze7EZdu+U=
+	t=1743638806; cv=none; b=EktLb/2alElJ/ANDJ9yKUbZoXxi+lgL6M3B0P0DgHytdcSxbRslyKXW1LWkJ516xJRNoysCIO4cCwAGwL066IG/KxGf6BjNY8hG0u/5/UAi7Gj3+y0hXlUbWq6xjM6Bx2hWR6O9cEulPLRqYxGeBdRiAbNr08exvoZpJqhW+P0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743638792; c=relaxed/simple;
-	bh=nhly9Oo98XoTVMa6E6OYtYSm01eN5GH5P0vWzI1XMTg=;
+	s=arc-20240116; t=1743638806; c=relaxed/simple;
+	bh=q0oeBg4kkjHukNevSdAXAXG57vFGbGkVFCKLMccHnWs=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VSb+BcEhI6JLS1xTQogucx854KBo/va/qCKcZGO5s+D0CeGIfQWv8jSXh5stkB3CLvZwAvGpsRi70kJFsAzVQy9lr6hor4xA6B5Iv3tniXpkKmvz5JYMtpV62Wx98zou1EmtRkXa5xvQeTiWXucZtIIFNxMCdqOYorEs8jnrmbk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=VZhxgYnK; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	 To:Cc:Content-Type; b=IfPtc69T1DLraapCbKjLYvVmq5TSJib/bTbvl7MuQbe3r7NB6TobNKmynqxXlNJjYeEY91cMVvWId/y5ZVhCf7YmGL2rnqdhatlBKThpke3brsGuEmuGCsvd7Pmyr54wZfBfhY+Ya5oX/RZC05d8bvn0JKeo/u+yXX3x8QrqVmo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eb05JHwT; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="VZhxgYnK"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ac29af3382dso46612566b.2
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 17:06:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eb05JHwT"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43ea40a6e98so2430755e9.1;
+        Wed, 02 Apr 2025 17:06:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1743638788; x=1744243588; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=WDME24yiYohb1xBflLrOYtprUkMulUfhOxUWN86ggD8=;
-        b=VZhxgYnKigDkHmPaz3LTGq3drg4E1UMeUc//U5llagqf+Ps0/xGfFYnrj8OcZYfwjp
-         3AOM7Bz5AGFpHGp+sgTuP5MXkUCKpuXYjqkVRljtUkFXME6jPmW1FQY1KImQj1LJBoHt
-         k1Hp+gXkxa889onjKMRk5iM9TbhUfZMQP7XK8=
+        d=gmail.com; s=20230601; t=1743638802; x=1744243602; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=THqZB3gc9ZiqXUYns3lMT7gLqog0AJdSzQ22r6kIxIg=;
+        b=eb05JHwTcsOcMq5VFNt78u6jEbs/NAfwNmBxcLQvXJ3oO2yT3cwSTN9d0eoYqzR6Rg
+         70bLPYn9Iw+WLxNsEEP+/n07nA/sQfZS5lu47pZ5F2nOZWjrB+cLCMheKfGa2Tik1oxe
+         +C5NF54cWRbf3KySzXa+eUD7yI1nMOdBCK6FgPwbBQsDKMDbRL8MD400B6FkvjAfrTCC
+         8y+wgKmRB2EKgBi0RxtuOt+gTOQmub/Lg0SFpKHU+pFF8jlA99P+ILgE1aNZLXXHh7RP
+         72bSuEQ3sy/7xt2JY+Ls9PAksv180el2uoxg7mB6vh5zQS8j1kGaImNZ4ohFh3kIUAQ3
+         TVcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743638788; x=1744243588;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=WDME24yiYohb1xBflLrOYtprUkMulUfhOxUWN86ggD8=;
-        b=jfV7ThFLHTGCQwFmfS4MPcBmJwOtR5orCYiGWXaWmwwIVgvy5C7fjLaXG+YNEtRaOg
-         YvREV+7udwsmgyyFnNZ3UUl0cDZ6A5Xluz/LcaXmQJKWpOp1quWRzkfxDMtZqp45Ar1c
-         mdokHlBKez//NUIK+OwoMZIG8lWvEblD0kORkfc+uTt2pqISLOo2uQfR+3WXJMPa8gx8
-         PVGZ1BJpznghlb3X+pVOT9Ulk0sUvZ4rKsMU05rcNMBGCxjFjFOGUnesP/7mX/I1XThx
-         jtgb5JqzVvnlci3u8UXdhyuDRAVy82/4/3iNZr0ecEOaEYrsgUXvapxOczZ8KRfB2jVJ
-         /fgg==
-X-Forwarded-Encrypted: i=1; AJvYcCWGUMK4VbDt9ES20GFMPJxJ/Z3aJr/ouuMJwTe6wM7hqRuPlWvqDwR9jLLBEDw4qXJcrDgQedzzV4I6Ino=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywr/IkE9YHObRa7jhJYiRHDNKYirZxA9MzeDH3DJlgy1kYSqcxh
-	uQVz4NCS+uQKfrmkldO5o2IfR3ZLfh1rO3/bvSbjg5+tdp9CVW/Dk13FBSvdlVp0mb/jwOKvTE5
-	Xq0A=
-X-Gm-Gg: ASbGnct/sRmLexsc879Qz4G65cHzSUlIQ3JC3qWMXKTKsJBfYlz5KxZdgAUyKLuVuOw
-	3BQ+RyIVgYdJD26ffLxhmMP2pgIrVOI5NRZX78IZBz0tST3zyZI+Ybut6E7aN7rB16Si866DnOS
-	Xa2cn9p0Yk8ptL3Snoj8kCKjfZXCC41RzowD0du0JRK4LnQVJ6tbO/NuAFhmiCrN6ILdAYCtgwg
-	J90Vr+z5bu4nRAul3lLyEx5Pbvbsu/vej+s/UX5H1GRDjem6BXlfeIJ6lv19atLr1BebIViXdjG
-	iT19n7id2RkI67vUuio6Ih/krndwr48sHGbYi1Om+1h6LPxrVrgt9rIsVGy7pec3psoAAREpFCs
-	cSHRi40TlIPBUafJYzMI=
-X-Google-Smtp-Source: AGHT+IG9feLyDhgqETN7Xz9NMKD4EyWJMM47mcCEKkgvjPeINsufU543vMbXJuuoFD/C4fzFNRSRjA==
-X-Received: by 2002:a17:907:7d8c:b0:ac3:8790:ce75 with SMTP id a640c23a62f3a-ac7389ea3a2mr1599213866b.10.1743638788530;
-        Wed, 02 Apr 2025 17:06:28 -0700 (PDT)
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com. [209.85.218.49])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7c01c1028sm4833866b.172.2025.04.02.17.06.27
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Apr 2025 17:06:27 -0700 (PDT)
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-aaee2c5ee6eso42336566b.1
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Apr 2025 17:06:27 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWRASWv4dM5hmPwbsGixI7oKRnwPGlwGdXR5PxpmAENsmKOM/+567w/GvrX8CgCEp5RE25ULZFVZK1Iitw=@vger.kernel.org
-X-Received: by 2002:a17:907:3da9:b0:ac2:912d:5a80 with SMTP id
- a640c23a62f3a-ac7389ea3e0mr1522405866b.5.1743638787221; Wed, 02 Apr 2025
- 17:06:27 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743638802; x=1744243602;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=THqZB3gc9ZiqXUYns3lMT7gLqog0AJdSzQ22r6kIxIg=;
+        b=bW1uJPzrFs4o0Xn1qkeli/E1xhXgr628qMMVPit+97N+DVmxdtgtTgQu317scTmYL/
+         2k/cGHJaEjKKqFt1cZPgs1QFo8LCDoY8q8U0x/udcuma3diIjFJqRD/DZMBxNA/C6dQb
+         92zffP+vgaIm31LXTDbs0U3RHDt6hsn6Jkhlf0GbsdgfW6ecIP3ZT8vmMZzC/Zbv6pOJ
+         yB57dkkgjCF+CgjIHb9cwn4DIrdIrnhd+uX2kBP4VAw+s3Ok8CYwJ5zG955Ss3HMAD5U
+         dkuoRsRUg1jLj1EN07ZhvooHtcZvIjFcTilj00Rl4oFRTgN5SoLwpMPnt2sxh1apPD88
+         OMDw==
+X-Forwarded-Encrypted: i=1; AJvYcCU1y1EksQvDo/EE+ffg/BGzMhzKGlU8AunP71EFoQafPAk5qKft3ET53yZucRAl2QTFXIK63nreKICg@vger.kernel.org, AJvYcCUkwC7fNmNlzKObuLAWSDsKcikRdqPk152Vj3PiCLFrKaizzTOBluTC9ArJ4EzI/KDrIRo8HtSNiJlQ@vger.kernel.org, AJvYcCW3ZuB6Awv4WK0wR8rW4HDu6XuOVvpGy9fsq22pmscaP0jVvl2B7aTVNzoGr4rSy1H4HsdXClHV12C0OHR5@vger.kernel.org, AJvYcCWhDvXy+LQ+J2FV6+1a6ufHcUY0AivBiutfcn8Uga8HQbUNqG7E+SYCh+iqX5qyy+NL9HYJftOTZAOJxdgGBA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwMADUh+DecK8DFwYOx0x632Qx89HW5EelcKigAcFdvOahoJTUk
+	FtY3eyTIxegvo75g9zu+Vzbhysz3+IC+dcicKw+3w4EBu0hGNHDJlxk3ye7UZlDw6Vk+DpzYRUb
+	PV9L85+J5zhef61uZ4YC0PbBBJA==
+X-Gm-Gg: ASbGncumnHWJBaFW4oe+JYbhC+amBaeGF/MTs9py+Dm3DlVJ+X6hH8Ypyf4KuCns5Bz
+	nNhdpoZDEivK+7TI3HKPq4NP5xHew9D4c4XIDGBaaZ5SnI4royxU22MQ55PpwFgMPT7igNwuoiz
+	O7dJ5mS4r6GXzKLzAhDDRjDgfoOg==
+X-Google-Smtp-Source: AGHT+IEvyEQkupDmAf3qVozR5BlueIdVIfTL0esTsJxUP8sWVaCCP1GT6K2TX6UE6Phhe+TxzenmCuBGyJp2uE4+9O0=
+X-Received: by 2002:a05:6000:2585:b0:39c:2688:4ebf with SMTP id
+ ffacd0b85a97d-39c29737e0dmr3794378f8f.6.1743638801887; Wed, 02 Apr 2025
+ 17:06:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAJfpegsQDTYsEWHMK9skpNzUO=GA_DR7zGHftyO2sZH5wjaZLA@mail.gmail.com>
-In-Reply-To: <CAJfpegsQDTYsEWHMK9skpNzUO=GA_DR7zGHftyO2sZH5wjaZLA@mail.gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Wed, 2 Apr 2025 17:06:09 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wihf7K7JhOsm2R6SSRbHuxzpMG+q87nVyD-jZnd+7-0gg@mail.gmail.com>
-X-Gm-Features: AQ5f1JqHxQ4y8QfdVOkyBy-Gm3oH8OTY9Em8Hq2QRv5vKqVBHYB0rPkvn3Y6piA
-Message-ID: <CAHk-=wihf7K7JhOsm2R6SSRbHuxzpMG+q87nVyD-jZnd+7-0gg@mail.gmail.com>
-Subject: Re: [GIT PULL] fuse update for 6.15
-To: Miklos Szeredi <miklos@szeredi.hu>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <CAMcHhXqbQ-6SLotNfQDStr5B0KAMxFRuSiLnjdg+UrtqA1phXw@mail.gmail.com>
+ <AM7P189MB100945E7C0850C7469739C81E3AF2@AM7P189MB1009.EURP189.PROD.OUTLOOK.COM>
+ <CAMcHhXrcvsKtZnHC5gKFh3nc_XKQKaLdBbnQA6J_rBdUxxP27w@mail.gmail.com>
+In-Reply-To: <CAMcHhXrcvsKtZnHC5gKFh3nc_XKQKaLdBbnQA6J_rBdUxxP27w@mail.gmail.com>
+From: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
+Date: Thu, 3 Apr 2025 02:06:30 +0200
+X-Gm-Features: ATxdqUHEo8FZvVy5ygBezdSIUAGGICKKb_RWUaWMTv_G9s3WUL90wafr3AxtuqI
+Message-ID: <CAMcHhXpPpQ175jiX3KbEVY7ATLghEzGU9EeQjx+zHkMs8vovzA@mail.gmail.com>
+Subject: Re: [PATCH v1 6/6] arm64: dts: qcom: Add support for X1-based Asus
+ Zenbook A14
+To: Maud Spierings <maud_spierings@hotmail.com>
+Cc: abel.vesa@linaro.org, andersson@kernel.org, conor+dt@kernel.org, 
+	devicetree@vger.kernel.org, gregkh@linuxfoundation.org, 
+	heikki.krogerus@linux.intel.com, johan+linaro@kernel.org, 
+	konrad.dybcio@oss.qualcomm.com, konradybcio@kernel.org, krzk+dt@kernel.org, 
+	krzysztof.kozlowski@linaro.org, linux-arm-msm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, lumag@kernel.org, 
+	robh@kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 1 Apr 2025 at 04:02, Miklos Szeredi <miklos@szeredi.hu> wrote:
+On Wed, 2 Apr 2025 at 10:36, Aleksandrs Vinarskis
+<alex.vinarskis@gmail.com> wrote:
 >
-> Commit 1dfe2a220e9c ("fuse: fix uring race condition for null
-> dereference of fc") in this queue has already been merged into
-> v6.14-final through Christian's tree (commit d9ecc77193ca).   For some
-> reason this causes a merge conflict, the resolution of which is to
-> just take the version from this pull (i.e. remove the atomic_set()).
+> On Wed, 2 Apr 2025 at 08:30, Maud Spierings <maud_spierings@hotmail.com> =
+wrote:
+> >
+> > > On Tue, 1 Apr 2025 at 23:15, Konrad Dybcio
+> > > <konrad.dybcio@oss.qualcomm.com> wrote:
+> > >>
+> > >> On 4/1/25 8:05 PM, Aleksandrs Vinarskis wrote:
+> > >> > On Tue, 1 Apr 2025 at 17:59, Konrad Dybcio
+> > >> > <konrad.dybcio@oss.qualcomm.com> wrote:
+> > >> >>
+> > >> >> On 3/31/25 11:53 PM, Aleksandrs Vinarskis wrote:
+> > >> >>> Initial support for Asus Zenbook A14. Particular moddel exists
+> > >> >>> in X1-26-100, X1P-42-100 (UX3407QA) and X1E-78-100 (UX3407RA).
+> > >> >>>
+> > >> >>> Mostly similar to other X1-based laptops. Notable differences ar=
+e:
+> > >> >>> * Wifi/Bluetooth combo being Qualcomm FastConnect 6900 on UX3407=
+QA
+> > >> >>>   and Qualcomm FastConnect 7800 on UX3407RA
+> > >> >>> * USB Type-C retimers are Parade PS8833, appear to behave identi=
+cal
+> > >> >>>   to Parade PS8830
+> > >> >>> * gpio90 is TZ protected
+> > >> >>
+> > >>
+> > >> [...]
+> > >>
+> > >> >>
+> > >> >>> +&spi10 {
+> > >> >>> +     status =3D "disabled";
+> > >> >>> +
+> > >> >>> +     /* Unknown device */
+> > >> >>> +};
+> > >> >>
+> > >> >> Does the device crash if you enable this bus? Keeping it 'okay' w=
+ould
+> > >> >> make it easier for folks to poke at it
+> > >> >
+> > >> > It does boot just fine, but does not initialize:
+> > >> > ```
+> > >> > geni_spi a88000.spi: Invalid proto 9
+> > >> > ...
+> > >> > qnoc-x1e80100 interconnect-1: sync_state() pending due to a88000.s=
+pi
+> > >> > ...
+> > >> > ```
+> > >> >
+> > >> > I only quickly checked that 9 is indeed invalid state, iirc should=
+'ve
+> > >> > been 2. But haven't looked deeper into it, so left it disabled. So=
+ I
+> > >> > thought best to leave it off for now. Unless you prefer to drop it
+> > >> > altogether?
+> > >>
+> > >> That means this QUP is configured to work as a QSPI host, which is n=
+ot yet
+> > >> supported upstream. I looked at the DSDT you submitted to aa64-lapto=
+ps, but
+> > >> there doesn't seem to be anything connected there, perhaps it's load=
+ed at
+> > >> runtime. Since your keyboard and touchpad work, maybe it's a touchsc=
+reen?
+> > >>
+> > >
+> > > Indeed it is just defined without anything attached. I am suspecting
+> > > it also may be just leftover, won't be the first one...
+> > > No, this particular laptop doesn't have a touchscreen in any of the
+> > > three screen configurations announced.
+> > >
+> > > It also does not have a fingerprint reader, nor hardware TPM2.0 (yet
+> > > SPI11 typically used for it is still TZ protected :). EC seems to be
+> > > over i2c5. Asus's touchpad supports some fancy gesture controls, but
+> > > there is in fact another 'extra' hidraw device 'hdtl', I assume that'=
+s
+> > > the one. No sdcard reader.
+> > > Only other still unsupported features are audio (i guess unlikely tha=
+t
+> > > they used different smart amp?), camera (ov02c01, pm8010, so also no)
+> > > and DP-HDMI bridge PS185HDM, which from what I can guesstimate is i2c=
+.
+> >
+> > I actually managed to contact someone about the ps185hdm as it is also
+> > used in my asus vivobook s15. But from what they told me it is a dumb
+> > bridge that does not require any further configuration. I have tried
+> > getting it to work but I've had no luck yet. I did find a hpd gpio at
+> > tlmm 126.
+> >
+> > I currently have just tried ignoring its existence and describing a non
+> > existent dp-connector with the hpd gpio hooked up to mdss_dp2_out but n=
+o
+> > luck. I get a timeout on the aux bus communication I think, so somethin=
+g
+> > is blocking that still.
+>
+> I think it was your messages that I saw on IRC of aarch64-laptops
+> then. Can confirm both HPD on tlmm, and lack of any i2c devices on
+> newly created virtual bus.
+>
+> >
+> > I think it may just be some regulator or something required to actually
+> > power up the ps185hdm
+>
+> That was my conclusion as well. Would you mind following up with them,
+> if they could disclose the amount of voltage supplies the IC is
+> expecting? if it's 1 or 2, it's rather easy to bruteforce all unused
+> pin combinations. If it's more than that, it's only reasonable to
+> enable all unused GPIOs to high at once, which I wouldn't do tbh :)
+>
+> The weird thing is that according to a rather simplified publically
+> available diagram, HPD is actually propagated through the PS185,
+> implying that bridge is on. It could be that IC requires multiple
+> supplies, hence Aux bus is not working, but in my experience these
+> devices typically don't start until all of the required supplies are
+> up.
+>
+> >
+> > from my correspondence:
+> > `
+> > Hi Maud,
+> >
+> > There is no =E2=80=9Cenable pin=E2=80=9D on the PS185 but there are sev=
+eral GPIO=E2=80=99s. The
+> > FW associated with the device is programmable so the manufacturer of th=
+e
+> > motherboard you are using may have requested a special feature (such as
+> > an enable pin on one of the GPIO) to be added by Parade. If that=E2=80=
+=99s the
+> > case then you would need to contact the motherboard manufacturer to fin=
+d
+> > out more details.
+> >
+> > Hot plug events are normally routed through the DP_HPD pin but, as note=
+d
+> > above, it=E2=80=99s possible that the motherboard manufacturer asked fo=
+r this to
+> > be replicated on the GPIO pin.
+> > `
+> >
+> > some messing around of me in the dts can be found here: [1]
+>
+> I think, you would also need to enable usb_1_ss2 combo phy, afaik only
+> mdss3 (for eDP) has a dedicated DP phy, for the rest it's a combo
+> qmpphy. Konrad could probably confirm?
+> Once i2c/aux works, maybe we would also need a small driver to set phy
+> to DP mode, as afaik pmic-glink handles these. Just hypothesis though.
+> I have tried adding a dummy "dp-connector" like you did, but as a
+> child node to pmic-glink, hoping that it would handle the alt mode,
+> but it is probably not that easy :)
+>
+> Would be happy to cooperate on debugging this offline.
+>
+> Alex
 
-Yup, those "made in both branches" kinds of conflicts are trivial to resolve.
+Small update,
 
-In case you wonder about the "for some reason" part: I say that they
-are "trivial to resolve", but they are trivial to resolve only when
-it's clear that you should take the *other* changes that the other
-branch does.
+Following initial work from Maud, I hacked around a bit and got HDMI
+working _most of the times_ on cold boot. Far from complete, but this
+proves the IC is indeed working as dumb bridge. At least non Zenbook
+DP routed to qmphy, like hinted by DSDT.
+I am guessing the HPD event comes too early, before AUX is ready for
+EDID readout to be the cause of the hotplug almost never working,
+since I can always readout EDID manually just fine. Will need to
+investigate it a bit more.
 
-So put another way: both branches did X (that "fix race condition"
-thing) but as different commits, so they had separate history.
+Initial (dirty) change for Asus Zenbook A14 [1].
 
-But then only one branch did Y (the "remove unneeded atomic set in
-uring creation") that is right next to X.
+[1] https://github.com/alexVinarskis/linux-x1e80100-zenbook-a14/commit/9046=
+6cd004c3df5d717295ae7dcd5ed183701de0
 
-Now, when I look at it and understand the semantics of the patch, I go
-"oh, ok, both sides did X, but you also did Y, so I'll take that X+Y
-thing". Simple.
-
-But it's simple only because I understand the semantics of the
-patches, and I see that I should take the union of the work.
-
-git won't do that, because while there are "patch queue" systems that
-do in fact use that exact logic of "both did patch X, the other side
-also did patch Y", git is not a patch queue system - and I think patch
-queue systems are actually wrong for anything more complicated.
-
-So git will look at the original shared state, and the state of both
-sides at the *end*, and make the merge decisions on that basis
-(resolving things with a three-way merge if both sides did changes -
-that's the simplified case for the simple history situation, at
-least).
-
-And in that model, you don't have "both did X, and then one side did
-Y". You have "one side did A, the other side did B, and they weren't
-the same".
-
-I also will claim that it's the safer thing to do, because who knows
-*why* one side did Y and the other side didn't? Without understanding
-the semantics of Y, it's very much not clear.
-
-For example, maybe the other side didn't do Y because Y was a quick
-hack bug-fix to get things working, and instead simply fixed it at
-some deeper level elsewhere that made the quick hack pointless and
-possibly even wrong.
-
-So just automatically doing some patch algebra can cause problems.
-
-Of course, the git model of merging can *also* cause problems.
-
-For an example of something that the git merge model will get wrong is
-if both sides do 'X', but one side notices that 'X' was horribly buggy
-and reverts it, and the other side doesn't.
-
-Now when you merge the two, git will see "one side made no changes at
-all, the other side did X" and at that point will merge 'X' and
-basically undo the revert.
-
-That *may* be the right thing to do. Again, maybe the other side
-didn't revert because the other side fixed the bug properly. But the
-*safe* thing would probably have been to treat it as that X+Y vs X
-thing, and ask for manual intervention by marking it as a conflict.
-
-But git won't do that, because git will see X+Y as being no change at
-all, and then the logic is "one side did nothing, the other side did
-new development, when you merge the two you obviously take the new
-development".
-
-And that's ignoring the whole issue with three-way merging that git
-then does for when there are changes on both sides: it's a traditional
-and generally very good strategy, but it can certainly also end up
-doing mis-merges when there are semantic conflicts that don't show up
-as overlapping changes.
-
-End result: there are no automated merge models that always get the
-right answer. The git merge model does work well, but there is no
-perfect.
-
-One good thing about the git model is that it tends to be fairly
-simple to explain *why* it does something. It's not rocket science.
-Merge conflicts really are fairly simple: both sides changed the same
-area in different ways.
-
-Of course, things get complicated when code movement or complex
-history is involved. Or when the two changes simply clash on a
-fundamental level and weren't at all about that kind of "A+B" vs "just
-A" situation.
-
-         Linus
+>
+>
+>
+> >
+> > [...]
+> >
+> > [1]:
+> > https://github.com/SpieringsAE/linux/blob/wip/x1e80100-6.14/arch/arm64/=
+boot/dts/qcom/x1e80100-asus-vivobook-s15.dts
+> >
+> > kind regards,
+> > Maud
