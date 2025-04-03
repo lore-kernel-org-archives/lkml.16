@@ -1,100 +1,143 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47E181519A7;
-	Thu,  3 Apr 2025 12:16:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C59D01C861F;
+	Thu,  3 Apr 2025 12:16:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743682564; cv=none; b=RIbZDQk5vLAu94kweq4fxabRsavuWm7xWpIsQc4LmK1izIGZl/Cb29GvDxoPYZELwXu9EyBTI5yKRiWXuC3lnVPcv8UnbVokrJdlQXaUboxzBZgrupMrz3L+AMPUn3FL/7eiFslyxf+uW0HFHHVXImK4DEBCyj1cw/h1rM76j1o=
+	t=1743682592; cv=none; b=Q9uBvCN8XLESOz1NnNxXAWLJcuJTTFvdgfBLjQrXQZ9TcubGM8qMu0vMaFKRoLD9Vj+7bZNOxE2ikF7OwbzyGyK53rHDliUifyesvuGHlxjEvlae60/3awa0v3yY9TP0G++ZXNIQz7/2dF6cJpsNzy56cQx+ZksGgtoqmU4PUbc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743682564; c=relaxed/simple;
-	bh=BfsuHIkQOn+t5ea9pEtC10uYV5VcdqlyisbK1g6IxPM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XUUKzNlipP73J+l9iTq8e5cX0ZqQi4IlVuK+9Zq7iD3Jhk4uGsz83R85rr+vJkDeRwosx94yLPi23bySCve26EAyWOrezrXoiPN9My2uHx7vCia0hIwCZn74ua6fVIOgvIjdCk6ZQ1E9k17vagKJ9K7TYen90DNWYt/M6xXicFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ilK/OMNw; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ilK/OMNw"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-227b650504fso7965915ad.0;
-        Thu, 03 Apr 2025 05:16:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743682562; x=1744287362; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:sender
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=kEq00/hkCJ6pJcCFQSkcNbWxF96iAwQsWcvrCaZX5hs=;
-        b=ilK/OMNwyLnUyFB3/Bx+wbQi8A0dcSJ6IlVOWaZtdLlwmRPMMSrugY7vFo9wr+zEqt
-         AV1s4UnwiZQWzAdfl6txdLbVw5A1EYTBTaSY6zCMLxiFe+QFToOdPnEdKcC1MUMDx+4J
-         e2lTJtWsHb9I6rNtoyE+IqO2sO1YJiJt3msAc9RdoA71WHKvBQ8sl1RFi6KALP5w6vmM
-         8tW6yS+BuWasXrX61/DJtcYmAubPWIEDCV5JPXybo4iUdjNf+zRr5o/eHQambSksXRPz
-         19rwhXTJSizUuj2Tq8urSAiwtmsGkCGTdbYStmteE+2yC+u4gNC/UVFFWBY7lA5dMqNP
-         syDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743682562; x=1744287362;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:sender
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kEq00/hkCJ6pJcCFQSkcNbWxF96iAwQsWcvrCaZX5hs=;
-        b=UkvvH8LoTisEok1m0ejAtdGZAm9ue3gyYKj+7o4XnFw0qjnjQll/Xj4ott3dEPS9na
-         /jNpTYKS5B70achE6DIhhdVopJ4nk8Ekq4nqogiimTE/SncjeWOOw3uawN3y1RgJYSpE
-         QTA/kPnGOkUSPx6SABG0b4cN2NYuJO0OTvZ+l40/rvmYh74AlLuC78yizE7FQJcO5M8A
-         +b2/922d4oyv3fpQPRHUD7l9BwFfJ9OXlW3Vy7pzC+rDBR7SM2nd6/Yoq0gL/MWUEeKS
-         FfWGCbpp67HPtbl23lsQPtGM+hwQ2lby9+988dZ3WyUAMq+/lJLByBHjLjDWPpbZPXds
-         i25A==
-X-Forwarded-Encrypted: i=1; AJvYcCUeNcua6dPAvk8n692furxd5Y13M8xazmfOQpkc2pzP9YXSnPakiiMaMFArHmbrEXzfAV9nc9cNl1Cg@vger.kernel.org, AJvYcCW8m4xJZmu4Zdr7no3uRjLawDjqpId8KA2ri0ZoN4ArY+1KkGXi1m/DhrjpGtaGKDPJ1eYgoN68Icp0JT8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyF6KrPeOyVQNqUQLmlMmSA1T4P3zuF0FSOl56jh7tJ+hRMYflO
-	RFqFPoRbQXazt0S2ZB9/AdmyCd7AIA8R4XXSvxaC2+HiKYagr6mz
-X-Gm-Gg: ASbGnctHScTLpVmEJjPB0X+2uaWY+QHecOjWjd5UX4qvuTxjUBc7Qm6uxT/RXayLAtR
-	TVLeUWA9EdjJI2dHZZ9/ie15XXLk36kDehq/UZXJvC/KkjdYuecQkinDWN+fRUIew7pyuaOcsub
-	FQsb0MxnT7BrZHnq8svnNP82uL1ca02V3V0VhYnhv6Uoz1m34RNxrVnnZLMbMpuloJRhjvoZQ1O
-	Lx5yGxbqUBL+vgDRFIE9gPD+Sof1BFa7qVjadDW04ARsTao/K3ZkCjU+ymS46VQJDgZXYfZbnjO
-	OotajuK5s0DZHwdAkHZw1Bc2YHtg5DhKgBLthDoKhzDNKBm4vxs4QQre8g==
-X-Google-Smtp-Source: AGHT+IE8TQ2CkjdWRykcK18PBt0Nb6zozfADT+9c8nhqxCjyqv/foO4kP8r/o0vLYNme2mK7+YJdBw==
-X-Received: by 2002:a17:903:18c:b0:21f:768:cced with SMTP id d9443c01a7336-22977d7d5d9mr24742365ad.8.1743682562558;
-        Thu, 03 Apr 2025 05:16:02 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-229785c385csm12791485ad.81.2025.04.03.05.16.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Apr 2025 05:16:02 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Thu, 3 Apr 2025 05:16:01 -0700
-From: Guenter Roeck <linux@roeck-us.net>
-To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Igor Mammedov <imammedo@redhat.com>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	=?utf-8?Q?Micha=C5=82?= Winiarski <michal.winiarski@intel.com>
-Subject: Re: [PATCH 1/1] PCI: Restore assigned resources fully after release
-Message-ID: <c295d86d-fb5a-4379-b998-719f39dbb209@roeck-us.net>
-References: <20250403093137.1481-1-ilpo.jarvinen@linux.intel.com>
+	s=arc-20240116; t=1743682592; c=relaxed/simple;
+	bh=04kLFOZ7ikVX75QnpTsKOUmQH/w+mexHYRa8z0f5jIU=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=E/ZKAvrn65jxs1ioBDRc2zPnWIljEtsdZfU7SOwVPBF94iwL2Sx6b+m7pRdz3LWhLowUCvsarJIjqZv3WIHXYpqVMr7WmwnXKwTXFUbLwpGwgFtG1xExf7vHMZl1+PKebPfxCKKnXn2BSw2YSuEJ0nnAPIqqQNxnz6CIYAkp4kE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZT10X3kPgz67D8Q;
+	Thu,  3 Apr 2025 20:15:40 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 9FCBA140142;
+	Thu,  3 Apr 2025 20:16:19 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 3 Apr
+ 2025 14:16:18 +0200
+Date: Thu, 3 Apr 2025 13:16:17 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Yuquan Wang <wangyuquan1236@phytium.com.cn>
+CC: <dan.j.williams@intel.com>, <rppt@kernel.org>, <rafael@kernel.org>,
+	<lenb@kernel.org>, <akpm@linux-foundation.org>, <alison.schofield@intel.com>,
+	<rrichter@amd.com>, <bfaccini@nvidia.com>, <haibo1.xu@intel.com>,
+	<david@redhat.com>, <linux-acpi@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
+	<chenbaozi@phytium.com.cn>, <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH v2] mm: numa_memblks: introduce numa_add_reserved_memblk
+Message-ID: <20250403131617.000078fa@huawei.com>
+In-Reply-To: <20250328092132.2695299-1-wangyuquan1236@phytium.com.cn>
+References: <20250328092132.2695299-1-wangyuquan1236@phytium.com.cn>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250403093137.1481-1-ilpo.jarvinen@linux.intel.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Thu, Apr 03, 2025 at 12:31:37PM +0300, Ilpo Järvinen wrote:
-> PCI resource fitting code in __assign_resources_sorted() runs in
-> multiple steps. A resource that was successfully assigned may have to
-> be released before the next step attempts assignment again. The
-> assign+release cycle is destructive to a start-aligned struct resource
-> (bridge window or IOV resource) because the start field is overwritten
-> with the real address when the resource got assigned.
+On Fri, 28 Mar 2025 17:21:32 +0800
+Yuquan Wang <wangyuquan1236@phytium.com.cn> wrote:
+
+> With numa_add_reserved_memblk(), kernel could add numa_memblk into
+> numa_reserved_meminfo directly.
 > 
-> Properly restore the resource after releasing it. The start, end, and
-> flags fields must be stored into the related struct pci_dev_resource in
-> order to be able to restore the resource to its original state.
+> acpi_parse_cfmws() currently adds empty CFMWS ranges to numa_meminfo
+> with the expectation that numa_cleanup_meminfo moves them to
+> numa_reserved_meminfo. There is no need for that indirection when it is
+> known in advance that these unpopulated ranges are meant for
+> numa_reserved_meminfo in suppot of future hotplug / CXL provisioning.
 > 
-> Reported-by: Guenter Roeck <linux@roeck-us.net>
-> Fixes: 96336ec70264 ("PCI: Perform reset_resource() and build fail list in sync")
-> Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+> Signed-off-by: Yuquan Wang <wangyuquan1236@phytium.com.cn>
 
-Tested-by: Guenter Roeck <linux@roeck-us.net>
+Given CFMWS is a CXL thing, +cc linux-cxl
 
-Guenter
+Seems like a reasonable cleanup to me.
+
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+
+> ---
+> 
+> Changes in v2 (Thanks to Dan):
+> - Use numa_add_reserved_memblk() to replace numa_add_memblk() in acpi_parse_cfmws()
+> - Add comments to describe the usage of numa_add_reserved_memblk()
+> - Provide a more explicit commit message
+> 
+>  drivers/acpi/numa/srat.c     |  2 +-
+>  include/linux/numa_memblks.h |  1 +
+>  mm/numa_memblks.c            | 22 ++++++++++++++++++++++
+>  3 files changed, 24 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/acpi/numa/srat.c b/drivers/acpi/numa/srat.c
+> index 00ac0d7bb8c9..70f1a7c6b54a 100644
+> --- a/drivers/acpi/numa/srat.c
+> +++ b/drivers/acpi/numa/srat.c
+> @@ -458,7 +458,7 @@ static int __init acpi_parse_cfmws(union acpi_subtable_headers *header,
+>  		return -EINVAL;
+>  	}
+>  
+> -	if (numa_add_memblk(node, start, end) < 0) {
+> +	if (numa_add_reserved_memblk(node, start, end) < 0) {
+>  		/* CXL driver must handle the NUMA_NO_NODE case */
+>  		pr_warn("ACPI NUMA: Failed to add memblk for CFMWS node %d [mem %#llx-%#llx]\n",
+>  			node, start, end);
+> diff --git a/include/linux/numa_memblks.h b/include/linux/numa_memblks.h
+> index dd85613cdd86..991076cba7c5 100644
+> --- a/include/linux/numa_memblks.h
+> +++ b/include/linux/numa_memblks.h
+> @@ -22,6 +22,7 @@ struct numa_meminfo {
+>  };
+>  
+>  int __init numa_add_memblk(int nodeid, u64 start, u64 end);
+> +int __init numa_add_reserved_memblk(int nid, u64 start, u64 end);
+>  void __init numa_remove_memblk_from(int idx, struct numa_meminfo *mi);
+>  
+>  int __init numa_cleanup_meminfo(struct numa_meminfo *mi);
+> diff --git a/mm/numa_memblks.c b/mm/numa_memblks.c
+> index ff4054f4334d..541a99c4071a 100644
+> --- a/mm/numa_memblks.c
+> +++ b/mm/numa_memblks.c
+> @@ -200,6 +200,28 @@ int __init numa_add_memblk(int nid, u64 start, u64 end)
+>  	return numa_add_memblk_to(nid, start, end, &numa_meminfo);
+>  }
+>  
+> +/**
+> + * numa_add_reserved_memblk - Add one numa_memblk to numa_reserved_meminfo
+> + * @nid: NUMA node ID of the new memblk
+> + * @start: Start address of the new memblk
+> + * @end: End address of the new memblk
+> + *
+> + * Add a new memblk to the numa_reserved_meminfo.
+> + *
+> + * Usage Case: numa_cleanup_meminfo() reconciles all numa_memblk instances
+> + * against memblock_type information and moves any that intersect reserved
+> + * ranges to numa_reserved_meminfo. However, when that information is known
+> + * ahead of time, we use numa_add_reserved_memblk() to add the numa_memblk
+> + * to numa_reserved_meminfo directly.
+> + *
+> + * RETURNS:
+> + * 0 on success, -errno on failure.
+> + */
+> +int __init numa_add_reserved_memblk(int nid, u64 start, u64 end)
+> +{
+> +	return numa_add_memblk_to(nid, start, end, &numa_reserved_meminfo);
+> +}
+> +
+>  /**
+>   * numa_cleanup_meminfo - Cleanup a numa_meminfo
+>   * @mi: numa_meminfo to clean up
+
