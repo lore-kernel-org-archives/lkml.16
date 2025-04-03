@@ -1,231 +1,462 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9488B2E3386
-	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 14:39:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 349CC24EAB2;
+	Thu,  3 Apr 2025 14:40:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743691164; cv=none; b=M+4JygwNsoYy52dleSCQ0YBL/FdJiQMLVk6A47tjXj8gBp6gAG/6zVXvGzKqBRWWD1tBtT2Uph5aYz5imEiUdnbtddLEstO0DJpmck4VgU/3BOX3UpyqthwvFfFhyHuMWbF2GJGqGrmurXWQpAOIxypcm/I8v0XqGJlbzehFXhQ=
+	t=1743691229; cv=none; b=BJK/6CbzhyLJZBst62rAxCzr+ud5099hlFqNHdSoOVS086Kx/d3NQ+mknLiCGdhsHlWzMzCdTsfaUoCvWkNu7wq680+gPY5DpJy41ooM1a6+p+xa9V5M1Q0oRMFInqXbOgnhSm51galItni21338YkXaNXO2DSsPJ4mzLQNhW/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743691164; c=relaxed/simple;
-	bh=1+CVJyPolg/HkeE1N9jZqboIyWDRnOxeMyrxfbjCZU8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ER2u04GZvMnawoQGRXabExeOhv7iCIZJEOJL5HKt3lwxuHzBTylyupAIF19WL2/duhl6tGCPmgeF/6qSVagA8Z+E8gaTWEYOIHE+TavvIYVYk8430zl38KO7kU1MFdkAd+wB7bYtq4jpAXRTT8Dd3Y2D/d2c29mr2TjkZpMtiZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=NSEiueri; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1743691229; c=relaxed/simple;
+	bh=2HN9m5zBkG+YIttJR9oI2MrlLRnZLaPdjF0ROE5NSqk=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=hEjAeMa/+TwCT1N/ddmF1JEzLYsLLiB8qigpcUBOQPDy8KRHoSPwTpkDwK4UULmkmsfX4YsF2ORhn+EDQ2jBgE3zRkt5to6for4lK5TeWloHPTOfh1eiPYP0C+HoePoV+yNJNe9O94LrFJQOoUVzU0UoF5ehDFiOP4HwbKuhJAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=nKsHAfpr; arc=none smtp.client-ip=80.241.56.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="NSEiueri"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4393dc02b78so6759175e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 07:39:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1743691161; x=1744295961; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=rl3+XYEt97n5m7GHT74FzI9q0aNI5a78n1yW3rrYoOo=;
-        b=NSEiueri+ie+EfWNWhdpiAdg+Ubxk0DdilUP/VIw4rr2f0jjteU5Qk8ixXjZBVJORJ
-         W3fRQ6s5v3VJVVf0TxA0XVS/innvYYA8K/V2hwg+IT2HusRzxOj+r4tY/dNAB7FMf23q
-         t8hY2AuOiegTBdht4RGvLqLMshiEnE4FDE5QlP1rS2hGKa9p1xB1CeBhIfPO6u38nRcW
-         6og8dVAn4qsPfVbGXnA4KCKV5vtjfYx+i2Aki9/emfFxTp71u/SQqgjNw1AoZvvlFvZ5
-         4xXgZJuvtg2hQ84UL3cEUPsqFr8I3hTPnKxXhnbY7ayDSQxDGf1+dPFm/NgEqvDRGAoA
-         NZdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743691161; x=1744295961;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=rl3+XYEt97n5m7GHT74FzI9q0aNI5a78n1yW3rrYoOo=;
-        b=YI37wUheJRfQZX3ACaqKiBg+q3ITZHxFUfD2GnY4S9DnhmfH2q5rXwMvB3wlWGROkt
-         LzZvepI86gz5ziKHOXkkBDlTqvtxTNpfIyLyin7OmHjVEa4tEB1YUrkEM3cYAP3s1BH7
-         yAltu+FzsD8AINYs80t1QyTT4OYP5jlyKb1WWwBXtsr5BzjLif9m53H2PfVSplC8ME70
-         uv0+bU5o1ZY6gPN1GZm04FIdbc1y1kLi6kJhsv23dvHDufcWporKCou4yV36jR+h2AYP
-         A97MB4TDgyXrruCA/3Bcqi5jL7nNu9ImR+Kp33cszkz1uQoQXIACrwh/PP5PliYhLAFF
-         0+ag==
-X-Gm-Message-State: AOJu0YyZHfp7Ee/gLUI9rcwp601dL++ss3nCfl5X3VGgcAsBdw68tZ/F
-	ZB3/Z/pbTskyGfF2jd6CNkU/qyANqwuI1rdsIEMbyFTHWHYCLzA78sWMh0EYid0=
-X-Gm-Gg: ASbGncvWoG7x2f7Mz8Lo1cliJuu3ZyCmV4IXc651oLZhW/dkUydR5Q8A/4feoxwXZQ5
-	XkTVRko4O5zQnklnZLFrq8q7AnVAMzHc5l8UyAHY4sIEM1aEmYubmCJNaNheymf/mjZ0CLR4CvS
-	mWQey7m5RuZxVnTtB5OWOzoZgegyv/jMwxxqDE/8CjQwt471OX4NWyIBaJvSbHMum1OvM4ko6tn
-	++V+XcABHMAXns4UUDjOBh0hYp7ZjiQP2XUpKJ+1k/fntpbmkNRVCvLZGVzx5JACAaxbrZuQW4o
-	lYlQLem8K7YXkD8m7wJDIAqa6880m3l2OBcR/yH06bzvYACtrqElrb0uwc4n
-X-Google-Smtp-Source: AGHT+IH3Qpv0DzeTUQ2Kk2Ur5SAltLgBhLy9a4dFt5da09/M5184HqY3H/S3J4d0u4ema/cKSfsbiA==
-X-Received: by 2002:a05:600c:1384:b0:43c:f616:f08 with SMTP id 5b1f17b1804b1-43ec429ea3amr25621635e9.8.1743691160757;
-        Thu, 03 Apr 2025 07:39:20 -0700 (PDT)
-Received: from [192.168.0.20] ([212.21.159.224])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec16ba978sm23616965e9.23.2025.04.03.07.39.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Apr 2025 07:39:20 -0700 (PDT)
-Message-ID: <b0b87bd7-e104-4c9b-b9e2-0682dfef28e9@suse.com>
-Date: Thu, 3 Apr 2025 17:39:18 +0300
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="nKsHAfpr"
+Received: from smtp202.mailbox.org (smtp202.mailbox.org [10.196.197.202])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4ZT4CW0YtFz9t7h;
+	Thu,  3 Apr 2025 16:40:23 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1743691223; h=from:from:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EotwNtCXeMJqVKkewQhAKZUbOMnZCRXe3XsN9jbimow=;
+	b=nKsHAfprMdINrpUEnwdMNEzZkg7X62u+AzLytnW8J3TCjcI5c9PIH1osyTtGsBi40Fgzfh
+	0BLeNwJoqPemqUM6+o7+Lqr+YbM+bbvlCBWhoxfcThRhlaKdclJMRxWg8zwaB0kvQvHflz
+	IPR2l8j2iMlK5kqRPBaEr7Se/ncMXFybCiOT6BwMrDsQj5p9zWpSZY/2VOYzb01Bj7pgqB
+	8BVpF4oZLiiJaAZSfY+GXrFbdxObZWFWXjGPlSO5VQW31sPR8Y/8Hyz5xR7hu4UCUEOO1M
+	7LXtS107dcJAqvV5QXgFfAsyfpTjBf/sHsuERzpEyoJ5avgR/8DiFPRD/37+Dw==
+Message-ID: <36b076dc17083f9edd9b100bd8fa57badde41158.camel@mailbox.org>
+Subject: Re: [PATCH v2] drm/nouveau: Prevent signalled fences in pending list
+From: Philipp Stanner <phasta@mailbox.org>
+Reply-To: phasta@kernel.org
+To: Christian =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>, 
+	phasta@kernel.org, Lyude Paul <lyude@redhat.com>, Danilo Krummrich
+	 <dakr@kernel.org>, David Airlie <airlied@gmail.com>, Simona Vetter
+	 <simona@ffwll.ch>, Sumit Semwal <sumit.semwal@linaro.org>
+Cc: dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
+	linaro-mm-sig@lists.linaro.org, stable@vger.kernel.org
+Date: Thu, 03 Apr 2025 16:40:19 +0200
+In-Reply-To: <72156b6a-9a8b-4485-8091-95f02c96eba8@amd.com>
+References: <20250403101353.42880-2-phasta@kernel.org>
+	 <c779bc2f-06af-4278-8bb5-08afc074b580@amd.com>
+	 <2558c9cf0cf28867238eb21950ce2a3f862c15c3.camel@mailbox.org>
+	 <72156b6a-9a8b-4485-8091-95f02c96eba8@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 37/49] x86/alternatives: Move text_poke_array completion
- from smp_text_poke_batch_finish() and smp_text_poke_batch_flush() to
- smp_text_poke_batch_process()
-To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Juergen Gross <jgross@suse.com>,
- "H . Peter Anvin" <hpa@zytor.com>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Peter Zijlstra <peterz@infradead.org>, Borislav Petkov <bp@alien8.de>,
- Thomas Gleixner <tglx@linutronix.de>
-References: <20250328132704.1901674-1-mingo@kernel.org>
- <20250328132704.1901674-38-mingo@kernel.org>
- <65e8ed9d-0fff-4f70-b095-8df52493ebec@suse.com> <Z-6PWWyopb86UC6y@gmail.com>
- <a64bc000-4226-4d5c-8486-a230f4ff5065@suse.com> <Z-6XkEpiXg4stqLY@gmail.com>
-Content-Language: en-US
-From: Nikolay Borisov <nik.borisov@suse.com>
-In-Reply-To: <Z-6XkEpiXg4stqLY@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-MBO-RS-META: sm1sfzwzrrjcz69c5hiajc6rnxzujchn
+X-MBO-RS-ID: bd7fd8576ab2d4ccf54
 
-
-
-On 3.04.25 г. 17:13 ч., Ingo Molnar wrote:
-> 
-> * Nikolay Borisov <nik.borisov@suse.com> wrote:
-> 
->>
->>
->> On 3.04.25 г. 16:38 ч., Ingo Molnar wrote:
->>>
->>> * Nikolay Borisov <nik.borisov@suse.com> wrote:
->>>
->>>>
->>>>
->>>> On 28.03.25 г. 15:26 ч., Ingo Molnar wrote:
->>>>> Simplifies the code and improves code generation a bit:
->>>>>
->>>>>       text	   data	    bss	    dec	    hex	filename
->>>>>      14769	   1017	   4112	  19898	   4dba	alternative.o.before
->>>>>      14742	   1017	   4112	  19871	   4d9f	alternative.o.after
->>>>>
->>>>> Signed-off-by: Ingo Molnar <mingo@kernel.org>
->>>>> ---
->>>>>     arch/x86/kernel/alternative.c | 11 +++++------
->>>>>     1 file changed, 5 insertions(+), 6 deletions(-)
->>>>>
->>>>> diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
->>>>> index 1df8fac6740d..5293929488f0 100644
->>>>> --- a/arch/x86/kernel/alternative.c
->>>>> +++ b/arch/x86/kernel/alternative.c
->>>>> @@ -2750,6 +2750,9 @@ static void smp_text_poke_batch_process(void)
->>>>>     		if (unlikely(!atomic_dec_and_test(refs)))
->>>>>     			atomic_cond_read_acquire(refs, !VAL);
->>>>>     	}
->>>>> +
->>>>> +	/* They are all completed: */
->>>>> +	text_poke_array.nr_entries = 0;
->>>>>     }
->>>>>     static void __smp_text_poke_batch_add(void *addr, const void *opcode, size_t len, const void *emulate)
->>>>> @@ -2857,20 +2860,16 @@ static bool text_poke_addr_ordered(void *addr)
->>>>>     void smp_text_poke_batch_finish(void)
->>>>>     {
->>>>> -	if (text_poke_array.nr_entries) {
->>>>> +	if (text_poke_array.nr_entries)
->>>>>     		smp_text_poke_batch_process();
->>>>> -		text_poke_array.nr_entries = 0;
->>>>> -	}
->>>>>     }
->>>>
->>>> This function becomes trivial, why not simply move the check into
->>>> smp_text_poke_batch_process and rename it to smp_text_poke_batch_finish ?
->>>
->>> Yeah, that's pretty much what happens in patch #47:
->>>
->>>     x86/alternatives: Remove 'smp_text_poke_batch_flush()'
->>
->> Well, that patch removes poke_batch_flush but still retains
->> poke_batch_finish + poke_batch_process. My suggestion is to eliminate
->> poke_batch_process name and turn it into poke_batch_finish by moving the
->> check from poke_batch_finish into poke_batch_process.
-> 
-> So, in the context of the full tree at:
-> 
->    git://git.kernel.org/pub/scm/linux/kernel/git/mingo/tip.git WIP.x86/alternatives
-> 
-> Standalone smp_text_poke_batch_process() is still needed, because
-> smp_text_poke_batch_add() uses it to drive the whole 'batching'
-> machinery.
-> 
-> If smp_text_poke_batch_process() finishes for each call, if I
-> understand your suggestion correctly, that reduces the amount of
-> batching done, which is a disadvantage.
-> 
-> Note how right now it's possible to do something like this:
-> 
-> 	smp_text_poke_batch_add(1);
-> 	smp_text_poke_batch_add(1);
-> 	smp_text_poke_batch_add(1);
-> 	smp_text_poke_batch_add(1);
-> 	smp_text_poke_batch_finish();
-> 
-> This results in a single call to smp_text_poke_batch_process(), with 4
-> entries, a single 4-entry flush in essence.
-
-I meant doing this:
-
-diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-index 5b1a6252a4b9..b6a781b9de26 100644
---- a/arch/x86/kernel/alternative.c
-+++ b/arch/x86/kernel/alternative.c
-@@ -2587,12 +2587,16 @@ noinstr int 
-smp_text_poke_int3_trap_handler(struct pt_regs *regs)
-   *               replacing opcode
-   *     - SMP sync all CPUs
-   */
--static void smp_text_poke_batch_process(void)
-+void smp_text_poke_batch_finish(void)
-  {
-         unsigned char int3 = INT3_INSN_OPCODE;
-         unsigned int i;
-         int do_sync;
-
-+
-+       if (!text_poke_array.nr_entries)
-+               return;
-+
-         lockdep_assert_held(&text_mutex);
-
-         /*
-@@ -2832,12 +2836,6 @@ static bool text_poke_addr_ordered(void *addr)
-         return true;
-  }
-
--void smp_text_poke_batch_finish(void)
--{
--       if (text_poke_array.nr_entries)
--               smp_text_poke_batch_process();
--}
+On Thu, 2025-04-03 at 15:10 +0200, Christian K=C3=B6nig wrote:
+> =C2=A0Am 03.04.25 um 14:58 schrieb Philipp Stanner:
+> =C2=A0
+> > =C2=A0
+> > On Thu, 2025-04-03 at 14:08 +0200, Christian K=C3=B6nig wrote:
+> > =C2=A0
+> > > =C2=A0
+> > > Am 03.04.25 um 12:13 schrieb Philipp Stanner:
+> > > =C2=A0
+> > > > =C2=A0
+> > > > Nouveau currently relies on the assumption that dma_fences will
+> > > > only
+> > > > ever get signalled through nouveau_fence_signal(), which takes
+> > > > care
+> > > > of
+> > > > removing a signalled fence from the list
+> > > > nouveau_fence_chan.pending.
+> > > >=20
+> > > > This self-imposed rule is violated in nouveau_fence_done(),
+> > > > where
+> > > > dma_fence_is_signaled() can signal the fence without removing
+> > > > it
+> > > > from
+> > > > the list. This enables accesses to already signalled fences
+> > > > through
+> > > > the
+> > > > list, which is a bug.
+> > > >=20
+> > > > Furthermore, it must always be possible to use standard
+> > > > dma_fence
+> > > > methods an a dma_fence and observe valid behavior. The
+> > > > canonical
+> > > > way of
+> > > > ensuring that signalling a fence has additional effects is to
+> > > > add
+> > > > those
+> > > > effects to a callback and register it on that fence.
+> > > >=20
+> > > > Move the code from nouveau_fence_signal() into a dma_fence
+> > > > callback.
+> > > > Register that callback when creating the fence.
+> > > >=20
+> > > > Cc: <stable@vger.kernel.org> # 4.10+
+> > > > Signed-off-by: Philipp Stanner <phasta@kernel.org>
+> > > > ---
+> > > > Changes in v2:
+> > > > =C2=A0 - Remove Fixes: tag. (Danilo)
+> > > > =C2=A0 - Remove integer "drop" and call nvif_event_block() in the
+> > > > fence
+> > > > =C2=A0=C2=A0=C2=A0 callback. (Danilo)
+> > > > ---
+> > > > =C2=A0drivers/gpu/drm/nouveau/nouveau_fence.c | 52 +++++++++++++---=
 -
-  /**
-   * smp_text_poke_batch_add() -- update instruction on live kernel on 
-SMP, batched
-   * @addr:      address to patch
-@@ -2854,7 +2852,7 @@ void smp_text_poke_batch_finish(void)
-  void __ref smp_text_poke_batch_add(void *addr, const void *opcode, 
-size_t len, const void *emulate)
-  {
-         if (text_poke_array.nr_entries == TEXT_POKE_ARRAY_MAX || 
-!text_poke_addr_ordered(addr))
--               smp_text_poke_batch_process();
-+               smp_text_poke_batch_finish();
-         __smp_text_poke_batch_add(addr, opcode, len, emulate);
-  }
+> > > > ----
+> > > > ----
+> > > > =C2=A0drivers/gpu/drm/nouveau/nouveau_fence.h |=C2=A0 1 +
+> > > > =C2=A02 files changed, 29 insertions(+), 24 deletions(-)
+> > > >=20
+> > > > diff --git a/drivers/gpu/drm/nouveau/nouveau_fence.c
+> > > > b/drivers/gpu/drm/nouveau/nouveau_fence.c
+> > > > index 7cc84472cece..cf510ef9641a 100644
+> > > > --- a/drivers/gpu/drm/nouveau/nouveau_fence.c
+> > > > +++ b/drivers/gpu/drm/nouveau/nouveau_fence.c
+> > > > @@ -50,24 +50,24 @@ nouveau_fctx(struct nouveau_fence *fence)
+> > > > =C2=A0	return container_of(fence->base.lock, struct
+> > > > nouveau_fence_chan, lock);
+> > > > =C2=A0}
+> > > > =C2=A0
+> > > > -static int
+> > > > -nouveau_fence_signal(struct nouveau_fence *fence)
+> > > > +static void
+> > > > +nouveau_fence_cleanup_cb(struct dma_fence *dfence, struct
+> > > > dma_fence_cb *cb)
+> > > > =C2=A0{
+> > > > -	int drop =3D 0;
+> > > > +	struct nouveau_fence_chan *fctx;
+> > > > +	struct nouveau_fence *fence;
+> > > > +
+> > > > +	fence =3D container_of(dfence, struct nouveau_fence,
+> > > > base);
+> > > > +	fctx =3D nouveau_fctx(fence);
+> > > > =C2=A0
+> > > > -	dma_fence_signal_locked(&fence->base);
+> > > > =C2=A0	list_del(&fence->head);
+> > > > =C2=A0	rcu_assign_pointer(fence->channel, NULL);
+> > > > =C2=A0
+> > > > =C2=A0	if (test_bit(DMA_FENCE_FLAG_USER_BITS, &fence-
+> > > > =C2=A0
+> > > > > =C2=A0
+> > > > > base.flags)) {
+> > > > > =C2=A0
+> > > > =C2=A0
+> > > > -		struct nouveau_fence_chan *fctx =3D
+> > > > nouveau_fctx(fence);
+> > > > -
+> > > > =C2=A0		if (!--fctx->notify_ref)
+> > > > -			drop =3D 1;
+> > > > +			nvif_event_block(&fctx->event);
+> > > > =C2=A0	}
+> > > > =C2=A0
+> > > > =C2=A0	dma_fence_put(&fence->base);
+> > > > -	return drop;
+> > > > =C2=A0}
+> > > > =C2=A0
+> > > > =C2=A0static struct nouveau_fence *
+> > > > @@ -93,8 +93,7 @@ nouveau_fence_context_kill(struct
+> > > > nouveau_fence_chan *fctx, int error)
+> > > > =C2=A0		if (error)
+> > > > =C2=A0			dma_fence_set_error(&fence->base,
+> > > > error);
+> > > > =C2=A0
+> > > > -		if (nouveau_fence_signal(fence))
+> > > > -			nvif_event_block(&fctx->event);
+> > > > +		dma_fence_signal_locked(&fence->base);
+> > > > =C2=A0	}
+> > > > =C2=A0	fctx->killed =3D 1;
+> > > > =C2=A0	spin_unlock_irqrestore(&fctx->lock, flags);
+> > > > @@ -127,11 +126,10 @@ nouveau_fence_context_free(struct
+> > > > nouveau_fence_chan *fctx)
+> > > > =C2=A0	kref_put(&fctx->fence_ref, nouveau_fence_context_put);
+> > > > =C2=A0}
+> > > > =C2=A0
+> > > > -static int
+> > > > +static void
+> > > > =C2=A0nouveau_fence_update(struct nouveau_channel *chan, struct
+> > > > nouveau_fence_chan *fctx)
+> > > > =C2=A0{
+> > > > =C2=A0	struct nouveau_fence *fence;
+> > > > -	int drop =3D 0;
+> > > > =C2=A0	u32 seq =3D fctx->read(chan);
+> > > > =C2=A0
+> > > > =C2=A0	while (!list_empty(&fctx->pending)) {
+> > > > @@ -140,10 +138,8 @@ nouveau_fence_update(struct
+> > > > nouveau_channel
+> > > > *chan, struct nouveau_fence_chan *fc
+> > > > =C2=A0		if ((int)(seq - fence->base.seqno) < 0)
+> > > > =C2=A0			break;
+> > > > =C2=A0
+> > > > -		drop |=3D nouveau_fence_signal(fence);
+> > > > +		dma_fence_signal_locked(&fence->base);
+> > > > =C2=A0	}
+> > > > -
+> > > > -	return drop;
+> > > > =C2=A0}
+> > > > =C2=A0
+> > > > =C2=A0static void
+> > > > @@ -152,7 +148,6 @@ nouveau_fence_uevent_work(struct
+> > > > work_struct
+> > > > *work)
+> > > > =C2=A0	struct nouveau_fence_chan *fctx =3D container_of(work,
+> > > > struct nouveau_fence_chan,
+> > > > =C2=A0						=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0
+> > > > uevent_work);
+> > > > =C2=A0	unsigned long flags;
+> > > > -	int drop =3D 0;
+> > > > =C2=A0
+> > > > =C2=A0	spin_lock_irqsave(&fctx->lock, flags);
+> > > > =C2=A0	if (!list_empty(&fctx->pending)) {
+> > > > @@ -161,11 +156,8 @@ nouveau_fence_uevent_work(struct
+> > > > work_struct
+> > > > *work)
+> > > > =C2=A0
+> > > > =C2=A0		fence =3D list_entry(fctx->pending.next,
+> > > > typeof(*fence), head);
+> > > > =C2=A0		chan =3D rcu_dereference_protected(fence-
+> > > > >channel,
+> > > > lockdep_is_held(&fctx->lock));
+> > > > -		if (nouveau_fence_update(chan, fctx))
+> > > > -			drop =3D 1;
+> > > > +		nouveau_fence_update(chan, fctx);
+> > > > =C2=A0	}
+> > > > -	if (drop)
+> > > > -		nvif_event_block(&fctx->event);
+> > > > =C2=A0
+> > > > =C2=A0	spin_unlock_irqrestore(&fctx->lock, flags);
+> > > > =C2=A0}
+> > > > @@ -235,6 +227,19 @@ nouveau_fence_emit(struct nouveau_fence
+> > > > *fence)
+> > > > =C2=A0			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 &fctx->lock, fctx->co=
+ntext,
+> > > > ++fctx-
+> > > > =C2=A0
+> > > > > =C2=A0
+> > > > > sequence);
+> > > > > =C2=A0
+> > > > =C2=A0
+> > > > =C2=A0	kref_get(&fctx->fence_ref);
+> > > > =C2=A0
+> > > > +	fence->cb.func =3D nouveau_fence_cleanup_cb;
+> > > > +	/* Adding a callback runs into
+> > > > __dma_fence_enable_signaling(), which will
+> > > > +	 * ultimately run into nouveau_fence_no_signaling(),
+> > > > where
+> > > > a WARN_ON
+> > > > +	 * would fire because the refcount can be dropped
+> > > > there.
+> > > > +	 *
+> > > > +	 * Increment the refcount here temporarily to work
+> > > > around
+> > > > that.
+> > > > +	 */
+> > > > +	dma_fence_get(&fence->base);
+> > > > +	ret =3D dma_fence_add_callback(&fence->base, &fence->cb,
+> > > > nouveau_fence_cleanup_cb);
+> > > > =C2=A0
+> > > =C2=A0
+> > > That looks like a really really awkward approach. The driver
+> > > basically uses a the DMA fence infrastructure as middle layer and
+> > > callbacks into itself to cleanup it's own structures.
+> > > =C2=A0
+> > =C2=A0
+> > What else are callbacks good for, if not to do something
+> > automatically
+> > when the fence gets signaled?
+> > =C2=A0
+> =C2=A0
+> =C2=A0Well if you add a callback for a signal you issued yourself then
+> that's kind of awkward.
+> =C2=A0
+> =C2=A0E.g. you call into the DMA fence code, just for the DMA fence code
+> to call yourself back again.
+
+Now we're entering CS-Philosophy, because it depends on who "you" and
+"yourself" are. In case of the driver, yes, naturally it registers a
+callback because at some other place (e.g., in the driver's interrupt
+handler) the fence will be signaled and the driver wants the callback
+stuff to be done.
+
+If that's not dma_fences' callbacks' purpose, then I'd be interested in
+knowing what their purpose is, because from my POV this discussion
+seems to imply that we effectively must never use them for anything.
+
+How could it ever be different? Who, for example, registers dma_fence
+callbacks while not signaling them "himself"?
 
 
-AFAICS this doesn't change the semantics. I.e smp_text_poke_batch_add 
-will call poke_batch_finish iff the address to be added violates the 
-sorted order of text_poke_array. The net effect is we have 1 less 
-function name to care about.
+>=20
+> =C2=A0
+> =C2=A0
+> > =C2=A0
+> > > =C2=A0
+> > > Additional to that we don't guarantee any callback order for the
+> > > DMA
+> > > fence and so it can be that mix cleaning up the callback with
+> > > other
+> > > work which is certainly not good when you want to guarantee that
+> > > the
+> > > cleanup happens under the same lock.
+> > > =C2=A0
+> > =C2=A0
+> > Isn't my perception correct that the primary issue you have with
+> > this
+> > approach is that dma_fence_put() is called from within the
+> > callback? Or
+> > do you also take issue with deleting from the list?
+> > =C2=A0
+> =C2=A0
+> =C2=A0Well kind of both. The issue is that the caller of
+> dma_fence_signal() or dma_fence_signal_locked() must hold the
+> reference until the function returns.
+> =C2=A0
+> =C2=A0When you do the list cleanup and the drop inside the callback it is
+> perfectly possible that the fence pointer becomes stale before you
+> return and that's really not a good idea.
 
-> 
-> Thanks,
-> 
-> 	Ingo
+In other words, you would prefer if this patch would have a function
+with my callback's code in a function, and that function would be
+called at every place where the driver signals a fence?
+
+If that's your opinion, then, IOW, it would mean for us to go almost
+back to status quo, with nouveau_fence_signal2.0, but with the
+dma_fence_is_signaled() part fixed.
+
+
+P.
+
+> =C2=A0
+> =C2=A0
+> > =C2=A0
+> >=20
+> > =C2=A0
+> > > =C2=A0
+> > > Instead the call to dma_fence_signal_locked() should probably be
+> > > removed from nouveau_fence_signal() and into
+> > > nouveau_fence_context_kill() and nouveau_fence_update().
+> > >=20
+> > > This way nouveau_fence_is_signaled() can call this function as
+> > > well.
+> > > =C2=A0
+> > =C2=A0
+> > Which "this function"? dma_fence_signal_locked()
+> > =C2=A0
+> =C2=A0
+> =C2=A0No the cleanup function for the list entry. Whatever you call that
+> then, the name nouveau_fence_signal() is probably not appropriate any
+> more.
+> =C2=A0
+> =C2=A0
+> > =C2=A0
+> >=20
+> > =C2=A0
+> > > =C2=A0
+> > > BTW: nouveau_fence_no_signaling() looks completely broken as
+> > > well. It
+> > > calls nouveau_fence_is_signaled() and then list_del() on the
+> > > fence
+> > > head.
+> > > =C2=A0
+> > =C2=A0
+> > I can assure you that a great many things in Nouveau look
+> > completely
+> > broken.
+> >=20
+> > The question for us is always the cost-benefit-ratio when fixing
+> > bugs.
+> > There are fixes that solve the bug with reasonable effort, and
+> > there
+> > are great reworks towards an ideal state.
+> > =C2=A0
+> =C2=A0
+> =C2=A0I would just simply drop that function. As far as I can see it
+> severs no purpose other than doing exactly what the common DMA fence
+> code does anyway.
+> =C2=A0
+> =C2=A0Just one less thing which could fail.
+> =C2=A0
+> =C2=A0Christian.
+> =C2=A0
+> =C2=A0
+> > =C2=A0
+> >=20
+> > P.
+> >=20
+> >=20
+> > =C2=A0
+> > > =C2=A0
+> > > As far as I can see that is completely superfluous and should
+> > > probably be dropped. IIRC I once had a patch to clean that up but
+> > > it
+> > > was dropped for some reason.
+> > >=20
+> > > Regards,
+> > > Christian.
+> > >=20
+> > >=20
+> > > =C2=A0
+> > > > =C2=A0
+> > > > +	dma_fence_put(&fence->base);
+> > > > +	if (ret)
+> > > > +		return ret;
+> > > > +
+> > > > =C2=A0	ret =3D fctx->emit(fence);
+> > > > =C2=A0	if (!ret) {
+> > > > =C2=A0		dma_fence_get(&fence->base);
+> > > > @@ -246,8 +251,7 @@ nouveau_fence_emit(struct nouveau_fence
+> > > > *fence)
+> > > > =C2=A0			return -ENODEV;
+> > > > =C2=A0		}
+> > > > =C2=A0
+> > > > -		if (nouveau_fence_update(chan, fctx))
+> > > > -			nvif_event_block(&fctx->event);
+> > > > +		nouveau_fence_update(chan, fctx);
+> > > > =C2=A0
+> > > > =C2=A0		list_add_tail(&fence->head, &fctx->pending);
+> > > > =C2=A0		spin_unlock_irq(&fctx->lock);
+> > > > @@ -270,8 +274,8 @@ nouveau_fence_done(struct nouveau_fence
+> > > > *fence)
+> > > > =C2=A0
+> > > > =C2=A0		spin_lock_irqsave(&fctx->lock, flags);
+> > > > =C2=A0		chan =3D rcu_dereference_protected(fence-
+> > > > >channel,
+> > > > lockdep_is_held(&fctx->lock));
+> > > > -		if (chan && nouveau_fence_update(chan, fctx))
+> > > > -			nvif_event_block(&fctx->event);
+> > > > +		if (chan)
+> > > > +			nouveau_fence_update(chan, fctx);
+> > > > =C2=A0		spin_unlock_irqrestore(&fctx->lock, flags);
+> > > > =C2=A0	}
+> > > > =C2=A0	return dma_fence_is_signaled(&fence->base);
+> > > > diff --git a/drivers/gpu/drm/nouveau/nouveau_fence.h
+> > > > b/drivers/gpu/drm/nouveau/nouveau_fence.h
+> > > > index 8bc065acfe35..e6b2df7fdc42 100644
+> > > > --- a/drivers/gpu/drm/nouveau/nouveau_fence.h
+> > > > +++ b/drivers/gpu/drm/nouveau/nouveau_fence.h
+> > > > @@ -10,6 +10,7 @@ struct nouveau_bo;
+> > > > =C2=A0
+> > > > =C2=A0struct nouveau_fence {
+> > > > =C2=A0	struct dma_fence base;
+> > > > +	struct dma_fence_cb cb;
+> > > > =C2=A0
+> > > > =C2=A0	struct list_head head;
+> > > > =C2=A0
+> > > > =C2=A0
+> > > =C2=A0=C2=A0
+> > =C2=A0=C2=A0
+> =C2=A0
+> =C2=A0
 
