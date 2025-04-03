@@ -1,106 +1,127 @@
-Received: from smtp.smtpout.orange.fr (smtp-81.smtpout.orange.fr [80.12.242.81])
-	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD20C252906;
-	Thu,  3 Apr 2025 18:02:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF21B253344
+	for <linux-kernel@vger.kernel.org>; Thu,  3 Apr 2025 18:03:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743703383; cv=none; b=IGf0DWjBpKu3bkUvsODKeG0UeXiy0s61OCHRhDHT+kXt6aOi8QCBgIRdI7ibqjE4a9OCCs6oEQh83vTvX+VYuWURkNzgGqfU52EVXofIFbdqR3HOsS8xhqzrjl34ITJpGo4df1KtLikjpDbPi+MGol4XBU2OpleASGJnTdgcfpM=
+	t=1743703387; cv=none; b=To3ZtZd0MjZhSWWMT/ZwgC+F+JGQNKO8XKqgnCQ+E0CuQPb8DVIck5gJ2aYOj31Nai/8hchPxwjP4WKzXUd6tpju4CjUUxXPJfUkp3IPem2Yn8z0pN6ZWq4mvT6/+gvNEsGLwh7gt4i8YGROaw4GqDwgtpoT3q5vCj6R9WaNzyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743703383; c=relaxed/simple;
-	bh=EZ/3QHprMgvIbJAI0Y0yjBJviEcXYKgybQ1mJdA3yhc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mKexa18HQaSts9Ulkluht6PnG2/8QdHPfK7C+NLmUIqHYdZBjGXbFOd5mxMjeWsSy6GKxTf6MJ3eSfTglvVDMUhFBTXvFMlbUrmijirVm/volas8EXX0Mv/MPAJl09K36YR7zyDYl6YZyyhOcCyUc4gj31dfnqY5n9vZBosZeck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=f0Bkz4rX; arc=none smtp.client-ip=80.12.242.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1743703387; c=relaxed/simple;
+	bh=8bqspJWW+gl6XkucNMvM8Ewl32Fobkcp8JB8eqmHRw0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aE58cCfk5vC1xU1kgrU7rk2brzX9o+9ViqFcHmPUwN+0NRjl7t3qz6nowoM+4CScc4JcXEkJ9GRokAh0I6K0KUdrpbCb8aIxUsa5n0g1hisSlOuQzlz3Mws0NDV62Bs/MUr+C2b55xBULtC6Xz20fpXbXPdD5bqO8Cmz/NPN//A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=cpabh8kB; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="f0Bkz4rX"
-Received: from [192.168.1.37] ([90.11.132.44])
-	by smtp.orange.fr with ESMTPA
-	id 0OssuZpVk0cMk0OswuDZfg; Thu, 03 Apr 2025 20:01:50 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1743703310;
-	bh=2ieRkX52RZnkiUxos+tLtIvh5wxLHTwYQ58rulZe6Nw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=f0Bkz4rXfHt4jwzmXxEeB/ra0Hix9/iQPxRwd222i2NpjCp/5Df/kIAkXwGWlouZu
-	 FZR0Dwip4wIrq8G71UTWTGbHSMhBtmjrMYmEhMgg1B72ttSkyak9SZvXAf55SoIT2k
-	 FoFFi/LY5ZUF17mxJJrLfDjtRUR4ARVK5so8lJndTyQZ7bVjvPzCz+O/i6fW6RyKjy
-	 AaAtxu7q6teffMI6/rJeMOrGmph+0im8+Yr1duLpgYJuX/uwEgWqfxA5L4isREwZgb
-	 cG1ajxcYulRl9NYJwYX03bhDa7ir6LmZ5la4ujA9l0H1wHF5begWnoRQ0BkgMYzGh5
-	 uyTVUpyXOZj0w==
-X-ME-Helo: [192.168.1.37]
-X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
-X-ME-Date: Thu, 03 Apr 2025 20:01:50 +0200
-X-ME-IP: 90.11.132.44
-Message-ID: <eda0d691-93ac-4833-8978-6d39730c4db2@wanadoo.fr>
-Date: Thu, 3 Apr 2025 20:01:46 +0200
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="cpabh8kB"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43cfebc343dso8511825e9.2
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 11:03:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1743703384; x=1744308184; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=8bqspJWW+gl6XkucNMvM8Ewl32Fobkcp8JB8eqmHRw0=;
+        b=cpabh8kBGt6hp1+H1xkLcgm10R2aF8iiBSj4u7Y0h2tx4OAqqovsCnY2zIcZ0zQ/ei
+         O7BEg24PzFo3Z2yH2/EMtwWjF8kfCIDsHeNyitVzMk0Bw6mV4oAkmReL1EDc3oLbo3VZ
+         y1Sw0uVZiKnrR6geeeIDBpBt7aKEQ3wFkpZfDIn+gzVhThmLCeZY3Q3TwIfzC3i2nuaS
+         bnUFEpm81+uF/aVHIAC7LdYNixJiotxFZFqTAWROfYeG2SisZ+0cDF+kXeVIjEaPFAZ6
+         9wE50iN5MchxxHNOT2iZx3Sz0r4LxwmeSUNhuQDKadH6hpJDXY0YnClC2ahHFTmF4djt
+         /onQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743703384; x=1744308184;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8bqspJWW+gl6XkucNMvM8Ewl32Fobkcp8JB8eqmHRw0=;
+        b=Dkg2gckFwcr055FvMpnD6O38Iy82CyA4hgnEBCCMcB4yu64kI6Cm8ykTqPHm0Lme7i
+         DABsbYhKfBNwKC4TbEl4Y1ShHhV+kWJhozc+um4tVZvg5XVcE9lJFCHhHS8H8RG3LN77
+         8K5+SwCOnUnDvUJyT9dtnSfqaJCeqLMNSHI6ko49sPQ30rqP9dLzSxeQkWGypMLmeNkB
+         1/0XbQ/Zdkjxq4B4rSvA8f1YcBXoWHxQ9fvuvUWrpFU7V/SoVeS4DwsktNGb5ZfguZwa
+         6dD/08oHn/Al+pw1GX0VY+fXvyBcDpEgbD7EA9kfV8OgtIq4dxxMWRJmlobk/6pf2mV5
+         RlDg==
+X-Forwarded-Encrypted: i=1; AJvYcCUveJm+h1OiBHz0BMqhQIKFUVls3AlsT4YX3mx1DX9gGoKJ0aRRSuuJ3CpiF5krOTj6e8Dy3fr56qTiftU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwAcigPs+zbR3evOuyncVctivDBK98Fc26YBdUnREM1vlW574EH
+	IJwv+JHtM6IsoNHBdXctF+eFdQkzhJQ5FkL7DFohZ45QBeiPtR+uMOMr5OgRTjs=
+X-Gm-Gg: ASbGncsDEWV2O9saBb6gi3s7UTxZEGevA4mjPGrj1De05gQKKAQ7pmx6s65BFCYG0Zq
+	/pc7Dp4L6SGS6cRakYKgVusmhOx994uknd/lkAglUQy6XkBabV/tMh7aMShBZiKk/GaM9cDokNW
+	Ik3a2R93XmyNLsfoKUfm5E1fRb2+dK+1PQvBDfIOCK5LipcdZF4ybPrWnEtL180NYXyB3qiF/0z
+	zQQhp4mSntZPqKgIN6uDBUFrU97GqRLAmuV5UeAry3JfT4hmxYmHIJS5oS9ShyTH2QN7akcyS5l
+	q+9hDiRZvnzjTo+BlDAtbOREBGjieNjf/6sCa+evHaG7fQ7X9dXfncx4+g==
+X-Google-Smtp-Source: AGHT+IHc9+xcqKfnS5TtRa8ckiUJWDR/Q3sVK7iLIqV18S7EGnZzlO47g3UTmwdBkNHAhiFPjh7kpg==
+X-Received: by 2002:a05:600c:1f86:b0:43d:fa58:81d3 with SMTP id 5b1f17b1804b1-43ecfa06ab0mr424785e9.32.1743703383971;
+        Thu, 03 Apr 2025 11:03:03 -0700 (PDT)
+Received: from blackdock.suse.cz ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec169b8a3sm27842955e9.19.2025.04.03.11.03.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Apr 2025 11:03:03 -0700 (PDT)
+Date: Thu, 3 Apr 2025 20:03:01 +0200
+From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
+To: "Chen, Yu C" <yu.c.chen@intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
+	Mel Gorman <mgorman@suse.de>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Michal Hocko <mhocko@kernel.org>, Roman Gushchin <roman.gushchin@linux.dev>, 
+	Shakeel Butt <shakeel.butt@linux.dev>, Muchun Song <muchun.song@linux.dev>, 
+	Andrew Morton <akpm@linux-foundation.org>, Tim Chen <tim.c.chen@intel.com>, Aubrey Li <aubrey.li@intel.com>, 
+	Rik van Riel <riel@surriel.com>, Raghavendra K T <raghavendra.kt@amd.com>, 
+	K Prateek Nayak <kprateek.nayak@amd.com>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
+	Xunlei Pang <xlpang@linux.alibaba.com>, linux-kernel@vger.kernel.org, cgroups@vger.kernel.org, 
+	linux-mm@kvack.org, Chen Yu <yu.chen.surf@foxmail.com>
+Subject: Re: [PATCH] sched/numa: Add statistics of numa balance task
+ migration and swap
+Message-ID: <ufnmsikyh6budl4qkhy5o4m76yldvlns3yja743bdwvxwsljer@ztbsqf7gx6oi>
+References: <20250402010611.3204674-1-yu.c.chen@intel.com>
+ <ufu5fuhwzzdhjoltgt5bpoqaonqur4t44phmz4oninzqlqpop7@hbwza7jri3ly>
+ <7cbbbd8f-a4b4-491d-bb60-97defff6007c@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/5] iio: light: al3010: Improve al3010_init error
- handling with dev_err_probe()
-To: devnull+david.ixit.cz@kernel.org
-Cc: clamor95@gmail.com, david@ixit.cz, jic23@kernel.org, lars@metafoo.de,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
- longnoserob@gmail.com
-References: <20250402-al3010-iio-regmap-v4-0-d189bea87261@ixit.cz>
- <20250402-al3010-iio-regmap-v4-1-d189bea87261@ixit.cz>
-Content-Language: en-US, fr-FR
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <20250402-al3010-iio-regmap-v4-1-d189bea87261@ixit.cz>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="cmo6hhl6vnnkdo2y"
+Content-Disposition: inline
+In-Reply-To: <7cbbbd8f-a4b4-491d-bb60-97defff6007c@intel.com>
 
-Le 02/04/2025 à 21:33, David Heidelberg via B4 Relay a écrit :
-> From: David Heidelberg <david-W22tF5X+A20@public.gmane.org>
-> 
-> Minor code simplifications and improved error reporting.
-> 
-> Signed-off-by: David Heidelberg <david-W22tF5X+A20@public.gmane.org>
-> ---
->   drivers/iio/light/al3010.c | 10 ++++------
->   1 file changed, 4 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/iio/light/al3010.c b/drivers/iio/light/al3010.c
-> index 8c004a9239aef246a8c6f6c3f4acd6b760ee8249..34a29a51c5f9e8aa143d3ba195b79a19793e4f88 100644
-> --- a/drivers/iio/light/al3010.c
-> +++ b/drivers/iio/light/al3010.c
-> @@ -92,8 +92,8 @@ static int al3010_init(struct al3010_data *data)
->   	ret = devm_add_action_or_reset(&data->client->dev,
->   				       al3010_set_pwr_off,
->   				       data);
-> -	if (ret < 0)
-> -		return ret;
-> +	if (ret)
-> +		return dev_err_probe(&data->client->dev, ret, "failed to add action\n");
 
-Not sure this new message is needed.
+--cmo6hhl6vnnkdo2y
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Subject: Re: [PATCH] sched/numa: Add statistics of numa balance task
+ migration and swap
+MIME-Version: 1.0
 
-The error is unlikely, and kmalloc(), which is used in is 
-devm_add_action_or_reset(), is already verbose.
+On Thu, Apr 03, 2025 at 10:47:44AM +0800, "Chen, Yu C" <yu.c.chen@intel.com> wrote:
+> In the context of NUMA balancing, it would be helpful to not only monitor on
+> the activities of individual task/thread but also the resource usage and
+> task migrations at the group level - which helps us quickly evaluate the
+> performance and resource usage of the container - like per memcg
+> numa_pages_migrated, numa_pte_updates introduced in
 
-CJ
+Somehow I thought that these are the useful metrics (amount of misplaced
+memory) and the aggregated task stats aren't interesting (they'd be more
+or less proportion of total number of tasks in the group and you don't
+know which task it was).
 
->   
->   	ret = i2c_smbus_write_byte_data(data->client, AL3010_REG_CONFIG,
->   					FIELD_PREP(AL3010_GAIN_MASK,
-> @@ -190,10 +190,8 @@ static int al3010_probe(struct i2c_client *client)
->   	indio_dev->modes = INDIO_DIRECT_MODE;
->   
->   	ret = al3010_init(data);
-> -	if (ret < 0) {
-> -		dev_err(dev, "al3010 chip init failed\n");
-> -		return ret;
-> -	}
-> +	if (ret)
-> +		return dev_err_probe(dev, ret, "failed to init ALS\n");
->   
->   	return devm_iio_device_register(dev, indio_dev);
->   }
-> 
+> Got it, will do in next version.
 
+OK.
+
+Thanks,
+Michal
+
+--cmo6hhl6vnnkdo2y
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQTd6mfF2PbEZnpdoAkt3Wney77BSQUCZ+7NUwAKCRAt3Wney77B
+SXyAAP9zRNbWyXvRY68kwReBWQwU+IWj9P0H4vV7txVVj+beHQD/Vl708/8cL+7h
+OSXoRbmFYGoPx1rHTLM6MtQrJS4noAA=
+=Vpoo
+-----END PGP SIGNATURE-----
+
+--cmo6hhl6vnnkdo2y--
