@@ -1,70 +1,289 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f49.google.com (mail-oo1-f49.google.com [209.85.161.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C36EA1FECAA;
-	Fri,  4 Apr 2025 16:12:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77F9020969A
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 16:15:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743783133; cv=none; b=NyWpHTA6e6bB+prLhefLneOhG2yKUm2pyEx0zsf5KmQutPDBCx6uHFASF8Oa7QmOn9GOcSOT4wAgysrgYJCeGyVtDVQsP5ElTwx+G46deHGr4Z52f5rdeifUVPi3IJ8V3lVbVaZ8RSboc+4VVVLSSksnxv+mPJcEgl9doVVmwoY=
+	t=1743783326; cv=none; b=j+QwoszWaK8NX0JDji+BI1sBk9Dn0juXUfwtpEQMst7M2l6rkb1LSl8Kwy1ooAGkksKowuIF1h6TEqg/ZiShomqSLAf4/4uTsFM6rGgz5igb9lZBftD/vvdktcuSxEIfmZEi8KnDeoQS6EBIeCVqQmfgCL9nFmMcSiTEf96xCg4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743783133; c=relaxed/simple;
-	bh=fKdvnEi5tKN2kAqSfzeL2P8T16EASbCOVKXOoadOa48=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J9O4PzT8yCLs837onQ8av7mUzuyzcUGmn3QM3JEoex1ai+Dq4G0ts6n1JBWoCDAtWuk44DYlPlUBLRqLOnyv0WdunADY4Nw8qacrY3Xmz4Uhtn7f6pJS1EnqUsyD2KYymSvpy9fWKK3RpX1MimisIWwJ6ZHcPlVOicx4Vc4jVZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JJ2T88nE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743783326; c=relaxed/simple;
+	bh=no3QAYqdItguKs3ATDS0SdIbnO/7BXoObTeJnj2tz6c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nBPFVtA9Mo/qURx6FmGB6ZZbQIVmTy699nfNNKsHZTCfIhUNXVMVo8svphIwIcsmtj/zKlxB14IaRkWdZNWtGFR6D6krfBOIiLrHEJaZ+yBt6aSL4VaWZXzAHpe9iCyL0tUKLryTuR45994RA6i9Xv2/zGwpCCXHkyxZsobacDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=YIQ2ACEn; arc=none smtp.client-ip=209.85.161.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JJ2T88nE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15AB9C4CEDD;
-	Fri,  4 Apr 2025 16:12:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743783133;
-	bh=fKdvnEi5tKN2kAqSfzeL2P8T16EASbCOVKXOoadOa48=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JJ2T88nE+N/4gXh74yoEu//aq/OHl8dvCdl0TPcxIbnWZJM9FRHSSVmaweRJxDDMV
-	 T6EXwUrg6hzI3Pr1RhAfohxPtg8v37oME0WFOt0V45crZsI07MMiuGZKvPhHbLUOv/
-	 IGpj9aw69Bf3A+FiGYKC4bFCXxdRdGrzZRx8Ghqw4QEAbLePIvZHkj+H0Aw3+TPqqF
-	 3lYOzpZVCKoFz+pdWz+R0SXqyZXY+qjpmvR+rUETQckrr7oBxPAQOWaZd31XKBgoOI
-	 eILRp22CLBhUUWmK6gZxSZvfOMb3z0O//AoyFub+cNPnioa3Ss6oykbYZYlGg8tdon
-	 /1PjQiG1pRjUw==
-Date: Fri, 4 Apr 2025 11:12:12 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Mubin Sayyed <mubin.sayyed@amd.com>
-Cc: krzk+dt@kernel.org, linux-usb@vger.kernel.org,
-	gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-	dlemoal@kernel.org, cassel@kernel.org, p.zabel@pengutronix.de,
-	brgl@bgdev.pl, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, conor+dt@kernel.org,
-	linus.walleij@linaro.org, radhey.shyam.pandey@amd.com,
-	linux-ide@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	michal.simek@amd.com, git@amd.com
-Subject: Re: [PATCH] dt-bindings: xilinx: Remove myself from maintainership
-Message-ID: <174378313091.1531760.13963641881686821013.robh@kernel.org>
-References: <20250403060836.2602361-1-mubin.sayyed@amd.com>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="YIQ2ACEn"
+Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-60245c7309bso451293eaf.3
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 09:15:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1743783322; x=1744388122; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=G2j3x93HYeHwY5tSNUGE91ADq/ThMEsShqde0z89gCY=;
+        b=YIQ2ACEninaJ1/vaFLNAn+lUMFr/zyToNRn0usnmmLBFFNsDdePlzk/5X5IPBWg+/h
+         f18bL7Axno8fcqCpvOHk+b/DNlizjab2PSyK5iOeuLdI/QZhemnyeFljivl3ZIgoK8Or
+         auyrEAiiJp6QqKMA0oCoDWFolUL08SSifMz/pyUHuvMWtw3OKMs2sohtXCk1uPUkq36x
+         99IryBrAy54y7cgYts/lOzgA5HSuBx1ys4FakUR2oK51Y5oE1k7OwnsjD4i3BPab6X0J
+         W1Tg+521gsmyqzHYA41dwk9kpSsJpnrR2cepcJTtXit99bdOU4ENk1tSkkuGGOJe/0/h
+         uCPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743783322; x=1744388122;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=G2j3x93HYeHwY5tSNUGE91ADq/ThMEsShqde0z89gCY=;
+        b=WSbpTVigkxJuEwClJGHfT32SUlgnhcXAlDNzSai3XFz655H94CgGnvdU82HMLOqrlZ
+         24BAlPwuB5QwSC3gaUt4XWS+IqHnZ476eOSWFkBaaVyCoHBzYmpMPdZH3b1sFV+yE7a4
+         0q8RR28qiUhjAAnqagiym8K3r9Mv1GGdTIAdeyxuh+De/PCDrPXzmOwSU7O3/TZ7Q/Xo
+         XWh7wUuQqm61I3IDiaI2sdXj0Xby5rpacdn3nrdmaiBNwcppkDbmA9gK8BqN0dc57Usm
+         nVdT5rhtrH0+y+N/WeXIgV1SwilfAqhigR/TY8M9X7wG1Bfw39SdxBTZhkkNzqfjasZz
+         H8qA==
+X-Forwarded-Encrypted: i=1; AJvYcCWCSvAnBQ1v8YaAehVLauPeZj1bFTtnpR64vdgKXCcYUW4OhHHTxIkUQkBBSx1SbT+mLT0lfyTZvWQT/A0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwrTLgdna5nQ1cicwnBhn5MvF4LC3MJcHnltaUdtz7+81d0CES4
+	Vqp0xVMav2TGNPc0CZme6fedjJuJRlveyEq+m2KxZ5U58TsyEe1JV4fQZMyACsQ=
+X-Gm-Gg: ASbGncsnNnJm9S/gs6ssOcd61UlVSQFiJA3VYjDpz90G3hYxYdGyvNfRyKokWmdYBQ2
+	qX9L5QsjRKcjHx5hHxOi2h8uZklrfkX25q9Qb4+BUwLIs6yrsEpST5d/V27WYFuRYMK41ISnvQb
+	aGIwN/ahUmRp7+tNhnR/zIdOa1dZ3qyIY/YNprGuGqlV+Q+SA0IRlGgH1BbZkzGzFBccBKhs2FJ
+	byGONEEvPiw3AoKzSpxO6SR2ZYhedqxPMzlnSn03VPW013zHAcXFJEkNAEnDLSoTZ8td7AK3RcO
+	OccXhSbJl8JEA1OAWBNDSzYFEXRAOISUNVPMOJltXL01stwbCLp4zjnlckbO0w+iCggnawdK2C3
+	oHB44AA==
+X-Google-Smtp-Source: AGHT+IGeD0DN5s5NpX38+vrcEe8pmX0dglCUeK/9Wn3VmmDArglW7QUf9t5hzJw6MmeVoRIoUy9CaA==
+X-Received: by 2002:a05:6808:2444:b0:3f8:30c1:cca7 with SMTP id 5614622812f47-4004557f18fmr2465378b6e.8.1743783322149;
+        Fri, 04 Apr 2025 09:15:22 -0700 (PDT)
+Received: from [192.168.0.113] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-4003ff9be6dsm662896b6e.25.2025.04.04.09.15.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 04 Apr 2025 09:15:20 -0700 (PDT)
+Message-ID: <25b34e60-5392-4bfb-b994-49212dfbdb22@baylibre.com>
+Date: Fri, 4 Apr 2025 11:15:18 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250403060836.2602361-1-mubin.sayyed@amd.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] iio: adc: stm32: add oversampling support
+To: Olivier Moysan <olivier.moysan@foss.st.com>,
+ Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>
+Cc: Fabrice Gasnier <fabrice.gasnier@foss.st.com>, linux-iio@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250403162358.1257370-1-olivier.moysan@foss.st.com>
+Content-Language: en-US
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <20250403162358.1257370-1-olivier.moysan@foss.st.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-
-On Thu, 03 Apr 2025 11:38:36 +0530, Mubin Sayyed wrote:
-> As I am leaving AMD and will no longer be maintaining
-> these platform drivers, so removing myself from maintainership.
+On 4/3/25 11:23 AM, Olivier Moysan wrote:
+> Add oversampling support for STM32H7, STM32MP15 & STM32MP13.
+> STM32F4 ADC has no oversampling feature.
 > 
-> Signed-off-by: Mubin Sayyed <mubin.sayyed@amd.com>
+> The current support of the oversampling feature aims at increasing
+> the data SNR, without changing the data resolution.
+> As the oversampling by itself increases data resolution,
+> a right shift is applied to keep initial resolution.
+
+Why do we not want the extra bits too? I guess if we wanted the extra bits
+in the future we could make the in_voltage_scale attribute writable to
+select the resolution.
+
+> Only the oversampling ratio corresponding to a power of two are
+> supported here, to get a direct link between right shift and
+> oversampling ratio. (2exp(n) ratio <=> n right shift)
+> 
+> The oversampling ratio is shared by all channels, whatever channel type.
+> (e.g. single ended or differential).
+> 
+> Oversampling can be configured using IIO ABI:
+> - in_voltage_oversampling_ratio_available
+> - in_voltage_oversampling_ratio
+
+This would require info_mask_shared_by_type but the patch uses
+info_mask_shared_by_all, so the attributes will be:
+
+- oversampling_ratio
+- oversampling_ratio_available
+
+I guess currently it doesn't matter which one gets used if there are only
+voltage channels, but it could make a difference, e.g. if a temperature
+channel was ever added.
+
+In any case, the description should match what is actually implemented.
+
+> 
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
+> Signed-off-by: Olivier Moysan <olivier.moysan@foss.st.com>
+> 
 > ---
->  Documentation/devicetree/bindings/ata/ceva,ahci-1v84.yaml        | 1 -
->  .../devicetree/bindings/gpio/xlnx,zynqmp-gpio-modepin.yaml       | 1 -
->  Documentation/devicetree/bindings/reset/xlnx,zynqmp-reset.yaml   | 1 -
->  Documentation/devicetree/bindings/usb/dwc3-xilinx.yaml           | 1 -
->  Documentation/devicetree/bindings/usb/microchip,usb5744.yaml     | 1 -
->  Documentation/devicetree/bindings/usb/xlnx,usb2.yaml             | 1 -
->  6 files changed, 6 deletions(-)
+> Changes in v2:
+> - Remove useless header files
+> - Use FIELD_PREP macro
+> - Reorder stm32_adc_write_raw() function
+
+Link to v1? (for the lazy reviewer :-p)
+
+> ---
+>  drivers/iio/adc/stm32-adc-core.h |  14 ++++
+>  drivers/iio/adc/stm32-adc.c      | 137 +++++++++++++++++++++++++++++++
+>  2 files changed, 151 insertions(+)
 > 
+> diff --git a/drivers/iio/adc/stm32-adc-core.h b/drivers/iio/adc/stm32-adc-core.h
+> index 73b2c2e91c08..bfd42c5456bf 100644
+> --- a/drivers/iio/adc/stm32-adc-core.h
+> +++ b/drivers/iio/adc/stm32-adc-core.h
+> @@ -91,6 +91,7 @@
+>  #define STM32H7_ADC_IER			0x04
+>  #define STM32H7_ADC_CR			0x08
+>  #define STM32H7_ADC_CFGR		0x0C
+> +#define STM32H7_ADC_CFGR2		0x10
+>  #define STM32H7_ADC_SMPR1		0x14
+>  #define STM32H7_ADC_SMPR2		0x18
+>  #define STM32H7_ADC_PCSEL		0x1C
+> @@ -160,6 +161,13 @@
+>  #define STM32H7_DMNGT_SHIFT		0
+>  #define STM32H7_DMNGT_MASK		GENMASK(1, 0)
+>  
+> +/* STM32H7_ADC_CFGR2 bit fields */
+> +#define STM32H7_OVSR_MASK		GENMASK(25, 16) /* Correspond to OSVR field in datasheet */
 
-Applied, thanks!
+nit: Comment seems obvious and can be left out.
 
+> +#define STM32H7_OVSR(v)			FIELD_PREP(STM32H7_OVSR_MASK, v)
+> +#define STM32H7_OVSS_MASK		GENMASK(8, 5)
+> +#define STM32H7_OVSS(v)			FIELD_PREP(STM32H7_OVSS_MASK, v)
+> +#define STM32H7_ROVSE			BIT(0)
+> +
+
+...
+
+> +static const unsigned int stm32h7_adc_oversampling_avail[] = {
+> +1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024
+
+Normal style is to have 1 tab indent here.
+
+> +};
+> +
+> +static const unsigned int stm32mp13_adc_oversampling_avail[] = {
+> +1, 2, 4, 8, 16, 32, 64, 128, 256
+
+And here.
+
+>  };
+>  
+
+...
+
+> @@ -889,6 +912,41 @@ static void stm32mp13_adc_start_conv(struct iio_dev *indio_dev, bool dma)
+>  	stm32_adc_set_bits(adc, STM32H7_ADC_CR, STM32H7_ADSTART);
+>  }
+>  
+> +static void stm32h7_adc_set_ovs(struct iio_dev *indio_dev, u32 ovs_idx)
+> +{
+> +	struct stm32_adc *adc = iio_priv(indio_dev);
+> +	u32 ovsr_bits, bits, msk;
+> +
+> +	msk = STM32H7_ROVSE | STM32H7_OVSR_MASK | STM32H7_OVSS_MASK;
+> +	stm32_adc_clr_bits(adc, STM32H7_ADC_CFGR2, msk);
+> +
+> +	if (!ovs_idx)
+> +		return;
+> +
+> +	ovsr_bits = (1 << ovs_idx) - 1;
+> +	bits = STM32H7_ROVSE | STM32H7_OVSS(ovs_idx) | STM32H7_OVSR(ovsr_bits);
+> +
+> +	stm32_adc_set_bits(adc, STM32H7_ADC_CFGR2, bits & msk);
+> +}
+> +
+> +static void stm32mp13_adc_set_ovs(struct iio_dev *indio_dev, u32 ovs_idx)
+> +{
+> +	struct stm32_adc *adc = iio_priv(indio_dev);
+> +	u32 bits, msk;
+> +
+> +	msk = STM32H7_ROVSE | STM32MP13_OVSR_MASK | STM32MP13_OVSS_MASK;
+> +	stm32_adc_clr_bits(adc, STM32H7_ADC_CFGR2, msk);
+> +
+> +	if (!ovs_idx)
+> +		return;
+> +
+> +	bits = STM32H7_ROVSE | STM32MP13_OVSS(ovs_idx);
+> +	if (ovs_idx - 1)
+> +		bits |= STM32MP13_OVSR(ovs_idx - 1);
+> +
+> +	stm32_adc_set_bits(adc, STM32H7_ADC_CFGR2, bits & msk);
+> +}
+
+
+Some comments in these functions could be useful to avoid needing the
+datasheet to understand all the different things that are happening here
+and more importantly, why it was decided to do it this way when there are
+many other possibilities (i.e. repeat the bit from commit message about
+always using 12-bit output).
+
+> @@ -1461,6 +1519,69 @@ static int stm32_adc_single_conv(struct iio_dev *indio_dev,
+>  	return ret;
+>  }
+>  
+> +static int stm32_adc_write_raw(struct iio_dev *indio_dev,
+> +			       struct iio_chan_spec const *chan,
+> +			       int val, int val2, long mask)
+> +{
+> +	struct stm32_adc *adc = iio_priv(indio_dev);
+> +	struct device *dev = indio_dev->dev.parent;
+> +	int nb = adc->cfg->adc_info->num_ovs;
+> +	u32 idx;
+> +	int ret;
+> +
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
+> +		if (val2)
+> +			return -EINVAL;
+> +
+> +		for (idx = 0; idx < nb; idx++)
+> +			if (adc->cfg->adc_info->oversampling[idx] == val)
+> +				break;
+> +
+> +		if (idx >= nb)
+> +			return -EINVAL;
+> +
+> +		ret = iio_device_claim_direct_mode(indio_dev);
+> +		if (ret)
+> +			return ret;
+
+We've been replacing this everywhere with:
+
+		if (!iio_device_claim_direct(indio_dev))
+			return -EBUSY;
+
+See: https://lore.kernel.org/linux-iio/20250331121317.1694135-1-jic23@kernel.org/
+
+> +
+> +		ret = pm_runtime_resume_and_get(dev);
+> +		if (ret < 0)
+> +			goto err;
+> +
+> +		adc->cfg->set_ovs(indio_dev, idx);
+> +
+> +		pm_runtime_mark_last_busy(dev);
+> +		pm_runtime_put_autosuspend(dev);
+> +
+> +		adc->ovs_idx = idx;
+> +
+> +err:
+> +		iio_device_release_direct_mode(indio_dev);
+
+		iio_device_release_direct(indio_dev);
+
+> +
+> +		return ret;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
