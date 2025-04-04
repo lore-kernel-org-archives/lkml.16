@@ -1,157 +1,298 @@
-Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22DDC1DE2CC
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 10:31:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D76919DF66;
+	Fri,  4 Apr 2025 10:32:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743762710; cv=none; b=QLVNMX+6G4wsyIl2XdEgt/K5glkUj/2mcRO2uDgzFXlMgtBkL4k2iDyICdV2XcinEKSAGGJkUbJ3E+MBv9i8mQbQEOKWa2g8Kp6S35j11mBzjDj6KG7PZLjzQHjAdL6yS/1b2nR3isb0B6+IofoHRSAV0WgJrSKBsdpy4fYLInE=
+	t=1743762769; cv=none; b=QK/7OywRfS0iM/EUsCQyvHntAeO73D2B4a4WtMG39hRuEHZ4JyCVpYg++/J3Ldbg80pCtXsPpIXGROaG+LvezRip2L1ieuCLZWwfgXmfU89hoZ7c83g1Ks1FrxEoOPEmEWxvkcXBKrf5NXRMa5G6dricWo8VFLuUi3+1F88HZA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743762710; c=relaxed/simple;
-	bh=puo0zeWGfg/XrDDKhEtVrd4WcWPM6KhzepuNu4U2cy4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RMukXNDxuFQN7FnsScdIqYh1a0vOfW8Sbl1BEYFJ2JLo68rpITQinUQSybDhk0vBoyoYYoqIXmy40SCaQmEDQrRtsU14BW5qLKdvpBnHvhlXK/M5XYf7rc0xezfA2agvSNbQU2TvAQECA8CkmOk3nk6sFzmdW7dshHPpWodlvYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=m/4st2RZ; arc=none smtp.client-ip=209.85.128.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1743762769; c=relaxed/simple;
+	bh=RnB3hqCazfynhXC46ZCpg6iui2CdO8E5L3mhRcFt/kU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=M+E+uOltO6jO817xg2WhfAbulCU7y4tsJUdk2TrNxo+Oe3wRCOe4ch8/hMDqMbOhQs+76/+JXYy3XVMk8LEU+SPE5QdafD/auppq5jC2d69swMX0CeE8aexKmT8dCZzDnw5PLiHuLLDECq60zI+1Jrkfkhf8pH1HwfV2mf9tdT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SdYgJILc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="m/4st2RZ"
-Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-6ff1e375a47so19347357b3.1
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 03:31:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743762707; x=1744367507; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=p2d7X4LZ95qskY0j6wRpuQmYie6Gy7m1icDTnjrkreI=;
-        b=m/4st2RZ1mYZE75yFAAubk3/IIDJ6JIabR/ozRM8VS8xImfsqQIuAVxlGtQU97pD/N
-         at9MecDkuLyDTFBTc/GnSfKatPHJXGGwPdSlb62nm79r/vCFoKJhws0GY0YYQdx6I9do
-         yc7ttS8xCmP/SM5eAR8IoV5v4lD5mxYS74ErF7dLTE1RcqS4ijiM5nZ1nrMGuJO+cmiB
-         7mnsRQRQDIFoc6BZxTFQAwLXf+0JHDocNLZKYAci5Rki3RGyrtWdNLmNjsNCdXAniL6Y
-         iHoJNl2txeZVsiBZJY783GrBNnFFFqE3lVM/e4l3QrhuC5MYIOWYY2fi4NrLLRA+Jcwo
-         aLeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743762707; x=1744367507;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=p2d7X4LZ95qskY0j6wRpuQmYie6Gy7m1icDTnjrkreI=;
-        b=rYHc00mIZVZ0AKnZUFLBY8OFscBmYu1ESr2DPg+cHkl+y4QNArUnzZfuMJi78fh2aD
-         Qv25wbwMPV7N/A6PtIMR4u7KEXJd67F1Wz/RwescPOrmXSSAWbg9dsfjNQuWyybTMxOM
-         HPQuJGY2qRrkfem86r8IBLVd7rfwxjL5L9CFlE6zqoMSoo2cM/oyYWArCXSZin37vUie
-         fkslx+1uq3nk5VSahINsDGCoHhSYoKS8ZSe8x3PrsCR+uBu6mDFLsQEhEQKFFGAWqQpo
-         BJnql5kXuMFFUl0Q5tTo5Il/hrGeJL8705SbOt3nnfBnvhaxsrIMlRD4C+uWyzdUC1ay
-         RcLg==
-X-Forwarded-Encrypted: i=1; AJvYcCVSFyZGwDhOzYhu8nqlS+Yu6B/9n2kkSK0GBwItaNWMahD9kDyyVlCsLgvwPaIp7AEMqVjvCfaxUeZE+HQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwbftO8IoRmpMEcB0duClul+l1g1GYj147o3mY8a2GYKY4g7JKU
-	jFvk7U2g6UJNJFfo3fimh8t4tTV4p9flPzbv7RoP7iieLxj58GnpivmAtgfxArjHlY/UxbYUtXz
-	c3zX2ItYe20OLZCo9EyEtogqon05ILjnD8l4o4g==
-X-Gm-Gg: ASbGncvUQShSkj5M5uPFvoPzu/skIV7JmauMTT1uLOT4GeevMcOlVjUO9M8Gb6mzC7R
-	EH8JQ1pr2IP1O3nhnI88X5AMUZczkuaoQzxXhcG4/tGhOEnH8ZJjJ6p0EBHpmavNz//V/yZgiOJ
-	OE335UtUJug7k+CG6O0Dc8wvC2ImJkplS4Gm1eAQ==
-X-Google-Smtp-Source: AGHT+IHL6tNiMt83fP/8QoVhxPRtZTRBqTJ/Cw9tCME3kjDGJ0WhVAtLf3L7QrkxkDkyR8ahdAf3HNvn/ambJdKtSJE=
-X-Received: by 2002:a05:690c:9a0d:b0:702:d85:5347 with SMTP id
- 00721157ae682-703e16473e9mr44558927b3.36.1743762706998; Fri, 04 Apr 2025
- 03:31:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SdYgJILc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73BA7C4CEDD;
+	Fri,  4 Apr 2025 10:32:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743762769;
+	bh=RnB3hqCazfynhXC46ZCpg6iui2CdO8E5L3mhRcFt/kU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SdYgJILcljmS2dEju5a5G3ZhdswondY0YXolrLFuSzHVl1Qu7sD9zklAzlo/oFwlc
+	 kBjZSTQObCQUB4lZZLouYFyGkiz3mxdjjnrZq5gDe4ozPtmwRL22f2ERSD2jL58mJ7
+	 iHyGfr8tOh37pkOX5FEuYWEoVpIhmf/jqrOsqtZwqHLi1itnkBB6gX0sVsSqqf7zMI
+	 MfIK1asSZZwKCgkYryNjmSxoTugZZfiFqJO4UucNsOkTh2zfQeVLAWIYc000+T7qD3
+	 QfRGe2lT19kPVgaUiqR5up2BXfQw6202F4Dkdk6UAKuAN8vbOb2wT2FvPxRZdTWLm0
+	 ioqcTZUjrp51Q==
+Date: Fri, 4 Apr 2025 12:32:46 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
+Cc: alexandre.belloni@bootlin.com, robh@kernel.org, krzk+dt@kernel.org, 
+	conor+dt@kernel.org, jarkko.nikula@linux.intel.com, linux-i3c@lists.infradead.org, 
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	andersson@kernel.org, konradybcio@kernel.org
+Subject: Re: [PATCH v3 2/3] i3c: master: Add Qualcomm I3C controller driver
+Message-ID: <20250404-provocative-mayfly-of-drama-eeddc1@shite>
+References: <20250403134644.3935983-1-quic_msavaliy@quicinc.com>
+ <20250403134644.3935983-3-quic_msavaliy@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250403-dt-cpu-schema-v1-0-076be7171a85@kernel.org> <20250403-dt-cpu-schema-v1-9-076be7171a85@kernel.org>
-In-Reply-To: <20250403-dt-cpu-schema-v1-9-076be7171a85@kernel.org>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Fri, 4 Apr 2025 12:30:59 +0200
-X-Gm-Features: AQ5f1JoO4h1zt0Jv8N6Q3VB80QU6oNypKSnO1edlCmwT1znvOfAf3BOWzm_IC6U
-Message-ID: <CAPDyKFoEEp8AZ7aJ8-wwp8=n+T4gbij15oYaCNhF1Bd-E1nMbg@mail.gmail.com>
-Subject: Re: [PATCH 09/19] arm: dts: qcom: sdx55/sdx65: Fix CPU power-domain-names
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	Samuel Holland <samuel@sholland.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Viresh Kumar <viresh.kumar@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Vincenzo Frascino <vincenzo.frascino@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, 
-	Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Viresh Kumar <vireshk@kernel.org>, 
-	Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, zhouyanjie@wanyeetech.com, 
-	Conor Dooley <conor@kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, 
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>, Steen Hegelund <Steen.Hegelund@microchip.com>, 
-	Daniel Machon <daniel.machon@microchip.com>, UNGLinuxDriver@microchip.com, 
-	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
-	Heiko Stuebner <heiko@sntech.de>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-pm@vger.kernel.org, linux-mediatek@lists.infradead.org, 
-	linux-arm-msm@vger.kernel.org, linux-mips@vger.kernel.org, 
-	imx@lists.linux.dev, linux-rockchip@lists.infradead.org, 
-	linux-amlogic@lists.infradead.org, linux-renesas-soc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250403134644.3935983-3-quic_msavaliy@quicinc.com>
 
-On Fri, 4 Apr 2025 at 05:02, Rob Herring (Arm) <robh@kernel.org> wrote:
->
-> "rpmhpd" is not documented nor used anywhere. As the enable-method is
-> "psci" use "psci" for the power-domain name.
->
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+On Thu, Apr 03, 2025 at 07:16:43PM GMT, Mukesh Kumar Savaliya wrote:
+> Add support for the Qualcomm I3C controller driver, which implements
+> I3C master functionality as defined in the MIPI Alliance Specification
+> for I3C, Version 1.0.
+> 
+> This driver supports master role in SDR mode.
+> 
+> Unlike some other I3C master controllers, this implementation
+> does not support In-Band Interrupts (IBI) and Hot-join requests.
+> 
+> Signed-off-by: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
 > ---
->  arch/arm/boot/dts/qcom/qcom-sdx55.dtsi | 2 +-
->  arch/arm/boot/dts/qcom/qcom-sdx65.dtsi | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/qcom/qcom-sdx55.dtsi b/arch/arm/boot/dts/qcom/qcom-sdx55.dtsi
-> index 39530eb580ea..64d9858b4248 100644
-> --- a/arch/arm/boot/dts/qcom/qcom-sdx55.dtsi
-> +++ b/arch/arm/boot/dts/qcom/qcom-sdx55.dtsi
-> @@ -57,7 +57,7 @@ cpu0: cpu@0 {
->                         enable-method = "psci";
->                         clocks = <&apcs>;
->                         power-domains = <&rpmhpd SDX55_CX>;
-> -                       power-domain-names = "rpmhpd";
-> +                       power-domain-names = "psci";
+>  drivers/i3c/master/Kconfig         |   13 +
+>  drivers/i3c/master/Makefile        |    1 +
+>  drivers/i3c/master/i3c-qcom-geni.c | 1099 ++++++++++++++++++++++++++++
+>  3 files changed, 1113 insertions(+)
+>  create mode 100644 drivers/i3c/master/i3c-qcom-geni.c
+> 
+> diff --git a/drivers/i3c/master/Kconfig b/drivers/i3c/master/Kconfig
+> index 77da199c7413..30b768df94c9 100644
+> --- a/drivers/i3c/master/Kconfig
+> +++ b/drivers/i3c/master/Kconfig
+> @@ -44,6 +44,19 @@ config SVC_I3C_MASTER
+>  	help
+>  	  Support for Silvaco I3C Dual-Role Master Controller.
+>  
+> +config I3C_QCOM_GENI
+> +	tristate "Qualcomm Technologies Inc.'s I3C controller driver"
+> +	depends on I3C
+> +	depends on QCOM_GENI_SE
+> +	help
+> +	  This driver supports QUPV3 GENI based I3C controller in master
+> +	  mode on the Qualcomm Technologies Inc.s SoCs. If you say yes to
+> +	  this option, support will be included for the built-in I3C interface
+> +	  on the Qualcomm Technologies Inc.s SoCs.
+> +
+> +	  This driver can also be built as a module.  If so, the module
+> +	  will be called i3c-qcom-geni.
+> +
+>  config MIPI_I3C_HCI
+>  	tristate "MIPI I3C Host Controller Interface driver (EXPERIMENTAL)"
+>  	depends on I3C
+> diff --git a/drivers/i3c/master/Makefile b/drivers/i3c/master/Makefile
+> index 3e97960160bc..bc11eecd4692 100644
+> --- a/drivers/i3c/master/Makefile
+> +++ b/drivers/i3c/master/Makefile
+> @@ -4,3 +4,4 @@ obj-$(CONFIG_DW_I3C_MASTER)		+= dw-i3c-master.o
+>  obj-$(CONFIG_AST2600_I3C_MASTER)	+= ast2600-i3c-master.o
+>  obj-$(CONFIG_SVC_I3C_MASTER)		+= svc-i3c-master.o
+>  obj-$(CONFIG_MIPI_I3C_HCI)		+= mipi-i3c-hci/
+> +obj-$(CONFIG_I3C_QCOM_GENI)		+= i3c-qcom-geni.o
 
-As I understand it, this isn't for cpu-power-mgmt but for
-cpu-performance-scaling.
+Did you just add entry to the end of file? No, don't break ordering.
+That's a standard rule for most subsystems.
 
-I have been thinking of adding a common power-domain-name for this,
-but never reached to do it. I think the last one we added was the
-Airoha SoC [1] which uses "perf", which seems to be the most common
-one. Still I don't see that being documented.
+...
 
->                         operating-points-v2 = <&cpu_opp_table>;
->                 };
->         };
-> diff --git a/arch/arm/boot/dts/qcom/qcom-sdx65.dtsi b/arch/arm/boot/dts/qcom/qcom-sdx65.dtsi
-> index 6b23ee676c9e..bfd04e53c5a8 100644
-> --- a/arch/arm/boot/dts/qcom/qcom-sdx65.dtsi
-> +++ b/arch/arm/boot/dts/qcom/qcom-sdx65.dtsi
-> @@ -58,7 +58,7 @@ cpu0: cpu@0 {
->                         enable-method = "psci";
->                         clocks = <&apcs>;
->                         power-domains = <&rpmhpd SDX65_CX_AO>;
-> -                       power-domain-names = "rpmhpd";
-> +                       power-domain-names = "psci";
+> +irqret:
+> +	if (m_stat)
+> +		writel_relaxed(m_stat, gi3c->se.base + SE_GENI_M_IRQ_CLEAR);
+> +
+> +	if (dma) {
+> +		if (dm_tx_st)
+> +			writel_relaxed(dm_tx_st, gi3c->se.base + SE_DMA_TX_IRQ_CLR);
+> +		if (dm_rx_st)
+> +			writel_relaxed(dm_rx_st, gi3c->se.base + SE_DMA_RX_IRQ_CLR);
+> +	}
+> +
+> +	/* if this is err with done-bit not set, handle that through timeout. */
+> +	if (m_stat & M_CMD_DONE_EN || m_stat & M_CMD_ABORT_EN) {
+> +		writel_relaxed(0, gi3c->se.base + SE_GENI_TX_WATERMARK_REG);
+> +		complete(&gi3c->done);
+> +	} else if (dm_tx_st & TX_DMA_DONE || dm_rx_st & RX_DMA_DONE	||
+> +		dm_rx_st & RX_RESET_DONE) {
+> +		complete(&gi3c->done);
+> +	}
+> +
+> +	spin_unlock_irqrestore(&gi3c->irq_lock, flags);
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int i3c_geni_runtime_get_mutex_lock(struct geni_i3c_dev *gi3c)
+> +{
 
-Ditto.
+You miss sparse/lockdep annotations.
 
->                         operating-points-v2 = <&cpu_opp_table>;
->                 };
->         };
->
-> --
-> 2.47.2
->
->
+> +	int ret;
+> +
+> +	mutex_lock(&gi3c->lock);
+> +	reinit_completion(&gi3c->done);
+> +	ret = pm_runtime_get_sync(gi3c->se.dev);
+> +	if (ret < 0) {
+> +		dev_err(gi3c->se.dev, "error turning on SE resources:%d\n", ret);
+> +		pm_runtime_put_noidle(gi3c->se.dev);
+> +		/* Set device in suspended since resume failed */
+> +		pm_runtime_set_suspended(gi3c->se.dev);
+> +		mutex_unlock(&gi3c->lock);
 
-Kind regards
-Uffe
+Either you lock or don't lock, don't mix these up.
 
-[1]
-drivers/cpufreq/airoha-cpufreq.c
-Documentation/devicetree/bindings/cpufreq/airoha,en7581-cpufreq.yaml
-drivers/pmdomain/mediatek/airoha-cpu-pmdomain.c
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void i3c_geni_runtime_put_mutex_unlock(struct geni_i3c_dev *gi3c)
+> +{
+
+Missing annotations.
+
+> +	pm_runtime_mark_last_busy(gi3c->se.dev);
+> +	pm_runtime_put_autosuspend(gi3c->se.dev);
+> +	mutex_unlock(&gi3c->lock);
+> +}
+> +
+> +static void geni_i3c_abort_xfer(struct geni_i3c_dev *gi3c)
+> +{
+> +	unsigned long time_remaining;
+> +	unsigned long flags;
+> +
+> +	reinit_completion(&gi3c->done);
+> +	spin_lock_irqsave(&gi3c->irq_lock, flags);
+> +	geni_i3c_handle_err(gi3c, GENI_TIMEOUT);
+> +	geni_se_abort_m_cmd(&gi3c->se);
+> +	spin_unlock_irqrestore(&gi3c->irq_lock, flags);
+> +	time_remaining = wait_for_completion_timeout(&gi3c->done, XFER_TIMEOUT);
+> +	if (!time_remaining)
+> +		dev_err(gi3c->se.dev, "Timeout abort_m_cmd\n");
+> +}
+
+...
+
+> +
+> +static int i3c_geni_resources_init(struct geni_i3c_dev *gi3c, struct platform_device *pdev)
+> +{
+> +	int ret;
+> +
+> +	gi3c->se.base = devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(gi3c->se.base))
+> +		return PTR_ERR(gi3c->se.base);
+> +
+> +	gi3c->se.clk = devm_clk_get(&pdev->dev, "se");
+> +	if (IS_ERR(gi3c->se.clk))
+> +		return dev_err_probe(&pdev->dev, PTR_ERR(gi3c->se.clk),
+> +							"Unable to get serial engine core clock: %pe\n",
+> +							gi3c->se.clk);
+
+Totally messed indentation.
+
+> +	ret = geni_icc_get(&gi3c->se, NULL);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Set the bus quota to a reasonable value for register access */
+> +	gi3c->se.icc_paths[GENI_TO_CORE].avg_bw = GENI_DEFAULT_BW;
+> +	gi3c->se.icc_paths[CPU_TO_GENI].avg_bw = GENI_DEFAULT_BW;
+> +	ret = geni_icc_set_bw(&gi3c->se);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Default source clock (se-clock-frequency) freq is 100Mhz */
+> +	gi3c->clk_src_freq = KHZ(100000);
+
+And why can't you use clk_get_rate()?
+
+> +
+> +	return 0;
+> +}
+> +
+> +static int geni_i3c_probe(struct platform_device *pdev)
+> +{
+> +	u32 proto, tx_depth, fifo_disable;
+> +	struct geni_i3c_dev *gi3c;
+
+Just store pdev->dev in local dev variable, to simplify everything here.
+
+> +	int ret;
+> +
+> +	gi3c = devm_kzalloc(&pdev->dev, sizeof(*gi3c), GFP_KERNEL);
+> +	if (!gi3c)
+> +		return -ENOMEM;
+> +
+> +	gi3c->se.dev = &pdev->dev;
+> +	gi3c->se.wrapper = dev_get_drvdata(pdev->dev.parent);
+> +
+> +	init_completion(&gi3c->done);
+> +	mutex_init(&gi3c->lock);
+> +	spin_lock_init(&gi3c->irq_lock);
+> +	platform_set_drvdata(pdev, gi3c);
+> +
+> +	ret = i3c_geni_resources_init(gi3c, pdev);
+> +	if (ret)
+> +		return dev_err_probe(&pdev->dev, ret, "Error Initializing GENI Resources\n");
+> +
+> +	gi3c->irq = platform_get_irq(pdev, 0);
+> +	if (gi3c->irq < 0)
+> +		return dev_err_probe(&pdev->dev, gi3c->irq, "Error getting IRQ number for I3C\n");
+> +
+> +	ret = devm_request_irq(&pdev->dev, gi3c->irq, geni_i3c_irq,
+> +			       IRQF_NO_AUTOEN, dev_name(&pdev->dev), gi3c);
+> +	if (ret)
+> +		return dev_err_probe(&pdev->dev, ret, "Error registering core IRQ\n");
+> +
+> +	ret = geni_se_resources_on(&gi3c->se);
+> +	if (ret)
+> +		return dev_err_probe(&pdev->dev, ret, "Error turning resources ON\n");
+> +
+> +	proto = geni_se_read_proto(&gi3c->se);
+> +	if (proto != GENI_SE_I3C) {
+> +		geni_se_resources_off(&gi3c->se);
+> +		return dev_err_probe(&pdev->dev, -ENXIO, "Invalid proto %d\n", proto);
+> +	}
+> +
+> +	fifo_disable = readl_relaxed(gi3c->se.base + GENI_IF_DISABLE_RO);
+> +	if (fifo_disable) {
+> +		geni_se_resources_off(&gi3c->se);
+> +		return dev_err_probe(&pdev->dev, -ENXIO, "GPI DMA mode not supported\n");
+> +	}
+> +
+> +	tx_depth = geni_se_get_tx_fifo_depth(&gi3c->se);
+> +	gi3c->tx_wm = tx_depth - 1;
+> +	geni_se_init(&gi3c->se, gi3c->tx_wm, tx_depth);
+> +	geni_se_config_packing(&gi3c->se, BITS_PER_BYTE, PACKING_BYTES_PW, true, true, true);
+> +	geni_se_resources_off(&gi3c->se);
+> +	dev_dbg(&pdev->dev, "i3c fifo/se-dma mode. fifo depth:%d\n", tx_depth);
+> +
+> +	pm_runtime_set_autosuspend_delay(gi3c->se.dev, I3C_AUTO_SUSPEND_DELAY);
+> +	pm_runtime_use_autosuspend(gi3c->se.dev);
+> +	pm_runtime_set_active(gi3c->se.dev);
+> +	pm_runtime_enable(gi3c->se.dev);
+> +
+> +	ret = i3c_master_register(&gi3c->ctrlr, &pdev->dev, &geni_i3c_master_ops, false);
+> +	if (ret) {
+> +		pm_runtime_disable(gi3c->se.dev);
+> +		pm_runtime_set_suspended(gi3c->se.dev);
+> +		pm_runtime_dont_use_autosuspend(gi3c->se.dev);
+> +		return ret;
+> +	}
+> +
+> +	return ret;
+
+return 0;
+
+> +}
+
+Best regards,
+Krzysztof
+
