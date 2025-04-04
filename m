@@ -1,147 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-fw-6002.amazon.com (smtp-fw-6002.amazon.com [52.95.49.90])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F8931F3D52;
-	Fri,  4 Apr 2025 15:44:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D78AE1F5853;
+	Fri,  4 Apr 2025 15:44:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.95.49.90
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743781440; cv=none; b=XCCIo4l878lo9Ge0DvIu8GKzz2+lAItj4qva6BnmYQs4ernDCsB2EcPSi2sMs2JJnvsvG3+H1B6qqUNC+cOaKxUZRvsRsPKJIx1UBZRlpKyaSawdV/7UDQoimzuv6j7/J1sAlMP1OKliv7d8SlsvOb3XC1SbGkASGIYeC094lqM=
+	t=1743781448; cv=none; b=F8NrDqEd4lbEMLjtLEvIIx2BqrH96WSs5i0mgRk1nCsrHo5LWtnTZOjqv99p8dWXzzrgNQ4PgA+Dp3kTb2YWzxR1yjEYIw+9KVHLLvmtOEPuIbQ3cTf2DU7yzL+IogUUATiKmwwrxHDVVFQuTwDzeHZfysPo9m7tOypVr7RsT40=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743781440; c=relaxed/simple;
-	bh=DW/wqyJx+YCqSUOlSSVG9BIY+e2C7Nv89wJzyiuMFP4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pgWqXP/y2yJitQXgyjlGyESQ01VAH6+VTgB8LMx7NsrNHI9/9V4CyAk1OHJC9tKXYYtFC0ChWae/VUVrLFRRjQKsWX7Eslkc8jNwUAfofshcoY/YOl2d+EIZIlv7UlAfQVxY+b454HBsuvTWwdR2dioD4gWkhWfNPQEJIc8s2bY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=trg3FmI6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743781448; c=relaxed/simple;
+	bh=Kt79fJGRwJnXAG2klKk7/s3O5ZBmyTaKqz+56dyv8yg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=n3J+GmM2X3pKdGYHMkxn8q6RsdVKh6MaQ37r9GgUZXIrJ/RKEPzMhQIVO8Uuheam6RzHRhY1taViXiwipu2SRr1Dp4QmZ+oxBvIBmaOsVBUdoePZ5T6rKy8cmXfTnsvaGBARz2jKO9GqR8k+AZYwl+tItEBgeD0vA+ghECwoQgo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.uk; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=En4mpUCo; arc=none smtp.client-ip=52.95.49.90
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="trg3FmI6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FDDEC4CEDD;
-	Fri,  4 Apr 2025 15:43:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743781439;
-	bh=DW/wqyJx+YCqSUOlSSVG9BIY+e2C7Nv89wJzyiuMFP4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=trg3FmI6Wtd7AGBLlZJiY+YpmOckUsjSwyLuGpkTgcrTcUlRrIqH9mUdL7RBI4kXA
-	 wGg4FYp4SHCgXtuiFYAz2U407PN0c9OQNL+oTy/3PVdBqym1lQfeimc/809LwsN5pY
-	 54uBZOaqQyUhkt+tCFuwE+JFaeywtH+MayBetTBPjHh0fyDdPZF/njcRQUbZQjvJJg
-	 Wv0SlBsF5tQ4E40ku16kf7gNvizK9MQIGeDXzoPzpLRq6gEt7PqA3B4Kn22FoXXkxq
-	 qq3lpDzU8KnGfpu0Hmj/EXVMpACBGSlYL9/umM9do0lebsPx5Be6NvbHxknxevlOBT
-	 hu56/JLLiiNew==
-Date: Fri, 4 Apr 2025 16:43:55 +0100
-From: Lee Jones <lee@kernel.org>
-To: Matti Vaittinen <mazziesaccount@gmail.com>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 00/14] Support ROHM Scalable PMIC family
-Message-ID: <20250404154355.GH372032@google.com>
-References: <cover.1742802856.git.mazziesaccount@gmail.com>
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="En4mpUCo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1743781446; x=1775317446;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=wclIRAQFfE2pzVzzCPlSKXfar9IWu+zIoU0sBLVtp38=;
+  b=En4mpUCo0sRNCVTx32Eq803PDdF9kKWPFWB8cBS6/4qHaWcILAROed7I
+   vKAdgimouFxghEHK6oMJO4gCGEqSieurVwJ4TMUBRmhJVU6F9Islci43s
+   mR4kF0BjLgwINZ8bzRzLQok/LPUPTGJ/BTjW/dGWM1j0RNLN9yi/qlyA3
+   M=;
+X-IronPort-AV: E=Sophos;i="6.15,188,1739836800"; 
+   d="scan'208";a="486684103"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
+  by smtp-border-fw-6002.iad6.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 15:44:01 +0000
+Received: from EX19MTAUWC001.ant.amazon.com [10.0.21.151:38790]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.25.120:2525] with esmtp (Farcaster)
+ id 19e4150d-3051-47dc-b5ab-c8164781f6fc; Fri, 4 Apr 2025 15:44:00 +0000 (UTC)
+X-Farcaster-Flow-ID: 19e4150d-3051-47dc-b5ab-c8164781f6fc
+Received: from EX19D003UWB001.ant.amazon.com (10.13.138.92) by
+ EX19MTAUWC001.ant.amazon.com (10.250.64.174) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Fri, 4 Apr 2025 15:43:55 +0000
+Received: from EX19MTAUWC001.ant.amazon.com (10.250.64.145) by
+ EX19D003UWB001.ant.amazon.com (10.13.138.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Fri, 4 Apr 2025 15:43:55 +0000
+Received: from email-imr-corp-prod-iad-1box-1a-6851662a.us-east-1.amazon.com
+ (10.25.36.210) by mail-relay.amazon.com (10.250.64.145) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id
+ 15.2.1544.14 via Frontend Transport; Fri, 4 Apr 2025 15:43:55 +0000
+Received: from dev-dsk-kalyazin-1a-a12e27e2.eu-west-1.amazon.com (dev-dsk-kalyazin-1a-a12e27e2.eu-west-1.amazon.com [172.19.103.116])
+	by email-imr-corp-prod-iad-1box-1a-6851662a.us-east-1.amazon.com (Postfix) with ESMTPS id DE9684032D;
+	Fri,  4 Apr 2025 15:43:52 +0000 (UTC)
+From: Nikita Kalyazin <kalyazin@amazon.com>
+To: <akpm@linux-foundation.org>, <pbonzini@redhat.com>, <shuah@kernel.org>,
+	<viro@zeniv.linux.org.uk>, <brauner@kernel.org>, <muchun.song@linux.dev>,
+	<hughd@google.com>
+CC: <kvm@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
+	<linux-fsdevel@vger.kernel.org>, <jack@suse.cz>,
+	<lorenzo.stoakes@oracle.com>, <Liam.Howlett@Oracle.com>, <jannh@google.com>,
+	<ryan.roberts@arm.com>, <david@redhat.com>, <jthoughton@google.com>,
+	<peterx@redhat.com>, <graf@amazon.de>, <jgowans@amazon.com>,
+	<roypat@amazon.co.uk>, <derekmn@amazon.com>, <nsaenz@amazon.es>,
+	<xmarcalx@amazon.com>, <kalyazin@amazon.com>
+Subject: [PATCH v3 0/6] KVM: guest_memfd: support for uffd minor
+Date: Fri, 4 Apr 2025 15:43:46 +0000
+Message-ID: <20250404154352.23078-1-kalyazin@amazon.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <cover.1742802856.git.mazziesaccount@gmail.com>
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-On Mon, 24 Mar 2025, Matti Vaittinen wrote:
+This series is built on top of the Fuad's v7 "mapping guest_memfd backed
+memory at the host" [1].
 
-> Support ROHM BD96802, BD96805 and BD96806 PMICs
-> 
-> The ROHM BD96801 [1] and BD96805 [2] are almost identical PMICs what comes
-> to the digital interface. Main difference is voltage tuning range.
-> Supporting BD96805 with BD96801 drivers is mostly just a matter of being
-> able to differentiate the PMICs (done based on the devicetree
-> compatible) and then providing separate voltage tables.
-> 
-> The ROHM BD96802 [3] is a companion PMIC which is intended to be used to
-> provide more capacity on systems where the BD96801 alone is not
-> sufficient. Startup sequence of these PMICs can be synchronized in
-> hardware level, and there seems to be some mechanisms which allow
-> delivering the companion PMIC (BD96802) status to the main PMIC
-> (BD96801/BD96805). This patch series does treat the companion PMIC(s) as
-> individual PMICs and allows using them from software point of view as a
-> stand alone ICs. From the digital point of view, the BD96802 is a subset
-> of BD96801, providing only buck1 and buck2 regulators. Please see the
-> data sheet
-> 
-> The ROHM BD96806 [4] is similar to the BD96802, except that it does also
-> provide different voltage tuning ranges.
-> 
-> This series adds basic voltage monitoring and control as well as a
-> watchdog support for these PMICs using the BD96801 drivers.
-> 
-> Similarly to the BD96801, these PMICs too have a few configurations
-> which can only be done when the PMIC is in STBY state. Similarly to the
-> BD96801, doing these configurations isn't supported by the driver. The
-> original BD96801 RFC [5] driver should be able to cover those
-> configurations, if modified to support these models.
-> 
-> [1]: ROHM BD96801 data sheet:
-> https://fscdn.rohm.com/en/products/databook/datasheet/ic/power/switching_regulator_system/product_brief_bd96801qxx-c-e.pdf
-> [2]: ROHM BD96805 data sheet:
-> https://fscdn.rohm.com/en/products/databook/datasheet/ic/power/switching_regulator_system/product_brief_bd96805qxx-c-e.pdf
-> [3]: ROHM BD96802 data sheet:
-> https://fscdn.rohm.com/en/products/databook/datasheet/ic/power/switching_regulator_system/product_brief_bd96802qxx-c-e.pdf
-> [4]: ROHM BD96806 data sheet:
-> https://fscdn.rohm.com/en/products/databook/datasheet/ic/power/switching_regulator_system/product_brief_bd96806qxx-c-e.pdf
-> [5]: Original BD96801 RFC:
-> https://lore.kernel.org/all/cover.1712058690.git.mazziesaccount@gmail.com/
-> 
-> Revision history:
-> 
-> v1 => v2: MFD driver changes after review by Lee
->  - Use enum for chip type instead of picking the data directly from the
->    of_match_data.
->  - rename "chip data" variable 'cd' to more widely used 'ddata'.
->  link to v1:
->   https://lore.kernel.org/all/cover.1741864404.git.mazziesaccount@gmail.com/
-> 
-> ---
-> 
-> Matti Vaittinen (14):
->   dt-bindings: regulator: Add ROHM BD96802 PMIC
->   dt-bindings: mfd: Add ROHM BD96802 PMIC
->   dt-bindings: mfd: bd96801: Add ROHM BD96805
->   dt-bindings: mfd: bd96802: Add ROHM BD96806
->   mfd: rohm-bd96801: Add chip info
->   mfd: bd96801: Drop IC name from the regulator IRQ resources
->   regulator: bd96801: Drop IC name from the IRQ resources
->   mfd: rohm-bd96801: Support ROHM BD96802
->   regulator: bd96801: Support ROHM BD96802
->   mfd: bd96801: Support ROHM BD96805
->   regulator: bd96801: Support ROHM BD96805 PMIC
->   mfd: bd96801: Support ROHM BD96806
->   regulator: bd96801: Support ROHM BD96806 PMIC
->   MAINTAINERS: Add BD96802 specific header
+With James's KVM userfault [2], it is possible to handle stage-2 faults
+in guest_memfd in userspace.  However, KVM itself also triggers faults
+in guest_memfd in some cases, for example: PV interfaces like kvmclock,
+PV EOI and page table walking code when fetching the MMIO instruction on
+x86.  It was agreed in the guest_memfd upstream call on 23 Jan 2025 [3]
+that KVM would be accessing those pages via userspace page tables.  In
+order for such faults to be handled in userspace, guest_memfd needs to
+support userfaultfd.
 
-Adding support for 3 new devices in one set!
+Changes since v2 [4]:
+ - James: Fix sgp type when calling shmem_get_folio_gfp
+ - James: Improved vm_ops->fault() error handling
+ - James: Add and make use of the can_userfault() VMA operation
+ - James: Add UFFD_FEATURE_MINOR_GUEST_MEMFD feature flag
+ - James: Fix typos and add more checks in the test
 
-You don't like making things easy for yourself (or us) do you!  =:-)
+Nikita
 
->  .../bindings/mfd/rohm,bd96801-pmic.yaml       |  10 +-
->  .../bindings/mfd/rohm,bd96802-pmic.yaml       | 101 ++++
->  .../regulator/rohm,bd96802-regulator.yaml     |  44 ++
->  MAINTAINERS                                   |   1 +
->  drivers/mfd/rohm-bd96801.c                    | 565 ++++++++++++++----
->  drivers/regulator/bd96801-regulator.c         | 447 ++++++++++++--
->  include/linux/mfd/rohm-bd96801.h              |   2 +
->  include/linux/mfd/rohm-bd96802.h              |  74 +++
->  include/linux/mfd/rohm-generic.h              |   3 +
->  9 files changed, 1065 insertions(+), 182 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd96802-pmic.yaml
->  create mode 100644 Documentation/devicetree/bindings/regulator/rohm,bd96802-regulator.yaml
->  create mode 100644 include/linux/mfd/rohm-bd96802.h
+[1] https://lore.kernel.org/kvm/20250318161823.4005529-1-tabba@google.com/T/
+[2] https://lore.kernel.org/kvm/20250109204929.1106563-1-jthoughton@google.com/T/
+[3] https://docs.google.com/document/d/1M6766BzdY1Lhk7LiR5IqVR8B8mG3cr-cxTxOrAosPOk/edit?tab=t.0#heading=h.w1126rgli5e3
+[4] https://lore.kernel.org/kvm/20250402160721.97596-1-kalyazin@amazon.com/T/
 
-The MFD stuff looks okay to me now.
+Nikita Kalyazin (6):
+  mm: userfaultfd: generic continue for non hugetlbfs
+  mm: provide can_userfault vma operation
+  mm: userfaultfd: use can_userfault vma operation
+  KVM: guest_memfd: add support for userfaultfd minor
+  mm: userfaultfd: add UFFD_FEATURE_MINOR_GUEST_MEMFD
+  KVM: selftests: test userfaultfd minor for guest_memfd
 
-Let me know when everything else is ready to go.
+ fs/userfaultfd.c                              |  3 +-
+ include/linux/mm.h                            |  5 +
+ include/linux/mm_types.h                      |  4 +
+ include/linux/userfaultfd_k.h                 | 10 +-
+ include/uapi/linux/userfaultfd.h              |  8 +-
+ mm/hugetlb.c                                  |  9 +-
+ mm/shmem.c                                    | 17 +++-
+ mm/userfaultfd.c                              | 47 ++++++---
+ .../testing/selftests/kvm/guest_memfd_test.c  | 99 +++++++++++++++++++
+ virt/kvm/guest_memfd.c                        | 10 ++
+ 10 files changed, 188 insertions(+), 24 deletions(-)
 
+
+base-commit: 3cc51efc17a2c41a480eed36b31c1773936717e0
 -- 
-Lee Jones [李琼斯]
+2.47.1
+
