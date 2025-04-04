@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55097219A70;
-	Fri,  4 Apr 2025 17:01:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CEBF21C18C;
+	Fri,  4 Apr 2025 17:01:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743786086; cv=none; b=lS/RSb5T0xPSAPYjZX4U2LFP0mZzN9TeYTxM9uYb7F1Ec358Hfpcpf+cO3PgKlVsV3RWMTuRpz7tAOnl83dNkPJU8sjyHIsSgoym5OxRZhe2y7BJ/q8g/8ao00hpoPnffVSJCJ0onuyBJZY2FvR2UB78dCn2NinqDtb/i+LqBWc=
+	t=1743786088; cv=none; b=Cf2oUSplqIe7qD9dyI61GRg6Q8PFhjzMiwmAKr3qKEbgljXsYq5JH390uEutVyPvVHyqEUXK9wvW/Zyp8g4Qo6JLXapvTbrdb6vGA84uW8ZPOCG5Jc4j7P4XbZquQ1ny6Qd48zpagHGWrAyBCvpuhgjIGmv9rrx63wc5TMQ1pOA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743786086; c=relaxed/simple;
-	bh=fPKF0CxXU2Uv6kLj5mDfrzpPbWjy8diOjL4HXn3bI1k=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=LDGlx2vFNq7dBHKqPqvowQu1zuGh+gTCqMC2d2GNIjir9pbmG8unitKRg2MefIYaEofq6bO7eg+ggNUayiKLIiEC32rq0goph1axMK8VO++/nEhHznTZvk503U5qmcLsm9VFsuqwrIJKJB3x2yzKkNbDAa4lQwA1JnM2J7R0s6Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cMqcUL2u; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743786088; c=relaxed/simple;
+	bh=FM90Zrr/Q3O7zTiIB5SmInbU8zTCY5ADRiVLnYTcVjY=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=JSxAYXWS5OtJ7qz23lROPSlyo0ehZd15ys7aAldLKfxnaNYiW4rBBbTddhNdrpRTol/7sBBg3UEIatBZTsaYbEyLlX5TbUQslkROt9tG/iabnUQ4cjC7KVZnNuofw445t0kG6+twG8mJNppt7phK0GjvnxEXYbWx8G0S6pRW0MI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sH7qFo07; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cMqcUL2u"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E94CC4CEE8;
-	Fri,  4 Apr 2025 17:01:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sH7qFo07"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4FBEC4CEE9;
+	Fri,  4 Apr 2025 17:01:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743786086;
-	bh=fPKF0CxXU2Uv6kLj5mDfrzpPbWjy8diOjL4HXn3bI1k=;
+	s=k20201202; t=1743786087;
+	bh=FM90Zrr/Q3O7zTiIB5SmInbU8zTCY5ADRiVLnYTcVjY=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=cMqcUL2uqF/mD7zKF82T830ofXpIUorFSOFfzBaReUVsIb+GuhFNu3oND183czgB1
-	 zD40L0e8lcm3exfpHIBkj2G5y7wY6JV03Rz/z/oVz7hJCIz/iNU/8h/Cdm7xipltLu
-	 PFTBBJwTw0GMEHBdewSkRWRr7FMPJvnPM0DF+AHMMrVSi2Ww887xOxtdOj9FcRZPNy
-	 LlUoEeS5tVAlxfuGR8gh2izBmjTgfPlcFeiFsjOugqbJdaCScEJkq9Kh0Duu0YehAE
-	 K0Md4MqtkqIqCAqtTFvxNKU3+Gg8RnHy550zVPiU9e82UfBVev63HqGxBNZwAuEsGf
-	 /c7yaiVcmdxjA==
+	b=sH7qFo07336m792/MI2xODI03UXHgg4Xhv5EzTvTkdu+i6mmxkCVJ/apQia6JYt7D
+	 mn4Jwjib8+sFWO7ejHY6Dq3E4uNWe3/YlJylu77vDWu/oU+CTaqMFglqhsStrfx99c
+	 WX4gfn2oCl6ZibsG1+IKXqj970LMb2HDQMvn9fA6cdoyZMcgnQRxyiLpFYw2RR+ojf
+	 Efe9wzulCQ9IuWfBFEatHR+zUc8x3oe9vN8BtIJDxB2gJxGjJIbNPOB33140vTFmZ2
+	 2CQRBwQmY7EBigUTwhQY7VXLnEyZTSibVBEH5fA6ljLSOBK3/4Z6oYYGa09bNKy9eU
+	 C/1bIJIQuKvcg==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 714953822D28;
-	Fri,  4 Apr 2025 17:02:04 +0000 (UTC)
-Subject: Re: [GIT PULL] platform-drivers-x86 for v6.15-2
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 32E843822D28;
+	Fri,  4 Apr 2025 17:02:06 +0000 (UTC)
+Subject: Re: [GIT PULL] SPI fixes for v6.15-merge-window
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <pdx86-pr-20250404173920-315358368@linux.intel.com>
-References: <pdx86-pr-20250404173920-315358368@linux.intel.com>
+In-Reply-To: <1fac1505c004071e4ad79df7e733d422.broonie@kernel.org>
+References: <1fac1505c004071e4ad79df7e733d422.broonie@kernel.org>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <pdx86-pr-20250404173920-315358368@linux.intel.com>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.15-2
-X-PR-Tracked-Commit-Id: 566d3a52b8f618d22664171633d7106a630f46b9
+X-PR-Tracked-Message-Id: <1fac1505c004071e4ad79df7e733d422.broonie@kernel.org>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git tags/spi-fix-v6.15-merge-window
+X-PR-Tracked-Commit-Id: e19c1272c80a5ecce387c1b0c3b995f4edf9c525
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 7ebd68d978bb784c284c60970a6e2d36e2434a6e
-Message-Id: <174378612316.3331400.8396366043102299966.pr-tracker-bot@kernel.org>
-Date: Fri, 04 Apr 2025 17:02:03 +0000
-To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, LKML <linux-kernel@vger.kernel.org>, PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy@kernel.org>
+X-PR-Merge-Commit-Id: 96364527357980ea68bb8bc7ec1490e22b9ed0cd
+Message-Id: <174378612485.3331400.10917822712260026222.pr-tracker-bot@kernel.org>
+Date: Fri, 04 Apr 2025 17:02:04 +0000
+To: Mark Brown <broonie@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Fri, 04 Apr 2025 17:39:20 +0300:
+The pull request you sent on Fri, 04 Apr 2025 16:20:13 +0100:
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.15-2
+> https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git tags/spi-fix-v6.15-merge-window
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/7ebd68d978bb784c284c60970a6e2d36e2434a6e
+https://git.kernel.org/torvalds/c/96364527357980ea68bb8bc7ec1490e22b9ed0cd
 
 Thank you!
 
