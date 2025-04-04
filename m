@@ -1,110 +1,124 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F07E1F0E58
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 11:57:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5AA11CDFAC;
+	Fri,  4 Apr 2025 11:58:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743767848; cv=none; b=rO76nxf2Kd0DK10g0ulPpeHYjPoUau+hDBbfuZRXEzwJ79rmZQW10NCRO9EQUaP96pabA2YYH0xsjC1kKVpdqOT4grg0sdn72KQT2VT/hDTiZanXDejTJs038N+F7YKIHeX8Sg7EVGUegkO4oY33pDybvx1dpP/woyRLn7v/RwA=
+	t=1743767936; cv=none; b=THVEV80maUSZ4LaahsPt+EGqoAJGsEv2CuatGDd04DfWqU4yZ1esdNqb8DAdkHoG84h66yC+etDovIpWlkhrjvnZlCSiL0T8uuRvM958v7F3UiAMVK2Vb9900yYt9/2nefefg5oqT3tq+r63/CybgzqXrkIU51NmM9MqvNUcGuQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743767848; c=relaxed/simple;
-	bh=f5+Z3NxSd3MuBNTouLvShUVcveuEqAlNOVOD9G+dzxg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CyMhmm9Me2pHxxO4xjN10BufXNXd4BNTAgWAPkF/frYzJ2kJd5l1w6y1vxZQb5HHi9o5cxbjL0UuWw4zZG9iaG5X/VRZ5qAdZI5JrCfKIuHS6Uf6quPwoQpNwg12Yn6tvM0raYBJmCamWiZr1nsODFu/3ZsV276WYAy35cSS+tw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Iu149ib8; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1743767936; c=relaxed/simple;
+	bh=L1ipA6ghftHVe27dfwT9Pe/CFAO/XalqKctlGIvJ044=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dGBSqpwjXTMVgHF+hmecY5f7ubNQAHifcHqGYYFdtIxKy+ap5nXcq1l9IuxLfeaSNNMtjwt9TsNcWJPP6g4yKcm6wmWHWWJsx8pbNkvD6PUEIej24MMdGgvfx9kGe7FVT+iC95nCp9JH5xs5eza18/H84uvC0PmtZ+hBEA/f/No=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e8b8dSHo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Iu149ib8"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-39127effa72so177503f8f.2
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 04:57:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743767845; x=1744372645; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=p7FNE7uW7CqflTfCGo1n2418876ImE/7n6IUCl4015U=;
-        b=Iu149ib8On0f8AYOMN3K/oNF8Mvwann0+MzmD8y7xThXE+Eut5ej8ZZMkbY8dnyrPF
-         t9jfFOGeWABPzeEab+5eHa0YPbDZ4bPUQp31Op7JQTJd/8iKZiadXpE7ey7Vxp4AkBRZ
-         lBg6413kINlqHlHhIVcKao+GnJftIVde8u0diD40hDrdeS1OT4cgZ3MMLlpyhhDSmD4Z
-         fO8+gRPPq5Ttn3RtzEe8zBtCWhaL/+yG/yHzFqN1JxM/g74+uviWXtDvR7yPmJY42uw6
-         TJbQJbzvuJcgazVnN/p2kmdzGkaixwAHTAWihkGEtjR3U/6RDm6C0Ao41kgF79qZmFur
-         92pw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743767845; x=1744372645;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=p7FNE7uW7CqflTfCGo1n2418876ImE/7n6IUCl4015U=;
-        b=irHG4eP8bxf52OgoZIzZoK+M0fuABdy1phllNp0kkpB8EkNPu9DA4vX8HeBIDLwRDJ
-         kpctSJN9dbfrvM+oSBkXqf34oitsh9/0nbYn1EqD2v6103jTJeE+Em2YjifbVe1k25wC
-         /yit7zjpJcvO+InJJ4bJ1Tlo/a0sk4jfh5cj0ukHWiUh7cp9TGEPBUwljFEaY2tStQlK
-         rG/MlSuGGlNC8xkwjhOfpiNL7E7PBjzdMPmYzTsTX9zpbbzh04ToFARoI6/U3kOyYswk
-         PaZjupCtRyhjJCe//KU36p9ShMILH3pubWkV2eL0nS2YYwLGwdUyssQExZeqb7Ks8ava
-         eTjQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXP5OISUJ2dEd7AT8201Qy8ahGeVt5Pyd3nhcKVV1fkM1qgQ3a0l8FtD2Fuu0sMTNJziMEWJCKjaVMlUZo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyyM2T1xC4qz+9NsePAf+aAQPHhcy+ZaWo4REQXzkZoAplDWnco
-	C4bHBpCJxL1ebmk4nZvskKaIZfl1K+Od02MuN578yIWRlN51JjJbMRyAauPlMIo=
-X-Gm-Gg: ASbGncttJCAUX3KdA3O1GfWz+KkR/2bDvSVTz6hTN3n6VBopjRvR1ZsiTaIUH8+pGhj
-	Uh0t3eM9rRyIkwCNDd+Bi9+m1h0ANzOzAGQXF1QMBY2T775eZevMjywMn4VLCnWpSsRn0bheIQR
-	S6YosqMqOQD+LTHpRkpCWtZ4Je2S7QNGD0iP8fdZEUlFQ2gkbbIN5gNKNqAtlxKQEj1y8k3lxmL
-	KDYx12Qwhd7GhSdPVrhYUW9ClXxyR3DNDyiHpiS3kChDkRRPGdHpW3on6fWCKInBiUXQyVNFToZ
-	Lq3/u6GG1t56hiH8UkceqPkAIVOfEzXnfm6i+mh4BdcBpdGVbamAFw==
-X-Google-Smtp-Source: AGHT+IHBtV33JgKfAEZ/K/Z3eAGyaEe//CmaN4daL7d9M+mX3ZcQYu8+eSe3/MU83jWvj/2V41Xy8g==
-X-Received: by 2002:a5d:6d81:0:b0:38f:27d3:1b44 with SMTP id ffacd0b85a97d-39cb357b616mr910662f8f.2.1743767844740;
-        Fri, 04 Apr 2025 04:57:24 -0700 (PDT)
-Received: from shite.. ([178.197.198.86])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c301ba2dfsm4209455f8f.60.2025.04.04.04.57.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Apr 2025 04:57:24 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Kevin Hilman <khilman@baylibre.com>,
-	Jerome Brunet <jbrunet@baylibre.com>,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-gpio@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-amlogic@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH 2/2] pinctrl: uniphier: Do not enable by default during compile testing
-Date: Fri,  4 Apr 2025 13:57:19 +0200
-Message-ID: <20250404115719.309999-2-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250404115719.309999-1-krzysztof.kozlowski@linaro.org>
-References: <20250404115719.309999-1-krzysztof.kozlowski@linaro.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e8b8dSHo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F86AC4CEDD;
+	Fri,  4 Apr 2025 11:58:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743767936;
+	bh=L1ipA6ghftHVe27dfwT9Pe/CFAO/XalqKctlGIvJ044=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=e8b8dSHoRwbwEPHvL7tL2vNaKDlnvc81OrZDmNa1csOSwaODgSzfUc67vHtEeDNQx
+	 3YNXZrheWNUVIKvje2ZK3ujBd0BEjPbHN1MIfqK7Gl5Oc0kLg8izo9MkXAnW7RkRs0
+	 +hxWWSK11o7T1JO8+z6M9RuOe9TdzJVoUUoTySvuZY2zw1GZjwaULZLMqqJkoNlV1f
+	 OZwmCMdYpG/VLPBlKYcYDzvXSxPXvzstpQx3HuEcrR/4eOW0Rt+Octx+09biMNIhlb
+	 4OMZ/ym88J7vr0uZg5uwutn49Vgf/yg+at1KbDyUEKrN2e7OYZIFs/wWXQGrU/oalm
+	 NYu83Xj1nKkzw==
+Date: Fri, 4 Apr 2025 14:58:51 +0300
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Jonathan McDowell <noodles@earth.li>, Sasha Levin <sashal@kernel.org>
+Cc: Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>,
+	Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
+	linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH] tpm: tis: Increase the default for timeouts B and C
+Message-ID: <Z-_Je7evunNi7kz0@kernel.org>
+References: <20250402172134.7751-1-msuchanek@suse.de>
+ <Z-13xOebA3LvQQ-8@earth.li>
+ <Z-7XQYP7_tXYR2Ik@kernel.org>
+ <Z-7y5x3u6wVGFjj-@earth.li>
+ <Z--PgeuYjRx6zXmG@kitsune.suse.cz>
+ <Z--T5LEsXddkTX-H@kernel.org>
+ <Z--m5rTDLLbyWEE5@earth.li>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z--m5rTDLLbyWEE5@earth.li>
 
-Enabling the compile test should not cause automatic enabling of all
-drivers.
+On Fri, Apr 04, 2025 at 10:31:18AM +0100, Jonathan McDowell wrote:
+> On Fri, Apr 04, 2025 at 11:10:12AM +0300, Jarkko Sakkinen wrote:
+> > On Fri, Apr 04, 2025 at 09:51:29AM +0200, Michal Suchánek wrote:
+> > > On Thu, Apr 03, 2025 at 09:43:19PM +0100, Jonathan McDowell wrote:
+> > > > On Thu, Apr 03, 2025 at 09:45:21PM +0300, Jarkko Sakkinen wrote:
+> > > > > On Wed, Apr 02, 2025 at 06:45:40PM +0100, Jonathan McDowell wrote:
+> > > > > > On Wed, Apr 02, 2025 at 07:21:30PM +0200, Michal Suchanek wrote:
+> > > > > > > With some Infineon chips the timeouts in tpm_tis_send_data (both B and
+> > > > > > > C) can reach up to about 2250 ms.
+> > > > > > >
+> > > > > > > Extend the timeout duration to accommodate this.
+> > > > > >
+> > > > > > The problem here is the bump of timeout_c is going to interact poorly with
+> > > > > > the Infineon errata workaround, as now we'll wait 4s instead of 200ms to
+> > > > > > detect the stuck status change.
+> > > > > >
+> > > > > > (Also shouldn't timeout_c already end up as 750ms, as it's
+> > > > > > max(TIS_SHORT_TIMEOUT, TPM2_TIMEOUT_C), and TIS_SHORT_TIMEOUT is 750 vs 200
+> > > > > > for TPM2_TIMEOUT_C? That doesn't seem to be borne out by your logs, nor my
+> > > > > > results.)
+> > > > >
+> > > > > Just noticed that the commit did not end up having fixes etc. tags:
+> > > > >
+> > > > > https://web.git.kernel.org/pub/scm/linux/kernel/git/jarkko/linux-tpmdd.git/commit/?id=de9e33df7762abbfc2a1568291f2c3a3154c6a9d
+> > > > >
+> > > > > Should we forward to stable?
+> > > >
+> > > > It's a TPM bug rather than a kernel issue, so I don't think there's a valid
+> > > > Fixes: for it, but it's certainly stable material in my mind.
+> > > 
+> > > In the more general sense of Fixes: indicating where the fix is
+> > > applicable it would be any kernel that supports TPM2.
+> > 
+> > I tried applying the patch on 6.1-stable:
+> > 
+> > ~/work/kernel.org/stable/linux tags/v6.1.132
+> > $ git am -3 ~/Downloads/infineon.patch
+> > Applying: tpm, tpm_tis: Workaround failed command reception on Infineon devices
+> > Using index info to reconstruct a base tree...
+> > M	drivers/char/tpm/tpm_tis_core.c
+> > M	drivers/char/tpm/tpm_tis_core.h
+> > M	include/linux/tpm.h
+> > Falling back to patching base and 3-way merge...
+> > Auto-merging include/linux/tpm.h
+> > Auto-merging drivers/char/tpm/tpm_tis_core.h
+> > Auto-merging drivers/char/tpm/tpm_tis_core.c
+> > 
+> > If no counter-opinions, I'd add:
+> > 
+> > stable@vger.kernel.org # v6.1+
+> > 
+> > I based this on Bookworm kernel.
+> 
+> It looks like Sasha has already autoselected it for 6.1, 6.6, 6.12, 6.13 +
+> 6.14.
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- drivers/pinctrl/uniphier/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Right! I can see also those mails, and exactly the version range I would
+have proposed :-) Perfect, thanks Sasha!
 
-diff --git a/drivers/pinctrl/uniphier/Kconfig b/drivers/pinctrl/uniphier/Kconfig
-index b71c07d84662..5e3de0df756b 100644
---- a/drivers/pinctrl/uniphier/Kconfig
-+++ b/drivers/pinctrl/uniphier/Kconfig
-@@ -3,7 +3,7 @@ menuconfig PINCTRL_UNIPHIER
- 	bool "UniPhier SoC pinctrl drivers"
- 	depends on ARCH_UNIPHIER || COMPILE_TEST
- 	depends on OF && MFD_SYSCON
--	default y
-+	default ARCH_UNIPHIER
- 	select PINMUX
- 	select GENERIC_PINCONF
- 
--- 
-2.45.2
+> 
+> J.
+> 
+> -- 
+> How does it work?  I don't know but it does!
+> This .sig brought to you by the letter R and the number 21
+> Product of the Republic of HuggieTag
+> 
 
+BR, Jarkko
