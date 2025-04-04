@@ -1,329 +1,318 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD45AEC4
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 20:45:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E83C634
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 20:46:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743799514; cv=none; b=Esxy2i1//mm2GDSWzupieFv8UPMtoVeVvSEIV2yLE6c6uDHAf3V+3FhTnAVQFMUAdS2iAShAnwP8VR76VoXB6v9GQLc+XN9sTKbBIO0FY+bSWqV1YQsxUDm+/DcA5pg4id4v6TP6vLe0fy0Hp18LwJJH1Ler66SwXpu8LcLd3wk=
+	t=1743799612; cv=none; b=d6lt/LkZbWzBmdZqEc7xpYzBSnC0r04GuxDzF8GsOivwm+Yd9InZuzdQuQgnORti6dZR6Q85pyVPi3wfrybBRN8kGYlfK0DfFkWm5HYbLFonwx6wl0mnK2dgVOTlfDcggcCpJkd3BwbnFEk8tqH9mJrd5oM1Z06oklE3kJczMXU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743799514; c=relaxed/simple;
-	bh=A/0jVxgGdOjNBCbM5Z5ihTLkQLzDOgDfPXKDmfO2yMM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tURsxIOeYOBUaqgo2z2I5/d8+X0gBN0QXRd8WzFQSkvtxfRFrRuiDzodJN4ua0I/SicIo+a7M5nY0kpeTlJXJgM6qCDPOk0aElBu7Fuk9Wa2iyfuRq2WcTUV1EX8j/PemjdoQGY8yv/prHga6t7Le5SWz3s7cuxXGu6vOEdNLww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gk9atwAW; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1743799612; c=relaxed/simple;
+	bh=3YEL4jWV2gmSn5Eo6z3VpcSbx++CMKSfeZ5Ard044tw=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=dfmcDFeoLNwr74MAZAK4BmsiFBjNPtVDABTJaFULcZZAhU/1uZox+S/+F52VONw49bXg0WPUc8qsHqzroK0Y9RAT3m4GvMe23VFzbHIcsLII+qrFdbFN+nnRa4BBwiXnamM30vqJHiwt8N/xy6bQk4ATXTelR1mvHBcarTkmgag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ikw62DF3; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gk9atwAW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743799511;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=U911cPDWIO1xJUhHQ77TZZ5y+lwqBdTdthchIsy3sAI=;
-	b=gk9atwAWRAnFmcHDdLqnu6/+o3ZK7zMCpxffI6jxnB2YV79Zi7Kqe4qV1YyxttCxgH5jVJ
-	foLqcL5znWaAFjW2tvo70KK/yNkbvCxQnSSuB5D1p373pnF5hV4umSt+hjM7jKLCKvoyXn
-	3RkmV9r0XbRmtl7vSZpqv7HsP5Hsl3A=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-619-9SM2sJqdNLC7yOQfBpsnjA-1; Fri, 04 Apr 2025 16:45:06 -0400
-X-MC-Unique: 9SM2sJqdNLC7yOQfBpsnjA-1
-X-Mimecast-MFC-AGG-ID: 9SM2sJqdNLC7yOQfBpsnjA_1743799505
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43d3b211d0eso18304115e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 13:45:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ikw62DF3"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ac2a9a74d9cso92401266b.1
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 13:46:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743799608; x=1744404408; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=6hRsnXtdDToRwE5VkYur5EcjHw55DqS5b6vMN9pCfr4=;
+        b=ikw62DF3dJkX5SDQgQ0LYfETfzGtqmSax8tJX1NoBr38VJQSL+bTLitc1A8sJ9SSPZ
+         TmrI0xjyH9QjgWOV5xCaukL2ZoHr4JGvyMktpwfrq8lHSUw3bxCowFILrZ3nI4JltNhM
+         Tdeou5X7VvP8xt3C6ey7Jy5aoXdRZuPt6hShnH3equOXBfgrfKA/RB04ejaHkL2VCSre
+         Yb1Oo7hblQnnMOpCyvmyFhfnDHFaJl8pd6U6p0tz5/rCS885GDAAy12jIlClI2gtB3BG
+         GQkhBsw4ELBdHhGwUy33hLBOw3RSglo5/p6mindaynCDNRhv8TCIDdGZgg75mNR9ghl6
+         6aNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743799505; x=1744404305;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=U911cPDWIO1xJUhHQ77TZZ5y+lwqBdTdthchIsy3sAI=;
-        b=isAA02IMWGd16nUQgnlwqaG/3eiDiX7zPLgIHNNn3kAaFDbIazf3VhBIEkm18VJJNu
-         3JkaJrZFW87BJTqrmU9cE6If+symuOUjL8I20/znYQfaKTmXjh0+TMlshq2Bv0b8IpOu
-         iwUc7c3NnRGphwvO3soD8H/wBOCtNDv/kcaChQ6JUUjxEUn7as3b7c/95PnbnU5Hprfw
-         YQxPqSncZ/p4hp/VYoYct5xPD5aapJPiXrQgNqG2eTeDxBK4aL7R26SQiVSvqyMGJEaC
-         g7OM8QtafabCRamQlvjuJnc2fd7t9fYh2okk+yIFE5FUADsF35w5mAzzBBoksM9qw3UJ
-         epgA==
-X-Forwarded-Encrypted: i=1; AJvYcCVKPIw4fMyHGmB9AChqoEWCwKI2Yuh0ZQK+07shnnCOfZiuTXChh4G+aV75mLxs1Q9fT+6BKMO3Zjly/CM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZFoVgy2OeuWGei5W6DbUdWPoazOZ1tAjdHO3BYts9LiyqxT4F
-	Re6k3WaTSWPhraG+Oc5StHCqzh1CqwaFH8qWpWqyIDc0yyQ9gs/74U+Ka6RBnmzjJDpQn+x1INl
-	DQkU8y9RbKgj7zmuFg8ZsG4jKa5xCI4xQi9mCFkN35r8u9zUVIDLx7zk8YzPnOA==
-X-Gm-Gg: ASbGnctCoQPQtZqDDCqfum/wKIFtpfFMlfljNIRybL1cR2IshXEH7yU6cNFLcOH3lfY
-	7lyQVwq/cYqR5Cm3vs33UEA4XoCX3gaCdNOXvuIY8mH35wspRaPcCGRoJ+gj63VKsu24/bGQ0Nb
-	eC1X9P0hQeDgxt4GAn82NxPhk2Q9wESLwax/SlJKWQHCx57jLqRY//8YeQUxv+ndG1FYfMvYh32
-	qzGpDxDjQSdxdaqiKwd1ZsNnCd4+q/jJBue9HW21N3Bzq8MjIO+407Opj6AKvi9m5at4p218rcL
-	erctYaJu0dnh5wxCUW6k1/8BlZfalEKuzhp2asn05SshTg==
-X-Received: by 2002:a05:600c:c0e:b0:439:8878:5029 with SMTP id 5b1f17b1804b1-43eced669f7mr41253985e9.2.1743799504748;
-        Fri, 04 Apr 2025 13:45:04 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEQdUlioKPZq69TbGGBY7RSLQ7tkW3z14eLyNXyqdvzkvKmN0qyRYhTKqjHqJuBvkjX3gnZ7Q==
-X-Received: by 2002:a05:600c:c0e:b0:439:8878:5029 with SMTP id 5b1f17b1804b1-43eced669f7mr41253765e9.2.1743799504278;
-        Fri, 04 Apr 2025 13:45:04 -0700 (PDT)
-Received: from [192.168.3.141] (p4ff23dc9.dip0.t-ipconnect.de. [79.242.61.201])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec34bbd9csm54659795e9.20.2025.04.04.13.45.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Apr 2025 13:45:03 -0700 (PDT)
-Message-ID: <198f2cbe-b1cb-4239-833e-9aac33d978fa@redhat.com>
-Date: Fri, 4 Apr 2025 22:45:00 +0200
+        d=1e100.net; s=20230601; t=1743799608; x=1744404408;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6hRsnXtdDToRwE5VkYur5EcjHw55DqS5b6vMN9pCfr4=;
+        b=WK5JJasVJkk/v2Utqnn6sqkzGM4568mwSLlq1xkKPuWcHQHhm8k3FZ+Vnm8T7YEwJh
+         5llqxjySp62U4H9doGZ0bqpBcQzcW4D7uBYmk+MvGWCZCjg8vasxYo1TBI79jtt1s/V+
+         30vdBb/vyK4Fq7ojwWmJXzmPDr0VE+nV10gp/w8O/7c+eIPHb0/9eoLJIt2A3XNTjvl3
+         xXMiuQdyDKiHOshdU4E50pOMbCpNfBdLoQUjWQNwyqs7ihxyx+biI7iuDnFqb9dH4FK1
+         7EnAKSwrm1w5npX07Z99fLKOaSk/nfl3A+bFGUV2ClwWOeQMionEMsFW4Z4TRGLD8g/l
+         oATw==
+X-Gm-Message-State: AOJu0YxL0umAsQ4kKc4AeKnsgNhS+uTMcfsTNLlo+F4j5Itti56OCfOx
+	aMUfeS1zT7kxr3mLpTlY3AFgyebHaOiIHpByNEWalYVy94LT+oqJRKaoKclKQrF+P3G30OehRL0
+	8W4NTtU2Dqf2cC8hn+9nBF2XYL58C9C7Y
+X-Gm-Gg: ASbGnct+P03D2Ky3dl+0IaeOeMpXQfZKeo8Ro0+WzrWg9IC5+j3q+H5UE68dVn72Q+M
+	j7b+IbYwBln6MqYVYTbVxasS6aNJfaLZDDel74Ke0ctBXsWkqe45/nNkwsFgKDhRIw0t+ZStY9/
+	4Q2lmt6X4xEo1ekvrfv8GMDCGD
+X-Google-Smtp-Source: AGHT+IFpL3ZnB9lDuEP5Av7ZBTbINZTCZ+03xATDynYVrD77yLKvElf+pz1L127nTfVIsgeaoJcjyI5OKPc8QPFbEVo=
+X-Received: by 2002:a17:907:2cc6:b0:ac6:b815:83ee with SMTP id
+ a640c23a62f3a-ac7d1c35d38mr431590866b.43.1743799607507; Fri, 04 Apr 2025
+ 13:46:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 3/3] mm/mempolicy: Support memory hotplug in weighted
- interleave
-To: Rakie Kim <rakie.kim@sk.com>, akpm@linux-foundation.org
-Cc: gourry@gourry.net, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- linux-cxl@vger.kernel.org, joshua.hahnjy@gmail.com,
- dan.j.williams@intel.com, ying.huang@linux.alibaba.com,
- Jonathan.Cameron@huawei.com, osalvador@suse.de, kernel_team@skhynix.com,
- honggyu.kim@sk.com, yunjeong.mun@sk.com
-References: <20250404074623.1179-1-rakie.kim@sk.com>
- <20250404074623.1179-4-rakie.kim@sk.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250404074623.1179-4-rakie.kim@sk.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Dave Airlie <airlied@gmail.com>
+Date: Sat, 5 Apr 2025 06:46:35 +1000
+X-Gm-Features: ATxdqUFQISWzBjVBOYCGg4eHEbpmZwyJMVRccY99sBggwBrSZbuwMv98o6CKmk0
+Message-ID: <CAPM=9twD=Epq278=nVGxMU4veeEpznYLnr_PVQ9WqvdnxZac_w@mail.gmail.com>
+Subject: [git pull] drm fixes for 6.15-rc1
+To: LKML <linux-kernel@vger.kernel.org>, Sima Vetter <sima@ffwll.ch>
+Cc: dri-devel <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 04.04.25 09:46, Rakie Kim wrote:
-> The weighted interleave policy distributes page allocations across multiple
-> NUMA nodes based on their performance weight, thereby improving memory
-> bandwidth utilization. The weight values for each node are configured
-> through sysfs.
-> 
-> Previously, sysfs entries for configuring weighted interleave were created
-> for all possible nodes (N_POSSIBLE) at initialization, including nodes that
-> might not have memory. However, not all nodes in N_POSSIBLE are usable at
-> runtime, as some may remain memoryless or offline.
-> This led to sysfs entries being created for unusable nodes, causing
-> potential misconfiguration issues.
-> 
-> To address this issue, this patch modifies the sysfs creation logic to:
-> 1) Limit sysfs entries to nodes that are online and have memory, avoiding
->     the creation of sysfs entries for nodes that cannot be used.
-> 2) Support memory hotplug by dynamically adding and removing sysfs entries
->     based on whether a node transitions into or out of the N_MEMORY state.
-> 
-> Additionally, the patch ensures that sysfs attributes are properly managed
-> when nodes go offline, preventing stale or redundant entries from persisting
-> in the system.
-> 
-> By making these changes, the weighted interleave policy now manages its
-> sysfs entries more efficiently, ensuring that only relevant nodes are
-> considered for interleaving, and dynamically adapting to memory hotplug
-> events.
-> 
-> Signed-off-by: Rakie Kim <rakie.kim@sk.com>
-> Signed-off-by: Honggyu Kim <honggyu.kim@sk.com>
-> Signed-off-by: Yunjeong Mun <yunjeong.mun@sk.com>
-> ---
->   mm/mempolicy.c | 109 ++++++++++++++++++++++++++++++++++++++-----------
->   1 file changed, 86 insertions(+), 23 deletions(-)
-> 
-> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-> index 73a9405ff352..f25c2c7f8fcf 100644
-> --- a/mm/mempolicy.c
-> +++ b/mm/mempolicy.c
-> @@ -113,6 +113,7 @@
->   #include <asm/tlbflush.h>
->   #include <asm/tlb.h>
->   #include <linux/uaccess.h>
-> +#include <linux/memory.h>
->   
->   #include "internal.h"
->   
-> @@ -3390,6 +3391,7 @@ struct iw_node_attr {
->   
->   struct sysfs_wi_group {
->   	struct kobject wi_kobj;
-> +	struct mutex kobj_lock;
->   	struct iw_node_attr *nattrs[];
->   };
->   
-> @@ -3439,13 +3441,24 @@ static ssize_t node_store(struct kobject *kobj, struct kobj_attribute *attr,
->   
->   static void sysfs_wi_node_delete(int nid)
->   {
-> -	if (!wi_group->nattrs[nid])
-> +	struct iw_node_attr *attr;
-> +
-> +	if (nid < 0 || nid >= nr_node_ids)
-> +		return;
-> +
-> +	mutex_lock(&wi_group->kobj_lock);
-> +	attr = wi_group->nattrs[nid];
-> +	if (!attr) {
-> +		mutex_unlock(&wi_group->kobj_lock);
->   		return;
-> +	}
-> +
-> +	wi_group->nattrs[nid] = NULL;
-> +	mutex_unlock(&wi_group->kobj_lock);
->   
-> -	sysfs_remove_file(&wi_group->wi_kobj,
-> -			  &wi_group->nattrs[nid]->kobj_attr.attr);
-> -	kfree(wi_group->nattrs[nid]->kobj_attr.attr.name);
-> -	kfree(wi_group->nattrs[nid]);
-> +	sysfs_remove_file(&wi_group->wi_kobj, &attr->kobj_attr.attr);
-> +	kfree(attr->kobj_attr.attr.name);
-> +	kfree(attr);
->   }
->   
->   static void sysfs_wi_release(struct kobject *wi_kobj)
-> @@ -3464,35 +3477,80 @@ static const struct kobj_type wi_ktype = {
->   
->   static int sysfs_wi_node_add(int nid)
->   {
-> -	struct iw_node_attr *node_attr;
-> +	int ret = 0;
->   	char *name;
-> +	struct iw_node_attr *new_attr = NULL;
->   
-> -	node_attr = kzalloc(sizeof(*node_attr), GFP_KERNEL);
-> -	if (!node_attr)
-> +	if (nid < 0 || nid >= nr_node_ids) {
-> +		pr_err("Invalid node id: %d\n", nid);
-> +		return -EINVAL;
-> +	}
-> +
-> +	new_attr = kzalloc(sizeof(struct iw_node_attr), GFP_KERNEL);
-> +	if (!new_attr)
->   		return -ENOMEM;
->   
->   	name = kasprintf(GFP_KERNEL, "node%d", nid);
->   	if (!name) {
-> -		kfree(node_attr);
-> +		kfree(new_attr);
->   		return -ENOMEM;
->   	}
->   
-> -	sysfs_attr_init(&node_attr->kobj_attr.attr);
-> -	node_attr->kobj_attr.attr.name = name;
-> -	node_attr->kobj_attr.attr.mode = 0644;
-> -	node_attr->kobj_attr.show = node_show;
-> -	node_attr->kobj_attr.store = node_store;
-> -	node_attr->nid = nid;
-> +	mutex_lock(&wi_group->kobj_lock);
-> +	if (wi_group->nattrs[nid]) {
-> +		mutex_unlock(&wi_group->kobj_lock);
-> +		pr_info("Node [%d] already exists\n", nid);
-> +		kfree(new_attr);
-> +		kfree(name);
-> +		return 0;
-> +	}
-> +	wi_group->nattrs[nid] = new_attr;
->   
-> -	if (sysfs_create_file(&wi_group->wi_kobj, &node_attr->kobj_attr.attr)) {
-> -		kfree(node_attr->kobj_attr.attr.name);
-> -		kfree(node_attr);
-> -		pr_err("failed to add attribute to weighted_interleave\n");
-> -		return -ENOMEM;
-> +	sysfs_attr_init(&wi_group->nattrs[nid]->kobj_attr.attr);
-> +	wi_group->nattrs[nid]->kobj_attr.attr.name = name;
-> +	wi_group->nattrs[nid]->kobj_attr.attr.mode = 0644;
-> +	wi_group->nattrs[nid]->kobj_attr.show = node_show;
-> +	wi_group->nattrs[nid]->kobj_attr.store = node_store;
-> +	wi_group->nattrs[nid]->nid = nid;
-> +
-> +	ret = sysfs_create_file(&wi_group->wi_kobj,
-> +				&wi_group->nattrs[nid]->kobj_attr.attr);
-> +	if (ret) {
-> +		kfree(wi_group->nattrs[nid]->kobj_attr.attr.name);
-> +		kfree(wi_group->nattrs[nid]);
-> +		wi_group->nattrs[nid] = NULL;
-> +		pr_err("Failed to add attribute to weighted_interleave: %d\n", ret);
->   	}
-> +	mutex_unlock(&wi_group->kobj_lock);
->   
-> -	wi_group->nattrs[nid] = node_attr;
-> -	return 0;
-> +	return ret;
-> +}
-> +
-> +static int wi_node_notifier(struct notifier_block *nb,
-> +			       unsigned long action, void *data)
-> +{
-> +	int err;
-> +	struct memory_notify *arg = data;
-> +	int nid = arg->status_change_nid;
-> +
-> +	if (nid < 0)
-> +		goto notifier_end;
-> +
-> +	switch(action) {
-> +	case MEM_ONLINE:
+Hi Linus,
 
-MEM_ONLINE is too late, we cannot fail hotplug at that point.
+Weekly fixes, mostly from the end of last week, this week was very
+quiet, maybe you scared everyone away. I probably should have
+highlighted Jani's work more closely, but it never occured that anyone
+would willingingly build a kernel without O=3D../toilet-builddir. This
+doesn't contain any fixes for that stuff, Jani is working on it, and
+hopefully you can help that make forward progress.
 
-Would MEM_GOING_ONLINE / MEM_CANCEL_ONLINE be better?
+As for this, it's mostly amdgpu, and xe, with some i915, adp and
+bridge bits, since I think this is overly quiet I'd expect rc2 to be a
+bit more lively.
 
+Regards,
+Dave.
 
-> +		err = sysfs_wi_node_add(nid);
-> +		if (err) {
-> +			pr_err("failed to add sysfs [node%d]\n", nid);
-> +			return NOTIFY_BAD;
+drm-next-2025-04-05:
+drm fixes for 6.15-rc1
 
-Note that NOTIFY_BAD includes NOTIFY_STOP_MASK. So you wouldn't call 
-other notifiers, but the overall memory onlining would succeed, which is 
-bad.
+bridge:
+- tda998x: Select CONFIG_DRM_KMS_HELPER
 
-If we don't care about the error (not prevent hotplug) we could only 
-pr_warn() and continue. Maybe this (unlikely) case is not a good reason 
-to stop memory from getting onlined. OTOH, it will barely ever trigger 
-in practice ...
+amdgpu:
+- Guard against potential division by 0 in fan code
+- Zero RPM support for SMU 14.0.2
+- Properly handle SI and CIK support being disabled
+- PSR fixes
+- DML2 fixes
+- DP Link training fix
+- Vblank fixes
+- RAS fixes
+- Partitioning fix
+- SDMA fix
+- SMU 13.0.x fixes
+- Rom fetching fix
+- MES fixes
+- Queue reset fix
 
--- 
-Cheers,
+xe:
+- Fix NULL pointer dereference on error path
+- Add missing HW workaround for BMG
+- Fix survivability mode not triggering
+- Fix build warning when DRM_FBDEV_EMULATION is not set
 
-David / dhildenb
+i915:
+- Bounds check for scalers in DSC prefill latency computation
+- Fix build by adding a missing include
 
+adp:
+- Fix error handling in plane setup
+The following changes since commit cf05922d63e2ae6a9b1b52ff5236a44c3b29f78c=
+:
+
+  Merge tag 'drm-intel-gt-next-2025-03-12' of
+https://gitlab.freedesktop.org/drm/i915/kernel into drm-next
+(2025-03-25 08:21:07 +1000)
+
+are available in the Git repository at:
+
+  https://gitlab.freedesktop.org/drm/kernel.git tags/drm-next-2025-04-05
+
+for you to fetch changes up to e2cb28ea3e01cb25095d1a341459901363dc39e9:
+
+  Merge tag 'drm-misc-next-fixes-2025-04-04' of
+https://gitlab.freedesktop.org/drm/misc/kernel into drm-next
+(2025-04-05 06:28:03 +1000)
+
+----------------------------------------------------------------
+drm fixes for 6.15-rc1
+
+bridge:
+- tda998x: Select CONFIG_DRM_KMS_HELPER
+
+amdgpu:
+- Guard against potential division by 0 in fan code
+- Zero RPM support for SMU 14.0.2
+- Properly handle SI and CIK support being disabled
+- PSR fixes
+- DML2 fixes
+- DP Link training fix
+- Vblank fixes
+- RAS fixes
+- Partitioning fix
+- SDMA fix
+- SMU 13.0.x fixes
+- Rom fetching fix
+- MES fixes
+- Queue reset fix
+
+xe:
+- Fix NULL pointer dereference on error path
+- Add missing HW workaround for BMG
+- Fix survivability mode not triggering
+- Fix build warning when DRM_FBDEV_EMULATION is not set
+
+i915:
+- Bounds check for scalers in DSC prefill latency computation
+- Fix build by adding a missing include
+
+adp:
+- Fix error handling in plane setup
+
+----------------------------------------------------------------
+Alex Deucher (2):
+      drm/amdgpu/gfx11: fix num_mec
+      drm/amdgpu/gfx12: fix num_mec
+
+Ankit Nautiyal (1):
+      drm/i915/watermark: Check bounds for scaler_users for dsc prefill lat=
+ency
+
+Arnd Bergmann (1):
+      drm/i2c: tda998x: select CONFIG_DRM_KMS_HELPER
+
+Asad Kamal (3):
+      drm/amd/pm: Remove host limit metrics support
+      drm/amd/pm: Update smu metrics table for smu_v13_0_6
+      drm/amd/pm: Add gpu_metrics_v1_8
+
+Brendan Tam (1):
+      drm/amd/display: prevent hang on link training fail
+
+Candice Li (1):
+      Remove unnecessary firmware version check for gc v9_4_2
+
+Charlene Liu (1):
+      Revert "drm/amd/display: dml2 soc dscclk use DPM table clk setting"
+
+Christian K=C3=B6nig (1):
+      drm/amdgpu: stop unmapping MQD for kernel queues v3
+
+Dan Carpenter (1):
+      drm: adp: Fix NULL vs IS_ERR() check in adp_plane_new()
+
+Dave Airlie (5):
+      Merge tag 'drm-misc-next-fixes-2025-03-27' of
+https://gitlab.freedesktop.org/drm/misc/kernel into drm-next
+      Merge tag 'drm-intel-next-fixes-2025-03-25' of
+https://gitlab.freedesktop.org/drm/i915/kernel into drm-next
+      Merge tag 'drm-xe-next-fixes-2025-03-27' of
+https://gitlab.freedesktop.org/drm/xe/kernel into drm-next
+      Merge tag 'amd-drm-next-6.15-2025-03-27' of
+https://gitlab.freedesktop.org/agd5f/linux into drm-next
+      Merge tag 'drm-misc-next-fixes-2025-04-04' of
+https://gitlab.freedesktop.org/drm/misc/kernel into drm-next
+
+Denis Arefev (5):
+      drm/amd/pm: Prevent division by zero
+      drm/amd/pm: Prevent division by zero
+      drm/amd/pm: Prevent division by zero
+      drm/amd/pm: Prevent division by zero
+      drm/amd/pm: Prevent division by zero
+
+Harish Chegondi (1):
+      drm/xe/eustall: Fix a possible pointer dereference after free
+
+Jesse.zhang@amd.com (1):
+      Revert "drm/amdgpu/sdma_v4_4_2: update VM flush implementation for SD=
+MA"
+
+Leo Li (2):
+      drm/amd/display: Increase vblank offdelay for PSR panels
+      drm/amd/display: Actually do immediate vblank disable
+
+Lijo Lazar (2):
+      drm/amdgpu: Add NPS2 to DPX compatible mode
+      drm/amdgpu: Prefer shadow rom when available
+
+Lucas De Marchi (2):
+      drm/xe: Move survivability back to xe
+      drm/xe: Set survivability mode before heci init
+
+Mario Limonciello (1):
+      drm/amd: Handle being compiled without SI or CIK support better
+
+Michal Wajdeczko (1):
+      drm/xe/vf: Don't check CTC_MODE[0] if VF
+
+Stanley.Yang (1):
+      drm/amdgpu: Update ta ras block
+
+Tomasz Paku=C5=82a (1):
+      drm/amd/pm: Add zero RPM enabled OD setting support for SMU14.0.2
+
+Vinay Belgaumkar (1):
+      drm/xe: Apply Wa_16023105232
+
+Xiang Liu (2):
+      drm/amdgpu: Use correct gfx deferred error count
+      drm/amdgpu: Parse all deferred errors with UMC aca handle
+
+Yue Haibing (2):
+      drm/i915/display: Fix build error without DRM_FBDEV_EMULATION
+      drm/xe: Fix unmet direct dependencies warning
+
+ drivers/gpu/drm/adp/adp_drv.c                      |   4 +-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_aca.c            |   4 +
+ drivers/gpu/drm/amd/amdgpu/amdgpu_aca.h            |   8 --
+ drivers/gpu/drm/amd/amdgpu/amdgpu_bios.c           |  34 ++++--
+ drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c            |  44 ++++----
+ drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c            |   1 +
+ drivers/gpu/drm/amd/amdgpu/amdgpu_ras.h            |   7 ++
+ drivers/gpu/drm/amd/amdgpu/amdgpu_ring.c           |  58 ++---------
+ drivers/gpu/drm/amd/amdgpu/amdgpu_xgmi.c           |   2 +-
+ drivers/gpu/drm/amd/amdgpu/aqua_vanjaram.c         |   3 +-
+ drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c             |  88 ++--------------
+ drivers/gpu/drm/amd/amdgpu/gfx_v11_0.c             |  90 ++--------------
+ drivers/gpu/drm/amd/amdgpu/gfx_v12_0.c             | 104 +++--------------=
+--
+ drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c              |  45 +-------
+ drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c              |  58 ++---------
+ drivers/gpu/drm/amd/amdgpu/gfx_v9_4_3.c            |  66 +++---------
+ drivers/gpu/drm/amd/amdgpu/jpeg_v4_0_3.c           |   2 +-
+ drivers/gpu/drm/amd/amdgpu/mmhub_v1_8.c            |   2 +-
+ drivers/gpu/drm/amd/amdgpu/sdma_v4_4_2.c           |  79 +++-----------
+ drivers/gpu/drm/amd/amdgpu/ta_ras_if.h             |   3 +
+ drivers/gpu/drm/amd/amdgpu/umc_v12_0.c             |   3 +-
+ drivers/gpu/drm/amd/amdgpu/vcn_v4_0_3.c            |   2 +-
+ drivers/gpu/drm/amd/amdgpu/vega10_sdma_pkt_open.h  |  70 -------------
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c  |  41 ++++++--
+ .../amd/display/dc/dml2/dml2_translation_helper.c  |   2 +-
+ .../drm/amd/display/dc/hwss/dcn20/dcn20_hwseq.c    |   6 +-
+ .../drm/amd/display/dc/hwss/dcn401/dcn401_hwseq.c  |   7 +-
+ drivers/gpu/drm/amd/include/kgd_pp_interface.h     | 114 +++++++++++++++++=
+++++
+ .../gpu/drm/amd/pm/powerplay/hwmgr/smu7_thermal.c  |   4 +-
+ .../drm/amd/pm/powerplay/hwmgr/vega10_thermal.c    |   4 +-
+ .../drm/amd/pm/powerplay/hwmgr/vega20_thermal.c    |   2 +-
+ .../amd/pm/swsmu/inc/pmfw_if/smu_v13_0_6_pmfw.h    |   7 +-
+ drivers/gpu/drm/amd/pm/swsmu/smu11/arcturus_ppt.c  |   3 +
+ drivers/gpu/drm/amd/pm/swsmu/smu13/smu_v13_0.c     |   2 +-
+ .../gpu/drm/amd/pm/swsmu/smu13/smu_v13_0_6_ppt.c   |  15 ---
+ .../gpu/drm/amd/pm/swsmu/smu14/smu_v14_0_2_ppt.c   |  55 +++++++++-
+ drivers/gpu/drm/amd/pm/swsmu/smu_cmn.c             |   3 +
+ drivers/gpu/drm/bridge/Kconfig                     |  13 +--
+ drivers/gpu/drm/i915/display/intel_fbdev.h         |   2 +
+ drivers/gpu/drm/i915/display/skl_watermark.c       |   5 +-
+ drivers/gpu/drm/xe/Kconfig                         |   2 +-
+ drivers/gpu/drm/xe/regs/xe_engine_regs.h           |   4 +
+ drivers/gpu/drm/xe/xe_device.c                     |  17 ++-
+ drivers/gpu/drm/xe/xe_eu_stall.c                   |   8 +-
+ drivers/gpu/drm/xe/xe_gt_clock.c                   |  54 +++++++---
+ drivers/gpu/drm/xe/xe_gt_types.h                   |   2 +
+ drivers/gpu/drm/xe/xe_hw_engine.c                  |  33 ++++++
+ drivers/gpu/drm/xe/xe_pci.c                        |  16 ++-
+ drivers/gpu/drm/xe/xe_survivability_mode.c         |  31 ++++--
+ drivers/gpu/drm/xe/xe_survivability_mode.h         |   1 -
+ drivers/gpu/drm/xe/xe_wa.c                         |   6 ++
+ drivers/gpu/drm/xe/xe_wa_oob.rules                 |   2 +
+ 52 files changed, 537 insertions(+), 701 deletions(-)
