@@ -1,142 +1,85 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E0AD155316;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 855FC155C82;
 	Fri,  4 Apr 2025 06:39:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743748751; cv=none; b=p19rQB3Jf91qb01J87D/4YHa20w8Lu8F5gxEL4LSkxwGrFmxllQpHhLLU999LwVE+iTyrAFAzZ53jnK9U7hiqN843FDLJpJNd/9wYr8LT/pm3xs5Jru1z1j4ndVSrAj3r+5Lv9yQGKLYCKYBjkMN1N9mtVf4pgp6EUeeAyYkR6o=
+	t=1743748756; cv=none; b=euc8wtletLe5w2gS5+ilwxPYMkShT4k5Gv0BaZoMwF/BsPljmLSXKIwP20t6YEchq9vLBq2cdzCGI3QWgIVQOOLjohYvdHhcVyepQdKN5dhA3uQHDq7jI1DU8xXlmiIvrjhznDosBJtTB0nkx6by6+mAe5UQ+5cAS+1CPFR9ZB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743748751; c=relaxed/simple;
-	bh=IfIl8FE43pGx+uQUjFgWd8RZQmiuKxZdD9ewBzSoVio=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LZR+L5iaGNRUZFC1SjAgEt96S3wn+tKY8ucufLryoFZvlvSKiYurf4Fm7wlS9+eoVOX7UUKJj3l0ldsCfgE+/IFN2ZgHk83xVhQaMuvbodg42llB0TcTp+wHG9yIvjg7Nu/evLAEDcMU+L3n+yOi6Q6pxYAuXao6zBpkWT51Jp8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=UVXvNaRv; arc=none smtp.client-ip=178.60.130.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1743748756; c=relaxed/simple;
+	bh=Nv+OpjzguYHw8XX/aCtXEwUOx0sT55RlHRNmpfHLPmA=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=lZEoqE0KqQmsnFkIrC1JyJD5l1kzp71vNwbVVmjmierZ8HxEmK55c3tsatqXS1yxJWWCAyQUS3l3FSiYrt/qYutHlFDXM8TlFBRMCbYaVOGhYKSI9gOGMPH+CIxQAnsRukjgPozasMXUQH0lPYxdxOY5LOPlsWRuPI/rjyJrihY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=desiato.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=aeiW6mLi; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=desiato.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="UVXvNaRv"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=uXwHVhIQiwQ3uewZeyB4MHzXT2Md9jRYI048JFRNUHo=; b=UVXvNaRvohlIod85Wo7r6eTwEA
-	eaQFuyGce9TLEyIIkuWx6dA8epXQXo5zR91aSQsoUMN2mFXvENJz8wmC2LWbgZnp5YblZXkBOXmoy
-	1tJLQ2Gp9QU7iNaxP5VMd8mN9iRAaWTQ28+kIDY20WM98OfYfhpM2pmGhz5kIUXV1z5mI1lcTMdXi
-	0hC5CUXpWhq16z4Pk47YCNXFcCVzPJjXZjXjYULxjvEuvwvFGOEPXCgmM/XfszU+o0ms42YD4Rp/S
-	vHd//uyxeQ8qE0DAfUPVMOJ7GVblx8/yJZEkVlq+rBAz6aSwQHlA++xcueVcPf2C29ihSZUB1I+1A
-	liG80V1Q==;
-Received: from [223.233.74.223] (helo=[192.168.1.12])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1u0ahf-00BDfn-Mg; Fri, 04 Apr 2025 08:38:59 +0200
-Message-ID: <ce03ac93-c8ee-4803-acdc-597dd432207b@igalia.com>
-Date: Fri, 4 Apr 2025 12:08:55 +0530
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aeiW6mLi"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
+	:MIME-Version:Message-ID:References:In-Reply-To:Subject:CC:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=09/sMJVzkrCgnCZOfO14brnFLODw8EPJdyTc6baTauI=; b=aeiW6mLin63+aKhEBweeImngwy
+	bFAaWHqMM0Vo7RccW0yfzqoBXyBsR4tuIv/bWPuIM6lCIjieZvbGwh7cRTdzhv2IQlx5UMvvw3dcM
+	scZNdo+FqpQe5hghh09cjc0rSab9wr3qSngC2zIcpXWL6i5xiLrfrVq+il2UwNfry4ZPdNUP4AsiZ
+	46IIFYWJ30ZQ0AIGirq0d2OCw72zo+WtMBrkoIGkt/f2mU7yFRO2fZuSZWZGiGzjLYuAA2V0skwZq
+	3NGfska2rPaDXNXCcLCEzTw8tHQEwUGAdpS9hU9WfOIG2sJB09FWN0bxPCdxUuLI6KhwTsKYiwwpG
+	EhRPlnAg==;
+Received: from [2001:8b0:10b:5:5fcd:596f:f785:8906] (helo=[IPv6:::1])
+	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1u0ahi-00000007JAJ-0gsd;
+	Fri, 04 Apr 2025 06:39:02 +0000
+Date: Fri, 04 Apr 2025 07:39:02 +0100
+From: David Woodhouse <dwmw2@infradead.org>
+To: Christoph Hellwig <hch@infradead.org>
+CC: "Michael S. Tsirkin" <mst@redhat.com>, virtio-comment@lists.linux.dev,
+ Claire Chang <tientzu@chromium.org>,
+ linux-devicetree <devicetree@vger.kernel.org>,
+ Rob Herring <robh+dt@kernel.org>,
+ =?ISO-8859-1?Q?J=F6rg_Roedel?= <joro@8bytes.org>,
+ iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+ graf@amazon.de
+Subject: =?US-ASCII?Q?Re=3A_=5BRFC_PATCH_1/3=5D_content=3A_Add_VIRTIO=5FF=5FSWIO?=
+ =?US-ASCII?Q?TLB_to_negotiate_use_of_SWIOTLB_bounce_buffers?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <Z-98Lqpq4mZN545Y@infradead.org>
+References: <20250402111901-mutt-send-email-mst@kernel.org> <6b3b047f1650d91abe5e523dd7f862c6f7ee6611.camel@infradead.org> <20250402114757-mutt-send-email-mst@kernel.org> <965ccf2f972c5d5f1f4edacb227f03171f20e887.camel@infradead.org> <20250402124131-mutt-send-email-mst@kernel.org> <eaef09ab218900a53347987a62fee1787283d9ed.camel@infradead.org> <Z-44wXdyia4RC6Cr@infradead.org> <06465bcf4422d088df2a0ce9cdb09767dac83118.camel@infradead.org> <Z-47O3vkyIf0mzdw@infradead.org> <cdd979bca2b8cc4ff170442d968b63f2b3f0ccd6.camel@infradead.org> <Z-98Lqpq4mZN545Y@infradead.org>
+Message-ID: <488D32C6-77FA-4CC8-988F-CD4D14548D4B@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.0
-Subject: Re: [PATCH v2 3/3] kthread: Use 'task_struct->full_name' to store
- kthread's full name
-Content-Language: en-US
-To: Kees Cook <kees@kernel.org>, Bhupesh <bhupesh@igalia.com>
-Cc: akpm@linux-foundation.org, kernel-dev@igalia.com,
- linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
- linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-mm@kvack.org, oliver.sang@intel.com, lkp@intel.com,
- laoar.shao@gmail.com, pmladek@suse.com, rostedt@goodmis.org,
- mathieu.desnoyers@efficios.com, arnaldo.melo@gmail.com,
- alexei.starovoitov@gmail.com, andrii.nakryiko@gmail.com,
- mirq-linux@rere.qmqm.pl, peterz@infradead.org, willy@infradead.org,
- david@redhat.com, viro@zeniv.linux.org.uk, ebiederm@xmission.com,
- brauner@kernel.org, jack@suse.cz, mingo@redhat.com, juri.lelli@redhat.com,
- bsegall@google.com, mgorman@suse.de, vschneid@redhat.com
-References: <20250331121820.455916-1-bhupesh@igalia.com>
- <20250331121820.455916-4-bhupesh@igalia.com> <202504030923.1FE7874F@keescook>
-From: Bhupesh Sharma <bhsharma@igalia.com>
-In-Reply-To: <202504030923.1FE7874F@keescook>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
 
-Hi Kees,
-
-On 4/3/25 9:54 PM, Kees Cook wrote:
-> On Mon, Mar 31, 2025 at 05:48:20PM +0530, Bhupesh wrote:
->> Commit 6986ce24fc00 ("kthread: dynamically allocate memory to store
->> kthread's full name"), added 'full_name' in parallel to 'comm' for
->> kthread names.
->>
->> Now that we have added 'full_name' added to 'task_struct' itself,
->> drop the additional 'full_name' entry from 'struct kthread' and also
->> its usage.
->>
->> Signed-off-by: Bhupesh <bhupesh@igalia.com>
-> I'd like to see this patch be the first patch in the series. This show
-> the existing use for "full_name". (And as such it'll probably need bits
-> from patch 1.)
-
-Sure, I will fix this in v3.
-
-Thanks,
-Bhupesh
-
+On 4 April 2025 07:29:02 BST, Christoph Hellwig <hch@infradead=2Eorg> wrote=
+:
+>On Thu, Apr 03, 2025 at 09:10:41AM +0100, David Woodhouse wrote:
+>> Thanks=2E I'll take a closer look at handling that=2E I think it's
+>> reasonable for the negotiation of the VIRTIO_F_SWIOTLB feature to be
+>> the thing that switches *all* addresses to be on-device, and the on-
+>> device buffer can't be accessed unless VIRTIO_F_SWIOTLB has been
+>> negotiated=2E
+>>=20
+>> Which neatly sidesteps the original thing I was trying to clarify
+>> anyway=2E
 >
->> ---
->>   kernel/kthread.c | 9 +++------
->>   1 file changed, 3 insertions(+), 6 deletions(-)
->>
->> diff --git a/kernel/kthread.c b/kernel/kthread.c
->> index 5dc5b0d7238e..46fe19b7ef76 100644
->> --- a/kernel/kthread.c
->> +++ b/kernel/kthread.c
->> @@ -66,8 +66,6 @@ struct kthread {
->>   #ifdef CONFIG_BLK_CGROUP
->>   	struct cgroup_subsys_state *blkcg_css;
->>   #endif
->> -	/* To store the full name if task comm is truncated. */
->> -	char *full_name;
->>   	struct task_struct *task;
->>   	struct list_head hotplug_node;
->>   	struct cpumask *preferred_affinity;
->> @@ -108,12 +106,12 @@ void get_kthread_comm(char *buf, size_t buf_size, struct task_struct *tsk)
->>   {
->>   	struct kthread *kthread = to_kthread(tsk);
->>   
->> -	if (!kthread || !kthread->full_name) {
->> +	if (!kthread || !tsk->full_name) {
->>   		strscpy(buf, tsk->comm, buf_size);
->>   		return;
->>   	}
->>   
->> -	strscpy_pad(buf, kthread->full_name, buf_size);
->> +	strscpy_pad(buf, tsk->full_name, buf_size);
->>   }
->>   
->>   bool set_kthread_struct(struct task_struct *p)
->> @@ -153,7 +151,6 @@ void free_kthread_struct(struct task_struct *k)
->>   	WARN_ON_ONCE(kthread->blkcg_css);
->>   #endif
->>   	k->worker_private = NULL;
->> -	kfree(kthread->full_name);
->>   	kfree(kthread);
->>   }
->>   
->> @@ -430,7 +427,7 @@ static int kthread(void *_create)
->>   		kthread_exit(-EINTR);
->>   	}
->>   
->> -	self->full_name = create->full_name;
->> +	self->task->full_name = create->full_name;
->>   	self->threadfn = threadfn;
->>   	self->data = data;
->>   
->> -- 
->> 2.38.1
->>
+>Switching all addressing does not sound like a good idea=2E  The main
+>thing these indirect buffers are used for is as a staging points for
+>P2P DMA, in which case they often are only used for some transfers or
+>even parts of a transfer=2E  At least for physical virtio devices P2P
+>is probably not far off with the current GPU craze, and I wouldn't
+>be surprised if people found uses for paravirt P2P as well=2E
 
+That isn't the original use case I had for it in virtio but that's useful =
+input, thanks=2E
+
+Plumbing a 65th address space bit through all descriptors seems impractica=
+l=2E Would it suffice for the driver to *specify* the location in the devic=
+e's DMA address space that the on-device buffer appears, to allow it to avo=
+id conflicts with system memory addresses? Better ideas?
