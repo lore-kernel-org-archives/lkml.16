@@ -1,157 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B1FE1F63F0;
-	Fri,  4 Apr 2025 15:52:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B45371F5408;
+	Fri,  4 Apr 2025 15:52:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743781931; cv=none; b=R9dKRqtgCVjKxXkJ5mbybL/LmL88uhf9TBvCw0PtQqEn6sleA6wMRW5I0uUHOu5jus+f/VjDbzUi/LzU2KTYgPkDvHSC7NpS6vvGW80/AGUVKrV51uFTgpZIWFTFMdeB+iIW00QF66iJLIsZYYBWulFAjXlSFiGtR9EUG2BSH78=
+	t=1743781948; cv=none; b=FWlK6Qz1MZwDrk/fmUm6Jnmnp2F2WugVejCaOf1eqpPl0H8VIEx5P5s7sg1APIyOXeNjKGfDxK4O3GvYfg/Uqbcz9laLpIi/3bKKTuTGw6vd5EHJLgvpOcMq3jGdw0MnHYHbb2UQl7/tJs9jV481RyxtsWLZVEdfgcDA46Qzf0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743781931; c=relaxed/simple;
-	bh=pcYSAYWTjqkxlR36E9MUlFnt4MSwvXEXlSFsCIsJPXc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ZhNdBL9wbxDxDN8T3wo1z30I0tsMUwHlZ+/6/+tsoRq/klybk+f3pWdOd8VzO/IB3yMDEGRnJqg/DXgYgfeeS+k9orN5CXeWdFdwxOr3zrOZf02leRF37CARRfTFF19uM0RM1S4/w7HSjHJeun7NNUdhek6yM2VPnL9j/w7tx8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P1fjKzc3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743781948; c=relaxed/simple;
+	bh=m9gKAxEv8+1se/VyAuR+Yuv/+qsz90ObqP12AabUSZI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=b6jQ8zonFpjGJ2VW9+vlmuVzrNsD8gCVmWQATTTxerc0Njb5JnD4SZNAOGxKXT691qWLdV5A2/74sUzOSy73ssvKXaedftqLTbW35jJbDAd0TzNUAO4dL5bOJvOlhWsIXmbBEAhZ+EXxxZ3TZV/NVrJJtVn4k29polCZtOy11fU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WCnPm6lT; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P1fjKzc3"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id C0C68C4CEE8;
-	Fri,  4 Apr 2025 15:52:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743781929;
-	bh=pcYSAYWTjqkxlR36E9MUlFnt4MSwvXEXlSFsCIsJPXc=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=P1fjKzc3eGvhquRsSY3kKtexSoesNyLLuy3gvu/bDKBUPf+pI3WcDWcM/yPCsoBYC
-	 wwnzIc4Go6I6exYpmwYPe9y1tj5Ns4T657M6S/ploo1T+IAlQVE2LXH4a6GfTp5lvf
-	 WLG9kjv36EeO+CTl7ZQhxgMFuv3XXZUmWCcswOAsRWNQNWaaDRR0Wvkt+bbhygOdRd
-	 IOrBm15UXGInQ3STw7jJidFfDKCmr+dlScoLZHEuNxalpRXbT9I1ClHUh20mGVEYAI
-	 ByzVNlcBBev5Shvx/2bMyxFpfaRHBKX/v3/Z47MtvLTi2C+6kbub1RZH9G9X1zDrWk
-	 FCxigDZhzM5Lw==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A541CC369A2;
-	Fri,  4 Apr 2025 15:52:09 +0000 (UTC)
-From: Jean-Baptiste Maneyrol via B4 Relay <devnull+jean-baptiste.maneyrol.tdk.com@kernel.org>
-Date: Fri, 04 Apr 2025 17:52:03 +0200
-Subject: [PATCH 2/2] iio: imu: inv_icm42600: switch to use generic name irq
- get
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WCnPm6lT"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-73712952e1cso2122153b3a.1;
+        Fri, 04 Apr 2025 08:52:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743781946; x=1744386746; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4aWTDe+rTzrD+6R9DmIQBtw8FiB3Cn3PFxzKkYh4A0s=;
+        b=WCnPm6lTmO/uCyoLABLaMItvwEXWro5Co+kC19ldt7Uh+Q9qrANFwW/y8pxn1NP9jN
+         UNT/L3wlolMVFGecSyV6XMq66xWz5L5ok2h0BbGG/VJHLr2TCVC7JiEg7BCYLBABHCLL
+         kZJgrGYy6FAq37w3V70i8sx317eP4AWUpGQSxPY/3bEAeBRTJE7skEIV9hLeuEAl1iKv
+         tIh4jguRk10+3zZeNRHt1obHhx+5mSfXRjvgwUcIQAPOoaxJrrjoK+P0o2Jk3hB6X67a
+         j6ET1xjTAedRfpCgZgp2auKdQ4VqGS6g6OgymS7xsE77/vUa0KXgGjkoXn8wg0VUOAL8
+         iFZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743781946; x=1744386746;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4aWTDe+rTzrD+6R9DmIQBtw8FiB3Cn3PFxzKkYh4A0s=;
+        b=RcHacwshefqemq7k7v9cTbedBNRiGEcEc9L5QqUlL5L+8L5eeTktqmA57lXFPhoqDy
+         FFiVb2VfFWfzczBChGjzgmirllDkghyF+2ESvlX1+nWE+RDRc0Rdjb7lL/ouGz82PQ1Y
+         XtJ7ZS2q3LYr8d4VdWJQUT6xGHA9yuwOtnOrcyJ0CR8uhOjmTweMFZIPbIbYeUFFKgxS
+         IXtXAK0YERiJStC8rUdY72NQVovoq44zX7hGHnBRCB7FtNcOn+Ibaj+oCTSBQ3klOZoj
+         6fdBb6xZ5N7yNmIXRNhdxLI6esGqc3AIJDwN9X8VvtkdjFJqJ1Uq0STj6yyeFOl6GzNB
+         UBGQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUUCifk668A+VLDuAV/FUutZ2ojv2r4UdndHjEvDpsybDm4vvf9lnCjeBrbacsflKYJKSMszAbxEdcbtSPY@vger.kernel.org, AJvYcCVmTCI2U/J9yoW+qe3Qsfe+P3pifpcv0a3Vag90f7TaI2IY8odsZBLYdoAKpAVZUm8ob4GKRW+oudp/pxeoch6c@vger.kernel.org, AJvYcCWft+TcLlV1AbKmGHoqKQ1v76h/UDg3dtv13C/GjKAIvodU3IKUviSc2SqEMc832Xf+L+k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyEc0Qqp8Iblrrw/v/lujQ9Cwy//sf638MbPudS7rprjA2+V+Ee
+	nB14z3rIB/VyVjVdzldMtAAru/dYv4iiD35C/KdPLnlIa1iy7GUbhpEv0K+E7ZRZ5/DcLP/O/Xo
+	XMba/CLdB/8IW3KEjqh8lUcNGgKY=
+X-Gm-Gg: ASbGnctAIiWum94cJUGX8lULwKfcsMUIyA61LvPJuJzvte4cEJIAeiY3M4ntskVjCGy
+	xAqkaImEAn51K8VVW3Z1OaY+dr2QBCuoKUaJT742Ui++jdKBtBdtKmgcGp589B4LVPPtOm00a9l
+	EgpwGucrbXTp2cTgAx0YwsTAjMjubocUltMSVCsp0FO3ncxQG4qmY8
+X-Google-Smtp-Source: AGHT+IEvIVeQZa5TCXYa49bWJYhlsbglGPFTWlTmzAYUiGUKqdhgB3iFQEsIbHaggKb+5mNlOlhexiQxMWXg/N6NSUo=
+X-Received: by 2002:a05:6a00:2292:b0:736:57cb:f2b6 with SMTP id
+ d2e1a72fcca58-739e4855de2mr5463254b3a.12.1743781945762; Fri, 04 Apr 2025
+ 08:52:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250404-iio-imu-inv-icm42600-rework-interrupt-using-names-v1-2-72ed5100da14@tdk.com>
-References: <20250404-iio-imu-inv-icm42600-rework-interrupt-using-names-v1-0-72ed5100da14@tdk.com>
-In-Reply-To: <20250404-iio-imu-inv-icm42600-rework-interrupt-using-names-v1-0-72ed5100da14@tdk.com>
-To: Jonathan Cameron <jic23@kernel.org>, 
- Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1743781928; l=3719;
- i=jean-baptiste.maneyrol@tdk.com; s=20240923; h=from:subject:message-id;
- bh=aK+9d09n/DXh1B0QAO9MWRE0rSAinKtcE5JJVNT3Ho0=;
- b=byMnHzROPs8DLM2mn3cabTWIUFGWHCYa7CvT5NK8dMafO+wt5IyQInBVadqaxAQpFsbvxPSNB
- bWxW0fplXRVBMrLQhTM21wdXrJe3RHHtBmHInes/rgtZX9OxA9+lB4r
-X-Developer-Key: i=jean-baptiste.maneyrol@tdk.com; a=ed25519;
- pk=bRqF1WYk0hR3qrnAithOLXSD0LvSu8DUd+quKLxCicI=
-X-Endpoint-Received: by B4 Relay for
- jean-baptiste.maneyrol@tdk.com/20240923 with auth_id=218
-X-Original-From: Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>
-Reply-To: jean-baptiste.maneyrol@tdk.com
+References: <malayarout91@gmail.com> <20250324064234.853591-1-malayarout91@gmail.com>
+In-Reply-To: <20250324064234.853591-1-malayarout91@gmail.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Fri, 4 Apr 2025 08:52:13 -0700
+X-Gm-Features: AQ5f1Jr6dpg1vkl2088UME8oWw4P2Av0jpCylRO5ZZVK_oKaO02pvSj060D0bCc
+Message-ID: <CAEf4BzagSxO-fNeeWfFPu2vpnbEUBnS7Y2P=ODGks_zVEg1mkg@mail.gmail.com>
+Subject: Re: [PATCH] selftests/bpf: close the file descriptor to avoid
+ resource leaks
+To: Malaya Kumar Rout <malayarout91@gmail.com>
+Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
+	Geliang Tang <geliang@kernel.org>, bpf@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>
+On Sun, Mar 23, 2025 at 11:43=E2=80=AFPM Malaya Kumar Rout
+<malayarout91@gmail.com> wrote:
+>
+> Static Analyis for bench_htab_mem.c with cppcheck:error
+> tools/testing/selftests/bpf/benchs/bench_htab_mem.c:284:3:
+> error: Resource leak: fd [resourceLeak]
+> tools/testing/selftests/bpf/prog_tests/sk_assign.c:41:3:
+> error: Resource leak: tc [resourceLeak]
+>
+> fix the issue  by closing the file descriptor (fd & tc) when
+> read & fgets operation fails.
+>
+> Signed-off-by: Malaya Kumar Rout <malayarout91@gmail.com>
+> ---
+>  tools/testing/selftests/bpf/benchs/bench_htab_mem.c | 1 +
+>  tools/testing/selftests/bpf/prog_tests/sk_assign.c  | 4 +++-
+>  2 files changed, 4 insertions(+), 1 deletion(-)
+>
+> diff --git a/tools/testing/selftests/bpf/benchs/bench_htab_mem.c b/tools/=
+testing/selftests/bpf/benchs/bench_htab_mem.c
+> index 926ee822143e..59746fd2c23a 100644
+> --- a/tools/testing/selftests/bpf/benchs/bench_htab_mem.c
+> +++ b/tools/testing/selftests/bpf/benchs/bench_htab_mem.c
+> @@ -281,6 +281,7 @@ static void htab_mem_read_mem_cgrp_file(const char *n=
+ame, unsigned long *value)
+>         got =3D read(fd, buf, sizeof(buf) - 1);
 
-Use generic fwnode_irq_get_byname() for getting interrupt pin using
-interrupt name.
-Only INT1 is supported by the driver currently.
----
- drivers/iio/imu/inv_icm42600/inv_icm42600.h      |  2 +-
- drivers/iio/imu/inv_icm42600/inv_icm42600_core.c | 13 +++++++++++--
- drivers/iio/imu/inv_icm42600/inv_icm42600_i2c.c  |  2 +-
- drivers/iio/imu/inv_icm42600/inv_icm42600_spi.c  |  2 +-
- 4 files changed, 14 insertions(+), 5 deletions(-)
+It could be a bit cleaner to add close(fd) here and drop the one we
+have at the end of the function.
 
-diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600.h b/drivers/iio/imu/inv_icm42600/inv_icm42600.h
-index 18787a43477b89db12caee597ab040af5c8f52d5..f893dbe6996506a33eb5d3be47e6765a923665c9 100644
---- a/drivers/iio/imu/inv_icm42600/inv_icm42600.h
-+++ b/drivers/iio/imu/inv_icm42600/inv_icm42600.h
-@@ -426,7 +426,7 @@ int inv_icm42600_set_temp_conf(struct inv_icm42600_state *st, bool enable,
- int inv_icm42600_debugfs_reg(struct iio_dev *indio_dev, unsigned int reg,
- 			     unsigned int writeval, unsigned int *readval);
- 
--int inv_icm42600_core_probe(struct regmap *regmap, int chip, int irq,
-+int inv_icm42600_core_probe(struct regmap *regmap, int chip,
- 			    inv_icm42600_bus_setup bus_setup);
- 
- struct iio_dev *inv_icm42600_gyro_init(struct inv_icm42600_state *st);
-diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600_core.c b/drivers/iio/imu/inv_icm42600/inv_icm42600_core.c
-index ef9875d3b79db116f9fb4f6d881a7979292c1792..bfdd7cd5fafae87ad7c6204f6dd3bef17935b3f9 100644
---- a/drivers/iio/imu/inv_icm42600/inv_icm42600_core.c
-+++ b/drivers/iio/imu/inv_icm42600/inv_icm42600_core.c
-@@ -683,12 +683,13 @@ static void inv_icm42600_disable_pm(void *_data)
- 	pm_runtime_disable(dev);
- }
- 
--int inv_icm42600_core_probe(struct regmap *regmap, int chip, int irq,
-+int inv_icm42600_core_probe(struct regmap *regmap, int chip,
- 			    inv_icm42600_bus_setup bus_setup)
- {
- 	struct device *dev = regmap_get_device(regmap);
- 	struct inv_icm42600_state *st;
--	int irq_type;
-+	struct fwnode_handle *fwnode;
-+	int irq, irq_type;
- 	bool open_drain;
- 	int ret;
- 
-@@ -697,6 +698,14 @@ int inv_icm42600_core_probe(struct regmap *regmap, int chip, int irq,
- 		return -ENODEV;
- 	}
- 
-+	/* get INT1 only supported interrupt */
-+	fwnode = dev_fwnode(dev);
-+	if (!fwnode)
-+		return -ENODEV;
-+	irq = fwnode_irq_get_byname(fwnode, "INT1");
-+	if (irq < 0)
-+		return dev_err_probe(dev, irq, "error missing INT1 interrupt\n");
-+
- 	irq_type = irq_get_trigger_type(irq);
- 	if (!irq_type)
- 		irq_type = IRQF_TRIGGER_FALLING;
-diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600_i2c.c b/drivers/iio/imu/inv_icm42600/inv_icm42600_i2c.c
-index 04e440fe023aa3869529b0f0be003ea0544bfb8d..38cc0d7834fcb96dabc401f29d613cf9fc75b8f5 100644
---- a/drivers/iio/imu/inv_icm42600/inv_icm42600_i2c.c
-+++ b/drivers/iio/imu/inv_icm42600/inv_icm42600_i2c.c
-@@ -67,7 +67,7 @@ static int inv_icm42600_probe(struct i2c_client *client)
- 	if (IS_ERR(regmap))
- 		return PTR_ERR(regmap);
- 
--	return inv_icm42600_core_probe(regmap, chip, client->irq,
-+	return inv_icm42600_core_probe(regmap, chip,
- 				       inv_icm42600_i2c_bus_setup);
- }
- 
-diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600_spi.c b/drivers/iio/imu/inv_icm42600/inv_icm42600_spi.c
-index 2bd2c4c8e50c3fe081e882aca6c64736510b474c..f40a09c4cbfc673e76922d13d61a3634785300ec 100644
---- a/drivers/iio/imu/inv_icm42600/inv_icm42600_spi.c
-+++ b/drivers/iio/imu/inv_icm42600/inv_icm42600_spi.c
-@@ -64,7 +64,7 @@ static int inv_icm42600_probe(struct spi_device *spi)
- 	if (IS_ERR(regmap))
- 		return PTR_ERR(regmap);
- 
--	return inv_icm42600_core_probe(regmap, chip, spi->irq,
-+	return inv_icm42600_core_probe(regmap, chip,
- 				       inv_icm42600_spi_bus_setup);
- }
- 
+pw-bot: cr
 
--- 
-2.49.0
+>         if (got <=3D 0) {
+>                 *value =3D 0;
+> +               close(fd);
+>                 return;
+>         }
+>         buf[got] =3D 0;
+> diff --git a/tools/testing/selftests/bpf/prog_tests/sk_assign.c b/tools/t=
+esting/selftests/bpf/prog_tests/sk_assign.c
+> index 0b9bd1d6f7cc..10a0ab954b8a 100644
+> --- a/tools/testing/selftests/bpf/prog_tests/sk_assign.c
+> +++ b/tools/testing/selftests/bpf/prog_tests/sk_assign.c
+> @@ -37,8 +37,10 @@ configure_stack(void)
+>         tc =3D popen("tc -V", "r");
+>         if (CHECK_FAIL(!tc))
+>                 return false;
+> -       if (CHECK_FAIL(!fgets(tc_version, sizeof(tc_version), tc)))
+> +       if (CHECK_FAIL(!fgets(tc_version, sizeof(tc_version), tc))) {
+> +               pclose(tc);
 
+this one looks good
 
+>                 return false;
+> +       }
+>         if (strstr(tc_version, ", libbpf "))
+>                 prog =3D "test_sk_assign_libbpf.bpf.o";
+>         else
+> --
+> 2.43.0
+>
