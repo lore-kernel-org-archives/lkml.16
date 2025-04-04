@@ -1,45 +1,46 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2077.outbound.protection.outlook.com [40.107.244.77])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2048.outbound.protection.outlook.com [40.107.243.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99B459475;
-	Fri,  4 Apr 2025 00:18:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C06033AC17;
+	Fri,  4 Apr 2025 00:18:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.48
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743725931; cv=fail; b=qdf7yJSdF/nFetsHNln4gAa+8+kii7dh+K4/xxVayYf5kZMwTKpBrsCb2Uu8bI+IYI6fPEW0R/rzHlvvY8vlfPJCJzY4d/slixBFOj4+7hzdjwRjyOJADd20rj9GpcEw9c7wfg+6Vsm+8kVkT7MbNViydf9yMvlkbv/yZN/5a7Y=
+	t=1743725940; cv=fail; b=oizK2ep/44NmE+0dFux47SccMititWH/Ph1BwlOqou1IaZwjErzYlOTR4xBjGs/1vmtmA/n25zgW/A2tgdiGNfyjj18Fp709gZgl7jl9q+9PEURlWwhb3FH078mBJKpJ/o9LCqXcRMY0DZj9tRuxiJUhEoFyQw2Z38pERLzAFJQ=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743725931; c=relaxed/simple;
-	bh=QMdCjhe97tl9V582KJLYjo/ZoFScnEJMUNX5iuX8AIo=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=sCapQAJRtfgkBTp1dlRJWAOWdJfZBZ59dMmwzIio8NpnOD1yHX809/FbatRyFJ7qVvVQFTQ0ofxH0NRdhWfXrGxbPjNI9+59+T0tVgsuyR92ofbW/eKpUxEuUbZ+VJOfQ6iFFmI+mJKBqV/mf9krcWrBVTIdfH9Xi1c13CnekYE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=bSkD9s/Z; arc=fail smtp.client-ip=40.107.244.77
+	s=arc-20240116; t=1743725940; c=relaxed/simple;
+	bh=F3uukRERJW3JhEOTTVV1sBpStZNJpo4aicMGuybGboI=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=k3w0JcgJer5jTlW9EVhSatMPzQSai6XvMGDp5gf3/95ivZKU1svpMV9b6Iw4xXTmU90wTMksrM7jdvo7o1H7765dBXAN5M+4smAo8rzNj083dULeKas4PgDiDI5TsQBeYi+A+Ls+Oiy/2h0Kmm0iXKOsWY+6AL9bbSaO2kUQYcU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=XPxgS0y+; arc=fail smtp.client-ip=40.107.243.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="bSkD9s/Z"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="XPxgS0y+"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=tdDwraagKARoO/5ncH+paB9eRxn96lmcFcHp2ZFp4TDr2ZQy7q+FAxQgFG95kTXFKLLBvaGnsQsv4vRVGOCdByWE7Jnm6wr+Xv4WWXi4e9FK15VR8zcbpfPMC1/DYgjOastTtLL+tAyTRVhnXoJmfOOufZjRIfQ+lUvza+Uss2QW39C2KYDWOZ9D1qNSKClku/TrTRsdVqcKXZOxh0RhY08RX8H6q9pZ2OKQAS3rHN1C+jV+B9f318E8WgVZGpqEzaXui+GcP7/NlNGr5fWb6O4uFtck6uC8UTjb/8RIwJRH8tUJu8VrQH4nGaybOzcPQzBmiVDRg+abXgbBUfFnHw==
+ b=YGK/LzDOooksqwddupgbbUMcMAjX6Q9JwpL/Ey/45sIvPfT4s+0GAhpNr+0Z2zCHCZpLRI9vRIxDKE1Q8I0Kb0fMuQHdjrbZqzxeSMPgycmcjiDSfZTnbBfeAtStwrms1WE0+gNPpMapm6+hkBbuPEu84V8v33+L1ODZVe/CXXaUk0fIA/vMUVFx5x9C5LtLeQYqsGdcQHS1Ny1Qte6n8urEAmM4tB/M1ePFgWAwJCUXJmj5qiF8YJ74kZIzaWa0MdiKn46cvrW7A0YoPEwBgljlVb9Pjj/M1uCBX7isqZUnEnEWg8DnqXecxNeEuObZzddpHOrv5kXJPgKD6SIo3Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=KK51DT2+xcgV8nILjq7rLmvM9pKvURHL+PwXZ5dM9DE=;
- b=B/iGM2qBWVfBUf1oBRdoMRClnzHJ4NjGj9yvfhytxyP6D8xVsQqm52tpzxU2WS7nb6pBhkaUSzXdIUWwZY4EKz8JEkrC1uXSiwDSixDGJHUPXR0bkFoEsyQydxAidk//vWEIuio0AKln61iWVod1tqtA8dckjVpnEktkvf4+lvo8dMmHgk+UrAHahvm5Bbda9MvihRvuisNkCD3LZ56fYCoDsJfE1/OwYsgzUtHWeK4bNB//GWeMHu384X19hLWqvkfLpGJ/JbfU5zNcryRa+LlmiRNIbPR2rImaOWZ64Pi0+evcpJemBLAl5g2tyWdvAMLAaQzDt0tvgmsaViNgiw==
+ bh=0OMOou6oSwhFqONDv35RrMsA/Y1PwTPTQJAIv6OMAkU=;
+ b=wXd0kFUPKbbH58i38DW/JPXIYXnvaQVfwZiPy75IyYd3XB4fPUM4r7DbmWGHZPgobLR1bypujCN4B6lbHCGofA26H0An3RxD6+TYVUnzMCjJ9MyVvrHTAniOw8s/fl6MxHPjWOpZDoCTwXqwWD4CBq18SEonHGSCViUAme1eYLoCf6PatONlt0HM1IxKiPdSN7ypf0kKBKmDuPR3iHMLuneyxjBcOlM09d34/9Warlz5R/Bb+nDCqlc+BPFKTAXs1KHHFES5NcHpWokfLeRwxd7AxwINGrq1DBsALiwcYVtI5T8Y39Z9SJgOINDLr4m7ISwUDOrb/om2U35mLrnj8g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KK51DT2+xcgV8nILjq7rLmvM9pKvURHL+PwXZ5dM9DE=;
- b=bSkD9s/ZGyjYRHBkX00C54KXFdpme4wQUOLwHsQRiPcvBYB6+7kQdT8WF7YOeLQzhkgCWQUhbha3TEvFZq+2zwIJ3DUPR+PTU/xto+RXx4WwKVL+rLz23zJn/FVz54G4F8+bdu2HD41m1G2sbes9mlJTofg2cr+CagjC1sRPrn8=
-Received: from SJ0PR03CA0083.namprd03.prod.outlook.com (2603:10b6:a03:331::28)
- by SN7PR12MB8435.namprd12.prod.outlook.com (2603:10b6:806:2e2::11) with
+ bh=0OMOou6oSwhFqONDv35RrMsA/Y1PwTPTQJAIv6OMAkU=;
+ b=XPxgS0y+eOfKNngF9C6RUHq+nF0DCb/krzgftnLN35vjSwUxjIzLZ9qNz1FQdm84VHmhXug5uWTzUJqDYpxaC0e98utWDj9+GzFF/KIAStPmJ1rzbaibMm3+nc3cAgUpbmSOZMP3fLt9ZQkApqh/DgImhmBNoUZWBT4b0jjuLsk=
+Received: from BY5PR03CA0020.namprd03.prod.outlook.com (2603:10b6:a03:1e0::30)
+ by SJ0PR12MB6782.namprd12.prod.outlook.com (2603:10b6:a03:44d::10) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Fri, 4 Apr
- 2025 00:18:45 +0000
-Received: from MWH0EPF000971E3.namprd02.prod.outlook.com
- (2603:10b6:a03:331:cafe::1f) by SJ0PR03CA0083.outlook.office365.com
- (2603:10b6:a03:331::28) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8583.41 via Frontend Transport; Fri,
- 4 Apr 2025 00:18:44 +0000
+ 2025 00:18:54 +0000
+Received: from MWH0EPF000971E5.namprd02.prod.outlook.com
+ (2603:10b6:a03:1e0:cafe::8f) by BY5PR03CA0020.outlook.office365.com
+ (2603:10b6:a03:1e0::30) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8511.18 via Frontend Transport; Fri,
+ 4 Apr 2025 00:18:54 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -47,13 +48,13 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- MWH0EPF000971E3.mail.protection.outlook.com (10.167.243.70) with Microsoft
+ MWH0EPF000971E5.mail.protection.outlook.com (10.167.243.73) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8606.22 via Frontend Transport; Fri, 4 Apr 2025 00:18:44 +0000
+ 15.20.8606.22 via Frontend Transport; Fri, 4 Apr 2025 00:18:53 +0000
 Received: from bmoger-ubuntu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 3 Apr
- 2025 19:18:41 -0500
+ 2025 19:18:50 -0500
 From: Babu Moger <babu.moger@amd.com>
 To: <tony.luck@intel.com>, <reinette.chatre@intel.com>,
 	<peternewman@google.com>
@@ -71,741 +72,224 @@ CC: <corbet@lwn.net>, <tglx@linutronix.de>, <mingo@redhat.com>,
 	<mario.limonciello@amd.com>, <linux-doc@vger.kernel.org>,
 	<linux-kernel@vger.kernel.org>, <maciej.wieczor-retman@intel.com>,
 	<eranian@google.com>
-Subject: [PATCH v12 00/26] x86/resctrl : Support AMD Assignable Bandwidth Monitoring Counters (ABMC)
-Date: Thu, 3 Apr 2025 19:18:09 -0500
-Message-ID: <cover.1743725907.git.babu.moger@amd.com>
+Subject: [PATCH v12 01/26] x86/resctrl: Introduce mbm_total_cfg and mbm_local_cfg in struct rdt_hw_mon_domain
+Date: Thu, 3 Apr 2025 19:18:10 -0500
+Message-ID: <bbe371a2025d6f0bcd9151a9a4311f504c5a6a21.1743725907.git.babu.moger@amd.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <cover.1743725907.git.babu.moger@amd.com>
+References: <cover.1743725907.git.babu.moger@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MWH0EPF000971E3:EE_|SN7PR12MB8435:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3de90207-a763-4ad2-4e78-08dd730e42fa
+X-MS-TrafficTypeDiagnostic: MWH0EPF000971E5:EE_|SJ0PR12MB6782:EE_
+X-MS-Office365-Filtering-Correlation-Id: b57b2c74-93e6-4d08-8469-08dd730e4877
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|376014|7416014|82310400026|1800799024|13003099007;
+	BCL:0;ARA:13230040|82310400026|1800799024|7416014|376014|36860700013;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?SVB0cWtCV09TaXhNTWhENzhOSmQvMEpPcFF1cy9ReGxaWCt5ME03b1dnYXZT?=
- =?utf-8?B?bXdmY0Z3aGk4eHg5U3hxKzhWZnJxamhzSEo0TkJOb0MvWmMvalJqZDJacUZs?=
- =?utf-8?B?Vm9VVVdhMWsvK1hVSjIvR1BzRnpwM3MwWlBGejdVTmhHL3ZKb1RlYXdCRVl5?=
- =?utf-8?B?TnFZQlRDenJzc2ZwZzI1NWF5Y29FL2J6Nmd3T0pYMTBmYWpaUUM1VnY3azFl?=
- =?utf-8?B?R2U4cEY5cHFsZnczWGUyVGo5N3NKSUVTRndrOE54UFAxdmZydG5maGhadGNB?=
- =?utf-8?B?L05xSDFSMHlENlU2VWo1VXczZU8rVm8wSVphTGRKY1RMR2xwS0Q4TUZZWVRv?=
- =?utf-8?B?MHg4YmNETXU4T1lLalVqQVlTT0dwVlFpTXB1d2doNUpibDJoc2tjSHZLQkFt?=
- =?utf-8?B?ZGVTcGNuVUVSMmxQVFM5UGdrdURCSmM5Vm9TWU1ZSVhRUEQyNVJzVWVhd25m?=
- =?utf-8?B?cUx2RjhvQngwVVpndU1FeUI2ZnZDdU9VSERyU0h5Yk8zSDRqZmZ3QStDbFVV?=
- =?utf-8?B?TElCY1MrdHlxeU9hOW00SHlKK3ZuZWlqUU5qdTdYOUZURGNGWnY5VUV0Zm1X?=
- =?utf-8?B?NkJvL1dCVkVnSWFGQlYxZ3FQT2FmWnhMUWMxS0FObXZDSG5pajNMNEQyT2I0?=
- =?utf-8?B?SUZISGUyQ2VKTmZUN2JNUWJQUk1JRHVqMkRHTXJGdDZVRklRckNNSWJNSGV6?=
- =?utf-8?B?bVZGME1KVThzTE9JQUo0bXpDd0R6RU9QWEdsV1JMZnhnWkd6UmxEZGlsUkty?=
- =?utf-8?B?allaN3ZHY013b2kyWExRSHJGTm1nWXVPemdhM2RubzlZOWZ0SjZJRmU3TG4y?=
- =?utf-8?B?emZ6MUJvVFdrYTJ6MnZQaTdiRFl1d2lZMmJBN1UxVDN1Ui9lbGdPb1FCWVlN?=
- =?utf-8?B?b0dtMVE4MVhIL3NiVE1PQmZkckhOanBaOG9rd1gralo1MldpeituU3UyRkJ0?=
- =?utf-8?B?b1VnbmZteTVGazhsVXMwbGRibWNrRnFwK2xpcDBxWkJCb01PQW1ONGZTaHRM?=
- =?utf-8?B?azdvSm5lNE45bFZjUXJrdERSbUYvM3gyM0pPQ0F5NXM2eEs5SzZhTG9VT2Fu?=
- =?utf-8?B?bngxSjFJSzNmWDRsbVR6VDZuWm5VeVhkQytnUUtyaHhYdEdITWxiU1RrSkVX?=
- =?utf-8?B?Y0E0M2RVMTc1OWZQTHd0MG9JdWV5MTNZRDE3dWhVZ3VLNXlvYUMzdDRYWmtB?=
- =?utf-8?B?a1lpQnJJUFVzNHVKMGEyZTdSZmI1cnlhNVdTeldjUml0ZmdTaFFlc0dvRU1S?=
- =?utf-8?B?RjJjbVJlaGpVK3lBV1NkQlBJTVNJaHJTei9MVHdVY2c4M21IZDdMMnhCVU9n?=
- =?utf-8?B?UUI4VjRjREtxMHBlR2VweFYyQk04bzBCNjVpbVE0OGY3MThuOVcrZ3NjNmtJ?=
- =?utf-8?B?ejg2b3dQQTRMVXBrMmxtYW11RG1SUXFhSEJYLzZhYS9wUi94QkFOOWxCZzBB?=
- =?utf-8?B?MDNHRC8vYnVnL3FmeHl3cG5kMVhESmMxVFhOOGpnL2tqUTVuNjhtRm5icWE2?=
- =?utf-8?B?RHB3K0VrWVlVWTlLb0lzeGFZR1ZGREF4cWpjS0pxRDUwTjVjbEVlNDQ2cGdW?=
- =?utf-8?B?SUV2bnRrMTVQemxtRG9xM05NQ3AxVGw3WHhTK1JCSU9WQWplZ2I3aVd1WDFH?=
- =?utf-8?B?QXc5U0xwQnpOQVVRcDVJdURvV2dubjBhREgxbHVaTVNhdUNQNHB3VFFZb2sv?=
- =?utf-8?B?SGRDcFpmVUUybjZKODJ1T1JTb3Vsa0FSVkVvYVdsNFZzaFRsOWM3bVdMUk9Z?=
- =?utf-8?B?SDJDZU1HZysyUmhVZGFmcHZrSG1nbWVOVm9TU0hNMUhab3AvOHVRTzBUWENh?=
- =?utf-8?B?aWZxQlczcExUOTJLaUJPWkNkNm5tdGttK3c4YVVJaVpRZnBPb1Z0SjZkWWY3?=
- =?utf-8?B?WTdSTVl5MnlHSHZoOWV0Zi9VQVhVTkFxZlFiUTU4aHlxbkxaOG5pOEx1WUZC?=
- =?utf-8?B?NGYwMTBhUFFVYkVGaTQxSnN6K0VHczNSM25LQzdtTS9iVUJ1ZlU1TWM0Wm9P?=
- =?utf-8?Q?+sPlykFPuWEVmUjITl9bEaP/YNDqmQ=3D?=
+	=?us-ascii?Q?80mOi6xXvn0aoCJGFYdwMDiFqwANIhDcqyV2Sz8T+Ukp2hz+e1j1qyS/pxne?=
+ =?us-ascii?Q?0nXpl1SL1Uqfykz+GEugKHpF6tiH3Tqw4tKXM3WSLiYU5A3zH4XMjhd4fBZ3?=
+ =?us-ascii?Q?6Y0pkFuQrqmJxcblgMbsgYIcuRr552VePqjjtxlwete/kfS4Y1//r2mIzK+q?=
+ =?us-ascii?Q?5ex327Qdp9BBRSiG50wgtxMRCvFk57di7OOjX+BToIrWxRMUD7+TKNDRIiwl?=
+ =?us-ascii?Q?Jr6FpZkgjILSQ+yKnR4XOdeyYWlsGP+NcG590LcVaEIQ7CSmJQ9ewPGFezb2?=
+ =?us-ascii?Q?qQJ0y7YuX+xlyRQgx9zgUzzLkaB4Z7IOVo0IyG/PeN2gnb5wYENaCLYfU+CV?=
+ =?us-ascii?Q?8Qz3zkBYDLV8czU/A62DYL2mB3owrsHScMddyrhp/ooMojGp0Z/tA3U+G5Oj?=
+ =?us-ascii?Q?LVTOeIWu2EIUvoVHRKlIFZ4QbaiaM+Mm54JdLBKek88DWPYT48DBWYt/pG2L?=
+ =?us-ascii?Q?C724qaFtvJ2/aY3F4O+Yzo8QfITLwWeDpYZXqcoiAwkq2ReIBA6U3lBrsqdt?=
+ =?us-ascii?Q?plZZuIkyny6JorYpEXu0aOrDIUGb+ODOTFSVrmtJYVL2/YKp02J7qFtJNBGJ?=
+ =?us-ascii?Q?3ZCpTBdsM6TxGMtuIDY7DeAFnfe6W8Jnqx6PMqFUAGyk52V+lg/nFhLm9pBQ?=
+ =?us-ascii?Q?+CTejge3C3nAUkDlxtjyeYSV/+ERCM2wUKHouAVSnqPtPrRvVJJdxxCeHF7z?=
+ =?us-ascii?Q?4G/zezD79JtF+YFORQdHgA/Eh7XBF5iYSKonFeyCFRILezJHqJVSRUeoAgoW?=
+ =?us-ascii?Q?z8FucLaxYBiz8o0z7n0MkS5Ew2sd4A0IgrS8C4/k2csdhSL28gqJ572coVuq?=
+ =?us-ascii?Q?eqABcY73B+bD7oH4cJ9zLckGfnS2JHGAikiDwazEULZuQurgcj5NeTT1SS2j?=
+ =?us-ascii?Q?aQAiUZJTBcdnXxaLzegxOlD2O2rpsqqQNGS9dcksuys0XEdDyIZ+Ep973Io/?=
+ =?us-ascii?Q?hDD7xWS2MNwGCSzs6P2eHZbdfLiAiCVdeO2Dihw0rKsei9gBag3Gle3Q7GAs?=
+ =?us-ascii?Q?lrmRBBjNt/43Fy5clyaz4W4AygCHwkwUicN0PXbS5GWNG/yOuUmNh51XLmbP?=
+ =?us-ascii?Q?/uTmzXvsGM2uZ4A38uRsO3mYhP0uR5rY/FF+V7KKNMAtcJAJHddhYll5UUXC?=
+ =?us-ascii?Q?yIaycG5XeH4g9B+9f5VNVkoNgUdMp5wkUE+TDWgbZi2Qby+zvdBeJnEB4Gtg?=
+ =?us-ascii?Q?+sr6rs3dx4398F7ANwvVxpiU7l+gwPp47Jv4F6oI8zmpSqF/pT0p7aTlhZ4d?=
+ =?us-ascii?Q?41RcKth/InGJnsWbJ6tp54jrl39QAa+zrWEx89Ns1G/zaa4t9aqGSBTvWyIf?=
+ =?us-ascii?Q?EzqJ1gDO0bts7bORFNXM1benTQ7bWC6oXN3UY+lQacx1ExpbHDo32/tyZv9z?=
+ =?us-ascii?Q?3NzMlYR5JzVljnLc2jNW3bHsKJxjyOKNSZFGRhlMsrcYJx08x9SU5f8oFNBx?=
+ =?us-ascii?Q?fvgiYmg9PEvIlDULgGqN7W5iqEMh+lrV2zlIOfmpCvltIbzz5ZvOqAXFOiQ1?=
+ =?us-ascii?Q?BfcdyTAtTqbV1+M=3D?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(376014)(7416014)(82310400026)(1800799024)(13003099007);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(7416014)(376014)(36860700013);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Apr 2025 00:18:44.5352
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Apr 2025 00:18:53.7444
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3de90207-a763-4ad2-4e78-08dd730e42fa
+X-MS-Exchange-CrossTenant-Network-Message-Id: b57b2c74-93e6-4d08-8469-08dd730e4877
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	MWH0EPF000971E3.namprd02.prod.outlook.com
+	MWH0EPF000971E5.namprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB8435
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB6782
 
+If the BMEC (Bandwidth Monitoring Event Configuration) feature is
+supported, the bandwidth events can be configured to track specific
+events. The event configuration is domain specific. Event configurations
+are not stored in resctrl but instead always read from or written to
+hardware directly when prompted by user space.
 
-This series adds the support for Assignable Bandwidth Monitoring Counters
-(ABMC). It is also called QoS RMID Pinning feature
+Read the event configuration from the hardware during domain
+initialization and store the configuration value in the rdt_hw_mon_domain
+structure for later use when the user requests to display it.
 
-Series is written such that it is easier to support other assignable
-features supported from different vendors.
-
-The feature details are documented in the  APM listed below [1].
-[1] AMD64 Architecture Programmer's Manual Volume 2: System Programming
-Publication # 24593 Revision 3.41 section 19.3.3.3 Assignable Bandwidth
-Monitoring (ABMC). The documentation is available at
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=206537
-
-The patches are based on top of commit
-bab03103a34f1 Merge branch into tip/master: 'x86/sev'
-
-# Introduction
-
-Users can create as many monitor groups as RMIDs supported by the hardware.
-However, bandwidth monitoring feature on AMD system only guarantees that
-RMIDs currently assigned to a processor will be tracked by hardware.
-The counters of any other RMIDs which are no longer being tracked will be
-reset to zero. The MBM event counters return "Unavailable" for the RMIDs
-that are not tracked by hardware. So, there can be only limited number of
-groups that can give guaranteed monitoring numbers. With ever changing
-configurations there is no way to definitely know which of these groups
-are being tracked for certain point of time. Users do not have the option
-to monitor a group or set of groups for certain period of time without
-worrying about counter being reset in between.
-    
-The ABMC feature provides an option to the user to assign a hardware
-counter to an RMID, event pair and monitor the bandwidth as long as it is
-assigned.  The assigned RMID will be tracked by the hardware until the user
-unassigns it manually. There is no need to worry about counters being reset
-during this period. Additionally, the user can specify a bitmask identifying
-the specific bandwidth types from the given source to track with the counter.
-
-Without ABMC enabled, monitoring will work in current 'default' mode without
-assignment option.
-
-# History
-
-Previous implementation of ABMC had dependancy on BMEC (Bandwidth Monitoring
-Event Configuration). Peter had concerns with that implementation because
-it may be not be compatible with ARM's MPAM.
-
-Here are the threads discussing the concerns and new interface to address the concerns.
-https://lore.kernel.org/lkml/CALPaoCg97cLVVAcacnarp+880xjsedEWGJPXhYpy4P7=ky4MZw@mail.gmail.com/
-https://lore.kernel.org/lkml/CALPaoCiii0vXOF06mfV=kVLBzhfNo0SFqt4kQGwGSGVUqvr2Dg@mail.gmail.com/
-
-Here are the finalized requirements based on the discussion:
-
-*   Remove BMEC dependency on the ABMC feature.
-
-*   Eliminate global assignment listing. The interface
-    /sys/fs/resctrl/info/L3_MON/mbm_assign_control is no longer required.
-
-*   Create the configuration directories at /sys/fs/resctrl/info/L3_MON/counter_configs/.
-    The configuration file names should be free-form, allowing users to create them as needed.
-
-*   Perform assignment listing at the group level by introducing mbm_L3_assignments
-    in each monitoring group. The listing should provide the following details:
-
-    Event Configuration: Specifies the event configuration applied. This will be crucial
-    when "mkdir" on event configuration is added in the future, leading to the creation
-    of mon_data/mon_l3_*/<event configuration>.
-
-    Domains: Identifies the domains where the configuration is applied, supporting multi-domain setups.
-
-    Assignment Type: Indicates whether the assignment is Exclusive (e or d), Shared (s), or Unassigned (_).
-
-*   Provide option to enable or disable auto assignment when new group is created.
-
-This series tries to address all the requirements listed above.
-
-# Implementation details
-
-Create a generic interface aimed to support user space assignment of scarce
-counters used for monitoring. First usage of interface is by ABMC with option
-to expand usage to "soft-ABMC" and MPAM counters in future.
-
-Feature adds following interface files:
-
-/sys/fs/resctrl/info/L3_MON/mbm_assign_mode: Reports the list of assignable
-monitoring features supported. The enclosed brackets indicate which
-feature is enabled.
-
-/sys/fs/resctrl/info/L3_MON/num_mbm_cntrs: Reports the number of monitoring
-counters available for assignment.
-
-/sys/fs/resctrl/info/L3_MON/available_mbm_cntrs: Reports the number of monitoring
-counters free in each domain.
-
-/sys/fs/resctrl/info/L3_MON/counter_configs : Directory to hold the counter configuration.
-
-/sys/fs/resctrl/info/L3_MON/counter_configs/mbm_total_bytes/event_filter : Default configuration
-for MBM total events.
-
-/sys/fs/resctrl/info/L3_MON/counter_configs/mbm_local_bytes/event_filter : Default configuration
-for MBM local events.
-
-/sys/fs/resctrl/mbm_L3_assignments: Interface to list or modify assignment states on each group.
-
-# Examples
-
-a. Check if ABMC support is available
-	#mount -t resctrl resctrl /sys/fs/resctrl/
-
-	# cat /sys/fs/resctrl/info/L3_MON/mbm_assign_mode
-	[mbm_cntr_assign]
-	default
-
-	ABMC feature is detected and it is enabled.
-
-b. Check how many ABMC counters are available. 
-
-	# cat /sys/fs/resctrl/info/L3_MON/num_mbm_cntrs 
-	32
-
-c. Check how many ABMC counters are available in each domain.
-
-	# cat /sys/fs/resctrl/info/L3_MON/available_mbm_cntrs 
-	0=30;1=30
-
-d. Check default counter configuration.
-
-	# cat /sys/fs/resctrl/info/L3_MON/counter_configs/mbm_total_bytes/event_filter 
-	local_reads, remote_reads, local_non_temporal_writes, remote_non_temporal_writes,
-        local_reads_slow_memory, remote_reads_slow_memory, dirty_victim_writes_all
-
-	# cat /sys/fs/resctrl/info/L3_MON/counter_configs/mbm_local_bytes/event_filter 
-	local_reads, local_non_temporal_writes, local_reads_slow_memory
-
-e. Series adds a new interface file "mbm_L3_assignments" in each monitoring group
-   to list and modify any group's monitoring states.
-
-	The list is displayed in the following format:
-
-        <Event configuration>:<Domain id>=<Assignment type>
-
-        Event configuration: A valid event configuration listed in the
-        /sys/fs/resctrl/info/L3_MON/counter_configs directory.
-
-        Domain ID: A valid domain ID number.
-
-        Assignment types:
-
-        _ : No event configuration assigned
-
-        e : Event configuration assigned in exclusive mode
-
-	Initial group status:
-	# cat /sys/fs/resctrl/mbm_L3_assignments
-	mbm_total_bytes:0=e;1=e
-	mbm_local_bytes:0=e;1=e
-
-	To unassign the configuration of mbm_total_bytes on domain 0:
-	#echo "mbm_total_bytes:0=_" > mbm_L3_assignments
-	#cat mbm_L3_assignments
-	mbm_total_bytes:0=_;1=e
-	mbm_local_bytes:0=e;1=e
-
-	To unassign the mbm_total_bytes configuration on all domains:
-    	$echo "mbm_total_bytes:*=_" > mbm_L3_assignments
-	$cat mbm_L3_assignments
-	mbm_total_bytes:0=_;1=_
-	mbm_local_bytes:0=e;1=e
-
-	To assign the mbm_total_bytes configuration on all domains in exclusive mode:
-    	$echo "mbm_total_bytes:*=e" > mbm_L3_assignments
-	$cat mbm_L3_assignments
-	mbm_total_bytes:0=e;1=e
-	mbm_local_bytes:0=e;1=e
-
-g. Read the events mbm_total_bytes and mbm_local_bytes of the default group.
-   There is no change in reading the events with ABMC. If the event is unassigned
-   when reading, then the read will come back as "Unassigned".
-	
-	# cat /sys/fs/resctrl/mon_data/mon_L3_00/mbm_total_bytes
-	779247936
-	# cat /sys/fs/resctrl/mon_data/mon_L3_00/mbm_local_bytes 
-	765207488
-	
-h. Check the default event configurations.
-
-	#cat /sys/fs/resctrl/info/L3_MON/counter_configs/mbm_total_bytes/event_filter
-	local_reads, remote_reads, local_non_temporal_writes, remote_non_temporal_writes,
-	local_reads_slow_memory, remote_reads_slow_memory, dirty_victim_writes_all
-
-	#cat /sys/fs/resctrl/info/L3_MON/counter_configs/mbm_local_bytes/event_filter
-	local_reads, local_non_temporal_writes, local_reads_slow_memory
-
-i. Change the event configuration for mbm_local_bytes.
-
-	#echo "local_reads, local_non_temporal_writes, local_reads_slow_memory, remote_reads" >
-	/sys/fs/resctrl/info/L3_MON/counter_configs/mbm_local_bytes/event_filter
-
-	#cat /sys/fs/resctrl/info/L3_MON/counter_configs/mbm_local_bytes/event_filter
-	local_reads, local_non_temporal_writes, local_reads_slow_memory, remote_reads
-	
-        This will update the assignments where mbm_local_bytes are configured.
-	
-j. Now read the total event again. The first read may come back with "Unavailable"
-   status. The subsequent read of mbm_total_bytes will display only the read events.
-	
-	#cat /sys/fs/resctrl/mon_data/mon_L3_00/mbm_total_bytes
-	Unavailable
-	#cat /sys/fs/resctrl/mon_data/mon_L3_00/mbm_total_bytes
-	314101
-
-k. Users will have the option to go back to 'default' mbm_assign_mode if required.
-   This can be done using the following command. Note that switching the
-   mbm_assign_mode will reset all the MBM counters of all resctrl groups.
-
-	# echo "default" > /sys/fs/resctrl/info/L3_MON/mbm_assign_mode
-	# cat /sys/fs/resctrl/info/L3_MON/mbm_assign_mode
-	mbm_cntr_assign
-	[default]
-	
-l. Unmount the resctrl
-	 
-	#umount /sys/fs/resctrl/
+Signed-off-by: Babu Moger <babu.moger@amd.com>
 ---
-v12:
-   This version is kind of RFC series with a new interface.
-   
-   Removed Reviewed-by tag on few patches when the patch has changed.
+v12: Fixed the conflicts due to recent merge.
+     This patch is for BMEC and there is no dependancy on ABMC feature.
+     Moved it earlier.
 
-   Moved BMEC related patches (1 and 2) to beginning of the series.
-   Removed the dependancy on BMEC to ABMC feature.
+v11: Resolved minor conflicts due to code displacement. Actual code didnt
+     change.
 
-   Removed the un-necessary initialization of mon_config_info structure.
-   Changed wrmsrl instead of wrmsr to address the below comment.
-   https://lore.kernel.org/lkml/0fc8dbd4-07d8-40bd-8eec-402b48762807@zytor.com/
+v10: Conflicts due to code displacement. Actual code didnt change.
 
-   Fixed the conflicts due to recent changes in rdt_resource data structure.
-   Added new mbm_cfg_mask field to resctrl_mon.
-   
-   Added the code to reset arch state inside _resctrl_abmc_enable().
+v9: Added Reviewed-by tag. No other changes.
 
-   Added the check CONFIG_RESCTRL_ASSIGN_FIXED to take care of arm platforms.
-   This will be defined only in arm and not in x86.
+v8: Renamed resctrl_mbm_evt_config_init() to arch_mbm_evt_config_init()
+    Minor commit message update.
 
-   Changed the code to display the max supported monitoring counters in each domain.
-   
-   Fixed the struct mbm_cntr_cfg code documentation.
-   Moved the struct mbm_cntr_cfg definition to resctrl/internal.h as suggested by James.
+v7: Fixed initializing INVALID_CONFIG_VALUE to mbm_local_cfg in case of error.
 
-   Replaced seq_puts(s, ";") with seq_putc(s, ';');
-   Added missing rdt_last_cmd_clear() in resctrl_available_mbm_cntrs_show().
+v6: Renamed resctrl_arch_mbm_evt_config -> resctrl_mbm_evt_config_init
+    Initialized value to INVALID_CONFIG_VALUE if it is not configurable.
+    Minor commit message update.
 
-   Added the check to reset the architecture-specific state only when assign is requested.
+v5: Exported mon_event_config_index_get.
+    Renamed arch_domain_mbm_evt_config to resctrl_arch_mbm_evt_config.
 
-   Added evt_cfg as the parameter to resctrl_arch_config_cntr() as the user will
-   be passing the event configuration from /info/L3_MON/event_configs/.
+v4: Read the configuration information from the hardware to initialize.
+    Added few commit messages.
+    Fixed the tab spaces.
 
-   Changed the check in resctrl_alloc_config_cntr() to reduce the indentation.
-   Fixed the handling error on first failure while assigning.
-   Added new parameter event configuration (evt_cfg) to get the event configuration from user space.
+v3: Minor changes related to rebase in mbm_config_write_domain.
 
-   Added tte support for reading ABMC counters. This is bit involved change and affects lots of code.
+v2: No changes.
+---
+ arch/x86/kernel/cpu/resctrl/core.c     |  2 ++
+ arch/x86/kernel/cpu/resctrl/internal.h |  9 +++++++++
+ arch/x86/kernel/cpu/resctrl/monitor.c  | 26 ++++++++++++++++++++++++++
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c |  2 +-
+ 4 files changed, 38 insertions(+), 1 deletion(-)
 
-   New patch to support event configurations via new counter_configs method.
-
-   Removed mbm_cntr_reset() as it is not required while removing the group.
-
-   Added new patch to handle auto assign on group creation ("mbm_assign_on_mkdir")
-
-   Added couple of patches add interface for "mbm_L3_assignments" on each mon group.
-
-   Introduced mbm_cntr_free_all() and resctrl_reset_rmid_all() to clear counters and
-   non-architectural states when monitor mode is changed.
-   https://lore.kernel.org/lkml/b60b4f72-6245-46db-a126-428fb13b6310@intel.com/
-
-   Moved the resctrl_arch_mbm_cntr_assign_set_one to domain_add_cpu_mon().
-
-   Patches 17, 18, 19, 20, 21, 23, 24 are completely new to address the new interface requirement.
-
-v11:
-   The commit 2937f9c361f7a ("x86/resctrl: Introduce resctrl_file_fflags_init() to initialize fflags")
-   is already merged. Removed from the series.
-   
-   Resolved minor conflicts due to code displacement in latest code.
+diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
+index cf29681d01e0..a28de257168f 100644
+--- a/arch/x86/kernel/cpu/resctrl/core.c
++++ b/arch/x86/kernel/cpu/resctrl/core.c
+@@ -558,6 +558,8 @@ static void domain_add_cpu_mon(int cpu, struct rdt_resource *r)
+ 		return;
+ 	}
  
-   Moved the monitoring related calls to monitor.c file when possible.
-   Moved some of the changes from include/linux/resctrl.h to arch/x86/kernel/cpu/resctrl/internal.h
-   as requested by Reinette. This changes will be moved back when arch and non code is separated.
-   
-   Renamed rdtgroup_mbm_assign_mode_show() to resctrl_mbm_assign_mode_show().
-   Renamed rdtgroup_num_mbm_cntrs_show() to resctrl_num_mbm_cntrs_show().
-
-   Moved the mon_config_info structure definition to internal.h.
-   Moved resctrl_arch_mon_event_config_get() and resctrl_arch_mon_event_config_set()
-   to monitor.c file.
-
-   Moved resctrl_arch_assign_cntr() and resctrl_abmc_config_one_amd() to monitor.c.
-   Added the code to reset the arch state in resctrl_arch_assign_cntr().
-   Also removed resctrl_arch_reset_rmid() inside IPI as the counters are reset from the callers.
-
-   Renamed rdtgroup_assign_cntr_event() to resctrl_assign_cntr_event().
-   Refactored the resctrl_assign_cntr_event().
-   Added functionality to exit on the first error during assignment.
-   Simplified mbm_cntr_free().
-   Removed the function mbm_cntr_assigned(). Will be using mbm_cntr_get() to
-   figure out if the counter is assigned or not.
-   
-   Renamed rdtgroup_unassign_cntr_event() to resctrl_unassign_cntr_event().
-   Refactored the resctrl_unassign_cntr_event().
-
-   Moved mbm_cntr_reset() to monitor.c.
-   Added code reset non-architectural state in mbm_cntr_reset().
-   Added missing rdtgroup_unassign_cntrs() calls on failure path.
-
-   Domain can be NULL with SNC support so moved the unassign check in rdtgroup_mondata_show().
-
-   Renamed rdtgroup_mbm_assign_mode_write() to resctrl_mbm_assign_mode_write().
-   Added more details in resctrl.rst about mbm_cntr_assign mode.
-   Re-arranged the text in resctrl.rst file in section mbm_cntr_assign.
-
-   Moved resctrl_arch_mbm_cntr_assign_set_one() to monitor.c
-
-   Added non-arch RMID reset in mbm_config_write_domain().
-   Removed resctrl_arch_reset_rmid() call in resctrl_abmc_config_one_amd(). Not required
-   as reset of arch and non-arch rmid counters done from the callers. It simplies the IPI code.
-
-   Fixed printing the separator after each domain while listing the group assignments.
-   Renamed rdtgroup_mbm_assign_control_show to resctrl_mbm_assign_control_show().
-
-   Fixed the static check warning with initializing dom_id in resctrl_process_flags()
-
-   Added change log in each patch for specific changes.
-
-v10:
-   Major change is related to domain specific assignment.
-   Added struct mbm_cntr_cfg inside mon domains. This will handle
-   the domain specific assignments as discussed in below.
-   https://lore.kernel.org/lkml/CALPaoCj+zWq1vkHVbXYP0znJbe6Ke3PXPWjtri5AFgD9cQDCUg@mail.gmail.com/
-   I did not see the need to add cntr_id in mbm_state structure. Not used in the code.
-   Following patches take care of these changes.
-   Patch 12, 13, 15, 16, 17, 18.
-   
-   Added __init attribute to cache_alloc_hsw_probe(). Followed function
-   prototype rules (preferred order is storage class before return type).
-   
-   Moved the mon_config_info structure definition to resctrl.h
-   
-   Added call resctrl_arch_reset_rmid() to reset the RMID in the domain inside IPI call
-   resctrl_abmc_config_one_amd.
-   
-   SMP and non-SMP call support is not required in resctrl_arch_config_cntr with new
-   domain specific assign approach/data structure.
-   
-   Assigned the counter before exposing the event files.
-   Moved the call rdtgroup_assign_cntrs() inside mkdir_rdt_prepare_rmid_alloc().
-   This is called both CNTR_MON and MON group creation.
-   
-   Call mbm_cntr_reset() when unmounted to clear all the assignments.
-   
-   Fixed the issue with finding the domain in multiple iterations in rdtgroup_process_flags().
-   
-   Printed full error message with domain information when assign fails.
-   
-   Taken care of other text comments in all the patches. Patch specific changes are in each patch.
-   
-   If I missed something please point me and it is not intentional.
-
-v9:
-   Patch 14 is a new addition. 
-   Major change in patch 24.
-   Moved the fix patch to address __init attribute to begining of the series.
-   Fixed all the call sequences. Added additional Fixed tags.
-
-   Added Reviewed-by where applicable.
-
-   Took care of couple of minor merge conflicts with latest code.
-   Re-ordered the MSR in couple of instances.
-   Added available_mbm_cntrs (patch 14) to print the number of counter in a domain.
-
-   Used MBM_EVENT_ARRAY_INDEX macro to get the event index.
-   Introduced rdtgroup_cntr_id_init() to initialize the cntr_id
-
-   Introduced new function resctrl_config_cntr to assign the counter, update
-   the bitmap and reset the architectural state.
-   Taken care of error handling(freeing the counter) when assignment fails.
-  
-   Changed rdtgroup_assign_cntrs() and rdtgroup_unassign_cntrs() to return void.
-   Updated couple of rdtgroup_unassign_cntrs() calls properly.
-
-   Fixed problem changing the mode to mbm_cntr_assign mode when it is
-   not supported. Added extra checks to detect if systems supports it.
-   
-   https://lore.kernel.org/lkml/03b278b5-6c15-4d09-9ab7-3317e84a409e@intel.com/
-   As discussed in the above comment, introduced resctrl_mon_event_config_set to
-   handle IPI. But sending another IPI inside IPI causes problem. Kernel
-   reports SMP warning. So, introduced resctrl_arch_update_cntr() to send the
-   command directly.
-
-   Fixed handling special case '//0=' and '//".
-   Removed extra strstr() call in rdtgroup_mbm_assign_control_write().
-   Added generic failure text when assignment operation fails.
-   Corrected user documentation format texts.
-
-v8:
-  Patches are getting into final stages. 
-  Couple of changes Patch 8, Patch 19 and Patch 23.
-  Most of the other changes are related to rename and text message updates.
-
-  Details are in each patch. Here is the summary.
-
-  Added __init attribute to dom_data_init() in patch 8/25.
-  Moved the mbm_cntrs_init() and mbm_cntrs_exit() functionality inside
-  dom_data_init() and dom_data_exit() respectively.
-
-  Renamed resctrl_mbm_evt_config_init() to arch_mbm_evt_config_init()
-  Renamed resctrl_arch_event_config_get() to resctrl_arch_mon_event_config_get().
-          resctrl_arch_event_config_set() to resctrl_arch_mon_event_config_set().
-
-  Rename resctrl_arch_assign_cntr to resctrl_arch_config_cntr.
-  Renamed rdtgroup_assign_cntr() to rdtgroup_assign_cntr_event().
-  Added the code to return the error if rdtgroup_assign_cntr_event fails.
-  Moved definition of MBM_EVENT_ARRAY_INDEX to resctrl/internal.h.
-  Renamed rdtgroup_mbm_cntr_is_assigned to mbm_cntr_assigned_to_domain
-  Added return error handling in resctrl_arch_config_cntr().
-  Renamed rdtgroup_assign_grp to rdtgroup_assign_cntrs.
-  Renamed rdtgroup_unassign_grp to rdtgroup_unassign_cntrs.
-  Fixed the problem with unassigning the child MON groups of CTRL_MON group.
-  Reset the internal counters after mbm_cntr_assign mode is changed.
-  Renamed rdtgroup_mbm_cntr_reset() to mbm_cntr_reset()
-  Renamed resctrl_arch_mbm_cntr_assign_configure to
-            resctrl_arch_mbm_cntr_assign_set_one.
-
-  Used the same IPI as event update to modify the assignment.
-  Could not do the way we discussed in the thread.
-  https://lore.kernel.org/lkml/f77737ac-d3f6-3e4b-3565-564f79c86ca8@amd.com/
-  Needed to figure out event type to update the configuration.
-
-  Moved unassign first and assign during the assign modification.
-  Assign none "_" takes priority. Cannot be mixed with other flags.
-  Updated the documentation and .rst file format. htmldoc looks ok.
-
-v7:
-   Major changes are related to FS and arch codes separation.
-   Changed few interface names based on feedback.
-   Here are the summary and each patch contains changes specific the patch.
-
-   Removed WARN_ON for num_mbm_cntrs. Decided to dynamically allocate the bitmap.
-   WARN_ON is not required anymore.
++	arch_mbm_evt_config_init(hw_dom);
++
+ 	list_add_tail_rcu(&d->hdr.list, add_pos);
  
-   Renamed the function resctrl_arch_get_abmc_enabled() to resctrl_arch_mbm_cntr_assign_enabled().
-
-   Merged resctrl_arch_mbm_cntr_assign_disable, resctrl_arch_mbm_cntr_assign_disable
-   and renamed to resctrl_arch_mbm_cntr_assign_set(). Passed the struct rdt_resource
-   to these functions.
-
-   Removed resctrl_arch_reset_rmid_all() from arch code. This will be done from FS the caller.
-
-   Updated the descriptions/commit log in resctrl.rst to generic text. Removed ABMC references.
-   Renamed mbm_mode to mbm_assign_mode.
-   Renamed mbm_control to  mbm_assign_control.
-   Introduced mutex lock in rdtgroup_mbm_mode_show().
+ 	err = resctrl_online_mon_domain(r, d);
+diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
+index c44c5b496355..9846153aa48f 100644
+--- a/arch/x86/kernel/cpu/resctrl/internal.h
++++ b/arch/x86/kernel/cpu/resctrl/internal.h
+@@ -32,6 +32,9 @@
+  */
+ #define MBM_CNTR_WIDTH_OFFSET_MAX (62 - MBM_CNTR_WIDTH_BASE)
  
-   The 'legacy' mode is called 'default' mode. 
-
-   Removed the static allocation and now allocating bitmap mbm_cntr_free_map dynamically.
-
-   Merged rdtgroup_assign_cntr(), rdtgroup_alloc_cntr() into one.
-   Merged rdtgroup_unassign_cntr(), rdtgroup_free_cntr() into one.
-   
-  Added struct rdt_resource to the interface functions resctrl_arch_assign_cntr ()
-  and resctrl_arch_unassign_cntr().
-  Rename rdtgroup_abmc_cfg() to resctrl_abmc_config_one_amd().
-   
-  Added a new patch to fix counter assignment on event config changes.
-
-  Removed the references of ABMC from user interfaces.
-
-  Simplified the parsing (strsep(&token, "//") in rdtgroup_mbm_assign_control_write().
-  Added mutex lock in rdtgroup_mbm_assign_control_write() while processing.
-
-  Thomas Gleixner asked us to update  https://gitlab.com/x86-cpuid.org/x86-cpuid-db. 
-  It needs internal approval. We are working on it.
-
-v6:
-  We still need to finalize few interface details on mbm_assign_mode and mbm_assign_control
-  in case of ABMC and Soft-ABMC. We can continue the discussion with this series.
-
-  Added support for domain-id '*' to update all the domains at once.
-  Fixed assign interface to allocate the counter if counter is
-  not assigned.   
-  Fixed unassign interface to free the counter if the counter is not
-  assigned in any of the domains.
-
-  Renamed abmc_capable to mbm_cntr_assignable.
-
-  Renamed abmc_enabled to mbm_cntr_assign_enabled.
-  Used msr_set_bit and msr_clear_bit for msr updates.
-  Renamed resctrl_arch_abmc_enable() to resctrl_arch_mbm_cntr_assign_enable().
-  Renamed resctrl_arch_abmc_disable() to resctrl_arch_mbm_cntr_assign_disable().
-
-  Changed the display name from num_cntrs to num_mbm_cntrs.
-
-  Removed the variable mbm_cntrs_free_map_len. This is not required.
-  Removed the call mbm_cntrs_init() in arch code. This needs to be done at higher level.
-  Used DECLARE_BITMAP to initialize mbm_cntrs_free_map.
-  Removed unused config value definitions.
-
-  Introduced mbm_cntr_map to track counters at domain level. With this
-  we dont need to send MSR read to read the counter configuration.
-
-  Separated all the counter id management to upper level in FS code.
-
-  Added checks to detect "Unassigned" before reading the RMID.
-
-  More details in each patch.
-
-v5:
-  Rebase changes (because of SNC support)
-
-  Interface changes.
-   /sys/fs/resctrl/mbm_assign to /sys/fs/resctrl/mbm_assign_mode.
-   /sys/fs/resctrl/mbm_assign_control to /sys/fs/resctrl/mbm_assign_control.
-
-  Added few arch specific routines.
-  resctrl_arch_get_abmc_enabled.
-  resctrl_arch_abmc_enable.
-  resctrl_arch_abmc_disable.
-
-  Few renames
-   num_cntrs_free_map -> mbm_cntrs_free_map
-   num_cntrs_init -> mbm_cntrs_init
-   arch_domain_mbm_evt_config -> resctrl_arch_mbm_evt_config
-
-  Introduced resctrl_arch_event_config_get and
-    resctrl_arch_event_config_set() to update event configuration.
-
-  Removed mon_state field mongroup. Added MON_CNTR_UNSET to initialize counters.
-
-  Renamed ctr_id to cntr_id for the hardware counter.
++#define INVALID_CONFIG_VALUE		U32_MAX
++#define INVALID_CONFIG_INDEX		UINT_MAX
++
+ /**
+  * cpumask_any_housekeeping() - Choose any CPU in @mask, preferring those that
+  *			        aren't marked nohz_full
+@@ -335,6 +338,8 @@ struct rdt_hw_ctrl_domain {
+  * @d_resctrl:	Properties exposed to the resctrl file system
+  * @arch_mbm_total:	arch private state for MBM total bandwidth
+  * @arch_mbm_local:	arch private state for MBM local bandwidth
++ * @mbm_total_cfg:	MBM total bandwidth configuration
++ * @mbm_local_cfg:	MBM local bandwidth configuration
+  *
+  * Members of this structure are accessed via helpers that provide abstraction.
+  */
+@@ -342,6 +347,8 @@ struct rdt_hw_mon_domain {
+ 	struct rdt_mon_domain		d_resctrl;
+ 	struct arch_mbm_state		*arch_mbm_total;
+ 	struct arch_mbm_state		*arch_mbm_local;
++	u32				mbm_total_cfg;
++	u32				mbm_local_cfg;
+ };
  
-  Report "Unassigned" in case the user attempts to read the events without assigning the counter.
-  
-  ABMC is enabled during the boot up. Can be enabled or disabled later.
-
-  Fixed opcode and flags combination.
-    '=_" is valid.
-    "-_" amd "+_" is not valid.
-
- Added all the comments as far as I know. If I missed something, it is not intentional.
-
-v4: 
-  Main change is domain specific event assignment.
-  Kept the ABMC feature as a default.
-  Dynamcic switching between ABMC and mbm_legacy is still allowed.
-  We are still not clear about mount option.
-  Moved the monitoring related data in resctrl_mon structure from rdt_resource.
-  Fixed the display of legacy and ABMC mode.
-  Used bimap APIs when possible.
-  Removed event configuration read from MSRs. We can use the
-  internal saved data.(patch 12)
-  Added more comments about L3_QOS_ABMC_CFG MSR.
-  Added IPIs to read the assignment status for each domain (patch 18 and 19)
-  More details in each patch.
-
-v3:
-   This series adds the support for global assignment mode discussed in
-   the thread. https://lore.kernel.org/lkml/20231201005720.235639-1-babu.moger@amd.com/
-   Removed the individual assignment mode and included the global assignment interface.
-   Added following interface files.
-   a. /sys/fs/resctrl/info/L3_MON/mbm_assign
-      Used for displaying the current assignment mode and switch between
-      ABMC and legacy mode.
-   b. /sys/fs/resctrl/info/L3_MON/mbm_assign_control
-      Used for lising the groups assignment mode and modify the assignment states.
-   c. Most of the changes are related to the new interface.
-   d. Addressed the comments from Reinette, James and Peter.
-   e. Hope I have addressed most of the major feedbacks discussed. If I missed
-      something then it is not intentional. Please feel free to comment.
-   f. Sending this as an RFC as per Reinette's comment. So, this is still open
-      for discussion.
-
-v2:
-   a. Major change is the way ABMC is enabled. Earlier, user needed to remount
-      with -o abmc to enable ABMC feature. Removed that option now.
-      Now users can enable ABMC by "$echo 1 to /sys/fs/resctrl/info/L3_MON/mbm_assign_enable".
-     
-   b. Added new word 21 to x86/cpufeatures.h.
-
-   c. Display unsupported if user attempts to read the events when ABMC is enabled
-      and event is not assigned.
-
-   d. Display monitor_state as "Unsupported" when ABMC is disabled.
-  
-   e. Text updates and rebase to latest tip tree (as of Jan 18).
+ static inline struct rdt_hw_ctrl_domain *resctrl_to_arch_ctrl_dom(struct rdt_ctrl_domain *r)
+@@ -504,6 +511,8 @@ void resctrl_file_fflags_init(const char *config, unsigned long fflags);
+ void rdt_staged_configs_clear(void);
+ bool closid_allocated(unsigned int closid);
+ int resctrl_find_cleanest_closid(void);
++void arch_mbm_evt_config_init(struct rdt_hw_mon_domain *hw_dom);
++unsigned int mon_event_config_index_get(u32 evtid);
  
-   f. This series is still work in progress. I am yet to hear from ARM developers. 
-
---------------------------------------------------------------------------------------
-
-Previous revisions:
-v11: https://lore.kernel.org/lkml/cover.1737577229.git.babu.moger@amd.com/
-v10: https://lore.kernel.org/lkml/cover.1734034524.git.babu.moger@amd.com/
-v9: https://lore.kernel.org/lkml/cover.1730244116.git.babu.moger@amd.com/
-v8: https://lore.kernel.org/lkml/cover.1728495588.git.babu.moger@amd.com/
-v7: https://lore.kernel.org/lkml/cover.1725488488.git.babu.moger@amd.com/
-v6: https://lore.kernel.org/lkml/cover.1722981659.git.babu.moger@amd.com/
-v5: https://lore.kernel.org/lkml/cover.1720043311.git.babu.moger@amd.com/
-v4: https://lore.kernel.org/lkml/cover.1716552602.git.babu.moger@amd.com/
-v3: https://lore.kernel.org/lkml/cover.1711674410.git.babu.moger@amd.com/  
-v2: https://lore.kernel.org/lkml/20231201005720.235639-1-babu.moger@amd.com/
-v1: https://lore.kernel.org/lkml/20231201005720.235639-1-babu.moger@amd.com/
-
-Babu Moger (26):
-  x86/resctrl: Introduce mbm_total_cfg and mbm_local_cfg in struct
-    rdt_hw_mon_domain
-  x86/resctrl: Remove MSR reading of event configuration value
-  x86/cpufeatures: Add support for Assignable Bandwidth Monitoring
-    Counters (ABMC)
-  x86/resctrl: Add ABMC feature in the command line options
-  x86/resctrl: Consolidate monitoring related data from rdt_resource
-  x86/resctrl: Detect Assignable Bandwidth Monitoring feature details
-  x86/resctrl: Add support to enable/disable AMD ABMC feature
-  x86/resctrl: Introduce the interface to display monitor mode
-  x86/resctrl: Introduce interface to display number of monitoring
-    counters
-  x86/resctrl: Introduce mbm_cntr_cfg to track assignable counters at
-    domain
-  x86/resctrl: Introduce interface to display number of free MBM
-    counters
-  x86/resctrl: Add data structures and definitions for ABMC assignment
-  x86/resctrl: Implement resctrl_arch_config_cntr() to assign a counter
-    with ABMC
-  x86/resctrl: Add the functionality to assign MBM events
-  x86/resctrl: Add the functionality to unassign MBM events
-  x86/resctrl: Report 'Unassigned' for MBM events in mbm_cntr_assign
-    mode
-  x86/resctrl: Add the support for reading ABMC counters
-  x86/resctrl: Add default MBM event configurations for mbm_cntr_assign
-    mode
-  x86/resctrl: Add event configuration directory under info/L3_MON/
-  x86/resctrl: Provide interface to update the event configurations
-  x86/resctrl: Introduce mbm_assign_on_mkdir to configure assignments
-  x86/resctrl: Auto assign/unassign counters when mbm_cntr_assign is
-    enabled
-  x86/resctrl: Introduce mbm_L3_assignments to list assignments in a
-    group
-  x86/resctrl: Introduce the interface to modify assignments in a group
-  x86/resctrl: Introduce the interface to switch between monitor modes
-  x86/resctrl: Configure mbm_cntr_assign mode if supported
-
- .../admin-guide/kernel-parameters.txt         |   2 +-
- Documentation/arch/x86/resctrl.rst            | 186 ++++
- arch/x86/include/asm/cpufeatures.h            |   1 +
- arch/x86/include/asm/msr-index.h              |   2 +
- arch/x86/kernel/cpu/cpuid-deps.c              |   2 +
- arch/x86/kernel/cpu/resctrl/core.c            |  15 +-
- arch/x86/kernel/cpu/resctrl/ctrlmondata.c     |  18 +-
- arch/x86/kernel/cpu/resctrl/internal.h        |  98 +++
- arch/x86/kernel/cpu/resctrl/monitor.c         | 456 +++++++++-
- arch/x86/kernel/cpu/resctrl/rdtgroup.c        | 809 ++++++++++++++++--
- arch/x86/kernel/cpu/scattered.c               |   1 +
- include/linux/resctrl.h                       |  72 +-
- include/linux/resctrl_types.h                 |  17 +
- 13 files changed, 1559 insertions(+), 120 deletions(-)
-
+ #ifdef CONFIG_RESCTRL_FS_PSEUDO_LOCK
+ int rdtgroup_locksetup_enter(struct rdtgroup *rdtgrp);
+diff --git a/arch/x86/kernel/cpu/resctrl/monitor.c b/arch/x86/kernel/cpu/resctrl/monitor.c
+index a93ed7d2a160..abd337fbd01d 100644
+--- a/arch/x86/kernel/cpu/resctrl/monitor.c
++++ b/arch/x86/kernel/cpu/resctrl/monitor.c
+@@ -1284,6 +1284,32 @@ int __init rdt_get_mon_l3_config(struct rdt_resource *r)
+ 	return 0;
+ }
+ 
++void arch_mbm_evt_config_init(struct rdt_hw_mon_domain *hw_dom)
++{
++	unsigned int index;
++	u64 msrval;
++
++	/*
++	 * Read the configuration registers QOS_EVT_CFG_n, where <n> is
++	 * the BMEC event number (EvtID).
++	 */
++	if (mbm_total_event.configurable) {
++		index = mon_event_config_index_get(QOS_L3_MBM_TOTAL_EVENT_ID);
++		rdmsrl(MSR_IA32_EVT_CFG_BASE + index, msrval);
++		hw_dom->mbm_total_cfg = msrval & MAX_EVT_CONFIG_BITS;
++	} else {
++		hw_dom->mbm_total_cfg = INVALID_CONFIG_VALUE;
++	}
++
++	if (mbm_local_event.configurable) {
++		index = mon_event_config_index_get(QOS_L3_MBM_LOCAL_EVENT_ID);
++		rdmsrl(MSR_IA32_EVT_CFG_BASE + index, msrval);
++		hw_dom->mbm_local_cfg = msrval & MAX_EVT_CONFIG_BITS;
++	} else {
++		hw_dom->mbm_local_cfg = INVALID_CONFIG_VALUE;
++	}
++}
++
+ void resctrl_mon_resource_exit(void)
+ {
+ 	struct rdt_resource *r = resctrl_arch_get_resource(RDT_RESOURCE_L3);
+diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+index c6274d40b217..bee32eaef8ab 100644
+--- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
++++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+@@ -1601,7 +1601,7 @@ static int rdtgroup_size_show(struct kernfs_open_file *of,
+  *         1 for evtid == QOS_L3_MBM_LOCAL_EVENT_ID
+  *         INVALID_CONFIG_INDEX for invalid evtid
+  */
+-static inline unsigned int mon_event_config_index_get(u32 evtid)
++unsigned int mon_event_config_index_get(u32 evtid)
+ {
+ 	switch (evtid) {
+ 	case QOS_L3_MBM_TOTAL_EVENT_ID:
 -- 
 2.34.1
 
