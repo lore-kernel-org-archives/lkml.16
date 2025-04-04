@@ -1,145 +1,193 @@
-Received: from omta36.uswest2.a.cloudfilter.net (omta36.uswest2.a.cloudfilter.net [35.89.44.35])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39F4F3D6F
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 15:18:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D230A3D6F;
+	Fri,  4 Apr 2025 15:19:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743779910; cv=none; b=TUJq2ChvHhX25xahk5u+AIhjeGDEYICeuWtjCx1rPfvYM3kOTVGxm4VYzZL8u+YntvuqP5Xk75eDZeDgG21/xfCPSnPFH+JrYK25YHgtMDy96SYV6XghDDVHK734WkfdXnvk4XT+tq9vSt/LQbCHq3iOLIx4ibUbq9jUzousVjE=
+	t=1743779944; cv=none; b=hwbWD8Ri6WMOVm2RzxN3iZIdJVBYFOmEA6hC2Zp25fAWrH73wb2mE5RVcEcerH65EQKtutqzxg+XPQTQKkfH4+a6hEmEs+KU7STtEi94x0DvhbmU+ijqJQQeFHCHr6F+A89cCsklJIAa8DbSZdQnVtwCSbbj06lrw2K8zpnTh2E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743779910; c=relaxed/simple;
-	bh=H0uRudBLt+TwPkP+W0bZthpxLYdGfI8njOVweTIscqE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YAcOmmhWR95Zv+f6ouLiwDXFDwjXDoulNd0Ax5WhWh1iOo0FGsWYSVFKnj7QGovjHB3daY7bNtvZr7p7HsnuGiwPqwGsqVEbqQrBq+7LsQ5/Apqxyri4X6hGgAW1xlA0VsZ2+qC7c002qbZdPUfBqAWEXRb9dy5OIjJtkoNGJ+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=UMmGwRAj; arc=none smtp.client-ip=35.89.44.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1743779944; c=relaxed/simple;
+	bh=EVLGz+q4eHgiZJTmh6liMRUu1PEh0/5UBRB7uM4oz9k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MuUnh+86E9MIoxLtroDOyjbkObKJxq8+TvNzwoGQ/BQWM4ubpreOL3MsHTPBFVZ7ckrvs1CB2+HENRJ5iCS32BJ3zIxV/Zjw/mTi9l0h2Q7Oq5sG+cQCa2DiS8ZyDTkowsIVlspsBt4Y27JAEutddFLfuDZyKTTuAAJU4DYwhIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZpRIytWN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="UMmGwRAj"
-Received: from eig-obgw-6001a.ext.cloudfilter.net ([10.0.30.140])
-	by cmsmtp with ESMTPS
-	id 0grUuzIcpMETl0imqu4mfe; Fri, 04 Apr 2025 15:16:52 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id 0impus9mygFaX0impuucSU; Fri, 04 Apr 2025 15:16:51 +0000
-X-Authority-Analysis: v=2.4 cv=DbzcqetW c=1 sm=1 tr=0 ts=67eff7e3
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=B3fuDwYyW55wTQKIj88FGw==:17
- a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
- a=QyXUC8HyAAAA:8 a=DTFsIx2UK63pnHR4iIcA:9 a=QEXdDO2ut3YA:10
- a=Xt_RvD8W3m28Mn_h3AK8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=c4pzsQqZc93HniLWNSSUJ840c7jg7svjvDCpXoucpPw=; b=UMmGwRAjyp/9MjeZ377GmzB2sJ
-	jy/BqpxloGZ77CXkwAkntodPi+J5nDcpSxz8PmCJke3DA/X4F5JznJFtLuIBA4RQdp7lqBOJvAK27
-	7OdOpoweuR0uiak+nv7ab28wRJP8MLWfGTSlq/SEz+XBYGBQk0Ht+IERKVV6ieSpNO80SDBR7MCIi
-	QrdP10HbNgZe4wGukE7E+IQftVYkZVT4HEGuDO1SQ/HZi715BPRL7TGMxN1pdrmKSNCjdJV1IGD+S
-	3xZhGTSJyl7bdHwADoJEkZKBE4yETHL0wLtpOzb5Kuh3PvoZWqyP0HdCWLQQ//Ix6U9hACbDbME/H
-	p9dMgApg==;
-Received: from [201.172.174.147] (port=38642 helo=[192.168.15.6])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1u0imo-00000003ya0-3HBT;
-	Fri, 04 Apr 2025 10:16:50 -0500
-Message-ID: <c2e2c15d-b587-49e9-b05c-2096e2de3c76@embeddedor.com>
-Date: Fri, 4 Apr 2025 09:16:43 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZpRIytWN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1575C4CEDD;
+	Fri,  4 Apr 2025 15:19:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743779944;
+	bh=EVLGz+q4eHgiZJTmh6liMRUu1PEh0/5UBRB7uM4oz9k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZpRIytWNGh6xPU4sOx6hAWTom1hqbV5uX++DNde2vD6oYf4O57B8N4WQJdyXQUYVh
+	 CMRngFfHBGK/dNj8YlHPQMDFX807gVo2IUlbgZ1nDbGkubQSR8Zwzej/iy9/jJaOam
+	 UkhPdGX7i8TZ0jBElK6byNxoN9oYamwf3kTQWr0Cammv2gBJ4+Kak7/79RWw/7eLGd
+	 dLhJBqs3/8OdQefF+8o1N263dkx10qK03cqlrXExc+6IoRj1RhrjG0vl9gwytDdVu2
+	 0/gqzN6B0olfmSlQBoapfHfQa2JyiR9YGf5HAOlk1bW8NBip67S7fBZiQxKcKJs483
+	 RrSajqF/Tt91g==
+Date: Fri, 4 Apr 2025 10:19:02 -0500
+From: Rob Herring <robh@kernel.org>
+To: Sukrut Bellary <sbellary@baylibre.com>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Tero Kristo <kristo@kernel.org>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Andreas Kemnade <andreas@kemnade.info>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/4] dt-bindings: clock: ti: Convert to yaml
+Message-ID: <20250404151902.GA1400262-robh@kernel.org>
+References: <20250404014500.2789830-1-sbellary@baylibre.com>
+ <20250404014500.2789830-2-sbellary@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][next] drm/nouveau: fifo: Avoid
- -Wflex-array-member-not-at-end warning
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Lyude Paul <lyude@redhat.com>, Danilo Krummrich <dakr@kernel.org>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-Cc: dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <Z-7IQcWNePAMQEM0@kspp>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <Z-7IQcWNePAMQEM0@kspp>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.172.174.147
-X-Source-L: No
-X-Exim-ID: 1u0imo-00000003ya0-3HBT
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.15.6]) [201.172.174.147]:38642
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 2
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfEbyetjCK6iwSDtwt3WpPT1U/Zo7m02YyfmzVQKb6q+rJ/6dD/cSZKSXpHzpRmSiIC5VKINSeJXnjT3NH+iUEIvvNvULAiizVUA2nmOXt7JeY9NxebAQ
- cmiBDbKoNcy1MtpI2HsMh72v4sX0tZfjCTaAw5TiSxQVa+glVVIQKL2ZtrbDBe5pO5ShTvNfDI4RJFopglOhXjKUhTHLsXQh+4CERYbHgYgD8fjx0coOKrYJ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250404014500.2789830-2-sbellary@baylibre.com>
 
+On Thu, Apr 03, 2025 at 06:44:57PM -0700, Sukrut Bellary wrote:
+> Covert TI autoidle clock txt binding to yaml.
 
+Convert
 
-On 03/04/25 11:41, Gustavo A. R. Silva wrote:
-> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-> getting ready to enable it, globally.
+2 patches in the series have the exact same subject. Really, nothing in 
+all of the git history should ever repeat a subject. After all, you 
+can't make the same change twice.
+
 > 
-> Use the `DEFINE_RAW_FLEX()` helper for an on-stack definition of
-> a flexible structure where the size of the flexible-array member
-> is known at compile-time, and refactor the rest of the code,
-> accordingly.
+> AutoIdle clock is not an individual clock; it is always a
+> derivate of some basic clock like a gate, divider, or fixed-factor.
+> This binding will be referred in ti,divider-clock.yaml, and
+> ti,fixed-factor-clock.yaml.
 > 
-> So, with these changes, fix the following warning:
+> As all clocks don't support the autoidle feature e.g.,
+> in DRA77xx/AM57xx[1], dpll_abe_x2* and dpll_per_x2 don't have
+> autoidle, remove required properties from the binding.
+> Clean up the example to meet the current standards.
 > 
-> drivers/gpu/drm/nouveau/nvif/fifo.c:29:42: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> Add the creator of the original binding as a maintainer.
 > 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> [1] https://www.ti.com/lit/ug/spruhz6l/spruhz6l.pdf
+> 
+> Signed-off-by: Sukrut Bellary <sbellary@baylibre.com>
 > ---
->   drivers/gpu/drm/nouveau/nvif/fifo.c | 32 ++++++++++++-----------------
->   1 file changed, 13 insertions(+), 19 deletions(-)
+>  .../devicetree/bindings/clock/ti/autoidle.txt | 37 --------------
+>  .../bindings/clock/ti/ti,autoidle.yaml        | 49 +++++++++++++++++++
+>  2 files changed, 49 insertions(+), 37 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/clock/ti/autoidle.txt
+>  create mode 100644 Documentation/devicetree/bindings/clock/ti/ti,autoidle.yaml
 > 
-> diff --git a/drivers/gpu/drm/nouveau/nvif/fifo.c b/drivers/gpu/drm/nouveau/nvif/fifo.c
-> index a463289962b2..f8772340fec4 100644
-> --- a/drivers/gpu/drm/nouveau/nvif/fifo.c
-> +++ b/drivers/gpu/drm/nouveau/nvif/fifo.c
-> @@ -25,33 +25,28 @@ static int
->   nvif_fifo_runlists(struct nvif_device *device)
->   {
->   	struct nvif_object *object = &device->object;
-> -	struct {
-> -		struct nv_device_info_v1 m;
-> -		struct {
-> -			struct nv_device_info_v1_data runlists;
-> -			struct nv_device_info_v1_data runlist[64];
-> -		} v;
-> -	} *a;
-> +	DEFINE_RAW_FLEX(struct nv_device_info_v1, a, data, 65);
-> +	struct nv_device_info_v1_data *runlists = &a->data[0];
-> +	struct nv_device_info_v1_data *runlist = &a->data[1];
-> +	const u8 rl_cnt = (__struct_size(a) - sizeof(*a)) / sizeof(*a->data) - 1;
->   	int ret, i;
->   
->   	if (device->runlist)
->   		return 0;
->   
-> -	if (!(a = kmalloc(sizeof(*a), GFP_KERNEL)))
+> diff --git a/Documentation/devicetree/bindings/clock/ti/autoidle.txt b/Documentation/devicetree/bindings/clock/ti/autoidle.txt
+> deleted file mode 100644
+> index 05645a10a9e3..000000000000
+> --- a/Documentation/devicetree/bindings/clock/ti/autoidle.txt
+> +++ /dev/null
+> @@ -1,37 +0,0 @@
+> -Binding for Texas Instruments autoidle clock.
+> -
+> -This binding uses the common clock binding[1]. It assumes a register mapped
+> -clock which can be put to idle automatically by hardware based on the usage
+> -and a configuration bit setting. Autoidle clock is never an individual
+> -clock, it is always a derivative of some basic clock like a gate, divider,
+> -or fixed-factor.
+> -
+> -[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
+> -
+> -Required properties:
+> -- reg : offset for the register controlling the autoidle
+> -- ti,autoidle-shift : bit shift of the autoidle enable bit
+> -- ti,invert-autoidle-bit : autoidle is enabled by setting the bit to 0
+> -
+> -Examples:
+> -	dpll_core_m4_ck: dpll_core_m4_ck {
+> -		#clock-cells = <0>;
+> -		compatible = "ti,divider-clock";
+> -		clocks = <&dpll_core_x2_ck>;
+> -		ti,max-div = <31>;
+> -		ti,autoidle-shift = <8>;
+> -		reg = <0x2d38>;
+> -		ti,index-starts-at-one;
+> -		ti,invert-autoidle-bit;
+> -	};
+> -
+> -	dpll_usb_clkdcoldo_ck: dpll_usb_clkdcoldo_ck {
+> -		#clock-cells = <0>;
+> -		compatible = "ti,fixed-factor-clock";
+> -		clocks = <&dpll_usb_ck>;
+> -		ti,clock-div = <1>;
+> -		ti,autoidle-shift = <8>;
+> -		reg = <0x01b4>;
+> -		ti,clock-mult = <1>;
+> -		ti,invert-autoidle-bit;
+> -	};
+> diff --git a/Documentation/devicetree/bindings/clock/ti/ti,autoidle.yaml b/Documentation/devicetree/bindings/clock/ti/ti,autoidle.yaml
+> new file mode 100644
+> index 000000000000..c995dae65cd6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/ti/ti,autoidle.yaml
+> @@ -0,0 +1,49 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/clock/ti/ti,autoidle.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: TI autoidle clock
+> +
+> +maintainers:
+> +  - Tero Kristo <kristo@kernel.org>
+> +  - Sukrut Bellary <sbellary@baylibre.com>
+> +
+> +description: |
 
-I'll send v2 preserving the above allocation (with some adjustments to
-remove the flex-array-in-the-middle issue), as I just got this report
-from the kernel test robot:
+Don't need '|' if no formatting to preserve.
 
-https://lore.kernel.org/lkml/202504041254.6e26LBdj-lkp@intel.com/
+> +  In TI SoC, some of the clocks support autoidle feature.
+> +  It assumes a register mapped clock which can be put to idle automatically
+> +  by hardware based on the usage and a configuration bit setting.
+> +  Autoidle clock is never an individual clock, it is always a derivative
+> +  of some basic clock like a gate, divider or fixed-factor.
 
-Thanks
---
-Gustavo
+Is this 3 1 sentence paragraphs or 1 paragraph with odd line wrapping? 
+Blank line between paragraphs or re-wrap at 80 char. I prefer the latter 
+as 1 sentence paragraphs doesn't make much sense.
+
+> +
+> +properties:
+> +  reg:
+> +    maxItems: 1
+> +
+> +  ti,autoidle-shift:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description:
+> +      bit shift of the autoidle enable bit for the clock
+> +    maximum: 31
+> +    default: 0
+> +
+> +  ti,invert-autoidle-bit:
+> +    type: boolean
+> +    description:
+> +      autoidle is enabled by setting the bit to 0
+> +
+> +additionalProperties: true
+> +
+> +examples:
+> +  - |
+> +    bus {
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +
+> +      clock@1b4 {
+> +        reg = <0x01b4>;
+> +        ti,autoidle-shift = <8>;
+> +        ti,invert-autoidle-bit;
+> +      };
+> +    };
+> -- 
+> 2.34.1
+> 
