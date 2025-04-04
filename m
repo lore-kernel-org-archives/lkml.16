@@ -1,85 +1,81 @@
-Received: from imap5.colo.codethink.co.uk (imap5.colo.codethink.co.uk [78.40.148.171])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DCD51FC7C7;
-	Fri,  4 Apr 2025 15:56:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.40.148.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC3A81EFFB4;
+	Fri,  4 Apr 2025 15:57:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743782211; cv=none; b=aMIcr1AGxpsaFAz0AjDGHlX+SpV3ElPfZTy+55cz1qOCIqPDfYCToZFocf128un1OIsAllIuaFm6Iv+kvhPvab+3ohTDhFzbXejymgs7idG5SEYtENidHfFUkQl9unrazX6/9nqrAgGlfCffu4xZ3Q3KvSt3Y8A6x9DRF1+WMuQ=
+	t=1743782257; cv=none; b=sMHnZ7fXeFXh25YO9e51ftJLkupEGDWfwqiV8ZUvsYqnDGiXk6w0LgVYFJqc42V93zHwgnopWBFlcJ7ooTLy3C+eksJPruTd4ynMC397k16bdEw6CpkWM7N1zgxfzhYvWDMz+DLdvpvubHG+JMhYEbAYvw10H5rni9o0MeECxak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743782211; c=relaxed/simple;
-	bh=ABpsVb0a/UQlWsessKYFH/LthH36DYFIjoPCIz9l3Gw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LIrGw+PF7QUZXKPMMijLshd7PnxKjnktLKlTOHLQovVi8E9Y7CIWA4V5RGHuNCZbQyq9/XF3sGcxhG+IYWT5/wnoXP6jaquv/xmgxzSbGz0hxEmQuse/XPBwEGziEc7cJ2GlSjRAlIsHa/iDWe3yjye6BVhf+DQxQsearzpGUNg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=codethink.co.uk; spf=pass smtp.mailfrom=codethink.co.uk; dkim=pass (2048-bit key) header.d=codethink.co.uk header.i=@codethink.co.uk header.b=MerP6PTL; arc=none smtp.client-ip=78.40.148.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=codethink.co.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codethink.co.uk
+	s=arc-20240116; t=1743782257; c=relaxed/simple;
+	bh=COkpL8fQE5l7P6GCduMEpuUwx2Y747Dacd8yAPOq3cM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=m+ixQaq05DlmsPduPzYG/FjrN9ltlAfqvobX42yzas5Q/IsqGFStrsAmx0miphYmlWS1U4kKzPM6PLQ38VkGs6lIMuoH6nyDi/inZrzFgDi1rLCZeXbTflsvT/Qq1VNRzb7MDwJ8uLsox2WO0MMU0PDXSWODY58N4PO+aMlq55c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jaAzCsNV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codethink.co.uk header.i=@codethink.co.uk header.b="MerP6PTL"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=codethink.co.uk; s=imap5-20230908; h=Sender:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=1Xn/hH6/7ss6uP5i4wKjZNjVXjJNOK/mVv5dxW21kIE=; b=MerP6PTLL1xnXQ1BsDkbiOnTLj
-	UfWowf6P5MrqIueDuE2fsf/9BUYR7dM5myL3b4Re9VetvFakSaj8YDPcP4zThfrVeSdoak3TUHfVI
-	dKC6zkKKPqOWIHI0VbV3tYAJ4UWmkmmYa7RHKJ/x39o6ldZoX9P0WkgdPZYqz+psDRz0/UXaNVdxW
-	mu0p1FrnjtTOmm2OtdZYARGvV+nq3O9DnIuBsnI2xuRPkvZd96oGnuEdTloTLOuPqGg1TQC0TuWyc
-	zdFjwJFNz+I9INy9kmsjADBRZBoRPZeAfhffLnJRjsLlclRgx0QDxRuz/pMDmC4c5daXMD/639p5P
-	AZd8VS+Q==;
-Received: from [167.98.27.226] (helo=[10.35.6.194])
-	by imap5.colo.codethink.co.uk with esmtpsa  (Exim 4.94.2 #2 (Debian))
-	id 1u0jPL-00BgSX-Ku; Fri, 04 Apr 2025 16:56:40 +0100
-Message-ID: <a92dad03-664b-46a6-9761-b788c47ff6f4@codethink.co.uk>
-Date: Fri, 4 Apr 2025 16:56:39 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jaAzCsNV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4588DC4CEDD;
+	Fri,  4 Apr 2025 15:57:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743782257;
+	bh=COkpL8fQE5l7P6GCduMEpuUwx2Y747Dacd8yAPOq3cM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jaAzCsNV9bb7/b/DCVXJZMr8AOzHbm8sYUd/1in+O4L19O/jri9ohRKONwQ1bZM2t
+	 rW/ee0rYCpf9zSDqgTTqFj7Xvi0RChS7KbJQHZTDx0+JMxTsdVzFoRJVXGY8IUSq3Z
+	 yCf6eK+jheBHf7pewipOGfbiP5bY32e/7TeWgSRt31E0zrPSLqwrbE9Fh9wwVDGST/
+	 yShbbacq/1+FoSOQyQOYZrEop2tWPys2YwAIdye4y20R/kNcTtYaYMVusd1Yqp9zTF
+	 oPngEc8ZWI+jCyUZvTfjgIKJNED6rAeHak5Nfwhk0ER8boKAEEAy7m6hFiOZKT9alW
+	 bcO1YfhcVYYsQ==
+Date: Fri, 4 Apr 2025 16:57:30 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Yeoreum Yun <yeoreum.yun@arm.com>
+Cc: catalin.marinas@arm.com, will@kernel.org, anshuman.khandual@arm.com,
+	joey.gouly@arm.com, yury.khrustalev@arm.com, maz@kernel.org,
+	oliver.upton@linux.dev, frederic@kernel.org,
+	shameerali.kolothum.thodi@huawei.com, james.morse@arm.com,
+	mark.rutland@arm.com, huangxiaojia2@huawei.com,
+	akpm@linux-foundation.org, surenb@google.com, robin.murphy@arm.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, nd@arm.com
+Subject: Re: [PATCH v2 3/3] tools/kselftest: add MTE_FAR hwcap test
+Message-ID: <0803d010-9e71-423b-9ee3-931a976e4670@sirena.org.uk>
+References: <20250403172758.67106-1-yeoreum.yun@arm.com>
+ <20250403172758.67106-4-yeoreum.yun@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/2] Implement endianess swap macros for RISC-V
-To: Ignacio Encinas <ignacio@iencinas.com>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Alexandre Ghiti <alex@ghiti.fr>,
- Arnd Bergmann <arnd@arndb.de>
-Cc: Eric Biggers <ebiggers@kernel.org>, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-kernel-mentees@lists.linux.dev,
- skhan@linuxfoundation.org, Zhihang Shao <zhihang.shao.iscas@gmail.com>,
- =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>,
- linux-arch@vger.kernel.org
-References: <20250403-riscv-swab-v3-0-3bf705d80e33@iencinas.com>
-Content-Language: en-GB
-From: Ben Dooks <ben.dooks@codethink.co.uk>
-Organization: Codethink Limited.
-In-Reply-To: <20250403-riscv-swab-v3-0-3bf705d80e33@iencinas.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Sender: ben.dooks@codethink.co.uk
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="fbQ9cK3yItVK93le"
+Content-Disposition: inline
+In-Reply-To: <20250403172758.67106-4-yeoreum.yun@arm.com>
+X-Cookie: You will soon forget this.
 
-On 03/04/2025 21:34, Ignacio Encinas wrote:
-> Motivated by [1]. A couple of things to note:
-> 
-> RISC-V needs a default implementation to fall back on. There is one
-> available in include/uapi/linux/swab.h but that header can't be included
-> from arch/riscv/include/asm/swab.h. Therefore, the first patch in this
-> series moves the default implementation into asm-generic.
-> 
-> Tested with crc_kunit as pointed out here [2]. I can't provide
-> performance numbers as I don't have RISC-V hardware yet.
-> 
-> [1] https://lore.kernel.org/all/20250302220426.GC2079@quark.localdomain/
-> [2] https://lore.kernel.org/all/20250216225530.306980-1-ebiggers@kernel.org/
-> 
-> Signed-off-by: Ignacio Encinas <ignacio@iencinas.com>
 
-I'll try and get these tested with my big-endian riscv qemu and verify
-if they work there.
+--fbQ9cK3yItVK93le
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
--- 
-Ben Dooks				http://www.codethink.co.uk/
-Senior Engineer				Codethink - Providing Genius
+On Thu, Apr 03, 2025 at 06:27:58PM +0100, Yeoreum Yun wrote:
+> add MTE_FAR hwcap test on kselftest.
 
-https://www.codethink.co.uk/privacy.html
+Reviewed-by: Mark Brown <broonie@kernel.org>
+
+--fbQ9cK3yItVK93le
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmfwAWkACgkQJNaLcl1U
+h9Cv8Af+OaSzBEMLiXHx8k7AGPbYlF+tWFCoZqeNuTxThXBEVt5tG5MUGTJodjTs
+6NtewEVZolnUSqZdsZEW2K6LH69L2s8ZhHn8jixuPz/k/wbWUwm3ZF5ugjg2DqTT
+huL0ZyoizumKfT+lt8D7s6Ja8jIQIOs4KpPNQKPfQ0mXMDfYr2nOqfbO77gkOTm7
+Q+vIsUg+eud3yt6uMVl3cLXLIHsf/P3vWFuyGj4Ct0Nij5XfhQF8HZQfv4stSkTZ
+cGNls83Gr/Oim4vLXWbVrHtE4uBmRxlXinKqBLNZnA0N7RbUQLW/DX3uRIBETmc+
+Ldf8YcDngw69rzEGdeAN60CsdmxP+A==
+=J8O6
+-----END PGP SIGNATURE-----
+
+--fbQ9cK3yItVK93le--
