@@ -1,75 +1,159 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx-out.tlen.pl (mx-out.tlen.pl [193.222.135.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22BBE3D984
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 18:53:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 374D519CCF5
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 18:54:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.222.135.140
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743792829; cv=none; b=ndH+SOVYLy2ewzDKCbi/PTY+DfHC9NV4vfq9PX2yBBNDZG0Xk6eDE0aBNHYeLbFCKmiwlE4AKddfhEIH8xLwsMd8w+3/jVoyD9jgFk5EaS8HB/2mXUvVT5VSV4RI/sn79J5HaL5qthIuCNjAgNfb43IPugSKKGyL65+hB+zisT4=
+	t=1743792870; cv=none; b=oQKBJPDt9oKA2zbabdearSkK22yQeAIJ6txiulNVkcylyuY4q1wF+rzuZ9V+yEqDIk3cj2Goo8vUwFLN4E6q1GRdn6emuWYFkWJeI3ULTTIhT9vsFnU6jxcjetbIeffvcgwPIAxVXTHLz3SfIVQBAHcTSFQg4Y+1zT5im58sbw8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743792829; c=relaxed/simple;
-	bh=4roYM9MGxVbQ3FCF7i4OX5frWmKimjizq1bm5jax3qk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Tkac3A9HrY6niImWFF2z+yeRvUKrC7X5C+7WNfjY7gPXzG+JxvOzZ9rapcUcXJ4TDNOKNPSFIVldBgo9DsGO44HA3h8ikRECZB26eYPGHfa/XY0WJ8XtiqQgW2/9QzKMm2g6RatDYrjYW+AU7hW5e9fpki62VHabYFc3Q3u79jc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wn2jG5p4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743792870; c=relaxed/simple;
+	bh=RVGCBv2FgTIBfdhHtZ3AfpllPB1f9clZiAcTwpT1fNA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jSpIYXji7u9DyAMBLa/u1+YVxCRfhd5R2t7234s9lB0pXI1iJntoIb/+Ubr+uo/FE5TXHT5u0MukeIgJ9tRX+xplzILtMiikjDDSNosyuqVGELWWcRFI+y2JD+slmTUDcsDxTxc2F86lZKk6jrJWjLklRcOJEpVWkUshmZk3Q+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=o2.pl; spf=pass smtp.mailfrom=o2.pl; dkim=pass (2048-bit key) header.d=o2.pl header.i=@o2.pl header.b=ZBGHAvOv; arc=none smtp.client-ip=193.222.135.140
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=o2.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=o2.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wn2jG5p4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A46CC4CEDD;
-	Fri,  4 Apr 2025 18:53:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743792828;
-	bh=4roYM9MGxVbQ3FCF7i4OX5frWmKimjizq1bm5jax3qk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Wn2jG5p4zr/e/ie3oaKfWHVpdKvF7cAnitUJNTo31d1Qi6KfuBdNBUC/U7iDaeIF+
-	 oADYRukeXYTfN9yW3Yof8mezl4BNqKmEN+QW9ZRyOEdCmue7pRbdiZn+PL/Jjs11l6
-	 AMx3iPi9x3ZZtKhK4u4ugnKFA1S6/cflJmRdHeT3s93q8JlcW+RU/ZDZSOgMUfiMT6
-	 kXed6laqyRIwXGjv5dv01tuoDJuuNPuTHUvYWA9aIIWsRcQvjn7Uf/nV9M8gd7G6wV
-	 SDyDAtrnkltWM5kqsX+sZgfk0kTqZjsrApebCZvjjY5/hRwaazX+SVJieBVaFrlL/b
-	 Ehixha2DFFxLg==
-Date: Fri, 4 Apr 2025 08:53:47 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Andrea Righi <arighi@nvidia.com>
-Cc: void@manifault.com, multics69@gmail.com, linux-kernel@vger.kernel.org,
-	sched-ext@meta.com
-Subject: Re: [PATCHSET sched_ext/for-6.16] sched_ext: Cleanup "ops" usage in
- symbols
-Message-ID: <Z_Aqu8cKVHa4SnMR@slm.duckdns.org>
-References: <20250403225026.838987-1-tj@kernel.org>
- <Z--NLGOGQe_9xULR@gpd3>
+	dkim=pass (2048-bit key) header.d=o2.pl header.i=@o2.pl header.b="ZBGHAvOv"
+Received: (wp-smtpd smtp.tlen.pl 35379 invoked from network); 4 Apr 2025 20:47:44 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=o2.pl; s=20241105;
+          t=1743792464; bh=qxQNzRq6V9hZZWivuWEAd1VvdJ2uPMeXKluOK0uLhSg=;
+          h=Subject:To:Cc:From;
+          b=ZBGHAvOvh9M/VbXJvi0HoT84wLa2M/OwSNussLorK822bUP56w5ld2v4NNKfxzgpE
+           ffsC1WLoPl0lTEkmvRwmi3xHarVmYciGsb7tmp5VVLFLD9XYuAqW1yHXVsbbvkTqkT
+           K+FxENIOewrr4rTnoi0H693mccCrYy7yYYH+7VuUVPmZYEI2FOppP0dr1KJ2Tmis+A
+           wK30jPM4iDEfkLWNBUKuyHwuHbexL1B3n4tOYjwOWKzmAyY+GGy7jgeZljcuy1bujw
+           tRDmgePxl31nwC5P7M+x8zwciJ6hYHeJq3Z9TmHS6UiGxQZhPGDDhhJkk/t34W0Zti
+           yqT9z+uUqkYvw==
+Received: from apn-78-30-72-220.dynamic.gprs.plus.pl (HELO [192.168.1.22]) (mat.jonczyk@o2.pl@[78.30.72.220])
+          (envelope-sender <mat.jonczyk@o2.pl>)
+          by smtp.tlen.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
+          for <bigeasy@linutronix.de>; 4 Apr 2025 20:47:44 +0200
+Message-ID: <dab534b6-d83b-40de-b6d0-77c40350627d@o2.pl>
+Date: Fri, 4 Apr 2025 20:47:42 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z--NLGOGQe_9xULR@gpd3>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] timekeeping: Add a lockdep override in tick_freeze().
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+ Thomas Gleixner <tglx@linutronix.de>
+Cc: Borislav Petkov <bp@alien8.de>, linux-rtc@vger.kernel.org,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ lkml <linux-kernel@vger.kernel.org>,
+ Anna-Maria Behnsen <anna-maria@linutronix.de>,
+ Frederic Weisbecker <frederic@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Chris Bainbridge <chris.bainbridge@gmail.com>
+References: <20250330113202.GAZ-krsjAnurOlTcp-@fat_crate.local>
+ <87sempv17b.ffs@tglx> <20250403135031.giGKVTEO@linutronix.de>
+ <20250403193659.hhUTgJLH@linutronix.de> <87r029uh3j.ffs@tglx>
+ <20250404133429.pnAzf-eF@linutronix.de>
+Content-Language: en-GB, pl
+From: =?UTF-8?Q?Mateusz_Jo=C5=84czyk?= <mat.jonczyk@o2.pl>
+Autocrypt: addr=mat.jonczyk@o2.pl; keydata=
+ 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
+ TANkZ3QqXNX2
+In-Reply-To: <20250404133429.pnAzf-eF@linutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-WP-MailID: 2f6fea8358d5c3b7f4038decbb2964c4
+X-WP-AV: skaner antywirusowy Poczty o2
+X-WP-SPAM: NO 0000001 [MeIh]                               
 
-On Fri, Apr 04, 2025 at 09:41:32AM +0200, Andrea Righi wrote:
-> Hi Tejun,
-> 
-> On Thu, Apr 03, 2025 at 12:49:42PM -1000, Tejun Heo wrote:
-> > The tag "ops" is used for two different purposes. First, to indicate that
-> > the entity is directly related to the operations such as flags carried in
-> > sched_ext_ops. Second, to indicate that the entity applies to something
-> > global such as enable or bypass states. The second usage is historical and
-> > causes confusion rather than clarifying anything. For example,
-> > scx_ops_enable_state enums are named SCX_OPS_* and thus conflict with
-> > scx_ops_flags.
-> 
-> We should probably rename also SCX_OPS_TASK_ITER_BATCH, which is not
-> related to sched_ext_ops as well.
-> 
-> Apart than that and the other comment about scx_error(), this looks like a
-> good cleanup.
-> 
-> Acked-by: Andrea Righi <arighi@nvidia.com>
+W dniu 4.04.2025 o 15:34, Sebastian Andrzej Siewior pisze:
+> tick_freeze() acquires a raw_spinlock_t (tick_freeze_lock). Later in the
+> callchain (timekeeping_suspend() -> mc146818_avoid_UIP()) the RTC driver
+> can acquire a spinlock_t which becomes a sleeping lock on PREEMPT_RT.
+> Lockdep complains about this lock nesting.
+>
+> Add a lockdep override for this special case and a comment explaining
+> why it is okay.
+>
+> Reported-by: Borislav Petkov <bp@alien8.de>
+> Closes: https://lore.kernel.org/all/20250330113202.GAZ-krsjAnurOlTcp-@fat_crate.local/
+> Reported-by: Chris Bainbridge <chris.bainbridge@gmail.com>
+> Closes: https://lore.kernel.org/all/CAP-bSRZ0CWyZZsMtx046YV8L28LhY0fson2g4EqcwRAVN1Jk+Q@mail.gmail.com/
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> ---
+>   kernel/time/tick-common.c | 20 ++++++++++++++++++++
+>   1 file changed, 20 insertions(+)
+>
+> diff --git a/kernel/time/tick-common.c b/kernel/time/tick-common.c
+> index a47bcf71defcf..8fd8e2ee09fa1 100644
+> --- a/kernel/time/tick-common.c
+> +++ b/kernel/time/tick-common.c
+> @@ -509,6 +509,7 @@ void tick_resume(void)
+>   
+>   #ifdef CONFIG_SUSPEND
+>   static DEFINE_RAW_SPINLOCK(tick_freeze_lock);
+> +static DEFINE_WAIT_OVERRIDE_MAP(tick_freeze_map, LD_WAIT_SLEEP);
+>   static unsigned int tick_freeze_depth;
+>   
+>   /**
+> @@ -528,9 +529,20 @@ void tick_freeze(void)
+>   	if (tick_freeze_depth == num_online_cpus()) {
+>   		trace_suspend_resume(TPS("timekeeping_freeze"),
+>   				     smp_processor_id(), true);
+> +		/*
+> +		 * All other CPUs have their interrupts disabled and are
+> +		 * suspended to idle. Other tasks have been frozen so there is
+> +		 * no scheduling happening. This means that there is no
+> +		 * concurrency in the system at this point. Therefore it is okay
+> +		 * to acquire a sleeping lock on PREEMPT_RT, such as spinlock_t,
+> +		 * because the lock can not be acquired and can not block.
 
-Applied 1-5 to sched_ext/for-6.16. Will address the suggestions in separate
-patches.
+because the lock cannot be held by other CPUs / threads and
+acquiring it cannot block.
 
-Thanks.
+> +		 * Inform lockdep about the situation.
+> +		 */
 
--- 
-tejun
+Greetings,
+
+Mateusz
+
