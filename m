@@ -1,144 +1,148 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B97418C930
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 06:54:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45F6E944E
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 06:58:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743749671; cv=none; b=mewJTFZiXjWkTCw4z+DnJwG2xEW4TztvpvQqoLCkYjFJZ7I0VGpF4seW6kDhfJJAodXA/8Rt6EOtOfOzsDRq2F120o+tURzOdjSSu9k9tyDE7uMjqvUdfB16keLjiiVicON/ea4Rr2/YR/a//KBJLU+6HnOrqGXSynMEH21IS8k=
+	t=1743749913; cv=none; b=fnHmm3BoTtgFZeoDuAvbIZXXUv3TcZKs3Nbh0DyhI+wAHwnyjmjynSdmLE9YVU414XYRMPjqXGlRr8Hp3qjtjF4Xo3uq7efjSpaD7lrCXqQhWFoAz4+Z2XlGLj196Jn2t3+W9sSn54N7qhBIR7avyX3QTnrc5jBnEjAWACdpXww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743749671; c=relaxed/simple;
-	bh=xMVbyCHwFmTSFiUsRdRz+WZwDQtMV90raRl5K2ATkn4=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Elq6iSclyZjW6kS4Llwb0EBIT4EeO09Kgnrxi9sQr3jNij6P7aud/40ikMugde1DHMUKjWN8VYZVMgJkYz6eqm5f/q57zgMkTNxpWUAiu8nAH6B/S+SRG8rRHGMOgfaaDCJkdxsYF1l9GOvrhFeWrFb2sS0DIrmBFOTy/AfqY+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=R+sVOgX2; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=iiPflYXO; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=R+sVOgX2; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=iiPflYXO; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1743749913; c=relaxed/simple;
+	bh=piW/A3OwiufTSHwZYjD1aHQCvC+ZqDsLQKoDh/71WKo=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=M+8ldXFyeZ/WvYYTvo7EzdXjEWO0/m0yQ8ryiV6Uedm25c6LI4VM1Z05l9DCsYbcEq8v9qINLk4x11PV6ZVWnE2j9bOR9gEAYvhelSxoRBA7u7zSmVQk62cT+9JSUNYMrYYWauy6x2yNHCHxLUHO6HtTbrjN6cAjhn/wA7uY+iI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z0C60jvF; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="R+sVOgX2";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="iiPflYXO";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="R+sVOgX2";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="iiPflYXO"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 776F21F385;
-	Fri,  4 Apr 2025 06:54:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1743749667; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9lmjj6zNiTdDv40dHv3q1k8YAjJkIDE5uiiP95uhUC4=;
-	b=R+sVOgX2wSShUY9LXz9aWI/Wqne/3ONx7rtOFNwMb9ZMRmrew4uRqcQ/Ac/MloEfFipKQa
-	D3m43CJRtLSIRH7EU41IhOkklzhZ/phJw0IB004GfYSwIbPstij5nHqNk5IGgV/4QHuEeU
-	EpnUEHXuSyorxROqyMMzB1s3xfHDXYE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1743749667;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9lmjj6zNiTdDv40dHv3q1k8YAjJkIDE5uiiP95uhUC4=;
-	b=iiPflYXOMs2KGEo3RF+MDH+yN8IDqmuCetnVonOqLpwW/5ma0nS8sLCwkN6Q9UbPFRtwFX
-	dGeCYquBnLY4VUDw==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1743749667; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9lmjj6zNiTdDv40dHv3q1k8YAjJkIDE5uiiP95uhUC4=;
-	b=R+sVOgX2wSShUY9LXz9aWI/Wqne/3ONx7rtOFNwMb9ZMRmrew4uRqcQ/Ac/MloEfFipKQa
-	D3m43CJRtLSIRH7EU41IhOkklzhZ/phJw0IB004GfYSwIbPstij5nHqNk5IGgV/4QHuEeU
-	EpnUEHXuSyorxROqyMMzB1s3xfHDXYE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1743749667;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9lmjj6zNiTdDv40dHv3q1k8YAjJkIDE5uiiP95uhUC4=;
-	b=iiPflYXOMs2KGEo3RF+MDH+yN8IDqmuCetnVonOqLpwW/5ma0nS8sLCwkN6Q9UbPFRtwFX
-	dGeCYquBnLY4VUDw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3C2F113691;
-	Fri,  4 Apr 2025 06:54:27 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id uC0ADSOC72f2WgAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Fri, 04 Apr 2025 06:54:27 +0000
-Date: Fri, 04 Apr 2025 08:54:26 +0200
-Message-ID: <87mscw4dst.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: "C.D. MacEachern" <craig.daniel.maceachern@gmail.com>
-Cc: Takashi Iwai <tiwai@suse.de>,
-	Salvatore Bonaccorso <carnil@debian.org>,
-	1100928@bugs.debian.org,
-	Kuan-Wei Chiu <visitorckw@gmail.com>,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: Bug#1100928: [regression 6.1.y] microphone no longer records (on VivoBook_ASUSLaptop TP401MARB_J401MA)
-In-Reply-To: <CAJ8x=4gN1fH6chp4C3jX1OXq2-JhbP5yUzLbqvWrAJ-u=+VNhw@mail.gmail.com>
-References: <174248253267.1718.4037292692790831697.reportbug@x>
-	<Z95s5T6OXFPjRnKf@eldamar.lan>
-	<Z-MMsp3XJyNHOlma@eldamar.lan>
-	<87iknwb80x.wl-tiwai@suse.de>
-	<CAJ8x=4jNhsjw_s-p5FXBk9WScPHEdUMZ0tXnhCiya8fCf_PH7w@mail.gmail.com>
-	<Z-ct2D6uIN1f6UbL@eldamar.lan>
-	<87zfh43uti.wl-tiwai@suse.de>
-	<CAJ8x=4ibzvVxxv7FzswtwTcYT73XaDOUr7gHWMcdxB+j8+zyyw@mail.gmail.com>
-	<878qojypu6.wl-tiwai@suse.de>
-	<CAJ8x=4gN1fH6chp4C3jX1OXq2-JhbP5yUzLbqvWrAJ-u=+VNhw@mail.gmail.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z0C60jvF"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-39ac56756f6so1396747f8f.2
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 23:58:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743749909; x=1744354709; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=SJcdXyBWzI+SzmxP6jxYSY0bJoYAQjTBPA13lqWwAtc=;
+        b=Z0C60jvFNEzhE234KpZ7m8zOPSiO51Zey76+8pVXl9vZ0dvdrGyrc4rUkUNZ45lG5C
+         eeoNTiMGkj9sHLdPchjcc8CkPVM9u7zCCS5ebwSMVFOlmNezIpfxvZhGmwNmNVx+EAng
+         MOkoUp7eediOV9lBUsmdI7co+xwy5Mni9qiEmVuMbpc6m59OL2TwZUxZmxlcxFI02M/H
+         Vg1e2vfhCTjT8eh4nzlhhlx4r4a5hLCK4VUsU8olKDUFr/FSiFOT2h3MlMxezFq1v4BZ
+         plqs2jWVPRwj/OjeKghrKIdUFEGYbpiAAF9RcYZ+w9ltVqFixXnn02h4SIw9FUAv4Ioo
+         /LuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743749909; x=1744354709;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=SJcdXyBWzI+SzmxP6jxYSY0bJoYAQjTBPA13lqWwAtc=;
+        b=d+x1BSwAHAc3FfGC+nfDsVpManwmbiO62lBW3mwjlImI6+4QkOw9S8FgmpN96M7SXK
+         7Ax1joDCoTrMLaTOYcu2vqgpcz4UpMXizi3lCbs2cxLtUve7EWmWpctAf7pEWUiEV17W
+         C4TU3JFEWCGy4j832LHydmTUw2UtJ4Jyz3ezhyivjRWDeLjj/iX29urahtpJ1X+kYU0r
+         97Nb4jhKEq7qDrvprdD0iGsmXUfAQoOxCjKExR7fMWkBWXEahpFj2U/L6UwSqtpwelxn
+         BrZGZH5uyDo16+TLlssVFVQ3IgtfTDuBTm5BOgizDA2GO2kJH6kUZ+99OHp1lIO0r8CO
+         e4nw==
+X-Forwarded-Encrypted: i=1; AJvYcCVkMZDLW2Ak2puI1nDmOcXgeF11V/D5qxNPYw72FKN2kiJJyy0+2J2sF14x4fyK8e4gZ+szO6gz4wHwSRc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzuwzUNGq9QFz8xrcwsw4DV6pUZXgdkNsngZoHsexw0pnBzkK+x
+	PRE75RZLJbATgRDJeWig92A7wourgSIbMfpG3N0G/GAWUUCqM4d8DudUzEO1Iks=
+X-Gm-Gg: ASbGncuosARW1eSSTjkwZJ7oQrE9+xsUn1XrGDN713bFXMkB2Uulso3AIW92F4V5Rbc
+	pvYvEmznnWOcO9JsfawZkxeYPAHE7pVgYkuv3cH1tGOm/fDq9QV+U9PDNOVsGQwUbshm8dl+nxD
+	fFTFZSZmBz/7RV3+nkgRjr72ahHSmh0D/wvpokBGsCrHF6NniGb3lv3MNq2Dd7GVSer7LMjmuxW
+	vlKnW1zLDfL7c/1qj89rhSP62+vo+GyMHOdJC85Ekp+kkWH1efjypH+tjqeTK72AIWu/16xf/g0
+	OfhYRSfh0cPDzO+XkxjINrWe97ZFNyq1ACM1t7Fkiz4qBcVBgJXLmcs=
+X-Google-Smtp-Source: AGHT+IFk/m6k9OOpcDqx2KupzlBkZJdPITA8VnARFP+hysgf3puT/fMX6ACaTMECjZJlHwdC0K/GEw==
+X-Received: by 2002:a5d:648e:0:b0:391:2c0c:1247 with SMTP id ffacd0b85a97d-39cb36b2a7bmr1718258f8f.1.1743749909339;
+        Thu, 03 Apr 2025 23:58:29 -0700 (PDT)
+Received: from [172.16.8.120] ([197.155.71.138])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c3020da17sm3608295f8f.64.2025.04.03.23.58.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Apr 2025 23:58:28 -0700 (PDT)
+Message-ID: <cebaec5995fd21c429160b30795e03c2caa29cef.camel@gmail.com>
+Subject: Re: [PATCH v2 1/3] staging: rtl8723bs: Modify struct rx_pkt_attrib
+ attribute bdecrypted
+From: Erick Karanja <karanja99erick@gmail.com>
+To: Greg KH <gregkh@linuxfoundation.org>, Julia Lawall
+ <julia.lawall@inria.fr>
+Cc: outreachy@lists.linux.dev, philipp.g.hortmann@gmail.com, 
+	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
+Date: Fri, 04 Apr 2025 09:58:23 +0300
+In-Reply-To: <2025040246-series-tusk-bec1@gregkh>
+References: <cover.1743613025.git.karanja99erick@gmail.com>
+	 <00287fa9f40c643b8451a0d2df8e2fb97235ee46.1743613025.git.karanja99erick@gmail.com>
+	 <2025040215-confusing-sibling-f99f@gregkh>
+	 <3c235d91-efd6-ddf8-7c9-d8d35c7585@inria.fr>
+	 <2025040246-series-tusk-bec1@gregkh>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Level: 
-X-Spamd-Result: default: False [-1.80 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.999];
-	MIME_GOOD(-0.10)[text/plain];
-	TAGGED_RCPT(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[suse.de,debian.org,bugs.debian.org,gmail.com,vger.kernel.org,lists.linux.dev];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:mid]
-X-Spam-Score: -1.80
-X-Spam-Flag: NO
+MIME-Version: 1.0
 
-On Thu, 03 Apr 2025 21:05:09 +0200,
-C.D. MacEachern wrote:
-> 
-> 
-> I've added 'snd_hda_intel.model=1043:1271' to the end of
-> GRUB_CMDLINE_LINUX_DEFAULT in /etc/default/grub then ran 'sudo update-grub'
-> and rebooted, choose the non-working kernel, and the audio input still did not
-> work. Any other ideas?
+On Wed, 2025-04-02 at 21:41 +0100, Greg KH wrote:
+> On Wed, Apr 02, 2025 at 10:34:22PM +0200, Julia Lawall wrote:
+> >=20
+> >=20
+> > On Wed, 2 Apr 2025, Greg KH wrote:
+> >=20
+> > > On Wed, Apr 02, 2025 at 08:16:42PM +0300, Erick Karanja wrote:
+> > > > Standardize boolean representation by ensuring consistency,
+> > > > replace instances of 1/0 with true/false where boolean logic is
+> > > > implied,
+> > > > as some definitions already use true/false.
+> > > > This improves code clarity and aligns with the kernel=E2=80=99s boo=
+l
+> > > > type usage.
+> > > >=20
+> > > > Signed-off-by: Erick Karanja <karanja99erick@gmail.com>
+> > > > ---
+> > > > =C2=A0drivers/staging/rtl8723bs/core/rtw_recv.c | 2 +-
+> > > > =C2=A01 file changed, 1 insertion(+), 1 deletion(-)
+> > > >=20
+> > > > diff --git a/drivers/staging/rtl8723bs/core/rtw_recv.c
+> > > > b/drivers/staging/rtl8723bs/core/rtw_recv.c
+> > > > index a389ba5ecc6f..fd04dbacb50f 100644
+> > > > --- a/drivers/staging/rtl8723bs/core/rtw_recv.c
+> > > > +++ b/drivers/staging/rtl8723bs/core/rtw_recv.c
+> > > > @@ -1358,7 +1358,7 @@ static signed int
+> > > > validate_80211w_mgmt(struct adapter *adapter, union recv_frame
+> > > > =C2=A0			u8 *mgmt_DATA;
+> > > > =C2=A0			u32 data_len =3D 0;
+> > > >=20
+> > > > -			pattrib->bdecrypted =3D 0;
+> > > > +			pattrib->bdecrypted =3D false;
+> > >=20
+> > > but bdecrypted is a u8, not a boolean type.=C2=A0 So setting it to
+> > > "false"
+> > > does not seem correct here, right?
+> >=20
+> > Is false different than 0?
+>=20
+> Does C guarantee that?=C2=A0 I can never remember.=C2=A0 I don't think it
+> guarantees that a 'bool' will only be 8 bits, or am I mistaken there
+> too?
+>=20
+> > Elsewhere there is an assignment to true.
+>=20
+> Was that in the original driver?
+>=20
+> If this doesn't come from the hardware, then it's fine to make the
+> change.=C2=A0 If it does, it needs to be verified that the layout and bit
+> values are identical.
+>=20
+> thanks,
+I have compared the generated assembly code
+before and after and I have observed the only
+change is the comment below.
+-# drivers/staging/rtl8723bs/core/rtw_recv.c:1361:
+ 			pattrib->bdecrypted =3D 0;
++# drivers/staging/rtl8723bs/core/rtw_recv.c:1361:
+ 			pattrib->bdecrypted =3D false;
+There is no change in the assembly instructions.
 
-Please try the patch.  If it still doesn't work, please give
-alsa-info.sh output again.
+>=20
+> greg k-h
 
-
-Takashi
