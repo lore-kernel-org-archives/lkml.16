@@ -1,173 +1,112 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 952E718CC10
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 07:53:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EF53198E60
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 07:54:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743753239; cv=none; b=jO5ZIMHUWiQExdEvnM6TdEOJv8iEruNz5SB5Vra7d5VzdKu5KiVtDyNLC5ztBHKa2I02M4yeD0G6aD+N7bpgyvfZNaHBay0a4vJQpED002xIgEcfncDapMbI1YCnv+PcQiJk1JC8o/oh/7yj7HDVOu6lvBXrhrnCUExpMO7VvuY=
+	t=1743753242; cv=none; b=pDef8Ian+GVdlLZXXIW+RhNKrknQcV2sL7nzRLnbvltjhWkvfHBCOanqPdvfXE/qKawUcvXekuBuCh3Zq1rjF0AS6YxI835BeFMhSgaSdP2DQu9N9GpjiZVTiciyqIL472Pxmm2wex4Mta6egN0zWbnZtu3U+B3H0a9A/o+i3g8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743753239; c=relaxed/simple;
-	bh=FDbptvu9aXxROFxleCfyl7mhheo033s/9xoVB4NEL3U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=roqinQuWaDeirlUOyjoA0qUVgVMY47c1pN8LzfTqZR58QbaJE1vBZbu6bPBNgtJ/l17PxJj6/MhBar96F9vbWyrsAVbkpIgUJK/HEraO6rys3YKfIo89C+jxyUii8vWcBE7lQOkx7gYjakT9ma/b2cIpIZ/Rlo9CbmiFIyXYyj4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=O4IVcWH5; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=xdPpIR7h; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=O4IVcWH5; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=xdPpIR7h; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1743753242; c=relaxed/simple;
+	bh=eMOboR1OF7sgHodBKX1sm5CBlNgK4lAffdjRbbeWCqk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mfEM1/BWe/Dpw8BdQwawf9csbu97qzipw8Qkp5Z4Gxucb8XrJkeqlN6AietB7aBsLl+7Asu5SXMXHpeKJ4eqvEezj0/g4Ymo06ZJ3KE7ig9FVqGJwK15lv3nlKGGHnmHnxOKX1/AE59f7raceU61zOuYBS0HVvmayUhSZkO6c84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XesQvbb6; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="O4IVcWH5";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="xdPpIR7h";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="O4IVcWH5";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="xdPpIR7h"
-Received: from kitsune.suse.cz (unknown [10.100.12.127])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id AD758211A6;
-	Fri,  4 Apr 2025 07:53:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1743753235; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zYPhgmSXacOeG1Rqk39JiHp34zxT6b3+aTUNNH70zts=;
-	b=O4IVcWH5RcEXFV9mloOFdl2YHmxl7bJoVTrklWGT0rneCsF7tCvleHEaDkRIy++5ND7M9o
-	EdzJlYc5dCH0+tAcedaOnFsGWiXvbGRqmGsSFzE4HtFOBRTdcUgQDFPU88SlEPw363lCl8
-	HzR5xB8S+z5XpPYh9jvnhPGa2rwpKoA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1743753235;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zYPhgmSXacOeG1Rqk39JiHp34zxT6b3+aTUNNH70zts=;
-	b=xdPpIR7hu/R39UsEIUmcsqm9XFkZ1905rSglxIwzfpABCug54BAXdcC4hSgkNRXtdnC7cR
-	xKf6L0Z/0XgQG8DQ==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1743753235; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zYPhgmSXacOeG1Rqk39JiHp34zxT6b3+aTUNNH70zts=;
-	b=O4IVcWH5RcEXFV9mloOFdl2YHmxl7bJoVTrklWGT0rneCsF7tCvleHEaDkRIy++5ND7M9o
-	EdzJlYc5dCH0+tAcedaOnFsGWiXvbGRqmGsSFzE4HtFOBRTdcUgQDFPU88SlEPw363lCl8
-	HzR5xB8S+z5XpPYh9jvnhPGa2rwpKoA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1743753235;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zYPhgmSXacOeG1Rqk39JiHp34zxT6b3+aTUNNH70zts=;
-	b=xdPpIR7hu/R39UsEIUmcsqm9XFkZ1905rSglxIwzfpABCug54BAXdcC4hSgkNRXtdnC7cR
-	xKf6L0Z/0XgQG8DQ==
-Date: Fri, 4 Apr 2025 09:53:54 +0200
-From: Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
-To: Jarkko Sakkinen <jarkko@kernel.org>
-Cc: Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
-	linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Jonathan McDowell <noodles@earth.li>
-Subject: Re: [PATCH] tpm: tis: Increase the default for timeout B
-Message-ID: <Z--QEuu65lJjfoP5@kitsune.suse.cz>
-References: <Z-6Gau3aCB7B3pB9@earth.li>
- <20250403182519.8412-1-msuchanek@suse.de>
- <Z-7YHkb_2Dpz7GpV@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XesQvbb6"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ac25d2b2354so304107166b.1
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 00:54:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743753239; x=1744358039; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RaGTQLiNqEVn6hoJZLsfuhUQi5LJ3xyfMo/qxpq0bPs=;
+        b=XesQvbb6uoPiMNFvnI0BLKf+rzX1q6cPpJgLQlCLBQ5nq6gBwKVS10UI4GpysdCwy0
+         WTOR7FznWpUltWiGrTpILyMkwYXCuYOuFy5kK2BhUpT2L3reYzY0FA1sB/oZvZl7xhmb
+         uSN2oJhkbyZt5m6a4Ssid6XM0lMDHOwJmFPdkiX1H6+nXqpSMYWIeZ9O2GqNNOlsMeQk
+         a7XYCXNWOow6L4FfbdOiITsrex5BWTLgKMpKeFxxxsIzP7XU5s6LJb1N+C/LKFD0ZFEM
+         C1tqTLoBX14CvesGnaMkRajp4/SCHbEFH1ccP86VkOXdFd6XA/z8MV8wYWag27+ZaInC
+         UCIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743753239; x=1744358039;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RaGTQLiNqEVn6hoJZLsfuhUQi5LJ3xyfMo/qxpq0bPs=;
+        b=q7Gz4vnmatgXT8r09Jbz6VBZbSX+C9m12DubmIIfAUjoAPMA9WDpDpaAwnyDyNXXwQ
+         GEYbcuFg+d2sMh6siYu+rO5y4d0/Jq6TkyCHHWPUN3Va4PU5rIPxrtno3S1frQw8pYCD
+         iLsQFT+ZO89xhX+oB0dYBslgsJiprP3J1OAFl98ZDfxM9ArzYu/BpqLFkg8pSZ5jY9Jy
+         ul+d17wUJ2XbKit2bLGEGrbp/rOynqbVgWzMRToInH2dgnKHPjotGnzYefFn7USYQ6rv
+         uCC10YdEem8Uu2Ye63jSvCqZd/OPjP0TAMhEtvxQ1VGyDuRM62+w3RoPVt/bU+Eqved/
+         aenA==
+X-Forwarded-Encrypted: i=1; AJvYcCWff8UHYTv3w9jfao+KvJw0YkPZJCyZtwIcsbE+24Pa0vjESnnMqKxGrrCOFT48p3cV+SIMEA6gJCtk0Wg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzDTeZLQmm/CM7dJ4XwOEszNXfmZrcTiuXBlTlKVqOaAx7gti50
+	IeYXcixt7Q84JutCaZKvcc1IlhvMQUv3rIhOnXR54qJRTACkWEIx7xzP9pH/NnmJSYcfifZ+2Hk
+	H21OBN60DRHyLy5eijBBa74716O4=
+X-Gm-Gg: ASbGnctApdjIjro1RqLnXNQ5UJ5LDf6ehGlaYSSB0EyfUMBQfdMCM1HGpk4T8k70F5n
+	0hMbnDmzR2Mh9nEFL785hegyGlpimxtu1ywI9lHQwxlhvuJkfEK4J9AMireEuaze2M7bYBbUGEe
+	vlpPM+SQHeN05qYFLtoVzN2BBPFw==
+X-Google-Smtp-Source: AGHT+IF6civQrpcsNGh3qPt0iFr0ZsF9o9HE36peO/Ap6sGq0saiZ3ABHJ4gFSQo6erdYgpt1gMsmjYQr107nKWDgTQ=
+X-Received: by 2002:a17:907:3686:b0:ac7:31d5:20de with SMTP id
+ a640c23a62f3a-ac7d6e93527mr121032066b.50.1743753239033; Fri, 04 Apr 2025
+ 00:53:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z-7YHkb_2Dpz7GpV@kernel.org>
-X-Spam-Score: -4.30
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RCVD_COUNT_ZERO(0.00)[0];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_ENVRCPT(0.00)[gmx.de];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[gmx.de,ziepe.ca,vger.kernel.org,earth.li];
-	RCPT_COUNT_FIVE(0.00)[6];
-	FROM_EQ_ENVFROM(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,kitsune.suse.cz:mid,kitsune.suse.cz:helo]
-X-Spam-Flag: NO
-X-Spam-Level: 
+References: <cover.1743723590.git.abrahamadekunle50@gmail.com> <6fe7cb92811d07865830974cb366d99981ab1755.1743723591.git.abrahamadekunle50@gmail.com>
+In-Reply-To: <6fe7cb92811d07865830974cb366d99981ab1755.1743723591.git.abrahamadekunle50@gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Fri, 4 Apr 2025 10:53:22 +0300
+X-Gm-Features: AQ5f1JrSo785G3atwbFfwkCZQrH7Nn1tO8h4kPi_a_CCxGgfg4kfie2vKhwpsQw
+Message-ID: <CAHp75Vem1E9wmmfXWsbawj2f+F=UkfzML7HyAnhTdsUqvjW91g@mail.gmail.com>
+Subject: Re: [v3 1/1] staging: rtl8723bs: Prevent duplicate NULL tests on a value
+To: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
+Cc: outreachy@lists.linux.dev, julia.lawall@inria.fr, 
+	gregkh@linuxfoundation.org, linux-staging@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, andy@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 03, 2025 at 09:49:02PM +0300, Jarkko Sakkinen wrote:
-> On Thu, Apr 03, 2025 at 08:25:05PM +0200, Michal Suchanek wrote:
-> > With some Infineon chips the timeouts in tpm_tis_send_data (both B and
-> > C) can reach up to about 2250 ms.
-> > 
-> > Timeout C is retried since
-> > commit de9e33df7762 ("tpm, tpm_tis: Workaround failed command reception on Infineon devices")
-> > 
-> > Timeout B still needs to be extended.
-> > 
-> > Link: https://lore.kernel.org/linux-integrity/Z5pI07m0Muapyu9w@kitsune.suse.cz/
-> > Signed-off-by: Michal Suchanek <msuchanek@suse.de>
-> > ---
-> > V2: Only extend timeout B
-> 
-> git format-patch --v2 ;-)
-> 
-> NP, but use --v3 next time...
-> 
-> > ---
-> >  drivers/char/tpm/tpm_tis_core.h | 2 +-
-> >  include/linux/tpm.h             | 2 +-
-> >  2 files changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/char/tpm/tpm_tis_core.h b/drivers/char/tpm/tpm_tis_core.h
-> > index 970d02c337c7..c272c25eb9d4 100644
-> > --- a/drivers/char/tpm/tpm_tis_core.h
-> > +++ b/drivers/char/tpm/tpm_tis_core.h
-> > @@ -54,7 +54,7 @@ enum tis_int_flags {
-> >  enum tis_defaults {
-> >  	TIS_MEM_LEN = 0x5000,
-> >  	TIS_SHORT_TIMEOUT = 750,	/* ms */
-> > -	TIS_LONG_TIMEOUT = 2000,	/* 2 sec */
-> > +	TIS_LONG_TIMEOUT = 4000,	/* 4 sec */
-> 
-> nit: secs (that said, don't care that much)
-> 
-> >  	TIS_TIMEOUT_MIN_ATML = 14700,	/* usecs */
-> >  	TIS_TIMEOUT_MAX_ATML = 15000,	/* usecs */
-> >  };
-> > diff --git a/include/linux/tpm.h b/include/linux/tpm.h
-> > index 6c3125300c00..3db0b6a87d45 100644
-> > --- a/include/linux/tpm.h
-> > +++ b/include/linux/tpm.h
-> > @@ -224,7 +224,7 @@ enum tpm2_const {
-> >  
-> >  enum tpm2_timeouts {
-> >  	TPM2_TIMEOUT_A          =    750,
-> > -	TPM2_TIMEOUT_B          =   2000,
-> > +	TPM2_TIMEOUT_B          =   4000,
-> >  	TPM2_TIMEOUT_C          =    200,
-> >  	TPM2_TIMEOUT_D          =     30,
-> >  	TPM2_DURATION_SHORT     =     20,
-> > -- 
-> > 2.47.1
-> > 
-> 
-> Have you tested with:
-> 
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/jarkko/linux-tpmdd.git/commit/?id=de9e33df7762abbfc2a1568291f2c3a3154c6a9d
+On Fri, Apr 4, 2025 at 3:03=E2=80=AFAM Abraham Samuel Adekunle
+<abrahamadekunle50@gmail.com> wrote:
+>
+> When a value has been tested for NULL in an expression, a
+> second NULL test on the same value in another expression
+> is unnecessary when the value has not been assigned NULL.
+>
+> Remove unnecessary duplicate NULL tests on the same value that
+> has previously been NULL tested.
+>
+> Found by Coccinelle.
 
-I haven't. It will take about a week to test if things go well.
+...
 
-Nonetheless, it's fairly clear that both timeouts are exceeded, and this
-fix is only for one of them.
+> +                       psta->sta_xmitpriv.txseq_tid[pattrib->priority] &=
+=3D 0xFFF;
 
-Thanks
+> +                                       psta->BA_starting_seqctrl[pattrib=
+->priority & 0x0f] =3D
+> +                                               (tx_seq + 1) & 0xfff;
 
-Michal
+> +                                       psta->BA_starting_seqctrl[pattrib=
+->priority & 0x0f] =3D
+> +                                               (pattrib->seqnum + 1) % 4=
+096;
+
+Logically it's obvious that you need to align all cases to have
+consistent approach.
+Besides that the commit message should mention this change. Something like =
+this
+"While at it, convert '& 0xfff' cases to use modulo operator and
+decimal number to make the upper limit visible and clear what the
+semantic of it is."
+
+--=20
+With Best Regards,
+Andy Shevchenko
