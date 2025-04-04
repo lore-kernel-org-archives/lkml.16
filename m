@@ -1,127 +1,275 @@
-Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D24D421171B;
-	Fri,  4 Apr 2025 18:59:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E656C1F0E5C
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 18:59:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743793151; cv=none; b=WswLU3BfNYH6Cf17Ud/cHeEUgkMevkUbm2GxstJahEgLjiKbx4IVcEal8334RzztL6mhcoj+0S9p0657r9nJcxc0ULawJmjU9IL6tHN1WFZKmBTHnScwl2eIX1HLfw2eH+u8fCQJzThiAh7NeWpWu65c9N7Sm3hYbWKGATh6bu0=
+	t=1743793150; cv=none; b=AzST8a+C/3T9SPN+BqkJKimCPA/ALT9VHytS/hgXkveXZAIruCzJ6FM8uZ1nzwvunAQb4dqMi1bhM6HyYBzjetHA55t7Uk4w3T34xINIHGCdmJ/dQD9H2oQlhgN4EINTLeqpBjsruVWsC5/VM2VYyMFk+Xlw61JoINM5Yvd31tE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743793151; c=relaxed/simple;
-	bh=yQ9hdxCYDvZLZy9cwnQzNC/wg6VEZN0qrwYMaic6OB4=;
+	s=arc-20240116; t=1743793150; c=relaxed/simple;
+	bh=Akp8TP4w548YBYZdc4wbMePm744tCLFwdjDQVOlgw6k=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=vBrgTkIJ/1hK4svTitlPdcQktc0MDWit4Di6U3N+9YOu1UsYJKzMJltf0CYWYUohjqAuH02Yk9o2NGrr6YyK04rwtaxFA95cB5nQVdE91GPJxut+EM8Yb9N/dnbFo9ya64MVMVrINlLeBTenGPYHU6344hpSa9P013KSKyO5fjc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XBSYmD7J; arc=none smtp.client-ip=209.85.222.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=jQYkdiAdehsR82B+ePGO8L3NIN75kdHD9bWahWlN1DyW+SJIp5/cxjjSZmkWUdqU0q77wcFfPyaEeHIOiQoEL2E1fPPXk9A63f6Tk3Rwp9PWDQrxTJ2wrGepJk4QZ2Wqy+DMfzcc2chrMsDkeGuKLyBuOQtCoD9w49vLOAqGunY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pG8w3F7s; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XBSYmD7J"
-Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-7c55b53a459so236626485a.3;
-        Fri, 04 Apr 2025 11:59:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pG8w3F7s"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ac2bdea5a38so378909566b.0
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 11:59:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743793148; x=1744397948; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=IKjUACZPIJS63zOoRpXcIU0I0KFD19K+GUNwLuKaBJ0=;
-        b=XBSYmD7JbRGSahmzxx3RqGSK5Pue5/MRWtqXBAsWoT4GiDnArZyNQ+mzqSfuYFc8Yp
-         k6+kYJZNTgQ4KYNBZhHUmMq2yP1ZmMqAObp1mQJ+oEzpFxEUSnnwQb3Bfpx8X46je6Cf
-         TwyYr5lsmEN9f92dfv61wwD7JjqMFEFJocMMgEDJ+LLeCgwrJeepIqywCB3QeUTV1VH9
-         21hYU54L2ClVXbtdPQ5m/6ajc1Vse7On71yNhQ7cceJ+tykVyr08nxZ+31Njj/ifsqkn
-         1xqIA1VCNJ0kQiOahj8U60D7DD5YWwixCgK3or0Glxtubg7G2Acx8EHktY1twikAzqDt
-         KNCA==
+        d=google.com; s=20230601; t=1743793147; x=1744397947; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Fd2VmCaaJDc5tXmdk0MdBa4CIzTq2IXZ7VVk4lrC7Pg=;
+        b=pG8w3F7spPNLaZf1zNcYVymfWxaffYFU378Qc4bR0XDHdDYKqy9D8h2Crk26+h9zMB
+         fIV2AyUnOMrmpSUbCOO1ZajXRLJhIYNzuOZfet4Ci3gJRyqPm5VCOj7pRu+6xVS0461B
+         EbSg9+5ssiO+O4sQHWCjcJBUXlGGCY2iC0PJGC+LyyBZsVIsII+24r1cKlJ1U55b+cup
+         txvWtb1DadzTJk5v3T0dEizp1xY7r7QsC5KivPMaTmvqOCfady4ShfTVb5eyd8XFTzUy
+         fD7jGLQMpmLN6a9LV3Wwu2fXtQNttZrzi0kYsRXJsodStZmToXimwLixiNX5QzRPeSLx
+         Um1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743793148; x=1744397948;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=IKjUACZPIJS63zOoRpXcIU0I0KFD19K+GUNwLuKaBJ0=;
-        b=QMZWQbLlwZVZF6uPevNLTjfXchmEwj+a0c5rAhjkumbEqaW3BqoDN3KpXbRcTWKuRp
-         44d4pBlSrdqcpUS1L4+wWGCS5HnCErUTf4XKYkqkKauUkzrcRClDbREuWda6JCSCARfb
-         7qAS0d87dUISvh7mgtyy2R0ChwIX6FzLuS3o/H3GSXikv56QaC5WyU7e4+l+KOA1Uj0+
-         o/PTW9oEpCUkSanps/E61a8ctjotDsYxOO+yr6C7SDuIvkjbmEmansiUvJFVXO0TRqb/
-         oNXE6JoumBCyPkodhgMQ/SqAJ1ZbI2eA9dA5meyRgsvDES0DNFevTeec0Gr973/4uSn9
-         xNZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUL6Ik0n6Bqnitd0shGA99Xfxg1T6lQoMvZAhw/J9Uhdm7dMHQ4ZM/XmFtRNZ8MoY6Qx5A9g7EMx3uSqmY=@vger.kernel.org, AJvYcCV5633EgHJtbZ8sVGjKqFxWSDK5RrGnaULHs5eiKtARyph1qnLVIE6KfYL4TGLLweAOpAAH8JQosEzUy9Jv6Ja0A6Nm@vger.kernel.org
-X-Gm-Message-State: AOJu0YzOOJibEzV3xHU8PCW3JqXwN+8XrU5FjS/tKEe5ATnmRip50vHd
-	Jx0ZnEoEV13yqhr0asrWXHr/SqB1DW5EciF1gwmmKZe5kSHgVgTjArNcOJhMwc0c7iabjKuxvbB
-	dqkMU0U5xudhVIbC0RJBpQB2X7PM=
-X-Gm-Gg: ASbGncuEAUJmxyu3dbwUFC99HAYvziJ3NOCgoUEJ/9RE9sLJ883nnhwxF9Lov0OQLMJ
-	EXRtRLYAn4o+YbpGG7QqbC9lK+5jkT4dQgLkMT83eoF37pGFdWgBlRAfmug3a4ZY+Bnk924EnKC
-	BLXFu5TCEVWh6JtdVoYFmirj4P8upIpI+ptEh60B0pEq4=
-X-Google-Smtp-Source: AGHT+IHK4lPWaHjVzf96lEuYnTdrBloLkWqdaEB22PpT80oP2tng4AuXivWfJ/G3VF+mcikH2Q5kZKH9Fk2/cUXAY7E=
-X-Received: by 2002:a05:620a:3723:b0:7c5:cdb5:271b with SMTP id
- af79cd13be357-7c775a0f60dmr500906185a.15.1743793148612; Fri, 04 Apr 2025
- 11:59:08 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743793147; x=1744397947;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Fd2VmCaaJDc5tXmdk0MdBa4CIzTq2IXZ7VVk4lrC7Pg=;
+        b=VscwmFZxk5c5cC4/dg3/8Rp05Rp4LvjcZUu96bFpN7w2ziAGSaQZanFxZ/Ip1g7mVh
+         Jdi2FodajRl/HOb7WYzxg6ME6P0nZ6XkuJUuPcRJYo9jJAWsGBvjc8za6IVzU1x/jtYy
+         eihYjdmmHcytWMbQLkt4JH2Tux7nEivStBM/LCD3kfCkkFgT629XTnZDggVmE9cApUH1
+         NVNh5JSKmrTsVE5vKgbadJ/ZbPeoeVw3/TAjnUgLnurLHGq4OOdvmHj+b0tFP6gM9VMu
+         8YllYaMcKxVE9uTtsjF2aqfJrWs8nGKYDOWCVJ0iIq6OIEnp3Y2nSGJ8aLiROLgbkWs8
+         WEMw==
+X-Forwarded-Encrypted: i=1; AJvYcCXHZC2zHCEyPpKeOYHRcPTx5/EIePpyRlfCxFvjGO2mTI4TIMEPReDoVbzoEbIH8CGKGfLi9j+4YuXCwo4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3Xmlh77hPXHyuE+FarLCL9xITCUjkVf5zkkV5St0qppAgcxel
+	O1m96yOVo9gN1T8xAoa4XhlYIJQV4LY8aIFIRcBS+2L+PagJjyx2N9leJZgm9V5OK9swb2DFOnm
+	V9+3K9U+V/uD+WmtTT8xzC2DXlUffVL38boZP
+X-Gm-Gg: ASbGnctsiZBPYhqsWZ4dE0zpoyL5T9cl1IStEMq3yG40TWPyM0V+OvItdJum+uZ5toi
+	KpUgKB3t2sdFxCDiJkOAq2RAWJH43wYVMovamvCZUK2Gu7eK9wHGpfVBMc7+isIcM+4ziv7iYPS
+	p3/V5i93VLJpDc8kKlhXO1zJiEjg==
+X-Google-Smtp-Source: AGHT+IHqCOEoVg/cVEabRgMbyepnPj+9o+omnNnoFUpz0K2+9E+TojQ8uIMehRo28tc0RIsdXVGT4xli6xdYcJ/v1sE=
+X-Received: by 2002:a17:907:968d:b0:ac7:9817:60aa with SMTP id
+ a640c23a62f3a-ac7d6c9fefamr255269966b.2.1743793146895; Fri, 04 Apr 2025
+ 11:59:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250404135850.2695211-1-devaanshk840@gmail.com> <20250404142010.4af17918@gandalf.local.home>
-In-Reply-To: <20250404142010.4af17918@gandalf.local.home>
-From: Devaansh Kumar <devaanshk840@gmail.com>
-Date: Sat, 5 Apr 2025 00:28:57 +0530
-X-Gm-Features: ATxdqUGsIsK8DS_fm-3DSox-hiuQDVXc-gGywCAuYU_mxCWuj_VHuB0qEooATvY
-Message-ID: <CA+RTe_iqc0qCaeZFsyv9==-VUH2VhqCU46Jx7C3ve2=VDwFUOA@mail.gmail.com>
-Subject: Re: [PATCH v3] tracing: Replace deprecated strncpy() with strscpy()
- for stack_trace_filter_buf
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	skhan@linuxfoundation.org, linux-kernel-mentees@lists.linuxfoundation.org
+References: <20250403100943.120738-1-sgarzare@redhat.com> <20250403100943.120738-4-sgarzare@redhat.com>
+ <CAAH4kHYcRm1TpcgbtryJAtc6sjeh3hXzW7ApXY4WhcfZ3HEpVw@mail.gmail.com> <CAGxU2F4Zf7Khfqy5UjjPJ096kHHPjhFMN+oxvRTfG1knKca9gA@mail.gmail.com>
+In-Reply-To: <CAGxU2F4Zf7Khfqy5UjjPJ096kHHPjhFMN+oxvRTfG1knKca9gA@mail.gmail.com>
+From: Dionna Amalie Glaze <dionnaglaze@google.com>
+Date: Fri, 4 Apr 2025 11:58:54 -0700
+X-Gm-Features: ATxdqUGgbFUW9C8F8OO_2JG0wrtdd1BxQD8N08wZ94rnrpOaYv3GcerIOUR9g-k
+Message-ID: <CAAH4kHZhsUoxNdJ0F3GeRPhC_JpB4suUA1z44bQ=RpGoR2oHkA@mail.gmail.com>
+Subject: Re: [PATCH v6 3/4] tpm: add SNP SVSM vTPM driver
+To: Stefano Garzarella <sgarzare@redhat.com>
+Cc: Jarkko Sakkinen <jarkko@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>, "H. Peter Anvin" <hpa@zytor.com>, 
+	linux-coco@lists.linux.dev, linux-integrity@vger.kernel.org, 
+	Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>, x86@kernel.org, 
+	Tom Lendacky <thomas.lendacky@amd.com>, Joerg Roedel <jroedel@suse.de>, 
+	Claudio Carvalho <cclaudio@linux.ibm.com>, 
+	James Bottomley <James.Bottomley@hansenpartnership.com>, linux-kernel@vger.kernel.org, 
+	Dov Murik <dovmurik@linux.ibm.com>, Thomas Gleixner <tglx@linutronix.de>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 4 Apr 2025 at 23:49, Steven Rostedt <rostedt@goodmis.org> wrote:
+On Fri, Apr 4, 2025 at 11:37=E2=80=AFAM Stefano Garzarella <sgarzare@redhat=
+.com> wrote:
 >
-> On Fri,  4 Apr 2025 19:28:48 +0530
-> Devaansh Kumar <devaanshk840@gmail.com> wrote:
->
-> > --- a/kernel/trace/trace_stack.c
-> > +++ b/kernel/trace/trace_stack.c
-> > @@ -543,8 +543,10 @@ static __init int enable_stacktrace(char *str)
-> >  {
-> >       int len;
+> On Fri, 4 Apr 2025 at 19:32, Dionna Amalie Glaze <dionnaglaze@google.com>=
+ wrote:
 > >
-> > -     if ((len = str_has_prefix(str, "_filter=")))
-> > -             strncpy(stack_trace_filter_buf, str + len, COMMAND_LINE_SIZE);
-> > +     len = str_has_prefix(str, "_filter=");
-> > +
-> > +     if (len)
-> > +             strscpy(stack_trace_filter_buf, str + len, sizeof(stack_trace_filter_buf));
+> > On Thu, Apr 3, 2025 at 3:10=E2=80=AFAM Stefano Garzarella <sgarzare@red=
+hat.com> wrote:
+> > >
+> > > From: Stefano Garzarella <sgarzare@redhat.com>
+> > >
+> > > Add driver for the vTPM defined by the AMD SVSM spec [1].
+> > >
+> > > The specification defines a protocol that a SEV-SNP guest OS can use =
+to
+> > > discover and talk to a vTPM emulated by the Secure VM Service Module =
+(SVSM)
+> > > in the guest context, but at a more privileged level (VMPL0).
+> > >
+> > > The new tpm-svsm platform driver uses two functions exposed by x86/se=
+v
+> > > to verify that the device is actually emulated by the platform and to
+> > > send commands and receive responses.
+> > >
+> > > The device cannot be hot-plugged/unplugged as it is emulated by the
+> > > platform, so we can use module_platform_driver_probe(). The probe
+> > > function will only check whether in the current runtime configuration=
+,
+> > > SVSM is present and provides a vTPM.
+> > >
+> > > This device does not support interrupts and sends responses to comman=
+ds
+> > > synchronously. In order to have .recv() called just after .send() in
+> > > tpm_try_transmit(), the .status() callback returns 0, and both
+> > > .req_complete_mask and .req_complete_val are set to 0.
+> > >
+> > > [1] "Secure VM Service Module for SEV-SNP Guests"
+> > >     Publication # 58019 Revision: 1.00
+> > >
+> > > Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+> > > ---
+> > > v6:
+> > > - removed the `locality` field (set to 0) and the FIXME comment [Jark=
+ko]
+> > > v5:
+> > > - removed cancel/status/req_* ops after rebase on master that cotains
+> > >   commit 980a573621ea ("tpm: Make chip->{status,cancel,req_canceled} =
+opt")
+> > > v4:
+> > > - moved "asm" includes after the "linux" includes [Tom]
+> > > - allocated buffer separately [Tom/Jarkko/Jason]
+> > > v3:
+> > > - removed send_recv() ops and followed the ftpm driver implementing .=
+status,
+> > >   .req_complete_mask, .req_complete_val, etc. [Jarkko]
+> > > - removed link to the spec because those URLs are unstable [Borislav]
+> > > ---
+> > >  drivers/char/tpm/tpm_svsm.c | 128 ++++++++++++++++++++++++++++++++++=
+++
+> > >  drivers/char/tpm/Kconfig    |  10 +++
+> > >  drivers/char/tpm/Makefile   |   1 +
+> > >  3 files changed, 139 insertions(+)
+> > >  create mode 100644 drivers/char/tpm/tpm_svsm.c
+> > >
+> > > diff --git a/drivers/char/tpm/tpm_svsm.c b/drivers/char/tpm/tpm_svsm.=
+c
+> > > new file mode 100644
+> > > index 000000000000..b9242c9eab87
+> > > --- /dev/null
+> > > +++ b/drivers/char/tpm/tpm_svsm.c
+> > > @@ -0,0 +1,128 @@
+> > > +// SPDX-License-Identifier: GPL-2.0-only
+> > > +/*
+> > > + * Copyright (C) 2025 Red Hat, Inc. All Rights Reserved.
+> > > + *
+> > > + * Driver for the vTPM defined by the AMD SVSM spec [1].
+> > > + *
+> > > + * The specification defines a protocol that a SEV-SNP guest OS can =
+use to
+> > > + * discover and talk to a vTPM emulated by the Secure VM Service Mod=
+ule (SVSM)
+> > > + * in the guest context, but at a more privileged level (usually VMP=
+L0).
+> > > + *
+> > > + * [1] "Secure VM Service Module for SEV-SNP Guests"
+> > > + *     Publication # 58019 Revision: 1.00
+> > > + */
+> > > +
+> > > +#include <linux/module.h>
+> > > +#include <linux/kernel.h>
+> > > +#include <linux/platform_device.h>
+> > > +#include <linux/tpm_svsm.h>
+> > > +
+> > > +#include <asm/sev.h>
+> > > +
+> > > +#include "tpm.h"
+> > > +
+> > > +struct tpm_svsm_priv {
+> > > +       void *buffer;
+> > > +};
+> > > +
+> > > +static int tpm_svsm_send(struct tpm_chip *chip, u8 *buf, size_t len)
+> > > +{
+> > > +       struct tpm_svsm_priv *priv =3D dev_get_drvdata(&chip->dev);
+> > > +       int ret;
+> > > +
+> > > +       ret =3D svsm_vtpm_cmd_request_fill(priv->buffer, 0, buf, len)=
+;
+> > > +       if (ret)
+> > > +               return ret;
+> > > +
+> > > +       /*
+> > > +        * The SVSM call uses the same buffer for the command and for=
+ the
+> > > +        * response, so after this call, the buffer will contain the =
+response
+> > > +        * that can be used by .recv() op.
+> > > +        */
+> > > +       return snp_svsm_vtpm_send_command(priv->buffer);
+> > > +}
+> > > +
+> > > +static int tpm_svsm_recv(struct tpm_chip *chip, u8 *buf, size_t len)
+> > > +{
+> > > +       struct tpm_svsm_priv *priv =3D dev_get_drvdata(&chip->dev);
+> > > +
+> > > +       /*
+> > > +        * The internal buffer contains the response after we send th=
+e command
+> > > +        * to SVSM.
+> > > +        */
+> > > +       return svsm_vtpm_cmd_response_parse(priv->buffer, buf, len);
+> > > +}
+> > > +
+> > > +static struct tpm_class_ops tpm_chip_ops =3D {
+> > > +       .flags =3D TPM_OPS_AUTO_STARTUP,
+> > > +       .recv =3D tpm_svsm_recv,
+> > > +       .send =3D tpm_svsm_send,
+> > > +};
+> > > +
+> > > +static int __init tpm_svsm_probe(struct platform_device *pdev)
+> > > +{
+> > > +       struct device *dev =3D &pdev->dev;
+> > > +       struct tpm_svsm_priv *priv;
+> > > +       struct tpm_chip *chip;
+> > > +       int err;
+> > > +
+> > > +       if (!snp_svsm_vtpm_probe())
+> > > +               return -ENODEV;
+> > > +
+> > > +       priv =3D devm_kmalloc(dev, sizeof(*priv), GFP_KERNEL);
+> > > +       if (!priv)
+> > > +               return -ENOMEM;
+> > > +
+> > > +       /*
+> > > +        * The maximum buffer supported is one page (see SVSM_VTPM_MA=
+X_BUFFER
+> > > +        * in tpm_svsm.h).
+> > > +        */
+> > > +       priv->buffer =3D (void *)devm_get_free_pages(dev, GFP_KERNEL,=
+ 0);
+> > > +       if (!priv->buffer)
+> > > +               return -ENOMEM;
+> > > +
+> > > +       chip =3D tpmm_chip_alloc(dev, &tpm_chip_ops);
+> > > +       if (IS_ERR(chip))
+> > > +               return PTR_ERR(chip);
+> > > +
+> > > +       dev_set_drvdata(&chip->dev, priv);
+> > > +
+> > > +       err =3D tpm2_probe(chip);
 > >
-> >       stack_tracer_enabled = 1;
-> >       return 1;
+> > Our testing is showing that tpm2_probe is hitting a null pointer deref
+> > in tpm_transmit.
 >
-> BTW, why separate out the len? I use this notation quite a bit for
-> str_has_prefix() checks.
->
-> $ git grep '(len = str_has_pref' kernel/trace
-> kernel/trace/trace_events.c:    if (!(len = str_has_prefix(fmt, "REC->")))
-> kernel/trace/trace_events_filter.c:     if ((len = str_has_prefix(str + i, ".ustring"))) {
-> kernel/trace/trace_events_filter.c:     if ((len = str_has_prefix(str + i, ".function"))) {
-> kernel/trace/trace_events_hist.c:       if ((len = str_has_prefix(str, "key=")) ||
-> kernel/trace/trace_events_hist.c:           (len = str_has_prefix(str, "keys="))) {
-> kernel/trace/trace_events_hist.c:       } else if ((len = str_has_prefix(str, "val=")) ||
-> kernel/trace/trace_events_hist.c:                  (len = str_has_prefix(str, "vals=")) ||
-> kernel/trace/trace_events_hist.c:                  (len = str_has_prefix(str, "values="))) {
-> kernel/trace/trace_events_hist.c:       } else if ((len = str_has_prefix(str, "sort="))) {
-> kernel/trace/trace_events_hist.c:       } else if ((len = str_has_prefix(str, "clock="))) {
-> kernel/trace/trace_events_hist.c:       } else if ((len = str_has_prefix(str, "size="))) {
-> kernel/trace/trace_events_hist.c:               if ((len = str_has_prefix(str, "onmatch(")))
-> kernel/trace/trace_events_hist.c:               else if ((len = str_has_prefix(str, "onmax(")))
-> kernel/trace/trace_events_hist.c:               else if ((len = str_has_prefix(str, "onchange(")))
-> kernel/trace/trace_stack.c:     if ((len = str_has_prefix(str, "_filter=")))
->
-> It's fine being in the if statement as the if is more about "does this have
-> this prefix" and the length is just a side effect of it to use it to
-> extract the rest.
->
-> This patch is only about removing strncpy(), it doesn't need to modify the
-> format.
->
-> -- Steve
+> Next time, please share a backtrace.
 
-Sure I'll keep that in mind.
+Right, my bad.
+>
+> BTW I suspect you're not using Linus' tree, so be sure to backport
+> also commit 980a573621ea ("tpm: Make
+> chip->{status,cancel,req_canceled} opt").
+>
+> Without that, you will have a null ptr dereference since .status() is
+> NULL from v5 of this series (as specified in the changelog).
 
--- Devaansh Kumar
+Thanks, I missed that detail. Will report back.
+>
+> Stefano
+
+>
+
+
+--
+-Dionna Glaze, PhD, CISSP, CCSP (she/her)
