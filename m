@@ -1,580 +1,267 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1405C101FF;
-	Fri,  4 Apr 2025 22:16:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743804970; cv=none; b=NQ7k+UZCseGesWAsLFgY04uiDbErhaItftfx+DtnBnGXT28OVE7xbdiyDJ2MSArPiz/VVD+UJqdiOd+BQKrheSO1RNPp6n07V3nz9K41pjOQMKqe/vy1kZAtiDBr+THH5s3zjBC8tL29C+MYEVXvWPmQwBRh98V0x9kgtl8WHgM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743804970; c=relaxed/simple;
-	bh=6+GDiLxz/CpwnE2Zi4MceDfHJkrAk8SovScxQPqNYIw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LGrPdHOhhTiW2J6+05TqRaeeGNgeLoReXWLhT9bGb8zbGkzFzokbuUYQEGUyk7UrJ4THWXr6VVWkpJHOptVjXs5ymKlRh1F8RSFtnliQjvXBaTmEDtncAQCnYtndWIG/5havb3a3l6Yzbw8LJl2+JhSyqtnEslysoeDRpwKfIRU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qk+QQOji; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16EF22E62B6;
+	Fri,  4 Apr 2025 22:19:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.7
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743805172; cv=fail; b=EomK+3VPJsX7rbTqurFINIMN/WeSrpqEA3oljvmog4hhNpMXpZbRyPkc0XusEkEysVGBZHOvWG0qzivBuFRu0GR/65upMk2qb22lI6k/twSUnYWYJn8mmp2YXRaHE8gXlJrf2W6Y+c6tld7DDL2bXM4uj6uNFpVPCMdYf1djn7Q=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743805172; c=relaxed/simple;
+	bh=jINAa9IbqfXiFgSvvCk0APQQ0RH2S3bsyA5rRobw6FM=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=DqenAzFvBYPcGJLYLh143Ub7IhXi49i9x0ts2rL30PlZAxlny5XLSwSoy5DmoT+tPpNBgJgrzQOvvc/WLWSzgqMdJu6b0Adr9Y+ch5qqKGTRgXqAaepZcly0x5LfpkXPhRNQ6Z1CPkL684Q1+dqTqP1FnX6q+RFWXNG3EYzuTsk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l7wjOV/h; arc=fail smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qk+QQOji"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2777AC4CEDD;
-	Fri,  4 Apr 2025 22:16:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743804969;
-	bh=6+GDiLxz/CpwnE2Zi4MceDfHJkrAk8SovScxQPqNYIw=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Qk+QQOjiVIGLbL2Gga3ybmYlDAISHMQ1pcVmCMdQd/+PKPzQcQ2i/2u4tmq9o36T2
-	 FSTIQ8BCOlgTy8a+kVLy6Mh5ilnVJnUa4IGSvZpkbaTB1nastKqeS2c+iVsfOFdb4Q
-	 3hsqI2Q/Hf3gBrGBbHItZoBi8ajDHkA9T1fgsSTC7Cv7sw5U4CnqQpGY1htDyL2ii8
-	 UGDbF83sZkK6c7quza/XqKK3gHs3H1pnaQ1jri8B5TT8kk2dqSzcu9+k0P1k9XhK6B
-	 YeWEsOFXdimU+ibx9QOSzelkSb4pv/vOU+4Ppr58FUDHLTdEbJt4Lo+C6Ms46ZWXFB
-	 ePtLL05jolYjQ==
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Vidya Sagar <vidyas@nvidia.com>
-Cc: Frank Li <Frank.li@nxp.com>,
-	linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-tegra@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: PCI: Remove obsolete .txt docs
-Date: Fri,  4 Apr 2025 17:15:57 -0500
-Message-ID: <20250404221559.552201-1-robh@kernel.org>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l7wjOV/h"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743805170; x=1775341170;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=jINAa9IbqfXiFgSvvCk0APQQ0RH2S3bsyA5rRobw6FM=;
+  b=l7wjOV/hDYKHa6WeB2ThXVSh2XKVslxd6mzfNoUbP5peX5cuFjgK9GGK
+   UYVUXlp3jF5fYBjcxoI0qtYuLp1+TUINmmDLfLvGPez/pgrP1j7a8NACm
+   RjmDqqipTKamfxWRK4akEzsYDMRJGM9HUWTONtg27Hi1Zzoem5H5Vo6HP
+   k+dAGAdq3gAjwwUoicHeviiQ6bm60NC0i5jWCRB7l7eKzOmASOUEyZBVo
+   f323QVFQLs3QBVd1gCAbZQ2WsdtLcfj1QWJV5bUSXMQ5gXmcOcGa6Or79
+   xvBdd844rN2fxF7KHLgH+hRQs7JpYZ3eUPHeAT8SRPgyetX3L5l9GfOL2
+   g==;
+X-CSE-ConnectionGUID: 1pdei4GaQeKay40dF2d/jw==
+X-CSE-MsgGUID: hoeOIEq7R5Sq/9h27FJX+g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11394"; a="70627772"
+X-IronPort-AV: E=Sophos;i="6.15,189,1739865600"; 
+   d="scan'208";a="70627772"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 15:19:29 -0700
+X-CSE-ConnectionGUID: nilBzJkgSeCMC3USU/u8tw==
+X-CSE-MsgGUID: BbUAA7r3TYOBbFVbTL2jvg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,189,1739865600"; 
+   d="scan'208";a="158405942"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 15:19:30 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Fri, 4 Apr 2025 15:19:28 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Fri, 4 Apr 2025 15:19:28 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.168)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Fri, 4 Apr 2025 15:19:28 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=hVWjT9Ks0mlu1bkcKYuJwEBn8sm+oOG5P+ymBTdnKWmzNU5tn+6FJfZL7ymA0A45tyzfIYXY6/mfhkWqkf+aMbMvGfYJ5JUsc/YHpDe+FA7ZoOQiVtoiR5cQB5viynLQ5qQhtojVjF6CbbGlEA2R1DfE5ZHx0+OuJ1xbr3YNETU89kT0YHb/2Ty/4fWBiCQ/aSGLnDN3DiRZrlfN4RJbEFtaD9ji7kNOpW0OZy2ji55VosCqHaKtf5o857qrap3sYtRC/Ec00PCfiVNKf/YeDw9r1l7gG+etR5MvPrdi3N3mJUSSI8UonzoiPH8ihm8n5XE1CJ+rBl+vR0BnrdaxZQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=B3jG1g2H/ere2ac11DND69Z2j6syMWIvyCRvoymk67M=;
+ b=WcQW9AOL48Ykxh0RR4Dc18GFp94dJB/sMm0uQnGvPG2J+5drEjtOZYK7NQQtKcs+Y9nib61CUFOazWH+WX0cmDFwBvY9e4yuhim4InxGDvTRUdhUzzfvCA8vVmpugravV5E7FmVkhIMjDmn/REIvPjbgNPJ6NG0alv3Eo2/jahLggyd6Sg6n9FY0m5qQB+LeUmOQBSvi3x7P9innVROPUDkNqFuaBDMhcm9p0pX0a8jSi2SgaipI+XhZJB+RZ8G/Td/BdPv3Dqf/IaVHSBqzfWwBM9Aze5chPZiUTt4GhjUeCakrAf5rgsybwEu3M268tvXDKguDcayqciRYLlWIIg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by IA1PR11MB6268.namprd11.prod.outlook.com (2603:10b6:208:3e4::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8583.41; Fri, 4 Apr
+ 2025 22:19:26 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8%3]) with mapi id 15.20.8583.041; Fri, 4 Apr 2025
+ 22:19:26 +0000
+Date: Fri, 4 Apr 2025 15:19:23 -0700
+From: Dan Williams <dan.j.williams@intel.com>
+To: "Zhijian Li (Fujitsu)" <lizhijian@fujitsu.com>, Dan Williams
+	<dan.j.williams@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
+CC: Jonathan Cameron <jonathan.cameron@huawei.com>, Dave Jiang
+	<dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>,
+	"Vishal Verma" <vishal.l.verma@intel.com>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] cxl/acpi: Verify CHBS length for CXL2.0
+Message-ID: <67f05aeb50ea_464f7294fb@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20250326074450.937819-1-lizhijian@fujitsu.com>
+ <67e4c9aaedd08_138d3294ca@iweiny-mobl.notmuch>
+ <1ed912df-42c7-4319-8765-3167963df7b3@fujitsu.com>
+ <67e5544237027_13cb29432@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+ <7bbf602d-6900-4179-9737-efeb40e1566f@fujitsu.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <7bbf602d-6900-4179-9737-efeb40e1566f@fujitsu.com>
+X-ClientProxiedBy: MW2PR16CA0060.namprd16.prod.outlook.com
+ (2603:10b6:907:1::37) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|IA1PR11MB6268:EE_
+X-MS-Office365-Filtering-Correlation-Id: 06c1b9df-213e-4c28-5d81-08dd73c6c279
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?jz3PM5cpNWHJtzcWDklFxMNCCDbsiU3LI5m8HBJgAfmCUolEE69VXmjcm+ZB?=
+ =?us-ascii?Q?rPPtC8xtohRHOIzOUbZAs8ZSWicqjWUxZ5iR9SKOT5MzUQUZlDZ+l6+EWFe3?=
+ =?us-ascii?Q?YV6BXPuodapf1MIpyiaDUFSBFFfNJsS9XH4Ez89po4GZGazi230KSY0LdzdD?=
+ =?us-ascii?Q?XR/mTk7hP9hJy2kjPmRxGzP85WXFXjUSEjvCgW+a3aqdOWb4MQpC/wRiveV+?=
+ =?us-ascii?Q?qpkeCJo8MfgDuCszBvPE5FlAtEqlO1faq9dfiVH2AHszrRKBXAJreRLtciBE?=
+ =?us-ascii?Q?SwdxzGLHgyU3zSIZ5YJGGhHEeSBjG9B4zNNL6HGf1asL/2uQt6rNNSBURhF7?=
+ =?us-ascii?Q?q/FPLcF6X4zT1+TPhpR/qJ/5m4wfB6lveienPkp1JaPcY2coPzLciFKJ5yxQ?=
+ =?us-ascii?Q?iGA6055sw4r34kf9D4xAQis61ggsZV0PWcokyG4YvgbSDYc2+dccEtbXChRP?=
+ =?us-ascii?Q?mLXp86aFDg+3amwnGSg/Zcvr2cgOFQUxYwH8JlDM6xx48hTrPtpd/iiR701o?=
+ =?us-ascii?Q?/6r6XyccIGHq1nJqm4BlSwXcXbOPH8ATD8MY8rd7eUr7vrecKwYFJINZp6Nk?=
+ =?us-ascii?Q?f4BqfjmpGRCGugPbVfaLJoa62kRmz6MsdBQAaPGhP3xKFW10eHk/9oKJTsmP?=
+ =?us-ascii?Q?FaAPztGC4ansQaz6Nyr1Fwe8QGAsLLM9SKzBVnnGksnGYiSg6sL+ivb8DPxs?=
+ =?us-ascii?Q?0AUm6eP8OYadyjPtQBzAzpeMAvVVoZbj9oWEHbAibzlRZasdgGX5zlhtG922?=
+ =?us-ascii?Q?1QxJwIHc/5XDbrqMKJ+Brc/oVppnK8qfVeAuqs9J6cnq7M4DWrervYhEo3ZB?=
+ =?us-ascii?Q?1or4nVzn/xmcT/PqLs0GzUfuAHQ87+BDY0cujI5/oCbYrAVtlluTeeAdUM3x?=
+ =?us-ascii?Q?31PQ9w//IkNZdhk9cBIwApN+YqAz5xLNaybnLHM5sKds2XySO+CU+qpgQJc3?=
+ =?us-ascii?Q?Af+CvBDzqpkXDh1rjssbfbOT8HTARp6GpfItcRq6XJfxX9Vz1g/Sux6LlKsL?=
+ =?us-ascii?Q?pR2bxUYjYIMS6HjPM3dQkXoHZUTqoFkPP6gphNNauFUY6ZMLWAwI3QVFCauy?=
+ =?us-ascii?Q?HuDXf/WUYNfobWXsriAJQSZqlMeatEfabROwamK8gZgYGScxlb3EfbM1ubJT?=
+ =?us-ascii?Q?b8giBqKNyKqF7XxMJ+5UCscnELah5swdgEPLn19R95Q5HicCkQ2P5SZkSUU9?=
+ =?us-ascii?Q?C/i9wrCehMW6Yl/Zw59sdQJS6Zju3vaBMYnm5qc7JtbmK6nwxSyCA45aKsth?=
+ =?us-ascii?Q?tiCllqd/La/rr7AEYC91MZg9YaqQV9C+e4GeGcceRYxIqQf8V+53Gow4brs/?=
+ =?us-ascii?Q?dFzXd30hD4z3Mbc4pKJQ5A7yFD5SZbspv/Mo1Ft9PJNqCud3aXqLzIKwqHRV?=
+ =?us-ascii?Q?6HN3jtV7l1RdKFyFtoQq0YgcHu3K?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?DWewXiwgRsUVPx/1IXwGm8Oqb+VqhuYPQlT1RvQah5wwc9gr+6jIZ60lJviV?=
+ =?us-ascii?Q?2JMd3FCaVuTDhxvL9mikS9LvMLvohIWFnYWmd1ElRfYGayrJs2fpL+q+d08z?=
+ =?us-ascii?Q?DM8e/Tcq1o9i29apysYnJC8TWtEMatAf5vtzhWeRoEeJ+Z7Ee9E4BAJHCsi/?=
+ =?us-ascii?Q?FZc1swSSmyZUHY53+v9Xp6rWvtniUXzk6+oz+U06ZuTOsCMKMRI1lPOhmC50?=
+ =?us-ascii?Q?AKsyV4inmTNZ26PE3mXrXeGMWWHaFXwb0YW6ghMyqQHbIxOp76XUDt8cgVy+?=
+ =?us-ascii?Q?ActlsKnvxr7o4FpV3LktTOvllXWXjHsrXgYLOYInkBWS2ZLKPEaJOFDRC8OT?=
+ =?us-ascii?Q?xjjI+49BVxFDQA33XwEgJ4FZ5PYA6JBRuUD1ZyXlY0mK2gOYJw5Z4AaP5Qtk?=
+ =?us-ascii?Q?LL3aurjlv3Iv7r1PJ0nOQeSA4XMuFoPas7c/62xTN7TeEk4K/5vTyFQBxoUT?=
+ =?us-ascii?Q?fvxGoRfty9FEqKKaOBvCuJdh74JXl1ItAwJxPK+mDCIIRi9/pKAQICQ1zgtr?=
+ =?us-ascii?Q?dcNCbr2BYJaw+h6VouJmujkoGMapost/MDAStWLV3EOEo5vmCoHNelF3vVfc?=
+ =?us-ascii?Q?mgiFnHnVBwxj5GaHYcHmjFX1pZotptFAPxpvDERnXmLQap9d+TMDSSKby68U?=
+ =?us-ascii?Q?+wp6MoFROLCIERJq71jchINcAO4SuocKJW227s3CMlPfXofzJ/jPIQEHOua2?=
+ =?us-ascii?Q?Jy6xw4IKN61lUf0C618P4XLyxTm9oYXzn1el3Ud3SgkvpneN4FfAkmcr5RQ4?=
+ =?us-ascii?Q?ovI4IOe5ghI7xIha/Q1pqT2btoxy0LKSZSJjlJ8lKfWWqUyLHaQV3Sz0/rn3?=
+ =?us-ascii?Q?k6Jo3XKYXGcLnKeQB5DdZxynODILdvzznt6ZDYgIiM2NaIqLRRhgyV8fnfrE?=
+ =?us-ascii?Q?3veMZHeoCqLvSVSayc5Bu9vIwYBJlDJaDIFN/aZomxLX4oYojFZ9cDIxt6lI?=
+ =?us-ascii?Q?gFWTL0qTr9jfBoxaI9Q0MODRmAGcnHEVx06L2nA1xTuPFYipm38uBy4bkjb3?=
+ =?us-ascii?Q?bEf43HFXmA/NRjMZOTCMiP+jRfIZ8NggKxAd8vRn3gfjkfSNohXd6PtIKQ/Z?=
+ =?us-ascii?Q?RHOSvsGI6iMmgl5gwaiizWW2BOSjl85axDqnUt94bppGr3dUkUYLvvlmzeEd?=
+ =?us-ascii?Q?lx2NeupBK5PNRoEFHT3IiH9kSAPVpdP5XHGOp6llYF70J7B1oYIfl8PtpdH5?=
+ =?us-ascii?Q?fFJYsGdXAK6DgkRzHa8477ECdqGSImNkDDlmkjEsrjawDdkK34fokKTUa11I?=
+ =?us-ascii?Q?yKTXjJ2hRfQpwJw93P4W7CifGdAZpuoZNTNyXNx437B7qWq1JH8TpvNEyOX9?=
+ =?us-ascii?Q?Rq1bykwNhzMurTT1wyX85/KK7dgfwjbKTSdKjX+4IBvQDg8BK1kYIRKTzIGE?=
+ =?us-ascii?Q?9z80Af8RewKEeCEyR3o1P0fQXQJYa4j+ro+eqJ3CeIe7xKDFhnF+bQ76TB8c?=
+ =?us-ascii?Q?n8JW79U0YO9u0Fx2JUll6jB8Kzc/GMcKbstcdXrQEnM3ziZoATYIfchOTMNN?=
+ =?us-ascii?Q?7QRIYGkpM2JVV7d27XmbxBjpgWu5ObgNBDAX0i3WOM0c+vSi2hF8GEYfqw30?=
+ =?us-ascii?Q?5aPKflNLUc1zrV0JxzYShsTEbOtMcmd+biMcwS1/Sq7jpS1sfgebVH7FOXpy?=
+ =?us-ascii?Q?Uw=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 06c1b9df-213e-4c28-5d81-08dd73c6c279
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Apr 2025 22:19:26.1994
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ve+lDa25nHr17EY5IU1ZIpmzHMeR+t1W/sv5vDuqb0160P/gN8bFS6SZ/zqmXz1XU5kLzbHmZQaSZp37Saj9peycRiX34fzaKb54KLALKQ8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR11MB6268
+X-OriginatorOrg: intel.com
 
-The content in these files has been moved to the schemas in dtschema.
-pci.txt is covered by pci-bus-common.yaml and pci-host-bridge.yaml.
-pci-iommu.txt is covered by pci-iommu.yaml. pci-msi.txt is covered in
-msi-map property in pci-host-bridge.yaml.
+Zhijian Li (Fujitsu) wrote:
+> 
+> 
+> On 27/03/2025 21:36, Dan Williams wrote:
+> > Zhijian Li (Fujitsu) wrote:
+> >>
+> >>
+> >> On 27/03/2025 11:44, Ira Weiny wrote:
+> >>> Li Zhijian wrote:
+> >>>> Per CXL Spec r3.1 Table 9-21, both CXL1.1 and CXL2.0 have defined their
+> >>>> own length, verify it to avoid an invalid CHBS
+> >>>
+> >>>
+> >>> I think this looks fine.  But did a platform have issues with this?
+> >>
+> >> Not really, actually, I discovered it while reviewing the code and
+> >> CXL specification.
+> >>
+> >> Currently, this issue arises only when I inject an incorrect length
+> >> via QEMU environment. Our hardware does not experience this problem.
+> >>
+> >>
+> >>> Does this need to be backported?
+> >> I remain neutral :)
+> > 
+> > What does the kernel do with this invalid CHBS from QEMU? I would be
+> > happy to let whatever bad effect from injecting a corrupted CHBS just
+> > happen because there are plenty of ways for QEMU to confuse the kernel
+> > even if the table lengths are correct.
+> > 
+> > Unless it has real impact I would rather not touch the kernel for every
+> > possible way that QEMU can make a mistake.
+> 
+> 
+> 
+> Thank you for the feedback.
+> 
+> If your earlier comments were specifically about ***backporting*** this patch,
+> I agree there might not be an urgent need for that.
+> 
+> However, regarding the discussion on whether this patch should be accepted
+> upstream, TBH, I believe it is necessary.
+> 
+> 1. The **CXL Specification (r3.1, Table 9-21)** explicitly defines `length`
+> requirements for CHBS in both CXL 1.1 and CXL 2.0 cases. Failing to
+> validate this field against the spec risks misinterpretation of invalid
+> configurations.
 
-Cc: Frank Li <Frank.li@nxp.com>
-Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
----
- .../bindings/pci/nvidia,tegra194-pcie-ep.yaml |   2 +-
- .../devicetree/bindings/pci/pci-iommu.txt     | 171 --------------
- .../devicetree/bindings/pci/pci-msi.txt       | 220 ------------------
- Documentation/devicetree/bindings/pci/pci.txt |  84 -------
- 4 files changed, 1 insertion(+), 476 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/pci/pci-iommu.txt
- delete mode 100644 Documentation/devicetree/bindings/pci/pci-msi.txt
- delete mode 100644 Documentation/devicetree/bindings/pci/pci.txt
+The point is that the kernel has gotten by without this check and does
+not need to be aggressive. Anything more than this hunk below is
+overkill:
 
-diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie-ep.yaml b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie-ep.yaml
-index a24fb8307d29..6d6052a2748f 100644
---- a/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie-ep.yaml
-+++ b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie-ep.yaml
-@@ -74,7 +74,7 @@ properties:
+diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+index cb14829bb9be..fbcb93e5beb5 100644
+--- a/drivers/cxl/acpi.c
++++ b/drivers/cxl/acpi.c
+@@ -482,6 +482,10 @@ static int cxl_get_chbs_iter(union acpi_subtable_headers *header, void *arg,
+            chbs->length != CXL_RCRB_SIZE)
+                return 0;
  
-   reset-gpios:
-     description: Must contain a phandle to a GPIO controller followed by GPIO
--      that is being used as PERST input signal. Please refer to pci.txt.
-+      that is being used as PERST input signal.
++       if (chbs->cxl_version == ACPI_CEDT_CHBS_VERSION_CXL20 &&
++           chbs->length != ACPI_CEDT_CHBS_LENGTH_CXL20)
++               return 0;
++
+        if (!chbs->base)
+                return 0;
  
-   phys:
-     minItems: 1
-diff --git a/Documentation/devicetree/bindings/pci/pci-iommu.txt b/Documentation/devicetree/bindings/pci/pci-iommu.txt
-deleted file mode 100644
-index 0def586fdcdf..000000000000
---- a/Documentation/devicetree/bindings/pci/pci-iommu.txt
-+++ /dev/null
-@@ -1,171 +0,0 @@
--This document describes the generic device tree binding for describing the
--relationship between PCI(e) devices and IOMMU(s).
--
--Each PCI(e) device under a root complex is uniquely identified by its Requester
--ID (AKA RID). A Requester ID is a triplet of a Bus number, Device number, and
--Function number.
--
--For the purpose of this document, when treated as a numeric value, a RID is
--formatted such that:
--
--* Bits [15:8] are the Bus number.
--* Bits [7:3] are the Device number.
--* Bits [2:0] are the Function number.
--* Any other bits required for padding must be zero.
--
--IOMMUs may distinguish PCI devices through sideband data derived from the
--Requester ID. While a given PCI device can only master through one IOMMU, a
--root complex may split masters across a set of IOMMUs (e.g. with one IOMMU per
--bus).
--
--The generic 'iommus' property is insufficient to describe this relationship,
--and a mechanism is required to map from a PCI device to its IOMMU and sideband
--data.
--
--For generic IOMMU bindings, see
--Documentation/devicetree/bindings/iommu/iommu.txt.
--
--
--PCI root complex
--================
--
--Optional properties
---------------------
--
--- iommu-map: Maps a Requester ID to an IOMMU and associated IOMMU specifier
--  data.
--
--  The property is an arbitrary number of tuples of
--  (rid-base,iommu,iommu-base,length).
--
--  Any RID r in the interval [rid-base, rid-base + length) is associated with
--  the listed IOMMU, with the IOMMU specifier (r - rid-base + iommu-base).
--
--- iommu-map-mask: A mask to be applied to each Requester ID prior to being
--  mapped to an IOMMU specifier per the iommu-map property.
--
--
--Example (1)
--===========
--
--/ {
--	#address-cells = <1>;
--	#size-cells = <1>;
--
--	iommu: iommu@a {
--		reg = <0xa 0x1>;
--		compatible = "vendor,some-iommu";
--		#iommu-cells = <1>;
--	};
--
--	pci: pci@f {
--		reg = <0xf 0x1>;
--		compatible = "vendor,pcie-root-complex";
--		device_type = "pci";
--
--		/*
--		 * The sideband data provided to the IOMMU is the RID,
--		 * identity-mapped.
--		 */
--		iommu-map = <0x0 &iommu 0x0 0x10000>;
--	};
--};
--
--
--Example (2)
--===========
--
--/ {
--	#address-cells = <1>;
--	#size-cells = <1>;
--
--	iommu: iommu@a {
--		reg = <0xa 0x1>;
--		compatible = "vendor,some-iommu";
--		#iommu-cells = <1>;
--	};
--
--	pci: pci@f {
--		reg = <0xf 0x1>;
--		compatible = "vendor,pcie-root-complex";
--		device_type = "pci";
--
--		/*
--		 * The sideband data provided to the IOMMU is the RID with the
--		 * function bits masked out.
--		 */
--		iommu-map = <0x0 &iommu 0x0 0x10000>;
--		iommu-map-mask = <0xfff8>;
--	};
--};
--
--
--Example (3)
--===========
--
--/ {
--	#address-cells = <1>;
--	#size-cells = <1>;
--
--	iommu: iommu@a {
--		reg = <0xa 0x1>;
--		compatible = "vendor,some-iommu";
--		#iommu-cells = <1>;
--	};
--
--	pci: pci@f {
--		reg = <0xf 0x1>;
--		compatible = "vendor,pcie-root-complex";
--		device_type = "pci";
--
--		/*
--		 * The sideband data provided to the IOMMU is the RID,
--		 * but the high bits of the bus number are flipped.
--		 */
--		iommu-map = <0x0000 &iommu 0x8000 0x8000>,
--			    <0x8000 &iommu 0x0000 0x8000>;
--	};
--};
--
--
--Example (4)
--===========
--
--/ {
--	#address-cells = <1>;
--	#size-cells = <1>;
--
--	iommu_a: iommu@a {
--		reg = <0xa 0x1>;
--		compatible = "vendor,some-iommu";
--		#iommu-cells = <1>;
--	};
--
--	iommu_b: iommu@b {
--		reg = <0xb 0x1>;
--		compatible = "vendor,some-iommu";
--		#iommu-cells = <1>;
--	};
--
--	iommu_c: iommu@c {
--		reg = <0xc 0x1>;
--		compatible = "vendor,some-iommu";
--		#iommu-cells = <1>;
--	};
--
--	pci: pci@f {
--		reg = <0xf 0x1>;
--		compatible = "vendor,pcie-root-complex";
--		device_type = "pci";
--
--		/*
--		 * Devices with bus number 0-127 are mastered via IOMMU
--		 * a, with sideband data being RID[14:0].
--		 * Devices with bus number 128-255 are mastered via
--		 * IOMMU b, with sideband data being RID[14:0].
--		 * No devices master via IOMMU c.
--		 */
--		iommu-map = <0x0000 &iommu_a 0x0000 0x8000>,
--			    <0x8000 &iommu_b 0x0000 0x8000>;
--	};
--};
-diff --git a/Documentation/devicetree/bindings/pci/pci-msi.txt b/Documentation/devicetree/bindings/pci/pci-msi.txt
-deleted file mode 100644
-index b73d839657b6..000000000000
---- a/Documentation/devicetree/bindings/pci/pci-msi.txt
-+++ /dev/null
-@@ -1,220 +0,0 @@
--This document describes the generic device tree binding for describing the
--relationship between PCI devices and MSI controllers.
--
--Each PCI device under a root complex is uniquely identified by its Requester ID
--(AKA RID). A Requester ID is a triplet of a Bus number, Device number, and
--Function number.
--
--For the purpose of this document, when treated as a numeric value, a RID is
--formatted such that:
--
--* Bits [15:8] are the Bus number.
--* Bits [7:3] are the Device number.
--* Bits [2:0] are the Function number.
--* Any other bits required for padding must be zero.
--
--MSIs may be distinguished in part through the use of sideband data accompanying
--writes. In the case of PCI devices, this sideband data may be derived from the
--Requester ID. A mechanism is required to associate a device with both the MSI
--controllers it can address, and the sideband data that will be associated with
--its writes to those controllers.
--
--For generic MSI bindings, see
--Documentation/devicetree/bindings/interrupt-controller/msi.txt.
--
--
--PCI root complex
--================
--
--Optional properties
---------------------
--
--- msi-map: Maps a Requester ID to an MSI controller and associated
--  msi-specifier data. The property is an arbitrary number of tuples of
--  (rid-base,msi-controller,msi-base,length), where:
--
--  * rid-base is a single cell describing the first RID matched by the entry.
--
--  * msi-controller is a single phandle to an MSI controller
--
--  * msi-base is an msi-specifier describing the msi-specifier produced for the
--    first RID matched by the entry.
--
--  * length is a single cell describing how many consecutive RIDs are matched
--    following the rid-base.
--
--  Any RID r in the interval [rid-base, rid-base + length) is associated with
--  the listed msi-controller, with the msi-specifier (r - rid-base + msi-base).
--
--- msi-map-mask: A mask to be applied to each Requester ID prior to being mapped
--  to an msi-specifier per the msi-map property.
--
--- msi-parent: Describes the MSI parent of the root complex itself. Where
--  the root complex and MSI controller do not pass sideband data with MSI
--  writes, this property may be used to describe the MSI controller(s)
--  used by PCI devices under the root complex, if defined as such in the
--  binding for the root complex.
--
--
--Example (1)
--===========
--
--/ {
--	#address-cells = <1>;
--	#size-cells = <1>;
--
--	msi: msi-controller@a {
--		reg = <0xa 0x1>;
--		compatible = "vendor,some-controller";
--		msi-controller;
--		#msi-cells = <1>;
--	};
--
--	pci: pci@f {
--		reg = <0xf 0x1>;
--		compatible = "vendor,pcie-root-complex";
--		device_type = "pci";
--
--		/*
--		 * The sideband data provided to the MSI controller is
--		 * the RID, identity-mapped.
--		 */
--		msi-map = <0x0 &msi_a 0x0 0x10000>,
--	};
--};
--
--
--Example (2)
--===========
--
--/ {
--	#address-cells = <1>;
--	#size-cells = <1>;
--
--	msi: msi-controller@a {
--		reg = <0xa 0x1>;
--		compatible = "vendor,some-controller";
--		msi-controller;
--		#msi-cells = <1>;
--	};
--
--	pci: pci@f {
--		reg = <0xf 0x1>;
--		compatible = "vendor,pcie-root-complex";
--		device_type = "pci";
--
--		/*
--		 * The sideband data provided to the MSI controller is
--		 * the RID, masked to only the device and function bits.
--		 */
--		msi-map = <0x0 &msi_a 0x0 0x100>,
--		msi-map-mask = <0xff>
--	};
--};
--
--
--Example (3)
--===========
--
--/ {
--	#address-cells = <1>;
--	#size-cells = <1>;
--
--	msi: msi-controller@a {
--		reg = <0xa 0x1>;
--		compatible = "vendor,some-controller";
--		msi-controller;
--		#msi-cells = <1>;
--	};
--
--	pci: pci@f {
--		reg = <0xf 0x1>;
--		compatible = "vendor,pcie-root-complex";
--		device_type = "pci";
--
--		/*
--		 * The sideband data provided to the MSI controller is
--		 * the RID, but the high bit of the bus number is
--		 * ignored.
--		 */
--		msi-map = <0x0000 &msi 0x0000 0x8000>,
--			  <0x8000 &msi 0x0000 0x8000>;
--	};
--};
--
--
--Example (4)
--===========
--
--/ {
--	#address-cells = <1>;
--	#size-cells = <1>;
--
--	msi: msi-controller@a {
--		reg = <0xa 0x1>;
--		compatible = "vendor,some-controller";
--		msi-controller;
--		#msi-cells = <1>;
--	};
--
--	pci: pci@f {
--		reg = <0xf 0x1>;
--		compatible = "vendor,pcie-root-complex";
--		device_type = "pci";
--
--		/*
--		 * The sideband data provided to the MSI controller is
--		 * the RID, but the high bit of the bus number is
--		 * negated.
--		 */
--		msi-map = <0x0000 &msi 0x8000 0x8000>,
--			  <0x8000 &msi 0x0000 0x8000>;
--	};
--};
--
--
--Example (5)
--===========
--
--/ {
--	#address-cells = <1>;
--	#size-cells = <1>;
--
--	msi_a: msi-controller@a {
--		reg = <0xa 0x1>;
--		compatible = "vendor,some-controller";
--		msi-controller;
--		#msi-cells = <1>;
--	};
--
--	msi_b: msi-controller@b {
--		reg = <0xb 0x1>;
--		compatible = "vendor,some-controller";
--		msi-controller;
--		#msi-cells = <1>;
--	};
--
--	msi_c: msi-controller@c {
--		reg = <0xc 0x1>;
--		compatible = "vendor,some-controller";
--		msi-controller;
--		#msi-cells = <1>;
--	};
--
--	pci: pci@f {
--		reg = <0xf 0x1>;
--		compatible = "vendor,pcie-root-complex";
--		device_type = "pci";
--
--		/*
--		 * The sideband data provided to MSI controller a is the
--		 * RID, but the high bit of the bus number is negated.
--		 * The sideband data provided to MSI controller b is the
--		 * RID, identity-mapped.
--		 * MSI controller c is not addressable.
--		 */
--		msi-map = <0x0000 &msi_a 0x8000 0x08000>,
--			  <0x8000 &msi_a 0x0000 0x08000>,
--			  <0x0000 &msi_b 0x0000 0x10000>;
--	};
--};
-diff --git a/Documentation/devicetree/bindings/pci/pci.txt b/Documentation/devicetree/bindings/pci/pci.txt
-deleted file mode 100644
-index 6a8f2874a24d..000000000000
---- a/Documentation/devicetree/bindings/pci/pci.txt
-+++ /dev/null
-@@ -1,84 +0,0 @@
--PCI bus bridges have standardized Device Tree bindings:
--
--PCI Bus Binding to: IEEE Std 1275-1994
--https://www.devicetree.org/open-firmware/bindings/pci/pci2_1.pdf
--
--And for the interrupt mapping part:
--
--Open Firmware Recommended Practice: Interrupt Mapping
--https://www.devicetree.org/open-firmware/practice/imap/imap0_9d.pdf
--
--Additionally to the properties specified in the above standards a host bridge
--driver implementation may support the following properties:
--
--- linux,pci-domain:
--   If present this property assigns a fixed PCI domain number to a host bridge,
--   otherwise an unstable (across boots) unique number will be assigned.
--   It is required to either not set this property at all or set it for all
--   host bridges in the system, otherwise potentially conflicting domain numbers
--   may be assigned to root buses behind different host bridges.  The domain
--   number for each host bridge in the system must be unique.
--- max-link-speed:
--   If present this property specifies PCI gen for link capability.  Host
--   drivers could add this as a strategy to avoid unnecessary operation for
--   unsupported link speed, for instance, trying to do training for
--   unsupported link speed, etc.  Must be '4' for gen4, '3' for gen3, '2'
--   for gen2, and '1' for gen1. Any other values are invalid.
--- reset-gpios:
--   If present this property specifies PERST# GPIO. Host drivers can parse the
--   GPIO and apply fundamental reset to endpoints.
--- supports-clkreq:
--   If present this property specifies that CLKREQ signal routing exists from
--   root port to downstream device and host bridge drivers can do programming
--   which depends on CLKREQ signal existence. For example, programming root port
--   not to advertise ASPM L1 Sub-States support if there is no CLKREQ signal.
--
--PCI-PCI Bridge properties
---------------------------
--
--PCIe root ports and switch ports may be described explicitly in the device
--tree, as children of the host bridge node. Even though those devices are
--discoverable by probing, it might be necessary to describe properties that
--aren't provided by standard PCIe capabilities.
--
--Required properties:
--
--- reg:
--   Identifies the PCI-PCI bridge. As defined in the IEEE Std 1275-1994
--   document, it is a five-cell address encoded as (phys.hi phys.mid
--   phys.lo size.hi size.lo). phys.hi should contain the device's BDF as
--   0b00000000 bbbbbbbb dddddfff 00000000. The other cells should be zero.
--
--   The bus number is defined by firmware, through the standard bridge
--   configuration mechanism. If this port is a switch port, then firmware
--   allocates the bus number and writes it into the Secondary Bus Number
--   register of the bridge directly above this port. Otherwise, the bus
--   number of a root port is the first number in the bus-range property,
--   defaulting to zero.
--
--   If firmware leaves the ARI Forwarding Enable bit set in the bridge
--   above this port, then phys.hi contains the 8-bit function number as
--   0b00000000 bbbbbbbb ffffffff 00000000. Note that the PCIe specification
--   recommends that firmware only leaves ARI enabled when it knows that the
--   OS is ARI-aware.
--
--Optional properties:
--
--- external-facing:
--   When present, the port is external-facing. All bridges and endpoints
--   downstream of this port are external to the machine. The OS can, for
--   example, use this information to identify devices that cannot be
--   trusted with relaxed DMA protection, as users could easily attach
--   malicious devices to this port.
--
--Example:
--
--pcie@10000000 {
--	compatible = "pci-host-ecam-generic";
--	...
--	pcie@0008 {
--		/* Root port 00:01.0 is external-facing */
--		reg = <0x00000800 0 0 0 0>;
--		external-facing;
--	};
--};
--- 
-2.47.2
+> 2. As mentioned in section **2.13.8** of the *CXL Memory Device Software Guide (Rev 1.0)*,
+> It's recommended to verify the CHBS length.
+> 
+> While the immediate impact might be limited to edge cases (e.g., incorrect QEMU configurations),
+> upstreaming this aligns the kernel with spec-mandated checks and improves
+> robustness for future use cases.
 
+What set me off was that this patch was:
+
+ 1 file changed, 29 insertions(+), 16 deletions(-)
+
+...motivated by a buggy QEMU configuration, and that the kernel has been
+fine to not carry self-defense against for years. So the check has
+literally not mattered in practice for a long time.
+
+I think it is ok to do that minimal validation I suggest above to pair
+with the v1.1 length check, but in general there are more ways than the
+length to produce a broken CHBS and I do not want to encourage a
+cxl_chbs_verify() approach to gather more and more theoretical checks
+unless and until we start seeing these quirks impacting the kernel in
+production use cases. Buggy QEMU is not a suitable justification for
+code refactoring.
