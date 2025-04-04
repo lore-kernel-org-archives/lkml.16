@@ -1,35 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F4FF167DB7;
-	Fri,  4 Apr 2025 22:10:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A92F521CC61;
+	Fri,  4 Apr 2025 22:10:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743804617; cv=none; b=d7BMEUng/LqQ5MovDxRmQM5gyAhrcdeTjUYgTiaj1/363TpxrHHFRh6RabQRIC8BQa+xhoAV4ecONMibuXcJaBkQSzDEugV7P5deoeikTr+UJwd80jcxlb8EyhniIV+jAwYU14Fn6sUMksxnyYMTFXxeIod2+zDasVDKMF+889g=
+	t=1743804619; cv=none; b=MnYCNpxeGufZgE0PoCODMz+kTvVdQReChTWmoXVkHTOUcJbIcnQxlPZ5QDMAJE8zPZD+gtljVaxlUqo6GFmmyYDRvd7wJ5RSyNxtFPtLk/1LdOn8w027HDRhp+6HpgxvNXoxIH2bJ2SJpYQUlX5E71o1m0oD5hgl9tLwLpJDdTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743804617; c=relaxed/simple;
-	bh=sb6FxWBGU3RdEvUJ1cGzxgOFNXn01qGvBKJW47wWL8Q=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=k4+VVAmcJHrNk+t5O68pMos29kgGthCMc0eXMF6UohCkq27Ghddb+Aeduhz1ZWO+gg7BcxO1q53CSn9BItrq5g6+fXQx3DWkYtPb0olV403gJ8NMxxEw9VU53thAY3xZG4PtnhFz7T8akvmHjK0ELKq5Wx8FY0QDOCiZMlJLOmo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dVNJT60u; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743804619; c=relaxed/simple;
+	bh=y51MbOwVp4ryXyEx0xcKE1VjTtQ0uSDqTX4P6+px5lc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=U7rmbHSQt76w7vk1KFcwuaG3JH3SgtfL7dh3sYhnLn5LMWZvlMesmx70Se9nuxnQWdIknBiCpR+uuA5M+vz8wFc7LaG1j8QW4Tk1i/SevH/DkjbKBi8sOv9mYukqGScyZs+tngu2lyLK/u78T7EAKGzbRqWpZnq1IslM0ENojrI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ddlWi+xK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dVNJT60u"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66B47C4CEDD;
-	Fri,  4 Apr 2025 22:10:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ddlWi+xK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7934CC4CEE9;
+	Fri,  4 Apr 2025 22:10:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743804617;
-	bh=sb6FxWBGU3RdEvUJ1cGzxgOFNXn01qGvBKJW47wWL8Q=;
-	h=From:Subject:Date:To:Cc:From;
-	b=dVNJT60u5gqvsglEppLuA1OuoJCcOE/ZySMGdld/i3alTDxM2bIf4s9TIPRuUbiKl
-	 WaAy80HVx9zKJrL7ZyScEQyA95Xgdx1J3IB1dzT2K3BA1uH+nEYVjmNpUsqgeNIeKj
-	 4zVgAIV+hTPhbK5ZVMVc3WJZpSM8HxUIPYSCExtAgcUZ4dJwNtjE5RV1pqVfjhr0er
-	 qdoWFhtC2dBif5AKW/eXgr9gfUDTbYP/fBhDAtDweizFJkmHtGJd7LUIWaYabj6AXR
-	 NhjE+Q1L1Bm4ZCK5qUVc6td4sLM9hvx4S61sQM1mHIlAbB9c8grJlExu5LNsC+n58o
-	 oRSFQ0rTQAunQ==
+	s=k20201202; t=1743804619;
+	bh=y51MbOwVp4ryXyEx0xcKE1VjTtQ0uSDqTX4P6+px5lc=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=ddlWi+xKGujI3peJO5VM30nTC8X/J+slv0fz/1brWdy3SaSguLa+GV/WBj2r13eV1
+	 WBm/+xuShjONq5LwT9pX4dfnTDwnCgWjdPQR13/nv1XQ0r6VKIfy8L7qGQKKfMitTR
+	 /ldi8D1MlIHqeP6eQ3VNOIeI6gYmnpQEm7yZ3MkAAeSPKB3MVDmct3W71YwXxh/uyL
+	 wI3SdDRW/M3ZXgssU0P4G3SDXYSzbMCMpG8ZhGfa/7YU0sygavjTqELVUo6qt4R61A
+	 yVxsV3hbP0ls6gZw0gL5VH51z3uP52wQvu/AFhnpszJZipUNhtEueIZENZ4fovGj++
+	 BJyJ9drfb8k1g==
 From: Nathan Chancellor <nathan@kernel.org>
-Subject: [PATCH 0/2] vsprintf: Use __diag macros to disable
- '-Wsuggest-attribute=format'
-Date: Fri, 04 Apr 2025 15:10:01 -0700
-Message-Id: <20250404-vsprintf-convert-pragmas-to-__diag-v1-0-5d6c5c55b2bd@kernel.org>
+Date: Fri, 04 Apr 2025 15:10:02 -0700
+Subject: [PATCH 1/2] compiler-gcc.h: Introduce __diag_GCC_all
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -38,10 +37,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIALlY8GcC/x3NQQrDIBBA0auEWXfAJEqlVyklSBztLKoyigRC7
- h7p8m3+P6GSMFV4TScIda6c08D8mGD/uhQJ2Q/DohajtNLYaxFOLeCeUydpWMTFn6vYMm6bZxf
- Rh6ez2prZmhVGqAgFPv6T9+e6bkFrnkV0AAAA
-X-Change-ID: 20250404-vsprintf-convert-pragmas-to-__diag-df7a84851853
+Message-Id: <20250404-vsprintf-convert-pragmas-to-__diag-v1-1-5d6c5c55b2bd@kernel.org>
+References: <20250404-vsprintf-convert-pragmas-to-__diag-v1-0-5d6c5c55b2bd@kernel.org>
+In-Reply-To: <20250404-vsprintf-convert-pragmas-to-__diag-v1-0-5d6c5c55b2bd@kernel.org>
 To: Linus Torvalds <torvalds@linux-foundation.org>, 
  Petr Mladek <pmladek@suse.com>, Steven Rostedt <rostedt@goodmis.org>
 Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
@@ -49,40 +47,52 @@ Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
  Sergey Senozhatsky <senozhatsky@chromium.org>, linux-kernel@vger.kernel.org, 
  llvm@lists.linux.dev, Nathan Chancellor <nathan@kernel.org>
 X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1000; i=nathan@kernel.org;
- h=from:subject:message-id; bh=sb6FxWBGU3RdEvUJ1cGzxgOFNXn01qGvBKJW47wWL8Q=;
- b=owGbwMvMwCUmm602sfCA1DTG02pJDOkfIo7Nq/EvDTlytOn5/W+Rh8V4mVZeUm9S51xpsPEOU
- 3h3+ZwzHaUsDGJcDLJiiizVj1WPGxrOOct449QkmDmsTCBDGLg4BWAi318w/K8NXrRchsNFUH7r
- qUtSx4Ke937T6HB+oZN7Q8NwxfW1S7oY/nsa130oMrnD/kpt58njSj1dUz+9CWktK/0r2/f+y+y
- nz9gA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1108; i=nathan@kernel.org;
+ h=from:subject:message-id; bh=y51MbOwVp4ryXyEx0xcKE1VjTtQ0uSDqTX4P6+px5lc=;
+ b=owGbwMvMwCUmm602sfCA1DTG02pJDOkfIo5FHfF4tbny033FTdHRfn3f9//6N3tu8971W4tD+
+ J4r/Pn2q6OUhUGMi0FWTJGl+rHqcUPDOWcZb5yaBDOHlQlkCAMXpwBMJCWWkWHr1NM83qy/ErQO
+ LRMJiVJVE/I5m1Dt68aR0v/SfPpScWtGhmmV+yRDgyVjd0r/zUiu+743g3fxJFV3j9VCMfNu9V+
+ cxA0A
 X-Developer-Key: i=nathan@kernel.org; a=openpgp;
  fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
 
-Hi all,
+It is not possible disabling a diagnostic for all versions of GCC
+without hard coding the minimum supported version at the site, as the
+GCC specific macros require a minimum version to disable the warning
+for:
 
-This is a follow up to the complaint that Linus made at [1] about how
-the #pragma and #ifdef to disable -Wsuggest-attribute=format is
-currently ugly. Convert the #pragma and #ifdef to the existing __diag()
-infrastructure in the kernel to hide some of the ugliness.
+    __diag_ignore(GCC, 5, ...);
 
-I am sending it to both the vsprintf maintainers/reviewers and Linus, in
-case he wants to apply it himself (since it is pretty simple).
+__diag_ignore_all() does not solve this issue because it disables a
+diagnostic for all versions of both GCC and clang, not just one or the
+other.
 
-[1]: https://lore.kernel.org/CAHk-=wgfX9nBGE0Ap9GjhOy7Mn=RSy=rx0MvqfYFFDx31KJXqQ@mail.gmail.com/
+Introduce __diag_GCC_all so that developers can write
 
+    __diag_ignore(GCC, all, ...);
+
+to disable a particular diagnostic for all versions of GCC, while not
+affecting clang.
+
+Signed-off-by: Nathan Chancellor <nathan@kernel.org>
 ---
-Nathan Chancellor (2):
-      compiler-gcc.h: Introduce __diag_GCC_all
-      vsprintf: Use __diag macros to disable '-Wsuggest-attribute=format'
-
  include/linux/compiler-gcc.h | 2 ++
- lib/vsprintf.c               | 9 ++++-----
- 2 files changed, 6 insertions(+), 5 deletions(-)
----
-base-commit: 9554264e302cccf4c2a1e9972f2e707b09ef74fd
-change-id: 20250404-vsprintf-convert-pragmas-to-__diag-df7a84851853
+ 1 file changed, 2 insertions(+)
 
-Best regards,
+diff --git a/include/linux/compiler-gcc.h b/include/linux/compiler-gcc.h
+index c9b58188ec61..c75a222880f9 100644
+--- a/include/linux/compiler-gcc.h
++++ b/include/linux/compiler-gcc.h
+@@ -127,6 +127,8 @@
+ #define __diag_GCC_8(s)
+ #endif
+ 
++#define __diag_GCC_all(s)	__diag(s)
++
+ #define __diag_ignore_all(option, comment) \
+ 	__diag(__diag_GCC_ignore option)
+ 
+
 -- 
-Nathan Chancellor <nathan@kernel.org>
+2.49.0
 
