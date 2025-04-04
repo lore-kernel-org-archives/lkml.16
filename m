@@ -1,192 +1,233 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7101918EFD4
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 12:57:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39B211E5B7C;
+	Fri,  4 Apr 2025 12:57:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743771429; cv=none; b=ucXlS9E747XU5iEKGnBw38qaCuic8OE0gpzl6YbgmUBaZEqgHd+WzSX+K10RAfQ870ur8uR9xEaelHzGQ/pMBvxCymaulPZXwCJH33PkcSahHU6hRkijDkWjtq5gp5WF2tSdCAgWVpzll0y4DRo7b1+aGjPWyCUPsTRbpRAMZf0=
+	t=1743771452; cv=none; b=YGcaR9x5wCMugANHUyei/PpmYdfDgxv147cuEqCxPXey0asrnp+KeeljxjZrSOKhi3JF5nib5ra1L0UaBT40kZA6z4DBvKQ8wk2mVLop5ec9wkNp/X6V12hnxFUWETjXZ4kZcf1w5Ivtyj5n0sIEXTe8wvpZA0nV3s3i7Q40UWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743771429; c=relaxed/simple;
-	bh=/5WnD2pyHsPRtA1mr4QsqnK6gJ0k5VrM/vH2/p9t0vw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=l2g4/m7h+S0v+RNr4L3QytHTJ6Em/+O6t5xy0nJdkSHBxwr0l8bpCwfybwCGV5HXfjpsb3W7PqvfAX+/ih1hyqIdsmIePKS8sq01n7qQA+v9btYXdB3q7ZnLzMFcMaNqb9en1CpMOBbXvKuH0XoGowFCMaD9fXldzyXfoC1Y+IY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=W/m5ye6B; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1743771452; c=relaxed/simple;
+	bh=xyYjW+AtxZxWbV1o0CQ1AfEjiVHQH5yQ+vFkf737e4A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GaJU9++3Lpt8aLyabzjUvjL8qIXqP1JtISg92z6iNDAfQT+0CKEPd3IiRy6/Hjzd6y52KTVOC8aFBJFamlQNzZ9/MFF55s1sh84ZuXqfWgMoCGlweu++Bq4LU6v6+9SUYCDWPd5uVfeOseSqc4tc4kYcWZZTVfXG+4ys5S37Zzc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Rvu9lNEs; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W/m5ye6B"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743771426;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=q3DMfaX7enMK+CS7Fw8aqK7Kb4zBw5LAQWIhlF/2oKY=;
-	b=W/m5ye6BAMjdyUPwYUi3MY6Ue4voDXa/DnXL2mY45icYLVomJeYYxKBJnR+krk+tM50uXB
-	vPZrq3fDAsjhzH1Fd708AAzRl4mSXFlx1gJ+9OmXxV/+KXK7VWSZcWvdwPYJcQTOFZqw6T
-	Khec+bBZ3J0l03RSPCCctqqtSB3l7xw=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-274-VM5dcx03OCmd5uCZquGSLw-1; Fri, 04 Apr 2025 08:57:05 -0400
-X-MC-Unique: VM5dcx03OCmd5uCZquGSLw-1
-X-Mimecast-MFC-AGG-ID: VM5dcx03OCmd5uCZquGSLw_1743771424
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43e9a3d2977so14796855e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 05:57:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743771424; x=1744376224;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=q3DMfaX7enMK+CS7Fw8aqK7Kb4zBw5LAQWIhlF/2oKY=;
-        b=ZxK1CK1sBWzXFTS4ZCbIxM3JWBm55uUT1OzX8NXxalzNjQMnVrjbV/qKk0Jl+BKRwG
-         9k+OMaE7E8rfctXKF1B5C2NdH/IpV3sCn3Cxn+b726dwIWr5zXZyOB9hPopzkcZifdui
-         fslvRdO/1iThs49Cg7Vyz1aQKokfBOma36Uco0tsYiG56Rrw/96cjkaTZ2UtrOARp1NB
-         QOK03IGr1/A377Z3ym9I9Su9YME1k4w2UuPgnBhp49Iah2kTO4zWn3hSCfqv4SOEGfaw
-         547mL/eyL6q30UlUt9xhtzqApGRzLBCwJSse4NkmQxR5uVUxL9F22cQ0ZqTwbrXQp9j2
-         pooA==
-X-Forwarded-Encrypted: i=1; AJvYcCVWnyLO9+QPfH0xEfJ9k3QU2fDeMGKcSddbOa29lm4cQdC4mD+BUnz1uumMlTR3H3FzJL8Fb0fljZaO/L4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyz7+xFsOMdtONor665DKRuhOWpIsSQjDXxhgJCN8dxjlRNeZtf
-	FhEI7X+CKRa5WvXZlDpFKeK5nRtokEcQdrGT/40K3Cu+9vQTg8wDUafxwkrhXnUTFFiJR1YQMbG
-	9rXsG4PPoVXWAs8sqdIgoiRurstCO11MXb7lfUDfye4r1lkkhTqNYNB6PwgX6wA==
-X-Gm-Gg: ASbGncuqRR4o2WRpDry7MUcgd7CWusRQKYXizUFXW4CpdFKH5IctMs4j0CeLwDAafqP
-	n1ELos1ekiGM1vlpQqP73EJz79Gvp8aTOkY9Otr6pshanr3/reQgE6Rx4FDAGrmgtE4Uko0Zgvk
-	D/w5lRKNUSMBhHTQ4RFRr/DMo3dy+tjpKjdff7/3mVIc7hp9r4RXxqWHb+ye1eZLd/N9X72EfAp
-	6PefF0L7+pUNgbEnxzt28HN9KRjuzZ8nxmHAo6dvajo+GSUtsbrdW0g5THAnMHBYJ110YWykma0
-	Php9wRYUOd8jOiIC3Gi0pi61YS62op67zns/ToyDDIu2GKd1BEqOaAxQ2RHLfrpkoKDVWp0XaMS
-	HVylKvooWUQvrTkeETDJ64sysb3WF+qik44xTq4GJXm4=
-X-Received: by 2002:a05:600c:3b14:b0:43c:ec97:75db with SMTP id 5b1f17b1804b1-43ed0bf6aeemr26013805e9.11.1743771424051;
-        Fri, 04 Apr 2025 05:57:04 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEsTD0NEe/13x1nCp/BwHj5jtQGwunCbeDSGxQPUJ97SNdpBIw8pTlFFk7pwqO9xIGqvwm+/w==
-X-Received: by 2002:a05:600c:3b14:b0:43c:ec97:75db with SMTP id 5b1f17b1804b1-43ed0bf6aeemr26013625e9.11.1743771423678;
-        Fri, 04 Apr 2025 05:57:03 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c71b:7900:8752:fae3:f9c9:a07e? (p200300cbc71b79008752fae3f9c9a07e.dip0.t-ipconnect.de. [2003:cb:c71b:7900:8752:fae3:f9c9:a07e])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec366a88csm44392385e9.37.2025.04.04.05.57.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Apr 2025 05:57:03 -0700 (PDT)
-Message-ID: <75884033-9474-4d0c-b737-d9b6aebe298b@redhat.com>
-Date: Fri, 4 Apr 2025 14:57:01 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Rvu9lNEs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743771450; x=1775307450;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=xyYjW+AtxZxWbV1o0CQ1AfEjiVHQH5yQ+vFkf737e4A=;
+  b=Rvu9lNEsuKb6Mi9E2RRgu5HYMRyCURp8wKHsILdvqGgRcJ/aXaXmVpUK
+   NiuQx+8HzDy8q1dR2at/oYh80PG2OJOLPv+c4GKq1MmG51FxbNz4x2cSw
+   27Esuqwrm2ARqlVV/SQpH33o/XXeubcNekXlz87U1HQgztckVdSt+fKvf
+   VWWTAlaJ7PnjYM7Vi2sr8McqCLTkoD7YN1nUu5FumdUY2FrCs4/KfWTKa
+   Gx+zde9wQywYXFF2lAE/aK4yc1I+iQYjXVGdWlfTW/EzwO/Ln+YoXNPPk
+   ocWoY8Gw/PD3Qgum8vyAfwScDtPlQ1RSYrST743e4YB8pmxFXzKalLzfF
+   w==;
+X-CSE-ConnectionGUID: iV+hXrcjRRylF2DyTMfDIg==
+X-CSE-MsgGUID: mVxdKb1cTMe9Np7amYXYXQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11393"; a="56576696"
+X-IronPort-AV: E=Sophos;i="6.15,188,1739865600"; 
+   d="scan'208";a="56576696"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 05:57:29 -0700
+X-CSE-ConnectionGUID: 1mEEHg4vSMmejJnBhYjM6Q==
+X-CSE-MsgGUID: 8NydhknOTYy7mydb1oLAjw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,188,1739865600"; 
+   d="scan'208";a="158292383"
+Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
+  by fmviesa001.fm.intel.com with ESMTP; 04 Apr 2025 05:57:22 -0700
+Received: from kbuild by b207828170a5 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u0gbo-0001FP-1P;
+	Fri, 04 Apr 2025 12:57:20 +0000
+Date: Fri, 4 Apr 2025 20:57:15 +0800
+From: kernel test robot <lkp@intel.com>
+To: Terry Bowman <terry.bowman@amd.com>, dave@stgolabs.net,
+	jonathan.cameron@huawei.com, dave.jiang@intel.com,
+	alison.schofield@intel.com, vishal.l.verma@intel.com,
+	ira.weiny@intel.com, dan.j.williams@intel.com, willy@infradead.org,
+	jack@suse.cz, rafael@kernel.org, len.brown@intel.com, pavel@ucw.cz,
+	ming.li@zohomail.com, nathan.fontenot@amd.com,
+	Smita.KoralahalliChannabasappa@amd.com,
+	huang.ying.caritas@gmail.com, yaoxt.fnst@fujitsu.com,
+	peterz@infradead.org, gregkh@linuxfoundation.org,
+	quic_jjohnson@quicinc.com, ilpo.jarvinen@linux.intel.com,
+	bhelgaas@google.com, andriy.shevchenko@linux.intel.com,
+	mika.westerberg@linux.intel.com, akpm@linux-foundation.org,
+	gourry@gourry.net, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
+	linux-fsdevel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev
+Subject: Re: [PATCH v3 1/4] kernel/resource: Provide mem region release for
+ SOFT RESERVES
+Message-ID: <202504042030.Rs5G4dWd-lkp@intel.com>
+References: <20250403183315.286710-2-terry.bowman@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] arm64: pageattr: Explicitly bail out when changing
- permissions for vmalloc_huge mappings
-To: Dev Jain <dev.jain@arm.com>, catalin.marinas@arm.com, will@kernel.org
-Cc: gshan@redhat.com, rppt@kernel.org, steven.price@arm.com,
- suzuki.poulose@arm.com, tianyaxiong@kylinos.cn, ardb@kernel.org,
- ryan.roberts@arm.com, urezki@gmail.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20250403052844.61818-1-dev.jain@arm.com>
-Content-Language: en-US
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250403052844.61818-1-dev.jain@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250403183315.286710-2-terry.bowman@amd.com>
 
-On 03.04.25 07:28, Dev Jain wrote:
-> arm64 uses apply_to_page_range to change permissions for kernel vmalloc mappings,
-> which does not support changing permissions for block mappings. This function
-> will change permissions until it encounters a block mapping, and will bail
-> out with a warning. Since there are no reports of this triggering, it
-> implies that there are currently no cases of code doing a vmalloc_huge()
-> followed by partial permission change. But this is a footgun waiting to
-> go off, so let's detect it early and avoid the possibility of permissions
-> in an intermediate state. So,  explicitly disallow changing permissions
-> for VM_ALLOW_HUGE_VMAP mappings.
-> 
-> Reviewed-by: Ryan Roberts <ryan.roberts@arm.com>
-> Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> Signed-off-by: Dev Jain <dev.jain@arm.com>
-> ---
-> v1->v2:
->   - Improve changelog, keep mention of page mappings in comment
-> 
->   arch/arm64/mm/pageattr.c | 6 +++---
->   1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/arm64/mm/pageattr.c b/arch/arm64/mm/pageattr.c
-> index 39fd1f7ff02a..04d4a8f676db 100644
-> --- a/arch/arm64/mm/pageattr.c
-> +++ b/arch/arm64/mm/pageattr.c
-> @@ -96,8 +96,8 @@ static int change_memory_common(unsigned long addr, int numpages,
->   	 * we are operating on does not result in such splitting.
->   	 *
->   	 * Let's restrict ourselves to mappings created by vmalloc (or vmap).
-> -	 * Those are guaranteed to consist entirely of page mappings, and
-> -	 * splitting is never needed.
-> +	 * Disallow VM_ALLOW_HUGE_VMAP mappings to guarantee that only page
-> +	 * mappings are updated and splitting is never needed.
->   	 *
->   	 * So check whether the [addr, addr + size) interval is entirely
->   	 * covered by precisely one VM area that has the VM_ALLOC flag set.
-> @@ -105,7 +105,7 @@ static int change_memory_common(unsigned long addr, int numpages,
->   	area = find_vm_area((void *)addr);
->   	if (!area ||
->   	    end > (unsigned long)kasan_reset_tag(area->addr) + area->size ||
-> -	    !(area->flags & VM_ALLOC))
-> +	    ((area->flags & (VM_ALLOC | VM_ALLOW_HUGE_VMAP)) != VM_ALLOC))
->   		return -EINVAL;
->   
->   	if (!numpages)
+Hi Terry,
 
-Makes sense to me. Whenever required, we can improve the checks (or even 
-try supporting splitting).
+kernel test robot noticed the following build warnings:
 
-Acked-by: David Hildenbrand <david@redhat.com>
+[auto build test WARNING on aae0594a7053c60b82621136257c8b648c67b512]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Terry-Bowman/kernel-resource-Provide-mem-region-release-for-SOFT-RESERVES/20250404-023601
+base:   aae0594a7053c60b82621136257c8b648c67b512
+patch link:    https://lore.kernel.org/r/20250403183315.286710-2-terry.bowman%40amd.com
+patch subject: [PATCH v3 1/4] kernel/resource: Provide mem region release for SOFT RESERVES
+config: i386-buildonly-randconfig-003-20250404 (https://download.01.org/0day-ci/archive/20250404/202504042030.Rs5G4dWd-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250404/202504042030.Rs5G4dWd-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504042030.Rs5G4dWd-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> kernel/resource.c:1414: warning: Function parameter or struct member 'busy_check' not described in '__release_mem_region_adjustable'
+>> kernel/resource.c:1414: warning: Function parameter or struct member 'res_desc' not described in '__release_mem_region_adjustable'
+>> kernel/resource.c:1414: warning: expecting prototype for release_mem_region_adjustable(). Prototype was for __release_mem_region_adjustable() instead
+
+
+vim +1414 kernel/resource.c
+
+^1da177e4c3f41 Linus Torvalds    2005-04-16  1389  
+e4ebc182a59bbb Nathan Fontenot   2025-04-03  1390  #if defined(CONFIG_MEMORY_HOTREMOVE) || defined(CONFIG_CXL_REGION)
+825f787bb49676 Toshi Kani        2013-04-29  1391  /**
+825f787bb49676 Toshi Kani        2013-04-29  1392   * release_mem_region_adjustable - release a previously reserved memory region
+825f787bb49676 Toshi Kani        2013-04-29  1393   * @start: resource start address
+825f787bb49676 Toshi Kani        2013-04-29  1394   * @size: resource region size
+825f787bb49676 Toshi Kani        2013-04-29  1395   *
+825f787bb49676 Toshi Kani        2013-04-29  1396   * This interface is intended for memory hot-delete.  The requested region
+825f787bb49676 Toshi Kani        2013-04-29  1397   * is released from a currently busy memory resource.  The requested region
+825f787bb49676 Toshi Kani        2013-04-29  1398   * must either match exactly or fit into a single busy resource entry.  In
+825f787bb49676 Toshi Kani        2013-04-29  1399   * the latter case, the remaining resource is adjusted accordingly.
+825f787bb49676 Toshi Kani        2013-04-29  1400   * Existing children of the busy memory resource must be immutable in the
+825f787bb49676 Toshi Kani        2013-04-29  1401   * request.
+825f787bb49676 Toshi Kani        2013-04-29  1402   *
+825f787bb49676 Toshi Kani        2013-04-29  1403   * Note:
+825f787bb49676 Toshi Kani        2013-04-29  1404   * - Additional release conditions, such as overlapping region, can be
+825f787bb49676 Toshi Kani        2013-04-29  1405   *   supported after they are confirmed as valid cases.
+825f787bb49676 Toshi Kani        2013-04-29  1406   * - When a busy memory resource gets split into two entries, the code
+825f787bb49676 Toshi Kani        2013-04-29  1407   *   assumes that all children remain in the lower address entry for
+825f787bb49676 Toshi Kani        2013-04-29  1408   *   simplicity.  Enhance this logic when necessary.
+825f787bb49676 Toshi Kani        2013-04-29  1409   */
+e4ebc182a59bbb Nathan Fontenot   2025-04-03  1410  static void __release_mem_region_adjustable(resource_size_t start,
+e4ebc182a59bbb Nathan Fontenot   2025-04-03  1411  					    resource_size_t size,
+e4ebc182a59bbb Nathan Fontenot   2025-04-03  1412  					    bool busy_check,
+e4ebc182a59bbb Nathan Fontenot   2025-04-03  1413  					    int res_desc)
+825f787bb49676 Toshi Kani        2013-04-29 @1414  {
+cb8e3c8b4f45e4 David Hildenbrand 2020-10-15  1415  	struct resource *parent = &iomem_resource;
+ec62d04e3fdc4b David Hildenbrand 2020-10-15  1416  	struct resource *new_res = NULL;
+ec62d04e3fdc4b David Hildenbrand 2020-10-15  1417  	bool alloc_nofail = false;
+825f787bb49676 Toshi Kani        2013-04-29  1418  	struct resource **p;
+825f787bb49676 Toshi Kani        2013-04-29  1419  	struct resource *res;
+825f787bb49676 Toshi Kani        2013-04-29  1420  	resource_size_t end;
+825f787bb49676 Toshi Kani        2013-04-29  1421  
+825f787bb49676 Toshi Kani        2013-04-29  1422  	end = start + size - 1;
+ec62d04e3fdc4b David Hildenbrand 2020-10-15  1423  	if (WARN_ON_ONCE((start < parent->start) || (end > parent->end)))
+ec62d04e3fdc4b David Hildenbrand 2020-10-15  1424  		return;
+825f787bb49676 Toshi Kani        2013-04-29  1425  
+ec62d04e3fdc4b David Hildenbrand 2020-10-15  1426  	/*
+ec62d04e3fdc4b David Hildenbrand 2020-10-15  1427  	 * We free up quite a lot of memory on memory hotunplug (esp., memap),
+ec62d04e3fdc4b David Hildenbrand 2020-10-15  1428  	 * just before releasing the region. This is highly unlikely to
+ec62d04e3fdc4b David Hildenbrand 2020-10-15  1429  	 * fail - let's play save and make it never fail as the caller cannot
+ec62d04e3fdc4b David Hildenbrand 2020-10-15  1430  	 * perform any error handling (e.g., trying to re-add memory will fail
+ec62d04e3fdc4b David Hildenbrand 2020-10-15  1431  	 * similarly).
+ec62d04e3fdc4b David Hildenbrand 2020-10-15  1432  	 */
+ec62d04e3fdc4b David Hildenbrand 2020-10-15  1433  retry:
+ec62d04e3fdc4b David Hildenbrand 2020-10-15  1434  	new_res = alloc_resource(GFP_KERNEL | (alloc_nofail ? __GFP_NOFAIL : 0));
+825f787bb49676 Toshi Kani        2013-04-29  1435  
+825f787bb49676 Toshi Kani        2013-04-29  1436  	p = &parent->child;
+825f787bb49676 Toshi Kani        2013-04-29  1437  	write_lock(&resource_lock);
+825f787bb49676 Toshi Kani        2013-04-29  1438  
+825f787bb49676 Toshi Kani        2013-04-29  1439  	while ((res = *p)) {
+825f787bb49676 Toshi Kani        2013-04-29  1440  		if (res->start >= end)
+825f787bb49676 Toshi Kani        2013-04-29  1441  			break;
+825f787bb49676 Toshi Kani        2013-04-29  1442  
+825f787bb49676 Toshi Kani        2013-04-29  1443  		/* look for the next resource if it does not fit into */
+825f787bb49676 Toshi Kani        2013-04-29  1444  		if (res->start > start || res->end < end) {
+825f787bb49676 Toshi Kani        2013-04-29  1445  			p = &res->sibling;
+825f787bb49676 Toshi Kani        2013-04-29  1446  			continue;
+825f787bb49676 Toshi Kani        2013-04-29  1447  		}
+825f787bb49676 Toshi Kani        2013-04-29  1448  
+825f787bb49676 Toshi Kani        2013-04-29  1449  		if (!(res->flags & IORESOURCE_MEM))
+825f787bb49676 Toshi Kani        2013-04-29  1450  			break;
+825f787bb49676 Toshi Kani        2013-04-29  1451  
+e4ebc182a59bbb Nathan Fontenot   2025-04-03  1452  		if (busy_check && !(res->flags & IORESOURCE_BUSY)) {
+e4ebc182a59bbb Nathan Fontenot   2025-04-03  1453  			p = &res->child;
+e4ebc182a59bbb Nathan Fontenot   2025-04-03  1454  			continue;
+e4ebc182a59bbb Nathan Fontenot   2025-04-03  1455  		}
+e4ebc182a59bbb Nathan Fontenot   2025-04-03  1456  
+e4ebc182a59bbb Nathan Fontenot   2025-04-03  1457  		if (res_desc != IORES_DESC_NONE && res->desc != res_desc) {
+825f787bb49676 Toshi Kani        2013-04-29  1458  			p = &res->child;
+825f787bb49676 Toshi Kani        2013-04-29  1459  			continue;
+825f787bb49676 Toshi Kani        2013-04-29  1460  		}
+825f787bb49676 Toshi Kani        2013-04-29  1461  
+825f787bb49676 Toshi Kani        2013-04-29  1462  		/* found the target resource; let's adjust accordingly */
+825f787bb49676 Toshi Kani        2013-04-29  1463  		if (res->start == start && res->end == end) {
+825f787bb49676 Toshi Kani        2013-04-29  1464  			/* free the whole entry */
+825f787bb49676 Toshi Kani        2013-04-29  1465  			*p = res->sibling;
+ebff7d8f270d04 Yasuaki Ishimatsu 2013-04-29  1466  			free_resource(res);
+825f787bb49676 Toshi Kani        2013-04-29  1467  		} else if (res->start == start && res->end != end) {
+825f787bb49676 Toshi Kani        2013-04-29  1468  			/* adjust the start */
+ec62d04e3fdc4b David Hildenbrand 2020-10-15  1469  			WARN_ON_ONCE(__adjust_resource(res, end + 1,
+ec62d04e3fdc4b David Hildenbrand 2020-10-15  1470  						       res->end - end));
+825f787bb49676 Toshi Kani        2013-04-29  1471  		} else if (res->start != start && res->end == end) {
+825f787bb49676 Toshi Kani        2013-04-29  1472  			/* adjust the end */
+ec62d04e3fdc4b David Hildenbrand 2020-10-15  1473  			WARN_ON_ONCE(__adjust_resource(res, res->start,
+ec62d04e3fdc4b David Hildenbrand 2020-10-15  1474  						       start - res->start));
+825f787bb49676 Toshi Kani        2013-04-29  1475  		} else {
+ec62d04e3fdc4b David Hildenbrand 2020-10-15  1476  			/* split into two entries - we need a new resource */
+825f787bb49676 Toshi Kani        2013-04-29  1477  			if (!new_res) {
+ec62d04e3fdc4b David Hildenbrand 2020-10-15  1478  				new_res = alloc_resource(GFP_ATOMIC);
+ec62d04e3fdc4b David Hildenbrand 2020-10-15  1479  				if (!new_res) {
+ec62d04e3fdc4b David Hildenbrand 2020-10-15  1480  					alloc_nofail = true;
+ec62d04e3fdc4b David Hildenbrand 2020-10-15  1481  					write_unlock(&resource_lock);
+ec62d04e3fdc4b David Hildenbrand 2020-10-15  1482  					goto retry;
+ec62d04e3fdc4b David Hildenbrand 2020-10-15  1483  				}
+825f787bb49676 Toshi Kani        2013-04-29  1484  			}
+825f787bb49676 Toshi Kani        2013-04-29  1485  			new_res->name = res->name;
+825f787bb49676 Toshi Kani        2013-04-29  1486  			new_res->start = end + 1;
+825f787bb49676 Toshi Kani        2013-04-29  1487  			new_res->end = res->end;
+825f787bb49676 Toshi Kani        2013-04-29  1488  			new_res->flags = res->flags;
+43ee493bde78da Toshi Kani        2016-01-26  1489  			new_res->desc = res->desc;
+825f787bb49676 Toshi Kani        2013-04-29  1490  			new_res->parent = res->parent;
+825f787bb49676 Toshi Kani        2013-04-29  1491  			new_res->sibling = res->sibling;
+825f787bb49676 Toshi Kani        2013-04-29  1492  			new_res->child = NULL;
+825f787bb49676 Toshi Kani        2013-04-29  1493  
+ec62d04e3fdc4b David Hildenbrand 2020-10-15  1494  			if (WARN_ON_ONCE(__adjust_resource(res, res->start,
+ec62d04e3fdc4b David Hildenbrand 2020-10-15  1495  							   start - res->start)))
+825f787bb49676 Toshi Kani        2013-04-29  1496  				break;
+825f787bb49676 Toshi Kani        2013-04-29  1497  			res->sibling = new_res;
+825f787bb49676 Toshi Kani        2013-04-29  1498  			new_res = NULL;
+825f787bb49676 Toshi Kani        2013-04-29  1499  		}
+825f787bb49676 Toshi Kani        2013-04-29  1500  
+825f787bb49676 Toshi Kani        2013-04-29  1501  		break;
+825f787bb49676 Toshi Kani        2013-04-29  1502  	}
+825f787bb49676 Toshi Kani        2013-04-29  1503  
+825f787bb49676 Toshi Kani        2013-04-29  1504  	write_unlock(&resource_lock);
+ebff7d8f270d04 Yasuaki Ishimatsu 2013-04-29  1505  	free_resource(new_res);
+825f787bb49676 Toshi Kani        2013-04-29  1506  }
+e4ebc182a59bbb Nathan Fontenot   2025-04-03  1507  #endif
+e4ebc182a59bbb Nathan Fontenot   2025-04-03  1508  
 
 -- 
-Cheers,
-
-David / dhildenb
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
