@@ -1,151 +1,89 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F3711C68F;
-	Fri,  4 Apr 2025 09:10:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743757858; cv=pass; b=WIvawIYmtFbJCdLfaJ+CaG+ZfUjW6Ln/7gs5Qut3mQnvAuRfRt1MhnuDPDrV2h9XYzGBcDpSpYMzLDcOXOJnPTuR5XMmjTmDQuDJ50YZdaBdlA3eXhrTaxOY5Xx94kHBwOZsyvs5ZK9QSKvTMy8KXwdsPslrUSGNkFoauMI5kkU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743757858; c=relaxed/simple;
-	bh=CeoWnqKLX7CR9OiKGTeTIa5UuDAMEp9+9zthQZ3BQ2w=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34F222E62C9
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 09:16:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743758182; cv=none; b=Ax3oo6M6U2xnc6uuOw8AWHFMLlBMsuHZTMl3H9lwfayHmKY3G0srH27eQVuEx4p/3otVWnhgm5aw7qmACCcL0TxtHWg6zUpVhtdY1uV9fLtsS2wxFSijccR7MUiUeuMhXuVuR2mthE9oENMxvlpKjm6DIn0Bq8ziv6W5HpOxWmQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743758182; c=relaxed/simple;
+	bh=5b7zWglJW2pQRpF/VAvCbkmMxN1dErHIcKD7M1KuYb4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=D48GH6rBK6/xiai+/VVUFnCYmw+LJDE3UiCjepw7uKK6U8UJyZYZA3t4OWvhIWOOvzasLY5fca2z2JylyXIZlpAHpOk0wgGIvjNr1T02tMLx3VjV741WIPZd9NGHTbQWxAB7qxMBO5R7H/Usp8TdEfoYMlVF/+uET8fQUlx3KHU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=benjamin.gaignard@collabora.com header.b=E44qa2+1; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	 In-Reply-To:Content-Type; b=WJeLbu3A41Mk8edlFr8Qp3SXEiCD3KUkPd/aeSQ9HmD3nB5S14Emi02rGMApc7hA9bF78Y6lKJpPwnyh0Zb2ek8q/kFC3KWn9ZQeFfUgEJOve1WLdSQbQl1/jMAJAbylwUiaHJy0p0glVxzT+Lhhr/PT8kIzgxIRtTHQMJ/N9jw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Zv3pX7Vm; arc=none smtp.client-ip=91.218.175.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=benjamin.gaignard@collabora.com header.b="E44qa2+1"
-ARC-Seal: i=1; a=rsa-sha256; t=1743757830; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=lUShNtcKP1QxHgS4zTd/vp7ntLnSv7ce/K//cMKvdkE+oeS+qBHF7vuMBBWk8Uw4iK1EqD7l/fOn+KFpR9s4HREZ9mrFHyaq/TIjq9Aj24C1zjQunajzXJ3piXyyLNDAmfVjXd+paiG6lDNsIuoA6Anp73qbGEe8oqjA8yKvyPQ=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1743757830; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=V7vYC1DmOY7g/IbhaQA2XCL8pgap2RluhVGOxgHTG9M=; 
-	b=laSlUDswAfoz779JiV1FURK9iKl0vfezQNSgAe3e5nTU+9mZW19jKnIPeU5NOsjljlV3e3u3uHj+W7MyrJR7HaY0MKwQ43/GanaCdVQM0t+OuzRiUim42ZSZ1NQAc9zZcIe3XoCpIMEzgaoOPc7SoulFJb+l5ZbJR3aCqBgiW38=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=benjamin.gaignard@collabora.com;
-	dmarc=pass header.from=<benjamin.gaignard@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1743757830;
-	s=zohomail; d=collabora.com; i=benjamin.gaignard@collabora.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=V7vYC1DmOY7g/IbhaQA2XCL8pgap2RluhVGOxgHTG9M=;
-	b=E44qa2+1o1cOfxADZeHmQ/I6MSeEi+WlMmoO+Hbbt8vFwQdzCKSQatPq4tBP/hjx
-	IrtF49UKs5kx/TU5k7GStPdlySyhxwxMOJoztqymr/CK3mVKRLQsCVWP5DeLojEdCoU
-	TkYJhh6rYuPjnhxp1AcBHyg5g2q6GX47CiqA+qQk=
-Received: by mx.zohomail.com with SMTPS id 1743757829476256.0475616658215;
-	Fri, 4 Apr 2025 02:10:29 -0700 (PDT)
-Message-ID: <133924c6-57ca-47ed-9e32-87b75b975f1c@collabora.com>
-Date: Fri, 4 Apr 2025 11:10:25 +0200
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Zv3pX7Vm"
+Message-ID: <98d40957-1b82-3131-7aea-6c8fe82724e3@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1743758167;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7eHxMIsBaZbX7wX9Z20E8DWlcz5DkoLsuwp84tWvw18=;
+	b=Zv3pX7Vmd55TpZ0I34bF0Q8Ov+Ee2Y25E7q+0iJtzxvSEiTB4ko0uf2K9MzxTVIwT1DYBP
+	WxNlNo+RDOxhbn5b39tQBrmHBGuuSdSBfDO7Nj1WUi9xep94JsgAKMzU6QXtrKeXMWzcNZ
+	GTDElZSnvO8uNsaIfIEL65fawJuIVYk=
+Date: Fri, 4 Apr 2025 17:15:27 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] media: verisilicon: Enable wide 4K in AV1 decoder
-To: Nicolas Dufresne <nicolas.dufresne@collabora.com>,
- Philipp Zabel <p.zabel@pengutronix.de>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Heiko Stuebner <heiko@sntech.de>
-Cc: linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- kernel@collabora.com
-References: <20250403-hantro-av1-wuhd-v1-1-334629cb7f63@collabora.com>
+Subject: Re: [PATCH] staging: gpib: warning: variable 'nec_priv' set but not
+ used warning
 Content-Language: en-US
-From: Benjamin Gaignard <benjamin.gaignard@collabora.com>
-In-Reply-To: <20250403-hantro-av1-wuhd-v1-1-334629cb7f63@collabora.com>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Greg KH <gregkh@linuxfoundation.org>, dpenkler@gmail.com, arnd@arndb.de,
+ everestkc@everestkc.com.np, niharchaithanya@gmail.com,
+ linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org,
+ sunliming <sunliming@kylinos.cn>, kernel test robot <lkp@intel.com>
+References: <20250321010649.10918-1-sunliming@linux.dev>
+ <2025040310-poncho-armband-782a@gregkh>
+ <8e92451a-4d43-1836-ce5f-afb6a523115b@linux.dev>
+ <f6e2c865-7c9f-4301-a1a8-8a5b1dbbb5f4@stanley.mountain>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: sunliming <sunliming@linux.dev>
+In-Reply-To: <f6e2c865-7c9f-4301-a1a8-8a5b1dbbb5f4@stanley.mountain>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
 
-Le 03/04/2025 à 21:07, Nicolas Dufresne a écrit :
-> Tested on RK3588, this decoder is capable of handling WUHD, so bump the
-> maximum width and height accordingly.
+On 2025/4/4 15:53, Dan Carpenter wrote:
+> On Fri, Apr 04, 2025 at 02:08:38PM +0800, Sunliming wrote:
+>> On 2025/4/3 22:08, Greg KH wrote:
+>>> On Fri, Mar 21, 2025 at 09:06:49AM +0800, sunliming@linux.dev wrote:
+>>>> From: sunliming <sunliming@kylinos.cn>
+>>>>
+>>>> Fix below kernel warning:
+>>>> drivers/staging/gpib/eastwood/fluke_gpib.c:196:23: warning: variable 'nec_priv' set but not
+>>>> used [-Wunused-but-set-variable]
+>>>>
+>>>> Reported-by: kernel test robot <lkp@intel.com>
+>>> Please link to where this was reported.  The report from the robot will
+>>> have the needed information in it on how to do this.
+>> Get it, I will resend the patch to fix this.
+>>
+>> Thanks.
+>>
+>>>> Signed-off-by: sunliming <sunliming@kylinos.cn>
+>>> As per our documentation, please use your name, not your email alias, on
+>>> the signed-off-by line.
+>> It's not my email alias,my name is sunliming too.
+> Why is it capitalized on your From header on your email but not in your
+> Signed-off-by?
+
+I didn't notice that my email and Gitconfig have different names set.  
+Thank you
+
+  for letting me know, I will fix it.
+
 >
-> Signed-off-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-
-Thanks for the patch.
-
-Reviewed-by: Benjamin Gaignard <benjamin.gaignard@collabora.com>
-
-> ---
->   drivers/media/platform/verisilicon/rockchip_vpu_hw.c | 20 ++++++++++----------
->   1 file changed, 10 insertions(+), 10 deletions(-)
+> regards,
+> dan carpenter
 >
-> diff --git a/drivers/media/platform/verisilicon/rockchip_vpu_hw.c b/drivers/media/platform/verisilicon/rockchip_vpu_hw.c
-> index 964122e7c355934cd80eb442219f6ba51bba8b71..b64f0658f7f1e77b3efd960b35cd54dec4edf4ef 100644
-> --- a/drivers/media/platform/verisilicon/rockchip_vpu_hw.c
-> +++ b/drivers/media/platform/verisilicon/rockchip_vpu_hw.c
-> @@ -85,10 +85,10 @@ static const struct hantro_fmt rockchip_vpu981_postproc_fmts[] = {
->   		.postprocessed = true,
->   		.frmsize = {
->   			.min_width = ROCKCHIP_VPU981_MIN_SIZE,
-> -			.max_width = FMT_UHD_WIDTH,
-> +			.max_width = FMT_4K_WIDTH,
->   			.step_width = MB_DIM,
->   			.min_height = ROCKCHIP_VPU981_MIN_SIZE,
-> -			.max_height = FMT_UHD_HEIGHT,
-> +			.max_height = FMT_4K_HEIGHT,
->   			.step_height = MB_DIM,
->   		},
->   	},
-> @@ -99,10 +99,10 @@ static const struct hantro_fmt rockchip_vpu981_postproc_fmts[] = {
->   		.postprocessed = true,
->   		.frmsize = {
->   			.min_width = ROCKCHIP_VPU981_MIN_SIZE,
-> -			.max_width = FMT_UHD_WIDTH,
-> +			.max_width = FMT_4K_WIDTH,
->   			.step_width = MB_DIM,
->   			.min_height = ROCKCHIP_VPU981_MIN_SIZE,
-> -			.max_height = FMT_UHD_HEIGHT,
-> +			.max_height = FMT_4K_HEIGHT,
->   			.step_height = MB_DIM,
->   		},
->   	},
-> @@ -318,10 +318,10 @@ static const struct hantro_fmt rockchip_vpu981_dec_fmts[] = {
->   		.match_depth = true,
->   		.frmsize = {
->   			.min_width = ROCKCHIP_VPU981_MIN_SIZE,
-> -			.max_width = FMT_UHD_WIDTH,
-> +			.max_width = FMT_4K_WIDTH,
->   			.step_width = MB_DIM,
->   			.min_height = ROCKCHIP_VPU981_MIN_SIZE,
-> -			.max_height = FMT_UHD_HEIGHT,
-> +			.max_height = FMT_4K_HEIGHT,
->   			.step_height = MB_DIM,
->   		},
->   	},
-> @@ -331,10 +331,10 @@ static const struct hantro_fmt rockchip_vpu981_dec_fmts[] = {
->   		.match_depth = true,
->   		.frmsize = {
->   			.min_width = ROCKCHIP_VPU981_MIN_SIZE,
-> -			.max_width = FMT_UHD_WIDTH,
-> +			.max_width = FMT_4K_WIDTH,
->   			.step_width = MB_DIM,
->   			.min_height = ROCKCHIP_VPU981_MIN_SIZE,
-> -			.max_height = FMT_UHD_HEIGHT,
-> +			.max_height = FMT_4K_HEIGHT,
->   			.step_height = MB_DIM,
->   		},
->   	},
-> @@ -344,10 +344,10 @@ static const struct hantro_fmt rockchip_vpu981_dec_fmts[] = {
->   		.max_depth = 2,
->   		.frmsize = {
->   			.min_width = ROCKCHIP_VPU981_MIN_SIZE,
-> -			.max_width = FMT_UHD_WIDTH,
-> +			.max_width = FMT_4K_WIDTH,
->   			.step_width = MB_DIM,
->   			.min_height = ROCKCHIP_VPU981_MIN_SIZE,
-> -			.max_height = FMT_UHD_HEIGHT,
-> +			.max_height = FMT_4K_HEIGHT,
->   			.step_height = MB_DIM,
->   		},
->   	},
->
-> ---
-> base-commit: f2151613e040973c868d28c8b00885dfab69eb75
-> change-id: 20250403-hantro-av1-wuhd-11e2cf5be1a4
->
-> Best regards,
