@@ -1,44 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6D522066F3;
-	Fri,  4 Apr 2025 00:07:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84809206F19;
+	Fri,  4 Apr 2025 00:07:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743725239; cv=none; b=KODqsAbVrD8/qOe4c0aQUuDtgCJ8njrtlfUDvp1RPuGtuBbOBk62Bup3Ygu5c7GgK+HkbFvkEwL2sa8KZcNroTZmSuiK/6/p/5F/qpr2w6qVnYs12sebaWmSQMGrHT9YZru/JdlrvIOyiABjR89sx/mHe3Og67VgWOPKAV3pT2Q=
+	t=1743725241; cv=none; b=X0BGpJsT8jdk9ONHqA7l+HHtU3xzGMpmx2O1ef9E0D3vGcB0Z47CPzyH+KlhhmCBpIgbQ61aLfKXkJN5VSwHA2587y42xGjxli/nuPMFaJt7Qn4SJ1WE7sVXkRdDyPiUIvJbHLgL/qPlHdSiL1fv23D4U+5bYY/E3Baoc8knesY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743725239; c=relaxed/simple;
-	bh=6H51TRq+4b6VBaT6ZCYfYPIOtcNrp00Og6veSVLaOEk=;
+	s=arc-20240116; t=1743725241; c=relaxed/simple;
+	bh=mk+yGaMYbXEcpKulZAEG/o59etxEz+0+S7aN3CTTJd8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=nEBOHzfXKIDiSFw3hsjba5qwBPhtF+Ndt/NFgQ2BOeGOokh82qmiAHtFhqykpZd0TpgWwk1uVX64m8E23VnsfJSxMRIsiTuG70/ZJPMkTFUEexTDzzIlqPIih132xKAjoc3wnwLbsFpOtK8PYHT90mYwfn6Tiy5pY3Ax8LVtzxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IxEltcQF; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=eWxI4iTXs54S56qbHU5Gx/NciFPXVW4Z8bxdBOpfNAn69BJn8eBQocPFlN4x595KWmggpoHlprZVtlX4JFwW9x1LjqsMF3JwYNhJWrsOOHkn3HD+asCPaqiQ4Yty9BuhT2gQIzQRPQIxqbN7Zuf/9B/FMok60SXkYwGzTtd9aiQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I/XrLSlk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IxEltcQF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B8DDC4CEE3;
-	Fri,  4 Apr 2025 00:07:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I/XrLSlk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8368AC4CEE5;
+	Fri,  4 Apr 2025 00:07:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743725236;
-	bh=6H51TRq+4b6VBaT6ZCYfYPIOtcNrp00Og6veSVLaOEk=;
+	s=k20201202; t=1743725241;
+	bh=mk+yGaMYbXEcpKulZAEG/o59etxEz+0+S7aN3CTTJd8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=IxEltcQFvWSVbQuRnOA8YrNqiQvD3u3BPwDEHxCtYNdI3Nt5Jr77BPegEWSLllLbw
-	 Ht4G+PycpaYjxJ1rgoEwijI/QFhGvvd5ZkpmjjAmtsv7E4xzfm7u35862FJsR3GTEz
-	 Mhj0xa83SjILmYHZYmYpL9OF6yqPIWc6hIWEgBX4ewgqsctseJSCV4Jk/4O4glX74l
-	 CmDurQdUsztFDRaWJo02LCspup7VwA9fCEj/st1/1TxDrs11pJUjZGUN4y2d7cdX2B
-	 KDlCGXBp/5Sg1a0eULi5GP3tgfGSjtQwP8HTbApL3/TdRF0+XERyc0tl3rw9eLGxz/
-	 dtNXwBvECnJAw==
+	b=I/XrLSlku/Dl+6cNffIYJaFXKGAq91p4vHHHIbojmJnyjdDKGdB1FBkUa+nMYQj2I
+	 RezsBq3hNjIzdnPerBhqr+WdujO2Wgeqm9PTAtgSdE2ZWMEpMwC0iOfoKeYPPsqLuz
+	 feZFPP9QXAkULrN7+vQpc3WcMjbhexM46iI3hoYwpTPmGSkjEtbY8hLhe2jsidi4N0
+	 Cv5Wr3M/NTXYyIWfXng8jiKXr3WYFxm6PX/d/tYT4EuRzd6wISgTNYfUptglJ/l/7k
+	 moWEE1uDxHaIgssnJ+XWMhP7DcJNtlPpe/Mh8II5r+C61z5pmvvb2C5WnWTT++p+J9
+	 NPaT61YFB2TGg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Heiko Stuebner <heiko@sntech.de>,
-	Sebastian Reichel <sebastian.reichel@collabora.com>,
-	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
-	Stephen Boyd <sboyd@kernel.org>,
+Cc: Haoxiang Li <haoxiang_li2024@163.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
 	Sasha Levin <sashal@kernel.org>,
-	mturquette@baylibre.com,
-	linux-clk@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 06/10] clk: check for disabled clock-provider in of_clk_get_hw_from_clkspec()
-Date: Thu,  3 Apr 2025 20:06:56 -0400
-Message-Id: <20250404000700.2689158-6-sashal@kernel.org>
+	agordeev@linux.ibm.com,
+	linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.1 08/10] s390/sclp: Add check for get_zeroed_page()
+Date: Thu,  3 Apr 2025 20:06:58 -0400
+Message-Id: <20250404000700.2689158-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250404000700.2689158-1-sashal@kernel.org>
 References: <20250404000700.2689158-1-sashal@kernel.org>
@@ -53,58 +52,59 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.1.132
 Content-Transfer-Encoding: 8bit
 
-From: Heiko Stuebner <heiko@sntech.de>
+From: Haoxiang Li <haoxiang_li2024@163.com>
 
-[ Upstream commit b20150d499b3ee5c2d632fbc5ac94f98dd33accf ]
+[ Upstream commit 3db42c75a921854a99db0a2775814fef97415bac ]
 
-of_clk_get_hw_from_clkspec() checks all available clock-providers by
-comparing their of nodes to the one from the clkspec. If no matching
-clock provider is found, the function returns -EPROBE_DEFER to cause a
-re-check at a later date. If a matching clock provider is found, an
-authoritative answer can be retrieved from it whether the clock exists
-or not.
+Add check for the return value of get_zeroed_page() in
+sclp_console_init() to prevent null pointer dereference.
+Furthermore, to solve the memory leak caused by the loop
+allocation, add a free helper to do the free job.
 
-This does not take into account that the clock-provider may never
-appear, because it's node is disabled. This can happen when a clock is
-optional, provided by a separate block which never gets enabled.
-
-One example of this happening is the rk3588's VOP, which has optional
-additional display clocks coming from PLLs inside the hdmiphy blocks.
-These can be used for better rates, but the system will also work
-without them.
-
-The problem around that is described in the followups to[1]. As we
-already know the of node of the presumed clock provider, add a check via
-of_device_is_available() whether this is a "valid" device node. This
-prevents eternal defer loops.
-
-Link: https://lore.kernel.org/dri-devel/20250215-vop2-hdmi1-disp-modes-v1-3-81962a7151d6@collabora.com/ [1]
-Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-Tested-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-Link: https://lore.kernel.org/r/20250222223733.2990179-1-heiko@sntech.de
-[sboyd@kernel.org: Reword commit text a bit]
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Haoxiang Li <haoxiang_li2024@163.com>
+Acked-by: Heiko Carstens <hca@linux.ibm.com>
+Link: https://lore.kernel.org/r/20250218025216.2421548-1-haoxiang_li2024@163.com
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/clk.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/s390/char/sclp_con.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-index 8ecbb8f494655..5a01ba04e47cf 100644
---- a/drivers/clk/clk.c
-+++ b/drivers/clk/clk.c
-@@ -5128,6 +5128,10 @@ of_clk_get_hw_from_clkspec(struct of_phandle_args *clkspec)
- 	if (!clkspec)
- 		return ERR_PTR(-EINVAL);
+diff --git a/drivers/s390/char/sclp_con.c b/drivers/s390/char/sclp_con.c
+index e5d947c763ea5..6a030ba38bf36 100644
+--- a/drivers/s390/char/sclp_con.c
++++ b/drivers/s390/char/sclp_con.c
+@@ -263,6 +263,19 @@ static struct console sclp_console =
+ 	.index = 0 /* ttyS0 */
+ };
  
-+	/* Check if node in clkspec is in disabled/fail state */
-+	if (!of_device_is_available(clkspec->np))
-+		return ERR_PTR(-ENOENT);
++/*
++ *  Release allocated pages.
++ */
++static void __init __sclp_console_free_pages(void)
++{
++	struct list_head *page, *p;
 +
- 	mutex_lock(&of_clk_mutex);
- 	list_for_each_entry(provider, &of_clk_providers, link) {
- 		if (provider->node == clkspec->np) {
++	list_for_each_safe(page, p, &sclp_con_pages) {
++		list_del(page);
++		free_page((unsigned long)page);
++	}
++}
++
+ /*
+  * called by console_init() in drivers/char/tty_io.c at boot-time.
+  */
+@@ -282,6 +295,10 @@ sclp_console_init(void)
+ 	/* Allocate pages for output buffering */
+ 	for (i = 0; i < sclp_console_pages; i++) {
+ 		page = (void *) get_zeroed_page(GFP_KERNEL | GFP_DMA);
++		if (!page) {
++			__sclp_console_free_pages();
++			return -ENOMEM;
++		}
+ 		list_add_tail(page, &sclp_con_pages);
+ 	}
+ 	sclp_conbuf = NULL;
 -- 
 2.39.5
 
