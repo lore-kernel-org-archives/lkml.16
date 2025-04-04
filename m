@@ -1,215 +1,72 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 995C61F416A
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 14:58:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 244A728E3F
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 15:01:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743778707; cv=none; b=IYubP6oQ9OQl/R//IxJb15d5YjERM2nE1Qby85Ww26S3GjG4LXNeBqwyYmJRcVNKwV/hm643GRtYti/USMIbF4fvXZc/cR46t51OIk6MDe2KMYdBqgfgeK7wmxS0JbEXk7uU23aVF3V+dJRZxP1bwwmoh5fGckQ0vjjvxzrcPqc=
+	t=1743778865; cv=none; b=MB1UcW6oKxS10cpwfU1HA5yc3jhNz9rLYdGm9xz+hd3Tn1dozRQglT9HQpgKJmzfGJh1f3UmL66x6TYouK5BtYUBXPrs3mDN+wZQnGymmc7US5LU4FrXcsuaoSgD9UK/738SG8qfH6GHA7xWSt6g5ompG9mspGotCd+sMgc8Ccc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743778707; c=relaxed/simple;
-	bh=DuDXxPmeyV0AQ6HZWiHwwN2XpVrnDA8PZdKvA2mo+sw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=g2rf0NptkXyG/OPrmrJnqKtRn3T1fK2ho1IYdq7mh297iRbWxKeV90ulvZfaKBwzPArbM84gqqzUSFonYCE/9HQ6+NrtBTTCYTZavnFLaCQBIR+h4/VK9mdbfgGcKTBjbRrb2VVEkqMxhOnzEfje/XtfT/+Gshc9dgnxGXySUDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=YJBZSFWg; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=8PTvIkqP; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=YJBZSFWg; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=8PTvIkqP; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="YJBZSFWg";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="8PTvIkqP";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="YJBZSFWg";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="8PTvIkqP"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 815E7211A7;
-	Fri,  4 Apr 2025 14:58:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1743778701; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=zEjvuHDkGc5e4ViPRtssNgeC0CjY4cA3zlNgk3SctQI=;
-	b=YJBZSFWg7wrm8E8alqbTNbmSw4TqTAt7mGba0+TjCeraIuaDqXcBgwn8dldciNH2V45vvV
-	066qhH9PV7PWJSxpQ4LCfTu21z1CwRarU2kfehXuSVgFM6LZmkMy/1y166g8eLSJzpE41R
-	EcQRgEv7KdqHDPKSj17EaYWVh9SZh3U=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1743778701;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=zEjvuHDkGc5e4ViPRtssNgeC0CjY4cA3zlNgk3SctQI=;
-	b=8PTvIkqPILLu2Yjf4YA/xbuiHkkdB92idPVaxYQiCKVMzksnSDvAfSuBO4s+Rh2KVdHHdd
-	E2zyoN7GmyQeipCQ==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1743778701; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=zEjvuHDkGc5e4ViPRtssNgeC0CjY4cA3zlNgk3SctQI=;
-	b=YJBZSFWg7wrm8E8alqbTNbmSw4TqTAt7mGba0+TjCeraIuaDqXcBgwn8dldciNH2V45vvV
-	066qhH9PV7PWJSxpQ4LCfTu21z1CwRarU2kfehXuSVgFM6LZmkMy/1y166g8eLSJzpE41R
-	EcQRgEv7KdqHDPKSj17EaYWVh9SZh3U=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1743778701;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=zEjvuHDkGc5e4ViPRtssNgeC0CjY4cA3zlNgk3SctQI=;
-	b=8PTvIkqPILLu2Yjf4YA/xbuiHkkdB92idPVaxYQiCKVMzksnSDvAfSuBO4s+Rh2KVdHHdd
-	E2zyoN7GmyQeipCQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1CEFF13691;
-	Fri,  4 Apr 2025 14:58:21 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 9FHGBY3z72cedwAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Fri, 04 Apr 2025 14:58:21 +0000
-Message-ID: <edf93bc7-3289-4b1c-9698-e5e2cc5a6910@suse.de>
-Date: Fri, 4 Apr 2025 16:58:20 +0200
+	s=arc-20240116; t=1743778865; c=relaxed/simple;
+	bh=AYko1VWOfBVHv9E1RRyYX2hPQcGc735qlsJ419fVcMg=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=bzN0NKJGKzBLXMiQoYfj/4dwnDoaBaIgzdimb4deMdoxTfBxaeTS9r9cfefD7OOK1yDu+f0DVHeHR0J2EnUR+KxJ0EQ87NLAVI1bIIHkgPx8a7qsGGmQ7ck1X5UjbKh0y/u8+uVFYu/jKK8D4YpTsPdBp0b5+ndW1Gvr+CS8t+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3d585d76b79so20715105ab.1
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 08:01:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743778863; x=1744383663;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/l5DxVvZzV/XmdJEnN3NdjGY2wFy/vsojLyqFJVpr58=;
+        b=rEQ0O/e1Zv0uxrmHa7grIK+4PYuDgzlyqTRz14wk9xT5+jWJX/tPLiZAWBbDpLHp8b
+         b5eJDA8RRQW5/f4QZxVBXlU3dHbs1yd2Bp4Aj4PWdTMYGfy26JCqGWH1EDbWu0NAoRi1
+         5sOOVyK8GMj9W+fk5kgv43hvYXbn/da25iaQtmj6zozvwwiaYi0HVBgBHMQrQSrcX6E9
+         lgDePoSUp8wZDPcsNv472ZmMht7y1YzVhSwR2Ev1eCSJMAT4QqB1Xa/i8BJNXFjLJeQA
+         +h6k3fEvzffY7rixLJ+WOakx4KOC+pOAwHo08EWjF48Bzx81xCCkoQtTrnJljiPIZkbR
+         C3Wg==
+X-Forwarded-Encrypted: i=1; AJvYcCXDunSQ/uvcF15+TaIqPXqdiSZBYWhdg8xmYmGYmMblosMxSNOkyPVp5mwngzYE8nGeeT9DBBaYW2GvMAQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw/hVmC1KK/wOPkm05KQJPh0pXGcZQdYCGS24HdbY2pUCVRpVr2
+	BJ3uugknmmsoMkvpWn+QW/rnBbyo0VMCVDXjx0TR8nqJwu+BYtN1FYIcCmTpzw5D2ReVzBloOpW
+	/i/m63q1VSShpXa/hTMkFFyYFKoUVaiSyTpKhZvkUU9/bCmND1RCJtl8=
+X-Google-Smtp-Source: AGHT+IG6eW3ypD/dyFDHuVvisZ3SglKvgxqH17m5/3K5JlVsbmlRsCifJq5LIVx1t3MJHQszTfOAcu1rYMYYpd09FqGjs10n4FyV
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v20 09/10] drm/shmem-helper: Switch
- drm_gem_shmem_vmap/vunmap to use pin/unpin
-To: Boris Brezillon <boris.brezillon@collabora.com>
-Cc: Dmitry Osipenko <dmitry.osipenko@collabora.com>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Gerd Hoffmann <kraxel@redhat.com>, Qiang Yu <yuq825@gmail.com>,
- Steven Price <steven.price@arm.com>, Frank Binns <frank.binns@imgtec.com>,
- Matt Coster <matt.coster@imgtec.com>, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, kernel@collabora.com
-References: <20250322212608.40511-1-dmitry.osipenko@collabora.com>
- <20250322212608.40511-10-dmitry.osipenko@collabora.com>
- <ea4f4059-7748-4bfd-9205-8e95222144da@suse.de>
- <710cdbd4-2c6e-48b7-b12b-972ab6d12abf@collabora.com>
- <20250402152102.01d9cfee@collabora.com>
- <a8ed4b8b-5116-4ac2-bfce-21b2751f7377@suse.de>
- <20250403105053.788b0f6e@collabora.com>
- <29cfb98b-fe27-4243-abe4-ce66aa504573@suse.de>
- <20250404165233.139814ee@collabora.com>
-Content-Language: en-US
-From: Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
- AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
- AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
- lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
- U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
- vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
- 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
- j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
- T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
- 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
- GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
- hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
- EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
- C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
- yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
- SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
- Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
- 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
-In-Reply-To: <20250404165233.139814ee@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_TLS_ALL(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[15];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[collabora.com,gmail.com,ffwll.ch,linux.intel.com,kernel.org,amd.com,redhat.com,arm.com,imgtec.com,lists.freedesktop.org,vger.kernel.org];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:mid]
-X-Spam-Score: -4.30
-X-Spam-Flag: NO
+X-Received: by 2002:a92:c243:0:b0:3d0:235b:4810 with SMTP id
+ e9e14a558f8ab-3d6e3ee191dmr43590305ab.2.1743778863169; Fri, 04 Apr 2025
+ 08:01:03 -0700 (PDT)
+Date: Fri, 04 Apr 2025 08:01:03 -0700
+In-Reply-To: <Z-_jtFYt0t0-6A7z@fedora>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67eff42f.050a0220.2dd465.0214.GAE@google.com>
+Subject: Re: [syzbot] [block?] possible deadlock in blk_mq_freeze_queue_nomemsave
+From: syzbot <syzbot+9dd7dbb1a4b915dee638@syzkaller.appspotmail.com>
+To: axboe@kernel.dk, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	ming.lei@redhat.com, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hi
+Hello,
 
-Am 04.04.25 um 16:52 schrieb Boris Brezillon:
-> On Fri, 4 Apr 2025 10:01:50 +0200
-> Thomas Zimmermann <tzimmermann@suse.de> wrote:
->
->>>> In your case, vmap an pin both intent to hold the shmem pages in memory.
->>>> They might be build on top of the same implementation, but one should
->>>> not be implemented with the other because of their different meanings.
->>> But that's not what we do, is it? Sure, in drm_gem_shmem_vmap_locked(),
->>> we call drm_gem_shmem_pin_locked(), but that's an internal function to
->>> make sure the pages are allocated and stay around until
->>> drm_gem_shmem_vunmap_locked() is called.
->>>
->>> I guess we could rename pin_count into hard_refcount or
->>> page_residency_count or xxx_count, and change the pin/unpin_locked()
->>> function names accordingly, but that's just a naming detail, it doesn't
->>> force you to call drm_gem_pin() to vmap() your GEM, it's something we
->>> do internally.
->> Such a rename would be much appreciated. page_residency_count seems
->> appropriate.
-> On a second thought, I think I prefer
-> 'unevictable_count/inc_unevictable()/dec_unevictable()'. But looking at
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+unregister_netdevice: waiting for DEV to become free
 
-Ok
-
-> the gem-vram changes you just posted, it looks like gem-shmem is not the
-> only one to use the term 'pin' for this page pinning thing, so if we go
-> and plan for a rename, I'd rather make it DRM-wide than gem-shmem being
-> the outlier yet again :-).
-
-Which one do you mean?
-
-- The code in gem-vram does pinning in the TTM sense of the term.
-
-- From the client code, the pinning got removed.
-
-- The GEM pin/unpin callbacks are still there, but the long-term plan is 
-to go to dma-buf pin callbacks AFAICT.
-
-- Renaming the dma-buf pin/unpin would be a kernel-wide change. Not 
-likely to happen.
-
-Best regards
-Thomas
+unregister_netdevice: waiting for batadv0 to become free. Usage count = 3
 
 
--- 
---
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Frankenstrasse 146, 90461 Nuernberg, Germany
-GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
-HRB 36809 (AG Nuernberg)
+Tested on:
 
+commit:         665c7e64 loop: replace freezing queue with quiesce & f..
+git tree:       https://github.com/ming1/linux.git syzbot-test
+console output: https://syzkaller.appspot.com/x/log.txt?x=12321178580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=adffebefc9feb9d6
+dashboard link: https://syzkaller.appspot.com/bug?extid=9dd7dbb1a4b915dee638
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+
+Note: no patches were applied.
