@@ -1,201 +1,139 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6DAE376;
-	Fri,  4 Apr 2025 05:23:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4318376;
+	Fri,  4 Apr 2025 05:24:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743744229; cv=none; b=VEFTM5tS2YLjhGfOHmLul1YhpBr4FbfqnddJfmTgmm/YFqJLrJOBEbTsv5fZVcZyjlVpWkYYjbTaPbtv/8FCMeTBdijyL/P3BmB8z0ZzpQW9CFN5BdZpH0sHcrxrVN8PvBNWTCukJzFi1Nf4CLqmAa2rt1WTRyExUY4zDkSwrD8=
+	t=1743744283; cv=none; b=T74VkBtpodS3ITs+jn7DHxb6Ui6WqrKFEjID5dZ9lrwlwWHeM8U1aDl8XPc/hcav3YSPr1bgfdu5G+PUuR/YyeHQUpO1NU85b+Db83JicbI6fJSLio0rvg6guRscax63H3E3oGd4GcRXuMTJRupdWn7xjAI57400gaX8qITH83M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743744229; c=relaxed/simple;
-	bh=b/dWOEJUtthRdL0hwa2p3YSPznOZdiGQPXzmsuaR8C4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XGX5QFUwq/k4yTarT9eGe3LjufG7vTPEO8DM2Tuesm5qkYJsiMrVP/xmk2SQD+A/Drxs8VEkoI5SbFravssaILZWaci+pXjcJAocjQkuWXI/jPtIug57IKMrdidBNAE8cVvaW/oWSMXMhWr9ux38x5tV74t4QOZ7eVzAGPp4nxI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dQJF20/O; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743744283; c=relaxed/simple;
+	bh=T6qWTHO6zn6yFeQRka369OQfKhxhMz8aa9AQl4IEI8g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=K1c0ZmMF/EqYU9dqd+MTKxxiuRMSwdUElWaJG1z559z5l7VGvVnk554e8L6TbcquRqzPqPAeLIpKrp/F3TWTitmdGDsmoDt4DEpJfZLkezCZcDBnxC93Z50Pio9UiOL2zpxwtkgtJAOh2IDvH0xSxeGqvI/6/54+7qzxw+gVrcc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=YF2GtSIB; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dQJF20/O"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43d0618746bso11021145e9.2;
-        Thu, 03 Apr 2025 22:23:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743744226; x=1744349026; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=erAv7JoyA1Zu+xnpzHAQheWpjIen+lhF/W4nW1Nuqoo=;
-        b=dQJF20/OwL4zefMCo/P7YjpGzoVLoLqs0wXorj0mm7D2PoZydMdUypOUNgQJ3146L8
-         Wrabk+rKTFTIU40qP5ESnRwjVp/coJIOetecnSCl1RjDyV3TQWcbXq2qab5H0HX2bYge
-         teQDEFrMBRJTeBfMyvc6S6qBSOrLjI0ZthqhbysHVygGPXVJCsmM2Gq6Z+u6RhmZ6RaZ
-         qSo1xC2WdmGFAnqudGPE84aTCKRBFLZ7Zj0Oswtrt8bXADGhs48BZuQ7zd6DtYSqkQaQ
-         T/OclCOA6cHjWr2uxpuySHJCoYwpqRX8lSL3k9nRFOCQPIywlLm4p3OcDm6nVtcwGjjd
-         9Dpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743744226; x=1744349026;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=erAv7JoyA1Zu+xnpzHAQheWpjIen+lhF/W4nW1Nuqoo=;
-        b=Q7aY4hRmYA3tA0FOOwDai7zfywoik2VnRDodmu4cDwloBOOdTkJz3jjnQ5cRBRec7p
-         WJwIIXzgFMm+9x0R0ObbtBzLjLweXlvlXJa8cbZf+AEH1C0yoyxAPyNj4vQLZbQtfHkh
-         Wp9M4NUFJXFDAXZvKZ7DAaLr0tsa7bj3ayc29QpHiQ8FG0ZlIa+S4Cq/M9yzjpiBvqp8
-         lH8s6vDGmksB4a2nBp1e/Ck8oyVnV/wVLMGOmkqmTglRgA3ninBlPSICluIHo4/gADvb
-         IHgbeV2wmrxcgDEbykWYeBjW0QCNG7IHngYPZEZiBMOGlGninaRzawXx2ejGOLo478s6
-         kCCw==
-X-Forwarded-Encrypted: i=1; AJvYcCUrA4+P9iRV+H8ESRPSxINIV2hXCi5v53gpjgsXrfu0xExnUvGPK48NYpqp1P7OPSROXlkzOZrMFOCP2Zf0@vger.kernel.org, AJvYcCXTHeHvPU3vbH4WdW8TWZbP2kRG0xz1sgpgtq6Sz47GeaKrtu/dYRkpXxiig0gHmK0zMMjn8KUlLaXv5Gm2@vger.kernel.org
-X-Gm-Message-State: AOJu0YwvvfqvXDFS4XjrNJ7Wo2wkGccZ5QOimoZl5drflIRfFqttFl+Y
-	mZXUTSn+zBvW2ZMH/taB9rhpXMrm8550vHqsK/YSSAs6nlRsaTO+
-X-Gm-Gg: ASbGnctbTe0b2mGChG2InEEYsaZWB07BE8rQvTA33t0yPBWd0HKuLlmkUPNjUK8gcwx
-	cCoao6LV9wazzpdFEQtjRY2lgPA1fgGR4VzBM7XWRkaKWHuphNO6kwb6ELbhEaDkgUHCPjPy3tI
-	JyGJX6MXy6T6jeQBXZgE1/Mlpsu0tlCbfqoz9w6abpjVhWbNtHSj5kxCY1c1rvdxrbIspcr/PXP
-	8zFJQQvDL0l1IQ5mSkG+w1pHandyUmfOsSgQIdpbsEyJlI6/zyvlTnrktQDzlxiNPMZjB7E2Xn5
-	p1jnBcn40tZkacoud/puto8NUS905NLxCGAK4DyqfmQdWCcuB79b+3qDvU2x
-X-Google-Smtp-Source: AGHT+IGDNBBpyCmvjcKuSt6wNZOj4t3YyIiQvnI7ftAolOKe54QSZynC2+DvZKGrBQSROn+H/z4u5A==
-X-Received: by 2002:a05:600c:500c:b0:43d:bb9:ad00 with SMTP id 5b1f17b1804b1-43ecf8cf6b2mr16238095e9.15.1743744225648;
-        Thu, 03 Apr 2025 22:23:45 -0700 (PDT)
-Received: from f.. (cst-prg-6-220.cust.vodafone.cz. [46.135.6.220])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c30096cc1sm3415487f8f.5.2025.04.03.22.23.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Apr 2025 22:23:44 -0700 (PDT)
-From: Mateusz Guzik <mjguzik@gmail.com>
-To: brauner@kernel.org
-Cc: viro@zeniv.linux.org.uk,
-	jack@suse.cz,
-	linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	Mateusz Guzik <mjguzik@gmail.com>
-Subject: [PATCH v2] fs: remove stale log entries from fs/namei.c
-Date: Fri,  4 Apr 2025 07:23:40 +0200
-Message-ID: <20250404052340.1371976-1-mjguzik@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="YF2GtSIB"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53433pSj012468;
+	Fri, 4 Apr 2025 05:24:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	dgpEB7gfc/lE0wfxGM1FCSwDljOatKrsnpah3weKpoQ=; b=YF2GtSIBQ+W8JWVc
+	+dun3q2bQr0j3bamCyb03zqxFYYuU23VGRSiPObrm26+J3AC1L1LHUbZ3UB3Lm8z
+	dOH0d6E9+vvxZUy+VQGmh06GF2OGZ9TMB/N8jyPZ35M3P3UkBNC2cvJzMwitj9it
+	BwofFJUoR70ubYL+MnornSuSz0S5hMDlXvhrY+ByfIeqdVhnQ7GMIPpDjswUDLh4
+	jgD+YQU/anEn7tPb8pfCCdZT5R8WZhUrKVLPvZv3iTjs4W+Mz6KJ7xMeejH4/zrb
+	QMlZ4C5oBgAEhMOmJ6Coq0SBRYHfoykSxWz8Kon0n8TRhjST+f+F/6bmVqlY08lU
+	2SNWfg==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45t2d50qw9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 04 Apr 2025 05:24:36 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5345OZTk028739
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 4 Apr 2025 05:24:35 GMT
+Received: from [10.204.100.69] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 3 Apr 2025
+ 22:24:31 -0700
+Message-ID: <1dd6e03d-09be-4853-741a-4fb47b7619a0@quicinc.com>
+Date: Fri, 4 Apr 2025 10:54:22 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH 0/8] Reup: SM8350 and SC8280XP venus support
+Content-Language: en-US
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+CC: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Stanimir Varbanov
+	<stanimir.k.varbanov@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>, <linux-media@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Johan Hovold <johan+linaro@kernel.org>
+References: <20250304-b4-linux-media-comitters-sc8280xp-venus-v1-0-279c7ea55493@linaro.org>
+ <8cfaeb25-2657-9df4-5cea-018aad62f579@quicinc.com>
+ <it3njgklhnedjzojafuxpjy3o5zfulgdclweyobv7kjgtpjmzx@6opje7yms4yg>
+From: Vikash Garodia <quic_vgarodia@quicinc.com>
+In-Reply-To: <it3njgklhnedjzojafuxpjy3o5zfulgdclweyobv7kjgtpjmzx@6opje7yms4yg>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: 7gynyBXwz0lmTHT6-60hgv_GkTO1B2KS
+X-Proofpoint-GUID: 7gynyBXwz0lmTHT6-60hgv_GkTO1B2KS
+X-Authority-Analysis: v=2.4 cv=Cvu/cm4D c=1 sm=1 tr=0 ts=67ef6d14 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8 a=ruycbLpa2_zXmOni_LEA:9
+ a=QEXdDO2ut3YA:10 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-04_01,2025-04-03_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 adultscore=0
+ bulkscore=0 suspectscore=0 mlxlogscore=999 malwarescore=0 spamscore=0
+ impostorscore=0 lowpriorityscore=0 priorityscore=1501 mlxscore=0
+ clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504040035
 
-Parties interested in learning about development history of the file can
-git log on it (on this repo or one of custom imports of pre-git
-history).
+Hi Dmitry,
 
-While here remove a questionable comment about copying pathnames into
-the kernel to "reduce some races" and "hopefully speeding things up".
-Making an in-kernel copy is not optional.
-
-Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
----
-
-an actual submission this time around
-
- fs/namei.c | 86 +-----------------------------------------------------
- 1 file changed, 1 insertion(+), 85 deletions(-)
-
-diff --git a/fs/namei.c b/fs/namei.c
-index 360a86ca1f02..6f20ac056540 100644
---- a/fs/namei.c
-+++ b/fs/namei.c
-@@ -5,16 +5,6 @@
-  *  Copyright (C) 1991, 1992  Linus Torvalds
-  */
- 
--/*
-- * Some corrections by tytso.
-- */
--
--/* [Feb 1997 T. Schoebel-Theuer] Complete rewrite of the pathname
-- * lookup logic.
-- */
--/* [Feb-Apr 2000, AV] Rewrite to the new namespace architecture.
-- */
--
- #include <linux/init.h>
- #include <linux/export.h>
- #include <linux/slab.h>
-@@ -44,83 +34,9 @@
- #include "internal.h"
- #include "mount.h"
- 
--/* [Feb-1997 T. Schoebel-Theuer]
-- * Fundamental changes in the pathname lookup mechanisms (namei)
-- * were necessary because of omirr.  The reason is that omirr needs
-- * to know the _real_ pathname, not the user-supplied one, in case
-- * of symlinks (and also when transname replacements occur).
-- *
-- * The new code replaces the old recursive symlink resolution with
-- * an iterative one (in case of non-nested symlink chains).  It does
-- * this with calls to <fs>_follow_link().
-- * As a side effect, dir_namei(), _namei() and follow_link() are now 
-- * replaced with a single function lookup_dentry() that can handle all 
-- * the special cases of the former code.
-- *
-- * With the new dcache, the pathname is stored at each inode, at least as
-- * long as the refcount of the inode is positive.  As a side effect, the
-- * size of the dcache depends on the inode cache and thus is dynamic.
-- *
-- * [29-Apr-1998 C. Scott Ananian] Updated above description of symlink
-- * resolution to correspond with current state of the code.
-- *
-- * Note that the symlink resolution is not *completely* iterative.
-- * There is still a significant amount of tail- and mid- recursion in
-- * the algorithm.  Also, note that <fs>_readlink() is not used in
-- * lookup_dentry(): lookup_dentry() on the result of <fs>_readlink()
-- * may return different results than <fs>_follow_link().  Many virtual
-- * filesystems (including /proc) exhibit this behavior.
-- */
--
--/* [24-Feb-97 T. Schoebel-Theuer] Side effects caused by new implementation:
-- * New symlink semantics: when open() is called with flags O_CREAT | O_EXCL
-- * and the name already exists in form of a symlink, try to create the new
-- * name indicated by the symlink. The old code always complained that the
-- * name already exists, due to not following the symlink even if its target
-- * is nonexistent.  The new semantics affects also mknod() and link() when
-- * the name is a symlink pointing to a non-existent name.
-- *
-- * I don't know which semantics is the right one, since I have no access
-- * to standards. But I found by trial that HP-UX 9.0 has the full "new"
-- * semantics implemented, while SunOS 4.1.1 and Solaris (SunOS 5.4) have the
-- * "old" one. Personally, I think the new semantics is much more logical.
-- * Note that "ln old new" where "new" is a symlink pointing to a non-existing
-- * file does succeed in both HP-UX and SunOs, but not in Solaris
-- * and in the old Linux semantics.
-- */
--
--/* [16-Dec-97 Kevin Buhr] For security reasons, we change some symlink
-- * semantics.  See the comments in "open_namei" and "do_link" below.
-- *
-- * [10-Sep-98 Alan Modra] Another symlink change.
-- */
--
--/* [Feb-Apr 2000 AV] Complete rewrite. Rules for symlinks:
-- *	inside the path - always follow.
-- *	in the last component in creation/removal/renaming - never follow.
-- *	if LOOKUP_FOLLOW passed - follow.
-- *	if the pathname has trailing slashes - follow.
-- *	otherwise - don't follow.
-- * (applied in that order).
-- *
-- * [Jun 2000 AV] Inconsistent behaviour of open() in case if flags==O_CREAT
-- * restored for 2.4. This is the last surviving part of old 4.2BSD bug.
-- * During the 2.4 we need to fix the userland stuff depending on it -
-- * hopefully we will be able to get rid of that wart in 2.5. So far only
-- * XEmacs seems to be relying on it...
-- */
- /*
-- * [Sep 2001 AV] Single-semaphore locking scheme (kudos to David Holland)
-- * implemented.  Let's see if raised priority of ->s_vfs_rename_mutex gives
-- * any extra contention...
-- */
--
--/* In order to reduce some races, while at the same time doing additional
-- * checking and hopefully speeding things up, we copy filenames to the
-- * kernel data space before using them..
-- *
-  * POSIX.1 2.4: an empty pathname is invalid (ENOENT).
-- * PATH_MAX includes the nul terminator --RR.
-+ * PATH_MAX includes the nul terminator.
-  */
- 
- #define EMBEDDED_NAME_MAX	(PATH_MAX - offsetof(struct filename, iname))
--- 
-2.43.0
-
+On 4/3/2025 10:28 PM, Dmitry Baryshkov wrote:
+> On Wed, Mar 05, 2025 at 08:49:37AM +0530, Vikash Garodia wrote:
+>>
+>> On 3/4/2025 6:37 PM, Bryan O'Donoghue wrote:
+>>> This series is a re-up of Konrad's original venus series for sc8280xp and
+>>> sm8350.Why this is enabled on venus driver ? Why not iris driver ? This needs an
+>> explanation on was this even tried to bring up on iris driver.
+>>
+>> How different is this from sm8250 which is already enabled on iris driver ?
+> 
+> As far as I remember, SM8250 support in Iris did not reach
+> feature-parity yet. So in my opinion it is fine to add new platforms to
+> the Venus driver, that will later migrate to the Iris driver.
+I would say, from decoder side all codecs are there now on Iris. H264 merged,
+while h265 and VP9 dec are posted as RFC, there is one compliance failure which
+is under debug to post them as regular patches.
+If we are mainly looking for decode usecases, then we should be on Iris.
+Preference would be to stay on Iris, otherwise we would have that extra ask to
+port it later from venus to iris.
+> 
+> Otherwise users of SC8280XP either have to use external patchsets (like
+> this one) or a non-full-featured driver (and still possibly external
+> patchsets, I didn't check if these two platforms can use
+> qcom,sm8250-venus as a fallback compat string).
+It should, atleast from the hardware spec perspective, AFAIK.
+> 
+> Bryan, Konrad, in my opinion, let's get these patches merged :-)
+> 
+>>
+>>> Link: https://lore.kernel.org/all/20230731-topic-8280_venus-v1-0-8c8bbe1983a5@linaro.org/
+>>>
+>>> The main obstacle to merging that series at the time was the longstanding
+>>> but invalid usage of "video-encoder" and "video-decoder" which is a
+>>> driver level configuration option not a description of hardware.
+>>>
+>>> Following on from that discussion a backwards compatible means of
+>>> statically selecting transcoder mode was upstreamed
+>>>
+>>> commit: 687bfbba5a1c ("media: venus: Add support for static video encoder/decoder declarations")
+>>>
+>>> Reworking this series from Konrad to incorporate this simple change
+>>>
+> 
+Regards,
+Vikash
