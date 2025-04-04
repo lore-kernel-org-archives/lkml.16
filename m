@@ -1,72 +1,117 @@
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 923E31E5B86
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 15:14:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B5021EF0AD;
+	Fri,  4 Apr 2025 15:14:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743779645; cv=none; b=hIYGWLhW7PpLy2uqBcFtAqGLjlvPumWSciXtdVQ3AL71pS9ju9HcPapUiZaUIQpE299dxq+13rd14ZvImAwp8hq0hW77P2LRRzS3SMRZHeVUyti9vglCwvgvrzAMAstCwsLnWk4eQugYDmSt87ZaZrCcXmd6ckPcCNDNiKE6Tfw=
+	t=1743779663; cv=none; b=EJ7LJnZXV87nopS4wqUPKHrORDKUswMhesplutNQ8kgJbDvxIhelJUOw3DU+f8P0KzTwVKvN+hJA5OgARyRGOHgx6h2Di2WldE2taI1eXD+0AXY/iEKRF+clMSy0Jys9FWuPCuDx0xqS+KItRGCyRH/f71v0JYL7BV6ffbDekX4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743779645; c=relaxed/simple;
-	bh=l4yDt1yHx9j+mchDuvLTH3Q5HyepF7QOqWVWlSgKA/0=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=OmEOXLKCKuIdC9xrWHBlImDZPfw6bHg7Lf1I6aKz1ZsRsvsmScQBvGZjjBPW+E6r2pjkbiu4loYj/mDNYmgeKm5cA8V6utnFxCDGod3cuKTdHPtWFiZA+/eOKGT72RdbVcAfiE+Ssybd/k3QEr9vKAYgp+kVNipqpI/pz3iZD1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3d5b3819ff9so20546255ab.0
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 08:14:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743779642; x=1744384442;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=iW+6vLxzZy4xI02zj7teqXkFbt/Cvq4mQ7bN9HZTK50=;
-        b=MOqMmybrB9Nw9OTnbnGolNBuWzF3YaCdWzrpEiUP6i4onaMQTazay0slwVchhj7AgO
-         hN2XFfgQnEi3xZlTCqX63Ch5sKWdFTHB1Xppia2AAGRlKMONd5UTGfYY623+eDkeTaWt
-         uCVOXiEOzsmNIKs3aiVUu8yCRoabP6b4TJBo+2gqLecOdZwMW3Dpw4ktlz5LE/K9UBgL
-         PI7JvO1ifXM5XFTO8F7scTsOI5FrMEbfKOCIKmkPQXKG1WBVHS5+erNCyJrFI5XYwe7N
-         cHTUvMm0JsfuWgPhu0Wq/m6/vte/YgPJB9IIKSqhjqjXf7e1SdU/LS9sG/gc/l7YstwK
-         Q7vg==
-X-Forwarded-Encrypted: i=1; AJvYcCWL68PZQ2IoAHfXdeGbh3EqVryNI+PxVvYkibhFCHhHxG9T6TqUFimTId4jAZyqvV2iGTSneCV117+qtl4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw/WvUDcpRnt/iTnlskx4D/3YbdPhMWMemXrn/ycwok31X/JcIW
-	jHk0kIuEw1+bW3DDBF+BHnwJwt/EbSXfMca1rKtYTWIUWlTyEO4QwdXdabx8MLKnNEpSltj4nnj
-	JuOPv5sughBpsDRXdr1R8nUzbtnL/Qt7Eye/uPV0GePWL4jspO7f+Rm4=
-X-Google-Smtp-Source: AGHT+IHQHK+2oKSLox2L7WzUmG1X8IpHFrta9cnoDMSch8yzSSBgwQkNqZMKxPfwGLce53ZqGh9rVIY5mpVzRMSLplnPyG/OetJU
+	s=arc-20240116; t=1743779663; c=relaxed/simple;
+	bh=evAovIBbD/uzBeMvoHDbt24jYAMqbvFBAa/ChPerOfs=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=WN8E7CYxXrzZ1nj4lK98AKz66JW8NiRcYqIZdk9J7Wol1sA8lOCRbq4zLNelp2hbsOp+NxDzl9byukCYCZGQ9k7aucCn8nyAZdcMBX6BEeUJKrRailAAr3EEbYFgFtTCLV4JuJ0PdrAzVImFGbnymyU1t1ObTY5ntcXqNDXvYo4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Sq4TDEFV; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=IohlGRpv; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Sq4TDEFV";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="IohlGRpv"
+Date: Fri, 04 Apr 2025 15:14:17 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1743779660;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5zG4YgNteA6hLvHRqyJ6K8KbsFLMnLYKMqLhkRxS8f0=;
+	b=Sq4TDEFVIaOtZ2v1+coTXeLJ6z/5lWOb7KgB8QxFnl6s4CPPPGxy1w7oplhfvrX2Dheo7r
+	JJUT8p/dLXcO0r22Eh8l84Jniy+meb7T91EV2UXE4cVo0ORvLkBP7fzI5Oum5r4OzzGcmX
+	nsF1gHdXJ+3B3DYzG8yr/B9cI6dCXBefmdsS4PfPCl+TXFhHHJ8vyDL2nrxZzlXZOEHDcl
+	INtEVZCb8KmPxba8ko7hiVMvRh7YwFJjnjBfX+/1a0KGBbhhZBD/5TxFsicCZGPl/jaFFi
+	NICtvFjSoP2RVe+4zyVJQ1uB0bhpRM0TA+78qMpI9XTapwVfVmTH/QuH1BHcig==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1743779660;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5zG4YgNteA6hLvHRqyJ6K8KbsFLMnLYKMqLhkRxS8f0=;
+	b=IohlGRpv+E9qEUZ867Jod95nR4YUdeAh7LC+EqoB8nbGrjDw9SdvNulMrHXaCcIA93Rlg2
+	AGRmicIp/ffjquAA==
+From: "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: irq/urgent] genirq/migration: Use irqd_get_parent_data() in
+ irq_force_complete_move()
+Cc: Frank Scheiner <frank.scheiner@web.de>,
+ Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+ linux-kernel@vger.kernel.org, maz@kernel.org
+In-Reply-To: <87h634ugig.ffs@tglx>
+References: <87h634ugig.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:16cf:b0:3d3:deee:de2f with SMTP id
- e9e14a558f8ab-3d6e3f01584mr44299585ab.7.1743779642707; Fri, 04 Apr 2025
- 08:14:02 -0700 (PDT)
-Date: Fri, 04 Apr 2025 08:14:02 -0700
-In-Reply-To: <20250404100710.3803-1-hdanton@sina.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67eff73a.050a0220.2dd465.0215.GAE@google.com>
-Subject: Re: [syzbot] [block?] possible deadlock in blk_mq_freeze_queue_nomemsave
-From: syzbot <syzbot+9dd7dbb1a4b915dee638@syzkaller.appspotmail.com>
-To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <174377965732.31282.158574464632397701.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-Hello,
+The following commit has been merged into the irq/urgent branch of tip:
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-unregister_netdevice: waiting for DEV to become free
+Commit-ID:     9b305678c55dd45044aa565fee04f8d88382bc4d
+Gitweb:        https://git.kernel.org/tip/9b305678c55dd45044aa565fee04f8d88382bc4d
+Author:        Thomas Gleixner <tglx@linutronix.de>
+AuthorDate:    Fri, 04 Apr 2025 16:51:19 +02:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Fri, 04 Apr 2025 17:08:36 +02:00
 
-unregister_netdevice: waiting for batadv0 to become free. Usage count = 3
+genirq/migration: Use irqd_get_parent_data() in irq_force_complete_move()
+
+Frank reported, that the common irq_force_complete_move() breaks the out of
+tree build of ia64. The reason is that ia64 uses the migration code, but
+does not have hierarchical interrupt domains enabled.
+
+This went unnoticed in mainline as both x86 and RISC-V have hierarchical
+domains enabled. Not that it matters for mainline, but it's still
+inconsistent.
+
+Use irqd_get_parent_data() instead of accessing the parent_data field
+directly. The helper returns NULL when hierarchical domains are disabled
+otherwise it accesses the parent_data field of the domain.
+
+No functional change.
+
+Fixes: 751dc837dabd ("genirq: Introduce common irq_force_complete_move() implementation")
+Reported-by: Frank Scheiner <frank.scheiner@web.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: Frank Scheiner <frank.scheiner@web.de>
+Link: https://lore.kernel.org/all/87h634ugig.ffs@tglx
 
 
-Tested on:
+---
+ kernel/irq/migration.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-commit:         e48e99b6 Merge tag 'pull-fixes' of git://git.kernel.or..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1564823f980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=c79406130aa88d22
-dashboard link: https://syzkaller.appspot.com/bug?extid=9dd7dbb1a4b915dee638
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=14783998580000
-
+diff --git a/kernel/irq/migration.c b/kernel/irq/migration.c
+index 147cabb..f2b2929 100644
+--- a/kernel/irq/migration.c
++++ b/kernel/irq/migration.c
+@@ -37,7 +37,7 @@ bool irq_fixup_move_pending(struct irq_desc *desc, bool force_clear)
+ 
+ void irq_force_complete_move(struct irq_desc *desc)
+ {
+-	for (struct irq_data *d = irq_desc_get_irq_data(desc); d; d = d->parent_data) {
++	for (struct irq_data *d = irq_desc_get_irq_data(desc); d; d = irqd_get_parent_data(d)) {
+ 		if (d->chip && d->chip->irq_force_complete_move) {
+ 			d->chip->irq_force_complete_move(d);
+ 			return;
