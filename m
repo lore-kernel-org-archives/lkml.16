@@ -1,197 +1,143 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com [209.85.221.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5083A1624C9;
-	Fri,  4 Apr 2025 10:12:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 013C11A7044
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 10:14:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743761571; cv=none; b=iPjWrgn+EJlp4yIiI0u7btTRI9WbuG/aWXT0uJHZbmLDmKTlp2tY34iHeIxUZA5SuusATDs4BciSZMRLDmmEm7svHA3FEG8Xr9jAn+IQV7ioTExU+VnBVrMmA/WWqEuZkx645GvYpVuKvepoLKq/A6fnMQqHOxNSl5e/riRdypQ=
+	t=1743761645; cv=none; b=JATLuVADMpD9X5n2DANuqOp8yn4IJcr0yOvitSLyCyBaFPFqyO2GYLH3cEpjflsDSeKUmRigBCBBvmL2HpYkxtsCcr5WixQM4Uhzx4kgVoJIH9tW0CcNhvs8fNmuPMTS7Sdo1Xut/UUVyduDKlFxvGdN8SFN904mDMB8nWiaehk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743761571; c=relaxed/simple;
-	bh=NxwVvZZDyOiRdG/tnZiX1ueoKdKHoYeMpk9LYgqApIM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FVM0oxHjlU8TjmCJLTFrKd8fb2q3YktICruVinkgM1oVQmoz+Qor5RhQM7B9mYqyETmLJI/RGNZISviJOOh8yxYTit0jWBa+Q/dh98EQtGrtZhFgK44aep9VORIr8x196zhBPJwGDKix0eauoj0ed/fcdGMn66dEwOPakRqIu1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CBGbEIDJ; arc=none smtp.client-ip=209.85.128.44
+	s=arc-20240116; t=1743761645; c=relaxed/simple;
+	bh=M1xR/ehUTlCqt5flnpbVHWZfT9TJ+6ACGN3OWuyHfIA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qLIIF1LJhJUKVfy9sxTHnWn7VPwJlb5WObvRoC83o5Y5rhEpqpCN8+DCGCNQQZXXYufNp/uRbfQirmo+K7c3t+eweiLmo5FiJivdY+zOjnSDDkXI7MGulFpf/Pxz35RtNx/R5CegxFBYYv9WCtvvpFQyLET91SN7VrF/x1QmbuM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bTDIWdMt; arc=none smtp.client-ip=209.85.221.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CBGbEIDJ"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43948f77f1aso13448995e9.0;
-        Fri, 04 Apr 2025 03:12:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bTDIWdMt"
+Received: by mail-vk1-f179.google.com with SMTP id 71dfb90a1353d-523edc385caso834544e0c.3
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 03:14:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743761567; x=1744366367; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=qrnOAx1Z42gXuu4NUkGGkg//gH1o3Mdb+pyo1hDqScI=;
-        b=CBGbEIDJSDgJJ5EGzfyDCibMT28v66AlJVmYWcKLKxUQxt7DHoroROCZao6mQ5GkcT
-         vec38sCnq901vimlkiOsHrdOVHixMj1QSxc6jAOPh1qrF/lI1FV1rrGrXOl4h2m0O5ua
-         pdiDFiST51yNwyAIQET/goZTa8XArbQcRfx905O0rYQ7XRG1IoA0eP0eJTDrWpBn507F
-         it6avN2r7hnYo6I5P7npiGDkscfcc5BnHDT4zbVMJhMi0YzaHN0EB9hE+ydZ2e7HW7iZ
-         GvAa9Ms0nnGs7uHo7FmKI24IhodSBVjTYUzK/3vhl4oXW2LwFsRlJ4/RNvGa470hdCD3
-         0zFA==
+        d=gmail.com; s=20230601; t=1743761643; x=1744366443; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Z6kQX7J4iPqcH4qqAuoXo8W2m8I6TgoA5VFu2BQ2/J4=;
+        b=bTDIWdMtAGoididzVD0Van1KJBR7RTgCrLsgm88hIqpAMPdpqJWHq/MeOeBrwy/9VO
+         HI+/gHeY6IBSz/7VM/RrzLqOPPEJZTf2HAm37WjlARD+qHc3XempV2nCMv1nL07h7oXR
+         7xl4MALT7EutIYCH6lC6izTrJUicIhgv81rEvu9Ve3VNcWuMCQT7mL8LW9dbsOvBL2bv
+         YzeporgCu4yYdqJC+iwtBWFJDeqglEQAgncoGP5qkY1Imd/YDglGRLkUaYLiS1m1ljQj
+         FyAVIL9KqU58601bjLJROf4wf+N32eLNYxBhNQGVyE7DKFZ7RK/wFHebIFicdqKQgcgZ
+         gKAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743761567; x=1744366367;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qrnOAx1Z42gXuu4NUkGGkg//gH1o3Mdb+pyo1hDqScI=;
-        b=pt0Dk+SO6EjCU23I5QIXCvFieA8DtqXM3gVfsIdRP9Or7QSVkTydeOqE12NIEMlhZz
-         yEs20wKofB633eeGfPn0dqCRHApLsCbdwSLeyYQbRtmEKuNZl0b9iXf25HMzvvcWQQnc
-         tJrDHaWlctnVM3zMlf9aewRHV3bR6C9/h/xwbMAtzLYc1WYBBL5neuOisFzz0W6i+RyH
-         SNzBS/k+AOhqAJ8QNeNzZUI9It8bta9iFeazYNm9Nk83GzkqIVHiJGrB/dIGgvPidBnX
-         rM1fsgtZmMweWN+m5qtWp8WSUANCrQ6/nv6D9qsBpRlSMNzMUnjvnQ8vYeUnh+aL7lTq
-         W2cA==
-X-Forwarded-Encrypted: i=1; AJvYcCV0bqnBGvESpxKO6TsCrAQB4dAPPThw/HOJckgIimHjps3ACkAiIkXs3KjtzYN8bg8d4lykM2YUzoWVGezo@vger.kernel.org, AJvYcCXE8MCgVadtbcTNAkPEIZisiR/kElduyoI0Fa/a9kDegjFA4z8v7xUvLLSBQoDZ6ldP2Nf1FIDh5pJO@vger.kernel.org
-X-Gm-Message-State: AOJu0YwkHZK+8qgrqrBFKVSeVBFjF9LAWVBm67BR+wiNDHeue0r3fxGS
-	T73efQKwhxTwqCM3HSAG1ShQdLYD/hbPC5sQLOwrHi9bh0JY+zyy
-X-Gm-Gg: ASbGncuzm0gPpMLx3TZgO1kLTQQcHmBZcqp4yZwlGWFUmWomvJZGbcaqRwISAL+pGKl
-	/N3aLyW/M/gAWa6lEkUkmJdwVkHXUKCsovNdzxj5GFmgX8d83Zf/uDIa/NpkwxUnzf9zfLRTlES
-	DNRkjbUdbhSOjz9WCFmwmmyM65KTfaybpehl8Cp/PuqfUK+vauV+GxY9VvDe2sp9ptcnFeqjN7A
-	Wo5g0wPpwEuo3Rfr/wMYGu0w+Uru7bEiDm4nWZ/RJJCZD6VjhqqVrMn0x505uM6uCKYC9ID5grJ
-	oq2GCqpc+8PruXofngat8I6yqp+W5mWncGoXO2qfRvkOmIWf9nAm6HwI5kXW+T6/8pCNRJjrxss
-	JPqH0RSdLwvEmwrDo
-X-Google-Smtp-Source: AGHT+IGn5zQjckVMr5yj5RkLrkNmEYqXiyrId5H4BjH0hkHpDWBOU4XybvpfkaZInnb7fcnChm8sLg==
-X-Received: by 2002:a05:600c:198b:b0:43c:fae1:5151 with SMTP id 5b1f17b1804b1-43ecf9fed70mr18873905e9.25.1743761567394;
-        Fri, 04 Apr 2025 03:12:47 -0700 (PDT)
-Received: from partp-nb.corp.toradex.com (31-10-206-125.static.upc.ch. [31.10.206.125])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec1f27a55sm43732995e9.2.2025.04.04.03.12.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Apr 2025 03:12:46 -0700 (PDT)
-From: Parth Pancholi <parth105105@gmail.com>
-To: Nishanth Menon <nm@ti.com>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Tero Kristo <kristo@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: Parth Pancholi <parth.pancholi@toradex.com>,
-	linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] arm64: dts: ti: k3-j784s4-main: Enable ACSPCIE outputs for PCIe interfaces
-Date: Fri,  4 Apr 2025 12:12:34 +0200
-Message-Id: <20250404101234.2671147-1-parth105105@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        d=1e100.net; s=20230601; t=1743761643; x=1744366443;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Z6kQX7J4iPqcH4qqAuoXo8W2m8I6TgoA5VFu2BQ2/J4=;
+        b=A9fc/IXCk11k4fVPEK3Idbp2mW9s/z9dQ5H4lVjmWg90cOE464lRHny0SlFF2FWPdj
+         wsS8nKyGdbmNz3J2hjmDTro/fkd31f3LiTAVIOspEBhdhHP5ggpi1f8dBkSZxRR7k+8a
+         t2jlTP+reBfEFM//3uFDvanUkav14zcV3Yo7FxfJT40TOXAj40s3+fjy0CH2RoHJzSDu
+         FiUbH58b91fwvfzbN3BNVkzIXcENPkk+n1bqUIwftcp/alEUpI/n1mWeSa89/8Y+sSIl
+         Le/dykvnoC6OjW23guoeOGMY3VxQSy/YVEMX7clObTI2am212GfU5sFbLGbFCRzTXRrp
+         jHgw==
+X-Forwarded-Encrypted: i=1; AJvYcCUAk9JPIIJg6ohNi+yuO/RJjxamZtjPm3hXISpFiv7PtX8d4ovaBxeoNkpA1s87mfEBWFsJaQqJSsJ/Tgw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyTeJ42Zt1NhphigzrZ+UipiGJpKOwCHKnREQ3NKisN+BIa6SwT
+	ACPLVkruPM8zykWIPJaIj2LqGI8PxbjSI6Y9gPYvxZUGiMmxyqDHHYsaxgWTEmGyYZTUED17iXy
+	ObZHkJalwBfA5hrhiECSwXN/W2VI=
+X-Gm-Gg: ASbGncs3U1p6+sWO+FUiXXnwaBeicit3aKlT59g/sFfugU99fvJ5mZm/sYXUWiL+Npo
+	NftzxjHfwh7AXgq7+w5j1nvJo8XmhSDwz+JYA6QzGc0hnC1xp2UskhaxUXLojIIzYXqtkVDSWmq
+	NxlOUFcoa4uv+/lnaBXyI0azfKBZCO10FWQBkEEA==
+X-Google-Smtp-Source: AGHT+IGHJ+mgde1bUNXVhTgyaQjWuFJcTsikHax7jYFsftnczff4N6TcT+1V1i3kwufL5PXiMgJCDcJcyRn2L3U7q74=
+X-Received: by 2002:a05:6122:886:b0:516:18cd:c1fc with SMTP id
+ 71dfb90a1353d-5276458254amr1626212e0c.8.1743761642817; Fri, 04 Apr 2025
+ 03:14:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <cover.1743723590.git.abrahamadekunle50@gmail.com>
+ <6fe7cb92811d07865830974cb366d99981ab1755.1743723591.git.abrahamadekunle50@gmail.com>
+ <CAHp75Vem1E9wmmfXWsbawj2f+F=UkfzML7HyAnhTdsUqvjW91g@mail.gmail.com> <33a8d769-33b9-43df-9914-99175605b026@stanley.mountain>
+In-Reply-To: <33a8d769-33b9-43df-9914-99175605b026@stanley.mountain>
+From: Samuel Abraham <abrahamadekunle50@gmail.com>
+Date: Fri, 4 Apr 2025 11:13:54 +0100
+X-Gm-Features: ATxdqUHTYgCeSt-ecqfOsTN05l_d53aRnie6hB7s9Rdi_fEEr2uHtQiBk9h1w2E
+Message-ID: <CADYq+fYKHsZCBN-z4ogcnAC_gK7i0P1=DHbfm=AC8o-uSUQ-7g@mail.gmail.com>
+Subject: Re: [v3 1/1] staging: rtl8723bs: Prevent duplicate NULL tests on a value
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, outreachy@lists.linux.dev, 
+	julia.lawall@inria.fr, gregkh@linuxfoundation.org, 
+	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org, andy@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Parth Pancholi <parth.pancholi@toradex.com>
+On Fri, Apr 4, 2025 at 10:06=E2=80=AFAM Dan Carpenter <dan.carpenter@linaro=
+.org> wrote:
+>
+> On Fri, Apr 04, 2025 at 10:53:22AM +0300, Andy Shevchenko wrote:
+> > On Fri, Apr 4, 2025 at 3:03=E2=80=AFAM Abraham Samuel Adekunle
+> > <abrahamadekunle50@gmail.com> wrote:
+> > >
+> > > When a value has been tested for NULL in an expression, a
+> > > second NULL test on the same value in another expression
+> > > is unnecessary when the value has not been assigned NULL.
+> > >
+> > > Remove unnecessary duplicate NULL tests on the same value that
+> > > has previously been NULL tested.
+> > >
+> > > Found by Coccinelle.
+> >
+> > ...
+> >
+> > > +                       psta->sta_xmitpriv.txseq_tid[pattrib->priorit=
+y] &=3D 0xFFF;
+> >
+> > > +                                       psta->BA_starting_seqctrl[pat=
+trib->priority & 0x0f] =3D
+> > > +                                               (tx_seq + 1) & 0xfff;
+> >
+> > > +                                       psta->BA_starting_seqctrl[pat=
+trib->priority & 0x0f] =3D
+> > > +                                               (pattrib->seqnum + 1)=
+ % 4096;
+> >
+> > Logically it's obvious that you need to align all cases to have
+> > consistent approach.
+> > Besides that the commit message should mention this change. Something l=
+ike this
+> > "While at it, convert '& 0xfff' cases to use modulo operator and
+> > decimal number to make the upper limit visible and clear what the
+> > semantic of it is."
+>
+> No, I'm sorry but that's really against the rules in drivers/staging.
+> Don't mix unrelated changes into a patch.  It needs to be done as a
+> separate patch if we're going to do that.
+>
+> To be honest, I don't even want people fixing line length issues or
+> adding spaces.  I would have accepted small white space changes but I
+> prefered the v2 version of this patch.  Once you start changing
+> "& 0xfff" to "% 4096" that's not white space and it must be done
+> in a separate patch. I use a script to review white space patches
+> because I'm always nervous someone will slip something malicious
+> into 100+ lines of reformated code.  It's really fast to review
+> patches with my script but once people start mixing things in then
+> it's a headache for me.
+>
+> Also if the change accidentally introduces a bug, I want it to be a
+> one liner change and not something hidden inside a giant reformat.
+>
+> regards,
+> dan carpenter
 
-TI J784S4-based devices, such as the AM69 SoC, provide PCIE_REFCLK outputs
-from the SoC, which can be used to clock external PCIe endpoint devices.
-Each PCIE_REFCLK output is enabled via the corresponding ACSPCIE clock
-buffer, with each buffer supporting two PADs to provide reference clocks
-for two associated PCIe instances. The mappings are as follows:
-        - PCIe0 -> ACSPCIE1 PAD0
-        - PCIe1 -> ACSPCIE0 PAD0
-        - PCIe2 -> ACSPCIE1 PAD1
-        - PCIe3 -> ACSPCIE0 PAD1
+Hello Dan,
+Thank you for your review.
+Please can you provide some guidance on what the next steps should be for m=
+e
+as regards the patch?
+Thank you.
 
-This patch enables each ACSPCIE module and its corresponding PADs to ensure
-that all PCIE_REFCLK outputs are functional.
-
-This change have been tested on an AM69-based custom hardware platform,
-where all four PCIe instances (PCIe0, PCIe1, PCIe2, and PCIe3) with the
-internal PCIE_REFCLK are utilized with various endpoint devices such as
-a WiFi card, NVMe SSD, and PCIe-to-USB bridge.
-
-Link: https://e2e.ti.com/support/processors-group/processors/f/processors-forum/1484211/am69-pcie-refclk-out-and-acspcie-mappings
-Signed-off-by: Parth Pancholi <parth.pancholi@toradex.com>
----
-This change depends on https://lore.kernel.org/all/20241209085157.1203168-1-s-vadapalli@ti.com/
-v2: set ti,syscon-acspcie-proxy-ctrl mask to 0x3 for all PCIe instances to prevent unintended overrides.
-v1: https://lore.kernel.org/all/20250320122259.525613-1-parth105105@gmail.com/
----
- .../boot/dts/ti/k3-j784s4-j742s2-main-common.dtsi    | 12 +++++++++---
- arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi           | 10 ++++++----
- 2 files changed, 15 insertions(+), 7 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/ti/k3-j784s4-j742s2-main-common.dtsi b/arch/arm64/boot/dts/ti/k3-j784s4-j742s2-main-common.dtsi
-index 591609f3194c..d82d5cb5607e 100644
---- a/arch/arm64/boot/dts/ti/k3-j784s4-j742s2-main-common.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j784s4-j742s2-main-common.dtsi
-@@ -132,6 +132,11 @@ acspcie0_proxy_ctrl: clock-controller@1a090 {
- 			compatible = "ti,j784s4-acspcie-proxy-ctrl", "syscon";
- 			reg = <0x1a090 0x4>;
- 		};
-+
-+		acspcie1_proxy_ctrl: clock-controller@1a094 {
-+			compatible = "ti,j784s4-acspcie-proxy-ctrl", "syscon";
-+			reg = <0x1a094 0x4>;
-+		};
- 	};
- 
- 	main_ehrpwm0: pwm@3000000 {
-@@ -1067,11 +1072,12 @@ pcie0_rc: pcie@2900000 {
- 		interrupts = <GIC_SPI 318 IRQ_TYPE_EDGE_RISING>;
- 		device_type = "pci";
- 		ti,syscon-pcie-ctrl = <&pcie0_ctrl 0x0>;
-+		ti,syscon-acspcie-proxy-ctrl = <&acspcie1_proxy_ctrl 0x3>;
- 		max-link-speed = <3>;
- 		num-lanes = <4>;
- 		power-domains = <&k3_pds 332 TI_SCI_PD_EXCLUSIVE>;
--		clocks = <&k3_clks 332 0>;
--		clock-names = "fck";
-+		clocks = <&k3_clks 332 0>, <&serdes1 CDNS_TORRENT_REFCLK_DRIVER>;
-+		clock-names = "fck", "pcie_refclk";
- 		#address-cells = <3>;
- 		#size-cells = <2>;
- 		bus-range = <0x0 0xff>;
-@@ -1111,7 +1117,7 @@ pcie1_rc: pcie@2910000 {
- 		ranges = <0x01000000 0x0 0x18001000  0x00 0x18001000  0x0 0x0010000>,
- 			 <0x02000000 0x0 0x18011000  0x00 0x18011000  0x0 0x7fef000>;
- 		dma-ranges = <0x02000000 0x0 0x0 0x0 0x0 0x10000 0x0>;
--		ti,syscon-acspcie-proxy-ctrl = <&acspcie0_proxy_ctrl 0x1>;
-+		ti,syscon-acspcie-proxy-ctrl = <&acspcie0_proxy_ctrl 0x3>;
- 		status = "disabled";
- 	};
- 
-diff --git a/arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi b/arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi
-index 0160fe0da983..ebbc315649d0 100644
---- a/arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi
-@@ -34,8 +34,8 @@ pcie2_rc: pcie@2920000 {
- 		max-link-speed = <3>;
- 		num-lanes = <2>;
- 		power-domains = <&k3_pds 334 TI_SCI_PD_EXCLUSIVE>;
--		clocks = <&k3_clks 334 0>;
--		clock-names = "fck";
-+		clocks = <&k3_clks 334 0>, <&serdes1 CDNS_TORRENT_REFCLK_DRIVER>;
-+		clock-names = "fck", "pcie_refclk";
- 		#address-cells = <3>;
- 		#size-cells = <2>;
- 		bus-range = <0x0 0xff>;
-@@ -45,6 +45,7 @@ pcie2_rc: pcie@2920000 {
- 		dma-coherent;
- 		dma-ranges = <0x02000000 0x0 0x0 0x0 0x0 0x10000 0x0>;
- 		ti,syscon-pcie-ctrl = <&pcie2_ctrl 0x0>;
-+		ti,syscon-acspcie-proxy-ctrl = <&acspcie1_proxy_ctrl 0x3>;
- 		status = "disabled";
- 	};
- 
-@@ -63,8 +64,8 @@ pcie3_rc: pcie@2930000 {
- 		max-link-speed = <3>;
- 		num-lanes = <2>;
- 		power-domains = <&k3_pds 335 TI_SCI_PD_EXCLUSIVE>;
--		clocks = <&k3_clks 335 0>;
--		clock-names = "fck";
-+		clocks = <&k3_clks 335 0>, <&serdes0 CDNS_TORRENT_REFCLK_DRIVER>;
-+		clock-names = "fck", "pcie_refclk";
- 		#address-cells = <3>;
- 		#size-cells = <2>;
- 		bus-range = <0x0 0xff>;
-@@ -74,6 +75,7 @@ pcie3_rc: pcie@2930000 {
- 		dma-coherent;
- 		dma-ranges = <0x02000000 0x0 0x0 0x0 0x0 0x10000 0x0>;
- 		ti,syscon-pcie-ctrl = <&pcie3_ctrl 0x0>;
-+		ti,syscon-acspcie-proxy-ctrl = <&acspcie0_proxy_ctrl 0x3>;
- 		status = "disabled";
- 	};
- 
--- 
-2.34.1
-
+Adekunle
