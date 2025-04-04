@@ -1,134 +1,72 @@
-Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C63719DF48
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 22:46:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8701219DFB4
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 22:54:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743806786; cv=none; b=pBKnAF3J68s+56D4F506VR+gfqyfJDnYm7jt5VF2hus2ohKtF7L+IfQ3V2CKoM1H6vYVPU322SFSwFGFpw0895ICz5tmS/I1IEDP7KwweOyr4aam470m9LJK/bDlXVxzmRVawsdIfbb/wy/Vi8JRaNs4d33bxRdQTrX8v4sAXWg=
+	t=1743807244; cv=none; b=h2/s6ubVjLZQmbi199a5Vq+GVIzD7gI9x+zy5lWVM/ew9XI/Pg2xQFbLD6EepHb/YTBq/Dfk8FCddD7lkGtMw5P7teKjGQuVw+vPsFRYtN5F92N8K9neXB+MNM+iiQc7uqYz+KqO1TibhdR7pDsT/6pcm+LNVEdPEL+dtADQpFw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743806786; c=relaxed/simple;
-	bh=Q9/i3wbmROUc1yAY0nI7uO6WaZml7TPX/9qDKuqEQtg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cIUGrKbfHcp8UXqeazx5NBy+3a1Pw6MExS3poxUMzxluP1C/zlJDG8GhKO/Wo+w4rKg2/qZDHZXY2Eg+CKFkD0v6gTxSNOugjm+d/xmR1Niisoa3dFze3og78Q1+R9X8p9+wK/pRgCtBm3f8t2mTA+qjnHRe3+E46N4IFQBt3AY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=QRFDrlVX; arc=none smtp.client-ip=95.215.58.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="QRFDrlVX"
-Date: Fri, 4 Apr 2025 15:46:01 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1743806772;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=icbPkrkUd1De4/wRlfQxCHPa3ucnmbOW4BGuGjTGkgM=;
-	b=QRFDrlVXyeKYm2auWsnzd21S31ggUiVTESz37sca/elBzIWiLNknM2FIh5SUSNnCRe54b0
-	sjQO6yUYmITskjDTi/PpqBwTl26+n2loNJ8I11WPulIigWcmGzePbbUy9Cyk3amqBVg/6I
-	BLVUr6+FIXMOnJxuxpCWz5b68q7rF50=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Oliver Upton <oliver.upton@linux.dev>
-To: Raghavendra Rao Ananta <rananta@google.com>
-Cc: Marc Zyngier <maz@kernel.org>, Mingwei Zhang <mizhang@google.com>,
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-	linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-	Oliver Upton <oupton@google.com>
-Subject: Re: [PATCH 1/2] KVM: selftests: arm64: Introduce and use
- hardware-definition macros
-Message-ID: <Z_BhKUAgkLCdeWDB@linux.dev>
-References: <20250404220659.1312465-1-rananta@google.com>
- <20250404220659.1312465-2-rananta@google.com>
+	s=arc-20240116; t=1743807244; c=relaxed/simple;
+	bh=CCboKF0E0pOUDrcALP+xPG44ezRrXKgwlgnWWox3uZE=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=m4Wrq/5Nzjqu91sroR/SS07kWary1PZHEu8TAcejHq9n/nkpwzF3Bo0+9igh6zdvzWtxe3TNtS717ThdXVgejgarsc4zYySjWLS6Dmpirm2qzqpsqpVqDKWFBotnooGMTWKU+uzO4IWeTy79u/T5lkIiJcO/MebFeHBan75rb3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3d5a9e7dd5aso29471655ab.3
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 15:54:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743807241; x=1744412041;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=BEWRvuZ+p60fVNjWGYQzVIHkSUDv98jwFOKe49syq3k=;
+        b=kfELhECu/MUcebKiRVpb7NIPcW/KPRF/sGx12oYxJ8UFcdmBI2YexLCnB/zqtbHzM8
+         JYsphabagmeLef1HfkxPfAmK8+UcFeNgJ2odiLlbMoPPpKTXFdAmW90E11YcfwxC+QOe
+         azewY8O+1sKMTOUTTOMNiYw+fppNa+mnfZQH2RaA2p4Gv5ju8l2lYh51YMLOHqWEu14p
+         cDszx9p8oWyIRb4Ur+AnfNrOWQWKb5Mpm0GdpIuTaSf8JtpCtlyrGgWSBJBzZ2DxcrnS
+         T14h/K5uQ0c5ITM28K3XPWXsT5PjAjD2k577db/oMsygv9gi2bt5z7AZzySfOG9Hxz2t
+         3SGQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVX7zr0MyiSh6F7WS7g4Sg7hlZrAC57R7GKYiLt5KTBSf+BGVgIIL/lxgIdkmv9+YspFdOQMXyR5dCBCvs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyPfNg4CZBL3XYbYbDtX1uRD0iobT7UVVQjCy9NTltuggCxGDXl
+	lXeDdATiHSUiZaX/NWrKfKWZqd6uAqQ9FPuGggH0v7+VfxycY0i/JWEBrm/xJPwRdwoGIiakqmz
+	0y3g8mBJevNHJVw3ilIThCQ7zvcfXj+u4ESZJ03Iq6VO4rymYklbXjp8=
+X-Google-Smtp-Source: AGHT+IFamuhyyN733T8LzkJlkNQKtpHf+l7lPROYrZ0KNuXw9tziMkAnJXM1Gpc5xEhMYY6926lIrdIRyJt20mn2V2ws3WsU60Yr
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250404220659.1312465-2-rananta@google.com>
-X-Migadu-Flow: FLOW_OUT
+X-Received: by 2002:a05:6e02:2198:b0:3d3:dcc4:a58e with SMTP id
+ e9e14a558f8ab-3d6e531f3e2mr54965625ab.8.1743807241675; Fri, 04 Apr 2025
+ 15:54:01 -0700 (PDT)
+Date: Fri, 04 Apr 2025 15:54:01 -0700
+In-Reply-To: <7472b072-9c08-4e5a-8f16-8a56647ebc9a@kernel.dk>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67f06309.050a0220.0a13.0226.GAE@google.com>
+Subject: Re: [syzbot] [io-uring?] INFO: task hung in io_wq_put_and_exit (4)
+From: syzbot <syzbot+58928048fd1416f1457c@syzkaller.appspotmail.com>
+To: asml.silence@gmail.com, axboe@kernel.dk, io-uring@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Raghu,
+Hello,
 
-On Fri, Apr 04, 2025 at 10:06:58PM +0000, Raghavendra Rao Ananta wrote:
-> The kvm selftest library for arm64 currently configures the hardware
-> fields, such as shift and mask in the page-table entries and registers,
-> directly with numbers. While it add comments at places, it's better to
-> rewrite them with appropriate macros to improve the readability and
-> reduce the risk of errors. Hence, introduce macros to define the
-> hardware fields and use them in the arm64 processor library.
-> 
-> Most of the definitions are primary copied from the Linux's header,
-> arch/arm64/include/asm/pgtable-hwdef.h.
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+unregister_netdevice: waiting for DEV to become free
 
-Thank you for doing this. Having magic numbers all around the shop was a
-complete mess. Just a single comment:
+unregister_netdevice: waiting for batadv0 to become free. Usage count = 3
 
-> No functional change intended.
-> 
-> Suggested-by: Oliver Upton <oupton@google.com>
-> Signed-off-by: Raghavendra Rao Ananta <rananta@google.com>
-> ---
->  tools/arch/arm64/include/asm/sysreg.h         | 38 +++++++++++++
->  .../selftests/kvm/arm64/page_fault_test.c     |  2 +-
->  .../selftests/kvm/include/arm64/processor.h   | 28 +++++++--
->  .../selftests/kvm/lib/arm64/processor.c       | 57 ++++++++++---------
->  4 files changed, 92 insertions(+), 33 deletions(-)
-> 
-> diff --git a/tools/arch/arm64/include/asm/sysreg.h b/tools/arch/arm64/include/asm/sysreg.h
-> index 150416682e2c..6fcde168f3a6 100644
-> --- a/tools/arch/arm64/include/asm/sysreg.h
-> +++ b/tools/arch/arm64/include/asm/sysreg.h
-> @@ -884,6 +884,44 @@
->  	 SCTLR_EL1_LSMAOE | SCTLR_EL1_nTLSMD | SCTLR_EL1_EIS   | \
->  	 SCTLR_EL1_TSCXT  | SCTLR_EL1_EOS)
->  
-> +/* TCR_EL1 specific flags */
-> +#define TCR_T0SZ_OFFSET	0
-> +#define TCR_T0SZ(x)		((UL(64) - (x)) << TCR_T0SZ_OFFSET)
-> +
-> +#define TCR_IRGN0_SHIFT	8
-> +#define TCR_IRGN0_MASK		(UL(3) << TCR_IRGN0_SHIFT)
-> +#define TCR_IRGN0_NC		(UL(0) << TCR_IRGN0_SHIFT)
-> +#define TCR_IRGN0_WBWA		(UL(1) << TCR_IRGN0_SHIFT)
-> +#define TCR_IRGN0_WT		(UL(2) << TCR_IRGN0_SHIFT)
-> +#define TCR_IRGN0_WBnWA	(UL(3) << TCR_IRGN0_SHIFT)
-> +
-> +#define TCR_ORGN0_SHIFT	10
-> +#define TCR_ORGN0_MASK		(UL(3) << TCR_ORGN0_SHIFT)
-> +#define TCR_ORGN0_NC		(UL(0) << TCR_ORGN0_SHIFT)
-> +#define TCR_ORGN0_WBWA		(UL(1) << TCR_ORGN0_SHIFT)
-> +#define TCR_ORGN0_WT		(UL(2) << TCR_ORGN0_SHIFT)
-> +#define TCR_ORGN0_WBnWA	(UL(3) << TCR_ORGN0_SHIFT)
-> +
-> +#define TCR_SH0_SHIFT		12
-> +#define TCR_SH0_MASK		(UL(3) << TCR_SH0_SHIFT)
-> +#define TCR_SH0_INNER		(UL(3) << TCR_SH0_SHIFT)
-> +
-> +#define TCR_TG0_SHIFT		14
-> +#define TCR_TG0_MASK		(UL(3) << TCR_TG0_SHIFT)
-> +#define TCR_TG0_4K		(UL(0) << TCR_TG0_SHIFT)
-> +#define TCR_TG0_64K		(UL(1) << TCR_TG0_SHIFT)
-> +#define TCR_TG0_16K		(UL(2) << TCR_TG0_SHIFT)
-> +
-> +#define TCR_IPS_SHIFT		32
-> +#define TCR_IPS_MASK		(UL(7) << TCR_IPS_SHIFT)
-> +#define TCR_IPS_52_BITS	(UL(6) << TCR_IPS_SHIFT)
-> +#define TCR_IPS_48_BITS	(UL(5) << TCR_IPS_SHIFT)
-> +#define TCR_IPS_40_BITS	(UL(2) << TCR_IPS_SHIFT)
-> +#define TCR_IPS_36_BITS	(UL(1) << TCR_IPS_SHIFT)
-> +
-> +#define TCR_HA			(UL(1) << 39)
-> +#define TCR_DS			(UL(1) << 59)
-> +
 
-sysreg.h isn't the right home for these definitions since it is meant to
-be a copy of the corresponding kernel header.
+Tested on:
 
-Since KVM selftests are likely the only thing in tools to care about
-setting up page tables, adding this to processor.h seems like a better
-place.
+commit:         d1005530 io_uring/kbuf: conditional schedule on buffer..
+git tree:       git://git.kernel.dk/linux.git io_uring-6.15
+console output: https://syzkaller.appspot.com/x/log.txt?x=14566fb0580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=dcca8bc6e23acb2
+dashboard link: https://syzkaller.appspot.com/bug?extid=58928048fd1416f1457c
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
 
-Thanks,
-Oliver
+Note: no patches were applied.
