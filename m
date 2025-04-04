@@ -1,55 +1,55 @@
-Received: from mail-ed1-f74.google.com (mail-ed1-f74.google.com [209.85.208.74])
+Received: from mail-ej1-f73.google.com (mail-ej1-f73.google.com [209.85.218.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FBCE1D8DFB
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 11:11:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D7E51D8DE0
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 11:11:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743765093; cv=none; b=tYk73R2kwoN2WL7VB1owegFZ02J+zpwrsO3MZ5yLMqJoFlqlfHNAPqeddm4dVYvRwefH/qBiWsf3zMHlXTIXNrJRzULMenw0gSufaw7Bmb4cSYZ/Q8+3ZJ2/lb3gEmTgHPLmsqBhJZAfzhuUFAIA3PihaCvBU/i6AO5Kcu4dvFw=
+	t=1743765100; cv=none; b=iLn2jUoIogDMmAMe6cCBKsLXbUV+kbaEH+uk8M8eZeQoDT00M1Es12o7D2IpNfsfJVGSo4yN/gJJjNXNXhBU7Fv/UoJLaTDx+IyrLdim1v1xdrf5OeDfsO1fOos9I/ZXF7NPGh32BDQFgIhj7H6Ar/mqnDvvPbpkROV0pxHLdmw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743765093; c=relaxed/simple;
-	bh=5CJiGcja7AktqPuYGnTo/h9X3MBvV+BYT1jWN4KIlws=;
+	s=arc-20240116; t=1743765100; c=relaxed/simple;
+	bh=fIOgEfDC1VfXM5pKlMw6H+0V/aq1M2HiUi5OYVVfXQE=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Rbf8/bldeE5NvfXfi1YIcB00ouAj6KhmqUYwBbFxfRdrigu8YH7cd+3ocPnRonArtj3Ovz9RFjzpl4j1lnOVmBidbQ/MCU7BTfOET5UUqmb4CJYm/10OU+bvfyL4EBPHPEuqBB23DMR6B5p6pSbLylypN1WleENyxGwTSmtB4Rs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--mclapinski.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ibm5OrKU; arc=none smtp.client-ip=209.85.208.74
+	 To:Cc:Content-Type; b=LEG1F/MrswZzlO9gcAk28FfbiOBOuxLiRaUKjRdPYwHkwP6hGx9HKnoHQOec91CCOhJ9pFYoG60fLJqwcKdg9JJ42arvQ2E7A+068rv5z0k6GBj0Abw/PLMGKV2uHZeJ/fmTDFOZuhkI9z99qFzpUF/3h4X6fqx9+ZBAH1C+QSQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--mclapinski.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UMgq1/UJ; arc=none smtp.client-ip=209.85.218.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--mclapinski.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ibm5OrKU"
-Received: by mail-ed1-f74.google.com with SMTP id 4fb4d7f45d1cf-5e6b2b8339fso1883247a12.3
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 04:11:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UMgq1/UJ"
+Received: by mail-ej1-f73.google.com with SMTP id a640c23a62f3a-ac6b047c0dcso172029866b.0
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 04:11:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743765089; x=1744369889; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1743765097; x=1744369897; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=0TuGPcYbkpHDWRddmkuJsnZqAYnjFVPblguEP3A9V20=;
-        b=ibm5OrKUL+gm34yDGQlxhXjgQvSr9U+bFrG44RIRW87JJHEgZGl/PpnRFme0aqZhqA
-         oxi0x2l5ja0xLwXMFkajFs1rgqA9enYrVP1KI0hrUq70NkKP1FgtFGn8/FJc47NJftBf
-         +xgZ53QIsatVPobaRbP/J6kph21AytbtkP93YGU9/7+w20LmEnJ8bQJFJ4my0Kr+wChM
-         6AQez+23lhMJeeUHV/1J1Clm2t7PHRaaw4ps+8MKipuj+qd8VHXBk50WFfAqj+ZVCpdZ
-         eDVXmrCq6DrZczWVqMQDrqkHXVBzT/dmZjYP9llZ1v4qEFs34wEp1PxD0RhF8Pmt0b4v
-         JnxQ==
+        bh=O3m+WmTCQqVjynILz7/6uCrd0X6i/R+AMAhm/ZBopf4=;
+        b=UMgq1/UJmPEjWOj7bVrbIkuMppMEFUtQ/sKe3Hq9z6BhvtBJVAHtembAfGssnDizU+
+         Z2xWiRtdNO20nq+asp4d1G9Ym3a4JGca3fqhyPTFg+cHs14tNqs/qMW4bN04cG8E1AnV
+         LAr1K/2SE/fPXNkDXovKHba9ITMzIT3VstNQCNdSW5xON/gLgRekwOllYkY135Y2VXQy
+         Vji2jh0a5di9mcwbZ0HFnmYr7XQmC4mUOX4QsMIUzvLXQq/4nZXUIzjMG3Nt1mvh3mFY
+         uZky+rzlb7VXWzO2ibkBXzyve2IUVZ4v68UkrwIdctot7H5rQjbAw5zzev3zjzaOkdpE
+         38xg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743765089; x=1744369889;
+        d=1e100.net; s=20230601; t=1743765097; x=1744369897;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0TuGPcYbkpHDWRddmkuJsnZqAYnjFVPblguEP3A9V20=;
-        b=cxhRBX626xpXbk1jYc+xmI28bi6mfex6nKGl+mzuTOqwcZeGDJMhci7nvIaXunwsfA
-         3+L75UBty2PxRgdwS4RLJEVAXdzYry8NdJYSaaW/AS0NIS2Rh5xWPo3SvTbF1/5brtSN
-         kd9yRQqI62HyWCYxaIgCUYk/4O31lwfELCKojoHJc4jt6lvRUp7Ji6elIqtvKjHO/Npj
-         YninZvh0CmuaJfj8O2027z8Xp1PGPpy+2M5kiW3pb9n/tl3cgLCUDFDS3rVXuP76DZ0w
-         o0OZs0jiXgbI6sTE6IMNf4DJ6jAFIA5pEEZ9cWOAKneuWLd+fL6MDjJg+iwe2Mi/nJ06
-         A0/w==
-X-Forwarded-Encrypted: i=1; AJvYcCVoFegLWlZ1OJ/cnKdry4VpvqIWZqy66wJZ1ayARXNYs6PNJ/Tlo6j0vYzKR95h72ljA57IcdEqpJG7yME=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy7a6IyJixXS1VX68YgMFMmxBS82yy4qi/pzWnEXPN4pmo/rDQi
-	4TRMRdKJRcYPbXUxpnVzAMCIviJJa9F4CxHdm50HecmRekBm8rQAKzjTLTil0ruuTbcOtuh98B2
-	i6uNirGyRIECLYq13bQ==
-X-Google-Smtp-Source: AGHT+IHdrgU8lDZx+TtRTe2b+4ez31o9X0k6eoK4oFPd7Qu1V3csMbGMUR0TqPmktPO8jbNXGxNwODfQ+f18L62M
-X-Received: from edbbm23.prod.google.com ([2002:a05:6402:b17:b0:5ec:d8d1:ed36])
+        bh=O3m+WmTCQqVjynILz7/6uCrd0X6i/R+AMAhm/ZBopf4=;
+        b=h6KQp3ceVGnVRsnawBDk1gLkC34Xaw38Rulo6JOBu8EZZwvwnJf1LjyLWCA+fG9BY5
+         r+jM0lDmKC4b1aDarpK8zryIZqPk3edgZprX6aBE1lXpI9yfXwUv5IVBmt3lNA+sO6re
+         nX6n0IkUUCCxwEDcrGyebW0o1ZQ4FXgF1Vi8RApQOOYttIp47kULjkJItRwNmXfwAhmk
+         ttrVV6MFXKhJx46dy7EAel9f+oSpvxw1fuQ8mEYjPVqzDJtj79E6jjcwQ9SQv+one/DH
+         iuHmwBsz0RYEb0OHMizKC5M/6kZB83JO3T91ScS6wILp8vo3XljGdO/87lasDjvKNlHT
+         Dw/A==
+X-Forwarded-Encrypted: i=1; AJvYcCW3iEPZabiI9IVBCtsjvgl/Q3ei1bQ5l3er9MbRDm6rz9VkMLRT4NiyI1dIxoutkUWRwNA6KnyacE146Rw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxUrdtbnV7o5ieykHQdRHgAwdx0hUvPvIuM4O60Kc4axSct3LM3
+	YOeIdd41UEocpPAlS2QdskCIlfi41yAxM5MErIgrdRGsbiZv6/CiMcnd9S9778SnIlW6lx7Uxvz
+	A4eTWqBQ5v6A6ShBupA==
+X-Google-Smtp-Source: AGHT+IGRCGm5SwBZezCEZlk2BcrDdHGxGuTaFAmDbFz42cXfolqybCHXvcnZcqvx1PkktVJ9luf+cLCY0XPEx4fA
+X-Received: from ejon12.prod.google.com ([2002:a17:906:7b4c:b0:ac3:dbd1:7008])
  (user=mclapinski job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6402:51ce:b0:5ec:cd52:27c9 with SMTP id 4fb4d7f45d1cf-5f0b66272camr1633832a12.31.1743765089689;
- Fri, 04 Apr 2025 04:11:29 -0700 (PDT)
-Date: Fri,  4 Apr 2025 13:11:02 +0200
+ 2002:a17:907:980f:b0:ac7:391b:e685 with SMTP id a640c23a62f3a-ac7d19fe8b9mr276270066b.59.1743765096893;
+ Fri, 04 Apr 2025 04:11:36 -0700 (PDT)
+Date: Fri,  4 Apr 2025 13:11:03 +0200
 In-Reply-To: <20250404111103.1994507-1-mclapinski@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250404111103.1994507-1-mclapinski@google.com>
 X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
-Message-ID: <20250404111103.1994507-2-mclapinski@google.com>
-Subject: [PATCH v4 1/2] mm/compaction: remove low watermark cap for proactive compaction
+Message-ID: <20250404111103.1994507-3-mclapinski@google.com>
+Subject: [PATCH v4 2/2] mm/compaction: reduce the difference between low and
+ high watermarks
 From: Michal Clapinski <mclapinski@google.com>
 To: Andrew Morton <akpm@linux-foundation.org>, Vlastimil Babka <vbabka@suse.cz>, 
 	Pasha Tatashin <tatashin@google.com>
@@ -68,37 +69,52 @@ Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
 	Michal Clapinski <mclapinski@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Previously a min cap of 5 has been set in the commit introducing
-proactive compaction. This was to make sure users don't hurt themselves
-by setting the proactiveness to 100 and making their system
-unresponsive. But the compaction mechanism has a backoff mechanism that
-will sleep for 30s if no progress is made, so I don't see a significant
-risk here. My system (19GB of memory) has been perfectly fine with both
-watermarks hardcoded to 0.
+Reduce the diff between low and high watermarks when compaction
+proactiveness is set to high. This allows users who set the
+proactiveness really high to have more stable fragmentation score over
+time.
 
 Signed-off-by: Michal Clapinski <mclapinski@google.com>
 ---
- mm/compaction.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+ Documentation/admin-guide/sysctl/vm.rst | 6 ++++++
+ mm/compaction.c                         | 5 +++--
+ 2 files changed, 9 insertions(+), 2 deletions(-)
 
+diff --git a/Documentation/admin-guide/sysctl/vm.rst b/Documentation/admin-guide/sysctl/vm.rst
+index f48eaa98d22d2..d716ff1f37b57 100644
+--- a/Documentation/admin-guide/sysctl/vm.rst
++++ b/Documentation/admin-guide/sysctl/vm.rst
+@@ -130,6 +130,12 @@ to latency spikes in unsuspecting applications. The kernel employs
+ various heuristics to avoid wasting CPU cycles if it detects that
+ proactive compaction is not being effective.
+ 
++Setting the value above 80 will, in addition to lowering the acceptable level
++of fragmentation, make the compaction code more sensitive to increases in
++fragmentation, i.e. compaction will trigger more often, but reduce
++fragmentation by a smaller amount.
++This makes the fragmentation level more stable over time.
++
+ Be careful when setting it to extreme values like 100, as that may
+ cause excessive background compaction activity.
+ 
 diff --git a/mm/compaction.c b/mm/compaction.c
-index a3203d97123ea..4ff6b6e1db2da 100644
+index 4ff6b6e1db2da..f29a09def4515 100644
 --- a/mm/compaction.c
 +++ b/mm/compaction.c
-@@ -2251,12 +2251,7 @@ static unsigned int fragmentation_score_wmark(bool low)
- {
- 	unsigned int wmark_low;
+@@ -2249,10 +2249,11 @@ static unsigned int fragmentation_score_node(pg_data_t *pgdat)
  
--	/*
--	 * Cap the low watermark to avoid excessive compaction
--	 * activity in case a user sets the proactiveness tunable
--	 * close to 100 (maximum).
--	 */
--	wmark_low = max(100U - sysctl_compaction_proactiveness, 5U);
-+	wmark_low = 100U - sysctl_compaction_proactiveness;
- 	return low ? wmark_low : min(wmark_low + 10, 100U);
+ static unsigned int fragmentation_score_wmark(bool low)
+ {
+-	unsigned int wmark_low;
++	unsigned int wmark_low, leeway;
+ 
+ 	wmark_low = 100U - sysctl_compaction_proactiveness;
+-	return low ? wmark_low : min(wmark_low + 10, 100U);
++	leeway = min(10U, wmark_low / 2);
++	return low ? wmark_low : min(wmark_low + leeway, 100U);
  }
  
+ static bool should_proactive_compact_node(pg_data_t *pgdat)
 -- 
 2.49.0.504.g3bcea36a83-goog
 
