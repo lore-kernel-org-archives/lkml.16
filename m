@@ -1,132 +1,175 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2812718D656;
-	Fri,  4 Apr 2025 13:32:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 181911EA7DD;
+	Fri,  4 Apr 2025 13:33:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743773581; cv=none; b=Bve+X/+XfmNIeLKM8mA0VlZQjOAsitxrJ+I2Si7eg0L7Q/aOnoVVBCI6TbnW9N/FiIjaAuh7lV975/NArz2Dl+qOs2hg0vEOGBdSo0CnUr1QwS9aOIN7s1AOu+I3W3YcKPfDkSw1tSdHICR97QOb3jQwBGg/SnzUzHwaeuQ+Pis=
+	t=1743773630; cv=none; b=FejFG3KDL73FkAM+jgL6SHAh0fe/myybVA6a2fHbXM2a7gKDHeyFvnrRU/borE1G/tJhn7JdiCo9N5RTH6iuB+PVDj4EIbRET6iR1wgTmapB4iz8MOuVXScfrQOPlrlbpE4+i5g51iD7WaWiZ2WO7PW5XiIQI1gCAa/Cy6PR/tU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743773581; c=relaxed/simple;
-	bh=x7lhNPOeDPftGyhj/PQXzkwnB0cuPTUxuDGk+lZ+BGA=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YJV1dcRPiSMgUJnCywF6bYIGDvI4lg3MKQsv3D6DVzeY/rAYITPerA4Vs7h4x+Y2Hmf06zhjULlzTCUOi+JEW6X5FIX5J9EbSpahF6IAOAIqrHxbFtjd8RvHqLYTYE4VRcZV12qA2kOb7j3uErK440yHwjQOyb7bSybEPnu7eOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZTfZx4bsCz6M4M9;
-	Fri,  4 Apr 2025 21:29:13 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 7524B140682;
-	Fri,  4 Apr 2025 21:32:55 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 4 Apr
- 2025 15:32:53 +0200
-Date: Fri, 4 Apr 2025 14:32:52 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Terry Bowman <terry.bowman@amd.com>
-CC: <dave@stgolabs.net>, <dave.jiang@intel.com>, <alison.schofield@intel.com>,
-	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
-	<dan.j.williams@intel.com>, <willy@infradead.org>, <jack@suse.cz>,
-	<rafael@kernel.org>, <len.brown@intel.com>, <pavel@ucw.cz>,
-	<ming.li@zohomail.com>, <nathan.fontenot@amd.com>,
-	<Smita.KoralahalliChannabasappa@amd.com>, <huang.ying.caritas@gmail.com>,
-	<yaoxt.fnst@fujitsu.com>, <peterz@infradead.org>,
-	<gregkh@linuxfoundation.org>, <quic_jjohnson@quicinc.com>,
-	<ilpo.jarvinen@linux.intel.com>, <bhelgaas@google.com>,
-	<andriy.shevchenko@linux.intel.com>, <mika.westerberg@linux.intel.com>,
-	<akpm@linux-foundation.org>, <gourry@gourry.net>,
-	<linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<nvdimm@lists.linux.dev>, <linux-fsdevel@vger.kernel.org>,
-	<linux-pm@vger.kernel.org>, <rrichter@amd.com>, <benjamin.cheatham@amd.com>,
-	<PradeepVineshReddy.Kodamati@amd.com>, <lizhijian@fujitsu.com>
-Subject: Re: [PATCH v3 2/4] cxl: Update Soft Reserved resources upon region
- creation
-Message-ID: <20250404143252.00007d06@huawei.com>
-In-Reply-To: <20250403183315.286710-3-terry.bowman@amd.com>
-References: <20250403183315.286710-1-terry.bowman@amd.com>
-	<20250403183315.286710-3-terry.bowman@amd.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1743773630; c=relaxed/simple;
+	bh=4IC8JoZKbmMD6UyNV4+VXdwqwnPVEFBwKLGDEvPFVV0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pMoJDnzA4hSeFTiMPuwY1VZHPgezVvi/L9d3m1bxGTpqyfzjD3ogM6TDCjEswYek7A0YkOH0ME10V9MsanCjt8LP9Ei3TNSbFZUSEHj+jSsz3NWjeNh3N3EkpE5iqNmqfUoB4OBGTPqlG4RhQR5K+MAFDo6r/IgkffAeRF+nWlo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6DDDC1515;
+	Fri,  4 Apr 2025 06:33:49 -0700 (PDT)
+Received: from pluto (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5A7AC3F59E;
+	Fri,  4 Apr 2025 06:33:45 -0700 (PDT)
+Date: Fri, 4 Apr 2025 14:33:42 +0100
+From: Cristian Marussi <cristian.marussi@arm.com>
+To: Johan Hovold <johan@kernel.org>
+Cc: Cristian Marussi <cristian.marussi@arm.com>,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	arm-scmi@vger.kernel.org, sudeep.holla@arm.com,
+	james.quinlan@broadcom.com, f.fainelli@gmail.com,
+	vincent.guittot@linaro.org, peng.fan@oss.nxp.com,
+	michal.simek@amd.com, quic_sibis@quicinc.com,
+	dan.carpenter@linaro.org, maz@kernel.org
+Subject: Re: [RFC PATCH 3/3] [NOT FOR UPSTREAM] firmware: arm_scmi: quirk:
+ Ignore FC bit in attributes
+Message-ID: <Z-_ftoETkjhrjw0r@pluto>
+References: <20250401122545.1941755-1-cristian.marussi@arm.com>
+ <20250401122545.1941755-4-cristian.marussi@arm.com>
+ <Z-5F8eTaZB2gLTNs@hovoldconsulting.com>
+ <Z-5QGXj0wXMvtasf@pluto>
+ <Z-5daoJn22XTprwk@hovoldconsulting.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z-5daoJn22XTprwk@hovoldconsulting.com>
 
-On Thu, 3 Apr 2025 13:33:13 -0500
-Terry Bowman <terry.bowman@amd.com> wrote:
-
-> From: Nathan Fontenot <nathan.fontenot@amd.com>
-> 
-> Update handling of SOFT RESERVE iomem resources that intersect with
-> CXL region resources to remove intersections from the SOFT RESERVE
-> resources. The current approach of leaving SOFT RESERVE resources as
-> is can cause failures during hotplug replace of CXL devices because
-> the resource is not available for reuse after teardown of the CXL device.
-> 
-> To accomplish this the cxl acpi driver creates a worker thread at the
-
-Inconsistent in capitalization. I'd just use CXL ACPI here given you used CXL PCI
-below.
-
-> end of cxl_acpi_probe(). This worker thread first waits for the CXL PCI
-> CXL mem drivers have loaded. The cxl core/suspend.c code is updated to
-> add a pci_loaded variable, in addition to the mem_active variable, that
-> is updated when the pci driver loads. Remove CONFIG_CXL_SUSPEND Kconfig as
-> it is no longer needed. A new cxl_wait_for_pci_mem() routine uses a
-> waitqueue for both these driver to be loaded. The need to add this
-> additional waitqueue is ensure the CXL PCI and CXL mem drivers have loaded
-> before we wait for their probe, without it the cxl acpi probe worker thread
-> calls wait_for_device_probe() before these drivers are loaded.
-> 
-> After the CXL PCI and CXL mem drivers load the cxl acpi worker thread
-CXL ACPI
-
-> uses wait_for_device_probe() to ensure device probe routines have
-> completed.
-
-Does it matter if these drivers go away again?  Everything seems
-to be one way at the moment.
-
-> 
-> Once probe completes and regions have been created, find all cxl
-
-CXL
-
-> regions that have been created and trim any SOFT RESERVE resources
-> that intersect with the region.
-> 
-> Update cxl_acpi_exit() to cancel pending waitqueue work.
-> 
-> Signed-off-by: Nathan Fontenot <nathan.fontenot@amd.com>
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-
-
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index be8a7dc77719..40835ec692c8 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -858,6 +858,7 @@ bool is_cxl_pmem_region(struct device *dev);
->  struct cxl_pmem_region *to_cxl_pmem_region(struct device *dev);
->  int cxl_add_to_region(struct cxl_port *root,
->  		      struct cxl_endpoint_decoder *cxled);
-> +int cxl_region_srmem_update(void);
-
-As before: srmem is a bit obscure. Maybe spell it out more.
-
->  struct cxl_dax_region *to_cxl_dax_region(struct device *dev);
->  u64 cxl_port_get_spa_cache_alias(struct cxl_port *endpoint, u64 spa);
->  #else
-> @@ -902,6 +903,8 @@ void cxl_coordinates_combine(struct access_coordinate *out,
+On Thu, Apr 03, 2025 at 12:05:30PM +0200, Johan Hovold wrote:
+> On Thu, Apr 03, 2025 at 10:08:41AM +0100, Cristian Marussi wrote:
+> > On Thu, Apr 03, 2025 at 10:25:21AM +0200, Johan Hovold wrote:
+> > > On Tue, Apr 01, 2025 at 01:25:45PM +0100, Cristian Marussi wrote:
 >  
->  bool cxl_endpoint_decoder_reset_detected(struct cxl_port *port);
->  
-> +void cxl_wait_for_pci_mem(void);
+> > > > +#define QUIRK_PERF_FC_FORCE						\
+> > > > +	({								\
+> > > > +		if (pi->proto->id == SCMI_PROTOCOL_PERF ||		\
+> > > > +		    message_id == 0x5 /* PERF_LEVEL_GET */)		\
+> > > 
+> > > This should be logical AND and PERF_LEVEL_GET is 0x8 (currently
+> > > fastchannel is enabled for all PERF messages).
+> > 
+> > ...right...not sure how I botched this condition completely...my bad...
+> > (even the comment is wrong :P...)
+> 
+> The PERF_LEVEL_GET comment? That one is correct, right? :)
 
+yes...but not attached to a message_id == 0x5 :P 
+
+> 
+> > > > +			attributes |= BIT(0);				\
+> > > > +	})
+> > > > +
+> > > >  static void
+> > > >  scmi_common_fastchannel_init(const struct scmi_protocol_handle *ph,
+> > > >  			     u8 describe_id, u32 message_id, u32 valid_size,
+> > > > @@ -1924,6 +1931,7 @@ scmi_common_fastchannel_init(const struct scmi_protocol_handle *ph,
+> > > >  
+> > > >  	/* Check if the MSG_ID supports fastchannel */
+> > > >  	ret = scmi_protocol_msg_check(ph, message_id, &attributes);
+> > > > +	SCMI_QUIRK(perf_level_get_fc_force, QUIRK_PERF_FC_FORCE);
+> > > 
+> > > This is cool and I assume can be used to minimise overhead in hot paths.
+> > > Perhaps you can have concerns about readability and remembering to
+> > > update the quirk implementation if the code here changes.
+> > 
+> > My main aim here was to be able to define the quirk code as much as
+> > possible in the proximity of where it is used...so that is clear what it
+> > does and dont get lost in some general common table....and the macro was
+> > a way to uniform the treatment of the static keys...
+> > 
+> > ...but I am still not sure if all of these macros just degrade visibility
+> > and we could get rid of them...would be really cool to somehow break the
+> > build if the code "sorrounding" the SCMI_QUIRK changes and you dont update
+> > (somehow) the quirk too...so as to be sure that the quirk is taking care of
+> > and maintained...but I doubt that is feasible, because, really, how do you
+> > even deternine which code changes are in proximity enough to the quirk to
+> > justify a break...same block ? same functions ? you cannot really know
+> > semantically where some changes can impact this part of the code...
+> > ..I supppose reviews and testing is the key and the only possible answer
+> > to this..
+> 
+> Yeah, it goes both ways. Getting the quirk implementation out of the way
+> makes it easier to follow the normal flow, but also makes it a bit
+> harder to review the quirk. Your implementation may be a good trade-off.
+> 
+> > > Does it even get compile tested if SCMI_QUIRKS is disabled?
+> > 
+> > It evaluates to nothing when CONFIG_ARM_SCMI_QUIRKS is disabled...
+> > ...so maybe I could add a Kconfig dep on COMPILE_TEST ....if this is what
+> > you mean..
+> 
+> Perhaps there's some way to get the quirk code always compiled but
+> discarded when CONFIG_ARM_SCMI_QUIRKS is disabled (e.g. by using
+> IS_ENABLED() in the macro)?
+> 
+
+I'll think about it.
+
+> CONFIG_ARM_SCMI_QUIRKS may also need to be enabled by default as it can
+> be hard to track down random crashes to a missing quirk.
+> 
+
+Done for V1
+
+> > > >  /* Global Quirks Definitions */
+> > > > +DEFINE_SCMI_QUIRK(perf_level_get_fc_force,
+> > > > +		  "your-bad-compatible", NULL, NULL, 0x0);
+> > > 
+> > > At first I tried matching on the SoC (fallback) compatible without
+> > > success until I noticed you need to put the primary machine compatible
+> > > here. For the SoC at hand, that would mean adding 10 or so entries since
+> > > all current commercial devices would be affected by this.
+> > > 
+> > 
+> > Ah right...I tested on a number of combinations BUT assumed only one
+> > compatible was to be found...you can potentially add dozens of this
+> > definitions for a number of platforms associating the same quirk to all
+> > of them and let the match logic enabling only the proper on...BUT this
+> > clearly does NOT scale indeed and you will have to endlessly add new
+> > platform if fw does NOT get fixed ever...
+> > 
+> > > Matching on vendor and protocol works.
+> > > 
+> > 
+> > That is abosutely the preferred way, BUT the match should be on
+> > Vendor/SubVendor/ImplVersion ... if the platform properly uses
+> > ImplementationVersion to differentiate between firmware builds...
+> 
+> We don't seem to have a subvendor here and if IIUC the version has not
+> been bumped (yet) after fixing the FC issue.
+> 
+
+Ok.
+
+> > ...if not you will end up applying the quirk on ANY current and future
+> > FW from this Vendor...maybe not an issue in this case...BUT they should
+> > seriously thinking about using ImplementationVersion properly in their
+> > future FW releases...especially if, as of now, no new fixed FW release
+> > has ever been released...
+> 
+> Right, in this case it would probably be OK.
+> 
+> But what if the version is bumped for some other reason (e.g. before a
+> bug has been identified)? Then you'd currently need an entry for each
+> affected revision or does the implementation assume it applies to
+> anything <= ImplVersion? Do we want to add support for version ranges?
+> 
+
+Right good point...we cannot assume anything really...quirks can be
+needed on a single version or on a range...we need ranges...
+
+I will rework the logic for V1.
+
+Thanks of the review and the feedback
+Cristian
