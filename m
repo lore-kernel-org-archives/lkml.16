@@ -1,165 +1,353 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E0C1847B
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 05:33:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BED222E62C0;
+	Fri,  4 Apr 2025 05:36:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743744818; cv=none; b=knfXccJLcgszfG/tvmXPoQ8IOgNIDlE98M7odL8ThF6BDqsdn0XVevkICc1sp6vtPNB1tXJHnlTDy2GDvfa2P29v03ZYqCEmpubnnfXyEZ6JtJrr2zvOFBgrLqsWYYu9Ixrvrp2mrIS0Hoe2NsDlyF2jWOivo1iCQ8UVe3oD8C8=
+	t=1743744982; cv=none; b=Bxzb+y5ZgbTsDzAXQGoo54YtcDkyQxdH6P+geeN9jt5p2IV047hZJGka8oalV7E+SOLeudfS2Lw3nM02kGCg4z9OJKHZUeZxCfcxyc2EMxEId/DMiPyHSwn71XvSTxAqwmxv0xMlRM50yAgwk1kc7siL5Zd7wQImJCiq+3tS9hk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743744818; c=relaxed/simple;
-	bh=t5YrEvo1Qv7V/OOCE0jzPDPPWuEcHK5DHyugrkXD3oU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=liuJrITCdcCfzozlR3Aho4T2ZxSVQ5YiJCrA2Kh7c2a3jnRnAQoGXiMMVpsDHV/h8RvRC1l0w9CS/gQjQScJ61MjPMZu+wfBvAF3P/+bOv+DLx4JLr4COonoQTW/cSVFdGc9nP/J1JRAzqJOzENZ4JSG7svtADgIRHByU4hbfS0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RWgGmVDV; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1743744982; c=relaxed/simple;
+	bh=sH0klwIb6iMG8a+GHaUTW6izLmJ4ZdiWbxeMoGEK6Zs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fztmDhDC4bKOeFOHHwOmwNTyh08m0iH/7IJgP6qbX2ziMCar+oxAnXjTB6xefV5FkDv0DyF6LXPAFm5rGPX38KCkznH2ErDiBO8XHM0i17q1Kce2RPhQk+HFs2hZZUtC0xXnjTBOf+fwR3LjSHkjYGu0MQvE4W5J+pq0CGXuq6w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ijh/Sg5N; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RWgGmVDV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743744815;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=W8DadzuBkB0b+TswMeRC57LXNTfY/qY6jGCVQ+lHwe0=;
-	b=RWgGmVDVEz2mbKbGB/sZ/+MSuhg3xTGQWDw5nXp1ATy/WmNtcLDQkdVaWKBnWso3QUMmQe
-	V22vKxkcmsBVGkq4R0nja3WP7cCbQqrFmIr/FOh6/CpV+kqqKQjytir+cbxT1aok1rW0bq
-	nZE4tjtqjfmHpnRfwFF+Zxhcc/ybTlQ=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-319-YIXJzMzmMUq5WH0h3kbuIA-1; Fri, 04 Apr 2025 01:33:33 -0400
-X-MC-Unique: YIXJzMzmMUq5WH0h3kbuIA-1
-X-Mimecast-MFC-AGG-ID: YIXJzMzmMUq5WH0h3kbuIA_1743744812
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43bc97e6360so9252835e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 22:33:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743744812; x=1744349612;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=W8DadzuBkB0b+TswMeRC57LXNTfY/qY6jGCVQ+lHwe0=;
-        b=EGgVGYXADHLSxRRojcP9OyLtcShyhcIMLHHOFC196WiCg280BGrW9aBKmiU1tT9tz7
-         hzJ2rr9syNYQpzms82vUwH8y/hEVjpLg8FjXjecJol5jBqMpliAgB28x4JwA2vAptl7J
-         s+nBfCp1vmiaNSdrTwFxGAf/UW2RC9yr2jQC+SCvVv9HvcRdLv9pTuj/h9Qkv/h6Ltv6
-         YuJ6VzK7p9/2Nlf1NZPz/MQfU3Hn6GRF2BLwOWv9RFSdGnnSWdRlX/t0UUi1NBBVTqeD
-         xM56QVBk2+EmLkVm5VWHUCtwHCzYrx3s8SDDpt/NnRFWhXrXavwWoUPnq79si7ooNBEF
-         m2BA==
-X-Forwarded-Encrypted: i=1; AJvYcCU56vq8JEf38Glea6tKYZsg32NIOSoDmTafvbK3RRqJemCVFgJzRJM2SfSKlFB/gbZOIfTqvl365CUCpC8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzLzOAgtNOUov+88RT0Br/dAEOi9Iaqpb8ZlTu7OW1sqZiuJA8Z
-	b76W9yQZx1hK7uUHaKgEypp48Nt7d4LM7Z4+7oSQHpuS3w4kFbVjcwk53h2eGkwr5J1teQCACyo
-	LcpQ8p2nau1jV5+mvnz7CzVxKQCkRPXReMFBlI6aQZl0jAAW8kqr4298bbDvh1Q==
-X-Gm-Gg: ASbGncupLuwTIefvKYFcc7VudGxNfBjfzWvIZPZgM362sjW7+COB7DrCV4LcbSGthwT
-	xfUSdNZ2QuEhIfj71SS1t8Q+EG21BvlvJ0eB68yBzr/ksl07y9PeBNcbP2buUPA2NH3sqs7XG17
-	uWaJrxRcA98FKFJX/1Af71KmER3dF6d6Ax+Qrbny0vdX4gRF0o3g2v1lTz5fCvAgOoQT2Me9Tp/
-	H+gSvRGSpYhHuPmG2Rh+9yw7jXn4Xx1Yfe/Ujjx5pY/QB8rsFuAkRV0W1CfquUUglvSe5VbypCL
-	IQRGoDMLlg==
-X-Received: by 2002:a05:600c:6986:b0:43d:a90:9f1 with SMTP id 5b1f17b1804b1-43ecf822cf4mr12380315e9.6.1743744812321;
-        Thu, 03 Apr 2025 22:33:32 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFOWcVoqDuuU1EzwnYMSgwjMR/a8JCeY7bzgZQlbtecRuO04aJY8fG8iABZRmySxq9rz0/+0A==
-X-Received: by 2002:a05:600c:6986:b0:43d:a90:9f1 with SMTP id 5b1f17b1804b1-43ecf822cf4mr12380055e9.6.1743744811973;
-        Thu, 03 Apr 2025 22:33:31 -0700 (PDT)
-Received: from redhat.com ([2a0d:6fc0:1517:1000:ea83:8e5f:3302:3575])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec342a3dfsm36561555e9.4.2025.04.03.22.33.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Apr 2025 22:33:31 -0700 (PDT)
-Date: Fri, 4 Apr 2025 01:33:28 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Halil Pasic <pasic@linux.ibm.com>
-Cc: David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
-	linux-s390@vger.kernel.org, virtualization@lists.linux.dev,
-	kvm@vger.kernel.org, Chandra Merla <cmerla@redhat.com>,
-	Stable@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>,
-	Thomas Huth <thuth@redhat.com>, Eric Farman <farman@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Wei Wang <wei.w.wang@intel.com>
-Subject: Re: [PATCH v1] s390/virtio_ccw: don't allocate/assign airqs for
- non-existing queues
-Message-ID: <20250404013208-mutt-send-email-mst@kernel.org>
-References: <20250402203621.940090-1-david@redhat.com>
- <20250403161836.7fe9fea5.pasic@linux.ibm.com>
- <20250403103127-mutt-send-email-mst@kernel.org>
- <20250404060204.04db301d.pasic@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ijh/Sg5N"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743744981; x=1775280981;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=sH0klwIb6iMG8a+GHaUTW6izLmJ4ZdiWbxeMoGEK6Zs=;
+  b=ijh/Sg5N6BHTLD8T6yhKRhmkBK+8pjA3JgdIx9i4VOJk0aUUse03j4Gd
+   Lc1LXuVnYCLSQwT1JmnniKLxPNMIvlz4Gg9y/zHBE7IxOT7WdU0sRSx0F
+   pZ3cuF6/aAYJGmJ1fPJRooc/e7pE5TURkn0g7H4allg71unxVW1S5grTy
+   zzokt99iAZ1sKyK3przSWE4hU+rqzMa9kIUrA580qZn36kRvtTDhjJiZH
+   vP7oz3k0Ke0qMlxefUJ4p5A8dnbatFd/YgK3fyVJOiNPoHqjXy+8MwAJt
+   vcWJDb4tNCrxy/1q9T9cRuOM3N22WgJjQFQm6Df61imj1vHIeFXH2XAsV
+   A==;
+X-CSE-ConnectionGUID: s/fLSZZFRN+Ef0EeflXcpA==
+X-CSE-MsgGUID: RM/F3UOqQsamn0a3bw+SQg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11393"; a="48831681"
+X-IronPort-AV: E=Sophos;i="6.15,187,1739865600"; 
+   d="scan'208";a="48831681"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 22:36:19 -0700
+X-CSE-ConnectionGUID: RuBuIHTUR52g5wLw1mubMA==
+X-CSE-MsgGUID: vBGKuWHCQpmsz0qboZ0Elg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,187,1739865600"; 
+   d="scan'208";a="158191484"
+Received: from ysun46-mobl1.sh.intel.com ([10.239.161.21])
+  by orviesa002.jf.intel.com with ESMTP; 03 Apr 2025 22:36:16 -0700
+From: Yi Sun <yi.sun@intel.com>
+To: vkoul@kernel.org,
+	dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: gordon.jin@intel.com,
+	yi.sun@linux.intel.com,
+	Yi Sun <yi.sun@intel.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Fenghua Yu <fenghuay@nvidia.com>
+Subject: [PATCH v2] dmaengine: idxd: Remove __packed from structures
+Date: Fri,  4 Apr 2025 13:36:14 +0800
+Message-ID: <20250404053614.3096769-1-yi.sun@intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250404060204.04db301d.pasic@linux.ibm.com>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Apr 04, 2025 at 06:02:04AM +0200, Halil Pasic wrote:
-> On Thu, 3 Apr 2025 10:35:33 -0400
-> "Michael S. Tsirkin" <mst@redhat.com> wrote:
-> 
-> > On Thu, Apr 03, 2025 at 04:18:36PM +0200, Halil Pasic wrote:
-> > > On Wed,  2 Apr 2025 22:36:21 +0200
-> [..]
-> > > 
-> > > 5.5.2 Virtqueues
-> > > 
-> > > 0
-> > >     inflateq 
-> > > 1
-> > >     deflateq 
-> > > 2
-> > >     statsq 
-> > > 3
-> > >     free_page_vq 
-> > > 4
-> > >     reporting_vq  
-> > 
-> > Indeed. Unfortunately, no one at all implemented this properly as
-> > per spec :(.
-> > 
-> > Balloon is the worst offender here but other devices are broken
-> > too in some configurations.
-> > 
-> > 
-> > Given it has been like this for many years I'm inclined in this
-> > instance to fix the spec not the implementations.
-> > 
-> 
-> I understand! For me at least knowing if we are going to change the
-> spec or the implementations is pretty important. It would probably
-> make sense to spin a patch for the spec, just for the unlikely case that
-> somebody did end up implementing this by the spec and wants to protest.
-> 
-> I think, a consequence of this design is that all queues need to be
-> created and allocated at initialization time.
+The __packed attribute introduces potential unaligned memory accesses
+and endianness portability issues. Instead of relying on compiler-specific
+packing, it's much better to explicitly fill structure gaps using padding
+fields, ensuring natural alignment.
 
-Why? after feature negotiation.
+Since all previously __packed structures already enforce proper alignment
+through manual padding, the __packed qualifiers are unnecessary and can be
+safely removed.
 
-> I mean in the spec we have something like 
-> """
-> 5.1.6.5.6.1 Driver Requirements: Automatic receive steering in multiqueue mode
-> The driver MUST configure the virtqueues before enabling them with the VIRTIO_NET_CTRL_MQ_VQ_PAIRS_SET command. 
-> """
-> 
-> For example one could want to hotplug 2 more vCPUs and still have a
-> queue-pair per cpu (and a controlq). Those 2 extra queue-pairs could
-> in theory be allocated on-demand instead of having to allocate memory
-> for the rings for all the queues corresponding to the maxed out setup.
-> I've had a look at the Linux virtio-net and it does allocate all the
-> queues up front.
-> 
-> Also with this design, I believe we would effectively prohibit "holes".
+Signed-off-by: Yi Sun <yi.sun@intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Reviewed-by: Fenghua Yu <fenghuay@nvidia.com>
 
-For existing devices at least.
+---
+Changelog:
+- v2: Change the subject to match idxd driver patch convention (Fenghua)
 
-> Now if holes are prohibited, IMHO it does not make a whole lot of
-> sense for the virtio_find_vqs() to support holes. Because the holes
-> and a fair amount of complexity. Of course that would make sense as a
-> cleanup on top.
-> 
-> Regards,
-> Halil
-
-
+diff --git a/drivers/dma/idxd/registers.h b/drivers/dma/idxd/registers.h
+index 006ba206ab1b..9c1c546fe443 100644
+--- a/drivers/dma/idxd/registers.h
++++ b/drivers/dma/idxd/registers.h
+@@ -45,7 +45,7 @@ union gen_cap_reg {
+ 		u64 rsvd3:32;
+ 	};
+ 	u64 bits;
+-} __packed;
++};
+ #define IDXD_GENCAP_OFFSET		0x10
+ 
+ union wq_cap_reg {
+@@ -65,7 +65,7 @@ union wq_cap_reg {
+ 		u64 rsvd4:8;
+ 	};
+ 	u64 bits;
+-} __packed;
++};
+ #define IDXD_WQCAP_OFFSET		0x20
+ #define IDXD_WQCFG_MIN			5
+ 
+@@ -79,7 +79,7 @@ union group_cap_reg {
+ 		u64 rsvd:45;
+ 	};
+ 	u64 bits;
+-} __packed;
++};
+ #define IDXD_GRPCAP_OFFSET		0x30
+ 
+ union engine_cap_reg {
+@@ -88,7 +88,7 @@ union engine_cap_reg {
+ 		u64 rsvd:56;
+ 	};
+ 	u64 bits;
+-} __packed;
++};
+ 
+ #define IDXD_ENGCAP_OFFSET		0x38
+ 
+@@ -114,7 +114,7 @@ union offsets_reg {
+ 		u64 rsvd:48;
+ 	};
+ 	u64 bits[2];
+-} __packed;
++};
+ 
+ #define IDXD_TABLE_MULT			0x100
+ 
+@@ -128,7 +128,7 @@ union gencfg_reg {
+ 		u32 rsvd2:18;
+ 	};
+ 	u32 bits;
+-} __packed;
++};
+ 
+ #define IDXD_GENCTRL_OFFSET		0x88
+ union genctrl_reg {
+@@ -139,7 +139,7 @@ union genctrl_reg {
+ 		u32 rsvd:29;
+ 	};
+ 	u32 bits;
+-} __packed;
++};
+ 
+ #define IDXD_GENSTATS_OFFSET		0x90
+ union gensts_reg {
+@@ -149,7 +149,7 @@ union gensts_reg {
+ 		u32 rsvd:28;
+ 	};
+ 	u32 bits;
+-} __packed;
++};
+ 
+ enum idxd_device_status_state {
+ 	IDXD_DEVICE_STATE_DISABLED = 0,
+@@ -183,7 +183,7 @@ union idxd_command_reg {
+ 		u32 int_req:1;
+ 	};
+ 	u32 bits;
+-} __packed;
++};
+ 
+ enum idxd_cmd {
+ 	IDXD_CMD_ENABLE_DEVICE = 1,
+@@ -213,7 +213,7 @@ union cmdsts_reg {
+ 		u8 active:1;
+ 	};
+ 	u32 bits;
+-} __packed;
++};
+ #define IDXD_CMDSTS_ACTIVE		0x80000000
+ #define IDXD_CMDSTS_ERR_MASK		0xff
+ #define IDXD_CMDSTS_RES_SHIFT		8
+@@ -284,7 +284,7 @@ union sw_err_reg {
+ 		u64 rsvd5;
+ 	};
+ 	u64 bits[4];
+-} __packed;
++};
+ 
+ union iaa_cap_reg {
+ 	struct {
+@@ -303,7 +303,7 @@ union iaa_cap_reg {
+ 		u64 rsvd:52;
+ 	};
+ 	u64 bits;
+-} __packed;
++};
+ 
+ #define IDXD_IAACAP_OFFSET	0x180
+ 
+@@ -320,7 +320,7 @@ union evlcfg_reg {
+ 		u64 rsvd2:28;
+ 	};
+ 	u64 bits[2];
+-} __packed;
++};
+ 
+ #define IDXD_EVL_SIZE_MIN	0x0040
+ #define IDXD_EVL_SIZE_MAX	0xffff
+@@ -334,7 +334,7 @@ union msix_perm {
+ 		u32 pasid:20;
+ 	};
+ 	u32 bits;
+-} __packed;
++};
+ 
+ union group_flags {
+ 	struct {
+@@ -352,13 +352,13 @@ union group_flags {
+ 		u64 rsvd5:26;
+ 	};
+ 	u64 bits;
+-} __packed;
++};
+ 
+ struct grpcfg {
+ 	u64 wqs[4];
+ 	u64 engines;
+ 	union group_flags flags;
+-} __packed;
++};
+ 
+ union wqcfg {
+ 	struct {
+@@ -410,7 +410,7 @@ union wqcfg {
+ 		u64 op_config[4];
+ 	};
+ 	u32 bits[16];
+-} __packed;
++};
+ 
+ #define WQCFG_PASID_IDX                2
+ #define WQCFG_PRIVL_IDX		2
+@@ -474,7 +474,7 @@ union idxd_perfcap {
+ 		u64 rsvd3:8;
+ 	};
+ 	u64 bits;
+-} __packed;
++};
+ 
+ #define IDXD_EVNTCAP_OFFSET		0x80
+ union idxd_evntcap {
+@@ -483,7 +483,7 @@ union idxd_evntcap {
+ 		u64 rsvd:36;
+ 	};
+ 	u64 bits;
+-} __packed;
++};
+ 
+ struct idxd_event {
+ 	union {
+@@ -493,7 +493,7 @@ struct idxd_event {
+ 		};
+ 		u32 val;
+ 	};
+-} __packed;
++};
+ 
+ #define IDXD_CNTRCAP_OFFSET		0x800
+ struct idxd_cntrcap {
+@@ -506,7 +506,7 @@ struct idxd_cntrcap {
+ 		u32 val;
+ 	};
+ 	struct idxd_event events[];
+-} __packed;
++};
+ 
+ #define IDXD_PERFRST_OFFSET		0x10
+ union idxd_perfrst {
+@@ -516,7 +516,7 @@ union idxd_perfrst {
+ 		u32 rsvd:30;
+ 	};
+ 	u32 val;
+-} __packed;
++};
+ 
+ #define IDXD_OVFSTATUS_OFFSET		0x30
+ #define IDXD_PERFFRZ_OFFSET		0x20
+@@ -533,7 +533,7 @@ union idxd_cntrcfg {
+ 		u64 rsvd3:4;
+ 	};
+ 	u64 val;
+-} __packed;
++};
+ 
+ #define IDXD_FLTCFG_OFFSET		0x300
+ 
+@@ -543,7 +543,7 @@ union idxd_cntrdata {
+ 		u64 event_count_value;
+ 	};
+ 	u64 val;
+-} __packed;
++};
+ 
+ union event_cfg {
+ 	struct {
+@@ -551,7 +551,7 @@ union event_cfg {
+ 		u64 event_enc:28;
+ 	};
+ 	u64 val;
+-} __packed;
++};
+ 
+ union filter_cfg {
+ 	struct {
+@@ -562,7 +562,7 @@ union filter_cfg {
+ 		u64 eng:8;
+ 	};
+ 	u64 val;
+-} __packed;
++};
+ 
+ #define IDXD_EVLSTATUS_OFFSET		0xf0
+ 
+@@ -580,7 +580,7 @@ union evl_status_reg {
+ 		u32 bits_upper32;
+ 	};
+ 	u64 bits;
+-} __packed;
++};
+ 
+ #define IDXD_MAX_BATCH_IDENT	256
+ 
+@@ -620,17 +620,17 @@ struct __evl_entry {
+ 	};
+ 	u64 fault_addr;
+ 	u64 rsvd5;
+-} __packed;
++};
+ 
+ struct dsa_evl_entry {
+ 	struct __evl_entry e;
+ 	struct dsa_completion_record cr;
+-} __packed;
++};
+ 
+ struct iax_evl_entry {
+ 	struct __evl_entry e;
+ 	u64 rsvd[4];
+ 	struct iax_completion_record cr;
+-} __packed;
++};
+ 
+ #endif
+-- 
+2.43.0
 
