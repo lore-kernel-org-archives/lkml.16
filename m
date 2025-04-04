@@ -1,137 +1,290 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A3DA18BBB0
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 08:32:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A702D18B463;
+	Fri,  4 Apr 2025 08:33:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743755567; cv=none; b=GTUhNc9Ocvp8oaDjqPIJ46x5kp7PtSeXtHKb9x7RqhIKBNcqykkR9o4XF8lOUZleMbRNxKiwugmL04NICsH4A3yAM7sDoVOlEY6Nc2CXtw1kQdEaec8k/LINMc639A+eWegdzvmVYeg7399pX94jc8KkoSo5H1g6Gk2NIi8cRhM=
+	t=1743755601; cv=none; b=X54I0ruiTgJfiAFH9kuyU4Xnif4HXFmvOerZXo7siylbQQMR8FqpH0lt6CBTrqqhvD5Vxl5/nXTqrpXHUwNA1lfAWV5vogVzwx9Ce4BuMHAOV7oEdKUlhu6i9q8KX6iWvA1Rqa2cINVXsRnH/vFg5/2PSkwUY9+f42e+j+cGwVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743755567; c=relaxed/simple;
-	bh=8mgiLfeOJH6U7WSgzeIIiX8jgYIFd8sgDdNUQ1WgpFw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sVRJYAT1NhLKcvdvUL1ke3okeVJG/PkvIi8f8NDxV7Zvc2XXk0ZJ85GII8tOL3UHaI4cicoqZ+qlL1aT61Q5H2ShRimPvpEz8P948+Yd3tlADqwg7JcHCYx2NGQm018czupBU3P/6M++q0KIGTw67aeU5uMYM281M7Ret8rT7Kg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EoJdBzYi; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1743755601; c=relaxed/simple;
+	bh=y1JfU3/JoaxSHCn/U0NYNOAABCIr8CbkptpxzLbR11c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ST29vgN9oAs4gYBd2IYeCgkQisw4M53wg9EAnr/azU8WaC+AGJspjJWm1Xhfrcn14GkqRDNUuQ7jChZJGcfodY5hDoqh/f0usYdDXSadJ6jTOahZXVF2no8aYuT5sRIr7cuZRM9tMTnnCJPZR/HpbWMdmCyHafJsSxWKbDEMVrw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mztqQV12; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EoJdBzYi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743755565;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1g2+hk0RrD47BYHCyQjMK8prZh3qSBoec7bPqHaAsFs=;
-	b=EoJdBzYiYp9MYGehCfR9QjNcbro0K5MXskljZu4rMTZwlfLfyZ8MGu2RH1ysE/iVRE4fnN
-	54b0G2d4jVoPhcBvOkRtt+lXIEsC4CcniLSQhZZHFbncGvUf61kTSRPQ+k0tiVbz/FtbwS
-	rgfUnWOSc9ecFQJVBDoZKxRWY3HQZBE=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-207-0JOhY8hYOj2vJvBMkIAMbA-1; Fri, 04 Apr 2025 04:32:43 -0400
-X-MC-Unique: 0JOhY8hYOj2vJvBMkIAMbA-1
-X-Mimecast-MFC-AGG-ID: 0JOhY8hYOj2vJvBMkIAMbA_1743755563
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43d00017e9dso11132365e9.0
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 01:32:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743755562; x=1744360362;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1g2+hk0RrD47BYHCyQjMK8prZh3qSBoec7bPqHaAsFs=;
-        b=ZmrnNvp8wntrL+uKS1LAzTSrNlDT2ndxWRJs6faSCtDFKwBGzCe8oDuqzFyj4fopdj
-         +1sFzx2fdsQTvBbJPl/2M/eXrLvlCedK305dHIfY5o4iMlNVL+9hWG69i4L9R+zkaVff
-         xHH6AG4v1Kbj+Qkfd4igzgIgIwGuRpIMOXldKFRBBNwsMC9FNN5Ss2H8pFNPrb6QC0od
-         N1BSX+KzAvgYE3osySamAkzv27XnHFJyXqwgRgIX2iNYRUoSXwrrufg0A/rvQKMyN6hr
-         i5F8ukVOSM551Vi14+TE9UvIACWs29tbJcEoNjds9Qd1zHicdQUVFW2x1EANKo+bNFj/
-         wmgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXSo6YocrYi3j1erPv08kLGSVdhnojON2oWYcCle0OR/RgcPsUKTjpxBp6XLcpl/tVWSrTvk50J+YssfQ4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzKWd9Dg4RLmW4wIUvDsU38O48n13IOHTEv5wc92Ag6367Q6Poe
-	dtIzwyxJMsDiFv+bGmUAcHMS4X6d1Ygsvm+gwQAq1utqy7yRXA2ndRzjDXMsIWobFAvPiPsTgB9
-	zO5I6B8Hhw96Pk6JWkb6vT/k2qMs1rQI6M3HDLOqEaRI4H0jcks1LDznDaj5FQw==
-X-Gm-Gg: ASbGncvtq+AuNDov0co+1yTlHtwuTQ0azBO041Dk2dy4wIQFlh0fhAOu3Z8uZXFq9ww
-	UzOTrkqSijmWEwn1fNfipS0P0Uh5j7Y2xu1ww7XKfL+sE933et/H45F7MS66UfFdhB6jDa0HmgM
-	USfBwz2KUeFBwSGeEUquPaCJFE2jEHQwis1xhfWZ7jdLD2vBBNyJY3w0ZDepo3EeyjwbGJjjDav
-	H5TnH1II6NI7sfoYXNMmOx/t8JyCKByevqluPXsO5YmkEd+UwH+qB4hrvLVBAr4sgOJEHB+4/5f
-	t4A+PaxabQ==
-X-Received: by 2002:a05:600c:4713:b0:43c:e2dd:98ea with SMTP id 5b1f17b1804b1-43ecf9c7731mr16261025e9.22.1743755562663;
-        Fri, 04 Apr 2025 01:32:42 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFJ0IdRaSckdVORex2b1FgzPZdidXCh6submJTDHordJMQojyupjfXYrJLLNpoFtr3Ssc7f6Q==
-X-Received: by 2002:a05:600c:4713:b0:43c:e2dd:98ea with SMTP id 5b1f17b1804b1-43ecf9c7731mr16260785e9.22.1743755562294;
-        Fri, 04 Apr 2025 01:32:42 -0700 (PDT)
-Received: from redhat.com ([2a0d:6fc0:1517:1000:ea83:8e5f:3302:3575])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec364d071sm39036635e9.32.2025.04.04.01.32.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Apr 2025 01:32:41 -0700 (PDT)
-Date: Fri, 4 Apr 2025 04:32:39 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: David Woodhouse <dwmw2@infradead.org>
-Cc: Christoph Hellwig <hch@infradead.org>, virtio-comment@lists.linux.dev,
-	Claire Chang <tientzu@chromium.org>,
-	linux-devicetree <devicetree@vger.kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	=?iso-8859-1?Q?J=F6rg?= Roedel <joro@8bytes.org>,
-	iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-	graf@amazon.de
-Subject: Re: [RFC PATCH 1/3] content: Add VIRTIO_F_SWIOTLB to negotiate use
- of SWIOTLB bounce buffers
-Message-ID: <20250404043016-mutt-send-email-mst@kernel.org>
-References: <20250402112410.2086892-1-dwmw2@infradead.org>
- <20250402112410.2086892-2-dwmw2@infradead.org>
- <Z-43svGzwoUQaYvg@infradead.org>
- <148a3c8ee53af585b42ec025c2c7821ad852c66c.camel@infradead.org>
- <Z-46TDmspmX0BJ2H@infradead.org>
- <05abb68286dd4bc17b243130d7982a334503095b.camel@infradead.org>
- <Z-99snVF5ESyJDDs@infradead.org>
- <fb7ea3ee5bf970fa36b012e16750f533b72903a0.camel@infradead.org>
- <20250404040838-mutt-send-email-mst@kernel.org>
- <67bd998bfe385088ef863342b9f8714754585476.camel@infradead.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mztqQV12"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B821C4CEDD;
+	Fri,  4 Apr 2025 08:33:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743755601;
+	bh=y1JfU3/JoaxSHCn/U0NYNOAABCIr8CbkptpxzLbR11c=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=mztqQV125JbRWALt5htTuj9OXF/xE5+kyxw/5VvL/wtzY9W9pwTRC6nyDzZw+6cs9
+	 1Z7AoHYKGijBBBgd/CSuIDz+uzxjjKAJA2Ru0c9oNXmDrYl2m7JhhygkGmeFtCwNuR
+	 CvvLqHwAx3dNRvxn+int6sZxVGgtA1wIXIVjws9ys7NJRLbrdSsdvjyOU342ff1mGR
+	 quwSAdeSzF3kwFYn9JyETxFlSrNiBt+8wKlPuEo0N/lUvE1Ws4nrtpZuxeMB0/2sFt
+	 LFODiNFuTy/b79KfOaAGVRf4xc44vmFJU/8yAPar2x0GKmWWK1lkfHMPqJHdto8Yzr
+	 7T/PPQfr1huCQ==
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-5498d2a8b89so1960809e87.1;
+        Fri, 04 Apr 2025 01:33:21 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUElh3IMASvE7zX33Y+2VMGzG8U7TFLmbvExC0Cb0LsI5J5Ob8nWw7JKCv+C7yIWUfkJLQB3B6/0HiSrA8j@vger.kernel.org, AJvYcCUVQG4kpIjm6MXyeghvZ8YVgSQzu2bs7DjL7h58yr2zeC4FZiKMrNTYs64qUCGwqBNbBpZCjHu4hhu3HOE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxnHX3mr7yaYIdmblcPd+j6ecEG99yrNDb17Pn4JQJCTvfs8qgi
+	9CfAZDWDMgl6ZQ6wMkQytKzmtuiFRssFojhEWLlTZ2X7Uj8v20qViPVfQ7zrv1hi9Rx5xzzAdCP
+	U8EGOawHOXOkRzXCVY7DvyXyZi50=
+X-Google-Smtp-Source: AGHT+IFRrBP/La+jpbM1fD1/Ql5J5r2JDnyokkCQmtIdTYzZIsH4W1MX/ASedmmxMsHd49K0otRSzivXgHoADsOhB2o=
+X-Received: by 2002:a05:651c:146e:b0:30b:b956:53e5 with SMTP id
+ 38308e7fff4ca-30f0a118fa3mr6771721fa.12.1743755599733; Fri, 04 Apr 2025
+ 01:33:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <67bd998bfe385088ef863342b9f8714754585476.camel@infradead.org>
+References: <20250331-debuginfo-v2-1-fb460999a5b3@purestorage.com>
+In-Reply-To: <20250331-debuginfo-v2-1-fb460999a5b3@purestorage.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Fri, 4 Apr 2025 17:32:42 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASo3uQ1BRDKy0JSiQdzkaH4DTa88aAGshUrDEXSUeRXxg@mail.gmail.com>
+X-Gm-Features: AQ5f1Jpzuam8FQm3KFwHGvqS1DchsEYndDcMKm4g_N_zpDdD_jUqwJa0W7PAY1A
+Message-ID: <CAK7LNASo3uQ1BRDKy0JSiQdzkaH4DTa88aAGshUrDEXSUeRXxg@mail.gmail.com>
+Subject: Re: [PATCH v2] kbuild: rpm-pkg: build a debuginfo RPM
+To: Uday Shankar <ushankar@purestorage.com>
+Cc: Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, linux-kbuild@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 04, 2025 at 09:16:44AM +0100, David Woodhouse wrote:
-> On Fri, 2025-04-04 at 04:09 -0400, Michael S. Tsirkin wrote:
-> > On Fri, Apr 04, 2025 at 08:50:47AM +0100, David Woodhouse wrote:
-> > > What's annoying is that this should work out of the box *already* with
-> > > virtio-mmio and a `restricted-dma-pool` — for systems which aren't
-> > > afflicted by UEFI/ACPI/PCI as their discovery mechanisms.
-> > 
-> > 
-> > That specifically would be just a driver bugfix then?
-> 
-> I actually think it works out of the box and there isn't even a bug to
-> fix. Haven't tested yet.
-> 
-> The sad part is that the system does it all automatically *if* it has
-> CONFIG_DMA_RESTRICTED_POOL (e.g. Linux) and the driver never even
-> notices that the dma_ops it's using are the swiotlb ops using the
-> provided buffer.
-> 
-> Which is *kind* of nice... except that when on a guest OS which *isn't*
-> Linux with CONFIG_DMA_RESTRICTED_POOL, the guest will just ignore the
-> `restricted-dma-pool` node and try DMA to system memory anyway, which
-> will fail.
+On Tue, Apr 1, 2025 at 7:46=E2=80=AFAM Uday Shankar <ushankar@purestorage.c=
+om> wrote:
+>
+> The rpm-pkg make target currently suffers from a few issues related to
+> debuginfo:
+> 1. debuginfo for things built into the kernel (vmlinux) is not available
+>    in any RPM produced by make rpm-pkg. This makes using tools like
+>    systemtap against a make rpm-pkg kernel impossible.
+> 2. debug source for the kernel is not available. This means that
+>    commands like 'disas /s' in gdb, which display source intermixed with
+>    assembly, can only print file names/line numbers which then must be
+>    painstakingly resolved to actual source in a separate editor.
+> 3. debuginfo for modules is available, but it remains bundled with the
+>    .ko files that contain module code, in the main kernel RPM. This is a
+>    waste of space for users who do not need to debug the kernel (i.e.
+>    most users).
+>
+> Address all of these issues by additionally building a debuginfo RPM
+> when the kernel configuration allows for it, in line with standard
+> patterns followed by RPM distributors. With these changes:
+> 1. systemtap now works (when these changes are backported to 6.11, since
+>    systemtap lags a bit behind in compatibility), as verified by the
+>    following simple test script:
+>
+>    # stap -e 'probe kernel.function("do_sys_open").call { printf("%s\n", =
+$$parms); }'
+>    dfd=3D0xffffffffffffff9c filename=3D0x7fe18800b160 flags=3D0x88800 mod=
+e=3D0x0
+>    ...
+>
+> 2. disas /s works correctly in gdb, with source and disassembly
+>    interspersed:
+>
+>    # gdb vmlinux --batch -ex 'disas /s blk_op_str'
+>    Dump of assembler code for function blk_op_str:
+>    block/blk-core.c:
+>    125     {
+>       0xffffffff814c8740 <+0>:     endbr64
+>
+>    127
+>    128             if (op < ARRAY_SIZE(blk_op_name) && blk_op_name[op])
+>       0xffffffff814c8744 <+4>:     mov    $0xffffffff824a7378,%rax
+>       0xffffffff814c874b <+11>:    cmp    $0x23,%edi
+>       0xffffffff814c874e <+14>:    ja     0xffffffff814c8768 <blk_op_str+=
+40>
+>       0xffffffff814c8750 <+16>:    mov    %edi,%edi
+>
+>    126             const char *op_str =3D "UNKNOWN";
+>       0xffffffff814c8752 <+18>:    mov    $0xffffffff824a7378,%rdx
+>
+>    127
+>    128             if (op < ARRAY_SIZE(blk_op_name) && blk_op_name[op])
+>       0xffffffff814c8759 <+25>:    mov    -0x7dfa0160(,%rdi,8),%rax
+>
+>    126             const char *op_str =3D "UNKNOWN";
+>       0xffffffff814c8761 <+33>:    test   %rax,%rax
+>       0xffffffff814c8764 <+36>:    cmove  %rdx,%rax
+>
+>    129                     op_str =3D blk_op_name[op];
+>    130
+>    131             return op_str;
+>    132     }
+>       0xffffffff814c8768 <+40>:    jmp    0xffffffff81d01360 <__x86_retur=
+n_thunk>
+>    End of assembler dump.
+>
+> 3. The size of the main kernel package goes down substantially,
+>    especially if many modules are built (quite typical). Here is a
+>    comparison of installed size of the kernel package (configured with
+>    allmodconfig, dwarf4 debuginfo, and module compression turned off)
+>    before and after this patch:
+>
+>    # rpm -qi kernel-6.13* | grep -E '^(Version|Size)'
+>    Version     : 6.13.0postpatch+
+>    Size        : 1382874089
+>    Version     : 6.13.0prepatch+
+>    Size        : 17870795887
+>
+>    This is a ~92% size reduction.
+>
+> Note that a debuginfo package can only be produced if the following
+> configs are set:
+> - CONFIG_DEBUG_INFO=3Dy
+> - CONFIG_MODULE_COMPRESS=3Dn
+> - CONFIG_DEBUG_INFO_SPLIT=3Dn
+>
+> The first of these is obvious - we can't produce debuginfo if the build
+> does not generate it. The second two requirements can in principle be
+> removed, but doing so is difficult with the current approach, which uses
+> a generic rpmbuild script find-debuginfo.sh that processes all packaged
+> executables. If we want to remove those requirements the best path
+> forward is likely to add some debuginfo extraction/installation logic to
+> the modules_install target (controllable by flags). That way, it's
+> easier to operate on modules before they're compressed, and the logic
+> can be reused by all packaging targets.
+>
+> Signed-off-by: Uday Shankar <ushankar@purestorage.com>
+> ---
+> Changes in v2:
+> - Check config requirements more explicitly (Masahiro Yamada)
+> - Ensure modules stay non-executable (Masahiro Yamada)
+> - Always combine debuginfo and debugsource package
+> - Link to v1: https://lore.kernel.org/r/20250210-debuginfo-v1-0-368feb582=
+92a@purestorage.com
+> ---
 
-I mean, it's easy to misconfigure Linux, this is why we love it ;) Why
-is this such a concern?
-
-> That's why my proposal adds the negotiated VIRTIO_F_SWIOTLB feature, so
-> that the device side can refuse, if the guest *isn't* agreeing to use
-> the bounce buffer in the situations where it must do so.
+Applied to linux-kbuild.
+Thanks.
 
 
-OTOH then setting this feature and if you make the device force it,
-you are breaking guests restricted-dma-pool which worked previously, no?
+>  scripts/package/kernel.spec | 46 +++++++++++++++++++++++++++++++++++++++=
+++++--
+>  scripts/package/mkspec      | 10 ++++++++++
+>  2 files changed, 54 insertions(+), 2 deletions(-)
+>
+> diff --git a/scripts/package/kernel.spec b/scripts/package/kernel.spec
+> index ac3e5ac01d8a4daa031bc9e70b792a68f74c388b..726f34e1196018165adf35093=
+3a5f816faeeef0b 100644
+> --- a/scripts/package/kernel.spec
+> +++ b/scripts/package/kernel.spec
+> @@ -2,8 +2,6 @@
+>  %{!?_arch: %define _arch dummy}
+>  %{!?make: %define make make}
+>  %define makeflags %{?_smp_mflags} ARCH=3D%{ARCH}
+> -%define __spec_install_post /usr/lib/rpm/brp-compress || :
+> -%define debug_package %{nil}
+>
+>  Name: kernel
+>  Summary: The Linux Kernel
+> @@ -46,6 +44,36 @@ This package provides kernel headers and makefiles suf=
+ficient to build modules
+>  against the %{version} kernel package.
+>  %endif
+>
+> +%if %{with_debuginfo}
+> +# list of debuginfo-related options taken from distribution kernel.spec
+> +# files
+> +%undefine _include_minidebuginfo
+> +%undefine _find_debuginfo_dwz_opts
+> +%undefine _unique_build_ids
+> +%undefine _unique_debug_names
+> +%undefine _unique_debug_srcs
+> +%undefine _debugsource_packages
+> +%undefine _debuginfo_subpackages
+> +%global _find_debuginfo_opts -r
+> +%global _missing_build_ids_terminate_build 1
+> +%global _no_recompute_build_ids 1
+> +%{debug_package}
+> +%endif
+> +# some (but not all) versions of rpmbuild emit %%debug_package with
+> +# %%install. since we've already emitted it manually, that would cause
+> +# a package redefinition error. ensure that doesn't happen
+> +%define debug_package %{nil}
+> +
+> +# later, we make all modules executable so that find-debuginfo.sh strips
+> +# them up. but they don't actually need to be executable, so remove the
+> +# executable bit, taking care to do it _after_ find-debuginfo.sh has run
+> +%define __spec_install_post \
+> +       %{?__debug_package:%{__debug_install_post}} \
+> +       %{__arch_install_post} \
+> +       %{__os_install_post} \
+> +       find %{buildroot}/lib/modules/%{KERNELRELEASE} -name "*.ko" -type=
+ f \\\
+> +               | xargs --no-run-if-empty chmod u-x
+> +
+>  %prep
+>  %setup -q -n linux
+>  cp %{SOURCE1} .config
+> @@ -89,8 +117,22 @@ ln -fns /usr/src/kernels/%{KERNELRELEASE} %{buildroot=
+}/lib/modules/%{KERNELRELEA
+>         echo "%exclude /lib/modules/%{KERNELRELEASE}/build"
+>  } > %{buildroot}/kernel.list
+>
+> +# make modules executable so that find-debuginfo.sh strips them. this
+> +# will be undone later in %%__spec_install_post
+> +find %{buildroot}/lib/modules/%{KERNELRELEASE} -name "*.ko" -type f \
+> +       | xargs --no-run-if-empty chmod u+x
+> +
+> +%if %{with_debuginfo}
+> +# copying vmlinux directly to the debug directory means it will not get
+> +# stripped (but its source paths will still be collected + fixed up)
+> +mkdir -p %{buildroot}/usr/lib/debug/lib/modules/%{KERNELRELEASE}
+> +cp vmlinux %{buildroot}/usr/lib/debug/lib/modules/%{KERNELRELEASE}
+> +%endif
+> +
+>  %clean
+>  rm -rf %{buildroot}
+> +rm -f debugfiles.list debuglinks.list debugsourcefiles.list debugsources=
+.list \
+> +       elfbins.list
+>
+>  %post
+>  if [ -x /usr/bin/kernel-install ]; then
+> diff --git a/scripts/package/mkspec b/scripts/package/mkspec
+> index 4dc1466dfc815c110eb7206f83dd874b17f5170f..c7375bfc25a9ad3ae98c08827=
+3bd76375ea6962e 100755
+> --- a/scripts/package/mkspec
+> +++ b/scripts/package/mkspec
+> @@ -23,6 +23,16 @@ else
+>  echo '%define with_devel 0'
+>  fi
+>
+> +# debuginfo package generation uses find-debuginfo.sh under the hood,
+> +# which only works on uncompressed modules that contain debuginfo
+> +if grep -q CONFIG_DEBUG_INFO=3Dy include/config/auto.conf &&
+> +   (! grep -q CONFIG_MODULE_COMPRESS=3Dy include/config/auto.conf) &&
+> +   (! grep -q CONFIG_DEBUG_INFO_SPLIT=3Dy include/config/auto.conf); the=
+n
+> +echo '%define with_debuginfo %{?_without_debuginfo: 0} %{?!_without_debu=
+ginfo: 1}'
+> +else
+> +echo '%define with_debuginfo 0'
+> +fi
+> +
+>  cat<<EOF
+>  %define ARCH ${ARCH}
+>  %define KERNELRELEASE ${KERNELRELEASE}
+>
+> ---
+> base-commit: 2c8725c1dca3de043670b38592b1b43105322496
+> change-id: 20250209-debuginfo-cd3d9417af21
+>
+> Best regards,
+> --
+> Uday Shankar <ushankar@purestorage.com>
+>
+>
 
--- 
-MST
 
+--=20
+Best Regards
+Masahiro Yamada
