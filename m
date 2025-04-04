@@ -1,65 +1,66 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8BDC1EA7FC
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 11:57:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 950071EEA33
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 11:57:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743767826; cv=none; b=usu+j1mDeZ4cyTB0D/2Ngu4XJxbUam8blTGZR8NMOXjJjptfPr5NNNCJHN4PW8XpARE9nTEXq8/Oi7Yraq8F0A+zJGEmD3Jhm9xOMZFYKy+9uECSw9JYEC2DlB4LHwUJtNANX0wZG9C0fX4A9IKj/mAsX91uc8WOT/KPaZiOfRg=
+	t=1743767828; cv=none; b=kjr56sBbFFGq/4UHqH3t2DmxFrP3/z7qHD1lWfQZ+OvSAg9pakpD9IBUJCZmw3Nfr4czQPkEPIJP65xoSkmQyWNr3hhWsTQQBPfqOK/wsV/a8OjhBDoHOmpRI8fT+DEvTN0MwR8ZbpZF8iwmSf8LjqD9qI5+53YwKNUHPNb2gUE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743767826; c=relaxed/simple;
-	bh=d1fAb3fHPiIYP5vnZt7mimC59KcGXB/kjjU+riDZhLM=;
+	s=arc-20240116; t=1743767828; c=relaxed/simple;
+	bh=YI259iMximjELrxM/8u/Qw6/mJUi2mzFrILZsHdPMf0=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=RIa27vhAibVs76Ar1VFSCAbQB4ELOq3evG7QB4cdyCi+pZ5vS1YoNdDdeJe5NnEc0QPvdtY+XgUCVFvwxVMEsH780TOTXifk39BGHV7mF8DGPQT9XKOXbEFAWRZNzCts9hi95T7qAGda5kUGIkD9QS43sC1enjsWRpmIrWHcjXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=etbYadnn; arc=none smtp.client-ip=209.85.221.46
+	 In-Reply-To:To:Cc; b=FPZuhvbbdV16LZOoE8uh3PdVSr1SDymCJw8a8FevDinpbCQ8DussyQMKMMfYOwwud7L4tNSSeRJ4YMSa31ihCdrPk7l+YCnLLBfT7I9cQE7W1DrKcuYIHOM83RIcYofumTiYlO+yPgFz9kmv8JpmTU+iuLUIkN+wzDQyJ8cP+mk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=r6ESB9MA; arc=none smtp.client-ip=209.85.221.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="etbYadnn"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-39127effa72so177435f8f.2
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 04:57:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r6ESB9MA"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-39973c72e8cso195031f8f.0
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 04:57:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743767823; x=1744372623; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1743767825; x=1744372625; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=rP6n61SWekMknO/zRlSYN14fVYP5G3VDX27XosLbmfk=;
-        b=etbYadnnZxOjh1wnppuM68xoMdapqCCStqyvoKSzGPn2mixQ69N6ZQqa2Nuf1Tc1S7
-         5aVGryk0tC84wSCv0Be3WFdf4yNz7RGfvfsU5tEG77ywqcT/FWOpO+9GAcRE5pCN3zXH
-         UG9Q+XeJ3d/I38I8X/Hz3Bm5JiQGB8U2GgSPoeWpGYECJ3VQs8muG1Ee0DMrtH86kFBG
-         1ywBUR1Fi7Q18MlNSoXTHukKJJdpqtM8acqlVlX5rMy8QpLTTRTbIhnTUR5H/xb3CNWM
-         1A5rIIgzJAqeRqvlxN5deDOEGuwOXQkr3UJwTASZB/rgtdN/74oBLoAFG76eBPBBhM7v
-         TahA==
+        bh=gxJBcAGGDyzbDLJAvfdPdyWxOOxD5U4tNFwB4IbsSu0=;
+        b=r6ESB9MA0w0jbKagB+LZhmE19V47nFepnBxnlxPxrkR/BailqdFKJKdMlXV342S82q
+         RxzhM5vQuLfxM1zReNbDxpL9NJO2MA4iRjeeosrPVlycZwMcRlN1zIR0Dvwx0mbpGv/W
+         V/Bhb7kCCy6ZvTGOwaja7+Dn2IzOjbr8sb2f2c01+o1Nnfkvy2HtwIVE+RA3ua0aYLEr
+         I2lssKaOD/ci3CeMGDElKPZUg2zugnCnehO+8WgSrj6z0sgNsfexWYDTbY877kyqOyBC
+         nn50PJ0P96fOyFdCxPdOoaKeCEKPm4sd2fxXyIuS3F5TzKqg6g/LCUTY0iCLt54wUmUv
+         HGsw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743767823; x=1744372623;
+        d=1e100.net; s=20230601; t=1743767825; x=1744372625;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=rP6n61SWekMknO/zRlSYN14fVYP5G3VDX27XosLbmfk=;
-        b=BFuF26TwkYQLh1mqn2pnFuf2GuWIynPjbx+36JjdYk/7XlWm98CgatH6uKRhY5iwLx
-         wJ9nHRkpR9qPI+/ugwu7hQQSj3li4CA5FBarV6UVCsVxrYSIrci06WNO3cizYSA/p7YK
-         jm4xdpHr7jjZp0QdhaKS5HU9go/lDV1OSc3NztGVRatvgY8hdPPbr+z12vuM3BUFleZJ
-         7JLL48vhKCUcwRNCYKolHwrOQfqAS09Fv6ytcIbvMIV0emPBgjjom9pVroQcGjaga8Yq
-         cEp44b+ScNYrM1mF3LB9cll0MnsKmH7gUYi9O2sS02prs8IkOZPAiwzghuvmUE3ez8KX
-         cNHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWOLQnaZlv/t/ehIyOu+HkTZL1qQ/TfZpIY6UvfbnKACxJYozZxwhGe+/yFnx2DTHTSGffA1KRWL/olbtc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YylmAk+gRMih8Io6Bk+0MtfoQT4L+ZqhVXFM6pg/Q8cnG70QEzP
-	fiT0J47t7OnKUQjGVfB8KNwLqm0Y1MkX6z/QwVk1bysLNEyvwQOm/fG4m3UiYrY=
-X-Gm-Gg: ASbGncuYT3WoBQHwgUUrOdBlFYYkXUv0lll3O6GjFim77qnip0f8v4bdt3FPADwG9Rn
-	UGR3MzoCfV9m43KWq0sqgEzbYEfzh5J9qJNImujf7yDTAY8ceL8AqYPl8b3ut1N+WspTtPyNObX
-	Vn2n/WgISmwJhNbufAkasEdbNbKW3JVPeO9+9I8FQX6J5u6JKKLe6LvE4ZMnBozm/DpvkJE2n3C
-	MHtYsoifLmrGIV/XmnfOoisPDthSHcIQcQ6uiPHtsQ8AwK5R8yEuPMUfLc1MiMn5W2E4urktf/c
-	RKenVsi1pCeOD+pQc7mrLRnFYXJtQC9CyoaXqKTGVz1+AEFE8FAVkWiyrAsIE4I=
-X-Google-Smtp-Source: AGHT+IGREdRnQ2gEflgpMySypGT2xrFpTeuT80iZBzxVkRizH3MB1Iv/GdfxP0Mu67TBThpOTa6MIw==
-X-Received: by 2002:a05:6000:188e:b0:39c:266c:dae with SMTP id ffacd0b85a97d-39cba936215mr862740f8f.11.1743767823172;
-        Fri, 04 Apr 2025 04:57:03 -0700 (PDT)
+        bh=gxJBcAGGDyzbDLJAvfdPdyWxOOxD5U4tNFwB4IbsSu0=;
+        b=QBX6LNLhAyQlRF2/UXu2LeAwBst/Ljnz8gt/oy02y6wL9EyWTXubkd0ZSD/bckPYW+
+         XVqsrasKGCSzNEIIji/bnk24r8CAjYKtaK/Y3Lomvb7GnsdS6O57rKODndPqE3/64AUu
+         skl8O/QTeVg0eNKgO6SyJXOQOqiRQQRspiPwtbn8Ti4LfMCNJfMAb0rHCJ+jsaGY2WFa
+         fm205qe5HLpWhRX2k2fx5KQHNcclXCScMbDQX8H7YWiZkUZlWChbzLxFC5WhBt+iOTsk
+         mbbzpLX7GfVpLCMjkEr9A/9xYE53bXI0Nn6sVmsqWyJ8A9nFys+pLHVt2OePC+qmDDF0
+         z19g==
+X-Forwarded-Encrypted: i=1; AJvYcCWVljPo6YM11xr0Yf/X3NQPYTUztNqywP66Odf/eaB1tBwRqWfWizn9vqHDee0TUIMmMOhwY1d8Jp6TUfw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyhR1n56yE8oGB4Tb6ERTt6d80ogMYm5DK3qPrBkIgE25jRYN9v
+	UlA5JaMjd3+wZOqmUVgfRTUv2SFjMjTMO2oVSfets7Dgb0X2d/6otZ+AwsIAE88=
+X-Gm-Gg: ASbGncuWohKnJyuJJw92hUXIfULcPBawAVHvsorUHh0QcTT6O58mQCtDySj9nSlUimK
+	4CYTgfMX9Bm8hM72dSBll2u74cXu0aV1JVuZiJRBy/8f9j7XOPwLsL6J5MC2bY7S/Q2G5xlHTMa
+	5FZInpEZRk7KTCqIdIwVopAMVSU/duK7LM61N+SoU9scx+ciiIcexPXeF3W5JzcxXhwUkJiWUou
+	jAe4nfdxHGMU0kBxt5zXcC1O3fhpXPC6sq2b0ELKIrlao0jGfO+OypqxVS+y4gUjUHjvMRgCBE8
+	5Ng6IC9Rc+OqNA7a90QWWqk9FfGOE8zA8F1zqzZw5LF27esxWURbPy3hEImYpwWfVfv7dngxHw=
+	=
+X-Google-Smtp-Source: AGHT+IEbqWVdAZjF0/qLy/H0JxxfBZjOz1OHqDHaLpBpQad1gKc6l1hGJIvzr71knts2F+y5b2ubng==
+X-Received: by 2002:a5d:64c7:0:b0:39c:1258:17d7 with SMTP id ffacd0b85a97d-39cba94bb2bmr852989f8f.16.1743767824815;
+        Fri, 04 Apr 2025 04:57:04 -0700 (PDT)
 Received: from [192.168.1.26] ([178.197.198.86])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec364cb9asm43842815e9.31.2025.04.04.04.57.01
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec364cb9asm43842815e9.31.2025.04.04.04.57.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Apr 2025 04:57:02 -0700 (PDT)
+        Fri, 04 Apr 2025 04:57:04 -0700 (PDT)
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Date: Fri, 04 Apr 2025 13:56:58 +0200
-Subject: [PATCH 2/5] clk: nuvoton: Do not enable by default during compile
+Date: Fri, 04 Apr 2025 13:56:59 +0200
+Subject: [PATCH 3/5] clk: stm32: Do not enable by default during compile
  testing
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -69,7 +70,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250404-kconfig-defaults-clk-v1-2-4d2df5603332@linaro.org>
+Message-Id: <20250404-kconfig-defaults-clk-v1-3-4d2df5603332@linaro.org>
 References: <20250404-kconfig-defaults-clk-v1-0-4d2df5603332@linaro.org>
 In-Reply-To: <20250404-kconfig-defaults-clk-v1-0-4d2df5603332@linaro.org>
 To: Neil Armstrong <neil.armstrong@linaro.org>, 
@@ -96,30 +97,46 @@ compile testing.
 
 Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
- drivers/clk/nuvoton/Kconfig | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/clk/stm32/Kconfig | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/clk/nuvoton/Kconfig b/drivers/clk/nuvoton/Kconfig
-index fe4b7f62f467048b7c86890972d55faebd066947..e7019b69ea74824de6943108f30ec259aa52e5f4 100644
---- a/drivers/clk/nuvoton/Kconfig
-+++ b/drivers/clk/nuvoton/Kconfig
+diff --git a/drivers/clk/stm32/Kconfig b/drivers/clk/stm32/Kconfig
+index dca409d52652213cfbd8d5ecf1a339ea53ba5d52..4d2eb993ea0838d408ff5b1e5b6d028cbcaa9301 100644
+--- a/drivers/clk/stm32/Kconfig
++++ b/drivers/clk/stm32/Kconfig
 @@ -4,7 +4,7 @@
- config COMMON_CLK_NUVOTON
- 	bool "Nuvoton clock controller common support"
- 	depends on ARCH_MA35 || COMPILE_TEST
+ menuconfig COMMON_CLK_STM32MP
+ 	bool "Clock support for common STM32MP clocks"
+ 	depends on ARCH_STM32 || COMPILE_TEST
 -	default y
-+	default ARCH_MA35
++	default ARCH_STM32
+ 	select RESET_CONTROLLER
  	help
- 	  Say y here to enable common clock controller for Nuvoton platforms.
- 
-@@ -12,7 +12,7 @@ if COMMON_CLK_NUVOTON
- 
- config CLK_MA35D1
- 	bool "Nuvoton MA35D1 clock controller support"
+ 	  Support for STM32MP SoC family clocks.
+@@ -14,21 +14,21 @@ if COMMON_CLK_STM32MP
+ config COMMON_CLK_STM32MP135
+ 	bool "Clock driver for stm32mp13x clocks"
+ 	depends on ARM || COMPILE_TEST
 -	default y
-+	default ARCH_MA35
++	default ARCH_STM32
  	help
- 	  Build the clock controller driver for MA35D1 SoC.
+ 	  Support for stm32mp13x SoC family clocks.
+ 
+ config COMMON_CLK_STM32MP157
+ 	bool "Clock driver for stm32mp15x clocks"
+ 	depends on ARM || COMPILE_TEST
+-	default y
++	default ARCH_STM32
+ 	help
+ 	  Support for stm32mp15x SoC family clocks.
+ 
+ config COMMON_CLK_STM32MP257
+ 	bool "Clock driver for stm32mp25x clocks"
+ 	depends on ARM64 || COMPILE_TEST
+-	default y
++	default ARCH_STM32
+ 	help
+ 	  Support for stm32mp25x SoC family clocks.
  
 
 -- 
