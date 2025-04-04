@@ -1,124 +1,117 @@
-Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EBFA19F462;
-	Fri,  4 Apr 2025 08:37:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.149.199.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DA0E19995D
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 08:38:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743755871; cv=none; b=e3f/PbhZPb4WCPi0FWFoVK3PJKsFqgRjvwwVGFdXH6HlyDh8MRwxvEVPA+EzRac/iO2TeaT73IQsRRwr/WZZhoRCLXUWJEiM48+GId74kkf4s+k/OxcgttCQ88HKBWexOkfKPL3Aysp6TST4vHtFx6YJ0Pk+mMUptb+L4tDcoHU=
+	t=1743755899; cv=none; b=haPA3LkxOkK4PX+49CacpQWB3o6c+GsfQwQoHsKpczHaijehFk9ww5AYe0o0uFnIwgUJMfWUQMTQvCboR8zathctPzIVkJzGfortlRuAEkTozRXv8wcFtmmGuTHUDKTRcbU0xnwt15OtUH6KFy2jBYJGZR1wh5SfKu7dji88aFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743755871; c=relaxed/simple;
-	bh=pLibqvIcw1SHorZ/STK72m6aN/tlhopq9FXsc2/2oGI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=q5C19f6lKPmgs6Ag6fqZp1aMJHB54cTVfEpqpnKl1U5zegDams87TtYb9EUzM6nXsogwPFZBZrRx1ccwudcjtWttiSceeoeMrkLzf0QzwiBr54h/b6xoFNjD0I0kIVt3Khl9eGaN5ougK7JODt6rl8x3dMqQHFa4IX3UiIx1UQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru; spf=pass smtp.mailfrom=ispras.ru; dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b=nnhfEQeH; arc=none smtp.client-ip=83.149.199.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ispras.ru
+	s=arc-20240116; t=1743755899; c=relaxed/simple;
+	bh=OktGT+TBkq3WfpZd1me7J15mRYBZ6g9T1DYDBuhe3d8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fN8vuvOoEMa/msXlfrt+G/Q5JqeI6haluVtjm1rPTJEcRC9/xnLb+j9NlhugkbCC85XdCU6tsldclOdxSI/VjY+UvW816LH3nq0P0Kc9aYRBuc1QUkloKef2/BtjBd7ice2N8GRkmKmdfBm+O2uQ4Wr+VvfS41xKiuY0FeQVrsY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=awDtH6Sm; arc=none smtp.client-ip=209.85.208.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b="nnhfEQeH"
-Received: from localhost.localdomain (unknown [5.181.23.154])
-	by mail.ispras.ru (Postfix) with ESMTPSA id 319674487843;
-	Fri,  4 Apr 2025 08:30:48 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru 319674487843
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
-	s=default; t=1743755448;
-	bh=ny7HwWXxKnGKVGDtPWStKsa49RNI8QK9Rh+xecVN+hU=;
-	h=From:To:Cc:Subject:Date:From;
-	b=nnhfEQeH+4iUZRxuAfxl4Ojn7z68V9h6+xvsGZJ2f8kq84KcpEOfgUpT686fwaBen
-	 dhKonu5Drm4xz+26lYxDB5C55fSI2ly1NHcbLY3+CHwz8iWyTcoN2vJimR4SuCkHLM
-	 Z6Ns/18LDvQnKQORNb7ZVtfDZWy+fQqBoke9Jtuc=
-From: Artem Sadovnikov <a.sadovnikov@ispras.ru>
-To: linux-ext4@vger.kernel.org
-Cc: Artem Sadovnikov <a.sadovnikov@ispras.ru>,
-	"Theodore Ts'o" <tytso@mit.edu>,
-	Andreas Dilger <adilger.kernel@dilger.ca>,
-	Eric Sandeen <sandeen@redhat.com>,
-	Jan Kara <jack@suse.cz>,
-	linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org,
-	stable@vger.kernel.org
-Subject: [PATCH] ext4: fix off-by-one error in do_split
-Date: Fri,  4 Apr 2025 08:28:05 +0000
-Message-ID: <20250404082804.2567-3-a.sadovnikov@ispras.ru>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="awDtH6Sm"
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-30eef9ce7feso17463561fa.0
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 01:38:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1743755896; x=1744360696; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mjK7W0Om4uq93pjMJtCwW0RKoP5OEp/tohd8eg66f0s=;
+        b=awDtH6Sm4pWEr6KInTiEOOi8NnZyDAmshppMr4eQwj9VhLy2EshRGyZ/WmootQn0oj
+         OoQJLc8jRb9Xmlz/YA2gJyLUJyP+HXn1PAeaToVeOFSD4ladaH7FKdNv/3gu5iKjoCav
+         VOHBvwklezw7I9mkfDBZB2JIjwtglcKweoGjK+Co1oYmycg2ZwgoFgBaBrpRtSsMJTZF
+         Yt8JBAI/qKPyvjVQGwAFaCvBeCQIifzPIbixUKxoTv2wJvBCi1Ks28q9K4iPhzKxzOP5
+         yZT/gHo43HobB1gghIk3cWNKFxJEnOL+BiBLeWq61RABgDaFc1x1vXn6HdlT/+ouJZBp
+         /H5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743755896; x=1744360696;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mjK7W0Om4uq93pjMJtCwW0RKoP5OEp/tohd8eg66f0s=;
+        b=a+i0xL5xPwPeszw5Iny1obEhajltJ7ml8NDX963oCCqbQh4AhORND3NqCw+nyy7rIf
+         adIlNppFrxJF/HTO9VD6hP14FscGfDOqB6Bu70ijXt9aVfjjU3cSy1VLAIitVASaFn+m
+         TRrzPTYlZepdJq6PDr5CjO3gxoyuyeohMQQ54HjYXzY6FmL476DDlca61zFrBzrjmiFL
+         frS2BG3HvNJ9O/olzccGWVnxyBbdZLI/jyE8GBMyenGeV4JymOFyaQJ0MZEogC3mGuKA
+         +h9zIIiscIIHINUCyZYDcGBjFoB1msoh6dnl121910vjT1vkUw7rRabcmEUw1ge616e8
+         yIzg==
+X-Forwarded-Encrypted: i=1; AJvYcCVTRKyOPv+1vnXq89hVdq+iNXBX30IcHjtJ8WC2hNM4zvPHBzLqNmWG7eEziUfcb/uDSE/DrGhA92gDJd8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YycJzEpMT+P0fgf4g0w0hM35d/AMxYWptoq/2mEEwEGEeD6TWxL
+	cQ7MQBaexzntfIWwS778WiGhfSK2Uyexg4Tnp8MiAI6vZwOdwCGMT2LlkYxw3Jn+CG/AIisGvMv
+	CmZIcWctVqEXPZq16HGSvvi5slH37Z/LysyEJaQ==
+X-Gm-Gg: ASbGncuZ009jb2zWAqkXfvCOvYVSCWaGCQR9HMgUugwKOPhg4bILEEr/DypDKX84V2d
+	UsCQXb00J8jJEDk1dbKnzdQDA6IuzclNX10LGZRMYZMzwCAemACfDeF4eieJep6mJIix6vQ4Rda
+	BIEW2mMvYDyGgBnj5ViTTyY45yi77BRW7bPjKaXs4SlfQGFIGDh4JfbXRkGA==
+X-Google-Smtp-Source: AGHT+IFo1yqcfYeeSlc8DpjiZKDyI9rcLin3wb9oxxwP6e5Vf0xIJMSzOKpz/A/vVvQ7XboHvE1K21R5AhhVXknfqdg=
+X-Received: by 2002:a2e:a588:0:b0:30d:dad4:e06f with SMTP id
+ 38308e7fff4ca-30f0a0f0da0mr7997421fa.2.1743755895678; Fri, 04 Apr 2025
+ 01:38:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250403160034.2680485-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20250403160034.2680485-1-andriy.shevchenko@linux.intel.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Fri, 4 Apr 2025 10:38:04 +0200
+X-Gm-Features: AQ5f1JoFgmR-MJjXIiICCtTNAV6gI4tCP6L06BPqgDcRNqu4WYtSJEQRY5AjDtI
+Message-ID: <CAMRc=Mf8AyxAeNbBbiQn1HdkrEdODmTAhTmrtiAp6H3=HUPSWg@mail.gmail.com>
+Subject: Re: [PATCH v2 0/6] gpiolib: acpi: Refactor to shrink the code by ~8%
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, linux-gpio@vger.kernel.org, 
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Mika Westerberg <westeri@kernel.org>, Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Syzkaller detected a use-after-free issue in ext4_insert_dentry that was
-caused by out-of-bounds access due to incorrect splitting in do_split.
+On Thu, Apr 3, 2025 at 6:00=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> A simple refactoring of the GPIO ACPI library parts to get an impressive
+> ~8% code shrink on x86_64 and ~2% on x86_32. Also reduces a C code a bit.
+>
+> add/remove: 0/2 grow/shrink: 0/5 up/down: 0/-1221 (-1221)
+> Function                                     old     new   delta
+> acpi_gpio_property_lookup                    425     414     -11
+> acpi_find_gpio.__UNIQUE_ID_ddebug478          56       -     -56
+> acpi_dev_gpio_irq_wake_get_by.__UNIQUE_ID_ddebug480      56       -     -=
+56
+> acpi_find_gpio                               354     216    -138
+> acpi_get_gpiod_by_index                      462     307    -155
+> __acpi_find_gpio                             877     638    -239
+> acpi_dev_gpio_irq_wake_get_by                695     129    -566
+> Total: Before=3D15375, After=3D14154, chg -7.94%
+>
+> In v2:
+> - renamed par to params (Mika, Bart)
+>
+> Andy Shevchenko (6):
+>   gpiolib: acpi: Improve struct acpi_gpio_info memory footprint
+>   gpiolib: acpi: Remove index parameter from acpi_gpio_property_lookup()
+>   gpiolib: acpi: Reduce memory footprint for struct acpi_gpio_params
+>   gpiolib: acpi: Rename par to params for better readability
+>   gpiolib: acpi: Reuse struct acpi_gpio_params in struct
+>     acpi_gpio_lookup
+>   gpiolib: acpi: Deduplicate some code in __acpi_find_gpio()
+>
+>  drivers/gpio/gpiolib-acpi.c   | 146 +++++++++++++++++-----------------
+>  include/linux/gpio/consumer.h |   2 +-
+>  2 files changed, 72 insertions(+), 76 deletions(-)
+>
+> --
+> 2.47.2
+>
 
-BUG: KASAN: use-after-free in ext4_insert_dentry+0x36a/0x6d0 fs/ext4/namei.c:2109
-Write of size 251 at addr ffff888074572f14 by task syz-executor335/5847
+Will you take it through your tree or do you want me to pick it up next wee=
+k?
 
-CPU: 0 UID: 0 PID: 5847 Comm: syz-executor335 Not tainted 6.12.0-rc6-syzkaller-00318-ga9cda7c0ffed #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 10/30/2024
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
- print_address_description mm/kasan/report.c:377 [inline]
- print_report+0x169/0x550 mm/kasan/report.c:488
- kasan_report+0x143/0x180 mm/kasan/report.c:601
- kasan_check_range+0x282/0x290 mm/kasan/generic.c:189
- __asan_memcpy+0x40/0x70 mm/kasan/shadow.c:106
- ext4_insert_dentry+0x36a/0x6d0 fs/ext4/namei.c:2109
- add_dirent_to_buf+0x3d9/0x750 fs/ext4/namei.c:2154
- make_indexed_dir+0xf98/0x1600 fs/ext4/namei.c:2351
- ext4_add_entry+0x222a/0x25d0 fs/ext4/namei.c:2455
- ext4_add_nondir+0x8d/0x290 fs/ext4/namei.c:2796
- ext4_symlink+0x920/0xb50 fs/ext4/namei.c:3431
- vfs_symlink+0x137/0x2e0 fs/namei.c:4615
- do_symlinkat+0x222/0x3a0 fs/namei.c:4641
- __do_sys_symlink fs/namei.c:4662 [inline]
- __se_sys_symlink fs/namei.c:4660 [inline]
- __x64_sys_symlink+0x7a/0x90 fs/namei.c:4660
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
- </TASK>
-
-The following loop is located right above 'if' statement.
-
-for (i = count-1; i >= 0; i--) {
-	/* is more than half of this entry in 2nd half of the block? */
-	if (size + map[i].size/2 > blocksize/2)
-		break;
-	size += map[i].size;
-	move++;
-}
-
-'i' in this case could go down to -1, in which case sum of active entries
-wouldn't exceed half the block size, but previous behaviour would also do
-split in half if sum would exceed at the very last block, which in case of
-having too many long name files in a single block could lead to
-out-of-bounds access and following use-after-free.
-
-Found by Linux Verification Center (linuxtesting.org) with Syzkaller.
-
-Cc: stable@vger.kernel.org
-Fixes: 5872331b3d91 ("ext4: fix potential negative array index in do_split()")
-Signed-off-by: Artem Sadovnikov <a.sadovnikov@ispras.ru>
----
- fs/ext4/namei.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/fs/ext4/namei.c b/fs/ext4/namei.c
-index cb5cb33b1d91..e9712e64ec8f 100644
---- a/fs/ext4/namei.c
-+++ b/fs/ext4/namei.c
-@@ -1971,7 +1971,7 @@ static struct ext4_dir_entry_2 *do_split(handle_t *handle, struct inode *dir,
- 	 * split it in half by count; each resulting block will have at least
- 	 * half the space free.
- 	 */
--	if (i > 0)
-+	if (i >= 0)
- 		split = count - move;
- 	else
- 		split = count/2;
--- 
-2.43.0
-
+Bart
