@@ -1,53 +1,53 @@
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A66561E1E0E;
-	Fri,  4 Apr 2025 11:56:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3423E1E1E04;
+	Fri,  4 Apr 2025 11:56:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743767775; cv=none; b=jhjo8lRcZV0eG67DSiR29LEGQYb7i16LQsCu9FotZV8Tjtmg+ASCZSmI9uUDdCbs80jZEP7Ud4tXjSukH8GU0aVykE5EIdPuhPl6/RjmQZqGJ3gDEbQ2gaadzEBWh7nLly7rqyUmZEx+3PqtVzJ/NWKsZiDsNZpe5rzz6X2GpkQ=
+	t=1743767775; cv=none; b=U/w79xlVE9APCmnEiAwqrPpWivSzwo3aBQNuK+dBsvQy3diNr2KMMIWIGyDwN2+GTrOtwHr67mpcJjQm1MX0XH74eXdKnPfWX1VBuxi7tzm77ORDoZm+MGoayLi+hjYhMqNrVHk6VvfI5UdikS1Scwtq8Dnak37xH3mlkHMM4Lg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1743767775; c=relaxed/simple;
-	bh=+e/kTh4eLyTZAIUP5q8WMBefPELhWsZlaCDHpVSzYFs=;
+	bh=SdKoJ+wrgbmbqtCuuf5Qj63KLZ54K3vcbb8D6elfkjs=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Ix/KvompNt0n9gAttRASJq52/HIntyDfgpbTClziFnUPP+bRxajNYVPZu3jgJ39ajTzjrvC8JsOq5qmpJnWE+pAQlcP+odRIR0j27UJxDCKogFp8sIuFzBszrO+PR6QXpE3TeKM77Sd/CmR5AzIcCwgnocOEZTC+Ctmd81iy+Cc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=c+DkL0m1; arc=none smtp.client-ip=205.220.180.131
+	 MIME-Version; b=P6Jg6vWT8q9T1y1KGPx5cA3FquR8UqWTfZZQwr+B2oGnNdOREU1TIJFu15WnsgXovFQTqF98zebL6gqw5pO3fo6S0anetejaVWglf/eygreB2t8xHFv+NTAWOMIqR1rW4YjdYVX5nlVv2LXKRY7zlNaS9GBtBbXJx9A7AmIdVmE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=CLW6ErKW; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="c+DkL0m1"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="CLW6ErKW"
 Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53489WuN007278;
-	Fri, 4 Apr 2025 11:55:52 GMT
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53489EmM006604;
+	Fri, 4 Apr 2025 11:55:50 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=HsdiQX0gVhk
-	hwl6AX7SjSfIOaaJUfiOUa0iL0MwH6mc=; b=c+DkL0m1L+fqpDEHy+pFtAod5iq
-	2S5Zw7kIfP+K/iRWGss8KCO3roTNCWnpzZlOxf8OiEb+kzeu5hnU6wvy+YtJmQS+
-	Zo6mhCkXgSHCjm3BPwEx62IoPyyJkLPVfwdPFLJxmw3QE98n827q6gixMC+CS77B
-	Wf1fXLDMsoncQPnbZ7jwEf3euLmvMqTB/ec82QzGasqmbjusWy7Ip1pOYHj406uG
-	m4x0m+9zem/jt5KA9kS2+Z8qEP6SG0doMX9rVbdt5RBFnnlBj+tB+38kVhOyDRYh
-	h/fE6EVwfeK8CVbzCxlURDPQMHLzhEwVz+7hD+ocWLxy2tK2fYa0TBRx6yQ==
+	:mime-version:references:subject:to; s=qcppdkim1; bh=hVCi7gtLhpA
+	XdSAk9dtD/5Maw7VEwUB2kEsjxp7ZhWY=; b=CLW6ErKW9hcuHwyeXE32gOaqf/h
+	k2wsvJU4j/fd+2ujaG/uQIbMDK1Jg2QZIa+2uDT87ZLnCX3mu2Vq69952+D17lLS
+	jJtFZ6WGRub9ph0/mAZuPw/+xxdd/ipz2OuHJyNezzP5KfIDwxaTB02i5II/yxYB
+	hMOw48s1Fkp1/KG7/RZn6OnOGuQ7LW+FQFFqBCxzdXjM/fwWM00t6bslUd7Hs6BL
+	Y16FJjs8j1Dxjw5xoGW54CMIslgjfMKzx5FPKaRm8waaXj1ihho583g+feY0ShA7
+	DWeJFCe7ki2IvoAc87z0LBQNq8E+7lK7Kc2kxgSjwQ65d37lYWdGKcP/62Q==
 Received: from apblrppmta01.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45tbnkrh06-1
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45tbnkrh04-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 04 Apr 2025 11:55:51 +0000 (GMT)
+	Fri, 04 Apr 2025 11:55:49 +0000 (GMT)
 Received: from pps.filterd (APBLRPPMTA01.qualcomm.com [127.0.0.1])
-	by APBLRPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 534Btj8w016524;
-	Fri, 4 Apr 2025 11:55:47 GMT
+	by APBLRPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 534Btju9016523;
+	Fri, 4 Apr 2025 11:55:46 GMT
 Received: from pps.reinject (localhost [127.0.0.1])
-	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 45p9xmaejq-1
+	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 45p9xmaejp-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Fri, 04 Apr 2025 11:55:46 +0000
 Received: from APBLRPPMTA01.qualcomm.com (APBLRPPMTA01.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 534Btkw7016548;
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 534Btkmv016546;
 	Fri, 4 Apr 2025 11:55:46 GMT
 Received: from hu-devc-hyd-u22-c.qualcomm.com (hu-amakhija-hyd.qualcomm.com [10.213.99.91])
-	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 534Btkeb016544
+	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 534BtkFp016541
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Fri, 04 Apr 2025 11:55:46 +0000
 Received: by hu-devc-hyd-u22-c.qualcomm.com (Postfix, from userid 4090850)
-	id 4E31859D; Fri,  4 Apr 2025 17:25:44 +0530 (+0530)
+	id 586BD59F; Fri,  4 Apr 2025 17:25:44 +0530 (+0530)
 From: Ayushi Makhija <quic_amakhija@quicinc.com>
 To: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
         freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
@@ -62,9 +62,9 @@ Cc: Ayushi Makhija <quic_amakhija@quicinc.com>, robdclark@gmail.com,
         jernej.skrabec@gmail.com, quic_abhinavk@quicinc.com,
         quic_rajeevny@quicinc.com, quic_vproddut@quicinc.com,
         quic_jesszhan@quicinc.com
-Subject: [PATCH v3 08/10] drm/bridge: anx7625: enable HPD interrupts
-Date: Fri,  4 Apr 2025 17:25:37 +0530
-Message-Id: <20250404115539.1151201-9-quic_amakhija@quicinc.com>
+Subject: [PATCH v3 10/10] drm/bridge: anx7625: change the gpiod_set_value API
+Date: Fri,  4 Apr 2025 17:25:39 +0530
+Message-Id: <20250404115539.1151201-11-quic_amakhija@quicinc.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250404115539.1151201-1-quic_amakhija@quicinc.com>
 References: <20250404115539.1151201-1-quic_amakhija@quicinc.com>
@@ -79,9 +79,10 @@ X-QCInternal: smtphost
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: o3TyJcgnz0tQxr8B2XFZbt4x3whjs8uT
-X-Proofpoint-GUID: o3TyJcgnz0tQxr8B2XFZbt4x3whjs8uT
-X-Authority-Analysis: v=2.4 cv=X9xSKHTe c=1 sm=1 tr=0 ts=67efc8c7 cx=c_pps a=Ou0eQOY4+eZoSc0qltEV5Q==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=GmOFy1Aw2oJkk_gCVS4A:9 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: q8O9dFXJH86HnqBNqL7WQT_r_FhBN4h3
+X-Proofpoint-GUID: q8O9dFXJH86HnqBNqL7WQT_r_FhBN4h3
+X-Authority-Analysis: v=2.4 cv=X9xSKHTe c=1 sm=1 tr=0 ts=67efc8c6 cx=c_pps a=Ou0eQOY4+eZoSc0qltEV5Q==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=KKAkSRfTAAAA:8 a=qu7jSu7UeuI-ykz2460A:9 a=TjNXssC_j7lpFel5tvFf:22
+ a=cvBusfyB2V15izCimMoJ:22
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-04-04_05,2025-04-03_03,2024-11-22_01
@@ -92,52 +93,54 @@ X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowprio
  route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
  definitions=main-2504040082
 
-When device enters the suspend state, it prevents
-HPD interrupts from occurring. To address this,
-add an additional PM runtime vote in hpd_enable().
-This vote is removed in hpd_disable().
+Use gpiod_set_value_cansleep() instead of gpiod_set_value()
+to fix the below call trace in the boot log:
+
+[    5.690534] Call trace:
+[    5.690536]  gpiod_set_value+0x40/0xa4
+[    5.690540]  anx7625_runtime_pm_resume+0xa0/0x324 [anx7625]
+[    5.690545]  __rpm_callback+0x48/0x1d8
+[    5.690549]  rpm_callback+0x6c/0x78
+
+Certain GPIO controllers require access via message-based buses
+such as I2C or SPI, which may cause the GPIOs to enter a sleep
+state. Therefore, use the gpiod_set_value_cansleep().
 
 Signed-off-by: Ayushi Makhija <quic_amakhija@quicinc.com>
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 ---
- drivers/gpu/drm/bridge/analogix/anx7625.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ drivers/gpu/drm/bridge/analogix/anx7625.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/gpu/drm/bridge/analogix/anx7625.c b/drivers/gpu/drm/bridge/analogix/anx7625.c
-index 0b97b66de577..99ef3f27ae42 100644
+index 365d1c871028..f6f730262511 100644
 --- a/drivers/gpu/drm/bridge/analogix/anx7625.c
 +++ b/drivers/gpu/drm/bridge/analogix/anx7625.c
-@@ -2474,6 +2474,22 @@ static const struct drm_edid *anx7625_bridge_edid_read(struct drm_bridge *bridge
- 	return anx7625_edid_read(ctx);
- }
+@@ -1257,10 +1257,10 @@ static void anx7625_power_on(struct anx7625_data *ctx)
+ 	usleep_range(11000, 12000);
  
-+static void anx7625_bridge_hpd_enable(struct drm_bridge *bridge)
-+{
-+	struct anx7625_data *ctx = bridge_to_anx7625(bridge);
-+	struct device *dev = ctx->dev;
-+
-+	pm_runtime_get_sync(dev);
-+}
-+
-+static void anx7625_bridge_hpd_disable(struct drm_bridge *bridge)
-+{
-+	struct anx7625_data *ctx = bridge_to_anx7625(bridge);
-+	struct device *dev = ctx->dev;
-+
-+	pm_runtime_put_sync(dev);
-+}
-+
- static const struct drm_bridge_funcs anx7625_bridge_funcs = {
- 	.attach = anx7625_bridge_attach,
- 	.detach = anx7625_bridge_detach,
-@@ -2487,6 +2503,8 @@ static const struct drm_bridge_funcs anx7625_bridge_funcs = {
- 	.atomic_reset = drm_atomic_helper_bridge_reset,
- 	.detect = anx7625_bridge_detect,
- 	.edid_read = anx7625_bridge_edid_read,
-+	.hpd_enable = anx7625_bridge_hpd_enable,
-+	.hpd_disable = anx7625_bridge_hpd_disable,
- };
+ 	/* Power on pin enable */
+-	gpiod_set_value(ctx->pdata.gpio_p_on, 1);
++	gpiod_set_value_cansleep(ctx->pdata.gpio_p_on, 1);
+ 	usleep_range(10000, 11000);
+ 	/* Power reset pin enable */
+-	gpiod_set_value(ctx->pdata.gpio_reset, 1);
++	gpiod_set_value_cansleep(ctx->pdata.gpio_reset, 1);
+ 	usleep_range(10000, 11000);
  
- static int anx7625_register_i2c_dummy_clients(struct anx7625_data *ctx,
+ 	DRM_DEV_DEBUG_DRIVER(dev, "power on !\n");
+@@ -1280,9 +1280,9 @@ static void anx7625_power_standby(struct anx7625_data *ctx)
+ 		return;
+ 	}
+ 
+-	gpiod_set_value(ctx->pdata.gpio_reset, 0);
++	gpiod_set_value_cansleep(ctx->pdata.gpio_reset, 0);
+ 	usleep_range(1000, 1100);
+-	gpiod_set_value(ctx->pdata.gpio_p_on, 0);
++	gpiod_set_value_cansleep(ctx->pdata.gpio_p_on, 0);
+ 	usleep_range(1000, 1100);
+ 
+ 	ret = regulator_bulk_disable(ARRAY_SIZE(ctx->pdata.supplies),
 -- 
 2.34.1
 
