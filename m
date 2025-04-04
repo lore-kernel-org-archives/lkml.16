@@ -1,133 +1,477 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 307D821C168;
-	Fri,  4 Apr 2025 17:47:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A63E01FF5F3
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 17:48:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743788825; cv=none; b=kDqzMOMDx6X2+v7NCeiEc+okgTRCygINoYZx+qklSqof4cQRZjv+MBaAwod0s6i3Q0UP5b6+6fTeQRnWO2y/adupdjPbpvBrmBmWY8LLf4+Y09yO3o2HKFjRwzAaQLk3pL9WJmiWsFkm6c5kUZ/Vf3hXwM+TV5/p2JuOr5cO6n4=
+	t=1743788918; cv=none; b=pjqTME7p2J8WX/AX11nMe5r5bnOESU6Bq8UZbqm+4QaEG9CJdUzuMJB4eRCbtt2SycoWlNZF9pQe2PpP8NoN9yUDYasPrQ9TwPgy157I4UjUvo1GrZL/dfP68ZtpCHtoC6USdpZ+eX+KyURfNIuRGYeBMIYaUlHc3jg9EJsQlcA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743788825; c=relaxed/simple;
-	bh=DqN5pxAfN0evYrsHyPi6fbUjjlY9CZ+NWI+PLEjkqtw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b0FEG/1Tv/7JUorm31nl9CFpQP05dRlF1jYptlK1Ap0TBdVmIlK5Gzov+7b88CCOQzlXexOq5AVxx+kE/FbUGxUcxMQCvDL4nDLm1opJgkjpBiIhA6cNlhcHM5Q85swZkcQflqMD8PNOPCPN0H0m7fE+AwfnmEkw/pltDmKrkRY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SNb5Ao3m; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1743788918; c=relaxed/simple;
+	bh=a7gWH2nkFeOsDGvRh7sMqCcn7di8a5/TuweiIDdEAJM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OKqCko+Kd7rOiLalR3jB+849K0QsHHBflQPf/VnXx9ygH0Zu++jq+v98xawBzI/o5GSw+DcdhzGSdqbH10TfM2ORhiXs6Xd29Ic5LWtPGKGXmW61T3ftWZpltP+qNnd9PQx4sxEwkmvha05Ue+qGh2KHvt4ca9JXZPQx6FZOdr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=hs2AZ0EN; arc=none smtp.client-ip=209.85.167.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SNb5Ao3m"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743788822; x=1775324822;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=DqN5pxAfN0evYrsHyPi6fbUjjlY9CZ+NWI+PLEjkqtw=;
-  b=SNb5Ao3m/5Cv1HrCZkTvycl6vigejnOFqzly0SsqP+4WcCTmJnoPI1k+
-   ZUDgSJmcV/193ikllRQ/6z06Kb7u4YnEAGN7wE7vORW1Ie/Gmb3Cow1rX
-   Wk3/YQ+K3mB/4POOYRO6hEY1JidIbK0AaQL2qw3d6nDhKNCZKVWNDzRw0
-   XnexKJWmClLJz7eDSRZydtpXxxckNNab420zaPUQZm9+/34SoNpr42j32
-   GqE58URaNsxX42Y4jd+X3sMLRxHhT6+0GSlzfO8Dhi78iLVghYnW9hRDb
-   Vud+qQ7nIb7vNVzZua6su6qedf8xhg0CpJvUlwnyM24UtSdD9vRJWw8PB
-   g==;
-X-CSE-ConnectionGUID: cAuL8keoT8+BSJQpNkngNw==
-X-CSE-MsgGUID: wvZIh/roT6W2Xr6zygHLOA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11394"; a="49094800"
-X-IronPort-AV: E=Sophos;i="6.15,188,1739865600"; 
-   d="scan'208";a="49094800"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 10:46:50 -0700
-X-CSE-ConnectionGUID: mYSbDg/qT2irREuKI9oL2w==
-X-CSE-MsgGUID: H+Qol/ZkRHOhB/+PniIPHw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,188,1739865600"; 
-   d="scan'208";a="132088790"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by fmviesa005.fm.intel.com with ESMTP; 04 Apr 2025 10:46:47 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u0l7s-0001Qp-2u;
-	Fri, 04 Apr 2025 17:46:44 +0000
-Date: Sat, 5 Apr 2025 01:46:11 +0800
-From: kernel test robot <lkp@intel.com>
-To: Wentao Liang <vulab@iscas.ac.cn>, sgoutham@marvell.com,
-	gakula@marvell.com, sbhatta@marvell.com, hkelam@marvell.com,
-	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Wentao Liang <vulab@iscas.ac.cn>
-Subject: Re: [PATCH] octeontx2-pf:  Add error handling for
- cn10k_map_unmap_rq_policer().
-Message-ID: <202504050116.6a4iOEA7-lkp@intel.com>
-References: <20250403151303.2280-1-vulab@iscas.ac.cn>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="hs2AZ0EN"
+Received: by mail-oi1-f173.google.com with SMTP id 5614622812f47-3fe83c8cbdbso721943b6e.3
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 10:48:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1743788915; x=1744393715; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=AvY/WWNlUB6k/evBE4GY6Felovk+eaQUcXiraaY6y74=;
+        b=hs2AZ0ENN8R6LMo7idEt9/okS+usW6gqmZ/KjwBIiPQtTDCIZtXVPOblAXo1rO+Ey5
+         P+di0LWGRc0NL/q4nMb+X6su/YS/NavZ9E+afnTxFZKFfvQURYhQEEUg2aQ5oc2FumFw
+         ggC+0klEcjCkonyTCzcL9BQ/S0wTzGwW8pQpmRy1+rWq7fbHnajWQgNQYXqvqhcT7f4j
+         fRuTOXNWf7xYJzGtKb52E1ArGeOeC4ZJFzUrhjyhiJIg2ug0Uv5/OXFkE4t0Ae3bKIl5
+         Fl1ws/Ku0cS0PyRkmFDnTUOzCg2BR45FXF0ymOl5dmHXvhMQAN3pL5tle4QhPCaXWZG6
+         xwpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743788915; x=1744393715;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=AvY/WWNlUB6k/evBE4GY6Felovk+eaQUcXiraaY6y74=;
+        b=YJ1KNSjDNkA8p/2q5nC9RHjRImBlrFX1FyfH2o72Mrr4d8RUyHV413p5ZoZm9ERFhw
+         eini5axG2d3qQ7PjXH9WBIR8uocgAVUHKTBuWvzdqec4qVORFcWAueSyDSdqX/1BDBZ1
+         J+H/PEuj3oL0g7uJjpW/cjHR++3MDSWah9wUi/TwEQHf8aA7/hMNjUtU27H5PT+G8Rvo
+         4lyz3xY2oj+VuLMD+nUF9S9Ot4Z2HZ8l21qCVhDGKlIUCrFqTjsP6sLuQidhRuLtHaMg
+         7CTtA2C3PXbIszcN/jn/46LKNZK84ABXw1xklcKP4GLAiEEuHB/mP0aY9eDsNCBUbK8G
+         jsCw==
+X-Forwarded-Encrypted: i=1; AJvYcCUjkuucYqQ37w+7hc+4/yMzkzUBnmmlrYoTF2s3IR783PEcPN2Yrfow+OfkBkpUPSq8Gup/956tlDeevtU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywc9z9GVL4bHc9HGL3WFMF10QS58Im4XCfG9ytfm0CkTrULfEpG
+	gZA8993bTTwMgtbpyHUgUpp/bRYkKxv7MWQaMZFht8XABk8wEddrQ5O6XDAYYFA=
+X-Gm-Gg: ASbGncs/Ax4uKD8xjq3cy0Ejmc9XWY6aPNZ2vF0QQcMidpQAUNQlJ/buXwCEIqo3iqO
+	MFSwTV/wzUBiY4yOkIF5cwZjrE5IWOB221Dw8TjZ1yBf1YxkLatUZ466c/4JpVGIxM4CDoj2blp
+	qaZ1II09goAs24iZiuafMbOdkIA/4GsL1HKK+Lh44D9JbivlRbmcOFlm9sbZCMtrhW8CEmcRI8Z
+	/hnqYceg33JPohUYSskBYbEgaanGfqPIL/dFq9VS2f654f8NP53DC23ASoXnd/BEqVy3+qcvjuM
+	znraeMMLc6BpmsCANqvVA7W6CB7XyxMo2JeeIbR/52dSgzNWwMdC/m/pbOuVs+xKN6FLbJLW74k
+	z2wzSkw==
+X-Google-Smtp-Source: AGHT+IHqN/zEntunmQti7QvdnI+zzlxqeFja7+5qeHzwZxJcenPeVZY1WnD3J92Ab5TIEbOJlcUA3g==
+X-Received: by 2002:a05:6808:199c:b0:3fa:51c5:d9a7 with SMTP id 5614622812f47-400455970b9mr1550054b6e.10.1743788915363;
+        Fri, 04 Apr 2025 10:48:35 -0700 (PDT)
+Received: from [192.168.0.113] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-4003ff99759sm686880b6e.21.2025.04.04.10.48.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 04 Apr 2025 10:48:33 -0700 (PDT)
+Message-ID: <fd2116bd-b0e2-4db4-97ff-1a1e88545413@baylibre.com>
+Date: Fri, 4 Apr 2025 12:48:32 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250403151303.2280-1-vulab@iscas.ac.cn>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 3/3] iio: dac: ad3530r: Add driver for AD3530R and
+ AD3531R
+To: Kim Seer Paller <kimseer.paller@analog.com>,
+ Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
+ Michael Hennerich <Michael.Hennerich@analog.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org
+References: <20250403-togreg-v3-0-d4b06a4af5a9@analog.com>
+ <20250403-togreg-v3-3-d4b06a4af5a9@analog.com>
+Content-Language: en-US
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <20250403-togreg-v3-3-d4b06a4af5a9@analog.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Wentao,
+On 4/3/25 12:33 AM, Kim Seer Paller wrote:
+> The AD3530/AD3530R (8-channel) and AD3531/AD3531R (4-channel) are
+> low-power, 16-bit, buffered voltage output DACs with software-
+> programmable gain controls, providing full-scale output spans of 2.5V or
+> 5V for reference voltages of 2.5V. These devices operate from a single
+> 2.7V to 5.5V supply and are guaranteed monotonic by design. The "R"
+> variants include a 2.5V, 5ppm/°C internal reference, which is disabled
+> by default.
+> 
+> Signed-off-by: Kim Seer Paller <kimseer.paller@analog.com>
+> ---
 
-kernel test robot noticed the following build warnings:
+...
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on v6.14 next-20250404]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> +#define AD3530R_INTERFACE_CONFIG_A		0x00
+> +#define AD3530R_OUTPUT_OPERATING_MODE_0		0x20
+> +#define AD3530R_OUTPUT_OPERATING_MODE_1		0x21
+> +#define AD3530R_OUTPUT_CONTROL_0		0x2A
+> +#define AD3530R_REFERENCE_CONTROL_0		0x3C
+> +#define AD3530R_SW_LDAC_TRIG_A			0xE5
+> +#define AD3530R_INPUT_CH(c)			(2 * (c) + 0xEB)
+> +
+> +#define AD3531R_SW_LDAC_TRIG_A			0xDD
+> +#define AD3531R_INPUT_CH(c)			(2 * (c) + 0xE3)
+> +
+> +#define AD3530R_SW_LDAC_TRIG_MASK		BIT(7)
+> +#define AD3530R_OUTPUT_CONTROL_MASK		BIT(2)
+> +#define AD3530R_REFERENCE_CONTROL_MASK		BIT(0)
+> +#define AD3530R_REG_VAL_MASK			GENMASK(15, 0)
+> +
+> +#define AD3530R_SW_RESET			(BIT(7) | BIT(0))
+> +#define AD3530R_MAX_CHANNELS			8
+> +#define AD3531R_MAX_CHANNELS			4
+> +#define AD3530R_CH(c)				(c)
+> +#define AD3530R_32KOHM_POWERDOWN_MODE		3
+> +#define AD3530R_INTERNAL_VREF_MV		2500
+> +#define AD3530R_LDAC_PULSE_US			100
+> +
+> +struct ad3530r_chan {
+> +	unsigned int powerdown_mode;
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Wentao-Liang/octeontx2-pf-Add-error-handling-for-cn10k_map_unmap_rq_policer/20250403-231435
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20250403151303.2280-1-vulab%40iscas.ac.cn
-patch subject: [PATCH] octeontx2-pf:  Add error handling for cn10k_map_unmap_rq_policer().
-config: s390-allmodconfig (https://download.01.org/0day-ci/archive/20250405/202504050116.6a4iOEA7-lkp@intel.com/config)
-compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250405/202504050116.6a4iOEA7-lkp@intel.com/reproduce)
+IMHO, code would be easier to understand if this was an enum.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504050116.6a4iOEA7-lkp@intel.com/
+> +	bool powerdown;
+> +};
+> +
+> +struct ad3530r_chip_info {
+> +	const char *name;
+> +	const struct iio_chan_spec *channels;
+> +	int (*input_ch_reg)(unsigned int c);
+> +	const int iio_chan;
+> +	unsigned int num_channels;
+> +	unsigned int sw_ldac_trig_reg;
+> +	bool internal_ref_support;
+> +};
+> +
+> +struct ad3530r_state {
+> +	struct regmap *regmap;
+> +	/* lock to protect against multiple access to the device and shared data */
+> +	struct mutex lock;
+> +	struct ad3530r_chan chan[AD3530R_MAX_CHANNELS];
+> +	const struct ad3530r_chip_info *chip_info;
+> +	struct gpio_desc *ldac_gpio;
+> +	int vref_mv;
+> +	u8 ldac;
+> +	bool range_multiplier;
 
-All warnings (new ones prefixed by >>):
+nit: call this has_range_multiplier or change to u8 and save the actual multipler value here.
 
->> drivers/net/ethernet/marvell/octeontx2/nic/cn10k.c:362:3: warning: misleading indentation; statement is not part of the previous 'for' [-Wmisleading-indentation]
-     362 |                 if (rc)
-         |                 ^
-   drivers/net/ethernet/marvell/octeontx2/nic/cn10k.c:360:2: note: previous statement is here
-     360 |         for (qidx = 0; qidx < hw->rx_queues; qidx++)
-         |         ^
-   1 warning generated.
+> +};
+> +
+
+...
+
+> +static ssize_t ad3530r_set_dac_powerdown(struct iio_dev *indio_dev,
+> +					 uintptr_t private,
+> +					 const struct iio_chan_spec *chan,
+> +					 const char *buf, size_t len)
+> +{
+> +	struct ad3530r_state *st = iio_priv(indio_dev);
+> +	int ret;
+> +	unsigned int mask, val;
+> +	bool powerdown;
+> +
+> +	ret = kstrtobool(buf, &powerdown);
+> +	if (ret)
+> +		return ret;
+> +
+> +	guard(mutex)(&st->lock);
+> +	switch (chan->channel) {
+> +	case AD3530R_CH(0) ... AD3530R_CH(AD3531R_MAX_CHANNELS - 1):
+
+Switch seems hard to read and not needed since there aren't any gaps.
+
+	if (chan->channel < AD3531R_MAX_CHANNELS)
+
+shoud work, no?
 
 
-vim +/for +362 drivers/net/ethernet/marvell/octeontx2/nic/cn10k.c
+> +		mask = GENMASK(chan->channel * 2 + 1, chan->channel * 2);
 
-   351	
-   352	int cn10k_free_matchall_ipolicer(struct otx2_nic *pfvf)
-   353	{
-   354		struct otx2_hw *hw = &pfvf->hw;
-   355		int qidx, rc;
-   356	
-   357		mutex_lock(&pfvf->mbox.lock);
-   358	
-   359		/* Remove RQ's policer mapping */
-   360		for (qidx = 0; qidx < hw->rx_queues; qidx++)
-   361			rc = cn10k_map_unmap_rq_policer(pfvf, qidx, hw->matchall_ipolicer, false);
- > 362			if (rc)
-   363				goto out;
-   364	
-   365		rc = cn10k_free_leaf_profile(pfvf, hw->matchall_ipolicer);
-   366	
-   367	out:
-   368		mutex_unlock(&pfvf->mbox.lock);
-   369		return rc;
-   370	}
-   371	
+Could use the chan->address field to hide the calucation a bit.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> +		val = (powerdown ? st->chan[chan->channel].powerdown_mode : 0)
+> +		      << (chan->channel * 2);
+
+I saw a series that proposed a non-const field_prep function recently. Not sure
+that made it through the bikeshedding though. Could be nice to hide some of this
+in a macro for readability if that isn't available.
+
+> +
+> +		ret = regmap_update_bits(st->regmap,
+> +					 AD3530R_OUTPUT_OPERATING_MODE_0,
+> +					 mask, val);
+> +		if (ret)
+> +			return ret;
+> +
+> +		st->chan[chan->channel].powerdown = powerdown;
+> +		return len;
+> +	case AD3530R_CH(AD3531R_MAX_CHANNELS) ...
+> +	     AD3530R_CH(AD3530R_MAX_CHANNELS - 1):
+> +		mask = GENMASK((chan->channel - 4) * 2 + 1,
+> +			       (chan->channel - 4) * 2);
+> +		val = (powerdown ? st->chan[chan->channel].powerdown_mode : 0)
+> +		      << ((chan->channel - 4) * 2);
+> +
+> +		ret = regmap_update_bits(st->regmap,
+> +					 AD3530R_OUTPUT_OPERATING_MODE_1,
+> +					 mask, val);
+> +		if (ret)
+> +			return ret;
+> +
+> +		st->chan[chan->channel].powerdown = powerdown;
+> +		return len;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +static int ad3530r_trigger_hw_ldac(struct gpio_desc *ldac_gpio)
+> +{
+> +	gpiod_set_value_cansleep(ldac_gpio, 1);
+> +	fsleep(AD3530R_LDAC_PULSE_US);
+> +	gpiod_set_value_cansleep(ldac_gpio, 0);
+> +
+> +	return 0;
+> +}
+> +
+> +static int ad3530r_dac_write(struct ad3530r_state *st, unsigned int chan,
+> +			     unsigned int val)
+> +{
+> +	int ret;
+> +	__be16 reg_val;
+> +
+> +	guard(mutex)(&st->lock);
+> +	reg_val = cpu_to_be16(val);
+> +
+> +	ret = regmap_bulk_write(st->regmap, st->chip_info->input_ch_reg(chan),
+> +				&reg_val, sizeof(reg_val));
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (st->ldac_gpio)
+> +		return ad3530r_trigger_hw_ldac(st->ldac_gpio);
+> +
+> +	return regmap_update_bits(st->regmap, st->chip_info->sw_ldac_trig_reg,
+> +				  AD3530R_SW_LDAC_TRIG_MASK,
+> +				  FIELD_PREP(AD3530R_SW_LDAC_TRIG_MASK, 1));
+
+Can be simplifed with regmap_set_bits().
+
+
+> +}
+> +
+> +static int ad3530r_read_raw(struct iio_dev *indio_dev,
+> +			    struct iio_chan_spec const *chan,
+> +			    int *val, int *val2, long info)
+> +{
+> +	struct ad3530r_state *st = iio_priv(indio_dev);
+> +	int ret;
+> +	__be16 reg_val;
+> +
+> +	switch (info) {
+> +	case IIO_CHAN_INFO_RAW:
+> +		ret = regmap_bulk_read(st->regmap,
+> +				       st->chip_info->input_ch_reg(chan->channel),
+> +				       &reg_val, sizeof(reg_val));
+> +		if (ret)
+> +			return ret;
+> +
+> +		*val = FIELD_GET(AD3530R_REG_VAL_MASK, be16_to_cpu(reg_val));
+> +
+> +		return IIO_VAL_INT;
+> +	case IIO_CHAN_INFO_SCALE:
+> +		*val = st->vref_mv;
+> +		*val2 = 16;
+
+This needs to take into account the range multipler.
+
+> +
+> +		return IIO_VAL_FRACTIONAL_LOG2;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+
+...
+
+> +static const struct iio_chan_spec_ext_info ad3530r_ext_info[] = {
+> +	AD3530R_CHAN_EXT_INFO("powerdown", 0, IIO_SEPARATE,
+> +			      ad3530r_get_dac_powerdown,
+> +			      ad3530r_set_dac_powerdown),
+> +	IIO_ENUM("powerdown_mode", IIO_SEPARATE, &ad3530r_powerdown_mode_enum),
+> +	IIO_ENUM_AVAILABLE("powerdown_mode", IIO_SHARED_BY_TYPE,
+> +			   &ad3530r_powerdown_mode_enum),
+> +	{ },
+
+iio style is no trailing comma on sentinil  
+
+	{ }
+
+> +};
+> +
+
+...
+
+> +static int ad3530r_setup(struct ad3530r_state *st)
+> +{
+> +	const struct ad3530r_chip_info *chip_info = st->chip_info;
+> +	struct device *dev = regmap_get_device(st->regmap);
+> +	struct gpio_desc *reset_gpio;
+> +	int i, ret;
+> +
+> +	reset_gpio = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_HIGH);
+> +	if (IS_ERR(reset_gpio))
+> +		return dev_err_probe(dev, PTR_ERR(reset_gpio),
+> +				     "Failed to get reset GPIO\n");
+> +
+> +	if (reset_gpio) {
+> +		/* Perform hardware reset */
+> +		fsleep(1000);
+> +		gpiod_set_value_cansleep(reset_gpio, 0);
+> +	} else {
+> +		/* Perform software reset */
+> +		ret = regmap_update_bits(st->regmap, AD3530R_INTERFACE_CONFIG_A,
+> +					 AD3530R_SW_RESET, AD3530R_SW_RESET);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	fsleep(10000);
+> +
+> +	/* Set operating mode to normal operation. */
+> +	ret = regmap_write(st->regmap, AD3530R_OUTPUT_OPERATING_MODE_0, 0);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (chip_info->num_channels > AD3531R_MAX_CHANNELS) {
+> +		ret = regmap_write(st->regmap, AD3530R_OUTPUT_OPERATING_MODE_1, 0);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	for (i = 0; i < chip_info->num_channels; i++)
+> +		st->chan[i].powerdown_mode = AD3530R_32KOHM_POWERDOWN_MODE;
+> +
+> +	st->ldac_gpio = devm_gpiod_get_optional(dev, "ldac", GPIOD_OUT_HIGH);
+> +	if (IS_ERR(st->ldac_gpio))
+> +		return dev_err_probe(dev, PTR_ERR(st->ldac_gpio),
+> +				     "Failed to get ldac GPIO\n");
+> +
+> +	if (device_property_present(dev, "adi,double-output-range")) {
+
+This is not documented in the DT bindings.
+
+This could instead be implemented by making the out_voltage_scale attribute
+writeable.
+
+If we really do need it in the devicetree because we want to protect against
+someone accidentally setting it too high, then the property should be the
+actual multipler value with an enum specifier of 1, 2 and a default of 1
+rather than a flag (e.g. adi,output-multipler).
+
+> +		st->range_multiplier = true;
+> +
+> +		return regmap_update_bits(st->regmap, AD3530R_OUTPUT_CONTROL_0,
+> +					  AD3530R_OUTPUT_CONTROL_MASK,
+> +					  FIELD_PREP(AD3530R_OUTPUT_CONTROL_MASK, 1));
+
+nit: can be simplified with regmap_set_bits().
+
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct regmap_config ad3530r_regmap_config = {
+> +	.reg_bits = 16,
+> +	.val_bits = 8,
+
+Should have at least a .max_register.
+
+.reg_read and .reg_write tables can make debuging easier too.
+
+> +};
+> +
+> +static const struct iio_info ad3530r_info = {
+> +	.read_raw = ad3530r_read_raw,
+> +	.write_raw = ad3530r_write_raw,
+> +	.debugfs_reg_access = &ad3530r_reg_access,
+
+nit: style is not consistent - can omit &.
+
+> +};
+> +
+> +static int ad3530r_probe(struct spi_device *spi)
+> +{
+> +	static const char * const regulators[] = { "vdd", "iovdd" };
+> +	const struct ad3530r_chip_info *chip_info;
+> +	struct device *dev = &spi->dev;
+> +	struct iio_dev *indio_dev;
+> +	struct ad3530r_state *st;
+> +	int ret;
+> +
+> +	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*st));
+> +	if (!indio_dev)
+> +		return -ENOMEM;
+> +
+> +	st = iio_priv(indio_dev);
+> +
+> +	st->regmap = devm_regmap_init_spi(spi, &ad3530r_regmap_config);
+> +	if (IS_ERR(st->regmap))
+> +		return dev_err_probe(dev, PTR_ERR(st->regmap),
+> +				     "Failed to init regmap");
+> +
+> +	ret = devm_mutex_init(dev, &st->lock);
+> +	if (ret)
+> +		return ret;
+> +
+> +	chip_info = spi_get_device_match_data(spi);
+> +	if (!chip_info)
+> +		return -ENODEV;
+> +
+> +	st->chip_info = chip_info;
+
+nit: local variable isn't that useful since st->chip_info is short enough.
+
+> +
+> +	ret = ad3530r_setup(st);
+> +	if (ret)
+> +		return ret;
+
+Setting up the chip before turning on power would not work well if the
+regulators are actually controlled. :-)
+
+> +
+> +	ret = devm_regulator_bulk_get_enable(dev, ARRAY_SIZE(regulators),
+> +					     regulators);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "Failed to enable regulators\n");
+> +
+> +	ret = devm_regulator_get_enable_read_voltage(dev, "ref");
+> +	if (ret < 0 && ret != -ENODEV)
+> +		return ret;
+> +
+> +	if (chip_info->internal_ref_support && ret == -ENODEV) {
+> +		/* Internal reference. */
+> +		ret = regmap_update_bits(st->regmap, AD3530R_REFERENCE_CONTROL_0,
+> +					 AD3530R_REFERENCE_CONTROL_MASK,
+> +					 FIELD_PREP(AD3530R_REFERENCE_CONTROL_MASK, 1));
+> +		if (ret)
+> +			return ret;
+> +
+> +		st->vref_mv = st->range_multiplier ?
+> +			      2 * AD3530R_INTERNAL_VREF_MV :
+> +			      AD3530R_INTERNAL_VREF_MV;
+> +	} else {
+> +		st->vref_mv = st->range_multiplier ? 2 * ret / 1000 : ret / 1000;
+
+ret can be -ENODEV here if !chip_info->internal_ref_support
+
+> +	}> +
+> +	indio_dev->name = chip_info->name;
+> +	indio_dev->info = &ad3530r_info;
+> +	indio_dev->modes = INDIO_DIRECT_MODE;
+> +	indio_dev->channels = chip_info->channels;
+> +	indio_dev->num_channels = chip_info->num_channels;
+> +
+> +	return devm_iio_device_register(&spi->dev, indio_dev);
+> +}
+> +
