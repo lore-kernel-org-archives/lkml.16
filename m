@@ -1,124 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5AA11CDFAC;
-	Fri,  4 Apr 2025 11:58:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ADC91D7E4A;
+	Fri,  4 Apr 2025 12:00:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743767936; cv=none; b=THVEV80maUSZ4LaahsPt+EGqoAJGsEv2CuatGDd04DfWqU4yZ1esdNqb8DAdkHoG84h66yC+etDovIpWlkhrjvnZlCSiL0T8uuRvM958v7F3UiAMVK2Vb9900yYt9/2nefefg5oqT3tq+r63/CybgzqXrkIU51NmM9MqvNUcGuQ=
+	t=1743768024; cv=none; b=Hh19sX5//WA28pEXve281x1sl8usOKgVj+JZk0MVAkEIaNa9jWTS+TB2p4dtSVaEZolTrpdE73xJ0U0rmYqf+a6u9HCQ0gCsjoIjEd0tSt/jCPEHPudVDiIf8OkpFOZ9cA7ig+3XmQPBPi1ru+rnMaapznjZIwNUGYHq89j/Ju4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743767936; c=relaxed/simple;
-	bh=L1ipA6ghftHVe27dfwT9Pe/CFAO/XalqKctlGIvJ044=;
+	s=arc-20240116; t=1743768024; c=relaxed/simple;
+	bh=GWjSo5aSfDtZUIQNVp2QpPj0kXwfTgDipP/FO55SnjI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dGBSqpwjXTMVgHF+hmecY5f7ubNQAHifcHqGYYFdtIxKy+ap5nXcq1l9IuxLfeaSNNMtjwt9TsNcWJPP6g4yKcm6wmWHWWJsx8pbNkvD6PUEIej24MMdGgvfx9kGe7FVT+iC95nCp9JH5xs5eza18/H84uvC0PmtZ+hBEA/f/No=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e8b8dSHo; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZUrHhOS9FWPh03MDuqCMm8w6JFadobPfZd3I8WsL3xM0ZY5xGxtbpl+Bm1YwQHavVyctBjSWCQyWNUR1nVNMfmCiUCDTUdOxgSjhTjs/w824TN/Edhyw5dzPeEN9A81m0KSfkToFXpyGtAsW2T06SqHhcByvqM2vK5ZzoBPe3CA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RKifZara; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e8b8dSHo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F86AC4CEDD;
-	Fri,  4 Apr 2025 11:58:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743767936;
-	bh=L1ipA6ghftHVe27dfwT9Pe/CFAO/XalqKctlGIvJ044=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=e8b8dSHoRwbwEPHvL7tL2vNaKDlnvc81OrZDmNa1csOSwaODgSzfUc67vHtEeDNQx
-	 3YNXZrheWNUVIKvje2ZK3ujBd0BEjPbHN1MIfqK7Gl5Oc0kLg8izo9MkXAnW7RkRs0
-	 +hxWWSK11o7T1JO8+z6M9RuOe9TdzJVoUUoTySvuZY2zw1GZjwaULZLMqqJkoNlV1f
-	 OZwmCMdYpG/VLPBlKYcYDzvXSxPXvzstpQx3HuEcrR/4eOW0Rt+Octx+09biMNIhlb
-	 4OMZ/ym88J7vr0uZg5uwutn49Vgf/yg+at1KbDyUEKrN2e7OYZIFs/wWXQGrU/oalm
-	 NYu83Xj1nKkzw==
-Date: Fri, 4 Apr 2025 14:58:51 +0300
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: Jonathan McDowell <noodles@earth.li>, Sasha Levin <sashal@kernel.org>
-Cc: Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>,
-	Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
-	linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH] tpm: tis: Increase the default for timeouts B and C
-Message-ID: <Z-_Je7evunNi7kz0@kernel.org>
-References: <20250402172134.7751-1-msuchanek@suse.de>
- <Z-13xOebA3LvQQ-8@earth.li>
- <Z-7XQYP7_tXYR2Ik@kernel.org>
- <Z-7y5x3u6wVGFjj-@earth.li>
- <Z--PgeuYjRx6zXmG@kitsune.suse.cz>
- <Z--T5LEsXddkTX-H@kernel.org>
- <Z--m5rTDLLbyWEE5@earth.li>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RKifZara"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743768022; x=1775304022;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=GWjSo5aSfDtZUIQNVp2QpPj0kXwfTgDipP/FO55SnjI=;
+  b=RKifZaraLYrWnD3b3wymWP0djniqIFg0lkNyrX8Cm1um9EHwDTeZtoFl
+   9UYrjq2WQihwtM62KEgi3ie0HvihtEFhaICb0oS2anRqnpP44c0hwfKeP
+   OdpN5su+Kv8kWY0WDtg8LZoFaae/bteLqEQFat0o02HdfOBQwGHVzy4Sv
+   4rRc+y2NmfSbqN+1ceoofGWHtokWbwuI92K0s4qwaudwK2W/94R4w7TI2
+   yZhaaRDWw+Q8Bco8XXP5KUrogs3d79PT9m10obQJPkCPnIEaygL9dlmeu
+   wHW6+BVF1D8i5LWJwR/aJvqtpvj5faV8Gt1sBykvpLCxVkSHwuDLFHon1
+   g==;
+X-CSE-ConnectionGUID: msah2jJrRsyVUq+d7wTKqA==
+X-CSE-MsgGUID: RVPaZc9WRyKBRdUnoc4Kaw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11393"; a="45114260"
+X-IronPort-AV: E=Sophos;i="6.15,188,1739865600"; 
+   d="scan'208";a="45114260"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 05:00:21 -0700
+X-CSE-ConnectionGUID: /MbJ3UplRDydapNBUfLGqA==
+X-CSE-MsgGUID: dsSjATMAQDuwaIWZGXy/0A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,188,1739865600"; 
+   d="scan'208";a="131999906"
+Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
+  by fmviesa005.fm.intel.com with ESMTP; 04 Apr 2025 05:00:18 -0700
+Received: from kbuild by b207828170a5 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u0fia-0001D5-0g;
+	Fri, 04 Apr 2025 12:00:16 +0000
+Date: Fri, 4 Apr 2025 20:00:15 +0800
+From: kernel test robot <lkp@intel.com>
+To: Matthias Fend <matthias.fend@emfend.at>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-media@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Matthias Fend <matthias.fend@emfend.at>,
+	bsp-development.geo@leica-geosystems.com
+Subject: Re: [PATCH 2/2] media: i2c: add Himax HM1246 image sensor driver
+Message-ID: <202504041909.gfi5uwYd-lkp@intel.com>
+References: <20250403-hm1246-v1-2-30990d71bc42@emfend.at>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z--m5rTDLLbyWEE5@earth.li>
+In-Reply-To: <20250403-hm1246-v1-2-30990d71bc42@emfend.at>
 
-On Fri, Apr 04, 2025 at 10:31:18AM +0100, Jonathan McDowell wrote:
-> On Fri, Apr 04, 2025 at 11:10:12AM +0300, Jarkko Sakkinen wrote:
-> > On Fri, Apr 04, 2025 at 09:51:29AM +0200, Michal Suchánek wrote:
-> > > On Thu, Apr 03, 2025 at 09:43:19PM +0100, Jonathan McDowell wrote:
-> > > > On Thu, Apr 03, 2025 at 09:45:21PM +0300, Jarkko Sakkinen wrote:
-> > > > > On Wed, Apr 02, 2025 at 06:45:40PM +0100, Jonathan McDowell wrote:
-> > > > > > On Wed, Apr 02, 2025 at 07:21:30PM +0200, Michal Suchanek wrote:
-> > > > > > > With some Infineon chips the timeouts in tpm_tis_send_data (both B and
-> > > > > > > C) can reach up to about 2250 ms.
-> > > > > > >
-> > > > > > > Extend the timeout duration to accommodate this.
-> > > > > >
-> > > > > > The problem here is the bump of timeout_c is going to interact poorly with
-> > > > > > the Infineon errata workaround, as now we'll wait 4s instead of 200ms to
-> > > > > > detect the stuck status change.
-> > > > > >
-> > > > > > (Also shouldn't timeout_c already end up as 750ms, as it's
-> > > > > > max(TIS_SHORT_TIMEOUT, TPM2_TIMEOUT_C), and TIS_SHORT_TIMEOUT is 750 vs 200
-> > > > > > for TPM2_TIMEOUT_C? That doesn't seem to be borne out by your logs, nor my
-> > > > > > results.)
-> > > > >
-> > > > > Just noticed that the commit did not end up having fixes etc. tags:
-> > > > >
-> > > > > https://web.git.kernel.org/pub/scm/linux/kernel/git/jarkko/linux-tpmdd.git/commit/?id=de9e33df7762abbfc2a1568291f2c3a3154c6a9d
-> > > > >
-> > > > > Should we forward to stable?
-> > > >
-> > > > It's a TPM bug rather than a kernel issue, so I don't think there's a valid
-> > > > Fixes: for it, but it's certainly stable material in my mind.
-> > > 
-> > > In the more general sense of Fixes: indicating where the fix is
-> > > applicable it would be any kernel that supports TPM2.
-> > 
-> > I tried applying the patch on 6.1-stable:
-> > 
-> > ~/work/kernel.org/stable/linux tags/v6.1.132
-> > $ git am -3 ~/Downloads/infineon.patch
-> > Applying: tpm, tpm_tis: Workaround failed command reception on Infineon devices
-> > Using index info to reconstruct a base tree...
-> > M	drivers/char/tpm/tpm_tis_core.c
-> > M	drivers/char/tpm/tpm_tis_core.h
-> > M	include/linux/tpm.h
-> > Falling back to patching base and 3-way merge...
-> > Auto-merging include/linux/tpm.h
-> > Auto-merging drivers/char/tpm/tpm_tis_core.h
-> > Auto-merging drivers/char/tpm/tpm_tis_core.c
-> > 
-> > If no counter-opinions, I'd add:
-> > 
-> > stable@vger.kernel.org # v6.1+
-> > 
-> > I based this on Bookworm kernel.
-> 
-> It looks like Sasha has already autoselected it for 6.1, 6.6, 6.12, 6.13 +
-> 6.14.
+Hi Matthias,
 
-Right! I can see also those mails, and exactly the version range I would
-have proposed :-) Perfect, thanks Sasha!
+kernel test robot noticed the following build errors:
 
-> 
-> J.
-> 
-> -- 
-> How does it work?  I don't know but it does!
-> This .sig brought to you by the letter R and the number 21
-> Product of the Republic of HuggieTag
-> 
+[auto build test ERROR on a2cc6ff5ec8f91bc463fd3b0c26b61166a07eb11]
 
-BR, Jarkko
+url:    https://github.com/intel-lab-lkp/linux/commits/Matthias-Fend/media-dt-bindings-i2c-add-Himax-HM1246-image-sensor/20250403-165139
+base:   a2cc6ff5ec8f91bc463fd3b0c26b61166a07eb11
+patch link:    https://lore.kernel.org/r/20250403-hm1246-v1-2-30990d71bc42%40emfend.at
+patch subject: [PATCH 2/2] media: i2c: add Himax HM1246 image sensor driver
+config: m68k-allmodconfig (https://download.01.org/0day-ci/archive/20250404/202504041909.gfi5uwYd-lkp@intel.com/config)
+compiler: m68k-linux-gcc (GCC) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250404/202504041909.gfi5uwYd-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504041909.gfi5uwYd-lkp@intel.com/
+
+All errors (new ones prefixed by >>, old ones prefixed by <<):
+
+>> ERROR: modpost: "__udivdi3" [drivers/media/i2c/hm1246.ko] undefined!
+>> ERROR: modpost: "__divdi3" [drivers/media/i2c/hm1246.ko] undefined!
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
