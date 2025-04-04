@@ -1,130 +1,246 @@
-Received: from fhigh-b7-smtp.messagingengine.com (fhigh-b7-smtp.messagingengine.com [202.12.124.158])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 460F633FD;
-	Fri,  4 Apr 2025 05:59:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.158
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 505642E62D4
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 06:02:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743746349; cv=none; b=OgsGYetC5Z6afjxe2HT8aOJ/lySKvkbzkabPomQwvDzuP9wBftSLeZdUsjIedf+sLQUmbUgJfuH2oLoAi1SOMW99clrpLPiXSJmLROSFxh8qlbyv1qr06nKhWvWAokG5XQFw3AyPtx45as/jIGtG/NvSC+SFwypJJwUSeNrrnso=
+	t=1743746572; cv=none; b=GD+yxN9PlDfMtr/UYWjlN0HJaA9f87X1QT4S+aiJn21ngRpNGxJ8cfiJPB1/8wchc7m3cRELLYwKeybVTvW3NY/c/LrNM1CZ1tDlp9EnUOECuVMzRBr0Hx2jyKkImDODj/iqydqnY3yfqh8yv7thyT6XePWiQa9o82dg43c/pdY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743746349; c=relaxed/simple;
-	bh=4fByqCcS2OpCFx6aaXLTI8NGU7zrTmm182MAT0SBLTA=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=AOvdwR9i+NWj5SBj9DFOvoCHbyhZJ3BC6/FaQPLc7GQwEu9TbHsuMekuMX9fcxLN8NFIuLVn30CG5dlFip16NkKTGqmXKYnXTfcpCeknpA6nvJPcNE2AeTgKCldWWtkiH5wvOCjmmpikOqnF7lHP6QfqCrUnA2BNtHiCFPPUtJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=kyfj2nX9; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=UlXaRuZ7; arc=none smtp.client-ip=202.12.124.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="kyfj2nX9";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="UlXaRuZ7"
-Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 26A43254021A;
-	Fri,  4 Apr 2025 01:59:07 -0400 (EDT)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-12.internal (MEProxy); Fri, 04 Apr 2025 01:59:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1743746347;
-	 x=1743832747; bh=WtWETSKQn6E8bswj3SLwct6dL1bxKxqY0tLnxPdz92w=; b=
-	kyfj2nX9ywt+kVVqKE1zT4yIyvL/zGCsiqO6jTMQsjvGPl/kiPADp7TbnoMZCX/+
-	QFXcz/uvl9vN8VceDDBP2648jebgklkeEOSTSLzreuLOQ66tbyj1ik2g3RGuwpoL
-	UHMfUYvkNRTbRQxAaPry9K9zDXpBx2fzk0BIL/qaFlJEhNIwbWArvn19EjQozfsj
-	K1dZKi3x+x/YhUHYDfzSzl3m8Dg1rBI8dhuVS8wFXlPhveAwoPjZxdkSSNpyuQXz
-	s1ZsNxjjB+Vt/q1eB5UnBi3CKuftqnsjcYivr0PDrUXPg+bHEks+t0O+KerRhSsa
-	IQ+mazqhzkkCr+tYTirCOA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1743746347; x=
-	1743832747; bh=WtWETSKQn6E8bswj3SLwct6dL1bxKxqY0tLnxPdz92w=; b=U
-	lXaRuZ7WZImyYo29349y1E1+PLVJ0jXDAetbG1N9eyw+lYEC+kMR3wqtrzLbAxAK
-	5giOOqAaZNhi8FRpn3MTMc4IxAxD7pb700AWeI6+xYK5GYSlObTX1hXqSM93KQhZ
-	28Fz7hGF6R5qFu5uDqMTN7KG58OOgscxreZyiSP71gFnGHKRqWLsKceOZ7OatKwJ
-	IyAz/gPUNOcSKeUlmCjGuN1h9nQqGTO4gQsW0iTArh61X1WDe+EWrhSuhg6V6Juq
-	E8EI4of3KJRnKdyNPlZHhSsq2l5n3WHqeHEElu4x0f3dSihhIqHbcxPssBC45/4U
-	JUyXvAN7mnhOv1RT4rsXg==
-X-ME-Sender: <xms:KnXvZycppOk42usNnGIZ-1ad9UmDjWojB-S12dWSvr4zNG24vbrrTw>
-    <xme:KnXvZ8OryAGUYA6VsbLaJDzt9EEOnbekFpg2e6fmAyAQRpgA9DUwHG17U0-pcVoKq
-    6gr1ob-e6TRw7IabRE>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduledtieeiucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
-    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
-    gsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeet
-    fefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
-    hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
-    uddvpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehprghlmhgvrhesuggrsggsvg
-    hlthdrtghomhdprhgtphhtthhopegrlhgvgiesghhhihhtihdrfhhrpdhrtghpthhtohep
-    iihhihhhrghnghdrshhhrghordhishgtrghssehgmhgrihhlrdgtohhmpdhrtghpthhtoh
-    epihhgnhgrtghiohesihgvnhgtihhnrghsrdgtohhmpdhrtghpthhtohepsghjohhrnhes
-    khgvrhhnvghlrdhorhhgpdhrtghpthhtohepvggsihhgghgvrhhssehkvghrnhgvlhdroh
-    hrghdprhgtphhtthhopehskhhhrghnsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhg
-    pdhrtghpthhtoheplhhinhhugidqrhhishgtvheslhhishhtshdrihhnfhhrrgguvggrug
-    drohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhdqmhgvnhhtvggvsheslhhi
-    shhtshdrlhhinhhugidruggvvh
-X-ME-Proxy: <xmx:KnXvZzis5nVlP2N_1orhQVV-sh5Gv_mpr8KN165f-qtU3w6qAptW8A>
-    <xmx:KnXvZ_8PdQo94lXe-_5Ne7XFtI_xMvdMKpEw3gptZnk2RKEaz9wLQg>
-    <xmx:KnXvZ-utjr21MYl3URUU1tX-WmnkR98v79aXEKuzmq75_3iqtUZ3IA>
-    <xmx:KnXvZ2HLi4WUyOTg1wGHDxc5bhdzD9G4VaRB-WrK6BS-zirO9J2vNw>
-    <xmx:KnXvZxswNfWyawCUSZPdgwJw-w89RVRs8F9GgKVBNOcQZV_fTIc4pKdC>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 362E42220073; Fri,  4 Apr 2025 01:59:06 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1743746572; c=relaxed/simple;
+	bh=emPbLf925xcF5u1Mvhz8lGS+QEIcnRz2cN/xA9CfmKg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eKlSwBXUJo+STC6159muifamOVW84Ej3kDA6N5eCZskzk8jkWdWrhenpfa4nuHig9ZxCDEB4TiOZEb+561DC4c497DNN9ZSiLLh/8Ev0zkY445K9S9FvxXqAPIQbaafGnsoNd/s3j0IF2685HqnqbG9tJgbiwIjGHptyFeD2fKc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6DFFB1063;
+	Thu,  3 Apr 2025 23:02:51 -0700 (PDT)
+Received: from [10.162.40.17] (a077893.blr.arm.com [10.162.40.17])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 42B2F3F694;
+	Thu,  3 Apr 2025 23:02:43 -0700 (PDT)
+Message-ID: <00a0d9f1-d0a1-41fe-a0af-7e2174efc2e0@arm.com>
+Date: Fri, 4 Apr 2025 11:32:41 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: Tdae3ef9051e7a30c
-Date: Fri, 04 Apr 2025 07:58:43 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Ignacio Encinas" <ignacio@iencinas.com>,
- "Paul Walmsley" <paul.walmsley@sifive.com>,
- "Palmer Dabbelt" <palmer@dabbelt.com>, "Alexandre Ghiti" <alex@ghiti.fr>
-Cc: "Eric Biggers" <ebiggers@kernel.org>, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-kernel-mentees@lists.linux.dev,
- "Shuah Khan" <skhan@linuxfoundation.org>,
- "Zhihang Shao" <zhihang.shao.iscas@gmail.com>,
- =?UTF-8?Q?Bj=C3=B6rn_T=C3=B6pel?= <bjorn@kernel.org>,
- Linux-Arch <linux-arch@vger.kernel.org>
-Message-Id: <c6efcdca-5739-42b6-8cb4-f4d8cc85b6af@app.fastmail.com>
-In-Reply-To: <20250403-riscv-swab-v3-2-3bf705d80e33@iencinas.com>
-References: <20250403-riscv-swab-v3-0-3bf705d80e33@iencinas.com>
- <20250403-riscv-swab-v3-2-3bf705d80e33@iencinas.com>
-Subject: Re: [PATCH v3 2/2] riscv: introduce asm/swab.h
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 11/11] arm64/mm: Batch barriers when updating kernel
+ mappings
+To: Ryan Roberts <ryan.roberts@arm.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Pasha Tatashin <pasha.tatashin@soleen.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Uladzislau Rezki <urezki@gmail.com>, Christoph Hellwig <hch@infradead.org>,
+ David Hildenbrand <david@redhat.com>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+ Mark Rutland <mark.rutland@arm.com>, Alexandre Ghiti
+ <alexghiti@rivosinc.com>, Kevin Brodsky <kevin.brodsky@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <20250304150444.3788920-1-ryan.roberts@arm.com>
+ <20250304150444.3788920-12-ryan.roberts@arm.com>
+Content-Language: en-US
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <20250304150444.3788920-12-ryan.roberts@arm.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On Thu, Apr 3, 2025, at 22:34, Ignacio Encinas wrote:
-> +#define ARCH_SWAB(size) \
-> +static __always_inline unsigned long __arch_swab##size(__u##size value) \
-> +{									\
-> +	unsigned long x = value;					\
-> +									\
-> +	if (riscv_has_extension_likely(RISCV_ISA_EXT_ZBB)) {            \
-> +		asm volatile (".option push\n"				\
-> +			      ".option arch,+zbb\n"			\
-> +			      "rev8 %0, %1\n"				\
-> +			      ".option pop\n"				\
-> +			      : "=r" (x) : "r" (x));			\
-> +		return x >> (BITS_PER_LONG - size);			\
-> +	}                                                               \
-> +	return  ___constant_swab##size(value);				\
+On 3/4/25 20:34, Ryan Roberts wrote:
+> Because the kernel can't tolerate page faults for kernel mappings, when
+> setting a valid, kernel space pte (or pmd/pud/p4d/pgd), it emits a
+> dsb(ishst) to ensure that the store to the pgtable is observed by the
+> table walker immediately. Additionally it emits an isb() to ensure that
+> any already speculatively determined invalid mapping fault gets
+> canceled.
+> 
+> We can improve the performance of vmalloc operations by batching these
+> barriers until the end of a set of entry updates.
+> arch_enter_lazy_mmu_mode() and arch_leave_lazy_mmu_mode() provide the
+> required hooks.
+> 
+> vmalloc improves by up to 30% as a result.
+> 
+> Two new TIF_ flags are created; TIF_LAZY_MMU tells us if the task is in
+> the lazy mode and can therefore defer any barriers until exit from the
+> lazy mode. TIF_LAZY_MMU_PENDING is used to remember if any pte operation
+> was performed while in the lazy mode that required barriers. Then when
+> leaving lazy mode, if that flag is set, we emit the barriers.
+> 
+> Since arch_enter_lazy_mmu_mode() and arch_leave_lazy_mmu_mode() are used
+> for both user and kernel mappings, we need the second flag to avoid
+> emitting barriers unnecessarily if only user mappings were updated.
+
+Agreed and hence for that an additional TIF flag i.e TIF_LAZY_MMU_PENDING
+can be justified.
+
+> 
+> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+> ---
+>  arch/arm64/include/asm/pgtable.h     | 73 ++++++++++++++++++++++------
+>  arch/arm64/include/asm/thread_info.h |  2 +
+>  arch/arm64/kernel/process.c          |  9 ++--
+>  3 files changed, 64 insertions(+), 20 deletions(-)
+> 
+> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
+> index 1898c3069c43..149df945c1ab 100644
+> --- a/arch/arm64/include/asm/pgtable.h
+> +++ b/arch/arm64/include/asm/pgtable.h
+> @@ -40,6 +40,55 @@
+>  #include <linux/sched.h>
+>  #include <linux/page_table_check.h>
+>  
+> +static inline void emit_pte_barriers(void)
+> +{
+> +	/*
+> +	 * These barriers are emitted under certain conditions after a pte entry
+> +	 * was modified (see e.g. __set_pte_complete()). The dsb makes the store
+> +	 * visible to the table walker. The isb ensures that any previous
+> +	 * speculative "invalid translation" marker that is in the CPU's
+> +	 * pipeline gets cleared, so that any access to that address after
+> +	 * setting the pte to valid won't cause a spurious fault. If the thread
+> +	 * gets preempted after storing to the pgtable but before emitting these
+> +	 * barriers, __switch_to() emits a dsb which ensure the walker gets to
+> +	 * see the store. There is no guarrantee of an isb being issued though.
+
+typo					^^^^^^^^
+ 					
+> +	 * This is safe because it will still get issued (albeit on a
+> +	 * potentially different CPU) when the thread starts running again,
+> +	 * before any access to the address.
+> +	 */
+> +	dsb(ishst);
+> +	isb();
 > +}
+> +
+> +static inline void queue_pte_barriers(void)
+> +{
+> +	if (test_thread_flag(TIF_LAZY_MMU))
+> +		set_thread_flag(TIF_LAZY_MMU_PENDING);
+> +	else
+> +		emit_pte_barriers();
+> +}
+> +
+> +#define  __HAVE_ARCH_ENTER_LAZY_MMU_MODE
+> +static inline void arch_enter_lazy_mmu_mode(void)
+> +{
+> +	VM_WARN_ON(in_interrupt());
+> +	VM_WARN_ON(test_thread_flag(TIF_LAZY_MMU));
+> +
+> +	set_thread_flag(TIF_LAZY_MMU);
+> +}
+> +
+> +static inline void arch_flush_lazy_mmu_mode(void)
+> +{
+> +	if (test_and_clear_thread_flag(TIF_LAZY_MMU_PENDING))
+> +		emit_pte_barriers();
+> +}
+> +
+> +static inline void arch_leave_lazy_mmu_mode(void)
+> +{
+> +	arch_flush_lazy_mmu_mode();
+> +	clear_thread_flag(TIF_LAZY_MMU);
+> +}
+> +
+>  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+>  #define __HAVE_ARCH_FLUSH_PMD_TLB_RANGE
+>  
+> @@ -323,10 +372,8 @@ static inline void __set_pte_complete(pte_t pte)
+>  	 * Only if the new pte is valid and kernel, otherwise TLB maintenance
+>  	 * has the necessary barriers.
+>  	 */
+> -	if (pte_valid_not_user(pte)) {
+> -		dsb(ishst);
+> -		isb();
+> -	}
+> +	if (pte_valid_not_user(pte))
+> +		queue_pte_barriers();
+>  }
+>  
+>  static inline void __set_pte(pte_t *ptep, pte_t pte)
+> @@ -778,10 +825,8 @@ static inline void set_pmd(pmd_t *pmdp, pmd_t pmd)
+>  
+>  	WRITE_ONCE(*pmdp, pmd);
+>  
+> -	if (pmd_valid(pmd)) {
+> -		dsb(ishst);
+> -		isb();
+> -	}
+> +	if (pmd_valid(pmd))
+> +		queue_pte_barriers();
+>  }
+>  
+>  static inline void pmd_clear(pmd_t *pmdp)
+> @@ -845,10 +890,8 @@ static inline void set_pud(pud_t *pudp, pud_t pud)
+>  
+>  	WRITE_ONCE(*pudp, pud);
+>  
+> -	if (pud_valid(pud)) {
+> -		dsb(ishst);
+> -		isb();
+> -	}
+> +	if (pud_valid(pud))
+> +		queue_pte_barriers();
+>  }
+>  
+>  static inline void pud_clear(pud_t *pudp)
+> @@ -925,8 +968,7 @@ static inline void set_p4d(p4d_t *p4dp, p4d_t p4d)
+>  	}
+>  
+>  	WRITE_ONCE(*p4dp, p4d);
+> -	dsb(ishst);
+> -	isb();
+> +	queue_pte_barriers();
+>  }
+>  
+>  static inline void p4d_clear(p4d_t *p4dp)
+> @@ -1052,8 +1094,7 @@ static inline void set_pgd(pgd_t *pgdp, pgd_t pgd)
+>  	}
+>  
+>  	WRITE_ONCE(*pgdp, pgd);
+> -	dsb(ishst);
+> -	isb();
+> +	queue_pte_barriers();
+>  }
+>  
+>  static inline void pgd_clear(pgd_t *pgdp)
+> diff --git a/arch/arm64/include/asm/thread_info.h b/arch/arm64/include/asm/thread_info.h
+> index 1114c1c3300a..1fdd74b7b831 100644
+> --- a/arch/arm64/include/asm/thread_info.h
+> +++ b/arch/arm64/include/asm/thread_info.h
+> @@ -82,6 +82,8 @@ void arch_setup_new_exec(void);
+>  #define TIF_SME_VL_INHERIT	28	/* Inherit SME vl_onexec across exec */
+>  #define TIF_KERNEL_FPSTATE	29	/* Task is in a kernel mode FPSIMD section */
+>  #define TIF_TSC_SIGSEGV		30	/* SIGSEGV on counter-timer access */
+> +#define TIF_LAZY_MMU		31	/* Task in lazy mmu mode */
+> +#define TIF_LAZY_MMU_PENDING	32	/* Ops pending for lazy mmu mode exit */
+>  
+>  #define _TIF_SIGPENDING		(1 << TIF_SIGPENDING)
+>  #define _TIF_NEED_RESCHED	(1 << TIF_NEED_RESCHED)
+> diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
+> index 42faebb7b712..45a55fe81788 100644
+> --- a/arch/arm64/kernel/process.c
+> +++ b/arch/arm64/kernel/process.c
+> @@ -680,10 +680,11 @@ struct task_struct *__switch_to(struct task_struct *prev,
+>  	gcs_thread_switch(next);
+>  
+>  	/*
+> -	 * Complete any pending TLB or cache maintenance on this CPU in case
+> -	 * the thread migrates to a different CPU.
+> -	 * This full barrier is also required by the membarrier system
+> -	 * call.
+> +	 * Complete any pending TLB or cache maintenance on this CPU in case the
+> +	 * thread migrates to a different CPU. This full barrier is also
+> +	 * required by the membarrier system call. Additionally it makes any
+> +	 * in-progress pgtable writes visible to the table walker; See
+> +	 * emit_pte_barriers().
+>  	 */
+>  	dsb(ish);
+>  
 
-I think the fallback should really just use the __builtin_bswap
-helpers instead of the ___constant_swab variants. The output
-would be the same, but you can skip patch 1/2.
+Otherwise, LGTM.
 
-I would also suggest dumbing down the macro a bit so you can
-still find the definition with 'git grep __arch_swab64'. Ideally
-just put the function body into a macro but leave the three
-separate inline function definitions.
-
-     Arnd
+I will try and think through again if these deferred sync and flush can cause
+subtle problems else where.
