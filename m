@@ -1,191 +1,152 @@
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1B37182BC
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 04:15:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA76D14A4C7;
+	Fri,  4 Apr 2025 04:16:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743740115; cv=none; b=TkEbXvvdcL2aIEThE4wcArnQK7azrSW2XKWPxx7P6bqLxghmB8/0a8pMtLfMW4FJD2jMLRwjMkRN8EC78fZF20Ahy21s5BPEZposQLdSQ7m2IJeUGg+vkiyAfnj/J5txokHNj+P3mdV62a9smb0/2q8KCbQa4hp1dOUThyni3aY=
+	t=1743740218; cv=none; b=GqIUJ+wPDdb7FEVUbCfZcIgIIURM4yzVeeZkoV3S4S0NBRGYpzNHqe5zCwcQh4ESCIO5ymQhf4N0WTywbqVtctJJAGShe/8rdGO/qalulReqzbthUjyglpK36dfQk0VUoppglj6dv7NwKB6N/B/mwS01QxW0M71PWvoXeP+FD6U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743740115; c=relaxed/simple;
-	bh=aDFw6L71JasM237YpPT/YYAiCJ4ytUZdSAhwuEzwIfo=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
-	 Content-Type:References; b=j8X/gPdbgNsGIJYn6Aq3XLJFEvOk3sorVteEbMpeVU0WyDL8z2qS6hG+CtM+3BzG8k0eYyybR9zU7E6gEzYgfDukL9reDXAKehTQefAwcerQ3eds0a6po/PMbYv4LcH9LFmlOOrs/6dMTowIXBujAZ4NpiBloZSXX3M4T2F+U3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=EC32QqUd; arc=none smtp.client-ip=203.254.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1743740218; c=relaxed/simple;
+	bh=y+pQ0N2FyDmDFD1EqNWG0arm7ZC8meGCYxaKT3eCFWo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FqihtQBHQ6Y2BhIlxACLGvsJRDVpIV6H6lpiod3PZT/OS7D8bqeaLaLGng0K3MgrUfr5lc2ygNGiUz8tc6Uz1bQP1mBSj2RROEzV1jNDHPkib86iyrS4JZ7xiCZxZepZBS6u78xi5zKlPBLln7MEH3irvqWKnTlh8AWoZYWsiHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XM4PeyfU; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="EC32QqUd"
-Received: from epcas2p1.samsung.com (unknown [182.195.41.53])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20250404041502epoutp040ca0862eb515550d14b54f45edb4f72e~zAmKHJqg40650906509epoutp04Y
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 04:15:02 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20250404041502epoutp040ca0862eb515550d14b54f45edb4f72e~zAmKHJqg40650906509epoutp04Y
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1743740102;
-	bh=XqYBy4gvdoVQ6qB+lepjnAo86Zkd1rhVn6wJVz03arE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=EC32QqUdOjySx7qPVT/rW8CgxiRnowLTfH8bBQnXyL1FzthcOEdHPYg2koIp1MVWC
-	 LvTHuXzKA8/3ce85BBwIr/xwO5wLeQT43VrEGHkZgEqNl8T5V+3i9cZz/m5br+Fp1R
-	 uFZ2IAvXhxCSoH+TXuPyoQ8F1udaut6ZbQDcu9AY=
-Received: from epsnrtp01.localdomain (unknown [182.195.42.153]) by
-	epcas2p4.samsung.com (KnoxPortal) with ESMTPS id
-	20250404041502epcas2p46fa3bd561f019e66b3ef83c051e00d93~zAmJfBPLY1433714337epcas2p4F;
-	Fri,  4 Apr 2025 04:15:02 +0000 (GMT)
-Received: from epsmgec2p1-new.samsung.com (unknown [182.195.36.69]) by
-	epsnrtp01.localdomain (Postfix) with ESMTP id 4ZTQHT40G8z6B9mB; Fri,  4 Apr
-	2025 04:15:01 +0000 (GMT)
-Received: from epcas2p4.samsung.com ( [182.195.41.56]) by
-	epsmgec2p1-new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	42.21.37303.5CC5FE76; Fri,  4 Apr 2025 13:15:01 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas2p4.samsung.com (KnoxPortal) with ESMTPA id
-	20250404041501epcas2p4b4ac00e225a28bea381f51f84914c4ac~zAmIWQFni0476804768epcas2p4K;
-	Fri,  4 Apr 2025 04:15:01 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20250404041500epsmtrp2eba09a6459fe7bb5c2f88fbad7ada89e~zAmIRfeZX2757627576epsmtrp2S;
-	Fri,  4 Apr 2025 04:15:00 +0000 (GMT)
-X-AuditID: b6c32a4d-54ffe700000091b7-f5-67ef5cc510ee
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	A0.33.08766.4CC5FE76; Fri,  4 Apr 2025 13:15:00 +0900 (KST)
-Received: from tiffany (unknown [10.229.95.142]) by epsmtip1.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20250404041500epsmtip1b2e088aa4de4f87d087f251c220a31e4~zAmIFzYQE1809918099epsmtip1U;
-	Fri,  4 Apr 2025 04:15:00 +0000 (GMT)
-Date: Fri, 4 Apr 2025 13:13:23 +0900
-From: Donghyeok Choe <d7271.choe@samsung.com>
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Youngmin Nam <youngmin.nam@samsung.com>, Marc Zyngier <maz@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>, Sudeep Holla <sudeep.holla@arm.com>,
-	Saravana Kannan <saravanak@google.com>, Ulf Hansson
-	<ulf.hansson@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	kernel-team@android.com, hajun.sung@samsung.com, d7271.choe@samsung.com,
-	joonki.min@samsung.com, ne.yoo@samsung.com
-Subject: Re: [GICv3 ITS]S2IDLE framework does not invoke syscore_ops in
- GICv3 ITS driver
-Message-ID: <20250404041323.GA685160@tiffany>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XM4PeyfU"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-7376dd56f8fso1937993b3a.2;
+        Thu, 03 Apr 2025 21:16:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743740216; x=1744345016; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=m5agAZSfSkx9AY9eawF+jGKK/rmtQCgnrXpeJjF2DZY=;
+        b=XM4PeyfUDfXU/BAv+rLpjSZHL4X6HYBLhCqEd5HklNfrWeXXqMcoQP7bq1TewDKtDr
+         oX7RvhDkwzfG0i6xuriwWeB4PiBHEiOph3D/yb451JuEiQzSSC67Ru+KZz+2RzKa1XQX
+         1TA4RBehLKXI/LpjKh0tycWrOei4GCw2LYxmDq59VSBGvZRlqzu3jTCiZqyte47JEmDF
+         m0Y8NI0mhvTGkocLjqzy7M8feDjGF/EKo7/g8cI6Gmcj3YknDuTrvfx9Mk2U6ekv4FQC
+         ZfB3xUJXuSLQaC7SEXSEgfdICAZWZtGZWpbtt94PsfcjMYt6LHI01zS1rIItbnMXCxxI
+         gitQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743740216; x=1744345016;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=m5agAZSfSkx9AY9eawF+jGKK/rmtQCgnrXpeJjF2DZY=;
+        b=vfrg8Y0TiSo2hvzHNRQGysHEwoTcIlCoi2kjjuiCO12AwhCGsZqCXuj/ABCrqh2i+0
+         unjPziaB2SA+YnQSlrbZ01mCZ79DSwUyQE4thoW8KKlQ90uhE9OW1bNpzpmOkEB3Y/ky
+         hwHIV1y/lPRLJmskHPfDF/C0RzH/uluGdK8A1+ArVp/YUjdy5ZoMub+ZOjxAf4tc/PoP
+         wcw5iqidxg3l7UHX26sZ/Hopj+MJc9xVrIOIx7KPAjfFoRdU//0QUdMquYz/kGQLglvJ
+         SEAB9ccuiySRAht0QV5VHaQTJFbor89bz0WpALSKRyXNfgpDpjEj/UwGLmAYcTusgYTT
+         NMRw==
+X-Forwarded-Encrypted: i=1; AJvYcCUZgtu7D92pOHnT1Ooy39s+HfCnUfZYHhFYAPxiIYCjLjxu43Nmovo+fFHo5z4RT2BNUvc8u6BE1uFOaOc=@vger.kernel.org, AJvYcCXc6f0zaYtQL11IP6HQb6ScZmCgPd1JnB0t+FW3HKY/AkqhUWYGvgvtLxprwoJvacl/ynxVsZ+WLb4rnurYJsDkUw==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy8qiW3AG1RNsziSqGYro8PJNp41xNuKCG2l8PuFcSyDXCmtf/k
+	H+zsmeaUb8jcxY8whaHPeR7klkTUZ1U4neR/3179iitpXnlFNGf+
+X-Gm-Gg: ASbGncv4sYPt8wVcYiALGRO4CEqmGCsQWL9i3nd1SDSOeIfdIkr3DWyPFL041Nl4q/P
+	HAiwflCQeYvaMgc0Ajg+qxalTjMMeW6hkrVmU2U/fJFa0bwkBfYHanrzkZhNOOroMI31rN708RH
+	XERv8bP5/DbWreVn+bpJB/J51nbwyYBhCNcHq0mGdYOaiKxQrVanoYVOXgpONnAQRLC1v3Lizcl
+	hps7tP9ktaJ85h8DSSCheI6fmvgB2cc2G+QPz6cuGO6+QUukbEQQ1PQ+93N6WX2j+VLEfXzyqh7
+	SmGzfVRDhKhe/PpcLytpWiY7EEIGNHB/9dUudNihIUU5H0aMsLHLOOW2cRvCENU6oVeFUNSbf+p
+	0RQUP
+X-Google-Smtp-Source: AGHT+IEBFglo8zSnDqo8NPVmUw2iSuO6FsxUTQvbgHpZJGKLGRVHiLEibhujjeh38Hlx0NyPFVaEAg==
+X-Received: by 2002:a05:6a00:3ccd:b0:736:55ec:ea94 with SMTP id d2e1a72fcca58-739e4c2ee0fmr2714016b3a.20.1743740215755;
+        Thu, 03 Apr 2025 21:16:55 -0700 (PDT)
+Received: from howard.lan (c-73-202-46-50.hsd1.ca.comcast.net. [73.202.46.50])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739d97d1810sm2357431b3a.24.2025.04.03.21.16.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Apr 2025 21:16:55 -0700 (PDT)
+From: Howard Chu <howardchu95@gmail.com>
+To: acme@kernel.org
+Cc: mingo@redhat.com,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	peterz@infradead.org,
+	kan.liang@linux.intel.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Howard Chu <howardchu95@gmail.com>
+Subject: [PATCH v1] perf trace: Fix inconsistent failures in perf trace's tests
+Date: Thu,  3 Apr 2025 21:16:52 -0700
+Message-ID: <20250404041652.329340-1-howardchu95@gmail.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20250403-rare-wasp-of-management-9bce59@sudeepholla>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrKJsWRmVeSWpSXmKPExsWy7bCmhe7RmPfpBmdOSVlc2zuR3aJp/yVm
-	i6u73zFb7NguYrHp8TVWi8u75rBZ7JxzktVi2fEuVouuQ3/ZLJaf2sFisXnTVGaL42vDLTqO
-	fGO2WHzgE7sDn8e23dtYPdbMW8PosWBTqcemVZ1sHneu7WHzeHfuHLvH5iX1Hn1bVjF6fN4k
-	F8AZlW2TkZqYklqkkJqXnJ+SmZduq+QdHO8cb2pmYKhraGlhrqSQl5ibaqvk4hOg65aZA3S5
-	kkJZYk4pUCggsbhYSd/Opii/tCRVISO/uMRWKbUgJafAvECvODG3uDQvXS8vtcTK0MDAyBSo
-	MCE748WpiWwFW8UqTj2/w9LAuF+oi5GTQ0LAROLhwVnsXYxcHEICexglTr9vZYFwPjFK/P65
-	iRnC+cYo0bdoARNMy8pn86Fa9jJKvGtohGp5yihx/fE7sCoWARWJ65P+soDYbAK6EpM6t7GB
-	2CIC6hJLzm5hBGlgFrjGLPHk7zsgh4NDWCBK4nF7HEgNL1D99MOL2CFsQYmTM5+AzeEUcJJY
-	924aE0ivhMAeDok35z5CneQise3RMXYIW1ji1fEtULaUxOd3e9kgGpoZJSbdeA3VPYNR4srk
-	z1DdxhKznrUzgtjMAhkSr/f8Zwe5SEJAWeLILRaIMJ9Ex+G/UGFeiY42aOipSJzve8AIs2vD
-	3LdQEz0kWr+2MEFCZSOTxPmjN9knMMrNQvLQLCTbIGwdiQW7P7HNAlrBLCAtsfwfB4SpKbF+
-	l/4CRtZVjFKpBcW56anJRgWGunmp5fB4Ts7P3cQITs9avjsYX6//q3eIkYmD8RCjBAezkgiv
-	rdr7dCHelMTKqtSi/Pii0pzU4kOMpsAYmsgsJZqcD8wQeSXxhiaWBiZmZobmRqYG5krivIc+
-	Pk0XEkhPLEnNTk0tSC2C6WPi4JRqYIozt10UwLBvfcPLNDb+ze5P/0SwnnVu23iXj2PZBJ9D
-	r7do18xdofvF9PAbO8HbyW4VZ6O6wnKvaoX9td06d5mybtDbXfv45Jx+hXH9z5/CZ13ybJpS
-	ldmkX9n5r10mHXC/ZSh2yuTRPrdZRad6Ziypj6ycofL08M/VFvfmzHdXWvLw5u9FEbsePnkb
-	U+E/ZTXj1OMtD0t8ehjFBJ9p1gbk9MyTazwhqWf0aW2FjcjcZ7Nmvz4wY4fI/RfnhB+lnL3T
-	9dpiytEl9fXro5d8WnhmMtNM2XkZ/7zm6jQHPozomdRWdPAWq5p7/pXHubxeDwTcSuNenJiy
-	9mOUjW5IaeATu+V2SlG7kpoZJy5POmylxFKckWioxVxUnAgAjQCCK1gEAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmphkeLIzCtJLcpLzFFi42LZdlhJTvdIzPt0g0+rzCyu7Z3IbtG0/xKz
-	xdXd75gtdmwXsdj0+BqrxeVdc9gsds45yWqx7HgXq0XXob9sFstP7WCx2LxpKrPF8bXhFh1H
-	vjFbLD7wid2Bz2Pb7m2sHmvmrWH0WLCp1GPTqk42jzvX9rB5vDt3jt1j85J6j74tqxg9Pm+S
-	C+CM4rJJSc3JLEst0rdL4Mo498Kk4KtwxfmPNxgbGGcIdDFyckgImEisfDafHcQWEtjNKNE3
-	MQMiLiXRvmUmE4QtLHG/5QhrFyMXUM1jRokz2+8zgiRYBFQkrk/6ywJiswnoSkzq3MYGYosI
-	qEssObuFEaSBWeAWs8SKSY/BioQFoiT2vJ0GNpUXqGH64UXsEFO3Mkms+L6KHSIhKHFy5hOw
-	BmYBLYkb/14CNXAA2dISy/9xgIQ5BZwk1r2bxjSBUWAWko5ZSDpmIXQsYGRexSiZWlCcm55b
-	bFhgmJdarlecmFtcmpeul5yfu4kRHFFamjsYt6/6oHeIkYmD8RCjBAezkgivrdr7dCHelMTK
-	qtSi/Pii0pzU4kOM0hwsSuK84i96U4QE0hNLUrNTUwtSi2CyTBycUg1M6a/M75RVNwV0Xq60
-	qlltNHmloYcWZ+2iROl3CR79kzeLcT5TaAs+lLUwUOfmZe0JPzqXccm+nHFmcsPWbuEpi3Yy
-	T7v+8KbnRPuM9pQVn8qz37T5RF+rSjxgtp91xeHgh51ef632+UyZnFFmpm724cjL85mf1BPv
-	nXmTffAT650QfhvBuKUHMzK+WuTtVCo45Td32Ybr5/yEV687ul/Nif14xOrVyRcehvGx2z/u
-	EordNGvyrl2OF+//lNXkllnHOcWjbONas/vHdPPadl4vFX7m/vNKeZ/oy+jFJyIvhcX8vnlE
-	NZhp5ZyH7y4fzSuKcphsf4JJ4sxaZfVJF2cU190K43r8zeWsjTeLk/CaXCWW4oxEQy3mouJE
-	AJpk7dYXAwAA
-X-CMS-MailID: 20250404041501epcas2p4b4ac00e225a28bea381f51f84914c4ac
-X-Msg-Generator: CA
-Content-Type: multipart/mixed;
-	boundary="----caUwc_dC5aEw_I.xGS0GMYyTEPKysFRHRKa1IoFNAgiy-i3F=_8e84e_"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250326030527epcas2p33aa30e62cc8a00c9e151c35bee71dac5
-References: <CGME20250326030527epcas2p33aa30e62cc8a00c9e151c35bee71dac5@epcas2p3.samsung.com>
-	<Z+Nv8U/4P3taDpUq@perf> <8634f0mall.wl-maz@kernel.org>
-	<Z+TEa8CVAYnbD/Tu@perf> <20250402-messy-wild-squid-7b4da9@sudeepholla>
-	<Z+3kwsesiXyC0hbO@perf>
-	<20250403-rare-wasp-of-management-9bce59@sudeepholla>
+Content-Transfer-Encoding: 8bit
 
-------caUwc_dC5aEw_I.xGS0GMYyTEPKysFRHRKa1IoFNAgiy-i3F=_8e84e_
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
+There are two failures that frequently occur in perf trace's tests. One
+is the failure of 'perf trace BTF general tests'; The other one is the
+failure of 'perf trace record and replay', which, when run independently,
+always succeeds.
 
-On Thu, Apr 03, 2025 at 10:18:54AM +0100, Sudeep Holla wrote:
-> /me more confused.
-> 
-> Are you saying you have some cpuidle platform specific logic inside
-> trace_android_vh_cpuidle_psci_enter(). I would assume it was just to
-> trace the entry into the state and nothing more.
+The root cause of the first failure, is that perf trace may give two types
+of output, depending on whether the comm of a process can be parsed, for
+example:
 
-Hi, I am a Samsung developer working with Youngmin Nam.
+mv/312705 renameat2(CWD, "/tmp/file1_VJOT", CWD, "/tmp/file2_VJOT", NOREPLACE) = 0
+:312774/312774 renameat2(CWD, "/tmp/file1_5YcE", CWD, "/tmp/file2_5YcE", NOREPLACE) = 0
 
-Yes, you are correct. The platform-specific logic runs, and only
-the booting core performs the GIC ITS save/restore. I understand that
-using trace in this way might have surprised you.
-However, this kind of trace usage is actually quite common
-within the Android kernel.
+In the test, however, grep is always looking for the comm 'mv', which
+sometimes may not be present.
 
-The Android kernel aims to ensure that all SoC vendors use
-the same kernel code, aiming for the benefits of the GKI project.
-Since vendors often want to control kernel behavior, they utilize
-traces like this to achieve that flexibility.
+The cause of the second failure is that 'perf trace BTF general tests'
+modifies the perf config, and because tests are run concurrently,
+subsequent tests use the modified perf config before the BTF general
+test can restore the original config. Mark the BTF general tests as
+exclusive will solve the failure.
 
-> In fact, it was recently added upstream as well.
-> Commit 7b7644831e72 ("cpuidle: psci: Add trace for PSCI domain idle")
+Signed-off-by: Howard Chu <howardchu95@gmail.com>
+Fixes: 0255338d6975 ("perf trace: Add tests for BTF general augmentation")
+---
+ tools/perf/tests/shell/trace_btf_general.sh | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Then it seems that this will be used instead of the Android kernel specific
-vendor hook(trace_android_vh_cpuidle_psci_enter).
-We can eliminate the diff between the mainline code and the ACK.
+diff --git a/tools/perf/tests/shell/trace_btf_general.sh b/tools/perf/tests/shell/trace_btf_general.sh
+index a25d8744695e..4833618a116b 100755
+--- a/tools/perf/tests/shell/trace_btf_general.sh
++++ b/tools/perf/tests/shell/trace_btf_general.sh
+@@ -1,5 +1,5 @@
+ #!/bin/bash
+-# perf trace BTF general tests
++# perf trace BTF general tests (exclusive)
+ # SPDX-License-Identifier: GPL-2.0
+ 
+ err=0
+@@ -29,7 +29,7 @@ check_vmlinux() {
+ trace_test_string() {
+   echo "Testing perf trace's string augmentation"
+   if ! perf trace -e renameat* --max-events=1 -- mv ${file1} ${file2} 2>&1 | \
+-    grep -q -E "^mv/[0-9]+ renameat(2)?\(.*, \"${file1}\", .*, \"${file2}\", .*\) += +[0-9]+$"
++    grep -q -E "^.*/[0-9]+ renameat(2)?\(.*, \"${file1}\", .*, \"${file2}\", .*\) += +[0-9]+$"
+   then
+     echo "String augmentation test failed"
+     err=1
+@@ -40,7 +40,7 @@ trace_test_buffer() {
+   echo "Testing perf trace's buffer augmentation"
+   # echo will insert a newline (\10) at the end of the buffer
+   if ! perf trace -e write --max-events=1 -- echo "${buffer}" 2>&1 | \
+-    grep -q -E "^echo/[0-9]+ write\([0-9]+, ${buffer}.*, [0-9]+\) += +[0-9]+$"
++    grep -q -E "^.*/[0-9]+ write\([0-9]+, ${buffer}.*, [0-9]+\) += +[0-9]+$"
+   then
+     echo "Buffer augmentation test failed"
+     err=1
+@@ -50,7 +50,7 @@ trace_test_buffer() {
+ trace_test_struct_btf() {
+   echo "Testing perf trace's struct augmentation"
+   if ! perf trace -e clock_nanosleep --force-btf --max-events=1 -- sleep 1 2>&1 | \
+-    grep -q -E "^sleep/[0-9]+ clock_nanosleep\(0, 0, \{1,\}, 0x[0-9a-f]+\) += +[0-9]+$"
++    grep -q -E "^.*/[0-9]+ clock_nanosleep\(0, 0, \{1,\}, 0x[0-9a-f]+\) += +[0-9]+$"
+   then
+     echo "BTF struct augmentation test failed"
+     err=1
+-- 
+2.45.2
 
-> Further you didn't explicitly answer my question. IIUC are you calling
-> GIC ITS suspend function unconditionally if its boot cpu ? Or is it
-> done only for s2idle ? If done only for s2idle, how does it work for
-> normal cpuidle entry to deepest idle state that matches the one entered
-> during s2idle.
-
-In the s2idle situation, only the booting core performs
-the GIC ITS suspend/resume. The difference from normal cpuidle
-is that in the case of s2idle, the entire system enters suspend
-at a level equivalent to kernel suspend.
-
-Through that trace(trace_android_vh_cpuidle_psci_enter),
-we don't directly call syscore suspend, but rather mimic
-the actions that syscore suspend would perform.
-
-You might be concerned about the following:
-While kernel suspend hotplugs out the remaining cores except for
-the booting core and performs syscore suspend, in the s2idle scenario,
-cores enter cpuidle in parallel when going into suspend.
-I understand that you may worry about the synchronization issues
-that could arise when cores enter cpuidle in parallel during
-the s2idle situation.
-There were many exceptional cases, and we resolved them all together
-with my colleagues. We paid the price for not using the mainline kernel
-code as intended.
-
-If you have any further questions, feel free to reach out.
-
-Best regards,  
-Donghyeok Choe
-
-------caUwc_dC5aEw_I.xGS0GMYyTEPKysFRHRKa1IoFNAgiy-i3F=_8e84e_
-Content-Type: text/plain; charset="utf-8"
-
-
-------caUwc_dC5aEw_I.xGS0GMYyTEPKysFRHRKa1IoFNAgiy-i3F=_8e84e_--
