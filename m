@@ -1,143 +1,193 @@
-Received: from mail-io1-f77.google.com (mail-io1-f77.google.com [209.85.166.77])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2087.outbound.protection.outlook.com [40.107.95.87])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B45892E62B4
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 07:30:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.77
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743751826; cv=none; b=flgIk3nwnxdOHV+rRhNi1mjx2EyOQiUpo3bFI8STrUJa0rSkk7/T71Zfkvb1NI6R84BAYV0ItETaPJ1VP8EcmwIDgpVybh4pdV56O7YvC3HhfHILa5JiZII1La84SeTwaQMeP75KsDws1gSWTUQ03RpSx6XpinPiaffze1z6W4g=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743751826; c=relaxed/simple;
-	bh=t4PZRH7CoAePnxy7rgxp5zyxiJV7h46qjHHO4drjfqM=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=uLPu0VrKePu23k4UUEvZK7xaoED6wj+LABvoC6zc8d3SczfYv3R+g1baWZWJAdZ3g/R+B8Uubac3H83miqTVqkc2AhgOlRtk1GGuAsviWl5zYAv3kK6W1PzsHrhJDKyL2Z/Mh0z0U3j9iCB7aZ/sq7sWxRVP+B5aO41YI5Z6J+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f77.google.com with SMTP id ca18e2360f4ac-85db3356bafso427423039f.3
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 00:30:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743751824; x=1744356624;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=1gPCz0+43gqYBzB8+ltwHGQJNHwuVwFI52eCb+gwnK8=;
-        b=b5lzlc4oG0uJuZEStZYeJwZnqZJSjGDNGNCTQ9tnwLmnA5nSgjwcQiVl72weS1X1sW
-         UTBfkDNP+RZkiu1TpBUa3o2O+TtWL7O0laaRFQ+TOJcuIMhpGJNXGoB0A//howK22m/q
-         IE+1TYo/oW0IyL5OPj3HGOH64SEtNKL7H0Zo1IrCOh7k+97pKt0NSiKWm+IIyeVggJ3S
-         mOViqxzlaAPFzwiyVmELjphBctzL82ccY6lyUk9NBemqJxeaobbmZvF3C4me6BBWvbAS
-         l+6gEFzp0xRfsPa8EJeKc9/6zsxtkwDyA3rQoOUo17oZ+L5R69vnJsj17Ux7q/NWTsQd
-         j8Zg==
-X-Forwarded-Encrypted: i=1; AJvYcCUrQvdhrTlOXuVeGo1s3zSE2sbKJoNBRFLt2ikfkYtbEzGGh+k+Ri35K38sm5OdKPXEUsUobrqhO3+R6c8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyRutEFM9GxIxaUyMfuyjAz58kF4CYsNDGfQkCry7aY9VZQl/ql
-	+thlzsGS0RqXaX5gcBAe7n1h4+InQcLhIZTq+KqMTZsUcenvItXUPSv1dxkOTUurphZgWiC8gUT
-	zgWAUutdIpdXQ4F3tgPjW/J1Wpdol4mxdeZSZjUwOSo+fz2ygEEkbBVM=
-X-Google-Smtp-Source: AGHT+IEqC+/naV5h3ulq8iy4MxO0A+vT2N00sfSkpRRQKs6apOu7E3su+ybZ1V0o+rjI4Bu2VPSow5xRDvHB9yt7rZqyEfHZS3J9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 980C92E62B4
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 07:30:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.87
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743751838; cv=fail; b=mSrW90XvfGtJoBcIRbMRbkeCSwA5xTscYhu1cFtdVpVZTC1Td91IucDXr7IN5IkqjOMwjYHclXucTFZs8MNwR7NBHZA/brJBGHi9/vjPp4tiYoSMe9KCfkLaoTImWFZNrpvU8OkgcPj48zGdffxvrKQ0LITCw96cSOViUaSlyU8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743751838; c=relaxed/simple;
+	bh=pDgJpfmCDJCGa05+9cacWd6rVrMZs5uYNGpQvkvasrw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=AF126OmgX9tFJ/4h2CBFYG+2sHxozaX9ptEe94TK6BiLbkUmeISjG8L9LEpU4d3A3wTGujSemszwdfYqHvbpZjomvNxGZre3+V9+vjGZn+0A55VYfNzDIjC21PHSavadzM/WHVi4i2NyBN8TNaCshs3Ce6s/t0BdXCEyO3g1diY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Gj7G/t1f; arc=fail smtp.client-ip=40.107.95.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Gj7G/t1f"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=r7f8Nar0r+jArGxc0K6+5XakBEKeYYMz2hEM776uiWmEZCEoFWS/WZ6nioCJ/6BD2fpd7aUcgjNCI+b3/T1ijkxkNG97VzHEuoOAEV4I4FtNJlYtahidN0zKlJDqRLSpM4+/b4mYfTZt6rSvmveOGzPmr6LyBolDXtI0Rb7A/Zbnna147NQPIdamTglJTZoZxLKJ47LCKW8f8h6eo5un5N9w7p3b6lT1q9fwwoFk5ZCwXTGg7EeRHJgEbl8+mqFgM1Y3k6W0/osbt0xXTvr+y3EblUifpLscHACvqYm0lOimWgnP9T99a3cKXD8/GR35RrTelCUTRA46jnR+bwyquQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=d0v2oIC0pRprA7iZfExGSF8s5lY0kJp5vdUzrBcqOFc=;
+ b=W53ohhedCX2lgF5WGHAoDQQxM9YumQPEopIM4H+/PTeSi0oSo34CEmOuAVuk5xswB58Oft/K+P5mLe0z+CIiSSG8nHVQtbZhZlZ9COqWBnz431qLt9P86D0QwwbIupIXIOPN4BHnJruwZIwonvetDuUImwVeDOoh7I1EVQiRbINKNzA7XP/2rgYMIeLHXKb/YtpafpNIYFeiNLKb4snbLka0EKvvC5WlLwnP5/SVY74YWzE3cNgB5ySkepshenCzM0ckeR+Q5xQghC3tno4DzVCd2WOGzk8xK03haXW8bTfNW10+T7hFhFrDSzcbaCIDF/4xprh0vC4OjF8bTy26AA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=d0v2oIC0pRprA7iZfExGSF8s5lY0kJp5vdUzrBcqOFc=;
+ b=Gj7G/t1fReNU407D1h9dQVny4W4vnUh/b580rTzXNeXFkTb/0Fqqe8InOZ3JMt8k/+JEe3RwzchDzDOE4BhKMsmkGa63WV5AaOS5Dp+TRQpHNrEfLAbRC+WmsDyL1xFhKgkus3CjfgnGXOLJiVWs8MEoT0nusmNj1xXlegq5op64mLUthB+seydEG2dkhs9mRNOLXymUjuA9Wk2nX7hzHEUneZrdUzQ1fCcPG3UwJynFxNSIrwXYGbYbbyeTl7YcbPolBZVbaWpDbRcqMDr+dmmKYccrwescUnCA/FxwpBK/B1jyua2TC2C6SDttwM4xCrQt5UjaSyIgegin5qGWPA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CY5PR12MB6405.namprd12.prod.outlook.com (2603:10b6:930:3e::17)
+ by CH3PR12MB8259.namprd12.prod.outlook.com (2603:10b6:610:124::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.50; Fri, 4 Apr
+ 2025 07:30:33 +0000
+Received: from CY5PR12MB6405.namprd12.prod.outlook.com
+ ([fe80::2119:c96c:b455:53b5]) by CY5PR12MB6405.namprd12.prod.outlook.com
+ ([fe80::2119:c96c:b455:53b5%6]) with mapi id 15.20.8534.043; Fri, 4 Apr 2025
+ 07:30:33 +0000
+Date: Fri, 4 Apr 2025 09:30:23 +0200
+From: Andrea Righi <arighi@nvidia.com>
+To: Tejun Heo <tj@kernel.org>
+Cc: void@manifault.com, multics69@gmail.com, linux-kernel@vger.kernel.org,
+	sched-ext@meta.com
+Subject: Re: [PATCH 4/5] sched_ext: Drop "ops" from scx_ops_exit(),
+ scx_ops_error() and friends
+Message-ID: <Z--Kj36FTPoDrK2g@gpd3>
+References: <20250403225026.838987-1-tj@kernel.org>
+ <20250403225026.838987-5-tj@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250403225026.838987-5-tj@kernel.org>
+X-ClientProxiedBy: MI0P293CA0008.ITAP293.PROD.OUTLOOK.COM
+ (2603:10a6:290:44::13) To CY5PR12MB6405.namprd12.prod.outlook.com
+ (2603:10b6:930:3e::17)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:216b:b0:3d4:2306:6d6 with SMTP id
- e9e14a558f8ab-3d6e3f89f84mr31956945ab.21.1743751823820; Fri, 04 Apr 2025
- 00:30:23 -0700 (PDT)
-Date: Fri, 04 Apr 2025 00:30:23 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67ef8a8f.050a0220.9040b.0375.GAE@google.com>
-Subject: [syzbot] [kernel?] KCSAN: data-race in hash_net4_add / hash_net4_gc_do
-From: syzbot <syzbot+78974ef5957119ce0f61@syzkaller.appspotmail.com>
-To: bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com, 
-	linux-kernel@vger.kernel.org, mingo@redhat.com, 
-	syzkaller-bugs@googlegroups.com, tglx@linutronix.de, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY5PR12MB6405:EE_|CH3PR12MB8259:EE_
+X-MS-Office365-Filtering-Correlation-Id: b69b3268-2b77-484a-0abd-08dd734a9565
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?8R57/3rkXJXUjLscNyhGb1ijyZg7ZSoOK9izt6veZs9DmMhuOpgpiJ0W+y0x?=
+ =?us-ascii?Q?GFCZQmmZO+eXoKlLq7MHBThLiBtjUSo0CRL97DubP3WyLSzaGFxiTeR9M9CY?=
+ =?us-ascii?Q?jl1IYZNQTvQt00aZgWQOxou6Kc6Hb5HRvykMIlvQHAinqco2y5zKeLL5YGqo?=
+ =?us-ascii?Q?avesBpOovAOyt0RfYpR92ETTpD3Scmpx7QyxxUvd2WHFxF4UbQgqYDgsbiLm?=
+ =?us-ascii?Q?Tb3+BcMsmzygh3qTADffgsJW2iA7EPj62PuqVMku2qv/t6nrPm44+V1Uvmju?=
+ =?us-ascii?Q?y2gF2nQ9BPi2AWP3SbDJi/Bxm+D8XgFw4KAYqLVHOHjIbgFkEijhKP4FbJvy?=
+ =?us-ascii?Q?bL9wv1t1gh0d7pV5o1gEDXTe4dROosmAhLSn9aCz6sC2Pf4Ghwr7feGlBoEx?=
+ =?us-ascii?Q?sVl7Lll4sz2CQr/pEcIOn7M6hYsq5cw+8DHCqQ0hTqQk68wDbfMEgOqU99Sp?=
+ =?us-ascii?Q?904bqDdc1Ay9u7SQbJS5zMXyR8IBxZo4Zd+b/vSJ1EH1FfvDQKgCFmlNvA55?=
+ =?us-ascii?Q?NUJJMtvFRN8bs1iaK8y2hF94+QSdxBbdI1aYM2igPmSkVE+irtIpLrVX2DBg?=
+ =?us-ascii?Q?2SudsvNfWCrU2HKwgTeMRzRgPQdMLY7KRG3muts02rrZoBtFAfO/nabG5Io5?=
+ =?us-ascii?Q?oHYMSe23eo5xomAWoU+lQGhnfp2GVZvE5sZf21omBulwGLi+KALZWmiF2jI7?=
+ =?us-ascii?Q?iDxQ2AJduWiFSavogCG9MGQEv5YUpnm+mE0AZjiIsqWHJ69pqBJdQVGKX6TT?=
+ =?us-ascii?Q?ZyA6iKm7O6RQFrCj0Tp3+vKk+mjVK7R3VhgGFk5enL5mE3BX1SnXHMuLeiiM?=
+ =?us-ascii?Q?JOiRxwf//iBRCHfbc1CGn5cl1wrGgP4uqTRF+5hUR41UAgMTrixq9Jto9bjK?=
+ =?us-ascii?Q?bpT9PsDD/ny4BaNU4SaNLQreizikv6FtRJ/knsnNoiFcb8kqn+fhmQYe6yCF?=
+ =?us-ascii?Q?0QC+XUJLfBWGItUvJTOv0w7iHdu4KOtlAbD5OK0F3IdPnZ0TrPboz7/ETfHz?=
+ =?us-ascii?Q?OGImwqSSuT2wU7egb5BlWpiCH7cp2AlziwqAflc35wBtQRkrtucuNud41NC1?=
+ =?us-ascii?Q?Koe5wIFHqqDDlwj8BaMrCvyHvRwCpqo956Pf3PoYkYWFhaYhyAXGtbFr0Mi6?=
+ =?us-ascii?Q?YMTPMUT+Q557qvhkbrwrOwHgabNxrhL4F14BnTLVXKmQg5PIjWiWBCijm4cH?=
+ =?us-ascii?Q?MSRh5EpbCoe29dGLtHyUdJh4BRmS81rsP/mdsQvenO3S11AchuT92xSEsstP?=
+ =?us-ascii?Q?5fWYOwdQjpk3zcBNy0KoFERBnfzHZ7kn6DCvEhDOM17OJmiIHouWGmgpttrK?=
+ =?us-ascii?Q?H7y7lkSIdcQtC760kP8H2JG6qICNI4Tv2MkWpaJDShfqybeMUycKq5TjaT6i?=
+ =?us-ascii?Q?7jaxpMxgeJp0e8T1OAjWbrsxsP3X?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR12MB6405.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?PFNo6hk6OtmnHgC6shUPupT2w7RygFaxL+aZPYnBpg9wMI8xnhaZ1Pwtyzu6?=
+ =?us-ascii?Q?AZ11Wef9/Cp7iFbc6iVYugH05C3NqJxScgkvueMOjbnXHll+tGxhBIej5uAA?=
+ =?us-ascii?Q?oME0I+7l+qYPPyomh53wy1mEtCB504SzS2IgyGaJOu9R0jVRIp16uEIWOdbX?=
+ =?us-ascii?Q?/3Wiigi7qaGMvQKW6EOjdcehF8FhS8neL7FfZiJyK2/ZRsrJSUmWVyBYJbXc?=
+ =?us-ascii?Q?DhVGBjBk47BAByj7dq1IUbIq8dJky3Hdy4BJIssgDZcGoUSghKYoAknVVOBG?=
+ =?us-ascii?Q?jrcFWqby2QjyO3ipTog78uZSgWmhhTii7CMlrR/HMxwK0bq4lruvTmGOb96a?=
+ =?us-ascii?Q?OSAbWxoGuC6B5P7FPn/stqh1ul4ziP4UkVbIweIIxbvGBkwfJEVs15aNSARh?=
+ =?us-ascii?Q?jCrWFxQo+d4/B1JqB8II1ayUaspkwjbU+GKsz6NSfPglM0hknLnACUHKb7Xj?=
+ =?us-ascii?Q?FiaX8xfHeLTWIGIQnU9BGhuFH6NJh10qGht4ewYWupnRJtRiwgIqb9c/oo+u?=
+ =?us-ascii?Q?ob2ZHX5CZ1yzz2OdNUcP/EK5xWRT7aW8spiuJEVgOWISvh/r6G6LlZQXImmr?=
+ =?us-ascii?Q?GblRiAnyenSB0iKS3pgPcZ0zniFur6MXPjk/aChcYcJ1YEw+Z35pHazSmQHK?=
+ =?us-ascii?Q?jslT+ObQKS3MHQRXYtMaoven0d+Y+WuK5292XD8zEsJLAG5djdGYcAJU/jir?=
+ =?us-ascii?Q?0ZH49dy9kszg1uu4mO0Awh04H+ln0UNCUSOONU2rD+mB5y4fOj2BobNb5PI1?=
+ =?us-ascii?Q?sDVQ3nlSC0fjtZ9IrbeJVe9dH+/NVRKSUut45bMwwqOFmE85rL9WTzr5wYxj?=
+ =?us-ascii?Q?GMCg/l6rAEXCWxeVycEqWsK/gxCMINqbFeoOKUGAxpM4WMbTGm+Us6xXFzGO?=
+ =?us-ascii?Q?2inrfTZI+S43UONffIWT5xP16HRJMoB0QeEbMJRHGgaQJgl8PXR6qyPPrxnf?=
+ =?us-ascii?Q?cQ7uYdG2MU9cUvtOL4HfewSzhOCImXqFiAbt47TTkYXb9UW0ZsPMWg8qQalw?=
+ =?us-ascii?Q?eQUGS52bNo+zKYH4eXQMTUqzpBwwgit5k8LYNH271W1jaQ8/JrqCjom3+xRX?=
+ =?us-ascii?Q?/+/9be+/rXI5Od4O0a6J2AZTY1NUlXpqLCiCM48rSatVlSQ8bFfaOBFintzD?=
+ =?us-ascii?Q?QSQ2gwaZzHKRVfNBTfCnGOWNxVXLVJRloi4yP4p40pd3drLtrhMsTOHmfXyt?=
+ =?us-ascii?Q?z76dMmxzV3nhgoi8hpjCJL6heLOUsBsEBf6QNlIinSs9vejJTOrgzik8CPWh?=
+ =?us-ascii?Q?PfOlCSOFGYiKLvWjpHrclqTQg3w5o4CisgthYLOFNxO0TiKM1bS3X+4Fv9/Y?=
+ =?us-ascii?Q?7GL9D3B8jmgI3YWtafaBxPRoCDmXtmOSXkExrPupUBIA5sxJF4BtbfO3h4gU?=
+ =?us-ascii?Q?5KOh2M4EBBJnS4CjIOGHRc2KRwjbCd5ILASA2zjscGGM9RpFe5xFsX/L6ft4?=
+ =?us-ascii?Q?a4ECt9nv1JF1kGfNfyqQ0brIoEbwxahd4wBhyiZi/ctjNxpg62XJmSYFWvYY?=
+ =?us-ascii?Q?nJ4wqVdFjpVYV+hVfZOSJFvZ9N+BBknQUM79a70p3Yz8IrDu2bc+rKMM95FH?=
+ =?us-ascii?Q?S3QeHvPhHhE8LkACozrrgBAF8rZCS3Cw/V1B1vJX?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b69b3268-2b77-484a-0abd-08dd734a9565
+X-MS-Exchange-CrossTenant-AuthSource: CY5PR12MB6405.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Apr 2025 07:30:33.0176
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 0E3nAKhWGmH0xE0aFrielZ+UEZ0CBWWuE/c6VtxSv62t7m5kWapH5d3C1H2ybqJiUpr/oiAnWGrUua+nGGXrkg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8259
 
-Hello,
+On Thu, Apr 03, 2025 at 12:49:46PM -1000, Tejun Heo wrote:
+> The tag "ops" is used for two different purposes. First, to indicate that
+> the entity is directly related to the operations such as flags carried in
+> sched_ext_ops. Second, to indicate that the entity applies to something
+> global such as enable or bypass states. The second usage is historical and
+> causes confusion rather than clarifying anything. For example,
+> scx_ops_enable_state enums are named SCX_OPS_* and thus conflict with
+> scx_ops_flags. Let's drop the second usages.
+> 
+> Drop "ops" from scx_ops_exit(), scx_ops_error() and friends.
+> 
+> Signed-off-by: Tejun Heo <tj@kernel.org>
+> ---
+...
+> @@ -1043,18 +1043,17 @@ static struct kobject *scx_root_kobj;
+>  
+>  static void process_ddsp_deferred_locals(struct rq *rq);
+>  static void scx_bpf_kick_cpu(s32 cpu, u64 flags);
+> -static __printf(3, 4) void scx_ops_exit_kind(enum scx_exit_kind kind,
+> -					     s64 exit_code,
+> -					     const char *fmt, ...);
+> +static __printf(3, 4) void __scx_exit(enum scx_exit_kind kind, s64 exit_code,
+> +				      const char *fmt, ...);
+>  
+> -#define scx_ops_error_kind(err, fmt, args...)					\
+> -	scx_ops_exit_kind((err), 0, fmt, ##args)
+> +#define __scx_error(err, fmt, args...)						\
+> +	__scx_exit((err), 0, fmt, ##args)
+>  
 
-syzbot found the following issue on:
+Can we move scx_error() here, right after __scx_error(), for better
+readability?
 
-HEAD commit:    a2cc6ff5ec8f Merge tag 'firewire-updates-6.15' of git://gi..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=17d8194c580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=878fb2f189a26734
-dashboard link: https://syzkaller.appspot.com/bug?extid=78974ef5957119ce0f61
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+> -#define scx_ops_exit(code, fmt, args...)					\
+> -	scx_ops_exit_kind(SCX_EXIT_UNREG_KERN, (code), fmt, ##args)
+> +#define scx_exit(code, fmt, args...)						\
+> +	__scx_exit(SCX_EXIT_UNREG_KERN, (code), fmt, ##args)
+>  
+> -#define scx_ops_error(fmt, args...)						\
+> -	scx_ops_error_kind(SCX_EXIT_ERROR, fmt, ##args)
+> +#define scx_error(fmt, args...)							\
+> +	__scx_error(SCX_EXIT_ERROR, fmt, ##args)
 
-Unfortunately, I don't have any reproducer for this issue yet.
+I've always found scx_exit_kind / exit_code a bit confusing, scx_exit_kind
+represents the reason of the exit, while exit_code is an additional code to
+describe the error.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/6cdeb8c88045/disk-a2cc6ff5.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/06bfec3b61f0/vmlinux-a2cc6ff5.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/b7367ea0d4e6/bzImage-a2cc6ff5.xz
+Not necessarily for this patch set, but what do you think about renaming
+scx_exit_kind to scx_exit_reason and scx_exit_reason() to
+scx_exit_reason_str()?
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+78974ef5957119ce0f61@syzkaller.appspotmail.com
-
-EXT4-fs (loop2): 1 truncate cleaned up
-ext4 filesystem being mounted at /376/file0 supports timestamps until 2038-01-19 (0x7fffffff)
-==================================================================
-BUG: KCSAN: data-race in hash_net4_add / hash_net4_gc_do
-
-read-write to 0xffff888120381268 of 4 bytes by task 23 on cpu 1:
- hash_net4_gc_do+0x908/0xf90 net/netfilter/ipset/ip_set_hash_gen.h:518
- hash_net4_gc+0x10d/0x280 net/netfilter/ipset/ip_set_hash_gen.h:583
- process_one_work kernel/workqueue.c:3238 [inline]
- process_scheduled_works+0x4de/0xa20 kernel/workqueue.c:3319
- worker_thread+0x52c/0x710 kernel/workqueue.c:3400
- kthread+0x4b7/0x540 kernel/kthread.c:464
- ret_from_fork+0x4b/0x60 arch/x86/kernel/process.c:153
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
-
-read to 0xffff888120381268 of 4 bytes by task 9403 on cpu 0:
- hash_net4_add+0x292/0x1d50 net/netfilter/ipset/ip_set_hash_gen.h:869
- hash_net4_uadt+0x51d/0x5d0 net/netfilter/ipset/ip_set_hash_net.c:202
- call_ad+0x1a3/0x550 net/netfilter/ipset/ip_set_core.c:1751
- ip_set_ad+0x5a7/0x670 net/netfilter/ipset/ip_set_core.c:1841
- ip_set_uadd+0x41/0x50 net/netfilter/ipset/ip_set_core.c:1864
- nfnetlink_rcv_msg+0x4ba/0x580 net/netfilter/nfnetlink.c:302
- netlink_rcv_skb+0x12f/0x230 net/netlink/af_netlink.c:2534
- nfnetlink_rcv+0x187/0x1610 net/netfilter/nfnetlink.c:667
- netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
- netlink_unicast+0x605/0x6c0 net/netlink/af_netlink.c:1339
- netlink_sendmsg+0x609/0x720 net/netlink/af_netlink.c:1883
- sock_sendmsg_nosec net/socket.c:712 [inline]
- __sock_sendmsg+0x140/0x180 net/socket.c:727
- ____sys_sendmsg+0x350/0x4e0 net/socket.c:2566
- ___sys_sendmsg net/socket.c:2620 [inline]
- __sys_sendmsg+0x1a0/0x240 net/socket.c:2652
- __do_sys_sendmsg net/socket.c:2657 [inline]
- __se_sys_sendmsg net/socket.c:2655 [inline]
- __x64_sys_sendmsg+0x46/0x50 net/socket.c:2655
- x64_sys_call+0x26f3/0x2e10 arch/x86/include/generated/asm/syscalls_64.h:47
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xc9/0x1c0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-value changed: 0x000003f4 -> 0x00000331
-
-Reported by Kernel Concurrency Sanitizer on:
-CPU: 0 UID: 0 PID: 9403 Comm: syz.2.1855 Not tainted 6.14.0-syzkaller-12966-ga2cc6ff5ec8f #0 PREEMPT(voluntary) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-==================================================================
-Set syz1 is full, maxelem 65536 reached
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+Thanks,
+-Andrea
