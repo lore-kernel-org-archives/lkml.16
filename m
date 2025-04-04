@@ -1,73 +1,77 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EAAE1F4C8E;
-	Fri,  4 Apr 2025 11:57:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1831F1F0E47
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 11:57:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743767834; cv=none; b=YywWpxpub6fwmr5qy6RdoU4fuVSQMNQJW4s9JuovPK3Vtz+wJH8mkSbDPsW81QafEITVfQCtE/8spXjsrl59AVlK/8jUCFladUzcoDTwacm+cOa4Dz/q6yElr0yynCsdVGtl+eVLq3q4qdiNO3TQQkX2aaqBUf9eDZMh8JwQXic=
+	t=1743767846; cv=none; b=GzFyIikA1pebpAEXBAmYJPhBiPLVo499c1a2FcmCyYIX82/EWF9pHsEPMfP+jpfGXPA6sbk4T+QKcWJR6K+LPYMSOd2kdvmt14h5tyWoqS135YH2kdkv1JL0+KjusCJOWZui6JZNjv9DUJ0gTUP+kyOLSkq84qz5QYmRpdIroD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743767834; c=relaxed/simple;
-	bh=exdwzMT2XPAsj7mwik3tgQyZ5TnoBOkJBqtp9yXU0qE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=sBUErdTYpegLYAlkkZzSmZxfRplu/jPmPwG0P7R8rhFychDS/QSKX3znkWUi3tq9bwkcLuOpqH0qgGgxZ3jU6afjRQIBdWXqYVxzdd8p3vXX0d3EzHWZzAAXyDEl0klkM3Q3CLqF+2veVbPKY7mFhhpZFRMuxgtsJEe1PgTyE1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=iKA5sch1; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
+	s=arc-20240116; t=1743767846; c=relaxed/simple;
+	bh=ua5zgSNobMAzdOd3gGboXIkQUVeUMK5UKTmz1jdpjmk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TiYo9Eee9LeRXBVvT+TkB881m1shQB3PTWh2qnHsurEAiOpFsDRKR7R4XtZtICxMWiUHk7B19DvjjEHZ9yuudFWHU17PkL6SyZ/IYeUorSgPW5jbBIL5P17v4Muxs8VBkRy/AeTTkInhZoizC3nCIkU4Knq+fHE/iNlHPojlqUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=adcyiKhl; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="iKA5sch1"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 534353tc001651;
-	Fri, 4 Apr 2025 11:55:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=yopZIdGlEPS
-	e7UYtTlLskvuAdG4hKGeUMFs3e0xIP9k=; b=iKA5sch1VPtbFzNdLwDI04YgEvK
-	u/WpOChS0yaRsclhrde7tqXsJzP3IqAQzmlpKC5goVy4XjPuxmJxy6WfMK7G/qNZ
-	MvBATrm5LM5zYxcpfIkZ8qQYhbkCZBb0NuTxLxRS2F5aGO63GFUrQLkm+DreBy81
-	puct4fdkHLUQJ8vL+yDKm0F1pvsWW9qtD4a+nWn2cnw0eGpMDCmqJtx/wWcsf03w
-	7Bji+Mn3RgLE9CqDgaCXDsg0cU7n3laimKeBFATazTha3tfLESxS3SbXR8xHe8PD
-	qofZYn0vMVD1sfscUF/YY/hs/KS8kvlrviAEXph14LluHBuzpZzI+Gi0hyw==
-Received: from apblrppmta01.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45t2d71mt6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 04 Apr 2025 11:55:49 +0000 (GMT)
-Received: from pps.filterd (APBLRPPMTA01.qualcomm.com [127.0.0.1])
-	by APBLRPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 534Btju8016523;
-	Fri, 4 Apr 2025 11:55:45 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 45p9xmaehy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 04 Apr 2025 11:55:45 +0000
-Received: from APBLRPPMTA01.qualcomm.com (APBLRPPMTA01.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 534BtjDi016498;
-	Fri, 4 Apr 2025 11:55:45 GMT
-Received: from hu-devc-hyd-u22-c.qualcomm.com (hu-amakhija-hyd.qualcomm.com [10.213.99.91])
-	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 534Bti4U016492
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 04 Apr 2025 11:55:45 +0000
-Received: by hu-devc-hyd-u22-c.qualcomm.com (Postfix, from userid 4090850)
-	id 38B67598; Fri,  4 Apr 2025 17:25:44 +0530 (+0530)
-From: Ayushi Makhija <quic_amakhija@quicinc.com>
-To: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc: Ayushi Makhija <quic_amakhija@quicinc.com>, robdclark@gmail.com,
-        dmitry.baryshkov@linaro.org, sean@poorly.run,
-        marijn.suijten@somainline.org, andersson@kernel.org, robh@kernel.org,
-        robh+dt@kernel.org, krzk+dt@kernel.org, konradybcio@kernel.org,
-        conor+dt@kernel.org, andrzej.hajda@intel.com,
-        neil.armstrong@linaro.org, rfoss@kernel.org,
-        Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
-        jernej.skrabec@gmail.com, quic_abhinavk@quicinc.com,
-        quic_rajeevny@quicinc.com, quic_vproddut@quicinc.com,
-        quic_jesszhan@quicinc.com, Dmitry Baryshkov <lumag@kernel.org>
-Subject: [PATCH v3 04/10] drm/msm/dsi: add DSI PHY configuration on SA8775P
-Date: Fri,  4 Apr 2025 17:25:33 +0530
-Message-Id: <20250404115539.1151201-5-quic_amakhija@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250404115539.1151201-1-quic_amakhija@quicinc.com>
-References: <20250404115539.1151201-1-quic_amakhija@quicinc.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="adcyiKhl"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-39127effa72so177494f8f.2
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 04:57:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1743767843; x=1744372643; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=b3JdFQg9OP+vObOtg3YucUTBQsfmVEuB77cG86LXLR4=;
+        b=adcyiKhlByv36kKW009qNqbAjIymcypcbpQty+vq11AcRCuhVI3iiKyPpSpJ4u1B2+
+         KLIbhiB+SNi6i/rS0IaVETZxBU/W+EfQdp0/1Shllia92pFXCukjjff0ABMjnMLqUTPv
+         fGsUywHlbW2HzS4RRvymW6nKjJ8FF+Hq9qVvgqUsV2PdqOZHTt3nBFt1LSr8zRv6Xmxw
+         6XJhdiBsvo9M5rDdB98BWLThAvnsZzpMlgcCCgZiV85YYXLcIDVIfGYwEJEqmVdf4jnI
+         Qy1slrV0TZMhtjWdBhu4ubMwobl/tHK0uNU+MXQohlARKralP2hADmpiihG7oPvDAVsn
+         dI3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743767843; x=1744372643;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=b3JdFQg9OP+vObOtg3YucUTBQsfmVEuB77cG86LXLR4=;
+        b=dxGsYg0uuwiNEOb7wjIaTWHHbY2i5lIFepNPukzdPwNOcgygczy2l0rhxitL1srQ+n
+         oi5kgSwu43y7kX6jw10gPwV2Dd7mh0lrmRryBEk9ILqp8/51dVZ01zSazWdmYBKan/A6
+         lH/qSCWEx5kiSV+wJ5VDPxVGlLlfj16Ab99cNhbL3xZPxukddLOxBKA+ve5lCJbMhH1O
+         ki81Lcx/7Fntcd/HDvq9B3Wp913xJOjItBXtrfUw+/6hsFFG8phM7AfQHNtwkOlIcAb1
+         5jZVDRDtq3zAwsAstytLv78ZxtP2PjOd5eNSQkWoF4RzX3qC/Uay+3FtfvJ5129J+GTT
+         JvDg==
+X-Forwarded-Encrypted: i=1; AJvYcCVwzR35avm8emtuMl7nzYb2VbXAbYsDjdDLBnhnlgUWqKQzcIC48o/9LwDJbNiUCZDJFVIgskmOOM+A4oE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzC9iKLwRL2DnB709thQxNB5QMUAWe/iY9Ues0v9w+qqeCccrn1
+	yMfDI/yapxCBEaTQ0xoycQM2UoKMmXNSDlsSKEVvS8NaQ/M1oqtTdhAqsLo9ydc=
+X-Gm-Gg: ASbGncudNWoa2nBYLiXrmkfflCoj8ErREN29iBgmxsf4CoOXSLV5fYOPi/t2HNmpNQv
+	ZPiQATS/kKLzOIHxAL8YBZQgQDJjkPVBi/rHwQo41JnKsR64XRTmceGudh3JLfdhN9NGt5fVJNE
+	wG/raFmTbEsMfouZC/uf/luVQxZrWIM+dJnKvpWaeO8ZUX6xbxJe2Ws9HGZ51Lfs7U+ZGHlU1jL
+	luqonUK+OsAi8tAecj0qMqlmuC0YmEseWkah9RWwgwzo9sF30TYq9qJqNbkq6GsELM0lV6XLLF9
+	sO6RFL3d7/5NQY+d1BJ8OL6+PVNUzXu9qUd1QiKmMMyvHgsdqbov6w==
+X-Google-Smtp-Source: AGHT+IErSp1UfkWiyQZSYQ4Fs3U5j3CAQMjPo78hcc56nmGo8lsKvG80Q29kD9bY+/gtM61oyOPwyg==
+X-Received: by 2002:a05:600c:1c1c:b0:43d:fa59:bce9 with SMTP id 5b1f17b1804b1-43ecfa4d95bmr7235225e9.9.1743767843351;
+        Fri, 04 Apr 2025 04:57:23 -0700 (PDT)
+Received: from shite.. ([178.197.198.86])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c301ba2dfsm4209455f8f.60.2025.04.04.04.57.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Apr 2025 04:57:22 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Jerome Brunet <jbrunet@baylibre.com>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-gpio@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-amlogic@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH 1/2] pinctrl: meson: Do not enable by default during compile testing
+Date: Fri,  4 Apr 2025 13:57:18 +0200
+Message-ID: <20250404115719.309999-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,104 +79,114 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=CfwI5Krl c=1 sm=1 tr=0 ts=67efc8c6 cx=c_pps a=Ou0eQOY4+eZoSc0qltEV5Q==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=VwQbUJbxAAAA:8 a=UZNEAvMi2Rj6Meq9XXQA:9 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: sDK-1jDIwfC5ik7PAXd5mxnEFcO8iM9V
-X-Proofpoint-GUID: sDK-1jDIwfC5ik7PAXd5mxnEFcO8iM9V
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-04_05,2025-04-03_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- phishscore=0 impostorscore=0 lowpriorityscore=0 bulkscore=0 adultscore=0
- mlxscore=0 mlxlogscore=999 suspectscore=0 clxscore=1015 spamscore=0
- malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504040082
 
-The SA8775P SoC uses the 5nm (v4.2) DSI PHY driver with
-different enable regulator load.
+Enabling the compile test should not cause automatic enabling of all
+drivers.  Restrict the default to ARCH also for individual drivers, even
+though their choice is not visible without selecting parent Kconfig
+symbol, because otherwise selecting parent would select the child during
+compile testing.
 
-Signed-off-by: Ayushi Makhija <quic_amakhija@quicinc.com>
-Reviewed-by: Dmitry Baryshkov <lumag@kernel.org>
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
- drivers/gpu/drm/msm/dsi/phy/dsi_phy.c     |  2 ++
- drivers/gpu/drm/msm/dsi/phy/dsi_phy.h     |  1 +
- drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c | 27 +++++++++++++++++++++++
- 3 files changed, 30 insertions(+)
+ drivers/pinctrl/meson/Kconfig | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c
-index c0bcc6828963..92be08ac5f65 100644
---- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c
-+++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c
-@@ -581,6 +581,8 @@ static const struct of_device_id dsi_phy_dt_match[] = {
- 	  .data = &dsi_phy_7nm_cfgs },
- 	{ .compatible = "qcom,dsi-phy-7nm-8150",
- 	  .data = &dsi_phy_7nm_8150_cfgs },
-+	{ .compatible = "qcom,sa8775p-dsi-phy-5nm",
-+	  .data = &dsi_phy_5nm_8775p_cfgs },
- 	{ .compatible = "qcom,sc7280-dsi-phy-7nm",
- 	  .data = &dsi_phy_7nm_7280_cfgs },
- 	{ .compatible = "qcom,sm6375-dsi-phy-7nm",
-diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.h b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.h
-index 1925418d9999..8d9a541f9f09 100644
---- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.h
-+++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.h
-@@ -59,6 +59,7 @@ extern const struct msm_dsi_phy_cfg dsi_phy_7nm_8150_cfgs;
- extern const struct msm_dsi_phy_cfg dsi_phy_7nm_7280_cfgs;
- extern const struct msm_dsi_phy_cfg dsi_phy_5nm_8350_cfgs;
- extern const struct msm_dsi_phy_cfg dsi_phy_5nm_8450_cfgs;
-+extern const struct msm_dsi_phy_cfg dsi_phy_5nm_8775p_cfgs;
- extern const struct msm_dsi_phy_cfg dsi_phy_4nm_8550_cfgs;
- extern const struct msm_dsi_phy_cfg dsi_phy_4nm_8650_cfgs;
+diff --git a/drivers/pinctrl/meson/Kconfig b/drivers/pinctrl/meson/Kconfig
+index 90639bc171f6..0315e224bce6 100644
+--- a/drivers/pinctrl/meson/Kconfig
++++ b/drivers/pinctrl/meson/Kconfig
+@@ -3,7 +3,7 @@ menuconfig PINCTRL_MESON
+ 	tristate "Amlogic SoC pinctrl drivers"
+ 	depends on ARCH_MESON || COMPILE_TEST
+ 	depends on OF
+-	default y
++	default ARCH_MESON
+ 	select PINMUX
+ 	select PINCONF
+ 	select GENERIC_PINCONF
+@@ -17,25 +17,25 @@ config PINCTRL_MESON8
+ 	bool "Meson 8 SoC pinctrl driver"
+ 	depends on ARM
+ 	select PINCTRL_MESON8_PMX
+-	default y
++	default ARCH_MESON
  
-diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c b/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
-index a92decbee5b5..2bfe6f921c7e 100644
---- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
-+++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
-@@ -1147,6 +1147,10 @@ static const struct regulator_bulk_data dsi_phy_7nm_37750uA_regulators[] = {
- 	{ .supply = "vdds", .init_load_uA = 37550 },
- };
+ config PINCTRL_MESON8B
+ 	bool "Meson 8b SoC pinctrl driver"
+ 	depends on ARM
+ 	select PINCTRL_MESON8_PMX
+-	default y
++	default ARCH_MESON
  
-+static const struct regulator_bulk_data dsi_phy_7nm_48000uA_regulators[] = {
-+	{ .supply = "vdds", .init_load_uA = 48000 },
-+};
-+
- static const struct regulator_bulk_data dsi_phy_7nm_98000uA_regulators[] = {
- 	{ .supply = "vdds", .init_load_uA = 98000 },
- };
-@@ -1289,6 +1293,29 @@ const struct msm_dsi_phy_cfg dsi_phy_5nm_8450_cfgs = {
- 	.quirks = DSI_PHY_7NM_QUIRK_V4_3,
- };
+ config PINCTRL_MESON_GXBB
+ 	tristate "Meson gxbb SoC pinctrl driver"
+ 	depends on ARM64
+ 	select PINCTRL_MESON8_PMX
+-	default y
++	default ARCH_MESON
  
-+const struct msm_dsi_phy_cfg dsi_phy_5nm_8775p_cfgs = {
-+	.has_phy_lane = true,
-+	.regulator_data = dsi_phy_7nm_48000uA_regulators,
-+	.num_regulators = ARRAY_SIZE(dsi_phy_7nm_48000uA_regulators),
-+	.ops = {
-+		.enable = dsi_7nm_phy_enable,
-+		.disable = dsi_7nm_phy_disable,
-+		.pll_init = dsi_pll_7nm_init,
-+		.save_pll_state = dsi_7nm_pll_save_state,
-+		.restore_pll_state = dsi_7nm_pll_restore_state,
-+		.set_continuous_clock = dsi_7nm_set_continuous_clock,
-+		},
-+	.min_pll_rate = 600000000UL,
-+#ifdef CONFIG_64BIT
-+	.max_pll_rate = 5000000000UL,
-+#else
-+	.max_pll_rate = ULONG_MAX,
-+#endif
-+	.io_start = { 0xae94400, 0xae96400 },
-+	.num_dsi_phy = 2,
-+	.quirks = DSI_PHY_7NM_QUIRK_V4_2,
-+};
-+
- const struct msm_dsi_phy_cfg dsi_phy_4nm_8550_cfgs = {
- 	.has_phy_lane = true,
- 	.regulator_data = dsi_phy_7nm_98400uA_regulators,
+ config PINCTRL_MESON_GXL
+ 	tristate "Meson gxl SoC pinctrl driver"
+ 	depends on ARM64
+ 	select PINCTRL_MESON8_PMX
+-	default y
++	default ARCH_MESON
+ 
+ config PINCTRL_MESON8_PMX
+ 	tristate
+@@ -44,7 +44,7 @@ config PINCTRL_MESON_AXG
+ 	tristate "Meson axg Soc pinctrl driver"
+ 	depends on ARM64
+ 	select PINCTRL_MESON_AXG_PMX
+-	default y
++	default ARCH_MESON
+ 
+ config PINCTRL_MESON_AXG_PMX
+ 	tristate
+@@ -53,24 +53,24 @@ config PINCTRL_MESON_G12A
+ 	tristate "Meson g12a Soc pinctrl driver"
+ 	depends on ARM64
+ 	select PINCTRL_MESON_AXG_PMX
+-	default y
++	default ARCH_MESON
+ 
+ config PINCTRL_MESON_A1
+ 	tristate "Meson a1 Soc pinctrl driver"
+ 	depends on ARM64
+ 	select PINCTRL_MESON_AXG_PMX
+-	default y
++	default ARCH_MESON
+ 
+ config PINCTRL_MESON_S4
+ 	tristate "Meson s4 Soc pinctrl driver"
+ 	depends on ARM64
+ 	select PINCTRL_MESON_AXG_PMX
+-	default y
++	default ARCH_MESON
+ 
+ config PINCTRL_AMLOGIC_A4
+ 	bool "AMLOGIC pincontrol"
+ 	depends on ARM64
+-	default y
++	default ARCH_MESON
+ 	help
+ 	  This is the driver for the pin controller found on Amlogic SoCs.
+ 
+@@ -82,12 +82,12 @@ config PINCTRL_AMLOGIC_C3
+ 	tristate "Amlogic C3 SoC pinctrl driver"
+ 	depends on ARM64
+ 	select PINCTRL_MESON_AXG_PMX
+-	default y
++	default ARCH_MESON
+ 
+ config PINCTRL_AMLOGIC_T7
+ 	tristate "Amlogic T7 SoC pinctrl driver"
+ 	depends on ARM64
+ 	select PINCTRL_MESON_AXG_PMX
+-	default y
++	default ARCH_MESON
+ 
+ endif
 -- 
-2.34.1
+2.45.2
 
