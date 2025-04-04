@@ -1,364 +1,81 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B4C91F416F
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 13:54:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFDE81F099F
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 13:55:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743774886; cv=none; b=dymQ/mw1hlE2nkGR+QHNfG5DlZqDCFsZxzQM1O/P40RiUA63+4fh0s+wPkCVICdhsNzd1wT+KkJBriiq8r+ZXrjS5s127LbtHpa8BX2by6hcW/qwXV5hlSl2spRqAjjHTEY9YNvinm4x1LLyuZT4Dqq0qdHTbEnMjInxDFAgWOI=
+	t=1743774936; cv=none; b=qqXRDwcd6+DidD+HYFoi6wORxN76woEc6Rh4JvlWh5FiqnHsdB23qzpdaKhxc8Zc8zEq792MUhSML2F+mFt7AYclyP4BNvakhpbnZa+H1I7PabrR75Ir3VV7a3rJApuwbgbo7WrVP7CmqQ+H+0VlQkeg3umo2+lOYQfP69e6iJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743774886; c=relaxed/simple;
-	bh=TzzAGUPZSfr3pJxORrzSYxXe5rbwSPVDubUqtayWsr8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HhjTF2zJKkKfomevAqKRTVkpMhSMI18EQ85hzS/P1i7BZUIMx3V+BFoPSdSq8+aCaYC0nitmzT3gCYxf5mdRICzkWUyjF1nsJgM7CCS8kcNVQPsE5FXpxZx3mvNj0OECpFOg+L4Gugnx2nbkpIxN9Fi8Et5TUKghANUdkoFwB8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=smile.fr; spf=pass smtp.mailfrom=smile.fr; dkim=pass (1024-bit key) header.d=smile.fr header.i=@smile.fr header.b=J22En9fR; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=smile.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=smile.fr
+	s=arc-20240116; t=1743774936; c=relaxed/simple;
+	bh=ZSeOpEv9FwaJSB+eGAyFO6sTOppKhI6DSLlTJPZijas=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=CxokJWnq/WMgVZ6AfF4SZs9DJEmUdZqlPBtpGhVWd3o3w/ZbHnxfFtMgRDy/torNsQXH5QUJqemxQzUQYSiOoQ4DoCJyvS98zVZ4Iw9uRFpJJy4gAzNz+uhhcF0iL2cE+l0Ow6I3PpLw+2bSZbBgS/BTiDEe5JLJdUIHQ1Tg1ek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OmAw3upK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=smile.fr header.i=@smile.fr header.b="J22En9fR"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5ed43460d6bso3398890a12.0
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 06:54:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=smile.fr; s=google; t=1743774879; x=1744379679; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mq7JkICkqN6XgL6+CNdZ3+38WtNFoa8H0helDu0w6yI=;
-        b=J22En9fR1rqkKUj6eiJjtwVMhtno4mhgUWZZO9yYkXGxty5G9FLYlEdO3BYWy4s9QU
-         Nc7yI6SUgXADSVP23OqlWE0NcZdhWvKaQLKtDdcEtg9ZpfFJNPgAjAnuw1ZQ+Y3Xhvnh
-         7uiL1iSVpk3p3/5EhAzi9+y3YdHKnVBTumoVE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743774879; x=1744379679;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mq7JkICkqN6XgL6+CNdZ3+38WtNFoa8H0helDu0w6yI=;
-        b=UUC2LOTxfARIqfzoFW5PourbpOCjOB0KDNUnODhk1T7+mBkmQXOlv/IgiaASbNTnrP
-         FWr7r8n2tC7vO3pjxzTGZRVWlImIwECVH6rnZ0go9WU5ksbeODj3rpp48/V/DmMvDr4s
-         NznTq7Nxz3zG/zMkiKj6OCKxsV2SGi8oLtWE+gKw31gUi1l+Zp/ihqRYKbD8UHeipXP3
-         GK4qxsN75124jQOlKnMNSyE4cVjVHUXtrmPMd7EWPZn16Rst2Y+ePq/AysqPBqnlLJeX
-         9FZbqS9mHFXvkM7+yXk+z8vuQWVsRfEIobL1StIHOWIFO55r9HExS2l4+eGyp53Ss13g
-         Atlg==
-X-Forwarded-Encrypted: i=1; AJvYcCWekXM8i6+Boj/G9ifDLyVl55zTc2hLuvXtVhUW33/A+Il0oMHKNU7KP1KeXyJy7/6GK74cDU/e8QeGG4A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyfVgCMeBaUNML/w2+1ABQ+L2JXp7+V1JncXMWCKrIXjJ/YOSRz
-	5KftVXqjnrIY/1so/U+PyV/5w9qsuql6UfVzcgSoleyAY8QhoEjKfzW9qDikf0ICHQpSK9Tac1x
-	OO3WwU2mZ8K8iSIg5crOGTC33SKuQF4/ZU72I6g==
-X-Gm-Gg: ASbGncvW/xgo/ISrCSPVqJ/UIbHMbfqFbj+C+Ss6VoiVlK6uJtaU3Gj1XzzBaIBQlpp
-	IBB74heRIl5YkRtgDdiRqtJQAL/H2NEO2ntnFxs5NDD/OKk8iRp7sOqXb36Y+nJ55PWLsODaXV2
-	tyzLTsjE35h16g1SAt4hdJjTAdRQ==
-X-Google-Smtp-Source: AGHT+IFXBMBQh84SPFA1ke6dDoxsNULs353AB4Sq132g1VTzqy7EZo9T/igMb43O4/eEIf9DuJ4q6ij914J5nItOfms=
-X-Received: by 2002:a05:6402:51c7:b0:5e8:bf8b:4396 with SMTP id
- 4fb4d7f45d1cf-5f0b658917cmr2341509a12.13.1743774879374; Fri, 04 Apr 2025
- 06:54:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OmAw3upK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C611C4CEDD;
+	Fri,  4 Apr 2025 13:55:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743774935;
+	bh=ZSeOpEv9FwaJSB+eGAyFO6sTOppKhI6DSLlTJPZijas=;
+	h=From:To:Cc:Subject:Date:From;
+	b=OmAw3upKNZz7a4Q9UDnMcmxfs+q1TG6YG82InBt0iNlYQHG3yiS3q6bp4/en/op8U
+	 TuxGYNTF5si7kckkQ3dat0h2yqPGdtqTwW6YA8ZLjKFcXsHUOmLFtuFCWrsiXDAvm7
+	 AFDEgKlEfJXlgLzgaV81S9SIj/tT6bemw8A0KMVfD17LC0Y0+N3fnIu4pRSFaXAhgm
+	 3FpAhuFwFM6rtF5PlWJhrfLgTE46a1gzja8Nn8YfBgbUOi2TI7U6V6FMc9cvEjEsZ8
+	 Kr5/napQCFWtc+2qhVvnAa+hFwgEz4fYhzcmA1DWX7zHwOpN1VVczw0BL62Vtgdc0E
+	 fmRLbzOogstlA==
+From: Arnd Bergmann <arnd@kernel.org>
+To: =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] firmware: turris-mox-rwtm: fix building without CONFIG_KEYS
+Date: Fri,  4 Apr 2025 15:55:25 +0200
+Message-Id: <20250404135531.2421755-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250326153535.158137-1-corentin.guillevic@smile.fr> <3be3ca59-157d-4ceb-81bd-4a1acdbccb9c@wanadoo.fr>
-In-Reply-To: <3be3ca59-157d-4ceb-81bd-4a1acdbccb9c@wanadoo.fr>
-From: Corentin GUILLEVIC <corentin.guillevic@smile.fr>
-Date: Fri, 4 Apr 2025 15:54:28 +0200
-X-Gm-Features: ATxdqUHIMMxfhYog5N5EbMGu-cdJbJG577zcyhIzeQ6REUNq6nXWSs3jt6g3j5o
-Message-ID: <CAMFqQmpJB4WeOM7GF1dEuJDb27rf=CBC4UuROWA+AH2+ZbJE8w@mail.gmail.com>
-Subject: Re: [PATCH 1/2] leds: tlc5928: Driver for the TI 16 Channel spi LED driver
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-leds@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi,
+From: Arnd Bergmann <arnd@arndb.de>
 
-Thank you for your review! I've fixed everything (new patch is
-coming), but I have issue for some of them: I can't use the suggested
-functions (guard(), for_each_available_child_of_node_scoped() and
-devm_mutex_init()) because the kernel version used on my device is too
-old (v5.15). No way to test with a newer version...
+"struct key" is defined conditionally, so the code referencing it
+must be made conditional as well:
 
-Should I let the "old" functions because of my kernel version?
+In file included from drivers/firmware/turris-mox-rwtm.c:29:
+include/linux/turris-signing-key.h: In function 'turris_signing_key_get_dev':
+include/linux/turris-signing-key.h:26:19: error: invalid use of undefined type 'const struct key'
+   26 |         return key->payload.data[1];
+      |                   ^~
 
->
-> Le 26/03/2025 =C3=A0 16:35, Corentin Guillevic a =C3=A9crit :
-> > The TLC59928 is an SPI-connected bus controlled 16-channel LED driver.
-> > A single 16-bit register handles the whole LEDs. Following a write, a
-> > latch GPIO applies the new LED configuration. An "enable" GPIO (blank
-> > in the TLC59928 datasheet) turns off the whole LEDs when active/high.
-> >
-> > This driver is able to handle a daisy-chain case, so when several
-> > TLC59928 controllers are connected in serie.
-> >
-> > Signed-off-by: Corentin Guillevic <corentin.guillevic@smile.fr>
-> > ---
->
-> ...
->
-> > +static int
-> > +tlc5928_set_ledout(struct tlc5928_led *led, bool val)
-> > +{
-> > +     struct tlc5928_chip *chip;
-> > +     struct tlc5928_chip *chip_owner =3D led->chip;
-> > +     struct tlc5928_priv *priv =3D chip_owner->priv;
-> > +     int ret;
-> > +
-> > +     mutex_lock(&priv->lock);
-> > +
-> > +     if (val)
-> > +             chip_owner->leds_state |=3D (1 << led->led_no);
-> > +     else
-> > +             chip_owner->leds_state &=3D ~(1 << led->led_no);
-> > +
-> > +     list_for_each_entry_reverse(chip, &priv->chips_list, list) {
-> > +             u16 leds_state =3D cpu_to_be16(chip->leds_state);
-> > +
-> > +             ret =3D spi_write(priv->spi, &(leds_state), sizeof(leds_s=
-tate));
-> > +
-> > +             if (ret)
->
-> Missing unlock.
-> Or use guard()?
->
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ include/linux/turris-signing-key.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Fixed! But guard() is unavailable on my kernel.
+diff --git a/include/linux/turris-signing-key.h b/include/linux/turris-signing-key.h
+index 032ca8cbf636..8a435b73c3a9 100644
+--- a/include/linux/turris-signing-key.h
++++ b/include/linux/turris-signing-key.h
+@@ -11,6 +11,7 @@
+ 
+ struct device;
+ 
++#ifdef CONFIG_KEYS
+ struct turris_signing_key_subtype {
+ 	u16 key_size;
+ 	u8 data_size;
+@@ -29,5 +30,6 @@ static inline struct device *turris_signing_key_get_dev(const struct key *key)
+ int
+ devm_turris_signing_key_create(struct device *dev, const struct turris_signing_key_subtype *subtype,
+ 			       const char *desc);
++#endif
+ 
+ #endif /* __TURRIS_SIGNING_KEY_H */
+-- 
+2.39.5
 
-> > +                     return ret;
-> > +     }
-> > +
-> > +     gpiod_set_value(priv->latch_gpio, 0);
-> > +     udelay(1);
-> > +     gpiod_set_value(priv->latch_gpio, 1);
-> > +
-> > +     mutex_unlock(&priv->lock);
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int
-> > +tlc5928_brightness_set(struct led_classdev *led_cdev,
-> > +                     enum led_brightness brightness)
-> > +{
-> > +     struct tlc5928_led *led =3D ldev_to_led(led_cdev);
-> > +
-> > +     /* TLC5928 only allows on/off, no brightness */
-> > +     return tlc5928_set_ledout(led, !!brightness);
-> > +}
-> > +
-> > +static const struct of_device_id of_tlc5928_leds_match[] __maybe_unuse=
-d =3D {
-> > +     { .compatible =3D "ti,tlc5928" },
-> > +     {},
->
-> Unneeded trailing ,
->
-> > +};
-> > +MODULE_DEVICE_TABLE(of, of_tlc5928_leds_match);
-> > +
-> > +static int tlc5928_probe_chip_dt(struct device *dev, struct device_nod=
-e *node,
-> > +             struct tlc5928_chip *chip)
-> > +{
-> > +     struct device_node *child;
-> > +     int count, err, reg;
-> > +
-> > +     count =3D of_get_available_child_count(node);
-> > +     if (!count)
-> > +             return -EINVAL;
-> > +
-> > +     chip->leds_state =3D 0;
-> > +
-> > +     for_each_available_child_of_node(node, child) {
->
-> for_each_available_child_of_node_scoped()?
->
-
-Same, not defined because my kernel is too old.
-
-> > +             struct tlc5928_led *led;
-> > +             struct led_init_data init_data =3D {};
-> > +
-> > +             init_data.fwnode =3D of_fwnode_handle(child);
-> > +
-> > +             err =3D of_property_read_u32(child, "reg", &reg);
-> > +             if (err) {
-> > +                     dev_err(dev, "%pOF: failed to read reg\n", child)=
-;
-> > +                     of_node_put(child);
-> > +                     return err;
-> > +             }
-> > +
-> > +             if (reg < 0 || reg >=3D TLC5928_MAX_LEDS ||
-> > +                             chip->leds[reg].active) {
-> > +                     of_node_put(child);
-> > +                     return -EINVAL;
-> > +             }
-> > +
-> > +             led =3D &chip->leds[reg];
-> > +
-> > +             led->active =3D true;
-> > +             led->chip =3D chip;
-> > +             led->led_no =3D reg;
-> > +             led->ldev.brightness_set_blocking =3D tlc5928_brightness_=
-set;
-> > +             err =3D devm_led_classdev_register_ext(dev, &led->ldev,
-> > +                                                      &init_data);
-> > +             if (err < 0) {
-> > +                     of_node_put(child);
-> > +                     dev_err(dev, "Failed to register LED for node %pf=
-w\n",
-> > +                             init_data.fwnode);
-> > +                     return err;
-> > +             }
-> > +     }
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int tlc5928_probe(struct spi_device *spi)
-> > +{
-> > +     struct device_node *node, *child;
-> > +     struct device *dev =3D &spi->dev;
-> > +     struct list_head *pos;
-> > +     struct tlc5928_chip *chip;
-> > +     struct tlc5928_priv *priv;
-> > +     int count, err, i;
-> > +
-> > +     node =3D dev_of_node(dev);
-> > +     if (!node)
-> > +             return -ENODEV;
-> > +
-> > +     count =3D of_get_available_child_count(node);
-> > +     if (!count)
-> > +             return -EINVAL;
-> > +
-> > +     priv =3D devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-> > +     if (!priv)
-> > +             return -ENOMEM;
-> > +
-> > +     priv->spi =3D spi;
-> > +     priv->latch_gpio =3D devm_gpiod_get(dev, "latch", GPIOD_OUT_HIGH)=
-;
-> > +     if (IS_ERR(priv->latch_gpio))
-> > +             return dev_err_probe(dev, PTR_ERR(priv->latch_gpio),
-> > +                                  "Failed to get latch GPIO\n");
-> > +
-> > +     mutex_init(&priv->lock);
->
-> Maybe:
-> err =3D devm_mutex_init(...);
-> if (err)
->         return err;
->
-> ?
-
-Same.
-
->
-> > +     INIT_LIST_HEAD(&priv->chips_list);
-> > +
-> > +     i =3D 0;
-> > +     for_each_available_child_of_node(node, child) {
-> > +             chip =3D devm_kzalloc(dev, sizeof(*chip), GFP_KERNEL);
-> > +             if (!chip)
-> > +                     return -ENOMEM;
-> > +
-> > +             list_add_tail(&chip->list, &priv->chips_list);
-> > +             chip->priv =3D priv;
-> > +             chip->enable_gpio =3D devm_gpiod_get_index_optional(dev, =
-"enable", i,
-> > +                             GPIOD_OUT_HIGH);
-> > +             if (IS_ERR(chip->enable_gpio)) {
-> > +                     dev_err(dev, "Error getting enable GPIO %i proper=
-ty: %ld\n", i,
-> > +                                     PTR_ERR(chip->enable_gpio));
-> > +                     return PTR_ERR(chip->enable_gpio);
-> > +             }
-> > +
-> > +             err =3D tlc5928_probe_chip_dt(dev, child, chip);
-> > +             if (err)
-> > +                     return err;
-> > +
-> > +             i++;
-> > +     }
-> > +
-> > +     list_for_each(pos, &priv->chips_list) {
->
-> list_for_each_entry()?
->
-> > +             chip =3D container_of(pos, struct tlc5928_chip, list);
-> > +             if (chip->enable_gpio)
-> > +                     gpiod_set_value(chip->enable_gpio, 0);
-> > +     }
-> > +
-> > +     spi_set_drvdata(spi, priv);
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int tlc5928_remove(struct spi_device *spi)
-> > +{
-> > +     struct list_head *pos;
-> > +     struct tlc5928_priv *priv =3D spi_get_drvdata(spi);
-> > +     int i;
-> > +
-> > +     list_for_each(pos, &priv->chips_list) {
->
-> list_for_each_entry()?
->
-
-Fixed!
-
-> > +             struct tlc5928_chip *chip =3D container_of(pos, struct tl=
-c5928_chip,
-> > +                             list);
-> > +
-> > +             for (i =3D 0; i < TLC5928_MAX_LEDS; i++) {
-> > +                     if (chip->leds[i].active)
-> > +                             devm_led_classdev_unregister(&spi->dev,
-> > +                                          &chip->leds[i].ldev);
->
-> Why is it needed?
-> devm_led_classdev_register_ext() was used.
->
-
-Yes, because the latch GPIO is set each time a LED is set. But during
-the module removing process, devm releases before the GPIO and then
-each LED (turning them off). So the kernel gets a NULL pointer after
-deference.
-
-An explicit unregister allows to free the LEDs before the GPIO.
-
-> > +             }
-> > +
-> > +             if (chip->enable_gpio) {
-> > +                     gpiod_set_value(chip->enable_gpio, 1);
-> > +                     gpiod_put(chip->enable_gpio);
->
-> Why is it needed?
-> devm_gpiod_get_index_optional() was used.
->
-
-Fixed!
-
-> > +             }
-> > +     }
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static const struct spi_device_id tlc5928_id[] =3D {
-> > +     { "tlc5928" },
-> > +     {},
->
-> Unneeded trailing ,
->
-> > +};
-> > +MODULE_DEVICE_TABLE(spi, tlc5928_id);
->
-> ...
->
-> CJ
->
-
-Corentin Guillevic
