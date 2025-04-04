@@ -1,101 +1,193 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C48F17F4F6;
-	Fri,  4 Apr 2025 06:35:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A5F9847B;
+	Fri,  4 Apr 2025 06:35:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743748533; cv=none; b=Tvckfn8K1rNnrOq2EIZJOADrG/wjoHtttbhZn9tyYiqNHviLkh62km/a9HnyAV4vOZhrxmvGIaNoJN4LznLf0Qmudfu2laMHaWUAFjyrgdUUcvCwmDeV8PZfKD09Yvkmh+mN8FnruArgXUsnOnCcmcH3seaO0K4HtqBc6xPY4AQ=
+	t=1743748549; cv=none; b=IzSJel+XuOqdbmmkaKkVzQN0wuur9nlZlGUAYEaX44wQjTMzhWSoR0wMPnYynniIrvOGrrr2c/LeoscFU1n8hSuae+3uNXWxexIUSH5e2n7ARKzvhSf9dDJpS8CjWAyw7IcvRFKTrX215Rpi8LQd5OBvl1uE8IErmtH8FJ9kPXg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743748533; c=relaxed/simple;
-	bh=f5UIYiHZr8F8zpMCKNp8y/OGEA3xHGIo+nLug8tZ04o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BzW3aFjjI5w0/ihkIRj5T6lUxpqHAXR9GDPMbknTlmT2ZKPCyi+LSt/aAUjkzLl1PYLaz6Rq2uCG5ZddExhDjYCsMnFreVo4OQqwK5PDYQAN1egL7L/xEnCwA2hIs5l90ZrFMMuhrBY+HLwIH9m8Yx/DTBd6XsJpi7KVYj0o0Zg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=yMLAmrTe; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	s=arc-20240116; t=1743748549; c=relaxed/simple;
+	bh=hD8174uOH2T+lsYS2evpeGfkcl1Wpip1zHGbv8j2Ef8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rqBtrXnrax2vdCgMJb8G/Y62IDbhlsXSgMjbKpdPsWcAcScbVaja0Gnec65rD8+NszaMbInTo60q9mPOKk12wx69ID4rvMkdFU+U7CFKKHnjy8NFTIDpAaaLfWUHjkgKKWlQy00tE3I0ZU+qG1munhVxk0uEP394kgjIJVmqIec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=VLtktzyg; arc=none smtp.client-ip=178.60.130.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="yMLAmrTe"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=oRL0tdJAjPV+G5hvzUicbBcc4clC5hezIULcGYZrejk=; b=yMLAmrTerlCYoA+aZjVyTxFk7c
-	/ODMdcEzGnEXoNZfxHBGocpOAS6S5WWdpfJJ/VeXkrszrn/2k7BclSgztw1iRnkALPnx632SU7Wfl
-	01XHHIZbz1cJeyP5Cxyuosnyf38KscTeVlmBTaUPwRJTdE49XYIz3jn8XVuY128BjrxhNx+Cn09lX
-	Xfgs4/mE0vq+8HD7VOLB1H3qdhTmZy3/vQonUGAOiLNKV0d/JU/PSZb/FCiqoMSpdV5SZrLoEHJF6
-	BodJBDnDcgfOf8VB9R0OgXQYFYrupaGYA3/qIiMSg/Lfh9UWcePY5aGGY2noFwUuwvbQdw+MExcfi
-	EdEc7xXg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u0aeI-0000000AtBZ-2zlI;
-	Fri, 04 Apr 2025 06:35:30 +0000
-Date: Thu, 3 Apr 2025 23:35:30 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: David Woodhouse <dwmw2@infradead.org>
-Cc: Christoph Hellwig <hch@infradead.org>, virtio-comment@lists.linux.dev,
-	mst@redhat.com, Claire Chang <tientzu@chromium.org>,
-	linux-devicetree <devicetree@vger.kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	=?iso-8859-1?Q?J=F6rg?= Roedel <joro@8bytes.org>,
-	iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-	graf@amazon.de
-Subject: Re: [RFC PATCH 1/3] content: Add VIRTIO_F_SWIOTLB to negotiate use
- of SWIOTLB bounce buffers
-Message-ID: <Z-99snVF5ESyJDDs@infradead.org>
-References: <20250402112410.2086892-1-dwmw2@infradead.org>
- <20250402112410.2086892-2-dwmw2@infradead.org>
- <Z-43svGzwoUQaYvg@infradead.org>
- <148a3c8ee53af585b42ec025c2c7821ad852c66c.camel@infradead.org>
- <Z-46TDmspmX0BJ2H@infradead.org>
- <05abb68286dd4bc17b243130d7982a334503095b.camel@infradead.org>
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="VLtktzyg"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=0rog/nxboMHnwuFuI69UvOFfP3CGYosW55e+1Io3x50=; b=VLtktzygHenGP22YTGx9UMPXIs
+	obpPCT9aIas2r7evBpL2D0bb1js6q0i/B4uC2opnWfDUipcfONy+0g0IbelLJS8aWQuyS2PsuDIdm
+	7w0cjzbWLsM7LHRK3mT51Cc3k9Ln/ZQIsH1KX/wq6HZzUcbB72ZYToUAJurnXWcFJEdpGZUbdw3BA
+	eh4hfAftwtmwzZFx1nZQs65zJEKslflvY7h601Fs48wxfKauy8fCWwVUIJ5I1FVouXn1lFW/1ES93
+	UOhDoOM9fSM2eyYscL3Uhqe7g8Qpi9xnwtjK0geFQUNqmvLdom5iBDTzulTdeQFl3ou1zbJmbqssb
+	K7OyNpGw==;
+Received: from [223.233.74.223] (helo=[192.168.1.12])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1u0aeJ-00BDab-Pv; Fri, 04 Apr 2025 08:35:32 +0200
+Message-ID: <6beead5a-8c21-af57-0304-1bf825588481@igalia.com>
+Date: Fri, 4 Apr 2025 12:05:26 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <05abb68286dd4bc17b243130d7982a334503095b.camel@infradead.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.0
+Subject: Re: [PATCH v2 1/3] exec: Dynamically allocate memory to store task's
+ full name
+Content-Language: en-US
+To: Yafang Shao <laoar.shao@gmail.com>, Bhupesh <bhupesh@igalia.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>
+Cc: akpm@linux-foundation.org, kernel-dev@igalia.com,
+ linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-mm@kvack.org, oliver.sang@intel.com, lkp@intel.com, pmladek@suse.com,
+ rostedt@goodmis.org, mathieu.desnoyers@efficios.com, arnaldo.melo@gmail.com,
+ alexei.starovoitov@gmail.com, andrii.nakryiko@gmail.com,
+ mirq-linux@rere.qmqm.pl, peterz@infradead.org, willy@infradead.org,
+ david@redhat.com, viro@zeniv.linux.org.uk, keescook@chromium.org,
+ ebiederm@xmission.com, brauner@kernel.org, jack@suse.cz, mingo@redhat.com,
+ juri.lelli@redhat.com, bsegall@google.com, mgorman@suse.de,
+ vschneid@redhat.com
+References: <20250331121820.455916-1-bhupesh@igalia.com>
+ <20250331121820.455916-2-bhupesh@igalia.com>
+ <CALOAHbB51b-reG6+ypr43sBJ-QpQhF39r5WPjuEp5rgabgRmoA@mail.gmail.com>
+From: Bhupesh Sharma <bhsharma@igalia.com>
+In-Reply-To: <CALOAHbB51b-reG6+ypr43sBJ-QpQhF39r5WPjuEp5rgabgRmoA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, Apr 03, 2025 at 09:06:37AM +0100, David Woodhouse wrote:
-> You are right, in theory, that (2b) is the job of ACPI or DT to
-> communicate. But virtio is presented as just another PCI device,
-> indistinguishable by the guest from other PCI devices which *are*
-> actually able to do DMA through the hardware's two-stage IOMMU.
 
-Then the virtual device should be behind a different IOMMU (or no IOMMU
-at all) to clearly differciate them for the assigned hardware devices.
+On 4/1/25 7:37 AM, Yafang Shao wrote:
+> On Mon, Mar 31, 2025 at 8:18 PM Bhupesh <bhupesh@igalia.com> wrote:
+>> Provide a parallel implementation for get_task_comm() called
+>> get_task_full_name() which allows the dynamically allocated
+>> and filled-in task's full name to be passed to interested
+>> users such as 'gdb'.
+>>
+>> Currently while running 'gdb', the 'task->comm' value of a long
+>> task name is truncated due to the limitation of TASK_COMM_LEN.
+>>
+>> For example using gdb to debug a simple app currently which generate
+>> threads with long task names:
+>>    # gdb ./threadnames -ex "run info thread" -ex "detach" -ex "quit" > log
+>>    # cat log
+>>
+>>    NameThatIsTooLo
+>>
+>> This patch does not touch 'TASK_COMM_LEN' at all, i.e.
+>> 'TASK_COMM_LEN' and the 16-byte design remains untouched. Which means
+>> that all the legacy / existing ABI, continue to work as before using
+>> '/proc/$pid/task/$tid/comm'.
+>>
+>> This patch only adds a parallel, dynamically-allocated
+>> 'task->full_name' which can be used by interested users
+>> via '/proc/$pid/task/$tid/full_name'.
+>>
+>> After this change, gdb is able to show full name of the task:
+>>    # gdb ./threadnames -ex "run info thread" -ex "detach" -ex "quit" > log
+>>    # cat log
+>>
+>>    NameThatIsTooLongForComm[4662]
+>>
+>> Signed-off-by: Bhupesh <bhupesh@igalia.com>
+>> ---
+>>   fs/exec.c             | 21 ++++++++++++++++++---
+>>   include/linux/sched.h |  9 +++++++++
+>>   2 files changed, 27 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/fs/exec.c b/fs/exec.c
+>> index f45859ad13ac..4219d77a519c 100644
+>> --- a/fs/exec.c
+>> +++ b/fs/exec.c
+>> @@ -1208,6 +1208,9 @@ int begin_new_exec(struct linux_binprm * bprm)
+>>   {
+>>          struct task_struct *me = current;
+>>          int retval;
+>> +       va_list args;
+>> +       char *name;
+>> +       const char *fmt;
+>>
+>>          /* Once we are committed compute the creds */
+>>          retval = bprm_creds_from_file(bprm);
+>> @@ -1348,11 +1351,22 @@ int begin_new_exec(struct linux_binprm * bprm)
+>>                   * detecting a concurrent rename and just want a terminated name.
+>>                   */
+>>                  rcu_read_lock();
+>> -               __set_task_comm(me, smp_load_acquire(&bprm->file->f_path.dentry->d_name.name),
+>> -                               true);
+>> +               fmt = smp_load_acquire(&bprm->file->f_path.dentry->d_name.name);
+>> +               name = kvasprintf(GFP_KERNEL, fmt, args);
+>> +               if (!name)
+>> +                       return -ENOMEM;
+>> +
+>> +               me->full_name = name;
+>> +               __set_task_comm(me, fmt, true);
+>>                  rcu_read_unlock();
+>>          } else {
+>> -               __set_task_comm(me, kbasename(bprm->filename), true);
+>> +               fmt = kbasename(bprm->filename);
+>> +               name = kvasprintf(GFP_KERNEL, fmt, args);
+>> +               if (!name)
+>> +                       return -ENOMEM;
+>> +
+>> +               me->full_name = name;
+>> +               __set_task_comm(me, fmt, true);
+>>          }
+>>
+>>          /* An exec changes our domain. We are no longer part of the thread
+>> @@ -1399,6 +1413,7 @@ int begin_new_exec(struct linux_binprm * bprm)
+>>          return 0;
+>>
+>>   out_unlock:
+>> +       kfree(me->full_name);
+>>          up_write(&me->signal->exec_update_lock);
+>>          if (!bprm->cred)
+>>                  mutex_unlock(&me->signal->cred_guard_mutex);
+>> diff --git a/include/linux/sched.h b/include/linux/sched.h
+>> index 56ddeb37b5cd..053b52606652 100644
+>> --- a/include/linux/sched.h
+>> +++ b/include/linux/sched.h
+>> @@ -1166,6 +1166,9 @@ struct task_struct {
+>>           */
+>>          char                            comm[TASK_COMM_LEN];
+>>
+>> +       /* To store the full name if task comm is truncated. */
+>> +       char                            *full_name;
+>> +
+> Adding another field to store the task name isn’t ideal. What about
+> combining them into a single field, as Linus suggested [0]?
+>
+> [0]. https://lore.kernel.org/all/CAHk-=wjAmmHUg6vho1KjzQi2=psR30+CogFd4aXrThr2gsiS4g@mail.gmail.com/
+>
 
-> To my knowledge there isn't a clean way, across platforms, to tell an
-> operating system that a certain device just *can't* do DMA at all. 
+Thanks for sharing Linus's suggestion. I went through the suggested 
+changes in the related threads and came up with the following set of points:
 
-Well, it's part of the device specific if it can do DMA or not.  We
-had a bunch of early PCI (and a lot of ISA) device that could not
-do P2P.  Even on PCIe there might be weirdo device that just expose
-a bar or have some bitbanged i2c or similar.
+1. struct task_struct would contain both 'comm' and 'full_name',
+2. Remove the task_lock() inside __get_task_comm(),
+3. Users of task->comm will be affected in the following ways:
+     (a). Printing with '%s' and tsk->comm would just continue to 
+work,but will get a longer max string.
+     (b). For users of memcpy.*->comm\>', we should change 'memcpy()' to 
+'copy_comm()' which would look like:
 
-Now if you mean virtio devices - yes there's no way currently as virtio
-is a quite fundamentally DMA based model.
+         memcpy(dst, src, TASK_COMM_LEN);
+         dst[TASK_COMM_LEN-1] = 0;
 
-> And
-> even if there was, why offer a device model that could *theoretically*
-> do DMA, just to tell the guest through some other channel that it
-> can't?
+    (c). Users which use "sizeof(->comm)" will continue to get the old value because of the hacky union.
 
-That would be the normal way.  Because virtio devices fundamentally can
-do DMA.  It's just your guest specification doesn't want them to.
+Am I missing something here. Please let me know your views.
 
-> What's wrong with a simple option to indicate, in the device model that
-> the system designer chooses to build for the guest, that it can't do
-> DMA?
-
-As stated above I suspect you still are asking the wrong question and
-have the wrong mental model.  Virtio fundamentally can do DMA, you just
-don't want it to.  And based on the other subthread I also suspect you'd
-actually be much better off with your bounce buffer in the virtual host
-memory instead of coming up with this particularly odd case, but even
-if not it's the system description that matters here, not the device
-model.
+Thanks,
+Bhupesh
 
