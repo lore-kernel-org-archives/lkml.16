@@ -1,121 +1,72 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D769B1F4631;
-	Fri,  4 Apr 2025 14:56:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79FEBDF49;
+	Fri,  4 Apr 2025 14:58:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743778566; cv=none; b=OWXEAmgpiSwmmpmIiML/lezMxcwNKfHMjh0cprm2+lSaCAu+kaMXf9IU6JASs4AIh0rZTwjzjshGUapMCSHjaBVi6j4GPvBJcbnK/Wt6NsqIzBAuWv6Y0k3h9CuOU+F4Elk9k5XsI3XkC2W1ax/f3zWwEufxqgL+a5nSPuRprCs=
+	t=1743778687; cv=none; b=SbBGGx3EZRMXOwbQFRc5j2PANd0e10X18fLqzhe9XyFx2ZGmCriLC9SF/3vjp05LcX9yWCStmMOGP8hYMEyJ8897rxDf/XTVRNbRQ3hlkwqYYXlStOlbuH78smJf1wFVS8ZaEjgmZ601mfurwN9tGnVLebtIpqMXnhvWXQKjFgk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743778566; c=relaxed/simple;
-	bh=ZKC9yGDKP7ZL9SggbwEVntc6h66l9cUcpFwGsLIdwyU=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=lKA+zS0UMD6zZOeNFxnjNMCj9R6nqI9DB9yYT46K135ebojv/CpfWMZZjyAm3PiM6tP++k5i0URBuAKoodnyryACCX2RV0QPeJmZYimrisqd+8cqOCQYHtIjC6dI27WYKYVA/atlrQ5DYc7oSJb8xA95dGU02h5EcLp8OMcrLWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lYq0Ahwk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743778687; c=relaxed/simple;
+	bh=LPsLxYddlVBXJ54faW88NFXswk0z7R7equVpFWPbk3Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ah97QgjtZIE+qQ4lfOv6rqIes+xU9uJHiocxiZERsljCGT7alrM30TxPKDpn7wg9z86xZzplGIrTiuyBg3kqBI2Mn+kJI/iPXx8IirFfUVJbofyWqkcAg6bBXp9ApfmuooodzQvhVNMBPjtzs9lXgTK6sN2j0ZRlWyCs6jkzVyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ONYkqMUD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lYq0Ahwk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08F3BC4CEDD;
-	Fri,  4 Apr 2025 14:56:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ONYkqMUD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DC47C4CEDD;
+	Fri,  4 Apr 2025 14:58:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743778565;
-	bh=ZKC9yGDKP7ZL9SggbwEVntc6h66l9cUcpFwGsLIdwyU=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=lYq0AhwkZcTUWyVwicaZ1vvM7sdLhXVWb88uIIREKJeM4f4dFtPRR+5YtBnIQ3+8S
-	 4rmWfDWxmKz8BkutmGYcsQCbqBKQsOpb3vKdZoOj3zlMzyIr63+JtEno2kDqBxKGaL
-	 uSpnRzGTivLPzIQSa2vlGQgFkEoHK4Djr247EPkB1MI0mgoQqCboWVbZe1YDRxstNw
-	 XL6TPr4SJ3ntriVvow1CY9ZhW/TaC9VWQaFtDYXQkEycuv4vNUekj/x3m4CmjcWhg8
-	 J/6CXGfE842P8cqvOhDfI5vtBqXZj1W2sAP8ubZBZr4Jve8ltlaLGaw/5ccWSyVqKq
-	 iX0gZX5BzPDSQ==
-Date: Fri, 04 Apr 2025 09:56:03 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=k20201202; t=1743778685;
+	bh=LPsLxYddlVBXJ54faW88NFXswk0z7R7equVpFWPbk3Y=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ONYkqMUD5CSrr0YYiKGIMwHNUNnHmtuc431Y6HKpwE9CULNssRPG8vv8x1YgYUjEn
+	 C0U2uNGhpckQrvyrqzxZW6SjzbG2WXV2AJ4OsoXeqe+7UPjbnLQsGbab0kszgabYAL
+	 1Hwe2Ny26g9DoKRQX6kD8vsI38hkdG94QGTK13wDtRbb0FcviUN+Wz8HeuRMVRUh4t
+	 +ISBWfcWtb+rAnUIRM7uCtRl7tWBlrb/Fk9xiKcS+eUrcBbpRCxZdIsG1pl+S3+f+6
+	 kpl1oQnCrKaNTKqnq0X8Wl/UXLMcGsdC7RiTAkgFXiJ11xlPz7WrFoGJlLucAt0EYc
+	 9FuaUylrBukgw==
+Date: Fri, 4 Apr 2025 07:58:04 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Jijie Shao <shaojijie@huawei.com>
+Cc: <davem@davemloft.net>, <edumazet@google.com>, <pabeni@redhat.com>,
+ <andrew+netdev@lunn.ch>, <horms@kernel.org>, <shenjian15@huawei.com>,
+ <wangpeiyang1@huawei.com>, <liuyonglong@huawei.com>,
+ <chenhao418@huawei.com>, <jonathan.cameron@huawei.com>,
+ <shameerali.kolothum.thodi@huawei.com>, <salil.mehta@huawei.com>,
+ <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net v2 6/7] net: hibmcge: fix not restore rx pause mac
+ addr after reset issue
+Message-ID: <20250404075804.42ccf6f0@kernel.org>
+In-Reply-To: <20250403135311.545633-7-shaojijie@huawei.com>
+References: <20250403135311.545633-1-shaojijie@huawei.com>
+	<20250403135311.545633-7-shaojijie@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Bjorn Andersson <andersson@kernel.org>, 
- Viresh Kumar <viresh.kumar@linaro.org>, linux-kernel@vger.kernel.org, 
- Conor Dooley <conor@kernel.org>, linux-rockchip@lists.infradead.org, 
- Daniel Machon <daniel.machon@microchip.com>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
- UNGLinuxDriver@microchip.com, Jerome Brunet <jbrunet@baylibre.com>, 
- Kevin Hilman <khilman@baylibre.com>, linux-sunxi@lists.linux.dev, 
- Liviu Dudau <liviu.dudau@arm.com>, linux-arm-kernel@lists.infradead.org, 
- Fabio Estevam <festevam@gmail.com>, 
- Neil Armstrong <neil.armstrong@linaro.org>, Stephen Boyd <sboyd@kernel.org>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Vincenzo Frascino <vincenzo.frascino@arm.com>, 
- linux-renesas-soc@vger.kernel.org, 
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
- Magnus Damm <magnus.damm@gmail.com>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Geert Uytterhoeven <geert+renesas@glider.be>, 
- Viresh Kumar <vireshk@kernel.org>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, zhouyanjie@wanyeetech.com, 
- Claudiu Beznea <claudiu.beznea@tuxon.dev>, Heiko Stuebner <heiko@sntech.de>, 
- Jernej Skrabec <jernej.skrabec@gmail.com>, linux-pm@vger.kernel.org, 
- linux-mediatek@lists.infradead.org, Chen-Yu Tsai <wens@csie.org>, 
- linux-mips@vger.kernel.org, imx@lists.linux.dev, 
- Samuel Holland <samuel@sholland.org>, Sudeep Holla <sudeep.holla@arm.com>, 
- Nishanth Menon <nm@ti.com>, devicetree@vger.kernel.org, 
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
- linux-arm-msm@vger.kernel.org, Nicolas Ferre <nicolas.ferre@microchip.com>, 
- linux-amlogic@lists.infradead.org, Sascha Hauer <s.hauer@pengutronix.de>, 
- Steen Hegelund <Steen.Hegelund@microchip.com>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- Matthias Brugger <matthias.bgg@gmail.com>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-In-Reply-To: <20250403-dt-cpu-schema-v1-14-076be7171a85@kernel.org>
-References: <20250403-dt-cpu-schema-v1-0-076be7171a85@kernel.org>
- <20250403-dt-cpu-schema-v1-14-076be7171a85@kernel.org>
-Message-Id: <174377856145.1313232.11316769002552655294.robh@kernel.org>
-Subject: Re: [PATCH 14/19] dt-bindings: arm/cpus: Add schemas for
- "enable-method" dependencies
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
+On Thu, 3 Apr 2025 21:53:10 +0800 Jijie Shao wrote:
+> In normal cases, the driver must ensure that the value
+> of rx pause mac addr is the same as the MAC address of
+> the network port. This ensures that the driver can
+> receive pause frames whose destination address is
+> the MAC address of the network port.
 
-On Thu, 03 Apr 2025 21:59:35 -0500, Rob Herring (Arm) wrote:
-> Replace the prose for properties dependent on specific "enable-method"
-> values with schemas defining the same requirements.
+I thought "in normal cases" pause frames use 01:80:C2:00:00:01
+as the destination address!?
+
+Are you sure this patch is not a misunderstanding, and the issue
+is already fixed by patch 2?
+
+> Currently, the rx pause addr does not restored after reset.
 > 
-> Both "qcom,acc" and "qcom,saw" properties appear to be required for any
-> of the Qualcomm enable-method values, so the schema is a bit simpler
-> than what the text said. The references to arm/msm/qcom,saw2.txt and
-> arm/msm/qcom,kpss-acc.txt are out of date, so just drop them.
-> 
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> ---
->  Documentation/devicetree/bindings/arm/cpus.yaml | 82 +++++++++++++++----------
->  1 file changed, 49 insertions(+), 33 deletions(-)
-> 
-
-My bot found errors running 'make dt_binding_check' on your patch:
-
-yamllint warnings/errors:
-
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/soc/qcom/qcom,saw2.example.dtb: cpu@0: 'qcom,acc' is a required property
-	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
-
-doc reference errors (make refcheckdocs):
-Warning: Documentation/translations/ja_JP/process/submit-checklist.rst references a file that doesn't exist: Documentation/translations/ja_JP/SubmitChecklist
-Documentation/translations/ja_JP/process/submit-checklist.rst: Documentation/translations/ja_JP/SubmitChecklist
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250403-dt-cpu-schema-v1-14-076be7171a85@kernel.org
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+> The index of the MAC address of the host is always 0.
+> Therefore, this patch sets rx pause addr to
+> the MAC address with index 0.
+-- 
+pw-bot: cr
