@@ -1,107 +1,188 @@
-Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC35033CFC
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 14:48:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAFF3DF49
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 14:49:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743778131; cv=none; b=MEHP9Kt160UaETH9ddvYM1VtYrSvaNTiYozS/Oz99RS7PHCthQBoNCjZ1aQ5relXLHwq8TzJprcyAfNUujWkybCnkYKzNZeKmhx6eytHBn85/53GMK0Eiu3WOlrv3YxJgN96fv/0FbbzJZtCtPDHLGYhWmkS1MKJSbNCko+L+Jc=
+	t=1743778172; cv=none; b=lN+4zA4ruEHwd7VhceccIvJNre5t88HeVaVnK8TLHhZ4dwPIzPscXIxzXQ4y4lGZEj6jaf+xVwlRVFs9Kq30odUcikcbsO0FTCAK5Xtg5bhF6VaJ6+FNtMVPKPdCEAnAUIQP9sOH+gENYLl91mAKuMJLlW7E+8CWJjIIMus4xTw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743778131; c=relaxed/simple;
-	bh=N8xr3gZnvBzoAFFMIbubqfbIqdfrBwHBym9C7LusSuM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ECtD+TPce2RudVJp7IVsephlSWsswIvwo5+iHzkA6HOc8TN7305qgpVqdhyZMLOkC5In2YdSyeYynjfdMMiVbkWwUN041hDguhxDOZZ5j+yzgInoDXqk82Qd1eagcfsg475tV2gAoR2HXM3jmEYsTEDdPzcvHI9QfNhvWi75v9I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=RR6ce+oZ; arc=none smtp.client-ip=209.85.166.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1743778172; c=relaxed/simple;
+	bh=HWEwvlns1Ly/r8WD4RQwDUQgwHBMsKXMWgoveY3P+zE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CrqEFobUBBI6y5OHhny13MKJiLiwlozdbRMyYXhcLTFaGVP6E+IBYEOYNyEI25jQpk8st4+db+tY4ulbtQn5cpwO9tcamMauYQ9Qt2ASENfkMPuBiNRy2gArkjSY28BJmt+HOuQg08yLG/7iVanq4euyTxZKfwTuIIbMTWNkmVc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R9YdINPw; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="RR6ce+oZ"
-Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-3d45503af24so18950595ab.2
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 07:48:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R9YdINPw"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-5497590ffbbso2231303e87.1
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 07:49:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1743778129; x=1744382929; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=WtHOMalSobmJxdbzjcuw4y+jApPaBkGJD3B8y9lwgGU=;
-        b=RR6ce+oZblxRJat4JWEYQPHpN79/xlFdt3AUFYxGiN5tbEOLycPTs5F+nu2YmIZmaw
-         0wGLZaoZ5W1tna2y0eZu8YwIRJL5Mfje+5FLwKX2Seg7/iQcUKc/gerkNyX0fr35fqVp
-         6uIUoHc1w/H2HDrnaRpaRn0gfQFdxupBRMDCE=
+        d=gmail.com; s=20230601; t=1743778169; x=1744382969; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=leY/xg6XC3NyUz7dkUGCTjCK0i+9QqtbvMPeRWQQtmA=;
+        b=R9YdINPwH9Nx99Te3qYcew4odrAUBmY0rWoKFdiqgMad4pdttcQeyj5s4wOuRk2D9j
+         R9gK3Pm3E/8+C7XOD6Kj4MEyDkuwwUrTwmWcbclbYwTAMSAMfXK4WbNPHVY1QfWmaREL
+         KRqZ4FP6wAsu3T3YAuh6tAt7t8jtAJAGgJnGeL5RAd7mW7SHWETpvRL9A+SgtV8c97PA
+         LI2tx6Zeo2wegrUbBdHieRfwaZHN7J9TcBpax0bMmZ6vo5MhnpqbtjK8kGBAehexiHvJ
+         tT1h1hYHJi859WFJca5rxKsvSTvO+YhOjgNhPa7BlW+gGwnlbvhcu+4v5LrKaXCUsNYM
+         AJ5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743778129; x=1744382929;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WtHOMalSobmJxdbzjcuw4y+jApPaBkGJD3B8y9lwgGU=;
-        b=IGFWxzJFUDbr3bFGBFyWYRQK62mCBqTN7W6CTFkKuheZZowFOSygbu6xLZh7fnxNJW
-         7yVmj0ja1AgezZ04yl2cLPB9Wh9jqvLImorSBxjO69pZP0S+KHJ9wbzl1s8/Y5UCidhk
-         nGa8mf24whXzvmpvTUKFH+mNtO66SVKEBCneJOMRG5P3HeYetzlY6Foc9/m8XZ8XJpG7
-         UvCeciqADUouG2yXJnGZmPep0FxMavBT8NvI7FKVCNjh2Q2cAeZTskVlbGrDBd/QRZBn
-         nsf0j6DYUdlfdYKWEoxwWd9/5isI+qd5POFWaFdvsfjDBztEN2N50i3/AZlfIPZVB/+9
-         jNsg==
-X-Forwarded-Encrypted: i=1; AJvYcCXgAWv4G+yu5oIuHJ0qbweXHzuQlRcjHTGseqbTg+2eH16VWJXSGGzB3GjIP8pAMTJVPwufYs1TyY4ahsw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwWEGfwO67XCKuSEQe132hSl5/OBm1wetB/jSIQpmhICtoa9Q9T
-	RQI7lrOD4Qn5O0Y0jVcQL3IMpGBHGaGi5f0b56LmnGdAa95n5L7drZ0/sEKpTM0=
-X-Gm-Gg: ASbGncvBcEwo+QvhR8Fski4JG0dPx9t7Zkn+VdEzEgY7r/WmZWv8cnfo/3GjXb1M2EZ
-	ihOdCWii2xqN7hjqkqdwmhvokaJmtMkZJon7g/SqRqtlL3Fk7LqkdttcWtBDVAdtPYdMCimCXtv
-	mdDjn7RGDSOhFdk6Ju9XtvqHmjdS1fIw5WHyjFuN5QZtnGmPgWahfK9cJc9ZXHCo1ilNiFRmJRx
-	fXXbHk1pF6usIWztTlcwP/Yk6OqVd7QhnpGzW2t4WhyZ1g/NL3oBv/7OXh6/ua58Kh+Nan80Hqe
-	HA4uMcp0y+6pXZMiSsgQ2WXiplcJSa+DucODOTnIEbZ0Sbm6otVcDN4=
-X-Google-Smtp-Source: AGHT+IGJgS5dZigzPp1PfoohVD7rTW7eiqP49p94pLE+ryqtZy9qsHkuogejD5wKg72S1cjf28aMZA==
-X-Received: by 2002:a05:6e02:1b0d:b0:3d5:eb10:1c3b with SMTP id e9e14a558f8ab-3d6e3eea7dcmr38875265ab.5.1743778129170;
-        Fri, 04 Apr 2025 07:48:49 -0700 (PDT)
-Received: from [192.168.1.14] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3d6de972c54sm8479945ab.65.2025.04.04.07.48.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Apr 2025 07:48:48 -0700 (PDT)
-Message-ID: <148cdbaa-09f6-4c66-8a2a-1f55b596a00e@linuxfoundation.org>
-Date: Fri, 4 Apr 2025 08:48:48 -0600
+        d=1e100.net; s=20230601; t=1743778169; x=1744382969;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=leY/xg6XC3NyUz7dkUGCTjCK0i+9QqtbvMPeRWQQtmA=;
+        b=bZC8EdA3D44PN6uj6eMMNBP/Mc+lM6tg2MxN4mpizOq0vyJjDyhiN61lW+qysJGd86
+         8nLe1pa5iiP3tQnr8MZpZIU79SWVMWNxrAuFkvz20sozbD+mD9NADDcylV8tw3d50jEK
+         lZZ/iddlGqShJtk8xWJOoRFQ7zzfbjYkRGxqN19H2H7l7m9EwdJWTvYsSu+shc/+q0Z8
+         BZlzkbc2UID/6k/kI1oXxTnx5cGarPdLED5+KaLXh2Alu5VPydNvzSytSFm40zpUACB5
+         Qd1PQsvKMKcc+YuVb/6p4AeUMJ6TeVgthucP62gA4ktWnrpSnM9FtqkP+3yQ2waeVBUh
+         bTbA==
+X-Gm-Message-State: AOJu0Yz7/3cLoz1YIaBdjj0ZY5R+CUJUO4YawBVUKFzxluyRuTuFZt5V
+	REMtQ1q6vYHPtZAn9TByDP/6CvmvINN2ITY04yQKaIxcVhYsHKVLTR44c9RlJzqgn0spt+cCRHd
+	37RzEH26Xh7SjJ2pswnaIf3cgnWDQwyaI
+X-Gm-Gg: ASbGnctmDviGm0+L/q7wfgWqLbgOUlXBW2GBYEExyncf6HJQ5CdzZAipsZt2JJPcFG6
+	AtwiEVrSfkeCH+RhX0nu3QLfAEavunyEPC7eyK32G80jo5muJefOpwYtr0pSR6JAjh8uu7PIv3f
+	kcMzaAlH5SscP9Ywy/YZOBnsE7wA==
+X-Google-Smtp-Source: AGHT+IGeO3deHz7Z6lu4AEXP+KsNpdpo9V7f2PDANKBVAbV7lF+kQ5yvv7kmZqcFHD7O3LRpuxHbf+VCOTQ/Cvvr500=
+X-Received: by 2002:a2e:a58e:0:b0:30d:b25d:72d0 with SMTP id
+ 38308e7fff4ca-30f0bf4711bmr8504741fa.17.1743778168597; Fri, 04 Apr 2025
+ 07:49:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.1 00/22] 6.1.133-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org,
- Shuah Khan <skhan@linuxfoundation.org>
-References: <20250403151620.960551909@linuxfoundation.org>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20250403151620.960551909@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250402172458.1378112-1-andrew.cooper3@citrix.com>
+ <1640cf43-8125-a562-91f9-9b306b863dc7@gmail.com> <4fff7dd0-70e4-4ec8-9ca7-7f7c52382d51@citrix.com>
+In-Reply-To: <4fff7dd0-70e4-4ec8-9ca7-7f7c52382d51@citrix.com>
+From: Uros Bizjak <ubizjak@gmail.com>
+Date: Fri, 4 Apr 2025 16:49:16 +0200
+X-Gm-Features: ATxdqUGnUnv8zBITkxZYp6w4nZu6zljDnB_q6pNBr12X9VQ0Ae64Z2mLh78w08k
+Message-ID: <CAFULd4bYr1dMxFypc_kMfQMo8EReUO+0SmyDrOQEcUu3tzvqvg@mail.gmail.com>
+Subject: Re: [PATCH v2] x86/idle: Remove MFENCEs for X86_BUG_CLFLUSH_MONITOR
+To: Andrew Cooper <andrew.cooper3@citrix.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 4/3/25 09:19, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.1.133 release.
-> There are 22 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sat, 05 Apr 2025 15:16:11 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.133-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+On Fri, Apr 4, 2025 at 4:16=E2=80=AFPM Andrew Cooper <andrew.cooper3@citrix=
+.com> wrote:
+>
+> On 04/04/2025 3:14 pm, Uros Bizjak wrote:
+> >
+> >
+> > On 2. 04. 25 19:24, Andrew Cooper wrote:
+> >> Commit 7e98b7192046 ("x86, idle: Use static_cpu_has() for CLFLUSH
+> >> workaround, add barriers") adds barriers, justified with:
+> >>
+> >>    ... and add memory barriers around it since the documentation is
+> >> explicit
+> >>    that CLFLUSH is only ordered with respect to MFENCE.
+> >>
+> >> This also triggered the same adjustment in commit
+> >> f8e617f45829 ("sched/idle/x86: Optimize unnecessary mwait_idle() resch=
+ed
+> >> IPIs") during development, although it failed to get the
+> >> static_cpu_has_bug()
+> >> treatment.
+> >>
+> >> X86_BUG_CLFLUSH_MONITOR (a.k.a the AAI65 errata) is specific to Intel
+> >> CPUs,
+> >> and the SDM currently states:
+> >>
+> >>    Executions of the CLFLUSH instruction are ordered with respect to
+> >> each
+> >>    other and with respect to writes, locked read-modify-write
+> >> instructions,
+> >>    and fence instructions[1].
+> >>
+> >> With footnote 1 reading:
+> >>
+> >>    Earlier versions of this manual specified that executions of the
+> >> CLFLUSH
+> >>    instruction were ordered only by the MFENCE instruction.  All
+> >> processors
+> >>    implementing the CLFLUSH instruction also order it relative to the
+> >> other
+> >>    operations enumerated above.
+> >>
+> >> i.e. The SDM was incorrect at the time, and barriers should not have
+> >> been
+> >> inserted.  Double checking the original AAI65 errata (not available fr=
+om
+> >> intel.com any more) shows no mention of barriers either.
+> >>
+> >> Note: If this were a general codepath, the MFENCEs would be needed,
+> >> because
+> >>        AMD CPUs of the same vintage do sport otherwise-unordered
+> >> CLFLUSHs.
+> >>
+> >> Furthermore, use a plain alternative, rather than
+> >> static_cpu_has_bug() and/or
+> >> no optimisation.  The workaround is a single instruction.
+> >>
+> >> Use an explicit %rax pointer rather than a general memory operand,
+> >> because
+> >> MONITOR takes the pointer implicitly in the same way.
+> >>
+> >> Link:
+> >> https://web.archive.org/web/20090219054841/http://download.intel.com/d=
+esign/xeon/specupdt/32033601.pdf
+> >> Fixes: 7e98b7192046 ("x86, idle: Use static_cpu_has() for CLFLUSH
+> >> workaround, add barriers")
+> >> Fixes: f8e617f45829 ("sched/idle/x86: Optimize unnecessary
+> >> mwait_idle() resched IPIs")
+> >> Signed-off-by: Andrew Cooper <andrew.cooper3@citrix.com>
+> >> ---
+> >> CC: Thomas Gleixner <tglx@linutronix.de>
+> >> CC: Ingo Molnar <mingo@redhat.com>
+> >> CC: Borislav Petkov <bp@alien8.de>
+> >> CC: Dave Hansen <dave.hansen@linux.intel.com>
+> >> CC: x86@kernel.org
+> >> CC: "H. Peter Anvin" <hpa@zytor.com>
+> >> CC: linux-kernel@vger.kernel.org
+> >>
+> >> v2:
+> >>   * Fix the same pattern in mwait_idle() too
+> >>   * Expand on why we're not using a general memory operand.
+> >> ---
+> >>   arch/x86/include/asm/mwait.h | 11 +++++------
+> >>   arch/x86/kernel/process.c    | 10 ++++------
+> >>   2 files changed, 9 insertions(+), 12 deletions(-)
+> >
+> > There is another instance of the same sequence in
+> > arch/x86/kernel/smpboot.c:
+> >
+> >         /*
+> >          * The CLFLUSH is a workaround for erratum AAI65 for
+> >          * the Xeon 7400 series.  It's not clear it is actually
+> >          * needed, but it should be harmless in either case.
+> >          * The WBINVD is insufficient due to the spurious-wakeup
+> >          * case where we return around the loop.
+> >          */
+> >         mb();
+> >         clflush(md);
+> >         mb();
+> >         __monitor(md, 0, 0);
+> >         mb();
+> >         __mwait(eax_hint, 0);
+> >
+> > Should this also be converted to the new sequence?
+>
+> Yes, it ought to.
+>
+> I'm OoO for a while though.  If you fancy doing a patch, please go
+> ahead.  Or a maintainer could fold a 3rd hunk into this patch?
 
-Compiled and booted on my test system. No dmesg regressions.
+Heh, I learned the hard way not to touch the code I don't understand. ;)
 
-Tested-by: Shuah Khan <skhan@linuxfoundation.org>
-
-thanks,
--- Shuah
+Uros.
