@@ -1,244 +1,104 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AA4619CCF5
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 18:55:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93218195B1A;
+	Fri,  4 Apr 2025 18:58:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743792942; cv=none; b=kDfSiPQKhkXmA+TzOdnRFWRXaIXx+kntubP7QNWoqSJqy6VstBDW7WJ63HWiZ1HPcwQfd07dO+TQ+GV6+ZCA2Bv7e931METMJt3Py5rwTJY2e1dFuft60NKKlj8nVbLYBCZpXh92n6bftVb30R30oLvpkcdOnofA36qm/KCyYMo=
+	t=1743793105; cv=none; b=Dwik20jOHpxvXeu+a9kWYpw/ADQ6mRfbPCfvIfBQ5iIyZth+7ZYHuC1LeHi8GyFFCXddZ4XI7yGn0IYfgSOS+PqcbL8dkM84HShFUo3rKqBRS3gAAfQ7InlEbyOYpsW5Ps8H52RtbtyC2qkQVCdzFa5hqnm5T8JmcZ75DOQLWng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743792942; c=relaxed/simple;
-	bh=XnDhVT1x83AsNY8OZJgr6vEU6u45rQkuQM30F7imBpU=;
-	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=UtR089yTzVLgCvp9gLlCDk6nWDhKNwQ5aBrcSYNGHiv8gSxl+ik8zmOTL7QHG+dsPbRc1BV9mz8APxCJkc1E8yfznxT3uV7ugV3dEscnOVZW/5TRjzuk7z9UhSpwF9s8nWpe5xb/P5B3+qJuDVXgWfk9KoZ50xHAOnBFhgaqHYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hgOtWSKm; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1743793105; c=relaxed/simple;
+	bh=gUJ7ch+2ljiCT2mj3iJ01ojeBYFA0SgdHk/14Pv5s+w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jLjNVJ7y6Ts+NHrDMFv+9V3ZEGNLs77jFoeeM99cytAtOeog/vox9Mwlt87yND8MbvThqZZxOw1Oh1GIXaUOmRNQ5ijlMA9zKAXYJmflA8ewg49ocaLH1V3ApfDD+7CuKZRswhE0BvSP2p4lP7tIP0QevcflmYra+p4ykhoBMys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NxT8NMyM; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hgOtWSKm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743792939;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RJ+WDACAsHxbVWot9DqTlvwAc/91z/vLEjznERJRGEA=;
-	b=hgOtWSKm3RoQwBo5KMLmnYYzz4kx5MiI2MqSlCOSBix4MJ6/DZmxDz0qtGCQT4FKInV90O
-	KJEOD1kO9TRYc4BX0wWJue29FM66dqwrAG4edqToEjtXNa9jmFHMKxT0ADyykZB6ShJePm
-	3IeWi6hqkqV3mQ3RmgcFll7btFZ2iJ4=
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
- [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-629-ycE4IAYuMU-Gp0OCTxMyvQ-1; Fri, 04 Apr 2025 14:55:37 -0400
-X-MC-Unique: ycE4IAYuMU-Gp0OCTxMyvQ-1
-X-Mimecast-MFC-AGG-ID: ycE4IAYuMU-Gp0OCTxMyvQ_1743792937
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c54e7922a1so483762585a.2
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 11:55:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NxT8NMyM"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-73972a54919so2280166b3a.3;
+        Fri, 04 Apr 2025 11:58:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743793103; x=1744397903; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=czT9t7Qp7rdMQKs61CER3dHjC/ShGZ0p9ydFV0RkeNI=;
+        b=NxT8NMyMbss3idUcr6xAclO1x+p80TzbXPCTNqHfkn1Xb2s0hanap73TCeFBXAmK89
+         3pIRCARK17X/q6ZVIfzibMiY3xiXahAOixBqbOfPvt1/YBHwKMv962mdzGELW4UvTMbj
+         5STOzqQYtn5wCTfGI7C8S4KXQBZcoDsyDjFjMd2m+mLuBDhX5QbAIDYY05P8/8AIlN2v
+         bYqfZRpgdGOi2WhSF0huUimnxwmKkcvH/tCUtEFVEPGT/3wWdF+OZwRkJ7V4Unloc4v9
+         ULuxmonHgENM5eWVyLd2jQK8raPzjH3Rmo2bBBfP02hxkVNOAJOELkTE9ttGatZx70oo
+         4zbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743792937; x=1744397737;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RJ+WDACAsHxbVWot9DqTlvwAc/91z/vLEjznERJRGEA=;
-        b=YbEjAtP3bxhEUyoh/nJp4xY3QD1mpMCe41CieA+FjiO2OVb/cNfJEKATQ0WjkTMbvY
-         j68FsmVu9iGvGAg/f6jXG88v4OghlkVSPhXiZD4jGufEx5SvvCNfqHaYA30F5t3lz0jY
-         8r2e9Ur0R4wH4BidTlalqanW0oHLkEZBcxNpuuNsi9VOjN5pMga2/keUSIjuZg1r46Aj
-         r6FHs7CHyXqLFNY2vG57aSgn6h2CSaJGxrdwOyM/L4e2gUdC7O1EzH9UDImCTJ2q6vMx
-         Id5k8pIB7tJHEMM8X2pUasP/GIqbvvqe7PIVBje+NJ3qNOBrzIvJDkztNnG/f1deNtgC
-         byTQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVDy4wKiyLwYbWvkTCify2giM2nLLkur5oJWZEj1Uz7DAZcQBCVwMTPJS0tAu/jfOh+LA57zQlMpcbS2WU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyizMySSDjoBycJU6mqpbeEbbBQKfHuD4n+Mi47YBgRTobmr6uT
-	usrkiGdTB/cQmG+VGkNRg4pLQHIyxxAiMtx9oNiFGXbbpCP+lqtiQKysMtuk0R3UU8rswEv5tK+
-	iScSknoMQXcvY7OCmVyKs0XuFE22M6XYVNo5E3kMSz3cKTM30g4BCb//7QjBrLQ==
-X-Gm-Gg: ASbGncsbaYm2kyORriJ893laBv9csiObicqEz4K4R15zi2xX0jX+8mq3XD5TBQ6hPB+
-	xbRnpEeWuN8FTyExSntvXGjTPOES68dIjEPXIfIvUacOXT2Z0UR4UGaU6erk3+avCHB+i7OL8eC
-	NB8EKNJH2Q9Gx3XkzhxHpQmXuUTPig0iRcAfIeZlus3YRUzWGXz2hSsqG8/QixzjiZ9LJypvvFg
-	+T6NqfF3Fu4ykHlpucSdz7WPBL8S1o91zpzRqSiVEPqNgVO92/jG/NmioBV2HpZiFFzlCSZFWte
-	5RwcNPNMA5IB+/9qodtYtSkI8ffPFf+Y6G34j+JLEz1PmOCmRXSonxI4dRGeyQ==
-X-Received: by 2002:a05:620a:d93:b0:7c5:6dc7:7e7c with SMTP id af79cd13be357-7c774d6fcd5mr576731285a.26.1743792937393;
-        Fri, 04 Apr 2025 11:55:37 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG1GWz7ZoZU1D4Cwc3QUuGir5Wj6Kdn7kWMfIbYb7f8OvFkQTHaKFBY0OhVoifakryu8wvgkg==
-X-Received: by 2002:a05:620a:d93:b0:7c5:6dc7:7e7c with SMTP id af79cd13be357-7c774d6fcd5mr576727485a.26.1743792936962;
-        Fri, 04 Apr 2025 11:55:36 -0700 (PDT)
-Received: from ?IPV6:2601:188:c100:5710:315f:57b3:b997:5fca? ([2601:188:c100:5710:315f:57b3:b997:5fca])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6ef0f1393fdsm24772476d6.89.2025.04.04.11.55.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Apr 2025 11:55:36 -0700 (PDT)
-From: Waiman Long <llong@redhat.com>
-X-Google-Original-From: Waiman Long <longman@redhat.com>
-Message-ID: <c4294852-cc94-401e-8335-02741005e5d7@redhat.com>
-Date: Fri, 4 Apr 2025 14:55:35 -0400
+        d=1e100.net; s=20230601; t=1743793103; x=1744397903;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=czT9t7Qp7rdMQKs61CER3dHjC/ShGZ0p9ydFV0RkeNI=;
+        b=rRvAUqCpzEmWTkP7I5qJNL5w8Df+2XfdfKQ0vLEDRwRjzjvSPrWHU1N7LfKgBHL3xC
+         n4zM3zD0otoNchB19KyMUM3iJGr+AhRUveMjgfIGC3/eSKAjMNSr51RMDamveFwgt0dt
+         lT9HfmmK96+v9+9t1VGGgXvJlO/8ioe7HB9/kjr+eSnxJIE/xENoV2bs6S9LL+GyvELZ
+         T5wgAublVfZGcsWwdFT5cbnDQP8sNotIiCNs7UtSRLYB6ccYsat72wGew60kwMl5zv4Q
+         8KA7VgfBduGl2cFNgZ+jSa+JKrRwQ2ZNAofKhW4q+SGLk/sQD71cSj8HoaE5cVrKjw6c
+         A7qA==
+X-Forwarded-Encrypted: i=1; AJvYcCXhKR/xW7VmeW5glgdxM+A6HDu8IAN2bCkL2MA6QdNGtcY2NKpdqEntTH5uf+gUoRa7RNiaDr6Jm5mWYG4=@vger.kernel.org, AJvYcCXmGGEfng8rHcZYL0r0PzTsTtwRWDWTDeJEUoO0AuO1zVmsa+2fGpaYQLEH8LrWfPTHyYF8iHq0TvpmLmw0iuOV5rNl@vger.kernel.org
+X-Gm-Message-State: AOJu0YwFJXQkDY+jah1J85q0rn3WWqVweo99fK3wlPtF9adn76l0x7vD
+	7F7hgdVZHmy1envNdO7ip+S/Yo/JGZiQ1l/yvPpOxSQ6ECstNODpPS4hypnfM3w=
+X-Gm-Gg: ASbGnctradwUE+uqI8IMgPeG86AtSEWpxs5SEIctf9mAhQ+HhtrkAwc/fy4u/EToJLI
+	Djz1p4nKkezdLafuqG/Qf6S19jiutwTRZCSItg4qLgYhhUjn8t+6nWvHfq99lHBTYxsIl41znIc
+	JYB+6TI9yFCE5ZST9OxO/e9zkeAfQ3ve4tb7k6PdqS4FQPHdUr6haGDDDsqzSByla01oMS7ZGBh
+	5mbJ1eCAtVyi8ouUCXj1A/9eNNXANkGoEXLJUPYj+de1DOBiEGqF3Y9Jeo3R2kf9TD7N4WRxivR
+	0cxsvd8TbXfaMg6sHa3tJLIzED7apceOgEuuAqyPzUQ=
+X-Google-Smtp-Source: AGHT+IFxFFy+1QLkfm3L4/1xU7Gcsmyq25Fpn10Kzmuaoo3aua/SdrrSfwlZtKCD91G9hrkEh0M55A==
+X-Received: by 2002:a05:6a00:1411:b0:732:5164:3cc with SMTP id d2e1a72fcca58-739e711fcf5mr5187398b3a.19.1743793102688;
+        Fri, 04 Apr 2025 11:58:22 -0700 (PDT)
+Received: from fedora.nitk.ac.in ([2a09:bac1:36a0:810::176:64])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739d97d17f8sm3879563b3a.10.2025.04.04.11.58.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Apr 2025 11:58:22 -0700 (PDT)
+From: Devaansh Kumar <devaanshk840@gmail.com>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com
+Cc: Devaansh Kumar <devaanshk840@gmail.com>,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	skhan@linuxfoundation.org,
+	linux-kernel-mentees@lists.linuxfoundation.org
+Subject: [PATCH v4] tracing: Replace deprecated strncpy() with strscpy() for stack_trace_filter_buf
+Date: Sat,  5 Apr 2025 00:28:15 +0530
+Message-ID: <20250404185816.2990559-1-devaanshk840@gmail.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] memcg: Don't generate low/min events if either
- low/min or elow/emin is 0
-To: Johannes Weiner <hannes@cmpxchg.org>, Waiman Long <llong@redhat.com>
-Cc: Tejun Heo <tj@kernel.org>, Michal Hocko <mhocko@kernel.org>,
- Roman Gushchin <roman.gushchin@linux.dev>,
- Shakeel Butt <shakeel.butt@linux.dev>, Muchun Song <muchun.song@linux.dev>,
- Andrew Morton <akpm@linux-foundation.org>, =?UTF-8?Q?Michal_Koutn=C3=BD?=
- <mkoutny@suse.com>, Shuah Khan <shuah@kernel.org>,
- linux-kernel@vger.kernel.org, cgroups@vger.kernel.org, linux-mm@kvack.org,
- linux-kselftest@vger.kernel.org
-References: <20250404012435.656045-1-longman@redhat.com>
- <Z_ATAq-cwtv-9Atx@slm.duckdns.org>
- <1ac51e8e-8dc0-4cd8-9414-f28125061bb3@redhat.com>
- <20250404181308.GA300138@cmpxchg.org>
-Content-Language: en-US
-In-Reply-To: <20250404181308.GA300138@cmpxchg.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 4/4/25 2:13 PM, Johannes Weiner wrote:
-> On Fri, Apr 04, 2025 at 01:25:33PM -0400, Waiman Long wrote:
->> On 4/4/25 1:12 PM, Tejun Heo wrote:
->>> Hello,
->>>
->>> On Thu, Apr 03, 2025 at 09:24:34PM -0400, Waiman Long wrote:
->>> ...
->>>> The simple and naive fix of changing the operator to ">", however,
->>>> changes the memory reclaim behavior which can lead to other failures
->>>> as low events are needed to facilitate memory reclaim.  So we can't do
->>>> that without some relatively riskier changes in memory reclaim.
->>> I'm doubtful using ">" would change reclaim behavior in a meaningful way and
->>> that'd be more straightforward. What do mm people think?
-> The knob documentation uses "within low" and "above low" to
-> distinguish whether you are protected or not, so at least from a code
-> clarity pov, >= makes more sense to me: if your protection is N and
-> you use exactly N, you're considered protected.
->
-> That also means that by definition an empty cgroup is protected. It's
-> not in excess of its protection. The test result isn't wrong.
->
-> The real weirdness is issuing a "low reclaim" event when no reclaim is
-> going to happen*.
->
-> The patch effectively special cases "empty means in excess" to avoid
-> the event and fall through to reclaim, which then does nothing as a
-> result of its own scan target calculations. That seems convoluted.
->
-> Why not skip empty cgroups before running inapplicable checks?
->
-> diff --git a/mm/vmscan.c b/mm/vmscan.c
-> index b620d74b0f66..260ab238ec22 100644
-> --- a/mm/vmscan.c
-> +++ b/mm/vmscan.c
-> @@ -5963,6 +5963,9 @@ static void shrink_node_memcgs(pg_data_t *pgdat, struct scan_control *sc)
->   
->   		mem_cgroup_calculate_protection(target_memcg, memcg);
->   
-> +		if (!mem_cgroup_usage(memcg, false))
-> +			continue;
-> +
->   		if (mem_cgroup_below_min(target_memcg, memcg)) {
->   			/*
->   			 * Hard protection.
-Yes, that should take care of the memcg with no task case.
->
->> I haven't looked deeply into why that is the case, but
->> test_memcg_low/min tests had other failures when I made this change.
-> It surprises me as well that it makes any practical difference.
+strncpy() is deprecated for NUL-terminated destination buffers and must
+be replaced by strscpy().
 
-I looked at it again and failure is the same expected memory.current 
-check in test_memcontrol. If I remove the equal sign, I got errors like:
+See issue: https://github.com/KSPP/linux/issues/90
 
-values_close: child 0 = 8339456, 29MB = 30408704
-failed with err = 21
-not ok 1 test_memcg_min
+Signed-off-by: Devaansh Kumar <devaanshk840@gmail.com>
+---
+ kernel/trace/trace_stack.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-So the test is expecting memory.current to have around 29MB, but it got 
-a lot less (~8MB) in this case. Before removing the equality sign, I 
-usually got about 25 MB and above for child 0. That is a pretty big 
-change in behavior, so I didn't make it.
-
->
-> * Waiman points out that the weirdness is seeing low events without
->    having a low configured. Eh, this isn't really true with recursive
->    propagation; you may or may not have an elow depending on parental
->    configuration and sibling behavior.
->
-Do you mind if we just don't update the low event count if low isn't 
-set, but leave the rest the same like
-
-diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-index 91721c8862c3..48a8bfa7d337 100644
---- a/include/linux/memcontrol.h
-+++ b/include/linux/memcontrol.h
-@@ -659,21 +659,25 @@ static inline bool mem_cgroup_unprotected(struct 
-mem_cgro>
-  static inline bool mem_cgroup_below_low(struct mem_cgroup *target,
-                                         struct mem_cgroup *memcg)
-  {
-+       unsigned long elow;
-+
-         if (mem_cgroup_unprotected(target, memcg))
-                 return false;
-
--       return READ_ONCE(memcg->memory.elow) >=
--               page_counter_read(&memcg->memory);
-+       elow = READ_ONCE(memcg->memory.elow);
-+       return elow && (page_counter_read(&memcg->memory) <= elow);
-  }
-
-  static inline bool mem_cgroup_below_min(struct mem_cgroup *target,
-                                         struct mem_cgroup *memcg)
-  {
-+       unsigned long emin;
-+
-         if (mem_cgroup_unprotected(target, memcg))
-                 return false;
-
--       return READ_ONCE(memcg->memory.emin) >=
--               page_counter_read(&memcg->memory);
-+       emin = READ_ONCE(memcg->memory.emin);
-+       return emin && (page_counter_read(&memcg->memory) <= emin);
-  }
-
-  void mem_cgroup_commit_charge(struct folio *folio, struct mem_cgroup 
-*memcg);
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index 77d015d5db0c..e8c1838c7962 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -4827,7 +4827,8 @@ static int shrink_one(struct lruvec *lruvec, 
-struct scan_>
-                 if (READ_ONCE(lruvec->lrugen.seg) != MEMCG_LRU_TAIL)
-                         return MEMCG_LRU_TAIL;
-
--               memcg_memory_event(memcg, MEMCG_LOW);
-+               if (memcg->memory.low)
-+                       memcg_memory_event(memcg, MEMCG_LOW);
-         }
-
-         success = try_to_shrink_lruvec(lruvec, sc);
-@@ -5902,6 +5903,9 @@ static void shrink_node_memcgs(pg_data_t *pgdat, 
-struct s>
-
-                 mem_cgroup_calculate_protection(target_memcg, memcg);
-
-+               if (!mem_cgroup_usage(memcg, false))
-+                       continue;
-+
-                 if (mem_cgroup_below_min(target_memcg, memcg)) {
-                         /*
-                          * Hard protection.
-@@ -5919,7 +5923,8 @@ static void shrink_node_memcgs(pg_data_t *pgdat, 
-struct s>
-                                 sc->memcg_low_skipped = 1;
-                                 continue;
-                         }
--                       memcg_memory_event(memcg, MEMCG_LOW);
-+                       if (memcg->memory.low)
-+                               memcg_memory_event(memcg, MEMCG_LOW);
-                 }
-
-                 reclaimed = sc->nr_reclaimed;
-
-Cheers,
-Longman
+diff --git a/kernel/trace/trace_stack.c b/kernel/trace/trace_stack.c
+index 5a48dba912ea..617e59a234da 100644
+--- a/kernel/trace/trace_stack.c
++++ b/kernel/trace/trace_stack.c
+@@ -544,7 +544,7 @@ static __init int enable_stacktrace(char *str)
+ 	int len;
+ 
+ 	if ((len = str_has_prefix(str, "_filter=")))
+-		strncpy(stack_trace_filter_buf, str + len, COMMAND_LINE_SIZE);
++		strscpy(stack_trace_filter_buf, str + len, sizeof(stack_trace_filter_buf));
+ 
+ 	stack_tracer_enabled = 1;
+ 	return 1;
+-- 
+2.47.1
 
