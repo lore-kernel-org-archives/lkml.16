@@ -1,151 +1,178 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBEF41F4717
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 11:57:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EAAE1F4C8E;
+	Fri,  4 Apr 2025 11:57:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743767832; cv=none; b=WzhMlnZ9NJiOyp9ELVkLO48oPMjZdeH9P0L8O7GWUuchGzsDVfpV7L0xvEpo+Zj0Kq9vcx42GKdKShEfWwE55gRCrigIxgVAm+l/oEt9c4D7s3nJW2Wuf/DU5bmNqCxQ3XdW1SuqY+jV2SL/9jCbrwOboTIAH6Q0EHIuFi4H2fA=
+	t=1743767834; cv=none; b=YywWpxpub6fwmr5qy6RdoU4fuVSQMNQJW4s9JuovPK3Vtz+wJH8mkSbDPsW81QafEITVfQCtE/8spXjsrl59AVlK/8jUCFladUzcoDTwacm+cOa4Dz/q6yElr0yynCsdVGtl+eVLq3q4qdiNO3TQQkX2aaqBUf9eDZMh8JwQXic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743767832; c=relaxed/simple;
-	bh=bQj/x/W9Ry/V3hdmp39LWSNOcVVmkCtarcvTt5OTXVM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=LLdZFV7LWhL+9IsFBk4uiM7zlHiStutYOT7Pbi1fcowqhAI4rr9RCBSV57IgnaL2HLJc3LnGbJZEp6THnoz4no1ooRYDOOvJsvAGcRmibHrLuHijqeXTcNJ8BzMCIe3cRlaqXxwLDhYfEcztgPCQMs1OJOlp9hMdogogLaVATQ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hZNiA06b; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1743767834; c=relaxed/simple;
+	bh=exdwzMT2XPAsj7mwik3tgQyZ5TnoBOkJBqtp9yXU0qE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=sBUErdTYpegLYAlkkZzSmZxfRplu/jPmPwG0P7R8rhFychDS/QSKX3znkWUi3tq9bwkcLuOpqH0qgGgxZ3jU6afjRQIBdWXqYVxzdd8p3vXX0d3EzHWZzAAXyDEl0klkM3Q3CLqF+2veVbPKY7mFhhpZFRMuxgtsJEe1PgTyE1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=iKA5sch1; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hZNiA06b"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43cf825f46bso1633025e9.3
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 04:57:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743767829; x=1744372629; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=d106TqNSzkY12ISczNEwfjZ5zhpWhqK85bfmJ3moKtE=;
-        b=hZNiA06beLwy8+fLoWXZekNTymYZOmLlPAaajLxN9YPDRFXGdEpMIpv3PUiGgUglHU
-         EnzM1JWSGx4a2C515kKtGhvX3HO50C5YyGiPKpAc1U5Udx29H2hLE3gKMPOAVN8jmzlD
-         Lpkv0VW9mWxZjjW97aOOsteFUvCm7Bo/eg1luM7ObMR799sJtlf0PxAeHkNciVqjAMsT
-         JmLEH3zZzY0+XRhnb64yvnbNSnsTsWXgRijhwT6olGTDlzHm3GwxFC3KaeluQd1NJV9K
-         nEHWgMyYIaTncs+ZXBAqFcWACltH0dDSMf6P+Hi1NG00JLMvt6WJLhfz7F8y/EELFuX0
-         we6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743767829; x=1744372629;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=d106TqNSzkY12ISczNEwfjZ5zhpWhqK85bfmJ3moKtE=;
-        b=U9x7GruQAY7taHO91WAkQfz1nH8j5dGibTUre9uQmoi3E3wTIZf99189DW/1Q/oZfE
-         sxldQSkv4q3NEJgjC/h3ehhhmgL+GT9WuHUcwJEsvYxlh22p/ZwCAOgATptJr0XxiQen
-         z+0Eavoemqq7OFdYRiJvzh0agv7C9Nd2w3edMIiLbZAET4QiQSvGP/hR1JTgFVZTQMv9
-         hI+QmirUdfV6dXVTaASENGiuYAC3wZXE5H8rDxC07N/P0UMqhh/Xvw2uXR8cxoppHbcR
-         MTjHhl4y4MbDU7SMFhHWjQoYirzWt8Jq6zKLNKEk14TZ9fWlSyzkyPV82gMSc9Za55wb
-         BVWg==
-X-Forwarded-Encrypted: i=1; AJvYcCWlSyv9KqJikk8I9cA43lmfRTfnJmKWE4jowhdvk9k1yQkUldl14wHmXohi01dIpUOnL0TUnTKEK2WbomI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzDaMVAEs+U7W94EDuGu8qraEKdfEzs2nN8zB2gTtIOweam4vyQ
-	+gWq0jOUc0GAmpSZNScb5z+P+GigynBm8qxRHp3A6a5cdtojzct1Y9FVHd8zJgY=
-X-Gm-Gg: ASbGncsMqeY7OzHr2Ld9mIuqMVqhzdfancpVQBa1e1US/SpNgZzTKKEHW72e1nFR/Ga
-	hYb3z2r4o9MeLwE3E4wiaZdbpq5gATBjTXivghtIg6c3dTp3HQ+fOTU3gno+pyLB969dUYgi/jl
-	5YRIDbm13itWdsj/6H0Hr/aihFEs2QB3CcLROPu7+OsX18BenNAoW3NdZLqVCy2ufpY73H/x/Qq
-	pmPQPcKMtV9tWKt2E800A/IH7iFXVZSpqXxTtl7/p8GOQ7zQrXkENTJxdbHwvZ388Y3IJXwxZ5g
-	twgNqf+IJQhR8/v1TzpwAn0y42TPw7ufYzQjBwSVIeTub1zGyKLhZVOYKDMaaOk=
-X-Google-Smtp-Source: AGHT+IFUn3Ncq3UJFAd17WQ9Pi1CnRMlttoznJGCzpSMvyRtLW9B9mLaVZY4lCtohUQhqeiWfvicpw==
-X-Received: by 2002:a05:600c:3592:b0:439:9ec5:dfa with SMTP id 5b1f17b1804b1-43ecfa18f83mr8121025e9.7.1743767829072;
-        Fri, 04 Apr 2025 04:57:09 -0700 (PDT)
-Received: from [192.168.1.26] ([178.197.198.86])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec364cb9asm43842815e9.31.2025.04.04.04.57.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Apr 2025 04:57:08 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Date: Fri, 04 Apr 2025 13:57:01 +0200
-Subject: [PATCH 5/5] clk: sunxi: Do not enable by default during compile
- testing
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="iKA5sch1"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 534353tc001651;
+	Fri, 4 Apr 2025 11:55:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=qcppdkim1; bh=yopZIdGlEPS
+	e7UYtTlLskvuAdG4hKGeUMFs3e0xIP9k=; b=iKA5sch1VPtbFzNdLwDI04YgEvK
+	u/WpOChS0yaRsclhrde7tqXsJzP3IqAQzmlpKC5goVy4XjPuxmJxy6WfMK7G/qNZ
+	MvBATrm5LM5zYxcpfIkZ8qQYhbkCZBb0NuTxLxRS2F5aGO63GFUrQLkm+DreBy81
+	puct4fdkHLUQJ8vL+yDKm0F1pvsWW9qtD4a+nWn2cnw0eGpMDCmqJtx/wWcsf03w
+	7Bji+Mn3RgLE9CqDgaCXDsg0cU7n3laimKeBFATazTha3tfLESxS3SbXR8xHe8PD
+	qofZYn0vMVD1sfscUF/YY/hs/KS8kvlrviAEXph14LluHBuzpZzI+Gi0hyw==
+Received: from apblrppmta01.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45t2d71mt6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 04 Apr 2025 11:55:49 +0000 (GMT)
+Received: from pps.filterd (APBLRPPMTA01.qualcomm.com [127.0.0.1])
+	by APBLRPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 534Btju8016523;
+	Fri, 4 Apr 2025 11:55:45 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 45p9xmaehy-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 04 Apr 2025 11:55:45 +0000
+Received: from APBLRPPMTA01.qualcomm.com (APBLRPPMTA01.qualcomm.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 534BtjDi016498;
+	Fri, 4 Apr 2025 11:55:45 GMT
+Received: from hu-devc-hyd-u22-c.qualcomm.com (hu-amakhija-hyd.qualcomm.com [10.213.99.91])
+	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 534Bti4U016492
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 04 Apr 2025 11:55:45 +0000
+Received: by hu-devc-hyd-u22-c.qualcomm.com (Postfix, from userid 4090850)
+	id 38B67598; Fri,  4 Apr 2025 17:25:44 +0530 (+0530)
+From: Ayushi Makhija <quic_amakhija@quicinc.com>
+To: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc: Ayushi Makhija <quic_amakhija@quicinc.com>, robdclark@gmail.com,
+        dmitry.baryshkov@linaro.org, sean@poorly.run,
+        marijn.suijten@somainline.org, andersson@kernel.org, robh@kernel.org,
+        robh+dt@kernel.org, krzk+dt@kernel.org, konradybcio@kernel.org,
+        conor+dt@kernel.org, andrzej.hajda@intel.com,
+        neil.armstrong@linaro.org, rfoss@kernel.org,
+        Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
+        jernej.skrabec@gmail.com, quic_abhinavk@quicinc.com,
+        quic_rajeevny@quicinc.com, quic_vproddut@quicinc.com,
+        quic_jesszhan@quicinc.com, Dmitry Baryshkov <lumag@kernel.org>
+Subject: [PATCH v3 04/10] drm/msm/dsi: add DSI PHY configuration on SA8775P
+Date: Fri,  4 Apr 2025 17:25:33 +0530
+Message-Id: <20250404115539.1151201-5-quic_amakhija@quicinc.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250404115539.1151201-1-quic_amakhija@quicinc.com>
+References: <20250404115539.1151201-1-quic_amakhija@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250404-kconfig-defaults-clk-v1-5-4d2df5603332@linaro.org>
-References: <20250404-kconfig-defaults-clk-v1-0-4d2df5603332@linaro.org>
-In-Reply-To: <20250404-kconfig-defaults-clk-v1-0-4d2df5603332@linaro.org>
-To: Neil Armstrong <neil.armstrong@linaro.org>, 
- Jerome Brunet <jbrunet@baylibre.com>, 
- Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Kevin Hilman <khilman@baylibre.com>, 
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
- Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
- Alexandre Torgue <alexandre.torgue@foss.st.com>, 
- Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
- Samuel Holland <samuel@sholland.org>, 
- =?utf-8?q?Emilio_L=C3=B3pez?= <emilio@elopez.com.ar>
-Cc: linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- linux-stm32@st-md-mailman.stormreply.com, linux-sunxi@lists.linux.dev, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-X-Mailer: b4 0.14.2
+Content-Transfer-Encoding: 8bit
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=CfwI5Krl c=1 sm=1 tr=0 ts=67efc8c6 cx=c_pps a=Ou0eQOY4+eZoSc0qltEV5Q==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=VwQbUJbxAAAA:8 a=UZNEAvMi2Rj6Meq9XXQA:9 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: sDK-1jDIwfC5ik7PAXd5mxnEFcO8iM9V
+X-Proofpoint-GUID: sDK-1jDIwfC5ik7PAXd5mxnEFcO8iM9V
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-04_05,2025-04-03_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ phishscore=0 impostorscore=0 lowpriorityscore=0 bulkscore=0 adultscore=0
+ mlxscore=0 mlxlogscore=999 suspectscore=0 clxscore=1015 spamscore=0
+ malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504040082
 
-Enabling the compile test should not cause automatic enabling of all
-drivers.  Restrict the default to ARCH also for individual drivers, even
-though their choice is not visible without selecting parent Kconfig
-symbol, because otherwise selecting parent would select the child during
-compile testing.
+The SA8775P SoC uses the 5nm (v4.2) DSI PHY driver with
+different enable regulator load.
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Ayushi Makhija <quic_amakhija@quicinc.com>
+Reviewed-by: Dmitry Baryshkov <lumag@kernel.org>
 ---
- drivers/clk/sunxi/Kconfig | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/gpu/drm/msm/dsi/phy/dsi_phy.c     |  2 ++
+ drivers/gpu/drm/msm/dsi/phy/dsi_phy.h     |  1 +
+ drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c | 27 +++++++++++++++++++++++
+ 3 files changed, 30 insertions(+)
 
-diff --git a/drivers/clk/sunxi/Kconfig b/drivers/clk/sunxi/Kconfig
-index 1c4e543366ddb76c1669b577c1ac337dc1be616f..5e2f92bfe4120981ab68b175dce798ac8b3268b0 100644
---- a/drivers/clk/sunxi/Kconfig
-+++ b/drivers/clk/sunxi/Kconfig
-@@ -2,13 +2,13 @@
- menuconfig CLK_SUNXI
- 	bool "Legacy clock support for Allwinner SoCs"
- 	depends on (ARM && ARCH_SUNXI) || COMPILE_TEST
--	default y
-+	default (ARM && ARCH_SUNXI)
+diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c
+index c0bcc6828963..92be08ac5f65 100644
+--- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c
++++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c
+@@ -581,6 +581,8 @@ static const struct of_device_id dsi_phy_dt_match[] = {
+ 	  .data = &dsi_phy_7nm_cfgs },
+ 	{ .compatible = "qcom,dsi-phy-7nm-8150",
+ 	  .data = &dsi_phy_7nm_8150_cfgs },
++	{ .compatible = "qcom,sa8775p-dsi-phy-5nm",
++	  .data = &dsi_phy_5nm_8775p_cfgs },
+ 	{ .compatible = "qcom,sc7280-dsi-phy-7nm",
+ 	  .data = &dsi_phy_7nm_7280_cfgs },
+ 	{ .compatible = "qcom,sm6375-dsi-phy-7nm",
+diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.h b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.h
+index 1925418d9999..8d9a541f9f09 100644
+--- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.h
++++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.h
+@@ -59,6 +59,7 @@ extern const struct msm_dsi_phy_cfg dsi_phy_7nm_8150_cfgs;
+ extern const struct msm_dsi_phy_cfg dsi_phy_7nm_7280_cfgs;
+ extern const struct msm_dsi_phy_cfg dsi_phy_5nm_8350_cfgs;
+ extern const struct msm_dsi_phy_cfg dsi_phy_5nm_8450_cfgs;
++extern const struct msm_dsi_phy_cfg dsi_phy_5nm_8775p_cfgs;
+ extern const struct msm_dsi_phy_cfg dsi_phy_4nm_8550_cfgs;
+ extern const struct msm_dsi_phy_cfg dsi_phy_4nm_8650_cfgs;
  
- if CLK_SUNXI
+diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c b/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
+index a92decbee5b5..2bfe6f921c7e 100644
+--- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
++++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
+@@ -1147,6 +1147,10 @@ static const struct regulator_bulk_data dsi_phy_7nm_37750uA_regulators[] = {
+ 	{ .supply = "vdds", .init_load_uA = 37550 },
+ };
  
- config CLK_SUNXI_CLOCKS
- 	bool "Legacy clock drivers"
--	default y
-+	default ARCH_SUNXI
- 	help
- 	  Legacy clock drivers being used on older (A10, A13, A20,
- 	  A23, A31, A80) SoCs. These drivers are kept around for
-@@ -19,14 +19,14 @@ config CLK_SUNXI_CLOCKS
++static const struct regulator_bulk_data dsi_phy_7nm_48000uA_regulators[] = {
++	{ .supply = "vdds", .init_load_uA = 48000 },
++};
++
+ static const struct regulator_bulk_data dsi_phy_7nm_98000uA_regulators[] = {
+ 	{ .supply = "vdds", .init_load_uA = 98000 },
+ };
+@@ -1289,6 +1293,29 @@ const struct msm_dsi_phy_cfg dsi_phy_5nm_8450_cfgs = {
+ 	.quirks = DSI_PHY_7NM_QUIRK_V4_3,
+ };
  
- config CLK_SUNXI_PRCM_SUN6I
- 	bool "Legacy A31 PRCM driver"
--	default y
-+	default ARCH_SUNXI
- 	help
- 	  Legacy clock driver for the A31 PRCM clocks. Those are
- 	  usually needed for the PMIC communication, mostly.
- 
- config CLK_SUNXI_PRCM_SUN8I
- 	bool "Legacy sun8i PRCM driver"
--	default y
-+	default ARCH_SUNXI
- 	help
- 	  Legacy clock driver for the sun8i family PRCM clocks.
- 	  Those are usually needed for the PMIC communication,
-@@ -34,7 +34,7 @@ config CLK_SUNXI_PRCM_SUN8I
- 
- config CLK_SUNXI_PRCM_SUN9I
- 	bool "Legacy A80 PRCM driver"
--	default y
-+	default ARCH_SUNXI
- 	help
- 	  Legacy clock driver for the A80 PRCM clocks. Those are
- 	  usually needed for the PMIC communication, mostly.
-
++const struct msm_dsi_phy_cfg dsi_phy_5nm_8775p_cfgs = {
++	.has_phy_lane = true,
++	.regulator_data = dsi_phy_7nm_48000uA_regulators,
++	.num_regulators = ARRAY_SIZE(dsi_phy_7nm_48000uA_regulators),
++	.ops = {
++		.enable = dsi_7nm_phy_enable,
++		.disable = dsi_7nm_phy_disable,
++		.pll_init = dsi_pll_7nm_init,
++		.save_pll_state = dsi_7nm_pll_save_state,
++		.restore_pll_state = dsi_7nm_pll_restore_state,
++		.set_continuous_clock = dsi_7nm_set_continuous_clock,
++		},
++	.min_pll_rate = 600000000UL,
++#ifdef CONFIG_64BIT
++	.max_pll_rate = 5000000000UL,
++#else
++	.max_pll_rate = ULONG_MAX,
++#endif
++	.io_start = { 0xae94400, 0xae96400 },
++	.num_dsi_phy = 2,
++	.quirks = DSI_PHY_7NM_QUIRK_V4_2,
++};
++
+ const struct msm_dsi_phy_cfg dsi_phy_4nm_8550_cfgs = {
+ 	.has_phy_lane = true,
+ 	.regulator_data = dsi_phy_7nm_98400uA_regulators,
 -- 
-2.45.2
+2.34.1
 
