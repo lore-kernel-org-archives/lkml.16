@@ -1,104 +1,108 @@
-Received: from hoffmanne.cfd (unknown [147.189.135.34])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0849A205E08
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 16:00:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=147.189.135.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A9A41F3D59
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 16:01:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743782433; cv=none; b=aBOawZwKaFVwPmM+73spBbEnwyJnNhA8BONeklepa395HQTLSEePJwhm4UmhZG8przVHjVa9T8tszaBEi1iQlKuH0AYUkoHI+xt/gKklxvOcjM7BBqnmjETyvVUMfmo/QrU7DXR8hX9M4oR2F0KJ9KRp1F24BDw1fVKUIIH/T6U=
+	t=1743782513; cv=none; b=V1C0fLojIzBFLiaR+goRkdt80PA+pfQwQlztJRDp8wwqjox94eEWjqdDoce99DIFCzcblqWzTdyoyApwbqGM0Dt44JWMOFnk9LMOpAFVtTYRb9M6uJZKsL2W+kuKTIN7rvaLp3XPDTS2Q0UEFsVJf606Mb45S3ss8HzFd1ss16o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743782433; c=relaxed/simple;
-	bh=IYxbeICQK8e2rRZhAXLSgrOhCXi0BW/Z9s7H62TtSp8=;
-	h=To:Subject:Date:From:Message-ID:MIME-Version:Content-Type; b=oI4mFq0yfDAhIRx5ppEXHcm4j6rZgSTlrhpBYTnFigoItzJi08TkXxgLtZosdj0sG+3WYqwzkoFYlTztsTG24FRTqeQVqVIaquGkqtAf2AVMFpWWNzbLYZJl6k1Yr+QY4ofwQQ0VNavtqCMpYesKRAHLmBZdZhEP70RYlGej+Uc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hoffmanne.cfd; spf=pass smtp.mailfrom=hoffmanne.cfd; dkim=pass (1024-bit key) header.d=hoffmanne.cfd header.i=@hoffmanne.cfd header.b=mBLXeNmE; arc=none smtp.client-ip=147.189.135.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hoffmanne.cfd
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hoffmanne.cfd
+	s=arc-20240116; t=1743782513; c=relaxed/simple;
+	bh=DAthZNw+5o9GgAEXHRLIN9HoWnIvnt3Jx7BcQo+HyKQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=bESg3GJmygA2Xc1ThFCtnGWQeYH9cJTmxnvKkaoi2y4n/uBkFCEJvah3O0cbRlqsPpMSs9nx9mnDDEG+r0Q696MCu+uBRuD/6UZEtzzMPDPvMY5M7wdsntB+GYNPUvYKkesZ8hrkCSumV/CxvNfbPCdCNNsj9QpAEBqXTfUs8co=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=casper.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=rcQ/TZXn; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=casper.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hoffmanne.cfd header.i=@hoffmanne.cfd header.b="mBLXeNmE"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rcQ/TZXn"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=hoffmanne.cfd; s=mail; h=Content-Transfer-Encoding:Content-Type:
-	MIME-Version:Message-ID:Reply-To:From:Date:Subject:To:Sender:Cc:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=L0iZFvOKRdneMjTr1bK7C14Y6R2q3ZPrgaxVOTVD8QI=; b=mBLXeNmExuUJZqbHEcecXemhLD
-	hUMp4BsK+DwFSYP/ixtfyFfupcn/9eQsf5JnOobf7zZdXjZSNy6IXaCYrpNdmiA1/jH700f2sUgFo
-	sR0m51ZienR2EqIngF0cQSyTECVtc/Bh9zuuXUNMNgd5hGve7PchHygwxb4wRKe33qFU=;
-Received: from admin by hoffmanne.cfd with local (Exim 4.90_1)
-	(envelope-from <support@hoffmanne.cfd>)
-	id 1u0jT5-000ORa-1t
-	for linux-kernel@vger.kernel.org; Fri, 04 Apr 2025 16:00:31 +0000
-To: linux-kernel@vger.kernel.org
-Subject: Re WTS
-Date: Fri, 4 Apr 2025 16:00:31 +0000
-From: Exceptional One PC <support@hoffmanne.cfd>
-Reply-To: sales@exceptionalonepc.com
-Message-ID: <a1dd1f0c24a763f1ca38005a938548f2@hoffmanne.cfd>
+	d=infradead.org; s=casper.20170209; h=Sender:Content-Transfer-Encoding:
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+	Reply-To:Content-Type:Content-ID:Content-Description;
+	bh=zwrAwVynWffEuxKPl0OEyEEBjA9QOQig2FF2bzdhEpA=; b=rcQ/TZXnLakdQxL4crd49SXX3c
+	edNsEOVe5KuObd9N9FvHOyENAzG1hCUGVegfPjAUI+DESeHQ2QnvFHahouiLIKJXGm/9RbMSGbECY
+	3H7F9hOPYEdMTiEfgcGsbG7aWDxhy3ZY9WqpRK44a5vaJHV37Lx6OginK6lDUrp+urL++BV2mtbH5
+	p+ZFyzIAKAcSjEt2BvR0qBo1O4L3+1RqPBeKcN2MGAKLhzlFZ2wIbiVn+ohK9/LZ1v86JEJ+uw17N
+	4zNZ8gbxTQmZ4FYx30Cw1FcflV3mnJKiulvzObmjLOk24f6Y0o78MuVRM7S5DrvoDrcue1z65zfMb
+	chjOXhaA==;
+Received: from [2001:8b0:10b:1::ebe] (helo=i7.infradead.org)
+	by casper.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1u0jSa-0000000GFHw-3A3Z;
+	Fri, 04 Apr 2025 16:01:01 +0000
+Received: from dwoodhou by i7.infradead.org with local (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1u0jSZ-0000000ERST-48Ac;
+	Fri, 04 Apr 2025 16:59:59 +0100
+From: David Woodhouse <dwmw2@infradead.org>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	"Sauerwein, David" <dssauerw@amazon.de>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	David Hildenbrand <david@redhat.com>,
+	Marc Zyngier <maz@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mike Rapoport <rppt@linux.ibm.com>,
+	Will Deacon <will@kernel.org>,
+	kvmarm@lists.cs.columbia.edu,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: [RFC PATCH v2 7/7] mm: use for_each_valid_pfn() in memory_hotplug
+Date: Fri,  4 Apr 2025 16:59:59 +0100
+Message-ID: <20250404155959.3442111-7-dwmw2@infradead.org>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250404155959.3442111-1-dwmw2@infradead.org>
+References: <20250404155959.3442111-1-dwmw2@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Sender: David Woodhouse <dwmw2@infradead.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 
-Hello ,
-These are available for sale. If you’re interested in purchasing these, please email me
+From: David Woodhouse <dwmw@amazon.co.uk>
 
+Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
+---
+ mm/memory_hotplug.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-brand new and original
-Brand New ST8000NM017B  $70 EA
-Brand New ST20000NM007D   $100 EACH
-Brand New ST4000NM000A   $30 EA
-Brand New WD80EFPX   $60 EA
- Brand New WD101PURZ    $70 EA
-
- 8TB 7.2K RPM SATA 6Gbps 512   2500pcs/$70 each
-
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index 75401866fb76..20c39ae45016 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -1756,12 +1756,10 @@ static int scan_movable_pages(unsigned long start, unsigned long end,
+ {
+ 	unsigned long pfn;
  
-
-SK Hynix 48GB 2RX8 PC5 56008 REO_1010-XT
-PH HMCGY8MG8RB227N AA
-QTY 239 $50 EACH
-
-
-
-Brand New CISCO C9300-48UXM-E
-Available 5
-$21800 EACH
-
+-	for (pfn = start; pfn < end; pfn++) {
++	for_each_valid_pfn (pfn, start, end) {
+ 		struct page *page;
+ 		struct folio *folio;
  
-
-Intel Xeon Gold 5418Y Processors
-QTY28 $780 each
-
-
-Brand New C9200L-48T-4X-E  
-$1000 EAC
-QTY4
-
+-		if (!pfn_valid(pfn))
+-			continue;
+ 		page = pfn_to_page(pfn);
+ 		if (PageLRU(page))
+ 			goto found;
+@@ -1805,11 +1803,9 @@ static void do_migrate_range(unsigned long start_pfn, unsigned long end_pfn)
+ 	static DEFINE_RATELIMIT_STATE(migrate_rs, DEFAULT_RATELIMIT_INTERVAL,
+ 				      DEFAULT_RATELIMIT_BURST);
  
-
-
- Brand New N9K-C93108TC-FX-24 Nexus
-9300-FX w/ 24p 100M/1/10GT & 6p 40/100G
-Available 4
-$3000 each
-
+-	for (pfn = start_pfn; pfn < end_pfn; pfn++) {
++	for_each_valid_pfn (pfn, start_pfn, end_pfn) {
+ 		struct page *page;
  
-
-Brand New NVIDIA GeForce RTX 4090 Founders
-Edition 24GB - QTY: 56 - $700 each
-
- Refurbished Grade A
-Dell Latitude 5430 Intel i7 1255U 1.70GHz 
-16GB RAM 256GB SSD 14" Win 11 Pro
-QTY63 $139 EA
-
-
-Refurbished Grade A
-HP EliteBook 840 G7 i7-10610U 16GB RAM 512GB
-SSD Windows 11 Pro TOUCH Screen
-QTY 237 USD 80 each
+-		if (!pfn_valid(pfn))
+-			continue;
+ 		page = pfn_to_page(pfn);
+ 		folio = page_folio(page);
+ 
+-- 
+2.49.0
 
