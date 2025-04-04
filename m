@@ -1,226 +1,214 @@
-Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5E154A32
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 02:31:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.53
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743733899; cv=none; b=uYb7xhSUBL+rSxDGh6Ve4ke/PY5e4Xh/Fx7bAORIUjW302gUd6blhrQOMZi2WZtRl8+Xu/8d1eEgiZZFRx1089C2d8MiexET50Uboyd7qwTEQZgrtqWczUQEEyHleoijz2Yc2VlQcJ+SJovly0tAqUKyDHTy73RpIyhlT0xwMCA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743733899; c=relaxed/simple;
-	bh=yHnZZpVl1yzU+3RWun8o5eoI7/TawRiNwZfiH6mye8k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sPhOLIEOE1GrmnOSiOaZDh3zOBYI8n2mluWogqOJQmlUGFhXeqtc5hXuQu+VcG3nXRledrd4Q8iIZt3HVp5GmV8qC0tJ7K7pKJb5amp4MVYhjXSeZ+d69Q5klIOhieFBzY7jPYiSSYfE5OptnMoVXQNP2kNR9H5H1NKdZRlOgSI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=VD2B2AyH; arc=none smtp.client-ip=209.85.161.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FB7010A1F;
+	Fri,  4 Apr 2025 02:33:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=148.163.135.77
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743734015; cv=fail; b=BXPCVdWyILhQsTboaPWzsb0I/UN9jovApYV30TA2KAJ53f3JSOYm9kLcGh4vfI26FLuB/7VnyHzmAC0/yWrTeZ/+ajgdK44i3i0Uok9UahzAM7Vii6ePiZ1kgx1ctaP3RHycCEUhx2NG0Fiu8bnU1H4bX7NQfoNgIUtLdt+4L6M=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743734015; c=relaxed/simple;
+	bh=FeKyVRpDZV6vX3juc7HGxwqQCoAZwDAKL3f6mVKOOzw=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=IasdbVZjMtt8pAMPc95uPnwwZdm1P1bc6yqBILHlVR65KqEpYNBOL+RqS7Uw/Xb2XQ5u3bQx/JCQfxNpzfEgm48s2Yk6MStUlZQJwFIdgPD8Dh0FpuDWfBHABt4dn9woBoRm91IIo90sz1IePQLbvADKqzYzskuweFwOIf7zjc8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=h8DgGnUT; arc=fail smtp.client-ip=148.163.135.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="VD2B2AyH"
-Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-603ff8e90acso412942eaf.1
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 19:31:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1743733897; x=1744338697; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=q2whIQD8KdpXADYPhBRKVcLNwmLnu/yZ5sYtE7xk5RY=;
-        b=VD2B2AyH5K3prI08Y98N6edl03rwk7kEGj0okk6eRw1SE3bRkC43z5NzbsUR6gIaHN
-         KcYorkJsl2A2u6PpvaiI7III3456VgCdgz90ZDobgR7zTRmFYHz6JdyMhZpxhhdKJQnz
-         ZFcoq+yF26yKf3t80KKay3OfKfadK2a+V+QEjs2NdDY/0xeG1X3SNG+nw7n/l1o0OAFU
-         HqJv6HQHDpvbkRJF0SQZRa3eiIPCtj4Pf9NuAUntzc2++SzQbQQRbiGPfII7rS8y7OtR
-         d3VuX+rIzxtcAv9SqkcxZLqbffc6uxgpjWkpY9yQ5piUcigEq+KYfB308aznHvj7Ufg0
-         hl7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743733897; x=1744338697;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=q2whIQD8KdpXADYPhBRKVcLNwmLnu/yZ5sYtE7xk5RY=;
-        b=NnmvsK/brYWGxs9nvrzB+hqQ050jh/dT3y+CzUHNgLxy9bYyVRntUGo5Lt5NofzJ+b
-         M5xkR9Wz2XiuPECT/oIY6khAUt4jR/eX7pq5/61osNXILRl70WYnqjrTxQBgFGJRhTew
-         VddJK7ATU+5ScRq9PjZwZF9TiF+xAWE/Ebxb1YLwm6vMtgP36Ark0mY1BH3kxXAz8xX5
-         gxPIMGBs3AZ6EDcW0OBQANUcK3GfZLQJjrI2sQ3FaNfkDaFZZ3pOVxfnf/uMvZ306NUT
-         a1bjDwpJDAFU8+puOe0I+AShGvQCVp7OJi6gDuZFESS1n7zH0y8IoNZ7xphiTxSF59Oh
-         NMPw==
-X-Forwarded-Encrypted: i=1; AJvYcCU33Leafyxmgv3gM9roI3PlR4zUGoZkfp8Bn0RZEZvaRFlFR/fjA7K7EVya+YBflE/Pz7y/9SnvheoNG2Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxjZ4S6itjLwq3QiQefWT8OWy12CQsA5Zy93ndxzWrkTVNbAy4b
-	tUWF8r1lmeS6BhZVlWxtO0B3q9Zz65gGIIHg0iSiyzWPRG6icNaUVNFvydEiZOSawxjS5KKe7RL
-	vfGiXM32RIvjPKctObzvCVIyINT3OWGft8v6peA==
-X-Gm-Gg: ASbGncu/ioEMD9cUpYFh29eOFRGT0Sb5XUb7e40FiRWZTZCKOJlsPYB7qZF1FHlEiJA
-	uEFke0sMsrv64bRKZB0mkjIzUed/52RWE4IV1T28Ueln5EsAEUZQwVifCBvRWq+n/7dGUlZAsVg
-	gr511rC+M4vJQxqkF0OSJDgY832eYE
-X-Google-Smtp-Source: AGHT+IH9gl4q75ltH2ZFe+KffjOAddtz44brumjLnokrgaEk7wAc7CLc6OwNvkK4AiXGIFpHGB8pVkw0ICZfkYYHRh0=
-X-Received: by 2002:a05:6820:2220:b0:603:f973:1b1 with SMTP id
- 006d021491bc7-604154d63fdmr798732eaf.0.1743733896559; Thu, 03 Apr 2025
- 19:31:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="h8DgGnUT"
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 533Lg3bw015673;
+	Thu, 3 Apr 2025 22:33:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=DKIM; bh=uEBeI
+	gj0oucI9uHsR0yN3hrwpHKqiIeVcmhjc/ucAAY=; b=h8DgGnUTakLNfZpujVgbo
+	EViggs9NZdIY/IBdjPoeyfoQWOx0w2NRkqzeT3dptKV+YYw9KL+/PDjJWBiweaid
+	oQvJeGozG18jpHabHqhiqraaiqXsZvRApSi0FUfO0Zv+DC1aTHoVUMpSlE+0wYzF
+	JPankeCY29F6SK5gs5iApghxkHnM5EQXPu2olgIRCg1IpL+82LxjEDNlUIC8XUJO
+	oIaZjN9rlVUQ3KR8TfM1+GY5m4anV6Gn3IdCyRO32kK+8rkX1rLQSrEPNmmit7Ex
+	ZAy7LITCHRZijvzCiPxMo3yAoGBDrvFTnYpTH/kfa+cqJs+7SqtAgdlGw6wud5LU
+	Q==
+Received: from byapr05cu005.outbound.protection.outlook.com (mail-westusazlp17010005.outbound.protection.outlook.com [40.93.1.5])
+	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 45t2fh8y5q-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 03 Apr 2025 22:33:29 -0400 (EDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=iGj6zmTVODCIne3+1WpGuW8ew83LPiP8DOfaoFjHeLZdEB9bb0EqDzdA4g8KAIm7qbC1LJIcnrm2l0qOuNSetATU8TvOVoTLjl3jYK2bUr82huPDgTAcJ5DDN9O25i4kstqbxaAMJSkJDEgtvqaBQXwGg5OvOlshoO+cK7gF+11PzqU7sER4V995YREkxsrj8c7EFuQnVQVQcqbc8aMUjy2/G4UGnEXcMcjl0WTEZ3gpLYtF36yuCjL7IyKIx/GyKvig+7zv4T+lKr7IfiU6Au9oVFQF/DpoKHGvgoqr91dxULoHqeUfnhu5TpOZZ0DLdsXpBgvUedFB8qt40Jg7aw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=uEBeIgj0oucI9uHsR0yN3hrwpHKqiIeVcmhjc/ucAAY=;
+ b=zApXf7shLwcAq1pQKEK3Vpw7Qf4Biq24viNufA/igmI/X45W8TGfLKuvKogIS6pCkIrpC1spz+S/rsYR7cIl52g5Ib5GkQV1r3YmB02d2bTLCv2Nq0iV+sHkJMwn9xEUgvNVsPK4Tu+3ZUz3pMLv7ViXC2kPsACMKjZhx0IVrd1E+b6PHgNAiCyyRGa2b0ctQXTFGZBuGZ7C9MroQteOAM5XcjZywVqTS3JAcrcGvzNXlVhPje6S8Hfd0UaIm1fzKfKDBXZvUBmyDOQLk4Be4BbSat7KkHdqktpAC31ObEt13xfi6TpoWALJBzZ1dMq6gFJzJzCbx/GH/2ZAYt/gqw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
+ dkim=pass header.d=analog.com; arc=none
+Received: from PH0PR03MB6351.namprd03.prod.outlook.com (2603:10b6:510:ab::18)
+ by SJ0PR03MB5488.namprd03.prod.outlook.com (2603:10b6:a03:287::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Fri, 4 Apr
+ 2025 02:33:27 +0000
+Received: from PH0PR03MB6351.namprd03.prod.outlook.com
+ ([fe80::71f7:8e63:e91:a354]) by PH0PR03MB6351.namprd03.prod.outlook.com
+ ([fe80::71f7:8e63:e91:a354%5]) with mapi id 15.20.8583.043; Fri, 4 Apr 2025
+ 02:33:27 +0000
+From: "Torreno, Alexis Czezar" <AlexisCzezar.Torreno@analog.com>
+To: Mark Brown <broonie@kernel.org>
+CC: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: RE: [PATCH v3 2/2] regulator: adp5055: Add driver for adp5055
+Thread-Topic: [PATCH v3 2/2] regulator: adp5055: Add driver for adp5055
+Thread-Index: AQHbpEKmrftOQwEYJEyOn1gcrSONubORyQeAgADm2BA=
+Date: Fri, 4 Apr 2025 02:33:27 +0000
+Message-ID:
+ <PH0PR03MB63517B73D2E5F9B46FAA6D41F1A92@PH0PR03MB6351.namprd03.prod.outlook.com>
+References: <20250403-upstream-adp5055-v3-0-8eb170f4f94e@analog.com>
+ <20250403-upstream-adp5055-v3-2-8eb170f4f94e@analog.com>
+ <360c60a4-d1ba-47bf-b65d-c6889801703f@sirena.org.uk>
+In-Reply-To: <360c60a4-d1ba-47bf-b65d-c6889801703f@sirena.org.uk>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PH0PR03MB6351:EE_|SJ0PR03MB5488:EE_
+x-ms-office365-filtering-correlation-id: 69923cb2-d752-45c5-39b7-08dd73211489
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|366016|376014|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?HJa7mJ93fx2dPHt8x0P/JRB1rJaD/PoQPkvZ8wfdK18gOO3eCcisFUcf8uOF?=
+ =?us-ascii?Q?kHG5Y4kwpQol8uk4EFRBini6wZcshUaZX6FPGqlqvtaC4F1D8f2VnVT/NKto?=
+ =?us-ascii?Q?FEGjJf7cm+GeiJDrsl3CWk9VxqFw2rh7sZrhmIGhdERRMHVE31d/PcFlnPYK?=
+ =?us-ascii?Q?LUVvEaW0xdW7QN+pk2q8m6jtBS5Arb71qS+FNjBuuz5HZ7vAWiCNgxP8GdYw?=
+ =?us-ascii?Q?p02vbvfdwrGchib8B1c0TEs8UFxDomXJze0D6+hJczXSbcbuAej7lekcNulK?=
+ =?us-ascii?Q?NOAGFW+okpXEGsHQ7UL8DEriQK5FNUNlknL3oh1ZOn0dqYShCqaXsG53F0WJ?=
+ =?us-ascii?Q?B6kpDNw0IlyeERZnogCddwvsMHBCo6yWIra+ppro7u4/cPMF+pCWlCVIzJ5G?=
+ =?us-ascii?Q?mpc6um5Uo/xZTMFpThgs8vo9/t1Wg5njCCfYZacf+W5s6Sf13JvDthw9KTeL?=
+ =?us-ascii?Q?WOtX+WVP7PQfmrWO2z18+pqq0xXK93izgrZEY+jyuqcMh0dn9tmiND5q+Gv0?=
+ =?us-ascii?Q?KViHpIOIeSN/4s38AjBSzrrCmd3G68Y9D6yIt/4b67GcFpgTtbeD5Hb1GBhQ?=
+ =?us-ascii?Q?x+/WHnPfOcJf9CzIp6JeM8kkfcKE/F4fcNCAJaVbLNlsy0qgv3HrcQ7SBtD2?=
+ =?us-ascii?Q?XRZhRCSlb7dcIkBNuq9ecyyTbo13polY49kEZNntSphBNBCG9bHNR/9rx/9A?=
+ =?us-ascii?Q?VuYYnxVKmV6Y/mO/qPIL9zxx5PaucZN7SEwJiyyo+WtYd+j1shDrDV5PMg9H?=
+ =?us-ascii?Q?pDYBh8Igt3wQhhleWAHsccvOHUkmQmxXL/evriD3jGhQnQjM6YKr4bYuMWy+?=
+ =?us-ascii?Q?46gRmRMp6wJR5FuiZ9ENREARWklqvyNzM4E3U19BeZQoLILz1d0l8G5cVSHO?=
+ =?us-ascii?Q?tHfTZS3aHz1ZNFv4DdkuVN+6sMbfJMtAzjeuNbZUb5Uuov7PWBpEubwpITIm?=
+ =?us-ascii?Q?BEm1J2r/XxTZUum1laTUg4JhQaKXBJcuGADeBT1N6/pocRVw3z3OhNcKGQDQ?=
+ =?us-ascii?Q?vIdgSiIGitU2Ck4ZP0xhartwVb3cnpbZanFsIuHdbxkmn3RMd3i3B5TJa75I?=
+ =?us-ascii?Q?Z8qLjFXwgIBt8o/2dt8YYcfkznX325lALyKrxFoJFTyeQq8RPj72vhbbQRzF?=
+ =?us-ascii?Q?exbSX82tn0V5HdO3X/X+WQT6dYAbgTdlXa49NxKeqNqRdhGUDTlbftR0ai8g?=
+ =?us-ascii?Q?TOvZPc5es0ysCcLSh6Dd4nxUR+fcOVNBcs1jlySeMnWh3U2Htaa6m8y/l8Wq?=
+ =?us-ascii?Q?1nG3Q7SWt8UE1F6SMGMdOXPAHRnbXLOvn9CSiEJbz0f8yQTLxvDbNFn59KHv?=
+ =?us-ascii?Q?YOei7B/uqlzT8K4hzO99GOMym7DqahxJieiE8uakUTxCtL7XsU5uZ2uAjthU?=
+ =?us-ascii?Q?TnB3KVqjcDpw8mevWJ7V2wyZ55qYD/ZKxb+npd9ShshFVh3VxUh67p0DFihL?=
+ =?us-ascii?Q?DSjZgiaQzumz2cd0ve0Q+IEtrWq5Q1AN?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR03MB6351.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?fv35RLrhbNbBxHKvhqwDDYguhNGQiCJ4FPl4Whggtd6IaN9dMdHME7o357YH?=
+ =?us-ascii?Q?+0pEDQSmXWnlT/U9+EUv9bfnDDgiNoSk6aOFiImBhgACWKnkk0e3v1jKeSA0?=
+ =?us-ascii?Q?3jcofjVWqFi5PfiuVU23VDV+EPpZP/69x6snWV5JpMxJ0yPTnEoWAZQxapMC?=
+ =?us-ascii?Q?ncGcgd1FGon8TtlEko0WAvyb/4jQZbqw7hSYuBF4hqPmckp/pivlg/8PTxOA?=
+ =?us-ascii?Q?3b7Q+w9k0MhIDLaMgfXLBIYWuEBIfiDryL4RU5FUwh96LlP1h9f9KcVtGC+O?=
+ =?us-ascii?Q?0g38LEnabJE/6fK79nQMkvMaRewNpVuH27bX9Z43wuqOeYD1StDekJgx5wFQ?=
+ =?us-ascii?Q?frz0z0GiVaWLgvKy5oNxbs8DnkOoeodg4l7km+ej5a3JoJCGzShYkdae51xg?=
+ =?us-ascii?Q?toUl8IaoSDC8sPnMBRuAFGoV6cnjWIB0VzG67xX2MejKuhFRz/fw0UQFACS8?=
+ =?us-ascii?Q?vYS12kzwEQoAuJKmdD2qYgI4630XDzM6omcC9k+Og5S+XhqnOdwryl1JAWdy?=
+ =?us-ascii?Q?QwYlb+TTro4p9LUcnPDQIVoFRFeKDSSzq8o6X9p57Eg6RoRMEGKlgLsFPdea?=
+ =?us-ascii?Q?ZSduZ1j3hHgzCeQWwQ2Fu1Khl3aZjfCmtPchwVe8Fk90eHSBwbYkqQ2VCBLb?=
+ =?us-ascii?Q?pOE7OVFL2mdsYx5oJmtcVrXgHqMvCRe4mOsYF7Sd7wecSIIc6bE2Z+hIQ0Jf?=
+ =?us-ascii?Q?JNPPhYp/ypaGIVqBCq8SeTyXPIjbUmG7wiseUpcsQ3MhdYBN96uzJy2A622r?=
+ =?us-ascii?Q?sv9924wDovv21NMGwguMWxc3O718Dp4lExmbmQCEth6EVxO6IP7iYTU9RZKR?=
+ =?us-ascii?Q?pzSaOX0vya1Xz5iAPd2mPqpJIFGmcH9B20GWKeVI3wRnvBsLLDW/cCAQHxX1?=
+ =?us-ascii?Q?FDuTPV9cCb1X+pwCeHz7D5hJudJ3y3leooLnIDzPlVtYYoBWtNfmYK7UZnlS?=
+ =?us-ascii?Q?sbresOOfR4tepTFaRZpIEYl7HHOUhjkYWVc1Tz2KUYMNYLkLASnlbusok9Yc?=
+ =?us-ascii?Q?ltWRwoxYpGxpfZFKPX37vtJ1xiCp8wRpoHQ5WuBrGhO4Un/ps9MPKwD/bHBy?=
+ =?us-ascii?Q?i8bgkvL2Wj54vhbqxAEsTOHekPY1CixxoHw52+blQV1QrM6ZWAZtzydi8tDd?=
+ =?us-ascii?Q?zcqb77oY5XG0HW/Nd+4Mv3wl+kszLhFlviLJIt3RxyivGIig+qXgR6KtKlso?=
+ =?us-ascii?Q?tKgIJWXvf7ehM/Ze3P+tXMmfng41WNIRCqGeYgYAW53MZyPN2s5JGT3ja1Mu?=
+ =?us-ascii?Q?aQ6E/YTvFyhLYXF5GHUWTQSdpdGEVe1E/4N+Wob0/RdWgpUp5A7GYoyuYUzD?=
+ =?us-ascii?Q?CF862H6IzrE9gRL22G0/eY5N19bgq+ipTlDgjc1HRw1CuXiqc2ujnWFN6raA?=
+ =?us-ascii?Q?7Dxq6cTCdn44RCKt6GJLxxvDZboh+cGz4NbTSC9HAPV2JP8H4PVHNEawL93p?=
+ =?us-ascii?Q?BhVGsMthicVRnurl1VnGZiMVuae+VO8hedbieYVQ3BP54bLn1baT/gLcgJmt?=
+ =?us-ascii?Q?K9cTRxshzdFe9RjNvpSJG9eIm6K1Jm4PdkF0gSCUR30LwU9VfIw/24ooLCrn?=
+ =?us-ascii?Q?kB09F1ZgbrxbY1y+JrFsry8neScPG8tUYdTzbK9VxwVhQwoCCTobIO7y86+I?=
+ =?us-ascii?Q?tg=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250403090336.16643-1-cuiyunhui@bytedance.com>
- <Z-5yr2mFaDt8kxC-@smile.fi.intel.com> <Z-51629pjyiZUIVy@smile.fi.intel.com>
-In-Reply-To: <Z-51629pjyiZUIVy@smile.fi.intel.com>
-From: yunhui cui <cuiyunhui@bytedance.com>
-Date: Fri, 4 Apr 2025 10:31:25 +0800
-X-Gm-Features: AQ5f1JploVvIX48e4bc9-Zvy4Mr-665fzaSUUegXQUAC-gU9ajtwKPkYszaiBXk
-Message-ID: <CAEEQ3w=xVNuSN-4tHx6ir-i+huN8m1JXgJz672=WHAVBqcP+TA@mail.gmail.com>
-Subject: Re: [External] Re: [PATCH] serial: 8250: fix panic due to PSLVERR
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: gregkh@linuxfoundation.org, jirislaby@kernel.org, 
-	john.ogness@linutronix.de, pmladek@suse.com, arnd@arndb.de, 
-	namcao@linutronix.de, benjamin.larsson@genexis.eu, schnelle@linux.ibm.com, 
-	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR03MB6351.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 69923cb2-d752-45c5-39b7-08dd73211489
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Apr 2025 02:33:27.2017
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: mMn4Ain0FHnFvHPlwHzRVCIz2w/ADNmPfxB1Ksb3ytdswAWz907PGn6owBmDogYP7M9PPTxKsSYgJPJB3O+An/pjCWVYmFSrIajRhCHWf1g=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR03MB5488
+X-Authority-Analysis: v=2.4 cv=MOJgmNZl c=1 sm=1 tr=0 ts=67ef44f9 cx=c_pps a=94i1PXq8WVRBNmfdvHlv4w==:117 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=gAnH3GRIAAAA:8 a=pGLkceISAAAA:8 a=ZQxAEoVRXZhn9j3pZNUA:9 a=CjuIK1q_8ugA:10
+X-Proofpoint-GUID: UF3FOiTdw9KHMmbgUfsNtY5C8akLsgi9
+X-Proofpoint-ORIG-GUID: UF3FOiTdw9KHMmbgUfsNtY5C8akLsgi9
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-04_01,2025-04-03_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 phishscore=0
+ adultscore=0 suspectscore=0 bulkscore=0 impostorscore=0 priorityscore=1501
+ spamscore=0 mlxscore=0 malwarescore=0 mlxlogscore=927 lowpriorityscore=0
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504040016
 
-Hi Andy,
 
-On Thu, Apr 3, 2025 at 7:50=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Thu, Apr 03, 2025 at 02:36:16PM +0300, Andy Shevchenko wrote:
-> > On Thu, Apr 03, 2025 at 05:03:36PM +0800, Yunhui Cui wrote:
->
-> A couple of more questions here:
-> 1) what is the DW IP version and where did you get the PSLVERR_RESP_EN
-> parameter from?
-> 2) what is the setting of the UART_16550_COMPATIBLE parameter?
 
-1): Refer to: https://www.synopsys.com/dw/ipdir.php?c=3DDW_apb_uart
+> -----Original Message-----
+> From: Mark Brown <broonie@kernel.org>
+> Sent: Thursday, April 3, 2025 7:09 PM
+> To: Torreno, Alexis Czezar <AlexisCzezar.Torreno@analog.com>
+> Cc: Liam Girdwood <lgirdwood@gmail.com>; Rob Herring <robh@kernel.org>;
+> Krzysztof Kozlowski <krzk+dt@kernel.org>; Conor Dooley
+> <conor+dt@kernel.org>; linux-kernel@vger.kernel.org;
+> devicetree@vger.kernel.org
+> Subject: Re: [PATCH v3 2/2] regulator: adp5055: Add driver for adp5055
+>=20
+> [External]
+>=20
+> On Thu, Apr 03, 2025 at 10:43:11AM +0800, Alexis Czezar Torreno wrote:
+>=20
+> > +static int adp5055_is_enabled(struct regulator_dev *rdev) {
+> > +	struct adp5055 *adp5055 =3D rdev_get_drvdata(rdev);
+> > +	int id =3D rdev_get_id(rdev);
+> > +	int val;
+> > +
+> > +	if (adp5055->en_mode_software)
+> > +		return regulator_is_enabled_regmap(rdev);
+> > +
+> > +	val =3D gpiod_get_value_cansleep(adp5055->en_gpiod[id]);
+> > +
+> > +	return val;
+> > +};
+>=20
+> This is absolutely standard enable GPIO support, just let the core handle
+> everything.  Otherwise this looks fine.
 
-2): data->uart_16550_compatible =3D=3D 0
+May I ask which core function is the suggested to use here?
 
->
-> > > When the PSLVERR_RESP_EN parameter is set to 1, the device generates
-> > > an error response if an attempt is made to read an empty RBR (Receive
-> > > Buffer Register) while the FIFO is enabled.
-> > >
-> > > In serial8250_do_startup, calling serial_port_out(port, UART_LCR,
-> >
-> > serial8250_do_startup()
-> >
-> > > UART_LCR_WLEN8) triggers dw8250_check_lcr(), which invokes
-> > > dw8250_force_idle() and serial8250_clear_and_reinit_fifos(). The latt=
-er
-> > > function enables the FIFO via serial_out(p, UART_FCR, p->fcr).
-> > > Execution proceeds to the dont_test_tx_en label:
-> > > ...
-> > > serial_port_in(port, UART_RX);
-> > > This satisfies the PSLVERR trigger condition.
-> > >
-> > > Because another CPU(e.g., using printk) is accessing the UART (UART
-> >
-> > printk()
-> >
-> > > is busy), the current CPU fails the check (value & ~UART_LCR_SPAR) =
-=3D=3D
-> > > (lcr & ~UART_LCR_SPAR), causing it to enter dw8250_force_idle().
-> > >
-> > > To resolve this issue, relevant serial_port_out operations should be
-> >
-> > serial_port_out()
-> >
-> > > placed in a critical section, and UART_RX data should only be read
-> > > when the UART_LSR DR bit is set.
-> >
-> > The last one is made in the common code, are you sure that all supporte=
-d UARTs
-> > will be okay with such a change?
-> >
-> > > Panic message:
-> >
-> > Please, read this
-> > https://www.kernel.org/doc/html/latest/process/submitting-patches.html#=
-backtraces-in-commit-messages
-> > and act accordingly.
-> >
-> > > [    0.442336] Oops - unknown exception [#1]
-> > > [    0.442337] Modules linked in:
-> > > [    0.442339] CPU: 3 UID: 0 PID: 1 Comm: swapper/0 Tainted: G       =
- W          6.12.13-00102-gf1f43e345877 #1
-> >
-> > Is it still reproducible on v6.14 (and soon v6.15-rc1)?
-> >
-> > > [    0.442342] Tainted: [W]=3DWARN
-> > > [    0.442343] epc : dw8250_serial_in32+0x1e/0x4a
-> > > [    0.442351]  ra : serial8250_do_startup+0x2c8/0x88e
-> > > [    0.442354] epc : ffffffff8064efca ra : ffffffff8064af28 sp : ffff=
-8f8000103990
-> > > [    0.442355]  gp : ffffffff815bad28 tp : ffffaf807e36d400 t0 : ffff=
-af80804cf080
-> > > [    0.442356]  t1 : 0000000000000001 t2 : 0000000000000000 s0 : ffff=
-8f80001039a0
-> > > [    0.442358]  s1 : ffffffff81626fc0 a0 : ffffffff81626fc0 a1 : 0000=
-000000000000
-> > > [    0.442359]  a2 : 0000000000000000 a3 : 0000000000000000 a4 : ffff=
-ffff81626fc0
-> > > [    0.442360]  a5 : ffff8f800012d900 a6 : 000000000000000f a7 : 0000=
-00000fc648c1
-> > > [    0.442361]  s2 : 0000000000000000 s3 : 0000000200000022 s4 : 0000=
-000000000000
-> > > [    0.442362]  s5 : ffffffff81626fc0 s6 : ffffaf8085227000 s7 : ffff=
-ffff81073c58
-> > > [    0.442363]  s8 : 0000000000500000 s9 : ffffaf80851a5a60 s10: ffff=
-af80851a5a60
-> > > [    0.442365]  s11: ffffffff80e85980 t3 : ffffaf807e324600 t4 : 0000=
-000000000002
-> > > [    0.442365]  t5 : 0000000000000003 t6 : ffffaf80804cf072
-> > > [    0.442366] status: 0000000200000120 badaddr: 0000000000000000 cau=
-se: 0000000000000013
-> > > [    0.442368] [<ffffffff8064efca>] dw8250_serial_in32+0x1e/0x4a
-> > > [    0.442371] [<ffffffff8064af28>] serial8250_do_startup+0x2c8/0x88e
-> > > [    0.442373] [<ffffffff8064b514>] serial8250_startup+0x26/0x2e
-> > > [    0.442375] [<ffffffff806428a2>] uart_startup+0x13a/0x308
-> > > [    0.442377] [<ffffffff80642aa4>] uart_port_activate+0x34/0x50
-> > > [    0.442378] [<ffffffff8062ab6a>] tty_port_open+0xb4/0x110
-> > > [    0.442383] [<ffffffff8063f548>] uart_open+0x22/0x36
-> > > [    0.442389] [<ffffffff806234b4>] tty_open+0x1be/0x5e6
-> > > [    0.442396] [<ffffffff802f2d52>] chrdev_open+0x10a/0x2a8
-> > > [    0.442400] [<ffffffff802e7ab6>] do_dentry_open+0xf6/0x34e
-> > > [    0.442405] [<ffffffff802e9456>] vfs_open+0x2a/0xb4
-> > > [    0.442408] [<ffffffff80300124>] path_openat+0x676/0xf36
-> > > [    0.442410] [<ffffffff80300a58>] do_filp_open+0x74/0xfa
-> > > [    0.442412] [<ffffffff802e9900>] file_open_name+0x84/0x144
-> > > [    0.442414] [<ffffffff802e99f6>] filp_open+0x36/0x54
-> > > [    0.442416] [<ffffffff80a01232>] console_on_rootfs+0x26/0x70
-> > > [    0.442420] [<ffffffff80a0154e>] kernel_init_freeable+0x2d2/0x30e
-> > > [    0.442422] [<ffffffff8099c730>] kernel_init+0x2a/0x15e
-> > > [    0.442427] [<ffffffff809a7666>] ret_from_fork+0xe/0x1c
-> > > [    0.442430] Code: e022 e406 0800 4683 0c15 691c 872a 96bb 00d5 97b=
-6 (439c) 851b
-> > > [    0.442432] ---[ end trace 0000000000000000 ]---
-> > > [    0.442434] Kernel panic - not syncing: Fatal exception in interru=
-pt
-> > > [    0.442435] SMP: stopping secondary CPUs
-> > > [    0.451111] ---[ end Kernel panic - not syncing: Fatal exception i=
-n interrupt ]---
-> >
-> > Fixes tag?
-> > Cc to stable@?
-> >
-> > ...
-> >
-> > >     /*
-> > >      * Now, initialize the UART
-> > >      */
-> >
-> > + Blank line.
-> >
-> > > +   uart_port_lock_irqsave(port, &flags);
-> > >     serial_port_out(port, UART_LCR, UART_LCR_WLEN8);
-> > >
-> > > -   uart_port_lock_irqsave(port, &flags);
-> > >     if (up->port.flags & UPF_FOURPORT) {
-> > >             if (!up->port.irq)
-> > >                     up->port.mctrl |=3D TIOCM_OUT1;
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
+I assume I need to change the line in ops:
+-> .is_enabled =3D adp5055_is_enabled,
 
-Thanks,
-Yunhui
+Not sure which function handles both GPIO and registers since as far as I
+understand 'regulator_is_enabled_regmap()' only handles software/registers =
+and
+'regulator_is_enabled()' only checks the gpio?
+
