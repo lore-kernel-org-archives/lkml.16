@@ -1,109 +1,101 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4B9F1F0E5D;
-	Fri,  4 Apr 2025 14:25:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+Received: from mg.richtek.com (mg.richtek.com [220.130.44.152])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D9A81A238C;
+	Fri,  4 Apr 2025 14:27:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.130.44.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743776734; cv=none; b=l+B7wbkcFUHu4oP9z2xAGWYBlHl2ihrZZxQla4lypKXmih8xvdgMekcT7+CBNH9tgxZqF0meUhvRdg5oxwR769qaYD9cNTFAzj0drw2IwTpySFiYUJjY1hWiGdgl+iOng5k5VcWYnpZaBM+79Ww7zTlTqgSUV+F5Z4xiol6R1+s=
+	t=1743776826; cv=none; b=ZokEVLISfET2pA8UthtH1+WC5c1UFcJU9nLff2y6ijVzRDN3SsKy8EGDK3fe9hUiD9OLUFWc6TofsKGJ04j/Y7z0VgkzCD2O4iyhxmmBMPS6VDTRy9z43t5H9MSkbBh+iEG8IVAFQkhhgtgalt/dHaEPXY0ijfb4y9gevkePrf4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743776734; c=relaxed/simple;
-	bh=QsmLFt7EjGOu0E7+wEGHOEm9tfhJmkWpMEUJ/Tk8ZGU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=V9Qqm0i+0OG04AJN2GSgktjr85zFKOcqQotduDe7RSjNRJDP0fvxBsSGnKb7Lvib8JUgLl9e9SJaQ67m2zRHnKslk0ObOYo6JfnvlPpfsXP+2wCyYtgVg2nUXvOFaIVc0A++a36odkXoxq2XnZgahNtsCbOEX87hWqzYTmyJ77I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OS4lrJC9; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1743776826; c=relaxed/simple;
+	bh=BinFXEu5xJ5P6GQ2tSNl4s/I+Bg9wAd2jeLycIJNcGE=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hAP9laUln9+JgZR1o4OmD0RA3w4V+bUDRDgx+mhe7wZiq0nkfL1qcVL+GFXyu3EWr7Hbi3jbAAzosPTwl4DI3MB3KmCIshCC1VAcuyi4e8jUJIRr0YLBB54VLRfccwU6uzh5FPp5FEjHjJFXrQQUZ2gmjzv8SBtiXx/Q65bYJ24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=richtek.com; spf=pass smtp.mailfrom=richtek.com; dkim=pass (2048-bit key) header.d=richtek.com header.i=@richtek.com header.b=rfO4hfjY; dkim=pass (2048-bit key) header.d=richtek.com header.i=@richtek.com header.b=TF7X/YOc; arc=none smtp.client-ip=220.130.44.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=richtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=richtek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OS4lrJC9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743776732; x=1775312732;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=QsmLFt7EjGOu0E7+wEGHOEm9tfhJmkWpMEUJ/Tk8ZGU=;
-  b=OS4lrJC9icfEyQ5fC4bFHpruIflEnfdUfHXYaUOE8Fd7sbymjMgJ1apd
-   5LdyTdFHAW5dol8TRibzxre/gJQ9a2UYZWxGGKMDc3GvgDkXvQqYjn0Gq
-   TItcaOukbGLtxoqU26DOlwxdrxn3dptUGH/hIKMURGgDV/E47ltdcbyGz
-   krjkDSskkWhGcyog25Ub12L/xe54xkgZghxK75fVrqeXojVXmZXob62qm
-   qwSKEJyDBcnKhyvlexplkEi1952jSMSqVve0cwdlnGVeLoDq4WB1SpHyO
-   UwMNeXz1B+wsh1Y1C+UGraMrBOJX3Z3WUwrjx9f7wJJmq5DcsrE+ZyEXl
-   A==;
-X-CSE-ConnectionGUID: RergILhgSISSNhm/U868bQ==
-X-CSE-MsgGUID: EsQqmavETKSTCuSQKBJMxg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11394"; a="55851612"
-X-IronPort-AV: E=Sophos;i="6.15,188,1739865600"; 
-   d="scan'208";a="55851612"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 07:25:32 -0700
-X-CSE-ConnectionGUID: MwVuWQEIRzyk0NbW7McFAw==
-X-CSE-MsgGUID: eOoob3K+Tt2XiDa9y12Gfw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,188,1739865600"; 
-   d="scan'208";a="132035673"
-Received: from unknown (HELO [10.237.72.199]) ([10.237.72.199])
-  by fmviesa005.fm.intel.com with ESMTP; 04 Apr 2025 07:25:30 -0700
-Message-ID: <b356f743-44b5-4f48-a289-fae0afe106ff@linux.intel.com>
-Date: Fri, 4 Apr 2025 17:26:40 +0300
+	dkim=pass (2048-bit key) header.d=richtek.com header.i=@richtek.com header.b="rfO4hfjY";
+	dkim=pass (2048-bit key) header.d=richtek.com header.i=@richtek.com header.b="TF7X/YOc"
+X-MailGates: (SIP:2,PASS,NONE)(compute_score:DELIVER,40,3)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=richtek.com;
+	s=richtek; t=1743776821;
+	bh=lKHyVuep4L/EA1oyYLoYQ61TnGK9fi+8Aheuj8YJrdY=; l=1004;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=rfO4hfjYwgQw1JFYd6QWp/MDWJEL+aPGD5iz8pT3rc8TxnjIZEXDDcGSgLNANT4UB
+	 H7nU21AsXU7AX/0CXn8lZqD6JDxlVii0h2bGR/+lB2Y+GTdCeD+INPydl7xKEDF1EE
+	 ib1ERPxlq5wZRnfxVadec86MPlOMuJooQOAYmRcLy5zSGNiHXJkyIcrVKWOFxxWll+
+	 JPe9TGRt0GuG+BG5ijkOMRXHBcNl2mN+FacCTog82qvKkNhGeWyuaDORH375vc1hI8
+	 FdK8JM0hycyLzlSuA21nYhS99XWPEo5kjH8LvQFlTut8yzCHCck7TgqnPw0TvVhSoe
+	 w/BVOFFnfAwJA==
+Received: from 192.168.8.21
+	by mg.richtek.com with MailGates ESMTP Server V3.0(1128086:0:AUTH_RELAY)
+	(envelope-from <prvs=11846F16CF=cy_huang@richtek.com>); Fri, 04 Apr 2025 22:26:58 +0800 (CST)
+X-MailGates: (compute_score:DELIVER,40,3)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=richtek.com;
+	s=richtek; t=1743776818;
+	bh=lKHyVuep4L/EA1oyYLoYQ61TnGK9fi+8Aheuj8YJrdY=; l=1004;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=TF7X/YOchb44Ls5Vgdrd7PnEPXBldCfrecLaiopuMxpkuyr0++bnv4z0lNqFd0rkl
+	 nL2ijOjM32OmAMomO4EhbowKIFXiCJv8TuUzbPihJwoTqUYUCaHbacjIAcHnJa2SlR
+	 xxH9faEzalCZYovHLgk69NadlE5m/9HCc1Rl+SCniMKArJ7KNdiKLsa1tM/oQfHXJf
+	 5QQCNjGnFvoEIU14BkDlpuiIvqH3sSuxmaWi+0w5lbt+ngx0rYi9YcvznboXB46QCp
+	 TbsDXYFhQq07sa5zLTIaOml9sgf5fu9VeSmlJJEfLEeIPUQ4A6sRqmQDZsfZBFCtTv
+	 GrSkVhZJX1Y3w==
+Received: from 192.168.10.46
+	by mg.richtek.com with MailGates ESMTPS Server V6.0(1629328:0:AUTH_RELAY)
+	(envelope-from <cy_huang@richtek.com>)
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256/256); Fri, 04 Apr 2025 22:21:09 +0800 (CST)
+Received: from ex4.rt.l (192.168.10.47) by ex3.rt.l (192.168.10.46) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Fri, 4 Apr
+ 2025 22:21:08 +0800
+Received: from git-send.richtek.com (192.168.10.154) by ex4.rt.l
+ (192.168.10.45) with Microsoft SMTP Server id 15.2.1544.11 via Frontend
+ Transport; Fri, 4 Apr 2025 22:21:08 +0800
+From: <cy_huang@richtek.com>
+To: Mark Brown <broonie@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+CC: Rob Herring <robh@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, ChiYuan
+ Huang <cy_huang@richtek.com>, Otto lin <otto_lin@richtek.com>, Allen Lin
+	<allen_lin@richtek.com>, <devicetree@vger.kernel.org>,
+	<linux-sound@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH 0/4] ASoC: Add Richtek rt9123 and rt9123p support
+Date: Fri, 4 Apr 2025 22:22:10 +0800
+Message-ID: <cover.1743774849.git.cy_huang@richtek.com>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: xhci: WARN Set TR Deq Ptr cmd failed due to incorrect slot or ep
- state.
-To: Paul Menzel <pmenzel@molgen.mpg.de>,
- Mathias Nyman <mathias.nyman@intel.com>,
- Michal Pecio <michal.pecio@gmail.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- linux-usb@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-References: <c279bd85-3069-4841-b1be-20507ac9f2d7@molgen.mpg.de>
-Content-Language: en-US
-From: Mathias Nyman <mathias.nyman@linux.intel.com>
-In-Reply-To: <c279bd85-3069-4841-b1be-20507ac9f2d7@molgen.mpg.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On 3.4.2025 21.02, Paul Menzel wrote:
-> Dear Linux folks,
-> 
-> 
-> Just a heads-up, that connecting an LMP USB-C mini Dock [1] to the Intel Kaby Lake Dell XPS 13 9360 with
-> 
->      00:14.0 USB controller [0c03]: Intel Corporation Sunrise Point-LP USB 3.0 xHCI Controller [8086:9d2f] (rev 21)
-> 
-> resulted in Linux 6.14.0-12966-ga2cc6ff5ec8f logging the warning and trace below.
-> 
-> ```
-> [   74.898485] usb 4-1.4: reset SuperSpeed USB device number 5 using xhci_hcd
-> [   74.916241] sd 0:0:0:0: [sda] Media removed, stopped polling
-> [   74.916634] sd 0:0:0:0: [sda] Attached SCSI removable disk
-> [   98.803081] PM: suspend entry (deep)
-> [   98.813999] Filesystems sync: 0.010 seconds
-> [   98.819226] Freezing user space processes
-> [  105.534176] xhci_hcd 0000:39:00.0: WARN Set TR Deq Ptr cmd failed due to incorrect slot or ep state.
-> [  105.606437] usb 4-1.4: reset SuperSpeed USB device number 5 using xhci_hcd
-> [  118.822270] Freezing user space processes failed after 20.003 seconds (2 tasks refusing to freeze, wq_busy=0):
+From: ChiYuan Huang <cy_huang@richtek.com>
 
-Thanks for the report.
+This patch series adds Richtek rt9123 and rt9123p support.
+It's a 3.2W mono Class-D audio amplifier.
 
-Looks like it's triggered during system suspend.
+ChiYuan Huang (4):
+  ASoC: dt-bindings: Add bindings for Richtek rt9123
+  ASoC: codecs: Add support for Richtek rt9123
+  ASoC: dt-bindings: Add bindings for Richtek rt9123p
+  ASoC: codecs: Add support for Richtek rt9123p
 
-"The Set TR Deq" command that fails here is queued when
-- endpoint stops to remove cancelled transfers.
-- endpoint resets to clear STALL or other halt due to transfer error.
-- canceling a transfer while endpoint is mid stall or tt clearing.
+ .../bindings/sound/richtek,rt9123.yaml        |  56 ++
+ .../bindings/sound/richtek,rt9123p.yaml       |  50 ++
+ sound/soc/codecs/Kconfig                      |  15 +
+ sound/soc/codecs/Makefile                     |   4 +
+ sound/soc/codecs/rt9123.c                     | 484 ++++++++++++++++++
+ sound/soc/codecs/rt9123p.c                    | 171 +++++++
+ 6 files changed, 780 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/richtek,rt9123.yaml
+ create mode 100644 Documentation/devicetree/bindings/sound/richtek,rt9123p.yaml
+ create mode 100644 sound/soc/codecs/rt9123.c
+ create mode 100644 sound/soc/codecs/rt9123p.c
 
-Looks like there are at least some gaps in verifying endpoint state in endpoint
-reset handler  before queuing the "Set TR Deq" command,
-this could be a possible reason.
 
-If this case could be reproduces with xhci dynamic debug enabled it would help
-narrowing down the real cause.
+base-commit: a2cc6ff5ec8f91bc463fd3b0c26b61166a07eb11
+-- 
+2.34.1
 
-echo 'module xhci_hcd =p' >/sys/kernel/debug/dynamic_debug/control
-
-Thanks
-Mathias
