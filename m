@@ -1,132 +1,163 @@
-Received: from mail-qv1-f68.google.com (mail-qv1-f68.google.com [209.85.219.68])
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 792A321CFEA
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 20:00:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.68
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E176E567;
+	Fri,  4 Apr 2025 20:00:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743796810; cv=none; b=pbvEPe1xm2zMnUBGrqa3GSR1LHv5eavtx7k3sR0bNRnVLe7PyRopYNL+jza/YX5FlFPfsIPQPw+No9OACQ0Ugsw9kJx18aiQFEyBSokjhWCRqvYEvc1TP1YaxKn0uGP1hww/HkeKEf1WifFDikuIctSJ5X8ZIL11VyiJTFU8lkE=
+	t=1743796829; cv=none; b=FWa9e8BBPIrGJMk8ELDbgKUPSQwU8bpjpe55Kbu7icPRZJeZ+2PVlHGWZ43QyLAjgqinbZwhzSyOPvHSjqMvFrK7wpHMFkicGqxUAcS8KFRcimx7ubbu5uCKs2UGE2Fzj95/d4xI/bSPHThUI7SrdmrQzk7bfTMHIWqDO/MFDps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743796810; c=relaxed/simple;
-	bh=Z+hEStOqVif7943lSI/sdGCcGpwnb6+xp/b4cL1hsyQ=;
-	h=From:Date:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=R2IIdUXw7CuEyu926SxaTe0Z4AB+mT/0yXkYuf7MSMuNl5bIl6XNdsGEz3duBWUxG53lJJpJ40pyutfbqCP/jlEXznAJXCOdFYkNNUhYjcSDrQu7YzSkTBzECIpA1jMz7u4XHTkdNLRla7Qw5v+1MFguk3Bc6I/i/1kVF/lJaoI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kudzu.us; spf=none smtp.mailfrom=kudzu.us; dkim=pass (2048-bit key) header.d=kudzu-us.20230601.gappssmtp.com header.i=@kudzu-us.20230601.gappssmtp.com header.b=vYYUvqYo; arc=none smtp.client-ip=209.85.219.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kudzu.us
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=kudzu.us
+	s=arc-20240116; t=1743796829; c=relaxed/simple;
+	bh=CdUvOQYTxjNTsDyHeUAwsW2erk3aVAGihloUjioHLbE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IOCW+ZO3bZEHBK9EcXKjuIj5B11SM4t4BxBLc7A5D11XAdcDibpSew53R57q3kOAFTJT+Ohi98Sd0rLgCvJdRqJNACU6HfqrQkdjC8H9WTe1Jlhdn4U3nezETRJyMbzBiV8WjlkOkDAOFQvyorBJM2zp/Nt8Pn9ml5CmctEijbA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X1P4/7F0; arc=none smtp.client-ip=209.85.208.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kudzu-us.20230601.gappssmtp.com header.i=@kudzu-us.20230601.gappssmtp.com header.b="vYYUvqYo"
-Received: by mail-qv1-f68.google.com with SMTP id 6a1803df08f44-6e8f254b875so24113286d6.1
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 13:00:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X1P4/7F0"
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-30de488cf81so24584381fa.1;
+        Fri, 04 Apr 2025 13:00:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1743796806; x=1744401606; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-disposition:mime-version
-         :message-id:subject:cc:to:date:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=h5eZ3DGWv7e/HOiKc2xl6HutGoiiFu21dZ6Xc3YK3wc=;
-        b=vYYUvqYoZQ0lNRe3DbfdCti7NVlie8G+3QpqHPNpUD5ZJOTqEbb6jwF0OQIB3M0BKz
-         kA2CmeZxfO7NbjojTdBkZUtfu+nZzEUQv/AsMIoWdki/UTnJp7JB9Ulsw2YfrnRIRJsf
-         JZWpISQImuJAE3rQ6K6030l3vFLdcdYuLta/+gfdFPqV4fVMKjuiZ8UhGmwa/e0RE6N8
-         HbyCiZwsT5jPgMvG0j50ngyi4eWDUEBLcZM6pjrgSKh2TUm66zQbACozJLj4Tg2/Ywcs
-         Xu62zren27Y8ewOAd9V79S8F/Hjd2E1rB6jnbRyoDMWRNr5g5s/cUxt8HUkP2YjRTqig
-         4m8g==
+        d=gmail.com; s=20230601; t=1743796824; x=1744401624; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=NGnSFRzuoAQP7JbKLfcQWzVzDu4XKirqs+YYRbjcXCs=;
+        b=X1P4/7F0v7aaaZ9jRpmpy/OHxTMYR/IapBAH13+VRB5Bg9RcxxnnDVp7TEh1biLtue
+         SSHrdMzKWzenGzXOb54e4KerrWXFZz4acPgAtMMqLpfkvoZf/KbOvv36G/aSuxRtbpQJ
+         5RR5PA448ww9RpxoGlFy1BkAB9feBoP2e+GbrJ4wjjppfPBXHZd7HfIEXneUXufXt3i6
+         oUNNaXKeg1CF9glQdSKTdoAU5b/T9TZmcK/dzcHDoCObalk5w3dN5r2ig2bc5Yk/TeKm
+         u8VGps9h2eftZdOmqUYkzv+iZy4LZ7W724W4ry4VW/UhsjdiCVGvRK3ULIJ0SZG+smDI
+         /cCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743796806; x=1744401606;
-        h=content-transfer-encoding:content-disposition:mime-version
-         :message-id:subject:cc:to:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=h5eZ3DGWv7e/HOiKc2xl6HutGoiiFu21dZ6Xc3YK3wc=;
-        b=MZCj3hpbGf9duHdkQ0RuFp1FBia15AXDRtkbV95qWj3phUYr1l1QbZykQeJzp5khDQ
-         FA4jYnH64uAvQJD2Jsa5ItvbH7MiXwuzAkbGnn+HKRTm46jarldCY9kN397SuC/Rdz2k
-         yPbdnv9/hepPTOx/9+B+CO71zu5R5C6AGoQ43vlPRLM+AhLjn9zMmPSfs8myobxyvzAS
-         NS+UGx4H/tQfEty/7ADo4cByUDQRZq0cIlZZFVvLr/XaR49e+9J1DqbfLfFFNUORRRgY
-         VBsNRHyd6WXdLRDFdcSP+sETPLzeXITFJ1g6pINzNbvtmQn9Qt0lqkUu2qYg9gwIyfYk
-         YJIw==
-X-Gm-Message-State: AOJu0YwM9dOZoXVL9VNUqhv/p0WqqB9xhiWdtmMTVXkJ/YkBwW2kazh2
-	PxZLbbBGUw7ZBqYxuonraShRR6vrgu9ncL+6FbISOUkDJ8dffMAc7tYyp3Orv9NMmOKUP1UALUI
-	5xpDO
-X-Gm-Gg: ASbGncuvw3law9DDV8lZKM6E0PnjSl9/y2EGKsLSdEGZ17bhL3Ie0WurvIMQtgQyiG0
-	R1WI1Fcv2ZyS8r1adG6BVcAiDE3Bp9Ous2y4qCXwdLIPzDIsNpJHVyuk10Qyb8FsHHj8MeNJP33
-	Za87weyu9TUEZ7nbVuVBTyDyfeuRONxycGp9ELT27VNoyd6u0FPuIfB0/rCFoywLo+G4XZ+hNK+
-	NsXDjgoXqypIdn5C3iHIlku6BT3n6N3eQGTwz5KAmybtdhPrzqOer5mNUUIKP2G2Co+sDudt+ql
-	EXWv4/D1sgrXkk8t8sowcA+shoU9dmw/UFii
-X-Google-Smtp-Source: AGHT+IH1dFd1V/bERQFGbzF7wB96i6ZViPRK9J2/g7n+bkagE+I2+GWu+MCxNK2rVP98gHE179j0aQ==
-X-Received: by 2002:a05:6214:19ca:b0:6e8:f433:20a8 with SMTP id 6a1803df08f44-6f0b73f46afmr10169116d6.9.1743796806094;
-        Fri, 04 Apr 2025 13:00:06 -0700 (PDT)
-Received: from localhost ([136.56.27.188])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6ef0f138d5dsm25238936d6.92.2025.04.04.13.00.05
+        d=1e100.net; s=20230601; t=1743796824; x=1744401624;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NGnSFRzuoAQP7JbKLfcQWzVzDu4XKirqs+YYRbjcXCs=;
+        b=OOgtFfTmcQbVZQAkz59xRB0mq7F6yzRyp3R3ig8WNM1r6Tm+R7XSRLjIy/D7cU91m2
+         dUJCBghHl0mnKf1Rdi36vJ/BSY6yJL0GGXOIip5gvCfU42ZVLuLtJymF12K77DXZMnpU
+         3eZmxLtNyH4TuUrCpUFmet8KVIbpqb/Fil0Cwct8s8TZ/mJ5X0XY27KH6Ee1FoegayBG
+         gMKS7/RJISsT2XAZqm+yYFxuuhRbpu8nFc11bq0nPZdqn2FvdHAFKU3FGXqf9GKuQWqy
+         h5O/r2jKi/IDJw1KNahprBhD1FWeTnqPX/IhSfMz78Jro0M+InX1GsCOR3Q2tzvHvzqL
+         +tPg==
+X-Forwarded-Encrypted: i=1; AJvYcCV78f0L3iWwLj4Qf9NN9u+koxXIsmKW9qpA0xlnYKi8GbEAG3Zb95Ray2FG5Y3uDsqIMdISfQ2hefxs@vger.kernel.org, AJvYcCXKCQiM0qbX23eTOTLlnyJp8ml2k9bqoWLUOzvJ7mfwd3kQ/Xxbe/jRLzl3PJm90Cb1Ih5cGqpcGOOLoq2I@vger.kernel.org
+X-Gm-Message-State: AOJu0YwxePembcCKtCoYbJqXxYECV611/YKhBa1WMGa3RFZzVIBJqPsS
+	guO3JpKd+ZhrP1/53mlsPQ5ozmPQkmJ71mvQUiExg6qFQf2XtL2B
+X-Gm-Gg: ASbGnctQuUx9/H9VQ0DlOOzYwCzTe0h6QZeWip/oPRvuw2bX9LnM5OzCXAJr7A6KL9N
+	tY/b7Galgu/s5qKBOoGSV8q5P1uL/J9yPntUufGdgl0TY5XGQ19N5Q9c2+WQJDgFPL1apKlgzEb
+	T+xbYvOusSkb4Q/ki+g2IDvWPP8YUAhk605LWb/mnoLyhaJbyFg0rY8y7UR/pIC/zbC5zrcJaxR
+	BXJ3CZPfEZ6zqAvoQgkLMmW6KdK0zfups2xPCNboUxVx59HxbaHUc1h9QB9QizYrkaK/OTTzB5m
+	PLnJoOLRX169L073EUO9MFyFi/qDzcia1NmfDPAFtDQTS84RHNDgUPis0E+HNoxvnCfa/OG0K+u
+	3GaA0tA==
+X-Google-Smtp-Source: AGHT+IEEDhNz2RLU0cU7UeS/zJmcHV5Dl+HcylWgqmeC/Yvy6JjRimOfReWDSNO1EN6tnir9PBbWUg==
+X-Received: by 2002:a05:651c:30c1:b0:30b:b956:53bd with SMTP id 38308e7fff4ca-30f164eb958mr2440851fa.4.1743796824081;
+        Fri, 04 Apr 2025 13:00:24 -0700 (PDT)
+Received: from gmail.com (83-233-6-197.cust.bredband2.com. [83.233.6.197])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30f031bd00csm6479541fa.66.2025.04.04.13.00.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Apr 2025 13:00:05 -0700 (PDT)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jdm@athena.kudzu.us>
-Date: Fri, 4 Apr 2025 16:00:05 -0400
-To: torvalds@linux-foundation.org
-Cc: linux-kernel@vger.kernel.org, ntb@lists.linux.dev
-Subject: [GIT PULL] NTB bug fixes for 6.15
-Message-ID: <Z_A6RauUQ2sczSMr@athena.kudzu.us>
+        Fri, 04 Apr 2025 13:00:23 -0700 (PDT)
+Date: Fri, 4 Apr 2025 22:00:21 +0200
+From: Marcus Folkesson <marcus.folkesson@gmail.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, dri-devel@lists.freedesktop.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] dt-bindings: display: Add Sitronix ST7571 panel
+Message-ID: <Z_A6VXPLuOfk9HPL@gmail.com>
+References: <20250404-st7571-v2-0-4c78aab9cd5a@gmail.com>
+ <20250404-st7571-v2-1-4c78aab9cd5a@gmail.com>
+ <d2ffca88-6773-4e40-b737-65a451ba1d01@kernel.org>
+ <e1a7c9d6-9c14-48d3-ac2e-c6e0df04bbbf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="C7W91j7lgF/0CeRL"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-
-Hello Linus,
-Here are a few NTB bug fixes and minor changes for 6.15.  Please consider pulling them.
-
-Thanks,
-Jon
+In-Reply-To: <e1a7c9d6-9c14-48d3-ac2e-c6e0df04bbbf@kernel.org>
 
 
+--C7W91j7lgF/0CeRL
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The following changes since commit 2014c95afecee3e76ca4a56956a936e23283f05b:
+Hi Krzysztof,
 
-  Linux 6.14-rc1 (2025-02-02 15:39:26 -0800)
+On Fri, Apr 04, 2025 at 07:36:12PM +0200, Krzysztof Kozlowski wrote:
+> On 04/04/2025 19:30, Krzysztof Kozlowski wrote:
+> >> +
+> >> +examples:
+> >> +  - |
+> >> +    #include <dt-bindings/gpio/gpio.h>
+> >> +   =20
+> >> +    i2c {
+> >> +        #address-cells =3D <1>;
+> >> +        #size-cells =3D <0>;
+> >> +
+> >> +        display@3f {
+> >=20
+> > Not much improved. How is this called in every other binding? panel.
+>=20
+> Hmmm, unless this is not a panel, but it looks like a panel and
+> description partially suggests it. Other sitronix devices are split
+> between these two, but OTOH your driver is more complex than just simple
+> panel.
 
-are available in the Git repository at:
+I've counted this as a display, but the border is not crystal
+clear, and, as you say, other Sitronix devices are split between the two.
+It is a controller/driver for a LCD panel.
 
-  https://github.com/jonmason/ntb tags/ntb-6.15
+>=20
+> Your commit msg is one sentence and binding description is basically
+> non-existing, so not sure how to help. You need to describe the hardware
+> so people understand what this device is.
 
-for you to fetch changes up to bf8a7ce7e4c7267a6f5f2b2023cfc459b330b25e:
+I've prepared this description for the next version of the patch:
 
-  ntb_hw_amd: Add NTB PCI ID for new gen CPU (2025-03-18 13:35:00 -0400)
+description:
+  Sitronix ST7571 is a driver and controller for up to 4-level gray
+  scale dot-matrix LCD panels.
+  It drives 128 segment outputs and 128+1 common outputs.
+  It provides several system interfaces like SPI, I2C and 8-bit parallel bu=
+s.
 
-----------------------------------------------------------------
-Bug fixes for NTB Switchtec driver mw negative shift, Intel NTB link
-status db, ntb_perf double unmap (in error case), and MSI 64bit
-arithmetic.  Also, add new AMD NTB PCI IDs, update AMD NTB maintainer,
-and pull in patch to reduce the stack usage in IDT driver.
+But still, it is not obvious if I should move it to panel or not.
 
-----------------------------------------------------------------
-Arnd Bergmann (1):
-      ntb: reduce stack usage in idt_scan_mws
+>=20
+> Best regards,
+> Krzysztof
 
-Basavaraj Natikar (1):
-      ntb_hw_amd: Add NTB PCI ID for new gen CPU
+Best regards,
+Marcus Folkesson
 
-Fedor Pchelkin (1):
-      ntb: use 64-bit arithmetic for the MSI doorbell mask
+--C7W91j7lgF/0CeRL
+Content-Type: application/pgp-signature; name=signature.asc
 
-Markus Elfring (1):
-      ntb_perf: Delete duplicate dmaengine_unmap_put() call in perf_copy_chunk()
+-----BEGIN PGP SIGNATURE-----
 
-Nikita Shubin (1):
-      ntb: intel: Fix using link status DB's
+iQIzBAEBCAAdFiEEBVGi6LZstU1kwSxliIBOb1ldUjIFAmfwOlAACgkQiIBOb1ld
+UjIxkw/+IYMZdy49mNky3ZxLZOHPj6jfpICZtwU3QV7hHQtccjTrAxO58wKk14U7
+0NLdVZY3VN9Tjr2ASKebQRgEbesEiKdZQJ2ZKu7z5tpj0WrImU0+jYIAKAPhO66f
+NtfwOD++IQJX0ZoX0oTfC8aMTD3qUN/vZ0NM+fvlSpu0+GEhZClA/yU2P5pVN66X
+B3i6COv/Bu7WWuJ/z6widLqqMf/ru6u1iOfhg4NJ4Bg6WiOazVnjLY72iQNreVho
+UQy7KJfCbT8aFptnaGPDZPtELCrxDNCifRmOhk1jylIiteWpEgjkdAFGCfjHXGm+
+ZsuH0ZhCHjEIfiqR0hG5IP33fP30d2dzmSBOS5nO0FldZIMGyC61VJ78MNoaleYl
+bivx5fsKvzJqgLL9kn2CaJKqEkZXePudspz0wTwcwNfSaTGBKBB9fzHcscnbGB2H
+hajQauJM6+ntV7QRqAhBhrP/A7eyNg/CUWY4K0eJridwQwSSXVKGhhYROoOsDCC+
+OABuvYbVIPt74NNgKXq5AJpdAZedMwPUYIptWBWirToYJ59zzAlE67lTmKU3MjTH
+Hzo0EKqEq0x+m6x85naY3ytm9FcLX8dKmsh5Zpo6TCaO5bdzd4yNunMTRekkjBc2
+KeGYDxA3g9UR00GSS3ib9DoGMpHWrQjCbIBhe9h4KuQtYmaFpPs=
+=HeD4
+-----END PGP SIGNATURE-----
 
-Shyam Sundar S K (1):
-      MAINTAINERS: Update AMD NTB maintainers
-
-Yajun Deng (1):
-      ntb_hw_switchtec: Fix shift-out-of-bounds in switchtec_ntb_mw_set_trans
-
- MAINTAINERS                            |  1 -
- drivers/ntb/hw/amd/ntb_hw_amd.c        |  1 +
- drivers/ntb/hw/idt/ntb_hw_idt.c        | 18 +++++++-----------
- drivers/ntb/hw/intel/ntb_hw_gen3.c     |  3 +++
- drivers/ntb/hw/mscc/ntb_hw_switchtec.c |  2 +-
- drivers/ntb/ntb_transport.c            |  2 +-
- drivers/ntb/test/ntb_perf.c            |  4 +---
- 7 files changed, 14 insertions(+), 17 deletions(-)
+--C7W91j7lgF/0CeRL--
