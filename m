@@ -1,72 +1,49 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 740D71B0F30
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 22:27:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F9C119C540
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 22:28:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743805655; cv=none; b=AqnbBOU8t9c8oFvEme/vM+WX0991bRuQ4BCbGjwzqd1h4V6XzLkKbbkAq2xFwRUDMMZrRtk61/zo5AW7CJz1kP4yxGxKJe1V2ehBNufx6a5KV/NAn7UEDIbNTLfym7jwKPvU0fbrFz70dAqrHFJp8ItRkEfF//YxfRg+UunDpe8=
+	t=1743805705; cv=none; b=BZWwf+N1sbFMwF1GLWD5AWrWxegYeph0H0kHQmRbwhsQUQ9ICXdeBzpvXHMIkyviPWogqmi1CE3ETvuQx+5iNP2pRiH4wiLSBbtkCGGxU9H8T4OM/J58eApatviW+ZltT2B7YZ754B3mQRXUFisEoLLrSsDhYwParXJRhhI8bEA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743805655; c=relaxed/simple;
-	bh=6t1DL07DzcvmXr33dmmIJ7avENvVMr/w4yeVTZqjwTA=;
+	s=arc-20240116; t=1743805705; c=relaxed/simple;
+	bh=rD4zM5OiuvvW6gCsQJsuSIomZr662KVSXdfF0TeywME=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XA/mA3izmjB3RPbnJqU8iLJ1oek6BW2hgwNOzyO/BGP0um73/eOUcPcj3qzSshUUJcXLMbGl0gRkFrZD+SNatqauhCopynJymt7KU21HMxW7l0khpp/VpTflhtVxsKHUktJ2G3orR3S0Y7SY9Dw1iZvauZllVcZCq274zurrz8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=CJ7jtrKI; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	 In-Reply-To:Content-Type; b=axlLDx2mBTQSVsXE9PfGjuS5OAWaX4ot+CfS0mpPtCa1C2dMNeaijCzunqShkFOK7TOS/GRX4ynk+gcncw9CG62hL9IiYt3XAWXRETFOR1BdH/VqJa5n7FX/t41kPH97q7ZzmsHNAim+wpM1hOFtVpKcS9Kgn479HTuCd+bzs2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IRYqz6/L; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="CJ7jtrKI"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 534JF6Jh002191
-	for <linux-kernel@vger.kernel.org>; Fri, 4 Apr 2025 22:27:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	VJYsnY+6erBvEBPaJTdsdZJ4uuZYnBabVTtsF30idCs=; b=CJ7jtrKIR3wEzlky
-	SmIINczI24WekUtr2AcduCha3aKa/RKj+CSS3dM8rbOS6ysv67v5I7I5VTGYmqCJ
-	rvGlcWqb4kV5Q5QVVqRwHyOq1zT8NMH+LvV0iEVJmfcaCAwqS8bIfcx9hSlTXW5S
-	B2J59OgnG5H1N3MKRo+WdSjHwi1cuqaBIjWWVsQXlSa/GWaVt7rk0S68h6ahgI9D
-	x/yKyOOKquWkLGOrXrMUQj9lFWafRsjc9LKmEwExKOlkwqhG+n4OGzl0r36qK51r
-	xQ7485sSh34y6welfmD9hFjUQrpCqw6EcaxW1NfG4QX80oUDI3UXZTIRBFLPjWIX
-	5GUl/w==
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com [209.85.219.70])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45t2d8u1hs-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 22:27:32 +0000 (GMT)
-Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6e8fb83e15fso5785666d6.0
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 15:27:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743805651; x=1744410451;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=VJYsnY+6erBvEBPaJTdsdZJ4uuZYnBabVTtsF30idCs=;
-        b=ft9mwOpnxqXxbaBZ2lKD/3E3O+oV0kT43sKVSBd5ZwcTW1sDHK/GE3SnOPpSzVT7Nj
-         eMvRL9IECWXI3CbWg+km9NLWagZ02eY8put6y5C3g7q92KqGuAgiT43kHaJ5GnkTo3QI
-         nh1dblMQ4+xLCGNneKVPqZ/BAxgiYzE6nlW5qD8CYKvuCF34bpCH0/bFUEo6T0tccKfA
-         cs0m9KLPyW0nBMr/J7lDBUMLw+ag7NYscaNfgt/q7+e2Ex0MRpvmvK9xhimKJx7Bz0Ti
-         lAXuinqM14AsEAY3h+obSNllGLzcLYCqKSI4wwGbZaX1QWSqzWF8h9T6ZY3OQwuAsEX3
-         NnhA==
-X-Forwarded-Encrypted: i=1; AJvYcCVgnUOi/A/9/35taAyDJDcIoiloxrIT2ZsX8YhdQJZJ3QB3OgNEr/31Ho89gqRGt14u4tm5fF0FQmAtDx0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwiNHN0DMu03JMMPY2s11XRCXzIu+O7N+E9WYEioOcGe2XmV02j
-	tyEYMi9ltMQIJB1ABUXzpqg1vfxViQrfXH+LCXmAp2VPio12xg21q5esvFwTrqY+qu4LnVs/mqi
-	mhDQ3Sei7tUx6vc4Zh2gbYO5eC4gcUgOSV19TtL7P4WNYpo+EQ/1EYOYi7nz5kB0=
-X-Gm-Gg: ASbGnct6LH4uqqDVHhP1IFc7kwuCVulaRmrcw/TKAWKwugAT+o97ApH0TRXOLdrcT7N
-	PxQR/BGWh6TSkygkq3W6TT/DGkbpvgf3HAH2JZunAYHu6BhrKDBrBOjfauvh0YfZTKO8CR4mrI/
-	lEAD8CiBnftlxhnZwjs7/95QepNHQRzjgfzc27UeTkNBVbuGpHspE0PfnnR9e3J07oFEGuzQbHh
-	XIuBJBO7k1sMyk2rasxwKmCDrlxc4uL0qT1/hOFkRYxUN3H1hJbJg+E+msDESV6DdiP+nhQ15gK
-	ugWtNRJes0UgZEXK69lzt4JrJRZd5sqJfICDsnDwvJVMJJ7i5W9EgBTWtoewf35QLHW2ew==
-X-Received: by 2002:a05:6214:500b:b0:6e8:c713:3222 with SMTP id 6a1803df08f44-6f01e80f181mr25333116d6.11.1743805651288;
-        Fri, 04 Apr 2025 15:27:31 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEhO901gakUgHiOaTVcE0jt4khKICm8Kfusd7IWqMVrk0IJGAnOO4bP8+VSL6u943JVp8MSsA==
-X-Received: by 2002:a05:6214:500b:b0:6e8:c713:3222 with SMTP id 6a1803df08f44-6f01e80f181mr25333006d6.11.1743805650898;
-        Fri, 04 Apr 2025 15:27:30 -0700 (PDT)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7bfe5d46esm326272566b.19.2025.04.04.15.27.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Apr 2025 15:27:30 -0700 (PDT)
-Message-ID: <c0e4636a-2d4a-4e94-aab0-150f88b53026@oss.qualcomm.com>
-Date: Sat, 5 Apr 2025 00:27:26 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IRYqz6/L"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743805702;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Befyf2MillwSBKMFj/rTqdswT5mC0g4BS1/gE352LrA=;
+	b=IRYqz6/LrkyPrNOQ7s6ZpGkQWb9pNyXSZrnhlkAh2UW6d9xs079EpOmgVyFFfp47rc9a5Y
+	vMcRzsLCBypO0AGdFf7zTSjDctTddC7jvtmWCdgYUpQhZN/8+4zyVaQHwqDI2NeABUGWvQ
+	TXujHUQvUZM/rSjEVtXnxBaP/Hi74ho=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-691-t-oQUblOMoGHXvd33mwDWw-1; Fri,
+ 04 Apr 2025 18:28:16 -0400
+X-MC-Unique: t-oQUblOMoGHXvd33mwDWw-1
+X-Mimecast-MFC-AGG-ID: t-oQUblOMoGHXvd33mwDWw_1743805694
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 280231801A06;
+	Fri,  4 Apr 2025 22:28:13 +0000 (UTC)
+Received: from [10.22.81.88] (unknown [10.22.81.88])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 4257C1801752;
+	Fri,  4 Apr 2025 22:28:10 +0000 (UTC)
+Message-ID: <f949d227-b3ba-48dc-8dab-d527b82e1246@redhat.com>
+Date: Fri, 4 Apr 2025 18:28:10 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,49 +51,93 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 06/10] arm64: dts: qcom: sa8775p: add Display Serial
- Interface device nodes
-To: Ayushi Makhija <quic_amakhija@quicinc.com>, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: robdclark@gmail.com, dmitry.baryshkov@linaro.org, sean@poorly.run,
-        marijn.suijten@somainline.org, andersson@kernel.org, robh@kernel.org,
-        robh+dt@kernel.org, krzk+dt@kernel.org, konradybcio@kernel.org,
-        conor+dt@kernel.org, andrzej.hajda@intel.com,
-        neil.armstrong@linaro.org, rfoss@kernel.org,
-        Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
-        jernej.skrabec@gmail.com, quic_abhinavk@quicinc.com,
-        quic_rajeevny@quicinc.com, quic_vproddut@quicinc.com,
-        quic_jesszhan@quicinc.com, Dmitry Baryshkov <lumag@kernel.org>
-References: <20250404115539.1151201-1-quic_amakhija@quicinc.com>
- <20250404115539.1151201-7-quic_amakhija@quicinc.com>
+Subject: Re: [PATCH v2 2/3] nvme-multipath: add the NVME_MULTIPATH_PARAM
+ config option
+To: Christoph Hellwig <hch@lst.de>
+Cc: kbusch@kernel.org, sagi@grimberg.me, loberman@redhat.com,
+ linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
+ emilne@redhat.com, bgurney@redhat.com, jmeneghi@redhat.com
+References: <20250322232848.225140-1-jmeneghi@redhat.com>
+ <20250322232848.225140-3-jmeneghi@redhat.com> <20250403043526.GC22526@lst.de>
 Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250404115539.1151201-7-quic_amakhija@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
+From: John Meneghini <jmeneghi@redhat.com>
+Organization: RHEL Core Storge Team
+In-Reply-To: <20250403043526.GC22526@lst.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Authority-Analysis: v=2.4 cv=KcPSsRYD c=1 sm=1 tr=0 ts=67f05cd4 cx=c_pps a=oc9J++0uMp73DTRD5QyR2A==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=TpLJD_z-7n-X9rO-aHYA:9
- a=QEXdDO2ut3YA:10 a=iYH6xdkBrDN1Jqds4HTS:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: ND9guh6zco5xqsZEO8K09YaayO9XznU2
-X-Proofpoint-ORIG-GUID: ND9guh6zco5xqsZEO8K09YaayO9XznU2
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-04_10,2025-04-03_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 spamscore=0
- malwarescore=0 priorityscore=1501 mlxlogscore=999 mlxscore=0
- suspectscore=0 clxscore=1015 impostorscore=0 adultscore=0
- lowpriorityscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2504040154
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-On 4/4/25 1:55 PM, Ayushi Makhija wrote:
-> Add device tree nodes for the DSI0 and DSI1 controllers
-> with their corresponding PHYs found on Qualcomm SA8775P SoC.
+
+On 4/3/25 12:35 AM, Christoph Hellwig wrote:
+> On Sat, Mar 22, 2025 at 07:28:47PM -0400, John Meneghini wrote:
+
+>> +config NVME_MULTIPATH_PARAM
+>> +	bool "NVMe multipath param"
 > 
-> Signed-off-by: Ayushi Makhija <quic_amakhija@quicinc.com>
-> Reviewed-by: Dmitry Baryshkov <lumag@kernel.org>
-> ---
+> This isn't really a good config options description.
+> 
+>> +	depends on NVME_CORE && NVME_MULTIPATH
+>> +	default y
+>> +	help
+>> +	  This option controls the inclusion of the NVMe core module
+>> +	  "multipath" parameter. If this option is disabled the
+>> +	  nvme_core.multipath parameter is excluded from the kernel.
+>> +	  If this option is enabled the nvme_core.multipath parameter
+>> +	  is included in the kernel.
+> 
+> So maybe invert the option to
+> 
+> config NVME_MULTIPATH_DISABLE
+> 	bool "Allow overriding the default nvme-multipath parameter"
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+So the question is: do you want the core_nvme.multipath parameter
+to be excluded by default, or included by default?
 
-Konrad
+Keith and I agreed to call this CONFIG_NVME_DISBALE_MULTIPATH_PARAM.
+However during testing I realized that many of the default make 'config'
+rules would end up with CONFIG_NVME_DISBALE_MULTIPATH_PARAM=y,
+even if I set the config rule to "default n".
+
+For example:
+
+  make localmodconfig
+  make allmodconfig
+
+would end up with compiling out the core_nvme.multipath parameter and I
+don't think this is what we want.
+
+If we want this new config option to provide no net change in the
+default behavior, we need this to be the logic to be positive.
+
+> 	help
+> 	  This option controls the inclusion of the NVMe core module
+> 	  "multipath" parameter. If this option is enabled the
+> 	  nvme_core.multipath parameter is excluded from the kernel.
+> 	  If this option is enabled the nvme_core.multipath parameter
+
+How about something simple like this:
+
++config NVME_ENABLE_MULTIPATH_PARAM
++       bool "NVMe enable core_nvme.multipath param"
++       depends on NVME_CORE && NVME_MULTIPATH
++       default y
++       help
++         If this option is N the core_nvme.multipath parameter
++         is excluded from the kernel. If this option is Y the
++         core_nvme.multipath parameter is included in the kernel.
++
++         If unsure, say Y.
++
+
+> 	  See the nvme_core.multipath documentation why disabling
+> 	  multipathing is generally harmful but there might be
+> 	  exception reasons to do so anyway.
+> 
+> (assuming we already have the documentation mentioned, if not we
+> need to add it)
+
+Yes, I will add some documentation about this.  It looks like we currently
+don't have any.
+
+/John
+
