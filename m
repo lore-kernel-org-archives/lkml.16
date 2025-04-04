@@ -1,133 +1,81 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BBC413AA2D;
-	Fri,  4 Apr 2025 12:05:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F6E81B413D;
+	Fri,  4 Apr 2025 12:08:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743768352; cv=none; b=iSAiyw9oE6kozOIgkt87EV1r7ENs0JD8LJG2LuR4LLf3Wzy10i1wBvd/ZCWI0z5rgTzSQ2+PQ1aTHCyXyRE6ZHjdQQ8O3HYM2TwMfC3bF4+lDdC7VqilFGm8vadtJHZR7yZAO5k4fPSKFdBswlfWUAfVaSgyjKt6wzW1VAZdP6M=
+	t=1743768518; cv=none; b=U+Eho6Fwh+DtUi+09Z19qk0PoosweQIlWgaU7SGAn2RJpIE6qtuA9cubcy2JTkCrWpbcqC7KWwmPyxVwjWjIpJL8pVJ0d0MI866JLCysHR3lcm875/l0NvFGT9tUxygSnwB6cE1DzH/ZdEu295OgMQN540Av9MJQRGnhZkiEPKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743768352; c=relaxed/simple;
-	bh=CKICFswTagr4M5w0rTnDXDPxJT/HGpOKJpeTFfAm058=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SDDAQC07MEpkgm6PDDc7go29xj6su4h0vJVhQnTzdQL0aUgUQzjXTVpt8hN/LHhKAFGHIDrk2r7cmUwpsGNL4u1cAr7Hh9UIStTEpfXPJ6VpouJ7xIYf55QModGMC/5f8PN4XV+q71KNuoEKTmY3XizH8fr1RssYYGIBDvzo93k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=FliFonRz; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1743768518; c=relaxed/simple;
+	bh=YdHMq7LpSxnzaV5xFDzRfBdfqAFUXaB87w78k1Zf55k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=V456ISxWYDSiFXN7+7/a8psOMKLXWDa3ytNQv4IZPyeHXmoH+6sMF+9ZVJWgOPw422zbgaI03yAQ80GJAx706SvnTaJ576b9f0GAMZjhFf5kNF6MelTVoelndA9XTk7Lucbhl9KNiOEos9Iz10vzdbW79Bbvzr6WpTdAA5nWPu8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IFLqO46q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="FliFonRz"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5341iPpW012823;
-	Fri, 4 Apr 2025 12:05:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=gdRE9A
-	feY0sv/9P4CQuo5UaCAIb69zipdGKQZI+5fZQ=; b=FliFonRzNX0UDeCjhbCu1p
-	5Dg/h9QhYusvGa7f9JSYYyC7v0kWvXRov1/e5fAqSavFeKIbb9KHrIWhnqy5iksT
-	D1V24AxjzCJoy3YsPUe3b4Ntmd3/znQu/SeFRI4H1bDCLAV2l0z2eW84/XidPWNq
-	8EdcQh/fhjCHrz7vi9AUhFzJ/IQzY/D7hZnRgn0hTRqerXQpaMUeJpXEA4G6P0+/
-	jC2E0DvuNmmEjcubOLT5xcA1Hpme36eP0jKMSrOs9o7cOELwvX6COV8Nn9lHwWJm
-	FL9VF4/LrhAIUHUcA3gABVoh3a5g25bchG4GeHI9UChXoEJ9irqh01RbJQyermRg
-	==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45t2qbu3d9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 04 Apr 2025 12:05:44 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 534B8QAV001877;
-	Fri, 4 Apr 2025 12:05:44 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45t2ch2v78-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 04 Apr 2025 12:05:44 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 534C5dwN55116130
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 4 Apr 2025 12:05:39 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 91BD82004E;
-	Fri,  4 Apr 2025 12:05:39 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1316020040;
-	Fri,  4 Apr 2025 12:05:39 +0000 (GMT)
-Received: from li-ce58cfcc-320b-11b2-a85c-85e19b5285e0 (unknown [9.152.224.212])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri,  4 Apr 2025 12:05:39 +0000 (GMT)
-Date: Fri, 4 Apr 2025 14:05:37 +0200
-From: Halil Pasic <pasic@linux.ibm.com>
-To: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, virtualization@lists.linux.dev,
-        kvm@vger.kernel.org, Chandra Merla <cmerla@redhat.com>,
-        Stable@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>,
-        Thomas Huth
- <thuth@redhat.com>, Eric Farman <farman@linux.ibm.com>,
-        Heiko Carstens
- <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev
- <agordeev@linux.ibm.com>,
-        Christian Borntraeger
- <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>, Wei Wang
- <wei.w.wang@intel.com>,
-        Halil Pasic <pasic@linux.ibm.com>
-Subject: Re: [PATCH v1] s390/virtio_ccw: don't allocate/assign airqs for
- non-existing queues
-Message-ID: <20250404140537.54c1e464.pasic@linux.ibm.com>
-In-Reply-To: <20250404013208-mutt-send-email-mst@kernel.org>
-References: <20250402203621.940090-1-david@redhat.com>
-	<20250403161836.7fe9fea5.pasic@linux.ibm.com>
-	<20250403103127-mutt-send-email-mst@kernel.org>
-	<20250404060204.04db301d.pasic@linux.ibm.com>
-	<20250404013208-mutt-send-email-mst@kernel.org>
-Organization: IBM
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IFLqO46q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 092C8C4CEE4;
+	Fri,  4 Apr 2025 12:08:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743768517;
+	bh=YdHMq7LpSxnzaV5xFDzRfBdfqAFUXaB87w78k1Zf55k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IFLqO46qB/dwPEQryEUhMXWB/7rpUbc5qxcg2PrUg3KYQ9v9JwLFDlE45GE/zWqYJ
+	 +yUElDSQZZA8Xrv9WO8oCfMBSOlPAJSQhON1twit6A3QLxwn6JIE09aT4/c45juiLu
+	 4sezB90vsOW2oe1m2bY7y1l5vQ9kGZHnJxw1sVYhYW1WdwJeQag9sPANRXrwuGV8J1
+	 h/muXqstxLALLhO0y34ZakGJVGzfFBQBYDkp+sfaVlJBM24nWVZ2t7e8J5JuQOh7ST
+	 qIKlR1jFoQ0OWe9wQwztolfAzZYUN28q9KFGAYX4XZt/Jm4w61rY8z2p3dn7orPzS1
+	 2aRyNjTNqQyLg==
+Date: Fri, 4 Apr 2025 14:08:34 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: =?utf-8?B?QW5kcsOp?= Draszik <andre.draszik@linaro.org>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, 
+	Chanwoo Choi <cw00.choi@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Alexandre Belloni <alexandre.belloni@bootlin.com>, 
+	Peter Griffin <peter.griffin@linaro.org>, Tudor Ambarus <tudor.ambarus@linaro.org>, 
+	Will McVicker <willmcvicker@google.com>, kernel-team@android.com, linux-kernel@vger.kernel.org, 
+	linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-rtc@vger.kernel.org
+Subject: Re: [PATCH v3 01/32] dt-bindings: mfd: samsung,s2mps11: add s2mpg10
+Message-ID: <20250404-fanatic-numbat-of-vastness-3afc8e@shite>
+References: <20250403-s2mpg10-v3-0-b542b3505e68@linaro.org>
+ <20250403-s2mpg10-v3-1-b542b3505e68@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: E7GPCDF2y4xfi5bYTJ2LPr4e7-D0TdM6
-X-Proofpoint-GUID: E7GPCDF2y4xfi5bYTJ2LPr4e7-D0TdM6
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-04_04,2025-04-03_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 clxscore=1015
- lowpriorityscore=0 malwarescore=0 suspectscore=0 spamscore=0 phishscore=0
- mlxscore=0 adultscore=0 bulkscore=0 priorityscore=1501 mlxlogscore=729
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504040079
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250403-s2mpg10-v3-1-b542b3505e68@linaro.org>
 
-On Fri, 4 Apr 2025 01:33:28 -0400
-"Michael S. Tsirkin" <mst@redhat.com> wrote:
+On Thu, Apr 03, 2025 at 09:58:53AM GMT, Andr=C3=A9 Draszik wrote:
+> The Samsung S2MPG10 PMIC is similar to the existing PMICs supported by
+> this binding.
+>=20
+> It is a Power Management IC for mobile applications with buck
+> converters, various LDOs, power meters, RTC, clock outputs, and
+> additional GPIOs interfaces.
+>=20
+> Unlike other Samsung PMICs, communication is not via I2C, but via the
+> Samsung ACPM firmware, it therefore doesn't need a 'reg' property but
+> needs to be a child of the ACPM firmware node instead.
+>=20
+> S2MPG10 can also act as a system power controller allowing
+> implementation of a true cold-reset of the system.
+>=20
+> Support for the other components like regulators and power meters will
+> be added in subsequent future patches.
+>=20
+> Signed-off-by: Andr=C3=A9 Draszik <andre.draszik@linaro.org>
 
-> > 
-> > I think, a consequence of this design is that all queues need to be
-> > created and allocated at initialization time.  
-> 
-> Why? after feature negotiation.
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-What I mean is, with this change having queues that exist but are not
-set up before the device becomes operational is not viable any more.
+Best regards,
+Krzysztof
 
-Let me use the virtio-net example again. I assume by the current spec
-it would be OK to have max_virtqueue_pairs quite big e.g. 64, just in
-case the guest ends up having many vCPUs hotplugged. But start out with
-2 vcpus, 2 queue pairs and initially doing VIRTIO_NET_CTRL_MQ_VQ_PAIRS_SET with 2.
-
-And then grow the guest to 8 vcpus, 'discover' virtqueues
-2(I-1) receiveqI, 2(I-1)+1 transmitqI for 2 < I < 9 (I is a natural number)
-and do another VIRTIO_NET_CTRL_MQ_VQ_PAIRS_SET with 8.
-
-Please notice that the controlq would sit at index 128 (64*2) all along. That
-is in the old world. In the new world we don't do holes, so we need to
-allocate all the virtqueues up to controlq up-front. To avoid having
-holes. Or any queue-pairs that are discoverd after the initial vq discovery
-would need to have an index larger than controlq has.
-
-Regards,
-Halil
