@@ -1,103 +1,115 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D06B11AD41F
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 12:13:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47C3B1DB363;
+	Fri,  4 Apr 2025 12:18:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743768813; cv=none; b=BY35gtWAMA+4xASnf4wiUwmdwCLYEN/8nAFcp9QTWUwHjXBooKRnVvgswIrsZkoj1f5Ylq6YGt/KkNi3FrFBQG7KEOZvcyiEI/zfJRI8NC8iekfRt1EGhC/0GGBE2AptWw/PfixA2qJF0BhZSUR+Lw6xPluPYNu7iEecZP2+nwQ=
+	t=1743769086; cv=none; b=dhFWON9tZfpMyhRWjscLdyEEtAfEuSuz1S7sexeWnBh88HcHOpFenba8zsr3E8mJK2AoPJECGSyXD+m8C2i0CHw/0ni3EhzdGE19YOjQEjFjJphO80Q8Jrttrphj+vRkqrDMVEwoZYBRqDqNnabeslCTziDE4wAyZ+31Kf07Y3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743768813; c=relaxed/simple;
-	bh=uqEb5kgd4VK3+LRVcuvh/ah2jvKTz9S7t7NclckKBhE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Yz9duPn6jwZdOLyFSXsf9IKbdVSu19PlwR29i9sb7XxeKScWOncdYQG2ellkK7FlKz9MXzhzB4ebtNTLFMgyecqQY9bnEWQifi3wOdWrdZROBfhtR0cTpYo7w88Y9f1y/L5QdIkpy+80dkJo3tA+5zlLXBzguZR7RZIyxaIx4g8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=f7WgKeX9; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1743769086; c=relaxed/simple;
+	bh=F5t8Um7OOTfhJKq4jZwEY0gafKvvuvc4XRg2bZIcrb8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MOvDzOQD5PFUc6j590Kn/X4SYJUKTT9vYFByiuilX318+9tyUfwqrltOzkH5DuljDHSfPtyNTLJIObg2YFmFBLkKkwLGhAake6tiLRs+fWC9J/vniNrwtzQpWgLGNz8VOTFTduXkCeJaYHdgeRLGxsGZGflhCXleh+8JwDYcuzE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UXcfXYrc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="f7WgKeX9"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4394944f161so2196105e9.3
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 05:13:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743768810; x=1744373610; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WkU6xWzc6lSGa4wrkLknImB41P1wMaOoruxvVliww/E=;
-        b=f7WgKeX9i88bgloAkriXhlqdyiFI7uIcw0eYoosAP72V/r3jrkvOX4bKKX4hYq1Wsn
-         V81Hoc9tXYdA/al3CSlwtjERQkZFmUPTUNHIdVjgIcTEocA6Zamc3DEzUVq4gd32JhFi
-         bGqrXtZOMlCKn06Q8d2NdrOVN4oRmfcxTxOn6sP5QQ9nBcdW3fwa7iIvhGA1o7WaVMpg
-         lAe+ZRJrI1rj+2gJ7zSgHiKmH/dZSbysf7R/2T9983oB8t8TlsyEev52Af1Zed7vjYTm
-         ly3NYHpllFFh7wgwyoPjrYRQMXQ3wjpnGIpWIfBmGvDH2Epb7SsiUefyBhbVtdKb52JD
-         BGbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743768810; x=1744373610;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WkU6xWzc6lSGa4wrkLknImB41P1wMaOoruxvVliww/E=;
-        b=mwxssDKw7Y7K3ndTgTqOJomgNeHZLn8/QWOL7HmmpX6/Heqsh64wiO/vAMp26hGOUf
-         FSa39k48GLEJudcGcq3BY8CpGZ4VdGzlSDPLnx7QDUD4faRTBZlZz7r/YhJ3PrK4mgD8
-         HE4QOvDXB6IVh2drkk6XemSoOY9Hwa/xW47nU+kNob+JYzzE2neY04baN+0ud1hWiBNB
-         iHdojBhqPfVK6Wl2N6Ncg1rfrpFRW3qzx67HRJ3EyEH2VPVJT8HaAE3jeXZncCtAep28
-         o2Ii2jwCa4F/Qe/rQH4sPKaRGz2Mgf6M+j0rY6yXM/lsGl0Khet1DRM4pWT7iCKeSb1T
-         kmPA==
-X-Forwarded-Encrypted: i=1; AJvYcCX6vdvznbb7JMvPu6pF6zjcwPS+UK+lYA3RnGLH7pgimG0YA78mu178kmyGTOOioZS/VxxVd72mhLMbOPA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwXtusyt58pILyMbCoprNE8/QvZFOMhkVBA7SmRJYIfv/Bc741F
-	Rkk8I0VrUnm3IZL/duanXh1yDBMixIhGT/zaScks2Rz8G1E7yoseQ34/j2apILI=
-X-Gm-Gg: ASbGncvxfIK1x9+X92+BzAJ14zcxJE4TweNdCIG9c2KKcMOtHJ0UbirgBThO/P2uSLS
-	p/O51uZIky23f6cA64miIg69lLO0xo4u+5Brc8iWFmG/IeIsj+oRyO/V5TeX51do5YOQ3Whnq0B
-	IthHf4rXfyAmj1IXn+obRXOgVrQo83Z4WBp6OW0CD934hJ6EHhBPcbSzVCzb8FRDuIGzIlNCszF
-	DsAFVm1jJAW3+Iltmu/55zh2ypqN+g2Jh1TeLPnBGu8JS1pxTV5Sex+u6yDgOJxr33Dsrv2Tsby
-	2I31rZiTFuNMvvUj2Nr+Q4yg4+RcaLfQWzY8K3WujjntMj60QLv919OeiZhA4cwY
-X-Google-Smtp-Source: AGHT+IHA0ZQjK8KraYmZvJELL/Kq9mNLied6TLIbpJo4CZlH3o0zAE5EQTuZmcNVi+hZHBAjCeQKog==
-X-Received: by 2002:a5d:64ce:0:b0:385:de67:229e with SMTP id ffacd0b85a97d-39cba934dcbmr862924f8f.11.1743768809991;
-        Fri, 04 Apr 2025 05:13:29 -0700 (PDT)
-Received: from shite.. ([178.197.198.86])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c30226be7sm4140344f8f.89.2025.04.04.05.13.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Apr 2025 05:13:29 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	linux-phy@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH 2/2] phy: samsung: Do not enable PHY_EXYNOS5_USBDRD by default during compile testing
-Date: Fri,  4 Apr 2025 14:13:26 +0200
-Message-ID: <20250404121326.318936-2-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250404121326.318936-1-krzysztof.kozlowski@linaro.org>
-References: <20250404121326.318936-1-krzysztof.kozlowski@linaro.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UXcfXYrc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4773C4CEDD;
+	Fri,  4 Apr 2025 12:18:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743769085;
+	bh=F5t8Um7OOTfhJKq4jZwEY0gafKvvuvc4XRg2bZIcrb8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UXcfXYrc7n0kJFY0EwdXMKHGvcZbkFgOLWr0n5ol/1BRS7ZmQKz8yj4eAtDLW9L/Y
+	 sOvZfVyRKtv6qlLOsSnka8eNKbAr8arxqJqsMrwiqotIv0pOINOvm0wN9vo983YvSZ
+	 B2ez7WYrTWnwW0sisq8vBACoTNUQuR/WqYVnAOJ1yC4/kz93hQazUML6BkSo9K6c9l
+	 EJoPg1vDFYlHdA9kAgHv4MCf6Omd/Gv/zKvBWF/VwFvKVJbDtJCmg3dqK7t1OoyNBM
+	 Ec315i1gfa835jtpervv2ECwzw2Y1M/3obVk3LK2Yzs2UZ+jvdV9QA1TZlxMnIfi+2
+	 G/7EONjGehAaA==
+Date: Fri, 4 Apr 2025 13:18:00 +0100
+From: Will Deacon <will@kernel.org>
+To: Shuai Xue <xueshuai@linux.alibaba.com>
+Cc: linux-arm-kernel@lists.infradead.org,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Mark Rutland <mark.rutland@arm.com>, baolin.wang@linux.alibaba.com,
+	tianruidong@linux.alibaba.com, brauner@kernel.org, shuah@kernel.org,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH] selftests/pidfd: align stack to fix SP alignment
+ exception
+Message-ID: <20250404121759.GA28692@willie-the-truck>
+References: <20250312061557.28532-1-xueshuai@linux.alibaba.com>
+ <0a70f4ab-cd83-434d-8dd2-486d58e5599a@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <0a70f4ab-cd83-434d-8dd2-486d58e5599a@linux.alibaba.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-Enabling the compile test should not cause automatic enabling of all
-drivers.
+On Wed, Mar 19, 2025 at 10:59:57AM +0800, Shuai Xue wrote:
+> + ARM maintainers for review.
+> 
+> 在 2025/3/12 14:15, Shuai Xue 写道:
+> > The pidfd_test fails on the ARM64 platform with the following error:
+> > 
+> >      Bail out! pidfd_poll check for premature notification on child thread exec test: Failed
+> > 
+> > When exception-trace is enabled, the kernel logs the details:
+> > 
+> >      #echo 1 > /proc/sys/debug/exception-trace
+> >      #dmesg | tail -n 20
+> >      [48628.713023] pidfd_test[1082142]: unhandled exception: SP Alignment, ESR 0x000000009a000000, SP/PC alignment exception in pidfd_test[400000+4000]
+> >      [48628.713049] CPU: 21 PID: 1082142 Comm: pidfd_test Kdump: loaded Tainted: G        W   E      6.6.71-3_rc1.al8.aarch64 #1
+> >      [48628.713051] Hardware name: AlibabaCloud AliServer-Xuanwu2.0AM-1UC1P-5B/AS1111MG1, BIOS 1.2.M1.AL.P.157.00 07/29/2023
+> >      [48628.713053] pstate: 60001800 (nZCv daif -PAN -UAO -TCO -DIT +SSBS BTYPE=-c)
+> >      [48628.713055] pc : 0000000000402100
+> >      [48628.713056] lr : 0000ffff98288f9c
+> >      [48628.713056] sp : 0000ffffde49daa8
+> >      [48628.713057] x29: 0000000000000000 x28: 0000000000000000 x27: 0000000000000000
+> >      [48628.713060] x26: 0000000000000000 x25: 0000000000000000 x24: 0000000000000000
+> >      [48628.713062] x23: 0000000000000000 x22: 0000000000000000 x21: 0000000000400e80
+> >      [48628.713065] x20: 0000000000000000 x19: 0000000000402650 x18: 0000000000000000
+> >      [48628.713067] x17: 00000000004200d8 x16: 0000ffff98288f40 x15: 0000ffffde49b92c
+> >      [48628.713070] x14: 0000000000000000 x13: 0000000000000000 x12: 0000000000000000
+> >      [48628.713072] x11: 0000000000001011 x10: 0000000000402100 x9 : 0000000000000010
+> >      [48628.713074] x8 : 00000000000000dc x7 : 3861616239346564 x6 : 000000000000000a
+> >      [48628.713077] x5 : 0000ffffde49daa8 x4 : 000000000000000a x3 : 0000ffffde49daa8
+> >      [48628.713079] x2 : 0000ffffde49dadc x1 : 0000ffffde49daa8 x0 : 0000000000000000
+> > 
+> > According to ARM ARM D1.3.10.2 SP alignment checking:
+> > 
+> > > When the SP is used as the base address of a calculation, regardless of
+> > > any offset applied by the instruction, if bits [3:0] of the SP are not
+> > > 0b0000, there is a misaligned SP.
+> > 
+> > To fix it, align the stack with 16 bytes.
+> > 
+> > Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+> > ---
+> >   tools/testing/selftests/pidfd/pidfd_test.c | 2 +-
+> >   1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/tools/testing/selftests/pidfd/pidfd_test.c b/tools/testing/selftests/pidfd/pidfd_test.c
+> > index c081ae91313a..ec161a7c3ff9 100644
+> > --- a/tools/testing/selftests/pidfd/pidfd_test.c
+> > +++ b/tools/testing/selftests/pidfd/pidfd_test.c
+> > @@ -33,7 +33,7 @@ static bool have_pidfd_send_signal;
+> >   static pid_t pidfd_clone(int flags, int *pidfd, int (*fn)(void *))
+> >   {
+> >   	size_t stack_size = 1024;
+> > -	char *stack[1024] = { 0 };
+> > +	char *stack[1024] __attribute__((aligned(16))) = {0};
+> >   #ifdef __ia64__
+> >   	return __clone2(fn, stack, stack_size, flags | SIGCHLD, NULL, pidfd);
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- drivers/phy/samsung/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+The arm64 alignment requirement is correct, but I don't really grok what
+this code is trying to do. If it's not using CLONE_VM, why bother passing
+a separate stack? If it _is_ using CLONE_VM, then surely the stack needs
+to be allocated somewhere other than the caller stack?
 
-diff --git a/drivers/phy/samsung/Kconfig b/drivers/phy/samsung/Kconfig
-index 6566100441d6..b7ab402909a8 100644
---- a/drivers/phy/samsung/Kconfig
-+++ b/drivers/phy/samsung/Kconfig
-@@ -85,7 +85,7 @@ config PHY_EXYNOS5_USBDRD
- 	depends on USB_DWC3_EXYNOS
- 	select GENERIC_PHY
- 	select MFD_SYSCON
--	default y
-+	default ARCH_EXYNOS
- 	help
- 	  Enable USB DRD PHY support for Exynos 5 SoC series.
- 	  This driver provides PHY interface for USB 3.0 DRD controller
--- 
-2.45.2
-
+Will
