@@ -1,74 +1,165 @@
-Received: from s1.g1.infrastructure.qtmlabs.xyz (s1.g1.infrastructure.qtmlabs.xyz [107.172.1.117])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE9FE2628C;
-	Fri,  4 Apr 2025 02:54:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=107.172.1.117
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75A8C4315A;
+	Fri,  4 Apr 2025 02:59:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743735272; cv=none; b=JOdBpOPr/IIENPlGbJMKWHZvEVdtQbODI+Phx+Swr9LULxzMmxMZL0LM3fHUC650g/djYqU/LmInHEKFfHFT7jAHVdDXJvPT3mK7rNkipMpCWMU2AzKdSQWNw70/anBWrjqhRrR7uqzrF1vn0o+spFweMBdAKjRDZBjTIeAgwBw=
+	t=1743735582; cv=none; b=rry8xRT6GOb4tg5bx0Ieg5l+sKnUaiB/8wuIV/QDzAR+QSEcu+Kwxkty2dYOGRbzgCy3YRzXEUq4DQfUPAnUXJds4aoH2qbm4Jf+3GgETrsiGV0DJsppfhWAhDgFKANKSLHoqsdinaYzwBOnAGPgem8vC+M9GqkasUIbWZ0yykE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743735272; c=relaxed/simple;
-	bh=o2Qp7noUEdgvbjneRbum3By4oKTUc48b2NdBMWJD2gQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=J8PfEncKHTALMv+6Xw/ABLGGp3tFbS1zk+ivZaZ/OcPd3oMCjFOeBuauHQXq5bXpoZHynfXVKzUCF65+rojm3x6z9rde2WpE7MvOzUDrGC427f0q3xgUvGPAaUH1d3/6WhcN99K+vI1U8rZtiyJycFc5QxcBm3kUgwfpf+bTBqc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qtmlabs.xyz; spf=pass smtp.mailfrom=qtmlabs.xyz; dkim=pass (2048-bit key) header.d=qtmlabs.xyz header.i=@qtmlabs.xyz header.b=YU3bBWRA; arc=none smtp.client-ip=107.172.1.117
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qtmlabs.xyz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qtmlabs.xyz
+	s=arc-20240116; t=1743735582; c=relaxed/simple;
+	bh=5rtDQ0pe7WShvacxxNJLUqvyINRo/AXE5vD1stW6jE8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=E2GmcHzQOr8EXL/QFtI90QujtX5m8SrQNKiTEkJiKA14r+PKdlN1fIBZhx+20FyAivBLvwqyr/5+qbBgjQk3XwRg/uyKScPXFnGRvoVzFIfnpAbiA6EEjDcgIG0oNySuj+2WGBNULE+LVA1bo2oRzosJnI9GAaP8L0Cdxq3HJt0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RiI7QF4Q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qtmlabs.xyz header.i=@qtmlabs.xyz header.b="YU3bBWRA"
-Message-ID: <691be719-7d4c-4cb1-87d6-cca7834547fe@qtmlabs.xyz>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qtmlabs.xyz; s=dkim;
-	t=1743735263;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vqgQZ33wcq/hpv8n+1Ly9smcoDQEdPOPf9R8b9HYxu4=;
-	b=YU3bBWRAz9g85BvWK1a7ViAWfYuYZn9JzeI14o9bsJF8Z0lDQ42Qfwd1o9TbrktO7M28C8
-	6zVnmzA5A183utZkTS1dyP9rcvRhVjSo4bDTT3+spyroG2PgnXwdfVGlCjCp1VrPVCNfn6
-	iKrgIB1hD35/HMnEZr8Xvi3q2IsDQeHZ2WfU0UldEqzGK+F8WN3A0g65EEOUJ5+7PhFPVP
-	TdrxVVOk+cJDCuF+YqhZHlyQWAmCH9Ehh8lTA7OTr5/1Llv7R0v1phLKbGGbtiLpZvNlAv
-	WHqcFRl33vxRUaEJ6AR5qzSs3zOW7rInO21s/J6pLGfal9OeJdagSDG0QDgVVw==
-Authentication-Results: s1.g1.infrastructure.qtmlabs.xyz;
-	auth=pass smtp.mailfrom=msizanoen@qtmlabs.xyz
-Date: Fri, 4 Apr 2025 09:54:16 +0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RiI7QF4Q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9EE0C4CEE7;
+	Fri,  4 Apr 2025 02:59:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743735581;
+	bh=5rtDQ0pe7WShvacxxNJLUqvyINRo/AXE5vD1stW6jE8=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=RiI7QF4QKTnEWoFPph74b7vTTM/C0H5U/et9pNcxSlU59KyGPZFNV+brPyXwaepz9
+	 KLVDwu3w2hDzi/J6nmwnrAUCMbyIJUNguH4ZwmXy7GY3k34plvSw0apXzHjtbL/JiB
+	 fHNKWkKHWfVX6kKZAkXCeaCuVd3YVWKwvmfjXf+eCSUKsqRLiSyyjTzKvwC48Fgl/N
+	 66plYdx2J+E8uU09r4TVAJ84N2SBEaXKVQQscPog8/6dDfqp2eL2fR2J2DXkp7XQC5
+	 VoVJj3czjxbBwKonugcBm3JgGhq2hncnAlD4K3x2D04gPtAliniMLLFtRSWpExAY+v
+	 iavi1HrZP7Thg==
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Date: Thu, 03 Apr 2025 21:59:22 -0500
+Subject: [PATCH 01/19] arm64: dts: allwinner: h5/h6: Drop spurious
+ 'clock-latency-ns' properties
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [REGRESSION] Kernel booted via kexec fails to resume from
- hibernation
-To: Roberto Ricci <io@r-ricci.it>
-Cc: ebiederm@xmission.com, rafael@kernel.org, pavel@ucw.cz,
- ytcoode@gmail.com, kexec@lists.infradead.org, linux-pm@vger.kernel.org,
- akpm@linux-foundation.org, regressions@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <Z4WFjBVHpndct7br@desktop0a> <Z4WGSMdF6seQm9GV@desktop0a>
- <b9f6ed5a-74b9-47c0-b073-9922dbe6119b@qtmlabs.xyz>
- <Z-8E-LLs1dFWfn6J@desktop0a>
-Content-Language: en-US
-From: msizanoen <msizanoen@qtmlabs.xyz>
-In-Reply-To: <Z-8E-LLs1dFWfn6J@desktop0a>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spamd-Bar: /
+Message-Id: <20250403-dt-cpu-schema-v1-1-076be7171a85@kernel.org>
+References: <20250403-dt-cpu-schema-v1-0-076be7171a85@kernel.org>
+In-Reply-To: <20250403-dt-cpu-schema-v1-0-076be7171a85@kernel.org>
+To: Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, 
+ Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Samuel Holland <samuel@sholland.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Viresh Kumar <viresh.kumar@linaro.org>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Vincenzo Frascino <vincenzo.frascino@arm.com>, 
+ Liviu Dudau <liviu.dudau@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, 
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+ Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, 
+ Stephen Boyd <sboyd@kernel.org>, zhouyanjie@wanyeetech.com, 
+ Conor Dooley <conor@kernel.org>, 
+ Nicolas Ferre <nicolas.ferre@microchip.com>, 
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
+ Steen Hegelund <Steen.Hegelund@microchip.com>, 
+ Daniel Machon <daniel.machon@microchip.com>, UNGLinuxDriver@microchip.com, 
+ Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>, Heiko Stuebner <heiko@sntech.de>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, 
+ Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
+ Geert Uytterhoeven <geert+renesas@glider.be>, 
+ Magnus Damm <magnus.damm@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org, 
+ linux-pm@vger.kernel.org, linux-mediatek@lists.infradead.org, 
+ linux-arm-msm@vger.kernel.org, linux-mips@vger.kernel.org, 
+ imx@lists.linux.dev, linux-rockchip@lists.infradead.org, 
+ linux-amlogic@lists.infradead.org, linux-renesas-soc@vger.kernel.org
+X-Mailer: b4 0.15-dev
 
-Can you send the dmesg logs for this case (6.13 + mentioned patch series 
-backported as target kernel, using kexec_load)?
+'clock-latency-ns' is not a valid property for CPU nodes. It belongs in
+OPP table (which has it). Drop them from the CPU nodes.
 
-On 4/4/25 05:00, Roberto Ricci wrote:
-> On 2025-04-01 19:59 +0700, msizanoen wrote:
->> [snip]
->> It seems like `e820__register_nosave_regions` is erroneously marking some
->> kernel memory as nosave in the presence of sub-page e820 regions. In theory
->> backporting
->> https://lore.kernel.org/all/20250214090651.3331663-1-rppt@kernel.org/ should
->> be sufficient to avoid this but a fix for the actual root cause is
->> preferred.
-> When using kexec_file_load, this patch series fixes the issue not only
-> in theory but also in practice.
-> But the issue with kexec_load (see
-> https://lore.kernel.org/all/Z-hYWc9LtBU1Yhtg@desktop0a/
-> ), which might be related, is not fixed.
+Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+---
+ arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi | 4 ----
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 4 ----
+ 2 files changed, 8 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
+index d3caf27b6a55..48802bf02f3b 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
+@@ -16,7 +16,6 @@ cpu0: cpu@0 {
+ 			reg = <0>;
+ 			enable-method = "psci";
+ 			clocks = <&ccu CLK_CPUX>;
+-			clock-latency-ns = <244144>; /* 8 32k periods */
+ 			#cooling-cells = <2>;
+ 		};
+ 
+@@ -26,7 +25,6 @@ cpu1: cpu@1 {
+ 			reg = <1>;
+ 			enable-method = "psci";
+ 			clocks = <&ccu CLK_CPUX>;
+-			clock-latency-ns = <244144>; /* 8 32k periods */
+ 			#cooling-cells = <2>;
+ 		};
+ 
+@@ -36,7 +34,6 @@ cpu2: cpu@2 {
+ 			reg = <2>;
+ 			enable-method = "psci";
+ 			clocks = <&ccu CLK_CPUX>;
+-			clock-latency-ns = <244144>; /* 8 32k periods */
+ 			#cooling-cells = <2>;
+ 		};
+ 
+@@ -46,7 +43,6 @@ cpu3: cpu@3 {
+ 			reg = <3>;
+ 			enable-method = "psci";
+ 			clocks = <&ccu CLK_CPUX>;
+-			clock-latency-ns = <244144>; /* 8 32k periods */
+ 			#cooling-cells = <2>;
+ 		};
+ 	};
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+index 2301c59b41b1..73e8604315c5 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+@@ -27,7 +27,6 @@ cpu0: cpu@0 {
+ 			reg = <0>;
+ 			enable-method = "psci";
+ 			clocks = <&ccu CLK_CPUX>;
+-			clock-latency-ns = <244144>; /* 8 32k periods */
+ 			#cooling-cells = <2>;
+ 			i-cache-size = <0x8000>;
+ 			i-cache-line-size = <64>;
+@@ -44,7 +43,6 @@ cpu1: cpu@1 {
+ 			reg = <1>;
+ 			enable-method = "psci";
+ 			clocks = <&ccu CLK_CPUX>;
+-			clock-latency-ns = <244144>; /* 8 32k periods */
+ 			#cooling-cells = <2>;
+ 			i-cache-size = <0x8000>;
+ 			i-cache-line-size = <64>;
+@@ -61,7 +59,6 @@ cpu2: cpu@2 {
+ 			reg = <2>;
+ 			enable-method = "psci";
+ 			clocks = <&ccu CLK_CPUX>;
+-			clock-latency-ns = <244144>; /* 8 32k periods */
+ 			#cooling-cells = <2>;
+ 			i-cache-size = <0x8000>;
+ 			i-cache-line-size = <64>;
+@@ -78,7 +75,6 @@ cpu3: cpu@3 {
+ 			reg = <3>;
+ 			enable-method = "psci";
+ 			clocks = <&ccu CLK_CPUX>;
+-			clock-latency-ns = <244144>; /* 8 32k periods */
+ 			#cooling-cells = <2>;
+ 			i-cache-size = <0x8000>;
+ 			i-cache-line-size = <64>;
+
+-- 
+2.47.2
+
