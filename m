@@ -1,544 +1,166 @@
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC74B220687;
-	Fri,  4 Apr 2025 19:40:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 439522253FB
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 19:40:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743795612; cv=none; b=MQ3iOstVofRTaUZLoM3Ij3U4h99u1l82dv+KGI2KDA+egg7qqVa2B05iT/8hD4GuLhkrLpPM9dD67qaddUyS4Dv2OrpnUppNtWGHaqWzhM+yUhUccWJdUg4Gk4xewdNpbFvH5+N8UKiPnI4t5dXiouwYDpzWv/qhySROkws0i/Y=
+	t=1743795617; cv=none; b=aH66h3tvk7SadfwU4PZA2g+lCxl0nHrYpPs7YIP+EsKhKZZ/Mat8yvEXiuEoOhdmY9569fT4yBOhtQ531iDhHzRNrhcolf46zMg1lupoOqWusjIv3Z/r21nR5b/MmOtNEGjCkzcwm6Mx4hqpSd2KLyIGY8J0a6U1EdwfyPLqgGo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743795612; c=relaxed/simple;
-	bh=K4+2653B+P3t09TRW4oWkeep7WQa3JA/0qhTEvnp/Kc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mXmnyTKpi+9FU6DA20YNqMzpOFMxBhL2d1cRgIqTPNaG+OQ9oOosAxWyIZEP7bi+bC8b4ubcfiAqQvA5CVQstIVqgC5SBEy97UZDsoWay9JcViD6cnFwnoIiAwsPI/DQGKSK3UV/T43pxXStdZvGaPhSoyC6n36Bi1w3DJpd5G4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=IS0MMpuL; arc=none smtp.client-ip=217.70.183.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1743795617; c=relaxed/simple;
+	bh=5pcNK2/F2mUD0tglxtkkvS4t6gF1WjE0uv3B3h/LLIU=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=pI7msuywo0+CCoOWKPuye8Qpky99vGtiu2V/j6BKkE/jMqgPFsCW/oUl2nnSEkq+1+7JGaCHlSEKAKgewDl7X+MeD9Dqnfuy7MJqOfBrZm1AwqCzSjiwb0xMcygIijYaYi07k5T5uBaCmpvrz87/PUFkcefxLPmK7c4i9OQfX6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Sm8m+KMp; arc=none smtp.client-ip=209.85.214.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="IS0MMpuL"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 6FABA4316C;
-	Fri,  4 Apr 2025 19:39:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1743795600;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Iwl7UY6fxvS7ChMd2ABQVnw01XXrMbl4YZYI1uC6zG4=;
-	b=IS0MMpuLmnRjctOh14jil2pndAXYyuWW7AYD1g/MC83EJSJrGFZ3U0P2RcG5SClgCRvrIu
-	Qs/QM3OQxmhoSM/mvKgYdbluOgc4LxijlG0UmZ34qC9yKXkYsiu8ceMrrcFKarBZfXxLXU
-	5vlQ9wYF4XCUQH/1dD67RpDp5StT6WiwaPmjuxBxJxNJp35ZQks/xkDGWF3yW14GhKuWeR
-	Ght0w1KW/j928cQ5SPrQtbbUzn33S2v56cPOugqbhlA4l6dhgGT7biPtd/B9DSi7XCe5sM
-	Zm8jL9QHYZ+LQfa0maBaKrGEmFBgooRoJ8AAGKPqbEKnxWnIexvKn60ntQ1yeA==
-Date: Fri, 4 Apr 2025 21:39:53 +0200
-From: Louis Chauvet <louis.chauvet@bootlin.com>
-To: Lyude Paul <lyude@redhat.com>
-Cc: dri-devel@lists.freedesktop.org, rust-for-linux@vger.kernel.org,
-	Danilo Krummrich <dakr@kernel.org>, mcanal@igalia.com,
-	Alice Ryhl <aliceryhl@google.com>,
-	Maxime Ripard <mripard@kernel.org>, Simona Vetter <sima@ffwll.ch>,
-	Daniel Almeida <daniel.almeida@collabora.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Trevor Gross <tmgross@umich.edu>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Asahi Lina <lina@asahilina.net>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC v3 02/33] rust: drm: Add traits for registering KMS devices
-Message-ID: <Z_A1gSIoMgpWXGor@2a02-8440-d108-69bb-05bc-5b53-7bd4-5db0.rev.sfr.net>
-Mail-Followup-To: Lyude Paul <lyude@redhat.com>,
-	dri-devel@lists.freedesktop.org, rust-for-linux@vger.kernel.org,
-	Danilo Krummrich <dakr@kernel.org>, mcanal@igalia.com,
-	Alice Ryhl <aliceryhl@google.com>,
-	Maxime Ripard <mripard@kernel.org>, Simona Vetter <sima@ffwll.ch>,
-	Daniel Almeida <daniel.almeida@collabora.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Trevor Gross <tmgross@umich.edu>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Asahi Lina <lina@asahilina.net>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	open list <linux-kernel@vger.kernel.org>
-References: <20250305230406.567126-1-lyude@redhat.com>
- <20250305230406.567126-3-lyude@redhat.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Sm8m+KMp"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-22410053005so37693055ad.1
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 12:40:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1743795614; x=1744400414; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
+        bh=xGc410CdItV9i0XHHpZ/RMSaoI91XXBZ8UWJ2P2MUyk=;
+        b=Sm8m+KMpEXHRY0LbMZcaS4gqHs9inVmDUniOFX9zK6bkWNwtjozjkZgBZLZ3E4iOdP
+         WRqYj2izdeIED27bH7h+HA8nH46gmuuAdMvBD512JQn7gH/Le83cKWBDk+zzUyuRUNqt
+         PTzgQrC6urgwyPleQMDal3bdVUJ3m78TBWSl1fVpwrgUD1NcBQLkm1fzEXa6fFgJiHx7
+         C18xVSI2lwQB5GWn1lld1cCsEYwgP8pvmUvaZ73mLicsBFHaxlj5GTEQcnogrAJokoOa
+         X4cdRsabQKbIN/seASHMrVCDfoSWHlSIbN8RIYFuMeidHWMU+ZKz21drSMogKp9mG7Mx
+         SXzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743795614; x=1744400414;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xGc410CdItV9i0XHHpZ/RMSaoI91XXBZ8UWJ2P2MUyk=;
+        b=E3hRGPGd0PosGv1lmPrNG1jOdKnuPYdCybBQWsqQ8CURm+f+Pf61hsmA1Pb5tKHSRs
+         PxenwiFjKVj3iXmC9qK1jfEzc7zed8vPpe1GNUmMW54/HZmWPIHuXPKvCFE9vUoqnU1k
+         e9P5GlGTqC+fngVgweFmdiX7m5AAe1yS2xBxBVP3bKDdbS5mBx7CdQZNjsk07nOMY2Gv
+         Sz0bureaPn869r1TdjoC/0FPuihgcDVQs8EwPRjTjQpOOkD9/2uSHIshwoP+ksiWdoxC
+         nJeJ9Max40WnjATz9VaWgE69D+FAtvWDOFYgOJZGM3jfTlzcV++9tZmIi/jr9Zbpdqhl
+         bpAw==
+X-Forwarded-Encrypted: i=1; AJvYcCUFJ5jTU+IvP8XJOAjB5YUK6NT4UUr1qsuMVGq/2GN0+F5si3HY2GPf5ujRuD1QVXq9kq/hrvAlYqszjUI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxVeBXK1fjgnV4fSJu/bQeevU06kIvBjNASLv8+yEsIkI+Nuvx4
+	egxfzNTRV6ZVr3Q0ak+OUfNOttN7HZoUoxyKRnKVKmjMhO/2KaPSALJvBNaK2bgChyyEvQ+uh93
+	iEg==
+X-Google-Smtp-Source: AGHT+IHtyu5/n45SoUCdmyRwx78ZExMmcLv2DVkaCFXoZBFEW/oA9gYZTnVIAZvyMAiWmV0cdXBxBQzi80A=
+X-Received: from pfks21.prod.google.com ([2002:a05:6a00:1955:b0:730:848d:a5a3])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:41d0:b0:223:4bd6:3869
+ with SMTP id d9443c01a7336-22a8a85adcbmr56111145ad.15.1743795614550; Fri, 04
+ Apr 2025 12:40:14 -0700 (PDT)
+Reply-To: Sean Christopherson <seanjc@google.com>
+Date: Fri,  4 Apr 2025 12:38:31 -0700
+In-Reply-To: <20250404193923.1413163-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250305230406.567126-3-lyude@redhat.com>
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduledvfeduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefnohhuihhsucevhhgruhhvvghtuceolhhouhhishdrtghhrghuvhgvthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgeekkeevvefhteejtefhheeluddttdduuddvieegleegheekffffudefvdfftdetnecuffhomhgrihhnpegurhhmrdgurghtrgdpsghoohhtlhhinhdrtghomhenucfkphepvdgrtddvmeekgeegtdemugdutdekmeeilegssgemhegstgemhegsheefmeejsggugeemhegusgdtnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddvmeekgeegtdemugdutdekmeeilegssgemhegstgemhegsheefmeejsggugeemhegusgdtpdhhvghlohepvdgrtddvqdekgeegtddqugdutdekqdeilegssgdqtdehsggtqdehsgehfedqjegsugegqdehuggstddrrhgvvhdrshhfrhdrnhgvthdpmhgrihhlfhhrohhmpehlohhuihhsrdgthhgruhhvvghtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvuddprhgtphhtthhopehlhihuuggvsehrvgguhhgrthdrtghomhdprhgtphhtt
- hhopegurhhiqdguvghvvghlsehlihhsthhsrdhfrhgvvgguvghskhhtohhprdhorhhgpdhrtghpthhtoheprhhushhtqdhfohhrqdhlihhnuhigsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggrkhhrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehmtggrnhgrlhesihhgrghlihgrrdgtohhmpdhrtghpthhtoheprghlihgtvghrhihhlhesghhoohhglhgvrdgtohhmpdhrtghpthhtohepmhhrihhprghrugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshhimhgrsehffhiflhhlrdgthh
-X-GND-Sasl: louis.chauvet@bootlin.com
+Mime-Version: 1.0
+References: <20250404193923.1413163-1-seanjc@google.com>
+X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
+Message-ID: <20250404193923.1413163-17-seanjc@google.com>
+Subject: [PATCH 16/67] KVM: SVM: Inhibit AVIC if ID is too big instead of
+ rejecting vCPU creation
+From: Sean Christopherson <seanjc@google.com>
+To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Joerg Roedel <joro@8bytes.org>, David Woodhouse <dwmw2@infradead.org>, 
+	Lu Baolu <baolu.lu@linux.intel.com>
+Cc: kvm@vger.kernel.org, iommu@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	Maxim Levitsky <mlevitsk@redhat.com>, Joao Martins <joao.m.martins@oracle.com>, 
+	David Matlack <dmatlack@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On 05/03/25 - 17:59, Lyude Paul wrote:
-> This commit adds some traits for registering DRM devices with KMS support,
-> implemented through the kernel::drm::kms::KmsDriver trait. Devices which
-> don't have KMS support can simply use PhantomData<Self>.
-> 
-> Signed-off-by: Lyude Paul <lyude@redhat.com>
-> 
-> ---
-> 
-> V3:
-> * Get rid of Kms, long live KmsDriver
->   After Daniel pointed out that we should just make KmsDriver a supertrait
->   of Driver, it immediately occurred to me that there's no actual need for
->   Kms to be a separate trait at all. So, drop Kms entirely and move its
->   requirements over to KmsDriver.
-> * Drop fbdev module entirely and move fbdev related setup into AllocImpl
->   (Daniel)
-> * Rebase to use drm_client_setup()
-> 
-> TODO:
-> * Generate feature flags automatically, these shouldn't need to be
->   specified by the user
-> 
-> Signed-off-by: Lyude Paul <lyude@redhat.com>
-> ---
->  rust/bindings/bindings_helper.h |   6 ++
->  rust/kernel/drm/device.rs       |  10 +-
->  rust/kernel/drm/drv.rs          |  56 ++++++++--
->  rust/kernel/drm/gem/mod.rs      |   4 +
->  rust/kernel/drm/gem/shmem.rs    |   4 +
->  rust/kernel/drm/kms.rs          | 186 ++++++++++++++++++++++++++++++++
->  rust/kernel/drm/mod.rs          |   1 +
->  7 files changed, 258 insertions(+), 9 deletions(-)
->  create mode 100644 rust/kernel/drm/kms.rs
-> 
-> diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_helper.h
-> index ca857fb00b1a5..e1ed4f40c8e89 100644
-> --- a/rust/bindings/bindings_helper.h
-> +++ b/rust/bindings/bindings_helper.h
-> @@ -6,10 +6,16 @@
->   * Sorted alphabetically.
->   */
->  
-> +#include <drm/drm_atomic.h>
-> +#include <drm/drm_atomic_helper.h>
-> +#include <drm/clients/drm_client_setup.h>
->  #include <drm/drm_device.h>
->  #include <drm/drm_drv.h>
->  #include <drm/drm_file.h>
-> +#include <drm/drm_fbdev_dma.h>
-> +#include <drm/drm_fbdev_shmem.h>
->  #include <drm/drm_gem.h>
-> +#include <drm/drm_gem_framebuffer_helper.h>
->  #include <drm/drm_gem_shmem_helper.h>
->  #include <drm/drm_ioctl.h>
->  #include <kunit/test.h>
-> diff --git a/rust/kernel/drm/device.rs b/rust/kernel/drm/device.rs
-> index 5b4db2dfe87f5..cf063de387329 100644
-> --- a/rust/kernel/drm/device.rs
-> +++ b/rust/kernel/drm/device.rs
-> @@ -5,8 +5,8 @@
->  //! C header: [`include/linux/drm/drm_device.h`](srctree/include/linux/drm/drm_device.h)
->  
->  use crate::{
-> -    bindings, device, drm,
-> -    drm::drv::AllocImpl,
-> +    bindings, device,
-> +    drm::{self, drv::AllocImpl, kms::private::KmsImpl as KmsImplPrivate},
->      error::code::*,
->      error::from_err_ptr,
->      error::Result,
-> @@ -73,7 +73,7 @@ impl<T: drm::drv::Driver> Device<T> {
->          dumb_create: T::Object::ALLOC_OPS.dumb_create,
->          dumb_map_offset: T::Object::ALLOC_OPS.dumb_map_offset,
->          show_fdinfo: None,
-> -        fbdev_probe: None,
-> +        fbdev_probe: T::Object::ALLOC_OPS.fbdev_probe,
->  
->          major: T::INFO.major,
->          minor: T::INFO.minor,
-> @@ -153,6 +153,10 @@ pub fn data(&self) -> <T::Data as ForeignOwnable>::Borrowed<'_> {
->          // SAFETY: `Self::data` is always converted and set on device creation.
->          unsafe { <T::Data as ForeignOwnable>::from_foreign(drm.raw_data()) };
->      }
-> +
-> +    pub(crate) const fn has_kms() -> bool {
-> +        <T::Kms as KmsImplPrivate>::MODE_CONFIG_OPS.is_some()
-> +    }
->  }
->  
->  // SAFETY: DRM device objects are always reference counted and the get/put functions
-> diff --git a/rust/kernel/drm/drv.rs b/rust/kernel/drm/drv.rs
-> index e42e266bdd0da..3e09e130730f6 100644
-> --- a/rust/kernel/drm/drv.rs
-> +++ b/rust/kernel/drm/drv.rs
-> @@ -6,14 +6,15 @@
->  
->  use crate::{
->      alloc::flags::*,
-> -    bindings,
-> +    bindings, device,
->      devres::Devres,
-> -    drm,
-> +    drm::{self, kms::private::KmsImpl as KmsImplPrivate},
->      error::{Error, Result},
->      private::Sealed,
->      str::CStr,
->      types::{ARef, ForeignOwnable},
->  };
-> +use core::ptr::null;
->  use macros::vtable;
->  
->  /// Driver use the GEM memory manager. This should be set for all modern drivers.
-> @@ -115,6 +116,12 @@ pub struct AllocOps {
->              offset: *mut u64,
->          ) -> core::ffi::c_int,
->      >,
-> +    pub(crate) fbdev_probe: Option<
-> +        unsafe extern "C" fn(
-> +            fbdev_helper: *mut bindings::drm_fb_helper,
-> +            sizes: *mut bindings::drm_fb_helper_surface_size,
-> +        ) -> core::ffi::c_int,
-> +    >,
->  }
->  
->  /// Trait for memory manager implementations. Implemented internally.
-> @@ -142,6 +149,14 @@ pub trait Driver {
->      /// The type used to represent a DRM File (client)
->      type File: drm::file::DriverFile;
->  
-> +    /// The KMS implementation for this driver.
-> +    ///
-> +    /// Drivers that wish to support KMS should pass their implementation of `drm::kms::KmsDriver`
-> +    /// here. Drivers which do not have KMS support can simply pass `drm::kms::NoKms` here.
-> +    type Kms: drm::kms::KmsImpl<Driver = Self>
-> +    where
-> +        Self: Sized;
-> +
->      /// Driver metadata
->      const INFO: DriverInfo;
->  
-> @@ -159,21 +174,44 @@ pub trait Driver {
->  
->  impl<T: Driver> Registration<T> {
->      /// Creates a new [`Registration`] and registers it.
-> -    pub fn new(drm: ARef<drm::device::Device<T>>, flags: usize) -> Result<Self> {
-> +    pub fn new(dev: &device::Device, data: T::Data, flags: usize) -> Result<Self> {
-> +        let drm = drm::device::Device::<T>::new(dev, data)?;
-> +        let has_kms = drm::device::Device::<T>::has_kms();
-> +
-> +        let mode_config_info = if has_kms {
-> +            // SAFETY: We have yet to register this device
-> +            Some(unsafe { T::Kms::setup_kms(&drm)? })
-> +        } else {
-> +            None
-> +        };
-> +
->          // SAFETY: Safe by the invariants of `drm::device::Device`.
->          let ret = unsafe { bindings::drm_dev_register(drm.as_raw(), flags) };
->          if ret < 0 {
->              return Err(Error::from_errno(ret));
->          }
->  
-> +        #[cfg(CONFIG_DRM_CLIENT = "y")]
-> +        if has_kms {
-> +            if let Some(ref info) = mode_config_info {
-> +                if let Some(fourcc) = info.preferred_fourcc {
-> +                    // SAFETY: We just registered `drm` above, fulfilling the C API requirements
-> +                    unsafe { bindings::drm_client_setup_with_fourcc(drm.as_raw(), fourcc) }
-> +                } else {
-> +                    // SAFETY: We just registered `drm` above, fulfilling the C API requirements
-> +                    unsafe { bindings::drm_client_setup(drm.as_raw(), null()) }
-> +                }
-> +            }
-> +        }
-> +
->          Ok(Self(drm))
->      }
->  
->      /// Same as [`Registration::new`}, but transfers ownership of the [`Registration`] to `Devres`.
-> -    pub fn new_foreign_owned(drm: ARef<drm::device::Device<T>>, flags: usize) -> Result {
-> -        let reg = Registration::<T>::new(drm.clone(), flags)?;
-> +    pub fn new_foreign_owned(dev: &device::Device, data: T::Data, flags: usize) -> Result {
+Inhibit AVIC with a new "ID too big" flag if userspace creates a vCPU with
+an ID that is too big, but otherwise allow vCPU creation to succeed.
+Rejecting KVM_CREATE_VCPU with EINVAL violates KVM's ABI as KVM advertises
+that the max vCPU ID is 4095, but disallows creating vCPUs with IDs bigger
+than 254 (AVIC) or 511 (x2AVIC).
 
-Maybe a dumb question, is the change from ARef to & related to this patch? 
-It look likes it can be splitted in a separate patch to simplify the 
-review.
+Alternatively, KVM could advertise an accurate value depending on which
+AVIC mode is in use, but that wouldn't really solve the underlying problem,
+e.g. would be a breaking change if KVM were to ever try and enable AVIC or
+x2AVIC by default.
 
-> +        let reg = Registration::<T>::new(dev, data, flags)?;
->  
-> -        Devres::new_foreign_owned(drm.as_ref(), reg, GFP_KERNEL)
-> +        Devres::new_foreign_owned(dev, reg, GFP_KERNEL)
->      }
->  
->      /// Returns a reference to the `Device` instance for this registration.
-> @@ -195,5 +233,11 @@ fn drop(&mut self) {
->          // SAFETY: Safe by the invariant of `ARef<drm::device::Device<T>>`. The existance of this
->          // `Registration` also guarantees the this `drm::device::Device` is actually registered.
->          unsafe { bindings::drm_dev_unregister(self.0.as_raw()) };
-> +
-> +        if drm::device::Device::<T>::has_kms() {
-> +            // SAFETY: We just checked above that KMS was setup for this device, so this is safe to
-> +            // call
-> +            unsafe { bindings::drm_atomic_helper_shutdown(self.0.as_raw()) }
-> +        }
->      }
->  }
-> diff --git a/rust/kernel/drm/gem/mod.rs b/rust/kernel/drm/gem/mod.rs
-> index 3fcab497cc2a5..605b0a22ac08b 100644
-> --- a/rust/kernel/drm/gem/mod.rs
-> +++ b/rust/kernel/drm/gem/mod.rs
-> @@ -300,6 +300,10 @@ impl<T: DriverObject> drv::AllocImpl for Object<T> {
->          gem_prime_import_sg_table: None,
->          dumb_create: None,
->          dumb_map_offset: None,
-> +        #[cfg(CONFIG_DRM_FBDEV_EMULATION = "y")]
-> +        fbdev_probe: Some(bindings::drm_fbdev_dma_driver_fbdev_probe),
-> +        #[cfg(CONFIG_DRM_FBDEV_EMULATION = "n")]
-> +        fbdev_probe: None,
->      };
->  }
->  
-> diff --git a/rust/kernel/drm/gem/shmem.rs b/rust/kernel/drm/gem/shmem.rs
-> index 92da0d7d59912..9c0162b268aa8 100644
-> --- a/rust/kernel/drm/gem/shmem.rs
-> +++ b/rust/kernel/drm/gem/shmem.rs
-> @@ -279,6 +279,10 @@ impl<T: DriverObject> drv::AllocImpl for Object<T> {
->          gem_prime_import_sg_table: Some(bindings::drm_gem_shmem_prime_import_sg_table),
->          dumb_create: Some(bindings::drm_gem_shmem_dumb_create),
->          dumb_map_offset: None,
-> +        #[cfg(CONFIG_DRM_FBDEV_EMULATION = "y")]
-> +        fbdev_probe: Some(bindings::drm_fbdev_shmem_driver_fbdev_probe),
-> +        #[cfg(CONFIG_DRM_FBDEV_EMULATION = "n")]
-> +        fbdev_probe: None,
->      };
->  }
->  
-> diff --git a/rust/kernel/drm/kms.rs b/rust/kernel/drm/kms.rs
-> new file mode 100644
-> index 0000000000000..78970c69f4cda
-> --- /dev/null
-> +++ b/rust/kernel/drm/kms.rs
-> @@ -0,0 +1,186 @@
-> +// SPDX-License-Identifier: GPL-2.0 OR MIT
-> +
-> +//! KMS driver abstractions for rust.
-> +
-> +use crate::{
-> +    device,
-> +    drm::{device::Device, drv::Driver},
-> +    error::to_result,
-> +    prelude::*,
-> +    types::*,
-> +};
-> +use bindings;
-> +use core::{marker::PhantomData, ops::Deref};
-> +
-> +/// The C vtable for a [`Device`].
-> +///
-> +/// This is created internally by DRM.
-> +pub struct ModeConfigOps {
-> +    pub(crate) kms_vtable: bindings::drm_mode_config_funcs,
-> +    pub(crate) kms_helper_vtable: bindings::drm_mode_config_helper_funcs,
-> +}
-> +
-> +/// A trait representing a type that can be used for setting up KMS, or a stub.
-> +///
-> +/// For drivers which don't have KMS support, the methods provided by this trait may be stubs. It is
-> +/// implemented internally by DRM.
-> +pub trait KmsImpl: private::KmsImpl {}
-> +
-> +pub(crate) mod private {
-> +    use super::*;
-> +
-> +    /// Private callback implemented internally by DRM for setting up KMS on a device, or stubbing
-> +    /// the KMS setup for devices which don't have KMS support.
-> +    #[allow(unreachable_pub)]
-> +    pub trait KmsImpl {
-> +        /// The parent driver for this KMS implementation
-> +        type Driver: Driver;
-> +
-> +        /// The optional KMS callback operations for this driver.
-> +        const MODE_CONFIG_OPS: Option<ModeConfigOps>;
-> +
-> +        /// The callback for setting up KMS on a device
-> +        ///
-> +        /// # Safety
-> +        ///
-> +        /// `drm` must be unregistered.
-> +        unsafe fn setup_kms(_drm: &Device<Self::Driver>) -> Result<ModeConfigInfo> {
-> +            build_error::build_error("This should never be reachable")
-> +        }
+Cc: Maxim Levitsky <mlevitsk@redhat.com>
+Signed-off-by: Sean Christopherson <seanjc@google.com>
+---
+ arch/x86/include/asm/kvm_host.h |  9 ++++++++-
+ arch/x86/kvm/svm/avic.c         | 16 ++++++++++++++--
+ arch/x86/kvm/svm/svm.h          |  3 ++-
+ 3 files changed, 24 insertions(+), 4 deletions(-)
 
-It is probably a dumb question, but why do you need to add a body 
-with a build failure here? 
-The compiler already fails if there is no default implementation if the 
-setup_kms is not implemented by the trait implementations.
-
-> +    }
-> +}
-> +
-> +/// A [`Device`] with KMS initialized that has not been registered with userspace.
-> +///
-> +/// This type is identical to [`Device`], except that it is able to create new static KMS resources.
-> +/// It represents a KMS device that is not yet visible to userspace, and also contains miscellaneous
-> +/// state required during the initialization process of a [`Device`].
-> +pub struct UnregisteredKmsDevice<'a, T: Driver> {
-> +    drm: &'a Device<T>,
-> +}
-> +
-> +impl<'a, T: Driver> Deref for UnregisteredKmsDevice<'a, T> {
-> +    type Target = Device<T>;
-> +
-> +    fn deref(&self) -> &Self::Target {
-> +        self.drm
-> +    }
-> +}
-> +
-> +impl<'a, T: Driver> UnregisteredKmsDevice<'a, T> {
-> +    /// Construct a new [`UnregisteredKmsDevice`].
-> +    ///
-> +    /// # Safety
-> +    ///
-> +    /// The caller promises that `drm` is an unregistered [`Device`].
-> +    pub(crate) unsafe fn new(drm: &'a Device<T>) -> Self {
-> +        Self { drm }
-> +    }
-> +}
-> +
-> +/// A trait which must be implemented by drivers that wish to support KMS
-> +///
-> +/// It should be implemented for the same type that implements [`Driver`]. Drivers which don't
-> +/// support KMS should use [`PhantomData<Self>`].
-> +///
-> +/// [`PhantomData<Self>`]: PhantomData
-> +#[vtable]
-> +pub trait KmsDriver: Driver {
-> +    /// Return a [`ModeConfigInfo`] structure for this [`device::Device`].
-> +    fn mode_config_info(
-> +        dev: &device::Device,
-> +        drm_data: <Self::Data as ForeignOwnable>::Borrowed<'_>,
-> +    ) -> Result<ModeConfigInfo>;
-> +
-> +    /// Create mode objects like [`crtc::Crtc`], [`plane::Plane`], etc. for this device
-> +    fn create_objects(drm: &UnregisteredKmsDevice<'_, Self>) -> Result
-> +    where
-> +        Self: Sized;
-> +}
-> +
-> +impl<T: KmsDriver> private::KmsImpl for T {
-> +    type Driver = Self;
-> +
-> +    const MODE_CONFIG_OPS: Option<ModeConfigOps> = Some(ModeConfigOps {
-> +        kms_vtable: bindings::drm_mode_config_funcs {
-> +            atomic_check: Some(bindings::drm_atomic_helper_check),
-> +            fb_create: Some(bindings::drm_gem_fb_create),
-> +            mode_valid: None,
-> +            atomic_commit: Some(bindings::drm_atomic_helper_commit),
-> +            get_format_info: None,
-> +            atomic_state_free: None,
-> +            atomic_state_alloc: None,
-> +            atomic_state_clear: None,
-> +        },
-> +
-> +        kms_helper_vtable: bindings::drm_mode_config_helper_funcs {
-> +            atomic_commit_setup: None,
-> +            atomic_commit_tail: None,
-> +        },
-> +    });
-> +
-> +    unsafe fn setup_kms(drm: &Device<Self::Driver>) -> Result<ModeConfigInfo> {
-> +        let mode_config_info = T::mode_config_info(drm.as_ref(), drm.data())?;
-> +
-> +        // SAFETY: `MODE_CONFIG_OPS` is always Some() in this implementation
-> +        let ops = unsafe { T::MODE_CONFIG_OPS.as_ref().unwrap_unchecked() };
-> +
-> +        // SAFETY:
-> +        // - This function can only be called before registration via our safety contract.
-> +        // - Before registration, we are the only ones with access to this device.
-> +        unsafe {
-> +            (*drm.as_raw()).mode_config = bindings::drm_mode_config {
-> +                funcs: &ops.kms_vtable,
-> +                helper_private: &ops.kms_helper_vtable,
-> +                min_width: mode_config_info.min_resolution.0,
-> +                min_height: mode_config_info.min_resolution.1,
-> +                max_width: mode_config_info.max_resolution.0,
-> +                max_height: mode_config_info.max_resolution.1,
-> +                cursor_width: mode_config_info.max_cursor.0,
-> +                cursor_height: mode_config_info.max_cursor.1,
-> +                preferred_depth: mode_config_info.preferred_depth,
-> +                ..Default::default()
-> +            };
-> +        }
-> +
-> +        // SAFETY: We just setup all of the required info this function needs in `drm_device`
-> +        to_result(unsafe { bindings::drmm_mode_config_init(drm.as_raw()) })?;
-> +
-> +        // SAFETY: `drm` is guaranteed to be unregistered via our safety contract.
-> +        let drm = unsafe { UnregisteredKmsDevice::new(drm) };
-> +
-> +        T::create_objects(&drm)?;
-> +
-> +        // TODO: Eventually add a hook to customize how state readback happens, for now just reset
-> +        // SAFETY: Since all static modesetting objects were created in `T::create_objects()`, and
-> +        // that is the only place they can be created, this fulfills the C API requirements.
-
-Why do you explain such strong requirements? From the c documentation of 
-drm_mode_config_reset, the only requirement is that drm_device is valid 
-and initialized.
-
-> +        unsafe { bindings::drm_mode_config_reset(drm.as_raw()) };
-> +
-> +        Ok(mode_config_info)
-> +    }
-> +}
-> +
-> +impl<T: KmsDriver> KmsImpl for T {}
-> +
-> +impl<T: Driver> private::KmsImpl for PhantomData<T> {
-> +    type Driver = T;
-> +
-> +    const MODE_CONFIG_OPS: Option<ModeConfigOps> = None;
-> +}
-> +
-> +impl<T: Driver> KmsImpl for PhantomData<T> {}
-> +
-> +/// Various device-wide information for a [`Device`] that is provided during initialization.
-> +#[derive(Copy, Clone)]
-> +pub struct ModeConfigInfo {
-> +    /// The minimum (w, h) resolution this driver can support
-> +    pub min_resolution: (i32, i32),
-> +    /// The maximum (w, h) resolution this driver can support
-> +    pub max_resolution: (i32, i32),
-> +    /// The maximum (w, h) cursor size this driver can support
-> +    pub max_cursor: (u32, u32),
-> +    /// The preferred depth for dumb ioctls
-> +    pub preferred_depth: u32,
-> +    /// An optional default fourcc format code to be preferred for clients.
-> +    pub preferred_fourcc: Option<u32>,
-> +}
-> diff --git a/rust/kernel/drm/mod.rs b/rust/kernel/drm/mod.rs
-> index 2c12dbd181997..049ae675cb9b1 100644
-> --- a/rust/kernel/drm/mod.rs
-> +++ b/rust/kernel/drm/mod.rs
-> @@ -8,3 +8,4 @@
->  pub mod fourcc;
->  pub mod gem;
->  pub mod ioctl;
-> +pub mod kms;
-> -- 
-> 2.48.1
-> 
-> 
-
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 54f3cf73329b..0583d8a9c8d4 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1304,6 +1304,12 @@ enum kvm_apicv_inhibit {
+ 	 */
+ 	APICV_INHIBIT_REASON_LOGICAL_ID_ALIASED,
+ 
++	/*
++	 * AVIC is disabled because the vCPU's APIC ID is beyond the max
++	 * supported by AVIC/x2AVIC, i.e. the vCPU is unaddressable.
++	 */
++	APICV_INHIBIT_REASON_PHYSICAL_ID_TOO_BIG,
++
+ 	NR_APICV_INHIBIT_REASONS,
+ };
+ 
+@@ -1322,7 +1328,8 @@ enum kvm_apicv_inhibit {
+ 	__APICV_INHIBIT_REASON(IRQWIN),			\
+ 	__APICV_INHIBIT_REASON(PIT_REINJ),		\
+ 	__APICV_INHIBIT_REASON(SEV),			\
+-	__APICV_INHIBIT_REASON(LOGICAL_ID_ALIASED)
++	__APICV_INHIBIT_REASON(LOGICAL_ID_ALIASED),	\
++	__APICV_INHIBIT_REASON(PHYSICAL_ID_TOO_BIG)
+ 
+ struct kvm_arch {
+ 	unsigned long n_used_mmu_pages;
+diff --git a/arch/x86/kvm/svm/avic.c b/arch/x86/kvm/svm/avic.c
+index c8ba2ce4cfd8..ba8dfc8a12f4 100644
+--- a/arch/x86/kvm/svm/avic.c
++++ b/arch/x86/kvm/svm/avic.c
+@@ -286,9 +286,21 @@ static int avic_init_backing_page(struct kvm_vcpu *vcpu)
+ 	int id = vcpu->vcpu_id;
+ 	struct vcpu_svm *svm = to_svm(vcpu);
+ 
++	/*
++	 * Inhibit AVIC if the vCPU ID is bigger than what is supported by AVIC
++	 * hardware.  Do so immediately, i.e. don't defer the update via a
++	 * request, as avic_vcpu_load() expects to be called if and only if the
++	 * vCPU has fully initialized AVIC.  Immediately clear apicv_active,
++	 * as avic_vcpu_load() assumes avic_physical_id_cache is valid, i.e.
++	 * waiting until KVM_REQ_APICV_UPDATE is processed on the first KVM_RUN
++	 * will result in an NULL pointer deference when loading the vCPU.
++	 */
+ 	if ((!x2avic_enabled && id > AVIC_MAX_PHYSICAL_ID) ||
+-	    (id > X2AVIC_MAX_PHYSICAL_ID))
+-		return -EINVAL;
++	    (id > X2AVIC_MAX_PHYSICAL_ID)) {
++		kvm_set_apicv_inhibit(vcpu->kvm, APICV_INHIBIT_REASON_PHYSICAL_ID_TOO_BIG);
++		vcpu->arch.apic->apicv_active = false;
++		return 0;
++	}
+ 
+ 	if (WARN_ON_ONCE(!vcpu->arch.apic->regs))
+ 		return -EINVAL;
+diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
+index 1cc4e145577c..7af28802ebee 100644
+--- a/arch/x86/kvm/svm/svm.h
++++ b/arch/x86/kvm/svm/svm.h
+@@ -715,7 +715,8 @@ extern struct kvm_x86_nested_ops svm_nested_ops;
+ 	BIT(APICV_INHIBIT_REASON_PHYSICAL_ID_ALIASED) |	\
+ 	BIT(APICV_INHIBIT_REASON_APIC_ID_MODIFIED) |	\
+ 	BIT(APICV_INHIBIT_REASON_APIC_BASE_MODIFIED) |	\
+-	BIT(APICV_INHIBIT_REASON_LOGICAL_ID_ALIASED)	\
++	BIT(APICV_INHIBIT_REASON_LOGICAL_ID_ALIASED) |	\
++	BIT(APICV_INHIBIT_REASON_PHYSICAL_ID_TOO_BIG)	\
+ )
+ 
+ bool avic_hardware_setup(void);
 -- 
-Louis Chauvet, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.49.0.504.g3bcea36a83-goog
+
