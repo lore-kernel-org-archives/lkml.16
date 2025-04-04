@@ -1,121 +1,102 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87DDB19E804;
-	Fri,  4 Apr 2025 08:53:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A903219D081
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 08:53:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743756813; cv=none; b=T55ssZYPaC5PfuWxSDQbkUQBSDZg24qY8QdwlRO+j8t0tUE/HY9oJxv4fOyvRqZN2WvjGSWTGroHVNr0lzH1v8jSzMtoiMd7zHm5guIeVna2AKlnW8g2QGM+qvwLnzESFPzp7xkxR6l/ge3a6VY19WY39fhjCVg5dGSTY5ASiUI=
+	t=1743756830; cv=none; b=gVFhsEPGTYLqE9GX4+PPYyphR9HJtkWt4OaitKTZ9Yi3xvyzj2QSrlQ/vkEqVE4j39dDlKaaFTeIitnzdmiGPPqJqZMehXsWXhf+J90EGf7eexpLWafTGfjPzYXEW3D1d99NfEf8XoDFGpCnyfApI0OfGQ+pgk53LHyQ8dzkBAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743756813; c=relaxed/simple;
-	bh=BR4v9jaduHHtjHDAkP3DcqrljwwGoF2ygLOcD1RaNR4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lKLzkeZRKoX01zWz0kxXXx5QULS0coRH2wYLFgPyKmnQz/A4heXlrf83Fwn1vInkKPeona0WTjCn1OCnM3g8EVaZtpUiXmwP0oxu5AluZ2V/SO0UksBgyXAuHXQz5WPoCgfDYdPU7GPBkrQzYBivvq8bdceBeUnxMehGrMQOvy4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=phXjCmqz; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1743756830; c=relaxed/simple;
+	bh=ujMPWAnf1O+bgsUZ8iB+TMoPNAqGfSKZOUzSlaV5O/s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BklIhObEUQQS1l2vYmAFKpIpwkA0vmJmqKV4THUTx1bGwMV6uFP8jO78xlz257yDj29+T/wteqjNZpUZb2HyQrDX/dF/GaTPAdeBfr13S4XXBMwQBIOB2T7W3625S24xMdcc5G+T42Q2y+SLshrNbVWtBmvDZMrwdrOLyLx16kc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=V/nATDAD; arc=none smtp.client-ip=209.85.160.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="phXjCmqz"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 7FA204340C;
-	Fri,  4 Apr 2025 08:53:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1743756804;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SZTRJDBNNgYDkCBY6upcyYXVnBhkGlf/cu+m+M/6vIQ=;
-	b=phXjCmqzZZKxxuJwruXaetuuVy5P0E2DyGB/9ihDxzLCq+CQn5d1CAbwfZaZ+Fmg9BRjus
-	7Q5NWpzcI5e6Iwg39kYruOE98vGmVxUWb92md2uia83KBMDgVaDpZD9qfsncjO9bloHYL0
-	5LW158MhgkQiGj/JRR4z4HNiKF/TIGimyBmXrN32dWWPehyS1tRmaxMY/ADDmnMiJ2JMXK
-	+jXcXkkKQxqOLY710F/sL0n/tx69yrVl2R2/wb7aZ+nBlIIbwoOt1WeP41torkK7+dYjWX
-	yZhckxdHE9b9jL60QvNPVyUM1Vvk86wzB9MlfLJgNsMswfGXXzhKQMTmz9R48g==
-Date: Fri, 4 Apr 2025 10:53:22 +0200
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-To: Ciprian Marian Costea <ciprianmarian.costea@oss.nxp.com>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, linux-rtc@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, NXP S32 Linux <s32@nxp.com>,
-	imx@lists.linux.dev, Christophe Lizzi <clizzi@redhat.com>,
-	Alberto Ruiz <aruizrui@redhat.com>,
-	Enric Balletbo <eballetb@redhat.com>,
-	Eric Chanudet <echanude@redhat.com>
-Subject: Re: [PATCH v9 3/4] arm64: defconfig: add S32G RTC module support
-Message-ID: <2025040408532288b38dea@mail.local>
-References: <20250403103346.3064895-1-ciprianmarian.costea@oss.nxp.com>
- <20250403103346.3064895-4-ciprianmarian.costea@oss.nxp.com>
- <c4a80c1f-56a0-4cdf-afbd-cb2c13cc0b8b@kernel.org>
- <6ebb8c15-9ff1-4bf3-bbf3-c91aa387d873@oss.nxp.com>
- <dec769ad-5144-4503-9714-d9c83a4c242c@kernel.org>
- <b7d82f31-05d1-4331-809b-e865d21c958c@oss.nxp.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="V/nATDAD"
+Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-4766cb762b6so18289671cf.0
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 01:53:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1743756827; x=1744361627; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ujMPWAnf1O+bgsUZ8iB+TMoPNAqGfSKZOUzSlaV5O/s=;
+        b=V/nATDADvlhYMGWhL6TB4FAfT6QqAXbN5VzqgzAVN+TAwFjUsZlP0rlqZaNXOiOIYY
+         ccBeDPyvZhYmwz9DePK3mCqLnRlmYrDnSUjAIM0lhbIR8PgxHaGTnDEEJWlqqhhW6XIn
+         3NQGD+PyTHbQ4SvlK00Dsod9O7oVbVuZQTjCZC0kXw71M5QTn5D5iuEZU8yiif4Tlg+n
+         pQ0Gd4O2/JLW5gPngK6yyi2VN6o1mcBTWtFBA+PXYNOFyvb2OYpsp0R6F3CXO/T+wc+n
+         dsgDYhCPGKcaYs4xouwbloDmyqb3+80P/dhpg+LwA0yZ7e6sukPHKCInjmK1545Ufymi
+         5+2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743756827; x=1744361627;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ujMPWAnf1O+bgsUZ8iB+TMoPNAqGfSKZOUzSlaV5O/s=;
+        b=eXJjYHrRSatmEraM/enDnsMhrSiF3vV7OjMyY8VZhrgr7nJqO1PS3Qo29D4PGWa421
+         mJ+zwBt0XNE6ZRt88ufIx9M93Nh9NsEh1QJh1Qkd0RzaiFqKrZPn7yXLP8J0utTSzJsx
+         Zi33liGS7S7uaGquqw6ShQyjYGs7LY4RwcaaeaBowyZ/1ZCNF8yljZQLVjH9VULKBtjU
+         sqHDSEo1QRxwWx1KVFBhDpVHve/hYgs31VjfPUDFPkJ/lrY0fqM/yFuyKlgoxAYo+bvW
+         vtlhL4rs/tRoF7dgFZKWtktgLjgLDegdCEHVgT1vXw/4sp5udPibwNfwKZP/JEfvd2Pk
+         iKWg==
+X-Forwarded-Encrypted: i=1; AJvYcCWvvE+/Eq/eV/yEORUUQqW+8r5Nb6Yh1nLppgAkMjaCKRTnMeusYQagULGFZj4VQXpcDcyK2eGHuQ1XrCA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwxBg2jgn8xceppNPgdPDSYvJRfo7FF/jXEsc5WpKh0mhLvVTdu
+	7kL42KbgXXxOY4L8236KaLclK/k4pb5F4HcGSD0rrdoWB+1BO1DJLNI3+lLYLKv7Q2kYHtU7xRK
+	ft8cGQ9aLAdFiVUcY6A+kUT/0W0SJIi7PkRwq
+X-Gm-Gg: ASbGncvS3bmYlY0EnUDeCIaszFitJppx//rT4PaWvm1fKZsYHIr/sNfr/FvrseSYvbF
+	/ayeiusuS2yCVK47YD3lJKEAduJIVMoIdno+4UCBXKVvXKPJlB7pA0DUJBh5UpawRN+1UmVIRoz
+	Obiuc6ruZA/1eHZylRTnWxY4rr29o=
+X-Google-Smtp-Source: AGHT+IEDvlcZZb4tFOjewKa5T6ATIyDdRK4SGeqCi554xhUd6jIH4AI3nWrbMiUMVwr+yZJxTIpJVIPkAIzZLyWMSKc=
+X-Received: by 2002:ac8:578c:0:b0:476:6df0:954f with SMTP id
+ d75a77b69052e-47924c86329mr33561751cf.10.1743756827275; Fri, 04 Apr 2025
+ 01:53:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b7d82f31-05d1-4331-809b-e865d21c958c@oss.nxp.com>
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduledutdduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeetlhgvgigrnhgurhgvuceuvghllhhonhhiuceorghlvgigrghnughrvgdrsggvlhhlohhnihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgeeiudeuteehhfekgeejveefhfeiudejuefhgfeljefgjeegkeeujeeugfehgefgnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtudemtggsudegmeehheeimeejrgdttdemugekjegvmedusgdusgemledtkeegmegttghftgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudegmeehheeimeejrgdttdemugekjegvmedusgdusgemledtkeegmegttghftgdphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomheprghlvgigrghnughrvgdrsggvlhhlohhnihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudejpdhrtghpthhtoheptghiphhrihgrnhhmrghrihgrnhdrtghoshhtvggrsehoshhsrdhngihprdgtohhmpdhrtghpthhtohepkhhriihksehkvghrnhgvlhdrohhrghdprhgtphhtt
- hhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghonhhorhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtrghtrghlihhnrdhmrghrihhnrghssegrrhhmrdgtohhmpdhrtghpthhtohepfihilhhlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhrthgtsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-GND-Sasl: alexandre.belloni@bootlin.com
+References: <20250403113519.992462-1-i.abramov@mt-integration.ru>
+ <Z-7N60DKIDLS2GXe@mini-arch> <20250404102919.8d08a70102d5200788d1f091@mt-integration.ru>
+In-Reply-To: <20250404102919.8d08a70102d5200788d1f091@mt-integration.ru>
+From: Eric Dumazet <edumazet@google.com>
+Date: Fri, 4 Apr 2025 10:53:35 +0200
+X-Gm-Features: AQ5f1JrJvO-P7srrVogKZHZUEQyOXnDzIFSrTNnEmr8jIXDbBAMV3uDIAoT6Pfs
+Message-ID: <CANn89i+UQQ6GqhWisHQEL0ECNFoQqVrO+2Ee3oDzysdR7dh=Ag@mail.gmail.com>
+Subject: Re: [PATCH net v2] net: Avoid calling WARN_ON() on -ENOMEM in netif_change_net_namespace()
+To: Ivan Abramov <i.abramov@mt-integration.ru>
+Cc: Stanislav Fomichev <stfomichev@gmail.com>, "David S. Miller" <davem@davemloft.net>, 
+	syzbot+1df6ffa7a6274ae264db@syzkaller.appspotmail.com, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	Kuniyuki Iwashima <kuniyu@amazon.com>, Stanislav Fomichev <sdf@fomichev.me>, Ahmed Zaki <ahmed.zaki@intel.com>, 
+	Alexander Lobakin <aleksander.lobakin@intel.com>, "Eric W. Biederman" <ebiederm@xmission.com>, 
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	lvc-project@linuxtesting.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 04/04/2025 10:19:56+0300, Ciprian Marian Costea wrote:
-> On 4/4/2025 10:15 AM, Krzysztof Kozlowski wrote:
-> > On 04/04/2025 08:24, Ciprian Marian Costea wrote:
-> > > On 4/4/2025 9:17 AM, Krzysztof Kozlowski wrote:
-> > > > On 03/04/2025 12:33, Ciprian Costea wrote:
-> > > > > From: Ciprian Marian Costea <ciprianmarian.costea@oss.nxp.com>
-> > > > > 
-> > > > > The RTC hardware module present on S32G based SoCs tracks clock time
-> > > > > during system suspend and it is used as a wakeup source on S32G2/S32G3
-> > > > > architecture.
-> > > > Which boards are using it? I don't see any DTS (nowhere), so I do not
-> > > > see single reason for this patch.
-> > > > 
-> > > > Best regards,
-> > > > Krzysztof
-> > > 
-> > > The RTC module is used by all the currently supported S32G2/S32G3
-> > > boards, so currently they are: S32G274A-EVB, S32G274A-RDB2, S32G399A-RDB3.
-> > 
-> > I don't think so. I looked at these DTS and there is no RTC.
-> > 
-> > > I do see your point in the fact that this driver should be enabled as
-> > > module only after platforms are actually using it.
-> > 
-> > No, post the user. I don't see the point of sending defconfig patch with
-> > RTC patchset anyway. That's different subsystem.
-> > 
-> > > 
-> > > So, would it be better for me to send a V10 in this series with the DTS
-> > > patch added ?
-> > 
-> > No, separate patchsets.
-> 
-> Ok. I will send out a V10 in which I will drop this current patch from the
-> patchset. Also, I will send the DTS patch which adds S32G274A-EVB,
-> S32G274-RDB2 and S32G399A-RDB3 usage of the RTC after this patchset gets
-> accepted.
-> 
+On Fri, Apr 4, 2025 at 9:29=E2=80=AFAM Ivan Abramov <i.abramov@mt-integrati=
+on.ru> wrote:
+>
+> On Thu, 3 Apr 2025 11:05:31 -0700, Stanislav Fomichev wrote:
+> > On 04/03, Ivan Abramov wrote:
+> >> It's pointless to call WARN_ON() in case of an allocation failure in
+> >> device_rename(), since it only leads to useless splats caused by delib=
+erate
+> >> fault injections, so avoid it.
+>
+> > What if this happens in a non-fault injection environment? Suppose
+> > the user shows up and says that he's having an issue with device
+> > changing its name after netns change. There will be no way to diagnose
+> > it, right?
+>
+> Failure to allocate a few hundred bytes in kstrdup doesn't seem
+> practically possible and happens only in fault injection scenarios. Other
+> types of failures in device_rename will still trigger WARN_ON.
 
-I don't need V10, I can apply V9 without 3/4 and 4/4
+If you want to fix this, fix it properly.
 
-> Best Regards,
-> Ciprian
-> 
-> > 
-> > Best regards,
-> > Krzysztof
-> 
-
--- 
-Alexandre Belloni, co-owner and COO, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Do not paper around the issue by silencing a warning.
