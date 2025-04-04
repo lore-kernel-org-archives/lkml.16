@@ -1,85 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D47F71E5B6C;
-	Fri,  4 Apr 2025 15:20:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E5701F4CB7
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 15:24:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743780027; cv=none; b=fF1rlUtVVOpzLh5KpgCmK5xRDaymhFvX7U+hUY44vnJjSUVZqHonQT4LnlbnHHbjvCJyzeujoQuD3BkXz1wKNkJO0D8AaXUBC5UvGe2mAehngfQT2IA4zLwtkQGe7Obj73npwEJicKIt2GKGBYuNOXyMHiaeKEZme6ZXR62jPxo=
+	t=1743780289; cv=none; b=Ca87MmyMnBM7vno6d5Jfxl0m8SNZKo7Eg2p8ovlowNmUwBzYDttNzfW5FXPZUlJjHV4RN6VzIVW7EIXRJJD6fEpTEtKhQbE65AAsTTEoueiQT3847w++ejde6p7XkQyr5ihvYvHzPbnWBQVswy0IMQyfqaLzpqmgEo9jCp+ttEQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743780027; c=relaxed/simple;
-	bh=wXfM6QyWAvK68QTm/0iU77QM/D2h3ToTPakJYOIk9MQ=;
-	h=Message-ID:From:To:Cc:Subject:Date; b=i+cwTGX87fRGpeuCTdoPaE/ZlJOMfzVz7cQosOKZq3w7N9yr+eHY7k6hZSe7dAzIC3WzCW0Vri89ABQwl0QY5JxAXMmc6W0vFrmyx/dwyYwO5Z37X74e3a7ODR9T/T+o5NgJ6qRWpPT9+1DAUmQgBnxzHZVrrjBNkNRMSTz/FyE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TfQFiC9b; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743780289; c=relaxed/simple;
+	bh=inpMJ0FPRUub21IpZSfL5QhmCbbTaEEPBMu6MrTa1TM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=B9CHc1L5zxwoHRnUUpnUSQzLHi50GKcOsK3HSomgZFLBW7VGy/gMsBI9v05QxmgCIom6rvjArCCGdBwAiBXCmoZVdC2wj+sx+GVC/Q8v90JMckA8lpgKj/iDFmCjBzQ/FoADZktYdEGtqQg8BxEJJH7QyihpmtV8IvkGqS6YjJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=B5KtRl0T; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TfQFiC9b"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9A27C4CEDD;
-	Fri,  4 Apr 2025 15:20:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743780027;
-	bh=wXfM6QyWAvK68QTm/0iU77QM/D2h3ToTPakJYOIk9MQ=;
-	h=From:To:Cc:Subject:Date:From;
-	b=TfQFiC9bjaD53D1NaITDLMZKbXBpFKEeU+PwHXR8NFnQnUBQk0DEALQpNje1pBB3M
-	 tjSX280cQI7J92QMo8BYbnpmhXvLNmg9gMqqP2VwNGo0p6LlryoADFXGjeRfesO79p
-	 zNiuBWmOnIi1T7F3Kv8aojtQnPqFe6NEzhsDWGlY1X/O7VaNllKJ1nOafz7QwixlVO
-	 3dfCcQnnAcLrKW04+uVqRfb0XSbwf9KdUXiBXsJn53A+eDfoiplDGDetOcv378MqGq
-	 ShlaM5e/4gD5PLxxFShmdUhDx0HwbqX62TvwiD++XBUpf68LZp5YmUd4IXAIpwJnJH
-	 EMwlrQHz5uItA==
-Message-ID: <1fac1505c004071e4ad79df7e733d422.broonie@kernel.org>
-From: Mark Brown <broonie@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: [GIT PULL] SPI fixes for v6.15-merge-window
-Date: Fri, 04 Apr 2025 16:20:13 +0100
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B5KtRl0T"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743780285;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=A0T5ej45cdBXZSKZupUdLP38frmAiouF33auGBYE01k=;
+	b=B5KtRl0TtyqZjcWlMMqR3jeMRDzRSrBKAD0m/z5eTzvq00ZVHjg24gjTBvPtWEE6Y9DZU9
+	bhLJjE9Ys7MgWNBBJGpivg/ZBQGEOwMsjqK0l+sPpq6OCVUuY5qqaOEhQkpXKArtoJObgV
+	wND19LjcVzQjdzhSztZEWk9mxRutG98=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-441-kgv0I02qM2CMghfU54IyMA-1; Fri,
+ 04 Apr 2025 11:24:43 -0400
+X-MC-Unique: kgv0I02qM2CMghfU54IyMA-1
+X-Mimecast-MFC-AGG-ID: kgv0I02qM2CMghfU54IyMA_1743780282
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E691D1955DCC;
+	Fri,  4 Apr 2025 15:24:41 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.144])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id E73751801752;
+	Fri,  4 Apr 2025 15:24:38 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Fri,  4 Apr 2025 17:24:07 +0200 (CEST)
+Date: Fri, 4 Apr 2025 17:24:03 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Mateusz Guzik <mjguzik@gmail.com>
+Cc: Breno Leitao <leitao@debian.org>, akpm@linux-foundation.org,
+	brauner@kernel.org, linux-kernel@vger.kernel.org,
+	joel.granados@kernel.org, kernel-team@meta.com
+Subject: Re: [PATCH] exit: skip IRQ disabled warning during power off
+Message-ID: <20250404152006.GF3720@redhat.com>
+References: <20250403-exit-v1-1-8e9266bfc4b7@debian.org>
+ <CAGudoHG9LWyv7-ZoO_v3W62gXCYQoYujXRQhW7SbMENeydWj=Q@mail.gmail.com>
+ <Z+/V5AzsSqY9ALqL@gmail.com>
+ <CAGudoHGYLB0GC2x3hr8aX835dQrQnJ5u0Si=Pw35=c_fjVC72A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAGudoHGYLB0GC2x3hr8aX835dQrQnJ5u0Si=Pw35=c_fjVC72A@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-The following changes since commit ee2ecf2cf501eaa69dcd723d76b434767195b64e:
+On 04/04, Mateusz Guzik wrote:
+>
+> Preferably this would be fixed so that nobody calls here with irqs off.
 
-  spi: dt-bindings: cdns,qspi-nor: Improve (2025-03-20 15:35:31 +0000)
+This is not my area, I can't help, but do you understand why sys_reboot()
+needs to call do_exit() ?
 
-are available in the Git repository at:
+Say, why the stupid patch below is wrong?
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git tags/spi-fix-v6.15-merge-window
+Oleg.
 
-for you to fetch changes up to e19c1272c80a5ecce387c1b0c3b995f4edf9c525:
+diff --git a/kernel/reboot.c b/kernel/reboot.c
+index ec087827c85c..0d0c8aa3ffcd 100644
+--- a/kernel/reboot.c
++++ b/kernel/reboot.c
+@@ -777,12 +777,11 @@ SYSCALL_DEFINE4(reboot, int, magic1, int, magic2, unsigned int, cmd,
+ 
+ 	case LINUX_REBOOT_CMD_HALT:
+ 		kernel_halt();
+-		do_exit(0);
++		for (;;) cpu_relax();
+ 
+ 	case LINUX_REBOOT_CMD_POWER_OFF:
+ 		kernel_power_off();
+-		do_exit(0);
+-		break;
++		for (;;) cpu_relax();
+ 
+ 	case LINUX_REBOOT_CMD_RESTART2:
+ 		ret = strncpy_from_user(&buffer[0], arg, sizeof(buffer) - 1);
 
-  spi: bcm2835: Restore native CS probing when pinctrl-bcm2835 is absent (2025-04-02 12:55:32 +0100)
-
-----------------------------------------------------------------
-spi: Fixes for v6.15
-
-A small collection of fixes that came in during the merge window,
-everything is driver specific with nothing standing out particularly
-
-----------------------------------------------------------------
-Florian Fainelli (2):
-      spi: bcm2835: Do not call gpiod_put() on invalid descriptor
-      spi: bcm2835: Restore native CS probing when pinctrl-bcm2835 is absent
-
-Geert Uytterhoeven (1):
-      spi: SPI_QPIC_SNAND should be tristate and depend on MTD
-
-Han Xu (1):
-      spi: fsl-qspi: use devm function instead of driver remove
-
-Josh Poimboeuf (1):
-      spi: cadence: Fix out-of-bounds array access in cdns_mrvl_xspi_setup_clock()
-
-Luis de Arquer (1):
-      spi-rockchip: Fix register out of bounds access
-
-Miquel Raynal (1):
-      spi: cadence-qspi: revert "Improve spi memory performance"
-
- drivers/spi/Kconfig               |  4 ++--
- drivers/spi/spi-bcm2835.c         | 18 ++++++++++++++++--
- drivers/spi/spi-cadence-quadspi.c |  2 +-
- drivers/spi/spi-cadence-xspi.c    |  2 +-
- drivers/spi/spi-fsl-qspi.c        | 31 +++++++++++++++++--------------
- drivers/spi/spi-qpic-snand.c      |  2 +-
- drivers/spi/spi-rockchip.c        |  2 +-
- 7 files changed, 39 insertions(+), 22 deletions(-)
