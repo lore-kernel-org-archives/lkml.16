@@ -1,87 +1,145 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B18B81A265E;
-	Fri,  4 Apr 2025 09:02:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5DF01ACEAF
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 09:02:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743757372; cv=none; b=HpOoV40v0BCY7vcPuuJTaaVP5YzxNzehw1vlzPvOZ2ck4FebGFOrxAZF/170M/L1S+KxKEwvUj2yPjcyrCXn6K/NN4pXr4ONu1gypy+KGSt1NA0JxdeJ3mlCqnzGmzEElh2dy9epV3Kwp3NPW0xbDmautkNIRqFi0SyCXqxPNZI=
+	t=1743757377; cv=none; b=Rl2OydWDPFBJkTtP09Y+nQ8zkAviW64Bjq9KhQztSZ+DuCWjaZ5WRUFzpbWgzQwMExp1cq0qR6u5Nk4kosXCpVSVQ/pSAJQr9fUpowiZiBxYdtz142CzzzmDamS380WIv4NGioL5o7eXmkRBMIdiguDVt3MZ8lCTGwV809CCNUc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743757372; c=relaxed/simple;
-	bh=wm44pMRxSMtVrJZ9//WbNLyZvf+/VMaxa9Bl2u1h3DU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gETNNL1zuDMHRkrgn8hWucuQRql3bUsQMPpqZYJZOy8PduWZfvpaML0vyfKxwl/kR+NUIMhgV0UsucSuGeu44vDJFq66isX3PT7USG4wVuLm/fe7EcSozuHldSZtAgDEJORNt/vfIpc3R2Z22dbgZz5nKMJ5L5t3h3eWK8Y6EB0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RqqiIGmV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743757377; c=relaxed/simple;
+	bh=Odehsj2BM8XDwHtXWOi49nNg3uGWv5LoB0mRa3iuQTc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iMkU0oNRlehg7D6UWC5Rt2ZA55fJgEcQGFUatv0y21Nf+QI3EVoAsUUDrBUzkblXfJ7JEqR4QhvQ3yh9sgE4+4Lt+ueTL/MsziKhsWkfgiPCLrhJdFvJxBzOnlBhWxrugt7o8FqduCKWeBcb382DrwZ81IfRfSxorLv0mVWfr6Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pO89RT65; arc=none smtp.client-ip=209.85.208.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RqqiIGmV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C705C4CEDD;
-	Fri,  4 Apr 2025 09:02:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743757372;
-	bh=wm44pMRxSMtVrJZ9//WbNLyZvf+/VMaxa9Bl2u1h3DU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=RqqiIGmVdSKS3ZhKoSM/x0QlgQ23XAWfSOYUsnl1O0R+0B8JuyU2o4hdmFBG+mxUK
-	 /QZmusJroU1fGCg6PjHm6r3xE/Xsl7b4IWFHWrz6AOSisgMB7DuPITh/7g5En3TSw6
-	 yXObcPqrcDXbZ43RKEcSUOWkPIfns6PuMUkYuExLz8kJIwNUQF2Cv4cZW4sW5Oqpm2
-	 b8XgdgJQDgkWuW/IjQGAaXjMgDts9OrxnQhONT99hlIiaU7cvEKchOJ7wRKOJ/aAFf
-	 mqU4ea+FIXpaeG3kQe0OBq/Dj4N7hn7mOn8/FO5FpoveryTtk4OU1ziaE8RULWhZcw
-	 l0/oESDsSHIxg==
-Message-ID: <70891a99-d2ca-4fd3-a88d-2f66a9a78f66@kernel.org>
-Date: Fri, 4 Apr 2025 10:02:47 +0100
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pO89RT65"
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-30c05fd126cso15241791fa.3
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 02:02:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1743757374; x=1744362174; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AT0sYEXJkvVX4YpBmzj2OY2C1bjsMKeplWHZpo7aDCU=;
+        b=pO89RT65tuUfGbKp88qFmapTtoQyH0zXgJeN1xxPXckoxqMXPZGby54DJOiqY+Bd+6
+         X0Tz89Cqow0Pb4q+iMlY7Uo/nqKYs6g1lgdQdThcG2EB33pLbSgG/xiRAGNBAqXO2oMA
+         XNVCqbi2m/bVTqbOQSSiN6GxPoBXIolVwsdT9VIpVkBXI0LDxxRduQLabS0ty3ByByoK
+         cVmRzIrh2RBRmanOZlGTy9gYlo8Om0sZrNFDXYXEZ9aEroRoacSoO8hm/B50W5Wh8s+B
+         g5JeYMij4/mVHopFJeWlYjzqF0FuxJyjUgx14aQ7bm+rW9gpYGTnDSSU+H7hMfxUyxdZ
+         9jrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743757374; x=1744362174;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=AT0sYEXJkvVX4YpBmzj2OY2C1bjsMKeplWHZpo7aDCU=;
+        b=NVF52NZwd+p3Izx4AAxaKswc08AzvuoNm4J7a7F9GZB4ixkOCMe6k/sz6TDAQT0VN4
+         AElwaeq8Y9DHDF6jp8HaMHksYxwoCm7mpvTONwxlpDSfSZySzX+dNFaCQDPGQ9BhNyrX
+         SoxTrKEU88yLHDUJ9kG14KUgzq+5NGW+Blx7VBetYJ5HAHmzymkC7eQAwrxgTzfwvCKA
+         eiiFxutNjoy5iNlSMKy52q72S+JFwFef5gIEXNw+aS7urwjXpQkB10b0ojvgFr3Gr5uw
+         SWl59I33A+Y2ZVBLxsTAR2/DSV9QbpZ9BauOpMFos2h+/I6PxjZipJmRmx7Jh/4pxmS2
+         RRvw==
+X-Forwarded-Encrypted: i=1; AJvYcCWfg+Cc+ieeRB+GIFlEewUVuGX22vmJLwFtBe8K2TPQFkNyh1QLGL3olvvTKLxzJGLmrSTD6wLpZhzyUS4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzOGMlUdtgtDlh7Sm0pARbvEYosQPxhvKqi0j9q02D6CZz0YuYT
+	OnjYP1ddA8L766zZCIMcIWssdwzOp5ktTfOs9wiOq6WHwloIM7Vn/XjOostk1d/ILKU7g78E27W
+	8AKDhg7EjDy1cBWk+OZ2ipV8S+ZBf8SzOOHkHlg==
+X-Gm-Gg: ASbGnctmi5OsHulsm93seud8MGEZylYSTBqqtErVev/fXhGRH5lLVWco0uUTXF60cJx
+	ZuCtMvFsccAO9u03s6kC7/XBtJZ0UnbRjB0OoCw6hYhZjAqcBYAHPEd/lkT5pcXYtzq2IFR/9+H
+	Pe+HH4xtAsjRlZiyhi75ep4EI=
+X-Google-Smtp-Source: AGHT+IE3c8J5XFi4Pog/UFlbZxenY07T9F111peneZ+Nl3svAw6cNIj7qt8tUyUvZtN1WK7vFyYtoxkG2auhvg4tpbM=
+X-Received: by 2002:a2e:bcc4:0:b0:30c:12b8:fb9e with SMTP id
+ 38308e7fff4ca-30f0c061ce6mr6442821fa.37.1743757373833; Fri, 04 Apr 2025
+ 02:02:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/8] Reup: SM8350 and SC8280XP venus support
-To: Vikash Garodia <quic_vgarodia@quicinc.com>,
- Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: Stanimir Varbanov <stanimir.k.varbanov@gmail.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>,
- Bjorn Andersson <andersson@kernel.org>, linux-media@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, Johan Hovold <johan+linaro@kernel.org>
-References: <20250304-b4-linux-media-comitters-sc8280xp-venus-v1-0-279c7ea55493@linaro.org>
- <8cfaeb25-2657-9df4-5cea-018aad62f579@quicinc.com>
- <it3njgklhnedjzojafuxpjy3o5zfulgdclweyobv7kjgtpjmzx@6opje7yms4yg>
- <1dd6e03d-09be-4853-741a-4fb47b7619a0@quicinc.com>
-Content-Language: en-US
-From: Bryan O'Donoghue <bod@kernel.org>
-In-Reply-To: <1dd6e03d-09be-4853-741a-4fb47b7619a0@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250331-gpio-todo-remove-nonexclusive-v1-0-25f72675f304@linaro.org>
+ <20250331-gpio-todo-remove-nonexclusive-v1-3-25f72675f304@linaro.org>
+ <CACRpkdYMRnmYD1YRavZs7MHEVFM42bOL2=6s4rJzFDnfLJ4fAQ@mail.gmail.com> <CAMRc=McBWncrCcX87a3pYeZ3=uYGNhpSrK74hDP-XNYrT8WMMg@mail.gmail.com>
+In-Reply-To: <CAMRc=McBWncrCcX87a3pYeZ3=uYGNhpSrK74hDP-XNYrT8WMMg@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Fri, 4 Apr 2025 11:02:42 +0200
+X-Gm-Features: AQ5f1Jro8WxWYYgBK-u74u_UUFVf1ElCnzRI4WgZMQgyCFcbCXmRoZirkubFn-w
+Message-ID: <CACRpkdbeObj7t=quffRrZtZQRRSr6GBeayN3o_8H8zGDD22XpQ@mail.gmail.com>
+Subject: Re: [PATCH 3/3] gpio: TODO: track the removal of GPIOD_FLAGS_BIT_NONEXCLUSIVE
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 04/04/2025 06:24, Vikash Garodia wrote:
->>> How different is this from sm8250 which is already enabled on iris driver ?
->> As far as I remember, SM8250 support in Iris did not reach
->> feature-parity yet. So in my opinion it is fine to add new platforms to
->> the Venus driver, that will later migrate to the Iris driver.
-> I would say, from decoder side all codecs are there now on Iris. H264 merged,
-> while h265 and VP9 dec are posted as RFC, there is one compliance failure which
-> is under debug to post them as regular patches.
-> If we are mainly looking for decode usecases, then we should be on Iris.
-> Preference would be to stay on Iris, otherwise we would have that extra ask to
-> port it later from venus to iris.
+On Tue, Apr 1, 2025 at 10:57=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl>=
+ wrote:
 
-Right now venus represents 9/20 - 45% of the patches being churned for 
-sc8280xp.
+> > If several providers with their own struct device is using one
+> > and the same GPIO line, the devres consumer is unclear: which
+> > struct device should own the GPIO line?
+> >
+>
+> Well, other subsystems just use reference-counted resources in this
+> case but see above - this is not a good fit for GPIOs.
 
-https://github.com/jhovold/linux/tree/wip/sc8280xp-6.14-rc7
+So to rehash, for example clocks and regulators are by definition the
+equivalent to NONEXCLUSIVE, that is their default behaviour.
 
-This is a good debate to have, however my memory of what we collectively 
-agreed both in public and private was to continue to merge new silicon 
-<= HFI6XX into venus unless and until iris hit feature parity for HFI6XX 
-and to continue with venus at that point for < HFI6XX.
+Two devices can surely request the same clock.
 
-So merging sc8280xp - HFI6XX is consistent with our agreement, the right 
-thing to do for our users and a big win in terms of technical debt 
-reduction.
+They can independently issue clk_enable() and clk_disable(),
+and the semantics is a reference count increase/decrease.
 
-I will post an update to this series ASAP.
+They can have the same phandle in the device tree.
 
----
-bod
+But GPIOs can not. They can only have one owner.
+
+Technically this is because the only reference count we have in a gpio
+descriptor is the boolean flag FLAG_REQUESTED, and it
+happens like this in gpiod_request_commit():
+
+        if (test_and_set_bit(FLAG_REQUESTED, &desc->flags))
+                return -EBUSY;
+
+This semantic is in a way natural because what would you do when
+two owners make something a GPIO cannot do, such as
+one does gpiod_set_value(1) and the other does gpiod_set_value(0)?
+
+This issue does not exist in resources such as clocks or
+regulators that only do enable/disable and that is why GPIOs
+are different from other resources.
+
+Then we can think of solutions to that.
+
+One way would be to add a new type of refcounted GPIO
+descriptor for this specific usecase, like (OTOMH):
+
+struct gpio_desc_shared {
+    struct gpio_desc *gpiod;
+    struct device *devs[MAX_OWNERS];
+    u32 use_count;
+};
+
+struct gpio_desc_shared *gpiod_shared_get(struct device *dev ...);
+void gpiod_shared_put(struct gpio_desc_shared *gds);
+
+int gpiod_shared_enable(struct gpio_desc_shared *gds);
+int gpiod_shared_disable(struct gpio_desc_shared *gds);
+
+So this compound struct will not be able to set value
+directly.
+
+The gpiod inside that shared descriptor need to be obtained with
+some gpiolib-internal quirk, not with gpiod_request().
+
+It will issue gpiod_set_value(1) on the first enable and
+gpiod_set_value(0) on last disable its internal descriptor.
+
+If existing valid users are switched over to that then the
+NONEXCLUSIVE stuff can be deleted.
+
+Yours,
+Linus Walleij
