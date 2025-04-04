@@ -1,101 +1,82 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13D8C1F3B94;
-	Fri,  4 Apr 2025 14:29:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AE961EB1A9;
+	Fri,  4 Apr 2025 14:30:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743776987; cv=none; b=ZQSORARuqtTdI85CP8+hjs7Bi8+IKhY9tCYA1JC3QSqLkEY2VTot3vhAfY3/nGrVjYFFQ9Y1yKDbFVPAPmMKIzsZj9R1CS/crAGQADEuXPK8OTjn2ZF3VdsbAuV6gIsgTDJpqyE/YV9WLvfV2+XFno5IA90OYOgpg1gvmjO3tXc=
+	t=1743777010; cv=none; b=Xa/SmWP1zhBZNCsaq6z919Km4hyGK0ZU9PMJn02h0LOP9n+70RihDrP2OfEVgkax7kUnx/WTrjg7yRa88sg1X1tjMywY6WHojCaCfYry2u0Ujwk8Hc4Ran++iPMAm/Ds7CcanOiyOF5VFjB+115FQ9Z5tno5Xnpnx6f7JhsoR1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743776987; c=relaxed/simple;
-	bh=pv4RMDin1G2s80kdMx9FCTirOhjc/CI7pmLRINL3VJY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TfuoyYxEMYDygonsEBbzRz9cKLuTKuD8osrafngoR5w7n6+CyciN28Gv0+JnmwE/kz85GJ1A+m36rzKVNALlBKkZK8FcR0WrHX6abxwkN9r9hg+JJMCk69Z4FB9DOoFmZ7QpkjKWAtZbo5JjPlxeYsD6tZ9agt0d9RDCUJC8nFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [141.14.220.43] (g43.guest.molgen.mpg.de [141.14.220.43])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id BBA3261E64799;
-	Fri, 04 Apr 2025 16:29:19 +0200 (CEST)
-Message-ID: <d69acb96-a90e-450f-94bd-d8116ca54ae4@molgen.mpg.de>
-Date: Fri, 4 Apr 2025 16:29:19 +0200
+	s=arc-20240116; t=1743777010; c=relaxed/simple;
+	bh=wTP+D4IXKBwvsj7zTnOsBaG/zgIJXbKgSf+ZGdl7G00=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=oZg5cYlIm/Vm8hyPyP9aBgr8eVMY9gn4gBGkeCZjVA/+xN54v0DUjd2kC85vUVY1ZqKC42TH2VPef4pdxi4X4pS7hCCV65cPeDKqRV6cPC8jfuM9iBzb7COKha8rqbEPPCSEA+NPNQITkKKZtp/EcZ93ARDYlzSgxBEvkjTlbAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b6dNVx3t; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b6dNVx3t"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBB42C4CEEC;
+	Fri,  4 Apr 2025 14:30:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743777010;
+	bh=wTP+D4IXKBwvsj7zTnOsBaG/zgIJXbKgSf+ZGdl7G00=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=b6dNVx3teeL8lUgEUSRmHqYqUzXA1JtIg5ncxTL3o9kYORzEQ+2/xb9SkZwPL8lmM
+	 /H4DcE9hggLrCueV82UC7YjQYRDUbSLe4JLk4XneDUE7GUHjtUjTpV/jHYJmIm/sv8
+	 enFLih/8RqAwFUGKPZC/jvbS+B5+gQuvXEs2zRH4+z1a7Q/FNTD8Ze7d4kXNYAHC7a
+	 SbIYkNwwLpNDS6YQ4V+Vm92Fsa7iGY6P5O44rhYrsU3bYWU+YTtrRjk54Ltd1JFvpe
+	 do+w9mqG1B9FHxSdc1QUkK2St8wjK9sy/2SuNzyMcop1jBKwqeSf2yz4lC28Q5scwT
+	 Md6DyU4DasLPQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33FC93822D28;
+	Fri,  4 Apr 2025 14:30:48 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: xhci: WARN Set TR Deq Ptr cmd failed due to incorrect slot or ep
- state.
-To: Mathias Nyman <mathias.nyman@linux.intel.com>
-Cc: Mathias Nyman <mathias.nyman@intel.com>,
- Michal Pecio <michal.pecio@gmail.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>
-References: <c279bd85-3069-4841-b1be-20507ac9f2d7@molgen.mpg.de>
- <b356f743-44b5-4f48-a289-fae0afe106ff@linux.intel.com>
-Content-Language: en-US
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <b356f743-44b5-4f48-a289-fae0afe106ff@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v4 0/1] usbnet:fix NPE during rx_complete
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174377704699.3279917.8004013265274717921.git-patchwork-notify@kernel.org>
+Date: Fri, 04 Apr 2025 14:30:46 +0000
+References: <cover.1743584159.git.luying1@xiaomi.com>
+In-Reply-To: <cover.1743584159.git.luying1@xiaomi.com>
+To: Ying Lu <luying526@gmail.com>
+Cc: oneukum@suse.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ netdev@vger.kernel.org, linux-usb@vger.kernel.org,
+ linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org, luying1@xiaomi.com
 
-Dear Mathias,
+Hello:
 
+This patch was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-Thank you for your quick reply.
-
-
-Am 04.04.25 um 16:26 schrieb Mathias Nyman:
-> On 3.4.2025 21.02, Paul Menzel wrote:
-
->> Just a heads-up, that connecting an LMP USB-C mini Dock [1] to the 
->> Intel Kaby Lake Dell XPS 13 9360 with
->>
->>      00:14.0 USB controller [0c03]: Intel Corporation Sunrise Point-LP 
->> USB 3.0 xHCI Controller [8086:9d2f] (rev 21)
->>
->> resulted in Linux 6.14.0-12966-ga2cc6ff5ec8f logging the warning and 
->> trace below.
->>
->> ```
->> [   74.898485] usb 4-1.4: reset SuperSpeed USB device number 5 using xhci_hcd
->> [   74.916241] sd 0:0:0:0: [sda] Media removed, stopped polling
->> [   74.916634] sd 0:0:0:0: [sda] Attached SCSI removable disk
->> [   98.803081] PM: suspend entry (deep)
->> [   98.813999] Filesystems sync: 0.010 seconds
->> [   98.819226] Freezing user space processes
->> [  105.534176] xhci_hcd 0000:39:00.0: WARN Set TR Deq Ptr cmd failed due to incorrect slot or ep state.
->> [  105.606437] usb 4-1.4: reset SuperSpeed USB device number 5 using xhci_hcd
->> [  118.822270] Freezing user space processes failed after 20.003 seconds (2 tasks refusing to freeze, wq_busy=0):
+On Wed,  2 Apr 2025 16:58:58 +0800 you wrote:
+> From: Ying Lu <luying1@xiaomi.com>
 > 
-> Thanks for the report.
+> The patchset fix the issue caused by the following modifications:
+> commit 04e906839a053f092ef53f4fb2d610983412b904
+> (usbnet: fix cyclical race on disconnect with work queue)
 > 
-> Looks like it's triggered during system suspend.
+> The issue:
+> The usb_submit_urb function lacks a usbnet_going_away validation,
+> whereas __usbnet_queue_skb includes this check. This inconsistency
+> creates a race condition where: A URB request may succeed, but
+> the corresponding SKB data fails to be queued.
 > 
-> "The Set TR Deq" command that fails here is queued when
-> - endpoint stops to remove cancelled transfers.
-> - endpoint resets to clear STALL or other halt due to transfer error.
-> - canceling a transfer while endpoint is mid stall or tt clearing.
-> 
-> Looks like there are at least some gaps in verifying endpoint state in 
-> endpoint reset handler  before queuing the "Set TR Deq" command, this
-> could be a possible reason.
-> 
-> If this case could be reproduces with xhci dynamic debug enabled it 
-> would help narrowing down the real cause.
-> 
-> echo 'module xhci_hcd =p' >/sys/kernel/debug/dynamic_debug/control
+> [...]
 
-I haven’t found a way to reliably reproduce it. I’ll try, but it might 
-take a while.
+Here is the summary with links:
+  - [v4,1/1] usbnet:fix NPE during rx_complete
+    https://git.kernel.org/netdev/net/c/51de36000934
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
 
-Kind regards,
-
-Paul
