@@ -1,104 +1,73 @@
-Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 173C65789D
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 01:40:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A9A079F5
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 01:44:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743730819; cv=none; b=R7e6txoM/8uxLtb99nwf0snmRt7bi/FxDYPH4DaZEONyeOoA301Ou4wr/lZ9p9xqyzNFpb4x3ALtLWuQP2hl02ijKmb88q9QJLHbWxJIs+j0FU5xMANRDUoxK9dpXWxX5JjPFIKmloG30ZcWT8IU2YsnO7NBrywvPuqVzbhlyE0=
+	t=1743731044; cv=none; b=OOhfWLVtTlauqbpckrMN1PQoYmtL33sY0QfHE5IJ2pGmV1yrB5EVkVfKC/nYq976zTabUuR85mXQw3NZNI3LHP9Yy7QuVrnhe2fL9TzlnQ28pDGomG2XMjQijXZwQYqXgA0hH+vmrnB/lDFOabmLpRdHoezSrlGg9v960GV5YV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743730819; c=relaxed/simple;
-	bh=06gXiVx5lKSFFQekv0CghOGVFlT7QaHEhE3pSVzC+e0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=i8uKv+Ql4cDYK0BHcKHN8CQCPWYgSSDydhNZGTgS0xUUsuWvRFJnHHkvgfvXkqb2rUjX39bvs7C/A/WLm7WXE2jpsqGyVnk8HgC7VyE75XcQIftS48jbMfF25GTSFi7nL8IOLdyygqjLsw9cIELKZYdxP3tpLTjKHesJgFBb2rE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=YVIdQTwo; arc=none smtp.client-ip=91.218.175.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="YVIdQTwo"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1743730814;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BaL+YTe2+GRQTxvSOsA8F0slQZP0gsLtQVxtzdV+oik=;
-	b=YVIdQTwo2vNEeKkxMFLZpTiRY9Tw49WcPNXtYb9sRqKpBiDZDA6NoG3Z2N2wJFJSP6T989
-	6fGtuqPuZcGBUzJ/81KT5TR2UWOQVfZDwQjl3oesbA1Zu4hGcO/aXcHyoqQ+2nfVWlgWya
-	tDhVUf4+urqwi6rscCd66ZwobItacxM=
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Johannes Weiner <hannes@cmpxchg.org>,
-	Michal Hocko <mhocko@kernel.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Muchun Song <muchun.song@linux.dev>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	linux-mm@kvack.org,
-	cgroups@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Meta kernel team <kernel-team@meta.com>
-Subject: [PATCH v2 9/9] memcg: manually inline replace_stock_objcg
-Date: Thu,  3 Apr 2025 18:39:13 -0700
-Message-ID: <20250404013913.1663035-10-shakeel.butt@linux.dev>
-In-Reply-To: <20250404013913.1663035-1-shakeel.butt@linux.dev>
-References: <20250404013913.1663035-1-shakeel.butt@linux.dev>
+	s=arc-20240116; t=1743731044; c=relaxed/simple;
+	bh=A393Gx2pK/Ku/cFvRGlnYxqYTsuIduB+8xOBy8MxwTQ=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=uR2MQ6CV7netauEpoM6ggWuFhynBxZtbWlo6qqdWI95rU7ujgLOny8p5lNSVn+SuY8oWPxXdcYr9/Wrl4gWXVeEXuMlpRbdFRLNRQYVhkrz4ytZt8Rvd39cPNSSwTlvAKdzTTE753dC7Sgvy9YACQgOFaAfmPdQbVW6Vq9mNRg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3d5da4fd946so30354925ab.1
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 18:44:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743731042; x=1744335842;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DoiImokpJQCJ328qckmZBvIfg+4Z/tOC/nua1/PJ5gI=;
+        b=nCdST3cr6uULBB2eb4KNp0Q+TcNQL/Kyeltk0ANSAyWpses6e2IdfmjgpkTNCfeeSM
+         UsTyL4fSUnEUj+ecuFoN7LqeQ0zeKjkv1gTtZqFnttGheA4NERnv6ZuwdCqTvk2w5zmP
+         C4UzjE8Z4VxYFEDoZK2bqPSiWVnM/64eDEjcnsFjBFKDFHUvwM6TMgBYoEkMgEe1+zf0
+         ZkPTHrsSZDB0D2bQ6vhscFLCteZPE2kxk7tnUHg4rmfSTLqofQvbM/NYKuOcOj8WUnGt
+         76LWY474Y35t4tCB95eTPDH8AegMTUnYw7rZm7BtUT7k48CputF9IJ6BXNJl4O7rWYVs
+         GmYw==
+X-Forwarded-Encrypted: i=1; AJvYcCWvfq7rSwKK8LeiDcT8y5pCgBN9JMIqk0VxE0m700Kv1SV8OFk0Sb/8QKAjf8XIQqeOFOf09gxUJ/KIMbs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxXwyxtGRqbj5NwuOqiy1428u1EMs0xUitgvWbeBhiG4fw3wump
+	Y77XQFw1PXaRoAg/fiTLLxvk+lOw8X1dhty5Kb68QLItM/SM/SaSv1zzsU3ewD3ylePSz+PUeB+
+	pRHAwetgRcTPk86QNnZJqbSQv0ImSIEoLsc0jNOGagc9+hJyFtsSkac4=
+X-Google-Smtp-Source: AGHT+IF7DJ2NzSfVkrdjsOZO3G1uAps/3BIEHQP77pCq+DcF1yaZ6jYdc/l+/2JmYgNrMsrkgcIl6UsXPJNj5ujFtW+EBSIWW2Kq
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+X-Received: by 2002:a92:cda7:0:b0:3d4:6e2f:b493 with SMTP id
+ e9e14a558f8ab-3d6e3f19ebfmr17080835ab.11.1743731042233; Thu, 03 Apr 2025
+ 18:44:02 -0700 (PDT)
+Date: Thu, 03 Apr 2025 18:44:02 -0700
+In-Reply-To: <20250404011510.3744-1-hdanton@sina.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67ef3962.050a0220.9040b.02b9.GAE@google.com>
+Subject: Re: [syzbot] [bluetooth?] possible deadlock in l2cap_conn_del
+From: syzbot <syzbot+b71bb48c13bf3fed3692@syzkaller.appspotmail.com>
+To: dan.carpenter@linaro.org, hdanton@sina.com, 
+	linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	luiz.dentz@gmail.com, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-The replace_stock_objcg() is being called by only refill_obj_stock, so
-manually inline it.
+Hello,
 
-Reviewed-by: Roman Gushchin <roman.gushchin@linux.dev>
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
-Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
----
- mm/memcontrol.c | 18 ++++++------------
- 1 file changed, 6 insertions(+), 12 deletions(-)
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+unregister_netdevice: waiting for DEV to become free
 
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 3bb02f672e39..aebb1f2c8657 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -2763,17 +2763,6 @@ void __memcg_kmem_uncharge_page(struct page *page, int order)
- 	obj_cgroup_put(objcg);
- }
- 
--/* Replace the stock objcg with objcg, return the old objcg */
--static void replace_stock_objcg(struct memcg_stock_pcp *stock,
--				struct obj_cgroup *objcg)
--{
--	drain_obj_stock(stock);
--	obj_cgroup_get(objcg);
--	stock->nr_bytes = atomic_read(&objcg->nr_charged_bytes)
--			? atomic_xchg(&objcg->nr_charged_bytes, 0) : 0;
--	WRITE_ONCE(stock->cached_objcg, objcg);
--}
--
- static void __account_obj_stock(struct obj_cgroup *objcg,
- 				struct memcg_stock_pcp *stock, int nr,
- 				struct pglist_data *pgdat, enum node_stat_item idx)
-@@ -2934,7 +2923,12 @@ static void refill_obj_stock(struct obj_cgroup *objcg, unsigned int nr_bytes,
- 
- 	stock = this_cpu_ptr(&memcg_stock);
- 	if (READ_ONCE(stock->cached_objcg) != objcg) { /* reset if necessary */
--		replace_stock_objcg(stock, objcg);
-+		drain_obj_stock(stock);
-+		obj_cgroup_get(objcg);
-+		stock->nr_bytes = atomic_read(&objcg->nr_charged_bytes)
-+				? atomic_xchg(&objcg->nr_charged_bytes, 0) : 0;
-+		WRITE_ONCE(stock->cached_objcg, objcg);
-+
- 		allow_uncharge = true;	/* Allow uncharge when objcg changes */
- 	}
- 	stock->nr_bytes += nr_bytes;
--- 
-2.47.1
+unregister_netdevice: waiting for batadv0 to become free. Usage count = 3
+
+
+Tested on:
+
+commit:         06a22366 Merge tag 'v6.15rc-part2-ksmbd-server-fixes' ..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=110c194c580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=2f0adb9bdfa87dbd
+dashboard link: https://syzkaller.appspot.com/bug?extid=b71bb48c13bf3fed3692
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=172e023f980000
 
