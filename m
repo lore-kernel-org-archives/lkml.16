@@ -1,50 +1,40 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-81.smtpout.orange.fr [80.12.242.81])
+	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65FC4207A07;
-	Fri,  4 Apr 2025 16:06:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 970B41FE44D;
+	Fri,  4 Apr 2025 16:09:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743782819; cv=none; b=q6DezYM2ugFddDIJRv3h9WzhJt2BXzJPxPcAV2Tlj/Q5CyFmVIhK0D7wKkCi0YAGTHHe+zH1qRd6YFbQwNCEb9pnJK0+bDFIh3RcICE9JDuA/GyKe0w6RhoyQYJeTVqfCmEN22e1eu298ONRCxUjniBB5tFvUJfI6Bn89YTU4F4=
+	t=1743782980; cv=none; b=u8p1pvM0YcERYpuZqO2ilAl8I1gtW024J6+vaYzgIHtm3CMtVqEaWrrX0JDqbOU37SCe94S1vkR1u4IGsX3jGVS+E3V72bD75VD210c8/KTBOZiuhWrlWha1KK3I/O/tdiJfdNl5bqw2aB3kwUUXsxrT/NS8lYVKjiEl/iTPxYE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743782819; c=relaxed/simple;
-	bh=iXVoP3wKEH70qKx98Hhc6Wogu3HSHe/ZVCwkUx8UtjI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Vlo1hvTxPC8BHRBLkXIlTfsYYbZis6U6pZEEBSP8bbNQ4JokpF0tYveWqDwnWoBT7C3bW9NCwhm+abPf0RhR3/wDOIkW0mO/uvkVW1/sUAGGfJN3VxdNiniRAmDx81pNJ40dzzs56sYVEAbJSPS0V0KI117qiIfnELlVahMwp3E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=E7OT17KM; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1743782980; c=relaxed/simple;
+	bh=eyNWkamsIncNPiOt+xFesAmuq5FxdHvBFGZeakFV6So=;
+	h=Message-ID:Date:MIME-Version:Subject:References:From:To:Cc:
+	 In-Reply-To:Content-Type; b=CuzyKrV/Ldpa5y20qmnC+uArKVdZsdlRjpjlJyGld6ZErwy6+EvbExAOUlwKycIPtqZ7+a3z2PU/xbA4hsFzwje+4kN0XQzixzs+bGHjU1A/L3tDJvRm14Vf1sJyDgRMtqoGRcT6w5OPPyfQvLsZ/OQY7RJsPbVVuZ4j5LvVnYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=dLLqTbxc; arc=none smtp.client-ip=80.12.242.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="E7OT17KM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743782818; x=1775318818;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=iXVoP3wKEH70qKx98Hhc6Wogu3HSHe/ZVCwkUx8UtjI=;
-  b=E7OT17KMCacw7nK9NnU+dHudIPOHltMbLEaGJxiuSFdYxw07MPTRja8A
-   KHUZFOXAs98V0CR4zrLux8oX6IDzuTB1CU0uvYcsyACC41gGMBaMwRmrF
-   zKlAJurRTsGbCwCnOfo1LKIsEWgkjrYnOK4FlZQjyNG1tD8r9lMmz0NtQ
-   DGVm0u1md23CbUAWPZvWJjSHZfFHXybkwgl6z+7z9CexxKgD+LTluRNYu
-   SE8A37+vgagqCGGzgyXZ5iUcDszWXJmTcgQ4tVlzlq0p0R1J8GA6QA36O
-   5E233rgl+4JGKkQ0vMfcn5mgtiKb8RryyPt3ICcC5dzAADex0FBvUieoQ
-   g==;
-X-CSE-ConnectionGUID: FOCoGt6BTnewDSG3rh80bw==
-X-CSE-MsgGUID: WA4HGncaTZuAboHpsCdtIQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11394"; a="49022881"
-X-IronPort-AV: E=Sophos;i="6.15,188,1739865600"; 
-   d="scan'208";a="49022881"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 09:06:57 -0700
-X-CSE-ConnectionGUID: cO+Z9NzfR/u/1zgGGwdspw==
-X-CSE-MsgGUID: 96Ikxg4US7+bKvi55n+CVw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,188,1739865600"; 
-   d="scan'208";a="164554384"
-Received: from daliomra-mobl3.amr.corp.intel.com (HELO [10.124.223.29]) ([10.124.223.29])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 09:06:54 -0700
-Message-ID: <3fd46452-fc96-4d50-9c40-a8a453d58f40@intel.com>
-Date: Fri, 4 Apr 2025 09:06:51 -0700
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="dLLqTbxc"
+Received: from [192.168.1.37] ([90.11.132.44])
+	by smtp.orange.fr with ESMTPA
+	id 0jbkuwMu44ggN0jbnuYpd4; Fri, 04 Apr 2025 18:09:33 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1743782973;
+	bh=R2NkmJsMvfh4t8otA7eSeQVdLEM/vde8d4/VGclQcLs=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To;
+	b=dLLqTbxcwUVOGYTEzDVHbOmMMlbDiBoKpgYdPy1su929m121GKESlgFo8/8HmB1sH
+	 VLY2KILrj0l6bkhabMpmBApSul2DA8QOzi3PX3wRxw10T+GxySyJx9m2s+bsdfbaRu
+	 ZnYG62goaMdy/KB7NtumNB+htSbw1PKt3dRsdWn+8yVgB1ZYFys+GZcAMQA5A9s6Up
+	 C1V/wIaWG8VskIABVdPtGUj9cTGbwJS/MWLVCZrkzGa6py3LWKP9AJIrXy6Y62CQZZ
+	 P8evZVD0VpypPWsjH4prncS7IBbkJ9sPgov60i6sB1+fvyYsIRyWohDUGlbLJu8jys
+	 MSBlM+tMOl3GA==
+X-ME-Helo: [192.168.1.37]
+X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
+X-ME-Date: Fri, 04 Apr 2025 18:09:33 +0200
+X-ME-IP: 90.11.132.44
+Message-ID: <33abd6fc-9ab3-497e-b421-0816a32b8141@wanadoo.fr>
+Date: Fri, 4 Apr 2025 18:09:28 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,122 +42,297 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 03/14] x86: Add arch specific kasan functions
-To: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>, hpa@zytor.com,
- hch@infradead.org, nick.desaulniers+lkml@gmail.com,
- kuan-ying.lee@canonical.com, masahiroy@kernel.org,
- samuel.holland@sifive.com, mingo@redhat.com, corbet@lwn.net,
- ryabinin.a.a@gmail.com, guoweikang.kernel@gmail.com, jpoimboe@kernel.org,
- ardb@kernel.org, vincenzo.frascino@arm.com, glider@google.com,
- kirill.shutemov@linux.intel.com, apopple@nvidia.com,
- samitolvanen@google.com, kaleshsingh@google.com, jgross@suse.com,
- andreyknvl@gmail.com, scott@os.amperecomputing.com, tony.luck@intel.com,
- dvyukov@google.com, pasha.tatashin@soleen.com, ziy@nvidia.com,
- broonie@kernel.org, gatlin.newhouse@gmail.com, jackmanb@google.com,
- wangkefeng.wang@huawei.com, thiago.bauermann@linaro.org, tglx@linutronix.de,
- kees@kernel.org, akpm@linux-foundation.org, jason.andryuk@amd.com,
- snovitoll@gmail.com, xin@zytor.com, jan.kiszka@siemens.com, bp@alien8.de,
- rppt@kernel.org, peterz@infradead.org, pankaj.gupta@amd.com,
- thuth@redhat.com, andriy.shevchenko@linux.intel.com,
- joel.granados@kernel.org, kbingham@kernel.org, nicolas@fjasle.eu,
- mark.rutland@arm.com, surenb@google.com, catalin.marinas@arm.com,
- morbo@google.com, justinstitt@google.com, ubizjak@gmail.com,
- jhubbard@nvidia.com, urezki@gmail.com, dave.hansen@linux.intel.com,
- bhe@redhat.com, luto@kernel.org, baohua@kernel.org, nathan@kernel.org,
- will@kernel.org, brgerst@gmail.com
-Cc: llvm@lists.linux.dev, linux-mm@kvack.org, linux-doc@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
- linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com, x86@kernel.org
-References: <cover.1743772053.git.maciej.wieczor-retman@intel.com>
- <e06c7c0fdbad7044f150891d827393665c5742fd.1743772053.git.maciej.wieczor-retman@intel.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <e06c7c0fdbad7044f150891d827393665c5742fd.1743772053.git.maciej.wieczor-retman@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v5 2/2] media: i2c: Add driver for ST VD55G1 camera sensor
+References: <20250404-b4-vd55g1-v5-0-98f2f02eec59@foss.st.com>
+ <20250404-b4-vd55g1-v5-2-98f2f02eec59@foss.st.com>
+Content-Language: en-US, fr-FR
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: Benjamin Mugnier <benjamin.mugnier@foss.st.com>
+Cc: conor+dt@kernel.org, devicetree@vger.kernel.org, krzk+dt@kernel.org,
+ linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+ mchehab@kernel.org, robh@kernel.org, sakari.ailus@linux.intel.com,
+ sylvain.petinot@foss.st.com
+In-Reply-To: <20250404-b4-vd55g1-v5-2-98f2f02eec59@foss.st.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 4/4/25 06:14, Maciej Wieczor-Retman wrote:
-> +static inline const void *__tag_set(const void *addr, u8 tag)
+Le 04/04/2025 à 16:50, Benjamin Mugnier a écrit :
+> The VD55G1 is a monochrome global shutter camera with a 804x704 maximum
+> resolution with RAW8 and RAW10 bytes per pixel.
+> The driver supports :
+> - Auto exposure from the sensor, or manual exposure mode
+> - HDR subtraction mode, allowing edge detection and background removal
+> - Auto exposure cold start, using configuration values from last stream
+> to start the next one
+> - LED GPIOs for illumination
+> - Most standard camera sensor features (hblank, vblank, test patterns,
+> again, dgain, hflip, vflip, auto exposure bias, etc.)
+> Add driver source code to MAINTAINERS file.
+
+Hi, a few nitpicks below, should they make sense.
+
+...
+
+> +static int vd55g1_prepare_clock_tree(struct vd55g1 *sensor)
 > +{
-> +	u64 __addr = (u64)addr & ~__tag_shifted(KASAN_TAG_KERNEL);
-> +	return (const void *)(__addr | __tag_shifted(tag));
+> +	struct i2c_client *client = sensor->i2c_client;
+> +	/* Double data rate */
+> +	u32 mipi_freq = sensor->link_freq * 2;
+> +	u32 sys_clk, mipi_div, pixel_div;
+> +	int ret = 0;
+> +
+> +	if (sensor->xclk_freq < 6 * HZ_PER_MHZ ||
+> +	    sensor->xclk_freq > 27 * HZ_PER_MHZ) {
+> +		dev_err(&client->dev,
+> +			"Only 6Mhz-27Mhz clock range supported. Provided %lu MHz\n",
+> +			sensor->xclk_freq / HZ_PER_MHZ);
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (mipi_freq < 250 * HZ_PER_MHZ ||
+> +	    mipi_freq > 1200 * HZ_PER_MHZ) {
+> +		dev_err(&client->dev,
+> +			"Only 250Mhz-1200Mhz link frequency range supported. Provided %lu MHz\n",
+> +			mipi_freq / HZ_PER_MHZ);
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (mipi_freq <= 300 * HZ_PER_MHZ)
+> +		mipi_div = 4;
+> +	else if (mipi_freq <= 600 * HZ_PER_MHZ)
+> +		mipi_div = 2;
+> +	else
+> +		mipi_div = 1;
+> +
+> +	sys_clk = mipi_freq * mipi_div;
+> +
+> +	if (sys_clk <= 780 * HZ_PER_MHZ)
+> +		pixel_div = 5;
+> +	else if (sys_clk <= 900 * HZ_PER_MHZ)
+> +		pixel_div = 6;
+> +	else
+> +		pixel_div = 8;
+> +
+> +	sensor->pixel_clock = sys_clk / pixel_div;
+> +	/* Frequency to data rate is 1:1 ratio for MIPI */
+> +	sensor->data_rate_in_mbps = mipi_freq;
+> +
+> +	return ret;
+
+Could be return 0, and ret could be removed.
+
 > +}
 
-This becomes a lot clearer to read if you separate out the casting from
-the logical bit manipulation. For instance:
+...
 
-static inline const void *__tag_set(const void *__addr, u8 tag)
-{
-	u64 addr = (u64)__addr;
+> +static int vd55g1_enable_streams(struct v4l2_subdev *sd,
+> +				 struct v4l2_subdev_state *state, u32 pad,
+> +				 u64 streams_mask)
+> +{
+> +	struct vd55g1 *sensor = to_vd55g1(sd);
+> +	struct i2c_client *client = v4l2_get_subdevdata(&sensor->sd);
+> +	int ret = 0;
 
-	addr &= ~__tag_shifted(KASAN_TAG_KERNEL);
-	addr |= __tag_shifted(tag);
+Un-needed init, it is set just the line after.
 
-	return (const void *)addr;
-}
+> +
+> +	ret = pm_runtime_resume_and_get(&client->dev);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	vd55g1_write(sensor, VD55G1_REG_EXT_CLOCK, sensor->xclk_freq, &ret);
+> +
+> +	/* configure output */
+> +	vd55g1_write(sensor, VD55G1_REG_MIPI_DATA_RATE,
+> +		     sensor->data_rate_in_mbps, &ret);
+> +	vd55g1_write(sensor, VD55G1_REG_OIF_CTRL, sensor->oif_ctrl, &ret);
+> +	vd55g1_write(sensor, VD55G1_REG_ISL_ENABLE, 0, &ret);
+> +	if (ret)
+> +		goto err_rpm_put;
+> +
+> +	ret = vd55g1_set_framefmt(sensor);
+> +	if (ret)
+> +		goto err_rpm_put;
+> +
+> +	/* Setup default GPIO values; could be overridden by V4L2 ctrl setup */
+> +	ret = vd55g1_update_gpios(sensor, GENMASK(VD55G1_NB_GPIOS - 1, 0));
+> +	if (ret)
+> +		goto err_rpm_put;
+> +
+> +	ret = vd55g1_apply_cold_start(sensor);
+> +	if (ret)
+> +		goto err_rpm_put;
+> +
+> +	/* Apply settings from V4L2 ctrls */
+> +	ret = __v4l2_ctrl_handler_setup(&sensor->ctrl_handler);
+> +	if (ret)
+> +		goto err_rpm_put;
+> +
+> +	/* Also apply settings from read-only V4L2 ctrls */
+> +	ret = vd55g1_ro_ctrls_setup(sensor);
+> +	if (ret)
+> +		goto err_rpm_put;
+> +
+> +	/* Start streaming */
+> +	vd55g1_write(sensor, VD55G1_REG_STBY, VD55G1_STBY_START_STREAM, &ret);
+> +	vd55g1_poll_reg(sensor, VD55G1_REG_STBY, 0, &ret);
+> +	vd55g1_wait_state(sensor, VD55G1_SYSTEM_FSM_STREAMING, &ret);
+> +	if (ret)
+> +		goto err_rpm_put;
+> +
+> +	vd55g1_lock_ctrls(sensor, true);
+> +
+> +	return ret;
 
-Also, unless there's a good reason for it, you might as well limit the
-places you need to use "__".
+return 0?
 
-Now that we can read this, I think it's potentially buggy. If someone
-went and changed:
+> +
+> +err_rpm_put:
+> +	pm_runtime_put(&client->dev);
+> +	return ret;
+> +}
 
-#define KASAN_TAG_KERNEL	0xFF
 
-to, say:
+...
 
-#define KASAN_TAG_KERNEL	0xAB
+> +static int vd55g1_check_csi_conf(struct vd55g1 *sensor,
+> +				 struct fwnode_handle *endpoint)
+> +{
+> +	struct i2c_client *client = sensor->i2c_client;
+> +	struct v4l2_fwnode_endpoint ep = { .bus_type = V4L2_MBUS_CSI2_DPHY };
+> +	u8 n_lanes;
+> +	int ret = 0;
 
-the '&' would miss clearing bits. It works fine in the arm64 implementation:
+Un-needed init, it is set just the line after.
 
-	u64 __addr = (u64)addr & ~__tag_shifted(0xff);
+> +
+> +	ret = v4l2_fwnode_endpoint_alloc_parse(endpoint, &ep);
+> +	if (ret)
+> +		return -EINVAL;
+> +
+> +	/* Check lanes number */
+> +	n_lanes = ep.bus.mipi_csi2.num_data_lanes;
+> +	if (n_lanes != 1) {
+> +		dev_err(&client->dev, "Sensor only supports 1 lane, found %d\n",
+> +			n_lanes);
+> +		ret = -EINVAL;
+> +		goto done;
+> +	}
+> +
+> +	/* Clock lane must be first */
+> +	if (ep.bus.mipi_csi2.clock_lane != 0) {
+> +		dev_err(&client->dev, "Clock lane must be mapped to lane 0\n");
+> +		ret = -EINVAL;
+> +		goto done;
+> +	}
+> +
+> +	/* Handle polarities in sensor configuration */
+> +	sensor->oif_ctrl = (ep.bus.mipi_csi2.lane_polarities[0] << 3) |
+> +			   (ep.bus.mipi_csi2.lane_polarities[1] << 6);
+> +
+> +	/* Check the link frequency set in device tree */
+> +	if (!ep.nr_of_link_frequencies) {
+> +		dev_err(&client->dev, "link-frequency property not found in DT\n");
+> +		ret = -EINVAL;
+> +		goto done;
+> +	}
+> +	if (ep.nr_of_link_frequencies != 1) {
+> +		dev_err(&client->dev, "Multiple link frequencies not supported\n");
+> +		ret = -EINVAL;
+> +		goto done;
+> +	}
+> +	sensor->link_freq = ep.link_frequencies[0];
+> +
+> +done:
+> +	v4l2_fwnode_endpoint_free(&ep);
+> +
+> +	return ret;
+> +}
+...
 
-because they've hard-coded 0xff. I _think_ that's what you actually want
-here. You don't want to mask out KASAN_TAG_KERNEL, you actually want to
-mask out *ANYTHING* in those bits.
+> +static int vd55g1_parse_dt(struct vd55g1 *sensor)
+> +{
+> +	struct i2c_client *client = sensor->i2c_client;
+> +	struct device *dev = &client->dev;
+> +	struct fwnode_handle *endpoint;
+> +	int ret;
+> +
+> +	endpoint = fwnode_graph_get_endpoint_by_id(dev_fwnode(dev), 0, 0, 0);
+> +	if (!endpoint) {
+> +		dev_err(dev, "Endpoint node not found\n");
 
-So the best thing is probably to define a KASAN_TAG_MASK that makes it
-clear which are the tag bits.
+The usage of trailing \n with dev_err() and dev_err_probe() is not 
+consistant in this driver.
+
+I would go for \n everywhere, but some people argue that it is no more 
+necessary.
+
+> +		return -EINVAL;
+> +	}
+> +
+> +	ret = vd55g1_check_csi_conf(sensor, endpoint);
+> +	fwnode_handle_put(endpoint);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return vd55g1_parse_dt_gpios(sensor);
+> +}
+> +
+> +static int vd55g1_subdev_init(struct vd55g1 *sensor)
+> +{
+> +	struct i2c_client *client = sensor->i2c_client;
+> +	int ret;
+> +
+> +	/* Init sub device */
+> +	sensor->sd.flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
+> +	sensor->sd.internal_ops = &vd55g1_internal_ops;
+> +
+> +	/* Init source pad */
+> +	sensor->pad.flags = MEDIA_PAD_FL_SOURCE;
+> +	sensor->sd.entity.function = MEDIA_ENT_F_CAM_SENSOR;
+> +	ret = media_entity_pads_init(&sensor->sd.entity, 1, &sensor->pad);
+> +	if (ret) {
+> +		dev_err(&client->dev, "Failed to init media entity : %d", ret);
+
+Unneeded space before : (to be consitant with code below)
+
+> +		return ret;
+> +	}
+> +
+> +	sensor->sd.state_lock = sensor->ctrl_handler.lock;
+> +	ret = v4l2_subdev_init_finalize(&sensor->sd);
+> +	if (ret) {
+> +		dev_err(&client->dev, "Subdev init error: %d", ret);
+> +		goto err_ctrls;
+> +	}
+> +
+> +	/*
+> +	 * Initiliaze controls after v4l2_subdev_init_finalize() to make sure
+
+Initialize?
+
+> +	 * default values are set.
+> +	 */
+> +	ret = vd55g1_init_ctrls(sensor);
+> +	if (ret) {
+> +		dev_err(&client->dev, "Controls initialization failed %d", ret);
+> +		goto err_media;
+> +	}
+> +
+> +	return ret;
+
+return 0?
+
+> +
+> +err_ctrls:
+> +	v4l2_ctrl_handler_free(sensor->sd.ctrl_handler);
+> +
+> +err_media:
+> +	media_entity_cleanup(&sensor->sd.entity);
+> +	return ret;
+> +}
+
+...
+
+CJ
+
