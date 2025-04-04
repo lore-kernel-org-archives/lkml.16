@@ -1,73 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE0861F0E48;
-	Fri,  4 Apr 2025 13:37:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6ED61EBFE2;
+	Fri,  4 Apr 2025 13:38:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743773851; cv=none; b=DMbdlQRMYVVWvUDKMkuCgMW/C5oAnPhwPRiTsWwbhTBH2v4XKS0BuzAQNl4JLIr6pP+9/Xo6RRRIzlz9esDBVIwvizjVAjvjsKeqssXNvdX6gYxRhB1VFk3N98SimmN9UO3hjkUxdX5rs6MaiX0onaFzGA+nFtJihgPTskIMTc8=
+	t=1743773891; cv=none; b=k3nM2sPTdG17RWJMjpFzuMoTEHEfCCeLed7HJ2kemzjBttpt0x/79k1+dZ9HWbue6y0qEINbGRvLRsBNGO+0D1lOh0d6tAoORK4z6pKkBvAwIUnBLT96l/mNdKGtfZsRQTqhq4VJ63yipzG0zL6EUlROmvz4vR5MzDDMy4Efcuw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743773851; c=relaxed/simple;
-	bh=0crlg9CVa208L3y+THC+49CvF+wOGo5V0hcKmYV1HSk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UgkS/91C1sGXzVKafxgcMrCvAi8lYMQsTVYudlelFQKg+RFASkZTkYLbYDcfu5L22SKEgXfzGwQ4c9NSd33etzDq8/JIS9w6RDzeBE/UtQspSrkZ8jpSQgRak9OZnrlfBGZZHMnkhi1icFtba/a5vtFVO19V2t/W1XYPeoK77tU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8416CC4CEE8;
-	Fri,  4 Apr 2025 13:37:30 +0000 (UTC)
-Date: Fri, 4 Apr 2025 09:38:37 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Devaansh Kumar <devaanshk840@gmail.com>, mhiramat@kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
- skhan@linuxfoundation.org, linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Re: [PATCH] tracing: Replace deprecated strncpy() with memcpy() for
- stack_trace_filter_buf
-Message-ID: <20250404093837.154d1239@gandalf.local.home>
-In-Reply-To: <2e5aae65-316a-48c1-b293-041bfbd1ed80@efficios.com>
-References: <20250403191342.1244863-1-devaanshk840@gmail.com>
-	<20250403153651.1188135b@gandalf.local.home>
-	<CA+RTe_gHo3U-tWM9MA4CMgxM13=biqkqnAbuS5Yuidrono1bvw@mail.gmail.com>
-	<2e5aae65-316a-48c1-b293-041bfbd1ed80@efficios.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1743773891; c=relaxed/simple;
+	bh=1E2ytAN49mBdglAR3XwbcrZ9OmV6c1AqR4x/hfqhtV0=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LQkRZN4Ye7cvoKG3t43qTkIEGFSBqRI7KZkkMQNplobt4tY4P87RIdHXcDwG0Pbugxsa8XXYbF1nmkG3fO/XW9MpFBs0h/N8vsJX/lKPqFjj7Gs4Ux8I5sWbR8Bd1Jip+vuPX6HpQ8HJMBDJHsNosFExcrEKNCZktpdmdPsJ6CU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZTfhy6s8fz6K9Br;
+	Fri,  4 Apr 2025 21:34:26 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 977C714062A;
+	Fri,  4 Apr 2025 21:38:07 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 4 Apr
+ 2025 15:38:06 +0200
+Date: Fri, 4 Apr 2025 14:38:04 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Terry Bowman <terry.bowman@amd.com>
+CC: <dave@stgolabs.net>, <dave.jiang@intel.com>, <alison.schofield@intel.com>,
+	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
+	<dan.j.williams@intel.com>, <willy@infradead.org>, <jack@suse.cz>,
+	<rafael@kernel.org>, <len.brown@intel.com>, <pavel@ucw.cz>,
+	<ming.li@zohomail.com>, <nathan.fontenot@amd.com>,
+	<Smita.KoralahalliChannabasappa@amd.com>, <huang.ying.caritas@gmail.com>,
+	<yaoxt.fnst@fujitsu.com>, <peterz@infradead.org>,
+	<gregkh@linuxfoundation.org>, <quic_jjohnson@quicinc.com>,
+	<ilpo.jarvinen@linux.intel.com>, <bhelgaas@google.com>,
+	<andriy.shevchenko@linux.intel.com>, <mika.westerberg@linux.intel.com>,
+	<akpm@linux-foundation.org>, <gourry@gourry.net>,
+	<linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<nvdimm@lists.linux.dev>, <linux-fsdevel@vger.kernel.org>,
+	<linux-pm@vger.kernel.org>, <rrichter@amd.com>, <benjamin.cheatham@amd.com>,
+	<PradeepVineshReddy.Kodamati@amd.com>, <lizhijian@fujitsu.com>
+Subject: Re: [PATCH v3 4/4] cxl/dax: Delay consumption of SOFT RESERVE
+ resources
+Message-ID: <20250404143804.00005291@huawei.com>
+In-Reply-To: <20250403183315.286710-5-terry.bowman@amd.com>
+References: <20250403183315.286710-1-terry.bowman@amd.com>
+	<20250403183315.286710-5-terry.bowman@amd.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Fri, 4 Apr 2025 08:54:33 -0400
-Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
+On Thu, 3 Apr 2025 13:33:15 -0500
+Terry Bowman <terry.bowman@amd.com> wrote:
 
-> >>> -     if ((len = str_has_prefix(str, "_filter=")))
-> >>> -             strncpy(stack_trace_filter_buf, str + len, COMMAND_LINE_SIZE);
-> >>> +     len = str_has_prefix(str, "_filter=");
-> >>> +
-> >>> +     if (len)
-> >>> +             memcpy(stack_trace_filter_buf, str + len, sizeof(stack_trace_filter_buf));  
-> >>
-> >> Hmm, this location looks like it can just use strscpy().  
-> > 
-> > Yes strscpy() also works. But since stack_trace_filter_buf is length
-> > bounded, shouldn't memcpy be the right choice?  
+> From: Nathan Fontenot <nathan.fontenot@amd.com>
 > 
-> It's not only about the destination, but also about the source length.
-
-Correct.
-
+> The dax hmem device initialization will consume any iomem
+> SOFT RESERVE resources prior to CXL region creation. To allow
+> for the CXL driver to complete region creation and trim any
+> SOFT RESERVE resources before the dax driver consumes them
+> we need to delay the dax driver's search for SOFT RESERVEs.
 > 
-> AFAIU, turning a strncpy into a memcpy here will overflow reading the
-> input @str if the input string is smaller than
-> sizeof(stack_trace_filter_buf) + len.
+> To do this the dax driver hmem device initialization code
+> skips the walk of the iomem resource tree if the CXL ACPI
+> driver is enabled. This allows the CXL driver to complete
+> region creation and trim any SOFT RESERVES. Once the CXL
+> driver completes this, the CXL driver then registers any
+> remaining SOFT RESERVE resources with the dax hmem driver.
+> 
+> Signed-off-by: Nathan Fontenot <nathan.fontenot@amd.com>
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+Looks fine to me, but I'm not feeling confident enough of
+this area of the kernel to give a tag.
 
-The old code just read str + len and what was after it until it hit a '\0'
-or the COMMAND_LINE_SIZE limit.
+Jonathan
 
-memcpy() always reads COMMAND_LINE_SIZE (which is sizeof(stack_trace_filter_buf))
-and will read more of the source "str" than may exist. Which as Mathieu
-pointed out, is a bug.
-
--- Steve
 
