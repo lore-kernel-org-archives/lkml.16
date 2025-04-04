@@ -1,76 +1,73 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC5E113CA9C
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 21:02:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F30B14831E
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 21:02:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743800533; cv=none; b=RHKUvB3YCpXSjGzO52s10pR69vjgF9utTyq/m/sLPx6dCmG918vu4DK8X0+Tuy2pADiDB5Ej++Pz7sJgmK8Q6xxEW1UApRozkzu4di87AdDGFVHNxk/IIt8/gz0UA/JfZ6CgjW/KUKLjRwD0Vy0cod9CHVrR3PX/5YyhEI0tJlw=
+	t=1743800542; cv=none; b=nZ3WV89Ui3jdQHhBz7y62jd5BAyXhUWO6CFQKDDwrwLIAWE9LS09QMGu5rO5RTkietMbmQypte/zPxwrbrMVM+YwP/siSU5lT6YBy2TVCfH2PgpoPUZPRNeij8RCyjq0GU4+0GuLTXcsx8hpvivAvVwvvsh0GQPgY+T+Cykc9ho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743800533; c=relaxed/simple;
-	bh=HkI0tKqftWEPpSzZIvp4k9Zi41oCVbenMG+H41i5Gdc=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=WWJzZZKybzzdNKHwfDNwEJWRaZg3ZxRq/murXD2zzoTjNWTD8lEcxCh/4OQL+n0jOAfX1XS0D0slQxnk1/9pVKG5HaEtoIi1nCEC012HPM1QfoIoQaoszjb8Lhocp7MkZDHJF7BOZHKD06zwG0RAaV0Z2spnZjNTjaCynRqbnrA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BRQOgfos; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743800542; c=relaxed/simple;
+	bh=dp9Um/rFFCjAtIbn7CPCJ0Hg/NpOtNmhis5wQNdfO00=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=THzXGE1lvxOe0zVMJjiHjqp0KHwj8kUH/7Ck6OF8mGtHi5waNOEgTT2COt5js2MUeGAaaQlhIoyIlOvfe2OXtnqjthTWd3oSwRgxHUQvZSrtnryr50ZttxX8GmyTdpIYLd7xtd+9Td/jYaDbpWymZVkrf/p+YDZvPP0wtlcy+aI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WgKuONl7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BRQOgfos"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1220BC4CEDD;
-	Fri,  4 Apr 2025 21:02:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WgKuONl7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE25AC4CEDD;
+	Fri,  4 Apr 2025 21:02:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743800533;
-	bh=HkI0tKqftWEPpSzZIvp4k9Zi41oCVbenMG+H41i5Gdc=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=BRQOgfos0teQ2hjjb3/BO9dBrpC/0pLkQhaTAXCazJGqtVKDSM0v6DPVzmLnDX0Ip
-	 oDpVQG+wNgS89Z7fMR4WTektBEcMZH7IPjxtcARf+qFqWcpzMCtj//OiA1lbiH+SvR
-	 c0cMuKIzQoGT85B4JeAraHm9gG6nLOWBfVxuwa0Iwrpjre46Fh8jFdr2XGwb8DNfF3
-	 ez+P5HWHNmWZZEYwEoQrgGGfJW4p1pmGemSxoxUooyAaDioFZQapZ783YCf+mTgS4w
-	 td2o2mw6xPXzigZdkkco3InYw7Mq0h7lnVE8C9xLOWn865rHuJBprx0My7OXsgUmcL
-	 5Gess9uLgTw1A==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 5AD033822D19;
-	Fri,  4 Apr 2025 21:02:51 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1743800541;
+	bh=dp9Um/rFFCjAtIbn7CPCJ0Hg/NpOtNmhis5wQNdfO00=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WgKuONl7uw8hFePLNbiYr7AyLV+jHzVu50qasOhydeEg3QOPDmezpV+N09jhOpPxl
+	 591hf/srUbVL0VZVWJ7WjJ9rIha6bpA3F1LksxKjvQQx0a94lFkStQ+Eh1wKUvFgU4
+	 ePOf6LdIE8OFnJMJwdDaRPa7Ue5R7t3Y5+T/IwUCsSPwDLIWrklagoRosNYRLtBaxL
+	 WXKG9XbfOze0ToxfUcH04IkBkBLx1ykX2DQV3updWwRKjELk07cdGbBZa+ZnUIj3RX
+	 7jUf8ECITE0ORfksNzCmnSP+yo95yyLFKhWqCWoZGvuJPMa/Z885NQfLhr2DjEWEOD
+	 ZpzYukZLFmfaQ==
+Date: Fri, 4 Apr 2025 14:02:17 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Petr Mladek <pmladek@suse.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Kees Cook <kees@kernel.org>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	John Ogness <john.ogness@linutronix.de>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org
+Subject: Re: [GIT PULL] more printk for 6.15
+Message-ID: <20250404210217.GA299251@ax162>
+References: <Z-00cAEKkfvyNto2@pathway.suse.cz>
+ <CAHk-=wgfX9nBGE0Ap9GjhOy7Mn=RSy=rx0MvqfYFFDx31KJXqQ@mail.gmail.com>
+ <Z-2EVf5BvJ-BoYkU@surfacebook.localdomain>
+ <CAHk-=wic_SpqRhtFF+_9wFOiUf-NZcTsNH+jNdi0xLPxexNGXg@mail.gmail.com>
+ <CAHp75Vf=tYmWXDUZDqcMK4i8k6_VBqGttw6-mEgt6VhvRVFwuA@mail.gmail.com>
+ <20250402203422.GA655609@ax162>
+ <Z-557YrwVr8bONq4@smile.fi.intel.com>
+ <Z--V04jtF16r63eO@pathway.suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [GIT PULL] RISC-V Patches for the 6.15 Merge Window, Part 1
-From: patchwork-bot+linux-riscv@kernel.org
-Message-Id: 
- <174380056995.3383526.5100779460663452844.git-patchwork-notify@kernel.org>
-Date: Fri, 04 Apr 2025 21:02:49 +0000
-References: <mhng-e4523e07-f5ae-4f8b-9eec-8422b05700f4@palmer-ri-x1c9>
-In-Reply-To: <mhng-e4523e07-f5ae-4f8b-9eec-8422b05700f4@palmer-ri-x1c9>
-To: Palmer Dabbelt <palmer@rivosinc.com>
-Cc: linux-riscv@lists.infradead.org, torvalds@linux-foundation.org,
- linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z--V04jtF16r63eO@pathway.suse.cz>
 
-Hello:
-
-This pull request was applied to riscv/linux.git (for-next)
-by Linus Torvalds <torvalds@linux-foundation.org>:
-
-On Fri, 04 Apr 2025 08:58:06 -0700 (PDT) you wrote:
-> The following changes since commit 4701f33a10702d5fc577c32434eb62adde0a1ae1:
+On Fri, Apr 04, 2025 at 10:19:02AM +0200, Petr Mladek wrote:
+> On Thu 2025-04-03 15:07:09, Andy Shevchenko wrote:
+> > FWIW, I have tested this in my case for both compilers and they are happy with it.
+> > 
+> > Tested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > 
->   Linux 6.14-rc7 (2025-03-16 12:55:17 -1000)
+> Great!
 > 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git tags/riscv-for-linus-6.15-mw1
-> 
-> [...]
+> Nathan, would mind to send this as a proper patch, please?
 
-Here is the summary with links:
-  - [GIT,PULL] RISC-V Patches for the 6.15 Merge Window, Part 1
-    https://git.kernel.org/riscv/c/4a1d8ababde6
+Sure thing, I will send it along shortly.
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Cheers,
+Nathan
