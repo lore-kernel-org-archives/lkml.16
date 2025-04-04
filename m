@@ -1,140 +1,101 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FA511E1DE9;
-	Fri,  4 Apr 2025 19:39:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C88A021D599
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 19:39:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743795548; cv=none; b=It3sMTa8pME0vkVCQ1jdPlppMka3HCFAvX2hNV/YVQS4WNBl+i/KAnphSEOazUGSMUIe7d1d0ObMNiKqGzz1N5s8h14ooYJu+WT+WpD8Zdr9HwrWc12ifHhyGyRuTuSEg43BaSzTyytFMESGDVONU7PqJUyMGez6Hcc0wRR8tjs=
+	t=1743795591; cv=none; b=RLVbb1fD/b3RmYq2R7cKPimkUiXhNHJ+tVqLXpugWlAf8Kvogt+oaX4KuYuXEGWuMsAyp0HBpD3yKFi9QgLXGEexf1AWWtsdPxRAndlayq6K0wwbVv4PWgKGjJ+0+5qC9MZ8tbGNS0AjJzcKeYJPcAkeHqxu8xJ3RxFzHXt1KGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743795548; c=relaxed/simple;
-	bh=VpfAjJAGyn2iFrsTDI2qa/oAK+7uNraImYwiQTOK1X4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=feV7EVtlYsQJVxXJZ0T1QfriqfC0cmRUzq7cMjVoUR2Vkgq0Peo7c4nx2OSUamaMZQ0pCao+GrAwIVy5KO9r11P5fWmcpQT3t3HU/dj9anJ5GcXAL9uHzjSIfwV5jV0SkUpk0joFFsWNnhOBdw4DSnfOCJ+qy33eLSkOYGbdxLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Hgsx9n2/; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743795591; c=relaxed/simple;
+	bh=IYgl0oz7WYCethX5zdLJOxQN9YYu60K0fmwKqhu1/aQ=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=YoY+2gvIU9Xg6n5hg5g4r9tpvyVzXjEmMkBtfO0FakF9MWoLwm1c9crK9dMxByms9vUgei+lSmsalLk37PqyZQhWo4r02tfGK8MJzxEdQUJT12OhlS38thDW2naBYt5laUpkELWM+OL1NSFDBLUmIuSDwdfySCBlSo+jzsmXGT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FuMYdILA; arc=none smtp.client-ip=209.85.210.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hgsx9n2/"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-22580c9ee0aso28234295ad.2;
-        Fri, 04 Apr 2025 12:39:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FuMYdILA"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-736a7d0b82fso2991438b3a.1
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 12:39:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743795546; x=1744400346; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=NQGNgVHxDhs7mBk3RqbeX6683p63yLHOISx5dQxLR50=;
-        b=Hgsx9n2/C17rlqum5/A4dc6mhszR+2cT+f4YbN93mqI/EhoE9043xB5QedBmxdJFFG
-         jMIqcLhWHk3q0xwti9aC1WRsjX98Ju6LC1gi1gEoxXyaOnVaLa/kEnDHogD/MuB5T532
-         NigoFE7VCAGRN3m1PH8q5yTFUeDF9ovT+ox6S9Ln4x31z9OskoOnKFvvbUu4TljnPiqv
-         ZuxNkd7/Xt7gWoqP72fGQrYfmiMlS38RujDr9dNoujcsrDztFnFQyGS32RVuxLpAMHpO
-         LZk8W8ktJgur1JLxaHYesMNqiW4ZGSu+y+mlPppbLfkxqQXTXoGERIM2SAJ5cJNuRRwF
-         pH2g==
+        d=google.com; s=20230601; t=1743795589; x=1744400389; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
+        bh=G03Ks9vMONlbd+61V/+Erd91vdrZg3/ZspQO1qdkUD0=;
+        b=FuMYdILAQilAMy02eAsO0PfVk2TasLFUoe22iCIiS+0GnjlmAefswNlJ8OFivJ4Ymn
+         IiviNgEl/pQ8VjiQklY2Fc5R3MiIUrd2lCEf1/CdsTlVfGdrR8aeGml1P0HVCN+9AdS7
+         s0MefyLD9B7HwTZJHL8aO4mfifsWDP8bS6GoP5Gy5c3dVQEPpDJMZjc9UeZ7lHI1+zWe
+         rTVUgtMwvL2wxOjJFRXGBC1tG6TJeUhi6XpTwDs1d08VyF0cLhePXqO2I6uEGNU4AeJm
+         iK0JAaBTs4AibCDCnAVN1wV0pDVA/MpTofb/QfiKm3BTX1LEAWWLW6/UneNsvGzB0kgR
+         wDZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743795546; x=1744400346;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NQGNgVHxDhs7mBk3RqbeX6683p63yLHOISx5dQxLR50=;
-        b=ORUNrFChe6OF+PbWktXV69fQiovjNYjIRQ93IzABNR1zofGCkhvFc96CHpMSnpuA4I
-         uDEaTngE5ig16GY2d5jJLyNzAndDJ7QNrRj7SzsN1HqSC7g0WQOMuf4OB0WGb+0Cjk+4
-         eUrvMn0kS9MdQ5Rm1PLS+4NXmFn260oJr7KlECsKXVEZqmxuAPUIw8UgP6tM/lRkzIaQ
-         GyhlNRGtQFufTgwmbIrbcZ8yE9hr00wJOH4rUsN1og/wrejpGhr9r9tUVH9CEQueVL+S
-         IDrtZRk4xpVXCWX2aRtUrDPplsmENCEQ1SwlK2JxkJtWX3MFKP+CiWzkvJl1Yw015WHj
-         tS9w==
-X-Forwarded-Encrypted: i=1; AJvYcCVHRlUbvoPhiQFs4bm0f42lM0w3zoMiE5vWw8/tk6SkjcO0n1u4c3vW9Br5fGKszm8W24hYWcVsbnlJzPKv@vger.kernel.org, AJvYcCXJErSbt4d889Os9T9zs0EQ5zmng1zaHXG/bOrBQNIFLfwNty2ti6MdKl+yqq5xRZAIBf4fnsoy//tR@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQY+CN5C5b6BIr4dVqyxKgHdR277p9ZwKyUgJQeBW1L/awCeLz
-	jLAq3WoQOP121af6UnWFBuJMDIRkWtdkOo+6vCOjirbcX6R/wVZr
-X-Gm-Gg: ASbGncs3Sis8aVhlYqgIqRzkzBwWSD3GCDBJ+2jibC/kmTwSv4qoHPbeFV0fSlNvsvr
-	Zapxle6G1hvEpkZn5ujMgazqxyRllNAFC6YwhdV06wKZwJBLt8BYdvnMiMKhOpoHPVCPnntr6I7
-	/amm+rn97OWVaW2pZJcfEivkFGJIxWgVf9XWTvux8dRGVb7hRMcG+ky4PdOPcZmudEBgn2sOVWt
-	/iJ45/DMdPQez28sFhoXKs56BvkufQBKLDQA8fanSSxOfrC9iLMXmrYKhq/BhzPojgR00yIV+5P
-	gOMET4ObLLtKjNBdsTOhWEklfWkKWxw0eQoddE43OWQ8RN8IyRychvwXaFrXsgSyTpglUOgPyLV
-	DoVIxiXR0wVjHHTs707S5M5hV
-X-Google-Smtp-Source: AGHT+IFe4mjpRg7zowmOKrRZGt9tbXvtfVX38ovvOh6lKYhx4xIePXLNWeuaoRutkTmWr1rWPnCrtw==
-X-Received: by 2002:a17:902:d4c7:b0:220:ec62:7dc8 with SMTP id d9443c01a7336-22a8a85a18dmr57542845ad.2.1743795546267;
-        Fri, 04 Apr 2025 12:39:06 -0700 (PDT)
-Received: from ?IPV6:2409:4080:1197:5c59:9640:d38a:951e:d202? ([2409:4080:1197:5c59:9640:d38a:951e:d202])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2297866e242sm36279755ad.164.2025.04.04.12.39.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Apr 2025 12:39:05 -0700 (PDT)
-Message-ID: <b493166b-5d1b-4228-82a0-ee7efcdd03e6@gmail.com>
-Date: Sat, 5 Apr 2025 01:08:59 +0530
+        d=1e100.net; s=20230601; t=1743795589; x=1744400389;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=G03Ks9vMONlbd+61V/+Erd91vdrZg3/ZspQO1qdkUD0=;
+        b=GAf+GwuddvKkNbkhcnQ20+S1uLIiQNpTD+CMOSGRVJs0/I4Kh5BS/jb/4dasusal7I
+         luSu4WHgxW0ySqrHslur2BHw+ecKdD+do5YYFc9jHQgO9WW9KCKXd6x2cKRkZkCxrSm9
+         +YmgCYLj0MikP0XK88B+hy+duzBemPSzx8rr4ltpaOJpJ6gMQAPByoiU2vn04/RuYoPA
+         0psdpWjDms3r6nV4PHWokcpe4SEUuky+nJ6iEzqif03l5R9NDOe7lBlOlra/AUuhEC51
+         5VbTn9VqcsT9WeaBuAWTOwCIMMD27UXdVUwpJFzWsOykPd5gEm1bkqDyXa+W3JcgQm2W
+         TSeA==
+X-Forwarded-Encrypted: i=1; AJvYcCVATqYH4rH9Y9Yd1Y7BmaV5ut+bChQjOH8WURMwCMkJwq5wJBByRIi33VUvUT1k0szWBVGcAq3dAhl/S7w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyEAWJ1L5o+1YglOiipsQgA6k1+nkV/R6JDLXzoleq52UXyO53q
+	eIJydFAjBrz6ad8DtDaso5+DCp5DoscVwRFhi95dGVECX/4v0rON5Dx9GHnUfk0J2DiOckVr2K2
+	T5g==
+X-Google-Smtp-Source: AGHT+IEW58Ax+7aXM/+czWYm3zsW3qa9UnEokKAJbXbZCPS8kr/NGoPhwa56A0X88mWfGU8rBiSmwQt9o2Q=
+X-Received: from pfbhj4.prod.google.com ([2002:a05:6a00:8704:b0:730:7c5b:2e2b])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:1411:b0:736:ff65:3fd0
+ with SMTP id d2e1a72fcca58-739e7113667mr5072766b3a.16.1743795588965; Fri, 04
+ Apr 2025 12:39:48 -0700 (PDT)
+Reply-To: Sean Christopherson <seanjc@google.com>
+Date: Fri,  4 Apr 2025 12:38:16 -0700
+In-Reply-To: <20250404193923.1413163-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] dt-bindings: pwm: Convert lpc32xx-pwm.txt to YAML
-To: Krzysztof Kozlowski <krzk@kernel.org>, ukleinek@kernel.org,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, vz@mleia.com,
- piotr.wojtaszczyk@timesys.com
-Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20250312122750.6391-1-purvayeshi550@gmail.com>
- <b2f6a357-a468-4526-a1b6-69ab2c643b2c@kernel.org>
- <61b1e302-98ad-4dda-8c03-18315d432512@gmail.com>
- <023b7e98-58ef-4752-9ef4-6fe699188b2f@kernel.org>
-Content-Language: en-US
-From: Purva Yeshi <purvayeshi550@gmail.com>
-In-Reply-To: <023b7e98-58ef-4752-9ef4-6fe699188b2f@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20250404193923.1413163-1-seanjc@google.com>
+X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
+Message-ID: <20250404193923.1413163-2-seanjc@google.com>
+Subject: [PATCH 01/67] KVM: SVM: Allocate IR data using atomic allocation
+From: Sean Christopherson <seanjc@google.com>
+To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Joerg Roedel <joro@8bytes.org>, David Woodhouse <dwmw2@infradead.org>, 
+	Lu Baolu <baolu.lu@linux.intel.com>
+Cc: kvm@vger.kernel.org, iommu@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	Maxim Levitsky <mlevitsk@redhat.com>, Joao Martins <joao.m.martins@oracle.com>, 
+	David Matlack <dmatlack@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On 02/04/25 12:03, Krzysztof Kozlowski wrote:
-> On 01/04/2025 19:32, Purva Yeshi wrote:
->> On 13/03/25 16:34, Krzysztof Kozlowski wrote:
->>> On 12/03/2025 13:27, Purva Yeshi wrote:
->>>> Convert the existing `lpc32xx-pwm.txt` bindings documentation into a
->>>> YAML schema (`nxp,lpc3220-pwm.yaml`).
->>>>
->>>> Set `"#pwm-cells"` to `const: 3` for expected PWM cell properties.
->>>>
->>>> Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
->>>> ---
->>>
->>> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->>>
->>>
->>> ---
->>>
->>> <form letter>
->>> This is an automated instruction, just in case, because many review tags
->>> are being ignored. If you know the process, you can skip it (please do
->>> not feel offended by me posting it here - no bad intentions intended).
->>> If you do not know the process, here is a short explanation:
->>>
->>> Please add Acked-by/Reviewed-by/Tested-by tags when posting new versions
->>> of patchset, under or above your Signed-off-by tag, unless patch changed
->>> significantly (e.g. new properties added to the DT bindings). Tag is
->>> "received", when provided in a message replied to you on the mailing
->>> list. Tools like b4 can help here. However, there's no need to repost
->>> patches *only* to add the tags. The upstream maintainer will do that for
->>> tags received on the version they apply.
->>>
->>> Full context and explanation:
->>> https://elixir.bootlin.com/linux/v6.12-rc3/source/Documentation/process/submitting-patches.rst#L577
->>> </form letter>
->>>
->>> Best regards,
->>> Krzysztof
->>
->> Hello!
->>
->> I wanted to follow up on the patch I submitted. I was wondering if you
->> had a chance to review it and if there are any comments or feedback.
-> 
-> And what did you quote? What's there? Did you read it before replying?
-> 
-> Please avoid pinging during the merge window.
-> 
-> 
-> Best regards,
-> Krzysztof
+Allocate SVM's interrupt remapping metadata using GFP_ATOMIC as
+svm_ir_list_add() is called with IRQs are disabled and irqfs.lock held
+when kvm_irq_routing_update() reacts to GSI routing changes.
 
-Hello Krzysztof,
+Fixes: 411b44ba80ab ("svm: Implements update_pi_irte hook to setup posted interrupt")
+Cc: stable@vger.kernel.org
+Signed-off-by: Sean Christopherson <seanjc@google.com>
+---
+ arch/x86/kvm/svm/avic.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Apologies for the unnecessary follow-up. I’ll avoid pinging during the 
-merge window.
+diff --git a/arch/x86/kvm/svm/avic.c b/arch/x86/kvm/svm/avic.c
+index 901d8d2dc169..a961e6e67050 100644
+--- a/arch/x86/kvm/svm/avic.c
++++ b/arch/x86/kvm/svm/avic.c
+@@ -820,7 +820,7 @@ static int svm_ir_list_add(struct vcpu_svm *svm, struct amd_iommu_pi_data *pi)
+ 	 * Allocating new amd_iommu_pi_data, which will get
+ 	 * add to the per-vcpu ir_list.
+ 	 */
+-	ir = kzalloc(sizeof(struct amd_svm_iommu_ir), GFP_KERNEL_ACCOUNT);
++	ir = kzalloc(sizeof(struct amd_svm_iommu_ir), GFP_ATOMIC | __GFP_ACCOUNT);
+ 	if (!ir) {
+ 		ret = -ENOMEM;
+ 		goto out;
+-- 
+2.49.0.504.g3bcea36a83-goog
+
