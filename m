@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEC1C405F7;
-	Fri,  4 Apr 2025 06:04:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D091A101F2;
+	Fri,  4 Apr 2025 06:06:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743746694; cv=none; b=QTwjTJeiab5eyzb8FsJKfjGvjTrak+a7UOEdc3x4FdEaXr8Upbd2bXBeUwRcc1I7020oDJsbz5pUCMC2BARzO7mqXSfmEwUwkD+fkK7zuJ/JbBwzaWcLwh0q7teXzyEUj/dLN4GcJNoyoD173oq5EDSkNtKnLdiAlZ8QEYSN8oM=
+	t=1743746796; cv=none; b=e/j/75y3dmux6UGYhkSAkTbl4ZwLX0wCEhhVolcBRy82AjyPSGPMXF1+VkWKe1U1pYEMluNJxzsG+FRLiuSS35V+X1B7aP8bR3jCWumuKxw6HpV5TCKJ0Ggh1R0KoNrlfxtrSTKDtYR8LINPVN9wBLZ2xrF3p7LaSINO4hfQh44=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743746694; c=relaxed/simple;
-	bh=PQJ6XOqXBt51EcKN+TLx5KcGeVH/M6mNAkkhBybJbUw=;
+	s=arc-20240116; t=1743746796; c=relaxed/simple;
+	bh=kdxx/iQU9DUFPGrP2rmDEm0XgmJkKdKoe2C+cY+sVlc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pQ/lfL86Hf9NQd0CkwC1bVOyxsan8cex/MAHfP471eTjtHxUvpFfxp3mOjJ2JYMLiZWKOnPv5+0MFMLs4EdIpv38WCtG7wEZptt1jZVFw60zzXa2GMsFMos1HcZr7JwxyLw0PlC3OxG9e7ZfTIwQPlrVnG0dIh7f+SEqaEfPEyI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NS2jyF3I; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=qIdaU9QdZxrSZevuqnfNwR8E8KDrJLD/I4xpgJmiju1VXsEyEaD3HJeRXesf/YPz/6PLLZIplQhHR5lHQyjXSU6W1TOdX7n1jh3KSO/O2CTr6fTxnXHS39/auvVF7HPjssnUZIdXZECr9uzvkEAMnO9tBf2RaJkmvGfqoB98OO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LVQ6Bis1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NS2jyF3I"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63697C4CEDD;
-	Fri,  4 Apr 2025 06:04:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LVQ6Bis1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A955C4CEDD;
+	Fri,  4 Apr 2025 06:06:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743746694;
-	bh=PQJ6XOqXBt51EcKN+TLx5KcGeVH/M6mNAkkhBybJbUw=;
+	s=k20201202; t=1743746796;
+	bh=kdxx/iQU9DUFPGrP2rmDEm0XgmJkKdKoe2C+cY+sVlc=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=NS2jyF3Ib17ISe/HhQtiFpnwkAn2c1h9K8zGTl2DiJE2yMqH4UdZnw/7/yxkQyHhx
-	 Tz1aSRSBRsjTQtqunUCkyEcH5JmQ9u14hCJWuqFZSjiDCr//SL0qQOiE6eFADtB6io
-	 rqRkTiRhgBxEVKRK2FgiGXmBjpRDyyf9uHy5k6NcmCcfkf34VLlOMf6p91YW69lpWk
-	 ZN5QWibNqrt9hyHDKtieQogylf+I+CjCmidZnedzRz7hheKmYDuqx/69G7LeTxkXEV
-	 3dXqDP4KFe6gIzJMQf4r4gkVie7F5qXPzFO500NZYJ3Ig0/6Uzn9xZq+e5O+Gopxx1
-	 K/Q2gIPxkc7Jw==
-Message-ID: <62f35ffc-f6ad-492d-8ccc-bf78229b12d9@kernel.org>
-Date: Fri, 4 Apr 2025 08:04:47 +0200
+	b=LVQ6Bis1t+SBNuNAI1xDodWz1lsK9ELHxxwmCYsKUh8larPIY01s3m3yob/8w/iiK
+	 9cDBOlXu3gtpuieD49YZd5eFqAZN7DLxipiJ2hp3FiiMF36/JLLfdIwIxgbg3hN5WU
+	 0CAngUTq4GRlqt3LQK0TGcj0K6O7nT7jgk+rZwKuafrKXVmoEurdKjEZ21SgdbWNX1
+	 WF34tqYZ7J8Nb9z/fyzfqLC4V0F9QQ5aX2jCas8CM90n85FR8jhiQmflFJ5Tqwm3fn
+	 9i5x9l0zoYCVBtlj2P13/aoyoPHNE2NSdxnJ2K8k169PZXEcUawadGG5SnK5+ytXis
+	 1kWok7iziNcIg==
+Message-ID: <ed9206d7-31a5-4450-9d24-364d28ef5198@kernel.org>
+Date: Fri, 4 Apr 2025 08:06:29 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,16 +35,15 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 2/4] arm64: dts: mt8188: add aie node
-To: "bo.kong" <bo.kong@mediatek.com>, Rob Herring <robh@kernel.org>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org
-Cc: zhaoyuan.chen@mediatek.com, Teddy.Chen@mediatek.com,
- Project_Global_Chrome_Upstream_Group@mediatek.com
-References: <20250403074005.21472-1-bo.kong@mediatek.com>
- <20250403074005.21472-3-bo.kong@mediatek.com>
+Subject: Re: [PATCH] pinctrl: qcom: Use devm_platform_ioremap_resource_byname
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+ shao.mingyin@zte.com.cn
+Cc: andersson@kernel.org, linus.walleij@linaro.org,
+ linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, yang.yang29@zte.com.cn, xu.xin16@zte.com.cn,
+ ye.xingchen@zte.com.cn, xie.ludan@zte.com.cn
+References: <202504031550143925VMOuiV6Gs3QgxNjRIOyf@zte.com.cn>
+ <ucxebkad5fov7vejtenikor4zfujuggqwbzzmnvm7yj6rw4hfn@ibpcbnf5oscj>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -90,32 +89,26 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20250403074005.21472-3-bo.kong@mediatek.com>
+In-Reply-To: <ucxebkad5fov7vejtenikor4zfujuggqwbzzmnvm7yj6rw4hfn@ibpcbnf5oscj>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 03/04/2025 09:38, bo.kong wrote:
-> From: Bo Kong <Bo.Kong@mediatek.com>
+On 03/04/2025 13:43, Dmitry Baryshkov wrote:
+> On Thu, Apr 03, 2025 at 03:50:14PM +0800, shao.mingyin@zte.com.cn wrote:
+>> From: Xie Ludan <xie.ludan@zte.com.cn>
+>>
+>> Introduce devm_platform_ioremap_resource_byname() to simplify
+>> resource retrieval and mapping.This new function consolidates
+>> platform_get_resource_byname() and devm_ioremap_resource() into a single
+>> call, improving code readability and reducing API call overhead.
 > 
-> Add aie node and related node
+> Commit message is incorrect. You are not introducing anything, you are
+> removing a whitespace.
 > 
-> Signed-off-by: Bo Kong <Bo.Kong@mediatek.com>
-> ---
-<form letter>
-Please use scripts/get_maintainers.pl to get a list of necessary people
-and lists to CC (and consider --no-git-fallback argument, so you will
-not CC people just because they made one commit years ago). It might
-happen, that command when run on an older kernel, gives you outdated
-entries. Therefore please be sure you base your patches on recent Linux
-kernel.
 
-Tools like b4 or scripts/get_maintainer.pl provide you proper list of
-people, so fix your workflow. Tools might also fail if you work on some
-ancient tree (don't, instead use mainline) or work on fork of kernel
-(don't, instead use mainline). Just use b4 and everything should be
-fine, although remember about `b4 prep --auto-to-cc` if you added new
-patches to the patchset.
-</form letter>
+This is another example of automated zte patches which sometimes are
+note tested or make no sense. They still keep generating them via
+automation and sending without actual review.
 
 Best regards,
 Krzysztof
