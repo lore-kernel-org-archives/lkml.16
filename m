@@ -1,23 +1,23 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CA7C21D5BF;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7828121E0AC;
 	Fri,  4 Apr 2025 17:34:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743788055; cv=none; b=vDBNNHJmaz49LKnosEPqEnVwlkVoRgdmzGLL8lDJdIs5GnZDUtIxpNis8diVBP4rX27R7aw6YvTqOloFHSjwcAnDxqWux1JORsP4AP3PHzwjzN7Bu8BO1VIMpPhj8vEaF772ZqL2h4w11Lp8Yi8/qaxbbVLB6qHVpxWYdUVrA6E=
+	t=1743788056; cv=none; b=P+DsvWIzEFLo6RDWNz0pNFtirnjohP83i8fLNOaKJTwwmIc7axfALQmA/E3cXiju1wif9zNHBB8aa0JrX5MZfa1AsR9F/XEES/Wjf3VWbfKQTPXEubSHQizLLkOZwT7865kQipBMgq6ieg+3GlKEquwqnMugMN0j8DBWHu0l4yA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743788055; c=relaxed/simple;
-	bh=Xq/c9441yejJ39714jb06l8LpBAPtM3FD/+lSJCUglo=;
+	s=arc-20240116; t=1743788056; c=relaxed/simple;
+	bh=SBhlq2J8Zn+ELgMcsYrxA8o1MdKoTWxRU1OhrVICJhc=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=VDi30cZv1p7DeSnrI1pkZGQDTdIY1Qp9fDIy5oYtd+5MuLVcQ1qU5UaYoe2l39HZuA83H+q0eLWUx7f1/gDgGaxbbY366BbOaPzgQqIu6dMzFTZWgy9ZFTj2nZ2c1j0rcFMh88lbWPk5kOxDlyI/nCWBkthsS/zNNgRxo56g/ms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=jUwuSery; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=L66ZTIwC; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=tuoHDaChJdb2ub6zWdOAFFwIacwE2O810+GGCk2vM/7/eyzIk837oSYT//8/o1jFDqRc27JfqvbPs+MyqMOPIGj5SE8xZFCiWjKm9ff9gyay7CXW2/1amRlqbQ8jcTdIRw1Mnbw4gKin8k7TZFxyJUIHcsK2oIZRWQO2uqaJDrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=fhsokw4q; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0nI39yq+; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jUwuSery";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="L66ZTIwC"
-Date: Fri, 04 Apr 2025 17:34:11 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fhsokw4q";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0nI39yq+"
+Date: Fri, 04 Apr 2025 17:34:12 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1743788052;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -25,12 +25,12 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=jPgRETb+UbQQmBG1CdsDikX+Aq6CVmzlp+bt8o6znes=;
-	b=jUwuSerytlvrcHOfhFTMUlVjq9f9kCtN1hfba+g8IXFXKfQyM1XEoQto/aKw6vuOcZIMwL
-	/aVcj+2AAWkyK91A7vYOXWMK2ZvDrewB0uEqwI4jujAtPQlH2i1icqvwaH5jag0QPsI32O
-	1ndF7sZgS1zSkgp0l+ji5qGPwYELkSJQrQhWWiaphbGSch/qtOzifuorFZ+nDZ+gaceXQl
-	s5GuotRIwLHrVpkVWoS40LuflYvtjh4DRTIfXrvz906rOWEaIz5LkzSt6pK+tXAC/5j8sx
-	RohxJcECwGostMSb4ziQ2XvZUHj2qcXB0x5ciRf4W/9VHY2Uqo4EsBrepW4FKA==
+	bh=OFPZJAoR1yjSzfTRmkDDcFDoUHdiGzbQ45p3d8+jwZo=;
+	b=fhsokw4q7e2s3E+1ila/ivxkfDtGiMM1y/dY3dy6j6p6yNJroTeO96wQqhVW3tnFCXg49Q
+	bt+eAJkYsDMwu3IJUASEbBWJabR9Mlmy7/uSFlrsJSNyDMwydmiEwql4YNiYf/qnomZN/S
+	KeE4tPJqHGzHYl7aoqsMynVoXF9wdbWNjXXu8zLiNTyT0KCQS33++YSBo8EJFtbF3HqdJ6
+	TY9/YOqW33oyTa5AzKdY0QoG1aDuie47p7X8XlGv7018rFB9y0gOSc1EfKngLjtxnyRR1c
+	/3z2Do3bQ1ghvgLwtYZDLStBogJCGgMddM4Y/d2XFOHHENaUvtz84ienQ6VM+w==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1743788052;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -38,20 +38,19 @@ DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=jPgRETb+UbQQmBG1CdsDikX+Aq6CVmzlp+bt8o6znes=;
-	b=L66ZTIwCQ+EBNFXnTNsq4odCveBzneJtpn/gizX+lm4aLXJoPC/b+TzJ5TJMavSaYG5jJY
-	AH5WQpEWT3ZsiFAg==
+	bh=OFPZJAoR1yjSzfTRmkDDcFDoUHdiGzbQ45p3d8+jwZo=;
+	b=0nI39yq+mhx2tt4WR4Cr6NDS5C4It88FrxbyPzbEzCiLn6H3fFFK51BOBOgQg2aM72KGvc
+	iDbBL0m77nA2BzBA==
 From: "tip-bot2 for Nam Cao" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/cleanups] hrtimers: Merge __hrtimer_init() into
- __hrtimer_setup()
+Subject: [tip: timers/cleanups] hrtimers: Switch to use __htimer_setup()
 Cc: Nam Cao <namcao@linutronix.de>, Thomas Gleixner <tglx@linutronix.de>,
  x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: =?utf-8?q?=3C8a0a847a35f711f66b2d05b57255aa44e7e61279=2E17387?=
+In-Reply-To: =?utf-8?q?=3Cd9a45a51b6a8aa0045310d63f73753bf6b33f385=2E17387?=
  =?utf-8?q?46927=2Egit=2Enamcao=40linutronix=2Ede=3E?=
-References: =?utf-8?q?=3C8a0a847a35f711f66b2d05b57255aa44e7e61279=2E173874?=
+References: =?utf-8?q?=3Cd9a45a51b6a8aa0045310d63f73753bf6b33f385=2E173874?=
  =?utf-8?q?6927=2Egit=2Enamcao=40linutronix=2Ede=3E?=
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,7 +58,7 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174378805137.31282.15961667566839362279.tip-bot2@tip-bot2>
+Message-ID: <174378805202.31282.4548676701082513893.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -69,53 +68,40 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the timers/cleanups branch of tip:
 
-Commit-ID:     941b649f92f5060b767e856fddc6583c1c50fab0
-Gitweb:        https://git.kernel.org/tip/941b649f92f5060b767e856fddc6583c1c50fab0
+Commit-ID:     6119cdeeead0552e7dcfde1473a711b494be66e5
+Gitweb:        https://git.kernel.org/tip/6119cdeeead0552e7dcfde1473a711b494be66e5
 Author:        Nam Cao <namcao@linutronix.de>
-AuthorDate:    Wed, 05 Feb 2025 11:55:12 +01:00
+AuthorDate:    Wed, 05 Feb 2025 11:55:11 +01:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
 CommitterDate: Fri, 04 Apr 2025 19:26:43 +02:00
 
-hrtimers: Merge __hrtimer_init() into __hrtimer_setup()
+hrtimers: Switch to use __htimer_setup()
 
-__hrtimer_init() is only called by __hrtimer_setup(). Simplify by merging
-__hrtimer_init() into __hrtimer_setup().
+__hrtimer_init_sleeper() calls __hrtimer_init() and also setups the
+callback function. But there is already __hrtimer_setup() which does both
+actions.
+
+Switch to use __hrtimer_setup() to simplify the code.
 
 Signed-off-by: Nam Cao <namcao@linutronix.de>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/all/8a0a847a35f711f66b2d05b57255aa44e7e61279.1738746927.git.namcao@linutronix.de
+Link: https://lore.kernel.org/all/d9a45a51b6a8aa0045310d63f73753bf6b33f385.1738746927.git.namcao@linutronix.de
 
 ---
- kernel/time/hrtimer.c | 12 +++---------
- 1 file changed, 3 insertions(+), 9 deletions(-)
+ kernel/time/hrtimer.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
 diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
-index 2d2835c..163cde3 100644
+index b7555ba..2d2835c 100644
 --- a/kernel/time/hrtimer.c
 +++ b/kernel/time/hrtimer.c
-@@ -1592,8 +1592,9 @@ static inline int hrtimer_clockid_to_base(clockid_t clock_id)
+@@ -2061,8 +2061,7 @@ static void __hrtimer_init_sleeper(struct hrtimer_sleeper *sl,
+ 			mode |= HRTIMER_MODE_HARD;
  	}
+ 
+-	__hrtimer_init(&sl->timer, clock_id, mode);
+-	sl->timer.function = hrtimer_wakeup;
++	__hrtimer_setup(&sl->timer, hrtimer_wakeup, clock_id, mode);
+ 	sl->task = current;
  }
  
--static void __hrtimer_init(struct hrtimer *timer, clockid_t clock_id,
--			   enum hrtimer_mode mode)
-+static void __hrtimer_setup(struct hrtimer *timer,
-+			    enum hrtimer_restart (*function)(struct hrtimer *),
-+			    clockid_t clock_id, enum hrtimer_mode mode)
- {
- 	bool softtimer = !!(mode & HRTIMER_MODE_SOFT);
- 	struct hrtimer_cpu_base *cpu_base;
-@@ -1626,13 +1627,6 @@ static void __hrtimer_init(struct hrtimer *timer, clockid_t clock_id,
- 	timer->is_hard = !!(mode & HRTIMER_MODE_HARD);
- 	timer->base = &cpu_base->clock_base[base];
- 	timerqueue_init(&timer->node);
--}
--
--static void __hrtimer_setup(struct hrtimer *timer,
--			    enum hrtimer_restart (*function)(struct hrtimer *),
--			    clockid_t clock_id, enum hrtimer_mode mode)
--{
--	__hrtimer_init(timer, clock_id, mode);
- 
- 	if (WARN_ON_ONCE(!function))
- 		timer->function = hrtimer_dummy_timeout;
