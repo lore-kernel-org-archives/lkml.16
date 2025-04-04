@@ -1,102 +1,131 @@
-Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E01C4A95E;
-	Fri,  4 Apr 2025 04:51:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97D4BA95E
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 04:54:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743742293; cv=none; b=M58zwhbUbxyLb84KOsgAdZSbIKa6ZEX/HfOIXJyo+to9IejvKDod01eHtaknr9gLO5+7P8e28VqmujajYkQm6ilBP3uMWlMInxQZbCU0dvA9SUrSpmXrk6PchtwvHednxD29KvQiCYMogdH5sgRMTMAVQVk3c8MbIaFBmAf32S0=
+	t=1743742469; cv=none; b=N8kS/Ijz21rjXUCF6bhR/q6oqCS8znvqFrqghmJJPGNnxoDQPZJ1AxmCfvXDAZN+f6XKWS3d7DsdUpeNayfIEDwEaFctRX7eVd/suTKEQ/MdiPvCq5bZ+I2GY26L6dqzsj8OMNaJwpZLUixdEOQXA6WG/bDI0K6n6E0cpW36nSY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743742293; c=relaxed/simple;
-	bh=JAKicYwYnX+BY+e/z0h+lneUm38kHCWULfOxJEdxa7E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qYoY06HtfHlVs+/at03RrIWEaN/RxRojV++LxmVGEc6x0zV+VB0mRcE/kI9s9Fe3icNnqK6fi4JWu2+K6KWHreZnzfLAJF1TND1PulGbZNfGvk6/2kZLkcBbTlKsVH0D7SVNMadaqCRI/7ndxkBaBY19/gSjHB1AHjuLxIGqHQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout3.hostsharing.net (Postfix) with ESMTPS id 84EE52C06E55;
-	Fri,  4 Apr 2025 06:42:29 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id BD8EF1143F; Fri,  4 Apr 2025 06:42:32 +0200 (CEST)
-Date: Fri, 4 Apr 2025 06:42:32 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Shawn Anastasio <sanastasio@raptorengineering.com>
-Cc: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, tpearson@raptorengineering.com,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Subject: Re: [PATCH 2/3] pci/hotplug/pnv_php: Work around switches with
- broken presence detection
-Message-ID: <Z-9jOFiPaxYAJwdm@wunner.de>
-References: <20250404041810.245984-1-sanastasio@raptorengineering.com>
- <20250404041810.245984-3-sanastasio@raptorengineering.com>
+	s=arc-20240116; t=1743742469; c=relaxed/simple;
+	bh=DVsGWBffIxs5oGnbNeh2kPBlbJNcw8YtrJF5Mx0qJaU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YlSQQCvwMml+ZoNLrBX9A+PyHV2WGBuVBZpsP/4mTh0RLJcQI3U3TKRuu28TWW8NdVE0Br2BPGDptjCgUwRBEg2eZQtQw9ABfnIJSg7+hUJ2WN63kpVV2xhwOaXc3Jo1yUD0oolM83ZvXSe3xN6pYIZONnwh9xm5t2XGjoc66DQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3AE2A1516;
+	Thu,  3 Apr 2025 21:54:28 -0700 (PDT)
+Received: from [10.162.40.17] (a077893.blr.arm.com [10.162.40.17])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E5A633F59E;
+	Thu,  3 Apr 2025 21:54:20 -0700 (PDT)
+Message-ID: <39d4d1d4-3d22-4d31-bfc6-1d583e9d3f9b@arm.com>
+Date: Fri, 4 Apr 2025 10:24:17 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250404041810.245984-3-sanastasio@raptorengineering.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 10/11] mm/vmalloc: Enter lazy mmu mode while
+ manipulating vmalloc ptes
+To: Ryan Roberts <ryan.roberts@arm.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Pasha Tatashin <pasha.tatashin@soleen.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Uladzislau Rezki <urezki@gmail.com>, Christoph Hellwig <hch@infradead.org>,
+ David Hildenbrand <david@redhat.com>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+ Mark Rutland <mark.rutland@arm.com>, Alexandre Ghiti
+ <alexghiti@rivosinc.com>, Kevin Brodsky <kevin.brodsky@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <20250304150444.3788920-1-ryan.roberts@arm.com>
+ <20250304150444.3788920-11-ryan.roberts@arm.com>
+Content-Language: en-US
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <20250304150444.3788920-11-ryan.roberts@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-[cc += Krishna]
 
-On Thu, Apr 03, 2025 at 11:18:09PM -0500, Shawn Anastasio wrote:
-> The Microsemi Switchtec PM8533 PFX 48xG3 [11f8:8533] PCIe switch system
-> was observed to incorrectly assert the Presence Detect Set bit in its
-> capabilities when tested on a Raptor Computing Systems Blackbird system,
-> resulting in the hot insert path never attempting a rescan of the bus
-> and any downstream devices not being re-detected.
+
+On 3/4/25 20:34, Ryan Roberts wrote:
+> Wrap vmalloc's pte table manipulation loops with
+> arch_enter_lazy_mmu_mode() / arch_leave_lazy_mmu_mode(). This provides
+> the arch code with the opportunity to optimize the pte manipulations.
 > 
-> Work around this by additionally checking whether the PCIe data link is
-> active or not when performing presence detection on downstream switches'
-> ports, similar to the pciehp_hpc.c driver.
-[...]
-> --- a/drivers/pci/hotplug/pnv_php.c
-> +++ b/drivers/pci/hotplug/pnv_php.c
-> @@ -390,6 +390,20 @@ static int pnv_php_get_power_state(struct hotplug_slot *slot, u8 *state)
+> Note that vmap_pfn() already uses lazy mmu mode since it delegates to
+> apply_to_page_range() which enters lazy mmu mode for both user and
+> kernel mappings.
+> 
+> These hooks will shortly be used by arm64 to improve vmalloc
+> performance.
+> 
+> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+> ---
+>  mm/vmalloc.c | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+> 
+> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> index 6111ce900ec4..b63ca0b7dd40 100644
+> --- a/mm/vmalloc.c
+> +++ b/mm/vmalloc.c
+> @@ -104,6 +104,9 @@ static int vmap_pte_range(pmd_t *pmd, unsigned long addr, unsigned long end,
+>  	pte = pte_alloc_kernel_track(pmd, addr, mask);
+>  	if (!pte)
+>  		return -ENOMEM;
+> +
+> +	arch_enter_lazy_mmu_mode();
+> +
+>  	do {
+>  		if (unlikely(!pte_none(ptep_get(pte)))) {
+>  			if (pfn_valid(pfn)) {
+> @@ -127,6 +130,8 @@ static int vmap_pte_range(pmd_t *pmd, unsigned long addr, unsigned long end,
+>  		set_pte_at(&init_mm, addr, pte, pfn_pte(pfn, prot));
+>  		pfn++;
+>  	} while (pte += PFN_DOWN(size), addr += size, addr != end);
+> +
+> +	arch_leave_lazy_mmu_mode();
+>  	*mask |= PGTBL_PTE_MODIFIED;
 >  	return 0;
 >  }
+> @@ -354,6 +359,8 @@ static void vunmap_pte_range(pmd_t *pmd, unsigned long addr, unsigned long end,
+>  	unsigned long size = PAGE_SIZE;
 >  
-> +static int pcie_check_link_active(struct pci_dev *pdev)
-> +{
-> +	u16 lnk_status;
-> +	int ret;
+>  	pte = pte_offset_kernel(pmd, addr);
+> +	arch_enter_lazy_mmu_mode();
 > +
-> +	ret = pcie_capability_read_word(pdev, PCI_EXP_LNKSTA, &lnk_status);
-> +	if (ret == PCIBIOS_DEVICE_NOT_FOUND || PCI_POSSIBLE_ERROR(lnk_status))
-> +		return -ENODEV;
+>  	do {
+>  #ifdef CONFIG_HUGETLB_PAGE
+>  		size = arch_vmap_pte_range_unmap_size(addr, pte);
+> @@ -370,6 +377,8 @@ static void vunmap_pte_range(pmd_t *pmd, unsigned long addr, unsigned long end,
+>  			ptent = ptep_get_and_clear(&init_mm, addr, pte);
+>  		WARN_ON(!pte_none(ptent) && !pte_present(ptent));
+>  	} while (pte += (size >> PAGE_SHIFT), addr += size, addr != end);
 > +
-> +	ret = !!(lnk_status & PCI_EXP_LNKSTA_DLLLA);
+> +	arch_leave_lazy_mmu_mode();
+>  	*mask |= PGTBL_PTE_MODIFIED;
+>  }
+>  
+> @@ -515,6 +524,9 @@ static int vmap_pages_pte_range(pmd_t *pmd, unsigned long addr,
+>  	pte = pte_alloc_kernel_track(pmd, addr, mask);
+>  	if (!pte)
+>  		return -ENOMEM;
 > +
-> +	return ret;
-> +}
+> +	arch_enter_lazy_mmu_mode();
 > +
+>  	do {
+>  		struct page *page = pages[*nr];
+>  
+> @@ -528,6 +540,8 @@ static int vmap_pages_pte_range(pmd_t *pmd, unsigned long addr,
+>  		set_pte_at(&init_mm, addr, pte, mk_pte(page, prot));
+>  		(*nr)++;
+>  	} while (pte++, addr += PAGE_SIZE, addr != end);
+> +
+> +	arch_leave_lazy_mmu_mode();
+>  	*mask |= PGTBL_PTE_MODIFIED;
+>  	return 0;
+>  }
 
-This appears to be a 1:1 copy of pciehp_check_link_active(),
-save for the ctrl_dbg() call.
-
-For the sake of code-reuse, please move the function into the
-PCI library drivers/pci/pci.c so that it can be used everywhere.
-
-Note that there's another patch pending which does exactly that:
-
-https://lore.kernel.org/r/20250225-qps615_v4_1-v4-7-e08633a7bdf8@oss.qualcomm.com/
-
-So either include that patch in your series (addressing the review
-feedback I sent for it and cc'ing the original submitter) or wait
-for it to be respun by the original submitter.
-
-Thanks,
-
-Lukas
+Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
