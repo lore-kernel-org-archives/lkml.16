@@ -1,44 +1,45 @@
 Received: from raptorengineering.com (mail.raptorengineering.com [23.155.224.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6637741A8F;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 643BB2E62B8;
 	Fri,  4 Apr 2025 04:26:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.155.224.40
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743740799; cv=none; b=BnlWbeJecgHgZ6cseDAR1pWrdqOcPeVQ2GHXKeM5BYssli6/BwhlEutfUac30G4oD7DUkf37iioxz3E+b+OZ9FV852M7QLkmpgjjCp3Ck+R1MhZPQc+SW/IdcsPpnFzy2klFyCXmmVgs4lakFfgsb1K1wE4kaXCeG/gx0omUetU=
+	t=1743740801; cv=none; b=P6R2naH1ecFRajWXZOaB/jGMJ7IjF1MVKqZIgnsOphY1mmCMZuaXKXQClY0UP0UUuKFE1lS1p6NE/PCg5kvPwoalnLLNlADhBjGUTBCym8s1TDIrINYlOrL+nUDNcpcTNGBXsr7KV+YkBOw+RFO12U0N917VkjN4HSE4U4P7Gmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743740799; c=relaxed/simple;
-	bh=A/cZPvww3Ad+U+8Y4dNgBrnTZwnWcMnzKOcn+dtyrdQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=TIWCuP+O2M8ZvU2G5F7e+yB2cuCNZfToc0EPzf2q8BBN08pbYt0VLiU6KWEjyyx8EVvSxb6L50y1z/lv7FaqsrHv84YsR4FfubRQh73YSwp8JPWm0LWGQQMJ55GrOMQbbEpXRJp9VcLIKsi4iP8bF6sU5mz3KAV3grijDImjIrA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com; spf=pass smtp.mailfrom=raptorengineering.com; dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b=TtBjpuRy; arc=none smtp.client-ip=23.155.224.40
+	s=arc-20240116; t=1743740801; c=relaxed/simple;
+	bh=107+hfmFzFDDXOmCW6raL4he+f4ybLXUIsRpVGyruwg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=WDdtEORD1Xry4cJgwQbeC9/vMMAUoJLUQLwab2MH368s3/HHJafflTtXvkXWUEpgaFyxc98vDrF5Tx47I6BHIyLnblMEg7GcPQK3KYdumPqOftX1hTfVvoIulxvX0Tk3KJQmWNntCQ8RKAnzEgUpd9iIDAa5MhrPJ77Cf0ZmGvA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com; spf=pass smtp.mailfrom=raptorengineering.com; dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b=ZGJXyuPw; arc=none smtp.client-ip=23.155.224.40
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raptorengineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b="TtBjpuRy"
+	dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b="ZGJXyuPw"
 Received: from localhost (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id 5FFC082878A5;
-	Thu,  3 Apr 2025 23:18:14 -0500 (CDT)
+	by mail.rptsys.com (Postfix) with ESMTP id 8BD958288948;
+	Thu,  3 Apr 2025 23:18:15 -0500 (CDT)
 Received: from mail.rptsys.com ([127.0.0.1])
 	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id 3t03eeFtjAEE; Thu,  3 Apr 2025 23:18:13 -0500 (CDT)
+	with ESMTP id F3ugog3yIHEK; Thu,  3 Apr 2025 23:18:14 -0500 (CDT)
 Received: from localhost (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id C13338287D28;
-	Thu,  3 Apr 2025 23:18:13 -0500 (CDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.rptsys.com C13338287D28
+	by mail.rptsys.com (Postfix) with ESMTP id C832C8287DC7;
+	Thu,  3 Apr 2025 23:18:14 -0500 (CDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.rptsys.com C832C8287DC7
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=raptorengineering.com; s=B8E824E6-0BE2-11E6-931D-288C65937AAD;
-	t=1743740293; bh=jRiQbVybKjEcDuhXdoz/6+j4pLASO6re8oUagrPcVLA=;
+	t=1743740294; bh=R3TEJwuAJZ0klnHkNfJo7ybCDbPTaShTCK/BgFmdm60=;
 	h=From:To:Date:Message-Id:MIME-Version;
-	b=TtBjpuRy2roKw6anjOiVGHi1nFullHiYIjLmrAjleSddBBnNuiJnC9Izy9x2UYtCW
-	 fzmWg4y/y3DXgLiqRaJ5xWiQlL9NdK6hc+eVLjP+K8WHUl5nZ0352ghRHyptB+A5c3
-	 yrGV0vm0xTTj/sMLYB0bDP0orTBSocMGOJalEXEY=
+	b=ZGJXyuPw/vyrls4htxAk3M/fQBla3YmcPvyqrIkmVqacNhP6uZOtU5anDmg+h2i2E
+	 57mze6ubVXAd39dkvw0BwAcwssPd5yZZ+xTGd7Ye98O2wdxmSB+8FPkunVK0CbZ+s5
+	 9hbXD6nrfuXMSKMwsN4u2FhbJXexWmbv+zbPXQAk=
 X-Virus-Scanned: amavisd-new at rptsys.com
 Received: from mail.rptsys.com ([127.0.0.1])
 	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id oB17kzBUJWU5; Thu,  3 Apr 2025 23:18:13 -0500 (CDT)
+	with ESMTP id 7J193i_wQp1T; Thu,  3 Apr 2025 23:18:14 -0500 (CDT)
 Received: from raptor-ewks-026.lan (5.edge.rptsys.com [23.155.224.38])
-	by mail.rptsys.com (Postfix) with ESMTPSA id 18DA58287182;
-	Thu,  3 Apr 2025 23:18:12 -0500 (CDT)
+	by mail.rptsys.com (Postfix) with ESMTPSA id 393F38287182;
+	Thu,  3 Apr 2025 23:18:14 -0500 (CDT)
 From: Shawn Anastasio <sanastasio@raptorengineering.com>
 To: linuxppc-dev@lists.ozlabs.org
 Cc: linux-kernel@vger.kernel.org,
@@ -50,10 +51,12 @@ Cc: linux-kernel@vger.kernel.org,
 	Naveen N Rao <naveen@kernel.org>,
 	Bjorn Helgaas <bhelgaas@google.com>,
 	Shawn Anastasio <sanastasio@raptorengineering.com>
-Subject: [PATCH 0/3] PowerNV PCIe Hotplug Driver Fixes
-Date: Thu,  3 Apr 2025 23:18:07 -0500
-Message-Id: <20250404041810.245984-1-sanastasio@raptorengineering.com>
+Subject: [PATCH 2/3] pci/hotplug/pnv_php: Work around switches with broken presence detection
+Date: Thu,  3 Apr 2025 23:18:09 -0500
+Message-Id: <20250404041810.245984-3-sanastasio@raptorengineering.com>
 X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20250404041810.245984-1-sanastasio@raptorengineering.com>
+References: <20250404041810.245984-1-sanastasio@raptorengineering.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,28 +65,66 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 
-Hello all,
+The Microsemi Switchtec PM8533 PFX 48xG3 [11f8:8533] PCIe switch system
+was observed to incorrectly assert the Presence Detect Set bit in its
+capabilities when tested on a Raptor Computing Systems Blackbird system,
+resulting in the hot insert path never attempting a rescan of the bus
+and any downstream devices not being re-detected.
 
-This series includes two fixes for bugs in the PowerNV PCIe hotplug
-driver that were discovered in testing with a Microsemi Switchtec PM8533
-PFX 48xG3 PCIe switch on a PowerNV system, as well as one workaround for
-PCIe switches that don't correctly implement slot presence detection
-such as the aforementioned one. Without the workaround, the switch works
-and downstream devices can be hot-unplugged, but the devices never come
-back online after being plugged in again until the system is rebooted.
-Other hotplug drivers (like pciehp_hpc) use a similar workaround.
+Work around this by additionally checking whether the PCIe data link is
+active or not when performing presence detection on downstream switches'
+ports, similar to the pciehp_hpc.c driver.
 
-Thanks,
+Signed-off-by: Shawn Anastasio <sanastasio@raptorengineering.com>
+---
+ drivers/pci/hotplug/pnv_php.c | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-Shawn Anastasio (3):
-  pci/hotplug/pnv_php: Properly clean up allocated IRQs on unplug
-  pci/hotplug/pnv_php: Work around switches with broken presence
-    detection
-  pci/hotplug/pnv_php: Fix refcount underflow on hot unplug
-
- drivers/pci/hotplug/pnv_php.c | 110 +++++++++++++++++++++++++++-------
- 1 file changed, 88 insertions(+), 22 deletions(-)
-
---
+diff --git a/drivers/pci/hotplug/pnv_php.c b/drivers/pci/hotplug/pnv_php.c
+index 2c07544216fb..1a734adb5b10 100644
+--- a/drivers/pci/hotplug/pnv_php.c
++++ b/drivers/pci/hotplug/pnv_php.c
+@@ -390,6 +390,20 @@ static int pnv_php_get_power_state(struct hotplug_slot *slot, u8 *state)
+ 	return 0;
+ }
+ 
++static int pcie_check_link_active(struct pci_dev *pdev)
++{
++	u16 lnk_status;
++	int ret;
++
++	ret = pcie_capability_read_word(pdev, PCI_EXP_LNKSTA, &lnk_status);
++	if (ret == PCIBIOS_DEVICE_NOT_FOUND || PCI_POSSIBLE_ERROR(lnk_status))
++		return -ENODEV;
++
++	ret = !!(lnk_status & PCI_EXP_LNKSTA_DLLLA);
++
++	return ret;
++}
++
+ static int pnv_php_get_adapter_state(struct hotplug_slot *slot, u8 *state)
+ {
+ 	struct pnv_php_slot *php_slot = to_pnv_php_slot(slot);
+@@ -402,6 +416,19 @@ static int pnv_php_get_adapter_state(struct hotplug_slot *slot, u8 *state)
+ 	 */
+ 	ret = pnv_pci_get_presence_state(php_slot->id, &presence);
+ 	if (ret >= 0) {
++		if (pci_pcie_type(php_slot->pdev) == PCI_EXP_TYPE_DOWNSTREAM &&
++			presence == OPAL_PCI_SLOT_EMPTY) {
++			/*
++			 * Similar to pciehp_hpc, check whether the Link Active
++			 * bit is set to account for broken downstream bridges
++			 * that don't properly assert Presence Detect State, as
++			 * was observed on the Microsemi Switchtec PM8533 PFX
++			 * [11f8:8533].
++			 */
++			if (pcie_check_link_active(php_slot->pdev) > 0)
++				presence = OPAL_PCI_SLOT_PRESENT;
++		}
++
+ 		*state = presence;
+ 		ret = 0;
+ 	} else {
+-- 
 2.30.2
 
