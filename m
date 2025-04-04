@@ -1,146 +1,130 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-b7-smtp.messagingengine.com (fhigh-b7-smtp.messagingengine.com [202.12.124.158])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCA4033FD;
-	Fri,  4 Apr 2025 05:55:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 460F633FD;
+	Fri,  4 Apr 2025 05:59:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743746155; cv=none; b=SD8L5L2g/p4ADS27x3TUkeGthzjXROXyyni+KCSv1lp9VLqPTw2SHsC6X9HKsXwyQNRgG6rF7X2OVtOrDXuGyP7FTaS6ZpPf6woPUmIza/uQmtMcCz9pSWbgbd0UWPcyj2zmFOfjH2JxEUrVGbAry+MxG7oHtanNE9Ktyiw/Qdg=
+	t=1743746349; cv=none; b=OgsGYetC5Z6afjxe2HT8aOJ/lySKvkbzkabPomQwvDzuP9wBftSLeZdUsjIedf+sLQUmbUgJfuH2oLoAi1SOMW99clrpLPiXSJmLROSFxh8qlbyv1qr06nKhWvWAokG5XQFw3AyPtx45as/jIGtG/NvSC+SFwypJJwUSeNrrnso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743746155; c=relaxed/simple;
-	bh=m3Wf1exXRQJ0ctdB9DJLeYyEFT0zavPZvNni4xpRWm0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZQvbB4Qa/pjVfifZ8T6VCMbDHJa4z8gKb3c8GmNXZXqjPVPh/EdzaN+W7Eo/rv2fmKYXHb7bjYePwGcLJVUxPlouvXM///e5tpudFBgpgb3CxJ/t3OOB6p36P+W/NoTf8liyyqLicOI4uEYn16AtktHfpxUdrXlssgJltQaoa5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HMnkIA6A; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743746349; c=relaxed/simple;
+	bh=4fByqCcS2OpCFx6aaXLTI8NGU7zrTmm182MAT0SBLTA=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=AOvdwR9i+NWj5SBj9DFOvoCHbyhZJ3BC6/FaQPLc7GQwEu9TbHsuMekuMX9fcxLN8NFIuLVn30CG5dlFip16NkKTGqmXKYnXTfcpCeknpA6nvJPcNE2AeTgKCldWWtkiH5wvOCjmmpikOqnF7lHP6QfqCrUnA2BNtHiCFPPUtJs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=kyfj2nX9; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=UlXaRuZ7; arc=none smtp.client-ip=202.12.124.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HMnkIA6A"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-307325f2436so16886161fa.0;
-        Thu, 03 Apr 2025 22:55:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743746152; x=1744350952; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=T4m4Lgv/G0HSWsRrxvRHFcyOI0AOUZXlAU03wGqymqg=;
-        b=HMnkIA6AEZaCdSoe+bo2VKoCAI14RgK7eore8JvxQVz26DcKwNF85hxrKAkTrbcvDO
-         KH1fYI9JG9iL1eDOuZEltAzuyVDhB23Gua64LnWJjAUdQDng62pqq/131t42OD2q2SqV
-         fvY9FhsLs9RsCjFUghEWX5O+CUrNSOMyPn5fPL14ygg86mLOy/CCDbl3FlaprmfsVoGd
-         6q+Ld54No6v1YZNK3L+H+NI9PAsfX2z3dRIUBzI4gFewXwm4Osj7rOkwgn6Vblb1bCk1
-         crQIRXu2weBU2I5+xqeyMgCYhdgLplmGcfsnJ3ASBgBG32H0+q5Ckb3dP6/h2uFejG2Y
-         K6mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743746152; x=1744350952;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=T4m4Lgv/G0HSWsRrxvRHFcyOI0AOUZXlAU03wGqymqg=;
-        b=jmUZRgwbOG/E3cwmxi+vpJ1reorwQFelHmlT8fekEAgpBnXNA2D6U6yu2zMfBigNt2
-         q3vUtDduY3Ar0zsaWoYxf8NBla3Y9Fk5HN8sz37sxVHYnPuaomUMyOAeJg/4e9joyhOL
-         0oVSLdXdmIFbh1Y5lUj7mTo9VtMijQM5MFTnR6jlKuNzWfOK9MaSB7u9kaDofN0sk+98
-         qbMrWxSWw3fllUBsY6miguKJsr3q7FMqRsFMZojKIFx9AQUAVi5LEdZGqJc74zM5OywK
-         tYZgR2e4F0XuoF8SeoEBr/bSPHNDAyfIUf33fGO3taXEjtxbq9oXJ2iOmunbnb4UCvuF
-         N30g==
-X-Forwarded-Encrypted: i=1; AJvYcCUI7aCfLrHo/qzrX1KtPqalWrSYu6OQfXO3ynJB2EMZiGaDdzFtikFcDn9qBeOy+j0M63Yzr73JcMg5UMU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzEXr97snYU6Yyq9l4wKc1GCNkbUyW9SKJhbGcljCFjV+uMOUqy
-	rBimD3m8Uc0wY+c0psAU3a4r6EQNc0lTJ5KuuXNEpt6WfipK9L9FY/5RnlltjrBEMQnRUsqMUDS
-	CIbl+4AY3dM2yC9NpdDaflbXWkCw=
-X-Gm-Gg: ASbGncvBtoStisP5dkheU+tUPactRBeR/ln1uRznyTME4fQ7zNJv/kX1u94wIPN9hAm
-	v6ZQfauvygrFwJBlS358VNmL77MPkq0SYmcMKf5nFARy5q1LPp+prC/2bAkDOAijfQYt5OMMJyI
-	lPKWeSE5EpARJcVljRVy5fNl6ykg==
-X-Google-Smtp-Source: AGHT+IGTy1lG5z/lKToJqLPpKeMMyAygaCW/W5NO8s5KV8h/yzeNHSQV1ViJFpeSbZCYHzC1pamHt+ktBZwIl25G9jM=
-X-Received: by 2002:a2e:ad92:0:b0:30d:e104:cd58 with SMTP id
- 38308e7fff4ca-30f0c08d73cmr3440681fa.41.1743746151616; Thu, 03 Apr 2025
- 22:55:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="kyfj2nX9";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="UlXaRuZ7"
+Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 26A43254021A;
+	Fri,  4 Apr 2025 01:59:07 -0400 (EDT)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-12.internal (MEProxy); Fri, 04 Apr 2025 01:59:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1743746347;
+	 x=1743832747; bh=WtWETSKQn6E8bswj3SLwct6dL1bxKxqY0tLnxPdz92w=; b=
+	kyfj2nX9ywt+kVVqKE1zT4yIyvL/zGCsiqO6jTMQsjvGPl/kiPADp7TbnoMZCX/+
+	QFXcz/uvl9vN8VceDDBP2648jebgklkeEOSTSLzreuLOQ66tbyj1ik2g3RGuwpoL
+	UHMfUYvkNRTbRQxAaPry9K9zDXpBx2fzk0BIL/qaFlJEhNIwbWArvn19EjQozfsj
+	K1dZKi3x+x/YhUHYDfzSzl3m8Dg1rBI8dhuVS8wFXlPhveAwoPjZxdkSSNpyuQXz
+	s1ZsNxjjB+Vt/q1eB5UnBi3CKuftqnsjcYivr0PDrUXPg+bHEks+t0O+KerRhSsa
+	IQ+mazqhzkkCr+tYTirCOA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1743746347; x=
+	1743832747; bh=WtWETSKQn6E8bswj3SLwct6dL1bxKxqY0tLnxPdz92w=; b=U
+	lXaRuZ7WZImyYo29349y1E1+PLVJ0jXDAetbG1N9eyw+lYEC+kMR3wqtrzLbAxAK
+	5giOOqAaZNhi8FRpn3MTMc4IxAxD7pb700AWeI6+xYK5GYSlObTX1hXqSM93KQhZ
+	28Fz7hGF6R5qFu5uDqMTN7KG58OOgscxreZyiSP71gFnGHKRqWLsKceOZ7OatKwJ
+	IyAz/gPUNOcSKeUlmCjGuN1h9nQqGTO4gQsW0iTArh61X1WDe+EWrhSuhg6V6Juq
+	E8EI4of3KJRnKdyNPlZHhSsq2l5n3WHqeHEElu4x0f3dSihhIqHbcxPssBC45/4U
+	JUyXvAN7mnhOv1RT4rsXg==
+X-ME-Sender: <xms:KnXvZycppOk42usNnGIZ-1ad9UmDjWojB-S12dWSvr4zNG24vbrrTw>
+    <xme:KnXvZ8OryAGUYA6VsbLaJDzt9EEOnbekFpg2e6fmAyAQRpgA9DUwHG17U0-pcVoKq
+    6gr1ob-e6TRw7IabRE>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduledtieeiucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
+    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
+    gsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeet
+    fefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
+    hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
+    uddvpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehprghlmhgvrhesuggrsggsvg
+    hlthdrtghomhdprhgtphhtthhopegrlhgvgiesghhhihhtihdrfhhrpdhrtghpthhtohep
+    iihhihhhrghnghdrshhhrghordhishgtrghssehgmhgrihhlrdgtohhmpdhrtghpthhtoh
+    epihhgnhgrtghiohesihgvnhgtihhnrghsrdgtohhmpdhrtghpthhtohepsghjohhrnhes
+    khgvrhhnvghlrdhorhhgpdhrtghpthhtohepvggsihhgghgvrhhssehkvghrnhgvlhdroh
+    hrghdprhgtphhtthhopehskhhhrghnsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhg
+    pdhrtghpthhtoheplhhinhhugidqrhhishgtvheslhhishhtshdrihhnfhhrrgguvggrug
+    drohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhdqmhgvnhhtvggvsheslhhi
+    shhtshdrlhhinhhugidruggvvh
+X-ME-Proxy: <xmx:KnXvZzis5nVlP2N_1orhQVV-sh5Gv_mpr8KN165f-qtU3w6qAptW8A>
+    <xmx:KnXvZ_8PdQo94lXe-_5Ne7XFtI_xMvdMKpEw3gptZnk2RKEaz9wLQg>
+    <xmx:KnXvZ-utjr21MYl3URUU1tX-WmnkR98v79aXEKuzmq75_3iqtUZ3IA>
+    <xmx:KnXvZ2HLi4WUyOTg1wGHDxc5bhdzD9G4VaRB-WrK6BS-zirO9J2vNw>
+    <xmx:KnXvZxswNfWyawCUSZPdgwJw-w89RVRs8F9GgKVBNOcQZV_fTIc4pKdC>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 362E42220073; Fri,  4 Apr 2025 01:59:06 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250403094527.349526-3-ubizjak@gmail.com> <202504040855.mr885Pz1-lkp@intel.com>
- <20250404015112.GA96368@sol.localdomain>
-In-Reply-To: <20250404015112.GA96368@sol.localdomain>
-From: Uros Bizjak <ubizjak@gmail.com>
-Date: Fri, 4 Apr 2025 07:55:40 +0200
-X-Gm-Features: ATxdqUHvxKjaAuNJAyKxretVYKicCee6aHgEDOIqcSNJgt7UxehAOrZAXyC0sC4
-Message-ID: <CAFULd4YrG-7DCXabke+uuLwLw2azciogG1nPGeAkMxLACw+0og@mail.gmail.com>
-Subject: Re: [PATCH 3/3] crypto: x86 - Remove CONFIG_AS_AVX512
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: linux-crypto@vger.kernel.org, kernel test robot <lkp@intel.com>, x86@kernel.org, 
-	linux-kernel@vger.kernel.org, oe-kbuild-all@lists.linux.dev, 
-	Herbert Xu <herbert@gondor.apana.org.au>, Thomas Gleixner <tglx@linutronix.de>, 
-	Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-ThreadId: Tdae3ef9051e7a30c
+Date: Fri, 04 Apr 2025 07:58:43 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Ignacio Encinas" <ignacio@iencinas.com>,
+ "Paul Walmsley" <paul.walmsley@sifive.com>,
+ "Palmer Dabbelt" <palmer@dabbelt.com>, "Alexandre Ghiti" <alex@ghiti.fr>
+Cc: "Eric Biggers" <ebiggers@kernel.org>, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-kernel-mentees@lists.linux.dev,
+ "Shuah Khan" <skhan@linuxfoundation.org>,
+ "Zhihang Shao" <zhihang.shao.iscas@gmail.com>,
+ =?UTF-8?Q?Bj=C3=B6rn_T=C3=B6pel?= <bjorn@kernel.org>,
+ Linux-Arch <linux-arch@vger.kernel.org>
+Message-Id: <c6efcdca-5739-42b6-8cb4-f4d8cc85b6af@app.fastmail.com>
+In-Reply-To: <20250403-riscv-swab-v3-2-3bf705d80e33@iencinas.com>
+References: <20250403-riscv-swab-v3-0-3bf705d80e33@iencinas.com>
+ <20250403-riscv-swab-v3-2-3bf705d80e33@iencinas.com>
+Subject: Re: [PATCH v3 2/2] riscv: introduce asm/swab.h
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On Fri, Apr 4, 2025 at 3:51=E2=80=AFAM Eric Biggers <ebiggers@kernel.org> w=
-rote:
->
-> On Fri, Apr 04, 2025 at 09:13:40AM +0800, kernel test robot wrote:
-> > Hi Uros,
-> >
-> > kernel test robot noticed the following build warnings:
-> >
-> > [auto build test WARNING on herbert-cryptodev-2.6/master]
-> > [also build test WARNING on herbert-crypto-2.6/master tip/x86/core linu=
-s/master v6.14]
-> > [cannot apply to next-20250403]
-> > [If your patch is applied to the wrong git tree, kindly drop us a note.
-> > And when submitting patch, we suggest to use '--base' as documented in
-> > https://git-scm.com/docs/git-format-patch#_base_tree_information]
-> >
-> > url:    https://github.com/intel-lab-lkp/linux/commits/Uros-Bizjak/cryp=
-to-x86-Remove-CONFIG_AS_SHA256_NI/20250403-174814
-> > base:   https://git.kernel.org/pub/scm/linux/kernel/git/herbert/cryptod=
-ev-2.6.git master
-> > patch link:    https://lore.kernel.org/r/20250403094527.349526-3-ubizja=
-k%40gmail.com
-> > patch subject: [PATCH 3/3] crypto: x86 - Remove CONFIG_AS_AVX512
-> > config: i386-buildonly-randconfig-001-20250404 (https://download.01.org=
-/0day-ci/archive/20250404/202504040855.mr885Pz1-lkp@intel.com/config)
-> > compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-> > reproduce (this is a W=3D1 build): (https://download.01.org/0day-ci/arc=
-hive/20250404/202504040855.mr885Pz1-lkp@intel.com/reproduce)
-> >
-> > If you fix the issue in a separate patch/commit (i.e. not just a new ve=
-rsion of
-> > the same patch/commit), kindly add following tags
-> > | Reported-by: kernel test robot <lkp@intel.com>
-> > | Closes: https://lore.kernel.org/oe-kbuild-all/202504040855.mr885Pz1-l=
-kp@intel.com/
-> >
-> > All warnings (new ones prefixed by >>):
-> >
-> > >> lib/raid6/recov_avx512.c:382:2: warning: #warning "your version of b=
-inutils lacks AVX512 support" [-Wcpp]
-> >      382 | #warning "your version of binutils lacks AVX512 support"
-> >          |  ^~~~~~~
-> >
-> >
-> > vim +382 lib/raid6/recov_avx512.c
-> >
-> > 13c520b2993c9fa Gayatri Kammela 2016-08-12  380
-> > 13c520b2993c9fa Gayatri Kammela 2016-08-12  381  #else
-> > 13c520b2993c9fa Gayatri Kammela 2016-08-12 @382  #warning "your version=
- of binutils lacks AVX512 support"
->
-> Yeah, CONFIG_AS_AVX512 needs to be removed from lib/raid6/ too.  It looke=
-d like
-> that directory was rolling its own CONFIG_AS_AVX512 in lib/raid6/test/Mak=
-efile,
-> but that's a makefile for a test program and not the actual kernel makefi=
-le.
+On Thu, Apr 3, 2025, at 22:34, Ignacio Encinas wrote:
+> +#define ARCH_SWAB(size) \
+> +static __always_inline unsigned long __arch_swab##size(__u##size value) \
+> +{									\
+> +	unsigned long x = value;					\
+> +									\
+> +	if (riscv_has_extension_likely(RISCV_ISA_EXT_ZBB)) {            \
+> +		asm volatile (".option push\n"				\
+> +			      ".option arch,+zbb\n"			\
+> +			      "rev8 %0, %1\n"				\
+> +			      ".option pop\n"				\
+> +			      : "=r" (x) : "r" (x));			\
+> +		return x >> (BITS_PER_LONG - size);			\
+> +	}                                                               \
+> +	return  ___constant_swab##size(value);				\
+> +}
 
-I think the best approach to avoid patch dependencies is not to remove
-the test for AS_AVX512 from Kconfig.assembler in this patch, but in a
-separate patch that will be eventually committed late in the merge
-cycle (or for the next version), after all other users are removed
-from the tree. I have patches for other parts ready.
+I think the fallback should really just use the __builtin_bswap
+helpers instead of the ___constant_swab variants. The output
+would be the same, but you can skip patch 1/2.
 
-I'll post v2 of this series with the above adjustment.
+I would also suggest dumbing down the macro a bit so you can
+still find the definition with 'git grep __arch_swab64'. Ideally
+just put the function body into a macro but leave the three
+separate inline function definitions.
 
-Thanks,
-Uros.
+     Arnd
