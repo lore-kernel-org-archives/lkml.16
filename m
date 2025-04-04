@@ -1,142 +1,217 @@
-Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A22F20C004;
-	Fri,  4 Apr 2025 16:47:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25F5121171C
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 16:47:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743785255; cv=none; b=Gzfs+gXnEcyaGGnZd7oE/bwDOZlw2bsk4uEyx9ZazwM9HhQ8ItWeZb5vjyzURHALB/Ncfriyao6FPJZZvQl2KXCZXFVRLQ6BYx5FVfSOu1xd0BP2fUiYDAf2W3lgWetvwrJ3MpHzXP+F8d1j5z1MOlPwCYgdRDjQBouL+Te4zi0=
+	t=1743785261; cv=none; b=mkvRwTb9WNxyZleQSQ4yDAqeRYQnT7x91EQj3CfBNmMn5jeElZcHwmxXnT72wa4FOh3JmBAaV+jTW3yp5h3MpbCStX7EyjiI6C7pnyAaBVKemptjtnKqKwPR7PFsOGS2jwMCxQX0aRFGldSfedjF3VDvHKXJFagCDLfgBHsRVqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743785255; c=relaxed/simple;
-	bh=9Iz38orDDWGWK2AIO290K6VwdNwDkNahYRb4oLv4U2A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=U/oyBqxY6k8jeVDb/d/MgnRadpYVUZgSvdlSouxU0CJbZUfB4TpR//Yr4Cjv8j4+ZwQywoww+3Hpco5vcO5yr+I1dlf0xNkK90ZvO5eEoBJs10xJCg5ohv8Lac58iQMj9TBxDibesmUI+X4Jv0g4FpI1hTrHsHz7evcIF3f0DJg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O/kXM6+V; arc=none smtp.client-ip=209.85.210.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743785261; c=relaxed/simple;
+	bh=kBOspWRNQ4BmOfPjA2PvOZq3vMDxXt5Q1YQqo0gJ9fo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oQbiFSAtbx2olXyXySk/L3gIcq7VFYf42qNA4RBrXXynhJhizghGcZSCt6HlXKUhPzgORuBn5dNTrRbQpyVaz/Iy0fqHY51JWoTHvUcREAq9gJlcIf0PRgw/l3fdecE+4z+uZk5G8uYJrKHy4RY49Q9Txmdzd0gLOwKe8fXtT6g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=35za31AV; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O/kXM6+V"
-Received: by mail-ot1-f53.google.com with SMTP id 46e09a7af769-72c0b4a038fso1473262a34.0;
-        Fri, 04 Apr 2025 09:47:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="35za31AV"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-39c1ee0fd43so1919268f8f.0
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 09:47:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743785253; x=1744390053; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=4qHFlUEgPfk8I50kLbzLY6Bfpxn+xaMagBJlQnZG6l0=;
-        b=O/kXM6+VCY7OfpkwJUs+dAp7P42QlYG8OEvl3igkiQo3CIri4LITHG0yDuOLf3SXxz
-         HvoXxv42uF8kMeltwg/JAIldl3+OauFR7NzPyiKTM+NMDv/p22REZeSab3sr9PGhTb+m
-         YHXy6HLHMXgN8Gqj7HiThNtwWXs0QTHIvfSYPIU7v2kmdaYv0cS6cRVExVx7tfJ/jTWj
-         Z/hwOXlVFZcxaeL7bZDlbl+PtoOCrNreewQC+DhSC49Rk3YV+Y6G5iDM2zB3239Zsrx2
-         hJZKlXIGKaoefFA/N5VqeUn7lee8QMxHZc+XhpNtXN/u9p3NgwFKGxIWl617IvaJI8Uq
-         AERg==
+        d=google.com; s=20230601; t=1743785257; x=1744390057; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=YjzowwCzDt7F+kKBoh3+rUz7yp+YdCsAa/lYm8cjXDA=;
+        b=35za31AVfXdRc0/Zuc9pHXF/ltzmo6No3PSHGMxYB2iI/QqquaFTOqBTcQCu/rMNyd
+         CXjlFhyQiS3Be8lMG1jh0OapUBcfabh6GERsC4iR2L6UuJ7gupwUYDNBXQ25mvmvhbTO
+         lmJeQm0k+DUVgdp8v7NyFiiv0VOyuGc1tMs/okqYjC4geXheUxm4UkjD5c+4Wr1jFKgC
+         Q9WspE10YvcuKK44Q6RvXxvd+zmj7hcEGGOwwn5UZcoPG+IqsZa3MVsOI2dlEQB+Uyi1
+         xnZrLGFY3gKx0uscnD9Q6zBv7DwQGQGLf0cneDiWNjRXNCgR5uI8ABo8tGzsLMl9Hbxn
+         dSBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743785253; x=1744390053;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1743785257; x=1744390057;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=4qHFlUEgPfk8I50kLbzLY6Bfpxn+xaMagBJlQnZG6l0=;
-        b=Q7pJHUsZk6nr7MwH2sfg87OK5gv113MsQaeBwK+B3tAxVlMYOIJHv51WqKnnEhs8mf
-         qgvP4bZUh4IgTmlrVqCmi3sT3+CqdkHQjaouXgDIKIypjqit3McEZo6/Pgh7Uu+mnzIG
-         3LgJ98GNpF3E18O296WdQctcowg0aNZ2c//tlu6YbKJeGnwSPDZWWw854IOzOc2zKAWz
-         FZvQWQOaKVT4/o6WjtvG/8B7lw6EIZP0ibCPVmcBYwejNQZgl5wA56Go9xxWaRlTmG1P
-         EWLbn8ZRh3iSwWZYHkmtmcfAVi4VkF2SZrCunzN5Or401SxA64rJGvm5whMPyg3sWbo/
-         vlSg==
-X-Forwarded-Encrypted: i=1; AJvYcCUhUxsgYmRajWV+jt5+lCON/K7NgcZMuo9pD4v81F/eS7md/d+dhteJMSJ36HSZyyxoddzwsoT4d1zUxeg=@vger.kernel.org, AJvYcCXIfgR1Fi1tnrGf3Vwv0RjYSXAOpsw3zzi5XYvIE21P3jtT2t/eZUTrybeM2tDtJPC/eCCPg9KY@vger.kernel.org
-X-Gm-Message-State: AOJu0YxoaN/SB2oFOlclMXE6lcuGNqITzG1DU3XswrsSxayEEn7zZ62Z
-	ubBUpq8dSULwYwScPdS84wBgwiXv6PwBc201XF8VyVo5cfAjeKlX
-X-Gm-Gg: ASbGncv90BzcYka4yAIqmwe7vYd0Redg8+Z5W52hNf46tyKDqFhiwwNmSbZZt+6Z0Lv
-	tzk1V3NpXRJNuOlkeu3q7PXyYJheUJUzt3ztudeQGfOFx44Qd2hkyMm0vOXq2Vkm1DQMhaz8Ooi
-	h8ro/pCQquG1qVF6ovhXhyjBmchPbaQewGTYx18Ym7WcFTorDda46wAHdAwRCijVd4Yg1hOAgBT
-	gWZxrwkvIFKqE6sill2vULGRYnGy9vJW61XS/qVg1hA46PV3eGBJkB49LZZcj8tUaLEhU16p4o9
-	JZ1EInZ5S2pmvpmnWD/4UULE8aM2leNctp3Sy7ee6i6pdD/nRaOFOYbs2SZfcXbyDCteVzFr
-X-Google-Smtp-Source: AGHT+IFCDH1WQvthzsuCflHZaq+IszPEDGqFQeCGyzAal9s00Vvb1OROP01ro5EUqCKz7yjuxRvDLw==
-X-Received: by 2002:a05:6830:d84:b0:72a:48d4:290b with SMTP id 46e09a7af769-72e3686ffb6mr2691302a34.26.1743785253004;
-        Fri, 04 Apr 2025 09:47:33 -0700 (PDT)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-72e3043cc8esm726012a34.0.2025.04.04.09.47.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Apr 2025 09:47:32 -0700 (PDT)
-Message-ID: <2725cea1-4bb2-4adf-a43a-8edffb5a3fb8@gmail.com>
-Date: Fri, 4 Apr 2025 09:47:30 -0700
+        bh=YjzowwCzDt7F+kKBoh3+rUz7yp+YdCsAa/lYm8cjXDA=;
+        b=PkaFAzQVWlZh7GhfSuUt5onkkZwetFPzjMVa8RJ/eCG/pcruE/Wm5gz0P8QSb3lxqZ
+         qp/QQN4dmEieOVMRQnqq6wLFs0tpQBTShzVR8ztQ3IYFh/mpHFq4JBFMgaDL911DRIwQ
+         86zbw8F+gfBAAEU5HLe8YCSjFz88SqQQoQ9a/qrlfTw1fkxO+gbuYZE5dIgWzHFBnT/t
+         4wGf6z6AKlc6wT9ob7/I5LoRUCU+EgeWqiRNbxHODTn0Li91cBHwDuA1eu3mumhKiBBj
+         2OU7aXFwdVeN/rrUgXTLQTq+KMnxnFRxRbI+q8M6EUX7FTh9v1h7RaNtf7BcvWtAFteU
+         oZQA==
+X-Forwarded-Encrypted: i=1; AJvYcCU+oKoa9aurWz6IP0LULoWP1deH30yklmJbk6OiaeE4ETb8op+Knos7T3Ng54DBII29YZZv7B0cJFV+OUc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YypdYGJtmeLT115vDLddJ9ezLfa2r4sH8bWFjK6Q/8mKtf2hBSN
+	h44VJ4pju6kCguo/ui+0qO0JQsg9mWY9kufWHGqwFWWPRYwMkaQRfLR/iYnpEg==
+X-Gm-Gg: ASbGncvM272BRp9oU50HXHM1jiZQgslK2jUd6tUT16MWBEWFA/MbHZCHBf5CB5aamCt
+	MOm1g8qjn2Y5ej/MEdkf88FAxHjLZzR2qW5KwW0R7jXSkF1lwDbppGCQAT9eaAEoRdhEaFzLiJ5
+	I7LIdJIxAwO4+IR1IuC++wPMgZtdE4F/kgc22RFkZ5s/01XYk1ebY1wXYeoBHpwotc3Eb4b9mYB
+	iAkzlPHuimxGdrxXQ1Pz7EU4ztJKAxfFnFbE4WoM/HBtYGq86ggSQg5Bqg8bbpVaBzDohOTZDHT
+	0r30QKn0l86rhwm7d69bNeGkLVw8ChdBsnuwG2XHgVKIXIQ2DgZ7UeGLOwK2wp7dxeNmW4TgIEH
+	q67vzOjU=
+X-Google-Smtp-Source: AGHT+IFzHQAEkpFtCO+t1gRCJIagbYhnnjuyRaUGQM6bW98s2AD1DwEmZUlzJZcYV+93fHKKsfUsjA==
+X-Received: by 2002:a5d:584a:0:b0:399:6dc0:f134 with SMTP id ffacd0b85a97d-39cba98b9c4mr4046259f8f.51.1743785257188;
+        Fri, 04 Apr 2025 09:47:37 -0700 (PDT)
+Received: from google.com (35.157.34.34.bc.googleusercontent.com. [34.34.157.35])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c3020d975sm4848736f8f.75.2025.04.04.09.47.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Apr 2025 09:47:36 -0700 (PDT)
+Date: Fri, 4 Apr 2025 17:47:33 +0100
+From: Vincent Donnefort <vdonnefort@google.com>
+To: Quentin Perret <qperret@google.com>
+Cc: maz@kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com,
+	suzuki.poulose@arm.com, yuzenghui@huawei.com,
+	catalin.marinas@arm.com, will@kernel.org,
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org, kernel-team@android.com
+Subject: Re: [PATCH v2 2/9] KVM: arm64: Add a range to
+ __pkvm_host_share_guest()
+Message-ID: <Z_ANJQXw7maV8TlT@google.com>
+References: <20250306110038.3733649-1-vdonnefort@google.com>
+ <20250306110038.3733649-3-vdonnefort@google.com>
+ <Z-6o0zcLa4Aw0N6R@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.13 00/23] 6.13.10-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
- conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250403151622.273788569@linuxfoundation.org>
-Content-Language: en-US
-From: Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; keydata=
- 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
- WlfRzlpjIPmdjgoicA==
-In-Reply-To: <20250403151622.273788569@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z-6o0zcLa4Aw0N6R@google.com>
 
-On 4/3/25 08:20, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.13.10 release.
-> There are 23 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Thu, Apr 03, 2025 at 03:27:15PM +0000, Quentin Perret wrote:
+> On Thursday 06 Mar 2025 at 11:00:31 (+0000), Vincent Donnefort wrote:
+> > +int __pkvm_host_share_guest(u64 pfn, u64 gfn, u64 nr_pages, struct pkvm_hyp_vcpu *vcpu,
+> >  			    enum kvm_pgtable_prot prot)
+> >  {
+> >  	struct pkvm_hyp_vm *vm = pkvm_hyp_vcpu_to_hyp_vm(vcpu);
+> >  	u64 phys = hyp_pfn_to_phys(pfn);
+> >  	u64 ipa = hyp_pfn_to_phys(gfn);
+> > +	enum pkvm_page_state state;
+> >  	struct hyp_page *page;
+> > +	u64 size;
+> >  	int ret;
+> >  
+> >  	if (prot & ~KVM_PGTABLE_PROT_RWX)
+> >  		return -EINVAL;
+> >  
+> > -	ret = check_range_allowed_memory(phys, phys + PAGE_SIZE);
+> > +	ret = __guest_check_transition_size(phys, ipa, nr_pages, &size);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	ret = check_range_allowed_memory(phys, phys + size);
+> >  	if (ret)
+> >  		return ret;
+> >  
+> >  	host_lock_component();
+> >  	guest_lock_component(vm);
+> >  
+> > -	ret = __guest_check_page_state_range(vcpu, ipa, PAGE_SIZE, PKVM_NOPAGE);
+> > +	ret = __guest_check_page_state_range(vm, ipa, size, PKVM_NOPAGE);
+> >  	if (ret)
+> >  		goto unlock;
+> >  
+> > -	page = hyp_phys_to_page(phys);
+> > -	switch (page->host_state) {
+> > +	state = hyp_phys_to_page(phys)->host_state;
+> > +	for_each_hyp_page(phys, size, page) {
+> > +		if (page->host_state != state) {
+> > +			ret = -EPERM;
+> > +			goto unlock;
+> > +		}
+> > +	}
+> > +
+> > +	switch (state) {
+> >  	case PKVM_PAGE_OWNED:
+> > -		WARN_ON(__host_set_page_state_range(phys, PAGE_SIZE, PKVM_PAGE_SHARED_OWNED));
+> > +		WARN_ON(__host_set_page_state_range(phys, size, PKVM_PAGE_SHARED_OWNED));
+> >  		break;
+> >  	case PKVM_PAGE_SHARED_OWNED:
+> > -		if (page->host_share_guest_count)
+> > -			break;
+> > -		/* Only host to np-guest multi-sharing is tolerated */
+> > -		WARN_ON(1);
+> > -		fallthrough;
+> > +		for_each_hyp_page(phys, size, page) {
+> > +			/* Only host to np-guest multi-sharing is tolerated */
+> > +			if (WARN_ON(!page->host_share_guest_count)) {
+> > +				ret = -EPERM;
+> > +				goto unlock;
+> > +			}
+> > +		}
+> > +		break;
+> >  	default:
+> >  		ret = -EPERM;
+> >  		goto unlock;
+> >  	}
+> >  
+> > -	WARN_ON(kvm_pgtable_stage2_map(&vm->pgt, ipa, PAGE_SIZE, phys,
+> > +	WARN_ON(kvm_pgtable_stage2_map(&vm->pgt, ipa, size, phys,
+> >  				       pkvm_mkstate(prot, PKVM_PAGE_SHARED_BORROWED),
+> >  				       &vcpu->vcpu.arch.pkvm_memcache, 0));
+> > -	page->host_share_guest_count++;
+> > +	__host_update_share_guest_count(phys, size, true);
 > 
-> Responses should be made by Sat, 05 Apr 2025 15:16:11 +0000.
-> Anything received after that time might be too late.
+> So we're walking the entire phys range 3 times;
 > 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.13.10-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.13.y
-> and the diffstat can be found below.
+> 	1. to check the host_state is consistent with that of the first
+> 	page;
 > 
-> thanks,
+> 	2. to set the state to SHARED_OWNED or to check the
+> 	host_share_guest_count;
 > 
-> greg k-h
+> 	3. and then again here to update the host share guest count
+> 
+> I feel like we could probably remove at least one loop with a pattern
+> like so:
+> 
+> 	for_each_hyp_page(phys, size, page) {
+> 		switch (page->state) {
+> 		case PKVM_PAGE_OWNED:
+> 			continue;
+> 		case PKVM_PAGE_SHARED_BORROWED:
+> 			if (page->host_shared_guest_count)
+> 				continue;
+> 			fallthrough;
+> 		default;
+> 			ret = -EPERM;
+> 			goto unlock;
+> 		}
+> 	}
+> 
+> 	for_each_hyp_page(phys, size, page) {
+> 		page->host_state = PKVM_PAGE_SHARED_OWNED;
+> 		page->host_share_guest_count++;
+> 	}
+> 
+> That would also tolerate a mix of OWNED and SHARED_OWNED page in the
+> range, which I'm not sure is needed but it doesn't cost us anything to
+> support so ... :-)
+> 
+> Wdyt?
 
-On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels, build tested on 
-BMIPS_GENERIC:
+That sounds good, I'll drop __host_update_share_guest_count at the same
+time to fold it directly into the share/unshare functions.
 
-Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
--- 
-Florian
+> 
+> >  unlock:
+> >  	guest_unlock_component(vm);
+> > diff --git a/arch/arm64/kvm/pkvm.c b/arch/arm64/kvm/pkvm.c
+> > index 930b677eb9b0..00fd9a524bf7 100644
+> > --- a/arch/arm64/kvm/pkvm.c
+> > +++ b/arch/arm64/kvm/pkvm.c
+> > @@ -361,7 +361,7 @@ int pkvm_pgtable_stage2_map(struct kvm_pgtable *pgt, u64 addr, u64 size,
+> >  		return -EINVAL;
+> >  
+> >  	lockdep_assert_held_write(&kvm->mmu_lock);
+> > -	ret = kvm_call_hyp_nvhe(__pkvm_host_share_guest, pfn, gfn, prot);
+> > +	ret = kvm_call_hyp_nvhe(__pkvm_host_share_guest, pfn, gfn, 1, prot);
+> >  	if (ret) {
+> >  		/* Is the gfn already mapped due to a racing vCPU? */
+> >  		if (ret == -EPERM)
+> > -- 
+> > 2.48.1.711.g2feabab25a-goog
+> > 
