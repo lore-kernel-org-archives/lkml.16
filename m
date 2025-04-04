@@ -1,135 +1,160 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4AF51CD3F
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 08:20:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85478188CB1
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 08:21:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743754861; cv=none; b=YqsfqPcgl3znByd1HdZ8KmOsZa6izxQhUUwoxj9uQQc/IG+8qMjmINeQv6Dkdq/T710Cw5nw66hOUHs17KfTJlONrcgl31s51KKLGv3dEWF5G815k1jEv3e/htIgGTrPFkM0WwF1MIB90kSNMPh3UYoOQDvsZ3IIvLt7enBwm6o=
+	t=1743754881; cv=none; b=D5YcImH92sFzg8GYIA0KAe54j7vq26YVXdvmzNWTusom4LFIla/GA6H1+M8m+Qgg73ySNoq352w05YZbJufdMu82od+k6KH8mSfEPyRCulamqOEb/mGlZvUC8v3bVsqWL0/fTirmsdPPVAJvPHeYUaUwiL5gLIafPCqmKjRAPy0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743754861; c=relaxed/simple;
-	bh=wIF523BR7ZWB9s9bPU3+WZJ/dOWtjgz9I0IYz1QIIiQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=QqvCijDir+h+bHGi1AwVRBemSedGlalAGg/P1yFeqe9V5RBrTTaTsXXxTFZ/pWSt7/lvOXn8b2lYEu5nrc+eDLmSp9Aixb5aT1vuROmGWMBWmhzwHgd4CukYQE9VgPr1EukaEPqYAVSEH/V2sNIoGmKpXAgb34xAi4oz5/90Kdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QDNY0Zm6; arc=none smtp.client-ip=209.85.208.43
+	s=arc-20240116; t=1743754881; c=relaxed/simple;
+	bh=oEBBa0UwT4LpK4NzDfGAM+pvxfyxo+z9Ez6buIMXpIQ=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Tc7rpwKQxvbJeKj7k/gs1DHX1qnHtLmdRrz8WL6I4kYpErPEe6mzb9icMyFrt5avCuyARphblMWorccZ2FpgJyb84+8bMNp3GcuTqNTqErKMR6lenjJJoLadkz6BePjwAT7xOwLMDfOilCgB6ZzkHnZlg2zoabH0jOK+7ArtdLg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KJ7KHNNH; arc=none smtp.client-ip=209.85.221.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QDNY0Zm6"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5e5c7d6b96fso3290417a12.3
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 01:20:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KJ7KHNNH"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3996af42857so1927267f8f.0
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 01:21:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743754858; x=1744359658; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=PhUM97i81TLucKbh3HwO8eUS6b7GpEjII2KUINX9Nsk=;
-        b=QDNY0Zm6Pe3VqW1epp3qLhtcTlySHLYP0nejPFDt8mjXQmDWApRo4SVneU67ns7pFt
-         OzCeg3uekQgrnmF6eYxol0TpIFRE8PjliSlAfrOhL66nXOZTEjC8y9DuN43vasT/aWZZ
-         f/blvLN/OfRq4DiIiz4GbIEArluaky0c4QU1HLSB3D6fhfKampAFKAEFg98byQSizdlW
-         4lOfqWMG2w2eUgjECpEuH/rsokpQW/HA/Ww6srQT3at+pbO5HI46GtudeZKkYQfMXLem
-         O/iFrYy4M+4/Px1Y9ptvj0v8uci0xI+86UpsB9aSHRIZaoLPNVo2Xzcyrogp0iizcqux
-         CTLA==
+        d=gmail.com; s=20230601; t=1743754877; x=1744359677; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=cJnag5N/E8imO6D4V20WNDdVIE9vBf0jkcorR9CB1ZI=;
+        b=KJ7KHNNHju5wT8P5HKROJk1c0+HrjLHZlKO152koN6Bg97Aq1GSGOp2s2rhP3k+sBu
+         8G/xM6lL18ezUDrFdrbSApd/dvA0b8lmitOSBBdW6KnemPMVQ+S2tbRsRPaqphLi5+PU
+         b2XtWQAx5bLV+uvmCZitiLYU8XfOOnVimscwEaSY+UAlu1bjz+f5j9pd1KoHQOVDxvlx
+         iYvgVTuCeF5qVj7UuRvv9ycZAfgQnTZBwFTuKs2REgt2g5ygoESi0NuJo7adl+whl5OM
+         R7H8kVYM/9OnrZqur3dfEt0mStjV8t61DmN3KTYaLdVLpzBxYaKIvUG1mR+e//8/6Cv0
+         ERLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743754858; x=1744359658;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PhUM97i81TLucKbh3HwO8eUS6b7GpEjII2KUINX9Nsk=;
-        b=dYUCozbaEpVFUlFcANPwOgB7rDBjlK7woA2iM7vbEJOQDCSzlHW09gfm7YX5zQrMWQ
-         Y10YA64dVa/pnaka1UWN6CjqUo8nByx854hEiRDvr5aiabE6Wd5L3AxNHD0zRFJ0kXE/
-         f8xAoEQxnSLODOozexsKlWF39kFeFaCUjo9mfjSVG5ERW8PcZuw7GZgrSwJeZ2E5fPuf
-         E8lO8Z4l0GkmrTZCEBFcvJbsnhjTQxDErW1MclEbQ1XRv5sGxjcxQclvcJV1nLY1iQkF
-         SBdn/2ey7mtalKy/9ZwkDE/tBga5WHXXdyF/DPR/mkM9Gi16eOQzs6BGApGFxcopO/Ui
-         6SaA==
-X-Forwarded-Encrypted: i=1; AJvYcCVS7sKb9cbcLlCG0em1q5SyhsQwbjPiby14bGGPaQKnnY5U6hAbS7sdlQLpds8QJ6tKd14JY1qfCslscto=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzogycCwB6ce0rpnkHaM0MKfuu0MQaBUEUBn+xsYOTYYDVVBUZA
-	8P+fUXnbbL9FM7xXgFvqnA4ab928Q5LEhzB5oqFmiN1kw0a7Srd5
-X-Gm-Gg: ASbGncs2SJNZwPEUnnqUWjgrIIWTyFoWD7CI5NPh/X9mF8y4nDwidv4Ku2+l86eh8rg
-	ok+ebT87KQlYx+M6Fqc67HBi6vbParjniktmm8uNAuD+Pe4ViSLVKz/jnAkAhTyqfv22zyJElGd
-	Ay0tPGrPzrLDkIe48aLh2uhR/eBTH7BshEJ6fIwAqgGHKN7xh/L3Xjf1y7R9niX7FrjWt8Ilp8A
-	wUfZMrim6HETMjSCJmNVmTptNdZ4EkHpoHj6wv0WIYy2PkHrnfNR0vNBcobpLZ2wdn8F8DjSxDZ
-	I+0iMCXbj2rPGelFyuAbMWb0qs5ObZ5025i2i2uwnShmKc5+
-X-Google-Smtp-Source: AGHT+IEE+qGYF91L1G7WyX/Xu4M0wabQdp1ZelqhnIo9zgbc86xHNjI0nM7t+1w2KmNl8tb0uAKwLA==
-X-Received: by 2002:a05:6402:1ec8:b0:5e5:b388:2a0d with SMTP id 4fb4d7f45d1cf-5f0b6576eacmr1582063a12.15.1743754857656;
-        Fri, 04 Apr 2025 01:20:57 -0700 (PDT)
-Received: from HP-650 ([105.112.123.50])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f087eedf61sm1939768a12.32.2025.04.04.01.20.55
+        d=1e100.net; s=20230601; t=1743754877; x=1744359677;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=cJnag5N/E8imO6D4V20WNDdVIE9vBf0jkcorR9CB1ZI=;
+        b=n8+q8oYF+ERKhV1i/hMwQ0YB7jC8loOyEyC0khjm6gmv0T0Q1q6AchWo69AqUr5Ld7
+         XJrTY/uO9qSjo5WRvfyGeFfDISHF6xQJKPR5JuWWlwv1kDmgw1XAhatUN8crJc7O6UXF
+         7biz2RY8BP6DyBRQhuWpA3gyED0f8JDfKMM2nXFvb6V+TjL7oFEfsxUV0+el8Zukl0l4
+         PRCiZgS3frwZIXQVwOTOXOprUTCs87HfQFtC2I8A5Ve57nAgj0LifIUQM2fqQYP8WuE1
+         BTupyZu5X5/pRoXYyZQqcZjwDCMR+dKViysTtSQx0FgLNKUFlsN/m3kibSI/IJIc9vlw
+         dutQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVF6/pbAGt8vD3ixy1xNeCWzQyl94/lNGcLyrEcMnoZYAxhbToOx+uPOrIt7aa0NnZLgZ240lV2s1QTVSY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxfjfV8BNZAtiWe6i+w0zMUq6Go/BXIbQCs8ORM4qJf/7SJbvxf
+	auNBFu75xghoKTwPfCK6LpP/1aot6Lwf0xRblZPnhNK/+QPuXRHY
+X-Gm-Gg: ASbGnctoOWV9e/oCp3AgIrPzkM8b9rDr3V0sov6ItetFuTRVwk5bbTQizLzGAk256Ti
+	WE3T3ZeCSLdv91+DWgRLbBYBI7lf97mpog0ZqOryml9rpZhVJagP/NxhH3KpKpoarDbni+bhON5
+	lGwva8p2LRtNBvNmTpNQaTmpA0zDTN6yD6QgJt3q0UX9ucQ1gSYcV0A8hecfVrqCDVn0ZbdSC+w
+	eKvU8Aye5972DVY7yPKvbw5Bw/eg31lu8FpH3uiV7Fw51zKVApDKw/mcPBXyOloBWRFmq7B2/X6
+	Znss3aD90SrpUXDJbsHjNYLxQQPqU8IaOS8g4fhfGsoAzLGrqYfqRak=
+X-Google-Smtp-Source: AGHT+IHjwKEYxClJ24d2Sr1Kx1XpSNoc5grq1wldrqVQn3q7Oax0SKHigAo7e6h2ExclO/2V4oBmxg==
+X-Received: by 2002:a05:6000:22c5:b0:39c:2c0b:8db4 with SMTP id ffacd0b85a97d-39c2e610ac9mr5747391f8f.10.1743754876537;
+        Fri, 04 Apr 2025 01:21:16 -0700 (PDT)
+Received: from [172.16.8.120] ([197.155.71.138])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec1630f21sm43123945e9.8.2025.04.04.01.21.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Apr 2025 01:20:57 -0700 (PDT)
-Date: Fri, 4 Apr 2025 09:20:39 +0100
-From: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Julia.Lawall" <julia.lawall@inria.fr>, outreachy@lists.linux.dev
-Cc: linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org,
-	dan.carpenter@linaro.org
-Subject: [PATCH v5] staging: rtl8723bs: modify struct field to use standard
- bool type
-Message-ID: <Z++WV1132FCULn+0@HP-650>
+        Fri, 04 Apr 2025 01:21:16 -0700 (PDT)
+Message-ID: <03ecf162e93d23e1224f0b6c07f08cb85547d3d8.camel@gmail.com>
+Subject: Re: [PATCH v2 1/3] staging: rtl8723bs: Modify struct rx_pkt_attrib
+ attribute bdecrypted
+From: Erick Karanja <karanja99erick@gmail.com>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Julia Lawall <julia.lawall@inria.fr>, outreachy@lists.linux.dev, 
+	philipp.g.hortmann@gmail.com, linux-staging@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Date: Fri, 04 Apr 2025 11:21:13 +0300
+In-Reply-To: <2025040440-provolone-uncertain-77a0@gregkh>
+References: <cover.1743613025.git.karanja99erick@gmail.com>
+	 <00287fa9f40c643b8451a0d2df8e2fb97235ee46.1743613025.git.karanja99erick@gmail.com>
+	 <2025040215-confusing-sibling-f99f@gregkh>
+	 <3c235d91-efd6-ddf8-7c9-d8d35c7585@inria.fr>
+	 <2025040246-series-tusk-bec1@gregkh>
+	 <cebaec5995fd21c429160b30795e03c2caa29cef.camel@gmail.com>
+	 <2025040440-provolone-uncertain-77a0@gregkh>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-The struct sta_info field ieee8021x_blocked uses the uint values
-0 and 1 to represent false and true values respectively.
-
-Convert cases to use the bool type instead to ensure consistency
-with other parts of the containing code where true or false have
-been used.
-
-This change causes the struct field to change size from a 32bit to
-an 8bit. However, the change is safe to make because the sta_info
-struct is not read from the hardware.
-
-Reported by Coccinelle.
-
-Signed-off-by: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
----
-Changes in v5:
-	- Added "PATCH" omitted in v4 to Subject title as observed by Greg.
-Changes in v4:
-	- Added information about chnaging size of struct field in commit.
-	 message and why it is safe to do so as suggested by Julia Lawall.
-Changes in v3:
-	- Added more patch recipients.
-Changes in v2:
-	- Improved commit message based on suggestion from Julia Lawall
-	- Clarity was provided to Greg Kroah-Hartman by Dan Carpenter on why
-	it is safe to make the change to the struct field.
-
- drivers/staging/rtl8723bs/core/rtw_ap.c      | 2 +-
- drivers/staging/rtl8723bs/include/sta_info.h | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/staging/rtl8723bs/core/rtw_ap.c b/drivers/staging/rtl8723bs/core/rtw_ap.c
-index ed6942e289a5..82f54f769ed1 100644
---- a/drivers/staging/rtl8723bs/core/rtw_ap.c
-+++ b/drivers/staging/rtl8723bs/core/rtw_ap.c
-@@ -389,7 +389,7 @@ void update_bmc_sta(struct adapter *padapter)
- 		psta->qos_option = 0;
- 		psta->htpriv.ht_option = false;
- 
--		psta->ieee8021x_blocked = 0;
-+		psta->ieee8021x_blocked = false;
- 
- 		memset((void *)&psta->sta_stats, 0, sizeof(struct stainfo_stats));
- 
-diff --git a/drivers/staging/rtl8723bs/include/sta_info.h b/drivers/staging/rtl8723bs/include/sta_info.h
-index b3535fed3de7..63343998266a 100644
---- a/drivers/staging/rtl8723bs/include/sta_info.h
-+++ b/drivers/staging/rtl8723bs/include/sta_info.h
-@@ -86,7 +86,7 @@ struct sta_info {
- 	uint qos_option;
- 	u8 hwaddr[ETH_ALEN];
- 
--	uint	ieee8021x_blocked;	/* 0: allowed, 1:blocked */
-+	bool ieee8021x_blocked;
- 	uint	dot118021XPrivacy; /* aes, tkip... */
- 	union Keytype	dot11tkiptxmickey;
- 	union Keytype	dot11tkiprxmickey;
--- 
-2.34.1
-
+On Fri, 2025-04-04 at 09:00 +0100, Greg KH wrote:
+> On Fri, Apr 04, 2025 at 09:58:23AM +0300, Erick Karanja wrote:
+> > On Wed, 2025-04-02 at 21:41 +0100, Greg KH wrote:
+> > > On Wed, Apr 02, 2025 at 10:34:22PM +0200, Julia Lawall wrote:
+> > > >=20
+> > > >=20
+> > > > On Wed, 2 Apr 2025, Greg KH wrote:
+> > > >=20
+> > > > > On Wed, Apr 02, 2025 at 08:16:42PM +0300, Erick Karanja
+> > > > > wrote:
+> > > > > > Standardize boolean representation by ensuring consistency,
+> > > > > > replace instances of 1/0 with true/false where boolean
+> > > > > > logic is
+> > > > > > implied,
+> > > > > > as some definitions already use true/false.
+> > > > > > This improves code clarity and aligns with the kernel=E2=80=99s
+> > > > > > bool
+> > > > > > type usage.
+> > > > > >=20
+> > > > > > Signed-off-by: Erick Karanja <karanja99erick@gmail.com>
+> > > > > > ---
+> > > > > > =C2=A0drivers/staging/rtl8723bs/core/rtw_recv.c | 2 +-
+> > > > > > =C2=A01 file changed, 1 insertion(+), 1 deletion(-)
+> > > > > >=20
+> > > > > > diff --git a/drivers/staging/rtl8723bs/core/rtw_recv.c
+> > > > > > b/drivers/staging/rtl8723bs/core/rtw_recv.c
+> > > > > > index a389ba5ecc6f..fd04dbacb50f 100644
+> > > > > > --- a/drivers/staging/rtl8723bs/core/rtw_recv.c
+> > > > > > +++ b/drivers/staging/rtl8723bs/core/rtw_recv.c
+> > > > > > @@ -1358,7 +1358,7 @@ static signed int
+> > > > > > validate_80211w_mgmt(struct adapter *adapter, union
+> > > > > > recv_frame
+> > > > > > =C2=A0			u8 *mgmt_DATA;
+> > > > > > =C2=A0			u32 data_len =3D 0;
+> > > > > >=20
+> > > > > > -			pattrib->bdecrypted =3D 0;
+> > > > > > +			pattrib->bdecrypted =3D false;
+> > > > >=20
+> > > > > but bdecrypted is a u8, not a boolean type.=C2=A0 So setting it t=
+o
+> > > > > "false"
+> > > > > does not seem correct here, right?
+> > > >=20
+> > > > Is false different than 0?
+> > >=20
+> > > Does C guarantee that?=C2=A0 I can never remember.=C2=A0 I don't thin=
+k it
+> > > guarantees that a 'bool' will only be 8 bits, or am I mistaken
+> > > there
+> > > too?
+> > >=20
+> > > > Elsewhere there is an assignment to true.
+> > >=20
+> > > Was that in the original driver?
+> > >=20
+> > > If this doesn't come from the hardware, then it's fine to make
+> > > the
+> > > change.=C2=A0 If it does, it needs to be verified that the layout and
+> > > bit
+> > > values are identical.
+> > >=20
+> > > thanks,
+> > I have compared the generated assembly code
+> > before and after and I have observed the only
+> > change is the comment below.
+> > -# drivers/staging/rtl8723bs/core/rtw_recv.c:1361:
+> > =C2=A0			pattrib->bdecrypted =3D 0;
+> > +# drivers/staging/rtl8723bs/core/rtw_recv.c:1361:
+> > =C2=A0			pattrib->bdecrypted =3D false;
+> > There is no change in the assembly instructions.
+>=20
+> Showing the assembly is key, not just a comment :)
+Thank you for the update. I will take this into consideration.
+Erick
