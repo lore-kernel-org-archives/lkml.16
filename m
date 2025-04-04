@@ -1,45 +1,68 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DADDADF5C;
-	Fri,  4 Apr 2025 15:32:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 637201DF962;
+	Fri,  4 Apr 2025 15:32:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743780739; cv=none; b=pg5w5KFPluu8JvtnYTQ3T37TDO7GQzUnX+hR2S866J1S+tsDgzmWyzhzGffoQgrHXvwDeyn8m8DF9vqO0CLaspFbL/vnUXs2GwFJYu4lakmY14mvIdKlP7wiCqGxRXEqNZaKHM/jam7e2T3i1irTefYTQEvN+pzgRI1qu6MvYAs=
+	t=1743780761; cv=none; b=H0L61N/XF8/flNV3x/GkYZaDW3IWwz5I9D0uxz1pA3Xs40AUBHUa1twaaQLuRqxdcA907fk4JfRMDymmaTYuedxaX8fUDv7CPyd0CeXNdb6HzqyAXihy8LGyvBXCTc8qqfyW2FwcbC4fFnvaETCCeOMvUCpgeL7t83R0+5h68fI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743780739; c=relaxed/simple;
-	bh=lspfCdwfiLKH5TIIU8Fn/Y5QaTGyaJPs6cQSG79n2MU=;
+	s=arc-20240116; t=1743780761; c=relaxed/simple;
+	bh=l4NfQuaRg7vF8YLzLFVfCX0eGTmkIJQDbug+xp/8Ur0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BZD02fiXA1RL2b++LVC82uQvoL24gh4Ivu2Cg9pkiQYaIBiNOv9sv0OHUasIQ652+m8UZeyZ6x3IGvr1VbbYBPyPYp/ciaWVWOTtSfhqdTKtAxCh/wqhAaDg0jr8quULE35uS7aD1c1h4OgqGQ6kAQzHUY+63OlbK0KUP7AXsWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PZmZ27RA; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=CgMwHI3Mxf23J9KN8lPSlcWfAewT3jSbX9mxfZ9MOyTVo9MacaAeOLcEoXFMMGNauoo5Bz6DMZRfs6htYzop9OD3Euo5UoAFkWSiye850T7jQQRTpC49rTBudWC1rCgb27pd9gdSBy5LgU3y6WeCg5SehwzlcJU1ZRt/PkF32Lk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MDw2ypPf; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PZmZ27RA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEB55C4CEDD;
-	Fri,  4 Apr 2025 15:32:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743780737;
-	bh=lspfCdwfiLKH5TIIU8Fn/Y5QaTGyaJPs6cQSG79n2MU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PZmZ27RA5lC9X6XJJzg/KfOWu0VZfFLZF5u/Nsl5jOZfRIcWapweLHSf2FL6qvYXS
-	 ydM0F+0P1lwusCrQi2y3Vk9NQh9IGC9/UyLvNR5XY3pmTtI5EmiFo2HeYuDBKaqYBU
-	 EMpd1Qvv1LzOupjw8GWg7k65zyZ5/8S+XOkhkATNqu8RWSjh0eAq9N7pMAznuYv7vj
-	 R31eH0C80Ezf2bCy8g/A+ToiYaRtyKjiHieoUYMA/p/lMnJcu9SLPU34jFBrwGT90D
-	 HtUVOLzY0wGkvoXJX5+hc4K2nQLUH/zodT7STlfquE26oNtGu2EdEKwWNXTLvE5C/U
-	 YkvCyFIMUINpw==
-Date: Fri, 4 Apr 2025 08:32:15 -0700
-From: Luis Chamberlain <mcgrof@kernel.org>
-To: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
-	willy@infradead.org, linux-mm@kvack.org,
-	Bagas Sanjaya <bagasdotme@gmail.com>,
-	David Hildenbrand <david@redhat.com>, da.gomez@kernel.org,
-	gost.dev@samsung.com, linux-doc@vger.kernel.org,
-	Pankaj Raghav <p.raghav@samsung.com>
-Subject: Re: [PATCH v3] docs: update THP admin guide about non-tmpfs
- filesystem support
-Message-ID: <Z-_7fzU02OU1hVOT@bombadil.infradead.org>
-References: <20250404140657.29285-1-kernel@pankajraghav.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MDw2ypPf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743780758; x=1775316758;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=l4NfQuaRg7vF8YLzLFVfCX0eGTmkIJQDbug+xp/8Ur0=;
+  b=MDw2ypPf38I3kIjEqPbEoaHVYkChGf5DpeCftS4YQ0BRauyuNb3qNH3B
+   7GeBzROBs4ZVFiFL7pODN6TtivYk0YvtXv2dlfFSaeQkjlZxro9bWSj2B
+   Flq+/RL8OFkmkHYCj/WEtp9aSv0fyfRjVKaO8/k1ow8jeC/EZcZlxudo2
+   wdfzzrD4K8WUqBb/kVWAP2iayiGzBgETnXnUJrgI9dK3d6ckodRlPqV8a
+   MAxVvAPp9HrJ4Ip2jGsJytHtb5veO57oVAig5Z16AYpTEItGMynBbjnxS
+   OFf3Y02W1JktgdyT38PLMY6q2QkdfFlQCqTyLDYk7Jn2a7B810sZmBGod
+   w==;
+X-CSE-ConnectionGUID: dxy+pEgMSNGoUgErKrxFgg==
+X-CSE-MsgGUID: N4AV3c7/RCi4yC6cgSXIOw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11394"; a="32827369"
+X-IronPort-AV: E=Sophos;i="6.15,188,1739865600"; 
+   d="scan'208";a="32827369"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 08:32:37 -0700
+X-CSE-ConnectionGUID: w6x4comGQQOj+pL4mRXMsQ==
+X-CSE-MsgGUID: uqelw8/ZSUC6OlaT1ChzUg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,188,1739865600"; 
+   d="scan'208";a="132460543"
+Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
+  by fmviesa004.fm.intel.com with ESMTP; 04 Apr 2025 08:32:34 -0700
+Received: from kbuild by b207828170a5 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u0j20-0001Kz-1i;
+	Fri, 04 Apr 2025 15:32:32 +0000
+Date: Fri, 4 Apr 2025 23:31:36 +0800
+From: kernel test robot <lkp@intel.com>
+To: Ignacio Encinas <ignacio@iencinas.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Alexandre Ghiti <alex@ghiti.fr>, Arnd Bergmann <arnd@arndb.de>
+Cc: oe-kbuild-all@lists.linux.dev, Eric Biggers <ebiggers@kernel.org>,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-kernel-mentees@lists.linux.dev, skhan@linuxfoundation.org,
+	Zhihang Shao <zhihang.shao.iscas@gmail.com>,
+	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@kernel.org>,
+	linux-arch@vger.kernel.org, Ignacio Encinas <ignacio@iencinas.com>
+Subject: Re: [PATCH v3 1/2] include/uapi/linux/swab.h: move default
+ implementation for swab macros into asm-generic
+Message-ID: <202504042300.it9RcOSt-lkp@intel.com>
+References: <20250403-riscv-swab-v3-1-3bf705d80e33@iencinas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,50 +71,31 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250404140657.29285-1-kernel@pankajraghav.com>
+In-Reply-To: <20250403-riscv-swab-v3-1-3bf705d80e33@iencinas.com>
 
-On Fri, Apr 04, 2025 at 04:06:57PM +0200, Pankaj Raghav (Samsung) wrote:
-> From: Pankaj Raghav <p.raghav@samsung.com>
-> 
-> THP support for non-tmpfs filesystem has been around for some time now.
-> Update the admin guide to reflect it.
-> 
-> While we are at it, move FilePmdMapped to previous paragraph for clarity,
-> and clarify ShmemPmdMapped & ShmemHugePage.
-> 
-> Signed-off-by: Pankaj Raghav <p.raghav@samsung.com>
-> Acked-by: David Hildenbrand <david@redhat.com>
-> ---
-> 
-> Changes since v2:
-> - Address comment from Bagas Sanjaya
-> - Squash commits and Ack from David
-> 
->  Documentation/admin-guide/mm/transhuge.rst | 22 +++++++++++++++-------
->  1 file changed, 15 insertions(+), 7 deletions(-)
-> 
-> diff --git a/Documentation/admin-guide/mm/transhuge.rst b/Documentation/admin-guide/mm/transhuge.rst
-> index dff8d5985f0f..f8aae64e38d0 100644
-> --- a/Documentation/admin-guide/mm/transhuge.rst
-> +++ b/Documentation/admin-guide/mm/transhuge.rst
-> @@ -12,8 +12,8 @@ using huge pages for the backing of virtual memory with huge pages
->  that supports the automatic promotion and demotion of page sizes and
->  without the shortcomings of hugetlbfs.
->  
-> -Currently THP only works for anonymous memory mappings and tmpfs/shmem.
-> -But in the future it can expand to other filesystems.
-> +Currently, THP only works for anonymous memory mappings, tmpfs/shmem and
-> +filesystems that support large folios.
+Hi Ignacio,
 
-That seems to allude that THP can be supported on filesystems
-that suppor large folios. I don't think we want to call that THP
-and that can confuse folks. Leaving "currently" also seems to
-indicate that there is more work to be done for THP for filesystems
-but that's not true as well. So how about something like:
+kernel test robot noticed the following build warnings:
 
-THP only works for anonymous memory mappings, and the tmpfs/shmem is the only
-filesystem to support it. The alternative to THP for other filesystems is to
-support large folios and with it you can end up using huge pages
-opportunistically.
+[auto build test WARNING on a7f2e10ecd8f18b83951b0bab47ddaf48f93bf47]
 
-  Luis
+url:    https://github.com/intel-lab-lkp/linux/commits/Ignacio-Encinas/include-uapi-linux-swab-h-move-default-implementation-for-swab-macros-into-asm-generic/20250404-051744
+base:   a7f2e10ecd8f18b83951b0bab47ddaf48f93bf47
+patch link:    https://lore.kernel.org/r/20250403-riscv-swab-v3-1-3bf705d80e33%40iencinas.com
+patch subject: [PATCH v3 1/2] include/uapi/linux/swab.h: move default implementation for swab macros into asm-generic
+config: i386-buildonly-randconfig-004-20250404 (https://download.01.org/0day-ci/archive/20250404/202504042300.it9RcOSt-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250404/202504042300.it9RcOSt-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504042300.it9RcOSt-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> usr/include/asm-generic/swab.h:21: found __[us]{8,16,32,64} type without #include <linux/types.h>
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
