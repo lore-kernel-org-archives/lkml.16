@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE3A61448D5;
-	Fri,  4 Apr 2025 02:59:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB7441B4227;
+	Fri,  4 Apr 2025 03:00:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743735598; cv=none; b=SBjTYQyylbM+cthQj3YehQbpyV1eQNvnhDIepJTun92qErsKGtwMdQDtmzJk8XfzbuCkxNSjM6JKPd05BeA9B8G2effxb1V2kQN+hbni1YzMh9h+uh2KHe7J26ekdUXFGu4u3W+4xCRHG5KN6yDCsUhQ2t5uTf+jY6/U/0U4OwE=
+	t=1743735601; cv=none; b=Lg3oTMW5gJeOr1/5/H/fAW0m+zInYbnxl1yXOcM2Fm8J2esnPNtj53zrMyzus9gWfEGlu5FFH87PAP4oV0xCmX2glcxAOG9f1ZZ9t1vgPh+yShNyxDElR4vyUhl3wFcT0JwBAd+tLhRSZUqW0gK2V8H3qFsjh4t8fA3uYpcg1Bc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743735598; c=relaxed/simple;
-	bh=xnnf/JMo7g8hotGpKUR0IYT07WFDf4YWzcm+WUwyUKc=;
+	s=arc-20240116; t=1743735601; c=relaxed/simple;
+	bh=jooiBRiLZ5KXTeX7sTZYMvh719V+Qu5vq1GtZM6CWWA=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=sRlh/mKpvjFZMXN1w2MColaCwlwT9hvPs+E2ThEUXTK2rTgIvuGf0Ume/xZ6m2obHKQpWY0BEHMyA1DvtdJZwsf4O+T2xS7BPKAMkc0RXL0WMeAnNdhHR3dXx0xL/nc0S1pi49bP76VEExP0zqek22iZ9KJuoFIJcfTpdPGFY3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L9m4MVF+; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=qK+danf0uib9EwofYbky4KPao56Q3d0GfI4IUz4IM2d6r1cp7qv5ell5h9fs1+Gmi1KyDuX3Gpt495eJ4ite4Vuz7ACd7l4lyIkVwHRso7OliOhZgG0RJJLC0fHRlnTjieZtJujnO1e1bnwtjIlxCotwiZDganGUx7B81yXgVQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g/nOEnzC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L9m4MVF+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 508DAC4CEE3;
-	Fri,  4 Apr 2025 02:59:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g/nOEnzC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4003C4CEE3;
+	Fri,  4 Apr 2025 02:59:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743735597;
-	bh=xnnf/JMo7g8hotGpKUR0IYT07WFDf4YWzcm+WUwyUKc=;
+	s=k20201202; t=1743735600;
+	bh=jooiBRiLZ5KXTeX7sTZYMvh719V+Qu5vq1GtZM6CWWA=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=L9m4MVF+CjyKiJF4HQGUCr+TFqomiA/bqC44XWNkWA1DHlVlz11Nva+tpMBnQsZxX
-	 eTghr2qdE7kh4uMtWQ2MvUFrOCocer4i0q+HiEXH8Yt9NsFAAkTbMYbobNxAg5B3lG
-	 HHB/EKqho1Fxd955zmMMskUQxaJYEZ0sW4L4SQ0hth4v8pPtWW9kSY7nJbdWOg61zc
-	 /3x+zwMvRp7HYKDbQcQia+tpYSJckx6QMv5w4fAf+Q6BLKjiplevqbbSxd52uFDNcV
-	 +xjhIsAKGFyvY9b16zN1Ba9+p4FruKxUwWqia9z0I/HKN3uYF2G35eyAKEDXjpJG/1
-	 lKJRzlS2Kq4Sw==
+	b=g/nOEnzC90yU3P0Hon/50j7bjUU/KNblbpYe76syN5W2QOwwzzoNvatmCdI8LKjVB
+	 GXztCu4IL/A0IORZ4wEe5qoYTPu5Pg2qdTI/GADX2IpCtl7Qlq3BQHZO/zX+1p8D+1
+	 WWVmMPsdLpyQouxJvuQnVlL4t01jBhIea2T09Usomwxj5PZfFpxRCGDgrurnsztTdB
+	 LvDckdMjWvj4seYBkbJOQVVX3OvNQDV+Z/f9IycDIz/I8RnpgnpRFLLS+VkO+vHJ7g
+	 W15YUZMzei1FJHwfHbyfxPUCyc1xy9tvhheao1yd31ibmMsHDhN8tRCzytLaIxuI+5
+	 QtnT/Tce6b/3w==
 From: "Rob Herring (Arm)" <robh@kernel.org>
-Date: Thu, 03 Apr 2025 21:59:33 -0500
-Subject: [PATCH 12/19] arm: dts: rockchip: Drop redundant CPU
- "clock-latency"
+Date: Thu, 03 Apr 2025 21:59:35 -0500
+Subject: [PATCH 14/19] dt-bindings: arm/cpus: Add schemas for
+ "enable-method" dependencies
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -38,7 +38,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250403-dt-cpu-schema-v1-12-076be7171a85@kernel.org>
+Message-Id: <20250403-dt-cpu-schema-v1-14-076be7171a85@kernel.org>
 References: <20250403-dt-cpu-schema-v1-0-076be7171a85@kernel.org>
 In-Reply-To: <20250403-dt-cpu-schema-v1-0-076be7171a85@kernel.org>
 To: Krzysztof Kozlowski <krzk+dt@kernel.org>, 
@@ -78,151 +78,129 @@ Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
  linux-amlogic@lists.infradead.org, linux-renesas-soc@vger.kernel.org
 X-Mailer: b4 0.15-dev
 
-The "clock-latency" property is part of the deprecated opp-v1 binding
-and is redundant if the opp-v2 table has equal or larger values in any
-"clock-latency-ns". Add any missing "clock-latency-ns" properties and
-remove "clock-latency".
+Replace the prose for properties dependent on specific "enable-method"
+values with schemas defining the same requirements.
+
+Both "qcom,acc" and "qcom,saw" properties appear to be required for any
+of the Qualcomm enable-method values, so the schema is a bit simpler
+than what the text said. The references to arm/msm/qcom,saw2.txt and
+arm/msm/qcom,kpss-acc.txt are out of date, so just drop them.
 
 Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 ---
- arch/arm/boot/dts/rockchip/rk3128.dtsi | 8 +++++++-
- arch/arm/boot/dts/rockchip/rk3188.dtsi | 1 -
- arch/arm/boot/dts/rockchip/rk322x.dtsi | 1 -
- arch/arm/boot/dts/rockchip/rk3288.dtsi | 5 +----
- arch/arm/boot/dts/rockchip/rv1108.dtsi | 1 -
- 5 files changed, 8 insertions(+), 8 deletions(-)
+ Documentation/devicetree/bindings/arm/cpus.yaml | 82 +++++++++++++++----------
+ 1 file changed, 49 insertions(+), 33 deletions(-)
 
-diff --git a/arch/arm/boot/dts/rockchip/rk3128.dtsi b/arch/arm/boot/dts/rockchip/rk3128.dtsi
-index d4572146d135..c49099954c28 100644
---- a/arch/arm/boot/dts/rockchip/rk3128.dtsi
-+++ b/arch/arm/boot/dts/rockchip/rk3128.dtsi
-@@ -48,7 +48,6 @@ cpu0: cpu@f00 {
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a7";
- 			reg = <0xf00>;
--			clock-latency = <40000>;
- 			clocks = <&cru ARMCLK>;
- 			resets = <&cru SRST_CORE0>;
- 			operating-points-v2 = <&cpu_opp_table>;
-@@ -87,31 +86,38 @@ cpu_opp_table: opp-table-0 {
- 		opp-216000000 {
- 			opp-hz = /bits/ 64 <216000000>;
- 			opp-microvolt = <950000 950000 1325000>;
-+			clock-latency-ns = <40000>;
- 		};
- 		opp-408000000 {
- 			opp-hz = /bits/ 64 <408000000>;
- 			opp-microvolt = <950000 950000 1325000>;
-+			clock-latency-ns = <40000>;
- 		};
- 		opp-600000000 {
- 			opp-hz = /bits/ 64 <600000000>;
- 			opp-microvolt = <950000 950000 1325000>;
-+			clock-latency-ns = <40000>;
- 		};
- 		opp-696000000 {
- 			opp-hz = /bits/ 64 <696000000>;
- 			opp-microvolt = <975000 975000 1325000>;
-+			clock-latency-ns = <40000>;
- 		};
- 		opp-816000000 {
- 			opp-hz = /bits/ 64 <816000000>;
- 			opp-microvolt = <1075000 1075000 1325000>;
- 			opp-suspend;
-+			clock-latency-ns = <40000>;
- 		};
- 		opp-1008000000 {
- 			opp-hz = /bits/ 64 <1008000000>;
- 			opp-microvolt = <1200000 1200000 1325000>;
-+			clock-latency-ns = <40000>;
- 		};
- 		opp-1200000000 {
- 			opp-hz = /bits/ 64 <1200000000>;
- 			opp-microvolt = <1325000 1325000 1325000>;
-+			clock-latency-ns = <40000>;
- 		};
- 	};
+diff --git a/Documentation/devicetree/bindings/arm/cpus.yaml b/Documentation/devicetree/bindings/arm/cpus.yaml
+index 2e666b2a4dcd..963a9320cba8 100644
+--- a/Documentation/devicetree/bindings/arm/cpus.yaml
++++ b/Documentation/devicetree/bindings/arm/cpus.yaml
+@@ -273,8 +273,6 @@ properties:
+     description:
+       The DT specification defines this as 64-bit always, but some 32-bit Arm
+       systems have used a 32-bit value which must be supported.
+-      Required for systems that have an "enable-method"
+-        property value of "spin-table".
  
-diff --git a/arch/arm/boot/dts/rockchip/rk3188.dtsi b/arch/arm/boot/dts/rockchip/rk3188.dtsi
-index 44b54af0bbf9..850bd6e67895 100644
---- a/arch/arm/boot/dts/rockchip/rk3188.dtsi
-+++ b/arch/arm/boot/dts/rockchip/rk3188.dtsi
-@@ -23,7 +23,6 @@ cpu0: cpu@0 {
- 			compatible = "arm,cortex-a9";
- 			next-level-cache = <&L2>;
- 			reg = <0x0>;
--			clock-latency = <40000>;
- 			clocks = <&cru ARMCLK>;
- 			operating-points-v2 = <&cpu0_opp_table>;
- 			resets = <&cru SRST_CORE0>;
-diff --git a/arch/arm/boot/dts/rockchip/rk322x.dtsi b/arch/arm/boot/dts/rockchip/rk322x.dtsi
-index 96421355c274..cd11a018105b 100644
---- a/arch/arm/boot/dts/rockchip/rk322x.dtsi
-+++ b/arch/arm/boot/dts/rockchip/rk322x.dtsi
-@@ -36,7 +36,6 @@ cpu0: cpu@f00 {
- 			resets = <&cru SRST_CORE0>;
- 			operating-points-v2 = <&cpu0_opp_table>;
- 			#cooling-cells = <2>; /* min followed by max */
--			clock-latency = <40000>;
- 			clocks = <&cru ARMCLK>;
- 			enable-method = "psci";
- 		};
-diff --git a/arch/arm/boot/dts/rockchip/rk3288.dtsi b/arch/arm/boot/dts/rockchip/rk3288.dtsi
-index 3f1d640afafa..42d705b544ec 100644
---- a/arch/arm/boot/dts/rockchip/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rockchip/rk3288.dtsi
-@@ -70,7 +70,6 @@ cpu0: cpu@500 {
- 			resets = <&cru SRST_CORE0>;
- 			operating-points-v2 = <&cpu_opp_table>;
- 			#cooling-cells = <2>; /* min followed by max */
--			clock-latency = <40000>;
- 			clocks = <&cru ARMCLK>;
- 			dynamic-power-coefficient = <370>;
- 		};
-@@ -81,7 +80,6 @@ cpu1: cpu@501 {
- 			resets = <&cru SRST_CORE1>;
- 			operating-points-v2 = <&cpu_opp_table>;
- 			#cooling-cells = <2>; /* min followed by max */
--			clock-latency = <40000>;
- 			clocks = <&cru ARMCLK>;
- 			dynamic-power-coefficient = <370>;
- 		};
-@@ -92,7 +90,6 @@ cpu2: cpu@502 {
- 			resets = <&cru SRST_CORE2>;
- 			operating-points-v2 = <&cpu_opp_table>;
- 			#cooling-cells = <2>; /* min followed by max */
--			clock-latency = <40000>;
- 			clocks = <&cru ARMCLK>;
- 			dynamic-power-coefficient = <370>;
- 		};
-@@ -103,7 +100,6 @@ cpu3: cpu@503 {
- 			resets = <&cru SRST_CORE3>;
- 			operating-points-v2 = <&cpu_opp_table>;
- 			#cooling-cells = <2>; /* min followed by max */
--			clock-latency = <40000>;
- 			clocks = <&cru ARMCLK>;
- 			dynamic-power-coefficient = <370>;
- 		};
-@@ -116,6 +112,7 @@ cpu_opp_table: opp-table-0 {
- 		opp-126000000 {
- 			opp-hz = /bits/ 64 <126000000>;
- 			opp-microvolt = <900000>;
-+			clock-latency-ns = <40000>;
- 		};
- 		opp-216000000 {
- 			opp-hz = /bits/ 64 <216000000>;
-diff --git a/arch/arm/boot/dts/rockchip/rv1108.dtsi b/arch/arm/boot/dts/rockchip/rv1108.dtsi
-index f3291f3bbc6f..42a4d72597a5 100644
---- a/arch/arm/boot/dts/rockchip/rv1108.dtsi
-+++ b/arch/arm/boot/dts/rockchip/rv1108.dtsi
-@@ -32,7 +32,6 @@ cpu0: cpu@f00 {
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a7";
- 			reg = <0xf00>;
--			clock-latency = <40000>;
- 			clocks = <&cru ARMCLK>;
- 			#cooling-cells = <2>; /* min followed by max */
- 			dynamic-power-coefficient = <75>;
+   cpu-idle-states:
+     $ref: /schemas/types.yaml#/definitions/phandle-array
+@@ -333,24 +331,13 @@ properties:
+ 
+   qcom,saw:
+     $ref: /schemas/types.yaml#/definitions/phandle
+-    description: |
+-      Specifies the SAW* node associated with this CPU.
+-
+-      Required for systems that have an "enable-method" property
+-      value of "qcom,kpss-acc-v1" or "qcom,kpss-acc-v2"
+-
+-      * arm/msm/qcom,saw2.txt
++    description:
++      Specifies the SAW node associated with this CPU.
+ 
+   qcom,acc:
+     $ref: /schemas/types.yaml#/definitions/phandle
+-    description: |
+-      Specifies the ACC* node associated with this CPU.
+-
+-      Required for systems that have an "enable-method" property
+-      value of "qcom,kpss-acc-v1", "qcom,kpss-acc-v2", "qcom,msm8226-smp" or
+-      "qcom,msm8916-smp".
+-
+-      * arm/msm/qcom,kpss-acc.txt
++    description:
++      Specifies the ACC node associated with this CPU.
+ 
+   rockchip,pmu:
+     $ref: /schemas/types.yaml#/definitions/phandle
+@@ -378,22 +365,51 @@ properties:
+       formed by encoding the target CPU id into the low bits of the
+       physical start address it should jump to.
+ 
+-if:
+-  # If the enable-method property contains one of those values
+-  properties:
+-    enable-method:
+-      contains:
+-        enum:
+-          - brcm,bcm11351-cpu-method
+-          - brcm,bcm23550
+-          - brcm,bcm-nsp-smp
+-  # and if enable-method is present
+-  required:
+-    - enable-method
+-
+-then:
+-  required:
+-    - secondary-boot-reg
++allOf:
++  - if:
++      # If the enable-method property contains one of those values
++      properties:
++        enable-method:
++          contains:
++            enum:
++              - brcm,bcm11351-cpu-method
++              - brcm,bcm23550
++              - brcm,bcm-nsp-smp
++      # and if enable-method is present
++      required:
++        - enable-method
++    then:
++      required:
++        - secondary-boot-reg
++  - if:
++      properties:
++        enable-method:
++          enum:
++            - spin-table
++            - renesas,r9a06g032-smp
++      required:
++        - enable-method
++    then:
++      required:
++        - cpu-release-addr
++  - if:
++      properties:
++        enable-method:
++          enum:
++            - qcom,kpss-acc-v1
++            - qcom,kpss-acc-v2
++            - qcom,msm8226-smp
++            - qcom,msm8916-smp
++      required:
++        - enable-method
++    then:
++      required:
++        - qcom,acc
++        - qcom,saw
++    else:
++      properties:
++        qcom,acc: false
++        qcom,saw: false
+ 
+ required:
+   - device_type
 
 -- 
 2.47.2
