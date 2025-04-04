@@ -1,109 +1,115 @@
-Received: from mail.3xo.fr (mail.3xo.fr [212.129.21.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 596E719D081;
-	Fri,  4 Apr 2025 08:57:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.129.21.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DC6D611E;
+	Fri,  4 Apr 2025 09:00:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743757071; cv=none; b=jW+yyNWOsMhFFA4VHdgK/Bom4FR0CzXtamNO1p6w3BQxjbvR4uqQ5jVUIRQJJg+JgRX/MX3ZQ1djy1TsD98FPhZSiFqgld4wHdf2w82Gv+FOH3vDvlcu9gNd0z3hp3rJLfyKUZqfYFItptu1zU4awtIvTNhJOIermpYIHm1oHJs=
+	t=1743757238; cv=none; b=LcYL3+0RO0QevQFcu/VU1AnRYiZW1EencyKavAMlsu8eng7r4j1JOk0eInGC5z+9gO/UT+8Y5mXfNIXsNYBHx807FEe7HbSYnnuHFVc4P9mPq2FDMRQ5aVpmf0VTcsByDY9AxCQSKaSZbjdhEzVsU3UtR6n4HH02Jvh6O93f0Pg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743757071; c=relaxed/simple;
-	bh=qGpiBlKk4gUz7SGt4N7XSRFqC2Dp6ovYU5+SiSPQizM=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=oSRHVbAWEB4F7MrU7nN8kjBM2Z3OAH1vOv/0Q5zy7EjHUbWOt7wT0/gkBnQGjQv6tf0LJHyHyUpbyDzi4DdKMxdPcESE9I+taXUrlVM14RC7YWj9u9FBmXfJ5x5+yRhOtWfqyOR+tr/J18TXcvcRhCBZqsugQHc/+hKSuglo0K0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=3xo.fr; spf=pass smtp.mailfrom=3xo.fr; dkim=pass (2048-bit key) header.d=3xo.fr header.i=@3xo.fr header.b=lb20VlKf; arc=none smtp.client-ip=212.129.21.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=3xo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=3xo.fr
+	s=arc-20240116; t=1743757238; c=relaxed/simple;
+	bh=dDw9nB3R5CrigY7byXXpDEVqVujq14h4RJcGIbk8Eyw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cVh7l0uvM2NIduAaWIE4dIhAr3ZNoBDTPelQUTlCBsoB4S12dUntuOI4hoMEYw0lJtGfNRRGMaRAfbckrz0k7INGbLupvxeqqdFKD7YVS5lYXiLXIl+3RAiqZAjPMA0h9MCgTCPwMYzAbDasjgsNZyye8CZUTD1MN4iTL9Nsqlk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Cx7pXNXy; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=3xo.fr header.i=@3xo.fr header.b="lb20VlKf"
-Received: from localhost (mail.3xo.fr [212.129.21.66])
-	by mail.3xo.fr (Postfix) with ESMTP id 98EECCD;
-	Fri,  4 Apr 2025 10:50:29 +0200 (CEST)
-X-Virus-Scanned: Debian amavis at nxo2.3xo.fr
-Received: from mail.3xo.fr ([212.129.21.66])
- by localhost (mail.3xo.fr [212.129.21.66]) (amavis, port 10024) with ESMTP
- id 8mSLMhAe8CKe; Fri,  4 Apr 2025 10:50:27 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.3xo.fr 83FED8D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=3xo.fr; s=3xo;
-	t=1743756627; bh=CRAJN8+XEA5p31GSsFqFuEJaey0yqN9dDs07tGG1jQA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=lb20VlKfcjY8a7J/mtS3DUFvklSqJjYHbNOpvr5mvDuUiTcUAZTrS4jvwIYi8pDbd
-	 jngz7iyj2q4qcYbEo0GDpo08Z9QRGAjpQdVAP4VFFDrkW8nKXq1Eo/bYXKZQyW/m7B
-	 XtHudX59MBoF8M+9EXMuM/86MpKMuPEiXhr+YP1CU432PwUleI3pWhJKH/mAgcVGfr
-	 mdDYTpedNVvrT51XQzQsffn4Jv0RJ4oEF+cxyX+4fVC8705kTxtdIRIKH8XCDQCNsY
-	 a6gvuy2X4ZE69DNF8SCmUBX3heBPxYDV9qklLKzRt+nmF+63iq/i6DC6LOg1J4dW24
-	 aayyaaredgRCQ==
-Received: from mail.3xo.fr (mail.3xo.fr [212.129.21.66])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	by mail.3xo.fr (Postfix) with ESMTPSA id 83FED8D;
-	Fri,  4 Apr 2025 10:50:27 +0200 (CEST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cx7pXNXy"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ac298c8fa50so300849466b.1;
+        Fri, 04 Apr 2025 02:00:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743757235; x=1744362035; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=HZZIhlXmSEM4mLMGt9PJm09NKzZfuiEVonPYgb5H/yw=;
+        b=Cx7pXNXyD+fJyZgOa66cHFUHggvW1Zfs2fGsTIhchCFR/UNsZ/KQaG+48ezEpbWfMz
+         5OICLHAexn0Lcf/LSax24K5rCqTPo6ambPj05IcNuyHJdEK/JQXp03P3HgrugaWDht4+
+         cdos7lzPQ0PBfwzoQwTujqm3PaGanLT5hD+QkWtMIsMSWorZQtIOAGH5eOKTpYiQdHey
+         9Z2ZOSBLk1yO+rw3AHzutPrr0i0DV0RPUDEMXFzxTim1o9RSe9PqW81VG/G/CsbaQD+i
+         xB1UzgsCWcwfd6Sd1QSp/NAoOvll16X5JLfXTvfDL7rQbi0nOekeSUR5Kkwppro9VgdE
+         H8rA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743757235; x=1744362035;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HZZIhlXmSEM4mLMGt9PJm09NKzZfuiEVonPYgb5H/yw=;
+        b=EPvQ+I7tb0vgt3hiBv4c/nMs8PEhnnowucAvLHkVJdhq/ajlQTuF6sXYgE7XjoEmEM
+         TqA8og3J5UT82zKVCuT6xTvJr2FMrvPosht/KZsWpuWCFpHxMDIF1jcxSoA07+pz6Yfk
+         7ooafa+jU9QyBXhxIkBVJN5comoL/jLQ6bYSEOuNkxmX8WHN4/AN0sQFuR1/hwNW2Tz7
+         hKnewj4kS2P/3DH6a2ceVm/vjcRZntPsIDKUUHFIXzxFxfKjeCC34jX25ixL182qJyv3
+         ApGDO3ZtAqBC2UnVQ7ManEHYaLWseoy2BdIPGsFpCghxgVyemo0gaDu/p/Yl8xpv0ygy
+         f2aw==
+X-Forwarded-Encrypted: i=1; AJvYcCU8fg4h1zKD3EMYM8j4y4mCRE7OMtXieN0GjZYGNM88wdMTQVIG0LLDEzZNb/7VE/ReBsOnJfedW8BsrJc=@vger.kernel.org, AJvYcCUQjK2UoU/2dDC+N3OVKuC/Gj8AIaex+OEZDoJX+35wTDWV4wtzkLP4XBDCHkyBmmOV/MxQi7noO6gExCA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx18wXNu+HNpKCl8/8a8FON3iYqPUNE6Br8U2FNuAihk8YSqvQY
+	IBxH836dki/UeOfnrBtIUsm0K0IAx0fZM+OUbeSfnJB63UAoLZHm
+X-Gm-Gg: ASbGncuFWe8EGwu2IgdNUrD91SU7tZMCy54w1saugYVGs/ORl/4wCUrvPAh4XzittIA
+	jMgai3cqnL51lLg4KJLWBuhhoe6gGO9uGdio9mYktU2IlFcWiMf2i+9U23XOP5KTPBrx/38lugZ
+	W0gaFsfFH/LfzB7OZlaimIKm3/PI9apoZE37jRFnNYmm9bl5Hulk3dgoztd95M0IXP2R2jmRlGf
+	92hmFvyR8mk58Qvbgjxn4kQd+W61vuICngd58s4XineRnBQ0TPSOUUVTvOAs0nYnI0Pn2m4zSvN
+	R7bHgaDUrPImHGBILcRKn77RHYHFnInzrCL/wIJApCn2c3u9vkCIFiYCStNzWIk0LKnAHg==
+X-Google-Smtp-Source: AGHT+IFKaYCa9Ekb9gEfEN5MRzSJWHbOs1q70b7ER2jDUNXjdVPmL24jFWpqdnQ80yp71nL0KKYsSg==
+X-Received: by 2002:a17:907:988:b0:ac7:31a4:d4e9 with SMTP id a640c23a62f3a-ac7d16bc089mr299516766b.4.1743757234491;
+        Fri, 04 Apr 2025 02:00:34 -0700 (PDT)
+Received: from demon-pc.localdomain ([188.27.129.206])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7bfe9adc6sm222086166b.59.2025.04.04.02.00.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Apr 2025 02:00:33 -0700 (PDT)
+From: Cosmin Tanislav <demonsingur@gmail.com>
+To: 
+Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+	Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Naushir Patuck <naush@raspberrypi.com>,
+	linux-media@vger.kernel.org,
+	linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Cosmin Tanislav <demonsingur@gmail.com>
+Subject: [PATCH v2] media: platform: rpi1-cfe: fix pad in call to get_mbus_config()
+Date: Fri,  4 Apr 2025 12:00:25 +0300
+Message-ID: <20250404090026.2986810-1-demonsingur@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Fri, 04 Apr 2025 10:50:27 +0200
-From: Nicolas Baranger <nicolas.baranger@3xo.fr>
-To: Christoph Hellwig <hch@infradead.org>
-Cc: hch@lst.de, David Howells <dhowells@redhat.com>, netfs@lists.linux.dev,
- linux-cifs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, Steve French <smfrench@gmail.com>, Jeff Layton
- <jlayton@kernel.org>, Christian Brauner <brauner@kernel.org>
-Subject: Re: [netfs/cifs - Linux 6.14] loop on file cat + file copy when files
- are on CIFS share
-In-Reply-To: <Z-Z95ePf3KQZ2MnB@infradead.org>
-References: <10bec2430ed4df68bde10ed95295d093@3xo.fr>
- <35940e6c0ed86fd94468e175061faeac@3xo.fr> <Z-Z95ePf3KQZ2MnB@infradead.org>
-Message-ID: <48685a06c2608b182df3b7a767520c1d@3xo.fr>
-X-Sender: nicolas.baranger@3xo.fr
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
 Content-Transfer-Encoding: 8bit
 
-Hi Christoph
+The source subdevice might be using a source pad not equal to 0.
 
-Thanks for answer and help
-Did someone reproduced the issue (very easy) ?
+Use the already existing source_pad field of cfe.
 
+Fixes: 6edb685abb2a ("media: raspberrypi: Add support for RP1-CFE")
+Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
+---
 
-CIFS SHARE is mounted as /mnt/fbx/FBX-24T
-echo toto >/mnt/fbx/FBX-24T/toto
+V2:
+ * correct Fixes tag
 
-ls -l /mnt/fbx/FBX-24T/toto
--rw-rw-rw- 1 root root 5 20 mars  09:20 /mnt/fbx/FBX-24T/toto
+ drivers/media/platform/raspberrypi/rp1-cfe/cfe.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-cat /mnt/fbx/FBX-24T/toto
-toto
-toto
-toto
-toto
-toto
-toto
-toto
-^C
+diff --git a/drivers/media/platform/raspberrypi/rp1-cfe/cfe.c b/drivers/media/platform/raspberrypi/rp1-cfe/cfe.c
+index 69a5f23e7954..7db4fe5e0fd4 100644
+--- a/drivers/media/platform/raspberrypi/rp1-cfe/cfe.c
++++ b/drivers/media/platform/raspberrypi/rp1-cfe/cfe.c
+@@ -1206,8 +1206,8 @@ static int cfe_start_streaming(struct vb2_queue *vq, unsigned int count)
+ 	cfg_reg_write(cfe, MIPICFG_INTE,
+ 		      MIPICFG_INT_CSI_DMA | MIPICFG_INT_PISP_FE);
+ 
+-	ret = v4l2_subdev_call(cfe->source_sd, pad, get_mbus_config, 0,
+-			       &mbus_config);
++	ret = v4l2_subdev_call(cfe->source_sd, pad, get_mbus_config,
++			       cfe->source_pad, &mbus_config);
+ 	if (ret < 0 && ret != -ENOIOCTLCMD) {
+ 		cfe_err(cfe, "g_mbus_config failed\n");
+ 		goto err_clear_inte;
+-- 
+2.49.0
 
-
-CIFS mount options:
-grep cifs /proc/mounts
-//10.0.10.100/FBX24T /mnt/fbx/FBX-24T cifs 
-rw,nosuid,nodev,noexec,relatime,vers=3.1.1,cache=none,upcall_target=app,username=fbx,domain=HOMELAN,uid=0,noforceuid,gid=0,noforcegid,addr=10.0.10.100,file_mode=0666,dir_mode=0755,iocharset=utf8,soft,nounix,serverino,mapposix,mfsymlinks,reparse=nfs,nativesocket,symlink=mfsymlinks,rsize=65536,wsize=65536,bsize=16777216,retrans=1,echo_interval=60,actimeo=1,closetimeo=1 
-0 0
-
-KERNEL: uname -a
-Linux 14RV-SERVER.14rv.lan 6.14.0-rc2-amd64 #0 SMP PREEMPT_DYNAMIC Wed 
-Feb 12 18:23:00 CET 2025 x86_64 GNU/Linux
-
-
-Kind regards
-Nicolas Baranger
-
-
-Le 2025-03-28 11:45, Christoph Hellwig a écrit :
-
-> Hi Nicolas,
-> 
-> please wait a bit, many file system developers where at a conference
-> this week.
