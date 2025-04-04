@@ -1,49 +1,64 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F9C119C540
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 22:28:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 555A11E1DE9
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 22:29:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743805705; cv=none; b=BZWwf+N1sbFMwF1GLWD5AWrWxegYeph0H0kHQmRbwhsQUQ9ICXdeBzpvXHMIkyviPWogqmi1CE3ETvuQx+5iNP2pRiH4wiLSBbtkCGGxU9H8T4OM/J58eApatviW+ZltT2B7YZ754B3mQRXUFisEoLLrSsDhYwParXJRhhI8bEA=
+	t=1743805789; cv=none; b=V3a/k8JWhwRWPOVdJM46pug5vOV2m9WZf4oZQmc61XJnxKWQ+0//OiNAoHrQkC2X0wJnKsEIpAXhDNjhQWQm7W86oQ6aHt6lVldqVVCYbiLMjGh3F0B5uecvnOgvL3cl7hHB5N/m9KpAKw2BiWzLO+gAMaAwf+LyQHoXx62VzPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743805705; c=relaxed/simple;
-	bh=rD4zM5OiuvvW6gCsQJsuSIomZr662KVSXdfF0TeywME=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=axlLDx2mBTQSVsXE9PfGjuS5OAWaX4ot+CfS0mpPtCa1C2dMNeaijCzunqShkFOK7TOS/GRX4ynk+gcncw9CG62hL9IiYt3XAWXRETFOR1BdH/VqJa5n7FX/t41kPH97q7ZzmsHNAim+wpM1hOFtVpKcS9Kgn479HTuCd+bzs2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IRYqz6/L; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1743805789; c=relaxed/simple;
+	bh=NmHFPxslfg0WBqi0kIWYsQah2KUantxPzippnzuHLhA=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=ndr8PYbX+KvU7fFh6hpojnPSFLmqT2fkPC4eyQKRYTiD9J3XnF42Hu92ESPHOQ0X+5Q04WTgBQxzCq06IBHlaDy0Bx7FXYxm0BoEpcumDJdoB8lH/A1ubS3nToqn+uH8J8LX9KITXpeJZ2RzUXo2bWVgughVnMZqFP+P9X3SC4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=jlVLBt48; arc=none smtp.client-ip=209.85.166.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IRYqz6/L"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743805702;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Befyf2MillwSBKMFj/rTqdswT5mC0g4BS1/gE352LrA=;
-	b=IRYqz6/LrkyPrNOQ7s6ZpGkQWb9pNyXSZrnhlkAh2UW6d9xs079EpOmgVyFFfp47rc9a5Y
-	vMcRzsLCBypO0AGdFf7zTSjDctTddC7jvtmWCdgYUpQhZN/8+4zyVaQHwqDI2NeABUGWvQ
-	TXujHUQvUZM/rSjEVtXnxBaP/Hi74ho=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-691-t-oQUblOMoGHXvd33mwDWw-1; Fri,
- 04 Apr 2025 18:28:16 -0400
-X-MC-Unique: t-oQUblOMoGHXvd33mwDWw-1
-X-Mimecast-MFC-AGG-ID: t-oQUblOMoGHXvd33mwDWw_1743805694
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 280231801A06;
-	Fri,  4 Apr 2025 22:28:13 +0000 (UTC)
-Received: from [10.22.81.88] (unknown [10.22.81.88])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 4257C1801752;
-	Fri,  4 Apr 2025 22:28:10 +0000 (UTC)
-Message-ID: <f949d227-b3ba-48dc-8dab-d527b82e1246@redhat.com>
-Date: Fri, 4 Apr 2025 18:28:10 -0400
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="jlVLBt48"
+Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-3cda56e1dffso12602525ab.1
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 15:29:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1743805786; x=1744410586; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:from:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=X2+rBhFrK00h+ijJXPzvBEmgahY//panNVZB95538Xg=;
+        b=jlVLBt48N5Ox5THVj7Dw0HXSa9Fuhw4h9+FGupAISLrxVILJSiHTYfcSwcovShAyuJ
+         xkkhN8EzZc4bK4gbZyW3X9X6Hq/aHbqfhbbmBVhfkN72WnTch9d+TTEhYqTZOAUyoHRb
+         LmeuZkU35hfdx1GfIDnfUEVy0EDw5HWkoL2tX8EyhRDloNZ7+UtU5Qi/K5NEm1LkMMxj
+         qUovMMNzPix2ZrRzdNlxsdhJuLpDJw708dT/7PJLZwakXWqAuzUF/XYvzbXrsqW5Qikn
+         rgE1aweZKsxaf6lcWGU/hCXuZ3u/J2dfqz1ZdvZ9vtqgYdLZepnyzf0eZrIXjMfVIyB/
+         G5tw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743805786; x=1744410586;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:from:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=X2+rBhFrK00h+ijJXPzvBEmgahY//panNVZB95538Xg=;
+        b=gZolMjQ8Fc1czQ0CpA935KKWeAgxcvAcEwMVqBaOWUFfTvE5vPH7pg/U7bNtRSotkU
+         w8eR2iz1l7P5Y27Ewcu5q/5GgJAwwCF3+nOeMEP7t3uAeo6hKne4Pz8IwHx3S6WIWYIv
+         bUwFCBcWsJ41/s2uyWdYxJ0lILJY9jk9PN9QAoKytGPe2Vvx4i6/fPPDLSKYuzJ164wO
+         aJHhy0oiXuwWgEtXBfrTwn/ZiuLZL98+MVdghsqCOI17HIpdyQPn61TVmLvBT08xCUnA
+         NCINzuFxkGi+JWa5BYNkwJyB5EBad28DHzKmlWjTrr7nyuPS6JII5o/lShr2Dz9L/9UE
+         Ykkg==
+X-Forwarded-Encrypted: i=1; AJvYcCWNUOFpJZSxW3ZI02tpoXgMjsw0H2kfjICgPyRUNBR88SV7K1D15Xi1krxP1hLIuozGbhlitkjGme+6paI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzn6X4p/pksCSliKiPGzd7QpFd7GL87IHHbKVcCt0RoECd7dPA5
+	rIPVzAzYyXkFdmYpSjgIS6h2F/j1HPwuBW3y/OnBi5ruia9g35z+HFBdDnLRd+0=
+X-Gm-Gg: ASbGncttowMpTgohlCG9090bxAtn3hH5DiYtYMXzzeU0jS3qlCb32xyG91YKI/k62vG
+	OXMSW8L+dm1tiFPyWTFeZRuiIaVPcVc9CW+t1YMpcc30QfL32bbvys6M5oAFWO9dpZfKsXPrGON
+	AARWl3l9rxDEDT+juGYgIkuZSjiOD+b+JsLr2KpoaYkPKSctUos3yOCT5Mfkxc68xBpyWeUu4Jj
+	/mKF7enO5+6V0wNpdRzftd5GrnKCfUP0JjtvRik2zxo01NexSb9AJpcCXIjjyziUfpj4TEjPxVn
+	Vhbc7O3qCNV55W/sEKG+WYZfa0YsymoGZpAUj+6XJw==
+X-Google-Smtp-Source: AGHT+IFEdAwRfc0UX+JXaYJNbcrDKSXDiE0ZmU7jYIj1mI0qDtgXapwG2cndU6ey8QrKP9T048JSFA==
+X-Received: by 2002:a05:6602:4c82:b0:85b:476e:ede2 with SMTP id ca18e2360f4ac-8611b5788f3mr531756939f.13.1743805786473;
+        Fri, 04 Apr 2025 15:29:46 -0700 (PDT)
+Received: from [192.168.1.150] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f4b5c497besm1038305173.38.2025.04.04.15.29.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 04 Apr 2025 15:29:45 -0700 (PDT)
+Message-ID: <078b3edf-aa34-452d-aa2b-244119f76ace@kernel.dk>
+Date: Fri, 4 Apr 2025 16:29:45 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,93 +66,22 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/3] nvme-multipath: add the NVME_MULTIPATH_PARAM
- config option
-To: Christoph Hellwig <hch@lst.de>
-Cc: kbusch@kernel.org, sagi@grimberg.me, loberman@redhat.com,
- linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
- emilne@redhat.com, bgurney@redhat.com, jmeneghi@redhat.com
-References: <20250322232848.225140-1-jmeneghi@redhat.com>
- <20250322232848.225140-3-jmeneghi@redhat.com> <20250403043526.GC22526@lst.de>
+From: Jens Axboe <axboe@kernel.dk>
+Subject: Re: [syzbot] [v9fs?] BUG: stack guard page was hit in io_wq_worker
+To: syzbot <syzbot+6f691675b0810bf591ec@syzkaller.appspotmail.com>
+Cc: akpm@linux-foundation.org, asmadeus@codewreck.org, ericvh@kernel.org,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org, lucho@ionkov.net,
+ syzkaller-bugs@googlegroups.com, v9fs@lists.linux.dev
+References: <6782e97a.050a0220.d0267.004b.GAE@google.com>
 Content-Language: en-US
-From: John Meneghini <jmeneghi@redhat.com>
-Organization: RHEL Core Storge Team
-In-Reply-To: <20250403043526.GC22526@lst.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+In-Reply-To: <6782e97a.050a0220.d0267.004b.GAE@google.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
+#syz set subsystems: netfs
 
-On 4/3/25 12:35 AM, Christoph Hellwig wrote:
-> On Sat, Mar 22, 2025 at 07:28:47PM -0400, John Meneghini wrote:
+I believe this one is long fixed, though.
 
->> +config NVME_MULTIPATH_PARAM
->> +	bool "NVMe multipath param"
-> 
-> This isn't really a good config options description.
-> 
->> +	depends on NVME_CORE && NVME_MULTIPATH
->> +	default y
->> +	help
->> +	  This option controls the inclusion of the NVMe core module
->> +	  "multipath" parameter. If this option is disabled the
->> +	  nvme_core.multipath parameter is excluded from the kernel.
->> +	  If this option is enabled the nvme_core.multipath parameter
->> +	  is included in the kernel.
-> 
-> So maybe invert the option to
-> 
-> config NVME_MULTIPATH_DISABLE
-> 	bool "Allow overriding the default nvme-multipath parameter"
-
-So the question is: do you want the core_nvme.multipath parameter
-to be excluded by default, or included by default?
-
-Keith and I agreed to call this CONFIG_NVME_DISBALE_MULTIPATH_PARAM.
-However during testing I realized that many of the default make 'config'
-rules would end up with CONFIG_NVME_DISBALE_MULTIPATH_PARAM=y,
-even if I set the config rule to "default n".
-
-For example:
-
-  make localmodconfig
-  make allmodconfig
-
-would end up with compiling out the core_nvme.multipath parameter and I
-don't think this is what we want.
-
-If we want this new config option to provide no net change in the
-default behavior, we need this to be the logic to be positive.
-
-> 	help
-> 	  This option controls the inclusion of the NVMe core module
-> 	  "multipath" parameter. If this option is enabled the
-> 	  nvme_core.multipath parameter is excluded from the kernel.
-> 	  If this option is enabled the nvme_core.multipath parameter
-
-How about something simple like this:
-
-+config NVME_ENABLE_MULTIPATH_PARAM
-+       bool "NVMe enable core_nvme.multipath param"
-+       depends on NVME_CORE && NVME_MULTIPATH
-+       default y
-+       help
-+         If this option is N the core_nvme.multipath parameter
-+         is excluded from the kernel. If this option is Y the
-+         core_nvme.multipath parameter is included in the kernel.
-+
-+         If unsure, say Y.
-+
-
-> 	  See the nvme_core.multipath documentation why disabling
-> 	  multipathing is generally harmful but there might be
-> 	  exception reasons to do so anyway.
-> 
-> (assuming we already have the documentation mentioned, if not we
-> need to add it)
-
-Yes, I will add some documentation about this.  It looks like we currently
-don't have any.
-
-/John
+-- 
+Jens Axboe
 
