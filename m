@@ -1,257 +1,126 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29A181F461F
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 11:57:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71CC11F4CAC;
+	Fri,  4 Apr 2025 11:57:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743767831; cv=none; b=QpbdTJq2HObbrC0Ev0T4MEm52bQpJYSH0NuaRlfvdMKFGy5CBCmBaQPUiji5C9fmuG4d9oMcosIWsLG5lHRe7+65YP7NT8HvPWziM0zqGM9f3hP/6c6a8vTAKFLdcCkr05eQAZFkuCUOc8o3eOL7/c/dv7A+LNQnSx7AixrCwWk=
+	t=1743767832; cv=none; b=UlyaCYWx/w4UpPrUmgWUhkbZHMgLalNlI0XRKWbXXvrU+KvospncAS8HhSrcimsij4TUuhxOlc7qlzI89KezC9SF80gR8axzckyXRzhP60pk7MaqVBRBE7K9mpv0QyBOzhOXXqB/v3HtK09HFzD+d5Pxn88nUpmPzW77Id7QLp8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743767831; c=relaxed/simple;
-	bh=uxxC2+rJC3Z2VSNCxxoKI1uj53Ey55YFQVhXgUJlMmI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Bw3JHn3bDUPs1emL0OYpxHU1GmJWEPbnRRS+48krJ8/FwoUlZiw923hEpFOB3oS3vYxGLWhiBoyblGaRVMntm7U6NpQNO/219YDNzIP/1Rq6juqQWY0QSE8/K2drnzQrZenHj8Gy9R9gSsZ2DLYj90itQEC/o3U0BBngEPjisVc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KE0oJY8K; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1743767832; c=relaxed/simple;
+	bh=BRsxHxbdXO9H4hrIDr4a0Voxf96eev/u4BqcAGG2K5s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CaMcBRxEu0jDHMGP2WJKV5le8oj70Gp0o1EkUPGnLdpU5KU89w1UogPVjZ1gEri2QXdp6/Afq83OSIqAiY9Qdc0ZRcsJikJhvh/gvIIE2d+LHG3j+7ILiqwxygjX6+y06kqkVuXIoW4SctwEhXgV1djLIbg1e0ry5Nm5q2d1SD0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EWSu+Lx6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KE0oJY8K"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43cee550af2so1880845e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 04:57:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743767827; x=1744372627; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=dWTh0iUxbFDZj1OSxB2YpSs0Atj06C+ykZmPKxNCsxA=;
-        b=KE0oJY8Ko+uG4iv2WCdHr2Gz0AO0ftR+YrN9X6gnkJ7tXit85VfVvhiNuD1WFHrlfq
-         52rIIqZAdJnQay9rnheQspL4GTZXqJUpdG99JD7W9xLjySHrEaU35VhZ0aQJVRtZC5M/
-         Xu2sg4mZoCo8SvJZzWqGRxioi0VlR/8jMh4tVziF44PyPb/UaJYaMRHCOptkTMUaaTkb
-         l2B8MPHz0LLVcr3JiHlvqsaICvZv8sey3QKN3IwetYnofuIeWV1+Bc3+R0gyCdwI+RCN
-         Remnt121HcJztRmineUjJ/aPC9vAc9h3YUm6e7/zMSPVgpiIjqth5zmLm8P1mojfXBIy
-         WPJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743767827; x=1744372627;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dWTh0iUxbFDZj1OSxB2YpSs0Atj06C+ykZmPKxNCsxA=;
-        b=tGqX8BqJZ0loTIPUwYPhb4gIeyZvBjvJnOSuLrTD6M8XNV4qSMjaWQEvTtP+c++JVc
-         rn0L204RUyJ2IrbUwmHxBfDrc7s/fwph64neAMMKs9og+SOh+afJBQFl5R1KZqTamkUS
-         XdFA71i7mWiMRcxURFYnxNX9mcFxsaEJcUJ2xmOkJoPSDkephDXuvNbZ6Xwzo481sKFu
-         /vmRYxJnYilGbGfmRwbMWguH6mw3J/t8kR7l3VyxpPcic0AJiOpTW6dYjSXXnC+Lm1Y/
-         Gi/yHMIDjf0SXTSnkrmxKFCTDQRiPQS+HakuYJ2XGhG+sdLxjBDKbY6cMFj5sOSF327x
-         ZPMg==
-X-Forwarded-Encrypted: i=1; AJvYcCURTqF7uOYyxIRBb5ofwJIEmyUe8D+GAZzNMGVU2ot0i0Flg4FLx1y8ktc3tcm86TSAkPFJr07koYJYgHU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyzM3oMG9Ci5x2kK0TRxT6EeeRthRsiHPdKZIqDUm6kXw8VpDSZ
-	8BDzOVMacbwXaPplfr/V3aUAWO+SPcSovic/g2oEG90Ra/QDGvj3rlNs3W7pVbE=
-X-Gm-Gg: ASbGncvoCLGmcUmMa7G2BFL+vsceZx6P9OxD8vu5Lbq8uq6gmvQ2JOP2pshmpOrHTsy
-	bAH4U3Qj1FRV/dP/jrT7IaEYWWZ3KpNgNg7m/FHWXTKtVbjbUgakUMhtdRDky3VmBQ13MFfc8IZ
-	75HIgBGOmimIPENqo7lYIp+QsFdMkqRNsjwToUDtg2l5adL8TkinGHz/vkfiRmRI3q2kWhYvKK+
-	7tInnw027f3gHQ+yaYhF4ypxHp5Ksps2MfP8Mg6z773Xq3C1c6mzu2rt93cdRdpMDRV6qFeFNgb
-	4QscgxU7XmE5FQNYho5B+aShs9yYNDaEix1BHVqSO4J6xf6D+dNWWYpgmUkvkZ4=
-X-Google-Smtp-Source: AGHT+IHHD7HuendpPytpQj7rstsIi+Mc3ng61xMnf8Qu66Hus393p51dcdiyAL39bcJzERvr8KKSjw==
-X-Received: by 2002:a05:600c:848d:b0:439:a3df:66f3 with SMTP id 5b1f17b1804b1-43ecfa18ba7mr9352835e9.6.1743767827420;
-        Fri, 04 Apr 2025 04:57:07 -0700 (PDT)
-Received: from [192.168.1.26] ([178.197.198.86])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec364cb9asm43842815e9.31.2025.04.04.04.57.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Apr 2025 04:57:06 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Date: Fri, 04 Apr 2025 13:57:00 +0200
-Subject: [PATCH 4/5] clk: sunxi-ng: Do not enable by default during compile
- testing
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EWSu+Lx6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF885C4CEEA;
+	Fri,  4 Apr 2025 11:57:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743767830;
+	bh=BRsxHxbdXO9H4hrIDr4a0Voxf96eev/u4BqcAGG2K5s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=EWSu+Lx6GPaJdh4AJTHhi9cjShMzC6EzTgtSESExuJfOiuYrc1SzVdIzKQPoOemJH
+	 Q+PfcjgwA8nHIW2oh1da+X8oqsOn1IyFW0phgGUcQrYLBDYMawonOCGXqUCQABW4P9
+	 IPMxQfPjb8SaFiRDBPOGOHoqtL3ef4DUnNov4a1VZ8ACIavJftUFwkwxr5TmHkdSxL
+	 nNhveGcA2Qfhmh0sHFzIz++mox+X6JinHWHIQlZ37q8C3l7WABFLe0yillZYXMdsXd
+	 rv0w3qTucadosK0EFb4B5qLgkg20An4C6m2KnxfF0icKVVIqNjPOQReJQz+UinjlVW
+	 H+bbLx5F2t79Q==
+Date: Fri, 4 Apr 2025 13:57:07 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Igor Pylypiv <ipylypiv@google.com>
+Cc: Damien Le Moal <dlemoal@kernel.org>, linux-ide@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] ata: libata-scsi: Set INFORMATION sense data field
+ consistently
+Message-ID: <Z-_JExGDyO9pVTON@ryzen>
+References: <20250403212924.306782-1-ipylypiv@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250404-kconfig-defaults-clk-v1-4-4d2df5603332@linaro.org>
-References: <20250404-kconfig-defaults-clk-v1-0-4d2df5603332@linaro.org>
-In-Reply-To: <20250404-kconfig-defaults-clk-v1-0-4d2df5603332@linaro.org>
-To: Neil Armstrong <neil.armstrong@linaro.org>, 
- Jerome Brunet <jbrunet@baylibre.com>, 
- Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Kevin Hilman <khilman@baylibre.com>, 
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
- Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
- Alexandre Torgue <alexandre.torgue@foss.st.com>, 
- Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
- Samuel Holland <samuel@sholland.org>, 
- =?utf-8?q?Emilio_L=C3=B3pez?= <emilio@elopez.com.ar>
-Cc: linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- linux-stm32@st-md-mailman.stormreply.com, linux-sunxi@lists.linux.dev, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250403212924.306782-1-ipylypiv@google.com>
 
-Enabling the compile test should not cause automatic enabling of all
-drivers.  Restrict the default to ARCH also for individual drivers, even
-though their choice is not visible without selecting parent Kconfig
-symbol, because otherwise selecting parent would select the child during
-compile testing.
+Hello Igor,
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- drivers/clk/sunxi-ng/Kconfig | 48 ++++++++++++++++++++++----------------------
- 1 file changed, 24 insertions(+), 24 deletions(-)
 
-diff --git a/drivers/clk/sunxi-ng/Kconfig b/drivers/clk/sunxi-ng/Kconfig
-index 5830a9d87bf25d536ac787fe83669c64c8214952..8896fd052ef1784d60d488ab1498737c1405deb2 100644
---- a/drivers/clk/sunxi-ng/Kconfig
-+++ b/drivers/clk/sunxi-ng/Kconfig
-@@ -9,123 +9,123 @@ if SUNXI_CCU
- 
- config SUNIV_F1C100S_CCU
- 	tristate "Support for the Allwinner newer F1C100s CCU"
--	default y
-+	default ARCH_SUNXI
- 	depends on MACH_SUNIV || COMPILE_TEST
- 
- config SUN20I_D1_CCU
- 	tristate "Support for the Allwinner D1/R528/T113 CCU"
--	default y
-+	default ARCH_SUNXI
- 	depends on MACH_SUN8I || RISCV || COMPILE_TEST
- 
- config SUN20I_D1_R_CCU
- 	tristate "Support for the Allwinner D1/R528/T113 PRCM CCU"
--	default y
-+	default ARCH_SUNXI
- 	depends on MACH_SUN8I || RISCV || COMPILE_TEST
- 
- config SUN50I_A64_CCU
- 	tristate "Support for the Allwinner A64 CCU"
--	default y
-+	default ARCH_SUNXI
- 	depends on ARM64 || COMPILE_TEST
- 
- config SUN50I_A100_CCU
- 	tristate "Support for the Allwinner A100 CCU"
--	default y
-+	default ARCH_SUNXI
- 	depends on ARM64 || COMPILE_TEST
- 
- config SUN50I_A100_R_CCU
- 	tristate "Support for the Allwinner A100 PRCM CCU"
--	default y
-+	default ARCH_SUNXI
- 	depends on ARM64 || COMPILE_TEST
- 
- config SUN50I_H6_CCU
- 	tristate "Support for the Allwinner H6 CCU"
--	default y
-+	default ARCH_SUNXI
- 	depends on ARM64 || COMPILE_TEST
- 
- config SUN50I_H616_CCU
- 	tristate "Support for the Allwinner H616 CCU"
--	default y
-+	default ARCH_SUNXI
- 	depends on ARM64 || COMPILE_TEST
- 
- config SUN50I_H6_R_CCU
- 	tristate "Support for the Allwinner H6 and H616 PRCM CCU"
--	default y
-+	default ARCH_SUNXI
- 	depends on ARM64 || COMPILE_TEST
- 
- config SUN55I_A523_CCU
- 	tristate "Support for the Allwinner A523/T527 CCU"
--	default y
-+	default ARCH_SUNXI
- 	depends on ARM64 || COMPILE_TEST
- 
- config SUN55I_A523_R_CCU
- 	tristate "Support for the Allwinner A523/T527 PRCM CCU"
--	default y
-+	default ARCH_SUNXI
- 	depends on ARM64 || COMPILE_TEST
- 
- config SUN4I_A10_CCU
- 	tristate "Support for the Allwinner A10/A20 CCU"
--	default y
-+	default ARCH_SUNXI
- 	depends on MACH_SUN4I || MACH_SUN7I || COMPILE_TEST
- 
- config SUN5I_CCU
- 	bool "Support for the Allwinner sun5i family CCM"
--	default y
-+	default ARCH_SUNXI
- 	depends on MACH_SUN5I || COMPILE_TEST
- 	depends on SUNXI_CCU=y
- 
- config SUN6I_A31_CCU
- 	tristate "Support for the Allwinner A31/A31s CCU"
--	default y
-+	default ARCH_SUNXI
- 	depends on MACH_SUN6I || COMPILE_TEST
- 
- config SUN6I_RTC_CCU
- 	tristate "Support for the Allwinner H616/R329 RTC CCU"
--	default y
-+	default ARCH_SUNXI
- 	depends on MACH_SUN8I || ARM64 || RISCV || COMPILE_TEST
- 
- config SUN8I_A23_CCU
- 	tristate "Support for the Allwinner A23 CCU"
--	default y
-+	default ARCH_SUNXI
- 	depends on MACH_SUN8I || COMPILE_TEST
- 
- config SUN8I_A33_CCU
- 	tristate "Support for the Allwinner A33 CCU"
--	default y
-+	default ARCH_SUNXI
- 	depends on MACH_SUN8I || COMPILE_TEST
- 
- config SUN8I_A83T_CCU
- 	tristate "Support for the Allwinner A83T CCU"
--	default y
-+	default ARCH_SUNXI
- 	depends on MACH_SUN8I || COMPILE_TEST
- 
- config SUN8I_H3_CCU
- 	tristate "Support for the Allwinner H3 CCU"
--	default y
-+	default ARCH_SUNXI
- 	depends on MACH_SUN8I || ARM64 || COMPILE_TEST
- 
- config SUN8I_V3S_CCU
- 	tristate "Support for the Allwinner V3s CCU"
--	default y
-+	default ARCH_SUNXI
- 	depends on MACH_SUN8I || COMPILE_TEST
- 
- config SUN8I_DE2_CCU
- 	tristate "Support for the Allwinner SoCs DE2 CCU"
--	default y
-+	default ARCH_SUNXI
- 	depends on MACH_SUN8I || ARM64 || RISCV || COMPILE_TEST
- 
- config SUN8I_R40_CCU
- 	tristate "Support for the Allwinner R40 CCU"
--	default y
-+	default ARCH_SUNXI
- 	depends on MACH_SUN8I || COMPILE_TEST
- 
- config SUN9I_A80_CCU
- 	tristate "Support for the Allwinner A80 CCU"
--	default y
-+	default ARCH_SUNXI
- 	depends on MACH_SUN9I || COMPILE_TEST
- 
- config SUN8I_R_CCU
- 	tristate "Support for Allwinner SoCs' PRCM CCUs"
--	default y
-+	default ARCH_SUNXI
- 	depends on MACH_SUN8I || ARM64 || COMPILE_TEST
- 
- endif
+I'm missing the bigger picture here.
 
--- 
-2.45.2
+Are we violating the spec? If so, please reference a specific
+section in the specs.
 
+From SPC-7:
+"""
+The contents of the INFORMATION field are device type or command specific
+and are defined in a command standard. See 4.4.4 for device server
+requirements regarding how values are returned in the INFORMATION field.
+"""
+
+Looking at SBC-5, "4.18.1 Error reporting overview":
+
+"""
+If a command attempts to access or reference an invalid LBA, then the device
+server shall report the first invalid LBA (e.g., lowest numbered LBA) in the
+INFORMATION field of the sense data (see SPC-6). If a recovered read error is
+reported, then the device server shall report the last LBA (e.g., highest
+numbered LBA) on which a recovered read error occurred for the command in the
+INFORMATION field of the sense data.
+"""
+
+Since we are generating this, it makes me thing that perhaps we should not
+set the INFORMATION field unconditionally? I guess it makes sense for e.g.
+REQ_OP_READ/READ_OP_WRITE commands, but probably does not make sense for e.g.
+REQ_OP_FLUSH commands?
+
+
+On Thu, Apr 03, 2025 at 02:29:24PM -0700, Igor Pylypiv wrote:
+> The INFORMATION field is not set when sense data is obtained using
+> ata_eh_request_sense(). Move the ata_scsi_set_sense_information() call
+> to ata_scsi_qc_complete() to consistently set the INFORMATION field
+> regardless of the way how the sense data is obtained.
+
+As you know, we also have successful commands with sense data
+(CDL policy 0xD), see ata_eh_get_success_sense().
+
+These commands will either fetch sense data using
+ata_eh_get_ncq_success_sense() or using ata_eh_get_non_ncq_success_sense()
+(the latter function will fetch sense data using ata_eh_request_sense()).
+
+Regardless of the path taken, these commands will also end up in
+ata_scsi_qc_complete(), so perhaps it is not enough for your patch to
+modify ata_scsi_qc_complete() to simply set the INFORMATION field for
+commands with ATA_ERR bit set (is_error) ? Perhaps you should also
+consider commands with sense data (have_sense), but without is_error set?
+
+
+> 
+> This call should be limited to regular commands only, as the INFORMATION
+> field is populated with different data for ATA PASS-THROUGH commands.
+
+I do agree that for ATA PASS-THROUGH commands with fixed format sense,
+the INFORMATION field is already defined by SAT.
+
+However, what about ATA PASS-THROUGH commands with descriptor format sense?
+
+ATA Status Return sense data descriptor, which is used by ATA PASS-THROUGH
+commands has descriptor type 09h.
+
+Information sense data descriptor has descriptor type 00h.
+(See 4.4.2.2 Information sense data descriptor in SPC-7.)
+
+Is it perhaps possible for a command to have both descriptors?
+
+After reading SPC-7, "Table 30 – DESCRIPTOR TYPE field"
+
+I would say that is appears that you usually just have one descriptor,
+so I would say let's continue only having the ATA Status Return sense
+data descriptor for ATA PASS-THOUGH commands.
+
+
+Kind regards,
+Niklas
