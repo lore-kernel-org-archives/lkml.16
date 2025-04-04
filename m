@@ -1,105 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F0341EDA34;
-	Fri,  4 Apr 2025 14:06:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDCCB28E8;
+	Fri,  4 Apr 2025 14:07:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743775611; cv=none; b=tL2i7kYHVbwmvRahvLPQfr87KeVuu6xnHgiSzHsfEIb5gyZmf2EJGXugxtBLJ95W2olYYn/DHQ/ZCNvS/7pn8w9N3shm15+rs3lQcp6/sRzsnHUfWO+fojFEmdpswJEZ7mkKYwMwyJHUcFwVgTRtb9Z9HHKVOVcozBQZXdC6Xhc=
+	t=1743775628; cv=none; b=L4+7w7FPEgJubuh/QiVetnnVAyOHLQgDppFSoZVqGFnlLXlsSykoWKUwt3cGW97fyJ9encdZPncSyY74K9V0g2pcMXctt0cb0iMRYm2ylWn8u/PEfMDgFcqCkTMIoSGyxFR+V+/gIMaTCot5kA9nvHW2aWGK6ZgzC+ZujlRCO0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743775611; c=relaxed/simple;
-	bh=dlTMdTr2De1XmJ58WqL6zRxnciJjXRMN5Yowymzujsg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tS+Jgx9dPuNbpQZJsN5bhuu/FkFsInsZZzUGPtGVUrEfpnukSOesEAiX6GBUqlRBpbYCE9C8Q/H6M1ghvm4k+aONiuuw23BZNEEPzE+jkaC68Z4zH+OYxHeaIv26gxs6Y9GAlSMvcW4mn6zDNgdqwadI+XLTmEUthBOPfYY1xRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pL/f2y9N; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743775628; c=relaxed/simple;
+	bh=h5We3wwreBm5Qak5TXwz0wc70IIQzs51jy6CwBitbAI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QX+2IAkWQWch6eFsNBmGZoTzyEE09tyehrkY3/eRabfpWm6yBCAEKxqbM1T3zCUrfa9daDLx2R4bG5Ykio/NsNMZVlS3f3HqQvg9TFNPt+VRfJt6TYjpplPdBXcyLHvUG/VfgzT/X/6YzyhY6SCuWL/84tcw33qV1dpAgZ8VHlw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com; spf=pass smtp.mailfrom=pankajraghav.com; dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b=whQHZy5T; arc=none smtp.client-ip=80.241.56.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pL/f2y9N"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2D38C4CEEB;
-	Fri,  4 Apr 2025 14:06:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743775610;
-	bh=dlTMdTr2De1XmJ58WqL6zRxnciJjXRMN5Yowymzujsg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=pL/f2y9NS0JveX+yUNgzMZsq/Dw3sjV6c0L0YMEePQpJqijExu0Mcy7pw4gyIZ88Z
-	 I+/7kQDj2cmLg7Xba3geV8KcFpJUJwAa+bwdLqYtoIwthH0AYySCjLQlODb6omCbNz
-	 3XVjOqKIjopfxwIu52QcBjwx7uoyq87IKkLwDtYu8lykxqkKYOVk2dkv85oq7XNcot
-	 g8pRnUWLbkNl7pD0FNResy0bBvd1JuOeULOEzltobE/43rnBuYwkOJfDI6C6KpjxnT
-	 NkRqqBCPGzyAuQmCyxH7T/uBhwEJNA9etKiTT9aJ4/XVne9Lne3mIhPbzazkuTAjuw
-	 rtCfQqHXnGuxg==
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-54af20849adso2020050e87.1;
-        Fri, 04 Apr 2025 07:06:50 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVybzw1F4OOCghWhGu5Lg3AA1YFrhhgxvVtZMLTg6E76lL7JrgPi2nhYIuWL0OAs6ZBQuXsB+x0+c0ZYOc=@vger.kernel.org, AJvYcCXl/dxz/VN8aCh5OxizlXpC+Rz2po2uue+EYC2o9sEtz5gZ3xCFhM66GT+imRejMXi3kevACX5QhY9CVvR9@vger.kernel.org
-X-Gm-Message-State: AOJu0YyO7OHmbEmXKP5o770MtJoSIp6rHkw/lEfz+nfqEtkPnNceXBp4
-	EiCGybq9Rhyie4ibhqn/MXgY6kF5lp15/5zUQgPisvsZ0wmnJqu73uWapAAoZrHkJTUw4T4B2RE
-	WcHOK6WiQntvyeggYpRvlQP2gMbE=
-X-Google-Smtp-Source: AGHT+IGzHPV4Ijvg/jSgwoi9Iou6eeQJHKq9kJXztvRO6Qu67pds9mGYv2PPcXBm554NzEkkqjpbU0NmHVi5sbNEGNA=
-X-Received: by 2002:a05:6512:3697:b0:549:91bd:2d86 with SMTP id
- 2adb3069b0e04-54c1ca8c075mr2266422e87.26.1743775609214; Fri, 04 Apr 2025
- 07:06:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b="whQHZy5T"
+Received: from smtp102.mailbox.org (smtp102.mailbox.org [10.196.197.102])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4ZTgQZ6fzfz9t1V;
+	Fri,  4 Apr 2025 16:07:02 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
+	s=MBO0001; t=1743775623;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=d3LlMKgq7dBlVlNItWKVgpXkIcgbMa8xNdNgsyJKxAM=;
+	b=whQHZy5TryGkrcao/56NMXr9BSIDzrhhw/CJjRYFZKIFT51nZ+xw7DbYoi3dYCEEKkQy1v
+	tIUJhIBcIRC0Cf10W45O5/taj9HdgHqhTMb3147cdgoc8iY00DVc3SW9GkEd0zBGG0PeTK
+	clizK9FRHiA61i/LDYEAnYKY/r5A/g1F7CRSnp8n59lKblgM30YB89ZkKI3LlbjPk/BXhf
+	kFl0yJckd3fAMJsWI8sQVNhQbvXIz2ayoij9HYW1q45eqJXSAUZJVjxGhWIsGZqsFrjPsZ
+	+GtzIsmm4564YOoMMqXxQwRwIyyvZqb3YfUV0fGnMNHlUQjt36Wly3Bh/Hegag==
+From: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	Jonathan Corbet <corbet@lwn.net>
+Cc: linux-kernel@vger.kernel.org,
+	willy@infradead.org,
+	linux-mm@kvack.org,
+	Bagas Sanjaya <bagasdotme@gmail.com>,
+	David Hildenbrand <david@redhat.com>,
+	da.gomez@kernel.org,
+	mcgrof@kernel.org,
+	gost.dev@samsung.com,
+	linux-doc@vger.kernel.org,
+	kernel@pankajraghav.com,
+	Pankaj Raghav <p.raghav@samsung.com>
+Subject: [PATCH v3] docs: update THP admin guide about non-tmpfs filesystem support
+Date: Fri,  4 Apr 2025 16:06:57 +0200
+Message-ID: <20250404140657.29285-1-kernel@pankajraghav.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250404102535.705090-1-ubizjak@gmail.com> <CAK7LNATO1RfACvWhHJuLi-FYWMnSn6+Tp67-EZtVWNk+RCSTVQ@mail.gmail.com>
- <CAFULd4bx9BGKo_4kn14rsVr44otpdjpjn_o6=zMp8iu98f9Upg@mail.gmail.com>
-In-Reply-To: <CAFULd4bx9BGKo_4kn14rsVr44otpdjpjn_o6=zMp8iu98f9Upg@mail.gmail.com>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Fri, 4 Apr 2025 23:06:13 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATnactfA2U0CB2VcoE1eDc+bj=Jjye-Khsc3xG-iZ2XVQ@mail.gmail.com>
-X-Gm-Features: ATxdqUEgEcjlrExqyVXX21WPPkwTmuO9oioeIgrH53vKuTzP8mVQPSUDIMgFn-Y
-Message-ID: <CAK7LNATnactfA2U0CB2VcoE1eDc+bj=Jjye-Khsc3xG-iZ2XVQ@mail.gmail.com>
-Subject: Re: [PATCH] compiler.h: Avoid the usage of __typeof_unqual__() when
- __GENKSYMS__ is defined
-To: Uros Bizjak <ubizjak@gmail.com>
-Cc: linux-modules@vger.kernel.org, linux-kbuild@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Paul Menzel <pmenzel@molgen.mpg.de>, 
-	Sami Tolvanen <samitolvanen@google.com>, Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, Apr 4, 2025 at 10:11=E2=80=AFPM Uros Bizjak <ubizjak@gmail.com> wro=
-te:
->
-> On Fri, Apr 4, 2025 at 2:56=E2=80=AFPM Masahiro Yamada <masahiroy@kernel.=
-org> wrote:
-> >
-> > On Fri, Apr 4, 2025 at 7:25=E2=80=AFPM Uros Bizjak <ubizjak@gmail.com> =
-wrote:
-> > >
-> > > Current version of genksyms doesn't know anything about __typeof_unqu=
-al__()
-> > > operator.  Avoid the usage of __typeof_unqual__() with genksyms to pr=
-event
-> > > errors when symbols are versioned.
-> > >
-> > > There were no problems with gendwarfksyms.
-> > >
-> > > Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-> > > Fixes: ac053946f5c40 ("compiler.h: introduce TYPEOF_UNQUAL() macro")
-> > > Reported-by: Paul Menzel <pmenzel@molgen.mpg.de>
-> > > Closes: https://lore.kernel.org/lkml/81a25a60-de78-43fb-b56a-131151e1=
-c035@molgen.mpg.de/
-> > > Cc: Sami Tolvanen <samitolvanen@google.com>
-> > > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > > ---
-> >
-> >
-> > Why don't you add it to the genksyms keyword table?
->
-> It doesn't work, even if I patch it with an even more elaborate patch
-> (attached).
->
-> I guess some more surgery will be needed, but for now a fallback works
-> as expected.
->
-> Uros.
+From: Pankaj Raghav <p.raghav@samsung.com>
 
-The attached patch looks good to me.
+THP support for non-tmpfs filesystem has been around for some time now.
+Update the admin guide to reflect it.
 
+While we are at it, move FilePmdMapped to previous paragraph for clarity,
+and clarify ShmemPmdMapped & ShmemHugePage.
 
+Signed-off-by: Pankaj Raghav <p.raghav@samsung.com>
+Acked-by: David Hildenbrand <david@redhat.com>
+---
 
---=20
-Best Regards
-Masahiro Yamada
+Changes since v2:
+- Address comment from Bagas Sanjaya
+- Squash commits and Ack from David
+
+ Documentation/admin-guide/mm/transhuge.rst | 22 +++++++++++++++-------
+ 1 file changed, 15 insertions(+), 7 deletions(-)
+
+diff --git a/Documentation/admin-guide/mm/transhuge.rst b/Documentation/admin-guide/mm/transhuge.rst
+index dff8d5985f0f..f8aae64e38d0 100644
+--- a/Documentation/admin-guide/mm/transhuge.rst
++++ b/Documentation/admin-guide/mm/transhuge.rst
+@@ -12,8 +12,8 @@ using huge pages for the backing of virtual memory with huge pages
+ that supports the automatic promotion and demotion of page sizes and
+ without the shortcomings of hugetlbfs.
+ 
+-Currently THP only works for anonymous memory mappings and tmpfs/shmem.
+-But in the future it can expand to other filesystems.
++Currently, THP only works for anonymous memory mappings, tmpfs/shmem and
++filesystems that support large folios.
+ 
+ .. note::
+    in the examples below we presume that the basic page size is 4K and
+@@ -463,11 +463,19 @@ fields for each mapping. (Note that AnonHugePages only applies to traditional
+ PMD-sized THP for historical reasons and should have been called
+ AnonHugePmdMapped).
+ 
+-The number of file transparent huge pages mapped to userspace is available
+-by reading ShmemPmdMapped and ShmemHugePages fields in ``/proc/meminfo``.
+-To identify what applications are mapping file transparent huge pages, it
+-is necessary to read ``/proc/PID/smaps`` and count the FilePmdMapped fields
+-for each mapping.
++The number of PMD-sized transparent huge pages currently used by
++filesystem data (page cache) is available by reading the FileHugePages field
++in ``/proc/meminfo``. The number of these huge pages that are mapped to userspace
++is available by reading FilePmdMapped field in ``proc/meminfo``. To identify
++what applications are mapping these huge pages, it is necessary to read
++``/proc/PID/smaps`` and count the FilePmdMapped fields for each mapping.
++
++In similar fashion, the number of PMD-sized transparent huge pages currently
++used by tmpfs/shmem is available by reading the ShmemHugePages field
++in ``/proc/meminfo``. The number of these huge pages that are mapped to userspace
++is available by reading ShmemPmdMapped field in ``proc/meminfo``. To identify
++what applications are mapping these huge pages, it is necessary to read
++``/proc/PID/smaps`` and count the ShmemPmdMapped fields for each mapping.
+ 
+ Note that reading the smaps file is expensive and reading it
+ frequently will incur overhead.
+
+base-commit: f0a16f5363325cc8d9382471cdc7b654c53254c9
+-- 
+2.47.2
+
