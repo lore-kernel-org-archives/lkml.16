@@ -1,44 +1,77 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79364214A66;
-	Fri,  4 Apr 2025 18:55:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1009D1B4242
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 18:55:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743792922; cv=none; b=gT9jVsIxKNYDTCWjZqoYb15Lgu5tQmce4jbK3Erm7RLbOl2YpvgbRfzXXQJ+HMxsTW7sm9Y8E61NBRknUA5aurScRTbXGSBkP/loGCW0RU8vY/bYPUXk3xBKgBSyLUG85BxRj6uE+PmxlsQq2RMJhIy2rft0B/P1nDpDBsQ20yU=
+	t=1743792924; cv=none; b=ReMrXq6CwwjS5Ia2ohnAeIB0MY2rRVON4wNduzuto2NneM59+ht9+0sU/F5ZRHPQiqeKG42yWuOVzVFKAwyeMdt3oCGWsKRUIs3ta+diGaf7jonUghmmyg0nXkh8miZbkwrrLWX75kzlOd56uZr71UjnWA+OU5L+RCb6yHvgqNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743792922; c=relaxed/simple;
-	bh=uGvJX+mVnoGeSQaFeYRrOHhVGthxAFm4BVArWwobaPM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=jhVmYMsO0Lx1z3jacPd/XKFl29YWfGnGR8krFSp+qQwoVipe/oHDUbDmR9wt4CRFOj7+lgWvQUOJggtHp2xKcxqsWsUhc3drycr3GSBC1K6gp7AmZyqgjwgmD2Ngca+3v9Y5QeAq+Dn1tO42+UGcH6Ir0dLvBJKHYqQWY2O3/Xo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fdZUHwDt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743792924; c=relaxed/simple;
+	bh=VfeedzAG7UGtPpSXuBMYVnF8aSHrgVbQjdxnN8frKgc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ccLNW717LYkZ77Owqo2JsCY2oWLWQCSOrdCaKNQMAHZgxps2YxTzc8uVqhuV6V9EEyMB/BmIIcFvBWQQ1jvrodBSut3blGw9lqm8dPBDrvLSHsISXx2NsUQII93a9Cwnrb/d4yNbgEiCi0Saja09ez2gm8NYB1dPd+SJp4XpdoE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com; spf=none smtp.mailfrom=pdp7.com; dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b=DOLIei0e; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=pdp7.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fdZUHwDt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9687BC4CEDD;
-	Fri,  4 Apr 2025 18:55:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743792921;
-	bh=uGvJX+mVnoGeSQaFeYRrOHhVGthxAFm4BVArWwobaPM=;
-	h=Date:From:To:Cc:Subject:From;
-	b=fdZUHwDt5V7O6Ws1ZS+XAZR8SGCtDi531ewHlkgaUueJ1e2HlcM4QnznvPaO2iluD
-	 XYSlmxeye4HdbpSy9FC9bIIg6E4BZ3z/Ggl4YvNY0oTHxxI+T4sEOfFPegNUHdVNOS
-	 nVUmSAwttE/EXdUl3+vTeztukRNqRHoyGaoMAGLxcKP2eatQqXr3Jr95zusIcfJXMT
-	 T0YYW+h/41hWedDd94F8GOzTIj7++oOu4n57nZndrKSvByNE/Umy4xovN/8iijGafF
-	 4GmRcVyt5y05PlljXIzuktxMWopoiOWwia7vZ2JOGDRwMQtRBya2WJF+0TyFEeykXO
-	 Z7Gz7pZq1QhoA==
-Date: Fri, 4 Apr 2025 15:55:18 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
-	Dmitry Vyukov <dvyukov@google.com>, Ian Rogers <irogers@google.com>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH 1/1] tools build: Don't set libunwind as available if
- test-all.c build succeeds
-Message-ID: <Z_ArFrHU7hMNUOv3@x1>
+	dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b="DOLIei0e"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-227aaa82fafso22502845ad.2
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 11:55:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=pdp7-com.20230601.gappssmtp.com; s=20230601; t=1743792921; x=1744397721; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=32troSjWvB/PDlVrpO70BnGFukXnYd/0VAcsVL2VxIE=;
+        b=DOLIei0ecBYGFmicWeKfI87N/P67NqV9YEsJR1Nc7HvTZqxxIhVEpIo1lsB0YKg5qa
+         L/BxUwXOuJvF0/LV5vxUjG30mMi5XHqiGguC8u3bg0d+HOF6ADEbYnPaOqf/HRrnLxCj
+         hy/9t4Of0LEas01mlWuodDDJnqlZIIO2/y56CPaiob5Fh8d4n/GbIAYC/p1WMfKuvsZy
+         wqk4VaAbqlD0luES9CaXDhDNG/56ytgbPBUENTxl/585/D7g1OfoHu52dH9YCSBCwSy4
+         2Zcm/8hWDjlUMpQ8ms/Zl3BtPFrgChehC7iirN3Ej0iZ8EqQS4QPpPOE7aoNHvNrIys/
+         IM8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743792921; x=1744397721;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=32troSjWvB/PDlVrpO70BnGFukXnYd/0VAcsVL2VxIE=;
+        b=qbj8wPQ/PlAIpZ6LWX35ELag2k0Xt/8B9Vs584BeRUa1GGL9Gl2Kxpin8B4ryQ41JN
+         faDhL1pCZLOq3Ci0LweYptQvoYsJxvNnbv1zUO0g6SHmm5bM2v+Mh7d3Bwfp8t+Nmc5I
+         Q3M6i3beYxkDK43IqHRt+HZdXu969faRoEP1ODRIrbuNUxyw6EcDmt8X+nmYEvklZtEi
+         xNnxTKK+u7QcCx6B7R6ldVYOtVs0s/C9huHljQOs6P21KQYG/DYtpvTsJ4frKhwHY8kL
+         l89sdcgXaZYq0xooVZ4rI4dYVdUGNtNK8XrQ6vskADh18iJ8srzIqhic0IVgQsrYfY0E
+         Tx4g==
+X-Forwarded-Encrypted: i=1; AJvYcCUFxlnkkyQPW+iXcyCL/p4RMKy0eJ3S5Gjesve5+zN24WSnu/z/Yeg6A/0I/ml5qw5KQ+NAAzpcanYXRgU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxfVJt2krEf/kRf2sAzO4LCSZk8/A1tPMTFGqHNfmjQU1Vh8q3B
+	Ac/O24+ZbALu2IEJqvR01M7bC66Xp41Zo92etMej9TInioEfKanczFZL3st0IYk=
+X-Gm-Gg: ASbGncv8ddIH0o0ZeXw/gyPfFYwQFbsBU54QiZMXHknh1JMXlxWVA+N4cV2L4OkJdmt
+	mUzNayCBsvuP7OIVRYjvVlXIcAmiBpPdDjsLB9JZsWyIc9IqdBZztHdOUeIsY/LR3uwQFKOS1q2
+	o/vf0u+TK5NMy6MMBYr2yADmhqcHxf1gi5hG9Z1FxPFtawG0uo3Mjld7RP1BWJ8oxKqfE1CUXg4
+	hzUWdl2o6gEsLIC8QOUNswdKAQ0uuy88ig3KCfW5gdLfI5oG82vV9igzAFIc5HjB2z5cp9KKnH8
+	J8bkExvDCJ4mdDlYjtwQNkvp+acK0fA5ldM=
+X-Google-Smtp-Source: AGHT+IECmYP3SjonjrfaeQPGWit3y+M9U7cHmSeJkMMAtjCbnPOJUL/PaAkD08+LqlcqZzBhgLpMMw==
+X-Received: by 2002:a17:902:ef10:b0:216:53fa:634f with SMTP id d9443c01a7336-22a8a1d4617mr66236245ad.48.1743792921190;
+        Fri, 04 Apr 2025 11:55:21 -0700 (PDT)
+Received: from x1 ([97.115.235.21])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2297866e4c2sm35763515ad.199.2025.04.04.11.55.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Apr 2025 11:55:20 -0700 (PDT)
+Date: Fri, 4 Apr 2025 11:55:17 -0700
+From: Drew Fustini <drew@pdp7.com>
+To: Michal Wilczynski <m.wilczynski@samsung.com>,
+	Conor Dooley <conor@kernel.org>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	guoren@kernel.org, wefu@redhat.com, paul.walmsley@sifive.com,
+	palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
+	jszhang@kernel.org, ulf.hansson@linaro.org,
+	m.szyprowski@samsung.com, linux-pm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v8 5/5] riscv: Enable PM_GENERIC_DOMAINS for T-Head SoCs
+Message-ID: <Z/ArFVx6l5Urh9KV@x1>
+References: <20250311171900.1549916-1-m.wilczynski@samsung.com>
+ <CGME20250311172035eucas1p104dcbae706bec735194a1dc4a30db969@eucas1p1.samsung.com>
+ <20250311171900.1549916-6-m.wilczynski@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,104 +80,47 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20250311171900.1549916-6-m.wilczynski@samsung.com>
 
-The tools/build/feature/test-all.c file tries to detect the expected,
-most common set of libraries/features we expect to have available to
-build perf with.
+On Tue, Mar 11, 2025 at 06:19:00PM +0100, Michal Wilczynski wrote:
+> T-Head SoCs feature separate power domains (power islands) for major
+> components like the GPU, Audio, and NPU. To manage the power states of
+> these components effectively, the kernel requires generic power domain
+> support.
+> 
+> This commit enables `CONFIG_PM_GENERIC_DOMAINS` for T-Head SoCs,
+> allowing the power domain driver for these components to be compiled and
+> integrated. This ensures proper power management and energy efficiency
+> on T-Head platforms.
+> 
+> By selecting `PM_GENERIC_DOMAINS`, we provide the necessary framework
+> for the power domain drivers to function correctly on RISC-V
+> architecture with T-Head SoCs.
+> 
+> Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
+> ---
+>  arch/riscv/Kconfig.socs | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/riscv/Kconfig.socs b/arch/riscv/Kconfig.socs
+> index 1916cf7ba450..83833ded8908 100644
+> --- a/arch/riscv/Kconfig.socs
+> +++ b/arch/riscv/Kconfig.socs
+> @@ -53,6 +53,7 @@ config ARCH_THEAD
+>  	bool "T-HEAD RISC-V SoCs"
+>  	depends on MMU && !XIP_KERNEL
+>  	select ERRATA_THEAD
+> +	select PM_GENERIC_DOMAINS if PM
+>  	help
+>  	  This enables support for the RISC-V based T-HEAD SoCs.
+>  
+> -- 
+> 2.34.1
+> 
 
-At some point libunwind was deemed not to be part of that set of
-libraries, but the patches making it to be opt-in ended up forgetting
-some details, fix one more.
+Reviewed-by: Drew Fustini <drew@pdp7.com>
 
-Testing it:
+Conor - would you be able to take this Kconfig.socs patch?
 
-  $ rm -rf /tmp/build/$(basename $PWD)/ ; mkdir -p /tmp/build/$(basename $PWD)/
-  $ rpm -q libunwind-devel
-  libunwind-devel-1.8.0-3.fc40.x86_64
-  $ make -k LIBUNWIND=1 CORESIGHT=1 O=/tmp/build/$(basename $PWD)/ -C tools/perf install-bin |& grep unwind && ldd ~/bin/perf | grep unwind
-  ...                               libunwind: [ on  ]
-    CC      /tmp/build/perf-tools-next/arch/x86/tests/dwarf-unwind.o
-    CC      /tmp/build/perf-tools-next/arch/x86/util/unwind-libunwind.o
-    CC      /tmp/build/perf-tools-next/util/arm64-frame-pointer-unwind-support.o
-    CC      /tmp/build/perf-tools-next/tests/dwarf-unwind.o
-    CC      /tmp/build/perf-tools-next/util/unwind-libunwind-local.o
-    CC      /tmp/build/perf-tools-next/util/unwind-libunwind.o
-	  libunwind-x86_64.so.8 => /lib64/libunwind-x86_64.so.8 (0x00007f615a549000)
-	  libunwind.so.8 => /lib64/libunwind.so.8 (0x00007f615a52f000)
-  $ sudo rpm -e libunwind-devel
-  $ rm -rf /tmp/build/$(basename $PWD)/ ; mkdir -p /tmp/build/$(basename $PWD)/
-  $ make -k LIBUNWIND=1 CORESIGHT=1 O=/tmp/build/$(basename $PWD)/ -C tools/perf install-bin |& grep unwind && ldd ~/bin/perf | grep unwind
-  Makefile.config:653: No libunwind found. Please install libunwind-dev[el] >= 1.1 and/or set LIBUNWIND_DIR
-  ...                               libunwind: [ OFF ]
-    CC      /tmp/build/perf-tools-next/arch/x86/tests/dwarf-unwind.o
-    CC      /tmp/build/perf-tools-next/arch/x86/util/unwind-libdw.o
-    CC      /tmp/build/perf-tools-next/util/arm64-frame-pointer-unwind-support.o
-    CC      /tmp/build/perf-tools-next/tests/dwarf-unwind.o
-    CC      /tmp/build/perf-tools-next/util/unwind-libdw.o
-  $
-
-Should be in a separate patch, but tired now, so also adding a message
-about the need to use LIBUNWIND=1 in the output when its not available,
-so done here as well.
-
-So, now when the devel files are not available we get:
-
-  $ make -k LIBUNWIND=1 CORESIGHT=1 O=/tmp/build/$(basename $PWD)/ -C tools/perf install-bin |& grep unwind && ldd ~/bin/perf | grep unwind
-  Makefile.config:653: No libunwind found. Please install libunwind-dev[el] >= 1.1 and/or set LIBUNWIND_DIR and set LIBUNWIND=1 in the make command line as it is opt-in now
-  ...                               libunwind: [ OFF ]
-  $
-
-Fixes: 13e17c9ff49119aa ("perf build: Make libunwind opt-in rather than opt-out")
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: James Clark <james.clark@linaro.org>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: https://lore.kernel.org/lkml/Z_AnsW9oJzFbhIFC@x1
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/build/Makefile.feature | 1 -
- tools/perf/Makefile.config   | 4 +++-
- 2 files changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-index 1931b6321314684c..54c8adfb94662c03 100644
---- a/tools/build/Makefile.feature
-+++ b/tools/build/Makefile.feature
-@@ -87,7 +87,6 @@ FEATURE_TESTS_BASIC :=                  \
-         libtracefs                      \
-         libcpupower                     \
-         libcrypto                       \
--        libunwind                       \
-         pthread-attr-setaffinity-np     \
-         pthread-barrier     		\
-         reallocarray                    \
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index eea95c6c0c71f76e..8ff1d8ade73fc061 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -624,6 +624,8 @@ endif
- ifndef NO_LIBUNWIND
-   have_libunwind :=
- 
-+  $(call feature_check,libunwind)
-+
-   $(call feature_check,libunwind-x86)
-   ifeq ($(feature-libunwind-x86), 1)
-     $(call detected,CONFIG_LIBUNWIND_X86)
-@@ -648,7 +650,7 @@ ifndef NO_LIBUNWIND
-   endif
- 
-   ifneq ($(feature-libunwind), 1)
--    $(warning No libunwind found. Please install libunwind-dev[el] >= 1.1 and/or set LIBUNWIND_DIR)
-+    $(warning No libunwind found. Please install libunwind-dev[el] >= 1.1 and/or set LIBUNWIND_DIR and set LIBUNWIND=1 in the make command line as it is opt-in now)
-     NO_LOCAL_LIBUNWIND := 1
-   else
-     have_libunwind := 1
--- 
-2.48.1
-
+Thanks,
+Drew
