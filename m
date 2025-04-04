@@ -1,83 +1,130 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C094A3FF1;
-	Fri,  4 Apr 2025 06:29:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A45A3FF1;
+	Fri,  4 Apr 2025 06:29:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743748147; cv=none; b=eMf66br5+xAPoL1lyDWRlb57K75VKVLfz/6zFlzPrNLWjsHNJo15GIO1Z5WOY8zcnCSkrptUzkwJlIelDdijvD8iLhtbOP1teuX6bxH5bQJ1LuXazw7NuQ+qW1y78kgBNeFG9b+5Ftaq0Q3xeqNP5Nhhu8QImL+xx515EoEySiI=
+	t=1743748163; cv=none; b=DHZ0DjiQCX9C0KkuZjki+4aK/a/VQfEUZXfabxZmrLPjPY1Y9fSDoBNL9/rzYKSbfgwzuM2Lb0c66JyNRRKQ7U8LTdpEoqler3XxJ9R+6OPheVIbgih5Q9uOMGzXrYO7PQ3GKPHTe5eqROE/I+CLRI3QQqlZN8t4KmCL8Fh5s3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743748147; c=relaxed/simple;
-	bh=0cXwsrlmI4kpYpmXPsreZ/PBe4dTaTgr46V4y/owBlg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IHSIt+yBJwgZcHAGoFDoVN47CJFq9KauwduwzoCfGmvVLpy57acusuPKLBOXgn0EcHfB5DirKKUHBdtmX69Y7n1Bo6DCP9ovtU8pImjmcxXJLb/WZhfLhcMlpqW3CzyTGp7zBdLoZeNbRZH/3LfZCtifT+6LAu68g2/IVy+YfSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=eBGL2UQV; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eBGL2UQV"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=OALZ1QhbxGHT/88J12tC/Hv6s/xhb6tvZprQO99ysVo=; b=eBGL2UQVDzGR/kon+3l7lgW/RZ
-	ntxPdTr6/vtsLJaDnWDwG+MW/6QswxTjnssGs0cZKJMM6wduFGbMqBf5sk7zQBAIWw3jzyKv0KSlM
-	x1GrOVuRVUofexhKCkNoVGJZ3PqsHhG+PIKJIxqDFaZ5foS4XZMYtNvzKjXrNjdLbxbDgokAnm1bi
-	6d+7GowYd8MyIIj0TvwvF+GMNkNxqkPlnTQOswkrHO2ATfPAmVvBO0tksCKv6GZjc6R8yCnehPH71
-	8oy0n5JaLyMXqkcyvSziNMB5B0Bi0OnTEKi1Bv6sPW/7VrvZBvIUGqBydSMlhdmYYJmh24CyzjJ6D
-	cz/3ULtw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u0aY2-0000000Asvo-1rR9;
-	Fri, 04 Apr 2025 06:29:02 +0000
-Date: Thu, 3 Apr 2025 23:29:02 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: David Woodhouse <dwmw2@infradead.org>
-Cc: Christoph Hellwig <hch@infradead.org>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	virtio-comment@lists.linux.dev, Claire Chang <tientzu@chromium.org>,
-	linux-devicetree <devicetree@vger.kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	=?iso-8859-1?Q?J=F6rg?= Roedel <joro@8bytes.org>,
-	iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-	graf@amazon.de
-Subject: Re: [RFC PATCH 1/3] content: Add VIRTIO_F_SWIOTLB to negotiate use
- of SWIOTLB bounce buffers
-Message-ID: <Z-98Lqpq4mZN545Y@infradead.org>
-References: <20250402111901-mutt-send-email-mst@kernel.org>
- <6b3b047f1650d91abe5e523dd7f862c6f7ee6611.camel@infradead.org>
- <20250402114757-mutt-send-email-mst@kernel.org>
- <965ccf2f972c5d5f1f4edacb227f03171f20e887.camel@infradead.org>
- <20250402124131-mutt-send-email-mst@kernel.org>
- <eaef09ab218900a53347987a62fee1787283d9ed.camel@infradead.org>
- <Z-44wXdyia4RC6Cr@infradead.org>
- <06465bcf4422d088df2a0ce9cdb09767dac83118.camel@infradead.org>
- <Z-47O3vkyIf0mzdw@infradead.org>
- <cdd979bca2b8cc4ff170442d968b63f2b3f0ccd6.camel@infradead.org>
+	s=arc-20240116; t=1743748163; c=relaxed/simple;
+	bh=Rz1FHmu/xqulw9U0Of0xH8kGJD/eSjT8yc5MWWeHAjg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Sxkj6Q9ya9rfqlxCWl1bhycvBVVyvuAxNw+VLhlURrFGOwJ6OLdU3OglFFeGC0YJf3z1M0V68w9Dsl/aTQFSF9k3BBl7aKYnQj/z65tBCn900WLvbRVtMfii2pBLZDm2Ah+EWIn1d5PQO7MhTcnayHeWKEIPV23QGsDLq9wuQKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E19F31063;
+	Thu,  3 Apr 2025 23:29:21 -0700 (PDT)
+Received: from [10.162.40.17] (a077893.blr.arm.com [10.162.40.17])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6FBC03F694;
+	Thu,  3 Apr 2025 23:29:14 -0700 (PDT)
+Message-ID: <b44b7241-cb97-49d4-986d-17dac4c463ae@arm.com>
+Date: Fri, 4 Apr 2025 11:59:10 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cdd979bca2b8cc4ff170442d968b63f2b3f0ccd6.camel@infradead.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] mm: numa_memblks: introduce numa_add_reserved_memblk
+To: Yuquan Wang <wangyuquan1236@phytium.com.cn>, Jonathan.Cameron@huawei.com,
+ dan.j.williams@intel.com, rppt@kernel.org, rafael@kernel.org,
+ lenb@kernel.org, akpm@linux-foundation.org, alison.schofield@intel.com,
+ rrichter@amd.com, bfaccini@nvidia.com, haibo1.xu@intel.com, david@redhat.com
+Cc: linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, chenbaozi@phytium.com.cn
+References: <20250328092132.2695299-1-wangyuquan1236@phytium.com.cn>
+Content-Language: en-US
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <20250328092132.2695299-1-wangyuquan1236@phytium.com.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Apr 03, 2025 at 09:10:41AM +0100, David Woodhouse wrote:
-> Thanks. I'll take a closer look at handling that. I think it's
-> reasonable for the negotiation of the VIRTIO_F_SWIOTLB feature to be
-> the thing that switches *all* addresses to be on-device, and the on-
-> device buffer can't be accessed unless VIRTIO_F_SWIOTLB has been
-> negotiated.
+
+
+On 3/28/25 14:51, Yuquan Wang wrote:
+> With numa_add_reserved_memblk(), kernel could add numa_memblk into
+> numa_reserved_meminfo directly.
 > 
-> Which neatly sidesteps the original thing I was trying to clarify
-> anyway.
+> acpi_parse_cfmws() currently adds empty CFMWS ranges to numa_meminfo
+> with the expectation that numa_cleanup_meminfo moves them to
+> numa_reserved_meminfo. There is no need for that indirection when it is
+> known in advance that these unpopulated ranges are meant for
+> numa_reserved_meminfo in suppot of future hotplug / CXL provisioning.
+> 
+> Signed-off-by: Yuquan Wang <wangyuquan1236@phytium.com.cn>
+> ---
+> 
+> Changes in v2 (Thanks to Dan):
+> - Use numa_add_reserved_memblk() to replace numa_add_memblk() in acpi_parse_cfmws()
+> - Add comments to describe the usage of numa_add_reserved_memblk()
+> - Provide a more explicit commit message
+> 
+>  drivers/acpi/numa/srat.c     |  2 +-
+>  include/linux/numa_memblks.h |  1 +
+>  mm/numa_memblks.c            | 22 ++++++++++++++++++++++
+>  3 files changed, 24 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/acpi/numa/srat.c b/drivers/acpi/numa/srat.c
+> index 00ac0d7bb8c9..70f1a7c6b54a 100644
+> --- a/drivers/acpi/numa/srat.c
+> +++ b/drivers/acpi/numa/srat.c
+> @@ -458,7 +458,7 @@ static int __init acpi_parse_cfmws(union acpi_subtable_headers *header,
+>  		return -EINVAL;
+>  	}
+>  
+> -	if (numa_add_memblk(node, start, end) < 0) {
+> +	if (numa_add_reserved_memblk(node, start, end) < 0) {
+>  		/* CXL driver must handle the NUMA_NO_NODE case */
+>  		pr_warn("ACPI NUMA: Failed to add memblk for CFMWS node %d [mem %#llx-%#llx]\n",
+>  			node, start, end);
+> diff --git a/include/linux/numa_memblks.h b/include/linux/numa_memblks.h
+> index dd85613cdd86..991076cba7c5 100644
+> --- a/include/linux/numa_memblks.h
+> +++ b/include/linux/numa_memblks.h
+> @@ -22,6 +22,7 @@ struct numa_meminfo {
+>  };
+>  
+>  int __init numa_add_memblk(int nodeid, u64 start, u64 end);
+> +int __init numa_add_reserved_memblk(int nid, u64 start, u64 end);
+>  void __init numa_remove_memblk_from(int idx, struct numa_meminfo *mi);
+>  
+>  int __init numa_cleanup_meminfo(struct numa_meminfo *mi);
+> diff --git a/mm/numa_memblks.c b/mm/numa_memblks.c
+> index ff4054f4334d..541a99c4071a 100644
+> --- a/mm/numa_memblks.c
+> +++ b/mm/numa_memblks.c
+> @@ -200,6 +200,28 @@ int __init numa_add_memblk(int nid, u64 start, u64 end)
+>  	return numa_add_memblk_to(nid, start, end, &numa_meminfo);
+>  }
+>  
+> +/**
+> + * numa_add_reserved_memblk - Add one numa_memblk to numa_reserved_meminfo
+> + * @nid: NUMA node ID of the new memblk
+> + * @start: Start address of the new memblk
+> + * @end: End address of the new memblk
+> + *
+> + * Add a new memblk to the numa_reserved_meminfo.
+> + *
+> + * Usage Case: numa_cleanup_meminfo() reconciles all numa_memblk instances
+> + * against memblock_type information and moves any that intersect reserved
+> + * ranges to numa_reserved_meminfo. However, when that information is known
+> + * ahead of time, we use numa_add_reserved_memblk() to add the numa_memblk
+> + * to numa_reserved_meminfo directly.
+> + *
+> + * RETURNS:
+> + * 0 on success, -errno on failure.
+> + */
+> +int __init numa_add_reserved_memblk(int nid, u64 start, u64 end)
+> +{
+> +	return numa_add_memblk_to(nid, start, end, &numa_reserved_meminfo);
+> +}
+> +
+>  /**
+>   * numa_cleanup_meminfo - Cleanup a numa_meminfo
+>   * @mi: numa_meminfo to clean up
 
-Switching all addressing does not sound like a good idea.  The main
-thing these indirect buffers are used for is as a staging points for
-P2P DMA, in which case they often are only used for some transfers or
-even parts of a transfer.  At least for physical virtio devices P2P
-is probably not far off with the current GPU craze, and I wouldn't
-be surprised if people found uses for paravirt P2P as well.
+For the NUMA memblocks
 
+Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
