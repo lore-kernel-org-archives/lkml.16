@@ -1,117 +1,175 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-176.mta1.migadu.com (out-176.mta1.migadu.com [95.215.58.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0C7A13BAE3;
-	Fri,  4 Apr 2025 19:36:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DAE521D3DB
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 19:37:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743795417; cv=none; b=kjSBue1MNhJ2NBX1zrtuih766PPltwwMIGma7LFVcfPM7jAStK78U6WJUW9GF6Zc5JyXDvd3ezw2T+SPHB1UvNu5kCRO9xfKytL3vCXtAvDWmjKn9WzkeddBF0ysVyRTRtkbh56g3Z4NG0miI9S4lZS1WAagpbvV4raBNZ81tkU=
+	t=1743795445; cv=none; b=ESPEKXFca0sQvb6vFuxl1fVbDSpaKBt9Yh3Oj6b+A1XYcZZTcVnw2QrGXZRo3uCgCOHLG/KloMgx0pqkRqgCKb77UlwnpBX+7uxIFqbgCQOjkokl/ljqGsiuXj7n4mY1cMfBwvnutNsHCjr0iBOskDM2VZ3rzJaKegL41RKUJeQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743795417; c=relaxed/simple;
-	bh=FSMtCfn+ZP9lfYPEpSyVY65JEMOJGb5IqLQ76rti0xU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AO+96JzDpwVsyoIGOM9Dgg+laX+UuISSIoUwnId0U5UWsFzBaGjVvVQc9rkbOiW9aaA7yqPqFuKSI4bEeI82Kfz0s6L6qMFLuLWS+2Auy8a3x2EsEaNBw/tLgOr1iVUfpcVAmp1bfqCLGN75m59KjV+kbcqyyLmVf51jAl0Xm7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ditv9oqI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743795445; c=relaxed/simple;
+	bh=KlocHTRvoEQIHaClI7Vw27hSJD1Kw2lEniwUaBZzMFQ=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=cvqPk8wBybx/YlgNdWym1gFgQC/IMzJAwLPaw3sNkQeIvemqDaUNkqkGdlUXpBv4tMY5F0gAgO1QDOfJ9oURbIL1kMzS0DZobqwVVKyvObtD5811phCKfFrHrd1sTn8/ZhZAgwKv8E39s5XYV1F3d6GDnR6iPnkwmgFK0/gKtwA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=DQXOMEEl; arc=none smtp.client-ip=95.215.58.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ditv9oqI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2685AC4CEDD;
-	Fri,  4 Apr 2025 19:36:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743795416;
-	bh=FSMtCfn+ZP9lfYPEpSyVY65JEMOJGb5IqLQ76rti0xU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Ditv9oqItPmNmw2WkMNBFu8JedACDJ+5+fRkBqDqgN0uDrs6HHUCzxHva8QRMRn1F
-	 6DxC0boeLiwpeSLY3Coh9+H6B84p/BfwBdYZTa/kGtaQnKA0uoLSIvX0rr0+xjPNxN
-	 0vqCPPIWUTz4FMpmPyuaryBe0n2G9G1gIwAbtn1NmiX0SBlM4j98E6tOPZq/Nnz3+c
-	 qlHbECaAkpmFIjrgegJ94qYnJQCtDKpaddaSH8sUQ6FISP+lw0wtDbT9ROYwXhtqm5
-	 yFZ+DYPi4lAMyGWaVx8D7jzksdXTKgNbW8X39FFfNzLvue/YQGpBfenBzxVrv9nWP8
-	 AZOLxtsFxgY+g==
-Date: Fri, 4 Apr 2025 14:36:55 -0500
-From: Rob Herring <robh@kernel.org>
-To: Ricardo Ribalda <ribalda@chromium.org>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Hans Verkuil <hverkuil@xs4all.nl>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 5/8] dt-bindings: usb: usb-device: Add orientation
-Message-ID: <20250404193655.GA158858-robh@kernel.org>
-References: <20250403-uvc-orientation-v1-0-1a0cc595a62d@chromium.org>
- <20250403-uvc-orientation-v1-5-1a0cc595a62d@chromium.org>
+	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="DQXOMEEl"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250403-uvc-orientation-v1-5-1a0cc595a62d@chromium.org>
+Mime-Version: 1.0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
+	t=1743795430;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=j5iIDPsMyXuzJK77wAJ/JXOO40jyIXq/LxkNUBl62XQ=;
+	b=DQXOMEElFWKrqzc82mZ22U473YVAh7jYVz30PuKpuDL7ShqgdxTy23hx+dHmzeji0rxpqu
+	aMHDmf+1Gfg336iJLkjDx2PPPwPr7Qr0rhYThNk4b/UyCCXDLDx047eJDNsTSpawOLZlP/
+	FWj2tWol/jaD1Q3lh/y5Ff7w4LId2FIeXgC8UayYsJIDdBIN90bRvk/E6ZWHbgaKbgMXdD
+	CEfS7wmw0TRJ80J80ZOOWHRVFLrwBuvbe9rGwAqU344CLe6jq90KOZtF3QVr6KnJG+ORCq
+	D7K6TYOblr5rnCLYQyTxejqUpQmTe8bj6iBcQrgGg86b7V8tgGBh8YZe7ByPYw==
+Content-Type: multipart/signed;
+ boundary=1d0b1c9b765b5909805ad66ccb19fe973b8f7f377113664bb82b4c67afb6;
+ micalg=pgp-sha256; protocol="application/pgp-signature"
+Date: Fri, 04 Apr 2025 21:36:58 +0200
+Message-Id: <D8Y3VW5489RZ.3IXJX79M1ZK8O@cknow.org>
+Cc: <neil.armstrong@linaro.org>, <sebastian.reichel@collabora.com>,
+ <stephen@radxa.com>, <dri-devel@lists.freedesktop.org>,
+ <hjc@rock-chips.com>, <mripard@kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-rockchip@lists.infradead.org>, <devicetree@vger.kernel.org>,
+ <yubing.zhang@rock-chips.com>, <naoki@radxa.com>,
+ <Laurent.pinchart@ideasonboard.com>, "Andy Yan" <andy.yan@rock-chips.com>,
+ <krzk+dt@kernel.org>, <robh@kernel.org>,
+ <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v3 1/9] dt-bindings: display: rockchip: Add schema for
+ RK3588 DPTX Controller
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: "Diederik de Haas" <didi.debian@cknow.org>
+To: "Andy Yan" <andyshrk@163.com>, <dmitry.baryshkov@oss.qualcomm.com>,
+ <heiko@sntech.de>
+References: <20250403033748.245007-1-andyshrk@163.com>
+ <20250403033748.245007-2-andyshrk@163.com>
+In-Reply-To: <20250403033748.245007-2-andyshrk@163.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, Apr 03, 2025 at 07:16:16PM +0000, Ricardo Ribalda wrote:
-> For some devices, such as cameras, the OS needs to know where they are
-> mounted.
+--1d0b1c9b765b5909805ad66ccb19fe973b8f7f377113664bb82b4c67afb6
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
 
-Do you have a usecase that's not a camera?
-
-> 
-> ACPI has a property for this purpose, which is parsed by
-> acpi_get_physical_device_location():
-> https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/06_Device_Configuration/Device_Configuration.html#pld-physical-location-of-device
-> 
-> In DT we have similar property for video-interface-devices called
-> orientation:
-> Documentation/devicetree/bindings/media/video-interface-devices.yaml
-> 
-> Add a new property orientation for usb-devices that matches the already
-> existing orientation property of video-interface-devices.
-> 
-> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+On Thu Apr 3, 2025 at 5:37 AM CEST, Andy Yan wrote:
+> From: Andy Yan <andy.yan@rock-chips.com>
+>
+> The Rockchip RK3588 SoC integrates the Synopsys DesignWare DPTX
+> controller. And this DPTX controller need share a USBDP PHY with
+> the USB 3.0 OTG controller during operation.
+>
+> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+> Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+>
 > ---
->  Documentation/devicetree/bindings/usb/usb-device.yaml | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/usb-device.yaml b/Documentation/devicetree/bindings/usb/usb-device.yaml
-> index da890ee60ce6e71a11910c565b6f805470782e4f..bbcda28ec7d5695307efa797f57180044afda77f 100644
-> --- a/Documentation/devicetree/bindings/usb/usb-device.yaml
-> +++ b/Documentation/devicetree/bindings/usb/usb-device.yaml
+>
+> (no changes since v2)
+>
+> Changes in v2:
+> - Link to V1: https://lore.kernel.org/linux-rockchip/20250223113036.74252=
+-1-andyshrk@163.com/
+> - Fix a character encoding issue
+>
+>  .../display/rockchip/rockchip,dw-dp.yaml      | 150 ++++++++++++++++++
+>  1 file changed, 150 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/rockchip/ro=
+ckchip,dw-dp.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/display/rockchip/rockchip,=
+dw-dp.yaml b/Documentation/devicetree/bindings/display/rockchip/rockchip,dw=
+-dp.yaml
+> new file mode 100644
+> index 0000000000000..a8a0087179972
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/rockchip/rockchip,dw-dp.y=
+aml
+> @@ -0,0 +1,150 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/rockchip/rockchip,dw-dp.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Rockchip DW DisplayPort Transmitter
+> +
+> +maintainers:
+> +  - Andy Yan <andy.yan@rock-chips.com>
+> +
+> +description: |
+> +  The Rockchip RK3588 SoC integrates the Synopsys DesignWare DPTX contro=
+ller
+> +  which is compliant with the DisplayPort Specification Version 1.4 with=
+ the
+> +  following features:
+> +
+> +  * DisplayPort 1.4a
+> +  * Main Link: 1/2/4 lanes
+> +  * Main Link Support 1.62Gbps, 2.7Gbps, 5.4Gbps and 8.1Gbps
+> +  * AUX channel 1Mbps
+> +  * Single Stream Transport(SST)
+> +  * Multistream Transport (MST)
+> +  * Type-C support (alternate mode)
+> +  * HDCP 2.2, HDCP 1.3
+> +  * Supports up to 8/10 bits per color component
+> +  * Supports RBG, YCbCr4:4:4, YCbCr4:2:2, YCbCr4:2:0
+> +  * Pixel clock up to 594MHz
+> +  * I2S, SPDIF audio interface
+> +
+> +allOf:
+> +  - $ref: /schemas/sound/dai-common.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - rockchip,rk3588-dp
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    items:
+> +      - description: Peripheral/APB bus clock
+> +      - description: DisplayPort AUX clock
+> +      - description: HDCP clock
+> +      - description: I2S interface clock
+> +      - description: SPDIF interfce clock
 
-This is a binding for *all* USB devices. This property should only be 
-added for devices where it makes sense.
+s/interfce/interface/
 
-> @@ -42,6 +42,10 @@ properties:
->        port to which this device is attached. The range is 1-255.
->      maxItems: 1
->  
-> +  orientation:
-> +    description: If present, specifies the orientation of the usb device.
-> +    $ref: /schemas/media/video-interface-devices.yaml#/properties/orientation
-
-Reference the schema from the top level and drop 
-'/properties/orientation'.
-
-What about 'rotation'? Seems like you'd want that too.
+Cheers,
+  Diederik
 
 > +
->    "#address-cells":
->      description: should be 1 for hub nodes with device nodes,
->        should be 2 for device nodes with interface nodes.
-> @@ -101,6 +105,7 @@ examples:
->          device@2 {
->              compatible = "usb123,4567";
->              reg = <2>;
-> +            orientation = <0>;
->          };
->  
->          device@3 {
-> 
-> -- 
-> 2.49.0.504.g3bcea36a83-goog
-> 
+> +  clock-names:
+> +    items:
+> +      - const: apb
+> +      - const: aux
+> +      - const: hdcp
+> +      - const: i2s
+> +      - const: spdif
+
+--1d0b1c9b765b5909805ad66ccb19fe973b8f7f377113664bb82b4c67afb6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQT1sUPBYsyGmi4usy/XblvOeH7bbgUCZ/A03gAKCRDXblvOeH7b
+bpJBAQDvx5djc7YfaKYs4IcJeoXUVMwHtmKxjI+9dTI+U5l82wD/TCM5+lKSSL8X
+Ub8SCGu2YvEfoUy58ySWw+QHY8eQfwE=
+=IJxa
+-----END PGP SIGNATURE-----
+
+--1d0b1c9b765b5909805ad66ccb19fe973b8f7f377113664bb82b4c67afb6--
