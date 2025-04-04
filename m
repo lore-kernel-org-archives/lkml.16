@@ -1,124 +1,115 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2BB51552E3;
-	Fri,  4 Apr 2025 07:47:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 623F51552E3;
+	Fri,  4 Apr 2025 07:48:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743752860; cv=none; b=DMpZd6uwwrK33E9hds6K3y4bwUy4jzmo1qZ0BTZM9+h9TgdMosVlFE94JEK/LlM9sB1RNm7exhkE4PSkWta0zUSD0xg7rtcU0PmWDbV5Lvs8u3VXwtKt4YJrEHW2yhq4V8Rb5Kr1x7kJ+CNPKTsAsY9psuWU0Ioqau6/dBBlEtg=
+	t=1743752893; cv=none; b=c019kRx8GQ3Wfiip1ijgIAA66UYLE6eQnqgdOfmgjbD4Q2x2KJ4t3q1XAW+gfGvoPaK3YnaQzs7bC2vFzUeabNesK2imog0JbiiRBmAuirHJ3C0foly1ZFgy3y6sPmZJAvzJkElz+RADXs70H2+Cgi+dWt+iY2oSijrOsMNCyng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743752860; c=relaxed/simple;
-	bh=n3WVEOSVyo5twplGrYfxLFXNkYDXkXuKVIkLlw7ygbk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GeR0ot0eARwDW9owUf7TPHvIVAx1qg9Cd0IZvTj9sF4/UpqPOSTb23f6j0kiy7mr6vaj706IcKLMttEeRMElp3VYaMOZ9yVhQ/8ncb5r5ToKgw5kRxE8Y8QDLcI5inTO9By/GoAwUE2AJXuE610EzBY0d1GzOIweYVOM9J0t0O0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CC5HlRub; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743752893; c=relaxed/simple;
+	bh=CWgn0iuDB61o8APfrFwOk0rOr7NMFOnhrduS8Ub4R/4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GXHQtT4v7IEkX1ukmvpHIJTTtYSHh8UjSO0ijgZABUSyZ6En8up/Eo39Jf26JR2C7Svl/3plF1MXDs3764cn9RAH3ZfwBm4zxt0LU8kh3M8tgivYXcb7oaW8hZJic+f6IEZIQ+lc5uhPhw4I3jhrylsNNoUgC9pSiMlrRHBuKLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EdzSo6AR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CC5HlRub"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 648B5C4CEDD;
-	Fri,  4 Apr 2025 07:47:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EdzSo6AR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57793C4CEDD;
+	Fri,  4 Apr 2025 07:48:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743752859;
-	bh=n3WVEOSVyo5twplGrYfxLFXNkYDXkXuKVIkLlw7ygbk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=CC5HlRubywiTUHDH3GzqNyIgC1CyFlxgDXREVTm98WIyeYzkFtFs1a/eZoA1kVwWy
-	 OQury3Z2olmo+RsZFmcEkI9l2TlvcYevXb6UpYO36+NuZLGzgGohMhfUzUUkOeR3ZE
-	 GsyjJqoQatJnwtYUJxI385nqicOS+N5RxwEyl3ayC7VhmCQYA+yQZIFc0njrKNU3Vt
-	 bYaJjiUwN2dEOIEadffJuZIZ+TGdEkMwNpJ/EVOrzlgARVxCK6wTSh0jyurUNsP/it
-	 7WkwttaqqGemqoIwLYqZvVcPffwhGG1EXh/aH9PJ/nKWsgAS2Cwi8c0wyf3bQgm/He
-	 dVGBSaXr9RaRw==
-Message-ID: <58d26423-04da-4491-9318-d4a7a1f12005@kernel.org>
-Date: Fri, 4 Apr 2025 10:47:31 +0300
+	s=k20201202; t=1743752892;
+	bh=CWgn0iuDB61o8APfrFwOk0rOr7NMFOnhrduS8Ub4R/4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=EdzSo6ARK1UfzhsxiPzjjCufTuaMzJ/BY7wMw7xL80+y7Pv7zoZpg9rTeI61T8hJD
+	 L6spvadDV+Z86S2YeB/zmbgelCx/RxW7P0D3izF3MS7vvSYWMr44sf71moHQWXWR+E
+	 D8OffDtA26EpHHJNm6lKMvE8OkD6wLw8UW+CPy8mlsZNpzmP4TYJeyp17fyYxhe5IY
+	 tm+C+tT2GJGhvEn/lW1Qg6W3DvO/U70VtCbwYUskDPeT//F7syTFUgzAEqVGcIsIGA
+	 h+6BO29HF3v6TsthlBgJOVZZpZS6YoA/I36syp2pZwxKbGE7woxmphMAfDN0G2HDPU
+	 1KmoAz22MGZbQ==
+Date: Fri, 4 Apr 2025 10:48:08 +0300
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: "Reshetova, Elena" <elena.reshetova@intel.com>
+Cc: "Annapurve, Vishal" <vannapurve@google.com>,
+	"Hansen, Dave" <dave.hansen@intel.com>,
+	"linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"x86@kernel.org" <x86@kernel.org>,
+	"Mallick, Asit K" <asit.k.mallick@intel.com>,
+	"Scarlata, Vincent R" <vincent.r.scarlata@intel.com>,
+	"Cai, Chong" <chongc@google.com>,
+	"Aktas, Erdem" <erdemaktas@google.com>,
+	"dionnaglaze@google.com" <dionnaglaze@google.com>,
+	"bondarn@google.com" <bondarn@google.com>,
+	"Raynor, Scott" <scott.raynor@intel.com>
+Subject: Re: [PATCH v2 2/2] x86/sgx: Implement EUPDATESVN and
+ opportunistically call it during first EPC page alloc
+Message-ID: <Z--OuMuWx8jUdSU1@kernel.org>
+References: <20250328125859.73803-3-elena.reshetova@intel.com>
+ <Z-bhczXA6aHdCYHq@kernel.org>
+ <Z-blOQ94ymUsDwPn@kernel.org>
+ <DM8PR11MB5750C88DFC518EB77B0D613FE7AD2@DM8PR11MB5750.namprd11.prod.outlook.com>
+ <Z-rU_JXWn0vCdBr_@kernel.org>
+ <DM8PR11MB5750A46718F899A43C52A984E7AC2@DM8PR11MB5750.namprd11.prod.outlook.com>
+ <Z-v4WfcLhmXbYvaa@kernel.org>
+ <DM8PR11MB575087BDAFA223EDCE9EC69EE7AF2@DM8PR11MB5750.namprd11.prod.outlook.com>
+ <Z-7dqQCiu5fWZ9a9@kernel.org>
+ <DM8PR11MB5750131ED71BFF175E3E329CE7A92@DM8PR11MB5750.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net v3 3/3] net: ti: icss-iep: Fix possible NULL pointer
- dereference for perout request
-To: Paolo Abeni <pabeni@redhat.com>, "Malladi, Meghana" <m-malladi@ti.com>,
- dan.carpenter@linaro.org, kuba@kernel.org, edumazet@google.com,
- davem@davemloft.net, andrew+netdev@lunn.ch
-Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- namcao@linutronix.de, javier.carrasco.cruz@gmail.com, diogo.ivo@siemens.com,
- horms@kernel.org, jacob.e.keller@intel.com, john.fastabend@gmail.com,
- hawk@kernel.org, daniel@iogearbox.net, ast@kernel.org, srk@ti.com,
- Vignesh Raghavendra <vigneshr@ti.com>, danishanwar@ti.com
-References: <20250328102403.2626974-1-m-malladi@ti.com>
- <20250328102403.2626974-4-m-malladi@ti.com>
- <0fb67fc2-4915-49af-aa20-8bdc9bed4226@kernel.org>
- <b0a099a6-33b2-49f9-9af7-580c60b98f55@ti.com>
- <469fd8d0-c72e-4ca6-87a9-2f42b180276b@redhat.com>
-Content-Language: en-US
-From: Roger Quadros <rogerq@kernel.org>
-In-Reply-To: <469fd8d0-c72e-4ca6-87a9-2f42b180276b@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DM8PR11MB5750131ED71BFF175E3E329CE7A92@DM8PR11MB5750.namprd11.prod.outlook.com>
 
-
-
-On 03/04/2025 14:25, Paolo Abeni wrote:
-> On 4/2/25 2:37 PM, Malladi, Meghana wrote:
->> On 4/2/2025 5:58 PM, Roger Quadros wrote:
->>> On 28/03/2025 12:24, Meghana Malladi wrote:
->>>> ICSS IEP driver has flags to check if perout or pps has been enabled
->>>> at any given point of time. Whenever there is request to enable or
->>>> disable the signal, the driver first checks its enabled or disabled
->>>> and acts accordingly.
->>>>
->>>> After bringing the interface down and up, calling PPS/perout enable
->>>> doesn't work as the driver believes PPS is already enabled,
->>>
->>> How? aren't we calling icss_iep_pps_enable(iep, false)?
->>> wouldn't this disable the IEP and clear the iep->pps_enabled flag?
->>>
->>
->> The whole purpose of calling icss_iep_pps_enable(iep, false) is to clear 
->> iep->pps_enabled flag, because if this flag is not cleared it hinders 
->> generating new pps signal (with the newly loaded firmware) once any of 
->> the interfaces are up (check icss_iep_perout_enable()), so instead of 
->> calling icss_iep_pps_enable(iep, false) I am just clearing the 
->> iep->pps_enabled flag.
+On Fri, Apr 04, 2025 at 06:53:17AM +0000, Reshetova, Elena wrote:
+> > On Wed, Apr 02, 2025 at 01:11:25PM +0000, Reshetova, Elena wrote:
+> > > > > current SGX kernel code does not handle such errors in any other way
+> > > > > than notifying that operation failed for other ENCLS leaves. So, I don't
+> > > > > see why ENCLS[EUPDATESVN] should be different from existing
+> > behaviour?
+> > > >
+> > > > While not disagreeing fully (it depends on call site), in some
+> > > > situations it is more difficult to take more preventive actions.
+> > > >
+> > > > This is a situation where we know that there are *zero* EPC pages in
+> > > > traffic so it is relatively easy to stop the madness, isn't it?
+> > > >
+> > > > I guess the best action would be make sgx_alloc_epc_page() return
+> > > > consistently -ENOMEM, if the unexpected happens.
+> > >
+> > > But this would be very misleading imo. We do have memory, even page
+> > > allocation might function as normal in EPC, the only thing that is broken
+> > > can be EUPDATESVN functionality. Returning -ENOMEM in this case seems
+> > > wrong.
+> > 
+> > This makes it not misleading at all:
+> > 
+> > 	pr_err("EUPDATESVN: unknown error %d\n", ret);
+> > 
+> > Since hardware should never return this, it indicates a kernel bug.
 > 
-> IDK what Roger thinks, but the above is not clear to me. I read it as
-> you are stating that icss_iep_pps_enable() indeed clears the flag, so i
-> don't see/follow the reasoning behind this change.
-> 
-> Skimmir over the code, icss_iep_pps_enable() could indeed avoid clearing
-> the flag under some circumstances is that the reason?
-> 
-> Possibly a more describing commit message would help.
+> OK, so you propose in this case to print the above message, sgx_updatesvn
+> returning an error, and then NULL from __sgx_alloc_epc_page_from_node and
+> the __sgx_alloc_epc_page returning -ENOMEM after an iteration over
+> a whole set of numa nodes given that we will keep getting the unknown error
+> on each node upon trying to do an allocation from each one?
 
-I would expect that modifying the xxx_enabled flag should be done only
-in the icss_iep_xxx_enable() function. Doing it anywhere else will be difficult
-to track/debug in the long term.
+I'd disable ioctl's in this case and return -ENOMEM. It's a cheap sanity
+check. Should not ever happen, but if e.g., a new kernel patch breaks
+anything, it could help catching issues.
 
-I don't see why the flag needs to be set anywhere else. Maye better to
-improve logic inside icss_iep_pps_enable() like Paolo suggests.
+We are talking here about situation that is never expected to happen so I
+don't think it is too heavy hammer here. Here it makes sense because not
+much effort is required to implement the counter-measures.
 
 > 
->>> And, what if you brought 2 interfaces of the same ICSS instances up
->>> but put only 1 interface down and up?
->>>
->>
->> Then the flag need not be disabled if only one interface is brought down 
->> because the IEP is still alive and all the IEP configuration (including 
->> pps/perout) is still valid.
+> Best Regards,
+> Elena. 
 > 
-> I read the above as stating this fix is not correct in such scenario,
-> leading to the wrong final state.
 > 
-> I think it would be better to either give a better reasoning about this
-> change in the commit message or refactor it to handle even such scenario,
-> 
-> Thanks,
-> 
-> Paolo
 > 
 
--- 
-cheers,
--roger
-
+BR, Jarkko
