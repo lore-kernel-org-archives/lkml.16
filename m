@@ -1,225 +1,977 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2069.outbound.protection.outlook.com [40.107.94.69])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 717E5BA49;
-	Fri,  4 Apr 2025 07:07:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.69
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743750477; cv=fail; b=HL0w/hvXClJTen/vKEfe1FLXMm91Po4TOtyi8JMsOWaaQtH0H5LSpdEA50SkaQYQkXnE2g14HrtH+Vz/QEwX7XqZ9GRMRiWFqSp0PoBub8SenxedAmh8zg5VcGOzBZFDNPorNQQ8q2w7Qp3o8u4L7YxJwl1ZtRTO9eTscE7kk7Y=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743750477; c=relaxed/simple;
-	bh=uCCavXMKhi9ZTiNfgLS4Ge4VxWHrK6/GbcWCZZGSEgU=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=CYquOAclm9Gk1D1WdKJJtSvUEulN2Dptd3q1ZjcPCeQUczd4tbA1C1lPoa4IKuBZfJXORsyvWfJpkBchvGOIJzjlwuVFf9T0N9jNkvtYrMotmhubJRuPcw/XDkXYmrpDcxR1X0xtaZsT1ZYmBo7B8jVmNArs2zAd0HGjThUlS5g=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=MaCuckXN; arc=fail smtp.client-ip=40.107.94.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5B09188A3A
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 07:11:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743750695; cv=none; b=gM1b3vEQX68b4SZhFa8qegxTkylqdNfpzypPIE5w6VBRXycsKgfIIXTzqDT3ji4JKPIatUPBC7EkpGtnxZfrqdN6kv3LOw+L8mM3cWsfpX1xvWSDwbSfAvLsUa3eL55/zCpZbNrT12iu4uQ+vLKKK05yxMCGrY3DL1uMlBOvhRQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743750695; c=relaxed/simple;
+	bh=zdiAzkyu+5KVG+okVpLVQQM/tIeOYc41kqNg4LiANMs=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=UT4OdIpvl19DGn2bwf1HBp6IsVCxfhKsX4XQ007glVtrak1k/vZL+L716Y1OmzoemCpg79Rya96KSnXVBpRZPqWa+vhU1AMyUznYtQqO6LR7MqFo3977FkTA4XhesOXDWK3jSX+33luBcdQQsATVpkghWRY5F5FI7sGVTcXRjUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=D8c2qPUL; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="MaCuckXN"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=FGn0WJ6HKSzYA5G74E0okicJdiPzwnQxG+gZYRYGlRTGDqM4KTxoGKY75AXMFHTxGoJslXjGRrvNzMq3yu2+GOR/9zNzoTNCLOQ1dSaG3NA9QIPGDt57fMFwcN2QCVJWwlSDCSYjt2cCFI92NU/6nx+zJIifmaQ/ZkENzFjozAGiozEu7KkM91I+9Hk7E59wHyzFZ5xoNuzJLyIaVjlzC+I+nr3Ok7spqeImFCR6tey1bpgBIohMZM+kq6eKfD7x6Au8ED+fBAhajvQ8mdiJT6b0Z3VhlYWIb2XtFq5YSEcfg3tPB+vmWszp9M6o1FvRGSjALQIegK9bqrZ47zzmxQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=uCCavXMKhi9ZTiNfgLS4Ge4VxWHrK6/GbcWCZZGSEgU=;
- b=xyB33Kdm+3rIZXm5eBLQr3WfXNSmXmz86Lk0rAQQUwkSLgWKCtV3WNEGqTYSaVMN5eX+f3X8mdnQIRwl+uMFetIfe9P2ICx4JSuvGpIdNdrvht/HnLisrnmC7pC7pHyZVZR61dWKb6f2aw/TLdzGnSkVIngGPHQBmmJlceAXd+CLyKURp6QRncAK5+YxA7f72DZsK3GxN5gKaTvI99MsOzVRC2b2EcF8pqiCJNwJiRQrZWlrk7b0tB3Mbsu81K/WjTErciDlcCpEJe7w0szpGLZKmnwybU2rHnTO4e0af2WcZvaPqxowxELB7RoOERXOayu3XTcATeQrWChBw4AXHw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uCCavXMKhi9ZTiNfgLS4Ge4VxWHrK6/GbcWCZZGSEgU=;
- b=MaCuckXNR9GFDfa/k6EY94VHf+7G65ETCPUyKVvkiC1CvRuVqLZTtVW3zHpLEYqgnFaBHh1NzsHNJDZul51J1yfoxon6x3mZumY9sD/f24FrvhWkDxIVmnTCup5FvnymbnZ80ZOw1cNmOwnQfYtkTirSvWP7lz5UrqIeELlUZjw=
-Received: from DM4PR12MB6158.namprd12.prod.outlook.com (2603:10b6:8:a9::20) by
- IA1PR12MB7664.namprd12.prod.outlook.com (2603:10b6:208:423::8) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8534.44; Fri, 4 Apr 2025 07:07:52 +0000
-Received: from DM4PR12MB6158.namprd12.prod.outlook.com
- ([fe80::b639:7db5:e0cc:be5e]) by DM4PR12MB6158.namprd12.prod.outlook.com
- ([fe80::b639:7db5:e0cc:be5e%6]) with mapi id 15.20.8583.041; Fri, 4 Apr 2025
- 07:07:52 +0000
-From: "Musham, Sai Krishna" <sai.krishna.musham@amd.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-CC: "bhelgaas@google.com" <bhelgaas@google.com>, "lpieralisi@kernel.org"
-	<lpieralisi@kernel.org>, "kw@linux.com" <kw@linux.com>,
-	"manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
-	"robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
-	<krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>,
-	"cassel@kernel.org" <cassel@kernel.org>, "linux-pci@vger.kernel.org"
-	<linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org"
-	<devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "Simek, Michal" <michal.simek@amd.com>,
-	"Gogada, Bharat Kumar" <bharat.kumar.gogada@amd.com>, "Havalige, Thippeswamy"
-	<thippeswamy.havalige@amd.com>
-Subject: RE: [PATCH 2/2] PCI: amd-mdb: Add support for PCIe RP PERST# signal
-Thread-Topic: [PATCH 2/2] PCI: amd-mdb: Add support for PCIe RP PERST# signal
-Thread-Index: AQHbngXNCEM0Bzx7+kuW7/tCQKsE7LOFFH0AgA4PGIA=
-Date: Fri, 4 Apr 2025 07:07:51 +0000
-Message-ID:
- <DM4PR12MB6158433474E7875ADF92ACA3CDA92@DM4PR12MB6158.namprd12.prod.outlook.com>
-References: <20250326041507.98232-1-sai.krishna.musham@amd.com>
- <20250326041507.98232-3-sai.krishna.musham@amd.com>
- <20250326-succinct-steadfast-pronghorn-5fcc21@krzk-bin>
-In-Reply-To: <20250326-succinct-steadfast-pronghorn-5fcc21@krzk-bin>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
- MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_ActionId=c7bcfb83-1103-425a-8588-2abaac89c27a;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_ContentBits=0;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Enabled=true;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Method=Standard;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Name=AMD
- Internal Distribution
- Only;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SetDate=2025-04-04T07:04:31Z;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Tag=10,
- 3, 0, 1;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DM4PR12MB6158:EE_|IA1PR12MB7664:EE_
-x-ms-office365-filtering-correlation-id: e5c82872-1726-4f0b-ee41-08dd73476a5a
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|7416014|376014|1800799024|366016|38070700018;
-x-microsoft-antispam-message-info:
- =?utf-8?B?Tjdja3JTak12Qi9FOUhaVDNCZk56cXp1V25vSmtTcXYycjRjMmU0RWdreFNO?=
- =?utf-8?B?ZWczUDdEK25WVVNNL0tEUnA2SUNHMXRUdHcxbHQzUDQ2RXpRWGN0QjluMWdz?=
- =?utf-8?B?ZncrY0g5OVgvOHMrYlFFS0pDM3BTSmxuYUhPcm82YVpnTzdDWDcwSlg4Y1Jw?=
- =?utf-8?B?YzZvd1pobUhlUXhsQUt0QXR3ckY5UjN4VnJTS1lSK3lwSmE1TFE2UEkxUzF2?=
- =?utf-8?B?S0lpeHdpaDRwU1VDbGhUV29zVEYzZ3JpdHdXeFNhUC9PaGlBeUFYc05KQ1ZO?=
- =?utf-8?B?cWN6RWo1SFQ4SEpXdVhIcWsxUkxqN1FNOXk5a0FYbkl3REpiSVZuS1BGazVk?=
- =?utf-8?B?MkJ3cWRRRkFvSGtHU1dXUlNyNGRLRUl3dkFJNTZ5TitxWC9aMFdiZEJ5WEFM?=
- =?utf-8?B?Zy9ld1Y4aWN6am1oeExEMGZ5bkhLRkJJYlRHQjNyWHF2eFVBaXBZTFd3QlNI?=
- =?utf-8?B?SkpRMklzVU5URU1PSFlKYmhVTE9McE1LblFMY21jM0dBL09yd2hvNDd3U1Zn?=
- =?utf-8?B?dWlMUlZZTlhnWFVQZk1DN1Nra2VITzNBZytRVS92cjAyY3ZXdnBKWlMrcUF3?=
- =?utf-8?B?NWVHdVVDL0ZtQTZPOE1tVVFDbFVZcTVndjE5SHFqOEpPNFZzeXo3Y2F2c29Q?=
- =?utf-8?B?ZVk0RVpRblFsQzd6UHRWSGVwM3BEQy9CUTMreldwU1BTVmV5NHNQRlNIQXM3?=
- =?utf-8?B?OE5qelFnb3F2SFBVaUNDd0x4OXlzZWYxSG1CejJENm9PNEVkcHJkSm1kZ0oz?=
- =?utf-8?B?MXBiQ1BIcFMrcWJLaVQzRWVJaHNpQkRxeVVaYlFic2daZlVEY3N4M09BdzJp?=
- =?utf-8?B?NFZvMlFXdVhnUXJySEdZZzFuSHArNmI4R3V3RkowdWdCM1o5SEZUOGh0WWpn?=
- =?utf-8?B?VXc2OWQySUdobVZSTThLZmdnYW9NQnVCcW9vWnZ2WXp0TzVOODR3WnNMMG1S?=
- =?utf-8?B?b1ZJcEhHOSswcUdkM2xZblBPV21HT1I0dTJMMVI2OThnb0NtdGNWOGd2bHox?=
- =?utf-8?B?clQxRDlPbi9FYnpKSlZrdmI3cTJBYmYzdVBxb1pzRDY1bDZIVU8xNWJNd0ZP?=
- =?utf-8?B?RzdFbktxcVJIMndJdmwwY0VEWkV1dm1wN3o1dDdKYWZoS0Z5QjYyVmpaZGlG?=
- =?utf-8?B?MGZZZDZJb1VVSWliTmNsQ2kvTmhIMTVsclRodXlQRGtaUXo2N2xONUF1ZXdL?=
- =?utf-8?B?dE5HRUs5U0czaEVWMzIyV1Z2czFqOElsZ2VqTjA2TEJ0SS9TcFNKbGVFb016?=
- =?utf-8?B?YThHNjF2K21Oa281UkFzR1FpNER5eFdhRjhGK09lM1VReEhHeC90K3JYeFNy?=
- =?utf-8?B?QkFHb0FLdnFjQUNXUnF1cE5LSk1lVWhBN1RZZHdGdmMvYUYyejZkNis1SHhJ?=
- =?utf-8?B?Rk42QXZQSzhLbHdYLzYyVm10dzM4VUlNSmpuUVhiYUhCUWtmN1hGTDhwZitm?=
- =?utf-8?B?QU4va2dHS084Qy9LN0o5alBLd0dBNUZYbFJxYWo0SHVyb21lYVJ6cUJuR3N0?=
- =?utf-8?B?SlZNYjRDTUdMQUs5c1VUcG1qWWYrVmlPUE9KdHV0eVI3cDdBcWt3WGlXRGk5?=
- =?utf-8?B?VWtXRnBaR3lTdVhvUFIvUVliaGdHdnBZQjI4My81cDNnUTVQUmdBT3B5N0RH?=
- =?utf-8?B?M0pNTlJXd2RFZy90c2hrWi9FS1Z4clFKYUFnWC9mbzl5MUR1bFFOdlNyWHRj?=
- =?utf-8?B?cEZ3WHJRNXVGRUV1NjdDOEtsQW9xVS9EL0FYc21XUmU5VnBKRG03VGowSVJt?=
- =?utf-8?B?YktXVTVrZlZMQjJWMEp0dHhUd1pnN0NkbytxanE4S1N2SCtmYWtXNTZ6SWMv?=
- =?utf-8?B?RzlzV3VESXRvNFZaTEpYeWNxRE5RK1E1Rzd1UXBhaU95SkZaS2kxVVdRNS9v?=
- =?utf-8?B?cHNPclRJclMzZVdSYXVNRWJ6RFlUV1FIdFFJUWNoNXg3NUIxc0pyMG5xN29x?=
- =?utf-8?Q?/DH+pemuWeR34pxRdIbyW0GH6mRN5+zL?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB6158.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?VmgyVW13V1p6bm1FOGlseG9pTXpscC9QcWdJdTZzbTBGY1ZkMW93QkgyZndH?=
- =?utf-8?B?NldtalNtRytmV0lZZ0pDam9TM2tnVXRZYkdHdE1uMkdubXVjWXo5S0NhVmJR?=
- =?utf-8?B?YWlDbkc5QTZQNjFaeERoQnkzM0o1S3hrU0FrTDZtNC9uZ1k2VTNXQXpTTFYx?=
- =?utf-8?B?ZHQrd2lZRnEwRVJybndQZlRSMWZZT1o1Mi9MR1JGVFp6MW9wY2FYbXBONXUv?=
- =?utf-8?B?aDlMeUlHQ1pGeHZNYmcwbWUxbGZidW50bjE1TlV6YjgvLzBDV0tEcXJMTXpS?=
- =?utf-8?B?N0xGSFJTWnVUUkhkeVkySzRjYjZwamJSYUNoM2hnclNkalMzdTUydDFBdG11?=
- =?utf-8?B?bHFUbU1aZmIzQW8yZE1ZUkl3aWU3YlU2STBuTGRzNzZaL0JNdXdkRjUranox?=
- =?utf-8?B?akVkay9Oc2xmdnFTZHVRV21NYzlCV3BrYTlJYlVDT2xUV3puRkRCNUFkM0Zw?=
- =?utf-8?B?NTFmVDNNUnQxYSt5RHdUdkhxQnl2MWZQSVdHN0pyRFRzRHhSY2szT0dra1pm?=
- =?utf-8?B?OGVOdHdSTTRpa1RmRU5taUFnV2xjNnI3NzNQUSs0VFcwUkRNTFRBMkFiNzdr?=
- =?utf-8?B?WUFvTm40Ry9pRXRLcjJRakN3WEdDSE5TdmF3c2RIN2lycUxXOXdTVXg4OUhZ?=
- =?utf-8?B?MENOcmUrVGhZOFBpY3FwaXkzaVkyazlqTGR4NUtoZXRpeTNESGFJM3paNm9S?=
- =?utf-8?B?U3BWR3NjVEcyU0grSXdpWGRKUGMyTU9OQmZSMHdwVDdXbVpqSkt5RnVCVERN?=
- =?utf-8?B?aDdSQmRRazRaSUxjUzVLVjJseXhDcC9JbiswNW9JT1hCYWtpWUc5WWllQlJM?=
- =?utf-8?B?NUNUNXNFbk01aGlzVStpT0NMUWhWbEpxZ3RRK3FLcjMxM24vV1Qrb05WdEw3?=
- =?utf-8?B?ZlNBZmIxa0dFVXp4ZjVOdWFVZURXcjk3YWJvL1puOXpmaEVPM2ZYSFQwZW8r?=
- =?utf-8?B?enpyYTBhSnFlUGJaOVJ3NE9QbjNnM2JsYUxBOGJhMERDTUE3Rlh5aUNlZWN5?=
- =?utf-8?B?NFBGdTlvMWliOWVkQVhydGVYbFVsZDhJaGYxRDFmRmIwbDZUL2MvVmVUQkxw?=
- =?utf-8?B?SDY0KzJzTEVFYUNmZ2FHMUMzOXRIWUJUOXJQUmZKM3Q4dkpiaFdVK0pkTE1G?=
- =?utf-8?B?T3NGRitmRGZJb1ZFbkRoTDlrVXNLeFpmK2lsVEoySmYrQ1E3cmVneVZiQnFC?=
- =?utf-8?B?UjZJS0VOdVBVYTRwUEtYM3RwUGNMWks1U05VMW4wWXY0ZFYvaHROckhCa3NW?=
- =?utf-8?B?NmRBcjFDZ1Y2R1poQkFHWDZjL2pHdzhLUHBxNDc5cWFqTGlEdUNJTUN3YXhI?=
- =?utf-8?B?dGwyZlNPdEpGU2JXWmM0QUNFYlpMM1NqZ0JqdFprbWlIZlo4SGkzcEdPb1JN?=
- =?utf-8?B?Z0hQWGFHd2VlMEIweEt0SDJ0cXZFQjd3MG9FRVYyMjhtaVFFLytYM1JwYkdX?=
- =?utf-8?B?QVBNWVVTU1hpcW1lZGZqVWI5VEtET1dRZmttM2lMYzY0Z0o1WEtjNUl0ODdp?=
- =?utf-8?B?U2RWSVV0cVltV2pXV1BjbkxwWE5xZklPWTZSU3d2bEViOVBUN1ZFY2VTNFR4?=
- =?utf-8?B?Z0tIZlVXeDh0SldRd0RJWUwzLzZ4aVBJSFE3cVByU2dNMTYyQXhSM2NIYk9Q?=
- =?utf-8?B?SURoSktqeTBzeDdGb014S25pWllwTFlQUmFnWU5ralF3QXdDQitBK3RRWTI5?=
- =?utf-8?B?Wm9IT2E4bmRqUGxVdXZZYmxPY3NQWTF3WE9MQUZOWVhqOE5Ra3FyL0NzUjZZ?=
- =?utf-8?B?MFlrMEZBd1Arb3dtWEF1aytoSHAvdy9hN003TWJzcGV1VEZva1RubEE2RHRk?=
- =?utf-8?B?NzBkQ2R0RktlMjFWbnZVVmNCVEU3K1M0SjQwUlJ5amVxb3M5OGphVGJFZERk?=
- =?utf-8?B?UUVoWnpGN0pVbmEwOWpJSkl2QXM5bGhoUjNxUlZ5YVgwQVFnSktNMG4vdUdE?=
- =?utf-8?B?dzNvcDZRMy94OXBDT2RnOHArdlh3K2w2c0dSWHZtMFcxMDNvVWpaSXBCNmk4?=
- =?utf-8?B?ZG04OGJNUmxZMDd1aHRiVWQ0dlZTV2ZOYlVxNTFOU3paL2dxY2JmMjFVdDlV?=
- =?utf-8?B?UU04ZTFJcHFlOU9BaWdhSWZuUzgxL2tCS3R2SHA0MnlyOXg4aTdMQ0ppZ0RS?=
- =?utf-8?Q?xhVQ=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="D8c2qPUL"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43d0618746bso11673965e9.2
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 00:11:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1743750690; x=1744355490; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zQmJkyko0OhYAsknEycSfzYAilGr5w+5CceE9oZdWlA=;
+        b=D8c2qPUL2bGn4GUfi2hFXGrOFXP2OdxpwN7AjxeQ6oZdriNYTJhZTfmTW6CK6HABJ5
+         sLKeNVFBU489tpLVLfIMEbxiDUUOqe+1piXHsGNkqb4JyB2KARQxzOSqUscxB2hWrUke
+         PIA6jTJr80yu1lSJ1Of+04/xOW8U2R3vUp7pgKdyFA4AmRcSpUkB5oK1vMgErAnbK3dp
+         wdGzWnhKNL2P3T4YleOfQg5xZXO3zxO1UBLS3ML8wmIzYxjjDNblnR+r/H+HhkF9IsEq
+         jQNCdTy3wPbjY0ALjMCso9psPR/Sl8KaE+FIqdlO0Zgia1iREXOwb7xOSV+EUf6WIDiy
+         cjqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743750690; x=1744355490;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=zQmJkyko0OhYAsknEycSfzYAilGr5w+5CceE9oZdWlA=;
+        b=PihYacMAjHCIyPBIP/vlMwUeT3BhUrj9+6BSjYXtHkr07oPHUHucS15/ARCdbiQtDB
+         g4h3tetPmA+lWvZTTTN9M41584ITYkLuIvwxarkbF8K4Ge1EM7LbEIxjwlH9gWR21wcD
+         liWqlgvLqLGk7bQ89BG/fYygo2JkbRBj6/ygP7HxmlL5tUlIMPR+JasT0+H3EEzPgrVu
+         hAER6kSAnC/bagm4LMaa4fPQ5ZEFg8jDKzJXpHWWPcSPjQL1cOiUOHz7FIiCihSKA/9o
+         SGPOgupT7H+u5b2tol2pMSpTGKYFEav0xbRyC8raPZ942gfupckG+VZpnM8xDNb2Ugsa
+         KyxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUOGKuhwFTLO5lMfc8aA2dP/Ibg+a/DBbBS9T2GSXdDGMKb00/Juap59n/sYPXFtHtGgyoucxYqknU6JRE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4SCSGnch9AGlFeFzif8hC0N+vhM2xVEQxS39tH97EPEio/VMN
+	Wu1sfcjrOK/4thLSdeCV4R1AAw4+ZfLmHuMr/NZSf0oVoluOfzvYw/79qR6fRRM=
+X-Gm-Gg: ASbGncvYolJuRC5cPRrO1ie0eYJjS5MrtOyU0VbudWNw1EQJj+VOxS9jkKlhFiPTpfq
+	pFEE4CYTwb3jc59cMo8yTsfkDyd/pqb3G2pe/PqIpCUlKbcjtJMCpBN7GrFthUlwf2Q3nZa5wp2
+	B+X8IabYgkZm4FdDcZwZDaUg5E3UhOZ16ip9LxMMe26vscwIJ1o1Pt9o2tcST6j1KBUEaaiJCWm
+	jbF0vmDZaU3LcgaqYZzOzviUqFpRA2DN0YWl6QdMef1h9VvLL0+3p/dRMaekL3cfnerkoXETz+B
+	xiqA8p9xjInTHgnBwE3ccemWquy2Madj4BpeOGwmmfipKpxljKXelAKGaFKGlUgw+p4TGc3MTRa
+	1YTKYzmkVQD+jq5E7gDE=
+X-Google-Smtp-Source: AGHT+IG26Ht0Wvr3P8so+/2dDR80FrZAL1BgE7LGSLrjdYw0eopIDPkygVwJEE488nCcrn3p7WCN/A==
+X-Received: by 2002:a05:600c:224c:b0:43c:f61e:6ea8 with SMTP id 5b1f17b1804b1-43ed382b5d7mr5746385e9.2.1743750689853;
+        Fri, 04 Apr 2025 00:11:29 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:3d9:2080:19b:8166:6e82:3840? ([2a01:e0a:3d9:2080:19b:8166:6e82:3840])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c301a6608sm3581986f8f.23.2025.04.04.00.11.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 04 Apr 2025 00:11:29 -0700 (PDT)
+Message-ID: <eb7f66b6-1c63-4453-91bb-31d884d2c2d9@linaro.org>
+Date: Fri, 4 Apr 2025 09:11:27 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB6158.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e5c82872-1726-4f0b-ee41-08dd73476a5a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Apr 2025 07:07:52.0073
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: T8h0j0u7eu5vDiqAO5xP74CfONg1Hm/Lv7UMo4YvBg++X9fwT579BAKLRue+zXpvJ/9pyurgxzQ7//rLiFBSow==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB7664
+User-Agent: Mozilla Thunderbird
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH 13/19] arm64: dts: amlogic: Drop redundant CPU
+ "clock-latency"
+To: "Rob Herring (Arm)" <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+ Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Samuel Holland <samuel@sholland.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Vincenzo Frascino <vincenzo.frascino@arm.com>,
+ Liviu Dudau <liviu.dudau@arm.com>, Sudeep Holla <sudeep.holla@arm.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+ Stephen Boyd <sboyd@kernel.org>, zhouyanjie@wanyeetech.com,
+ Conor Dooley <conor@kernel.org>, Nicolas Ferre
+ <nicolas.ferre@microchip.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+ Steen Hegelund <Steen.Hegelund@microchip.com>,
+ Daniel Machon <daniel.machon@microchip.com>, UNGLinuxDriver@microchip.com,
+ Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Heiko Stuebner <heiko@sntech.de>,
+ Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>,
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+ Geert Uytterhoeven <geert+renesas@glider.be>,
+ Magnus Damm <magnus.damm@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
+ linux-pm@vger.kernel.org, linux-mediatek@lists.infradead.org,
+ linux-arm-msm@vger.kernel.org, linux-mips@vger.kernel.org,
+ imx@lists.linux.dev, linux-rockchip@lists.infradead.org,
+ linux-amlogic@lists.infradead.org, linux-renesas-soc@vger.kernel.org
+References: <20250403-dt-cpu-schema-v1-0-076be7171a85@kernel.org>
+ <20250403-dt-cpu-schema-v1-13-076be7171a85@kernel.org>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <20250403-dt-cpu-schema-v1-13-076be7171a85@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-W0FNRCBPZmZpY2lhbCBVc2UgT25seSAtIEFNRCBJbnRlcm5hbCBEaXN0cmlidXRpb24gT25seV0N
-Cg0KSGkgS3J6eXN6dG9mLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206
-IEtyenlzenRvZiBLb3psb3dza2kgPGtyemtAa2VybmVsLm9yZz4NCj4gU2VudDogV2VkbmVzZGF5
-LCBNYXJjaCAyNiwgMjAyNSAxOjUzIFBNDQo+IFRvOiBNdXNoYW0sIFNhaSBLcmlzaG5hIDxzYWku
-a3Jpc2huYS5tdXNoYW1AYW1kLmNvbT4NCj4gQ2M6IGJoZWxnYWFzQGdvb2dsZS5jb207IGxwaWVy
-YWxpc2lAa2VybmVsLm9yZzsga3dAbGludXguY29tOw0KPiBtYW5pdmFubmFuLnNhZGhhc2l2YW1A
-bGluYXJvLm9yZzsgcm9iaEBrZXJuZWwub3JnOyBrcnprK2R0QGtlcm5lbC5vcmc7DQo+IGNvbm9y
-K2R0QGtlcm5lbC5vcmc7IGNhc3NlbEBrZXJuZWwub3JnOyBsaW51eC1wY2lAdmdlci5rZXJuZWwu
-b3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2Vy
-bmVsLm9yZzsgU2ltZWssIE1pY2hhbA0KPiA8bWljaGFsLnNpbWVrQGFtZC5jb20+OyBHb2dhZGEs
-IEJoYXJhdCBLdW1hcg0KPiA8YmhhcmF0Lmt1bWFyLmdvZ2FkYUBhbWQuY29tPjsgSGF2YWxpZ2Us
-IFRoaXBwZXN3YW15DQo+IDx0aGlwcGVzd2FteS5oYXZhbGlnZUBhbWQuY29tPg0KPiBTdWJqZWN0
-OiBSZTogW1BBVENIIDIvMl0gUENJOiBhbWQtbWRiOiBBZGQgc3VwcG9ydCBmb3IgUENJZSBSUCBQ
-RVJTVCMgc2lnbmFsDQo+DQo+IENhdXRpb246IFRoaXMgbWVzc2FnZSBvcmlnaW5hdGVkIGZyb20g
-YW4gRXh0ZXJuYWwgU291cmNlLiBVc2UgcHJvcGVyIGNhdXRpb24NCj4gd2hlbiBvcGVuaW5nIGF0
-dGFjaG1lbnRzLCBjbGlja2luZyBsaW5rcywgb3IgcmVzcG9uZGluZy4NCj4NCj4NCj4gT24gV2Vk
-LCBNYXIgMjYsIDIwMjUgYXQgMDk6NDU6MDdBTSArMDUzMCwgU2FpIEtyaXNobmEgTXVzaGFtIHdy
-b3RlOg0KPiA+IEFkZCBQRVJTVCMgc2lnbmFsIGhhbmRsaW5nIHZpYSBJMkMgR1BJTyBleHBhbmRl
-ciBmb3IgQU1EIFZlcnNhbDIgTURCDQo+ID4gUENJZSBSb290IFBvcnQuDQo+ID4NCj4gPiBTaWdu
-ZWQtb2ZmLWJ5OiBTYWkgS3Jpc2huYSBNdXNoYW0gPHNhaS5rcmlzaG5hLm11c2hhbUBhbWQuY29t
-Pg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2llLWFtZC1tZGIu
-YyB8IDIwICsrKysrKysrKysrKysrKysrKysrDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAyMCBpbnNl
-cnRpb25zKCspDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wY2kvY29udHJvbGxlci9k
-d2MvcGNpZS1hbWQtbWRiLmMNCj4gPiBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaWUt
-YW1kLW1kYi5jDQo+ID4gaW5kZXggNGViMmE0ZTgxODlkLi40ZWVhNTNlOWUxOTcgMTAwNjQ0DQo+
-ID4gLS0tIGEvZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpZS1hbWQtbWRiLmMNCj4gPiAr
-KysgYi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2llLWFtZC1tZGIuYw0KPiA+IEBAIC0x
-OCw2ICsxOCw3IEBADQo+ID4gICNpbmNsdWRlIDxsaW51eC9yZXNvdXJjZS5oPg0KPiA+ICAjaW5j
-bHVkZSA8bGludXgvdHlwZXMuaD4NCj4gPg0KPiA+ICsjaW5jbHVkZSAiLi4vLi4vcGNpLmgiDQo+
-ID4gICNpbmNsdWRlICJwY2llLWRlc2lnbndhcmUuaCINCj4gPg0KPiA+ICAjZGVmaW5lIEFNRF9N
-REJfVExQX0lSX1NUQVRVU19NSVNDICAgICAgICAgICAweDRDMA0KPiA+IEBAIC00MDgsNiArNDA5
-LDcgQEAgc3RhdGljIGludCBhbWRfbWRiX2FkZF9wY2llX3BvcnQoc3RydWN0IGFtZF9tZGJfcGNp
-ZQ0KPiAqcGNpZSwNCj4gPiAgICAgICBzdHJ1Y3QgZHdfcGNpZSAqcGNpID0gJnBjaWUtPnBjaTsN
-Cj4gPiAgICAgICBzdHJ1Y3QgZHdfcGNpZV9ycCAqcHAgPSAmcGNpLT5wcDsNCj4gPiAgICAgICBz
-dHJ1Y3QgZGV2aWNlICpkZXYgPSAmcGRldi0+ZGV2Ow0KPiA+ICsgICAgIHN0cnVjdCBncGlvX2Rl
-c2MgKnJlc2V0X2dwaW87DQo+ID4gICAgICAgaW50IGVycjsNCj4gPg0KPiA+ICAgICAgIHBjaWUt
-PnNsY3IgPSBkZXZtX3BsYXRmb3JtX2lvcmVtYXBfcmVzb3VyY2VfYnluYW1lKHBkZXYsDQo+ID4g
-InNsY3IiKTsgQEAgLTQyNiw2ICs0MjgsMjQgQEAgc3RhdGljIGludCBhbWRfbWRiX2FkZF9wY2ll
-X3BvcnQoc3RydWN0DQo+ID4gYW1kX21kYl9wY2llICpwY2llLA0KPiA+DQo+ID4gICAgICAgcHAt
-Pm9wcyA9ICZhbWRfbWRiX3BjaWVfaG9zdF9vcHM7DQo+ID4NCj4gPiArICAgICAvKiBSZXF1ZXN0
-IHRoZSBHUElPIGZvciBQQ0llIHJlc2V0IHNpZ25hbCBhbmQgYXNzZXJ0ICovDQo+ID4gKyAgICAg
-cmVzZXRfZ3BpbyA9IGRldm1fZ3Bpb2RfZ2V0X29wdGlvbmFsKGRldiwgInJlc2V0IiwgR1BJT0Rf
-T1VUX0hJR0gpOw0KPiA+ICsgICAgIGlmIChJU19FUlIocmVzZXRfZ3BpbykpIHsNCj4gPiArICAg
-ICAgICAgICAgIGlmIChQVFJfRVJSKHJlc2V0X2dwaW8pID09IC1FUFJPQkVfREVGRVIpDQo+ID4g
-KyAgICAgICAgICAgICAgICAgICAgIHJldHVybiAtRVBST0JFX0RFRkVSOw0KPiA+ICsgICAgICAg
-ICAgICAgZGV2X2VycihkZXYsICJGYWlsZWQgdG8gcmVxdWVzdCByZXNldCBHUElPXG4iKTsNCj4N
-Cj4gRG8gbm90IG9wZW4tY29kZSBkZXZfZXJyX3Byb2JlLg0KPg0KDQpUaGFuayB5b3UgZm9yIHJl
-dmlld2luZy4gU3VyZSwgSSB3aWxsIHVzZSBkZXZfZXJyX3Byb2JlIGluIG5leHQgcGF0Y2guDQoN
-Cj4gQmVzdCByZWdhcmRzLA0KPiBLcnp5c3p0b2YNCg0KUmVnYXJkcywNClNhaSBLcmlzaG5hDQoN
-Cg==
+On 04/04/2025 04:59, Rob Herring (Arm) wrote:
+> The "clock-latency" property is part of the deprecated opp-v1 binding
+> and is redundant if the opp-v2 table has equal or larger values in any
+> "clock-latency-ns". Add any missing "clock-latency-ns" properties and
+> remove "clock-latency".
+> 
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+> ---
+>   arch/arm64/boot/dts/amlogic/meson-g12a-fbx8am.dts             | 4 ----
+>   arch/arm64/boot/dts/amlogic/meson-g12a-radxa-zero.dts         | 4 ----
+>   arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts             | 4 ----
+>   arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts               | 4 ----
+>   arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts            | 4 ----
+>   arch/arm64/boot/dts/amlogic/meson-g12a.dtsi                   | 1 +
+>   arch/arm64/boot/dts/amlogic/meson-g12b-a311d-libretech-cc.dts | 6 ------
+>   arch/arm64/boot/dts/amlogic/meson-g12b-a311d.dtsi             | 2 ++
+>   arch/arm64/boot/dts/amlogic/meson-g12b-bananapi-cm4.dtsi      | 6 ------
+>   arch/arm64/boot/dts/amlogic/meson-g12b-bananapi.dtsi          | 6 ------
+>   arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi       | 6 ------
+>   arch/arm64/boot/dts/amlogic/meson-g12b-odroid-go-ultra.dts    | 6 ------
+>   arch/arm64/boot/dts/amlogic/meson-g12b-odroid.dtsi            | 6 ------
+>   arch/arm64/boot/dts/amlogic/meson-g12b-radxa-zero2.dts        | 6 ------
+>   arch/arm64/boot/dts/amlogic/meson-g12b-s922x.dtsi             | 2 ++
+>   arch/arm64/boot/dts/amlogic/meson-g12b-w400.dtsi              | 6 ------
+>   arch/arm64/boot/dts/amlogic/meson-sm1-ac2xx.dtsi              | 4 ----
+>   arch/arm64/boot/dts/amlogic/meson-sm1-bananapi.dtsi           | 4 ----
+>   arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts        | 4 ----
+>   arch/arm64/boot/dts/amlogic/meson-sm1-odroid.dtsi             | 4 ----
+>   arch/arm64/boot/dts/amlogic/meson-sm1-s905d3-libretech-cc.dts | 4 ----
+>   arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts              | 4 ----
+>   arch/arm64/boot/dts/amlogic/meson-sm1.dtsi                    | 1 +
+>   23 files changed, 6 insertions(+), 92 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-fbx8am.dts b/arch/arm64/boot/dts/amlogic/meson-g12a-fbx8am.dts
+> index 9aa36f17ffa2..d0a3b4b9229c 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-g12a-fbx8am.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-g12a-fbx8am.dts
+> @@ -267,28 +267,24 @@ &cpu0 {
+>   	cpu-supply = <&vddcpu>;
+>   	operating-points-v2 = <&cpu_opp_table>;
+>   	clocks = <&clkc CLKID_CPU_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu1 {
+>   	cpu-supply = <&vddcpu>;
+>   	operating-points-v2 = <&cpu_opp_table>;
+>   	clocks = <&clkc CLKID_CPU_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu2 {
+>   	cpu-supply = <&vddcpu>;
+>   	operating-points-v2 = <&cpu_opp_table>;
+>   	clocks = <&clkc CLKID_CPU_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu3 {
+>   	cpu-supply = <&vddcpu>;
+>   	operating-points-v2 = <&cpu_opp_table>;
+>   	clocks = <&clkc CLKID_CPU_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &ethmac {
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-radxa-zero.dts b/arch/arm64/boot/dts/amlogic/meson-g12a-radxa-zero.dts
+> index 952b8d02e5c2..4353485c6f26 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-g12a-radxa-zero.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-g12a-radxa-zero.dts
+> @@ -220,28 +220,24 @@ &cpu0 {
+>   	cpu-supply = <&vddcpu>;
+>   	operating-points-v2 = <&cpu_opp_table>;
+>   	clocks = <&clkc CLKID_CPU_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu1 {
+>   	cpu-supply = <&vddcpu>;
+>   	operating-points-v2 = <&cpu_opp_table>;
+>   	clocks = <&clkc CLKID_CPU_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu2 {
+>   	cpu-supply = <&vddcpu>;
+>   	operating-points-v2 = <&cpu_opp_table>;
+>   	clocks = <&clkc CLKID_CPU_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu3 {
+>   	cpu-supply = <&vddcpu>;
+>   	operating-points-v2 = <&cpu_opp_table>;
+>   	clocks = <&clkc CLKID_CPU_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cvbs_vdac_port {
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts b/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts
+> index 52fbc5103e45..f39fcabc763f 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts
+> @@ -314,28 +314,24 @@ &cpu0 {
+>   	cpu-supply = <&vddcpu>;
+>   	operating-points-v2 = <&cpu_opp_table>;
+>   	clocks = <&clkc CLKID_CPU_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu1 {
+>   	cpu-supply = <&vddcpu>;
+>   	operating-points-v2 = <&cpu_opp_table>;
+>   	clocks = <&clkc CLKID_CPU_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu2 {
+>   	cpu-supply = <&vddcpu>;
+>   	operating-points-v2 = <&cpu_opp_table>;
+>   	clocks = <&clkc CLKID_CPU_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu3 {
+>   	cpu-supply = <&vddcpu>;
+>   	operating-points-v2 = <&cpu_opp_table>;
+>   	clocks = <&clkc CLKID_CPU_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cvbs_vdac_port {
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts b/arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts
+> index 5407049d2647..b5bf8ecc91e6 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts
+> @@ -407,28 +407,24 @@ &cpu0 {
+>   	cpu-supply = <&vddcpu>;
+>   	operating-points-v2 = <&cpu_opp_table>;
+>   	clocks = <&clkc CLKID_CPU_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu1 {
+>   	cpu-supply = <&vddcpu>;
+>   	operating-points-v2 = <&cpu_opp_table>;
+>   	clocks = <&clkc CLKID_CPU_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu2 {
+>   	cpu-supply = <&vddcpu>;
+>   	operating-points-v2 = <&cpu_opp_table>;
+>   	clocks = <&clkc CLKID_CPU_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu3 {
+>   	cpu-supply = <&vddcpu>;
+>   	operating-points-v2 = <&cpu_opp_table>;
+>   	clocks = <&clkc CLKID_CPU_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &clkc_audio {
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts b/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
+> index 01da83658ae3..5ab460a3e637 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
+> @@ -263,28 +263,24 @@ &cpu0 {
+>   	cpu-supply = <&vddcpu>;
+>   	operating-points-v2 = <&cpu_opp_table>;
+>   	clocks = <&clkc CLKID_CPU_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu1 {
+>   	cpu-supply = <&vddcpu>;
+>   	operating-points-v2 = <&cpu_opp_table>;
+>   	clocks = <&clkc CLKID_CPU_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu2 {
+>   	cpu-supply = <&vddcpu>;
+>   	operating-points-v2 = <&cpu_opp_table>;
+>   	clocks = <&clkc CLKID_CPU_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu3 {
+>   	cpu-supply = <&vddcpu>;
+>   	operating-points-v2 = <&cpu_opp_table>;
+>   	clocks = <&clkc CLKID_CPU_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cvbs_vdac_port {
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
+> index 543e70669df5..deee61dbe074 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
+> @@ -62,6 +62,7 @@ cpu_opp_table: opp-table {
+>   		opp-1000000000 {
+>   			opp-hz = /bits/ 64 <1000000000>;
+>   			opp-microvolt = <731000>;
+> +			clock-latency-ns = <50000>;
+>   		};
+>   
+>   		opp-1200000000 {
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-a311d-libretech-cc.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-a311d-libretech-cc.dts
+> index adedc1340c78..415248931ab1 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-g12b-a311d-libretech-cc.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-a311d-libretech-cc.dts
+> @@ -76,42 +76,36 @@ &cpu0 {
+>   	cpu-supply = <&vddcpu_b>;
+>   	operating-points-v2 = <&cpu_opp_table_0>;
+>   	clocks = <&clkc CLKID_CPU_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu1 {
+>   	cpu-supply = <&vddcpu_b>;
+>   	operating-points-v2 = <&cpu_opp_table_0>;
+>   	clocks = <&clkc CLKID_CPU_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu100 {
+>   	cpu-supply = <&vddcpu_a>;
+>   	operating-points-v2 = <&cpub_opp_table_1>;
+>   	clocks = <&clkc CLKID_CPUB_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu101 {
+>   	cpu-supply = <&vddcpu_a>;
+>   	operating-points-v2 = <&cpub_opp_table_1>;
+>   	clocks = <&clkc CLKID_CPUB_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu102 {
+>   	cpu-supply = <&vddcpu_a>;
+>   	operating-points-v2 = <&cpub_opp_table_1>;
+>   	clocks = <&clkc CLKID_CPUB_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu103 {
+>   	cpu-supply = <&vddcpu_a>;
+>   	operating-points-v2 = <&cpub_opp_table_1>;
+>   	clocks = <&clkc CLKID_CPUB_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &pwm_ab {
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-a311d.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12b-a311d.dtsi
+> index 8e9ad1e51d66..8ecb5bd125c1 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-g12b-a311d.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-a311d.dtsi
+> @@ -14,6 +14,7 @@ cpu_opp_table_0: opp-table-0 {
+>   		opp-1000000000 {
+>   			opp-hz = /bits/ 64 <1000000000>;
+>   			opp-microvolt = <761000>;
+> +			clock-latency-ns = <50000>;
+>   		};
+>   
+>   		opp-1200000000 {
+> @@ -54,6 +55,7 @@ cpub_opp_table_1: opp-table-1 {
+>   		opp-1000000000 {
+>   			opp-hz = /bits/ 64 <1000000000>;
+>   			opp-microvolt = <731000>;
+> +			clock-latency-ns = <50000>;
+>   		};
+>   
+>   		opp-1200000000 {
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-bananapi-cm4.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12b-bananapi-cm4.dtsi
+> index 92e8b26ecccc..39011b645128 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-g12b-bananapi-cm4.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-bananapi-cm4.dtsi
+> @@ -155,42 +155,36 @@ &cpu0 {
+>   	cpu-supply = <&vddcpu_b>;
+>   	operating-points-v2 = <&cpu_opp_table_0>;
+>   	clocks = <&clkc CLKID_CPU_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu1 {
+>   	cpu-supply = <&vddcpu_b>;
+>   	operating-points-v2 = <&cpu_opp_table_0>;
+>   	clocks = <&clkc CLKID_CPU_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu100 {
+>   	cpu-supply = <&vddcpu_a>;
+>   	operating-points-v2 = <&cpub_opp_table_1>;
+>   	clocks = <&clkc CLKID_CPUB_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu101 {
+>   	cpu-supply = <&vddcpu_a>;
+>   	operating-points-v2 = <&cpub_opp_table_1>;
+>   	clocks = <&clkc CLKID_CPUB_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu102 {
+>   	cpu-supply = <&vddcpu_a>;
+>   	operating-points-v2 = <&cpub_opp_table_1>;
+>   	clocks = <&clkc CLKID_CPUB_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu103 {
+>   	cpu-supply = <&vddcpu_a>;
+>   	operating-points-v2 = <&cpub_opp_table_1>;
+>   	clocks = <&clkc CLKID_CPUB_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &ext_mdio {
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-bananapi.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12b-bananapi.dtsi
+> index 54663c55a20e..1b08303c4282 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-g12b-bananapi.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-bananapi.dtsi
+> @@ -263,42 +263,36 @@ &cpu0 {
+>   	cpu-supply = <&vddcpu_b>;
+>   	operating-points-v2 = <&cpu_opp_table_0>;
+>   	clocks = <&clkc CLKID_CPU_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu1 {
+>   	cpu-supply = <&vddcpu_b>;
+>   	operating-points-v2 = <&cpu_opp_table_0>;
+>   	clocks = <&clkc CLKID_CPU_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu100 {
+>   	cpu-supply = <&vddcpu_a>;
+>   	operating-points-v2 = <&cpub_opp_table_1>;
+>   	clocks = <&clkc CLKID_CPUB_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu101 {
+>   	cpu-supply = <&vddcpu_a>;
+>   	operating-points-v2 = <&cpub_opp_table_1>;
+>   	clocks = <&clkc CLKID_CPUB_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu102 {
+>   	cpu-supply = <&vddcpu_a>;
+>   	operating-points-v2 = <&cpub_opp_table_1>;
+>   	clocks = <&clkc CLKID_CPUB_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu103 {
+>   	cpu-supply = <&vddcpu_a>;
+>   	operating-points-v2 = <&cpub_opp_table_1>;
+>   	clocks = <&clkc CLKID_CPUB_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &ethmac {
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi
+> index 48650bad230d..fc737499f207 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-khadas-vim3.dtsi
+> @@ -51,42 +51,36 @@ &cpu0 {
+>   	cpu-supply = <&vddcpu_b>;
+>   	operating-points-v2 = <&cpu_opp_table_0>;
+>   	clocks = <&clkc CLKID_CPU_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu1 {
+>   	cpu-supply = <&vddcpu_b>;
+>   	operating-points-v2 = <&cpu_opp_table_0>;
+>   	clocks = <&clkc CLKID_CPU_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu100 {
+>   	cpu-supply = <&vddcpu_a>;
+>   	operating-points-v2 = <&cpub_opp_table_1>;
+>   	clocks = <&clkc CLKID_CPUB_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu101 {
+>   	cpu-supply = <&vddcpu_a>;
+>   	operating-points-v2 = <&cpub_opp_table_1>;
+>   	clocks = <&clkc CLKID_CPUB_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu102 {
+>   	cpu-supply = <&vddcpu_a>;
+>   	operating-points-v2 = <&cpub_opp_table_1>;
+>   	clocks = <&clkc CLKID_CPUB_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu103 {
+>   	cpu-supply = <&vddcpu_a>;
+>   	operating-points-v2 = <&cpub_opp_table_1>;
+>   	clocks = <&clkc CLKID_CPUB_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &pwm_ab {
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-go-ultra.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-go-ultra.dts
+> index e21831dfceee..d5938a4a6da3 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-go-ultra.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-go-ultra.dts
+> @@ -281,42 +281,36 @@ &cpu0 {
+>   	cpu-supply = <&vddcpu_b>;
+>   	operating-points-v2 = <&cpu_opp_table_0>;
+>   	clocks = <&clkc CLKID_CPU_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu1 {
+>   	cpu-supply = <&vddcpu_b>;
+>   	operating-points-v2 = <&cpu_opp_table_0>;
+>   	clocks = <&clkc CLKID_CPU_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu100 {
+>   	cpu-supply = <&vddcpu_a>;
+>   	operating-points-v2 = <&cpub_opp_table_1>;
+>   	clocks = <&clkc CLKID_CPUB_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu101 {
+>   	cpu-supply = <&vddcpu_a>;
+>   	operating-points-v2 = <&cpub_opp_table_1>;
+>   	clocks = <&clkc CLKID_CPUB_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu102 {
+>   	cpu-supply = <&vddcpu_a>;
+>   	operating-points-v2 = <&cpub_opp_table_1>;
+>   	clocks = <&clkc CLKID_CPUB_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu103 {
+>   	cpu-supply = <&vddcpu_a>;
+>   	operating-points-v2 = <&cpub_opp_table_1>;
+>   	clocks = <&clkc CLKID_CPUB_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   /* RK817 only supports 12.5mV steps, round up the values */
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid.dtsi
+> index 7e8964bacfce..3298d59833b6 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid.dtsi
+> @@ -227,42 +227,36 @@ &cpu0 {
+>   	cpu-supply = <&vddcpu_b>;
+>   	operating-points-v2 = <&cpu_opp_table_0>;
+>   	clocks = <&clkc CLKID_CPU_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu1 {
+>   	cpu-supply = <&vddcpu_b>;
+>   	operating-points-v2 = <&cpu_opp_table_0>;
+>   	clocks = <&clkc CLKID_CPU_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu100 {
+>   	cpu-supply = <&vddcpu_a>;
+>   	operating-points-v2 = <&cpub_opp_table_1>;
+>   	clocks = <&clkc CLKID_CPUB_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu101 {
+>   	cpu-supply = <&vddcpu_a>;
+>   	operating-points-v2 = <&cpub_opp_table_1>;
+>   	clocks = <&clkc CLKID_CPUB_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu102 {
+>   	cpu-supply = <&vddcpu_a>;
+>   	operating-points-v2 = <&cpub_opp_table_1>;
+>   	clocks = <&clkc CLKID_CPUB_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu103 {
+>   	cpu-supply = <&vddcpu_a>;
+>   	operating-points-v2 = <&cpub_opp_table_1>;
+>   	clocks = <&clkc CLKID_CPUB_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu_thermal {
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-radxa-zero2.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-radxa-zero2.dts
+> index fc05ecf90714..1e5c6f984945 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-g12b-radxa-zero2.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-radxa-zero2.dts
+> @@ -259,42 +259,36 @@ &cpu0 {
+>   	cpu-supply = <&vddcpu_b>;
+>   	operating-points-v2 = <&cpu_opp_table_0>;
+>   	clocks = <&clkc CLKID_CPU_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu1 {
+>   	cpu-supply = <&vddcpu_b>;
+>   	operating-points-v2 = <&cpu_opp_table_0>;
+>   	clocks = <&clkc CLKID_CPU_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu100 {
+>   	cpu-supply = <&vddcpu_a>;
+>   	operating-points-v2 = <&cpub_opp_table_1>;
+>   	clocks = <&clkc CLKID_CPUB_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu101 {
+>   	cpu-supply = <&vddcpu_a>;
+>   	operating-points-v2 = <&cpub_opp_table_1>;
+>   	clocks = <&clkc CLKID_CPUB_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu102 {
+>   	cpu-supply = <&vddcpu_a>;
+>   	operating-points-v2 = <&cpub_opp_table_1>;
+>   	clocks = <&clkc CLKID_CPUB_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu103 {
+>   	cpu-supply = <&vddcpu_a>;
+>   	operating-points-v2 = <&cpub_opp_table_1>;
+>   	clocks = <&clkc CLKID_CPUB_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu_thermal {
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-s922x.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12b-s922x.dtsi
+> index 44c23c984034..19cad93a6889 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-g12b-s922x.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-s922x.dtsi
+> @@ -14,6 +14,7 @@ cpu_opp_table_0: opp-table-0 {
+>   		opp-1000000000 {
+>   			opp-hz = /bits/ 64 <1000000000>;
+>   			opp-microvolt = <731000>;
+> +			clock-latency-ns = <50000>;
+>   		};
+>   
+>   		opp-1200000000 {
+> @@ -59,6 +60,7 @@ cpub_opp_table_1: opp-table-1 {
+>   		opp-1000000000 {
+>   			opp-hz = /bits/ 64 <1000000000>;
+>   			opp-microvolt = <771000>;
+> +			clock-latency-ns = <50000>;
+>   		};
+>   
+>   		opp-1200000000 {
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-w400.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12b-w400.dtsi
+> index a7a0fc264cdc..9b6d780eada7 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-g12b-w400.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-w400.dtsi
+> @@ -213,42 +213,36 @@ &cpu0 {
+>   	cpu-supply = <&vddcpu_b>;
+>   	operating-points-v2 = <&cpu_opp_table_0>;
+>   	clocks = <&clkc CLKID_CPU_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu1 {
+>   	cpu-supply = <&vddcpu_b>;
+>   	operating-points-v2 = <&cpu_opp_table_0>;
+>   	clocks = <&clkc CLKID_CPU_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu100 {
+>   	cpu-supply = <&vddcpu_a>;
+>   	operating-points-v2 = <&cpub_opp_table_1>;
+>   	clocks = <&clkc CLKID_CPUB_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu101 {
+>   	cpu-supply = <&vddcpu_a>;
+>   	operating-points-v2 = <&cpub_opp_table_1>;
+>   	clocks = <&clkc CLKID_CPUB_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu102 {
+>   	cpu-supply = <&vddcpu_a>;
+>   	operating-points-v2 = <&cpub_opp_table_1>;
+>   	clocks = <&clkc CLKID_CPUB_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu103 {
+>   	cpu-supply = <&vddcpu_a>;
+>   	operating-points-v2 = <&cpub_opp_table_1>;
+>   	clocks = <&clkc CLKID_CPUB_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cvbs_vdac_port {
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-sm1-ac2xx.dtsi b/arch/arm64/boot/dts/amlogic/meson-sm1-ac2xx.dtsi
+> index a3463149db3d..9be3084b090d 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-sm1-ac2xx.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-sm1-ac2xx.dtsi
+> @@ -147,28 +147,24 @@ &cpu0 {
+>   	cpu-supply = <&vddcpu>;
+>   	operating-points-v2 = <&cpu_opp_table>;
+>   	clocks = <&clkc CLKID_CPU_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu1 {
+>   	cpu-supply = <&vddcpu>;
+>   	operating-points-v2 = <&cpu_opp_table>;
+>   	clocks = <&clkc CLKID_CPU1_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu2 {
+>   	cpu-supply = <&vddcpu>;
+>   	operating-points-v2 = <&cpu_opp_table>;
+>   	clocks = <&clkc CLKID_CPU2_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu3 {
+>   	cpu-supply = <&vddcpu>;
+>   	operating-points-v2 = <&cpu_opp_table>;
+>   	clocks = <&clkc CLKID_CPU3_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cvbs_vdac_port {
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-sm1-bananapi.dtsi b/arch/arm64/boot/dts/amlogic/meson-sm1-bananapi.dtsi
+> index 40db95f64636..538b35036954 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-sm1-bananapi.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-sm1-bananapi.dtsi
+> @@ -185,28 +185,24 @@ &cpu0 {
+>   	cpu-supply = <&vddcpu>;
+>   	operating-points-v2 = <&cpu_opp_table>;
+>   	clocks = <&clkc CLKID_CPU_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu1 {
+>   	cpu-supply = <&vddcpu>;
+>   	operating-points-v2 = <&cpu_opp_table>;
+>   	clocks = <&clkc CLKID_CPU1_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu2 {
+>   	cpu-supply = <&vddcpu>;
+>   	operating-points-v2 = <&cpu_opp_table>;
+>   	clocks = <&clkc CLKID_CPU2_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu3 {
+>   	cpu-supply = <&vddcpu>;
+>   	operating-points-v2 = <&cpu_opp_table>;
+>   	clocks = <&clkc CLKID_CPU3_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &ext_mdio {
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts b/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts
+> index 5d75ad3f3e46..a3d9b66b6878 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dts
+> @@ -51,28 +51,24 @@ &cpu0 {
+>   	cpu-supply = <&vddcpu>;
+>   	operating-points-v2 = <&cpu_opp_table>;
+>   	clocks = <&clkc CLKID_CPU_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu1 {
+>   	cpu-supply = <&vddcpu>;
+>   	operating-points-v2 = <&cpu_opp_table>;
+>   	clocks = <&clkc CLKID_CPU1_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu2 {
+>   	cpu-supply = <&vddcpu>;
+>   	operating-points-v2 = <&cpu_opp_table>;
+>   	clocks = <&clkc CLKID_CPU2_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu3 {
+>   	cpu-supply = <&vddcpu>;
+>   	operating-points-v2 = <&cpu_opp_table>;
+>   	clocks = <&clkc CLKID_CPU3_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &pwm_AO_cd {
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-sm1-odroid.dtsi b/arch/arm64/boot/dts/amlogic/meson-sm1-odroid.dtsi
+> index ad8d07883760..c4524eb4f099 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-sm1-odroid.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-sm1-odroid.dtsi
+> @@ -250,28 +250,24 @@ &cpu0 {
+>   	cpu-supply = <&vddcpu>;
+>   	operating-points-v2 = <&cpu_opp_table>;
+>   	clocks = <&clkc CLKID_CPU_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu1 {
+>   	cpu-supply = <&vddcpu>;
+>   	operating-points-v2 = <&cpu_opp_table>;
+>   	clocks = <&clkc CLKID_CPU1_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu2 {
+>   	cpu-supply = <&vddcpu>;
+>   	operating-points-v2 = <&cpu_opp_table>;
+>   	clocks = <&clkc CLKID_CPU2_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu3 {
+>   	cpu-supply = <&vddcpu>;
+>   	operating-points-v2 = <&cpu_opp_table>;
+>   	clocks = <&clkc CLKID_CPU3_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &ext_mdio {
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-sm1-s905d3-libretech-cc.dts b/arch/arm64/boot/dts/amlogic/meson-sm1-s905d3-libretech-cc.dts
+> index 537370db360f..5daadfb170b4 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-sm1-s905d3-libretech-cc.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-sm1-s905d3-libretech-cc.dts
+> @@ -64,26 +64,22 @@ &cpu0 {
+>   	cpu-supply = <&vddcpu_b>;
+>   	operating-points-v2 = <&cpu_opp_table>;
+>   	clocks = <&clkc CLKID_CPU_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu1 {
+>   	cpu-supply = <&vddcpu_b>;
+>   	operating-points-v2 = <&cpu_opp_table>;
+>   	clocks = <&clkc CLKID_CPU1_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu2 {
+>   	cpu-supply = <&vddcpu_b>;
+>   	operating-points-v2 = <&cpu_opp_table>;
+>   	clocks = <&clkc CLKID_CPU2_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu3 {
+>   	cpu-supply = <&vddcpu_b>;
+>   	operating-points-v2 = <&cpu_opp_table>;
+>   	clocks = <&clkc CLKID_CPU3_CLK>;
+> -	clock-latency = <50000>;
+>   };
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts b/arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts
+> index 37d7f64b6d5d..024d2eb8e6ee 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts
+> @@ -359,28 +359,24 @@ &cpu0 {
+>   	cpu-supply = <&vddcpu>;
+>   	operating-points-v2 = <&cpu_opp_table>;
+>   	clocks = <&clkc CLKID_CPU_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu1 {
+>   	cpu-supply = <&vddcpu>;
+>   	operating-points-v2 = <&cpu_opp_table>;
+>   	clocks = <&clkc CLKID_CPU1_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu2 {
+>   	cpu-supply = <&vddcpu>;
+>   	operating-points-v2 = <&cpu_opp_table>;
+>   	clocks = <&clkc CLKID_CPU2_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &cpu3 {
+>   	cpu-supply = <&vddcpu>;
+>   	operating-points-v2 = <&cpu_opp_table>;
+>   	clocks = <&clkc CLKID_CPU3_CLK>;
+> -	clock-latency = <50000>;
+>   };
+>   
+>   &ethmac {
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-sm1.dtsi b/arch/arm64/boot/dts/amlogic/meson-sm1.dtsi
+> index 97e4b52066dc..966ebb19cc55 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-sm1.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-sm1.dtsi
+> @@ -100,6 +100,7 @@ cpu_opp_table: opp-table {
+>   		opp-1000000000 {
+>   			opp-hz = /bits/ 64 <1000000000>;
+>   			opp-microvolt = <770000>;
+> +			clock-latency-ns = <50000>;
+>   		};
+>   
+>   		opp-1200000000 {
+> 
+
+Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
