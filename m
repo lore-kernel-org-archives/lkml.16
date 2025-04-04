@@ -1,199 +1,101 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62C1B18BC3D;
-	Fri,  4 Apr 2025 06:35:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C48F17F4F6;
+	Fri,  4 Apr 2025 06:35:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743748527; cv=none; b=AEBBoK+/yGmQmX1+Z3GSgno0+nvbY85yKcnTQwQcczNlIGPJijxwbL6V3uDupdyv3vliR76EFdiYWCj0JPkl5NxwfgOZQZnE4XW5DPD91vtV4Ya1p14tccFjSq4CImz3B5mILEFKzhiyyqTMz6oI8+DRNBxJnsEVz5V4oxcejsI=
+	t=1743748533; cv=none; b=Tvckfn8K1rNnrOq2EIZJOADrG/wjoHtttbhZn9tyYiqNHviLkh62km/a9HnyAV4vOZhrxmvGIaNoJN4LznLf0Qmudfu2laMHaWUAFjyrgdUUcvCwmDeV8PZfKD09Yvkmh+mN8FnruArgXUsnOnCcmcH3seaO0K4HtqBc6xPY4AQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743748527; c=relaxed/simple;
-	bh=uf4rYD9t2gn5zV19MtRg0HceEF4u822rbbG6f5CZEoM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=nhw9IsH//af5ru7+/nIU+Ub/Zo8Thj7zOGUTKdnwaZaRDYiuiSfr3O+VVU7GXVCX6wYoADwk2GctrAXj6+aYHedwOyi+16wD5W8UX9GcGH171wmRETLN1ZB+ezDlY/cfoB4Pbl0jo9JRN+k2I4F4yzj7ZKjKOTFPab5+p5zYkfw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Km/dTclp; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743748533; c=relaxed/simple;
+	bh=f5UIYiHZr8F8zpMCKNp8y/OGEA3xHGIo+nLug8tZ04o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BzW3aFjjI5w0/ihkIRj5T6lUxpqHAXR9GDPMbknTlmT2ZKPCyi+LSt/aAUjkzLl1PYLaz6Rq2uCG5ZddExhDjYCsMnFreVo4OQqwK5PDYQAN1egL7L/xEnCwA2hIs5l90ZrFMMuhrBY+HLwIH9m8Yx/DTBd6XsJpi7KVYj0o0Zg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=yMLAmrTe; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Km/dTclp"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-224191d92e4so16346385ad.3;
-        Thu, 03 Apr 2025 23:35:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743748525; x=1744353325; darn=vger.kernel.org;
-        h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=L6lJnoTkwzdjXsC0+52u0ropQ0W1YSxIsAMlZ25CPTk=;
-        b=Km/dTclpeejlfW4FI0B/oTuTQndM4RiMswu7RetEv9TqH/CvesYdQzflKai6dYxVAT
-         5LDGCR+ktHKDkmMc1xug0ophdvp5XiiA3s9FE0CgguM+zVjSIBh4ZSZo8VvEh8xne7l+
-         JHF0jsw3SBWEHbsQlMHCndU/pG1+pZhExcgoWAKtsjHyw+xjOVk05XEJhNmqnv3tUINo
-         SYZcCvxTU5l119Zq4ZtCSVLl0hWvs3MxWcw7PCEf6qNZ263hDXXyPAEvaoi0ImfmQEhw
-         OdcsR+qsQXRJmGejpoe3OU5yN76/QyQEA8yg+TlcscLn+wP0/MY98pBTqkyqLjuwZYjs
-         5Sog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743748525; x=1744353325;
-        h=references:in-reply-to:message-id:date:subject:cc:to:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=L6lJnoTkwzdjXsC0+52u0ropQ0W1YSxIsAMlZ25CPTk=;
-        b=QfulELwYfxzy9GTprNvKLFHCkYvwBqy01SkVeONqK8Gz2cb3WC0j6/Ph1UXd/jNq6t
-         5QxsEAyageOVs10CvyJTnwv00vVrU69b6xMITWdu4uqN7XWCxjBcRU2dIGD+8VZpunZA
-         2iGBCjdV0odQfimF9KYb9AlTTYBhgf+KgAythovGGr0pIUnTK+rKVnRoc2iYnv7eQeic
-         4AlJwkag0dC2KBYwL4I4CBfeHHkwowqfEuTyI4DN1qarximeF+EmQLG8UyIpPqf+B5ZC
-         CFBqnu6JreaYR2N073G42tptiB/HaGZ6ivCpt2Ej2zg52wrCLhWVacxgwYHhWcQAHl5w
-         230g==
-X-Forwarded-Encrypted: i=1; AJvYcCX9vosNNNsBz7M0BdKnq8gGdU8v4inBIL3k1bbPGy7V4jFfo8P97qs9TVyDT+eDJnaXQxhjhEe6Te8k5qvo@vger.kernel.org, AJvYcCXei4IVD5w+hldKyfO+o34Q2o6015eX7z8LCSrNWCpx9kmwqDQ4FjUPpS/72qNVHdnK/BYdd4eYURJbrtEi@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz6i54twEKvIaZFF6rUW5upvIvK1VEZRXYsKij3q7IYCMhDDo1P
-	bn+S60Oy9MJh9yKlQn164ZGmXr8DgpkglgiMP7JG8YC7Y9taDm+j
-X-Gm-Gg: ASbGncsN32DIZ3QPA91AQnLIKXpxQCgTlBVYln/7aZLg3Cu3d6DxCD+FHLY63L6hyto
-	3JMmKx2YdqcqS+Ru1nUM3euK4eqLukV0lC5n4ANRcSA0OUVPb8ZUjPQMlmelELOwl7xzqf8a5Sm
-	pGQdadI/e6+XH1tBt0m2wJ38M1B2S8w2wZCC6WVrfPF+/lvZMgscVx3FCaWmAZzw0PSy+2uzEYB
-	zapH9kQmmxA3hGtP0kxcmqdz80367QT+MzpQwSBaPyUJ9JImeANuELahGaIkJ0pEB7qck9Y/D+d
-	GHw8QaSk73qFBzZ983GNVa/8LhSMnipH9jIZxTEGBvr6rxqehuuNZdAbVG54tu7lA3uRD4Ai6g=
-	=
-X-Google-Smtp-Source: AGHT+IEx1KAgPqM1x7d8Wskej+UazaVhLKu8QqS4ldLsoA80gD3oBB5ji46YWPEQp1hH+Z3aRdYE9A==
-X-Received: by 2002:a17:903:2ec5:b0:216:6283:5a8c with SMTP id d9443c01a7336-22a8a0a3599mr29852915ad.39.1743748525461;
-        Thu, 03 Apr 2025 23:35:25 -0700 (PDT)
-Received: from localhost.localdomain ([221.214.202.225])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2297866e1b4sm25105335ad.181.2025.04.03.23.35.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Apr 2025 23:35:25 -0700 (PDT)
-From: Penglei Jiang <superman.xpt@gmail.com>
-To: superman.xpt@gmail.com
-Cc: adrian.ratiu@collabora.com,
-	akpm@linux-foundation.org,
-	brauner@kernel.org,
-	felix.moessbauer@siemens.com,
-	jlayton@kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	lorenzo.stoakes@oracle.com,
-	mjguzik@gmail.com,
-	syzbot+02e64be5307d72e9c309@syzkaller.appspotmail.com,
-	syzbot+f9238a0a31f9b5603fef@syzkaller.appspotmail.com,
-	tglx@linutronix.de,
-	viro@zeniv.linux.org.uk,
-	xu.xin16@zte.com.cn
-Subject: [PATCH V5] proc: Fix the issue of proc_mem_open returning NULL
-Date: Thu,  3 Apr 2025 23:33:57 -0700
-Message-Id: <20250404063357.78891-1-superman.xpt@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20250331170647.36285-1-superman.xpt@gmail.com>
-References: <20250331170647.36285-1-superman.xpt@gmail.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="yMLAmrTe"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=oRL0tdJAjPV+G5hvzUicbBcc4clC5hezIULcGYZrejk=; b=yMLAmrTerlCYoA+aZjVyTxFk7c
+	/ODMdcEzGnEXoNZfxHBGocpOAS6S5WWdpfJJ/VeXkrszrn/2k7BclSgztw1iRnkALPnx632SU7Wfl
+	01XHHIZbz1cJeyP5Cxyuosnyf38KscTeVlmBTaUPwRJTdE49XYIz3jn8XVuY128BjrxhNx+Cn09lX
+	Xfgs4/mE0vq+8HD7VOLB1H3qdhTmZy3/vQonUGAOiLNKV0d/JU/PSZb/FCiqoMSpdV5SZrLoEHJF6
+	BodJBDnDcgfOf8VB9R0OgXQYFYrupaGYA3/qIiMSg/Lfh9UWcePY5aGGY2noFwUuwvbQdw+MExcfi
+	EdEc7xXg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1u0aeI-0000000AtBZ-2zlI;
+	Fri, 04 Apr 2025 06:35:30 +0000
+Date: Thu, 3 Apr 2025 23:35:30 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: David Woodhouse <dwmw2@infradead.org>
+Cc: Christoph Hellwig <hch@infradead.org>, virtio-comment@lists.linux.dev,
+	mst@redhat.com, Claire Chang <tientzu@chromium.org>,
+	linux-devicetree <devicetree@vger.kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	=?iso-8859-1?Q?J=F6rg?= Roedel <joro@8bytes.org>,
+	iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+	graf@amazon.de
+Subject: Re: [RFC PATCH 1/3] content: Add VIRTIO_F_SWIOTLB to negotiate use
+ of SWIOTLB bounce buffers
+Message-ID: <Z-99snVF5ESyJDDs@infradead.org>
+References: <20250402112410.2086892-1-dwmw2@infradead.org>
+ <20250402112410.2086892-2-dwmw2@infradead.org>
+ <Z-43svGzwoUQaYvg@infradead.org>
+ <148a3c8ee53af585b42ec025c2c7821ad852c66c.camel@infradead.org>
+ <Z-46TDmspmX0BJ2H@infradead.org>
+ <05abb68286dd4bc17b243130d7982a334503095b.camel@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <05abb68286dd4bc17b243130d7982a334503095b.camel@infradead.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-The function proc_mem_open() can return an errno, NULL, or mm_struct*.
-If it fails to acquire mm, it returns NULL, but the caller does not
-check for the case when the return value is NULL.
+On Thu, Apr 03, 2025 at 09:06:37AM +0100, David Woodhouse wrote:
+> You are right, in theory, that (2b) is the job of ACPI or DT to
+> communicate. But virtio is presented as just another PCI device,
+> indistinguishable by the guest from other PCI devices which *are*
+> actually able to do DMA through the hardware's two-stage IOMMU.
 
-The following conditions lead to failure in acquiring mm:
+Then the virtual device should be behind a different IOMMU (or no IOMMU
+at all) to clearly differciate them for the assigned hardware devices.
 
-  - The task is a kernel thread (PF_KTHREAD)
-  - The task is exiting (PF_EXITING)
+> To my knowledge there isn't a clean way, across platforms, to tell an
+> operating system that a certain device just *can't* do DMA at all. 
 
-Changes:
+Well, it's part of the device specific if it can do DMA or not.  We
+had a bunch of early PCI (and a lot of ISA) device that could not
+do P2P.  Even on PCIe there might be weirdo device that just expose
+a bar or have some bitbanged i2c or similar.
 
-  - Add documentation comments for the return value of proc_mem_open().
-  - Add checks in the caller to return -ESRCH when proc_mem_open()
-    returns NULL.
+Now if you mean virtio devices - yes there's no way currently as virtio
+is a quite fundamentally DMA based model.
 
-Reported-by: syzbot+f9238a0a31f9b5603fef@syzkaller.appspotmail.com
-Closes: https://lore.kernel.org/all/000000000000f52642060d4e3750@google.com
-Signed-off-by: Penglei Jiang <superman.xpt@gmail.com>
----
-V4 -> V5: Completed the changelog
-V3 -> V4: Revised the comments
-V2 -> V3: Added comments to explain the proc_mem_open() return value
-V1 -> V2: Added the missing NULL check, dropped the proc_mem_open() modification
+> And
+> even if there was, why offer a device model that could *theoretically*
+> do DMA, just to tell the guest through some other channel that it
+> can't?
 
- fs/proc/base.c       | 12 +++++++++---
- fs/proc/task_mmu.c   | 12 ++++++------
- fs/proc/task_nommu.c |  4 ++--
- 3 files changed, 17 insertions(+), 11 deletions(-)
+That would be the normal way.  Because virtio devices fundamentally can
+do DMA.  It's just your guest specification doesn't want them to.
 
-diff --git a/fs/proc/base.c b/fs/proc/base.c
-index b0d4e1908b22..85a3f5e253d4 100644
---- a/fs/proc/base.c
-+++ b/fs/proc/base.c
-@@ -827,7 +827,13 @@ static const struct file_operations proc_single_file_operations = {
- 	.release	= single_release,
- };
- 
--
-+/*
-+ * proc_mem_open() can return errno, NULL or mm_struct*.
-+ *
-+ *   - Returns NULL if the task has no mm (PF_KTHREAD or PF_EXITING)
-+ *   - Returns mm_struct* on success
-+ *   - Returns error code on failure
-+ */
- struct mm_struct *proc_mem_open(struct inode *inode, unsigned int mode)
- {
- 	struct task_struct *task = get_proc_task(inode);
-@@ -854,8 +860,8 @@ static int __mem_open(struct inode *inode, struct file *file, unsigned int mode)
- {
- 	struct mm_struct *mm = proc_mem_open(inode, mode);
- 
--	if (IS_ERR(mm))
--		return PTR_ERR(mm);
-+	if (IS_ERR_OR_NULL(mm))
-+		return mm ? PTR_ERR(mm) : -ESRCH;
- 
- 	file->private_data = mm;
- 	return 0;
-diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-index 994cde10e3f4..b9e3bd006346 100644
---- a/fs/proc/task_mmu.c
-+++ b/fs/proc/task_mmu.c
-@@ -212,8 +212,8 @@ static int proc_maps_open(struct inode *inode, struct file *file,
- 
- 	priv->inode = inode;
- 	priv->mm = proc_mem_open(inode, PTRACE_MODE_READ);
--	if (IS_ERR(priv->mm)) {
--		int err = PTR_ERR(priv->mm);
-+	if (IS_ERR_OR_NULL(priv->mm)) {
-+		int err = priv->mm ? PTR_ERR(priv->mm) : -ESRCH;
- 
- 		seq_release_private(inode, file);
- 		return err;
-@@ -1325,8 +1325,8 @@ static int smaps_rollup_open(struct inode *inode, struct file *file)
- 
- 	priv->inode = inode;
- 	priv->mm = proc_mem_open(inode, PTRACE_MODE_READ);
--	if (IS_ERR(priv->mm)) {
--		ret = PTR_ERR(priv->mm);
-+	if (IS_ERR_OR_NULL(priv->mm)) {
-+		ret = priv->mm ? PTR_ERR(priv->mm) : -ESRCH;
- 
- 		single_release(inode, file);
- 		goto out_free;
-@@ -2069,8 +2069,8 @@ static int pagemap_open(struct inode *inode, struct file *file)
- 	struct mm_struct *mm;
- 
- 	mm = proc_mem_open(inode, PTRACE_MODE_READ);
--	if (IS_ERR(mm))
--		return PTR_ERR(mm);
-+	if (IS_ERR_OR_NULL(mm))
-+		return mm ? PTR_ERR(mm) : -ESRCH;
- 	file->private_data = mm;
- 	return 0;
- }
-diff --git a/fs/proc/task_nommu.c b/fs/proc/task_nommu.c
-index bce674533000..59bfd61d653a 100644
---- a/fs/proc/task_nommu.c
-+++ b/fs/proc/task_nommu.c
-@@ -260,8 +260,8 @@ static int maps_open(struct inode *inode, struct file *file,
- 
- 	priv->inode = inode;
- 	priv->mm = proc_mem_open(inode, PTRACE_MODE_READ);
--	if (IS_ERR(priv->mm)) {
--		int err = PTR_ERR(priv->mm);
-+	if (IS_ERR_OR_NULL(priv->mm)) {
-+		int err = priv->mm ? PTR_ERR(priv->mm) : -ESRCH;
- 
- 		seq_release_private(inode, file);
- 		return err;
--- 
-2.17.1
+> What's wrong with a simple option to indicate, in the device model that
+> the system designer chooses to build for the guest, that it can't do
+> DMA?
+
+As stated above I suspect you still are asking the wrong question and
+have the wrong mental model.  Virtio fundamentally can do DMA, you just
+don't want it to.  And based on the other subthread I also suspect you'd
+actually be much better off with your bounce buffer in the virtual host
+memory instead of coming up with this particularly odd case, but even
+if not it's the system description that matters here, not the device
+model.
 
