@@ -1,125 +1,106 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B264A18C930
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 07:12:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 674C417A31F;
+	Fri,  4 Apr 2025 07:15:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743750730; cv=none; b=NmLS8mtMEylZOhSDIaan5z+zL9AwhheWNH8F3l20r5F9hWgikxecoD0eCq1t39YKwFWlmGlVzLfPv1Cl8GjfyEiEsIpOA4c0j7WxRZyXIxVLXQJ5iYAXv5bfqoj0ZnX91RRKK6uYHdPk/ryVUUQGI4qh3+KDv58SD/wfeUmmRAM=
+	t=1743750916; cv=none; b=q5Q4hVBaVgXMet8hVUt96qYmbRD7bzaCQrY/GqG1Bti6NR5Doiz7ZDKjV+GpuWA9Gk+ceCopwXRPL65NYvlQKG0h08MCBFKQ350dchyCJmE/ukAnrV5Q5mKnm+hpPY4PPHNLrnoVJQk7+X/478lm7W4Bxr4Vz/Huqr1d7+V69t0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743750730; c=relaxed/simple;
-	bh=U23hVQDvBPnjEz1wdi+mc/GNtiHL10BsAGjmKYpM6TA=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
-	 References:In-Reply-To; b=VKCMy6VzsAqArL1GSOlcCCWZynjtZgLU7hXqjgcGLsj3kOyNiAbiTx/3wmUQXpbBDel09OX2+s50cJclyq950y5JUd8y0NrQ2uoR4lrQeKwduBl4i7ExVniyxL/YPmDv7B0Y8g8VEo7rED3OkQBIgnPGaBvXyKx9pzHRbtpCadU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=CG8dWdLM; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
+	s=arc-20240116; t=1743750916; c=relaxed/simple;
+	bh=XlZUyusEwbUmomwwZk/AGdKmRc5G5Oj19N7ritsx424=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rLJEfkwQjr0BxNfVnwAydJZeZ00g9dZeEz9f3Hb8LHgOR/GBGd1M3k4iKJtqD6SFC9YXGkrBAXVa9zM5Q1Pkky3CZbJ7+ykwu3gqcSyWnDPKOHnryF5UZ2vUNpCw63qnPNg2YHhRCIOc9tOo8cNxg3EQjO8jGMssy34YRJf6dbQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HL0Fp/Ha; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="CG8dWdLM"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ac2a9a74d9cso307536866b.1
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 00:12:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fairphone.com; s=fair; t=1743750725; x=1744355525; darn=vger.kernel.org;
-        h=in-reply-to:references:subject:cc:to:from:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=U23hVQDvBPnjEz1wdi+mc/GNtiHL10BsAGjmKYpM6TA=;
-        b=CG8dWdLMsTxbZTBlmZmH7+lJRcBpTSOrE+yAZKODTsIQQQ7rCx/hwFYGwe86eUjrsf
-         GoKSsBFpx/os0Fam6hkuRVwJm9m8l/Tpm/KCYCEKz7ia2DyiuYBvEpNySIom/2PzrDW1
-         C6qwjki37n/PeMyxr+bR2l1hQ5fYv0ktARX/AtWMZYOoLuO78LBTRv2QqoPzgHPChDHO
-         4PM/4VX6jScS17JYmp1kjhefgcm8tjRmOO86D97FlGQbFjQx4tvrCuCXM0Gykjsw/dIe
-         719KxaKA4s41OxaU3Gn0OIm2d18PB/x6pThlrcf8bF9KMXzZj3DJcORg2Gn2fJr9BY8Y
-         PFuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743750725; x=1744355525;
-        h=in-reply-to:references:subject:cc:to:from:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=U23hVQDvBPnjEz1wdi+mc/GNtiHL10BsAGjmKYpM6TA=;
-        b=So+v3edeNOnP+aiDvIcdpteV5h2qfZ9vCW4j4jVrpeHMzqu0o7ws9AcrN/1UJxcR7+
-         H3cvS6CPP13hnNJLR5Ba9OgYHxTA8Mdegg7YaJ4BHjUDzC1QgGxsiNQnBLsDThoBn6aA
-         Qf4IyPVkLvVhqs/iUJhYQHOvSW1D5uPH2QVmaT0HUUzKy24KSIZXSEIjqePpW1mkidvP
-         uyhs5qw6h98+nLGII/cdPNkoX9O9fuodPHJ21yogEY219sNA1b1evsujNn1dgTELe7Dd
-         EYxHx5pPtsCJTuA4f3h1jqiNGojj3UrUPmxznWlCxa0gpy9nrSXlp9lwFu1cVsCsRmLn
-         1HfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX7Vs68bbFLofWsDTSgOScYqb0baofK98XNOWWpC2sQ+rZP9GC3Xwvk5dRMghYb5FWN89VRZ9+OYQK5Eak=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwLe1QlkUk1Rj2zWu1XfkFFpyhTBFgIFW7whM/4ztktHfGXYbhk
-	mKmVl/ukY8hd33myXXz28SPkpIGGu8Wfnwp0qez1dlOHlzZk+DRXZlqlh03LCoA=
-X-Gm-Gg: ASbGnct7mspXVrgssR53Q6fPDA/wEqCD4o7lIuP1tQRIj3a0rDI4Os/U95VIvgEA+XK
-	JbjHsWU8/TNFkTQmjcdTOOpYhDjsH9YRyzQ/Ywr38M1I11ssKVb6juzu6KqIllMLHsN7rmOV82+
-	XQXc8AefdAo9Pp+8e7vZJILlidGbOohFOpJ8ZAWOdz1gj0LpQfimYfGiv8tDDjvE2/UN4QOPMxk
-	CeDehVhWOQ+cnRRsEogmT5UAzazAEPqWnWDYfwP24yptOj7HWjI713aLTWrqfc+dTqQIkBfnTRH
-	AxB8owdyseVAtOPFvgdoWlQQhr+GF7u3vZUt2+5G2KEO44HAuH6kNA6meCTZwt0j4lnb+2sWTt+
-	NdGqACsUk6GoA9A==
-X-Google-Smtp-Source: AGHT+IFN6J+KZNpV9GFYn4RUt9e/peo9TpSfWt8AYxwIXQxs3kWCtPSeLrpO1q1TafhsMbSbK20xMA==
-X-Received: by 2002:a17:907:da6:b0:ac3:4487:6a99 with SMTP id a640c23a62f3a-ac7d1c39469mr190978066b.47.1743750724902;
-        Fri, 04 Apr 2025 00:12:04 -0700 (PDT)
-Received: from localhost (144-178-202-138.static.ef-service.nl. [144.178.202.138])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7bfe5d44dsm209663066b.13.2025.04.04.00.12.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Apr 2025 00:12:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HL0Fp/Ha"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743750914; x=1775286914;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=XlZUyusEwbUmomwwZk/AGdKmRc5G5Oj19N7ritsx424=;
+  b=HL0Fp/Hay29YIu10RlYcosSdwj8lijzHWKkqxrPlC3/YcIaPunPMOHTc
+   bu1y5cQkoxl1DQkqaPLWxKW8/yMWr14kzycTM/CVbbMrjW+PFbYrynMyz
+   VP4oNpMc9N4sGZbEsemV12J4jLIlxOkPViKtp6jUhr7c8YP1EVzGgAwSA
+   2yxERfVBAQwBgqheWRe/pjYfS+/m9CHU7PIvVArahW4ywPmFTeXN9LhCa
+   jPYTpGhnaNPJ0CbhoIJhKlLp/AjjFQSdhmnQL/L3AnOgYsNxcJdRMVKDh
+   sJR8Ir1yLOStd21Nr/qNPNt0pii3yJo0Bwv4EA1kLWivCrkVvSz+k1AOC
+   w==;
+X-CSE-ConnectionGUID: AdQDj8/qSkiplD3uhxOlng==
+X-CSE-MsgGUID: N+RJ4mkHQAGE5soGK4Nq8Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11393"; a="67655606"
+X-IronPort-AV: E=Sophos;i="6.15,187,1739865600"; 
+   d="scan'208";a="67655606"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 00:15:13 -0700
+X-CSE-ConnectionGUID: QLD+AsDsSUiqGbNvkRR6vw==
+X-CSE-MsgGUID: hoXfZcudSGmeWSTjO2TSKw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,187,1739865600"; 
+   d="scan'208";a="127130582"
+Received: from mev-dev.igk.intel.com ([10.237.112.144])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 00:15:11 -0700
+Date: Fri, 4 Apr 2025 09:14:57 +0200
+From: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
+To: Wentao Liang <vulab@iscas.ac.cn>
+Cc: m.chetan.kumar@intel.com, loic.poulain@linaro.org,
+	ryazanov.s.a@gmail.com, johannes@sipsolutions.net,
+	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] net: wwan: Add error handling for
+ ipc_mux_dl_acb_send_cmds().
+Message-ID: <Z++G8b6DBd3uCd1x@mev-dev.igk.intel.com>
+References: <20250403084800.2247-1-vulab@iscas.ac.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 04 Apr 2025 09:12:04 +0200
-Message-Id: <D8XO1JU37NEV.YN595H7NEOU7@fairphone.com>
-From: "Luca Weiss" <luca.weiss@fairphone.com>
-To: "Konrad Dybcio" <konrad.dybcio@oss.qualcomm.com>, "Prasad Kumpatla"
- <quic_pkumpatl@quicinc.com>, "Bjorn Andersson" <andersson@kernel.org>,
- "Konrad Dybcio" <konradybcio@kernel.org>, "Rob Herring" <robh@kernel.org>,
- "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
- <conor+dt@kernel.org>
-Cc: <cros-qcom-dts-watchers@chromium.org>, <linux-arm-msm@vger.kernel.org>,
- <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <kernel@oss.qualcomm.com>, "Mohammad Rafi Shaik" <quic_mohs@quicinc.com>
-Subject: Re: [PATCH v1 3/8] arm64: dts: qcom: qcs6490-rb3gen2: Modify WSA
- and VA macro clock nodes for audioreach solution
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250317054151.6095-1-quic_pkumpatl@quicinc.com>
- <20250317054151.6095-4-quic_pkumpatl@quicinc.com>
- <4c27d6b9-781b-4106-8165-97c9750cf99f@oss.qualcomm.com>
-In-Reply-To: <4c27d6b9-781b-4106-8165-97c9750cf99f@oss.qualcomm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250403084800.2247-1-vulab@iscas.ac.cn>
 
-Hi Konrad,
+On Thu, Apr 03, 2025 at 04:48:00PM +0800, Wentao Liang wrote:
+> The ipc_mux_dl_acbcmd_decode() calls the ipc_mux_dl_acb_send_cmds(),
+> but does not report the error if ipc_mux_dl_acb_send_cmds() fails.
+> This makes it difficult to detect command sending failures. A proper
+> implementation can be found in ipc_mux_dl_cmd_decode().
+> 
+> Add error reporting to the call, logging an error message using dev_err()
+> if the command sending fails.
+> 
+> Fixes: 1f52d7b62285 ("net: wwan: iosm: Enable M.2 7360 WWAN card support")
+> Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+> ---
+>  drivers/net/wwan/iosm/iosm_ipc_mux_codec.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/net/wwan/iosm/iosm_ipc_mux_codec.c b/drivers/net/wwan/iosm/iosm_ipc_mux_codec.c
+> index bff46f7ca59f..478c9c8b638b 100644
+> --- a/drivers/net/wwan/iosm/iosm_ipc_mux_codec.c
+> +++ b/drivers/net/wwan/iosm/iosm_ipc_mux_codec.c
+> @@ -509,8 +509,11 @@ static void ipc_mux_dl_acbcmd_decode(struct iosm_mux *ipc_mux,
+>  			return;
+>  			}
+>  		trans_id = le32_to_cpu(cmdh->transaction_id);
+> -		ipc_mux_dl_acb_send_cmds(ipc_mux, cmd, cmdh->if_id,
+> -					 trans_id, cmd_p, size, false, true);
+> +		if (ipc_mux_dl_acb_send_cmds(ipc_mux, cmd, cmdh->if_id,
+> +					     trans_id, cmd_p, size, false, true))
+> +			dev_err(ipc_mux->dev,
+> +				"if_id %d: cmd send failed",
+> +				cmdh->if_id);
 
-On Tue Apr 1, 2025 at 6:05 PM CEST, Konrad Dybcio wrote:
-> On 3/17/25 6:41 AM, Prasad Kumpatla wrote:
->> From: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
->>=20
->> Modify and enable WSA, VA and lpass_tlmm clock properties.
->> For audioreach solution mclk, npl and fsgen clocks
->> are enabled through the q6prm clock driver.
->>=20
->> Signed-off-by: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
->> Co-developed-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
->> Signed-off-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
->> ---
->
-> Instead, put the inverse changes in sc7280-chrome-common.dtsi please
+Shouldn't it go to the net-next? It isn't fixing anything, just adding
+error message.
 
-How are we going to handle other sc7280-based platforms, such as my
-QCM6490 Fairphone 5 needing to use q6afecc instead of q6prmcc which gets
-used in this patchset?
-
-One solution might be to put q6afecc into the base sc7280.dtsi file,
-then we have a sc7280-audioreach.dtsi which overwrites q6afecc with
-q6prmcc which then gets included by boards using audioreach.
-
-I also don't think we can split this across sc7280 vs qcm6490 vs sm7325,
-there seems to be any combination possible on any of these SoCs -
-depending on the firmware shipped with it.
-
-So somewhat similar to the current sc7280-chrome-common.dtsi but just
-for audioreach.
-
-Regards
-Luca
-
->
-> Konrad
-
+>  	}
+>  }
+>  
+> -- 
+> 2.42.0.windows.2
