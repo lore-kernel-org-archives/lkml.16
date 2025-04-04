@@ -1,186 +1,110 @@
-Received: from webmail.webked.de (webmail.webked.de [159.69.203.94])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADFDA14831E;
-	Fri,  4 Apr 2025 08:17:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.203.94
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A8AD1CD3F;
+	Fri,  4 Apr 2025 08:18:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743754638; cv=none; b=WKusyiCYEFkNImxC+1gluV7N7frSyxXKPb6D3ILZbL1SJ0dlNF764osFpEsXvuRvD4ZKQOdFcA0Bvb+i+l4GJ9w5yNY6mExJ0sYM14NO8qtg7ccXyvBwwthVwnlM34pSHBWPHNb2YGXi79JJsIGdLmKu5O4vYYA9yUT3P+X05bw=
+	t=1743754717; cv=none; b=KkGhqx2d06TxZVmesKIm5XevZ7OccclNeOMLAjhtqBPcy4mgJGUBAai5xX0ISzmgpQBmnnGFmOONCc9aEKYKVVWIS70T1UPXqwynZeDOsvvq84EqYFld7bkNJt/FXbOyzkdE5wqKNg/Tq2q3m7ZF7xyv8QkGsshxCKvnu80nekU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743754638; c=relaxed/simple;
-	bh=Cum2HBj0wq3wG0kYJgWZyERuNJx/Px6KBEHhIMFuuDw=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Y3Ra5kbsxoLRT8JG0vCC/Z/bJW5135JyHfZvu8BjFeXGrdR3S23IcDzSoUKV63F49jwCNJAxJFndFCrAdhfBvOuYSVQ4X1iOt6h+t99kfRKrfON7cWileOW8AEPBGdjgUJh201S6sAzX6g0+pW2fJxsy+TE6xs7yLhiFXf8shS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=webked.de; spf=pass smtp.mailfrom=webked.de; arc=none smtp.client-ip=159.69.203.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=webked.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=webked.de
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 08FD562BA4;
-	Fri,  4 Apr 2025 10:16:55 +0200 (CEST)
-Message-ID: <11c5cb52d024a5158c5b8c5e69e2e4639a055a31.camel@webked.de>
-Subject: Re: [REGRESSION] Massive virtio-net throughput drop in guest VM
- with Linux 6.8+
-From: Markus Fohrer <markus.fohrer@webked.de>
-To: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: virtualization@lists.linux-foundation.org, jasowang@redhat.com, 
-	davem@davemloft.net, edumazet@google.com, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Date: Fri, 04 Apr 2025 10:16:55 +0200
-In-Reply-To: <20250403090001-mutt-send-email-mst@kernel.org>
-References: <1d388413ab9cfd765cd2c5e05b5e69cdb2ec5a10.camel@webked.de>
-	 <20250403090001-mutt-send-email-mst@kernel.org>
-Organization: WEBKED IT Markus Fohrer
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.3-0ubuntu1 
+	s=arc-20240116; t=1743754717; c=relaxed/simple;
+	bh=zKyWCqOQmeoLND24mpf/CYQJKMUyhqV3An79AoIIz5w=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=dJ5oOp9+WCtwWDbOVF4NdE59xhNt4hUWFnu27qMXfjr3nb2/xnmHA4CyEw9F8Mnzkoc3oJgBq3AXaOC8rZpF65Be/Rt/ubeAinVWnrLHdc/sziN39AVDuoWlYa7N76FokD7oVW/8gejb8yuAiNUdsB2fcDToM5s9gAxeAWNt6xo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WOKJH+Vi; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WOKJH+Vi"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id E39AFC4CEDD;
+	Fri,  4 Apr 2025 08:18:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743754717;
+	bh=zKyWCqOQmeoLND24mpf/CYQJKMUyhqV3An79AoIIz5w=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=WOKJH+ViZJTy1m+7Trmr9VyxHl6IVP53xPYaz7/P7gz8MPYgKPR5OPEOpQdLoY6kQ
+	 LPHE9ox2jPzhGK37YrvefRcZHmkOvr8YBtb96YYhWYZvSPOw5NQXf2ePTKkbthcYlL
+	 3COAz5JHWs5YHVmJB6bMJT+OujIleVnghRzSztWdEpl2pXczRVPjlGG3fdA+m3RGAH
+	 GD4XehcujTSotX21ZdFSJKsqQn3I2r7GCNSkGfRpC7JIaXqHn2danwJ4Ow+uWgNKBh
+	 /5Sxg0bNgjak1Dn5aYK4NPzlkEa4WOxE/JPGJe9t7u5mixL1eM6DldY46U47nXxCoC
+	 oHKzHIfuS97Ew==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCFECC36010;
+	Fri,  4 Apr 2025 08:18:35 +0000 (UTC)
+From: Aaron Kling via B4 Relay <devnull+webgeek1234.gmail.com@kernel.org>
+Date: Fri, 04 Apr 2025 03:17:29 -0500
+Subject: [PATCH] phy: tegra: xusb: Default otg mode to peripheral
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250404-xusb-peripheral-v1-1-99c184b9bf5f@gmail.com>
+X-B4-Tracking: v=1; b=H4sIAJiV72cC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDEwMT3YrS4iTdAqCmgozUosQc3WQT0yRDM2PzNGPjJCWgroKi1LTMCrC
+ J0bG1tQD44iNRYQAAAA==
+X-Change-ID: 20250404-xusb-peripheral-c45b1637f33b
+To: JC Kuo <jckuo@nvidia.com>, Vinod Koul <vkoul@kernel.org>, 
+ Kishon Vijay Abraham I <kishon@kernel.org>, 
+ Thierry Reding <thierry.reding@gmail.com>, 
+ Jonathan Hunter <jonathanh@nvidia.com>
+Cc: linux-phy@lists.infradead.org, linux-tegra@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Aaron Kling <webgeek1234@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1743754715; l=1543;
+ i=webgeek1234@gmail.com; s=20250217; h=from:subject:message-id;
+ bh=02vuqpYVHM7yfAaBTJbe6AZ084fOjTN9Ney/idMUyM4=;
+ b=Ifh17Js/Rv1KGxy41smqbJVdAi2qz971idOpYHlEA3F0lbHVFg4YbFSKOKSuHaYqYT+88Gfgv
+ LSng9B9NDvwArVJDIx7gn8g5nSzee5su96037mRcIZOdi8SV3jsbh71
+X-Developer-Key: i=webgeek1234@gmail.com; a=ed25519;
+ pk=TQwd6q26txw7bkK7B8qtI/kcAohZc7bHHGSD7domdrU=
+X-Endpoint-Received: by B4 Relay for webgeek1234@gmail.com/20250217 with
+ auth_id=342
+X-Original-From: Aaron Kling <webgeek1234@gmail.com>
+Reply-To: webgeek1234@gmail.com
 
-Am Donnerstag, dem 03.04.2025 um 09:04 -0400 schrieb Michael S.
-Tsirkin:
-> On Wed, Apr 02, 2025 at 11:12:07PM +0200, Markus Fohrer wrote:
-> > Hi,
-> >=20
-> > I'm observing a significant performance regression in KVM guest VMs
-> > using virtio-net with recent Linux kernels (6.8.1+ and 6.14).
-> >=20
-> > When running on a host system equipped with a Broadcom NetXtreme-E
-> > (bnxt_en) NIC and AMD EPYC CPUs, the network throughput in the
-> > guest drops to 100=E2=80=93200 KB/s. The same guest configuration perfo=
-rms
-> > normally (~100 MB/s) when using kernel 6.8.0 or when the VM is
-> > moved to a host with Intel NICs.
-> >=20
-> > Test environment:
-> > - Host: QEMU/KVM, Linux 6.8.1 and 6.14.0
-> > - Guest: Linux with virtio-net interface
-> > - NIC: Broadcom BCM57416 (bnxt_en driver, no issues at host level)
-> > - CPU: AMD EPYC
-> > - Storage: virtio-scsi
-> > - VM network: virtio-net, virtio-scsi (no CPU or IO bottlenecks)
-> > - Traffic test: iperf3, scp, wget consistently slow in guest
-> >=20
-> > This issue is not present:
-> > - On 6.8.0=20
-> > - On hosts with Intel NICs (same VM config)
-> >=20
-> > I have bisected the issue to the following upstream commit:
-> >=20
-> > =C2=A0 49d14b54a527 ("virtio-net: Suppress tx timeout warning for small
-> > tx")
-> > =C2=A0 https://git.kernel.org/linus/49d14b54a527
->=20
-> Thanks a lot for the info!
->=20
->=20
-> both the link and commit point at:
->=20
-> commit 49d14b54a527289d09a9480f214b8c586322310a
-> Author: Eric Dumazet <edumazet@google.com>
-> Date:=C2=A0=C2=A0 Thu Sep 26 16:58:36 2024 +0000
->=20
-> =C2=A0=C2=A0=C2=A0 net: test for not too small csum_start in virtio_net_h=
-dr_to_skb()
-> =C2=A0=C2=A0=C2=A0=20
->=20
-> is this what you mean?
->=20
-> I don't know which commit is "virtio-net: Suppress tx timeout warning
-> for small tx"
->=20
->=20
->=20
-> > Reverting this commit restores normal network performance in
-> > affected guest VMs.
-> >=20
-> > I=E2=80=99m happy to provide more data or assist with testing a potenti=
-al
-> > fix.
-> >=20
-> > Thanks,
-> > Markus Fohrer
->=20
->=20
-> Thanks! First I think it's worth checking what is the setup, e.g.
-> which offloads are enabled.
-> Besides that, I'd start by seeing what's doing on. Assuming I'm right
-> about
-> Eric's patch:
->=20
-> diff --git a/include/linux/virtio_net.h b/include/linux/virtio_net.h
-> index 276ca543ef44d8..02a9f4dc594d02 100644
-> --- a/include/linux/virtio_net.h
-> +++ b/include/linux/virtio_net.h
-> @@ -103,8 +103,10 @@ static inline int virtio_net_hdr_to_skb(struct
-> sk_buff *skb,
-> =C2=A0
-> =C2=A0		if (!skb_partial_csum_set(skb, start, off))
-> =C2=A0			return -EINVAL;
-> +		if (skb_transport_offset(skb) < nh_min_len)
-> +			return -EINVAL;
-> =C2=A0
-> -		nh_min_len =3D max_t(u32, nh_min_len,
-> skb_transport_offset(skb));
-> +		nh_min_len =3D skb_transport_offset(skb);
-> =C2=A0		p_off =3D nh_min_len + thlen;
-> =C2=A0		if (!pskb_may_pull(skb, p_off))
-> =C2=A0			return -EINVAL;
->=20
->=20
-> sticking a printk before return -EINVAL to show the offset and
-> nh_min_len
-> would be a good 1st step. Thanks!
->=20
+From: Aaron Kling <webgeek1234@gmail.com>
 
-I added the following printk inside virtio_net_hdr_to_skb():
+Currently, if usb-role-switch is set and role-switch-default-mode is
+not, a xusb port will be inoperable until that port is hotplugged,
+because the driver defaults to role none. Instead of requiring all
+devices to set the default mode, assume that the port is primarily
+intended for use in device mode. This assumption already has precedence
+in the synopsys dwc3 driver.
 
-    if (skb_transport_offset(skb) < nh_min_len){
-        printk(KERN_INFO "virtio_net: 3 drop, transport_offset=3D%u,
-nh_min_len=3D%u\n",
-               skb_transport_offset(skb), nh_min_len);
-        return -EINVAL;
-    }
+Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
+---
+ drivers/phy/tegra/xusb.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-Built and installed the kernel, then triggered a large download via:
+diff --git a/drivers/phy/tegra/xusb.c b/drivers/phy/tegra/xusb.c
+index 79d4814d758d5e1f0e8200d61e131606adbb0e2d..c56e83216d0f566a09b67377172fb04c8406f4cf 100644
+--- a/drivers/phy/tegra/xusb.c
++++ b/drivers/phy/tegra/xusb.c
+@@ -731,13 +731,11 @@ static void tegra_xusb_parse_usb_role_default_mode(struct tegra_xusb_port *port)
+ 
+ 	if (mode == USB_DR_MODE_HOST)
+ 		role = USB_ROLE_HOST;
+-	else if (mode == USB_DR_MODE_PERIPHERAL)
++	else
+ 		role = USB_ROLE_DEVICE;
+ 
+-	if (role != USB_ROLE_NONE) {
+-		usb_role_switch_set_role(port->usb_role_sw, role);
+-		dev_dbg(&port->dev, "usb role default mode is %s", modes[mode]);
+-	}
++	usb_role_switch_set_role(port->usb_role_sw, role);
++	dev_dbg(&port->dev, "usb role default mode is %s", modes[mode]);
+ }
+ 
+ static int tegra_xusb_usb2_port_parse_dt(struct tegra_xusb_usb2_port *usb2)
 
-    wget http://speedtest.belwue.net/10G
+---
+base-commit: 91e5bfe317d8f8471fbaa3e70cf66cae1314a516
+change-id: 20250404-xusb-peripheral-c45b1637f33b
 
-Relevant output from `dmesg -w`:
-
-[   57.327943] virtio_net: 3 drop, transport_offset=3D34, nh_min_len=3D40 =
-=20
-[   57.428942] virtio_net: 3 drop, transport_offset=3D34, nh_min_len=3D40 =
-=20
-[   57.428962] virtio_net: 3 drop, transport_offset=3D34, nh_min_len=3D40 =
-=20
-[   57.553068] virtio_net: 3 drop, transport_offset=3D34, nh_min_len=3D40 =
-=20
-[   57.553088] virtio_net: 3 drop, transport_offset=3D34, nh_min_len=3D40 =
-=20
-[   57.576678] virtio_net: 3 drop, transport_offset=3D34, nh_min_len=3D40 =
-=20
-[   57.618438] virtio_net: 3 drop, transport_offset=3D34, nh_min_len=3D40 =
-=20
-[   57.618453] virtio_net: 3 drop, transport_offset=3D34, nh_min_len=3D40 =
-=20
-[   57.703077] virtio_net: 3 drop, transport_offset=3D34, nh_min_len=3D40 =
-=20
-[   57.823072] virtio_net: 3 drop, transport_offset=3D34, nh_min_len=3D40 =
-=20
-[   57.891982] virtio_net: 3 drop, transport_offset=3D34, nh_min_len=3D40 =
-=20
-[   57.946190] virtio_net: 3 drop, transport_offset=3D34, nh_min_len=3D40 =
-=20
-[   58.218686] virtio_net: 3 drop, transport_offset=3D34, nh_min_len=3D40 =
-=20
-
-I would now do the test with commit
-49d14b54a527289d09a9480f214b8c586322310a and commit
-49d14b54a527289d09a9480f214b8c586322310a~1
-
+Best regards,
+-- 
+Aaron Kling <webgeek1234@gmail.com>
 
 
