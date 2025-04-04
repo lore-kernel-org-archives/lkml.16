@@ -1,60 +1,57 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1116117A2FD
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 08:46:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C12DB19FA92
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 08:46:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743756381; cv=none; b=fFvbYypfbjHY5uBMovtM2QlJfjmvNeTKHWnmfNg1ULfbjKZy5AaG1WogjcOV5BICVsPaxKuJfZB3Y20B2rTIGsgFfo/qSt6FWW7p44oAde6do+5SRDhODr2pQrX7ID4FpOfncqcT/hw2IdGOBdzB/xXUE05YLlIGExyNkNy0r1w=
+	t=1743756384; cv=none; b=QuPVYL4AwnDHUBrN56iDQL51zwkOC4RIxWoRM4svnrZB+8VhDmouSFJ2r+dPXgEwS9EMIt+85Pv3M0lIR8zx+OWvRg/zefDyk5+Nj6AUJ7k2D5cbMF/YSKlR4C/l2+meR2gVNFyHkTpQnHb08V9ZV2o8ytchWZmCe4ob51O/fN8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743756381; c=relaxed/simple;
-	bh=wFfzs2yz6m4G+u1pOhU0+RQw8E1fFOBql4bI6XTMHCk=;
+	s=arc-20240116; t=1743756384; c=relaxed/simple;
+	bh=sl7FJWKpiJnwBHISlGmRh2PVdiT/xXJxWgfPfgh/FZc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=DBBsrifsLl896sddkAQNEh8VYhrIgHlIZtgPh8PwemlPrJDauVxSohQRLb2/+/3HGwx1pbapWTBXw5oeJvvtSzt4W3aO51RM+CvIdgCykf6smelvR4ZrYEIN2i3WLW6CmPsAhvf6NB0gXdxe0XselWgDsWhOLQVObT+CuzBzlWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Hn2Q0JpV; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=rH5OxZInDKkLkYoWQppy05NtaUy3Vjq7TCxuPoOfkxPJT/yVOjw3pD2MQutNFpwndZ3ot+8VU4RCKOR6bcPTEtAcDO7YJDk6SRJyYcQ11o9YXSZXKWOHCDiiRK1QmCPvxA/K4eHDazEW/4uoaeyRPAhQ7dxp1gvaGPR/pl+GeTo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=M0+m+S5H; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Hn2Q0JpV"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M0+m+S5H"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743756378;
+	s=mimecast20190719; t=1743756381;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=l5M4AS5XQF4x0P7R9xaeq2+nOQNy0WXpZT4o++PKUQQ=;
-	b=Hn2Q0JpVGEhl38+DDVI4Pwy6BmlLmeOXZskg0Nsz4owaOP+poNWGHLEwmTUhWggsnwT/PJ
-	r4hphupUn/r0ZohugSFsrzqi5L+d4w+Uhy/TzspQxJBordBQ4aprRul2CBSURZwI2Yhtbo
-	kCxexjbU4Hs14HSLUI0UrCjSN6Jdbmg=
+	bh=lhjEUJ4tBBUr4Z43+VO+6l4qMHWkClGKYDVJczgnbdM=;
+	b=M0+m+S5HnduI3mBmI3ATMzrs7puDBYXm3zVH9OOeochEXRE2QURI+cyQd6l5bxz8KORa/+
+	lTm3wtHNTkvlXTpInQZeW9Qvxm/uaG9XEvobsMs6d8iLFIjIQG8Z8zE1ibBRepuQ6P23Gn
+	9awbvmlKF6PEfN1yhXqNva1XfLMFHfI=
 Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-498--qczUiBfML605vV7WJiKIw-1; Fri,
- 04 Apr 2025 04:46:15 -0400
-X-MC-Unique: -qczUiBfML605vV7WJiKIw-1
-X-Mimecast-MFC-AGG-ID: -qczUiBfML605vV7WJiKIw_1743756374
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-658-acDumnTMOC2X4HrYlBGkhw-1; Fri,
+ 04 Apr 2025 04:46:19 -0400
+X-MC-Unique: acDumnTMOC2X4HrYlBGkhw-1
+X-Mimecast-MFC-AGG-ID: acDumnTMOC2X4HrYlBGkhw_1743756378
 Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 177FA1955DCD;
-	Fri,  4 Apr 2025 08:46:14 +0000 (UTC)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C3F8F19560BB;
+	Fri,  4 Apr 2025 08:46:18 +0000 (UTC)
 Received: from gmonaco-thinkpadt14gen3.rmtit.com (unknown [10.44.32.143])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 88109180B487;
-	Fri,  4 Apr 2025 08:46:10 +0000 (UTC)
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id EF12F180A803;
+	Fri,  4 Apr 2025 08:46:14 +0000 (UTC)
 From: Gabriele Monaco <gmonaco@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-trace-kernel@vger.kernel.org
+	Peter Zijlstra <peterz@infradead.org>
 Cc: Gabriele Monaco <gmonaco@redhat.com>,
 	Tomas Glozar <tglozar@redhat.com>,
 	Juri Lelli <jlelli@redhat.com>
-Subject: [RFC PATCH 5/9] sched: Add sched tracepoints for RV task model
-Date: Fri,  4 Apr 2025 10:45:18 +0200
-Message-ID: <20250404084512.98552-16-gmonaco@redhat.com>
+Subject: [RFC PATCH 6/9] sched: Treat try_to_block_task with pending signal as wakeup
+Date: Fri,  4 Apr 2025 10:45:19 +0200
+Message-ID: <20250404084512.98552-17-gmonaco@redhat.com>
 In-Reply-To: <20250404084512.98552-11-gmonaco@redhat.com>
 References: <20250404084512.98552-11-gmonaco@redhat.com>
 Precedence: bulk
@@ -66,104 +63,51 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-Add the following tracepoints:
-* sched_set_need_resched(tsk, cpu, tif)
-    Called when a task is set the need resched [lazy] flag
-* sched_switch_vain(preempt, tsk, tsk_state)
-    Called when a task is selected again during __schedule
-    i.e. prev == next == tsk : no real context switch
+If a task sets itself to interruptible and schedules, the __schedule
+function checks whether there's a pending signal and, if that's the
+case, updates the state of the task to runnable instead of dequeuing.
+By looking at the tracepoints, we see the task enters the scheduler
+while sleepable but exits as runnable. From a modelling perspective,
+this is equivalent to a wakeup and the tracepoints should reflect that.
 
-These tracepoints are useful to describe the Linux task model and are
-adapted from the patches by Daniel Bristot de Oliveira
-(https://bristot.me/linux-task-model/).
+Add the waking/wakeup tracepoints in the try_to_block_task function and
+set the prev_state used by the sched_switch tracepoint to TASK_RUNNING
+if the task had a pending signal and was not blocked.
 
 Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
 ---
- include/linux/sched.h        | 7 ++++++-
- include/trace/events/sched.h | 8 ++++++++
- kernel/sched/core.c          | 9 +++++++++
- 3 files changed, 23 insertions(+), 1 deletion(-)
+ kernel/sched/core.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index f96ac19828934..7bcd37493ab07 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -340,9 +340,11 @@ extern void io_schedule_finish(int token);
- extern long io_schedule_timeout(long timeout);
- extern void io_schedule(void);
- 
--/* wrapper function to trace from this header file */
-+/* wrapper functions to trace from this header file */
- DECLARE_TRACEPOINT(sched_set_state_tp);
- extern void __trace_set_current_state(int state_value);
-+DECLARE_TRACEPOINT(sched_set_need_resched_tp);
-+extern void __trace_set_need_resched(struct task_struct *curr, int tif);
- 
- /**
-  * struct prev_cputime - snapshot of system and user cputime
-@@ -2064,6 +2066,9 @@ static inline int test_tsk_thread_flag(struct task_struct *tsk, int flag)
- 
- static inline void set_tsk_need_resched(struct task_struct *tsk)
- {
-+	if (tracepoint_enabled(sched_set_need_resched_tp) &&
-+	    !test_tsk_thread_flag(tsk, TIF_NEED_RESCHED))
-+		__trace_set_need_resched(tsk, TIF_NEED_RESCHED);
- 	set_tsk_thread_flag(tsk,TIF_NEED_RESCHED);
- }
- 
-diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
-index 8994e97d86c13..77bbcce407cb4 100644
---- a/include/trace/events/sched.h
-+++ b/include/trace/events/sched.h
-@@ -835,6 +835,14 @@ DECLARE_TRACE_CONDITION(sched_set_state_tp,
- 	TP_ARGS(tsk, state),
- 	TP_CONDITION(!!(tsk->__state) != !!state));
- 
-+DECLARE_TRACE(sched_set_need_resched_tp,
-+	TP_PROTO(struct task_struct *tsk, int cpu, int tif),
-+	TP_ARGS(tsk, cpu, tif));
-+
-+DECLARE_TRACE(sched_switch_vain_tp,
-+	TP_PROTO(bool preempt, struct task_struct *tsk, unsigned int prev_state),
-+	TP_ARGS(preempt, tsk, prev_state));
-+
- #endif /* _TRACE_SCHED_H */
- 
- /* This part must be outside protection */
 diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index cfaca3040b2f8..f2f79236d5811 100644
+index f2f79236d5811..48cb32abce01a 100644
 --- a/kernel/sched/core.c
 +++ b/kernel/sched/core.c
-@@ -1109,6 +1109,7 @@ static void __resched_curr(struct rq *rq, int tif)
+@@ -6584,7 +6584,12 @@ static bool try_to_block_task(struct rq *rq, struct task_struct *p,
+ 	int flags = DEQUEUE_NOCLOCK;
  
- 	cpu = cpu_of(rq);
- 
-+	trace_sched_set_need_resched_tp(curr, cpu, tif);
- 	if (cpu == smp_processor_id()) {
- 		set_ti_thread_flag(cti, tif);
- 		if (tif == TIF_NEED_RESCHED)
-@@ -1124,6 +1125,13 @@ static void __resched_curr(struct rq *rq, int tif)
+ 	if (signal_pending_state(task_state, p)) {
+-		WRITE_ONCE(p->__state, TASK_RUNNING);
++		/*
++		 * From a modelling perspective, this is equivalent to a wakeup
++		 * before dequeuing the task: trace accordingly.
++		 */
++		trace_sched_waking(p);
++		ttwu_do_wakeup(p);
+ 		return false;
  	}
- }
  
-+#ifdef CONFIG_SMP
-+void __trace_set_need_resched(struct task_struct *curr, int tif)
-+{
-+	trace_sched_set_need_resched_tp(curr, smp_processor_id(), tif);
-+}
-+#endif
-+
- void resched_curr(struct rq *rq)
- {
- 	__resched_curr(rq, TIF_NEED_RESCHED);
-@@ -6767,6 +6775,7 @@ static void __sched notrace __schedule(int sched_mode)
- 		rq = context_switch(rq, prev, next, &rf);
- 	} else {
- 		rq_unpin_lock(rq, &rf);
-+		trace_sched_switch_vain_tp(preempt, prev, prev_state);
- 		__balance_callbacks(rq);
- 		raw_spin_rq_unlock_irq(rq);
+@@ -6721,7 +6726,9 @@ static void __sched notrace __schedule(int sched_mode)
+ 			goto picked;
+ 		}
+ 	} else if (!preempt && prev_state) {
+-		try_to_block_task(rq, prev, prev_state);
++		/* Task was not blocked due to a signal and is again runnable */
++		if (!try_to_block_task(rq, prev, prev_state))
++			prev_state = TASK_RUNNING;
+ 		switch_count = &prev->nvcsw;
  	}
+ 
 -- 
 2.49.0
 
