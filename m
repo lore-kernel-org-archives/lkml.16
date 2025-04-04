@@ -1,48 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C59451FCFEF;
-	Fri,  4 Apr 2025 00:06:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4170C1FDA61;
+	Fri,  4 Apr 2025 00:06:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743725180; cv=none; b=iONZBNFnkFxvy3J/kFQ1xpZIFKtoNPG1hzcFw3iAy7iUhGXicSJqQjRwsg2hlyZW1I0yQVgldIU1un/cqh8uk51h5QMCCtgds/ShZiZOuwIqzBl1qA1AHVmChlmyRzTdM1JAQVS2GK/1E/+mcDEeCnFvsxzaE0/y6eIhvfmryn0=
+	t=1743725181; cv=none; b=WCdMtNQziwestrNL6sxpSOVhbTXEFZUuH0ek8CxHDRnC6iU3qNbjOZaTWultX56BXqh6BFpjBnyh/FqEftzuCaHTEA1Oxb/vy9+yHMdyW+8jyPGp9x6CLugg3SVBo50F+vXukyokVor12BjoeoPONhl1et8Esv7sx+ZfQHUL7Ww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743725180; c=relaxed/simple;
-	bh=BmyR377iGQFpvkWvtAzNvlbcCamoCe9It8oX634jPyg=;
+	s=arc-20240116; t=1743725181; c=relaxed/simple;
+	bh=BCtxT1d8UkfzjmAXTF1FOqDNIhSGxvXPswTXeXcqyuA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LJyjuIgQJ9BGX5Gdpc07yfLK10d0tEOFh5H4UdQ2DdxaR4KLbY6DUs89fTssCh3Dxq+QZ4U3kSfeSxsDtX+gCiDk760ocx7IFpMbPR3jrWUqRtAV+GuLi6SEnxHpN2XEL1N4Mc7872pacUwM4KDeHRv783hu/MvXRIFYwWaNHZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qG84xExD; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=YyeT2CdPgVVgulo0AWBXmKukHnb0zUdBu33WA8O3WStCCUuNnUhAT3mn+ssfDv/zkF46kXHRt3S3zi785TPYgj9hkhsadX/FxP1DQmbam6h/qbX2YbtWubwJS0N2JZ7AuyveFkzhjkpwGaegLngr04Vbn7rYmpiBpCFI7E2UOpk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Thfke2Yx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qG84xExD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4ADC3C4CEE3;
-	Fri,  4 Apr 2025 00:06:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Thfke2Yx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7D06C4CEE5;
+	Fri,  4 Apr 2025 00:06:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743725180;
-	bh=BmyR377iGQFpvkWvtAzNvlbcCamoCe9It8oX634jPyg=;
+	s=k20201202; t=1743725178;
+	bh=BCtxT1d8UkfzjmAXTF1FOqDNIhSGxvXPswTXeXcqyuA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=qG84xExDDLO8A9UofC4Wga89aK4pdTDF3f4Xh1ICtN+toxx8+7jdswKF5pbZsQbbE
-	 zMhuYnsrfT3VmLN2Qu0X0bRO31G1q2HsyzAiLeMVgPpEl95d1BqfICvgmZv8GbGrO1
-	 WVYUAPtVdmROExRIuLgIs2uBRFqzmfrWr9a3wiSdB89gMCbLCMddnrTLWkwOPzFbH8
-	 TMPZcwM9KpgZmi53TI1SIq3UVQtst4yFOhAhUwqtKE4UxRMlbKtIo9ngai+3DDIz37
-	 2IrgzpFHme9v0Q255uB9wT8YXXdipxVXMUTXOYUMvc4Z8XkXY3wmTxq3q3apLVsv9j
-	 sec5cghfsc+Iw==
+	b=Thfke2Yx/EJ0e64JZNwEng/i7oN2zWGeql7OZ2dI7fyivvaUF4pc0roy1Y18oJ1vC
+	 i9rvizHHHJXGh7oPEBJRsOXVz2zNH5EAqE9/ONogSc4q97POf3qghxBgGEMQ9u0MEK
+	 cGiAKBGaKidZ2YO9SfL3NGFva3ove1asrAvChyzfEyaW178fMoWN+6G9O2aswqsWNV
+	 YAJQHBak7lo85uM3Rxw/KHORZlOJRfb/3T82ZIgIBsjjqT88TY1HHlGJykUBlzi23x
+	 tVOcVwkJAuDpPAgxh3Es4RG4f6ulAslmc53J61gyarxnfPWvXPKBiip8+bnTHT2yJl
+	 LVZsVLCmd68jQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: =?UTF-8?q?Mateusz=20Jo=C5=84czyk?= <mat.jonczyk@o2.pl>,
-	David Heideberg <david@ixit.cz>,
-	Ingo Molnar <mingo@kernel.org>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
+Cc: Yafang Shao <laoar.shao@gmail.com>,
+	Alexei Starovoitov <ast@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org
-Subject: [PATCH AUTOSEL 6.12 18/20] x86/Kconfig: Make CONFIG_PCI_CNB20LE_QUIRK depend on X86_32
-Date: Thu,  3 Apr 2025 20:05:38 -0400
-Message-Id: <20250404000541.2688670-18-sashal@kernel.org>
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 17/20] bpf: Reject attaching fexit/fmod_ret to __noreturn functions
+Date: Thu,  3 Apr 2025 20:05:37 -0400
+Message-Id: <20250404000541.2688670-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250404000541.2688670-1-sashal@kernel.org>
 References: <20250404000541.2688670-1-sashal@kernel.org>
@@ -52,98 +47,112 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.21
 Content-Transfer-Encoding: 8bit
 
-From: Mateusz Jończyk <mat.jonczyk@o2.pl>
+From: Yafang Shao <laoar.shao@gmail.com>
 
-[ Upstream commit d9f87802676bb23b9425aea8ad95c76ad9b50c6e ]
+[ Upstream commit cfe816d469dce9c0864062cf65dd7b3c42adc6f8 ]
 
-I was unable to find a good description of the ServerWorks CNB20LE
-chipset. However, it was probably exclusively used with the Pentium III
-processor (this CPU model was used in all references to it that I
-found where the CPU model was provided: dmesgs in [1] and [2];
-[3] page 2; [4]-[7]).
+If we attach fexit/fmod_ret to __noreturn functions, it will cause an
+issue that the bpf trampoline image will be left over even if the bpf
+link has been destroyed. Take attaching do_exit() with fexit for example.
+The fexit works as follows,
 
-As is widely known, the Pentium III processor did not support the 64-bit
-mode, support for which was introduced by Intel a couple of years later.
-So it is safe to assume that no systems with the CNB20LE chipset have
-amd64 and the CONFIG_PCI_CNB20LE_QUIRK may now depend on X86_32.
+  bpf_trampoline
+  + __bpf_tramp_enter
+    + percpu_ref_get(&tr->pcref);
 
-Additionally, I have determined that most computers with the CNB20LE
-chipset did have ACPI support and this driver was inactive on them.
-I have submitted a patch to remove this driver, but it was met with
-resistance [8].
+  + call do_exit()
 
-[1] Jim Studt, Re: Problem with ServerWorks CNB20LE and lost interrupts
-    Linux Kernel Mailing List, https://lkml.org/lkml/2002/1/11/111
+  + __bpf_tramp_exit
+    + percpu_ref_put(&tr->pcref);
 
-[2] RedHat Bug 665109 - e100 problems on old Compaq Proliant DL320
-    https://bugzilla.redhat.com/show_bug.cgi?id=665109
+Since do_exit() never returns, the refcnt of the trampoline image is
+never decremented, preventing it from being freed. That can be verified
+with as follows,
 
-[3] R. Hughes-Jones, S. Dallison, G. Fairey, Performance Measurements on
-    Gigabit Ethernet NICs and Server Quality Motherboards,
-    http://datatag.web.cern.ch/papers/pfldnet2003-rhj.doc
+  $ bpftool link show                                   <<<< nothing output
+  $ grep "bpf_trampoline_[0-9]" /proc/kallsyms
+  ffffffffc04cb000 t bpf_trampoline_6442526459    [bpf] <<<< leftover
 
-[4] "Hardware for Linux",
-    Probe #d6b5151873 of Intel STL2-bd A28808-302 Desktop Computer (STL2)
-    https://linux-hardware.org/?probe=d6b5151873
+In this patch, all functions annotated with __noreturn are rejected, except
+for the following cases:
+- Functions that result in a system reboot, such as panic,
+  machine_real_restart and rust_begin_unwind
+- Functions that are never executed by tasks, such as rest_init and
+  cpu_startup_entry
+- Functions implemented in assembly, such as rewind_stack_and_make_dead and
+  xen_cpu_bringup_again, lack an associated BTF ID.
 
-[5] "Hardware for Linux", Probe #0b5d843f10 of Compaq ProLiant DL380
-    https://linux-hardware.org/?probe=0b5d843f10
+With this change, attaching fexit probes to functions like do_exit() will
+be rejected.
 
-[6] Ubuntu Forums, Dell Poweredge 2400 - Adaptec SCSI Bus AIC-7880
-    https://ubuntuforums.org/showthread.php?t=1689552
+$ ./fexit
+libbpf: prog 'fexit': BPF program load failed: -EINVAL
+libbpf: prog 'fexit': -- BEGIN PROG LOAD LOG --
+Attaching fexit/fmod_ret to __noreturn functions is rejected.
 
-[7] Ira W. Snyder, "BISECTED: 2.6.35 (and -git) fail to boot: APIC problems"
-    https://lkml.org/lkml/2010/8/13/220
-
-[8] Bjorn Helgaas, "Re: [PATCH] x86/pci: drop ServerWorks / Broadcom
-    CNB20LE PCI host bridge driver"
-    https://lore.kernel.org/lkml/20220318165535.GA840063@bhelgaas/T/
-
-Signed-off-by: Mateusz Jończyk <mat.jonczyk@o2.pl>
-Signed-off-by: David Heideberg <david@ixit.cz>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Link: https://lore.kernel.org/r/20250321-x86_x2apic-v3-6-b0cbaa6fa338@ixit.cz
+Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
+Link: https://lore.kernel.org/r/20250318114447.75484-2-laoar.shao@gmail.com
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/Kconfig | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ kernel/bpf/verifier.c | 32 ++++++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 6f8e9af827e0c..be3a95d29d65a 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -2961,13 +2961,21 @@ config MMCONF_FAM10H
- 	depends on X86_64 && PCI_MMCONFIG && ACPI
+diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+index a0cab0d0252fa..f21b3633fd720 100644
+--- a/kernel/bpf/verifier.c
++++ b/kernel/bpf/verifier.c
+@@ -22221,6 +22221,33 @@ BTF_ID(func, __rcu_read_unlock)
+ #endif
+ BTF_SET_END(btf_id_deny)
  
- config PCI_CNB20LE_QUIRK
--	bool "Read CNB20LE Host Bridge Windows" if EXPERT
--	depends on PCI
-+	bool "Read PCI host bridge windows from the CNB20LE chipset" if EXPERT
-+	depends on X86_32 && PCI
- 	help
- 	  Read the PCI windows out of the CNB20LE host bridge. This allows
- 	  PCI hotplug to work on systems with the CNB20LE chipset which do
- 	  not have ACPI.
- 
-+	  The ServerWorks (later Broadcom) CNB20LE was a chipset designed
-+	  most probably only for Pentium III.
++/* fexit and fmod_ret can't be used to attach to __noreturn functions.
++ * Currently, we must manually list all __noreturn functions here. Once a more
++ * robust solution is implemented, this workaround can be removed.
++ */
++BTF_SET_START(noreturn_deny)
++#ifdef CONFIG_IA32_EMULATION
++BTF_ID(func, __ia32_sys_exit)
++BTF_ID(func, __ia32_sys_exit_group)
++#endif
++#ifdef CONFIG_KUNIT
++BTF_ID(func, __kunit_abort)
++BTF_ID(func, kunit_try_catch_throw)
++#endif
++#ifdef CONFIG_MODULES
++BTF_ID(func, __module_put_and_kthread_exit)
++#endif
++#ifdef CONFIG_X86_64
++BTF_ID(func, __x64_sys_exit)
++BTF_ID(func, __x64_sys_exit_group)
++#endif
++BTF_ID(func, do_exit)
++BTF_ID(func, do_group_exit)
++BTF_ID(func, kthread_complete_and_exit)
++BTF_ID(func, kthread_exit)
++BTF_ID(func, make_task_dead)
++BTF_SET_END(noreturn_deny)
 +
-+	  To find out if you have such a chipset, search for a PCI device with
-+	  1166:0009 PCI IDs, for example by executing
-+		lspci -nn | grep '1166:0009'
-+	  The code is inactive if there is none.
-+
- 	  There's no public spec for this chipset, and this functionality
- 	  is known to be incomplete.
+ static bool can_be_sleepable(struct bpf_prog *prog)
+ {
+ 	if (prog->type == BPF_PROG_TYPE_TRACING) {
+@@ -22309,6 +22336,11 @@ static int check_attach_btf_id(struct bpf_verifier_env *env)
+ 	} else if (prog->type == BPF_PROG_TYPE_TRACING &&
+ 		   btf_id_set_contains(&btf_id_deny, btf_id)) {
+ 		return -EINVAL;
++	} else if ((prog->expected_attach_type == BPF_TRACE_FEXIT ||
++		   prog->expected_attach_type == BPF_MODIFY_RETURN) &&
++		   btf_id_set_contains(&noreturn_deny, btf_id)) {
++		verbose(env, "Attaching fexit/fmod_ret to __noreturn functions is rejected.\n");
++		return -EINVAL;
+ 	}
  
+ 	key = bpf_trampoline_compute_key(tgt_prog, prog->aux->attach_btf, btf_id);
 -- 
 2.39.5
 
