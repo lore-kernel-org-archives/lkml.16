@@ -1,122 +1,98 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6C961BEF87;
-	Fri,  4 Apr 2025 10:58:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3B2F1BEF87;
+	Fri,  4 Apr 2025 10:59:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743764323; cv=none; b=ma0r8uGLQlYyr9sAtHv+jqiqfWucoYzNhkWQy98k1TUNDQ4qp67YIAPfXQhj0DVdrWBUlPG1BI/NnH1TwZmiyCbbOuF8AczB6UmypwO4fGWihVQHaXu2+fs5Lri4n6XNKEAD9+zyK/1KDxM8o9JxhIBTRoT5WZZo4O357WbV/6U=
+	t=1743764386; cv=none; b=vEHMV9dadXDh5Bbb1H4rGYBa3Fym/44ywQE/nzI6w5j6r0F7PXcVgy4eC8str1AoM7G88sNwZ673aZ4nnqEajLvs0Oa72VpIs+dQhq88UwDGdtkaJC6vqZ7EGAZ4Fxc6mTE4IaF1HTddHc67KGiXXdG46r2YeT5axv4BvogPHJ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743764323; c=relaxed/simple;
-	bh=29c4vSaKSvPKhmpFz7QIBmh4VQjlG7FqFr9hBMYD4o4=;
+	s=arc-20240116; t=1743764386; c=relaxed/simple;
+	bh=yhYS4eZ5vDTG+ZOahz1UCsM6rGMobvDFfIV2X9EDPdo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i4jYB3dWT9yqryosvKq/+i8Xdjugl9UgXpnOw4/yA86mVdpGLeRMdRw3DHGnW900K8b1/raQtw5774QrVeYveqkoRWkzaZNSGkh5dPNT4JMS7TYVAtPgdTpW8G7PiD91LTjRq2TnfKvm229XLPj6EzyjNz0vjC3vxzDnalrBYn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Cj6F314W; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=nSh6g6IxjHAi9cpGCWR5s0FvvbjXnxxm3ohFyDO9zJUDIqCEoKDDEz4vT9GWsoXcYDTIPJU58SDiBVjobOks7EDI+cLawfrXBdlwMi6hRh5msVVfj4n3JIrxkuqBRgAdOQc3sXSoKLFoxekpGK9l+v20elD14us8wcOsjYUMtUE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ozr5oUbf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Cj6F314W"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743764322; x=1775300322;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=29c4vSaKSvPKhmpFz7QIBmh4VQjlG7FqFr9hBMYD4o4=;
-  b=Cj6F314WKTCw4/2vzH0S/Xjbiaj3p7kTmvK6SrZpxP+JeDIM8ipuLeWK
-   M2HHQ+r1xQJ+q7Rtc4QGZpXCuAoepwIPArjGzgEleK/9WhJezMfbBT3Wb
-   D+/wISt31xc3+Zr+9t5C9i/9yeRsrvHk2tTilF0aw99hMuMB9Etp5w3No
-   iWW9DO3V8Hr9GEb6q5eC3fKOnqSs1qqC5yTnN0OQ3Sq7SE7IhTghiNfnI
-   D0iDvU+FtL3OSK7PZu2/+tLHaM6UnfWfObYmtaQ1WZuXducZ7hVb/CayK
-   FAQAQxsjvwEyZVMryRl4l5zsQfxD9eUsJoLMRevjxmh86HQbUkVseRZx0
-   A==;
-X-CSE-ConnectionGUID: asJmgpF1ReaUNUiKqbxruQ==
-X-CSE-MsgGUID: YREFAv6dTbC/QWqhCA5d9g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11393"; a="45340399"
-X-IronPort-AV: E=Sophos;i="6.15,188,1739865600"; 
-   d="scan'208";a="45340399"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 03:58:41 -0700
-X-CSE-ConnectionGUID: J2cMLxjEQwm59K7unQAKbA==
-X-CSE-MsgGUID: 4LY1BBZSQfuxy7nPFwCyOg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,188,1739865600"; 
-   d="scan'208";a="132137250"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 03:58:38 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1u0ekt-000000096iP-0isf;
-	Fri, 04 Apr 2025 13:58:35 +0300
-Date: Fri, 4 Apr 2025 13:58:34 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: yunhui cui <cuiyunhui@bytedance.com>
-Cc: gregkh@linuxfoundation.org, jirislaby@kernel.org,
-	john.ogness@linutronix.de, pmladek@suse.com, arnd@arndb.de,
-	namcao@linutronix.de, benjamin.larsson@genexis.eu,
-	schnelle@linux.ibm.com, linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org
-Subject: Re: [External] Re: [PATCH] serial: 8250: fix panic due to PSLVERR
-Message-ID: <Z--7Wm_erf5U2xMl@smile.fi.intel.com>
-References: <20250403090336.16643-1-cuiyunhui@bytedance.com>
- <Z-5yr2mFaDt8kxC-@smile.fi.intel.com>
- <CAEEQ3wkWmfkq06iyhxs32pyTUp7Mm=UD-dYen_9H5kHnsJe10g@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ozr5oUbf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84CB8C4CEE5;
+	Fri,  4 Apr 2025 10:59:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743764385;
+	bh=yhYS4eZ5vDTG+ZOahz1UCsM6rGMobvDFfIV2X9EDPdo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Ozr5oUbfm2+qbAZ5JOojv/oXOneP7zNUyueLA8jxeDUtM8VEu/1L7eF5m6qCtfTYc
+	 SfBuB0H7No+Lmj6bqDfZkI1syWhQAzBrZLBGgXb5C58YUdtb9t/DE6hDSIBssQICzh
+	 N6WRX+zPWXjXsPbVQ5SeBc2dZiyaA2kBZ4ofhA9czAODErXFrEQAqztHne+AOF4QFp
+	 tgsG/uzvg4FuF564jrSXx1FnL5VSXLDj0KRNGgFl/1q1tkWrtGhN6aKgwWw9eWWjfL
+	 dvUE7V1265dhGl8gfTynJUjTrY0LBohNtP2Oolk5MoOWrtcyRUjrbJNOSz7zHI34Cf
+	 6+mN/86njiCJw==
+Date: Fri, 4 Apr 2025 11:59:40 +0100
+From: Simon Horman <horms@kernel.org>
+To: Jijie Shao <shaojijie@huawei.com>
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, andrew+netdev@lunn.ch, shenjian15@huawei.com,
+	wangpeiyang1@huawei.com, liuyonglong@huawei.com,
+	chenhao418@huawei.com, jonathan.cameron@huawei.com,
+	shameerali.kolothum.thodi@huawei.com, salil.mehta@huawei.com,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net v2 1/7] net: hibmcge: fix incorrect pause frame
+ statistics issue
+Message-ID: <20250404105940.GE214849@horms.kernel.org>
+References: <20250403135311.545633-1-shaojijie@huawei.com>
+ <20250403135311.545633-2-shaojijie@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEEQ3wkWmfkq06iyhxs32pyTUp7Mm=UD-dYen_9H5kHnsJe10g@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20250403135311.545633-2-shaojijie@huawei.com>
 
-On Fri, Apr 04, 2025 at 10:44:09AM +0800, yunhui cui wrote:
-> On Thu, Apr 3, 2025 at 7:36 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> > On Thu, Apr 03, 2025 at 05:03:36PM +0800, Yunhui Cui wrote:
-
-...
-
-> > > To resolve this issue, relevant serial_port_out operations should be
-> >
-> > serial_port_out()
+On Thu, Apr 03, 2025 at 09:53:05PM +0800, Jijie Shao wrote:
+> The driver supports pause frames,
+> but does not pass pause frames based on rx pause enable configuration,
+> resulting in incorrect pause frame statistics.
 > 
-> Okay.
+> like this:
+> mz eno3 '01 80 c2 00 00 01 00 18 2d 04 00 9c 88 08 00 01 ff ff' \
+> 	-p 64 -c 100
 > 
-> >
-> > > placed in a critical section, and UART_RX data should only be read
-> > > when the UART_LSR DR bit is set.
-> >
-> > The last one is made in the common code, are you sure that all supported UARTs
-> > will be okay with such a change?
+> ethtool -S enp132s0f2 | grep -v ": 0"
+> NIC statistics:
+>      rx_octets_total_filt_cnt: 6800
+>      rx_filt_pkt_cnt: 100
 > 
-> This change enhances code robustness without being intrusive.
-
-It is intrusive as it touches the core part affecting basically
-_all_ of the 8250-based drivers.
-
-Yes, it's small, but still it needs to be done carefully with commit message
-pointing out to the other 8250 datasheets to show that this is _not_ DW
-specific change.
-
-...
-
-> > > Panic message:
-> >
-> > Please, read this
-> > https://www.kernel.org/doc/html/latest/process/submitting-patches.html#backtraces-in-commit-messages
-> > and act accordingly.
+> The rx pause frames are filtered by the MAC hardware.
 > 
-> Okay, I'll update the next version to follow the guideline: 'Avoid
-> directly copying full dmesg output (e.g., timestamps, registers, and
-> stack dumps); instead, extract the critical call chain.'
+> This patch configures pass pause frames based on the
+> rx puase enable status to ensure that
+> rx pause frames are not filtered.
+> 
+> mz eno3 '01 80 c2 00 00 01 00 18 2d 04 00 9c 88 08 00 01 ff ff' \
+>         -p 64 -c 100
+> 
+> ethtool --include-statistics -a enp132s0f2
+> Pause parameters for enp132s0f2:
+> Autonegotiate:	on
+> RX:		on
+> TX:		on
+> RX negotiated: on
+> TX negotiated: on
+> Statistics:
+>   tx_pause_frames: 0
+>   rx_pause_frames: 100
+> 
+> Fixes: 3a03763f3876 ("net: hibmcge: Add pauseparam supported in this module")
+> Signed-off-by: Jijie Shao <shaojijie@huawei.com>
+> ---
+> ChangeLog:
+> v1 -> v2:
+>   - Add more details in commit log, suggested by Simon Horman.
+>   v1: https://lore.kernel.org/all/20250402133905.895421-1-shaojijie@huawei.com/
 
-and make it short, e.g. ~3-5 lines only.
+Thanks for the update.
 
--- 
-With Best Regards,
-Andy Shevchenko
-
+Reviewed-by: Simon Horman <horms@kernel.org>
 
