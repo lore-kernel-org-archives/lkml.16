@@ -1,84 +1,136 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DA581EFF90;
-	Fri,  4 Apr 2025 13:34:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 896A618D65F;
+	Fri,  4 Apr 2025 13:34:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743773656; cv=none; b=WeBmdTiWPfHwcl3n3qchurBWWWtEgzpNKbQP1zZQuakkW4EpVohl4plMlGkp/jr3HMsavUwoWYqILqOtsYteRRx/CgNsgluJt0uXMWdKaEXXklyJhz/kVDGkwQ7H8lBQnmuiPS+PbZAq5GhZypQccBVjd9lwg9vxAuwuYioZUVk=
+	t=1743773675; cv=none; b=W/TlcIez2boUWZGoObOnNOIATnvecQS/y1I2KNL7KzHMiH34TDVXY1jU44bvINjPctivMCOXR6uGMCo6Wb8QQkT7pYvQqOWOykpidMuUCqU6mJ+N1URTDC1wkKdz9gSz4plPu1vpePIRTZt0K1OEW3JsI5xpb4u6pVvJWQuT0OQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743773656; c=relaxed/simple;
-	bh=B6AmqiWAWAQHPpfTvZpYHk8KMpkuBOP+r7HbmOUmCgI=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gp9CDmU8TsKyLDuoXwmd495LMRRKzju+drSENKQySPbqusrYuD945eMlpMXpTGD2TZSK5rSkQvmelmwLehorK1wUeJm94vQEHKbWA0uMEZZnHlCoYb3Y55MxwJxMJnS28LOM/mS3l5KZ/8DJi2Q/xSBnlu1zvy9kQqA4t2ykyBA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZTfcQ2vK9z6M4WF;
-	Fri,  4 Apr 2025 21:30:30 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 3C3B2140682;
-	Fri,  4 Apr 2025 21:34:12 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 4 Apr
- 2025 15:34:10 +0200
-Date: Fri, 4 Apr 2025 14:34:09 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Terry Bowman <terry.bowman@amd.com>
-CC: <dave@stgolabs.net>, <dave.jiang@intel.com>, <alison.schofield@intel.com>,
-	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
-	<dan.j.williams@intel.com>, <willy@infradead.org>, <jack@suse.cz>,
-	<rafael@kernel.org>, <len.brown@intel.com>, <pavel@ucw.cz>,
-	<ming.li@zohomail.com>, <nathan.fontenot@amd.com>,
-	<Smita.KoralahalliChannabasappa@amd.com>, <huang.ying.caritas@gmail.com>,
-	<yaoxt.fnst@fujitsu.com>, <peterz@infradead.org>,
-	<gregkh@linuxfoundation.org>, <quic_jjohnson@quicinc.com>,
-	<ilpo.jarvinen@linux.intel.com>, <bhelgaas@google.com>,
-	<andriy.shevchenko@linux.intel.com>, <mika.westerberg@linux.intel.com>,
-	<akpm@linux-foundation.org>, <gourry@gourry.net>,
-	<linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<nvdimm@lists.linux.dev>, <linux-fsdevel@vger.kernel.org>,
-	<linux-pm@vger.kernel.org>, <rrichter@amd.com>, <benjamin.cheatham@amd.com>,
-	<PradeepVineshReddy.Kodamati@amd.com>, <lizhijian@fujitsu.com>
-Subject: Re: [PATCH v3 3/4] dax/mum: Save the dax mum platform device
- pointer
-Message-ID: <20250404143409.00000961@huawei.com>
-In-Reply-To: <20250403183315.286710-4-terry.bowman@amd.com>
-References: <20250403183315.286710-1-terry.bowman@amd.com>
-	<20250403183315.286710-4-terry.bowman@amd.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1743773675; c=relaxed/simple;
+	bh=ztTIVrLXRLhv3irvEroVpxQyjNKnySai3btoYBkcTAE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hcLdCKRHe1cLCBd6At863KHuCWgjO+1eADyF4HGyqisZdLwsVVag2phXxP/6iCYMaFVVL9TqTg555PUQTAi8y3lpCfcDZajoGB06X9hy9iYHp1J7yxdfw3DE8oRbFNliJwoMretp48123G6LRduutU6X4MN+BxeTbnABYfpLL8I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=SiCELOOP; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MZVEOIc3; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="SiCELOOP";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MZVEOIc3"
+Date: Fri, 4 Apr 2025 15:34:29 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1743773671;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7XSOzK8avOwU9ReeIGcsZooY7igMM/lTAPH1PhhFsfY=;
+	b=SiCELOOP9CgN6VpkO0wk4cl+UxQYTcniMR1VPd4RWEMwfvXUQBDf0UAwthtMGtLAsRyXq5
+	uKaaQscw9EoO3e5J8oClgV6tzt2SnazZlvdymrXOO5dlePBhtdfdg57B+ue5NeYb+avTIn
+	Twlj8/tB3QyDmvLcuit3WTW/Zz15FNhxI6ytMSUvzwdKiHXRgDbVufDZemQ/v0RGSklxXE
+	gmwI2T9Tw0oDx9J7+2dsztJVOoQqlML1U9XzYpWjoWsVkYreCL6xmEWqZm+GC5MEAYv2wi
+	xqXs1VJL34qwHtLRvK1L0oLxGmPOILnV9rMJYmr2tiySko+yqZMSm16+rFUXzw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1743773671;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7XSOzK8avOwU9ReeIGcsZooY7igMM/lTAPH1PhhFsfY=;
+	b=MZVEOIc3g61xAdjQoavnhFY8X3Qhy1fH9hmtv8DMCQAzq4I5hAD6LtMmQBAiSmgTb4scRT
+	Ew3d1Exh1xOaifCA==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Borislav Petkov <bp@alien8.de>, linux-rtc@vger.kernel.org,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Mateusz =?utf-8?Q?Jo=C5=84czyk?= <mat.jonczyk@o2.pl>,
+	lkml <linux-kernel@vger.kernel.org>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Chris Bainbridge <chris.bainbridge@gmail.com>
+Subject: [PATCH] timekeeping: Add a lockdep override in tick_freeze().
+Message-ID: <20250404133429.pnAzf-eF@linutronix.de>
+References: <20250330113202.GAZ-krsjAnurOlTcp-@fat_crate.local>
+ <87sempv17b.ffs@tglx>
+ <20250403135031.giGKVTEO@linutronix.de>
+ <20250403193659.hhUTgJLH@linutronix.de>
+ <87r029uh3j.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <87r029uh3j.ffs@tglx>
 
-On Thu, 3 Apr 2025 13:33:14 -0500
-Terry Bowman <terry.bowman@amd.com> wrote:
+tick_freeze() acquires a raw_spinlock_t (tick_freeze_lock). Later in the
+callchain (timekeeping_suspend() -> mc146818_avoid_UIP()) the RTC driver
+can acquire a spinlock_t which becomes a sleeping lock on PREEMPT_RT.
+Lockdep complains about this lock nesting.
 
-> From: Nathan Fontenot <nathan.fontenot@amd.com>
+Add a lockdep override for this special case and a comment explaining
+why it is okay.
 
-mum?
+Reported-by: Borislav Petkov <bp@alien8.de>
+Closes: https://lore.kernel.org/all/20250330113202.GAZ-krsjAnurOlTcp-@fat_crate.local/
+Reported-by: Chris Bainbridge <chris.bainbridge@gmail.com>
+Closes: https://lore.kernel.org/all/CAP-bSRZ0CWyZZsMtx046YV8L28LhY0fson2g4EqcwRAVN1Jk+Q@mail.gmail.com/
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+ kernel/time/tick-common.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-> 
-> In order to handle registering hmem devices for SOFT RESERVE
-> resources after the dax hmem device initialization occurs
-> we need to save a reference to the dax hmem platform device
-> that will be used in a following patch.
-> 
-> Saving the platform device pointer also allows us to clean
-> up the walk_hmem_resources() routine to no require the
-> struct device argument.
-> 
-> There should be no functional changes.
-> 
-> Signed-off-by: Nathan Fontenot <nathan.fontenot@amd.com>
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+diff --git a/kernel/time/tick-common.c b/kernel/time/tick-common.c
+index a47bcf71defcf..8fd8e2ee09fa1 100644
+--- a/kernel/time/tick-common.c
++++ b/kernel/time/tick-common.c
+@@ -509,6 +509,7 @@ void tick_resume(void)
+ 
+ #ifdef CONFIG_SUSPEND
+ static DEFINE_RAW_SPINLOCK(tick_freeze_lock);
++static DEFINE_WAIT_OVERRIDE_MAP(tick_freeze_map, LD_WAIT_SLEEP);
+ static unsigned int tick_freeze_depth;
+ 
+ /**
+@@ -528,9 +529,20 @@ void tick_freeze(void)
+ 	if (tick_freeze_depth == num_online_cpus()) {
+ 		trace_suspend_resume(TPS("timekeeping_freeze"),
+ 				     smp_processor_id(), true);
++		/*
++		 * All other CPUs have their interrupts disabled and are
++		 * suspended to idle. Other tasks have been frozen so there is
++		 * no scheduling happening. This means that there is no
++		 * concurrency in the system at this point. Therefore it is okay
++		 * to acquire a sleeping lock on PREEMPT_RT, such as spinlock_t,
++		 * because the lock can not be acquired and can not block.
++		 * Inform lockdep about the situation.
++		 */
++		lock_map_acquire_try(&tick_freeze_map);
+ 		system_state = SYSTEM_SUSPEND;
+ 		sched_clock_suspend();
+ 		timekeeping_suspend();
++		lock_map_release(&tick_freeze_map);
+ 	} else {
+ 		tick_suspend_local();
+ 	}
+@@ -552,8 +564,16 @@ void tick_unfreeze(void)
+ 	raw_spin_lock(&tick_freeze_lock);
+ 
+ 	if (tick_freeze_depth == num_online_cpus()) {
++		/*
++		 * Similar to tick_freeze(). On resumption the first CPU may
++		 * acquire uncontended sleeping locks while other CPUs block on
++		 * tick_freeze_lock.
++		 */
++		lock_map_acquire_try(&tick_freeze_map);
+ 		timekeeping_resume();
+ 		sched_clock_resume();
++		lock_map_release(&tick_freeze_map);
++
+ 		system_state = SYSTEM_RUNNING;
+ 		trace_suspend_resume(TPS("timekeeping_freeze"),
+ 				     smp_processor_id(), false);
+-- 
+2.49.0
 
