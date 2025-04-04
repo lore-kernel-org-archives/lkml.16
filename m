@@ -1,113 +1,161 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-fw-52002.amazon.com (smtp-fw-52002.amazon.com [52.119.213.150])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D43F1F94C;
-	Fri,  4 Apr 2025 08:02:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DB7915C15F;
+	Fri,  4 Apr 2025 08:04:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.150
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743753746; cv=none; b=i+bQt3Xq0e4y1KbJ++WtoFgYOiQv3a3Qukok6WqEaD61j7+fQdgNKhHbEHoV/60V9riX8k0zOJsaMoKiW7RkUoy2eSf6R6pZtfENejiKTgAG+hSmDCrNaULVjg3PfDNcRcwVBxpFsucSd+agsfeJZrSqz/+QjMBYjD20UM9XJ0g=
+	t=1743753893; cv=none; b=UTz3stWyhCEFNb+RFC1s/zixTa/pMazLRo5i0Y9cdvTA+VtCt1MgUOJND/+YyMrEMe2sOOW300Ndeu/abrsT6ItEEx72jWqTHX7mn4/Mr2P4tYy2SPwOn/WOOS9oNkHUjBi4vMjyOSLoZSwNvz9BlKH8C7HD8s8Qy2e2s5RASQ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743753746; c=relaxed/simple;
-	bh=E8C0LD9acvN2S2Nm7WLqkEC4F/RvxUV/p8KPGrrhyJc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kXs+UPeE3FmLOEQApKTfs1lA48dYR5CSs/j+GRlvTjBnYQVMkAbVF2hxrHxYiFsJE4y609p7AUhcTUaIulHDu9NVaQ12BvBdioFdH278E3qKu01AwWHrj7LgfMxxyjUUeu2p0OFPNua1PMU/H9appd+4CXdhEWb1gd8CLZ9U59g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=QUkAX3Ut; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743753893; c=relaxed/simple;
+	bh=zgxljn3pdO7HKVjvDZCDLSoX0wHxgeY4k9s/aZAWLyY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=nMV1yJY+UsAkW1j2ZUnpcKcNoc6MXCI7veb6I252QeLnErgd1udkybr0VzBGFw19dyfIHN+bE13Zu4JJB1N4KGbRS9swyG3c5vcEtLj09CMMjhadw3hnU7681wj+HqnnaoniE3XP3mHf4F6Me9wKmqMDkrIiPX5fJLOdzALDwPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.de; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=Tp3yRMd4; arc=none smtp.client-ip=52.119.213.150
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="QUkAX3Ut"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BAD19C4CEE5;
-	Fri,  4 Apr 2025 08:02:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1743753746;
-	bh=E8C0LD9acvN2S2Nm7WLqkEC4F/RvxUV/p8KPGrrhyJc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QUkAX3UtWsiiz73bMdKQwda5ZIvsR4KA3USkPWQSYoFy4OAozSoSMATbBR23qoopi
-	 mWqCcjUjSKfgFNmoW7V9YsQ5znAQkBk9Cvj58c5/n9GvEBZ+GySlfRY2FRYjarYuoX
-	 5cIAvJ+oTcQTiUyHfbx01qxQnO2nT33bl3/R26GE=
-Date: Fri, 4 Apr 2025 09:00:57 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Erick Karanja <karanja99erick@gmail.com>
-Cc: Julia Lawall <julia.lawall@inria.fr>, outreachy@lists.linux.dev,
-	philipp.g.hortmann@gmail.com, linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] staging: rtl8723bs: Modify struct rx_pkt_attrib
- attribute bdecrypted
-Message-ID: <2025040440-provolone-uncertain-77a0@gregkh>
-References: <cover.1743613025.git.karanja99erick@gmail.com>
- <00287fa9f40c643b8451a0d2df8e2fb97235ee46.1743613025.git.karanja99erick@gmail.com>
- <2025040215-confusing-sibling-f99f@gregkh>
- <3c235d91-efd6-ddf8-7c9-d8d35c7585@inria.fr>
- <2025040246-series-tusk-bec1@gregkh>
- <cebaec5995fd21c429160b30795e03c2caa29cef.camel@gmail.com>
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Tp3yRMd4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1743753889; x=1775289889;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=b1JqVe+LlcQEqQ5UTMrgb294HSTh8vlr/zAQ/LotKnA=;
+  b=Tp3yRMd4dnMVrZxk4fsVuxx5rfcQKqHFQyOkWRqNDuzv8WufWnwM8xJw
+   7xSYG83fs3eK3QCltSktJJa9pBnLNNuRMEPPNpbQ2ypoY6o7HQ20nLN8j
+   XGnzHlEhyssb0MiDd0kCiRJQeNhZGgs07oL5uYJlUJUDzXWL2qNx1y3+E
+   Q=;
+X-IronPort-AV: E=Sophos;i="6.15,187,1739836800"; 
+   d="scan'208";a="711049091"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
+  by smtp-border-fw-52002.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 08:04:45 +0000
+Received: from EX19MTAUWA002.ant.amazon.com [10.0.21.151:9580]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.47.226:2525] with esmtp (Farcaster)
+ id 0ebe5713-faf2-4492-b600-33b458c6eb8b; Fri, 4 Apr 2025 08:04:44 +0000 (UTC)
+X-Farcaster-Flow-ID: 0ebe5713-faf2-4492-b600-33b458c6eb8b
+Received: from EX19D020UWC004.ant.amazon.com (10.13.138.149) by
+ EX19MTAUWA002.ant.amazon.com (10.250.64.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Fri, 4 Apr 2025 08:04:44 +0000
+Received: from [0.0.0.0] (10.253.83.51) by EX19D020UWC004.ant.amazon.com
+ (10.13.138.149) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14; Fri, 4 Apr 2025
+ 08:04:40 +0000
+Message-ID: <32ca5221-5b25-4bfd-acd7-9eebae8c3635@amazon.com>
+Date: Fri, 4 Apr 2025 10:04:38 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <cebaec5995fd21c429160b30795e03c2caa29cef.camel@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] vsock/virtio: Remove queued_replies pushback logic
+To: "Michael S. Tsirkin" <mst@redhat.com>, Stefan Hajnoczi
+	<stefanha@redhat.com>
+CC: <netdev@vger.kernel.org>, Stefano Garzarella <sgarzare@redhat.com>,
+	<linux-kernel@vger.kernel.org>, <virtualization@lists.linux.dev>,
+	<kvm@vger.kernel.org>, Asias He <asias@redhat.com>, Paolo Abeni
+	<pabeni@redhat.com>, Jakub Kicinski <kuba@kernel.org>, Eric Dumazet
+	<edumazet@google.com>, "David S . Miller" <davem@davemloft.net>,
+	<nh-open-source@amazon.com>
+References: <20250401201349.23867-1-graf@amazon.com>
+ <20250402161424.GA305204@fedora>
+ <20250403073111-mutt-send-email-mst@kernel.org>
+Content-Language: en-US
+From: Alexander Graf <graf@amazon.com>
+In-Reply-To: <20250403073111-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: EX19D037UWC001.ant.amazon.com (10.13.139.197) To
+ EX19D020UWC004.ant.amazon.com (10.13.138.149)
 
-On Fri, Apr 04, 2025 at 09:58:23AM +0300, Erick Karanja wrote:
-> On Wed, 2025-04-02 at 21:41 +0100, Greg KH wrote:
-> > On Wed, Apr 02, 2025 at 10:34:22PM +0200, Julia Lawall wrote:
-> > > 
-> > > 
-> > > On Wed, 2 Apr 2025, Greg KH wrote:
-> > > 
-> > > > On Wed, Apr 02, 2025 at 08:16:42PM +0300, Erick Karanja wrote:
-> > > > > Standardize boolean representation by ensuring consistency,
-> > > > > replace instances of 1/0 with true/false where boolean logic is
-> > > > > implied,
-> > > > > as some definitions already use true/false.
-> > > > > This improves code clarity and aligns with the kernel’s bool
-> > > > > type usage.
-> > > > > 
-> > > > > Signed-off-by: Erick Karanja <karanja99erick@gmail.com>
-> > > > > ---
-> > > > >  drivers/staging/rtl8723bs/core/rtw_recv.c | 2 +-
-> > > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > > > 
-> > > > > diff --git a/drivers/staging/rtl8723bs/core/rtw_recv.c
-> > > > > b/drivers/staging/rtl8723bs/core/rtw_recv.c
-> > > > > index a389ba5ecc6f..fd04dbacb50f 100644
-> > > > > --- a/drivers/staging/rtl8723bs/core/rtw_recv.c
-> > > > > +++ b/drivers/staging/rtl8723bs/core/rtw_recv.c
-> > > > > @@ -1358,7 +1358,7 @@ static signed int
-> > > > > validate_80211w_mgmt(struct adapter *adapter, union recv_frame
-> > > > >  			u8 *mgmt_DATA;
-> > > > >  			u32 data_len = 0;
-> > > > > 
-> > > > > -			pattrib->bdecrypted = 0;
-> > > > > +			pattrib->bdecrypted = false;
-> > > > 
-> > > > but bdecrypted is a u8, not a boolean type.  So setting it to
-> > > > "false"
-> > > > does not seem correct here, right?
-> > > 
-> > > Is false different than 0?
-> > 
-> > Does C guarantee that?  I can never remember.  I don't think it
-> > guarantees that a 'bool' will only be 8 bits, or am I mistaken there
-> > too?
-> > 
-> > > Elsewhere there is an assignment to true.
-> > 
-> > Was that in the original driver?
-> > 
-> > If this doesn't come from the hardware, then it's fine to make the
-> > change.  If it does, it needs to be verified that the layout and bit
-> > values are identical.
-> > 
-> > thanks,
-> I have compared the generated assembly code
-> before and after and I have observed the only
-> change is the comment below.
-> -# drivers/staging/rtl8723bs/core/rtw_recv.c:1361:
->  			pattrib->bdecrypted = 0;
-> +# drivers/staging/rtl8723bs/core/rtw_recv.c:1361:
->  			pattrib->bdecrypted = false;
-> There is no change in the assembly instructions.
 
-Showing the assembly is key, not just a comment :)
+On 03.04.25 14:21, Michael S. Tsirkin wrote:
+> On Wed, Apr 02, 2025 at 12:14:24PM -0400, Stefan Hajnoczi wrote:
+>> On Tue, Apr 01, 2025 at 08:13:49PM +0000, Alexander Graf wrote:
+>>> Ever since the introduction of the virtio vsock driver, it included
+>>> pushback logic that blocks it from taking any new RX packets until the
+>>> TX queue backlog becomes shallower than the virtqueue size.
+>>>
+>>> This logic works fine when you connect a user space application on the
+>>> hypervisor with a virtio-vsock target, because the guest will stop
+>>> receiving data until the host pulled all outstanding data from the VM.
+>>>
+>>> With Nitro Enclaves however, we connect 2 VMs directly via vsock:
+>>>
+>>>    Parent      Enclave
+>>>
+>>>      RX -------- TX
+>>>      TX -------- RX
+>>>
+>>> This means we now have 2 virtio-vsock backends that both have the pushback
+>>> logic. If the parent's TX queue runs full at the same time as the
+>>> Enclave's, both virtio-vsock drivers fall into the pushback path and
+>>> no longer accept RX traffic. However, that RX traffic is TX traffic on
+>>> the other side which blocks that driver from making any forward
+>>> progress. We're now in a deadlock.
+>>>
+>>> To resolve this, let's remove that pushback logic altogether and rely on
+>>> higher levels (like credits) to ensure we do not consume unbounded
+>>> memory.
+>> The reason for queued_replies is that rx packet processing may emit tx
+>> packets. Therefore tx virtqueue space is required in order to process
+>> the rx virtqueue.
+>>
+>> queued_replies puts a bound on the amount of tx packets that can be
+>> queued in memory so the other side cannot consume unlimited memory. Once
+>> that bound has been reached, rx processing stops until the other side
+>> frees up tx virtqueue space.
+>>
+>> It's been a while since I looked at this problem, so I don't have a
+>> solution ready. In fact, last time I thought about it I wondered if the
+>> design of virtio-vsock fundamentally suffers from deadlocks.
+>>
+>> I don't think removing queued_replies is possible without a replacement
+>> for the bounded memory and virtqueue exhaustion issue though. Credits
+>> are not a solution - they are about socket buffer space, not about
+>> virtqueue space, which includes control packets that are not accounted
+>> by socket buffer space.
+>
+> Hmm.
+> Actually, let's think which packets require a response.
+>
+> VIRTIO_VSOCK_OP_REQUEST
+> VIRTIO_VSOCK_OP_SHUTDOWN
+> VIRTIO_VSOCK_OP_CREDIT_REQUEST
+>
+>
+> the response to these always reports a state of an existing socket.
+> and, only one type of response is relevant for each socket.
+>
+> So here's my suggestion:
+> stop queueing replies on the vsock device, instead,
+> simply store the response on the socket, and create a list of sockets
+> that have replies to be transmitted
+>
+>
+> WDYT?
+
+
+Wouldn't that create the same problem again? The socket will eventually 
+push back any new data that it can take because its FIFO is full. At 
+that point, the "other side" could still have a queue full of requests 
+on exactly that socket that need to get processed. We can now not pull 
+those packets off the virtio queue, because we can not enqueue responses.
+
+But that means now the one queue is blocked from making forward 
+progress, because we are applying back pressure. And that means 
+everything can grind to a halt and we have the same deadlock this patch 
+is trying to fix.
+
+I don't see how we can possibly guarantee a lossless data channel over a 
+tiny wire (single, fixed size, in order virtio ring) while also 
+guaranteeing bounded memory usage. One of the constraints need to go: 
+Either we are no longer lossless or we effectively allow unbounded 
+memory usage.
+
+
+Alex
+
