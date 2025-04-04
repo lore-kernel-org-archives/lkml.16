@@ -1,196 +1,118 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2062.outbound.protection.outlook.com [40.107.93.62])
+Received: from mout.web.de (mout.web.de [212.227.15.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD03E20F081
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 20:08:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.62
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743797300; cv=fail; b=jFU4VjPLla+djTmw8SNXhUtprgnsyxBZg+ByRnPefrWoHA5RqohuxdqwQLucUnmo2iQwj6HEJdiyWrdWO5k2gMUXKYDnsMcG1YvKxk93YGp4s653FRbA3kpSSN3yqYmI+PhPqJOn/Z8OreWmt1EXU9BhT49WRgXtFatsXscW+fY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743797300; c=relaxed/simple;
-	bh=gGR/XiQym/w1IKvnWRUWZ442rqhBv195ScJWfEF0r8s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=QQ8MkL58K61hFCoXjI1TIkMHTu/eqlg36spXMmrgYHhaeJG02GHEObAvkHswyTumU0CY4YXyXD8iENWFdbNvT5iLfppZ3PBWWruzx4WMW6CV/keHP2uPhpsTTpcPt2DS6lhZu3uclccazx7LCMGnAVEXtf2LeAevNKRhA0FeLP0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=kC/dJycx; arc=fail smtp.client-ip=40.107.93.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03AC81624DD;
+	Fri,  4 Apr 2025 20:08:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743797332; cv=none; b=UW6fHyqX/pXE2K6joevIP96p8wSAsV0rTH1t8c4RJdHhV7LQmQkzYwBmk1aQ9j38taRXiBLGWVyax05KhBAorSGPLJp55sY36Q4BWPOtLT0ZRixKIrNLLvUZJnvfB2SS4aDauNZg6Ix9m8brihywTbENkLjA0frqO69I4iYa6Ys=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743797332; c=relaxed/simple;
+	bh=rFb8EIRrNetLyJcxwW5vp+VP4WYfMdX5pTix+iKkpLE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GVtF8JojPijSJh1TYrfMJ7LKUEYi1fTkgItY54PsJeqqbUEPtL1JVawszijqqzUf4EEfyc7Uf/gZ6Fw48Q9rXu9n8Z2R1ggG9oYlQE+cDO7yO1KC1XfWyoIMEEhe1lhrAxqak+Dyih6nVxooIqXlXkgfy55Nk7OYU1x+MNmozeo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=frank.scheiner@web.de header.b=ipWb3L9p; arc=none smtp.client-ip=212.227.15.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="kC/dJycx"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Aw2MJVjTP8yXg0adqrGrRHqrcqjZO0G9TdAJgfvdOa35s6GU9+krpGp/fSdOqjNNrylfV4qB4dM5XsnircDKHu05FQUmj/+NSGp/4LLeuMzfpkpQXLLz/KRtNfbzUoYtArWsY9bgw/ms3EFhYLAcgZOZrjS3kVKZJpboSsJAV1wROc19LXxbVQAGr4Uyvm/4ejl+IE1e/+OoSevTbAVkP2qXUanewJB7swd4EByJXRG59ThIyEtsnQneTyEniBFo1VU2HdH3oGxQGYi2FsC0tdp5EYhBnih+vLOH1mkUMXR3VlfWc4AOyGrAzvdUZ3mo8+s2nYnvKOd6d5P218mzzw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+HJ4hYI0xxOI2HYE/PbjpultgZ9FShfCARozmJQqfpE=;
- b=SjLEOgxf/LL2NknBgwn1Ke3ERkv2Ef68kSyu+do2C0cyxM8MHfn5X/8VJWLJDVKe/vdUBeNgVERTq7asVpGxaLINTV1RXIw0rYOi7KbPRhLM8tuXcgbtVVnF40gD0OLor2NFi7v+P56aWWvI9boiETzsrHFjLSB3AnyTKGTqVRSH0mI2pIZ5C/RsZ45IpI9Oj2SttPohMvYzPj01lRvBsr4zhXOALHjFV7la3aKO4lypFIlSWQme6adGHlDMqro4NJUDolSdmcAd1XpCB2WasiWtrky7MF6VPbpbQq+1e59C1V3lWO/VDW9HACiZJLczOFyDL1glR4OtfH0qhK9whg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+HJ4hYI0xxOI2HYE/PbjpultgZ9FShfCARozmJQqfpE=;
- b=kC/dJycxIGfa3q4T7ZADUFyKhFQcbklMzA1QdXZigDk1L50Kvwa5nHain1FeIebIq2XKI6UbjAwNHozxSaXXK+aObxw4GctJBKKNJGUwaEXoLo87FV7PaQ0O+kyyNZMmJQkxS6QgJd7F+ssuvBT48NeVL0bUOzN2qjxVbvypJbr/wuon7PHbB7/XDEUb6GvQOGn1B2jVsiQL1q7lFMMkFQV4wS0b7vU1z5htyZw5w3ADQV6zwJKNmQgxBV6xYLRxwHYRZw9TiO8kCck+a/LXMUYaYHRtN/V6ASZ9jCcTaVr1ZgQYL8+fbkRs/M3QCd06rlOYAgZ2pa7213V8V+IIHQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CY5PR12MB6405.namprd12.prod.outlook.com (2603:10b6:930:3e::17)
- by PH7PR12MB6418.namprd12.prod.outlook.com (2603:10b6:510:1fe::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.47; Fri, 4 Apr
- 2025 20:08:12 +0000
-Received: from CY5PR12MB6405.namprd12.prod.outlook.com
- ([fe80::2119:c96c:b455:53b5]) by CY5PR12MB6405.namprd12.prod.outlook.com
- ([fe80::2119:c96c:b455:53b5%6]) with mapi id 15.20.8534.043; Fri, 4 Apr 2025
- 20:08:12 +0000
-Date: Fri, 4 Apr 2025 22:08:09 +0200
-From: Andrea Righi <arighi@nvidia.com>
-To: Tejun Heo <tj@kernel.org>
-Cc: void@manifault.com, multics69@gmail.com, linux-kernel@vger.kernel.org,
-	sched-ext@meta.com
-Subject: Re: [PATCH 6/5] sched_ext: Drop "ops" from SCX_OPS_TASK_ITER_BATCH
-Message-ID: <Z_A8KTXmYqKS1LZO@gpd3>
-References: <20250403225026.838987-1-tj@kernel.org>
- <Z--NLGOGQe_9xULR@gpd3>
- <Z_AvCG5HcMV6b_xT@slm.duckdns.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z_AvCG5HcMV6b_xT@slm.duckdns.org>
-X-ClientProxiedBy: MI0P293CA0012.ITAP293.PROD.OUTLOOK.COM
- (2603:10a6:290:44::20) To CY5PR12MB6405.namprd12.prod.outlook.com
- (2603:10b6:930:3e::17)
+	dkim=pass (2048-bit key) header.d=web.de header.i=frank.scheiner@web.de header.b="ipWb3L9p"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1743797303; x=1744402103; i=frank.scheiner@web.de;
+	bh=xrpxSLP1ycahFmgGkZ0VYLFyQeC1WzpMKJnrZUbVj+Q=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=ipWb3L9pxSxrTOduSEBGah68s18TJd52K1vmFICEcBIqOkEN0z3qVMm2XJzPjTnc
+	 81HluNWqHVjB5Jw8q6h1A8aVNEiM0dfj4b9RPSsx9uIP7MXGcq2xB/LFYfak2PVNj
+	 bhtk5v5F4MgovCfagFNoIQ6HGJtTh86VAIs74aocj9yn8yuZG1riDENa+KahJyOU0
+	 9wHC4mjPoNA/7EFrWG1MuT/Mnx1aXiQEqsAC8kYk5XFZx4ukgXjWQ7iOmcmTE/7IT
+	 UDI9loBhea8gOfvqVf4ZikVv8pK1n0GLWEWspZMhCHhSuMMD2QNg60wT43xXW4OI8
+	 knwmdw8PxA+oYdDytw==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.30] ([79.200.211.78]) by smtp.web.de (mrweb006
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1MYclj-1tWqH749EB-00Oeox; Fri, 04
+ Apr 2025 22:08:23 +0200
+Message-ID: <e452c6c5-a534-4547-8f23-c81ed65e52d2@web.de>
+Date: Fri, 4 Apr 2025 22:08:21 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY5PR12MB6405:EE_|PH7PR12MB6418:EE_
-X-MS-Office365-Filtering-Correlation-Id: fe7cb6f1-b4ae-4bb8-ebf0-08dd73b46da7
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?BcMWlx4ZBFksRRE/pZZU6nY2TUU2ZbctLxRLil/p0w/iFdCT1TIff6aIVx+T?=
- =?us-ascii?Q?2VGzeYSiDTUosxOx/xXwlE3LTD4hH7DfLnMM1R3xMxZq4mkuqALbBK/n0BDq?=
- =?us-ascii?Q?D40v6qDO/+uKIErEoj/NBtxA3yzY1nSAQou7uQexInH913N8vPv++zLVV9bk?=
- =?us-ascii?Q?VysOcgi33QTCVkVh7sQzHpidO4KKjhnpnEv828mjFHFYqhRKOL7d1c6K+2g+?=
- =?us-ascii?Q?yE6/mdRtDRe3JQaR+YclAtufotAL/a0na93Ady3AxPZHmKwtqmLXAYsHsWCR?=
- =?us-ascii?Q?baA2yB1Ram3ypopmkOZX1YdyYPPaGrqWgm4Sw36XwnIGaREBqjllXqxmGE+v?=
- =?us-ascii?Q?YIrZkkkPIJr6POFHL+pYs5t0CrKiC0sCWfR0RsgV02YnPJtXZJeWiUoQjWB9?=
- =?us-ascii?Q?w3FAKIpHNpm30j3ZxH4ZcNjteo+JIWSCVhFXM1hLnqXdXZUbCDT5f11AUJ+9?=
- =?us-ascii?Q?e4bEvKhJqkmCmlxB/rCF8Yp+wFOMxO0Ejo5M4LmAwrwAwJ+Y84IO5Q881YJG?=
- =?us-ascii?Q?ve/obpnAwl5hBDVjMLKSSBjH6Ch67WBIkVX4f2ZCxqCzSPmbbX1oUvgrz0LA?=
- =?us-ascii?Q?X5wsmcen4Y7s51uZedb511wx9Vk74wI+OzYHJ/eOUASAyfqN8TSY+NvytNfs?=
- =?us-ascii?Q?NJIutZ/3X9LrYTkO3I/VCLp2CTcuIuCNLA7TCzhFjCiRJCioNEUEtVkYlui6?=
- =?us-ascii?Q?9Z4i6wAc4yRT6aU/X5yDLOa/LcsYrLaQYoRSOynU6urMi046/34OxCzRemJO?=
- =?us-ascii?Q?N9pqg/qw4OmwrYLD01PtUqjCuIPSBZJbnpSmPnPemvVL+zDoFcC7CcQwAk/e?=
- =?us-ascii?Q?TxgIUUt+DIM4ryVOAYbYJaakPheeC4+nCJWwKm8iFhzOi6ujAK72zD7tqjJZ?=
- =?us-ascii?Q?miKz61MmN9E9zCN4C0oWbW7Cj/shrekDzUgvzWmLqv6v79urFyXrATOh8Xm6?=
- =?us-ascii?Q?GdUkC+iHoZ0ymeczG5cMqXtyGGkOWGJ81xwpDDepil5ZsamP4WqthhsxU7D9?=
- =?us-ascii?Q?17a3ig+q1cMw+z6I2jxLxr/4iIGVCs4lCu6BXlQOGqBg8HOnzLnwNEoxxmh2?=
- =?us-ascii?Q?nb2lbzTqS/xCudiLZd8KBUoD1aKUSC4UvcmK/DKOR8A85PxlpV5Ru/pAId5L?=
- =?us-ascii?Q?VoEjpt6Bhf9K6DHP8TgYgI8cNAi/v5NGb89DyeU0FpR7BOgp4nhI55WNzjW3?=
- =?us-ascii?Q?aiwObdauntad3S0fTtAX4TebGohmKN3IIYE7SgTp2tEMcw79lv/07V4Oboes?=
- =?us-ascii?Q?E8mvGxiWQS7CSv4OgDNYKHwTheZNNCxl8qWnSx/GnK/nBvHz0I4DSFMxc1Dm?=
- =?us-ascii?Q?ePSFMwQ+tK/Jd+2tQfULQ5XVcZeAhayb0OHO9N4pqxS5AWTml4gkemY7EwqG?=
- =?us-ascii?Q?VOW7+9eRWpkQVyXvI6r5gjf+bfE2SCZEru7czFyV7J7ozQiNVvyKk2Tj9fyl?=
- =?us-ascii?Q?n15iS9hwFLY=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR12MB6405.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?jRH3W208G7iFWBLZup6BK8+Me01AV8VTfWbzupSw7s6hKH1syNJwqIGWCUAq?=
- =?us-ascii?Q?demqrTMlOIT4opXb9jqtsTERPYo4kT9NjxAwQ0uinIb2t46W9c0NLnw4kD4O?=
- =?us-ascii?Q?H6sBn86VESP4TaapWQxjCfqMmoBKOkpL41XiQca2mduF8uiOODYl5/U7BroM?=
- =?us-ascii?Q?84hyCUxzuue0RqihY7Hp0KlcOyBaofwtD8jvZpOWtgjC3JGSdWtIdvYof26k?=
- =?us-ascii?Q?8s/QeLLzOCdWGhavvbIpugZYBTf6tJARCiqQQuQuFRMkgOltbzSBN0zeN94q?=
- =?us-ascii?Q?v3B0SuelyKzCRqjt6H+W1X5Sg8+H9szavvgZnw2b+IZIzhyCi2gmEAl2+FBM?=
- =?us-ascii?Q?JDjgt4rTbEhVv97ctTuocO7bjNo323Ntoc4ISptf43DpR6zApLkX92raf5rN?=
- =?us-ascii?Q?a8QJQsnXtoEQgx6KDR5oII+QoXKs3QbLSCrWemhtE+55OjWCTs/xB5UjzZoz?=
- =?us-ascii?Q?qhfIY+1byaIkz51m+W6AIPO3LEOHFSfKOxa0MIPgpDEFeAAL1DCTazFsYVAW?=
- =?us-ascii?Q?05GXHgY9y+CNHL1cfzUssVzUcyAMYarnukweRoyuC6GC/EXAaHKwC24j2HJn?=
- =?us-ascii?Q?qycrQmDB5mClqOxIXBdNBZZF9aqlntjDZipxHsO+P9srckmXsFrOw7IOho4J?=
- =?us-ascii?Q?Z7GAAbiX5fcacVrFWZeS73iDLYjhHoU8QMwC6dkkrcsj9wKdA0hX2rk7U2tc?=
- =?us-ascii?Q?l9mIcBK/R0fqGNSxrgjyQKlCoOrm7t5TG/T+mO9FkFJzhDCNZA9tErjqi+7Z?=
- =?us-ascii?Q?PWNC5HDZvPdXBDQRkXc9frTZJQyNqjxq8+vWS/pv2j/So56/pMMMgKUy2Srg?=
- =?us-ascii?Q?IfDtLHDLWs/qr4ir1e2bexZbtg6Qrs6x+DaChZPdvgPQfIuIFEcCrmXAc/u1?=
- =?us-ascii?Q?iNMD7OgPLamqmrXAkGWB1+FoD1tuWJCGLRILW0Y2tQoKVynpMNOHcvdxhPWz?=
- =?us-ascii?Q?DxbfO2JdMCzrqqjxdT53o8jERUBz0oAT1eIZPJW04q3+EKax4tQ0Y5k11lwJ?=
- =?us-ascii?Q?tx/qKQmJD+ZY51y1c/k4nzk7CX/poxzRuXkencTvbYKbiGthBhzCsFcspbKg?=
- =?us-ascii?Q?BoDKrPhf5SOubPxxdhvZ9kWpql1AufA14yCOQeahzCPzwdfeYeYseWF8IgT/?=
- =?us-ascii?Q?gaqcV6hZ8DmG1UH3KFeb4ThGdLplbuIS71jL82NQVU7GmxX3wSzTJ0A91HBc?=
- =?us-ascii?Q?8cRDzt68XH001zDW/4MiAzkHuknVn1gUZPnhQtAJ8NH2tSz7rKgxKn3PDdlz?=
- =?us-ascii?Q?A7zyD7QPYIH5xXb3KYqj7dGzQYOFyeG/cCGzDYrdN2QApo/zsfii3fvFqQ7l?=
- =?us-ascii?Q?CPvgy975qfNXCsF5AOdsDuq1O9Pu1I/CapWW4C+8/7ScwAMj1khUZSFuVfIt?=
- =?us-ascii?Q?7hoJPTn6dcUlkCaDo4UbxLsX6LELiSmC47Qo0NEYwYyESv7PSnNIFeqE+xR6?=
- =?us-ascii?Q?7ZousbCbwX9RperBnavZRfwigahEJqjTFw9NKQxNvYDmyUwoldlrJ01G25EP?=
- =?us-ascii?Q?lgeYu+99gRoJYo2YQX2CfK4x7TFklIAyd1Yr4vRleQ8JBDBQaurEmK3OOywQ?=
- =?us-ascii?Q?BQGf8vJC48UQqkxW4LO1cYbSR+XbCBv9a+TICIsn?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fe7cb6f1-b4ae-4bb8-ebf0-08dd73b46da7
-X-MS-Exchange-CrossTenant-AuthSource: CY5PR12MB6405.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Apr 2025 20:08:12.8434
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1fa1excamMF018kvnz0dgBRjk5iYUb4P5gCQLqgTpkS0iC+JwbrBU+7FL6F7wxz8E1b4mJ2SgeEpiU5+JtAyVg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6418
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6.14 00/21] 6.14.1-rc1 review
+Content-Language: en-US
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org,
+ linux-ia64@vger.kernel.org
+References: <20250403151621.130541515@linuxfoundation.org>
+From: Frank Scheiner <frank.scheiner@web.de>
+In-Reply-To: <20250403151621.130541515@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:fvU9h+f3+Mpevc/oYRGQnw02OPxuywenANdG2iHF5ka3nEeUn7L
+ zxtB5jc77FkCt33nvcxEDPBSJlmus7WQI6pnVVVLafOcOi+VNoGMEJgw26hHiUet2N1yGUY
+ cNs1e9RmHcBMG1orKuN6O1R1hCiXWSQ1ZJ3JttrZL14Y+tTdzmWBnD7615RWQkKJWWWgVHK
+ 3nub6kzJ/SskOFanbdIgA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:4kYjNfGtMX8=;INUUeARrbEoqAc1aSuQoQ/pzR1j
+ z+hnM14Rwow1+S3NLJdB2wbt3aJq338eqVlKW78IHX9v6XGpBLFK+8uNcxNvk6KD4/geOl67m
+ w1TDFKxwksvZkCJ8xKM7UQ3nT3nSAkkJs/HZBaEkMnNK7dQTU2NHiYVjtMYtxrVPbD88fnTvQ
+ MroEjdes7XyUzo1OtgJCqn8jUdvr6gqqKZwaKqRHp4KwVDlxFpALsr6slsjhsAfe8nV//9Zz+
+ z8kHSJ5ffm+gG8WjXLkLMKLGT3YM+7zTxly7cL4hvM342QQlGFLk0BmmXyeNWPX09JxTxdyaC
+ D0ly07e02piWACtp92cbg8yzSTb/W2taX2aeow61752i+zoKXb/z/Wj0/wVhMOR5d9re7Uo2y
+ sSoNaVJqXwZBxRA7Kao6l5HsLMFqcX/FlTCEwmy+peNfNKyvKr/1q/gnEE0n/xHhwbh3h85/w
+ rIgW8Z022VenIIaeTyx191hpFggWOqDk0GCzYiEcR+F8YxT0fGs2u9evaG9EksIGJmYfn947C
+ HNxzGT5N1HAsCZj6IkgHgX51g9RhiWtw2jwm94AJ4gE0GbCO/7m7bQxt3yyXQC8znp5t8Sw7D
+ nQsswtFZssdYqpmlyQXcB3rHAVruNwbeyZGb51+NxHbMXAfsiUoRyYHEP0GsiXc8K3vcHvDGb
+ 3zcRsM6HX8GqyvOisNUSUDUzwD2fp+xLBFJ9weBeOJ6hjqU0BM1WXtZvNH7PoFoHOvMawvdrj
+ WEjTvXS2bv2WKe5Tetqi4B70L2J8nQ5X2nKGB91inj6ZqXfZHy1Zr9s4BnXAqRFWay3LyUmbr
+ 8PKgEKYa/EPJ/+ipkwDkJMy3eFASH9pMlrqQhU67RAT00oyOer9UMKH6ZGHYpn/faIjSN3K1P
+ F9/FiPib4+hNYQRsoqe0PXlSogj7Jc4b9Wme0WQtvbJ7KBIOFZZg/VR/J3H9rEJ7LwuR9LgmA
+ dAiiKNztZFon1Ir5msGKxIqxb5MScZVfkHU9senjk6TledMobZ6Ek9IuQg2Rnl0uychFYkoeL
+ 50UAMLpd1CkuRYLhDlih5uMFPwd15wvZAYfz+WWbff8lgwUJ/LWqbThyJykr2v9gju8RUQtMI
+ BTLMTZbnYdYTenYy2On2lTfi7U50cMvK06mDsV6feU6AmwRu8CDtyVS4mTjcBFBeZT+gsOfEp
+ XqfehW4sUGxOuqqOgxDndkNFK3JxU9AgL6RI9xNN6jra7RGMhmVeFErdLfV1VGpS+XX/EhUCC
+ 5SfF8pGBorM9rryPjd1PQE22Xzj8UT4dSi84ibW/SjElrAcF8ltr9a5I0m6kNGdMCa7s3Sj/9
+ K54bUxbHxwmHF3A6fT4KvbY7ius6RG4R+Ty3C5JlD1dHjKb8oT6mT6nfwgClzvLCnOiVVgOGe
+ TQ03U17zXqM71YXxl9bxRRZV1l8BMkNvZR7K1nicpl2C5NJ5khwKlEmGEe765/FZWqcGMFaxD
+ xdD4Vjw9v5yzPu6U63b+0Db/vEjFRMh+ogaihY3fGs/sSf1yk
 
-On Fri, Apr 04, 2025 at 09:12:08AM -1000, Tejun Heo wrote:
-> The tag "ops" is used for two different purposes. First, to indicate that
-> the entity is directly related to the operations such as flags carried in
-> sched_ext_ops. Second, to indicate that the entity applies to something
-> global such as enable or bypass states. The second usage is historical and
-> causes confusion rather than clarifying anything. For example,
-> scx_ops_enable_state enums are named SCX_OPS_* and thus conflict with
-> scx_ops_flags. Let's drop the second usages.
-> 
-> Drop "ops" from SCX_OPS_TASK_ITER_BATCH.
-> 
-> Signed-off-by: Tejun Heo <tj@kernel.org>
-> Suggested-by: Andrea Righi <arighi@nvidia.com>
+On 03.04.25 17:20, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.14.1 release.
+> There are 21 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Sat, 05 Apr 2025 15:16:11 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.14.1=
+-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.gi=
+t linux-6.14.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-Looks good.
+Cross-builds for ia64/hp-sim and runs fine in Ski ([1]).
 
-Acked-by: Andrea Righi <arighi@nvidia.com>
+[1]: https://github.com/linux-ia64/linux-stable-rc/actions/runs/1426331316=
+2#summary-39980213570
 
-Thanks,
--Andrea
+Tested-by: Frank Scheiner <frank.scheiner@web.de>
 
-> ---
->  kernel/sched/ext.c |    8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> --- a/kernel/sched/ext.c
-> +++ b/kernel/sched/ext.c
-> @@ -26,7 +26,7 @@ enum scx_consts {
->  	 * Iterating all tasks may take a while. Periodically drop
->  	 * scx_tasks_lock to avoid causing e.g. CSD and RCU stalls.
->  	 */
-> -	SCX_OPS_TASK_ITER_BATCH		= 32,
-> +	SCX_TASK_ITER_BATCH		= 32,
->  };
->  
->  enum scx_exit_kind {
-> @@ -1401,15 +1401,15 @@ static void scx_task_iter_stop(struct sc
->   * @iter: iterator to walk
->   *
->   * Visit the next task. See scx_task_iter_start() for details. Locks are dropped
-> - * and re-acquired every %SCX_OPS_TASK_ITER_BATCH iterations to avoid causing
-> - * stalls by holding scx_tasks_lock for too long.
-> + * and re-acquired every %SCX_TASK_ITER_BATCH iterations to avoid causing stalls
-> + * by holding scx_tasks_lock for too long.
->   */
->  static struct task_struct *scx_task_iter_next(struct scx_task_iter *iter)
->  {
->  	struct list_head *cursor = &iter->cursor.tasks_node;
->  	struct sched_ext_entity *pos;
->  
-> -	if (!(++iter->cnt % SCX_OPS_TASK_ITER_BATCH)) {
-> +	if (!(++iter->cnt % SCX_TASK_ITER_BATCH)) {
->  		scx_task_iter_unlock(iter);
->  		cond_resched();
->  		scx_task_iter_relock(iter);
+Cheers,
+Frank
