@@ -1,46 +1,46 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2055.outbound.protection.outlook.com [40.107.93.55])
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2048.outbound.protection.outlook.com [40.107.96.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C1BFD517;
-	Fri,  4 Apr 2025 00:19:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D34F14830A;
+	Fri,  4 Apr 2025 00:19:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.48
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743725950; cv=fail; b=XdspVzsEDKyks8nEs9Nlcad0pq6JTYMDPxdmBxQMgmhnDF6+EJNkxKrMH7/hT768w2ugUa7eUmyrMvMjEM8oCIHp2gWyUeJAQaoOXXG9zi0K3yC6V5gOBuYqSQMxUG55okbkX2h3es0KRAE6Q66R3sv9kYDB+I4D9LtisK5vaRs=
+	t=1743725961; cv=fail; b=cPqwc5Ob033GUI4PuEDzF/CQ2c/A2l0mYA5gSVr62t1sLuQI7U3us6QOnohs9+NW76Tbm7jEW7u8kSoZrtU4mnjqgzeXohF1jbqBzO2/z1p5XnxVtUiUW6YCPXkRDARrDl0U68XcSDDxzXSYEnDA44jf6TCS+av35dcf+GK2qRw=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743725950; c=relaxed/simple;
-	bh=hL6B/3TTOQhbm90yNgyUm+sVpG4QVpWSXoaWrBioZ8o=;
+	s=arc-20240116; t=1743725961; c=relaxed/simple;
+	bh=Ix+kassLOcT9QsVpG/5XfRpAXcyKgYY3DtwtqgrE14c=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OmRx80qzYXVz4qY6kuJO839O9EpJYky9zSXO2eZTz2WAdFzFnS+obUp5hTDkHenAXjV5uBuZPoyHlIBffGkHPDrSswGXKEDvKl669XSbjMRNxuCqkqsHyScsbKl46kZyRjXQTOwCcuVb6fl3sWer4w+GZizSKU6Z6GyT/ssjLe4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=0jMu9mUD; arc=fail smtp.client-ip=40.107.93.55
+	 MIME-Version:Content-Type; b=gWVA6xH2RdPxcAzOclZE5ENDseEfMCQbuoq6+toyxadW3eSGkkje46gWCr58c4A2akqUnftm8oXjyRBxqckuhNdW9pWCbSFEVbTJWZIZ99GM1DQrZ9YMkd3NnCWeCXUw/di1IJarDP41w52t4D3xdS/IdxoYg0wdxGYbtvYB1+o=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=PkjTYQOj; arc=fail smtp.client-ip=40.107.96.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="0jMu9mUD"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="PkjTYQOj"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Nxa/3Y35z93uMV4clJqJzk9VtZNvzjVUJEAqUwlRS9Betf+GiNmt6rWKd6cVoiOJctBHOdzXnjlvfFX/k0FgqU1yl4WMdZxoInLRtgdxqQ/XORnIeQahJE7UXy28/cO3lNVIniyn5xHAXlbjGZa8tZeE9kVJ1zxRqkkusbiZy4duBr8WG8jxOI+ds2EIOWwqd18cmeVTN/zwp+1hA0tA72ZuVsg+Ldk9xGLTBABpjBxnfp4F0Y21ZgmtzvKnZOOITxB32dQinP40PaPoLATAxaXJOY13gNvXSeM+PhTOYToAeOnQqgPFmPV38jQmWQMdm7DPaMLfKk3UXywNVvMmhg==
+ b=QDserQWObdLMu2vpXE317TCZwQjPpJ3sc8m66E/TDAPtDlyIuhFvYpkXioO3cXfLrpuxVPofmdaQCLrfgyJ4iFvz5Nm55hC+7vnqJEd66w/x5BH1WMdO+inrgbyv39mZNyRykycn99Kjb4Pkxj9BhmxXqEScaFa20raRhG4dHEtHorO2eKPn/t0g4jM+35TtOriPI3Z2IzkrqiBG/RLwFUixtN3pA+BWYQf7XUnEDH+Q51W2W31WAbl1KByFzjQl/PjnPE7zQwh5+ZNzG2yLpz6FZFAbmD3/KsWMfH+oWPYdn84JlILsfN0WLEUWaduqV4BuvnBEjrhva9D2Dvkg2Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Ec3HktzSX+0fNs6Aw8D1xT89b5vWJ91M81m5bV0wEIE=;
- b=m3r+Y5hIVsotIk4/e8B6cr8Bop+q8Wc+XZ2wNq2MeXSC7cdZed7tcszzVwQbo2T4ig2/s7acNvFmXG8hyXBxdltTPS5zZQfdDJK7sNMmJZ+Mp6zHU5rdxa8wfrr/dS1bbMhwzWWgNT9rSihycBR0WU0ha5kwVzMxBe4yYw43gTscbeojS9GIOwA9y8+Z1h8ZU1vvcb5N7oGd/PnaBNdpXfQA9WVd85Dc6DI0KhnjWZg+wUAX/n984fYZQdRPZuDvKkSecwOYY9cyXXMg4WAIaeseWUPhouTHR7w2wgd1MWcaeBlJqgLYcFcY6/tRVAMxxSNYhaS3hJV2zrm+Nv/i5w==
+ bh=jO5AkJMvnkArleSbe7rd41u2vc2JrZG1JWSDivzw2WM=;
+ b=O+JCUH3ZV8D35H2IRiAtKD+rQA8gzhJ7d2Fiu9N2Q5VzHAwANowk2WkyY5wafDTDjHyGg1jC5xHbqywX4ZYqHphTAlhOM1dhh/MA5vK9uWt0sBMRtL4aIvp6NtCQsh+XYz/xChqlMrNUQOLh05gyaGaMD5hm9vbxTywlsESlrST54p+TTwG/wdYQkL0W6HuwaA523WLEv9HTeHp+UaoQPR7cACBpy2Wmj7Kw/TLmq3m8k78tkhEeOMmizkbZGAFnIYl/enAsv+niPftLG/7RyFgRSyqV+Q3y1N+AsGY7oHPxq1AZHb2MJCtiaZ2s0/iVbBw56hSqUxRdhAWeGVdewg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ec3HktzSX+0fNs6Aw8D1xT89b5vWJ91M81m5bV0wEIE=;
- b=0jMu9mUDSPl6faSyIqV+iuXRsVVEbXrzHFSj68hcTIxvuz3xa47roMcBt5NRIcfgbtc589LbJFnfmREDOZC9yHLbJppV3w2V0gxRHf8WJFJ9NNwUu/HOHcRm2DDNzJ4F02cbfgzKVDQEgZ4yt6ksAyAKiNkFgTzktBohk2ZPXK8=
-Received: from MW2PR2101CA0003.namprd21.prod.outlook.com (2603:10b6:302:1::16)
- by CY8PR12MB7636.namprd12.prod.outlook.com (2603:10b6:930:9f::15) with
+ bh=jO5AkJMvnkArleSbe7rd41u2vc2JrZG1JWSDivzw2WM=;
+ b=PkjTYQOjGLQeU+3IhVb4FVU/gPxMtL2HglQfFuFJgIGq3dXsHVlt4iDBVM/CdGfSIWbYV1ov4PHE7V7u4H1CKT8y4qcVAwvjxHfx/PiZ+r4tH2vCaLlRoflts0++Ez6vnQGdvgL4x34kVueluVRV5B1w/nhqpw1cwbzvj4vjMP0=
+Received: from BYAPR05CA0035.namprd05.prod.outlook.com (2603:10b6:a03:c0::48)
+ by DM4PR12MB5986.namprd12.prod.outlook.com (2603:10b6:8:69::16) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Fri, 4 Apr
- 2025 00:19:04 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.48; Fri, 4 Apr
+ 2025 00:19:13 +0000
 Received: from MWH0EPF000971E2.namprd02.prod.outlook.com
- (2603:10b6:302:1:cafe::9) by MW2PR2101CA0003.outlook.office365.com
- (2603:10b6:302:1::16) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8632.6 via Frontend Transport; Fri, 4
- Apr 2025 00:19:03 +0000
+ (2603:10b6:a03:c0:cafe::d5) by BYAPR05CA0035.outlook.office365.com
+ (2603:10b6:a03:c0::48) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8583.27 via Frontend Transport; Fri,
+ 4 Apr 2025 00:19:12 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -50,11 +50,11 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
  MWH0EPF000971E2.mail.protection.outlook.com (10.167.243.69) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8606.22 via Frontend Transport; Fri, 4 Apr 2025 00:19:03 +0000
+ 15.20.8606.22 via Frontend Transport; Fri, 4 Apr 2025 00:19:12 +0000
 Received: from bmoger-ubuntu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 3 Apr
- 2025 19:18:59 -0500
+ 2025 19:19:09 -0500
 From: Babu Moger <babu.moger@amd.com>
 To: <tony.luck@intel.com>, <reinette.chatre@intel.com>,
 	<peternewman@google.com>
@@ -72,9 +72,9 @@ CC: <corbet@lwn.net>, <tglx@linutronix.de>, <mingo@redhat.com>,
 	<mario.limonciello@amd.com>, <linux-doc@vger.kernel.org>,
 	<linux-kernel@vger.kernel.org>, <maciej.wieczor-retman@intel.com>,
 	<eranian@google.com>
-Subject: [PATCH v12 02/26] x86/resctrl: Remove MSR reading of event configuration value
-Date: Thu, 3 Apr 2025 19:18:11 -0500
-Message-ID: <4f1551b39f669be01ea3e5938f165d207e2f7c6a.1743725907.git.babu.moger@amd.com>
+Subject: [PATCH v12 03/26] x86/cpufeatures: Add support for Assignable Bandwidth Monitoring Counters (ABMC)
+Date: Thu, 3 Apr 2025 19:18:12 -0500
+Message-ID: <135e452ba38426487e143bc4661883e4939d502c.1743725907.git.babu.moger@amd.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <cover.1743725907.git.babu.moger@amd.com>
 References: <cover.1743725907.git.babu.moger@amd.com>
@@ -90,316 +90,166 @@ X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MWH0EPF000971E2:EE_|CY8PR12MB7636:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6f3dcf5a-648d-4ae9-78f3-08dd730e4e0d
+X-MS-TrafficTypeDiagnostic: MWH0EPF000971E2:EE_|DM4PR12MB5986:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6affa520-5667-4610-b1d3-08dd730e5395
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|82310400026|376014|7416014|36860700013|13003099007;
+	BCL:0;ARA:13230040|7416014|82310400026|376014|1800799024|36860700013|13003099007;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?sFhYbtGDGiDUHxSh/Rjt50o4tgq3mjGqaZGIJujjOg5pvO8aenGo1/kfXAZX?=
- =?us-ascii?Q?tNcbowlCRq4yZyCyT89xNCGqS3ITAG58DSSYtVeFpCWgyHng5fLhq6tejRWN?=
- =?us-ascii?Q?SMXTknxeK3GYrIMU8z2vc8F7/JVDdBbwEvp/e8NFQjUpZm7Pt66QPB59luc4?=
- =?us-ascii?Q?GsdwGhV9xU4EgXqcY9nQzIuFxHFEUXDG+HZqnYJg2UOfng34ZJjo6WHvSCNv?=
- =?us-ascii?Q?H50oS6aLd7SFu9xF1LGjlN6RGGBlPY1Ni8P8706DzVw7g53U8XZWmbs3RsRm?=
- =?us-ascii?Q?yO+YaGUHx2NpePZ5RF5krM2eBokqeKQsVbX2MYTKOGVZGBbDeo27nXiteL70?=
- =?us-ascii?Q?LTMr+8wn3GD3sjL9J/j/cNbD97KlCggpAjzqXvZOSLO4xd6VNL6z2aCVFPxW?=
- =?us-ascii?Q?tmxZ5EQpEQ3/x0j/R7YqrgUE7d2rJjIpsgCp6oKY31VzE8IMqjW432CgJ2tv?=
- =?us-ascii?Q?+GPTAaDgrYOJSQHKmM6b+Z3WLkt6x6xH37px+g/eWBAJKmQxh+e2sLZvrMJR?=
- =?us-ascii?Q?mTRpw/tEJ70ES8oXBeBhdVZ6SNrC87mZH/l2lC2IIvOgrUcYJZAdPmmw98Db?=
- =?us-ascii?Q?6WWNV70C2DMOGXY3VyVa7n0Ft0IWoMAnDoG7bQsDLO6r6/g7uAMKltRhUY24?=
- =?us-ascii?Q?Se3NCBq9NuCzN1XjkNuPlIpKWEBAOXZ4gY7LxBLzgOKqI2LZYbLWAd92p/BX?=
- =?us-ascii?Q?aguDKKcwlQVV5gdT9gM7Ic6oUviKChwk5/qAIXZELjI/V8jz0V/e70nvgsp3?=
- =?us-ascii?Q?guFJZlkLlXhpL1Nnuw1kcNZXEbzkhJLE+CZVsyMsT6g86dzFY6uAFGWpaHee?=
- =?us-ascii?Q?kqh9JpXgqIJeJ39iXvZ9YUFPU7iNNBXJEABytCfB8B+kvKfPWZNCYBN0vmKW?=
- =?us-ascii?Q?kYrRsO9XGlev2Nh4jxUMj28xtM7Gx07ysNNA+oYlF49/V5CROUbbLYuxb4sh?=
- =?us-ascii?Q?yb8SVXH7VLcGWX7dirRjL89A6VDjkSRQaHfpX6w0PAOBPQr2wBzaLsb3hf1i?=
- =?us-ascii?Q?jZQPqad4qQZO5jkdedMwObiU2OFKthOqWAdmIK9ti/hltn7ZuKbtM7W4Y/DH?=
- =?us-ascii?Q?UAIZUEp5PWmQyOLHticYZZQZldQGv79CMl15Ely+i3M+fdeViWKWSOwbCVjW?=
- =?us-ascii?Q?XIevuZJDSCA7e8Gz0pUBqVBAqOjuAUJ603MdtYi9SCGgwwe3j9ttI5Hind1L?=
- =?us-ascii?Q?rnKxdPKtqYdmjNbFnE9RKMKZin2DMk4c9IvS0bMw0YheIe6UPZvcx8X0tPiz?=
- =?us-ascii?Q?Yo5XYqWGhs2O0uj7Q8vv+ZbmYsRuGfRTqV3WbSctjF3Ek0isDKMwzk2fy05C?=
- =?us-ascii?Q?P/AfQDW5rmcoeN2IYKAze3eLefU+KvFn4y9/k+HVyLNyOaVlzAPY7CxKVhzZ?=
- =?us-ascii?Q?PmvMmM9n9TltKwcP/z709FplTfGp7YffLjKl6m6ap1cELAHew371uslLYO4u?=
- =?us-ascii?Q?IHe+BGgLMm85Mod/Ta+tmADvZV1fl6u2jERYq2VHMI8hOm3zQsuCEInsQNmz?=
- =?us-ascii?Q?DFrIoJCBBjHLiYU=3D?=
+	=?us-ascii?Q?gvqAQfArS+x5ZP0tnsWTaxoln66rS/ZzNPVAywrDYAppMvPHxeXyNzZ0r7al?=
+ =?us-ascii?Q?ICN4fywHuhg+rd7YMQozYdZPWVv4wl6Zxlw6SSK1g0I8OjKMIEmtG6Q7UXbw?=
+ =?us-ascii?Q?G/kSfUfEVJqTvjqQv4ytwn1SpzgO9JR0SOMOhQosoIiZ0URdvcsLdbG4WxB+?=
+ =?us-ascii?Q?8a5L8mkAIAZsgPrJAK8sUfUcq1yA8ZVtNeBMWNBEf/a173gKjyUkKBLzMF2Q?=
+ =?us-ascii?Q?Y+PGugtPWNxiwW7DBiVdpS1tHiOGZASQ9gq2J7m5PSk6wnctywfruBj/T07y?=
+ =?us-ascii?Q?CEydAT3c3MtPJVjO1cALw9kqZnS9VdrphR/7LILPUxsDObvLMs7yMkh0BEIK?=
+ =?us-ascii?Q?a6FCx8wIJHyXPFaZqjsKzb989vIuJPEQNYNcaxR2O4kq924KYom8x8+VqPlD?=
+ =?us-ascii?Q?O+ztkMJtq+05JjjdfnST0KlD6nLml7SmC4mnkHFkkIGjUWwIxomc+rcgbC5g?=
+ =?us-ascii?Q?G1b/ad6m4XdJD3SAbmfgtbIL1vkzTi01bVw7tlod9RJms2SUhdOPV/tA7fCn?=
+ =?us-ascii?Q?t4PCKntOixPJqe5xJr1iqsgScPSlcPY+BE+rjBofJpEj/UnWRLiF3L6RpNZ0?=
+ =?us-ascii?Q?JaaRpOUb3rtGq1hZeMkKL6byfFRe5Ay33puFdnxLSDBlp3mgk1KbbOXReP3c?=
+ =?us-ascii?Q?Po2itF+OHlqmcMFcx2rMnj8ALB43ROZcOpxzXh1o8Zal26UPS58HtfmqObzE?=
+ =?us-ascii?Q?YIvHxTPiOF2Vm9JllVfcCh/kaUY/EQ4SR1xkEeHG7xIUu6uvus6wcFwGP5Yv?=
+ =?us-ascii?Q?VhaOl7GpdC0g8NnP2DkegwzWWM4cdNG2QHDaMT4PXxjjdiPpvp6xjN45QdOy?=
+ =?us-ascii?Q?/SXiV1OjFSgtv3YiNr8bcsR4cl8CdhhXbjm/xKbu8cdMpqZWOPtAFXaxbkDo?=
+ =?us-ascii?Q?GsRbqB9nqKLERzV9Y8GmnWkS7Cio3pDXrpm5fghG4KrUJtGRuz737L4gjMLR?=
+ =?us-ascii?Q?NsgAXUDmDWkxO17KtEoB62r8/6LiwTA0+3iz9l5/d40ZLQe0lrausO8N3Ofm?=
+ =?us-ascii?Q?uj+EUwVm3S2yeU2C8wU7R/m3dH4WIp/THptIlf+CrHnppS/8/Z4b9ZcTzeWf?=
+ =?us-ascii?Q?UXog4K+sT9ZgGXUb/SPylxeRysyCAwAGKn2DovnMF6b+/++iKvz+MzRnMZcx?=
+ =?us-ascii?Q?uAISgFjS0CgUFGNBmxWeBm5OZ71t5JDxpFdgKS4qyZLrCRh3CWiTysBBKkUZ?=
+ =?us-ascii?Q?TuO/xWaT944HG1K4FoW1yC0+XPQe9t5itbdXUjrhZb4jq5xKCDq9peIQS5bA?=
+ =?us-ascii?Q?4T+spXzZMgMY8NUgPZ1CKno6PaIzzJq9uZtKX8dDgpgUM7bbzXrAKlSc7THW?=
+ =?us-ascii?Q?f6a/M34ld3YMzygTERwf3XRlXXTXTK0sDKW8gKDKU7Fefen4gA8Wjor+2LE/?=
+ =?us-ascii?Q?fsrwQ+EravPK9NR0rtTKuxt9mD7dxgcn7rro08TLThs56TyROI0aMzzF/1Qq?=
+ =?us-ascii?Q?aGZ6cP8CQ9UD0VazxrS/0uYv60CFulvKEHsYhJFS4X0o5/tUPBuEt/oT10sW?=
+ =?us-ascii?Q?DAJY2tIxFpZNpqk=3D?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(376014)(7416014)(36860700013)(13003099007);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(82310400026)(376014)(1800799024)(36860700013)(13003099007);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Apr 2025 00:19:03.1158
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Apr 2025 00:19:12.3971
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6f3dcf5a-648d-4ae9-78f3-08dd730e4e0d
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6affa520-5667-4610-b1d3-08dd730e5395
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
 	MWH0EPF000971E2.namprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7636
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5986
 
-The event configuration is domain specific and initialized during domain
-initialization. The values are stored in struct rdt_hw_mon_domain.
+Users can create as many monitor groups as RMIDs supported by the hardware.
+However, bandwidth monitoring feature on AMD system only guarantees that
+RMIDs currently assigned to a processor will be tracked by hardware. The
+counters of any other RMIDs which are no longer being tracked will be reset
+to zero. The MBM event counters return "Unavailable" for the RMIDs that are
+not tracked by hardware. So, there can be only limited number of groups
+that can give guaranteed monitoring numbers. With ever changing
+configurations there is no way to definitely know which of these groups are
+being tracked for certain point of time. Users do not have the option to
+monitor a group or set of groups for certain period of time without
+worrying about RMID being reset in between.
 
-It is not required to read the configuration register every time user asks
-for it. Use the value stored in struct rdt_hw_mon_domain instead.
+The ABMC feature provides an option to the user to assign a hardware
+counter to an RMID, event pair and monitor the bandwidth as long as it is
+assigned. The assigned RMID will be tracked by the hardware until the user
+unassigns it manually. There is no need to worry about counters being reset
+during this period. Additionally, the user can specify a bitmask
+identifying the specific bandwidth types from the given source to track
+with the counter.
 
-Introduce resctrl_arch_mon_event_config_get() and
-resctrl_arch_mon_event_config_set() to get/set architecture domain specific
-mbm_total_cfg/mbm_local_cfg values.
+Without ABMC enabled, monitoring will work in current mode without
+assignment option.
 
+Linux resctrl subsystem provides the interface to count maximum of two
+memory bandwidth events per group, from a combination of available total
+and local events. Keeping the current interface, users can enable a maximum
+of 2 ABMC counters per group. User will also have the option to enable only
+one counter to the group. If the system runs out of assignable ABMC
+counters, kernel will display an error. Users need to disable an already
+enabled counter to make space for new assignments.
+
+The feature can be detected via CPUID_Fn80000020_EBX_x00 bit 5.
+Bits Description
+5    ABMC (Assignable Bandwidth Monitoring Counters)
+
+The feature details are documented in APM listed below [1].
+[1] AMD64 Architecture Programmer's Manual Volume 2: System Programming
+Publication # 24593 Revision 3.41 section 19.3.3.3 Assignable Bandwidth
+Monitoring (ABMC).
+
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=206537
 Signed-off-by: Babu Moger <babu.moger@amd.com>
 ---
-v12: Removed the un-necessary initialization of mon_config_info structure.
-     Changed wrmsrl instead of wrmsr to address the below comment.
-     https://lore.kernel.org/lkml/0fc8dbd4-07d8-40bd-8eec-402b48762807@zytor.com/
-     Fixed a minor typo in comment.
-     Added comments to resctrl_arch_mon_event_config_get() and resctrl_arch_mon_event_config_set()
-     Resolved the conflicts from the recent changes.
-     This patch is for BMEC and there is no dependancy on ABMC feature. Moved it earlier.
 
-v11: Moved the mon_config_info structure definition to internal.h.
-     Moved resctrl_arch_mon_event_config_get() and resctrl_arch_mon_event_config_set()
-     to monitor.c file.
-     Renamed local variable from val to config_val.
+Note: Checkpatch checks/warnings are ignored to maintain coding style.
 
-v10: Moved the mon_config_info structure definition to resctrl.h.
+v12: Removed the dependancy on X86_FEATURE_BMEC.
+     Removed the Reviewed-by tag as patch has changed.
 
-v9: Removed QOS_L3_OCCUP_EVENT_ID switch case in resctrl_arch_mon_event_config_set.
-    Fixed a unnecessary space.
+v11: No changes.
 
-v8: Renamed
-    resctrl_arch_event_config_get() to resctrl_arch_mon_event_config_get().
-    resctrl_arch_event_config_set() to resctrl_arch_mon_event_config_set().
+v10: No changes.
 
-v7: Removed check if (val == INVALID_CONFIG_VALUE) as resctrl_arch_event_config_get
-    already prints warning.
-    Kept the Event config value definitions as is.
+v9: Took care of couple of minor merge conflicts. No other changes.
 
-v6: Fixed inconstancy with types. Made all the types to u32 for config
-    value.
-    Removed few rdt_last_cmd_puts as it is not necessary.
-    Removed unused config value definitions.
-    Few more updates to commit message.
+v8: No changes.
 
-v5: Introduced resctrl_arch_event_config_get and
-    resctrl_arch_event_config_get() based on our discussion.
-    https://lore.kernel.org/lkml/68e861f9-245d-4496-a72e-46fc57d19c62@amd.com/
+v7: Removed "" from feature flags. Not required anymore.
+    https://lore.kernel.org/lkml/20240817145058.GCZsC40neU4wkPXeVR@fat_crate.local/
 
-v4: New patch.
+v6: Added Reinette's Reviewed-by. Moved the Checkpatch note below ---.
+
+v5: Minor rebase change and subject line update.
+
+v4: Changes because of rebase. Feature word 21 has few more additions now.
+    Changed the text to "tracked by hardware" instead of active.
+
+v3: Change because of rebase. Actual patch did not change.
+
+v2: Added dependency on X86_FEATURE_BMEC.
 ---
- arch/x86/kernel/cpu/resctrl/monitor.c  | 52 +++++++++++++++++++++
- arch/x86/kernel/cpu/resctrl/rdtgroup.c | 63 +++++---------------------
- include/linux/resctrl.h                | 18 +++-----
- 3 files changed, 71 insertions(+), 62 deletions(-)
+ arch/x86/include/asm/cpufeatures.h | 1 +
+ arch/x86/kernel/cpu/cpuid-deps.c   | 2 ++
+ arch/x86/kernel/cpu/scattered.c    | 1 +
+ 3 files changed, 4 insertions(+)
 
-diff --git a/arch/x86/kernel/cpu/resctrl/monitor.c b/arch/x86/kernel/cpu/resctrl/monitor.c
-index abd337fbd01d..b84cd48c3d95 100644
---- a/arch/x86/kernel/cpu/resctrl/monitor.c
-+++ b/arch/x86/kernel/cpu/resctrl/monitor.c
-@@ -1330,3 +1330,55 @@ void __init intel_rdt_mbm_apply_quirk(void)
- 	mbm_cf_rmidthreshold = mbm_cf_table[cf_index].rmidthreshold;
- 	mbm_cf = mbm_cf_table[cf_index].cf;
- }
-+
-+/*
-+ * May run on CPU that does not belong to domain.
-+ */
-+u32 resctrl_arch_mon_event_config_get(struct rdt_mon_domain *d,
-+				      enum resctrl_event_id eventid)
-+{
-+	struct rdt_hw_mon_domain *hw_dom = resctrl_to_arch_mon_dom(d);
-+
-+	switch (eventid) {
-+	case QOS_L3_OCCUP_EVENT_ID:
-+		break;
-+	case QOS_L3_MBM_TOTAL_EVENT_ID:
-+		return hw_dom->mbm_total_cfg;
-+	case QOS_L3_MBM_LOCAL_EVENT_ID:
-+		return hw_dom->mbm_local_cfg;
-+	}
-+
-+	/* Never expect to get here */
-+	WARN_ON_ONCE(1);
-+
-+	return INVALID_CONFIG_VALUE;
-+}
-+
-+/*
-+ * Runs on CPU that belongs to domain.
-+ */
-+void resctrl_arch_mon_event_config_set(void *info)
-+{
-+	struct resctrl_mon_config_info *mon_info = info;
-+	struct rdt_hw_mon_domain *hw_dom;
-+	unsigned int index;
-+
-+	index = mon_event_config_index_get(mon_info->evtid);
-+	if (index == INVALID_CONFIG_INDEX)
-+		return;
-+
-+	wrmsrl(MSR_IA32_EVT_CFG_BASE + index, mon_info->mon_config);
-+
-+	hw_dom = resctrl_to_arch_mon_dom(mon_info->d);
-+
-+	switch (mon_info->evtid) {
-+	case QOS_L3_MBM_TOTAL_EVENT_ID:
-+		hw_dom->mbm_total_cfg = mon_info->mon_config;
-+		break;
-+	case QOS_L3_MBM_LOCAL_EVENT_ID:
-+		hw_dom->mbm_local_cfg = mon_info->mon_config;
-+		break;
-+	default:
-+		break;
-+	}
-+}
-diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-index bee32eaef8ab..b8100c89f1a6 100644
---- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-+++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-@@ -1614,34 +1614,11 @@ unsigned int mon_event_config_index_get(u32 evtid)
- 	}
- }
+diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+index 8b7cf13e0acb..accc1c328672 100644
+--- a/arch/x86/include/asm/cpufeatures.h
++++ b/arch/x86/include/asm/cpufeatures.h
+@@ -479,6 +479,7 @@
+ #define X86_FEATURE_AMD_FAST_CPPC	(21*32 + 5) /* Fast CPPC */
+ #define X86_FEATURE_AMD_HETEROGENEOUS_CORES (21*32 + 6) /* Heterogeneous Core Topology */
+ #define X86_FEATURE_AMD_WORKLOAD_CLASS	(21*32 + 7) /* Workload Classification */
++#define X86_FEATURE_ABMC		(21*32 + 8) /* Assignable Bandwidth Monitoring Counters */
  
--void resctrl_arch_mon_event_config_read(void *_config_info)
--{
--	struct resctrl_mon_config_info *config_info = _config_info;
--	unsigned int index;
--	u64 msrval;
--
--	index = mon_event_config_index_get(config_info->evtid);
--	if (index == INVALID_CONFIG_INDEX) {
--		pr_warn_once("Invalid event id %d\n", config_info->evtid);
--		return;
--	}
--	rdmsrl(MSR_IA32_EVT_CFG_BASE + index, msrval);
--
--	/* Report only the valid event configuration bits */
--	config_info->mon_config = msrval & MAX_EVT_CONFIG_BITS;
--}
--
--static void mondata_config_read(struct resctrl_mon_config_info *mon_info)
--{
--	smp_call_function_any(&mon_info->d->hdr.cpu_mask,
--			      resctrl_arch_mon_event_config_read, mon_info, 1);
--}
--
- static int mbm_config_show(struct seq_file *s, struct rdt_resource *r, u32 evtid)
- {
--	struct resctrl_mon_config_info mon_info;
- 	struct rdt_mon_domain *dom;
- 	bool sep = false;
-+	u32 config_val;
- 
- 	cpus_read_lock();
- 	mutex_lock(&rdtgroup_mutex);
-@@ -1650,13 +1627,8 @@ static int mbm_config_show(struct seq_file *s, struct rdt_resource *r, u32 evtid
- 		if (sep)
- 			seq_puts(s, ";");
- 
--		memset(&mon_info, 0, sizeof(struct resctrl_mon_config_info));
--		mon_info.r = r;
--		mon_info.d = dom;
--		mon_info.evtid = evtid;
--		mondata_config_read(&mon_info);
--
--		seq_printf(s, "%d=0x%02x", dom->hdr.id, mon_info.mon_config);
-+		config_val = resctrl_arch_mon_event_config_get(dom, evtid);
-+		seq_printf(s, "%d=0x%02x", dom->hdr.id, config_val);
- 		sep = true;
- 	}
- 	seq_puts(s, "\n");
-@@ -1687,35 +1659,23 @@ static int mbm_local_bytes_config_show(struct kernfs_open_file *of,
- 	return 0;
- }
- 
--void resctrl_arch_mon_event_config_write(void *_config_info)
--{
--	struct resctrl_mon_config_info *config_info = _config_info;
--	unsigned int index;
--
--	index = mon_event_config_index_get(config_info->evtid);
--	if (index == INVALID_CONFIG_INDEX) {
--		pr_warn_once("Invalid event id %d\n", config_info->evtid);
--		return;
--	}
--	wrmsr(MSR_IA32_EVT_CFG_BASE + index, config_info->mon_config, 0);
--}
--
- static void mbm_config_write_domain(struct rdt_resource *r,
- 				    struct rdt_mon_domain *d, u32 evtid, u32 val)
- {
--	struct resctrl_mon_config_info mon_info = {0};
-+	struct resctrl_mon_config_info mon_info;
-+	u32 config_val;
- 
- 	/*
--	 * Read the current config value first. If both are the same then
-+	 * Check the current config value first. If both are the same then
- 	 * no need to write it again.
- 	 */
-+	config_val = resctrl_arch_mon_event_config_get(d, evtid);
-+	if (config_val == INVALID_CONFIG_VALUE || config_val == val)
-+		return;
-+
- 	mon_info.r = r;
- 	mon_info.d = d;
- 	mon_info.evtid = evtid;
--	mondata_config_read(&mon_info);
--	if (mon_info.mon_config == val)
--		return;
--
- 	mon_info.mon_config = val;
- 
- 	/*
-@@ -1724,7 +1684,8 @@ static void mbm_config_write_domain(struct rdt_resource *r,
- 	 * are scoped at the domain level. Writing any of these MSRs
- 	 * on one CPU is observed by all the CPUs in the domain.
- 	 */
--	smp_call_function_any(&d->hdr.cpu_mask, resctrl_arch_mon_event_config_write,
-+	smp_call_function_any(&d->hdr.cpu_mask,
-+			      resctrl_arch_mon_event_config_set,
- 			      &mon_info, 1);
- 
- 	/*
-diff --git a/include/linux/resctrl.h b/include/linux/resctrl.h
-index 880351ca3dfc..afa9aabf014c 100644
---- a/include/linux/resctrl.h
-+++ b/include/linux/resctrl.h
-@@ -361,7 +361,7 @@ int resctrl_arch_update_domains(struct rdt_resource *r, u32 closid);
- __init bool resctrl_arch_is_evt_configurable(enum resctrl_event_id evt);
- 
- /**
-- * resctrl_arch_mon_event_config_write() - Write the config for an event.
-+ * resctrl_arch_mon_event_config_set() - Write the config for an event.
-  * @config_info: struct resctrl_mon_config_info describing the resource, domain
-  *		 and event.
-  *
-@@ -370,19 +370,15 @@ __init bool resctrl_arch_is_evt_configurable(enum resctrl_event_id evt);
-  *
-  * Called via IPI to reach a CPU that is a member of the specified domain.
-  */
--void resctrl_arch_mon_event_config_write(void *config_info);
-+void resctrl_arch_mon_event_config_set(void *config_info);
- 
- /**
-- * resctrl_arch_mon_event_config_read() - Read the config for an event.
-- * @config_info: struct resctrl_mon_config_info describing the resource, domain
-- *		 and event.
-- *
-- * Reads resource, domain and eventid from @config_info and reads the
-- * hardware config value into config_info->mon_config.
-- *
-- * Called via IPI to reach a CPU that is a member of the specified domain.
-+ * resctrl_arch_mon_event_config_get() - Get config value from the hardware domain.
-+ * @d:			Monitoring domain to read config value
-+ * @eventid:		enum resctrl_event_id describing type
-  */
--void resctrl_arch_mon_event_config_read(void *config_info);
-+u32 resctrl_arch_mon_event_config_get(struct rdt_mon_domain *d,
-+				      enum resctrl_event_id eventid);
- 
- /* For use by arch code to remap resctrl's smaller CDP CLOSID range */
- static inline u32 resctrl_get_config_index(u32 closid,
+ /*
+  * BUG word(s)
+diff --git a/arch/x86/kernel/cpu/cpuid-deps.c b/arch/x86/kernel/cpu/cpuid-deps.c
+index a2fbea0be535..2f54831e04e5 100644
+--- a/arch/x86/kernel/cpu/cpuid-deps.c
++++ b/arch/x86/kernel/cpu/cpuid-deps.c
+@@ -71,6 +71,8 @@ static const struct cpuid_dep cpuid_deps[] = {
+ 	{ X86_FEATURE_CQM_MBM_LOCAL,		X86_FEATURE_CQM_LLC   },
+ 	{ X86_FEATURE_BMEC,			X86_FEATURE_CQM_MBM_TOTAL   },
+ 	{ X86_FEATURE_BMEC,			X86_FEATURE_CQM_MBM_LOCAL   },
++	{ X86_FEATURE_ABMC,			X86_FEATURE_CQM_MBM_TOTAL   },
++	{ X86_FEATURE_ABMC,			X86_FEATURE_CQM_MBM_LOCAL   },
+ 	{ X86_FEATURE_AVX512_BF16,		X86_FEATURE_AVX512VL  },
+ 	{ X86_FEATURE_AVX512_FP16,		X86_FEATURE_AVX512BW  },
+ 	{ X86_FEATURE_ENQCMD,			X86_FEATURE_XSAVES    },
+diff --git a/arch/x86/kernel/cpu/scattered.c b/arch/x86/kernel/cpu/scattered.c
+index 16f3ca30626a..3b72b72270f1 100644
+--- a/arch/x86/kernel/cpu/scattered.c
++++ b/arch/x86/kernel/cpu/scattered.c
+@@ -49,6 +49,7 @@ static const struct cpuid_bit cpuid_bits[] = {
+ 	{ X86_FEATURE_MBA,			CPUID_EBX,  6, 0x80000008, 0 },
+ 	{ X86_FEATURE_SMBA,			CPUID_EBX,  2, 0x80000020, 0 },
+ 	{ X86_FEATURE_BMEC,			CPUID_EBX,  3, 0x80000020, 0 },
++	{ X86_FEATURE_ABMC,			CPUID_EBX,  5, 0x80000020, 0 },
+ 	{ X86_FEATURE_AMD_WORKLOAD_CLASS,	CPUID_EAX, 22, 0x80000021, 0 },
+ 	{ X86_FEATURE_PERFMON_V2,		CPUID_EAX,  0, 0x80000022, 0 },
+ 	{ X86_FEATURE_AMD_LBR_V2,		CPUID_EAX,  1, 0x80000022, 0 },
 -- 
 2.34.1
 
