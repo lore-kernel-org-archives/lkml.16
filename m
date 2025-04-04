@@ -1,88 +1,214 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE1041B3925
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 10:15:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7794910E9;
+	Fri,  4 Apr 2025 10:18:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743761752; cv=none; b=YeKFssY3+Bxs8cTnNmixGD0pbJk/hSj/LCKOev5zpNX4M7Pdd7+MBDT8JSdVDd1xVYDE96dam53wzaZrqpODGYJlrLpY4aFcD72rImI9dkg0yoFW1f+KS057H/dgFYMlLHYiNWb0IW0CTpuvXLbY3l9jU/r3HiLk7t3+PG80oR4=
+	t=1743761913; cv=none; b=b3dxePJukWtEzVMXx+3/sqUsxND++7rIZW7Z23xfVdhTwcNoI3lNWEt2D1acgm3Ziohx7nrMWfhBhBErLbVTVKFlfzZPvTDmr1sHcGmrwEvN/4gdMjR0nZPHtH6fIubjwQyJyXJoCwFIhQxsGoDNn5py0a/Ct3Yoq7n9dR8s28k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743761752; c=relaxed/simple;
-	bh=R2BR0qqO3PePUpH1S4THnCm5i4BVGs4eFwUy+ZzQMvc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iryF7DneRWY7i+KjenmX6ophdLn2BrD0DSKeanPYhhInzzzKagr0UsELqfPxtSHCdkgefXW07UJNX70qgCvj0itaT8kbOdXPWFcmie1/ySJxesGK9gwlJ5y79bqRBz5/5kFbgSt+fj3ZZWNdyY6Q3W0cxhxK1trBDuhKuxkblBs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gt4fVU0a; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743761913; c=relaxed/simple;
+	bh=80splu1n8pOU1KBBOO6Kic2gl/SyiEiRofLtsBPJG04=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SNCWtRk8mQE82pzAe0gkdpsVI7qNn6dA7fTyLlKFaiLmDtG4vi+3d/7l/Y1IkJV6fA8SIhy518XHTbiJKKDTdivQN0hmZzammNBFHY9OoRfw5ZET1ZYvqXivR0kj1c5ha2maPH4+IA8lx8lPQsc9YuSl0pKCD3KpQT4aV5XJeMM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kRwy/3tv; arc=none smtp.client-ip=209.85.215.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gt4fVU0a"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D370C4CEDD;
-	Fri,  4 Apr 2025 10:15:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743761751;
-	bh=R2BR0qqO3PePUpH1S4THnCm5i4BVGs4eFwUy+ZzQMvc=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Gt4fVU0aDRIkqL8Dl5z6AQHLUPpAsigzVkvUCY5cll+L1ziG+l/tE4ZjpHyzgBZbz
-	 SSXCzER9wOrWMTvPP/ZESRjYYofjjDzLWzxfolFBWoYUwZtFSBxsFndhcPWZcSU+2a
-	 5MYO6w1X1EjWPzoinjx0d8OUmzu/fJKXESM++YhwdCnZu/f08G2XvX/QVDIfE1J327
-	 pC5jAFUfglLzqgEQ5qXHVW9DtrErVIhuTQRqW53KeaZ4WdpZlCp0eSDoQWG2g7Ct1W
-	 NBP/BW/3KT1tmMPAoXxUHse/NhDOEEqFnTTyaeklnQTn+tljmvYBy0hmu7cspToyRe
-	 0tRrO6noP8EVA==
-From: Philipp Stanner <phasta@kernel.org>
-To: Tejun Heo <tj@kernel.org>,
-	Lai Jiangshan <jiangshanlai@gmail.com>
-Cc: linux-kernel@vger.kernel.org,
-	Philipp Stanner <phasta@kernel.org>
-Subject: [PATCH v2] workqueue: Better document teardown for delayed_work
-Date: Fri,  4 Apr 2025 12:15:44 +0200
-Message-ID: <20250404101543.74262-2-phasta@kernel.org>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kRwy/3tv"
+Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-af519c159a8so1671555a12.3;
+        Fri, 04 Apr 2025 03:18:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743761911; x=1744366711; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=kk2+ssM+Oku3Smc5VL3MHZ4lXHAgsUA/66b+AhTOPFU=;
+        b=kRwy/3tv5u/qNkJNnlngkTvywHIFo4oeaJq7MAipJ1r9HWLiJaI2YnPbnlUA+tSqZP
+         jmfpvaXRWHk7p2WagqG5XhUMFBHvF1g8Ktgw3qSzpuJNnAaT/gxtOREu44gmUHFaXKQn
+         nPDn8/kVzMPTIoPHuBesmG3AE/b1XLDjeo2LHdkgUEGHSgW1RbwhnGJIraH3HNnw3YvU
+         pah5ofNaIM2HRknkNak3bXsWjnGG57jtljGJJpqm7WJvNfUu3PsPsttaW8PCzJGEfQqr
+         QEnCvpkNdOTpU2pm2T0IR5YDm13mXE2HngsF1tkKwCA3auUkFUTaHS3pUQb8uAjAGk1l
+         DiGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743761911; x=1744366711;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kk2+ssM+Oku3Smc5VL3MHZ4lXHAgsUA/66b+AhTOPFU=;
+        b=HQgr7S6FL9WdDbuQPySEqX8rwayXmkMY/obD2TbZRf5rTdWWpscTt4FsFxK56osGiF
+         gfu88cpBurqpLqlFCnw+f3hvMaUSXnHVm2kAe7NFu/0/L+N13VN6PoddfyRAW6X7S/vb
+         OCHsh7XscG0Lei6H8U4CvY9z8ZccSBH/v35XEvthD7wJpBfTPk77uHWBKNCN1ABZ7Atm
+         9+hH7A/TMDcL466bHBixrI7CC7eBK3Ejl+3SplxpTRPo/dOuVrRvUfyOodze7v1lT6JH
+         WEF6e32y2mBFKTuONT2QVXwiEsQKDwnQ6Z7VS6SUwKEqbkTVvSKxXHPJbebx2zsKedv/
+         rXrw==
+X-Forwarded-Encrypted: i=1; AJvYcCWECdpNu8FbKIQsMyNNa6gcROaHHyG2g3NkVphMfrYfZJnNwx7iYI0qigC+puWQal6T6v50WflbG/xgqa4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7QZV3RdaLMRy9NduiUQfeFVzMse6rbH04/wmHogkZ16Q4FMJm
+	rio0PeXT28eOEBRZElI/RcjpiOYdHPUSCJggM5umNn3BvNN0hTQ3bqxnU/qNRFVoXFWY7WG1XuS
+	sebSc9cigtjOs7tTMSt2wFvsIrK0qtchWEsp5yA==
+X-Gm-Gg: ASbGnctyJiLQmAyr0GmRNU27qZqwx25knysVRk0w7/q4DmZhJTZoqNe8Jli5Plzt0Mc
+	uGWa8UIcJmRhoTBCdkbLnmT0egyvmMYZUXyD37yLEIUFQUb+ADN+rfni130zZklusnw84wjh6TI
+	CMfyyhNXo9QFUKDK5MI/oiWAdObHwi1QbBaxkW4K+R
+X-Google-Smtp-Source: AGHT+IF5qLApiWtmfEDZpNEBNfwwjniKGCedGrVsIBSll8ZYZ6bWrMHRGsz5hNK6ku+PeSNjXvg1TdI1HKVtH14YtJA=
+X-Received: by 2002:a17:90b:254c:b0:2ee:aed6:9ec2 with SMTP id
+ 98e67ed59e1d1-306a6159281mr3617039a91.14.1743761910715; Fri, 04 Apr 2025
+ 03:18:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250403151621.130541515@linuxfoundation.org>
+In-Reply-To: <20250403151621.130541515@linuxfoundation.org>
+From: Luna Jernberg <droidbittin@gmail.com>
+Date: Fri, 4 Apr 2025 12:18:18 +0200
+X-Gm-Features: ATxdqUGBb48kNnIvxkBjFnEnOVymJCkadN_wHW90QF4tTA66dTROAv5n4CAYZjs
+Message-ID: <CADo9pHjHSDjbGHrx1bY0JAxPRNWW63772wGt0e4wQ_kDq50JhA@mail.gmail.com>
+Subject: Re: [PATCH 6.14 00/21] 6.14.1-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
+	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
+	broonie@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-destroy_workqueue() does not ensure that non-pending work submitted with
-queue_delayed_work() gets cancelled. The caller has to ensure that
-manually.
+Tested-by: Luna Jernberg <droidbittin@gmail.com>
 
-Add this information about delayed_work in destroy_workqueue()'s
-docstring.
+AMD Ryzen 5 5600 6-Core Processor:
+https://www.inet.se/produkt/5304697/amd-ryzen-5-5600-3-5-ghz-35mb on a
+https://www.gigabyte.com/Motherboard/B550-AORUS-ELITE-V2-rev-12
+https://www.inet.se/produkt/1903406/gigabyte-b550-aorus-elite-v2
+motherboard :)
 
-Add a TODO for destroy_workqueue() to wait for all delayed_work.
+running Arch Linux with the testing repos enabled:
+https://archlinux.org/ https://archboot.com/
+https://wiki.archlinux.org/title/Arch_Testing_Team
 
-Signed-off-by: Philipp Stanner <phasta@kernel.org>
----
-Changes in v2:
-  - Make it explicit what the problem is and tell the user what to do to
-    work around it. (Tejun)
-  - Add a TODO for handling delayed_work in the future. (Me)
----
- kernel/workqueue.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+(still building on my Dell Latitude laptop)
 
-diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-index bfe030b443e2..a4d23c102f9f 100644
---- a/kernel/workqueue.c
-+++ b/kernel/workqueue.c
-@@ -5837,6 +5837,17 @@ static bool pwq_busy(struct pool_workqueue *pwq)
-  * @wq: target workqueue
-  *
-  * Safely destroy a workqueue. All work currently pending will be done first.
-+ *
-+ * This function does NOT guarantee that non-pending work that has been
-+ * submitted with queue_delayed_work() and similar functions will be done
-+ * before destroying the workqueue. The fundamental problem is that, currently,
-+ * the workqueue has no way of accessing non-pending delayed_work. delayed_work
-+ * is only linked on the timer-side. All delayed_work must, therefore, be
-+ * canceled before calling this function.
-+ *
-+ * TODO: It would be better if the problem described above wouldn't exist and
-+ * destroy_workqueue() would cleanly cancel all pending and non-pending
-+ * delayed_work.
-  */
- void destroy_workqueue(struct workqueue_struct *wq)
- {
--- 
-2.48.1
-
+Den tors 3 apr. 2025 kl 17:25 skrev Greg Kroah-Hartman
+<gregkh@linuxfoundation.org>:
+>
+> This is the start of the stable review cycle for the 6.14.1 release.
+> There are 21 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Sat, 05 Apr 2025 15:16:11 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.14.1-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.14.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
+>
+> -------------
+> Pseudo-Shortlog of commits:
+>
+> Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>     Linux 6.14.1-rc1
+>
+> John Keeping <jkeeping@inmusicbrands.com>
+>     serial: 8250_dma: terminate correct DMA in tx_dma_flush()
+>
+> Cheick Traore <cheick.traore@foss.st.com>
+>     serial: stm32: do not deassert RS485 RTS GPIO prematurely
+>
+> Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>     perf tools: Fix up some comments and code to properly use the event_source bus
+>
+> Luo Qiu <luoqiu@kylinsec.com.cn>
+>     memstick: rtsx_usb_ms: Fix slab-use-after-free in rtsx_usb_ms_drv_remove
+>
+> Michal Pecio <michal.pecio@gmail.com>
+>     usb: xhci: Apply the link chain quirk on NEC isoc endpoints
+>
+> Michal Pecio <michal.pecio@gmail.com>
+>     usb: xhci: Don't skip on Stopped - Length Invalid
+>
+> Dominique Martinet <dominique.martinet@atmark-techno.com>
+>     net: usb: usbnet: restore usb%d name exception for local mac addresses
+>
+> Fabio Porcedda <fabio.porcedda@gmail.com>
+>     net: usb: qmi_wwan: add Telit Cinterion FE990B composition
+>
+> Fabio Porcedda <fabio.porcedda@gmail.com>
+>     net: usb: qmi_wwan: add Telit Cinterion FN990B composition
+>
+> Sherry Sun <sherry.sun@nxp.com>
+>     tty: serial: fsl_lpuart: disable transmitter before changing RS485 related registers
+>
+> Cameron Williams <cang1@live.co.uk>
+>     tty: serial: 8250: Add Brainboxes XC devices
+>
+> Cameron Williams <cang1@live.co.uk>
+>     tty: serial: 8250: Add some more device IDs
+>
+> William Breathitt Gray <wbg@kernel.org>
+>     counter: microchip-tcb-capture: Fix undefined counter channel state on probe
+>
+> Fabrice Gasnier <fabrice.gasnier@foss.st.com>
+>     counter: stm32-lptimer-cnt: fix error handling when enabling
+>
+> Andres Traumann <andres.traumann.01@gmail.com>
+>     ALSA: hda/realtek: Bass speaker fixup for ASUS UM5606KA
+>
+> Dhruv Deshpande <dhrv.d@proton.me>
+>     ALSA: hda/realtek: Support mute LED on HP Laptop 15s-du3xxx
+>
+> Maxim Mikityanskiy <maxtram95@gmail.com>
+>     netfilter: socket: Lookup orig tuple for IPv6 SNAT
+>
+> Abel Wu <wuyun.abel@bytedance.com>
+>     cgroup/rstat: Fix forceidle time in cpu.stat
+>
+> Minjoong Kim <pwn9uin@gmail.com>
+>     atm: Fix NULL pointer dereference
+>
+> Terry Junge <linuxhid@cosmicgizmosystems.com>
+>     HID: hid-plantronics: Add mic mute mapping and generalize quirks
+>
+> Terry Junge <linuxhid@cosmicgizmosystems.com>
+>     ALSA: usb-audio: Add quirk for Plantronics headsets to fix control names
+>
+>
+> -------------
+>
+> Diffstat:
+>
+>  Makefile                                  |   4 +-
+>  drivers/counter/microchip-tcb-capture.c   |  19 ++++
+>  drivers/counter/stm32-lptimer-cnt.c       |  24 +++--
+>  drivers/hid/hid-plantronics.c             | 144 ++++++++++++++----------------
+>  drivers/memstick/host/rtsx_usb_ms.c       |   1 +
+>  drivers/net/usb/qmi_wwan.c                |   2 +
+>  drivers/net/usb/usbnet.c                  |  21 +++--
+>  drivers/tty/serial/8250/8250_dma.c        |   2 +-
+>  drivers/tty/serial/8250/8250_pci.c        |  46 ++++++++++
+>  drivers/tty/serial/fsl_lpuart.c           |  17 ++++
+>  drivers/tty/serial/stm32-usart.c          |   4 +-
+>  drivers/usb/host/xhci-ring.c              |   4 +
+>  drivers/usb/host/xhci.h                   |  13 ++-
+>  kernel/cgroup/rstat.c                     |  29 +++---
+>  net/atm/mpc.c                             |   2 +
+>  net/ipv6/netfilter/nf_socket_ipv6.c       |  23 +++++
+>  sound/pci/hda/patch_realtek.c             |   2 +
+>  sound/usb/mixer_quirks.c                  |  51 +++++++++++
+>  tools/perf/Documentation/intel-hybrid.txt |  12 +--
+>  tools/perf/Documentation/perf-list.txt    |   2 +-
+>  tools/perf/arch/x86/util/iostat.c         |   2 +-
+>  tools/perf/builtin-stat.c                 |   2 +-
+>  tools/perf/util/mem-events.c              |   2 +-
+>  tools/perf/util/pmu.c                     |   4 +-
+>  24 files changed, 304 insertions(+), 128 deletions(-)
+>
+>
+>
