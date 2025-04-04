@@ -1,227 +1,220 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBDCC22DFAF;
-	Fri,  4 Apr 2025 19:40:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5758922DFA9
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 19:40:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743795648; cv=none; b=Vcw5KuzjRIpqRIA9qYwSxPWcoznJlrGmqNGo8FenMcs8wYyfg5SEH/TMW1oJvASDGjKEqhH2s3q44dz0UqfvIGeXBXaHKHV3WUB13uQOWmnFS0AATtl+ma5R8cLbr3mHqOomMS4rEYpxq4OzAAfNOPEhbwU3GggUaoUHvOUOdCE=
+	t=1743795648; cv=none; b=KNTHhAGvPd7YNW5X9ie9/mcF71nZh2usjlz9gRTkbchNIa6v5EbdYewrXqzEstzNOqtaeEqDYfyItMj+iIawK1Mvuh0S7euCAdgGNDsUboiszbxrpptmcZQRFvelPG6Ey8uRZgjAk1o4FoclCHin2kZPQo4wHPP3DgSP1RFO78c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1743795648; c=relaxed/simple;
-	bh=X60ncpChgW8F3t+APBZl1n9z8FKQTuNx+IytCXpYTTg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u964A6hcYFXmfL5vHrv5ZjIr2DbaRVF2+/8MpNZy6FVCRinJvyxSG9o3XUh0PL8zyAtvxRPsRJwxHn4ltn3ZL6gPySgpyzgnmkmB333u6Ol5V/o5VXLvzIgE61FZqcVndrQA/sN3QXEkI2rwvQshD7FzkeDeQkSEA0ysDvFmGc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aXGaQw9e; arc=none smtp.client-ip=10.30.226.201
+	bh=S1IQCpBa9erCP4/lm9a+T/slv15e6a/B9F7tRfkzXTs=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=pip+PwwKMjZRsV3LiF33y3sdZDXY4XEdR7UGuIhrMvKnwlywwFZQctJl6ehzydiGMmvAyHRjcNo+kuDohcWC/wupPZ6glbwnsHFFF7DLQ2wkeV8wASHE0pxVG8+nIQ5w9CGMaLgJY6s2yL1Zf2PwP3LTgVgQW5YIYcy7HHHpo4c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CiJ/bJcR; arc=none smtp.client-ip=209.85.210.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aXGaQw9e"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDA12C4CEDD;
-	Fri,  4 Apr 2025 19:40:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743795648;
-	bh=X60ncpChgW8F3t+APBZl1n9z8FKQTuNx+IytCXpYTTg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aXGaQw9eGa9ezTPA5PgsIXdzB7oQMT71L0vuBTzpaaFdX5XE8QNRrqsYDdxgGDXT+
-	 MJ+W9gUNQW0Dr2XYPE26I3Dqgij1Niueiqj/iUMSsk8mv2q3cpuMI3zIFi0Qm90VFc
-	 QTWYgql2GrWle78Vu09/5d42P633QX9NQozLs0jmjVY+ASJwyRFEumzha4GdeegUgi
-	 8iCSq9XSZnX4hXVf70v+juQwthGzv2fCxfJ5BTlVgtKkJYlBFvbCOGwwUDwYfntP9K
-	 RqP6Ka/YYYRh/z+KEjcx9Nde7qv4F32TqbwNm5tJxMrSO3OD0NffBEqXbVSMu4i9bx
-	 FMw9l2Fr/TiSw==
-Date: Fri, 4 Apr 2025 14:40:46 -0500
-From: Rob Herring <robh@kernel.org>
-To: Sukrut Bellary <sbellary@baylibre.com>
-Cc: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Tero Kristo <kristo@kernel.org>,
-	Kevin Hilman <khilman@baylibre.com>,
-	Andreas Kemnade <andreas@kemnade.info>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/4] dt-bindings: clock: ti: Convert fixed-factor-clock
- to yaml
-Message-ID: <20250404194046.GA167370-robh@kernel.org>
-References: <20250404014500.2789830-1-sbellary@baylibre.com>
- <20250404014500.2789830-4-sbellary@baylibre.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CiJ/bJcR"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-7394792f83cso1891189b3a.3
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 12:40:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1743795646; x=1744400446; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
+        bh=uaVpxlbnDgtNQ9eArDqZS6RnH4UAPqkG1v5XnP6kRe0=;
+        b=CiJ/bJcRDGfhiMp8nRs17hBZl77Hnzs9FB3jdyAVsfJmhIodgAfvt+b1dg53t2DOux
+         SQ7Dp4OXeVssclGWIDlz9gAec09GWcDzw+/LRgXMT3bVf0MNy5JkuQY/UrdwcBqRgYRz
+         z2SWr5rZBzoVoWObigTimfkpDTM47u33SzasjmwkMyeicwvjwmiUVKhEdX96g97ikPMg
+         Tbwx0v16Z1KSLFg2EEvm7YZB7+ov2UbHJvqV3iPJ+yXMOyvmtdsOTPLRxgpn+c6zDC0O
+         MqyfGCaIZR9wdw035d10GY/+WD25cjIqcQlJ3evh7Mmak6FGbz6lyIoZ30/ujBZaTgbA
+         pchA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743795646; x=1744400446;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uaVpxlbnDgtNQ9eArDqZS6RnH4UAPqkG1v5XnP6kRe0=;
+        b=dVIs6fB+AMHGVLE6T8veTMRAnehTFhQKSsRvGd//AS1St8cNv3w471mQfR00mAlXHE
+         VtiUnUKcrQZxyYdKU44Viv+Jpz2hVTImzoN3JRBbVA6kQSwaGrJ9RTzg67ArkQ2xQHqY
+         6h5r8IjYzxZkShQopQcWJMjrn1rZnOEgk9p4jBtNOpArokyhI4/tcGE7IbIBXLylO3J1
+         wlv4j0yYXbJwgPr1IkCKyxznoUHTcxW7O8mUkACsUdHanGP7RUG0uFtKL4cv0wGPOUWm
+         tjg2ZSaeeETOXgom12IAEkipTugyb8vi/CFiiX/BICmqD7qb5LivZsOzy/3DllD0yb7Y
+         7GIg==
+X-Forwarded-Encrypted: i=1; AJvYcCUxWiVc76tC4wC5OhNANx/AvVrx2cAT+jbKuIfG35jhNBw3VVBigAQaHiQNH0/n+w92wVgwEiU7f4DSSk0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyCCfFgzK4MIjyqG5jKkGL0Dgwindtnf6RmyYnzAYwh6HtQcbv4
+	Kz9icdbUG0ZTEUP4Q+SavOcMgI56MsFHaWIDmnDFhGWPSJUTx1pp7MlUDAmQ7FQCySk4+yr7GAe
+	E0g==
+X-Google-Smtp-Source: AGHT+IEaPgjswzlO8HHW+mHK05gIj6Syjqlu81aOJEReqz978dEgQfNJanfgf5aiklETS63POvgyQk3Fmxw=
+X-Received: from pfhh19.prod.google.com ([2002:a05:6a00:2313:b0:736:ab5f:21f4])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:2289:b0:736:755b:8317
+ with SMTP id d2e1a72fcca58-73b6b8f8f45mr861882b3a.21.1743795645870; Fri, 04
+ Apr 2025 12:40:45 -0700 (PDT)
+Reply-To: Sean Christopherson <seanjc@google.com>
+Date: Fri,  4 Apr 2025 12:38:49 -0700
+In-Reply-To: <20250404193923.1413163-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250404014500.2789830-4-sbellary@baylibre.com>
+Mime-Version: 1.0
+References: <20250404193923.1413163-1-seanjc@google.com>
+X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
+Message-ID: <20250404193923.1413163-35-seanjc@google.com>
+Subject: [PATCH 34/67] KVM: x86: Move posted interrupt tracepoint to common code
+From: Sean Christopherson <seanjc@google.com>
+To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Joerg Roedel <joro@8bytes.org>, David Woodhouse <dwmw2@infradead.org>, 
+	Lu Baolu <baolu.lu@linux.intel.com>
+Cc: kvm@vger.kernel.org, iommu@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	Maxim Levitsky <mlevitsk@redhat.com>, Joao Martins <joao.m.martins@oracle.com>, 
+	David Matlack <dmatlack@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Apr 03, 2025 at 06:44:59PM -0700, Sukrut Bellary wrote:
-> Convert TI fixed-factor-clock binding to yaml.
-> 
-> This uses the ti,autoidle.yaml for clock autoidle support.
-> Clean up the example to meet the current standards.
-> 
-> Add the creator of the original binding as a maintainer.
-> 
-> Signed-off-by: Sukrut Bellary <sbellary@baylibre.com>
-> ---
->  .../bindings/clock/ti/fixed-factor-clock.txt  | 42 ----------
->  .../clock/ti/ti,fixed-factor-clock.yaml       | 77 +++++++++++++++++++
->  2 files changed, 77 insertions(+), 42 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/clock/ti/fixed-factor-clock.txt
->  create mode 100644 Documentation/devicetree/bindings/clock/ti/ti,fixed-factor-clock.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/ti/fixed-factor-clock.txt b/Documentation/devicetree/bindings/clock/ti/fixed-factor-clock.txt
-> deleted file mode 100644
-> index dc69477b6e98..000000000000
-> --- a/Documentation/devicetree/bindings/clock/ti/fixed-factor-clock.txt
-> +++ /dev/null
-> @@ -1,42 +0,0 @@
-> -Binding for TI fixed factor rate clock sources.
-> -
-> -This binding uses the common clock binding[1], and also uses the autoidle
-> -support from TI autoidle clock [2].
-> -
-> -[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-> -[2] Documentation/devicetree/bindings/clock/ti/autoidle.txt
-> -
-> -Required properties:
-> -- compatible : shall be "ti,fixed-factor-clock".
-> -- #clock-cells : from common clock binding; shall be set to 0.
-> -- ti,clock-div: fixed divider.
-> -- ti,clock-mult: fixed multiplier.
-> -- clocks: parent clock.
-> -
-> -Optional properties:
-> -- clock-output-names : from common clock binding.
-> -- ti,autoidle-shift: bit shift of the autoidle enable bit for the clock,
-> -  see [2]
-> -- reg: offset for the autoidle register of this clock, see [2]
-> -- ti,invert-autoidle-bit: autoidle is enabled by setting the bit to 0, see [2]
-> -- ti,set-rate-parent: clk_set_rate is propagated to parent
-> -
-> -Example:
-> -	clock {
-> -		compatible = "ti,fixed-factor-clock";
-> -		clocks = <&parentclk>;
-> -		#clock-cells = <0>;
-> -		ti,clock-div = <2>;
-> -		ti,clock-mult = <1>;
-> -	};
-> -
-> -	dpll_usb_clkdcoldo_ck: dpll_usb_clkdcoldo_ck {
-> -		#clock-cells = <0>;
-> -		compatible = "ti,fixed-factor-clock";
-> -		clocks = <&dpll_usb_ck>;
-> -		ti,clock-div = <1>;
-> -		ti,autoidle-shift = <8>;
-> -		reg = <0x01b4>;
-> -		ti,clock-mult = <1>;
-> -		ti,invert-autoidle-bit;
-> -	};
-> diff --git a/Documentation/devicetree/bindings/clock/ti/ti,fixed-factor-clock.yaml b/Documentation/devicetree/bindings/clock/ti/ti,fixed-factor-clock.yaml
-> new file mode 100644
-> index 000000000000..f597aedbad05
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/ti/ti,fixed-factor-clock.yaml
-> @@ -0,0 +1,77 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/clock/ti/ti,fixed-factor-clock.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: TI fixed factor rate clock sources
-> +
-> +maintainers:
-> +  - Tero Kristo <kristo@kernel.org>
-> +  - Sukrut Bellary <sbellary@baylibre.com>
-> +
-> +description: |
+Move the pi_irte_update tracepoint to common x86, and call it whenever the
+IRTE is modified.  Tracing only the modifications that result in an IRQ
+being posted to a vCPU makes the tracepoint useless for debugging.
 
-Don't need '|'.
+Drop the vendor specific address; plumbing that into common code isn't
+worth the trouble, as the address is meaningless without a whole pile of
+other information that isn't provided in any tracepoint.
 
-> +  This consists of a divider and a multiplier used to generate
-> +  a fixed rate clock. This also uses the autoidle support from
-> +  TI autoidle clock.
-> +
-> +allOf:
-> +  - $ref: /schemas/clock/ti/ti,autoidle.yaml#
+Signed-off-by: Sean Christopherson <seanjc@google.com>
+---
+ arch/x86/kvm/svm/avic.c        |  6 ------
+ arch/x86/kvm/trace.h           | 19 +++++++------------
+ arch/x86/kvm/vmx/posted_intr.c |  3 ---
+ arch/x86/kvm/x86.c             | 12 +++++++++---
+ 4 files changed, 16 insertions(+), 24 deletions(-)
 
-You can drop '/schemas/clock/ti/'
+diff --git a/arch/x86/kvm/svm/avic.c b/arch/x86/kvm/svm/avic.c
+index 666f518340a7..dcfe908f5b98 100644
+--- a/arch/x86/kvm/svm/avic.c
++++ b/arch/x86/kvm/svm/avic.c
+@@ -825,9 +825,6 @@ int avic_pi_update_irte(struct kvm_kernel_irqfd *irqfd, struct kvm *kvm,
+ 	 */
+ 	svm_ir_list_del(irqfd);
+ 
+-	pr_debug("SVM: %s: host_irq=%#x, guest_irq=%#x, set=%#x\n",
+-		 __func__, host_irq, guest_irq, !!vcpu);
+-
+ 	/**
+ 	 * Here, we setup with legacy mode in the following cases:
+ 	 * 1. When cannot target interrupt to a specific vcpu.
+@@ -863,9 +860,6 @@ int avic_pi_update_irte(struct kvm_kernel_irqfd *irqfd, struct kvm *kvm,
+ 		 */
+ 		if (!ret)
+ 			ret = svm_ir_list_add(to_svm(vcpu), irqfd, &pi);
+-
+-		trace_kvm_pi_irte_update(host_irq, vcpu->vcpu_id, guest_irq,
+-					 vector, vcpu_info.pi_desc_addr, true);
+ 	} else {
+ 		ret = irq_set_vcpu_affinity(host_irq, NULL);
+ 	}
+diff --git a/arch/x86/kvm/trace.h b/arch/x86/kvm/trace.h
+index ccda95e53f62..be4f55c23ec7 100644
+--- a/arch/x86/kvm/trace.h
++++ b/arch/x86/kvm/trace.h
+@@ -1089,37 +1089,32 @@ TRACE_EVENT(kvm_smm_transition,
+  * Tracepoint for VT-d posted-interrupts and AMD-Vi Guest Virtual APIC.
+  */
+ TRACE_EVENT(kvm_pi_irte_update,
+-	TP_PROTO(unsigned int host_irq, unsigned int vcpu_id,
+-		 unsigned int gsi, unsigned int gvec,
+-		 u64 pi_desc_addr, bool set),
+-	TP_ARGS(host_irq, vcpu_id, gsi, gvec, pi_desc_addr, set),
++	TP_PROTO(unsigned int host_irq, struct kvm_vcpu *vcpu,
++		 unsigned int gsi, unsigned int gvec, bool set),
++	TP_ARGS(host_irq, vcpu, gsi, gvec, set),
+ 
+ 	TP_STRUCT__entry(
+ 		__field(	unsigned int,	host_irq	)
+-		__field(	unsigned int,	vcpu_id		)
++		__field(	int,		vcpu_id		)
+ 		__field(	unsigned int,	gsi		)
+ 		__field(	unsigned int,	gvec		)
+-		__field(	u64,		pi_desc_addr	)
+ 		__field(	bool,		set		)
+ 	),
+ 
+ 	TP_fast_assign(
+ 		__entry->host_irq	= host_irq;
+-		__entry->vcpu_id	= vcpu_id;
++		__entry->vcpu_id	= vcpu ? vcpu->vcpu_id : -1;
+ 		__entry->gsi		= gsi;
+ 		__entry->gvec		= gvec;
+-		__entry->pi_desc_addr	= pi_desc_addr;
+ 		__entry->set		= set;
+ 	),
+ 
+-	TP_printk("PI is %s for irq %u, vcpu %u, gsi: 0x%x, "
+-		  "gvec: 0x%x, pi_desc_addr: 0x%llx",
++	TP_printk("PI is %s for irq %u, vcpu %d, gsi: 0x%x, gvec: 0x%x",
+ 		  __entry->set ? "enabled and being updated" : "disabled",
+ 		  __entry->host_irq,
+ 		  __entry->vcpu_id,
+ 		  __entry->gsi,
+-		  __entry->gvec,
+-		  __entry->pi_desc_addr)
++		  __entry->gvec)
+ );
+ 
+ /*
+diff --git a/arch/x86/kvm/vmx/posted_intr.c b/arch/x86/kvm/vmx/posted_intr.c
+index fd5f6a125614..baf627839498 100644
+--- a/arch/x86/kvm/vmx/posted_intr.c
++++ b/arch/x86/kvm/vmx/posted_intr.c
+@@ -275,9 +275,6 @@ int vmx_pi_update_irte(struct kvm_kernel_irqfd *irqfd, struct kvm *kvm,
+ 			.vector = vector,
+ 		};
+ 
+-		trace_kvm_pi_irte_update(host_irq, vcpu->vcpu_id, guest_irq,
+-					 vcpu_info.vector, vcpu_info.pi_desc_addr, true);
+-
+ 		return irq_set_vcpu_affinity(host_irq, &vcpu_info);
+ 	} else {
+ 		return irq_set_vcpu_affinity(host_irq, NULL);
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 0ab818bba743..a20d461718cc 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -13571,9 +13571,11 @@ static int kvm_pi_update_irte(struct kvm_kernel_irqfd *irqfd,
+ 			      struct kvm_kernel_irq_routing_entry *old,
+ 			      struct kvm_kernel_irq_routing_entry *new)
+ {
++	unsigned int host_irq = irqfd->producer->irq;
+ 	struct kvm *kvm = irqfd->kvm;
+ 	struct kvm_vcpu *vcpu = NULL;
+ 	struct kvm_lapic_irq irq;
++	int r;
+ 
+ 	if (!irqchip_in_kernel(kvm) ||
+ 	    !kvm_arch_has_irq_bypass() ||
+@@ -13600,8 +13602,13 @@ static int kvm_pi_update_irte(struct kvm_kernel_irqfd *irqfd,
+ 			vcpu = NULL;
+ 	}
+ 
+-	return kvm_x86_call(pi_update_irte)(irqfd, irqfd->kvm, irqfd->producer->irq,
+-					    irqfd->gsi, new, vcpu, irq.vector);
++	r = kvm_x86_call(pi_update_irte)(irqfd, irqfd->kvm, host_irq, irqfd->gsi,
++					 new, vcpu, irq.vector);
++	if (r)
++		return r;
++
++	trace_kvm_pi_irte_update(host_irq, vcpu, irqfd->gsi, irq.vector, !!vcpu);
++	return 0;
+ }
+ 
+ int kvm_arch_irq_bypass_add_producer(struct irq_bypass_consumer *cons,
+@@ -14074,7 +14081,6 @@ EXPORT_TRACEPOINT_SYMBOL_GPL(kvm_nested_intercepts);
+ EXPORT_TRACEPOINT_SYMBOL_GPL(kvm_write_tsc_offset);
+ EXPORT_TRACEPOINT_SYMBOL_GPL(kvm_ple_window_update);
+ EXPORT_TRACEPOINT_SYMBOL_GPL(kvm_pml_full);
+-EXPORT_TRACEPOINT_SYMBOL_GPL(kvm_pi_irte_update);
+ EXPORT_TRACEPOINT_SYMBOL_GPL(kvm_avic_unaccelerated_access);
+ EXPORT_TRACEPOINT_SYMBOL_GPL(kvm_avic_incomplete_ipi);
+ EXPORT_TRACEPOINT_SYMBOL_GPL(kvm_avic_ga_log);
+-- 
+2.49.0.504.g3bcea36a83-goog
 
-> +
-> +properties:
-> +  compatible:
-> +    const: ti,fixed-factor-clock
-> +
-> +  "#clock-cells":
-> +    const: 0
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  ti,clock-div:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: Fixed divider
-
-Constraints?
-
-> +
-> +  ti,clock-mult:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: Fixed multiplier
-
-Constraints?
-
-> +
-> +  clocks:
-
-       maxItems: 1
-
-> +    description:
-> +      Link to phandle of parent clock.
-
-Drop the description
-
-> +
-> +  clock-output-names:
-
-       maxItems: 1
-
-> +    description:
-> +      From common clock binding
-
-Drop
-
-> +
-> +  ti,set-rate-parent:
-> +    description:
-> +      Propagate to parent clock
-> +    type: boolean
-> +
-> +required:
-> +  - compatible
-> +  - clocks
-> +  - "#clock-cells"
-> +  - ti,clock-mult
-> +  - ti,clock-div
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    bus{
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        clock@1b4 {
-> +            compatible = "ti,fixed-factor-clock";
-> +            reg = <0x1b4>;
-> +            clocks = <&dpll_usb_ck>;
-> +            #clock-cells = <0>;
-> +            ti,clock-mult = <1>;
-> +            ti,clock-div = <1>;
-> +            ti,autoidle-shift = <8>;
-> +            ti,invert-autoidle-bit;
-> +        };
-> +    };
-> -- 
-> 2.34.1
-> 
