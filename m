@@ -1,290 +1,109 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C07F1EDA26;
-	Fri,  4 Apr 2025 13:18:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D3EB82D98;
+	Fri,  4 Apr 2025 13:18:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743772700; cv=none; b=phHHsfqJE3UcHHZvS/x7f6gsv5nD8C0ZfAA1QM20r08CKdL1p+EtQAeKVB1YSsnF4VsSHOZBLkd3595Pprobcj6UbdHK34iAJaX/j4YTNHGGU2gQZ662vg8I/79Fz4k8FsUcr0rLnnpZZh3jH/RRQzd461DQB5Uouja+e7eBPrs=
+	t=1743772724; cv=none; b=ldpW0QR9ASWFCyZCaY+k+g+cSEDGJmTg/WMqVVmB7oQvrJpxoQe+CleuUO3p2GLd+L55hotAVA/sLYAwhMb15XdK5EPZAbpkYUx6DbL4TbqJ3yztA7sPiph67zK+93edPx96EilX3CAcVDXS4s3L8UVNnRLS7jSqOjCyVJF+l5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743772700; c=relaxed/simple;
-	bh=LXNzuXLeRTm8jG3p+pKkuZRDyf0+LkHmCSi04lxWu3Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BKGJMgUGnbMxqiLqIoFYIgqh0KgbkyHdhV2RLumnyNA/hqS3pk8vWYaDO4vX1wUb7cpaxT/NzFhZmRn8Xo3DMVUkdyEn9ueAjZ6QvsGPhbVUKWRu7p04ccoTeRoyB4zhQM92ArM+ZrI2QMtkwi8MdXejCAo9gHz/1AYYevqUFEA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EVIbzUbd; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1743772724; c=relaxed/simple;
+	bh=8p+c4MB2Vz2NLD+RiN8PNGA7Pc+YAFAuwCP+/mMX5Bs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=syr+2X+tTBERF6utb9ugcFi2InI1tPTBhVhyRyP4oQBMDOHpBR0zxWXH9Esj7PNjLpc/ckdJQ1iPBO9zMOhfON9tqZV6YOc4yyCAeitZRQ/YrRW5AQt1cJSXgNuLm0UV4P4D4F31NcZP6af1YqMgzW/MHdvEy1Yi+yfZAS2tTS8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eKW8BkEP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EVIbzUbd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743772699; x=1775308699;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=LXNzuXLeRTm8jG3p+pKkuZRDyf0+LkHmCSi04lxWu3Q=;
-  b=EVIbzUbdY/UndfgA3hoqoL5CuhyK0GtkajI5PqUKyFIOp8iFa9hOJgw9
-   WYo+3p9P2fG0ZdgHW6jzI4zR9UNxVQuUf6n5PCBeLI0WiV6svrVGyFGZh
-   6z4xWb6mOwavQYSVaw1+GxdIujhszSn4hf8D6Efe7IvN8EWilt+TgN9cZ
-   M+3bsAyqdIBRiSToPpcnAm/TaSJGy7FKotwV6tBztmXIFjgNhMHcuslsH
-   mykNIyqHb15y2d5V5Ksb292LfFUcfdMLbcFsCM0Xi1MyVVCX0ZovKmdrw
-   6UDB2c+vlSKnGzUGSWrqzUsasZR8xggXeD6Fen/XqqAPC9P7jtSndF29t
-   A==;
-X-CSE-ConnectionGUID: jxdeeysERjiAfNa0jbyyiw==
-X-CSE-MsgGUID: Lg72mG22Qg+u2+GClhmQ+A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11394"; a="55402097"
-X-IronPort-AV: E=Sophos;i="6.15,188,1739865600"; 
-   d="scan'208";a="55402097"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 06:18:18 -0700
-X-CSE-ConnectionGUID: JIG12BvgSLmwXeiVgXuG4w==
-X-CSE-MsgGUID: 6Y3E6zPDSmCFZvSwlS/caA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,188,1739865600"; 
-   d="scan'208";a="128157431"
-Received: from opintica-mobl1 (HELO wieczorr-mobl1.intel.com) ([10.245.245.50])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 06:18:03 -0700
-From: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
-To: hpa@zytor.com,
-	hch@infradead.org,
-	nick.desaulniers+lkml@gmail.com,
-	kuan-ying.lee@canonical.com,
-	masahiroy@kernel.org,
-	samuel.holland@sifive.com,
-	mingo@redhat.com,
-	corbet@lwn.net,
-	ryabinin.a.a@gmail.com,
-	guoweikang.kernel@gmail.com,
-	jpoimboe@kernel.org,
-	ardb@kernel.org,
-	vincenzo.frascino@arm.com,
-	glider@google.com,
-	kirill.shutemov@linux.intel.com,
-	apopple@nvidia.com,
-	samitolvanen@google.com,
-	maciej.wieczor-retman@intel.com,
-	kaleshsingh@google.com,
-	jgross@suse.com,
-	andreyknvl@gmail.com,
-	scott@os.amperecomputing.com,
-	tony.luck@intel.com,
-	dvyukov@google.com,
-	pasha.tatashin@soleen.com,
-	ziy@nvidia.com,
-	broonie@kernel.org,
-	gatlin.newhouse@gmail.com,
-	jackmanb@google.com,
-	wangkefeng.wang@huawei.com,
-	thiago.bauermann@linaro.org,
-	tglx@linutronix.de,
-	kees@kernel.org,
-	akpm@linux-foundation.org,
-	jason.andryuk@amd.com,
-	snovitoll@gmail.com,
-	xin@zytor.com,
-	jan.kiszka@siemens.com,
-	bp@alien8.de,
-	rppt@kernel.org,
-	peterz@infradead.org,
-	pankaj.gupta@amd.com,
-	thuth@redhat.com,
-	andriy.shevchenko@linux.intel.com,
-	joel.granados@kernel.org,
-	kbingham@kernel.org,
-	nicolas@fjasle.eu,
-	mark.rutland@arm.com,
-	surenb@google.com,
-	catalin.marinas@arm.com,
-	morbo@google.com,
-	justinstitt@google.com,
-	ubizjak@gmail.com,
-	jhubbard@nvidia.com,
-	urezki@gmail.com,
-	dave.hansen@linux.intel.com,
-	bhe@redhat.com,
-	luto@kernel.org,
-	baohua@kernel.org,
-	nathan@kernel.org,
-	will@kernel.org,
-	brgerst@gmail.com
-Cc: llvm@lists.linux.dev,
-	linux-mm@kvack.org,
-	linux-doc@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kbuild@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kasan-dev@googlegroups.com,
-	x86@kernel.org
-Subject: [PATCH v3 14/14] x86: Make software tag-based kasan available
-Date: Fri,  4 Apr 2025 15:14:18 +0200
-Message-ID: <3ed2c4baaf9b182c9d9716db95387ee14d98c99c.1743772053.git.maciej.wieczor-retman@intel.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <cover.1743772053.git.maciej.wieczor-retman@intel.com>
-References: <cover.1743772053.git.maciej.wieczor-retman@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eKW8BkEP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DBDCC4CEDD;
+	Fri,  4 Apr 2025 13:18:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743772723;
+	bh=8p+c4MB2Vz2NLD+RiN8PNGA7Pc+YAFAuwCP+/mMX5Bs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=eKW8BkEPXJzBEfA6eyTODP0H96m9hqR98uXmWJ+NQbzBwEXHrdYrjtSd1C8RWZmfz
+	 2rcbpHdZXLJRVcFaE9n5Kp4yS8ugzHBQqGEDWJS2qXvoobc+wP2LpgFooZ3AZGa3xa
+	 6bKGGVFi85i5+b/AfCt8XkZRJhnqVnGqQ0ftCT5vqRVzGTuQFelxLx7V8tqxC1gZv7
+	 u1xcnhxGxabJM0V87wUWYVqmKLm/TNRviJGpd0rTUcnJlFhcHwhwwXhdKoE4G2UVgz
+	 pjRM+2K+IxITVbj+DgcmSYFJK28J91/7Ppto2N1C+xXzQUFvu+zdmpvR8Gf7606QS7
+	 J6mnKZPky2aVw==
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ac28e66c0e1so311005966b.0;
+        Fri, 04 Apr 2025 06:18:43 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU74/AFkwfml4gbLJgq9B9nT7NigzWroHm/O7v4+JSE0HLq4cZFyhHESaVr+F/jFy+qajPMTwncmn3v@vger.kernel.org, AJvYcCVca6V00CRoBKtmUtOIWtOWE5bY3mOa0M3AJPEMAT/M4vh5VjsFQPQ45bzqYVVQj1v7jl0dK/wssQnFMWW1hw==@vger.kernel.org, AJvYcCVt6RIcvH0oORKvmL8WVdavu8J9SIIBSl6so57Ms21AUG21xMzChc5O1PjM/fy6+n2yMjWJ+zWNRmg=@vger.kernel.org, AJvYcCWElHLSNXK4GYCk3a16tcR6mVf0iXDTjD+tQu8rLGZk1JoGx7Eh4+5gpu5FcfCTBzXW/mL8+/iG8bTY4xPW@vger.kernel.org, AJvYcCWTtfUlgX6ca+PColQA4KXdHY/u7g/lLUiAbFptm2aFsFc/00VHmr5O94tToY1z2tK9KyL0ld/Nhi8BFyN6s/E2Cag=@vger.kernel.org, AJvYcCWfxWgSkvrs/iJ68oR2IeT8oaObM1OA9mAL2rutoTP5TKuARVZyrJvsl7CBRfJCbJGKvh3QvOQ76MujuQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy8YR5iHRp2Qh7Z2jWkc5AaOgn5a34dBGvx+jVMh3ExHPtM5C+8
+	1pBb3M464xHdP+wExqQ0UhfhXaJiaMywYle0yjI90bJfXs6BIaLsHy2yExCeS/8YZYyTAI8fTnJ
+	rvAVb4Zmpo/AYxO4iWIW6k+XLhw==
+X-Google-Smtp-Source: AGHT+IGeMGvCEeK8AclL93nVBIzL9ZaOIe89VJXnsQlCY86LywWmTQFiXrpurfnLdBj4EjlXLbq/bSkPsN9UQIZ0bQ0=
+X-Received: by 2002:a17:907:7209:b0:ac3:45c6:a1ec with SMTP id
+ a640c23a62f3a-ac7d6d5dff4mr229454566b.25.1743772721929; Fri, 04 Apr 2025
+ 06:18:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250403-dt-cpu-schema-v1-0-076be7171a85@kernel.org>
+ <20250403-dt-cpu-schema-v1-6-076be7171a85@kernel.org> <Z-_K2XDEcbtcCMVM@linaro.org>
+In-Reply-To: <Z-_K2XDEcbtcCMVM@linaro.org>
+From: Rob Herring <robh@kernel.org>
+Date: Fri, 4 Apr 2025 08:18:30 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJT-0gwvJnMb63izy6WwJpBVsswkauL8OMLCrF08q9HYQ@mail.gmail.com>
+X-Gm-Features: ATxdqUHOgMca65CFxOkpc1GwFhcina94zKtpSzj7uSzh0WZ2vI4WGj4U0KjYQTw
+Message-ID: <CAL_JsqJT-0gwvJnMb63izy6WwJpBVsswkauL8OMLCrF08q9HYQ@mail.gmail.com>
+Subject: Re: [PATCH 06/19] arm64: dts: qcom: msm8939: Fix CPU node
+ "enable-method" property dependencies
+To: Stephan Gerhold <stephan.gerhold@linaro.org>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Samuel Holland <samuel@sholland.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Viresh Kumar <viresh.kumar@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Vincenzo Frascino <vincenzo.frascino@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, 
+	Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Viresh Kumar <vireshk@kernel.org>, 
+	Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, zhouyanjie@wanyeetech.com, 
+	Conor Dooley <conor@kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, 
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>, Steen Hegelund <Steen.Hegelund@microchip.com>, 
+	Daniel Machon <daniel.machon@microchip.com>, UNGLinuxDriver@microchip.com, 
+	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
+	Heiko Stuebner <heiko@sntech.de>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, 
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	linux-pm@vger.kernel.org, linux-mediatek@lists.infradead.org, 
+	linux-arm-msm@vger.kernel.org, linux-mips@vger.kernel.org, 
+	imx@lists.linux.dev, linux-rockchip@lists.infradead.org, 
+	linux-amlogic@lists.infradead.org, linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Make CONFIG_KASAN_SW_TAGS available for x86 machines if they have
-ADDRESS_MASKING enabled (LAM) as that works similarly to Top-Byte Ignore
-(TBI) that allows the software tag-based mode on arm64 platform.
+On Fri, Apr 4, 2025 at 7:04=E2=80=AFAM Stephan Gerhold
+<stephan.gerhold@linaro.org> wrote:
+>
+> On Thu, Apr 03, 2025 at 09:59:27PM -0500, Rob Herring (Arm) wrote:
+> > The "qcom,acc" and "qcom,saw" properties aren't valid with "spin-table"
+> > enable-method nor are they used on 64-bit kernels, so they can be
+> > dropped.
+> >
+>
+> The bootloader we currently use on these devices reads these properties
+> to set up the spin-table, so removing these will break booting secondary
+> CPU cores.
+>
+> The motivation for implementing it that way was that 32-bit vs 64-bit
+> kernel shouldn't be relevant for the describing the hardware blocks in
+> the device tree. The code in the bootloader is generic and handles
+> different SoCs (e.g. msm8916 with 4 cores and msm8939 with 8 cores, the
+> enable sequences are identical).
+>
+> Can we keep this in somehow? To be fair, I'm not sure what property we
+> could match on to check if these properties are allowed ...
 
-Set scale macro based on KASAN mode: in software tag-based mode 16 bytes
-of memory map to one shadow byte and 8 in generic mode.
+Yes, we can keep them. We'll have to allow them with "spin-table" and
+"psci" I guess.
 
-Signed-off-by: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
----
-Changelog v3:
-- Remove runtime_const from previous patch and merge the rest here.
-- Move scale shift definition back to header file.
-- Add new kasan offset for software tag based mode.
-- Fix patch message typo 32 -> 16, and 16 -> 8.
-- Update lib/Kconfig.kasan with x86 now having software tag-based
-  support.
-
-Changelog v2:
-- Remove KASAN dense code.
-
- Documentation/arch/x86/x86_64/mm.rst | 6 ++++--
- arch/x86/Kconfig                     | 5 +++--
- arch/x86/boot/compressed/misc.h      | 1 +
- arch/x86/include/asm/kasan.h         | 9 +++++++++
- arch/x86/kernel/setup.c              | 2 ++
- arch/x86/mm/kasan_init_64.c          | 2 +-
- lib/Kconfig.kasan                    | 3 ++-
- 7 files changed, 22 insertions(+), 6 deletions(-)
-
-diff --git a/Documentation/arch/x86/x86_64/mm.rst b/Documentation/arch/x86/x86_64/mm.rst
-index f2db178b353f..1e2d6b3ae231 100644
---- a/Documentation/arch/x86/x86_64/mm.rst
-+++ b/Documentation/arch/x86/x86_64/mm.rst
-@@ -60,7 +60,8 @@ Complete virtual memory map with 4-level page tables
-    ffffe90000000000 |  -23    TB | ffffe9ffffffffff |    1 TB | ... unused hole
-    ffffea0000000000 |  -22    TB | ffffeaffffffffff |    1 TB | virtual memory map (vmemmap_base)
-    ffffeb0000000000 |  -21    TB | ffffebffffffffff |    1 TB | ... unused hole
--   ffffec0000000000 |  -20    TB | fffffbffffffffff |   16 TB | KASAN shadow memory
-+   ffffec0000000000 |  -20    TB | fffffbffffffffff |   16 TB | KASAN shadow memory (generic mode)
-+   fffff40000000000 |   -8    TB | fffffc0000000000 |    8 TB | KASAN shadow memory (software tag-based mode)
-   __________________|____________|__________________|_________|____________________________________________________________
-                                                               |
-                                                               | Identical layout to the 56-bit one from here on:
-@@ -130,7 +131,8 @@ Complete virtual memory map with 5-level page tables
-    ffd2000000000000 |  -11.5  PB | ffd3ffffffffffff |  0.5 PB | ... unused hole
-    ffd4000000000000 |  -11    PB | ffd5ffffffffffff |  0.5 PB | virtual memory map (vmemmap_base)
-    ffd6000000000000 |  -10.5  PB | ffdeffffffffffff | 2.25 PB | ... unused hole
--   ffdf000000000000 |   -8.25 PB | fffffbffffffffff |   ~8 PB | KASAN shadow memory
-+   ffdf000000000000 |   -8.25 PB | fffffbffffffffff |   ~8 PB | KASAN shadow memory (generic mode)
-+   ffdffc0000000000 |   -6    PB | ffeffc0000000000 |    4 PB | KASAN shadow memory (software tag-based mode)
-   __________________|____________|__________________|_________|____________________________________________________________
-                                                               |
-                                                               | Identical layout to the 47-bit one from here on:
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 15f346f02af0..cfe1cb15950e 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -197,6 +197,7 @@ config X86
- 	select HAVE_ARCH_JUMP_LABEL_RELATIVE
- 	select HAVE_ARCH_KASAN			if X86_64
- 	select HAVE_ARCH_KASAN_VMALLOC		if X86_64
-+	select HAVE_ARCH_KASAN_SW_TAGS		if ADDRESS_MASKING
- 	select HAVE_ARCH_KFENCE
- 	select HAVE_ARCH_KMSAN			if X86_64
- 	select HAVE_ARCH_KGDB
-@@ -402,8 +403,8 @@ config AUDIT_ARCH
- 
- config KASAN_SHADOW_OFFSET
- 	hex
--	depends on KASAN
--	default 0xdffffc0000000000
-+	default 0xdffffc0000000000 if KASAN_GENERIC
-+	default 0xffeffc0000000000 if KASAN_SW_TAGS
- 
- config HAVE_INTEL_TXT
- 	def_bool y
-diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
-index dd8d1a85f671..f6a87e9ad200 100644
---- a/arch/x86/boot/compressed/misc.h
-+++ b/arch/x86/boot/compressed/misc.h
-@@ -13,6 +13,7 @@
- #undef CONFIG_PARAVIRT_SPINLOCKS
- #undef CONFIG_KASAN
- #undef CONFIG_KASAN_GENERIC
-+#undef CONFIG_KASAN_SW_TAGS
- 
- #define __NO_FORTIFY
- 
-diff --git a/arch/x86/include/asm/kasan.h b/arch/x86/include/asm/kasan.h
-index 212218622963..d2eedaa092d5 100644
---- a/arch/x86/include/asm/kasan.h
-+++ b/arch/x86/include/asm/kasan.h
-@@ -6,8 +6,16 @@
- #include <linux/kasan-tags.h>
- #include <linux/types.h>
- #define KASAN_SHADOW_OFFSET _AC(CONFIG_KASAN_SHADOW_OFFSET, UL)
-+#ifdef CONFIG_KASAN_SW_TAGS
-+#define KASAN_SHADOW_SCALE_SHIFT 4
-+#else
- #define KASAN_SHADOW_SCALE_SHIFT 3
-+#endif
- 
-+#ifdef CONFIG_KASAN_SW_TAGS
-+#define KASAN_SHADOW_END	KASAN_SHADOW_OFFSET
-+#define KASAN_SHADOW_START	(KASAN_SHADOW_END - ((UL(1)) << (__VIRTUAL_MASK_SHIFT - KASAN_SHADOW_SCALE_SHIFT)))
-+#else
- /*
-  * Compiler uses shadow offset assuming that addresses start
-  * from 0. Kernel addresses don't start from 0, so shadow
-@@ -24,6 +32,7 @@
- #define KASAN_SHADOW_END        (KASAN_SHADOW_START + \
- 					(1ULL << (__VIRTUAL_MASK_SHIFT - \
- 						  KASAN_SHADOW_SCALE_SHIFT)))
-+#endif
- 
- #ifndef __ASSEMBLER__
- #include <linux/bitops.h>
-diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index c7164a8de983..a40d66da69f4 100644
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -1182,6 +1182,8 @@ void __init setup_arch(char **cmdline_p)
- 
- 	kasan_init();
- 
-+	kasan_init_sw_tags();
-+
- 	/*
- 	 * Sync back kernel address range.
- 	 *
-diff --git a/arch/x86/mm/kasan_init_64.c b/arch/x86/mm/kasan_init_64.c
-index e8a451cafc8c..b5cf3dca6954 100644
---- a/arch/x86/mm/kasan_init_64.c
-+++ b/arch/x86/mm/kasan_init_64.c
-@@ -371,7 +371,7 @@ void __init kasan_init(void)
- 	 * bunch of things like kernel code, modules, EFI mapping, etc.
- 	 * We need to take extra steps to not overwrite them.
- 	 */
--	if (pgtable_l5_enabled()) {
-+	if (pgtable_l5_enabled() && !IS_ENABLED(CONFIG_KASAN_SW_TAGS)) {
- 		void *ptr;
- 
- 		ptr = (void *)pgd_page_vaddr(*pgd_offset_k(KASAN_SHADOW_END));
-diff --git a/lib/Kconfig.kasan b/lib/Kconfig.kasan
-index f82889a830fa..9ddbc6aeb5d5 100644
---- a/lib/Kconfig.kasan
-+++ b/lib/Kconfig.kasan
-@@ -100,7 +100,8 @@ config KASAN_SW_TAGS
- 
- 	  Requires GCC 11+ or Clang.
- 
--	  Supported only on arm64 CPUs and relies on Top Byte Ignore.
-+	  Supported on arm64 CPUs that support Top Byte Ignore and on x86 CPUs
-+	  that support Linear Address Masking.
- 
- 	  Consumes about 1/16th of available memory at kernel start and
- 	  add an overhead of ~20% for dynamic allocations.
--- 
-2.49.0
-
+Rob
