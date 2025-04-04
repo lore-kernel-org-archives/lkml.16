@@ -1,166 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.web.de (mout.web.de [212.227.15.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 980821A3142;
-	Fri,  4 Apr 2025 09:21:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD66717A300;
+	Fri,  4 Apr 2025 09:22:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743758499; cv=none; b=Ds4Hlsf3lP9MVKZtBNx7QZ4pTyf6QBIb6RoFFguO8SLeyBCMhwMUuz9nntxV6aSldpk7/ZiCnNAG1yXfc27/Qy3cAHOM/eRy27qyyXuQxVlgHzNl0r8zcUFizl37v5aJHQ6y5TSQzI1Whd8dlh8qLehNkBqFkciq6ndOAOMMRcc=
+	t=1743758548; cv=none; b=Z+0yD4VX1UvUhLSmcXu+7qQu8czEJ1RXawDrHfeVazaW7a7JVz2SL4eej5h/saEpmXQsALsDbnMxcTLP9Mq0uSs/H0fVJirXz5NW4vOTXCwO/Q9ulrLSD59m4VqXPACqnN3sVi3YaBcTCtaN2uLuCMkmmwhlwDeuaNGGbZE1kdA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743758499; c=relaxed/simple;
-	bh=8YXmkh4y0yK+27UdeCSafZhd00VNPUKtI2R/MeGHZw0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=orRVXabdhasUcnws5F0vzTCoEkzDorFYrdVVcyFEMSqr4AABi++Utd8D+FWNvGEz0qOikdnOSHilHbyGwTjcpKXrQ9qvHj0gFoT9xhd74c+sW9sUVzBws+eWVYxVKnAnC5LVwVrOK9if3sRCT852Lw8JupR/GEhJ1hmo0PQDtZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BZUU+43R; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743758548; c=relaxed/simple;
+	bh=4Rmo1OIYfneloOqpbx4GqzJBdNJaS3RqAYXs514+VFA=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=L/JuU95papleQ/EaT9t8IltZXcw0syPMG6xTDgWvTHBuACtHEdqYXOv7AgTVrsudAVDYiHK9uwuPrEvPtRMYKxiUOLgXh98/ksH5SwxpvlD+QnUIXHicXJXQGFeqkJ6dSX5kQ6sfe7rU0/jHcfF8XbPrN/zQ1gZEGn672XaT+HY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=fqcdGoYj; arc=none smtp.client-ip=212.227.15.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BZUU+43R"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA9CBC4CEDD;
-	Fri,  4 Apr 2025 09:21:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743758499;
-	bh=8YXmkh4y0yK+27UdeCSafZhd00VNPUKtI2R/MeGHZw0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BZUU+43R7jq6omveJw4jer75uPzA+ZLjJxaCvwnqHt7KNUQ0CAzRRaiKLlriM4YQT
-	 whjDY52WTH01XTrdPwZ0V+6yugelmu2i7PzrWWfwkwDWP4fmwMeUTOQdgHXL6KCjmW
-	 Xq2fO8j4XGNIx+lxVqm+bLv9mak3pODaMiU3zHKSFXPz82j/B+PctBqePCv6wJY4ej
-	 2eH9Nu3vJhVqePfECRAgseYVRzthGuN5imTSejU/X4H2JQg7Jl4U7Z+dF59KbkEGg2
-	 u6dIdk/jXcqPwsodzPpDjMXHyNNHvQdW3FgRxwtu/+BLsaNxD2C93IBbGfwBArpu6n
-	 4u10uBMVLPDUw==
-Date: Fri, 4 Apr 2025 10:21:31 +0100
-From: Lee Jones <lee@kernel.org>
-To: =?iso-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Sylwester Nawrocki <s.nawrocki@samsung.com>,
-	Chanwoo Choi <cw00.choi@samsung.com>,
-	Alim Akhtar <alim.akhtar@samsung.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Peter Griffin <peter.griffin@linaro.org>,
-	Tudor Ambarus <tudor.ambarus@linaro.org>,
-	Will McVicker <willmcvicker@google.com>, kernel-team@android.com,
-	linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-rtc@vger.kernel.org,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH v3 10/32] mfd: sec: merge separate core and irq modules
-Message-ID: <20250404092131.GB43241@google.com>
-References: <20250403-s2mpg10-v3-0-b542b3505e68@linaro.org>
- <20250403-s2mpg10-v3-10-b542b3505e68@linaro.org>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="fqcdGoYj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1743758526; x=1744363326; i=markus.elfring@web.de;
+	bh=4Rmo1OIYfneloOqpbx4GqzJBdNJaS3RqAYXs514+VFA=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=fqcdGoYjwDCm73eGlCCAZmCCOCbDjUQ9eYSJdBu9Za/o8oVr5mpY9YyS3AP4lVV2
+	 NU2rw/rUURCTfRgfDK6uDHoK6TU1nTB7jPUQavnfFi1XibrBcuEwiV0Aj0MUcbwZi
+	 PZ0H+J6dlpwc6BpOV53L/sOrS7QCV1OaGdvXHc6HKs4+2EilgtRrD9Fy3oumHOKys
+	 sGMATqyjHLjtPB9hRUL8IgSplsgkEjL5yACGNPDAwLkCvUJfqAIJECMmUsQ+Vmdyf
+	 lDe3b1i09zCBJcFqKct4ghNe1IWjNI/sHMvfm26DQvFISlqd0VB80bVNuRqGIJzSu
+	 H4Dzbq8zLFuRpJmCaQ==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.70.27]) by smtp.web.de (mrweb006
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1M2Phi-1twmxc2nks-00A9jP; Fri, 04
+ Apr 2025 11:22:06 +0200
+Message-ID: <879740e3-d485-4150-b0d4-538cae5bf39e@web.de>
+Date: Fri, 4 Apr 2025 11:22:06 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250403-s2mpg10-v3-10-b542b3505e68@linaro.org>
+User-Agent: Mozilla Thunderbird
+To: Henry Martin <bsdhenrymartin@gmail.com>, linux-ide@vger.kernel.org
+Cc: LKML <linux-kernel@vger.kernel.org>, Damien Le Moal <dlemoal@kernel.org>,
+ Niklas Cassel <cassel@kernel.org>
+References: <20250404061438.67557-1-bsdhenrymartin@gmail.com>
+Subject: Re: [PATCH v2] ata: pata_pxa: Fix potential NULL pointer dereference
+ in pxa_ata_probe()
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20250404061438.67557-1-bsdhenrymartin@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:J3YN1v4LFbVMz8/fgW2pgoPiU14nM8S6d3tgV9tJZBA0RllY44A
+ MNj+NSWfeT/oG3dfDfVsRozVlly4vFCTVH58Sn1yhVzw06o/xR4gg+fkIIN7+rIBZTiFqK5
+ 4onzODLvNLj7zu9gJekp3ayis4SRyL4tj1+Dnw4DjdOpEBHrE5RPSxQ1fDy+JLR7AUI5WUC
+ fvK56f/GDVbygLwOZW99w==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:5EydMVgJFUU=;524IjyqXC4wNhljffufiWc/e2EB
+ HMx6wUUgxnJ7+NZEvEd8wXbuqoUr4I9SYAYmNAS2V+8j4k6oQLQFJxXytJybprKktB455fKne
+ tfLQtuW6+4d9BzK77tR7wgxmNnMRCWCuC16Y0ITkEpqu6y3qWtTyHqMJ//yhTCOMiR0gejas7
+ +HSZ6I36PCOqFXcs77MceIZpBzYC3NW2zYJPR7C3ZciRZ48lKVQ6u/eRYOckqssL9q6ojh+3e
+ js1X0ZZAeG/3dF+B/ryUmwsvDM0+ykOWXELJjkEmJlPzneHke51mjTkcVxohJHMrg2j4AsdFk
+ w2OK6uB13hqQrhHnTTCE7I7FiVd002dJxAziDFqGNWra53Ob5HpfbXWpyIMgcOs+4sO+OYLE4
+ uT6KHB2k2OVyShAn3oxP13XqXFcJJQbEspRQDMLB4432YsRdIikSuQ/D1qAJAQKZ5xgw8tSw7
+ pkb/cCTmADMYlZsG5evlHEtCoY8YOYty2RmgwD6kJxFCMaVw9DOcadobPFRkF8SKzwSP/s/f/
+ Hop2fQmzf3bPk0urPEFcPkBzXeauuPKjntm14Xjjwukp6jJrvWO+jQ+VFuWhQufBj4LJvoWY8
+ lcuJy66+Z6XcizS0CN2IQ/cqGlEG68EhW/DTWKGPFXo9UNMi3YJBvsecHR+8lday3rUi1Lk+H
+ JUq4w/P49ENNpq69HQEpZ2+wQ9o6qY79o43glXI+NKW70FZIbzUd06G6O80JYKeTXnm3J4O/7
+ jI+xIvXbGc4wmidtOAiKowB96X+WoUzd0IVzT5NHzwtgSJK+01VU7sdmq6WypHCKKmM0UqtTG
+ S6KuMRWcoUHhc7aw9cqM2yiBb26gDVsJXr5oxnWZ2rSLMbE2HDksoY2otp+FY0OWTFgTAjwr7
+ FhVYF11gR0RPc+HOxDM93KrGgvuB+L3xIELEplsoggN/mBVVEwEbnphfj7brC7wSJPYFTRkBJ
+ GQcd5/zkwv7V9Mwqys6V4VX2TKoQZkByFp55jdIv159bmgdIBcOpeyxjfXECpCkax9zIv/WeW
+ FvRSTaAY85iVBOflGqosMGocx1UGU72KRp7y4jRLycK9ZYb/0DGD7kksplvdouuQlPQYMBJuu
+ UOE4cR14SF7yiWk/fu5xPV0XSWeUo5k9hiVIMgo9A0dhLY28y7vsrxzHTJKhe6fLrnT4j3Dgl
+ TdoqPHtG5HxUz6q3Q64bkHSvQV6lHiJw+Bc0mnxEGMPFEP5hyeqZpjIK+ooOWsepeC7appXc7
+ du0l6PbZbB1gg2beZaS4a18AkIJE/ToAFwPUAsPKk0WXLcfDdhfSMCgDGU4FJQT932tQz3iFV
+ YH9KuyeROJQU+qRUHc+WhgSRu3HsTrukPt+kR9zu28r2ExUl+WWHy90mFpvQs6sq7PvMNjXK2
+ lkQnMQxSsFstSkaNRRjvBWzX2QSE1nzzBsPgP9YjGf9vnyno78Fafec2O8GGnuxYuf039Xkam
+ nQLcr3/stuUSaCzzTLCQ/zug6RuU0+lFaAUmTcnYyWk3ow38pX/+sjhV3m8AIkk0VlbmjUw==
 
-On Thu, 03 Apr 2025, André Draszik wrote:
+=E2=80=A6
+> Add NULL check after devm_ioremap() to prevent this issue.
 
-> There is no reason to have these two kernel modules separate. Having
-> them merged into one kernel module also slightly reduces memory
-> consumption and module load times a little.
-> 
-> mapped size (lsmod):
->          before:             after:
->     sec_core   20480    sec_core   24576
->     sec_irq    16384
->     ----------------
->     total      36864
-> 
-> Section sizes (size -A):
->          before:             after:
->     sec_core    6780    sec_core   13239
->     sec_irq     8046
->     ----------------
->     Total      14826
-> 
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> Signed-off-by: André Draszik <andre.draszik@linaro.org>
+May you omit the word =E2=80=9Cpotential=E2=80=9D from the summary phrase?
+
+
+=E2=80=A6
 > ---
-> Checkpatch suggests to update MAINTAINERS, but the new file is covered
-> already due to using a wildcard.
-> ---
->  drivers/mfd/Makefile                     | 3 ++-
->  drivers/mfd/{sec-core.c => sec-common.c} | 2 ++
+> V1 -> V2: Correct commit message and keep a blank line after check.
 
-Okay, but why the name change?
+Can such an adjustment become helpful for any more places?
 
->  drivers/mfd/sec-irq.c                    | 9 ---------
->  3 files changed, 4 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> index b617782eca436e34084a9cd24c309801c5680390..8f315298b32a2a9ee114ed5e49e760bd8f930aee 100644
-> --- a/drivers/mfd/Makefile
-> +++ b/drivers/mfd/Makefile
-> @@ -228,7 +228,8 @@ obj-$(CONFIG_MFD_RK8XX)		+= rk8xx-core.o
->  obj-$(CONFIG_MFD_RK8XX_I2C)	+= rk8xx-i2c.o
->  obj-$(CONFIG_MFD_RK8XX_SPI)	+= rk8xx-spi.o
->  obj-$(CONFIG_MFD_RN5T618)	+= rn5t618.o
-> -obj-$(CONFIG_MFD_SEC_CORE)	+= sec-core.o sec-irq.o
-> +sec-core-objs			:= sec-common.o sec-irq.o
-> +obj-$(CONFIG_MFD_SEC_CORE)	+= sec-core.o
->  obj-$(CONFIG_MFD_SEC_ACPM)	+= sec-acpm.o
->  obj-$(CONFIG_MFD_SEC_I2C)	+= sec-i2c.o
->  obj-$(CONFIG_MFD_SYSCON)	+= syscon.o
-> diff --git a/drivers/mfd/sec-core.c b/drivers/mfd/sec-common.c
-> similarity index 98%
-> rename from drivers/mfd/sec-core.c
-> rename to drivers/mfd/sec-common.c
-> index c4b7abe511090d8f5ff2eb501f325cc8173b9bf5..782dec1956a5fd7bf0dbb2159f9d222ad3fea942 100644
-> --- a/drivers/mfd/sec-core.c
-> +++ b/drivers/mfd/sec-common.c
-> @@ -307,6 +307,8 @@ static int sec_pmic_resume(struct device *dev)
->  DEFINE_SIMPLE_DEV_PM_OPS(sec_pmic_pm_ops, sec_pmic_suspend, sec_pmic_resume);
->  EXPORT_SYMBOL_GPL(sec_pmic_pm_ops);
->  
-> +MODULE_AUTHOR("Chanwoo Choi <cw00.choi@samsung.com>");
-> +MODULE_AUTHOR("Krzysztof Kozlowski <krzk@kernel.org>");
->  MODULE_AUTHOR("Sangbeom Kim <sbkim73@samsung.com>");
->  MODULE_DESCRIPTION("Core driver for the Samsung S5M");
->  MODULE_LICENSE("GPL");
-> diff --git a/drivers/mfd/sec-irq.c b/drivers/mfd/sec-irq.c
-> index bf86281401ac6ff05c90c2d71c84744709ed79cb..aa467e488fb5ef79d5bc7110e1ba7c26fcfa9892 100644
-> --- a/drivers/mfd/sec-irq.c
-> +++ b/drivers/mfd/sec-irq.c
-> @@ -6,7 +6,6 @@
->  #include <linux/array_size.h>
->  #include <linux/build_bug.h>
->  #include <linux/dev_printk.h>
-> -#include <linux/export.h>
->  #include <linux/interrupt.h>
->  #include <linux/irq.h>
->  #include <linux/mfd/samsung/core.h>
-> @@ -17,7 +16,6 @@
->  #include <linux/mfd/samsung/s2mpu02.h>
->  #include <linux/mfd/samsung/s2mpu05.h>
->  #include <linux/mfd/samsung/s5m8767.h>
-> -#include <linux/module.h>
->  #include <linux/regmap.h>
->  #include "sec-core.h"
->  
-> @@ -510,10 +508,3 @@ int sec_irq_init(struct sec_pmic_dev *sec_pmic)
->  
->  	return 0;
->  }
-> -EXPORT_SYMBOL_GPL(sec_irq_init);
-> -
-> -MODULE_AUTHOR("Sangbeom Kim <sbkim73@samsung.com>");
-> -MODULE_AUTHOR("Chanwoo Choi <cw00.choi@samsung.com>");
-> -MODULE_AUTHOR("Krzysztof Kozlowski <krzk@kernel.org>");
-> -MODULE_DESCRIPTION("Interrupt support for the S5M MFD");
-> -MODULE_LICENSE("GPL");
-> 
-> -- 
-> 2.49.0.472.ge94155a9ec-goog
-> 
-
--- 
-Lee Jones [李琼斯]
+Regards,
+Markus
