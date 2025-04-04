@@ -1,82 +1,102 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45F95146588
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 11:39:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DBA0146588;
+	Fri,  4 Apr 2025 11:40:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743766752; cv=none; b=hxc5g6sQslN8p4cp6EdRJfgQhuRkadXtCc0M4btL8so2KYgim4GQJ8JERoXTJxYqREK0whfAshcKvdK9VEFUO6rFXRlvn+Qi/MpnlgrlqzBYUe8eR8A7DK6NM/r05eJqHi3ofvdf6X7OyHlWRBn74H+T15tKIn7+D6wFw1j//9w=
+	t=1743766822; cv=none; b=sEGXQA4ZArJBC4YSPAX63fvgTyyX2hmFAjo59C7BWFn7wg6QQlHl6G0Mjyja+7XgrkgZMHFytOIRjTxJ5q5b8QLxOayE0y57xUwQu0+ovHJjPmX8hRfkwr7wDhTQO0FhRsGMG4MPeojvb4SuU0a8ysdVRPYAJ2mrq1MWrld2Wq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743766752; c=relaxed/simple;
-	bh=OaVOtSqyswMnScAeHQjW6coYcRHBe1m1bBclYABbBIY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=FzxQZLBmhmwEK2slhCjcsS3JrltWXuJHQodJ2x/afbN+nHJmCTaQdf2yBmtBI3iIw/NpLXcBU9Y3IJNfSV0Z8XGFfqbm6oPT2D/P87WGBJOx5nAdY4eRFlJOMJhbxX+2cdk5SGut5yDTvn2MkjJP+aowoSZbInglRj9RVtvfi1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=aklubG7C; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1743766822; c=relaxed/simple;
+	bh=9b45S75utZYYfge2O1DXivXuvb2z6jJYNv6lm027wpM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qv7NOQogsYIZkuhlcOxZW6C/cTa56jm6OlJOOiZF6fpeh1DdMf+xwee348mYS5kO4dnmc1O/eogC832C4rE99NPdXxMoOSEXCELbC4MKHz6iCSkA0ii0Q4ayv0PvRrD34Z/1WgqrtyEhe1kRrFG0pHmh0QV961FeUG3/7Y68nvg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=O8sWvlmo; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="aklubG7C"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1743766160;
-	bh=OaVOtSqyswMnScAeHQjW6coYcRHBe1m1bBclYABbBIY=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=aklubG7CZTZ4oD+B+o7ONUyn7kOhXbLT+OLgD0232dAFXRmAWl0xxXUw9UaMAYP3v
-	 h2Bbx0o5hWUp81wI02AbBgifEtyUu9yVlk9ZR2P0mQOKIQrKZGys9Rhk3wxQgW1y+C
-	 toUou7tP3zhdGxiQObKB1KqwS8W42Nri+FFPHbTIngBnAB46XLLidiT6v1dsYlHvlh
-	 W8HXAG6CYJglmXVM4RAwwz4MevjjOp2ea/eTSaddIXeR+zsw7P9QL4S1U3yM7AzFgV
-	 TVOv8DzH2xIFAwdXthRPAig4G9vUtqWC4rntz9ahaNFEiaebeaK+8BK1blD+CnJ2Hf
-	 xYktL8Tz9tY5Q==
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 4F61E17E0215;
-	Fri,  4 Apr 2025 13:29:20 +0200 (CEST)
-Message-ID: <3e10ed93-dadb-4d0b-b419-28ea492a1603@collabora.com>
-Date: Fri, 4 Apr 2025 13:29:19 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="O8sWvlmo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743766820; x=1775302820;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=9b45S75utZYYfge2O1DXivXuvb2z6jJYNv6lm027wpM=;
+  b=O8sWvlmod9x2mFSW2C1eXFUtIv0+ovKqZQjaI2m8NhcPkJC+zzzrBmYe
+   LNipD9bwG6P0j569Z2eZJli0tc7BGRFF7G4fELnyiwTPRBRQc21tZREQf
+   g2GETdnBtIP1ks1+Fr85QMUq1Iw4dtVcoIDnJyMeFcFBieFn7rQwLLtu6
+   Rf6Umpz8rEuinjeyntuP1VvFaKqXztILDVmvd05mVoiFuK99YFugQZDLY
+   o99e2LjKQEkBFWFnSdXnohSE2E+8mYNV9F/mRXvrqd0l3s39YCpspSr20
+   04sM1u6tiYXsadIOGWVpuEeXelVs6p0OLED8MZ1Kl8hWfoit86vJ9ADDK
+   Q==;
+X-CSE-ConnectionGUID: 7OLiZnOcTouz5HzNZOEUNA==
+X-CSE-MsgGUID: XKbOjzzdT/iZj1uFCiFyfQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11393"; a="56190944"
+X-IronPort-AV: E=Sophos;i="6.15,188,1739865600"; 
+   d="scan'208";a="56190944"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 04:40:19 -0700
+X-CSE-ConnectionGUID: SOL4dQJCTMi8nBpfVI+NLw==
+X-CSE-MsgGUID: 9zq669XaQguh4n9RfXZa6Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,188,1739865600"; 
+   d="scan'208";a="127586898"
+Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
+  by fmviesa008.fm.intel.com with ESMTP; 04 Apr 2025 04:40:16 -0700
+Received: from kbuild by b207828170a5 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u0fPC-0001Cd-25;
+	Fri, 04 Apr 2025 11:40:14 +0000
+Date: Fri, 4 Apr 2025 19:39:50 +0800
+From: kernel test robot <lkp@intel.com>
+To: Matthias Fend <matthias.fend@emfend.at>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-media@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Matthias Fend <matthias.fend@emfend.at>,
+	bsp-development.geo@leica-geosystems.com
+Subject: Re: [PATCH 2/2] media: i2c: add Himax HM1246 image sensor driver
+Message-ID: <202504041952.OcJvDWaM-lkp@intel.com>
+References: <20250403-hm1246-v1-2-30990d71bc42@emfend.at>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] soc: mediatek: Do not enable MTK_SOCINFO by default
- during compile testing
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Matthias Brugger <matthias.bgg@gmail.com>, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
-References: <20250404112359.255053-1-krzysztof.kozlowski@linaro.org>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20250404112359.255053-1-krzysztof.kozlowski@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250403-hm1246-v1-2-30990d71bc42@emfend.at>
 
-Il 04/04/25 13:23, Krzysztof Kozlowski ha scritto:
-> Enabling the compile test should not cause automatic enabling of such
-> drivers.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Hi Matthias,
 
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+kernel test robot noticed the following build errors:
 
-> ---
->   drivers/soc/mediatek/Kconfig | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/soc/mediatek/Kconfig b/drivers/soc/mediatek/Kconfig
-> index d7293977f06e..006214f8e5ee 100644
-> --- a/drivers/soc/mediatek/Kconfig
-> +++ b/drivers/soc/mediatek/Kconfig
-> @@ -81,7 +81,7 @@ config MTK_SVS
->   
->   config MTK_SOCINFO
->   	tristate "MediaTek SoC Information"
-> -	default y
-> +	default ARCH_MEDIATEK
->   	depends on NVMEM_MTK_EFUSE
->   	select SOC_BUS
->   	help
+[auto build test ERROR on a2cc6ff5ec8f91bc463fd3b0c26b61166a07eb11]
 
+url:    https://github.com/intel-lab-lkp/linux/commits/Matthias-Fend/media-dt-bindings-i2c-add-Himax-HM1246-image-sensor/20250403-165139
+base:   a2cc6ff5ec8f91bc463fd3b0c26b61166a07eb11
+patch link:    https://lore.kernel.org/r/20250403-hm1246-v1-2-30990d71bc42%40emfend.at
+patch subject: [PATCH 2/2] media: i2c: add Himax HM1246 image sensor driver
+config: m68k-allyesconfig (https://download.01.org/0day-ci/archive/20250404/202504041952.OcJvDWaM-lkp@intel.com/config)
+compiler: m68k-linux-gcc (GCC) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250404/202504041952.OcJvDWaM-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504041952.OcJvDWaM-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   m68k-linux-ld: drivers/media/i2c/hm1246.o: in function `hm1246_calc_pll.constprop.0':
+>> hm1246.c:(.text+0x956): undefined reference to `__udivdi3'
+   m68k-linux-ld: drivers/media/i2c/hm1246.o: in function `hm1246_update_controls.isra.0':
+>> hm1246.c:(.text+0xd1e): undefined reference to `__divdi3'
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
