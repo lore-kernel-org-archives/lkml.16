@@ -1,63 +1,63 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A01FA20328
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 01:45:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E33E1862A
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 01:45:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743731120; cv=none; b=Rp1yuKgnbe4tAUHYqUV39LebuoV7xNa28NLcZtR77/CWDZyFDild12Ij98yiWLKjk3u138U7kJe18uVssIuOnb6mefLefYi+NO/QDKvFH5F1hTTKVEUVeFWCFcZU87/VvfBw+/F6sbxbxUirIg321JJBQlFHyHWEb2GhRFgBYHQ=
+	t=1743731120; cv=none; b=NRK7UtzOt8w2gEgvAVDHHc6pkEF4XTIpkW18pLiuelJEWGhonL/Gi+CfTndBHpQggJd9maRoFMaCSD4/CRaLIhzY/NgQWEe8UIcyfWr3W0scyrRBhLEe8xzz2OLIkbA6DueCOwOE/EX7dptsyf2D6/3wI/OwddrE+dJpLF79USE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1743731120; c=relaxed/simple;
-	bh=n3Kn7kAHOLRMaEZFmxJZo2Ms0Jh5Vsq8CS8CKBw7xUU=;
+	bh=VtZFzV4SFM7hxS9whoKifK0cWBFHUo7gxrtPQ7C+MbU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=PudcfYW/RgpJ5QuNCxRdgssruBTEJqG+Pgp3aq/b53eobd0I7xEAkecfe+248yhZfYHoHXBMEZAWfSO+BZRjLeZtMSTHa1riefGs4cTNVSf9au3OQsvIBVujRYa0ZxrR8fq06Xok7tsWMi6HsKPdx3B6j+6vWOGFwSjUinPPRq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=ko3jfXYV; arc=none smtp.client-ip=209.85.210.178
+	 MIME-Version; b=IIqRSJll+kQf7rRpfgQ/iGF0FNvs3xS3dVF5MQ5W3idzdw0yz3XugZIx5Gk10b0bX0F7CM77Fqqennuy4U5mRC+4SPpj6py5vDjAoThD+6MxbiD9EE+JpQy3hCq89epzHnI6dapk2qPDfh0QZUgyqAcexfr/fbI5PrYC0Loh+nE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=UERdeM19; arc=none smtp.client-ip=209.85.214.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="ko3jfXYV"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-736ad42dfd6so1235816b3a.3
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 18:45:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="UERdeM19"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2264aefc45dso21367635ad.0
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 18:45:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1743731117; x=1744335917; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1743731118; x=1744335918; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=bbl06tvWC+FxEdMBUfkTSr6qAT6T9YsYFXQDKwpOtkg=;
-        b=ko3jfXYVucHW+RZgKX4c9MJD/Q+obe7r5hoOIwapnyKz363dRKFQBHQCp69y5IjUVH
-         xWSVqi5E2sgfDvixNRAGt65dowy9VduCZ1YCQmsYB9wtO1mv8f6JyvkOmoznNPbHt0G6
-         oiiE6NroI1UyGpYsEK2RhcKWu98oQOvOf6zS6K7VNSQ32eBhZ9SXyEa7ulqCBhB0LFN2
-         sBpKbB3JG/4J4NFk6T+9ijPXw6PhRhJ+6Jb7nDlGlxoLB9LVKv8Soux2F9SBplglU1Af
-         VSSF2Hz0c462PGAtCTU8MtvOgprPNvNuEi4jUeHuyHdVjhgNS7b5o+Au+D1DsWgZdP0Q
-         HQwA==
+        bh=vd/Kv7YAIdyn43HTlxRPFm7Eme+lU7QzjnIMeLAoJAo=;
+        b=UERdeM19yodduWAJiQG1W4Jo1XGOmLCwiDuKNTJovixwfx0tCzuQmKTPb9peNYO8Uj
+         8UDGUUcHYQvrqVce2DrxUveRZh1NJRjY4IOQ8l/zEckW9cq3UUnHFfZ1W5GNSD7mmfeY
+         gDmOPnanViXwXHmve4ZG7mnQg6uCXdm73SL4ylpFp+6Vzm0W56uQ+IOEO5Of1UogwKo1
+         aiN/CIfZjTJ4Yp5Fps+MltjVnDh3DY+mngrP8V5cAZ+lDGLmq7rIG4yj40N6Y3cAQemo
+         62tcwzHt6VkNCG67DIBwjIJHf6Cjo3KssXu6Io5t+mrZ6FfQrlCaJDfJOzoi0k7npDH2
+         a7Kg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743731117; x=1744335917;
+        d=1e100.net; s=20230601; t=1743731118; x=1744335918;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=bbl06tvWC+FxEdMBUfkTSr6qAT6T9YsYFXQDKwpOtkg=;
-        b=RnUhWoeto+ZTzAuYM6OOcZ0boDMny8871u6O0xtwpZM7XLii4AiwwaKjrr2AApzJra
-         2LiabZoLTLIfTW2wm59VOog22XqcYGcwCuAjN8GyzMaoTmUoUqgj0k9r3jyVV7m/vzDU
-         1rcr2HnSJgwFTkEIJ26Uc1hbgjJzfBYxIXr5lpNqyh7GZsFM6HbosrSGi20WEb68IBhT
-         u5wWRdVpcCe8+HENPNtf7keIW59Bq7lyjfwdXk6YZLi0eP4pwrOaLXA47wdYZ458yfUe
-         qkM+0xv3vk3f98xztudnJB/EKwPGVZsgt7PXd3D3fp82djwxZE6RSDwn/Mv0T7Q+FY4L
-         X8dw==
-X-Forwarded-Encrypted: i=1; AJvYcCW7b20MxgUC1HCdDDaMwuRid+EU3ZSW5IpuayeWFO5GX7GgC0so13agkwGq+pQ8H/YSaPgQ5kRuIbR4QZo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YydEhEaAH3fiKhTWleyl8eysPoicR7ZWVdCHpuNIfNpuQguIFau
-	KKReSm1XrjbDanZ4cCj59+knGPAAZZ/Z35dFQtaZO6Bue/ZcQAIXRMkn/Jkg8zY=
-X-Gm-Gg: ASbGncub/kx8UKDv/5fJzANkcBi5e5yzlygz9UIJMSYWI1cgsB0gML+YlxpC0hyG9iA
-	tDnmePKiDlUPI4Help7h2cVMbnWXjB8BJOrx4EuzZGym/APD8FS8DoikWIBtGZg2HscRPL6BRct
-	vzRE/NVES2JRaIjGfoUAHrZTZ4Z2W5jFef1JIAVf5pVVvBog76Y1uA7edrohZHMj5JRzQ/epBTA
-	A73TXuYRyYtSrBoZrV/HY5sxqImU1uBp0P3aTwxETRR6++CXW2ZgiXC17DBb42pIeNIwmUxxBS5
-	/foKjBxuUCeMoe9kOCusPNjjLxEtwuO1CEGjXfnu0KkY2rJxnjJLqGYY1rZZpoDc3FFibC+XwHR
-	hls1Ib7U=
-X-Google-Smtp-Source: AGHT+IGB7VVxlcH4mCeKmWqDq8Mj2hEIg+V5vVlAvNYDbmq7B6sl/ThuxlEmXAG7xfEyGBUtBDzzWA==
-X-Received: by 2002:a05:6a00:1707:b0:736:4c93:1bdf with SMTP id d2e1a72fcca58-739e4b667b9mr2374369b3a.18.1743731116724;
-        Thu, 03 Apr 2025 18:45:16 -0700 (PDT)
+        bh=vd/Kv7YAIdyn43HTlxRPFm7Eme+lU7QzjnIMeLAoJAo=;
+        b=n7M+KWJIK9EFUK1rLXqbmD90t7SvRTpfMJOADmEMRhm27rdoFVPMdbuB39yiNxQ8p6
+         sL1S1fhXJQRE8QszAMnjlQI/HgdPXVkHCgZ2MAYlcKiytGX95nEEYkGDd6Xc0m9VNHTw
+         jLTDWsQIpFNHJZYNJA7lAwp699OFE8pX6gDIt9SAEqagRaFMfKUiLOOQgD3HZ3ixUl/t
+         xH1k1RzWwAjTyP5x+U5IjAyzzG4j3jZbhwtMPOy6qL6y7QelXuHEANtfGrVtYBLyS79T
+         6V/cXJ/yVfvNsi8GCIr5e13J3TKJdThzMZWX9xVS2Qo4CzGeJc/dAZWYQyLjb2La83Sv
+         rIZw==
+X-Forwarded-Encrypted: i=1; AJvYcCUkdBgdhj8euzKO8AXlwE9ptI3cXMbjmOxoiJjM8iqbZHoLUbOjfceVZdt/9xPXQG7V8lb5TCj7u1bCNOU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzQLozgZwGc81nc1D9A5wVfckgimt6qui5ruZDohABtq1kN3x34
+	Uhp4ci1hykRHBmPay2CCj0v/vd4alZzB31G5HeHvQciU7ztpJX6XyyxeOyScIcI=
+X-Gm-Gg: ASbGncsXaI/zyjqHimi7Ezvf0hs92R+j7Nvco/rQcQfdsO6x5Xt725y5XZGVrM/ys4z
+	LUqfKULS/BSUWxv51RTqz/U9PvmBkgFfbu4QUBQO9Y3sdb2+sshDOpSddqr8MYqcg5SIDcSRgdl
+	hb8gnuL0MlPUzYJHw5hBNQpdl9XHgzc2nmiV+ofsSHn8T3bZEgn4MXibWyZnxKWQI2TbLISsiAF
+	4vUEc98atDq8f7u4nAmuToI2N9CPHhQFVvq0wL2z1kvr5kzbYjQ5XaLxgglhEMXiebjXiCxxPV2
+	yGZ4wq0Hx/mYMIMlRA8zcIS04D/70p1Tdt/Sa1VIeX4BeB+xjeP3i7/Zo2UymTZ01Vwf6ibDz2u
+	AYq4gv7k=
+X-Google-Smtp-Source: AGHT+IGHo9ZuBB0qJ1rexiUBkU1zGy+UOTRILsGjezQ/KXhzycsHA6LVyLjVtGW5XbFbwRWLRWJOzw==
+X-Received: by 2002:a17:902:d2c1:b0:21f:6bda:e492 with SMTP id d9443c01a7336-22a8a8b82f1mr16901115ad.35.1743731118385;
+        Thu, 03 Apr 2025 18:45:18 -0700 (PDT)
 Received: from dev-linux.. (syn-076-088-115-008.res.spectrum.com. [76.88.115.8])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739da0e3184sm2195304b3a.160.2025.04.03.18.45.15
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739da0e3184sm2195304b3a.160.2025.04.03.18.45.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Apr 2025 18:45:16 -0700 (PDT)
+        Thu, 03 Apr 2025 18:45:17 -0700 (PDT)
 From: Sukrut Bellary <sbellary@baylibre.com>
 To: Michael Turquette <mturquette@baylibre.com>,
 	Stephen Boyd <sboyd@kernel.org>,
@@ -71,9 +71,9 @@ Cc: Sukrut Bellary <sbellary@baylibre.com>,
 	linux-clk@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/4] dt-bindings: clock: ti: Convert to yaml
-Date: Thu,  3 Apr 2025 18:44:57 -0700
-Message-Id: <20250404014500.2789830-2-sbellary@baylibre.com>
+Subject: [PATCH 2/4] dt-bindings: clock: ti: Convert to yaml
+Date: Thu,  3 Apr 2025 18:44:58 -0700
+Message-Id: <20250404014500.2789830-3-sbellary@baylibre.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250404014500.2789830-1-sbellary@baylibre.com>
 References: <20250404014500.2789830-1-sbellary@baylibre.com>
@@ -85,127 +85,99 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Covert TI autoidle clock txt binding to yaml.
+This binding doesn't define a new clock binding type,
+it is used to group the existing clock nodes under the hardware hierarchy.
 
-AutoIdle clock is not an individual clock; it is always a
-derivate of some basic clock like a gate, divider, or fixed-factor.
-This binding will be referred in ti,divider-clock.yaml, and
-ti,fixed-factor-clock.yaml.
-
-As all clocks don't support the autoidle feature e.g.,
-in DRA77xx/AM57xx[1], dpll_abe_x2* and dpll_per_x2 don't have
-autoidle, remove required properties from the binding.
+As this is not a provider clock, remove #clock-cells and
+clock-output-names properties.
+Though few clockdomain nodes in the dts use these properties,
+we are not fixing dts here.
 Clean up the example to meet the current standards.
 
 Add the creator of the original binding as a maintainer.
 
-[1] https://www.ti.com/lit/ug/spruhz6l/spruhz6l.pdf
-
 Signed-off-by: Sukrut Bellary <sbellary@baylibre.com>
 ---
- .../devicetree/bindings/clock/ti/autoidle.txt | 37 --------------
- .../bindings/clock/ti/ti,autoidle.yaml        | 49 +++++++++++++++++++
- 2 files changed, 49 insertions(+), 37 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/clock/ti/autoidle.txt
- create mode 100644 Documentation/devicetree/bindings/clock/ti/ti,autoidle.yaml
+ .../bindings/clock/ti/clockdomain.txt         | 25 ------------
+ .../bindings/clock/ti/ti,clockdomain.yaml     | 38 +++++++++++++++++++
+ 2 files changed, 38 insertions(+), 25 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/clock/ti/clockdomain.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/ti/ti,clockdomain.yaml
 
-diff --git a/Documentation/devicetree/bindings/clock/ti/autoidle.txt b/Documentation/devicetree/bindings/clock/ti/autoidle.txt
+diff --git a/Documentation/devicetree/bindings/clock/ti/clockdomain.txt b/Documentation/devicetree/bindings/clock/ti/clockdomain.txt
 deleted file mode 100644
-index 05645a10a9e3..000000000000
---- a/Documentation/devicetree/bindings/clock/ti/autoidle.txt
+index edf0b5d42768..000000000000
+--- a/Documentation/devicetree/bindings/clock/ti/clockdomain.txt
 +++ /dev/null
-@@ -1,37 +0,0 @@
--Binding for Texas Instruments autoidle clock.
+@@ -1,25 +0,0 @@
+-Binding for Texas Instruments clockdomain.
 -
--This binding uses the common clock binding[1]. It assumes a register mapped
--clock which can be put to idle automatically by hardware based on the usage
--and a configuration bit setting. Autoidle clock is never an individual
--clock, it is always a derivative of some basic clock like a gate, divider,
--or fixed-factor.
+-This binding uses the common clock binding[1] in consumer role.
+-Every clock on TI SoC belongs to one clockdomain, but software
+-only needs this information for specific clocks which require
+-their parent clockdomain to be controlled when the clock is
+-enabled/disabled. This binding doesn't define a new clock
+-binding type, it is used to group existing clock nodes under
+-hardware hierarchy.
 -
 -[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
 -
 -Required properties:
--- reg : offset for the register controlling the autoidle
--- ti,autoidle-shift : bit shift of the autoidle enable bit
--- ti,invert-autoidle-bit : autoidle is enabled by setting the bit to 0
+-- compatible : shall be "ti,clockdomain"
+-- #clock-cells : from common clock binding; shall be set to 0.
+-- clocks : link phandles of clocks within this domain
+-
+-Optional properties:
+-- clock-output-names : from common clock binding.
 -
 -Examples:
--	dpll_core_m4_ck: dpll_core_m4_ck {
--		#clock-cells = <0>;
--		compatible = "ti,divider-clock";
--		clocks = <&dpll_core_x2_ck>;
--		ti,max-div = <31>;
--		ti,autoidle-shift = <8>;
--		reg = <0x2d38>;
--		ti,index-starts-at-one;
--		ti,invert-autoidle-bit;
+-	dss_clkdm: dss_clkdm {
+-		compatible = "ti,clockdomain";
+-		clocks = <&dss1_alwon_fck_3430es2>, <&dss_ick_3430es2>;
 -	};
--
--	dpll_usb_clkdcoldo_ck: dpll_usb_clkdcoldo_ck {
--		#clock-cells = <0>;
--		compatible = "ti,fixed-factor-clock";
--		clocks = <&dpll_usb_ck>;
--		ti,clock-div = <1>;
--		ti,autoidle-shift = <8>;
--		reg = <0x01b4>;
--		ti,clock-mult = <1>;
--		ti,invert-autoidle-bit;
--	};
-diff --git a/Documentation/devicetree/bindings/clock/ti/ti,autoidle.yaml b/Documentation/devicetree/bindings/clock/ti/ti,autoidle.yaml
+diff --git a/Documentation/devicetree/bindings/clock/ti/ti,clockdomain.yaml b/Documentation/devicetree/bindings/clock/ti/ti,clockdomain.yaml
 new file mode 100644
-index 000000000000..c995dae65cd6
+index 000000000000..2bae2a0f6318
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/ti/ti,autoidle.yaml
-@@ -0,0 +1,49 @@
++++ b/Documentation/devicetree/bindings/clock/ti/ti,clockdomain.yaml
+@@ -0,0 +1,38 @@
 +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/clock/ti/ti,autoidle.yaml#
++$id: http://devicetree.org/schemas/clock/ti/ti,clockdomain.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: TI autoidle clock
++title: TI clock domain
 +
 +maintainers:
 +  - Tero Kristo <kristo@kernel.org>
 +  - Sukrut Bellary <sbellary@baylibre.com>
 +
 +description: |
-+  In TI SoC, some of the clocks support autoidle feature.
-+  It assumes a register mapped clock which can be put to idle automatically
-+  by hardware based on the usage and a configuration bit setting.
-+  Autoidle clock is never an individual clock, it is always a derivative
-+  of some basic clock like a gate, divider or fixed-factor.
++  Every clock on TI SoC belongs to one clockdomain. For specific clocks, the
++  parent clockdomain has to be controlled when the clock is enabled/disabled.
++  This binding doesn't define a new clock binding type, it is used to group
++  the existing clock nodes under hardware hierarchy.
 +
 +properties:
-+  reg:
-+    maxItems: 1
++  compatible:
++    const: ti,clockdomain
 +
-+  ti,autoidle-shift:
-+    $ref: /schemas/types.yaml#/definitions/uint32
++  clocks:
 +    description:
-+      bit shift of the autoidle enable bit for the clock
-+    maximum: 31
-+    default: 0
++      Clocks within this domain
 +
-+  ti,invert-autoidle-bit:
-+    type: boolean
-+    description:
-+      autoidle is enabled by setting the bit to 0
++required:
++  - compatible
++  - clocks
 +
-+additionalProperties: true
++additionalProperties: false
 +
 +examples:
 +  - |
-+    bus {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      clock@1b4 {
-+        reg = <0x01b4>;
-+        ti,autoidle-shift = <8>;
-+        ti,invert-autoidle-bit;
-+      };
++    l3init_clkdm: l3init_clkdm {
++        compatible = "ti,clockdomain";
++        clocks = <&dpll_usb_ck>;
 +    };
 -- 
 2.34.1
