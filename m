@@ -1,169 +1,120 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40C751BC9F4
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 11:56:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84F101E8351
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 11:57:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743767818; cv=none; b=g2SxJs9eWUNHlI8TF+S5J+dIsG9klnGQ2hYxh1oKlsN6Bs7Bj9K0YlH1vCRp41x2M1hIYZV4s6hUTbe5Ac8f7Ajc5z4ndPEXSObYahh7DcLJh/O9MJmWYbieCvjs9w+v1vhgHf/rtOw1knNEeiQuF19deg0Z07Vb5Rl6EdysAq4=
+	t=1743767824; cv=none; b=k1lSLMyzeNPWSC3HdZyjpTucgIm1qZ6AxFDXvWCboRFkNmLJwYeDA0+cYK8F72VlqbMYNBHjchTynaQcGjNxLUuJ8EmBweEmq+y8nGGyiG3o66PbXOUQ5atb0SY02tecmaS7shVpNEdKj5IvX/3wy6uwSr1mnC9hBqgoy4xvHZg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743767818; c=relaxed/simple;
-	bh=PDZ8wopAz0p6dRYwWVh9TziS/j8jc0WTBI7vNoZgTPg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Q76VNc9SFpukqAzrq2xPDTgCmzYTN4xYUn75m/Zc8la0RfafsOoSapNB9skHxd92fpWj18VjFm0+5DH9N+srCT81zKwOO26/oyIBZukudIIQaf8nKpCTDCviIFe217ceIGNCEjlKMA4T7Jfzs1AqGeAxZd/WNYNUyPH0xz+Qe7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=9elements.com; spf=pass smtp.mailfrom=9elements.com; dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b=PUMQG8so; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=9elements.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=9elements.com
+	s=arc-20240116; t=1743767824; c=relaxed/simple;
+	bh=zsqexfN3olOy8cznO5MQ/mSDVYhWtEHBp8RW8IswWus=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=M4ej2zgoPvq8yccKbp4STEZXrvrLS3xitQuHuhicpZjgnb0qHoUGK666msHVjj7rbZ537TytU2U7H2RsBR0sRpat/gvZup7o5lTNZUEAl33tmflGR799MjdgnSpwtkpsYO8x+B2GifqFd2Hpf3dvmofOXC5fDvUfzaUBWfuK/K8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=e+OMxxRK; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b="PUMQG8so"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-39727fe912cso932674f8f.3
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 04:56:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="e+OMxxRK"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43cf861f936so2720645e9.3
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 04:57:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=9elements.com; s=google; t=1743767813; x=1744372613; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=doiI8VQYK1ufpJ8YlTdC9R6WZr99FG3ISjHW2FSinYk=;
-        b=PUMQG8soi16HrQk0BkopQQjfrFjQdYudXQRisBysJuKFHO4AZDrWZJXBn6JFl2mPJj
-         DXUFM+r7PyGRa7SVK3d0pFWG64RZTuEnKfSHSiVx0AoKZ3QhZFO8L9MGnAaJYj6m4ufn
-         lvDlVcx0E0pdcm/ZRUou3sBQ3gu4Pa04OYcdklwC9YYtBmw7us3xHWRZsSGfNvWxN0J1
-         veoC7XT60MWN93YSYE1q60++TGnTRyze89LPbF8rRYQvAGclr/gUX1z6Mz2xQGbCKCmS
-         qooaTucXYRLSN06jPdHzoi9nTjDJU4QXXOH4l20iAzuDc2yecCzzncrXSkns4VZ/FDd5
-         TebQ==
+        d=linaro.org; s=google; t=1743767820; x=1744372620; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=9y9jtm3UdXwtwABizUC1WU+17uEhYP0YGv4IThPOMns=;
+        b=e+OMxxRKy/g2uN7leyfObciSAUKmNOxxbi2U5KH6KKQSXBy89Fv2EW6Y0xSquM0uXu
+         fTX79pMaFihoj+cmeCNXlbJ6I0nAp5okizWugzQRFTyDIuWQLkr3RGKIz8zq2QRUnyx6
+         Yp9wj3JBiXc4Q1P3mYsph0xzLrX0YGQ8GvP/X+PnudYBoYLIkr944w8AiNomHnKwXkhE
+         J1qJ1/JQ6Rfi93veVX7VtataD5uf155YAuEQvynF5xUewYcJnk91XNaIGYiHP6JJ7Czm
+         QOUvqOpXGwq1grvtjEt6B2HRFLen3zpqadR+oNeu2zb/485p28RRwBVfJoHvwYTDT/I6
+         QGKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743767813; x=1744372613;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1743767820; x=1744372620;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=doiI8VQYK1ufpJ8YlTdC9R6WZr99FG3ISjHW2FSinYk=;
-        b=Zl0zFwWODFTOXaxF+lWncHp3N1wBtHSlSzQnPdd2eo/rJHVS/69qxEPo426sOPG2jA
-         NX02XgQK2KzXVJOiwlrx5/jWU/X6Ffytv2KwSunvjpWLyyWBlYsjljESD6Y1Y3PnJPBW
-         +8D/IvgqZ+kkCYsDDfur3laxLhXH7MPOL6omYizqdHlX/T+PE5crAEHsVXq0HvWUEGX5
-         gXvt0M/PlFde3ZG2j5Nq6toUN9d1dC/P78KeJ8dhJa93gAVPzYXvko62d5Vl8x4JSISN
-         WNMTNsGq7lfMZgUp43K6E7b4UoiVQa277lUxvyLgKbhsfgbUOqCv4Gj2TQk7ovx2AsV3
-         ZMmQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUp8JF7PXFdNx6r2FT3T0az0NP3UBA90YYbNmSFainoSfhwCQF3lHTIrIrEgmHIneNjOtT4NAWlB/8Btgk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyawTmPWOmq6jKV5Yi9ECcluYDL9N6dER1Yf2nWSmTVQ5AbIyUs
-	vXWYx0HUf9S2YEnQ60PgjMfp97pjgHIzbI7J8FFIchuoajXwHmJGJPWurLhNU+A=
-X-Gm-Gg: ASbGncss+rSznOm31Q4oxm6c5/KA/P1ewxJDc3MG700KroHf9H25zrfzGBLpg86HBJK
-	uteKWhvEWOdL59oijie8GwIshCic6KMqVL5nwfFGL1QS32b6/RaVyKwWNhvnnsFeGWKWfvMGqWn
-	xBRFEsLTHW4xCI6D9/6P7T2bpyfWvMK8CPsOsxYCsl5qf/ztpFqCvWjdN/exXi7/P9+cRxAbXNl
-	E1SHD6cDrQ1B/pIaBRT1D5+cE/v3w5Z/ewZkLv5wr5Qe9OOS7ajaNa0d65r5rk4dF6oDATKTE4U
-	m4EKU7tEYbxgBVJDzNp7oMVvFdidWBoWBzY5g6fT+mtjnfQWtDzpz3ODHlsCLTUS2hLvEqR8Xxw
-	RasfC4zGnzgMD4xEh+tUSb9Q=
-X-Google-Smtp-Source: AGHT+IEeD0LudfIMzIZ39+meQ1M9f+OiYAkIG6t3WyDlnjQ7l93eVXpcifm9jo92oB6MspeMv7DRSA==
-X-Received: by 2002:a05:6000:220f:b0:391:2f2f:818 with SMTP id ffacd0b85a97d-39cb35b24famr2899682f8f.9.1743767813392;
-        Fri, 04 Apr 2025 04:56:53 -0700 (PDT)
-Received: from stroh80.lab.9e.network (ip-078-094-000-050.um19.pools.vodafone-ip.de. [78.94.0.50])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c30226f1fsm4236219f8f.95.2025.04.04.04.56.52
+        bh=9y9jtm3UdXwtwABizUC1WU+17uEhYP0YGv4IThPOMns=;
+        b=r1qqACuB9EVMtp2xfC/ogsGJ8VTGyKCyQKxU2Tyyi9ivX5iIfdWvcaI+I6dhIc2TYD
+         vhM7usKrzVMddQyHV8eA6NGtr1Uig1SQHljKd+j95caPLL5x5b1xnqA2ZZGoOccfLpUN
+         pvp1OiKz6QA3+uXm5xYE2IhDmPp5ltZzrSRGqbvJvXSQJShQTIMYn9PgHTV3vaLiUwrn
+         xFdq6Y13gttnL+1mzH7MKQhRv6vmmMdBn0Zbr7eoQuauipyippgP6DW6rM45WmgzzL+q
+         6BU70DXgc/hLXddfQWj6v09FTqFo9EedlkrDSN5QXsnxKfH+qL/VCHyo2Iy/pWa0htVx
+         Opxg==
+X-Forwarded-Encrypted: i=1; AJvYcCXC5Y5e4X0NyH+s1KtRpWWx5fOuXGijv4UuVwUV5xQS8pbBDPkui9h3TWBeoKqXzO6yXJVcR+gTD8FzyVg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwPgX7j9S2Qe3ixzBYKhSIS+mCvpraXAR8TpBUo9/ARkOsJGyiF
+	lOdwySID9svUjA23JccZRCRjjTYV12v+YWmloI62ITRwMipV63G1k+vRAyk1NxY4hlEglV7fWWB
+	1
+X-Gm-Gg: ASbGncvCrz8OUh7xySC8aXnWBVr0ej4Olm6+WXy1BbH1Uj8AvvaKv0a6or6ebHamjOe
+	/SwtZpYQHcSyGwe1zXVolA2HkrywMIc3SyGAupB80wZiHksdSeI+PNZrJiVxvg8pJ1T8yhNUhNC
+	LHec77eW/o56QABV34AHVX156JYfnpZTJ+ila8XZTgmgvZ9U2QupWqrUEHL+3Dcio5blXo0C5/l
+	eNg6Xta8hbmOu6SJHT8ui1iKLN6veNKI5SFQdeLq51Jn6blKV6XY79aQDAuD0InS1PFD2TQNjqu
+	/YByhD2i8YNJG6hXrNT/GgL4VLU9tpWV1yburRrhO2lmkcEcY9EQFQadRY7l6QY=
+X-Google-Smtp-Source: AGHT+IE3YMdROfy4Pz/lL2bVAErbCHUi9OQZGeJfx60uexq6ErgRMWHK+iTZDQBEUem01jamr5n43g==
+X-Received: by 2002:a05:600c:3ba2:b0:43b:cab3:1fd1 with SMTP id 5b1f17b1804b1-43ecf81ce08mr9264575e9.1.1743767819747;
+        Fri, 04 Apr 2025 04:56:59 -0700 (PDT)
+Received: from [192.168.1.26] ([178.197.198.86])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec364cb9asm43842815e9.31.2025.04.04.04.56.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Apr 2025 04:56:52 -0700 (PDT)
-From: Your Name <naresh.solanki@9elements.com>
-X-Google-Original-From: Your Name <you@example.com>
-To: Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>,
-	linux-hwmon@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Naresh Solanki <naresh.solanki@9elements.com>
-Subject: [RESEND PATCH v2] hwmon: (max6639) : Allow setting target RPM
-Date: Fri,  4 Apr 2025 17:26:45 +0530
-Message-ID: <20250404115646.2000563-1-you@example.com>
-X-Mailer: git-send-email 2.42.0
+        Fri, 04 Apr 2025 04:56:59 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH 0/5] clk: Do not enable by default during compile testing
+Date: Fri, 04 Apr 2025 13:56:56 +0200
+Message-Id: <20250404-kconfig-defaults-clk-v1-0-4d2df5603332@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAjJ72cC/x3MQQqAIBBA0avErBsws4iuEi1EZ2ooLLQiiO6et
+ HyL/x9IFIUS9MUDkS5JsoWMqizAzTZMhOKzQSvdKKMMLm4LLBN6YnuuR0K3LshWG+68aytTQ07
+ 3SCz3vx3G9/0AHeSjdWYAAAA=
+X-Change-ID: 20250404-kconfig-defaults-clk-fa24f8dc6143
+To: Neil Armstrong <neil.armstrong@linaro.org>, 
+ Jerome Brunet <jbrunet@baylibre.com>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Kevin Hilman <khilman@baylibre.com>, 
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+ Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+ Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Samuel Holland <samuel@sholland.org>, 
+ =?utf-8?q?Emilio_L=C3=B3pez?= <emilio@elopez.com.ar>
+Cc: linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linux-stm32@st-md-mailman.stormreply.com, linux-sunxi@lists.linux.dev, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.14.2
 
-From: Naresh Solanki <naresh.solanki@9elements.com>
+Enabling the compile test should not cause automatic enabling of all
+drivers.
 
-Currently, during startup, the fan is set to its maximum RPM by default,
-which may not be suitable for all use cases.
-This patch introduces support for specifying a target RPM via the Device
-Tree property "target-rpm".
+No dependencies, can be picked by individual maintainers.
 
-Changes:
-- Added `target_rpm` field to `max6639_data` structure to store the
-  target RPM for each fan channel.
-- Modified `max6639_probe_child_from_dt()` to read the `"target-rpm"`
-  property from the Device Tree and set `target_rpm` accordingly.
-- Updated `max6639_init_client()` to use `target_rpm` to compute the
-  initial PWM duty cycle instead of defaulting to full speed (120/120).
-
-Behavior:
-- If `"target-rpm"` is specified, the fan speed is set accordingly.
-- If `"target-rpm"` is not specified, the previous behavior (full speed
-  at startup) is retained.
-
-This allows better control over fan speed during system initialization.
-
-Signed-off-by: Naresh Solanki <naresh.solanki@9elements.com>
+Best regards,
+Krzysztof
 
 ---
-Changes in v2:
-- Pre-init target_rpm[] to 4000 RPM
-- Validate if target_rpm[] is within configured range.
+Krzysztof Kozlowski (5):
+      clk: meson: Do not enable by default during compile testing
+      clk: nuvoton: Do not enable by default during compile testing
+      clk: stm32: Do not enable by default during compile testing
+      clk: sunxi-ng: Do not enable by default during compile testing
+      clk: sunxi: Do not enable by default during compile testing
+
+ drivers/clk/meson/Kconfig    | 16 +++++++--------
+ drivers/clk/nuvoton/Kconfig  |  4 ++--
+ drivers/clk/stm32/Kconfig    |  8 ++++----
+ drivers/clk/sunxi-ng/Kconfig | 48 ++++++++++++++++++++++----------------------
+ drivers/clk/sunxi/Kconfig    | 10 ++++-----
+ 5 files changed, 43 insertions(+), 43 deletions(-)
 ---
- drivers/hwmon/max6639.c | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+base-commit: 07951d09335e96138e0595208fcc66c35ce0447e
+change-id: 20250404-kconfig-defaults-clk-fa24f8dc6143
 
-diff --git a/drivers/hwmon/max6639.c b/drivers/hwmon/max6639.c
-index 32b4d54b2076..a06346496e1d 100644
---- a/drivers/hwmon/max6639.c
-+++ b/drivers/hwmon/max6639.c
-@@ -80,6 +80,7 @@ struct max6639_data {
- 	/* Register values initialized only once */
- 	u8 ppr[MAX6639_NUM_CHANNELS];	/* Pulses per rotation 0..3 for 1..4 ppr */
- 	u8 rpm_range[MAX6639_NUM_CHANNELS]; /* Index in above rpm_ranges table */
-+	u32 target_rpm[MAX6639_NUM_CHANNELS];
- 
- 	/* Optional regulator for FAN supply */
- 	struct regulator *reg;
-@@ -563,6 +564,10 @@ static int max6639_probe_child_from_dt(struct i2c_client *client,
- 	if (!err)
- 		data->rpm_range[i] = rpm_range_to_reg(val);
- 
-+	err = of_property_read_u32(child, "target-rpm", &val);
-+	if (!err)
-+		data->target_rpm[i] = val;
-+
- 	return 0;
- }
- 
-@@ -573,6 +578,7 @@ static int max6639_init_client(struct i2c_client *client,
- 	const struct device_node *np = dev->of_node;
- 	struct device_node *child;
- 	int i, err;
-+	u8 target_duty;
- 
- 	/* Reset chip to default values, see below for GCONFIG setup */
- 	err = regmap_write(data->regmap, MAX6639_REG_GCONFIG, MAX6639_GCONFIG_POR);
-@@ -586,6 +592,8 @@ static int max6639_init_client(struct i2c_client *client,
- 	/* default: 4000 RPM */
- 	data->rpm_range[0] = 1;
- 	data->rpm_range[1] = 1;
-+	data->target_rpm[0] = 4000;
-+	data->target_rpm[1] = 4000;
- 
- 	for_each_child_of_node(np, child) {
- 		if (strcmp(child->name, "fan"))
-@@ -639,8 +647,12 @@ static int max6639_init_client(struct i2c_client *client,
- 		if (err)
- 			return err;
- 
--		/* PWM 120/120 (i.e. 100%) */
--		err = regmap_write(data->regmap, MAX6639_REG_TARGTDUTY(i), 120);
-+		/* Set PWM based on target RPM if specified */
-+		if (data->target_rpm[i] >  rpm_ranges[data->rpm_range[i]])
-+			data->target_rpm[i] = rpm_ranges[data->rpm_range[i]];
-+
-+		target_duty = 120 * data->target_rpm[i] / rpm_ranges[data->rpm_range[i]];
-+		err = regmap_write(data->regmap, MAX6639_REG_TARGTDUTY(i), target_duty);
- 		if (err)
- 			return err;
- 	}
-
-base-commit: 2115cbeec8a3ccc69e3b7ecdf97b4472b0829cfc
+Best regards,
 -- 
-2.42.0
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
