@@ -1,117 +1,147 @@
-Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com [209.85.221.181])
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DB193D6F;
-	Fri,  4 Apr 2025 15:29:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F04803D6F
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 15:29:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743780561; cv=none; b=tWuQB2dwAywjKCRpioUkqFhX7n1xtf0PSyct2Bu+bWWuWwUL2de34hR5kvvmQuSKVssAD0Mq94O/PybciKC9lCF+l7XJsnGPbyXx6xO0OnkG8GZYOdHAv6lnTVt3zGqFYjOJdQMMIhIs79Bsp0jw5OFvbH5fyJZKYZC0d0Xa3gs=
+	t=1743780583; cv=none; b=UB07gG791cVmKo9nLmo0j1sjPpS+JB/uGIL19MJUn2JvaDckWCT5b1nGgdChR+v4uz/j0R3ZJVV6okFD1ptivx4q1oWHTwVFMgfsV6i725BNWY5Hs2s3xvYW2cPhCGzmT+K+LwiG0StNEIRYshNBmrGUZusf/QxoHa0lffnmzgs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743780561; c=relaxed/simple;
-	bh=uM40pu9Z6r9Jxlm4n/4Au8nRalfUeAyiv3GTqd3/fOI=;
+	s=arc-20240116; t=1743780583; c=relaxed/simple;
+	bh=HjdwWopL3+KNAiU+AwlxrvLUeWtJPmSCP1JudML+O20=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BSPKTZVFXRtZk7oq65U4T5eKdFsV0gzvcrgmTHcYQwB7THFOA8EOHgMjhui3+NQiqr+ATrypnzrU9KexMfOrCXLIRhkoiaEWyqNF25lh0AVa7MzzcZN5rSf9v8BmuXKQ8e6rqNd59MwkUTBqAo2ECptEHm2lAUEBkr0SzFgxurc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gB809ruG; arc=none smtp.client-ip=209.85.221.181
+	 To:Cc:Content-Type; b=N9Jy8nmU8mkcnjfldVQpNqfzHSvz00XuYsD6rwiQk6NgQe8uYkfCrwFQmQL9xXqGj8X4oO9FzPgttkrJx4zioGiBMB3lECtO85HLj0VUK0d93ze3CyyhvNicydNurmdMdNWQDLCG4uTirRGP5ZNnZc3zh3lmEFG0gMeBDSTgOQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GKh5lpfb; arc=none smtp.client-ip=209.85.222.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gB809ruG"
-Received: by mail-vk1-f181.google.com with SMTP id 71dfb90a1353d-523f670ca99so998151e0c.1;
-        Fri, 04 Apr 2025 08:29:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GKh5lpfb"
+Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-7c3bf231660so239882885a.0
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 08:29:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743780559; x=1744385359; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1743780580; x=1744385380; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=k02HlloNIozkkFN+/8qEPF7E5OVMmHSryhg37d8ULUg=;
-        b=gB809ruGJyitx08ks1QuyuNAJpQ9HQ//4fOJtorM/rKJJjhKVdDewr2Lf5oR21QQ6y
-         ujOR8IFGGLHVTjYiaWqWtfLTjiJw20Oud1RL1pH7OxP5sTThN2F8pAdV1OrE3lxFfYnd
-         UpZdk+xqm6szd3+ikI3RQ0EOM9Rx0LFeGddOtNNmzUrRjNB63jtKiD0CpbppIiD6le9T
-         zLf7PHrZO5zQRUeMaF461IW2hYUN/DHniHbbIM1PCddACvoKM2vbuJQpfxHndYLJlIl5
-         poJ1Io1xCOxs8cTA06yTNfUjYMy5UPUFUd+MfjP9xGGwr0IFpIAeHUfNKyE7hkN7ponp
-         Dr4w==
+        bh=WZfJaXWQQXLNloYcFnObsdg4J1wfnipetY87c4ZgF5I=;
+        b=GKh5lpfbG26Dla9CosqfXr2uldrd4zWv/y9uatoUawa4Dr9XGlprnp03Nn4s16HgOy
+         /pAsxnDDkELSTHWy2gr1hr9ClCRTQlvCdn4gFl8En/hi8AsBFMlG6e0+lM5lIUYYGy62
+         1RceCpiqCvXS/lO8eDTX9qwNM6H7UUnbUSkxyiGSVmf5DdsxnLTsMCHrP6TtR0h9c7MM
+         30ajryFDMvF4shB+CwpBR3n8xgtc135dDu6rsBHPC6ed27XUQDNh7jNuflJ6yElfc6AO
+         K+Fbc4xuq8XALk3wPKlMlOVxBIJIWYCdU6wChIQsqLDe1z+v7zS71UtSPHbamgrJ/xLQ
+         gh4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743780559; x=1744385359;
+        d=1e100.net; s=20230601; t=1743780580; x=1744385380;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=k02HlloNIozkkFN+/8qEPF7E5OVMmHSryhg37d8ULUg=;
-        b=EDs/Q0yt5dwdXRlyZ+lJicj6JmiK9HmZnG7nLIJeGHoLjJgcSdzTD8njki8oad+siV
-         T0BCPBN5O9KLcVKmfNvi74KhhoflvkeiVJ1WblUUl1eNHVTOM1rUqcwkI4/BnklmHCbn
-         RTRmnQdkc/JTsxURcKqIEUTG63a4ruxmE/XU7jmeeG3fySqrIAreNDVIBFTgPbrWznFk
-         IHShgp1cjN55zyMGdNs5G+e0zulXssMOkAfxsPnPYg6IKkm2zafnMPbOl7aw0955xBfR
-         Yb5xblanprUmptZaovKuDRIo3z2WcZej9/ma4C/Jidz4yHWcRyrAAcAA7hW4V3gnxMzH
-         3o1Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUBM0dV3ww+HPi/xQZAUFUKc3ZXsbCTbXUPb1k8BsPA43aN8cbAKVkJFeLoNsiO1GJ9N5mfSssCRdw2X4R2@vger.kernel.org, AJvYcCWMfE67997lZXvBhpJWaCNuFTqqojhSsWYLXnXGV5A5SePPKlnduhsenIg/wKGRDnd6jLTU2zTYVP0IqTcr6itYeho=@vger.kernel.org, AJvYcCX8pGm0XUirq4/xCDU1RpcvEj5O44qov1JX/7tlolJ4J+mJqDPjewbOfok3gv+h7kXy3Vr9ZuhpCtdK@vger.kernel.org
-X-Gm-Message-State: AOJu0YyJwyCRDtQYOvTVBvZjGWYwVEDZFUdMpZt3dPRMNTMnfJoS5dXN
-	DHQ4E1ZN1GMoYPRd5Z8OSTuxI8aja4bci31CjX7skGWDy/QccHmVB0T2/eYcVawRpTO0hVBAFUX
-	JERVCmj5XgqB2CjbNCMdId9hv1OA=
-X-Gm-Gg: ASbGncs/OLmaV/RtF06Fe3J11HS2foKubL9YuEiWLHuMU31NgB52gjxqfagS6ncmJAI
-	FFPTW+GDp+tnXI+VNU35KA8MuuJWSEUGf+gznZKt3KYnJwYSckA9ThwJvbx11gwy+KAQoql+853
-	p+GB75xc31C9vTN7RJxq0KpftSw8Emiy39tXK786s4aEnV5xVQGtcUKMaX+Q==
-X-Google-Smtp-Source: AGHT+IHGVVs8EyWlZYsKs9eWMXJxof9zZ51Qwfke9s2QlG6Zpc9JizzFAA318HQ7P7E5ruSFZneG7kVoVCI04RBljys=
-X-Received: by 2002:a05:6122:6585:b0:520:51a4:b84f with SMTP id
- 71dfb90a1353d-5276444fe9cmr3378844e0c.4.1743780558933; Fri, 04 Apr 2025
- 08:29:18 -0700 (PDT)
+        bh=WZfJaXWQQXLNloYcFnObsdg4J1wfnipetY87c4ZgF5I=;
+        b=WY4jb1NLZDvG0fKH4SaQSTW7l1BqbZuKIn70MKyahy+JkN/uNwwsVps3t/Bu82ksUc
+         ptJLTGbss5bMpFmvbnJWY0/shmGYdigL3EJn4JE172fEFL6ZVTo1cS7pYVgX6BsgEPma
+         QitTVkobd6g6JNb0S7pXDg/dY7zZ0YjyyJUPgFAJEvhzRNsP+9NGAAft4+aDnVRfWcE9
+         vAIa4Y6fBw2sdZEcLqv+JPVOWOTTM30bIDnPsUtL785eNbegrKN9Zu0b6gfbJ8izXeQ4
+         GKUQ6r5sCBIHft8NwNPl5RC0b3HkKw/Ri3lTUn/JSL4TZ1oIa7Rr5QCQDxfC8wWAJ3Ie
+         EMbA==
+X-Forwarded-Encrypted: i=1; AJvYcCXEHr3MJ1JDDatWbG1FR7i9k6pwHbqiWPeG7a22dDc2KtSowd7gZUxbV1QFuVQ4HTfFg0d5smcpFmkbMqE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxI7qPjAZkL82ieBrcUIlzlf4BiqEGPsUWiXk1fiOjSPKPrCP37
+	0qE9RWr6nOVItygbswR+pPyFBoIdFmZBgkozFvvPqMsvW1uG6cwhy2C4u0bzlVkWu53kQ0cP6HJ
+	/HFdE4zhyZseYumg9PO1gYTwUlP0=
+X-Gm-Gg: ASbGncsI9wbCcqHDYGkjMRSqVMM1UEQccRe7G+Vt3Z+x0nWes6Dj/MJE2bdPVMcGDIy
+	eyL/s0kEBc7ZVloBQxRqSJXqdaYTuBQnr+y9BwAFmVC1lTrXmObzgl29SZmVU5UEYC8E9oDCMAA
+	mjRi66k8j+n56wRZgWoHOa0fcAfoTYVPggk0hgXHHvvnfFPA5Z4m4GPxn6Ww==
+X-Google-Smtp-Source: AGHT+IHm7lyN0qi+1Nq0kz6GHTRjqT3eaA9a9CZ6vohCvgLExH0hf+Pe4PcXLc55uC7qXOyI+eE79CdP+mApgb81nSk=
+X-Received: by 2002:ad4:5ce8:0:b0:6e8:fec9:87ff with SMTP id
+ 6a1803df08f44-6f01e7591b2mr62974286d6.23.1743780579696; Fri, 04 Apr 2025
+ 08:29:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250401171432.101504-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250401171432.101504-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250402-beneficial-dark-mosquito-6c3641@krzk-bin> <4fa7112b-ade4-4396-b085-16b1c5a7b84b@kernel.org>
-In-Reply-To: <4fa7112b-ade4-4396-b085-16b1c5a7b84b@kernel.org>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Fri, 4 Apr 2025 16:28:52 +0100
-X-Gm-Features: ATxdqUFocy1kzNDdrRv4ErZQ6hx4mOj8G5uoaZwdki_6HbA2bHSD7rGX8QnvL-U
-Message-ID: <CA+V-a8sWrZ4gH0_JhPFOR32z5EapkoXPxt0GyiQ4bAgbKkquHw@mail.gmail.com>
-Subject: Re: [PATCH v3 1/3] dt-bindings: reset: Document RZ/V2H(P) USB2PHY
- reset driver
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, linux-renesas-soc@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <fqj732chhrffec5hrvg5f7i5hqidgpdetldolyubj25jczq7ec@wj4bwu7psbwh> <20250404140628.2049848-1-joshua.hahnjy@gmail.com>
+In-Reply-To: <20250404140628.2049848-1-joshua.hahnjy@gmail.com>
+From: Nhat Pham <nphamcs@gmail.com>
+Date: Fri, 4 Apr 2025 08:29:28 -0700
+X-Gm-Features: ATxdqUF83msa2ZHsH4C_adG3eFx7pC1hThgSJmpRBY5ApU5tqZZhLnneYHkWGYM
+Message-ID: <CAKEwX=PWRefnvGEHE4=Peru88p-Y-351wgxRXV+POcA=m_kO5A@mail.gmail.com>
+Subject: Re: [PATCH 0/2] minimize swapping on zswap store failure
+To: Joshua Hahn <joshua.hahnjy@gmail.com>
+Cc: Sergey Senozhatsky <senozhatsky@chromium.org>, Yosry Ahmed <yosryahmed@google.com>, 
+	akpm@linux-foundation.org, hannes@cmpxchg.org, cerasuolodomenico@gmail.com, 
+	sjenning@redhat.com, ddstreet@ieee.org, vitaly.wool@konsulko.com, 
+	hughd@google.com, corbet@lwn.net, konrad.wilk@oracle.com, rppt@kernel.org, 
+	linux-mm@kvack.org, kernel-team@meta.com, linux-kernel@vger.kernel.org, 
+	david@ixit.cz, Minchan Kim <minchan@kernel.org>, Shakeel Butt <shakeel.butt@linux.dev>, 
+	Chengming Zhou <chengming.zhou@linux.dev>, Kairui Song <ryncsn@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Krzysztof,
-
-Thank you for the review.
-
-On Wed, Apr 2, 2025 at 7:59=E2=80=AFAM Krzysztof Kozlowski <krzk@kernel.org=
+On Fri, Apr 4, 2025 at 7:06=E2=80=AFAM Joshua Hahn <joshua.hahnjy@gmail.com=
 > wrote:
 >
-> On 02/04/2025 08:57, Krzysztof Kozlowski wrote:
-> > On Tue, Apr 01, 2025 at 06:14:30PM +0100, Prabhakar wrote:
-> >> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >>
-> >> Add a device tree binding document for the Renesas RZ/V2H(P) USB2PHY r=
-eset
-> >> driver. This driver controls the reset and power-down of the USB2.0 PH=
-Y,
-> >> which is used for both host and function modes.
-> >>
-> >> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >> ---
-> >>  .../reset/renesas,rzv2h-usb2phy-reset.yaml    | 56 ++++++++++++++++++=
-+
-> >>  1 file changed, 56 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/reset/renesas,rz=
-v2h-usb2phy-reset.yaml
+> On Fri, 4 Apr 2025 10:46:22 +0900 Sergey Senozhatsky <senozhatsky@chromiu=
+m.org> wrote:
+>
+> > On (25/04/03 13:38), Nhat Pham wrote:
+> > > > Ultimately the goal is to prevent an incompressible page from hoard=
+ing the
+> > > > compression algorithm on multiple reclaim attempts, but if we are s=
+pending
+> > > > more time by allocating new pages... maybe this isn't the correct a=
+pproach :(
+> > >
+> > > Hmmm, IIUC this problem also exists with zram, since zram allocates a
+> > > PAGE_SIZE sized buffer to hold the original page's content. I will
+> > > note though that zram seems to favor these kinds of pages for
+> > > writeback :) Maybe this is why...?
 > >
-> > Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> > zram is a generic block device, it must store whatever comes in,
+> > compressible or incompressible.  E.g. when we have, say, ext4
+> > running atop of the zram device we cannot reject page stores.
+> >
+> > And you are right, when we use zram for swap, there is some benefit
+> > in storing incompressible pages.  First, those pages are candidates
+> > for zram writeback, which achieves the goal of removing the page from
+> > RAM after all, we give up on the incompressible page reclamation with
+> > "return it back to LRU" approach.  Second, on some zram setups we do
+> > re-compression (with a slower and more efficient algorithm) and in
+> > certain number of cases what is incompressible with the primary (fast)
+> > algorithm is compressible with the secondary algorithm.
 >
-> Actually one more thing:
-> Drop "driver" from the subject and commit msg and instead describe the
-> hardware.
+> Hello Sergey,
 >
-I will do that in the next version.
+> Thank you for your insight, I did not know this is how zram handled
+> incompressible pages. In the case of this prototype, I expected to see th=
+e most
+> gains from storing incompressible pages in the zswap LRU when writeback w=
+as
+> disabled (if writeback is enabled, then we expect to see less differences=
+ with
+> just writing the page back).
+>
+> On the note of trying a second compression algorithm -- do you know how m=
+uch
+> of the initially incompressible pages get compressed later? I can certain=
+ly
+> imagine that trying different compression algorithms makes a difference, =
+I am
+> wondering if zswap should attempt this as well, or if it is not worth spe=
+nding
+> even more CPU trying to re-comprses the page.
 
-Cheers,
-Prabhakar
+It wouldn't help us :) The algorithm we use, zstd, is usually already
+the slow algorithm in this context. We can try higher levels of zstd,
+but there are always data that are simply incompressible - think
+random values, or memory already compressed by userspace.
+
+Yeah we can target them for writeback to swap in zswap as well. It
+wouldn't help your (micro)benchmark though, because IIRC you don't do
+writeback and/or do not writeback before it is faulted back in :)
+
+>
+> Thank you again for your response! Have a great day : -)
+> Joshua
+>
+> Sent using hkml (https://github.com/sjp38/hackermail)
+>
