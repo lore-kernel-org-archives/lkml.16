@@ -1,73 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62D9A19D89B
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 13:03:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A06D3131E49;
+	Fri,  4 Apr 2025 13:04:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743771805; cv=none; b=CuKDdUXKvCgUI7sdIgiSehtsGeu9HaJ0rUcxJ7GiMtfY80vqA56/Slv3JxnxyBGL2eYVZh9h92nH9FiSH0Reaa9KMctxGAo4yJW6MCOcLahdMNgS1QqsLUtnb5bW4/QTSYwLR4nMODJbWRhYhEzGf0ZzVdkbu1TRo0rt58EC09I=
+	t=1743771877; cv=none; b=hDdkeX5mjVVH0Iz+cRaG7zjHz+S3Jffvifp+gUumVZUBaOndhN6V7UTM/blAzuB6sG96RStrkECOAH4XgkuQU+yzrjtEhC33V12CF3EArROzrf25sv2hMwqeE2UYZ+MgwJfWFgD57Q72zP5ElhWQfjL3up4/793P+onZ78zI5Ag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743771805; c=relaxed/simple;
-	bh=VKS0+pJnSKPr/yDgnLfPzCkGDWYd0/lQhSYDHe/+6dA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r6VRBlxAgbvN6VYw7sWEPd9rG/Fb3eBTAfJgQMok2ronPERSjorvui2kLGDG7ncePYDoSOsyu+mRELYxUgmP8Ylw/RTdi7tHKhEFKXiJq3N8aH0M9w/s/7WhjRFUcHiIQLiIi+//8U/TyRx1BwlCAGRYgW59RlvZNflFbEq+Ea0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dm4Os5c5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743771877; c=relaxed/simple;
+	bh=TIcjc1PX8pfAkNsgoaStOmZ/+4vUoGQm2eg6A6tJemo=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=gSEk6sFZujkdtvWU//JmLqdJqgYW8wXjokYingPEdlFrFeb703YyOqENRmDIDRYnB0ZzjjRHBdcDHVubC4+/uAoK8nIPAEyprfOK8+fj69irv0zxJHLmbjkU1RMqYR5agnR8gfo+i7/EsDo/qbspiYy4TiJmM23XrSLQQeS275I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=NaWdRVDY; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dm4Os5c5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A04D4C4CEDD;
-	Fri,  4 Apr 2025 13:03:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743771804;
-	bh=VKS0+pJnSKPr/yDgnLfPzCkGDWYd0/lQhSYDHe/+6dA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Dm4Os5c5HiiHKMFMLtyK10MrkoouADFBXOuGYhZ9NYG+RKuB0danG9d8b1/q5omIF
-	 TrX9YYN13EKoFIZLIYiBlKHe+lKAcEy1L1g1uHbrpWb8ZPmTknjZk083ADJ7CY4T9h
-	 ZKs8y5mZcWkDa3RMOaR1U7pzSypZKfs16w32fRSnPcPOYVNnQi/+sfQD6E7YA2Jzqh
-	 rdlCOzX5MN1Rvbu81k42Hk05CJZhvpHd3arNK4CwcrLgvDgWrLofzEhxG2M/PdBEok
-	 /lwFrGViHa5QLWag+ztYyVMDN9qMS503HOZ2vJ9ao3p3ODZmgeY/pFXatvyMA+Wd29
-	 QzHfPBFrdA+xw==
-Date: Fri, 4 Apr 2025 14:03:17 +0100
-From: Will Deacon <will@kernel.org>
-To: Mark Brown <broonie@kernel.org>
-Cc: Marc Zyngier <maz@kernel.org>, James Morse <james.morse@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-	linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-	Eric Auger <eauger@redhat.com>,
-	Wilco Dijkstra <wilco.dijkstra@arm.com>,
-	Eric Auger <eric.auger@redhat.com>,
-	Florian Weimer <fweimer@redhat.com>, Fuad Tabba <tabba@google.com>,
-	Jeremy Linton <jeremy.linton@arm.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	James Clark <james.clark@linaro.org>
-Subject: Re: [PATCH 00/10] KVM: arm64: Backport of SVE fixes to v5.15
-Message-ID: <20250404130316.GB29089@willie-the-truck>
-References: <20250402-stable-sve-5-15-v1-0-84d0e5ff1102@kernel.org>
- <1b4ce8d2-2e0e-49ef-ab91-4a831e22b8ed@sirena.org.uk>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="NaWdRVDY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1743771872;
+	bh=TIcjc1PX8pfAkNsgoaStOmZ/+4vUoGQm2eg6A6tJemo=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=NaWdRVDYZHg/mewcsLnGzD/wrMPXR0kdn5WulVc85HU/8FeJSnDYQ948Li+qTaq2q
+	 /tX9+iJYNOuD6T/YqFfTWWBvEyKEBqetQqXyzbWlb9xSmLGowI06MBw4hdnDr8lemf
+	 kKu0rts181MpqI+gqe2QavDGbE94vJpbXrhFf31X5oi9WvOAa1BcV/un094saA9Zr+
+	 PnIFGCxe9eUf9hW4RMcdrUShfLkMTvxpe4Yn5x96ocDEMX26Kkd69Eue+ZFiHyJ4cy
+	 TUuzDXFzNV3mSfAz06E2toLG9juqNHbV1qUJBwS67/9id8F3DCEqpZgoBdB+MVxst1
+	 n9JiQTr0QAlOA==
+Received: from apertis-1.home (2a01cb0892f2D600c8f85Cf092d4Af51.ipv6.abo.wanadoo.fr [IPv6:2a01:cb08:92f2:d600:c8f8:5cf0:92d4:af51])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: jmassot)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 7AB7A17E00AC;
+	Fri,  4 Apr 2025 15:04:32 +0200 (CEST)
+Message-ID: <8342b2562be8dda51decdb32b47af308d1d9fab5.camel@collabora.com>
+Subject: Re: [PATCH v1 1/1] media: i2c: max9671x: Remove (explicitly) unused
+ header
+From: Julien Massot <julien.massot@collabora.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sakari Ailus
+	 <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Date: Fri, 04 Apr 2025 15:04:31 +0200
+In-Reply-To: <20250331072707.3988687-1-andriy.shevchenko@linux.intel.com>
+References: <20250331072707.3988687-1-andriy.shevchenko@linux.intel.com>
+Organization: Collabora Ltd.
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1b4ce8d2-2e0e-49ef-ab91-4a831e22b8ed@sirena.org.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Thu, Apr 03, 2025 at 12:16:20AM +0100, Mark Brown wrote:
-> On Wed, Apr 02, 2025 at 11:59:32PM +0100, Mark Brown wrote:
-> > This series backports some recent fixes for SVE/KVM interactions from
-> > Mark Rutland to v5.15.
-> 
-> *sigh* Forgot Greg and the stable list here - will resend, sorry for the
-> noise.
+Hi,
 
-I think you made the same mistake on the 6.1 backports too:
+Thanks for your patch
+On Mon, 2025-03-31 at 10:27 +0300, Andy Shevchenko wrote:
+> The fwnode.h is not supposed to be used by the drivers as it
+> has the definitions for the core parts for different device
+> property provider implementations. Drop it.
+>=20
+> Note, that fwnode API for drivers is provided in property.h
+> which is included here.
+>=20
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+> =C2=A0drivers/media/i2c/max96714.c | 2 +-
+> =C2=A0drivers/media/i2c/max96717.c | 2 +-
+> =C2=A02 files changed, 2 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/media/i2c/max96714.c b/drivers/media/i2c/max96714.c
+> index 159753b13777..3cc1b1ae47d1 100644
+> --- a/drivers/media/i2c/max96714.c
+> +++ b/drivers/media/i2c/max96714.c
+> @@ -7,11 +7,11 @@
+> =C2=A0
+> =C2=A0#include <linux/bitfield.h>
+> =C2=A0#include <linux/bitops.h>
+> -#include <linux/fwnode.h>
+> =C2=A0#include <linux/gpio/consumer.h>
+> =C2=A0#include <linux/i2c.h>
+> =C2=A0#include <linux/i2c-mux.h>
+> =C2=A0#include <linux/module.h>
+> +#include <linux/property.h>
+> =C2=A0#include <linux/regmap.h>
+> =C2=A0#include <linux/regulator/consumer.h>
+> =C2=A0
+> diff --git a/drivers/media/i2c/max96717.c b/drivers/media/i2c/max96717.c
+> index 30c5ca0e817a..23fb7e67d1a4 100644
+> --- a/drivers/media/i2c/max96717.c
+> +++ b/drivers/media/i2c/max96717.c
+> @@ -9,10 +9,10 @@
+> =C2=A0#include <linux/clk.h>
+> =C2=A0#include <linux/clk-provider.h>
+> =C2=A0#include <linux/delay.h>
+> -#include <linux/fwnode.h>
+> =C2=A0#include <linux/gpio/driver.h>
+> =C2=A0#include <linux/i2c-mux.h>
+> =C2=A0#include <linux/i2c.h>
+> +#include <linux/property.h>
+> =C2=A0#include <linux/regmap.h>
+> =C2=A0
+> =C2=A0#include <media/v4l2-cci.h>
+>=20
 
-https://lore.kernel.org/r/20250325-stable-sve-6-1-v1-0-83259d427d84@kernel.org
+Reviewed-by: Julien Massot <julien.massot@collabora.com>
 
-Will
+Julien
+
