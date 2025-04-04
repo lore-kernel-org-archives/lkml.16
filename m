@@ -1,56 +1,59 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40AA717A2FD
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 08:45:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 385F31A00F0
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 08:46:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743756362; cv=none; b=ZVVqXRJc0SLDdPveFCU2h+MPnwdDceNbIvMmfKLiHSEPoUKXx8VYxvbOzZnvvU0A3JVFliICjnUtjG+k03iTIQnXbJUf9HC8hIQRt0ceQu74t1lAphj026PyZD+bRs3KHK/9iF6UFygAZmDco9rT8Oyi4YX0H9eKwZytC5TV0/I=
+	t=1743756365; cv=none; b=QcHk+5rsr7gk6AUsO3wRHxUxQQwg7k42dvEUvN6uhQHb+vXnvxtD5K+sY7Tdiocl5uAcgr/C8Wl5yV97HvFw3g8g9U7Ov+ZTj+4hnInnwnNX0tNVqVrjVHr4r/aRj3taGKOnsmD/3YIJqYI3ctOZxGc8e+sg6lRqWuNJEgRv1UY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743756362; c=relaxed/simple;
-	bh=Zb38lUIGnOqjdzLnUBddPxrwxwpbnv7mI2v7ycX2vKw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mjrU0wt1jL91qUSZOlGLN/vbN01XcXVVfQfxp7y+fAFrCl+ejpL8qgI3Isqwuq0NYBLT7Pn9WjN2Q3S4ujqWhFibK7uaVbYLoYuZR2A+7Lwxm9k1yEsWO8r2eatCFYfyons+StgDRHnP1IkB+JburSFVENJ4OICzjQKeyWsSdQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Pq58sWVN; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1743756365; c=relaxed/simple;
+	bh=55w/VlvPRY6e7SnqUOleIYymHuuR1CoCZShX5ta66N0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=k68SFWK6uory07O7dSYjy9ISdsOUHz8JIxsC2ljlpJw1J1/lkwioZh/YTmq/MR+9bu3Bs0BEwJ+ECz0Ahx4BWDXiEN2iU80CfG4vNRQv+L1941RXfIkmtMx0uJlosV312SHKZjw3/Gliz110W7fB0WaKyAaZlAY4hyK/LX+4uWQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MFJXiDd0; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Pq58sWVN"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MFJXiDd0"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743756359;
+	s=mimecast20190719; t=1743756362;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=ls68xxakQRSEXtlSRwySRkod4E1AW3ATqK1TgT3ql6M=;
-	b=Pq58sWVNEBp9POj/ShDy81IEVMwH0rO9XAvncUkq1w8wS6zZt82LPdmqI7ksiin4QC2Yb2
-	I/q910ZBOsS197q5mhTZez5WVR22uyXxUl9df+p2XiZiiAVwkyfteq6/frfDdcqUpC5AIU
-	yMZkPWJArQqQ+/RgxlD7rwGX66sc2lg=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Uzpx/ks+8dU83bQ2k/Wg2tkl4O8ewZUp90aomwDKfgQ=;
+	b=MFJXiDd0bxzIsgUXEV/XxTgw19oldUe9o5fxWSujJqLre+vQ5Ojae9lrXHE57AlF+JrdNH
+	neIRSDxh4SdDlK6axCyFn/sglraukBnRsE/6IhBj927x+bHFlu0qM33Hk2d5eS07L4KLn0
+	qE23s6oxZcVviNzlyfFgKRUd5AAQ1eM=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-635-3blMcO-xPJuaPdpZvRHltQ-1; Fri,
- 04 Apr 2025 04:45:56 -0400
-X-MC-Unique: 3blMcO-xPJuaPdpZvRHltQ-1
-X-Mimecast-MFC-AGG-ID: 3blMcO-xPJuaPdpZvRHltQ_1743756355
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-472-6ulgx4waO4Ct2kLNXvwf3A-1; Fri,
+ 04 Apr 2025 04:45:59 -0400
+X-MC-Unique: 6ulgx4waO4Ct2kLNXvwf3A-1
+X-Mimecast-MFC-AGG-ID: 6ulgx4waO4Ct2kLNXvwf3A_1743756358
 Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DF3F51955DDD;
-	Fri,  4 Apr 2025 08:45:54 +0000 (UTC)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3FDFD180AB19;
+	Fri,  4 Apr 2025 08:45:58 +0000 (UTC)
 Received: from gmonaco-thinkpadt14gen3.rmtit.com (unknown [10.44.32.143])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 21120180A803;
-	Fri,  4 Apr 2025 08:45:50 +0000 (UTC)
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id C86E3180B487;
+	Fri,  4 Apr 2025 08:45:55 +0000 (UTC)
 From: Gabriele Monaco <gmonaco@redhat.com>
 To: linux-kernel@vger.kernel.org,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Steven Rostedt <rostedt@goodmis.org>
+	Steven Rostedt <rostedt@goodmis.org>,
+	linux-trace-kernel@vger.kernel.org
 Cc: Gabriele Monaco <gmonaco@redhat.com>,
 	Tomas Glozar <tglozar@redhat.com>,
 	Juri Lelli <jlelli@redhat.com>
-Subject: [RFC PATCH 0/9] rv: Add monitors to validate task switch
-Date: Fri,  4 Apr 2025 10:45:13 +0200
-Message-ID: <20250404084512.98552-11-gmonaco@redhat.com>
+Subject: [RFC PATCH 1/9] tools/rv: Do not skip idle in trace
+Date: Fri,  4 Apr 2025 10:45:14 +0200
+Message-ID: <20250404084512.98552-12-gmonaco@redhat.com>
+In-Reply-To: <20250404084512.98552-11-gmonaco@redhat.com>
+References: <20250404084512.98552-11-gmonaco@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,143 +63,34 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-This series adds two monitors to the sched collection that imply two
-previously existing monitors:
+Currently, the userspace RV tool skips trace events triggered by the RV
+tool itself, this can be changed by passing the parameter -s, which sets
+the variable config_my_pid to 0 (instead of the tool's PID).
+The current condition for per-task monitors (config_has_id) does not
+check that config_my_pid isn't 0 to skip. In case we pass -s, we show
+events triggered by RV but don't show those triggered by idle (PID 0).
 
-tss => sts:
-Not only prove that switches occur in scheduling context but also that
-each call to the scheduler implies a switch (also a vain one) and
-disables interrupts doing so.
+Fix the condition to account this scenario.
 
-srs => snroc:
-Describe different types of switches and their requirements, e.g.:
-* preemption requires need resched which is cleared by any switch
-* suspension requires setting the task to sleepable and, after the
-  switch occurs, the task requires a wakeup to come back to runnable
-The monitor implies setting the task state occurs only when the task is
-running, which is what snroc was guaranteeing.
+Fixes: 6d60f89691fc ("tools/rv: Add in-kernel monitor interface")
+Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
+---
+ tools/verification/rv/src/in_kernel.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-We also include some minor cleanup patches (1-4) tracepoints (5) and
-preparatory fixes (6-7) covering some corner cases:
-
-Patch 1 fixes the behaviour of the rv tool with -s and idle tasks.
-
-Patch 2 allows the rv tool to gracefully terminate with SIGTERM
-
-Patch 3 adds da_handle_start_run_event_ also to per-task monitors
-
-Patch 4 removes a trailing whitespace from the rv tracepoint string
-
-Patch 5 adds the need_resched and switch_vain tracepoints
-
-Patch 6 treats scheduling out sleepable tasks with pending signals as
-wakeup (with appropriate tracepoint calls and changing the state)
-
-Patch 7 detects race conditions when rv monitors run concurrently and
-retries applying the events
-
-Patch 8 adds the sts monitor
-
-Patch 9 adds the srs monitor
-
-NOTES
-
-The srs monitor is quite complex and there are a few things that I
-cannot fully explain:
-
-* A sleeping task requires to set the state to sleepable, but in case of
-  a task sleeping on an rtlock, the set sleepable and wakeup events race
-  and we don't always see the right order:
-
- 5d..2. 107.488369: event: 639: sleepable x set_sleepable -> sleepable
- 4d..5. 107.488369: event: 639: sleepable x wakeup -> running (final)
- 5d..3. 107.488385: error: 639: switch_suspend not expected in the state running
-
-    wakeup()                    set_state()
-        state=RUNNING
-                                    trace_set_state()
-        trace_wakeup()
-                                    state=SLEEPING
-
-  I added a special event (switch_block) but there may be a better way.
-  Changing the order between tracepoints and setting the state doesn't
-  change, we can still be out of sync.
-
-* I consider preemption any scheduling with preempt==true and assume
-  this can happen only if need resched is set (either via tif or
-  preemption count). The tracepoint tracks only when the tif is set and
-  I added a special event with a schedule entry with (preempt &&
-  !tif_need_resched() && test_preempt_need_resched()) to account for
-  preemptions where the tif was not set (perhaps there's a better way).
-  Nevertheless, I still rarely see some preemptions without either set.
-  Not sure if it's a glitch in the model or a case I didn't consider.
-
-To: Ingo Molnar <mingo@redhat.com>
-To: Peter Zijlstra <peterz@infradead.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Tomas Glozar <tglozar@redhat.com>
-Cc: Juri Lelli <jlelli@redhat.com>
-
-Gabriele Monaco (9):
-  tools/rv: Do not skip idle in trace
-  tools/rv: Stop gracefully also on SIGTERM
-  rv: Add da_handle_start_run_event_ to per-task monitors
-  rv: Remove trailing whitespace from tracepoint string
-  sched: Add sched tracepoints for RV task model
-  sched: Treat try_to_block_task with pending signal as wakeup
-  rv: Retry when da monitor detects race conditions
-  rv: Replace tss monitor with more complete sts
-  rv: Add srs per-task monitor
-
- Documentation/trace/rv/monitor_sched.rst      | 237 +++++++++++++++---
- include/linux/rv.h                            |   3 +-
- include/linux/sched.h                         |   7 +-
- include/rv/da_monitor.h                       |  75 +++++-
- include/trace/events/sched.h                  |   8 +
- kernel/sched/core.c                           |  20 +-
- kernel/trace/rv/Kconfig                       |   4 +-
- kernel/trace/rv/Makefile                      |   4 +-
- kernel/trace/rv/monitors/snroc/snroc.c        |  85 -------
- kernel/trace/rv/monitors/snroc/snroc.h        |  47 ----
- .../trace/rv/monitors/{snroc => srs}/Kconfig  |   8 +-
- kernel/trace/rv/monitors/srs/srs.c            | 135 ++++++++++
- kernel/trace/rv/monitors/srs/srs.h            |  87 +++++++
- .../{snroc/snroc_trace.h => srs/srs_trace.h}  |   8 +-
- kernel/trace/rv/monitors/sts/Kconfig          |  18 ++
- kernel/trace/rv/monitors/sts/sts.c            | 118 +++++++++
- kernel/trace/rv/monitors/sts/sts.h            |  62 +++++
- .../{tss/tss_trace.h => sts/sts_trace.h}      |   8 +-
- kernel/trace/rv/monitors/tss/Kconfig          |  14 --
- kernel/trace/rv/monitors/tss/tss.c            |  91 -------
- kernel/trace/rv/monitors/tss/tss.h            |  47 ----
- kernel/trace/rv/rv_trace.h                    |  12 +-
- tools/verification/models/sched/snroc.dot     |  18 --
- tools/verification/models/sched/srs.dot       |  61 +++++
- tools/verification/models/sched/sts.dot       |  29 +++
- tools/verification/models/sched/tss.dot       |  18 --
- tools/verification/rv/src/in_kernel.c         |   2 +-
- tools/verification/rv/src/rv.c                |   1 +
- 28 files changed, 828 insertions(+), 399 deletions(-)
- delete mode 100644 kernel/trace/rv/monitors/snroc/snroc.c
- delete mode 100644 kernel/trace/rv/monitors/snroc/snroc.h
- rename kernel/trace/rv/monitors/{snroc => srs}/Kconfig (52%)
- create mode 100644 kernel/trace/rv/monitors/srs/srs.c
- create mode 100644 kernel/trace/rv/monitors/srs/srs.h
- rename kernel/trace/rv/monitors/{snroc/snroc_trace.h => srs/srs_trace.h} (67%)
- create mode 100644 kernel/trace/rv/monitors/sts/Kconfig
- create mode 100644 kernel/trace/rv/monitors/sts/sts.c
- create mode 100644 kernel/trace/rv/monitors/sts/sts.h
- rename kernel/trace/rv/monitors/{tss/tss_trace.h => sts/sts_trace.h} (67%)
- delete mode 100644 kernel/trace/rv/monitors/tss/Kconfig
- delete mode 100644 kernel/trace/rv/monitors/tss/tss.c
- delete mode 100644 kernel/trace/rv/monitors/tss/tss.h
- delete mode 100644 tools/verification/models/sched/snroc.dot
- create mode 100644 tools/verification/models/sched/srs.dot
- create mode 100644 tools/verification/models/sched/sts.dot
- delete mode 100644 tools/verification/models/sched/tss.dot
-
-
-base-commit: e48e99b6edf41c69c5528aa7ffb2daf3c59ee105
+diff --git a/tools/verification/rv/src/in_kernel.c b/tools/verification/rv/src/in_kernel.c
+index c0dcee795c0de..72b03bae021cd 100644
+--- a/tools/verification/rv/src/in_kernel.c
++++ b/tools/verification/rv/src/in_kernel.c
+@@ -429,7 +429,7 @@ ikm_event_handler(struct trace_seq *s, struct tep_record *record,
+ 
+ 	tep_get_common_field_val(s, trace_event, "common_pid", record, &pid, 1);
+ 
+-	if (config_has_id && (config_my_pid == id))
++	if (config_my_pid && config_has_id && (config_my_pid == id))
+ 		return 0;
+ 	else if (config_my_pid && (config_my_pid == pid))
+ 		return 0;
 -- 
 2.49.0
 
