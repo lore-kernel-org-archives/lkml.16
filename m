@@ -1,61 +1,64 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E035B1A38E3;
-	Fri,  4 Apr 2025 09:32:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 727B71A8F79;
+	Fri,  4 Apr 2025 09:33:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743759180; cv=none; b=rON21FEvjJErQKI4ol6kxExdJ1HOWy4oNEYMBTdW4k7gZMvMoKfNHvTiYEnWuvTHiR6Cp0/O1XQ/pfsLda8LwC9MgrfT719dpnHpjZL8r0Fv24yAAf6qp2/UEoTP3n9d3y6sUXBqlJafo6fhwy1//tRw17IZ4AWPZ6/uAAXGAGo=
+	t=1743759208; cv=none; b=e2IQdr60EGnZ3Rd6eKD54yEqykgYhbg8hjeVYK3voEAOO54RZkNJLEyXwr67EGkQdqiKNsCf7YBm7GA957ehDsbFbNYfIuSB7QQl9qmK5U1jyyN4P9Mnuay13nfXoMYRnDer4FuWeolS0X05X6l9KAAgr2dBPzLfZajYZ6N3A4I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743759180; c=relaxed/simple;
-	bh=x/htCtnL4bJbQP2vXMg/bxEFFPbS11UpyoiMOMuZhvU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BRl2M9BVxfbT77z3e6AJLdFciRLMtL6rEN0xITRVTuC489BHnc6MEPmUrCPfInwudvcuJxgaTqmyv+JPPX1ApRMrgsbwwnDUetlBlYogxgpdyX3JW+HJsECR9735gC9MrWIicTTMCraJvJQ/3i4ZNbVV5ObF145ohWAWbdi2krk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nq1cnFY2; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nq1cnFY2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC6BDC4CEDD;
-	Fri,  4 Apr 2025 09:32:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743759179;
-	bh=x/htCtnL4bJbQP2vXMg/bxEFFPbS11UpyoiMOMuZhvU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nq1cnFY2+4/Yt4lih9yaYqSrPLqIoT1sqSPa/3a54HfC32ZzPeiCvxzJDZ3o3GQ2c
-	 GVq6c5d/AIuGVHJqgXhJHgP3Lw2Zz2irdSPow+o0xa0oR0uEFTflEH/dho8HadSQuR
-	 a1jk056yjABFzETI3RLW0Q1OJRaD6QGlDuFb8uhFd5XnVcgt+k/wY7q6y4TEJjRfaJ
-	 ZgGKXZtrK6v8/SLdO5Xbo/jKoP69FCEUEfYQz7NOOX4ifwpIgMMhxsCXPx6AOMQjRP
-	 MyDVWksd4rHqFXhOeZwSuWioXXbo8utI3YOES21FaFi21yDM/dff5LNL6uAvrHWXX7
-	 R6EDtGdg+micA==
-Date: Fri, 4 Apr 2025 10:32:54 +0100
-From: Simon Horman <horms@kernel.org>
-To: Stanislav Fomichev <sdf@fomichev.me>
-Cc: netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, paulmck@kernel.org,
-	joel@joelfernandes.org, steven.price@arm.com,
-	akpm@linux-foundation.org, matttbe@kernel.org,
-	anshuman.khandual@arm.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next] configs/debug: run and debug PREEMPT
-Message-ID: <20250404093254.GC214849@horms.kernel.org>
-References: <20250402172305.1775226-1-sdf@fomichev.me>
+	s=arc-20240116; t=1743759208; c=relaxed/simple;
+	bh=OlwY32Fbx2TlVbmK0WPgwwu2UwN+JSBPC0gU3EjSsdI=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=phm+04C2YxXlduBOAtDQQ8c9TZBXdzRiF2KNOCAieo728sWrIM3aqFq79Qyi6WHnZ+7Jqc7AxvqjEuQHl0N0CPD+8jFALyh/6pVXDypEaMcsOc7lE1JJ2CIZkmLvGGkASnoFHj4if/g7K9xroe0mMEtcbpt5zZQ0Rwwysf5n3iQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZTYGb06R4z6K61Z;
+	Fri,  4 Apr 2025 17:29:43 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 31004140498;
+	Fri,  4 Apr 2025 17:33:23 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 4 Apr
+ 2025 11:33:22 +0200
+Date: Fri, 4 Apr 2025 10:33:21 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Zaid Alali <zaidal@os.amperecomputing.com>
+CC: <rafael@kernel.org>, <lenb@kernel.org>, <james.morse@arm.com>,
+	<tony.luck@intel.com>, <bp@alien8.de>, <robert.moore@intel.com>,
+	<dan.j.williams@intel.com>, <Benjamin.Cheatham@amd.com>,
+	<Avadhut.Naik@amd.com>, <viro@zeniv.linux.org.uk>, <arnd@arndb.de>,
+	<ira.weiny@intel.com>, <dave.jiang@intel.com>,
+	<sthanneeru.opensrc@micron.com>, <linux-acpi@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <acpica-devel@lists.linux.dev>
+Subject: Re: [PATCH v5 9/9] ACPI: APEI: EINJ: Update the documentation for
+ EINJv2 support
+Message-ID: <20250404103321.0000035d@huawei.com>
+In-Reply-To: <20250403231339.23708-10-zaidal@os.amperecomputing.com>
+References: <20250403231339.23708-1-zaidal@os.amperecomputing.com>
+	<20250403231339.23708-10-zaidal@os.amperecomputing.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250402172305.1775226-1-sdf@fomichev.me>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500011.china.huawei.com (7.191.174.215) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Wed, Apr 02, 2025 at 10:23:05AM -0700, Stanislav Fomichev wrote:
-> Recent change [0] resulted in a "BUG: using __this_cpu_read() in
-> preemptible" splat [1]. PREEMPT kernels have additional requirements
-> on what can and can not run with/without preemption enabled.
-> Expose those constrains in the debug kernels.
-> 
-> 0: https://lore.kernel.org/netdev/20250314120048.12569-2-justin.iurman@uliege.be/
-> 1: https://lore.kernel.org/netdev/20250402094458.006ba2a7@kernel.org/T/#mbf72641e9d7d274daee9003ef5edf6833201f1bc
-> 
-> Signed-off-by: Stanislav Fomichev <sdf@fomichev.me>
+On Thu,  3 Apr 2025 16:13:39 -0700
+Zaid Alali <zaidal@os.amperecomputing.com> wrote:
 
-Reviewed-by: Simon Horman <horms@kernel.org>
+> Add documentation for the updated ACPI specs for EINJv2(1)(2)
+> 
+> (1) https://github.com/tianocore/edk2/issues/9449
+> (2) https://github.com/tianocore/edk2/issues/9017
+I forgot to highlight these should probably be link tags as per
+earlier patch review.  Other than that, looks good.
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
