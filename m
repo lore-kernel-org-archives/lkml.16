@@ -1,128 +1,113 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB0F91DA53
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 16:52:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0C9020A5E1
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 16:52:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743785537; cv=none; b=iFSPZmMDGbbuWtvQh5NMBuAxnl/MyMh19vv3+bwGSE5v0Ji93LnFQZqyfCMnw8ekEHIsZ6gXpxxOBbNOvertzGUUl3P3yzVoj/4/P3ivMBCIr2byL+5dLsBSQrzo+o6dc/CbltuJ2ATrj+0vCeRpCOjdkmUbI0KUr8tHiAw1EL0=
+	t=1743785538; cv=none; b=KromiD4wBv9ztczq74Xy6gVqKvzHb5heA7DEmTZa7ZMam6QCQpnCmU+6fmZiLrLur7llDPP3udlvz1WHoAF5OAuPjNXlslPTVweGbjRMZK81ceiehjjrVGkwUf8wz/JU74dFn6q4mZX1gHRXAhpopWOXjZ1Ct8v1NCvSfMije8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743785537; c=relaxed/simple;
-	bh=5lDdvReyzVEX97KMbGRyvWLuicLyJkWPizdN9Pf2q0c=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=YD22xgkoHrkDGWDQG/KThD0rpyWag53W/3tMvU006hlGLYFCTIy3o+xqHQUR5mc1e2GvkOLtjtFZE0JORocy1gqo5g06wLFVAQn0N01S5iFZ/0Pz/qbH4TC38T46d8gp6GI7XSUmbBDOPa+cppoAPEl5VV8ahWFBotOel6h5GKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fdhQG14n; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1743785538; c=relaxed/simple;
+	bh=XZ4p3dyMPjI8KzdK6UZBzSYUinH6HrPMC954K8FV8Ig=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nuffCv96IP9jfW757/XotYYBkpkJD3LtYhnaGVX4XC5wd31Xn3Ol+c82nSTSjhRHnL0x9Yw3q9Wl/NvAFw2qL7pvTLO1i3UK7XEMxtDk8oZV2ItbYAlraHLby3l/pBKf4FayUN7vSGviBkGhgxlwDiio2L0wkhSUIPgMffuFcyY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=FiKG21Ig; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fdhQG14n"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743785536; x=1775321536;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=5lDdvReyzVEX97KMbGRyvWLuicLyJkWPizdN9Pf2q0c=;
-  b=fdhQG14nnnA+aDzsq1VkttX/sIgKO3MQQ8KGNezd0YA4mIF9wjMrV3iQ
-   Uk2jkTwNl2bMlClifsdPb6aepPtQ3wJeXjCxlwBgLgJeiBmyesf0AAsci
-   xcfzFDMwt1RILoCR5x5cHeOqUg13HvU/WLfiCDtyUVq83bcZ29ODKC0at
-   itmbOYYXx2XwBIlRaDazcLVNoox80EF0mprMhU+RmiTWrjlaggx1qIunM
-   4uTmqvtQ5gVujQJLRq0Bt5hH0tMTeLhXeQ+gjuve3A+cyrnXfzxGqy9w+
-   LRivmcmRehnrFGAVVODEmTXpwyIIIzLUJTt19CEJPhI8dKLD5y0lBUqsh
-   Q==;
-X-CSE-ConnectionGUID: wq+1zVbsRkCKJ/WcYPxnAA==
-X-CSE-MsgGUID: IEpqIv/ASGabn9ykibndkw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11394"; a="44479208"
-X-IronPort-AV: E=Sophos;i="6.15,188,1739865600"; 
-   d="scan'208";a="44479208"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 09:52:15 -0700
-X-CSE-ConnectionGUID: tH1TQQLhSZiNhAS25wu9GQ==
-X-CSE-MsgGUID: h+qRiDY5RaK8jbPnI/Uw4A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,188,1739865600"; 
-   d="scan'208";a="128205053"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa009.fm.intel.com with ESMTP; 04 Apr 2025 09:52:13 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 87D9F129; Fri, 04 Apr 2025 19:52:11 +0300 (EEST)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	linux-kernel@vger.kernel.org
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Will Deacon <will@kernel.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Waiman Long <longman@redhat.com>,
-	Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH v1 1/1] sched/fair: Mark some static const with __maybe_unused
-Date: Fri,  4 Apr 2025 19:52:04 +0300
-Message-ID: <20250404165204.3657093-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="FiKG21Ig"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5e5cd420781so3221575a12.2
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 09:52:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1743785533; x=1744390333; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=dcaHckNUalgvuK38rDNnG2eFvol8+c/qkWl70UacdGo=;
+        b=FiKG21IgUoWEvwZAIqBYgRlOFYS9N9dgEC1Oo1rboFVXq664hXPHhskHEnIWmnpFf+
+         PYcFGlYKfbSrrKdjfc043MOgl8YdX307FHo2NSjUyS05ivH0ITIzF20ZzldWMYKaDSuu
+         OMOiRNeXQq3Gai1lIys+57piEGRBt4X6JM1BI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743785533; x=1744390333;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=dcaHckNUalgvuK38rDNnG2eFvol8+c/qkWl70UacdGo=;
+        b=SydBCNJnvgtG1umjsgIAhJht0sIkAPbDaVkgFukBHADA2TaJUrQvI97mX3ADlTIOmV
+         /3NtxbhHysP66vBZ1em2FcFnu+peUAefx2dqclMqcFMZ+FnNamTcjjZsVdWTgD9LjeFS
+         aaGj7pxpK7RkNQfuwHlvjdZ8drIsnghOiVpAWXt5M0SnbgnjragiRUMsFAI5k8fCbaXk
+         K0gKJ+N/xkXfq4SQ8gT9ibTZ5MJPAi8d4tfceoQd5MPmutKi9u9OpmNE1diuhdKLYklL
+         8y1PdSUZU7tsFoWa2wXYUlSYcLfZA1BZfNd5IG4hpUCseYNSg2qZBnCtddoM0+DGCnYG
+         RT0A==
+X-Forwarded-Encrypted: i=1; AJvYcCU5JSd+4V91tA84SB8UM8qANvHcYko/50Xih7qAkrRt5hdEv0pAlZK17KhQwWZTmjHf33SKwLYuTnSdnoQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxNw+WL77D+NfxrsUchry4XZPZWjCJ70TU9WkOGvrOpNY74YJUT
+	vkkWLatf6iYBztbvlQzKQBm1OJcWc4Yyo6uMkIuQynWorq8zfydc41bHbBkuj1iDggJDidQR7eq
+	ISR8=
+X-Gm-Gg: ASbGnctK0yc6x2HSHuArayY8UVYS3S8qUN3VKUSjo7kKykviJC2RDAZOhmQyf6B+vyc
+	NovTCFl4Hq2X1537u9vbJff1jpw/z9ZYuA789O5zuhXrsxdH3dQohVfVmHRuryZukRcequZD3wE
+	iUPTtvegsP3o/ez9cyA1jSG+09gstsIiBSb1IBKynR6N/IjaooY3nPiQycXz0AXFt3kgMvOC5A4
+	VAxvu4X6nDSN9ZaGMryA1CoyWg6jgx981Zifh/WZxygG5U3B20WveBNyCSH1bPaN3BE4ufGTxPp
+	8ZpDBV1Km2mD6yGYjj9eGzjIG9LnzH6PHljAo20HGVtPNtenNlr+VcZAv7XFY1iUjK8mFGfKBKJ
+	EB7MlO6On3mBKLqLdz54=
+X-Google-Smtp-Source: AGHT+IHhhM2dWgfCkQ9okwfo/bp82XcjCHTO9qhlYtR7XT/DA0+zNECyzd2g/a75jgA1VYAbjS+KNw==
+X-Received: by 2002:a05:6402:5193:b0:5ed:76b0:a688 with SMTP id 4fb4d7f45d1cf-5f0b4716ce4mr3164736a12.21.1743785532826;
+        Fri, 04 Apr 2025 09:52:12 -0700 (PDT)
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com. [209.85.218.54])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f087f0d6bbsm2722282a12.46.2025.04.04.09.52.12
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 04 Apr 2025 09:52:12 -0700 (PDT)
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ac2a81e41e3so409712466b.1
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 09:52:12 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVOYFN7HHeeRBgz/iJ1nUmcM4HXT7b162lDKHRu3HR6MrZTERt8X4dO/vIfULnW4royLuHsJtMyVWTYDXk=@vger.kernel.org
+X-Received: by 2002:a17:907:a05:b0:ac3:8988:deda with SMTP id
+ a640c23a62f3a-ac7e7626e41mr24401266b.40.1743785531540; Fri, 04 Apr 2025
+ 09:52:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <mhng-e4523e07-f5ae-4f8b-9eec-8422b05700f4@palmer-ri-x1c9>
+In-Reply-To: <mhng-e4523e07-f5ae-4f8b-9eec-8422b05700f4@palmer-ri-x1c9>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Fri, 4 Apr 2025 09:51:55 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whWHfgVaGodMi+UecXXbo2t1At-cVUMH0e8kS6Pacqwsg@mail.gmail.com>
+X-Gm-Features: ATxdqUGi3Juiu86MXhM0XWazcK8DDHPfVGFinP8mcRY6eeaAhkWCP85ngtPW-Fo
+Message-ID: <CAHk-=whWHfgVaGodMi+UecXXbo2t1At-cVUMH0e8kS6Pacqwsg@mail.gmail.com>
+Subject: Re: [GIT PULL] RISC-V Patches for the 6.15 Merge Window, Part 1
+To: Palmer Dabbelt <palmer@rivosinc.com>
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-GCC considers that some static const defined in the lockdep_internals.h
-are unused, which prevents `make W=1` and CONFIG_WERROR=y builds:
+On Fri, 4 Apr 2025 at 08:58, Palmer Dabbelt <palmer@rivosinc.com> wrote:
+>
+> --- a/arch/riscv/mm/tlbflush.c
+> +++ b/arch/riscv/mm/tlbflush.c
+> @@ -192,10 +192,9 @@ bool arch_tlbbatch_should_defer(struct mm_struct *mm)
+>  void arch_tlbbatch_add_pending(struct arch_tlbflush_unmap_batch *batch,
+>                 struct mm_struct *mm, unsigned long start, unsigned long end)
+>  {
+> -       unsigned long start = uaddr & PAGE_MASK;
+> -
+>         cpumask_or(&batch->cpumask, &batch->cpumask, mm_cpumask(mm));
+> -       mmu_notifier_arch_invalidate_secondary_tlbs(mm, start, start + PAGE_SIZE);
+> +       mmu_notifier_arch_invalidate_secondary_tlbs(mm, start & PAGE_MASK,
+> +                                                   (end & PAGE_MASK) + PAGE_SIZE);
+>  }
 
-kernel/locking/lockdep_internals.h:69:28: error: ‘LOCKF_USED_IN_IRQ_READ’ defined but not used [-Werror=unused-const-variable=]
-   69 | static const unsigned long LOCKF_USED_IN_IRQ_READ =
-      |                            ^~~~~~~~~~~~~~~~~~~~~~
-kernel/locking/lockdep_internals.h:63:28: error: ‘LOCKF_ENABLED_IRQ_READ’ defined but not used [-Werror=unused-const-variable=]
-   63 | static const unsigned long LOCKF_ENABLED_IRQ_READ =
-      |                            ^~~~~~~~~~~~~~~~~~~~~~
-kernel/locking/lockdep_internals.h:57:28: error: ‘LOCKF_USED_IN_IRQ’ defined but not used [-Werror=unused-const-variable=]
-   57 | static const unsigned long LOCKF_USED_IN_IRQ =
-      |                            ^~~~~~~~~~~~~~~~~
-kernel/locking/lockdep_internals.h:51:28: error: ‘LOCKF_ENABLED_IRQ’ defined but not used [-Werror=unused-const-variable=]
-   51 | static const unsigned long LOCKF_ENABLED_IRQ =
-      |                            ^~~~~~~~~~~~~~~~~
+That just seems wrong.
 
-Fix this by marking them with __maybe_unused.
+All the PAGE_MASK and PAGE_SIZE games look entirely wrong and pointless.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- kernel/locking/lockdep_internals.h | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+As far as I can tell, the code should just call
+mmu_notifier_arch_invalidate_secondary_tlbs() with the completely
+unmodified start and end values. They should already be page-aligned,
+and 'end' is already the 'one past' thing, not the final byte.
 
-diff --git a/kernel/locking/lockdep_internals.h b/kernel/locking/lockdep_internals.h
-index 20f9ef58d3d0..82e71335f367 100644
---- a/kernel/locking/lockdep_internals.h
-+++ b/kernel/locking/lockdep_internals.h
-@@ -48,25 +48,25 @@ enum {
- };
- 
- #define LOCKDEP_STATE(__STATE)	LOCKF_ENABLED_##__STATE |
--static const unsigned long LOCKF_ENABLED_IRQ =
-+static __maybe_unused const unsigned long LOCKF_ENABLED_IRQ =
- #include "lockdep_states.h"
- 	0;
- #undef LOCKDEP_STATE
- 
- #define LOCKDEP_STATE(__STATE)	LOCKF_USED_IN_##__STATE |
--static const unsigned long LOCKF_USED_IN_IRQ =
-+static __maybe_unused const unsigned long LOCKF_USED_IN_IRQ =
- #include "lockdep_states.h"
- 	0;
- #undef LOCKDEP_STATE
- 
- #define LOCKDEP_STATE(__STATE)	LOCKF_ENABLED_##__STATE##_READ |
--static const unsigned long LOCKF_ENABLED_IRQ_READ =
-+static __maybe_unused const unsigned long LOCKF_ENABLED_IRQ_READ =
- #include "lockdep_states.h"
- 	0;
- #undef LOCKDEP_STATE
- 
- #define LOCKDEP_STATE(__STATE)	LOCKF_USED_IN_##__STATE##_READ |
--static const unsigned long LOCKF_USED_IN_IRQ_READ =
-+static __maybe_unused const unsigned long LOCKF_USED_IN_IRQ_READ =
- #include "lockdep_states.h"
- 	0;
- #undef LOCKDEP_STATE
--- 
-2.47.2
+And maybe I'm missing something and my resolution is wrong, but that's
+what I did.
 
+Somebody should obviously test it.
+
+            Linus
