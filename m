@@ -1,110 +1,261 @@
-Received: from mail-lj1-f196.google.com (mail-lj1-f196.google.com [209.85.208.196])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6D521F3BA8;
-	Fri,  4 Apr 2025 15:19:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F38BF1F582D
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 15:19:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743779964; cv=none; b=SjbzD1OWFViHDd39YXCaOJkdSkfc25DPbZiydxoq3ZcTYTlhtwHDwp3rdX0IjGOZP8b8xYcRX8MAn3chPW3CMqn9dWaIAv2KrtbN0OJpTM0kzVdiHXraEviBKEmcXBWkiO23FAhopojIIqXaFQZY5pdV+UvHQ+8Ypqv60tPrRuE=
+	t=1743779969; cv=none; b=KSD9+BxHrsxebtflvA17yAa2StuTlufdEkdUfwA3gCxVljopM28ue1stSvx6N4RAKHKVxVjAOdLb5p2bp+EDLPIhMIdQZVYVP8CP3epPbxLLWNJXfJwAtADLlER3nHUYJJcve4SN8e0rntlqrOYZ8ve3eiHGc/Y1Deoq/BXuXLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743779964; c=relaxed/simple;
-	bh=Xr9jXvezucw+9GAAJLda5NvJK+z/kHdD7h+oYo5bzG4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=taE+n3VUkAvilnvjPBwLCVQrPrFZES6V2J7SQ0KDy19nKQitte++JLi+aYJmrJA8IoiP/THVfXGMvUwY4phPjRygC6xGT65g3dDfk0J6jwD1JZ6LksGEGRgFgqIAn8RGjA7PHLk7QrVnnzrv0XX02Km8fDT9Uww0SxEou2lcbm0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XbeRVOpb; arc=none smtp.client-ip=209.85.208.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743779969; c=relaxed/simple;
+	bh=eBQ9nNxE6lSXQIeYzj1Cau9JY6Jgqp7mRdU8CLlxMig=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KVlT5EoveLZdDWuzSFaSdGzi9P5Or2OoxyVeGQwDMY+u8iq8IXpG8Kfs+UAe3+xuEK0yO2xkMzp+YyfEgIqzotmdKzmW8xT/viIAdW8CM2zC9s++Y0EuZv2qJqDFSd0njHwVWFCGeFXSTZKpcywnTibNzbTvSfnVf3B716ctCOg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=TEdwwrAv; arc=none smtp.client-ip=91.218.175.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XbeRVOpb"
-Received: by mail-lj1-f196.google.com with SMTP id 38308e7fff4ca-30bee278c2aso33997651fa.0;
-        Fri, 04 Apr 2025 08:19:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743779961; x=1744384761; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=b7iWccUiw/ID8NYLVkhb9PSyPwcEt5/Y/IQ2ZtQH16c=;
-        b=XbeRVOpb/c+ffdckV6hAMPjVDMLrXHU5kmTm6m5Us1FZJQ26rUFD5bMr0o/h2uDRuV
-         9JjhyiUagIR+2qGMmCzFGD5sdDdvwjqcfBUTHQm9fDJthqoHbOrqpUotoqofSPnJMlfz
-         NewegDjOHY4tppPcHDjDpm/EUZFo13W2fY8DerDqsrqIW54DCbt9Yvu2MQ80+dAUVb7l
-         0b3lnZwJGR1wk/lisRbMrhMB+pUMdDiLeSbmQsITxffAZGUGFmW/XEj6LsU+qNLy20Yi
-         kCp8BvpOkON78qBhzR7NCeOan7cPwJCVhGc7CNpartuWHXbU4Ly360JkZCORIPl/6jNi
-         a/qg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743779961; x=1744384761;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=b7iWccUiw/ID8NYLVkhb9PSyPwcEt5/Y/IQ2ZtQH16c=;
-        b=bT/l72uyAIym4vEFB0S7qXMIUD/fypqxb1R6khppSMFdTtaJMXG+kZ5kdzHQ4Imbs8
-         VH8/vQywwbkN0HYnc3CsWxP1CBJ144J4jNx1pNTS2rtA/tQkvG/uFtqNhngpumJiRv/m
-         2j72gxpMLr2CwSgOUNZAuJFEqMgckJTcvEHEIZTDsjRKrkerQzqL8PAB9BaotLdsZVo2
-         Fng6lB6Dw9y4As3e5OA0gFhKZkpBdacarps6MccGSgN4ImbfuuinS6Wd10K8s8pjk2M5
-         7f73242J6109Vt+ePSOHyiVvygrG2vSLj9tPXuuWCQGXsjKr2fOTTzq0W90t3kLiHZMs
-         VHLw==
-X-Forwarded-Encrypted: i=1; AJvYcCVadcIfH69Yc39Lmseq/oF1NJqK+7IMYmbSIO4acZ/7ihrji9Q7Es1yEh/xPqHzwNT+XSrF3LMwb2uL3fOp@vger.kernel.org, AJvYcCWbd3+qPD7GOf8M+QYXqjQk0yf8Kd4BhELySI53e+itGXra586A8L/vTf1KYXJ2T2g6toMtiVMZMgkYvu4=@vger.kernel.org, AJvYcCXmGmkOIy927aBoiD2ANi/jNqweRizYykbKgqCrc6gKaFqlhD79izuzbhLHBQiUVN1zSEfUo7/ABP+4BzGX@vger.kernel.org
-X-Gm-Message-State: AOJu0YyPevizb3BofelzxNCF7dG8LfQyWoYPusnduz+Nm2Q+6C6mekuG
-	23KdmoRu+I5il8Yh+fOV5qeKI59hm+zUvyuJBHp4nDidgILiMILi78+MCIewKTMdGMKBrxmFfmm
-	q+2kwkoE8weopLRgYSbciEQOzbx8=
-X-Gm-Gg: ASbGncuPwk5MlXwV1+P9yhIsYSOx5tHkIcGBNkPqe3BQoXfAa+ZOHvvsHzYNneFiXOA
-	bmlkrzi6ExZzYkamRJUn9p3enr3zMBUPKtZ20BdcUUSZFVrP52hHzc6JEeciO+ItawrCLvCiSAu
-	lmmpbOrAnLWoA/dDujR9rbi3kbyuU=
-X-Google-Smtp-Source: AGHT+IEXx6acthjgAn6//pGGjgLYBD1HWjhVlOep3HaA55zS/PUR37+AJSk2OPFw/dPZLEdIcG0O31KhRGxGnR7OnQE=
-X-Received: by 2002:a05:651c:1449:b0:30d:c4c3:eafa with SMTP id
- 38308e7fff4ca-30f0a6672c6mr13405141fa.7.1743779960600; Fri, 04 Apr 2025
- 08:19:20 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="TEdwwrAv"
+Message-ID: <c9a69eda-e066-49e1-979a-b6ec5ef115ba@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1743779964;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UWX0HTz4vZa+tHFvj8jM2lcjDzCYW7m/OUMpzGk+52s=;
+	b=TEdwwrAv1AvChzcWpwOAmY9TNVC9ryZeMsF2AhYAiE/SgE2zWcHO8rgoiPlQPfmHpm4vZJ
+	Y1GrWAgWka1x006GeZk12ELJxehJ/BhINMU6qRe05vINZ1hdeBV6jC6Y4yd516v/7ToMd2
+	6HZ7ZSJdudDFrdTfrWqn+5cOVYysmC8=
+Date: Fri, 4 Apr 2025 11:19:18 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <Z-uqpxcge0J99IPI@aspen.lan> <20250401091647.22784-1-bsdhenrymartin@gmail.com>
- <174377951404.402191.3996310155954584937.b4-ty@kernel.org> <20250404151300.GD372032@google.com>
-In-Reply-To: <20250404151300.GD372032@google.com>
-From: henry martin <bsdhenrymartin@gmail.com>
-Date: Fri, 4 Apr 2025 23:19:09 +0800
-X-Gm-Features: ATxdqUEtLv1VLfi6vRSrJH5UTl_kVLlPCY8-xy9xcLIwMYM5iu9pWJ5-wcimQ4I
-Message-ID: <CAEnQdOpWrZPor9WMtEfub5qJFT98rrsN_A6jb_a-JqSjd9tihw@mail.gmail.com>
-Subject: Re: (subset) [PATCH v4] backlight: pm8941: Add NULL check in wled_configure()
-To: Lee Jones <lee@kernel.org>
-Cc: danielt@kernel.org, jingoohan1@gmail.com, deller@gmx.de, 
-	linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [RFC net-next PATCH 01/13] dt-bindings: net: Add binding for
+ Xilinx PCS
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: netdev@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S . Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Russell King <linux@armlinux.org.uk>,
+ linux-kernel@vger.kernel.org, Christian Marangi <ansuelsmth@gmail.com>,
+ upstream@airoha.com, Heiner Kallweit <hkallweit1@gmail.com>,
+ Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Michal Simek <michal.simek@amd.com>,
+ Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>,
+ Rob Herring <robh@kernel.org>, Robert Hancock <robert.hancock@calian.com>,
+ devicetree@vger.kernel.org
+References: <20250403181907.1947517-1-sean.anderson@linux.dev>
+ <20250403181907.1947517-2-sean.anderson@linux.dev>
+ <20250404-tench-of-heavenly-beauty-fb4ed1@shite>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Sean Anderson <sean.anderson@linux.dev>
+In-Reply-To: <20250404-tench-of-heavenly-beauty-fb4ed1@shite>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-Noted, thanks for the feedback! I=E2=80=99ll send subsequent versions as
-independent patches in the future.
+On 4/4/25 06:37, Krzysztof Kozlowski wrote:
+> On Thu, Apr 03, 2025 at 02:18:55PM GMT, Sean Anderson wrote:
+>> This adds a binding for the Xilinx 1G/2.5G Ethernet PCS/PMA or SGMII
+> 
+> Incomplete review, since this is an RFC.
 
-Best regards,
-Henry
+Only an RFC due to netdev's rules. I consider this patchset complete.
 
+> Please do not use "This commit/patch/change", but imperative mood. See
+> longer explanation here:
+> https://elixir.bootlin.com/linux/v5.17.1/source/Documentation/process/submitting-patches.rst#L95
+> 
+> A nit, subject: drop second/last, redundant "binding for". The
+> "dt-bindings" prefix is already stating that these are bindings.
+> See also:
+> https://elixir.bootlin.com/linux/v6.7-rc8/source/Documentation/devicetree/bindings/submitting-patches.rst#L18
+> 
+>> LogiCORE IP. This device is a soft device typically used to adapt
+>> between GMII and SGMII or 1000BASE-X (possbilty in combination with a
+>> serdes). pcs-modes reflects the modes available with the as configured
+>> when the device is synthesized. Multiple modes may be specified if
+>> dynamic reconfiguration is supported.
+>> 
+>> One PCS may contain "shared logic in core" which can be connected to
+>> other PCSs with "shared logic in example design." This primarily refers
+>> to clocking resources, allowing a reference clock to be shared by a bank
+>> of PCSs. To support this, if #clock-cells is defined then the PCS will
+>> register itself as a clock provider for other PCSs.
+>> 
+>> Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
+>> ---
+>> 
+>>  .../devicetree/bindings/net/xilinx,pcs.yaml   | 129 ++++++++++++++++++
+>>  1 file changed, 129 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/net/xilinx,pcs.yaml
+>> 
+>> diff --git a/Documentation/devicetree/bindings/net/xilinx,pcs.yaml b/Documentation/devicetree/bindings/net/xilinx,pcs.yaml
+>> new file mode 100644
+>> index 000000000000..56a3ce0c4ef0
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/net/xilinx,pcs.yaml
+>> @@ -0,0 +1,129 @@
+>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/net/xilinx,pcs.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Xilinx 1G/2.5G Ethernet PCS/PMA or SGMII LogiCORE IP
+>> +
+>> +maintainers:
+>> +  - Sean Anderson <sean.anderson@seco.com>
+>> +
+>> +description:
+>> +  This is a soft device which implements the PCS and (depending on
+>> +  configuration) PMA layers of an IEEE Ethernet PHY. On the MAC side, it
+>> +  implements GMII. It may have an attached SERDES (internal or external), or
+>> +  may directly use LVDS IO resources. Depending on the configuration, it may
+>> +  implement 1000BASE-X, SGMII, 2500BASE-X, or 2.5G SGMII.
+>> +
+>> +  This device has a notion of "shared logic" such as reset and clocking
+>> +  resources which must be shared between multiple PCSs using the same I/O
+>> +  banks. Each PCS can be configured to have the shared logic in the "core"
+>> +  (instantiated internally and made available to other PCSs) or in the "example
+>> +  design" (provided by another PCS). PCSs with shared logic in the core are
+>> +  reset controllers, and generally provide several resets for other PCSs in the
+>> +  same bank.
+>> +
+>> +allOf:
+>> +  - $ref: ethernet-controller.yaml#
+>> +
+>> +properties:
+>> +  compatible:
+>> +    contains:
+> 
+> From where did you get such syntax? What do you want to express?
 
-Lee Jones <lee@kernel.org> =E4=BA=8E2025=E5=B9=B44=E6=9C=884=E6=97=A5=E5=91=
-=A8=E4=BA=94 23:13=E5=86=99=E9=81=93=EF=BC=9A
->
-> On Fri, 04 Apr 2025, Lee Jones wrote:
->
-> > On Tue, 01 Apr 2025 17:16:47 +0800, Henry Martin wrote:
-> > > devm_kasprintf() returns NULL when memory allocation fails. Currently=
-,
-> > > wled_configure() does not check for this case, which results in a NUL=
-L
-> > > pointer dereference.
-> > >
-> > > Add NULL check after devm_kasprintf() to prevent this issue.
-> > >
-> > >
-> > > [...]
-> >
-> > Applied, thanks!
-> >
-> > [1/1] backlight: pm8941: Add NULL check in wled_configure()
-> >       commit: b0fdeb96ead46de57a6226bc3a3ac7f9b50c0ace
->
-> Next time, please send subsequent patch versions independently.
->
-> --
-> Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
+The compatible should contain this value, but we don't really care what else it
+contains. This aligns with how the kernel matches drivers to devices.
+
+>> +      const: xilinx,pcs-16.2
+> 
+> What does the number mean?
+
+It's the version of the IP. 
+
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  "#clock-cells":
+>> +    const: 0
+>> +    description:
+>> +      Register a clock representing the clocking resources shared with other
+>> +      PCSs.
+> 
+> Drop description, redundant.
+> 
+>> +
+>> +  clocks:
+>> +    items:
+>> +      - description:
+>> +          The reference clock for the PCS. Depending on your setup, this may be
+>> +          the gtrefclk, refclk, clk125m signal, or clocks from another PCS.
+>> +
+>> +  clock-names:
+>> +    const: refclk
+>> +
+>> +  done-gpios:
+>> +    maxItems: 1
+>> +    description:
+>> +      GPIO connected to the reset-done output, if present.
+>> +
+>> +  interrupts:
+>> +    items:
+>> +      - description:
+>> +          The an_interrupt autonegotiation-complete interrupt.
+>> +
+>> +  interrupt-names:
+>> +    const: an
+>> +
+>> +  pcs-modes:
+>> +    description:
+>> +      The interfaces that the PCS supports.
+>> +    oneOf:
+>> +      - const: sgmii
+>> +      - const: 1000base-x
+>> +      - const: 2500base-x
+>> +      - items:
+>> +          - const: sgmii
+>> +          - const: 1000base-x
+> 
+> This is confusing. Why fallbacks? Shouldn't this be just enum? And
+> where is the type or constraints about number of items?
+
+As stated in the commit message, multiple modes may be specified if
+dynamic reconfiguration is supported. So I want to allow
+
+	pcs-modes = "sgmii"
+	pcs-modes = "1000base-x"
+	pcs-modes = "2500base-x"
+	pcs-modes = "sgmii", "1000base-x"
+
+>> +
+>> +  reset-gpios:
+>> +    maxItems: 1
+>> +    description:
+>> +      GPIO connected to the reset input.
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - pcs-modes
+>> +
+>> +additionalProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    #include <dt-bindings/gpio/gpio.h>
+>> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+>> +    #include <dt-bindings/interrupt-controller/irq.h>
+>> +
+>> +    mdio {
+>> +        #address-cells = <1>;
+>> +        #size-cells = <0>;
+>> +
+>> +        pcs0: ethernet-pcs@0 {
+>> +            #clock-cells = <0>;
+> 
+> Follow DTS coding style. clock-cells are never the first property.
+
+Where is this documented?
+
+>> +            compatible = "xlnx,pcs-16.2";
+>> +            reg = <0>;
+>> +            clocks = <&si570>;
+>> +            clock-names = "refclk";
+>> +            interrupts-extended = <&gic GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>;
+>> +            interrupt-names = "an";
+>> +            reset-gpios = <&gpio 5 GPIO_ACTIVE_HIGH>;
+>> +            done-gpios = <&gpio 6 GPIO_ACTIVE_HIGH>;
+>> +            pcs-modes = "sgmii", "1000base-x";
+>> +        };
+>> +
+>> +        pcs1: ethernet-pcs@1 {
+>> +            compatible = "xlnx,pcs-16.2";
+>> +            reg = <1>;
+>> +            clocks = <&pcs0>;
+>> +            clock-names = "refclk";
+>> +            interrupts-extended = <&gic GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>;
+>> +            interrupt-names = "an";
+>> +            reset-gpios = <&gpio 7 GPIO_ACTIVE_HIGH>;
+>> +            done-gpios = <&gpio 8 GPIO_ACTIVE_HIGH>;
+>> +            pcs-modes = "sgmii", "1000base-x";
+> 
+> Drop example, basically the same as previous.
+> 
+> Best regards,
+> Krzysztof
+> 
