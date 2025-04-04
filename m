@@ -1,247 +1,275 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 736BC481B1;
-	Fri,  4 Apr 2025 00:29:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A6BD51C5A;
+	Fri,  4 Apr 2025 00:41:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743726580; cv=none; b=Umocuex+nAWbs8YcR3DZFImGFdBFYT2h0pfnum5MgJEKge4LA/wiIsiWYURAm1B7XSmlgN+2j3bUxnhyq0MTWomdT4woik7WNcgIlXw/3jPygl8p222F8zwbID8oGXdSx6/DoBf6R1JJtaW8WHnZaUFVAxNsRP8o5dtlahkXeiM=
+	t=1743727306; cv=none; b=D4nwZGbIC5KSXNbNi4xEVfCLmzK7ST/hdeWQyp0MbUMsX308/AMEfchhxHb/qnFGT51DeuOvVCy9w1xk46dICFtDw/pCIuoDY1wxxjj5Qr/w6qG9AMb7yVuC0B/t3NnbzpewbKW4Zk56YKJ4I9Sf3BXprxFAs5SxoVTUwASku/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743726580; c=relaxed/simple;
-	bh=St89Kwzj3JRQR9Jf8LzwrVl8hl+hk+d3qKXySXoa7Oc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fXF+toz8rB0aWu8Y2J0l5cdYqF2Sgi1EzwgPUefnQua0EHW7uvXlyNLj6SPSl/hD1x/hzXZ8OLvXJL/l/9gyhkHIT6BUnieFtk1TaPv7AjlGUjR/WlQkBYKNqRvHbaG0DGZYfFZu7FF24zxkgZkx/0hwmCRyYRdx9MVU67536rM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aC/pEh39; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aC/pEh39"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43cf0d787eeso14448155e9.3;
-        Thu, 03 Apr 2025 17:29:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743726577; x=1744331377; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tBiB0ezIz2JVyD/2wk2RTNMgtZ0w5Sl/SCYeQbZaMbY=;
-        b=aC/pEh39yCrXQQvpOVWvHLphULrtLIZ/7aaxOxwD8loXJjFZeMwXV+wuMq5ZoSPFWT
-         uGnKLXhWSjdDfulFLPgZVAHUfG1/p3xcbv7EOpDxxAY1j9ds/UnXJYUysOs+k0cC+jcG
-         Ke4Jz9UQkWLwcsbqnx2TmrO1bd39V30GEIyAuBq0otmPOQ3gUks8ZDNR7BWSx7OPe8Yj
-         mYtZYtRe+UqhN2yVghadGweT29weuc/G7q+IH2F38h8zK3pWjo6/fk/+aPBmdANmo24m
-         Ysv4R78TQ9bO1+8khcAFozzOu2mf1QVPIqQepC2uqfVEkaDpsHK645E3aPiKpIrJF7Vo
-         Bgfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743726577; x=1744331377;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tBiB0ezIz2JVyD/2wk2RTNMgtZ0w5Sl/SCYeQbZaMbY=;
-        b=EKG0xSjNDLbveqY9oX18//IMGQq7kjJAC6i2NcA7UkKvtTlifoQlIh3xQQ/UYE8PzR
-         ZXL9s0bRL0XmpQDrhlsyWpSDMX4ef+4V+Sf4n7eGw/BaMuI4JQy9HtOyRL7D93BMEPeQ
-         jA6ZBaaWRdGgf+r/ygQwzkBlBwkiej5GKtUg4PxrhN0aD4N6nOUXbNuUYj1q/yR6UIks
-         VFmImNlU29rjXR7eGtK3V61BPsyu+s9c+zOskCY1Z5XAzZJ8JhtRC+Wun0tAYW9Pt0lz
-         J9P75FjpCwzZdG0tMENngAAcinmitDWT0MRJ1F2mc7ClZFdYDXMF5CArD50ogmDeZzvE
-         eF6w==
-X-Forwarded-Encrypted: i=1; AJvYcCVPlzBtGR3r60aPQ2Y7MUS++u+ZzFY1ae+F85sncZv19WCiCx9qHgtNk7AbvNjdnLdM8V3oeMvS@vger.kernel.org, AJvYcCVgpZBBw2Os5Uxie7uFElPaMAXNwwiQniFRh7DIpp7CwNihViD8K9LPjxFaErxeJNBpl5stksCDQiGMBEc=@vger.kernel.org, AJvYcCVsbRXkt8+eJLOoM+qt5JfHEcOTdyxxkJe/l2ZcyU+gTsT37INd5LSYGHf8D7Pg/fVLZiQ9mgDlQ6BdkjhPrYof@vger.kernel.org
-X-Gm-Message-State: AOJu0YywqQStL/KvlJedp29rTGUMcnJY9MyKfgu18SF3pkPpyUZi+391
-	XTdlkijxr6eUPMmlLSrpc6geTMY/3lB0Ktoa0qO8TMrm+fA3eXZKSCY2o2sFgztK7XapvXtnxc3
-	eXACOxuogeNUoiQ4Z9/Bg8T28oeI=
-X-Gm-Gg: ASbGnctTNFeydLFNJEiB56J6U+A+vTrDZgwBD0MxyOAuen2oiFx7GSl2p0KFS8s+iZj
-	lBN98DC82ozBus2ZR4TkAQ0SqLVz7cBS7X7LgaX+spwXT6k1P9GTiv4J1e309BfTm8RP5UyqJEL
-	WS2DevcejhTKs1T9f6w86u/TCKTCU75lqjGihp2DH5Ow==
-X-Google-Smtp-Source: AGHT+IH0WO7alMHnSQ600cGoJ30v59cQ6Hcw8+PewC6V/UOaegICbs42GgT4rYHeJpAu+a4G5NWUjAj8q4o9+SjW5AM=
-X-Received: by 2002:a5d:59a8:0:b0:391:ba6:c069 with SMTP id
- ffacd0b85a97d-39d0de67a70mr494591f8f.44.1743726576607; Thu, 03 Apr 2025
- 17:29:36 -0700 (PDT)
+	s=arc-20240116; t=1743727306; c=relaxed/simple;
+	bh=VyfYwcWwR5LBBiodEZzlIwx+OnYnum3cE1lMwDoVHkU=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=SdgrU3l+lrwd58dZy6kLW2hgRaXyeQfTPN68PO9aphvPJ3+7al06XyFm+w4w5nCEKp0Be3pEqzfWDT+DOoN2KMZ/ztRzoVrkhzcniAiUvnbY8yVUw0l3ll+xSP/eKsGZkd5Sy5Xi+9RZXpxsUWbaqWAHPGfQyk6tc5+vTbx3q4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BD0AC4CEE3;
+	Fri,  4 Apr 2025 00:41:45 +0000 (UTC)
+Date: Thu, 3 Apr 2025 20:42:51 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Tom Zanussi <zanussi@kernel.org>
+Subject: [PATCH] tracing: Move histogram trigger variables from stack to per
+ CPU structure
+Message-ID: <20250403204251.0164a4cf@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250331032354.75808-1-jiayuan.chen@linux.dev>
- <20250331032354.75808-2-jiayuan.chen@linux.dev> <CAADnVQJ6NPGuY=c8kbpX_nLYq4oOxOBAxbDPFLuw+yr4WrQQOQ@mail.gmail.com>
- <ce4a0aacecb2db7d232e94a324150dc5936c803a@linux.dev>
-In-Reply-To: <ce4a0aacecb2db7d232e94a324150dc5936c803a@linux.dev>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Thu, 3 Apr 2025 17:29:24 -0700
-X-Gm-Features: ATxdqUFDcIjakGnOj7Wmbqm9yQCN56zvn2RS53u99WJJDy-qNI3FZqsVdqVbQ_E
-Message-ID: <CAADnVQLH5d7-=8HLL1c+SZ-drgGf2X0aAGSoK-c7=9G-_Dy6+g@mail.gmail.com>
-Subject: Re: [PATCH bpf v2 1/2] bpf, xdp: clean head/meta when expanding it
-To: Jiayuan Chen <jiayuan.chen@linux.dev>
-Cc: bpf <bpf@vger.kernel.org>, Jiayuan Chen <mrpre@163.com>, 
-	syzbot+0e6ddb1ef80986bdfe64@syzkaller.appspotmail.com, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Simon Horman <horms@kernel.org>, Jesper Dangaard Brouer <hawk@kernel.org>, Mykola Lysenko <mykolal@fb.com>, 
-	Shuah Khan <shuah@kernel.org>, Willem de Bruijn <willemb@google.com>, 
-	Jason Xing <kerneljasonxing@gmail.com>, Anton Protopopov <aspsk@isovalent.com>, 
-	Abhishek Chauhan <quic_abchauha@quicinc.com>, Jordan Rome <linux@jordanrome.com>, 
-	Martin Kelly <martin.kelly@crowdstrike.com>, David Lechner <dlechner@baylibre.com>, 
-	LKML <linux-kernel@vger.kernel.org>, Network Development <netdev@vger.kernel.org>, 
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Apr 3, 2025 at 5:27=E2=80=AFPM Jiayuan Chen <jiayuan.chen@linux.dev=
-> wrote:
->
-> April 3, 2025 at 22:24, "Alexei Starovoitov" <alexei.starovoitov@gmail.co=
-m> wrote:
->
->
->
-> >
-> > On Sun, Mar 30, 2025 at 8:27 PM Jiayuan Chen <jiayuan.chen@linux.dev> w=
-rote:
-> >
-> > >
-> > > The device allocates an skb, it additionally allocates a prepad size
-> > >
-> > >  (usually equal to NET_SKB_PAD or XDP_PACKET_HEADROOM) but leaves it
-> > >
-> > >  uninitialized.
-> > >
-> > >  The bpf_xdp_adjust_head function moves skb->data forward, which allo=
-ws
-> > >
-> > >  users to access data belonging to other programs, posing a security =
-risk.
-> > >
-> > >  Reported-by: syzbot+0e6ddb1ef80986bdfe64@syzkaller.appspotmail.com
-> > >
-> > >  Closes: https://lore.kernel.org/all/00000000000067f65105edbd295d@goo=
-gle.com/T/
-> > >
-> > >  Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
-> > >
-> > >  ---
-> > >
-> > >  include/uapi/linux/bpf.h | 8 +++++---
-> > >
-> > >  net/core/filter.c | 5 ++++-
-> > >
-> > >  tools/include/uapi/linux/bpf.h | 6 ++++--
-> > >
-> > >  3 files changed, 13 insertions(+), 6 deletions(-)
-> > >
-> > >  diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
-> > >
-> > >  index defa5bb881f4..be01a848cbbf 100644
-> > >
-> > >  --- a/include/uapi/linux/bpf.h
-> > >
-> > >  +++ b/include/uapi/linux/bpf.h
-> > >
-> > >  @@ -2760,8 +2760,9 @@ union bpf_attr {
-> > >
-> > >  *
-> > >
-> > >  * long bpf_xdp_adjust_head(struct xdp_buff *xdp_md, int delta)
-> > >
-> > >  * Description
-> > >
-> > >  - * Adjust (move) *xdp_md*\ **->data** by *delta* bytes. Note that
-> > >
-> > >  - * it is possible to use a negative value for *delta*. This helper
-> > >
-> > >  + * Adjust (move) *xdp_md*\ **->data** by *delta* bytes. Note that
-> > >
-> > >  + * it is possible to use a negative value for *delta*. If *delta*
-> > >
-> > >  + * is negative, the new header will be memset to zero. This helper
-> > >
-> > >  * can be used to prepare the packet for pushing or popping
-> > >
-> > >  * headers.
-> > >
-> > >  *
-> > >
-> > >  @@ -2989,7 +2990,8 @@ union bpf_attr {
-> > >
-> > >  * long bpf_xdp_adjust_meta(struct xdp_buff *xdp_md, int delta)
-> > >
-> > >  * Description
-> > >
-> > >  * Adjust the address pointed by *xdp_md*\ **->data_meta** by
-> > >
-> > >  - * *delta* (which can be positive or negative). Note that this
-> > >
-> > >  + * *delta* (which can be positive or negative). If *delta* is
-> > >
-> > >  + * negative, the new meta will be memset to zero. Note that this
-> > >
-> > >  * operation modifies the address stored in *xdp_md*\ **->data**,
-> > >
-> > >  * so the latter must be loaded only after the helper has been
-> > >
-> > >  * called.
-> > >
-> > >  diff --git a/net/core/filter.c b/net/core/filter.c
-> > >
-> > >  index 46ae8eb7a03c..5f01d373b719 100644
-> > >
-> > >  --- a/net/core/filter.c
-> > >
-> > >  +++ b/net/core/filter.c
-> > >
-> > >  @@ -3947,6 +3947,8 @@ BPF_CALL_2(bpf_xdp_adjust_head, struct xdp_buf=
-f *, xdp, int, offset)
-> > >
-> > >  if (metalen)
-> > >
-> > >  memmove(xdp->data_meta + offset,
-> > >
-> > >  xdp->data_meta, metalen);
-> > >
-> > >  + if (offset < 0)
-> > >
-> > >  + memset(data, 0, -offset);
-> > >
-> > >  xdp->data_meta +=3D offset;
-> > >
-> > >  xdp->data =3D data;
-> > >
-> > >  @@ -4239,7 +4241,8 @@ BPF_CALL_2(bpf_xdp_adjust_meta, struct xdp_buf=
-f *, xdp, int, offset)
-> > >
-> > >  return -EINVAL;
-> > >
-> > >  if (unlikely(xdp_metalen_invalid(metalen)))
-> > >
-> > >  return -EACCES;
-> > >
-> > >  -
-> > >
-> > >  + if (offset < 0)
-> > >
-> > >  + memset(meta, 0, -offset);
-> > >
-> >
-> > Let's make everyone pay a performance penalty to silence
-> > KMSAN warning?
-> > I don't think it's a good trade off.
-> > Soft nack.
-> >
->
-> It's not just about simply suppressing KMSAN warnings, but for security
-> considerations.
->
-> So I'd like to confirm: currently, loading an XDP program only requires
-> CAP_NET_ADMIN and CAP_BPF permissions. If we consider this as a super
-> privilege, then even if uninitialized memory is exposed, I think it's oka=
-y,
-> as it's the developer's responsibility, for example, like the CVE in meta
-> https://vuldb.com/?id.246309.
+From: Steven Rostedt <rostedt@goodmis.org>
 
-And we fixed Katran. not the kernel.
+The histogram trigger has three somewhat large arrays on the kernel stack:
 
-> Or I'm thinking, can we rely on the verifier to force the initialization
-> of the newly added packet boundary behavior, specifically for this specia=
-l
-> case (although it won't be easy to implement).
+	unsigned long entries[HIST_STACKTRACE_DEPTH];
+	u64 var_ref_vals[TRACING_MAP_VARS_MAX];
+	char compound_key[HIST_KEY_SIZE_MAX];
+
+Checking the function event_hist_trigger() stack frame size, it currently
+uses 816 bytes for its stack frame due to these variables!
+
+Instead, allocate a per CPU structure that holds these arrays for each
+context level (normal, softirq, irq and NMI). That is, each CPU will have
+4 of these structures. This will be allocated when the first histogram
+trigger is enabled and freed when the last is disabled. When the
+histogram callback triggers, it will request this structure. The request
+will disable preemption, get the per CPU structure at the index of the
+per CPU variable, and increment that variable.
+
+The callback will use the arrays in this structure to perform its work and
+then release the structure. That in turn will simply decrement the per CPU
+index and enable preemption.
+
+Moving the variables from the kernel stack to the per CPU structure brings
+the stack frame of event_hist_trigger() down to just 112 bytes.
+
+Fixes: 067fe038e70f6 ("tracing: Add variable reference handling to hist triggers")
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/trace_events_hist.c | 126 ++++++++++++++++++++++++++-----
+ 1 file changed, 107 insertions(+), 19 deletions(-)
+
+diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+index 261163b00137..c1ea6aaac182 100644
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -5246,17 +5246,94 @@ hist_trigger_actions(struct hist_trigger_data *hist_data,
+ 	}
+ }
+ 
++/*
++ * The hist_pad structure is used to save information to create
++ * a histogram from the histogram trigger. It's too big to store
++ * on the stack, so when the histogram trigger is initialized
++ * a percpu array of 4 hist_pad structures is allocated.
++ * This will cover every context from normal, softirq, irq and NMI
++ * in the very unlikely event that a tigger happens at each of
++ * these contexts and interrupts a currently active trigger.
++ */
++struct hist_pad {
++	unsigned long		entries[HIST_STACKTRACE_DEPTH];
++	u64			var_ref_vals[TRACING_MAP_VARS_MAX];
++	char			compound_key[HIST_KEY_SIZE_MAX];
++};
++
++static struct hist_pad __percpu *hist_pads;
++static DEFINE_PER_CPU(int, hist_pad_cnt);
++static refcount_t hist_pad_ref;
++
++/* One hist_pad for every context (normal, softirq, irq, NMI) */
++#define MAX_HIST_CNT 4
++
++static int alloc_hist_pad(void)
++{
++	lockdep_assert_held(&event_mutex);
++
++	if (refcount_read(&hist_pad_ref)) {
++		refcount_inc(&hist_pad_ref);
++		return 0;
++	}
++
++	hist_pads = __alloc_percpu(sizeof(struct hist_pad) * MAX_HIST_CNT,
++				   __alignof__(struct hist_pad));
++	if (!hist_pads)
++		return -ENOMEM;
++
++	refcount_set(&hist_pad_ref, 1);
++	return 0;
++}
++
++static void free_hist_pad(void)
++{
++	lockdep_assert_held(&event_mutex);
++
++	if (!refcount_dec_and_test(&hist_pad_ref))
++		return;
++
++	free_percpu(hist_pads);
++	hist_pads = NULL;
++}
++
++static struct hist_pad *get_hist_pad(void)
++{
++	struct hist_pad *hist_pad;
++	int cnt;
++
++	preempt_disable();
++	hist_pad = per_cpu_ptr(hist_pads, smp_processor_id());
++	if (!hist_pad)
++		goto out_fail;
++
++	if (this_cpu_read(hist_pad_cnt) == MAX_HIST_CNT)
++		goto out_fail;
++
++	cnt = this_cpu_inc_return(hist_pad_cnt) - 1;
++
++	return &hist_pad[cnt];
++
++ out_fail:
++	preempt_enable();
++	return NULL;
++}
++
++static void put_hist_pad(void)
++{
++	this_cpu_dec(hist_pad_cnt);
++	preempt_enable();
++}
++
+ static void event_hist_trigger(struct event_trigger_data *data,
+ 			       struct trace_buffer *buffer, void *rec,
+ 			       struct ring_buffer_event *rbe)
+ {
+ 	struct hist_trigger_data *hist_data = data->private_data;
+ 	bool use_compound_key = (hist_data->n_keys > 1);
+-	unsigned long entries[HIST_STACKTRACE_DEPTH];
+-	u64 var_ref_vals[TRACING_MAP_VARS_MAX];
+-	char compound_key[HIST_KEY_SIZE_MAX];
+ 	struct tracing_map_elt *elt = NULL;
+ 	struct hist_field *key_field;
++	struct hist_pad *hist_pad;
+ 	u64 field_contents;
+ 	void *key = NULL;
+ 	unsigned int i;
+@@ -5264,25 +5341,29 @@ static void event_hist_trigger(struct event_trigger_data *data,
+ 	if (unlikely(!rbe))
+ 		return;
+ 
+-	memset(compound_key, 0, hist_data->key_size);
++	hist_pad = get_hist_pad();
++	if (!hist_pad)
++		return;
++
++	memset(hist_pad->compound_key, 0, hist_data->key_size);
+ 
+ 	for_each_hist_key_field(i, hist_data) {
+ 		key_field = hist_data->fields[i];
+ 
+ 		if (key_field->flags & HIST_FIELD_FL_STACKTRACE) {
+-			memset(entries, 0, HIST_STACKTRACE_SIZE);
++			memset(hist_pad->entries, 0, HIST_STACKTRACE_SIZE);
+ 			if (key_field->field) {
+ 				unsigned long *stack, n_entries;
+ 
+ 				field_contents = hist_fn_call(key_field, elt, buffer, rbe, rec);
+ 				stack = (unsigned long *)(long)field_contents;
+ 				n_entries = *stack;
+-				memcpy(entries, ++stack, n_entries * sizeof(unsigned long));
++				memcpy(hist_pad->entries, ++stack, n_entries * sizeof(unsigned long));
+ 			} else {
+-				stack_trace_save(entries, HIST_STACKTRACE_DEPTH,
++				stack_trace_save(hist_pads->entries, HIST_STACKTRACE_DEPTH,
+ 						 HIST_STACKTRACE_SKIP);
+ 			}
+-			key = entries;
++			key = hist_pad->entries;
+ 		} else {
+ 			field_contents = hist_fn_call(key_field, elt, buffer, rbe, rec);
+ 			if (key_field->flags & HIST_FIELD_FL_STRING) {
+@@ -5293,26 +5374,31 @@ static void event_hist_trigger(struct event_trigger_data *data,
+ 		}
+ 
+ 		if (use_compound_key)
+-			add_to_key(compound_key, key, key_field, rec);
++			add_to_key(hist_pad->compound_key, key, key_field, rec);
+ 	}
+ 
+ 	if (use_compound_key)
+-		key = compound_key;
++		key = hist_pad->compound_key;
+ 
+ 	if (hist_data->n_var_refs &&
+-	    !resolve_var_refs(hist_data, key, var_ref_vals, false))
+-		return;
++	    !resolve_var_refs(hist_data, key, hist_pad->var_ref_vals, false))
++		goto out;
+ 
+ 	elt = tracing_map_insert(hist_data->map, key);
+ 	if (!elt)
+-		return;
++		goto out;
+ 
+-	hist_trigger_elt_update(hist_data, elt, buffer, rec, rbe, var_ref_vals);
++	hist_trigger_elt_update(hist_data, elt, buffer, rec, rbe, hist_pad->var_ref_vals);
+ 
+-	if (resolve_var_refs(hist_data, key, var_ref_vals, true))
+-		hist_trigger_actions(hist_data, elt, buffer, rec, rbe, key, var_ref_vals);
++	if (resolve_var_refs(hist_data, key, hist_pad->var_ref_vals, true)) {
++		hist_trigger_actions(hist_data, elt, buffer, rec, rbe,
++				     key, hist_pad->var_ref_vals);
++	}
+ 
+ 	hist_poll_wakeup();
++
++ out:
++	put_hist_pad();
+ }
+ 
+ static void hist_trigger_stacktrace_print(struct seq_file *m,
+@@ -6145,6 +6231,9 @@ static int event_hist_trigger_init(struct event_trigger_data *data)
+ {
+ 	struct hist_trigger_data *hist_data = data->private_data;
+ 
++	if (alloc_hist_pad() < 0)
++		return -ENOMEM;
++
+ 	if (!data->ref && hist_data->attrs->name)
+ 		save_named_trigger(hist_data->attrs->name, data);
+ 
+@@ -6189,6 +6278,7 @@ static void event_hist_trigger_free(struct event_trigger_data *data)
+ 
+ 		destroy_hist_data(hist_data);
+ 	}
++	free_hist_pad();
+ }
+ 
+ static struct event_trigger_ops event_hist_trigger_ops = {
+@@ -6204,9 +6294,7 @@ static int event_hist_trigger_named_init(struct event_trigger_data *data)
+ 
+ 	save_named_trigger(data->named_data->name, data);
+ 
+-	event_hist_trigger_init(data->named_data);
+-
+-	return 0;
++	return event_hist_trigger_init(data->named_data);
+ }
+ 
+ static void event_hist_trigger_named_free(struct event_trigger_data *data)
+-- 
+2.47.2
+
