@@ -1,73 +1,96 @@
-Received: from mx2.securetransport.de (mx2.securetransport.de [188.68.39.254])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9BF1B45BE3;
-	Fri,  4 Apr 2025 13:50:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.39.254
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1361F1EE7B1
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 13:50:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743774660; cv=none; b=jxfX89GIBwdM1iDoXOR3ovoKS3SvrGc265vU6t+K93eX/T4E5rOOj54PcSu6gKYXG8bgRicv0sMxCY0bTUqRFvi+AdMaWdsox088bD6qbIkZY7DhKwxu+ziFDn2YzOkG6s/1abnpq6EMsbeAshElJuO2NBCNrqeWtCe3YCoDOmc=
+	t=1743774660; cv=none; b=jGkURJ1p/FOGR22fibQd87dk5ouPaMHCo/AhezZCJeKkh9W6WmpWng45ernW8quKbE3RjKWgyujQ06LvwOCzvEiHXVNjtigPzqyD+TqVvu0jZqWDKNmzCLfWH8gJUAYs+GmQjeeCfvLDE+GtcEyIJsgRqejbclSOHbzD7YVwvuE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1743774660; c=relaxed/simple;
-	bh=hVT2gV81WiynqyAvgJ80N/NPNcWm4WWWhENk0ztWwec=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=mJMfDlhgweJT7GIMxGNx6P4LyN992Aggv9P8Z8QwiRkxmwbY6nG/54+qDigpYPGkvE244DWuB39cUBUPbdSwYNq0YGkHyf9pyjJJz8697q5RhAX1C2pBnhVET25GL07HJ9aPuES5dtYO82W8/iWPyxBud+pRwdAelYHHvp+HSf0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=dh-electronics.com; spf=pass smtp.mailfrom=dh-electronics.com; dkim=pass (2048-bit key) header.d=dh-electronics.com header.i=@dh-electronics.com header.b=P3LwILsi; arc=none smtp.client-ip=188.68.39.254
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=dh-electronics.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dh-electronics.com
+	bh=g4HKRVR5iNuUKt6XxJzLJNqwyq84woqy+JBuYDM4a+4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NCRFNlctvvqmG7wZP0AfLUbxlOLFjYq6q24fVP5fO8JcLMOc5hpqehx+i2mugxxLrnxiK+wf0z0rI34SEW1e+s2/DSjQayOMyth5WY4TwVvqwJ5tYyibiwqF+mCk7d/lvpfPW0odMk1otdjGJpBnBZXXPmRZFDHsWfVOnaz0A10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iGrKodK4; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dh-electronics.com header.i=@dh-electronics.com header.b="P3LwILsi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dh-electronics.com;
-	s=dhelectronicscom; t=1743774094;
-	bh=usivlFTDzVIZfDa9MfqJrFI4XYUeFJ4i6p8YAeHPhkk=;
-	h=From:To:CC:Subject:Date:From;
-	b=P3LwILsiZqNvMupxtz5Mz9q72WqqosIkuHeEcv/x417tnXy5wQh1SiIjqMaXVZYmW
-	 tEUwCl94gPPfWaXdHwjcuABHY/GnvekOQOePrxuMkG1JDOzPJdgAy8hq9HE2pHids2
-	 OPMOAYBDMeybjyM6GryWVX4ZG+EXcwA4iFHXJlzOWg5q1PkyG4UeKtLgQu789XK3Q8
-	 +tO6jf4+xcpfa6pUHQHFP6HOWsgpEztYaYMVy5mvg8v2VGObMIijmufevsXliuyB0z
-	 9eFyjICb/kkdRXbwMs3Xmpi81RKzj0l/wuaZSk2YJ55FJyEpe6Wlkp/kz2tJ4IFgI4
-	 Ccws/xAz5mjxA==
-From: Johann Neuhauser <jneuhauser@dh-electronics.com>
-To: <linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>
-CC: Johann Neuhauser <jneuhauser@dh-electronics.com>, Jonathan Corbet
-	<corbet@lwn.net>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown
-	<broonie@kernel.org>
-Subject: [PATCH 0/3] regulator: userspace-consumer: Add regulator event uevents
-Date: Fri, 4 Apr 2025 15:40:06 +0200
-Message-ID: <20250404134009.2610460-1-jneuhauser@dh-electronics.com>
-X-klartext: yes
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iGrKodK4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743774657;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=v10Rq+qm+0lVG+/ZpXOjHbbBOxXi0wHFQ9TLKO+kuNU=;
+	b=iGrKodK4dLuYIPPrsdcwxzV5V+t7lkLKDKWXDlq5CndIpSWAV+o7q1rT1n2V2ObWkXidpa
+	bXlj1JPr6Mzl4kmKb3ONNWuzCjfnKMIj4CvtyfAtlEXPwn6iGDr8LjJNZX/xAs1ygGE2UV
+	twqCkZSylUaFykyRfZJB10FMq1OtLu4=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-351-tjhwzyzOMsmGNMNs1LaaYg-1; Fri,
+ 04 Apr 2025 09:50:56 -0400
+X-MC-Unique: tjhwzyzOMsmGNMNs1LaaYg-1
+X-Mimecast-MFC-AGG-ID: tjhwzyzOMsmGNMNs1LaaYg_1743774655
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4891D19560BC;
+	Fri,  4 Apr 2025 13:50:55 +0000 (UTC)
+Received: from fedora (unknown [10.72.120.26])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 157C419560AD;
+	Fri,  4 Apr 2025 13:50:50 +0000 (UTC)
+Date: Fri, 4 Apr 2025 21:50:44 +0800
+From: Ming Lei <ming.lei@redhat.com>
+To: syzbot <syzbot+9dd7dbb1a4b915dee638@syzkaller.appspotmail.com>
+Cc: axboe@kernel.dk, linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [block?] possible deadlock in
+ blk_mq_freeze_queue_nomemsave
+Message-ID: <Z-_jtFYt0t0-6A7z@fedora>
+References: <67ea99e0.050a0220.3c3d88.0042.GAE@google.com>
+ <67ee4810.050a0220.9040b.016e.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <67ee4810.050a0220.9040b.016e.GAE@google.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-This series adds support for regulator event reporting via uevents to the
-userspace-consumer regulator driver. The goal is to provide userspace with
-a straightforward mechanism to monitor and respond to important regulator
-events such as overcurrent conditions, voltage changes, and enable/disable
-transitions.
+On Thu, Apr 03, 2025 at 01:34:24AM -0700, syzbot wrote:
+> syzbot has found a reproducer for the following issue on:
+> 
+> HEAD commit:    a1b5bd45d4ee Merge tag 'usb-6.15-rc1' of git://git.kernel...
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=1711cfb0580000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=adffebefc9feb9d6
+> dashboard link: https://syzkaller.appspot.com/bug?extid=9dd7dbb1a4b915dee638
+> compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12ee494c580000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13df5998580000
+> 
+> Downloadable assets:
+> disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-a1b5bd45.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/588b4d489b63/vmlinux-a1b5bd45.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/51ead797f7ae/bzImage-a1b5bd45.xz
+> 
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+9dd7dbb1a4b915dee638@syzkaller.appspotmail.com
 
-Signed-off-by: Johann Neuhauser <jneuhauser@dh-electronics.com>
----
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: Liam Girdwood <lgirdwood@gmail.com>
-Cc: linux-doc@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: Mark Brown <broonie@kernel.org>
----
-Johann Neuhauser (3):
-  regulator: userspace-consumer: Add uevent reporting for regulator
-    events
-  ABI: sysfs-platform: Document uevent ABI for reg-userspace-consumer
-  docs: regulator: userspace-consumer: Add uevent-based regulator event
-    reporting
+...
 
- ...ysfs-platform-regulator-userspace-consumer | 23 +++++
- .../regulator/userspace-consumer.rst          | 92 +++++++++++++++++++
- drivers/regulator/userspace-consumer.c        | 74 ++++++++++++++-
- 3 files changed, 188 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/ABI/testing/sysfs-platform-regulator-userspace-consumer
- create mode 100644 Documentation/driver-api/regulator/userspace-consumer.rst
+> If you want syzbot to run the reproducer, reply with:
+> #syz test: git://repo/address.git branch-or-commit-hash
+> If you attach or paste a git patch, syzbot will apply it before testing.
 
--- 
-2.39.5
+#syz test: https://github.com/ming1/linux.git syzbot-test
+
+
+Thanks,
+Ming
+
