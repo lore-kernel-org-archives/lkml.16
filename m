@@ -1,74 +1,106 @@
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 006011386B4
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 04:59:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4513F2E62B2;
+	Fri,  4 Apr 2025 05:07:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743742745; cv=none; b=mZm7bELWd3TgvpQ9T5TVRti8hB1OI1hWAyOwzJVm11/FicCCTwUOhdPTDIzve2NwZE5MFsunqUhSl1DiG1EgNo53waRnhtr2u5U+ly3fRHclHdDDfhO+Tami8pqMFdbkfAgoAOvxn7oCDE5UW1aSTfRtdbsS2A18VEbBrIpzJaY=
+	t=1743743250; cv=none; b=P52ZSSvo5eemq4CbRPf/o0Rh20UbSPUOcrXUsUqsGMNhqpXxxV9P0YMZqrUzNL2S3ClmUFBE1nXZrV1uHIsrJ+OxuFvbIf7V+Ve40sVVF/uCvhL3zQx//N+sK+cfmICfnRF1SjQlDi8XoR3rZQ7k01w0WlxkkLCQzGyUhm3nDxE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743742745; c=relaxed/simple;
-	bh=wFLPmx0Fwbmd/I78yKqedPCDa3YVrPzE4DZoTzzBYbg=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=PtsaMVy1Qe4HgjdRlQTgQPuVzIVw0NROPtHnniE9GKiRIFAHkELbAhEEGnU/fXtExA4kXuCpZgk5dnk2TOuzoKnLAHJq1keTbJLPd0mOV0Q3+FtvUNkCOCmmWdVig6uVYh3yAuZbv62rZjxZsjnrgLG71PafE9tc7KcnDDjpldM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-85dcaf42b61so349986339f.3
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 21:59:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743742743; x=1744347543;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=veSiNRiQYQ4ynN8I5E3nEA6jQwT6rqRu0bXRMuIj9hQ=;
-        b=waD4vy19/H3oKYwTbk0rlnijaXfcUBjY0QMOFsydCTAXtuLRw5qSv8SM27FZ7QlS8w
-         d9OMU/MIPSoGaGBfFyiZx29lA2hHW1j3l60/lSudo+nImtesANOA0FYmNHWZuo2vcwLH
-         cvtxnSFx2s1VrNwKa0kv6h1sikVlq3n44fzRYDlAxXYj2O9l0fw7AJ/IF2R8fVih5DMs
-         1ZEzzbYtrIjivSt6adnZyBSeKuTR8XJA4hz/YM0zkqcXaPrTc3c7ybyOPk0MOCzp/L/+
-         F+Ro7x2ENzo298O14Dnw7pbBjZ/g+71gmxCMJtMYMCRldWzspGHrr6yZ1kR69VhpMlih
-         Vy7g==
-X-Forwarded-Encrypted: i=1; AJvYcCUIRr+EA4C7eETmNcSEDky14aF53DozXbxSUG/djJyMe7+tjgiZFgM21MkJwihmyXW+/0/OevOoNfFfBmI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwP93XfovM/x+qWYYRcUdKBweeYDSBJhIkaGtt4CoCpLX7EPvVg
-	iQP1GAffdADkRb1FDquAAPmj6YWFloKsZXwLLsxm9udLZDhm5PoVJ+oeCMeVi63hKg+0wkiT+Pe
-	ECV1842SAm1cpGcVuVyzSdApuip7AK8KwXS2BDkWrigUcxH+iB2rVC7I=
-X-Google-Smtp-Source: AGHT+IEfzW2UhovFNpHtnZ6+XnVHMCXzqHaXL0dQJ9zNwC+OQPLBYM5Vkt6QH2EqPBTD5D8l59Lb0XYDaqzSEeEvHN2sOg+8h67U
+	s=arc-20240116; t=1743743250; c=relaxed/simple;
+	bh=28QBX3i1zLNBff2ID9RVsF3iS9Ffh33atW62jlWw69k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qBhhNP3MjYAID2/+ksPjXYEKTnYNpNOTBNFGH81qS8ZJwi2PYKx1uqeaAfoSr+NVjiCO+tW5kAqQFGn7MsgvgqW8/IbUL2RmugDadP+WwJIiuzq6HADUEQEwP/z9gHFBm2A8Ouyj3OLMmKNUwDyPDRDeVpnpMZQ1hDSYjpFo/XI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=T8t4H8Pe; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="T8t4H8Pe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743743248; x=1775279248;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=28QBX3i1zLNBff2ID9RVsF3iS9Ffh33atW62jlWw69k=;
+  b=T8t4H8PeWT6ATZUlCCn/a+WDWxb5sXNcLVZM26NrtR/HJ29KLtR6/tsy
+   Mh7Ed6eD3CJBcigUogiJkV119rqJ5UxyyRBAn7NYqX0XyrK+uc3KiYCKv
+   OxDq5BWTXZ8hllpQs+QkbWx5uCbktqmpRpdiGGdHIuQJVg65xlnIpGsBy
+   XTjRJSu/SFX7qh7Ukqmip+c55Vtirlo37I1qSfX2J3/8trqn3i90QWcib
+   RWvkXSSMKTsxsMA/mQW2/j9PWUZI8d9LDgs0JCWC2XPT387aCmS7Zmn4x
+   aPBNTgUdtC1z+/zqdfxlzqoK3DRzZlmEdLdy7CL9akuiGhiqqwJWgdM9i
+   Q==;
+X-CSE-ConnectionGUID: wSyF17IvQv+EER0kvS5zog==
+X-CSE-MsgGUID: zrVGXuyBRFWI8NoZ+2ozEA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11393"; a="45350678"
+X-IronPort-AV: E=Sophos;i="6.15,187,1739865600"; 
+   d="scan'208";a="45350678"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 22:07:27 -0700
+X-CSE-ConnectionGUID: HyesBfsQRJ2cWVkBgxByeA==
+X-CSE-MsgGUID: My1e6VapS+6ARNkVGgBb9Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,187,1739865600"; 
+   d="scan'208";a="158204028"
+Received: from mev-dev.igk.intel.com ([10.237.112.144])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 22:07:25 -0700
+Date: Fri, 4 Apr 2025 07:07:13 +0200
+From: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
+To: Wentao Liang <vulab@iscas.ac.cn>
+Cc: sgoutham@marvell.com, gakula@marvell.com, sbhatta@marvell.com,
+	hkelam@marvell.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] octeontx2-pf:  Add error handling for
+ cn10k_map_unmap_rq_policer().
+Message-ID: <Z+9pAZTV2AE53lrY@mev-dev.igk.intel.com>
+References: <20250403151303.2280-1-vulab@iscas.ac.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:c243:0:b0:3d3:e3fc:d5e1 with SMTP id
- e9e14a558f8ab-3d6e3ee1673mr24694795ab.1.1743742743080; Thu, 03 Apr 2025
- 21:59:03 -0700 (PDT)
-Date: Thu, 03 Apr 2025 21:59:03 -0700
-In-Reply-To: <20250404040706.3772-1-hdanton@sina.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67ef6717.050a0220.9040b.031f.GAE@google.com>
-Subject: Re: [syzbot] [media?] [usb?] KASAN: slab-use-after-free Read in
- load_firmware_cb (2)
-From: syzbot <syzbot+db4326df1b9af04f68fc@syzkaller.appspotmail.com>
-To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250403151303.2280-1-vulab@iscas.ac.cn>
 
-Hello,
+On Thu, Apr 03, 2025 at 11:13:03PM +0800, Wentao Liang wrote:
+> The cn10k_free_matchall_ipolicer() calls the cn10k_map_unmap_rq_policer()
+> for each queue in a for loop without checking for any errors. A proper
+> implementation can be found in cn10k_set_matchall_ipolicer_rate().
+> 
+> Check the return value of the cn10k_map_unmap_rq_policer() function during
+> each loop. Jump to unlock function and return the error code if the
+> funciton fails to unmap policer.
+> 
+> Fixes: 2ca89a2c3752 ("octeontx2-pf: TC_MATCHALL ingress ratelimiting offload")
+> Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+> ---
+>  drivers/net/ethernet/marvell/octeontx2/nic/cn10k.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/cn10k.c b/drivers/net/ethernet/marvell/octeontx2/nic/cn10k.c
+> index a15cc86635d6..ce58ad61198e 100644
+> --- a/drivers/net/ethernet/marvell/octeontx2/nic/cn10k.c
+> +++ b/drivers/net/ethernet/marvell/octeontx2/nic/cn10k.c
+> @@ -353,11 +353,13 @@ int cn10k_free_matchall_ipolicer(struct otx2_nic *pfvf)
+>  
+>  	/* Remove RQ's policer mapping */
+>  	for (qidx = 0; qidx < hw->rx_queues; qidx++)
+> -		cn10k_map_unmap_rq_policer(pfvf, qidx,
+> -					   hw->matchall_ipolicer, false);
+> +		rc = cn10k_map_unmap_rq_policer(pfvf, qidx, hw->matchall_ipolicer, false);
+> +		if (rc)
+> +			goto out;
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+Didn't you forget about braces around for?
 
-Reported-by: syzbot+db4326df1b9af04f68fc@syzkaller.appspotmail.com
-Tested-by: syzbot+db4326df1b9af04f68fc@syzkaller.appspotmail.com
-
-Tested on:
-
-commit:         d6b13dbd Merge branch 'for-next/core' into for-kernelci
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
-console output: https://syzkaller.appspot.com/x/log.txt?x=11692a74580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=c7139a37e0ece1f
-dashboard link: https://syzkaller.appspot.com/bug?extid=db4326df1b9af04f68fc
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-userspace arch: arm64
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=125de178580000
-
-Note: testing is done by a robot and is best-effort only.
+>  
+>  	rc = cn10k_free_leaf_profile(pfvf, hw->matchall_ipolicer);
+>  
+> +out:
+>  	mutex_unlock(&pfvf->mbox.lock);
+>  	return rc;
+>  }
+> -- 
+> 2.42.0.windows.2
