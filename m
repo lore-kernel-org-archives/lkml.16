@@ -1,132 +1,144 @@
-Received: from fhigh-b7-smtp.messagingengine.com (fhigh-b7-smtp.messagingengine.com [202.12.124.158])
+Received: from s1.g1.infrastructure.qtmlabs.xyz (s1.g1.infrastructure.qtmlabs.xyz [107.172.1.117])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EED5D15B54A;
-	Fri,  4 Apr 2025 05:49:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 338E115DBB3;
+	Fri,  4 Apr 2025 05:50:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=107.172.1.117
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743745800; cv=none; b=GC6U9EKjxYDrlKAXit3kgVvdh48rbc2MJ6qpxyTK1BBJ84yLGfzikaZyXQc1gb09LXWCwYmDLCjT9c7pk2cY00+Yxiqr+99Fi9GZkuJ5FkmiHCB7KhtRsPu05Hy1VeiJDG59IM3GJ7VnGxkl6Lr6YaeU2expL2ASCuaH0QOT3Jw=
+	t=1743745814; cv=none; b=ArkQU6aaMUe+gspkkM2v/amYKZYaSvzi1TFQCf3qXqMwe2E8G5uy85xri7vsPM3oQwGgQYezlm/WvBVuwy5kbeHyqZN3+E3WcHGyYgSV0BVLc129yWsiLb1uwvLJQ1sRrLWDULoYGWO1lfWCyZLhXp1OYUrGhAb20LQdeuiIbuo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743745800; c=relaxed/simple;
-	bh=qkTHqjl83pLG/+D8Skug3u0Mx3mxlwN9CoNV7VolM9o=;
-	h=MIME-Version:Date:From:To:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=gT0iOtfgyzgG7mMXjp3y4N9OoWIGMUGfC+hMwbfk3FasvMb6HoYjdLJOm4wzngc/3fONjwMzwQiV4FVyUURj4pabw/tvyrKgFEhyGnAaFtE/ac9cFErqOz0bESlNYtr3PRTLL9z0qz3n6U1RL8PpdNN26RO+3tgAWOBHiks1GJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=cREzHxhO; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=c7DHAjdH; arc=none smtp.client-ip=202.12.124.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1743745814; c=relaxed/simple;
+	bh=E0lTe+FJPV0F1VKQxQbHoHGJojoKObYVSGdv5v9cqxw=;
+	h=Content-Type:Message-ID:Date:MIME-Version:Subject:From:To:Cc:
+	 References:In-Reply-To; b=uoZv9tJ473RHyrpmoprUAvwAjiTEdPiyWqJEWf3CNzj5nDENUNKYwiNhtXUIklI6YbnhqQk8IiXFfqDPZ6X84bhCteB+emACIgKyeKTaPSA2fGD2wv6tlgnloA9AzWh70uPinRs1OpqGQdue6uQGmr/jnpU3d+o9pxrQ/2lZA/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qtmlabs.xyz; spf=pass smtp.mailfrom=qtmlabs.xyz; dkim=pass (2048-bit key) header.d=qtmlabs.xyz header.i=@qtmlabs.xyz header.b=HkWrS4lG; arc=none smtp.client-ip=107.172.1.117
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qtmlabs.xyz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qtmlabs.xyz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="cREzHxhO";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="c7DHAjdH"
-Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id C69A92540208;
-	Fri,  4 Apr 2025 01:49:57 -0400 (EDT)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-12.internal (MEProxy); Fri, 04 Apr 2025 01:49:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:content-transfer-encoding:content-type:content-type:date:date
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1743745797;
-	 x=1743832197; bh=jiFFNkuCIH7ZG6pqQ+AbUtFKAmY8bCOOF0MhNJ0ccxk=; b=
-	cREzHxhOLd5iw3lJUyZ1sf6YboO163DBvMqtwijXmO4lmnoacGSPuqlMob1TnYmM
-	EjMU6X5YAW9aQ09Ah2mT9mvvdhkJPLq2q1Epz/rj4KohQRcsos0TpLmYsKT063qj
-	YCrBgtjRvsQS9EHMV593u2riSDxRbjysuPrD0upNA2LO9ZBPd0uYjX4qWnBfMnj6
-	eu4xEov0C9k2TMhXbj46vp7mTXuPhAqrNCmS4jehSScUEgAO+fd2I+dtPLSA3cEI
-	dZv0NMCuro4DOLn82nGXZZ6UoimbIs0iO1lq19nJDr4CRH2SMm2c3KToCAG2mJNe
-	yJhd6VIW0bG/WAH+xyk17Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:content-transfer-encoding:content-type
-	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm2; t=1743745797; x=1743832197; bh=j
-	iFFNkuCIH7ZG6pqQ+AbUtFKAmY8bCOOF0MhNJ0ccxk=; b=c7DHAjdHlCs3c171T
-	FgJDkeEPXP0aJlvKNt8vzX9KU3eVOmGbYhugcn0TPh3sqJfoiPvKiM4cswWhVz9F
-	PVV3Pn6FXGW6G9yvMnAuOnFJo7zrWRZcmKIJ/hFrVTLIX3MF8ggWKsDHCyt3M+EV
-	ac/YXaLhY/qZ3YIg1g4F3Uxt0tq2B3s518lxj0R6UY4FiJ7vSrcedi1NA4B6weBn
-	p6ZMa2R91kNFoMnlHmuQB9an+1+jUZRwCtCiaKcmdkUWN4YvyBQMyynilQrvjnLB
-	cz+guR4Xl3iGnOjGgH79kEWrBj0O3wlfqH4Omy1OvFUtErMAWd7Et+xy8QMIpYmy
-	7TSLg==
-X-ME-Sender: <xms:BXPvZ9nrG31ueBFogNnTDWcbR6J8RNsw7X0OLEV-lSFzqvjM0g5ppw>
-    <xme:BXPvZ419yjwzmgHqGnMFn1DOo1fy9CHJKqMNehqhAeUnkhUfmvBupKUXdYkuQtddS
-    TFjohemrgGunKQjvGY>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduledtieegucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepofggfffhvffkjghfufgtgfesthejredtredt
-    tdenucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusg
-    druggvqeenucggtffrrghtthgvrhhnpefhkeeltdfffefhgffhteetheeuhffgteeghfdt
-    ueefudeuleetgfehtdejieffhfenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
-    epmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggvpdhnsggprhgtphhtthhopedu
-    gedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepnhhitghkrdguvghsrghulhhnih
-    gvrhhsodhlkhhmlhesghhmrghilhdrtghomhdprhgtphhtthhopeihuhhrhidrnhhorhho
-    vhesghhmrghilhdrtghomhdprhgtphhtthhopehirhhoghgvrhhssehgohhoghhlvgdrtg
-    homhdprhgtphhtthhopehjuhhsthhinhhsthhithhtsehgohhoghhlvgdrtghomhdprhgt
-    phhtthhopehmohhrsghosehgohhoghhlvgdrtghomhdprhgtphhtthhopegrughrihgrnh
-    drhhhunhhtvghrsehinhhtvghlrdgtohhmpdhrtghpthhtohepjhgrtghosgdrvgdrkhgv
-    lhhlvghrsehinhhtvghlrdgtohhmpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdroh
-    hrghdprhgtphhtthhopehnrghthhgrnheskhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:BXPvZzp7YMrawrFKcXI2LMRtjebMbG3rtCjrP35MqaiZsxrBppNatQ>
-    <xmx:BXPvZ9n_JQQFZg8tVnlWAofPSEpckD26vuBabjRQayQDt-6RUDbbVQ>
-    <xmx:BXPvZ72pWi6ev2M6fgLT9fI2b7yhZg7icuL5NQ3qnBlNfBnAN1TfYg>
-    <xmx:BXPvZ8uvPBJ21iyQrb4G_4yFxp6KdiitPQ4TQfx-YgFk-UgQU0zM4Q>
-    <xmx:BXPvZzruerDU4_YF2_WRKMkMbfqdBC8fp3mIjafEbcgtGLzAcKxjwi0Z>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 17A782220073; Fri,  4 Apr 2025 01:49:56 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=qtmlabs.xyz header.i=@qtmlabs.xyz header.b="HkWrS4lG"
+Content-Type: multipart/mixed; boundary="------------08L6YdHquZUpv03HEHpbPDhB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qtmlabs.xyz; s=dkim;
+	t=1743745810;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+ytiwc9QXzR9VaVB1US+GOGp83Z98Cx/zqNhgfzVo6k=;
+	b=HkWrS4lG4mKe4eli15RrfKo6WsOqx2JmVjBov6gUuHXf8P0/0dCu5wzDoMpKWSdaJkQJqP
+	TQApk0DgsMM5F5ZTl6tEN0lxx9g/Z4TYTPawLFlDNv5KNidgOR9CTNzr7hI9+wsj/38vi0
+	/aQj0iYD4KKdP6VoR7xsZJk12F4sWv90H+HmA3WLohwOBqoJfsQwzPJXJiJTbY1A79Ifuw
+	OA0+unqYbrODdbLBy1o7cwk+nUwvctiBsAXi6sV+4FXaKyJVyw1olTBsYWakIY5EAT9Q3Q
+	6BSjTAGnOKXd51gCSFMzKCXgoLeuYrTZ3ZNSQ9V19vtJlS0LpK4skaU4gY4j/w==
+Authentication-Results: s1.g1.infrastructure.qtmlabs.xyz;
+	auth=pass smtp.mailfrom=msizanoen@qtmlabs.xyz
+Message-ID: <4081fbd9-0a5f-49d6-9553-4f964bf5ef27@qtmlabs.xyz>
+Date: Fri, 4 Apr 2025 12:50:03 +0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: Tbabee1c6d5c86beb
-Date: Fri, 04 Apr 2025 07:49:33 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Ian Rogers" <irogers@google.com>, "Yury Norov" <yury.norov@gmail.com>,
- "Rasmus Villemoes" <linux@rasmusvillemoes.dk>,
- "Nathan Chancellor" <nathan@kernel.org>,
- "Nick Desaulniers" <nick.desaulniers+lkml@gmail.com>,
- "Bill Wendling" <morbo@google.com>, "Justin Stitt" <justinstitt@google.com>,
- "Adrian Hunter" <adrian.hunter@intel.com>,
- "Thomas Gleixner" <tglx@linutronix.de>, "Jakub Kicinski" <kuba@kernel.org>,
- "Jacob Keller" <jacob.e.keller@intel.com>,
- Linux-Arch <linux-arch@vger.kernel.org>, linux-kernel@vger.kernel.org,
- llvm@lists.linux.dev
-Message-Id: <dbba94f1-27ee-4344-b4b2-d8dffe6b7d33@app.fastmail.com>
-In-Reply-To: <20250403165702.396388-3-irogers@google.com>
-References: <20250403165702.396388-1-irogers@google.com>
- <20250403165702.396388-3-irogers@google.com>
-Subject: Re: [PATCH v1 2/5] bitmap: Silence a clang -Wshorten-64-to-32 warning
-Content-Type: text/plain
+Subject: Re: [REGRESSION] Kernel booted via kexec fails to resume from
+ hibernation
+From: msizanoen <msizanoen@qtmlabs.xyz>
+To: Roberto Ricci <io@r-ricci.it>
+Cc: ebiederm@xmission.com, rafael@kernel.org, pavel@ucw.cz,
+ ytcoode@gmail.com, kexec@lists.infradead.org, linux-pm@vger.kernel.org,
+ akpm@linux-foundation.org, regressions@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+References: <Z4WFjBVHpndct7br@desktop0a> <Z4WGSMdF6seQm9GV@desktop0a>
+ <b9f6ed5a-74b9-47c0-b073-9922dbe6119b@qtmlabs.xyz>
+ <Z-8E-LLs1dFWfn6J@desktop0a>
+ <691be719-7d4c-4cb1-87d6-cca7834547fe@qtmlabs.xyz>
+ <004d85e4-d23d-43af-87ca-8d037abba51d@qtmlabs.xyz>
+Content-Language: en-US
+In-Reply-To: <004d85e4-d23d-43af-87ca-8d037abba51d@qtmlabs.xyz>
+X-Spamd-Bar: +
+X-Spam-Level: *
+
+This is a multi-part message in MIME format.
+--------------08L6YdHquZUpv03HEHpbPDhB
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On Thu, Apr 3, 2025, at 18:56, Ian Rogers wrote:
-> The clang warning -Wshorten-64-to-32 can be useful to catch
-> inadvertent truncation. In some instances this truncation can lead to
-> changing the sign of a result, for example, truncation to return an
-> int to fit a sort routine. Silence the warning by making the implicit
-> truncation explicit.
+Here's an updated version of the patch that better handles pathological 
+e820 tables.
 
+On 4/4/25 11:56, msizanoen wrote:
+> Also, can you reproduce this issue with a target kernel (the kernel 
+> being kexec-ed) that has one of the patches attached (select the 
+> correct one according to your kernel version) applied, with either 
+> kexec_load or kexec_file_load?
+>
+> On 4/4/25 09:54, msizanoen wrote:
+>> Can you send the dmesg logs for this case (6.13 + mentioned patch 
+>> series backported as target kernel, using kexec_load)?
+>>
+>> On 4/4/25 05:00, Roberto Ricci wrote:
+>>> On 2025-04-01 19:59 +0700, msizanoen wrote:
+>>>> [snip]
+>>>> It seems like `e820__register_nosave_regions` is erroneously 
+>>>> marking some
+>>>> kernel memory as nosave in the presence of sub-page e820 regions. 
+>>>> In theory
+>>>> backporting
+>>>> https://lore.kernel.org/all/20250214090651.3331663-1-rppt@kernel.org/ 
+>>>> should
+>>>> be sufficient to avoid this but a fix for the actual root cause is
+>>>> preferred.
+>>> When using kexec_file_load, this patch series fixes the issue not only
+>>> in theory but also in practice.
+>>> But the issue with kexec_load (see
+>>> https://lore.kernel.org/all/Z-hYWc9LtBU1Yhtg@desktop0a/
+>>> ), which might be related, is not fixed.
+--------------08L6YdHquZUpv03HEHpbPDhB
+Content-Type: text/x-patch; charset=UTF-8; name="for-6.14-and-earlier-v2.diff"
+Content-Disposition: attachment; filename="for-6.14-and-earlier-v2.diff"
+Content-Transfer-Encoding: base64
 
->  unsigned int bitmap_weight(const unsigned long *src, unsigned int nbits)
->  {
->  	if (small_const_nbits(nbits))
-> -		return hweight_long(*src & BITMAP_LAST_WORD_MASK(nbits));
-> +		return (int)hweight_long(*src & BITMAP_LAST_WORD_MASK(nbits));
->  	return __bitmap_weight(src, nbits);
->  }
+ZGlmZiAtLWdpdCBhL2FyY2gveDg2L2tlcm5lbC9lODIwLmMgYi9hcmNoL3g4Ni9rZXJuZWwv
+ZTgyMC5jCmluZGV4IDQ4OTNkMzBjZTQzOC4uNWQ5NjNkZjYzYjdhIDEwMDY0NAotLS0gYS9h
+cmNoL3g4Ni9rZXJuZWwvZTgyMC5jCisrKyBiL2FyY2gveDg2L2tlcm5lbC9lODIwLmMKQEAg
+LTc1NCwyMiArNzU0LDIxIEBAIHZvaWQgX19pbml0IGU4MjBfX21lbW9yeV9zZXR1cF9leHRl
+bmRlZCh1NjQgcGh5c19hZGRyLCB1MzIgZGF0YV9sZW4pCiB2b2lkIF9faW5pdCBlODIwX19y
+ZWdpc3Rlcl9ub3NhdmVfcmVnaW9ucyh1bnNpZ25lZCBsb25nIGxpbWl0X3BmbikKIHsKIAlp
+bnQgaTsKLQl1bnNpZ25lZCBsb25nIHBmbiA9IDA7CisJdTY0IGxhc3RfYWRkciA9IDA7CiAK
+IAlmb3IgKGkgPSAwOyBpIDwgZTgyMF90YWJsZS0+bnJfZW50cmllczsgaSsrKSB7CiAJCXN0
+cnVjdCBlODIwX2VudHJ5ICplbnRyeSA9ICZlODIwX3RhYmxlLT5lbnRyaWVzW2ldOwogCi0J
+CWlmIChwZm4gPCBQRk5fVVAoZW50cnktPmFkZHIpKQotCQkJcmVnaXN0ZXJfbm9zYXZlX3Jl
+Z2lvbihwZm4sIFBGTl9VUChlbnRyeS0+YWRkcikpOwotCi0JCXBmbiA9IFBGTl9ET1dOKGVu
+dHJ5LT5hZGRyICsgZW50cnktPnNpemUpOwotCiAJCWlmIChlbnRyeS0+dHlwZSAhPSBFODIw
+X1RZUEVfUkFNICYmIGVudHJ5LT50eXBlICE9IEU4MjBfVFlQRV9SRVNFUlZFRF9LRVJOKQot
+CQkJcmVnaXN0ZXJfbm9zYXZlX3JlZ2lvbihQRk5fVVAoZW50cnktPmFkZHIpLCBwZm4pOwor
+CQkJY29udGludWU7CiAKLQkJaWYgKHBmbiA+PSBsaW1pdF9wZm4pCi0JCQlicmVhazsKKwkJ
+aWYgKGxhc3RfYWRkciA8IGVudHJ5LT5hZGRyKQorCQkJcmVnaXN0ZXJfbm9zYXZlX3JlZ2lv
+bihQRk5fVVAobGFzdF9hZGRyKSwgUEZOX0RPV04oZW50cnktPmFkZHIpKTsKKworCQlsYXN0
+X2FkZHIgPSBlbnRyeS0+YWRkciArIGVudHJ5LT5zaXplOwogCX0KKworCXJlZ2lzdGVyX25v
+c2F2ZV9yZWdpb24oUEZOX1VQKGxhc3RfYWRkciksIGxpbWl0X3Bmbik7CiB9CiAKICNpZmRl
+ZiBDT05GSUdfQUNQSQo=
+--------------08L6YdHquZUpv03HEHpbPDhB
+Content-Type: text/x-patch; charset=UTF-8; name="for-master-v2.diff"
+Content-Disposition: attachment; filename="for-master-v2.diff"
+Content-Transfer-Encoding: base64
 
-I don't understand this one. hweight_long() and bitmap_weight()
-both return unsigned value, so why do you need to cast this to
-a signed value to avoid a signedness problem?
+ZGlmZiAtLWdpdCBhL2FyY2gveDg2L2tlcm5lbC9lODIwLmMgYi9hcmNoL3g4Ni9rZXJuZWwv
+ZTgyMC5jCmluZGV4IDU3MTIwZjA3NDljYy4uNjU2ZWQ3YWJkMjhkIDEwMDY0NAotLS0gYS9h
+cmNoL3g4Ni9rZXJuZWwvZTgyMC5jCisrKyBiL2FyY2gveDg2L2tlcm5lbC9lODIwLmMKQEAg
+LTc1MywyMiArNzUzLDIxIEBAIHZvaWQgX19pbml0IGU4MjBfX21lbW9yeV9zZXR1cF9leHRl
+bmRlZCh1NjQgcGh5c19hZGRyLCB1MzIgZGF0YV9sZW4pCiB2b2lkIF9faW5pdCBlODIwX19y
+ZWdpc3Rlcl9ub3NhdmVfcmVnaW9ucyh1bnNpZ25lZCBsb25nIGxpbWl0X3BmbikKIHsKIAlp
+bnQgaTsKLQl1bnNpZ25lZCBsb25nIHBmbiA9IDA7CisJdTY0IGxhc3RfYWRkciA9IDA7CiAK
+IAlmb3IgKGkgPSAwOyBpIDwgZTgyMF90YWJsZS0+bnJfZW50cmllczsgaSsrKSB7CiAJCXN0
+cnVjdCBlODIwX2VudHJ5ICplbnRyeSA9ICZlODIwX3RhYmxlLT5lbnRyaWVzW2ldOwogCi0J
+CWlmIChwZm4gPCBQRk5fVVAoZW50cnktPmFkZHIpKQotCQkJcmVnaXN0ZXJfbm9zYXZlX3Jl
+Z2lvbihwZm4sIFBGTl9VUChlbnRyeS0+YWRkcikpOwotCi0JCXBmbiA9IFBGTl9ET1dOKGVu
+dHJ5LT5hZGRyICsgZW50cnktPnNpemUpOwotCiAJCWlmIChlbnRyeS0+dHlwZSAhPSBFODIw
+X1RZUEVfUkFNKQotCQkJcmVnaXN0ZXJfbm9zYXZlX3JlZ2lvbihQRk5fVVAoZW50cnktPmFk
+ZHIpLCBwZm4pOworCQkJY29udGludWU7CiAKLQkJaWYgKHBmbiA+PSBsaW1pdF9wZm4pCi0J
+CQlicmVhazsKKwkJaWYgKGxhc3RfYWRkciA8IGVudHJ5LT5hZGRyKQorCQkJcmVnaXN0ZXJf
+bm9zYXZlX3JlZ2lvbihQRk5fVVAobGFzdF9hZGRyKSwgUEZOX0RPV04oZW50cnktPmFkZHIp
+KTsKKworCQlsYXN0X2FkZHIgPSBlbnRyeS0+YWRkciArIGVudHJ5LT5zaXplOwogCX0KKwor
+CXJlZ2lzdGVyX25vc2F2ZV9yZWdpb24oUEZOX1VQKGxhc3RfYWRkciksIGxpbWl0X3Bmbik7
+CiB9CiAKICNpZmRlZiBDT05GSUdfQUNQSQo=
 
-hweight_long() should never return anything larger than 64ul
-anyway, which is way outside of the range where it would get
-sign-extended.
-
-A more logical change to me would be to make hweight_long()
-and bitmap_weight() have the same return type, either
-'unsigned long' or 'unsigned int'.
-
-      Arnd
+--------------08L6YdHquZUpv03HEHpbPDhB--
