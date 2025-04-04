@@ -1,115 +1,101 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DC6D611E;
-	Fri,  4 Apr 2025 09:00:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA8AD19D8BC;
+	Fri,  4 Apr 2025 09:00:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743757238; cv=none; b=LcYL3+0RO0QevQFcu/VU1AnRYiZW1EencyKavAMlsu8eng7r4j1JOk0eInGC5z+9gO/UT+8Y5mXfNIXsNYBHx807FEe7HbSYnnuHFVc4P9mPq2FDMRQ5aVpmf0VTcsByDY9AxCQSKaSZbjdhEzVsU3UtR6n4HH02Jvh6O93f0Pg=
+	t=1743757252; cv=none; b=G0LQEZ8oYpspKPhf8Lo9UjLEv8TNum8Lmcl3vC+ssrKivCRcJqbprUhN9Qt925mngRJFC/0aogC5wNZEYXCxIZ4cO6cj574eWuACX9aMhIJ1ZqwbYS2iDD1LhDHCt+vdvwY7Kd2JyByCTQyG5aQbCA4rxkjCl6oqhOVHUZ+3Zqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743757238; c=relaxed/simple;
-	bh=dDw9nB3R5CrigY7byXXpDEVqVujq14h4RJcGIbk8Eyw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cVh7l0uvM2NIduAaWIE4dIhAr3ZNoBDTPelQUTlCBsoB4S12dUntuOI4hoMEYw0lJtGfNRRGMaRAfbckrz0k7INGbLupvxeqqdFKD7YVS5lYXiLXIl+3RAiqZAjPMA0h9MCgTCPwMYzAbDasjgsNZyye8CZUTD1MN4iTL9Nsqlk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Cx7pXNXy; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743757252; c=relaxed/simple;
+	bh=k/YiXYU6vKrqfpgBxhCR7zyfbZ02ohzIpo4VCo5cDsA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jftl9znveM5apwGA8NzW+DF0xSMqGlLtk+w94V5OM80vq/nSaZlB+cM+MFGMiTgNSR4ovdAZLn6UuJWPac5+d4iM9L1BWFa/OJpnSJqvoNK4PsvFQqDXtACNKJ0GeLpuXUn1zaA+gFPmD6q4FC3d6X9jPpbfkG6NXpbPhRQItWQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uox9NFcA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cx7pXNXy"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ac298c8fa50so300849466b.1;
-        Fri, 04 Apr 2025 02:00:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743757235; x=1744362035; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=HZZIhlXmSEM4mLMGt9PJm09NKzZfuiEVonPYgb5H/yw=;
-        b=Cx7pXNXyD+fJyZgOa66cHFUHggvW1Zfs2fGsTIhchCFR/UNsZ/KQaG+48ezEpbWfMz
-         5OICLHAexn0Lcf/LSax24K5rCqTPo6ambPj05IcNuyHJdEK/JQXp03P3HgrugaWDht4+
-         cdos7lzPQ0PBfwzoQwTujqm3PaGanLT5hD+QkWtMIsMSWorZQtIOAGH5eOKTpYiQdHey
-         9Z2ZOSBLk1yO+rw3AHzutPrr0i0DV0RPUDEMXFzxTim1o9RSe9PqW81VG/G/CsbaQD+i
-         xB1UzgsCWcwfd6Sd1QSp/NAoOvll16X5JLfXTvfDL7rQbi0nOekeSUR5Kkwppro9VgdE
-         H8rA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743757235; x=1744362035;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=HZZIhlXmSEM4mLMGt9PJm09NKzZfuiEVonPYgb5H/yw=;
-        b=EPvQ+I7tb0vgt3hiBv4c/nMs8PEhnnowucAvLHkVJdhq/ajlQTuF6sXYgE7XjoEmEM
-         TqA8og3J5UT82zKVCuT6xTvJr2FMrvPosht/KZsWpuWCFpHxMDIF1jcxSoA07+pz6Yfk
-         7ooafa+jU9QyBXhxIkBVJN5comoL/jLQ6bYSEOuNkxmX8WHN4/AN0sQFuR1/hwNW2Tz7
-         hKnewj4kS2P/3DH6a2ceVm/vjcRZntPsIDKUUHFIXzxFxfKjeCC34jX25ixL182qJyv3
-         ApGDO3ZtAqBC2UnVQ7ManEHYaLWseoy2BdIPGsFpCghxgVyemo0gaDu/p/Yl8xpv0ygy
-         f2aw==
-X-Forwarded-Encrypted: i=1; AJvYcCU8fg4h1zKD3EMYM8j4y4mCRE7OMtXieN0GjZYGNM88wdMTQVIG0LLDEzZNb/7VE/ReBsOnJfedW8BsrJc=@vger.kernel.org, AJvYcCUQjK2UoU/2dDC+N3OVKuC/Gj8AIaex+OEZDoJX+35wTDWV4wtzkLP4XBDCHkyBmmOV/MxQi7noO6gExCA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx18wXNu+HNpKCl8/8a8FON3iYqPUNE6Br8U2FNuAihk8YSqvQY
-	IBxH836dki/UeOfnrBtIUsm0K0IAx0fZM+OUbeSfnJB63UAoLZHm
-X-Gm-Gg: ASbGncuFWe8EGwu2IgdNUrD91SU7tZMCy54w1saugYVGs/ORl/4wCUrvPAh4XzittIA
-	jMgai3cqnL51lLg4KJLWBuhhoe6gGO9uGdio9mYktU2IlFcWiMf2i+9U23XOP5KTPBrx/38lugZ
-	W0gaFsfFH/LfzB7OZlaimIKm3/PI9apoZE37jRFnNYmm9bl5Hulk3dgoztd95M0IXP2R2jmRlGf
-	92hmFvyR8mk58Qvbgjxn4kQd+W61vuICngd58s4XineRnBQ0TPSOUUVTvOAs0nYnI0Pn2m4zSvN
-	R7bHgaDUrPImHGBILcRKn77RHYHFnInzrCL/wIJApCn2c3u9vkCIFiYCStNzWIk0LKnAHg==
-X-Google-Smtp-Source: AGHT+IFKaYCa9Ekb9gEfEN5MRzSJWHbOs1q70b7ER2jDUNXjdVPmL24jFWpqdnQ80yp71nL0KKYsSg==
-X-Received: by 2002:a17:907:988:b0:ac7:31a4:d4e9 with SMTP id a640c23a62f3a-ac7d16bc089mr299516766b.4.1743757234491;
-        Fri, 04 Apr 2025 02:00:34 -0700 (PDT)
-Received: from demon-pc.localdomain ([188.27.129.206])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7bfe9adc6sm222086166b.59.2025.04.04.02.00.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Apr 2025 02:00:33 -0700 (PDT)
-From: Cosmin Tanislav <demonsingur@gmail.com>
-To: 
-Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Naushir Patuck <naush@raspberrypi.com>,
-	linux-media@vger.kernel.org,
-	linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Cosmin Tanislav <demonsingur@gmail.com>
-Subject: [PATCH v2] media: platform: rpi1-cfe: fix pad in call to get_mbus_config()
-Date: Fri,  4 Apr 2025 12:00:25 +0300
-Message-ID: <20250404090026.2986810-1-demonsingur@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uox9NFcA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41E27C4CEDD;
+	Fri,  4 Apr 2025 09:00:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743757252;
+	bh=k/YiXYU6vKrqfpgBxhCR7zyfbZ02ohzIpo4VCo5cDsA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=uox9NFcADIkeM4YsiP9YvUMwFy97Vf2K/xCcAJNmDrfUIAIe/TU7lmq8YBrGsehlp
+	 /zpX+RQjdhyfGh1PTfLrWX6uCtPGv3c0clRxeYo1KLBSpM95jDaTLAP8XqlUneNCMo
+	 DEBc+whvZrZKGZbjaddwSY4NTvLg3ogMBQvBXaGBoZDXaPfYM9ONV5Du5T8+K5eEAO
+	 fvwh+Gssay8P0Qkx+pDCZdiFitsUR0b1LMCoKTlWRuJkLsoPqErspcMDLqBr2SK6xO
+	 cniRfaLSWKUjlsbrg29f2JoOAw/ojxt9UR0NmWHHpVKDfdkBmBSbvE32eg/G3qWgnW
+	 Vv/DSNwQXyEhA==
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-30db3f3c907so15363411fa.1;
+        Fri, 04 Apr 2025 02:00:52 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUMhaReFZ59kMzp5ZuEXRRDuS8Rtus/vKFe0btro5rTmOhxvFxjJ6nmEfQYmcfMJKOKDVKYSXwy/pldblw=@vger.kernel.org, AJvYcCWo3RniH7ltavENFye0LiPezzln7+9kCuUw8bSuvVscqYcKerok5cJ1iEbKUaWVlkZzJXdFp5OXZEfUIkGn@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJwe8RgaiU4EufaKf6bYzYCuJWvpCR1qMs+mCT39kDDHqxLuEk
+	WPrnkrTTWGTOO2kUE33cwS9G3Qe3H2nwov631NpwzDAHsvXCL1Htc1ceZzu1XIhnEIJvjkJNUJ/
+	5Mvyg6ylZ/j44rCufxBbMYZi9R9Y=
+X-Google-Smtp-Source: AGHT+IELBJHSywFYB1gsUU3kEehfOSZtRZAacPMzmPSGEn+1NnIGOb2Dzwpf/0Z43HJH2r7L0FLZO4AVQvWfAcv6TXU=
+X-Received: by 2002:a05:651c:1556:b0:30b:a20b:eccc with SMTP id
+ 38308e7fff4ca-30f0a118e41mr8587311fa.11.1743757250970; Fri, 04 Apr 2025
+ 02:00:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <39FF69551D01924F+20250326174156.390126-1-wangyuli@uniontech.com>
+ <3e52d80d-0c60-4df5-8cb5-21d4b1fce7b7@suse.com> <F0F0E660A98E4FA3+de115480-b3ee-4f33-b90f-a8f3badc97de@uniontech.com>
+In-Reply-To: <F0F0E660A98E4FA3+de115480-b3ee-4f33-b90f-a8f3badc97de@uniontech.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Fri, 4 Apr 2025 18:00:14 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASep+fv2F7tZAu3VC8V3bvFZuxfto-OPLuuL3uSt+kqxA@mail.gmail.com>
+X-Gm-Features: AQ5f1JoMRvLxWPixpoi67ZNides3gWF-YhKD-ZFbUzcfU6-xl6uYXmdFHMbXi9M
+Message-ID: <CAK7LNASep+fv2F7tZAu3VC8V3bvFZuxfto-OPLuuL3uSt+kqxA@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: deb-pkg: Add libdw-dev:native to Build-Depends-Arch
+To: WangYuli <wangyuli@uniontech.com>
+Cc: Petr Pavlu <petr.pavlu@suse.com>, nathan@kernel.org, nicolas@fjasle.eu, 
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	samitolvanen@google.com, zhanjun@uniontech.com, niecheng1@uniontech.com, 
+	guanwentao@uniontech.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The source subdevice might be using a source pad not equal to 0.
+On Thu, Apr 3, 2025 at 12:06=E2=80=AFPM WangYuli <wangyuli@uniontech.com> w=
+rote:
+>
+> Hi Petr,
+>
+> On 2025/3/28 18:19, Petr Pavlu wrote:
+> > If scripts/package/mkdebian is updated in this way then I think
+> > scripts/package/mkspec -> scripts/package/kernel.spec should be adjuste=
+d
+> > as well for consistency.
+> >
+> > File scripts/package/kernel.spec contains:
+> > BuildRequires: (elfutils-libelf-devel or libelf-devel) flex
+> >
+> > elfutils-libelf-devel is for Fedora/RH distros, libelf-devel is for
+> > (open)SUSE.
+> >
+> > If I'm looking correctly, a new dependency to make dwarf.h available fo=
+r
+> > both would be:
+> > BuildRequires: elfutils-devel or libdw-devel
+> >
+> Alright, thank you for the feedback.
+> But it appears that the dependency package is named differently on
+> Fedora and openSUSE.
+> I will expand my testing scope to address this in the patch and will
+> resubmit it once the merge window has closed.
 
-Use the already existing source_pad field of cfe.
 
-Fixes: 6edb685abb2a ("media: raspberrypi: Add support for RP1-CFE")
-Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
----
+Yeah, it would be appreciated if you fix the rpm-pkg as well,
+but please submit two separate patches for deb-pkg and rpm-pkg.
+(perhaps, pacman-pkg too?)
 
-V2:
- * correct Fixes tag
+Also, please fix the commit log, as suggested by Sami.
 
- drivers/media/platform/raspberrypi/rp1-cfe/cfe.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/platform/raspberrypi/rp1-cfe/cfe.c b/drivers/media/platform/raspberrypi/rp1-cfe/cfe.c
-index 69a5f23e7954..7db4fe5e0fd4 100644
---- a/drivers/media/platform/raspberrypi/rp1-cfe/cfe.c
-+++ b/drivers/media/platform/raspberrypi/rp1-cfe/cfe.c
-@@ -1206,8 +1206,8 @@ static int cfe_start_streaming(struct vb2_queue *vq, unsigned int count)
- 	cfg_reg_write(cfe, MIPICFG_INTE,
- 		      MIPICFG_INT_CSI_DMA | MIPICFG_INT_PISP_FE);
- 
--	ret = v4l2_subdev_call(cfe->source_sd, pad, get_mbus_config, 0,
--			       &mbus_config);
-+	ret = v4l2_subdev_call(cfe->source_sd, pad, get_mbus_config,
-+			       cfe->source_pad, &mbus_config);
- 	if (ret < 0 && ret != -ENOIOCTLCMD) {
- 		cfe_err(cfe, "g_mbus_config failed\n");
- 		goto err_clear_inte;
--- 
-2.49.0
 
+--=20
+Best Regards
+Masahiro Yamada
