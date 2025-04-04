@@ -1,269 +1,235 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFCB32E62B4;
-	Fri,  4 Apr 2025 02:42:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 999D8634
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 02:44:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743734523; cv=none; b=H5ju5znDYbyeDzayV8KL7Tk8aKx/n8EgT0InoFFwwHEGTp5XqUYqUIBNESn0oLOgmEyCtQwW+A8YsO1oCZeRJ+jNn6LpPDYaGNKASnzFNAJxnueGlQyhsjENXQ1VNY0wIYF14ZyE0qoWECoa3JlErzOcqB6PEluGs8MT24LRIkM=
+	t=1743734663; cv=none; b=VBVjieOIMSbXk4sc6wgNKMBeGuwNiJfsEzrWGINiWABDDc8feL2ckrp7qsw2Md85axUOtjr5fcRzZfTqql1iGJ2tc7ROkgEUDO9kkqQJHlK5nOSe0m9b7xRcLHKgptqy1PApiDlst+tITMLmKYSlQ5Zf7Ysypcw+srEIucAbzq4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743734523; c=relaxed/simple;
-	bh=HEGvr219F+jjZb9/wuTWMlS78qKx3UrYGOaUQS8/10o=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=bgSUWeZQgpB1SI9SXdRTkB+2+A/dr/C3beC+uGuI6JNjuYWd8ZDZI5CRfPh5M3Rw766WzF7pJkCGKvkz1nUI0RFdOwIcHJK5rNnhCdjdnVSGzyU1h1xF0Wrazx9uAcIP5knqNaId5oa4nr0t2V6iGG8GthqZS8Hp34UPqNsvNiI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BVpmXOq9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743734663; c=relaxed/simple;
+	bh=hR/G0FoBsEMa/zy1eASMqgio0eJvUNvgFLMmAXwNYfU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=j4KOsexK/E99pnroUjvxmbH9r7nkeEvtzCcQOblgBb3GC4exGLJJuKoHMgVazIRAf1Bqg5QNitSCd0asF+0gNlFajpZjEkEwh9N8xy/+3pQl1ap4B+x5kFO6HUH+dPoxclEd2jN8LjFqBTuismTfULn15rX4tTlimVupuHsQtLM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=R7NRae91; arc=none smtp.client-ip=209.85.167.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BVpmXOq9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 879CCC4CEE3;
-	Fri,  4 Apr 2025 02:42:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743734523;
-	bh=HEGvr219F+jjZb9/wuTWMlS78qKx3UrYGOaUQS8/10o=;
-	h=Date:From:To:Cc:Subject:From;
-	b=BVpmXOq9/uEKXRJYI5q4UMXDDOB3QbzRgpssliD+ZKvK2uuElEqXMsztrJMpv2pHo
-	 q/79t9aQ6VQEJ3JNmUYC1X3wfXgxtWECAorb8ZBppR0Jk9kjdPbHiYromv9wmpqZsi
-	 W9OE3OfEgph3+EEOgyBrlfxsWnH3YNf8S5DtiJwY+kA7hiddOVVvphgYb8lKQhqg7l
-	 EEUwWFYj9hiTcSbPTFT0jI63PIO/i0L1fiGRIJwSPAhAb5ifCQfAvV5e1XU1sw4HXM
-	 IufllFMHgFo7waiZibC+DgM60GjfI6t+94dgLAoVBK44zoAEHt50BOI06rd80+vIWH
-	 ewdOnhs13HJ8w==
-Date: Thu, 3 Apr 2025 20:42:00 -0600
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Miri Korenblit <miriam.rachel.korenblit@intel.com>,
-	Johannes Berg <johannes.berg@intel.com>
-Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH][next] wifi: iwlwifi: mvm/fw: Avoid
- -Wflex-array-member-not-at-end warnings
-Message-ID: <Z-9G-GHufhXKeYft@kspp>
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="R7NRae91"
+Received: by mail-oi1-f179.google.com with SMTP id 5614622812f47-3fe83c8cbdbso486165b6e.3
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 19:44:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1743734660; x=1744339460; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=b3to4EZ4KOPkdFrVQMEvvFBf1MhlaFI8gIxRSmU8z08=;
+        b=R7NRae9182RmulC4jrmiqPTHFeg62yT/CLgV7yLqjIIHKdhnImdG6xi9bL47UKYylO
+         lrIy73B85KdwxedSTa5TzcFBJAOrg5RM4lS1Rk0wpQ4d8I7MNRb1Lo7SHp+PFwYw2t4z
+         LHfgcYsTjxbAH8UOqEXBbY6Vvgj0LYSvMbr6Q8wXAPbheUXz/kVLL9SQh4d9S6GAIwOR
+         nbHl7knntKBpZvnayWJXgp2dVhFvvTbfNvgt3ySdAcDuxCimmPOMlTo6iRRv7sdjyf7I
+         BqW/3v/s1AND7wha0zIGA2IRDDo6RIJ+ivHDcNVtmoWM7G05pN3V4D9zm1hxbFVBhkI5
+         uvMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743734660; x=1744339460;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=b3to4EZ4KOPkdFrVQMEvvFBf1MhlaFI8gIxRSmU8z08=;
+        b=LuZjA32CcFWCc9GiIEZg/BnzfZWRaOS1W02UZplY5i7pKPZmNBG7LpMrj087u6UGlN
+         Xuzfr6t284e2+gu1JrxJEPNY5W8uzVsvQ02fFWI0q+gnwTvh5XCJcvdUUHheagkl4Av2
+         LmnUWx1OefP0icq5BgR7dCxtdbTwkv2G+l82t9kJvLPPm4x313uTNO22GApbpw6L5eAS
+         0GlPMYtqnLZpUSUxW0JBGAD1Z1GEnp82Gt7NOoBHPTIcpD4d0lVAd0GOqHvwU6J/xLu9
+         pw4SaOYIiRM2qV/RgmKdx8QRF3U1VcP6JbYJ4X8oR6BpBQbprjOl7tbhVppEf0toHWLM
+         4Cmg==
+X-Forwarded-Encrypted: i=1; AJvYcCUdW6rjIYG2QMTUpfA0OVsRmheQKnpqM/V1so6TIopsA4e+b9zwKuP/LduD/1qWY259F+h3IIcq2RgVw3c=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy3GcB1MMRbw9UOrEA+yUlsHQrnOPFlWGqXDaxJtxzzohnZ0zUc
+	naM3SacgN9b0OFLWgSYNXEvQHhgHKdh8wQCEv+YdIjW6VpSeI2ZKIrgxLtM+/AfKY8GS752Utf2
+	zgCdqONsA/9Kcor8zfT6FYFRfihsUM8204LsIsA==
+X-Gm-Gg: ASbGncvp5Yy5GU+tXh3UA3ESJhD5ok7bkJ6TRtEqBXzpvsPoMarAzmGr4fzf20zQ8eM
+	PHdPmrSG+0NpN5z74oxtbI8PHedMTdOorTnPPPcmXKXkN/oSec3suktW1fRyDNj7QxwOkrkFt6B
+	lrQPd3Of7qFJ915/1qGhs0dBvJcYs+
+X-Google-Smtp-Source: AGHT+IFjvwlQt97TWXYvRTkX1MJds7QaL2P5+NCX3VHwMbmvGzcaH492Si95hFTBr5UpcQ4uIJdQ61s0Den342Lx99Q=
+X-Received: by 2002:a05:6808:118a:b0:3f9:d5a2:89a6 with SMTP id
+ 5614622812f47-4004563d596mr951684b6e.35.1743734660528; Thu, 03 Apr 2025
+ 19:44:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20250403090336.16643-1-cuiyunhui@bytedance.com> <Z-5yr2mFaDt8kxC-@smile.fi.intel.com>
+In-Reply-To: <Z-5yr2mFaDt8kxC-@smile.fi.intel.com>
+From: yunhui cui <cuiyunhui@bytedance.com>
+Date: Fri, 4 Apr 2025 10:44:09 +0800
+X-Gm-Features: AQ5f1JqZlZYmfxf_2wHsUDMn4QlG0JCmAjQFmx6FdNX0KnxfsddxfxpJyEMyiCY
+Message-ID: <CAEEQ3wkWmfkq06iyhxs32pyTUp7Mm=UD-dYen_9H5kHnsJe10g@mail.gmail.com>
+Subject: Re: [External] Re: [PATCH] serial: 8250: fix panic due to PSLVERR
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: gregkh@linuxfoundation.org, jirislaby@kernel.org, 
+	john.ogness@linutronix.de, pmladek@suse.com, arnd@arndb.de, 
+	namcao@linutronix.de, benjamin.larsson@genexis.eu, schnelle@linux.ibm.com, 
+	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
--Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-getting ready to enable it, globally.
+Hi Andy,
 
-So, in order to avoid ending up with a flexible-array member in the
-middle of multiple other structs, we use the `__struct_group()`
-helper to create a new tagged `struct iwl_tx_cmd_hdr`. This structure
-groups together all the members of the flexible `struct iwl_tx_cmd`
-except the flexible array.
+On Thu, Apr 3, 2025 at 7:36=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Thu, Apr 03, 2025 at 05:03:36PM +0800, Yunhui Cui wrote:
+> > When the PSLVERR_RESP_EN parameter is set to 1, the device generates
+> > an error response if an attempt is made to read an empty RBR (Receive
+> > Buffer Register) while the FIFO is enabled.
+> >
+> > In serial8250_do_startup, calling serial_port_out(port, UART_LCR,
+>
+> serial8250_do_startup()
+>
+> > UART_LCR_WLEN8) triggers dw8250_check_lcr(), which invokes
+> > dw8250_force_idle() and serial8250_clear_and_reinit_fifos(). The latter
+> > function enables the FIFO via serial_out(p, UART_FCR, p->fcr).
+> > Execution proceeds to the dont_test_tx_en label:
+> > ...
+> > serial_port_in(port, UART_RX);
+> > This satisfies the PSLVERR trigger condition.
+> >
+> > Because another CPU(e.g., using printk) is accessing the UART (UART
+>
+> printk()
 
-As a result, the array is effectively separated from the rest of the
-members without modifying the memory layout of the flexible structure.
-We then change the type of the middle struct members currently causing
-trouble from `struct iwl_tx_cmd` to `struct iwl_tx_cmd_hdr`.
+Okay.
 
-We also want to ensure that when new members need to be added to the
-flexible structure, they are always included within the newly created
-tagged struct. For this, we use `static_assert()`. This ensures that the
-memory layout for both the flexible structure and the new tagged struct
-is the same after any changes.
+>
+> > is busy), the current CPU fails the check (value & ~UART_LCR_SPAR) =3D=
+=3D
+> > (lcr & ~UART_LCR_SPAR), causing it to enter dw8250_force_idle().
+> >
+> > To resolve this issue, relevant serial_port_out operations should be
+>
+> serial_port_out()
 
-This approach avoids having to implement `struct iwl_tx_cmd_hdr`
-as a completely separate structure, thus preventing having to maintain
-two independent but basically identical structures, closing the door
-to potential bugs in the future.
+Okay.
 
-We also use `container_of()` whenever we need to retrieve a pointer to
-the flexible structure, through which we can access the flexible-array
-member, if necessary.
+>
+> > placed in a critical section, and UART_RX data should only be read
+> > when the UART_LSR DR bit is set.
+>
+> The last one is made in the common code, are you sure that all supported =
+UARTs
+> will be okay with such a change?
 
-So, with these changes, fix the following warnings:
+This change enhances code robustness without being intrusive.
 
-drivers/net/wireless/intel/iwlwifi/mld/../fw/api/tdls.h:134:27: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-drivers/net/wireless/intel/iwlwifi/mld/../fw/api/tdls.h:53:27: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-drivers/net/wireless/intel/iwlwifi/mld/../fw/api/tx.h:745:27: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-drivers/net/wireless/intel/iwlwifi/mld/../fw/api/tx.h:764:27: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-drivers/net/wireless/intel/iwlwifi/mvm/../fw/api/tdls.h:134:27: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-drivers/net/wireless/intel/iwlwifi/mvm/../fw/api/tdls.h:53:27: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-drivers/net/wireless/intel/iwlwifi/mvm/../fw/api/tx.h:745:27: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-drivers/net/wireless/intel/iwlwifi/mvm/../fw/api/tx.h:764:27: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+>
+> > Panic message:
+>
+> Please, read this
+> https://www.kernel.org/doc/html/latest/process/submitting-patches.html#ba=
+cktraces-in-commit-messages
+> and act accordingly.
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
-This patch is quite similar to the following one:
+Okay, I'll update the next version to follow the guideline: 'Avoid
+directly copying full dmesg output (e.g., timestamps, registers, and
+stack dumps); instead, extract the critical call chain.'
 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=e74c0a7875cfec27c25f582f001cc4625a0f8c07
+>
+> > [    0.442336] Oops - unknown exception [#1]
+> > [    0.442337] Modules linked in:
+> > [    0.442339] CPU: 3 UID: 0 PID: 1 Comm: swapper/0 Tainted: G        W=
+          6.12.13-00102-gf1f43e345877 #1
+>
+> Is it still reproducible on v6.14 (and soon v6.15-rc1)?
 
-Thanks!
+This is not a consistently reproducible issue, but even without this
+fix, I believe the issue still exists.
 
- .../net/wireless/intel/iwlwifi/fw/api/tdls.h  |  4 +-
- .../net/wireless/intel/iwlwifi/fw/api/tx.h    | 60 ++++++++++---------
- .../net/wireless/intel/iwlwifi/mvm/mac-ctxt.c |  8 ++-
- drivers/net/wireless/intel/iwlwifi/mvm/tdls.c | 10 ++--
- 4 files changed, 44 insertions(+), 38 deletions(-)
+>
+> > [    0.442342] Tainted: [W]=3DWARN
+> > [    0.442343] epc : dw8250_serial_in32+0x1e/0x4a
+> > [    0.442351]  ra : serial8250_do_startup+0x2c8/0x88e
+> > [    0.442354] epc : ffffffff8064efca ra : ffffffff8064af28 sp : ffff8f=
+8000103990
+> > [    0.442355]  gp : ffffffff815bad28 tp : ffffaf807e36d400 t0 : ffffaf=
+80804cf080
+> > [    0.442356]  t1 : 0000000000000001 t2 : 0000000000000000 s0 : ffff8f=
+80001039a0
+> > [    0.442358]  s1 : ffffffff81626fc0 a0 : ffffffff81626fc0 a1 : 000000=
+0000000000
+> > [    0.442359]  a2 : 0000000000000000 a3 : 0000000000000000 a4 : ffffff=
+ff81626fc0
+> > [    0.442360]  a5 : ffff8f800012d900 a6 : 000000000000000f a7 : 000000=
+000fc648c1
+> > [    0.442361]  s2 : 0000000000000000 s3 : 0000000200000022 s4 : 000000=
+0000000000
+> > [    0.442362]  s5 : ffffffff81626fc0 s6 : ffffaf8085227000 s7 : ffffff=
+ff81073c58
+> > [    0.442363]  s8 : 0000000000500000 s9 : ffffaf80851a5a60 s10: ffffaf=
+80851a5a60
+> > [    0.442365]  s11: ffffffff80e85980 t3 : ffffaf807e324600 t4 : 000000=
+0000000002
+> > [    0.442365]  t5 : 0000000000000003 t6 : ffffaf80804cf072
+> > [    0.442366] status: 0000000200000120 badaddr: 0000000000000000 cause=
+: 0000000000000013
+> > [    0.442368] [<ffffffff8064efca>] dw8250_serial_in32+0x1e/0x4a
+> > [    0.442371] [<ffffffff8064af28>] serial8250_do_startup+0x2c8/0x88e
+> > [    0.442373] [<ffffffff8064b514>] serial8250_startup+0x26/0x2e
+> > [    0.442375] [<ffffffff806428a2>] uart_startup+0x13a/0x308
+> > [    0.442377] [<ffffffff80642aa4>] uart_port_activate+0x34/0x50
+> > [    0.442378] [<ffffffff8062ab6a>] tty_port_open+0xb4/0x110
+> > [    0.442383] [<ffffffff8063f548>] uart_open+0x22/0x36
+> > [    0.442389] [<ffffffff806234b4>] tty_open+0x1be/0x5e6
+> > [    0.442396] [<ffffffff802f2d52>] chrdev_open+0x10a/0x2a8
+> > [    0.442400] [<ffffffff802e7ab6>] do_dentry_open+0xf6/0x34e
+> > [    0.442405] [<ffffffff802e9456>] vfs_open+0x2a/0xb4
+> > [    0.442408] [<ffffffff80300124>] path_openat+0x676/0xf36
+> > [    0.442410] [<ffffffff80300a58>] do_filp_open+0x74/0xfa
+> > [    0.442412] [<ffffffff802e9900>] file_open_name+0x84/0x144
+> > [    0.442414] [<ffffffff802e99f6>] filp_open+0x36/0x54
+> > [    0.442416] [<ffffffff80a01232>] console_on_rootfs+0x26/0x70
+> > [    0.442420] [<ffffffff80a0154e>] kernel_init_freeable+0x2d2/0x30e
+> > [    0.442422] [<ffffffff8099c730>] kernel_init+0x2a/0x15e
+> > [    0.442427] [<ffffffff809a7666>] ret_from_fork+0xe/0x1c
+> > [    0.442430] Code: e022 e406 0800 4683 0c15 691c 872a 96bb 00d5 97b6 =
+(439c) 851b
+> > [    0.442432] ---[ end trace 0000000000000000 ]---
+> > [    0.442434] Kernel panic - not syncing: Fatal exception in interrupt
+> > [    0.442435] SMP: stopping secondary CPUs
+> > [    0.451111] ---[ end Kernel panic - not syncing: Fatal exception in =
+interrupt ]---
+>
+> Fixes tag?
+> Cc to stable@?
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/fw/api/tdls.h b/drivers/net/wireless/intel/iwlwifi/fw/api/tdls.h
-index cfa6532a3cdd..02198bc37f8c 100644
---- a/drivers/net/wireless/intel/iwlwifi/fw/api/tdls.h
-+++ b/drivers/net/wireless/intel/iwlwifi/fw/api/tdls.h
-@@ -50,7 +50,7 @@ struct iwl_tdls_channel_switch_timing {
-  */
- struct iwl_tdls_channel_switch_frame {
- 	__le32 switch_time_offset;
--	struct iwl_tx_cmd tx_cmd;
-+	struct iwl_tx_cmd_hdr tx_cmd;
- 	u8 data[IWL_TDLS_CH_SW_FRAME_MAX_SIZE];
- } __packed; /* TDLS_STA_CHANNEL_SWITCH_FRAME_API_S_VER_1 */
- 
-@@ -131,7 +131,7 @@ struct iwl_tdls_config_cmd {
- 	struct iwl_tdls_sta_info sta_info[IWL_TDLS_STA_COUNT];
- 
- 	__le32 pti_req_data_offset;
--	struct iwl_tx_cmd pti_req_tx_cmd;
-+	struct iwl_tx_cmd_hdr pti_req_tx_cmd;
- 	u8 pti_req_template[];
- } __packed; /* TDLS_CONFIG_CMD_API_S_VER_1 */
- 
-diff --git a/drivers/net/wireless/intel/iwlwifi/fw/api/tx.h b/drivers/net/wireless/intel/iwlwifi/fw/api/tx.h
-index 0a39e4b6eb62..5c0c7bac36d6 100644
---- a/drivers/net/wireless/intel/iwlwifi/fw/api/tx.h
-+++ b/drivers/net/wireless/intel/iwlwifi/fw/api/tx.h
-@@ -222,34 +222,36 @@ enum iwl_tx_offload_assist_flags_pos {
-  * and then the actial payload.
-  */
- struct iwl_tx_cmd {
--	__le16 len;
--	__le16 offload_assist;
--	__le32 tx_flags;
--	struct {
--		u8 try_cnt;
--		u8 btkill_cnt;
--		__le16 reserved;
--	} scratch; /* DRAM_SCRATCH_API_U_VER_1 */
--	__le32 rate_n_flags;
--	u8 sta_id;
--	u8 sec_ctl;
--	u8 initial_rate_index;
--	u8 reserved2;
--	u8 key[16];
--	__le32 reserved3;
--	__le32 life_time;
--	__le32 dram_lsb_ptr;
--	u8 dram_msb_ptr;
--	u8 rts_retry_limit;
--	u8 data_retry_limit;
--	u8 tid_tspec;
--	__le16 pm_frame_timeout;
--	__le16 reserved4;
--	union {
--		DECLARE_FLEX_ARRAY(u8, payload);
--		DECLARE_FLEX_ARRAY(struct ieee80211_hdr, hdr);
--	};
-+	/* New members MUST be added within the __struct_group() macro below. */
-+	__struct_group(iwl_tx_cmd_hdr, __hdr, __packed,
-+		__le16 len;
-+		__le16 offload_assist;
-+		__le32 tx_flags;
-+		struct {
-+			u8 try_cnt;
-+			u8 btkill_cnt;
-+			__le16 reserved;
-+		} scratch; /* DRAM_SCRATCH_API_U_VER_1 */
-+		__le32 rate_n_flags;
-+		u8 sta_id;
-+		u8 sec_ctl;
-+		u8 initial_rate_index;
-+		u8 reserved2;
-+		u8 key[16];
-+		__le32 reserved3;
-+		__le32 life_time;
-+		__le32 dram_lsb_ptr;
-+		u8 dram_msb_ptr;
-+		u8 rts_retry_limit;
-+		u8 data_retry_limit;
-+		u8 tid_tspec;
-+		__le16 pm_frame_timeout;
-+		__le16 reserved4;
-+	);
-+	struct ieee80211_hdr hdr[];
- } __packed; /* TX_CMD_API_S_VER_6 */
-+static_assert(offsetof(struct iwl_tx_cmd, hdr) == sizeof(struct iwl_tx_cmd_hdr),
-+	      "struct member likely outside of __struct_group()");
- 
- struct iwl_dram_sec_info {
- 	__le32 pn_low;
-@@ -742,7 +744,7 @@ struct iwl_compressed_ba_notif {
-  * @frame: the template of the beacon frame
-  */
- struct iwl_mac_beacon_cmd_v6 {
--	struct iwl_tx_cmd tx;
-+	struct iwl_tx_cmd_hdr tx;
- 	__le32 template_id;
- 	__le32 tim_idx;
- 	__le32 tim_size;
-@@ -761,7 +763,7 @@ struct iwl_mac_beacon_cmd_v6 {
-  * @frame: the template of the beacon frame
-  */
- struct iwl_mac_beacon_cmd_v7 {
--	struct iwl_tx_cmd tx;
-+	struct iwl_tx_cmd_hdr tx;
- 	__le32 template_id;
- 	__le32 tim_idx;
- 	__le32 tim_size;
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/mac-ctxt.c b/drivers/net/wireless/intel/iwlwifi/mvm/mac-ctxt.c
-index bec18d197f31..f010e68b4a55 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/mac-ctxt.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/mac-ctxt.c
-@@ -1032,7 +1032,9 @@ static int iwl_mvm_mac_ctxt_send_beacon_v6(struct iwl_mvm *mvm,
- 	struct iwl_mvm_vif *mvmvif = iwl_mvm_vif_from_mac80211(vif);
- 	struct iwl_mac_beacon_cmd_v6 beacon_cmd = {};
- 
--	iwl_mvm_mac_ctxt_set_tx(mvm, vif, beacon, &beacon_cmd.tx);
-+	iwl_mvm_mac_ctxt_set_tx(mvm, vif, beacon,
-+				container_of(&beacon_cmd.tx,
-+					     struct iwl_tx_cmd, __hdr));
- 
- 	beacon_cmd.template_id = cpu_to_le32((u32)mvmvif->id);
- 
-@@ -1052,7 +1054,9 @@ static int iwl_mvm_mac_ctxt_send_beacon_v7(struct iwl_mvm *mvm,
- 	struct iwl_mvm_vif *mvmvif = iwl_mvm_vif_from_mac80211(vif);
- 	struct iwl_mac_beacon_cmd_v7 beacon_cmd = {};
- 
--	iwl_mvm_mac_ctxt_set_tx(mvm, vif, beacon, &beacon_cmd.tx);
-+	iwl_mvm_mac_ctxt_set_tx(mvm, vif, beacon,
-+				container_of(&beacon_cmd.tx,
-+					     struct iwl_tx_cmd, __hdr));
- 
- 	beacon_cmd.template_id = cpu_to_le32((u32)mvmvif->id);
- 
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/tdls.c b/drivers/net/wireless/intel/iwlwifi/mvm/tdls.c
-index 36379b738de1..bcfae05192ad 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/tdls.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/tdls.c
-@@ -342,6 +342,8 @@ iwl_mvm_tdls_config_channel_switch(struct iwl_mvm *mvm,
- 	struct iwl_tdls_channel_switch_cmd_tail *tail =
- 		iwl_mvm_chan_info_cmd_tail(mvm, &cmd.ci);
- 	u16 len = sizeof(cmd) - iwl_mvm_chan_info_padding(mvm);
-+	struct iwl_tx_cmd *tx_cmd =
-+		container_of(&tail->frame.tx_cmd, struct iwl_tx_cmd, __hdr);
- 	int ret;
- 
- 	lockdep_assert_held(&mvm->mutex);
-@@ -410,14 +412,12 @@ iwl_mvm_tdls_config_channel_switch(struct iwl_mvm *mvm,
- 			ret = -EINVAL;
- 			goto out;
- 		}
--		iwl_mvm_set_tx_cmd_ccmp(info, &tail->frame.tx_cmd);
-+		iwl_mvm_set_tx_cmd_ccmp(info, tx_cmd);
- 	}
- 
--	iwl_mvm_set_tx_cmd(mvm, skb, &tail->frame.tx_cmd, info,
--			   mvmsta->deflink.sta_id);
-+	iwl_mvm_set_tx_cmd(mvm, skb, tx_cmd, info, mvmsta->deflink.sta_id);
- 
--	iwl_mvm_set_tx_cmd_rate(mvm, &tail->frame.tx_cmd, info, sta,
--				hdr->frame_control);
-+	iwl_mvm_set_tx_cmd_rate(mvm, tx_cmd, info, sta, hdr->frame_control);
- 	rcu_read_unlock();
- 
- 	memcpy(tail->frame.data, skb->data, skb->len);
--- 
-2.43.0
+Okay.
 
+>
+> ...
+>
+> >       /*
+> >        * Now, initialize the UART
+> >        */
+>
+> + Blank line.
+
+Okay.
+
+>
+> > +     uart_port_lock_irqsave(port, &flags);
+> >       serial_port_out(port, UART_LCR, UART_LCR_WLEN8);
+> >
+> > -     uart_port_lock_irqsave(port, &flags);
+> >       if (up->port.flags & UPF_FOURPORT) {
+> >               if (!up->port.irq)
+> >                       up->port.mctrl |=3D TIOCM_OUT1;
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
+>
+
+Thanks,
+Yunhui
