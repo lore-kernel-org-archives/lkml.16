@@ -1,210 +1,87 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3E9817A2FD;
-	Fri,  4 Apr 2025 09:02:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B18B81A265E;
+	Fri,  4 Apr 2025 09:02:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743757366; cv=none; b=Ek5wfLwZEkBHfiAHaVuwjWAPDYGt4LOFkZyti31JIGGSZLxJ3x7+ZNVJoXMtoEqhPzDsO71oYqqGXh0my/P6qultH5mj0q1iXMdXZPa8VOVsaaH0nY647IfVX9BwUQWshrvrlbST1+Hn4PyyRxrt7KD1e+jCxsTBl52uyPf1+Sw=
+	t=1743757372; cv=none; b=HpOoV40v0BCY7vcPuuJTaaVP5YzxNzehw1vlzPvOZ2ck4FebGFOrxAZF/170M/L1S+KxKEwvUj2yPjcyrCXn6K/NN4pXr4ONu1gypy+KGSt1NA0JxdeJ3mlCqnzGmzEElh2dy9epV3Kwp3NPW0xbDmautkNIRqFi0SyCXqxPNZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743757366; c=relaxed/simple;
-	bh=ybEN/+MVdR+Z2PVAWEdlwJhHO/+OPFI6MPFsScL0VXE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TG5nhyklGWt013IJ8Q5Cod+Atu/Imjr/5WANrNYvcdyjxnUwpPjCDD2HL6LViE0q9KnRffsr0dfk9d1kiYcdMf8WwHI/2FEvY26B9LbSOt0LnEcHzQHnIwsZlYjeIzHtJdheWtTWVrkhy+vMRv2Wnzj6mbH3GOY/oSqGNtA6gbk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WRpSeJbQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743757372; c=relaxed/simple;
+	bh=wm44pMRxSMtVrJZ9//WbNLyZvf+/VMaxa9Bl2u1h3DU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gETNNL1zuDMHRkrgn8hWucuQRql3bUsQMPpqZYJZOy8PduWZfvpaML0vyfKxwl/kR+NUIMhgV0UsucSuGeu44vDJFq66isX3PT7USG4wVuLm/fe7EcSozuHldSZtAgDEJORNt/vfIpc3R2Z22dbgZz5nKMJ5L5t3h3eWK8Y6EB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RqqiIGmV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WRpSeJbQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6413EC4CEDD;
-	Fri,  4 Apr 2025 09:02:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RqqiIGmV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C705C4CEDD;
+	Fri,  4 Apr 2025 09:02:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743757365;
-	bh=ybEN/+MVdR+Z2PVAWEdlwJhHO/+OPFI6MPFsScL0VXE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=WRpSeJbQKyuUDx2u4/NBlEpMuDV/UdjF5FHUt3By62mCTZoxme/SHhrG6BbERJ0zx
-	 Kof6f0CY1hxQaF/WesKXZtA5v+7A3j3iyDEHX8M0sXd2vqWLopQ4a/bY6Xt2Y4znkp
-	 oJgMFe5EacASyH8B6OzUHtBKQDBonSdW9xKfnP/Wio/YQJRc46+ZnWca6/RZatvaRI
-	 VG0OI4XVlqnP8XswbgdFQ17mO3nBlzS9wk398lkuvjacZseOtXUSZNv49TOwMIKuOU
-	 WR8bBi9ICnN4KXmZqPaG0SgtO4BkI381g3caWZe9OpeTRPihcamc0kDvdAm3FqcvZk
-	 DPeN4GJZhQW2A==
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-54b0d638e86so2067591e87.1;
-        Fri, 04 Apr 2025 02:02:45 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVXSNjQ4EZ33y0z8jXWHkTaMujjAILTmA1xJNR3MeOeT6/aczLt8eF72Y0Hps84OMMwmbNR+QZcAEJ+NOg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyrr6FS5dk6ht1tCd5NXeH9VrnKZLA919e/UuVVq9CHgwWxeTpP
-	G5dh1dsDBil+zr+DuPfKCncXHAcl/AbKLPsdqUdUQAoUFt5wB5lWDBsaRsmxC1YjqX+JwWf36Bv
-	cVMmkZvQFfw8XZMnpTt+pkhHBNlc=
-X-Google-Smtp-Source: AGHT+IGRSm4+WIzfAJTm1OSKhZC/IeUbIYyKP9KJP535p52PaGbZjoxnmCrpbPjYHOjts4LtDqBtd/M8IfKquiiVqSE=
-X-Received: by 2002:a05:6512:10d1:b0:54b:117c:8ef6 with SMTP id
- 2adb3069b0e04-54c22801108mr538868e87.57.1743757364003; Fri, 04 Apr 2025
- 02:02:44 -0700 (PDT)
+	s=k20201202; t=1743757372;
+	bh=wm44pMRxSMtVrJZ9//WbNLyZvf+/VMaxa9Bl2u1h3DU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=RqqiIGmVdSKS3ZhKoSM/x0QlgQ23XAWfSOYUsnl1O0R+0B8JuyU2o4hdmFBG+mxUK
+	 /QZmusJroU1fGCg6PjHm6r3xE/Xsl7b4IWFHWrz6AOSisgMB7DuPITh/7g5En3TSw6
+	 yXObcPqrcDXbZ43RKEcSUOWkPIfns6PuMUkYuExLz8kJIwNUQF2Cv4cZW4sW5Oqpm2
+	 b8XgdgJQDgkWuW/IjQGAaXjMgDts9OrxnQhONT99hlIiaU7cvEKchOJ7wRKOJ/aAFf
+	 mqU4ea+FIXpaeG3kQe0OBq/Dj4N7hn7mOn8/FO5FpoveryTtk4OU1ziaE8RULWhZcw
+	 l0/oESDsSHIxg==
+Message-ID: <70891a99-d2ca-4fd3-a88d-2f66a9a78f66@kernel.org>
+Date: Fri, 4 Apr 2025 10:02:47 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250328-fix-merge-config-v1-1-ee78797d1302@samsung.com>
-In-Reply-To: <20250328-fix-merge-config-v1-1-ee78797d1302@samsung.com>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Fri, 4 Apr 2025 18:02:07 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASs5p0+YShD7HBFQmxEObr0px8gZmjLajAJrTLGc1uPkg@mail.gmail.com>
-X-Gm-Features: AQ5f1JrC8YpOlyN2707XKMupNR7R4GAn2J78BuVec6mV6BfLKc6orPOh3gqzuU8
-Message-ID: <CAK7LNASs5p0+YShD7HBFQmxEObr0px8gZmjLajAJrTLGc1uPkg@mail.gmail.com>
-Subject: Re: [PATCH] kconfig: merge_config: use an empty file as initfile
-To: Daniel Gomez <da.gomez@kernel.org>
-Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Daniel Gomez <da.gomez@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/8] Reup: SM8350 and SC8280XP venus support
+To: Vikash Garodia <quic_vgarodia@quicinc.com>,
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Stanimir Varbanov <stanimir.k.varbanov@gmail.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>,
+ Bjorn Andersson <andersson@kernel.org>, linux-media@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Johan Hovold <johan+linaro@kernel.org>
+References: <20250304-b4-linux-media-comitters-sc8280xp-venus-v1-0-279c7ea55493@linaro.org>
+ <8cfaeb25-2657-9df4-5cea-018aad62f579@quicinc.com>
+ <it3njgklhnedjzojafuxpjy3o5zfulgdclweyobv7kjgtpjmzx@6opje7yms4yg>
+ <1dd6e03d-09be-4853-741a-4fb47b7619a0@quicinc.com>
+Content-Language: en-US
+From: Bryan O'Donoghue <bod@kernel.org>
+In-Reply-To: <1dd6e03d-09be-4853-741a-4fb47b7619a0@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Mar 28, 2025 at 11:29=E2=80=AFPM Daniel Gomez <da.gomez@kernel.org>=
- wrote:
->
-> From: Daniel Gomez <da.gomez@samsung.com>
->
-> The scripts/kconfig/merge_config.sh script requires an existing
-> $INITFILE (or the $1 argument) as a base file for merging Kconfig
-> fragments. However, an empty $INITFILE can serve as an initial starting
-> point, later referenced by the KCONFIG_ALLCONFIG Makefile variable
-> if -m is not used. This variable can point to any configuration file
-> containing preset config symbols (the merged output) as stated in
-> Documentation/kbuild/kconfig.rst. When -m is used $INITFILE will
-> contain just the merge output requiring the user to run make (i.e.
-> KCONFIG_ALLCONFIG=3D<$INITFILE> make <allnoconfig/alldefconfig> or make
-> olddefconfig).
->
-> Instead of failing when `$INITFILE` is missing, create an empty file and
-> use it as the starting point for merges.
->
-> Signed-off-by: Daniel Gomez <da.gomez@samsung.com>
-> ---
+On 04/04/2025 06:24, Vikash Garodia wrote:
+>>> How different is this from sm8250 which is already enabled on iris driver ?
+>> As far as I remember, SM8250 support in Iris did not reach
+>> feature-parity yet. So in my opinion it is fine to add new platforms to
+>> the Venus driver, that will later migrate to the Iris driver.
+> I would say, from decoder side all codecs are there now on Iris. H264 merged,
+> while h265 and VP9 dec are posted as RFC, there is one compliance failure which
+> is under debug to post them as regular patches.
+> If we are mainly looking for decode usecases, then we should be on Iris.
+> Preference would be to stay on Iris, otherwise we would have that extra ask to
+> port it later from venus to iris.
 
+Right now venus represents 9/20 - 45% of the patches being churned for 
+sc8280xp.
 
-You still could do 'touch .config' in advance, but
-I do not have a strong option.
+https://github.com/jhovold/linux/tree/wip/sc8280xp-6.14-rc7
 
-Applied to linux-kbuild. Thanks.
+This is a good debate to have, however my memory of what we collectively 
+agreed both in public and private was to continue to merge new silicon 
+<= HFI6XX into venus unless and until iris hit feature parity for HFI6XX 
+and to continue with venus at that point for < HFI6XX.
 
-I quoted $INITFILE in order to fix a shellcheck warning.
+So merging sc8280xp - HFI6XX is consistent with our agreement, the right 
+thing to do for our users and a big win in terms of technical debt 
+reduction.
 
+I will post an update to this series ASAP.
 
-
-diff --git a/scripts/kconfig/merge_config.sh b/scripts/kconfig/merge_config=
-.sh
-index ad35a60de350..79c09b378be8 100755
---- a/scripts/kconfig/merge_config.sh
-+++ b/scripts/kconfig/merge_config.sh
-@@ -113,7 +113,7 @@ shift;
-
- if [ ! -r "$INITFILE" ]; then
-        echo "The base file '$INITFILE' does not exist. Creating one..." >&=
-2
--       touch $INITFILE
-+       touch "$INITFILE"
- fi
-
- MERGE_LIST=3D$*
-
-
-
-
-> Commit b9fe99c5b994 ("kbuild: mergeconfig: move an error check
-> to merge_config.sh") moves the check for .config to exist from
-> scripts/kconfig/Makefile to the scripts/kconfig/merge_config.sh.
-> But this is no longer necessary.
->
-> This avoid having to run a make <target> to create a first .config file.
-> Workflow:
->
-> ./scripts/kconfig/merge_config.sh \
-> -m .config \
-> <fragment list>
->
-> make olddefconfig
->
-> Here the logs with upstream scripts/kconfig/merge_config.sh (to show
-> .config is created with tinyconfig).
->
-> make tinyconfig V=3D1
-> {..}
-> make -f ./scripts/Makefile.build obj=3Dscripts/kconfig tinyconfig
-> KCONFIG_ALLCONFIG=3Dkernel/configs/tiny-base.config make -f ./Makefile al=
-lnoconfig
-> make -f ./scripts/Makefile.build obj=3Dscripts/basic
-> make -f ./scripts/Makefile.build obj=3Dscripts/kconfig allnoconfig
-> scripts/kconfig/conf  --allnoconfig Kconfig
->
-> configuration written to .config
->
-> make -f ./Makefile tiny.config
-> make -f ./scripts/Makefile.build obj=3Dscripts/basic
-> make -f ./scripts/Makefile.build obj=3Dscripts/kconfig tiny.config
-> cmd_merge_fragments tiny.config
->   ./scripts/kconfig/merge_config.sh -m .config
-> ./kernel/configs/tiny.config ./arch/x86/configs/tiny.config
-> Using .config as base
-> Merging ./kernel/configs/tiny.config
-> Value of CONFIG_CC_OPTIMIZE_FOR_SIZE is redefined by fragment
-> ./kernel/configs/tiny.config:
-> Previous value: # CONFIG_CC_OPTIMIZE_FOR_SIZE is not set
-> New value: CONFIG_CC_OPTIMIZE_FOR_SIZE=3Dy
->
-> Value of CONFIG_KERNEL_XZ is redefined by fragment
-> ./kernel/configs/tiny.config:
-> Previous value: # CONFIG_KERNEL_XZ is not set
-> New value: CONFIG_KERNEL_XZ=3Dy
->
-> Value of CONFIG_SLUB_TINY is redefined by fragment
-> ./kernel/configs/tiny.config:
-> Previous value: # CONFIG_SLUB_TINY is not set
-> New value: CONFIG_SLUB_TINY=3Dy
->
-> Merging ./arch/x86/configs/tiny.config
-> Value of CONFIG_UNWINDER_GUESS is redefined by fragment
-> ./arch/x86/configs/tiny.config:
-> Previous value: # CONFIG_UNWINDER_GUESS is not set
-> New value: CONFIG_UNWINDER_GUESS=3Dy
->
-> merged configuration written to .config (needs make)
->
-> make -f ./Makefile olddefconfig
-> make -f ./scripts/Makefile.build obj=3Dscripts/basic
-> make -f ./scripts/Makefile.build obj=3Dscripts/kconfig olddefconfig
-> scripts/kconfig/conf  --olddefconfig Kconfig
->
-> configuration written to .config
-> ---
->  scripts/kconfig/merge_config.sh | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/scripts/kconfig/merge_config.sh b/scripts/kconfig/merge_conf=
-ig.sh
-> index 0b7952471c18f6882b8978f839f3170bb41fb01f..ad35a60de350ae1c5b60d39bf=
-752115d27276f52 100755
-> --- a/scripts/kconfig/merge_config.sh
-> +++ b/scripts/kconfig/merge_config.sh
-> @@ -112,8 +112,8 @@ INITFILE=3D$1
->  shift;
->
->  if [ ! -r "$INITFILE" ]; then
-> -       echo "The base file '$INITFILE' does not exist.  Exit." >&2
-> -       exit 1
-> +       echo "The base file '$INITFILE' does not exist. Creating one..." =
->&2
-> +       touch $INITFILE
->  fi
->
->  MERGE_LIST=3D$*
->
-> ---
-> base-commit: e21edb1638e82460f126a6e49bcdd958d452929c
-> change-id: 20250328-fix-merge-config-87fe109017e9
->
-> Best regards,
-> --
-> Daniel Gomez <da.gomez@samsung.com>
->
-
-
---=20
-Best Regards
-Masahiro Yamada
+---
+bod
