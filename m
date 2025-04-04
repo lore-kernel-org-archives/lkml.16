@@ -1,119 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from pv50p00im-zteg10021401.me.com (pv50p00im-zteg10021401.me.com [17.58.6.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCF8919F10A;
-	Fri,  4 Apr 2025 02:59:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24A8119DF66
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 02:59:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743735594; cv=none; b=LJSv96gKStWGIH0i46vZAvk2qWN7SzWsBWnq/y4eTOXqI6/PnKObsTWXxSIvj5UDQtQqntNPIwCmHhXbUrAkN8T/RgD5icVW5TUmZ2cWGxiqoqNBvqirJeMBiDqFLGpvrl4BsxGorQrCeQydlqoum0090iquV5MEEM1dHfhyMcs=
+	t=1743735594; cv=none; b=uZhO0abKWjrGSBmtlnYM/eYHWly03I1uUYZIQwfyDnCDxNipUPHYuxCPMHiwwFsSVo5zGXrjB7kjl07/5T73P8pCy99RUMvcGDfyxSv/FiP5IBsr3FdUa+E3tEYtcy+zGcus95qB8kWAxYzXFJPMQlgYYxdJXh7ny3eyb5Ls/DE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1743735594; c=relaxed/simple;
-	bh=1W6pnPI2cQreK/3+uRQUHI1ov/YAXvY/bkfHhelXghU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=nfeWP8b7m/hzLTyRmJ37Oz/Ro9KQrwT73PtpsEXa+rU02LDjw5fiXYl4VV7U3NRa4NerczdSLUlCOAO5t7cql+/GO0cmZsGaKr0YkxnqZ/mqjOm6UW9CtpgMfWoT49HeNqqrrXSHyW8SOpHhg7OZVp8wxk178aeqh44XhbPCnIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GdLsVFPS; arc=none smtp.client-ip=10.30.226.201
+	bh=a59/dCArZpjmdu1CA2ns6K7frhrEdPJ4+b5B41x0SKk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Bnfz6I/nnc7ewZqVqo+IJSy6cdDu+QMYKnWcDMl7LnW/47oAJ4eiWZVLc2IZFSc1wSvOq2oaBlAlWUs3/fSci5UvXNZEe6OUfCBm7xCWPD61mtOxeVtYTgpY2YkRTRVL8m9RS9hYWA6WjdVFgh0iTMiusFxUFhVSI9f0JoZXhuU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=icb1fn/E; arc=none smtp.client-ip=17.58.6.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GdLsVFPS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C76AC4CEE3;
-	Fri,  4 Apr 2025 02:59:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743735593;
-	bh=1W6pnPI2cQreK/3+uRQUHI1ov/YAXvY/bkfHhelXghU=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=GdLsVFPSPAzYBAvq539ZzBXsdV331WjtxuwM2qUxhzUdt56UPc33KEAtCXWymZboA
-	 Xqnktp3sh/XpKkjPwQ3eobyzfRsUtvBVCoQS5qeq/6fsr3BXauJ/ePBcaokzPWlWiy
-	 G9iMmBqkj5xkX4YVCwshcoXdrU4KiF7VJnZtxyww2fsu52Fu/eTEx7rax/36xxr7lB
-	 th/RHNX1p6qaubojJKCMRYZz+neBX6eJgKCm6pR6/ACSKgrfLr31J+RCRvDXXEI7fo
-	 5PBzr7JXyURO63S0RDpJfsN2CzW3IYZC4xYP3ghIso/ijjEJBp1c/zraQoVAZ8ptE9
-	 S1lLwK2TnC1fQ==
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Date: Thu, 03 Apr 2025 21:59:30 -0500
-Subject: [PATCH 09/19] arm: dts: qcom: sdx55/sdx65: Fix CPU
- power-domain-names
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="icb1fn/E"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
+	s=1a1hai; bh=fG3CGqe+hvK5S3evRDdon69vZKGIehTLbtFqN3Fym2M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:x-icloud-hme;
+	b=icb1fn/E/NlnyCRVqy/8M6PrlMWO6CDU4dX2glMzFngDDg711ZTkm8yHSclRy4MLI
+	 L1ik1qVKxj2mCQwCACsTWjShOr3e0RyxuAel4INOws1+b5ATIj98vfmN3TWcDkIpws
+	 lcUY+C1ZNkFfaOgszw8/yPvGM0XP9zcs3R2rlrDIn93WzW8Jrep/Jnbk102H1kq83d
+	 MEBTReNAwVjSY3n91Nh9HG9VQP6j8VJiBBvle1Y+4tU3xkB2cTC3QUxPda51piDn1u
+	 cCbhJbCFDp3bhYdlXsKS9SErKeVbO9o3lxNdUtnA2+QbYAdqA/OujAHKuxsHKG1EUC
+	 iHa+kBrOv+caQ==
+Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
+	by pv50p00im-zteg10021401.me.com (Postfix) with ESMTPSA id D3BB88E0091;
+	Fri,  4 Apr 2025 02:59:45 +0000 (UTC)
+Message-ID: <f6dd3667-8528-4597-963f-75e78d7be733@icloud.com>
+Date: Fri, 4 Apr 2025 10:59:41 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/1] device property: Add a note to the fwnode.h
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Zijun Hu <quic_zijuhu@quicinc.com>, linux-acpi@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+ Daniel Scally <djrscally@gmail.com>,
+ Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Danilo Krummrich <dakr@kernel.org>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+References: <20250331163540.280606-1-andriy.shevchenko@linux.intel.com>
+Content-Language: en-US
+From: Zijun Hu <zijun_hu@icloud.com>
+In-Reply-To: <20250331163540.280606-1-andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250403-dt-cpu-schema-v1-9-076be7171a85@kernel.org>
-References: <20250403-dt-cpu-schema-v1-0-076be7171a85@kernel.org>
-In-Reply-To: <20250403-dt-cpu-schema-v1-0-076be7171a85@kernel.org>
-To: Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, 
- Jernej Skrabec <jernej.skrabec@gmail.com>, 
- Samuel Holland <samuel@sholland.org>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, 
- Viresh Kumar <viresh.kumar@linaro.org>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Vincenzo Frascino <vincenzo.frascino@arm.com>, 
- Liviu Dudau <liviu.dudau@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, 
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
- Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, 
- Stephen Boyd <sboyd@kernel.org>, zhouyanjie@wanyeetech.com, 
- Conor Dooley <conor@kernel.org>, 
- Nicolas Ferre <nicolas.ferre@microchip.com>, 
- Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
- Steen Hegelund <Steen.Hegelund@microchip.com>, 
- Daniel Machon <daniel.machon@microchip.com>, UNGLinuxDriver@microchip.com, 
- Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Fabio Estevam <festevam@gmail.com>, Heiko Stuebner <heiko@sntech.de>, 
- Neil Armstrong <neil.armstrong@linaro.org>, 
- Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
- Geert Uytterhoeven <geert+renesas@glider.be>, 
- Magnus Damm <magnus.damm@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org, 
- linux-pm@vger.kernel.org, linux-mediatek@lists.infradead.org, 
- linux-arm-msm@vger.kernel.org, linux-mips@vger.kernel.org, 
- imx@lists.linux.dev, linux-rockchip@lists.infradead.org, 
- linux-amlogic@lists.infradead.org, linux-renesas-soc@vger.kernel.org
-X-Mailer: b4 0.15-dev
+X-Proofpoint-GUID: 1U1YPAE7jr6a27fniVEr3Z9tVBQ1j0QS
+X-Proofpoint-ORIG-GUID: 1U1YPAE7jr6a27fniVEr3Z9tVBQ1j0QS
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-04_01,2025-04-03_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adultscore=0
+ mlxlogscore=999 malwarescore=0 bulkscore=0 mlxscore=0 clxscore=1011
+ suspectscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2308100000 definitions=main-2504040020
 
-"rpmhpd" is not documented nor used anywhere. As the enable-method is
-"psci" use "psci" for the power-domain name.
+On 2025/4/1 00:35, Andy Shevchenko wrote:
+> Add a note to the fwnode.h that the header should not be used
+> directly in the leaf drivers, they all should use the higher
+> level APIs and the respective headers.
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+> 
+> v2: added "...into the driver" piece at the end to remove ambiguity
+> 
+>  include/linux/fwnode.h | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/include/linux/fwnode.h b/include/linux/fwnode.h
+> index 6fa0a268d538..4c4d3f93534c 100644
+> --- a/include/linux/fwnode.h
+> +++ b/include/linux/fwnode.h
+> @@ -2,6 +2,12 @@
+>  /*
+>   * fwnode.h - Firmware device node object handle type definition.
+>   *
+> + * Note, this header is not meant to be used by the leaf drivers.
+> + * It provides the low level data types and definitions for the firmware
 
-Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
----
- arch/arm/boot/dts/qcom/qcom-sdx55.dtsi | 2 +-
- arch/arm/boot/dts/qcom/qcom-sdx65.dtsi | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+Ack
 
-diff --git a/arch/arm/boot/dts/qcom/qcom-sdx55.dtsi b/arch/arm/boot/dts/qcom/qcom-sdx55.dtsi
-index 39530eb580ea..64d9858b4248 100644
---- a/arch/arm/boot/dts/qcom/qcom-sdx55.dtsi
-+++ b/arch/arm/boot/dts/qcom/qcom-sdx55.dtsi
-@@ -57,7 +57,7 @@ cpu0: cpu@0 {
- 			enable-method = "psci";
- 			clocks = <&apcs>;
- 			power-domains = <&rpmhpd SDX55_CX>;
--			power-domain-names = "rpmhpd";
-+			power-domain-names = "psci";
- 			operating-points-v2 = <&cpu_opp_table>;
- 		};
- 	};
-diff --git a/arch/arm/boot/dts/qcom/qcom-sdx65.dtsi b/arch/arm/boot/dts/qcom/qcom-sdx65.dtsi
-index 6b23ee676c9e..bfd04e53c5a8 100644
---- a/arch/arm/boot/dts/qcom/qcom-sdx65.dtsi
-+++ b/arch/arm/boot/dts/qcom/qcom-sdx65.dtsi
-@@ -58,7 +58,7 @@ cpu0: cpu@0 {
- 			enable-method = "psci";
- 			clocks = <&apcs>;
- 			power-domains = <&rpmhpd SDX65_CX_AO>;
--			power-domain-names = "rpmhpd";
-+			power-domain-names = "psci";
- 			operating-points-v2 = <&cpu_opp_table>;
- 		};
- 	};
+> + * and device property providers. The respective API headers should
+> + * guarantee all the required data types and definitions without including
+> + * this header directly into the driver.
 
--- 
-2.47.2
+device property(include/linux/property.h)
+	       ^
+	       |
+firmware node(include/linux/fwnode.h)
+   ^           ^         ^        ^
+   |           |         |        |
+   DT         ACPI     SWNODE    ...
+
+
+For various firmware implementations(DT|ACPI|SWNODE...), i feel we may
+allow them include fwnode.h by their header or source files.
+
+> + *
+>   * Copyright (C) 2015, Intel Corporation
+>   * Author: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>   */
 
