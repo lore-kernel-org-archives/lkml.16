@@ -1,63 +1,81 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75AD521C18C
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 17:01:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9948D1F03CD;
+	Fri,  4 Apr 2025 17:02:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743786091; cv=none; b=mERadDteWt67JnEL0rC6vvWEn6q/hD1jqug4ql5RlCRPU4dgiJ+nTIglgCMxoyK7qNYzbwxIUnnKz3l0FVGdgnSXaHTAz9F+8UgUJ6icKzQkLZUv/5HvD5fcURFWUkdz895mrGolUKrx/IgcKxA0dEmCMqDxunUh1foRDHy/wVw=
+	t=1743786177; cv=none; b=fuoM4+ZlJF1zGZdcA+kw1qAcFzXYotrtbYLpe/BlcuWCeP47Vki65Aw6KpSJq3oLX6u2J988cJaA98v0hca9ZnoRJWmxb+z+JX35wIa6QqzKVMozq7TDCiCJzTKjIT3xezbRUGXB0mBtkFptIT9CEclAY0v6FuPdXpDWWj4xxrk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743786091; c=relaxed/simple;
-	bh=hrukEFpy9+Jy1KGZ/zOcraALjOes3wwq2y1IvPEmVgU=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=Ik5G/SpUNNTLgxr2SlD5LiInf25tLANMmgmCEuPM/IU6LlEO8Rt4e8jOTU7PxuXqFzb3E0ygKwmKaQ3FyZhG+MVokg3b9j3WLuPSaM4LF9uHrXPiOjiBJh7FHkvSh69G8oakLfOVFsXcFbDCqM3Emsjr5aXiQUDdYS3EcnGFN30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ufgNuT2+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743786177; c=relaxed/simple;
+	bh=oPnGwjxtjjs/5C3MfcR4X0HPMe5YHfPGa1R/ZL26eaI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KZbmm76h+AgV0Hytj+oaF/aQIelm6vjP9yAktY1ifPJNlsuOLu0XZZQGnZFuaYWzXCnCYYZyAlMSssSsyh3C/hwqo++5r1OCXgHQ8GmBJ4IhCo7Wc3FZG5wRxWPBS4gz9ZQOC1UfcY+QVnORAzsjPRF56a7cpvEeUfGpqxVlbFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ctS8h6Ui; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ufgNuT2+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58293C4CEDD;
-	Fri,  4 Apr 2025 17:01:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ctS8h6Ui"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E855BC4CEE9;
+	Fri,  4 Apr 2025 17:02:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743786091;
-	bh=hrukEFpy9+Jy1KGZ/zOcraALjOes3wwq2y1IvPEmVgU=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=ufgNuT2+Z8pW6YujcnmcUxLdRXczWBB80yEixaJhbST/+tLYkJb53knCzWV6Iw/gD
-	 3INbTLIB6yb9GJmnJfKosKhxtUnfy7tBVEc3Zk+Hh7x8s/zgkfMLw5BqT7LgbGjY2S
-	 JqI7l1zcNfxqtx2FXxzb4dwo4wO/dA5bDmAy8W4nu54u5Vd5PGzvk97+v6n7ZKI8YW
-	 QA2Jt5g50vWleSs/PstgmY4BzLfEHB/ngFGAXrAVIlvTWcgFmiz2T7dbh6zQITc5Sp
-	 zyrxzUmUGpMzaBeunkbyf5Lm71EfKDgmB5YP52M11JBlyqtsdNpMQUls0uEIkYoeTy
-	 Kv0AKK6iac/nQ==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE9833822D28;
-	Fri,  4 Apr 2025 17:02:09 +0000 (UTC)
-Subject: Re: [GIT PULL] RISC-V Patches for the 6.15 Merge Window, Part 1
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <mhng-e4523e07-f5ae-4f8b-9eec-8422b05700f4@palmer-ri-x1c9>
-References: <mhng-e4523e07-f5ae-4f8b-9eec-8422b05700f4@palmer-ri-x1c9>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <mhng-e4523e07-f5ae-4f8b-9eec-8422b05700f4@palmer-ri-x1c9>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git tags/riscv-for-linus-6.15-mw1
-X-PR-Tracked-Commit-Id: 3eb64093f533a29d3291a463fd65126bf430ba60
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 4a1d8ababde685a77fd4fd61e58f973cbdf29f8c
-Message-Id: <174378612858.3331400.13861432422726874558.pr-tracker-bot@kernel.org>
-Date: Fri, 04 Apr 2025 17:02:08 +0000
-To: Palmer Dabbelt <palmer@rivosinc.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+	s=k20201202; t=1743786177;
+	bh=oPnGwjxtjjs/5C3MfcR4X0HPMe5YHfPGa1R/ZL26eaI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ctS8h6UiAWFI8jl0bgAEfAX7R4mchKnqjT+n0JWOg646pmH/zOivPZTrGIireM9sB
+	 m/Rs11ArykManspipp/fM28gcraX4jU/hB+smFeTffWTlLhiI3jTmI8yKWAwJ3pu/8
+	 3N6QmrMndLU0Y2z2lpIY+C6EeIGtFfmsm0Kz2rKNJ3bejXt7zNH2puZtdFWWc0lU4J
+	 y3JJ5UC0N51vmOrv4kg8E9sJeNLD09LUSVwyWZ+88kyDcDzTYqo4aSgvu7psu2c3xo
+	 HHmvAfKen39M9UTXY2YBauBV1RsKbAQOM+ISLza7gqZ4VzJlYEKhh1wdLHxNkK1IJj
+	 m/czyoMdQtj8g==
+Date: Fri, 4 Apr 2025 18:02:53 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Johann Neuhauser <jneuhauser@dh-electronics.com>
+Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	Jonathan Corbet <corbet@lwn.net>,
+	Liam Girdwood <lgirdwood@gmail.com>
+Subject: Re: [PATCH 0/3] regulator: userspace-consumer: Add regulator event
+ uevents
+Message-ID: <b5fa7d1a-16bf-4031-8990-f559cf589b67@sirena.org.uk>
+References: <20250404134009.2610460-1-jneuhauser@dh-electronics.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="jT5kjD0mLTfL7UhA"
+Content-Disposition: inline
+In-Reply-To: <20250404134009.2610460-1-jneuhauser@dh-electronics.com>
+X-Cookie: You will soon forget this.
 
-The pull request you sent on Fri, 04 Apr 2025 08:58:06 -0700 (PDT):
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git tags/riscv-for-linus-6.15-mw1
+--jT5kjD0mLTfL7UhA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/4a1d8ababde685a77fd4fd61e58f973cbdf29f8c
+On Fri, Apr 04, 2025 at 03:40:06PM +0200, Johann Neuhauser wrote:
+> This series adds support for regulator event reporting via uevents to the
+> userspace-consumer regulator driver. The goal is to provide userspace with
+> a straightforward mechanism to monitor and respond to important regulator
+> events such as overcurrent conditions, voltage changes, and enable/disable
+> transitions.
 
-Thank you!
+This sounds like you're trying to use userspace-consumer in production
+rather than as a test bodge...   what's the actual use case here?
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+--jT5kjD0mLTfL7UhA
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmfwELwACgkQJNaLcl1U
+h9AxAAf8Cu5MhCLb1wWJCLWNM2VRJ6fqAj/TDBYj3J4N0xaB8DgkwDW+tI5Wv8pS
+5qVmiMeZJRiLd1I2ExLLMK1Rs3qeaIORmsk8/C1tCpp30RzW0eYfuK5DtPnsj9K+
+QWOeijYQJ7USFPSxdhkZdixgBTeMJHlAF+XmsVc1gSRx9Ii5w1O2SWRiZ+ZMkaYC
+muL++Vf4+7qpfeljxzv4O46NMQvd8EjFWfQaBuf6+eCOWwjzy16gPCUdX9G4PyLJ
+voDEW9T11bWfJUcTm6noxSRTco/trQ5UZVly4w4szU5qlBvsyb0qKJYW0amoT/kW
+KuCZ/mZj6JdAeznPYndw3de06vb31Q==
+=nnRE
+-----END PGP SIGNATURE-----
+
+--jT5kjD0mLTfL7UhA--
