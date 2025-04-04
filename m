@@ -1,184 +1,308 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2061.outbound.protection.outlook.com [40.107.236.61])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D177321C176;
-	Fri,  4 Apr 2025 19:30:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.61
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743795045; cv=fail; b=o3yPkbQvoa94BAZu1pmm001QcIFVhkSdvhrUoOfZBSGfmH0jD0oejPWtclOSFk+tbJ58RC3o38u5Qh5WKNnYWAQujvGQuOjIIgePOSPP9YKCQuT53DyOO76DvLlGQzjjIx9fGMNWrt1NooTUMi7ldv2Ww/OuTidU2Y7XKefZzTk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743795045; c=relaxed/simple;
-	bh=+Mu93OGV4ZnxRYWz9EWMeM/zSXJoEWePeZKNOmJCWKk=;
-	h=From:To:CC:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID:Date; b=bEwlVcqXrD/nxjyv0ZpCBYcm+abcM8W4voGDzKQGzJ8w4L3xElndwfxnnnlUH75JIadxRHkmV3DkYAokCKLXvwM4kI4G14N71fYPpWw9VPZkEFfS0sdUhAATOOEggYThtEhTQ3ojA9uHK/dAKdZo3Gur2/oQjHCCgfTCAofZFi0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=I0jF6wyO; arc=fail smtp.client-ip=40.107.236.61
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E570921C176
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 19:31:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743795073; cv=none; b=e/7ac5Kgmjr8NHBoCnjxQMx+ylbHVHloGUQoGvqh1V4uh8EXCsXWCeVB4xnQGi+41BkDC0xEgn+EK98eTL3XWczP1NjmNpNJSoK35I2m/MzFByKDto9mA3agihzx6oGgpkR7QsKwQ5mOlZHMotqtZdoSTKXxl0zELxcN1ynsyEo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743795073; c=relaxed/simple;
+	bh=GU+BKGPhP1ncxOUriSi+A6K9Rm1tckxuSG8mFYnJzng=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=jy1Z2+ezP8P4aYLcNMROBSf8YHE7/nG5q7WY/S9p1uwjkajaXc3ZMgjmjb3y8SEAQqGNVh6fyTH9HSDvRn5VIpFTJX+btRSlbcCYxOSI3TFvq9qjU16USSz36zWq6vhZZ647UbnyI9NG8b0qESUU2UesXQMCZd8zWE0S8SaAQAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wkennington.com; spf=none smtp.mailfrom=wkennington.com; dkim=pass (2048-bit key) header.d=wkennington-com.20230601.gappssmtp.com header.i=@wkennington-com.20230601.gappssmtp.com header.b=fm3oH15k; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wkennington.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=wkennington.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="I0jF6wyO"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ENlvetW1jASlx5vsWPmRqDlRaTB2m73ZrA9XeMT8iC0WIc93FUEVnOh/3iHvWUEmmQ9m9nSLTNPmINr9rN0Fp03SFTp9Jt4WOKe2dK2e5rz9FSHfpe0ieiTe9o2NH7dMO2lTHbdMbcubLka+5zVoNivJ5m0xEsxilm29hN6zFSbIdmBgACRCi7j2Acf49iGw+zgdauxOjdk/rxWV1U/bBq/MqCy68vyaMpdxvuGwoGV9RAw2D6ITyOgT6Csjz9ddn/GWrRZf6f8XM4tjFxwC8PSTI6gRRVZVj8Juha9XpXb50EoCl+aSDp7Vg6EiZ8MfxML41O3KQPFVph/XgShWsQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=JzW5bL9TmdVGi2+DbXx2RXNsRGh+cABZ7NPmqyN7MeI=;
- b=HyK1z84qexAjGVkkanormxdRfcpKI2KZW0VAqExNVcdnGYk+H+Fx+ujlGGGpgEiGRnW8niqdnwNVFN06NMbCBUr7icMRsjS2YPNKBCuavYF1EPYqqc5o1lKJ5DhkhdZ35nQGghT/gdQ9uAvYJBgzVw7oEsqSxw2fLka+2O4da6B6vFjhwxt51o6Bpu7zaSHyFYnOVcmQg4tcdIs+gkVscg5ndM/ZzfdrkdvykNZhEPCBV5fQH/8JMwspUdSmiFQgrYCfh3YAGvQorRQl/tZGNytxmAQPt08a+X0Qx4Efr+J6UPXYXlAuq2ZuiSPf4aGtfmyshbmTxtXT8rYeqbDAwg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=linuxfoundation.org
- smtp.mailfrom=nvidia.com; dmarc=pass (p=reject sp=reject pct=100) action=none
- header.from=nvidia.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JzW5bL9TmdVGi2+DbXx2RXNsRGh+cABZ7NPmqyN7MeI=;
- b=I0jF6wyOTV15s+ubo/KdoFfMFt3kpduZ3+6/lN08kw6JX17HWnnXbSKBBQL/PP99Oub5zmOo2X3rzNNlvnEg1oOdaPN+YuuD685+YFU5JBjGC5rC+QfQGs1k1+dcBnyLuJOXIJcuNWD8sPOz9lVejTW2wPXZqcPJtXNqJ0Lwct+Ft1S6E/fSARhGicix8kHXMmtoLLlTYNuEfcL5I96GuXGDQYEEcsXzqvOFvuYP8xkFRujzmpJY451iGweOTugJSF7SkBG/pbDLsUG5bfy8Gvuk7Ss8bVBuYWsaqOzHjpB1ISK05IduZjTPqeIAZ/VK0l6hgPU5h4Bg3tZYtstFHw==
-Received: from LV3P220CA0030.NAMP220.PROD.OUTLOOK.COM (2603:10b6:408:234::10)
- by SJ2PR12MB8134.namprd12.prod.outlook.com (2603:10b6:a03:4fa::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8583.41; Fri, 4 Apr
- 2025 19:30:38 +0000
-Received: from BN1PEPF00006002.namprd05.prod.outlook.com
- (2603:10b6:408:234:cafe::db) by LV3P220CA0030.outlook.office365.com
- (2603:10b6:408:234::10) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8606.27 via Frontend Transport; Fri,
- 4 Apr 2025 19:30:38 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- BN1PEPF00006002.mail.protection.outlook.com (10.167.243.234) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8632.13 via Frontend Transport; Fri, 4 Apr 2025 19:30:37 +0000
-Received: from rnnvmail204.nvidia.com (10.129.68.6) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Fri, 4 Apr 2025
- 12:30:18 -0700
-Received: from rnnvmail204.nvidia.com (10.129.68.6) by rnnvmail204.nvidia.com
- (10.129.68.6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Fri, 4 Apr
- 2025 12:30:18 -0700
-Received: from jonathanh-vm-01.nvidia.com (10.127.8.9) by mail.nvidia.com
- (10.129.68.6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
- Transport; Fri, 4 Apr 2025 12:30:17 -0700
-From: Jon Hunter <jonathanh@nvidia.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	<patches@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
-	<torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-	<linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-	<lkft-triage@lists.linaro.org>, <pavel@denx.de>, <jonathanh@nvidia.com>,
-	<f.fainelli@gmail.com>, <sudipm.mukherjee@gmail.com>, <srw@sladewatkins.net>,
-	<rwarsow@gmx.de>, <conor@kernel.org>, <hargar@microsoft.com>,
-	<broonie@kernel.org>, <linux-tegra@vger.kernel.org>, <stable@vger.kernel.org>
-Subject: Re: [PATCH 6.13 00/23] 6.13.10-rc1 review
-In-Reply-To: <20250403151622.273788569@linuxfoundation.org>
-References: <20250403151622.273788569@linuxfoundation.org>
-X-NVConfidentiality: public
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+	dkim=pass (2048-bit key) header.d=wkennington-com.20230601.gappssmtp.com header.i=@wkennington-com.20230601.gappssmtp.com header.b="fm3oH15k"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-227c7e57da2so22172825ad.0
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 12:31:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=wkennington-com.20230601.gappssmtp.com; s=20230601; t=1743795070; x=1744399870; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Iwmtu+uZ52qMzsfxSGrsHEPDBbiiwoZf6ArXjNCWgbQ=;
+        b=fm3oH15kqzLpvUh9kdUKanQ6EgK6wxxfHc9x3w9FbRIy2KjnjbEcLj3ZK9cLPDKAg4
+         JBmq8PLs8DZuulEeb1MRzYbTy8HZzde1YHF+tK/Oi3GC+UHq0e4q0qWtys7RLxx5xmZi
+         im2tVdYDu4vl1FVFP82FtcnT2f2daAHuZ5LuGAQWDNORK432o9izTt1K+aYdhTW9boMk
+         Y9s4iZIRDseYg/5izIGtAkcVRZYWx6ocLqbJEtdM3AUTh+ofWaiNbfv2Ngsx+44qHAyC
+         A5BEwELLe8dwIHaj+4ZeHXqmZ658P73yy96uE8bfAJV0LwjQ98zkSMLJGdq4E/laqTOt
+         R6wQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743795070; x=1744399870;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Iwmtu+uZ52qMzsfxSGrsHEPDBbiiwoZf6ArXjNCWgbQ=;
+        b=upacegeJJdF8nvjaR/iHYZ1R3U8GSAj1w0gUJo1/u+qgbEDAehCNJHxaHbX5vFhA3J
+         uZXqbKF6X9BI5GgLnBRR4JQBwBhl7439UfoslgHGw9Jktf9v3xHucDTwCB05XFG9UKRp
+         0lM2nbxv7P3Yah5SbgSMuSW9hqj3x8D2epzr/GDQ4Tgnpe3MiShw2OGN2c39+z3h0aRW
+         eFVQutFAg1XquqRicBz3PjHTMuJXLAvmVlT/bTBn6lLgTi9XwFj7ouxJud/0Fy6J54xY
+         MOFik/2+rsQjoiZaLagxDM0wxBqc7DL352Mj1U0eVtYeP9UtevwIrDCd/SA3DJbS0mH5
+         cUkA==
+X-Forwarded-Encrypted: i=1; AJvYcCX1BZ9NNfRIlWxE4rq9DV35Ue9R1u+Ix4ZpltH5hCX9ZMGgJ91hnmNDbPkxfZ+SJT/+WRwiVjp4o7t1H4k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwDdbAvCwwDJLBmriyC34XAgwBfhwdrYxfKjiSvXz+h36WQkws9
+	UZxf/ni88VZGhHX/u23oYKTigM9OiyNqBSQyFhYvtDp1KAjrvz9FvmZzvgrymxWYJGdYPERZq+v
+	SlEs=
+X-Gm-Gg: ASbGncvOQoeG/nod29j0mHG30HsFOpwuUrDVGcBYP9AgOCnyM9YWSfANVqPvJvG5rYp
+	B3pBVgOIxU4WCVoDaBQd4BB0c+ZwL3eEBbr5BnkJn50RRcq+kmo/cRX/wemxQ/8knXy7+AkU4Ew
+	dJhAuq+UkFO8OTk3tMnkHuN+QSTf9ZyjkH9mTaTLa4u3ckPRMedXaw3St0v107UjpL7h2lEYn4Q
+	wzntDrsOeYscqffkAlMHroQXkG6BVqff0B/4lFbezcVTJnSCYdGvKyN+TC2YZsvYI3+E6Fqsqvj
+	17eY8PCa96c8l25RYY6lK/VO21SBppeujEn0kwvTfxwWJ+e2eXE3Df7OodZ+wAR3fqCyBShy5Ct
+	XSPJATipZsubpHVWk6hcauSmns1uefKlq
+X-Google-Smtp-Source: AGHT+IGTDbsIkafCkBmrZ0jPl04z8nF+jvoLkJwwV4Q5//IsfxS/Oh9aioaRAWJTxf5pL4DbpzKmmQ==
+X-Received: by 2002:a17:902:e88c:b0:223:f408:c3f8 with SMTP id d9443c01a7336-22a8a0577fcmr55202755ad.14.1743795070218;
+        Fri, 04 Apr 2025 12:31:10 -0700 (PDT)
+Received: from wak-linux.svl.corp.google.com ([2a00:79e0:2e5b:9:2c9e:1e72:3ae7:b81c])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2297865e07dsm36260435ad.157.2025.04.04.12.31.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Apr 2025 12:31:09 -0700 (PDT)
+From: "William A. Kennington III" <william@wkennington.com>
+To: Jean Delvare <jdelvare@suse.com>,
+	Guenter Roeck <linux@roeck-us.net>
+Cc: linux-hwmon@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"William A. Kennington III" <william@wkennington.com>
+Subject: [PATCH v4] hwmon: (pmbus): Introduce page_change_delay
+Date: Fri,  4 Apr 2025 12:31:03 -0700
+Message-ID: <20250404193103.4174977-1-william@wkennington.com>
+X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
+In-Reply-To: <20250403211246.3876138-1-william@wkennington.com>
+References: <20250403211246.3876138-1-william@wkennington.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <44590b02-be3a-4208-b496-1946b7c99066@rnnvmail204.nvidia.com>
-Date: Fri, 4 Apr 2025 12:30:17 -0700
-X-NV-OnPremToCloud: AnonymousSubmission
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN1PEPF00006002:EE_|SJ2PR12MB8134:EE_
-X-MS-Office365-Filtering-Correlation-Id: aae3dc84-0f3e-4c59-ddf9-08dd73af2dce
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|1800799024|7416014|376014|82310400026|13003099007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?MHRPYW9oNHlRQTIvZVREeEF0QTFYZWZSQUNtVm5RbGlqdFdNbVdiYUpieUI5?=
- =?utf-8?B?YytRaUJvVExXTTF0SFVJV2hzZERQMCtqRXg0SWp2NzB6Y05ST2NncU5kNm1Y?=
- =?utf-8?B?bVkyT2trVG1EdnE1SFBSL29TeWVIUEwzTEkxS0RnaHVHV052YUpnbXFpOURP?=
- =?utf-8?B?aWM1S2JIOHZPYkZ5aVlKdFJSZkVRUkRPZ3pnZU9FaVZhOG1ZNGFvTks3YmJr?=
- =?utf-8?B?bDdxblQ0Z3ZVanVYdDF0RkhKVVlPYThOOVFNQ2x3d0xpbnJ3bkcyaFhhZ29a?=
- =?utf-8?B?akFBbDZZT2xJdEwvMHJLK3MvUXo4cStpSHVEUGd4cG52b1V6NElUVjI1QTQy?=
- =?utf-8?B?OWZWTDRueVIvbVZkMGtGbkpyVWdVUU1KNnBWOWJkd2NiS0lwUFRhQkJiN0ZZ?=
- =?utf-8?B?RThVa3NHOUZrSGZlV0IvbG5nN1lGTmQ5a3lVWnQ0N2FjbmR6SnNvU1UycmFQ?=
- =?utf-8?B?YlN1SjVueVRrMk51bStQOWFzcVU4QVdMcjI5N3pBcjN4YUs5T2p1bjNMSGl2?=
- =?utf-8?B?WG1RdEEzdFArWitCc2pIeDZhMlNhVnNVMmNMNFhGUW55R1dPWHliL1lnVW9S?=
- =?utf-8?B?NHQva2RXNnRzcE9oaG9KS0pzMFlBNTVBMmt2a2RSUVdOMlIrNzBPcHdQMW1k?=
- =?utf-8?B?UnRYemdzcGFhZDdjS3cvcjJpRUFLTkp1STNvMml4NlFsUVhaUExldjFhYXpQ?=
- =?utf-8?B?VG56dW5UNkNBblZhN0Fvc1JxejJsK21rVXBLMHIzNGhxUXdwYkR0V3BXM3NK?=
- =?utf-8?B?WHVCQVRNaG1zRDdiOCtMYW45RE0xWW56diszYkpLdG9RaU5XbWFGVlBpU3hM?=
- =?utf-8?B?NWlQNTVkcVQ5Y3huWWJjVTRDTGNMSWV6dEJrU29wR0RIRDFEeUxEL3VyQUhS?=
- =?utf-8?B?VFdrbU8weVo3R3B0RHcvK0hFNllvclRUMHpvb0orcktPeldTTFZsOEVVWDhR?=
- =?utf-8?B?TXdZK25TLzVIY0RzQStyc1lFQkx6U1V6SERFN3hwQUYxUENNbXhSUnlrSHdY?=
- =?utf-8?B?UFkwUHdqK2JPR3U2V0JIajZEYXlKU3BMM2VFMmM3RDEwQW4rQjBwOWoyL0tD?=
- =?utf-8?B?NnhWb3E2amFjb294REh0Tys0Y3h0MStkdXVRdFovV3htNXVrQlJpM08zcGJD?=
- =?utf-8?B?dVVMZnFudEE3Q0lBeEVJbHBsU1hlMmltTkhIbEE1Z25LZjhNN2JvYW54ajB2?=
- =?utf-8?B?NmZ2bkxqVnhpdDNHOHE4UGRnamEzelRZbjFQaklVTUpRU2g4YjhDOG9PMjk0?=
- =?utf-8?B?eU9CNmU4aE5RQlJxNkt4dzJRM25zTk4zZlduWHUyazlVd1c2QUx5K2tYbTd4?=
- =?utf-8?B?NEVOUmxZNWltWWZjcmFCTnV5Z04vMVhZNlFIblh4N2s2b1lsZ1p4OGE4T2FT?=
- =?utf-8?B?Y2V2ZDBnK0V6MlpCZ1d2THJlSWxHS0xJOE9HM3V0eVQ4aU83cWFldHErMGNX?=
- =?utf-8?B?Mkt5dmc0UWhSVitleERWUVN0a0JmSU1xM0t5azJjVmMrdTI5MnpBN1V2OFVI?=
- =?utf-8?B?aUpNTVVBRHlJWStRM2trSE1ROGpSVnd3cmRWVGNIcExNcmpDc1N1SmtGV2hz?=
- =?utf-8?B?K2JrenRuWHFjeHJHbms3ZGVvb3ExOTk4Q2VwVGNnN1l0ejBPNlJCc0pYSS9F?=
- =?utf-8?B?SXloSVF0RG9ybE9LRXNwOXhIU3B5OHA4THY2eEtuZjJ4WHRRZ0YvMkloMGl5?=
- =?utf-8?B?amZIdVEwZmttL0U0WnJWT1V5ZUltL0Nya21FVHZuR1hyWDBLOTl2VHVidW5D?=
- =?utf-8?B?c0JJL1dMVkpwTklVcjkwaW8zNTMxd2hMV2w2b1p4UStEUi9vRUlHejlHNkxC?=
- =?utf-8?B?Tk56UGREUU9HNFcwdUhaS241TXVGbFJQVitES2FsbnNwdHM4N09iWjJtUlhX?=
- =?utf-8?B?N244Qityb2UxL0hOaWJhQTNLWitWSXB0bnFhbWZxdEdrblhoNXVHRXpadDlZ?=
- =?utf-8?B?c3kvcVc5SVdJTVhFeXlzeUZxVFlnV3UwVXZSVHhreFFURnZEMGdBUUlJbklY?=
- =?utf-8?Q?ycaGyPI04lsVL3XiHST0xTBpN5YWXQ=3D?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(7416014)(376014)(82310400026)(13003099007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Apr 2025 19:30:37.9606
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: aae3dc84-0f3e-4c59-ddf9-08dd73af2dce
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN1PEPF00006002.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB8134
+Content-Transfer-Encoding: 8bit
 
-On Thu, 03 Apr 2025 16:20:17 +0100, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.13.10 release.
-> There are 23 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sat, 05 Apr 2025 15:16:11 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.13.10-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.13.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+We have some buggy pmbus devices that require a delay after performing a
+page change operation before trying to issue more commands to the
+device.
 
-All tests passing for Tegra ...
+This allows for a configurable delay after page changes, but not
+affecting other read or write operations.
 
-Test results for stable-v6.13:
-    10 builds:	10 pass, 0 fail
-    28 boots:	28 pass, 0 fail
-    116 tests:	116 pass, 0 fail
+This makes a slight behavioral tweak to the existing delay logic, where
+it considers the longest of delays between operations, instead of always
+chosing the write delay over the access delay.
 
-Linux version:	6.13.10-rc1-g8cbfaadfa0ec
-Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
-                tegra186-p3509-0000+p3636-0001, tegra194-p2972-0000,
-                tegra194-p3509-0000+p3668-0000, tegra20-ventana,
-                tegra210-p2371-2180, tegra210-p3450-0000,
-                tegra30-cardhu-a04
+Signed-off-by: William A. Kennington III <william@wkennington.com>
+---
+V1 -> V2: Simplify how the backoff time is stored and computed
+V2 -> V3: Use the BIT macro
+V3 -> V4: Move defines up
+	  Move op combos outside update call
+	  Remove unused PMBUS_OP_READ
 
-Tested-by: Jon Hunter <jonathanh@nvidia.com>
+ drivers/hwmon/pmbus/pmbus.h      |  1 +
+ drivers/hwmon/pmbus/pmbus_core.c | 70 ++++++++++++++++----------------
+ 2 files changed, 36 insertions(+), 35 deletions(-)
 
-Jon
+diff --git a/drivers/hwmon/pmbus/pmbus.h b/drivers/hwmon/pmbus/pmbus.h
+index ddb19c9726d6..742dafc44390 100644
+--- a/drivers/hwmon/pmbus/pmbus.h
++++ b/drivers/hwmon/pmbus/pmbus.h
+@@ -482,6 +482,7 @@ struct pmbus_driver_info {
+ 	 */
+ 	int access_delay;		/* in microseconds */
+ 	int write_delay;		/* in microseconds */
++	int page_change_delay;		/* in microseconds */
+ };
+ 
+ /* Regulator ops */
+diff --git a/drivers/hwmon/pmbus/pmbus_core.c b/drivers/hwmon/pmbus/pmbus_core.c
+index 787683e83db6..950a03cd6de9 100644
+--- a/drivers/hwmon/pmbus/pmbus_core.c
++++ b/drivers/hwmon/pmbus/pmbus_core.c
+@@ -31,6 +31,13 @@
+ #define PMBUS_ATTR_ALLOC_SIZE	32
+ #define PMBUS_NAME_SIZE		24
+ 
++/*
++ * The type of operation used for picking the delay between
++ * successive pmbus operations.
++ */
++#define PMBUS_OP_WRITE		BIT(0)
++#define PMBUS_OP_PAGE_CHANGE	BIT(1)
++
+ static int wp = -1;
+ module_param(wp, int, 0444);
+ 
+@@ -114,8 +121,8 @@ struct pmbus_data {
+ 
+ 	int vout_low[PMBUS_PAGES];	/* voltage low margin */
+ 	int vout_high[PMBUS_PAGES];	/* voltage high margin */
+-	ktime_t write_time;		/* Last SMBUS write timestamp */
+-	ktime_t access_time;		/* Last SMBUS access timestamp */
++
++	ktime_t next_access_backoff;	/* Wait until at least this time */
+ };
+ 
+ struct pmbus_debugfs_entry {
+@@ -170,33 +177,26 @@ EXPORT_SYMBOL_NS_GPL(pmbus_set_update, "PMBUS");
+ static void pmbus_wait(struct i2c_client *client)
+ {
+ 	struct pmbus_data *data = i2c_get_clientdata(client);
+-	const struct pmbus_driver_info *info = data->info;
+-	s64 delta;
++	s64 delay = ktime_us_delta(data->next_access_backoff, ktime_get());
+ 
+-	if (info->access_delay) {
+-		delta = ktime_us_delta(ktime_get(), data->access_time);
+-
+-		if (delta < info->access_delay)
+-			fsleep(info->access_delay - delta);
+-	} else if (info->write_delay) {
+-		delta = ktime_us_delta(ktime_get(), data->write_time);
+-
+-		if (delta < info->write_delay)
+-			fsleep(info->write_delay - delta);
+-	}
++	if (delay > 0)
++		fsleep(delay);
+ }
+ 
+-/* Sets the last accessed timestamp for pmbus_wait */
+-static void pmbus_update_ts(struct i2c_client *client, bool write_op)
++/* Sets the last operation timestamp for pmbus_wait */
++static void pmbus_update_ts(struct i2c_client *client, int op)
+ {
+ 	struct pmbus_data *data = i2c_get_clientdata(client);
+ 	const struct pmbus_driver_info *info = data->info;
++	int delay = info->access_delay;
+ 
+-	if (info->access_delay) {
+-		data->access_time = ktime_get();
+-	} else if (info->write_delay && write_op) {
+-		data->write_time = ktime_get();
+-	}
++	if (op & PMBUS_OP_WRITE)
++		delay = max(delay, info->write_delay);
++	if (op & PMBUS_OP_PAGE_CHANGE)
++		delay = max(delay, info->page_change_delay);
++
++	if (delay > 0)
++		data->next_access_backoff = ktime_add_us(ktime_get(), delay);
+ }
+ 
+ int pmbus_set_page(struct i2c_client *client, int page, int phase)
+@@ -211,13 +211,13 @@ int pmbus_set_page(struct i2c_client *client, int page, int phase)
+ 	    data->info->pages > 1 && page != data->currpage) {
+ 		pmbus_wait(client);
+ 		rv = i2c_smbus_write_byte_data(client, PMBUS_PAGE, page);
+-		pmbus_update_ts(client, true);
++		pmbus_update_ts(client, PMBUS_OP_WRITE | PMBUS_OP_PAGE_CHANGE);
+ 		if (rv < 0)
+ 			return rv;
+ 
+ 		pmbus_wait(client);
+ 		rv = i2c_smbus_read_byte_data(client, PMBUS_PAGE);
+-		pmbus_update_ts(client, false);
++		pmbus_update_ts(client, 0);
+ 		if (rv < 0)
+ 			return rv;
+ 
+@@ -231,7 +231,7 @@ int pmbus_set_page(struct i2c_client *client, int page, int phase)
+ 		pmbus_wait(client);
+ 		rv = i2c_smbus_write_byte_data(client, PMBUS_PHASE,
+ 					       phase);
+-		pmbus_update_ts(client, true);
++		pmbus_update_ts(client, PMBUS_OP_WRITE);
+ 		if (rv)
+ 			return rv;
+ 	}
+@@ -251,7 +251,7 @@ int pmbus_write_byte(struct i2c_client *client, int page, u8 value)
+ 
+ 	pmbus_wait(client);
+ 	rv = i2c_smbus_write_byte(client, value);
+-	pmbus_update_ts(client, true);
++	pmbus_update_ts(client, PMBUS_OP_WRITE);
+ 
+ 	return rv;
+ }
+@@ -286,7 +286,7 @@ int pmbus_write_word_data(struct i2c_client *client, int page, u8 reg,
+ 
+ 	pmbus_wait(client);
+ 	rv = i2c_smbus_write_word_data(client, reg, word);
+-	pmbus_update_ts(client, true);
++	pmbus_update_ts(client, PMBUS_OP_WRITE);
+ 
+ 	return rv;
+ }
+@@ -408,7 +408,7 @@ int pmbus_read_word_data(struct i2c_client *client, int page, int phase, u8 reg)
+ 
+ 	pmbus_wait(client);
+ 	rv = i2c_smbus_read_word_data(client, reg);
+-	pmbus_update_ts(client, false);
++	pmbus_update_ts(client, 0);
+ 
+ 	return rv;
+ }
+@@ -471,7 +471,7 @@ int pmbus_read_byte_data(struct i2c_client *client, int page, u8 reg)
+ 
+ 	pmbus_wait(client);
+ 	rv = i2c_smbus_read_byte_data(client, reg);
+-	pmbus_update_ts(client, false);
++	pmbus_update_ts(client, 0);
+ 
+ 	return rv;
+ }
+@@ -487,7 +487,7 @@ int pmbus_write_byte_data(struct i2c_client *client, int page, u8 reg, u8 value)
+ 
+ 	pmbus_wait(client);
+ 	rv = i2c_smbus_write_byte_data(client, reg, value);
+-	pmbus_update_ts(client, true);
++	pmbus_update_ts(client, PMBUS_OP_WRITE);
+ 
+ 	return rv;
+ }
+@@ -523,7 +523,7 @@ static int pmbus_read_block_data(struct i2c_client *client, int page, u8 reg,
+ 
+ 	pmbus_wait(client);
+ 	rv = i2c_smbus_read_block_data(client, reg, data_buf);
+-	pmbus_update_ts(client, false);
++	pmbus_update_ts(client, 0);
+ 
+ 	return rv;
+ }
+@@ -2530,7 +2530,7 @@ static int pmbus_read_coefficients(struct i2c_client *client,
+ 	rv = i2c_smbus_xfer(client->adapter, client->addr, client->flags,
+ 			    I2C_SMBUS_WRITE, PMBUS_COEFFICIENTS,
+ 			    I2C_SMBUS_BLOCK_PROC_CALL, &data);
+-	pmbus_update_ts(client, true);
++	pmbus_update_ts(client, PMBUS_OP_WRITE);
+ 
+ 	if (rv < 0)
+ 		return rv;
+@@ -2734,7 +2734,7 @@ static int pmbus_init_common(struct i2c_client *client, struct pmbus_data *data,
+ 	if (!(data->flags & PMBUS_NO_CAPABILITY)) {
+ 		pmbus_wait(client);
+ 		ret = i2c_smbus_read_byte_data(client, PMBUS_CAPABILITY);
+-		pmbus_update_ts(client, false);
++		pmbus_update_ts(client, 0);
+ 
+ 		if (ret >= 0 && (ret & PB_CAPABILITY_ERROR_CHECK)) {
+ 			if (i2c_check_functionality(client->adapter, I2C_FUNC_SMBUS_PEC))
+@@ -2750,13 +2750,13 @@ static int pmbus_init_common(struct i2c_client *client, struct pmbus_data *data,
+ 	data->read_status = pmbus_read_status_word;
+ 	pmbus_wait(client);
+ 	ret = i2c_smbus_read_word_data(client, PMBUS_STATUS_WORD);
+-	pmbus_update_ts(client, false);
++	pmbus_update_ts(client, 0);
+ 
+ 	if (ret < 0 || ret == 0xffff) {
+ 		data->read_status = pmbus_read_status_byte;
+ 		pmbus_wait(client);
+ 		ret = i2c_smbus_read_byte_data(client, PMBUS_STATUS_BYTE);
+-		pmbus_update_ts(client, false);
++		pmbus_update_ts(client, 0);
+ 
+ 		if (ret < 0 || ret == 0xff) {
+ 			dev_err(dev, "PMBus status register not found\n");
+-- 
+2.49.0.504.g3bcea36a83-goog
+
