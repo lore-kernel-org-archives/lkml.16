@@ -1,85 +1,104 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 855FC155C82;
-	Fri,  4 Apr 2025 06:39:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7632E17A31B;
+	Fri,  4 Apr 2025 06:40:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743748756; cv=none; b=euc8wtletLe5w2gS5+ilwxPYMkShT4k5Gv0BaZoMwF/BsPljmLSXKIwP20t6YEchq9vLBq2cdzCGI3QWgIVQOOLjohYvdHhcVyepQdKN5dhA3uQHDq7jI1DU8xXlmiIvrjhznDosBJtTB0nkx6by6+mAe5UQ+5cAS+1CPFR9ZB0=
+	t=1743748815; cv=none; b=D2ITa8b6gIcr55FQBkcej7lNVo5YOgk0seEJIrbI0cA+tMuAFIeu6mATMISClK2T9YByNwNpmLVBqdrZIQo1nuBhLfw344AevMCtnbxoPKSn3mDEG7z53AacCxGVHlYsd3kVUDTJXC8yRlX/CD6ll5V+K/8bGa+SFL/87XApeUo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743748756; c=relaxed/simple;
-	bh=Nv+OpjzguYHw8XX/aCtXEwUOx0sT55RlHRNmpfHLPmA=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=lZEoqE0KqQmsnFkIrC1JyJD5l1kzp71vNwbVVmjmierZ8HxEmK55c3tsatqXS1yxJWWCAyQUS3l3FSiYrt/qYutHlFDXM8TlFBRMCbYaVOGhYKSI9gOGMPH+CIxQAnsRukjgPozasMXUQH0lPYxdxOY5LOPlsWRuPI/rjyJrihY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=desiato.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=aeiW6mLi; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=desiato.srs.infradead.org
+	s=arc-20240116; t=1743748815; c=relaxed/simple;
+	bh=LvXOJwYpeCUDmWDFM30zJvFIxLATT3JGqRx/e4h8Lug=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=dhxYT5OEX/pDl632Bk/MROvjApygdl1taCFrRs3MOQQ1ZMW75t3gxM+/jFKNUqiF83w70UZiFcR78K1tTKdSA2wbQtbPVEiVQemlBzMHVr/9ObaPlXM+HvHXeqjryt2aSRmsWgFrFFadLNjKffNnBrIBWPIHvdp2MPL3zqkxiMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ToaEabsq; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aeiW6mLi"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
-	:MIME-Version:Message-ID:References:In-Reply-To:Subject:CC:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=09/sMJVzkrCgnCZOfO14brnFLODw8EPJdyTc6baTauI=; b=aeiW6mLin63+aKhEBweeImngwy
-	bFAaWHqMM0Vo7RccW0yfzqoBXyBsR4tuIv/bWPuIM6lCIjieZvbGwh7cRTdzhv2IQlx5UMvvw3dcM
-	scZNdo+FqpQe5hghh09cjc0rSab9wr3qSngC2zIcpXWL6i5xiLrfrVq+il2UwNfry4ZPdNUP4AsiZ
-	46IIFYWJ30ZQ0AIGirq0d2OCw72zo+WtMBrkoIGkt/f2mU7yFRO2fZuSZWZGiGzjLYuAA2V0skwZq
-	3NGfska2rPaDXNXCcLCEzTw8tHQEwUGAdpS9hU9WfOIG2sJB09FWN0bxPCdxUuLI6KhwTsKYiwwpG
-	EhRPlnAg==;
-Received: from [2001:8b0:10b:5:5fcd:596f:f785:8906] (helo=[IPv6:::1])
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u0ahi-00000007JAJ-0gsd;
-	Fri, 04 Apr 2025 06:39:02 +0000
-Date: Fri, 04 Apr 2025 07:39:02 +0100
-From: David Woodhouse <dwmw2@infradead.org>
-To: Christoph Hellwig <hch@infradead.org>
-CC: "Michael S. Tsirkin" <mst@redhat.com>, virtio-comment@lists.linux.dev,
- Claire Chang <tientzu@chromium.org>,
- linux-devicetree <devicetree@vger.kernel.org>,
- Rob Herring <robh+dt@kernel.org>,
- =?ISO-8859-1?Q?J=F6rg_Roedel?= <joro@8bytes.org>,
- iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
- graf@amazon.de
-Subject: =?US-ASCII?Q?Re=3A_=5BRFC_PATCH_1/3=5D_content=3A_Add_VIRTIO=5FF=5FSWIO?=
- =?US-ASCII?Q?TLB_to_negotiate_use_of_SWIOTLB_bounce_buffers?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <Z-98Lqpq4mZN545Y@infradead.org>
-References: <20250402111901-mutt-send-email-mst@kernel.org> <6b3b047f1650d91abe5e523dd7f862c6f7ee6611.camel@infradead.org> <20250402114757-mutt-send-email-mst@kernel.org> <965ccf2f972c5d5f1f4edacb227f03171f20e887.camel@infradead.org> <20250402124131-mutt-send-email-mst@kernel.org> <eaef09ab218900a53347987a62fee1787283d9ed.camel@infradead.org> <Z-44wXdyia4RC6Cr@infradead.org> <06465bcf4422d088df2a0ce9cdb09767dac83118.camel@infradead.org> <Z-47O3vkyIf0mzdw@infradead.org> <cdd979bca2b8cc4ff170442d968b63f2b3f0ccd6.camel@infradead.org> <Z-98Lqpq4mZN545Y@infradead.org>
-Message-ID: <488D32C6-77FA-4CC8-988F-CD4D14548D4B@infradead.org>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ToaEabsq"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53433wkc016767;
+	Fri, 4 Apr 2025 06:40:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	HnTgQtPaAwIxPjdthGCDs1XTMfTKRZ4L7EzRuelR8oE=; b=ToaEabsq8cC+HROV
+	pjMnmbgL0fRwIfCO+CsgqAZaFUHpuax5CRmh5dWNz1qEHC/YCIMPVeQgudAB1J7E
+	AWQ7T7c/I7nngZPryQh2pTeMZL47U72ffdDx+Bco/WrTAPcWS27w0NtX+Fios95C
+	FCm0du7eh2RYWRBss+ssYUfNAL6tWe41X9T1y6KKpfpawwohDcVxJcrufb/Ruyb3
+	CEmWWbu1qvAbFkJvJpyZcOWP5Ix4JIsrbL411H4NAmuZW9ZJRML6jKRsM2qc+7Rf
+	s90pg7IWOFKAXSdSom7MftrpMqa93t2gYRPF5x1WF5huHZuljlmRmGH4IM1LZYyq
+	iC/d3Q==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45t2d98whg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 04 Apr 2025 06:40:00 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5346dxHC013652
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 4 Apr 2025 06:39:59 GMT
+Received: from [10.151.36.43] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 3 Apr 2025
+ 23:39:57 -0700
+Message-ID: <97500c11-18a6-c9ab-fc95-cfb0d62c9c31@quicinc.com>
+Date: Fri, 4 Apr 2025 12:09:44 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: linux-next: Tree for Apr 3 (drivers/spi/spi-qpic-snand)
+To: Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Rothwell
+	<sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+CC: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        <linux-spi@vger.kernel.org>
+References: <20250403171248.219e0e61@canb.auug.org.au>
+ <4b964eb4-7d0f-40f5-bbc9-5039e075ff65@infradead.org>
+Content-Language: en-US
+From: Md Sadre Alam <quic_mdalam@quicinc.com>
+In-Reply-To: <4b964eb4-7d0f-40f5-bbc9-5039e075ff65@infradead.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: 5j_G_FJd8EpXTIGKOktW6JFjG15jsn1f
+X-Authority-Analysis: v=2.4 cv=cpybk04i c=1 sm=1 tr=0 ts=67ef7ec0 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=rUSp2p67hj3hLfAB3vEA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: 5j_G_FJd8EpXTIGKOktW6JFjG15jsn1f
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-04_02,2025-04-03_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 malwarescore=0 clxscore=1011
+ phishscore=0 suspectscore=0 mlxlogscore=732 bulkscore=0 adultscore=0
+ priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504040043
 
-On 4 April 2025 07:29:02 BST, Christoph Hellwig <hch@infradead=2Eorg> wrote=
-:
->On Thu, Apr 03, 2025 at 09:10:41AM +0100, David Woodhouse wrote:
->> Thanks=2E I'll take a closer look at handling that=2E I think it's
->> reasonable for the negotiation of the VIRTIO_F_SWIOTLB feature to be
->> the thing that switches *all* addresses to be on-device, and the on-
->> device buffer can't be accessed unless VIRTIO_F_SWIOTLB has been
->> negotiated=2E
->>=20
->> Which neatly sidesteps the original thing I was trying to clarify
->> anyway=2E
->
->Switching all addressing does not sound like a good idea=2E  The main
->thing these indirect buffers are used for is as a staging points for
->P2P DMA, in which case they often are only used for some transfers or
->even parts of a transfer=2E  At least for physical virtio devices P2P
->is probably not far off with the current GPU craze, and I wouldn't
->be surprised if people found uses for paravirt P2P as well=2E
+Hi,
 
-That isn't the original use case I had for it in virtio but that's useful =
-input, thanks=2E
+On 4/4/2025 6:54 AM, Randy Dunlap wrote:
+> 
+> 
+> On 4/2/25 11:12 PM, Stephen Rothwell wrote:
+>> Hi all,
+>>
+>> Changes since 20250402:
+>>
+> 
+> on x86_64:
+> 
+> ERROR: modpost: "qcom_nandc_unalloc" [drivers/spi/spi-qpic-snand.ko] undefined!
+Change already posted for this error at [1]
+[1] 
+https://lore.kernel.org/lkml/99eef91c334f3f2314c2f5671e1eb55211a5ff19.1743150196.git.geert+renesas@glider.be/T/
 
-Plumbing a 65th address space bit through all descriptors seems impractica=
-l=2E Would it suffice for the driver to *specify* the location in the devic=
-e's DMA address space that the on-device buffer appears, to allow it to avo=
-id conflicts with system memory addresses? Better ideas?
+Thanks,
+Alam.
