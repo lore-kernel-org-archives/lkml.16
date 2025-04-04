@@ -1,117 +1,196 @@
-Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E4341EF0BA
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 13:40:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
+Received: from mx2.securetransport.de (mx2.securetransport.de [188.68.39.254])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AACEB12D1F1;
+	Fri,  4 Apr 2025 13:42:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.39.254
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743774056; cv=none; b=QXSkQ82U483rZJ2z3nvIsFE+jLXncxrDeWMf4ys2l9wI04TTZ5BVgyLbYYARIxVJ7n5KwWTy0gDe3J/HyHDKUJPWr0KEdQT4beRC9AzOAQEp5df/YtilDY3mMydUJ4y2Lwqr0FzM8vbzi/X/COslBT6ZVRLYdauK745Vn2Mb8qY=
+	t=1743774140; cv=none; b=RD/Cm0O5jsVl15K30XjwzPFAM1sbmN3A16t8o4JSs6ZSPWVvNztDj5JkTt44w+l2KIeabJH68oD6JqD0AB0AC0VPOMcvftkdKBw+UFwL7KRXOdz4RV/ToHfrNBRdQRCjpAm8aEBp+ISSca8Fky7/dXNkQduGSeELRbExgJMINXA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743774056; c=relaxed/simple;
-	bh=xANPefLqpcEQYBRE/NCV46oK1I/FrELUp3mVZEO+8co=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Nvpczg0qFYbFfvZm5lwRaitTQo1xo018TATrXA4Te+Td4p76b95x82XVF99I2GfI+j/uaMAsG/gg4N+GmoZ4GosNTGYuQIA6lluvAHrKAWlPgosY0r+T0Z9j2oyx2Ec79Kq3/QU3qDFGsZu3SzdgzZBFwTqqBuYhbRIzS1rFehs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=uugS4K5E; arc=none smtp.client-ip=95.215.58.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1743774140; c=relaxed/simple;
+	bh=6SAs7ZiWvqWG3XPpQsQtnVyH6fMBaB/n6b1668EDrmw=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TZrJHlkS5L/p8/nAOF3+IE+hzYINdpiS3HHKz4BVcf883VR/0J4JZQz+MgqyTTvZdeqQV0E1m13msu/jK66Sc4aTTv98dX2obM1nDAtAfMCzKlcAxfOXwFXKHvdS5umxmjWz9X/wQ0O7dUawjVhjco0naLJMLJkr4XEzZT6xwNI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=dh-electronics.com; spf=pass smtp.mailfrom=dh-electronics.com; dkim=pass (2048-bit key) header.d=dh-electronics.com header.i=@dh-electronics.com header.b=BwRXDgMb; arc=none smtp.client-ip=188.68.39.254
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=dh-electronics.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dh-electronics.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="uugS4K5E"
-Message-ID: <3291d0f9-40af-4e8d-aa08-b84132caf03d@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1743774041;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0WVYyYy47dRxRDE2y37KU6fRW5bT0lNVCJKYGaAjgBU=;
-	b=uugS4K5EShcKvWJc+VGSsPwIPg4rMNQLThsiZLoVA7gjw0RdwfgRWXqG6XuvXjkc9V/UUy
-	RPUEIM2kTvgk4rN/casblXmUQq6t/61LXHyHRG6aBGqKIqLOJ9uq3bqDk3NR7Z5JG9p2Kc
-	bJVJUBEhVk3rq/XVylmp7GbTJX/Qz9k=
-Date: Fri, 4 Apr 2025 15:40:39 +0200
+	dkim=pass (2048-bit key) header.d=dh-electronics.com header.i=@dh-electronics.com header.b="BwRXDgMb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dh-electronics.com;
+	s=dhelectronicscom; t=1743774104;
+	bh=fy8WY+eU9dK+jaA1NumMddQBYAbhrFBEaD8MJdiHjGM=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References:From;
+	b=BwRXDgMbbs8loO4tUgMIhxqSQHLV4AN1wy5ONt/s8y5vGULDMKD3ifMcWCBM+ILx8
+	 OwYhL5E8VDxKJ+n8y+ZgkgvlUWW2LpL+qNEJomFNQd3lNwEG7CI2LPXZcbcA3d3i/U
+	 xSF8LWYY7G2j8/9HNCoag9hfSgUGs+GlodFJMKDjQWl2XufgM5V0UpECnuf5IcEyFQ
+	 tHokH/b3Jt9GjxdA/qa4X+2z9lwIKQkSzakm/7/l3+UpfVb8AGewkeCnEMXXzDvmOr
+	 rGTur2v6Rq6lbrGWXvXowh20+xBjvDmLDgjsgciLPy2kLuzue3+1JNBa1zIA6ExdCq
+	 jGX7WJumfBRqg==
+From: Johann Neuhauser <jneuhauser@dh-electronics.com>
+To: <linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>
+CC: Johann Neuhauser <jneuhauser@dh-electronics.com>, Jonathan Corbet
+	<corbet@lwn.net>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown
+	<broonie@kernel.org>
+Subject: [PATCH 1/3] regulator: userspace-consumer: Add uevent reporting for regulator events
+Date: Fri, 4 Apr 2025 15:40:07 +0200
+Message-ID: <20250404134009.2610460-2-jneuhauser@dh-electronics.com>
+X-klartext: yes
+In-Reply-To: <20250404134009.2610460-1-jneuhauser@dh-electronics.com>
+References: <20250404134009.2610460-1-jneuhauser@dh-electronics.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH 5.4.y] RDMA/srpt: Support specifying the srpt_service_guid
- parameter
-To: Alok Tiwari <alok.a.tiwari@oracle.com>, bvanassche@acm.org,
- dledford@redhat.com, jgg@ziepe.ca, linux-rdma@vger.kernel.org,
- target-devel@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
- darren.kenny@oracle.com
-References: <20250403125955.2553106-1-alok.a.tiwari@oracle.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Zhu Yanjun <yanjun.zhu@linux.dev>
-In-Reply-To: <20250403125955.2553106-1-alok.a.tiwari@oracle.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On 03.04.25 14:59, Alok Tiwari wrote:
-> From: Bart Van Assche <bvanassche@acm.org>
-> 
-> [ Upstream commit fdfa083549de5d50ebf7f6811f33757781e838c0 ]
-> 
-> Make loading ib_srpt with this parameter set work. The current behavior is
-> that setting that parameter while loading the ib_srpt kernel module
-> triggers the following kernel crash:
-> 
-> BUG: kernel NULL pointer dereference, address: 0000000000000000
-> Call Trace:
->   <TASK>
->   parse_one+0x18c/0x1d0
->   parse_args+0xe1/0x230
->   load_module+0x8de/0xa60
->   init_module_from_file+0x8b/0xd0
->   idempotent_init_module+0x181/0x240
->   __x64_sys_finit_module+0x5a/0xb0
->   do_syscall_64+0x5f/0xe0
->   entry_SYSCALL_64_after_hwframe+0x6e/0x76
-> 
-> Cc: LiHonggang <honggangli@163.com>
-> Reported-by: LiHonggang <honggangli@163.com>
-> Fixes: a42d985bd5b2 ("ib_srpt: Initial SRP Target merge for v3.3-rc1")
-> Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-> Link: https://lore.kernel.org/r/20240205004207.17031-1-bvanassche@acm.org
-> Signed-off-by: Leon Romanovsky <leon@kernel.org>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> [Alok: Backport to 5.4.y since the commit has already been backported to
-> 5.15y, 5.10.y, and 4.19.y]
-> Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
+Generate uevents when regulator events such as voltage changes, overcurrent,
+or enable/disable transitions occur. A separate uevent is emitted for each
+individual regulator event bit, allowing precise event handling in userspace
+via udev rules.
 
-Not sure if this "Cc: stable@vger.kernel.org" is needed to notify the 
-engineer of stable branch or not.
+The emitted uevent key `EVENT=` corresponds directly to the event types defined
+in include/uapi/regulator/regulator.h.
 
-Zhu Yanjun
+This provides a flexible, user-friendly mechanism to monitor and handle
+regulator events from userspace.
 
-> ---
->   drivers/infiniband/ulp/srpt/ib_srpt.c | 8 ++++++--
->   1 file changed, 6 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/infiniband/ulp/srpt/ib_srpt.c b/drivers/infiniband/ulp/srpt/ib_srpt.c
-> index d03a4f2e006f..f5fd8c1058ce 100644
-> --- a/drivers/infiniband/ulp/srpt/ib_srpt.c
-> +++ b/drivers/infiniband/ulp/srpt/ib_srpt.c
-> @@ -79,12 +79,16 @@ module_param(srpt_srq_size, int, 0444);
->   MODULE_PARM_DESC(srpt_srq_size,
->   		 "Shared receive queue (SRQ) size.");
->   
-> +static int srpt_set_u64_x(const char *buffer, const struct kernel_param *kp)
-> +{
-> +	return kstrtou64(buffer, 16, (u64 *)kp->arg);
-> +}
->   static int srpt_get_u64_x(char *buffer, const struct kernel_param *kp)
->   {
->   	return sprintf(buffer, "0x%016llx", *(u64 *)kp->arg);
->   }
-> -module_param_call(srpt_service_guid, NULL, srpt_get_u64_x, &srpt_service_guid,
-> -		  0444);
-> +module_param_call(srpt_service_guid, srpt_set_u64_x, srpt_get_u64_x,
-> +		  &srpt_service_guid, 0444);
->   MODULE_PARM_DESC(srpt_service_guid,
->   		 "Using this value for ioc_guid, id_ext, and cm_listen_id instead of using the node_guid of the first HCA.");
->   
+Signed-off-by: Johann Neuhauser <jneuhauser@dh-electronics.com>
+---
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Liam Girdwood <lgirdwood@gmail.com>
+Cc: linux-doc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: Mark Brown <broonie@kernel.org>
+---
+ drivers/regulator/userspace-consumer.c | 74 +++++++++++++++++++++++++-
+ 1 file changed, 73 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/regulator/userspace-consumer.c b/drivers/regulator/userspace-consumer.c
+index 72bb5ffb49a8..01cf07d42682 100644
+--- a/drivers/regulator/userspace-consumer.c
++++ b/drivers/regulator/userspace-consumer.c
+@@ -11,6 +11,7 @@
+  *   Author: Mark Brown <broonie@opensource.wolfsonmicro.com>
+  */
+ 
++#include <linux/bitops.h>
+ #include <linux/err.h>
+ #include <linux/mutex.h>
+ #include <linux/module.h>
+@@ -29,6 +30,9 @@ struct userspace_consumer_data {
+ 
+ 	int num_supplies;
+ 	struct regulator_bulk_data *supplies;
++
++	struct kobject *kobj;
++	struct notifier_block nb;
+ };
+ 
+ static ssize_t name_show(struct device *dev,
+@@ -115,12 +119,68 @@ static const struct attribute_group attr_group = {
+ 	.is_visible =  attr_visible,
+ };
+ 
++/*
++ * This should probably be placed elsewhere in the regulator framework...
++ */
++static const char *regulator_event_str(unsigned long event)
++{
++	switch (event) {
++	case REGULATOR_EVENT_ABORT_DISABLE:
++		return "ABORT_DISABLE";
++	case REGULATOR_EVENT_ABORT_VOLTAGE_CHANGE:
++		return "ABORT_VOLTAGE_CHANGE";
++	case REGULATOR_EVENT_DISABLE:
++		return "DISABLE";
++	case REGULATOR_EVENT_ENABLE:
++		return "ENABLE";
++	case REGULATOR_EVENT_FAIL:
++		return "FAIL";
++	case REGULATOR_EVENT_FORCE_DISABLE:
++		return "FORCE_DISABLE";
++	case REGULATOR_EVENT_OVER_CURRENT:
++		return "OVER_CURRENT";
++	case REGULATOR_EVENT_OVER_TEMP:
++		return "OVER_TEMP";
++	case REGULATOR_EVENT_PRE_DISABLE:
++		return "PRE_DISABLE";
++	case REGULATOR_EVENT_PRE_VOLTAGE_CHANGE:
++		return "PRE_VOLTAGE_CHANGE";
++	case REGULATOR_EVENT_REGULATION_OUT:
++		return "REGULATION_OUT";
++	case REGULATOR_EVENT_UNDER_VOLTAGE:
++		return "UNDER_VOLTAGE";
++	case REGULATOR_EVENT_VOLTAGE_CHANGE:
++		return "VOLTAGE_CHANGE";
++	default:
++		return NULL;
++	}
++}
++
++static int regulator_userspace_notify(struct notifier_block *nb, unsigned long event, void *unused)
++{
++	struct userspace_consumer_data *drvdata = container_of(nb, struct userspace_consumer_data, nb);
++	char env_buf[128];
++	char *envp[] = { "NAME=event", env_buf, NULL };
++	unsigned int bit;
++
++	for_each_set_bit(bit, &event, BITS_PER_TYPE(event)) {
++		const char *event_str = regulator_event_str(BIT(bit));
++
++		if (event_str && event_str[0] != '\0') {
++			scnprintf(env_buf, sizeof(env_buf), "EVENT=%s", event_str);
++			kobject_uevent_env(drvdata->kobj, KOBJ_CHANGE, envp);
++		}
++	}
++
++	return NOTIFY_OK;
++}
++
+ static int regulator_userspace_consumer_probe(struct platform_device *pdev)
+ {
+ 	struct regulator_userspace_consumer_data tmpdata;
+ 	struct regulator_userspace_consumer_data *pdata;
+ 	struct userspace_consumer_data *drvdata;
+-	int ret;
++	int i, ret;
+ 
+ 	pdata = dev_get_platdata(&pdev->dev);
+ 	if (!pdata) {
+@@ -153,6 +213,7 @@ static int regulator_userspace_consumer_probe(struct platform_device *pdev)
+ 	drvdata->num_supplies = pdata->num_supplies;
+ 	drvdata->supplies = pdata->supplies;
+ 	drvdata->no_autoswitch = pdata->no_autoswitch;
++	drvdata->kobj = &pdev->dev.kobj;
+ 
+ 	mutex_init(&drvdata->lock);
+ 
+@@ -184,6 +245,13 @@ static int regulator_userspace_consumer_probe(struct platform_device *pdev)
+ 	}
+ 	drvdata->enabled = !!ret;
+ 
++	drvdata->nb.notifier_call = regulator_userspace_notify;
++	for (i = 0; i < drvdata->num_supplies; i++) {
++		ret = devm_regulator_register_notifier(drvdata->supplies[i].consumer, &drvdata->nb);
++		if (ret)
++			goto err_enable;
++	}
++
+ 	return 0;
+ 
+ err_enable:
+@@ -195,6 +263,10 @@ static int regulator_userspace_consumer_probe(struct platform_device *pdev)
+ static void regulator_userspace_consumer_remove(struct platform_device *pdev)
+ {
+ 	struct userspace_consumer_data *data = platform_get_drvdata(pdev);
++	int i;
++
++	for (i = 0; i < data->num_supplies; i++)
++		devm_regulator_unregister_notifier(data->supplies[i].consumer, &data->nb);
+ 
+ 	sysfs_remove_group(&pdev->dev.kobj, &attr_group);
+ 
+-- 
+2.39.5
 
