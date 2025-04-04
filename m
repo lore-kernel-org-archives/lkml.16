@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 128101EBFE2;
-	Fri,  4 Apr 2025 12:20:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74B411EEA33;
+	Fri,  4 Apr 2025 12:20:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743769226; cv=none; b=DTz9RFbEQOQBaJbeyTfDZcSEtBCsx0yt+4AK/+aJ+KtBLn7MWST0M12ZOVb7fUldrMsLAGABaR3pFm8Hy1fy8dmJtXHRGONptRQC8RZ6ZKyXEok7pUJyFjQ0phVsaEHZVnl+VxQMjzFK3oO1SxQqJr2RzHzx2ZL4wLG/9jyEebI=
+	t=1743769231; cv=none; b=fEdzHXmIl50bMQjH44tXP/OQw5B5j3uGLqLAs6MOYA0Eq+PUtDRbOB4JGNiE4dwtVF8WYsX6klBzwh34k5xLgyCXW7SVKoeCtrFLCA0h7+wTrjKxLYeuHMGL4iQcHHQeHJbfkTiktmhFxXTLQfbfJWlYX38vLgNjFrSygQ8Wq+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743769226; c=relaxed/simple;
-	bh=s+giwPaT/Tv9s/df4azVB4o/cHwapfcHYHXBslVCdOQ=;
+	s=arc-20240116; t=1743769231; c=relaxed/simple;
+	bh=hB8g06LHusju5aaSslcMI2Vmp9YyRR3BB0OcFs0BMkc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bx/CBEnsoHfBVPuxRsZzXFGoXKLtLt9Fcnk+6lDGjaKweihPJXzfhg3pyQUuZbIfLI46LV43FZINGka36vi41Q1bErfrZVW15MDeP3FSOLyMeRYIdtuE0UWSPrhQTFfo8yFv4SR8Hm+vX429Efcc8vbzX3r0f4SrKQ0PFXICSUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DZIHhL+w; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=lX8s78g51Z3xUjNL3/NRnRjZ67XzepsRCEIjVCeB6AWLNEeOw0faznx3oYBXWcoTj8gNs85Cvisb15XMoLCB1N2N43gD/OqZLpzkKTd3QT0AoIOzebj59mABtreqL/e6u9aqVze0Yj1dNCZK0jOpDLfYjyOCyRBnJW411ZRcCv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DjbdX148; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DZIHhL+w"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 699C4C4CEE8;
-	Fri,  4 Apr 2025 12:20:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DjbdX148"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DC5EC4CEDD;
+	Fri,  4 Apr 2025 12:20:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743769225;
-	bh=s+giwPaT/Tv9s/df4azVB4o/cHwapfcHYHXBslVCdOQ=;
+	s=k20201202; t=1743769230;
+	bh=hB8g06LHusju5aaSslcMI2Vmp9YyRR3BB0OcFs0BMkc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=DZIHhL+wJKM35i0cwXBtvcIJv3nqbcBfNFsdbO5hQCEpwTuA2Spk2AYqqHG5bfiTG
-	 ixRIbd9VS/djCN2RpMI4pol4eM88FZxbV4Sm659k+E1IsGYIldPmi+W+ZO2k/goAJ3
-	 qQVoEmEIXCj8+OSFELVUgW8yukYDv7c9pzlkdawTlG9+deXT4Q1MWC7IYASmeco07h
-	 grFkmXddflaJbzQXl5TFwIkZqCQa+kbOMCwoQmzS3s0eLARjjXpEpXPzzZthY1C7D3
-	 sFXb4c9LTuiX1Eendh9WdJ79KRHovPKAvI9ia2ToElrZ8Y5pyw7ocRKV/rzdJMboxC
-	 4PtzEkoBQtvzQ==
+	b=DjbdX148Bl2eCI6bf9kX4v8EgXT2tJ/yA43dmcUsRp2j2MTp0ZWsbT81X8KknAZG6
+	 KgQrvt3K5im/Dtygesji+p5dRphOhfSkQDCjpHO3ou4DjKa0AL8N6OurJIr2jJgzNJ
+	 yAakodZl6QDHLqn1x6RfwV34+1Pc0eV8/Wri5haHvowd+zf1kg0Q4x/Aojs390SffF
+	 pSM9AeR6ljvsk/0DQZ/TkkrX6s8BwWwWj3L8+WaUNxTK1TD1kYG2V2jrsIYEStKhp+
+	 qixweR2Kxz9Q+eSArQ6h7kaStsTSKPHtkbhB8DgtngEtGuMe0hIHpslFghf5B4t60l
+	 bYGEiugosak/Q==
 From: Philipp Stanner <phasta@kernel.org>
 To: Jaroslav Kysela <perex@perex.cz>,
 	Takashi Iwai <tiwai@suse.com>,
@@ -47,9 +47,9 @@ To: Jaroslav Kysela <perex@perex.cz>,
 Cc: linux-parisc@vger.kernel.org,
 	linux-sound@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 10/11] ALSA: hdspm: Replace deprecated PCI functions
-Date: Fri,  4 Apr 2025 14:19:11 +0200
-Message-ID: <20250404121911.85277-12-phasta@kernel.org>
+Subject: [PATCH 11/11] ASoC: loongson: Replace deprecated PCI functions
+Date: Fri,  4 Apr 2025 14:19:12 +0200
+Message-ID: <20250404121911.85277-13-phasta@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250404121911.85277-2-phasta@kernel.org>
 References: <20250404121911.85277-2-phasta@kernel.org>
@@ -66,30 +66,49 @@ Replace them with pcim_iomap_region().
 
 Signed-off-by: Philipp Stanner <phasta@kernel.org>
 ---
- sound/pci/rme9652/hdspm.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ sound/soc/loongson/loongson_i2s_pci.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/sound/pci/rme9652/hdspm.c b/sound/pci/rme9652/hdspm.c
-index f89718b19d23..9e11e60284eb 100644
---- a/sound/pci/rme9652/hdspm.c
-+++ b/sound/pci/rme9652/hdspm.c
-@@ -6558,13 +6558,12 @@ static int snd_hdspm_create(struct snd_card *card,
+diff --git a/sound/soc/loongson/loongson_i2s_pci.c b/sound/soc/loongson/loongson_i2s_pci.c
+index d2d0e5d8cac9..1ea5501a97f8 100644
+--- a/sound/soc/loongson/loongson_i2s_pci.c
++++ b/sound/soc/loongson/loongson_i2s_pci.c
+@@ -16,6 +16,8 @@
+ #include "loongson_i2s.h"
+ #include "loongson_dma.h"
  
- 	pci_set_master(hdspm->pci);
++#define DRIVER_NAME "loongson-i2s-pci"
++
+ static bool loongson_i2s_wr_reg(struct device *dev, unsigned int reg)
+ {
+ 	switch (reg) {
+@@ -92,13 +94,12 @@ static int loongson_i2s_pci_probe(struct pci_dev *pdev,
+ 	i2s->dev = dev;
+ 	pci_set_drvdata(pdev, i2s);
  
--	err = pcim_iomap_regions(pci, 1 << 0, "hdspm");
--	if (err < 0)
--		return err;
-+	hdspm->iobase = pcim_iomap_region(pci, 0, "hdspm");
-+	if (IS_ERR(hdspm->iobase))
-+		return PTR_ERR(hdspm->iobase);
+-	ret = pcim_iomap_regions(pdev, 1 << 0, dev_name(dev));
+-	if (ret < 0) {
+-		dev_err(dev, "iomap_regions failed\n");
+-		return ret;
++	i2s->reg_base = pcim_iomap_region(pdev, 0, DRIVER_NAME);
++	if (IS_ERR(i2s->reg_base)) {
++		dev_err(dev, "iomap_region failed\n");
++		return PTR_ERR(i2s->reg_base);
+ 	}
  
- 	hdspm->port = pci_resource_start(pci, 0);
- 	io_extent = pci_resource_len(pci, 0);
--	hdspm->iobase = pcim_iomap_table(pci)[0];
- 	dev_dbg(card->dev, "remapped region (0x%lx) 0x%lx-0x%lx\n",
- 			(unsigned long)hdspm->iobase, hdspm->port,
- 			hdspm->port + io_extent - 1);
+-	i2s->reg_base = pcim_iomap_table(pdev)[0];
+ 	i2s->regmap = devm_regmap_init_mmio(dev, i2s->reg_base,
+ 					    &loongson_i2s_regmap_config);
+ 	if (IS_ERR(i2s->regmap))
+@@ -147,7 +148,7 @@ static const struct pci_device_id loongson_i2s_ids[] = {
+ MODULE_DEVICE_TABLE(pci, loongson_i2s_ids);
+ 
+ static struct pci_driver loongson_i2s_driver = {
+-	.name = "loongson-i2s-pci",
++	.name = DRIVER_NAME,
+ 	.id_table = loongson_i2s_ids,
+ 	.probe = loongson_i2s_pci_probe,
+ 	.driver = {
 -- 
 2.48.1
 
