@@ -1,96 +1,116 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C13A01EEA4E
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 13:31:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DE7E1F03CD;
+	Fri,  4 Apr 2025 13:31:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743773482; cv=none; b=YXU3k+YoGK5Om3HtX6C3zLoa27Vb+H0lod6+iBmaqanhmuJX7wiA4ZIGScCIcTgHG2TJ9F6vCzZIBhCipBH2lwES/tmttHAbZQFlZmphWks1lDQblMENBhJjBsEQuIgCdNMb9Fe1QSgmERzyhdPEUDBXq9XfYduj9TlWHZPVhzs=
+	t=1743773491; cv=none; b=WUvc8t+ZpNG02kA8TbitDCcT1FxFRct/dC2S1yCjlWDM9+yXnd7tgocapajTNjWIgxUQA9fIpTfkxdh2PkNYcZ9dlXe6wXH3tuI2+6nd/zhPdYPD64pXVZGrYYBnDkKULmGq/xK6CK143zRHa2gER70nEhJxSwtBqSzS27GNlWI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743773482; c=relaxed/simple;
-	bh=/wxzFAJWhXTRWiA4rv+u8jEVP0QqGm6mc+Wy5Om3SmI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=GfX8DOGV8zZ8grVbNbItguM/xL8xz/L11FwjKAgjZvgZZWS9uwEyuammSkk3N/s/pcd5mx50Hq1367sY58qVtbCOHNr9xRPGb5lrDmU+cCkQbtE9ajoOfDhwKjinXla4eTMhOf3XziSsmNP9H81Tp1sYf6EXXA47WRMnRDcCb4c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=TRKnKpoG; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=FUS7Zx/u; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1743773491; c=relaxed/simple;
+	bh=Mrb3uEmlv4xl8tkAfjJDSVDkM8xtCLnQRyTNFJMkSWg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eMeAucbhUKmXtkzC2Nn2xo/xszbfDq8LuyE3DK17p15+KXaxEyJnxCAdrXOBhP7vSrhjqc2CfP8itUCDbgd0tnT7XxEPfyR9FdsYcPZye7jSJ7NejwS+swJCtEyu9tJcXnFISbEf8vH0SXgWD7+rK7gYGvocNSxADhJLCzv4i/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S3tinM7N; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TRKnKpoG";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FUS7Zx/u"
-Date: Fri, 4 Apr 2025 15:31:16 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1743773477;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-	bh=V55n4+BdXPiTHEXRvGt5+QG54LfxTfkJtbWgjaVxqUo=;
-	b=TRKnKpoGXvTVj/pD53j4jZegyqPxNxn148nXsQKUGT06EM3NEERkg5U961Fma+ulYQqvLL
-	H8M8P7dOwSEzulyLPa/KXtdPlaupVDTcihUEylrSlx8WbUjPZifaqJ2AMlmsl99l/F8TKH
-	n7w42eSIzO8vPyuGLxkCyBKXvIRKBzxV1FIaje1OdIEyqR5/cxJ54AjbXZRNjlWVvgLiaI
-	6MHDbeLnkuWC8zHxXrcZBXBZoYLpGJEjBz4aB7KArTWAuNAJTFb5QESDtmTx8SlU6bNiT7
-	xIRbDDuKFjN6QFbV+o63fxJJAuv7NttmuHlvm4VvXIsHWhzu2RohPvSQUZYxRw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1743773477;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-	bh=V55n4+BdXPiTHEXRvGt5+QG54LfxTfkJtbWgjaVxqUo=;
-	b=FUS7Zx/uir7S9XM6X61xQhqmTy1fVqNDrqxaKl5CrfE25Y3PvXxySSQo95NIEMiXINGlqW
-	v71NIvWBo9EUAdDw==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: linux-kernel@vger.kernel.org
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH] clocksource/i8253: Acquire the lock disabled interrupts.
-Message-ID: <20250404133116.p-XRWJXf@linutronix.de>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S3tinM7N"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2295d78b433so20177825ad.2;
+        Fri, 04 Apr 2025 06:31:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743773489; x=1744378289; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=zmk7AQJnJtbdOsTE+xjJik8mWDejJLeip88wYD329cw=;
+        b=S3tinM7NJZ72mV6OlM2B7Bko6aiwa/lmCwQor5GsHO4d66VYJizQB+63KPl6Ujq486
+         KO0ANR3nd98zW1G+pWM/rzWJ+X4zC6yzxy9BjjaOpY82Aa+xgN+pRwlJBkgCE8LU7Asp
+         0BjRS6ZMy5nceNZb7nSI/xRVU5COouvQhSn3qtDDXAXq47sX8eC+uWthqi9gbjr57FFc
+         GH9mlAz5aooY/vvIPmDt3exDLlLcUakWW8U0uOkzK4T5+MbonWas+meiqJoKw7GewKze
+         4wPtAH82MHRpgrsbKiGEbPab5BP1Q8/kMxNjgQTNQeTOQzBBK9eq2lvitLOGU6dGQvm2
+         CMJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743773489; x=1744378289;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zmk7AQJnJtbdOsTE+xjJik8mWDejJLeip88wYD329cw=;
+        b=RHPeVRouLxkEd8p2tXkuJMjr2zrUpzMjDtcyoDBrncZF/9ZR6ecYvMVohJEPhEMp0L
+         BCS5MMqCnCIwK/pWKKbxzyjkLT5sOjjDxisBcHG6ATf763yzvFoGtCWKVkw6bLI61f/r
+         kq8+M8d0TT38exUORVMkRFRfrqgGIMfHubSOTki9G4phApux7AQrH3H+/S2RxJ+gWwdU
+         X2xZybX9SaRbtxGjHhGJeBJaqYCwz7aioBPBPUGL/ZBjyprcM1nzXOQh9qEayxheKpjm
+         diLBxaXlFqx6FynacvluhblRksQvuOa6JYellglEZeVqtEB+B1m9W3jNrWnzqklSPuMi
+         tGPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU2N029mTvsUZOqezGby1CNP7VrX9n3BFK52ysuLMRXgB7kkGQNUru57I4izTphgK/rDZumCa6z86FEtsE=@vger.kernel.org, AJvYcCV45sEiAW8R+8KS4ZHJFo+UpHlWGhXCQREsm6XVLKS4yMo3O1jRrh9/MH6cCH7C3nY4fQinviLpCgk7X2/No3hWKfu6@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx0giN3L2wE/dc4oKJHXAT8r05SQ3oH2cZ3xErZX79tzXaCqtlN
+	CD354Osk0SAroJIAGn4W1DX6x6fYIF4Ff/jvzumct/BG11SESqh9
+X-Gm-Gg: ASbGnctan3+yHszcez7AcuX6CppI0AxrI/7+EX10mR3esXEKIvm5wxhsSU6wxl5dLvf
+	MQ9wGITXfZ9VjEn7GExzQKn9uZJ3VLrgXdc1L8S7YJclqeiZVVCEE87dgc4Dh1gV1E9SFuRKaYU
+	X7Fhhzq+/rTAfVobjF7IHRVt9/AizHAaroFdeMaHHo+neQcgAK+ynNgJxqKgI3icVp2q12jmqLh
+	ZNM9B2vwst8OTgbhLFAW3T10eru7JwPtGeAXVsRtdE1Y2KzsekIjBgICfa1LmatyH00bauFLb4f
+	5lMlb4Rqb7HSkSv540ERYbwZR9uSel7KVbDkSlVlq6yq
+X-Google-Smtp-Source: AGHT+IHHjJCFcl1Uoof7R+Oq2QP1pTkGPta9Ksu7QNpbZo2s53FaqTO/vWbI7tuL49zRDu2mYg/0dw==
+X-Received: by 2002:a17:902:f70d:b0:224:1221:1ab4 with SMTP id d9443c01a7336-22a8a05866cmr51137215ad.22.1743773489062;
+        Fri, 04 Apr 2025 06:31:29 -0700 (PDT)
+Received: from fedora.nitk.ac.in ([2a09:bac5:3d57:1a46::29e:13])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22978772746sm31684035ad.223.2025.04.04.06.31.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Apr 2025 06:31:28 -0700 (PDT)
+From: Devaansh Kumar <devaanshk840@gmail.com>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com
+Cc: Devaansh Kumar <devaanshk840@gmail.com>,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	skhan@linuxfoundation.org,
+	linux-kernel-mentees@lists.linuxfoundation.org
+Subject: [PATCH v2] tracing: Replace deprecated strncpy() with strscpy() for stack_trace_filter_buf
+Date: Fri,  4 Apr 2025 19:01:03 +0530
+Message-ID: <20250404133105.2660762-1-devaanshk840@gmail.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-On x86 during boot, clockevent_i8253_disable() can be invoked via
-x86_late_time_init -> hpet_time_init() -> pit_timer_init() which happens
-with enabled interrupts.
-If some of the old i8253 hardware is actually used then lockdep will
-notice that i8253_lock is used in hardirq context. This causes lockdep
-to complain because it observed the lock being acquired with enabled
-interrupts and in hardirq context.
+strncpy() is deprecated for NUL-terminated destination buffers and must
+be replaced by strscpy().
 
-Make clockevent_i8253_disable() acquire the lock with disabled
-interrupts.
+See issue: https://github.com/KSPP/linux/issues/90
 
-Fixes: c8c4076723dac ("x86/timer: Skip PIT initialization on modern chipsets")
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Devaansh Kumar <devaanshk840@gmail.com>
 ---
- drivers/clocksource/i8253.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ kernel/trace/trace_stack.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/clocksource/i8253.c b/drivers/clocksource/i8253.c
-index 39f7c2d736d16..67dcd9c8f1875 100644
---- a/drivers/clocksource/i8253.c
-+++ b/drivers/clocksource/i8253.c
-@@ -103,8 +103,9 @@ int __init clocksource_i8253_init(void)
- #ifdef CONFIG_CLKEVT_I8253
- void clockevent_i8253_disable(void)
+diff --git a/kernel/trace/trace_stack.c b/kernel/trace/trace_stack.c
+index 5a48dba912ea..982b1c88fce2 100644
+--- a/kernel/trace/trace_stack.c
++++ b/kernel/trace/trace_stack.c
+@@ -3,6 +3,7 @@
+  * Copyright (C) 2008 Steven Rostedt <srostedt@redhat.com>
+  *
+  */
++#include <linux/string.h>
+ #include <linux/sched/task_stack.h>
+ #include <linux/stacktrace.h>
+ #include <linux/security.h>
+@@ -543,8 +544,10 @@ static __init int enable_stacktrace(char *str)
  {
--	raw_spin_lock(&i8253_lock);
-+	unsigned long flags;
+ 	int len;
  
-+	raw_spin_lock_irqsave(&i8253_lock, flags);
- 	/*
- 	 * Writing the MODE register should stop the counter, according to
- 	 * the datasheet. This appears to work on real hardware (well, on
-@@ -133,7 +134,7 @@ void clockevent_i8253_disable(void)
+-	if ((len = str_has_prefix(str, "_filter=")))
+-		strncpy(stack_trace_filter_buf, str + len, COMMAND_LINE_SIZE);
++	len = str_has_prefix(str, "_filter=");
++
++	if (len)
++		strscpy(stack_trace_filter_buf, str + len, sizeof(stack_trace_filter_buf));
  
- 	outb_p(0x30, PIT_MODE);
- 
--	raw_spin_unlock(&i8253_lock);
-+	raw_spin_unlock_irqrestore(&i8253_lock, flags);
- }
- 
- static int pit_shutdown(struct clock_event_device *evt)
+ 	stack_tracer_enabled = 1;
+ 	return 1;
 -- 
-2.49.0
+2.47.1
 
