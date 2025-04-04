@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 063E52206A2;
-	Fri,  4 Apr 2025 23:16:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 127BE221729;
+	Fri,  4 Apr 2025 23:16:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743808591; cv=none; b=HvXLEsEXDhbX7NjZtkXrHNqJ6bji9QDByoCRXnGQ08cY8os5EoV3B24qvI3hY7GJbCtuU+lm7ecQviqBSVDaJQpRvzwCPf0kkHgbU6JVjYWizefskjwL3cL13q4YWaVUfz6GlmxX2xihsL1J7zmTE6ZQRTY4wOm/605hra+I9E8=
+	t=1743808592; cv=none; b=U/Dbu2G3GT5v7EmiR2Pj71ynURoGYL/wvPSYQZhK+ebzZ80R4Qha85ra/Oh+Uy7SL1YfugU1uM2n/1KPYNCWu/xB61RtnNZSuVUsdE4J3pK2xmj/hiyUfVY7jG5N/iKKWp6fcKdJfLPaFvsWjYz4nVzhQyPXc21B9DF6rtlOa+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743808591; c=relaxed/simple;
-	bh=jxR0YUjCGyxvTiCsuxxeOrtJDSm69Jli91V4OF+mxcE=;
+	s=arc-20240116; t=1743808592; c=relaxed/simple;
+	bh=pLcNof6JbapOHK594mGu5j5X53Jvg5ctd3e5BUNyfVo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LX5YmUkblmgGJFgbWJ3pkhOAFhmWTUhOlg1Ztod7hzQV9zQaUIziacWCFhfIYnz/6QHRXq499TqGZ73Lcxwr5bJyDtD0Hfom6VZAQvQ9VUWphYmBvc0hIyMXz1pl6jAxTbh2Gs5kLEVRDJK7ypZwAiIwFzVMwPWq59lYzAroW5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ke4RpOuR; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=jwzt1YgSLTB1qW3KQDWUKVUlbM8k/a5ts5CnsX39lvxIX8pqhXamuWgzx/ASQUV9bVU0aIre9+JhYNPEg8YJyYzQGuZWZjXk4tZlphyYJd4q1q57aO8UeItywyNuvYyhDE/giw+HKjXky7kYfXUGZDl2dnjA0uX8jofY9+2Zr68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fbna1okn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ke4RpOuR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12A9AC4CEE4;
-	Fri,  4 Apr 2025 23:16:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fbna1okn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26F98C4CEF2;
+	Fri,  4 Apr 2025 23:16:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743808590;
-	bh=jxR0YUjCGyxvTiCsuxxeOrtJDSm69Jli91V4OF+mxcE=;
+	s=k20201202; t=1743808591;
+	bh=pLcNof6JbapOHK594mGu5j5X53Jvg5ctd3e5BUNyfVo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Ke4RpOuRmclK4L6r9+WooSBwD00x1EZqpeKLHMkDRmhkradwcKCH8ojC/Z88vujhe
-	 7zzJHoW0GQb4RG0ygqRQ34wRYs4ICSPLaInUrUNyUS0ZKh3nCscPUAUfsfe0a7//St
-	 48DPhaQ2Yx9A3pYppD6+EXFJ4CwE9zjIo9Vys212J5mQ2ufeoebFiupczHEbyC5UWv
-	 1Az9YSppWwUCNniiYCwCQd0iV+cYeRr5JLG0fpOY6WZW8gjI38zZ8cZ8NLsIPXE19v
-	 dEclbN9E9QPAsoDXb86AAViD1XAF58BcDg7AMHezgWTuEeYrctUveHbpcPd5p8fkgo
-	 HWV/YySkviMjw==
+	b=fbna1oknD/ZvI3sOJ9ta/LdvxqmsuirwvEnENV50pL1QcyK7da3vftEpZj6/Cxgb4
+	 q1k77iXUU72vUtTLAksT9nyhStbjPVq03hV/lrtcnUoP0WoMKGQBh80iUGQiCR1pvQ
+	 HdzMCvMXYkygICv20K3WhoQcK8WSd+0OGhPZKZNzJn/EnPrWDNRd9W1nCu8raxlSq2
+	 xm3K7T3cb0x+sq6VaKm7tRVu+zOFWZ0HaWjD9HJDyVGh/yLgC7oLEpdNzmJJThGwm/
+	 It7aOt1YqU8wEfxfseXbChNlUT38umNQhrthUzYD9SIuk/LyzsvALf5rS65hGjfgRO
+	 lAlf2IH9X6Lfg==
 From: Eric Biggers <ebiggers@kernel.org>
 To: linux-scsi@vger.kernel.org
 Cc: linux-block@vger.kernel.org,
@@ -41,9 +41,9 @@ Cc: linux-block@vger.kernel.org,
 	Konrad Dybcio <konradybcio@kernel.org>,
 	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
 	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH v13 1/3] soc: qcom: ice: make qcom_ice_program_key() take struct blk_crypto_key
-Date: Fri,  4 Apr 2025 16:15:30 -0700
-Message-ID: <20250404231533.174419-2-ebiggers@kernel.org>
+Subject: [PATCH v13 3/3] ufs: qcom: add support for wrapped keys
+Date: Fri,  4 Apr 2025 16:15:32 -0700
+Message-ID: <20250404231533.174419-4-ebiggers@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250404231533.174419-1-ebiggers@kernel.org>
 References: <20250404231533.174419-1-ebiggers@kernel.org>
@@ -57,187 +57,116 @@ Content-Transfer-Encoding: 8bit
 
 From: Eric Biggers <ebiggers@google.com>
 
-qcom_ice_program_key() currently accepts the key as an array of bytes,
-algorithm ID, key size enum, and data unit size.  However both callers
-have a struct blk_crypto_key which contains all that information.  Thus
-they both have similar code that converts the blk_crypto_key into the
-form that qcom_ice_program_key() wants.  Once wrapped key support is
-added, the key type would need to be added to the arguments too.
+Wire up the wrapped key support for ufs-qcom by implementing the needed
+methods in struct blk_crypto_ll_ops and setting the appropriate flag in
+blk_crypto_profile::key_types_supported.
 
-Therefore, this patch changes qcom_ice_program_key() to take in all this
-information as a struct blk_crypto_key directly.  The calling code is
-updated accordingly.  This ends up being much simpler, and it makes the
-key type be passed down automatically once wrapped key support is added.
+For more information about this feature and how to use it, refer to
+the sections about hardware-wrapped keys in
+Documentation/block/inline-encryption.rst and
+Documentation/filesystems/fscrypt.rst.
 
-Based on a patch by Gaurav Kashyap <quic_gaurkash@quicinc.com> that
-replaced the byte array argument only.  This patch makes the
-blk_crypto_key replace other arguments like the algorithm ID too,
-ensuring that there remains only one source of truth.
+Based on patches by Gaurav Kashyap <quic_gaurkash@quicinc.com>.
+Reworked to use the custom crypto profile support.
 
 Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Tested-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org> # sm8650
 Signed-off-by: Eric Biggers <ebiggers@google.com>
 ---
- drivers/mmc/host/sdhci-msm.c | 11 +----------
- drivers/soc/qcom/ice.c       | 23 ++++++++++++-----------
- drivers/ufs/host/ufs-qcom.c  | 11 +----------
- include/soc/qcom/ice.h       | 22 +++-------------------
- 4 files changed, 17 insertions(+), 50 deletions(-)
+ drivers/ufs/host/ufs-qcom.c | 51 ++++++++++++++++++++++++++++++++-----
+ 1 file changed, 45 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
-index 57bd49eea7772..5694ad0a35567 100644
---- a/drivers/mmc/host/sdhci-msm.c
-+++ b/drivers/mmc/host/sdhci-msm.c
-@@ -1960,20 +1960,11 @@ static int sdhci_msm_ice_keyslot_program(struct blk_crypto_profile *profile,
- 					 unsigned int slot)
- {
- 	struct sdhci_msm_host *msm_host =
- 		sdhci_msm_host_from_crypto_profile(profile);
- 
--	/* Only AES-256-XTS has been tested so far. */
--	if (key->crypto_cfg.crypto_mode != BLK_ENCRYPTION_MODE_AES_256_XTS)
--		return -EOPNOTSUPP;
--
--	return qcom_ice_program_key(msm_host->ice,
--				    QCOM_ICE_CRYPTO_ALG_AES_XTS,
--				    QCOM_ICE_CRYPTO_KEY_SIZE_256,
--				    key->bytes,
--				    key->crypto_cfg.data_unit_size / 512,
--				    slot);
-+	return qcom_ice_program_key(msm_host->ice, slot, key);
- }
- 
- static int sdhci_msm_ice_keyslot_evict(struct blk_crypto_profile *profile,
- 				       const struct blk_crypto_key *key,
- 				       unsigned int slot)
-diff --git a/drivers/soc/qcom/ice.c b/drivers/soc/qcom/ice.c
-index 2310afa77b76b..5cadf5e3cf982 100644
---- a/drivers/soc/qcom/ice.c
-+++ b/drivers/soc/qcom/ice.c
-@@ -160,41 +160,42 @@ int qcom_ice_suspend(struct qcom_ice *ice)
- 
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(qcom_ice_suspend);
- 
--int qcom_ice_program_key(struct qcom_ice *ice,
--			 u8 algorithm_id, u8 key_size,
--			 const u8 crypto_key[], u8 data_unit_size,
--			 int slot)
-+int qcom_ice_program_key(struct qcom_ice *ice, unsigned int slot,
-+			 const struct blk_crypto_key *blk_key)
- {
- 	struct device *dev = ice->dev;
- 	union {
- 		u8 bytes[AES_256_XTS_KEY_SIZE];
- 		u32 words[AES_256_XTS_KEY_SIZE / sizeof(u32)];
- 	} key;
- 	int i;
- 	int err;
- 
- 	/* Only AES-256-XTS has been tested so far. */
--	if (algorithm_id != QCOM_ICE_CRYPTO_ALG_AES_XTS ||
--	    key_size != QCOM_ICE_CRYPTO_KEY_SIZE_256) {
--		dev_err_ratelimited(dev,
--				    "Unhandled crypto capability; algorithm_id=%d, key_size=%d\n",
--				    algorithm_id, key_size);
-+	if (blk_key->crypto_cfg.crypto_mode !=
-+	    BLK_ENCRYPTION_MODE_AES_256_XTS) {
-+		dev_err_ratelimited(dev, "Unsupported crypto mode: %d\n",
-+				    blk_key->crypto_cfg.crypto_mode);
- 		return -EINVAL;
- 	}
- 
--	memcpy(key.bytes, crypto_key, AES_256_XTS_KEY_SIZE);
-+	if (blk_key->size != AES_256_XTS_KEY_SIZE) {
-+		dev_err_ratelimited(dev, "Incorrect key size\n");
-+		return -EINVAL;
-+	}
-+	memcpy(key.bytes, blk_key->bytes, AES_256_XTS_KEY_SIZE);
- 
- 	/* The SCM call requires that the key words are encoded in big endian */
- 	for (i = 0; i < ARRAY_SIZE(key.words); i++)
- 		__cpu_to_be32s(&key.words[i]);
- 
- 	err = qcom_scm_ice_set_key(slot, key.bytes, AES_256_XTS_KEY_SIZE,
- 				   QCOM_SCM_ICE_CIPHER_AES_256_XTS,
--				   data_unit_size);
-+				   blk_key->crypto_cfg.data_unit_size / 512);
- 
- 	memzero_explicit(&key, sizeof(key));
- 
- 	return err;
- }
 diff --git a/drivers/ufs/host/ufs-qcom.c b/drivers/ufs/host/ufs-qcom.c
-index 1b37449fbffc5..b111b37cef109 100644
+index 85040861ddc6e..46cca52aa6f11 100644
 --- a/drivers/ufs/host/ufs-qcom.c
 +++ b/drivers/ufs/host/ufs-qcom.c
-@@ -215,21 +215,12 @@ static int ufs_qcom_ice_keyslot_program(struct blk_crypto_profile *profile,
- {
- 	struct ufs_hba *hba = ufs_hba_from_crypto_profile(profile);
- 	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
- 	int err;
+@@ -154,15 +154,10 @@ static int ufs_qcom_ice_init(struct ufs_qcom_host *host)
+ 	}
  
--	/* Only AES-256-XTS has been tested so far. */
--	if (key->crypto_cfg.crypto_mode != BLK_ENCRYPTION_MODE_AES_256_XTS)
--		return -EOPNOTSUPP;
+ 	if (IS_ERR_OR_NULL(ice))
+ 		return PTR_ERR_OR_ZERO(ice);
+ 
+-	if (qcom_ice_get_supported_key_type(ice) != BLK_CRYPTO_KEY_TYPE_RAW) {
+-		dev_warn(dev, "Wrapped keys not supported. Disabling inline encryption support.\n");
+-		return 0;
+-	}
 -
- 	ufshcd_hold(hba);
--	err = qcom_ice_program_key(host->ice,
--				   QCOM_ICE_CRYPTO_ALG_AES_XTS,
--				   QCOM_ICE_CRYPTO_KEY_SIZE_256,
--				   key->bytes,
--				   key->crypto_cfg.data_unit_size / 512,
--				   slot);
-+	err = qcom_ice_program_key(host->ice, slot, key);
+ 	host->ice = ice;
+ 
+ 	/* Initialize the blk_crypto_profile */
+ 
+ 	caps.reg_val = cpu_to_le32(ufshcd_readl(hba, REG_UFS_CCAP));
+@@ -172,11 +167,11 @@ static int ufs_qcom_ice_init(struct ufs_qcom_host *host)
+ 	if (err)
+ 		return err;
+ 
+ 	profile->ll_ops = ufs_qcom_crypto_ops;
+ 	profile->max_dun_bytes_supported = 8;
+-	profile->key_types_supported = BLK_CRYPTO_KEY_TYPE_RAW;
++	profile->key_types_supported = qcom_ice_get_supported_key_type(ice);
+ 	profile->dev = dev;
+ 
+ 	/*
+ 	 * Currently this driver only supports AES-256-XTS.  All known versions
+ 	 * of ICE support it, but to be safe make sure it is really declared in
+@@ -240,13 +235,57 @@ static int ufs_qcom_ice_keyslot_evict(struct blk_crypto_profile *profile,
+ 	err = qcom_ice_evict_key(host->ice, slot);
  	ufshcd_release(hba);
  	return err;
  }
  
- static int ufs_qcom_ice_keyslot_evict(struct blk_crypto_profile *profile,
-diff --git a/include/soc/qcom/ice.h b/include/soc/qcom/ice.h
-index fdf1b5c21eb9a..24573e4250395 100644
---- a/include/soc/qcom/ice.h
-+++ b/include/soc/qcom/ice.h
-@@ -4,35 +4,19 @@
-  */
++static int ufs_qcom_ice_derive_sw_secret(struct blk_crypto_profile *profile,
++					 const u8 *eph_key, size_t eph_key_size,
++					 u8 sw_secret[BLK_CRYPTO_SW_SECRET_SIZE])
++{
++	struct ufs_hba *hba = ufs_hba_from_crypto_profile(profile);
++	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
++
++	return qcom_ice_derive_sw_secret(host->ice, eph_key, eph_key_size,
++					 sw_secret);
++}
++
++static int ufs_qcom_ice_import_key(struct blk_crypto_profile *profile,
++				   const u8 *raw_key, size_t raw_key_size,
++				   u8 lt_key[BLK_CRYPTO_MAX_HW_WRAPPED_KEY_SIZE])
++{
++	struct ufs_hba *hba = ufs_hba_from_crypto_profile(profile);
++	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
++
++	return qcom_ice_import_key(host->ice, raw_key, raw_key_size, lt_key);
++}
++
++static int ufs_qcom_ice_generate_key(struct blk_crypto_profile *profile,
++				     u8 lt_key[BLK_CRYPTO_MAX_HW_WRAPPED_KEY_SIZE])
++{
++	struct ufs_hba *hba = ufs_hba_from_crypto_profile(profile);
++	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
++
++	return qcom_ice_generate_key(host->ice, lt_key);
++}
++
++static int ufs_qcom_ice_prepare_key(struct blk_crypto_profile *profile,
++				    const u8 *lt_key, size_t lt_key_size,
++				    u8 eph_key[BLK_CRYPTO_MAX_HW_WRAPPED_KEY_SIZE])
++{
++	struct ufs_hba *hba = ufs_hba_from_crypto_profile(profile);
++	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
++
++	return qcom_ice_prepare_key(host->ice, lt_key, lt_key_size, eph_key);
++}
++
+ static const struct blk_crypto_ll_ops ufs_qcom_crypto_ops = {
+ 	.keyslot_program	= ufs_qcom_ice_keyslot_program,
+ 	.keyslot_evict		= ufs_qcom_ice_keyslot_evict,
++	.derive_sw_secret	= ufs_qcom_ice_derive_sw_secret,
++	.import_key		= ufs_qcom_ice_import_key,
++	.generate_key		= ufs_qcom_ice_generate_key,
++	.prepare_key		= ufs_qcom_ice_prepare_key,
+ };
  
- #ifndef __QCOM_ICE_H__
- #define __QCOM_ICE_H__
+ #else
  
-+#include <linux/blk-crypto.h>
- #include <linux/types.h>
- 
- struct qcom_ice;
- 
--enum qcom_ice_crypto_key_size {
--	QCOM_ICE_CRYPTO_KEY_SIZE_INVALID	= 0x0,
--	QCOM_ICE_CRYPTO_KEY_SIZE_128		= 0x1,
--	QCOM_ICE_CRYPTO_KEY_SIZE_192		= 0x2,
--	QCOM_ICE_CRYPTO_KEY_SIZE_256		= 0x3,
--	QCOM_ICE_CRYPTO_KEY_SIZE_512		= 0x4,
--};
--
--enum qcom_ice_crypto_alg {
--	QCOM_ICE_CRYPTO_ALG_AES_XTS		= 0x0,
--	QCOM_ICE_CRYPTO_ALG_BITLOCKER_AES_CBC	= 0x1,
--	QCOM_ICE_CRYPTO_ALG_AES_ECB		= 0x2,
--	QCOM_ICE_CRYPTO_ALG_ESSIV_AES_CBC	= 0x3,
--};
--
- int qcom_ice_enable(struct qcom_ice *ice);
- int qcom_ice_resume(struct qcom_ice *ice);
- int qcom_ice_suspend(struct qcom_ice *ice);
--int qcom_ice_program_key(struct qcom_ice *ice,
--			 u8 algorithm_id, u8 key_size,
--			 const u8 crypto_key[], u8 data_unit_size,
--			 int slot);
-+int qcom_ice_program_key(struct qcom_ice *ice, unsigned int slot,
-+			 const struct blk_crypto_key *blk_key);
- int qcom_ice_evict_key(struct qcom_ice *ice, int slot);
- struct qcom_ice *devm_of_qcom_ice_get(struct device *dev);
- 
- #endif /* __QCOM_ICE_H__ */
+ static inline void ufs_qcom_ice_enable(struct ufs_qcom_host *host)
 -- 
 2.49.0
 
