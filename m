@@ -1,87 +1,63 @@
-Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 555A11E1DE9
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 22:29:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67FAE2CA6;
+	Fri,  4 Apr 2025 22:35:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743805789; cv=none; b=V3a/k8JWhwRWPOVdJM46pug5vOV2m9WZf4oZQmc61XJnxKWQ+0//OiNAoHrQkC2X0wJnKsEIpAXhDNjhQWQm7W86oQ6aHt6lVldqVVCYbiLMjGh3F0B5uecvnOgvL3cl7hHB5N/m9KpAKw2BiWzLO+gAMaAwf+LyQHoXx62VzPU=
+	t=1743806114; cv=none; b=lDNhZTmnJrt2vJFDOWalhwxi1VxgqWC2eJgspKXICMMmS7gwMd/oytkm55FbXUo5g+3KomDWJ6JS4YYy9frR1S/GfNzNiBW8j0CyJxsj77jx9PPTBjdDsv+MfOihx8vGj4xrzqCD5F0tZhNMzUsFYDjVJzaU/MAK8n3EouI4jow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743805789; c=relaxed/simple;
-	bh=NmHFPxslfg0WBqi0kIWYsQah2KUantxPzippnzuHLhA=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=ndr8PYbX+KvU7fFh6hpojnPSFLmqT2fkPC4eyQKRYTiD9J3XnF42Hu92ESPHOQ0X+5Q04WTgBQxzCq06IBHlaDy0Bx7FXYxm0BoEpcumDJdoB8lH/A1ubS3nToqn+uH8J8LX9KITXpeJZ2RzUXo2bWVgughVnMZqFP+P9X3SC4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=jlVLBt48; arc=none smtp.client-ip=209.85.166.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1743806114; c=relaxed/simple;
+	bh=Bqhq5x4MyU5RKA1rydjfrLPOMzHkrqVwcDDSmswHrZI=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=BjOZ24sL03bT2gOUq4U1ZdBx9CnzvdECEEozeJnX+IvjiwR7vKeOUDAHcBdMMH/X56apD0NrflGYx2bvtsY1Nci0iQlBCcOX7JM+z84ef09PXf9KAnnUnP2QNzHlyNkHxEqY3GBxQZs65fxE+WnNhKaDeR7ciR2J6ZCuz2DqNUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p/k4wKA/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="jlVLBt48"
-Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-3cda56e1dffso12602525ab.1
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 15:29:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1743805786; x=1744410586; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=X2+rBhFrK00h+ijJXPzvBEmgahY//panNVZB95538Xg=;
-        b=jlVLBt48N5Ox5THVj7Dw0HXSa9Fuhw4h9+FGupAISLrxVILJSiHTYfcSwcovShAyuJ
-         xkkhN8EzZc4bK4gbZyW3X9X6Hq/aHbqfhbbmBVhfkN72WnTch9d+TTEhYqTZOAUyoHRb
-         LmeuZkU35hfdx1GfIDnfUEVy0EDw5HWkoL2tX8EyhRDloNZ7+UtU5Qi/K5NEm1LkMMxj
-         qUovMMNzPix2ZrRzdNlxsdhJuLpDJw708dT/7PJLZwakXWqAuzUF/XYvzbXrsqW5Qikn
-         rgE1aweZKsxaf6lcWGU/hCXuZ3u/J2dfqz1ZdvZ9vtqgYdLZepnyzf0eZrIXjMfVIyB/
-         G5tw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743805786; x=1744410586;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=X2+rBhFrK00h+ijJXPzvBEmgahY//panNVZB95538Xg=;
-        b=gZolMjQ8Fc1czQ0CpA935KKWeAgxcvAcEwMVqBaOWUFfTvE5vPH7pg/U7bNtRSotkU
-         w8eR2iz1l7P5Y27Ewcu5q/5GgJAwwCF3+nOeMEP7t3uAeo6hKne4Pz8IwHx3S6WIWYIv
-         bUwFCBcWsJ41/s2uyWdYxJ0lILJY9jk9PN9QAoKytGPe2Vvx4i6/fPPDLSKYuzJ164wO
-         aJHhy0oiXuwWgEtXBfrTwn/ZiuLZL98+MVdghsqCOI17HIpdyQPn61TVmLvBT08xCUnA
-         NCINzuFxkGi+JWa5BYNkwJyB5EBad28DHzKmlWjTrr7nyuPS6JII5o/lShr2Dz9L/9UE
-         Ykkg==
-X-Forwarded-Encrypted: i=1; AJvYcCWNUOFpJZSxW3ZI02tpoXgMjsw0H2kfjICgPyRUNBR88SV7K1D15Xi1krxP1hLIuozGbhlitkjGme+6paI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzn6X4p/pksCSliKiPGzd7QpFd7GL87IHHbKVcCt0RoECd7dPA5
-	rIPVzAzYyXkFdmYpSjgIS6h2F/j1HPwuBW3y/OnBi5ruia9g35z+HFBdDnLRd+0=
-X-Gm-Gg: ASbGncttowMpTgohlCG9090bxAtn3hH5DiYtYMXzzeU0jS3qlCb32xyG91YKI/k62vG
-	OXMSW8L+dm1tiFPyWTFeZRuiIaVPcVc9CW+t1YMpcc30QfL32bbvys6M5oAFWO9dpZfKsXPrGON
-	AARWl3l9rxDEDT+juGYgIkuZSjiOD+b+JsLr2KpoaYkPKSctUos3yOCT5Mfkxc68xBpyWeUu4Jj
-	/mKF7enO5+6V0wNpdRzftd5GrnKCfUP0JjtvRik2zxo01NexSb9AJpcCXIjjyziUfpj4TEjPxVn
-	Vhbc7O3qCNV55W/sEKG+WYZfa0YsymoGZpAUj+6XJw==
-X-Google-Smtp-Source: AGHT+IFEdAwRfc0UX+JXaYJNbcrDKSXDiE0ZmU7jYIj1mI0qDtgXapwG2cndU6ey8QrKP9T048JSFA==
-X-Received: by 2002:a05:6602:4c82:b0:85b:476e:ede2 with SMTP id ca18e2360f4ac-8611b5788f3mr531756939f.13.1743805786473;
-        Fri, 04 Apr 2025 15:29:46 -0700 (PDT)
-Received: from [192.168.1.150] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f4b5c497besm1038305173.38.2025.04.04.15.29.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Apr 2025 15:29:45 -0700 (PDT)
-Message-ID: <078b3edf-aa34-452d-aa2b-244119f76ace@kernel.dk>
-Date: Fri, 4 Apr 2025 16:29:45 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p/k4wKA/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD465C4CEDD;
+	Fri,  4 Apr 2025 22:35:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743806113;
+	bh=Bqhq5x4MyU5RKA1rydjfrLPOMzHkrqVwcDDSmswHrZI=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=p/k4wKA/V/PXFe++QHEXiDXCanx/tHGwfdUWIViEKo+oiPG7R/GRcS55ZqbS/kmHE
+	 JdPNUYgPI27xiyXH5+XyMM4burlX0C8tvY2BOKfgC2mm3OFWKNQlLVdG0iFa557n0e
+	 +kdIjso1K+BWyBuwCZhoeCpxDRDmZs8lS0gKrC5UcaFUNn64GaswfMJpDhs12j8z1y
+	 VnBjxdSLmC/tvLFDPr/zD6Brv2vSE2Bz6CASq2kZF7x4vlR+9L0A+aKl6R6gNALtUf
+	 NJcAUC8i+I/jt504gLQZHMmWKzplVRhAwKgV6A9FXYhQWh8hRlzqiD4wY0YS/B8XbM
+	 qPnXDFXOv0qrQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33E563822D19;
+	Fri,  4 Apr 2025 22:35:52 +0000 (UTC)
+Subject: Re: [GIT PULL] smb3 client fixes
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <CAH2r5muz6e_n10Yia4R686nJsgqvzgpBVQ5vKk4oQe4tL-Wwqg@mail.gmail.com>
+References: <CAH2r5muz6e_n10Yia4R686nJsgqvzgpBVQ5vKk4oQe4tL-Wwqg@mail.gmail.com>
+X-PR-Tracked-List-Id: <linux-cifs.vger.kernel.org>
+X-PR-Tracked-Message-Id: <CAH2r5muz6e_n10Yia4R686nJsgqvzgpBVQ5vKk4oQe4tL-Wwqg@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.samba.org/sfrench/cifs-2.6.git tags/6.15-rc-part2-smb3-client-fixes
+X-PR-Tracked-Commit-Id: 827a1bd9af9df6a4023736ff52475b2a5395d91d
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 9f867ba24d3665d9ac9d9ef1f51844eb4479b291
+Message-Id: <174380615083.3459750.16087945652693205043.pr-tracker-bot@kernel.org>
+Date: Fri, 04 Apr 2025 22:35:50 +0000
+To: Steve French <smfrench@gmail.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, LKML <linux-kernel@vger.kernel.org>, CIFS <linux-cifs@vger.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Jens Axboe <axboe@kernel.dk>
-Subject: Re: [syzbot] [v9fs?] BUG: stack guard page was hit in io_wq_worker
-To: syzbot <syzbot+6f691675b0810bf591ec@syzkaller.appspotmail.com>
-Cc: akpm@linux-foundation.org, asmadeus@codewreck.org, ericvh@kernel.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org, lucho@ionkov.net,
- syzkaller-bugs@googlegroups.com, v9fs@lists.linux.dev
-References: <6782e97a.050a0220.d0267.004b.GAE@google.com>
-Content-Language: en-US
-In-Reply-To: <6782e97a.050a0220.d0267.004b.GAE@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-#syz set subsystems: netfs
+The pull request you sent on Fri, 4 Apr 2025 17:10:47 -0500:
 
-I believe this one is long fixed, though.
+> git://git.samba.org/sfrench/cifs-2.6.git tags/6.15-rc-part2-smb3-client-fixes
+
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/9f867ba24d3665d9ac9d9ef1f51844eb4479b291
+
+Thank you!
 
 -- 
-Jens Axboe
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
