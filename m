@@ -1,88 +1,85 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1BB21FF1A3
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 15:58:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9844ADF5C;
+	Fri,  4 Apr 2025 15:59:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743782302; cv=none; b=m0meR48ryPk30bSYQM08DNZNjBvfIj2e6L3rwCSbCNSxnrSaLWYvktNu6sK1JXroF6cUarvPU0lbcbJKOfE1ZNT/sYEAJIhR/FGfOtCPBaUKtsYgm8/z8uidNbl/zbRs1TFw8dFu1wCGRkoCIrJjPcLEDyly4bxhhqpeq5nnJ0U=
+	t=1743782398; cv=none; b=LdCXQ6kpCkqrgG32rY1NxSmUfWvMoqt6iAjBi9iitokrTP5AGLEn0TCpWIlL5fHc+Asd6wAtSEWEyWQQ0TN6ID8hzfraXf1VPRYr/vbJ5tWyZSOd/YtMYRl9t7q/UUBVy2YISmfMnoc38P1+J9CwIKGbdi4BFDmraJhFjsdxDDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743782302; c=relaxed/simple;
-	bh=tRKOkfd6qLJFQE7R23p8Xc/vjAtr8M2K9QIPcFzV9Ag=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p61VXnpVYe4rw6+sD6KYI65KZfPonFzRc0SQRIgZHxgt5mcheQFnfCjYFfWjjWGhSYZF5oRCDu2KPn+DMeOSJbh120RTwiZksaingeEyN5CwHgxCFMiSqRET+wDSd1l7w/OxExsXb+Gvp0ALhiNImElzipZFQDsmzEoAYc4i/Y0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PhqJS6CB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743782398; c=relaxed/simple;
+	bh=WrZEF9Yxb5ULBShRbFH48qvpHj9RvDQIE9VPe6LC7pI=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=bMbweDddAdHxhs/HGa34yoQYq+76gH7aW/YqoIvbjCtxTCRmn1qwhtcbNDcBrJ661hbLNnh8BjxpinneKChvRMPxVEwbcgcjT/syiR+uXt5iAGQgcvKq9e3Du6jevESlh/HFxG8vuz3U8KRwqv9CE/ZjMMVgh92kcJU8zYum3e4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LAEp/ntu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PhqJS6CB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D617EC4CEDD;
-	Fri,  4 Apr 2025 15:58:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LAEp/ntu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C8E5C4CEDD;
+	Fri,  4 Apr 2025 15:59:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743782302;
-	bh=tRKOkfd6qLJFQE7R23p8Xc/vjAtr8M2K9QIPcFzV9Ag=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PhqJS6CB9ljx49n4bTwoc+W4UoiVPaXAHlrw0XMHrE+ZQfoNuNTgGE6REnb11MSsh
-	 jjJd7dGrHDC1gBnJhb+Gst5w7SXVInNzlrzJoroXgszPdR9qJSDGa1aNXd0FM+Lrc3
-	 B1ZFOhfLwpxMEybw3P/j7znRIJ/Irt+5bLn2a+l6jkjxG5IfZnJw+yhdlk9qPzbsIz
-	 GqM5oOpTK+N0MWzXR51dZ9UGQlaaW0LOKFX17mBiLrbYn8iRKkQl369Tgkx1BgrR/5
-	 iGXTzAxzjOH/hzM17W8FsHfhQeBDYZrBnDDarQvle1HlFySurbhnJ0suvqyhFXYo7P
-	 9SFJ+qsMESBoA==
-Date: Fri, 4 Apr 2025 16:58:14 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Yeoreum Yun <yeoreum.yun@arm.com>
-Cc: catalin.marinas@arm.com, will@kernel.org, anshuman.khandual@arm.com,
-	joey.gouly@arm.com, maz@kernel.org, oliver.upton@linux.dev,
-	frederic@kernel.org, james.morse@arm.com,
-	hardevsinh.palaniya@siliconsignals.io,
-	shameerali.kolothum.thodi@huawei.com, huangxiaojia2@huawei.com,
-	mark.rutland@arm.com, samuel.holland@sifive.com,
-	palmer@rivosinc.com, charlie@rivosinc.com,
-	thiago.bauermann@linaro.org, bgray@linux.ibm.com,
-	tglx@linutronix.de, puranjay@kernel.org, david@redhat.com,
-	yang@os.amperecomputing.com, mbenes@suse.cz,
-	joel.granados@kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, nd@arm.com
-Subject: Re: [PATCH v2 4/4] tools/kselftest: add MTE_STORE_ONLY feature hwcap
- test
-Message-ID: <8cd07b7b-0795-485a-86f1-bc3a68be7820@sirena.org.uk>
-References: <20250403174701.74312-1-yeoreum.yun@arm.com>
- <20250403174701.74312-5-yeoreum.yun@arm.com>
+	s=k20201202; t=1743782398;
+	bh=WrZEF9Yxb5ULBShRbFH48qvpHj9RvDQIE9VPe6LC7pI=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=LAEp/ntu2bwl+Irpk6BuOuLI2cgXnKNQat2ed18ZIW5NctNUL1ZzhUd0SiXglWQhU
+	 wIgNo+pKH0sDGZc3CfjfhKe1E6uLnrSyFFyYIl3nEmcFKvLiqsr900F+GMsCUafUM2
+	 DSN9Sby7QD1DZoyazHYKnflfzSSO66Ayv/hTocDCBinOtlm/T1P9gOKgzbM39naJXN
+	 L1UOjaY0n+Afa09d9XFzORjYckdqmIc35buJxrJshty8ZLuuq6Vq+JbSVc52McYwxi
+	 37zgbu6RCMIJzQo2jfoX/8U0wTXaJ1N8Vtp20CSSmQEpFEPYwjCQEiSc5BKkPgBSae
+	 0UqgzEXJK8QwQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE4F33822D28;
+	Fri,  4 Apr 2025 16:00:36 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="PMkyeU5nDe5fyzdI"
-Content-Disposition: inline
-In-Reply-To: <20250403174701.74312-5-yeoreum.yun@arm.com>
-X-Cookie: You will soon forget this.
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH] selftests/bpf: Convert comma to semicolon
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174378243553.3310001.5428425724896312604.git-patchwork-notify@kernel.org>
+Date: Fri, 04 Apr 2025 16:00:35 +0000
+References: <20250401061546.1990156-1-nichen@iscas.ac.cn>
+In-Reply-To: <20250401061546.1990156-1-nichen@iscas.ac.cn>
+To: Chen Ni <nichen@iscas.ac.cn>
+Cc: andrii@kernel.org, eddyz87@gmail.com, mykolal@fb.com, ast@kernel.org,
+ daniel@iogearbox.net, martin.lau@linux.dev, song@kernel.org,
+ yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org,
+ sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org, shuah@kernel.org,
+ mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com,
+ peterz@infradead.org, ameryhung@gmail.com, juntong.deng@outlook.com,
+ oleg@redhat.com, bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+
+Hello:
+
+This patch was applied to bpf/bpf-next.git (master)
+by Andrii Nakryiko <andrii@kernel.org>:
+
+On Tue,  1 Apr 2025 14:15:46 +0800 you wrote:
+> Replace comma between expressions with semicolons.
+> 
+> Using a ',' in place of a ';' can have unintended side effects.
+> Although that is not the case here, it is seems best to use ';'
+> unless ',' is intended.
+> 
+> Found by inspection.
+> No functional change intended.
+> Compile tested only.
+> 
+> [...]
+
+Here is the summary with links:
+  - selftests/bpf: Convert comma to semicolon
+    https://git.kernel.org/bpf/bpf-next/c/c9661394850d
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
 
---PMkyeU5nDe5fyzdI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Thu, Apr 03, 2025 at 06:47:01PM +0100, Yeoreum Yun wrote:
-> add MTE_STORE_ONLY feature hwcap test.
-
-Reviewed-by: Mark Brown <broonie@kernel.org>
-
-Usually the subject would be kselftest/arm64 BTW.
-
---PMkyeU5nDe5fyzdI
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmfwAZUACgkQJNaLcl1U
-h9BWowf/R3vl/2tkx4iIVwMuzIG9MRQHR602mNzSvNgq8KueHzVfm1Oy4T7LMc5a
-sMSfEZ9vr+fBe8oRVtOSZjY53YzxvTjonEIB6bxOn11g5ylY57TFb2GmLBusWrg8
-/BVsagQj8qQR2t+blKH8h9lKz69LRpENjYhOFNeDoUHmBb3R4DtyCXJeN3bvIYWy
-1tOmOLooMSvfyWOzOZFt6jRAvzA1Zk1GcE9sM0m/WZiTVOoPudGmnfsU/gGSqa9E
-1I9yteqyNTciwAFdvvq6D3ADwhIUkKSF2/4a5IBVcd32OXzF2OZmpuPM0xYy6tEK
-QBo1DMuuW4YYtpKVMLHE94JWq7rZvg==
-=WmZg
------END PGP SIGNATURE-----
-
---PMkyeU5nDe5fyzdI--
