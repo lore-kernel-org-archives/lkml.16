@@ -1,57 +1,57 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 296F819924E
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 21:15:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AE781F0E5C
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 21:15:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743801312; cv=none; b=TEtynt+IhIQDWA4kFV85fAkhB/uUEr3TKAHwV3HfGq2FIRYAbDwFxfPj+J4Ovleluo0bfyCJsy9LO5nLBUG/mwHLh7JavpC574jMcEFZUx5/4q9IRuobBw5xqbpwAppz82iujeN09GdcsZkrzcDDjoYMT7Qux6IEht7wkfCUCvk=
+	t=1743801315; cv=none; b=lvH9AwWm7yPqVqlagWq1iLG+2gQradPCDkgRbaJAlboRQdmVoTnYJb/j6Oj8ZsuZ95bE998leQjURCrD38+06dUGnSgmLobRxM17SF/trHXvRGyiea/ddzN93ndPiI5raT58moVZN9cPEO9dDgCst5D9B3wrmXKUhJb3Guuc5nY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743801312; c=relaxed/simple;
-	bh=8YRrcSuqZ2X6elO3mJMg4SsPMd3wcuYxZDV9OuSa3es=;
+	s=arc-20240116; t=1743801315; c=relaxed/simple;
+	bh=R8NuUhmI02N5n1m2zQQJmYcq/tgo+PabOiQg+/IuxGk=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=QEfXQYGceMYKn86EvxZY1O0ltgfTbR/dt32yvgRjcc1wa0zuAE8B456Rq12E3i9+FXq353AUZaegboc5Kuai45cQVpEBSK8yNPeQ1HVQQaa+8jcdlaUplMRIumjbqz9mFxVKkyCnrhvzJ0RYRyZeYX6n7d3ceAfiM5pyAZ6ktPo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jOsLhL8b; arc=none smtp.client-ip=209.85.216.74
+	 To:Cc:Content-Type; b=AsZ2HjXfm1mDhDmnqLglOeyyciuuxlJ0em13K1UbonN8M49u/hC7lno/MKAMaSiMuToIF1yCyvIij0o0j3GaKDm1ANrvh94W3vhf9nRMsNyBCvGCS6ZG5Y2AsncdKH5nNxaLId3pYM6CKj7qrHP/dPu7OuWBGeppU3pDZdwXXLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RyGi+dNm; arc=none smtp.client-ip=209.85.210.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jOsLhL8b"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-3011bee1751so2347925a91.1
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 14:15:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RyGi+dNm"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-739071bdf2eso1856253b3a.2
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 14:15:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743801309; x=1744406109; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1743801313; x=1744406113; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=9QlPfYoNUHN0npkNqAREwoXYlnO6YkPNvJYmSOd9TNs=;
-        b=jOsLhL8b/9t3v1EmL9arzdQZwBPyrhvzElSxUQkQZ4gt22qTZc8R7st1njULiKSkeU
-         auxG/e79guVNomsLDQ2+nlf9Gc5IFu4k/ZVLwPED+Ok39TKjdzW+YPn63yLCtXhT+pHH
-         zau8dS/Ri/EoEPBnjRT3Q7/su/IWnF/ScL2u5aBNo3xV2AbePT2a3849JYi84noKwGVx
-         x5M9mjOtlqVoggRoVCC9Az1DBg9ap9gmnO23P1Qv1njUENYHOe0DEc+wBRJejlrYdGNB
-         nmYW92OVnTIKcHjz94yNUDdUhRI54QvRHb6jBHw6VGH1DxspP++uSx3562kVhF81D7Mc
-         KJ9Q==
+        bh=+c3CamxlMu4cATASgv0Iy6Lf5d+wt8ucP9dRv+3+Crg=;
+        b=RyGi+dNmo0BgsZBqodEkGGcqn0l+ZJrVdlX7al2r9GPIi19p6iyazBVfXdySUcHaEl
+         zOEoHdJpGRcaJTnYuAN5JmIiHHJz7M2q48GfsBGM9IOqtNWW74TxTXydWrQ3nAK5L8gq
+         cAUsWSrFsiVwL1U/ucLoqqoftVTzb//eb3UuZPJP2uj7zkYFxV2g/6zHBTIT8Zy/+t2v
+         Pq/ltO/mVHbKWO1zBGF7cl9KmqurvTNyjin4K0lhN2WBifk4qY2FSBNQSMWiuFvcM/nV
+         VHZBXV3EqBtZ0LrluCHA61GI38r2D4MHjzVc2PGZrNzmoiop9U4vTS1V7N3L5QAP4VH2
+         u5PQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743801309; x=1744406109;
+        d=1e100.net; s=20230601; t=1743801313; x=1744406113;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=9QlPfYoNUHN0npkNqAREwoXYlnO6YkPNvJYmSOd9TNs=;
-        b=WzDkfGiRQXCzt/JeyFByFmTJrvTncNRjwxIcNUQKRripNdhGIMKW1113NKezYbKCWF
-         GVRH7XphjzGGMgzDTj3wHTy9fqq9jDI+IhZzYCmTHVQEQa+mcWRSw3oyCubmbGTOuQzp
-         GsRxTqvHCJn9DaUJT6npYtZoXNNgepe1K9POdXWQk+fsFewPzlloPn/rW0rWYUbUB3cH
-         cUuZ7yLx/7b5TfFt70o0gbCvHfXn+xiP/RUp/i1t0W8WQXhgIuuCCpT5K4xsQhOfdKjh
-         6rH9Z+ebN2eHdeClG5HJbizZZkKjli9LU4utC/QaY8RgOUxLLc+1AkjKyioKZIB9N6KP
-         Yy/w==
-X-Forwarded-Encrypted: i=1; AJvYcCUgKbv3zOd96Dm+1RfR27JGp14ZVekzxVJ/4yJzCctslPxSqHZuPPmRXK9k6l0kVofS23Bb4swwrCufOoY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxlQMkjj6WrD9tjqRGJsd5HwCfraW+8/m6pE7/h55h8WW7bkzCp
-	yJVzwrWi1QEo1xYzLMnRl+BcJTMeYq8tJYAQi9yDF2CxyYIChP/rLiFJIlyLIfIKVUvXdZMq650
-	sLA==
-X-Google-Smtp-Source: AGHT+IFG/HHiS7U1SE6A/tzvJJ9amzcONWj17eofMzEa4fVAsgAjCRMKGaMbI4EF0SCoGNkBCkXglKNNX8c=
-X-Received: from pjbov5.prod.google.com ([2002:a17:90b:2585:b0:301:2679:9aa])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:51cd:b0:2ee:f80c:6889
- with SMTP id 98e67ed59e1d1-306a492209bmr7867881a91.33.1743801309333; Fri, 04
- Apr 2025 14:15:09 -0700 (PDT)
+        bh=+c3CamxlMu4cATASgv0Iy6Lf5d+wt8ucP9dRv+3+Crg=;
+        b=CASXbXbBbu/yTJ7w4ILw4jqzZLcGfR8TV/IFk1z2OaW+su6B1jIdU5lvPgU0TOBdcU
+         fvNXKWPPYaF+v1IfV23ReEh98kM5Qh4OYJKNP7gCk7SgZbI6du+qWFN5nQkDQVYpc9QG
+         CZst45pgLVPzwaOy8aSZvi+JMl3kiXUmuSPzzzHKioNTYe7v/f0S8mwUDtuO6dMpZ4cu
+         0OFV/1jXMtbOyRLv+OXe8cxPTmOdzh3MM5HpGAZnZl44umH6t1pFAOJB0ABMp80HwNTy
+         K2e5R6/lOvSg/axLmyShx2YWsxCn8Yg7WrNKWf/unqjqYgyzwuSYAdNic3icqphrEduy
+         S4yg==
+X-Forwarded-Encrypted: i=1; AJvYcCXnbUpRK/6wJBmxeaJ/44a/05wMWti2mfFCU6FazO4Ai/0Vi4GVB3QaVvJG8hX5SzhW6ixEDxapN9vQB1Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx8+nyQ1hea5blJUoTKbu7K3AVnZrhrbHAFZPkpEhwRyHlR/okF
+	Dr4Zbrc5Gpw1VqiZ502norpgmmZiDRbOySzfZn0ozOylajiDt9xvpYl1G0n1tqHJOh8xaP+XDBU
+	cLw==
+X-Google-Smtp-Source: AGHT+IF1tacFrLaohc7CkMS1gtWVWkDqbIHHrrY0gCvWvfr9O5duisiiz3XdJWCovxvuLreYisa8S4H6eT8=
+X-Received: from pfbhg1.prod.google.com ([2002:a05:6a00:8601:b0:736:3d80:706e])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:32a2:b0:1f5:75a9:5257
+ with SMTP id adf61e73a8af0-20113c57dfcmr1150484637.13.1743801312641; Fri, 04
+ Apr 2025 14:15:12 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Fri,  4 Apr 2025 14:14:45 -0700
+Date: Fri,  4 Apr 2025 14:14:47 -0700
 In-Reply-To: <20250404211449.1443336-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -61,8 +61,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250404211449.1443336-1-seanjc@google.com>
 X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
-Message-ID: <20250404211449.1443336-4-seanjc@google.com>
-Subject: [PATCH 3/7] irqbypass: Take ownership of producer/consumer token tracking
+Message-ID: <20250404211449.1443336-6-seanjc@google.com>
+Subject: [PATCH 5/7] irqbypass: Use paired consumer/producer to disconnect
+ during unregister
 From: Sean Christopherson <seanjc@google.com>
 To: "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
 	Paolo Bonzini <pbonzini@redhat.com>, Alex Williamson <alex.williamson@redhat.com>
@@ -73,278 +74,98 @@ Cc: kvm@vger.kernel.org, virtualization@lists.linux.dev,
 	Yong He <alexyonghe@tencent.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Move ownership of IRQ bypass token tracking into irqbypass.ko, and
-explicitly require callers to pass an eventfd_ctx structure instead of a
-completely opaque token.  Relying on producers and consumers to set the
-token appropriately is error prone, and hiding the fact that the token must
-be an eventfd_ctx pointer (for all intents and purposes) unnecessarily
-obfuscates the code and makes it more brittle.
+Use the paired consumer/producer information to disconnect IRQ bypass
+producers/consumers in O(1) time (ignoring the cost of __disconnect()).
 
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- drivers/vfio/pci/vfio_pci_intrs.c |  5 +----
- drivers/vhost/vdpa.c              |  4 +---
- include/linux/irqbypass.h         | 31 +++++++++++++++++--------------
- virt/kvm/eventfd.c                |  3 +--
- virt/lib/irqbypass.c              | 30 +++++++++++++++++++++---------
- 5 files changed, 41 insertions(+), 32 deletions(-)
+ virt/lib/irqbypass.c | 50 +++++++-------------------------------------
+ 1 file changed, 8 insertions(+), 42 deletions(-)
 
-diff --git a/drivers/vfio/pci/vfio_pci_intrs.c b/drivers/vfio/pci/vfio_pci_intrs.c
-index 8382c5834335..c852643d8359 100644
---- a/drivers/vfio/pci/vfio_pci_intrs.c
-+++ b/drivers/vfio/pci/vfio_pci_intrs.c
-@@ -505,15 +505,12 @@ static int vfio_msi_set_vector_signal(struct vfio_pci_core_device *vdev,
- 	if (ret)
- 		goto out_put_eventfd_ctx;
- 
--	ctx->producer.token = trigger;
- 	ctx->producer.irq = irq;
--	ret = irq_bypass_register_producer(&ctx->producer);
-+	ret = irq_bypass_register_producer(&ctx->producer, trigger);
- 	if (unlikely(ret)) {
- 		dev_info(&pdev->dev,
- 		"irq bypass producer (token %p) registration fails: %d\n",
- 		ctx->producer.token, ret);
--
--		ctx->producer.token = NULL;
- 	}
- 	ctx->trigger = trigger;
- 
-diff --git a/drivers/vhost/vdpa.c b/drivers/vhost/vdpa.c
-index 5a49b5a6d496..2749290f892d 100644
---- a/drivers/vhost/vdpa.c
-+++ b/drivers/vhost/vdpa.c
-@@ -213,7 +213,7 @@ static void vhost_vdpa_setup_vq_irq(struct vhost_vdpa *v, u16 qid)
- 		return;
- 
- 	vq->call_ctx.producer.irq = irq;
--	ret = irq_bypass_register_producer(&vq->call_ctx.producer);
-+	ret = irq_bypass_register_producer(&vq->call_ctx.producer, vq->call_ctx.ctx);
- 	if (unlikely(ret))
- 		dev_info(&v->dev, "vq %u, irq bypass producer (token %p) registration fails, ret =  %d\n",
- 			 qid, vq->call_ctx.producer.token, ret);
-@@ -712,7 +712,6 @@ static long vhost_vdpa_vring_ioctl(struct vhost_vdpa *v, unsigned int cmd,
- 			if (ops->get_status(vdpa) &
- 			    VIRTIO_CONFIG_S_DRIVER_OK)
- 				vhost_vdpa_unsetup_vq_irq(v, idx);
--			vq->call_ctx.producer.token = NULL;
- 		}
- 		break;
- 	}
-@@ -753,7 +752,6 @@ static long vhost_vdpa_vring_ioctl(struct vhost_vdpa *v, unsigned int cmd,
- 			cb.callback = vhost_vdpa_virtqueue_cb;
- 			cb.private = vq;
- 			cb.trigger = vq->call_ctx.ctx;
--			vq->call_ctx.producer.token = vq->call_ctx.ctx;
- 			if (ops->get_status(vdpa) &
- 			    VIRTIO_CONFIG_S_DRIVER_OK)
- 				vhost_vdpa_setup_vq_irq(v, idx);
-diff --git a/include/linux/irqbypass.h b/include/linux/irqbypass.h
-index 9bdb2a781841..379725b9a003 100644
---- a/include/linux/irqbypass.h
-+++ b/include/linux/irqbypass.h
-@@ -10,6 +10,7 @@
- 
- #include <linux/list.h>
- 
-+struct eventfd_ctx;
- struct irq_bypass_consumer;
- 
- /*
-@@ -18,20 +19,20 @@ struct irq_bypass_consumer;
-  * The IRQ bypass manager is a simple set of lists and callbacks that allows
-  * IRQ producers (ex. physical interrupt sources) to be matched to IRQ
-  * consumers (ex. virtualization hardware that allows IRQ bypass or offload)
-- * via a shared token (ex. eventfd_ctx).  Producers and consumers register
-- * independently.  When a token match is found, the optional @stop callback
-- * will be called for each participant.  The pair will then be connected via
-- * the @add_* callbacks, and finally the optional @start callback will allow
-- * any final coordination.  When either participant is unregistered, the
-- * process is repeated using the @del_* callbacks in place of the @add_*
-- * callbacks.  Match tokens must be unique per producer/consumer, 1:N pairings
-- * are not supported.
-+ * via a shared eventfd_ctx).  Producers and consumers register independently.
-+ * When a producer and consumer are paired, i.e. a token match is found, the
-+ * optional @stop callback will be called for each participant.  The pair will
-+ * then be connected via the @add_* callbacks, and finally the optional @start
-+ * callback will allow any final coordination.  When either participant is
-+ * unregistered, the process is repeated using the @del_* callbacks in place of
-+ * the @add_* callbacks.  Match tokens must be unique per producer/consumer,
-+ * 1:N pairings are not supported.
-  */
- 
- /**
-  * struct irq_bypass_producer - IRQ bypass producer definition
-  * @node: IRQ bypass manager private list management
-- * @token: opaque token to match between producer and consumer (non-NULL)
-+ * @token: IRQ bypass manage private token to match producers and consumers
-  * @irq: Linux IRQ number for the producer device
-  * @add_consumer: Connect the IRQ producer to an IRQ consumer (optional)
-  * @del_consumer: Disconnect the IRQ producer from an IRQ consumer (optional)
-@@ -57,7 +58,7 @@ struct irq_bypass_producer {
- /**
-  * struct irq_bypass_consumer - IRQ bypass consumer definition
-  * @node: IRQ bypass manager private list management
-- * @token: opaque token to match between producer and consumer (non-NULL)
-+ * @token: IRQ bypass manage private token to match producers and consumers
-  * @add_producer: Connect the IRQ consumer to an IRQ producer
-  * @del_producer: Disconnect the IRQ consumer from an IRQ producer
-  * @stop: Perform any quiesce operations necessary prior to add/del (optional)
-@@ -79,9 +80,11 @@ struct irq_bypass_consumer {
- 	void (*start)(struct irq_bypass_consumer *);
- };
- 
--int irq_bypass_register_producer(struct irq_bypass_producer *);
--void irq_bypass_unregister_producer(struct irq_bypass_producer *);
--int irq_bypass_register_consumer(struct irq_bypass_consumer *);
--void irq_bypass_unregister_consumer(struct irq_bypass_consumer *);
-+int irq_bypass_register_producer(struct irq_bypass_producer *producer,
-+				 struct eventfd_ctx *eventfd);
-+void irq_bypass_unregister_producer(struct irq_bypass_producer *producer);
-+int irq_bypass_register_consumer(struct irq_bypass_consumer *consumer,
-+				 struct eventfd_ctx *eventfd);
-+void irq_bypass_unregister_consumer(struct irq_bypass_consumer *consumer);
- 
- #endif /* IRQBYPASS_H */
-diff --git a/virt/kvm/eventfd.c b/virt/kvm/eventfd.c
-index 249ba5b72e9b..afdbac0d0b9f 100644
---- a/virt/kvm/eventfd.c
-+++ b/virt/kvm/eventfd.c
-@@ -426,12 +426,11 @@ kvm_irqfd_assign(struct kvm *kvm, struct kvm_irqfd *args)
- 
- #ifdef CONFIG_HAVE_KVM_IRQ_BYPASS
- 	if (kvm_arch_has_irq_bypass()) {
--		irqfd->consumer.token = (void *)irqfd->eventfd;
- 		irqfd->consumer.add_producer = kvm_arch_irq_bypass_add_producer;
- 		irqfd->consumer.del_producer = kvm_arch_irq_bypass_del_producer;
- 		irqfd->consumer.stop = kvm_arch_irq_bypass_stop;
- 		irqfd->consumer.start = kvm_arch_irq_bypass_start;
--		ret = irq_bypass_register_consumer(&irqfd->consumer);
-+		ret = irq_bypass_register_consumer(&irqfd->consumer, irqfd->eventfd);
- 		if (ret)
- 			pr_info("irq bypass consumer (token %p) registration fails: %d\n",
- 				irqfd->consumer.token, ret);
 diff --git a/virt/lib/irqbypass.c b/virt/lib/irqbypass.c
-index 28a4d933569a..98bf76d03078 100644
+index 4c912c30b7e6..6d68a0f71dd9 100644
 --- a/virt/lib/irqbypass.c
 +++ b/virt/lib/irqbypass.c
-@@ -77,30 +77,32 @@ static void __disconnect(struct irq_bypass_producer *prod,
- /**
-  * irq_bypass_register_producer - register IRQ bypass producer
-  * @producer: pointer to producer structure
-+ * @eventfd: pointer to the eventfd context associated with the producer
-  *
-  * Add the provided IRQ producer to the list of producers and connect
-  * with any matching token found on the IRQ consumers list.
+@@ -138,32 +138,16 @@ EXPORT_SYMBOL_GPL(irq_bypass_register_producer);
   */
--int irq_bypass_register_producer(struct irq_bypass_producer *producer)
-+int irq_bypass_register_producer(struct irq_bypass_producer *producer,
-+				 struct eventfd_ctx *eventfd)
+ void irq_bypass_unregister_producer(struct irq_bypass_producer *producer)
  {
- 	struct irq_bypass_producer *tmp;
- 	struct irq_bypass_consumer *consumer;
- 	int ret;
- 
--	if (!producer->token)
-+	if (WARN_ON_ONCE(producer->token))
- 		return -EINVAL;
+-	struct irq_bypass_producer *tmp;
+-	struct irq_bypass_consumer *consumer;
+-
+ 	if (!producer->token)
+ 		return;
  
  	mutex_lock(&lock);
  
- 	list_for_each_entry(tmp, &producers, node) {
--		if (tmp->token == producer->token) {
-+		if (tmp->token == eventfd) {
- 			ret = -EBUSY;
- 			goto out_err;
- 		}
- 	}
+-	list_for_each_entry(tmp, &producers, node) {
+-		if (tmp->token != producer->token)
+-			continue;
++	if (producer->consumer)
++		__disconnect(producer, producer->consumer);
  
- 	list_for_each_entry(consumer, &consumers, node) {
--		if (consumer->token == producer->token) {
-+		if (consumer->token == eventfd) {
- 			ret = __connect(producer, consumer);
- 			if (ret)
- 				goto out_err;
-@@ -108,6 +110,7 @@ int irq_bypass_register_producer(struct irq_bypass_producer *producer)
- 		}
- 	}
- 
-+	producer->token = eventfd;
- 	list_add(&producer->node, &producers);
- 
- 	mutex_unlock(&lock);
-@@ -147,10 +150,12 @@ void irq_bypass_unregister_producer(struct irq_bypass_producer *producer)
- 			}
- 		}
- 
-+		producer->token = NULL;
- 		list_del(&producer->node);
- 		break;
- 	}
- 
-+	WARN_ON_ONCE(producer->token);
+-		list_for_each_entry(consumer, &consumers, node) {
+-			if (consumer->token == producer->token) {
+-				WARN_ON_ONCE(producer->consumer != consumer);
+-				__disconnect(producer, consumer);
+-				break;
+-			}
+-		}
+-
+-		producer->token = NULL;
+-		list_del(&producer->node);
+-		break;
+-	}
+-
+-	WARN_ON_ONCE(producer->token);
++	producer->token = NULL;
++	list_del(&producer->node);
  	mutex_unlock(&lock);
  }
  EXPORT_SYMBOL_GPL(irq_bypass_unregister_producer);
-@@ -158,31 +163,35 @@ EXPORT_SYMBOL_GPL(irq_bypass_unregister_producer);
- /**
-  * irq_bypass_register_consumer - register IRQ bypass consumer
+@@ -173,8 +157,6 @@ EXPORT_SYMBOL_GPL(irq_bypass_unregister_producer);
   * @consumer: pointer to consumer structure
-+ * @eventfd: pointer to the eventfd context associated with the consumer
+  * @eventfd: pointer to the eventfd context associated with the consumer
   *
-  * Add the provided IRQ consumer to the list of consumers and connect
-  * with any matching token found on the IRQ producer list.
+- * Add the provided IRQ consumer to the list of consumers and connect
+- * with any matching token found on the IRQ producer list.
   */
--int irq_bypass_register_consumer(struct irq_bypass_consumer *consumer)
-+int irq_bypass_register_consumer(struct irq_bypass_consumer *consumer,
-+				 struct eventfd_ctx *eventfd)
+ int irq_bypass_register_consumer(struct irq_bypass_consumer *consumer,
+ 				 struct eventfd_ctx *eventfd)
+@@ -228,32 +210,16 @@ EXPORT_SYMBOL_GPL(irq_bypass_register_consumer);
+  */
+ void irq_bypass_unregister_consumer(struct irq_bypass_consumer *consumer)
  {
- 	struct irq_bypass_consumer *tmp;
- 	struct irq_bypass_producer *producer;
- 	int ret;
- 
--	if (!consumer->token ||
--	    !consumer->add_producer || !consumer->del_producer)
-+	if (WARN_ON_ONCE(consumer->token))
-+		return -EINVAL;
-+
-+	if (!consumer->add_producer || !consumer->del_producer)
- 		return -EINVAL;
+-	struct irq_bypass_consumer *tmp;
+-	struct irq_bypass_producer *producer;
+-
+ 	if (!consumer->token)
+ 		return;
  
  	mutex_lock(&lock);
  
- 	list_for_each_entry(tmp, &consumers, node) {
--		if (tmp->token == consumer->token || tmp == consumer) {
-+		if (tmp->token == eventfd || tmp == consumer) {
- 			ret = -EBUSY;
- 			goto out_err;
- 		}
- 	}
+-	list_for_each_entry(tmp, &consumers, node) {
+-		if (tmp != consumer)
+-			continue;
++	if (consumer->producer)
++		__disconnect(consumer->producer, consumer);
  
- 	list_for_each_entry(producer, &producers, node) {
--		if (producer->token == consumer->token) {
-+		if (producer->token == eventfd) {
- 			ret = __connect(producer, consumer);
- 			if (ret)
- 				goto out_err;
-@@ -190,6 +199,7 @@ int irq_bypass_register_consumer(struct irq_bypass_consumer *consumer)
- 		}
- 	}
- 
-+	consumer->token = eventfd;
- 	list_add(&consumer->node, &consumers);
- 
- 	mutex_unlock(&lock);
-@@ -229,10 +239,12 @@ void irq_bypass_unregister_consumer(struct irq_bypass_consumer *consumer)
- 			}
- 		}
- 
-+		consumer->token = NULL;
- 		list_del(&consumer->node);
- 		break;
- 	}
- 
-+	WARN_ON_ONCE(consumer->token);
+-		list_for_each_entry(producer, &producers, node) {
+-			if (producer->token == consumer->token) {
+-				WARN_ON_ONCE(consumer->producer != producer);
+-				__disconnect(producer, consumer);
+-				break;
+-			}
+-		}
+-
+-		consumer->token = NULL;
+-		list_del(&consumer->node);
+-		break;
+-	}
+-
+-	WARN_ON_ONCE(consumer->token);
++	consumer->token = NULL;
++	list_del(&consumer->node);
  	mutex_unlock(&lock);
  }
  EXPORT_SYMBOL_GPL(irq_bypass_unregister_consumer);
