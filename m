@@ -1,78 +1,59 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 211781A23AD
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 09:54:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB5BB1A314F;
+	Fri,  4 Apr 2025 09:54:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743760457; cv=none; b=ClKfLAAZXZIKxpOHnVIQS9p/jKDHdQHXxH6JZggMHHGjnXEM0D+hS30G8Twt1u/N+3/jVucSCjWiyhoQXjam0UJdMvzoIRM54KNlUI4yGiahyjRv+CPCrYOOAbEZxF2OndUxlwm5oCPXvTz1w9agJwnVKk9UGVRApUMWZZywWJY=
+	t=1743760483; cv=none; b=q7WFbxFnSSWxOvW02CjZb8odMCpOWAeVJp7P7gK0AXu0Q7M441euZm/ifrcEZzOQwQNCh52yDgPN8CZALQGbVaBPzLOWUYFcuil6YhIn0kBMGyJHwduIyb1XTK0jfT6G3rWUq+iV0V3s4LkeLYmhkptu393bZ+jkqJNlvNl6Zsg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743760457; c=relaxed/simple;
-	bh=hNeF7z0PXm+fZ7v87K6B50kIrzIayzQQzo6kuSxs2hY=;
+	s=arc-20240116; t=1743760483; c=relaxed/simple;
+	bh=cSrVbGxlpctlURfhSmALnKBVmteINKipAHsEvzkIzVk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=COLb8ScZN8aRJezFQMqKSYz9AZ+jEVE78RFm/UOjuXsZURhT1uFHOhXWjK3V7E2jtYNW4hh+WjusJ/e7lJeLQwUfpEo7mKRkOq2gN0qQVAlAgi7SOn09fxrJCaN135lAu5Vp8nlE7Xm0x6/YRum4I9lR7f31Nh1AbDw1JlpLL7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PSUiO4NR; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=f0Rj1o2jOOV562AyNPOz3+Mx3XSUw7A43r3+krZww7fxPwVMN9yd6ar+PRbe45sCCOYMt4PEF8WM/2tpG74ZU1WAeCUmucmd8YNv6IdLMWySBfj6uvAX7XxnWc5IdoclB4MzjOzoOEp1hWELTSAPpCjpjmuBrP0rduhB5EDWhH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NqdZLC8P; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PSUiO4NR"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ac298c8fa50so308199366b.1
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 02:54:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743760453; x=1744365253; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=kYAlHXEplBZR8C+Nf50IvIJmhOSpOhaYvMLYZLbAtKw=;
-        b=PSUiO4NRJ7BCL0mL0p8SghQIM+pQNmuV+iah/Hy03TDHKCYzo1v81v6VsIbkNXjQ0W
-         OiX+DzmB7vSvZV8M3a5btnnym/02igUBTmAdq7J3ghGuqgzSazAMCAkNtJrRu67xuIhO
-         cldE6KnKKsw0ubqsqG12NiTY/OBIpQ7bx8HB1BQor/8LjeZzfltGmF8Hxsnw47h7vqJg
-         OvBaf5OtAweU98FE8h41o4PjR/kni+OWNwbY4aIkHqK4m3yNdmtqvM3q8kv15SKh9Fuy
-         DLdM/Uhq0pcH50AWd3DrlXuJs345e85iXp2EUnq4qkqN1lDf9k4TlyHfMULoWP2MF2sY
-         QZ2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743760453; x=1744365253;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kYAlHXEplBZR8C+Nf50IvIJmhOSpOhaYvMLYZLbAtKw=;
-        b=kuQ+tXjTPlY3rmcM4rI6tK4UFYddQP4en2ankHKMWXyELLrz9ojjl6kXXMsMgmU5Au
-         YH6HVhfUgt5dcdWFvJ6HkuNzv927wBh2VbGW0RILiAUF/OoJ0xgiaCRJiguyP5nK5Csp
-         n+SbCdwSNB2vuEhPd774Gw9oDkU/cpwa/aBbwzeAZTPGbvm1mOuTC8pjuLcJ8tTFHvl1
-         zMJ0rGlFlL+HMYFTvC1ZY7x1kb/IUnH+Go3I4KV85jAyAm5E10FeEDOCA29zHomr345b
-         zm2vuXUfPIZzC/t9p+cNKzkA15SGlhImku/15DhSwvYlOfuSZ/iGtWGwoy2ppOPKl4Aw
-         UZ0w==
-X-Forwarded-Encrypted: i=1; AJvYcCUJ+rmomipnUItpNBuxD1uVLdE3wkbby+7dsz21HtIj5hG5xO/cQZVb8eAWbQ1+1ULnQjyJyrICrm9U25s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzD8LH7Mhp/xBreszmxGk9mHOsBb2o7zrrFfse7wi0Vw91NJ3iD
-	fjWHwUlSg/CeLQOkjGaa7lymg0XXVnKV8YC9yDSnyMSIoB9qu1DkQY+dureR4ps=
-X-Gm-Gg: ASbGnctBRQRqjetu4M/qm4LsbSLn6SZN33BOxIMOUS8/sKUemKgmgj4OCcrV/EtQyxg
-	di9B+fF9+mgfbvSvJdsbBVhyeFmJxBBaOs3CST7DLtV7eWEZFhko+cwOWDsxuTj69OTzjOjN4o0
-	4svwAeK63O4Es7fkCGWysR6R6RHZyDerFgaQg5dj+8GEAu1UZKa6MaCOVQXyo1x74A4Ml1lCcDb
-	+C28JY0PBJLBwsnoW44kf0IOxQsNJBV2nN4BCBdXBcZ5jFxYnY0HTdnNWMnmjSbNg/FUqk68J9x
-	W5acuXeQl0Zksd6UcUBlgWJ7lx73XdgUk1cQkRNLZ7T4wbVi85wQYe52
-X-Google-Smtp-Source: AGHT+IHVK1xPFjgUlctqGoP+C/6wMdr/sOeO1yGK5ebaeEn+PcqQk/KtPy0g6bA4aI5FsjIRW2rTCA==
-X-Received: by 2002:a17:907:6d29:b0:ac1:f19a:c0a0 with SMTP id a640c23a62f3a-ac7d177475emr226973866b.20.1743760453343;
-        Fri, 04 Apr 2025 02:54:13 -0700 (PDT)
-Received: from linaro.org ([2a02:2454:ff21:ef30:e124:1321:48a4:8c63])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7c013f651sm224335566b.123.2025.04.04.02.54.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Apr 2025 02:54:12 -0700 (PDT)
-Date: Fri, 4 Apr 2025 11:54:10 +0200
-From: Stephan Gerhold <stephan.gerhold@linaro.org>
-To: Wesley Cheng <quic_wcheng@quicinc.com>
-Cc: srinivas.kandagatla@linaro.org, mathias.nyman@intel.com, perex@perex.cz,
-	conor+dt@kernel.org, dmitry.torokhov@gmail.com, corbet@lwn.net,
-	broonie@kernel.org, lgirdwood@gmail.com, krzk+dt@kernel.org,
-	pierre-louis.bossart@linux.intel.com, Thinh.Nguyen@synopsys.com,
-	tiwai@suse.com, robh@kernel.org, gregkh@linuxfoundation.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-sound@vger.kernel.org, linux-usb@vger.kernel.org,
-	linux-input@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-doc@vger.kernel.org
-Subject: Re: [PATCH v37 24/31] ASoC: qcom: qdsp6: Add USB backend ASoC driver
- for Q6
-Message-ID: <Z--sQj-fXwXkk5iS@linaro.org>
-References: <20250404002728.3590501-1-quic_wcheng@quicinc.com>
- <20250404002728.3590501-25-quic_wcheng@quicinc.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NqdZLC8P"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D486BC4CEDD;
+	Fri,  4 Apr 2025 09:54:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743760482;
+	bh=cSrVbGxlpctlURfhSmALnKBVmteINKipAHsEvzkIzVk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NqdZLC8PCMbwQmaPJjUq1AB8uqnD6azcUrHQUG7wlkgsJ5KZyLC3gWR8+5IQ8gdkH
+	 BipTaslXkHHOiwz6doB2JCUH5WpxGhWYjF6ywbQfHN0TpQDALMbrZQRGxKRdi/Mna1
+	 DrImE5oznfHcWyCtDYGehTiv4FdNZ3AgwLl+Pi4myqIj3yA8VUB8TtFzuY/hsgbk3V
+	 s+JisuKs89/jhocAXjeRatMHAtxEaG7IMWtsefPAlDHT4AGYaPA7lD9NRhHx33dXBn
+	 EjjpU4eQwu80NTHkXfft43c+DxySzS8KH3+L80qUYkfY8ownLn/BHE1NsKZaXz/ZwV
+	 WxjdoB7VzppCw==
+Date: Fri, 4 Apr 2025 12:54:25 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Pratyush Yadav <ptyadav@amazon.de>,
+	Changyuan Lyu <changyuanl@google.com>, linux-kernel@vger.kernel.org,
+	graf@amazon.com, akpm@linux-foundation.org, luto@kernel.org,
+	anthony.yznaga@oracle.com, arnd@arndb.de, ashish.kalra@amd.com,
+	benh@kernel.crashing.org, bp@alien8.de, catalin.marinas@arm.com,
+	dave.hansen@linux.intel.com, dwmw2@infradead.org,
+	ebiederm@xmission.com, mingo@redhat.com, jgowans@amazon.com,
+	corbet@lwn.net, krzk@kernel.org, mark.rutland@arm.com,
+	pbonzini@redhat.com, pasha.tatashin@soleen.com, hpa@zytor.com,
+	peterz@infradead.org, robh+dt@kernel.org, robh@kernel.org,
+	saravanak@google.com, skinsburskii@linux.microsoft.com,
+	rostedt@goodmis.org, tglx@linutronix.de, thomas.lendacky@amd.com,
+	usama.arif@bytedance.com, will@kernel.org,
+	devicetree@vger.kernel.org, kexec@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+	linux-mm@kvack.org, x86@kernel.org
+Subject: Re: [PATCH v5 09/16] kexec: enable KHO support for memory
+ preservation
+Message-ID: <Z--sUYCvP3Q8nT8e@kernel.org>
+References: <20250320015551.2157511-1-changyuanl@google.com>
+ <20250320015551.2157511-10-changyuanl@google.com>
+ <mafs05xjmqsqc.fsf@amazon.de>
+ <20250403114209.GE342109@nvidia.com>
+ <Z-6UA3C1TPeH_kGL@kernel.org>
+ <20250403142438.GF342109@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -81,107 +62,272 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250404002728.3590501-25-quic_wcheng@quicinc.com>
+In-Reply-To: <20250403142438.GF342109@nvidia.com>
 
-On Thu, Apr 03, 2025 at 05:27:21PM -0700, Wesley Cheng wrote:
-> Create a USB BE component that will register a new USB port to the ASoC USB
-> framework.  This will handle determination on if the requested audio
-> profile is supported by the USB device currently selected.
+Hi Jason,
+
+On Thu, Apr 03, 2025 at 11:24:38AM -0300, Jason Gunthorpe wrote:
+> On Thu, Apr 03, 2025 at 04:58:27PM +0300, Mike Rapoport wrote:
+> > On Thu, Apr 03, 2025 at 08:42:09AM -0300, Jason Gunthorpe wrote:
+> > > On Wed, Apr 02, 2025 at 07:16:27PM +0000, Pratyush Yadav wrote:
+> > > > > +int kho_preserve_phys(phys_addr_t phys, size_t size)
+> > > > > +{
+> > > > > +	unsigned long pfn = PHYS_PFN(phys), end_pfn = PHYS_PFN(phys + size);
+> > > > > +	unsigned int order = ilog2(end_pfn - pfn);
+> > > > 
+> > > > This caught my eye when playing around with the code. It does not put
+> > > > any limit on the order, so it can exceed NR_PAGE_ORDERS. Also, when
+> > > > initializing the page after KHO, we pass the order directly to
+> > > > prep_compound_page() without sanity checking it. The next kernel might
+> > > > not support all the orders the current one supports. Perhaps something
+> > > > to fix?
+> > > 
+> > > IMHO we should delete the phys functions until we get a user of them
+> > 
+> > The only user of memory tracker in this series uses kho_preserve_phys()
 > 
-> Check for if the PCM format is supported during the hw_params callback.  If
-> the profile is not supported then the userspace ALSA entity will receive an
-> error, and can take further action.
+> But it really shouldn't. The reserved memory is a completely different
+> mechanism than buddy allocator preservation. It doesn't even call
+> kho_restore_phys() those pages, it just feeds the ranges directly to:
 > 
-> Signed-off-by: Wesley Cheng <quic_wcheng@quicinc.com>
-> ---
->  include/sound/q6usboffload.h  |  20 +++
->  sound/soc/qcom/Kconfig        |  12 ++
->  sound/soc/qcom/qdsp6/Makefile |   1 +
->  sound/soc/qcom/qdsp6/q6usb.c  | 278 ++++++++++++++++++++++++++++++++++
->  4 files changed, 311 insertions(+)
->  create mode 100644 include/sound/q6usboffload.h
->  create mode 100644 sound/soc/qcom/qdsp6/q6usb.c
+> +       reserved_mem_add(*p_start, size, name);
 > 
-> diff --git a/include/sound/q6usboffload.h b/include/sound/q6usboffload.h
-> new file mode 100644
-> index 000000000000..35ae26ba6509
-> --- /dev/null
-> +++ b/include/sound/q6usboffload.h
-> @@ -0,0 +1,20 @@
-> +/* SPDX-License-Identifier: GPL-2.0
-> + *
-> + * sound/q6usboffload.h -- QDSP6 USB offload
-> + *
-> + * Copyright (c) 2022-2025 Qualcomm Innovation Center, Inc. All rights reserved.
-> + */
-> +
-> +/**
-> + * struct q6usb_offload - USB backend DAI link offload parameters
-> + * @dev: dev handle to usb be
-> + * @domain: allocated iommu domain
-> + * @sid: streamID for iommu
-> + * @intr_num: usb interrupter number
-> + **/
-> +struct q6usb_offload {
-> +	struct device *dev;
-> +	struct iommu_domain *domain;
-> +	long long sid;
+> The bitmaps should be understood as preserving memory from the buddy
+> allocator only.
+> 
+> IMHO it should not call kho_preserve_phys() at all.
 
-"long long" feels like overkill for sid, given that it's essentially
-either an u8 or -1. I see you just copied this from q6asm-dai.c, but
-unlike q6asm-dai, you don't seem to check for sid < 0 in PATCH 28/31
-(qc_audio_offload.c).
+Do you mean that for preserving large physical ranges we need something
+entirely different? 
 
-Looking at the logic in q6asm-dai.c, it feels like this could really
-just be an "u8", since the -1 for "no iommus specified" is effectively
-just handled like sid = 0.
+Then we don't need the bitmaps at this point, as we don't have any users
+for kho_preserve_folio() and we should not worry ourself with orders and
+restoration of high order folios until then ;-)
 
-> +	u16 intr_num;
-> +};
-> [...]
-> diff --git a/sound/soc/qcom/qdsp6/q6usb.c b/sound/soc/qcom/qdsp6/q6usb.c
-> new file mode 100644
-> index 000000000000..cb8c4a62a816
-> --- /dev/null
-> +++ b/sound/soc/qcom/qdsp6/q6usb.c
-> [...]
-> +static int q6usb_dai_dev_probe(struct platform_device *pdev)
-> +{
-> +	struct device_node *node = pdev->dev.of_node;
-> +	struct q6usb_port_data *data;
-> +	struct device *dev = &pdev->dev;
-> +	struct of_phandle_args args;
-> +	int ret;
-> +
-> +	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
-> +	if (!data)
-> +		return -ENOMEM;
-> +
-> +	ret = of_property_read_u16(node, "qcom,usb-audio-intr-idx",
-> +				   &data->priv.intr_num);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "failed to read intr idx.\n");
-> +		return ret;
-> +	}
-> +
-> +	ret = of_parse_phandle_with_fixed_args(node, "iommus", 1, 0, &args);
-> +	if (ret < 0)
-> +		data->priv.sid = -1;
-> +	else
+Now more seriously, I considered the bitmaps and sparse xarrays as good
+initial implementation of memory preservation that can do both physical
+ranges now and folios later when we'll need them. It might not be the
+optimal solution in the long run but we don't have enough data right now to
+do any optimizations for real. Preserving huge amounts of order-0 pages
+does not seem to me a representative test case at all. 
 
-Could just do if (ret == 0) here and drop the if branch above, if you
-make sid an u8 like I suggested above.
+The xarrays + bitmaps do have the limitation that we cannot store any
+information about the folio except its order and if we are anyway need
+something else to preserve physical ranges, I suggest starting with
+preserving ranges and then adding optimizations for the folio case.
 
-> +		data->priv.sid = args.args[0] & Q6_USB_SID_MASK;
-> +
-> +	data->priv.domain = iommu_get_domain_for_dev(&pdev->dev);
-> +
-> +	data->priv.dev = dev;
-> +	INIT_LIST_HEAD(&data->devices);
+As I've mentioned earlier, maple tree is perfect for tracking ranges, it
+simpler than other alternatives, and at allows storing information
+about a range and easy and efficient coalescing for adjacent ranges with
+matching properties. The maple tree based memory tracker is less memory
+efficient than bitmap if we count how many data is required to preserve
+gigabytes of distinct order-0 pages, but I don't think this is the right
+thing to measure at least until we have some real data about how KHO is
+used.
 
-I think you also need devm_mutex_init(&data->lock) or separate
-mutex_init()/mutex_destroy() here, if someone enables
-CONFIG_DEBUG_MUTEXES.
+Here's something that implements preservation of ranges (compile tested
+only) and adding folios with their orders and maybe other information would
+be quite easy.
 
-Thanks,
-Stephan
+/*
+ * Keep track of memory that is to be preserved across KHO.
+ *
+ * For simplicity use a maple tree that conveniently stores ranges and
+ * allows adding BITS_PER_XA_VALUE of metadata to each range
+ */
+
+struct kho_mem_track
+{
+	struct maple_tree ranges;
+};
+
+static struct kho_mem_track kho_mem_track;
+
+typedef unsigned long kho_range_desc_t;
+
+static int __kho_preserve(struct kho_mem_track *tracker, unsigned long addr,
+			  size_t size, kho_range_desc_t info)
+{
+	struct maple_tree *ranges = &tracker->ranges;
+	MA_STATE(mas, ranges, addr - 1, addr + size + 1);
+	unsigned long lower, upper;
+
+	void *area = NULL;
+
+	lower = addr;
+	upper = addr + size - 1;
+
+	might_sleep();
+
+	area = mas_walk(&mas);
+	if (area && mas.last == addr - 1)
+		lower = mas.index;
+
+	area = mas_next(&mas, ULONG_MAX);
+	if (area && mas.index == addr + size)
+		upper = mas.last;
+
+	mas_set_range(&mas, lower, upper);
+
+	return mas_store_gfp(&mas, xa_mk_value(info), GFP_KERNEL);
+}
+
+/**
+ * kho_preserve_phys - preserve a physcally contiguous range accross KHO.
+ * @phys: physical address of the range
+ * @phys: size of the range
+ *
+ * Records that the entire range from @phys to @phys + @size is preserved
+ * across KHO.
+ *
+ * Return: 0 on success, error code on failure
+ */
+int kho_preserve_phys(phys_addr_t phys, size_t size)
+{
+	return __kho_preserve(&kho_mem_track, phys, size, 0);
+}
+EXPORT_SYMBOL_GPL(kho_preserve_phys);
+
+#define KHOSER_PTR(type)  union {phys_addr_t phys; type ptr;}
+#define KHOSER_STORE_PTR(dest, val)			\
+	({						\
+		(dest).phys = virt_to_phys(val);	\
+		typecheck(typeof((dest).ptr), val);	\
+	})
+#define KHOSER_LOAD_PTR(src) ((src).phys ? (typeof((src).ptr))(phys_to_virt((src).phys)): NULL)
+
+struct khoser_mem_range {
+	phys_addr_t start;
+	phys_addr_t size;
+	unsigned long data;
+};
+
+struct khoser_mem_chunk_hdr {
+	KHOSER_PTR(struct khoser_mem_chunk *) next;
+	unsigned long num_ranges;
+};
+
+#define KHOSER_RANGES_SIZE					\
+	((PAGE_SIZE - sizeof(struct khoser_mem_chunk_hdr) /	\
+	  sizeof(struct khoser_mem_range)))
+
+struct khoser_mem_chunk {
+	struct khoser_mem_chunk_hdr hdr;
+	struct khoser_mem_range ranges[KHOSER_RANGES_SIZE];
+};
+
+static int new_chunk(struct khoser_mem_chunk **cur_chunk)
+{
+	struct khoser_mem_chunk *chunk;
+
+	chunk = kzalloc(sizeof(*chunk), GFP_KERNEL);
+	if (!chunk)
+		return -ENOMEM;
+	if (*cur_chunk)
+		KHOSER_STORE_PTR((*cur_chunk)->hdr.next, chunk);
+	*cur_chunk = chunk;
+	return 0;
+}
+
+/*
+ * Record all the ranges in a linked list of pages for the next kernel to
+ * process. Each chunk holds array of ragnes. The maple_tree is used to store
+ * them in a tree while building up the data structure, but the KHO successor
+ * kernel only needs to process them once in order.
+ *
+ * All of this memory is normal kmalloc() memory and is not marked for
+ * preservation. The successor kernel will remain isolated to the scratch space
+ * until it completes processing this list. Once processed all the memory
+ * storing these ranges will be marked as free.
+ */
+static int kho_mem_serialize(phys_addr_t *fdt_value)
+{
+	struct kho_mem_track *tracker = &kho_mem_track;
+	struct maple_tree *ranges = &tracker->ranges;
+	struct khoser_mem_chunk *first_chunk = NULL;
+	struct khoser_mem_chunk *chunk = NULL;
+	MA_STATE(mas, ranges, 0, ULONG_MAX);
+	void *entry;
+	int err;
+
+	mas_for_each(&mas, entry, ULONG_MAX) {
+		size_t size = mas.last - mas.index + 1;
+		struct khoser_mem_range *range;
+
+		err = new_chunk(&chunk);
+		if (err)
+			goto err_free;
+		if (!first_chunk)
+			first_chunk = chunk;
+
+		if (chunk->hdr.num_ranges == ARRAY_SIZE(chunk->ranges)) {
+			err = new_chunk(&chunk);
+			if (err)
+				goto err_free;
+		}
+
+		range = &chunk->ranges[chunk->hdr.num_ranges];
+		range->start = mas.index;
+		range->size = size;
+		range->data = xa_to_value(entry);
+		chunk->hdr.num_ranges++;
+	}
+
+	*fdt_value = virt_to_phys(first_chunk);
+
+	return 0;
+
+err_free:
+	chunk = first_chunk;
+	while (chunk) {
+		struct khoser_mem_chunk *tmp = chunk;
+		chunk = KHOSER_LOAD_PTR(chunk->hdr.next);
+		kfree(tmp);
+	}
+	return err;
+}
+
+static void __init deserialize_range(struct khoser_mem_range *range)
+{
+	memblock_reserved_mark_noinit(range->start, range->size);
+	memblock_reserve(range->start, range->size);
+}
+
+static void __init kho_mem_deserialize(void)
+{
+	const void *fdt = kho_get_fdt();
+	struct khoser_mem_chunk *chunk;
+	const phys_addr_t *mem;
+	int len, node;
+
+	if (!fdt)
+		return;
+
+	node = fdt_path_offset(fdt, "/preserved-memory");
+	if (node < 0) {
+		pr_err("no preserved-memory node: %d\n", node);
+		return;
+	}
+
+	mem = fdt_getprop(fdt, node, "metadata", &len);
+	if (!mem || len != sizeof(*mem)) {
+		pr_err("failed to get preserved memory bitmaps\n");
+		return;
+	}
+
+	chunk = phys_to_virt(*mem);
+	while (chunk) {
+		unsigned int i;
+
+		memblock_reserve(virt_to_phys(chunk), sizeof(*chunk));
+
+		for (i = 0; i != chunk->hdr.num_ranges; i++)
+			deserialize_range(&chunk->ranges[i]);
+
+		chunk = KHOSER_LOAD_PTR(chunk->hdr.next);
+	}
+}
+
+-- 
+Sincerely yours,
+Mike.
