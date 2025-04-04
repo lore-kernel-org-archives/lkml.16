@@ -1,69 +1,46 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E8282E62B6
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 01:50:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E69962E62B6;
+	Fri,  4 Apr 2025 01:51:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743731450; cv=none; b=Xakhq2/FVCTjtNGDNrzsD+YCH0eqng7eBkxPAIsc5guFNbmrl6Hma3ytqP3pNbG/WN4zCALuhCrKHeA+rIeXqrSpei5Rjgsy7zclWEhPO74VYz/BKDYCBmXioLS8rUgNZlLusxx0iXE4nXozB5icdp2abgna04adT9462NqHmHU=
+	t=1743731479; cv=none; b=k68tLFvkDKY81+xHI06emVNcD0RknQuMvGgpr+2ZdhNdGZn+113/qb/QvVh5aPsC8It/paqHt3ScSWxQNPVaIWVWMm2qOsgmwLr7aKn9yKnzEqF02kWNkRvYIPcHHyhuNkCGmpM04MS/i02dHz7iQKAc62eFzhOG8W8mNr7LKxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743731450; c=relaxed/simple;
-	bh=V2YWFuijqlJ+cy7CyrQuedjLS1wJNZm36ZMN5Euzk6U=;
+	s=arc-20240116; t=1743731479; c=relaxed/simple;
+	bh=9BoW4B3ZGSIAPStsSTAkrF11eLh+Pal6bHutBUTfweI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V7INHH94aHwsf/g2/uNgtR1nZucA6+eEYfsE8QGfqqB8m/m+p6xnxYqW/y2aDrOsKUpKotkWwSUF6WCKgtmva8oHstPaw0gLvxt/WR3/9G5dMpxuxVL8OyHrCI+XnLRJNqlyW0aOv5XerbGmHToXl8lU7fI2zCeW3HRcmYGYBuw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=LR1ECD5H; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=q36WUzs5TmpVK7mSmVOzty125V8Os8eXrB460RUSXj+YBAuNntmDgeE35z610BjAqZJU3tKJC5bqO67UHm6UHpFdR3m6fE+hW3KC9sp+XYc1LCTCyUKmqSJdAxAIX3G7PnZCPIC1xa5FQEYbgLUxbgP3URPnIXEtllCq3izs2zY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mlzPqpQM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LR1ECD5H"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-22403cbb47fso16574115ad.0
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 18:50:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1743731448; x=1744336248; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=xkYgl4zr3nXqdErHUjkuxoKSDXxbWnctKWg4ernvjFw=;
-        b=LR1ECD5HmN6r6qZgk6nl/6cQCMfntHfukxF+bzKkJSRs3frph3R3shD309Tjq5+n/k
-         d/t7ilmmOIABaGtbVmaYQq0SJ3uzmRM3GSEskT5UAEB37jCMfK55ZjfG2HvM1X2/7d46
-         SPWojG+zjLKL8cAE1saJab4ZbxNI+m+g5OGWk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743731448; x=1744336248;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xkYgl4zr3nXqdErHUjkuxoKSDXxbWnctKWg4ernvjFw=;
-        b=UbZkMMwKZv//Vh44RGPqgK/FHCuErlgBcbZ/gKcvUaNdotOgkUUPyCUm7MYa4CXZaC
-         wHR8XvfIaoQJ1a5M3isEPnm4bqdOdYlm+xqSfjF5cnQ9Ju2GjW+gtDwVPKEG2idcyKwj
-         uzKGlkk2440AFoMgu3U/FRdAutiCyq1SfETRcLmgBIqRSVsxBWGypjNeHTd2LjcW/pnO
-         Q6loY7Og6J9udatoJdoAy0zbnUlJRLRPR7gqE4xP1dLo8C35Lc8NcvBJoFwu5v3yEHu5
-         63Z+UR5E+gYT5iIWShgIEtzR4Ui3IG7NAAeOWQ3TVrdhAoEHpRGu0PVy/UFFwvRNNq90
-         9tHw==
-X-Forwarded-Encrypted: i=1; AJvYcCUOfSH9xlx5v/cV6FYIKpAe1YB8JA1y+h/rldPbXh1CKe4W4xBMjAEcrQKMA90zGtYPmI2YrwW5LFwMtE4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzaOsnRUPp5G7NxOTQdAz/tPvqwmOdxcmu1H2D9z+Ji7iBF/Vag
-	G27tv/jeMpCdUNSHa1ptaM3jYZSdn4AKkVuJsH1gH97O7qoOViH0vcc8nfb7kw==
-X-Gm-Gg: ASbGncs9x7jwHtWCUljhoKZfT4AW5aftev2rCA+JxrCaItWqqZIFBG4TYddjKUe6LId
-	eAKn138+1rQhBh7IPQobTjsrfwHxeWAx2nXJLB0HO4yvcykYzyY8zoMPWs4RGL7D2Kq8O8mFFCT
-	Cda4xwt15+0lWv9ZGRfPAOoXtDl3yNzwg7fpixo3/E3G3+xG4GwJ8lKeSJhbOHQuUVRkVzRS077
-	1xti7H44oT4+0CCdITetDkxzA8EOTdMx9FDoJcfN24Fi404HlkomWyjVXDR33jzhJ6U0pR8VoB6
-	YtRZZPFUuKPXfdJ1TQPL3n+fwhSDHOQWNXbKQ5C9SFp+2pKQICaKEgVqs1w=
-X-Google-Smtp-Source: AGHT+IG+VhyB5g//5WwnbEL9f4OcluPDZI0996O3JkznfBYQQ+pMS3M04Xzgt1Qg/Yhacit6cq/t4g==
-X-Received: by 2002:a17:902:ec8a:b0:223:5ca1:3b0b with SMTP id d9443c01a7336-22a8a8c99fcmr14437925ad.40.1743731448493;
-        Thu, 03 Apr 2025 18:50:48 -0700 (PDT)
-Received: from google.com ([2401:fa00:8f:203:addc:e770:41f7:fb85])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2297865bda1sm21348525ad.131.2025.04.03.18.50.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Apr 2025 18:50:48 -0700 (PDT)
-Date: Fri, 4 Apr 2025 10:50:43 +0900
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Brian Geffon <bgeffon@google.com>
-Cc: Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Richard Chang <richardycc@google.com>, 
-	Minchan Kim <minchan@kernel.org>, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	sawlani@google.com
-Subject: Re: [PATCHv2] zram: modernize writeback interface
-Message-ID: <6555ksohyt2qvigdxpcdg3holtxurmoot4ocdahdtyunaaxx4b@jwlzy65jm5ob>
-References: <20250327015818.4148660-1-senozhatsky@chromium.org>
- <Z-7yAWG3IE7dnOKi@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mlzPqpQM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A0BFC4CEE7;
+	Fri,  4 Apr 2025 01:51:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743731474;
+	bh=9BoW4B3ZGSIAPStsSTAkrF11eLh+Pal6bHutBUTfweI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mlzPqpQMtxka8dg4h0lb/M46ArxUyLQIZqOH1ccPbgdTlOKZZTO6v8jYWON1cHta3
+	 rFA0Cc60/MthP3RsQdcHw6Q0sCFuCWB5PVMy+CYUudkH7XgPxe2/WMkgFT4g78I2VC
+	 kqqT7aPrcDCnf5TIHJ4wjnPuKuB4PZUvBymnlSbyhd607+hD4VWrJbYXWhXE/Na3jB
+	 sy2/FxQSxSShqZXHEMIFOW/gNH91OYCz/BSN2Y+MnWLIlN/hd4+SyptGTFCGLKXUlH
+	 1GfRw7N7xUgqy0w/lsDvK3V3vqT3ExmnaV6xhR/j+RFaL0bUjO92XqlDvcfCvPfUJ4
+	 zSHuzlF+DWDEg==
+Date: Thu, 3 Apr 2025 18:51:12 -0700
+From: Eric Biggers <ebiggers@kernel.org>
+To: Uros Bizjak <ubizjak@gmail.com>
+Cc: linux-crypto@vger.kernel.org, kernel test robot <lkp@intel.com>,
+	x86@kernel.org, linux-kernel@vger.kernel.org,
+	oe-kbuild-all@lists.linux.dev,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [PATCH 3/3] crypto: x86 - Remove CONFIG_AS_AVX512
+Message-ID: <20250404015112.GA96368@sol.localdomain>
+References: <20250403094527.349526-3-ubizjak@gmail.com>
+ <202504040855.mr885Pz1-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -72,25 +49,48 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z-7yAWG3IE7dnOKi@google.com>
+In-Reply-To: <202504040855.mr885Pz1-lkp@intel.com>
 
-On (25/04/03 20:39), Brian Geffon wrote:
-[..]
-> > +static int parse_page_index(char *val, unsigned long nr_pages,
-> > +			    unsigned long *lo, unsigned long *hi)
-> > +{
-> > +	int ret;
-> > +
-> > +	ret = kstrtoul(val, 10, lo);
-> > +	if (ret)
-> > +		return ret;
-> > +	*hi = *lo + 1;
-> > +	if (*lo >= nr_pages || *hi > nr_pages)
+On Fri, Apr 04, 2025 at 09:13:40AM +0800, kernel test robot wrote:
+> Hi Uros,
 > 
-> I think you can do just:
-> if (*lo >= nr_pages)
+> kernel test robot noticed the following build warnings:
 > 
-> The *hi > nr_pages check seems superfluous given the
-> assignment directly above this.
+> [auto build test WARNING on herbert-cryptodev-2.6/master]
+> [also build test WARNING on herbert-crypto-2.6/master tip/x86/core linus/master v6.14]
+> [cannot apply to next-20250403]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> 
+> url:    https://github.com/intel-lab-lkp/linux/commits/Uros-Bizjak/crypto-x86-Remove-CONFIG_AS_SHA256_NI/20250403-174814
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/herbert/cryptodev-2.6.git master
+> patch link:    https://lore.kernel.org/r/20250403094527.349526-3-ubizjak%40gmail.com
+> patch subject: [PATCH 3/3] crypto: x86 - Remove CONFIG_AS_AVX512
+> config: i386-buildonly-randconfig-001-20250404 (https://download.01.org/0day-ci/archive/20250404/202504040855.mr885Pz1-lkp@intel.com/config)
+> compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250404/202504040855.mr885Pz1-lkp@intel.com/reproduce)
+> 
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202504040855.mr885Pz1-lkp@intel.com/
+> 
+> All warnings (new ones prefixed by >>):
+> 
+> >> lib/raid6/recov_avx512.c:382:2: warning: #warning "your version of binutils lacks AVX512 support" [-Wcpp]
+>      382 | #warning "your version of binutils lacks AVX512 support"
+>          |  ^~~~~~~
+> 
+> 
+> vim +382 lib/raid6/recov_avx512.c
+> 
+> 13c520b2993c9fa Gayatri Kammela 2016-08-12  380  
+> 13c520b2993c9fa Gayatri Kammela 2016-08-12  381  #else
+> 13c520b2993c9fa Gayatri Kammela 2016-08-12 @382  #warning "your version of binutils lacks AVX512 support"
 
-Ack, thanks.
+Yeah, CONFIG_AS_AVX512 needs to be removed from lib/raid6/ too.  It looked like
+that directory was rolling its own CONFIG_AS_AVX512 in lib/raid6/test/Makefile,
+but that's a makefile for a test program and not the actual kernel makefile.
+
+- Eric
