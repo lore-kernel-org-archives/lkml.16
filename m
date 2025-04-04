@@ -1,43 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4170C1FDA61;
-	Fri,  4 Apr 2025 00:06:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 487F01FDE01;
+	Fri,  4 Apr 2025 00:06:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743725181; cv=none; b=WCdMtNQziwestrNL6sxpSOVhbTXEFZUuH0ek8CxHDRnC6iU3qNbjOZaTWultX56BXqh6BFpjBnyh/FqEftzuCaHTEA1Oxb/vy9+yHMdyW+8jyPGp9x6CLugg3SVBo50F+vXukyokVor12BjoeoPONhl1et8Esv7sx+ZfQHUL7Ww=
+	t=1743725182; cv=none; b=lyCJ9jUx27F3VkJ4l1vF95uSIkdq2U0cJLQRfbxuxo3p33KYrHUvsD7BpfcLK5Vt1HqYmosaB3AJsSentytN8oh4XrLW+x1WVq9oyUbJ9/91hCo7Pb/OWpcF2Tvi+L7oRdmWIa7rIOg7RfudTEVPTJmwurA5eXIYpT5o0pNG2Ew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743725181; c=relaxed/simple;
-	bh=BCtxT1d8UkfzjmAXTF1FOqDNIhSGxvXPswTXeXcqyuA=;
+	s=arc-20240116; t=1743725182; c=relaxed/simple;
+	bh=e5RyO+AZ9x3PVZLJ/XfuNStV0atV5+YiTuU4XRtK238=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=YyeT2CdPgVVgulo0AWBXmKukHnb0zUdBu33WA8O3WStCCUuNnUhAT3mn+ssfDv/zkF46kXHRt3S3zi785TPYgj9hkhsadX/FxP1DQmbam6h/qbX2YbtWubwJS0N2JZ7AuyveFkzhjkpwGaegLngr04Vbn7rYmpiBpCFI7E2UOpk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Thfke2Yx; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=qZ2xYQsH+6aTK0oEVyeYYt/jm+B3RQ1uIvhe8OeAYhTXfI7YZKxgwoCx93Ot4nZ9qevTBbPkhuzTKMThkEn+1XvFh2hsez/vpeqZepo6R0Ygp+2QpihWtZ7VplTBE442/vNS8GNCGqQNJkDCnrAJGzX6u9aPxOVg2nVDTXLaI4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r9ZHWypK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Thfke2Yx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7D06C4CEE5;
-	Fri,  4 Apr 2025 00:06:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r9ZHWypK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2985AC4CEE3;
+	Fri,  4 Apr 2025 00:06:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743725178;
-	bh=BCtxT1d8UkfzjmAXTF1FOqDNIhSGxvXPswTXeXcqyuA=;
+	s=k20201202; t=1743725182;
+	bh=e5RyO+AZ9x3PVZLJ/XfuNStV0atV5+YiTuU4XRtK238=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Thfke2Yx/EJ0e64JZNwEng/i7oN2zWGeql7OZ2dI7fyivvaUF4pc0roy1Y18oJ1vC
-	 i9rvizHHHJXGh7oPEBJRsOXVz2zNH5EAqE9/ONogSc4q97POf3qghxBgGEMQ9u0MEK
-	 cGiAKBGaKidZ2YO9SfL3NGFva3ove1asrAvChyzfEyaW178fMoWN+6G9O2aswqsWNV
-	 YAJQHBak7lo85uM3Rxw/KHORZlOJRfb/3T82ZIgIBsjjqT88TY1HHlGJykUBlzi23x
-	 tVOcVwkJAuDpPAgxh3Es4RG4f6ulAslmc53J61gyarxnfPWvXPKBiip8+bnTHT2yJl
-	 LVZsVLCmd68jQ==
+	b=r9ZHWypKqcXP+JBqyj7i9SfeViQSD/1Am/bICmaB3MJINo3dcjtr/rXA4lmUKms3l
+	 wSDeVy5hQccmsZRUc6mQBetMOSYJBfGQfXu1RXGxgmxX2Un0oU/HaYqLmpxWBrz38l
+	 GASCRnrihotCcBmBd2ENm4wej7nrq11ig7koNeCOZJ5cPNfOH4fBne+KgeBI5NIeUl
+	 03bJcwxMGiuDcOmPQdl6ALJnmwAeKraP4Ts4i0YLFhGDwa7YeCc2/LGiWBcoH4PqFh
+	 8y/rHN/iBxePIguA9zIUaiBvq9Ah0ILxKSwpYyyMAczo5kfo+8JouZTzk4MkAFEYly
+	 VkFjMrBHGfylA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Yafang Shao <laoar.shao@gmail.com>,
-	Alexei Starovoitov <ast@kernel.org>,
+Cc: Huisong Li <lihuisong@huawei.com>,
+	Adam Young <admiyo@os.amperecomputing.com>,
+	Robbie King <robbiek@xsightlabs.com>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	Jassi Brar <jassisinghbrar@gmail.com>,
 	Sasha Levin <sashal@kernel.org>,
-	daniel@iogearbox.net,
-	andrii@kernel.org,
-	bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 17/20] bpf: Reject attaching fexit/fmod_ret to __noreturn functions
-Date: Thu,  3 Apr 2025 20:05:37 -0400
-Message-Id: <20250404000541.2688670-17-sashal@kernel.org>
+	linux-acpi@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 19/20] mailbox: pcc: Fix the possible race in updation of chan_in_use flag
+Date: Thu,  3 Apr 2025 20:05:39 -0400
+Message-Id: <20250404000541.2688670-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250404000541.2688670-1-sashal@kernel.org>
 References: <20250404000541.2688670-1-sashal@kernel.org>
@@ -52,107 +53,95 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.21
 Content-Transfer-Encoding: 8bit
 
-From: Yafang Shao <laoar.shao@gmail.com>
+From: Huisong Li <lihuisong@huawei.com>
 
-[ Upstream commit cfe816d469dce9c0864062cf65dd7b3c42adc6f8 ]
+[ Upstream commit 9779d45c749340ab461d595c1a4a664cb28f3007 ]
 
-If we attach fexit/fmod_ret to __noreturn functions, it will cause an
-issue that the bpf trampoline image will be left over even if the bpf
-link has been destroyed. Take attaching do_exit() with fexit for example.
-The fexit works as follows,
+The function mbox_chan_received_data() calls the Rx callback of the
+mailbox client driver. The callback might set chan_in_use flag from
+pcc_send_data(). This flag's status determines whether the PCC channel
+is in use.
 
-  bpf_trampoline
-  + __bpf_tramp_enter
-    + percpu_ref_get(&tr->pcref);
+However, there is a potential race condition where chan_in_use is
+updated incorrectly due to concurrency between the interrupt handler
+(pcc_mbox_irq()) and the command sender(pcc_send_data()).
 
-  + call do_exit()
+The 'chan_in_use' flag of a channel is set to true after sending a
+command. And the flag of the new command may be cleared erroneous by
+the interrupt handler afer mbox_chan_received_data() returns,
 
-  + __bpf_tramp_exit
-    + percpu_ref_put(&tr->pcref);
+As a result, the interrupt being level triggered can't be cleared in
+pcc_mbox_irq() and it will be disabled after the number of handled times
+exceeds the specified value. The error log is as follows:
 
-Since do_exit() never returns, the refcnt of the trampoline image is
-never decremented, preventing it from being freed. That can be verified
-with as follows,
+  |  kunpeng_hccs HISI04B2:00: PCC command executed timeout!
+  |  kunpeng_hccs HISI04B2:00: get port link status info failed, ret = -110
+  |  irq 13: nobody cared (try booting with the "irqpoll" option)
+  |  Call trace:
+  |   dump_backtrace+0x0/0x210
+  |   show_stack+0x1c/0x2c
+  |   dump_stack+0xec/0x130
+  |   __report_bad_irq+0x50/0x190
+  |   note_interrupt+0x1e4/0x260
+  |   handle_irq_event+0x144/0x17c
+  |   handle_fasteoi_irq+0xd0/0x240
+  |   __handle_domain_irq+0x80/0xf0
+  |   gic_handle_irq+0x74/0x2d0
+  |   el1_irq+0xbc/0x140
+  |   mnt_clone_write+0x0/0x70
+  |   file_update_time+0xcc/0x160
+  |   fault_dirty_shared_page+0xe8/0x150
+  |   do_shared_fault+0x80/0x1d0
+  |   do_fault+0x118/0x1a4
+  |   handle_pte_fault+0x154/0x230
+  |   __handle_mm_fault+0x1ac/0x390
+  |   handle_mm_fault+0xf0/0x250
+  |   do_page_fault+0x184/0x454
+  |   do_translation_fault+0xac/0xd4
+  |   do_mem_abort+0x44/0xb4
+  |   el0_da+0x40/0x74
+  |   el0_sync_handler+0x60/0xb4
+  |   el0_sync+0x168/0x180
+  |  handlers:
+  |   pcc_mbox_irq
+  |  Disabling IRQ #13
 
-  $ bpftool link show                                   <<<< nothing output
-  $ grep "bpf_trampoline_[0-9]" /proc/kallsyms
-  ffffffffc04cb000 t bpf_trampoline_6442526459    [bpf] <<<< leftover
+To solve this issue, pcc_mbox_irq() must clear 'chan_in_use' flag before
+the call to mbox_chan_received_data().
 
-In this patch, all functions annotated with __noreturn are rejected, except
-for the following cases:
-- Functions that result in a system reboot, such as panic,
-  machine_real_restart and rust_begin_unwind
-- Functions that are never executed by tasks, such as rest_init and
-  cpu_startup_entry
-- Functions implemented in assembly, such as rewind_stack_and_make_dead and
-  xen_cpu_bringup_again, lack an associated BTF ID.
-
-With this change, attaching fexit probes to functions like do_exit() will
-be rejected.
-
-$ ./fexit
-libbpf: prog 'fexit': BPF program load failed: -EINVAL
-libbpf: prog 'fexit': -- BEGIN PROG LOAD LOG --
-Attaching fexit/fmod_ret to __noreturn functions is rejected.
-
-Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
-Link: https://lore.kernel.org/r/20250318114447.75484-2-laoar.shao@gmail.com
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Tested-by: Adam Young <admiyo@os.amperecomputing.com>
+Tested-by: Robbie King <robbiek@xsightlabs.com>
+Signed-off-by: Huisong Li <lihuisong@huawei.com>
+(sudeep.holla: Minor updates to the subject, commit message and comment)
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+Signed-off-by: Jassi Brar <jassisinghbrar@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/bpf/verifier.c | 32 ++++++++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
+ drivers/mailbox/pcc.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index a0cab0d0252fa..f21b3633fd720 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -22221,6 +22221,33 @@ BTF_ID(func, __rcu_read_unlock)
- #endif
- BTF_SET_END(btf_id_deny)
+diff --git a/drivers/mailbox/pcc.c b/drivers/mailbox/pcc.c
+index 82102a4c5d688..8fd4d0f79b090 100644
+--- a/drivers/mailbox/pcc.c
++++ b/drivers/mailbox/pcc.c
+@@ -333,10 +333,16 @@ static irqreturn_t pcc_mbox_irq(int irq, void *p)
+ 	if (pcc_chan_reg_read_modify_write(&pchan->plat_irq_ack))
+ 		return IRQ_NONE;
  
-+/* fexit and fmod_ret can't be used to attach to __noreturn functions.
-+ * Currently, we must manually list all __noreturn functions here. Once a more
-+ * robust solution is implemented, this workaround can be removed.
-+ */
-+BTF_SET_START(noreturn_deny)
-+#ifdef CONFIG_IA32_EMULATION
-+BTF_ID(func, __ia32_sys_exit)
-+BTF_ID(func, __ia32_sys_exit_group)
-+#endif
-+#ifdef CONFIG_KUNIT
-+BTF_ID(func, __kunit_abort)
-+BTF_ID(func, kunit_try_catch_throw)
-+#endif
-+#ifdef CONFIG_MODULES
-+BTF_ID(func, __module_put_and_kthread_exit)
-+#endif
-+#ifdef CONFIG_X86_64
-+BTF_ID(func, __x64_sys_exit)
-+BTF_ID(func, __x64_sys_exit_group)
-+#endif
-+BTF_ID(func, do_exit)
-+BTF_ID(func, do_group_exit)
-+BTF_ID(func, kthread_complete_and_exit)
-+BTF_ID(func, kthread_exit)
-+BTF_ID(func, make_task_dead)
-+BTF_SET_END(noreturn_deny)
-+
- static bool can_be_sleepable(struct bpf_prog *prog)
- {
- 	if (prog->type == BPF_PROG_TYPE_TRACING) {
-@@ -22309,6 +22336,11 @@ static int check_attach_btf_id(struct bpf_verifier_env *env)
- 	} else if (prog->type == BPF_PROG_TYPE_TRACING &&
- 		   btf_id_set_contains(&btf_id_deny, btf_id)) {
- 		return -EINVAL;
-+	} else if ((prog->expected_attach_type == BPF_TRACE_FEXIT ||
-+		   prog->expected_attach_type == BPF_MODIFY_RETURN) &&
-+		   btf_id_set_contains(&noreturn_deny, btf_id)) {
-+		verbose(env, "Attaching fexit/fmod_ret to __noreturn functions is rejected.\n");
-+		return -EINVAL;
- 	}
++	/*
++	 * Clear this flag after updating interrupt ack register and just
++	 * before mbox_chan_received_data() which might call pcc_send_data()
++	 * where the flag is set again to start new transfer. This is
++	 * required to avoid any possible race in updatation of this flag.
++	 */
++	pchan->chan_in_use = false;
+ 	mbox_chan_received_data(chan, NULL);
  
- 	key = bpf_trampoline_compute_key(tgt_prog, prog->aux->attach_btf, btf_id);
+ 	check_and_ack(pchan, chan);
+-	pchan->chan_in_use = false;
+ 
+ 	return IRQ_HANDLED;
+ }
 -- 
 2.39.5
 
