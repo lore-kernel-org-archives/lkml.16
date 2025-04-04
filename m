@@ -1,100 +1,245 @@
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
+Received: from webmail.webked.de (webmail.webked.de [159.69.203.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F1851953AD;
-	Fri,  4 Apr 2025 08:52:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6915C1953AD;
+	Fri,  4 Apr 2025 08:52:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.203.94
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743756724; cv=none; b=sBkB33p9O6qr116T1mt68fkAeVhOvhbKMPUk448VL7YcW9phNDYCatykhzS+QSraiD9Cirll9mQ1/tOu7H/7gstjl4vlrTM8htNusasq5g7CtiLjqiWVeYld/WhFt7IEX4PWFx2Xl02wkAorWGBHwx8I8lJpY9Iy5qJ+J8b16FU=
+	t=1743756742; cv=none; b=SGQN+MlZ5vrNSc5C1WSLdC4Q6YMeVx0kEcYFkOOGWs4buRRcKJtiRW6nuXgY8SXs33pHdxUwVQk4DaWs5A9kmHsuR6kQuv9wRbn7eLOyqMEe/hTQoorFyZYzt+/6+rf/aHHoeOYdDuXFUITqmUHi4VtAidhhFAV0B8bHYNzTOrs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743756724; c=relaxed/simple;
-	bh=ytfvydb71SW4qnHu5ZeuDqr6g+dawnF2MysvyNp8mD4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KJCClfcO1sXX9dGpXND8CTJQsd56pq+CudY3tpqw1in4hq9KKW62OGrbua4ARQLpfv2joLop0h6S6o5ykhn8qTH/tDwbrrK6qrgfyA0GBZl+PW5BUXwWKgMs27q4CvJYe06aK8vKgS7mnTvbJHFluTLwk1lwstd3p7KHhdS5lpc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout2.hostsharing.net (Postfix) with ESMTPS id E74F3200A2A0;
-	Fri,  4 Apr 2025 10:46:15 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 282651212B; Fri,  4 Apr 2025 10:46:27 +0200 (CEST)
-Date: Fri, 4 Apr 2025 10:46:27 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: manivannan.sadhasivam@linaro.org
-Cc: Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	Oliver O'Halloran <oohall@gmail.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof Wilczy??ski <kw@linux.com>, Rob Herring <robh@kernel.org>,
-	dingwei@marvell.com, cassel@kernel.org,
-	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
-	linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH 2/4] PCI/ERR: Add support for resetting the slot in a
- platforms specific way
-Message-ID: <Z--cY5Uf6JyTYL9y@wunner.de>
-References: <20250404-pcie-reset-slot-v1-0-98952918bf90@linaro.org>
- <20250404-pcie-reset-slot-v1-2-98952918bf90@linaro.org>
+	s=arc-20240116; t=1743756742; c=relaxed/simple;
+	bh=Y/iH1wk4bgH4xibIUWVmQXY/sVGMZAhzE5PSW0nKRek=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=tHfKh7OkUHK7n2FZYxXAjVvUAemTCDXpibLFuIYZ5NL1Nn5OKuP/YbH74wLmGkF4TsdS3hGmvcRkK0cVsBfZs3RFadq7zS7yQEy2I2bTiZMRnUz5dTofelqIOm0Jf+AZrEtsIitV8i+y+GCFepJe9l2nEW/geLQ7w6+KgxNoz7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=webked.de; spf=pass smtp.mailfrom=webked.de; arc=none smtp.client-ip=159.69.203.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=webked.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=webked.de
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id C106E62BAA;
+	Fri,  4 Apr 2025 10:52:09 +0200 (CEST)
+Message-ID: <e75cb5881a97485b08cdd76efd8a7d2191ecd106.camel@webked.de>
+Subject: Re: [REGRESSION] Massive virtio-net throughput drop in guest VM
+ with Linux 6.8+
+From: Markus Fohrer <markus.fohrer@webked.de>
+To: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: virtualization@lists.linux-foundation.org, jasowang@redhat.com, 
+	davem@davemloft.net, edumazet@google.com, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Date: Fri, 04 Apr 2025 10:52:09 +0200
+In-Reply-To: <20250404042711-mutt-send-email-mst@kernel.org>
+References: <1d388413ab9cfd765cd2c5e05b5e69cdb2ec5a10.camel@webked.de>
+	 <20250403090001-mutt-send-email-mst@kernel.org>
+	 <11c5cb52d024a5158c5b8c5e69e2e4639a055a31.camel@webked.de>
+	 <20250404042711-mutt-send-email-mst@kernel.org>
+Organization: WEBKED IT Markus Fohrer
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250404-pcie-reset-slot-v1-2-98952918bf90@linaro.org>
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Fri, Apr 04, 2025 at 01:52:22PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
-> When the PCI error handling requires resetting the slot, reset it using the
-> host bridge specific 'reset_slot' callback if available before calling the
-> 'slot_reset' callback of the PCI drivers.
-> 
-> The 'reset_slot' callback is responsible for resetting the given slot
-> referenced by the 'pci_dev' pointer in a platform specific way and bring it
-> back to the working state if possible. If any error occurs during the slot
-> reset operation, relevant errno should be returned.
-[...]
-> --- a/drivers/pci/pcie/err.c
-> +++ b/drivers/pci/pcie/err.c
-> @@ -234,11 +234,16 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->  	}
->  
->  	if (status == PCI_ERS_RESULT_NEED_RESET) {
-> -		/*
-> -		 * TODO: Should call platform-specific
-> -		 * functions to reset slot before calling
-> -		 * drivers' slot_reset callbacks?
-> -		 */
-> +		if (host->reset_slot) {
-> +			ret = host->reset_slot(host, bridge);
-> +			if (ret) {
-> +				pci_err(bridge, "failed to reset slot: %d\n",
-> +					ret);
-> +				status = PCI_ERS_RESULT_DISCONNECT;
-> +				goto failed;
-> +			}
-> +		}
-> +
+Am Freitag, dem 04.04.2025 um 04:29 -0400 schrieb Michael S. Tsirkin:
+> On Fri, Apr 04, 2025 at 10:16:55AM +0200, Markus Fohrer wrote:
+> > Am Donnerstag, dem 03.04.2025 um 09:04 -0400 schrieb Michael S.
+> > Tsirkin:
+> > > On Wed, Apr 02, 2025 at 11:12:07PM +0200, Markus Fohrer wrote:
+> > > > Hi,
+> > > >=20
+> > > > I'm observing a significant performance regression in KVM guest
+> > > > VMs
+> > > > using virtio-net with recent Linux kernels (6.8.1+ and 6.14).
+> > > >=20
+> > > > When running on a host system equipped with a Broadcom
+> > > > NetXtreme-E
+> > > > (bnxt_en) NIC and AMD EPYC CPUs, the network throughput in the
+> > > > guest drops to 100=E2=80=93200 KB/s. The same guest configuration
+> > > > performs
+> > > > normally (~100 MB/s) when using kernel 6.8.0 or when the VM is
+> > > > moved to a host with Intel NICs.
+> > > >=20
+> > > > Test environment:
+> > > > - Host: QEMU/KVM, Linux 6.8.1 and 6.14.0
+> > > > - Guest: Linux with virtio-net interface
+> > > > - NIC: Broadcom BCM57416 (bnxt_en driver, no issues at host
+> > > > level)
+> > > > - CPU: AMD EPYC
+> > > > - Storage: virtio-scsi
+> > > > - VM network: virtio-net, virtio-scsi (no CPU or IO
+> > > > bottlenecks)
+> > > > - Traffic test: iperf3, scp, wget consistently slow in guest
+> > > >=20
+> > > > This issue is not present:
+> > > > - On 6.8.0=20
+> > > > - On hosts with Intel NICs (same VM config)
+> > > >=20
+> > > > I have bisected the issue to the following upstream commit:
+> > > >=20
+> > > > =C2=A0 49d14b54a527 ("virtio-net: Suppress tx timeout warning for
+> > > > small
+> > > > tx")
+> > > > =C2=A0 https://git.kernel.org/linus/49d14b54a527
+> > >=20
+> > > Thanks a lot for the info!
+> > >=20
+> > >=20
+> > > both the link and commit point at:
+> > >=20
+> > > commit 49d14b54a527289d09a9480f214b8c586322310a
+> > > Author: Eric Dumazet <edumazet@google.com>
+> > > Date:=C2=A0=C2=A0 Thu Sep 26 16:58:36 2024 +0000
+> > >=20
+> > > =C2=A0=C2=A0=C2=A0 net: test for not too small csum_start in
+> > > virtio_net_hdr_to_skb()
+> > > =C2=A0=C2=A0=C2=A0=20
+> > >=20
+> > > is this what you mean?
+> > >=20
+> > > I don't know which commit is "virtio-net: Suppress tx timeout
+> > > warning
+> > > for small tx"
+> > >=20
+> > >=20
+> > >=20
+> > > > Reverting this commit restores normal network performance in
+> > > > affected guest VMs.
+> > > >=20
+> > > > I=E2=80=99m happy to provide more data or assist with testing a
+> > > > potential
+> > > > fix.
+> > > >=20
+> > > > Thanks,
+> > > > Markus Fohrer
+> > >=20
+> > >=20
+> > > Thanks! First I think it's worth checking what is the setup, e.g.
+> > > which offloads are enabled.
+> > > Besides that, I'd start by seeing what's doing on. Assuming I'm
+> > > right
+> > > about
+> > > Eric's patch:
+> > >=20
+> > > diff --git a/include/linux/virtio_net.h
+> > > b/include/linux/virtio_net.h
+> > > index 276ca543ef44d8..02a9f4dc594d02 100644
+> > > --- a/include/linux/virtio_net.h
+> > > +++ b/include/linux/virtio_net.h
+> > > @@ -103,8 +103,10 @@ static inline int
+> > > virtio_net_hdr_to_skb(struct
+> > > sk_buff *skb,
+> > > =C2=A0
+> > > =C2=A0		if (!skb_partial_csum_set(skb, start, off))
+> > > =C2=A0			return -EINVAL;
+> > > +		if (skb_transport_offset(skb) < nh_min_len)
+> > > +			return -EINVAL;
+> > > =C2=A0
+> > > -		nh_min_len =3D max_t(u32, nh_min_len,
+> > > skb_transport_offset(skb));
+> > > +		nh_min_len =3D skb_transport_offset(skb);
+> > > =C2=A0		p_off =3D nh_min_len + thlen;
+> > > =C2=A0		if (!pskb_may_pull(skb, p_off))
+> > > =C2=A0			return -EINVAL;
+> > >=20
+> > >=20
+> > > sticking a printk before return -EINVAL to show the offset and
+> > > nh_min_len
+> > > would be a good 1st step. Thanks!
+> > >=20
+> >=20
+> > I added the following printk inside virtio_net_hdr_to_skb():
+> >=20
+> > =C2=A0=C2=A0=C2=A0 if (skb_transport_offset(skb) < nh_min_len){
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 printk(KERN_INFO "virtio_net=
+: 3 drop, transport_offset=3D%u,
+> > nh_min_len=3D%u\n",
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 skb_transport_offset(skb), nh_min_len);
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EINVAL;
+> > =C2=A0=C2=A0=C2=A0 }
+> >=20
+> > Built and installed the kernel, then triggered a large download
+> > via:
+> >=20
+> > =C2=A0=C2=A0=C2=A0 wget http://speedtest.belwue.net/10G
+> >=20
+> > Relevant output from `dmesg -w`:
+> >=20
+> > [=C2=A0=C2=A0 57.327943] virtio_net: 3 drop, transport_offset=3D34,
+> > nh_min_len=3D40=C2=A0=20
+> > [=C2=A0=C2=A0 57.428942] virtio_net: 3 drop, transport_offset=3D34,
+> > nh_min_len=3D40=C2=A0=20
+> > [=C2=A0=C2=A0 57.428962] virtio_net: 3 drop, transport_offset=3D34,
+> > nh_min_len=3D40=C2=A0=20
+> > [=C2=A0=C2=A0 57.553068] virtio_net: 3 drop, transport_offset=3D34,
+> > nh_min_len=3D40=C2=A0=20
+> > [=C2=A0=C2=A0 57.553088] virtio_net: 3 drop, transport_offset=3D34,
+> > nh_min_len=3D40=C2=A0=20
+> > [=C2=A0=C2=A0 57.576678] virtio_net: 3 drop, transport_offset=3D34,
+> > nh_min_len=3D40=C2=A0=20
+> > [=C2=A0=C2=A0 57.618438] virtio_net: 3 drop, transport_offset=3D34,
+> > nh_min_len=3D40=C2=A0=20
+> > [=C2=A0=C2=A0 57.618453] virtio_net: 3 drop, transport_offset=3D34,
+> > nh_min_len=3D40=C2=A0=20
+> > [=C2=A0=C2=A0 57.703077] virtio_net: 3 drop, transport_offset=3D34,
+> > nh_min_len=3D40=C2=A0=20
+> > [=C2=A0=C2=A0 57.823072] virtio_net: 3 drop, transport_offset=3D34,
+> > nh_min_len=3D40=C2=A0=20
+> > [=C2=A0=C2=A0 57.891982] virtio_net: 3 drop, transport_offset=3D34,
+> > nh_min_len=3D40=C2=A0=20
+> > [=C2=A0=C2=A0 57.946190] virtio_net: 3 drop, transport_offset=3D34,
+> > nh_min_len=3D40=C2=A0=20
+> > [=C2=A0=C2=A0 58.218686] virtio_net: 3 drop, transport_offset=3D34,
+> > nh_min_len=3D40=C2=A0=20
+>=20
+> Hmm indeed. And what about these values?
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 u32 start =3D __virtio16_to_cpu(little_endian, hdr-
+> >csum_start);
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 u32 off =3D __virtio16_to_cpu(little_endian, hdr-
+> >csum_offset);
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 u32 needed =3D start + max_t(u32, thlen, off +
+> sizeof(__sum16));
+> print them too?
+>=20
+>=20
+>=20
+> > I would now do the test with commit
+> > 49d14b54a527289d09a9480f214b8c586322310a and commit
+> > 49d14b54a527289d09a9480f214b8c586322310a~1
+> >=20
+>=20
+> Worth checking though it seems likely now the hypervisor is doing
+> weird
+> things. what kind of backend is it? qemu? tun? vhost-user? vhost-net?
+>=20
 
-This feels like something that should be plumbed into
-pcibios_reset_secondary_bus(), rather than pcie_do_recovery().
+Backend: QEMU/KVM hypervisor (Proxmox)
 
-Note that in the DPC case, pcie_do_recovery() doesn't issue a reset
-itself.  The reset has already happened, it was automatically done
-by the hardware and all the kernel needs to do is bring up the link
-again.  Do you really need any special handling for that in the
-host controller driver?
 
-Only in the AER case do you want to issue a reset on the secondary bus
-and if there's any platform-specific support needed for that, it needs
-to go into pcibios_reset_secondary_bus().
+printk output:
 
-Thanks,
+[   58.641906] virtio_net: drop, transport_offset=3D34  start=3D34, off=3D1=
+6,
+needed=3D54, nh_min_len=3D40
+[   58.678048] virtio_net: drop, transport_offset=3D34  start=3D34, off=3D1=
+6,
+needed=3D54, nh_min_len=3D40
+[   58.952871] virtio_net: drop, transport_offset=3D34  start=3D34, off=3D1=
+6,
+needed=3D54, nh_min_len=3D40
+[   58.962157] virtio_net: drop, transport_offset=3D34  start=3D34, off=3D1=
+6,
+needed=3D54, nh_min_len=3D40
+[   59.071645] virtio_net: drop, transport_offset=3D34  start=3D34, off=3D1=
+6,
+needed=3D54, nh_min_len=3D40
 
-Lukas
+
+
+
+
