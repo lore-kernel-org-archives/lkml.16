@@ -1,41 +1,62 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07F2421171B
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 20:10:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C0FB20ADC9;
+	Fri,  4 Apr 2025 20:11:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743797416; cv=none; b=saJbOa9j/fZKa0322zC/HpkaaJ9PfgoefjQIIUptY1dZ9bCxHqDa6qnaavdArwoSyYh/vuyNtaPihJdf4LLv12HFq/YozPPdPlb8CSmKsIIiA0mrvr2d3eB+f2VC4c0E6SiuA3PhSX/OQLshj9gyd8lc4I9ytFKn2cSHsgW94A4=
+	t=1743797502; cv=none; b=aAMvSdfiNTa0qGpELOquPvZyuoMBcIvS4ejo/lZ1nHP/VjKz4bR0n9tuWd+T2WudD0WboFHwbCsQVuLop7Caslg/rjonA1boP4u5AWQKAvzAp7/m4MkF68bL9ay2wt66n02utS2U7yU6iYNKLCNWMViD7ZF4ROkm1s0yrDKTtdw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743797416; c=relaxed/simple;
-	bh=DE4KCV0TzLpLW4OL3j8Qh5bJB7kbdPfxVvil/YKeYS0=;
+	s=arc-20240116; t=1743797502; c=relaxed/simple;
+	bh=VHeRdeU1SaiFj8DJEwuhTtm9mNs5SIztyxEFxics7os=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ocfdj69lXyGCUwYLa9Mfe5DPomGhzTV51BJS3NdqVJAXpj2qLMxkdOfuwazD+voTYBorISrZ92Ka7+igNz4GPHtLNDiVJSKm6n2iEmJElQPui12NF3hJ/C/wsNVBiOJSvoQHP5ngqHe9zQ3HRvfn8TaE8pAt4hj4PD+W0amzSIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OtrJUgQm; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=oZB+LyrNiaoC0VhJdZMyV5L8sEgkDfzEG/bkOuNuhW2h7QZISDX99P6S4s+P+JQhy28XvvRbPbosW29vtc5QdDOwHhnWKtz7kcbhkT6wXS9kkx89MSyDdsXZ5raWaZsNnO1rZ43SoNiMBPEUDp34SsDhNtLaAjXYDXa60vfEt7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GAmhRw7N; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OtrJUgQm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 572CDC4CEDD;
-	Fri,  4 Apr 2025 20:10:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GAmhRw7N"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B142C4CEDD;
+	Fri,  4 Apr 2025 20:11:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743797415;
-	bh=DE4KCV0TzLpLW4OL3j8Qh5bJB7kbdPfxVvil/YKeYS0=;
+	s=k20201202; t=1743797501;
+	bh=VHeRdeU1SaiFj8DJEwuhTtm9mNs5SIztyxEFxics7os=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OtrJUgQm/RZJuBmSf1V9Y6qJD/rY3hy0898aUp+SCKowvyMKC/cIOxirSc2iIvMMx
-	 pmRrUey/kC1GpL10awWxeLm99HZbMNJNJaruCFlWofkCJqSJPq2C8DTeLAkzu27z99
-	 QDyhDHU7h6ooqh0jxY+4jeO+GbLZomljUFIuZiUWebow5idkkJeUien9YMcA+pTOg+
-	 AWYwaSyit7AKYkC3SnXPcSijD95DYzRciQsgQ+eSsQEsdwtujczK+jKThUvw/v3d/D
-	 7taU9lEcOyBpDoDPfFIa59VbHCuWQyNq5PZJDy8l8AftN/rpyvyp1y1H2nKmh85KWv
-	 uP+MfPxQ6lVwA==
-Date: Fri, 4 Apr 2025 10:10:14 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Andrea Righi <arighi@nvidia.com>
-Cc: void@manifault.com, multics69@gmail.com, linux-kernel@vger.kernel.org,
-	sched-ext@meta.com
-Subject: Re: [PATCH 6/5] sched_ext: Drop "ops" from SCX_OPS_TASK_ITER_BATCH
-Message-ID: <Z_A8piEiBmvATU7s@slm.duckdns.org>
-References: <20250403225026.838987-1-tj@kernel.org>
- <Z--NLGOGQe_9xULR@gpd3>
- <Z_AvCG5HcMV6b_xT@slm.duckdns.org>
+	b=GAmhRw7Nz52NW/mVabsCa688AdBJSVdZkV1u1WrVh4Ig1it56SoT6FD/MZv5N6aj2
+	 Ttq1X3XOJkzXfty8JVHMdmJA7mfW8hangGrm80Ra7FDXShmQXXfpXZC2P8qgC5Jp+s
+	 uT0vlIO1IWcTxTTQNffblOjXVclF9rOn9xkb5OLCMH3RRzgn11MwOHniYCR2wV4tLD
+	 9dcXkPLT1uewh810i7xpoIW7iBxu+bSFZlLBfuG9AvUcgpbfmqRECY74Rm0HGT6GLr
+	 Pvccpg3Vra1Bfv2lTc+sZHuctyRI/NFIZAKZjA1CL0P5GdvdS6Mw60hPa4pydOKfu/
+	 EF9kclGKQM1QA==
+Date: Fri, 4 Apr 2025 15:11:40 -0500
+From: Rob Herring <robh@kernel.org>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Kishon Vijay Abraham I <kishon@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Anup Patel <apatel@ventanamicro.com>, Marc Zyngier <maz@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
+	Shuah Khan <shuah@kernel.org>, Richard Zhu <hongxing.zhu@nxp.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Niklas Cassel <cassel@kernel.org>, dlemoal@kernel.org,
+	jdmason@kudzu.us, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, imx@lists.linux.dev,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v16 04/15] dt-bindings: pci: pci-msi: Add support for PCI
+ Endpoint msi-map
+Message-ID: <20250404201140.GA236599-robh@kernel.org>
+References: <20250404-ep-msi-v16-0-d4919d68c0d0@nxp.com>
+ <20250404-ep-msi-v16-4-d4919d68c0d0@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,25 +65,27 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z_AvCG5HcMV6b_xT@slm.duckdns.org>
+In-Reply-To: <20250404-ep-msi-v16-4-d4919d68c0d0@nxp.com>
 
-On Fri, Apr 04, 2025 at 09:12:08AM -1000, Tejun Heo wrote:
-> The tag "ops" is used for two different purposes. First, to indicate that
-> the entity is directly related to the operations such as flags carried in
-> sched_ext_ops. Second, to indicate that the entity applies to something
-> global such as enable or bypass states. The second usage is historical and
-> causes confusion rather than clarifying anything. For example,
-> scx_ops_enable_state enums are named SCX_OPS_* and thus conflict with
-> scx_ops_flags. Let's drop the second usages.
+On Fri, Apr 04, 2025 at 03:01:05PM -0400, Frank Li wrote:
+> Document the use of msi-map for PCI Endpoint (EP) controllers, which can
+> use MSI as a doorbell mechanism. Each EP controller can support up to 8
+> physical functions and 65,536 virtual functions.
 > 
-> Drop "ops" from SCX_OPS_TASK_ITER_BATCH.
+> Define how to construct device IDs using function bits [2:0] and virtual
+> function index bits [31:3], enabling msi-map to associate each child device
+> with a specific msi-specifier.
 > 
-> Signed-off-by: Tejun Heo <tj@kernel.org>
-> Suggested-by: Andrea Righi <arighi@nvidia.com>
+> Include a device tree example illustrating this configuration.
+> 
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+> change from v15 to v16
+> - new patch
+> ---
+>  Documentation/devicetree/bindings/pci/pci-msi.txt | 51 +++++++++++++++++++++++
+>  1 file changed, 51 insertions(+)
 
-Applied to sched_ext/for-6.16.
+Please don't add to .txt files.
 
-Thanks.
-
--- 
-tejun
+Rob
