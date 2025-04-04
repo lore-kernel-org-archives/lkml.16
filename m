@@ -1,208 +1,269 @@
-Received: from MRWPR03CU001.outbound.protection.outlook.com (mail-francesouthazon11011007.outbound.protection.outlook.com [40.107.130.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68D202E62B4;
-	Fri,  4 Apr 2025 02:40:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.130.7
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743734440; cv=fail; b=uEJ/MH8ih4fNnjVc0JtKow+JlopNMWU/46nz8WqV/6MxiX7EQKuCopG3KahkxBzsp1TCMbwE39j1aM5Zh3oXfZ88cyy920iD8w5EB7S+P5QG/08viCSxnzQ3sJ2bUE9dnxd2X5ZFqY8m8noUTjFilumJSzWLp9sfvGQ3u9DB0mE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743734440; c=relaxed/simple;
-	bh=o3s4xTH21e0Fn6KRHaZjF+D9i1MKV4LudkAWtbJ43ig=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=JeAYmkXu2eSP3NdFlTMc32tEV2RyyFTiXUljTRuaKjb2PEl6BpG9ACqcEus2qK+NK6cqHiW/pkXLfMrY45ofjubHHibAJWJ64vFtbOAdlw5zZ4S1mjdeVSO2DDEyP50EWcZ4ailtwmwX3sR2PtkxhEJ4SlVn0lW3cD427BAHgj0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=bEqKgAvG; arc=fail smtp.client-ip=40.107.130.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFCB32E62B4;
+	Fri,  4 Apr 2025 02:42:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743734523; cv=none; b=H5ju5znDYbyeDzayV8KL7Tk8aKx/n8EgT0InoFFwwHEGTp5XqUYqUIBNESn0oLOgmEyCtQwW+A8YsO1oCZeRJ+jNn6LpPDYaGNKASnzFNAJxnueGlQyhsjENXQ1VNY0wIYF14ZyE0qoWECoa3JlErzOcqB6PEluGs8MT24LRIkM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743734523; c=relaxed/simple;
+	bh=HEGvr219F+jjZb9/wuTWMlS78qKx3UrYGOaUQS8/10o=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=bgSUWeZQgpB1SI9SXdRTkB+2+A/dr/C3beC+uGuI6JNjuYWd8ZDZI5CRfPh5M3Rw766WzF7pJkCGKvkz1nUI0RFdOwIcHJK5rNnhCdjdnVSGzyU1h1xF0Wrazx9uAcIP5knqNaId5oa4nr0t2V6iGG8GthqZS8Hp34UPqNsvNiI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BVpmXOq9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="bEqKgAvG"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=vvsqscHyBzqvaqbvNDf8KYUXoDcipU8w/7Y1eZiHF+PMbPQmuPOP0SOjOfMHppmLa+tkzu030nEHSP/BDeNO/iS/BXZ1SLfknnXrjFFpPrC6JLYN4bGg+ZZc8jWjEj+C2ctOyR14RaknI7SIjSs1c6wGNjPf2QsxI24LRBAPazxDxN3gZQY0Z8MwYk8iMrvPcmmycZDZJljtzFZoLB2mBgReeaTg2c1MhbbQIhgOpXJGsLRXwbGjB+G2CliGqXfY/JPKL97Bm+ehTuhuWbCpu9N9YLnbS5hcTvirc2fBIjL+WgSwAsCmuEeEZhrYNahXYUJyc7wa4A66GiioMniePQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qWgpxp4qQ3Q+zg5JoSx0L9q8PUpscpRshuCxFVTMg4k=;
- b=aUMz2w2LO8s/Dhh1fpgtQXVCyIzVaOAEGUzECAKc+ECKFJD+oCkP+m8TusVky/ED2ctaSAXzYPmVA1Zn7w1PQq7K8b3JvyduIzAxoKnfDCHwDXxGHRUliYndEjsW3d+Pmjy8VQWsY5FQcDsTfDBXxjzHa8ueND+F63CzCJZOibTBeBJS5847K/dRqGo4ptK8rrDDGZ8CuzB1DsYj5oVlKmIFMNU3Z20Toa9xj9ekaChXXN/9Rx1fuKZ8qkn7PUEfFFlvdxJ7I1aQdWv1bNySC/RyfRVSAWGdWnrIhyiFEbkkQzDZiaQ1Lc6d7eBt3Al2IkgtLL2Az9yXkjoz44mNmA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qWgpxp4qQ3Q+zg5JoSx0L9q8PUpscpRshuCxFVTMg4k=;
- b=bEqKgAvGFsdLYQ9P49Myrgg/9m5o7mneGRpiIp1fV8dDZNeb1ULpA1qSEhgPZsJMYtbnSGzvjsT8gVmdkgdDmZiLt9Rv5BNlU8TfffQRCIXOI1EMcqyZYLhaGLnkkpc26cf9dptp7DO4JWWgQvm9BLnCFzD5G8prI+sq47rkIbZeisMAjZDoRqN48AHTkjmGXOQuuQIFYt85c7jo5txgW6LPdX4P1P64lmpxfU8lJ5qn1iUIqXIZKcGBKAKGA78hA8o+O1Uox3f5OUEafDx3Uy8p7hWBHJQaGtU+wXHymWc3c9mzgzNsCXY3bZygva1fE2egbM+NVD/4QnOw0pDZfg==
-Received: from AS4PR04MB9692.eurprd04.prod.outlook.com (2603:10a6:20b:4fe::20)
- by AM9PR04MB8210.eurprd04.prod.outlook.com (2603:10a6:20b:3e7::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8583.41; Fri, 4 Apr
- 2025 02:40:35 +0000
-Received: from AS4PR04MB9692.eurprd04.prod.outlook.com
- ([fe80::a2bf:4199:6415:f299]) by AS4PR04MB9692.eurprd04.prod.outlook.com
- ([fe80::a2bf:4199:6415:f299%4]) with mapi id 15.20.8583.041; Fri, 4 Apr 2025
- 02:40:35 +0000
-From: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
-To: "patchwork-bot+bluetooth@kernel.org" <patchwork-bot+bluetooth@kernel.org>
-CC: "marcel@holtmann.org" <marcel@holtmann.org>, "luiz.dentz@gmail.com"
-	<luiz.dentz@gmail.com>, "linux-bluetooth@vger.kernel.org"
-	<linux-bluetooth@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, Amitkumar Karwar <amitkumar.karwar@nxp.com>,
-	Sherry Sun <sherry.sun@nxp.com>
-Subject: Re: [PATCH v1 1/2] Bluetooth: btnxpuart: Add msleep() after changing
- the baudrate
-Thread-Topic: [PATCH v1 1/2] Bluetooth: btnxpuart: Add msleep() after changing
- the baudrate
-Thread-Index: AQHbpQrxvKzeDbjtU0ORz5T3W0Sixw==
-Date: Fri, 4 Apr 2025 02:40:35 +0000
-Message-ID:
- <AS4PR04MB969280C43E48134AD6D1F73FE7A92@AS4PR04MB9692.eurprd04.prod.outlook.com>
-References: <20250327182523.524534-1-neeraj.sanjaykale@nxp.com>
- <174371163549.2672071.11589670566595157295.git-patchwork-notify@kernel.org>
-In-Reply-To:
- <174371163549.2672071.11589670566595157295.git-patchwork-notify@kernel.org>
-Accept-Language: en-IN, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: AS4PR04MB9692:EE_|AM9PR04MB8210:EE_
-x-ms-office365-filtering-correlation-id: 364f479d-047d-472a-b73a-08dd732213c6
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|376014|1800799024|366016|38070700018;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?hle3TdHQIws5UxnjgAQy7GfKHUGznoiFjSSoD9VM5NjkNjfxLDdhiMah3nv5?=
- =?us-ascii?Q?AID3wSxuPwyVeYgZihZBUBdlzkqysvufg5sTj23LEUvM73nGe+06xJK0/0Er?=
- =?us-ascii?Q?5GjRo1D4ISyuSS8Q1wgd1FGbuS54v/q3PdugXYLy7zXw/TZlZqBEMXk5W1Ut?=
- =?us-ascii?Q?tTns8tAORHcPqxiNIZaylZ8c9QsGY228U9yguQOJC6IirYdSLuJLiHB3CBfO?=
- =?us-ascii?Q?Nw34v8m/zvkjUcjEwxAoZS+k3qvamFRmxEldYRmN+/eAr38IFzj4/3mHJNUI?=
- =?us-ascii?Q?FFBiVgHTZ06/sxMek+X8hnQuPkUfvHSIbbooxZPjLze+SbJP4Z8XQxMdxAfH?=
- =?us-ascii?Q?pKPKRy/t+6fJY6CS36r2gObtj9Gh4Q7+vLHlfgFTVs+SY2251OxmdMb1ZCcu?=
- =?us-ascii?Q?+lrifuRoSqJ2/9TgqnlkO7cQXttup+yAKlv/Qg4k0UUNSdHUMBIoDHTLAGDK?=
- =?us-ascii?Q?ReiMg7NtfL8L+2mdDjWlk4PvGhcgo52KmE9dytJlkXxZJuIIQfHKuCQTzLI8?=
- =?us-ascii?Q?DxF5WGSpsJXPLrywwVvmTD6T/31D5OoAkPvAcWgpgWaFC0H0nSTqfBVqbk8Y?=
- =?us-ascii?Q?qNvh1uVlbmp10q6zbLPQZOoTtbJz4GYH6RU/E4xeBJqa2kteCyUh1LlHfTEe?=
- =?us-ascii?Q?cNpBoWVenk8C6zTBwzUAOte5sdVT1BkH1fkZraskC6UwTNEHYyShgjP0AZDy?=
- =?us-ascii?Q?4v3tVQM64jwK0eIEm8LYW+74QaVge9dg1AJPG485wVj4KDpqFwURUlgIIcoS?=
- =?us-ascii?Q?XPb9uDviMMaeWljrlp3mHIagtkvbRJLJjPzZvKhBJkJp345IOU862OPI77F+?=
- =?us-ascii?Q?DpM2adiwiimFFuqYGh6+DK4PpWvNR/DlJAYpWfTvQJGxZfxXw4PUTvdd3Njx?=
- =?us-ascii?Q?xo+CK5oYmuPuc3mTa/QUmYFL3LAe4ojAaMXganp6RWmU08r5lPlqZ+ghTx7d?=
- =?us-ascii?Q?9d4er37tZImiSmsmFrm/jsDZ8xM0R+rJ7GBg7dAJL9my/OKNQ13Gg15gyfvY?=
- =?us-ascii?Q?xIPlJZTzMJFBPktxD2+XrytBM1AIx2nL0lrAgIkICLJcfejd+Y1WlXwuJPD1?=
- =?us-ascii?Q?4ywWGS7jitZ0XyPj6IpWO7y4pizpeM7VhZs5sy1V+JmoTdUoDUuCwyTmBEf2?=
- =?us-ascii?Q?YcF3jATijo6I1+EQUOLxl7RlT+M2bWWaCCcgOODxSVQdfEtu2+aXrjdR04ST?=
- =?us-ascii?Q?KKeVYuZQipvP+JNFiT50CFkMCjN5G2y+nbWuQi4+Gogx3Thz3iR3N12w9eFb?=
- =?us-ascii?Q?xrzWWETWcNd4eimpY/fRR2XED6cG1fS7sNs/RQX9QcIvRPiG5+DLVMAZPvFe?=
- =?us-ascii?Q?UjRK6XZBQbbi0ZrBqTDkxeVEijrl0fY6ZEduzZC01M+PwQSmN3nJXZideBu9?=
- =?us-ascii?Q?ZmtsjGH34UfN0eXBgWJxNIXnk37m?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS4PR04MB9692.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?uImUA6nnVBQ3MJoLTrWJgcyYJYZNwZwjP0zBAJgelSMmU7uCzP9AcVmRlAIo?=
- =?us-ascii?Q?GINx4NgUQapwAJuGbzOXOX5o4eOmiiwyAMO4q6aFnZw2Zz3pzCvlyRBXOzdw?=
- =?us-ascii?Q?gUSEMeaqijvPqxDBgTbclG5F8IMHmRzSj4in4VnbwlORxys9rpu3FYVNgjLX?=
- =?us-ascii?Q?I0H8FDD5pszB96gYMc1Kz7dHrmwvCUKGReLl8C1/GEFubFjz7NqxC1b59uQI?=
- =?us-ascii?Q?sMcwqd6r9S/BClKL4nl3wiUTp9rmLXtxwDphSYkvxpa0u+9WZtn2aB9r8OP1?=
- =?us-ascii?Q?WR8WH1LDjaKkyBRRiWhp8iCUIhBzdRM8w8EPmenf0wqrk6mFmdmax0M2y9Uc?=
- =?us-ascii?Q?RcUBKDVMRSWU5X0zajCT9JooEEP/8PXBtZu3NSJWVigzVwzKeNlRtkOKJBEd?=
- =?us-ascii?Q?CS3FwkO6lrNPnJW9qQdyn7npgzD7WLw0mvEq9isSbaN/S27X0PMO5/iL4Aml?=
- =?us-ascii?Q?pHKJG8pQoLYTEKwGEe9iutkyduBTMWz2zW3oxu3QiVBhvE7iXfw0xVFtHXpd?=
- =?us-ascii?Q?CPIEsYzvlwfw8h8zEHnAa9MgkayPCrdZeBwuP8xC6JwYI+68Mmwl1Ex3XCyh?=
- =?us-ascii?Q?FLrtPwlgCI1xOtaIMRVgmNz5iSMuyAit3NUAKM7GYIDj7UNijxaqmaHKAsnU?=
- =?us-ascii?Q?+U6KUBCkvtyneiRjC2n48lEH3JbHL1UMz8D8OHIjy6xhhLrOMMQOeuzBbRmA?=
- =?us-ascii?Q?6FJH4kxdeHA6m7EZoZYdnBbj3Zji8SbS29YwvUKmRNlnR5QugPbE+4597xbC?=
- =?us-ascii?Q?6T/az+KKzExNeXPlHA6SmmgsnKzEWcIkrVOB+YjXGJ21ZNneRTYf7m4ijcpZ?=
- =?us-ascii?Q?eJIU0Oro1PaqTE6chtz9WAC+cXp2HGMi3nEfPli/BIIR27gBxCGUg4WZTxP+?=
- =?us-ascii?Q?iNyVVMaSYBH/SpY4q1Fm1KoNHy79fl2FUdADObzom8x4zLdLB3Jq53Gfb+5b?=
- =?us-ascii?Q?T2mxXwo9aIt5HwmE95zo6bXo/M9Pz3hHiqGHK8xobNCaqwq9w3TC0mgk79BM?=
- =?us-ascii?Q?GZ33hIph5jstR2VZ1cb+r3fsDLVz9VtQtktrwsIVM/Dj1uflsRBI3X8Sv2xI?=
- =?us-ascii?Q?fJXBrouSUHsHiSo4Vl+Flg38oVuUa/qHK+mmu03jvNshAlaO591BzgDq2u6u?=
- =?us-ascii?Q?5EsJWaFQr1QRghgYaIC6Q6O8py0ff1r7f/kI7Yhell5vINAzoVPrwwXZXrEY?=
- =?us-ascii?Q?yrJnSwi1MxQE7CLp34yhIyox/ZRbCDbWQKvXCLHSdqhUNGaag4A0KIXfAWd/?=
- =?us-ascii?Q?xG9ZbFgE6UG7YcRIflQsQGF4Buy0sSyx3cZ3jbNqFtjGeWsLVMPIvquo9jTm?=
- =?us-ascii?Q?nRHefZ7AgmUwfXKDVeXEsKcqS8Qsr3unsxkEVdGNdvVXBgN5Qb5lYbNB8fXw?=
- =?us-ascii?Q?xj7WaQbn3V+Ovk/NHBR19P0DSCtmgTMXcYybmjzP+Zs/4yF2syWF02wnGvC7?=
- =?us-ascii?Q?7mKFQqiOnG5blMRv5kjV/qRta3dhKL0wwde17NbBlxLoMMSczEc57p4DJ4+e?=
- =?us-ascii?Q?W/Y1NnGkDS6WCxOpXip+UF2TDTbl1lVpkioh/OSchN4ToW9fgKqz/caCPSbr?=
- =?us-ascii?Q?nvDHQExgiNgXYJd6tT1apdd057J9cftpuLso/M54?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BVpmXOq9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 879CCC4CEE3;
+	Fri,  4 Apr 2025 02:42:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743734523;
+	bh=HEGvr219F+jjZb9/wuTWMlS78qKx3UrYGOaUQS8/10o=;
+	h=Date:From:To:Cc:Subject:From;
+	b=BVpmXOq9/uEKXRJYI5q4UMXDDOB3QbzRgpssliD+ZKvK2uuElEqXMsztrJMpv2pHo
+	 q/79t9aQ6VQEJ3JNmUYC1X3wfXgxtWECAorb8ZBppR0Jk9kjdPbHiYromv9wmpqZsi
+	 W9OE3OfEgph3+EEOgyBrlfxsWnH3YNf8S5DtiJwY+kA7hiddOVVvphgYb8lKQhqg7l
+	 EEUwWFYj9hiTcSbPTFT0jI63PIO/i0L1fiGRIJwSPAhAb5ifCQfAvV5e1XU1sw4HXM
+	 IufllFMHgFo7waiZibC+DgM60GjfI6t+94dgLAoVBK44zoAEHt50BOI06rd80+vIWH
+	 ewdOnhs13HJ8w==
+Date: Thu, 3 Apr 2025 20:42:00 -0600
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Miri Korenblit <miriam.rachel.korenblit@intel.com>,
+	Johannes Berg <johannes.berg@intel.com>
+Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH][next] wifi: iwlwifi: mvm/fw: Avoid
+ -Wflex-array-member-not-at-end warnings
+Message-ID: <Z-9G-GHufhXKeYft@kspp>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: AS4PR04MB9692.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 364f479d-047d-472a-b73a-08dd732213c6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Apr 2025 02:40:35.4201
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ++v1+DBBfFXQE5lBQuHYsEaIDp4DRLAJCvqjmGIrHf1UBFgc5daqQEaMD6te36NN9QJzRY46bxwqrfWJlNTo4kBJMyDlbqRr1ESS/w/50FI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR04MB8210
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hi Luiz,
+-Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+getting ready to enable it, globally.
 
-Please do not merge this patch series.
+So, in order to avoid ending up with a flexible-array member in the
+middle of multiple other structs, we use the `__struct_group()`
+helper to create a new tagged `struct iwl_tx_cmd_hdr`. This structure
+groups together all the members of the flexible `struct iwl_tx_cmd`
+except the flexible array.
 
-I have sent out 2 different patches instead titled:
-1) [PATCH v2] Bluetooth: btnxpuart: Add an error message if FW dump trigger=
- fails
-2) [PATCH v1] Bluetooth: btnxpuart: Revert baudrate change in nxp_shutdown
+As a result, the array is effectively separated from the rest of the
+members without modifying the memory layout of the flexible structure.
+We then change the type of the middle struct members currently causing
+trouble from `struct iwl_tx_cmd` to `struct iwl_tx_cmd_hdr`.
 
-Thanks,
-Neeraj
+We also want to ensure that when new members need to be added to the
+flexible structure, they are always included within the newly created
+tagged struct. For this, we use `static_assert()`. This ensures that the
+memory layout for both the flexible structure and the new tagged struct
+is the same after any changes.
 
+This approach avoids having to implement `struct iwl_tx_cmd_hdr`
+as a completely separate structure, thus preventing having to maintain
+two independent but basically identical structures, closing the door
+to potential bugs in the future.
 
->
-> Hello:
->
-> This series was applied to bluetooth/bluetooth-next.git (master) by Luiz
-> Augusto von Dentz <luiz.von.dentz@intel.com>:
->
-> On Thu, 27 Mar 2025 23:55:22 +0530 you wrote:
-> > This adds a 100 millisec sleep after change baudrate vendor command.
-> >
-> > It is observed that when the baudrate change command changes the
-> > baudrate from 3000000 to 115200, any immediate HCI command returns an
-> > error -22 (Device Busy).
-> >
-> > Adding a small delay after the change baudrate command complete event
-> > is received helps fix the issue.
-> >
-> > [...]
->
-> Here is the summary with links:
->   - [v1,1/2] Bluetooth: btnxpuart: Add msleep() after changing the baudra=
-te
->     (no matching commit)
->   - [v1,2/2] Bluetooth: btnxpuart: Add an error message if FW dump trigge=
-r
-> fails
->
-> https://git.kern/
-> el.org%2Fbluetooth%2Fbluetooth-
-> next%2Fc%2F061e4972c48c&data=3D05%7C02%7Cneeraj.sanjaykale%40nxp.co
-> m%7C08b8a55d25e04b812fd008dd72ecea34%7C686ea1d3bc2b4c6fa92cd99c
-> 5c301635%7C0%7C0%7C638793084075362630%7CUnknown%7CTWFpbGZsb
-> 3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkF
-> OIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=3D8u4Uw6T820eP6
-> mAFNCXU1xuUFpXYUB32nrYKuj8th%2BQ%3D&reserved=3D0
->
-> You are awesome, thank you!
-> --
-> Deet-doot-dot, I am a bot.
-> https://korg.do/
-> cs.kernel.org%2Fpatchwork%2Fpwbot.html&data=3D05%7C02%7Cneeraj.sanjay
-> kale%40nxp.com%7C08b8a55d25e04b812fd008dd72ecea34%7C686ea1d3bc2
-> b4c6fa92cd99c5c301635%7C0%7C0%7C638793084075397504%7CUnknown%
-> 7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOi
-> JXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=3Dth
-> Hgu6Dw8RWjMWGzjv7C%2F4JPJzBwwC7RzDUmor8bq4M%3D&reserved=3D0
->
+We also use `container_of()` whenever we need to retrieve a pointer to
+the flexible structure, through which we can access the flexible-array
+member, if necessary.
+
+So, with these changes, fix the following warnings:
+
+drivers/net/wireless/intel/iwlwifi/mld/../fw/api/tdls.h:134:27: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/net/wireless/intel/iwlwifi/mld/../fw/api/tdls.h:53:27: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/net/wireless/intel/iwlwifi/mld/../fw/api/tx.h:745:27: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/net/wireless/intel/iwlwifi/mld/../fw/api/tx.h:764:27: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/net/wireless/intel/iwlwifi/mvm/../fw/api/tdls.h:134:27: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/net/wireless/intel/iwlwifi/mvm/../fw/api/tdls.h:53:27: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/net/wireless/intel/iwlwifi/mvm/../fw/api/tx.h:745:27: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/net/wireless/intel/iwlwifi/mvm/../fw/api/tx.h:764:27: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+This patch is quite similar to the following one:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=e74c0a7875cfec27c25f582f001cc4625a0f8c07
+
+Thanks!
+
+ .../net/wireless/intel/iwlwifi/fw/api/tdls.h  |  4 +-
+ .../net/wireless/intel/iwlwifi/fw/api/tx.h    | 60 ++++++++++---------
+ .../net/wireless/intel/iwlwifi/mvm/mac-ctxt.c |  8 ++-
+ drivers/net/wireless/intel/iwlwifi/mvm/tdls.c | 10 ++--
+ 4 files changed, 44 insertions(+), 38 deletions(-)
+
+diff --git a/drivers/net/wireless/intel/iwlwifi/fw/api/tdls.h b/drivers/net/wireless/intel/iwlwifi/fw/api/tdls.h
+index cfa6532a3cdd..02198bc37f8c 100644
+--- a/drivers/net/wireless/intel/iwlwifi/fw/api/tdls.h
++++ b/drivers/net/wireless/intel/iwlwifi/fw/api/tdls.h
+@@ -50,7 +50,7 @@ struct iwl_tdls_channel_switch_timing {
+  */
+ struct iwl_tdls_channel_switch_frame {
+ 	__le32 switch_time_offset;
+-	struct iwl_tx_cmd tx_cmd;
++	struct iwl_tx_cmd_hdr tx_cmd;
+ 	u8 data[IWL_TDLS_CH_SW_FRAME_MAX_SIZE];
+ } __packed; /* TDLS_STA_CHANNEL_SWITCH_FRAME_API_S_VER_1 */
+ 
+@@ -131,7 +131,7 @@ struct iwl_tdls_config_cmd {
+ 	struct iwl_tdls_sta_info sta_info[IWL_TDLS_STA_COUNT];
+ 
+ 	__le32 pti_req_data_offset;
+-	struct iwl_tx_cmd pti_req_tx_cmd;
++	struct iwl_tx_cmd_hdr pti_req_tx_cmd;
+ 	u8 pti_req_template[];
+ } __packed; /* TDLS_CONFIG_CMD_API_S_VER_1 */
+ 
+diff --git a/drivers/net/wireless/intel/iwlwifi/fw/api/tx.h b/drivers/net/wireless/intel/iwlwifi/fw/api/tx.h
+index 0a39e4b6eb62..5c0c7bac36d6 100644
+--- a/drivers/net/wireless/intel/iwlwifi/fw/api/tx.h
++++ b/drivers/net/wireless/intel/iwlwifi/fw/api/tx.h
+@@ -222,34 +222,36 @@ enum iwl_tx_offload_assist_flags_pos {
+  * and then the actial payload.
+  */
+ struct iwl_tx_cmd {
+-	__le16 len;
+-	__le16 offload_assist;
+-	__le32 tx_flags;
+-	struct {
+-		u8 try_cnt;
+-		u8 btkill_cnt;
+-		__le16 reserved;
+-	} scratch; /* DRAM_SCRATCH_API_U_VER_1 */
+-	__le32 rate_n_flags;
+-	u8 sta_id;
+-	u8 sec_ctl;
+-	u8 initial_rate_index;
+-	u8 reserved2;
+-	u8 key[16];
+-	__le32 reserved3;
+-	__le32 life_time;
+-	__le32 dram_lsb_ptr;
+-	u8 dram_msb_ptr;
+-	u8 rts_retry_limit;
+-	u8 data_retry_limit;
+-	u8 tid_tspec;
+-	__le16 pm_frame_timeout;
+-	__le16 reserved4;
+-	union {
+-		DECLARE_FLEX_ARRAY(u8, payload);
+-		DECLARE_FLEX_ARRAY(struct ieee80211_hdr, hdr);
+-	};
++	/* New members MUST be added within the __struct_group() macro below. */
++	__struct_group(iwl_tx_cmd_hdr, __hdr, __packed,
++		__le16 len;
++		__le16 offload_assist;
++		__le32 tx_flags;
++		struct {
++			u8 try_cnt;
++			u8 btkill_cnt;
++			__le16 reserved;
++		} scratch; /* DRAM_SCRATCH_API_U_VER_1 */
++		__le32 rate_n_flags;
++		u8 sta_id;
++		u8 sec_ctl;
++		u8 initial_rate_index;
++		u8 reserved2;
++		u8 key[16];
++		__le32 reserved3;
++		__le32 life_time;
++		__le32 dram_lsb_ptr;
++		u8 dram_msb_ptr;
++		u8 rts_retry_limit;
++		u8 data_retry_limit;
++		u8 tid_tspec;
++		__le16 pm_frame_timeout;
++		__le16 reserved4;
++	);
++	struct ieee80211_hdr hdr[];
+ } __packed; /* TX_CMD_API_S_VER_6 */
++static_assert(offsetof(struct iwl_tx_cmd, hdr) == sizeof(struct iwl_tx_cmd_hdr),
++	      "struct member likely outside of __struct_group()");
+ 
+ struct iwl_dram_sec_info {
+ 	__le32 pn_low;
+@@ -742,7 +744,7 @@ struct iwl_compressed_ba_notif {
+  * @frame: the template of the beacon frame
+  */
+ struct iwl_mac_beacon_cmd_v6 {
+-	struct iwl_tx_cmd tx;
++	struct iwl_tx_cmd_hdr tx;
+ 	__le32 template_id;
+ 	__le32 tim_idx;
+ 	__le32 tim_size;
+@@ -761,7 +763,7 @@ struct iwl_mac_beacon_cmd_v6 {
+  * @frame: the template of the beacon frame
+  */
+ struct iwl_mac_beacon_cmd_v7 {
+-	struct iwl_tx_cmd tx;
++	struct iwl_tx_cmd_hdr tx;
+ 	__le32 template_id;
+ 	__le32 tim_idx;
+ 	__le32 tim_size;
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/mac-ctxt.c b/drivers/net/wireless/intel/iwlwifi/mvm/mac-ctxt.c
+index bec18d197f31..f010e68b4a55 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/mac-ctxt.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/mac-ctxt.c
+@@ -1032,7 +1032,9 @@ static int iwl_mvm_mac_ctxt_send_beacon_v6(struct iwl_mvm *mvm,
+ 	struct iwl_mvm_vif *mvmvif = iwl_mvm_vif_from_mac80211(vif);
+ 	struct iwl_mac_beacon_cmd_v6 beacon_cmd = {};
+ 
+-	iwl_mvm_mac_ctxt_set_tx(mvm, vif, beacon, &beacon_cmd.tx);
++	iwl_mvm_mac_ctxt_set_tx(mvm, vif, beacon,
++				container_of(&beacon_cmd.tx,
++					     struct iwl_tx_cmd, __hdr));
+ 
+ 	beacon_cmd.template_id = cpu_to_le32((u32)mvmvif->id);
+ 
+@@ -1052,7 +1054,9 @@ static int iwl_mvm_mac_ctxt_send_beacon_v7(struct iwl_mvm *mvm,
+ 	struct iwl_mvm_vif *mvmvif = iwl_mvm_vif_from_mac80211(vif);
+ 	struct iwl_mac_beacon_cmd_v7 beacon_cmd = {};
+ 
+-	iwl_mvm_mac_ctxt_set_tx(mvm, vif, beacon, &beacon_cmd.tx);
++	iwl_mvm_mac_ctxt_set_tx(mvm, vif, beacon,
++				container_of(&beacon_cmd.tx,
++					     struct iwl_tx_cmd, __hdr));
+ 
+ 	beacon_cmd.template_id = cpu_to_le32((u32)mvmvif->id);
+ 
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/tdls.c b/drivers/net/wireless/intel/iwlwifi/mvm/tdls.c
+index 36379b738de1..bcfae05192ad 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/tdls.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/tdls.c
+@@ -342,6 +342,8 @@ iwl_mvm_tdls_config_channel_switch(struct iwl_mvm *mvm,
+ 	struct iwl_tdls_channel_switch_cmd_tail *tail =
+ 		iwl_mvm_chan_info_cmd_tail(mvm, &cmd.ci);
+ 	u16 len = sizeof(cmd) - iwl_mvm_chan_info_padding(mvm);
++	struct iwl_tx_cmd *tx_cmd =
++		container_of(&tail->frame.tx_cmd, struct iwl_tx_cmd, __hdr);
+ 	int ret;
+ 
+ 	lockdep_assert_held(&mvm->mutex);
+@@ -410,14 +412,12 @@ iwl_mvm_tdls_config_channel_switch(struct iwl_mvm *mvm,
+ 			ret = -EINVAL;
+ 			goto out;
+ 		}
+-		iwl_mvm_set_tx_cmd_ccmp(info, &tail->frame.tx_cmd);
++		iwl_mvm_set_tx_cmd_ccmp(info, tx_cmd);
+ 	}
+ 
+-	iwl_mvm_set_tx_cmd(mvm, skb, &tail->frame.tx_cmd, info,
+-			   mvmsta->deflink.sta_id);
++	iwl_mvm_set_tx_cmd(mvm, skb, tx_cmd, info, mvmsta->deflink.sta_id);
+ 
+-	iwl_mvm_set_tx_cmd_rate(mvm, &tail->frame.tx_cmd, info, sta,
+-				hdr->frame_control);
++	iwl_mvm_set_tx_cmd_rate(mvm, tx_cmd, info, sta, hdr->frame_control);
+ 	rcu_read_unlock();
+ 
+ 	memcpy(tail->frame.data, skb->data, skb->len);
+-- 
+2.43.0
 
