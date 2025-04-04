@@ -1,199 +1,163 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10A881EB9F3;
-	Fri,  4 Apr 2025 13:16:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 226BA1EB9F3;
+	Fri,  4 Apr 2025 13:16:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743772594; cv=none; b=eErtDWlpd6MtL7UfnK0UOigEtOyPoZ07upE600+1Dc8iRqK1Vy59H5hgFYQPWS9HXN4Rkq4hLIpzZ6GQBRN69rCutV0dabwULooF2JAb7WLinboeCMXv5AFKqumMuvn4OxET2XRYTrvlTnXusGowSsiT0DvMZoQ7MKInMdE9rJI=
+	t=1743772607; cv=none; b=fZTL8244HK6bngbJzv42Mjg/RXElcio+2vdw9qLH+k744HUcV6yxStXgzhiPYiuRSOyMWhD+KvA+EkMk+T/kP6C+9UGn7bTjI4lBv+ZDYskc8K7PMNu+oT1Qsu28kSWftmJl6AOeukAKgIl935s1iH8OGp4yESgT2h6XYk+1hMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743772594; c=relaxed/simple;
-	bh=C6B0G55t9QifqETFe0ucXP9cc/PDbPCg2V7XC9fn1Yw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mex2hHL3WTyH1burUgvjmVPkaS9PHZpZrhKamVCS3izYoCvxuq8bGISZVgB2vE+AK9UYcryIt/9tfKhjKGu3lxEOV+rkzy5lUQbSRoWUAUAPoXjvTF7fYJEp4iOTXIi58Owy+VthQaqvZb9LSpQPkfi31nse3ym0WzvNPd5FDu4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CtMqyDLm; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CtMqyDLm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743772593; x=1775308593;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=C6B0G55t9QifqETFe0ucXP9cc/PDbPCg2V7XC9fn1Yw=;
-  b=CtMqyDLm4KvYjjgJ6paPsT94cRBwytfIFQhdxUJtSElTqlFo4/hAXSz1
-   dMnveJ5dwoQzA3cgaWBW6Ne0Hm892Muvv2qrJNUxGdMvAOXexNy7vLPL6
-   K90C5Yd2wiyKVst7463bAfWPlGQ4/DE0mFQ4IC8yqV60dt9c5CD2srtTe
-   /RW3T0YSe3iXVv4zlS4u4yqDsOK269Ilw/6uVPfdcKO04jYueiUkuOJ9a
-   b85RD/nhmohQbc3ldQfIigV7s59RpceKYUMALTmwdeTONahwyjLb7IvRl
-   46RSj1XPwGJQzLEcvyCjMUrWg5hDqE40fdnJ7hqxnV/Kkerw/a6lkmTrO
-   g==;
-X-CSE-ConnectionGUID: 4JuEAegdRrOfJv5nEhUJvg==
-X-CSE-MsgGUID: QXZPhykmQb2GsCZIwnhOnA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11394"; a="55401799"
-X-IronPort-AV: E=Sophos;i="6.15,188,1739865600"; 
-   d="scan'208";a="55401799"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 06:16:33 -0700
-X-CSE-ConnectionGUID: TzYslCmYQFCBxN0Q9bAEvg==
-X-CSE-MsgGUID: AIqBIgH2RQGX8Ny4prod5A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,188,1739865600"; 
-   d="scan'208";a="128157216"
-Received: from opintica-mobl1 (HELO wieczorr-mobl1.intel.com) ([10.245.245.50])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 06:16:17 -0700
-From: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
-To: hpa@zytor.com,
-	hch@infradead.org,
-	nick.desaulniers+lkml@gmail.com,
-	kuan-ying.lee@canonical.com,
-	masahiroy@kernel.org,
-	samuel.holland@sifive.com,
-	mingo@redhat.com,
-	corbet@lwn.net,
-	ryabinin.a.a@gmail.com,
-	guoweikang.kernel@gmail.com,
-	jpoimboe@kernel.org,
-	ardb@kernel.org,
-	vincenzo.frascino@arm.com,
-	glider@google.com,
-	kirill.shutemov@linux.intel.com,
-	apopple@nvidia.com,
-	samitolvanen@google.com,
-	maciej.wieczor-retman@intel.com,
-	kaleshsingh@google.com,
-	jgross@suse.com,
-	andreyknvl@gmail.com,
-	scott@os.amperecomputing.com,
-	tony.luck@intel.com,
-	dvyukov@google.com,
-	pasha.tatashin@soleen.com,
-	ziy@nvidia.com,
-	broonie@kernel.org,
-	gatlin.newhouse@gmail.com,
-	jackmanb@google.com,
-	wangkefeng.wang@huawei.com,
-	thiago.bauermann@linaro.org,
-	tglx@linutronix.de,
-	kees@kernel.org,
-	akpm@linux-foundation.org,
-	jason.andryuk@amd.com,
-	snovitoll@gmail.com,
-	xin@zytor.com,
-	jan.kiszka@siemens.com,
-	bp@alien8.de,
-	rppt@kernel.org,
-	peterz@infradead.org,
-	pankaj.gupta@amd.com,
-	thuth@redhat.com,
-	andriy.shevchenko@linux.intel.com,
-	joel.granados@kernel.org,
-	kbingham@kernel.org,
-	nicolas@fjasle.eu,
-	mark.rutland@arm.com,
-	surenb@google.com,
-	catalin.marinas@arm.com,
-	morbo@google.com,
-	justinstitt@google.com,
-	ubizjak@gmail.com,
-	jhubbard@nvidia.com,
-	urezki@gmail.com,
-	dave.hansen@linux.intel.com,
-	bhe@redhat.com,
-	luto@kernel.org,
-	baohua@kernel.org,
-	nathan@kernel.org,
-	will@kernel.org,
-	brgerst@gmail.com
-Cc: llvm@lists.linux.dev,
-	linux-mm@kvack.org,
-	linux-doc@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kbuild@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kasan-dev@googlegroups.com,
-	x86@kernel.org
-Subject: [PATCH v3 07/14] x86: KASAN raw shadow memory PTE init
-Date: Fri,  4 Apr 2025 15:14:11 +0200
-Message-ID: <a5d62e8ed4eddec7ddc7a2039469ae4dd8ba0386.1743772053.git.maciej.wieczor-retman@intel.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <cover.1743772053.git.maciej.wieczor-retman@intel.com>
-References: <cover.1743772053.git.maciej.wieczor-retman@intel.com>
+	s=arc-20240116; t=1743772607; c=relaxed/simple;
+	bh=Rgy2gfndJX3PsB92jWszKXmI5B60tkP+ysr7rxwu8+Y=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FbaEJaX0dhyOvainMWSIB/4CsLqbzJyDFqoqQgH8ZrcdWKezY51+8C5Z1SiTd/rCHCo6Bwg1o/ARSAhLPB7TVU0jaWcXcXk+xblJC2oJ/TOs2xwrAO6ZusrzjyyT5iO5DN0bv4ycoSJcrqlCPaCykyk0lAX4sib5gr3rSyqTERs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZTfDD4glsz6M4MH;
+	Fri,  4 Apr 2025 21:13:00 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 7425514062A;
+	Fri,  4 Apr 2025 21:16:42 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 4 Apr
+ 2025 15:16:41 +0200
+Date: Fri, 4 Apr 2025 14:16:39 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Terry Bowman <terry.bowman@amd.com>
+CC: <dave@stgolabs.net>, <dave.jiang@intel.com>, <alison.schofield@intel.com>,
+	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
+	<dan.j.williams@intel.com>, <willy@infradead.org>, <jack@suse.cz>,
+	<rafael@kernel.org>, <len.brown@intel.com>, <pavel@ucw.cz>,
+	<ming.li@zohomail.com>, <nathan.fontenot@amd.com>,
+	<Smita.KoralahalliChannabasappa@amd.com>, <huang.ying.caritas@gmail.com>,
+	<yaoxt.fnst@fujitsu.com>, <peterz@infradead.org>,
+	<gregkh@linuxfoundation.org>, <quic_jjohnson@quicinc.com>,
+	<ilpo.jarvinen@linux.intel.com>, <bhelgaas@google.com>,
+	<andriy.shevchenko@linux.intel.com>, <mika.westerberg@linux.intel.com>,
+	<akpm@linux-foundation.org>, <gourry@gourry.net>,
+	<linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<nvdimm@lists.linux.dev>, <linux-fsdevel@vger.kernel.org>,
+	<linux-pm@vger.kernel.org>, <rrichter@amd.com>, <benjamin.cheatham@amd.com>,
+	<PradeepVineshReddy.Kodamati@amd.com>, <lizhijian@fujitsu.com>
+Subject: Re: [PATCH v3 1/4] kernel/resource: Provide mem region release for
+ SOFT RESERVES
+Message-ID: <20250404141639.00000f59@huawei.com>
+In-Reply-To: <20250403183315.286710-2-terry.bowman@amd.com>
+References: <20250403183315.286710-1-terry.bowman@amd.com>
+	<20250403183315.286710-2-terry.bowman@amd.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-In KASAN's generic mode the default value in shadow memory is zero.
-During initialization of shadow memory pages they are allocated and
-zeroed.
+On Thu, 3 Apr 2025 13:33:12 -0500
+Terry Bowman <terry.bowman@amd.com> wrote:
 
-In KASAN's tag-based mode the default tag for the arm64 architecture is
-0xFE which corresponds to any memory that should not be accessed. On x86
-(where tags are 4-bit wide instead of 8-bit wide) that tag is 0xE so
-during the initializations all the bytes in shadow memory pages should
-be filled with 0xE.
+> From: Nathan Fontenot <nathan.fontenot@amd.com>
+> 
+> Add a release_Sam_region_adjustable() interface to allow for
 
-Use memblock_alloc_try_nid_raw() instead of memblock_alloc_try_nid() to
-avoid zeroing out the memory so it can be set with the KASAN invalid
-tag.
+Who is Sam?  (typo)
 
-Signed-off-by: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
----
-Changelog v2:
-- Remove dense mode references, use memset() instead of kasan_poison().
+> removing SOFT RESERVE memory resources. This extracts out the code
+> to remove a mem region into a common __release_mem_region_adjustable()
+> routine, this routine takes additional parameters of an IORES
+> descriptor type to add checks for IORES_DESC_* and a flag to check
+> for IORESOURCE_BUSY to control it's behavior.
+> 
+> The existing release_mem_region_adjustable() is a front end to the
+> common code and a new release_srmem_region_adjustable() is added to
+> release SOFT RESERVE resources.
+> 
+> Signed-off-by: Nathan Fontenot <nathan.fontenot@amd.com>
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> ---
+>  include/linux/ioport.h |  3 +++
+>  kernel/resource.c      | 55 +++++++++++++++++++++++++++++++++++++++---
+>  2 files changed, 54 insertions(+), 4 deletions(-)
+> 
+> diff --git a/include/linux/ioport.h b/include/linux/ioport.h
+> index 5385349f0b8a..718360c9c724 100644
+> --- a/include/linux/ioport.h
+> +++ b/include/linux/ioport.h
+> @@ -357,6 +357,9 @@ extern void __release_region(struct resource *, resource_size_t,
+>  #ifdef CONFIG_MEMORY_HOTREMOVE
+>  extern void release_mem_region_adjustable(resource_size_t, resource_size_t);
+>  #endif
+> +#ifdef CONFIG_CXL_REGION
+> +extern void release_srmem_region_adjustable(resource_size_t, resource_size_t);
+I'm not sure the srmem is obvious enough.  Maybe it's worth the long
+name to spell it out some more.. e.g. something like
 
- arch/x86/mm/kasan_init_64.c | 19 ++++++++++++++++---
- 1 file changed, 16 insertions(+), 3 deletions(-)
+extern void release_softresv_mem_region_adjustable() ?
+> +#endif
+>  #ifdef CONFIG_MEMORY_HOTPLUG
+>  extern void merge_system_ram_resource(struct resource *res);
+>  #endif
+> diff --git a/kernel/resource.c b/kernel/resource.c
+> index 12004452d999..0195b31064b0 100644
+> --- a/kernel/resource.c
+> +++ b/kernel/resource.c
+> @@ -1387,7 +1387,7 @@ void __release_region(struct resource *parent, resource_size_t start,
+>  }
+>  EXPORT_SYMBOL(__release_region);
+>  
+> -#ifdef CONFIG_MEMORY_HOTREMOVE
+> +#if defined(CONFIG_MEMORY_HOTREMOVE) || defined(CONFIG_CXL_REGION)
+>  /**
+>   * release_mem_region_adjustable - release a previously reserved memory region
 
-diff --git a/arch/x86/mm/kasan_init_64.c b/arch/x86/mm/kasan_init_64.c
-index 0539efd0d216..e8a451cafc8c 100644
---- a/arch/x86/mm/kasan_init_64.c
-+++ b/arch/x86/mm/kasan_init_64.c
-@@ -34,6 +34,18 @@ static __init void *early_alloc(size_t size, int nid, bool should_panic)
- 	return ptr;
- }
- 
-+static __init void *early_raw_alloc(size_t size, int nid, bool should_panic)
-+{
-+	void *ptr = memblock_alloc_try_nid_raw(size, size,
-+			__pa(MAX_DMA_ADDRESS), MEMBLOCK_ALLOC_ACCESSIBLE, nid);
-+
-+	if (!ptr && should_panic)
-+		panic("%pS: Failed to allocate page, nid=%d from=%lx\n",
-+		      (void *)_RET_IP_, nid, __pa(MAX_DMA_ADDRESS));
-+
-+	return ptr;
-+}
-+
- static void __init kasan_populate_pmd(pmd_t *pmd, unsigned long addr,
- 				      unsigned long end, int nid)
- {
-@@ -63,8 +75,9 @@ static void __init kasan_populate_pmd(pmd_t *pmd, unsigned long addr,
- 		if (!pte_none(*pte))
- 			continue;
- 
--		p = early_alloc(PAGE_SIZE, nid, true);
--		entry = pfn_pte(PFN_DOWN(__pa(p)), PAGE_KERNEL);
-+		p = early_raw_alloc(PAGE_SIZE, nid, true);
-+		memset(p, PAGE_SIZE, KASAN_SHADOW_INIT);
-+		entry = pfn_pte(PFN_DOWN(__pa_nodebug(p)), PAGE_KERNEL);
- 		set_pte_at(&init_mm, addr, pte, entry);
- 	} while (pte++, addr += PAGE_SIZE, addr != end);
- }
-@@ -436,7 +449,7 @@ void __init kasan_init(void)
- 	 * it may contain some garbage. Now we can clear and write protect it,
- 	 * since after the TLB flush no one should write to it.
- 	 */
--	memset(kasan_early_shadow_page, 0, PAGE_SIZE);
-+	memset(kasan_early_shadow_page, KASAN_SHADOW_INIT, PAGE_SIZE);
- 	for (i = 0; i < PTRS_PER_PTE; i++) {
- 		pte_t pte;
- 		pgprot_t prot;
--- 
-2.49.0
+Looks like you left the old docs which I'm guessing is not the intent.
+
+>   * @start: resource start address
+> @@ -1407,7 +1407,10 @@ EXPORT_SYMBOL(__release_region);
+>   *   assumes that all children remain in the lower address entry for
+>   *   simplicity.  Enhance this logic when necessary.
+>   */
+> -void release_mem_region_adjustable(resource_size_t start, resource_size_t size)
+> +static void __release_mem_region_adjustable(resource_size_t start,
+> +					    resource_size_t size,
+> +					    bool busy_check,
+> +					    int res_desc)
+>  {
+>  	struct resource *parent = &iomem_resource;
+>  	struct resource *new_res = NULL;
+> @@ -1446,7 +1449,12 @@ void release_mem_region_adjustable(resource_size_t start, resource_size_t size)
+>  		if (!(res->flags & IORESOURCE_MEM))
+>  			break;
+>  
+> -		if (!(res->flags & IORESOURCE_BUSY)) {
+> +		if (busy_check && !(res->flags & IORESOURCE_BUSY)) {
+> +			p = &res->child;
+> +			continue;
+> +		}
+> +
+> +		if (res_desc != IORES_DESC_NONE && res->desc != res_desc) {
+>  			p = &res->child;
+>  			continue;
+>  		}
+> @@ -1496,7 +1504,46 @@ void release_mem_region_adjustable(resource_size_t start, resource_size_t size)
+>  	write_unlock(&resource_lock);
+>  	free_resource(new_res);
+>  }
+> -#endif	/* CONFIG_MEMORY_HOTREMOVE */
+> +#endif
+> +
+> +#ifdef CONFIG_MEMORY_HOTREMOVE
+> +/**
+> + * release_mem_region_adjustable - release a previously reserved memory region
+As above. I was surprised to see new docs in here for an existing function.
+I think you forgot to delete the now wrongly placed ones above.
+
+Jonathan
 
