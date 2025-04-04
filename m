@@ -1,114 +1,366 @@
-Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5091F1EB5DA;
-	Fri,  4 Apr 2025 12:30:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0739A1D47AD;
+	Fri,  4 Apr 2025 12:30:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743769811; cv=none; b=fWXgeWURqcScdDz3YU7J4GTvchGtNTUvwhtFS8eMvMt/D7EoRtpPDJ3m5l+JvrpIrYZe/98NdKojRKZULH4/aKQmBg0zaeuDIaogqU8TJwgozDmXmTBaZXfzqcH3GlfH6gNJhA7vrW17W31MUX33XI0e8wlFJQdomDeyGdv+UJ4=
+	t=1743769849; cv=none; b=i1IOhx4mKOFTses2uNnHln+McsuDQwb7bsODDDYvWvDt53tapqR8XqpVIbpv/6nmlK4HtJ96cLwmMNK/WwxpH3XlJ/kQvRZabJZlNOONTk57oiPET0/ox51TBRc/QAYNVw3zb7Vh7Bf9mppkWScWNB9YLRMW7K42KUkKhGVoc+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743769811; c=relaxed/simple;
-	bh=JeuacFG/T5IzwJvxG1MoFQp4VLhHpIBovq2dABSnT4Q=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=i2d6hGBLw65LDTos2czsqJjy1qaZoYghZywtvOMjy+uRRZ67e6tKoSMscQCF0caS5j9IUyWBMbB/UhO+oaKDAGEvXBjAzNOQOXY4/9b1M+TOk7G4w1KJ98SogOLbfOrG9LzynL0aXWJpPFCeYyzP/nx4Gx6vQYBw48zc8tRChCk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev; spf=pass smtp.mailfrom=buenzli.dev; arc=none smtp.client-ip=80.241.56.161
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=buenzli.dev
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [10.196.197.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4ZTdGh1m1wz9s3R;
-	Fri,  4 Apr 2025 14:30:04 +0200 (CEST)
+	s=arc-20240116; t=1743769849; c=relaxed/simple;
+	bh=ETOr91Tq8ZKbLALXWnmPJpwuKqE608g5yS6RULec6BE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aaaLg7DmZs1ZMXF9BIPtYw25wXaKGMlvRbqJW8O2RT/hIzovP36G3ZXIeaQ3CFEvSLkZTe4PyZSi3WDRqjCYwluEsR5j5bavWb9oM0kkH3FaJQrURnOnQ0QKLAURmo5y3LGSy0QlV2TFFCV4UXNW4/gsaxzdZa0WPKFF5D8QZTU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rFwelLUu; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rFwelLUu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C239C4CEE8;
+	Fri,  4 Apr 2025 12:30:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743769848;
+	bh=ETOr91Tq8ZKbLALXWnmPJpwuKqE608g5yS6RULec6BE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rFwelLUu9lopSMIfKa7vjUPT1+t9fafdqTjA/5ooYI7rnDZ2uL4D5kopyVbgmmdJc
+	 fTXh0rXQ66TSJslbEi0ecZCN+T/8boQNTcapie0ZL3fn7xQksk4RCBTBfvILx7zEWs
+	 njOee1Jy/C0sOGr/CLtd3ru62U2V0XEKIAKNB4Cdd/PW4S+7bmDZyePr3tS59bc6r4
+	 AyB8ZX/uXY/Y33whUqzsD2FR+ZR3CXXj8mGHSXRBcz+eEXvhrIQjawhw4yrcp0YJXA
+	 qTrXpOUHDwe28ZySIBLraIoiMPyCqkcpUjLt4bfvKdMmDYSXcSWbaDUWty7e1bYZgC
+	 oB+VFtndtPw8Q==
+Date: Fri, 4 Apr 2025 13:30:45 +0100
+From: Lee Jones <lee@kernel.org>
+To: Craig McQueen <craig@mcqueen.au>
+Cc: linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/2] leds: Add some setup ioctls to uleds driver
+Message-ID: <20250404123045.GA278642@google.com>
+References: <20250317022220.423966-1-craig@mcqueen.au>
+ <20250317022220.423966-2-craig@mcqueen.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 04 Apr 2025 14:29:56 +0200
-Message-Id: <D8XUSXKGAPBL.HFZUETKB6YQ1@buenzli.dev>
-Cc: "Daniel Scally" <djrscally@gmail.com>, "Heikki Krogerus"
- <heikki.krogerus@linux.intel.com>, "Sakari Ailus"
- <sakari.ailus@linux.intel.com>, "Dirk Behme" <dirk.behme@de.bosch.com>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, "Danilo Krummrich" <dakr@kernel.org>, "Saravana
- Kannan" <saravanak@google.com>, "Miguel Ojeda" <ojeda@kernel.org>, "Alex
- Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary
- Guo" <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, "Benno Lossin" <benno.lossin@proton.me>,
- "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl"
- <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
- <linux-kernel@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
- <devicetree@vger.kernel.org>, <rust-for-linux@vger.kernel.org>
-Subject: Re: [PATCH 03/10] device property: Add
- fwnode_property_read_int_array()
-From: "Remo Senekowitsch" <remo@buenzli.dev>
-To: "Rob Herring" <robh@kernel.org>, "Andy Shevchenko"
- <andriy.shevchenko@linux.intel.com>
-References: <20250326171411.590681-1-remo@buenzli.dev>
- <20250326171411.590681-4-remo@buenzli.dev>
- <Z-UPJyD41LOMM3o2@smile.fi.intel.com>
- <D8WA3WIHEQRN.3LQS84K8Z46OW@buenzli.dev>
- <Z-6NG7fSfyKH-vW_@smile.fi.intel.com>
- <CAL_JsqLPZc1LB09auMOJp90hbhJin75Yaa09h12ziZZgExSsBg@mail.gmail.com>
-In-Reply-To: <CAL_JsqLPZc1LB09auMOJp90hbhJin75Yaa09h12ziZZgExSsBg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250317022220.423966-2-craig@mcqueen.au>
 
-On Thu Apr 3, 2025 at 6:08 PM CEST, Rob Herring wrote:
-> On Thu, Apr 3, 2025 at 8:29=E2=80=AFAM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
->>
->> On Wed, Apr 02, 2025 at 06:04:13PM +0200, Remo Senekowitsch wrote:
->> > On Thu Mar 27, 2025 at 9:41 AM CET, Andy Shevchenko wrote:
->> > > On Wed, Mar 26, 2025 at 06:13:42PM +0100, Remo Senekowitsch wrote:
->> > >> The rust bindings for reading device properties has a single
->> > >> implementation supporting differing sizes of integers. The fwnode C=
- API
->> > >> already has a similar interface, but it is not exposed with the
->> > >> fwnode_property_ API. Add the fwnode_property_read_int_array() wrap=
-per.
->>
->> ...
->>
->> > >> +EXPORT_SYMBOL_GPL(fwnode_property_read_int_array);
->> > >
->> > > I'm not sure about this. We have a lot of assumptions in the code th=
-at the
->> > > arrays beneath are only represented by the selected number of intege=
-r types.
->> > > This opens a Pandora's box, e.g., reading in u24, which is not suppo=
-rted by
->> > > the upper layers..
->> > >
->> > >> +int fwnode_property_read_int_array(const struct fwnode_handle *fwn=
-ode, const char *propname,
->> > >> +                             unsigned int elem_size, void *val, si=
-ze_t nval);
->> >
->> > Here's an alternative approach using a macro to map each integer type =
-explicitly
->> > to its corresponding read function. There are some additional changes =
-that will
->> > be necessary to make the rest work, but this is the gist of it.
->>
->> I don;'t know Rust to tell anything about this, but at least it feels mu=
-ch
->> better approach.
->
-> I know a little Rust and it is much worse. It is implementing the same
-> code 8 times instead of 1 time just to work-around the C API.
+On Mon, 17 Mar 2025, Craig McQueen wrote:
 
-Can you please elaborate on this concern?
+> * Add an ioctl for setup as an alternative to doing a write.
+>   This is similar to the ioctl that was added to uinput for setup.
+> * Add an ioctl to set a default trigger for the LED.
+> 
+> Signed-off-by: Craig McQueen <craig@mcqueen.au>
+> ---
+>  Documentation/leds/uleds.rst |   6 ++
+>  drivers/leds/uleds.c         | 125 ++++++++++++++++++++++++++++-------
+>  include/uapi/linux/uleds.h   |  30 ++++++++-
+>  3 files changed, 137 insertions(+), 24 deletions(-)
+> 
+> diff --git a/Documentation/leds/uleds.rst b/Documentation/leds/uleds.rst
+> index 4077745dae00..0512e577d63a 100644
+> --- a/Documentation/leds/uleds.rst
+> +++ b/Documentation/leds/uleds.rst
+> @@ -24,6 +24,12 @@ A new LED class device will be created with the name given. The name can be
+>  any valid sysfs device node name, but consider using the LED class naming
+>  convention of "devicename:color:function".
+>  
+> +Alternatively, setup can be done with an ioctl call, passing a pointer to
+> +the structure.
+> +
+> +There is also an ioctl call to configure a default trigger for the LED, by
+> +passing a pointer to a structure containing the name of a trigger.
+> +
+>  The current brightness is found by reading an int value from the character
+>  device. Reading will block until the brightness changes. The device node can
+>  also be polled to notify when the brightness value changes.
+> diff --git a/drivers/leds/uleds.c b/drivers/leds/uleds.c
+> index 374a841f18c3..598e376a4b1b 100644
+> --- a/drivers/leds/uleds.c
+> +++ b/drivers/leds/uleds.c
+> @@ -6,6 +6,7 @@
+>   *
+>   * Based on uinput.c: Aristeu Sergio Rozanski Filho <aris@cathedrallabs.org>
+>   */
+> +#include <linux/ctype.h>
+>  #include <linux/fs.h>
+>  #include <linux/init.h>
+>  #include <linux/leds.h>
+> @@ -25,13 +26,14 @@ enum uleds_state {
+>  };
+>  
+>  struct uleds_device {
+> -	struct uleds_user_dev	user_dev;
+> -	struct led_classdev	led_cdev;
+> -	struct mutex		mutex;
+> -	enum uleds_state	state;
+> -	wait_queue_head_t	waitq;
+> -	int			brightness;
+> -	bool			new_data;
+> +	struct uleds_user_dev		user_dev;
+> +	struct uleds_user_trigger	default_trigger;
+> +	struct led_classdev		led_cdev;
+> +	struct mutex			mutex;
+> +	enum uleds_state		state;
+> +	wait_queue_head_t		waitq;
+> +	int				brightness;
+> +	bool				new_data;
+>  };
+>  
+>  static struct miscdevice uleds_misc;
+> @@ -70,15 +72,17 @@ static int uleds_open(struct inode *inode, struct file *file)
+>  	return 0;
+>  }
+>  
+> -static ssize_t uleds_write(struct file *file, const char __user *buffer,
+> -			   size_t count, loff_t *ppos)
+> +static bool is_led_name_valid(const char *name)
+>  {
+> -	struct uleds_device *udev = file->private_data;
+> -	const char *name;
+> -	int ret;
+> +	return ((name[0] != '\0') &&
+> +		(strcmp(name, ".") != 0) &&
+> +		(strcmp(name, "..") != 0) &&
+> +		(strchr(name, '/') == NULL));
+> +}
+>  
+> -	if (count == 0)
+> -		return 0;
+> +static int dev_setup(struct uleds_device *udev, const char __user *buffer)
 
-The previous approach uses generics, which means the function is also
-"copy-pasted" for each concrete type it is used with at compile time,
-just like with a macro. So using a macro wouldn't be worse than generics
-if binary size is the concern.
+uleds_dev_setup()
 
-If the concern is about readability, I have managed to move all logic
-outside the macro body, all that remains is the association between type
-and `*_read_array` function.
+> +{
+> +	int ret;
+>  
+>  	ret = mutex_lock_interruptible(&udev->mutex);
+>  	if (ret)
+> @@ -89,20 +93,13 @@ static ssize_t uleds_write(struct file *file, const char __user *buffer,
+>  		goto out;
+>  	}
+>  
+> -	if (count != sizeof(struct uleds_user_dev)) {
+> -		ret = -EINVAL;
+> -		goto out;
+> -	}
 
-Remo
+Why is this no longer required?
+
+> -
+>  	if (copy_from_user(&udev->user_dev, buffer,
+>  			   sizeof(struct uleds_user_dev))) {
+>  		ret = -EFAULT;
+>  		goto out;
+>  	}
+>  
+> -	name = udev->user_dev.name;
+> -	if (!name[0] || !strcmp(name, ".") || !strcmp(name, "..") ||
+> -	    strchr(name, '/')) {
+> +	if (!is_led_name_valid(udev->user_dev.name)) {
+
+Maybe we should make this official and put it in a header somewhere?
+
+>  		ret = -EINVAL;
+>  		goto out;
+>  	}
+> @@ -120,7 +117,6 @@ static ssize_t uleds_write(struct file *file, const char __user *buffer,
+>  
+>  	udev->new_data = true;
+>  	udev->state = ULEDS_STATE_REGISTERED;
+> -	ret = count;
+>  
+>  out:
+>  	mutex_unlock(&udev->mutex);
+> @@ -128,6 +124,23 @@ static ssize_t uleds_write(struct file *file, const char __user *buffer,
+>  	return ret;
+>  }
+>  
+> +static ssize_t uleds_write(struct file *file, const char __user *buffer,
+> +	size_t count, loff_t *ppos)
+> +{
+> +	struct uleds_device *udev = file->private_data;
+> +	int ret;
+> +
+> +	if (count == 0)
+> +		return 0;
+> +	if (count != sizeof(struct uleds_user_dev))
+> +		return -EINVAL;
+> +
+> +	ret = dev_setup(udev, buffer);
+> +	if (ret < 0)
+> +		return ret;
+
+Nit: '\n'
+
+> +	return count;
+> +}
+> +
+>  static ssize_t uleds_read(struct file *file, char __user *buffer, size_t count,
+>  			  loff_t *ppos)
+>  {
+> @@ -179,6 +192,71 @@ static __poll_t uleds_poll(struct file *file, poll_table *wait)
+>  	return 0;
+>  }
+>  
+> +/*
+> + * Trigger name validation: Allow only alphanumeric, hyphen or underscore.
+> + */
+
+This is clearly a single line comment.
+
+The first part is also invalidated by the function's nomenclature.
+
+> +static bool is_trigger_name_valid(const char *name)
+> +{
+> +	size_t i;
+> +
+> +	if (name[0] == '\0')
+> +		return false;
+> +
+> +	for (i = 0; i < TRIG_NAME_MAX; i++) {
+
+Shouldn't this be <=?
+
+> +		if (name[i] == '\0')
+> +			break;
+> +		if (!isalnum(name[i]) && name[i] != '-' && name[i] != '_')
+> +			return false;
+> +	}
+
+Nit: '\n'
+
+> +	/* Length check and avoid any special names. */
+> +	return ((i < TRIG_NAME_MAX) &&
+
+What if the name is exactly the max?
+
+> +		(strcmp(name, "default") != 0));
+
+This can go on the line above.
+
+How about?
+
+   return !((i < TRIG_NAME_MAX) && (strcmp(name, "default"))
+
+> +}
+> +
+> +static long uleds_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+> +{
+> +	struct uleds_device *udev = file->private_data;
+> +	struct uleds_user_trigger default_trigger;
+> +	int retval = 0;
+> +
+> +	switch (cmd) {
+> +	case ULEDS_IOC_DEV_SETUP:
+> +		retval = dev_setup(udev, (const char __user *)arg);
+> +		break;
+> +
+> +	case ULEDS_IOC_SET_DEFAULT_TRIGGER:
+> +		retval = copy_from_user(&default_trigger,
+> +			(struct uleds_user_trigger __user *)arg,
+> +			sizeof(default_trigger));
+
+Subsequent lines need tabbing out to the open parenthesis.
+
+> +		if (retval)
+> +			return retval;
+
+Please open things out.
+
+Squished code is hard to read code.
+
+> +		retval = mutex_lock_interruptible(&udev->mutex);
+> +		if (retval)
+> +			return retval;
+> +		if (default_trigger.name[0] == '\0') {
+> +			udev->led_cdev.default_trigger = NULL;
+> +		} else {
+> +			if (!is_trigger_name_valid(default_trigger.name)) {
+> +				mutex_unlock(&udev->mutex);
+> +				return -EINVAL;
+> +			}
+> +			memcpy(&udev->default_trigger, &default_trigger,
+> +				sizeof(udev->default_trigger));
+> +			udev->led_cdev.default_trigger = udev->default_trigger.name;
+> +		}
+> +		if (udev->state == ULEDS_STATE_REGISTERED)
+> +			led_trigger_set_default(&udev->led_cdev);
+> +		mutex_unlock(&udev->mutex);
+> +		break;
+> +
+> +	default:
+> +		retval = -ENOIOCTLCMD;
+> +		break;
+> +	}
+> +
+> +	return retval;
+> +}
+> +
+>  static int uleds_release(struct inode *inode, struct file *file)
+>  {
+>  	struct uleds_device *udev = file->private_data;
+> @@ -200,6 +278,7 @@ static const struct file_operations uleds_fops = {
+>  	.read		= uleds_read,
+>  	.write		= uleds_write,
+>  	.poll		= uleds_poll,
+> +	.unlocked_ioctl	= uleds_ioctl,
+>  };
+>  
+>  static struct miscdevice uleds_misc = {
+> diff --git a/include/uapi/linux/uleds.h b/include/uapi/linux/uleds.h
+> index 4d32a39965f8..0e9861a8c31f 100644
+> --- a/include/uapi/linux/uleds.h
+> +++ b/include/uapi/linux/uleds.h
+> @@ -15,11 +15,39 @@
+>  #ifndef _UAPI__ULEDS_H_
+>  #define _UAPI__ULEDS_H_
+>  
+> -#define LED_MAX_NAME_SIZE	64
+> +#define LED_MAX_NAME_SIZE		64
+> +#define ULEDS_TRIGGER_MAX_NAME_SIZE	64
+>  
+>  struct uleds_user_dev {
+>  	char name[LED_MAX_NAME_SIZE];
+>  	int max_brightness;
+>  };
+>  
+> +struct uleds_user_trigger {
+> +	char name[ULEDS_TRIGGER_MAX_NAME_SIZE];
+> +};
+> +
+> +
+
+Remove this double line spacing.
+
+> +/* ioctl commands */
+> +
+> +#define ULEDS_IOC_MAGIC		'l'
+> +
+> +/*
+> + * Initial setup.
+> + * E.g.:
+> + *	int retval;
+> + *	struct uleds_user_dev dev_setup = { "mainboard:green:battery", 255 };
+> + *	retval = ioctl(fd, ULEDS_IOC_DEV_SETUP, &dev_setup);
+> + */
+> +#define ULEDS_IOC_DEV_SETUP		_IOW(ULEDS_IOC_MAGIC, 0x01, struct uleds_user_dev)
+> +
+> +/*
+> + * Set the default trigger.
+> + * E.g.:
+> + *	int retval;
+> + *	struct uleds_user_trigger default_trigger = { "battery" };
+> + *	retval = ioctl(fd, ULEDS_IOC_SET_DEFAULT_TRIGGER, &default_trigger);
+> + */
+> +#define ULEDS_IOC_SET_DEFAULT_TRIGGER	_IOW(ULEDS_IOC_MAGIC, 0x02, struct uleds_user_trigger)
+> +
+>  #endif /* _UAPI__ULEDS_H_ */
+> -- 
+> 2.48.1
+> 
+> 
+
+-- 
+Lee Jones [李琼斯]
