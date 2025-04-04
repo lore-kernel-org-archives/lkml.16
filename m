@@ -1,96 +1,57 @@
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFF9916132F
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 09:05:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DBF916132F;
+	Fri,  4 Apr 2025 09:06:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743757555; cv=none; b=fkPLts8VqC7cYfMq/Z9vcBOY1462pNUB2wnr1h7A5zloKdr9pp5q/PXG6UVby1p5rcQGJIgpBjhkZvl8syAQNlZ+el7KYfqfHzOfzH85i2y0IwBVR5rqD0wF5VlmcM/yqLhMAbIKjRzg2+cNC8s0jbHcksc7gU1FcZWXjMBM1ok=
+	t=1743757569; cv=none; b=ZULCZim+55f5bxUPsl0FdXBt4LaCg7j/UTV/wvB9RtRVDGkms6ncvnJHcQCYmHrwjl7/ckZsfuOwTLvkQ2vRXozk554hyjMnRK40if1vF5DdhUC5IXupq2h8DbM+v5Ay86OZxaUXCaGIr+ICEgB/Z18hoECS6n5LJ3LncAHYOQU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743757555; c=relaxed/simple;
-	bh=uhKMFNAVbmR4Kr/0n24Wq5pDZu2LhHwS5o/4unQpAXU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=U//jvQVx1Dvhkbo5utzyLogw5j9FlkBQs29RSXGxrCNe0TEcpUfPQxGpcEkVZEa5xNT13AEdpKqDAhSOtQiRJmi6KOn6+T12Z4D/LTrBiFZOaSBFlfKfpN316Ln61NdrXomjLgjobOU6J771Ieda5m5KziilS09LV5L4EkHg0V0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZesPuEAf; arc=none smtp.client-ip=209.85.222.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZesPuEAf"
-Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-7c554d7dc2aso294889585a.3
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 02:05:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743757552; x=1744362352; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uhKMFNAVbmR4Kr/0n24Wq5pDZu2LhHwS5o/4unQpAXU=;
-        b=ZesPuEAfXGTea6dD51j8Jrh8J00FwlRUNJ384NoDRmwBJOBAfYm3Jg7feT4tqxMglM
-         wP+YoSRzXZoQ/ZLrfZSQEFcrQZmkH6GBL4FV3kpkVd2JGUwB7nFMzfi/z8NFWCvxJ4Dp
-         oEatzBYvcqeV9nQiIajhPsZg5fAAxKGgFgPotZrX9nIO9hYywS977BU00RXhhZ99x+lf
-         EIglP2fwuifxeJ9LIWoC/NbESJ5z6OQOTsUFEaEnP835owQOC0kIlxDoKSBHPaDkXym/
-         OMj1a22hg1r5QBe1Anv8o9ZLrNbF4aBfkRAbKrq43igz5FGXFVVbmh9V14qgYYzpEFe2
-         jHiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743757552; x=1744362352;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=uhKMFNAVbmR4Kr/0n24Wq5pDZu2LhHwS5o/4unQpAXU=;
-        b=ghPlQEAjm9pHxRzBKWkZJETaO8xWM/esDYoAr4mg8AtOMJB4Q5pDZmy1cU3+lmLFvN
-         7Wu2HyYUgA7hFZkn2PUfnixjmgbXeHqhYZiAjW+myObWS2qju/XRauVxUmSVeB9xUFhv
-         GbNSrjQxwvAlfWFQkN4DL/wpkfGuAUb+zDeZkxVW57oY1iM3Mcph9G6O/tp/7UeloIYi
-         3OaxURw0n3I1OP+zvn0wZa7KRPSMXT5nZ7rfj5kXUJJ1jJTGqupyEcuEVFQXC0Okc8b/
-         anMwqB8QyPlhmfntEQGbWr3az2V+kLciNpfNgBnuV1PHc9ZpY3mK9cbei/0eEgN3hduj
-         1stg==
-X-Forwarded-Encrypted: i=1; AJvYcCVcpMw1ySj15kG5gMnFiRmb5k5nHpT0wKrWXOlkQnZY0Y6jTQzCzDlv6avvQMd4ZFom13QHuWjHOqq+DAo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxYicEIInHrxBEONdM8SEgCnRf0x/sgx/TWuKI63byE/jW03NkY
-	SM/uQEkjlsgU5dpgv1gMYibvAm1Ub9v3sdrBA8fKQpKI5krxIlrVZssic4G0HJS7UnFm6rWlXSJ
-	SnSb59pYvCI1+3p8pCIk4L3gIU4A=
-X-Gm-Gg: ASbGncsgD77L/k63oM7BLE6tBug1sfiejsxyCk7uQMqbwd1azxZc1YEILifOhR/dIlS
-	nkCU5KoY+ta/iQSi5251QIzNgC7ztP1JQ9tJWJofwN7Tb76OWOIESF/vFM3Zj8yH4/HhDqovTQc
-	sLtVO/5+RZiJj5LZScI3QDNSzd91e1OVacB03hamvPLnnf0fOTxlzWHGTD
-X-Google-Smtp-Source: AGHT+IGeB5gy3Bxye7z2MQOfNjxPTBd6g4r626j11K+xJvAUfHLE5a3OVvVAhRJh35DKi5LecvLM+IdQonxpnOsRMcA=
-X-Received: by 2002:a05:620a:1a10:b0:7c5:57cd:f1cb with SMTP id
- af79cd13be357-7c774dd6ed6mr310719385a.37.1743757551749; Fri, 04 Apr 2025
- 02:05:51 -0700 (PDT)
+	s=arc-20240116; t=1743757569; c=relaxed/simple;
+	bh=3KuxW5QTAuQ13ScJFuxAKFZQrv/QjQev0J4mopx8Gnc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sf2KK1WZ2KS2qrBxj5kM5uB7gFw82UHDL+QNiZ6l0Ocpe/VHTx2bi/TQ2lDXfgt44b10RgGP0uYgTjsxW+K4XccqKzTvuJFkr0NLAAMwTh9rfK1IqiFOndUsWeI691rBCltp3cMorRgMgA6ja00JFcl6T6pUms4pzTNlLXTsLuA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id D978A68BEB; Fri,  4 Apr 2025 11:06:01 +0200 (CEST)
+Date: Fri, 4 Apr 2025 11:06:01 +0200
+From: Christoph Hellwig <hch@lst.de>
+To: John Garry <john.g.garry@oracle.com>
+Cc: Christoph Hellwig <hch@lst.de>, alx@kernel.org, brauner@kernel.org,
+	djwong@kernel.org, dchinner@redhat.com, linux-man@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org, ojaswin@linux.ibm.com,
+	ritesh.list@gmail.com, martin.petersen@oracle.com,
+	linux-api@vger.kernel.org
+Subject: Re: [PATCH RFC] statx.2: Add stx_atomic_write_unit_max_opt
+Message-ID: <20250404090601.GA12163@lst.de>
+References: <20250319114402.3757248-1-john.g.garry@oracle.com> <20250320070048.GA14099@lst.de> <c656fa4d-eb76-4caa-8a71-a8d8a2ba6206@oracle.com> <20250320141200.GC10939@lst.de> <7311545c-e169-4875-bc6c-97446eea2c45@oracle.com> <20250323064029.GA30848@lst.de> <5485c1ad-8a20-40bc-aa75-68b820de5e1c@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250403160807.100057-1-gshahrouzi@gmail.com> <2025040429-avenge-camera-8d88@gregkh>
-In-Reply-To: <2025040429-avenge-camera-8d88@gregkh>
-From: Gabriel <gshahrouzi@gmail.com>
-Date: Fri, 4 Apr 2025 05:05:00 -0400
-X-Gm-Features: AQ5f1Jo01_JEw9ySJEDjCel8vQNe5KvQVh0WsMLpEgdBI48FpmeYR0ubmuhUQR0
-Message-ID: <CAKUZ0zJzNinEqQLVH8o-QKYoZ99VWum-Qtfr+rGNytK44Zzdyw@mail.gmail.com>
-Subject: Re: [PATCH v3] staging: rtl8723bs: Remove trailing whitespace
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: linux-staging@lists.linux.dev, philipp.g.hortmann@gmail.com, 
-	eamanu@riseup.net, linux-kernel@vger.kernel.org, 
-	linux-kernel-mentees@lists.linux.dev, skhan@linuxfoundation.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5485c1ad-8a20-40bc-aa75-68b820de5e1c@oracle.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Fri, Apr 4, 2025 at 2:28=E2=80=AFAM Greg KH <gregkh@linuxfoundation.org>=
- wrote:
+On Thu, Apr 03, 2025 at 04:07:04PM +0100, John Garry wrote:
+> So I am thinking one of these:
+> a. stx_atomic_write_unit_max_dev
+> b. stx_atomic_write_unit_max_bdev
+> c. stx_atomic_write_unit_max_align
+> d. stx_atomic_write_unit_max_hw
 >
-> On Thu, Apr 03, 2025 at 12:08:07PM -0400, Gabriel Shahrouzi wrote:
-> > Remove trailing whitespace to comply with kernel coding style.
-> >
-> > Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->
-> As far as I can recall, I did not suggest this patch :(
-Whoops. I misunderstood. I initially thought "it" meant the suggestion
-for the new patch revision. But thinking more about it, that would be
-redundant, since that information already exists in the previous
-version's thread and could be spammy with many reviewers.
+> The terms dev (or device) and bdev are already used in the meaning of some 
+> members in struct statx, so not too bad. However, when we support large 
+> atomic writes for XFS rtvol, the bdev atomic write limit and rtextsize 
+> would influence this value (so just bdev might be a bit misleading in the 
+> name).
 
-However, providing information on how that idea first came up is
-useful, since that origin story doesn't already exist on the thread
-(countering the base assumption that you alone came up with it).
+Don't.  Especially when you have a natively out of write file system
+that optimized case will not involve the usual hardware offload.
 
-Separately, I need to make sure to use the official documentation for
-tags instead of relying on Google searches and third-party
-documentation.
