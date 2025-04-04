@@ -1,144 +1,110 @@
-Received: from s1.g1.infrastructure.qtmlabs.xyz (s1.g1.infrastructure.qtmlabs.xyz [107.172.1.117])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 338E115DBB3;
-	Fri,  4 Apr 2025 05:50:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=107.172.1.117
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4771533FD;
+	Fri,  4 Apr 2025 05:51:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743745814; cv=none; b=ArkQU6aaMUe+gspkkM2v/amYKZYaSvzi1TFQCf3qXqMwe2E8G5uy85xri7vsPM3oQwGgQYezlm/WvBVuwy5kbeHyqZN3+E3WcHGyYgSV0BVLc129yWsiLb1uwvLJQ1sRrLWDULoYGWO1lfWCyZLhXp1OYUrGhAb20LQdeuiIbuo=
+	t=1743745912; cv=none; b=GIxxRrlFjLsM7g0TVkFLREFOHl+Hsr/oWuyVw5rcMXT6N5QEFd5l7Jbi7PYcFFQt2J/+wG/A9nZvMIC5AHm/UQMoLOTbqZ06dN6lX024CoLg7f6UfrkIWK1SBvPZXo0kxcKlISF2cBHxW21RomQXgNUF8J0DP9k5VNZT32eHyzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743745814; c=relaxed/simple;
-	bh=E0lTe+FJPV0F1VKQxQbHoHGJojoKObYVSGdv5v9cqxw=;
-	h=Content-Type:Message-ID:Date:MIME-Version:Subject:From:To:Cc:
-	 References:In-Reply-To; b=uoZv9tJ473RHyrpmoprUAvwAjiTEdPiyWqJEWf3CNzj5nDENUNKYwiNhtXUIklI6YbnhqQk8IiXFfqDPZ6X84bhCteB+emACIgKyeKTaPSA2fGD2wv6tlgnloA9AzWh70uPinRs1OpqGQdue6uQGmr/jnpU3d+o9pxrQ/2lZA/A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qtmlabs.xyz; spf=pass smtp.mailfrom=qtmlabs.xyz; dkim=pass (2048-bit key) header.d=qtmlabs.xyz header.i=@qtmlabs.xyz header.b=HkWrS4lG; arc=none smtp.client-ip=107.172.1.117
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qtmlabs.xyz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qtmlabs.xyz
+	s=arc-20240116; t=1743745912; c=relaxed/simple;
+	bh=duAYRq244lKghXLjwlUPtR96qqOm7CqC4g55tLgHcK8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lH6aTHNnCgv44frErvaQ+eVNVQ50H6odJ+AsyZ7RZO+HmscEtEOPxA4Vvug7ZMmMGjBA0VXQJl1FzJ+PN/GHTXIHyXvm1+i+SRatS/kc90ofcB13Hup2OHoqK8wFT5OKmkcOmO1yH8efXQt2V/eHhX86SvwPBM0iKJWrhEG5fOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SMlXbCGP; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qtmlabs.xyz header.i=@qtmlabs.xyz header.b="HkWrS4lG"
-Content-Type: multipart/mixed; boundary="------------08L6YdHquZUpv03HEHpbPDhB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qtmlabs.xyz; s=dkim;
-	t=1743745810;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+ytiwc9QXzR9VaVB1US+GOGp83Z98Cx/zqNhgfzVo6k=;
-	b=HkWrS4lG4mKe4eli15RrfKo6WsOqx2JmVjBov6gUuHXf8P0/0dCu5wzDoMpKWSdaJkQJqP
-	TQApk0DgsMM5F5ZTl6tEN0lxx9g/Z4TYTPawLFlDNv5KNidgOR9CTNzr7hI9+wsj/38vi0
-	/aQj0iYD4KKdP6VoR7xsZJk12F4sWv90H+HmA3WLohwOBqoJfsQwzPJXJiJTbY1A79Ifuw
-	OA0+unqYbrODdbLBy1o7cwk+nUwvctiBsAXi6sV+4FXaKyJVyw1olTBsYWakIY5EAT9Q3Q
-	6BSjTAGnOKXd51gCSFMzKCXgoLeuYrTZ3ZNSQ9V19vtJlS0LpK4skaU4gY4j/w==
-Authentication-Results: s1.g1.infrastructure.qtmlabs.xyz;
-	auth=pass smtp.mailfrom=msizanoen@qtmlabs.xyz
-Message-ID: <4081fbd9-0a5f-49d6-9553-4f964bf5ef27@qtmlabs.xyz>
-Date: Fri, 4 Apr 2025 12:50:03 +0700
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SMlXbCGP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743745909; x=1775281909;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=duAYRq244lKghXLjwlUPtR96qqOm7CqC4g55tLgHcK8=;
+  b=SMlXbCGPqsUrLySXhR+WYCM/yf7kaNp6eqw8Dq8arIKOt97VJLuuYWQt
+   lwuTtsVDngPqAJCz28h7FxbfpZoZMyLtt4edMyUm87pvAopmREAzsT1eQ
+   X/uHpjO8SGcb73G1aT9hjZTE3Z/BCqjN8OwADS5UL1Y4HuTxtkjHP9AIO
+   ls88fpp84+SbmP1rwjECF9k6C1TUIagfR0vW+ZnEK3nYR8276uNEyLjEh
+   nI2MXpdkLqdW8tqDwc8rqs+/Qz7Hzo+YlQJHGwfT/0xPC/obMRLHkVPL/
+   ygI3kJ9Ef/tUrkJXGlS/LCclV4UDc39cfZOhqX4f1xUapA6fOSp8ghL+4
+   g==;
+X-CSE-ConnectionGUID: 6jxuR0oHRweD/zMHd1Vh7w==
+X-CSE-MsgGUID: zrDmQElyT5e/XecKU/NjUQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11393"; a="49036173"
+X-IronPort-AV: E=Sophos;i="6.15,187,1739865600"; 
+   d="scan'208";a="49036173"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 22:51:49 -0700
+X-CSE-ConnectionGUID: EPim8gilRX2xDSLhfsQhCw==
+X-CSE-MsgGUID: j56jmjC5TESUcP4qGnnCUQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,187,1739865600"; 
+   d="scan'208";a="127025444"
+Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
+  by fmviesa006.fm.intel.com with ESMTP; 03 Apr 2025 22:51:46 -0700
+Received: from kbuild by b207828170a5 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u0Zxv-00011n-2A;
+	Fri, 04 Apr 2025 05:51:43 +0000
+Date: Fri, 4 Apr 2025 13:51:01 +0800
+From: kernel test robot <lkp@intel.com>
+To: Sukrut Bellary <sbellary@baylibre.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, Sukrut Bellary <sbellary@baylibre.com>,
+	Tero Kristo <kristo@kernel.org>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Andreas Kemnade <andreas@kemnade.info>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/4] dt-bindings: clock: ti: Convert to yaml
+Message-ID: <202504041306.Dxlb0inM-lkp@intel.com>
+References: <20250404014500.2789830-3-sbellary@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [REGRESSION] Kernel booted via kexec fails to resume from
- hibernation
-From: msizanoen <msizanoen@qtmlabs.xyz>
-To: Roberto Ricci <io@r-ricci.it>
-Cc: ebiederm@xmission.com, rafael@kernel.org, pavel@ucw.cz,
- ytcoode@gmail.com, kexec@lists.infradead.org, linux-pm@vger.kernel.org,
- akpm@linux-foundation.org, regressions@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <Z4WFjBVHpndct7br@desktop0a> <Z4WGSMdF6seQm9GV@desktop0a>
- <b9f6ed5a-74b9-47c0-b073-9922dbe6119b@qtmlabs.xyz>
- <Z-8E-LLs1dFWfn6J@desktop0a>
- <691be719-7d4c-4cb1-87d6-cca7834547fe@qtmlabs.xyz>
- <004d85e4-d23d-43af-87ca-8d037abba51d@qtmlabs.xyz>
-Content-Language: en-US
-In-Reply-To: <004d85e4-d23d-43af-87ca-8d037abba51d@qtmlabs.xyz>
-X-Spamd-Bar: +
-X-Spam-Level: *
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250404014500.2789830-3-sbellary@baylibre.com>
 
-This is a multi-part message in MIME format.
---------------08L6YdHquZUpv03HEHpbPDhB
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Hi Sukrut,
 
-Here's an updated version of the patch that better handles pathological 
-e820 tables.
+kernel test robot noticed the following build warnings:
 
-On 4/4/25 11:56, msizanoen wrote:
-> Also, can you reproduce this issue with a target kernel (the kernel 
-> being kexec-ed) that has one of the patches attached (select the 
-> correct one according to your kernel version) applied, with either 
-> kexec_load or kexec_file_load?
->
-> On 4/4/25 09:54, msizanoen wrote:
->> Can you send the dmesg logs for this case (6.13 + mentioned patch 
->> series backported as target kernel, using kexec_load)?
->>
->> On 4/4/25 05:00, Roberto Ricci wrote:
->>> On 2025-04-01 19:59 +0700, msizanoen wrote:
->>>> [snip]
->>>> It seems like `e820__register_nosave_regions` is erroneously 
->>>> marking some
->>>> kernel memory as nosave in the presence of sub-page e820 regions. 
->>>> In theory
->>>> backporting
->>>> https://lore.kernel.org/all/20250214090651.3331663-1-rppt@kernel.org/ 
->>>> should
->>>> be sufficient to avoid this but a fix for the actual root cause is
->>>> preferred.
->>> When using kexec_file_load, this patch series fixes the issue not only
->>> in theory but also in practice.
->>> But the issue with kexec_load (see
->>> https://lore.kernel.org/all/Z-hYWc9LtBU1Yhtg@desktop0a/
->>> ), which might be related, is not fixed.
---------------08L6YdHquZUpv03HEHpbPDhB
-Content-Type: text/x-patch; charset=UTF-8; name="for-6.14-and-earlier-v2.diff"
-Content-Disposition: attachment; filename="for-6.14-and-earlier-v2.diff"
-Content-Transfer-Encoding: base64
+[auto build test WARNING on clk/clk-next]
+[also build test WARNING on robh/for-next linus/master v6.14 next-20250403]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-ZGlmZiAtLWdpdCBhL2FyY2gveDg2L2tlcm5lbC9lODIwLmMgYi9hcmNoL3g4Ni9rZXJuZWwv
-ZTgyMC5jCmluZGV4IDQ4OTNkMzBjZTQzOC4uNWQ5NjNkZjYzYjdhIDEwMDY0NAotLS0gYS9h
-cmNoL3g4Ni9rZXJuZWwvZTgyMC5jCisrKyBiL2FyY2gveDg2L2tlcm5lbC9lODIwLmMKQEAg
-LTc1NCwyMiArNzU0LDIxIEBAIHZvaWQgX19pbml0IGU4MjBfX21lbW9yeV9zZXR1cF9leHRl
-bmRlZCh1NjQgcGh5c19hZGRyLCB1MzIgZGF0YV9sZW4pCiB2b2lkIF9faW5pdCBlODIwX19y
-ZWdpc3Rlcl9ub3NhdmVfcmVnaW9ucyh1bnNpZ25lZCBsb25nIGxpbWl0X3BmbikKIHsKIAlp
-bnQgaTsKLQl1bnNpZ25lZCBsb25nIHBmbiA9IDA7CisJdTY0IGxhc3RfYWRkciA9IDA7CiAK
-IAlmb3IgKGkgPSAwOyBpIDwgZTgyMF90YWJsZS0+bnJfZW50cmllczsgaSsrKSB7CiAJCXN0
-cnVjdCBlODIwX2VudHJ5ICplbnRyeSA9ICZlODIwX3RhYmxlLT5lbnRyaWVzW2ldOwogCi0J
-CWlmIChwZm4gPCBQRk5fVVAoZW50cnktPmFkZHIpKQotCQkJcmVnaXN0ZXJfbm9zYXZlX3Jl
-Z2lvbihwZm4sIFBGTl9VUChlbnRyeS0+YWRkcikpOwotCi0JCXBmbiA9IFBGTl9ET1dOKGVu
-dHJ5LT5hZGRyICsgZW50cnktPnNpemUpOwotCiAJCWlmIChlbnRyeS0+dHlwZSAhPSBFODIw
-X1RZUEVfUkFNICYmIGVudHJ5LT50eXBlICE9IEU4MjBfVFlQRV9SRVNFUlZFRF9LRVJOKQot
-CQkJcmVnaXN0ZXJfbm9zYXZlX3JlZ2lvbihQRk5fVVAoZW50cnktPmFkZHIpLCBwZm4pOwor
-CQkJY29udGludWU7CiAKLQkJaWYgKHBmbiA+PSBsaW1pdF9wZm4pCi0JCQlicmVhazsKKwkJ
-aWYgKGxhc3RfYWRkciA8IGVudHJ5LT5hZGRyKQorCQkJcmVnaXN0ZXJfbm9zYXZlX3JlZ2lv
-bihQRk5fVVAobGFzdF9hZGRyKSwgUEZOX0RPV04oZW50cnktPmFkZHIpKTsKKworCQlsYXN0
-X2FkZHIgPSBlbnRyeS0+YWRkciArIGVudHJ5LT5zaXplOwogCX0KKworCXJlZ2lzdGVyX25v
-c2F2ZV9yZWdpb24oUEZOX1VQKGxhc3RfYWRkciksIGxpbWl0X3Bmbik7CiB9CiAKICNpZmRl
-ZiBDT05GSUdfQUNQSQo=
---------------08L6YdHquZUpv03HEHpbPDhB
-Content-Type: text/x-patch; charset=UTF-8; name="for-master-v2.diff"
-Content-Disposition: attachment; filename="for-master-v2.diff"
-Content-Transfer-Encoding: base64
+url:    https://github.com/intel-lab-lkp/linux/commits/Sukrut-Bellary/dt-bindings-clock-ti-Convert-to-yaml/20250404-094647
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git clk-next
+patch link:    https://lore.kernel.org/r/20250404014500.2789830-3-sbellary%40baylibre.com
+patch subject: [PATCH 2/4] dt-bindings: clock: ti: Convert to yaml
+reproduce: (https://download.01.org/0day-ci/archive/20250404/202504041306.Dxlb0inM-lkp@intel.com/reproduce)
 
-ZGlmZiAtLWdpdCBhL2FyY2gveDg2L2tlcm5lbC9lODIwLmMgYi9hcmNoL3g4Ni9rZXJuZWwv
-ZTgyMC5jCmluZGV4IDU3MTIwZjA3NDljYy4uNjU2ZWQ3YWJkMjhkIDEwMDY0NAotLS0gYS9h
-cmNoL3g4Ni9rZXJuZWwvZTgyMC5jCisrKyBiL2FyY2gveDg2L2tlcm5lbC9lODIwLmMKQEAg
-LTc1MywyMiArNzUzLDIxIEBAIHZvaWQgX19pbml0IGU4MjBfX21lbW9yeV9zZXR1cF9leHRl
-bmRlZCh1NjQgcGh5c19hZGRyLCB1MzIgZGF0YV9sZW4pCiB2b2lkIF9faW5pdCBlODIwX19y
-ZWdpc3Rlcl9ub3NhdmVfcmVnaW9ucyh1bnNpZ25lZCBsb25nIGxpbWl0X3BmbikKIHsKIAlp
-bnQgaTsKLQl1bnNpZ25lZCBsb25nIHBmbiA9IDA7CisJdTY0IGxhc3RfYWRkciA9IDA7CiAK
-IAlmb3IgKGkgPSAwOyBpIDwgZTgyMF90YWJsZS0+bnJfZW50cmllczsgaSsrKSB7CiAJCXN0
-cnVjdCBlODIwX2VudHJ5ICplbnRyeSA9ICZlODIwX3RhYmxlLT5lbnRyaWVzW2ldOwogCi0J
-CWlmIChwZm4gPCBQRk5fVVAoZW50cnktPmFkZHIpKQotCQkJcmVnaXN0ZXJfbm9zYXZlX3Jl
-Z2lvbihwZm4sIFBGTl9VUChlbnRyeS0+YWRkcikpOwotCi0JCXBmbiA9IFBGTl9ET1dOKGVu
-dHJ5LT5hZGRyICsgZW50cnktPnNpemUpOwotCiAJCWlmIChlbnRyeS0+dHlwZSAhPSBFODIw
-X1RZUEVfUkFNKQotCQkJcmVnaXN0ZXJfbm9zYXZlX3JlZ2lvbihQRk5fVVAoZW50cnktPmFk
-ZHIpLCBwZm4pOworCQkJY29udGludWU7CiAKLQkJaWYgKHBmbiA+PSBsaW1pdF9wZm4pCi0J
-CQlicmVhazsKKwkJaWYgKGxhc3RfYWRkciA8IGVudHJ5LT5hZGRyKQorCQkJcmVnaXN0ZXJf
-bm9zYXZlX3JlZ2lvbihQRk5fVVAobGFzdF9hZGRyKSwgUEZOX0RPV04oZW50cnktPmFkZHIp
-KTsKKworCQlsYXN0X2FkZHIgPSBlbnRyeS0+YWRkciArIGVudHJ5LT5zaXplOwogCX0KKwor
-CXJlZ2lzdGVyX25vc2F2ZV9yZWdpb24oUEZOX1VQKGxhc3RfYWRkciksIGxpbWl0X3Bmbik7
-CiB9CiAKICNpZmRlZiBDT05GSUdfQUNQSQo=
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504041306.Dxlb0inM-lkp@intel.com/
 
---------------08L6YdHquZUpv03HEHpbPDhB--
+All warnings (new ones prefixed by >>):
+
+   Warning: Documentation/arch/powerpc/cxl.rst references a file that doesn't exist: Documentation/ABI/testing/sysfs-class-cxl
+   Warning: Documentation/devicetree/bindings/clock/ti/fixed-factor-clock.txt references a file that doesn't exist: Documentation/devicetree/bindings/clock/ti/autoidle.txt
+   Warning: Documentation/devicetree/bindings/clock/ti/ti,divider-clock.yaml references a file that doesn't exist: Documentation/devicetree/bindings/clock/ti/autoidle.txt
+>> Warning: Documentation/devicetree/bindings/clock/ti/ti,gate-clock.yaml references a file that doesn't exist: Documentation/devicetree/bindings/clock/ti/clockdomain.txt
+   Warning: Documentation/devicetree/bindings/regulator/siliconmitus,sm5703-regulator.yaml references a file that doesn't exist: Documentation/devicetree/bindings/mfd/siliconmitus,sm5703.yaml
+   Warning: Documentation/hwmon/g762.rst references a file that doesn't exist: Documentation/devicetree/bindings/hwmon/g762.txt
+   Warning: Documentation/translations/ja_JP/SubmittingPatches references a file that doesn't exist: linux-2.6.12-vanilla/Documentation/dontdiff
+   Warning: Documentation/translations/zh_CN/admin-guide/README.rst references a file that doesn't exist: Documentation/dev-tools/kgdb.rst
+   Warning: Documentation/translations/zh_CN/dev-tools/gdb-kernel-debugging.rst references a file that doesn't exist: Documentation/dev-tools/gdb-kernel-debugging.rst
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
