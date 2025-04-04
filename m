@@ -1,59 +1,64 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77AB521C184
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 17:35:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05FA921C171;
+	Fri,  4 Apr 2025 17:35:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743788150; cv=none; b=KTEontZMDJGo3wtUL5EeAu0NQbicVhxz3qzXC2MroT6PiyLUpOx8NKoljKWVSjisoPxAzn9MNlXmAssd5SZTGpIOfUzrnLc82F/tzKONSQ991Y5UlJA6X4Wqcoudm9jvgklzLQz25q/7NS+pslrVC56eGP6tboza2ChEb+z2+rs=
+	t=1743788158; cv=none; b=fZwAIfKF9pYOMUA98OBmMozBEK0rtW3tRLzpWJ8D/XO+oH4hNP5IXjgiix1wE3Cwg7E8zSnsH9ThtOA6oW8ETNWxRH57yeSOVkB3s6UTioltDsq5w+Wf5Ht70s4zSpLzoGh+xjSCbv/nhBvqkVZtnznRrAb/sQLk/gSrODB6RvI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743788150; c=relaxed/simple;
-	bh=SMTilVN6x/E0WFJK/nmz+VVmcBRCXyfsBBBi5eJrBg0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=JV5Voxud9tY/B7Lod7lRkEbK06BcYqKE0uyZbiwYaV5jR73kjC+1LkLv6Rt/pU92Su8G4lLmCixEzwBF255VmLvcYby2JhO/eQcA4aPwwwCFwPuo1vb66rVX738SvtLDLKS1HRuZXri8JI8bEvBsLmPb/MclmThEERLZcCMGeJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Kv3UlUL8; arc=none smtp.client-ip=198.175.65.9
+	s=arc-20240116; t=1743788158; c=relaxed/simple;
+	bh=Tj/HfVjqdh8faGcHAlLbM5/fJtNdbkBrRoiq+2QW0Ps=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RmuUJprg5kzyiA+H9xXY048cxWVrT0Mv66dHkIbFXPcbYsXGhD6b3SKQ3GJTT4Us+iMHKVH8eRxfGUqFl/CLoaol43eCSXyvNebekMJvxeq6uBllv8cXxn4x2JBV1THqK4R4Qb3YeyjjegxWGzlTWglxWnVD6mK6jiqHfcDDDyA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Zpdiks8W; arc=none smtp.client-ip=198.175.65.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Kv3UlUL8"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Zpdiks8W"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743788149; x=1775324149;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=SMTilVN6x/E0WFJK/nmz+VVmcBRCXyfsBBBi5eJrBg0=;
-  b=Kv3UlUL8B4CA/I56wwKudw2QC/ExrqIHfUVeX4XwJvm0HcpMSJgNrLSx
-   KBkJ/2mXzOVYJKWBrHLv6b5FAtiRdRgNPou4DkceClExqYqYa/2/m3KDe
-   Wh5wev9bkikAOYzTn2FpS26n9CpOtqS+880gOSOqXc3/S9Wwf/8RP1f0P
-   C+StD8sD6Ui4b5n0C3+xTpfrZnAa6bXxmVGNu0Yy5IQaaU4jgQWq4HskQ
-   EIU8CVeF4BJXpcbqEDcvlv4VfVcJnl3eX7ivZIH4zc7/x3s10dUqeQy73
-   s6aeNVb1GEBpSN5aND6EybAiV5DLMKXe9TxUboyoti+gTBBecLE7yha2h
-   A==;
-X-CSE-ConnectionGUID: Fo5abx0iT3SK4jkHHBLaKw==
-X-CSE-MsgGUID: DkFn4dCpSvC/c5yGoZEVzg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11394"; a="67708237"
+  t=1743788150; x=1775324150;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Tj/HfVjqdh8faGcHAlLbM5/fJtNdbkBrRoiq+2QW0Ps=;
+  b=Zpdiks8W7+R+O8leVL3uxHvNZg5Y4tEiSdXZlBBBJVRgElym0R0UlCQR
+   YVnwp5YwkHrPsjVG5RZg1shmpwOW4F03WUbTTWfmUGNBa/H6HITNKPrcA
+   p3da/MJIODHwhkeWqM1Ec6TU4cPWxTblZqWmhvB/zFE9bXFhnb5r9T/ty
+   Dr0ekfKUPT6xR2dH6JDUXbOflnaQTbQf8/5UKDdr2JLm8QLpRxbrE2yWF
+   eOJdBjfi1AEgDkA6CtmHFYSNmYYmMevmENkzOMhZMisTj12pM0mpNaPfn
+   dSLTLIX452c1Do4/2OhynNSLfxtEMO6BQA/0L4rDDT+SN4j8fZj6QqRKE
+   w==;
+X-CSE-ConnectionGUID: c+1si+5uQ1OQbCgxdpUcpg==
+X-CSE-MsgGUID: jx0lihhIS7GJ+BrAip9gYg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11394"; a="45140695"
 X-IronPort-AV: E=Sophos;i="6.15,188,1739865600"; 
-   d="scan'208";a="67708237"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 10:35:48 -0700
-X-CSE-ConnectionGUID: 5r/4FHUMRv+MLE8ULpeY8g==
-X-CSE-MsgGUID: sabSRLRAQjW5kAO58gXOow==
+   d="scan'208";a="45140695"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 10:35:49 -0700
+X-CSE-ConnectionGUID: 53fwTgKvTvmRLYdCdRTTTA==
+X-CSE-MsgGUID: DAaf8C44RgyeCvVKTvQkdw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,188,1739865600"; 
-   d="scan'208";a="131508551"
+   d="scan'208";a="127855345"
 Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by fmviesa003.fm.intel.com with ESMTP; 04 Apr 2025 10:35:46 -0700
+  by fmviesa010.fm.intel.com with ESMTP; 04 Apr 2025 10:35:46 -0700
 Received: from kbuild by b207828170a5 with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1u0kxE-0001QX-0e;
+	id 1u0kxE-0001QV-0a;
 	Fri, 04 Apr 2025 17:35:44 +0000
-Date: Sat, 5 Apr 2025 01:35:01 +0800
+Date: Sat, 5 Apr 2025 01:35:00 +0800
 From: kernel test robot <lkp@intel.com>
-To: Nam Cao <namcao@linutronix.de>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>
-Subject: [tip:timers/cleanups 5/10] kernel/time/timer_list.c:49:77: error:
- macro "ACCESS_PRIVATE" requires 2 arguments, but only 1 given
-Message-ID: <202504050305.zbYN7qiW-lkp@intel.com>
+To: Wentao Liang <vulab@iscas.ac.cn>, sgoutham@marvell.com,
+	gakula@marvell.com, sbhatta@marvell.com, hkelam@marvell.com,
+	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com
+Cc: oe-kbuild-all@lists.linux.dev, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Wentao Liang <vulab@iscas.ac.cn>
+Subject: Re: [PATCH] octeontx2-pf:  Add error handling for
+ cn10k_map_unmap_rq_policer().
+Message-ID: <202504050157.qdVzTVMM-lkp@intel.com>
+References: <20250403151303.2280-1-vulab@iscas.ac.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,49 +67,65 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20250403151303.2280-1-vulab@iscas.ac.cn>
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers/cleanups
-head:   5c4da3a96bf484f965057c281f1ef48ac46987bc
-commit: 9453228aa82f20c07670d22c3d54f1be6c4244b4 [5/10] hrtimers: Make callback function pointer private
-config: arm-randconfig-002-20250404 (https://download.01.org/0day-ci/archive/20250405/202504050305.zbYN7qiW-lkp@intel.com/config)
-compiler: arm-linux-gnueabi-gcc (GCC) 7.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250405/202504050305.zbYN7qiW-lkp@intel.com/reproduce)
+Hi Wentao,
+
+kernel test robot noticed the following build warnings:
+
+[auto build test WARNING on linus/master]
+[also build test WARNING on v6.14 next-20250404]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Wentao-Liang/octeontx2-pf-Add-error-handling-for-cn10k_map_unmap_rq_policer/20250403-231435
+base:   linus/master
+patch link:    https://lore.kernel.org/r/20250403151303.2280-1-vulab%40iscas.ac.cn
+patch subject: [PATCH] octeontx2-pf:  Add error handling for cn10k_map_unmap_rq_policer().
+config: s390-allyesconfig (https://download.01.org/0day-ci/archive/20250405/202504050157.qdVzTVMM-lkp@intel.com/config)
+compiler: s390-linux-gcc (GCC) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250405/202504050157.qdVzTVMM-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504050305.zbYN7qiW-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504050157.qdVzTVMM-lkp@intel.com/
 
-All errors (new ones prefixed by >>):
+All warnings (new ones prefixed by >>):
 
-   kernel/time/timer_list.c: In function 'print_timer':
->> kernel/time/timer_list.c:49:77: error: macro "ACCESS_PRIVATE" requires 2 arguments, but only 1 given
-     SEQ_printf(m, " #%d: <%p>, %ps", idx, taddr, ACCESS_PRIVATE(timer->function));
-                                                                                ^
->> kernel/time/timer_list.c:49:47: error: 'ACCESS_PRIVATE' undeclared (first use in this function); did you mean 'DQF_PRIVATE'?
-     SEQ_printf(m, " #%d: <%p>, %ps", idx, taddr, ACCESS_PRIVATE(timer->function));
-                                                  ^~~~~~~~~~~~~~
-                                                  DQF_PRIVATE
-   kernel/time/timer_list.c:49:47: note: each undeclared identifier is reported only once for each function it appears in
+   drivers/net/ethernet/marvell/octeontx2/nic/cn10k.c: In function 'cn10k_free_matchall_ipolicer':
+>> drivers/net/ethernet/marvell/octeontx2/nic/cn10k.c:360:9: warning: this 'for' clause does not guard... [-Wmisleading-indentation]
+     360 |         for (qidx = 0; qidx < hw->rx_queues; qidx++)
+         |         ^~~
+   drivers/net/ethernet/marvell/octeontx2/nic/cn10k.c:362:17: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the 'for'
+     362 |                 if (rc)
+         |                 ^~
 
 
-vim +/ACCESS_PRIVATE +49 kernel/time/timer_list.c
+vim +/for +360 drivers/net/ethernet/marvell/octeontx2/nic/cn10k.c
 
-    44	
-    45	static void
-    46	print_timer(struct seq_file *m, struct hrtimer *taddr, struct hrtimer *timer,
-    47		    int idx, u64 now)
-    48	{
-  > 49		SEQ_printf(m, " #%d: <%p>, %ps", idx, taddr, ACCESS_PRIVATE(timer->function));
-    50		SEQ_printf(m, ", S:%02x", timer->state);
-    51		SEQ_printf(m, "\n");
-    52		SEQ_printf(m, " # expires at %Lu-%Lu nsecs [in %Ld to %Ld nsecs]\n",
-    53			(unsigned long long)ktime_to_ns(hrtimer_get_softexpires(timer)),
-    54			(unsigned long long)ktime_to_ns(hrtimer_get_expires(timer)),
-    55			(long long)(ktime_to_ns(hrtimer_get_softexpires(timer)) - now),
-    56			(long long)(ktime_to_ns(hrtimer_get_expires(timer)) - now));
-    57	}
-    58	
+2ca89a2c375272 Sunil Goutham 2021-06-15  351  
+2ca89a2c375272 Sunil Goutham 2021-06-15  352  int cn10k_free_matchall_ipolicer(struct otx2_nic *pfvf)
+2ca89a2c375272 Sunil Goutham 2021-06-15  353  {
+2ca89a2c375272 Sunil Goutham 2021-06-15  354  	struct otx2_hw *hw = &pfvf->hw;
+2ca89a2c375272 Sunil Goutham 2021-06-15  355  	int qidx, rc;
+2ca89a2c375272 Sunil Goutham 2021-06-15  356  
+2ca89a2c375272 Sunil Goutham 2021-06-15  357  	mutex_lock(&pfvf->mbox.lock);
+2ca89a2c375272 Sunil Goutham 2021-06-15  358  
+2ca89a2c375272 Sunil Goutham 2021-06-15  359  	/* Remove RQ's policer mapping */
+2ca89a2c375272 Sunil Goutham 2021-06-15 @360  	for (qidx = 0; qidx < hw->rx_queues; qidx++)
+d85bdae93e8dbe Wentao Liang  2025-04-03  361  		rc = cn10k_map_unmap_rq_policer(pfvf, qidx, hw->matchall_ipolicer, false);
+d85bdae93e8dbe Wentao Liang  2025-04-03  362  		if (rc)
+d85bdae93e8dbe Wentao Liang  2025-04-03  363  			goto out;
+2ca89a2c375272 Sunil Goutham 2021-06-15  364  
+2ca89a2c375272 Sunil Goutham 2021-06-15  365  	rc = cn10k_free_leaf_profile(pfvf, hw->matchall_ipolicer);
+2ca89a2c375272 Sunil Goutham 2021-06-15  366  
+d85bdae93e8dbe Wentao Liang  2025-04-03  367  out:
+2ca89a2c375272 Sunil Goutham 2021-06-15  368  	mutex_unlock(&pfvf->mbox.lock);
+2ca89a2c375272 Sunil Goutham 2021-06-15  369  	return rc;
+2ca89a2c375272 Sunil Goutham 2021-06-15  370  }
+2ca89a2c375272 Sunil Goutham 2021-06-15  371  
 
 -- 
 0-DAY CI Kernel Test Service
