@@ -1,159 +1,211 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67BD61DB363;
-	Fri,  4 Apr 2025 12:53:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DEB27DA7F
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 12:54:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743771216; cv=none; b=KfU7ceDRhpig9OLCnZx73C+HeR4Pa/fw0crPGXjD7iSiHCypzbm2VqmrLr5kRUhInO2J2pl+mqLZnSps1aGDxDSUng/w+NpOg5wH6Qwzi4WUnDhPJXxOM3RZVL3+3LPtNxzw/2kOvb02x4s53ZfC/aNgpKwlSMrl2HbXtQZk7QE=
+	t=1743771244; cv=none; b=WwK/aNegsQRjn3jMU5qwKxLmFd5jqx8fH8vMT/tHaFcwA/weeospNwnlM3jqXMNQmgtZWvwMUcMHEAW+kmZHXYPCvRe/Gaac8H3UGkVNmH+kQ2oQyGirUF1te3UvuMGbseigIumU/++sHoKkqrVIFZgBc//nbU/39T4la3R8CRA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743771216; c=relaxed/simple;
-	bh=M9oy6Oig3DightrSfmwgC0+ra3J0DzzSqTPwazFkYH0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ygz2wfOyzHh189e4OQj360K8l6XKTZi9iOdGHYTAZTV8q0Pu0bWmjcLKxqQa4OmY4R/gqfDG4q0jQJAg9aEgp9OKmF+ywnXvm95i4ahf5mgPzBlPof+TA5IeTHwq5ldjeyitsr5hJgQmQoy1wshxJ0DAaGMhruBshbIq/eTog0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CeTVngV/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743771244; c=relaxed/simple;
+	bh=MO1g84JHd6dGcmLMXY8Ea66pb02b0PTWLblfjxZIDxg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dR2tFxrX8EFwmH6qJ5LlaFPZzKiFui0RGeHmKjWPMB1yH7WL4AZai8tc5aYApkKOzD1cab3h0MkO0VK8JgC7WarpGrF0Q0cCAOHfanvg96XOn6xb7y8DNWoVtJBwMRhMX9snF0bS8ztlPivnA46rPt1fdpCv1jAFuwyqgxFkB68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=mpHfzesV; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=UuGB+zpX; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=mpHfzesV; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=UuGB+zpX; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CeTVngV/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93D96C4CEDD;
-	Fri,  4 Apr 2025 12:53:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743771215;
-	bh=M9oy6Oig3DightrSfmwgC0+ra3J0DzzSqTPwazFkYH0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=CeTVngV/8Lh529GnepMDyp/kMXEsU6L6Sy4DWhqUmNKlzhIS1AwcR5dQL1kfQl0Y/
-	 BszOZzMtlpHp9/H2yRZx3sssDZ+rP5IohuGyg0eP/MWbTrOru5JFYrUhYV4RkQfrRB
-	 0wMWCBFNhsVEhKa4EtuKItEZnwY1etdKSUyg8VPcTHEOJGvrQgOnvWiGgwIm6GK5dV
-	 Az3RHWGSjXkGsXWva6UyRSkNyfBSfKtWqRxsmAiwIlbL5sPbzDhVIQDksbdTp9Qf7p
-	 giMVseLS1BgQ0ia/SkcUPuH4sizh0XVcSDmpVh9H7c24qkcFC2ULpi8FwP1xGiCn/t
-	 wMOSG21TlKptw==
-Message-ID: <bb95af7c-5e88-4c6a-87db-2ddd1fe211a5@kernel.org>
-Date: Fri, 4 Apr 2025 14:53:31 +0200
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="mpHfzesV";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="UuGB+zpX";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="mpHfzesV";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="UuGB+zpX"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 6A215211C8;
+	Fri,  4 Apr 2025 12:54:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1743771240; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5qbKrD0h+S0pJh/V1i4JkUn/lVc2CMhJrcitjKBTUiw=;
+	b=mpHfzesVONj8GHap3OQH/01AVAmhXxRXyWIyGO1xYtdPRexIU2g9NnZyiN7rDZDrU/iWms
+	YzzitzESBwk+AEGbty8B0tSdKRYU7U4Gqp5tR6OO/KWKR7FMx+rWMaNbobyoXOZO4jcJT/
+	9EarQ9zFJ46D3L7lf6NsLoOkR7bu4kA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1743771240;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5qbKrD0h+S0pJh/V1i4JkUn/lVc2CMhJrcitjKBTUiw=;
+	b=UuGB+zpXixPX6SbQsrbINqUbfSvydyqgGp95Apo1tecmyuEhy4UyC4oDywRDsFTaZslUm5
+	Pa4Qg4AH3Dd0e/BA==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1743771240; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5qbKrD0h+S0pJh/V1i4JkUn/lVc2CMhJrcitjKBTUiw=;
+	b=mpHfzesVONj8GHap3OQH/01AVAmhXxRXyWIyGO1xYtdPRexIU2g9NnZyiN7rDZDrU/iWms
+	YzzitzESBwk+AEGbty8B0tSdKRYU7U4Gqp5tR6OO/KWKR7FMx+rWMaNbobyoXOZO4jcJT/
+	9EarQ9zFJ46D3L7lf6NsLoOkR7bu4kA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1743771240;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5qbKrD0h+S0pJh/V1i4JkUn/lVc2CMhJrcitjKBTUiw=;
+	b=UuGB+zpXixPX6SbQsrbINqUbfSvydyqgGp95Apo1tecmyuEhy4UyC4oDywRDsFTaZslUm5
+	Pa4Qg4AH3Dd0e/BA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 46B4F13691;
+	Fri,  4 Apr 2025 12:54:00 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id Rrs5D2jW72coUQAAD6G6ig
+	(envelope-from <dwagner@suse.de>); Fri, 04 Apr 2025 12:54:00 +0000
+Date: Fri, 4 Apr 2025 14:53:59 +0200
+From: Daniel Wagner <dwagner@suse.de>
+To: James Smart <jsmart2021@gmail.com>
+Cc: Daniel Wagner <wagi@kernel.org>, 
+	James Smart <james.smart@broadcom.com>, Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, 
+	Chaitanya Kulkarni <kch@nvidia.com>, Hannes Reinecke <hare@suse.de>, Keith Busch <kbusch@kernel.org>, 
+	linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 10/18] nvmet-fcloop: allocate/free fcloop_lsreq
+ directly
+Message-ID: <2a012944-576c-469e-965d-080d841d191d@flourine.local>
+References: <20250318-nvmet-fcloop-v3-0-05fec0fc02f6@kernel.org>
+ <20250318-nvmet-fcloop-v3-10-05fec0fc02f6@kernel.org>
+ <4937c9f8-fbc7-46d4-a14f-262a0244f1f0@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] arm64: dts: qcom: x1e80100-hp-elitebook-ultra-g1q: DT
- for HP EliteBook Ultra G1q
-To: Juerg Haefliger <juerg.haefliger@canonical.com>, andersson@kernel.org,
- konradybcio@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-References: <20250404090108.3333211-1-juerg.haefliger@canonical.com>
- <20250404090108.3333211-3-juerg.haefliger@canonical.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
- FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
- QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
- gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
- /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
- iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
- VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
- 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
- xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
- eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
- AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
- MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
- Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
- MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
- OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
- GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
- 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
- YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
- 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
- BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
- JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
- 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
- YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
- Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
- ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
- vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
- oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
- lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
- t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
- uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
- 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
- 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20250404090108.3333211-3-juerg.haefliger@canonical.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4937c9f8-fbc7-46d4-a14f-262a0244f1f0@gmail.com>
+X-Spam-Score: -4.30
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-0.999];
+	NEURAL_HAM_SHORT(-0.20)[-0.994];
+	MIME_GOOD(-0.10)[text/plain];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	FREEMAIL_TO(0.00)[gmail.com];
+	MISSING_XM_UA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On 04/04/2025 11:01, Juerg Haefliger wrote:
-> Introduce a device tree for the HP EliteBook Ultra G1q 14" AI laptop. It
-> seems to be using the same baseboard as the HP OmniBook X 14 so just use
-> that for now.
+Hi James,
+
+On Wed, Mar 19, 2025 at 03:47:20PM -0700, James Smart wrote:
+> On 3/18/2025 3:40 AM, Daniel Wagner wrote:
+> > fcloop depends on the host or the target to allocate the fcloop_lsreq
+> > object. This means that the lifetime of the fcloop_lsreq is tied to
+> > either the host or the target. Consequently, the host or the target must
+> > cooperate during shutdown.
+> > 
+> > Unfortunately, this approach does not work well when the target forces a
+> > shutdown, as there are dependencies that are difficult to resolve in a
+> > clean way.
 > 
-> Signed-off-by: Juerg Haefliger <juerg.haefliger@canonical.com>
-> ---
->  arch/arm64/boot/dts/qcom/Makefile             |  1 +
->  .../qcom/x1e80100-hp-elitebook-ultra-g1q.dts  | 36 +++++++++++++++++++
->  drivers/firmware/qcom/qcom_scm.c              |  1 +
->  3 files changed, 38 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/qcom/x1e80100-hp-elitebook-ultra-g1q.dts
+> ok - although I'm guessing you'll trading one set of problems for
+> another.
+
+Yes, there is no free lunch :)
+
+So far I was able to deal with new problems. I've run the updated series
+over night with the nasty blktest case where the target is constantly
+removed and added back without any problems.
+
+> > @@ -353,10 +354,13 @@ fcloop_h2t_ls_req(struct nvme_fc_local_port *localport,
+> >   			struct nvme_fc_remote_port *remoteport,
+> >   			struct nvmefc_ls_req *lsreq)
+> >   {
+> > -	struct fcloop_lsreq *tls_req = lsreq->private;
+> >   	struct fcloop_rport *rport = remoteport->private;
+> > +	struct fcloop_lsreq *tls_req;
+> >   	int ret = 0;
+> > +	tls_req = kmalloc(sizeof(*tls_req), GFP_KERNEL);
+> > +	if (!tls_req)
+> > +		return -ENOMEM;
+> >   	tls_req->lsreq = lsreq;
+> >   	INIT_LIST_HEAD(&tls_req->ls_list);
+> > @@ -387,19 +391,23 @@ fcloop_h2t_xmt_ls_rsp(struct nvmet_fc_target_port *targetport,
+> >   	struct nvme_fc_remote_port *remoteport = tport->remoteport;
+> >   	struct fcloop_rport *rport;
+> > +
+> > +	if (!remoteport) {
+> > +		kfree(tls_req);
+> > +		return -ECONNREFUSED;
+> > +	}
+> > +
+> don't do this - this is not a path the lldd would generate.
+
+Ok, after looking at it again, I think I don't need it.
+
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-> index 710879d94c00..3d98bb95e8b1 100644
-> --- a/arch/arm64/boot/dts/qcom/Makefile
-> +++ b/arch/arm64/boot/dts/qcom/Makefile
-> @@ -294,6 +294,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= x1e78100-lenovo-thinkpad-t14s-oled.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= x1e80100-asus-vivobook-s15.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= x1e80100-crd.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= x1e80100-dell-xps13-9345.dtb
-> +dtb-$(CONFIG_ARCH_QCOM)	+= x1e80100-hp-elitebook-ultra-g1q.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= x1e80100-hp-omnibook-x14.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= x1e80100-lenovo-yoga-slim7x.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= x1e80100-microsoft-romulus13.dtb
-> diff --git a/arch/arm64/boot/dts/qcom/x1e80100-hp-elitebook-ultra-g1q.dts b/arch/arm64/boot/dts/qcom/x1e80100-hp-elitebook-ultra-g1q.dts
-> new file mode 100644
-> index 000000000000..7f069a2e9a46
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/x1e80100-hp-elitebook-ultra-g1q.dts
-> @@ -0,0 +1,36 @@
-> +// SPDX-License-Identifier: BSD-3-Clause
-> +
-> +/dts-v1/;
-> +
-> +#include "x1e80100-hp-omnibook-x14.dtsi"
-> +
-> +/ {
-> +	model = "HP EliteBook Ultra G1q";
-> +	compatible = "hp,elitebook-ultra-g1q", "qcom,x1e80100";
-> +
-> +	sound {
+> >   	memcpy(lsreq->rspaddr, lsrsp->rspbuf,
+> >   		((lsreq->rsplen < lsrsp->rsplen) ?
+> >   				lsreq->rsplen : lsrsp->rsplen));
+> >   	lsrsp->done(lsrsp);
+> 
+> This done() call should always be made regardless of the remoteport
+> presence.
+> 
+> instead, put the check here
+> 
+>         if (!remoteport) {
+>             kfree(tls_req);
+>             return 0;
+>         }
 
-Please override by label/phandle.
+Will do
 
-> +		model = "X1E80100-HP-ELITEBOOK-ULTRA-G1Q";
-> +	};
-> +};
-> +
-> +&gpu {
-> +	status = "okay";
-> +
-> +	zap-shader {
-> +		firmware-name = "qcom/x1e80100/hp/elitebook-ultra-g1q/qcdxkmsuc8380.mbn";
-> +	};
-> +};
+> > @@ -475,18 +491,21 @@ fcloop_t2h_xmt_ls_rsp(struct nvme_fc_local_port *localport,
+> >   	struct nvmet_fc_target_port *targetport = rport->targetport;
+> >   	struct fcloop_tport *tport;
+> > +	if (!targetport) {
+> > +		kfree(tls_req);
+> > +		return -ECONNREFUSED;
+> > +	}
+> > +
+> 
+> same here - don't do this - this is not a path the lldd would
+> generate.
 
-so here &sound {}
+The early return and freeing tls_req is necessary. If the host doesn't
+expect the error code, then fine. I'll remove it. The reason why we need
+it is:
 
-The other DTS also should have it model overridden, because otherwise
-you claim that "X1E80100-HP-OMNIBOOK-X14" is the common card.
+  The target port is gone. The target doesn't expect any response
+  anymore and the ->done call is not valid because the resources have
+  been freed by nvmet_fc_free_pending_reqs.
 
-Best regards,
-Krzysztof
+  We end up here from delete association exchange:
+  nvmet_fc_xmt_disconnect_assoc sends a async request.
+
+I am adding this as comment here.
+
+Thanks for the review. Highly appreciated!
+Daniel
