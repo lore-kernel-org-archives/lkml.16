@@ -1,110 +1,248 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C056C1EA7E2
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 12:52:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94FCF1DF993
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 12:53:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743771152; cv=none; b=Whgaq52+i9aUIrh3cNsFvNRCCIJqHtkOVfAF4047X0atjJDmdcv93/WY141jCbTyFe2zqIZxiJJwG9PDBY4iutCjxAYIQt+wjzOQFkLs+uGKjlkUNNN8IgLJUI07LKkQc3+9Y2roO9nwCuARO07PcGvA5wJfIcsThiPP1W766Y0=
+	t=1743771201; cv=none; b=ns6Q77OuR9YdkqPS0VDwWYcQ9gVNw8kXrIrOFQaja/L+2V0370SoeVamoqpUuwYjOknsWVaoUnPVdFQIB+v0bfNyzgSoxqR8+MrsrOTgChKvJ7uYTrAnBnjre1uxpbB4qc6AeQbYA3VxUbUTdY8JFxElS7u80vsb8v/I4UI0IGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743771152; c=relaxed/simple;
-	bh=rSyWljWgOpiiMEZiTLykd/9NqgJXQ9olRcNpovHlunI=;
+	s=arc-20240116; t=1743771201; c=relaxed/simple;
+	bh=+cJ1TuCmxASLIjUj4waEA5rUpgkrh9mJXMKRYetWXQo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TkNNdPOSMMeHhvIIRE5UUiDJe8mNxpNGNLWEQk0pIbXtcRYV0YfM95SXO6Rw7ulnQPJFKeZ2vZ7/0On2nQUKcIJSItnNnZqzev/i83Y/EQ5LXstCofD3zBAvFy7UoVHqODMV5BEjOsG33mGwq5G+++JqQnAe/U2TB/Ro2xt4pSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MWmDEqUS; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=EZieL6Fq53OIEHx2jAyk9sgi0/UIy7eAnwJ9ceeOwCjDcWsJvqMNN3gWLAaVihMXcjRFSm5U+g8+fFSGVxvZ3WkAfntCA1JZocRPwm3stCjjQkVT1XOyWuQ0hURcN1Zr+Cbcxh4G6FLey07dqczMXQhfMGXurl74DHM9DsZ2bU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i/0nb8xg; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MWmDEqUS"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-22403cbb47fso20995785ad.0
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 05:52:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i/0nb8xg"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-abbd96bef64so372934566b.3
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 05:53:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743771150; x=1744375950; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=DKMhv36eTVwOYBrxUb1Bibo3iK9Aa6oEo/P/njWpUJg=;
-        b=MWmDEqUSbYWhhgRpkle05339KsKoXTCsJTBPaQXGvIuEKzgxwswQ1PJ68KMLWh5ysR
-         J/+lEPz5Jieb3P1YuIMIY1Q+E7Xj1wtTOXsoWN6c+x99pCqNsZ4JFNWnsMk/2pzAdwg2
-         wCe/6rrKOYbWzyzeQTaTnMoH+hl2h4JXS3kqrtnRvEhDBlybgruNQEmO5pqFjjY3UrIN
-         TM7B74LZIuAfUSpU4NFded5j2NDbmbySH3DQzcmGqX7kOrkqakZSNdg8Zm5k89Pm2vZY
-         rvK5rHo/bRHgtG3IA03qwjnubNWdnE940OvDh1VDMZAfw5bj7pI7OyB9owhrtxMFB5R+
-         /lmA==
+        d=gmail.com; s=20230601; t=1743771197; x=1744375997; darn=vger.kernel.org;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BxSV5JdfZYerNlQnuHDGWvwKKG0TLYgttgt+Oowf87E=;
+        b=i/0nb8xgHYNpwoQDRdzfDqHhqj15u6cnCmlxsFLn7bXwmimPKVtS5hzTqh1fZnGRib
+         wPon5zdKpu9WBysolIdDNMWE9MYJqXKL5T/bLEuCRK5E4HTd6Ej1h1yHfPgQSGcIf3qO
+         wS5WYNtR5Ccbecc/a+1XDx2zLzOq6wcc5h7e8yyrNLR36QqQj8nntCovJ1lhrdDmBLnK
+         3IeX4xUqdGjH0pe0SVkoyY+t5D31co5KhBW8c3iCmHZBMTQq6aJmJEflGJg80payJR4w
+         HlBDJRrKkQNiYfzazMg713sbCsZnkfakBgr6R0xfshU242F0+l5SAT/mxKTfYMWe9894
+         tlZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743771150; x=1744375950;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DKMhv36eTVwOYBrxUb1Bibo3iK9Aa6oEo/P/njWpUJg=;
-        b=iHPxQrJtm+lr2ZNlToPvIvhofSpGDO7p2ZZQfiIx1f9bPzNUTbLb3z0VWXFxRfVK3e
-         C6KlzcxYLLA7r9aLBeCBI+O0yt9AZxIxFWvr6P2Ll4w6FnZMJPTAD2+n+O8p1oCXQCH6
-         4ZWtHwVcalg8eMwZGFjt4tRYocFr0ESw+ty5pc9I8w6OiEnRuTYJRTo9OuNnn3I44fI6
-         ePBqcglx780GXm5CPBqyFYImg+pKSEJsCL1g575jsi6B6jz+WQo+0KSva2EjwyG75B72
-         /E8ooH+hjFH80Po2gR3M+aiu3+Uzh6mj4kCTuRWwbbDewG1EZH2QEShahhE6FEq0+Fk0
-         eg7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVkGlZS3yL+lxxcwIlYdU7mDQKjSQOXCGC1OMQUjYkuTlZEiRtym9U8oHVNUPZDbpl493Lhndyo0fzdidM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxV3AOYUd9DVlhv0MCBrBvBOszZe06bBG3HNQEm8CqcLsq9SoA1
-	AA1kSzOGfu5++tdNz7Ds/0aMTcnAWQNbRt7VjnSpB67NRkBw3XDn1ztHMvDl+w==
-X-Gm-Gg: ASbGncvwJEo5yaMRHLmEifg6xwKq5p0hIjSFmrXyVbRyLH9CG89WXdrOaPBIaYtrrCE
-	H6lct0ImSiPyv0Fa9irr8qlX0akcGXbtaPQw7+ArHDfoacOtz6HEH2r8vKZyxZDa9BA2XTnd7W6
-	8ECnnHso4kPn/z6YvPPYcg0yj2B/mC5u/D+akqctur+ymBsD4Wb/efyM+DfZpFxvnDOSe9ug89G
-	j5W2z+dihaIqb8yRsqAt1Lp1dARucGb3c49AwcNIaGrGhfZT72J9ul6+JNIZ1oWGKnYgMEnf8Ms
-	d4X/wEf3oDnLkQiS+5hieeXfdLK2pv9vJu5nygorz2nB+dr6llDy15jAsfPF+qJvCg==
-X-Google-Smtp-Source: AGHT+IERCFn6js6qeVXEwdJZjCbdeV3RjyphuuYpeMmQ+ZbwSxAgINay3FYEHGIrYESdCmhtl9xeVQ==
-X-Received: by 2002:a17:902:d4c7:b0:220:ec62:7dc8 with SMTP id d9443c01a7336-22a8a85a18dmr40259765ad.2.1743771150028;
-        Fri, 04 Apr 2025 05:52:30 -0700 (PDT)
-Received: from thinkpad ([120.60.75.137])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-229785ad83esm31289735ad.20.2025.04.04.05.52.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Apr 2025 05:52:29 -0700 (PDT)
-Date: Fri, 4 Apr 2025 18:22:22 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: shao.mingyin@zte.com.cn, shawn.lin@rock-chips.com, 
-	yang.yang29@zte.com.cn, xu.xin16@zte.com.cn, ye.xingchen@zte.com.cn, 
-	lpieralisi@kernel.org, kw@linux.com, robh@kernel.org, bhelgaas@google.com, 
-	heiko@sntech.de, linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, zhang.enpei@zte.com.cn
-Subject: Re: [PATCH] drivers: pci: controller: pcie-rockchip: Use
- dev_err_probe()
-Message-ID: <4mbdugltwhiaw5kgg2d44jq4yz4mpdrscjiomp2kmnv5gk5i22@hid72rovi2oj>
-References: <20250403154326411S4luMrK8A5RXovincATzF@zte.com.cn>
- <03d12cd2-c719-4703-a0eb-2a32ef41af92@kernel.org>
+        d=1e100.net; s=20230601; t=1743771197; x=1744375997;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :reply-to:message-id:subject:cc:to:from:date:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=BxSV5JdfZYerNlQnuHDGWvwKKG0TLYgttgt+Oowf87E=;
+        b=LfW1CpGDSU9w6EXZ8/C91vkJwCE+24Bb9XxjQP2e9OT7eIa561AyaSQjwDOeaoNeHq
+         WezCF6baMEEd1MS+3cLjNSqX41DNUvlBrYtugo4Sk6/7WnAz6XanToJYG7bVHcfKDuFc
+         USzD/ufQjPXsP4VBQn0RcOpVx47QowphrsJnDjlcQcL9EsQFpRgzslXc23jkuWGTaiiI
+         L2QuJLF/cnrEiVuwag2G+DOhZUcwaH4rxGf8wXEK10/CqRg+EetFvj/SfJMLYNuUfpnZ
+         bdsr7eF1tCO8mMoV0aSis7wl+BMTMIsR2AWFBPM9EnTP93xQEccxeNkJ9OQlG1pPXbBQ
+         ZnmA==
+X-Forwarded-Encrypted: i=1; AJvYcCVc+vkfHRtfQqe1fOJz2ZprPWZjHYI4QkeTaHH39lqXyHzv/JsHrXRgutALbyuWUCboXfi8n/xc+ejbfTs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzCpvq9S0/uD10QxdFpCaXlQqEm7XzN71eHPp+cjzq8NQ9fYpie
+	C4O63ZWCHqHmh79TrtEQ9tLP20LLb4R+TGv7Wp/8ymIPDsRJI1U3
+X-Gm-Gg: ASbGncvKYt8dfb5myc5vjl0ghJwNxr5tMsMoNN0jZQbwEEgaomyKEELHVw9uu7ZOqim
+	3X2eJEVPm6UvPkEBVe4lZ7q5nNOqW4szK+/aKXc9rzcs9P76wkYxkDJE5ih25Un+Js4c7l83BDZ
+	Wxhwp0D8C2imzB/qv1jq7GgYpb5XfPXhMAaXKteKS2MBoPswi8TxU6Xo93qEEuJ3rA6KNQ+S8ay
+	xnr/YYmU2DNDm1EOHcBSokQFxng0Nj6dxnDklKxGExw5mai+ogvc/7J06xmJnnq8dVTHyaOWoWn
+	/j3GqbsisAiT2o0SwoKYiokkJWbfm/AfYuRvVewrvgAwJS9SvSPo2jo=
+X-Google-Smtp-Source: AGHT+IHhpmh0Zd+jSwcDgXoqq4LjVdAHEM1glKtn2rYqjD+Vi3fO5csG4iFVzNS8+2xBUDjtnt2smQ==
+X-Received: by 2002:a17:907:a4d:b0:ac7:3456:7ece with SMTP id a640c23a62f3a-ac7d1b28752mr343911266b.46.1743771196491;
+        Fri, 04 Apr 2025 05:53:16 -0700 (PDT)
+Received: from localhost ([185.92.221.13])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f0880a3cc5sm2335682a12.74.2025.04.04.05.53.15
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 04 Apr 2025 05:53:15 -0700 (PDT)
+Date: Fri, 4 Apr 2025 12:53:15 +0000
+From: Wei Yang <richard.weiyang@gmail.com>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
+	Suren Baghdasaryan <surenb@google.com>,
+	David Hildenbrand <david@redhat.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Rik van Riel <riel@surriel.com>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] mm/vma: fix incorrectly disallowed anonymous VMA
+ merges
+Message-ID: <20250404125315.5bou5ays7u7sv4rb@master>
+Reply-To: Wei Yang <richard.weiyang@gmail.com>
+References: <cover.1742245056.git.lorenzo.stoakes@oracle.com>
+ <ab86a655c18cf9feb031a9b08b74812dcb432221.1742245056.git.lorenzo.stoakes@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <03d12cd2-c719-4703-a0eb-2a32ef41af92@kernel.org>
+In-Reply-To: <ab86a655c18cf9feb031a9b08b74812dcb432221.1742245056.git.lorenzo.stoakes@oracle.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 
-On Fri, Apr 04, 2025 at 08:09:40AM +0200, Krzysztof Kozlowski wrote:
-> On 03/04/2025 09:43, shao.mingyin@zte.com.cn wrote:
-> > From: Zhang Enpei <zhang.enpei@zte.com.cn>
-> > 
-> > Replace the open-code with dev_err_probe() to simplify the code.
-> > 
-> > Signed-off-by: Zhang Enpei <zhang.enpei@zte.com.cn>
-> > Signed-off-by: Shao Mingyin <shao.mingyin@zte.com.cn>
-> > ---
-> Considering zte is sending untested patches from poor automation (or AI
-> generated), this might be correct or might not be because it does not
-> look like probe path.
+On Mon, Mar 17, 2025 at 09:15:03PM +0000, Lorenzo Stoakes wrote:
+[...]
+>However, we have a problem here - typically the vma passed here is the
+>destination VMA.
+>
+>For instance in vma_merge_existing_range() we invoke:
+>
+>can_vma_merge_left()
+>-> [ check that there is an immediately adjacent prior VMA ]
+>-> can_vma_merge_after()
+>  -> is_mergeable_vma() for general attribute check
+>-> is_mergeable_anon_vma([ proposed anon_vma ], prev->anon_vma, prev)
+>
+>So if we were considering a target unfaulted 'prev':
+>
+>	  unfaulted    faulted
+>	|-----------|-----------|
+>	|    prev   |    vma    |
+>	|-----------|-----------|
+>
+>This would call is_mergeable_anon_vma(NULL, vma->anon_vma, prev).
+>
+>The list_is_singular() check for vma->anon_vma_chain, an empty list on
+>fault, would cause this merge to _fail_ even though all else indicates a
+>merge.
+>
+
+Great spot. It is hiding there for 15 years.
+
+>Equally a simple merge into a next VMA would hit the same problem:
+>
+>	   faulted    unfaulted
+>	|-----------|-----------|
+>	|    vma    |    next   |
+>	|-----------|-----------|
+>
+[...]
+>---
+> mm/vma.c                |  81 +++++++++++++++++++++++---------
+> tools/testing/vma/vma.c | 100 +++++++++++++++++++++-------------------
+> 2 files changed, 111 insertions(+), 70 deletions(-)
+>
+>diff --git a/mm/vma.c b/mm/vma.c
+>index 5cdc5612bfc1..5418eef3a852 100644
+>--- a/mm/vma.c
+>+++ b/mm/vma.c
+>@@ -57,6 +57,22 @@ struct mmap_state {
+> 		.state = VMA_MERGE_START,				\
+> 	}
 > 
-> Anyway, don't send patch by patch and line by line. Why you did not
-> decide to fix all of the places in these drivers?
+>+/*
+>+ * If, at any point, the VMA had unCoW'd mappings from parents, it will maintain
+>+ * more than one anon_vma_chain connecting it to more than one anon_vma. A merge
+>+ * would mean a wider range of folios sharing the root anon_vma lock, and thus
+>+ * potential lock contention, we do not wish to encourage merging such that this
+>+ * scales to a problem.
+>+ */
+
+I don't follow here. Take a look into do_wp_page(), where CoW happens. But I
+don't find where it will unlink parent anon_vma from vma->anon_vma_chain.
+
+Per my understanding, the unlink behavior happens in unlink_anon_vma() which
+unlink all anon_vma on vma->anon_vma_chain. And the normal caller of
+unlink_anon_vma() is free_pgtables(). Other callers are on error path to
+release prepared data. From this perspective, I don't see the chance to unlink
+parent anon_vma from vma->anon_vma_chain either.
+
+But maybe I missed something. If it is not too bother, would you mind giving
+me a hint?
+
+>+static bool vma_had_uncowed_parents(struct vm_area_struct *vma)
+>+{
+>+	/*
+>+	 * The list_is_singular() test is to avoid merging VMA cloned from
+>+	 * parents. This can improve scalability caused by anon_vma lock.
+>+	 */
+>+	return vma && vma->anon_vma && !list_is_singular(&vma->anon_vma_chain);
+>+}
+>+
+> static inline bool is_mergeable_vma(struct vma_merge_struct *vmg, bool merge_next)
+> {
+> 	struct vm_area_struct *vma = merge_next ? vmg->next : vmg->prev;
+>@@ -82,24 +98,28 @@ static inline bool is_mergeable_vma(struct vma_merge_struct *vmg, bool merge_nex
+> 	return true;
+> }
 > 
+>-static inline bool is_mergeable_anon_vma(struct anon_vma *anon_vma1,
+>-		 struct anon_vma *anon_vma2, struct vm_area_struct *vma)
+>+static bool is_mergeable_anon_vma(struct vma_merge_struct *vmg, bool merge_next)
+> {
+>+	struct vm_area_struct *tgt = merge_next ? vmg->next : vmg->prev;
+>+	struct vm_area_struct *src = vmg->middle; /* exisitng merge case. */
+                                                     ^^^
 
-To bump up the contribution maybe :P
+A trivial typo here.
 
-But to reiterate what Krzysztof said, please send patches only after fixing all
-identical issues in the driver. Patches should be split only when the fixes are
-non-identical.
+>+	struct anon_vma *tgt_anon = tgt->anon_vma;
+>+	struct anon_vma *src_anon = vmg->anon_vma;
+>+
+> 	/*
+>-	 * The list_is_singular() test is to avoid merging VMA cloned from
+>-	 * parents. This can improve scalability caused by anon_vma lock.
+>+	 * We _can_ have !src, vmg->anon_vma via copy_vma(). In this instance we
+>+	 * will remove the existing VMA's anon_vma's so there's no scalability
+>+	 * concerns.
+> 	 */
+>-	if ((!anon_vma1 || !anon_vma2) && (!vma ||
+>-		list_is_singular(&vma->anon_vma_chain)))
+>-		return true;
+>-	return anon_vma1 == anon_vma2;
+>-}
+>+	VM_WARN_ON(src && src_anon != src->anon_vma);
+> 
+>-/* Are the anon_vma's belonging to each VMA compatible with one another? */
+>-static inline bool are_anon_vmas_compatible(struct vm_area_struct *vma1,
+>-					    struct vm_area_struct *vma2)
+>-{
+>-	return is_mergeable_anon_vma(vma1->anon_vma, vma2->anon_vma, NULL);
+>+	/* Case 1 - we will dup_anon_vma() from src into tgt. */
+>+	if (!tgt_anon && src_anon)
+>+		return !vma_had_uncowed_parents(src);
+>+	/* Case 2 - we will simply use tgt's anon_vma. */
+>+	if (tgt_anon && !src_anon)
+>+		return !vma_had_uncowed_parents(tgt);
+>+	/* Case 3 - the anon_vma's are already shared. */
+>+	return src_anon == tgt_anon;
+> }
+> 
+> /*
+>@@ -164,7 +184,7 @@ static bool can_vma_merge_before(struct vma_merge_struct *vmg)
+> 	pgoff_t pglen = PHYS_PFN(vmg->end - vmg->start);
+> 
+> 	if (is_mergeable_vma(vmg, /* merge_next = */ true) &&
+>-	    is_mergeable_anon_vma(vmg->anon_vma, vmg->next->anon_vma, vmg->next)) {
+>+	    is_mergeable_anon_vma(vmg, /* merge_next = */ true)) {
+> 		if (vmg->next->vm_pgoff == vmg->pgoff + pglen)
+> 			return true;
+> 	}
+>@@ -184,7 +204,7 @@ static bool can_vma_merge_before(struct vma_merge_struct *vmg)
+> static bool can_vma_merge_after(struct vma_merge_struct *vmg)
+> {
+> 	if (is_mergeable_vma(vmg, /* merge_next = */ false) &&
+>-	    is_mergeable_anon_vma(vmg->anon_vma, vmg->prev->anon_vma, vmg->prev)) {
+>+	    is_mergeable_anon_vma(vmg, /* merge_next = */ false)) {
+> 		if (vmg->prev->vm_pgoff + vma_pages(vmg->prev) == vmg->pgoff)
+> 			return true;
+> 	}
 
-- Mani
+We have two sets API to check vma's mergeability:
+
+  * can_vma_merge_before/after
+  * can_vma_merge_left/right
+
+And xxx_merge_right() calls xxx_merge_before(), which is a little confusing.
+
+Now can_vma_merge_before/after looks almost same. Do you think it would be
+easier for reading to consolidate to one function?
 
 -- 
-மணிவண்ணன் சதாசிவம்
+Wei Yang
+Help you, Help me
