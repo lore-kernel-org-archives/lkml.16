@@ -1,106 +1,73 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0587131E49;
-	Fri,  4 Apr 2025 13:03:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62D9A19D89B
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 13:03:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743771793; cv=none; b=u+tzmcrxomlw3gVib4aTAv2T9aJCHr9ANibYKvRM2qSrtoZbv+LXjFop0gP2t9iBm0wO288CTwd8+xKeVL53sYQaBLaH9KBrY8aVy0qDhDBlkVfIK1xYMyUQwdnVEFKEyg/0MqD03t0JqU5dMY2CBNvmt1PzITBXrSAhXmGYxDk=
+	t=1743771805; cv=none; b=CuKDdUXKvCgUI7sdIgiSehtsGeu9HaJ0rUcxJ7GiMtfY80vqA56/Slv3JxnxyBGL2eYVZh9h92nH9FiSH0Reaa9KMctxGAo4yJW6MCOcLahdMNgS1QqsLUtnb5bW4/QTSYwLR4nMODJbWRhYhEzGf0ZzVdkbu1TRo0rt58EC09I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743771793; c=relaxed/simple;
-	bh=AKLtJKgf6xvY8q/ufoUEoQNZ+XIHdCtuKdSi0hzYYBc=;
+	s=arc-20240116; t=1743771805; c=relaxed/simple;
+	bh=VKS0+pJnSKPr/yDgnLfPzCkGDWYd0/lQhSYDHe/+6dA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=al3PRRt8TA2puqbCtH87Pz9Hlm5qcL8wjTqRQ8jYxCvYOd/TzwChgHtNJ6wpEPilT6+ErJCuqCZKCOJQJ+dsZA7rvMjPHwijEO9M6/LsQHhayXj8FTOELsz1CZQpOGumyROj6fIUfK9EftLcY0OWqMdH+EQZ5zR3x6HWfJsNF8s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tQMQrsUS; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=r6VRBlxAgbvN6VYw7sWEPd9rG/Fb3eBTAfJgQMok2ronPERSjorvui2kLGDG7ncePYDoSOsyu+mRELYxUgmP8Ylw/RTdi7tHKhEFKXiJq3N8aH0M9w/s/7WhjRFUcHiIQLiIi+//8U/TyRx1BwlCAGRYgW59RlvZNflFbEq+Ea0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dm4Os5c5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tQMQrsUS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57730C4CEDD;
-	Fri,  4 Apr 2025 13:03:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dm4Os5c5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A04D4C4CEDD;
+	Fri,  4 Apr 2025 13:03:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743771793;
-	bh=AKLtJKgf6xvY8q/ufoUEoQNZ+XIHdCtuKdSi0hzYYBc=;
+	s=k20201202; t=1743771804;
+	bh=VKS0+pJnSKPr/yDgnLfPzCkGDWYd0/lQhSYDHe/+6dA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tQMQrsUS7cQSM+dAXLB5YhPBn9aqUgzyfhobLQQi4NPn1qB0UFCzQhywGy5iJrto1
-	 /1auJFTdYaS4tkopc/uLiKWZKqC8+Iz4QaLsSCjLPskmYkwTxfnG+j6uxFYaAsOaGx
-	 RSRx2bYnEv9wmphEhboMVl6w94MWUVUA4yRQ4PXEfAYAE7nHjbSneWMDWV7c2JRm2b
-	 GI8gU83Gu54k6DE4mamV1XVodAJKXpaZK6OMb3DxpLxzWm1uegT0bRG0AKIRxz4GTn
-	 ur/kyQd5bxCSVDgchdcJEiO4Gk/yTrC8RxOm6t5Pg1z5F9iKMz4Xodeciupg3fngdY
-	 w0346XLuXmSTQ==
-Date: Fri, 4 Apr 2025 14:03:03 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Shuah Khan <skhan@linuxfoundation.org>
-Cc: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Vincenzo Frascino <vincenzo.frascino@arm.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Kees Cook <kees@kernel.org>, Eric Biederman <ebiederm@xmission.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Andy Lutomirski <luto@kernel.org>, Willy Tarreau <w@1wt.eu>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
-	"Jason A. Donenfeld" <Jason@zx2c4.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: Re: [PATCH v2 12/16] selftests: vDSO: parse_vdso: Use UAPI headers
- instead of libc headers
-Message-ID: <0850bce9-f6d1-4742-a132-25b02bf6fac8@sirena.org.uk>
-References: <20250226-parse_vdso-nolibc-v2-0-28e14e031ed8@linutronix.de>
- <20250226-parse_vdso-nolibc-v2-12-28e14e031ed8@linutronix.de>
- <af553c62-ca2f-4956-932c-dd6e3a126f58@sirena.org.uk>
- <c7bea938-ee3b-477e-9ed0-db29ca02a538@sirena.org.uk>
- <75ea2dcf-0ba3-4076-9a54-6b39e4e72a3d@linuxfoundation.org>
- <708e303e-4de6-4322-8065-1dacf0cc0d53@sirena.org.uk>
+	b=Dm4Os5c5HiiHKMFMLtyK10MrkoouADFBXOuGYhZ9NYG+RKuB0danG9d8b1/q5omIF
+	 TrX9YYN13EKoFIZLIYiBlKHe+lKAcEy1L1g1uHbrpWb8ZPmTknjZk083ADJ7CY4T9h
+	 ZKs8y5mZcWkDa3RMOaR1U7pzSypZKfs16w32fRSnPcPOYVNnQi/+sfQD6E7YA2Jzqh
+	 rdlCOzX5MN1Rvbu81k42Hk05CJZhvpHd3arNK4CwcrLgvDgWrLofzEhxG2M/PdBEok
+	 /lwFrGViHa5QLWag+ztYyVMDN9qMS503HOZ2vJ9ao3p3ODZmgeY/pFXatvyMA+Wd29
+	 QzHfPBFrdA+xw==
+Date: Fri, 4 Apr 2025 14:03:17 +0100
+From: Will Deacon <will@kernel.org>
+To: Mark Brown <broonie@kernel.org>
+Cc: Marc Zyngier <maz@kernel.org>, James Morse <james.morse@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+	linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+	Eric Auger <eauger@redhat.com>,
+	Wilco Dijkstra <wilco.dijkstra@arm.com>,
+	Eric Auger <eric.auger@redhat.com>,
+	Florian Weimer <fweimer@redhat.com>, Fuad Tabba <tabba@google.com>,
+	Jeremy Linton <jeremy.linton@arm.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	James Clark <james.clark@linaro.org>
+Subject: Re: [PATCH 00/10] KVM: arm64: Backport of SVE fixes to v5.15
+Message-ID: <20250404130316.GB29089@willie-the-truck>
+References: <20250402-stable-sve-5-15-v1-0-84d0e5ff1102@kernel.org>
+ <1b4ce8d2-2e0e-49ef-ab91-4a831e22b8ed@sirena.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="cV+QB6VwGauMc72v"
-Content-Disposition: inline
-In-Reply-To: <708e303e-4de6-4322-8065-1dacf0cc0d53@sirena.org.uk>
-X-Cookie: You will soon forget this.
-
-
---cV+QB6VwGauMc72v
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <1b4ce8d2-2e0e-49ef-ab91-4a831e22b8ed@sirena.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Mon, Mar 31, 2025 at 12:56:26PM +0100, Mark Brown wrote:
-> On Fri, Mar 28, 2025 at 05:08:26PM -0600, Shuah Khan wrote:
+On Thu, Apr 03, 2025 at 12:16:20AM +0100, Mark Brown wrote:
+> On Wed, Apr 02, 2025 at 11:59:32PM +0100, Mark Brown wrote:
+> > This series backports some recent fixes for SVE/KVM interactions from
+> > Mark Rutland to v5.15.
+> 
+> *sigh* Forgot Greg and the stable list here - will resend, sorry for the
+> noise.
 
-> > If this is going through tip
+I think you made the same mistake on the 6.1 backports too:
 
-> > Acked-by: Shuah Khan <skhan@linuxfoundation.org>
+https://lore.kernel.org/r/20250325-stable-sve-6-1-v1-0-83259d427d84@kernel.org
 
-> > Otherwise, I can send this up
-
-> Given that this hasn't had a response from tip for several weeks it's
-> probably as well for you to pick it up - I was considering sending it
-> directly to Linus myself.
-
-I tried sending a copy to Linus but he didn't respond yet, could you
-send it as part of a kselftest pull request?  It'd be unfortunate to
-have a broken -rc1.
-
---cV+QB6VwGauMc72v
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmfv2IYACgkQJNaLcl1U
-h9BrcAf/c+Isfk+QXS/lo7Vaf3QMDGrL0qiuFylQH2WcURylDQesXlCyE36yinxP
-SVs/gto1aZZvWXs6tZiMHfRbdJmA0Bol/WEgGouC3YbKV09E94321Q5vO67Qo4p4
-kUtyUWDBdJ2ltUn+tdMvwPnXEzEzT4Qd36llO22p99jaY8BQww8wj+UkBtaNcJxv
-dgThiAoRt23TKxPJ1HXRbszAXrKSc6HI/eYbjOZaZjQowZ5GVZPs5JVkG3jSii8h
-CqSp23rxxw5icqh4c7RQS1c1v+UygJTubXZNTNAKXbWf2x33CCvpHUTyRFeNqMfI
-ZxxNgSIZEXsJKc3dJhB3WFWIBm0ubw==
-=9cZZ
------END PGP SIGNATURE-----
-
---cV+QB6VwGauMc72v--
+Will
