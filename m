@@ -1,316 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f73.google.com (mail-ej1-f73.google.com [209.85.218.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66DF51BEF87;
-	Fri,  4 Apr 2025 11:11:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C1891D5CE5
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 11:11:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743765067; cv=none; b=rHV7KXyvCGn0QWrfLl6Jhhv8xRjKL/BpteqDApv5qYUKZ3nhBdQ59jXDBLhdf/rEaY6myq28tNCrDcddTfT7uS1t/0vya0ZMLA8Xcu+hIgSxW0djgdZ5mIM7L+utJvYf+I8oxiCJnUEQymQ1pipxqpHjy0VCwscvM2sTWQXVsRQ=
+	t=1743765086; cv=none; b=q3IIo3MuPHrL0CwrqE2h5AzQgk/V4ArD4lCLho1XxmBp6+oAEA+kWauRC+EMJPcfA6Z+ELjJTj/FMehvl9KtuZ5lIsuK72b7VT5UbT3rblZEj6G0x0EhWszfsFgtH5hzJLnwSe3fyBGQYLoL3Ql7IQMBaxXWwZ/WAKjhE7TxHFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743765067; c=relaxed/simple;
-	bh=PxW9C9uE2sPn+4J3bcvgkKgFGQt0vPUOZGSNVIJBhW0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kTbz0bGdz1Hlo5jN/Qr+ajWLhOnhdZ1SXvgcTXJkbgIuiPIaoye+fdYEO6sWvfUBiUcgLhIh6/Hq/qR05BeAerS9xAuq5pDPs1MbxL2/xGhdFuGcOXK0DUzg1rPbN6GiP1MVWeScxyhgYy9Ka2SzWttxtNjLN8czis23g9axT30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nIGPRwcg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743765086; c=relaxed/simple;
+	bh=UDr/Lb9XWzoHsFBUucxyLR4h9S1sKw8aMUMUdQL/L0Q=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=pbCC3kvsNPsZ2JDkMWT491o5eEPZn/pm26seUrikahRdShqFDzCtW3hdQvKK9E1fFUYItPbDgxwI0SmfXXOtxGuASU+ApDloF25o3srBra/ZBNrjTgJarNSp5FkMH06Of1XSMcJl71aXCD0SJoXknP5XKzSBRlacfcEit3/NVo4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--mclapinski.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GxWXiP2b; arc=none smtp.client-ip=209.85.218.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--mclapinski.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nIGPRwcg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DEEDEC4CEDD;
-	Fri,  4 Apr 2025 11:11:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743765066;
-	bh=PxW9C9uE2sPn+4J3bcvgkKgFGQt0vPUOZGSNVIJBhW0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nIGPRwcgNe+LrpmucRUeB6TYyfDmOz4zcF22kG1wiCAB2TN0wSlTet7gWXtbvEUHn
-	 OcgwRKO3f7e8yxYG52oo+CES6+qfbKq9C2T/Vnk0Qzuv9p1QQhpyKuzHLPc6qSEbNX
-	 aX0VuYPEf53boA40M1uDh1TgGlpevRp/LH4lxqdmMgqWP4E4bLUgFM39z+aQprf9rE
-	 HWS44gbSipCCMkdj5mTaiV0fiS2hL8CyVy1wIujogU/TDhRliGhgO7rZ3wZfj3620g
-	 ojYKfzKlqBCq1L2SbghpU4s+z7KgYHlwZr7dHx475APcyleKPcyvAxih3r7arSaWbq
-	 dLw9Xusgebqkg==
-Date: Fri, 4 Apr 2025 13:11:03 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Crystal Guo <crystal.guo@mediatek.com>
-Cc: Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
-	Project_Global_Chrome_Upstream_Group@mediatek.com
-Subject: Re: [PATCH v4 2/2] memory/mediatek: Add an interface to get current
- DDR data rate
-Message-ID: <20250404-soft-pumpkin-bettong-09abfc@shite>
-References: <20250403065030.22761-1-crystal.guo@mediatek.com>
- <20250403065030.22761-3-crystal.guo@mediatek.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GxWXiP2b"
+Received: by mail-ej1-f73.google.com with SMTP id a640c23a62f3a-ac3dca41591so176766566b.1
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 04:11:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1743765082; x=1744369882; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Zymo7rZ7Uaxj5C85OkxMopyfJntujg//NlAcCsh1y3A=;
+        b=GxWXiP2bmpahQjvngkOoAkfkTeg0OoAetahokNc5u18S7O/74RXBl+KefB1Ju2pc47
+         XDDa6x9xqfzzuzfDTtyBg9x404egEjj10CYRh6v79V4QhoaVNedEZRA6itVPNDj9PIet
+         b2/ud16I7lPeUGoB0cmSsO8M4f9Ls2s8KJil5D6UZNI6cUKwAs0ciXkrYp7XHL2NIHji
+         kjcnILSV1TVuR1znRZDhJQB7wuGuVHyKIpSFjmb4WgOFAO7SOe2fNWjYFOXaz1mC8Ulx
+         Nj7GlEwNai1Dm1TvG0fX6IDr00HcM273YpJvAmzEVfvTB2HcWZq4hzmhN0rHVe4jih4f
+         8mwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743765082; x=1744369882;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Zymo7rZ7Uaxj5C85OkxMopyfJntujg//NlAcCsh1y3A=;
+        b=ugS3wprkTC6K2EfL6TeM+NhoEeLsn9n5+HElhkUeYkI2+BU44Hd9Xy3oMLmAVBbLJ1
+         eIMKB7mFpmOkm5Pp3Y1Bw7ZlVIa1GLrhQuArR+XHXhgip+D+VZaWpNLCcyfOZPMuu8sW
+         DynN/eithiJj5w76NozoCXrSxENT4ycB9+a133yRsotG+Du7SlKiBgD4j8d73wgO7gDY
+         WmK+MP6qMysi1VwrBewlrFs4QzMptCVv6rXOyVAbALAh7nCCUyUX+52u2ieSkttIkHr8
+         IextgPqwlvppCU5MevOB6to/vw2qvK1G3rE5LMAtc1xgxPd0gnTPBx1JH5zcLDK+rm5V
+         fyzQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXNH/3AKa99OPz6TcHGGPEK8nEtoqT81+M7m7iC4qsRhqT+q6PX2jdKmmzC28Xqtbp5V3Ha6OmKVfqxLpg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxZKEgnpIqjCW4EJQbsy22wimqzJFN1NHxLmRfQ8bZ0aStZT48v
+	i3CmxLU7OVMQN6vBqv9zyPyGShJGMGEz0wzdoLPotPQn2VRJxYkkOF52ccLF/0qwtRAF6UJQpj4
+	e9ZmkDDOO78YVoVQ/dw==
+X-Google-Smtp-Source: AGHT+IG+ldNYNdV51lrNuZQ4fk+QDbNPHUWm7+QzGL/G1P+L2ir0BWlN5d364Rwi2NeBoKhLFwUsyQJuulyPuyfz
+X-Received: from ejcfz16.prod.google.com ([2002:a17:907:9590:b0:ac2:50cf:f244])
+ (user=mclapinski job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:907:6d04:b0:ac6:da00:83f4 with SMTP id a640c23a62f3a-ac7d1c69d88mr229541966b.53.1743765082733;
+ Fri, 04 Apr 2025 04:11:22 -0700 (PDT)
+Date: Fri,  4 Apr 2025 13:11:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250403065030.22761-3-crystal.guo@mediatek.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
+Message-ID: <20250404111103.1994507-1-mclapinski@google.com>
+Subject: [PATCH v4 0/2] mm/compaction: allow more aggressive proactive compaction
+From: Michal Clapinski <mclapinski@google.com>
+To: Andrew Morton <akpm@linux-foundation.org>, Vlastimil Babka <vbabka@suse.cz>, 
+	Pasha Tatashin <tatashin@google.com>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	Michal Clapinski <mclapinski@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
+Our goal is to keep memory usage of a VM low on the host. For that
+reason, we use free page reporting which by default reports free pages
+of order 9 and larger to the host to be freed. The feature works well
+only if the memory in the guest is not fragmented below pages of order
+9. Proactive compaction can be reused to achieve defragmentation after
+some parameter tweaking.
 
-Please use subject prefixes matching the subsystem. You can get them for
-example with 'git log --oneline -- DIRECTORY_OR_FILE' on the directory
-your patch is touching. For bindings, the preferred subjects are
-explained here:
-https://www.kernel.org/doc/html/latest/devicetree/bindings/submitting-patches.html#i-for-patch-submitters
+When the fragmentation score (lower is better) gets larger than the
+high watermark, proactive compaction kicks in. Compaction stops when
+the score goes below the low watermark (or no progress is made and
+backoff kicks in). Let's define the difference between high and low
+watermarks as leeway. Before these changes, the minimum possible value
+for low watermark was 5 and the leeway was hardcoded to 10 (so minimum
+possible value for high watermark was 15).
 
-memory: mediatek:
+To test this, I created a VM with 19GB of memory and free page
+reporting enabled. The VM was ~idle. I meassured the memory usage from
+inside the guest (/proc/meminfo) and from the host (provided by the
+hypervisor).
+Before:
+https://drive.google.com/file/d/1Xw23lRry_PgEH3f6QRnSGvoHh2u9UHyI/view?usp=sharing
+After:
+https://drive.google.com/file/d/1wMhpIzepx6t44F70yCPA50n1S5V2AT-a/view?usp=sharing
 
-On Thu, Apr 03, 2025 at 02:48:48PM GMT, Crystal Guo wrote:
-> Add MediaTek DRAMC driver to provide an interface that can
-> obtain current DDR data rate.
-> 
-> Signed-off-by: Crystal Guo <crystal.guo@mediatek.com>
-> ---
->  drivers/memory/Kconfig              |   1 +
->  drivers/memory/Makefile             |   1 +
->  drivers/memory/mediatek/Kconfig     |  20 +++
->  drivers/memory/mediatek/Makefile    |   2 +
->  drivers/memory/mediatek/mtk-dramc.c | 223 ++++++++++++++++++++++++++++
->  5 files changed, 247 insertions(+)
->  create mode 100644 drivers/memory/mediatek/Kconfig
->  create mode 100644 drivers/memory/mediatek/Makefile
->  create mode 100644 drivers/memory/mediatek/mtk-dramc.c
-> 
-> diff --git a/drivers/memory/Kconfig b/drivers/memory/Kconfig
-> index c82d8d8a16ea..b1698549ff81 100644
-> --- a/drivers/memory/Kconfig
-> +++ b/drivers/memory/Kconfig
-> @@ -227,5 +227,6 @@ config STM32_FMC2_EBI
->  
->  source "drivers/memory/samsung/Kconfig"
->  source "drivers/memory/tegra/Kconfig"
-> +source "drivers/memory/mediatek/Kconfig"
+v4:
+- Replace the leeway tunable with an equation based on proactiveness.
+- Add graphs to prove it works.
+v3: Remove gerrit ids from commit msgs.
+v2: Change commit msgs and document the new sysctl.
 
-m goes before s, so this goes before samsung source.
+Michal Clapinski (2):
+  mm/compaction: remove low watermark cap for proactive compaction
+  mm/compaction: reduce the difference between low and high watermarks
 
->  
->  endif
-> diff --git a/drivers/memory/Makefile b/drivers/memory/Makefile
-> index d2e6ca9abbe0..c0facf529803 100644
-> --- a/drivers/memory/Makefile
-> +++ b/drivers/memory/Makefile
-> @@ -27,6 +27,7 @@ obj-$(CONFIG_STM32_FMC2_EBI)	+= stm32-fmc2-ebi.o
->  
->  obj-$(CONFIG_SAMSUNG_MC)	+= samsung/
->  obj-$(CONFIG_TEGRA_MC)		+= tegra/
-> +obj-$(CONFIG_MEDIATEK_MC)	+= mediatek/
->  obj-$(CONFIG_TI_EMIF_SRAM)	+= ti-emif-sram.o
->  obj-$(CONFIG_FPGA_DFL_EMIF)	+= dfl-emif.o
->  
-> diff --git a/drivers/memory/mediatek/Kconfig b/drivers/memory/mediatek/Kconfig
-> new file mode 100644
-> index 000000000000..eadc11ec0f1c
-> --- /dev/null
-> +++ b/drivers/memory/mediatek/Kconfig
-> @@ -0,0 +1,20 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +config MEDIATEK_MC
-> +	bool "MediaTek Memory Controller support"
-> +	default y
+ Documentation/admin-guide/sysctl/vm.rst |  6 ++++++
+ mm/compaction.c                         | 12 ++++--------
+ 2 files changed, 10 insertions(+), 8 deletions(-)
 
-Why this has to be enabled for every compile test build? Look how other
-platforms do it.
+-- 
+2.49.0.504.g3bcea36a83-goog
 
-I'll fix the tegra.
-
-
-> +	depends on ARCH_MEDIATEK || COMPILE_TEST
-> +	help
-> +	  This option allows to enable MediaTek memory controller drivers,
-> +	  which may include controllers for DRAM or others.
-> +
-> +if MEDIATEK_MC
-> +
-> +config MTK_DRAMC
-> +	tristate "MediaTek DRAMC driver"
-> +	default y
-
-This matters less, could stay or could be also ARCH_MDIATEK.
-
-> +	help
-> +	  This driver is for the DRAM Controller found in MediaTek SoCs
-> +	  and provides a sysfs interface for reporting the current DRAM
-> +	  data rate.
-> +
-> +endif
-
-...
-
-> +
-> +static unsigned int read_reg_field(void __iomem *base, unsigned int offset, unsigned int mask)
-> +{
-> +	unsigned int val = readl(base + offset);
-> +	unsigned int shift = __ffs(mask);
-> +
-> +	return (val & mask) >> shift;
-> +}
-> +
-> +static int mtk_dramc_probe(struct platform_device *pdev)
-
-Weird ordering. probe() is one of the last functions. Only other driver
-struct functions (like remove, suspend/resume) go after, not some
-regular code.
-
-> +{
-> +	struct mtk_dramc *dramc;
-> +	const struct mtk_dramc_pdata *pdata;
-> +
-> +	dramc = devm_kzalloc(&pdev->dev, sizeof(struct mtk_dramc), GFP_KERNEL);
-> +	if (!dramc)
-> +		return dev_err_probe(&pdev->dev, -ENOMEM, "Failed to allocate memory\n");
-> +
-> +	pdata = of_device_get_match_data(&pdev->dev);
-> +	if (!pdata)
-> +		return dev_err_probe(&pdev->dev, -EINVAL, "No platform data available\n");
-
-Just return. That's impossible condition, so no need for printing errors.
-
-> +
-> +	dramc->pdata = pdata;
-
-Why do you need pdata variable in the first place? Make this code
-simple, not complicated.
-
-> +
-> +	dramc->anaphy_base = devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(dramc->anaphy_base))
-> +		return dev_err_probe(&pdev->dev, PTR_ERR(dramc->anaphy_base),
-> +				     "Unable to map ANAPHY base\n");
-> +
-> +	dramc->ddrphy_base = devm_platform_ioremap_resource(pdev, 1);
-> +	if (IS_ERR(dramc->ddrphy_base))
-> +		return dev_err_probe(&pdev->dev, PTR_ERR(dramc->ddrphy_base),
-> +				     "Unable to map DDRPHY base\n");
-> +
-> +	platform_set_drvdata(pdev, dramc);
-> +	return 0;
-> +}
-> +
-> +static unsigned int mtk_fmeter_v1(struct mtk_dramc *dramc)
-> +{
-> +	const struct mtk_dramc_pdata *pdata = dramc->pdata;
-> +	unsigned int shu_level, pll_sel, offset;
-> +	unsigned int sdmpcw, posdiv, clkdiv, fbksel, sopen, async_ca, ser_mode;
-> +	unsigned int prediv_freq, posdiv_freq, vco_freq;
-> +	unsigned int final_rate;
-> +
-> +	shu_level = read_reg_field(dramc->ddrphy_base, pdata->regs[DRAMC_DPHY_DVFS_STA],
-> +				   pdata->masks[DRAMC_DPHY_DVFS_SHU_LV]);
-
-Don't creat your own wrappers. Use existing FIELD_PREP stuff.
-
-> +	pll_sel = read_reg_field(dramc->ddrphy_base, pdata->regs[DRAMC_DPHY_DVFS_STA],
-> +				 pdata->masks[DRAMC_DPHY_DVFS_PLL_SEL]);
-> +	offset = pdata->shuffle_offset * shu_level;
-> +
-> +	sdmpcw = read_reg_field(dramc->anaphy_base,
-> +				((pll_sel == 0) ?
-> +				pdata->regs[DRAMC_APHY_SHU_PHYPLL2] :
-> +				pdata->regs[DRAMC_APHY_SHU_CLRPLL2]) + offset,
-> +				pdata->masks[DRAMC_APHY_PLL2_SDMPCW]);
-> +	posdiv = read_reg_field(dramc->anaphy_base,
-> +				((pll_sel == 0) ?
-> +				pdata->regs[DRAMC_APHY_SHU_PHYPLL3] :
-> +				pdata->regs[DRAMC_APHY_SHU_CLRPLL3]) + offset,
-> +				pdata->masks[DRAMC_APHY_PLL3_POSDIV]);
-> +	fbksel = read_reg_field(dramc->anaphy_base, pdata->regs[DRAMC_APHY_SHU_PHYPLL4] + offset,
-> +				pdata->masks[DRAMC_APHY_PLL4_FBKSEL]);
-> +	sopen = read_reg_field(dramc->anaphy_base, pdata->regs[DRAMC_APHY_ARPI0] + offset,
-> +			       pdata->masks[DRAMC_APHY_ARPI0_SOPEN]);
-> +	async_ca = read_reg_field(dramc->anaphy_base, pdata->regs[DRAMC_APHY_CA_ARDLL1] + offset,
-> +				  pdata->masks[DRAMC_APHY_ARDLL1_CK_EN]);
-> +	ser_mode = read_reg_field(dramc->anaphy_base, pdata->regs[DRAMC_APHY_B0_TX0] + offset,
-> +				  pdata->masks[DRAMC_APHY_B0_TX0_SER_MODE]);
-> +
-> +	clkdiv = (ser_mode == 1) ? 1 : 0;
-> +	posdiv &= ~(pdata->posdiv_purify);
-> +
-> +	prediv_freq = pdata->ref_freq_mhz * (sdmpcw >> pdata->prediv);
-> +	posdiv_freq = (prediv_freq >> posdiv) >> 1;
-> +	vco_freq = posdiv_freq << fbksel;
-> +	final_rate = vco_freq >> clkdiv;
-> +
-> +	if (sopen == 1 && async_ca == 1)
-> +		final_rate >>= 1;
-> +
-> +	return final_rate;
-> +}
-> +
-> +/**
-> + * mtk_dramc_get_data_rate - Calculate the current DRAM data rate
-> + * @dev: Device pointer
-> + *
-> + * Return: DRAM Data Rate in Mbps or negative number for error
-> + */
-> +static unsigned int mtk_dramc_get_data_rate(struct device *dev)
-> +{
-> +	struct mtk_dramc *dramc = dev_get_drvdata(dev);
-> +
-> +	if (dramc->pdata->fmeter_version == 1)
-
-Drop, it's not possible to have other case.
-
-> +		return mtk_fmeter_v1(dramc);
-> +
-> +	dev_err(dev, "Frequency meter version %u not supported\n", dramc->pdata->fmeter_version);
-> +	return -EINVAL;
-> +}
-> +
-> +static ssize_t dram_data_rate_show(struct device *dev,
-> +				   struct device_attribute *attr, char *buf)
-
-No ABI doc.
-
-Why existing interconnect interface is not suitable here?  This should
-be an interconnect, otherwise what is the point of this driver? What do
-you exactly configure here?
-
-
-> +{
-> +	return snprintf(buf, PAGE_SIZE, "DRAM data rate = %u\n",
-> +			mtk_dramc_get_data_rate(dev));
-> +}
-> +
-> +static DEVICE_ATTR_RO(dram_data_rate);
-> +
-> +static struct attribute *mtk_dramc_attrs[] = {
-> +	&dev_attr_dram_data_rate.attr,
-> +	NULL
-> +};
-> +ATTRIBUTE_GROUPS(mtk_dramc);
-> +
-> +static const struct mtk_dramc_pdata dramc_pdata_mt8196 = {
-> +	.fmeter_version = 1,
-> +	.ref_freq_mhz = 26,
-> +	.regs = mtk_dramc_regs_mt8196,
-> +	.masks = mtk_dramc_masks_mt8196,
-> +	.posdiv_purify = BIT(2),
-> +	.prediv = 7,
-> +	.shuffle_offset = 0x700,
-> +};
-> +
-> +static const struct of_device_id mtk_dramc_of_ids[] = {
-> +	{ .compatible = "mediatek,mt8196-dramc", .data = &dramc_pdata_mt8196 },
-> +	{ /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(of, mtk_dramc_of_ids);
-> +
-> +static struct platform_driver mtk_dramc_driver = {
-> +	.probe = mtk_dramc_probe,
-> +	.driver = {
-> +		.name = "mtk-dramc",
-> +		.of_match_table = mtk_dramc_of_ids,
-> +		.dev_groups = mtk_dramc_groups,
-> +	},
-> +};
-> +module_platform_driver(mtk_dramc_driver);
-> +
-> +MODULE_AUTHOR("Crystal Guo <crystal.guo@mediatek.com>");
-> +MODULE_DESCRIPTION("MediaTek DRAM Controller Driver");
-> +MODULE_LICENSE("GPL");
-> -- 
-> 2.18.0
-> 
