@@ -1,155 +1,117 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 549E2194A59
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 12:38:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE2E4194A59
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 12:39:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743770303; cv=none; b=dVDwkoP6CSeJNyw7O9mE+2DGfSK3IttiCf0cmj0stq3rKIJWBRRQUE00VtgWobGu7/VtxOKwySkF48AUBmFI8jUxMFS6lR/DY61KS3FIst1I/+Rqg5eGuL/KHLhQZ/Hv+knknRZGXHob9mMr8w1RhRMPy/li1jJ7fbmrKWR9aDA=
+	t=1743770388; cv=none; b=srGkFnY4BhyLj72XLQ3QJ0zE1ReAI8Sgbcdtv7+dzzi/JuJ0gFeXhr46OWzZCd4+mgf5Ja2uHTuuX+q9vlpGehNUMeyp587cv8XOTl+n92uDdR5W/z72zFQFSMeGB7/PMaKS+yWZkDYOedqnJ+ulaWfY3+7lc+bh2gLRSSgfL3A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743770303; c=relaxed/simple;
-	bh=RcMTWnmgUYFYD6VF2EaLBPiPWi7gChWHpBqLg+WBsDc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IrJ0AJ/aTwGCrBNMBR8bmImlhU+qcxfxd+ZHEfNmPT3UzLtQ/9nPrGREGllsumeQ+W/pLEzmNBirI1l+3Hnens078M/hqvz57zbsMeX+a0zlTHLduY5eHH4hxF9i6x88DjlMtTaY6OVrEVXj/J5+hZ3RDAv1yELG5cBzErjF0fQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=F/+AP8wq; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1743770388; c=relaxed/simple;
+	bh=rWZrTo6CbOAZVlBYr0KMUl0bNmnyRfmlSthZhFH6jXo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Sk3jp/Ewm09Mglm6nxyaOub8X+ePH+YN/tvqNwLY91K4HGj936zn8gm1ofFEtX2psqpccAI+XNgkP/r3MgNU3Mggo9ocIMDULfo/pchxpNLPBEKvC2/fSoygZWJWKUOEsoUHzYWPSJffvHXulIwSJpObf87GwSByzCT3sI+LYM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lrXF5FpW; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F/+AP8wq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743770299;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vJaPaLyX59V82xrNu9MClw/rdrscnEivzyc3CCiExGE=;
-	b=F/+AP8wqkq08W22jJUmITR9S20Xr0YpDbNin+dUKFO/E/xSwAkXtgZ+T48/r+0BKto8cs0
-	aMcNgwdH0xItZpThmC7LPoebqV+IcxIt18dB9Pq2WHisguD1fw4X5Xdo71Q4FObZDvGmIq
-	Xhh60pXjtox9E3TFXN0j6C9fTUNSneQ=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-161-2cAwC4iSPuq49jUPtuNGyA-1; Fri,
- 04 Apr 2025 08:38:18 -0400
-X-MC-Unique: 2cAwC4iSPuq49jUPtuNGyA-1
-X-Mimecast-MFC-AGG-ID: 2cAwC4iSPuq49jUPtuNGyA_1743770297
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id F14E71956089;
-	Fri,  4 Apr 2025 12:38:16 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.144])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 053553003777;
-	Fri,  4 Apr 2025 12:38:13 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Fri,  4 Apr 2025 14:37:42 +0200 (CEST)
-Date: Fri, 4 Apr 2025 14:37:38 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Christian Brauner <brauner@kernel.org>
-Cc: linux-fsdevel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>,
-	Lennart Poettering <lennart@poettering.net>,
-	Daan De Meyer <daan.j.demeyer@gmail.com>,
-	Mike Yuan <me@yhndnzj.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC 3/4] pidfd: improve uapi when task isn't found
-Message-ID: <20250404123737.GC3720@redhat.com>
-References: <20250403-work-pidfd-fixes-v1-0-a123b6ed6716@kernel.org>
- <20250403-work-pidfd-fixes-v1-3-a123b6ed6716@kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lrXF5FpW"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3913290f754so222640f8f.1
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 05:39:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1743770385; x=1744375185; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=d+xv3GCTllU74BY3qzp0YBkubI5fxJJbRLLZjqaSHDw=;
+        b=lrXF5FpWI9e1PtDl2+1ChwNy4SLmMRWVaon5B/MHSDauSDYitTv3heMuiGtzEzIQmj
+         5TvpBiR6HhcxjVQ8uJIsIYXJrCMxKniCSU9xWBkhXIFnF7vsmaTn2JsJki1SF2md7DBZ
+         A+nMQc5hoxeG+glu5+n4fX+TuPyIBpzWS3gNAOGI8G1jFsFKYEqjP5FVm6fth9Uvkqnr
+         banfSZx07534KMPVBbPqtnPq1Jw+fCaCDFc8h1rybQ3vH2NM0R3vyUdOXRc28S8uYTnI
+         ZJJMWEgyQHahjxvL41vXtV8PoCE3m/+DClrqCgUN7XQ1TD3je1TrVnLHk844ch50ghHX
+         JWZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743770385; x=1744375185;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=d+xv3GCTllU74BY3qzp0YBkubI5fxJJbRLLZjqaSHDw=;
+        b=t2dXinEGSNcAaUT2eetVkwpwRy7o/QXPteVEklh0rt/e1gsxEQdNf/MC6zt9Fm53Pw
+         OnZxIhJvXCyk1geb1zKzyygcdHRcW4Qaq1IXF4NPpQ4Mf8LQadTXDhUMSUhHEv2KslK9
+         tsRipZOkPW/pf6Rq0/rNqGgnAYqyWshEQ3Q/ppvwFbed7QYrWPo3ijAUVZOEv1TX2Qpi
+         S2es4j7u4DD5rhiHBjhJTKCUlYg6pZtcl1D5qUZ2kWDNGCl42lVXewdyyndhggf8BNaN
+         GfUY8DdChu3K3BIYDkU3BihucFjMwsyxaWo/me/qwL+py3zI+FCW7i+b4SjrYQJGSWVW
+         XJtQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWyg19HKuOndfqGvSaHVB/fcMUdSZ+W1FTV+izt8prR7SFYCnfDQkwbN5kg8BFMEcH0d1GqIaQyroZZ0QY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy+/JP94kS9myTJdFmZQb3QoN46M4dDTVjQM9zwVztFVMzIhJbi
+	GZJ0xkoxNhufCsdNlqmr/9+5uvccCb0XcTJn9l0XObKqz4/4H3jn6cE95uAWS/U=
+X-Gm-Gg: ASbGncupwfxKbi3mM+VrrZANapevugpdx+pAM/19rfSQ7gLyVsD4k9tE3GuA/cfBv/h
+	9DXUTTdxRP0K1ISpl6YT+P9ac35Gf2eJ/Gin8mPSxTUkGQWjRG5k15fERbGef7mYWS7YasNmUOF
+	mVsUKjXbTNP1puVlfyc0H/BAXCGT2wwvzH5w7FkvJtF+CeW+/HuOmKiFLdnPX94ZXdVZhDPcfcS
+	y7LgukNgLs/5kGHbDRzs39FYp6tgyBg97FSbZ/r1xmswg4S0vuPzxW008YQDTHM1PgPaZ5w7Up1
+	U04P3G1pXnZmVZslt74rIe3VrJrj5HmL3t+4oQcswY7KEvhqsCglvA==
+X-Google-Smtp-Source: AGHT+IG+lKwfjMi8F019Bso/vFNO0xQAvVFuEUWApO7mpNXS+oQ2lkSC3va++KwObICvSEH0/L4KwQ==
+X-Received: by 2002:a05:6000:22c6:b0:38f:2685:8457 with SMTP id ffacd0b85a97d-39cadc76447mr939830f8f.0.1743770385087;
+        Fri, 04 Apr 2025 05:39:45 -0700 (PDT)
+Received: from shite.. ([178.197.198.86])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c301a67a1sm4203490f8f.24.2025.04.04.05.39.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Apr 2025 05:39:44 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Guenter Roeck <linux@roeck-us.net>,
+	linux-watchdog@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH] watchdog: Do not enable by default during compile testing
+Date: Fri,  4 Apr 2025 14:39:41 +0200
+Message-ID: <20250404123941.362620-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250403-work-pidfd-fixes-v1-3-a123b6ed6716@kernel.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+Content-Transfer-Encoding: 8bit
 
-On 04/03, Christian Brauner wrote:
->
-> We currently report EINVAL whenever a struct pid has no tasked attached
-> anymore thereby conflating two concepts:
->
-> (1) The task has already been reaped.
-> (2) The caller requested a pidfd for a thread-group leader but the pid
->     actually references a struct pid that isn't used as a thread-group
->     leader.
->
-> This is causing issues for non-threaded workloads as in [1].
->
-> This patch tries to allow userspace to distinguish between (1) and (2).
-> This is racy of course but that shouldn't matter.
->
-> Link: https://github.com/systemd/systemd/pull/36982 [1]
-> Signed-off-by: Christian Brauner <brauner@kernel.org>
+Enabling the compile test should not cause automatic enabling of all
+drivers.
 
-For this series:
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ drivers/watchdog/Kconfig | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Reviewed-by: Oleg Nesterov <oleg@redhat.com>
-
-
-But I have a couple of cosmetic nits...
-
->  int pidfd_prepare(struct pid *pid, unsigned int flags, struct file **ret)
->  {
-> -	bool thread = flags & PIDFD_THREAD;
-> +	int err = 0;
->
-> -	if (!pid_has_task(pid, thread ? PIDTYPE_PID : PIDTYPE_TGID))
-> -		return -EINVAL;
-> +	if (!(flags & PIDFD_THREAD)) {
-> +		/*
-> +		 * If this is struct pid isn't used as a thread-group
-> +		 * leader pid but the caller requested to create a
-> +		 * thread-group leader pidfd then report ENOENT to the
-> +		 * caller as a hint.
-> +		 */
-> +		if (!pid_has_task(pid, PIDTYPE_TGID))
-> +			err = -ENOENT;
-> +	}
-> +
-> +	/*
-> +	 * If this wasn't a thread-group leader struct pid or the task
-> +	 * got reaped in the meantime report -ESRCH to userspace.
-> +	 *
-> +	 * This is racy of course. This could've not been a thread-group
-> +	 * leader struct pid and we set ENOENT above but in the meantime
-> +	 * the task got reaped. Or there was a multi-threaded-exec by a
-> +	 * subthread and we were a thread-group leader but now got
-> +	 * killed.
-
-The comment about the multi-threaded-exec looks a bit misleading to me.
-If this pid is a group-leader-pid and we race with de_thread() which does
-
-		exchange_tids(tsk, leader);
-		transfer_pid(leader, tsk, PIDTYPE_TGID);
-
-nothing "bad" can happen, both pid_has_task(PIDTYPE_PID) or
-pid_has_task(PIDTYPE_TGID) can't return NULL during (or after) this
-transition.
-
-hlists_swap_heads_rcu() or hlist_replace_rcu() can't make
-hlist_head->first == NULL during this transition...
-
-Or I misunderstood the comment?
-
-And... the code looks a bit overcomplicated to me, why not simply
-
-	int pidfd_prepare(struct pid *pid, unsigned int flags, struct file **ret)
-	{
-		if (!pid_has_task(pid, PIDTYPE_PID))
-			return -ESRCH;
-
-		if (!(flags & PIDFD_THREAD) && !pid_has_task(pid, PIDTYPE_TGID))
-			return -ENOENT;
-
-		return __pidfd_prepare(pid, flags, ret);
-	}
-
-? Of course, the comments should stay.
-
-But again, this is cosmetic/subjective, please do what you like more.
-
-Oleg.
+diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+index 0d8d37f712e8..1d29e5f4f40c 100644
+--- a/drivers/watchdog/Kconfig
++++ b/drivers/watchdog/Kconfig
+@@ -1001,7 +1001,7 @@ config STM32_WATCHDOG
+ 	tristate "STM32 Independent WatchDoG (IWDG) support"
+ 	depends on ARCH_STM32 || COMPILE_TEST
+ 	select WATCHDOG_CORE
+-	default y
++	default ARCH_STM32
+ 	help
+ 	  Say Y here to include support for the watchdog timer
+ 	  in stm32 SoCs.
+@@ -1869,7 +1869,7 @@ config OCTEON_WDT
+ config MARVELL_GTI_WDT
+ 	tristate "Marvell GTI Watchdog driver"
+ 	depends on ARCH_THUNDER || (COMPILE_TEST && 64BIT)
+-	default y
++	default ARCH_THUNDER
+ 	select WATCHDOG_CORE
+ 	help
+ 	  Marvell GTI hardware supports watchdog timer. First timeout
+@@ -2035,7 +2035,7 @@ config 8xxx_WDT
+ config PIKA_WDT
+ 	tristate "PIKA FPGA Watchdog"
+ 	depends on WARP || (PPC64 && COMPILE_TEST)
+-	default y
++	default WARP
+ 	help
+ 	  This enables the watchdog in the PIKA FPGA. Currently used on
+ 	  the Warp platform.
+-- 
+2.45.2
 
