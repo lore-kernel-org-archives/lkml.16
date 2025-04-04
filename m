@@ -1,120 +1,116 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 987D0847B;
-	Fri,  4 Apr 2025 07:59:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB9FA1F94C
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 08:00:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743753570; cv=none; b=Ln205S/g1TjSNcF1Be8kp5T9gh8lLHTm7h3V+oSX38yErf5H/L/Kh5y+eOVlg5Tdbtt8XigNmT1vliFxPSlvS/XOLOrziNMjarGcTm9RzPqmhI2JNqU34RtAMH7GzOv5dS8CoN4eCBFDXKSq0cwz2RcH8KcB8t66KKRfCYwzXhY=
+	t=1743753661; cv=none; b=awaOFivs8pODCWHsP6i/ecOazcp+ohCUniIJMNOMMEkJxSSw+pXhIQWrXGmiq4rhfiKleWu1VuA7c5q89ZVPKlF9NE4pkBjClrbtngHoeXvJCMRAa6c8ZfSpNwOxCOZol9uI9cd1lzohWOTe/1XdkNaxawTOQ+2PrgZYSJOiCmQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743753570; c=relaxed/simple;
-	bh=yGuboUMthTnrSr0YxktMqa6s6aGvoefMlWmXmxJDGv4=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=BGNMr2T0ce5qhu6Op4wbSq9ZZ48BoVzHS9f6G8xu8/sE1GJ7JAAxdttcogIf2VQ8V2KGb/APDWckKN0E1mKwpjKwdSNaLttdmVvnXXXW2iPTmNiNOrb3GJ/6ErwgtGmGbowFV80Psxv6X7sLhpFhDFqjtQZkaMDIM2DUZJUxzeA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SgiH7w5M; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743753661; c=relaxed/simple;
+	bh=pr0/25F8iIEDARQYcJhcKSuVvjTXR5ohp+UJj7cy7aI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=d1PQqyXrtMcO0kK2XS3FrljJorWja+TA90Ppq9goeUL3SVY2LOHzhQ6bNfbJus3QSut0C+pdnjlY+sW/lI13PwWNBMiuumeUr5+PooHaYIGPRW4vIwc8/QJWBDDwfLXTp/W8exLxmXqPAwzDfDp/ek29LVsbDekT0uJohf0Ylz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=fZTAsPvO; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SgiH7w5M"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43cf0d787eeso17662645e9.3;
-        Fri, 04 Apr 2025 00:59:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="fZTAsPvO"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-38f2f391864so942059f8f.3
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 01:00:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743753567; x=1744358367; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Nr/t6BskpDZsQWS/KHvw+5O1AbfwUb+OCjtyeJ/2soE=;
-        b=SgiH7w5Mwr+vdwLUbnj/5FLxf74iYcd1fuewmzSepSEI2hqlG1E97LYz4WGrZCTIXY
-         RCX4eFNUPeZRv5zsYfYgmTaNJ9f5kittGDS3gTM87rO4++us/XGrvBnUbvqm/JKl5MH3
-         BMB46wsCFnyQN7cXLLMQ2fcrHa1f7xPhjzd6MGursIoPb9jNOgrjzCxgjkral6Y49Qi/
-         K30UIOc+WdKSZrBEtvPVsHanmErbwbQ2jQ/sjS2uAP6m2EZ8LI56o6cMn6fDXHRC5PXf
-         JPiX1jVZ8IHnidUtu3z1XWc9AyfE3HWm3xJ925yAmtNyv65EVPistwZivMxoF2U39oXw
-         uMWQ==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1743753655; x=1744358455; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=yx20aOl6hxNq71ohoplbiMtIwtQJkykeNvp+f1I4+W0=;
+        b=fZTAsPvO4hdg1K/x5vi86Yyu82MnOJceQ3onai+bDz46omGtA+OCKLKnvYrhlu9OBH
+         xrkeQ0q1xgIZD+gfX71/gl+wo9eUn6N1KdiAyf4VFDQhoGIN7IV+6ELH3yibzKrmcd9o
+         NHjYQCo2Mno8VFIKdPswc/1INaCx8+02HKfE98kxMZeH0Qby5azeXuuJTXnVgTfK4VoQ
+         mKZifOTnHzQIM3tk478xfaB32CgI23WtAl3Q9kZ4DxTSUCdty+WXTphypFweNcL/9934
+         mFQj0NlqWOLUKD6lXfUd+G8U6AjqEn3DQ4aoNhCDDDllc5XzW9tQsxa2kRmR2/Qkl26s
+         u5ww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743753567; x=1744358367;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Nr/t6BskpDZsQWS/KHvw+5O1AbfwUb+OCjtyeJ/2soE=;
-        b=MZuMuGumipFs8viR229bDhNW3dmAKZA4U8aqljSYKKzz7m0j9hhStCG7YUD+miYytP
-         BgrdB4On5UbfMcKROIbFaW8GZu3JPlrv1eyeO0u0TX7berA4a4oDGdaTPTQB28j4rmf9
-         CHw7SqxKAJUebIV87U2T4UwwjHMPBGmicZ/bFKkU932pjfHg+AhuIefy1+RDRjs2VibL
-         G3Kd7Xg3MMblKko1pyvLFe479Q/a0D082guo+6QtzCTK7Bx5mk2HbvdkB9IhbaG4dDW9
-         h5b6GxVr3B40OCqFcKn395rEL9ZtZ93/mzMADOkiRZdTlAGtgTPXtziEYhMFfoAvOmfw
-         cNkA==
-X-Forwarded-Encrypted: i=1; AJvYcCVAaiEs5HTYz2RNnxmFjfvW+dAkugQKxnI6Pd3EChqm+dRhrvIJiDDgmddI8AfIEaLEj7gRZdaB@vger.kernel.org, AJvYcCXAwyn4eAh+DNOPyZGisnC4qYLzeY6DWyGs4bB7fZV9jFW4TWdI6sHMHRATHBJ7Aa5XufoklY78+i3MRBI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw8HxC9wZG8wiac/Tt/1MHDX45GMxluK+ebnjkl1P308TVN4vLD
-	gxcO8mbzT9tnvarQDDTapAgbv3irXnu7s8zTb+dScc8qZh9AxT5T
-X-Gm-Gg: ASbGncvUcT6Vg1ke8rJhC+y/pcvewfq0CiSkhX+2H92QDJvjAy6nDP7vObFOymEdTZa
-	L+YPSg4el46zRkGJ4ab4FxO+sW+x/u6b92pOHaKHnQfl8da8jbxQpaGWw/Jxzqx4khlWnDooITW
-	tGOmHGE8/JekAJbtOUJUxWaRovQ0R7SiCKQq7FIEWvuO3ibush3fy/IPcKRIPy9lpeXCtsR3nRQ
-	9gIGxGbLcIfib1fPIGKy6C50U8FQ5IlP7re+BcmGO4ANH6wOMJb7x11HYo4pYOIvucqDbD79vmv
-	UfFecgKUpmteblRCkLlKEVxD3nlW5zJd4ehQkAOl0g/rxhO8NngzkYGX
-X-Google-Smtp-Source: AGHT+IGy0FnVsV73jUujcayMrD7rYIs9G/cxOlRjUi4l53/BlPFVn3dQEG1Vf4RXOkfRc3KVHv1q4g==
-X-Received: by 2002:a05:6000:2902:b0:391:3f4f:a17f with SMTP id ffacd0b85a97d-39d0de67b6dmr1352589f8f.42.1743753566484;
-        Fri, 04 Apr 2025 00:59:26 -0700 (PDT)
-Received: from ?IPv6:2a01:50a0:aa10:1a36::11d? ([2a01:50a0:aa:0:185:40:248:10])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec1794e94sm42791465e9.31.2025.04.04.00.59.21
+        d=1e100.net; s=20230601; t=1743753655; x=1744358455;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=yx20aOl6hxNq71ohoplbiMtIwtQJkykeNvp+f1I4+W0=;
+        b=LnuIAUMBP5m/danj1BcMmEPvDve0/SLgg8uHITU5dhkRxhRIjIt31qJkisjpYwbiBZ
+         shaHRc66T1DluhXV4XxzYJpmZP0RRCCAgvwIgVfolWmO3ykBSGF/NVeCfMRn6bAsad7g
+         Pfo6qF5FnarHuwS8TjUeVmNSQB9jHg7SQ6F7xxg5n2l0punegPg+hCrk7jzDot6U9IiV
+         gfahDKuasvLJ8nklCrI4b4hLBCHd7KJaUHtdMlKCMzf0RBlG9TVbdm6017IcfUND7r+/
+         Favtu2pbqbkUcyKNeA5wAw1GwOn4j5W1avbHlISeoXuumqwXkrnFqxiwceM3m9Sova9+
+         28Tw==
+X-Forwarded-Encrypted: i=1; AJvYcCWgPgR0/EF1kvT/qCreNmXtKcaDhpeWBCbtF2RB6db6XfljbCgeOOwjeYK8VuZUSPqzFs6oUdPta5DCJEE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzCgJQi6uhbjxqGkUqsswaPaL9EtjAeJAuyVuTBJQePq/mY3wmQ
+	D+8OW7SEEfwqafHsDjAmIlZwdm9RPIDfcwrR0vjMg7JCEhFyViJTOUa7RGqhSPw=
+X-Gm-Gg: ASbGncu77RxjBc/feox4kYteQVWeYSgAHH8HUPsXIgSQ9rz9J+8bKmidG1rHY+2UauQ
+	WZurH+qSexGq1Vqxe6mNSV/TmREYT7HX7j43sKORSVlvXilc7Kae2N+fndMvMHCVA30+Sh6jJSz
+	4T1K/WXoJo0Cvwj943mmwGf4wfn6KKKnv/+w1bNY0tJ3fOqljtq+Sc0KxTE5ReAN9y3kiLmnhww
+	AKZ0RWqmJYcbgFD32TT24jweN0GXK6mddTmFHI4K//4khwpu5J2VSlgty3lGbbIIuHrTcwnyHAF
+	Psg6p9uCNghH1gx/EDeb2otyf1OseLiqxBWpmtd9DycWGjTlWdpuH2ghLO141uMojFhgMC294g+
+	a9cgn3uG4byQ=
+X-Google-Smtp-Source: AGHT+IH92EJqbZhbFVGJDEY6lA8Jg2sdloS5bO5Q4lOiIY+vLsPpGyrboeSaBmRz18vx/ZTSttV78A==
+X-Received: by 2002:a5d:64cd:0:b0:390:eebc:6f32 with SMTP id ffacd0b85a97d-39d1466220fmr1243506f8f.48.1743753655066;
+        Fri, 04 Apr 2025 01:00:55 -0700 (PDT)
+Received: from localhost (p200300f65f14610400000000000001b9.dip0.t-ipconnect.de. [2003:f6:5f14:6104::1b9])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-43ea8d2bc7fsm50496335e9.0.2025.04.04.01.00.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Apr 2025 00:59:26 -0700 (PDT)
-Message-ID: <4d0c0cb9e9d513bf9ba81346ea72c9e58359ff93.camel@gmail.com>
-Subject: Re: [REGRESSION] Massive virtio-net throughput drop in guest VM
- with Linux 6.8+
-From: Torsten Krah <krah.tm@gmail.com>
-To: virtualization@lists.linux-foundation.org
-Cc: Markus Fohrer <markus.fohrer@webked.de>, mst@redhat.com, 
-	jasowang@redhat.com, davem@davemloft.net, edumazet@google.com, 
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Fri, 04 Apr 2025 09:59:19 +0200
-In-Reply-To: <1d388413ab9cfd765cd2c5e05b5e69cdb2ec5a10.camel@webked.de>
-References: <1d388413ab9cfd765cd2c5e05b5e69cdb2ec5a10.camel@webked.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.3-0ubuntu1 
+        Fri, 04 Apr 2025 01:00:54 -0700 (PDT)
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>
+Cc: linux-renesas-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] MAINTAINERS: Generalize ARM/RISC-V/RENESAS ARCHITECTURE
+Date: Fri,  4 Apr 2025 10:00:43 +0200
+Message-ID: <20250404080045.367845-2-u.kleine-koenig@baylibre.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1057; i=u.kleine-koenig@baylibre.com; h=from:subject; bh=pr0/25F8iIEDARQYcJhcKSuVvjTXR5ohp+UJj7cy7aI=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBn75GtwXL7vChmr7X6CN1PdBtkkIelvq/R+QaBy PKUstjArYaJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZ++RrQAKCRCPgPtYfRL+ TiZOCAC7TV74Eg4xchbUyT6fdfyvJy2FDymVP9icFTyJ0jdpcJeSeJiIeLIDmV0rG67gfwtS4jl k75rfRgnth5JJ8AQb/OIibPdiAOY85um9QdLl169kEc6ZJidQQmIyHFa7xeqLm/MwsjWhfG2EiC y/ejXE/CGin2/ph+Y/VbGldTKy8XsCEfFJ3EQYN97dX8oU0rPlLO94BDt+lgTG40bMwGStsO/j2 XhCDSbp6LmgZswLYwXx6bShCkWZPEQAW6CofoDOukTsIjz5NmG46Oe0bR1yQ+WJbT9mcfyN5Cs8 dunLewUFiXcnCJW4AiIaH+IMAJnuSbvmxhSGFTyt00rsnpFd
+X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Transfer-Encoding: 8bit
 
-Am Mittwoch, dem 02.04.2025 um 23:12 +0200 schrieb Markus Fohrer:
-> When running on a host system equipped with a Broadcom NetXtreme-E
-> (bnxt_en) NIC and AMD EPYC CPUs, the network throughput in the guest
-> drops to 100=E2=80=93200 KB/s. The same guest configuration performs norm=
-ally
-> (~100 MB/s) when using kernel 6.8.0 or when the VM is moved to a host
-> with Intel NICs.
+Triggered by noticing that the pwm-rcar driver isn't covered by the
+Renesas maintainer entry, add this driver to it. Instead of adding it
+explicitly, just add a file regex for "rcar" (and drop the one entry
+that gets redundant by that).
 
-Hi,
+Looking at the output of
 
-as I am affected too, here is the link to the Ubuntu issue, just in
-case someone wants to have a look:
+	$ git ls-files | grep rcar
 
-https://bugs.launchpad.net/ubuntu/+source/linux/+bug/2098961
+only shows files related to that architecture, so no X: line is
+currently needed.
 
-We're seeing lots of those in dmesg output:
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
+---
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-[  561.505323] net_ratelimit: 1396 callbacks suppressed
-[  561.505339] ens18: bad gso: type: 4, size: 1448
-[  561.505343] ens18: bad gso: type: 4, size: 1448
-[  561.507270] ens18: bad gso: type: 4, size: 1448
-[  561.508257] ens18: bad gso: type: 4, size: 1448
-[  561.511432] ens18: bad gso: type: 4, size: 1448
-[  561.511452] ens18: bad gso: type: 4, size: 1448
-[  561.514719] ens18: bad gso: type: 4, size: 1448
-[  561.514966] ens18: bad gso: type: 4, size: 1448
-[  561.518553] ens18: bad gso: type: 4, size: 1448
-[  561.518781] ens18: bad gso: type: 4, size: 1448
-[  566.506044] net_ratelimit: 1363 callbacks suppressed
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 4cc3cfd35665..77155718a9e9 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -3061,10 +3061,10 @@ F:	arch/arm/include/debug/renesas-scif.S
+ F:	arch/arm/mach-shmobile/
+ F:	arch/arm64/boot/dts/renesas/
+ F:	arch/riscv/boot/dts/renesas/
+-F:	drivers/nvmem/rcar-efuse.c
+ F:	drivers/pmdomain/renesas/
+ F:	drivers/soc/renesas/
+ F:	include/linux/soc/renesas/
++N:	rcar
+ K:	\brenesas,
+ 
+ ARM/RISCPC ARCHITECTURE
 
-
-And another interesting thing we observed - at least in our environment
-- that we can trigger that regression only with IPv4 traffic (bad
-performance and lots of bad gso messages) - if we only use IPv6, it
-does work (good performance and not one bad gso message).
-
-kind regards
-
-Torsten
+base-commit: a2cc6ff5ec8f91bc463fd3b0c26b61166a07eb11
+-- 
+2.47.2
 
