@@ -1,118 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A0C81DA53;
-	Fri,  4 Apr 2025 13:09:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53F6D1E1DFF;
+	Fri,  4 Apr 2025 13:11:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743772169; cv=none; b=DOJiP3UWeAMufjg0uKO4aamRya32iuuLfZYrfLtCTvCpa81Zv+kzBTayLEphoEmY19NeJ0qhFw2rOEy1JKZGZf7/CcdB4wqlKYsyzoIYhjYLRFtdWGs9vqakaHjSzwprrZUUqplhFP0xIOaGLhIPMNOeIkMvmjT3TV2p+5cTOtM=
+	t=1743772269; cv=none; b=OT/di5Uh0ZE+LSpf/jjuDk4STlMDiX9QIT6uCcYq5SVZXtUfbJdctj0+laG0siou9Y4yPjw3Ds/BMgwdixnnpU3h072A5ani91yqKe1m508s6YhTSzv9ViEut7ue8MzTvG4U1qk+DlIHE7QtYKZquQT6aKhFzhCjR9JdA328EOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743772169; c=relaxed/simple;
-	bh=dXvLo65uum190+DYUNNlALy+j1eqU6jZE1YhXB2VRzw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=X0C38h8UEJzIXSS/9JOIPJiJ6AB+cj8YLrkPrMKqB7h4qfOqC8nPG7puMNDrd2W4Dq6dyluCNQTX/FuNno8sX+WZeBsbz8z0/1Yb/xNAqLTiWlozLxLJ2GzV3CsTfRshfpbnHI074deaV0xSgy+HJnhjtC48ZsCOM4wUevbLdzU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GDd3H0n4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743772269; c=relaxed/simple;
+	bh=nz3b45f2kDp8g3yCmdG1yNvTfsTyA35b7QwNerR+WzA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BXBH9zKKdiE2ozUbwRN7bPNUGJazsE+El7Jx43mzjpTW7lBw5MHrHEjJ+uTNG1x2m0YiklCLj4QsmMbQdUsBbrbUCKH67qpoLudgXF23QMoeF2mtCeMXBml+NvofDbUf7dSa9kkm4F0Jg+xzyVYf2d4Fvlfil6e589quJjP+beU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=UyCtCsPo; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GDd3H0n4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B84B1C4CEF4;
-	Fri,  4 Apr 2025 13:09:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743772168;
-	bh=dXvLo65uum190+DYUNNlALy+j1eqU6jZE1YhXB2VRzw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=GDd3H0n4Z0vbzhOAKBtX4aBm2VvNF3+IHAlBZcY+prFuXi8cUpHIAmcgMJANZtdgc
-	 SadmKjqoeeP3emGC4LnYFxHT6I2Z5k4Qigi/ixTpN0IjDgoC2YwqzWaLtiFw6MVdWY
-	 R51uqx4Vo1nBKrHVzBG0y29dCta48Jc5BLa59kSTc1THSL1yXM0eoSE65ifw4Hc4m9
-	 SWymD+qBgYbMWGz01AIzxcp4EAbHrwklRmWGHBAZsGAPODfBKuc22jPpwnuD0PsKUb
-	 4WzCQ8fABsmztu+A1EYwZSW/Iy8dxRsSFMwWpTf8Ntbimo0rh1MzNq8RAHcck28ns7
-	 PlZqBwK10PG0Q==
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ac297cbe017so586263666b.0;
-        Fri, 04 Apr 2025 06:09:28 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU1oqbiGOfR79B3pmInEqVgP4qtwzVaONtkQARqp+uC81Mft8Xu8Osog9axGNsecaFxr6b8tpQ5Du3RDg==@vger.kernel.org, AJvYcCUP71WUkuxcxwSxEihnpmmgyJ69Y9v00U8+PEYZlnocMAkXkyjJ9+U0edMJAuili0g8BJpBmNplAxs=@vger.kernel.org, AJvYcCUnoidDpJ/6539fzb9oaeM6wd+Tu1qirHEVErwfUIaBM8P9JHTK87n9jyIDc73qqRPPRKyIkkQ28dc++woP@vger.kernel.org, AJvYcCWG+VknflL4bK0dOwFOCrJKVwn6g10VFM08IqFozGz3+cAgJDDe7gZgSn+f3IryoFQ06o9NJgoHItTlIDR1eoIqPnY=@vger.kernel.org, AJvYcCWUdpY/s8HvtRX6B72Yfafu95gfhVjTex1OcG3J4VBCyOwXaB459pygIrF0HRaCMQqEjw5IIxpgdr7I@vger.kernel.org, AJvYcCXnxWf2Yx+EFpzGuWfPkKaX1RVOICB1aJVDmboz4giWOIjye1YB/IMW+tjq+5bYJFPim6WkoQHssf1ZCmvd/Q==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxGCVZaL7XGX5y50cubVmjjZlDPhU8H2yc1ZKh9vKw2qFcyVvcj
-	pP0m5emXt5B1XtQ82KNkFITbdP/UsstiLqSDSqyUEtSgMj6EvOWaIO/a0hrPo5lF9SVWu3i8rxW
-	STXg2O5Ayg75vLd95FHcGr5uUHA==
-X-Google-Smtp-Source: AGHT+IFIyAD0iksJ2rEYwVDKxfXp9paMa26qoweWItquite8ZOPf4g5g6GK5SE+pbTwu/1QEMoBYtzOxpeaG2eY6PCU=
-X-Received: by 2002:a17:907:6e8e:b0:ac2:d5d3:2b77 with SMTP id
- a640c23a62f3a-ac7d2e1b9c5mr344142866b.8.1743772167150; Fri, 04 Apr 2025
- 06:09:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="UyCtCsPo"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id F15FA44401;
+	Fri,  4 Apr 2025 13:11:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1743772262;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AXf1qMWKVsb2hFlQVhByp9Af9uko8h3RHpXqX39vRM0=;
+	b=UyCtCsPoIDFSt+Ts9rHyPDYFOVWB4NLcKaKPC6vBqHgNFQEGKn7FOga+sbj3myHATaAni2
+	LMPTbMjjePmMh7+I+RoIeLKNCP94fB/p82u0Mpc17Rtb5TRnZVm2lEmlL8ypR6SzNAB2Wd
+	F4DqM+5KXqjGo/DvHT1dk7dYLQOP0ugrjr5Wc5OhPUN0wO6t7/iU/O8yTLp4riAI3T+sDc
+	52GfBREK0SqZdqlYRrcUXGZZHj8y0DMUxpdoKCLLDXpRCrNMfSgHJ1TJE4rsCWaUDGeRjY
+	ErDdIcL+ADNMP/BbsFc5rNzR2Vj1uLHFdAcItqnkTNRb41PxNTaQAUax+2Sh0g==
+Message-ID: <cb07335e-8dc0-4cf1-8524-40770d5419cc@bootlin.com>
+Date: Fri, 4 Apr 2025 15:11:00 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250403-dt-cpu-schema-v1-0-076be7171a85@kernel.org>
- <20250403-dt-cpu-schema-v1-18-076be7171a85@kernel.org> <CAPDyKFrFRrPVJ_t0JrAE1VTbS02hwr=L-EHtqb7CQiWzB1MnQg@mail.gmail.com>
-In-Reply-To: <CAPDyKFrFRrPVJ_t0JrAE1VTbS02hwr=L-EHtqb7CQiWzB1MnQg@mail.gmail.com>
-From: Rob Herring <robh@kernel.org>
-Date: Fri, 4 Apr 2025 08:09:15 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqKygxhcQ=PZW84sfiW7BVXKF839vfNyxS9GwAXuqmN=8g@mail.gmail.com>
-X-Gm-Features: ATxdqUFqb3GyPW1xY4MYIKArvKkAjEGffj80G84cX0XvObx4_cAf9jnDsr6emp0
-Message-ID: <CAL_JsqKygxhcQ=PZW84sfiW7BVXKF839vfNyxS9GwAXuqmN=8g@mail.gmail.com>
-Subject: Re: [PATCH 18/19] dt-bindings: arm/cpus: Add power-domains constraints
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	Samuel Holland <samuel@sholland.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Viresh Kumar <viresh.kumar@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Vincenzo Frascino <vincenzo.frascino@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, 
-	Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Viresh Kumar <vireshk@kernel.org>, 
-	Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, zhouyanjie@wanyeetech.com, 
-	Conor Dooley <conor@kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, 
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>, Steen Hegelund <Steen.Hegelund@microchip.com>, 
-	Daniel Machon <daniel.machon@microchip.com>, UNGLinuxDriver@microchip.com, 
-	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
-	Heiko Stuebner <heiko@sntech.de>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-pm@vger.kernel.org, linux-mediatek@lists.infradead.org, 
-	linux-arm-msm@vger.kernel.org, linux-mips@vger.kernel.org, 
-	imx@lists.linux.dev, linux-rockchip@lists.infradead.org, 
-	linux-amlogic@lists.infradead.org, linux-renesas-soc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 4/5] pinctrl: Add pin controller driver for AAEON UP
+ boards
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+ Geert Uytterhoeven <geert+renesas@glider.be>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Lee Jones <lee@kernel.org>,
+ Pavel Machek <pavel@ucw.cz>, linux-gpio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
+ thomas.petazzoni@bootlin.com, DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw
+References: <CACRpkdZ6kmPn9TfO40drJ+vwM2GNKfNaP21R_gEvugg+GJiF1w@mail.gmail.com>
+ <7e96dd60-8f72-48f9-a393-5a8a7e5c6b18@bootlin.com>
+ <Z4Tg-uTVcOiYK2Dr@smile.fi.intel.com>
+ <b50444f7-4dd1-4440-af36-783b1b4f8625@bootlin.com>
+ <Z4jNZPcDd89-HfAd@smile.fi.intel.com>
+ <e273428e-3ebd-4116-b317-9aae0c8c603b@bootlin.com>
+ <Z4j8NmKMEL7PALmw@smile.fi.intel.com>
+ <8b9dd766-ae7e-4817-a093-536ae9646cd3@bootlin.com>
+ <Z4kUWxR9VWkzQ9aW@smile.fi.intel.com>
+ <5e5f7635-86ed-4814-b26f-b1c45fa4f29a@bootlin.com>
+ <Z6NOfUG3QZyYW0rw@smile.fi.intel.com>
+Content-Language: en-US
+From: Thomas Richard <thomas.richard@bootlin.com>
+In-Reply-To: <Z6NOfUG3QZyYW0rw@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduleduheefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthejredttddvjeenucfhrhhomhepvfhhohhmrghsucftihgthhgrrhguuceothhhohhmrghsrdhrihgthhgrrhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeekveeiveeguddtteelhfeuueduieelheetudeujedufeduvddutedufeehhfeigfenucffohhmrghinhepghhithhhuhgsrdgtohhmnecukfhppedvrgdtudemtggsudegmehfgedtmegsfhdttdemfhdtheegmegtlegtvdemvddutgefmeduheeiieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudegmehfgedtmegsfhdttdemfhdtheegmegtlegtvdemvddutgefmeduheeiiedphhgvlhhopeglkffrggeimedvrgdtudemtggsudegmehfgedtmegsfhdttdemfhdtheegmegtlegtvdemvddutgefmeduheeiiegnpdhmrghilhhfrhhomhepthhhohhmrghsrdhrihgthhgrrhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedufedprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehlihhnuhigrdhinhhtvghlrdgtohhmp
+ dhrtghpthhtoheplhhinhhushdrfigrlhhlvghijheslhhinhgrrhhordhorhhgpdhrtghpthhtohepghgvvghrthdorhgvnhgvshgrshesghhlihguvghrrdgsvgdprhgtphhtthhopegsrhhglhessghguggvvhdrphhlpdhrtghpthhtoheplhgvvgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphgrvhgvlhesuhgtfidrtgiipdhrtghpthhtoheplhhinhhugidqghhpihhosehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-GND-Sasl: thomas.richard@bootlin.com
 
-On Fri, Apr 4, 2025 at 5:37=E2=80=AFAM Ulf Hansson <ulf.hansson@linaro.org>=
- wrote:
->
-> On Fri, 4 Apr 2025 at 05:06, Rob Herring (Arm) <robh@kernel.org> wrote:
-> >
-> > The "power-domains" and "power-domains-names" properties are missing an=
-y
-> > constraints. Add the constraints and drop the generic descriptions.
-> >
-> > Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> > ---
-> >  Documentation/devicetree/bindings/arm/cpus.yaml | 8 ++------
-> >  1 file changed, 2 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/arm/cpus.yaml b/Document=
-ation/devicetree/bindings/arm/cpus.yaml
-> > index 6f74ebfd38df..5bd5822db8af 100644
-> > --- a/Documentation/devicetree/bindings/arm/cpus.yaml
-> > +++ b/Documentation/devicetree/bindings/arm/cpus.yaml
-> > @@ -313,19 +313,15 @@ properties:
-> >      maxItems: 1
-> >
-> >    power-domains:
-> > -    description:
-> > -      List of phandles and PM domain specifiers, as defined by binding=
-s of the
-> > -      PM domain provider (see also ../power_domain.txt).
-> > +    maxItems: 1
->
-> There are more than one in some cases. The most is probably three, I thin=
-k.
+Hi Andy,
 
-Unless I missed it, testing says otherwise. What would the names be if
-more than 1 entry?
+On 2/5/25 12:41, Andy Shevchenko wrote:
+> On Wed, Feb 05, 2025 at 12:17:29PM +0100, Thomas Richard wrote:
+>> On 1/16/25 15:14, Andy Shevchenko wrote:
+> 
+> ...
+> 
+>> So I'm not really convinced by all this complexity for only one driver.
+> 
+> I am not sure if I asked you to show the excerpt from DSDT for this device.
+> Is there any link I can browse the ASL code (for that particular device,
+> most likely I wouldn't need the full DSDT)?
+> 
 
-Rob
+I'm currently working on the V3, and I just remembered that you asked me
+DSDT file. So for the UP Squared board, please find the full DSDT, and
+also SSDT1 (which contains the FPGA declaration).
+
+DSDT: https://gist.github.com/thom24/4d24c2a2f58d93f799e512c2485efd45
+SSDT1: https://gist.github.com/thom24/2da44ef86eacfa5d2d492ce43fa41aa4
+
+Best Regards,
+
+Thomas
