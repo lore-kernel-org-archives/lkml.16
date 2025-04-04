@@ -1,175 +1,118 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 452E9847B
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 07:57:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com [209.85.221.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D30425776
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 07:58:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743753433; cv=none; b=ir9ODMDQcQga+DdVgt3vWVLWOK/YMyEM4LDi3F8Y1ebBp0yqRDTZX2phPNSjlWDrT1DC9qOl6SR+x972jQi4LE2fFuYN8AhywTUV3fB6RmkI13J+w0xT6FgnJ/ujUwxKZiq12M8zo8zF5ek48vgjWgVA/+1VfNEd7eM4qwn5R8M=
+	t=1743753536; cv=none; b=HxpUKPqKIvkg0Zce0RxTMoOmIlaQu9G1SRCF3nHUZgW80NdlhQweBFuQxJDTZsP2NNAM5Q1/kdbK9NeKWsNlhFQmI0PhAbWbZCnedeXnxERckWeI26Tk5O8HWOmHzqBTisZwveKzcePXOCBiNIgM/vlIwCp1XoP9f+8J46sfwwQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743753433; c=relaxed/simple;
-	bh=9JeqvOReHWh/bsTIrcVRAGVDKWqZxvYEbZDt95bTYXk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hPdotAHxeuGlVgVGz8pbfCNBHdVe8JK0MkUX3Ia1uRWzIGcIEGm/VHVGRcnwHAN09zdgE0WtjurqVZU1/XOE8S8BNtbRgN508u9ytsRG66CHzCF5ZpRo1wmlxj1rhDLZwLO9LUISoNscNpav7eCynfYi3XkdY+HjXeHHzD5xego=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 77F131063;
-	Fri,  4 Apr 2025 00:57:12 -0700 (PDT)
-Received: from [10.57.71.100] (unknown [10.57.71.100])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 26D223F59E;
-	Fri,  4 Apr 2025 00:57:05 -0700 (PDT)
-Message-ID: <107650bf-a8c1-4a71-a302-2e80abd5d062@arm.com>
-Date: Fri, 4 Apr 2025 09:57:02 +0200
+	s=arc-20240116; t=1743753536; c=relaxed/simple;
+	bh=UUjzB8EKvto6Mi+McaUUa66PIdWe5H8zn4PvcUFx5v0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jQEOqwP79wC0HIcLdVdK93rL6Mn1zaiHFba/dqlJrDWhK6bRLUTIfD0vFNk67WTji4kc8wnJVCZXA5weCzMqbNu/nxaWoBj771ZilOMOVRnVC14esCbFG8yhKthzAvB03voTRk8OuOEgi1WYXlvPhhaUgjR3jaV/SzzZj/mQWKM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T2gtlH/X; arc=none smtp.client-ip=209.85.221.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T2gtlH/X"
+Received: by mail-vk1-f180.google.com with SMTP id 71dfb90a1353d-524125f6cadso1788203e0c.2
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 00:58:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743753533; x=1744358333; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EGt7mfXqnCsxJf6ymQojTs7U2r6jHdpo83KmTV6yu60=;
+        b=T2gtlH/XbSwXxoskRN+qDk19enLiSa+aYx41g32T0BgoEtlgfG71T0IZxQWVRuu4R1
+         6kX1IsvrW43Ly6JTAH72SZnNdOjHj/NlYx8GMnBew3Dcr2OARptiPNZ7Tcp7PBHB8jOV
+         cpy6tpERZYaHw5Nud7SvBTpEFaoUIacR+L3hb7Pz451Eg1EiUnkjMReYWXsJYcuZbDAi
+         QHfX4I5XQm9hr92965hgZxARgRsrZDtCfexWIPAfQwbb4MMT6bRu0471Q/Fe3cTzckDR
+         +Bk0UD/ORB8TIT86tKpE5jcv4PHolbK5I0jsUplhuU2qwm0lwCmRvTUCWAN0TPRVwDNB
+         WzOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743753533; x=1744358333;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EGt7mfXqnCsxJf6ymQojTs7U2r6jHdpo83KmTV6yu60=;
+        b=uiYorCRH1G+q0/pigvPorbmnqJp/4/S3fwMsD98W6cT337Uka4RW1ae39et7W/ntqI
+         hQC0fx7UxibHudo4AFFk0nXvUXJ1eo5BkhcmomrcZUOzAYkOwJ9/y+pNXXSpc3bovs0i
+         gGi3QMQdwPU70qsyI8Sg14IuMTNUp9xbX8bXGSZf6lLGZGO97/kvhhZu7ZjUqSVeqIDi
+         Rs83N0T7HjWLxDob7ClUybU4xiDXGCaqk8QxJqg55459o2MquPUdj4twX2AD/lxvUHle
+         A6f3zjcN0GZDYIqx+x99GKfhbipi8ZRCnyhfIY89t0s9fsptwWe8+TFFK7IKVedSkgw+
+         wcPg==
+X-Forwarded-Encrypted: i=1; AJvYcCXJ5qnD1JFsYekF7yYY4dCAFbd4O8E7EGmzluNmdhDgiGiwblhVeYJullWWEckA0eeqLOSZiKUPmXyGOUY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwBX+qFivmil/4eNoKdK7Pp6TdQAB8/RWldzxqDXU9vhc5YIEFB
+	6dkhB1O98mTbqTCVAcG6P7BNBEWIX8yri5C78VucNxwkawu2t+7xnajuEXrM9GnhXeD/gIMW9op
+	Cbo0A7mSMMeTzYK+XedCyxMBUs8I=
+X-Gm-Gg: ASbGncvstDGIltiZi+GU///0YiuIGHzFaCY4XAscO0zlsq2GIl780NQak7AU7UlzCU4
+	bipEZ4r0Y/qG+miDbxMws13atC/oP/n2wuxsZ6dKQjUBKR99b0joWRCbXuYnUPyHpvSdUOIGDH/
+	tAyBlE6Z7JLJPlJJLD2wMuUhKVOPM=
+X-Google-Smtp-Source: AGHT+IG18H2efN3W0ynslk7u6ZVVcWZdIvpP+NTBsn2fgurwqAFVSJxosdOjlAphvZS+agE+uFb1CvcSXL9ki1DqXqY=
+X-Received: by 2002:a05:6122:8c01:b0:520:4996:7cf2 with SMTP id
+ 71dfb90a1353d-52765da1546mr778622e0c.10.1743753533250; Fri, 04 Apr 2025
+ 00:58:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v3 00/15] pkeys-based page table hardening
-To: Maxwell Bland <mbland@motorola.com>
-Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
- Mark Brown <broonie@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
- Dave Hansen <dave.hansen@linux.intel.com>, Jann Horn <jannh@google.com>,
- Jeff Xu <jeffxu@chromium.org>, Joey Gouly <joey.gouly@arm.com>,
- Kees Cook <kees@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
- Andy Lutomirski <luto@kernel.org>, Marc Zyngier <maz@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>,
- Pierre Langlois <pierre.langlois@arm.com>,
- Quentin Perret <qperret@google.com>, "Mike Rapoport (IBM)"
- <rppt@kernel.org>, Ryan Roberts <ryan.roberts@arm.com>,
- Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>,
- Matthew Wilcox <willy@infradead.org>, Qi Zheng <zhengqi.arch@bytedance.com>,
- linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org, x86@kernel.org
-References: <20250203101839.1223008-1-kevin.brodsky@arm.com>
- <a32cjyekuecoowzbitc2xykilvpu6l3jjtityp7x5hw7xbiysp@5l2lptwmqiug>
- <802963a0-32bd-49e8-82b1-34443acdd5ae@arm.com>
- <epnxrdkidbrjyjzapms7dfsvjcc7ewewjue7khbuxhresy5x5n@hyhokacdi2yg>
- <bcaa98c0-4218-470d-981d-9ab0894d3b1b@arm.com>
- <rzmxyxnufxrti7nxw3i25dil4bcqjzwqty4alwikm7bgbpjbju@dx5leafgss5l>
-Content-Language: en-GB
-From: Kevin Brodsky <kevin.brodsky@arm.com>
-In-Reply-To: <rzmxyxnufxrti7nxw3i25dil4bcqjzwqty4alwikm7bgbpjbju@dx5leafgss5l>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <cover.1743723590.git.abrahamadekunle50@gmail.com>
+ <6fe7cb92811d07865830974cb366d99981ab1755.1743723591.git.abrahamadekunle50@gmail.com>
+ <CAHp75Vem1E9wmmfXWsbawj2f+F=UkfzML7HyAnhTdsUqvjW91g@mail.gmail.com>
+In-Reply-To: <CAHp75Vem1E9wmmfXWsbawj2f+F=UkfzML7HyAnhTdsUqvjW91g@mail.gmail.com>
+From: Samuel Abraham <abrahamadekunle50@gmail.com>
+Date: Fri, 4 Apr 2025 08:58:44 +0100
+X-Gm-Features: ATxdqUHLFQnBzkVzPAsbPZ-fN4f13INUlSaGlgt92rS1o8ASalZ-kH56X9NRuu8
+Message-ID: <CADYq+fYU=rb1EBgv0U87mFMFe2ct87g05GEyu8oG9=+xHjccyg@mail.gmail.com>
+Subject: Re: [v3 1/1] staging: rtl8723bs: Prevent duplicate NULL tests on a value
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: outreachy@lists.linux.dev, julia.lawall@inria.fr, 
+	gregkh@linuxfoundation.org, linux-staging@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, andy@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 28/03/2025 17:15, Maxwell Bland wrote:
-> [...]
+On Fri, Apr 4, 2025 at 8:53=E2=80=AFAM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
 >
-> However, the "real" idea here is:
+> On Fri, Apr 4, 2025 at 3:03=E2=80=AFAM Abraham Samuel Adekunle
+> <abrahamadekunle50@gmail.com> wrote:
+> >
+> > When a value has been tested for NULL in an expression, a
+> > second NULL test on the same value in another expression
+> > is unnecessary when the value has not been assigned NULL.
+> >
+> > Remove unnecessary duplicate NULL tests on the same value that
+> > has previously been NULL tested.
+> >
+> > Found by Coccinelle.
 >
-> (1) "splitting up" each RW data structure ($X$) into mutable and non-mutable
-> parts would be difficult and difficult to maintain, so I was looking for
-> a solution outside of that.
-> (2) The primitive we do have, thanks to POE and this patch, is
-> the ability to make a page of memory writable only from a specific
-> context, and read only otherwise.
-> (3) The well-trodden solution is to allocate a field on a second,
-> independent page $p$ when allocating $X$, with some field/hash/magic to
-> guarantee the integrity of writes to the immutable fields of $X$
-> (sometimes called shadow memory).
+> ...
 >
-> Valid, CFI-guaranteed functions would have access to $p$, and would
-> be instrumented to update $p$ with a new hash of the fields of $X$
-> when updating $X$, but likely something more performance-friendly.
-> When readig from $X$, the data is pulled from $p$ to ensure the
-> field being read from $X$ is valid and has not been modified. It is
-> not possible to modify $p$ outside of the valid contexts in which
-> we can modify the read-mostly or constant fields of $X$.
+> > +                       psta->sta_xmitpriv.txseq_tid[pattrib->priority]=
+ &=3D 0xFFF;
 >
-> Importantly, this does not rely on the confidentiality of $p$, which I
-> think was an issue with trying an approach like this with ARM MTE
-> previously, or at least the version of ARM MTE that Juhee Kim et al. at
-> Georgia Tech broke with speculative exectuion, iirc.
+> > +                                       psta->BA_starting_seqctrl[pattr=
+ib->priority & 0x0f] =3D
+> > +                                               (tx_seq + 1) & 0xfff;
 >
-> I think performance is difficult here, but that's more of a development
-> concern, I hope, than a concern in theory.
-
-Thank you for elaborating, this is much clearer now. I suppose this
-requires that all read-mostly fields are accessed via helpers that will
-check/update $p$. Painful when those fields are directly accessed today,
-as in the case of task_struct, but the required changes are hopefully
-easy to automate (using Coccinelle for instance). And as you point out
-further down, this could be done via a compiler attribute instead. The
-performance impact on reads is clearly a concern, but it is not an
-all-or-nothing scheme - we can choose which members are protected,
-meaning we can make trade-offs.
-
-Overall this seems worth investigating. I wonder, have you considered
-how accessors would find the shadow memory? It could of course be linked
-directly from task_struct, but then nothing prevents that pointer from
-being corrupted. I can't think of another cheap way to link $p$ though.
-This is not a full-blown shadow memory approach, so I'm not sure we can
-reserve a whole chunk of the address space for that purpose.
-
->> [...]
->>
->> A different angle would be use an attribute to mark struct members,
->> rather than functions. That would instruct the compiler to switch kpkeys
->> level whenever that member is written (and only then). You would
->> probably want to forbid taking the address of the member too, as the
->> compiler can't easily track that. That said this doesn't solve the
->> bigger issue of existing code expecting to be able to write to other
->> members in the struct. It most likely works only if the kpkeys switch is
->> done when writing to any member of the struct (which may get very
->> expensive).
-> We agree. Doing something like this doesn't crash stuff, but it makes
-> the phone sluggish and terrible to use. (-: Hence, I may try the above:
-> keep the struct read-write, but when reading from "critical fields"
-> (pointers to function pointers), require the compiler to inject a check
-> for an integrity value stored on a mostly-read-only page. That integrity
-> value can only be updated by code that is resonsible for writing said
-> critical fields.
+> > +                                       psta->BA_starting_seqctrl[pattr=
+ib->priority & 0x0f] =3D
+> > +                                               (pattrib->seqnum + 1) %=
+ 4096;
 >
-> Since the supposition is things like f_ops don't really need to change
-> much ($p$ does not need to be accessed much), and otherwise the data
-> structure is fully writable, the performance impact seems like it would
-> not be significant.
+> Logically it's obvious that you need to align all cases to have
+> consistent approach.
+> Besides that the commit message should mention this change. Something lik=
+e this
+> "While at it, convert '& 0xfff' cases to use modulo operator and
+> decimal number to make the upper limit visible and clear what the
+> semantic of it is."
 
-Agreed, it doesn't have to be very expensive if used sparingly.
+Okay, I will do that.
+Thank you for being so patient
 
-> That said, and if I am not mistaken, the downside is it'd require
-> Clang/GCC support, same as CFI.
-
-Indeed. For experimenting a Coccinelle script to convert direct access
-to certain members to a function call is probably easier :)
-
->
->>> [...]
->>> Noticed as well, just now, the reliance on the static_key for branch
->>> unlikely ... the following data structure (at the end of this email) may
->>> be of interest as an FYI ... it can be used to track whether the kernel
->>> self patching API is only being used to patch expected locations.
->>>
->>> I use this right now with additional checks that the instruction being
->>> written for the indirect branch matches the expected offset.
->> Are there exploits out there corrupting the address of a static branch?
->> This seems difficult to me in practice because the __jump_table section
->> where the addresses of instructions to be patched are stored is marked
->> __ro_after_init.
-> There are a couple of different ways. You can do the attack this patch
-> is intended to prevent, change the page tables unwillingly to give
-> yourself permissions to write to the static key struct as part of a
-> larger chain, there's the ability to inject code into a kernel
-> module to call the patch text API and use it as a write gadget for the
-> rest of the kernel, etc..
-
-Right. I'd argue that static keys are not your biggest worry if the
-attacker can control page tables or call arbitrary functions - and in
-fact kpkeys are easily defeated if the attacker is able to modify the
-control flow (one could simply call kpkeys_set_level()).
-
-> There were a lot of claims back in the day that kernel code would be
-> marked strictly read-only by the EL2 secure monitor or kernel proection
-> systems, but there's self-modifying code built right into it under many
-> KConfigs. To have a guarantee of CFI you kind of have to ensure the
-> kernel can't patch itself.
-
-Self-patching is used extensively on boot (on arm64 at least) to support
-optional extensions such as POE. I suppose this kind of patching isn't
-really a concern as it occurs very early. Static keys can be used at any
-point and are therefore more dangerous, but the performance uplift is
-likely significant in many cases.
-
-- Kevin
+Adekunle.
