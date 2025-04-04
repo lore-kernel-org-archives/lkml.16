@@ -1,148 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C112E12DD95;
-	Fri,  4 Apr 2025 13:39:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2938412D1F1
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 13:39:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743773941; cv=none; b=pyXwLSdf+UXrffRyiXHUgSRDc2LbR1qgUhlppR1WJCrRKNMTQ5/Ujnbc3AFRAIXL4005h5+ErxhtoftWZwKcyRrO2Ma9HuVsQdPlshbKQZteUwsd5YvkBuTnUcFNf1biQvp3/ALy6Pz3s2O3U5VCYTcfXf2njUQfoNgJZILSsuc=
+	t=1743773965; cv=none; b=Hp/Jsybu30VfVDMmuOl7h9GT0mKJFA/ooHfXEbkzEEjX/fFpYCvtOCkV9XkvAEfptFdqBk1qZnC3OcnCUpa5WFtLK8FqdIrlthv4AMKenVOpLBC490NiHn01yHq5hHxpDTY2176lcvl4OmvrJemXu3fWSRWrAP8PCdiAG+YKEOw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743773941; c=relaxed/simple;
-	bh=vfUq5U/Wla4KrjDkPf/VZz2suucaLJQCY5wq0GYGuOw=;
+	s=arc-20240116; t=1743773965; c=relaxed/simple;
+	bh=Gi8wr+GBzFfZ88My7G2EpRboGbN7NTb7ctyDaIu9ano=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Eow9GYeazypvjEkdTZ6EF//ZkqkcIuzGrWotuSn8zwNWWp0a0MPNEL+aracsXFDzb70M++jVAd3FdhZm4Y4ViCEAR7YzZphx/CLHRwxJyxGc9qltLBHwZx1z87l8V3nWiX9B1kNfwoYV/5/TgyCiu+wWCnRwcyduR2E+3brdGCw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W5kWHoLk; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=MVfyhzmZTSpFs5kiU6RNA1ty7P9pncsGL7mLiVYpM66VK6M7MDr8HFSk0UrkJOP56kB2F9WD1VPhwWgmAmLzPGzlOyWulodq6KrYwTj7qXTfCmZbjk1KjkXzzcaEuWc2i7/rELPmYGJsCNPOyhc4ws7L5LHA2NifG43Z0Pdz27c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NX6A9ijJ; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W5kWHoLk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DA97C4CEDD;
-	Fri,  4 Apr 2025 13:38:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743773941;
-	bh=vfUq5U/Wla4KrjDkPf/VZz2suucaLJQCY5wq0GYGuOw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=W5kWHoLkv8Hzchwhgfg7XaHhfqEZaE+y8xF0+F1Qy2rFmRYc6O4sJKbRSWBwkz1r9
-	 quhm1jcQt2MhQUF3cOlItQncHt6ar6873ruxeMxefX92AWcTNYp+e+Yfu01jktiqnN
-	 ZMrVjWCi3vh3bp3UT2WFWzGVor6FPJL2gHfujlMlrAkhJkYkZ8Nn1KHMSmPZe79Fp6
-	 K9LHbgthndN/6hzhBA0KoNO++DF+wAysLzgD6w0FJcGqakRAXk11LtWhfyLOC7w/SS
-	 VNezrdSjrN+JQoQGLzW9YJ8V8T5etwhJZqUs/0aoBCouOcL1oi5Mhz30DdK7hSb2uw
-	 hg2a3rCH1PeWw==
-Date: Fri, 4 Apr 2025 15:38:56 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: linux-fsdevel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>, 
-	Lennart Poettering <lennart@poettering.net>, Daan De Meyer <daan.j.demeyer@gmail.com>, 
-	Mike Yuan <me@yhndnzj.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC 3/4] pidfd: improve uapi when task isn't found
-Message-ID: <20250404-roben-zoodirektor-13cb8d1acefe@brauner>
-References: <20250403-work-pidfd-fixes-v1-0-a123b6ed6716@kernel.org>
- <20250403-work-pidfd-fixes-v1-3-a123b6ed6716@kernel.org>
- <20250404123737.GC3720@redhat.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NX6A9ijJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743773963; x=1775309963;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Gi8wr+GBzFfZ88My7G2EpRboGbN7NTb7ctyDaIu9ano=;
+  b=NX6A9ijJRe0bzibf5MMY5OItnB37y6dhfMCYRxgTXgjZ2AZ9DbllARyO
+   NRQGcM3IGrazafDmYgKg+X30wSwgzMO1h6PAOMXXOEOiceTiownGLJA7z
+   Xq7eagqsB/Gw68pY6SPdUcL0s8kmld6avg+2xLuOjUkIoYiuFJgF1IYhw
+   aVG50T1d7OuJDXPgmAZRL/rBtFtvUuUqp9+MR7w6o44wk4eOOLFOoJ0T8
+   0/RriSp61UsQweHpJaxR7P+cJKzxCBumoh/vBA7oUq7k1eJXw3HhexKZA
+   I12s1Auz3Rj93fdtXUEiaNO+e7oo5hq15+yrXVpFs+CqXh/ahI8YyHdMg
+   g==;
+X-CSE-ConnectionGUID: OugQJ+wRTZCwizPbKc/sNA==
+X-CSE-MsgGUID: zxnKe23VQeqhnuYS7BNXNg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11394"; a="56199040"
+X-IronPort-AV: E=Sophos;i="6.15,188,1739865600"; 
+   d="scan'208";a="56199040"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 06:39:23 -0700
+X-CSE-ConnectionGUID: t3Myw3EVS82qNUGWwgXDBg==
+X-CSE-MsgGUID: z9UQMbVfTZ6mAwnWqMAUzw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,188,1739865600"; 
+   d="scan'208";a="127073543"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 06:39:20 -0700
+Date: Fri, 4 Apr 2025 16:39:17 +0300
+From: Raag Jadav <raag.jadav@intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>, david.m.ertman@intel.com,
+	ira.weiny@intel.com, lee@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] mfd: core: Support auxiliary device
+Message-ID: <Z-_hBbqke1qPP_Gi@black.fi.intel.com>
+References: <20250403110053.1274521-1-raag.jadav@intel.com>
+ <2025040336-ethically-regulate-3594@gregkh>
+ <Z-_ESekESYYvMHeR@black.fi.intel.com>
+ <Z-_QwB1cExN1emMF@smile.fi.intel.com>
+ <Z-_SIbfBdMXXkkWG@black.fi.intel.com>
+ <Z-_X2j0yzyLCS3r2@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250404123737.GC3720@redhat.com>
+In-Reply-To: <Z-_X2j0yzyLCS3r2@smile.fi.intel.com>
 
-On Fri, Apr 04, 2025 at 02:37:38PM +0200, Oleg Nesterov wrote:
-> On 04/03, Christian Brauner wrote:
-> >
-> > We currently report EINVAL whenever a struct pid has no tasked attached
-> > anymore thereby conflating two concepts:
-> >
-> > (1) The task has already been reaped.
-> > (2) The caller requested a pidfd for a thread-group leader but the pid
-> >     actually references a struct pid that isn't used as a thread-group
-> >     leader.
-> >
-> > This is causing issues for non-threaded workloads as in [1].
-> >
-> > This patch tries to allow userspace to distinguish between (1) and (2).
-> > This is racy of course but that shouldn't matter.
-> >
-> > Link: https://github.com/systemd/systemd/pull/36982 [1]
-> > Signed-off-by: Christian Brauner <brauner@kernel.org>
+On Fri, Apr 04, 2025 at 04:00:10PM +0300, Andy Shevchenko wrote:
+> On Fri, Apr 04, 2025 at 03:35:45PM +0300, Raag Jadav wrote:
+> > On Fri, Apr 04, 2025 at 03:29:52PM +0300, Andy Shevchenko wrote:
+> > > On Fri, Apr 04, 2025 at 02:36:41PM +0300, Raag Jadav wrote:
+> > > > On Thu, Apr 03, 2025 at 03:02:47PM +0100, Greg KH wrote:
+> > > > > On Thu, Apr 03, 2025 at 04:30:53PM +0530, Raag Jadav wrote:
 > 
-> For this series:
+> ...
 > 
-> Reviewed-by: Oleg Nesterov <oleg@redhat.com>
+> > > > > > 2. Should we allow auxiliary drivers to manage their own resources
+> > > > > >    (MEM, IO, IRQ etc)?
+> > > > > 
+> > > > > The resources are all shared by the "parent" device, that's what makes
+> > > > > aux drivers work, they need to handle this as there is no unique way to
+> > > > > carve up the resources here.
+> > > > > 
+> > > > > So I don't know how you would do this, sorry.
+> > > > 
+> > > > Perhaps we can carve it up in mfd_add_devices() using start and end members
+> > > > and error out if they overlap.
+> > > 
+> > > I don't think we want a flag day. If anything, it should be a new call.
+> > 
+> > Yes, I mean in mfd_add_auxiliary_device() (as in this patch).
+> > 
+> > > > Can't we still have a struct resource that is unique to that specific
+> > > > auxiliary device?
+> > > 
+> > > Oh, believe me, you won't do that. Save yourself from _a lot_ of troubles with
+> > > different cases when the shared resources are required.
+> > 
+> > I think we already have ignore_resource_conflicts flag as part of mfd_cell,
+> > no?
 > 
-> 
-> But I have a couple of cosmetic nits...
-> 
-> >  int pidfd_prepare(struct pid *pid, unsigned int flags, struct file **ret)
-> >  {
-> > -	bool thread = flags & PIDFD_THREAD;
-> > +	int err = 0;
-> >
-> > -	if (!pid_has_task(pid, thread ? PIDTYPE_PID : PIDTYPE_TGID))
-> > -		return -EINVAL;
-> > +	if (!(flags & PIDFD_THREAD)) {
-> > +		/*
-> > +		 * If this is struct pid isn't used as a thread-group
-> > +		 * leader pid but the caller requested to create a
-> > +		 * thread-group leader pidfd then report ENOENT to the
-> > +		 * caller as a hint.
-> > +		 */
-> > +		if (!pid_has_task(pid, PIDTYPE_TGID))
-> > +			err = -ENOENT;
-> > +	}
-> > +
-> > +	/*
-> > +	 * If this wasn't a thread-group leader struct pid or the task
-> > +	 * got reaped in the meantime report -ESRCH to userspace.
-> > +	 *
-> > +	 * This is racy of course. This could've not been a thread-group
-> > +	 * leader struct pid and we set ENOENT above but in the meantime
-> > +	 * the task got reaped. Or there was a multi-threaded-exec by a
-> > +	 * subthread and we were a thread-group leader but now got
-> > +	 * killed.
-> 
-> The comment about the multi-threaded-exec looks a bit misleading to me.
-> If this pid is a group-leader-pid and we race with de_thread() which does
-> 
-> 		exchange_tids(tsk, leader);
-> 		transfer_pid(leader, tsk, PIDTYPE_TGID);
-> 
-> nothing "bad" can happen, both pid_has_task(PIDTYPE_PID) or
-> pid_has_task(PIDTYPE_TGID) can't return NULL during (or after) this
-> transition.
-> 
-> hlists_swap_heads_rcu() or hlist_replace_rcu() can't make
-> hlist_head->first == NULL during this transition...
+> It's not so easy, and it's not the only thing that's needed. You can dive into
+> it and see how the request of the resource work. Also note the hardware that
+> has common registers. Again, using regmap solves most of these issues if not all.
 
-Good point.
+What if there are multiple types of resources including multiple ones
+of same type?
 
-> 
-> Or I misunderstood the comment?
-> 
-> And... the code looks a bit overcomplicated to me, why not simply
-> 
-> 	int pidfd_prepare(struct pid *pid, unsigned int flags, struct file **ret)
-> 	{
-> 		if (!pid_has_task(pid, PIDTYPE_PID))
-> 			return -ESRCH;
-> 
-> 		if (!(flags & PIDFD_THREAD) && !pid_has_task(pid, PIDTYPE_TGID))
-> 			return -ENOENT;
+I know it's not common but we have such cases already in place.
 
-I thought that checking PIDTYPE_PID first could cause misleading results
-where we report ENOENT where we should report ESRCH: If the task was
-released after the successful PIDTYPE_PID check for a pid that was never
-a thread-group leader we report ENOENT. That's what I reversed the
-check. But I can adapt that to you scheme. I mostly wanted a place to
-put the comments.
-
-> 
-> 		return __pidfd_prepare(pid, flags, ret);
-> 	}
-> 
-> ? Of course, the comments should stay.
-> 
-> But again, this is cosmetic/subjective, please do what you like more.
-> 
-> Oleg.
-> 
+Raag
