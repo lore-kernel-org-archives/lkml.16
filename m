@@ -1,59 +1,146 @@
-Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC7BE1B043E
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 14:54:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 176481F427D;
+	Fri,  4 Apr 2025 14:54:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743778451; cv=none; b=FuVvWJWgPci7CL+1M5wpsPUfMKTVpiVj+HW/NVT7soRfaqckyFpntrZMnfWfBJNt42RGifj0fQBaXECrq5KkL0YvIOg6ieUiEPyP3ZsKEgWx8+E7Qselx5Sw6T8Y4jGotwLO1wWJotILcgMKlVEUcnKVChAehqYZRL/xfmGnEkI=
+	t=1743778451; cv=none; b=EOB60ZF3cMDwr8724w+Smlv5NuAL/ZBgLD1VQx8cXue4DQCJPmlh+rg2uvOhqJci+wGer8/ImFaAuUkHxJKTET3Oglx0MWgPvlU6RT6k9znO+lzuuY0fBu0nWf/d0xG/jMwJPBYCXFpJIB+ZPKaD4uo43iyNe5xjXlY9acG5Od8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1743778451; c=relaxed/simple;
-	bh=OrWnd/AIVtyfUtf1QWN2C81czHbvbqvK7PUNeJ9GhF0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gKYIBj+Naw7cTPnVfrr9YLe+1gCdkMj1lYjGerZnwFnjDkzeLUaJFTAo1Uttn9mhJ5vhxS1U9AeZVJO+3BD/0EtFiwnNsMEthRiIOn3EASDoqhedt2YV2cr579sSBHG3yr4gjFOZhKOPYY3LWNC0RsiKC7JVqZe6ybcqwrKji38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=CwJ0rmQk; arc=none smtp.client-ip=91.218.175.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	bh=UStvosSNAQmkr31Xk9qwjYeXXCSO22rLfxuxakC6PCM=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=B6mHsoPHrPPZQauMA0ehCqwl74n5jLXHwakNS3SBSZEYzg6HU5HiDzVITD8KQTrrmLDWv+AaOS+a9fI98d0j+lgLs/vSWDo9JIUd5LK6U8PPXe36binv7EuqExEWjrMyExmXNoBNjJjBI+FVhcIhfBkA5yCZ8q2VAanoFMhbYz8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=DcKaLlwv; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="CwJ0rmQk"
-Date: Fri, 4 Apr 2025 10:53:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1743778436;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OLg5PeIHaOFt5pMV3h7TuWebvpx5Qt/dpEM9TkWrbCE=;
-	b=CwJ0rmQkxjYRT553nTryoJSNAzsdF8H2gJNSaJR/gcpqWQ94BABcs5MT+REOCYDXlygGQS
-	yvcVVNZRGFvbzD8B0H0cihCjYmNC+tJ9GGtr/ucNRm/Gxpzdtrf7H/b+wWOAtACm0sa/wu
-	cpVjy01KufTkkqf+CDOk6BKFmL24H+s=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Markus Elfring <Markus.Elfring@web.de>
-Cc: linux-bcachefs@vger.kernel.org, vulab@iscas.ac.cn, 
-	stable@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] bcachefs: Add error handling for zlib_deflateInit2()
-Message-ID: <morzv5ulzvkdpkegs33bwdocnn3hftxviqmw4wkvlh2qnsfagd@trk7lpvqj37k>
-References: <xjtejtaya3znotupznz4eywstkjvucxwyo2gf4b6phcwq6a2i5@pqicczp3ty5g>
- <667bcd67-aac4-425c-b100-d25dc86eb6a9@web.de>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="DcKaLlwv"
+Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 534C53uR025369;
+	Fri, 4 Apr 2025 16:53:59 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=selector1; bh=jD1SktgJEa/ehkjgrs+b4u
+	O3+aClm9z3KUsPiS3Ue78=; b=DcKaLlwvKW9UKBuj1UxvIWqnnUZInxuFhk8rbr
+	GSigQyVKuWhjpZbp85m0mR0w3GvLu80Zq9uueb5Sd+FbPczlO4pLp87jpSv2m9UN
+	bQ9hvZRHvUzm9Szb6qDjwj1KxZCa+UFOh23S915LJlFXYMgsa2+QRtMd0gLbiXdx
+	9yHLqK86NrKFw0gw4rbG3FB0dSLk0j/PKRwQRY9wml1ThLYj2UcwZOfqCHqOb+H5
+	jxznL5QaMYG8RmMspBvHvKPNYMqz0LBGrHi/gd30oZwO7Gka5Pebk2QVpimAUhF5
+	HRUGilU1p/B72uTokVvZRNgYhxgu2NQ8C9bOqCrGHCH9fEZA==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 45t2cs3syp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 04 Apr 2025 16:53:59 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id A82524004B;
+	Fri,  4 Apr 2025 16:52:52 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id C937893CD83;
+	Fri,  4 Apr 2025 16:50:53 +0200 (CEST)
+Received: from localhost (10.252.23.40) by SHFDAG1NODE1.st.com (10.75.129.69)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 4 Apr
+ 2025 16:50:53 +0200
+From: Benjamin Mugnier <benjamin.mugnier@foss.st.com>
+Subject: [PATCH v5 0/2] media: Add support for ST VD55G1 camera sensor
+Date: Fri, 4 Apr 2025 16:50:50 +0200
+Message-ID: <20250404-b4-vd55g1-v5-0-98f2f02eec59@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <667bcd67-aac4-425c-b100-d25dc86eb6a9@web.de>
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAMrx72cC/3XOTW7DIBAF4KtErEs0DDMxdNV7RF3wm7BoXJkIN
+ Yp89xpv6rTp8iG+9+YuappKquJ1dxdTaqWW8bIEftmJcHaXU5IlLlkgIAMiS0+yReaTkj56C9E
+ nbb0Wy//PKeXytXYd35d8LvU6Tre1uqn++qylKQlSR3ZgMEN29i2Pte7rdR/Gj167Go3mtzFRH
+ Ty5wWZ8NH274c8egdpaXCwE47xxZALzX6u3FrdW91uttoYJaOAnu/SvpX4zeZWZwmGA8Gjnef4
+ G72msR4wBAAA=
+X-Change-ID: 20250225-b4-vd55g1-bdb90dbe39b3
+To: Benjamin Mugnier <benjamin.mugnier@foss.st.com>,
+        Sylvain Petinot
+	<sylvain.petinot@foss.st.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Sakari Ailus
+	<sakari.ailus@linux.intel.com>
+CC: <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.14.2
+X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-04_06,2025-04-03_03,2024-11-22_01
 
-On Fri, Apr 04, 2025 at 04:20:18PM +0200, Markus Elfring wrote:
-> …
-> > > Add an error check and return 0 immediately if the initialzation fails.
-> >
-> > Applied
-> 
-> Did you try to avoid a typo in such a change description?
+Hi,
 
-Typos add character :)
+This serie adds support for the STMicroelectronics VD55G1 camera sensor.
+The VD55G1 is a monochrome global shutter camera with a 804x704 maximum
+resolution with RAW8 and RAW10 bytes per pixel.
+Datasheets and other documentation can be found at st.com [1].
+A lot of inspiration was taken from the imx219 and the vd56g3 serie.
+It is compatible with libcamera. Tested on Raspberry Pi 4 and 5, with and
+without libcamera.
+
+[1] https://www.st.com/en/imaging-and-photonics-solutions/vd55g1.html#documentation
+
+Regards,
+Benjamin
+
+---
+Changes in v5:
+- Include missing proprety.h header
+- Move link_freq to device structure
+- Update get_vblank_limits() prototype
+- Add BUILD_BUG_ON() in vd55g1_update_patgen()
+- Drop hdl->error check
+- Use device_property*() instead of of_property*()
+- Drop OF requirement
+- Improve runtime pm usage
+- Various syntax fixes
+- Link to v4: https://lore.kernel.org/r/20250402-b4-vd55g1-v4-0-84b1f54c670c@foss.st.com
+
+Changes in v4:
+- Fix data-lanes syntax in binding
+- Link to v3: https://lore.kernel.org/r/20250402-b4-vd55g1-v3-0-393985404759@foss.st.com
+
+Changes in v3:
+- Add maxItems to data-lanes in binding
+- Drop redondant 'binding' in binding commit message
+- Link to v2: https://lore.kernel.org/r/20250401-b4-vd55g1-v2-0-0c8ab8a48c55@foss.st.com
+
+Changes in v2:
+- Fix device tree binding mistakes
+- Drop linux media git from MAINTAINERS file
+- Fix coding style mistakes
+- Drop vd55g1_err_probe wrapper
+- Fix 32bits build
+- Fix config symbol help paragraph being too short for checkpatch
+- Link to v1: https://lore.kernel.org/r/20250328-b4-vd55g1-v1-0-8d16b4a79f29@foss.st.com
+
+---
+Benjamin Mugnier (2):
+      media: dt-bindings: Add ST VD55G1 camera sensor
+      media: i2c: Add driver for ST VD55G1 camera sensor
+
+ .../devicetree/bindings/media/i2c/st,vd55g1.yaml   |  132 ++
+ MAINTAINERS                                        |    9 +
+ drivers/media/i2c/Kconfig                          |   11 +
+ drivers/media/i2c/Makefile                         |    1 +
+ drivers/media/i2c/vd55g1.c                         | 2005 ++++++++++++++++++++
+ 5 files changed, 2158 insertions(+)
+---
+base-commit: b2c4bf0c102084e77ed1b12090d77a76469a6814
+change-id: 20250225-b4-vd55g1-bdb90dbe39b3
+
+Best regards,
+-- 
+Benjamin Mugnier <benjamin.mugnier@foss.st.com>
+
