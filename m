@@ -1,65 +1,43 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 136302E62B6
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 12:57:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743771470; cv=none; b=HWESCleeRwUHcRvdM5TMHFlXmAr2SUzfEiaEmQ+lI2RXpIWcMwwIBoN8/kLIajRjYGPzDxxo/KUTGHQD9tR1Nj0l+wwfgmvvw9sCw7giE9okUHt4sKVjSVXecTvZrYqvXM9M3MJzNOJ+ewD2ql9N5KpyeNtqvP9eL9GC6yTR2T0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743771470; c=relaxed/simple;
-	bh=8d80S9evksG67Dfqh6qMD9RM1vPLOK9S9RAuXVlxw3s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Kj7YWxFrBrqOXb4Cszi+yx9zV53wyqUCC4bituBL4cv9yUi8cdDPok6Y8amAKZfjYJB8g549sr6/KSFPZpvBCQuO1zYeJ37oa8AVnbbaGykmR3fZnXwSirnGTwf64asdcFmy0yDZfsqDU77GI6yEBLIM/LJxqZ9fEPi1G3+cz20=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yAfx2nMM; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 983B42E62B6
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 12:58:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743771504; cv=pass; b=eEpSbNPrzCcfthHpqisuIlyUvqyvhjaTkglurm2wCsB7/B2xo8lEqhdyLLquztC1tt5cYql5FgB6zVPTImxHrmM4QB6I9g55aduOt0L+OLiijAn+dfHfHV4CfdW14n03sPaLqwBc71I64cjd4QwO00E/cqrPx54VsstTE1n8WiY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743771504; c=relaxed/simple;
+	bh=1NUkmn93zltYrATavReLxL8vomELaK3wbCqJJBUtmVE=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=UyAOh+miCgLiuhk8TV3FwkBU1n3XHsSU7uq0pDoZ3CUJKnCL+ORAGBXfW+NycDJW6WSDhsZ1/gLIN7okEYCTPNh697/1sd2Zzi3mGRYoakU2OYlTDQ3/6+1RTuH3tRybUU/pRs8aj+7CbBRyUCZplITWKRt+Tv9eaGVCbXtzYnU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b=Aez8+8Xz; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yAfx2nMM"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43e9ccaa1ebso2268205e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 05:57:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743771467; x=1744376267; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=AP9s0rZpAv3GmSnbWi7Q2FkIgLBgF7bZd+YrGo3Mnq8=;
-        b=yAfx2nMMRJofEWeqHdKM5IQ8QHOQNjqBvtZtaUvKxQa53lP/N9BNMO+TT77IEb8mZB
-         89btRc6uR+fgzq224aApy0ZAorsdXH/jZV6he1dIWY8SIJfs3mob3RX0iA6VmFCvmTgX
-         rfPVKuLyqv+M+Ro1YkBi7D9OYkdT6HXoKXz2tFjde/mkv34jRYVD0+EjMDdcWGQlGeLj
-         BKvsuf3wflTNT0mwXJSW1Fo5L6eZ8ARq+OFMXH9lfRRusBoV4sQOiOFtjSpuxL1n2yFp
-         1TrAj4Ox2M8LGzOHItmH5nEbPqMkXZ6rszChAiczJqVZf0/OHly9u2vp9GjgcLuxvv4c
-         eQNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743771467; x=1744376267;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=AP9s0rZpAv3GmSnbWi7Q2FkIgLBgF7bZd+YrGo3Mnq8=;
-        b=ngiUVgXLIjnWt+fRKtKMBDAVBT86q0m3LphU6RmmfTfjPynjJj0U+kY6P4PNctCYz+
-         ElIc2EGCN0ocEd5ECcvFEeK34O1aKf9R7wl7q4T2S6nBSPK1gZw0HraOlDtpfst5N0wc
-         BLRvehmV8rO04MZIlIJq9J18wHDjwcab13dO8/HN6DZko9Owkt7xC9ldXHglV9G9eh6z
-         7MUOxg3/DrA7cnQihzXjdIjI6VgbMzYk5zcxaRrNccQGrw7hxHgjOr53Df0yvXgSIMJz
-         YVT73MImw49Iyu0YKp+ZSgPZurCh2hBsJM2tm0O4NxcKCItNJ4dASbvPKow77JwHrhH7
-         SftA==
-X-Forwarded-Encrypted: i=1; AJvYcCXvjtD3ZYYlSkf0ubZsDt0BTXcKj0F+SXn5mfkcY/inoRSeVBH+Xvtr0TJbWmMk3PoIxS6ZDI9aHM9UHyg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZRlEXEPKCRY03dXUIEtBIxBuzAQPcMj54EXYKNBqosty3lY10
-	/p77wXl+hWRu5/lnpqlgyNqbKt72bdcUg5pLMCuoBTKFboyGO0kfDcCapU5S0N04i17Wn2RQN/i
-	c
-X-Gm-Gg: ASbGnctDYwFsDIfsMAs0sAuH0IKyguKMDAG58Gr1vNvE9fjY1CzhuYWntlG7u7IMxWQ
-	nv8TMItZsclBCJXXsx8RoEE8NcgL6nAyoySD1U21TMF6/ZnDRxaPhIsko+Px8lFakKtUjytYa6R
-	xx69tKBG40OmY3V5EsDJl+OC8wE/g309mQ5qDGKHHhM0q//wx3eKglYWb0o2gA1w+3GU3b5GWZv
-	RRC+cNj+Jey2l2gj6rsin1sXvctDMSc7kbVd9fc4gTOahwss7WhprsR0hvTnfZg5bOznugiYmkQ
-	8zeAILWzXNFkL8Mq06TNYmddb8GrBrVOjBlvLu+2t8uAPr+2hx9WKrbaXLKpnGeY
-X-Google-Smtp-Source: AGHT+IEGvAJ8IDkmHjyNctnZpmcOgg3Hg98h2KB/LoYx9eflP5cjgD19BLtwKDgGETac5jcnMEP/PQ==
-X-Received: by 2002:a05:600c:5107:b0:43b:c844:a4ba with SMTP id 5b1f17b1804b1-43ecf85f893mr7864555e9.3.1743771467349;
-        Fri, 04 Apr 2025 05:57:47 -0700 (PDT)
-Received: from [192.168.1.106] ([178.197.198.86])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c30226b17sm4345840f8f.92.2025.04.04.05.57.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Apr 2025 05:57:46 -0700 (PDT)
-Message-ID: <4f69f618-bb9f-4269-9467-40c0eb3bc1b9@linaro.org>
-Date: Fri, 4 Apr 2025 14:57:45 +0200
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b="Aez8+8Xz"
+ARC-Seal: i=1; a=rsa-sha256; t=1743771473; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=hEnfFmxvzdFtRTSIwelHkDDiIIwvmp8Z4eKlZmICISdRMJX7v+fzFk8QxMPKg8uBX9yZwEfSGys0h1Eb3xfvkMykCD/++APNnERrA4fDRusjHJUZEhEZEvw2atfXjjy060oObjE6LdUvbuSSOxN/iosEZtj5RDXkgpNbaYtKc6U=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1743771473; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=eACs556LWYn/VXJSp36c3evelj61tsdIYGmy50dFBBo=; 
+	b=kyF34fNHuTazzDNS8kvCRvhSx6EdtH6yZO6htz8OmU7P0tmx2gynHSQh+6rdBvb9/lLo79NaSMDab3XDrVqEYGy24dikUTYHawDcYbyniIan0jcbTMloyCLOjZW0L/a8gou1lO8yEmk/GCM1Q7D52rTG+V6bjTZn2pl2G2aS5j8=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=dmitry.osipenko@collabora.com;
+	dmarc=pass header.from=<dmitry.osipenko@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1743771473;
+	s=zohomail; d=collabora.com; i=dmitry.osipenko@collabora.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:From:From:To:To:Cc:Cc:References:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=eACs556LWYn/VXJSp36c3evelj61tsdIYGmy50dFBBo=;
+	b=Aez8+8XzBP6r/zqefw8kNqUqTy6KdxYrq0MNqyxj35+nbobgFrSbryqT8Ag/hJ1p
+	UOvBJjMeHrqgq//mVJlbFF4vyIaT2k1C6CO1K1e5X47v/3+kJO6cyfZYqrJHTFVnOln
+	ZEwdYQtNq006hGJe8MBjo48GcGBSdMeEuvJXqabk=
+Received: by mx.zohomail.com with SMTPS id 1743771470818665.4330160938939;
+	Fri, 4 Apr 2025 05:57:50 -0700 (PDT)
+Message-ID: <f59c4c85-0a64-4cb5-b16a-fa519a9c6fb1@collabora.com>
+Date: Fri, 4 Apr 2025 15:57:47 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,79 +45,56 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] watchdog: Do not enable by default during compile testing
-To: Guenter Roeck <linux@roeck-us.net>,
- Wim Van Sebroeck <wim@linux-watchdog.org>, linux-watchdog@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250404123941.362620-1-krzysztof.kozlowski@linaro.org>
- <8b6ede05-281a-4fb1-bcdc-457e6f2610ff@roeck-us.net>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH v1] drm/shmem-helper: Fix unsetting shmem vaddr while vmap
+ refcount > 0
+From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
+To: Thomas Zimmermann <tzimmermann@suse.de>,
+ Lucas De Marchi <lucas.demarchi@intel.com>,
+ Boris Brezillon <boris.brezillon@collabora.com>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ kernel@collabora.com
+References: <20250403142633.484660-1-dmitry.osipenko@collabora.com>
 Content-Language: en-US
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <8b6ede05-281a-4fb1-bcdc-457e6f2610ff@roeck-us.net>
+In-Reply-To: <20250403142633.484660-1-dmitry.osipenko@collabora.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-ZohoMailClient: External
 
-On 04/04/2025 14:49, Guenter Roeck wrote:
-> On 4/4/25 05:39, Krzysztof Kozlowski wrote:
->> Enabling the compile test should not cause automatic enabling of all
->> drivers.
->>
+On 4/3/25 17:26, Dmitry Osipenko wrote:
+> We switched to use refcount_t for vmaps and missed to change the vunmap
+> code to properly unset the vmap pointer, which is now cleared while vmap's
+> refcount > 0. Clear the cached vmap pointer only when refcounting drops to
+> zero to fix the bug.
 > 
-> Sorry, I seem to be missing something.
+> Fixes: e1fc39a92332 ("drm/shmem-helper: Use refcount_t for vmap_use_count")
+> Reported-by: Lucas De Marchi <lucas.demarchi@intel.com>
+> Closes: https://lore.kernel.org/dri-devel/20250403105053.788b0f6e@collabora.com/T/#m3dca6d81bedc8d6146a56b82694624fbc6fa4c96
+> Signed-off-by: Dmitry Osipenko <dmitry.osipenko@collabora.com>
+> ---
+>  drivers/gpu/drm/drm_gem_shmem_helper.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> Isn't that what COMPILE_TEST is all about, that it enables everything ?
+> diff --git a/drivers/gpu/drm/drm_gem_shmem_helper.c b/drivers/gpu/drm/drm_gem_shmem_helper.c
+> index 2d924d547a51..aa43265f4f4f 100644
+> --- a/drivers/gpu/drm/drm_gem_shmem_helper.c
+> +++ b/drivers/gpu/drm/drm_gem_shmem_helper.c
+> @@ -415,11 +415,11 @@ void drm_gem_shmem_vunmap_locked(struct drm_gem_shmem_object *shmem,
+>  
+>  		if (refcount_dec_and_test(&shmem->vmap_use_count)) {
+>  			vunmap(shmem->vaddr);
+> +			shmem->vaddr = NULL;
+> +
+>  			drm_gem_shmem_unpin_locked(shmem);
+>  		}
+>  	}
+> -
+> -	shmem->vaddr = NULL;
+>  }
+>  EXPORT_SYMBOL_GPL(drm_gem_shmem_vunmap_locked);
+>  
 
-No. Compile test *allows* to compile test, but it does not mean you want
-immediately compile everything. allyesconfig is for everything. Maybe
-you want to compile some subset of drivers.
+Applied to misc-next
 
-BTW, I am aligning with the most frequent pattern (quickly judging), so
-of course I also accept argument that we should revert that other
-pattern and use "default y" everywhere.
-
+-- 
 Best regards,
-Krzysztof
+Dmitry
