@@ -1,25 +1,33 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 505642E62D4
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 06:02:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F02F9101F2;
+	Fri,  4 Apr 2025 06:02:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743746572; cv=none; b=GD+yxN9PlDfMtr/UYWjlN0HJaA9f87X1QT4S+aiJn21ngRpNGxJ8cfiJPB1/8wchc7m3cRELLYwKeybVTvW3NY/c/LrNM1CZ1tDlp9EnUOECuVMzRBr0Hx2jyKkImDODj/iqydqnY3yfqh8yv7thyT6XePWiQa9o82dg43c/pdY=
+	t=1743746572; cv=none; b=eHSKISnkSbuxNjtSvHbESvmAuushNCmkXkObQWJIVZKH8lyPcC2yQLBX8weJC7w0/cjhh9g8EWzD1nU8MJ9CEYADDfZmm0UKQZBSL5A1Sj6DWXuIL6l308b3KZsERF22fzS/yXMisRyrujaq5c7y89slFwG9SclSoU9yCvkNxx0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1743746572; c=relaxed/simple;
-	bh=emPbLf925xcF5u1Mvhz8lGS+QEIcnRz2cN/xA9CfmKg=;
+	bh=IRMiqdgFfuR7YhdJiN5QWoj4YDPH4E1FMu5HHkdtHiE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eKlSwBXUJo+STC6159muifamOVW84Ej3kDA6N5eCZskzk8jkWdWrhenpfa4nuHig9ZxCDEB4TiOZEb+561DC4c497DNN9ZSiLLh/8Ev0zkY445K9S9FvxXqAPIQbaafGnsoNd/s3j0IF2685HqnqbG9tJgbiwIjGHptyFeD2fKc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6DFFB1063;
-	Thu,  3 Apr 2025 23:02:51 -0700 (PDT)
-Received: from [10.162.40.17] (a077893.blr.arm.com [10.162.40.17])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 42B2F3F694;
-	Thu,  3 Apr 2025 23:02:43 -0700 (PDT)
-Message-ID: <00a0d9f1-d0a1-41fe-a0af-7e2174efc2e0@arm.com>
-Date: Fri, 4 Apr 2025 11:32:41 +0530
+	 In-Reply-To:Content-Type; b=WMYeUKM475WiJioDAUMpozxNMWEd25uVQ/JmOcurHHsNsb9QB27QKmUHwze763eZLuh/RIYfTMtlnANgs3UjYfJrCuquaioHm2SXfiZEBFsmzfnf+m1sc9gm7Xl6wfHbmSttqLdKuK9ytNQbOGskcqklQVaX1aqQSJkwxPQgRKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QjLrGbxa; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QjLrGbxa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 884B6C4CEDD;
+	Fri,  4 Apr 2025 06:02:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743746571;
+	bh=IRMiqdgFfuR7YhdJiN5QWoj4YDPH4E1FMu5HHkdtHiE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=QjLrGbxacrlxnEDINOoGe5zW/1gRvzVUB0eEu2DckGZX07yoz1LdqMxMHV0LvgY5N
+	 XFu3hkroT0jzKNwM6yxxysCUOJ8+tzfd4am01efTd3+15QnbAvpNsZdGLev2eqyJk1
+	 vD+BXsbgqgP47020tukOf1SJbQEa60oQGOjcDGGa5YQ6TpOlPDxB6GXlqtV+mba5vX
+	 Zy0fFGrVfmC3viPWmKFNr4WUPKCaz1cM5y6PjUsgFpWEOjvvccgG8rRhxa3lGzDGkd
+	 k5cY//rzcrWtCHV4vZbaPke68UAgDhCvftw3hYRpt1tSAggbx34smVGx7KjY6wEGDU
+	 7Rm+oUrTk7bfA==
+Message-ID: <ef25c226-6801-48b4-8347-3362415d9de3@kernel.org>
+Date: Fri, 4 Apr 2025 08:02:41 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,220 +35,118 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 11/11] arm64/mm: Batch barriers when updating kernel
- mappings
-To: Ryan Roberts <ryan.roberts@arm.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Pasha Tatashin <pasha.tatashin@soleen.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Uladzislau Rezki <urezki@gmail.com>, Christoph Hellwig <hch@infradead.org>,
- David Hildenbrand <david@redhat.com>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>,
- Mark Rutland <mark.rutland@arm.com>, Alexandre Ghiti
- <alexghiti@rivosinc.com>, Kevin Brodsky <kevin.brodsky@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-References: <20250304150444.3788920-1-ryan.roberts@arm.com>
- <20250304150444.3788920-12-ryan.roberts@arm.com>
+Subject: Re: [PATCH v2 0/7] Add module support for Arm64 Exynos MCT driver
+To: Youngmin Nam <youngmin.nam@samsung.com>,
+ Will McVicker <willmcvicker@google.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Peter Griffin <peter.griffin@linaro.org>,
+ =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>,
+ Tudor Ambarus <tudor.ambarus@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Saravana Kannan
+ <saravanak@google.com>, Donghoon Yu <hoony.yu@samsung.com>,
+ kernel-team@android.com, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+ devicetree@vger.kernel.org, semen.protsenko@linaro.org
+References: <CGME20250402233425epcas2p479285add99d27dc18aabd2295bfcbdc8@epcas2p4.samsung.com>
+ <20250402233407.2452429-1-willmcvicker@google.com> <Z+8xrLbya9/oFg7y@perf>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <20250304150444.3788920-12-ryan.roberts@arm.com>
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <Z+8xrLbya9/oFg7y@perf>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 3/4/25 20:34, Ryan Roberts wrote:
-> Because the kernel can't tolerate page faults for kernel mappings, when
-> setting a valid, kernel space pte (or pmd/pud/p4d/pgd), it emits a
-> dsb(ishst) to ensure that the store to the pgtable is observed by the
-> table walker immediately. Additionally it emits an isb() to ensure that
-> any already speculatively determined invalid mapping fault gets
-> canceled.
+On 04/04/2025 03:11, Youngmin Nam wrote:
+>>
+>> -- 
+>> 2.49.0.472.ge94155a9ec-goog
+>>
+>>
 > 
-> We can improve the performance of vmalloc operations by batching these
-> barriers until the end of a set of entry updates.
-> arch_enter_lazy_mmu_mode() and arch_leave_lazy_mmu_mode() provide the
-> required hooks.
+> Hi Will.
 > 
-> vmalloc improves by up to 30% as a result.
-> 
-> Two new TIF_ flags are created; TIF_LAZY_MMU tells us if the task is in
-> the lazy mode and can therefore defer any barriers until exit from the
-> lazy mode. TIF_LAZY_MMU_PENDING is used to remember if any pte operation
-> was performed while in the lazy mode that required barriers. Then when
-> leaving lazy mode, if that flag is set, we emit the barriers.
-> 
-> Since arch_enter_lazy_mmu_mode() and arch_leave_lazy_mmu_mode() are used
-> for both user and kernel mappings, we need the second flag to avoid
-> emitting barriers unnecessarily if only user mappings were updated.
+> I tested this series on a E850-96(Exynos3830 based) board and it's working as a moudle.
 
-Agreed and hence for that an additional TIF flag i.e TIF_LAZY_MMU_PENDING
-can be justified.
+Hi,
+
+On which kernel did you apply these patches for testing?
 
 > 
-> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
-> ---
->  arch/arm64/include/asm/pgtable.h     | 73 ++++++++++++++++++++++------
->  arch/arm64/include/asm/thread_info.h |  2 +
->  arch/arm64/kernel/process.c          |  9 ++--
->  3 files changed, 64 insertions(+), 20 deletions(-)
+> # dmesg | grep mct
+> [7.376224] clocksource: mct-frc: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 73510017198 ns
 > 
-> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
-> index 1898c3069c43..149df945c1ab 100644
-> --- a/arch/arm64/include/asm/pgtable.h
-> +++ b/arch/arm64/include/asm/pgtable.h
-> @@ -40,6 +40,55 @@
->  #include <linux/sched.h>
->  #include <linux/page_table_check.h>
->  
-> +static inline void emit_pte_barriers(void)
-> +{
-> +	/*
-> +	 * These barriers are emitted under certain conditions after a pte entry
-> +	 * was modified (see e.g. __set_pte_complete()). The dsb makes the store
-> +	 * visible to the table walker. The isb ensures that any previous
-> +	 * speculative "invalid translation" marker that is in the CPU's
-> +	 * pipeline gets cleared, so that any access to that address after
-> +	 * setting the pte to valid won't cause a spurious fault. If the thread
-> +	 * gets preempted after storing to the pgtable but before emitting these
-> +	 * barriers, __switch_to() emits a dsb which ensure the walker gets to
-> +	 * see the store. There is no guarrantee of an isb being issued though.
+> # lsmod | grep exynos_mct
+> exynos_mct             12288  0
+> 
+> # cat /sys/devices/system/clocksource/clocksource0/current_clocksource
+> arch_sys_counter
+> # cat /sys/devices/system/clockevents/clockevent0/current_device
+> arch_sys_timer
+> 
+> # cat /proc/interrupts 
+>         CPU0    CPU1    CPU2    CPU3    CPU4    CPU5    CPU6    CPU7
+>  12:    2566    2752    2467    4026    3372    2822    2115    3227 GIC-0  27 Level     arch_timer
+> ...
+>  77:       0       0       0       0       0       0       0       0 GIC-0 235 Level     mct_comp_irq
+>  78:       0       0       0       0       0       0       0       0 GIC-0 239 Level     mct_tick0
+>  79:       0       0       0       0       0       0       0       0 GIC-0 240 Level     mct_tick1
+>  80:       0       0       0       0       0       0       0       0 GIC-0 241 Level     mct_tick2
+>  81:       0       0       0       0       0       0       0       0 GIC-0 242 Level     mct_tick3
+>  82:       0       0       0       0       0       0       0       0 GIC-0 243 Level     mct_tick4
+>  83:       0       0       0       0       0       0       0       0 GIC-0 244 Level     mct_tick5
+>  84:       0       0       0       0       0       0       0       0 GIC-0 245 Level     mct_tick6
+>  85:       0       0       0       0       0       0       0       0 GIC-0 246 Level     mct_tick7
+> 
+> Reviewed-by: Youngmin Nam <youngmin.nam@samsung.com>
 
-typo					^^^^^^^^
- 					
-> +	 * This is safe because it will still get issued (albeit on a
-> +	 * potentially different CPU) when the thread starts running again,
-> +	 * before any access to the address.
-> +	 */
-> +	dsb(ishst);
-> +	isb();
-> +}
-> +
-> +static inline void queue_pte_barriers(void)
-> +{
-> +	if (test_thread_flag(TIF_LAZY_MMU))
-> +		set_thread_flag(TIF_LAZY_MMU_PENDING);
-> +	else
-> +		emit_pte_barriers();
-> +}
-> +
-> +#define  __HAVE_ARCH_ENTER_LAZY_MMU_MODE
-> +static inline void arch_enter_lazy_mmu_mode(void)
-> +{
-> +	VM_WARN_ON(in_interrupt());
-> +	VM_WARN_ON(test_thread_flag(TIF_LAZY_MMU));
-> +
-> +	set_thread_flag(TIF_LAZY_MMU);
-> +}
-> +
-> +static inline void arch_flush_lazy_mmu_mode(void)
-> +{
-> +	if (test_and_clear_thread_flag(TIF_LAZY_MMU_PENDING))
-> +		emit_pte_barriers();
-> +}
-> +
-> +static inline void arch_leave_lazy_mmu_mode(void)
-> +{
-> +	arch_flush_lazy_mmu_mode();
-> +	clear_thread_flag(TIF_LAZY_MMU);
-> +}
-> +
->  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
->  #define __HAVE_ARCH_FLUSH_PMD_TLB_RANGE
->  
-> @@ -323,10 +372,8 @@ static inline void __set_pte_complete(pte_t pte)
->  	 * Only if the new pte is valid and kernel, otherwise TLB maintenance
->  	 * has the necessary barriers.
->  	 */
-> -	if (pte_valid_not_user(pte)) {
-> -		dsb(ishst);
-> -		isb();
-> -	}
-> +	if (pte_valid_not_user(pte))
-> +		queue_pte_barriers();
->  }
->  
->  static inline void __set_pte(pte_t *ptep, pte_t pte)
-> @@ -778,10 +825,8 @@ static inline void set_pmd(pmd_t *pmdp, pmd_t pmd)
->  
->  	WRITE_ONCE(*pmdp, pmd);
->  
-> -	if (pmd_valid(pmd)) {
-> -		dsb(ishst);
-> -		isb();
-> -	}
-> +	if (pmd_valid(pmd))
-> +		queue_pte_barriers();
->  }
->  
->  static inline void pmd_clear(pmd_t *pmdp)
-> @@ -845,10 +890,8 @@ static inline void set_pud(pud_t *pudp, pud_t pud)
->  
->  	WRITE_ONCE(*pudp, pud);
->  
-> -	if (pud_valid(pud)) {
-> -		dsb(ishst);
-> -		isb();
-> -	}
-> +	if (pud_valid(pud))
-> +		queue_pte_barriers();
->  }
->  
->  static inline void pud_clear(pud_t *pudp)
-> @@ -925,8 +968,7 @@ static inline void set_p4d(p4d_t *p4dp, p4d_t p4d)
->  	}
->  
->  	WRITE_ONCE(*p4dp, p4d);
-> -	dsb(ishst);
-> -	isb();
-> +	queue_pte_barriers();
->  }
->  
->  static inline void p4d_clear(p4d_t *p4dp)
-> @@ -1052,8 +1094,7 @@ static inline void set_pgd(pgd_t *pgdp, pgd_t pgd)
->  	}
->  
->  	WRITE_ONCE(*pgdp, pgd);
-> -	dsb(ishst);
-> -	isb();
-> +	queue_pte_barriers();
->  }
->  
->  static inline void pgd_clear(pgd_t *pgdp)
-> diff --git a/arch/arm64/include/asm/thread_info.h b/arch/arm64/include/asm/thread_info.h
-> index 1114c1c3300a..1fdd74b7b831 100644
-> --- a/arch/arm64/include/asm/thread_info.h
-> +++ b/arch/arm64/include/asm/thread_info.h
-> @@ -82,6 +82,8 @@ void arch_setup_new_exec(void);
->  #define TIF_SME_VL_INHERIT	28	/* Inherit SME vl_onexec across exec */
->  #define TIF_KERNEL_FPSTATE	29	/* Task is in a kernel mode FPSIMD section */
->  #define TIF_TSC_SIGSEGV		30	/* SIGSEGV on counter-timer access */
-> +#define TIF_LAZY_MMU		31	/* Task in lazy mmu mode */
-> +#define TIF_LAZY_MMU_PENDING	32	/* Ops pending for lazy mmu mode exit */
->  
->  #define _TIF_SIGPENDING		(1 << TIF_SIGPENDING)
->  #define _TIF_NEED_RESCHED	(1 << TIF_NEED_RESCHED)
-> diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
-> index 42faebb7b712..45a55fe81788 100644
-> --- a/arch/arm64/kernel/process.c
-> +++ b/arch/arm64/kernel/process.c
-> @@ -680,10 +680,11 @@ struct task_struct *__switch_to(struct task_struct *prev,
->  	gcs_thread_switch(next);
->  
->  	/*
-> -	 * Complete any pending TLB or cache maintenance on this CPU in case
-> -	 * the thread migrates to a different CPU.
-> -	 * This full barrier is also required by the membarrier system
-> -	 * call.
-> +	 * Complete any pending TLB or cache maintenance on this CPU in case the
-> +	 * thread migrates to a different CPU. This full barrier is also
-> +	 * required by the membarrier system call. Additionally it makes any
-> +	 * in-progress pgtable writes visible to the table walker; See
-> +	 * emit_pte_barriers().
->  	 */
->  	dsb(ish);
->  
+This means you reviewed *every* patch.
 
-Otherwise, LGTM.
+> Tested-by: Youngmin Nam <youngmin.nam@samsung.com>
 
-I will try and think through again if these deferred sync and flush can cause
-subtle problems else where.
+Best regards,
+Krzysztof
