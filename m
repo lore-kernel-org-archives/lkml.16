@@ -1,47 +1,38 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A720F282EB;
-	Fri,  4 Apr 2025 03:06:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2584B42A8F;
+	Fri,  4 Apr 2025 03:08:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743735979; cv=none; b=DGQViXAu+w/nB6DBWaXA+Ir4htWWQKf3BxGNGimhw4vdjoJkmp/5FkEoMfKAsGuLtP5QEvSFpuJBPpheWZplg1cEBTjpaW3sD4CfvT/ZJyKA3VKqJgO4ibvI5khMzrD4dz/WkIvvh74x9qIgX1RpUwb2MTQ3mJ7GYdA033HyHOI=
+	t=1743736138; cv=none; b=HtpRRQX2nuwDcuZCQd9TpNgZFHcEsftsYlvnncN9WXmZpxvpbGKDUQecxeOdGMFtwFyEc9phwHtPJAeCDyyWg3OyP+tewFU9Tzj2rLGfd8wgR5C3O4IFrGPWFgjOw2Eeczhp9a3JPiZGBU49ZJhzSMx8fqT8FbX+j9n5ahWVyqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743735979; c=relaxed/simple;
-	bh=OOzjTNsaoeztiuaUUEKgQnbbeDt20tTPv/xP9IFlZAs=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=FxgxYeFXWfT4u6fkLItuEoZNvrHVAS2r8M9FrwbJq2FoR/m775wbaVNNO/A1jHaCsEaGCI73e+3K52T8JEscMCKeWfGDP6WMwsmq518u8NkAPDgE85PgNYcz3eTIFpUU8gThRjBm9pAPuZimjAiVse4UivVMvc6i7rW7N4aaDwM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=PLLOeVPC; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="PLLOeVPC"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:Message-ID:Subject:Cc:To:
-	From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:References:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=EULONde+eAu9B+Vu7ZbRkaj2yQsdB6BaOde6KnVIdgw=; b=PLLOeVPCiEoRmTAy3V+XWdfKbz
-	MtLQ4ECjLWfSgKRowAkLnJJ+mUeei24k7Xe8qgAwyXziEOu0KHy8QpiPte+WLsYgdUb42vr3q0B8C
-	jovztRg5dbvuyLeRg8ykOyzg3Q1k8aapoh2hQke1irk4/z4a9oVDrPG5HakgJQgjW8KIe0a7k6Vca
-	tAZrZASU+q4V2rONS+17ksOLelT1FjV/eCKCB0XtUSJAV8WmzcCURGzFiUfSYg4Ztu0bhW5xWIsBY
-	+iUte5VlcfyFvCxWkUdGyiJI0PE4tkbRqiXf34bXa6YK8+wyOJgD6JE15VGkYAmLsZwwOSh9uNE1X
-	715mazCQ==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1u0XNI-00Ci7R-1K;
-	Fri, 04 Apr 2025 11:05:45 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 04 Apr 2025 11:05:44 +0800
-Date: Fri, 4 Apr 2025 11:05:44 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: andriy.shevchenko@linux.intel.com, przemyslaw.kitszel@intel.com,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, vbabka@suse.cz,
-	torvalds@linux-foundation.org, intel-wired-lan@lists.osuosl.org,
-	netdev@vger.kernel.org, linux-toolchains@vger.kernel.org
-Subject: Re: [RFC] slab: introduce auto_kfree macro
-Message-ID: <Z-9MiJ0nuBxYCaV2@gondor.apana.org.au>
+	s=arc-20240116; t=1743736138; c=relaxed/simple;
+	bh=EFv5kyn/a5Ai+gwUVyuC7HIbBRAFDJibgtYJMSxEavU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BXLPOoJvqvN3cvqwU3UmSdAUixGNIBypwqNUSrQPJU0H5UxMS7ZzufUB8CWFJATcFut598DZ6Rddo7rXgL9psovJnM05bM0yoNEEcd/bi1shBIdwox3BMw9e2v4VTKHHvIGozDqn2cxXVdxLD5DrzWLtawQ0Slo49kWVBOErcPc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout1.hostsharing.net (Postfix) with ESMTPS id 4C07A2C506B7;
+	Fri,  4 Apr 2025 05:08:33 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 39C12E798; Fri,  4 Apr 2025 05:08:45 +0200 (CEST)
+Date: Fri, 4 Apr 2025 05:08:45 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Raag Jadav <raag.jadav@intel.com>
+Cc: rafael@kernel.org, mahesh@linux.ibm.com, oohall@gmail.com,
+	bhelgaas@google.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, ilpo.jarvinen@linux.intel.com
+Subject: Re: [PATCH v1] PCI/AER: Avoid power state transition during system
+ suspend
+Message-ID: <Z-9NPQUMt2s90CAA@wunner.de>
+References: <20250403074425.1181053-1-raag.jadav@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,31 +41,24 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250402121935.GJ25239@noisy.programming.kicks-ass.net>
-X-Newsgroups: apana.lists.os.linux.kernel,apana.lists.os.linux.netdev
+In-Reply-To: <20250403074425.1181053-1-raag.jadav@intel.com>
 
-Peter Zijlstra <peterz@infradead.org> wrote:
->
-> The compiler *should* complain. But neither GCC nor clang actually
-> appear to warn in this case.
+On Thu, Apr 03, 2025 at 01:14:25PM +0530, Raag Jadav wrote:
+> If an error is triggered while system suspend is in progress, any bus
+> level power state transition will result in unpredictable error handling.
+> Mark skip_bus_pm flag as true to avoid this.
+[...]
+> Ideally we'd want to defer recovery until system resume, but this is
+> good enough to prevent device suspend.
 
-Linus turned that warning off in 2020:
+if (system_state == SYSTEM_SUSPEND)
 
-commit 78a5255ffb6a1af189a83e493d916ba1c54d8c75
-Author: Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sat May 9 13:57:10 2020 -0700
+... tells you whether the system is suspending, so you could catch that
+in the error recovery code.
 
-    Stop the ad-hoc games with -Wno-maybe-initialized
+Suspend to ACPI state S3 or S4 shouldn't need error recovery through reset
+upon resume because devices are generally reset by BIOS on resume anyway.
 
-You need to enable it by hand to see the warning:
+Thanks,
 
-make KBUILD_CFLAGS_KERNEL=-Wmaybe-uninitialized CFLAGS_MODULE=-Wmaybe-uninitialized
-
-W=2 enables it too but it also enables lots of other crap so it's
-useless.
-
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Lukas
