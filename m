@@ -1,223 +1,270 @@
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2051.outbound.protection.outlook.com [40.107.20.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6882D1DA53;
-	Fri,  4 Apr 2025 16:50:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.51
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743785415; cv=fail; b=KloHTrO9NsfQZ3aX8i3y8ddxwPcouEJWFF7C911zl5YdRZfcrYvpqIysEtH7xqDfs0vc/ad04wLYIAw0FY26j1tuc4PW60gEXP9c9+KQE80oyr3sCCf0c3Ga97O/ebaRgMpYFGzqEjuHCObCAPWGZi+93NtJ1avufsmCL+13dzs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743785415; c=relaxed/simple;
-	bh=cApcswUgbGsuT+p2HnERe583XMeqzdUrArZH161QDwQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=o/2u58brvXaBSBp45VY69t3E/khA1vVO+BaFNQmT/NFxbQS9IsT3HAlSkMqpAadqlL12m2RsqjezFIr6xyXYDQIOmrXNcYNrQEl4EaDGE8/TcWHab9PwmRdU2+p/3Fw9/CUMFpvl/fOG20Gnj0HLfVgAuEjr5s+mJczJ+4nONNw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=oKsLJlYb; arc=fail smtp.client-ip=40.107.20.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEAD71DA53;
+	Fri,  4 Apr 2025 16:51:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743785512; cv=none; b=cqeuJKOsgcQmf7zMhBAEQjiFpODr9lnue5A69J9V6ax0MZG3e5+EVHKhmxCyAKjkInnGPchzP2TuIK6FTF9eDxucTqmco0o267htj8t/uJln2jLjDyhDDWrMASkgpdDPc6P8i4+xYCTKDt95loLqYu+Zg5hZfIydJJDdR88AI88=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743785512; c=relaxed/simple;
+	bh=k/1i68EDhtfGaWp4Zjr/ho+pU2UjPOi9WaiMdKbnryI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=l9dLy1ulWQoSBj9zcZl1ynZUmuR/ns41+qb87jY1AUlj5xcdsuYB8Gx0B9x/nUeiLDSL+4chFmUFyil+jEH0EirU2/hROtjdb5dRh8Kfkb9mlcd9g3pGK8mApaLp72LKMnA7jaYb5ByVTnKRrkW4BeSckjETFi7GzSfBy0OWKcc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DFIKEcV/; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="oKsLJlYb"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=aKcK61JMoUNs89kVShuoRb4HB058BSf7evRzhnKPQg9Z0kb6kcRBcNn2YgQdrqUz/auqtddfC6cBMaT5o13xlhxDgwGE6LvAFHJVe19MxaH+wsW8GpGp+zCvqqxNHHCe5XbA1kJvgh61f9U3BUL8XLK4Ypq2G0e7BaBSsbVhQkwcnql2zZsjDHSAwQeIcb68xLmSWYFJqFi+W3cJXvZz/e0JlNAZaoZld3OgfPgHXMH1tnX+iz90GvNAVJcD2gFNZx014aqVP+c9XiHpN1jlCPuPU5HE3UShY1AzldPBHBYmBJPsojEjv9uvAVzNdKO/SB6E4uCtOq1dDYhyb606Gg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=W+sgAnsLhH57eOdNsvuI1L0ywx/UFZY/lzF0V83S3Uc=;
- b=SokvsjstyBEt/h/6kIL96e+ZgN6tOQkw2PKoT8oOhjjesa/jouh6Nsb1nACahFXmAC2JCUE5oaPIBoTEbhg/43J1WRvLqqLSRxTjaIlVTZYEt8qx0wdiEvmSuOLyC+NRnBbjamk77veuQ1XQR2G9ZM9G51qMS56LZ7vezM/saI7iXDp2S8ogtOg+vUTePYaL/F/DvYlRjfA0z6yzyE4H8mFHV0ESuIufhkf/y7g8Dmj14MzZLlqNRnby8zi55KFtqnrnI/zStnvvMbAJmXnTW8TJv8ofruXkfufm+ynrYzf2EcDzHMBTd219uUlASE90w1+wy6smdE2foHn/HpqJgA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=W+sgAnsLhH57eOdNsvuI1L0ywx/UFZY/lzF0V83S3Uc=;
- b=oKsLJlYb2xaTXd+7N5j914qqXYgBGsXfCLUMDBrGX9PxVziVrIp/57pIx8rRPWPrnJqF54HF3I/w+Zk12F+YPNdNP+PM47RW99as7c1jR9mgkWo5avl1pHOpKZMFG03Xl9qdxMBQYUtY7xaooKMrqOqXmnVs0QqqE+MIFOksg2Xo+AvLoaS4zmuGLEDFfflAPONod+af9+I50cGNqgyrYanHjgRCMwJqdu6D1jEhGtuhbBS1RRHoPm0ESdX5KPd93GY3tnZFEb/WWx7D26Bquc2GUzQjlUwC1M0cPawtWirboueJ+viCc1ysD8u95zvHqdjOaakYGMkuOKVRf61AWg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by DBAPR04MB7303.eurprd04.prod.outlook.com (2603:10a6:10:1af::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.50; Fri, 4 Apr
- 2025 16:50:10 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%2]) with mapi id 15.20.8534.048; Fri, 4 Apr 2025
- 16:50:10 +0000
-Date: Fri, 4 Apr 2025 12:50:02 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: Pankaj Gupta <pankaj.gupta@nxp.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"imx@lists.linux.dev" <imx@lists.linux.dev>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v14 4/6] firmware: imx: add driver for NXP EdgeLock
- Enclave
-Message-ID: <Z/ANuvgHRRTUWV0x@lizhi-Precision-Tower-5810>
-References: <20250327-imx-se-if-v14-0-2219448932e4@nxp.com>
- <20250327-imx-se-if-v14-4-2219448932e4@nxp.com>
- <Z+QePoixgnheYQTW@lizhi-Precision-Tower-5810>
- <AM9PR04MB8604C02C27C8C43FF89B95DC95AC2@AM9PR04MB8604.eurprd04.prod.outlook.com>
- <AM9PR04MB86046B9A3821D8793877F1D395AF2@AM9PR04MB8604.eurprd04.prod.outlook.com>
- <Z+2qFe/E0dbR+qkQ@lizhi-Precision-Tower-5810>
- <AM9PR04MB8604F5E033F9C0985F29BD5F95AE2@AM9PR04MB8604.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <AM9PR04MB8604F5E033F9C0985F29BD5F95AE2@AM9PR04MB8604.eurprd04.prod.outlook.com>
-X-ClientProxiedBy: SJ0PR03CA0138.namprd03.prod.outlook.com
- (2603:10b6:a03:33c::23) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DFIKEcV/"
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-54b166fa41bso2383508e87.0;
+        Fri, 04 Apr 2025 09:51:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743785509; x=1744390309; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zCJOxCsq4sP6eihazz9u78w+Z/VcmA1ipTY8uGgwWqQ=;
+        b=DFIKEcV/OOdulk04GAl1peHltsDAkEdoSYSR5wdx3P0NJpRFiTHzIydB0i/z/q6pT6
+         erzUK8Gw307/D5njZSlJdHdAMIcLV80XODWAAR9YDyB6h2QCJoWeEl8SA3lV2S3BZygW
+         1JxeUxIHk6LNxtMt9/HRVqQOu7IQiPP+lpVwldbW3iR0iwWBhMOI7KD5KtpYgmzyHQ+L
+         Bng+R61Sp0vykGsFo8oArBmCLAKzp7NYjGA3UgKe6cDK8siroOCSsNtzPzVNn8t0uk3Z
+         RRH9RLTEEC+0h33C9rISMLP5fodMtzBteT4LRY/jOWowSUVUtj18f2db2PPC08posjP5
+         X2eA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743785509; x=1744390309;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zCJOxCsq4sP6eihazz9u78w+Z/VcmA1ipTY8uGgwWqQ=;
+        b=VXtB2QrNw5zmqKd50KHyJ/36QntZbbQtzyn3iJSzMos1AWtC/ows0Y3FYYXsGAe67c
+         BPoPQV+z5l2gc0nWX3F/jzmoUlASqXpk2UFe5HBezFN/xzT5TIvJRX+92O+glc7L1+M6
+         jTu1W9NP6HksRKGUxhgSRn8H8K0Ew9UgrFf0i92nF1uZfqcooquCLfOAjDEzjQct1ovM
+         QklDJK68975plHRasNzyGlL0dZQJQO+SmE+OP4mncYJpb4z7PvJxy2csvT9vSKxmzBPW
+         LurZqgFMxIVxpWrOW4Dhivh80fEqFjJDbU9ZN+dyPoKayxUgtL0ixAkejBJMEsdSLkis
+         eMkw==
+X-Forwarded-Encrypted: i=1; AJvYcCUkJLp0EwCDYNnl/kRy5O1hOMxP/wn2LgX+4WKrR7eo2XOWAR9cKQ2cJ154ij0q5ovMsUFwvtvo/oGUf/zpCvvfLl+S@vger.kernel.org, AJvYcCXZJr4zP5rDGmnZ55t2zgEEoIXabuIgp3ziAPrcdvMj+e01oBugJX+qyrxNQ3YGUXpdTbxW2GgK90dUFko=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/lHACUsAUjHEbi4MVC1HC2mXSqi5+IhpBW0+fT6ESQUwvR29L
+	1KwY3+J2CyZwGgmRhha4Qkhu9GJd5+LrIbry+YlliHRNzNdeJrEm4Snp7PgRbTfXDQUn9vrR6c8
+	h4Tc01VFoBiWSjGySvblZV1emKSQ=
+X-Gm-Gg: ASbGncuVN2TRZDn7ml1ZBZbIKUjNV1Ramz7LBoEmK3OoCzNmPfDxOoAbkf9Wnh/u/Ow
+	fk3RniMSDVB3QHOBPILxpFOOZ6Kt8FKe14wc4h2s+Of8Rwdo1lOonn8xMdXoR+e+EJdzgmkReOV
+	qtM79umVQw7TdzVXqNeyH/lyxkIg==
+X-Google-Smtp-Source: AGHT+IGzzdDf2+O+E4/8+jxtfp2u1ZLEf3GLMetOJ2O4e5uP72yC+bvImYtxfvw5tvT6UgNEgQsHq4u2w0+aFxWqr1w=
+X-Received: by 2002:a05:6512:4013:b0:549:66d8:a1d2 with SMTP id
+ 2adb3069b0e04-54c232e2686mr1144449e87.19.1743785508633; Fri, 04 Apr 2025
+ 09:51:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|DBAPR04MB7303:EE_
-X-MS-Office365-Filtering-Correlation-Id: f08961b4-f2bb-4fc8-77e8-08dd7398c2fe
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|7416014|1800799024|52116014|376014|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?grjGk8WP1c14NjFtfKgFm53i0jj3Vc6zYLpWidSvw+azurwqQGHLV4TONamX?=
- =?us-ascii?Q?nzwgRmH7UDpRI9GDuO98diaJI7Fr10KZuBitGadFVBbmNp7fNe5OY7MK5kyM?=
- =?us-ascii?Q?9YgE7JVC1RYDqE4tProB1HyTGK5Nc9E1QFVZXZFis3wIour6C6NasCvS1aEB?=
- =?us-ascii?Q?YujHmmK9ICVRiVZknufwS0R3b8N/SgPGxz4vwfNYF5yheQSXT5cuFnqX+LMa?=
- =?us-ascii?Q?tt7PpbsF7wRHqT7hq7sQWRyN9i7YIUfvBP3wxS5s3OGUXoTfam2KOEnyl8b3?=
- =?us-ascii?Q?lYORlNIV+swh042Jw+oMoETAW6pN1wd6kvzMDEEorzGmLAAIxcoWuczrX8L7?=
- =?us-ascii?Q?sAyZ3rowv9dwy76a6s7RSvaTO9JszEObtzmk1FJlvISpTOcyAieiUtbHz/9y?=
- =?us-ascii?Q?DhKORegBZSlGkH8SE59FD0stRH3VDt8zsXPBFrunloNs9pYlqKvDgu3PN+HW?=
- =?us-ascii?Q?qHukr+pwT7w5NybvTqK+1KhZqNWZp6ukhiYHvEwQjv2/q6SwtTtH6QYNS80X?=
- =?us-ascii?Q?y44vKGJbjScg+cPreEMSWHhCgwBJYXsrdyXSp84+MTtdi9g4TCvEGjpvkK9U?=
- =?us-ascii?Q?Rx9O7XbZxS0R2P6KrCl+t7XB+FxC6fGqozrwNPg/K4FS7PnzjswxEPqCd7CZ?=
- =?us-ascii?Q?Lp/GrTf61nYjoh+8MdHvQyjS1oM3wA28vCipmswHQ5bBeP53wdNMmQjLOgHt?=
- =?us-ascii?Q?aXKi7MCCG0PY49QK6AUYWvw0M+A+PbskBCX4YPqgd2a0yQo77AiP9jrv9xiE?=
- =?us-ascii?Q?Fed0UKSqIQU5H0bo27eDoDsXvTSQDso3mfVZaqPBBet8cH6dFuvKKFQsbJcO?=
- =?us-ascii?Q?TNCmt91TYL+m6jCNilGiE6AFvnrAD13uxuFSfmUhA9htMvdq+Ikokxe4Sgd6?=
- =?us-ascii?Q?Dw9tPZr2em+fG5+sFfYEL8JO8B16pRR2e2r/5WDOCu11bR6iwxYGLzzpooQZ?=
- =?us-ascii?Q?RwyPQDG/F1SrkdgA6jRBT4kKTjd4gYcbGbF24gBtWNbOQxItQdvrrRisC+de?=
- =?us-ascii?Q?RvLjSMdtowEgi8o0p9nZNYJOFWiV/NzCeuKBZ2IMy3hbvrtRtsEPb0IEYe+v?=
- =?us-ascii?Q?6XaresXpK8d+HVED3t0DiZM94sGZCn0aDPQHLW8mCOTiu/2usoQ4/nxNkyg9?=
- =?us-ascii?Q?O+5HK2q/lroKdD6lhFOFSBrhWIO7BJl7kzRVz+Z94VDUCUsXJchuFZN54OQB?=
- =?us-ascii?Q?YrUSDLTRwzAqZPSObQA30pM1BDrBZf7nRkHiIHpe7vQp5Of+NpWa/AlRkRv0?=
- =?us-ascii?Q?Y/63ggsQ8sRLH/l3U2AAgPISujPVFv4r+rRhuyRXHWRz88955Fts/o9LBa5d?=
- =?us-ascii?Q?ABhyNsfazlfp+Rmnw0nPCKYkXTj70SS9y/uKhSYEtRCZ5C2f0AmZ79clpT+b?=
- =?us-ascii?Q?nxyF8KHk3//6VVT7QJdk0mTATJ6LRM0LjYB6IqFy8zWfXauy3bDtCFO/AX6Z?=
- =?us-ascii?Q?RxAckLPr/pu67dPDaYxtT7IHjcLm4Blr?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(1800799024)(52116014)(376014)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?RyOS0/7AiKDDwQNvIUOUDXXCdcRsk59kjg976OYe+lEY7NX2PJUh3L/LQ1Yr?=
- =?us-ascii?Q?28sJJxCqbcntE6bXQIvaAQCFHBBzVGKkf7dBapHnbJ99jBAPbSFHhu6uKqjm?=
- =?us-ascii?Q?Hvi0rAYg8SEx0gn+JC6iDIOQDA/L5TAyJYrHLdvpAhFy0PqwdbAUBqM1KhF+?=
- =?us-ascii?Q?TcgFCUad2XaLxM9Bq0E+kev+XgySbNulJ3kNzb+8NExWm83ofuVRIOOBMc8l?=
- =?us-ascii?Q?o2AhLUEFUu2roLdF87rqGTWc48sXh4TzPyTJt24VnKBjNyG276ATuLU2NQT2?=
- =?us-ascii?Q?RUYrbZ2elQNOBnQCttcwZrgTJIm308CbuEqtkf11V6ykj5gnv1Xl1WP9xwQK?=
- =?us-ascii?Q?Uh6B0ze6bYXdqCVPJJvxqS0r5j3b+hlqLIWZR7ev7otfbTwcbPtfkzqkmvm6?=
- =?us-ascii?Q?iO49sVz8keL0Iv+Mdu0Bk+v2E3PVTfreKk5ighVBFepKDeJ2Vk2JmjuttC2O?=
- =?us-ascii?Q?wGDatpwdRTMEcrIn2W03luGwVyzi0zObL0YEh+mXYIp6awYZiSXE1imWMm8q?=
- =?us-ascii?Q?E+wFFXNU+469OQatIpvkFhWpbkLN96P5duRqnCYanXWpuNTctpqoeu0kXJnO?=
- =?us-ascii?Q?GnU6G8I/YzuYMXOgHbohqYRftRv2CZlBC7v9p6xoHI0DrccfKBgRq0s/8cSJ?=
- =?us-ascii?Q?N4pFs+nHZ2C9/yCNEXoohab8P+eliROnZ7gIXFOmVfDncu/Ywnkc+fjI60RY?=
- =?us-ascii?Q?g9eZVeNTaZu6pjbI0KXtD3uHXuVLpxZnXl00x9kyrjz+wlwf2U/4S+764y4E?=
- =?us-ascii?Q?XiedelwvgIiaaipJyIuAw7bx51JSEeUoTI9PdQ7UAzKSrV0OiwtbEGjalfHn?=
- =?us-ascii?Q?RQJuONKGx6y4584vLRPZfSuMxL2SpudOtcHCpqCXrqXfEOUJ/qOuYyhRoaZR?=
- =?us-ascii?Q?5OhcZQQcCD4gPiCY4JVnZIUCyCUmlmICCMkAWy/AC/3ikw8cA4kkR9pKJ9Xx?=
- =?us-ascii?Q?YUacYt5vVwwrSAqb2DQ/tlueia/qMKZDaISP54/nhLQxHu4qKdd2g+QJamfd?=
- =?us-ascii?Q?1rYeLpCJSntGQmCsEjzmlfngbaqDXH1EqNM4nzrcmzygImN2x7UQnofFL65y?=
- =?us-ascii?Q?xkS5+HfhHhIY6uq5CrNe6cu8Nae0SAy2BQKoi5JzjRT2i611UPKDdk7n/TxF?=
- =?us-ascii?Q?x49Dd8UTijd+HHENJhW1OXN0H47FcxG+9JwSlasGJSsfl1MGCWjd3FpW6jrK?=
- =?us-ascii?Q?dX3Es9eORn+Bo1svsFj8vHJHC/1fW653j71TC7aRL3DY+X9gfbjF9VKEPuNu?=
- =?us-ascii?Q?AdN54phPSY67DVu5hW1VevAE8IvWYvBKbXeXuiQD3vAZ8qi2eZjj+stwl/89?=
- =?us-ascii?Q?3Pza+6nSVRH8KywFuVuLfuh4Cx2wvduysRUSMI0Djg16dQo2wbys581/Wj6M?=
- =?us-ascii?Q?vHrloZBppjIMM6CxQHIikNsR0P9jnqsMvuDOo2khpU+AIHf5m8mushv6hr9b?=
- =?us-ascii?Q?X4oOm899vak284QChjEWGRdTZzH9lws+yuUI14eqkGhDheGlhtLPjMprRgJu?=
- =?us-ascii?Q?4wCtQoYWZB0pHlDSQ0WiDB+q68EsOx+Vq6PU/HTHFeLY7Yy19Aa89t4f8FWB?=
- =?us-ascii?Q?MdEkHmWRSL/7uAvF5tA=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f08961b4-f2bb-4fc8-77e8-08dd7398c2fe
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Apr 2025 16:50:10.3684
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: T+Y0Pfg+3YldNd7D7vFe+LlvjfHj6uegsP9myy64cwuPVibcdNH+mE2Jk5F+DJS811HsJ6STSCXbTO0GHIMHBQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBAPR04MB7303
+References: <20250331223516.7810-2-sweettea-kernel@dorminy.me>
+ <CAMgjq7AroDCKTfJzJRr++8H2b3eTd=MeUqwkPUX4ixRVqZw6-A@mail.gmail.com> <CAGudoHH7OUHG2HHrjzqkiqgYXzLEtovCptHpxkyVNPwSMHWfrw@mail.gmail.com>
+In-Reply-To: <CAGudoHH7OUHG2HHrjzqkiqgYXzLEtovCptHpxkyVNPwSMHWfrw@mail.gmail.com>
+From: Kairui Song <ryncsn@gmail.com>
+Date: Sat, 5 Apr 2025 00:51:32 +0800
+X-Gm-Features: ATxdqUHJHnHN5IVy15yQ4251S2SiHtKLSV0rTOnKNbdjM_u66PODTpuuzvggkbw
+Message-ID: <CAMgjq7C_W3dfYQ6DJT4QCza1DCtCE7yUdiManQSxCKOENxTm_g@mail.gmail.com>
+Subject: Re: [RFC PATCH v2] mm: use per-numa-node atomics instead of percpu_counters
+To: Mateusz Guzik <mjguzik@gmail.com>
+Cc: Sweet Tea Dorminy <sweettea-kernel@dorminy.me>, Andrew Morton <akpm@linux-foundation.org>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Dennis Zhou <dennis@kernel.org>, 
+	Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@linux.com>, Martin Liu <liumartin@google.com>, 
+	David Rientjes <rientjes@google.com>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	Shakeel Butt <shakeel.butt@linux.dev>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Sweet Tea Dorminy <sweettea@google.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>, Suren Baghdasaryan <surenb@google.com>, 
+	Vlastimil Babka <vbabka@suse.cz>, Christian Brauner <brauner@kernel.org>, 
+	Wei Yang <richard.weiyang@gmail.com>, David Hildenbrand <david@redhat.com>, 
+	Miaohe Lin <linmiaohe@huawei.com>, Al Viro <viro@zeniv.linux.org.uk>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Yu Zhao <yuzhao@google.com>, Roman Gushchin <roman.gushchin@linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 03, 2025 at 05:02:08AM +0000, Pankaj Gupta wrote:
-> On Wed, Apr 02, 2025 at 06:15:12AM +0000, Pankaj Gupta wrote:
-> >> >> diff --git a/drivers/firmware/imx/se_ctrl.h
-> >> >> b/drivers/firmware/imx/se_ctrl.h new file mode 100644 index
-> >> >> 000000000000..177623f3890e
-> >> >> --- /dev/null
-> >> >> +++ b/drivers/firmware/imx/se_ctrl.h
-> >> >> @@ -0,0 +1,84 @@
-> >> >> +/* SPDX-License-Identifier: GPL-2.0+ */
-> >> >> +/*
-> >> >> + * Copyright 2025 NXP
-> >> >> + */
-> >> >> +
-> >> >> +#ifndef SE_MU_H
-> >> >> +#define SE_MU_H
-> >> >> +
-> >> >> +#include <linux/miscdevice.h>
-> >> >> +#include <linux/semaphore.h>
-> >> >> +#include <linux/mailbox_client.h>
-> >> >> +
-> >>
-> >> ....
-> >>
-> >> >> +};
-> >> >> +
-> >> >> +struct se_if_defines {
-> >> >> +	const u8 se_if_type;
-> >> >> +	const u8 se_instance_id;
-> >> Getting used at drivers/firmware/imx/se_ctrl.c:320
+On Thu, Apr 3, 2025 at 10:31=E2=80=AFPM Mateusz Guzik <mjguzik@gmail.com> w=
+rote:
 >
-> >	dev_info(dev, "i.MX secure-enclave: %s%d interface to firmware,
-> configured.",
-> >		 SE_TYPE_STR_HSM,
-> >		 priv->if_defs->se_instance_id);
+> On Tue, Apr 1, 2025 at 5:27=E2=80=AFAM Kairui Song <ryncsn@gmail.com> wro=
+te:
+> >
+> > On Tue, Apr 1, 2025 at 6:36=E2=80=AFAM Sweet Tea Dorminy
+> > <sweettea-kernel@dorminy.me> wrote:
+> > >
+> > > [Resend as requested as RFC and minus prereq-patch-id junk]
+> > >
+> > > Recently, several internal services had an RSS usage regression as pa=
+rt of a
+> > > kernel upgrade. Previously, they were on a pre-6.2 kernel and were ab=
+le to
+> > > read RSS statistics in a backup watchdog process to monitor and decid=
+e if
+> > > they'd overrun their memory budget. Now, however, a representative se=
+rvice
+> > > with five threads, expected to use about a hundred MB of memory, on a=
+ 250-cpu
+> > > machine had memory usage tens of megabytes different from the expecte=
+d amount
+> > > -- this constituted a significant percentage of inaccuracy, causing t=
+he
+> > > watchdog to act.
+> > >
+> > > This was a result of f1a7941243c1 ("mm: convert mm's rss stats into
+> > > percpu_counter") [1].  Previously, the memory error was bounded by
+> > > 64*nr_threads pages, a very livable megabyte. Now, however, as a resu=
+lt of
+> > > scheduler decisions moving the threads around the CPUs, the memory er=
+ror could
+> > > be as large as a gigabyte.
+> > >
+> > > This is a really tremendous inaccuracy for any few-threaded program o=
+n a
+> > > large machine and impedes monitoring significantly. These stat counte=
+rs are
+> > > also used to make OOM killing decisions, so this additional inaccurac=
+y could
+> > > make a big difference in OOM situations -- either resulting in the wr=
+ong
+> > > process being killed, or in less memory being returned from an OOM-ki=
+ll than
+> > > expected.
+> > >
+> > > Finally, while the change to percpu_counter does significantly improv=
+e the
+> > > accuracy over the previous per-thread error for many-threaded service=
+s, it does
+> > > also have performance implications - up to 12% slower for short-lived=
+ processes
+> > > and 9% increased system time in make test workloads [2].
+> > >
+> > > A previous attempt to address this regression by Peng Zhang [3] used =
+a hybrid
+> > > approach with delayed allocation of percpu memory for rss_stats, show=
+ing
+> > > promising improvements of 2-4% for process operations and 6.7% for pa=
+ge
+> > > faults.
+> > >
+> > > This RFC takes a different direction by replacing percpu_counters wit=
+h a
+> > > more efficient set of per-NUMA-node atomics. The approach:
+> > >
+> > > - Uses one atomic per node up to a bound to reduce cross-node updates=
+.
+> > > - Keeps a similar batching mechanism, with a smaller batch size.
+> > > - Eliminates the use of a spin lock during batch updates, bounding st=
+at
+> > >   update latency.
+> > > - Reduces percpu memory usage and thus thread startup time.
+> > >
+> > > Most importantly, this bounds the total error to 32 times the number =
+of NUMA
+> > > nodes, significantly smaller than previous error bounds.
+> > >
+> > > On a 112-core machine, lmbench showed comparable results before and a=
+fter this
+> > > patch.  However, on a 224 core machine, performance improvements were
+> > > significant over percpu_counter:
+> > > - Pagefault latency improved by 8.91%
+> > > - Process fork latency improved by 6.27%
+> > > - Process fork/execve latency improved by 6.06%
+> > > - Process fork/exit latency improved by 6.58%
+> > >
+> > > will-it-scale also showed significant improvements on these machines.
+> > >
+> > > [1] https://lore.kernel.org/all/20221024052841.3291983-1-shakeelb@goo=
+gle.com/
+> > > [2] https://lore.kernel.org/all/20230608111408.s2minsenlcjow7q3@quack=
+3/
+> > > [3] https://lore.kernel.org/all/20240418142008.2775308-1-zhangpeng362=
+@huawei.com/
+> >
+> > Hi, thanks for the idea.
+> >
+> > I'd like to mention my previous work on this:
+> > https://lwn.net/ml/linux-kernel/20220728204511.56348-1-ryncsn@gmail.com=
+/
+> >
+> > Basically using one global percpu counter instead of a per-task one, an=
+d
+> > flush each CPU's sub-counter on context_switch (if next->active_mm !=3D
+> > current->active_mm, no switch for IRQ or kthread).
+> > More like a percpu stash.
+> >
+> > Benchmark looks great and the fast path is super fast (just a
+> > this_cpu_add). context_switch is also fine because the scheduler would
+> > try to keep one task on the same CPU  to make better use of cache. And
+> > it can leverage the cpu bitmap like tlb shootdown to optimize the
+> > whole thing.
+> >
+> > The error and total memory consumption are both lower than current desi=
+gn too.
 >
-> > You only print value, don't actual use it. It should be safe remove it
->
-> > Frank
->
-> No, it is not just used for print.
-> This variable is used to construct the device name as well, in 5/6 patch.
->
-> Moreover, it is needed for other SoC like i.MX8DXL, i.MX95, i.MX94, there
-> are multiple instances of same secure-enclave type.
-> It will be used to identify the intended instance later.
 
-But it all is 0 now. Add it back when it really need in future.
+Thanks for checking the patch.
 
-Frank
+> Note there are 2 unrelated components in that patchset:
+> - one per-cpu instance of rss counters which is rolled up on context
+> switches, avoiding the costly counter alloc/free on mm
+> creation/teardown
+> - cpu iteration in get_mm_counter
 >
-> >>
-> >> > This is not used actually, you can remove it
-> >> Getting used at drivers/firmware/imx/se_ctrl.c:347
-> >>
-> >> >> +	u8 cmd_tag;
-> >> >> +	u8 rsp_tag;
-> >> >> +	u8 success_tag;
-> >> >> +	u8 base_api_ver;
-> >> >> +	u8 fw_api_ver;
-> >> >> +};
-> >> >> +
-> >> >> +struct se_if_priv {
-> >> >> +	struct device *dev;
-> >> >> +
->
->
+> The allocation problem is fixable without abandoning the counters, see
+> my other e -mail (tl;dr let mm's hanging out in slab caches *keep* the
+> counters). This aspect has to be solved anyway due to mm_alloc_cid().
+> Providing a way to sort it out covers *both* the rss counters and the
+> cid thing.
 
+It's not just about the fork performance, on some servers there could
+be ~100K processes and ~200 CPUs, that will be hundreds of MBs of
+memory just for the counters.
 
+And nowadays it's not something uncommon for a desktop to have ~64
+CPUs and ~10K processes.
+
+If we use a single shared "per-cpu" counter (as in the patch), the
+total consumption will always be only about just dozens of bytes.
+
+>
+> In your patchset the accuracy increase comes at the expense of walking
+> all CPUs every time, while a big part of the point of using percpu
+> counters is to have a good enough approximation somewhere that this is
+> not necessary.
+
+It usually doesn't walk all CPUs, only the CPUs that actually used
+that mm_struct, by checking mm_struct's cpu_bitmap. I didn't check if
+all arch uses that bitmap though.
+
+It's true that one CPU having its bit set on one mm_struct's
+cpu_bitmap doesn't mean it updated the RSS counter so there will be
+false positives, the false positive rate is low as schedulers don't
+shuffle processes between processors randomly, and not every process
+will be ran at a period.
+
+Also per my observation the reader side is much colder compared to
+updater for /proc.
+
+>
+> Indeed the stock kernel fails to achieve that at the moment and as you
+> can see there is discussion how to tackle it. It is a general percpu
+> counter problem.
+>
+> I verified get_mm_counter is issued in particular on mmap and munmap.
+> On high core count boxes (hundreds of cores) the mandatory all CPU
+> walk has to be a problem, especially if a given process is also highly
+> multi-threaded and mmap/munmap heavy.
+>
+> Thus I think your patchset would also benefit from some form of
+> distribution of the counter other than just per-cpu and the one
+> centralized value. At the same time if RSS accuracy is your only
+> concern and you don't care about walking the CPUs, then you could
+> modify the current code to also do it.
+>
+> Or to put it differently, while it may be changing the scheme to have
+> a local copy makes sense, the patchset is definitely not committable
+> in the proposed form -- it really wants to have better quality caching
+> of the state.
+> --
+> Mateusz Guzik <mjguzik gmail.com>
