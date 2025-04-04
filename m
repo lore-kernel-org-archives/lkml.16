@@ -1,190 +1,273 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2043.outbound.protection.outlook.com [40.107.243.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1873D14F9D9
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 07:41:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.43
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743752506; cv=fail; b=l2NfYI6Z/VomNjndltKfBgUYv8Slu3bP31PAQgUryN4ixIPVNEgHcEt4f5tkMPxDU25zfGJn0oLZsfeDqyXnGoVtrRQqe6b4UnFTk9jSo5wBvKVgEjgWpJy0L0MbY9LsRKpuHvn4uxYklMOZ3PkveorNi2m8GYzEfyXJbGVH7RQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743752506; c=relaxed/simple;
-	bh=P3SU58ds4vAFA6S3RrLo0U6W+5A6YZw0YvICz40KbFc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=S1kcO7urNVEAfqa9crAyh7iTGp+9x1GeeS/ElIfHjWw4Bv7m0+qnW8YZ44RMlGDtz9TyyEaLyhZVyqcahpYvCfOYET4+07HhW03JPqCgEFtr6adZ0O+JrlUYI2JUQFumQDwQI5S36TT0fYDEp3+lJ93w/RFNc9G5oOtoDy0lbII=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Y7a5blAL; arc=fail smtp.client-ip=40.107.243.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB25318FDD5;
+	Fri,  4 Apr 2025 07:41:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743752507; cv=none; b=aJ0QwDDzC0SIEEYm/yBeah8FVWsJ5yoldJ7tnpy9gqaF/AiEH/YwvfvvO4oEr8W7z++h6+hKntUwZ/Q61PC2GlIFGEnb2gPGjMbxKM3c5bdam/2ji3gkqihcGeyZd5lkn9v2xjQJ9EVkBbl2rk75kvT4jM0Aw4isYCET0IjMMh8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743752507; c=relaxed/simple;
+	bh=jvt1JioOXT3ZaMG/51uHfdhrC7m62/NHzvooV5WTvF4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=fNF9flKXMOSlf8Et9/wQmuVsk6nz9hcBLhv+OxnjfTVdPeuJuEAbbj6CjDZGwOCUCm0ZL2CBmCHyKmbwt2wIGqWoIfaYHUMScACNdIrbtnczDSbWrqIIl3qbGKIPqc6B5Hiza1bbHtPcxlb5UL1qy+0qDHhjaGMJYB1WcBUCyOU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=enHHkfE4; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Y7a5blAL"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=vrMEKTZrJQjQ5EcxsmuXT6RsVU63VawAsIcu9vDoL7kSzLcWBQ3Zb36EisGb5kTozMYol+MOpvI/zNq4C6KPaz2uVTDm7t52tzCJNwHu2+0sNFhO7yQXYh3gYepxtkRflxDXoVn1i2PngFu+CSYUuo7iFyqt8XHEykijC6FlDBPesuHhBJ9SEmNmhtYK8SevYLfeZovzRBdn5ntBaXH//yCrO9xkTRse5wyouCo3ciANjlKN7/ZbSQSgtgkbAREQyU88rO/jRcIh3w61K+C3yWIEUBH7TZC9hd5eE++HK3QzdzYzEzokBRgczV1Q34QKn01dRTLanV7X7X4g05xEUA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+mctEUKwX54lQCyPDoyhdP+dnQVvYFadIlk3191cQXM=;
- b=VUOwQ1Gdlf+tlx3kXbITKVB731E5YOhqCzVVVri5tQcDK5n9LRPUbYJlHoVdq55Dp069LD09p2AE7xLQ3bBrn2psTELPAmsuMCT43cNFIsA3erFBADi0/taWdLNLocEH8Z8kIz68b0G5aGOxj0esSAodOBi1hHMzQIqeqA7KacBL2lPrPrOMrmwIGN5NBlJMIA4pv7rxXkkOAkNKM0kaBPvSmDb1RsZo399M6VG4NAmD/DbJ9/ac/l3iEOw+7Nv2Ci2udSXZrDGnLnwunl4xvcwzhBvaocfv4qTjwUd4X4s3PzFlX5oSRDNPkeuxwy6K0fvFec671gagpfHLOrH3OA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+mctEUKwX54lQCyPDoyhdP+dnQVvYFadIlk3191cQXM=;
- b=Y7a5blAL+yPrMviKqnOTMu1ZueHUhMWi1Mh+3yvZO5dM3x9E7pGHN5CPNA7diMcyonMz4bJJu2qaieWgSNFgCz+2B9wiog6JtE2PSGRAa36SnsXwYRVvb06cga/dF368zBiT3DFsWjHT8mDIVxfTBsJAbBnnbIJmxW54pDclePFNLy9tQ9jQzGsUReQK7eBOsRG44GMo0uXXPhN7w/UvIRu+1v16O+Js5ITbM7DQjBNgiZF1SNTYQ1kidT6HHtdqXqVh52IM2/6CQQNOuLA0UQpT8tDy4FcaxfVXuWQXrU5zRksFt74CWwHsuZmopZOhmtzGdhSTxdKOy/GQKYCjTg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CY5PR12MB6405.namprd12.prod.outlook.com (2603:10b6:930:3e::17)
- by DM6PR12MB4170.namprd12.prod.outlook.com (2603:10b6:5:219::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8583.41; Fri, 4 Apr
- 2025 07:41:40 +0000
-Received: from CY5PR12MB6405.namprd12.prod.outlook.com
- ([fe80::2119:c96c:b455:53b5]) by CY5PR12MB6405.namprd12.prod.outlook.com
- ([fe80::2119:c96c:b455:53b5%6]) with mapi id 15.20.8534.043; Fri, 4 Apr 2025
- 07:41:40 +0000
-Date: Fri, 4 Apr 2025 09:41:32 +0200
-From: Andrea Righi <arighi@nvidia.com>
-To: Tejun Heo <tj@kernel.org>
-Cc: void@manifault.com, multics69@gmail.com, linux-kernel@vger.kernel.org,
-	sched-ext@meta.com
-Subject: Re: [PATCHSET sched_ext/for-6.16] sched_ext: Cleanup "ops" usage in
- symbols
-Message-ID: <Z--NLGOGQe_9xULR@gpd3>
-References: <20250403225026.838987-1-tj@kernel.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250403225026.838987-1-tj@kernel.org>
-X-ClientProxiedBy: ZR2P278CA0046.CHEP278.PROD.OUTLOOK.COM
- (2603:10a6:910:53::19) To CY5PR12MB6405.namprd12.prod.outlook.com
- (2603:10b6:930:3e::17)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="enHHkfE4"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ac7bd86f637so274904666b.1;
+        Fri, 04 Apr 2025 00:41:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743752503; x=1744357303; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wwLokimafnR8j2x9NWOgXXCaOdUwwsv3luK9m0abkH4=;
+        b=enHHkfE4qQeCCQrs8k8zexhV5D98jDQtgIbWkdHF+b8jkLYdzI/vo5l0jVBEGLlpYO
+         AYqLO732LtsKZXALUh/Ge/2pPSMGMZVpcpirIlDCbravOuYmJS8CafqkmDO5oWCrgWSb
+         gs6tqi9BDRZ4nhMCU/sFbeHZdKEYPPtjznnLswJgHsY7VowXzRVNOVlw0nwvMHMJjUNe
+         JB43Y60jIStb5Rlzy2ZQXcAnq/gUOzsQcVFaqRR7cI6g+H0U/MpAAdqMEecAclxqM0Ta
+         Bv0Jnkgk7/v7L/SO6FFDIT7O7ArfbUda5bCa99gi7zdOeDnvFF6qftS86X9HxRWp/I7L
+         6jpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743752503; x=1744357303;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wwLokimafnR8j2x9NWOgXXCaOdUwwsv3luK9m0abkH4=;
+        b=kJdqyyQ5IDmKYjXRZ+lYsIV1ozsR2Fq5jEcua58eg9jIWVCETrP1oEwJZmmaa5PEfs
+         OavPIDNxUid9FkdIqBWRvaNf0NMPnA0mYduW/3Z1D5QjkTLCl7NfDYljRH8eE+xZnvDp
+         q5WaWMi6AaanGFWBhAlhNQ4uNwE0+FjyD7kIiAkLU0d0xfMW7oKX+95y4Y6ANzCj65BL
+         UIoKs9VaA1Ym0b6+jE0FIpQWrqoY+nAvQW3zSTWUQBZfMNJtYjamX24G6IJ6zM+zSoqr
+         hC2sxLCMBqWS7NAsNbS13JjOh7bQAqgPWzHk3WrlE4qSmTzWMnpqRdBJe/yMry4opHvp
+         n5tg==
+X-Forwarded-Encrypted: i=1; AJvYcCXZLZRQEdTsQFv8j7aNLP+DpF9R5zdXi9LtsB7MUJiHMXIBHtpXBEHp2Hoxl7AEK2nyaCZsyGQRAqHVVpg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwBkYFrcQQlZwQ3M6sexL6+fTQkFWC0l4gVSehzHZIBkyOOIwN1
+	8zkJyGSzjKid5Yke1PqQ3r7+cgU9vkxi1b5rAVH5byAxLQ1WXfvIU3l+KFjv
+X-Gm-Gg: ASbGncsM2Hw0XILJo/5USdJHC8jzq+hWnFewQucXkCXf6NEFnvmfQ2cVSSQ15Zylfs8
+	ve/6v5ulesWRxBRzskjsu/WDJkyVeHhWE+RyW+Q8iVnUQkv7bZBI2diRtTazzpDRc4DrER4Fvn9
+	D6uJAsi4ZXc9EY7tNNmoZefFcLp1b9y3637wB0Sy06VwFXfdLHylcKcc6mvUxI9faL3od6z4f3F
+	7jLD8iD+RlD0tA/kXimzJaN4Q9t7S5akGM5O0Lgd3SQfdpA8giGotlpprYYZ9TLOTq5MrHJ9kMe
+	CANigimB1cU4mFuFL/uxl0oH0kHYQoKhiMNd
+X-Google-Smtp-Source: AGHT+IGLKpqhQVOZd3X7rVbFi1VLjL/rDAAxh6TKYfjC6lZURG0M49KTwhvOwM0PA3RY5GlhIVZyqw==
+X-Received: by 2002:a17:907:6d0a:b0:ac7:81b0:62c9 with SMTP id a640c23a62f3a-ac7d2fb9b5fmr166849966b.20.1743752502970;
+        Fri, 04 Apr 2025 00:41:42 -0700 (PDT)
+Received: from fedora.. ([193.77.86.199])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7bfe9aa4esm211739266b.54.2025.04.04.00.41.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Apr 2025 00:41:41 -0700 (PDT)
+From: Uros Bizjak <ubizjak@gmail.com>
+To: linux-crypto@vger.kernel.org,
+	x86@kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Uros Bizjak <ubizjak@gmail.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@kernel.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Eric Biggers <ebiggers@kernel.org>
+Subject: [PATCH v2 3/3] crypto: x86 - Remove CONFIG_AS_AVX512 handling
+Date: Fri,  4 Apr 2025 09:41:02 +0200
+Message-ID: <20250404074135.520812-3-ubizjak@gmail.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250404074135.520812-1-ubizjak@gmail.com>
+References: <20250404074135.520812-1-ubizjak@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY5PR12MB6405:EE_|DM6PR12MB4170:EE_
-X-MS-Office365-Filtering-Correlation-Id: fb53b34d-875a-4795-f7d8-08dd734c2366
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?GSqPisdrbob1PHAi9BYK9zRtzdKj/lZxxn95jmpeGQqttC+if9585c4iO86F?=
- =?us-ascii?Q?NPuHaaqnN4t+g1AFBGbZCCVRkgPJXV4ICKkQn6cGc1YXX2SSfwpmPQtA3ekL?=
- =?us-ascii?Q?tsXzzyWTlp80zitkiR3g4cquVxcdPOIgUMVOD4V9i3x07s5heQsRLR0CWPfy?=
- =?us-ascii?Q?fDCj/RJCWReCuy0VCOnCMe6NmdM52mbCVLkwqtqa3XQFn92WuFYBLYbQ9pM8?=
- =?us-ascii?Q?lNkmGZkRLFHsX6xKD3cDvsaSEBi/If7u9eF4vSKfycQfvymdNoQPemLYOvem?=
- =?us-ascii?Q?oQXUG3KwgWEnD9Vy0utr/Ky9lBwPe9pLghWvsy8gCaz1PQOCm4D3NxNfEYXg?=
- =?us-ascii?Q?T78PT700KWvkHvOgT3i8td1xAz6AhqDViIZQlA5A6MxnnMzY1C0JkB6xmgJ7?=
- =?us-ascii?Q?cbOGGcFvgmtCaVesS3YLFweKNzodkyQreN3Ee07+Q/JfIKInlWFZK5iv3u0I?=
- =?us-ascii?Q?il7PqglEIwnRGFrNOY1GrTibAtR8oy+EC9iruQOjM+PKCwsZqSj29+4bT8r/?=
- =?us-ascii?Q?5UBUCydh9ZXQdTl0xDSn9+4EHMq1+czkYXPKuU7Dxux3TQhd7W6zuQa6oe6m?=
- =?us-ascii?Q?+kFfF4YPCBcCwbGXxzi0ojaHZ6LZBHfsbdz6Vhnm2IKg3q/7aFYCbljPPMpy?=
- =?us-ascii?Q?2Q2/xdTAsEG9V5Fd36Y7tpr/AkGJtWjc0/6iUDfQckcSLkQZT9lnVmVoCasY?=
- =?us-ascii?Q?t5HpsTVRLsaoUkJp8XVwCcRXzuq3PncEgo9313Xw0yImYHBxVTJlFtmTLgAH?=
- =?us-ascii?Q?lltdNWDipTNq6TXQJPUtRrR98Yj9bEsbm+zvYfMJUfBo0g481PzYGALVyHAD?=
- =?us-ascii?Q?JlFK3fhOJrL5Lw2Bb1TD2fm3cpSAHqwUvXRXA1t8Su7wCCslx+JTSsBr48on?=
- =?us-ascii?Q?mUj81CEF1wSPQvv9b/nvFJHDC+e1r15ldU6+rJABX5wnlW6VpT4NAlwfj+yu?=
- =?us-ascii?Q?4nrmaoq6J3iJGcVpMRrD6M+bvNJfA5lkETLVHVShth2OEcR+KqE6PxS2d3aU?=
- =?us-ascii?Q?GBQ//o8GVa6dcZVV3OkboLwIfejge7NINtSp7AqTXkmq/4OkIgPKIniZ56Ot?=
- =?us-ascii?Q?V/VZ2x9O/Jn6fKbJLcwVODx5355L5D0FHO+g+HmFY1uDATjprTn2kkTbTk7Z?=
- =?us-ascii?Q?VS0aMxpXbpFt+tO3bYN0Uxk7JAumIUof0Wl3c30DYJP1h6PZ/kyOvM2M8LRU?=
- =?us-ascii?Q?Hkn0EJ+iKa1Io9XvsLdkPXM9DjaFV7dFKa1tzhGcahoPHjLPneVGomJIoa69?=
- =?us-ascii?Q?VuNBO/HN/2B/p45+LLiKU1IaiaOUKyJTLYFQ0PueVU/2q4BEz3MBiSl/TdYh?=
- =?us-ascii?Q?Z/R6At4O4B5XflhyPIAlmZ862b2A47iR2RCFbaTokLjPO6vvUtr8D1oUQP7L?=
- =?us-ascii?Q?DtI/FoDVARlMUCNyAHlM+TTJPMsI?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR12MB6405.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?U2sLVuM4hm2+0wAVn7EBaTK+WQg3SaHbswLgYsan6UJeT6Tj+Fv+MMUqHzlW?=
- =?us-ascii?Q?cDc8De8Tom/khxMO2JCRObpY5jG59xrXfzy6y3gx5h4ksh2K7dpNPYB9iZJb?=
- =?us-ascii?Q?4IW/3ZtEuHAXHupzyDH2PBs4u78qi3yFhRkl7TpDOP8RYVw4TnfpNLMFOyR+?=
- =?us-ascii?Q?D2t0Tf+DJWHVCKvrTdVAREwl1sqvilpKkfHMQZuGlen/pT5c/UH6K0qioLkj?=
- =?us-ascii?Q?adzGhWa/tJ36/g2iWaWj93Q7oMHYryBPeZLURULhLAnlk2hEpvy8XcfFap38?=
- =?us-ascii?Q?5ruMvCzk/s3sfHv+i+nyTpUXb1L22ar/a3N447qjfDWGvxte9Om/yU19jc/E?=
- =?us-ascii?Q?8yVMeA8kLDrbAgeO3Me2gwVbDhRQMHecs07r3uOR1ItZrbT2aKGx+rcVBWAb?=
- =?us-ascii?Q?PSMcsU5XeUCe70nK6X0Vm9vlztffW+MdZmA/rRnyfmkmC6S65/5yD+QRN56a?=
- =?us-ascii?Q?hkvKx0T6eQEj0oxhnSsdyXh5cm0ezwj0leDxHOQY432drWyDSQ2pXXLbgZAz?=
- =?us-ascii?Q?xk+uPrJVMVjwmJxAxFAFMDyJnhIWKkTBXLUIJzztMvT54kfLnjeldGeu9nJp?=
- =?us-ascii?Q?zdSDYDAkvNWkHxUZvEaZwE+cxgiDHE3yqv/9OMZs0vwpIX3Y/jkWN4/D1nMx?=
- =?us-ascii?Q?Ic19QdlaFVFPIBPRiMukL46+3wrEhS0EHvbDO1TM4km61alavaMHn+YdHL9G?=
- =?us-ascii?Q?pUJ9hinc+MNZA358+ja4oH5mHiYnF2Hm+SFSE5mtI1HEbN5GxnnhngAWREyz?=
- =?us-ascii?Q?CNZ73dNKSYM7NuyQNfIuak029UDIGIGdYihFBXfotygVhGhoeiXr9hSYUJ+e?=
- =?us-ascii?Q?I/GSVpZFlqv9Kwg79Ng1DZj05qm7oa3qKnYZLTGglJmPx2uYBW30lQUx1fWb?=
- =?us-ascii?Q?qpR8rGeO5qc/NYOJF4uW3ZI7dxiH6giILdfzcTTkgL4WOtqXfeYyIZxBuJif?=
- =?us-ascii?Q?OL4sC0EoYb89rB3a4iphDfDknECLnEmIkFHsWanpghi5IsiNFfI/bwRbR+JS?=
- =?us-ascii?Q?AGzZ43AFSDt/x7tbIBrzVyvIl72BqgUd6rW6EayqUDfC7itZxtJyc/sYV9zU?=
- =?us-ascii?Q?bONhy1QwQRLgaYTwIoENF1hCIEykFnTzTlrQIZTNyP0bQHZb9SQUqYhOhsuU?=
- =?us-ascii?Q?TSHX9oYKKSTvcuGVuAytTfVzjPl2RDzd4BFI/ZkXHaloJgXBJE7oyo10Bz6B?=
- =?us-ascii?Q?GwcUxDybJ7lOkbUaliF2H0LCt0QYVaIWMqf54zMwVGp+I6FgbLwLr5MQ4PFd?=
- =?us-ascii?Q?1b+E7IQ9kaYD6j6P2yhPlh4qHoo4Ek7iqIqEDx/BycvtEN+VQJGX+nctA6v7?=
- =?us-ascii?Q?yqE6Oyvq6TpM2+nqcDVklynhnR3EqAoPzxAGsVcBZ5AJezmWbH6oH7qheyKk?=
- =?us-ascii?Q?fRECYPbnpk4kRwR8mdyu3SY18t4SbdyAXORFWax4fCfqnMRtLOp2GvLr2HWG?=
- =?us-ascii?Q?lZRrV7cmN+oXbO+scLz+xc5H3uK4J91/goVfLphEgb/J7ySz/eAcOIEaSM0x?=
- =?us-ascii?Q?VCSn1GqKJovJLYU7PAGSzGPeL20pH7BRqMJjtN5kBgW72oIbsIGjPA4x9MyL?=
- =?us-ascii?Q?sXqwjAPc7//s0pIWkAKW7p/vPw4zCTwtwh5YzdZ9?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fb53b34d-875a-4795-f7d8-08dd734c2366
-X-MS-Exchange-CrossTenant-AuthSource: CY5PR12MB6405.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Apr 2025 07:41:40.6560
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: V9NJ8hfXddUd5G0pPAsCPlBqBi1xwTEmQuQO18fNOcxCOc3F17kpZ3aZtEJhZB+tIwvklAYxBXkzzZi/7fHKhw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4170
+Content-Transfer-Encoding: 8bit
 
-Hi Tejun,
+Current minimum required version of binutils is 2.25,
+which supports AVX-512 instruction mnemonics.
 
-On Thu, Apr 03, 2025 at 12:49:42PM -1000, Tejun Heo wrote:
-> The tag "ops" is used for two different purposes. First, to indicate that
-> the entity is directly related to the operations such as flags carried in
-> sched_ext_ops. Second, to indicate that the entity applies to something
-> global such as enable or bypass states. The second usage is historical and
-> causes confusion rather than clarifying anything. For example,
-> scx_ops_enable_state enums are named SCX_OPS_* and thus conflict with
-> scx_ops_flags.
+Remove check for assembler support of AVX-512 instructions
+and all relevant macros for conditional compilation.
 
-We should probably rename also SCX_OPS_TASK_ITER_BATCH, which is not
-related to sched_ext_ops as well.
+No functional change intended.
 
-Apart than that and the other comment about scx_error(), this looks like a
-good cleanup.
+Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Reviewed-by: Eric Biggers <ebiggers@kernel.org>
+---
+v2: Do not remove AS_AVX512 from arch/x86/Kconfig.assembler.
+---
+ arch/x86/crypto/Kconfig                       | 2 +-
+ arch/x86/crypto/Makefile                      | 3 +--
+ arch/x86/crypto/blake2s-core.S                | 4 ----
+ arch/x86/crypto/blake2s-glue.c                | 6 ++----
+ arch/x86/crypto/chacha_glue.c                 | 6 ++----
+ arch/x86/crypto/poly1305-x86_64-cryptogams.pl | 8 --------
+ arch/x86/crypto/poly1305_glue.c               | 6 +++---
+ 7 files changed, 9 insertions(+), 26 deletions(-)
 
-Acked-by: Andrea Righi <arighi@nvidia.com>
+diff --git a/arch/x86/crypto/Kconfig b/arch/x86/crypto/Kconfig
+index 3d948f10c94c..547bb0db9217 100644
+--- a/arch/x86/crypto/Kconfig
++++ b/arch/x86/crypto/Kconfig
+@@ -332,7 +332,7 @@ config CRYPTO_ARIA_AESNI_AVX2_X86_64
+ 
+ config CRYPTO_ARIA_GFNI_AVX512_X86_64
+ 	tristate "Ciphers: ARIA with modes: ECB, CTR (AVX512/GFNI)"
+-	depends on X86 && 64BIT && AS_AVX512 && AS_GFNI
++	depends on X86 && 64BIT && AS_GFNI
+ 	select CRYPTO_SKCIPHER
+ 	select CRYPTO_SIMD
+ 	select CRYPTO_ALGAPI
+diff --git a/arch/x86/crypto/Makefile b/arch/x86/crypto/Makefile
+index e06b739176c9..2f22b381f244 100644
+--- a/arch/x86/crypto/Makefile
++++ b/arch/x86/crypto/Makefile
+@@ -43,8 +43,7 @@ obj-$(CONFIG_CRYPTO_AEGIS128_AESNI_SSE2) += aegis128-aesni.o
+ aegis128-aesni-y := aegis128-aesni-asm.o aegis128-aesni-glue.o
+ 
+ obj-$(CONFIG_CRYPTO_CHACHA20_X86_64) += chacha-x86_64.o
+-chacha-x86_64-y := chacha-avx2-x86_64.o chacha-ssse3-x86_64.o chacha_glue.o
+-chacha-x86_64-$(CONFIG_AS_AVX512) += chacha-avx512vl-x86_64.o
++chacha-x86_64-y := chacha-avx2-x86_64.o chacha-ssse3-x86_64.o chacha-avx512vl-x86_64.o chacha_glue.o
+ 
+ obj-$(CONFIG_CRYPTO_AES_NI_INTEL) += aesni-intel.o
+ aesni-intel-y := aesni-intel_asm.o aesni-intel_glue.o
+diff --git a/arch/x86/crypto/blake2s-core.S b/arch/x86/crypto/blake2s-core.S
+index b50b35ff1fdb..ac1c845445a4 100644
+--- a/arch/x86/crypto/blake2s-core.S
++++ b/arch/x86/crypto/blake2s-core.S
+@@ -29,7 +29,6 @@ SIGMA:
+ .byte 13,  7, 12,  3, 11, 14,  1,  9,  2,  5, 15,  8, 10,  0,  4,  6
+ .byte  6, 14, 11,  0, 15,  9,  3,  8, 10, 12, 13,  1,  5,  2,  7,  4
+ .byte 10,  8,  7,  1,  2,  4,  6,  5, 13, 15,  9,  3,  0, 11, 14, 12
+-#ifdef CONFIG_AS_AVX512
+ .section .rodata.cst64.BLAKE2S_SIGMA2, "aM", @progbits, 640
+ .align 64
+ SIGMA2:
+@@ -43,7 +42,6 @@ SIGMA2:
+ .long  6, 13,  0, 14, 12,  2,  1, 11, 15,  4,  5,  8,  7,  9,  3, 10
+ .long 15,  5,  4, 13, 10,  7,  3, 11, 12,  2,  0,  6,  9,  8,  1, 14
+ .long  8,  7, 14, 11, 13, 15,  0, 12, 10,  4,  5,  6,  3,  2,  1,  9
+-#endif /* CONFIG_AS_AVX512 */
+ 
+ .text
+ SYM_FUNC_START(blake2s_compress_ssse3)
+@@ -174,7 +172,6 @@ SYM_FUNC_START(blake2s_compress_ssse3)
+ 	RET
+ SYM_FUNC_END(blake2s_compress_ssse3)
+ 
+-#ifdef CONFIG_AS_AVX512
+ SYM_FUNC_START(blake2s_compress_avx512)
+ 	vmovdqu		(%rdi),%xmm0
+ 	vmovdqu		0x10(%rdi),%xmm1
+@@ -253,4 +250,3 @@ SYM_FUNC_START(blake2s_compress_avx512)
+ 	vzeroupper
+ 	RET
+ SYM_FUNC_END(blake2s_compress_avx512)
+-#endif /* CONFIG_AS_AVX512 */
+diff --git a/arch/x86/crypto/blake2s-glue.c b/arch/x86/crypto/blake2s-glue.c
+index 0313f9673f56..00f84f29cc8c 100644
+--- a/arch/x86/crypto/blake2s-glue.c
++++ b/arch/x86/crypto/blake2s-glue.c
+@@ -41,8 +41,7 @@ void blake2s_compress(struct blake2s_state *state, const u8 *block,
+ 					    SZ_4K / BLAKE2S_BLOCK_SIZE);
+ 
+ 		kernel_fpu_begin();
+-		if (IS_ENABLED(CONFIG_AS_AVX512) &&
+-		    static_branch_likely(&blake2s_use_avx512))
++		if (static_branch_likely(&blake2s_use_avx512))
+ 			blake2s_compress_avx512(state, block, blocks, inc);
+ 		else
+ 			blake2s_compress_ssse3(state, block, blocks, inc);
+@@ -59,8 +58,7 @@ static int __init blake2s_mod_init(void)
+ 	if (boot_cpu_has(X86_FEATURE_SSSE3))
+ 		static_branch_enable(&blake2s_use_ssse3);
+ 
+-	if (IS_ENABLED(CONFIG_AS_AVX512) &&
+-	    boot_cpu_has(X86_FEATURE_AVX) &&
++	if (boot_cpu_has(X86_FEATURE_AVX) &&
+ 	    boot_cpu_has(X86_FEATURE_AVX2) &&
+ 	    boot_cpu_has(X86_FEATURE_AVX512F) &&
+ 	    boot_cpu_has(X86_FEATURE_AVX512VL) &&
+diff --git a/arch/x86/crypto/chacha_glue.c b/arch/x86/crypto/chacha_glue.c
+index 8bb74a272879..ce12ad807af1 100644
+--- a/arch/x86/crypto/chacha_glue.c
++++ b/arch/x86/crypto/chacha_glue.c
+@@ -48,8 +48,7 @@ static unsigned int chacha_advance(unsigned int len, unsigned int maxblocks)
+ static void chacha_dosimd(u32 *state, u8 *dst, const u8 *src,
+ 			  unsigned int bytes, int nrounds)
+ {
+-	if (IS_ENABLED(CONFIG_AS_AVX512) &&
+-	    static_branch_likely(&chacha_use_avx512vl)) {
++	if (static_branch_likely(&chacha_use_avx512vl)) {
+ 		while (bytes >= CHACHA_BLOCK_SIZE * 8) {
+ 			chacha_8block_xor_avx512vl(state, dst, src, bytes,
+ 						   nrounds);
+@@ -282,8 +281,7 @@ static int __init chacha_simd_mod_init(void)
+ 	    cpu_has_xfeatures(XFEATURE_MASK_SSE | XFEATURE_MASK_YMM, NULL)) {
+ 		static_branch_enable(&chacha_use_avx2);
+ 
+-		if (IS_ENABLED(CONFIG_AS_AVX512) &&
+-		    boot_cpu_has(X86_FEATURE_AVX512VL) &&
++		if (boot_cpu_has(X86_FEATURE_AVX512VL) &&
+ 		    boot_cpu_has(X86_FEATURE_AVX512BW)) /* kmovq */
+ 			static_branch_enable(&chacha_use_avx512vl);
+ 	}
+diff --git a/arch/x86/crypto/poly1305-x86_64-cryptogams.pl b/arch/x86/crypto/poly1305-x86_64-cryptogams.pl
+index b9abcd79c1f4..409ec6955733 100644
+--- a/arch/x86/crypto/poly1305-x86_64-cryptogams.pl
++++ b/arch/x86/crypto/poly1305-x86_64-cryptogams.pl
+@@ -2811,18 +2811,10 @@ if ($avx>2) {
+ # reason stack layout is kept identical to poly1305_blocks_avx2. If not
+ # for this tail, we wouldn't have to even allocate stack frame...
+ 
+-if($kernel) {
+-	$code .= "#ifdef CONFIG_AS_AVX512\n";
+-}
+-
+ &declare_function("poly1305_blocks_avx512", 32, 4);
+ poly1305_blocks_avxN(1);
+ &end_function("poly1305_blocks_avx512");
+ 
+-if ($kernel) {
+-	$code .= "#endif\n";
+-}
+-
+ if (!$kernel && $avx>3) {
+ ########################################################################
+ # VPMADD52 version using 2^44 radix.
+diff --git a/arch/x86/crypto/poly1305_glue.c b/arch/x86/crypto/poly1305_glue.c
+index 08ff4b489f7e..8b5593c46da7 100644
+--- a/arch/x86/crypto/poly1305_glue.c
++++ b/arch/x86/crypto/poly1305_glue.c
+@@ -107,7 +107,7 @@ static void poly1305_simd_blocks(void *ctx, const u8 *inp, size_t len,
+ 		const size_t bytes = min_t(size_t, len, SZ_4K);
+ 
+ 		kernel_fpu_begin();
+-		if (IS_ENABLED(CONFIG_AS_AVX512) && static_branch_likely(&poly1305_use_avx512))
++		if (static_branch_likely(&poly1305_use_avx512))
+ 			poly1305_blocks_avx512(ctx, inp, bytes, padbit);
+ 		else if (static_branch_likely(&poly1305_use_avx2))
+ 			poly1305_blocks_avx2(ctx, inp, bytes, padbit);
+@@ -265,8 +265,8 @@ static int __init poly1305_simd_mod_init(void)
+ 	if (boot_cpu_has(X86_FEATURE_AVX) && boot_cpu_has(X86_FEATURE_AVX2) &&
+ 	    cpu_has_xfeatures(XFEATURE_MASK_SSE | XFEATURE_MASK_YMM, NULL))
+ 		static_branch_enable(&poly1305_use_avx2);
+-	if (IS_ENABLED(CONFIG_AS_AVX512) && boot_cpu_has(X86_FEATURE_AVX) &&
+-	    boot_cpu_has(X86_FEATURE_AVX2) && boot_cpu_has(X86_FEATURE_AVX512F) &&
++	if (boot_cpu_has(X86_FEATURE_AVX) && boot_cpu_has(X86_FEATURE_AVX2) &&
++	    boot_cpu_has(X86_FEATURE_AVX512F) &&
+ 	    cpu_has_xfeatures(XFEATURE_MASK_SSE | XFEATURE_MASK_YMM | XFEATURE_MASK_AVX512, NULL) &&
+ 	    /* Skylake downclocks unacceptably much when using zmm, but later generations are fast. */
+ 	    boot_cpu_data.x86_vfm != INTEL_SKYLAKE_X)
+-- 
+2.49.0
 
-Thanks,
--Andrea
-
-> 
-> This inconsistency will become more noticeable with the planned multiple
-> scheduler support. Clean them up in preparation.
-> 
-> This patchset is on top of the current linus#master e8b471285262 ("Merge tag
-> 'for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/rmk/linux") and
-> contains the following patches:
-> 
->  0001-sched_ext-Drop-ops-from-scx_ops_enable_state-and-fri.patch
->  0002-sched_ext-Drop-ops-from-scx_ops_helper-scx_ops_enabl.patch
->  0003-sched_ext-Drop-ops-from-scx_ops_bypass-scx_ops_breat.patch
->  0004-sched_ext-Drop-ops-from-scx_ops_exit-scx_ops_error-a.patch
->  0005-sched_ext-Drop-ops-from-scx_ops_-init-exit-enable-di.patch
-> 
-> which are also available in the following git branch:
-> 
->  git://git.kernel.org/pub/scm/linux/kernel/git/tj/sched_ext.git scx-drop-ops-from-names
-> 
-> diffstat follows.
-> 
->  kernel/sched/ext.c                |  458 ++++++++++++++++++--------------------
->  kernel/sched/ext_idle.c           |   20 -
->  kernel/sched/sched.h              |    4
->  tools/sched_ext/scx_show_state.py |   14 -
->  4 files changed, 239 insertions(+), 257 deletions(-)
-> 
-> --
-> tejun
-> 
