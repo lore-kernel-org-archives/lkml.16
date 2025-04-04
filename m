@@ -1,250 +1,226 @@
-Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99AAC1A2393;
-	Fri,  4 Apr 2025 08:48:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6854919DFB4
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 08:50:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743756491; cv=none; b=G9dDbGhBWmHUdyEjlTAh8Bs6bSsREuMA4pDKhrKWFokkPV5vnCZsZ3Pvid/KpQCLFpsSg9784PHZGBR+2EdEGG39dvJzOrZ8BfUtBHXXVAu6NMu+Ps6X7eRF2WyUlsFf5jncS40iN3GF89v9K3eWKU4TldAiTubitsz/B9VBF/U=
+	t=1743756654; cv=none; b=Iz0Zex1jgOZL1OfNVZYK8N+gLJftvClHkKunoBcmO6q4cFAyXu38l5sqoHbIvrdAY5GOm7kiiv5+2TQ2W8/twyUMb/ZM9Qt8XNSFcBvjgdNv+GWsSqmUN311Z3dBRlsTGW+HVkmzdlXtLQa6/xbm5mNCNSVNrecTmibZtqTpbkw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743756491; c=relaxed/simple;
-	bh=ZQOEb8u3RDoF68oLgxFL7DOVXtidnbHC/aIeLuWknxs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gBO1+pw0Qoxxg/DOcNpLqs6+oizHJq9aFxSEhOoTKCAYCxao7qNKPnogdIHoFwVcMAU2GmnZM1AmdaAHGlVh6Z9/06CxRQ3Sy4r/F85HWM18Lw32IRwO2ovL+RTqZsEGQVIqey5NhVZo1aHjtc2DqOG6syhLIfA+zpqxK9QorRE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c/tABtJg; arc=none smtp.client-ip=209.85.215.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743756654; c=relaxed/simple;
+	bh=2jg+qs3Whl3tuhDOYf9dfPC+A7kP0mjKDtCbdH6iKZo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JLq7UqVrZfLVaMk+XxH4mJ0C1Jg7to7W6WFUsaluQLfxnkAmLfxO2emfgHVnOFbAsi+qwhwxY+Ex9HXx/WT3s+MyrZ5RjT8mcUf4SERh+UUjDRpiaRPEMVAX3NJIflsjlpB0WTWtcfMDzghfE1Lz7aFzVHXqI6VQLFguD7/a4Wo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=dqyFuZ0o; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=w2rQ9U7L; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=dqyFuZ0o; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=w2rQ9U7L; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c/tABtJg"
-Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-af51596da56so1611299a12.0;
-        Fri, 04 Apr 2025 01:48:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743756489; x=1744361289; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=GKYFZl2hMBVvq/tGTvaEyWP0BJSuPsnZGbFqpvTq3m8=;
-        b=c/tABtJgu+1wJsUkjKrBPvwHxlYzTfKx5KLtxrrgzhfwGhnw/6hl78TLrW9GE5gZLN
-         mI+cdtbZozoF4ENePLzbBuob6zSGuyzOVZZ8R0iPpoPK0HqMi0HGj6ryOTfeqfIGSfTK
-         pAMxja0NTobZT/w/Lgg//t9A4/GjDCkldDNK+MVjaz5/VjZLw4G991iQZdAIQJ7XfODq
-         TNp7/9IjOkmeqRr0gleYDD8SWOYuZgPpFTMqoR9vmorBYSfMczWP+9qes8FCBX8ZMkZ4
-         8Wgc6IU/4UzzS5HWxTplc1N3HEIDlsfproGpT5rDScNdUu5vDDlvxrsI51+288VcWt79
-         Q9pw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743756489; x=1744361289;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GKYFZl2hMBVvq/tGTvaEyWP0BJSuPsnZGbFqpvTq3m8=;
-        b=gbT87ZTSv41xMXleiQCkS52QCQ/SguaEStLV2SMtdBL2LCVmHEOTZqLknQsdv41uKU
-         zAb0Ucer2fbARH/u25UKUYyg9QjGnm9dJQ8o78hbYDA56DW4MVLxW+EU4rvRDpiUMFm8
-         036pckZg0Y6yvVjiUglpHOfSsHCP/mb7QEhwOBNjqRV/hjE6suCrrAKPKyoZGMALDlqa
-         u7bpG3i6XRIVnFYo8EKjzmRY4CqeU5GJYAJjE2xOAoFWEO9NAmsxjmcB2y/tooc3V4q/
-         2U70dVingvqB6zCeHUQhb/ykg1+fzoS4wcw2MtRyfswAgoM3+NgizgnaoFPXjJ1ebxhi
-         sq4A==
-X-Forwarded-Encrypted: i=1; AJvYcCUOtJPBRc5IioM0MW3jFu0MMGXcFrb28zqqD7OckVHxBF8crXx9ww8zsToeBpKF85NtGI23/Vuf3j694bw=@vger.kernel.org, AJvYcCV0TrUz1p8A53RwzcsYcJXW8pfivWu8Yt85TGBd4S3hjzRzm7ixpc70T+17hO4p+1I5Wj0=@vger.kernel.org, AJvYcCW0b3wu7OK+/DWh0/EB65e3kBCAroWppkRrG65nqNUThRS3ZtNeAeQkfMQhGUTUYl2MAXFxbBrSxMJaJAJA@vger.kernel.org, AJvYcCWBIyiuXGIrWc6fLzF1IxJMvw3+0LUNFwnO4Ud4/QWiHh+e8RxMeaOo/6rVExCggf5iNxW9F9ZD2JXsnh98@vger.kernel.org, AJvYcCWJQ/bFk24O5Hp0JZV0XFJhNR4kxbJYnBgRCuzlm2K/5tmLXvLybylL2HJ+yV2TZsYwqKRfssoRwFON4f7vfp8=@vger.kernel.org, AJvYcCWVX06+Jmb1/qFd+FIYYK49QQriTeK0e+YunmPqYugJYDo9NIDl6+zXA+ZeLXAitjjhoBlhNb9w@vger.kernel.org, AJvYcCX/mZk2ieEmy+t92MdHcUygsboq5iZ0SqdlX5kc7F8HcLb9DpCS1zzaTPNKFKGzpusSRSmfr7hcSoBsuSE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzT7zSbRSPqDnGUtSv16T1bKfA6vLhno9VQU5t1+t6taJeB69yD
-	/2gnWmPEGDHklhEr417S7xiG6j4mIeb+JGc+RfRa5saC6MKupRSH
-X-Gm-Gg: ASbGncvTfwN7HF3F4A+oXR2eUK2jaHcm+kJMIDrK4fE8i1QuufdBRgpjzUah5prUH5Y
-	iGg/EXVCunVVxag0mIAospw0i5XmUUkZb8GBMpuqP/aSTgjqXASHNNlc8reLwMCTU9+Z5Ud1pZn
-	q5XVL7LUScxUKksRra62grNeCIGmS3DqSNrYNHLecDuTdy7LJaVeozJ8Qb2KAIpiIBCWnsTy7i4
-	BR0Uqi/EZQeIpWvgrY4xyc2dhJEle+As2TPY//wKAZSvYNXu98GuVYpsNLtPiCz5CjvBuIGa3hN
-	i/Egu+iZOIER5Wxvr0/a94tNVHjZEodRT7EhVJLKFHk2cw+E+opN+6UrhvjwVOYMTPgtQ3ZN
-X-Google-Smtp-Source: AGHT+IHQy54LZ/NyiSvEoks7UryUue+uQARWbnhEUMyhIJqZeMH+xfpWnZ/jGnglOqtjlSonVKNhIw==
-X-Received: by 2002:a05:6a21:999d:b0:1f5:8748:76cc with SMTP id adf61e73a8af0-20108188cdemr3659983637.31.1743756488698;
-        Fri, 04 Apr 2025 01:48:08 -0700 (PDT)
-Received: from visitorckw-System-Product-Name ([140.113.216.168])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af9bc32c999sm2377463a12.19.2025.04.04.01.47.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Apr 2025 01:48:07 -0700 (PDT)
-Date: Fri, 4 Apr 2025 16:47:58 +0800
-From: Kuan-Wei Chiu <visitorckw@gmail.com>
-To: Yury Norov <yury.norov@gmail.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>,
-	David Laight <david.laight.linux@gmail.com>,
-	Andrew Cooper <andrew.cooper3@citrix.com>,
-	Laurent.pinchart@ideasonboard.com, airlied@gmail.com,
-	akpm@linux-foundation.org, alistair@popple.id.au,
-	andrew+netdev@lunn.ch, andrzej.hajda@intel.com,
-	arend.vanspriel@broadcom.com, awalls@md.metrocast.net, bp@alien8.de,
-	bpf@vger.kernel.org, brcm80211-dev-list.pdl@broadcom.com,
-	brcm80211@lists.linux.dev, dave.hansen@linux.intel.com,
-	davem@davemloft.net, dmitry.torokhov@gmail.com,
-	dri-devel@lists.freedesktop.org, eajames@linux.ibm.com,
-	edumazet@google.com, eleanor15x@gmail.com,
-	gregkh@linuxfoundation.org, hverkuil@xs4all.nl,
-	jernej.skrabec@gmail.com, jirislaby@kernel.org, jk@ozlabs.org,
-	joel@jms.id.au, johannes@sipsolutions.net, jonas@kwiboo.se,
-	jserv@ccns.ncku.edu.tw, kuba@kernel.org, linux-fsi@lists.ozlabs.org,
-	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org, linux-mtd@lists.infradead.org,
-	linux-serial@vger.kernel.org, linux-wireless@vger.kernel.org,
-	linux@rasmusvillemoes.dk, louis.peens@corigine.com,
-	maarten.lankhorst@linux.intel.com, mchehab@kernel.org,
-	mingo@redhat.com, miquel.raynal@bootlin.com, mripard@kernel.org,
-	neil.armstrong@linaro.org, netdev@vger.kernel.org,
-	oss-drivers@corigine.com, pabeni@redhat.com,
-	parthiban.veerasooran@microchip.com, rfoss@kernel.org,
-	richard@nod.at, simona@ffwll.ch, tglx@linutronix.de,
-	tzimmermann@suse.de, vigneshr@ti.com, x86@kernel.org
-Subject: Re: [PATCH v3 00/16] Introduce and use generic parity16/32/64 helper
-Message-ID: <Z++cvrLOz2VAaUkO@visitorckw-System-Product-Name>
-References: <Z824SgB9Dt5zdWYc@visitorckw-System-Product-Name>
- <Z9CyuowYsZyez36c@thinkpad>
- <80771542-476C-493E-858A-D2AF6A355CC1@zytor.com>
- <Z9GtcNJie8TRKywZ@thinkpad>
- <Z9G2Tyypb3iLoBjn@visitorckw-System-Product-Name>
- <Z9KMKwnZXA2mkD2s@visitorckw-System-Product-Name>
- <Z+AlyB461xwMxMtG@visitorckw-System-Product-Name>
- <eec0dfd7-5e4f-4a08-928c-b7714dbc4a17@zytor.com>
- <Z+6dh1ZVIKWWOKaP@visitorckw-System-Product-Name>
- <Z-6zzP2O-Q7zvTLt@thinkpad>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="dqyFuZ0o";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="w2rQ9U7L";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="dqyFuZ0o";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="w2rQ9U7L"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 3E2B91F385;
+	Fri,  4 Apr 2025 08:50:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1743756650; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=al/KGWINhLbwxqwLgfJXN1NKo8O3SXov2ubbI/5HcV0=;
+	b=dqyFuZ0ob8nMFh7+OXygQwnQW9glQvatYrHsslYiRlROrasnbhZ0BWKjWxaYq8p51LR/vQ
+	g7g/0oxMNffTiV2iskcqX5KPHIiZ1I890R2rArzAV3nB4iydliqEifnVoEnZd7KnqmOEZN
+	DYOa2W9r21ZA6DVgMooiOqcWEBIHhx4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1743756650;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=al/KGWINhLbwxqwLgfJXN1NKo8O3SXov2ubbI/5HcV0=;
+	b=w2rQ9U7LYdkpPj3ZKH/JhXoEWGn0sZFt5ZR5xdamz3gCPFm0yYFGCUBpythm0KSThUXriG
+	dUiKRnthkKSa8yAA==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=dqyFuZ0o;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=w2rQ9U7L
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1743756650; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=al/KGWINhLbwxqwLgfJXN1NKo8O3SXov2ubbI/5HcV0=;
+	b=dqyFuZ0ob8nMFh7+OXygQwnQW9glQvatYrHsslYiRlROrasnbhZ0BWKjWxaYq8p51LR/vQ
+	g7g/0oxMNffTiV2iskcqX5KPHIiZ1I890R2rArzAV3nB4iydliqEifnVoEnZd7KnqmOEZN
+	DYOa2W9r21ZA6DVgMooiOqcWEBIHhx4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1743756650;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=al/KGWINhLbwxqwLgfJXN1NKo8O3SXov2ubbI/5HcV0=;
+	b=w2rQ9U7LYdkpPj3ZKH/JhXoEWGn0sZFt5ZR5xdamz3gCPFm0yYFGCUBpythm0KSThUXriG
+	dUiKRnthkKSa8yAA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0EC3113691;
+	Fri,  4 Apr 2025 08:50:50 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id QlMaA2qd72evAQAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Fri, 04 Apr 2025 08:50:50 +0000
+Message-ID: <e316916e-178a-41f2-ab6c-00ca644101b6@suse.cz>
+Date: Fri, 4 Apr 2025 10:50:49 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z-6zzP2O-Q7zvTLt@thinkpad>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/2] Implement numa node notifier
+Content-Language: en-US
+To: Harry Yoo <harry.yoo@oracle.com>, David Hildenbrand <david@redhat.com>
+Cc: Oscar Salvador <osalvador@suse.de>,
+ Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+ mkoutny@suse.com, Dan Williams <dan.j.williams@intel.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>
+References: <20250401092716.537512-1-osalvador@suse.de>
+ <78c976ba-1eaf-47b7-a310-b8a99a3882e2@suse.cz>
+ <Z-1tzl2NqqRUYyU-@localhost.localdomain>
+ <e1ebfafa-f063-4340-b577-d1b6b2fb5d11@redhat.com> <Z-8GY8X9uAE8LsDz@harry>
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <Z-8GY8X9uAE8LsDz@harry>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 3E2B91F385
+X-Spam-Score: -3.01
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-3.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	ARC_NA(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_CC(0.00)[suse.de,linux-foundation.org,kvack.org,vger.kernel.org,gmail.com,suse.com,intel.com,huawei.com];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.cz:mid,suse.cz:dkim]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On Thu, Apr 03, 2025 at 12:14:04PM -0400, Yury Norov wrote:
-> On Thu, Apr 03, 2025 at 10:39:03PM +0800, Kuan-Wei Chiu wrote:
-> > On Tue, Mar 25, 2025 at 12:43:25PM -0700, H. Peter Anvin wrote:
-> > > On 3/23/25 08:16, Kuan-Wei Chiu wrote:
-> > > > 
-> > > > Interface 3: Multiple Functions
-> > > > Description: bool parity_odd8/16/32/64()
-> > > > Pros: No need for explicit casting; easy to integrate
-> > > >        architecture-specific optimizations; except for parity8(), all
-> > > >        functions are one-liners with no significant code duplication
-> > > > Cons: More functions may increase maintenance burden
-> > > > Opinions: Only I support this approach
-> > > > 
-> > > 
-> > > OK, so I responded to this but I can't find my reply or any of the
-> > > followups, so let me go again:
-> > > 
-> > > I prefer this option, because:
-> > > 
-> > > a. Virtually all uses of parity is done in contexts where the sizes of the
-> > > items for which parity is to be taken are well-defined, but it is *really*
-> > > easy for integer promotion to cause a value to be extended to 32 bits
-> > > unnecessarily (sign or zero extend, although for parity it doesn't make any
-> > > difference -- if the compiler realizes it.)
-> > > 
-> > > b. It makes it easier to add arch-specific implementations, notably using
-> > > __builtin_parity on architectures where that is known to generate good code.
-> > > 
-> > > c. For architectures where only *some* parity implementations are
-> > > fast/practical, the generic fallbacks will either naturally synthesize them
-> > > from components via shift-xor, or they can be defined to use a larger
-> > > version; the function prototype acts like a cast.
-> > > 
-> > > d. If there is a reason in the future to add a generic version, it is really
-> > > easy to do using the size-specific functions as components; this is
-> > > something we do literally all over the place, using a pattern so common that
-> > > it, itself, probably should be macroized:
-> > > 
-> > > #define parity(x) 				\
-> > > ({						\
-> > > 	typeof(x) __x = (x);			\
-> > > 	bool __y;				\
-> > > 	switch (sizeof(__x)) {			\
-> > > 		case 1:				\
-> > > 			__y = parity8(__x);	\
-> > > 			break;			\
-> > > 		case 2:				\
-> > > 			__y = parity16(__x);	\
-> > > 			break;			\
-> > > 		case 4:				\
-> > > 			__y = parity32(__x);	\
-> > > 			break;			\
-> > > 		case 8:				\
-> > > 			__y = parity64(__x);	\
-> > > 			break;			\
-> > > 		default:			\
-> > > 			BUILD_BUG();		\
-> > > 			break;			\
-> > > 	}					\
-> > > 	__y;					\
-> > > })
-> > >
-> > Thank you for your detailed response and for explaining the rationale
-> > behind your preference. The points you outlined in (a)–(d) all seem
-> > quite reasonable to me.
-> > 
-> > Yury,
-> > do you have any feedback on this?
-> > Thank you.
+On 4/4/25 00:06, Harry Yoo wrote:
+> On Thu, Apr 03, 2025 at 03:02:25PM +0200, David Hildenbrand wrote:
+>> On 02.04.25 19:03, Oscar Salvador wrote:
+>> > On Wed, Apr 02, 2025 at 06:06:51PM +0200, Vlastimil Babka wrote:
+>> > > What if we had two chains:
+>> > > 
+>> > > register_node_notifier()
+>> > > register_node_normal_notifier()
+>> > > 
+>> > > I think they could have shared the state #defines and struct node_notify
+>> > > would have just one nid and be always >= 0.
+>> > > 
+>> > > Or would it add too much extra boilerplate and only slab cares?
+>> > 
+>> > We could indeed go on that direction to try to decouple
+>> > status_change_nid from status_change_nid_normal.
+>> > 
+>> > Although as you said, slub is the only user of status_change_nid_normal
+>> > for the time beign, so I am not sure of adding a second chain for only
+>> > one user.
+>> > 
+>> > Might look cleaner though, and the advantatge is that slub would not get
+>> > notified for nodes adquiring only ZONE_MOVABLE.
+>> > 
+>> > Let us see what David thinks about it.
+>> 
+>> I'd hope we'd be able to get rid of the _normal stuff completely, it's seems
+>> way to specialized.
 > 
-> My feedback to you:
+> Hmm, perhaps we can remove it with as part of this patch series?
 > 
-> I asked you to share any numbers about each approach. Asm listings,
-> performance tests, bloat-o-meter. But you did nothing or very little
-> in that department. You move this series, and it means you should be
-> very well aware of alternative solutions, their pros and cons.
+> status_change_nid_normal has been used to indicate both 'There is a
+> status change' AND 'The node id when the NUMA node has normal memory'.
 > 
-It seems the concern is that I didn't provide assembly results and
-performance numbers. While I believe that listing these numbers alone
-cannot prove which users really care about parity efficiency, I have
-included the assembly results and my initial observations below. Some
-differences, like mov vs movzh, are likely difficult to measure.
+> But since NUMA node notifier triggers only when there is a state change,
+> it can simply pass nid, like patch 2 does. SLUB can then check whether the
+> node has normal memory.
 
-Compilation on x86-64 using GCC 14.2 with O2 Optimization:
+Well the state change could be adding movable memory, SLUB checks that
+there's no normal memory and thus does nothing. Then normal memory is added
+to the node, but there's no new notification and SLUB is left without
+supporting the node forever.
 
-Link to Godbolt: https://godbolt.org/z/EsqPMz8cq
+But with David's suggestion we avoid that problem.
 
-For u8 Input:
-- #2 and #3 generate exactly the same assembly code, while #1 replaces
-  one `mov` instruction with `movzh`, which may slightly slow down the
-  performance due to zero extension.
-- Efficiency: #2 = #3 > #1
+> Or am I missing something?
+> 
+>> We added that in
+>> 
+>> commit b9d5ab2562eceeada5e4837a621b6260574dd11d
+>> Author: Lai Jiangshan <laijs@cn.fujitsu.com>
+>> Date:   Tue Dec 11 16:01:05 2012 -0800
+>> 
+>>     slub, hotplug: ignore unrelated node's hot-adding and hot-removing
+>>     SLUB only focuses on the nodes which have normal memory and it ignores the
+>>     other node's hot-adding and hot-removing.
+>>     Aka: if some memory of a node which has no onlined memory is online, but
+>>     this new memory onlined is not normal memory (for example, highmem), we
+>>     should not allocate kmem_cache_node for SLUB.
+>>     And if the last normal memory is offlined, but the node still has memory,
+>>     we should remove kmem_cache_node for that node.  (The current code delays
+>>     it when all of the memory is offlined)
+>>     So we only do something when marg->status_change_nid_normal > 0.
+>>     marg->status_change_nid is not suitable here.
+>>     The same problem doesn't exist in SLAB, because SLAB allocates kmem_list3
+>>     for every node even the node don't have normal memory, SLAB tolerates
+>>     kmem_list3 on alien nodes.  SLUB only focuses on the nodes which have
+>>     normal memory, it don't tolerate alien kmem_cache_node.  The patch makes
+>>     SLUB become self-compatible and avoids WARNs and BUGs in rare conditions.
+>> 
+>> 
+>> How "bad" would it be if we do the slab_mem_going_online_callback() etc even
+>> for completely-movable nodes? I assume one kmem_cache_alloc() per slab_caches.
+>>
+>> slab_mem_going_offline_callback() only does shrinking, #dontcare
+>> 
+>> Looking at slab_mem_offline_callback(), we never even free the caches either
+>> way when offlining. So the implication would be that we would have movable-only nodes
+>> set in slab_nodes.
+>> 
+>> 
+>> We don't expect many such nodes, so ... do we care?
+>> 
+>> -- 
+>> Cheers,
+>> 
+>> David / dhildenb
+>> 
+>> 
+> 
 
-For u16 Input:
-- As with u8 input, #1 performs an unnecessary zero extension, while #3
-  replaces one of the `shr` instructions in #2 with a `mov`, making it
-  slightly faster.
-- Efficiency: #3 > #2 > #1
-
-For u32 Input:
-- #1 has an additional `mov` instruction compared to #2, and #2 has an
-  extra `shr` instruction compared to #3.
-- Efficiency: #3 > #2 > #1
-
-For u64 Input:
-- #1 and #2 generate the same code, but #3 has one less `shr`
-  instruction compared to the others.
-- Efficiency: #3 > #1 = #2
-
----
-
-Adding -m32 Flag to View Assembly for 32-bit Machine:
-
-Link to Godbolt: https://godbolt.org/z/GrPa86Eq5
-
-For u8 Input:
-- #2 and #3 generate identical assembly code, whereas #1 has additional
-  `mov`, `shr`, and `push/pop` instructions.
-- Efficiency: #2 = #3 > #1
-
-For u16 Input:
-- #1 uses a lot of `xmm` register operations, making it slower than #2
-  and #3. Additionally, #2 has an extra `shr` instruction compared to #3.
-- Efficiency: #3 > #2 > #1
-
-For u32 Input:
-- #1 again uses a lot of `xmm` register operations, so it is slower
-  than #2 and #3, and #2 has an additional `shr` instruction compared to #3.
-- Efficiency: #3 > #2 > #1
-
-For u64 Input:
-- Both #1 and #2 use `xmm` register operations, but #1 has a few extra
-  `movdqa` instructions. #3 is more concise, using a few `shr`, `xor`,
-  and `mov` instructions to complete the operation.
-- Efficiency: #3 > #2 > #1
-
-Regards,
-Kuan-Wei
