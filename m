@@ -1,74 +1,75 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C53CE25776
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 07:53:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 952E718CC10
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 07:53:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743753227; cv=none; b=ZvtKpfqdXaabg5v5I+RYXnv6e20a+drLhJZ/uBd0czCayAIHPXQnIv66PQSDjmVIYgydtnD7MMkO1L5l7b3tibgA0UBrKNKJSpU2t0hDOoJnzvxY0vW3c+/+8rn58B+aKkH+EaRX5lcXgOuWOK2rACFQukwcp7npzO3A7sXYFbg=
+	t=1743753239; cv=none; b=jO5ZIMHUWiQExdEvnM6TdEOJv8iEruNz5SB5Vra7d5VzdKu5KiVtDyNLC5ztBHKa2I02M4yeD0G6aD+N7bpgyvfZNaHBay0a4vJQpED002xIgEcfncDapMbI1YCnv+PcQiJk1JC8o/oh/7yj7HDVOu6lvBXrhrnCUExpMO7VvuY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743753227; c=relaxed/simple;
-	bh=r9khSvMMV0yozH0rzjo8JBgc41XEfqOhVFzyTEndWgw=;
+	s=arc-20240116; t=1743753239; c=relaxed/simple;
+	bh=FDbptvu9aXxROFxleCfyl7mhheo033s/9xoVB4NEL3U=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m9/L/hNXECR8PkIvytCDmQ9F5g9rRCEl4+XCVeTVIYbiDJFMuKu5JwamARzkmYEh7O1NNk/ehaOtsmb93uZjG8aSWOtoYmPvZ4d57+g8alu1kYJwCagI8ZUABdqykqyYkTEmP76vQguXAPnZUzH/YS460XpUjXgh2uYOyRbyegU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=oRdPxgXp; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=roqinQuWaDeirlUOyjoA0qUVgVMY47c1pN8LzfTqZR58QbaJE1vBZbu6bPBNgtJ/l17PxJj6/MhBar96F9vbWyrsAVbkpIgUJK/HEraO6rys3YKfIo89C+jxyUii8vWcBE7lQOkx7gYjakT9ma/b2cIpIZ/Rlo9CbmiFIyXYyj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=O4IVcWH5; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=xdPpIR7h; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=O4IVcWH5; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=xdPpIR7h; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oRdPxgXp"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43cfa7e7f54so10533015e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 00:53:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743753224; x=1744358024; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=3GvNudHj43sLnU2IimkQsPqmval+E8iAU6S3i4j/9Ag=;
-        b=oRdPxgXpKAlq1tpMRcbnzU53KAG2qfbg4B8l0vgEwQadGRfl/Vp3gC+zIFlntIYa9W
-         jk1WBFl1igYKDliYjRSW8f5kZuFAV6GZD6tyc+FG+YttzPp9tzc9FK5TMtPSClgzMESX
-         PLAsnzOnLUEShmPytrAcldqRH4V44XuJFL2bp8RU9LvsY8K4I6FSwLIbgng/KMU7A1Gl
-         TyBm1btun/m8yCPXq7Zsj8eXo7jyqiexkokUtd881X4H1KUulRY6trwSOAZP57e10xMt
-         vv3W/mGc6aB16tdeNjV2IzkeCSCMhDzzu/wEScVRHTxbPIyv3mQ3TbfEjtT3yey68haH
-         +ofQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743753224; x=1744358024;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3GvNudHj43sLnU2IimkQsPqmval+E8iAU6S3i4j/9Ag=;
-        b=eW1V+d58IJM3ukjnhve/PFGYSzBApuExN/hg6iZRyecWQtYP/J1zr7cYZul4SOMbxY
-         fHIL9zuHdsYAB0M4C/AmhmBumj+3/YcaFuMQ37TJC/yP39f3eawN2oCHhV2eBCmGus4G
-         01tVEfHJGM4wVXH/1qRhPYF2p5c4fadBWnVt0Py1JAvX7DecDVDyb3XAaJWmgS2YwAny
-         HhCmVgU3efWKgROmY4flAPejhzLsCdkfGxHqn3coOSehlR1docnTOx/Q05vYJ/zsZI0g
-         wq9j+j22eGo9lLK88CKHC+diLJ+3qaBQgrXDFpnzVcAYt2AXADLlkE8Sd6yV0qzlZtmB
-         AsSg==
-X-Forwarded-Encrypted: i=1; AJvYcCWnnpcvZn6ooceoeBgoGy3/1YYfOcUz4ld+zT+rmqPLGhp6d2SpmdyNKF1NfFftVuh8SueJzOz8mp2lnKM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyPxYPGa2I1vI/RVuL6mpXyU+DM0VuJjnEb/Y3s0PFILEx2oULF
-	6e0vtAIje+908lzAM+6/9rYDqWEIXU9KgzDedn2kE8KrwejvNx2QJ8ufAq+TLGw=
-X-Gm-Gg: ASbGncuPrBshnPBm3p5BOcaaela9bcvmIK4jNww5mwm1oGj8wZkCBLkHoRYLc1EbfBe
-	WShw/Kkd5gljmMgU0grXdkTpBROXWlBl1pOGG6uSmHQyCVMQ+FNL+vUntUDjjHuw+9L2A+7pDjZ
-	RsCYRlgBenrHJ6MfSGjBWEnxsOYVX5rcKqv6YLgrEzy18qbtmhSbne+Om8+SIH0zMYrjA3ad5OD
-	0C/D1hQFoZ5sjK6Et6jqeXc0PiXtitkxd9WnGTJI3voi2kY3PRxzlLmIwO0xhs/S4pM7b2YA9Bv
-	2gAA2bXcasaJOtSVvWDO/IKHoulFDtu7GhBGvpgXGCHS/n6KRg==
-X-Google-Smtp-Source: AGHT+IEdqvONhq2YUwRwTjwRLNZUpJ81Q60Z9i3sMQ6SbaJbaM3ciB6FWcqPTl4o5r9FVChY4xceDg==
-X-Received: by 2002:a05:600c:1d8e:b0:43d:fa5f:7d30 with SMTP id 5b1f17b1804b1-43ecef0230cmr19010215e9.16.1743753223927;
-        Fri, 04 Apr 2025 00:53:43 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-43ec364d036sm38271635e9.26.2025.04.04.00.53.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Apr 2025 00:53:43 -0700 (PDT)
-Date: Fri, 4 Apr 2025 10:53:36 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Sunliming <sunliming@linux.dev>
-Cc: Greg KH <gregkh@linuxfoundation.org>, dpenkler@gmail.com, arnd@arndb.de,
-	everestkc@everestkc.com.np, niharchaithanya@gmail.com,
-	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org,
-	sunliming <sunliming@kylinos.cn>, kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH] staging: gpib: warning: variable 'nec_priv' set but not
- used warning
-Message-ID: <f6e2c865-7c9f-4301-a1a8-8a5b1dbbb5f4@stanley.mountain>
-References: <20250321010649.10918-1-sunliming@linux.dev>
- <2025040310-poncho-armband-782a@gregkh>
- <8e92451a-4d43-1836-ce5f-afb6a523115b@linux.dev>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="O4IVcWH5";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="xdPpIR7h";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="O4IVcWH5";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="xdPpIR7h"
+Received: from kitsune.suse.cz (unknown [10.100.12.127])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id AD758211A6;
+	Fri,  4 Apr 2025 07:53:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1743753235; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zYPhgmSXacOeG1Rqk39JiHp34zxT6b3+aTUNNH70zts=;
+	b=O4IVcWH5RcEXFV9mloOFdl2YHmxl7bJoVTrklWGT0rneCsF7tCvleHEaDkRIy++5ND7M9o
+	EdzJlYc5dCH0+tAcedaOnFsGWiXvbGRqmGsSFzE4HtFOBRTdcUgQDFPU88SlEPw363lCl8
+	HzR5xB8S+z5XpPYh9jvnhPGa2rwpKoA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1743753235;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zYPhgmSXacOeG1Rqk39JiHp34zxT6b3+aTUNNH70zts=;
+	b=xdPpIR7hu/R39UsEIUmcsqm9XFkZ1905rSglxIwzfpABCug54BAXdcC4hSgkNRXtdnC7cR
+	xKf6L0Z/0XgQG8DQ==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1743753235; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zYPhgmSXacOeG1Rqk39JiHp34zxT6b3+aTUNNH70zts=;
+	b=O4IVcWH5RcEXFV9mloOFdl2YHmxl7bJoVTrklWGT0rneCsF7tCvleHEaDkRIy++5ND7M9o
+	EdzJlYc5dCH0+tAcedaOnFsGWiXvbGRqmGsSFzE4HtFOBRTdcUgQDFPU88SlEPw363lCl8
+	HzR5xB8S+z5XpPYh9jvnhPGa2rwpKoA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1743753235;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zYPhgmSXacOeG1Rqk39JiHp34zxT6b3+aTUNNH70zts=;
+	b=xdPpIR7hu/R39UsEIUmcsqm9XFkZ1905rSglxIwzfpABCug54BAXdcC4hSgkNRXtdnC7cR
+	xKf6L0Z/0XgQG8DQ==
+Date: Fri, 4 Apr 2025 09:53:54 +0200
+From: Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
+To: Jarkko Sakkinen <jarkko@kernel.org>
+Cc: Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
+	linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Jonathan McDowell <noodles@earth.li>
+Subject: Re: [PATCH] tpm: tis: Increase the default for timeout B
+Message-ID: <Z--QEuu65lJjfoP5@kitsune.suse.cz>
+References: <Z-6Gau3aCB7B3pB9@earth.li>
+ <20250403182519.8412-1-msuchanek@suse.de>
+ <Z-7YHkb_2Dpz7GpV@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,35 +78,96 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8e92451a-4d43-1836-ce5f-afb6a523115b@linux.dev>
+In-Reply-To: <Z-7YHkb_2Dpz7GpV@kernel.org>
+X-Spam-Score: -4.30
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	ARC_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RCVD_COUNT_ZERO(0.00)[0];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_ENVRCPT(0.00)[gmx.de];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[gmx.de,ziepe.ca,vger.kernel.org,earth.li];
+	RCPT_COUNT_FIVE(0.00)[6];
+	FROM_EQ_ENVFROM(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,kitsune.suse.cz:mid,kitsune.suse.cz:helo]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On Fri, Apr 04, 2025 at 02:08:38PM +0800, Sunliming wrote:
+On Thu, Apr 03, 2025 at 09:49:02PM +0300, Jarkko Sakkinen wrote:
+> On Thu, Apr 03, 2025 at 08:25:05PM +0200, Michal Suchanek wrote:
+> > With some Infineon chips the timeouts in tpm_tis_send_data (both B and
+> > C) can reach up to about 2250 ms.
+> > 
+> > Timeout C is retried since
+> > commit de9e33df7762 ("tpm, tpm_tis: Workaround failed command reception on Infineon devices")
+> > 
+> > Timeout B still needs to be extended.
+> > 
+> > Link: https://lore.kernel.org/linux-integrity/Z5pI07m0Muapyu9w@kitsune.suse.cz/
+> > Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+> > ---
+> > V2: Only extend timeout B
 > 
-> On 2025/4/3 22:08, Greg KH wrote:
-> > On Fri, Mar 21, 2025 at 09:06:49AM +0800, sunliming@linux.dev wrote:
-> > > From: sunliming <sunliming@kylinos.cn>
-> > > 
-> > > Fix below kernel warning:
-> > > drivers/staging/gpib/eastwood/fluke_gpib.c:196:23: warning: variable 'nec_priv' set but not
-> > > used [-Wunused-but-set-variable]
-> > > 
-> > > Reported-by: kernel test robot <lkp@intel.com>
-> > Please link to where this was reported.  The report from the robot will
-> > have the needed information in it on how to do this.
+> git format-patch --v2 ;-)
 > 
-> Get it, I will resend the patch to fix this.
+> NP, but use --v3 next time...
 > 
-> Thanks.
+> > ---
+> >  drivers/char/tpm/tpm_tis_core.h | 2 +-
+> >  include/linux/tpm.h             | 2 +-
+> >  2 files changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/char/tpm/tpm_tis_core.h b/drivers/char/tpm/tpm_tis_core.h
+> > index 970d02c337c7..c272c25eb9d4 100644
+> > --- a/drivers/char/tpm/tpm_tis_core.h
+> > +++ b/drivers/char/tpm/tpm_tis_core.h
+> > @@ -54,7 +54,7 @@ enum tis_int_flags {
+> >  enum tis_defaults {
+> >  	TIS_MEM_LEN = 0x5000,
+> >  	TIS_SHORT_TIMEOUT = 750,	/* ms */
+> > -	TIS_LONG_TIMEOUT = 2000,	/* 2 sec */
+> > +	TIS_LONG_TIMEOUT = 4000,	/* 4 sec */
 > 
-> > > Signed-off-by: sunliming <sunliming@kylinos.cn>
-> > As per our documentation, please use your name, not your email alias, on
-> > the signed-off-by line.
+> nit: secs (that said, don't care that much)
 > 
-> It's not my email alias,my name is sunliming too.
+> >  	TIS_TIMEOUT_MIN_ATML = 14700,	/* usecs */
+> >  	TIS_TIMEOUT_MAX_ATML = 15000,	/* usecs */
+> >  };
+> > diff --git a/include/linux/tpm.h b/include/linux/tpm.h
+> > index 6c3125300c00..3db0b6a87d45 100644
+> > --- a/include/linux/tpm.h
+> > +++ b/include/linux/tpm.h
+> > @@ -224,7 +224,7 @@ enum tpm2_const {
+> >  
+> >  enum tpm2_timeouts {
+> >  	TPM2_TIMEOUT_A          =    750,
+> > -	TPM2_TIMEOUT_B          =   2000,
+> > +	TPM2_TIMEOUT_B          =   4000,
+> >  	TPM2_TIMEOUT_C          =    200,
+> >  	TPM2_TIMEOUT_D          =     30,
+> >  	TPM2_DURATION_SHORT     =     20,
+> > -- 
+> > 2.47.1
+> > 
+> 
+> Have you tested with:
+> 
+> https://web.git.kernel.org/pub/scm/linux/kernel/git/jarkko/linux-tpmdd.git/commit/?id=de9e33df7762abbfc2a1568291f2c3a3154c6a9d
 
-Why is it capitalized on your From header on your email but not in your
-Signed-off-by?
+I haven't. It will take about a week to test if things go well.
 
-regards,
-dan carpenter
+Nonetheless, it's fairly clear that both timeouts are exceeded, and this
+fix is only for one of them.
 
+Thanks
+
+Michal
