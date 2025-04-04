@@ -1,102 +1,108 @@
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A903219D081
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 08:53:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A7F719D081;
+	Fri,  4 Apr 2025 08:54:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743756830; cv=none; b=gVFhsEPGTYLqE9GX4+PPYyphR9HJtkWt4OaitKTZ9Yi3xvyzj2QSrlQ/vkEqVE4j39dDlKaaFTeIitnzdmiGPPqJqZMehXsWXhf+J90EGf7eexpLWafTGfjPzYXEW3D1d99NfEf8XoDFGpCnyfApI0OfGQ+pgk53LHyQ8dzkBAY=
+	t=1743756863; cv=none; b=YYonqxpcB1+xMYz+ouYmlM8/i3kxMILBiu40pKIXby3qqjfNPgB8GqxrRKRIAWKb0u/fzV8c+Hgfk69TE7FlP40q4Gb2pWAqiLKRdWtZLSzz48yIZ/Auqqra2y9Mu4VXWf1hGa1Ea095myhoAggz5pU5bMcq+xjfCuyNK9YA+wY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743756830; c=relaxed/simple;
-	bh=ujMPWAnf1O+bgsUZ8iB+TMoPNAqGfSKZOUzSlaV5O/s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BklIhObEUQQS1l2vYmAFKpIpwkA0vmJmqKV4THUTx1bGwMV6uFP8jO78xlz257yDj29+T/wteqjNZpUZb2HyQrDX/dF/GaTPAdeBfr13S4XXBMwQBIOB2T7W3625S24xMdcc5G+T42Q2y+SLshrNbVWtBmvDZMrwdrOLyLx16kc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=V/nATDAD; arc=none smtp.client-ip=209.85.160.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1743756863; c=relaxed/simple;
+	bh=9NYzRZ1COzrlU7BYU5J5GjWaayrhQctCrdHr4Vdoiyc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PlQ5ZVrZAKLz6GHNUxPkXlWt/yGc4SZoNVsJZm0ieiSpMrOXQK1jQkChgwV9TXQVllDGHFqVgVJGYu9JcSJ4GoDxq3F3v1CHseoHdYUXTDWLV0/xfpCDf7I1jwOo5Rcxu4VGm10VoKE02HUrB5iXZwPrjUYm9P1xIdbzoqY2mX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NLNvxFvD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="V/nATDAD"
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-4766cb762b6so18289671cf.0
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 01:53:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743756827; x=1744361627; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ujMPWAnf1O+bgsUZ8iB+TMoPNAqGfSKZOUzSlaV5O/s=;
-        b=V/nATDADvlhYMGWhL6TB4FAfT6QqAXbN5VzqgzAVN+TAwFjUsZlP0rlqZaNXOiOIYY
-         ccBeDPyvZhYmwz9DePK3mCqLnRlmYrDnSUjAIM0lhbIR8PgxHaGTnDEEJWlqqhhW6XIn
-         3NQGD+PyTHbQ4SvlK00Dsod9O7oVbVuZQTjCZC0kXw71M5QTn5D5iuEZU8yiif4Tlg+n
-         pQ0Gd4O2/JLW5gPngK6yyi2VN6o1mcBTWtFBA+PXYNOFyvb2OYpsp0R6F3CXO/T+wc+n
-         dsgDYhCPGKcaYs4xouwbloDmyqb3+80P/dhpg+LwA0yZ7e6sukPHKCInjmK1545Ufymi
-         5+2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743756827; x=1744361627;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ujMPWAnf1O+bgsUZ8iB+TMoPNAqGfSKZOUzSlaV5O/s=;
-        b=eXJjYHrRSatmEraM/enDnsMhrSiF3vV7OjMyY8VZhrgr7nJqO1PS3Qo29D4PGWa421
-         mJ+zwBt0XNE6ZRt88ufIx9M93Nh9NsEh1QJh1Qkd0RzaiFqKrZPn7yXLP8J0utTSzJsx
-         Zi33liGS7S7uaGquqw6ShQyjYGs7LY4RwcaaeaBowyZ/1ZCNF8yljZQLVjH9VULKBtjU
-         sqHDSEo1QRxwWx1KVFBhDpVHve/hYgs31VjfPUDFPkJ/lrY0fqM/yFuyKlgoxAYo+bvW
-         vtlhL4rs/tRoF7dgFZKWtktgLjgLDegdCEHVgT1vXw/4sp5udPibwNfwKZP/JEfvd2Pk
-         iKWg==
-X-Forwarded-Encrypted: i=1; AJvYcCWvvE+/Eq/eV/yEORUUQqW+8r5Nb6Yh1nLppgAkMjaCKRTnMeusYQagULGFZj4VQXpcDcyK2eGHuQ1XrCA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwxBg2jgn8xceppNPgdPDSYvJRfo7FF/jXEsc5WpKh0mhLvVTdu
-	7kL42KbgXXxOY4L8236KaLclK/k4pb5F4HcGSD0rrdoWB+1BO1DJLNI3+lLYLKv7Q2kYHtU7xRK
-	ft8cGQ9aLAdFiVUcY6A+kUT/0W0SJIi7PkRwq
-X-Gm-Gg: ASbGncvS3bmYlY0EnUDeCIaszFitJppx//rT4PaWvm1fKZsYHIr/sNfr/FvrseSYvbF
-	/ayeiusuS2yCVK47YD3lJKEAduJIVMoIdno+4UCBXKVvXKPJlB7pA0DUJBh5UpawRN+1UmVIRoz
-	Obiuc6ruZA/1eHZylRTnWxY4rr29o=
-X-Google-Smtp-Source: AGHT+IEDvlcZZb4tFOjewKa5T6ATIyDdRK4SGeqCi554xhUd6jIH4AI3nWrbMiUMVwr+yZJxTIpJVIPkAIzZLyWMSKc=
-X-Received: by 2002:ac8:578c:0:b0:476:6df0:954f with SMTP id
- d75a77b69052e-47924c86329mr33561751cf.10.1743756827275; Fri, 04 Apr 2025
- 01:53:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NLNvxFvD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D3BBC4CEDD;
+	Fri,  4 Apr 2025 08:54:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743756862;
+	bh=9NYzRZ1COzrlU7BYU5J5GjWaayrhQctCrdHr4Vdoiyc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NLNvxFvD/kmV6TBTFpq/R0bePHNAkKVlEOJC4gcWjs7VdASkGVSXgYGS9iM/i7WkA
+	 7losMYFvh0kdVbvD+3uQ0FGTkPdFusaqF+Ad3baBU6mO4TBk9Ov/UpyREtBmCRRke4
+	 imjwC693PMBULfYAwPYF3dmUXO+itxyCXNQP3oqiuVVBFQeHzoKxrKfjxdPshzvbwa
+	 bFeYDsgWQHdoOYxtMyEX1Ze6UVHLihXw+h8YZkdommypBguHuDXgKmQTEo967ciKQh
+	 NSSLFte/Kimx9c6osf8wtCRYoi8CjDeftEx2Iw5OqZTzqJVDXyFdMBxdCkoACYyoEm
+	 dnWUuYtd09i1w==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1u0com-000000008Lg-0zNa;
+	Fri, 04 Apr 2025 10:54:28 +0200
+Date: Fri, 4 Apr 2025 10:54:28 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Christopher Obbard <christopher.obbard@linaro.org>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org,
+	Rui Miguel Silva <rui.silva@linaro.org>,
+	Abel Vesa <abel.vesa@linaro.org>
+Subject: Re: [PATCH v6] drm/dp: clamp PWM bit count to advertised MIN and MAX
+ capabilities
+Message-ID: <Z--eRHaYw_vbgK2f@hovoldconsulting.com>
+References: <20250330-wip-obbardc-qcom-t14s-oled-panel-brightness-v6-1-84ad1cd1078a@linaro.org>
+ <Z-pTcB0L33bozxjl@hovoldconsulting.com>
+ <CACr-zFAiKRTHyRAF5HkM2drCMD7Q_Z3ZUFAsSnevy38yD8XMwg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250403113519.992462-1-i.abramov@mt-integration.ru>
- <Z-7N60DKIDLS2GXe@mini-arch> <20250404102919.8d08a70102d5200788d1f091@mt-integration.ru>
-In-Reply-To: <20250404102919.8d08a70102d5200788d1f091@mt-integration.ru>
-From: Eric Dumazet <edumazet@google.com>
-Date: Fri, 4 Apr 2025 10:53:35 +0200
-X-Gm-Features: AQ5f1JrJvO-P7srrVogKZHZUEQyOXnDzIFSrTNnEmr8jIXDbBAMV3uDIAoT6Pfs
-Message-ID: <CANn89i+UQQ6GqhWisHQEL0ECNFoQqVrO+2Ee3oDzysdR7dh=Ag@mail.gmail.com>
-Subject: Re: [PATCH net v2] net: Avoid calling WARN_ON() on -ENOMEM in netif_change_net_namespace()
-To: Ivan Abramov <i.abramov@mt-integration.ru>
-Cc: Stanislav Fomichev <stfomichev@gmail.com>, "David S. Miller" <davem@davemloft.net>, 
-	syzbot+1df6ffa7a6274ae264db@syzkaller.appspotmail.com, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
-	Kuniyuki Iwashima <kuniyu@amazon.com>, Stanislav Fomichev <sdf@fomichev.me>, Ahmed Zaki <ahmed.zaki@intel.com>, 
-	Alexander Lobakin <aleksander.lobakin@intel.com>, "Eric W. Biederman" <ebiederm@xmission.com>, 
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	lvc-project@linuxtesting.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACr-zFAiKRTHyRAF5HkM2drCMD7Q_Z3ZUFAsSnevy38yD8XMwg@mail.gmail.com>
 
-On Fri, Apr 4, 2025 at 9:29=E2=80=AFAM Ivan Abramov <i.abramov@mt-integrati=
-on.ru> wrote:
->
-> On Thu, 3 Apr 2025 11:05:31 -0700, Stanislav Fomichev wrote:
-> > On 04/03, Ivan Abramov wrote:
-> >> It's pointless to call WARN_ON() in case of an allocation failure in
-> >> device_rename(), since it only leads to useless splats caused by delib=
-erate
-> >> fault injections, so avoid it.
->
-> > What if this happens in a non-fault injection environment? Suppose
-> > the user shows up and says that he's having an issue with device
-> > changing its name after netns change. There will be no way to diagnose
-> > it, right?
->
-> Failure to allocate a few hundred bytes in kstrdup doesn't seem
-> practically possible and happens only in fault injection scenarios. Other
-> types of failures in device_rename will still trigger WARN_ON.
+On Fri, Apr 04, 2025 at 08:54:29AM +0100, Christopher Obbard wrote:
+> On Mon, 31 Mar 2025 at 09:33, Johan Hovold <johan@kernel.org> wrote:
 
-If you want to fix this, fix it properly.
+> > > @@ -4035,6 +4036,32 @@ drm_edp_backlight_probe_max(struct drm_dp_aux *aux, struct drm_edp_backlight_inf
+> > >       }
+> > >
+> > >       pn &= DP_EDP_PWMGEN_BIT_COUNT_MASK;
+> > > +
+> > > +     ret = drm_dp_dpcd_read_byte(aux, DP_EDP_PWMGEN_BIT_COUNT_CAP_MIN, &pn_min);
+> > > +     if (ret < 0) {
+> > > +             drm_dbg_kms(aux->drm_dev, "%s: Failed to read pwmgen bit count cap min: %d\n",
+> > > +                         aux->name, ret);
+> > > +             return -ENODEV;
+> > > +     }
+> > > +     pn_min &= DP_EDP_PWMGEN_BIT_COUNT_MASK;
+> > > +
+> > > +     ret = drm_dp_dpcd_read_byte(aux, DP_EDP_PWMGEN_BIT_COUNT_CAP_MAX, &pn_max);
+> > > +     if (ret < 0) {
+> > > +             drm_dbg_kms(aux->drm_dev, "%s: Failed to read pwmgen bit count cap max: %d\n",
+> > > +                         aux->name, ret);
+> > > +             return -ENODEV;
+> > > +     }
+> > > +     pn_max &= DP_EDP_PWMGEN_BIT_COUNT_MASK;
+> > > +
+> > > +     /*
+> > > +      * Per VESA eDP Spec v1.4b, section 3.3.10.2:
+> > > +      * If DP_EDP_PWMGEN_BIT_COUNT is less than DP_EDP_PWMGEN_BIT_COUNT_CAP_MIN,
+> > > +      * the sink must use the MIN value as the effective PWM bit count.
+> > > +      * Clamp the reported value to the [MIN, MAX] capability range to ensure
+> > > +      * correct brightness scaling on compliant eDP panels.
+> > > +      */
+> > > +     pn = clamp(pn, pn_min, pn_max);
+> >
+> > You never make sure that pn_min <= pn_max so you could end up with
+> > pn < pn_min on broken hardware here. Not sure if it's something you need
+> > to worry about at this point.
+> 
+> I am honestly not sure. I would hope that devices follow the spec and
+> there is no need to be too paranoid, but then again we do live in the
+> real world where things are... not so simple ;-).
+> I will wait for further feedback from someone who has more experience
+> with eDP panels than I have.
 
-Do not paper around the issue by silencing a warning.
+There's always going to be buggy devices and input should always be
+sanitised so I suggest adding that check before calling clamp() (which
+expects min <= max) so that the result here is well-defined.
+
+Johan
