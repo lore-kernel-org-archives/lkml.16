@@ -1,68 +1,52 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39F0A33FD
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 23:33:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4735713B2BB
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 23:37:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743809603; cv=none; b=pRYf5RzxMdFEq1plW8C3dPiQyoEGPE3oljKaGKzoR9U0VuhWOjhEZCVDxPDyGsFSuSJih6daIwZRDlag1WOjiFNF6m9odZxAC97R6FmgyYONohEXJuZndbpAMR/2i9cMn+MTc1YRaIkBLBFaRVCm9pyLHm2n4rjF+3GEHL8XWKY=
+	t=1743809843; cv=none; b=V5YwxHQWtUrlAgGMT8ScRPmUTwDZmJHBqb1w3shH7go+LoFlGgKLwWc3zivePSBRzm/18+wZNLON7DjfCrTNqWgI6qDJeEkswnGIxhblsxYrW51WGl/F0teFSsl8jmXlbtCGoMYKh4GLVBHn0bVIbn8GhtlgUhDsBlZhoizaaPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743809603; c=relaxed/simple;
-	bh=F01ob2aLQ3liUe4JNIsCv844jx2uuMudGq8B5gfh9E8=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=q2KHGZPItgMc+EBr15tMrb5KzBq1b7DkomAIGG1LI/tJS1pmTeshVxxBpcDLolDQ9YvI4zlr/Q4qyH5TCORF06bTx3GmI9fN6HGcod3soB2zGCrsZ7jlX2VCVl07xoUr+7CGlTzOKGw4+3rMnPgIKCEAOlAbWOLA8mBNwpjZS2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CjfIPsc3; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743809843; c=relaxed/simple;
+	bh=GI8K8fXDBCh2FPVk7FuAjB9WmhRKTpeT98nexJxBQqw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VhUhZsl5qBDr/CrvbBOCTDEVIYVl9Ok6yOPshPWJsMQt/uajhSBmSMtpVN7lkZr1aLSIofb1c28z5pdbaF9DqsYrvB26ztUEuzEyMmCSTQvLBVLYqktED4cwgwmbwIKbHrDWzXIydO42sRNkox3fToEHUqR8qncyJ6HtMT3jgr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=r-ricci.it; spf=pass smtp.mailfrom=r-ricci.it; dkim=pass (2048-bit key) header.d=r-ricci.it header.i=@r-ricci.it header.b=uNXGvnNd; arc=none smtp.client-ip=91.218.175.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=r-ricci.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=r-ricci.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CjfIPsc3"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5e8be1c6ff8so4784206a12.1
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 16:33:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743809600; x=1744414400; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=4EP4z1mChh3kJ48ZHpuKiS3iu2fY6RHMQL3FYeKcgZU=;
-        b=CjfIPsc307nD5aONdSO26TccQFQmb2eObHvwOmbG+RdS7hYiYC1Y6tW5o7yVfr3GAj
-         HGCpSJkEUMOkq/F3Ifz06n+gaBAE03B/o4eJCN1iaVXy2OKNncO81m+UllvuP95bgEYG
-         jztQtNfp8v9/wWlTccHI2y6H7LkEpm66sI3grRBtfVEWVX16ehjZGAEqeQ+pdPpA83IL
-         jEcSyfqO83TNqnwWz+/4026jnyzSPS0Ani+H8gqaAwLdYp6KllMNAa54C7lF/YxjyJT8
-         w71rWmZz8oPQ0KFWepq40f9f1CeMApQuAyVQVXKDLLSE9abpEXOFP8PgotBcNDnPHH9K
-         20ig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743809600; x=1744414400;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4EP4z1mChh3kJ48ZHpuKiS3iu2fY6RHMQL3FYeKcgZU=;
-        b=wBlqpxwAfuhFkBvZ00BjrPnqcY3PtO3iXIsg1L+GydGgmhqyIv4hjxaAjeiQogKdM1
-         6ZesfdvheovW5KbKmWJVY4M65ZFmtVa3adJVW5zhT825rfSF3WnL0BnN+KURh8i8V2+Y
-         WOqd8+8R/Z+8m7xIepzSnq0srS/synqIjTngNYgHV9eS2IaaM4E0isx1/eVfknLe6LdN
-         DiJYyzXYwLhH2XGS+vHzbxcgs6L4IRVcJE/wKbCM3cjyhmMqgqQ9pHCHlBQCOPL/+p18
-         aKoVqwbNSiVSniAF6XB71JA6CCxofmp/eP3PQCfjKj/alAuqDE7x7vGyaBmA+dmLKf7Z
-         gl9A==
-X-Forwarded-Encrypted: i=1; AJvYcCVq81exil8Db7ZYCQaBiTzV1mlla3t2i2WGS/8+Eg+G7r0cb1EyYrKg6rw6rNx+q5QyOy7l0OAbwY+UNEY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxW2B3RE7LR84kMnbnDMphcilsao3DtTFO8CryHXywwJUe9ICks
-	QHMshkHTff438k5bYRsM4tsrZbD3s9HntdqoZx0P3iRVfNKlCj+0
-X-Gm-Gg: ASbGncsxczWWFoQchjCEeKZwAP6iM1q3H7kOfCnLQjv6k/AvndTPFzYUNecE5xvfqUz
-	OMg22z+HdMzke9mPfMysqirUSh5hQ4U8CqRV8EEI5Ki97sm2m8HWFUu1qAtuMd4fNkEdJjlT9Wu
-	DAL1wiyKJN4DJWvIF+rMlBSFO/yIj53YRQZrjWFnVT8Y+0QJ4LFcEaxqClxXSFPwjy+cXjg2VjN
-	JeRYa66Zp3pdg1+mjnc+QmG8XA5j5W4ZlNTmHCHAAr9NyCd4gC1CGJb6CO7hVjakSp6+FjX4hNG
-	49C5JYiQ6bKDdTm2lpmMXbGdVH6cQpHRpahOVWFAtAyG/xifjg==
-X-Google-Smtp-Source: AGHT+IGJ0ANfNXgmMJj0Q1O1O/JVYiWXMA2oa4wpweViwDI5wrLYiU1Dge5Z4oCqR6T4shEd3Ne/9g==
-X-Received: by 2002:a05:6402:2712:b0:5de:39fd:b2f5 with SMTP id 4fb4d7f45d1cf-5f0b5d8b51bmr3718138a12.1.1743809600312;
-        Fri, 04 Apr 2025 16:33:20 -0700 (PDT)
-Received: from ubuntu ([105.112.234.193])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f087ed1c68sm2881390a12.17.2025.04.04.16.33.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Apr 2025 16:33:19 -0700 (PDT)
-Date: Fri, 4 Apr 2025 23:33:16 +0000
-From: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Julia Lawall <julia.lawall@inria.fr>, outreachy@lists.linux.dev
-Cc: linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Dan Carpenter <dan.carpenter@linaro.org>, andy.@kernel.org
-Subject: [PATCH] staging: rtl8723bs: Use % 4096 instead of & 0xfff
-Message-ID: <Z/Bro47isE8zhcu7@ubuntu>
+	dkim=pass (2048-bit key) header.d=r-ricci.it header.i=@r-ricci.it header.b="uNXGvnNd"
+Date: Sat, 5 Apr 2025 01:37:15 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=r-ricci.it; s=key1;
+	t=1743809837;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GI8K8fXDBCh2FPVk7FuAjB9WmhRKTpeT98nexJxBQqw=;
+	b=uNXGvnNdzQlXu9Jvln8BKbLoHI2I6EhtvGmXw39XHygcZbI1Ph6xc8LOngN7VwUnmel0iK
+	198ALO/ZF31C4Cw2P6/mehcV3hvLRmeXxWyoiYVn952yt1IcKpqTi7oO2FEZjeV22nEjRB
+	8rsAbQvNzfdC48WScsCSgjKqAa0FfC0qDkldZTFvyBqKoCVVuNaunnck/GW28gwgr4sHGL
+	L3OcEDfyd07EY1cQxRKSNXSFwHupvyuojSVyDGuvxBevPjBuwvddjBr6bW+T1sxktlLIz+
+	VxvkkfCiFGEoC7wBBMf8uV6kJ3/cakERzlPY7xemL+/OCfmE45dXCpDMy7DJGg==
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Roberto Ricci <io@r-ricci.it>
+To: Baoquan He <bhe@redhat.com>
+Cc: Dave Young <dyoung@redhat.com>, ebiederm@xmission.com,
+	rafael@kernel.org, pavel@ucw.cz, ytcoode@gmail.com,
+	kexec@lists.infradead.org, linux-pm@vger.kernel.org,
+	akpm@linux-foundation.org, regressions@lists.linux.dev,
+	linux-kernel@vger.kernel.org, msizanoen@qtmlabs.xyz,
+	rafael.j.wysocki@intel.com, yu.c.chen@intel.com
+Subject: Re: [REGRESSION] Kernel booted via kexec fails to resume from
+ hibernation
+Message-ID: <Z_BtK43rKhxw28l4@desktop0a>
+References: <Z4WFjBVHpndct7br@desktop0a>
+ <Z5bx7ZHNcyc5fM_L@darkstar.users.ipa.redhat.com>
+ <CALu+AoSSKh=5ELgQyzDrGEDm5fm2XKteH1ZC70mm89pNSSPMHw@mail.gmail.com>
+ <Z-c7V2hptt9U9UCl@desktop0a>
+ <Z+dQZozsbdls6yqJ@MiWiFi-R3L-srv>
+ <Z-hYWc9LtBU1Yhtg@desktop0a>
+ <Z_Bry0JcB1jqPztR@desktop0a>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,48 +55,15 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <Z_Bry0JcB1jqPztR@desktop0a>
+X-Migadu-Flow: FLOW_OUT
 
-Replace the bitwise AND operator `&` with a modulo
-operator `%` and decimal number to make the upper limit visible
-and clear what the semantic of it is.
+On 2025-04-05 01:31 +0200, Roberto Ricci wrote:
+> I've bisected this other bug with kexec_load. I found commit
+> 62a03defeabd PM / hibernate: Verify the consistent of e820 memory map by md5 digest
+> Reverting it on v6.14 fixes kexec_load, but not kexec_file_load.
+> Also applying the patch suggested by msizanoen fixes kexec_file_load, too:
+> https://lore.kernel.org/all/Z_BDbwmFV6wxDPV1@desktop0a/
 
-Also add white spaces around binary operators for improved
-readabiity and adherence to Linux kernel coding style.
-
-Suggested-by Andy Shevchenko <andy.shevchenko@gmail.com>
-
-Signed-off-by: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
----
- drivers/staging/rtl8723bs/core/rtw_xmit.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/staging/rtl8723bs/core/rtw_xmit.c b/drivers/staging/rtl8723bs/core/rtw_xmit.c
-index 297c93d65315..630669193be4 100644
---- a/drivers/staging/rtl8723bs/core/rtw_xmit.c
-+++ b/drivers/staging/rtl8723bs/core/rtw_xmit.c
-@@ -943,7 +943,7 @@ s32 rtw_make_wlanhdr(struct adapter *padapter, u8 *hdr, struct pkt_attrib *pattr
- 
- 			if (psta) {
- 				psta->sta_xmitpriv.txseq_tid[pattrib->priority]++;
--				psta->sta_xmitpriv.txseq_tid[pattrib->priority] &= 0xFFF;
-+				psta->sta_xmitpriv.txseq_tid[pattrib->priority] %= 4096;
- 				pattrib->seqnum = psta->sta_xmitpriv.txseq_tid[pattrib->priority];
- 
- 				SetSeqNum(hdr, pattrib->seqnum);
-@@ -963,11 +963,11 @@ s32 rtw_make_wlanhdr(struct adapter *padapter, u8 *hdr, struct pkt_attrib *pattr
- 					if (SN_LESS(pattrib->seqnum, tx_seq)) {
- 						pattrib->ampdu_en = false;/* AGG BK */
- 					} else if (SN_EQUAL(pattrib->seqnum, tx_seq)) {
--						psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (tx_seq+1)&0xfff;
-+						psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (tx_seq + 1) % 4096;
- 
- 						pattrib->ampdu_en = true;/* AGG EN */
- 					} else {
--						psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (pattrib->seqnum+1)&0xfff;
-+						psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (pattrib->seqnum + 1) % 4096;
- 						pattrib->ampdu_en = true;/* AGG EN */
- 					}
- 				}
--- 
-2.34.1
-
+I mean, doing both things fixes both bugs. The second thing fixes
+kexec_file_load only.
