@@ -1,123 +1,129 @@
-Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDCCB28E8;
-	Fri,  4 Apr 2025 14:07:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33B3028E8;
+	Fri,  4 Apr 2025 14:09:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743775628; cv=none; b=L4+7w7FPEgJubuh/QiVetnnVAyOHLQgDppFSoZVqGFnlLXlsSykoWKUwt3cGW97fyJ9encdZPncSyY74K9V0g2pcMXctt0cb0iMRYm2ylWn8u/PEfMDgFcqCkTMIoSGyxFR+V+/gIMaTCot5kA9nvHW2aWGK6ZgzC+ZujlRCO0E=
+	t=1743775772; cv=none; b=VItF61+DSOnLM0AzXo4afGqi62EjOMvbiAYvD1MM6gNvS0prkMjfJzcAUeiYoB239MUfjlvkaXgatTsBp7AJKrbluUSVBPdD+JlrgsYAOkvEMMazuVkEcuOEsIg0jb40TpbutjVW40aWOKNZCqhtNpDCFroQEclzceNyqTrVg+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743775628; c=relaxed/simple;
-	bh=h5We3wwreBm5Qak5TXwz0wc70IIQzs51jy6CwBitbAI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QX+2IAkWQWch6eFsNBmGZoTzyEE09tyehrkY3/eRabfpWm6yBCAEKxqbM1T3zCUrfa9daDLx2R4bG5Ykio/NsNMZVlS3f3HqQvg9TFNPt+VRfJt6TYjpplPdBXcyLHvUG/VfgzT/X/6YzyhY6SCuWL/84tcw33qV1dpAgZ8VHlw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com; spf=pass smtp.mailfrom=pankajraghav.com; dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b=whQHZy5T; arc=none smtp.client-ip=80.241.56.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
+	s=arc-20240116; t=1743775772; c=relaxed/simple;
+	bh=7vkatnzzxhhVFbD4HxLrh/KjbSJzy28SNpvsJYk/8oM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=S1iRFfvZa2Uf91lkNj77jVv3hTlZ+bU5n5K1ZsEJGcoNRMgasnK4RUHpR1ztLhT2iF/BbYDq4Ef6S6fow6eKVjaHyJdeO6KjyGkcY/xsi3fXAvUq2Wwh9s85iFQVX82LYicvu0lvNsMExkN1RZoDL154Psvb11nw9rsKJsGwcq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=m6kk7GVy; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b="whQHZy5T"
-Received: from smtp102.mailbox.org (smtp102.mailbox.org [10.196.197.102])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="m6kk7GVy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743775771; x=1775311771;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=7vkatnzzxhhVFbD4HxLrh/KjbSJzy28SNpvsJYk/8oM=;
+  b=m6kk7GVywsxUTuy8/ypS/ZLA3XODO/YPN061DVJySXVgbA+fs+mw0oz/
+   kcradNcEB0KxGIrBj80m0ljttrGkEiIbOJ4AFN/TYxTyPK99EHKKsS0UB
+   2/vo/Cxg/QipJ/Ib5Th36ixs7tHdmFs4az4p8qmFs+ikT2jYu1oQo2eu0
+   HjA3HfS7/clT99hQXFwSsidZqNySTxrk8yKXZtU3XF5AXZgtLbBtwmJlo
+   7dorC7ORm2+osMl3mA6jGddVojCw1b5P4LtTgQ3c96wR/8CgbjPxcT2Wj
+   TnMtOKMpzgBdyg7BfSHhLkwKN9bzTdfhK4c/krJozgKxr7yKm19MBvhwf
+   g==;
+X-CSE-ConnectionGUID: lEmXnVm9TLCDG7/xy6O7/A==
+X-CSE-MsgGUID: sp6jpCHvTi6rLAtooiFf/A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11394"; a="45389891"
+X-IronPort-AV: E=Sophos;i="6.15,188,1739865600"; 
+   d="scan'208";a="45389891"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 07:09:30 -0700
+X-CSE-ConnectionGUID: 0qZXDAKJT0y/buDtFmkciQ==
+X-CSE-MsgGUID: PO7ncICxSzGAixNyMY1Wxg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,188,1739865600"; 
+   d="scan'208";a="158308246"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 07:09:30 -0700
+Received: from [10.246.136.14] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.14])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4ZTgQZ6fzfz9t1V;
-	Fri,  4 Apr 2025 16:07:02 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
-	s=MBO0001; t=1743775623;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=d3LlMKgq7dBlVlNItWKVgpXkIcgbMa8xNdNgsyJKxAM=;
-	b=whQHZy5TryGkrcao/56NMXr9BSIDzrhhw/CJjRYFZKIFT51nZ+xw7DbYoi3dYCEEKkQy1v
-	tIUJhIBcIRC0Cf10W45O5/taj9HdgHqhTMb3147cdgoc8iY00DVc3SW9GkEd0zBGG0PeTK
-	clizK9FRHiA61i/LDYEAnYKY/r5A/g1F7CRSnp8n59lKblgM30YB89ZkKI3LlbjPk/BXhf
-	kFl0yJckd3fAMJsWI8sQVNhQbvXIz2ayoij9HYW1q45eqJXSAUZJVjxGhWIsGZqsFrjPsZ
-	+GtzIsmm4564YOoMMqXxQwRwIyyvZqb3YfUV0fGnMNHlUQjt36Wly3Bh/Hegag==
-From: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Jonathan Corbet <corbet@lwn.net>
-Cc: linux-kernel@vger.kernel.org,
-	willy@infradead.org,
-	linux-mm@kvack.org,
-	Bagas Sanjaya <bagasdotme@gmail.com>,
-	David Hildenbrand <david@redhat.com>,
-	da.gomez@kernel.org,
-	mcgrof@kernel.org,
-	gost.dev@samsung.com,
-	linux-doc@vger.kernel.org,
-	kernel@pankajraghav.com,
-	Pankaj Raghav <p.raghav@samsung.com>
-Subject: [PATCH v3] docs: update THP admin guide about non-tmpfs filesystem support
-Date: Fri,  4 Apr 2025 16:06:57 +0200
-Message-ID: <20250404140657.29285-1-kernel@pankajraghav.com>
+	by linux.intel.com (Postfix) with ESMTPS id 10E0120B5736;
+	Fri,  4 Apr 2025 07:09:27 -0700 (PDT)
+Message-ID: <c21d05c6-d71c-47e3-b4a2-e275d9d487f2@linux.intel.com>
+Date: Fri, 4 Apr 2025 10:09:27 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 0/4] Add support for cpu event term
+To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Leo Yan <leo.yan@arm.com>, James Clark <james.clark@linaro.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Weilin Wang <weilin.wang@intel.com>, Andi Kleen <ak@linux.intel.com>,
+ Dominique Martinet <asmadeus@codewreck.org>,
+ Yicong Yang <yangyicong@hisilicon.com>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250403194337.40202-1-irogers@google.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20250403194337.40202-1-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Pankaj Raghav <p.raghav@samsung.com>
 
-THP support for non-tmpfs filesystem has been around for some time now.
-Update the admin guide to reflect it.
 
-While we are at it, move FilePmdMapped to previous paragraph for clarity,
-and clarify ShmemPmdMapped & ShmemHugePage.
+On 2025-04-03 3:43 p.m., Ian Rogers wrote:
+> Being able to set the cpu mask per event was discussed in the context
+> of a sysfs event.cpus file is discussed here:
+> https://lore.kernel.org/lkml/CAP-5=fXXuWchzUK0n5KTH8kamr=DQoEni+bUoo8f-4j8Y+eMBg@mail.gmail.com/
+> Ultimately Kan preferred to have multiple PMUs with a cpumask each
+> rather than an event.cpus file per event. It is still useful to have
+> the cpu event term and so the sysfs part of the original patch series
+> is dropped.
+> 
+> v6: Purely a rebase.
+> v5: Purely a rebase.
+> v4: Add the stat-display output change for zero counters Namhyung
+>     requested as part of the series:
+>     https://lore.kernel.org/lkml/Zvx9VbJWtmkcuSBs@google.com/
+>     This skips zero values for CPUs not in the evsel's cpumask rather
+>     than the evsel's PMU's cpumask.
+> v3: Drop sysfs event.cpus file support patch from series.  Reference
+>     to using cpu to modify uncore events is dropped from the commit
+>     message. Reference counting issues on the cpumap are addressed.
+> v2: Add support for multiple cpu terms on an event that are
+>     merged. For example, an event of "l1d-misses/cpu=4,cpu=5/" will
+>     now be opened on both CPU 4 and 5 rather than just CPU 4.
+> 
+> Ian Rogers (4):
+>   libperf cpumap: Add ability to create CPU from a single CPU number
+>   perf stat: Use counter cpumask to skip zero values
+>   perf parse-events: Set is_pmu_core for legacy hardware events
+>   perf parse-events: Add "cpu" term to set the CPU an event is recorded
+>     on
 
-Signed-off-by: Pankaj Raghav <p.raghav@samsung.com>
-Acked-by: David Hildenbrand <david@redhat.com>
----
+Tried on a Hybrid platform. Everything looks good.
 
-Changes since v2:
-- Address comment from Bagas Sanjaya
-- Squash commits and Ack from David
+Tested-by: Kan Liang <kan.liang@linux.intel.com>
 
- Documentation/admin-guide/mm/transhuge.rst | 22 +++++++++++++++-------
- 1 file changed, 15 insertions(+), 7 deletions(-)
-
-diff --git a/Documentation/admin-guide/mm/transhuge.rst b/Documentation/admin-guide/mm/transhuge.rst
-index dff8d5985f0f..f8aae64e38d0 100644
---- a/Documentation/admin-guide/mm/transhuge.rst
-+++ b/Documentation/admin-guide/mm/transhuge.rst
-@@ -12,8 +12,8 @@ using huge pages for the backing of virtual memory with huge pages
- that supports the automatic promotion and demotion of page sizes and
- without the shortcomings of hugetlbfs.
- 
--Currently THP only works for anonymous memory mappings and tmpfs/shmem.
--But in the future it can expand to other filesystems.
-+Currently, THP only works for anonymous memory mappings, tmpfs/shmem and
-+filesystems that support large folios.
- 
- .. note::
-    in the examples below we presume that the basic page size is 4K and
-@@ -463,11 +463,19 @@ fields for each mapping. (Note that AnonHugePages only applies to traditional
- PMD-sized THP for historical reasons and should have been called
- AnonHugePmdMapped).
- 
--The number of file transparent huge pages mapped to userspace is available
--by reading ShmemPmdMapped and ShmemHugePages fields in ``/proc/meminfo``.
--To identify what applications are mapping file transparent huge pages, it
--is necessary to read ``/proc/PID/smaps`` and count the FilePmdMapped fields
--for each mapping.
-+The number of PMD-sized transparent huge pages currently used by
-+filesystem data (page cache) is available by reading the FileHugePages field
-+in ``/proc/meminfo``. The number of these huge pages that are mapped to userspace
-+is available by reading FilePmdMapped field in ``proc/meminfo``. To identify
-+what applications are mapping these huge pages, it is necessary to read
-+``/proc/PID/smaps`` and count the FilePmdMapped fields for each mapping.
-+
-+In similar fashion, the number of PMD-sized transparent huge pages currently
-+used by tmpfs/shmem is available by reading the ShmemHugePages field
-+in ``/proc/meminfo``. The number of these huge pages that are mapped to userspace
-+is available by reading ShmemPmdMapped field in ``proc/meminfo``. To identify
-+what applications are mapping these huge pages, it is necessary to read
-+``/proc/PID/smaps`` and count the ShmemPmdMapped fields for each mapping.
- 
- Note that reading the smaps file is expensive and reading it
- frequently will incur overhead.
-
-base-commit: f0a16f5363325cc8d9382471cdc7b654c53254c9
--- 
-2.47.2
+Thanks,
+Kan>
+>  tools/lib/perf/cpumap.c                |  10 +++
+>  tools/lib/perf/include/perf/cpumap.h   |   2 +
+>  tools/perf/Documentation/perf-list.txt |   9 ++
+>  tools/perf/util/evsel_config.h         |   1 +
+>  tools/perf/util/parse-events.c         | 113 ++++++++++++++++++-------
+>  tools/perf/util/parse-events.h         |   3 +-
+>  tools/perf/util/parse-events.l         |   1 +
+>  tools/perf/util/pmu.c                  |   3 +-
+>  tools/perf/util/stat-display.c         |  21 +++--
+>  9 files changed, 124 insertions(+), 39 deletions(-)
+> 
 
