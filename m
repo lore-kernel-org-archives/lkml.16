@@ -1,75 +1,145 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from omta36.uswest2.a.cloudfilter.net (omta36.uswest2.a.cloudfilter.net [35.89.44.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 175CB86344;
-	Fri,  4 Apr 2025 15:17:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39F4F3D6F
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 15:18:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743779827; cv=none; b=jswyfAasZl4uSy45ixwDZwIgjbKzFmnonnynlSEJiEQyGN4vZxuKnT1Eam9Y8GThK7koBJeQOT/ddvkAxZF0rcy7ePhbhu1AJCaJO8zoMg+Ub4ePP4ws1GstZbavdYNaTPDYdck/coxZARBkipYGs6qp8eMkGvh8l3GI5jIPRrg=
+	t=1743779910; cv=none; b=TUJq2ChvHhX25xahk5u+AIhjeGDEYICeuWtjCx1rPfvYM3kOTVGxm4VYzZL8u+YntvuqP5Xk75eDZeDgG21/xfCPSnPFH+JrYK25YHgtMDy96SYV6XghDDVHK734WkfdXnvk4XT+tq9vSt/LQbCHq3iOLIx4ibUbq9jUzousVjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743779827; c=relaxed/simple;
-	bh=qOs+fLd7zsPUFNymqQgXx9+kWVigfHUsAiGZPOVHthw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MyiLm7BvinJlrbnnm3KvVyaKsDFMku1grEbAM54yeENDKzsYDb5OC+DQS33GNfqvWZZNKNOVspC31CY4TOUEdtEkgkhN/fNp1dJkpWYZJ5Ph1Qp5utogHxyVGsGVT50NJ1SIHmH788HCXSGyW3WPVlAxB8+4aiNmWIOytGJgVlA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OwDgM89D; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743779910; c=relaxed/simple;
+	bh=H0uRudBLt+TwPkP+W0bZthpxLYdGfI8njOVweTIscqE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YAcOmmhWR95Zv+f6ouLiwDXFDwjXDoulNd0Ax5WhWh1iOo0FGsWYSVFKnj7QGovjHB3daY7bNtvZr7p7HsnuGiwPqwGsqVEbqQrBq+7LsQ5/Apqxyri4X6hGgAW1xlA0VsZ2+qC7c002qbZdPUfBqAWEXRb9dy5OIjJtkoNGJ+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=UMmGwRAj; arc=none smtp.client-ip=35.89.44.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OwDgM89D"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E948CC4CEDD;
-	Fri,  4 Apr 2025 15:17:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743779825;
-	bh=qOs+fLd7zsPUFNymqQgXx9+kWVigfHUsAiGZPOVHthw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OwDgM89DZiXDZzbrrNvPmUczQgRsMvB+q16ARNTJu4aIoltsrxZQ+la+TyIWugZDl
-	 vrElbgXvr1jesmIA7hvaeKMi8WDIjOcetp/0KLAyAx6mDCOXG3FFERVpCrRQm359R5
-	 W68W2mpd3YJzESU9MIJ/r2S5L7eP9Pyxnt7q+Kw92Y4VivMK77G/4t4h4D1HbpYKH/
-	 1jGDI//5MszKcvB+2WXj+Nrto2DPfjvsWYL4I91L2sK0A4mJ+9Cnhgy1xSxppiHGgk
-	 jyoWB+lVebbC08eNG8ABLJ95y2Tli7H1+ELzJzgfhwl8N0VV2bIw3kXyFcp3agYM+i
-	 YIvAxLChixJIA==
-Date: Fri, 4 Apr 2025 08:17:02 -0700
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Nikolay Borisov <nik.borisov@suse.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, amit@kernel.org, 
-	kvm@vger.kernel.org, amit.shah@amd.com, thomas.lendacky@amd.com, bp@alien8.de, 
-	tglx@linutronix.de, peterz@infradead.org, pawan.kumar.gupta@linux.intel.com, 
-	corbet@lwn.net, mingo@redhat.com, dave.hansen@linux.intel.com, hpa@zytor.com, 
-	seanjc@google.com, pbonzini@redhat.com, daniel.sneddon@linux.intel.com, 
-	kai.huang@intel.com, sandipan.das@amd.com, boris.ostrovsky@oracle.com, 
-	Babu.Moger@amd.com, david.kaplan@amd.com, dwmw@amazon.co.uk, 
-	andrew.cooper3@citrix.com
-Subject: Re: [PATCH v3 3/6] x86/bugs: Fix RSB clearing in
- indirect_branch_prediction_barrier()
-Message-ID: <ioxjh7izpnmbutljkbhdqorlpwtm5iwosorltmhkp3t7nyoqlo@tiecv24hnbar>
-References: <cover.1743617897.git.jpoimboe@kernel.org>
- <27fe2029a2ef8bc0909e53e7e4c3f5b437242627.1743617897.git.jpoimboe@kernel.org>
- <d5ad36d8-40da-4c13-a6a7-ed8494496577@suse.com>
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="UMmGwRAj"
+Received: from eig-obgw-6001a.ext.cloudfilter.net ([10.0.30.140])
+	by cmsmtp with ESMTPS
+	id 0grUuzIcpMETl0imqu4mfe; Fri, 04 Apr 2025 15:16:52 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id 0impus9mygFaX0impuucSU; Fri, 04 Apr 2025 15:16:51 +0000
+X-Authority-Analysis: v=2.4 cv=DbzcqetW c=1 sm=1 tr=0 ts=67eff7e3
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=B3fuDwYyW55wTQKIj88FGw==:17
+ a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
+ a=QyXUC8HyAAAA:8 a=DTFsIx2UK63pnHR4iIcA:9 a=QEXdDO2ut3YA:10
+ a=Xt_RvD8W3m28Mn_h3AK8:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=c4pzsQqZc93HniLWNSSUJ840c7jg7svjvDCpXoucpPw=; b=UMmGwRAjyp/9MjeZ377GmzB2sJ
+	jy/BqpxloGZ77CXkwAkntodPi+J5nDcpSxz8PmCJke3DA/X4F5JznJFtLuIBA4RQdp7lqBOJvAK27
+	7OdOpoweuR0uiak+nv7ab28wRJP8MLWfGTSlq/SEz+XBYGBQk0Ht+IERKVV6ieSpNO80SDBR7MCIi
+	QrdP10HbNgZe4wGukE7E+IQftVYkZVT4HEGuDO1SQ/HZi715BPRL7TGMxN1pdrmKSNCjdJV1IGD+S
+	3xZhGTSJyl7bdHwADoJEkZKBE4yETHL0wLtpOzb5Kuh3PvoZWqyP0HdCWLQQ//Ix6U9hACbDbME/H
+	p9dMgApg==;
+Received: from [201.172.174.147] (port=38642 helo=[192.168.15.6])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.98.1)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1u0imo-00000003ya0-3HBT;
+	Fri, 04 Apr 2025 10:16:50 -0500
+Message-ID: <c2e2c15d-b587-49e9-b05c-2096e2de3c76@embeddedor.com>
+Date: Fri, 4 Apr 2025 09:16:43 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <d5ad36d8-40da-4c13-a6a7-ed8494496577@suse.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH][next] drm/nouveau: fifo: Avoid
+ -Wflex-array-member-not-at-end warning
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Lyude Paul <lyude@redhat.com>, Danilo Krummrich <dakr@kernel.org>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
+Cc: dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <Z-7IQcWNePAMQEM0@kspp>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <Z-7IQcWNePAMQEM0@kspp>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.172.174.147
+X-Source-L: No
+X-Exim-ID: 1u0imo-00000003ya0-3HBT
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.15.6]) [201.172.174.147]:38642
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 2
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfEbyetjCK6iwSDtwt3WpPT1U/Zo7m02YyfmzVQKb6q+rJ/6dD/cSZKSXpHzpRmSiIC5VKINSeJXnjT3NH+iUEIvvNvULAiizVUA2nmOXt7JeY9NxebAQ
+ cmiBDbKoNcy1MtpI2HsMh72v4sX0tZfjCTaAw5TiSxQVa+glVVIQKL2ZtrbDBe5pO5ShTvNfDI4RJFopglOhXjKUhTHLsXQh+4CERYbHgYgD8fjx0coOKrYJ
 
-On Fri, Apr 04, 2025 at 05:45:37PM +0300, Nikolay Borisov wrote:
-> 
-> 
-> On 2.04.25 г. 21:19 ч., Josh Poimboeuf wrote:
-> > IBPB is expected to clear the RSB.  However, if X86_BUG_IBPB_NO_RET is
-> > set, that doesn't happen.  Make indirect_branch_prediction_barrier()
-> > take that into account by calling __write_ibpb() which already does the
-> > right thing.
-> 
-> I find this changelog somewhat dubious. So zen < 4 basically have
-> IBPB_NO_RET, your patch 2 in this series makes using SBPB for cores which
-> have SRSO_NO or if the mitigation is disabled. So if you have a core which
-> is zen <4 and doesn't use SBPB then what happens?
 
-I'm afraid I don't understand the question.  In that case write_ibpb()
-uses IBPB and manually clears the RSB.
 
--- 
-Josh
+On 03/04/25 11:41, Gustavo A. R. Silva wrote:
+> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+> getting ready to enable it, globally.
+> 
+> Use the `DEFINE_RAW_FLEX()` helper for an on-stack definition of
+> a flexible structure where the size of the flexible-array member
+> is known at compile-time, and refactor the rest of the code,
+> accordingly.
+> 
+> So, with these changes, fix the following warning:
+> 
+> drivers/gpu/drm/nouveau/nvif/fifo.c:29:42: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>   drivers/gpu/drm/nouveau/nvif/fifo.c | 32 ++++++++++++-----------------
+>   1 file changed, 13 insertions(+), 19 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/nouveau/nvif/fifo.c b/drivers/gpu/drm/nouveau/nvif/fifo.c
+> index a463289962b2..f8772340fec4 100644
+> --- a/drivers/gpu/drm/nouveau/nvif/fifo.c
+> +++ b/drivers/gpu/drm/nouveau/nvif/fifo.c
+> @@ -25,33 +25,28 @@ static int
+>   nvif_fifo_runlists(struct nvif_device *device)
+>   {
+>   	struct nvif_object *object = &device->object;
+> -	struct {
+> -		struct nv_device_info_v1 m;
+> -		struct {
+> -			struct nv_device_info_v1_data runlists;
+> -			struct nv_device_info_v1_data runlist[64];
+> -		} v;
+> -	} *a;
+> +	DEFINE_RAW_FLEX(struct nv_device_info_v1, a, data, 65);
+> +	struct nv_device_info_v1_data *runlists = &a->data[0];
+> +	struct nv_device_info_v1_data *runlist = &a->data[1];
+> +	const u8 rl_cnt = (__struct_size(a) - sizeof(*a)) / sizeof(*a->data) - 1;
+>   	int ret, i;
+>   
+>   	if (device->runlist)
+>   		return 0;
+>   
+> -	if (!(a = kmalloc(sizeof(*a), GFP_KERNEL)))
+
+I'll send v2 preserving the above allocation (with some adjustments to
+remove the flex-array-in-the-middle issue), as I just got this report
+from the kernel test robot:
+
+https://lore.kernel.org/lkml/202504041254.6e26LBdj-lkp@intel.com/
+
+Thanks
+--
+Gustavo
