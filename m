@@ -1,67 +1,112 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FB3F1DED42;
-	Fri,  4 Apr 2025 12:44:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE7E31DC1A7;
+	Fri,  4 Apr 2025 12:45:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743770678; cv=none; b=Y1qn9Ul8OI9SUGzSUilxaWyws6rgm0pK7wggoDoaPFnlq6ovvJFHbF8slrMaiMmDYga3DNtQemWpFOxbP7mYK/9FXGd4FVqkvC6trHGxVSdBgBVALp96occ7dg2KCmrgmg5F3omPjQ4np2mTeFw0QOjAptbPolI8sWYLJPjVsFk=
+	t=1743770712; cv=none; b=aH2CliDn9mDpk7qxZwNFEnDa6DuZnPibo1fKq6JxvpHEx8VxoxJ7EprHov3PIVh7LWrrRfwnWPNf+06Cijm7P19yL89n0/AvjjHrkk7G0U14GrsMOmBWDHmP5W8mp3g0MpVfNHrhEj9Ij25mOW2Hx7kDq6OltOyfEe77Mz0tiXs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743770678; c=relaxed/simple;
-	bh=E4e67rHgpSPgqOnHvqNCsKXjZWx98mHZFwbic7q3pQk=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=E4/UQITSGs01Q5htZGmtui2JI6yRNSWQNuxraGwiLUKP9B62C4bKrdYAD6yorEPTXpPg6fkEK+mkBmC5gxZcAHK8HjhJZxWhAlKLuzln6fp+6f2yL6iPPBvSc/mgwa1ipYEoBT5QcyTWLat6Igm6P5EjXHQVXIzLVvmzGhEIq1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S1Wffv0/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743770712; c=relaxed/simple;
+	bh=+f9bptQzXW02fg/r/Fn12knWGTzQttrVy41KB2g3QZ4=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=X3PrFs0fwGonCshCSwfH1ORqGeHOeey0O2R32ui5nHd/ffNTzGntbrBRgOF+ProfiZRwinT0YxrK3aCDsr+ICHSXN5uCu0GdkVATcerQw9EAi/CVVGwlwV5yLqTg4FmPBw6c7zjNdJaNFyom+DoML0LTVh1wz70G7QR5bO6+Uh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dat10KXg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S1Wffv0/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF315C4CEDD;
-	Fri,  4 Apr 2025 12:44:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dat10KXg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AFC4C4CEDD;
+	Fri,  4 Apr 2025 12:45:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743770677;
-	bh=E4e67rHgpSPgqOnHvqNCsKXjZWx98mHZFwbic7q3pQk=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=S1Wffv0/7oJegElGij9WL52oMeRXNfgH7JGjlizaJv0IaNPJuEdaekwV3P0+lfz2f
-	 ExKe0UysVdQkTZ5I9/lwro9LxkY/EldGn3EBiK3/m8aowhgdiYRsEkrnO1sZvKJ0oA
-	 iiDvPo06P/fPJrwMSFfEL96U5hnNp6b2QesTNK/uNekkPzMHK6ROdh5vYWjtSZNI18
-	 bAEecRqfZNYql+bASBMYHN8VU5JFH3drYLzkUyB0V10bqCiJ6yad9j3BW4Cicwemrf
-	 Dth1ZZcUycWkTMMt+aIcdn92qkXx9xXHRyrT9PbSneVrkxrO24L3cFcxZv1nYehgcS
-	 H1GWLJVtbDIrg==
-From: Lee Jones <lee@kernel.org>
-To: Lee Jones <lee@kernel.org>, linux-leds@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Pavel Machek <pavel@kernel.org>
-In-Reply-To: <20250318160524.2979982-1-andriy.shevchenko@linux.intel.com>
-References: <20250318160524.2979982-1-andriy.shevchenko@linux.intel.com>
-Subject: Re: (subset) [PATCH v2 1/1] leds: core: Bail out when composed
- name can't fit the buffer
-Message-Id: <174377067651.311707.16521927408874362100.b4-ty@kernel.org>
-Date: Fri, 04 Apr 2025 13:44:36 +0100
+	s=k20201202; t=1743770711;
+	bh=+f9bptQzXW02fg/r/Fn12knWGTzQttrVy41KB2g3QZ4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=dat10KXg8qGBRc6wGr53pYS2oCTMA1VLmxkoVxpX7r9er25pw4MdWL04Hy1t+FRn0
+	 WvanxZFRMN0ABsf8CwgkBg7gqlnepiYF75sXDI7vaDepE0LKLRib2BhfcAaOil1Xbu
+	 1WUEK7IMvBY9QSX2qyr/uFjkct2AYFoL0FLzf969RVdpPn66mrYlBmRhteMQyz05HY
+	 4leuNuDOZvtElIeFwz/8qQhSjkQcxZrZiZP9ayeF75uNQ5clm/SLcn8MOOlExX2S0u
+	 XUtpWC5GICfNvbfbiRpuopV99cvd0gxQEV7eTgSZ/q/ah2HfvunyBscvuBxnR79dAC
+	 MVOO3KkpueQYg==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=lobster-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1u0gQ0-002LQk-R4;
+	Fri, 04 Apr 2025 13:45:09 +0100
+Date: Fri, 04 Apr 2025 13:45:11 +0100
+Message-ID: <87zfgwxfhk.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Christian Bruel <christian.bruel@foss.st.com>
+Cc: <tglx@linutronix.de>,
+	<robh@kernel.org>,
+	<krzk+dt@kernel.org>,
+	<conor+dt@kernel.org>,
+	<mcoquelin.stm32@gmail.com>,
+	<alexandre.torgue@foss.st.com>,
+	<linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>,
+	<devicetree@vger.kernel.org>,
+	<linux-stm32@st-md-mailman.stormreply.com>
+Subject: Re: [PATCH 3/3] arm64: dts: st: add st,stm32mp2-cortex-a7-gic in intc node in stm32mp251.dtsi
+In-Reply-To: <1c9a49cb-35a1-4bcc-abd5-b14a49d4d094@foss.st.com>
+References: <20250403122805.1574086-1-christian.bruel@foss.st.com>
+	<20250403122805.1574086-4-christian.bruel@foss.st.com>
+	<874iz5yx2c.wl-maz@kernel.org>
+	<1c9a49cb-35a1-4bcc-abd5-b14a49d4d094@foss.st.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Mailer: b4 0.15-dev-510f9
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: christian.bruel@foss.st.com, tglx@linutronix.de, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Tue, 18 Mar 2025 18:04:29 +0200, Andy Shevchenko wrote:
-> GCC compiler complains about snprintf() calls that may potentially cut
-> the output:
+On Fri, 04 Apr 2025 13:17:08 +0100,
+Christian Bruel <christian.bruel@foss.st.com> wrote:
 > 
->  drivers/leds/led-core.c:551:78: error: ‘snprintf’ output may be truncated before the last format character [-Werror=format-truncation=]
->  drivers/leds/led-core.c:554:78: error: ‘snprintf’ output may be truncated before the last format character [-Werror=format-truncation=]
->  ...
 > 
-> [...]
+> 
+> On 4/3/25 19:27, Marc Zyngier wrote:
+> > On Thu, 03 Apr 2025 13:28:05 +0100,
+> > Christian Bruel <christian.bruel@foss.st.com> wrote:
+> >> 
+> >> Add st,stm32mp2-cortex-a7-gic to enable the GICC_DIR register remap
+> >> 
+> >> Signed-off-by: Christian Bruel <christian.bruel@foss.st.com>
+> >> ---
+> >>   arch/arm64/boot/dts/st/stm32mp251.dtsi | 2 +-
+> >>   1 file changed, 1 insertion(+), 1 deletion(-)
+> >> 
+> >> diff --git a/arch/arm64/boot/dts/st/stm32mp251.dtsi b/arch/arm64/boot/dts/st/stm32mp251.dtsi
+> >> index f3c6cdfd7008..030e5da67a7e 100644
+> >> --- a/arch/arm64/boot/dts/st/stm32mp251.dtsi
+> >> +++ b/arch/arm64/boot/dts/st/stm32mp251.dtsi
+> >> @@ -115,7 +115,7 @@ scmi_vdda18adc: regulator@7 {
+> >>   	};
+> >>     	intc: interrupt-controller@4ac00000 {
+> >> -		compatible = "arm,cortex-a7-gic";
+> >> +		compatible = "st,stm32mp2-cortex-a7-gic", "arm,cortex-a7-gic";
+> > 
+> > What nonsense is this? This is an *arm64* machine, with I expect a
+> > GIC400. Where is this A7 compat coming from?
+> 
+> Probably historical, as the first port was for aarch32. I will fix
+> this separately. thanks for the head up!
 
-Applied, thanks!
+Then while you're at it, you may want to consider removing the
+"always-on" property in the timer, because I'm pretty sure the
+comparator goes down in low power mode on A53 and A35, and loses its
+value.
 
-[1/1] leds: core: Bail out when composed name can't fit the buffer
-      commit: 8f5b950b7791479db918c750e1c762b2b30435e6
+In general, only VMs can make use of this property.
 
---
-Lee Jones [李琼斯]
+	M.
 
+-- 
+Jazz isn't dead. It just smells funny.
