@@ -1,143 +1,168 @@
-Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com [209.85.221.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 013C11A7044
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 10:14:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD1E010E9;
+	Fri,  4 Apr 2025 10:15:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743761645; cv=none; b=JATLuVADMpD9X5n2DANuqOp8yn4IJcr0yOvitSLyCyBaFPFqyO2GYLH3cEpjflsDSeKUmRigBCBBvmL2HpYkxtsCcr5WixQM4Uhzx4kgVoJIH9tW0CcNhvs8fNmuPMTS7Sdo1Xut/UUVyduDKlFxvGdN8SFN904mDMB8nWiaehk=
+	t=1743761733; cv=none; b=J9VA0JC6tibe/T4UcyWz6RZkxQS1d0lHzZPhKDotge3xuZp6yAymisXZBKjMbXVVv+ql58ahGh45/umYzqTQZh6uzIQ87kkj4gPVA+AJqleI0uOiCEUaXeJxIYvkAl0KXtq5SlxhOrXuS9OsVH0hdiwORqZk7aCLeNhH5ZM9eoU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743761645; c=relaxed/simple;
-	bh=M1xR/ehUTlCqt5flnpbVHWZfT9TJ+6ACGN3OWuyHfIA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qLIIF1LJhJUKVfy9sxTHnWn7VPwJlb5WObvRoC83o5Y5rhEpqpCN8+DCGCNQQZXXYufNp/uRbfQirmo+K7c3t+eweiLmo5FiJivdY+zOjnSDDkXI7MGulFpf/Pxz35RtNx/R5CegxFBYYv9WCtvvpFQyLET91SN7VrF/x1QmbuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bTDIWdMt; arc=none smtp.client-ip=209.85.221.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743761733; c=relaxed/simple;
+	bh=gyIoBt2OOL6gSzt2KTHHzziQ4yxPniRhdjUfbgCWyAA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=JENfMwhP5LY+6RlzziGHNrlHJ524Ojpbr52TVs03FW/PRYdLjv/dClqem3Yr2v5oFb1cOq009Kn1PmQnr7yh4/eenZI3FxWfaq+GFn4r5jPPKc1oeLl8IZF9SdCTm0EAncue2j4uJQHrPTIEA5W9sPRUrMQojfEhzQKI7r90NMY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=KRtSKujD; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bTDIWdMt"
-Received: by mail-vk1-f179.google.com with SMTP id 71dfb90a1353d-523edc385caso834544e0c.3
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 03:14:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743761643; x=1744366443; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Z6kQX7J4iPqcH4qqAuoXo8W2m8I6TgoA5VFu2BQ2/J4=;
-        b=bTDIWdMtAGoididzVD0Van1KJBR7RTgCrLsgm88hIqpAMPdpqJWHq/MeOeBrwy/9VO
-         HI+/gHeY6IBSz/7VM/RrzLqOPPEJZTf2HAm37WjlARD+qHc3XempV2nCMv1nL07h7oXR
-         7xl4MALT7EutIYCH6lC6izTrJUicIhgv81rEvu9Ve3VNcWuMCQT7mL8LW9dbsOvBL2bv
-         YzeporgCu4yYdqJC+iwtBWFJDeqglEQAgncoGP5qkY1Imd/YDglGRLkUaYLiS1m1ljQj
-         FyAVIL9KqU58601bjLJROf4wf+N32eLNYxBhNQGVyE7DKFZ7RK/wFHebIFicdqKQgcgZ
-         gKAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743761643; x=1744366443;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Z6kQX7J4iPqcH4qqAuoXo8W2m8I6TgoA5VFu2BQ2/J4=;
-        b=A9fc/IXCk11k4fVPEK3Idbp2mW9s/z9dQ5H4lVjmWg90cOE464lRHny0SlFF2FWPdj
-         wsS8nKyGdbmNz3J2hjmDTro/fkd31f3LiTAVIOspEBhdhHP5ggpi1f8dBkSZxRR7k+8a
-         t2jlTP+reBfEFM//3uFDvanUkav14zcV3Yo7FxfJT40TOXAj40s3+fjy0CH2RoHJzSDu
-         FiUbH58b91fwvfzbN3BNVkzIXcENPkk+n1bqUIwftcp/alEUpI/n1mWeSa89/8Y+sSIl
-         Le/dykvnoC6OjW23guoeOGMY3VxQSy/YVEMX7clObTI2am212GfU5sFbLGbFCRzTXRrp
-         jHgw==
-X-Forwarded-Encrypted: i=1; AJvYcCUAk9JPIIJg6ohNi+yuO/RJjxamZtjPm3hXISpFiv7PtX8d4ovaBxeoNkpA1s87mfEBWFsJaQqJSsJ/Tgw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyTeJ42Zt1NhphigzrZ+UipiGJpKOwCHKnREQ3NKisN+BIa6SwT
-	ACPLVkruPM8zykWIPJaIj2LqGI8PxbjSI6Y9gPYvxZUGiMmxyqDHHYsaxgWTEmGyYZTUED17iXy
-	ObZHkJalwBfA5hrhiECSwXN/W2VI=
-X-Gm-Gg: ASbGncs3U1p6+sWO+FUiXXnwaBeicit3aKlT59g/sFfugU99fvJ5mZm/sYXUWiL+Npo
-	NftzxjHfwh7AXgq7+w5j1nvJo8XmhSDwz+JYA6QzGc0hnC1xp2UskhaxUXLojIIzYXqtkVDSWmq
-	NxlOUFcoa4uv+/lnaBXyI0azfKBZCO10FWQBkEEA==
-X-Google-Smtp-Source: AGHT+IGHJ+mgde1bUNXVhTgyaQjWuFJcTsikHax7jYFsftnczff4N6TcT+1V1i3kwufL5PXiMgJCDcJcyRn2L3U7q74=
-X-Received: by 2002:a05:6122:886:b0:516:18cd:c1fc with SMTP id
- 71dfb90a1353d-5276458254amr1626212e0c.8.1743761642817; Fri, 04 Apr 2025
- 03:14:02 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KRtSKujD"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 534AFQj83782346
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 4 Apr 2025 05:15:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1743761726;
+	bh=4uGL39H7/qKsSx6rczsc2M6MCnKlqe6F5XvSWhvhopk=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=KRtSKujDo8PNp5r3MHa/e6WUcy1L8aROtRu9bxFUuoImsmeKZ4qVHzdvBG8cBqJI0
+	 76KADuuicr4p16WfFfiMV81daYAc8Zp1xjI85eoKNMNDTLbvJ34TugiTAAi5n5mYJR
+	 fVGK/rtlnLuKAZqkXxYE/FyzJs4aJb8PpiUHN9rk=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 534AFQPq011469
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 4 Apr 2025 05:15:26 -0500
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 4
+ Apr 2025 05:15:25 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 4 Apr 2025 05:15:25 -0500
+Received: from [172.24.227.40] (pratham-workstation-pc.dhcp.ti.com [172.24.227.40])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 534AFNGj014523;
+	Fri, 4 Apr 2025 05:15:23 -0500
+Message-ID: <8aa65022-8adc-4c4a-a812-11bfd64e628c@ti.com>
+Date: Fri, 4 Apr 2025 15:45:22 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1743723590.git.abrahamadekunle50@gmail.com>
- <6fe7cb92811d07865830974cb366d99981ab1755.1743723591.git.abrahamadekunle50@gmail.com>
- <CAHp75Vem1E9wmmfXWsbawj2f+F=UkfzML7HyAnhTdsUqvjW91g@mail.gmail.com> <33a8d769-33b9-43df-9914-99175605b026@stanley.mountain>
-In-Reply-To: <33a8d769-33b9-43df-9914-99175605b026@stanley.mountain>
-From: Samuel Abraham <abrahamadekunle50@gmail.com>
-Date: Fri, 4 Apr 2025 11:13:54 +0100
-X-Gm-Features: ATxdqUHTYgCeSt-ecqfOsTN05l_d53aRnie6hB7s9Rdi_fEEr2uHtQiBk9h1w2E
-Message-ID: <CADYq+fYKHsZCBN-z4ogcnAC_gK7i0P1=DHbfm=AC8o-uSUQ-7g@mail.gmail.com>
-Subject: Re: [v3 1/1] staging: rtl8723bs: Prevent duplicate NULL tests on a value
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, outreachy@lists.linux.dev, 
-	julia.lawall@inria.fr, gregkh@linuxfoundation.org, 
-	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org, andy@kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC 1/2] crypto: ti: Add support for SHA224/256/384/512 in
+ DTHE V2 driver
+To: Herbert Xu <herbert@gondor.apana.org.au>
+CC: "David S. Miller" <davem@davemloft.net>, <linux-crypto@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Vignesh Raghavendra <vigneshr@ti.com>,
+        Praneeth Bajjuri <praneeth@ti.com>,
+        Kamlesh Gurudasani <kamlesh@ti.com>,
+        Manorit Chawdhry <m-chawdhry@ti.com>
+References: <20250218104943.2304730-1-t-pratham@ti.com>
+ <20250218104943.2304730-2-t-pratham@ti.com>
+ <Z8QSVLoucZxG1xlc@gondor.apana.org.au>
+ <f7105c10-7e36-4914-a9e8-e83eb61f0189@ti.com>
+ <104cdd15-8763-49fc-9f4b-9b21020bd6a1@ti.com>
+ <Z-5IaY0JoTYcx1JW@gondor.apana.org.au>
+Content-Language: en-US
+From: T Pratham <t-pratham@ti.com>
+In-Reply-To: <Z-5IaY0JoTYcx1JW@gondor.apana.org.au>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Fri, Apr 4, 2025 at 10:06=E2=80=AFAM Dan Carpenter <dan.carpenter@linaro=
-.org> wrote:
->
-> On Fri, Apr 04, 2025 at 10:53:22AM +0300, Andy Shevchenko wrote:
-> > On Fri, Apr 4, 2025 at 3:03=E2=80=AFAM Abraham Samuel Adekunle
-> > <abrahamadekunle50@gmail.com> wrote:
-> > >
-> > > When a value has been tested for NULL in an expression, a
-> > > second NULL test on the same value in another expression
-> > > is unnecessary when the value has not been assigned NULL.
-> > >
-> > > Remove unnecessary duplicate NULL tests on the same value that
-> > > has previously been NULL tested.
-> > >
-> > > Found by Coccinelle.
-> >
-> > ...
-> >
-> > > +                       psta->sta_xmitpriv.txseq_tid[pattrib->priorit=
-y] &=3D 0xFFF;
-> >
-> > > +                                       psta->BA_starting_seqctrl[pat=
-trib->priority & 0x0f] =3D
-> > > +                                               (tx_seq + 1) & 0xfff;
-> >
-> > > +                                       psta->BA_starting_seqctrl[pat=
-trib->priority & 0x0f] =3D
-> > > +                                               (pattrib->seqnum + 1)=
- % 4096;
-> >
-> > Logically it's obvious that you need to align all cases to have
-> > consistent approach.
-> > Besides that the commit message should mention this change. Something l=
-ike this
-> > "While at it, convert '& 0xfff' cases to use modulo operator and
-> > decimal number to make the upper limit visible and clear what the
-> > semantic of it is."
->
-> No, I'm sorry but that's really against the rules in drivers/staging.
-> Don't mix unrelated changes into a patch.  It needs to be done as a
-> separate patch if we're going to do that.
->
-> To be honest, I don't even want people fixing line length issues or
-> adding spaces.  I would have accepted small white space changes but I
-> prefered the v2 version of this patch.  Once you start changing
-> "& 0xfff" to "% 4096" that's not white space and it must be done
-> in a separate patch. I use a script to review white space patches
-> because I'm always nervous someone will slip something malicious
-> into 100+ lines of reformated code.  It's really fast to review
-> patches with my script but once people start mixing things in then
-> it's a headache for me.
->
-> Also if the change accidentally introduces a bug, I want it to be a
-> one liner change and not something hidden inside a giant reformat.
->
-> regards,
-> dan carpenter
+Hi Herbert
 
-Hello Dan,
-Thank you for your review.
-Please can you provide some guidance on what the next steps should be for m=
-e
-as regards the patch?
-Thank you.
+Thanks for helping out here. I modified import/export (albeit with a few
+changes/quirks; discussed below) and all self-tests are passing.
 
-Adekunle
+On 03/04/25 14:05, Herbert Xu wrote:
+> On Thu, Apr 03, 2025 at 01:58:47PM +0530, T Pratham wrote:
+>> I'm so sorry, for it slipped out of my mind that `u8 phash_available`
+>> also needs to be restored at import. It's just stores a boolean 0/1. How
+>> to go about handling this?
+> You should be able to derive that from digestcnt.  IOW if you have
+> previously submitted data to the hardware, then phash is available,
+> and vice versa.
+I am able to derive this from digestcnt. This is working.
+>
+> Note that if you go down this route (which many drivers do), then
+> you're going to need to initialise a zero hash partial state in
+> the export function like this:
+>
+> static int ahash_export_zero(struct ahash_request *req, void *out)
+> {
+> 	HASH_FBREQ_ON_STACK(fbreq, req);
+>  
+> 	return crypto_ahash_init(fbreq) ?:
+> 	       crypto_ahash_export(fbreq, out);
+> }
+Although, I was not able to quite understand what you meant to imply
+from this snippet. And I was not able to find any references for
+HASH_FBREQ_ON_STACK as well. Overall, it was not clear why such a fbreq
+is required and where it is being used. Hence I omitted this part
+completely, and still passing all tests. Would love to know if you have
+any good reason to what you suggested.
+> Cheers,
+
+Another thing, the buflen variable ranges from 0 to BLOCK_SIZE, not
+(BLOCK_SIZE - 1). This is being used to handle certain quirks of the
+hardware together with linux crypto framework, which I am happy to
+elaborate further if required. Cutting the digression short, I have to
+find a workaround to comply with your import/export changes:
+
+tl;dr: I'm storing buflen - 1 if buflen != 0. To differentiate b/w
+buflen = 0 and buflen = 1 in import, I am storing a flag in buf[1] if
+buflen is either 0 or 1. Code (simplified for brevity) follows.
+
+static int dthe_sha256_export(struct ahash_request *req, void *out)
+{
+    [...]
+    struct sha256_state *state = out;
+
+    if (buflen > 0) {
+        state->count = digestcnt + (buflen - 1);
+        memcpy(state->buf, data_buf, buflen);
+        if (buflen == 1)
+            state->buf[1] = 1;
+    } else {
+        state->count = digestcnt;
+        state->buf[1] = 0;
+    }
+    memcpy(state->state, phash, phash_size);
+
+    return 0;
+}
+
+static int dthe_sha256_import(struct ahash_request *req, const void *in)
+{
+    [...]
+    const struct sha256_state *state = in;
+
+    buflen = state->count & (SHA256_BLOCK_SIZE - 1);
+    digestcnt = state->count - buflen;
+    if (buflen == 0) {
+        if (state->buf[1])
+            buflen = 1;
+    } else {
+        buflen++;
+    }
+    [...]
+    memcpy(phash, state->state, phash_size);
+    memcpy(data_buf, state->buf, buflen);
+    phash_available = ((digestcnt) ? 1 : 0);
+
+    return 0;
+}
+
+I'm not exactly sure what effects, in any, this would have if this is
+exported to a software implementation in some extraordinary error case.
+But this is what I could think of to handle my case and would like to
+know if this is an issue with software implementation. I would also love
+to know how you're migrating other drivers which are storing more data
+in their states than the struct sha256_state /sha512_state can store.
+
+Regards
+T Pratham <t-pratham@ti.com>
+
