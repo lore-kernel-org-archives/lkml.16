@@ -1,67 +1,123 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBF7833997
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 10:38:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D90333997;
+	Fri,  4 Apr 2025 10:39:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743763140; cv=none; b=NB+nr4CCMmD9qAcb6vLFYfS+DVBhqg2bNLobjP47rjMiC19z6uwQN47YC582fkZmdV7oFNiGb5UDbAwHYiQKgecBWba4ze8Ps9J/maaf7qS/yVX2sIqbgPq2fh/zdvMCAytE+kg2yIb9gTu6LXzeMyDRC6DOr0H5aHknlqh5Yqs=
+	t=1743763159; cv=none; b=etsh803EkAvBP5XgKr7OMEPK00ZMwyBWNQzRClfgUj0bQVfEF438wuazF6b4i42dQsRDHEFaE3PTFbylqYtL/UjARjUSxXW9lriBiPTUUPPGfCy+KQVoRszVidkO4gMPIoRYERTapVwrabaDrOGyJdGbwltXOm02vxxO3N2JtoU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743763140; c=relaxed/simple;
-	bh=cyh9GNwkSeiWX8VVWJet6cmrStrv1Y1BhHYKMAKCy08=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nyM2TIcDj874+cVmL/ZKJ0RUm0dj4HPZK3Uo3OasJFrDIRQzrgeb015xXn692+3wG5vd/1e3uuOmaUh7Apu3oKzyICwHlss5hDXN43GdBlXV1QcGEZdALVN+UrzXbpiii4X3fvozfZwa8p+8MfHREd0S6tEE+Zuy5JxdMnekIl4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ESN/8jiy; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1743763159; c=relaxed/simple;
+	bh=Nhjw/1qgO802K9Dxvex0VqNz1I+f410ci7Gd/YQZ6EE=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=XGzbdaqc68p6SqesedCZqnd+6YC6AGTtsu5djMgMwohinHTW/OtpegKIIA1wbL/5OgI++zasmyc/D8tWbdjk8Q1PCctbVBdphRg1LU8hI55BON1MA9JmORukRO21XctwoHaoGB9xnoLY/poKWfpPUEX+am/qERaMTZdQB1ZJkus=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q9NiUfxW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ESN/8jiy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743763136;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cyh9GNwkSeiWX8VVWJet6cmrStrv1Y1BhHYKMAKCy08=;
-	b=ESN/8jiypF2kkVAFmdr3MeS71Q1QFWnfBci7F//tqECC0FklFQYA7wBkC4UuOv7C//d0rU
-	tlTRy2U36X+tVBxMd8nrhDyRize5QvY2ayAuL/nOBt4opp+8nUFHyotPCTvrHhwXR9jFE/
-	OFCgegQ+h5cwHbDt8WpPG4YfjdgAk/g=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-147-VBD95XQ3OHOpaN9246N_MA-1; Fri,
- 04 Apr 2025 06:38:55 -0400
-X-MC-Unique: VBD95XQ3OHOpaN9246N_MA-1
-X-Mimecast-MFC-AGG-ID: VBD95XQ3OHOpaN9246N_MA_1743763134
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9338C195605A;
-	Fri,  4 Apr 2025 10:38:54 +0000 (UTC)
-Received: from virtlab1023.lab.eng.rdu2.redhat.com (virtlab1023.lab.eng.rdu2.redhat.com [10.8.1.187])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id EAE2C3000707;
-	Fri,  4 Apr 2025 10:38:53 +0000 (UTC)
-From: Paolo Bonzini <pbonzini@redhat.com>
-To: Sean Christopherson <seanjc@google.com>
-Cc: kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] KVM: x86/mmu: Wrap sanity check on number of TDP MMU pages with KVM_PROVE_MMU
-Date: Fri,  4 Apr 2025 06:38:50 -0400
-Message-ID: <20250404103850.188049-1-pbonzini@redhat.com>
-In-Reply-To: <20250315023448.2358456-1-seanjc@google.com>
-References: 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q9NiUfxW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8117AC4CEDD;
+	Fri,  4 Apr 2025 10:39:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743763156;
+	bh=Nhjw/1qgO802K9Dxvex0VqNz1I+f410ci7Gd/YQZ6EE=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=Q9NiUfxWdnjXgAN2oysQVyKQpX+FmF1efkNnxFUnJN2RMSTl8bT8PA4gi40u+QIyT
+	 tNLK4T3E+MjtQYDHs7tSwh2+cEXUqJHuCtP+cYCR5a4Fyopxi+EHzKuFXWwt4MMf67
+	 WUF/DjSdNow/hLbJp5HzCsEBh69yNIU3fXDmZ+a7Prr+eNm7a1jjtRIGfXpfBdP7tN
+	 4fiBbHLpOH0HOIBrzWJ/sv47MwKPNOR1bGReCb3rnQZStbhNZ48yThoJtszztRq1rx
+	 quY0GETAIjfEmXQqPPaKEbSDZ5cgrUT4x1654oDmdo439jwm0Ed5ZCHnxMh83BMn9u
+	 EIklTjEJzRtgA==
+Message-ID: <b4e2db47-eb56-4a9d-bcd7-52b23450ae48@kernel.org>
+Date: Fri, 4 Apr 2025 12:39:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC net-next PATCH 01/13] dt-bindings: net: Add binding for
+ Xilinx PCS
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Sean Anderson <sean.anderson@linux.dev>
+Cc: netdev@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S . Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Russell King <linux@armlinux.org.uk>,
+ linux-kernel@vger.kernel.org, Christian Marangi <ansuelsmth@gmail.com>,
+ upstream@airoha.com, Heiner Kallweit <hkallweit1@gmail.com>,
+ Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Michal Simek <michal.simek@amd.com>,
+ Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>,
+ Rob Herring <robh@kernel.org>, Robert Hancock <robert.hancock@calian.com>,
+ devicetree@vger.kernel.org
+References: <20250403181907.1947517-1-sean.anderson@linux.dev>
+ <20250403181907.1947517-2-sean.anderson@linux.dev>
+ <20250404-tench-of-heavenly-beauty-fb4ed1@shite>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250404-tench-of-heavenly-beauty-fb4ed1@shite>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Queued, thanks.
+On 04/04/2025 12:37, Krzysztof Kozlowski wrote:
+>> +  pcs-modes:
+>> +    description:
+>> +      The interfaces that the PCS supports.
+>> +    oneOf:
+>> +      - const: sgmii
+>> +      - const: 1000base-x
+>> +      - const: 2500base-x
+>> +      - items:
+>> +          - const: sgmii
+>> +          - const: 1000base-x
+> 
+> This is confusing. Why fallbacks? Shouldn't this be just enum? And
+> where is the type or constraints about number of items?
+> 
+I just double checked now in dtschema and latest next - there is no such
+property.
 
-Paolo
-
-
+Best regards,
+Krzysztof
