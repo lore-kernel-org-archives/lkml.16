@@ -1,138 +1,118 @@
-Received: from fout-b3-smtp.messagingengine.com (fout-b3-smtp.messagingengine.com [202.12.124.146])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B052B1DA53;
-	Fri,  4 Apr 2025 13:09:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.146
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A0C81DA53;
+	Fri,  4 Apr 2025 13:09:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743772163; cv=none; b=MuSUDu+C3/1jKq4rsTe5IByxMi51imNRNXxpCOm0PhocjT6wJLe9y+Cn6sK5/VrCg7wlDCHuOMSK/r4POLyb8OJknRv+By/YOrRnDD/PuAXUo3TXoQce3OFjXZRDeI77w0azp9NouGg4MjPQvW0abySczYsUyOwVT2cyUvNvCUo=
+	t=1743772169; cv=none; b=DOJiP3UWeAMufjg0uKO4aamRya32iuuLfZYrfLtCTvCpa81Zv+kzBTayLEphoEmY19NeJ0qhFw2rOEy1JKZGZf7/CcdB4wqlKYsyzoIYhjYLRFtdWGs9vqakaHjSzwprrZUUqplhFP0xIOaGLhIPMNOeIkMvmjT3TV2p+5cTOtM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743772163; c=relaxed/simple;
-	bh=p+Vd/gy9bqHYEnxjkZAYOoG8rQiG9whmXDxSDqJ7mjQ=;
-	h=MIME-Version:Date:From:To:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=TFKVeihpjTnKQMi85c5u8dgIdYMX9hQ6MIp9l2tAAcekCc2XlXMYcJtSDcb+tmsdvVfIGCmREejwQ+3qGA8sbDC9pb/0Wfdsq/8f4ixzeZvpEgxcEPyYE2aRh2fcY2E9SiCjHeQ9AI+C2dN6KurR1WJIo4IevWViSvH6WUerE64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=XYMdSAby; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=RiqazJTj; arc=none smtp.client-ip=202.12.124.146
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1743772169; c=relaxed/simple;
+	bh=dXvLo65uum190+DYUNNlALy+j1eqU6jZE1YhXB2VRzw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=X0C38h8UEJzIXSS/9JOIPJiJ6AB+cj8YLrkPrMKqB7h4qfOqC8nPG7puMNDrd2W4Dq6dyluCNQTX/FuNno8sX+WZeBsbz8z0/1Yb/xNAqLTiWlozLxLJ2GzV3CsTfRshfpbnHI074deaV0xSgy+HJnhjtC48ZsCOM4wUevbLdzU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GDd3H0n4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="XYMdSAby";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="RiqazJTj"
-Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
-	by mailfout.stl.internal (Postfix) with ESMTP id 86E321140113;
-	Fri,  4 Apr 2025 09:09:17 -0400 (EDT)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-12.internal (MEProxy); Fri, 04 Apr 2025 09:09:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:content-transfer-encoding:content-type:content-type:date:date
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1743772157;
-	 x=1743858557; bh=QFcpB6AybEix3zTwsEsAW7tA7XfKgQapOO30cIQ8+4Y=; b=
-	XYMdSAbyWj6Is1BGJkmSTXM59cSDWOzo5v2vQ5i/wS3Yl1kU9j+B/nk0EpqrveoN
-	TrOQgQcRWfvFSw4s1gR4IZceyvN+uSQYSk966Cqofu1sVc53AWeUT/auJwbZEWgd
-	HesNXAXW4wWnTR10TLcaofwD1WqvsezFyL3qPXxRxfP1F4MrCzr69IzKn142zWyi
-	TGCKM9i7fytPKGUG8tJBAwcpA3CqIeI4zfL8oW1UQ/bz6OUjc+9Eqa7jOf9t0Z0C
-	DI4FFpiwF2yIR1orNShmGWHtddZrMWSMAA0MSgAYswxpS/IqLer6J2eF7IbX0hnx
-	WeU1dv0vXb/G+DT2fJz72A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:content-transfer-encoding:content-type
-	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm2; t=1743772157; x=1743858557; bh=Q
-	FcpB6AybEix3zTwsEsAW7tA7XfKgQapOO30cIQ8+4Y=; b=RiqazJTjaqSUTO97R
-	9XYgvbjZWUoXQ68jQWMI9Bw44ONQstaR2smtep7esqXgLnv0gSjmbyvYIP/EIXIG
-	OkUi7wY6nsSrxDKm8HnEz8f/TFrqEtnneYedWaROeD0RwhyBq/yorVHfu2Aoe5EF
-	XppWKif1ox06NCxLnFsWXFo7vPl38ckCOBHzBOJhTsrw25bjm9jE+nnsGLUqqHyn
-	TW68bubYLZpBS7W+QYpxFeBvIsiXc3+HtUPqzDwmFjKxatA/cQfF/quFZ5iTfveD
-	i/4s60CE8kNgBgtQL5AvZbqD0rhfFkxsuGEfrl4w9+Kxo7Zn20qXaFLad01DErTA
-	VQp8g==
-X-ME-Sender: <xms:_NnvZ9DJKQnE0KsP6RFFSfFLte8OEe5bl-Y3CDUOfdGnMc6RkeViYA>
-    <xme:_NnvZ7jp0SW_WI7XpEUVKuxe2lZpSZI1s16vW-5703ROIee1Pp0Sg5i8T-yXEI7g3
-    taEgOvm3NLPQeX1c0I>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduleduheefucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepofggfffhvffkjghfufgtgfesthejredtredt
-    tdenucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusg
-    druggvqeenucggtffrrghtthgvrhhnpefhkeeltdfffefhgffhteetheeuhffgteeghfdt
-    ueefudeuleetgfehtdejieffhfenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
-    epmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggvpdhnsggprhgtphhtthhopeeh
-    pdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehkrhiihihsiihtohhfrdhkohiilh
-    hofihskhhisehlihhnrghrohdrohhrghdprhgtphhtthhopeifihhmsehlihhnuhigqdif
-    rghttghhughoghdrohhrghdprhgtphhtthhopehlihhnuhigsehrohgvtghkqdhushdrnh
-    gvthdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdr
-    ohhrghdprhgtphhtthhopehlihhnuhigqdifrghttghhughoghesvhhgvghrrdhkvghrnh
-    gvlhdrohhrgh
-X-ME-Proxy: <xmx:_NnvZ4krXK8x_0-eKzUFt9-c_gme_nFDS0T5QDCU70TgbwywxovWQQ>
-    <xmx:_NnvZ3wLi66F07hUTfgYesHurIcCD7Nq0fYdDgNyZlWGBXiTrP0liQ>
-    <xmx:_NnvZyQQGZiIzGH8izpFgU_qYm5MIoQmH_AGPgYLGQ9T2hLQHGu6ng>
-    <xmx:_NnvZ6bTQuH9FSa_CTu8tum0kZxUWsxrcChlGczo4fhq5r7unWV14g>
-    <xmx:_dnvZ-fPA3vx2ClXLuNFdB-rVvhT9D_Aokl1tImCjVRIqFnrdcLrk30y>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 8B8C92220073; Fri,  4 Apr 2025 09:09:16 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GDd3H0n4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B84B1C4CEF4;
+	Fri,  4 Apr 2025 13:09:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743772168;
+	bh=dXvLo65uum190+DYUNNlALy+j1eqU6jZE1YhXB2VRzw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=GDd3H0n4Z0vbzhOAKBtX4aBm2VvNF3+IHAlBZcY+prFuXi8cUpHIAmcgMJANZtdgc
+	 SadmKjqoeeP3emGC4LnYFxHT6I2Z5k4Qigi/ixTpN0IjDgoC2YwqzWaLtiFw6MVdWY
+	 R51uqx4Vo1nBKrHVzBG0y29dCta48Jc5BLa59kSTc1THSL1yXM0eoSE65ifw4Hc4m9
+	 SWymD+qBgYbMWGz01AIzxcp4EAbHrwklRmWGHBAZsGAPODfBKuc22jPpwnuD0PsKUb
+	 4WzCQ8fABsmztu+A1EYwZSW/Iy8dxRsSFMwWpTf8Ntbimo0rh1MzNq8RAHcck28ns7
+	 PlZqBwK10PG0Q==
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ac297cbe017so586263666b.0;
+        Fri, 04 Apr 2025 06:09:28 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU1oqbiGOfR79B3pmInEqVgP4qtwzVaONtkQARqp+uC81Mft8Xu8Osog9axGNsecaFxr6b8tpQ5Du3RDg==@vger.kernel.org, AJvYcCUP71WUkuxcxwSxEihnpmmgyJ69Y9v00U8+PEYZlnocMAkXkyjJ9+U0edMJAuili0g8BJpBmNplAxs=@vger.kernel.org, AJvYcCUnoidDpJ/6539fzb9oaeM6wd+Tu1qirHEVErwfUIaBM8P9JHTK87n9jyIDc73qqRPPRKyIkkQ28dc++woP@vger.kernel.org, AJvYcCWG+VknflL4bK0dOwFOCrJKVwn6g10VFM08IqFozGz3+cAgJDDe7gZgSn+f3IryoFQ06o9NJgoHItTlIDR1eoIqPnY=@vger.kernel.org, AJvYcCWUdpY/s8HvtRX6B72Yfafu95gfhVjTex1OcG3J4VBCyOwXaB459pygIrF0HRaCMQqEjw5IIxpgdr7I@vger.kernel.org, AJvYcCXnxWf2Yx+EFpzGuWfPkKaX1RVOICB1aJVDmboz4giWOIjye1YB/IMW+tjq+5bYJFPim6WkoQHssf1ZCmvd/Q==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxGCVZaL7XGX5y50cubVmjjZlDPhU8H2yc1ZKh9vKw2qFcyVvcj
+	pP0m5emXt5B1XtQ82KNkFITbdP/UsstiLqSDSqyUEtSgMj6EvOWaIO/a0hrPo5lF9SVWu3i8rxW
+	STXg2O5Ayg75vLd95FHcGr5uUHA==
+X-Google-Smtp-Source: AGHT+IFIyAD0iksJ2rEYwVDKxfXp9paMa26qoweWItquite8ZOPf4g5g6GK5SE+pbTwu/1QEMoBYtzOxpeaG2eY6PCU=
+X-Received: by 2002:a17:907:6e8e:b0:ac2:d5d3:2b77 with SMTP id
+ a640c23a62f3a-ac7d2e1b9c5mr344142866b.8.1743772167150; Fri, 04 Apr 2025
+ 06:09:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: Te05da8092d6125b0
-Date: Fri, 04 Apr 2025 15:08:46 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Krzysztof Kozlowski" <krzysztof.kozlowski@linaro.org>,
- "Guenter Roeck" <linux@roeck-us.net>,
- "Wim Van Sebroeck" <wim@linux-watchdog.org>, linux-watchdog@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Message-Id: <191543a8-2e2e-4ac4-9b2b-d253820a0c9f@app.fastmail.com>
-In-Reply-To: <05d96c93-f9a8-42ea-9c11-2d38a7dffff7@linaro.org>
-References: <20250404123941.362620-1-krzysztof.kozlowski@linaro.org>
- <8b6ede05-281a-4fb1-bcdc-457e6f2610ff@roeck-us.net>
- <4f69f618-bb9f-4269-9467-40c0eb3bc1b9@linaro.org>
- <05d96c93-f9a8-42ea-9c11-2d38a7dffff7@linaro.org>
-Subject: Re: [PATCH] watchdog: Do not enable by default during compile testing
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+References: <20250403-dt-cpu-schema-v1-0-076be7171a85@kernel.org>
+ <20250403-dt-cpu-schema-v1-18-076be7171a85@kernel.org> <CAPDyKFrFRrPVJ_t0JrAE1VTbS02hwr=L-EHtqb7CQiWzB1MnQg@mail.gmail.com>
+In-Reply-To: <CAPDyKFrFRrPVJ_t0JrAE1VTbS02hwr=L-EHtqb7CQiWzB1MnQg@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Date: Fri, 4 Apr 2025 08:09:15 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqKygxhcQ=PZW84sfiW7BVXKF839vfNyxS9GwAXuqmN=8g@mail.gmail.com>
+X-Gm-Features: ATxdqUFqb3GyPW1xY4MYIKArvKkAjEGffj80G84cX0XvObx4_cAf9jnDsr6emp0
+Message-ID: <CAL_JsqKygxhcQ=PZW84sfiW7BVXKF839vfNyxS9GwAXuqmN=8g@mail.gmail.com>
+Subject: Re: [PATCH 18/19] dt-bindings: arm/cpus: Add power-domains constraints
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Samuel Holland <samuel@sholland.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Viresh Kumar <viresh.kumar@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Vincenzo Frascino <vincenzo.frascino@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, 
+	Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Viresh Kumar <vireshk@kernel.org>, 
+	Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, zhouyanjie@wanyeetech.com, 
+	Conor Dooley <conor@kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, 
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>, Steen Hegelund <Steen.Hegelund@microchip.com>, 
+	Daniel Machon <daniel.machon@microchip.com>, UNGLinuxDriver@microchip.com, 
+	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
+	Heiko Stuebner <heiko@sntech.de>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, 
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	linux-pm@vger.kernel.org, linux-mediatek@lists.infradead.org, 
+	linux-arm-msm@vger.kernel.org, linux-mips@vger.kernel.org, 
+	imx@lists.linux.dev, linux-rockchip@lists.infradead.org, 
+	linux-amlogic@lists.infradead.org, linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 4, 2025, at 14:59, Krzysztof Kozlowski wrote:
-> On 04/04/2025 14:57, Krzysztof Kozlowski wrote:
->> On 04/04/2025 14:49, Guenter Roeck wrote:
->>> On 4/4/25 05:39, Krzysztof Kozlowski wrote:
->>>> Enabling the compile test should not cause automatic enabling of all
->>>> drivers.
->>>>
->>>
->>> Sorry, I seem to be missing something.
->>>
->>> Isn't that what COMPILE_TEST is all about, that it enables everything ?
->> 
->> No. Compile test *allows* to compile test, but it does not mean you want
->> immediately compile everything. allyesconfig is for everything. Maybe
->> you want to compile some subset of drivers.
->> 
->> BTW, I am aligning with the most frequent pattern (quickly judging), so
->> of course I also accept argument that we should revert that other
->> pattern and use "default y" everywhere.
+On Fri, Apr 4, 2025 at 5:37=E2=80=AFAM Ulf Hansson <ulf.hansson@linaro.org>=
+ wrote:
 >
-> I also dug out old recommendation from Arnd (so I am not making this
-> stuff up):
+> On Fri, 4 Apr 2025 at 05:06, Rob Herring (Arm) <robh@kernel.org> wrote:
+> >
+> > The "power-domains" and "power-domains-names" properties are missing an=
+y
+> > constraints. Add the constraints and drop the generic descriptions.
+> >
+> > Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+> > ---
+> >  Documentation/devicetree/bindings/arm/cpus.yaml | 8 ++------
+> >  1 file changed, 2 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/arm/cpus.yaml b/Document=
+ation/devicetree/bindings/arm/cpus.yaml
+> > index 6f74ebfd38df..5bd5822db8af 100644
+> > --- a/Documentation/devicetree/bindings/arm/cpus.yaml
+> > +++ b/Documentation/devicetree/bindings/arm/cpus.yaml
+> > @@ -313,19 +313,15 @@ properties:
+> >      maxItems: 1
+> >
+> >    power-domains:
+> > -    description:
+> > -      List of phandles and PM domain specifiers, as defined by binding=
+s of the
+> > -      PM domain provider (see also ../power_domain.txt).
+> > +    maxItems: 1
+>
+> There are more than one in some cases. The most is probably three, I thin=
+k.
 
-Right, I agree with your patch here: COMPILE_TEST=y should make a
-lot more options visible but not generally enable those.
+Unless I missed it, testing says otherwise. What would the names be if
+more than 1 entry?
 
-Note that COMPILE_TEST=y also turns *off* some other options in
-order to speed up the (allmodconfig) build process and avoid
-some options that are unhelp for finding build issues:
-
-lib/Kconfig.kasan-config KASAN_STACK
-lib/Kconfig.kasan:      bool "Stack instrumentation (unsafe)" if CC_IS_CLANG && !COMPILE_TEST
-security/Kconfig.hardening-config GCC_PLUGIN_STACKLEAK_VERBOSE
-security/Kconfig.hardening-     bool "Report stack depth analysis instrumentation" if EXPERT
-security/Kconfig.hardening-     depends on GCC_PLUGIN_STACKLEAK
-security/Kconfig.hardening:     depends on !COMPILE_TEST        # too noisy
-kernel/gcov/Kconfig-config GCOV_PROFILE_ALL
-kernel/gcov/Kconfig-    bool "Profile entire Kernel"
-kernel/gcov/Kconfig:    depends on !COMPILE_TEST
-
-     Arnd
+Rob
