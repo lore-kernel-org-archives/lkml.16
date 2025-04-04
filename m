@@ -1,134 +1,107 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27DAC1F30DE
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 14:48:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC35033CFC
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 14:48:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743778106; cv=none; b=V15/rhEoEZ21lZWwHyZbY4wCI0wArxOHEBCyr9Z2johDEC8RoREF3cys2Kb+0bTts0EnPb/cGnVGlAhguB1+B3QOJ/JFJwxl3CqiIcohj2AqkWdr0S1MEHLWOIGa7jNHrU08cwuHomrX3ZORuKq+mGlRilgabVsC77TbjD6RnJ0=
+	t=1743778131; cv=none; b=MEHP9Kt160UaETH9ddvYM1VtYrSvaNTiYozS/Oz99RS7PHCthQBoNCjZ1aQ5relXLHwq8TzJprcyAfNUujWkybCnkYKzNZeKmhx6eytHBn85/53GMK0Eiu3WOlrv3YxJgN96fv/0FbbzJZtCtPDHLGYhWmkS1MKJSbNCko+L+Jc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743778106; c=relaxed/simple;
-	bh=7GoSdsG/z6MpG2BagU+D4l810H5dr152SZ9Pl+lLkHw=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=SZZvGTCl8Pb5oD/OrJMEHt/l6k4o2BavFfh1BzLI8Huiru8oa+BeWUbePVG+LM9KhwSj/TKE/13eUexjx2jIVKU7t8y6F8rl5zV9zjomW9a9U2QSAbYBDQckVRSlScM4+mKsfgKkrByhRW35YBSDoe/G1DREW2yaSihO47fTSUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cTu5lGVY; arc=none smtp.client-ip=209.85.210.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1743778131; c=relaxed/simple;
+	bh=N8xr3gZnvBzoAFFMIbubqfbIqdfrBwHBym9C7LusSuM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ECtD+TPce2RudVJp7IVsephlSWsswIvwo5+iHzkA6HOc8TN7305qgpVqdhyZMLOkC5In2YdSyeYynjfdMMiVbkWwUN041hDguhxDOZZ5j+yzgInoDXqk82Qd1eagcfsg475tV2gAoR2HXM3jmEYsTEDdPzcvHI9QfNhvWi75v9I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=RR6ce+oZ; arc=none smtp.client-ip=209.85.166.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cTu5lGVY"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-73009f59215so2663786b3a.1
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 07:48:24 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="RR6ce+oZ"
+Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-3d45503af24so18950595ab.2
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 07:48:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743778104; x=1744382904; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=AJhPpgrch93rw9qEOeOeCjiRRouixDVFkUmIy3HUxXE=;
-        b=cTu5lGVYLdmbLfYh2hUqzaSQ9t3uYG73iXUTiuVj+B13ux9VIsF5/A3Ku7P+APCmj3
-         pR2k1BH/cjeSh2vXr/yCxAZYzze9WyMwJFGd+/47XEN8WaOuy0UUN1BDr4NbPmI5YNyR
-         KWjO8T9lhIxfvb6wNTcyXJiFYc6+IvAebUeYp8xJIX9uvOU1T4XQqqwysWK6oUTHIQTt
-         agxZYLmaVH9HmgaKeLNdegK/aXuMnSyAvvWXdnahsu7AOgmYgI4wxfR+EJsBtGFiNocI
-         TGvxJvFnkK3zFg5hrdhvw70zI4E8YhbCFbh94VJDA5RcCkIOvfQbaQDycF9Rb/x9cG0e
-         EB3g==
+        d=linuxfoundation.org; s=google; t=1743778129; x=1744382929; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=WtHOMalSobmJxdbzjcuw4y+jApPaBkGJD3B8y9lwgGU=;
+        b=RR6ce+oZblxRJat4JWEYQPHpN79/xlFdt3AUFYxGiN5tbEOLycPTs5F+nu2YmIZmaw
+         0wGLZaoZ5W1tna2y0eZu8YwIRJL5Mfje+5FLwKX2Seg7/iQcUKc/gerkNyX0fr35fqVp
+         6uIUoHc1w/H2HDrnaRpaRn0gfQFdxupBRMDCE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743778104; x=1744382904;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=AJhPpgrch93rw9qEOeOeCjiRRouixDVFkUmIy3HUxXE=;
-        b=eYl+YJkk+XzzW/QaGybEfFyplaz6jUpFCeV0XMK9EHfJTGjpO+QHd1+7zKhRjL9Onm
-         LKp/bi8+80K3y/xAzSRWRkZiY8NvTD3qAeUsVIp3bc15gXGjWJU/t0qg6CXS3nX+eYx6
-         0mG27pLXIKQW9Sj/h5ytrA8xK99Lu1tzQdNHl4McAAgaW0sLT84rG4nrP5D4bSZoRjQE
-         iR7qKagKHDKfX0aqaLIpIsHCVDIFp7SoQrijFPyHctEC8k/71Dsh9+8QBqoypapvK/71
-         rzfmtQ73AsEGprAxGGOtKSHpSNm/irwuJe+yx62WFaqK8ahh9O9S7B+uePO7jmqeLqbC
-         JsMA==
-X-Forwarded-Encrypted: i=1; AJvYcCWIHPy7FH2HR3imzk04mcCYaxCAVrPI/k/1VVazzPoEEj0StBUgQ7QunuzZ52awDrVbkQHqJjU4ex0XLSE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwXcpI8XIeO4+Rzw/BH/eSuBtoLis0DPefxIl/npCNNydNjet1A
-	8KtSTqLsf1jLX7m6u/SNquJ4Wzn+LlTZcBjzaoPcVNyjwCQTr4OzxuPKT6Uo2/3EY+LIx4hvs3W
-	Hvg==
-X-Google-Smtp-Source: AGHT+IHFvdwrET8Y6QcdUiOgpiO855/145zExvENJh/buRtt+mH/PTvvhnAGZvIkGKaQJbDWqiOBm8BuNwU=
-X-Received: from pffk21.prod.google.com ([2002:aa7:88d5:0:b0:736:6fb6:804])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:c991:b0:1f5:87a0:60ed
- with SMTP id adf61e73a8af0-2010800c6b8mr4326139637.19.1743778104358; Fri, 04
- Apr 2025 07:48:24 -0700 (PDT)
-Date: Fri, 4 Apr 2025 07:48:22 -0700
-In-Reply-To: <676ed22f-9c3f-4013-99d8-37c4c73bb9ac@zhaoxin.com>
+        d=1e100.net; s=20230601; t=1743778129; x=1744382929;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WtHOMalSobmJxdbzjcuw4y+jApPaBkGJD3B8y9lwgGU=;
+        b=IGFWxzJFUDbr3bFGBFyWYRQK62mCBqTN7W6CTFkKuheZZowFOSygbu6xLZh7fnxNJW
+         7yVmj0ja1AgezZ04yl2cLPB9Wh9jqvLImorSBxjO69pZP0S+KHJ9wbzl1s8/Y5UCidhk
+         nGa8mf24whXzvmpvTUKFH+mNtO66SVKEBCneJOMRG5P3HeYetzlY6Foc9/m8XZ8XJpG7
+         UvCeciqADUouG2yXJnGZmPep0FxMavBT8NvI7FKVCNjh2Q2cAeZTskVlbGrDBd/QRZBn
+         nsf0j6DYUdlfdYKWEoxwWd9/5isI+qd5POFWaFdvsfjDBztEN2N50i3/AZlfIPZVB/+9
+         jNsg==
+X-Forwarded-Encrypted: i=1; AJvYcCXgAWv4G+yu5oIuHJ0qbweXHzuQlRcjHTGseqbTg+2eH16VWJXSGGzB3GjIP8pAMTJVPwufYs1TyY4ahsw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwWEGfwO67XCKuSEQe132hSl5/OBm1wetB/jSIQpmhICtoa9Q9T
+	RQI7lrOD4Qn5O0Y0jVcQL3IMpGBHGaGi5f0b56LmnGdAa95n5L7drZ0/sEKpTM0=
+X-Gm-Gg: ASbGncvBcEwo+QvhR8Fski4JG0dPx9t7Zkn+VdEzEgY7r/WmZWv8cnfo/3GjXb1M2EZ
+	ihOdCWii2xqN7hjqkqdwmhvokaJmtMkZJon7g/SqRqtlL3Fk7LqkdttcWtBDVAdtPYdMCimCXtv
+	mdDjn7RGDSOhFdk6Ju9XtvqHmjdS1fIw5WHyjFuN5QZtnGmPgWahfK9cJc9ZXHCo1ilNiFRmJRx
+	fXXbHk1pF6usIWztTlcwP/Yk6OqVd7QhnpGzW2t4WhyZ1g/NL3oBv/7OXh6/ua58Kh+Nan80Hqe
+	HA4uMcp0y+6pXZMiSsgQ2WXiplcJSa+DucODOTnIEbZ0Sbm6otVcDN4=
+X-Google-Smtp-Source: AGHT+IGJgS5dZigzPp1PfoohVD7rTW7eiqP49p94pLE+ryqtZy9qsHkuogejD5wKg72S1cjf28aMZA==
+X-Received: by 2002:a05:6e02:1b0d:b0:3d5:eb10:1c3b with SMTP id e9e14a558f8ab-3d6e3eea7dcmr38875265ab.5.1743778129170;
+        Fri, 04 Apr 2025 07:48:49 -0700 (PDT)
+Received: from [192.168.1.14] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3d6de972c54sm8479945ab.65.2025.04.04.07.48.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 04 Apr 2025 07:48:48 -0700 (PDT)
+Message-ID: <148cdbaa-09f6-4c66-8a2a-1f55b596a00e@linuxfoundation.org>
+Date: Fri, 4 Apr 2025 08:48:48 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250317091917.72477-1-liamni-oc@zhaoxin.com> <Z9gl5dbTfZsUCJy-@google.com>
- <676ed22f-9c3f-4013-99d8-37c4c73bb9ac@zhaoxin.com>
-Message-ID: <Z-_xNpgsYDW0_4Jn@google.com>
-Subject: Re: [PATCH] KVM: x86:Cancel hrtimer in the process of saving PIT
- state to reduce the performance overhead caused by hrtimer during guest stop.
-From: Sean Christopherson <seanjc@google.com>
-To: LiamNioc <LiamNi-oc@zhaoxin.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org, 
-	pbonzini@redhat.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, hpa@zytor.com, LiamNi@zhaoxin.com, 
-	CobeChen@zhaoxin.com, LouisQi@zhaoxin.com, EwanHai@zhaoxin.com, 
-	FrankZhu@zhaoxin.com
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6.1 00/22] 6.1.133-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org,
+ Shuah Khan <skhan@linuxfoundation.org>
+References: <20250403151620.960551909@linuxfoundation.org>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <20250403151620.960551909@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Mar 25, 2025, LiamNioc wrote:
-> On 2025/3/17 21:38, Sean Christopherson wrote:
-> > On Mon, Mar 17, 2025, Liam Ni wrote:
-> > > When using the dump-guest-memory command in QEMU to dump
-> > > the virtual machine's memory,the virtual machine will be
-> > > paused for a period of time.If the guest (i.e., UEFI) uses
-> > > the PIT as the system clock,it will be observed that the
-> > > HRTIMER used by the PIT continues to run during the guest
-> > > stop process, imposing an additional burden on the system.
-> > > Moreover, during the guest restart process,the previously
-> > > established HRTIMER will be canceled,and the accumulated
-> > > timer events will be flushed.However, before the old
-> > > HRTIMER is canceled,the accumulated timer events
-> > > will "surreptitiously" inject interrupts into the guest.
-> > >=20
-> > > SO during the process of saving the KVM PIT state,
-> > > the HRTIMER need to be canceled to reduce the performance overhead
-> > > caused by HRTIMER during the guest stop process.
-> > >=20
-> > > i.e. if guest
-> > >=20
-> > > Signed-off-by: Liam Ni <liamni-oc@zhaoxin.com>
-> > > ---
-> > >   arch/x86/kvm/x86.c | 4 ++++
-> > >   1 file changed, 4 insertions(+)
-> > >=20
-> > > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> > > index 045c61cc7e54..75355b315aca 100644
-> > > --- a/arch/x86/kvm/x86.c
-> > > +++ b/arch/x86/kvm/x86.c
-> > > @@ -6405,6 +6405,8 @@ static int kvm_vm_ioctl_get_pit(struct kvm *kvm=
-, struct kvm_pit_state *ps)
-> > >=20
-> > >        mutex_lock(&kps->lock);
-> > >        memcpy(ps, &kps->channels, sizeof(*ps));
-> > > +     hrtimer_cancel(&kvm->arch.vpit->pit_state.timer);
-> > > +     kthread_flush_work(&kvm->arch.vpit->expired);
-> >=20
-> > KVM cannot assume userspace wants to stop the PIT when grabbing a snaps=
-hot.  It's
-> > a significant ABI change, and not desirable in all cases.
->=20
-> When VM Pause, all devices of the virtual machine are frozen, so the PIT
-> freeze only saves the PIT device status, but does not cancel HRTIMER, but
-> chooses to cancel HRTIMER when VM resumes and refresh the pending task.
-> According to my observation, before refreshing the pending task, these
-> pending tasks will secretly inject interrupts into the guest.
->=20
-> So do we need to cancel the HRTIMER when VM pause=EF=BC=9F
+On 4/3/25 09:19, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.1.133 release.
+> There are 22 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sat, 05 Apr 2025 15:16:11 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.133-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-The problem is that KVM has no real concept of pausing a VM.  There are a v=
-ariety
-of hacky hooks here and there, but no KVM-wide notion of "pause".
+Compiled and booted on my test system. No dmesg regressions.
 
-For this case, after getting PIT state, you should be able to use KVM_SET_P=
-IT2 to
-set the mode of channel[0] to 0xff, which call destroy_pit_timer() via
-pit_load_count().
+Tested-by: Shuah Khan <skhan@linuxfoundation.org>
+
+thanks,
+-- Shuah
