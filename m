@@ -1,87 +1,117 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67F261A316A;
-	Fri,  4 Apr 2025 08:46:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20DC91A4E9D
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 08:46:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743756375; cv=none; b=Pw8h8Xpy+sJmUAaKUuDLKFZKGSZ5zyAQUrQeYwyZaUAHXmaK2kdmlO/stIZuNq5X1Sl0/i3cl6Tux911xRLJqiNL61yWE+/gWGIR6VBK4sZjfNGkGkdx9Yohy8qafuPQjxxHw6G2359Q4Df4c67Qkk3om7XPOit8uidxhHxZwxc=
+	t=1743756376; cv=none; b=IMe6713xz/4HcS6egRgtZA29nBA/L7H4R7mSthFtkCLPTeZoYeJc8sxIc/FjBQB1tcZJz10XLwDVNQoQOcQwC2+neO1fK5dqk3xFQDDKHR41kCgoovxFHnUR0VS00N+PKAOqPCihDtSNQN21yEGVuikL9KLljF7OTeu5NQaY8j0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743756375; c=relaxed/simple;
-	bh=U+qQ7pPdcSkGjmRrgrAC29ChDfgI5BkPrBje4kN75+4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i8SH77ndw6WNHMDtV1WQ7N+YLtDN896XLkm569rOu6/EqlQ0RzCuGbohZebR+p65eqDmjDNPeLx68DzMjU9rvw9RJJC9rZtDZuyu42Gx7qX5puX/WnwmBHcNETO40ehXLgSHvJicwWECx6K5UmHsuRPOLOZhjlzc6v9ZTE07GoY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=cn8LN7CV; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	s=arc-20240116; t=1743756376; c=relaxed/simple;
+	bh=JjchyDx9ZDuNSkR7gg0EQJ1XnonzrcsHfZUIM0eKyAs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=N8NS0XlTCpv27ZTgoX3mfHkUY9H88pmXI2RaewLC15VyupDV4b1R4EVmRC8YO9j+CWQm+aLMCGcmR8Rxed+GH0cMusR0WdR2JJd+AZLJ1lqP0kJ4XamM4iF11UrvhvtB9wMWPIkH5C5d9WFqxss8NeaUxEEkJ9um/ZhaIECnT9o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Zx34Id0/; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cn8LN7CV"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=1QyhuqlkJjaA1p21YKwlGJzD+w7/jhv1314mzzJkJHU=; b=cn8LN7CVTxIhtJ2+2DIVLS+GN3
-	nXjeTxuBNIzgoLL1lEXwwJQnBdeRBlP/U1lPh0u/U3n8Ue4Ltm/FMPV7jHKiXOQ/bKlIx2B+Y7i6Y
-	xq+8VLJo8gDNSSNq/T7F3peHS5xR/F8buBV8PU3hsww02wbl3MQ+x43Zr+VON3JHTnwHczo8YoqCt
-	79NK+CAkkaI6uhxNe0Ov/WA9DkqdLwzkmJoBFqAcLIwtS2hhMPpJz7u6/SdMnOqQt0cHg/7jM/Kr7
-	G6AeROrh44rdc8UID2OcratELu8+2YGeHvaKqDvhVQx0O/I0WinMw2uZ01cCcerw8zHXeT3MXfVV+
-	BF6KJHVg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u0cgm-0000000BBO8-3FuU;
-	Fri, 04 Apr 2025 08:46:12 +0000
-Date: Fri, 4 Apr 2025 01:46:12 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-	David Howells <dhowells@redhat.com>
-Subject: Re: Chaining is dead
-Message-ID: <Z--cVCsfWxk427qE@infradead.org>
-References: <ZzqyAW2HKeIjGnKa@gondor.apana.org.au>
- <Z5Ijqi4uSDU9noZm@gondor.apana.org.au>
- <Z-JE2HNY-Tj8qwQw@gondor.apana.org.au>
- <20250325152541.GA1661@sol.localdomain>
- <Z-NdGvErMGS5OT7X@gondor.apana.org.au>
- <Z-NjarWmWSmQ97K0@gondor.apana.org.au>
- <20250326033404.GD1661@sol.localdomain>
- <Z-N55Yjve6wTnPqm@gondor.apana.org.au>
- <Z-itc_Qd5LLn19pH@gondor.apana.org.au>
- <20250331165630.GA3893920@google.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Zx34Id0/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743756373;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DBkQV5qy9pCoK2ZfSIURClvOop1gu95J9WdLQljvT3w=;
+	b=Zx34Id0/lsuu+oOLA6ZgWaLJrxHPhlhhtQy2M98NeGUbVC8t2qPn0gW82rkTGCtezknGXD
+	1XJMRXtVQCkwpJwdfI/Hu/WbtFEBpuAJ3QTWoLxcEuGor84VwIQgbZp/ZkBOJ+BD6Vef3D
+	NVc0areQAoH95A7QbMdjdtEa4LALR7w=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-601-z62EZGUmMdyGk66058dG1A-1; Fri,
+ 04 Apr 2025 04:46:10 -0400
+X-MC-Unique: z62EZGUmMdyGk66058dG1A-1
+X-Mimecast-MFC-AGG-ID: z62EZGUmMdyGk66058dG1A_1743756369
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6FB1D1800361;
+	Fri,  4 Apr 2025 08:46:09 +0000 (UTC)
+Received: from gmonaco-thinkpadt14gen3.rmtit.com (unknown [10.44.32.143])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 8514C180B487;
+	Fri,  4 Apr 2025 08:46:06 +0000 (UTC)
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: linux-kernel@vger.kernel.org,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-trace-kernel@vger.kernel.org
+Cc: Gabriele Monaco <gmonaco@redhat.com>,
+	Tomas Glozar <tglozar@redhat.com>,
+	Juri Lelli <jlelli@redhat.com>
+Subject: [RFC PATCH 4/9] rv: Remove trailing whitespace from tracepoint string
+Date: Fri,  4 Apr 2025 10:45:17 +0200
+Message-ID: <20250404084512.98552-15-gmonaco@redhat.com>
+In-Reply-To: <20250404084512.98552-11-gmonaco@redhat.com>
+References: <20250404084512.98552-11-gmonaco@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250331165630.GA3893920@google.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-On Mon, Mar 31, 2025 at 04:56:30PM +0000, Eric Biggers wrote:
-> > My strategy is to allocate the whole thing if we can (2KB or 4KB
-> > depending on your digest size), and if that fails, fall back to
-> > a stack buffer of 512 bytes (or whatever number that keeps the
-> > compiler quiet regarding stack usage).  Even if we're on the stack,
-> > it should still give more than enough to data to satiate your
-> > multibuffer hash code.
-> 
-> Extending the generic crypto infrastructure to support bios and folios is an
-> interesting idea.
+RV event tracepoints print a line with the format:
+    "event_xyz: S0 x event -> S1 "
+    "event_xyz: S1 x event -> S0 (final)"
 
-The right way to do that is to make it work on an iov_iter.  David
-Howells talked about that at LSF/MM and might even have done that work
-at least at a POC level.  That way you can trivially pass in a bio
-because it's just an ITER_BVEC iter, and for a folio you'd build a
-single entry bvec.
+While printing an event leading to a non-final state, the line
+has a trailing white space (visible above before the closing ").
 
-The primary intent here is to avoid building the scatterlist for crypto
-work in network file systems, but just about any other caller would
-benefit as well, but that scatterlist isn't a good fit for any of the
-callers I've looked at, it a really bad fit for software crypto and at
-least once we get the new two step DMA API also a bad fit for hardware
-offload.
+Adapt the format string not to print the trailing whitespace if we are
+not printing "(final)".
+
+Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
+---
+ kernel/trace/rv/rv_trace.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/kernel/trace/rv/rv_trace.h b/kernel/trace/rv/rv_trace.h
+index 422b75f58891e..18fa0e358a30e 100644
+--- a/kernel/trace/rv/rv_trace.h
++++ b/kernel/trace/rv/rv_trace.h
+@@ -29,11 +29,11 @@ DECLARE_EVENT_CLASS(event_da_monitor,
+ 		__entry->final_state		= final_state;
+ 	),
+ 
+-	TP_printk("%s x %s -> %s %s",
++	TP_printk("%s x %s -> %s%s",
+ 		__entry->state,
+ 		__entry->event,
+ 		__entry->next_state,
+-		__entry->final_state ? "(final)" : "")
++		__entry->final_state ? " (final)" : "")
+ );
+ 
+ DECLARE_EVENT_CLASS(error_da_monitor,
+@@ -90,12 +90,12 @@ DECLARE_EVENT_CLASS(event_da_monitor_id,
+ 		__entry->final_state		= final_state;
+ 	),
+ 
+-	TP_printk("%d: %s x %s -> %s %s",
++	TP_printk("%d: %s x %s -> %s%s",
+ 		__entry->id,
+ 		__entry->state,
+ 		__entry->event,
+ 		__entry->next_state,
+-		__entry->final_state ? "(final)" : "")
++		__entry->final_state ? " (final)" : "")
+ );
+ 
+ DECLARE_EVENT_CLASS(error_da_monitor_id,
+-- 
+2.49.0
 
