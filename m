@@ -1,172 +1,127 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0933256C6D;
-	Fri,  4 Apr 2025 19:43:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98B26258CC2;
+	Fri,  4 Apr 2025 19:44:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743795785; cv=none; b=g5xgEPhiDZHprkfiGBWLnCsIGcvcwF0IRjUCBFzI7oJTZ+HxQ+s/5dKu+Cr4957qJPiHE8eD4obnqdXINqNZ79M99BxZkrslAhAnJR6lC48FqEtC+AOOobmBbWl1DQbelZduZVFyTuOKiqC9dOp0uj+44/qQmTdlZkJ0OIGfg1c=
+	t=1743795882; cv=none; b=NBBZRiOLrO5CdQkxXvw6YU5IzYfxVIXUxRoDy65JTquy0TcwT+AbF3dMSNI4+JLIJAzg2Jt+ZmGlNumGNcbj62QlqsKwix8wgg+ZQaqGKimUjRuKjknoQqrejXfeGxbYhsRDZiGUrUbPd6gH0fi3U8Kjl5wSBsEsiFzVazyDYPo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743795785; c=relaxed/simple;
-	bh=xjRClgk0ru5HG2bIkVaucZvG6Qpe+4PE/utI54oaEgk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UPr9mWA56x6AufNLQOju/Lr6MaLks7YaDMb6LzE2pbRsD+OuzyDYgZROfWDHEpW15ObBCY5Bqr4qzKwuDrc0x/o8K7XAJOT5VbXzXkz8HvMz8n5KpsCx+fIeqv2LRKLr0MBpAYIdASLYpYKJ5LmF7F0MV70g2HyFV28qtA74wYI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MEXeT+q2; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743795882; c=relaxed/simple;
+	bh=uFk4xVJsOFMvSdLT5YQiyK9BCbFlv5ZfVSfjcUtKDH8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QJQ63yHqCSmbr0xJx6WSOs7juPJ0kSEkaQzwMMMHf2H9uY3ntsGy43yYzhSXE5r39BfwcoJeaOlyPn7oAhk9fBtmkRxsKwshL/6ir2lTYlYd7Y77Rm0ZwPF0dJYr475mIUox2z/ZFeViladRn8E7y3ARSYRRorr8WFcLf1jEjds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KjtTrgfB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MEXeT+q2"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-22403cbb47fso26170385ad.0;
-        Fri, 04 Apr 2025 12:43:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743795783; x=1744400583; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=aCdihjYQTCflyJxm6dwPDa7f9mrC1RNKPnkAQB9Cuvo=;
-        b=MEXeT+q2YrSdSAErSjL6AimNp3RbMgaQJHOul0TGkTAyqsbrjkQHS9vC6LvvveZrAv
-         c1jIyQRlYzkFEx8Or2HSRTPEOwXEZsQMUisvaBPX3EpfV655N0idvCGrvtqxGnPZ3tNY
-         SO7KdNJSsCFryUlE+xE2T1GbibyHnVTew/OEMHspkTLLpYfONZ4xz5lVDnBG1/Cz4sHW
-         j9g87Z25KjH1ie5/IW5s0GcvAIQIMNP/FaUTWMpypWOrC5TBK6qjzipEVhlvljb4fchx
-         5lHrq36teg6qjgfUJbA1OTPs1JRHWZpi4/gK1NR4R9OgSMBtOUurtd96WWP66lDA7fPH
-         HoSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743795783; x=1744400583;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=aCdihjYQTCflyJxm6dwPDa7f9mrC1RNKPnkAQB9Cuvo=;
-        b=ANkTr8PlaM+Bh9lKdcvLcRZQ2UYo6+RDl/thi+0p+soK6Z1lPfJnb6z8UmozmNS0JY
-         0fflDJ96wClAqTPMUuWosqdXReIvb0ceEJeZ6XrXxyjoXiZXi3xo1b7l7kD6aI1C9OJW
-         j+T0F5jXQ6j/G8tHRPdme7L1E7GY/awuNUNTai4iXsqNQb9YIRcNUuCHI69YzTv7HxYR
-         4ZHMwNWnKW3biBB7GkcZIQYkQjDYdJk3Rn/WVG7gt19sJGtlHC5Th8weSr2KTTp0WoIE
-         dIAdUsweYxf2JKsg6EJp/c30jMXjhEfrlt9nfqEGp7cRLase3U449JRBQvJxp1hbFSEL
-         ypIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVYDYYhSRWsW5V1XtDhuNWlToYWALBSONMz7CKdGEzx6DrjRDKFQD4AX9EJFVN2ZiHrapzu0SMs9AHE@vger.kernel.org, AJvYcCWtgc5UExuTgjww+U8h70MIu6JakOdl4CAgZj+yaGVsjyGzkeYamDwyYjmbBM7y2WiT+VA5vl/CKLKo5NTL@vger.kernel.org, AJvYcCXExxJcIySipaN0U1R13/B1wj/L+G5TzDDLWgJE5GLQos+D8cXWcZ6DIbB00RnDTQpMcGJUdvmydBhs@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy7Uvi3r7Jg5P+lVmf8WXZqPrhyOkp9/TJw1rxwzbCovIJkmoQ0
-	jok5MHhdC46svATV1eMUpt7vYhWo1s4mmf0c581j+AB/OsYgW7oOSmX2qrrn
-X-Gm-Gg: ASbGnctAhAL6ikhozniO2w/7yMyfy2TF8vwq8ltrLqA+xaP36XE0pu7FB6HyFYcwtSX
-	NhO/GZ5pcCgHGOQYgf8Ya+FiDJ6ebJF422+t2YMJTHrjF0nyhNRdVWTXZXokjgvoRU+h0XR4Bf0
-	IhtCzkOY0TrG644UrJA43r0fBokguVgIsDzFZZRRVDLcA70OdyddStV1/cbcqn3rSMv1yNgOdQn
-	V5L2xXMewONxfIrVzk5gAuU3RIH6hywo/PeuIZvYCV0aZ7AvsldrKG6dwEeatltk6bEP9o2iVsN
-	071V78roDgWe3xDk9W7vtWN3LROuEFKe/jgST6C8wmZPWaXBnsl8as+kB2VqkR81+V5G4exjqrH
-	4PJmbL43/VNfw5NXw9mCesBlI
-X-Google-Smtp-Source: AGHT+IGmSZQUmzN4kMPir1/3DwusZurNYkOuuU+RMXFG9BLfGYFc6j2Dj8c8UT3R/eHzPGq0z3D8Xw==
-X-Received: by 2002:a17:903:3baf:b0:215:b9a6:5cb9 with SMTP id d9443c01a7336-22a8a85a244mr65443215ad.5.1743795782746;
-        Fri, 04 Apr 2025 12:43:02 -0700 (PDT)
-Received: from ?IPV6:2409:4080:1197:5c59:9640:d38a:951e:d202? ([2409:4080:1197:5c59:9640:d38a:951e:d202])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2297866e1b4sm36482985ad.181.2025.04.04.12.42.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Apr 2025 12:43:02 -0700 (PDT)
-Message-ID: <299e033b-05d6-4d85-8d01-2d7d0167432f@gmail.com>
-Date: Sat, 5 Apr 2025 01:12:56 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KjtTrgfB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BB77C4CEDD;
+	Fri,  4 Apr 2025 19:44:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743795882;
+	bh=uFk4xVJsOFMvSdLT5YQiyK9BCbFlv5ZfVSfjcUtKDH8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KjtTrgfBBVjaG36XOjc58PwSurzBar7ba+BW1ikSrfESFXEJFPkhFrS8BDuO3hV0Z
+	 XaKXvR00S1B6rWnoXMoD58JIkrGEpjKVcHYwxnf8MOqPwxTglE0cFU7V2cmH8Dogq+
+	 BjVSnHTZGmCc+GOin86nkGOg7mj4adoEOxSOeyhlzV+bKCZy9n8bbqgD6zcDprb5tq
+	 kriNqX2BfHqBTPdY6lCCNCQh0ZqJBquVadul6PGJG0hXfl34XYrX8aB7TAOvsU5q5k
+	 1kJT1qm+wFsdAMp2zu5bhory8Zg1D8gMGQ2bbqe5mSclfTtXl7fxot8b/VD/W3+RRM
+	 ymUxc2l17Fu6Q==
+Date: Fri, 4 Apr 2025 21:44:39 +0200
+From: Daniel Gomez <da.gomez@kernel.org>
+To: David Hildenbrand <david@redhat.com>
+Cc: Luis Chamberlain <mcgrof@kernel.org>, 
+	"Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org, willy@infradead.org, 
+	linux-mm@kvack.org, Bagas Sanjaya <bagasdotme@gmail.com>, gost.dev@samsung.com, 
+	linux-doc@vger.kernel.org, Pankaj Raghav <p.raghav@samsung.com>
+Subject: Re: [PATCH v3] docs: update THP admin guide about non-tmpfs
+ filesystem support
+Message-ID: <kjmyope67af54eagiatlgph7bo4lgzy6jyut7z6elzartkoogy@eon2qkiwdbab>
+References: <20250404140657.29285-1-kernel@pankajraghav.com>
+ <Z-_7fzU02OU1hVOT@bombadil.infradead.org>
+ <09c13770-4d62-430a-827d-6ad35411d18c@redhat.com>
+ <Z_Ad0MsSAuAGevgm@bombadil.infradead.org>
+ <427f683b-ac68-4820-b264-4016b34df592@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] dt-bindings: pwm: Convert lpc32xx-pwm.txt to YAML
-To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, vz@mleia.com,
- piotr.wojtaszczyk@timesys.com, linux-pwm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20250312122750.6391-1-purvayeshi550@gmail.com>
- <76ovkshf4dr6egh72uiigsugdqsin6zwy3skksldhhh2goer6x@gsp3qkhqdtev>
-Content-Language: en-US
-From: Purva Yeshi <purvayeshi550@gmail.com>
-In-Reply-To: <76ovkshf4dr6egh72uiigsugdqsin6zwy3skksldhhh2goer6x@gsp3qkhqdtev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <427f683b-ac68-4820-b264-4016b34df592@redhat.com>
 
-On 03/04/25 16:11, Uwe Kleine-König wrote:
-> Hello,
+On Fri, Apr 04, 2025 at 09:07:23PM +0100, David Hildenbrand wrote:
+> On 04.04.25 19:58, Luis Chamberlain wrote:
+> > On Fri, Apr 04, 2025 at 06:18:12PM +0200, David Hildenbrand wrote:
+> > > On 04.04.25 17:32, Luis Chamberlain wrote:
+> > > > On Fri, Apr 04, 2025 at 04:06:57PM +0200, Pankaj Raghav (Samsung) wrote:
+> > > > > From: Pankaj Raghav <p.raghav@samsung.com>
+> > > > > 
+> > > > > THP support for non-tmpfs filesystem has been around for some time now.
+> > > > > Update the admin guide to reflect it.
+> > > > > 
+> > > > > While we are at it, move FilePmdMapped to previous paragraph for clarity,
+> > > > > and clarify ShmemPmdMapped & ShmemHugePage.
+> > > > > 
+> > > > > Signed-off-by: Pankaj Raghav <p.raghav@samsung.com>
+> > > > > Acked-by: David Hildenbrand <david@redhat.com>
+> > > > > ---
+> > > > > 
+> > > > > Changes since v2:
+> > > > > - Address comment from Bagas Sanjaya
+> > > > > - Squash commits and Ack from David
+> > > > > 
+> > > > >    Documentation/admin-guide/mm/transhuge.rst | 22 +++++++++++++++-------
+> > > > >    1 file changed, 15 insertions(+), 7 deletions(-)
+> > > > > 
+> > > > > diff --git a/Documentation/admin-guide/mm/transhuge.rst b/Documentation/admin-guide/mm/transhuge.rst
+> > > > > index dff8d5985f0f..f8aae64e38d0 100644
+> > > > > --- a/Documentation/admin-guide/mm/transhuge.rst
+> > > > > +++ b/Documentation/admin-guide/mm/transhuge.rst
+> > > > > @@ -12,8 +12,8 @@ using huge pages for the backing of virtual memory with huge pages
+> > > > >    that supports the automatic promotion and demotion of page sizes and
+> > > > >    without the shortcomings of hugetlbfs.
+> > > > > -Currently THP only works for anonymous memory mappings and tmpfs/shmem.
+> > > > > -But in the future it can expand to other filesystems.
+> > > > > +Currently, THP only works for anonymous memory mappings, tmpfs/shmem and
+> > > > > +filesystems that support large folios.
+> > > > 
+> > > > That seems to allude that THP can be supported on filesystems
+> > > > that suppor large folios. I don't think we want to call that THP
+> > > > and that can confuse folks. Leaving "currently" also seems to
+> > > > indicate that there is more work to be done for THP for filesystems
+> > > > but that's not true as well. So how about something like:
+> > > > 
+> > > > THP only works for anonymous memory mappings, and the tmpfs/shmem is the only
+> > > > filesystem to support it. The alternative to THP for other filesystems is to
+> > > > support large folios and with it you can end up using huge pages
+> > > 
+> > > That makes things more complicated without a good reason.
+> > > 
+> > > See CONFIG_READ_ONLY_THP_FOR_FS as an early usage of the term "THP" for
+> > > stuff we have in the pagecache.
+> > 
+> > OK.
+> > 
+> > > (with large folios we now properly implement
+> > > this concept, and support more than only PMD size)
+> > 
+> > Do we really want to call large folio support on filesystems THP?
 > 
-> On Wed, Mar 12, 2025 at 05:57:50PM +0530, Purva Yeshi wrote:
->> Convert the existing `lpc32xx-pwm.txt` bindings documentation into a
->> YAML schema (`nxp,lpc3220-pwm.yaml`).
->>
->> Set `"#pwm-cells"` to `const: 3` for expected PWM cell properties.
->>
->> Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
+> Good question.
 > 
-> I suggest the following commit log:
+> "folio" is just the metadata we currently use to manage a chunk of memory,
+> and a "large folio" is one that spans more than a single page -- huge page,
+> large page, super page, ... in the past the metadata for that used to be a
+> complicated piece of "compound page". In the future, we might call it
+> differently (struct file_mem ?), who knows.
 > 
->      dt-bindings: pwm: Convert lpc32xx-pwm.txt to yaml format
-> 
->      Convert the existing plain text binding documentation for
->      nxp,lpc3220-pwm devices to a YAML schema.
-> 
->      The value #pwm-cells wasn't specified before, set it to 3 to match the
->      usual value for PWMs.
-> 
+> So "large folio" support in a fs allows for the usage of these larger chunks
+> of memory (huge pages).
 
-Hello,
-
-Thank you for the suggestion. I'll update the commit log accordingly in 
-the next revision.
-
->> diff --git a/Documentation/devicetree/bindings/pwm/nxp,lpc3220-pwm.yaml b/Documentation/devicetree/bindings/pwm/nxp,lpc3220-pwm.yaml
->> new file mode 100644
->> index 000000000..432a5e9d4
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pwm/nxp,lpc3220-pwm.yaml
->> @@ -0,0 +1,38 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/pwm/nxp,lpc3220-pwm.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: LPC32XX PWM controller
->> +
->> +maintainers:
->> +  - Vladimir Zapolskiy <vz@mleia.com>
->> +  - Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
->> +
->> +allOf:
->> +  - $ref: pwm.yaml#
->> +
->> +properties:
->> +  compatible:
->> +    const: nxp,lpc3220-pwm
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  "#pwm-cells":
->> +    const: 3
-> 
-> The PWMs defined in arch/arm/boot/dts/nxp/lpc/lpc32xx.dtsi also have a
-> clocks property and in the driver it's not optional. Can you please add
-> it (here, in the list of required properties and the commit log)?
-
-Thank you for the review. I’ll add the clocks property, update the list 
-of required properties, and adjust the commit log accordingly in the 
-next revision.
-
-> 
->> +required:
->> +  - compatible
->> +  - reg
->> +
->> +unevaluatedProperties: false
->> +
->> +examples:
->> +  - |
->> +    pwm@4005c000 {
->> +        compatible = "nxp,lpc3220-pwm";
->> +        reg = <0x4005c000 0x4>;
->> +        #pwm-cells = <3>;
->> +    };
-> 
-> Best regards
-> Uwe
-
-Best regards,
-Purva Yeshi
-
-
-
+I'm a bit confused here. I thought the term 'huge pages' referred to specific
+page table level like PMD, PUD, or PGD (and not PTE). And "large folio" term can
+span up to anything (currently up to PMD). Could you clarify if I'm
+misunderstanding something?
