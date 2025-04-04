@@ -1,25 +1,33 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 092952E62D1
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 03:50:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C790405F7;
+	Fri,  4 Apr 2025 03:55:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743738649; cv=none; b=QpSeyJym0ExP0CeuwupmYLxLmkUcZ7agdKLD1DFRa6uwevfTRX59ioUMfCfR9o7/smf6yc2U/esaKBEVrqP2ZKZcn8dJAKjJqa6Pih+aHthyuMKjKlFWa4yXE9XS/y/kFILgQdrxA0IkBdfHUvXkElK15whh3ef/3iUFXUHGito=
+	t=1743738922; cv=none; b=cP9q57+9l5cGEuAOZZe+9qJ0OkaW1Q1O0m41WPBUBS+f0iZJwEOQiV4MhqEy1Cx3nK6yotJS4YmFBONqnr0FFXv6SllXbXjQsFvpOSbht6jOzpvR+flsPHTipd7sXyjdYGT1GjqAE/kb2ON8WqbsBNyGZYZ9X4r3nGgVsELD3iQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743738649; c=relaxed/simple;
-	bh=831a3b/szRXFhs4u6BKC5Yc43cN0QKhK1rfCUJc1Hd0=;
+	s=arc-20240116; t=1743738922; c=relaxed/simple;
+	bh=nfrVIDcX82RBIgB6YujF5Ina9PlmqR0UkrDESoRx/38=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KvLFRKSnoLZX1ymJK71CfQDo8nTe5aijyLHVB+4mOa0ZoOs3RlHdwwdtuI/Rj3EvWptPXkMJIEh1QwLePlrmvrA6udGpEiISGxWuE+cctjoW/H78aQ5Zmx2tH4ep5Joo7vr7pblYf38dK+5ePxvB8J4/vlqoxwzR9W+/eevx+2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5DE041516;
-	Thu,  3 Apr 2025 20:50:48 -0700 (PDT)
-Received: from [10.162.40.17] (a077893.blr.arm.com [10.162.40.17])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 10FBC3F694;
-	Thu,  3 Apr 2025 20:50:40 -0700 (PDT)
-Message-ID: <6e4e11ef-d0d2-48e8-9ecd-4ba6575c8e52@arm.com>
-Date: Fri, 4 Apr 2025 09:20:37 +0530
+	 In-Reply-To:Content-Type; b=qYKolDXY+jIhVpluhcjEmL6qJj9OIleSmUTx134h68ToKJe2oxL2nHaUNjX2UcxDfr8LkwmdQxeApoXMga7t+unpqGwIfa3radH12mXnOqgkhVpIrkpyRNOsp5Xqv920oNpW4fv3GPHALHHK2+RX06MEzsIAuzZPapba9XWgSC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lAolNBww; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lAolNBww"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32AA3C4CEDD;
+	Fri,  4 Apr 2025 03:55:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743738920;
+	bh=nfrVIDcX82RBIgB6YujF5Ina9PlmqR0UkrDESoRx/38=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=lAolNBwwQzHEihA6y/2uejPCga+LLvaa9Pj/hHExCZ0z8kkMfauFTsCPvADBNkISG
+	 ZE//FueLAF/834ZoLsKNEZ7pycg0OXGTKloKHxCal+4mhbwUsY6whpY860i7GuV+LK
+	 NCd3y73iKgudx83HG4x4q215yxghwOpu//aRnBUO3S9VMXES0UhFkpEU8+nPWdeYx6
+	 nZRVtaITM6oHxWRHfBdzlfJ5X+fyaeaYw4U8mwUZ7JUyJw6/D/THioIoo3GhR6F+5h
+	 KqQaBomIjMkZRuj/o8WwSJZVE7a7eVwCtAZipgqdtkY/sHgvHGNZjAvFjUuQ5IztrZ
+	 kSfBnbWjJMk9A==
+Message-ID: <6eef4b75-2a2c-42f2-a35e-558260143dba@kernel.org>
+Date: Fri, 4 Apr 2025 12:54:36 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,142 +35,90 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 02/11] arm64: hugetlb: Refine tlb maintenance scope
-To: Ryan Roberts <ryan.roberts@arm.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Pasha Tatashin <pasha.tatashin@soleen.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Uladzislau Rezki <urezki@gmail.com>, Christoph Hellwig <hch@infradead.org>,
- David Hildenbrand <david@redhat.com>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>,
- Mark Rutland <mark.rutland@arm.com>, Alexandre Ghiti
- <alexghiti@rivosinc.com>, Kevin Brodsky <kevin.brodsky@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-References: <20250304150444.3788920-1-ryan.roberts@arm.com>
- <20250304150444.3788920-3-ryan.roberts@arm.com>
+Subject: Re: [PATCH] libata: Add error handling for pdc20621_i2c_read().
+To: Wentao Liang <vulab@iscas.ac.cn>, cassel@kernel.org
+Cc: linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250403103957.2550-1-vulab@iscas.ac.cn>
+From: Damien Le Moal <dlemoal@kernel.org>
 Content-Language: en-US
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <20250304150444.3788920-3-ryan.roberts@arm.com>
+Organization: Western Digital Research
+In-Reply-To: <20250403103957.2550-1-vulab@iscas.ac.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
+On 4/3/25 7:39 PM, Wentao Liang wrote:
+> The pdc20621_prog_dimm0() calls the pdc20621_i2c_read(), but does not
+
+The function pdc20621_prog_dimm0() calls the function pdc20621_i2c_read() but
+does...
 
 
-On 3/4/25 20:34, Ryan Roberts wrote:
-> When operating on contiguous blocks of ptes (or pmds) for some hugetlb
-> sizes, we must honour break-before-make requirements and clear down the
-> block to invalid state in the pgtable then invalidate the relevant tlb
-> entries before making the pgtable entries valid again.
+> handle the error if the read fails. This could lead to process with
+> invalid data. A proper inplementation can be found in
+
+s/inplementation/implementation
+
+> pdc20621_prog_dimm_global(). As mentioned in its commit:
+> bb44e154e25125bef31fa956785e90fccd24610b, the variable spd0 might be
+> used uninitialized when pdc20621_i2c_read() fails.
 > 
-> However, the tlb maintenance is currently always done assuming the worst
-> case stride (PAGE_SIZE), last_level (false) and tlb_level
-> (TLBI_TTL_UNKNOWN). We can do much better with the hinting; In reality,
-> we know the stride from the huge_pte pgsize, we are always operating
-> only on the last level, and we always know the tlb_level, again based on
-> pgsize. So let's start providing these hints.
+> Add error handling to the pdc20621_i2c_read(). If a read operation fails,
+> an error message is logged via dev_err(), and return an under-zero value
+> to represent error situlation.
+
+and return a negative error code.
+
 > 
-> Additionally, avoid tlb maintenace in set_huge_pte_at().
-> Break-before-make is only required if we are transitioning the
-> contiguous pte block from valid -> valid. So let's elide the
-> clear-and-flush ("break") if the pte range was previously invalid.
+> Add error handling to pdc20621_prog_dimm0() in pdc20621_dimm_init(), and
+> return a none-zero value when pdc20621_prog_dimm0() fails.
+
+return a negative error code if pdc20621_prog_dimm0() fails.
+
 > 
-> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+> Fixes: 4447d3515616 ("libata: convert the remaining SATA drivers to new init model")
+> Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
 > ---
->  arch/arm64/include/asm/hugetlb.h | 29 +++++++++++++++++++----------
->  arch/arm64/mm/hugetlbpage.c      |  9 ++++++---
->  2 files changed, 25 insertions(+), 13 deletions(-)
+>  drivers/ata/sata_sx4.c | 13 ++++++++++---
+>  1 file changed, 10 insertions(+), 3 deletions(-)
 > 
-> diff --git a/arch/arm64/include/asm/hugetlb.h b/arch/arm64/include/asm/hugetlb.h
-> index 07fbf5bf85a7..2a8155c4a882 100644
-> --- a/arch/arm64/include/asm/hugetlb.h
-> +++ b/arch/arm64/include/asm/hugetlb.h
-> @@ -69,29 +69,38 @@ extern void huge_ptep_modify_prot_commit(struct vm_area_struct *vma,
+> diff --git a/drivers/ata/sata_sx4.c b/drivers/ata/sata_sx4.c
+> index a482741eb181..a4027eb2fb66 100644
+> --- a/drivers/ata/sata_sx4.c
+> +++ b/drivers/ata/sata_sx4.c
+> @@ -1117,9 +1117,14 @@ static int pdc20621_prog_dimm0(struct ata_host *host)
+>  	mmio += PDC_CHIP0_OFS;
 >  
->  #include <asm-generic/hugetlb.h>
+>  	for (i = 0; i < ARRAY_SIZE(pdc_i2c_read_data); i++)
+> -		pdc20621_i2c_read(host, PDC_DIMM0_SPD_DEV_ADDRESS,
+> -				  pdc_i2c_read_data[i].reg,
+> -				  &spd0[pdc_i2c_read_data[i].ofs]);
+> +		if (!pdc20621_i2c_read(host, PDC_DIMM0_SPD_DEV_ADDRESS,
+> +				       pdc_i2c_read_data[i].reg,
+> +				       &spd0[pdc_i2c_read_data[i].ofs])){
+> +			dev_err(host->dev,
+> +				"Failed in i2c read at index %d: device=%#x, reg=%#x\n",
+> +				i, PDC_DIMM0_SPD_DEV_ADDRESS, pdc_i2c_read_data[i].reg);
+> +			return -1;
+
+			return -EIO;
+> +		}
 >  
-> -#define __HAVE_ARCH_FLUSH_HUGETLB_TLB_RANGE
-> -static inline void flush_hugetlb_tlb_range(struct vm_area_struct *vma,
-> -					   unsigned long start,
-> -					   unsigned long end)
-> +static inline void __flush_hugetlb_tlb_range(struct vm_area_struct *vma,
-> +					     unsigned long start,
-> +					     unsigned long end,
-> +					     unsigned long stride,
-> +					     bool last_level)
->  {
-> -	unsigned long stride = huge_page_size(hstate_vma(vma));
-> -
->  	switch (stride) {
->  #ifndef __PAGETABLE_PMD_FOLDED
->  	case PUD_SIZE:
-> -		__flush_tlb_range(vma, start, end, PUD_SIZE, false, 1);
-> +		__flush_tlb_range(vma, start, end, PUD_SIZE, last_level, 1);
->  		break;
->  #endif
->  	case CONT_PMD_SIZE:
->  	case PMD_SIZE:
-> -		__flush_tlb_range(vma, start, end, PMD_SIZE, false, 2);
-> +		__flush_tlb_range(vma, start, end, PMD_SIZE, last_level, 2);
->  		break;
->  	case CONT_PTE_SIZE:
-> -		__flush_tlb_range(vma, start, end, PAGE_SIZE, false, 3);
-> +		__flush_tlb_range(vma, start, end, PAGE_SIZE, last_level, 3);
->  		break;
->  	default:
-> -		__flush_tlb_range(vma, start, end, PAGE_SIZE, false, TLBI_TTL_UNKNOWN);
-> +		__flush_tlb_range(vma, start, end, PAGE_SIZE, last_level, TLBI_TTL_UNKNOWN);
->  	}
->  }
+>  	data |= (spd0[4] - 8) | ((spd0[21] != 0) << 3) | ((spd0[3]-11) << 4);
+>  	data |= ((spd0[17] / 4) << 6) | ((spd0[5] / 2) << 7) |
+> @@ -1284,6 +1289,8 @@ static unsigned int pdc20621_dimm_init(struct ata_host *host)
 >  
-> +#define __HAVE_ARCH_FLUSH_HUGETLB_TLB_RANGE
-> +static inline void flush_hugetlb_tlb_range(struct vm_area_struct *vma,
-> +					   unsigned long start,
-> +					   unsigned long end)
-> +{
-> +	unsigned long stride = huge_page_size(hstate_vma(vma));
-> +
-> +	__flush_hugetlb_tlb_range(vma, start, end, stride, false);
-> +}
-> +
->  #endif /* __ASM_HUGETLB_H */
-> diff --git a/arch/arm64/mm/hugetlbpage.c b/arch/arm64/mm/hugetlbpage.c
-> index 6a2af9fb2566..065be8650aa5 100644
-> --- a/arch/arm64/mm/hugetlbpage.c
-> +++ b/arch/arm64/mm/hugetlbpage.c
-> @@ -183,8 +183,9 @@ static pte_t get_clear_contig_flush(struct mm_struct *mm,
->  {
->  	pte_t orig_pte = get_clear_contig(mm, addr, ptep, pgsize, ncontig);
->  	struct vm_area_struct vma = TLB_FLUSH_VMA(mm, 0);
-> +	unsigned long end = addr + (pgsize * ncontig);
+>  	/* Programming DIMM0 Module Control Register (index_CID0:80h) */
+>  	size = pdc20621_prog_dimm0(host);
+> +	if (size < 0)
+> +		return 1;
+
+		return size;
+
+>  	dev_dbg(host->dev, "Local DIMM Size = %dMB\n", size);
 >  
-> -	flush_tlb_range(&vma, addr, addr + (pgsize * ncontig));
-> +	__flush_hugetlb_tlb_range(&vma, addr, end, pgsize, true);
->  	return orig_pte;
->  }
->  
-> @@ -209,7 +210,7 @@ static void clear_flush(struct mm_struct *mm,
->  	for (i = 0; i < ncontig; i++, addr += pgsize, ptep++)
->  		__ptep_get_and_clear(mm, addr, ptep);
->  
-> -	flush_tlb_range(&vma, saddr, addr);
-> +	__flush_hugetlb_tlb_range(&vma, saddr, addr, pgsize, true);
->  }
->  
->  void set_huge_pte_at(struct mm_struct *mm, unsigned long addr,
-> @@ -238,7 +239,9 @@ void set_huge_pte_at(struct mm_struct *mm, unsigned long addr,
->  	dpfn = pgsize >> PAGE_SHIFT;
->  	hugeprot = pte_pgprot(pte);
->  
-> -	clear_flush(mm, addr, ptep, pgsize, ncontig);
-> +	/* Only need to "break" if transitioning valid -> valid. */
-> +	if (pte_valid(__ptep_get(ptep)))
-> +		clear_flush(mm, addr, ptep, pgsize, ncontig);
->  
->  	for (i = 0; i < ncontig; i++, ptep++, addr += pgsize, pfn += dpfn)
->  		__set_ptes(mm, addr, ptep, pfn_pte(pfn, hugeprot), 1);
+>  	/* Programming DIMM Module Global Control Register (index_CID0:88h) */
 
 
-LGTM
-
-Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
+-- 
+Damien Le Moal
+Western Digital Research
