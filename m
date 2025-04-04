@@ -1,124 +1,66 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95F711B0F17;
-	Fri,  4 Apr 2025 09:44:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 953911B0413;
+	Fri,  4 Apr 2025 09:44:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743759850; cv=none; b=bDbSzPw3zijrnqsNiYlMzp1DQnB4AfliaFWvHcf5xcW2jPu7MkkGtHaJNJ8MJ18gwoPLk0o1t1dJpbOmjoZYJ9G0iwjwX39pGAT49T+5juMFc5wcIb7Va4XTdsGiAvOD33lgRalWsPqx2GgvQC4BGmHKVaoyK5x247EM6+qPCX8=
+	t=1743759892; cv=none; b=gpn406d2dRu3yDcsLgQkXzsuqz8V9FBr/SiJ/fql3lEp9+H2zgVZcq+h5ohzRBkcEy2eIQ/BwMFv0ayWLWySY9QnJ1OlOzFY56I/EkKVpVd3rMG25r0VLJgp+RJ2oZ0v7QVb7oNDRJt84X9BI8KzqVFHhWvmDPb/1bFZdohZWYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743759850; c=relaxed/simple;
-	bh=/1xoPsKQlQBWMpLcgEjKZ/hJOcJIL0rM7P/QyChG6kU=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZyjSC2dE3NTpw6GpRbuEL2ON1euWWEjJKtYswTOG28SxdmgxOAueZ5WBQKvPfeEvPweiYlvyxGK5k3C5oe0ej8C22JIWesPgrH/xXZZmOeJ1wIbCmVfDcVM1NHg5c68YCTxhlUwpdR5oSeCM1VqOCGWtsHa4n5fQNKudwmXk324=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=mNjoFrze; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="mNjoFrze"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1743759848; x=1775295848;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=/1xoPsKQlQBWMpLcgEjKZ/hJOcJIL0rM7P/QyChG6kU=;
-  b=mNjoFrzeWd8peTAG5WC9J3+Cc9JqBm8ldSXpV+imLvRQa9XccuyrirYM
-   nkYPQMBk5V71KPnKqpR8U8AiKSFq9hQv9n+oNFp23OZBX6i1G/OF5ZK5L
-   UBgiTzLC55B3GqDdIm2BY4TtZ4C4fz57sSgpgknLcAAB9+ITjauwCzBXd
-   6DLdRDeYGLV439g196KXc1L5fp9M4mkCeRNcNpQhl/vg1cj0wI6JChAa1
-   OJMeivD6LvAyKUmQxrSTOHpQIMvWWSvUbgi7yDxL5V7C39d8EbA4bM3pW
-   /KsjuJVOCRQOTRICsz1Fl9OmsYeD7k72OUGq7faC5SqEYgFNn9/VHpHUa
-   g==;
-X-CSE-ConnectionGUID: CCbOwbOjQ2SseDv2d8Zv6w==
-X-CSE-MsgGUID: TTSMcQbYQG2UnIfQGa0ggw==
-X-IronPort-AV: E=Sophos;i="6.15,187,1739862000"; 
-   d="scan'208";a="39641646"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 04 Apr 2025 02:44:01 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Fri, 4 Apr 2025 02:43:37 -0700
-Received: from DEN-DL-M70577 (10.10.85.11) by chn-vm-ex04.mchp-main.com
- (10.10.85.152) with Microsoft SMTP Server id 15.1.2507.44 via Frontend
- Transport; Fri, 4 Apr 2025 02:43:28 -0700
-Date: Fri, 4 Apr 2025 09:43:28 +0000
-From: Daniel Machon <daniel.machon@microchip.com>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-CC: Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
-	<conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec
-	<jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, "Rafael J.
- Wysocki" <rafael@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>, Vincenzo Frascino
-	<vincenzo.frascino@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, Sudeep Holla
-	<sudeep.holla@arm.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, "Bjorn
- Andersson" <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Viresh Kumar
-	<vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd
-	<sboyd@kernel.org>, <zhouyanjie@wanyeetech.com>, Conor Dooley
-	<conor@kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, "Claudiu
- Beznea" <claudiu.beznea@tuxon.dev>, Steen Hegelund
-	<Steen.Hegelund@microchip.com>, <UNGLinuxDriver@microchip.com>, Shawn Guo
-	<shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, "Pengutronix
- Kernel Team" <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
-	Heiko Stuebner <heiko@sntech.de>, Neil Armstrong <neil.armstrong@linaro.org>,
-	Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Geert Uytterhoeven
-	<geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>,
-	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-sunxi@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
-	<linux-pm@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
-	<linux-arm-msm@vger.kernel.org>, <linux-mips@vger.kernel.org>,
-	<imx@lists.linux.dev>, <linux-rockchip@lists.infradead.org>,
-	<linux-amlogic@lists.infradead.org>, <linux-renesas-soc@vger.kernel.org>
-Subject: Re: [PATCH 04/19] arm64: dts: microchip: sparx5: Fix CPU node
- "enable-method" property dependencies
-Message-ID: <20250404094328.cojaf5cxrotnetln@DEN-DL-M70577>
-References: <20250403-dt-cpu-schema-v1-0-076be7171a85@kernel.org>
- <20250403-dt-cpu-schema-v1-4-076be7171a85@kernel.org>
+	s=arc-20240116; t=1743759892; c=relaxed/simple;
+	bh=HD7kWkg7XSuXBSb2w/uqNbauod0izeN3YT2dEnrTrM0=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oOGxiOx9y1v2igMlDo1X4XgVlpxSoFGBLneb5x/bHjgycFxz75vKqMAoJDtr791jJcrvk1Lt7kpHs64KDRX3RFEF7iCoJMY1LEvbxGwzKpSfmrFAaRq8fia/a3QdoMb4AgRKhSO2pfJ20/J1HmjZKDjgqBivfjw+opaOdtPf3k4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZTY5w2qgnz6K5VN;
+	Fri,  4 Apr 2025 17:22:12 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 8A3B11408E8;
+	Fri,  4 Apr 2025 17:25:52 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 4 Apr
+ 2025 11:25:51 +0200
+Date: Fri, 4 Apr 2025 10:25:50 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Zaid Alali <zaidal@os.amperecomputing.com>
+CC: <rafael@kernel.org>, <lenb@kernel.org>, <james.morse@arm.com>,
+	<tony.luck@intel.com>, <bp@alien8.de>, <robert.moore@intel.com>,
+	<dan.j.williams@intel.com>, <Benjamin.Cheatham@amd.com>,
+	<Avadhut.Naik@amd.com>, <viro@zeniv.linux.org.uk>, <arnd@arndb.de>,
+	<ira.weiny@intel.com>, <dave.jiang@intel.com>,
+	<sthanneeru.opensrc@micron.com>, <linux-acpi@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <acpica-devel@lists.linux.dev>
+Subject: Re: [PATCH v5 7/9] ACPI: APEI: EINJ: Add debugfs files for EINJv2
+ support
+Message-ID: <20250404102550.00007d3e@huawei.com>
+In-Reply-To: <20250403231339.23708-8-zaidal@os.amperecomputing.com>
+References: <20250403231339.23708-1-zaidal@os.amperecomputing.com>
+	<20250403231339.23708-8-zaidal@os.amperecomputing.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250403-dt-cpu-schema-v1-4-076be7171a85@kernel.org>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500011.china.huawei.com (7.191.174.215) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-> The "spin-table" enable-method requires "cpu-release-addr" property,
-> so add a dummy entry. It is assumed the bootloader will fill in the
-> correct values.
-> 
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> ---
->  arch/arm64/boot/dts/microchip/sparx5_pcb_common.dtsi | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/microchip/sparx5_pcb_common.dtsi b/arch/arm64/boot/dts/microchip/sparx5_pcb_common.dtsi
-> index 32bb76b3202a..83bf5c81b5f7 100644
-> --- a/arch/arm64/boot/dts/microchip/sparx5_pcb_common.dtsi
-> +++ b/arch/arm64/boot/dts/microchip/sparx5_pcb_common.dtsi
-> @@ -12,10 +12,12 @@ &psci {
-> 
->  &cpu0 {
->         enable-method = "spin-table";
-> +       cpu-release-addr = /bits/ 64 <0>;
->  };
-> 
->  &cpu1 {
->         enable-method = "spin-table";
-> +       cpu-release-addr = /bits/ 64 <0>;
->  };
-> 
->  &uart0 {
-> 
-> --
-> 2.47.2
->
+On Thu,  3 Apr 2025 16:13:37 -0700
+Zaid Alali <zaidal@os.amperecomputing.com> wrote:
 
-Reviewed-by: Daniel Machon <daniel.machon@microchip.com>
-Tested-by: Daniel Machon <daniel.machon@microchip.com>
- 
+> Create a debugfs blob file to be used for reading the user
+> input for the component array. EINJv2 enables users to inject
+> errors to multiple components/devices at the same time using
+> component array.
+> 
+> Signed-off-by: Zaid Alali <zaidal@os.amperecomputing.com>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+Hmm.  Maybe you didn't get my emails?
