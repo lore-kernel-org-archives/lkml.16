@@ -1,50 +1,65 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D13AB20C47A;
-	Fri,  4 Apr 2025 16:43:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27C16211282
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 16:43:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743784987; cv=none; b=rQPKkJeYO8T0WuYH+/rw4vzpspAG2VRzA+ajh22PhQuj+kWB3PEuR+Ejox9yScJ+s+NttTDBGZ8INlxZ9RBg7GCPTSAWB0qoKHpr9iNeOAID0S0UBtHp64E3M1tJJKqlp7k8JuPjIewS7OKFj3FDUs8pE2xysEIcvGafb0rpuJ0=
+	t=1743784994; cv=none; b=qzgBC/StwDZCBy1ePCmD08B91TPhD5AqkzP8FBXXJ9HDmFsOtGUzxCktgT20ufFGhR5w1KY5/m7nClHNRdvKE5m13EsfaVyw7ZWl8A1u2TppEWHe77fq/FXIgaOm1Sb8EnML0X/wmHsWy7Vi4n37ssaHC1bEr6R+krgX2RPRa6g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743784987; c=relaxed/simple;
-	bh=ayFfjprWbAEYcS3LTd7+T5khf0vhzbC7c/TA3bU+bmo=;
+	s=arc-20240116; t=1743784994; c=relaxed/simple;
+	bh=4h/h5Ey4YkMehMG/YIdYL0cH70WRN3xek869zn7JOjs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gi5ZQQ/ULa2mPTUvm0zr7OZ6pfaO2YjcmMy6r5UB2LOD5cBqpFDzJM8nOAhl/XbbKvF0S9wRF5t4MFL84B55mYKgDis1h+eStm3WhwwmZ7BmAVC1TPPR/yxjSXYXoCU1ZJz0Z1Zj1Xze3b/+O5rEnXGAlR9hIXCaa9JvV49EK7Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lxatC83k; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 In-Reply-To:Content-Type; b=QJcL0dk3Rjvpk7TxYb57zX6x0Shvi4j3DTZcWu9jWNyZyuar5EW/MQHDVhCLniFBg5CV2RW288ALvAng/biv7goNghTXSWgsJxzSyno31c3D95INoUu/V34iQZMTw4QYCNwx3iASjyrfhv9LQUkwh62oa1zWqxW1NobZmD7LA+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=uPWgwOWg; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lxatC83k"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743784985; x=1775320985;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=ayFfjprWbAEYcS3LTd7+T5khf0vhzbC7c/TA3bU+bmo=;
-  b=lxatC83kcd6Ob7PcGlbGvmpI44y75SAjgZ+vsH4c7P3Iarb08F0DwjxQ
-   zdzKoJF9XTHedlmQsoO3bl7J7Re9yRsS2ptvT80wH0Ft2INjrib4dFRft
-   ZbpjYNsT6U0L/ktXWIEQQmwywr8drQEKWOtf8KSIhhkoDVfG/3Z5S9fGW
-   iXr8xnBgBKUeRxpyDm0qrl9KgEMiQGMcVswLzXrjh1V41Iu11agJmFUVT
-   E49IWLtAfUzKKoiuK05k8DoS3A1wgErGipGTUOzXvnTZR+Si/mVPHo361
-   lSl9surpw2V/S0vxBem4zKbpXlI/uznmPrGcJIjDgK3ZOmFopDmdSHYoV
-   Q==;
-X-CSE-ConnectionGUID: vLB8CuB1TGSfT5g6aXDQEw==
-X-CSE-MsgGUID: RtUtNF8bRVydtFzn52jdXA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11394"; a="62631332"
-X-IronPort-AV: E=Sophos;i="6.15,188,1739865600"; 
-   d="scan'208";a="62631332"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 09:43:04 -0700
-X-CSE-ConnectionGUID: PNDCImh2SwmUq/OXMReN8A==
-X-CSE-MsgGUID: 2z30JdBbQJeAh01BitZsnQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,188,1739865600"; 
-   d="scan'208";a="127247176"
-Received: from daliomra-mobl3.amr.corp.intel.com (HELO [10.124.223.29]) ([10.124.223.29])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 09:42:57 -0700
-Message-ID: <257b39a5-69bf-4e6d-844b-576e9c9d2e7d@intel.com>
-Date: Fri, 4 Apr 2025 09:42:55 -0700
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uPWgwOWg"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43d0953d3e1so1878835e9.2
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 09:43:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1743784990; x=1744389790; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=xAGsnLdrspAycxCBxeKM44JqaHnIQt6B7n8T1zYYWxs=;
+        b=uPWgwOWgsk3o0w/ihhuR9MqF/8M6stdY6HHoCyuAEq7bzhUmtpSXdP2MkN115kSzOC
+         aBlDICzHLvmo50VNn1V07ebwppM1zq78KQ/gyVN0ChWLauzzz/Hs5W7bFsYJmVhmwIH7
+         egKtNoz2SRCdQnM9kGymiKDkUKeHxlJTCQ3Wxx0oD8M6XfcPh42/bUD0AxG/81cTnSWJ
+         2z6/eO4i3dU9f70cCMgnS2JN1cFfAQZVmEChOyhFGuW7twcH0sv2mY468SycVp49+3XG
+         kLQSX10xPVfeugsx4iDjFtiAGW+3LbdavUaJMs+Jpa/dargniEI5ND7xYvKZOpbeajhI
+         4dAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743784990; x=1744389790;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xAGsnLdrspAycxCBxeKM44JqaHnIQt6B7n8T1zYYWxs=;
+        b=cgFMRlV768F2inuHJt+tKxnyn9WjYePq2/R1TceADHgEboq8ViQTg4fsE/sqQK1PWj
+         TKipc25138y90FoDygIwQv72adk/yQa0r7pVJkGBBhFUdItU+NXcwpJCy8Vl8qrOtspt
+         PxTsGzSVNR7CvbTkPNNIw1ZrNqianKPDy6yqsEi+2Y/MSigK6imomIpA7OGZ59TktfRA
+         lXjB8yAyYzLvvABNLjgiD68vpcCzywl5vkRgKNMgZJzruoJv/Fw0LcPWqYCIMSCGAsnC
+         Y2+4VaPEa22HinNgSr7hQxvirABG+s4QJ2Mq2KTeSh71fa877baOiOw/766TbqrNHDTH
+         Lc8w==
+X-Forwarded-Encrypted: i=1; AJvYcCXrQXiGhgWTTywSB8ZBKb9dD/3QQuH5Ib18JQ9laRNo8sYSu+bM22iC9tkj0vccrX5MISM6VTuV0lnYJgw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzUaEq1dGYUzfQ9F/nIc7ied85y80s1kazFo6cHMZ394WEWKowS
+	GobxN5O0ee43lgjyDAljQoRKvldmEBY7U8umtXQMY3kneHVTsZcuFI5+5uGs8Jo=
+X-Gm-Gg: ASbGncv/P4PDNFh0RDeyvVR1dBSRNxCxuRCLL0poHPCp3K4/TaETEGMGWHBqoigQMEQ
+	MjzL5yoEWxsSOLg3N5l8nVkFd2/cx+4yK3pbbj+2CE7WYrcUKIjt31VZws+Z8hWO1zkhTaADG8s
+	nZmOB8yQiI0dmRLpmz0TMp/oBUcVPfETIfP3BN80lgc/37AVLgY0PrRVQ7lU4yuWF/5DBWlfV/f
+	XgTWWI/+oP43cFKuP+LrHbnSuu9AbLlFVbb2jM4kqMcH9R1S2UNvXVI6ztqoOnhYuc/TrUnPqGq
+	kyhPMXcxW6Lx+QXxSj/RrtQR06f9YD76AaAWF30xrDluG3sEn12dwBEHAvpTGrhz
+X-Google-Smtp-Source: AGHT+IG2IbUlYSnGQ6rLAHHC6qjUasnOVdNNxP1zU9JNrvGwlwZmuhSUx3coIjZGTA3VjYqWTFYtwQ==
+X-Received: by 2002:a05:600c:1d05:b0:43b:c0fa:f9c4 with SMTP id 5b1f17b1804b1-43ecfa03395mr12662335e9.4.1743784990341;
+        Fri, 04 Apr 2025 09:43:10 -0700 (PDT)
+Received: from [192.168.1.106] ([178.197.198.86])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec34bf258sm50009095e9.23.2025.04.04.09.43.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 04 Apr 2025 09:43:09 -0700 (PDT)
+Message-ID: <c5319e0f-6388-4f9a-82dd-526fdeb4ae26@linaro.org>
+Date: Fri, 4 Apr 2025 18:43:07 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,132 +67,122 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 05/14] x86: Reset tag for virtual to physical address
- conversions
-To: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>, hpa@zytor.com,
- hch@infradead.org, nick.desaulniers+lkml@gmail.com,
- kuan-ying.lee@canonical.com, masahiroy@kernel.org,
- samuel.holland@sifive.com, mingo@redhat.com, corbet@lwn.net,
- ryabinin.a.a@gmail.com, guoweikang.kernel@gmail.com, jpoimboe@kernel.org,
- ardb@kernel.org, vincenzo.frascino@arm.com, glider@google.com,
- kirill.shutemov@linux.intel.com, apopple@nvidia.com,
- samitolvanen@google.com, kaleshsingh@google.com, jgross@suse.com,
- andreyknvl@gmail.com, scott@os.amperecomputing.com, tony.luck@intel.com,
- dvyukov@google.com, pasha.tatashin@soleen.com, ziy@nvidia.com,
- broonie@kernel.org, gatlin.newhouse@gmail.com, jackmanb@google.com,
- wangkefeng.wang@huawei.com, thiago.bauermann@linaro.org, tglx@linutronix.de,
- kees@kernel.org, akpm@linux-foundation.org, jason.andryuk@amd.com,
- snovitoll@gmail.com, xin@zytor.com, jan.kiszka@siemens.com, bp@alien8.de,
- rppt@kernel.org, peterz@infradead.org, pankaj.gupta@amd.com,
- thuth@redhat.com, andriy.shevchenko@linux.intel.com,
- joel.granados@kernel.org, kbingham@kernel.org, nicolas@fjasle.eu,
- mark.rutland@arm.com, surenb@google.com, catalin.marinas@arm.com,
- morbo@google.com, justinstitt@google.com, ubizjak@gmail.com,
- jhubbard@nvidia.com, urezki@gmail.com, dave.hansen@linux.intel.com,
- bhe@redhat.com, luto@kernel.org, baohua@kernel.org, nathan@kernel.org,
- will@kernel.org, brgerst@gmail.com
-Cc: llvm@lists.linux.dev, linux-mm@kvack.org, linux-doc@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
- linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com, x86@kernel.org
-References: <cover.1743772053.git.maciej.wieczor-retman@intel.com>
- <a8332a2dc5b21bd8533ea38da258c093fb9f2fe2.1743772053.git.maciej.wieczor-retman@intel.com>
-From: Dave Hansen <dave.hansen@intel.com>
+Subject: Re: [PATCH 4/5] clk: sunxi-ng: Do not enable by default during
+ compile testing
+To: Andre Przywara <andre.przywara@arm.com>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>,
+ Jerome Brunet <jbrunet@baylibre.com>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Kevin Hilman <khilman@baylibre.com>,
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>, Chen-Yu Tsai
+ <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Samuel Holland <samuel@sholland.org>, =?UTF-8?Q?Emilio_L=C3=B3pez?=
+ <emilio@elopez.com.ar>, linux-amlogic@lists.infradead.org,
+ linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+ linux-sunxi@lists.linux.dev
+References: <20250404-kconfig-defaults-clk-v1-0-4d2df5603332@linaro.org>
+ <20250404-kconfig-defaults-clk-v1-4-4d2df5603332@linaro.org>
+ <20250404151320.53c4698b@donnerap.manchester.arm.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <a8332a2dc5b21bd8533ea38da258c093fb9f2fe2.1743772053.git.maciej.wieczor-retman@intel.com>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20250404151320.53c4698b@donnerap.manchester.arm.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 4/4/25 06:14, Maciej Wieczor-Retman wrote:
-> +#ifdef CONFIG_KASAN_SW_TAGS
-> +#define page_to_virt(x)	({									\
-> +	__typeof__(x) __page = x;								\
-> +	void *__addr = __va(page_to_pfn((__typeof__(x))__tag_reset(__page)) << PAGE_SHIFT);	\
-> +	(void *)__tag_set((const void *)__addr, page_kasan_tag(__page));			\
-> +})
-> +#endif
+On 04/04/2025 16:13, Andre Przywara wrote:
+> On Fri, 04 Apr 2025 13:57:00 +0200
+> Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org> wrote:
+> 
+> Hi 
+>> Enabling the compile test should not cause automatic enabling of all
+>> drivers.  Restrict the default to ARCH also for individual drivers, even
+>> though their choice is not visible without selecting parent Kconfig
+>> symbol, because otherwise selecting parent would select the child during
+>> compile testing.
+> 
+> so I remember we changed this to "default y", because there were some
+> tricky problems with regards to RISC-V and ARM. See commits:
+> 
+> commit 0ff347db4c97cc16b4e428dc1db550ba3628f1e2
+> Author: Samuel Holland <samuel@sholland.org>
+> Date:   Sat Dec 31 17:14:25 2022 -0600
+>     clk: sunxi-ng: Move SoC driver conditions to dependencies
+> 
+> and 
+> 
+> commit a26dc096f683ca27ac5e68703bfd3098b4212abd
+> Author: Samuel Holland <samuel@sholland.org>
+> Date:   Sat Dec 31 17:14:24 2022 -0600
+>     clk: sunxi-ng: Remove duplicate ARCH_SUNXI dependencies
+> 
+> Don't remember what broke, exactly, but just wanted to give a heads up.
+> 
+Hm, I missed that. Quite unexpected commits.
 
-Is this #ifdef needed?
+I would expect they to change default to match exact case but apparently
+for simplicity they became default for everyone? No clue...
 
-I thought there were stub versions of all of those tag functions. So it
-should be harmless to use this page_to_virt() implementation with or
-without KASAN. Right?
+Commit says:
+" Do not duplicate the same expression on the `default` line, so the two
+lines do not need to be kept in sync."
+what it did, but not WHY.
 
-I'm also confused by the implementation. This is one reason why I rather
-dislike macros. Why does this act like the type of 'x' is variable?
-Isn't it always a 'struct page *'? If so, then why all of the
-__typeof__()'s?
+Why is the most important thing...
 
-Are struct page pointers _ever_ tagged? If they are, then doesn't
-page_to_pfn() need to handle untagging as well? If they aren't, then
-there's no reason to __tag_reset() in here.
+The rest of the commit msg:
+"Drivers stay disabled under COMPILE_TEST because of the `default
+ARCH_SUNXI` applied to SUNXI_CCU."
 
-What was the thinking behind this cast:
+is true, until you enable SUNXI_CCU. Then all of them became enabled by
+default, which is not necessary and in general not welcomed. You should
+compile test only things which you want, not everything.
 
-	(const void *)__addr
-
-?
-
-Are any of these casts _doing_ anything? I'm struggling to find anything
-wrong with:
-
-#define page_to_virt(x)	({													
-	void *__addr = __va(page_to_pfn(__page) << PAGE_SHIFT);
-	__tag_set(__addr, page_kasan_tag(x))
-})
-
-... which made me look back at:
-
-	static inline const void *__tag_set(const void *addr, u8 tag)
-
-from patch 3. I don't think the 'const' makes any sense on the return
-value here. Surely the memory pointed at by a tagged pointer doesn't
-need to be const. Why should the tag setting function be returning a
-const pointer?
-
-I can see why it would *take* a const pointer since it's not modifying
-the memory, but I don't see why it is returning one.
-
-
+Best regards,
+Krzysztof
