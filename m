@@ -1,193 +1,124 @@
-Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A5B051C5A;
-	Fri,  4 Apr 2025 11:53:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 340F4146588;
+	Fri,  4 Apr 2025 11:56:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743767590; cv=none; b=qsIuW+zSs6NWSqJzwdrwO6JSv02ftAcjClQHmxN1QIKcLe0Zg8lmK0x86tNBn81F4jNdlPAwxkbr8h8N7F7ecHWgNkEF82azAgHMMf3dg1epfwAmpewcBlT7sNBChouy71pTO7nqXfmbxBT1VcAYrPzxPNUiWDijN0/NUQOROpA=
+	t=1743767775; cv=none; b=ppWKb7T9WZqhOj+qIcvty5PC53u1N8jGNocQQHJZjxBvMDPle9nXqxIv3QO1hL77ViYvCk4UcYSt3gq/74x5K6bUjqubnXvIIA/aadLsitDHRcSE9fXLGG68ZZEIbfkvgCOKlwE2Gt7HBUBwRTM8xWFciGhNbAH4qVA2I+89suo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743767590; c=relaxed/simple;
-	bh=enShrMQhzHuV2QFUuVSEFAnA+ItTuEMOfv17cqnkY3U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NJ3iihWcYoEu08nUZ59EY1xTG52rbzcleHja85/19OVKgWcjbxrOBTDauz8/Qgh6pm6Xz2l23BbZZABQ07+oa5/3LgWddmnOHytZJ4L2YvteE8RelQTb1HTAlFvDL8eMTVzwxJxx3t43OvYUSGQgrB/Z6K0tnqu9j1ceKpI2//A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=xf8Q6A0D; arc=none smtp.client-ip=115.124.30.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1743767775; c=relaxed/simple;
+	bh=FXK0vHGriDN45DKE3P7IPqYNCttvkvo0J8zgdE8VySE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=M7zt9dIwSZd1BA8ZT3+XeP4ERQvWXTf8wgLTvNb/xwI0NtlAj9JPMDv0gs/l/AgFsoVz48NFXUTY+R7gA5Bren5thPcvPDkX7OADvbGLxrpLaa+04GRF9Z3SNd4/8XIyZ298lxP05MPFd0XA+KxWS58x2ZLIC7A1gSV3G6hWkgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Bai+MV7k; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="xf8Q6A0D"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1743767579; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=hDt6lANfWbz9SDk6CjGNO07bg5Gs/3uMX+AENgcIecM=;
-	b=xf8Q6A0D2ny8/rKQXohst8rBbLm9dYfk7v7hsJ5nL2P+RvwPratWvmUh2+SMhSITMf4a3mo3Siv7M+I5VzZXRIZX0PJm/BoyJs1OEH35f67F6yqCB4xxnXN2OFvPgX2dtJw4opBjDCynmGYx29ZapH2j7Btceppj6FZhiFCJa/k=
-Received: from 30.246.161.208(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WUz6I16_1743767259 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Fri, 04 Apr 2025 19:47:40 +0800
-Message-ID: <ab0facc9-f7f1-4ba2-b56c-868d2f8e6807@linux.alibaba.com>
-Date: Fri, 4 Apr 2025 19:47:39 +0800
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Bai+MV7k"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 534342B7012549;
+	Fri, 4 Apr 2025 11:55:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=qcppdkim1; bh=Q4aOjZlhbTo
+	HOH1IjMihlbE4m6Wg1vmIRVvPjeRJess=; b=Bai+MV7k19TqckTgoqT9UJB2B37
+	g5KJ0SwJedhHFeCCrDlqQforhBvtn5i93o+0RXPk0fJECWYMUr5k143zhkAkT9tN
+	JN0SQIr23Ucft9x0X0OtICpHhgEpcKDaYmDGINSoBAmfOUqWvw7zYWjCxG8dK4WH
+	7eELUPvbEnxvtBvq/G7BKvpzcyMb+epFocVK0NA5+X/cF7JtCNtluNtVzujEjZjj
+	PLlIn67JTzl2UrkClqpIMLo0C+Pydk4utHh+dKZg5oTD++Ia7kogc4KsfRfaA651
+	6v0pEI/LfaHAinR88QUHN9ZenrvrpvYUGq8oFONgeLv3yTzlXV1O87NcRkw==
+Received: from apblrppmta01.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45t2d51nh4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 04 Apr 2025 11:55:49 +0000 (GMT)
+Received: from pps.filterd (APBLRPPMTA01.qualcomm.com [127.0.0.1])
+	by APBLRPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 534BtjpW016525;
+	Fri, 4 Apr 2025 11:55:45 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 45p9xmaej0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 04 Apr 2025 11:55:45 +0000
+Received: from APBLRPPMTA01.qualcomm.com (APBLRPPMTA01.qualcomm.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 534Btjj3016499;
+	Fri, 4 Apr 2025 11:55:45 GMT
+Received: from hu-devc-hyd-u22-c.qualcomm.com (hu-amakhija-hyd.qualcomm.com [10.213.99.91])
+	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 534BtiqQ016491
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 04 Apr 2025 11:55:45 +0000
+Received: by hu-devc-hyd-u22-c.qualcomm.com (Postfix, from userid 4090850)
+	id 2DD2E590; Fri,  4 Apr 2025 17:25:44 +0530 (+0530)
+From: Ayushi Makhija <quic_amakhija@quicinc.com>
+To: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc: Ayushi Makhija <quic_amakhija@quicinc.com>, robdclark@gmail.com,
+        dmitry.baryshkov@linaro.org, sean@poorly.run,
+        marijn.suijten@somainline.org, andersson@kernel.org, robh@kernel.org,
+        robh+dt@kernel.org, krzk+dt@kernel.org, konradybcio@kernel.org,
+        conor+dt@kernel.org, andrzej.hajda@intel.com,
+        neil.armstrong@linaro.org, rfoss@kernel.org,
+        Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
+        jernej.skrabec@gmail.com, quic_abhinavk@quicinc.com,
+        quic_rajeevny@quicinc.com, quic_vproddut@quicinc.com,
+        quic_jesszhan@quicinc.com
+Subject: [PATCH v3 02/10] dt-bindings: msm: dsi-controller-main: document the SA8775P DSI CTRL
+Date: Fri,  4 Apr 2025 17:25:31 +0530
+Message-Id: <20250404115539.1151201-3-quic_amakhija@quicinc.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250404115539.1151201-1-quic_amakhija@quicinc.com>
+References: <20250404115539.1151201-1-quic_amakhija@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 4/9] dmaengine: idxd: Add missing cleanup for early
- error out in idxd_setup_internals
-To: Fenghua Yu <fenghuay@nvidia.com>, vinicius.gomes@intel.com,
- dave.jiang@intel.com, Markus.Elfring@web.de, vkoul@kernel.org
-Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250309062058.58910-1-xueshuai@linux.alibaba.com>
- <20250309062058.58910-5-xueshuai@linux.alibaba.com>
- <22b63198-2aab-481c-a4cd-74c3349e22f8@nvidia.com>
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <22b63198-2aab-481c-a4cd-74c3349e22f8@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: 9W-_3Dd5CaaJns3lh-xufx9_ecgQdIuz
+X-Proofpoint-GUID: 9W-_3Dd5CaaJns3lh-xufx9_ecgQdIuz
+X-Authority-Analysis: v=2.4 cv=Cvu/cm4D c=1 sm=1 tr=0 ts=67efc8c6 cx=c_pps a=Ou0eQOY4+eZoSc0qltEV5Q==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=NRHHWUy0EX9jfUzwrTwA:9 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-04_05,2025-04-03_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 adultscore=0
+ bulkscore=0 suspectscore=0 mlxlogscore=999 malwarescore=0 spamscore=0
+ impostorscore=0 lowpriorityscore=0 priorityscore=1501 mlxscore=0
+ clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504040082
 
+Document the DSI CTRL on the SA8775P Platform.
 
+Signed-off-by: Ayushi Makhija <quic_amakhija@quicinc.com>
+---
+ .../devicetree/bindings/display/msm/dsi-controller-main.yaml    | 2 ++
+ 1 file changed, 2 insertions(+)
 
-在 2025/4/3 07:26, Fenghua Yu 写道:
-> 
-> On 3/8/25 22:20, Shuai Xue wrote:
->> The idxd_setup_internals() is missing some cleanup when things fail in
->> the middle.
->>
->> Add the appropriate cleanup routines:
->>
->> - cleanup groups
->> - cleanup enginces
->> - cleanup wqs
->>
->> to make sure it exits gracefully.
->>
->> Fixes: defe49f96012 ("dmaengine: idxd: fix group conf_dev lifetime")
->> Cc: stable@vger.kernel.org
->> Suggested-by: Fenghua Yu <fenghuay@nvidia.com>
->> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
->> ---
->>   drivers/dma/idxd/init.c | 59 ++++++++++++++++++++++++++++++++++++-----
->>   1 file changed, 52 insertions(+), 7 deletions(-)
->>
->> diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
->> index fe4a14813bba..7334085939dc 100644
->> --- a/drivers/dma/idxd/init.c
->> +++ b/drivers/dma/idxd/init.c
->> @@ -155,6 +155,26 @@ static void idxd_cleanup_interrupts(struct idxd_device *idxd)
->>       pci_free_irq_vectors(pdev);
->>   }
->> +static void idxd_clean_wqs(struct idxd_device *idxd)
->> +{
->> +    struct idxd_wq *wq;
->> +    struct device *conf_dev;
->> +    int i;
->> +
->> +    for (i = 0; i < idxd->max_wqs; i++) {
->> +        wq = idxd->wqs[i];
->> +        if (idxd->hw.wq_cap.op_config)
->> +            bitmap_free(wq->opcap_bmap);
->> +        kfree(wq->wqcfg);
->> +        conf_dev = wq_confdev(wq);
->> +        put_device(conf_dev);
->> +        kfree(wq);
->> +
-> Please remove this blank line here, warned by checkpatch.
-
-I checked with checkpatch, but it does not warn (:
-
-./scripts/checkpatch.pl idxd-fix-v3/0004-dmaengine-idxd-Add-missing-cleanup-for-early-error-o.patch
-total: 0 errors, 0 warnings, 91 lines checked
-
-idxd-fix-v3/0004-dmaengine-idxd-Add-missing-cleanup-for-early-error-o.patch has no obvious style problems and is ready for submission.
-
-
-Will send a new version to fix it and collect all you reviewed-by tag,
-Thanks.
-
->> +    }
->> +    bitmap_free(idxd->wq_enable_map);
->> +    kfree(idxd->wqs);
->> +}
->> +
->>   static int idxd_setup_wqs(struct idxd_device *idxd)
->>   {
->>       struct device *dev = &idxd->pdev->dev;
->> @@ -245,6 +265,21 @@ static int idxd_setup_wqs(struct idxd_device *idxd)
->>       return rc;
->>   }
->> +static void idxd_clean_engines(struct idxd_device *idxd)
->> +{
->> +    struct idxd_engine *engine;
->> +    struct device *conf_dev;
->> +    int i;
->> +
->> +    for (i = 0; i < idxd->max_engines; i++) {
->> +        engine = idxd->engines[i];
->> +        conf_dev = engine_confdev(engine);
->> +        put_device(conf_dev);
->> +        kfree(engine);
->> +    }
->> +    kfree(idxd->engines);
->> +}
->> +
->>   static int idxd_setup_engines(struct idxd_device *idxd)
->>   {
->>       struct idxd_engine *engine;
->> @@ -296,6 +331,19 @@ static int idxd_setup_engines(struct idxd_device *idxd)
->>       return rc;
->>   }
->> +static void idxd_clean_groups(struct idxd_device *idxd)
->> +{
->> +    struct idxd_group *group;
->> +    int i;
->> +
->> +    for (i = 0; i < idxd->max_groups; i++) {
->> +        group = idxd->groups[i];
->> +        put_device(group_confdev(group));
->> +        kfree(group);
->> +    }
->> +    kfree(idxd->groups);
->> +}
->> +
->>   static int idxd_setup_groups(struct idxd_device *idxd)
->>   {
->>       struct device *dev = &idxd->pdev->dev;
->> @@ -410,7 +458,7 @@ static int idxd_init_evl(struct idxd_device *idxd)
->>   static int idxd_setup_internals(struct idxd_device *idxd)
->>   {
->>       struct device *dev = &idxd->pdev->dev;
->> -    int rc, i;
->> +    int rc;
->>       init_waitqueue_head(&idxd->cmd_waitq);
->> @@ -441,14 +489,11 @@ static int idxd_setup_internals(struct idxd_device *idxd)
->>    err_evl:
->>       destroy_workqueue(idxd->wq);
->>    err_wkq_create:
->> -    for (i = 0; i < idxd->max_groups; i++)
->> -        put_device(group_confdev(idxd->groups[i]));
->> +    idxd_clean_groups(idxd);
->>    err_group:
->> -    for (i = 0; i < idxd->max_engines; i++)
->> -        put_device(engine_confdev(idxd->engines[i]));
->> +    idxd_clean_engines(idxd);
->>    err_engine:
->> -    for (i = 0; i < idxd->max_wqs; i++)
->> -        put_device(wq_confdev(idxd->wqs[i]));
->> +    idxd_clean_wqs(idxd);
->>    err_wqs:
->>       return rc;
->>   }
-> 
-> Reviewed-by: Fenghua Yu <fenghuay@nvidia.com>
-> 
-> Thanks.
-> 
-> -Fenghua
-
-
-Thanks.
-
-Cheers,
-Shuai
+diff --git a/Documentation/devicetree/bindings/display/msm/dsi-controller-main.yaml b/Documentation/devicetree/bindings/display/msm/dsi-controller-main.yaml
+index 2aab33cd0017..a025e4384ac6 100644
+--- a/Documentation/devicetree/bindings/display/msm/dsi-controller-main.yaml
++++ b/Documentation/devicetree/bindings/display/msm/dsi-controller-main.yaml
+@@ -23,6 +23,7 @@ properties:
+               - qcom,msm8996-dsi-ctrl
+               - qcom,msm8998-dsi-ctrl
+               - qcom,qcm2290-dsi-ctrl
++              - qcom,sa8775p-dsi-ctrl
+               - qcom,sc7180-dsi-ctrl
+               - qcom,sc7280-dsi-ctrl
+               - qcom,sdm660-dsi-ctrl
+@@ -314,6 +315,7 @@ allOf:
+           contains:
+             enum:
+               - qcom,msm8998-dsi-ctrl
++              - qcom,sa8775p-dsi-ctrl
+               - qcom,sc7180-dsi-ctrl
+               - qcom,sc7280-dsi-ctrl
+               - qcom,sdm845-dsi-ctrl
+-- 
+2.34.1
 
