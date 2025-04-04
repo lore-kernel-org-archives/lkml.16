@@ -1,88 +1,82 @@
-Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3333E1E1020;
-	Fri,  4 Apr 2025 12:02:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.132
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5D481B87F2;
+	Fri,  4 Apr 2025 12:02:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743768152; cv=none; b=Jk8Xcdf4OKWPTcdkxsw8Uxm6xAJYe7AjKRnOtIe3koRxOzFG3kZNK2wVvWLhnwdXwM2sKWrgp1sEcfeRoUuYIpQESVrt5em8RBqVNer+TcXYxQc0yLdVxvDPLXdeC21Jrqh1eNc2Oom7HiBATo2jxIYx2TgetpESC/sXGWY6uz4=
+	t=1743768152; cv=none; b=DZMKXSMEo9hEtWfynjLgm/vECh5zMx26l6aNxhmRFFY0tuJUI/0funyxudD7bKmb8YJ1lnQn0pIs273nLwRpvNdmeIhgQRl5Z7nTDfR3kQnoE2UQ1JjTeSPRbG8CAJYDVj1Stpb5rZxPsaaBeeV8cnkyQxrhUAYW6CiJhXnIuZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1743768152; c=relaxed/simple;
-	bh=KAyEV8BTleWW1dzXEcTbbOThEjffpdF7ikqrRRQ/Nzc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FOGnEHJNLVpEWk5ICbQIvNKr2LLUiscPG+QFeRMSxswt6Jo1m0h3VaoNDbHs4W+aIbdx1zJClhclp7NZam8oiBK6LBY1RA+4Vq7/s0EvFFfBLjGLOYN1fVX0wOfdQ8A8fWbkLr+uSlMwC00fBt1nSiKWQ+5N2QeEl1Op4j26OSA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=cZBPEYzU; arc=none smtp.client-ip=115.124.30.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	bh=Eq3EL8qAfF3ubJ3G58msjokJj0yf2Iu8YXIYO1ZjxMc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=n31TORY8vq+vB2Mtxr6t37EoH1GSNURkQ9tDljqZxyo89mfw/mp3mFZfRPNBSggjrXmCH4aDhUuQy3q9b102B9G1hYKauZd1fO4fKhoABcUXBwN8ks21cuY4ix5lNrijcP8BNS8empIa8/QGrHnELfmocs1UT7qVmDoJqMz1QKw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tY1K6Jyd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="cZBPEYzU"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1743768140; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=bHrE7lpbUgz12wfwjxk2eHqBwsJF0K53E2iCqsP2ONE=;
-	b=cZBPEYzU5FKBfy6Xc6OQzR+vNIItc/+6D2QKJ1WwRafS+t3vegUsIHkMPVl9+k5Sn0UtEbOqrVE52k9OF7wT78DUsnEl2ugKlVqyAzZoGrjAGVBGCK0j5dOLyGffk6Qrly8Z3sC5/sTLvU1F/cq12wSg9NkX9Yk4Ho2Ol7+u0/0=
-Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WUyld47_1743768140 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Fri, 04 Apr 2025 20:02:20 +0800
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-To: vinicius.gomes@intel.com,
-	dave.jiang@intel.com,
-	fenghuay@nvidia.com,
-	vkoul@kernel.org
-Cc: xueshuai@linux.alibaba.com,
-	dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 2/9] dmaengine: idxd: fix memory leak in error handling path of idxd_setup_engines
-Date: Fri,  4 Apr 2025 20:02:10 +0800
-Message-ID: <20250404120217.48772-3-xueshuai@linux.alibaba.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20250404120217.48772-1-xueshuai@linux.alibaba.com>
-References: <20250404120217.48772-1-xueshuai@linux.alibaba.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tY1K6Jyd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6592C4CEEB;
+	Fri,  4 Apr 2025 12:02:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743768152;
+	bh=Eq3EL8qAfF3ubJ3G58msjokJj0yf2Iu8YXIYO1ZjxMc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tY1K6JydiyfhSflxJ/F4XEFB3NFTpdNpMhmxpX4p12EPUHra3SlintjeP0XRbGVaX
+	 Q7VKwxGrsBAh68B35WwJQfpaQPrnxChjMYMcMQXqksHFnNwmZu+5XZPBSioNPkF6Ql
+	 +o6s6FGUT84L6uWD9yYKVtDSC1X0wKgnQK4Tp82xqCR1zfsoxn1sryHdRvE7WDUSJJ
+	 uwAIP6EV4/G3SIOP5Ahy+gLCra2fzjrNzL9Iejt0076PRfedcTp+9/XvJl3tZN/an3
+	 99FnZwt125nzld6iPTkmnJ1AU7gzfaLc2JNoFR0MfQLqgF/mb/FvM2NKWgqqGyE1dx
+	 qZkL5UeUMjZpA==
+Date: Fri, 4 Apr 2025 13:02:26 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+	jonathanh@nvidia.com, f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+	conor@kernel.org, hargar@microsoft.com
+Subject: Re: [PATCH 6.13 00/23] 6.13.10-rc1 review
+Message-ID: <f5e5841f-2ef9-4451-88f4-b19fbec3207b@sirena.org.uk>
+References: <20250403151622.273788569@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="dZ6BUzTtkXkVXXCT"
+Content-Disposition: inline
+In-Reply-To: <20250403151622.273788569@linuxfoundation.org>
+X-Cookie: You will soon forget this.
 
-Memory allocated for engines is not freed if an error occurs during
-idxd_setup_engines(). To fix it, free the allocated memory in the
-reverse order of allocation before exiting the function in case of an
-error.
 
-Fixes: 75b911309060 ("dmaengine: idxd: fix engine conf_dev lifetime")
-Cc: stable@vger.kernel.org
-Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-Reviewed-by: Fenghua Yu <fenghuay@nvidia.com>
----
- drivers/dma/idxd/init.c | 4 ++++
- 1 file changed, 4 insertions(+)
+--dZ6BUzTtkXkVXXCT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
-index 80fb189c9624..ff6ec3c0f604 100644
---- a/drivers/dma/idxd/init.c
-+++ b/drivers/dma/idxd/init.c
-@@ -275,6 +275,7 @@ static int idxd_setup_engines(struct idxd_device *idxd)
- 		rc = dev_set_name(conf_dev, "engine%d.%d", idxd->id, engine->id);
- 		if (rc < 0) {
- 			put_device(conf_dev);
-+			kfree(engine);
- 			goto err;
- 		}
- 
-@@ -288,7 +289,10 @@ static int idxd_setup_engines(struct idxd_device *idxd)
- 		engine = idxd->engines[i];
- 		conf_dev = engine_confdev(engine);
- 		put_device(conf_dev);
-+		kfree(engine);
- 	}
-+	kfree(idxd->engines);
-+
- 	return rc;
- }
- 
--- 
-2.43.5
+On Thu, Apr 03, 2025 at 04:20:17PM +0100, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.13.10 release.
+> There are 23 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 
+Tested-by: Mark Brown <broonie@kernel.org>
+
+--dZ6BUzTtkXkVXXCT
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmfvylEACgkQJNaLcl1U
+h9CZdgf/TpsphPRJA3T1m+oApTfpHrl11zAIYDkxeGXIjOn2W+Ea8GxXivpkz0sC
+IHf4nClqeXMqbcr96Ftse6LS30rel98WeIGEOD8WA9WRIo4uEPeQoKU72MwJtr+Y
+Pf+dJIfjZ7B2O8B9oOaxTN+qJyN49o7ZwiBeIeeAYC7iwdVBj3Oa0z30rEFAMVOc
+8IkFyQKQ9pXxoD4aD/foxTj3eVpUA9wLWNLhuvn3cACPupwnCUPX+KmbIzIrGyc1
+Vd13OqIFHn2hASk5eW4dSo8py9Kb/Vu7Ih2COEN7Du3BFk3bC4P+EWHhzwASJNGh
+Md98hWDndtNR1zf+piC+ZMpkdBJebA==
+=lQlg
+-----END PGP SIGNATURE-----
+
+--dZ6BUzTtkXkVXXCT--
