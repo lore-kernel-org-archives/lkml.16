@@ -1,69 +1,120 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67F1A17B425;
-	Fri,  4 Apr 2025 08:36:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF70B17A305;
+	Fri,  4 Apr 2025 08:36:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743755765; cv=none; b=eFfvVTVygJhDAWrSRruThYjO7Ihr14vZF+aHjTePZE9D/8ugStpL4vaN5Awi12YStqU8wG8Hf+hDzrenoi4KlAdorHAtbJPOhla9fVUUaeyD8RWBRkkRCDZyDiix/tdvSsmFoixdaaeuY24ZZzIuh15a42JvDtk/fWxJqE+O5B4=
+	t=1743755804; cv=none; b=hEIr8L6GHusA3hQuXAUNRSWBc4+PzZF0e9u0E9Y0xehRlw0GLu3OrINszleUOiX00cezb5Hpke3EkllSuZTGfCnroqGR0jnJFTKgYCWd6WmSCzDq3Ua442VFqG4wTFSkX9cV8EAttsnbmOlDtjt0NDC7DZGhlpwYFwn5jTbY4bo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743755765; c=relaxed/simple;
-	bh=cpAYU27T+6cUvzLWCJPLe/61xl0whQmDjfkQg8Fljjg=;
+	s=arc-20240116; t=1743755804; c=relaxed/simple;
+	bh=VTfhpIHcF6m/bQCKrSzeEFziB0k07MobSdEDyrf259k=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A1TBsO+wIUu04PF2GwqrYZRFIg+ZG2mGszFugfzRNXAWhYwyXjM/LVL+Mb8H1xKAiTRcZ4wwmQSoTm/o5PP3figLfFL+37kBYx05O1O3stKSH6DYmCAEewjSmL4HcGiKUk8kKb6WVSfso2se82x1UngulEyp/b9uXcbJhRjOr0M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=l1BZnnXN; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=kYcEX5EHdHPEltNE7VXbhq8spDHIqZcyXlIG/dbYHhk/psygx8m55Ce4v12XuehaJjvPC6Nk832i19akPZgFL99B0AsPD2CfFtjficyNeY5QfMKlYMyeIrvKoTNOOx7+0vGCBb9yrm2xtDtlu2rmWuG10E1R6ZNO2bHVTmhCf0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AtofxsJ5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="l1BZnnXN"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=iyhrJRyNvZ9ef/6I8LSnRyHP6bfuwM1VgqmMV8KADj4=; b=l1BZnnXNlfsZWilk1ZSrlozH/k
-	ois7x0XB03CpSjQBHQbmS50cYpJi6nRKTu5FpmbpVbjNl6/lqLSDH6yFpYF1v8i5zXnuoyTY1eugm
-	9/6snfoO4H+dvxcdSpkcKiipbMCWJJE0JfyMkTJ7KuO5c5cs9QC4layZhQXYfC+2oLDGjgGk1U4Z/
-	8pk8MXagRqPKip/nRdzizm6gycQvgGuztcRRRFILS7IYNbLE1vrK0xsTOq6C6N/6Ni0Pgx6ssLr28
-	M8IuYGKqWWVTDsoTKwxRcM1cJKR6uzbspfrTU3GX7vzYrOhOnLWaQvFhiFeSvQymI8fftWgjuip7g
-	oQdeFZwA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u0cWy-0000000BAF4-0EUT;
-	Fri, 04 Apr 2025 08:36:04 +0000
-Date: Fri, 4 Apr 2025 01:36:04 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Randy Dunlap <rdunlap@infradead.org>
-Cc: Eric Biggers <ebiggers@kernel.org>, linux-kernel@vger.kernel.org,
-	Ard Biesheuvel <ardb@kernel.org>, linux-crypto@vger.kernel.org,
-	linux-arch@vger.kernel.org
-Subject: Re: [PATCH 1/7] lib/crc: remove unnecessary prompt for CONFIG_CRC32
- and drop 'default y'
-Message-ID: <Z--Z9HtsGbpGin9K@infradead.org>
-References: <20250401221600.24878-1-ebiggers@kernel.org>
- <20250401221600.24878-2-ebiggers@kernel.org>
- <2c1cbb51-cc16-4292-ad30-482d93935d91@infradead.org>
- <20250402035107.GA317606@sol.localdomain>
- <81aac5ff-8698-4059-92a2-bccb998eb000@infradead.org>
- <20250402050234.GB317606@sol.localdomain>
- <b5589b7d-d4a1-4b12-a845-afdbb26ed845@infradead.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AtofxsJ5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B854C4CEDD;
+	Fri,  4 Apr 2025 08:36:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743755804;
+	bh=VTfhpIHcF6m/bQCKrSzeEFziB0k07MobSdEDyrf259k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AtofxsJ5r9dHvM9LnkHomR8DcDOnHrvmFU/KtG1qZ7eA5mr8+Cwjpxf5rb8l5aTxM
+	 yYQAgTL4f5nrx717/m+TLJLqPnQ5CgH6kxpvVl4ktt1EG62BupzReXdKnXOaKnXjT8
+	 OPQ2uI8p+OZ/xWpumu4eFv6BIac6/lRikcAPlkhUWhVzRiEqQoeEjxLD4yY1KLoSna
+	 /MXtIAdO72kitl5g6AKpNfkmFkzbFoXBsiOpzQzhXGhoBT9O7LPFLbR6bFVpc7DHoY
+	 PGCz+3yaAyK9r0kBCDbIqOWt/CVlhpeDe/c9AVqj9WwgrXt6E4WUQ9QVWQsACKTwf8
+	 b0IK8VBZxrVuQ==
+Date: Fri, 4 Apr 2025 10:36:38 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	linux-trace-kernel@vger.kernel.org, peterz@infradead.org,
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-team@meta.com, rostedt@goodmis.org, oleg@redhat.com,
+	mhiramat@kernel.org, ast@kernel.org
+Subject: Re: [PATCH tip/perf] uprobes: avoid false lockdep splat in uprobe
+ timer callback
+Message-ID: <Z--aFoGN4Pm9cx8J@gmail.com>
+References: <20250403171831.3803479-1-andrii@kernel.org>
+ <20250403174917.OLHfwBp-@linutronix.de>
+ <CAEf4BzasxUn+Ywi-=TtP+S+i4VBLnKvYCkxPCz63o4zEXT9QZw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <b5589b7d-d4a1-4b12-a845-afdbb26ed845@infradead.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEf4BzasxUn+Ywi-=TtP+S+i4VBLnKvYCkxPCz63o4zEXT9QZw@mail.gmail.com>
 
-On Tue, Apr 01, 2025 at 10:56:32PM -0700, Randy Dunlap wrote:
-> > Having prompts for library kconfig options solely because out-of-tree modules
-> > might need them.
+
+* Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
+
+> On Thu, Apr 3, 2025 at 10:49 AM Sebastian Andrzej Siewior
+> <bigeasy@linutronix.de> wrote:
+> >
+> > On 2025-04-03 10:18:31 [-0700], Andrii Nakryiko wrote:
+> > > Avoid a false-positive lockdep warning in PREEMPT_RT configuration when
+> > > using write_seqcount_begin() in uprobe timer callback by using
+> > > raw_write_* APIs. Uprobe's use of timer callback is guaranteed to not
+> > > race with itself, and as such seqcount's insistence on having hardirqs
+> > preemption, not hardirqs
+> >
+> > > disabled on the writer side is irrelevant. So switch to raw_ variants of
+> > > seqcount API instead of disabling hardirqs unnecessarily.
+> > >
+> > > Also, point out in the comments more explicitly why we use seqcount
+> > > despite our reader side being rather simple and never retrying. We favor
+> > > well-maintained kernel primitive in favor of open-coding our own memory
+> > > barriers.
+> >
+> > Thank you.
+> >
+> > > Link: https://lore.kernel.org/bpf/CAADnVQLLOHZmPO4X_dQ+cTaSDvzdWHzA0qUqQDhLFYL3D6xPxg@mail.gmail.com/
+> > > Reported-by: Alexei Starovoitov <ast@kernel.org>
+> > > Suggested-by: Sebastian Sewior <bigeasy@linutronix.de>
+> > > Fixes: 8622e45b5da1 ("uprobes: Reuse return_instances between multiple uretprobes within task")
+> > > Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+> > > ---
+> > >  kernel/events/uprobes.c | 13 +++++++++++--
+> > >  1 file changed, 11 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> > > index 70c84b9d7be3..6d7e7da0fbbc 100644
+> > > --- a/kernel/events/uprobes.c
+> > > +++ b/kernel/events/uprobes.c
+> > > @@ -1944,6 +1944,9 @@ static void free_ret_instance(struct uprobe_task *utask,
+> > >        * to-be-reused return instances for future uretprobes. If ri_timer()
+> > >        * happens to be running right now, though, we fallback to safety and
+> > >        * just perform RCU-delated freeing of ri.
+> > > +      * Admittedly, this is a rather simple use of seqcount, but it nicely
+> > > +      * abstracts away all the necessary memory barriers, so we use
+> > > +      * a well-supported kernel primitive here.
+> > >        */
+> > >       if (raw_seqcount_try_begin(&utask->ri_seqcount, seq)) {
+> > >               /* immediate reuse of ri without RCU GP is OK */
+> > > @@ -2004,12 +2007,18 @@ static void ri_timer(struct timer_list *timer)
+> > >       /* RCU protects return_instance from freeing. */
+> > >       guard(rcu)();
+> > >
+> > > -     write_seqcount_begin(&utask->ri_seqcount);
+> >
+> > > +     /* See free_ret_instance() for notes on seqcount use.
+> >
+> > This is not a proper multi line comment.
 > 
-> Well, I think that is was supported for many years. I don't see how it
-> would become unsupported all of a sudden. IMHO.
+> yep, will fix; no, uprobe is not networking, this style is just
+> ingrained in my brain from working in BPF code base for a while
 
-Doing crap for out of tree modules was never in any way supported.
-Occasional sloppy maintainers let it slip in but we always fix it ASAP
-when noticed.
+... and this example underlines why we've been asking the networking 
+folks for years to use the standard Linux kernel coding style for 
+comments, instead of creating this pointless noise & inconsistency.
 
+Thanks,
+
+	Ingo
