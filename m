@@ -1,67 +1,72 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 763E8BA50
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 01:25:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B44DB12E7E;
+	Fri,  4 Apr 2025 01:28:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743729911; cv=none; b=QBkDR33YbNZZcbVd27m/SPfGxpxn1HNq3HZl3/9SZLUC+8MvF7zc9AJry4ZGJs/DSp6XDNtL8HKriPjeE9wpkpCsN5dQ9QflC8wN7TtUkzMX1fMlel5FBEXTq4AijCsY0cMUrL3l5It1phyAM7kDwyw9DWoYhXDMJdWDqSU7E6U=
+	t=1743730108; cv=none; b=X+mq+XXQVi2BSc6Bio2WKOIhNeKtFsIBz+jXzbeo9RBMh3QMyIUH95EGsCsZb7yC4TBocIiOJyHgNzjD/GFlAnMsTLJFBLAJ8Hm7Kp03KGKa51Cy4UhrFgLvjMQdr/xH3szxJ6klebhy7ES+7cEUZLK81QSclt34Szj6C2HLNL8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743729911; c=relaxed/simple;
-	bh=fmIqemItsSn8uWtmpSudYW9uL7027N4mcenfH6Fc3wI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jpM7nHKbxBkhh+nde9fW8up19PSm3dWPWBy41OZ8sRK+Ow+OwDurVN7Coohqmix18vBpUKPqgnColxrkhUBh+p4uPwtPZo+i6j/i8aV1u5sxfIRur0Q1GFIkjlNMP36V+6l4ZsHbiQzz84SSYcMFGeXp/d/jMbGvG7u6NDFPYd0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VkpDivgF; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1743730108; c=relaxed/simple;
+	bh=5+Giy3MvQ8w3Ogn/b9n3+xZekKG1FsumBjZO5LtSWtQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Xe8GVqaFWuau3cY3/7Z4d3utafREbHC/67X8bxjTohZ9Qg3ZNS1oDo5quf/qyudqluY4dt7Br5TfpX8TabfTO6wX6q0QAJ5PiZVhbh/NXDSg654B3IhsplfL1WHZHgwsnhHowrMQnAxFmUC1S2FHwSTakC87ikfgmdj36jRAEgE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OUufdWQ5; arc=none smtp.client-ip=209.85.222.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VkpDivgF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743729908;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=u40nOJ01a63ZVAi+7N9ee5JQSwTN52ClpcX6EeuMZm0=;
-	b=VkpDivgFOSBG+GowgTk78P+2a+5IXSqUMedjlL/OUcLNP6LG2M1T/RzpDK7kHJh26JC1SA
-	0iaqUSDL0QJqyzZEPvKkKClUO4RVadjEGFjuzdlrnq5UMUleXNkZXPciqNkUtyUnVfiQ6o
-	xN7FV59R0M35vXaWF8UnIw/Ju0sw6b4=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-619-KHq0k6vyOk6VLwGfDTM-rQ-1; Thu,
- 03 Apr 2025 21:25:03 -0400
-X-MC-Unique: KHq0k6vyOk6VLwGfDTM-rQ-1
-X-Mimecast-MFC-AGG-ID: KHq0k6vyOk6VLwGfDTM-rQ_1743729901
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 06D8419560B3;
-	Fri,  4 Apr 2025 01:25:01 +0000 (UTC)
-Received: from llong-thinkpadp16vgen1.westford.csb (unknown [10.22.89.4])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 1FAE51828A9F;
-	Fri,  4 Apr 2025 01:24:57 +0000 (UTC)
-From: Waiman Long <longman@redhat.com>
-To: Johannes Weiner <hannes@cmpxchg.org>,
-	Michal Hocko <mhocko@kernel.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Muchun Song <muchun.song@linux.dev>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Tejun Heo <tj@kernel.org>,
-	=?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
-	Shuah Khan <shuah@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	cgroups@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-kselftest@vger.kernel.org,
-	Waiman Long <longman@redhat.com>
-Subject: [PATCH v2 2/2] selftests: memcg: Increase error tolerance of child memory.current check in test_memcg_protection()
-Date: Thu,  3 Apr 2025 21:24:35 -0400
-Message-ID: <20250404012435.656045-2-longman@redhat.com>
-In-Reply-To: <20250404012435.656045-1-longman@redhat.com>
-References: <20250404012435.656045-1-longman@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OUufdWQ5"
+Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-7c53b9d66fdso196028585a.3;
+        Thu, 03 Apr 2025 18:28:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743730105; x=1744334905; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Z5KehqjscaqmbWM/FF2IgUe0rMAoDoCjxIkxHlSDOuQ=;
+        b=OUufdWQ5pMmoVvtEPUm/wBONWCbWAuZbbIlrKB5kTmd4wxobeRHIKeDa+puqX/2NL1
+         8ysiBRGQUULrWpWuNitnlNeQJZLtGMU5EBD034vJ4BB5yOBx1QuK3UA6DwrOstXI9Zrz
+         aEI3815uKJnXosCKSPan5TqOI9SgzETJUDWhQF7Jy+o/6uEwYtHiIEAmOUD2cAI8nGPV
+         o0Tc5/3rX3l98ZV+OXS3m8UOfsUeFt9BW0duM2pYXRLN6P5GVj6JTk2UfLCKV0DhC/eN
+         QmD/wNBC4/YlFzS5mj7In+l94Zs3TqoEvFeH3Bh/w5Z6KqWyK6Bb/VdRgb8b2Vl/7Z46
+         +cNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743730105; x=1744334905;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Z5KehqjscaqmbWM/FF2IgUe0rMAoDoCjxIkxHlSDOuQ=;
+        b=kCiXclKPzsGrnx7CJl1Zhfco/u0VUT50/c13OyKqLzCCn/S3rytlSJRyzF64c4q1qj
+         uzGC5k9R7woAvbnMoK2Lzo98OjiF7OY3AfDk+rbpoNWVkNpi0SWDacpxTbWhSQ30GxWD
+         hWNVdVrlQXv/CNczWwclDQWSNW5T7S5vFxT/O0D3fbzMBdbK8jjuBDZ08A/DZ/m+e/ax
+         uZzb/mel2yWPleDsg0SD7kmchYoK8bpA7FttUrsVqgjLtejjAFHQe3Tnyo8MLP1mJK5Y
+         apSqxaRnnpKr2Gr2+xNKiK6l2Nmn//p2QZw9yF4x6pzy/rpz8pvnJ6qfOP0D090bW2LT
+         EVFg==
+X-Forwarded-Encrypted: i=1; AJvYcCWLxbqOGTTamSoJNjrBr8y6jETrm/PxftgcdZjRU5rwXpiCAhu5xquLAkP9rtlbkohZTAxoQC+IeNt5m83U@vger.kernel.org, AJvYcCXYJLqkOBAmdPS9AG1bBsarlzcPSwh7vT3RFiggdf2ES359NslWKTIuex5OfnDF+Z/sr6UdnYUqXdkTF+Oi3A==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyv6NkLJlJib13Tn8087Y0tWxD83t3niuPHuZ1oATmn+CkP/1FJ
+	sWJn93owxojrX9q29qcjFYw4lLxP0WhJTYImPPDqhOWyYCaBzSZR
+X-Gm-Gg: ASbGncs0weDajeEN2WW9AKGKzUCFNlXVvzsE5LJoUKUZz4gQQxmtKLHZ5qWE9rya19g
+	G+I70BgLElvf7DIWlDChuuw0uNqqIuX8dSPkik0v2gHMaRRUDJTL396HD8O6Fk4NHRAOf5vzPJ+
+	iVV+2m5rM99rku5CDflLQdRs5AWfKkujXvtam96JeTZMB/1B2zSPOtIYZvVRG4SgEJLYvZgaUOD
+	YfYmsXJK1My4c7SywZ+CuSAjRkusk1Uw+nBqus2J9L7OAFSXSHGujKh1ict5Xn+XIczNcE4hVkk
+	Bp+fS4x8aKdGzhnajI+Nx5IhwoQMgtCHiNY/dwPQExXO33UOdzib9fGJXS+V9fu+aeTBq7yB9Ye
+	sqfmVIFfVcvJ/Lb/014T6Zv0=
+X-Google-Smtp-Source: AGHT+IH8rF5SgsSKXM0L1XV5g7fJdJDCNCo+lyIiVL3Oc0X593rI5DTIOdeNQczN1802u5TCgxIfvw==
+X-Received: by 2002:a05:620a:4484:b0:7c3:ca9d:210b with SMTP id af79cd13be357-7c774d277b8mr183533385a.6.1743730105428;
+        Thu, 03 Apr 2025 18:28:25 -0700 (PDT)
+Received: from theriatric.mshome.net (c-73-123-232-110.hsd1.ma.comcast.net. [73.123.232.110])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c76ea58f95sm147401185a.80.2025.04.03.18.28.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Apr 2025 18:28:25 -0700 (PDT)
+From: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+To: kent.overstreet@linux.dev
+Cc: gshahrouzi@gmail.com,
+	linux-bcachefs@vger.kernel.org,
+	shuah@kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-kernel-mentees@lists.linux.dev
+Subject: [PATCH 0/3] This series addresses several minor issues found using sparse.
+Date: Thu,  3 Apr 2025 21:28:19 -0400
+Message-ID: <20250404012822.188485-1-gshahrouzi@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,84 +74,31 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-The test_memcg_protection() function is used for the test_memcg_min and
-test_memcg_low sub-tests. This function generates a set of parent/child
-cgroups like:
+The first patch fixes a typo ('\%u') in a format specifier within a print
+statement. The incorrect sequence was replaced as it didn't appear
+to be the author's intent.
 
-  parent:  memory.min/low = 50M
-  child 0: memory.min/low = 75M,  memory.current = 50M
-  child 1: memory.min/low = 25M,  memory.current = 50M
-  child 2: memory.min/low = 0,    memory.current = 50M
+The second patch corrects the type for a function argument to __le64,
+which fixes two related sparse warnings. Although the argument data
+is already little-endian, using the specific __le64 type improves
+consistency and makes the expected data format explicit.
 
-After applying memory pressure, the function expects the following
-actual memory usages.
+The third patch ensures cpu_to_le16() is used when preparing certain
+on-disk data (directory entry lengths). This maintains correct byte
+ordering for big-endian systems.
 
-  parent:  memory.current ~= 50M
-  child 0: memory.current ~= 29M
-  child 1: memory.current ~= 21M
-  child 2: memory.current ~= 0
+Gabriel Shahrouzi (3):
+  bcachefs: Fix escape sequence in prt_printf
+  bcachefs: Fix type for parameter in
+    journal_advance_devs_to_next_bucket
+  bcachefs: Use cpu_to_le16 for dirent lengths
 
-In reality, the actual memory usages can differ quite a bit from the
-expected values. It uses an error tolerance of 10% with the values_close()
-helper.
+ fs/bcachefs/data_update.c | 2 +-
+ fs/bcachefs/dirent.c      | 4 ++--
+ fs/bcachefs/journal_io.c  | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
-Both the test_memcg_min and test_memcg_low sub-tests can fail
-sporadically because the actual memory usage exceeds the 10% error
-tolerance. Below are a sample of the usage data of the tests runs
-that fail.
-
-  Child   Actual usage    Expected usage    %err
-  -----   ------------    --------------    ----
-    1       16990208         22020096      -12.9%
-    1       17252352         22020096      -12.1%
-    0       37699584         30408704      +10.7%
-    1       14368768         22020096      -21.0%
-    1       16871424         22020096      -13.2%
-
-The current 10% error tolerenace might be right at the time
-test_memcontrol.c was first introduced in v4.18 kernel, but memory
-reclaim have certainly evolved quite a bit since then which may result
-in a bit more run-to-run variation than previously expected.
-
-Increase the error tolerance to 15% for child 0 and 20% for child 1 to
-minimize the chance of this type of failure. The tolerance is bigger
-for child 1 because an upswing in child 0 corresponds to a smaller
-%err than a similar downswing in child 1 due to the way %err is used
-in values_close().
-
-Before this patch, a 100 test runs of test_memcontrol produced the
-following results:
-
-     19 not ok 3 test_memcg_min
-     13 not ok 4 test_memcg_low
-
-After applying this patch, there were no test failure for test_memcg_min
-and test_memcg_low in 100 test runs.
-
-Signed-off-by: Waiman Long <longman@redhat.com>
----
- tools/testing/selftests/cgroup/test_memcontrol.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/tools/testing/selftests/cgroup/test_memcontrol.c b/tools/testing/selftests/cgroup/test_memcontrol.c
-index 16f5d74ae762..f442c0c3f5a7 100644
---- a/tools/testing/selftests/cgroup/test_memcontrol.c
-+++ b/tools/testing/selftests/cgroup/test_memcontrol.c
-@@ -495,10 +495,10 @@ static int test_memcg_protection(const char *root, bool min)
- 	for (i = 0; i < ARRAY_SIZE(children); i++)
- 		c[i] = cg_read_long(children[i], "memory.current");
- 
--	if (!values_close(c[0], MB(29), 10))
-+	if (!values_close(c[0], MB(29), 15))
- 		goto cleanup;
- 
--	if (!values_close(c[1], MB(21), 10))
-+	if (!values_close(c[1], MB(21), 20))
- 		goto cleanup;
- 
- 	if (c[3] != 0)
 -- 
-2.48.1
+2.43.0
 
