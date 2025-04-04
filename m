@@ -1,167 +1,218 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B198E15FA7B
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 19:16:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 153B217A317
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 19:18:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743794178; cv=none; b=akitcTQQp0WWMXyEG+NQahJm1eQQ1PTBtQweMVHrVhEWQm5y0DMvYyGfz8d8iBM8AEn6yb2byp8Vd6u89ylW6pej6U462AeHdbaZrZY9FxqcN8+NHQ8BXESNqVqm2gsL79V5YsKEbl8h1iR5z9E9BWRI2OUwUOsmJ5CJ0TAG8hs=
+	t=1743794304; cv=none; b=SpsQ8OU3bfWtVzNHwKqQyfl5ea0vVn4kMkVfShjtJw25k+1L5tCewZlywlZpv8DEQ6nk2WgCZEt89Rg1HqygD90SOMj32LrZKdQ8RdxRC2yxKdzrEJp8A1Hn6y27fx9sQS27T+8dGYW9y9fcFUhAQoI8DZxM591Hgc6vYd1YHRs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743794178; c=relaxed/simple;
-	bh=4jDpcbc+n3StlJ/igRvfdtaJfpXsjzsOP8rxVbWqNQE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iURfhiOdlZC0ZB0tIFfbzr7rXE8LaPgQQgFbr4k9R3BKsRCO/+waVY9hvl4bayRzB8Eift5igd2/5VDS+fXHRLNxe6LlexlordyXEFYs2twI72sTsY4zoBnCGf9uxh7cPIrW7pk38oRECsv0GLINj4DIVBRwNyf9kfIlXShreRE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VF5H4iPL; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1743794304; c=relaxed/simple;
+	bh=yuLgbxQGvrOS2X08diIgybCCQx/nMdoQsHko7b9lT2c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=od+BFJJ36ovTNTLNYwhLK2N0ruwTcGtM8N8wKDo18lHOogvaK3FFE5AHxcbmpIrswlWKUXVgPqsSKm8e49WciHYUXOdryF+CS+Ee1GtAie/Cij9aYHXJVGSD0RLZieCYQ2vJvpgN+ZE6VKflwmEiTKw3Iux7H5BJjG6VW/ui8SE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tbT2Oa6V; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VF5H4iPL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743794175;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=4PpR+tac16PtwrzOBM/O7GPHt+8dLRoSGWTrWNH4DHg=;
-	b=VF5H4iPLfhFOZeqGV2Oj8c5mvX6fxI4a9ycbTgg/9XAKB48Ff885Xz1PKcLuQ+wuA17f8l
-	WcZ14cqQScFkipj+90JBuGmyqjtz1Ifl5zWipbSMekFzrmNMSFU8ycNpMd3GO3fMoEPYBc
-	qQrkCxYqIVJVjv6Tou1JLBxm01R+sbE=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-164-HUaOomp9N-m8l7iPkxsGWg-1; Fri, 04 Apr 2025 15:16:14 -0400
-X-MC-Unique: HUaOomp9N-m8l7iPkxsGWg-1
-X-Mimecast-MFC-AGG-ID: HUaOomp9N-m8l7iPkxsGWg_1743794173
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43d734da1a3so12858345e9.0
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 12:16:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tbT2Oa6V"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2263428c8baso435ad.1
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 12:18:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1743794302; x=1744399102; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=LSagy7uSrSThurXFGxgzOfcgNiZbdsnlLtFl9TRWcgQ=;
+        b=tbT2Oa6Vf6xV0cI6e96lUHkk/57MUMi9tT5MQBiuHnwNua7zFHRRMFm41m1eis44u3
+         n23bz8BASep5u1T9XDJog1eyb1dmFtDNg6ZX3DECfn/t8qbIyB+4o+6Fo3JvZQrwAOZL
+         x3g2lUoYsZLPXFZwok5E55FUfFsHc15XPD+WZ9LuLMzbWlKR9xxHvbXEuFn4MN0iL6DS
+         2XCbeIYwN3T+4l83A4jqzdXjnyQFgvG0LqKEhCN4MUUW6NClgcbu6bLNP/fB67xbmoTB
+         pjpG1bBwI1Y8irysylpweGPa8i+XUIapbqogHMdIetoePSyIVgMMClKCnIFU7hXUYEYj
+         qZaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743794173; x=1744398973;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=4PpR+tac16PtwrzOBM/O7GPHt+8dLRoSGWTrWNH4DHg=;
-        b=Blrg/UnPEWvlACBYgtPudVx1V2NIB2QK+zk5VKWzLFmwuEZAR32By0P4i3b7iw/qNB
-         TiRBUXfpEvDsuTIywAjxaS4TL6WOLaOSzW0WJ3adjUB9rfpJS191xyq4eAzTM54dqhRA
-         Udcsx64Hb/e+7mi4Z1USrlgwTXEUMqQWGAN995apcZ/veufTNK4ioTYHUZn8yaaoYCic
-         XJU0NYKFsxlrDXR8HhUQxAXWotlOVYu/B5GpEk13vWKPtUilNI+s2A3NrG0OyKXcEiOI
-         J8ykQwZ0GAzTnpabur+0eiTcEULOTGv/HCCkJhhaKbJ+PRcEK1q/tkNyLpRrNLYXz+RI
-         negg==
-X-Gm-Message-State: AOJu0YyOD+qikgCljvfJTNWKrBLkZjRS9oRc3Rv+h9djIff+hUvrJC+D
-	r3B8vJEsMYE3/C7p79uF6WjFUyyxZDnjvbLzq2qWwC96KHnkhixzBcletHBuIJ5J85FA7MNFdGk
-	XeL7NIyImcZdIPOuNnD1yTI2g4IwQctYwz2uPXJCal5Ufu7/KltnRdPl3njNq3Q==
-X-Gm-Gg: ASbGncsNR/bChdrEBCIeFd0kn0F2rr4bTVmx5P4kXYdMfLIZymLFa3ty0srlGMaIH5x
-	/to19FDA/8UXxSjDwPD11lfN+l24ZOB9oMw48DszJJngFWqWp8cFirkidryS2iohM5NVo8ujAtc
-	Fltt/76i3nAE6AZ2FIMHm0NyjnQqwYPuWzInNLPLcMVDOMFM041paXV8jQ0EgcEt0zgBYVDzPsS
-	b5TlHn7p7H7SbtNNKbBnXUzgHqlSC6BJE32yxa8N/uOPv4YB7bN2hgMy8ok1cJ9t/croQrK5HGv
-	iBiTrjWFKj2jgwlTIfUt6jNvtLtU80zps7kMAFxfdqN1ZLAdBY3K3950gdFADVlGwZCN9MQ+eZd
-	JkIzOk6l7iDUlOPOMVzCwEov9GEWk9qzIofUg4iA4iVs=
-X-Received: by 2002:a05:600c:3109:b0:43c:f629:66f4 with SMTP id 5b1f17b1804b1-43ecf57edb7mr49105505e9.0.1743794172969;
-        Fri, 04 Apr 2025 12:16:12 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH05fYflvrVwvhMukX75WUDcgwXtJWZ9HyjyIeSGiNXu+yaUN2WxYLK1syGo/EXt1y/isBObA==
-X-Received: by 2002:a05:600c:3109:b0:43c:f629:66f4 with SMTP id 5b1f17b1804b1-43ecf57edb7mr49105295e9.0.1743794172623;
-        Fri, 04 Apr 2025 12:16:12 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c71b:7900:8752:fae3:f9c9:a07e? (p200300cbc71b79008752fae3f9c9a07e.dip0.t-ipconnect.de. [2003:cb:c71b:7900:8752:fae3:f9c9:a07e])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec16ba978sm56794595e9.23.2025.04.04.12.16.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Apr 2025 12:16:11 -0700 (PDT)
-Message-ID: <f4924ad4-c70b-4999-b595-01c488607189@redhat.com>
-Date: Fri, 4 Apr 2025 21:16:10 +0200
+        d=1e100.net; s=20230601; t=1743794302; x=1744399102;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=LSagy7uSrSThurXFGxgzOfcgNiZbdsnlLtFl9TRWcgQ=;
+        b=I8gFwNJs4+kvJrBbXqbMAL5kpSFcW7d1aOgD/bNzAhsX+05ncl9fPO1jrNAGGLmcjo
+         OitPmwM9/f7PH3BuDWTt6hxz4nguQvti8G3dyMZp2vWz2AYdLu1PgmYcMexj6SsMIpKl
+         BpQsuTmg+em2hCyEzHGZ3uELm/Mur845efgHbHLv/HMdpmQizfXU2UMGek4NbZ8ZjHnb
+         BbePTrxD50w8E0LzPlmJAdnDRRlwSJeapNh+Y+f51vcT+P5U7QAjVdyAfaRPY8GSXC93
+         sNhUGgq9hJBRpqdTqN81EweXaNbPX4TmsCU0ANH2P+qqYMXH892OXykyfvRvUCs+U07Z
+         MTZg==
+X-Forwarded-Encrypted: i=1; AJvYcCVGmjWYlWXpb7ubkjwTGPRp/bq14DQLoDzqjOjHS73RuTGBYGrEp+rhIgrZWIYcXruLo2W0/1feUWDuCkY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy6sQfXdQcztevf3rFIlnk3JaoRIugUfv6Q6S4gRBj/KVdzQWSg
+	2FOFMhYJ0Fs6egnVDgwo567oP6obnEHzcOcr5FFvpcMAn+IZTG7XkdGvojmeAQ==
+X-Gm-Gg: ASbGncs6WhOU48Q38ToVkU09o9zw9AL2NukILTA1vi+jTZt5wGIVicXHe/6WA9zfsrM
+	t6muVmlLP/QatQz6x9jiu0br7w/qt2yCTlBG4JVpHwqabQso2YcclHICP7xvDV1GfrlwV0fR4B4
+	AuUxOK0pRVoNLB+pqCPpLYZZX/e94sj7j86Yugl9tekpoq2jXioBTWo5xMids5eV80p+kc6V37r
+	EQ5TJcKVlSRfO9dzRGYEKVA58/Vo9iSKAdZFmJ+vL8/UUA8QJVYnbiFdqjN9k/GfmL1K/smjQRU
+	wTVFz9uJU/Fpg74qxCv7GjlYvWnLPTqdJ4QQbvrZCvGCRpy/LraB6exMsAnWz0i/063yAFPIqmg
+	sjW3t
+X-Google-Smtp-Source: AGHT+IEn9cGd3ZCBXhuYvQcOgN02mAky4Jb9syFIcmxF7RAopcTEIkPdqg9Mvvk7Bu9Hut8z4qsu0w==
+X-Received: by 2002:a17:903:3c6f:b0:21f:3f5c:d24c with SMTP id d9443c01a7336-22a95dab1f8mr442165ad.0.1743794301968;
+        Fri, 04 Apr 2025 12:18:21 -0700 (PDT)
+Received: from google.com (24.21.230.35.bc.googleusercontent.com. [35.230.21.24])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af9bc41a835sm3195120a12.70.2025.04.04.12.18.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Apr 2025 12:18:21 -0700 (PDT)
+Date: Fri, 4 Apr 2025 12:18:16 -0700
+From: Igor Pylypiv <ipylypiv@google.com>
+To: Niklas Cassel <cassel@kernel.org>
+Cc: Damien Le Moal <dlemoal@kernel.org>, linux-ide@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] ata: libata-scsi: Set INFORMATION sense data field
+ consistently
+Message-ID: <Z_AweMPLRJgBIBF3@google.com>
+References: <20250403212924.306782-1-ipylypiv@google.com>
+ <Z-_JExGDyO9pVTON@ryzen>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] docs: update THP admin guide about non-tmpfs
- filesystem support
-To: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>,
- Andrew Morton <akpm@linux-foundation.org>, Jonathan Corbet <corbet@lwn.net>
-Cc: linux-kernel@vger.kernel.org, willy@infradead.org, linux-mm@kvack.org,
- Bagas Sanjaya <bagasdotme@gmail.com>, da.gomez@kernel.org,
- mcgrof@kernel.org, gost.dev@samsung.com, linux-doc@vger.kernel.org,
- Pankaj Raghav <p.raghav@samsung.com>
-References: <20250404140657.29285-1-kernel@pankajraghav.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250404140657.29285-1-kernel@pankajraghav.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z-_JExGDyO9pVTON@ryzen>
 
-On 04.04.25 16:06, Pankaj Raghav (Samsung) wrote:
-> From: Pankaj Raghav <p.raghav@samsung.com>
+On Fri, Apr 04, 2025 at 01:57:07PM +0200, Niklas Cassel wrote:
+> Hello Igor,
 > 
-> THP support for non-tmpfs filesystem has been around for some time now.
-> Update the admin guide to reflect it.
 > 
-> While we are at it, move FilePmdMapped to previous paragraph for clarity,
-> and clarify ShmemPmdMapped & ShmemHugePage.
+> I'm missing the bigger picture here.
 > 
-> Signed-off-by: Pankaj Raghav <p.raghav@samsung.com>
-> Acked-by: David Hildenbrand <david@redhat.com>
-> ---
+> Are we violating the spec? If so, please reference a specific
+> section in the specs.
 
-BTW, we should go over the whole document and bring it up to date. 
-Interestingly, it starts with
+Hi Niklas,
 
-"Performance critical computing applications dealing with large memory
-working sets are already running on top of libhugetlbfs and in turn
-hugetlbfs. Transparent HugePage Support (THP) is an alternative mean of
-using huge pages for the backing of virtual memory with huge pages
-that supports the automatic promotion and demotion of page sizes and
-without the shortcomings of hugetlbfs.
+Thank you for the thorough review!
 
-Currently THP only works for anonymous memory mappings and tmpfs/shmem.
-But in the future it can expand to other filesystems."
+I'm using the SAT-6 (revision 2) spec:
 
--- 
-Cheers,
+11 Translation of ATA errors to SCSI errors
+11.7 INFORMATION field
 
-David / dhildenb
+             Table 201 — Contents of the INFORMATION field
+ +---------------------------+------------------------------------------+
+ | ATA command               | INFORMATION field                        |
+ +---------------------------+------------------------------------------+
+ | FLUSH CACHE               |                                          |
+ | FLUSH CACHE EXT           |                                          |
+ | READ DMA                  |                                          |
+ | READ DMA EXT              |                                          |
+ | READ FPDMA QUEUED         |                                          |
+ | READ SECTORS              |                                          |
+ | READ SECTORS EXT          |                                          |
+ | READ VERIFY SECTOR(S)     | ATA LBA field ᵃ                          |
+ | READ VERIFY SECTOR(S) EXT |                                          |
+ | WRITE DMA                 |                                          |
+ | WRITE DMA EXT             |                                          |
+ | WRITE DMA FUA EXT         |                                          |
+ | WRITE FPDMA QUEUED        |                                          |
+ | WRITE SECTOR(S)           |                                          |
+ | WRITE SECTOR(S) EXT       |                                          |
+ +---------------------------+------------------------------------------+
+ | All others                | Unspecified                              |
+ +---------------------------+------------------------------------------+
+ | ᵃ From ATA error outputs (non-NCQ) or ATA NCQ Command Error log      |
+ +----------------------------------------------------------------------+
 
+> 
+> From SPC-7:
+> """
+> The contents of the INFORMATION field are device type or command specific
+> and are defined in a command standard. See 4.4.4 for device server
+> requirements regarding how values are returned in the INFORMATION field.
+> """
+> 
+> Looking at SBC-5, "4.18.1 Error reporting overview":
+> 
+> """
+> If a command attempts to access or reference an invalid LBA, then the device
+> server shall report the first invalid LBA (e.g., lowest numbered LBA) in the
+> INFORMATION field of the sense data (see SPC-6). If a recovered read error is
+> reported, then the device server shall report the last LBA (e.g., highest
+> numbered LBA) on which a recovered read error occurred for the command in the
+> INFORMATION field of the sense data.
+> """
+> 
+> Since we are generating this, it makes me thing that perhaps we should not
+> set the INFORMATION field unconditionally? I guess it makes sense for e.g.
+> REQ_OP_READ/READ_OP_WRITE commands, but probably does not make sense for e.g.
+> REQ_OP_FLUSH commands?
+>
+
+SAT-6 specifies that we should set ATA LBA for FLUSH CACHE [EXT] as well.
+For "All others" commands (not explicitly listed in Table 201), the value
+in the INFORMATION field is "Unspecified". I think it should be fine to
+set ATA LBA for other commands as well. 
+
+> 
+> On Thu, Apr 03, 2025 at 02:29:24PM -0700, Igor Pylypiv wrote:
+> > The INFORMATION field is not set when sense data is obtained using
+> > ata_eh_request_sense(). Move the ata_scsi_set_sense_information() call
+> > to ata_scsi_qc_complete() to consistently set the INFORMATION field
+> > regardless of the way how the sense data is obtained.
+> 
+> As you know, we also have successful commands with sense data
+> (CDL policy 0xD), see ata_eh_get_success_sense().
+> 
+> These commands will either fetch sense data using
+> ata_eh_get_ncq_success_sense() or using ata_eh_get_non_ncq_success_sense()
+> (the latter function will fetch sense data using ata_eh_request_sense()).
+> 
+> Regardless of the path taken, these commands will also end up in
+> ata_scsi_qc_complete(), so perhaps it is not enough for your patch to
+> modify ata_scsi_qc_complete() to simply set the INFORMATION field for
+> commands with ATA_ERR bit set (is_error) ? Perhaps you should also
+> consider commands with sense data (have_sense), but without is_error set?
+>
+
+SAT-6 "11.7 INFORMATION field" has a footnote for the "ATA LBA field" as
+follows: "From ATA error outputs (non-NCQ) or ATA NCQ Command Error log".
+
+I limited the change to commands with ATA_ERR bit set (is_error) because
+the spec explicitly mentions errors and the whole section 11 is dedicated
+to the translation of ATA errors. 
+
+> 
+> > 
+> > This call should be limited to regular commands only, as the INFORMATION
+> > field is populated with different data for ATA PASS-THROUGH commands.
+> 
+> I do agree that for ATA PASS-THROUGH commands with fixed format sense,
+> the INFORMATION field is already defined by SAT.
+> 
+> However, what about ATA PASS-THROUGH commands with descriptor format sense?
+> 
+> ATA Status Return sense data descriptor, which is used by ATA PASS-THROUGH
+> commands has descriptor type 09h.
+> 
+> Information sense data descriptor has descriptor type 00h.
+> (See 4.4.2.2 Information sense data descriptor in SPC-7.)
+> 
+> Is it perhaps possible for a command to have both descriptors?
+> 
+> After reading SPC-7, "Table 30 – DESCRIPTOR TYPE field"
+> 
+> I would say that is appears that you usually just have one descriptor,
+> so I would say let's continue only having the ATA Status Return sense
+> data descriptor for ATA PASS-THOUGH commands.
+>
+
+Agree. ATA Status Return sense data descriptor for ATA PASS-THOUGH commands
+already contains the ATA LBA in bytes [6..11] so it seems redundant to
+also include the same in the Information sense data descriptor.   
+
+
+Thank you,
+Igor
+ 
+> 
+> Kind regards,
+> Niklas
