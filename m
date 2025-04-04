@@ -1,139 +1,74 @@
-Received: from s1.g1.infrastructure.qtmlabs.xyz (s1.g1.infrastructure.qtmlabs.xyz [107.172.1.117])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EA2AA95E;
-	Fri,  4 Apr 2025 04:56:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=107.172.1.117
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 006011386B4
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 04:59:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743742593; cv=none; b=kU9nIX0hOD+m750i/n/yMdJ+RuK68s5xKlX+JpPKtbZCjKK9EFW3pTS8r+4IzhR+daGBqTqZjG4pW/kvCb8265bnm+8dtVPISoZik/pFH/PzJV2j8bOIZQXPTg6MUiJS7nuffPvlGH+aD4F6/m8ZmuoeGJzlnx6rbM4KLQmxoq0=
+	t=1743742745; cv=none; b=mZm7bELWd3TgvpQ9T5TVRti8hB1OI1hWAyOwzJVm11/FicCCTwUOhdPTDIzve2NwZE5MFsunqUhSl1DiG1EgNo53waRnhtr2u5U+ly3fRHclHdDDfhO+Tami8pqMFdbkfAgoAOvxn7oCDE5UW1aSTfRtdbsS2A18VEbBrIpzJaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743742593; c=relaxed/simple;
-	bh=nwhDu68aWdWRGWKSFWI4REESRhrTBgR1bfnknaQzRfc=;
-	h=Content-Type:Message-ID:Date:MIME-Version:Subject:From:To:Cc:
-	 References:In-Reply-To; b=D5vIvF79nurPaTdOVkJ+ufG4aFjlTB4eQ7TwPFlouKJk9c1Hb1HGSNOauBs8Sj0gcAXcEGR/CgDWBVHCR8BM9iIoeJ8O7i+oFPNrvKjpiCBTboS2ldc4MWSzTyMR6ngGRZao04K7JSIgowYrKjYTaQyGhNHc0TrbyQDGVm304CM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qtmlabs.xyz; spf=pass smtp.mailfrom=qtmlabs.xyz; dkim=pass (2048-bit key) header.d=qtmlabs.xyz header.i=@qtmlabs.xyz header.b=EvttBZce; arc=none smtp.client-ip=107.172.1.117
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qtmlabs.xyz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qtmlabs.xyz
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qtmlabs.xyz header.i=@qtmlabs.xyz header.b="EvttBZce"
-Content-Type: multipart/mixed; boundary="------------QNl5qfMEuxRVraWYtdKPb7kl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qtmlabs.xyz; s=dkim;
-	t=1743742589;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vau1mPOVxvBKN2mqH71v2LRxp6uq3iTaCAxzKJIn02I=;
-	b=EvttBZcejpCKd38V1E4icwkGSfefBiF9OpE8mKuYddA8vEIxPuNrv2n4/uelEym54+yJtI
-	sWEdYXo9743t6WTxlZjCz+F05LIa89q3kpLVxCtHkJQKwxUEs9s5Jd2jbje6G+mqUznBWW
-	zw+gNKcRHsxLCaESAB2q3YSsyYwK+a7vxidWEXX1a2L7KXgqjsptfS9laevme9Z6nGS5Ft
-	oempeWsiUZSVHpr7rHdfXpGpKdQSBcN9PWgUvmA8IybtVXK25xINb5sb3o6TAMwzq9pMU0
-	cE5alLNMfYnXgzazSEWGG38Hn0UbUBLxW06KasCnSdjA0s45W9gfvGXkys+HCg==
-Authentication-Results: s1.g1.infrastructure.qtmlabs.xyz;
-	auth=pass smtp.mailfrom=msizanoen@qtmlabs.xyz
-Message-ID: <004d85e4-d23d-43af-87ca-8d037abba51d@qtmlabs.xyz>
-Date: Fri, 4 Apr 2025 11:56:21 +0700
+	s=arc-20240116; t=1743742745; c=relaxed/simple;
+	bh=wFLPmx0Fwbmd/I78yKqedPCDa3YVrPzE4DZoTzzBYbg=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=PtsaMVy1Qe4HgjdRlQTgQPuVzIVw0NROPtHnniE9GKiRIFAHkELbAhEEGnU/fXtExA4kXuCpZgk5dnk2TOuzoKnLAHJq1keTbJLPd0mOV0Q3+FtvUNkCOCmmWdVig6uVYh3yAuZbv62rZjxZsjnrgLG71PafE9tc7KcnDDjpldM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-85dcaf42b61so349986339f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 21:59:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743742743; x=1744347543;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=veSiNRiQYQ4ynN8I5E3nEA6jQwT6rqRu0bXRMuIj9hQ=;
+        b=waD4vy19/H3oKYwTbk0rlnijaXfcUBjY0QMOFsydCTAXtuLRw5qSv8SM27FZ7QlS8w
+         d9OMU/MIPSoGaGBfFyiZx29lA2hHW1j3l60/lSudo+nImtesANOA0FYmNHWZuo2vcwLH
+         cvtxnSFx2s1VrNwKa0kv6h1sikVlq3n44fzRYDlAxXYj2O9l0fw7AJ/IF2R8fVih5DMs
+         1ZEzzbYtrIjivSt6adnZyBSeKuTR8XJA4hz/YM0zkqcXaPrTc3c7ybyOPk0MOCzp/L/+
+         F+Ro7x2ENzo298O14Dnw7pbBjZ/g+71gmxCMJtMYMCRldWzspGHrr6yZ1kR69VhpMlih
+         Vy7g==
+X-Forwarded-Encrypted: i=1; AJvYcCUIRr+EA4C7eETmNcSEDky14aF53DozXbxSUG/djJyMe7+tjgiZFgM21MkJwihmyXW+/0/OevOoNfFfBmI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwP93XfovM/x+qWYYRcUdKBweeYDSBJhIkaGtt4CoCpLX7EPvVg
+	iQP1GAffdADkRb1FDquAAPmj6YWFloKsZXwLLsxm9udLZDhm5PoVJ+oeCMeVi63hKg+0wkiT+Pe
+	ECV1842SAm1cpGcVuVyzSdApuip7AK8KwXS2BDkWrigUcxH+iB2rVC7I=
+X-Google-Smtp-Source: AGHT+IEfzW2UhovFNpHtnZ6+XnVHMCXzqHaXL0dQJ9zNwC+OQPLBYM5Vkt6QH2EqPBTD5D8l59Lb0XYDaqzSEeEvHN2sOg+8h67U
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [REGRESSION] Kernel booted via kexec fails to resume from
- hibernation
-From: msizanoen <msizanoen@qtmlabs.xyz>
-To: Roberto Ricci <io@r-ricci.it>
-Cc: ebiederm@xmission.com, rafael@kernel.org, pavel@ucw.cz,
- ytcoode@gmail.com, kexec@lists.infradead.org, linux-pm@vger.kernel.org,
- akpm@linux-foundation.org, regressions@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <Z4WFjBVHpndct7br@desktop0a> <Z4WGSMdF6seQm9GV@desktop0a>
- <b9f6ed5a-74b9-47c0-b073-9922dbe6119b@qtmlabs.xyz>
- <Z-8E-LLs1dFWfn6J@desktop0a>
- <691be719-7d4c-4cb1-87d6-cca7834547fe@qtmlabs.xyz>
-Content-Language: en-US
-In-Reply-To: <691be719-7d4c-4cb1-87d6-cca7834547fe@qtmlabs.xyz>
-X-Spamd-Bar: +
-X-Spam-Level: *
+X-Received: by 2002:a92:c243:0:b0:3d3:e3fc:d5e1 with SMTP id
+ e9e14a558f8ab-3d6e3ee1673mr24694795ab.1.1743742743080; Thu, 03 Apr 2025
+ 21:59:03 -0700 (PDT)
+Date: Thu, 03 Apr 2025 21:59:03 -0700
+In-Reply-To: <20250404040706.3772-1-hdanton@sina.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67ef6717.050a0220.9040b.031f.GAE@google.com>
+Subject: Re: [syzbot] [media?] [usb?] KASAN: slab-use-after-free Read in
+ load_firmware_cb (2)
+From: syzbot <syzbot+db4326df1b9af04f68fc@syzkaller.appspotmail.com>
+To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-This is a multi-part message in MIME format.
---------------QNl5qfMEuxRVraWYtdKPb7kl
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Hello,
 
-Also, can you reproduce this issue with a target kernel (the kernel 
-being kexec-ed) that has one of the patches attached (select the correct 
-one according to your kernel version) applied, with either kexec_load or 
-kexec_file_load?
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-On 4/4/25 09:54, msizanoen wrote:
-> Can you send the dmesg logs for this case (6.13 + mentioned patch 
-> series backported as target kernel, using kexec_load)?
->
-> On 4/4/25 05:00, Roberto Ricci wrote:
->> On 2025-04-01 19:59 +0700, msizanoen wrote:
->>> [snip]
->>> It seems like `e820__register_nosave_regions` is erroneously marking 
->>> some
->>> kernel memory as nosave in the presence of sub-page e820 regions. In 
->>> theory
->>> backporting
->>> https://lore.kernel.org/all/20250214090651.3331663-1-rppt@kernel.org/ 
->>> should
->>> be sufficient to avoid this but a fix for the actual root cause is
->>> preferred.
->> When using kexec_file_load, this patch series fixes the issue not only
->> in theory but also in practice.
->> But the issue with kexec_load (see
->> https://lore.kernel.org/all/Z-hYWc9LtBU1Yhtg@desktop0a/
->> ), which might be related, is not fixed.
---------------QNl5qfMEuxRVraWYtdKPb7kl
-Content-Type: text/x-patch; charset=UTF-8; name="for-6.14-and-earlier.diff"
-Content-Disposition: attachment; filename="for-6.14-and-earlier.diff"
-Content-Transfer-Encoding: base64
+Reported-by: syzbot+db4326df1b9af04f68fc@syzkaller.appspotmail.com
+Tested-by: syzbot+db4326df1b9af04f68fc@syzkaller.appspotmail.com
 
-ZGlmZiAtLWdpdCBhL2FyY2gveDg2L2tlcm5lbC9lODIwLmMgYi9hcmNoL3g4Ni9rZXJuZWwv
-ZTgyMC5jCmluZGV4IDgyYjk2ZWQ5ODkwYS4uZWY2ZTYzOWU0M2ZhIDEwMDY0NAotLS0gYS9h
-cmNoL3g4Ni9rZXJuZWwvZTgyMC5jCisrKyBiL2FyY2gveDg2L2tlcm5lbC9lODIwLmMKQEAg
-LTc1NCwyMCArNzU0LDIwIEBAIHZvaWQgX19pbml0IGU4MjBfX21lbW9yeV9zZXR1cF9leHRl
-bmRlZCh1NjQgcGh5c19hZGRyLCB1MzIgZGF0YV9sZW4pCiB2b2lkIF9faW5pdCBlODIwX19y
-ZWdpc3Rlcl9ub3NhdmVfcmVnaW9ucyh1bnNpZ25lZCBsb25nIGxpbWl0X3BmbikKIHsKIAlp
-bnQgaTsKLQl1bnNpZ25lZCBsb25nIHBmbiA9IDA7CisJdTY0IGxhc3RfYWRkciA9IDA7CiAK
-IAlmb3IgKGkgPSAwOyBpIDwgZTgyMF90YWJsZS0+bnJfZW50cmllczsgaSsrKSB7CiAJCXN0
-cnVjdCBlODIwX2VudHJ5ICplbnRyeSA9ICZlODIwX3RhYmxlLT5lbnRyaWVzW2ldOwogCi0J
-CWlmIChwZm4gPCBQRk5fVVAoZW50cnktPmFkZHIpKQotCQkJcmVnaXN0ZXJfbm9zYXZlX3Jl
-Z2lvbihwZm4sIFBGTl9VUChlbnRyeS0+YWRkcikpOworCQlpZiAobGFzdF9hZGRyIDwgZW50
-cnktPmFkZHIpCisJCQlyZWdpc3Rlcl9ub3NhdmVfcmVnaW9uKFBGTl9VUChsYXN0X2FkZHIp
-LCBQRk5fRE9XTihlbnRyeS0+YWRkcikpOwogCi0JCXBmbiA9IFBGTl9ET1dOKGVudHJ5LT5h
-ZGRyICsgZW50cnktPnNpemUpOworCQlsYXN0X2FkZHIgPSBlbnRyeS0+YWRkciArIGVudHJ5
-LT5zaXplOwogCiAJCWlmIChlbnRyeS0+dHlwZSAhPSBFODIwX1RZUEVfUkFNICYmIGVudHJ5
-LT50eXBlICE9IEU4MjBfVFlQRV9SRVNFUlZFRF9LRVJOKQotCQkJcmVnaXN0ZXJfbm9zYXZl
-X3JlZ2lvbihQRk5fVVAoZW50cnktPmFkZHIpLCBwZm4pOworCQkJcmVnaXN0ZXJfbm9zYXZl
-X3JlZ2lvbihQRk5fVVAoZW50cnktPmFkZHIpLCBQRk5fRE9XTihsYXN0X2FkZHIpKTsKIAot
-CQlpZiAocGZuID49IGxpbWl0X3BmbikKKwkJaWYgKFBGTl9ET1dOKGxhc3RfYWRkcikgPj0g
-bGltaXRfcGZuKQogCQkJYnJlYWs7CiAJfQogfQo=
---------------QNl5qfMEuxRVraWYtdKPb7kl
-Content-Type: text/x-patch; charset=UTF-8; name="for-master.diff"
-Content-Disposition: attachment; filename="for-master.diff"
-Content-Transfer-Encoding: base64
+Tested on:
 
-ZGlmZiAtLWdpdCBhL2FyY2gveDg2L2tlcm5lbC9lODIwLmMgYi9hcmNoL3g4Ni9rZXJuZWwv
-ZTgyMC5jCmluZGV4IDU3MTIwZjA3NDljYy4uYzMyZWY3ZjUyMDVmIDEwMDY0NAotLS0gYS9h
-cmNoL3g4Ni9rZXJuZWwvZTgyMC5jCisrKyBiL2FyY2gveDg2L2tlcm5lbC9lODIwLmMKQEAg
-LTc1MywyMCArNzUzLDIwIEBAIHZvaWQgX19pbml0IGU4MjBfX21lbW9yeV9zZXR1cF9leHRl
-bmRlZCh1NjQgcGh5c19hZGRyLCB1MzIgZGF0YV9sZW4pCiB2b2lkIF9faW5pdCBlODIwX19y
-ZWdpc3Rlcl9ub3NhdmVfcmVnaW9ucyh1bnNpZ25lZCBsb25nIGxpbWl0X3BmbikKIHsKIAlp
-bnQgaTsKLQl1bnNpZ25lZCBsb25nIHBmbiA9IDA7CisJdTY0IGxhc3RfYWRkciA9IDA7CiAK
-IAlmb3IgKGkgPSAwOyBpIDwgZTgyMF90YWJsZS0+bnJfZW50cmllczsgaSsrKSB7CiAJCXN0
-cnVjdCBlODIwX2VudHJ5ICplbnRyeSA9ICZlODIwX3RhYmxlLT5lbnRyaWVzW2ldOwogCi0J
-CWlmIChwZm4gPCBQRk5fVVAoZW50cnktPmFkZHIpKQotCQkJcmVnaXN0ZXJfbm9zYXZlX3Jl
-Z2lvbihwZm4sIFBGTl9VUChlbnRyeS0+YWRkcikpOworCQlpZiAobGFzdF9hZGRyIDwgZW50
-cnktPmFkZHIpCisJCQlyZWdpc3Rlcl9ub3NhdmVfcmVnaW9uKFBGTl9VUChsYXN0X2FkZHIp
-LCBQRk5fRE9XTihlbnRyeS0+YWRkcikpOwogCi0JCXBmbiA9IFBGTl9ET1dOKGVudHJ5LT5h
-ZGRyICsgZW50cnktPnNpemUpOworCQlsYXN0X2FkZHIgPSBlbnRyeS0+YWRkciArIGVudHJ5
-LT5zaXplOwogCiAJCWlmIChlbnRyeS0+dHlwZSAhPSBFODIwX1RZUEVfUkFNKQotCQkJcmVn
-aXN0ZXJfbm9zYXZlX3JlZ2lvbihQRk5fVVAoZW50cnktPmFkZHIpLCBwZm4pOworCQkJcmVn
-aXN0ZXJfbm9zYXZlX3JlZ2lvbihQRk5fVVAoZW50cnktPmFkZHIpLCBQRk5fRE9XTihsYXN0
-X2FkZHIpKTsKIAotCQlpZiAocGZuID49IGxpbWl0X3BmbikKKwkJaWYgKFBGTl9ET1dOKGxh
-c3RfYWRkcikgPj0gbGltaXRfcGZuKQogCQkJYnJlYWs7CiAJfQogfQo=
+commit:         d6b13dbd Merge branch 'for-next/core' into for-kernelci
+git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
+console output: https://syzkaller.appspot.com/x/log.txt?x=11692a74580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=c7139a37e0ece1f
+dashboard link: https://syzkaller.appspot.com/bug?extid=db4326df1b9af04f68fc
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+userspace arch: arm64
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=125de178580000
 
---------------QNl5qfMEuxRVraWYtdKPb7kl--
+Note: testing is done by a robot and is best-effort only.
