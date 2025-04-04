@@ -1,72 +1,69 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C69026AFB
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 12:39:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4F421DE4E1
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 12:40:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743770396; cv=none; b=SaL5DJX1vBnpvs/mkg6ga4gC4KBpnIojrRkrdPdLZ4/W2fKDU0lMxh+5ncU49WwULHzCiAkKqHpAyxrQEz57npyniAdkLqvFNJZbiwaoeofvaTuEpqr/lA6KMDUiNd47tqKgX733N8qIgc4vZ765smBgzMGbEGrTG7q2twMmEeY=
+	t=1743770406; cv=none; b=oWF2L4nJ8dtdlE+u/vh9Q4DzHERFr+WlrGG9grVwDwIgCOIZGRn6k+kAXLi3iOXiRqUncNSPlVINi6BTVQjG58OvnPvmZmDjAGSKG5Llow/Ok6k3I6HjAnCglbhhFWJtv2QqdorGodW/1vzNvt9mhReviAuiSfeUV/1COwYejck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743770396; c=relaxed/simple;
-	bh=nBLz1kTJ8NH5i/Yn/ykHHxiMfT5KmmPCMp7p2LIR8Sg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kwHEelK3n1fdJ5VYGJeIgoomY4nsEYkUTyifcEXPZvANtyiu2Ae+vTMS1/+iQFy72RNCBeXed1y3IpeX/WyQnLfueEVnXbXeFOW8E62ObG7EVhrV2NxmUogvJ3qoUAdB243mYNOTMGUa1HNaoh72CdKnY9seQQ3sPqDeUlOvUBA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vqH252cl; arc=none smtp.client-ip=209.85.128.43
+	s=arc-20240116; t=1743770406; c=relaxed/simple;
+	bh=ow9gqO7eFp2FYxDOYnJaH2KbWRrtLsiqWzo5C4iyYoI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=p357GN0itEufx4Izo6tJTZ1eRi2b7LtJuFrQsH9E2chp+J3GhCZBXgqsCtGV8N/rzkU+7jKenF/MNGznxNQSIg2DijSnRj+oMa0Zh0gVjubmvYUGp2ZuyM5l+7sZfn3WjjFWC1X6b+xWXGX2TaZXBM0shwf/GJxdYr2FGxCAPI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Ltm12TlY; arc=none smtp.client-ip=209.85.221.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vqH252cl"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43935d1321aso2167355e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 05:39:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ltm12TlY"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3912387cf48so104093f8f.3
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 05:40:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743770393; x=1744375193; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1743770403; x=1744375203; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZTU9ncN4gaPvvWv2/kPgQ7Y0Lxm8sALtBZAAIO+VFQ8=;
-        b=vqH252cltloAlxsvD26YYL2wfh0VRR8ytCvKX0opOaOxewYKgo/IwDLUjdY8sW1fmk
-         A5Z4poZrEGG6uwOsH8yp44cjI6mgm9tJ/TNwAKYCaOfk6pwdAInMZ8MlpNSQx6pbOfy4
-         Y0nJPksq8Sd9cDWie9/Em56ufAtMK46M5cpw1GwpwAV2m6seZVz5afZkWWiZia71+vYm
-         uAfY5/qtAGGs9Kk0cKbl/QcSuYDtBzWt4wuRuCqwEizJL1eLIvYRDC4KgyrY7IrCg6HZ
-         Rq7Xh2pDfGb/2LQ+bCyiE/ItFNlg0Ivl4JVGfgj5Ckg8bHG8UAsWMkyos8LjxbbKXYmc
-         E0WQ==
+        bh=LXiYIvn+BUcCubjmRBFccQD3FCRydhDd1RRaxLlQdJw=;
+        b=Ltm12TlYpzccwVKpicknmdaKFqEO7K55kTae4hNgQmWePKlAxfhZNPiB1WLLT3NU5i
+         GZ+xnupH1ASjkxhOrCRn/FsJTlL7NFXGPVzULqIJLhHGJaTgx3WOT705thE3n941QR8Q
+         Xpmog16qgg+IRIJpb/x2UDSIJ322aMWvhUq5NADrEZYGhv7j5yNY3LlSyP2GtRfE8YTG
+         VeVRXGqzDPixLi/KUNZEmdz/5OIPZYjpU+pz1JNnfjCWMeb4lCEzqlQ5tBAKiWjodXXo
+         6fZeXIy5PSDvW/y0Kuxtwi6Q2xtDl8QQddx3Jlgk81OHwzDPUCfRcThRWJrT52ouOi2q
+         9y6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743770393; x=1744375193;
+        d=1e100.net; s=20230601; t=1743770403; x=1744375203;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ZTU9ncN4gaPvvWv2/kPgQ7Y0Lxm8sALtBZAAIO+VFQ8=;
-        b=EIXAszeMfhB8bzphgNEot2RotmBi68I27OoGWZdKwbIfschuh8zFx9/tgah+K0BHTu
-         l2bGUfIT1q1+gu915169XpNpxxz4u9e68YSOOrapKA+nKCCJrG74Z+ATkbbTZI3JFjG9
-         uH/Hlz7gQ1o0gq8Zsf7NUVS0kev++d1XAUHM6rZl5SHZyUp03R8XTqbbPVCxlwITrqzE
-         Gj4XMPqnmMaIT4B0MSa5sI8/4GwN1ywYwPUl1TG83TCZGr9LjMJdOpBOUUttk9C8Z4+v
-         84OumSUCj/ZGX0EAeBAknQPgQeH/1Cnx6j4YeUfq9CRgCcxVMcvjPVcGfw/oi5Bqe5Wp
-         dr3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVnlEcvSI3ibYGaS+7RpPq2mElYU8nKv/lMFRM/35GHOHolm3z5+O7ZB1xGGswgtN9ye9ybN6iQ3mxaIMw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxnfH5R8KzVpm10TpGg3Fzm7UgWxt7mtptjyL+9ZhizhZK9t/Ll
-	iFRWO6YdB1jZ3G4VJUDZT5xmT0V0I9mZUtHnA4l60PNnT6h1ksmZS5JYf1VUJQY=
-X-Gm-Gg: ASbGncuSN7m4YauUmw0B7DSBjotmkG55hpJZEKOFyBj1PN+d5kn60EYiJFX0Do0oQV+
-	X5/wt6nCqVmKHR8m2oC9Zdt8a8Wgh8gTd68HkXqaXCwnOkxPpumA0SPkOoms9td18CpP3ubDzvv
-	QwWkYlwWfMNHNM9f6joid4DCiZBkPVcdQ2gBSmVRTDvbkuIHIpOeKJE41PUnKnnlh5nXUXPptk+
-	ZWIr2hzggdvtBDWEpadT6iM9QgbbFpy7XHWDhRwtab8jEyeFyKfHZayoHPEQk70Am4eCCUZFG/n
-	2gIWH8LhN0IzPulOXSrm0pn9A6jqbNan5Mq23WeZzvBdKnLhNQyjnw==
-X-Google-Smtp-Source: AGHT+IFE/BNeQcKRRWZIPVRmYBmQ1t5nK5Wr5F4lJXYDnVHNSidWI2olRFDyeW5mBZo+ZjR5fCLwxA==
-X-Received: by 2002:a5d:5f44:0:b0:386:3a50:8c52 with SMTP id ffacd0b85a97d-39cb35a76e9mr962968f8f.7.1743770393235;
-        Fri, 04 Apr 2025 05:39:53 -0700 (PDT)
+        bh=LXiYIvn+BUcCubjmRBFccQD3FCRydhDd1RRaxLlQdJw=;
+        b=k90sgco+uLg+0eMgXnX/M/JYxW3vfu8gDZJCXUmbBhMun2epm8XLcYnmod4WJkfocG
+         /RZZ0V8ZKXLplzDw9oEWCVFUCN/2EOjwK8CJG3G1tDiKKgTZ4xVGB8q3rfCil7hHGZGG
+         Ohj4Tf14OWs/NpvinV8FjBA8NuRmDyv7Yb8tz8HxUZw9T176e+vrnuykAGMlVf0eMclg
+         XzgThrJBpuUX5ZDoZdzKqzmV+oOBviLPmj/Vgh7jYJI+Xwj9ovClFcBwIJ94NMe6MhAe
+         G9UQQkVAKzUzAKUAqyS1d+BvoCvmICLqkcuJZhzCl8BCfB+2Wo/de3m6ZUwvi7ynt+8m
+         N0Ow==
+X-Forwarded-Encrypted: i=1; AJvYcCUIcIaQiH+ByFgM11CA4PpPnt3uq9myBVTjs37GI0xqc9fIER86/DQ/S/B8/I3gPR4rDApn404hCZGYqXU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJqZ5S3nLr7Fst6YIu+O19+2LCQkKD5EfhK0TehomYQRjX3ebl
+	UZpXxzby2N73lT3fikgiFfg9QXNk1+y63ABVzDVjDwewZZOTi3Kh6syU+SLGc5g=
+X-Gm-Gg: ASbGncs7pYHqwvQzCzSOftQyXZEwMIxxICEj/dsSeo4wlDHzb+Ib4qjLFy+ESL1T2Sx
+	RvjQRFB00SzAZuK+Y8dMqaAQrnDQCKEeML/YBnajnfK9nz11UkAWroCT0drlH1oTHzkCZEXz9K+
+	n4ukTYOXSGsZV+jqf/bwNDrWNnakHaiOHpQTsVrUxwmoqQGByMDsptN+OikrRaLWjy0/Z1AqPJq
+	CXztzqB4RJ24/Qj8DfIDMWjdGsz6ocnzalHT59jYO1d2MIgH0AkxZ6vUdn8+pfwZwiIEavgQBCC
+	UXm/1JFcuGzS3OY/F39RxczVyJSJhaHeDBVKtPfcXDykkHpIR2DySw==
+X-Google-Smtp-Source: AGHT+IE5wWt/yUGgqvhavSp6KwjTdVBZAE3cjP4dZHsK7r6/lTQwPIXiPHRLMZ4AJ3sKwHjJHHtgPw==
+X-Received: by 2002:a05:6000:4022:b0:39c:30f1:beaa with SMTP id ffacd0b85a97d-39cb37a8010mr866634f8f.7.1743770403153;
+        Fri, 04 Apr 2025 05:40:03 -0700 (PDT)
 Received: from shite.. ([178.197.198.86])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c3020d98bsm4261898f8f.76.2025.04.04.05.39.52
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c30226dfesm4308954f8f.97.2025.04.04.05.40.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Apr 2025 05:39:52 -0700 (PDT)
+        Fri, 04 Apr 2025 05:40:02 -0700 (PDT)
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Neil Armstrong <neil.armstrong@linaro.org>,
-	Kevin Hilman <khilman@baylibre.com>,
-	Jerome Brunet <jbrunet@baylibre.com>,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-amlogic@lists.infradead.org,
+To: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	linux-pm@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH] firmware: meson: Do not enable MESON_SM by default during compile testing
-Date: Fri,  4 Apr 2025 14:39:49 +0200
-Message-ID: <20250404123949.362652-1-krzysztof.kozlowski@linaro.org>
+Subject: [PATCH] cpuidle: at91: Do not enable ARM_AT91_CPUIDLE by default during compile testing
+Date: Fri,  4 Apr 2025 14:39:59 +0200
+Message-ID: <20250404123959.362684-1-krzysztof.kozlowski@linaro.org>
 X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -81,22 +78,22 @@ drivers.
 
 Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
- drivers/firmware/meson/Kconfig | 2 +-
+ drivers/cpuidle/Kconfig.arm | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/firmware/meson/Kconfig b/drivers/firmware/meson/Kconfig
-index f2fdd3756648..179f5d46d8dd 100644
---- a/drivers/firmware/meson/Kconfig
-+++ b/drivers/firmware/meson/Kconfig
-@@ -5,7 +5,7 @@
- config MESON_SM
- 	tristate "Amlogic Secure Monitor driver"
- 	depends on ARCH_MESON || COMPILE_TEST
+diff --git a/drivers/cpuidle/Kconfig.arm b/drivers/cpuidle/Kconfig.arm
+index a1ee475d180d..4d095f435b86 100644
+--- a/drivers/cpuidle/Kconfig.arm
++++ b/drivers/cpuidle/Kconfig.arm
+@@ -89,7 +89,7 @@ config ARM_U8500_CPUIDLE
+ 
+ config ARM_AT91_CPUIDLE
+ 	bool "Cpu Idle Driver for the AT91 processors"
 -	default y
-+	default ARCH_MESON
- 	depends on ARM64_4K_PAGES
++	default ARCH_AT91
+ 	depends on (ARCH_AT91 || COMPILE_TEST) && !ARM64
  	help
- 	  Say y here to enable the Amlogic secure monitor driver
+ 	  Select this to enable cpuidle for AT91 processors.
 -- 
 2.45.2
 
