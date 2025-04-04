@@ -1,117 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 831891F181F;
-	Fri,  4 Apr 2025 16:55:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5660920E70F;
+	Fri,  4 Apr 2025 16:56:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743785743; cv=none; b=tPlBbiLmXeNsOyxGXzmRFpZT1CnYVgRzaVQMPgHBYJvQt0G/LuBQnonlR56WhejIihdKQ3qEqCpZIUsfNy35PpdK7xTm4OYFvoYCcY22MLZDuDPIsx3YszST/Ijgsqo/XtO1q23euf+1DlA1i1TstMzpC2TvyjpvOzbh44ykMWg=
+	t=1743785798; cv=none; b=r8IdnY0OLS20DTaRpagR8um4a65s2K/ssk/6sqWeDWnZens4N4bufTxUlH2H45LFjjkMw0JfFyxkTVb0v4lxahv4/f6TwIUU2BnJGbgS8pGYxUzFXeCcyomZy6D48SYqJlLtC+cV4IwA1N35z4ywPoxGeUEDmyfqnhCjznJOFts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743785743; c=relaxed/simple;
-	bh=ThNXk6gQmRSG91uTwe+RSVnkgKn9o9HMxBFyge/Vpio=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EkpwfTe1MkUu9GJW9W57rALUFRW7/GHsT8JXMBhN8ZQCKoE8PAuQkC8E3ROh5Pi6TEizHsHbfWut5/bLY6MT1yzKpimuVlIEWgwTzCQsBxuN6chdj4g+LyypjwmLzR5Cwi5jBUZlN+55XrtbPqU2MXsERy/FgNsh3IfZkLg4NIs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ULRTN/uZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743785798; c=relaxed/simple;
+	bh=uSI/mNDOWuv8z6wXM4ATudMQnMeI2qrBbdXzg2XE6UM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=C9Hg+Mo2JyUMsKJzk4nYmD3j7mKqgChmzex4BUOqVctca87bKxWrELdzGGE7wFfjL9D+rBPVf70/zaDeMfrT7NpSsBt4sTnDiLxq6gduLXV2wouXJppQvM1CrULSVGp4WQP4GeR75hRL3JAK8hxj9ip4odfEI+7i2R5Q3eNHLJY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KYgTyC9y; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ULRTN/uZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AC06C4CEDD;
-	Fri,  4 Apr 2025 16:55:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743785743;
-	bh=ThNXk6gQmRSG91uTwe+RSVnkgKn9o9HMxBFyge/Vpio=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ULRTN/uZrtDIdGK0Npe+J/IFBIzHTvgqz6iAT15uYWKsSOXxe13+WDcf32RPw2DGz
-	 2qupFztV7yAlvr4Twq9o+Ibw9PxelQdMhITs714Z0FAhvJDiyYS59oyZZPhFGwSNP6
-	 ia8BVA+4hqmPN2rnjJVqPMaloPNr7M02l7BQA2hH0HS7B3UBrX7z4hDy/GY+ez4btn
-	 kj10SJ71bWqSkB0k6nlLEhQl/TZeh47PhlqnC1pjCH2anFUwYE1sLDqK6DpD3tztEQ
-	 M1cvsZDT9UELKrX5lqDmR3kddMeunMWD0xZDQf3Qz+s7J5qafA0lkHmlGSuRq4A5lk
-	 YVJ2IOSiA/tHw==
-Date: Fri, 4 Apr 2025 17:55:38 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Marcus Folkesson <marcus.folkesson@gmail.com>
-Cc: David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, dri-devel@lists.freedesktop.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] dt-bindings: display: Add Sitronix ST7571 panel
-Message-ID: <20250404-railway-croon-288f2943928d@spud>
-References: <20250404-st7571-v2-0-4c78aab9cd5a@gmail.com>
- <20250404-st7571-v2-1-4c78aab9cd5a@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KYgTyC9y"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743785798; x=1775321798;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=uSI/mNDOWuv8z6wXM4ATudMQnMeI2qrBbdXzg2XE6UM=;
+  b=KYgTyC9yLwEzfNVDW0NT/L6DMb+ynxK1z1J6ZkxnjgNcJLUkRMDfVGFR
+   xyTGqv08NXIgsO8x681lTQJCajogsHT7Wf061XxfZLIAZkdx3mT3+50uS
+   5kSZehNDKi5qFajz1LnQRhV5jr0/ruilTH9q3wKKbnl1LvbYvwnNnxzQK
+   QCgsYxNYwaRTbXfn9HDsCJ8RAoLWAdk4geViFkUYbdi2W3NfeQ+3BTIwS
+   Le/BceXlRePKs+PaiInZEDcf/1PeL7vA20riYnMexEnr4A/+fOGp0VOUX
+   71FbpQq3HoAKO0UwzmifKpKATULosyx4hbNmFvEtHLLmiS0RBK4apK/jI
+   A==;
+X-CSE-ConnectionGUID: ZfCUF+d1Q+WLJ+xEVN1bqg==
+X-CSE-MsgGUID: evlkveYDQ/i8mmSGDEoGvg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11394"; a="47944691"
+X-IronPort-AV: E=Sophos;i="6.15,188,1739865600"; 
+   d="scan'208";a="47944691"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 09:56:36 -0700
+X-CSE-ConnectionGUID: Y7QpnuiMSQu9Veya9py4Qg==
+X-CSE-MsgGUID: 5LEvsRX7R6CbR5uFxiPhsQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,188,1739865600"; 
+   d="scan'208";a="127875138"
+Received: from daliomra-mobl3.amr.corp.intel.com (HELO [10.124.223.29]) ([10.124.223.29])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 09:56:33 -0700
+Message-ID: <c4971a5e-1c17-4daf-8af4-804d07902fe4@intel.com>
+Date: Fri, 4 Apr 2025 09:56:31 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="qzsnKKKTsOCiJ2gz"
-Content-Disposition: inline
-In-Reply-To: <20250404-st7571-v2-1-4c78aab9cd5a@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 06/14] x86: Physical address comparisons in
+ fill_p*d/pte
+To: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>, hpa@zytor.com,
+ hch@infradead.org, nick.desaulniers+lkml@gmail.com,
+ kuan-ying.lee@canonical.com, masahiroy@kernel.org,
+ samuel.holland@sifive.com, mingo@redhat.com, corbet@lwn.net,
+ ryabinin.a.a@gmail.com, guoweikang.kernel@gmail.com, jpoimboe@kernel.org,
+ ardb@kernel.org, vincenzo.frascino@arm.com, glider@google.com,
+ kirill.shutemov@linux.intel.com, apopple@nvidia.com,
+ samitolvanen@google.com, kaleshsingh@google.com, jgross@suse.com,
+ andreyknvl@gmail.com, scott@os.amperecomputing.com, tony.luck@intel.com,
+ dvyukov@google.com, pasha.tatashin@soleen.com, ziy@nvidia.com,
+ broonie@kernel.org, gatlin.newhouse@gmail.com, jackmanb@google.com,
+ wangkefeng.wang@huawei.com, thiago.bauermann@linaro.org, tglx@linutronix.de,
+ kees@kernel.org, akpm@linux-foundation.org, jason.andryuk@amd.com,
+ snovitoll@gmail.com, xin@zytor.com, jan.kiszka@siemens.com, bp@alien8.de,
+ rppt@kernel.org, peterz@infradead.org, pankaj.gupta@amd.com,
+ thuth@redhat.com, andriy.shevchenko@linux.intel.com,
+ joel.granados@kernel.org, kbingham@kernel.org, nicolas@fjasle.eu,
+ mark.rutland@arm.com, surenb@google.com, catalin.marinas@arm.com,
+ morbo@google.com, justinstitt@google.com, ubizjak@gmail.com,
+ jhubbard@nvidia.com, urezki@gmail.com, dave.hansen@linux.intel.com,
+ bhe@redhat.com, luto@kernel.org, baohua@kernel.org, nathan@kernel.org,
+ will@kernel.org, brgerst@gmail.com
+Cc: llvm@lists.linux.dev, linux-mm@kvack.org, linux-doc@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com, x86@kernel.org
+References: <cover.1743772053.git.maciej.wieczor-retman@intel.com>
+ <926742095b7e55099cc48d70848ca3c1eff4b5eb.1743772053.git.maciej.wieczor-retman@intel.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <926742095b7e55099cc48d70848ca3c1eff4b5eb.1743772053.git.maciej.wieczor-retman@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+On 4/4/25 06:14, Maciej Wieczor-Retman wrote:
+> +		if (__pa(p4d) != (pgtable_l5_enabled() ?
+> +				  (unsigned long)pgd_val(*pgd) & PTE_PFN_MASK :
+> +				  __pa(pgd)))
+>  			printk(KERN_ERR "PAGETABLE BUG #00! %p <-> %p\n",
 
---qzsnKKKTsOCiJ2gz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Apr 04, 2025 at 03:50:32PM +0200, Marcus Folkesson wrote:
-> Sitronix ST7571 is a 4bit gray scale dot matrix LCD controller.
->=20
-> Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
-> ---
->  .../bindings/display/sitronix,st7571.yaml          | 73 ++++++++++++++++=
-++++++
->  1 file changed, 73 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/display/sitronix,st7571.ya=
-ml b/Documentation/devicetree/bindings/display/sitronix,st7571.yaml
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..11575b820c59c5ada427fbb6b=
-015c331215c8db6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/sitronix,st7571.yaml
-> @@ -0,0 +1,73 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/sitronix,st7571.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Sitronix ST7571 Display Panels
-> +
-> +maintainers:
-> +  - Marcus Folkesson <marcus.folkesson@gmail.com>
-> +
-> +description:
-> +  This binding is for display panels using a Sitronix ST7571 controller =
-in I2C
-> +  mode.
-> +
-> +allOf:
-> +  - $ref: panel/panel-common.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    const: sitronix,st7571
-> +
-> +  reg: true
-
-You need to constrain this, so maxItems: 1.
-Otherwise, seems okay.
-
---qzsnKKKTsOCiJ2gz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ/APCgAKCRB4tDGHoIJi
-0jFaAP94txS1od9FB9n4WU+erJN/I8jN9X+7sbHfsWd5TswTLAD/b05lLr3/b6yz
-+nYXOZDzWEmbmlxEz43LbhhqbWDX2gA=
-=QZbK
------END PGP SIGNATURE-----
-
---qzsnKKKTsOCiJ2gz--
+This one is pretty fugly. But I guess it's just one place and it
+probably isn't worth refactoring this and the other helpers just for a
+debug message.
