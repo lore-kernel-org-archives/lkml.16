@@ -1,175 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70D2218C930;
-	Fri,  4 Apr 2025 07:11:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B264A18C930
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 07:12:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743750715; cv=none; b=s6is7zxmwRi3pTBLir1ufuRNGXypc4N+BuoUGyxSclPPnhKidfNIB7ge1NrGSPGe6BMAAevcGUiu0hS74rLJHccyfRBwfMCFN8SPYUNZG/eGEylVA4HN1fN/KcNd9hCo+0GEEuhXW0bPuTHyv1/ZAwvjFhJv5ec7Opk8/HLWMos=
+	t=1743750730; cv=none; b=NmLS8mtMEylZOhSDIaan5z+zL9AwhheWNH8F3l20r5F9hWgikxecoD0eCq1t39YKwFWlmGlVzLfPv1Cl8GjfyEiEsIpOA4c0j7WxRZyXIxVLXQJ5iYAXv5bfqoj0ZnX91RRKK6uYHdPk/ryVUUQGI4qh3+KDv58SD/wfeUmmRAM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743750715; c=relaxed/simple;
-	bh=FjMPHVS0p/AMhYK43KwHzjWKcIUzufN+U2ZEu6dgFIo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ntaxnayfHEWd0uU5nS0slnMZOWwmausv4Z65ldLVdGAJsBmUXpguJlQM2oaqoDCmv/LkjhguFx/G6Lg+D9PJUO6IXwGv6jNY5KgAd1eLlOZbLqQLZUAD8Y6R3yybbaNQqW49gf254uinFV26IzBsAnaaRYihbuAIjMozAVmAIPw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X3RnzofV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743750730; c=relaxed/simple;
+	bh=U23hVQDvBPnjEz1wdi+mc/GNtiHL10BsAGjmKYpM6TA=;
+	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
+	 References:In-Reply-To; b=VKCMy6VzsAqArL1GSOlcCCWZynjtZgLU7hXqjgcGLsj3kOyNiAbiTx/3wmUQXpbBDel09OX2+s50cJclyq950y5JUd8y0NrQ2uoR4lrQeKwduBl4i7ExVniyxL/YPmDv7B0Y8g8VEo7rED3OkQBIgnPGaBvXyKx9pzHRbtpCadU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=CG8dWdLM; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X3RnzofV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B56BC4CEDD;
-	Fri,  4 Apr 2025 07:11:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743750713;
-	bh=FjMPHVS0p/AMhYK43KwHzjWKcIUzufN+U2ZEu6dgFIo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=X3RnzofVsxxAWLBVr6wErJOHulxI4ZDUp2vTZMDA7vpBeB6+h3kEk7ITA7mCRTWw+
-	 CTd638aOn+tYDeC4LErz7ltwCx9DNXBK8zV54YQCo7m0NwFXe5yCvivB8pmbmWJeXY
-	 ertgeJ48wWstISX+0qUBIDffjChu7a1hGXQXHwa1BJpEjQepRL2EX+OYCd9e124S5o
-	 zwaoYZiqgN0zYpkoeu3iZrV8x+MronVLRQmKiEOsHaFZOd2WpE9tVxIkuaB7z19d28
-	 IPE7K6KWaUJ0ftOmYPGctoc39pYesJ2V+hCFDjyTGIF2kE08MIfG50aj6rJ+VAvmpR
-	 Tem7hp2tnDOKg==
-Message-ID: <45429e61-9219-42ca-b901-ff9508b9e985@kernel.org>
-Date: Fri, 4 Apr 2025 09:11:48 +0200
+	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="CG8dWdLM"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ac2a9a74d9cso307536866b.1
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 00:12:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fairphone.com; s=fair; t=1743750725; x=1744355525; darn=vger.kernel.org;
+        h=in-reply-to:references:subject:cc:to:from:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=U23hVQDvBPnjEz1wdi+mc/GNtiHL10BsAGjmKYpM6TA=;
+        b=CG8dWdLMsTxbZTBlmZmH7+lJRcBpTSOrE+yAZKODTsIQQQ7rCx/hwFYGwe86eUjrsf
+         GoKSsBFpx/os0Fam6hkuRVwJm9m8l/Tpm/KCYCEKz7ia2DyiuYBvEpNySIom/2PzrDW1
+         C6qwjki37n/PeMyxr+bR2l1hQ5fYv0ktARX/AtWMZYOoLuO78LBTRv2QqoPzgHPChDHO
+         4PM/4VX6jScS17JYmp1kjhefgcm8tjRmOO86D97FlGQbFjQx4tvrCuCXM0Gykjsw/dIe
+         719KxaKA4s41OxaU3Gn0OIm2d18PB/x6pThlrcf8bF9KMXzZj3DJcORg2Gn2fJr9BY8Y
+         PFuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743750725; x=1744355525;
+        h=in-reply-to:references:subject:cc:to:from:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=U23hVQDvBPnjEz1wdi+mc/GNtiHL10BsAGjmKYpM6TA=;
+        b=So+v3edeNOnP+aiDvIcdpteV5h2qfZ9vCW4j4jVrpeHMzqu0o7ws9AcrN/1UJxcR7+
+         H3cvS6CPP13hnNJLR5Ba9OgYHxTA8Mdegg7YaJ4BHjUDzC1QgGxsiNQnBLsDThoBn6aA
+         Qf4IyPVkLvVhqs/iUJhYQHOvSW1D5uPH2QVmaT0HUUzKy24KSIZXSEIjqePpW1mkidvP
+         uyhs5qw6h98+nLGII/cdPNkoX9O9fuodPHJ21yogEY219sNA1b1evsujNn1dgTELe7Dd
+         EYxHx5pPtsCJTuA4f3h1jqiNGojj3UrUPmxznWlCxa0gpy9nrSXlp9lwFu1cVsCsRmLn
+         1HfQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX7Vs68bbFLofWsDTSgOScYqb0baofK98XNOWWpC2sQ+rZP9GC3Xwvk5dRMghYb5FWN89VRZ9+OYQK5Eak=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwLe1QlkUk1Rj2zWu1XfkFFpyhTBFgIFW7whM/4ztktHfGXYbhk
+	mKmVl/ukY8hd33myXXz28SPkpIGGu8Wfnwp0qez1dlOHlzZk+DRXZlqlh03LCoA=
+X-Gm-Gg: ASbGnct7mspXVrgssR53Q6fPDA/wEqCD4o7lIuP1tQRIj3a0rDI4Os/U95VIvgEA+XK
+	JbjHsWU8/TNFkTQmjcdTOOpYhDjsH9YRyzQ/Ywr38M1I11ssKVb6juzu6KqIllMLHsN7rmOV82+
+	XQXc8AefdAo9Pp+8e7vZJILlidGbOohFOpJ8ZAWOdz1gj0LpQfimYfGiv8tDDjvE2/UN4QOPMxk
+	CeDehVhWOQ+cnRRsEogmT5UAzazAEPqWnWDYfwP24yptOj7HWjI713aLTWrqfc+dTqQIkBfnTRH
+	AxB8owdyseVAtOPFvgdoWlQQhr+GF7u3vZUt2+5G2KEO44HAuH6kNA6meCTZwt0j4lnb+2sWTt+
+	NdGqACsUk6GoA9A==
+X-Google-Smtp-Source: AGHT+IFN6J+KZNpV9GFYn4RUt9e/peo9TpSfWt8AYxwIXQxs3kWCtPSeLrpO1q1TafhsMbSbK20xMA==
+X-Received: by 2002:a17:907:da6:b0:ac3:4487:6a99 with SMTP id a640c23a62f3a-ac7d1c39469mr190978066b.47.1743750724902;
+        Fri, 04 Apr 2025 00:12:04 -0700 (PDT)
+Received: from localhost (144-178-202-138.static.ef-service.nl. [144.178.202.138])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7bfe5d44dsm209663066b.13.2025.04.04.00.12.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 04 Apr 2025 00:12:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 2/2] PCI: xilinx-cpm: Add support for PCIe RP PERST#
- signal
-To: "Musham, Sai Krishna" <sai.krishna.musham@amd.com>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: "bhelgaas@google.com" <bhelgaas@google.com>,
- "lpieralisi@kernel.org" <lpieralisi@kernel.org>, "kw@linux.com"
- <kw@linux.com>, "robh@kernel.org" <robh@kernel.org>,
- "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
- "conor+dt@kernel.org" <conor+dt@kernel.org>,
- "cassel@kernel.org" <cassel@kernel.org>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "Simek, Michal" <michal.simek@amd.com>,
- "Gogada, Bharat Kumar" <bharat.kumar.gogada@amd.com>,
- "Havalige, Thippeswamy" <thippeswamy.havalige@amd.com>
-References: <20250326022811.3090688-1-sai.krishna.musham@amd.com>
- <20250326022811.3090688-3-sai.krishna.musham@amd.com>
- <cjrb3idrj3x7vo4fujl6nakj3foyu64gtxwovmxd4qvovvhwqq@26bpt5b4zjao>
- <f65db82b-fedb-43d8-9d61-53e1bacda3ba@kernel.org>
- <DM4PR12MB61587CD51275A8E63A9B704ECDA92@DM4PR12MB6158.namprd12.prod.outlook.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
- FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
- QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
- gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
- /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
- iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
- VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
- 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
- xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
- eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
- AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
- MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
- Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
- MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
- OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
- GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
- 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
- YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
- 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
- BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
- JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
- 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
- YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
- Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
- ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
- vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
- oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
- lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
- t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
- uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
- 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
- 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <DM4PR12MB61587CD51275A8E63A9B704ECDA92@DM4PR12MB6158.namprd12.prod.outlook.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Date: Fri, 04 Apr 2025 09:12:04 +0200
+Message-Id: <D8XO1JU37NEV.YN595H7NEOU7@fairphone.com>
+From: "Luca Weiss" <luca.weiss@fairphone.com>
+To: "Konrad Dybcio" <konrad.dybcio@oss.qualcomm.com>, "Prasad Kumpatla"
+ <quic_pkumpatl@quicinc.com>, "Bjorn Andersson" <andersson@kernel.org>,
+ "Konrad Dybcio" <konradybcio@kernel.org>, "Rob Herring" <robh@kernel.org>,
+ "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
+ <conor+dt@kernel.org>
+Cc: <cros-qcom-dts-watchers@chromium.org>, <linux-arm-msm@vger.kernel.org>,
+ <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <kernel@oss.qualcomm.com>, "Mohammad Rafi Shaik" <quic_mohs@quicinc.com>
+Subject: Re: [PATCH v1 3/8] arm64: dts: qcom: qcs6490-rb3gen2: Modify WSA
+ and VA macro clock nodes for audioreach solution
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250317054151.6095-1-quic_pkumpatl@quicinc.com>
+ <20250317054151.6095-4-quic_pkumpatl@quicinc.com>
+ <4c27d6b9-781b-4106-8165-97c9750cf99f@oss.qualcomm.com>
+In-Reply-To: <4c27d6b9-781b-4106-8165-97c9750cf99f@oss.qualcomm.com>
 
-On 04/04/2025 09:03, Musham, Sai Krishna wrote:
-> [AMD Official Use Only - AMD Internal Distribution Only]
-> 
-> Hi Krzysztof,
-> 
-> Thank you for reviewing.
-> 
->> -----Original Message-----
->> From: Krzysztof Kozlowski <krzk@kernel.org>
->> Sent: Thursday, March 27, 2025 11:38 PM
->> To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>; Musham, Sai
->> Krishna <sai.krishna.musham@amd.com>
->> Cc: bhelgaas@google.com; lpieralisi@kernel.org; kw@linux.com; robh@kernel.org;
->> krzk+dt@kernel.org; conor+dt@kernel.org; cassel@kernel.org; linux-
->> pci@vger.kernel.org; devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
->> Simek, Michal <michal.simek@amd.com>; Gogada, Bharat Kumar
->> <bharat.kumar.gogada@amd.com>; Havalige, Thippeswamy
->> <thippeswamy.havalige@amd.com>
->> Subject: Re: [PATCH v6 2/2] PCI: xilinx-cpm: Add support for PCIe RP PERST#
->> signal
->>
->> Caution: This message originated from an External Source. Use proper caution
->> when opening attachments, clicking links, or responding.
->>
->>
->> On 27/03/2025 18:25, Manivannan Sadhasivam wrote:
->>>>  /**
->>>> @@ -551,6 +600,27 @@ static int xilinx_cpm_pcie_parse_dt(struct
->> xilinx_cpm_pcie *port,
->>>>              port->reg_base = port->cfg->win;
->>>>      }
->>>>
->>>> +    port->crx_base = devm_platform_ioremap_resource_byname(pdev,
->>>> +                                                           "cpm_crx");
->>>> +    if (IS_ERR(port->crx_base)) {
->>>> +            if (PTR_ERR(port->crx_base) == -EINVAL)
->>>> +                    port->crx_base = NULL;
->>>> +            else
->>>> +                    return PTR_ERR(port->crx_base);
->>>> +    }
->>>> +
->>>> +    if (port->variant->version == CPM5NC_HOST) {
->>>> +            port->cpm5nc_attr_base =
->>>> +                    devm_platform_ioremap_resource_byname(pdev,
->>>> +
->>>> + "cpm5nc_attr");
->>>
->>> Where is this resource defined in the binding?
->>>
->>
->> So this is v6 and still not tested.
->>
->> Where is the DTS using this binding and driver, so we can verify that AMD is not
->> sending us such totally bogus, downstream code?
->>
-> 
-> This patch is tested for mentioned CPM versions, I apologize that
+Hi Konrad,
 
-No, it wasn't. Testing would point that out.
+On Tue Apr 1, 2025 at 6:05 PM CEST, Konrad Dybcio wrote:
+> On 3/17/25 6:41 AM, Prasad Kumpatla wrote:
+>> From: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
+>>=20
+>> Modify and enable WSA, VA and lpass_tlmm clock properties.
+>> For audioreach solution mclk, npl and fsgen clocks
+>> are enabled through the q6prm clock driver.
+>>=20
+>> Signed-off-by: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
+>> Co-developed-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
+>> Signed-off-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
+>> ---
+>
+> Instead, put the inverse changes in sc7280-chrome-common.dtsi please
 
-> I missed adding the cpm5nc_attr resource in DT binding. I will not
-> repeat this again. I will add the resource in the next patch.
-> Thanks for your understanding.
+How are we going to handle other sc7280-based platforms, such as my
+QCM6490 Fairphone 5 needing to use q6afecc instead of q6prmcc which gets
+used in this patchset?
 
-Again, where is the DTS?
+One solution might be to put q6afecc into the base sc7280.dtsi file,
+then we have a sc7280-audioreach.dtsi which overwrites q6afecc with
+q6prmcc which then gets included by boards using audioreach.
 
-Best regards,
-Krzysztof
+I also don't think we can split this across sc7280 vs qcm6490 vs sm7325,
+there seems to be any combination possible on any of these SoCs -
+depending on the firmware shipped with it.
+
+So somewhat similar to the current sc7280-chrome-common.dtsi but just
+for audioreach.
+
+Regards
+Luca
+
+>
+> Konrad
+
