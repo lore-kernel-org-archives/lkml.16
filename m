@@ -1,93 +1,32 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A73BCD27E;
-	Fri,  4 Apr 2025 14:00:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54322D27E;
+	Fri,  4 Apr 2025 14:02:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743775241; cv=none; b=AnxiqdVHYDHdKfEDFBcSy2cnzxIf5eeqr/oAyRxMCYHpMNZDa8J6zApZkgXb25iHYSYEK8ZWlG4I3mNdkozOmhiVzb5TxT4lKeHlNM4GoKcMKqhPaMpNSFnqgYZR7nzcBZXfWh9NU7UpdM0I+UZ0QZYC/Sj0f7NwEwQEaa1dP/Y=
+	t=1743775374; cv=none; b=LLArTVq7O2FfChiAKBl9MJs5sTtSojZ/LjEPoaTGIJvgqkrad921rZbXkerXfWolHHEXxH5KWCbBPB/N7R0BegdsYJ2GHc7jcm/IGHzmCCVjuVQLnr6auJDkQy1HhDnP0WXvCK0R7gp+D/QMX472W50BUerIheq5710ENVJsAVk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743775241; c=relaxed/simple;
-	bh=9/SEMBOZxsAvotN2MKqo8m8V8upKHV9GlI2jswR+Q0E=;
+	s=arc-20240116; t=1743775374; c=relaxed/simple;
+	bh=1X8+Xr8hv8b+T4iI5Uc77T5lmSNbzFrp1Cixnj48R0g=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Y7WKPod6FvmRK2gQR3RcCkpr2Zhk4O/qFHkOis6sUHr2QEyIzVeF/pyMmTDZS1dvbwU376hOTMl6wFdvtNyazbiCWZbXqXWmUvh1RNrtdznL+3BdH1ZW3MtMYGqs4cdEKFxAc8W4UEuHybbR8IkfBQlekwYGQJG+cSETlzVhjQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=GhGmXufM; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="GhGmXufM"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 534Coit4007039;
-	Fri, 4 Apr 2025 14:00:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=wAawdn
-	WjwVjA4C1L7fy+HM31JjiouPF2X2FNhOABGsY=; b=GhGmXufMH0t8f5D/1QUoDe
-	ggEuNiqKYizEBy4qbM0kE07lf2JBR87rZ003uNt0JIaTPlqJJzwuILHGMpNmkl+n
-	mbKm3ycTDuIIS5UGZEY4EqQr9xLZs1aVjrsWbZsvcpsOUg8hRGYfsAQfEwIaGDm7
-	9fN3A4QgavDdTuSg7de3wgogQjeT0bbTWc6Tbma+G+8oEJpo4dtXxsA4HtwpVyz9
-	Zcv0KsxdzJvEvDdsa5OFluSLnnedU7n/4+i9EVf90K73HSSqanJRKNo3LUUoD0+y
-	iETaJp8exhIYbNCjk6XSXIO9HMvP7EHJ4bC4hvqS7VAQxrltkIKybSyXGZsPwnoA
-	==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45t356bmfa-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 04 Apr 2025 14:00:32 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 534B7vTo021240;
-	Fri, 4 Apr 2025 14:00:31 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45t2e7b82j-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 04 Apr 2025 14:00:31 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 534E0RtN25690792
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 4 Apr 2025 14:00:27 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5E4CD20040;
-	Fri,  4 Apr 2025 14:00:27 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C91892004B;
-	Fri,  4 Apr 2025 14:00:26 +0000 (GMT)
-Received: from li-ce58cfcc-320b-11b2-a85c-85e19b5285e0 (unknown [9.152.224.212])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri,  4 Apr 2025 14:00:26 +0000 (GMT)
-Date: Fri, 4 Apr 2025 16:00:25 +0200
-From: Halil Pasic <pasic@linux.ibm.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        virtualization@lists.linux.dev, kvm@vger.kernel.org,
-        Chandra Merla
- <cmerla@redhat.com>, Stable@vger.kernel.org,
-        Cornelia Huck
- <cohuck@redhat.com>, Thomas Huth <thuth@redhat.com>,
-        Eric Farman
- <farman@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik
- <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian
- Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle
- <svens@linux.ibm.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Wei Wang
- <wei.w.wang@intel.com>, Halil Pasic <pasic@linux.ibm.com>
-Subject: Re: [PATCH v1] s390/virtio_ccw: don't allocate/assign airqs for
- non-existing queues
-Message-ID: <20250404160025.3ab56f60.pasic@linux.ibm.com>
-In-Reply-To: <d6f5f854-1294-4afa-b02a-657713435435@redhat.com>
-References: <20250402203621.940090-1-david@redhat.com>
-	<20250403161836.7fe9fea5.pasic@linux.ibm.com>
-	<e2936e2f-022c-44ee-bb04-f07045ee2114@redhat.com>
-	<20250404063619.0fa60a41.pasic@linux.ibm.com>
-	<4a33daa3-7415-411e-a491-07635e3cfdc4@redhat.com>
-	<d54fbf56-b462-4eea-a86e-3a0defb6298b@redhat.com>
-	<20250404153620.04d2df05.pasic@linux.ibm.com>
-	<d6f5f854-1294-4afa-b02a-657713435435@redhat.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+	 MIME-Version:Content-Type; b=bhRVYtG6PW9c2QxWb8TP7zAdhtCdu5NlQFFZ9nhppTIo9P5VC4akgeFmCMtTDj9Aq0nVeuGKyWaqHVewQHadeNCxMdh7cjYnIYdIi3uQ3t5OcHVuXXiKuICH4Iv0xlA4cO4yDGz24lRyKQvKvt7HAHKMiSW43dQ5n1q7iFFwgbY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 222AFC4CEDD;
+	Fri,  4 Apr 2025 14:02:53 +0000 (UTC)
+Date: Fri, 4 Apr 2025 10:04:00 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Tom Zanussi <zanussi@kernel.org>
+Subject: Re: [PATCH] tracing: Move histogram trigger variables from stack to
+ per CPU structure
+Message-ID: <20250404100400.22195057@gandalf.local.home>
+In-Reply-To: <20250404095841.2cac7a47@gandalf.local.home>
+References: <20250403204251.0164a4cf@gandalf.local.home>
+	<20250404095841.2cac7a47@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -95,60 +34,24 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: JnDzwSSKtyNvcNoZEbvl6f2JDRGMxQ4D
-X-Proofpoint-ORIG-GUID: JnDzwSSKtyNvcNoZEbvl6f2JDRGMxQ4D
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-04_06,2025-04-03_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- malwarescore=0 priorityscore=1501 adultscore=0 mlxscore=0 spamscore=0
- clxscore=1015 suspectscore=0 lowpriorityscore=0 impostorscore=0
- phishscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2504040097
+Content-Transfer-Encoding: 7bit
 
-On Fri, 4 Apr 2025 15:48:49 +0200
-David Hildenbrand <david@redhat.com> wrote:
+On Fri, 4 Apr 2025 09:58:41 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> > Sounds good to me! But I'm still a little confused by the "holes".
-> > What confuses me is that i can think of at least 2 distinct types of
-> > "holes": 1) Holes that can be filled later. The queue conceptually
-> > exists, but there is no need to back it with any resources for now
-> > because it is dormant (it can be seen a hole in comparison to queues
-> > that need to materialize -- vring, notifiers, ...)
-> > 2) Holes that can not be filled without resetting the device: i.e. if
-> >     certain features are not negotiated, then a queue X does not
-> > exist, but subsequent queues retain their index.  
+> Hmm, this is incorrect. hist_pads can be NULL or allocated, so the check
+> should be:
 > 
-> I think it is not about "negotiated", that might be the wrong
-> terminology.
+> 	if (!hist_pads)
+> 		goto fail;
+> 	hist_pad = per_cpu_ptr(hist_pads, smp_processor_id());
 > 
-> E.g., in QEMU virtio_balloon_device_realize() we define the virtqueues 
-> (virtio_add_queue()) if virtio_has_feature(s->host_features).
-> 
-> That is, it's independent of a feature negotiation (IIUC), it's static 
-> for the device --  "host_features"
-> 
-> 
-> Is that really "negotiated" or is it "the device offers the feature X"
-> ?
+> Will send v2.
 
-It is offered. And this is precisely why I'm so keen on having a precise
-wording here.
+In fact, if hist_pads fails to allocate, the triggers should not be enabled
+(it would fail to enable). So I'll just add to the start of the function:
 
-Usually for compatibility one needs negotiated. Because the feature
-negotiation is mostly about compatibility. I.e. the driver should be
-able to say, hey I don't know about that feature, and get compatible
-behavior. If for example VIRTIO_BALLOON_F_FREE_PAGE_HINT and
-VIRTIO_BALLOON_F_PAGE_REPORTING are both offered but only
-VIRTIO_BALLOON_F_PAGE_REPORTING is negotiated. That would make reporting_vq
-jump to +1 compared to the case where VIRTIO_BALLOON_F_FREE_PAGE_HINT is
-not offered. Which is IMHO no good, because for the features that the
-driver is going to reject in most of the cases it should not matter if
-it was offered or not.
+	if (WARN_ON_ONCE(!hist_pads))
+		return NULL;
 
-@MST: Please correct me if I'm wrong!
-
-Regards,
-Halil
+-- Steve
