@@ -1,155 +1,238 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CBD61494A6
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 18:26:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99CEB20A5EE
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 18:26:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743791186; cv=none; b=XmehPiW1/Xyj7qpZqxyMzGlGRvr41v31yALxJ2IRc/NbTSYacjRhS7xO6YX5+XKibIbE3l42jXNGWsRnSnQR3m7YbhfpY+2K4488vE1tJBPEKjvQkuWjvW1aNmaKmGT2LfL7u4xnX+56lrY3yfbyhhy4Qn8bJ2fT5gGArqBChMg=
+	t=1743791202; cv=none; b=K9bIe7YNlTzPM00/0juZRSzPozoOH+zZyYiq0Nybq8O4UEns+ZT6G6EeOngILwR0a7L4mZS3sSzWDxelyWmiiUMwFLVW6hcqtprv1+xg+ajkdkPDZvaKYGq/U5p0Bj6kKMM0UaB26XjCdz0V6IIwf4l53CgJwDg4rscADFT2sCk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743791186; c=relaxed/simple;
-	bh=ZOTccLSgfI9cTOLRpsnzj9bwhsvfPOgW3jKDNeC0EZc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CnqpiyrND9hvyNDTGiSoZNftM7DDsa2reMXZJaA2TZQxv8iHU32IDAi2HrOLtqhr+pLAIHRXpTjKyK64n5dYd+yIyj1tHtCZDcTITc6QPECoVwzonBch+RWMTM1rHtnUtzvcvWdGU5IWeGmgDjHoRmlFURmuhu55fmQ1z8NrdPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=KHnCteTS; arc=none smtp.client-ip=209.85.221.41
+	s=arc-20240116; t=1743791202; c=relaxed/simple;
+	bh=EYv98k/kVrWQigraqqHU5Ii71ogDM06xt3AD16sSeaA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WYxEE+6II+aAl/bfzXTbvMgp3P7b0eu19fBZDMcXaGIfOvqN6S1KQO41mVzo2jYI2tZCJ9SYs6H9EZWIBPx4+G9fh0+wegsieeRvfI/MKEDxRZZdu34WTkCv6Gtex5KHo+GV6lcncUy3HcJns0YRGOWn+hmNpGGIDxYi7Y8yHFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=avzZ3A20; arc=none smtp.client-ip=209.85.218.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="KHnCteTS"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-39c31e4c3e5so1341995f8f.0
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 11:26:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="avzZ3A20"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ab78e6edb99so339528566b.2
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 11:26:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1743791183; x=1744395983; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=TLhJnFT3Gwgfc4DYQiW9AZKUF72F44NtVJtW3JeRxAo=;
-        b=KHnCteTSyAw1pbj3+oxle6j5KlpYwwHRbQ0kr4eNBN/n8jasO9nCtGCQLG1VeViHr/
-         ELJGHfW7G+bZY+8nonSO9a1hQZVZuesptbz09xQnBYUSfmGRSBEySoKD1IHWxV8slmLQ
-         iU0Ow83iZFBq/TmVWZEUvrgMVxAJ3k7oZYNOKVDwORAtjhN4/eMET3PWbL/NSf5MPc/B
-         rAb6p7j6YrarUERYXlbnffT7TfSQb0As4FJDWW98+cdoxTPEFNUPENWRviM/eLKR0Pja
-         YsLLuVgGi/d2/Wl8NfefrK0EHwQlQ0f9mtmCfrNZJerdtYbFTOISpR/lNm2NvBwsiCmg
-         yxXw==
+        d=suse.com; s=google; t=1743791199; x=1744395999; darn=vger.kernel.org;
+        h=in-reply-to:autocrypt:from:content-language:references:cc:to
+         :subject:user-agent:mime-version:date:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=EYv98k/kVrWQigraqqHU5Ii71ogDM06xt3AD16sSeaA=;
+        b=avzZ3A20LG1M8ikdciZJ9wUWIPbiRerhCD9kABQ+xuVCWiI5wlpsOHehrKlP97aDyg
+         VG8xQwrDr81LRnqsCKoSVtMIzn01AtKN28ojEqsXW2HiYpNeItaGH/syrWsSASSmNkcp
+         sSO8/i6mB/r0pZXg5SQ+knHEzL0NA6HExqP6k8oLNn1nVg2r9BoiCCRqFKSzPxBaFmsT
+         too4LYfkrPug+ggvvyCifUTaiG8RpGBSD4fOrs87xl82XXecktk2hwI/qqfq5uvLdiww
+         iIQsQwOniLIvw21JTIGlcLkKN/LIhzmzwzY0oe18/CmR6QpXgJhgYB1/mpN4WoE7Das7
+         PigA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743791183; x=1744395983;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TLhJnFT3Gwgfc4DYQiW9AZKUF72F44NtVJtW3JeRxAo=;
-        b=sMNl1/HzyWjgtwJfjUJdQP9CkUn/kxcL36a0G24M+fckO9oGpzE20ZQg8kxyvY+EJe
-         JOoef4m1g0fM126MJkCD8Aky28S4tS5lHGZ8nQcliZUv/mD3kzbxKaQY/zRVFJ1+Q6ag
-         EDkX2Hum51VzcDf/Lx89CtIUvpyBm+V/C3cQQVHxIwEn630tytCf9CwL4YgjypGMfucp
-         zsiE9j+BzolJmP2whtu/2oAcu5OXLeqlc3twcHj4ROkHGMgkbOkHKbownzuRtYyEhqOk
-         Yl3rkGFCxqgtfZfldgBmKXvs+TXPhG48DU/S8/sRrMBBkFWtL/FvTtJo/5/Unin/Rx3y
-         anJw==
-X-Forwarded-Encrypted: i=1; AJvYcCU7AR8N9QhVkYQ6E7zXzCGTE6YkkFW4wFEMppqm8LHb2eZd5p9WzMCkotbmh7qYeCbpVzqzScma88ePrU4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzmJwaLeURjm1fuZpHNUF4Rvoa4B3d4cq44OqYhg7lBjj22bPKx
-	y471m4qaN1FEklhz/g/8MwzpG1l0bSHAT40C5Cz5ycbeUHE92GdVwynbW9+J/HY=
-X-Gm-Gg: ASbGnctIOSnDyuiVdelvmJQo7coGRvTMZAZnKjT7KtOLSLEYniTVuy/x9z+u+Sn88J8
-	Fb13/u4R9igRPYcpsx+Ghk/znPWY75+TaDfnELTwDvgA+R2SMUjui7ots2uCt5vev+D6VtLF8qu
-	OcjapD/M7T/i0mlZ9slAvnNeKsR/sfFdT7p7Wf6h46Yw6GobyRMO3nNnFw00jWqDCi1YiOB97SD
-	VtB/uHr0Py0YqJOBmMO5lUOtbyYf/FftAJaz2Mkxx2q9OU4rV1FgVMFv4dEHFscz3oJ4OiZv7Z+
-	aBrGR/Kky9kOx5Aa5tpVFdmVDV/1z8uT0reIjO0F9yJXuec=
-X-Google-Smtp-Source: AGHT+IFVVzcvCxUkq7QqYrnEsRDzq8Ic4YqHD2DrlGgpG3HTOI3DOpixIDGv0syuaug71lzZJsL3oA==
-X-Received: by 2002:a05:6000:2406:b0:38f:3a89:fdb5 with SMTP id ffacd0b85a97d-39cb3575d97mr3948931f8f.11.1743791182544;
-        Fri, 04 Apr 2025 11:26:22 -0700 (PDT)
-Received: from blackdock.suse.cz ([193.86.92.181])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c3020d975sm5041239f8f.75.2025.04.04.11.26.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Apr 2025 11:26:22 -0700 (PDT)
-Date: Fri, 4 Apr 2025 20:26:20 +0200
-From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
-To: Waiman Long <longman@redhat.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, 
-	Roman Gushchin <roman.gushchin@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Muchun Song <muchun.song@linux.dev>, Andrew Morton <akpm@linux-foundation.org>, 
-	Tejun Heo <tj@kernel.org>, Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org, 
-	cgroups@vger.kernel.org, linux-mm@kvack.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] memcg: Don't generate low/min events if either
- low/min or elow/emin is 0
-Message-ID: <aopkqb4bd6sag5mgvnvmoojlsz47lxrgxav7lsywkzeqtb5pco@ptxoqnloplzi>
-References: <20250404012435.656045-1-longman@redhat.com>
+        d=1e100.net; s=20230601; t=1743791199; x=1744395999;
+        h=in-reply-to:autocrypt:from:content-language:references:cc:to
+         :subject:user-agent:mime-version:date:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=EYv98k/kVrWQigraqqHU5Ii71ogDM06xt3AD16sSeaA=;
+        b=Mdl+ZU5vQzxyCpEmVxxzNTDksCYCm1NbjfPhul7IojkEi8JAph62dcrpd7R8iwadq8
+         4k33emd/Jl+wk6L/CDq+utH1r7RuZd5xc1eV9YljQwEwZvne1Sj25vn4+Zpi8ccDJtDo
+         OKUEkUPA++FrZ3LstA6qS6Tj6wRUPBAFngyLXNSVWG+zH2Gv9b7drjE3HSxCXD/LtLhC
+         63piC3ITQPQmVZ8ZqQtH6Ki0w4iyrLmBNcCeJzuzdFaZ7z6dIhTHY+ZgsFDytFj1BmOr
+         T6UqyctwDgA5KTgGCPqMfefwQP+mFxwWCxvTzQActjL+9DmR0zclfDIpuwoeHL7j3vUY
+         eh5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCX6PN9JZJRXLQ/jBu7AP32jxybUCb4GFQnw7WhVbmxPdHge0DNWkDWztIvOLCjmFkckxri5npHh0iKUGdc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxjYVEz47JL5fBCnt+y7CPAdsqmxBPZdIZDIWcJOaH1JbI+0+dT
+	xOxi+FL0Q/DQIG0sNI+vQ8NSRJA90dkClQDbTV1BqBcIBYGgMjSLE6+2s6GpXFw=
+X-Gm-Gg: ASbGncvVbPTK6QF3qDGtD2PhmHmJ7xqegyTJO0otyOxmC7Y8TAf89027mTDIJX1Fxih
+	Dk5b4zSbT/atxx27FLIObKzHvyKvAJ5ODjS2NAXo1k2mWOJLTWDLKfuJufFFc58VKQVYXPqt3w1
+	lMLy4yhr4dzS11w0xBwCKHVGL2TJ09qex42g64aWKHMlyaTK6s53TS6ZfpQ/Fwd8qevNiZciaHW
+	93fWfRbKvOG6BNNTRg9TNE/Jz7yccmcKZjbUSQo2x+2ehwJASBomxmSkv2WD1mLJZITZvODi7sy
+	5k1TYuCjPBB00T+YDahLVLn4IU+YY1B9rIJ+ebWQiSGJrtbegbHawpUVn6NId8R+dR+qY6TfQV+
+	6ypcLqPauE7f23/5p3qdZGGfxVkZj9xBAX8gfCVrBLZShBEiNob95kJK/KTL/Lh46Uz88og==
+X-Google-Smtp-Source: AGHT+IEtRyOMJ7rv9Yu9CmzIEdrjS+IkGOdcluo1mbQaap6BtyC/vpBedaMyW0qLTYyMqsUGAtHvSw==
+X-Received: by 2002:a17:907:d8c:b0:ac7:b366:c331 with SMTP id a640c23a62f3a-ac7d6e951e8mr318304766b.53.1743791198824;
+        Fri, 04 Apr 2025 11:26:38 -0700 (PDT)
+Received: from ?IPV6:2003:e5:873d:1a00:8e99:ce06:aa4a:2e7b? (p200300e5873d1a008e99ce06aa4a2e7b.dip0.t-ipconnect.de. [2003:e5:873d:1a00:8e99:ce06:aa4a:2e7b])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7c01c21d0sm300949066b.175.2025.04.04.11.26.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 04 Apr 2025 11:26:38 -0700 (PDT)
+Message-ID: <42a55a38-ad95-465b-b557-95c99e12377f@suse.com>
+Date: Fri, 4 Apr 2025 20:26:37 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="3ezm3guyzo3fa3j5"
-Content-Disposition: inline
-In-Reply-To: <20250404012435.656045-1-longman@redhat.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] x86/xen: fix balloon target initialization for PVH
+ dom0
+To: Dave Hansen <dave.hansen@intel.com>,
+ Roger Pau Monne <roger.pau@citrix.com>, xen-devel@lists.xenproject.org,
+ linux-kernel@vger.kernel.org
+Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+ Stefano Stabellini <sstabellini@kernel.org>,
+ Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
+References: <20250404133459.16125-1-roger.pau@citrix.com>
+ <b0bb167b-fc48-4434-99a1-9b0d2f3e7d38@intel.com>
+Content-Language: en-US
+From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Autocrypt: addr=jgross@suse.com; keydata=
+ xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOB
+ ycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJve
+ dYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJ
+ NwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvx
+ XP3FAp2pkW0xqG7/377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEB
+ AAHNH0p1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT7CwHkEEwECACMFAlOMcK8CGwMH
+ CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRCw3p3WKL8TL8eZB/9G0juS/kDY9LhEXseh
+ mE9U+iA1VsLhgDqVbsOtZ/S14LRFHczNd/Lqkn7souCSoyWsBs3/wO+OjPvxf7m+Ef+sMtr0
+ G5lCWEWa9wa0IXx5HRPW/ScL+e4AVUbL7rurYMfwCzco+7TfjhMEOkC+va5gzi1KrErgNRHH
+ kg3PhlnRY0Udyqx++UYkAsN4TQuEhNN32MvN0Np3WlBJOgKcuXpIElmMM5f1BBzJSKBkW0Jc
+ Wy3h2Wy912vHKpPV/Xv7ZwVJ27v7KcuZcErtptDevAljxJtE7aJG6WiBzm+v9EswyWxwMCIO
+ RoVBYuiocc51872tRGywc03xaQydB+9R7BHPzsBNBFOMcBYBCADLMfoA44MwGOB9YT1V4KCy
+ vAfd7E0BTfaAurbG+Olacciz3yd09QOmejFZC6AnoykydyvTFLAWYcSCdISMr88COmmCbJzn
+ sHAogjexXiif6ANUUlHpjxlHCCcELmZUzomNDnEOTxZFeWMTFF9Rf2k2F0Tl4E5kmsNGgtSa
+ aMO0rNZoOEiD/7UfPP3dfh8JCQ1VtUUsQtT1sxos8Eb/HmriJhnaTZ7Hp3jtgTVkV0ybpgFg
+ w6WMaRkrBh17mV0z2ajjmabB7SJxcouSkR0hcpNl4oM74d2/VqoW4BxxxOD1FcNCObCELfIS
+ auZx+XT6s+CE7Qi/c44ibBMR7hyjdzWbABEBAAHCwF8EGAECAAkFAlOMcBYCGwwACgkQsN6d
+ 1ii/Ey9D+Af/WFr3q+bg/8v5tCknCtn92d5lyYTBNt7xgWzDZX8G6/pngzKyWfedArllp0Pn
+ fgIXtMNV+3t8Li1Tg843EXkP7+2+CQ98MB8XvvPLYAfW8nNDV85TyVgWlldNcgdv7nn1Sq8g
+ HwB2BHdIAkYce3hEoDQXt/mKlgEGsLpzJcnLKimtPXQQy9TxUaLBe9PInPd+Ohix0XOlY+Uk
+ QFEx50Ki3rSDl2Zt2tnkNYKUCvTJq7jvOlaPd6d/W0tZqpyy7KVay+K4aMobDsodB3dvEAs6
+ ScCnh03dDAFgIq5nsB11j3KPKdVoPlfucX2c7kGNH+LUMbzqV6beIENfNexkOfxHfw==
+In-Reply-To: <b0bb167b-fc48-4434-99a1-9b0d2f3e7d38@intel.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------az9mjnjMNxtWEQ6g385kjHmp"
 
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------az9mjnjMNxtWEQ6g385kjHmp
+Content-Type: multipart/mixed; boundary="------------ovw2iLJ40lMBphh3VLp0WxkB";
+ protected-headers="v1"
+From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+To: Dave Hansen <dave.hansen@intel.com>,
+ Roger Pau Monne <roger.pau@citrix.com>, xen-devel@lists.xenproject.org,
+ linux-kernel@vger.kernel.org
+Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+ Stefano Stabellini <sstabellini@kernel.org>,
+ Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
+Message-ID: <42a55a38-ad95-465b-b557-95c99e12377f@suse.com>
+Subject: Re: [PATCH v2] x86/xen: fix balloon target initialization for PVH
+ dom0
+References: <20250404133459.16125-1-roger.pau@citrix.com>
+ <b0bb167b-fc48-4434-99a1-9b0d2f3e7d38@intel.com>
+In-Reply-To: <b0bb167b-fc48-4434-99a1-9b0d2f3e7d38@intel.com>
 
---3ezm3guyzo3fa3j5
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
+--------------ovw2iLJ40lMBphh3VLp0WxkB
+Content-Type: multipart/mixed; boundary="------------bvchYM7fVNyfKc4uShVBrciV"
+
+--------------bvchYM7fVNyfKc4uShVBrciV
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
+
+T24gMDQuMDQuMjUgMjA6MjAsIERhdmUgSGFuc2VuIHdyb3RlOg0KPiBPbiA0LzQvMjUgMDY6
+MzQsIFJvZ2VyIFBhdSBNb25uZSB3cm90ZToNCj4+IE11Y2ggbGlrZSBhNmFhNGViOTk0ZWUs
+IHRoZSBjb2RlIGluIHRoaXMgY2hhbmdlc2V0IHNob3VsZCBoYXZlIGJlZW4gcGFydCBvZg0K
+Pj4gMzg2MjBmYzRlODkzLg0KPj4NCj4+IEZpeGVzOiBhNmFhNGViOTk0ZWUgKCd4ZW4veDg2
+OiBhZGQgZXh0cmEgcGFnZXMgdG8gdW5wb3B1bGF0ZWQtYWxsb2MgaWYgYXZhaWxhYmxlJykN
+Cj4+IFNpZ25lZC1vZmYtYnk6IFJvZ2VyIFBhdSBNb25uw6kgPHJvZ2VyLnBhdUBjaXRyaXgu
+Y29tPg0KPiANCj4gSSBkb24ndCBzZWUgYSBjYzpzdGFibGVAIG9uIHRoZXJlLiBXYXMgdGhl
+cmUgYSByZWFzb24gZm9yIHRoYXQgb3IgZGlkDQo+IHlvdSBqdXN0IGxlYXZlIGl0IG9mZiBi
+eSBhY2NpZGVudD8NCg0KVGhhbmtzIGZvciBub3RpY2luZy4gSSdsbCBhZGQgaXQgd2hlbiBj
+b21taXR0aW5nLg0KDQoNCkp1ZXJnZW4NCg==
+--------------bvchYM7fVNyfKc4uShVBrciV
+Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
+Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
+Content-Description: OpenPGP public key
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2 1/2] memcg: Don't generate low/min events if either
- low/min or elow/emin is 0
-MIME-Version: 1.0
 
-Hello Waiman.
+-----BEGIN PGP PUBLIC KEY BLOCK-----
 
-On Thu, Apr 03, 2025 at 09:24:34PM -0400, Waiman Long <longman@redhat.com> =
-wrote:
-> 1) memory.low is set to 0, but low events can still be triggered and
->    so the cgroup may have a non-zero low event count. I doubt users are
->    looking for that as they didn't set memory.low at all.
+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
+kt+z4drzFUyEjLM1vVvIMjkUoJs=3D
+=3DeeAB
+-----END PGP PUBLIC KEY BLOCK-----
 
-I agree with this reasoning, been there [1] but fix ain't easy (also
-consensus of whether such an event should count or not and whether
-reclaim should happen or not). (See also [2] where I had tried other
-approaches that _didn't_ work.)
+--------------bvchYM7fVNyfKc4uShVBrciV--
 
-> 2) memory.low is set to a non-zero value but the cgroup has no task in
->    it so that it has an effective low value of 0.=20
+--------------ovw2iLJ40lMBphh3VLp0WxkB--
 
-There maybe page cache remaining in the cgroup even with not present
-task inside it.
-
->    Again it may have a non-zero low event count if memory reclaim
->    happens. This is probably not a result expected by the users and it
->    is really doubtful that users will check an empty cgroup with no
->    task in it and expecting some non-zero event counts.
-
-Well, if memory.current > 0, some reclaim events can be justified and
-thus expected (e.g. by me).
-
-> The simple and naive fix of changing the operator to ">", however,
-> changes the memory reclaim behavior which can lead to other failures
-> as low events are needed to facilitate memory reclaim.  So we can't do
-> that without some relatively riskier changes in memory reclaim.
->=20
-> Another simpler alternative is to avoid reporting below_low failure
-> if either memory.low or its effective equivalent is 0 which is done
-> by this patch specifically for the two failed use cases above.
-
-Admittedly, I haven't seen any complaints from real world about these
-events except for this test (which was ported from selftests to LTP
-too).
-
-> With this patch applied, the test_memcg_low sub-test finishes
-> successfully without failure in most cases.
-
-I'd say the simplest solution to make the test pass without figuring out
-what semantics of low events should be correct is not to check the
-memory.events:low at all with memory_recursiveprot (this is what was
-done in the cloned LTP test).
-
-Michal
-
-[1] https://lore.kernel.org/all/20220322182248.29121-1-mkoutny@suse.com/
-[2] https://bugzilla.suse.com/show_bug.cgi?id=3D1196298
-
---3ezm3guyzo3fa3j5
-Content-Type: application/pgp-signature; name="signature.asc"
+--------------az9mjnjMNxtWEQ6g385kjHmp
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYKAB0WIQTd6mfF2PbEZnpdoAkt3Wney77BSQUCZ/AkSQAKCRAt3Wney77B
-SXLwAQCLHjkGHqdonWWfAZmkRMLnnd/9GLDwQHs1pDPkdB+LygEAv1ILh4buquz3
-RL8ZpTYF0zHvtsUdp9Ow556iY7pSSw8=
-=fCfQ
+wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmfwJF0FAwAAAAAACgkQsN6d1ii/Ey//
+8wf+L4d6Phkv8b/AXT430FhKk7Ald+mvUh9mivKwcF9bE2VfUXf8iH1jgT0LMK+cZDcOlt/aPcl8
+ZdccaAVpwsg6mr5hEPcuOM0QpPFaWKSGnsGaOgvLUVhTduSlM81EWvj2VeZ8662l2EHs+6704uAE
+vtQRG6MsPpGrt8yTA9+HUuxD5w8Y4RVMmqJyIDH/Y9pPi/mUQt+EXUOQ3Rmo/AWbAKSg/GyFfiHa
+ba8cb7spE3S2m48WkpW1VCDke44RuebRuajl+y5HxxsmI58UanLAd3xB4Q4TCwSq2bxR8RDCkHNg
+RM59df0vzUN7HRH1zQvwnybdal1y3TNyIidjJyg16g==
+=x/+V
 -----END PGP SIGNATURE-----
 
---3ezm3guyzo3fa3j5--
+--------------az9mjnjMNxtWEQ6g385kjHmp--
