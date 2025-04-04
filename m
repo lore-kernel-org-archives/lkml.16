@@ -1,101 +1,146 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58A05199E94;
-	Fri,  4 Apr 2025 10:21:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C14F1199E94
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 10:22:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743762099; cv=none; b=n0OHwJsPoaL8mKnVY6Vi1p9TSytsJSIwJiV8WZu8C04bB/rFmhGYMbJfyO+2NAflhe4HBM0Yu+sGAk/0nnvUItcvMp9XxOYxoUSmnBSZjJp/juDVAuBzP8HpgkOkfHrB8pyR5q+1DZZuLZbBhKwMaBTCYZqIMYdUMnHHl6OL8XE=
+	t=1743762177; cv=none; b=Z0brUIm0MSpX5CgqvclazjhYmIwDm7vX1N9mV46JaQEq5zn8TkwfmD9MYMiXw7RiXvwCEPRmh50sacKM5LEcO8gPDnBv/c/bg4OWGuwD5DsPvErQbWLSBkYOhC1YT50bOnA1veuJe/KECaLXyQ7gugWZC5p9okwbDyBNgn4TvBs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743762099; c=relaxed/simple;
-	bh=+R5alz/hiVkEdro8zZ5Zd00elGcA9uY7RSHDpwPPN2A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rVSWwG6gIR0fqOfIIpq25MedGz9oRDEaUVHTbfG5nVvzR0uCi3rC/vXVwEJ/rM7AbklI6Vc8PsF+LK4QUV1btDe3+3qQrDaTp/tc/LyaOSlp9W1WMDpsRweCQuxCg4dlrbx6xdrr1YcEwe6fMTFkVdyXWViMkVN5KzbfozsLy8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kC2y0deB; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1743762177; c=relaxed/simple;
+	bh=JtreWaK1HxThyWsdFhRvKmWImSDOAWofMIBdnx78l+o=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=rPi8sqJHd8mAUlLW6L1omn1IK1TEB0WF2RuywQV+4eY1KSIgGoKYV09zVVv7XM4bj2vT3n4ypFYoKDszXpwEMobhQBhU2+j2c5xoYYlVHex1J0bpRYD5zTqDB1Y/iAqDzwMSe7Ng+8P74IK4WyW8+71rQuU4oD8GZurgFscZWMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EGCXKKJC; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kC2y0deB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743762097; x=1775298097;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=+R5alz/hiVkEdro8zZ5Zd00elGcA9uY7RSHDpwPPN2A=;
-  b=kC2y0deBNLZfrAP7AEiaC9q/q036OzfsdULkhsmpoqYxICheAqvORydY
-   e1sn2Du8YTVNJJk7yxhqTqF+c0z7irMjuX+Ke/OXk4YH52UFJZ63C2vdn
-   4hrUUFIxFURCbWfEMCPIQZuNbm4mIZqPPus3yoRTMcS0mDo83skRnWm4F
-   jjSY79uPdzPKYs5u+lUOVSVlEvhCwXCrC6kmoYHodYq8ulLy3xiQ0cmrL
-   N3Krn3eEjjjYpvnV5aWKbtYKiv6YWcotBFE3z/phhNDvYdwds9FNienRf
-   VaAOkMn1gwqCq2wQ7WquJ0YLCwm2V2vdB8v3X6RhgYrrB2kDiT3oeDdjI
-   Q==;
-X-CSE-ConnectionGUID: /ujJkdsUQCidjNNW07S3ig==
-X-CSE-MsgGUID: NM15iKroQKSrosPfTdigOg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11393"; a="44446549"
-X-IronPort-AV: E=Sophos;i="6.15,187,1739865600"; 
-   d="scan'208";a="44446549"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 03:21:36 -0700
-X-CSE-ConnectionGUID: pdWTszeuQECRgaqdOhRD0Q==
-X-CSE-MsgGUID: XAJ+m7HyQBqR/TLj8Y+JXw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,187,1739865600"; 
-   d="scan'208";a="128186092"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 03:21:34 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1u0eB0-0000000965l-1tSV;
-	Fri, 04 Apr 2025 13:21:30 +0300
-Date: Fri, 4 Apr 2025 13:21:30 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: yunhui cui <cuiyunhui@bytedance.com>
-Cc: gregkh@linuxfoundation.org, jirislaby@kernel.org,
-	john.ogness@linutronix.de, pmladek@suse.com, arnd@arndb.de,
-	namcao@linutronix.de, benjamin.larsson@genexis.eu,
-	schnelle@linux.ibm.com, linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org
-Subject: Re: [External] Re: [PATCH] serial: 8250: fix panic due to PSLVERR
-Message-ID: <Z--yqlI0cRnixWpy@smile.fi.intel.com>
-References: <20250403090336.16643-1-cuiyunhui@bytedance.com>
- <Z-5yr2mFaDt8kxC-@smile.fi.intel.com>
- <Z-51629pjyiZUIVy@smile.fi.intel.com>
- <CAEEQ3w=xVNuSN-4tHx6ir-i+huN8m1JXgJz672=WHAVBqcP+TA@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EGCXKKJC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743762173;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=DNVoYJhFq7cXruMh9BbCFB9GyK713s6YFzIH0vw/1ok=;
+	b=EGCXKKJCmFT+puB0IXuwKa61ttfk9u2a+ZCbR0H4vTKWxwlrdOHqBv6xYZ5Z2erUrgGvsE
+	FFhVyTNcFDhTKDJkIuJ4Lp2QO/Me6NHVCKqg7o9jw4ic4Ty2ptA6k+gUtXYj88ei2k1wWS
+	CACs89epl6S/7L398Eb1bpho8eLSU9s=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-153-rG8YWHmhOSa1cDqFJcG8fQ-1; Fri, 04 Apr 2025 06:22:52 -0400
+X-MC-Unique: rG8YWHmhOSa1cDqFJcG8fQ-1
+X-Mimecast-MFC-AGG-ID: rG8YWHmhOSa1cDqFJcG8fQ_1743762172
+Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-5e5c1bb6a23so3090768a12.0
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 03:22:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743762171; x=1744366971;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :references:to:from:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DNVoYJhFq7cXruMh9BbCFB9GyK713s6YFzIH0vw/1ok=;
+        b=OM/SJP4RaNXwi2VrwSE/5QQZImyYWOkcbjuWQBMg9RAyY2mUepfjs4ZLf5nbDyMwzj
+         SPBsa2uk2izAi0vQHyR5EUjf1YyUlp3fz3K0hotHvGFbtLQCSQ7yuC0hcpPzDvrMGFqU
+         cWkb3w5SGujaWfcosaJ95XVm8diftcMNirKyV2zmLQcdh+BgPNYNPnhLgfNM+52J95W9
+         bLSNtrEOpMbz9NDxyLsZ2FFmVMerIFSc8bM5WSmiS2y6BouPuyKoQf80f9E7DvtqH4O+
+         MnyTKmF9ukvi4msi2v845MxKlzd1m/NYlOeGoAqZamFdLvvDCGag+Zhp40w5A/Xwuu3N
+         UHqQ==
+X-Gm-Message-State: AOJu0YySW76xDRrJ6oexD6B+9i0fj/+0y/dL0OBPuhMSxFhSj3jp03Iv
+	1VedI/CVXAnwJfmHiH1IhrAgnEdUWMBxALJeaA2bJfOM6S/WzUhgOsC83fHikafAxHNLpS79sZY
+	xLkbh6pv6DBmdX+IacqvriHQz/VHnoxYbfJvz6exxr9yocQAh64M1nB9dGH64tUobatgYmcyo7d
+	00D5dNHCqx92kjsZEh1XBCSrl845bH4akF5n0Fneu+0H95rg==
+X-Gm-Gg: ASbGnctxLs82B9pOxjdrhlt2VP1/6MLWqOnT3UZ0RDIH6zPlrDadAlHplpNS3Skr7D2
+	0bQY9ISu/XRl2JrUVpEWJG+fE51AtWpSAdQWVlT01pCqSoxntxl3CqM0DPPOIi+odJGnjppqTrL
+	k1pu1miiMukZTun3XrbA2gX3AnFBzPwbTs0fgoQuWho3cUXI4ElKv5y582tege64QZZcl7Rfxqq
+	SRnJMoWOFwcFe446cFCOXUWv4bVjhimSMuP+vR7oU/78V//oou5khusmGOlKf9hDmNC7QuB9hQZ
+	KpAEv4Q/2EYxt8o1q4LH
+X-Received: by 2002:a05:6402:2714:b0:5e7:87cd:2479 with SMTP id 4fb4d7f45d1cf-5f0b28821dbmr2250726a12.8.1743762170868;
+        Fri, 04 Apr 2025 03:22:50 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFHM+zZOy5sRewTG5wad0dtUfjY+Jh0Y6kbMGiejkGMj5j7Z6poTz19CfMKHeKcGq5Wo1d3wQ==
+X-Received: by 2002:a05:6402:2714:b0:5e7:87cd:2479 with SMTP id 4fb4d7f45d1cf-5f0b28821dbmr2250708a12.8.1743762170453;
+        Fri, 04 Apr 2025 03:22:50 -0700 (PDT)
+Received: from [192.168.10.48] ([151.49.230.224])
+        by smtp.googlemail.com with ESMTPSA id 4fb4d7f45d1cf-5f087f0d6bbsm2224445a12.46.2025.04.04.03.22.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 04 Apr 2025 03:22:49 -0700 (PDT)
+Message-ID: <68d3aed1-2afc-43ba-9b84-c28e01637d45@redhat.com>
+Date: Fri, 4 Apr 2025 12:22:48 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEEQ3w=xVNuSN-4tHx6ir-i+huN8m1JXgJz672=WHAVBqcP+TA@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] selftests: kvm: bring list of exit reasons up to date
+From: Paolo Bonzini <pbonzini@redhat.com>
+To: linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+References: <20250331221851.614582-1-pbonzini@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=pbonzini@redhat.com; keydata=
+ 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
+In-Reply-To: <20250331221851.614582-1-pbonzini@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Apr 04, 2025 at 10:31:25AM +0800, yunhui cui wrote:
-> On Thu, Apr 3, 2025 at 7:50 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> > On Thu, Apr 03, 2025 at 02:36:16PM +0300, Andy Shevchenko wrote:
-> > > On Thu, Apr 03, 2025 at 05:03:36PM +0800, Yunhui Cui wrote:
-> >
-> > A couple of more questions here:
-> > 1) what is the DW IP version and where did you get the PSLVERR_RESP_EN
-> > parameter from?
-> > 2) what is the setting of the UART_16550_COMPATIBLE parameter?
-> 
-> 1): Refer to: https://www.synopsys.com/dw/ipdir.php?c=DW_apb_uart
+On 4/1/25 00:18, Paolo Bonzini wrote:
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> ---
+>   tools/testing/selftests/kvm/lib/kvm_util.c | 5 ++---
+>   1 file changed, 2 insertions(+), 3 deletions(-)
 
-I don't understand this. I asked about version of the IP, I have datasheets
-already for many of them, I can't find PSLVERR_RESP_EN there, that's why the
-question.
+Applied now.
 
-> 2): data->uart_16550_compatible == 0
+Paolo
 
-Thanks!
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+> diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
+> index 279ad8946040..815bc45dd8dc 100644
+> --- a/tools/testing/selftests/kvm/lib/kvm_util.c
+> +++ b/tools/testing/selftests/kvm/lib/kvm_util.c
+> @@ -2019,9 +2019,8 @@ static struct exit_reason {
+>   	KVM_EXIT_STRING(RISCV_SBI),
+>   	KVM_EXIT_STRING(RISCV_CSR),
+>   	KVM_EXIT_STRING(NOTIFY),
+> -#ifdef KVM_EXIT_MEMORY_NOT_PRESENT
+> -	KVM_EXIT_STRING(MEMORY_NOT_PRESENT),
+> -#endif
+> +	KVM_EXIT_STRING(LOONGARCH_IOCSR),
+> +	KVM_EXIT_STRING(MEMORY_FAULT),
+>   };
+>   
+>   /*
 
