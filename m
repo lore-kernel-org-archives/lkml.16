@@ -1,340 +1,211 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2074.outbound.protection.outlook.com [40.107.93.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4029C21D5BF
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 19:31:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743795089; cv=none; b=ZzSrBfW6hyjMn2utD69GAI8x0fqmiGaQAi4J95cWwd2lV/NL9shsnNMI8j2MEomrMD0D8AquX29kQzjTKae9s/dY6kfM832WuqT39Vy6eVs9BmaN4MJaDbIPyiCWzxNuShTeCwub2JLCAkvJ/4iSKGFVYzsfnho10jbiondmY2w=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743795089; c=relaxed/simple;
-	bh=VwiRV/e28I9bnPygUuh/jqIi0NGSfuLpQnfxaSZf7mQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XTuIHdPyCxbpf5Q+FcJuXWWGyIGXU4J1Wh205mI34MTP/l1NU1Ou7e5Q8kc7GCiv6Q9HnQaa49QhgzmxQl/hChK6eexM4/+eCB5fZGrHv5Xd7xblt9prCZ2VxI8kuMBnjZbbvL0OdKK+DONE7NjAz6mevwtOIoYe892km1xTJiU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wkennington.com; spf=none smtp.mailfrom=wkennington.com; dkim=pass (2048-bit key) header.d=wkennington-com.20230601.gappssmtp.com header.i=@wkennington-com.20230601.gappssmtp.com header.b=ztKtvLvR; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wkennington.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=wkennington.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 838C815DBB3;
+	Fri,  4 Apr 2025 19:32:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.74
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743795179; cv=fail; b=YTemXVob9SBvsAPMUFfTUPR9bbtwqg947r+y9JsvCjn9NwdIOUBFLkfTq1s/wpjcuzi0RMHGlxxFdz9cgYtgk/05J7jyPWxoDsVwNGcJo+lr4d/MkJN0QelGM32sfLZjSK67rTuZ5hOomjjSxVofV5+hkR+470eIUe2oQU+fqPU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743795179; c=relaxed/simple;
+	bh=89rwE6RirR/U2jFn5EyBPZExnKtfDCHl8nSSk8Hpoxg=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=hewFVELGRQpWgrJAl7qYjuoIov+yEJYm0Q8vbWIFYSS57VvRNsSVJRBbVak4B+835ngoIwAudng5ua4o/pRXlOopJMZdFd/DeRe6m7/RJyj6Sc4K2aLMpIi/Cu92VUwYOjZ4/HfWvmCaXcvWW9DQ1tRDpU0vvd+xvr49Wwwy+Ik=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=PEX1XjLg; arc=fail smtp.client-ip=40.107.93.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wkennington-com.20230601.gappssmtp.com header.i=@wkennington-com.20230601.gappssmtp.com header.b="ztKtvLvR"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-7359aca7ef2so3150304b3a.2
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 12:31:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=wkennington-com.20230601.gappssmtp.com; s=20230601; t=1743795085; x=1744399885; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=z9ak9CiviRuGzfJfjnoKlDnbc66wFb4O0ILw2ZpMgXY=;
-        b=ztKtvLvRYOhKNYOHKD+6bMsrNBAa743NmPovG2yCxtzG6YJUNBhCksYWQoBELT1gAw
-         GUWbos3kzwpw/L+qp8JPlACA3q+sU2Rn2q3Nbv+ux8YdhYYgTBQGsVoVyfJVAFJ9ZPtn
-         c6AU+s1V/FghK7F+MCc0aR2wZESe6oafr8Bjmp8DOanhot+45EKPW8nN8aZRjy3VdtPf
-         3Hn2ayXcEaoKuErrigQoqGjmJgp2nyc9VFdV6ccSG1UzYj3rKlUkqXB5ybKwoJM2RCRN
-         m1pPJMtWGxevNjMl4PCSKDPxUZ4Fp/bODDLVP8DX6vR+Gaz13+gFuZnKjTLM/8A/bm1o
-         TCPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743795085; x=1744399885;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=z9ak9CiviRuGzfJfjnoKlDnbc66wFb4O0ILw2ZpMgXY=;
-        b=evlRRa04JbdwTpE9Nf1WGnrJXJ1Xo9zG9hOaj3J5of4BYcHtmlLKLuCkqd/OEvo/4e
-         N01YfE6Fh2jnHL8cT3Ona4X313nRNhgkIHkV04YelOyWkFLdKwQbGXYkaQUgP533bjNG
-         VBmradll3cWL8zkbqjdETC8zPWzlyf699Xs9S+LkQNkIzR0QaFQs470KoW09RrlugQYO
-         sQhcBSjXcYtryLEV9cGgTi13bhjyj6HDiOH7RDb0/+NaCh5RwNrG8CQkD6mJS6849v9u
-         2np7dWZKs8dbk7tlqQeMHNk/PozjEq+Au5PxPf10pRq2YPpZvkeEiBXFNR71QyXW67Ug
-         EkuQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXEK19/OjxkQvtTBTmDEeSJOJD10fMNtO99zQTOWFZocQFFe1dHzjWcJXrJkzfb9c7iPkH2A8+U+ma+at0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy/H6B4KSInBqtrKEyCCJdWabBUZ3yxeQ+X1diWRLz0DmIg8fxy
-	DYCZMM+lL0g4E43J+FUayZlvlZiWnYwThe80iMhYmZCIbVR0h6/ERUsOBnD5oEyNixUP1BRDhxi
-	mT7u0gkqkYtteTk9mxY0T6LIItIdT3Q+G6yncVw==
-X-Gm-Gg: ASbGncuMmckn7qS2a0D/xxnzChhpiPGuyBUMS8+adzfxJ3c/E63MYndhcs7Dq3M5MGA
-	JFTChuSI3xmCuaFmJYUAEkk4o+Wlr3PtqxfqBUzCqMg4oeoEBgX265xuPvqPed85n1Mgk070xYc
-	kyds/jhuAVcevMkFslGB6HHWZ6IDMdS+fseyE60VPFEQOdSHxOQJnqmiAl4nlM
-X-Google-Smtp-Source: AGHT+IGFwB4zt/PdfiXH+ur93rYROPkDM8m0gCZjvh6xPu1u1ZUNrLgLZe+281AL1D/QzaaZZFT6wVzuZUClt609Qcw=
-X-Received: by 2002:a05:6a20:c995:b0:1fd:f55f:881e with SMTP id
- adf61e73a8af0-20108182fd0mr6394281637.36.1743795085425; Fri, 04 Apr 2025
- 12:31:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="PEX1XjLg"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=vqjvYxVS+Njrog3zqyIWFBb7z2j3S/EzHV8DmfSyblXDEI2AJtGYGXp/mMbltm2sVBEQSR1p0qjQrtDkLZyPLNMp4hURa1apQfEuCq/iHM6bidnu5yQy73ttc3m4pOkCPjz3GNEnimRdsSInAs1VE3snlWAbqpnTp3Uk1AN2XT40oh3bIs1wf++lB3yY1dhoRFVjv/BEzUkXNv00FLb1LjACwsYXYSr3xZz95TJml/jW1whYGB/jA1cDnRZoeR681tWGAu9Rpit2ZyUnMj+9awckJjZ9HOfTT4u5+R0rhPmBvvm1qtek+W+43aRTAbdEB3sub4bq80EzXObF6a1//Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=VBIpxzuEihRvVL4aqAYRM3BHEmt5PcR3lr2r18rQQdo=;
+ b=hyvW19dukDSt9DwFGEZyA2uTKasrnwBrrVxaZHUF0FDCynECeFcjffK7vyQa1lHXVbGYCXNQ7dzZiUQQ4mpJPr7MpL1r4J2ejPzd7sKjYbiq16dLzN4/oM3bgEojzcEwFnvnRbzOdBna4QHLjyQNVJ71etx+i+JRmXpr4ZU8a0mbyjNkiH9CtyUcNDiSrpbXgHKy000JzD5WVJrSYbvHfeNza/Ny8rmy05ceQ7GFTVjTOQMM1hO4XcR8xvqKYKrstibe2146ctPSnZhqyznh8ijY9IygCb64VZnBylpZSeyjmRy80FrxZbWsgUSTZMPZYFl1wqBGuU1auq84fJFxyg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VBIpxzuEihRvVL4aqAYRM3BHEmt5PcR3lr2r18rQQdo=;
+ b=PEX1XjLgSeN7AElLPnfsoGSw6FnMzTjBpKBtlG+XmuUL9ATNPeQRa7b0Aafde2ZSKa7XaXcwLswDrx4W1xbe/l/nQ4/C5I8YJ4DByA+t3FAq+ejyoqOTPcIy/yQpxD0ESuaVpnNbf8zd7g+GFolNAtNjOsjYWspqqnNmrQea6ni7KoYv2UAAUOy/uZHeRP0sevO+Kr7I0xCjxcwzA/zgHR7RrR7+t9y1odU1/3iB3LpzVFYS/P1mSW/hc8QtB229P9AVxaCV4NfmKOkkhuaZAcTO0ukxeUqxvaFCclQRSbmsiQ7clbcXCDzyNK8m5BhXCrJIiPz9XOK5nSN3xtN3Ug==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from SJ2PR12MB8784.namprd12.prod.outlook.com (2603:10b6:a03:4d0::11)
+ by PH7PR12MB5806.namprd12.prod.outlook.com (2603:10b6:510:1d2::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Fri, 4 Apr
+ 2025 19:32:50 +0000
+Received: from SJ2PR12MB8784.namprd12.prod.outlook.com
+ ([fe80::1660:3173:eef6:6cd9]) by SJ2PR12MB8784.namprd12.prod.outlook.com
+ ([fe80::1660:3173:eef6:6cd9%6]) with mapi id 15.20.8534.043; Fri, 4 Apr 2025
+ 19:32:50 +0000
+Message-ID: <3fdb3d2f-8588-4b4f-a2a8-4b526419b5d3@nvidia.com>
+Date: Fri, 4 Apr 2025 20:32:39 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6.14 00/21] 6.14.1-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, f.fainelli@gmail.com,
+ sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+ conor@kernel.org, hargar@microsoft.com, broonie@kernel.org,
+ "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+References: <20250403151621.130541515@linuxfoundation.org>
+From: Jon Hunter <jonathanh@nvidia.com>
+Content-Language: en-US
+In-Reply-To: <20250403151621.130541515@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: LO4P123CA0524.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:2c5::9) To SJ2PR12MB8784.namprd12.prod.outlook.com
+ (2603:10b6:a03:4d0::11)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250402202741.3593606-1-william@wkennington.com>
- <20250403211246.3876138-1-william@wkennington.com> <444f9411-851b-4810-8f6e-35306ac9bfdb@roeck-us.net>
-In-Reply-To: <444f9411-851b-4810-8f6e-35306ac9bfdb@roeck-us.net>
-From: William Kennington <william@wkennington.com>
-Date: Fri, 4 Apr 2025 12:31:13 -0700
-X-Gm-Features: ATxdqUEfP1dne_1Ecc0vgWxHxv28B79fPP6sUUrlDCWkLaeUUMo4l2ixdkeFm_I
-Message-ID: <CAD_4BXg3WzRZWiRo42JF0-oxffdj+N0agkyeE_m0Gd1YGda8+w@mail.gmail.com>
-Subject: Re: [PATCH v3] hwmon: (pmbus): Introduce page_change_delay
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ2PR12MB8784:EE_|PH7PR12MB5806:EE_
+X-MS-Office365-Filtering-Correlation-Id: 54cb63b2-fd87-4ef6-f21f-08dd73af7c88
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|10070799003|376014|1800799024|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?Q3RIazJqNXM0a2QxL2JqQmovZUN2OUFSSWpKSVMxV0R0S0pXaU80aWhXWGgz?=
+ =?utf-8?B?NnBscGlvay9RbTFyWUYyRjJSb3pnR0dLdnRQbkZkd0IrUERZNEF5eVdiQUVi?=
+ =?utf-8?B?OFJ6bzIwbkdFMnJUWXZKYzhIeHp6RXROY3NOUFRCc2lXaCt5TURnWjh0Wk9t?=
+ =?utf-8?B?eDlWWUhwSUhsSXFaVVk1U1lvOFU1RFFabGFYN3hpTTdQWC9RSUpDMVVmY2My?=
+ =?utf-8?B?R2ZCYVltdUxWbXFKT2JZYzNqdU1iZVkwU1RCUXpTSnNvZ0JpSXg2bG5VL1N5?=
+ =?utf-8?B?U21JUUtCb2g0WEI1aHM0WWt5UXhHUmIzT0ZjUmkxRG1MOGdUUWRCL1RuWVZ2?=
+ =?utf-8?B?SjVaUEdlOFljeVpKTkFmaFMwODJReXQ4Yk9NdjRiRFlTVUl4eWY5aXZkOGlY?=
+ =?utf-8?B?OWR2ZDQyRzFjRkR1aEo5VzZFWTBva3dvUFdsUkZ5RGNWdmdvYXRTRExTSXA3?=
+ =?utf-8?B?UFR6NjQvaDJDbmRHQm03QVAzMTh5MlcvT3ZBOE83aS9mS01iS1phSDRJMHNj?=
+ =?utf-8?B?ck5RZTFDUkZLamFPNlJ3d0ViRjRLVXZ0a2wvRGprOGlIa3o5UC90K0NuZnRP?=
+ =?utf-8?B?SWp3TUhPMTJEdXJYdHU1SUl0M1lYQ1BRMWFYWDRjaXRObmdoaWtBVXNIdEpv?=
+ =?utf-8?B?OHJnbTNKSzM3QjJ5R203OTVXRVE3Y2RwK1gvZFYyZ05TVnBjTTVZZmlmYkVi?=
+ =?utf-8?B?SGhCVWhUdVFqcC9taUNRS0NIRnorSlZxbExhZlkvYS9BVEhhOFJhV1pUN0s5?=
+ =?utf-8?B?VkZuSDg5YlhWZ045SThBLytDSDREWGg3M3RmRU9ic2d4NU1TMXYwSXFXQUtS?=
+ =?utf-8?B?aXRDMlBVUTRYSEc5cWVNWU9GN1FsazA4UkZzNVNadnVnZ3ViVnloWWpQb0xB?=
+ =?utf-8?B?enhlRFlLZ1ExdHN6cGM5WmVZK09BeVhtVDg3QzdLdGFIbHBZVEgwNnJxQ3U1?=
+ =?utf-8?B?cHJ4WWN3bkEzVmQ5ZGVCMXhzUWQrMHgvZUNHdW1LaEhwemYzNmpUTVJGR0sy?=
+ =?utf-8?B?b242eXVwZ0tMdDdyWUs2SGVxdCtvczFoWWtvcDgyL1lzNzJtT084L0VVTk0z?=
+ =?utf-8?B?ZElMK1J6Q1lKUUxkRFkzcWhCbkRsZmhsNUo2RkJlUlRTNDF5N3VQZFRsTnFI?=
+ =?utf-8?B?RVBUK0dsbk9ZL2dmb2hoRHNWYXZvN2lLWG42dng2QktTVU1HaFdEcUJXaTVQ?=
+ =?utf-8?B?NHBQMzN0K3JIUmxFYkppc1pwQ1hPd3BWYTVwTk1LSVRzYzBFZFdDYUs0cFZZ?=
+ =?utf-8?B?QnBFTng5NUs1MzNNVktiWDFBVlRuU3lDYVNFR0JwVVcyZWlTUjhqcEVWb1JC?=
+ =?utf-8?B?MGcxcTJIUjJKaUFyVkczNWR5TU9wNktxK2s5NVl2SHBxNFN4NjIwL3hSU0I5?=
+ =?utf-8?B?UHRjZTZPelVDR25zMTlET3VTeVZ3Y3p6YVhRQWlyVHhhaStlOUNoUHlDOU5J?=
+ =?utf-8?B?L09qRmNZemJRTUlPYllOd2RGTkxRUXBtZ1BUQ2dJdFVOUlg3MEFQcldzWnlK?=
+ =?utf-8?B?VnF3cDQ3VHJZd01hNzJ2bGJkK3phZ0g3TDBMZHBMOFZyMzU2a0FoZloySDQw?=
+ =?utf-8?B?QVVVVTNWemtWdFpoSndRaklTV2pPZExNMmYzQ1FmQjlGSm81WU9sRVdsZ0cr?=
+ =?utf-8?B?MXlvanpldHFEVUJEZzdNODNIckI5amRNRDgvRTdTWWV4MXVzMDQ3ejF5UWV1?=
+ =?utf-8?B?UGRBTm1LMGY3MWJ0RmdzWGF0cVRpWFZGRUFzZVh5ODRIV2JNNFFmR3p4b0tT?=
+ =?utf-8?B?L1B5ZDVQam93MXE1TWpBSFF2Rll3MVEvU2NYaVBOL2NuN1ppM2FjczdXbFpQ?=
+ =?utf-8?B?T2xQUDBpbmpOeG96QWY2L1ZhUmsvU0xxT2RHYnRsaEJCZFAvQjZ4MGF3bVFn?=
+ =?utf-8?Q?RksbRuHd+FBvC?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR12MB8784.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(10070799003)(376014)(1800799024)(7416014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?eStJRy9uM05qNXA1V1FBQkJMTC9uRXRydzk1cHZNSmYwbFhub1hDWnBOQ3ZR?=
+ =?utf-8?B?dXZIaGF6SHlab2g5a04xVGE4aHlWcjBhWHlBRG5wRUl2ZFczTVRtbDN4YXFO?=
+ =?utf-8?B?QkJOUnFHb0RnRmVML0gvUFR0NGo5M2x6eHhVbGRUUi9QSC9yd0dQNkV3bnkw?=
+ =?utf-8?B?SmRoNzZ5VGZhbjYwa1FVSVBUSzFYK3NFVGJ1a0NsUWZOcThiU1NBMHowUnN2?=
+ =?utf-8?B?L0VJZXZkeHF3V1R4Q2F5NUJSblg3bGZ4dllHL1RWaS9JWVpTd3FrNTVVaFhB?=
+ =?utf-8?B?Uk5zUmowUUJBeGN2WldKNjZIY0RrYmp3TVp4bjZ3YUF3Sk5LY25QYVV5di9w?=
+ =?utf-8?B?enZmUEtRZGNldkV5bDZBSFg4UnA4d1Mwb0gzMTQrMVB6RStYYWd6cDFWc2gv?=
+ =?utf-8?B?Qm10NW9ENDVZZ1N0QjF2bmJSTXdyVGVCVzR1VWtPdnVUaHlkNE5KY2lHRXN6?=
+ =?utf-8?B?aTdVeXRWTzRqUXVFZWR5eG5sN0ZiWkN2VmZyZUcwdUNRVHBRVlI3TFd5Y25E?=
+ =?utf-8?B?UUFQZEViS0YzRzZPd21NTUpKZXA4ek5idUJLMllWek9KM3hsNUZtNGE5RmEx?=
+ =?utf-8?B?ZTFvb3EvaG1JV21ISlhxR1ZRNFZZU3RyZVdvVkVCVjYrV1dUNXFjY3YrdEUx?=
+ =?utf-8?B?aGlSSS9jT3o1TXVLaHh2d2hSY0lyLzZyei9TeDBzemlkdldzWEhuanZMR0ls?=
+ =?utf-8?B?K2lMOFh5SU9CWENOQWlkYkV6R2l2QnZtK1lTRmJyRmFNbmMxSkdDWG84SmNK?=
+ =?utf-8?B?NDBjcFlOYkxVUlZrVnB4R0s1TlMrZC8vUjkzQ1dtR0RmaFpMRzFTYk4zcDdS?=
+ =?utf-8?B?N2wvdXFITjV3ZVpRcThEVlJaZHNCM3VtcmlhdnhpSUlEeDJudndSYUZoaW1K?=
+ =?utf-8?B?YjdoSytRZC93R0MwVG5VWEVsQ3ZhSERLS1NXTTlaSSsxTklrQ3ZlR0ZyWTJo?=
+ =?utf-8?B?MmdIRzY2QUdHMnJWSkN3ajQyb0o3SHMzdVN5cWo3dWlOQ012UTlKcWExUm0v?=
+ =?utf-8?B?NDVXUGN1ZC83R0MxRXRVZXVtbkFPdDdUcEoyMG5LZHJSRzBOTUhEaHAvN1k3?=
+ =?utf-8?B?bzV0TDgraldmZWt6cjlndThPc2NUbWdtdlE3dE01dW9rM1VrZTh6Y3ArbTlB?=
+ =?utf-8?B?Y2tUZmRDUmZNWHRjdHRmVmFQMGxPYWNCcmw2ZWdwZTlLd2gramNkZGdxOVJj?=
+ =?utf-8?B?cXVPM1JXN2VDZWMxbDZHRFg0Y05VTjY5R3VZZXQ4eXFXbnp5eEx5NVM5Zkl1?=
+ =?utf-8?B?T3VCVmxyUWtMOHpLZDdnUFQyYmZJTjJpTkpQbTJPQURZek5IUGI5eElwbWRS?=
+ =?utf-8?B?V0pFTnR6S1RCTTZuSUpHZFhVcDZCSXNFcFNSTURpYkJ5TXNkTzd5eVdkTTF4?=
+ =?utf-8?B?KzlLdXBQRXBUWWxrcmowQXRKckJDUkd4QW8wMXpsVzJjTTIwNWRrYmpIUGpC?=
+ =?utf-8?B?elBvY0RWWjlsV01GekM4ZmVHaGRWYzEvcnlIWDNRR0w1OGdVZThGdk80V2Fy?=
+ =?utf-8?B?S0k4RGlGUzk3emdKNTBBSm96SVNtNHZrR09venhxNFpzN0RTTlRvY1BzNk00?=
+ =?utf-8?B?UW1yaDVhT1J2N2dsUTVyc2RvbyttazFzUTJ6TDBCbzN6cm1RbGtURDV3QXdC?=
+ =?utf-8?B?MG4xUWhYY2hTRkZ0dUVHcGtndGhNa2NEUU9wbUQ5a1ljNDNLZ2l3TlRObXhG?=
+ =?utf-8?B?d29Ra1FvTTB1akpMazJZd3IzaGp0ZlhWYUZxZGUxakZqLzZuVTBGczVXSVlS?=
+ =?utf-8?B?cXh2TVJPdjBsam4wOHFZYkNZRHJzOEE4TnhidHVuYk4wUGg2R2FHbk1FZ1hI?=
+ =?utf-8?B?cVJtalh5Q0VjRlo4VEJ5VmFYdkFydkxhSHFndlpHNGhRU1lXdzdKUThhcnhB?=
+ =?utf-8?B?aWtYQlhKNmtRU2x5bjZURldISHlhblBBNTg4eVdTbWk3TzlHd3djQy9BSWhm?=
+ =?utf-8?B?azJTUHRobDhEbXZiL2U3M0JrRGl3eUpIMkNhQy94N0xJVS8ySGtZcVUyT080?=
+ =?utf-8?B?ZnhJSkpiUkUxaGNiL00zamFnOUd0MjJSMWpRT0J2SnBjQ0lreWhESzZUbjNl?=
+ =?utf-8?B?aTBUT3VyMTdvY0picThJZ1g0VERNVzhCT1RoNUIzMHlIOWdRc2hSZVpPMGkx?=
+ =?utf-8?B?eUtpRG9kbnNMaEZGdzZPUTRiZ0c1REt3a2IrcmVHSENPNHBLVmNydzlrQ3B0?=
+ =?utf-8?Q?Fr3LYXwYHDYpPFe9p6odGfTqS5CUYbnDEebGc4dM5wCh?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 54cb63b2-fd87-4ef6-f21f-08dd73af7c88
+X-MS-Exchange-CrossTenant-AuthSource: SJ2PR12MB8784.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Apr 2025 19:32:50.5239
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: XYUyUjlXCyJdwL2k72BdCCTopcKpXHXnBpspPW/OKk8WTbICuZpv7a9hfyq0ULFNNMW4+lKvuLmhmY6gp9thrg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB5806
 
-On Thu, Apr 3, 2025 at 5:28=E2=80=AFPM Guenter Roeck <linux@roeck-us.net> w=
-rote:
->
-> On Thu, Apr 03, 2025 at 02:12:46PM -0700, William A. Kennington III wrote=
-:
-> > We have some buggy pmbus devices that require a delay after performing =
-a
-> > page change operation before trying to issue more commands to the
-> > device.
-> >
-> > This allows for a configurable delay after page changes, but not
-> > affecting other read or write operations.
-> >
-> > Signed-off-by: William A. Kennington III <william@wkennington.com>
-> > ---
-> > V1 -> V2: Simplify how the backoff time is stored and computed
-> > V2 -> V3: Use the BIT macro
-> >
-> >  drivers/hwmon/pmbus/pmbus.h      |  1 +
-> >  drivers/hwmon/pmbus/pmbus_core.c | 67 +++++++++++++++-----------------
-> >  2 files changed, 33 insertions(+), 35 deletions(-)
-> >
-> > diff --git a/drivers/hwmon/pmbus/pmbus.h b/drivers/hwmon/pmbus/pmbus.h
-> > index ddb19c9726d6..742dafc44390 100644
-> > --- a/drivers/hwmon/pmbus/pmbus.h
-> > +++ b/drivers/hwmon/pmbus/pmbus.h
-> > @@ -482,6 +482,7 @@ struct pmbus_driver_info {
-> >        */
-> >       int access_delay;               /* in microseconds */
-> >       int write_delay;                /* in microseconds */
-> > +     int page_change_delay;          /* in microseconds */
-> >  };
-> >
-> >  /* Regulator ops */
-> > diff --git a/drivers/hwmon/pmbus/pmbus_core.c b/drivers/hwmon/pmbus/pmb=
-us_core.c
-> > index 787683e83db6..3aa5851610b2 100644
-> > --- a/drivers/hwmon/pmbus/pmbus_core.c
-> > +++ b/drivers/hwmon/pmbus/pmbus_core.c
-> > @@ -114,8 +114,8 @@ struct pmbus_data {
-> >
-> >       int vout_low[PMBUS_PAGES];      /* voltage low margin */
-> >       int vout_high[PMBUS_PAGES];     /* voltage high margin */
-> > -     ktime_t write_time;             /* Last SMBUS write timestamp */
-> > -     ktime_t access_time;            /* Last SMBUS access timestamp */
-> > +
-> > +     ktime_t next_access_backoff;    /* Wait until at least this time =
-*/
-> >  };
-> >
-> >  struct pmbus_debugfs_entry {
-> > @@ -170,33 +170,30 @@ EXPORT_SYMBOL_NS_GPL(pmbus_set_update, "PMBUS");
-> >  static void pmbus_wait(struct i2c_client *client)
-> >  {
-> >       struct pmbus_data *data =3D i2c_get_clientdata(client);
-> > -     const struct pmbus_driver_info *info =3D data->info;
-> > -     s64 delta;
-> > -
-> > -     if (info->access_delay) {
-> > -             delta =3D ktime_us_delta(ktime_get(), data->access_time);
-> > -
-> > -             if (delta < info->access_delay)
-> > -                     fsleep(info->access_delay - delta);
-> > -     } else if (info->write_delay) {
-> > -             delta =3D ktime_us_delta(ktime_get(), data->write_time);
-> > +     s64 delay =3D ktime_us_delta(data->next_access_backoff, ktime_get=
-());
-> >
-> > -             if (delta < info->write_delay)
-> > -                     fsleep(info->write_delay - delta);
-> > -     }
-> > +     if (delay > 0)
-> > +             fsleep(delay);
-> >  }
-> >
-> > -/* Sets the last accessed timestamp for pmbus_wait */
-> > -static void pmbus_update_ts(struct i2c_client *client, bool write_op)
-> > +#define PMBUS_OP_READ BIT(0)
-> > +#define PMBUS_OP_WRITE BIT(1)
-> > +#define PMBUS_OP_PAGE_CHANGE BIT(2)
->
-> I guess you really don't like tabs. Ok, no problem, I can fix that up whe=
-n
-> I apply the patch. Either case, please move the defines ahead of the firs=
-t
-> code block.
 
-Done
+On 03/04/2025 16:20, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.14.1 release.
+> There are 21 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sat, 05 Apr 2025 15:16:11 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.14.1-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.14.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
->
-> > +
-> > +/* Sets the last operation timestamp for pmbus_wait */
-> > +static void pmbus_update_ts(struct i2c_client *client, int op)
-> >  {
-> >       struct pmbus_data *data =3D i2c_get_clientdata(client);
-> >       const struct pmbus_driver_info *info =3D data->info;
-> > +     int delay =3D info->access_delay;
->
-> Hmm, this is a functional change. It always sets the minimum wait
-> time to access_delay, even if the operation is a write. I guess
-> it makes sense because otherwise there would be no delay after
-> a write if only access_delay is set. However, that means that
-> PMBUS_OP_READ is not really needed anymore and can be dropped.
->
-> This should be explained in the patch description.
 
-Done
+No new regressions for Tegra ...
 
->
-> >
-> > -     if (info->access_delay) {
-> > -             data->access_time =3D ktime_get();
-> > -     } else if (info->write_delay && write_op) {
-> > -             data->write_time =3D ktime_get();
-> > -     }
-> > +     if (op & (PMBUS_OP_WRITE | PMBUS_OP_PAGE_CHANGE))
-> > +             delay =3D max(delay, info->write_delay);
-> > +     if (op & PMBUS_OP_PAGE_CHANGE)
-> > +             delay =3D max(delay, info->page_change_delay);
-> > +
->
-> I would have set PMBUS_OP_WRITE | PMBUS_OP_PAGE_CHANGE in the calling cod=
-e,
-> but this is ok too. However, please make it
+Test results for stable-v6.14:
+     10 builds:	10 pass, 0 fail
+     28 boots:	28 pass, 0 fail
+     116 tests:	115 pass, 1 fail
 
-Sure, I'll just move it to the callsite
+Linux version:	6.14.1-rc1-g8dba5209f1d8
+Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
+                 tegra186-p3509-0000+p3636-0001, tegra194-p2972-0000,
+                 tegra194-p3509-0000+p3668-0000, tegra20-ventana,
+                 tegra210-p2371-2180, tegra210-p3450-0000,
+                 tegra30-cardhu-a04
 
->
->         if (op & (PMBUS_OP_WRITE | PMBUS_OP_PAGE_CHANGE)) {
->                 delay =3D max(delay, info->write_delay);
->                 if (op & PMBUS_OP_PAGE_CHANGE)
->                         delay =3D max(delay, info->page_change_delay);
->         }
->
-> After dropping PMBUS_OP_READ, that can be simplified further to
->
->         if (op) {
->                 ...
->         }
->
-> > +     if (delay > 0)
-> > +             data->next_access_backoff =3D ktime_add_us(ktime_get(), d=
-elay);
-> >  }
-> >
-> >  int pmbus_set_page(struct i2c_client *client, int page, int phase)
-> > @@ -211,13 +208,13 @@ int pmbus_set_page(struct i2c_client *client, int=
- page, int phase)
-> >           data->info->pages > 1 && page !=3D data->currpage) {
-> >               pmbus_wait(client);
-> >               rv =3D i2c_smbus_write_byte_data(client, PMBUS_PAGE, page=
-);
-> > -             pmbus_update_ts(client, true);
-> > +             pmbus_update_ts(client, PMBUS_OP_PAGE_CHANGE);
-> >               if (rv < 0)
-> >                       return rv;
-> >
-> >               pmbus_wait(client);
-> >               rv =3D i2c_smbus_read_byte_data(client, PMBUS_PAGE);
-> > -             pmbus_update_ts(client, false);
-> > +             pmbus_update_ts(client, PMBUS_OP_READ);
-> >               if (rv < 0)
-> >                       return rv;
-> >
-> > @@ -231,7 +228,7 @@ int pmbus_set_page(struct i2c_client *client, int p=
-age, int phase)
-> >               pmbus_wait(client);
-> >               rv =3D i2c_smbus_write_byte_data(client, PMBUS_PHASE,
-> >                                              phase);
-> > -             pmbus_update_ts(client, true);
-> > +             pmbus_update_ts(client, PMBUS_OP_WRITE);
-> >               if (rv)
-> >                       return rv;
-> >       }
-> > @@ -251,7 +248,7 @@ int pmbus_write_byte(struct i2c_client *client, int=
- page, u8 value)
-> >
-> >       pmbus_wait(client);
-> >       rv =3D i2c_smbus_write_byte(client, value);
-> > -     pmbus_update_ts(client, true);
-> > +     pmbus_update_ts(client, PMBUS_OP_WRITE);
-> >
-> >       return rv;
-> >  }
-> > @@ -286,7 +283,7 @@ int pmbus_write_word_data(struct i2c_client *client=
-, int page, u8 reg,
-> >
-> >       pmbus_wait(client);
-> >       rv =3D i2c_smbus_write_word_data(client, reg, word);
-> > -     pmbus_update_ts(client, true);
-> > +     pmbus_update_ts(client, PMBUS_OP_WRITE);
-> >
-> >       return rv;
-> >  }
-> > @@ -408,7 +405,7 @@ int pmbus_read_word_data(struct i2c_client *client,=
- int page, int phase, u8 reg)
-> >
-> >       pmbus_wait(client);
-> >       rv =3D i2c_smbus_read_word_data(client, reg);
-> > -     pmbus_update_ts(client, false);
-> > +     pmbus_update_ts(client, PMBUS_OP_READ);
-> >
-> >       return rv;
-> >  }
-> > @@ -471,7 +468,7 @@ int pmbus_read_byte_data(struct i2c_client *client,=
- int page, u8 reg)
-> >
-> >       pmbus_wait(client);
-> >       rv =3D i2c_smbus_read_byte_data(client, reg);
-> > -     pmbus_update_ts(client, false);
-> > +     pmbus_update_ts(client, PMBUS_OP_READ);
-> >
-> >       return rv;
-> >  }
-> > @@ -487,7 +484,7 @@ int pmbus_write_byte_data(struct i2c_client *client=
-, int page, u8 reg, u8 value)
-> >
-> >       pmbus_wait(client);
-> >       rv =3D i2c_smbus_write_byte_data(client, reg, value);
-> > -     pmbus_update_ts(client, true);
-> > +     pmbus_update_ts(client, PMBUS_OP_WRITE);
-> >
-> >       return rv;
-> >  }
-> > @@ -523,7 +520,7 @@ static int pmbus_read_block_data(struct i2c_client =
-*client, int page, u8 reg,
-> >
-> >       pmbus_wait(client);
-> >       rv =3D i2c_smbus_read_block_data(client, reg, data_buf);
-> > -     pmbus_update_ts(client, false);
-> > +     pmbus_update_ts(client, PMBUS_OP_READ);
-> >
-> >       return rv;
-> >  }
-> > @@ -2530,7 +2527,7 @@ static int pmbus_read_coefficients(struct i2c_cli=
-ent *client,
-> >       rv =3D i2c_smbus_xfer(client->adapter, client->addr, client->flag=
-s,
-> >                           I2C_SMBUS_WRITE, PMBUS_COEFFICIENTS,
-> >                           I2C_SMBUS_BLOCK_PROC_CALL, &data);
-> > -     pmbus_update_ts(client, true);
-> > +     pmbus_update_ts(client, PMBUS_OP_READ | PMBUS_OP_WRITE);
->
-> I'd argue that this does not warrant a PMBUS_OP_WRITE in the first place.
-> From the chip's perspective, the operation is complete after the data
-> is returned. This is just as much a write as any other SMBus read operati=
-on
-> (a write of an address followed by a read). If you think otherwise, pleas=
-e
-> explain.
->
-> Either case, the change warrants an explanation in the patch description.
+Test failures:	tegra186-p2771-0000: pm-system-suspend.sh
 
-The previous behavior was to treat this as a write though? I updated
-the description about picking the maximum delay in the code change
-above, but this specific instance is still classified the same.
+Tested-by: Jon Hunter <jonathanh@nvidia.com>
 
-I think technically we shouldn't do a single smbus transfer, but do
-the write followed by read with a write delay injected between them. I
-don't want to make that change here but it doesn't make sense to
-ignore the write delay IMHO.
+There is a known issue for Tegra186 that should be fixed in mainline 
+now. I will let you know what commits we need to resolve this.
 
->
-> Thanks,
-> Guenter
+Jon
+
+-- 
+nvpublic
+
