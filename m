@@ -1,165 +1,171 @@
-Received: from smtp-fw-9105.amazon.com (smtp-fw-9105.amazon.com [207.171.188.204])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87D2920ADEE;
-	Fri,  4 Apr 2025 16:25:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.188.204
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 417B120ADD5;
+	Fri,  4 Apr 2025 16:25:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743783913; cv=none; b=QCkDyPihvWY2CFDhORfvgjqEN1PTmLrEtf6veysO4uOXzirvlOX7lcP+JNORNBYV00eJYZCYqvrQk5CbFVLiM+nTEnnbfQMDxnN4NHpsKor1pxiHDGQKxP7Xn54AGNvC3IavuwF/Q7CLiYpeLSPrghLcykdu+hQWsPbT5FgleTM=
+	t=1743783925; cv=none; b=EOvCQ+C9Nf6KM4snE/eeCSNDmSqUAU0+p/pr8tiCIi+ozqNYBBvTrDs/F9NuTfxTLtWrSKT08d98/yrxIvn2Ot1rRYlOSKIVNXigT9kK7ZOyu1TTo/Vzr8T3XO6+QlrZG5JCq4f9DxflXbyFt3MRJ4nTaN7GBR8H6vWwZIJhDi0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743783913; c=relaxed/simple;
-	bh=eF+HTA08ywMrReINY75pZwsJgSFDqgNGDi1vthS9iHo=;
-	h=From:To:CC:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=f82mnlw/DO1wu0QyYwCq1JMT8ZZovA6Bm8oPWqsSjKDW9uwFVZKpOml1PLBZP3oFjF6SqRt7eXrWNgRK14n9A9BtsPDtlefMl1aGBSc04gODWCwATnCprzlpAY1A1QyUifwnmlK3SSlzPaoFMT5iCv3jQYMcCKktkw8fZHV9c1o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de; spf=pass smtp.mailfrom=amazon.de; dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b=GRrTQdV/; arc=none smtp.client-ip=207.171.188.204
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
+	s=arc-20240116; t=1743783925; c=relaxed/simple;
+	bh=DPKesb5zEufm5ZzxHksY/n1wcad6WX+VWC9xfDlF+90=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=syqgUkz37z3tCBnTqK6m5PIdRDZuEq6vFZ+GwidlDhsO3gtmEb45G0tIVGSnmZ5xV9YVfLiGIV1Xk+0pDCUCvTKBNY/6c3LVCSVQvL/lhm2f/1el4qpWD+BtZyLglfaHto9HEKdNcxlSgZAkKR7kw+jK6BsqOq23Nt3ySJLZvj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=lIFG05Ly; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="GRrTQdV/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1743783912; x=1775319912;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=8M1kcrllrPJGqNpSTkGjHsOAwcJ4P4JfrDK2o2gPRAw=;
-  b=GRrTQdV/oqMyDHVDf2wgm4Zc24mJeZVF0GWGtisl/D6UJl/3VDLEH5qs
-   BkC6KousddgRX3CetGXbI5sG5NFwKG68CK3UmP19TUp6FRHi1Tkgb2XhS
-   SFagrcb/OegaDa5ILUtBw5PzFSeg0eFfIqxpZUxtBrfUe0Jc8fPTnACls
-   8=;
-X-IronPort-AV: E=Sophos;i="6.15,188,1739836800"; 
-   d="scan'208";a="7655191"
-Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.210])
-  by smtp-border-fw-9105.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 16:25:05 +0000
-Received: from EX19MTAUWB002.ant.amazon.com [10.0.21.151:19358]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.43.57:2525] with esmtp (Farcaster)
- id 41e9b48e-af72-465f-a631-5054d723289f; Fri, 4 Apr 2025 16:25:04 +0000 (UTC)
-X-Farcaster-Flow-ID: 41e9b48e-af72-465f-a631-5054d723289f
-Received: from EX19D020UWA001.ant.amazon.com (10.13.138.249) by
- EX19MTAUWB002.ant.amazon.com (10.250.64.231) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Fri, 4 Apr 2025 16:24:56 +0000
-Received: from EX19MTAUWB001.ant.amazon.com (10.250.64.248) by
- EX19D020UWA001.ant.amazon.com (10.13.138.249) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Fri, 4 Apr 2025 16:24:55 +0000
-Received: from email-imr-corp-prod-iad-all-1a-059220b4.us-east-1.amazon.com
- (10.25.36.214) by mail-relay.amazon.com (10.250.64.254) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id
- 15.2.1544.14 via Frontend Transport; Fri, 4 Apr 2025 16:24:55 +0000
-Received: from dev-dsk-ptyadav-1c-43206220.eu-west-1.amazon.com (dev-dsk-ptyadav-1c-43206220.eu-west-1.amazon.com [172.19.91.144])
-	by email-imr-corp-prod-iad-all-1a-059220b4.us-east-1.amazon.com (Postfix) with ESMTP id EBBDF42F0D;
-	Fri,  4 Apr 2025 16:24:54 +0000 (UTC)
-Received: by dev-dsk-ptyadav-1c-43206220.eu-west-1.amazon.com (Postfix, from userid 23027615)
-	id A83976148; Fri,  4 Apr 2025 16:24:54 +0000 (UTC)
-From: Pratyush Yadav <ptyadav@amazon.de>
-To: Jason Gunthorpe <jgg@nvidia.com>
-CC: Mike Rapoport <rppt@kernel.org>, Changyuan Lyu <changyuanl@google.com>,
-	<linux-kernel@vger.kernel.org>, <graf@amazon.com>,
-	<akpm@linux-foundation.org>, <luto@kernel.org>, <anthony.yznaga@oracle.com>,
-	<arnd@arndb.de>, <ashish.kalra@amd.com>, <benh@kernel.crashing.org>,
-	<bp@alien8.de>, <catalin.marinas@arm.com>, <dave.hansen@linux.intel.com>,
-	<dwmw2@infradead.org>, <ebiederm@xmission.com>, <mingo@redhat.com>,
-	<jgowans@amazon.com>, <corbet@lwn.net>, <krzk@kernel.org>,
-	<mark.rutland@arm.com>, <pbonzini@redhat.com>, <pasha.tatashin@soleen.com>,
-	<hpa@zytor.com>, <peterz@infradead.org>, <robh+dt@kernel.org>,
-	<robh@kernel.org>, <saravanak@google.com>,
-	<skinsburskii@linux.microsoft.com>, <rostedt@goodmis.org>,
-	<tglx@linutronix.de>, <thomas.lendacky@amd.com>, <usama.arif@bytedance.com>,
-	<will@kernel.org>, <devicetree@vger.kernel.org>, <kexec@lists.infradead.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-doc@vger.kernel.org>,
-	<linux-mm@kvack.org>, <x86@kernel.org>
-Subject: Re: [PATCH v5 09/16] kexec: enable KHO support for memory preservation
-In-Reply-To: <20250404143031.GB1336818@nvidia.com>
-References: <20250320015551.2157511-1-changyuanl@google.com>
-	<20250320015551.2157511-10-changyuanl@google.com>
-	<mafs05xjmqsqc.fsf@amazon.de> <20250403114209.GE342109@nvidia.com>
-	<Z-6UA3C1TPeH_kGL@kernel.org> <20250403142438.GF342109@nvidia.com>
-	<Z--sUYCvP3Q8nT8e@kernel.org> <20250404124729.GH342109@nvidia.com>
-	<Z-_kSXrHWU5Bf3sV@kernel.org> <20250404143031.GB1336818@nvidia.com>
-Date: Fri, 4 Apr 2025 16:24:54 +0000
-Message-ID: <mafs08qofq4h5.fsf@amazon.de>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="lIFG05Ly"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1743783921;
+	bh=DPKesb5zEufm5ZzxHksY/n1wcad6WX+VWC9xfDlF+90=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=lIFG05LyoSoDkuiDxZiNPzbpH10QW9uId0znLHEjJuSF4coYTaTDP7fDogFee97IW
+	 O+kszdWoEd+qrdaoVTFfIitY7/Px4UFPItdD6/pq5rhVnl8zLGMaJwWYwngtGlNrgp
+	 ymlqE0l1aNhGLYMKD7xCAVE24/6TMNthG5CZUITG+asvK8QSiW9QlKIyK98CFge1bb
+	 93lglrT+4MwWf1N0uV5iBUd+xWCDPVvTRhy2dNgzjrcQUJO3HM72WU1dru/xK6j9fp
+	 8bwDvXqfFR06fdsIpDFmt7/kW4VoggFyr1oOem+S7Xyqeh6QgC8xgALER9XIaKRkGJ
+	 Cr0Kdin3DCYmQ==
+Received: from [192.168.42.160] (mtl.collabora.ca [66.171.169.34])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: nicolas)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 9678D17E07F2;
+	Fri,  4 Apr 2025 18:25:17 +0200 (CEST)
+Message-ID: <91799a0e05deadc34b9aa688ba44c43c67011a0f.camel@collabora.com>
+Subject: Re: [PATCH v13 0/6] Add Synopsys DesignWare HDMI RX Controller
+From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+To: Tim Surber <me@timsurber.de>, Dmitry Osipenko	
+ <dmitry.osipenko@collabora.com>, Hans Verkuil <hverkuil@xs4all.nl>, Shreeya
+ Patel <shreeya.patel@collabora.com>, Heiko Stuebner <heiko@sntech.de>,
+ Mauro Carvalho Chehab	 <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski	 <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, 	jose.abreu@synopsys.com, nelson.costa@synopsys.com,
+ shawn.wen@rock-chips.com,  Sebastian Reichel
+ <sebastian.reichel@collabora.com>
+Cc: kernel@collabora.com, linux-media@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-rockchip@lists.infradead.org, Christophe JAILLET
+	 <christophe.jaillet@wanadoo.fr>, Diederik de Haas <didi.debian@cknow.org>
+Date: Fri, 04 Apr 2025 12:25:16 -0400
+In-Reply-To: <e0e144be-5cf9-4a79-a602-2ab2b7cd9aa1@timsurber.de>
+References: <20250304085819.108067-1-dmitry.osipenko@collabora.com>
+	 <78ff36f6-01a7-4df4-b653-c4509fb93af4@timsurber.de>
+	 <1039aca7-89b9-44ef-9775-e7852e956362@timsurber.de>
+	 <9b4b1e65-127d-422b-a359-a1d8e25652f9@xs4all.nl>
+	 <88054acf-3051-414c-aef7-4c0f085d5182@collabora.com>
+	 <47e022f4-1c1b-43c4-8f6c-bc1ff23ad39f@collabora.com>
+	 <e0e144be-5cf9-4a79-a602-2ab2b7cd9aa1@timsurber.de>
+Organization: Collabora Canada
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.56.0 (3.56.0-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-On Fri, Apr 04 2025, Jason Gunthorpe wrote:
+Hi Tim,
 
-> On Fri, Apr 04, 2025 at 04:53:13PM +0300, Mike Rapoport wrote:
-[...]
->> Most drivers do not use folios
->
-> Yes they do, either through kmalloc or through alloc_page/etc. "folio"
-> here is just some generic word meaning memory from the buddy allocator.
->
-> The big question on my mind is if we need a way to preserve slab
-> objects as well..
+Le mercredi 05 mars 2025 à 11:41 +0100, Tim Surber a écrit :
+> Hi,
+> 
+> so the 4:4:4 issue was just a gstreamer bug and it worked when I
+> applied 
+> an experimental fix [1].
+> 
+> So everything works for me using the default EDID now.
+> 
+> Tested-by: Tim Surber <me@timsurber.de>
+> 
+> [1]: 
+> https://gitlab.freedesktop.org/gstreamer/gstreamer/-/merge_requests/8534
 
-Only if the objects in the slab cache are of a format that doesn't
-change, and I am not sure if that is the case anywhere. Maybe a driver
-written with KHO in mind would find it useful, but that's way down the
-line.
+Thanks, I'll try and get this fix moving soon. I now have a RK3588 with
+hacks that let me force YUV in the 3 subsampling, so I can easily
+reproduce now.
 
->
->> and for preserving memfd* and hugetlb we'd need to have some dance
->> around that memory anyway.
->
-> memfd is all folios - what do you mean?
->
-> hugetlb is moving toward folios.. eg guestmemfd is supposed to be
-> taking the hugetlb special stuff and turning it into folios.
->
->> So I think kho_preserve_folio() would be a part of the fdbox or
->> whatever that functionality will be called.
->
-> It is part of KHO. Preserving the folios has to be sequenced with
-> starting the buddy allocator, and that is KHO's entire responsibility.
->
-> I could see something like preserving slab being in a different layer,
-> built on preserving folios.
+Nicolas
 
-Agree with both points.
+p.s. I also hit some buffer starvation issues (inside GStreamer), for
+which I will be sending a fix to this driver so GStreamer is aware of
+the lost frames.
 
-[...]
->> As for the optimizations of memblock reserve path, currently it what hurts
->> the most in my and Pratyush experiments. They are not very representative,
->> but still, preserving lots of pages/folios spread all over would have it's
->> toll on the mm initialization.
->
->> And I don't think invasive changes to how
->> buddy and memory map initialization are the best way to move forward and
->> optimize that.
->
-> I'm pretty sure this is going to be the best performance path, but I
-> have no idea how invasive it would be to the buddy alloactor to make
-> it work.
-
-I don't imagine it would be that invasive TBH. memblock_free_pages()
-already checks for kmsan_memblock_free_pages() or
-early_page_initialised(), it can also check for kho_page() just as
-easily.
-
->
->> Quite possibly we'd want to be able to minimize amount of *ranges*
->> that we preserve.
->
-> I'm not sure, that seems backwards to me, we really don't want to have
-> KHO mem zones! So I think optimizing for, and thinking about ranges
-> doesn't make sense.
->
-> The big ranges will arise naturally beacuse things like hugetlb
-> reservations should all be contiguous and the resulting folios should
-> all be allocated for the VM and also all be contigous. So vast, vast
-> amounts of memory will be high order and contiguous.
-
-Yes, and those can work quite well with table + bitmaps too.
-
-[...]
+> 
+> On 3/5/25 10:09, Dmitry Osipenko wrote:
+> > On 3/5/25 12:03, Dmitry Osipenko wrote:
+> > > On 3/5/25 11:10, Hans Verkuil wrote:
+> > > > On 05/03/2025 01:59, Tim Surber wrote:
+> > > > > Hi Dmitry,
+> > > > > 
+> > > > > I did some more testing. That the Apple TV did not work was a
+> > > > > bit
+> > > > > misleading.
+> > > > > 
+> > > > > It was just, that the Apple TV defaulted to 4:4:4 Chroma
+> > > > > which does not
+> > > > > work at all for me. (The same happens using the vendor
+> > > > > driver).
+> > > > > 
+> > > > > When I changed the EDID to match the vendor driver the HDMI
+> > > > > handshake
+> > > > > happened with 4:2:0 chroma, where I could verify even 4k60fps
+> > > > > using your
+> > > > > driver, nice!
+> > > > > 
+> > > > > So the remaining problems I see are:
+> > > > > - 4:4:4 chroma not working in any resolution
+> > > > > - 4:2:2 and RGB not working in 4k60fps (is this a hardware
+> > > > > limitation?)
+> > > > > 
+> > > > > A possible workaround could be to disable these non supported
+> > > > > formats in
+> > > > > the default EDID.
+> > > > I would like to merge this driver this week, since otherwise it
+> > > > will likely
+> > > > slip to v6.16. So if there is a working EDID, perhaps it can be
+> > > > used for now,
+> > > > and later on it can be patched if there is a better EDID.
+> > > > 
+> > > > Would this EDID work? Tim, can you try this?
+> > > > 
+> > > > v4l2-ctl --set-edid type=hdmi-4k-600mhz,ycbcr444,ycbcr422
+> > > > 
+> > > > Alternatively, if there is indeed a HW limitation that prevents
+> > > > 4kp60 to work,
+> > > > try this:
+> > > > 
+> > > > v4l2-ctl --set-edid type=hdmi-4k-300mhz,ycbcr444,ycbcr422
+> > > > 
+> > > > Whichever of the two works is what we can use as default EDID.
+> > > 
+> > > Disabling 444 and 422 is an option. Though, they work on my setup
+> > > at
+> > > 4k@60p.
+> > > 
+> > > In general, it often a challenge to get 4k@60p properly with any
+> > > of
+> > > these small board devices. 4k@60p works only using a short HDMI
+> > > cable
+> > > for me. Also, not everyone aware that the micro HDMI adapter
+> > > needs to be
+> > > compliant with HDMI 2.0 for 4k@60, that's why 300MHz is the
+> > > default.
+> > > 
+> > > Will be nice to have the good EDID enabled by default in the
+> > > defconfig.
+> > > Dealing with problems like that will be a headache for majority
+> > > of
+> > > people, IMO.
+> > 
+> > BTW, I don't see it as a blocker. Driver works in general, new
+> > issues
+> > can be resolved with additional patches.
+> > 
 
 -- 
-Regards,
-Pratyush Yadav
+Nicolas Dufresne
+Principal Engineer at Collabora
