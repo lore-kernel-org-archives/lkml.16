@@ -1,73 +1,50 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EECD145B0B
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 16:18:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59F313C38;
+	Fri,  4 Apr 2025 16:20:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743783500; cv=none; b=NOCQUUJA1bWybckULdaaMDJo/ylMYTc2AF4aIPXCOQC6fNBmt0l2YNf/8zq970RnmPSLYxGhdZ9FtFsR9AoRelBIYeOmyJUWfoGOu+RqBEYYzV5HgBBr3U4Db3wLvbIqJnwaaWFkWSKKE1PtnmISCmjq7TJWWbyKALCGd7c2EF0=
+	t=1743783661; cv=none; b=j0Yzecq4IFYDVbxV7zkb1KvOSa626d5N7y/R/elzTgPRYOHIQuw2fvioSRMqLRYsi/sBgHfgTkQZeVRadRNxAFi1KogVZsGB1X9CqV/vgSpvYkbAZ2fj+H+3zra7X6pI8CAT5IJLYLRrgszHTyz3PCN+H4ofoDqM82aWC46gIcY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743783500; c=relaxed/simple;
-	bh=TYaxjWS4iwUxMgBaeB2fSxhqrtPm8y+U+Y71w7AtIoo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CqHuRDvkbZPJ7Bax9/J1Jiug0aK5+lIU8Ciju0ksTXgwD4bnmA3HfGiUXbvkafHcmOqdKLEP+tJg/cVtoeZGjQUvNQ7xUE4wyu0CHDGkGcAp8evJNcldtgEve7cl8ZAOgFXHlyXB7ZV6v7eKuzgRpEGFACZOB8ZD6Cuv0v6R324=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ftn2lre2; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1743783661; c=relaxed/simple;
+	bh=6+63ujJr+8nttY08AbevyHO47yB6QM9GVzRI584XxxY=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:CC:References:
+	 In-Reply-To:Content-Type; b=nwMrTRVaXU+JxLXGRuo7MY/KdWlL3b3SbU81NP+6kRRxhcsfIN1FC0lBou5tTIC/K4QHCsdDx28pm+g5yIkIxK4dOQY7wlCguuI/5tXle67Av5NgCaPArHfbgL5K4YHVS+D/4SP0YnlBjail4hmySzClH6Tew22hP3eQC4HA8U0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=IPxQ45rl; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ftn2lre2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743783497;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=8OejXCrxqbnmVsxgWwxh4xnmNEURfQ/aJ6V7K3P+SnU=;
-	b=Ftn2lre2zuWgoG/tM3MP+oq127PlYMBNYcuVHCQwoFqTBp3OqcotN0UzMQ2pk/YYWVykNy
-	IDACu5gOFc0qwLmYTjFNA3pAwUEjD/ImX71/t5e23AGrrafp56y1HUEHReBsuz3WFfSF40
-	RZfgIxQF4iHj4xwOAaXhUPamkqDfNTU=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-678-6QLZb53RMIGtHVZrGE0dRQ-1; Fri, 04 Apr 2025 12:18:16 -0400
-X-MC-Unique: 6QLZb53RMIGtHVZrGE0dRQ-1
-X-Mimecast-MFC-AGG-ID: 6QLZb53RMIGtHVZrGE0dRQ_1743783495
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43cf446681cso15937815e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 09:18:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743783495; x=1744388295;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
-         :references:cc:to:content-language:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8OejXCrxqbnmVsxgWwxh4xnmNEURfQ/aJ6V7K3P+SnU=;
-        b=ico812HwETiia8LFnxWv6Dw3gP/uen+i7Mo7hqK40qoVNDHGaep6oQjohnVd6tawgF
-         QfyGNUx7uiJRyvbcBGnHdnT9kPZn+L3GnVSdZAwS+iEJM6ifFkIFokoEXysJTM5L7lvH
-         qUy0pwJLyySM9N8QWFfMUHidMu6IUPMIzyZZIhwO3SVi31wsizoHsYJAQIHzf1cNH3Nh
-         y0yrI+2HguNlpUJwerAtPojNDbBp5DBpMujWZ46HTUi8Q2nCQDtlL3CF8qInJHiSfVNi
-         eex8TbUa5U+qNhNyoIgJN3pK/d1hRujWXP+YxoDAdNCNTw0awTINlVLUXpE7HePVCXC4
-         Rm0A==
-X-Forwarded-Encrypted: i=1; AJvYcCVmsXhBd7BM+aytMiGHKckeVFov4VmPmhaTV9SgmGgDAPDpo0yZwRv48bmCc1fDu+eiEApJg9AZJFfixNE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzdvJPQSXh0XF+iWCnNariskHeWbzJYbhYP2r80bmbevrNOZvgz
-	1/MOIEnFiiVzbMepPt/SQqdvORORKV8/uD6jhFELJODUcjb3eRhAa1cOdeQN1eAiWXK5aa7Drwm
-	0Q0W4CPg61+ySxr+MWPQdcD/CDWgXaTtoKYlfwbt8QGIBiF482nI/4I+I+ykZ9w==
-X-Gm-Gg: ASbGncvY8UyprsJO+vjHUE7l4mP22MW4RPs9BKBfes21/ZKmv55Bt67n+LElyoRKGaV
-	n4XRsOjqZ2Eq2MsUThc4pmcLxSPibtHp8uHzChZLRxzPo7WpGyYmsXwRnmrkvU4rjZfXh0zAKZd
-	vPqBnub8ZSHREglMBRyxZLqsovXq4nAJYI0nL7bOWk880GaqA1aXlzRipJku0pjhMZ3DotMvylN
-	tc86HeDW1FHpcxYKbW1/Tq3I+nd+1dkhma5VIOk7CcjAoP2GdORse/r3lCVgZkOhdXlNLfmOLx0
-	Jy9O/RRQb84DPXTl/k75mVtGRdmDvh1MsuvN9n5E4w+6aFJgN9VxWVWGIIhxCV4HWJ/9BZDhwAZ
-	zUugXFfW4E08klC1/z9eS51esRxhF4VxovqlmtvU5W+o=
-X-Received: by 2002:a05:600c:46cb:b0:434:fa55:eb56 with SMTP id 5b1f17b1804b1-43ed0b5e180mr29601045e9.7.1743783494854;
-        Fri, 04 Apr 2025 09:18:14 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGw50XUZ8b0mACVEGPstaSHFt8lZgrm023WRQpvI196XI6AXldQlXHgmz4W+aCZxXfYzFNIPA==
-X-Received: by 2002:a05:600c:46cb:b0:434:fa55:eb56 with SMTP id 5b1f17b1804b1-43ed0b5e180mr29600805e9.7.1743783494482;
-        Fri, 04 Apr 2025 09:18:14 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c71b:7900:8752:fae3:f9c9:a07e? (p200300cbc71b79008752fae3f9c9a07e.dip0.t-ipconnect.de. [2003:cb:c71b:7900:8752:fae3:f9c9:a07e])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c30226b17sm4765020f8f.92.2025.04.04.09.18.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Apr 2025 09:18:13 -0700 (PDT)
-Message-ID: <09c13770-4d62-430a-827d-6ad35411d18c@redhat.com>
-Date: Fri, 4 Apr 2025 18:18:12 +0200
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="IPxQ45rl"
+Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 534C4qNv029984;
+	Fri, 4 Apr 2025 18:20:45 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	1NKt9MGk7ZEOtW9yl+h4WTA3wA9CpVLn+mNMcHfKAhU=; b=IPxQ45rlu7+o8yi4
+	P4i53sGBKbLIQeId/7GJJNo4duzK01pjiygyNrVSkEFNErmTGQWnepIKgiu1yFdX
+	ui77G8b6N46xs1K4kkoylKxUISjZKFYqjabB5QqZI5i2LsW86hKRBHUUJiI2Cxst
+	XeIUM+GBJk/4qtMDVtGk+djcIX/lE+2hvO6DWlcYPyh+Zr6JEC5bDuvqMY1E2b7R
+	V0ufWH6OSmpVL7/pS7P2cJXwJUK2evuoeqUmLLCyVnpnqXyFTichVnxWlCmO0+v9
+	/nvW4kWhtrB3ZrNJdhbBB0l8pfo/6WHV4bOxSgXYZ+VmekajmANSP2mR4CzecLm2
+	/XSbLg==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 45t2ct4368-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 04 Apr 2025 18:20:45 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 85F5040053;
+	Fri,  4 Apr 2025 18:19:40 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 89DA09645B9;
+	Fri,  4 Apr 2025 18:18:51 +0200 (CEST)
+Received: from [10.130.77.120] (10.130.77.120) by SHFDAG1NODE3.st.com
+ (10.75.129.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 4 Apr
+ 2025 18:18:50 +0200
+Message-ID: <ddfc03e2-d4a6-460f-aafd-933019751dbf@foss.st.com>
+Date: Fri, 4 Apr 2025 18:18:32 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,120 +52,128 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] docs: update THP admin guide about non-tmpfs
- filesystem support
+From: Christian Bruel <christian.bruel@foss.st.com>
+Subject: Re: [PATCH 2/3] irqchip/gic: Use 0x10000 offset to access GICC_DIR on
+ STM32MP2
+To: Marc Zyngier <maz@kernel.org>
+CC: <tglx@linutronix.de>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <mcoquelin.stm32@gmail.com>,
+        <alexandre.torgue@foss.st.com>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+References: <20250403122805.1574086-1-christian.bruel@foss.st.com>
+ <20250403122805.1574086-3-christian.bruel@foss.st.com>
+ <8734epyw17.wl-maz@kernel.org>
+ <1213dbfb-821a-4534-947b-acc4eac9da81@foss.st.com>
+ <87y0wgxd4j.wl-maz@kernel.org>
 Content-Language: en-US
-To: Luis Chamberlain <mcgrof@kernel.org>,
- "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
- willy@infradead.org, linux-mm@kvack.org, Bagas Sanjaya
- <bagasdotme@gmail.com>, da.gomez@kernel.org, gost.dev@samsung.com,
- linux-doc@vger.kernel.org, Pankaj Raghav <p.raghav@samsung.com>
-References: <20250404140657.29285-1-kernel@pankajraghav.com>
- <Z-_7fzU02OU1hVOT@bombadil.infradead.org>
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
- dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
- QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
- XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
- Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
- PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
- WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
- UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
- jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
- B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
- ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwZgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQW
- AgMBAh4BAheAAhkBFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl8Ox4kFCRKpKXgACgkQTd4Q
- 9wD/g1oHcA//a6Tj7SBNjFNM1iNhWUo1lxAja0lpSodSnB2g4FCZ4R61SBR4l/psBL73xktp
- rDHrx4aSpwkRP6Epu6mLvhlfjmkRG4OynJ5HG1gfv7RJJfnUdUM1z5kdS8JBrOhMJS2c/gPf
- wv1TGRq2XdMPnfY2o0CxRqpcLkx4vBODvJGl2mQyJF/gPepdDfcT8/PY9BJ7FL6Hrq1gnAo4
- 3Iv9qV0JiT2wmZciNyYQhmA1V6dyTRiQ4YAc31zOo2IM+xisPzeSHgw3ONY/XhYvfZ9r7W1l
- pNQdc2G+o4Di9NPFHQQhDw3YTRR1opJaTlRDzxYxzU6ZnUUBghxt9cwUWTpfCktkMZiPSDGd
- KgQBjnweV2jw9UOTxjb4LXqDjmSNkjDdQUOU69jGMUXgihvo4zhYcMX8F5gWdRtMR7DzW/YE
- BgVcyxNkMIXoY1aYj6npHYiNQesQlqjU6azjbH70/SXKM5tNRplgW8TNprMDuntdvV9wNkFs
- 9TyM02V5aWxFfI42+aivc4KEw69SE9KXwC7FSf5wXzuTot97N9Phj/Z3+jx443jo2NR34XgF
- 89cct7wJMjOF7bBefo0fPPZQuIma0Zym71cP61OP/i11ahNye6HGKfxGCOcs5wW9kRQEk8P9
- M/k2wt3mt/fCQnuP/mWutNPt95w9wSsUyATLmtNrwccz63XOwU0EVcufkQEQAOfX3n0g0fZz
- Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
- T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
- 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
- CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
- NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
- 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
- 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
- lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
- AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
- N7eop7uh+6bezi+rugUI+w6DABEBAAHCwXwEGAEIACYCGwwWIQQb2cqtc1xMOkYN/MpN3hD3
- AP+DWgUCXw7HsgUJEqkpoQAKCRBN3hD3AP+DWrrpD/4qS3dyVRxDcDHIlmguXjC1Q5tZTwNB
- boaBTPHSy/Nksu0eY7x6HfQJ3xajVH32Ms6t1trDQmPx2iP5+7iDsb7OKAb5eOS8h+BEBDeq
- 3ecsQDv0fFJOA9ag5O3LLNk+3x3q7e0uo06XMaY7UHS341ozXUUI7wC7iKfoUTv03iO9El5f
- XpNMx/YrIMduZ2+nd9Di7o5+KIwlb2mAB9sTNHdMrXesX8eBL6T9b+MZJk+mZuPxKNVfEQMQ
- a5SxUEADIPQTPNvBewdeI80yeOCrN+Zzwy/Mrx9EPeu59Y5vSJOx/z6OUImD/GhX7Xvkt3kq
- Er5KTrJz3++B6SH9pum9PuoE/k+nntJkNMmQpR4MCBaV/J9gIOPGodDKnjdng+mXliF3Ptu6
- 3oxc2RCyGzTlxyMwuc2U5Q7KtUNTdDe8T0uE+9b8BLMVQDDfJjqY0VVqSUwImzTDLX9S4g/8
- kC4HRcclk8hpyhY2jKGluZO0awwTIMgVEzmTyBphDg/Gx7dZU1Xf8HFuE+UZ5UDHDTnwgv7E
- th6RC9+WrhDNspZ9fJjKWRbveQgUFCpe1sa77LAw+XFrKmBHXp9ZVIe90RMe2tRL06BGiRZr
- jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <Z-_7fzU02OU1hVOT@bombadil.infradead.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+In-Reply-To: <87y0wgxd4j.wl-maz@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE3.st.com
+ (10.75.129.71)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-04_07,2025-04-03_03,2024-11-22_01
 
-On 04.04.25 17:32, Luis Chamberlain wrote:
-> On Fri, Apr 04, 2025 at 04:06:57PM +0200, Pankaj Raghav (Samsung) wrote:
->> From: Pankaj Raghav <p.raghav@samsung.com>
+
+
+On 4/4/25 15:36, Marc Zyngier wrote:
+> On Fri, 04 Apr 2025 13:15:05 +0100,
+> Christian Bruel <christian.bruel@foss.st.com> wrote:
 >>
->> THP support for non-tmpfs filesystem has been around for some time now.
->> Update the admin guide to reflect it.
 >>
->> While we are at it, move FilePmdMapped to previous paragraph for clarity,
->> and clarify ShmemPmdMapped & ShmemHugePage.
 >>
->> Signed-off-by: Pankaj Raghav <p.raghav@samsung.com>
->> Acked-by: David Hildenbrand <david@redhat.com>
->> ---
+>> On 4/3/25 19:50, Marc Zyngier wrote:
+>>> On Thu, 03 Apr 2025 13:28:04 +0100,
+>>> Christian Bruel <christian.bruel@foss.st.com> wrote:
+>>>>
+>>>> When GIC_4KNOT64K bit in the GIC configuration register is
+>>>> 0 (64KB), address block is modified in such a way than only the
+>>>> first 4KB of the GIC cpu interface are accessible with default
+>>>> offsets.
+>>>> With this bit mapping GICC_DIR register is accessible at
+>>>> offset 0x10000 instead of 0x1000, thus remap accordingly
+>>>
+>>> And I'm pretty sure the whole of the GICC range is correctly
+>>> accessible at offset 0xF000, giving you the full 8kB you need. That's
+>>> because each page of the GIC is aliased over two 64kB blocks, as per
+>>> the integration guidelines so that MMU isolation can be provided on a
+>>> 64kB boundary.
 >>
->> Changes since v2:
->> - Address comment from Bagas Sanjaya
->> - Squash commits and Ack from David
+>> Thanks a lot for this explanation, indeed this works like a charm.
 >>
->>   Documentation/admin-guide/mm/transhuge.rst | 22 +++++++++++++++-------
->>   1 file changed, 15 insertions(+), 7 deletions(-)
+>>>
+>>> Funnily enough, all it takes is to adjust GICC region. You can either:
+>>>
+>>> - make it 128kB wide, and the driver will take care of it (details in
+>>>     gic_check_eoimode()). On one of my boxes that is similarly
+>>>     configured, I get:
+>>>
+>>>     [    0.000000] NR_IRQS: 64, nr_irqs: 64, preallocated irqs: 0
+>>>     [    0.000000] GIC: Adjusting CPU interface base to 0x00000000780af000
+>>>     [    0.000000] Root IRQ handler: gic_handle_irq
+>>>     [    0.000000] GIC: Using split EOI/Deactivate mode
+>>>
+>>>     See below for what I expect to be the correct fix.
+>>>     - make it 8kB wide from offset 0xF000.
 >>
->> diff --git a/Documentation/admin-guide/mm/transhuge.rst b/Documentation/admin-guide/mm/transhuge.rst
->> index dff8d5985f0f..f8aae64e38d0 100644
->> --- a/Documentation/admin-guide/mm/transhuge.rst
->> +++ b/Documentation/admin-guide/mm/transhuge.rst
->> @@ -12,8 +12,8 @@ using huge pages for the backing of virtual memory with huge pages
->>   that supports the automatic promotion and demotion of page sizes and
->>   without the shortcomings of hugetlbfs.
->>   
->> -Currently THP only works for anonymous memory mappings and tmpfs/shmem.
->> -But in the future it can expand to other filesystems.
->> +Currently, THP only works for anonymous memory mappings, tmpfs/shmem and
->> +filesystems that support large folios.
+>> I checked both and they work. I will go for the former to show real
+>> 8kB size to be exposed in the DT. And there are a few other
+>> platforms that use this alias
 > 
-> That seems to allude that THP can be supported on filesystems
-> that suppor large folios. I don't think we want to call that THP
-> and that can confuse folks. Leaving "currently" also seems to
-> indicate that there is more work to be done for THP for filesystems
-> but that's not true as well. So how about something like:
+> I think 8kB the wrong option. The GIC *is* supposed to be integrated
+> over 128kB on arm64 platforms (there was some documentation about that
+> back in the days, but it has become impossible to search anything on
+> ARM's stupidly broken website.  My recollection is that it was bundled
+> with the GICv2m "specification" (only half a page!). >
+> Furthermore, you are supposed to describe the HW. Not your
+> interpretation of it. Correctly written SW targeting arm64 know about
+> this anyway.
+
+greping other platforms there are a bunch 0xf000 offset 8KB mapped:
+
+  amd/amd-seattle-soc.dtsi
+  arm/corstone1000.dtsi
+  arm/foundation-v8-gicv3.dtsi
+  arm/juno-base.dtsi
+  mediatek/mt8516.dtsi
+
+but, looking at the stm32mp25 memory map (1)
+
+0x4AC22000 - 0x4AC3FFFF 120 Reserved -
+0x4AC20000 - 0x4AC21FFF 8   GICC
+
+I can know guess that the  Reserved 120kB is for aliasing the 64kB 
+blocks. Thus describing the GICC range at 128kB makes sense
+
+similarly 4 kB + 120 Reserved for GICH and 8kB + 120 Reserved for GICV
+
+(1) 
+https://www.st.com/resource/en/reference_manual/rm0457-stm32mp25xx-advanced-armbased-3264bit-mpus-stmicroelectronics.pdf
+
+
 > 
-> THP only works for anonymous memory mappings, and the tmpfs/shmem is the only
-> filesystem to support it. The alternative to THP for other filesystems is to
-> support large folios and with it you can end up using huge pages
+>>> Unless the ST HW folks have been even more creative, none of this
+>>> overly complicated stuff should be necessary. Just describe the HW
+>>> correctly.
+>>
+>> I was unable to find this information in the GIC-400 trm
+>> (https://developer.arm.com/documentation/ddi0471/b/programmers-model/gic-400-register-map). Now
+>> I also prefer to use GICC alias at
+>> offset 0xf000 as suggested rather than the quirk solution
+> 
+> Again, this isn't a quirk. It's the one true way for 64bit platforms
+> that can use pages bigger than 4kB. That's the purpose of the 4Kn64K
+> parameter in the integration, dropping bits [15:12] from the PA
+> presented to the CPU interface.
 
-That makes things more complicated without a good reason.
+sorry, misunderstanding, I was referring about my dropped quirk that I 
+now dropped, not your options
 
-See CONFIG_READ_ONLY_THP_FOR_FS as an early usage of the term "THP" for 
-stuff we have in the pagecache. (with large folios we now properly 
-implement this concept, and support more than only PMD size)
+thanks
 
--- 
-Cheers,
-
-David / dhildenb
-
+Christian
+> 
+> 	M.
+> 
