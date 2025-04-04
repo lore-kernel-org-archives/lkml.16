@@ -1,145 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AF9D1F12E8;
-	Fri,  4 Apr 2025 13:53:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F5561F2C56;
+	Fri,  4 Apr 2025 13:53:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743774810; cv=none; b=RjncH6tN2bNl7LG5B2D+3L6Kk9qtzGcjjxq8kLZcmRNvHSkxQyuKK5Qw3/pNqLA/h/c0KcMcbNZBrqNJmcNncLtCIx8IMVeH3x2jnVd5BGo2i32pg0gvAauKd1kqsh4BQBeeB9FydR/P8ro/z78uJwk2ahx2ZBrYg2YMZ44Vu6E=
+	t=1743774818; cv=none; b=jN/OggD3QKW6WkRv2q/Wb+Xbmfieu0rdhQMphjCrUyHzyp/He5Aw62rKBgoviU3hCKjokX0mrRrPi5/jm8WQCA9ixed52yT73zX45Cn9cPuIp0qgpBW1kpqDxKRvxHWp8clB0RDR8gtzuq1UKRuP/JWmBICJKY3bfKQw4hC+/Og=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743774810; c=relaxed/simple;
-	bh=2rzMRftKBbWXyLp7FGHjPk6gHfvfTiEV+d+apCFfS6U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kbwCpRVtixlCmVemCVJrikfYlN3V3LwkVvFbVyX6yz+cankLcoJBF4MZv0YppntUteKE1UeH0aWFVhrTrJLhIkYHBhm0jyMYPvgmrphykLtuzMi2x6l7T4RpaPuUYA+BpJG7jl9+STKyw9hKxRuv6CKatpZ9gxMK5GIIUCWBR0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u86qq+WW; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u86qq+WW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67702C4CEE9;
-	Fri,  4 Apr 2025 13:53:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743774810;
-	bh=2rzMRftKBbWXyLp7FGHjPk6gHfvfTiEV+d+apCFfS6U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=u86qq+WWOgfr/y8T3yYEfFibNlmCislNnrANwDMm0Ddd3FrjSwk5X/9lyM2ctT40p
-	 fbIqF2t2bIDazWL1aQ+8uKlFQwozKkEDLtbquMfiQEfWaMUxIkbLXNa3+U20SS79tc
-	 zsXuF9LVeo4pVn1onYujBO70qGEQvFTfGdJyt62/ft4rTl1i7VRVZueQsD5E0NMq3R
-	 4XlixfG7j2DkiY5hGeOJg9CqNrunFEW/Vhp7IbJcQUzXFhrmZ9yj191xLraeS8y+0B
-	 A5ZL0U88jgVbAMqN4TBDpuesEaWt5Mz+qG36eitZepGX00BCXMDM83p/0iTferff24
-	 ylNRrHAYePorg==
-Date: Fri, 4 Apr 2025 16:53:13 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Pratyush Yadav <ptyadav@amazon.de>,
-	Changyuan Lyu <changyuanl@google.com>, linux-kernel@vger.kernel.org,
-	graf@amazon.com, akpm@linux-foundation.org, luto@kernel.org,
-	anthony.yznaga@oracle.com, arnd@arndb.de, ashish.kalra@amd.com,
-	benh@kernel.crashing.org, bp@alien8.de, catalin.marinas@arm.com,
-	dave.hansen@linux.intel.com, dwmw2@infradead.org,
-	ebiederm@xmission.com, mingo@redhat.com, jgowans@amazon.com,
-	corbet@lwn.net, krzk@kernel.org, mark.rutland@arm.com,
-	pbonzini@redhat.com, pasha.tatashin@soleen.com, hpa@zytor.com,
-	peterz@infradead.org, robh+dt@kernel.org, robh@kernel.org,
-	saravanak@google.com, skinsburskii@linux.microsoft.com,
-	rostedt@goodmis.org, tglx@linutronix.de, thomas.lendacky@amd.com,
-	usama.arif@bytedance.com, will@kernel.org,
-	devicetree@vger.kernel.org, kexec@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
-	linux-mm@kvack.org, x86@kernel.org
-Subject: Re: [PATCH v5 09/16] kexec: enable KHO support for memory
- preservation
-Message-ID: <Z-_kSXrHWU5Bf3sV@kernel.org>
-References: <20250320015551.2157511-1-changyuanl@google.com>
- <20250320015551.2157511-10-changyuanl@google.com>
- <mafs05xjmqsqc.fsf@amazon.de>
- <20250403114209.GE342109@nvidia.com>
- <Z-6UA3C1TPeH_kGL@kernel.org>
- <20250403142438.GF342109@nvidia.com>
- <Z--sUYCvP3Q8nT8e@kernel.org>
- <20250404124729.GH342109@nvidia.com>
+	s=arc-20240116; t=1743774818; c=relaxed/simple;
+	bh=10U8NdtmwB1T4+mE7hjOFF0m9/uG3tbjwAiz9Gypt7Y=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=o5XKynj09ORCLqYkr3jemhcotkn8chSnuK+1rmNY7N/C0ZJq0TKiVm1liRUXzPljfflo4DMEV8WBFCCg03lF6MRiPH7nOkpdKYNpD3nWCDpWsa2SnKXw6mt8OdmR9YCNIPBmp+e3IG9043NtawtWDclxhRA3g0kovfn5LI2KwAg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZTg2l66Zpz6M4WH;
+	Fri,  4 Apr 2025 21:49:51 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id B1E71140595;
+	Fri,  4 Apr 2025 21:53:33 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 4 Apr
+ 2025 15:53:33 +0200
+Date: Fri, 4 Apr 2025 14:53:31 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: "Zhijian Li (Fujitsu)" <lizhijian@fujitsu.com>
+CC: Dan Williams <dan.j.williams@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, Dave Jiang
+	<dave.jiang@intel.com>, "Alison Schofield" <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] cxl/acpi: Verify CHBS length for CXL2.0
+Message-ID: <20250404145331.00001559@huawei.com>
+In-Reply-To: <7bbf602d-6900-4179-9737-efeb40e1566f@fujitsu.com>
+References: <20250326074450.937819-1-lizhijian@fujitsu.com>
+	<67e4c9aaedd08_138d3294ca@iweiny-mobl.notmuch>
+	<1ed912df-42c7-4319-8765-3167963df7b3@fujitsu.com>
+	<67e5544237027_13cb29432@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+	<7bbf602d-6900-4179-9737-efeb40e1566f@fujitsu.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250404124729.GH342109@nvidia.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Fri, Apr 04, 2025 at 09:47:29AM -0300, Jason Gunthorpe wrote:
-> On Fri, Apr 04, 2025 at 12:54:25PM +0300, Mike Rapoport wrote:
-> > > IMHO it should not call kho_preserve_phys() at all.
+On Fri, 28 Mar 2025 04:15:13 +0000
+"Zhijian Li (Fujitsu)" <lizhijian@fujitsu.com> wrote:
+
+> On 27/03/2025 21:36, Dan Williams wrote:
+> > Zhijian Li (Fujitsu) wrote:  
+> >>
+> >>
+> >> On 27/03/2025 11:44, Ira Weiny wrote:  
+> >>> Li Zhijian wrote:  
+> >>>> Per CXL Spec r3.1 Table 9-21, both CXL1.1 and CXL2.0 have defined their
+> >>>> own length, verify it to avoid an invalid CHBS  
+> >>>
+> >>>
+> >>> I think this looks fine.  But did a platform have issues with this?  
+> >>
+> >> Not really, actually, I discovered it while reviewing the code and
+> >> CXL specification.
+> >>
+> >> Currently, this issue arises only when I inject an incorrect length
+> >> via QEMU environment. Our hardware does not experience this problem.
+> >>
+> >>  
+> >>> Does this need to be backported?  
+> >> I remain neutral :)  
 > > 
-> > Do you mean that for preserving large physical ranges we need something
-> > entirely different?
+> > What does the kernel do with this invalid CHBS from QEMU? I would be
+> > happy to let whatever bad effect from injecting a corrupted CHBS just
+> > happen because there are plenty of ways for QEMU to confuse the kernel
+> > even if the table lengths are correct.
+> > 
+> > Unless it has real impact I would rather not touch the kernel for every
+> > possible way that QEMU can make a mistake.  
 > 
-> If they don't use the buddy allocator, then yes?
 > 
-> > Then we don't need the bitmaps at this point, as we don't have any users
-> > for kho_preserve_folio() and we should not worry ourself with orders and
-> > restoration of high order folios until then ;-)
 > 
-> Arguably yes :\
+> Thank you for the feedback.
 > 
-> Maybe change the reserved regions code to put the region list in a
-> folio and preserve the folio instead of using FDT as a "demo" for the
-> functionality.
-
-Folios are not available when we restore reserved regions, this just won't
-work.
-
-> > The xarrays + bitmaps do have the limitation that we cannot store any
-> > information about the folio except its order and if we are anyway need
-> > something else to preserve physical ranges, I suggest starting with
-> > preserving ranges and then adding optimizations for the folio case.
+> If your earlier comments were specifically about ***backporting*** this patch,
+> I agree there might not be an urgent need for that.
 > 
-> Why? What is the use case for physical ranges that isn't handled
-> entirely by reserved_mem_add()?
+> However, regarding the discussion on whether this patch should be accepted
+> upstream, TBH, I believe it is necessary.
 > 
-> We know what the future use case is for the folio preservation, all
-> the drivers and the iommu are going to rely on this.
-
-We don't know how much of the preservation will be based on folios.
-Most drivers do not use folios and for preserving memfd* and hugetlb we'd
-need to have some dance around that memory anyway.  So I think
-kho_preserve_folio() would be a part of the fdbox or whatever that
-functionality will be called.
-
-> > Here's something that implements preservation of ranges (compile tested
-> > only) and adding folios with their orders and maybe other information would
-> > be quite easy.
+> 1. The **CXL Specification (r3.1, Table 9-21)** explicitly defines `length`
+> requirements for CHBS in both CXL 1.1 and CXL 2.0 cases. Failing to
+> validate this field against the spec risks misinterpretation of invalid
+> configurations.
 > 
-> But folios and their orders is the *whole point*, again I don't see
-> any use case for preserving ranges, beyond it being a way to optimize
-> the memblock reserve path. But that path should be fixed up to just
-> use the bitmap directly..
+> 2. As mentioned in section **2.13.8** of the *CXL Memory Device Software Guide (Rev 1.0)*,
+> It's recommended to verify the CHBS length.
+> 
+> While the immediate impact might be limited to edge cases (e.g., incorrect QEMU configurations),
+> upstreaming this aligns the kernel with spec-mandated checks and improves
+> robustness for future use cases.
+> 
+> [1] https://cdrdv2-public.intel.com/643805/643805_CXL_Memory_Device_SW_Guide_Rev1_1.pdf
 
-Are they? 
-The purpose of basic KHO is to make sure the memory we want to preserve is
-not trampled over. Preserving folios with their orders means we need to
-make sure memory range of the folio is preserved and we carry additional
-information to actually recreate the folio object, in case it is needed and
-in case it is possible. Hughetlb, for instance has its own way initializing
-folios and just keeping the order won't be enough for that.
+Just to check - are we talking hacked QEMU or some configuration of QEMU that
+can generate the wrong length?
 
-As for the optimizations of memblock reserve path, currently it what hurts
-the most in my and Pratyush experiments. They are not very representative,
-but still, preserving lots of pages/folios spread all over would have it's
-toll on the mm initialization. And I don't think invasive changes to how
-buddy and memory map initialization are the best way to move forward and
-optimize that. Quite possibly we'd want to be able to minimize amount of
-*ranges* that we preserve.
+Jonathan
 
-So from the three alternatives we have now (xarrays + bitmaps, tables +
-bitmaps and maple tree for ranges) maple tree seems to be the simplest and
-efficient enough to start with.
- 
-Preserving folio orders with it is really straighforward and until we see
-some real data of how the entire KHO machinery is used, I'd prefer simple
-over anything else.
+> 
+> 
+> > 
+> > I.e. if it was a widespread problem that affected multiple QEMU users by
+> > default then maybe. Just your local test gone awry? Maybe not  
 
-> Jason
-
--- 
-Sincerely yours,
-Mike.
