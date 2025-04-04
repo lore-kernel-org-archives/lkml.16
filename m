@@ -1,144 +1,138 @@
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from the.earth.li (the.earth.li [93.93.131.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C4222E62B6;
-	Fri,  4 Apr 2025 07:22:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9D202E62B6;
+	Fri,  4 Apr 2025 07:28:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.93.131.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743751324; cv=none; b=suDmX9eVIY9SThkYYnyusYNXGQvlIvJU/DkrrrBTdhWIoe2s9ZcuzFyFEJA73xeg6VmxflFlMbPUt5Umn55X6dTzxYLKsaOXtjcnaU7ZrS1lfCMWDxczUX+qYVBpUcrkrbuv4DWhQWEEr5Q1bl92rbDqPwASIZfTLgL35j7BdjU=
+	t=1743751693; cv=none; b=t5sqwTZ5SjBn2bw9X8bH4BeutxY2ObP1xYIyJtLB8IoV9Zolemrlb8QgNwiCr4xPEfk/qOvEbSwAlXBG+M7eIDXHMyL5xabvjiYQEigzd4UfIzJcM9vcuF8DfEGpmKl6YqO3PI3ymcQA3ChUFFj2KGhIcvifG8KRtgTHu/MHsO8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743751324; c=relaxed/simple;
-	bh=wyyCNEg2XaAgHt+MpKO9cro/bi3gmE6YO23StBPm5yI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nnSR+spO3mbqseaQ6HTc7RU2KwrQTu5P6/C4MW99RklhTpZeELSBPQJLVyRlyDeycHHDhC9FHDxYChOw16qOymfzJsIT27rgK2d0XW0L/DESymyvjv2wrejihuwjNT7gTLA6AO31z8O7k6gYuROXl6W3pM4ranXAQV9J6vVrG9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RaXzu39b; arc=none smtp.client-ip=209.85.210.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743751693; c=relaxed/simple;
+	bh=2/JScvOwZ7VhRJQXXo1N+2i+wXcN5K1lBC1eIXdvdQ4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sViYjZvMbLCE98zv/oTOzHlpi5Ee0qqzqMS6Daa95cKdgO+H7VHPZ4P6LRZUbDffBroKp/+H1hwOPThgCJGFr3c04j4uTINCdDbFmqywvYAn5j7by1xqz6CVtj4twU65O9x1l93Yu0uati0poeqFxG+LgWoN+8e/pOXFboa2OgU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=earth.li; spf=pass smtp.mailfrom=earth.li; dkim=pass (2048-bit key) header.d=earth.li header.i=@earth.li header.b=o89W3YbK; arc=none smtp.client-ip=93.93.131.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=earth.li
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=earth.li
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RaXzu39b"
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-736c062b1f5so1448106b3a.0;
-        Fri, 04 Apr 2025 00:22:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743751322; x=1744356122; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=hjbjq84OY+V2VTQE3ONIBsyDtOPoNqTXO3fKwxhNopY=;
-        b=RaXzu39bjYAmakLJbuVp1rw33EDKSNVE3Cc9n2TfspWge8UI0leGGf6PfVSdbkPUFT
-         MRAh6HJTC2pFHhdflrHsXco5aPp/id0ye3KhCLgIl9PMUfZHh8Xzs3MvRqX/djXMcJnE
-         GVb8hnNfFR44QTlOeCCArghNQrYJldLFMpnGKy5+C2iFa5Fx0n72X5eBuoUD61nmIU4x
-         F6UJRCKq3qgNBhNy61AM/FBAfjuCkZSBYMBERVxc8B4wQ/cc3ZIk6e0oRtri85BR4z7q
-         7+c6aNqebmrZeAShk53/GHYBW5HpHcleomRAVw4RXmdaw8dAR2Y+tcz0PB2WgEk4ARgV
-         9lww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743751322; x=1744356122;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=hjbjq84OY+V2VTQE3ONIBsyDtOPoNqTXO3fKwxhNopY=;
-        b=liMexDps1jkfhUVG9CgeuV5bBjoaeJWF+HH3B6aPa9atCFmejM6gWAprj2E0KkvqRJ
-         +sobFpLYQJuhXzgsC4UgN5dU8qh9PFtEFjKipZ7G0O0yCaiiu79bbKLRmnoGNiP8B4Lf
-         S70nuMAGZCEsAakljaoNGdVkrvjHMPq4IqSxcT4OU/HnE63+7tEUCMQoRtggzpBKvEHn
-         JoezEgbNoUgBeRV7iK+kEGSByk5sGTeF9mqUxlb6G3eQRvGYnu+0SKcoyVsX96mSSLAe
-         GTUMWCN6g0QGdKL+L2+f8blrWcGsn8STQRigae0GviTvGE5Z9HAJbXz69whRL52wzBaZ
-         8KFA==
-X-Forwarded-Encrypted: i=1; AJvYcCUKA9ww438SRu++xSeO80vEVGB2EzdDg0Q4Cw3xp3RrhFudYf2lCNn4DmPv4QI7SIClKQGa1KqvwxWM@vger.kernel.org, AJvYcCUzxvp38ycbsO3CNC1tTILssiHdZyoezyULAYdCLNTKKWjRDTUMKZbk1JzVMtLdBpCdDrSEVSz7f4JdpVu3@vger.kernel.org, AJvYcCWD9mbM5oJY/0YeY21tlnA+vmTosYDqihHRU6kh52L7OCpqZARcMpY6nk3YlBFspDvZJhvGvv+QULNCUUJ3@vger.kernel.org
-X-Gm-Message-State: AOJu0YyH0ZCoLqFP/jV/y1r+EoUxd2T37kcJdNYmmITD+Lgo3CsSAakU
-	pyCO+QZKe3cDmVeKpwg4o04YPi/nDN2/CxKNSx8JMnx3d3UU2ViQWo0UTxgA1oE=
-X-Gm-Gg: ASbGncsVafu2IFa1ixQlHD2m8+O9EEQcrwoD9tEcBh625K0f10eei2O891E8tHi2NzR
-	b8ISg+1P2JUwuDMN3/tlgGoQUjxXhm4gZp0MbMdSHp+Nb9dfqGJAyAGA/UqgPKjcTErSRqvrLFY
-	pg21kB2mAsBnlNNzfoWJGNBHd+gbOMOvkNfTn24Ib8ptU5TMdKwds++Ywd/kWEqkRmqLSYJzYFW
-	Y1v3NgDS9PjeFVWfo+QuEpt8rVlvYWv8xnGA8S5/BB42IXCm5Bp20TZ8jB02rffUyQicjSKQkmX
-	8Ontl5PQMBZnCMEaFaB5e0luU6caBgsJq6Etkx0wm3l19/WKkDN9xQ==
-X-Google-Smtp-Source: AGHT+IHz52iM0Ut+nIzEPwr7kHc6kYrM80hwVYpXhsX4Ng9bdBpZGSHbEcuYewXJUL8+qRD62QptZA==
-X-Received: by 2002:a05:6a20:3953:b0:1f5:7f45:7f95 with SMTP id adf61e73a8af0-201081897bbmr2516743637.27.1743751322434;
-        Fri, 04 Apr 2025 00:22:02 -0700 (PDT)
-Received: from nuvole.. ([144.202.86.13])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739da0e3184sm2674547b3a.160.2025.04.04.00.21.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Apr 2025 00:22:01 -0700 (PDT)
-From: Pengyu Luo <mitltlatltl@gmail.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>
-Cc: Pengyu Luo <mitltlatltl@gmail.com>,
-	linux-arm-msm@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] clk: qcom: rpmh: make clkaN optional
-Date: Fri,  4 Apr 2025 15:20:02 +0800
-Message-ID: <20250404072003.515796-1-mitltlatltl@gmail.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=earth.li header.i=@earth.li header.b="o89W3YbK"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=earth.li;
+	s=the; h=In-Reply-To:Content-Transfer-Encoding:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=2YdnEUH1wsmqIUpTi67kfYO334IijJ7ao9U93PHnRDw=; b=o89W3YbKJ17EvI3O8gZ7qEoPKY
+	bBemwLOdjgi2gxGEa9/8MaV1poqwOQMq7DgL7rnPqHsf0a7XgGgI+OVsum6/KDDS6FP0fMX2BTKRX
+	sQuI4w2NyPAIhsMKMcTNWgnfEQb7vgcEAZVG9q2YM2oMcB/7vL/7E5t2ptdW9LArW5t+IHE3o+Peb
+	fFH5fW0//sw8xeZWVuPnycrlON1uvlAaMAnEkuYFj0Jf4AYbFyHaGPaOJOmFJsp09Heooe47dadzP
+	Dq+jxHBh/uf6kMlf78Y+WwheoOTLt+88lRvPXUmynYUgAECfoV00kCL49xi5hkCqkVbG3ki8ne92i
+	6iGlweJA==;
+Received: from noodles by the.earth.li with local (Exim 4.96)
+	(envelope-from <noodles@earth.li>)
+	id 1u0bT9-00EExp-1Y;
+	Fri, 04 Apr 2025 08:28:03 +0100
+Date: Fri, 4 Apr 2025 08:28:03 +0100
+From: Jonathan McDowell <noodles@earth.li>
+To: Sasha Levin <sashal@kernel.org>
+Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+	Jonathan McDowell <noodles@meta.com>,
+	Jarkko Sakkinen <jarkko@kernel.org>, peterhuewe@gmx.de,
+	linux-integrity@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 5.4 9/9] tpm: End any active auth session before
+ shutdown
+Message-ID: <Z--KA3cyFGsqNBKE@earth.li>
+References: <20250403192050.2682427-1-sashal@kernel.org>
+ <20250403192050.2682427-9-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250403192050.2682427-9-sashal@kernel.org>
 
-On sm8650, clkaN are missing in cmd-db for some specific devices. This
-caused a boot failure. Printing log during initramfs phase, I found
+NAK. Not sure on the logic that decided this was applicable for 5.4, but 
+it's obviously not even been compile tested:
 
-[    0.053281] clk-rpmh 17a00000.rsc:clock-controller: missing RPMh resource address for clka1
+noodles@sevai:~/checkouts/linux$ git checkout v5.4.291
+Updating files: 100% (13517/13517), done.
+Previous HEAD position was 219d54332a09 Linux 5.4
+HEAD is now at 52bcf31d8e3d Linux 5.4.291
+noodles@sevai:~/checkouts/linux$ git grep tpm2_end_auth_session
+noodles@sevai:~/checkouts/linux$ 
 
-Adding the optional property to avoid probing failure which causes
-countless deferred probe. In the downstream tree,similar workarounds
-are introduced for sm7635, sm8550, sm8635, sm8650, sm8750.
+The auth session bits were introduced in 699e3efd6c645 (tpm: Add HMAC 
+session start and end functions), which landed in 6.10.
 
-Tested-by: Pengyu Luo <mitltlatltl@gmail.com> # Oneplus Pad Pro / Oneplus Pad 2
-Signed-off-by: Pengyu Luo <mitltlatltl@gmail.com>
----
- drivers/clk/qcom/clk-rpmh.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+On Thu, Apr 03, 2025 at 03:20:50PM -0400, Sasha Levin wrote:
+>From: Jonathan McDowell <noodles@meta.com>
+>
+>[ Upstream commit 1dbf74e00a5f882b04b398399b6def65cd51ef21 ]
+>
+>Lazy flushing of TPM auth sessions can interact badly with IMA + kexec,
+>resulting in loaded session handles being leaked across the kexec and
+>not cleaned up. Fix by ensuring any active auth session is ended before
+>the TPM is told about the shutdown, matching what is done when
+>suspending.
+>
+>Before:
+>
+>root@debian-qemu-efi:~# tpm2_getcap handles-loaded-session
+>root@debian-qemu-efi:~# tpm2_getcap handles-saved-session
+>root@debian-qemu-efi:~# kexec --load --kexec-file-syscall …
+>root@debian-qemu-efi:~# systemctl kexec
+>…
+>root@debian-qemu-efi:~# tpm2_getcap handles-loaded-session
+>- 0x2000000
+>root@debian-qemu-efi:~# tpm2_getcap handles-saved-session
+>root@debian-qemu-efi:~#
+>(repeat kexec steps)
+>root@debian-qemu-efi:~# tpm2_getcap handles-loaded-session
+>- 0x2000000
+>- 0x2000001
+>root@debian-qemu-efi:~# tpm2_getcap handles-saved-session
+>root@debian-qemu-efi:~#
+>
+>After:
+>
+>root@debian-qemu-efi:~# tpm2_getcap handles-loaded-session
+>root@debian-qemu-efi:~# tpm2_getcap handles-saved-session
+>root@debian-qemu-efi:~# kexec --load --kexec-file-syscall …
+>root@debian-qemu-efi:~# systemctl kexec
+>…
+>root@debian-qemu-efi:~# tpm2_getcap handles-loaded-session
+>root@debian-qemu-efi:~# tpm2_getcap handles-saved-session
+>root@debian-qemu-efi:~#
+>
+>Signed-off-by: Jonathan McDowell <noodles@meta.com>
+>Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
+>Signed-off-by: Sasha Levin <sashal@kernel.org>
+>---
+> drivers/char/tpm/tpm-chip.c | 1 +
+> 1 file changed, 1 insertion(+)
+>
+>diff --git a/drivers/char/tpm/tpm-chip.c b/drivers/char/tpm/tpm-chip.c
+>index 17fbd7f7a2954..b33e938d80e8a 100644
+>--- a/drivers/char/tpm/tpm-chip.c
+>+++ b/drivers/char/tpm/tpm-chip.c
+>@@ -290,6 +290,7 @@ static int tpm_class_shutdown(struct device *dev)
+> 	down_write(&chip->ops_sem);
+> 	if (chip->flags & TPM_CHIP_FLAG_TPM2) {
+> 		if (!tpm_chip_start(chip)) {
+>+			tpm2_end_auth_session(chip);
+> 			tpm2_shutdown(chip, TPM2_SU_CLEAR);
+> 			tpm_chip_stop(chip);
+> 		}
+>-- 
+>2.39.5
+>
+>
 
-diff --git a/drivers/clk/qcom/clk-rpmh.c b/drivers/clk/qcom/clk-rpmh.c
-index c7675930f..68704c4f0 100644
---- a/drivers/clk/qcom/clk-rpmh.c
-+++ b/drivers/clk/qcom/clk-rpmh.c
-@@ -66,6 +66,8 @@ struct clk_rpmh {
- struct clk_rpmh_desc {
- 	struct clk_hw **clks;
- 	size_t num_clks;
-+	/* rpmh clock clkaN are optional for this latform */
-+	bool clka_optional;
- };
- 
- static DEFINE_MUTEX(rpmh_clk_lock);
-@@ -648,6 +650,7 @@ static struct clk_hw *sm8550_rpmh_clocks[] = {
- static const struct clk_rpmh_desc clk_rpmh_sm8550 = {
- 	.clks = sm8550_rpmh_clocks,
- 	.num_clks = ARRAY_SIZE(sm8550_rpmh_clocks),
-+	.clka_optional = true,
- };
- 
- static struct clk_hw *sm8650_rpmh_clocks[] = {
-@@ -679,6 +682,7 @@ static struct clk_hw *sm8650_rpmh_clocks[] = {
- static const struct clk_rpmh_desc clk_rpmh_sm8650 = {
- 	.clks = sm8650_rpmh_clocks,
- 	.num_clks = ARRAY_SIZE(sm8650_rpmh_clocks),
-+	.clka_optional = true,
- };
- 
- static struct clk_hw *sc7280_rpmh_clocks[] = {
-@@ -847,6 +851,7 @@ static struct clk_hw *sm8750_rpmh_clocks[] = {
- static const struct clk_rpmh_desc clk_rpmh_sm8750 = {
- 	.clks = sm8750_rpmh_clocks,
- 	.num_clks = ARRAY_SIZE(sm8750_rpmh_clocks),
-+	.clka_optional = true,
- };
- 
- static struct clk_hw *of_clk_rpmh_hw_get(struct of_phandle_args *clkspec,
-@@ -890,6 +895,11 @@ static int clk_rpmh_probe(struct platform_device *pdev)
- 		rpmh_clk = to_clk_rpmh(hw_clks[i]);
- 		res_addr = cmd_db_read_addr(rpmh_clk->res_name);
- 		if (!res_addr) {
-+			hw_clks[i] = NULL;
-+
-+			if (desc->clka_optional && !strncmp(rpmh_clk->res_name, "clka", sizeof("clka") - 1))
-+				continue;
-+
- 			dev_err(&pdev->dev, "missing RPMh resource address for %s\n",
- 				rpmh_clk->res_name);
- 			return -ENODEV;
+J.
+
 -- 
-2.48.1
-
+... Inside every living person there's a dead person trying to get out.
