@@ -1,318 +1,244 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E83C634
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 20:46:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71B25634
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 20:50:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743799612; cv=none; b=d6lt/LkZbWzBmdZqEc7xpYzBSnC0r04GuxDzF8GsOivwm+Yd9InZuzdQuQgnORti6dZR6Q85pyVPi3wfrybBRN8kGYlfK0DfFkWm5HYbLFonwx6wl0mnK2dgVOTlfDcggcCpJkd3BwbnFEk8tqH9mJrd5oM1Z06oklE3kJczMXU=
+	t=1743799830; cv=none; b=SnuNfjrwVw3wgLKBs6HBix/52wN/7HMHOGCume0AkoYlkVHXML7awRJ31ymDZjfJ9WkiPiskYHuWDEj+TSEd0fgV6iwMA1TqE7VXFoabZ2REAviFLyMT0AOc0RyF9vw2IYi+NkwlHOXvg9aW6Y8VL/IOpaDrdFOFthcAKW0/J18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743799612; c=relaxed/simple;
-	bh=3YEL4jWV2gmSn5Eo6z3VpcSbx++CMKSfeZ5Ard044tw=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=dfmcDFeoLNwr74MAZAK4BmsiFBjNPtVDABTJaFULcZZAhU/1uZox+S/+F52VONw49bXg0WPUc8qsHqzroK0Y9RAT3m4GvMe23VFzbHIcsLII+qrFdbFN+nnRa4BBwiXnamM30vqJHiwt8N/xy6bQk4ATXTelR1mvHBcarTkmgag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ikw62DF3; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743799830; c=relaxed/simple;
+	bh=2zh7IF9E6CPypzO2FqueI7RTXNOhA6eMssTy+NNgw4g=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=q4wARGBi7B+kNa7VlKhzoqGrx9TpLrPE9gITpMj1anb/3dCBBv7hNv28UW9ZmmI9iV57x5fa1VSBFFmhwEvNyAmB9HCSEq9CFPYQykuulbIUH5CUh6dRLyhxQVewT399vaQRP8NjuDWLgVBEdxI/n72eVhblFt6+xhcNi5NYOk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ueTXOYEu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ikw62DF3"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ac2a9a74d9cso92401266b.1
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 13:46:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743799608; x=1744404408; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=6hRsnXtdDToRwE5VkYur5EcjHw55DqS5b6vMN9pCfr4=;
-        b=ikw62DF3dJkX5SDQgQ0LYfETfzGtqmSax8tJX1NoBr38VJQSL+bTLitc1A8sJ9SSPZ
-         TmrI0xjyH9QjgWOV5xCaukL2ZoHr4JGvyMktpwfrq8lHSUw3bxCowFILrZ3nI4JltNhM
-         Tdeou5X7VvP8xt3C6ey7Jy5aoXdRZuPt6hShnH3equOXBfgrfKA/RB04ejaHkL2VCSre
-         Yb1Oo7hblQnnMOpCyvmyFhfnDHFaJl8pd6U6p0tz5/rCS885GDAAy12jIlClI2gtB3BG
-         GQkhBsw4ELBdHhGwUy33hLBOw3RSglo5/p6mindaynCDNRhv8TCIDdGZgg75mNR9ghl6
-         6aNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743799608; x=1744404408;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=6hRsnXtdDToRwE5VkYur5EcjHw55DqS5b6vMN9pCfr4=;
-        b=WK5JJasVJkk/v2Utqnn6sqkzGM4568mwSLlq1xkKPuWcHQHhm8k3FZ+Vnm8T7YEwJh
-         5llqxjySp62U4H9doGZ0bqpBcQzcW4D7uBYmk+MvGWCZCjg8vasxYo1TBI79jtt1s/V+
-         30vdBb/vyK4Fq7ojwWmJXzmPDr0VE+nV10gp/w8O/7c+eIPHb0/9eoLJIt2A3XNTjvl3
-         xXMiuQdyDKiHOshdU4E50pOMbCpNfBdLoQUjWQNwyqs7ihxyx+biI7iuDnFqb9dH4FK1
-         7EnAKSwrm1w5npX07Z99fLKOaSk/nfl3A+bFGUV2ClwWOeQMionEMsFW4Z4TRGLD8g/l
-         oATw==
-X-Gm-Message-State: AOJu0YxL0umAsQ4kKc4AeKnsgNhS+uTMcfsTNLlo+F4j5Itti56OCfOx
-	aMUfeS1zT7kxr3mLpTlY3AFgyebHaOiIHpByNEWalYVy94LT+oqJRKaoKclKQrF+P3G30OehRL0
-	8W4NTtU2Dqf2cC8hn+9nBF2XYL58C9C7Y
-X-Gm-Gg: ASbGnct+P03D2Ky3dl+0IaeOeMpXQfZKeo8Ro0+WzrWg9IC5+j3q+H5UE68dVn72Q+M
-	j7b+IbYwBln6MqYVYTbVxasS6aNJfaLZDDel74Ke0ctBXsWkqe45/nNkwsFgKDhRIw0t+ZStY9/
-	4Q2lmt6X4xEo1ekvrfv8GMDCGD
-X-Google-Smtp-Source: AGHT+IFpL3ZnB9lDuEP5Av7ZBTbINZTCZ+03xATDynYVrD77yLKvElf+pz1L127nTfVIsgeaoJcjyI5OKPc8QPFbEVo=
-X-Received: by 2002:a17:907:2cc6:b0:ac6:b815:83ee with SMTP id
- a640c23a62f3a-ac7d1c35d38mr431590866b.43.1743799607507; Fri, 04 Apr 2025
- 13:46:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ueTXOYEu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F72AC4CEDD;
+	Fri,  4 Apr 2025 20:50:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743799830;
+	bh=2zh7IF9E6CPypzO2FqueI7RTXNOhA6eMssTy+NNgw4g=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ueTXOYEutMDb9kGmn9sQddg6HClTJnHE6s0U2N05isQsnndpnBVYb46HTX4ErkF0P
+	 mn0iGe0IEz9nvMA7O+LiCwc16jaXBtj5o0UJ6gkBnsXCttO5bjsIJpxLT/t9OIiJ3g
+	 iNRayDSUsHWvVcu/wUAQOFe6W4UpNoOEOauTYXAel7TLOnMVlV/fDTuZqcDGgE+KRV
+	 P7n34bFPVdaeSkJ0rYp9B84frOeHv8gD8dzlTlk0dwwkBlVFo4e0k/hcWNMCnH34mF
+	 WZ2NAGJLqQIGF1ujBWhRMqHtXxNROYb7tSCeDQvlA/8oG5ssWZ/fhkd2HQ5AhxNfsy
+	 A+KrSh6hcKsxg==
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: x86@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	Juergen Gross <jgross@suse.com>,
+	Andrew Cooper <andrew.cooper3@citrix.com>
+Subject: [PATCH v3] objtool: Fix SYSCALL instruction handling and INSN_CONTEXT_SWITCH
+Date: Fri,  4 Apr 2025 13:50:26 -0700
+Message-ID: <9b23e4413873bee38961e628b0c73f6d3a26d494.1743799705.git.jpoimboe@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Dave Airlie <airlied@gmail.com>
-Date: Sat, 5 Apr 2025 06:46:35 +1000
-X-Gm-Features: ATxdqUFQISWzBjVBOYCGg4eHEbpmZwyJMVRccY99sBggwBrSZbuwMv98o6CKmk0
-Message-ID: <CAPM=9twD=Epq278=nVGxMU4veeEpznYLnr_PVQ9WqvdnxZac_w@mail.gmail.com>
-Subject: [git pull] drm fixes for 6.15-rc1
-To: LKML <linux-kernel@vger.kernel.org>, Sima Vetter <sima@ffwll.ch>
-Cc: dri-devel <dri-devel@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi Linus,
+The !CONFIG_IA32_EMULATION version of xen_entry_SYSCALL_compat() ends
+with a SYSCALL instruction.  In Xen, SYSCALL is a hypercall.  Usually
+that would return, but in this case it's a hypercall to IRET, which
+doesn't return.
 
-Weekly fixes, mostly from the end of last week, this week was very
-quiet, maybe you scared everyone away. I probably should have
-highlighted Jani's work more closely, but it never occured that anyone
-would willingingly build a kernel without O=3D../toilet-builddir. This
-doesn't contain any fixes for that stuff, Jani is working on it, and
-hopefully you can help that make forward progress.
+Objtool doesn't know that, so it falls through to the next function,
+triggering a false positive:
 
-As for this, it's mostly amdgpu, and xe, with some i915, adp and
-bridge bits, since I think this is overly quiet I'd expect rc2 to be a
-bit more lively.
+  vmlinux.o: warning: objtool: xen_reschedule_interrupt+0x2a: RET before UNTRAIN
 
-Regards,
-Dave.
+Fix that by adding UD2 after the SYSCALL to avoid the undefined behavior
+and prevent the objtool fallthrough, and teach validate_unret() to stop
+control flow on the UD2 like validate_branch() already does.
 
-drm-next-2025-04-05:
-drm fixes for 6.15-rc1
+Unfortunately that's not the whole story.  While that works for
+validate_unret(), it breaks validate_branch() which terminates control
+flow after the SYSCALL, triggering an unreachable instruction warning on
+the UD2.
 
-bridge:
-- tda998x: Select CONFIG_DRM_KMS_HELPER
+The real problem here is that INSN_CONTEXT_SWITCH is ambiguous.  It can
+represent both call semantics (SYSCALL, SYSENTER) and return semantics
+(SYSRET, IRET, RETS, RETU).  Those differ significantly: calls preserve
+control flow whereas returns terminate it.
 
-amdgpu:
-- Guard against potential division by 0 in fan code
-- Zero RPM support for SMU 14.0.2
-- Properly handle SI and CIK support being disabled
-- PSR fixes
-- DML2 fixes
-- DP Link training fix
-- Vblank fixes
-- RAS fixes
-- Partitioning fix
-- SDMA fix
-- SMU 13.0.x fixes
-- Rom fetching fix
-- MES fixes
-- Queue reset fix
+validate_branch() uses an arbitrary rule for INSN_CONTEXT_SWITCH that
+almost works by accident: if in a function, keep going; otherwise stop.
+It should instead be based on the semantics of the underlying
+instruction.
 
-xe:
-- Fix NULL pointer dereference on error path
-- Add missing HW workaround for BMG
-- Fix survivability mode not triggering
-- Fix build warning when DRM_FBDEV_EMULATION is not set
+INSN_CONTEXT_SWITCH's original purpose was to enable the "unsupported
+instruction in callable function" warning.  But that warning really has
+no reason to exist.  It has never found any bugs, and those instructions
+are only in entry code anyway.  So just get rid of it.
 
-i915:
-- Bounds check for scalers in DSC prefill latency computation
-- Fix build by adding a missing include
+That in turn allows objtool to stop caring about SYSCALL or SYSENTER.
+Their call semantic means they usually don't affect control flow in the
+containing function/code, and can just be INSN_OTHER.  The far
+returns/jumps can also be ignored as those aren't used anywhere.
 
-adp:
-- Fix error handling in plane setup
-The following changes since commit cf05922d63e2ae6a9b1b52ff5236a44c3b29f78c=
-:
+With SYSCALL and SYSENTER removed, INSN_CONTEXT_SWITCH now has a sane
+well-defined return semantic.  Rename it to INSN_EXCEPTION_RETURN to
+better reflect its meaning.
 
-  Merge tag 'drm-intel-gt-next-2025-03-12' of
-https://gitlab.freedesktop.org/drm/i915/kernel into drm-next
-(2025-03-25 08:21:07 +1000)
+Fixes: a2796dff62d6 ("x86/xen: don't do PV iret hypercall through hypercall page")
+Reported-by: Andrew Cooper <andrew.cooper3@citrix.com>
+Tested-by: Andrew Cooper <andrew.cooper3@citrix.com>
+Reviewed-by: Juergen Gross <jgross@suse.com>
+Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
+---
+v3:
+- actually set INSN_EXCEPTION_RETURN for IRET
 
-are available in the Git repository at:
+v2:
+- rename INSN_CONTEXT_SWITCH -> INSN_EXCEPTION_RETURN
+- clarify that xen SYSCALL is a hypercall
+- check for SYSEXIT
 
-  https://gitlab.freedesktop.org/drm/kernel.git tags/drm-next-2025-04-05
+ arch/x86/xen/xen-asm.S               |  6 +-----
+ tools/objtool/arch/x86/decode.c      | 21 +++++----------------
+ tools/objtool/check.c                | 15 +++++++--------
+ tools/objtool/include/objtool/arch.h |  2 +-
+ 4 files changed, 14 insertions(+), 30 deletions(-)
 
-for you to fetch changes up to e2cb28ea3e01cb25095d1a341459901363dc39e9:
+diff --git a/arch/x86/xen/xen-asm.S b/arch/x86/xen/xen-asm.S
+index 109af12f7647..5bdae7839c08 100644
+--- a/arch/x86/xen/xen-asm.S
++++ b/arch/x86/xen/xen-asm.S
+@@ -38,9 +38,7 @@ SYM_FUNC_START(xen_hypercall_pv)
+ 	ANNOTATE_NOENDBR
+ 	push %rcx
+ 	push %r11
+-	UNWIND_HINT_SAVE
+ 	syscall
+-	UNWIND_HINT_RESTORE
+ 	pop %r11
+ 	pop %rcx
+ 	RET
+@@ -226,9 +224,7 @@ SYM_CODE_END(xen_early_idt_handler_array)
+ 	push %rax
+ 	mov  $__HYPERVISOR_iret, %eax
+ 	syscall		/* Do the IRET. */
+-#ifdef CONFIG_MITIGATION_SLS
+-	int3
+-#endif
++	ud2		/* The SYSCALL should never return. */
+ .endm
+ 
+ SYM_CODE_START(xen_iret)
+diff --git a/tools/objtool/arch/x86/decode.c b/tools/objtool/arch/x86/decode.c
+index 33d861c04ebd..83c3180757d6 100644
+--- a/tools/objtool/arch/x86/decode.c
++++ b/tools/objtool/arch/x86/decode.c
+@@ -522,7 +522,7 @@ int arch_decode_instruction(struct objtool_file *file, const struct section *sec
+ 			case INAT_PFX_REPNE:
+ 				if (modrm == 0xca)
+ 					/* eretu/erets */
+-					insn->type = INSN_CONTEXT_SWITCH;
++					insn->type = INSN_EXCEPTION_RETURN;
+ 				break;
+ 			default:
+ 				if (modrm == 0xca)
+@@ -535,11 +535,10 @@ int arch_decode_instruction(struct objtool_file *file, const struct section *sec
+ 
+ 			insn->type = INSN_JUMP_CONDITIONAL;
+ 
+-		} else if (op2 == 0x05 || op2 == 0x07 || op2 == 0x34 ||
+-			   op2 == 0x35) {
++		} else if (op2 == 0x07 || op2 == 0x35) {
+ 
+-			/* sysenter, sysret */
+-			insn->type = INSN_CONTEXT_SWITCH;
++			/* sysret, sysexit */
++			insn->type = INSN_EXCEPTION_RETURN;
+ 
+ 		} else if (op2 == 0x0b || op2 == 0xb9) {
+ 
+@@ -671,12 +670,7 @@ int arch_decode_instruction(struct objtool_file *file, const struct section *sec
+ 			}
+ 			break;
+ 		}
+-
+-		fallthrough;
+-
+-	case 0xca: /* retf */
+-	case 0xcb: /* retf */
+-		insn->type = INSN_CONTEXT_SWITCH;
++		insn->type = INSN_EXCEPTION_RETURN;
+ 		break;
+ 
+ 	case 0xe0: /* loopne */
+@@ -718,11 +712,6 @@ int arch_decode_instruction(struct objtool_file *file, const struct section *sec
+ 			if (has_notrack_prefix(&ins))
+ 				WARN("notrack prefix found at %s:0x%lx", sec->name, offset);
+ 
+-		} else if (modrm_reg == 5) {
+-
+-			/* jmpf */
+-			insn->type = INSN_CONTEXT_SWITCH;
+-
+ 		} else if (modrm_reg == 6) {
+ 
+ 			/* push from mem */
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index 4a1f6c3169b3..e04ce065a08b 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -3684,14 +3684,7 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
+ 
+ 			break;
+ 
+-		case INSN_CONTEXT_SWITCH:
+-			if (func) {
+-				if (!next_insn || !next_insn->hint) {
+-					WARN_INSN(insn, "unsupported instruction in callable function");
+-					return 1;
+-				}
+-				break;
+-			}
++		case INSN_EXCEPTION_RETURN:
+ 			return 0;
+ 
+ 		case INSN_STAC:
+@@ -3886,6 +3879,9 @@ static int validate_unret(struct objtool_file *file, struct instruction *insn)
+ 			WARN_INSN(insn, "RET before UNTRAIN");
+ 			return 1;
+ 
++		case INSN_EXCEPTION_RETURN:
++			return 0;
++
+ 		case INSN_NOP:
+ 			if (insn->retpoline_safe)
+ 				return 0;
+@@ -3895,6 +3891,9 @@ static int validate_unret(struct objtool_file *file, struct instruction *insn)
+ 			break;
+ 		}
+ 
++		if (insn->dead_end)
++			return 0;
++
+ 		if (!next) {
+ 			WARN_INSN(insn, "teh end!");
+ 			return 1;
+diff --git a/tools/objtool/include/objtool/arch.h b/tools/objtool/include/objtool/arch.h
+index 089a1acc48a8..5bba1a894e5c 100644
+--- a/tools/objtool/include/objtool/arch.h
++++ b/tools/objtool/include/objtool/arch.h
+@@ -19,7 +19,7 @@ enum insn_type {
+ 	INSN_CALL,
+ 	INSN_CALL_DYNAMIC,
+ 	INSN_RETURN,
+-	INSN_CONTEXT_SWITCH,
++	INSN_EXCEPTION_RETURN,
+ 	INSN_BUG,
+ 	INSN_NOP,
+ 	INSN_STAC,
+-- 
+2.49.0
 
-  Merge tag 'drm-misc-next-fixes-2025-04-04' of
-https://gitlab.freedesktop.org/drm/misc/kernel into drm-next
-(2025-04-05 06:28:03 +1000)
-
-----------------------------------------------------------------
-drm fixes for 6.15-rc1
-
-bridge:
-- tda998x: Select CONFIG_DRM_KMS_HELPER
-
-amdgpu:
-- Guard against potential division by 0 in fan code
-- Zero RPM support for SMU 14.0.2
-- Properly handle SI and CIK support being disabled
-- PSR fixes
-- DML2 fixes
-- DP Link training fix
-- Vblank fixes
-- RAS fixes
-- Partitioning fix
-- SDMA fix
-- SMU 13.0.x fixes
-- Rom fetching fix
-- MES fixes
-- Queue reset fix
-
-xe:
-- Fix NULL pointer dereference on error path
-- Add missing HW workaround for BMG
-- Fix survivability mode not triggering
-- Fix build warning when DRM_FBDEV_EMULATION is not set
-
-i915:
-- Bounds check for scalers in DSC prefill latency computation
-- Fix build by adding a missing include
-
-adp:
-- Fix error handling in plane setup
-
-----------------------------------------------------------------
-Alex Deucher (2):
-      drm/amdgpu/gfx11: fix num_mec
-      drm/amdgpu/gfx12: fix num_mec
-
-Ankit Nautiyal (1):
-      drm/i915/watermark: Check bounds for scaler_users for dsc prefill lat=
-ency
-
-Arnd Bergmann (1):
-      drm/i2c: tda998x: select CONFIG_DRM_KMS_HELPER
-
-Asad Kamal (3):
-      drm/amd/pm: Remove host limit metrics support
-      drm/amd/pm: Update smu metrics table for smu_v13_0_6
-      drm/amd/pm: Add gpu_metrics_v1_8
-
-Brendan Tam (1):
-      drm/amd/display: prevent hang on link training fail
-
-Candice Li (1):
-      Remove unnecessary firmware version check for gc v9_4_2
-
-Charlene Liu (1):
-      Revert "drm/amd/display: dml2 soc dscclk use DPM table clk setting"
-
-Christian K=C3=B6nig (1):
-      drm/amdgpu: stop unmapping MQD for kernel queues v3
-
-Dan Carpenter (1):
-      drm: adp: Fix NULL vs IS_ERR() check in adp_plane_new()
-
-Dave Airlie (5):
-      Merge tag 'drm-misc-next-fixes-2025-03-27' of
-https://gitlab.freedesktop.org/drm/misc/kernel into drm-next
-      Merge tag 'drm-intel-next-fixes-2025-03-25' of
-https://gitlab.freedesktop.org/drm/i915/kernel into drm-next
-      Merge tag 'drm-xe-next-fixes-2025-03-27' of
-https://gitlab.freedesktop.org/drm/xe/kernel into drm-next
-      Merge tag 'amd-drm-next-6.15-2025-03-27' of
-https://gitlab.freedesktop.org/agd5f/linux into drm-next
-      Merge tag 'drm-misc-next-fixes-2025-04-04' of
-https://gitlab.freedesktop.org/drm/misc/kernel into drm-next
-
-Denis Arefev (5):
-      drm/amd/pm: Prevent division by zero
-      drm/amd/pm: Prevent division by zero
-      drm/amd/pm: Prevent division by zero
-      drm/amd/pm: Prevent division by zero
-      drm/amd/pm: Prevent division by zero
-
-Harish Chegondi (1):
-      drm/xe/eustall: Fix a possible pointer dereference after free
-
-Jesse.zhang@amd.com (1):
-      Revert "drm/amdgpu/sdma_v4_4_2: update VM flush implementation for SD=
-MA"
-
-Leo Li (2):
-      drm/amd/display: Increase vblank offdelay for PSR panels
-      drm/amd/display: Actually do immediate vblank disable
-
-Lijo Lazar (2):
-      drm/amdgpu: Add NPS2 to DPX compatible mode
-      drm/amdgpu: Prefer shadow rom when available
-
-Lucas De Marchi (2):
-      drm/xe: Move survivability back to xe
-      drm/xe: Set survivability mode before heci init
-
-Mario Limonciello (1):
-      drm/amd: Handle being compiled without SI or CIK support better
-
-Michal Wajdeczko (1):
-      drm/xe/vf: Don't check CTC_MODE[0] if VF
-
-Stanley.Yang (1):
-      drm/amdgpu: Update ta ras block
-
-Tomasz Paku=C5=82a (1):
-      drm/amd/pm: Add zero RPM enabled OD setting support for SMU14.0.2
-
-Vinay Belgaumkar (1):
-      drm/xe: Apply Wa_16023105232
-
-Xiang Liu (2):
-      drm/amdgpu: Use correct gfx deferred error count
-      drm/amdgpu: Parse all deferred errors with UMC aca handle
-
-Yue Haibing (2):
-      drm/i915/display: Fix build error without DRM_FBDEV_EMULATION
-      drm/xe: Fix unmet direct dependencies warning
-
- drivers/gpu/drm/adp/adp_drv.c                      |   4 +-
- drivers/gpu/drm/amd/amdgpu/amdgpu_aca.c            |   4 +
- drivers/gpu/drm/amd/amdgpu/amdgpu_aca.h            |   8 --
- drivers/gpu/drm/amd/amdgpu/amdgpu_bios.c           |  34 ++++--
- drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c            |  44 ++++----
- drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c            |   1 +
- drivers/gpu/drm/amd/amdgpu/amdgpu_ras.h            |   7 ++
- drivers/gpu/drm/amd/amdgpu/amdgpu_ring.c           |  58 ++---------
- drivers/gpu/drm/amd/amdgpu/amdgpu_xgmi.c           |   2 +-
- drivers/gpu/drm/amd/amdgpu/aqua_vanjaram.c         |   3 +-
- drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c             |  88 ++--------------
- drivers/gpu/drm/amd/amdgpu/gfx_v11_0.c             |  90 ++--------------
- drivers/gpu/drm/amd/amdgpu/gfx_v12_0.c             | 104 +++--------------=
---
- drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c              |  45 +-------
- drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c              |  58 ++---------
- drivers/gpu/drm/amd/amdgpu/gfx_v9_4_3.c            |  66 +++---------
- drivers/gpu/drm/amd/amdgpu/jpeg_v4_0_3.c           |   2 +-
- drivers/gpu/drm/amd/amdgpu/mmhub_v1_8.c            |   2 +-
- drivers/gpu/drm/amd/amdgpu/sdma_v4_4_2.c           |  79 +++-----------
- drivers/gpu/drm/amd/amdgpu/ta_ras_if.h             |   3 +
- drivers/gpu/drm/amd/amdgpu/umc_v12_0.c             |   3 +-
- drivers/gpu/drm/amd/amdgpu/vcn_v4_0_3.c            |   2 +-
- drivers/gpu/drm/amd/amdgpu/vega10_sdma_pkt_open.h  |  70 -------------
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c  |  41 ++++++--
- .../amd/display/dc/dml2/dml2_translation_helper.c  |   2 +-
- .../drm/amd/display/dc/hwss/dcn20/dcn20_hwseq.c    |   6 +-
- .../drm/amd/display/dc/hwss/dcn401/dcn401_hwseq.c  |   7 +-
- drivers/gpu/drm/amd/include/kgd_pp_interface.h     | 114 +++++++++++++++++=
-++++
- .../gpu/drm/amd/pm/powerplay/hwmgr/smu7_thermal.c  |   4 +-
- .../drm/amd/pm/powerplay/hwmgr/vega10_thermal.c    |   4 +-
- .../drm/amd/pm/powerplay/hwmgr/vega20_thermal.c    |   2 +-
- .../amd/pm/swsmu/inc/pmfw_if/smu_v13_0_6_pmfw.h    |   7 +-
- drivers/gpu/drm/amd/pm/swsmu/smu11/arcturus_ppt.c  |   3 +
- drivers/gpu/drm/amd/pm/swsmu/smu13/smu_v13_0.c     |   2 +-
- .../gpu/drm/amd/pm/swsmu/smu13/smu_v13_0_6_ppt.c   |  15 ---
- .../gpu/drm/amd/pm/swsmu/smu14/smu_v14_0_2_ppt.c   |  55 +++++++++-
- drivers/gpu/drm/amd/pm/swsmu/smu_cmn.c             |   3 +
- drivers/gpu/drm/bridge/Kconfig                     |  13 +--
- drivers/gpu/drm/i915/display/intel_fbdev.h         |   2 +
- drivers/gpu/drm/i915/display/skl_watermark.c       |   5 +-
- drivers/gpu/drm/xe/Kconfig                         |   2 +-
- drivers/gpu/drm/xe/regs/xe_engine_regs.h           |   4 +
- drivers/gpu/drm/xe/xe_device.c                     |  17 ++-
- drivers/gpu/drm/xe/xe_eu_stall.c                   |   8 +-
- drivers/gpu/drm/xe/xe_gt_clock.c                   |  54 +++++++---
- drivers/gpu/drm/xe/xe_gt_types.h                   |   2 +
- drivers/gpu/drm/xe/xe_hw_engine.c                  |  33 ++++++
- drivers/gpu/drm/xe/xe_pci.c                        |  16 ++-
- drivers/gpu/drm/xe/xe_survivability_mode.c         |  31 ++++--
- drivers/gpu/drm/xe/xe_survivability_mode.h         |   1 -
- drivers/gpu/drm/xe/xe_wa.c                         |   6 ++
- drivers/gpu/drm/xe/xe_wa_oob.rules                 |   2 +
- 52 files changed, 537 insertions(+), 701 deletions(-)
