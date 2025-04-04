@@ -1,110 +1,166 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC68E1D7E26;
-	Fri,  4 Apr 2025 12:40:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8FBCA1DB363;
+	Fri,  4 Apr 2025 12:41:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743770438; cv=none; b=CT1L+HZZ/snoeubfk5S6v0Yn+XcN3rXrGkjHlGJGuwur0IdKb+br96qOFVgYxdrD+J3PSQL/GP7VVhE7Swz93iAy0+uNBWe3Srwz5NyGxkWsm0gq5gtTrNW4cIni5pSMhgi+klwqXsIFdadobDgHtTZK9kxRNfLAPx8RfuhtHr4=
+	t=1743770469; cv=none; b=po1iB3a4WTKm1jZJkxuzara899KRRNduo/D6MGAzjWeq614NUK6+oD3OiezraDHoyCxQiwdh6bhmxFP7fcozPUL6UFbH7jz5nB8lHu26fLr2OiwM+tMFMf5seMmgjeb79bwM2DFphN9oyT5USqyjYNZe/qYCw5XfRfmdOpN4h1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743770438; c=relaxed/simple;
-	bh=89neJgVwi0h8aXKOy7swYdp7ZNkwQFPUD9cASJEE9fQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=sSRxgNETZ+SCvoD2LcvE/NCtOC0XPOabJbZIW2Hgr6Rp2ikftN+ILX83z1H5XSAlq8AiRL+GLrTOpaipOB815mjoQXvy8oK5HITaCS6fcFmTkkVQxC8WwK0FZFeP+sQBUwsHYpDkGn7uMbq5V32zW28WrhdveX/uNXwVNM7hSb0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Nc9h0mu2; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Nc9h0mu2"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 534CeRr1276837
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 4 Apr 2025 07:40:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1743770427;
-	bh=kxiQY3N4ykwzgDm8fvtIm0ymVAuD8xrmmIdWe4wXE+E=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=Nc9h0mu2005x2eX/OeTXzRgzeHosu9jFNEvs3fl9dJiwV/F+zSFkUG0fzYntTcc2z
-	 zLjKLFaIEN4Y8Y4qtt2jCtLup26UzSQdFE1i0NphZwzq5KNA1P7d5t8m6H2NZ0pIGH
-	 J9Ex0PK8am0lI78+ICJg/xvzlJXmwJAqqCPa2Y9g=
-Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 534CeRJU091168
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 4 Apr 2025 07:40:27 -0500
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 4
- Apr 2025 07:40:26 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 4 Apr 2025 07:40:26 -0500
-Received: from [172.24.227.40] (pratham-workstation-pc.dhcp.ti.com [172.24.227.40])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 534CeOMb060065;
-	Fri, 4 Apr 2025 07:40:24 -0500
-Message-ID: <8536cdf7-f4bd-4f9a-9eaf-9e38fba67741@ti.com>
-Date: Fri, 4 Apr 2025 18:10:23 +0530
+	s=arc-20240116; t=1743770469; c=relaxed/simple;
+	bh=iY1p6+npB+bD9BrO1Sg5lKvxjiUurx93mXmSO4ERzEc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=t9c45BdoxF1MPfDuk6ktwePTMHImdOzEL8fVrVErXLJ2Z9O+3FMVkOU+J9QcNawKvTVcIPuY8/rKFxmK25MuRS972okxWrJRIHFhzBzWfU0/ELlGFr948mefJ+jHXbTcYn1yuB/EqC0+jk/xQFmcp19EWhTWNP8YQIS0pBMQEIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 39AA31515;
+	Fri,  4 Apr 2025 05:41:02 -0700 (PDT)
+Received: from donnerap.manchester.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EF7A53F59E;
+	Fri,  4 Apr 2025 05:40:53 -0700 (PDT)
+Date: Fri, 4 Apr 2025 13:39:58 +0100
+From: Andre Przywara <andre.przywara@arm.com>
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec
+ <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, "Rafael
+ J. Wysocki" <rafael@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>,
+ Matthias Brugger <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
+ <angelogioacchino.delregno@collabora.com>, Vincenzo Frascino
+ <vincenzo.frascino@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, Sudeep
+ Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio
+ <konradybcio@kernel.org>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd
+ <sboyd@kernel.org>, zhouyanjie@wanyeetech.com, Conor Dooley
+ <conor@kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Claudiu
+ Beznea <claudiu.beznea@tuxon.dev>, Steen Hegelund
+ <Steen.Hegelund@microchip.com>, Daniel Machon
+ <daniel.machon@microchip.com>, UNGLinuxDriver@microchip.com, Shawn Guo
+ <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix
+ Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
+ Heiko Stuebner <heiko@sntech.de>, Neil Armstrong
+ <neil.armstrong@linaro.org>, Kevin Hilman <khilman@baylibre.com>, Jerome
+ Brunet <jbrunet@baylibre.com>, Martin Blumenstingl
+ <martin.blumenstingl@googlemail.com>, Geert Uytterhoeven
+ <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
+ linux-pm@vger.kernel.org, linux-mediatek@lists.infradead.org,
+ linux-arm-msm@vger.kernel.org, linux-mips@vger.kernel.org,
+ imx@lists.linux.dev, linux-rockchip@lists.infradead.org,
+ linux-amlogic@lists.infradead.org, linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH 01/19] arm64: dts: allwinner: h5/h6: Drop spurious
+ 'clock-latency-ns' properties
+Message-ID: <20250404133958.5361be95@donnerap.manchester.arm.com>
+In-Reply-To: <20250403-dt-cpu-schema-v1-1-076be7171a85@kernel.org>
+References: <20250403-dt-cpu-schema-v1-0-076be7171a85@kernel.org>
+	<20250403-dt-cpu-schema-v1-1-076be7171a85@kernel.org>
+Organization: ARM
+X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC 1/2] crypto: ti: Add support for SHA224/256/384/512 in
- DTHE V2 driver
-To: Herbert Xu <herbert@gondor.apana.org.au>
-CC: "David S. Miller" <davem@davemloft.net>, <linux-crypto@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Vignesh Raghavendra <vigneshr@ti.com>,
-        Praneeth Bajjuri <praneeth@ti.com>,
-        Kamlesh Gurudasani <kamlesh@ti.com>,
-        Manorit Chawdhry <m-chawdhry@ti.com>
-References: <20250218104943.2304730-1-t-pratham@ti.com>
- <20250218104943.2304730-2-t-pratham@ti.com>
- <Z8QSVLoucZxG1xlc@gondor.apana.org.au>
- <f7105c10-7e36-4914-a9e8-e83eb61f0189@ti.com>
- <104cdd15-8763-49fc-9f4b-9b21020bd6a1@ti.com>
- <Z-5IaY0JoTYcx1JW@gondor.apana.org.au>
- <8aa65022-8adc-4c4a-a812-11bfd64e628c@ti.com>
- <Z--zFB8Rm007AMzP@gondor.apana.org.au>
-Content-Language: en-US
-From: T Pratham <t-pratham@ti.com>
-In-Reply-To: <Z--zFB8Rm007AMzP@gondor.apana.org.au>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
+On Thu, 03 Apr 2025 21:59:22 -0500
+"Rob Herring (Arm)" <robh@kernel.org> wrote:
 
-On 04/04/25 15:53, Herbert Xu wrote:
-> Yes that's a common problem with crypto hash drivers that can't
-> deal with a zero-length final update.  The best solution is to
-> use a fallback for the final update if it turns out to be zero-length
-> rather than retaining an extra block.  Hashing a single block for
-> finalisation is simply not worth the overhead of setting up DMA and
-> what not.
->
-> The other option is to use the fallback to hash the extra block in
-> the export function.
->
-> Cheers,
+Hi,
 
-Although yes the hardware cannot process zero length input, the actual
-reason for doing this is to support the linux framework's
-init-update-final flow on the hardware.
+> 'clock-latency-ns' is not a valid property for CPU nodes. It belongs in
+> OPP table (which has it). Drop them from the CPU nodes.
 
-Our hardware can accept data as multiple packets, each of which can be
-of any length. The only restriction it has is that only the last packet
-can have arbitrary length, rest have to be a multiple of BLOCK_SIZE. The
-hardware needs a bit to be set to indicate that the packet to be
-submitted is the last data packet.
+Looks alright, only affects H5 and H6, and they indeed have it in their
+-cpu-opp.dtsi:
 
-Now, in the crypto framework, there is no way to know if a particular
-update call is the last update or if another update call will happen
-after that. Therefore I am unable to set that bit in any invocation of
-the update function. So I am retaining one block of data which is sent
-to hardware in the final function, a place where we know for sure that
-there is no more input coming now.
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 
-Regards
-T Pratham <t-pratham@ti.com>
+Reviewed-by: Andre Przywara <andre.przywara@arm.com>
+
+Cheers,
+Andre
+
+> ---
+>  arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi | 4 ----
+>  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 4 ----
+>  2 files changed, 8 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
+> index d3caf27b6a55..48802bf02f3b 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
+> @@ -16,7 +16,6 @@ cpu0: cpu@0 {
+>  			reg = <0>;
+>  			enable-method = "psci";
+>  			clocks = <&ccu CLK_CPUX>;
+> -			clock-latency-ns = <244144>; /* 8 32k periods */
+>  			#cooling-cells = <2>;
+>  		};
+>  
+> @@ -26,7 +25,6 @@ cpu1: cpu@1 {
+>  			reg = <1>;
+>  			enable-method = "psci";
+>  			clocks = <&ccu CLK_CPUX>;
+> -			clock-latency-ns = <244144>; /* 8 32k periods */
+>  			#cooling-cells = <2>;
+>  		};
+>  
+> @@ -36,7 +34,6 @@ cpu2: cpu@2 {
+>  			reg = <2>;
+>  			enable-method = "psci";
+>  			clocks = <&ccu CLK_CPUX>;
+> -			clock-latency-ns = <244144>; /* 8 32k periods */
+>  			#cooling-cells = <2>;
+>  		};
+>  
+> @@ -46,7 +43,6 @@ cpu3: cpu@3 {
+>  			reg = <3>;
+>  			enable-method = "psci";
+>  			clocks = <&ccu CLK_CPUX>;
+> -			clock-latency-ns = <244144>; /* 8 32k periods */
+>  			#cooling-cells = <2>;
+>  		};
+>  	};
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> index 2301c59b41b1..73e8604315c5 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> @@ -27,7 +27,6 @@ cpu0: cpu@0 {
+>  			reg = <0>;
+>  			enable-method = "psci";
+>  			clocks = <&ccu CLK_CPUX>;
+> -			clock-latency-ns = <244144>; /* 8 32k periods */
+>  			#cooling-cells = <2>;
+>  			i-cache-size = <0x8000>;
+>  			i-cache-line-size = <64>;
+> @@ -44,7 +43,6 @@ cpu1: cpu@1 {
+>  			reg = <1>;
+>  			enable-method = "psci";
+>  			clocks = <&ccu CLK_CPUX>;
+> -			clock-latency-ns = <244144>; /* 8 32k periods */
+>  			#cooling-cells = <2>;
+>  			i-cache-size = <0x8000>;
+>  			i-cache-line-size = <64>;
+> @@ -61,7 +59,6 @@ cpu2: cpu@2 {
+>  			reg = <2>;
+>  			enable-method = "psci";
+>  			clocks = <&ccu CLK_CPUX>;
+> -			clock-latency-ns = <244144>; /* 8 32k periods */
+>  			#cooling-cells = <2>;
+>  			i-cache-size = <0x8000>;
+>  			i-cache-line-size = <64>;
+> @@ -78,7 +75,6 @@ cpu3: cpu@3 {
+>  			reg = <3>;
+>  			enable-method = "psci";
+>  			clocks = <&ccu CLK_CPUX>;
+> -			clock-latency-ns = <244144>; /* 8 32k periods */
+>  			#cooling-cells = <2>;
+>  			i-cache-size = <0x8000>;
+>  			i-cache-line-size = <64>;
+> 
 
