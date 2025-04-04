@@ -1,117 +1,193 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 440E11DE4D6
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 13:36:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 031781EBFE2;
+	Fri,  4 Apr 2025 13:36:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743773785; cv=none; b=dKlwWT4zTdzOklflptXpTq7MsIWZBa4BewaoXz9DO9VuiVDm3RrRQKIODtZIwbh/Pz5hhdfFpeO9FY91+UxUH9NiZZWjsoxq5RtxNlm3usFrL122m2jzHqBWmFJLQCn+mvnEOH9HkUAk1iyVgkHsdYS8YuDwHp03S9Z7d95BBpY=
+	t=1743773795; cv=none; b=Jdy+gqUuYqb3Fi9/TjR0xm3g97UVRN5xr5WKg8+dwt0mlwPyhGvX96yPSa0Q8gJ432XOa0yi/3V0Izj87R9ntWhAcgZBK4vYoO2aGu4/CLsVdHNB2PrueAj1pPO5EN+EImB2MuDq+Db8SO6Yf2bCsrSxmUC9KfzXyWQ1Xk3C5lA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743773785; c=relaxed/simple;
-	bh=BFtRrOiMb4YodHyDzwtpl7EL/TOyP1jSsqhzyFxYG9c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ar9xq84mN+HIH7izoiwOX2Q8UaT9AvvAKm73DKc60PCig3LoA/MJX1uVtA60d6bSK3LUamMkU9v6oDOVpDuDRAJw0kZd48d5o/bnYbyscyEQ2GXAx9/xMxZ7sLego6it3ORmX+xduWqvmhtOqX3Vrc1+uErMob10UY+YwljQCs0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5e6194e9d2cso3741460a12.2
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 06:36:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743773781; x=1744378581;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AymxfdBPdivTlBBSjvnlepuzTGycHmeguhnsChkicb0=;
-        b=k3a+nfIKtMymgh6Lb38rAJPIEMWhfjAKzLOnBsW7FfUSjpH0kfi7GS6qBuyyP3Ncnb
-         qJV8ORm5NBnp3rokYE7q7NfntfyrGO6t70MmV2azBDKwmCw4pYAZyu0AIGnxsPV0y/0X
-         tmCCQkAQeW0SVSljS8DhWNFJhrx+p381xPjbmQSKPKjy2AG/HJvljdMSuivAcSeFJaw/
-         Dpkqlcm31N0pfoYRULv9UrdYBD3AY4zqz6a4n3BVX7rjjM7EkXedlb6jvlWwsjPFOLje
-         ocYyduhhfzFEpxhA0lv+nMC2VjiyHvyAZYmNKN+nETTw3fDocRMt9Bqtdl/IVnUZ4ZjR
-         0ivA==
-X-Forwarded-Encrypted: i=1; AJvYcCWAl9dySLk46JYusY/jc/Osj4/Pj0D1evH2maxbtHFtzWGvxk4zfSIeKBdb7CIV2OZ+mRfYiuOURcanDcs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YznCrTQiV3rVr5fBq93JEDA47S06SOlRqZ5x3UtkBQD5k6NvkEZ
-	5rVMa5UwR5Pr+9HaewU2hRtWswwH1Y2PmNadnia/3oJph68Qc375
-X-Gm-Gg: ASbGnctveZqxxWn4pp/L2pyo3E3IZ8a1SiTRplGfRSSHzvOTd8Ta2DZTZhhpBnuQCsh
-	gYuxOCutsESELEwfxrFIVqgVpiL5FIDqh9C1PehkruBgdKwhtzu6BWm1ddoS5SMxI1zipa8vXfY
-	tjIzUO1SkxcAQXAb8/29d9Nkgr/NTp/Moqh6x5277nOfzYhRcBT7SyQwE4J6PaYBPt4KD+9P/zX
-	L6B0EhVvxhXFBmBAZMiireN6WUDZoLnzOXb+PLYF7Hl2e6d7N8L/u8GEHPAUEN9x/vUDF5BKumF
-	QvfxA52RzsAWdJ926peLoOaaIy9eOlgjPRriQ+A+Ca3EMxQ=
-X-Google-Smtp-Source: AGHT+IEe1DcXvjfKi97dlkXleUL4qZHR/l5/Fg9N/S5IGWNfRlWsNbeszuME1HhRdGxUwtCnLnDDew==
-X-Received: by 2002:a05:6402:2108:b0:5e5:e78a:c4d7 with SMTP id 4fb4d7f45d1cf-5f0b3b9a0e9mr2469636a12.12.1743773781185;
-        Fri, 04 Apr 2025 06:36:21 -0700 (PDT)
-Received: from gmail.com ([2a03:2880:30ff:71::])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f087f08780sm2398706a12.39.2025.04.04.06.36.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Apr 2025 06:36:20 -0700 (PDT)
-Date: Fri, 4 Apr 2025 06:36:18 -0700
-From: Breno Leitao <leitao@debian.org>
-To: Marc Zyngier <maz@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, arnd@arndb.de, kernel-team@meta.com,
-	vincenzo.frascino@arm.com, anders.roxell@linaro.org,
-	ndecarli@meta.com, rmikey@meta.com
-Subject: Re: [PATCH RFC] arm64: vdso: Use __arch_counter_get_cntvct()
-Message-ID: <Z+/gUiv5gCuc7JfK@gmail.com>
-References: <20250402-arm-vdso-v1-1-2e7a12d75107@debian.org>
- <87a58yz0cm.wl-maz@kernel.org>
- <878qoiyzic.wl-maz@kernel.org>
- <Z+57uXX3u0zeTGeP@gmail.com>
- <871pu9yvlb.wl-maz@kernel.org>
+	s=arc-20240116; t=1743773795; c=relaxed/simple;
+	bh=I3vcLmVLsFwbGKKNAa5gOJi+kc6XdJdjzcVHrIDFyk0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lhJSGgCNgVbA9no7k1o8CTKFESJ4QWQpkAyF6QhYvd4Gm+IUoWNFyoeERxnDshg+594OFszrS/vbqeiP6AmhDtFIXt0Aca+8We3H14AgtBubTie1Fepw/NSJe+vioZkaUFu95g7HXNABLyTmc1fAgSXPXOF8GXYHgFUmmE+G6gE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=SSVC65l/; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="SSVC65l/"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 534DRRHE001973;
+	Fri, 4 Apr 2025 13:36:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=f3aNq9
+	6GpV4DJKKwJmf2EkJ9N2yWAajx4pMWzECAfes=; b=SSVC65l/4jt7jgIpSX0vPx
+	pqkvmeJ7uQyK6UmqAAR45VUX0xZDUCOf/FAHYwAnOM7jKxPGo+jQiTVhkIV4LPTU
+	8xe9HbXrtXaq3gTFmIhZvb1vxsXZ3NVopg4s4Q+xDtokl3CXSFWNpCePoqDm1ZYT
+	RY5LxgyqkKchOKEB4fF2gG7jp9Sqzvb00c9V8rajrdTbGS71piYaOjplwz9bcjkE
+	rzR1Em1L6LtKCei8ZvQUFSh9bl2QgD4any2tKgCH1aQduKlYbik0TbBI5t0p92ky
+	xTUjt5LJl+n21ve+OgpZb+JF9ZRe6LEVhSzzJBd8p20zkLqX+9ajDk5rUa6BVy+w
+	==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45t2qakjtp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 04 Apr 2025 13:36:26 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 534AmuPK003240;
+	Fri, 4 Apr 2025 13:36:25 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 45t2cdu5r8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 04 Apr 2025 13:36:25 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 534DaMZ513173160
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 4 Apr 2025 13:36:22 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 53CF62004B;
+	Fri,  4 Apr 2025 13:36:22 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C9D7320043;
+	Fri,  4 Apr 2025 13:36:21 +0000 (GMT)
+Received: from li-ce58cfcc-320b-11b2-a85c-85e19b5285e0 (unknown [9.152.224.212])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri,  4 Apr 2025 13:36:21 +0000 (GMT)
+Date: Fri, 4 Apr 2025 15:36:20 +0200
+From: Halil Pasic <pasic@linux.ibm.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        virtualization@lists.linux.dev, kvm@vger.kernel.org,
+        Chandra Merla
+ <cmerla@redhat.com>, Stable@vger.kernel.org,
+        Cornelia Huck
+ <cohuck@redhat.com>, Thomas Huth <thuth@redhat.com>,
+        Eric Farman
+ <farman@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik
+ <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian
+ Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle
+ <svens@linux.ibm.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Wei Wang
+ <wei.w.wang@intel.com>, Halil Pasic <pasic@linux.ibm.com>
+Subject: Re: [PATCH v1] s390/virtio_ccw: don't allocate/assign airqs for
+ non-existing queues
+Message-ID: <20250404153620.04d2df05.pasic@linux.ibm.com>
+In-Reply-To: <d54fbf56-b462-4eea-a86e-3a0defb6298b@redhat.com>
+References: <20250402203621.940090-1-david@redhat.com>
+	<20250403161836.7fe9fea5.pasic@linux.ibm.com>
+	<e2936e2f-022c-44ee-bb04-f07045ee2114@redhat.com>
+	<20250404063619.0fa60a41.pasic@linux.ibm.com>
+	<4a33daa3-7415-411e-a491-07635e3cfdc4@redhat.com>
+	<d54fbf56-b462-4eea-a86e-3a0defb6298b@redhat.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <871pu9yvlb.wl-maz@kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: jjbHEg6GGT9HznXQ3JvmOavD-8W0juTq
+X-Proofpoint-GUID: jjbHEg6GGT9HznXQ3JvmOavD-8W0juTq
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-04_05,2025-04-03_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
+ lowpriorityscore=0 suspectscore=0 impostorscore=0 adultscore=0 mlxscore=0
+ bulkscore=0 mlxlogscore=999 malwarescore=0 phishscore=0 spamscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502280000 definitions=main-2504040094
 
-Hello Marc,
+On Fri, 4 Apr 2025 12:55:09 +0200
+David Hildenbrand <david@redhat.com> wrote:
 
-On Thu, Apr 03, 2025 at 06:59:44PM +0100, Marc Zyngier wrote:
-> On Thu, 03 Apr 2025 13:14:49 +0100,
-> Breno Leitao <leitao@debian.org> wrote:
-> > 
-> > Since you created *all* this noise regarding instruction ordering, can
-> > I pick your brain in the same topic? :-P
-> > 
-> > If my machine has Speculation Barrier (sb)[1] support, is it a good
-> > replacement for `isb` ? Do you happen to know?
+> For virito-balloon, we should probably do the following:
 > 
-> Probably not. SB prevent speculation past it, while ISB is here to
-> enforce ordering. We're pretty happy to let the CPU speculate the
-> counter, as long as it does it the order we have defined.
+>  From 38e340c2bb53c2a7cc7c675f5dfdd44ecf7701d9 Mon Sep 17 00:00:00 2001
+> From: David Hildenbrand <david@redhat.com>
+> Date: Fri, 4 Apr 2025 12:53:16 +0200
+> Subject: [PATCH] virtio-balloon: Fix queue index assignment for
+>   non-existing queues
+> 
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
+>   device-types/balloon/description.tex | 22 ++++++++++++++++------
+>   1 file changed, 16 insertions(+), 6 deletions(-)
+> 
+> diff --git a/device-types/balloon/description.tex b/device-types/balloon/description.tex
+> index a1d9603..a7396ff 100644
+> --- a/device-types/balloon/description.tex
+> +++ b/device-types/balloon/description.tex
+> @@ -16,6 +16,21 @@ \subsection{Device ID}\label{sec:Device Types / Memory Balloon Device / Device I
+>     5
+>   
+>   \subsection{Virtqueues}\label{sec:Device Types / Memory Balloon Device / Virtqueues}
+> +
+> +\begin{description}
+> +\item[inflateq] Exists unconditionally.
+> +\item[deflateq] Exists unconditionally.
+> +\item[statsq] Only exists if VIRTIO_BALLOON_F_STATS_VQ is set.
+> +\item[free_page_vq] Only exists if VIRTIO_BALLOON_F_FREE_PAGE_HINT is set.
+> +\item[reporting_vq] Only exists if VIRTIO_BALLOON_F_PAGE_REPORTING is set.
 
-I understand `isb` kills any speculation very badly today, given it
-flushes the pipeline completely. That might be reason that replacing
-`isb` by `sb` makes the operation 20%.
+s/is set/is negotiated/?
 
-iThis is what the `isb` manual[1] says:
+I think we should stick to "feature is offered" and "feature is
+negotiated".
 
- > An ISB flushes the pipeline and ensures that the effects of any
- > completed context-changing operation before the ISB are visible to
- > any instruction after the ISB
+> +\end{description}
+> +
+> +\begin{note}
+> +Virtqueue indexes are assigned sequentially for existing queues, starting
+> +with index 0; consequently, if a virtqueue does not exist, it does not get
+> +an index assigned. Assuming all virtqueues exist for a device, the indexes
+> +are:
+> +
+>   \begin{description}
+>   \item[0] inflateq
+>   \item[1] deflateq
+> @@ -23,12 +38,7 @@ \subsection{Virtqueues}\label{sec:Device Types / Memory Balloon Device / Virtque
+>   \item[3] free_page_vq
+>   \item[4] reporting_vq
+>   \end{description}
+> -
+> -  statsq only exists if VIRTIO_BALLOON_F_STATS_VQ is set.
+> -
+> -  free_page_vq only exists if VIRTIO_BALLOON_F_FREE_PAGE_HINT is set.
+> -
+> -  reporting_vq only exists if VIRTIO_BALLOON_F_PAGE_REPORTING is set.
+> +\end{note}
+>   
+>   \subsection{Feature bits}\label{sec:Device Types / Memory Balloon Device / Feature bits}
+>   \begin{description}
 
-[1] https://developer.arm.com/documentation/100941/0101/Barriers
+Sounds good to me! But I'm still a little confused by the "holes". What
+confuses me is that i can think of at least 2 distinct types of "holes":
+1) Holes that can be filled later. The queue conceptually exists, but
+   there is no need to back it with any resources for now because it is 
+   dormant (it can be seen a hole in comparison to queues that need to
+  materialize -- vring, notifiers, ...)
+2) Holes that can not be filled without resetting the device: i.e. if
+   certain features are not negotiated, then a queue X does not exist,
+   but subsequent queues retain their index.
 
-> On some implementation, this can be have a similar effect (drain the
-> fetch queue, restart). But the intent clearly isn't the same, and some
-> implementations may do things differently.
+Can we have both kinds or was/will be 1) and/or 2) never a thing?
 
-Let me back-up to `isb` purpose in such case (before reading CNTVCT_EL0).
+This patch would make sure that neither 1) nor 2) applies to
+virtio-balloon, which is good. But we are talking about a
+transport fix here, and I would like to eventually make sure
+that the abstractions make sense.
 
-From my understand, it severs two propositions:
+That being said, I think we should proceed with this patch, because I
+don't think Linux uses type 1) holes.
 
-1) Make sure that the code after the `mrs CNTVCT_EL0` is not executed
-   out-of-order before the read
- 
-2) Code that comes before the the CNTVCT_EL0 read retires before the
-   read.
-
-If I understand what `sb` does, it only protects against 1) but not 2).
-Is this the right way to understand it?
-
-Thanks for you time,
---breno
+Regards,
+Halil
