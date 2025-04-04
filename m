@@ -1,85 +1,120 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 879F71A5B8E
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 19:53:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 046561DFD83
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 19:54:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743796399; cv=none; b=fPaAmPe/4xB6xvNNtYBP9dqQsKFjxeL1E7eYInxa10Z9dYruslqGyyz5dwuClEU/eoF77xIWZlsxEnKojLOSGfkv7Bh1b4cIeR22iTQrDW0hMjPr2KbkN9AqCNUsXcKt5I5AkttoTtpGaV172tN1r+K/QWw0pInhKWau/fsGQqc=
+	t=1743796486; cv=none; b=qWiHHWb7exm3FW/ICgzILwqB6iHh8FqNDO/d1frLruGmqr0RcDNoxxE2Vl3rJy0yUnqeHqEKKuTXg+PXFAF5PiqvxpBQzT+inCZHWztpB5Zpkr0BGLAktFmfUPotZes+7lROrjMHiafNuzppKwuT/AId7buiPQvSI51WfRnDr98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743796399; c=relaxed/simple;
-	bh=dBBa1o7eH67G4MV4jyizlfxUVGGZZ6ge+FKvW5APsak=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=oPYu7LIMX5A0YY6RbHDT47PaJvRV0riEVgs/RpQHSefNVrd5a7Oz9mxzs3hb3ogMwh17MA6Zn8z4I4+RcL3AgvJnLpZnoRj1M5a3ypFFobIlEbIxKo5v32CMww/HD6v49sCYb4QPDWG+YSK/eS+xg7G7ngFPTOZQWuwe12zCFyI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=I2O8XO5m; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1743796486; c=relaxed/simple;
+	bh=2UlsTHi7AOc8miGOqZhj4VPJ8gnJHtkD07YzMrfULlg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UaycBWO5gBLQFOfZqsWHnn3AoMrZzyDAFrFfQEATsDXtU2qreJQINOuzBkDiGUjM7PgZtntk7FcULlULDvL/jSCf0+gQvJ8qs5q4YNsT4Le5/zByo0T/zY6DgfqT9TgK+jfQPu0i9r2Muuk+GCoA3CP+nL8BTSNfuZ3Ugta8G+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CEx/U85j; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="I2O8XO5m"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1743796395;
-	bh=dBBa1o7eH67G4MV4jyizlfxUVGGZZ6ge+FKvW5APsak=;
-	h=From:Date:Subject:To:Cc:From;
-	b=I2O8XO5m2Z6qJy7xkjqT1xmeKZb/ge+K8MUWTuSKo4sIwpvMxNl1N1Ldwb8HhcvFF
-	 kokWn28/+aGQnV86vfSoTrtDjXI4u5oEB4trJ10/R3udEMGtF8p2LJCEcEUbH1KBf8
-	 u99RRsI5JYvqSPkBYlcWST22KOhV7YSdW4oCf8FODvEQUpXQgXAl0THS5vw0FnDvqd
-	 /wMniK7nHw1b7wvHW0NwzReWxQkdR+DWZl1yW94jTnLvQndAbZv1Fm6Fhj065FoNTW
-	 zYK0gOH+xgwntEG9ygRtJ7TrIEaFzYX63C3G0ccszrZdvpiVpdP9bxggZQI61CYx5b
-	 AsOJ9n/1z9LNQ==
-Received: from [192.168.1.63] (unknown [70.107.117.78])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: nfraprado)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 6D98617E0FC3;
-	Fri,  4 Apr 2025 21:53:14 +0200 (CEST)
-From: =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
-Date: Fri, 04 Apr 2025 15:52:07 -0400
-Subject: [PATCH] MAINTAINERS: Add SCM for MediaTek
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CEx/U85j"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41F32C4CEDD;
+	Fri,  4 Apr 2025 19:54:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743796485;
+	bh=2UlsTHi7AOc8miGOqZhj4VPJ8gnJHtkD07YzMrfULlg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=CEx/U85jhoYAMt09WN2v5Ga+FezzbD2Dz5tMaeiDaquWBw0BMfPsEDsVjFdLPVm92
+	 4o2Y07hxNTgPv3ZSG6ryzQgaGNk2Zs5ae+h1pDop+MAbB1lW5GdupMzofjas0x0ozY
+	 hWXYsa6L3cJGv8nUP+yTvtDINa+2ji6aTzTxZdDraEieAPu5pRFPPam1esWAj9yY/R
+	 31+WkXtfgqzTomaDLBVWEeDai9GYo/0Le+fBNxS4V8530CuLL4KDbtlyFemTRSKSCW
+	 qJyjLnB5yqJq7Bd8JX4p0n4cwHPYs4uijlS+QaoPUdz/zQgvlNsSX9FeODtdHX7pqU
+	 exNpjk2u4UFcA==
+From: Jaegeuk Kim <jaegeuk@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	linux-f2fs-devel@lists.sourceforge.net
+Cc: Jaegeuk Kim <jaegeuk@kernel.org>
+Subject: [PATCH] f2fs: clean up unnecessary indentation
+Date: Fri,  4 Apr 2025 19:54:42 +0000
+Message-ID: <20250404195442.413945-1-jaegeuk@kernel.org>
+X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250404-maintainers-mtk-scm-v1-1-95d1f0c3f60b@collabora.com>
-X-B4-Tracking: v=1; b=H4sIAGY48GcC/x2MQQqAIBAAvxJ7bsHMMPpKdBDbagkt3Igg/HvSY
- Q5zmHlBKDEJDNULiW4WPmKRpq7Aby6uhDwXB610p4wyGBzHq0BJMFw7ig/oOkNaq9ZSb6GUZ6K
- Fn/86Tjl/MUnktGUAAAA=
-X-Change-ID: 20250404-maintainers-mtk-scm-a54e22037e87
-To: Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: kernel@collabora.com, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
- =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
-X-Mailer: b4 0.14.2
 
-Add SCM entry for "ARM/Mediatek SoC support" section.
+No functional change.
 
-Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 ---
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+ fs/f2fs/segment.h | 40 ++++++++++++++++++++++++----------------
+ 1 file changed, 24 insertions(+), 16 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 78467ad7a8feffda3a6909dc5f8d9bf0b0dee3e6..8375b95348906d3efa953d00bc224174ab56c910 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2739,6 +2739,7 @@ L:	linux-mediatek@lists.infradead.org (moderated for non-subscribers)
- S:	Maintained
- W:	https://mtk.wiki.kernel.org/
- C:	irc://irc.libera.chat/linux-mediatek
-+T:	git git://git.kernel.org/pub/scm/linux/kernel/git/mediatek/linux.git
- F:	arch/arm/boot/dts/mediatek/
- F:	arch/arm/mach-mediatek/
- F:	arch/arm64/boot/dts/mediatek/
-
----
-base-commit: a4cda136f021ad44b8b52286aafd613030a6db5f
-change-id: 20250404-maintainers-mtk-scm-a54e22037e87
-
-Best regards,
+diff --git a/fs/f2fs/segment.h b/fs/f2fs/segment.h
+index 0465dc00b349..5fcb1f92d506 100644
+--- a/fs/f2fs/segment.h
++++ b/fs/f2fs/segment.h
+@@ -429,7 +429,6 @@ static inline void __set_free(struct f2fs_sb_info *sbi, unsigned int segno)
+ 	unsigned int secno = GET_SEC_FROM_SEG(sbi, segno);
+ 	unsigned int start_segno = GET_SEG_FROM_SEC(sbi, secno);
+ 	unsigned int next;
+-	unsigned int usable_segs = f2fs_usable_segs_in_sec(sbi);
+ 
+ 	spin_lock(&free_i->segmap_lock);
+ 	clear_bit(segno, free_i->free_segmap);
+@@ -437,7 +436,7 @@ static inline void __set_free(struct f2fs_sb_info *sbi, unsigned int segno)
+ 
+ 	next = find_next_bit(free_i->free_segmap,
+ 			start_segno + SEGS_PER_SEC(sbi), start_segno);
+-	if (next >= start_segno + usable_segs) {
++	if (next >= start_segno + f2fs_usable_segs_in_sec(sbi)) {
+ 		clear_bit(secno, free_i->free_secmap);
+ 		free_i->free_sections++;
+ 	}
+@@ -463,22 +462,31 @@ static inline void __set_test_and_free(struct f2fs_sb_info *sbi,
+ 	unsigned int secno = GET_SEC_FROM_SEG(sbi, segno);
+ 	unsigned int start_segno = GET_SEG_FROM_SEC(sbi, secno);
+ 	unsigned int next;
+-	unsigned int usable_segs = f2fs_usable_segs_in_sec(sbi);
++	bool ret;
+ 
+ 	spin_lock(&free_i->segmap_lock);
+-	if (test_and_clear_bit(segno, free_i->free_segmap)) {
+-		free_i->free_segments++;
+-
+-		if (!inmem && IS_CURSEC(sbi, secno))
+-			goto skip_free;
+-		next = find_next_bit(free_i->free_segmap,
+-				start_segno + SEGS_PER_SEC(sbi), start_segno);
+-		if (next >= start_segno + usable_segs) {
+-			if (test_and_clear_bit(secno, free_i->free_secmap))
+-				free_i->free_sections++;
+-		}
+-	}
+-skip_free:
++	ret = test_and_clear_bit(segno, free_i->free_segmap);
++	if (!ret)
++		goto unlock_out;
++
++	free_i->free_segments++;
++
++	if (!inmem && IS_CURSEC(sbi, secno))
++		goto unlock_out;
++
++	/* check large section */
++	next = find_next_bit(free_i->free_segmap,
++			     start_segno + SEGS_PER_SEC(sbi), start_segno);
++	if (next < start_segno + f2fs_usable_segs_in_sec(sbi))
++		goto unlock_out;
++
++	ret = test_and_clear_bit(secno, free_i->free_secmap);
++	if (!ret)
++		goto unlock_out;
++
++	free_i->free_sections++;
++
++unlock_out:
+ 	spin_unlock(&free_i->segmap_lock);
+ }
+ 
 -- 
-Nícolas F. R. A. Prado <nfraprado@collabora.com>
+2.49.0.504.g3bcea36a83-goog
 
