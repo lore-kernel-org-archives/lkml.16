@@ -1,113 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F2B6101F2;
-	Fri,  4 Apr 2025 06:13:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6197101F2;
+	Fri,  4 Apr 2025 06:13:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743747188; cv=none; b=Xm4r9fU2KpmsGU5MGDwSscuJ1TmtTc+wN3nnF5j1dgkxHhJFQKiiAqgOIUsjEzdJ4fleW2J0B4GN7ea8T74QcHUEfbOl3vzMxNgd7pXQogIb1c3CkxRvsRGhOLwSOpS3j8PmCLua8nWXpFL/LAP721wFKU51hJ/ltnSP/yI+8Ng=
+	t=1743747194; cv=none; b=RNHEeESzrATt1vT/baCeACuTr6kEfMniGIw/Qa2hQwwUpvV93265LbV/bgoSDlC4CA2K38zHTMglc3OfndW9ZhWc1hRwqncfCGxo8xlLqrPNcs95YGriny6dp6D+x9DW/HlPCSHRktK1bpipNHfyCopt3PvNy0579aDsn7Do8pg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743747188; c=relaxed/simple;
-	bh=nZHzpVI3J8SGHs+5EI0MI3PuiDodDZqU3FJVvBRM2r4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MM2/nBjyRbU4RMDiw1OPcRC/tx/VUw7utAhsJNd0dxcjUlBKdSS1LdEdvej//s4UNYTdqbpdveHrTbYGqVTIXUZwPTdekkANdiAuvVW/knuVC3wMp3YJtS+v5TDM1Kq3Kz+e7YhVQbMOnmWUY87Vs2MvXFVScN1S2+YxqT0iVw0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VPkebXSR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743747194; c=relaxed/simple;
+	bh=D/d1gnPCumIccAY1D58aMP6d2nRRx7Cr8jlQwlsQyhI=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=L12oFGtEVUGGGy6tA/c4F7yMwf//Ttyo7d5LbryAaNoKjb+Ya2lxvqpq01IqDL38BDQco8eI8qgLH9UICK7kNgsZi47En1wZA11nNkaa6WvuWL6apNuktGi5Dqy3PCW2BopHsGOI3uYRtJvdBbxVfWqg1Eaf+PMphYYedYAu398=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=FLlcagOC; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VPkebXSR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 538BDC4CEDD;
-	Fri,  4 Apr 2025 06:13:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743747188;
-	bh=nZHzpVI3J8SGHs+5EI0MI3PuiDodDZqU3FJVvBRM2r4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=VPkebXSRFOhFIcAFdDtU3srZ27hd/R4EIXd42uyBWOGaKKCoeurgy1s3+i5Og3yBJ
-	 QxwS+JksvgmYAe+cydA338daUJ6QRs4zsAcF23lFVax0V1L422i1DHiCEU7EM0GKNZ
-	 H5n779s2eyyePAplcHd+UtWKvuIp1FZwo1nomBaEEl5N4J9+dwCZOJyDjMVZM+n0Bq
-	 YpQvnNlDg7qXujPxMXPddJTbd73gCwQ76snkpzl2Vj4epY7XYiteQ7Qiic1LlLP45u
-	 DcIx2r7/Hqqkk8DGtmme0SiE8gEUboQ2pYBKOGzGgHY6SptgWndpV/nJZrz5uphKQA
-	 lcrgtcBbm+S0A==
-Message-ID: <8ae5b493-6906-4adc-8983-d343c7803f06@kernel.org>
-Date: Fri, 4 Apr 2025 08:12:59 +0200
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FLlcagOC"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 5346D073265204
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 4 Apr 2025 01:13:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1743747180;
+	bh=KVWOwvRPO7YvD8ife4s6y5HXtx59DE9Bhv5GKy5bWME=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=FLlcagOCAFXhKEBo2g69Vx91biEEicL67yNaykYglTguEFH+U1KZVfHYarNRCHBua
+	 DCDOeF0+rF+wOQ3+Eu3Z+ZCuL79E3OANB4j/mA+l0/LlMJiywQg3u96TdpH0B7HFJS
+	 CX8Efn0Le1+K6IWtV9jDlMjPBz1NxefQfyMgYXeY=
+Received: from DFLE20.ent.ti.com ([10.64.6.57])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTP id 5346D0b3032094;
+	Fri, 4 Apr 2025 01:13:00 -0500
+Received: from flwvowa01.ent.ti.com (10.64.41.90) by DFLE20.ent.ti.com
+ (10.64.6.57) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.2.1748.10; Fri, 4 Apr
+ 2025 01:13:00 -0500
+Received: from DFLE115.ent.ti.com (10.64.6.36) by flwvowa01.ent.ti.com
+ (10.64.41.90) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2507.34; Fri, 4 Apr
+ 2025 01:13:00 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 4 Apr 2025 01:13:00 -0500
+Received: from localhost (lcpd911.dhcp.ti.com [172.24.227.226])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 5346CxRT123540;
+	Fri, 4 Apr 2025 01:12:59 -0500
+Date: Fri, 4 Apr 2025 11:42:58 +0530
+From: Dhruva Gole <d-gole@ti.com>
+To: Ulf Hansson <ulf.hansson@linaro.org>
+CC: <linux-pm@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] pmdomain: core: Reset genpd->states to avoid freeing
+ invalid data
+Message-ID: <20250404061258.alstrdgpz75gywna@lcpd911>
+References: <20250402120613.1116711-1-ulf.hansson@linaro.org>
+ <20250403080815.jsdoydcczkeuvmy6@lcpd911>
+ <CAPDyKFrgYVMvaBf13ksdJ6Zr6bvLo1Jmz8yLiyg_43hs65STVQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] sound: soc: stm: stm32_sai: Use dev_err_probe()
-To: shao.mingyin@zte.com.cn, olivier.moysan@foss.st.com
-Cc: arnaud.pouliquen@foss.st.com, lgirdwood@gmail.com, broonie@kernel.org,
- perex@perex.cz, tiwai@suse.com, mcoquelin.stm32@gmail.com,
- alexandre.torgue@foss.st.com, linux-sound@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- yang.yang29@zte.com.cn, xu.xin16@zte.com.cn, ye.xingchen@zte.com.cn,
- zhang.enpei@zte.com.cn
-References: <20250403154142936Po-soX8Bifyvw_eWSbddT@zte.com.cn>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250403154142936Po-soX8Bifyvw_eWSbddT@zte.com.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <CAPDyKFrgYVMvaBf13ksdJ6Zr6bvLo1Jmz8yLiyg_43hs65STVQ@mail.gmail.com>
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On 03/04/2025 09:41, shao.mingyin@zte.com.cn wrote:
-> From: Zhang Enpei <zhang.enpei@zte.com.cn>
+On Apr 03, 2025 at 17:55:41 +0200, Ulf Hansson wrote:
+> On Thu, 3 Apr 2025 at 10:08, Dhruva Gole <d-gole@ti.com> wrote:
+> >
+> > On Apr 02, 2025 at 14:06:13 +0200, Ulf Hansson wrote:
+> > > If genpd_alloc_data() allocates data for the default power-states for the
+> > > genpd, let's make sure to also reset the pointer in the error path. This
+> > > makes sure a genpd provider driver doesn't end up trying to free the data
+> > > again, but using an invalid pointer.
+> >
+> > I maybe missing something but if kfree works similar to [1]GNU free() won't
+> > it make the genpd->states NULL anyway? Have you actually seen scenarios
+> > where the genpd->states is remaining non-NULL even after kfree?
 > 
-> Replace the open-code with dev_err_probe() to simplify the code.
+> Yes. kfree() doesn't reset the pointer to the data.
+
+Gotcha.
+
+[...]
+> > >       put_device(&genpd->dev);
+> > > -     if (genpd->free_states == genpd_free_default_power_state)
+> > > +     if (genpd->free_states == genpd_free_default_power_state) {
+> > >               kfree(genpd->states);
+> > > +             genpd->states = NULL;
+> >
+> > Also the coding convention for kfree in other places in pmdomains
+> > doesn't seem to follow this practise either...
 > 
-> Signed-off-by: Zhang Enpei <zhang.enpei@zte.com.cn>
-> Signed-off-by: Shao Mingyin <shao.mingyin@zte.com.cn>
-> ---
-The code was correct before 2cfe1ff22555 ("ASoC: stm32: sai: add
-stm32mp25 support") and that commit broke it. Some explanation would be
-useful instead of blindly generating patches.
+> Right. I am not suggesting changing them all. Only this one, as it's a
+> special case and an error path.
+> 
+> genpd->states may be allocated by both the genpd provider driver and
+> internally by genpd via pm_genpd_init(), hence we need to be a bit
+> more careful.
+> 
 
-Was it done on purpose like that in that commit? Or ST just sent
-downstream commit to mainline without changing it?
+I see.. okay then,
+Reviewed-by: Dhruva Gole <d-gole@ti.com>
 
+
+-- 
 Best regards,
-Krzysztof
+Dhruva Gole
+Texas Instruments Incorporated
