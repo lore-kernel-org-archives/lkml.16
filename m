@@ -1,96 +1,162 @@
-Received: from mail-pl1-f196.google.com (mail-pl1-f196.google.com [209.85.214.196])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3BE3DDC1
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 20:14:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A4161F561C
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 20:15:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743797699; cv=none; b=PKhtF2FSx/zpDstdZvZdcDd35rpzhKTIgThqUbv//gEQMbLjHk3E8pn8bQeDor7JdgKb1yu+eBBikYw5IFh+s7Kcp7A8T1cfc7A31CXpuakGTG7mCpRfGvHwY1+lH4CsDVoW7uAuxvjXV1/EUVCMZzhWsZho43FPoJHUGU8qjRg=
+	t=1743797724; cv=none; b=sRpht5Y30P1vUAlwXddj4b7b9smtYeMRFOe9V/dQpUz0BXm9UYabyuZoiwwgwv17c31WCsYO7QZhUQ7ZX0gsPZAtD72B8gEyt8Yb/ZXAXLEEbhyDEySB2ZRb6Ouugz8EBXZQ+6A4idUAkE/klBJiPyc0oN2Wxuzsl+9nJHjXX+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743797699; c=relaxed/simple;
-	bh=V5m9fSkc1kiynvrvuBLYgb6fQ4DQ6fsXJBRBsZ4ixTk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=DZ6SdTyD7ZcRgKpzsRd0o7aPJRMvfzLTD3DcfBe5qzN6GFLZ9lpnQTGM5sithVyscs9GSEQ4GMyjOdhHro3/NbZuheWD4D6HD4oi95vShhxfHAN2ydOi2L9RjirqVGSkBVBI4l8wBl+oA/zRG/KBDFmtVUgQFyLOZqqOePq79YU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=CrfK/DUb; arc=none smtp.client-ip=209.85.214.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1743797724; c=relaxed/simple;
+	bh=FNMLVPOYURQjDIbEqTZeHZjf8H6jXyblhUfeS+qvi4w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QsHKeFOOefYdTwehyLp7hBdASBQIZkrKLc94X8B5VIo+YY9oSMGvog5gO33b25N1whzUZQVILHA4PXJ02btsm7R0kvwm0+sbhzmTEt25tmwTa+okWpTitCA54rzUMfc5vQJP26AzL0n0snUjzDr7ScuiDfMzwSu24huwFqFbv8I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org; spf=none smtp.mailfrom=blackwall.org; dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b=XPesGFd1; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=blackwall.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="CrfK/DUb"
-Received: by mail-pl1-f196.google.com with SMTP id d9443c01a7336-223f4c06e9fso23020145ad.1
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 13:14:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b="XPesGFd1"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43ce70f9afbso25831285e9.0
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 13:15:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1743797696; x=1744402496; darn=vger.kernel.org;
-        h=mime-version:message-id:date:subject:cc:to:from:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=/FBk6NdvKrMWCu3tKHxufhADR2ZSaIO/oZLOZ9EnxBc=;
-        b=CrfK/DUbCiz/+nVD77uX8h2LWpxncov88glHg3H1/azNxvjCA5GpnpmFyHVX7AP4dt
-         DCR9jRcdqVtuifJdgHJDd8edXw6iBMWepr6AG3cAWxcSl6Ul7H0HfptKQNOvH3wudqUQ
-         J4ej8ScIsvHvM97rpdMA7CnzGzT0OfkzHF4KRlu9LxAtKEpDWs5k/3xhT+0/yiv8tEoG
-         CiwMxZQHn5R9hUEsGFRZonzAFHAKZiFBOjSrtnjOyuFD0XzTKjS8As117CITEmnNuVfN
-         cNMM/vbFbj4Eg05tW+1Srt77BMVybg00UxOb+aew2jSaPP3kfxKk+hmi/Tt5eLaoFfmU
-         qSVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743797696; x=1744402496;
-        h=mime-version:message-id:date:subject:cc:to:from:x-gm-message-state
+        d=blackwall-org.20230601.gappssmtp.com; s=20230601; t=1743797721; x=1744402521; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=/FBk6NdvKrMWCu3tKHxufhADR2ZSaIO/oZLOZ9EnxBc=;
-        b=fjONIQTsD0cINKZfjPf6jMA2/pT9PWowtwgScCV6Gp4+RbkCN7IXZXDexCNsWAGNLd
-         BwGAvaY/y45jnrlxRfNMYvpMMtMot7a2C5p7tzk8fUaqLywYYVt+sgh7cVJ5VtbOOrY1
-         NLtRq8JZ/10oMt1Hvpqn18mo1udlQfzGy2lRcIiVhyfsXM603TrKU5Cx2lXOTNMkJfSD
-         N/xbKtyXUXHTq2mtjfC01kNTgidv7g6YPcRc3RrUk3Ff7K+oxT/wZIVps6p1tMs+EiR+
-         fZY5xkBkQmE6WlftQ0VKauAy2q9YXM0eiXlkMYl+3owmO4kUU9ICcxuzrklkK5bCho/R
-         tJIg==
-X-Forwarded-Encrypted: i=1; AJvYcCWyUPeh9S4cuo+3B14Nar8sB/xw8iw5Gc/QhO+zm7/6XKgWvuRzfKHPIHT2aqC4dDksSYhz3hKjqwkGaok=@vger.kernel.org
-X-Gm-Message-State: AOJu0YydYy/odyfWFwLTAfmEEx3+wFeKH1ID31atqJyJ5JbcfayvxFsN
-	agtG2igsK45FSRdY+ZH+hT//4MJemf0HC8R52FG+MKfPgGV2hKjsaGHoTQ4uMxU=
-X-Gm-Gg: ASbGncua16Xl+Zj2nKCvz1Y0aRxbA1cqN9TdqU1xw3iOA57YNUL1kWj1NG+yHMUxSib
-	z7LkuQKY3SDua9eimIKYC27bsUBA/YrUmQ6nRiWuNQX6jI+paLvHXMZPhb9jY/HR+ZkfXY3s2zx
-	xGktDaR1QDIC06JOHHkf8WO9/Z/57V8prhcB9VTIGjIyvbaTf1K2gPnZpeUF2+r0vaPSxvvqgVe
-	21W8//hZ4nxwM/iDvPTd57TxtPnimbYBfpzuqTIA+VvNdsOQ/ETlZZFLzSHLkTnWoKeclt1Zmn5
-	ggb47I7BtJY+UW5yC3inxs+vIJzuJAXYiDd+JMsJXi3/S9eEsXL23w==
-X-Google-Smtp-Source: AGHT+IFpY9obGLrPSf90qFUUIy/i88BUoaxsGk56sC6A1IFiBRGRyXqtZEhSta9iE3ZF6j26evkz0g==
-X-Received: by 2002:a17:903:3c6c:b0:220:fe36:650c with SMTP id d9443c01a7336-22a89bac53emr69618525ad.23.1743797696161;
-        Fri, 04 Apr 2025 13:14:56 -0700 (PDT)
-Received: from localhost ([97.126.182.119])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2297866e61dsm36705135ad.190.2025.04.04.13.14.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Apr 2025 13:14:55 -0700 (PDT)
-From: Kevin Hilman <khilman@baylibre.com>
-To: linux-embedded@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [ANNOUNCE] Embedded Recipes conference: May 14-16, Nice, France
-Date: Fri, 04 Apr 2025 13:14:55 -0700
-Message-ID: <7hbjtblm4g.fsf@baylibre.com>
+        bh=dDPtzrDQm7D2KJ6r1jIrDZFX1ist1md5kdhYkAXF22A=;
+        b=XPesGFd11XG/G9/8I0Orw8ceBOcaqCOKXfhjKp66c+6JCzZPMreK5fAa4hhTvTwBCX
+         w8jo1RyhEPAePdo/VnMyruwPcFOtSUHnyfjpPqqvbSCi/0EvzUNkU7uXNa8g7NVJyAZr
+         YNvJtZpWZjNXmdzLM7OON1iMX3DYcIPDJdguFOzABYweqQ4sGoKVdQUzs01Iy+wGxN76
+         a9aQdvuNA2kgbJiv0OO0nJW2TmobnWwi+yLSKhOVSC/OGBXCuX9Y2/G1tNdZxeybbWzu
+         5dy+l9eSNMq8I1rzFM/I8RnQqjT/uvZECeAwwCYhCbLqiSXl4maB3G4o6dKN1JCNDAje
+         zc9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743797721; x=1744402521;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dDPtzrDQm7D2KJ6r1jIrDZFX1ist1md5kdhYkAXF22A=;
+        b=u7o+ACLb2QtSHBFrwtO2N3B3mPdHDEyUKXj8j2OgxLe+D254olPG9Eik6YKGrNySXy
+         HSIP4oePedkMuAYuyTsyJGMD9hZAzy+HP8w+gUjdSloMseMrjRFilnvTKJaPO0PeNhX4
+         fDjp00WKJHafQXc9Ah7tBUfdCM8Q3r25klXsQMmy60S4q7RfY3h6epDSl3LtrtxxSUTR
+         to9IMTMCiyOTBU9bZ9RAp760SZnL5EYIkuoQ2Q2SMfvBefMlWm59thfPQLJ6Og0xb4FG
+         zcS98eXfyeij4fdX7HmTAdDj7aqIwuB0Ue5hLe3YlGboHIdliMuZ8bSgmv/u98SaOkCS
+         kt5A==
+X-Forwarded-Encrypted: i=1; AJvYcCXEx99Rz1ZexarxRitsyW0yeB54ivjrM6MajTwzUOvBf6gJQvhdafIn0wPkGfmBUgVJNh0slIAfiPNy43Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxEtOBPPnOPTUtgVxOw7RPOkK57tKmBrI9fQ/EYouavLh98jDCv
+	kIbVJhjRN3rBfM4PSU1m2sOLsc2RTwwpWWtQixavUJl5DFp4KThHyWcX3SM0IjY=
+X-Gm-Gg: ASbGncs6B0JoZdiaulz2FiH45SAH9o+4cd+v4Y7KaBolVW5Tb45KZQEshGdFyigR6Rp
+	JRa277gvuQPPryu+NXEU3C7byKL0qahcMc7LubM/WhrLS94hIzWl14V2qY18nWNO06QRho2SDpA
+	8v9zohuvgI18Hsp/1m3i1iM4DNUf4WsQVhAa47nhyQnY7RWOJ5TAFsEYOdHHONGc9zo8e6ok4fn
+	4IfXzJm8NLe/Q66L0wfj3cS3dGmFDSnh7oqRFk8K2dAzJ0t+oYHwD+DpSCTFlBV+CKyIKx1q3Ng
+	rCYHN7nxCF9lv0QXQrnMMMfgA8NjuLGhdyVww82ruZz+5/WPH7qolqIwECOi6iOjg4dc2kR3HKm
+	4
+X-Google-Smtp-Source: AGHT+IGVOzLfgvsBZseM5TV3JdkQLxAe0MfgoooeouE9pQaId+9aWIcjjMv6iTb0EZIAoYH8aCKyuQ==
+X-Received: by 2002:a05:6000:4305:b0:391:4914:3c6a with SMTP id ffacd0b85a97d-39d0de27eeamr3277151f8f.29.1743797720808;
+        Fri, 04 Apr 2025 13:15:20 -0700 (PDT)
+Received: from [192.168.0.205] (78-154-15-142.ip.btc-net.bg. [78.154.15.142])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c301a7064sm5279408f8f.34.2025.04.04.13.15.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 04 Apr 2025 13:15:20 -0700 (PDT)
+Message-ID: <96bda215-bee1-4ff7-9d88-b97922ca7b1a@blackwall.org>
+Date: Fri, 4 Apr 2025 23:15:19 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Patch v2 net-next 3/3] net: bridge: mcast: Notify on mdb offload
+ failure
+To: Joseph Huang <joseph.huang.2024@gmail.com>,
+ Joseph Huang <Joseph.Huang@garmin.com>, netdev@vger.kernel.org
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Roopa Prabhu <roopa@nvidia.com>, Simon Horman <horms@kernel.org>,
+ linux-kernel@vger.kernel.org, bridge@lists.linux.dev
+References: <20250403234412.1531714-1-Joseph.Huang@garmin.com>
+ <20250403234412.1531714-4-Joseph.Huang@garmin.com>
+ <36c7286d-b410-4695-b069-f79605feade4@blackwall.org>
+ <917d4124-c389-4623-836d-357150b45240@gmail.com>
+ <abb9e2c1-c4b5-4ffa-b2e3-8b204da5efca@blackwall.org>
+ <9e7f6c4c-cabe-46e9-b59f-6638b4ae25e3@gmail.com>
+Content-Language: en-US
+From: Nikolay Aleksandrov <razor@blackwall.org>
+In-Reply-To: <9e7f6c4c-cabe-46e9-b59f-6638b4ae25e3@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hello,
+On 4/4/25 23:11, Joseph Huang wrote:
+> On 4/4/2025 4:04 PM, Nikolay Aleksandrov wrote:
+>> On 4/4/25 18:25, Joseph Huang wrote:
+>>> On 4/4/2025 6:29 AM, Nikolay Aleksandrov wrote:
+>>>> On 4/4/25 02:44, Joseph Huang wrote:
+>>>>> Notify user space on mdb offload failure if mdb_offload_fail_notification
+>>>>> is set.
+>>>>>
+>>>>> Signed-off-by: Joseph Huang <Joseph.Huang@garmin.com>
+>>>>> ---
+>>>>>    net/bridge/br_mdb.c       | 26 +++++++++++++++++++++-----
+>>>>>    net/bridge/br_private.h   |  9 +++++++++
+>>>>>    net/bridge/br_switchdev.c |  4 ++++
+>>>>>    3 files changed, 34 insertions(+), 5 deletions(-)
+>>>>>
+>>>>
+>>>> The patch looks good, but one question - it seems we'll mark mdb entries with
+>>>> "offload failed" when we get -EOPNOTSUPP as an error as well. Is that intended?
+>>>>
+>>>> That is, if the option is enabled and we have mixed bridge ports, we'll mark mdbs
+>>>> to the non-switch ports as offload failed, but it is not due to a switch offload
+>>>> error.
+>>>
+>>> Good catch. No, that was not intended.
+>>>
+>>> What if we short-circuit and just return like you'd suggested initially if err == -EOPNOTSUPP?
+>>>
+>>>>> diff --git a/net/bridge/br_switchdev.c b/net/bridge/br_switchdev.c
+>>>>> index 40f0b16e4df8..9b5005d0742a 100644
+>>>>> --- a/net/bridge/br_switchdev.c
+>>>>> +++ b/net/bridge/br_switchdev.c
+>>>>> @@ -504,6 +504,7 @@ static void br_switchdev_mdb_complete(struct net_device *dev, int err, void *pri
+>>>>>        struct net_bridge_mdb_entry *mp;
+>>>>>        struct net_bridge_port *port = data->port;
+>>>>>        struct net_bridge *br = port->br;
+>>>>> +    u8 old_flags;
+>>>>>    
+>>>
+>>> +    if (err == -EOPNOTSUPP)
+>>> +        goto notsupp;
+>>>
+>>>>>        spin_lock_bh(&br->multicast_lock);
+>>>>>        mp = br_mdb_ip_get(br, &data->ip);
+>>>>> @@ -514,7 +515,10 @@ static void br_switchdev_mdb_complete(struct net_device *dev, int err, void *pri
+>>>>>            if (p->key.port != port)
+>>>>>                continue;
+>>>>>    +        old_flags = p->flags;
+>>>>>            br_multicast_set_pg_offload_flags(p, !err);
+>>>>> +        if (br_mdb_should_notify(br, old_flags ^ p->flags))
+>>>>> +            br_mdb_flag_change_notify(br->dev, mp, p);
+>>>>>        }
+>>>>>    out:
+>>>>>        spin_unlock_bh(&br->multicast_lock);
+>>>>
+>>>
+>>> + notsupp:
+>>>      kfree(priv);
+>>
+>> Looks good to me. Thanks!
+> 
+> Thanks for the review!
+> 
+> And a logistic question. Now that part 1 and part 2 are ack'd (thanks again for the review), when I send out v3, should I resend those (unmodified part 1 and part 2) with my v3 patch series, or should I break this one off and only send part 3 v3 as a separate patch?
+> 
+> Thanks,
+> Joseph
 
-Join us May 14-16 in Nice, France for a small conference focused on
-embedded Linux (and more!): 
+You should send the whole set again as v3, but you should keep the acked-by tags in those patches.
 
-  https://embedded-recipes.org/2025/
+Cheers,
+ Nik
 
-Embedded Recipes (ER) is a small, open source conference (~150 people),
-with 2 days of technical talks[1] in a single track, followed by an
-optional day of technical workshops/hacking days etc.[2]
-
-Also, that same week other events such as the media summit[3] and the
-GStreamer hackfset[4] will also be held nearby in Nice.
-
-So if you're in Europe (or want to be) in May, join other embedded
-developers in the sun of the French Riviera for a great technical
-conference.
-
-See you in Nice!
-
-Kevin
-
-[1] https://embedded-recipes.org/2025/speakers/
-[2] https://embedded-recipes.org/2025/workshops/
-[3] https://lore.kernel.org/linux-media/18ac3f06-58c2-4121-86a5-f8a2b5d1e47c@xs4all.nl/T/#m0ec5a88d4b24dc3bd3db6e0c6309031de1afc216
-[4] https://discourse.gstreamer.org/t/gstreamer-spring-hackfest-2025-on-16-18-may-2025-in-nice-france/4366/
