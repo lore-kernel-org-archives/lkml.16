@@ -1,106 +1,109 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE2D04438B
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 08:09:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B54D34438B;
+	Fri,  4 Apr 2025 08:10:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743754175; cv=none; b=vGDbhMLmr+fNzQJLGFns/k1wdF55gt60eOlolTtgg6WWdnHH9F1EVfgtxCoj3GFN6P2AeIWzoRE4ZldbRCa+Atltp2jpmyEdQ8J4iqR2igrgzbAN5rYoIMCwPKjODdd6DIKtwEdRMI5ym1sJ2/Ha0uWS9TJDKoQ6iZLHsV+22rE=
+	t=1743754216; cv=none; b=tlNGn+8NORLctq76/YTLESnIi1jldSOxORtelfHj5T1Ex4tBlJNqT4HbYplgPILcD1DV1sGe/pRnCLgUlUAG6rx2qTnG87SIBe1aPwYRp1UUIHch7iz7rw36PVBby4V/W9OyTFhkW/CJE55lFYFABa59I7+JKlrRuJfKh6HmcIA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743754175; c=relaxed/simple;
-	bh=yV9gySGcz9nCBmFuK0MGbtvEcssL7765LlB8XkROYxg=;
+	s=arc-20240116; t=1743754216; c=relaxed/simple;
+	bh=JOJw4Ly+hN8nIycVX2Sr1keBTt4OC41cKR3dcNiASGE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mdf6mOM65v8Dp8f5f241gBxfN9EG6Y5o6ogr2yE4k+0c4qLZxQbn+ufS/yPyl43as3NZCulqOCsHLZm5XTyPj4wLTjo8GSSbchhq6Zl6igBpPCgSIe96K9Av8gR0Nr8qx/iKISAQ4UMXMEK8g4MKflajqu12o/yLW52dwUPdWZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=H9mR93ri; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=s6Phc+IC2woXHDFbulaFM4COfK0f6E4Yb6EOJxbdGRsBzx2/+zECQZjVYw7FsfpklZjb3THTxMCskL6LQrsZFPypj4Lm3wjsHBOSVjldWWM/JcQOZS0OaIDUHEJbcpEJ3PtLROGrfgEMphfgWDpTKxuMsSaXrM8dLfP03aNqBpw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k3lwPypm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H9mR93ri"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743754172;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yV9gySGcz9nCBmFuK0MGbtvEcssL7765LlB8XkROYxg=;
-	b=H9mR93riNw0DM0nCKlGyYgZbVmWRumdijXF27F01ZMi9HRFvpTA4Bxm7b5RQ+OewKHDTCR
-	u3HARrDGCkzI/L0AvKvhsOg5baYoqaIs5G210Srtc5E5jMyQvs9F7AdxCAIVsBNAGI+p/W
-	4n6mXTvrb50wgYnrzkEDHMkm+Tx5wAo=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-538-4tIywbVvNb-MfdYZ0v__WA-1; Fri, 04 Apr 2025 04:09:31 -0400
-X-MC-Unique: 4tIywbVvNb-MfdYZ0v__WA-1
-X-Mimecast-MFC-AGG-ID: 4tIywbVvNb-MfdYZ0v__WA_1743754170
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43d209dc2d3so9968545e9.3
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 01:09:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743754170; x=1744358970;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yV9gySGcz9nCBmFuK0MGbtvEcssL7765LlB8XkROYxg=;
-        b=LY4OZtivvIuxs1rmpPjlAggoVIBXomhpsaFWHjvWc4Xw/drhpS3mUs6IIGXBn5hANA
-         x/RdsR6H91xNDbslGPMEjM7cCczdK4plR5nxrtDyKTBOysOgSdJcsQkYQjw/SuOy6j2L
-         yR5eSFKoL+haoGZzbIWLxgnUHpejQxGHffBI0X3jgDlYJT3ml9ugVEGS2UBQreWrpA0s
-         xZCYfgh3855w161QgW5pdsJ/RD86lmtlH9wwiHquKQSRNPPSnH0MlkhRTQldwSUW65Jr
-         WbTAZpG9O+kHtFdEqrLBYgPUKJmvfLALwlrgVxVMSxuN7RPDJ6P/ia0U27OAnfB6FATZ
-         3iNg==
-X-Forwarded-Encrypted: i=1; AJvYcCUVqi4IWvTTMgIG6mEboe/EnWIUthFVGtuGtLbbiEty/BOKhuivrX3eJhLr3V3K2GYWJ7D/d+Sn07Wsn90=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxzlLJWldlbLJBKlihfdA3PFUwR79WBD0lYhUSil+LMdNqUuYDn
-	5du3bGGunm5ktEwDqctHlQTV47u1mM+IqdQ9/P8RZZk+WeHP8MTnj24zmh1svrOtxCYQvXaUFVy
-	95nNWueh6RT/0a2W13yaLdGAH4VgraBW/2krD34AZ9GuNVkcloA9qtOpWJrf+HA==
-X-Gm-Gg: ASbGncvmJSXu8ryRjKJmi3uH+/e1um/Gfuxs3GLXtVrHkRrpc0DcNyyxFcYJShkna5i
-	EtKOqtIIiV0xyhUyEz/9kGzZq9UmxUpWTKySjgRRbfiNsr/2A3hy2lqsjF4NNxT1oT0U+gijF+N
-	125abRrh5GgMG6hYs7gvv5UqDtdAsst8MvBCf2iRH2Nu3PdEQMY0B5ENct+y6I2aNvvs1KAP7uv
-	grB0PnVeanSpaWSoXSwf2fQpzNAlqwOJyHktkFNsm6Nj1rqCuf4VZubUtGtEZoeNlSNsdvbh97W
-	I1iSPzPHSg==
-X-Received: by 2002:a05:6000:144e:b0:399:7f2b:8531 with SMTP id ffacd0b85a97d-39cba9776d4mr1803213f8f.38.1743754169868;
-        Fri, 04 Apr 2025 01:09:29 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG754OrlwhFHNx9bSdDp3RVe9BAdUN8rbNKS+RMhtY4uj+i5/0n3q6iyPufdrVkEsaxkLy08Q==
-X-Received: by 2002:a05:6000:144e:b0:399:7f2b:8531 with SMTP id ffacd0b85a97d-39cba9776d4mr1803184f8f.38.1743754169540;
-        Fri, 04 Apr 2025 01:09:29 -0700 (PDT)
-Received: from redhat.com ([2a0d:6fc0:1517:1000:ea83:8e5f:3302:3575])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c300968cfsm3779154f8f.16.2025.04.04.01.09.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Apr 2025 01:09:28 -0700 (PDT)
-Date: Fri, 4 Apr 2025 04:09:26 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: David Woodhouse <dwmw2@infradead.org>
-Cc: Christoph Hellwig <hch@infradead.org>, virtio-comment@lists.linux.dev,
-	Claire Chang <tientzu@chromium.org>,
-	linux-devicetree <devicetree@vger.kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	=?iso-8859-1?Q?J=F6rg?= Roedel <joro@8bytes.org>,
-	iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-	graf@amazon.de
-Subject: Re: [RFC PATCH 1/3] content: Add VIRTIO_F_SWIOTLB to negotiate use
- of SWIOTLB bounce buffers
-Message-ID: <20250404040838-mutt-send-email-mst@kernel.org>
-References: <20250402112410.2086892-1-dwmw2@infradead.org>
- <20250402112410.2086892-2-dwmw2@infradead.org>
- <Z-43svGzwoUQaYvg@infradead.org>
- <148a3c8ee53af585b42ec025c2c7821ad852c66c.camel@infradead.org>
- <Z-46TDmspmX0BJ2H@infradead.org>
- <05abb68286dd4bc17b243130d7982a334503095b.camel@infradead.org>
- <Z-99snVF5ESyJDDs@infradead.org>
- <fb7ea3ee5bf970fa36b012e16750f533b72903a0.camel@infradead.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k3lwPypm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7BFBC4CEE9;
+	Fri,  4 Apr 2025 08:10:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743754216;
+	bh=JOJw4Ly+hN8nIycVX2Sr1keBTt4OC41cKR3dcNiASGE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=k3lwPypmo33BRdLKuruE2jxtOfSIfZLeGe7CwfwzL/OmTG6cOQNjLSae9Pki97J41
+	 HDnmdJrJS0dv5NkLhq9lYN1uksjTUYzXTku9DbVP2Q9v4eYK6R4uYNAsB/LCU9a6dW
+	 Oi0vw8tRpodiJe5YqBxjLlWBWN85MoyTDDM5DFo8bL/mbo8SYJAgeCR+QU0KsyFDN7
+	 aWKCmbghfD7AGqQaJfHt+p2aD51zdtPgW3GIRn4AEiQAerolgev9RaQ/TZUeZyULim
+	 +WDO1cSOtCUzxTqL/q14sqCNbx/U2VnZtk3+OXDyUzYozT90KbcE/8ZTfWfA6ex/UL
+	 7kaRA16fYG84Q==
+Date: Fri, 4 Apr 2025 11:10:12 +0300
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
+Cc: Jonathan McDowell <noodles@earth.li>, Peter Huewe <peterhuewe@gmx.de>,
+	Jason Gunthorpe <jgg@ziepe.ca>, linux-integrity@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] tpm: tis: Increase the default for timeouts B and C
+Message-ID: <Z--T5LEsXddkTX-H@kernel.org>
+References: <20250402172134.7751-1-msuchanek@suse.de>
+ <Z-13xOebA3LvQQ-8@earth.li>
+ <Z-7XQYP7_tXYR2Ik@kernel.org>
+ <Z-7y5x3u6wVGFjj-@earth.li>
+ <Z--PgeuYjRx6zXmG@kitsune.suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <fb7ea3ee5bf970fa36b012e16750f533b72903a0.camel@infradead.org>
+In-Reply-To: <Z--PgeuYjRx6zXmG@kitsune.suse.cz>
 
-On Fri, Apr 04, 2025 at 08:50:47AM +0100, David Woodhouse wrote:
-> What's annoying is that this should work out of the box *already* with
-> virtio-mmio and a `restricted-dma-pool` â€” for systems which aren't
-> afflicted by UEFI/ACPI/PCI as their discovery mechanisms.
+On Fri, Apr 04, 2025 at 09:51:29AM +0200, Michal Suchánek wrote:
+> On Thu, Apr 03, 2025 at 09:43:19PM +0100, Jonathan McDowell wrote:
+> > On Thu, Apr 03, 2025 at 09:45:21PM +0300, Jarkko Sakkinen wrote:
+> > > On Wed, Apr 02, 2025 at 06:45:40PM +0100, Jonathan McDowell wrote:
+> > > > On Wed, Apr 02, 2025 at 07:21:30PM +0200, Michal Suchanek wrote:
+> > > > > With some Infineon chips the timeouts in tpm_tis_send_data (both B and
+> > > > > C) can reach up to about 2250 ms.
+> > > > >
+> > > > > Extend the timeout duration to accommodate this.
+> > > > 
+> > > > The problem here is the bump of timeout_c is going to interact poorly with
+> > > > the Infineon errata workaround, as now we'll wait 4s instead of 200ms to
+> > > > detect the stuck status change.
+> > > > 
+> > > > (Also shouldn't timeout_c already end up as 750ms, as it's
+> > > > max(TIS_SHORT_TIMEOUT, TPM2_TIMEOUT_C), and TIS_SHORT_TIMEOUT is 750 vs 200
+> > > > for TPM2_TIMEOUT_C? That doesn't seem to be borne out by your logs, nor my
+> > > > results.)
+> > > 
+> > > Just noticed that the commit did not end up having fixes etc. tags:
+> > > 
+> > > https://web.git.kernel.org/pub/scm/linux/kernel/git/jarkko/linux-tpmdd.git/commit/?id=de9e33df7762abbfc2a1568291f2c3a3154c6a9d
+> > > 
+> > > Should we forward to stable?
+> > 
+> > It's a TPM bug rather than a kernel issue, so I don't think there's a valid
+> > Fixes: for it, but it's certainly stable material in my mind.
+> 
+> In the more general sense of Fixes: indicating where the fix is
+> applicable it would be any kernel that supports TPM2.
 
+I tried applying the patch on 6.1-stable:
 
-That specifically would be just a driver bugfix then?
+~/work/kernel.org/stable/linux tags/v6.1.132
+$ git am -3 ~/Downloads/infineon.patch
+Applying: tpm, tpm_tis: Workaround failed command reception on Infineon devices
+Using index info to reconstruct a base tree...
+M	drivers/char/tpm/tpm_tis_core.c
+M	drivers/char/tpm/tpm_tis_core.h
+M	include/linux/tpm.h
+Falling back to patching base and 3-way merge...
+Auto-merging include/linux/tpm.h
+Auto-merging drivers/char/tpm/tpm_tis_core.h
+Auto-merging drivers/char/tpm/tpm_tis_core.c
 
+If no counter-opinions, I'd add:
+
+stable@vger.kernel.org # v6.1+
+
+I based this on Bookworm kernel.
+
+> 
+> Thanks
+> 
+> Michal
+
+BR, Jarkko
