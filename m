@@ -1,76 +1,88 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A59A1F4196;
-	Fri,  4 Apr 2025 14:39:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5675C1F30DD;
+	Fri,  4 Apr 2025 14:40:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743777599; cv=none; b=g7QmahYnn5QlMr6rVK6hLFlDgo0LyeC/4wrGXQEHPTt+JDCG6JdMlVo1l0PBo0B8L13upjodvdrmWfZoXlyEG6/O+9+GPeaWazA9azj2+hJMaHCfxRwi7evpXjjtFiPN7Yidm7iRc4b6SlsmvGWyg8TJy4NVjdESKLKaFmsIQH4=
+	t=1743777613; cv=none; b=Py9ztr1CEKFkztgtpuoq/kkFuZ8Yob6SSz0a9a3H/l+1KcvKBZFAzTj/krgcwmHcFnyJY5Nsc/fR443nnsS6LJmAv+lscOehkPqY63mOo88Gm9dDrdZTYBD07qWq4AkkszUjnSyfcc17mYlUxvh/kJOJnGjCebt2Zh8VNM7q0Gw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743777599; c=relaxed/simple;
-	bh=iXNWa94UwMAcNEi/QIGmOJRBOrQZ8V7nXBmtotp1tL0=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=Zqiz+J6+c+3MYXc8aihDM0Yb/mTDz+FAVH7v59OHrzcQmTWobYjYRwgVXQS0qsmWAqX9dQ3+tilVXxQvsksjiYqoX3lZ63IjRwSa4hzeDf9jsosAaP1DidyhwHHTpvz2LEj/ae1IBrDJrPFrhowW6pr9qy24Kdn1kdKbcq1LJgw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=afcHv0pI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743777613; c=relaxed/simple;
+	bh=/RZ9Jsfr5r/ynHY5LjHn47dZxf3iZyn2PfuGAOJz5PE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=H1I6OoaKNzZyLOjJtkSFKiXPQ1Xl6vVV3Aa5KCxBrrbfWD2fY4y5qiOvi7IeX8rcDLV+7DR6cwNOCMeWlqiRVvsS5Wd39rjbW8R5rAytgtXZiA28ApRzTYwLsqg9wn5jQw3/q9KUFRvoIfp06PkXkkOJKs2GVgtX+YaadgmxTzI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Es+r2Jc5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="afcHv0pI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA5ACC4CEDD;
-	Fri,  4 Apr 2025 14:39:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Es+r2Jc5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C24DC4CEDD;
+	Fri,  4 Apr 2025 14:40:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743777599;
-	bh=iXNWa94UwMAcNEi/QIGmOJRBOrQZ8V7nXBmtotp1tL0=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=afcHv0pIe8QLXIn/bsBu0d+f5xduxXpjHoER2qO8uwkePLnpp3iP2WhY1qlyjpZiM
-	 SUSD4ziKCRusDiVzOKbex1VMdTAcYO5uZ7G7yERFHzFgtCqDBMgXRrnXopZq6P2Ef6
-	 IpLD/SI7lwHIn2yRwSgCk4PixUlt8aFFfZ7sIihWepV3S6A4yGviAPKdBATOtYXboa
-	 /iAcqD1w95R6Hof0AP8g0mQrGmVxiSaPl+TY58jbw3VhmvpvNFpMVr3L2jHzcFMbV3
-	 7hXEyTJrAtvo27w9XUMFrL++QbxxJkU5hge2mFsFA8YVSAv8eEgrc/LBUukRQgk0hx
-	 KnabVfmeG7xmQ==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33CE13822D28;
-	Fri,  4 Apr 2025 14:40:37 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1743777612;
+	bh=/RZ9Jsfr5r/ynHY5LjHn47dZxf3iZyn2PfuGAOJz5PE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Es+r2Jc5llwE6fe/0G2YE8Tfxo8QLszDIi+FELtIsScuyexbh7Ua23Tg3UkzVbiaK
+	 Dk7CB4DvhEbYh0HIb9k3xUBvhhoBWQLEjGBeNZNTJ52NyjceFMVdYe0BS1EX3pyVY0
+	 CzjXkIlAuhJ4JHEBU9qRjLtvu+Txbqe+pb87yWDbJk6Tnys0UwneBEpjog4YrET0iv
+	 p6UHblTneFfbN8LAeZ62rHqSSCJMCmuoSqaaPaUCPgcqZn057vcZREwk9tQYYurXf8
+	 58qiPPyYRSTLGAEeT1bt1kSoMIAl4JDMr63DwcVHla27uTPkP2A06Za4Sw+z9bMiRl
+	 SKwbcDwFUGcbg==
+Date: Fri, 4 Apr 2025 15:40:06 +0100
+From: Lee Jones <lee@kernel.org>
+To: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
+Cc: ukleinek@kernel.org, alexandre.torgue@foss.st.com, krzk+dt@kernel.org,
+	conor+dt@kernel.org, jic23@kernel.org, daniel.lezcano@linaro.org,
+	tglx@linutronix.de, robh@kernel.org, catalin.marinas@arm.com,
+	will@kernel.org, devicetree@vger.kernel.org, wbg@kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-iio@vger.kernel.org, linux-pwm@vger.kernel.org,
+	olivier.moysan@foss.st.com
+Subject: Re: [PATCH v4 2/8] mfd: stm32-lptimer: add support for stm32mp25
+Message-ID: <20250404144006.GB372032@google.com>
+References: <20250314171451.3497789-1-fabrice.gasnier@foss.st.com>
+ <20250314171451.3497789-3-fabrice.gasnier@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v3] arcnet: Add NULL check in com20020pci_probe()
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174377763574.3283451.6914615027976743568.git-patchwork-notify@kernel.org>
-Date: Fri, 04 Apr 2025 14:40:35 +0000
-References: <20250402135036.44697-1-bsdhenrymartin@gmail.com>
-In-Reply-To: <20250402135036.44697-1-bsdhenrymartin@gmail.com>
-To: Henry Martin <bsdhenrymartin@gmail.com>
-Cc: m.grzeschik@pengutronix.de, andrew+netdev@lunn.ch, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250314171451.3497789-3-fabrice.gasnier@foss.st.com>
 
-Hello:
+On Fri, 14 Mar 2025, Fabrice Gasnier wrote:
 
-This patch was applied to netdev/net.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
-
-On Wed,  2 Apr 2025 21:50:36 +0800 you wrote:
-> devm_kasprintf() returns NULL when memory allocation fails. Currently,
-> com20020pci_probe() does not check for this case, which results in a
-> NULL pointer dereference.
+> Add support for STM32MP25 SoC.
+> A new hardware configuration register (HWCFGR2) has been added, to gather
+> number of capture/compare channels, autonomous mode and input capture
+> capability. The full feature set is implemented in LPTIM1/2/3/4. LPTIM5
+> supports a smaller set of features. This can now be read from HWCFGR
+> registers.
 > 
-> Add NULL check after devm_kasprintf() to prevent this issue and ensure
-> no resources are left allocated.
+> Add new registers to the stm32-lptimer.h: CCMR1, CCR2, HWCFGR1/2 and VERR.
+> Update the stm32_lptimer data struct so signal the number of
+> capture/compare channels to the child devices.
+> Also Remove some unused bit masks (CMPOK_ARROK / CMPOKCF_ARROKCF).
 > 
-> [...]
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
+> ---
+> Changes in V4:
+> - Add DIEROK, ARROK status flags, and their clear flags.
+> Changes in V2:
+> - rely on fallback compatible as no specific .data is associated to the
+>   driver. Compatibility is added by reading hardware configuration
+>   registers.
+> - read version register, to be used by clockevent child driver
+> - rename register/bits definitions
+> ---
+>  drivers/mfd/stm32-lptimer.c       | 33 ++++++++++++++++++++++++++-
+>  include/linux/mfd/stm32-lptimer.h | 37 ++++++++++++++++++++++++++++---
 
-Here is the summary with links:
-  - [v3] arcnet: Add NULL check in com20020pci_probe()
-    https://git.kernel.org/netdev/net/c/fda8c491db2a
+At least the Clocksource driver depends on this.
 
-You are awesome, thank you!
+I need Acks from the other Maintainers before I can merge this.
+
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Lee Jones [李琼斯]
