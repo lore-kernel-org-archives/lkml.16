@@ -1,132 +1,123 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05FA921C171;
-	Fri,  4 Apr 2025 17:35:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9962521C171;
+	Fri,  4 Apr 2025 17:36:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743788158; cv=none; b=fZwAIfKF9pYOMUA98OBmMozBEK0rtW3tRLzpWJ8D/XO+oH4hNP5IXjgiix1wE3Cwg7E8zSnsH9ThtOA6oW8ETNWxRH57yeSOVkB3s6UTioltDsq5w+Wf5Ht70s4zSpLzoGh+xjSCbv/nhBvqkVZtnznRrAb/sQLk/gSrODB6RvI=
+	t=1743788177; cv=none; b=SOo/riugv6r8EkPtwpdSFkHJ8I2rRLf1Jg9K11TrucnbXEM9rFTXT4TfHjjqq9YxyuPoDLFXDVtppg3gT9WWTLfGSYymFKnDosoPfvFiiDbhRlQ+zFlU2f9YoS2sFfZjngrb9/TEDbDa5s/v6Y8q4mztJfsQPhbFoqBD+ZoaGz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743788158; c=relaxed/simple;
-	bh=Tj/HfVjqdh8faGcHAlLbM5/fJtNdbkBrRoiq+2QW0Ps=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RmuUJprg5kzyiA+H9xXY048cxWVrT0Mv66dHkIbFXPcbYsXGhD6b3SKQ3GJTT4Us+iMHKVH8eRxfGUqFl/CLoaol43eCSXyvNebekMJvxeq6uBllv8cXxn4x2JBV1THqK4R4Qb3YeyjjegxWGzlTWglxWnVD6mK6jiqHfcDDDyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Zpdiks8W; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1743788177; c=relaxed/simple;
+	bh=KbIoPoLGDYM22xBKQMNFkLY0IePa8B1xnn92SVNs6W8=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=hfZ3BrA4BO46KFDuVMRPtuGPsIWS0/T09Q7Zj1wPZE9V14dQfK4gnrz21+Bcq4a/fXEB3lNFquMmx0Hli2s2V97OXMCoZh0YH5ZLYO2Z54Qe18p/mSeNcr2EeCMzqTBC0YRC+KVL+ANT1sEQf/B7XDVDSjz8A7IoQlhRHl9aG2g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lTkvYgE/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Zpdiks8W"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743788150; x=1775324150;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Tj/HfVjqdh8faGcHAlLbM5/fJtNdbkBrRoiq+2QW0Ps=;
-  b=Zpdiks8W7+R+O8leVL3uxHvNZg5Y4tEiSdXZlBBBJVRgElym0R0UlCQR
-   YVnwp5YwkHrPsjVG5RZg1shmpwOW4F03WUbTTWfmUGNBa/H6HITNKPrcA
-   p3da/MJIODHwhkeWqM1Ec6TU4cPWxTblZqWmhvB/zFE9bXFhnb5r9T/ty
-   Dr0ekfKUPT6xR2dH6JDUXbOflnaQTbQf8/5UKDdr2JLm8QLpRxbrE2yWF
-   eOJdBjfi1AEgDkA6CtmHFYSNmYYmMevmENkzOMhZMisTj12pM0mpNaPfn
-   dSLTLIX452c1Do4/2OhynNSLfxtEMO6BQA/0L4rDDT+SN4j8fZj6QqRKE
-   w==;
-X-CSE-ConnectionGUID: c+1si+5uQ1OQbCgxdpUcpg==
-X-CSE-MsgGUID: jx0lihhIS7GJ+BrAip9gYg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11394"; a="45140695"
-X-IronPort-AV: E=Sophos;i="6.15,188,1739865600"; 
-   d="scan'208";a="45140695"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 10:35:49 -0700
-X-CSE-ConnectionGUID: 53fwTgKvTvmRLYdCdRTTTA==
-X-CSE-MsgGUID: DAaf8C44RgyeCvVKTvQkdw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,188,1739865600"; 
-   d="scan'208";a="127855345"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by fmviesa010.fm.intel.com with ESMTP; 04 Apr 2025 10:35:46 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u0kxE-0001QV-0a;
-	Fri, 04 Apr 2025 17:35:44 +0000
-Date: Sat, 5 Apr 2025 01:35:00 +0800
-From: kernel test robot <lkp@intel.com>
-To: Wentao Liang <vulab@iscas.ac.cn>, sgoutham@marvell.com,
-	gakula@marvell.com, sbhatta@marvell.com, hkelam@marvell.com,
-	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com
-Cc: oe-kbuild-all@lists.linux.dev, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Wentao Liang <vulab@iscas.ac.cn>
-Subject: Re: [PATCH] octeontx2-pf:  Add error handling for
- cn10k_map_unmap_rq_policer().
-Message-ID: <202504050157.qdVzTVMM-lkp@intel.com>
-References: <20250403151303.2280-1-vulab@iscas.ac.cn>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lTkvYgE/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C481C4CEDD;
+	Fri,  4 Apr 2025 17:36:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743788177;
+	bh=KbIoPoLGDYM22xBKQMNFkLY0IePa8B1xnn92SVNs6W8=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=lTkvYgE/4KXYpRN1kjTf+z/jGjnm2trbBy5bEUn05zALPUzZRIBDQlXnG9mcZiKvN
+	 LYNo1DHoWAKIy5xBdfu9bx8Ota8k/EkRLs924q9C0Wzg1oeTd4PCkRUI/BJDKtE0Dy
+	 c1JYnrtuo4NPmLqzfH5rA0YrJYTPj4oPZ2zZiGUEOSNq7zopkolMFiKU1JRTaPdzdu
+	 5hm/6YrOTApn+ONjSiAp0DN8/lyG6OlumrWDTwGTL3pNb6yqh2dajrApqQrSDPzNdz
+	 WZ5WLEc/QTi4r1z4In19yj3ptJ479yheLQTLcEz+SjMNd95Jz3PR4zqrSljOvwcvAd
+	 TXPwqQSL4oalA==
+Message-ID: <e1a7c9d6-9c14-48d3-ac2e-c6e0df04bbbf@kernel.org>
+Date: Fri, 4 Apr 2025 19:36:12 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250403151303.2280-1-vulab@iscas.ac.cn>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/3] dt-bindings: display: Add Sitronix ST7571 panel
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Marcus Folkesson <marcus.folkesson@gmail.com>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250404-st7571-v2-0-4c78aab9cd5a@gmail.com>
+ <20250404-st7571-v2-1-4c78aab9cd5a@gmail.com>
+ <d2ffca88-6773-4e40-b737-65a451ba1d01@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
+ FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
+ QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
+ gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
+ /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
+ iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
+ VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
+ 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
+ xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
+ eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
+ AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
+ MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
+ Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
+ MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
+ OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
+ GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
+ 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
+ YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
+ 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
+ BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
+ JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
+ 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
+ YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
+ Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
+ ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
+ vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
+ oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
+ lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
+ t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
+ uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
+ 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
+ 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
+In-Reply-To: <d2ffca88-6773-4e40-b737-65a451ba1d01@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Wentao,
+On 04/04/2025 19:30, Krzysztof Kozlowski wrote:
+>> +
+>> +examples:
+>> +  - |
+>> +    #include <dt-bindings/gpio/gpio.h>
+>> +    
+>> +    i2c {
+>> +        #address-cells = <1>;
+>> +        #size-cells = <0>;
+>> +
+>> +        display@3f {
+> 
+> Not much improved. How is this called in every other binding? panel.
 
-kernel test robot noticed the following build warnings:
+Hmmm, unless this is not a panel, but it looks like a panel and
+description partially suggests it. Other sitronix devices are split
+between these two, but OTOH your driver is more complex than just simple
+panel.
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on v6.14 next-20250404]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Your commit msg is one sentence and binding description is basically
+non-existing, so not sure how to help. You need to describe the hardware
+so people understand what this device is.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Wentao-Liang/octeontx2-pf-Add-error-handling-for-cn10k_map_unmap_rq_policer/20250403-231435
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20250403151303.2280-1-vulab%40iscas.ac.cn
-patch subject: [PATCH] octeontx2-pf:  Add error handling for cn10k_map_unmap_rq_policer().
-config: s390-allyesconfig (https://download.01.org/0day-ci/archive/20250405/202504050157.qdVzTVMM-lkp@intel.com/config)
-compiler: s390-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250405/202504050157.qdVzTVMM-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504050157.qdVzTVMM-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   drivers/net/ethernet/marvell/octeontx2/nic/cn10k.c: In function 'cn10k_free_matchall_ipolicer':
->> drivers/net/ethernet/marvell/octeontx2/nic/cn10k.c:360:9: warning: this 'for' clause does not guard... [-Wmisleading-indentation]
-     360 |         for (qidx = 0; qidx < hw->rx_queues; qidx++)
-         |         ^~~
-   drivers/net/ethernet/marvell/octeontx2/nic/cn10k.c:362:17: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the 'for'
-     362 |                 if (rc)
-         |                 ^~
-
-
-vim +/for +360 drivers/net/ethernet/marvell/octeontx2/nic/cn10k.c
-
-2ca89a2c375272 Sunil Goutham 2021-06-15  351  
-2ca89a2c375272 Sunil Goutham 2021-06-15  352  int cn10k_free_matchall_ipolicer(struct otx2_nic *pfvf)
-2ca89a2c375272 Sunil Goutham 2021-06-15  353  {
-2ca89a2c375272 Sunil Goutham 2021-06-15  354  	struct otx2_hw *hw = &pfvf->hw;
-2ca89a2c375272 Sunil Goutham 2021-06-15  355  	int qidx, rc;
-2ca89a2c375272 Sunil Goutham 2021-06-15  356  
-2ca89a2c375272 Sunil Goutham 2021-06-15  357  	mutex_lock(&pfvf->mbox.lock);
-2ca89a2c375272 Sunil Goutham 2021-06-15  358  
-2ca89a2c375272 Sunil Goutham 2021-06-15  359  	/* Remove RQ's policer mapping */
-2ca89a2c375272 Sunil Goutham 2021-06-15 @360  	for (qidx = 0; qidx < hw->rx_queues; qidx++)
-d85bdae93e8dbe Wentao Liang  2025-04-03  361  		rc = cn10k_map_unmap_rq_policer(pfvf, qidx, hw->matchall_ipolicer, false);
-d85bdae93e8dbe Wentao Liang  2025-04-03  362  		if (rc)
-d85bdae93e8dbe Wentao Liang  2025-04-03  363  			goto out;
-2ca89a2c375272 Sunil Goutham 2021-06-15  364  
-2ca89a2c375272 Sunil Goutham 2021-06-15  365  	rc = cn10k_free_leaf_profile(pfvf, hw->matchall_ipolicer);
-2ca89a2c375272 Sunil Goutham 2021-06-15  366  
-d85bdae93e8dbe Wentao Liang  2025-04-03  367  out:
-2ca89a2c375272 Sunil Goutham 2021-06-15  368  	mutex_unlock(&pfvf->mbox.lock);
-2ca89a2c375272 Sunil Goutham 2021-06-15  369  	return rc;
-2ca89a2c375272 Sunil Goutham 2021-06-15  370  }
-2ca89a2c375272 Sunil Goutham 2021-06-15  371  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Best regards,
+Krzysztof
