@@ -1,63 +1,184 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4007319994F;
-	Fri,  4 Apr 2025 08:37:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE08719994F;
+	Fri,  4 Apr 2025 08:37:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743755840; cv=none; b=FnyvfnZQDQfToY77cyBFjoYMNY0GmPdKiqYfLoH1UXeOpEXiFodywKxlM7SIMtJ5FWeWrwNM+m1auMLF7KpHCkS/GawHNYKld4Ztd0EMDhpeTJCAAGnC72SG10km2mXopNvtDN6OKWlzUtp9ezgqmx0xLIqZF9BBRW/bg+ToArI=
+	t=1743755858; cv=none; b=CrGgBzf5bhBrIcce6FUq4uH8zkw1/1G1Bed/L5Mf+HggycGqdxGIsCBm1+7mZAyLrgSgCwcAsY6WTyuAOYu9A2t4rbD6nGsyTRXMgOqrRzAiymntcvriTPm9olodVxV7e3j6CyIra/X23lz599M39pXX4hzlTYWBWTvOS1pc3Q0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743755840; c=relaxed/simple;
-	bh=AEVc7jJ5wVZJd8UQkwBkZ0fFoF4aMa5hBy4BVBYGX14=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FWF1ExgqB9O0rJEowTqZduIjMKlsORtEP2XZWzVbm4YqVdwzM7bP99I/E3hAhG6i69LtGY/0CKOgWbi81XIQ2ZkEn4SmMj68jWOQye8jxJP1IzS+X2fMGdZPn6y/q8WRCkF9f0MUaxkQZKJxCvFBjB6XDYpwTWXcCZNgJzIc+VQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=jgvIHHdD; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	s=arc-20240116; t=1743755858; c=relaxed/simple;
+	bh=7lKQpPKTVw0wqECtAGjx+cKAgoZ/IhDFDDXnVUzCXLE=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=NTcagKlIrWxPm+O2uoCrtBZgmUP8xPawlT5QIr4uwOnmByptPnRzYzc1F/L/kWSqHJZz265zCFu33xHZfwjRu3eKGwOnFjgSWF0IfL0CqWOh/BLaxe9eYo9U5rIgmJvg2m0MIrAx6p2qhPiuFya4oVHE48btNZ7+P9arEWsk8Ls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=eeyAbm89; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=JcN4S+2K; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jgvIHHdD"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=KfS5Z2KntBZx7miP6TngOOEv0Pcp0oG2FKWreVv1b5M=; b=jgvIHHdDIqU7r164qyTzVnF+6H
-	5YmEkEtqjWsNSyUIPYdOwplYMFJ2dkL8bFd35pRfWI2taP3wjVAC0cL4CabjPCTrrnNFxM009ZxVH
-	r+a5lhFKiCVkoLprGl6rlKRYrd8ZIaVwaHWYXvhFDsZmlphqVKGqrknYCV86/rVyOZ9jSi3SfaL4S
-	UAJr6VQVGc0qx+YXA1ailKJMSWZziXGyR4p2uTNU+9gyCgTObZh38OW6hKsCRa29e1I1/lh72+0t/
-	U4sSK8USvP91+ojRD9i7QNLYAvcuEvuaO/BvWo4rm00Q/S1CUGt1mViK5Q1lygtzS8XN979jGeRH9
-	Gk0k1/3g==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u0cY9-0000000BARO-3CpM;
-	Fri, 04 Apr 2025 08:37:17 +0000
-Date: Fri, 4 Apr 2025 01:37:17 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
-	linux-crypto@vger.kernel.org, linux-arch@vger.kernel.org
-Subject: Re: [PATCH 6/7] lib/crc: document all the CRC library kconfig options
-Message-ID: <Z--aPZDWPiW05FNS@infradead.org>
-References: <20250401221600.24878-1-ebiggers@kernel.org>
- <20250401221600.24878-7-ebiggers@kernel.org>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="eeyAbm89";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JcN4S+2K"
+Date: Fri, 04 Apr 2025 08:37:29 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1743755854;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yAW4Iy6p573QrPBUU9MGrvgfkCxvi9ZQwji3B/2nL1k=;
+	b=eeyAbm89dTtoLDzDMwU9pWBX/cDqoZG2js00zWGrPQL16VxIeYmicIyggHiGKgQyBdz0nB
+	beYpczpVndCauFSOyFMuDyGxvzGqhfEoVzayrjlwfBgnaUh/beZdF+Vl3L6xS2H5dd8oTI
+	bFHSXRv3lxXkmldU/dROrB79XjTfVGASmr32AZcowRIeJeLA3QI+stiTTUOOxB+TR07EzJ
+	LRWsOYJkLD3SJQaX+oDK291Sx5xrABePvPpPQpK1w1L4Tfbc/lUBwvBrGnJ+17KS25jvTH
+	JxmJFun4BbSt6WUoDj+v+34uVg7GTUnTVsIFpCz2EV0NebUGPqaetwkmZKlgKA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1743755854;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yAW4Iy6p573QrPBUU9MGrvgfkCxvi9ZQwji3B/2nL1k=;
+	b=JcN4S+2K3PbG4LouIVNCGPIDcj0cxl8x0kSBSqSWQe1fnNiI6ei4hNBmeRwzPDVHfQ2orv
+	m3J+Oh1LPwMfuJCw==
+From: "tip-bot2 for Andrii Nakryiko" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: sched/core] sched/tracepoints: Move and extend the
+ sched_process_exit() tracepoint
+Cc: Andrii Nakryiko <andrii@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+ "Steven Rostedt (Google)" <rostedt@goodmis.org>,
+ Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250402180925.90914-1-andrii@kernel.org>
+References: <20250402180925.90914-1-andrii@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250401221600.24878-7-ebiggers@kernel.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Message-ID: <174375584977.31282.8985910498663747932.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 01, 2025 at 03:15:59PM -0700, Eric Biggers wrote:
-> From: Eric Biggers <ebiggers@google.com>
-> 
-> Previous commits removed all the original CRC kconfig help text, since
-> it was oriented towards people configuring the kernel, and the options
-> are no longer user-selectable.  However, it's still useful for there to
-> be help text for kernel developers.  Add this.
+The following commit has been merged into the sched/core branch of tip:
 
-I usually document hidden options using comments instead of the help
-text to clearly distinguish them for visible options.  Not sure if there
-is a general preference either way, I just through I'd drop this here.
+Commit-ID:     3e816361e94a0e79b1aabf44abec552e9698b196
+Gitweb:        https://git.kernel.org/tip/3e816361e94a0e79b1aabf44abec552e9698b196
+Author:        Andrii Nakryiko <andrii@kernel.org>
+AuthorDate:    Wed, 02 Apr 2025 11:09:25 -07:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Fri, 04 Apr 2025 10:30:19 +02:00
 
+sched/tracepoints: Move and extend the sched_process_exit() tracepoint
+
+It is useful to be able to access current->mm at task exit to, say,
+record a bunch of VMA information right before the task exits (e.g., for
+stack symbolization reasons when dealing with short-lived processes that
+exit in the middle of profiling session). Currently,
+trace_sched_process_exit() is triggered after exit_mm() which resets
+current->mm to NULL making this tracepoint unsuitable for inspecting
+and recording task's mm_struct-related data when tracing process
+lifetimes.
+
+There is a particularly suitable place, though, right after
+taskstats_exit() is called, but before we do exit_mm() and other
+exit_*() resource teardowns. taskstats performs a similar kind of
+accounting that some applications do with BPF, and so co-locating them
+seems like a good fit. So that's where trace_sched_process_exit() is
+moved with this patch.
+
+Also, existing trace_sched_process_exit() tracepoint is notoriously
+missing `group_dead` flag that is certainly useful in practice and some
+of our production applications have to work around this. So plumb
+`group_dead` through while at it, to have a richer and more complete
+tracepoint.
+
+Note that we can't use sched_process_template anymore, and so we use
+TRACE_EVENT()-based tracepoint definition. But all the field names and
+order, as well as assign and output logic remain intact. We just add one
+extra field at the end in backwards-compatible way.
+
+Document the dependency to sched_process_template anyway.
+
+Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Acked-by: Oleg Nesterov <oleg@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: https://lore.kernel.org/r/20250402180925.90914-1-andrii@kernel.org
+---
+ include/trace/events/sched.h | 34 ++++++++++++++++++++++++++++++----
+ kernel/exit.c                |  2 +-
+ 2 files changed, 31 insertions(+), 5 deletions(-)
+
+diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
+index 8994e97..3bec9fb 100644
+--- a/include/trace/events/sched.h
++++ b/include/trace/events/sched.h
+@@ -326,11 +326,37 @@ DEFINE_EVENT(sched_process_template, sched_process_free,
+ 	     TP_ARGS(p));
+ 
+ /*
+- * Tracepoint for a task exiting:
++ * Tracepoint for a task exiting.
++ * Note, it's a superset of sched_process_template and should be kept
++ * compatible as much as possible. sched_process_exits has an extra
++ * `group_dead` argument, so sched_process_template can't be used,
++ * unfortunately, just like sched_migrate_task above.
+  */
+-DEFINE_EVENT(sched_process_template, sched_process_exit,
+-	     TP_PROTO(struct task_struct *p),
+-	     TP_ARGS(p));
++TRACE_EVENT(sched_process_exit,
++
++	TP_PROTO(struct task_struct *p, bool group_dead),
++
++	TP_ARGS(p, group_dead),
++
++	TP_STRUCT__entry(
++		__array(	char,	comm,	TASK_COMM_LEN	)
++		__field(	pid_t,	pid			)
++		__field(	int,	prio			)
++		__field(	bool,	group_dead		)
++	),
++
++	TP_fast_assign(
++		memcpy(__entry->comm, p->comm, TASK_COMM_LEN);
++		__entry->pid		= p->pid;
++		__entry->prio		= p->prio; /* XXX SCHED_DEADLINE */
++		__entry->group_dead	= group_dead;
++	),
++
++	TP_printk("comm=%s pid=%d prio=%d group_dead=%s",
++		  __entry->comm, __entry->pid, __entry->prio,
++		  __entry->group_dead ? "true" : "false"
++	)
++);
+ 
+ /*
+  * Tracepoint for waiting on task to unschedule:
+diff --git a/kernel/exit.c b/kernel/exit.c
+index 1b51dc0..f1db86d 100644
+--- a/kernel/exit.c
++++ b/kernel/exit.c
+@@ -936,12 +936,12 @@ void __noreturn do_exit(long code)
+ 
+ 	tsk->exit_code = code;
+ 	taskstats_exit(tsk, group_dead);
++	trace_sched_process_exit(tsk, group_dead);
+ 
+ 	exit_mm();
+ 
+ 	if (group_dead)
+ 		acct_process();
+-	trace_sched_process_exit(tsk);
+ 
+ 	exit_sem(tsk);
+ 	exit_shm(tsk);
