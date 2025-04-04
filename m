@@ -1,109 +1,90 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACA1D1A9B49;
-	Fri,  4 Apr 2025 09:39:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 090FE1A23BC;
+	Fri,  4 Apr 2025 09:41:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743759582; cv=none; b=pnJeyPoSUlv4baw4hdVAXy65W+9m1Cog4oAvFciNVYP/ltqxqeKRTsB8URVftXhw2zMVPHiX8dnpzi1bCcgz3PJ+30mBfOo62ESP60foQgAo+EXRmG8XSwVHZ3Rlo+oNX9LHUrBDBR7nuDq51pZBdaus7Mn4FFSad8GH0C4tdmk=
+	t=1743759707; cv=none; b=h2FbJflPeNoohx1M0jgIAs/x0xKXLlasMbs+AjAgKTxwhl6kNS41Oh+xSAF/8Z1U24hSAeQBVjhM7XlasKqvILMMPSTSku6Z0yzYMAoyakfYF0zfEGenGVsJ7NWF+tgd3ovgpOs0qh5zRB3IIBz2YeKKkG05714Rev/nJ3QBoD4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743759582; c=relaxed/simple;
-	bh=eI0pDZzwTHzHhiPpLrvB9SxVToa1zUT3EqskKkeIA1s=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=F+QRZ/qU8GTIQfD/nj6fGh/vR+2aL4y6vXX6r2UabSxpxLbsldh/hC6GpuJ2tP0XPG9Vu34CwN2E6v+OxOmSkKKh3kYiXf8DSNgPR6TfIULN0jx9H5atW85IRt/b3i6fgObPIQ+51TNqq9fSxynYZP30BoeYUO5Qt7a3zlXvrxQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=desiato.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=M6BIRk4X; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=desiato.srs.infradead.org
+	s=arc-20240116; t=1743759707; c=relaxed/simple;
+	bh=g7W1dzfH6j/cA6crUWTfS8ZlKF2LjHCdHL+zKUojDQ4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PtOsvNgzKyxFJYA7a6v+/SZftFt+4UHGEU8u3ftX0EHmr4NGqB2w8h1YHwCE3JJwCdTfe8tiK/3fmFYjTpwln9kIjHq4RO+bxtvCyhPAvzOCk9SfEUQt6VB3C8n+6zslN/sOHMZufjkCMfIS2ZajQ4d7pwZAQER1AopjOwUiiiI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=rM36v9Pe; arc=none smtp.client-ip=217.194.8.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="M6BIRk4X"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
-	:MIME-Version:Message-ID:References:In-Reply-To:Subject:CC:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=GWI8VEWmOz0N6I3kxJsh/12WWavgWVMZDb3oXygH9Ac=; b=M6BIRk4X1M3h2puaRJ1tEAhVRO
-	t53sXuaN0xS232VVZHz3+wG6hW0qWZivFY/8AC3Gig7CeS0OCjIZ0WJIFSpkxZZ1bU2CIZUhZUUFZ
-	0zW0+LT1Y3JxeAIgC8FZQ5KjjRNGcuU0XSQONtfC3uHKMov2da5B5yavAXOlZfPFyVo8Q5x6iXUx8
-	EPQARInu/oZlkzGRiU3EVFVZfuSdWHLUKPgxvTwlxHc00niu50w1OZDM6KmygMdJlGMoX8BSGvGyV
-	iaeTVi8t/EGOgfzKrDr09l1LFLLA9CDLH0o5lY3VCIYy0sVK0VA6vBkJhUbaloVB4AxPKTNl48+Tp
-	44OdKoSA==;
-Received: from [193.117.214.244] (helo=[127.0.0.1])
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u0dWR-00000007NJR-3eod;
-	Fri, 04 Apr 2025 09:39:36 +0000
-Date: Fri, 04 Apr 2025 10:39:35 +0100
-From: David Woodhouse <dwmw2@infradead.org>
-To: Christoph Hellwig <hch@infradead.org>
-CC: virtio-comment@lists.linux.dev, mst@redhat.com,
- Claire Chang <tientzu@chromium.org>,
- linux-devicetree <devicetree@vger.kernel.org>,
- Rob Herring <robh+dt@kernel.org>,
- =?ISO-8859-1?Q?J=F6rg_Roedel?= <joro@8bytes.org>,
- iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
- graf@amazon.de
-Subject: =?US-ASCII?Q?Re=3A_=5BRFC_PATCH_1/3=5D_content=3A_Add_VIRTIO=5FF=5FSWIO?=
- =?US-ASCII?Q?TLB_to_negotiate_use_of_SWIOTLB_bounce_buffers?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <Z--W_JagTSyhYqzk@infradead.org>
-References: <20250402112410.2086892-1-dwmw2@infradead.org> <20250402112410.2086892-2-dwmw2@infradead.org> <Z-43svGzwoUQaYvg@infradead.org> <148a3c8ee53af585b42ec025c2c7821ad852c66c.camel@infradead.org> <Z-46TDmspmX0BJ2H@infradead.org> <05abb68286dd4bc17b243130d7982a334503095b.camel@infradead.org> <Z-99snVF5ESyJDDs@infradead.org> <fb7ea3ee5bf970fa36b012e16750f533b72903a0.camel@infradead.org> <Z--W_JagTSyhYqzk@infradead.org>
-Message-ID: <3251F79D-4838-4C89-80BF-6EB19076833A@infradead.org>
+	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="rM36v9Pe"
+Received: from francesco-nb (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
+	by mail11.truemail.it (Postfix) with ESMTPA id 95D6D1F99A;
+	Fri,  4 Apr 2025 11:41:34 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
+	s=default; t=1743759695;
+	bh=UkGhpRwbzS0VPnH1TZfEQLwmTd3JyghrN/O4RuEAQws=; h=From:To:Subject;
+	b=rM36v9PegNSof5+k1AZosOO95S82pCG12s5H1kAQn3tvMp8p/k7+sdFmwvoIcpEaS
+	 1EbZnOU2ZfcaZqcfLtZBw8uKWB7YMw5CxqhqkjwD/e7B7W2cZVnHNtYcUxBN/yEDXT
+	 ZjK/wtatzssOVL3fNZiKn77aGX2jMRlVaBkDwFVpWd89csspEl8XuhjNxTbItmC4bN
+	 XnNLLOci4o3SmrFY7wT53qthCWduaaSpyRrnXwyXRROOkoX9MUkAd6fKmQpiQI3wuy
+	 czMP+IxxwbcgvQug+9IkreCSFe5iEU2j/cuPijpfjnhHE2xC07eRT2V1qybBr+9paj
+	 Kk3OTqjOrMhrA==
+Date: Fri, 4 Apr 2025 11:41:30 +0200
+From: Francesco Dolcini <francesco@dolcini.it>
+To: Sherry Sun <sherry.sun@nxp.com>
+Cc: hongxing.zhu@nxp.com, l.stach@pengutronix.de, lpieralisi@kernel.org,
+	kw@linux.com, robh@kernel.org, bhelgaas@google.com,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+	festevam@gmail.com, linux-imx@nxp.com, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2 2/4] dt-bindings: imx6q-pcie: Add wake-gpios property
+Message-ID: <20250404094130.GA35433@francesco-nb>
+References: <20231213092850.1706042-1-sherry.sun@nxp.com>
+ <20231213092850.1706042-3-sherry.sun@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231213092850.1706042-3-sherry.sun@nxp.com>
 
-On 4 April 2025 09:23:24 BST, Christoph Hellwig <hch@infradead=2Eorg> wrote=
-:
->On Fri, Apr 04, 2025 at 08:50:47AM +0100, David Woodhouse wrote:
->> I do agree, this is fundamentally a system issue=2E In a CoCo model, it=
-'s
->> non-trivial for the system to allow *virtual* devices to do "DMA"
->> because that actually means allowing the VMM to access arbitrary guest
->> memory=2E
->
->
->> So "for the emulated devices, just use a device model that doesn't do
->> arbitrary DMA to system memory" is a nice simple answer, and keeps the
->> guest support restricted to its *own* standalone driver=2E
->
->It's also one that completely breaks the abstraction=2E=20
+Hello
 
-Hm? Having a device that simply doesn't *do* any DMA surely doesn't break =
-any system DMA / IOMMU abstractions because it's no longer even relevant to=
- them, which is kind of the point=2E
+On Wed, Dec 13, 2023 at 05:28:48PM +0800, Sherry Sun wrote:
+> Add wake-gpios property that can be used to wakeup the host
+> processor.
+> 
+> Signed-off-by: Sherry Sun <sherry.sun@nxp.com>
+> Reviewed-by: Richard Zhu <hongxing.zhu@nxp.com>
+> ---
+>  Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
+> index 81bbb8728f0f..fba757d937e1 100644
+> --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
+> +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
+> @@ -72,6 +72,12 @@ properties:
+>        L=operation state) (optional required).
+>      type: boolean
+>  
+> +  wake-gpios:
+> +    description: If present this property specifies WAKE# sideband signaling
+> +      to implement wakeup functionality. This is an input GPIO pin for the Root
+> +      Port mode here. Host drivers will wakeup the host using the IRQ
+> +      corresponding to the passed GPIO.
+> +
 
-Which abstraction did you mean?
+From what I know it is possible to share the same WAKE# signal for
+multiple root ports. Is this going to work fine with this binding? Same
+question on the driver.
 
+We do have design exactly like that, so it's not a theoretical question.
 
-> I still don't
->understand what the problem is with having the paravirtualized devices
->on a different part of the virtual PCIe topology so that the stage2
->IOMMU isn't used for them, but instead just the direct mapping or a
->stub viommu that blocks all access=2E
+Francesco
 
-It can't have a direct mapping because the VMM can't access guest memory=
-=2E It has to be blocked, which is fine=2E But that's only part of the pict=
-ure =E2=80=94 then how do you actually get data in/out of the device?
-
-By having on-device memory and not attempting DMA to system memory, perhap=
-s=2E=2E=2E? :)
-
->> What's annoying is that this should work out of the box *already* with
->> virtio-mmio and a `restricted-dma-pool` =E2=80=94 for systems which are=
-n't
->> afflicted by UEFI/ACPI/PCI as their discovery mechanisms=2E
->
->Yes=2E  And the fix is to get the equivalent to restricted-dma-pool into
->UEFI/ACPI=2E  That gives you a portable and device-independent way to
->describe this limitation, which is much better than hacking around it
->using an odd device model=2E
-
-It still has the problem that existing drivers in all operating systems pr=
-oduced before 2030 will see the device and try to use it as-is, with no com=
-prehension of this new thing=2E
 
