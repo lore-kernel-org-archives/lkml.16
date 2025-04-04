@@ -1,130 +1,162 @@
-Received: from raptorengineering.com (mail.raptorengineering.com [23.155.224.40])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0E0613B797;
-	Fri,  4 Apr 2025 04:26:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.155.224.40
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BD852F42;
+	Fri,  4 Apr 2025 04:36:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743740801; cv=none; b=Vi3B58V0aEuPyKaJ2qOglPRO1EKPSXob/6Mu/zs+6x2fzFAviCoitqoN2UgqT3ZI7Et1G1tGWd7+W/ZPVtw8NOrOV/QeBh+2SIRVdv3f1Peu81IXDpHNAL84iiKEVojljUy7D4QpIhFpbEUoig6gdtOJAk2mfeYf2iVQfqemK/Y=
+	t=1743741394; cv=none; b=dw0/Iet2iVXwzq7kcriRR9FJK9RtrgR/RXUjXFwnoBXnAZV9hzTRbyW6+Lci+YCKpa+nSx9x6Cg13jqARXc5DMappcVvgJFFuxKPh9+91isxQAVwA8FOZrG7lma47tO4fcBJ1y8RFTyy2jZhSy3T7rH9CuyGtoKxrk0mVwnT6MM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743740801; c=relaxed/simple;
-	bh=GD4PbrRWARoVxmIZIO0RTWV/Z6qA8xZnFttWFtGyuwE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=M9r/7HL/brGDs9XSrp48CRVg5H3X0Dbc11Wb2JAa4DktJDF01sn8zlhMfR/bG1oP3iqTB0j8LetvGCnc6yUJFoAxzC37vQ3uuoFe6bjN4cs6oqygPzBX2+Tn+JEZpp6LJwsE7woL8L0Za0q/DwQH/r6KKk1L8ldWv3Fl7QMNNJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com; spf=pass smtp.mailfrom=raptorengineering.com; dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b=NJ2WDg/F; arc=none smtp.client-ip=23.155.224.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raptorengineering.com
+	s=arc-20240116; t=1743741394; c=relaxed/simple;
+	bh=0vjqbI54XhzhHUQdiVGUjW5y+D0bq8M2T6mXQZfmY/4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LLU3MonkchMdxXw5ZjeYNKYA+uSjLplfNkhBKT7FaOdj9aMNpxy3sxpTSk/8V7q4GItQ21NmD+a6Y4t+pbTbpwsPu2/rNHEXtaUacFlyPEXzatAiVZH9C0ZQ6ISUPINpSNCm5EAHU8fKCmiVUeN1w64kMz3dK/VKOJuO49wV3uI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=XJY0Jxm/; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b="NJ2WDg/F"
-Received: from localhost (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id 4A9C18287DC7;
-	Thu,  3 Apr 2025 23:18:16 -0500 (CDT)
-Received: from mail.rptsys.com ([127.0.0.1])
-	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id y0x95OhCHdpj; Thu,  3 Apr 2025 23:18:15 -0500 (CDT)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id 5125A82888D4;
-	Thu,  3 Apr 2025 23:18:15 -0500 (CDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.rptsys.com 5125A82888D4
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=raptorengineering.com; s=B8E824E6-0BE2-11E6-931D-288C65937AAD;
-	t=1743740295; bh=g8RNqE7aPiU1zvwocf1geGsqM6oe9JplNEQakBf0Reg=;
-	h=From:To:Date:Message-Id:MIME-Version;
-	b=NJ2WDg/FTHCCC6jFgYkZlr24HYP+QOKD2ftg3UT+clr+55Mx+4dkhbO6XW1PFMw85
-	 kD67hZYiQ0jWO3dcGWqL9fYMPsZ19bSMXZH6fABD0/bCFLyOOwJl5bkUmIFGW0Z5T9
-	 kEarqQZJELs45FV7AKLy+5XuXmFBbNHDUgwcNFJ4=
-X-Virus-Scanned: amavisd-new at rptsys.com
-Received: from mail.rptsys.com ([127.0.0.1])
-	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id Bl4Uh3ydGZaJ; Thu,  3 Apr 2025 23:18:15 -0500 (CDT)
-Received: from raptor-ewks-026.lan (5.edge.rptsys.com [23.155.224.38])
-	by mail.rptsys.com (Postfix) with ESMTPSA id BAF458287D01;
-	Thu,  3 Apr 2025 23:18:14 -0500 (CDT)
-From: Shawn Anastasio <sanastasio@raptorengineering.com>
-To: linuxppc-dev@lists.ozlabs.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	tpearson@raptorengineering.com,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Shawn Anastasio <sanastasio@raptorengineering.com>
-Subject: [PATCH 3/3] pci/hotplug/pnv_php: Fix refcount underflow on hot unplug
-Date: Thu,  3 Apr 2025 23:18:10 -0500
-Message-Id: <20250404041810.245984-4-sanastasio@raptorengineering.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20250404041810.245984-1-sanastasio@raptorengineering.com>
-References: <20250404041810.245984-1-sanastasio@raptorengineering.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="XJY0Jxm/"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5341hWjO018160;
+	Fri, 4 Apr 2025 04:36:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=a6sLxc
+	S3TcvfwEy5jkDxKLI0Y3bZtHPLoHbD+dRqtSo=; b=XJY0Jxm/QcEKYMU8zN41p/
+	ZPVkowhUC4M4aGR4kz3iVtnSo/wFpSG2Qim1TmqGM1RG0Kk5lOqFiR/CyEkxkYKH
+	Ptt4qeiM4Ba1UX5dRLg2WPoNX5WCl9IJfQEpPFiuF0XTG4ssYifdJRW38WcNRYqR
+	xtFEoRJB1oyAn2R3/M1rDd9PeP/7AnF16kgUSWpnYqcL6uhzRfWXL2DAgsnmCPwq
+	hcs+Rdw1tHjYKAsG7rtXmcQIgbEMepMJMKWtxEJlGW89hB8YrYDRC/Y8h1qjJoFs
+	GKCogugY/zCk5k6PHBq3CMyKULLlHLwt406bOsAdU8stPiWcl7ri9twUHxP+8cig
+	==
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45t2qb18am-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 04 Apr 2025 04:36:26 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5341xOJk031088;
+	Fri, 4 Apr 2025 04:36:25 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 45t2e4sbr9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 04 Apr 2025 04:36:25 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5344aLlq44171660
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 4 Apr 2025 04:36:21 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C1CA12004B;
+	Fri,  4 Apr 2025 04:36:21 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id F36F820043;
+	Fri,  4 Apr 2025 04:36:20 +0000 (GMT)
+Received: from li-ce58cfcc-320b-11b2-a85c-85e19b5285e0 (unknown [9.171.55.30])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with SMTP;
+	Fri,  4 Apr 2025 04:36:20 +0000 (GMT)
+Date: Fri, 4 Apr 2025 06:36:19 +0200
+From: Halil Pasic <pasic@linux.ibm.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        virtualization@lists.linux.dev, kvm@vger.kernel.org,
+        Chandra Merla
+ <cmerla@redhat.com>, Stable@vger.kernel.org,
+        Cornelia Huck
+ <cohuck@redhat.com>, Thomas Huth <thuth@redhat.com>,
+        Eric Farman
+ <farman@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik
+ <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian
+ Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle
+ <svens@linux.ibm.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Wei Wang
+ <wei.w.wang@intel.com>, Halil Pasic <pasic@linux.ibm.com>
+Subject: Re: [PATCH v1] s390/virtio_ccw: don't allocate/assign airqs for
+ non-existing queues
+Message-ID: <20250404063619.0fa60a41.pasic@linux.ibm.com>
+In-Reply-To: <e2936e2f-022c-44ee-bb04-f07045ee2114@redhat.com>
+References: <20250402203621.940090-1-david@redhat.com>
+	<20250403161836.7fe9fea5.pasic@linux.ibm.com>
+	<e2936e2f-022c-44ee-bb04-f07045ee2114@redhat.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: _z-VbjkG-r5cBAIZ-IvKSRNxA8KWz6XU
+X-Proofpoint-GUID: _z-VbjkG-r5cBAIZ-IvKSRNxA8KWz6XU
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-04_01,2025-04-03_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ malwarescore=0 priorityscore=1501 adultscore=0 bulkscore=0
+ lowpriorityscore=0 mlxscore=0 phishscore=0 suspectscore=0 spamscore=0
+ mlxlogscore=999 clxscore=1015 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2502280000 definitions=main-2504040025
 
-When hot unplugging a slot containing a PCIe switch on a PowerNV system,
-the reference count of the device_node corresponding to the root will
-underflow. This is due to improper handling of the device_nodes'
-refcounts in pnv_php_detach_device nodes that occurs on each unplug
-event.
+On Thu, 3 Apr 2025 16:28:31 +0200
+David Hildenbrand <david@redhat.com> wrote:
 
-When iterating through children nodes, pnv_php_detach_nodes first
-recursively detach each child's children, then it would decrement the
-child's refcount and finally call of_detach_node on it, which in turn
-would decrement the refcount further and result in an underflow. Fix
-this by dropping the explicit of_put call and by moving the final
-of_detach_node call after the loop.
+> > Sorry I have to have a look at that discussion. Maybe it will answer
+> > some my questions.  
+> 
+> Yes, I think so.
+> 
+> >   
+> >> Let's fix it without affecting existing setups for now by properly
+> >> ignoring the non-existing queues, so the indicator bits will match
+> >> the queue indexes.  
+> > 
+> > Just one question. My understanding is that the crux is that Linux
+> > and QEMU (or the driver and the device) disagree at which index
+> > reporting_vq is actually sitting. Is that right?  
+> 
+> I thought I made it clear: this is only about the airq indicator bit. 
+> That's where both disagree.
+> 
+> Not the actual queue index (see above).
 
-The underflow that occurs without this patch produces the following
-backtrace on unplug events:
+I did some more research including having a look at that discussion. Let
+me try to sum up how did we end up here.
 
-  refcount_t: underflow; use-after-free.
-  WARNING: CPU: 4 PID: 669 at lib/refcount.c:28 refcount_warn_saturate+0x214/0x224
-  Call Trace:
-   refcount_warn_saturate+0x210/0x224 (unreliable)
-   kobject_put+0x154/0x2d4
-   of_node_put+0x2c/0x40
-   of_get_next_child+0x74/0xd0
-   pnv_php_detach_device_nodes+0x2a4/0x30c
-   pnv_php_set_slot_power_state+0x20c/0x500
-   pnv_php_disable_slot+0xb8/0xdc
-   power_write_file+0xf8/0x18c
-   pci_slot_attr_store+0x40/0x5c
-   sysfs_kf_write+0x64/0x78
-   kernfs_fop_write_iter+0x1b4/0x2a4
-   vfs_write+0x3bc/0x50c
-   ksys_write+0x84/0x140
-   system_call_exception+0x124/0x230
-   system_call_vectored_common+0x15c/0x2ec
+Before commit a229989d975e ("virtio: don't allocate vqs when names[i] =
+NULL") the kernel behavior used to be in spec, but QEMU and possibly
+other hypervisor were out of spec and things did not work.
 
-Signed-off-by: Shawn Anastasio <sanastasio@raptorengineering.com>
----
- drivers/pci/hotplug/pnv_php.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+Possibly because of the complexity of fixing the hypervisor(s) commit
+a229989d975e ("virtio: don't allocate vqs when names[i] = NULL") opted
+for changing the guest side so that it does not fit the spec but fits
+the hypervisor(s). It unfortunately also broke notifiers (for the with
+holes) scenario for virtio-ccw only.
 
-diff --git a/drivers/pci/hotplug/pnv_php.c b/drivers/pci/hotplug/pnv_php.c
-index 1a734adb5b10..a3fa44f7bf1a 100644
---- a/drivers/pci/hotplug/pnv_php.c
-+++ b/drivers/pci/hotplug/pnv_php.c
-@@ -156,11 +156,12 @@ static void pnv_php_detach_device_nodes(struct device_node *parent)
- 	struct device_node *dn;
- 
- 	for_each_child_of_node(parent, dn) {
-+		/* Detach any children of the parent node first */
- 		pnv_php_detach_device_nodes(dn);
--
--		of_node_put(dn);
--		of_detach_node(dn);
- 	}
-+
-+	/* Finally, detach the parent */
-+	of_detach_node(parent);
- }
- 
- static void pnv_php_rmv_devtree(struct pnv_php_slot *php_slot)
--- 
-2.30.2
+Now we had another look at this, and have concluded that fixing the
+hypervisor(s) and fixing the kernel, and making sure that the fixed
+kernel can tolerate the old broken hypervisor(s) is way to complicated
+if possible at all. So we decided to give the spec a reality check and
+fix the notifier bit assignment for virtio-ccw which is broken beyond
+doubt if we accept that the correct virtqueue index is the one that the
+hypervisor(s) use and not the one that the spec says they should use.
 
+With the spec fixed, the whole notion of "holes" will be something that
+does not make sense any more. With that the merit of the kernel interface
+virtio_find_vqs() supporting "holes" is quite questionable. Now we need
+it because the drivers within the Linux kernel still think of the queues
+in terms of the current spec, i.e. they try to have the "holes" as
+mandated by the spec, and the duty of making it work with the broken
+device implementations falls to the transports.
+
+Under the assumption that the spec is indeed going to be fixed:
+
+Reviewed-by: Halil Pasic <pasic@linux.ibm.com>
+
+Regards,
+Halil
