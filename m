@@ -1,37 +1,37 @@
 Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68DA22010EB
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65C1C200BA9
 	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 16:00:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743782413; cv=none; b=Q1Cl50C0Qi/7aaBlH8zMvDSypA2T/DK7NOh29FDKbNSFpRqBzZyFzYOftHl/h090eBOnsg/R7WdwTv6ID8r71iZB0Z837tEhX7I+8a32E8hkBqNB/3g47vQqmz+FDZSvoyMyBbrciYj5QvuciHTWz+fJVg5fjH5CVEXS4crKzTc=
+	t=1743782413; cv=none; b=EKgf8zLHX1Z9Gcd0kTVqMClo2DoZzgjmmHYzNhkMQ0jfSORmHY8kfVHtosrItTofSTSL1GMDJWhz51SReTxS5F7nX1Xw7to/SeTO8+YH5oh52CAYkakFyzKIQU9rA+vhfFp27axZ8tjCfPIQg4aYSvDv0GPfj9lQ/UB+NmeOG/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1743782413; c=relaxed/simple;
-	bh=FygBoL0/JzEns8UKI78mxgqR1zBXu+j2bVPTD/LjJTU=;
+	bh=D66HpPzIsh9s7WpdgSaM0v5NH51UIUN1kQRqUAsn+kI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nlAr3MdaeTDha+H/x4iy9RgXN9+f9uqekiGbZra4szowfP/8MXUh5WigqOEQtaf+GRxtfx1wPMsj3XvkGGf3ftKxcOOvq7qi64RXxWwSbH3SELX11KeVtJStjF2Av8+YZ5LL5yOFXj92IeY+PJUI++4+VJMP4HDtf1UTkkxq5Rc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=desiato.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=FXBcvlGe; arc=none smtp.client-ip=90.155.92.199
+	 MIME-Version; b=CqTANVTypJDrXyj7ZFUrduyMaOczas919+sxIsJ3vBp/HNy3QIEXB1HIyweQmn9niS2wX1E37TojCiMaDekVebMkOxjXeam2kGJLqetvitrn6QuNngSD4SXj81Xo/LJBJK1LsQCZiiz5EWSSplE4U8XdB2Fkfz3Zrry9NINXO1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=desiato.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=HX3tq7HI; arc=none smtp.client-ip=90.155.92.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=desiato.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FXBcvlGe"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HX3tq7HI"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=desiato.20200630; h=Sender:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=bzhTX9e5Ndxofs9PWPQjKMiyjzcJ935BwY08z5T956o=; b=FXBcvlGeZ+C24swIZknr5xL0p8
-	XJhae2JBOiSnCkqw22sW73oMle0AScGnnrrjrgRcsQsZKQse1RoOVdLIAp+dv1eKSBknP+k57ZXTz
-	oWUMRnld+BtYXoPg9UHMvLAZzjw0c1r0zO6b6YuvPysev0lfnzXdLFdhNKt0M0ZRh4D85BOqRtvFd
-	tK/plvL5cesPT7WqFT+JxUKBNBmTGj3rplsy2rhhCN5gtGHW7sANGWiNY+prH/0XWDK8ACkkP8KYO
-	0V/99vErEol0YusGdeIvCekK7OkuLDr72beS/ATKgCtccaGDE3fu936DgqYjnSi8OA0ZPVlXsvrGH
-	9UT0Bu0g==;
+	bh=EggTF7jgXyqw27ORwtXsCRX4H5aiRA/a+Rh2J8KLoHU=; b=HX3tq7HIzG2pG87fAq0XTCafH8
+	DkspEeMBkCy2NMH7zp0U9SyOEyHmpaU3H7Ofz669hMx9zaObkueGN/ZaHJDQQkbbsq/szbqDptC6j
+	MEvAedrkC8t9fR5K0oL5RA2eStCojpgVZNK5eHYm29/U4EMZDp1rdB7mREiazKOw2ClJGF36A7NMb
+	QIxbjBiyvvLDG2KkQFeEfwESWlQlq4Cqp751opuozo+zc7k9llxAs9HYO9i3oHJ5803HtEgylCLlr
+	E2HjVkjQaue4zB/utadXeYQG1ct50Itrnag4GetbD68mpWhqmuyE9X0df0jP2ZmVnM5XfX1TrmFxG
+	1Owpd5BA==;
 Received: from [2001:8b0:10b:1::ebe] (helo=i7.infradead.org)
 	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u0jSc-00000007QP0-0VvU;
+	id 1u0jSc-00000007QP1-0YK4;
 	Fri, 04 Apr 2025 16:00:02 +0000
 Received: from dwoodhou by i7.infradead.org with local (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u0jSZ-0000000ERSE-2u5h;
+	id 1u0jSZ-0000000ERSN-3n5A;
 	Fri, 04 Apr 2025 16:59:59 +0100
 From: David Woodhouse <dwmw2@infradead.org>
 To: Mike Rapoport <rppt@kernel.org>
@@ -49,9 +49,9 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	linux-mm@kvack.org
-Subject: [RFC PATCH v2 2/7] mm: Implement for_each_valid_pfn() for CONFIG_FLATMEM
-Date: Fri,  4 Apr 2025 16:59:54 +0100
-Message-ID: <20250404155959.3442111-2-dwmw2@infradead.org>
+Subject: [RFC PATCH v2 5/7] mm, PM: Use for_each_valid_pfn() in kernel/power/snapshot.c
+Date: Fri,  4 Apr 2025 16:59:57 +0100
+Message-ID: <20250404155959.3442111-5-dwmw2@infradead.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250404155959.3442111-1-dwmw2@infradead.org>
 References: <20250404155959.3442111-1-dwmw2@infradead.org>
@@ -67,55 +67,74 @@ X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato
 
 From: David Woodhouse <dwmw@amazon.co.uk>
 
-In the FLATMEM case, the default pfn_valid() just checks that the PFN is
-within the range [ ARCH_PFN_OFFSET .. ARCH_PFN_OFFSET + max_mapnr ).
-
-The for_each_valid_pfn() function can therefore be a simple for() loop
-using those as min/max respectively.
-
 Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
-Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 ---
- include/asm-generic/memory_model.h | 26 +++++++++++++++++++++++++-
- 1 file changed, 25 insertions(+), 1 deletion(-)
+ kernel/power/snapshot.c | 42 ++++++++++++++++++++---------------------
+ 1 file changed, 20 insertions(+), 22 deletions(-)
 
-diff --git a/include/asm-generic/memory_model.h b/include/asm-generic/memory_model.h
-index a3b5029aebbd..044536da3390 100644
---- a/include/asm-generic/memory_model.h
-+++ b/include/asm-generic/memory_model.h
-@@ -30,7 +30,31 @@ static inline int pfn_valid(unsigned long pfn)
- 	return pfn >= pfn_offset && (pfn - pfn_offset) < max_mapnr;
+diff --git a/kernel/power/snapshot.c b/kernel/power/snapshot.c
+index 4e6e24e8b854..f151c7a45584 100644
+--- a/kernel/power/snapshot.c
++++ b/kernel/power/snapshot.c
+@@ -1094,16 +1094,15 @@ static void mark_nosave_pages(struct memory_bitmap *bm)
+ 			 ((unsigned long long) region->end_pfn << PAGE_SHIFT)
+ 				- 1);
+ 
+-		for (pfn = region->start_pfn; pfn < region->end_pfn; pfn++)
+-			if (pfn_valid(pfn)) {
+-				/*
+-				 * It is safe to ignore the result of
+-				 * mem_bm_set_bit_check() here, since we won't
+-				 * touch the PFNs for which the error is
+-				 * returned anyway.
+-				 */
+-				mem_bm_set_bit_check(bm, pfn);
+-			}
++		for_each_valid_pfn (pfn, region->start_pfn, region->end_pfn) {
++			/*
++			 * It is safe to ignore the result of
++			 * mem_bm_set_bit_check() here, since we won't
++			 * touch the PFNs for which the error is
++			 * returned anyway.
++			 */
++			mem_bm_set_bit_check(bm, pfn);
++		}
+ 	}
  }
- #define pfn_valid pfn_valid
--#endif
-+
-+static inline bool first_valid_pfn(unsigned long *pfn)
-+{
-+	/* avoid <linux/mm.h> include hell */
-+	extern unsigned long max_mapnr;
-+	unsigned long pfn_offset = ARCH_PFN_OFFSET;
-+
-+	if (*pfn < pfn_offset) {
-+		*pfn = pfn_offset;
-+		return true;
+ 
+@@ -1255,21 +1254,20 @@ static void mark_free_pages(struct zone *zone)
+ 	spin_lock_irqsave(&zone->lock, flags);
+ 
+ 	max_zone_pfn = zone_end_pfn(zone);
+-	for (pfn = zone->zone_start_pfn; pfn < max_zone_pfn; pfn++)
+-		if (pfn_valid(pfn)) {
+-			page = pfn_to_page(pfn);
++	for_each_valid_pfn(pfn, zone->zone_start_pfn, max_zone_pfn) {
++		page = pfn_to_page(pfn);
+ 
+-			if (!--page_count) {
+-				touch_nmi_watchdog();
+-				page_count = WD_PAGE_COUNT;
+-			}
++		if (!--page_count) {
++			touch_nmi_watchdog();
++			page_count = WD_PAGE_COUNT;
++		}
+ 
+-			if (page_zone(page) != zone)
+-				continue;
++		if (page_zone(page) != zone)
++			continue;
+ 
+-			if (!swsusp_page_is_forbidden(page))
+-				swsusp_unset_page_free(page);
+-		}
++		if (!swsusp_page_is_forbidden(page))
++			swsusp_unset_page_free(page);
 +	}
-+
-+	if ((*pfn - pfn_offset) < max_mapnr)
-+		return true;
-+
-+	return false;
-+}
-+
-+#ifndef for_each_valid_pfn
-+#define for_each_valid_pfn(pfn, start_pfn, end_pfn)			       \
-+	for (pfn = max_t(unsigned long, start_pfn, ARCH_PFN_OFFSET);	\
-+	     pfn < min_t(unsigned long, end_pfn, ARCH_PFN_OFFSET + max_mapnr); \
-+			 pfn++)
-+#endif /* for_each_valid_pfn */
-+#endif /* valid_pfn */
  
- #elif defined(CONFIG_SPARSEMEM_VMEMMAP)
- 
+ 	for_each_migratetype_order(order, t) {
+ 		list_for_each_entry(page,
 -- 
 2.49.0
 
