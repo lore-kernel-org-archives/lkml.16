@@ -1,85 +1,73 @@
-Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E5091F4193
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 15:12:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E73F01EFF9D;
+	Fri,  4 Apr 2025 15:13:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743779542; cv=none; b=D+sKaSpmVEjt9Xm7/IdWkKGSO5USnUtWQnDvKi1z+uIzuXLWO55k5MtbCH+9l0ABF+OONoXJF0cZm6efBqc/bMYJp9i7wOX32kch/BUhIcTZbWuIVzM94H233ajLMFxVcxH5aOEDEVCBz2XCHhqMyCP/rh+rIbsuTheXf9Ysels=
+	t=1743779585; cv=none; b=OX0UCxTU4ilwz8IcRrbBq4OSlYuTUmix1bzqFU4irCV6J8W7nyQ6CMI7n8lfjgJqa/HWd6ulyaRzoPYqUrE1okhRA3I8hzw7PbdB5BRjCX8Pu5R2YypVUCkqmRbt3ghdnQcrLuO9VeEafKFLkx7Ln6x7oC9schQ1/r2ZTJrG98M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743779542; c=relaxed/simple;
-	bh=KCreTXWymrecjtmPS3L+e7hwdFIM1EdwxQRvo86EOwc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SngL7UWF8IIoQqZV9DB1O9yozP+HM8STUyFxm03STp+O9IGQ9dS1/QN6lNIRKG7BslkqcSr6xp5AaojPeifFJV5wTfzZB6cqXIETxwxuYhPV1vANqPIT9zBmSDy0yCe+96R89fHxZbuuaxHFP91lwuFFF4yis7fnnyfc1OR1TIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=tbJh3/Fg; arc=none smtp.client-ip=95.215.58.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1743779585; c=relaxed/simple;
+	bh=FP3tFb7Y7bfvGa0ApcazABFfYZtkfCm210aLvxNGQGo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=V4LChgqJofWv4zrTRXXPilVigi13vYc6H/KzBmea2nawDyPaL9bFGz8ytpwJl5cblhC6VJp4t9N11y4aEmesXIdJDmzYAF2NWqOD6rWmwpKMXoMv1JDTzGFtFB+iV+a1D8D9APOcsgWVTRGL/2N8369g4+w8/bWd6XSPV4DGtPM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gUPQmRq5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="tbJh3/Fg"
-Message-ID: <fd379fac-dbf8-4976-8f23-6202d488b262@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1743779528;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fmFbXTDoFw2W47L5foiUWbOD7ozmpdIO22Jr4A2duwQ=;
-	b=tbJh3/Fg0I3QaJE7qJnm0rsYxRsteme9jDC4vYOJBYNmG5FChxRQQYC4+Hn81aX3sLMv28
-	ElV2hGVdt7V8gJSsPuVjeFxi3rWu2w9xh6wFb+ZWNwyS21ElFYj3xYVNLiPV1X3B3vC8g8
-	jGmO0uNV9iScl3zdOf/NLL4jHfMObVQ=
-Date: Fri, 4 Apr 2025 11:12:00 -0400
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gUPQmRq5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F390CC4CEDD;
+	Fri,  4 Apr 2025 15:13:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743779584;
+	bh=FP3tFb7Y7bfvGa0ApcazABFfYZtkfCm210aLvxNGQGo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gUPQmRq5EXOp+mQwNUabADYpwjaWw+w7ZokORBXILQBS4O84eA2+5q9p7wrXn1LTL
+	 JGTQgnVUhgiAzxW+DMk4b0Cc8BrrgKRVntfqBYhyVRnaMNobzueZB5Qdim4GVC7t+L
+	 h4TgRmemcobifY1FCComkjQ08o+gaXP9oOgLgabmSLeMFA8JVEhgYeHo0tdrW5ahM0
+	 05A0FB/9/7QcBbFA8TnLbx6wFaTedMXxUsJYjbZXIcrhVO1l+oZjUQfElG2ZSWcBMm
+	 YmIEYsdvMpPBnA5gYZDA0MVhMQa9VWg8UXJ8Us650LR1E2Ik17WCxM2j8fraH/d2KL
+	 GBCR57oBvKTLQ==
+Date: Fri, 4 Apr 2025 16:13:00 +0100
+From: Lee Jones <lee@kernel.org>
+To: danielt@kernel.org, Henry Martin <bsdhenrymartin@gmail.com>
+Cc: jingoohan1@gmail.com, deller@gmx.de, linux-arm-msm@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Subject: Re: (subset) [PATCH v4] backlight: pm8941: Add NULL check in
+ wled_configure()
+Message-ID: <20250404151300.GD372032@google.com>
+References: <Z-uqpxcge0J99IPI@aspen.lan>
+ <20250401091647.22784-1-bsdhenrymartin@gmail.com>
+ <174377951404.402191.3996310155954584937.b4-ty@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [RFC net-next PATCH 01/13] dt-bindings: net: Add binding for
- Xilinx PCS
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: netdev@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S . Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Russell King <linux@armlinux.org.uk>,
- linux-kernel@vger.kernel.org, Christian Marangi <ansuelsmth@gmail.com>,
- upstream@airoha.com, Heiner Kallweit <hkallweit1@gmail.com>,
- Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Michal Simek <michal.simek@amd.com>,
- Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>,
- Rob Herring <robh@kernel.org>, Robert Hancock <robert.hancock@calian.com>,
- devicetree@vger.kernel.org
-References: <20250403181907.1947517-1-sean.anderson@linux.dev>
- <20250403181907.1947517-2-sean.anderson@linux.dev>
- <20250404-tench-of-heavenly-beauty-fb4ed1@shite>
- <b4e2db47-eb56-4a9d-bcd7-52b23450ae48@kernel.org>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Sean Anderson <sean.anderson@linux.dev>
-In-Reply-To: <b4e2db47-eb56-4a9d-bcd7-52b23450ae48@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <174377951404.402191.3996310155954584937.b4-ty@kernel.org>
 
-On 4/4/25 06:39, Krzysztof Kozlowski wrote:
-> On 04/04/2025 12:37, Krzysztof Kozlowski wrote:
->>> +  pcs-modes:
->>> +    description:
->>> +      The interfaces that the PCS supports.
->>> +    oneOf:
->>> +      - const: sgmii
->>> +      - const: 1000base-x
->>> +      - const: 2500base-x
->>> +      - items:
->>> +          - const: sgmii
->>> +          - const: 1000base-x
->> 
->> This is confusing. Why fallbacks? Shouldn't this be just enum? And
->> where is the type or constraints about number of items?
->> 
-> I just double checked now in dtschema and latest next - there is no such
-> property.
+On Fri, 04 Apr 2025, Lee Jones wrote:
 
-OK, so you would prefer xlnx,pcs-modes?
+> On Tue, 01 Apr 2025 17:16:47 +0800, Henry Martin wrote:
+> > devm_kasprintf() returns NULL when memory allocation fails. Currently,
+> > wled_configure() does not check for this case, which results in a NULL
+> > pointer dereference.
+> > 
+> > Add NULL check after devm_kasprintf() to prevent this issue.
+> > 
+> > 
+> > [...]
+> 
+> Applied, thanks!
+> 
+> [1/1] backlight: pm8941: Add NULL check in wled_configure()
+>       commit: b0fdeb96ead46de57a6226bc3a3ac7f9b50c0ace
 
---Sean
+Next time, please send subsequent patch versions independently.
 
+-- 
+Lee Jones [李琼斯]
