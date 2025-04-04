@@ -1,102 +1,117 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B101E12DD95;
-	Fri,  4 Apr 2025 13:40:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E4341EF0BA
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 13:40:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743774042; cv=none; b=ekoCz+qdHR3ZVR/EAwp2e4XtPRqJOBpTVGYPJ+B+KCQA3CYUgcqCzw7ocFB7CkdRPY8T2+musHL/MDWFfXRg2Or2ikLhDRV5yJ+zxhqFZsAL2FQK49XUzopP4x+afxpNAicr9HhPAYIFmP3I84PfCiJrOdm25/iVUoFnJ0bQlpM=
+	t=1743774056; cv=none; b=QXSkQ82U483rZJ2z3nvIsFE+jLXncxrDeWMf4ys2l9wI04TTZ5BVgyLbYYARIxVJ7n5KwWTy0gDe3J/HyHDKUJPWr0KEdQT4beRC9AzOAQEp5df/YtilDY3mMydUJ4y2Lwqr0FzM8vbzi/X/COslBT6ZVRLYdauK745Vn2Mb8qY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743774042; c=relaxed/simple;
-	bh=08nROLE83sH/QfN+ScKwvqbF/rDt1zpxINveXRGVxQQ=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eD+PYcIztE7hxA3xDWhu2BBYeuKNoW+UQZE9izYaLHPIWzx2BRh2SDwYp9UUWgjb58yJmCERbhf+Xk2NwTmEnRuyUh+o7dp23vXPQn5KLv7Kt6aFYDidMcgxZxO33umd8NC4rSM3O00hqoAwUCGmF3bFLcN0MtLNKwWAerBsVlI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZTflt0wvpz6K9DN;
-	Fri,  4 Apr 2025 21:36:58 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id B59A11404F9;
-	Fri,  4 Apr 2025 21:40:38 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 4 Apr
- 2025 15:40:38 +0200
-Date: Fri, 4 Apr 2025 14:40:36 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Gregory Price <gourry@gourry.net>
-CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<kernel-team@meta.com>, <dan.j.williams@intel.com>,
-	<vishal.l.verma@intel.com>, <dave.jiang@intel.com>, <dave@stgolabs.net>,
-	<alison.schofield@intel.com>, <ira.weiny@intel.com>
-Subject: Re: [PATCH v2] cxl: core/region - ignore interleave granularity
- when ways=1
-Message-ID: <20250404144036.000021c1@huawei.com>
-In-Reply-To: <20250402232552.999634-1-gourry@gourry.net>
-References: <20250402232552.999634-1-gourry@gourry.net>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1743774056; c=relaxed/simple;
+	bh=xANPefLqpcEQYBRE/NCV46oK1I/FrELUp3mVZEO+8co=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Nvpczg0qFYbFfvZm5lwRaitTQo1xo018TATrXA4Te+Td4p76b95x82XVF99I2GfI+j/uaMAsG/gg4N+GmoZ4GosNTGYuQIA6lluvAHrKAWlPgosY0r+T0Z9j2oyx2Ec79Kq3/QU3qDFGsZu3SzdgzZBFwTqqBuYhbRIzS1rFehs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=uugS4K5E; arc=none smtp.client-ip=95.215.58.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="uugS4K5E"
+Message-ID: <3291d0f9-40af-4e8d-aa08-b84132caf03d@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1743774041;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0WVYyYy47dRxRDE2y37KU6fRW5bT0lNVCJKYGaAjgBU=;
+	b=uugS4K5EShcKvWJc+VGSsPwIPg4rMNQLThsiZLoVA7gjw0RdwfgRWXqG6XuvXjkc9V/UUy
+	RPUEIM2kTvgk4rN/casblXmUQq6t/61LXHyHRG6aBGqKIqLOJ9uq3bqDk3NR7Z5JG9p2Kc
+	bJVJUBEhVk3rq/XVylmp7GbTJX/Qz9k=
+Date: Fri, 4 Apr 2025 15:40:39 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Subject: Re: [PATCH 5.4.y] RDMA/srpt: Support specifying the srpt_service_guid
+ parameter
+To: Alok Tiwari <alok.a.tiwari@oracle.com>, bvanassche@acm.org,
+ dledford@redhat.com, jgg@ziepe.ca, linux-rdma@vger.kernel.org,
+ target-devel@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+ darren.kenny@oracle.com
+References: <20250403125955.2553106-1-alok.a.tiwari@oracle.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Zhu Yanjun <yanjun.zhu@linux.dev>
+In-Reply-To: <20250403125955.2553106-1-alok.a.tiwari@oracle.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
- frapeml500008.china.huawei.com (7.182.85.71)
+X-Migadu-Flow: FLOW_OUT
 
-On Wed,  2 Apr 2025 19:25:52 -0400
-Gregory Price <gourry@gourry.net> wrote:
+On 03.04.25 14:59, Alok Tiwari wrote:
+> From: Bart Van Assche <bvanassche@acm.org>
+> 
+> [ Upstream commit fdfa083549de5d50ebf7f6811f33757781e838c0 ]
+> 
+> Make loading ib_srpt with this parameter set work. The current behavior is
+> that setting that parameter while loading the ib_srpt kernel module
+> triggers the following kernel crash:
+> 
+> BUG: kernel NULL pointer dereference, address: 0000000000000000
+> Call Trace:
+>   <TASK>
+>   parse_one+0x18c/0x1d0
+>   parse_args+0xe1/0x230
+>   load_module+0x8de/0xa60
+>   init_module_from_file+0x8b/0xd0
+>   idempotent_init_module+0x181/0x240
+>   __x64_sys_finit_module+0x5a/0xb0
+>   do_syscall_64+0x5f/0xe0
+>   entry_SYSCALL_64_after_hwframe+0x6e/0x76
+> 
+> Cc: LiHonggang <honggangli@163.com>
+> Reported-by: LiHonggang <honggangli@163.com>
+> Fixes: a42d985bd5b2 ("ib_srpt: Initial SRP Target merge for v3.3-rc1")
+> Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+> Link: https://lore.kernel.org/r/20240205004207.17031-1-bvanassche@acm.org
+> Signed-off-by: Leon Romanovsky <leon@kernel.org>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> [Alok: Backport to 5.4.y since the commit has already been backported to
+> 5.15y, 5.10.y, and 4.19.y]
+> Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
 
-> When validating decoder IW/IG when setting up regions, the granularity
-> is irrelevant when iw=1 - all accesses will always route to the only
-> target anyway - so all ig values are "correct". Loosen the requirement
-> that `ig = (parent_iw * parent_ig)` when iw=1.
-> 
-> On some Zen5 platforms, the platform BIOS specifies a 256-byte
-> interleave granularity window for host bridges when there is only
-> one target downstream.  This leads to Linux rejecting the configuration
-> of a region with a x2 root with two x1 hostbridges.
-> 
-> Decoder Programming:
->    root - iw:2 ig:256
->    hb1  - iw:1 ig:256  (Linux expects 512)
->    hb2  - iw:1 ig:256  (Linux expects 512)
->    ep1  - iw:2 ig:256
->    ep2  - iw:2 ig:256
-> 
-> This change allows all decoders downstream of a passthrough decoder to
-> also be configured as passthrough (iw:1 ig:X), but still disallows
-> downstream decoders from applying subsequent interleaves.
-> 
-> e.g. in the above example if there was another decoder south of hb1
-> attempting to interleave 2 endpoints - Linux would enforce hb1.ig=512
-> because the southern decoder would have iw:2 and require ig=pig*piw.
-> 
-> Signed-off-by: Gregory Price <gourry@gourry.net>
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-Reasonable work around and good explanation.
+Not sure if this "Cc: stable@vger.kernel.org" is needed to notify the 
+engineer of stable branch or not.
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Zhu Yanjun
 
 > ---
->  drivers/cxl/core/region.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>   drivers/infiniband/ulp/srpt/ib_srpt.c | 8 ++++++--
+>   1 file changed, 6 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 04bc6cad092c..dec262eadf9a 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -1553,7 +1553,7 @@ static int cxl_port_setup_targets(struct cxl_port *port,
->  
->  	if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags)) {
->  		if (cxld->interleave_ways != iw ||
-> -		    cxld->interleave_granularity != ig ||
-> +		    (iw > 1 && cxld->interleave_granularity != ig) ||
->  		    cxled->spa_range.start != p->res->start ||
->  		    cxled->spa_range.end != p->res->end ||
->  		    ((cxld->flags & CXL_DECODER_F_ENABLE) == 0)) {
+> diff --git a/drivers/infiniband/ulp/srpt/ib_srpt.c b/drivers/infiniband/ulp/srpt/ib_srpt.c
+> index d03a4f2e006f..f5fd8c1058ce 100644
+> --- a/drivers/infiniband/ulp/srpt/ib_srpt.c
+> +++ b/drivers/infiniband/ulp/srpt/ib_srpt.c
+> @@ -79,12 +79,16 @@ module_param(srpt_srq_size, int, 0444);
+>   MODULE_PARM_DESC(srpt_srq_size,
+>   		 "Shared receive queue (SRQ) size.");
+>   
+> +static int srpt_set_u64_x(const char *buffer, const struct kernel_param *kp)
+> +{
+> +	return kstrtou64(buffer, 16, (u64 *)kp->arg);
+> +}
+>   static int srpt_get_u64_x(char *buffer, const struct kernel_param *kp)
+>   {
+>   	return sprintf(buffer, "0x%016llx", *(u64 *)kp->arg);
+>   }
+> -module_param_call(srpt_service_guid, NULL, srpt_get_u64_x, &srpt_service_guid,
+> -		  0444);
+> +module_param_call(srpt_service_guid, srpt_set_u64_x, srpt_get_u64_x,
+> +		  &srpt_service_guid, 0444);
+>   MODULE_PARM_DESC(srpt_service_guid,
+>   		 "Using this value for ioc_guid, id_ext, and cm_listen_id instead of using the node_guid of the first HCA.");
+>   
 
