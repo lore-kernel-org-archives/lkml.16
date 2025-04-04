@@ -1,298 +1,214 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D76919DF66;
-	Fri,  4 Apr 2025 10:32:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC2811C8616
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 10:33:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743762769; cv=none; b=QK/7OywRfS0iM/EUsCQyvHntAeO73D2B4a4WtMG39hRuEHZ4JyCVpYg++/J3Ldbg80pCtXsPpIXGROaG+LvezRip2L1ieuCLZWwfgXmfU89hoZ7c83g1Ks1FrxEoOPEmEWxvkcXBKrf5NXRMa5G6dricWo8VFLuUi3+1F88HZA8=
+	t=1743762783; cv=none; b=AEnvBLxtqg49qoilQq9h5UoIX5vexj3y5FCwpgPBQsLCd3PLE503PHGYVppPiIXBqihvHrFpGBYc6+ILwsCAvKutN+5mP0zP9cLg5rnm0wUIESV4bk3t5Rvp5V8pVwJOpih5bPRqRNUuLXvt9AvwqxIZZHw2jBla6bcTy52d9/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743762769; c=relaxed/simple;
-	bh=RnB3hqCazfynhXC46ZCpg6iui2CdO8E5L3mhRcFt/kU=;
+	s=arc-20240116; t=1743762783; c=relaxed/simple;
+	bh=iIvZFKUo6HhC//luS8XmR1wJkVNAW0g10A8C29sCPWA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M+E+uOltO6jO817xg2WhfAbulCU7y4tsJUdk2TrNxo+Oe3wRCOe4ch8/hMDqMbOhQs+76/+JXYy3XVMk8LEU+SPE5QdafD/auppq5jC2d69swMX0CeE8aexKmT8dCZzDnw5PLiHuLLDECq60zI+1Jrkfkhf8pH1HwfV2mf9tdT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SdYgJILc; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=TgZWMDqD9btggDM8xhWE0JxWWb3IYUGZaIRHPib7yLHIhXKlVbQ4KFgivEoV3kjDYaWG4r2z/WcBaib4EsIEr3ESWVENQFgCq8/1WMCybbtqQCmUw4TuEM9d592IqNFERwfZDPF5Gj9z3/8XIYEzHJRkYp/EI44Vz+tP7fcoLiw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=wtvfVyF1; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=rNaxwECt; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=wtvfVyF1; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=rNaxwECt; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SdYgJILc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73BA7C4CEDD;
-	Fri,  4 Apr 2025 10:32:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743762769;
-	bh=RnB3hqCazfynhXC46ZCpg6iui2CdO8E5L3mhRcFt/kU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SdYgJILcljmS2dEju5a5G3ZhdswondY0YXolrLFuSzHVl1Qu7sD9zklAzlo/oFwlc
-	 kBjZSTQObCQUB4lZZLouYFyGkiz3mxdjjnrZq5gDe4ozPtmwRL22f2ERSD2jL58mJ7
-	 iHyGfr8tOh37pkOX5FEuYWEoVpIhmf/jqrOsqtZwqHLi1itnkBB6gX0sVsSqqf7zMI
-	 MfIK1asSZZwKCgkYryNjmSxoTugZZfiFqJO4UucNsOkTh2zfQeVLAWIYc000+T7qD3
-	 QfRGe2lT19kPVgaUiqR5up2BXfQw6202F4Dkdk6UAKuAN8vbOb2wT2FvPxRZdTWLm0
-	 ioqcTZUjrp51Q==
-Date: Fri, 4 Apr 2025 12:32:46 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
-Cc: alexandre.belloni@bootlin.com, robh@kernel.org, krzk+dt@kernel.org, 
-	conor+dt@kernel.org, jarkko.nikula@linux.intel.com, linux-i3c@lists.infradead.org, 
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	andersson@kernel.org, konradybcio@kernel.org
-Subject: Re: [PATCH v3 2/3] i3c: master: Add Qualcomm I3C controller driver
-Message-ID: <20250404-provocative-mayfly-of-drama-eeddc1@shite>
-References: <20250403134644.3935983-1-quic_msavaliy@quicinc.com>
- <20250403134644.3935983-3-quic_msavaliy@quicinc.com>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="wtvfVyF1";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="rNaxwECt";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="wtvfVyF1";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="rNaxwECt"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 1CCB81F385;
+	Fri,  4 Apr 2025 10:33:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1743762780; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qNIU3WIQ6pKBKbu8eUDqiDF++dbLxGd1edJKIVG9ftQ=;
+	b=wtvfVyF1uqTp6CeKdjVGf9hR/SL8AaQXeg+zA5+E7Ibo12o76AsQ+Tzjx6TXgntPrsKv7/
+	5mIdmg3f6JuxyYGjmc0lJ16YKNSIDEOgHuEGdeTSYaDeLceAZiHY5SFVU040EO0pPaEqjG
+	E1KCg3vUjlcxn9tDenG+qboPS1jcvME=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1743762780;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qNIU3WIQ6pKBKbu8eUDqiDF++dbLxGd1edJKIVG9ftQ=;
+	b=rNaxwECtXv9s5nLbHzHDbkc8jlD1PMK06gCppoL7owyHFRAcYnwWigIuxp4TikTCEABww8
+	VmPpwsp5+1nrvoCQ==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1743762780; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qNIU3WIQ6pKBKbu8eUDqiDF++dbLxGd1edJKIVG9ftQ=;
+	b=wtvfVyF1uqTp6CeKdjVGf9hR/SL8AaQXeg+zA5+E7Ibo12o76AsQ+Tzjx6TXgntPrsKv7/
+	5mIdmg3f6JuxyYGjmc0lJ16YKNSIDEOgHuEGdeTSYaDeLceAZiHY5SFVU040EO0pPaEqjG
+	E1KCg3vUjlcxn9tDenG+qboPS1jcvME=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1743762780;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qNIU3WIQ6pKBKbu8eUDqiDF++dbLxGd1edJKIVG9ftQ=;
+	b=rNaxwECtXv9s5nLbHzHDbkc8jlD1PMK06gCppoL7owyHFRAcYnwWigIuxp4TikTCEABww8
+	VmPpwsp5+1nrvoCQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0CD351364F;
+	Fri,  4 Apr 2025 10:33:00 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id jt/TAly172cpIwAAD6G6ig
+	(envelope-from <jack@suse.cz>); Fri, 04 Apr 2025 10:33:00 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id BB372A07E6; Fri,  4 Apr 2025 12:32:59 +0200 (CEST)
+Date: Fri, 4 Apr 2025 12:32:59 +0200
+From: Jan Kara <jack@suse.cz>
+To: Edward Adam Davis <eadavis@qq.com>
+Cc: syzbot+4d7cd7dd0ce1aa8d5c65@syzkaller.appspotmail.com, jack@suse.cz, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Re: [PATCH] isofs: Prevent the use of too small fid
+Message-ID: <5lnoza375x4ap3kaunr4w66j7e7eui6kowk72s67ky3wchd6uz@ek2pfltls6ss>
+References: <67eee51c.050a0220.9040b.0240.GAE@google.com>
+ <tencent_9C8CB8A7E7C6C512C7065DC98B6EDF6EC606@qq.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250403134644.3935983-3-quic_msavaliy@quicinc.com>
+In-Reply-To: <tencent_9C8CB8A7E7C6C512C7065DC98B6EDF6EC606@qq.com>
+X-Spam-Level: 
+X-Spamd-Result: default: False [-2.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	TAGGED_RCPT(0.00)[4d7cd7dd0ce1aa8d5c65];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FREEMAIL_TO(0.00)[qq.com];
+	FREEMAIL_ENVRCPT(0.00)[qq.com];
+	RCPT_COUNT_FIVE(0.00)[6];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[3];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_LAST(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email]
+X-Spam-Score: -2.30
+X-Spam-Flag: NO
 
-On Thu, Apr 03, 2025 at 07:16:43PM GMT, Mukesh Kumar Savaliya wrote:
-> Add support for the Qualcomm I3C controller driver, which implements
-> I3C master functionality as defined in the MIPI Alliance Specification
-> for I3C, Version 1.0.
+On Fri 04-04-25 13:31:29, Edward Adam Davis wrote:
+> syzbot reported a slab-out-of-bounds Read in isofs_fh_to_parent. [1]
 > 
-> This driver supports master role in SDR mode.
+> The handle_bytes value passed in by the reproducing program is equal to 12.
+> In handle_to_path(), only 12 bytes of memory are allocated for the structure
+> file_handle->f_handle member, which causes an out-of-bounds access when
+> accessing the member parent_block of the structure isofs_fid in isofs,
+> because accessing parent_block requires at least 16 bytes of f_handle.
+> Here, fh_len is used to indirectly confirm that the value of handle_bytes
+> is greater than 3 before accessing parent_block.
 > 
-> Unlike some other I3C master controllers, this implementation
-> does not support In-Band Interrupts (IBI) and Hot-join requests.
+> [1]
+> BUG: KASAN: slab-out-of-bounds in isofs_fh_to_parent+0x1b8/0x210 fs/isofs/export.c:183
+> Read of size 4 at addr ffff0000cc030d94 by task syz-executor215/6466
+> CPU: 1 UID: 0 PID: 6466 Comm: syz-executor215 Not tainted 6.14.0-rc7-syzkaller-ga2392f333575 #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+> Call trace:
+>  show_stack+0x2c/0x3c arch/arm64/kernel/stacktrace.c:466 (C)
+>  __dump_stack lib/dump_stack.c:94 [inline]
+>  dump_stack_lvl+0xe4/0x150 lib/dump_stack.c:120
+>  print_address_description mm/kasan/report.c:408 [inline]
+>  print_report+0x198/0x550 mm/kasan/report.c:521
+>  kasan_report+0xd8/0x138 mm/kasan/report.c:634
+>  __asan_report_load4_noabort+0x20/0x2c mm/kasan/report_generic.c:380
+>  isofs_fh_to_parent+0x1b8/0x210 fs/isofs/export.c:183
+>  exportfs_decode_fh_raw+0x2dc/0x608 fs/exportfs/expfs.c:523
+>  do_handle_to_path+0xa0/0x198 fs/fhandle.c:257
+>  handle_to_path fs/fhandle.c:385 [inline]
+>  do_handle_open+0x8cc/0xb8c fs/fhandle.c:403
+>  __do_sys_open_by_handle_at fs/fhandle.c:443 [inline]
+>  __se_sys_open_by_handle_at fs/fhandle.c:434 [inline]
+>  __arm64_sys_open_by_handle_at+0x80/0x94 fs/fhandle.c:434
+>  __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
+>  invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:49
+>  el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:132
+>  do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:151
+>  el0_svc+0x54/0x168 arch/arm64/kernel/entry-common.c:744
+>  el0t_64_sync_handler+0x84/0x108 arch/arm64/kernel/entry-common.c:762
+>  el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
 > 
-> Signed-off-by: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
+> Allocated by task 6466:
+>  kasan_save_stack mm/kasan/common.c:47 [inline]
+>  kasan_save_track+0x40/0x78 mm/kasan/common.c:68
+>  kasan_save_alloc_info+0x40/0x50 mm/kasan/generic.c:562
+>  poison_kmalloc_redzone mm/kasan/common.c:377 [inline]
+>  __kasan_kmalloc+0xac/0xc4 mm/kasan/common.c:394
+>  kasan_kmalloc include/linux/kasan.h:260 [inline]
+>  __do_kmalloc_node mm/slub.c:4294 [inline]
+>  __kmalloc_noprof+0x32c/0x54c mm/slub.c:4306
+>  kmalloc_noprof include/linux/slab.h:905 [inline]
+>  handle_to_path fs/fhandle.c:357 [inline]
+>  do_handle_open+0x5a4/0xb8c fs/fhandle.c:403
+>  __do_sys_open_by_handle_at fs/fhandle.c:443 [inline]
+>  __se_sys_open_by_handle_at fs/fhandle.c:434 [inline]
+>  __arm64_sys_open_by_handle_at+0x80/0x94 fs/fhandle.c:434
+>  __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
+>  invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:49
+>  el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:132
+>  do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:151
+>  el0_svc+0x54/0x168 arch/arm64/kernel/entry-common.c:744
+>  el0t_64_sync_handler+0x84/0x108 arch/arm64/kernel/entry-common.c:762
+>  el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
+> 
+> Reported-by: syzbot+4d7cd7dd0ce1aa8d5c65@syzkaller.appspotmail.com
+> Closes: https://syzkaller.appspot.com/bug?extid=4d7cd7dd0ce1aa8d5c65
+> Tested-by: syzbot+4d7cd7dd0ce1aa8d5c65@syzkaller.appspotmail.com
+> Signed-off-by: Edward Adam Davis <eadavis@qq.com>
+
+Thanks! This is indeed an old bug :). Added to my tree.
+
+								Honza
+
 > ---
->  drivers/i3c/master/Kconfig         |   13 +
->  drivers/i3c/master/Makefile        |    1 +
->  drivers/i3c/master/i3c-qcom-geni.c | 1099 ++++++++++++++++++++++++++++
->  3 files changed, 1113 insertions(+)
->  create mode 100644 drivers/i3c/master/i3c-qcom-geni.c
+>  fs/isofs/export.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/i3c/master/Kconfig b/drivers/i3c/master/Kconfig
-> index 77da199c7413..30b768df94c9 100644
-> --- a/drivers/i3c/master/Kconfig
-> +++ b/drivers/i3c/master/Kconfig
-> @@ -44,6 +44,19 @@ config SVC_I3C_MASTER
->  	help
->  	  Support for Silvaco I3C Dual-Role Master Controller.
+> diff --git a/fs/isofs/export.c b/fs/isofs/export.c
+> index 35768a63fb1d..421d247fae52 100644
+> --- a/fs/isofs/export.c
+> +++ b/fs/isofs/export.c
+> @@ -180,7 +180,7 @@ static struct dentry *isofs_fh_to_parent(struct super_block *sb,
+>  		return NULL;
 >  
-> +config I3C_QCOM_GENI
-> +	tristate "Qualcomm Technologies Inc.'s I3C controller driver"
-> +	depends on I3C
-> +	depends on QCOM_GENI_SE
-> +	help
-> +	  This driver supports QUPV3 GENI based I3C controller in master
-> +	  mode on the Qualcomm Technologies Inc.s SoCs. If you say yes to
-> +	  this option, support will be included for the built-in I3C interface
-> +	  on the Qualcomm Technologies Inc.s SoCs.
-> +
-> +	  This driver can also be built as a module.  If so, the module
-> +	  will be called i3c-qcom-geni.
-> +
->  config MIPI_I3C_HCI
->  	tristate "MIPI I3C Host Controller Interface driver (EXPERIMENTAL)"
->  	depends on I3C
-> diff --git a/drivers/i3c/master/Makefile b/drivers/i3c/master/Makefile
-> index 3e97960160bc..bc11eecd4692 100644
-> --- a/drivers/i3c/master/Makefile
-> +++ b/drivers/i3c/master/Makefile
-> @@ -4,3 +4,4 @@ obj-$(CONFIG_DW_I3C_MASTER)		+= dw-i3c-master.o
->  obj-$(CONFIG_AST2600_I3C_MASTER)	+= ast2600-i3c-master.o
->  obj-$(CONFIG_SVC_I3C_MASTER)		+= svc-i3c-master.o
->  obj-$(CONFIG_MIPI_I3C_HCI)		+= mipi-i3c-hci/
-> +obj-$(CONFIG_I3C_QCOM_GENI)		+= i3c-qcom-geni.o
-
-Did you just add entry to the end of file? No, don't break ordering.
-That's a standard rule for most subsystems.
-
-...
-
-> +irqret:
-> +	if (m_stat)
-> +		writel_relaxed(m_stat, gi3c->se.base + SE_GENI_M_IRQ_CLEAR);
-> +
-> +	if (dma) {
-> +		if (dm_tx_st)
-> +			writel_relaxed(dm_tx_st, gi3c->se.base + SE_DMA_TX_IRQ_CLR);
-> +		if (dm_rx_st)
-> +			writel_relaxed(dm_rx_st, gi3c->se.base + SE_DMA_RX_IRQ_CLR);
-> +	}
-> +
-> +	/* if this is err with done-bit not set, handle that through timeout. */
-> +	if (m_stat & M_CMD_DONE_EN || m_stat & M_CMD_ABORT_EN) {
-> +		writel_relaxed(0, gi3c->se.base + SE_GENI_TX_WATERMARK_REG);
-> +		complete(&gi3c->done);
-> +	} else if (dm_tx_st & TX_DMA_DONE || dm_rx_st & RX_DMA_DONE	||
-> +		dm_rx_st & RX_RESET_DONE) {
-> +		complete(&gi3c->done);
-> +	}
-> +
-> +	spin_unlock_irqrestore(&gi3c->irq_lock, flags);
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static int i3c_geni_runtime_get_mutex_lock(struct geni_i3c_dev *gi3c)
-> +{
-
-You miss sparse/lockdep annotations.
-
-> +	int ret;
-> +
-> +	mutex_lock(&gi3c->lock);
-> +	reinit_completion(&gi3c->done);
-> +	ret = pm_runtime_get_sync(gi3c->se.dev);
-> +	if (ret < 0) {
-> +		dev_err(gi3c->se.dev, "error turning on SE resources:%d\n", ret);
-> +		pm_runtime_put_noidle(gi3c->se.dev);
-> +		/* Set device in suspended since resume failed */
-> +		pm_runtime_set_suspended(gi3c->se.dev);
-> +		mutex_unlock(&gi3c->lock);
-
-Either you lock or don't lock, don't mix these up.
-
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void i3c_geni_runtime_put_mutex_unlock(struct geni_i3c_dev *gi3c)
-> +{
-
-Missing annotations.
-
-> +	pm_runtime_mark_last_busy(gi3c->se.dev);
-> +	pm_runtime_put_autosuspend(gi3c->se.dev);
-> +	mutex_unlock(&gi3c->lock);
-> +}
-> +
-> +static void geni_i3c_abort_xfer(struct geni_i3c_dev *gi3c)
-> +{
-> +	unsigned long time_remaining;
-> +	unsigned long flags;
-> +
-> +	reinit_completion(&gi3c->done);
-> +	spin_lock_irqsave(&gi3c->irq_lock, flags);
-> +	geni_i3c_handle_err(gi3c, GENI_TIMEOUT);
-> +	geni_se_abort_m_cmd(&gi3c->se);
-> +	spin_unlock_irqrestore(&gi3c->irq_lock, flags);
-> +	time_remaining = wait_for_completion_timeout(&gi3c->done, XFER_TIMEOUT);
-> +	if (!time_remaining)
-> +		dev_err(gi3c->se.dev, "Timeout abort_m_cmd\n");
-> +}
-
-...
-
-> +
-> +static int i3c_geni_resources_init(struct geni_i3c_dev *gi3c, struct platform_device *pdev)
-> +{
-> +	int ret;
-> +
-> +	gi3c->se.base = devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(gi3c->se.base))
-> +		return PTR_ERR(gi3c->se.base);
-> +
-> +	gi3c->se.clk = devm_clk_get(&pdev->dev, "se");
-> +	if (IS_ERR(gi3c->se.clk))
-> +		return dev_err_probe(&pdev->dev, PTR_ERR(gi3c->se.clk),
-> +							"Unable to get serial engine core clock: %pe\n",
-> +							gi3c->se.clk);
-
-Totally messed indentation.
-
-> +	ret = geni_icc_get(&gi3c->se, NULL);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Set the bus quota to a reasonable value for register access */
-> +	gi3c->se.icc_paths[GENI_TO_CORE].avg_bw = GENI_DEFAULT_BW;
-> +	gi3c->se.icc_paths[CPU_TO_GENI].avg_bw = GENI_DEFAULT_BW;
-> +	ret = geni_icc_set_bw(&gi3c->se);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Default source clock (se-clock-frequency) freq is 100Mhz */
-> +	gi3c->clk_src_freq = KHZ(100000);
-
-And why can't you use clk_get_rate()?
-
-> +
-> +	return 0;
-> +}
-> +
-> +static int geni_i3c_probe(struct platform_device *pdev)
-> +{
-> +	u32 proto, tx_depth, fifo_disable;
-> +	struct geni_i3c_dev *gi3c;
-
-Just store pdev->dev in local dev variable, to simplify everything here.
-
-> +	int ret;
-> +
-> +	gi3c = devm_kzalloc(&pdev->dev, sizeof(*gi3c), GFP_KERNEL);
-> +	if (!gi3c)
-> +		return -ENOMEM;
-> +
-> +	gi3c->se.dev = &pdev->dev;
-> +	gi3c->se.wrapper = dev_get_drvdata(pdev->dev.parent);
-> +
-> +	init_completion(&gi3c->done);
-> +	mutex_init(&gi3c->lock);
-> +	spin_lock_init(&gi3c->irq_lock);
-> +	platform_set_drvdata(pdev, gi3c);
-> +
-> +	ret = i3c_geni_resources_init(gi3c, pdev);
-> +	if (ret)
-> +		return dev_err_probe(&pdev->dev, ret, "Error Initializing GENI Resources\n");
-> +
-> +	gi3c->irq = platform_get_irq(pdev, 0);
-> +	if (gi3c->irq < 0)
-> +		return dev_err_probe(&pdev->dev, gi3c->irq, "Error getting IRQ number for I3C\n");
-> +
-> +	ret = devm_request_irq(&pdev->dev, gi3c->irq, geni_i3c_irq,
-> +			       IRQF_NO_AUTOEN, dev_name(&pdev->dev), gi3c);
-> +	if (ret)
-> +		return dev_err_probe(&pdev->dev, ret, "Error registering core IRQ\n");
-> +
-> +	ret = geni_se_resources_on(&gi3c->se);
-> +	if (ret)
-> +		return dev_err_probe(&pdev->dev, ret, "Error turning resources ON\n");
-> +
-> +	proto = geni_se_read_proto(&gi3c->se);
-> +	if (proto != GENI_SE_I3C) {
-> +		geni_se_resources_off(&gi3c->se);
-> +		return dev_err_probe(&pdev->dev, -ENXIO, "Invalid proto %d\n", proto);
-> +	}
-> +
-> +	fifo_disable = readl_relaxed(gi3c->se.base + GENI_IF_DISABLE_RO);
-> +	if (fifo_disable) {
-> +		geni_se_resources_off(&gi3c->se);
-> +		return dev_err_probe(&pdev->dev, -ENXIO, "GPI DMA mode not supported\n");
-> +	}
-> +
-> +	tx_depth = geni_se_get_tx_fifo_depth(&gi3c->se);
-> +	gi3c->tx_wm = tx_depth - 1;
-> +	geni_se_init(&gi3c->se, gi3c->tx_wm, tx_depth);
-> +	geni_se_config_packing(&gi3c->se, BITS_PER_BYTE, PACKING_BYTES_PW, true, true, true);
-> +	geni_se_resources_off(&gi3c->se);
-> +	dev_dbg(&pdev->dev, "i3c fifo/se-dma mode. fifo depth:%d\n", tx_depth);
-> +
-> +	pm_runtime_set_autosuspend_delay(gi3c->se.dev, I3C_AUTO_SUSPEND_DELAY);
-> +	pm_runtime_use_autosuspend(gi3c->se.dev);
-> +	pm_runtime_set_active(gi3c->se.dev);
-> +	pm_runtime_enable(gi3c->se.dev);
-> +
-> +	ret = i3c_master_register(&gi3c->ctrlr, &pdev->dev, &geni_i3c_master_ops, false);
-> +	if (ret) {
-> +		pm_runtime_disable(gi3c->se.dev);
-> +		pm_runtime_set_suspended(gi3c->se.dev);
-> +		pm_runtime_dont_use_autosuspend(gi3c->se.dev);
-> +		return ret;
-> +	}
-> +
-> +	return ret;
-
-return 0;
-
-> +}
-
-Best regards,
-Krzysztof
-
+>  	return isofs_export_iget(sb,
+> -			fh_len > 2 ? ifid->parent_block : 0,
+> +			fh_len > 3 ? ifid->parent_block : 0,
+>  			ifid->parent_offset,
+>  			fh_len > 4 ? ifid->parent_generation : 0);
+>  }
+> -- 
+> 2.43.0
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
