@@ -1,109 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77D2413D539;
-	Fri,  4 Apr 2025 17:22:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E73A211A23
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 17:22:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743787325; cv=none; b=D6W9CBE2S68Kh1GO5W3zfrLNFoY5AFSMZgmmN721N8sLuLtgyFx6NmrZs9bZMNN3WGM9L95r7fUVXGhDfKw7g1Ws92FBWytxZZHju8Kml5pqOAbTUfU8fkVHYi8E6usivtPSd6TVqyOSd566Ieph14SDiu2B02f59MliPchFH64=
+	t=1743787352; cv=none; b=NPuDPROxFdavC5eSpi4qBNlNiLQBYhIuI76m3MI9BqqvWu4BA7ElDwStzUzOSON6NaNQo61d1hfn2OawSxMrbs4UFmvbrLDK0lvP7dIN2hbEYZFtTWVMUSPHBnCFx1CKeB0tFRkDrqLSZUbaaxZRJQGHJoF9ANyFQOARu/Y46P8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743787325; c=relaxed/simple;
-	bh=Y9XxofYqasuo0zueCm8YR/pkUi2kYgS91APGyJHgwpM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=V5dzopNwsmP+O7gZyJJ6NVG5X6XPKFIVjo5Lb4PEvlCz3zLmiA5DPVQlD4vJANJLshRM/u3cHjA3auf0879duCcLX2wonnuQCv2KmAiB7if1Z2xix702efkKpmsngD2cyKnk2uMRF1hrRQZOy6d6GMoLRnFVBfvpn0GB9WNDK7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nyxzCXgE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743787352; c=relaxed/simple;
+	bh=ZJigoLO0XUuv8rpOLqbma7w6louNn+EBbne/BVcrNrw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LAYUcK4bngVlzt5Org2q341aVceVqsUPEStkLQTNJ2JV7zmApFntEZJ8WCX4zlANQTSCC+XN6ArJornkEX6Rp2e86a+Ed/Dj5K7AvZJqouDbiQRCp1aaS8a+AnBo7s7x+I216K8NnA0Iw7m+PRCdqEVpmqiWnK3ANSOOI05pOXQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=Pn1Ioa1P; arc=none smtp.client-ip=209.85.219.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nyxzCXgE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2636C4CEDD;
-	Fri,  4 Apr 2025 17:22:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743787324;
-	bh=Y9XxofYqasuo0zueCm8YR/pkUi2kYgS91APGyJHgwpM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=nyxzCXgE2s8Zhnayugacd0XLFgX4a+oIOzX+4s7WZ9ikZgU3i6dAHU+0LpQvLNjVK
-	 tFRBqPNymcgcR9WCdf9xKS1S9hN75azXjb/uHCx4RkgVILpwuE9WyAC9Nkivd0n+LT
-	 /IaAUezTl7WG1gfMG1VLOXkgjoV4lFTB1fAjuU0S1FDGMXb8VjMKCsA/ShGwtbWW70
-	 5va3/uMd83ImYb03gRkCr/Kb2dFxvtynevh2nGzQdMwg0DPT+qrBYg+96BqtF3+0xk
-	 nNIL5DSlClKGxbw1R3P5vBCfWNFq6xlePbsz/tCM+6vzRYekVXRdDwZy6bmK/PIEnk
-	 7pxEVdfjdCQXg==
-Message-ID: <7962134d-6380-44a6-8d1e-02aafa510531@kernel.org>
-Date: Fri, 4 Apr 2025 19:22:00 +0200
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="Pn1Ioa1P"
+Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6e8f94c2698so12293186d6.0
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 10:22:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1743787348; x=1744392148; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=PATlcXEUf2c7HZ7OV7dOmgWFjlDBED3/6vIgl63QLNg=;
+        b=Pn1Ioa1PfHYTmcqpzBqskwaid4oPLzSx8MT6dmJTmUyU88hkCwBI1WlAwk1e6UZN8W
+         9EwI1xbTpEp1gGViLvCEA49BswtHkFaikTn189/YeY9DXxsqPECYoqbXCKZAHwx4mKLN
+         S/fnJvQ6Ju9Yhq+o1sbDAsnJyy/ZLLLCLT4+fHDJhK3Ctc2jm9iQgnfMK9ugVVHhozZU
+         yiamORU2zpN8LR7d58Nju9ujYgXrZqRNHAVxmSGaO4/KEfzmGGw8zWJ0DkxGiZzVIV1D
+         sZ9mNbfmsz60GTRoSRbqSZ/hspTklwn5Ytagjlqpc55VXRZQV8r8t5xO7NS6c74qoKmi
+         WfNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743787348; x=1744392148;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PATlcXEUf2c7HZ7OV7dOmgWFjlDBED3/6vIgl63QLNg=;
+        b=RvNUAg3o/fy9+UCQCpf0/YLrsvbZuXYM8ho1RyqbtEDz9t932xGiuRQjgrxe/vYveK
+         JnCS9hCzg6WbC9zTxfoHh4KQfcqASaMo5ucpavnZgEqgHAayAJYE9fW6cY1MBehp6Jbn
+         NJJ75Zf/H5AM9PLJkNQsKs2RSL4LRLl3EnhWu8Ef6UV/QV7sD5We0jj8nq82qD1T26gY
+         K2NAzQBwrTLEJdIUUZfkigvfY4yRE+nNHy3N+CSkyC5fIZNTALxIy51GXAaWy1/HWEKs
+         DHQ30ZIQNNKHJ480WJHmgOKlznfmACmJV5H2t+lb2oPGjeP/ndvJfvuKSXODVtih7E1K
+         Ekhg==
+X-Forwarded-Encrypted: i=1; AJvYcCVusNprbY0wcUSEDaUTp2+OHfAF/0VVjUeMSropgkDWTW+3xW6uJf5mJOV3RDur5+9RkD8Ut/BTaX7yMx0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJl3Sl541GZgB1KZgSjugh9/8soUl2Ei/XfZcwBURth2ppw53b
+	f9GmBPZdyWXlcg8bgSJEWNlB13hBBeWrvb0z6Ovpn78zZV1IO0NFLgKeh5NdbKg=
+X-Gm-Gg: ASbGncuce5hEwLz3KTvu6gsiWe+BFo9utCd19H3PL9ZE3iTd8EYePz8v1MvELj4YXAb
+	eC/c/AafR6PbIfXzBRokddVUCa3GXLIJF0TjpZY92Y2hj/PRUPiA6/u2eJwo6vwqZDovCB6twPC
+	bvN45Gv7+5ZVXrFkGJZyadFyMEEWQTU48xgi9C0pY6LiLkmxWQs7aNzffLQq7P2M/fzvUawiXsq
+	CFXBkPodCGY5HSBEM/XmXGYNREzXG04nbggzGfhrFzqY64kKtfeFBfsqVJchUaUAsOLZUW7LEXx
+	V8vIJldhvl1m6BxxyTo6HcyaGOSGLkYNDG6l2sfhug==
+X-Google-Smtp-Source: AGHT+IHe60/Uu4PrKphc2rO5BSUpl63xrVt2LuOqa7v9kFyQkG6E0kZxDVSPsYQMFyOC5OblBZrO7g==
+X-Received: by 2002:a05:6214:27e4:b0:6ea:d604:9e49 with SMTP id 6a1803df08f44-6f064b2757emr56473726d6.34.1743787348348;
+        Fri, 04 Apr 2025 10:22:28 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F ([2620:10d:c091:500::6:3e6e])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6ef0efc12besm23949416d6.16.2025.04.04.10.22.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Apr 2025 10:22:27 -0700 (PDT)
+Date: Fri, 4 Apr 2025 13:22:25 -0400
+From: Gregory Price <gourry@gourry.net>
+To: Robert Richter <rrichter@amd.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+	Terry Bowman <terry.bowman@amd.com>
+Subject: Re: [PATCH] cxl/region: Continue recalculating position during sort
+Message-ID: <Z_AVURWuOL75DPqE@gourry-fedora-PF4VCD3F>
+References: <20250218132356.1809075-1-rrichter@amd.com>
+ <20250218132356.1809075-5-rrichter@amd.com>
+ <Z-_8kRHep5LVeuvS@gourry-fedora-PF4VCD3F>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] iio: imu: inv_icm42600: switch to use generic name
- irq get
-To: jean-baptiste.maneyrol@tdk.com, Jonathan Cameron <jic23@kernel.org>,
- Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250404-iio-imu-inv-icm42600-rework-interrupt-using-names-v1-0-72ed5100da14@tdk.com>
- <20250404-iio-imu-inv-icm42600-rework-interrupt-using-names-v1-2-72ed5100da14@tdk.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
- FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
- QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
- gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
- /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
- iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
- VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
- 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
- xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
- eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
- AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
- MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
- Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
- MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
- OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
- GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
- 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
- YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
- 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
- BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
- JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
- 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
- YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
- Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
- ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
- vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
- oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
- lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
- t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
- uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
- 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
- 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20250404-iio-imu-inv-icm42600-rework-interrupt-using-names-v1-2-72ed5100da14@tdk.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z-_8kRHep5LVeuvS@gourry-fedora-PF4VCD3F>
 
-On 04/04/2025 17:52, Jean-Baptiste Maneyrol via B4 Relay wrote:
->  
-> +	/* get INT1 only supported interrupt */
-> +	fwnode = dev_fwnode(dev);
-> +	if (!fwnode)
-> +		return -ENODEV;
-> +	irq = fwnode_irq_get_byname(fwnode, "INT1");
-> +	if (irq < 0)
-> +		return dev_err_probe(dev, irq, "error missing INT1 interrupt\n");
+On Fri, Apr 04, 2025 at 10:36:49AM -0500, Gregory Price wrote:
+> The auto decoder probe proess overwrites the endpoint position
+> temporarily to record its temporary location in the region target list.
+> This patch restores the pos recalculation during the sort target process
+> so that decoder probe order doesn't affect region probe.
+> 
+> Signed-off-by: Gregory Price <gourry@gourry.net>
 
-That's an ABI break.
+Disregard this patch, it appears to break is subtly different ways now -
+sigh :[.
 
-Best regards,
-Krzysztof
+~Gregory
