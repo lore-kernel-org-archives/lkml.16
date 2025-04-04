@@ -1,112 +1,102 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2938412D1F1
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 13:39:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B101E12DD95;
+	Fri,  4 Apr 2025 13:40:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743773965; cv=none; b=Hp/Jsybu30VfVDMmuOl7h9GT0mKJFA/ooHfXEbkzEEjX/fFpYCvtOCkV9XkvAEfptFdqBk1qZnC3OcnCUpa5WFtLK8FqdIrlthv4AMKenVOpLBC490NiHn01yHq5hHxpDTY2176lcvl4OmvrJemXu3fWSRWrAP8PCdiAG+YKEOw=
+	t=1743774042; cv=none; b=ekoCz+qdHR3ZVR/EAwp2e4XtPRqJOBpTVGYPJ+B+KCQA3CYUgcqCzw7ocFB7CkdRPY8T2+musHL/MDWFfXRg2Or2ikLhDRV5yJ+zxhqFZsAL2FQK49XUzopP4x+afxpNAicr9HhPAYIFmP3I84PfCiJrOdm25/iVUoFnJ0bQlpM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743773965; c=relaxed/simple;
-	bh=Gi8wr+GBzFfZ88My7G2EpRboGbN7NTb7ctyDaIu9ano=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MVfyhzmZTSpFs5kiU6RNA1ty7P9pncsGL7mLiVYpM66VK6M7MDr8HFSk0UrkJOP56kB2F9WD1VPhwWgmAmLzPGzlOyWulodq6KrYwTj7qXTfCmZbjk1KjkXzzcaEuWc2i7/rELPmYGJsCNPOyhc4ws7L5LHA2NifG43Z0Pdz27c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NX6A9ijJ; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NX6A9ijJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743773963; x=1775309963;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Gi8wr+GBzFfZ88My7G2EpRboGbN7NTb7ctyDaIu9ano=;
-  b=NX6A9ijJRe0bzibf5MMY5OItnB37y6dhfMCYRxgTXgjZ2AZ9DbllARyO
-   NRQGcM3IGrazafDmYgKg+X30wSwgzMO1h6PAOMXXOEOiceTiownGLJA7z
-   Xq7eagqsB/Gw68pY6SPdUcL0s8kmld6avg+2xLuOjUkIoYiuFJgF1IYhw
-   aVG50T1d7OuJDXPgmAZRL/rBtFtvUuUqp9+MR7w6o44wk4eOOLFOoJ0T8
-   0/RriSp61UsQweHpJaxR7P+cJKzxCBumoh/vBA7oUq7k1eJXw3HhexKZA
-   I12s1Auz3Rj93fdtXUEiaNO+e7oo5hq15+yrXVpFs+CqXh/ahI8YyHdMg
-   g==;
-X-CSE-ConnectionGUID: OugQJ+wRTZCwizPbKc/sNA==
-X-CSE-MsgGUID: zxnKe23VQeqhnuYS7BNXNg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11394"; a="56199040"
-X-IronPort-AV: E=Sophos;i="6.15,188,1739865600"; 
-   d="scan'208";a="56199040"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 06:39:23 -0700
-X-CSE-ConnectionGUID: t3Myw3EVS82qNUGWwgXDBg==
-X-CSE-MsgGUID: z9UQMbVfTZ6mAwnWqMAUzw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,188,1739865600"; 
-   d="scan'208";a="127073543"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 06:39:20 -0700
-Date: Fri, 4 Apr 2025 16:39:17 +0300
-From: Raag Jadav <raag.jadav@intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Greg KH <gregkh@linuxfoundation.org>, david.m.ertman@intel.com,
-	ira.weiny@intel.com, lee@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] mfd: core: Support auxiliary device
-Message-ID: <Z-_hBbqke1qPP_Gi@black.fi.intel.com>
-References: <20250403110053.1274521-1-raag.jadav@intel.com>
- <2025040336-ethically-regulate-3594@gregkh>
- <Z-_ESekESYYvMHeR@black.fi.intel.com>
- <Z-_QwB1cExN1emMF@smile.fi.intel.com>
- <Z-_SIbfBdMXXkkWG@black.fi.intel.com>
- <Z-_X2j0yzyLCS3r2@smile.fi.intel.com>
+	s=arc-20240116; t=1743774042; c=relaxed/simple;
+	bh=08nROLE83sH/QfN+ScKwvqbF/rDt1zpxINveXRGVxQQ=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=eD+PYcIztE7hxA3xDWhu2BBYeuKNoW+UQZE9izYaLHPIWzx2BRh2SDwYp9UUWgjb58yJmCERbhf+Xk2NwTmEnRuyUh+o7dp23vXPQn5KLv7Kt6aFYDidMcgxZxO33umd8NC4rSM3O00hqoAwUCGmF3bFLcN0MtLNKwWAerBsVlI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZTflt0wvpz6K9DN;
+	Fri,  4 Apr 2025 21:36:58 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id B59A11404F9;
+	Fri,  4 Apr 2025 21:40:38 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 4 Apr
+ 2025 15:40:38 +0200
+Date: Fri, 4 Apr 2025 14:40:36 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Gregory Price <gourry@gourry.net>
+CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<kernel-team@meta.com>, <dan.j.williams@intel.com>,
+	<vishal.l.verma@intel.com>, <dave.jiang@intel.com>, <dave@stgolabs.net>,
+	<alison.schofield@intel.com>, <ira.weiny@intel.com>
+Subject: Re: [PATCH v2] cxl: core/region - ignore interleave granularity
+ when ways=1
+Message-ID: <20250404144036.000021c1@huawei.com>
+In-Reply-To: <20250402232552.999634-1-gourry@gourry.net>
+References: <20250402232552.999634-1-gourry@gourry.net>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z-_X2j0yzyLCS3r2@smile.fi.intel.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Fri, Apr 04, 2025 at 04:00:10PM +0300, Andy Shevchenko wrote:
-> On Fri, Apr 04, 2025 at 03:35:45PM +0300, Raag Jadav wrote:
-> > On Fri, Apr 04, 2025 at 03:29:52PM +0300, Andy Shevchenko wrote:
-> > > On Fri, Apr 04, 2025 at 02:36:41PM +0300, Raag Jadav wrote:
-> > > > On Thu, Apr 03, 2025 at 03:02:47PM +0100, Greg KH wrote:
-> > > > > On Thu, Apr 03, 2025 at 04:30:53PM +0530, Raag Jadav wrote:
+On Wed,  2 Apr 2025 19:25:52 -0400
+Gregory Price <gourry@gourry.net> wrote:
+
+> When validating decoder IW/IG when setting up regions, the granularity
+> is irrelevant when iw=1 - all accesses will always route to the only
+> target anyway - so all ig values are "correct". Loosen the requirement
+> that `ig = (parent_iw * parent_ig)` when iw=1.
 > 
-> ...
+> On some Zen5 platforms, the platform BIOS specifies a 256-byte
+> interleave granularity window for host bridges when there is only
+> one target downstream.  This leads to Linux rejecting the configuration
+> of a region with a x2 root with two x1 hostbridges.
 > 
-> > > > > > 2. Should we allow auxiliary drivers to manage their own resources
-> > > > > >    (MEM, IO, IRQ etc)?
-> > > > > 
-> > > > > The resources are all shared by the "parent" device, that's what makes
-> > > > > aux drivers work, they need to handle this as there is no unique way to
-> > > > > carve up the resources here.
-> > > > > 
-> > > > > So I don't know how you would do this, sorry.
-> > > > 
-> > > > Perhaps we can carve it up in mfd_add_devices() using start and end members
-> > > > and error out if they overlap.
-> > > 
-> > > I don't think we want a flag day. If anything, it should be a new call.
-> > 
-> > Yes, I mean in mfd_add_auxiliary_device() (as in this patch).
-> > 
-> > > > Can't we still have a struct resource that is unique to that specific
-> > > > auxiliary device?
-> > > 
-> > > Oh, believe me, you won't do that. Save yourself from _a lot_ of troubles with
-> > > different cases when the shared resources are required.
-> > 
-> > I think we already have ignore_resource_conflicts flag as part of mfd_cell,
-> > no?
+> Decoder Programming:
+>    root - iw:2 ig:256
+>    hb1  - iw:1 ig:256  (Linux expects 512)
+>    hb2  - iw:1 ig:256  (Linux expects 512)
+>    ep1  - iw:2 ig:256
+>    ep2  - iw:2 ig:256
 > 
-> It's not so easy, and it's not the only thing that's needed. You can dive into
-> it and see how the request of the resource work. Also note the hardware that
-> has common registers. Again, using regmap solves most of these issues if not all.
+> This change allows all decoders downstream of a passthrough decoder to
+> also be configured as passthrough (iw:1 ig:X), but still disallows
+> downstream decoders from applying subsequent interleaves.
+> 
+> e.g. in the above example if there was another decoder south of hb1
+> attempting to interleave 2 endpoints - Linux would enforce hb1.ig=512
+> because the southern decoder would have iw:2 and require ig=pig*piw.
+> 
+> Signed-off-by: Gregory Price <gourry@gourry.net>
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Reasonable work around and good explanation.
 
-What if there are multiple types of resources including multiple ones
-of same type?
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-I know it's not common but we have such cases already in place.
+> ---
+>  drivers/cxl/core/region.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index 04bc6cad092c..dec262eadf9a 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -1553,7 +1553,7 @@ static int cxl_port_setup_targets(struct cxl_port *port,
+>  
+>  	if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags)) {
+>  		if (cxld->interleave_ways != iw ||
+> -		    cxld->interleave_granularity != ig ||
+> +		    (iw > 1 && cxld->interleave_granularity != ig) ||
+>  		    cxled->spa_range.start != p->res->start ||
+>  		    cxled->spa_range.end != p->res->end ||
+>  		    ((cxld->flags & CXL_DECODER_F_ENABLE) == 0)) {
 
-Raag
