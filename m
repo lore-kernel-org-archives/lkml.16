@@ -1,113 +1,254 @@
-Received: from pv50p00im-zteg10021401.me.com (pv50p00im-zteg10021401.me.com [17.58.6.47])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24A8119DF66
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 02:59:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92C2A1A3145;
+	Fri,  4 Apr 2025 02:59:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743735594; cv=none; b=uZhO0abKWjrGSBmtlnYM/eYHWly03I1uUYZIQwfyDnCDxNipUPHYuxCPMHiwwFsSVo5zGXrjB7kjl07/5T73P8pCy99RUMvcGDfyxSv/FiP5IBsr3FdUa+E3tEYtcy+zGcus95qB8kWAxYzXFJPMQlgYYxdJXh7ny3eyb5Ls/DE=
+	t=1743735595; cv=none; b=isDvbDiVo0yjDZb/fs8WFHHh9pHLhHk07M0iOkU2raVMMJuG4+PjcbspaQ82mxEXefEp39YCpmeXF7TzYuefJv3+Gz8GNpz+qFL3hH85loakul++n4bfGtigZ027S6Sf1Tsj5h+0/gYlxBwIajfgfk7NuPRRAFCNca1t99Btyhw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743735594; c=relaxed/simple;
-	bh=a59/dCArZpjmdu1CA2ns6K7frhrEdPJ4+b5B41x0SKk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Bnfz6I/nnc7ewZqVqo+IJSy6cdDu+QMYKnWcDMl7LnW/47oAJ4eiWZVLc2IZFSc1wSvOq2oaBlAlWUs3/fSci5UvXNZEe6OUfCBm7xCWPD61mtOxeVtYTgpY2YkRTRVL8m9RS9hYWA6WjdVFgh0iTMiusFxUFhVSI9f0JoZXhuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=icb1fn/E; arc=none smtp.client-ip=17.58.6.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
+	s=arc-20240116; t=1743735595; c=relaxed/simple;
+	bh=xMgbsjBv9Kef+UFcQ6l0JsE73pnNHHIi5V3EKTVvKZU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=o3OmKVHGLmO6DTcJTKw6TEpS7St29Bzh/4fsrexhJyP1jGdL9/GQIxi/CXY3QIv8WUWMKWl1OvDYc8evUqtQaKChoEEVjBBJa890c+1v+++jEkDQ8+o350kGK6hCWXOX5sD6NBnqWpeVkQ56FIMC/Q7aRQe3Moo+jiNXHac1cA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IWCsZoJx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="icb1fn/E"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-	s=1a1hai; bh=fG3CGqe+hvK5S3evRDdon69vZKGIehTLbtFqN3Fym2M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:x-icloud-hme;
-	b=icb1fn/E/NlnyCRVqy/8M6PrlMWO6CDU4dX2glMzFngDDg711ZTkm8yHSclRy4MLI
-	 L1ik1qVKxj2mCQwCACsTWjShOr3e0RyxuAel4INOws1+b5ATIj98vfmN3TWcDkIpws
-	 lcUY+C1ZNkFfaOgszw8/yPvGM0XP9zcs3R2rlrDIn93WzW8Jrep/Jnbk102H1kq83d
-	 MEBTReNAwVjSY3n91Nh9HG9VQP6j8VJiBBvle1Y+4tU3xkB2cTC3QUxPda51piDn1u
-	 cCbhJbCFDp3bhYdlXsKS9SErKeVbO9o3lxNdUtnA2+QbYAdqA/OujAHKuxsHKG1EUC
-	 iHa+kBrOv+caQ==
-Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
-	by pv50p00im-zteg10021401.me.com (Postfix) with ESMTPSA id D3BB88E0091;
-	Fri,  4 Apr 2025 02:59:45 +0000 (UTC)
-Message-ID: <f6dd3667-8528-4597-963f-75e78d7be733@icloud.com>
-Date: Fri, 4 Apr 2025 10:59:41 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IWCsZoJx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D85A7C4CEEA;
+	Fri,  4 Apr 2025 02:59:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743735595;
+	bh=xMgbsjBv9Kef+UFcQ6l0JsE73pnNHHIi5V3EKTVvKZU=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=IWCsZoJxuJf4uC4DHbLlZqGIlVn0yqULR8Xtwd1cvdcGj7FhgjRQsG2SZFQd0XerM
+	 CRUVey1D2fQtZTk306phmWw6frB7jh1SH8kVjnZg+Qubx0VBm/vyiWFIzZpWBR08PA
+	 /LZ/0lId4BBMvcDw1WOPh7PViu2YUoTQ+UAqMt+Y7hyQdMNBm+uZwkM3WH9Tcr5/23
+	 Vd8Ft9GnkB81oQy2ce+2bXpECXxW3bO6y598SZCfo3GvNV1vdgjQQvH5ZZ6EYT4wcG
+	 6pqTzBxnPTqB8+Dy9NGVG76jnC1SNKcdt17QiODpJwYElrrof8OiFD5VlOEZ+y99Gs
+	 jg+wxJbjyDYcA==
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Date: Thu, 03 Apr 2025 21:59:31 -0500
+Subject: [PATCH 10/19] arm/arm64: dts: imx: Drop redundant CPU
+ "clock-latency"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/1] device property: Add a note to the fwnode.h
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Zijun Hu <quic_zijuhu@quicinc.com>, linux-acpi@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
- Daniel Scally <djrscally@gmail.com>,
- Heikki Krogerus <heikki.krogerus@linux.intel.com>,
- Sakari Ailus <sakari.ailus@linux.intel.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Danilo Krummrich <dakr@kernel.org>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-References: <20250331163540.280606-1-andriy.shevchenko@linux.intel.com>
-Content-Language: en-US
-From: Zijun Hu <zijun_hu@icloud.com>
-In-Reply-To: <20250331163540.280606-1-andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: 1U1YPAE7jr6a27fniVEr3Z9tVBQ1j0QS
-X-Proofpoint-ORIG-GUID: 1U1YPAE7jr6a27fniVEr3Z9tVBQ1j0QS
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-04_01,2025-04-03_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adultscore=0
- mlxlogscore=999 malwarescore=0 bulkscore=0 mlxscore=0 clxscore=1011
- suspectscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2308100000 definitions=main-2504040020
+Message-Id: <20250403-dt-cpu-schema-v1-10-076be7171a85@kernel.org>
+References: <20250403-dt-cpu-schema-v1-0-076be7171a85@kernel.org>
+In-Reply-To: <20250403-dt-cpu-schema-v1-0-076be7171a85@kernel.org>
+To: Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, 
+ Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Samuel Holland <samuel@sholland.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Viresh Kumar <viresh.kumar@linaro.org>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Vincenzo Frascino <vincenzo.frascino@arm.com>, 
+ Liviu Dudau <liviu.dudau@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, 
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+ Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, 
+ Stephen Boyd <sboyd@kernel.org>, zhouyanjie@wanyeetech.com, 
+ Conor Dooley <conor@kernel.org>, 
+ Nicolas Ferre <nicolas.ferre@microchip.com>, 
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
+ Steen Hegelund <Steen.Hegelund@microchip.com>, 
+ Daniel Machon <daniel.machon@microchip.com>, UNGLinuxDriver@microchip.com, 
+ Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>, Heiko Stuebner <heiko@sntech.de>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, 
+ Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
+ Geert Uytterhoeven <geert+renesas@glider.be>, 
+ Magnus Damm <magnus.damm@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org, 
+ linux-pm@vger.kernel.org, linux-mediatek@lists.infradead.org, 
+ linux-arm-msm@vger.kernel.org, linux-mips@vger.kernel.org, 
+ imx@lists.linux.dev, linux-rockchip@lists.infradead.org, 
+ linux-amlogic@lists.infradead.org, linux-renesas-soc@vger.kernel.org
+X-Mailer: b4 0.15-dev
 
-On 2025/4/1 00:35, Andy Shevchenko wrote:
-> Add a note to the fwnode.h that the header should not be used
-> directly in the leaf drivers, they all should use the higher
-> level APIs and the respective headers.
-> 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
-> 
-> v2: added "...into the driver" piece at the end to remove ambiguity
-> 
->  include/linux/fwnode.h | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/include/linux/fwnode.h b/include/linux/fwnode.h
-> index 6fa0a268d538..4c4d3f93534c 100644
-> --- a/include/linux/fwnode.h
-> +++ b/include/linux/fwnode.h
-> @@ -2,6 +2,12 @@
->  /*
->   * fwnode.h - Firmware device node object handle type definition.
->   *
-> + * Note, this header is not meant to be used by the leaf drivers.
-> + * It provides the low level data types and definitions for the firmware
+The "clock-latency" property is part of the deprecated opp-v1 binding
+and is redundant if the opp-v2 table has equal or larger values in any
+"clock-latency-ns". The OPP tables have values of 150000, so it can be
+removed.
 
-Ack
+Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+---
+ arch/arm/boot/dts/nxp/imx/imx7s.dtsi      | 1 -
+ arch/arm64/boot/dts/freescale/imx8mm.dtsi | 4 ----
+ arch/arm64/boot/dts/freescale/imx8mn.dtsi | 4 ----
+ arch/arm64/boot/dts/freescale/imx8mp.dtsi | 4 ----
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi | 4 ----
+ 5 files changed, 17 deletions(-)
 
-> + * and device property providers. The respective API headers should
-> + * guarantee all the required data types and definitions without including
-> + * this header directly into the driver.
+diff --git a/arch/arm/boot/dts/nxp/imx/imx7s.dtsi b/arch/arm/boot/dts/nxp/imx/imx7s.dtsi
+index 2629968001a7..9235dd7e93bb 100644
+--- a/arch/arm/boot/dts/nxp/imx/imx7s.dtsi
++++ b/arch/arm/boot/dts/nxp/imx/imx7s.dtsi
+@@ -73,7 +73,6 @@ cpu0: cpu@0 {
+ 			device_type = "cpu";
+ 			reg = <0>;
+ 			clock-frequency = <792000000>;
+-			clock-latency = <61036>; /* two CLK32 periods */
+ 			clocks = <&clks IMX7D_CLK_ARM>;
+ 			cpu-idle-states = <&cpu_sleep_wait>;
+ 			operating-points-v2 = <&cpu0_opp_table>;
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+index 4de3bf22902b..cfebaa01217e 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+@@ -62,7 +62,6 @@ A53_0: cpu@0 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a53";
+ 			reg = <0x0>;
+-			clock-latency = <61036>; /* two CLK32 periods */
+ 			clocks = <&clk IMX8MM_CLK_ARM>;
+ 			enable-method = "psci";
+ 			i-cache-size = <0x8000>;
+@@ -83,7 +82,6 @@ A53_1: cpu@1 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a53";
+ 			reg = <0x1>;
+-			clock-latency = <61036>; /* two CLK32 periods */
+ 			clocks = <&clk IMX8MM_CLK_ARM>;
+ 			enable-method = "psci";
+ 			i-cache-size = <0x8000>;
+@@ -102,7 +100,6 @@ A53_2: cpu@2 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a53";
+ 			reg = <0x2>;
+-			clock-latency = <61036>; /* two CLK32 periods */
+ 			clocks = <&clk IMX8MM_CLK_ARM>;
+ 			enable-method = "psci";
+ 			i-cache-size = <0x8000>;
+@@ -121,7 +118,6 @@ A53_3: cpu@3 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a53";
+ 			reg = <0x3>;
+-			clock-latency = <61036>; /* two CLK32 periods */
+ 			clocks = <&clk IMX8MM_CLK_ARM>;
+ 			enable-method = "psci";
+ 			i-cache-size = <0x8000>;
+diff --git a/arch/arm64/boot/dts/freescale/imx8mn.dtsi b/arch/arm64/boot/dts/freescale/imx8mn.dtsi
+index a5f9cfb46e5d..848ba5e46ee6 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mn.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mn.dtsi
+@@ -62,7 +62,6 @@ A53_0: cpu@0 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a53";
+ 			reg = <0x0>;
+-			clock-latency = <61036>;
+ 			clocks = <&clk IMX8MN_CLK_ARM>;
+ 			enable-method = "psci";
+ 			i-cache-size = <0x8000>;
+@@ -83,7 +82,6 @@ A53_1: cpu@1 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a53";
+ 			reg = <0x1>;
+-			clock-latency = <61036>;
+ 			clocks = <&clk IMX8MN_CLK_ARM>;
+ 			enable-method = "psci";
+ 			i-cache-size = <0x8000>;
+@@ -102,7 +100,6 @@ A53_2: cpu@2 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a53";
+ 			reg = <0x2>;
+-			clock-latency = <61036>;
+ 			clocks = <&clk IMX8MN_CLK_ARM>;
+ 			enable-method = "psci";
+ 			i-cache-size = <0x8000>;
+@@ -121,7 +118,6 @@ A53_3: cpu@3 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a53";
+ 			reg = <0x3>;
+-			clock-latency = <61036>;
+ 			clocks = <&clk IMX8MN_CLK_ARM>;
+ 			enable-method = "psci";
+ 			i-cache-size = <0x8000>;
+diff --git a/arch/arm64/boot/dts/freescale/imx8mp.dtsi b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+index ce6793b2d57e..f8afdba71c36 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mp.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+@@ -65,7 +65,6 @@ A53_0: cpu@0 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a53";
+ 			reg = <0x0>;
+-			clock-latency = <61036>;
+ 			clocks = <&clk IMX8MP_CLK_ARM>;
+ 			enable-method = "psci";
+ 			i-cache-size = <0x8000>;
+@@ -86,7 +85,6 @@ A53_1: cpu@1 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a53";
+ 			reg = <0x1>;
+-			clock-latency = <61036>;
+ 			clocks = <&clk IMX8MP_CLK_ARM>;
+ 			enable-method = "psci";
+ 			i-cache-size = <0x8000>;
+@@ -105,7 +103,6 @@ A53_2: cpu@2 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a53";
+ 			reg = <0x2>;
+-			clock-latency = <61036>;
+ 			clocks = <&clk IMX8MP_CLK_ARM>;
+ 			enable-method = "psci";
+ 			i-cache-size = <0x8000>;
+@@ -124,7 +121,6 @@ A53_3: cpu@3 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a53";
+ 			reg = <0x3>;
+-			clock-latency = <61036>;
+ 			clocks = <&clk IMX8MP_CLK_ARM>;
+ 			enable-method = "psci";
+ 			i-cache-size = <0x8000>;
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+index d51de8d899b2..d27b824995eb 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+@@ -106,7 +106,6 @@ A53_0: cpu@0 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a53";
+ 			reg = <0x0>;
+-			clock-latency = <61036>; /* two CLK32 periods */
+ 			clocks = <&clk IMX8MQ_CLK_ARM>;
+ 			enable-method = "psci";
+ 			i-cache-size = <0x8000>;
+@@ -126,7 +125,6 @@ A53_1: cpu@1 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a53";
+ 			reg = <0x1>;
+-			clock-latency = <61036>; /* two CLK32 periods */
+ 			clocks = <&clk IMX8MQ_CLK_ARM>;
+ 			enable-method = "psci";
+ 			i-cache-size = <0x8000>;
+@@ -144,7 +142,6 @@ A53_2: cpu@2 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a53";
+ 			reg = <0x2>;
+-			clock-latency = <61036>; /* two CLK32 periods */
+ 			clocks = <&clk IMX8MQ_CLK_ARM>;
+ 			enable-method = "psci";
+ 			i-cache-size = <0x8000>;
+@@ -162,7 +159,6 @@ A53_3: cpu@3 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a53";
+ 			reg = <0x3>;
+-			clock-latency = <61036>; /* two CLK32 periods */
+ 			clocks = <&clk IMX8MQ_CLK_ARM>;
+ 			enable-method = "psci";
+ 			i-cache-size = <0x8000>;
 
-device property(include/linux/property.h)
-	       ^
-	       |
-firmware node(include/linux/fwnode.h)
-   ^           ^         ^        ^
-   |           |         |        |
-   DT         ACPI     SWNODE    ...
-
-
-For various firmware implementations(DT|ACPI|SWNODE...), i feel we may
-allow them include fwnode.h by their header or source files.
-
-> + *
->   * Copyright (C) 2015, Intel Corporation
->   * Author: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->   */
+-- 
+2.47.2
 
