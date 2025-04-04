@@ -1,123 +1,155 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33D551494A6
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 18:20:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CBD61494A6
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 18:26:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743790815; cv=none; b=ZY2GzkgaoBE6RaCtCIOIdVTC6pdNkDYU4FqZ5SZB/97XJwsZvmlRIrFzHUxixhg1m9YyuJlBBjq/6LdvdS1wqA+1cjIaq3AWAn32G9oApQTnz0BNhsDObMn3K5gQWiMbs/0/pM4hoov35l1Yov/qwfDQlUki1m83E5tlXoY1KEw=
+	t=1743791186; cv=none; b=XmehPiW1/Xyj7qpZqxyMzGlGRvr41v31yALxJ2IRc/NbTSYacjRhS7xO6YX5+XKibIbE3l42jXNGWsRnSnQR3m7YbhfpY+2K4488vE1tJBPEKjvQkuWjvW1aNmaKmGT2LfL7u4xnX+56lrY3yfbyhhy4Qn8bJ2fT5gGArqBChMg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743790815; c=relaxed/simple;
-	bh=ELgTjsF9sNCsFhLEjCNGV9IJbqb8XICQISChbZPO81U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NUzhp48269iKPtXHul/EnJ6G1FJBcYLcPIA5aXERsDfnI9+pByVtGng12SXtrY1r+OcGj+CZsKs7OXnhtK6jwPwfjx9ythhxPy9lC1ZUJeVkmz9f8CJbVqlNURhla768tL7cYXDcPQQkNNK5JvvJsqCwRmkxANNWl446Ay5SikM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TxcCbUTx; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1743791186; c=relaxed/simple;
+	bh=ZOTccLSgfI9cTOLRpsnzj9bwhsvfPOgW3jKDNeC0EZc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CnqpiyrND9hvyNDTGiSoZNftM7DDsa2reMXZJaA2TZQxv8iHU32IDAi2HrOLtqhr+pLAIHRXpTjKyK64n5dYd+yIyj1tHtCZDcTITc6QPECoVwzonBch+RWMTM1rHtnUtzvcvWdGU5IWeGmgDjHoRmlFURmuhu55fmQ1z8NrdPk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=KHnCteTS; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TxcCbUTx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743790813; x=1775326813;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=ELgTjsF9sNCsFhLEjCNGV9IJbqb8XICQISChbZPO81U=;
-  b=TxcCbUTxzryritMh2nTP0a912lTm5u2RvqmFle/+dIC+f1p56LTNqNmA
-   dl7MCh4s/uwp8nmeQwbCcpocRdEuflwSMubYacNL+5y4DVN5mBdmvka0i
-   RxSxyY21hMWh1xIPRHQh3iiW2Ln1c7IS+W+AQlc7mIaSwge4hOGoiA//z
-   ZVUB9C9UbWn84X/PLVBUTxW4XH3+kYyXMe8E9Eauaf2IqgA2i24yiI3BQ
-   3m/oQlanJ9Xjsuxcsd0B+CTOkgWX4iTjKkMlWGiAiQTG/WyNGuxKGarNt
-   TmJ/wxJyVhQM7YSPfpMZZtimeJRuttnJAbLo0ozNbFB8ZQHkGVOlUCOdi
-   A==;
-X-CSE-ConnectionGUID: m8gfIjWcTK+Ewr5bwTYzUg==
-X-CSE-MsgGUID: u2pLnS1PR0+uHRqgqQQNgg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11394"; a="55873256"
-X-IronPort-AV: E=Sophos;i="6.15,189,1739865600"; 
-   d="scan'208";a="55873256"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 11:20:13 -0700
-X-CSE-ConnectionGUID: YLPXpNZIRC6W91HXhVzEwA==
-X-CSE-MsgGUID: 0kJYb0jhS2uusKSQfSWmwQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,189,1739865600"; 
-   d="scan'208";a="127863717"
-Received: from daliomra-mobl3.amr.corp.intel.com (HELO [10.124.223.29]) ([10.124.223.29])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 11:20:11 -0700
-Message-ID: <b0bb167b-fc48-4434-99a1-9b0d2f3e7d38@intel.com>
-Date: Fri, 4 Apr 2025 11:20:10 -0700
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="KHnCteTS"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-39c31e4c3e5so1341995f8f.0
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 11:26:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1743791183; x=1744395983; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=TLhJnFT3Gwgfc4DYQiW9AZKUF72F44NtVJtW3JeRxAo=;
+        b=KHnCteTSyAw1pbj3+oxle6j5KlpYwwHRbQ0kr4eNBN/n8jasO9nCtGCQLG1VeViHr/
+         ELJGHfW7G+bZY+8nonSO9a1hQZVZuesptbz09xQnBYUSfmGRSBEySoKD1IHWxV8slmLQ
+         iU0Ow83iZFBq/TmVWZEUvrgMVxAJ3k7oZYNOKVDwORAtjhN4/eMET3PWbL/NSf5MPc/B
+         rAb6p7j6YrarUERYXlbnffT7TfSQb0As4FJDWW98+cdoxTPEFNUPENWRviM/eLKR0Pja
+         YsLLuVgGi/d2/Wl8NfefrK0EHwQlQ0f9mtmCfrNZJerdtYbFTOISpR/lNm2NvBwsiCmg
+         yxXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743791183; x=1744395983;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TLhJnFT3Gwgfc4DYQiW9AZKUF72F44NtVJtW3JeRxAo=;
+        b=sMNl1/HzyWjgtwJfjUJdQP9CkUn/kxcL36a0G24M+fckO9oGpzE20ZQg8kxyvY+EJe
+         JOoef4m1g0fM126MJkCD8Aky28S4tS5lHGZ8nQcliZUv/mD3kzbxKaQY/zRVFJ1+Q6ag
+         EDkX2Hum51VzcDf/Lx89CtIUvpyBm+V/C3cQQVHxIwEn630tytCf9CwL4YgjypGMfucp
+         zsiE9j+BzolJmP2whtu/2oAcu5OXLeqlc3twcHj4ROkHGMgkbOkHKbownzuRtYyEhqOk
+         Yl3rkGFCxqgtfZfldgBmKXvs+TXPhG48DU/S8/sRrMBBkFWtL/FvTtJo/5/Unin/Rx3y
+         anJw==
+X-Forwarded-Encrypted: i=1; AJvYcCU7AR8N9QhVkYQ6E7zXzCGTE6YkkFW4wFEMppqm8LHb2eZd5p9WzMCkotbmh7qYeCbpVzqzScma88ePrU4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzmJwaLeURjm1fuZpHNUF4Rvoa4B3d4cq44OqYhg7lBjj22bPKx
+	y471m4qaN1FEklhz/g/8MwzpG1l0bSHAT40C5Cz5ycbeUHE92GdVwynbW9+J/HY=
+X-Gm-Gg: ASbGnctIOSnDyuiVdelvmJQo7coGRvTMZAZnKjT7KtOLSLEYniTVuy/x9z+u+Sn88J8
+	Fb13/u4R9igRPYcpsx+Ghk/znPWY75+TaDfnELTwDvgA+R2SMUjui7ots2uCt5vev+D6VtLF8qu
+	OcjapD/M7T/i0mlZ9slAvnNeKsR/sfFdT7p7Wf6h46Yw6GobyRMO3nNnFw00jWqDCi1YiOB97SD
+	VtB/uHr0Py0YqJOBmMO5lUOtbyYf/FftAJaz2Mkxx2q9OU4rV1FgVMFv4dEHFscz3oJ4OiZv7Z+
+	aBrGR/Kky9kOx5Aa5tpVFdmVDV/1z8uT0reIjO0F9yJXuec=
+X-Google-Smtp-Source: AGHT+IFVVzcvCxUkq7QqYrnEsRDzq8Ic4YqHD2DrlGgpG3HTOI3DOpixIDGv0syuaug71lzZJsL3oA==
+X-Received: by 2002:a05:6000:2406:b0:38f:3a89:fdb5 with SMTP id ffacd0b85a97d-39cb3575d97mr3948931f8f.11.1743791182544;
+        Fri, 04 Apr 2025 11:26:22 -0700 (PDT)
+Received: from blackdock.suse.cz ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c3020d975sm5041239f8f.75.2025.04.04.11.26.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Apr 2025 11:26:22 -0700 (PDT)
+Date: Fri, 4 Apr 2025 20:26:20 +0200
+From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
+To: Waiman Long <longman@redhat.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, 
+	Roman Gushchin <roman.gushchin@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
+	Muchun Song <muchun.song@linux.dev>, Andrew Morton <akpm@linux-foundation.org>, 
+	Tejun Heo <tj@kernel.org>, Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org, 
+	cgroups@vger.kernel.org, linux-mm@kvack.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] memcg: Don't generate low/min events if either
+ low/min or elow/emin is 0
+Message-ID: <aopkqb4bd6sag5mgvnvmoojlsz47lxrgxav7lsywkzeqtb5pco@ptxoqnloplzi>
+References: <20250404012435.656045-1-longman@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] x86/xen: fix balloon target initialization for PVH
- dom0
-To: Roger Pau Monne <roger.pau@citrix.com>, Juergen Gross <jgross@suse.com>,
- xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
-Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
- Stefano Stabellini <sstabellini@kernel.org>,
- Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
-References: <20250404133459.16125-1-roger.pau@citrix.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <20250404133459.16125-1-roger.pau@citrix.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="3ezm3guyzo3fa3j5"
+Content-Disposition: inline
+In-Reply-To: <20250404012435.656045-1-longman@redhat.com>
 
-On 4/4/25 06:34, Roger Pau Monne wrote:
-> Much like a6aa4eb994ee, the code in this changeset should have been part of
-> 38620fc4e893.
-> 
-> Fixes: a6aa4eb994ee ('xen/x86: add extra pages to unpopulated-alloc if available')
-> Signed-off-by: Roger Pau Monné <roger.pau@citrix.com>
 
-I don't see a cc:stable@ on there. Was there a reason for that or did
-you just leave it off by accident?
+--3ezm3guyzo3fa3j5
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2 1/2] memcg: Don't generate low/min events if either
+ low/min or elow/emin is 0
+MIME-Version: 1.0
+
+Hello Waiman.
+
+On Thu, Apr 03, 2025 at 09:24:34PM -0400, Waiman Long <longman@redhat.com> =
+wrote:
+> 1) memory.low is set to 0, but low events can still be triggered and
+>    so the cgroup may have a non-zero low event count. I doubt users are
+>    looking for that as they didn't set memory.low at all.
+
+I agree with this reasoning, been there [1] but fix ain't easy (also
+consensus of whether such an event should count or not and whether
+reclaim should happen or not). (See also [2] where I had tried other
+approaches that _didn't_ work.)
+
+> 2) memory.low is set to a non-zero value but the cgroup has no task in
+>    it so that it has an effective low value of 0.=20
+
+There maybe page cache remaining in the cgroup even with not present
+task inside it.
+
+>    Again it may have a non-zero low event count if memory reclaim
+>    happens. This is probably not a result expected by the users and it
+>    is really doubtful that users will check an empty cgroup with no
+>    task in it and expecting some non-zero event counts.
+
+Well, if memory.current > 0, some reclaim events can be justified and
+thus expected (e.g. by me).
+
+> The simple and naive fix of changing the operator to ">", however,
+> changes the memory reclaim behavior which can lead to other failures
+> as low events are needed to facilitate memory reclaim.  So we can't do
+> that without some relatively riskier changes in memory reclaim.
+>=20
+> Another simpler alternative is to avoid reporting below_low failure
+> if either memory.low or its effective equivalent is 0 which is done
+> by this patch specifically for the two failed use cases above.
+
+Admittedly, I haven't seen any complaints from real world about these
+events except for this test (which was ported from selftests to LTP
+too).
+
+> With this patch applied, the test_memcg_low sub-test finishes
+> successfully without failure in most cases.
+
+I'd say the simplest solution to make the test pass without figuring out
+what semantics of low events should be correct is not to check the
+memory.events:low at all with memory_recursiveprot (this is what was
+done in the cloned LTP test).
+
+Michal
+
+[1] https://lore.kernel.org/all/20220322182248.29121-1-mkoutny@suse.com/
+[2] https://bugzilla.suse.com/show_bug.cgi?id=3D1196298
+
+--3ezm3guyzo3fa3j5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQTd6mfF2PbEZnpdoAkt3Wney77BSQUCZ/AkSQAKCRAt3Wney77B
+SXLwAQCLHjkGHqdonWWfAZmkRMLnnd/9GLDwQHs1pDPkdB+LygEAv1ILh4buquz3
+RL8ZpTYF0zHvtsUdp9Ow556iY7pSSw8=
+=fCfQ
+-----END PGP SIGNATURE-----
+
+--3ezm3guyzo3fa3j5--
