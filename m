@@ -1,117 +1,173 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-81.smtpout.orange.fr [80.12.242.81])
+	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 923242147E0
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 17:25:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C733213D539;
+	Fri,  4 Apr 2025 17:28:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743787540; cv=none; b=P6vrEWWghXtKeJQfv6sa7xRyIthVU61BDd9VoOqHHHJu1t5pRZgJn0uPHmzOGeWV4QqlHA6fGNX6vKFOInct81sEb7I09xOyZUkB0n7Av4XtSstU5wmfkDm0xMN+S9yNQeGSaxIlfrjsOwU58fk5Swbz+ohO4z4heb5x5jiY+aQ=
+	t=1743787692; cv=none; b=WCzb2Fq/GEjasdhSVTo28QS13tr9jklQlrlMx3ppAR/k4vz1MUy0rG4jMQzJu8r6nn5F5oszigTlqaALdV7KcahFJM1gwp/uUGzfWQj0JgyPHlKHJTJLGgZj29lBAlMn9N68UljuTy/EPFWFX+04cNXTsHgQfGqYBBAwZwoYsiM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743787540; c=relaxed/simple;
-	bh=UIONdw5KXPgsmLhBGCkNGI+fIM7vKA5uHxq4ySw2mXA=;
-	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=q3wyPmBIJc5Mfl6rBSmgZGVzyPgwouyOQU/rUhEHTdDQShFbcazSwziYQzltqO30FW+9DZnu8MPtWU9sJHWIEk8Rn970D/2waEicOGJmEiT8b8E1vMs+JBcy5OBvHGwav4dYjWWhla5MQett6+437ZgW9YR5RxvxEzBr1e5vFyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OwZlB6l/; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1743787692; c=relaxed/simple;
+	bh=EZGg8Gsu11BD2bNrVJs8YMypzinC9NMtnPqW0GajYIY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WeCLcpVI83ntOrlsta0UhgFRZzTbjd2j5cUBgoRNIr6aMQT8Wyzhp0usI6XwbiSLUSYc8nn9EJ6KeoMH4xxoFPA+D97kRwcWo7JUjFGXQN/yLgvwQSR3RE02tOldepkwbHDopYV4aKkK/Ikj9GikQfs/55pXB/2bgMN36fzCdPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=VXKxz8nD; arc=none smtp.client-ip=80.12.242.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OwZlB6l/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743787537;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zY1OdvQqmeKzz5CfMBTTTFp4WcoqAgk+p41C7P+KQBs=;
-	b=OwZlB6l/wdpehFI4Gfr/IAe7NTo4bRqQbe1m8nr5A34RBRooJEnbf+BFM9iM2/X8h5vc1C
-	nc5jVq9Wg7PX9AgmDQ5ArPlSZr42w3txOfdfyQaC3hHhsZ9Sjfak5OvuSupfB8BKKbbzJ7
-	hqcm+8mTvqVxSPH9kD6PuogJlvCYd+k=
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
- [209.85.160.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-646-hFA0JMimPDCwPfY77uKC5Q-1; Fri, 04 Apr 2025 13:25:36 -0400
-X-MC-Unique: hFA0JMimPDCwPfY77uKC5Q-1
-X-Mimecast-MFC-AGG-ID: hFA0JMimPDCwPfY77uKC5Q_1743787536
-Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-4768656f608so48796181cf.1
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 10:25:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743787535; x=1744392335;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zY1OdvQqmeKzz5CfMBTTTFp4WcoqAgk+p41C7P+KQBs=;
-        b=WIrRl8S4JsBj3Y0JpXffeSHK37RsNAqAIHNQJ0mxffxOf1HPLD+p8g5lGfR56qEclY
-         4jngK6v2IhwjMJcTl97iOMW+qh+yUGUsyNlUjQkXHKwyaPbWg+HGa+DK0EIu4iWkq5PY
-         8TWUvMjUyBESAL42je5KRTEID5Zz+Mhp2UFv5jUg7NnChokXD2aFnMQKYx4uLQgKsGVu
-         sVdv1tlDQ+NYmjTW0PX3epZfUee+yEM1SvX55NGsgh0mmGqHF3JVuicSjeP9GIFGZzTP
-         nGNKowk3JHJOqu0X2od6C1Krx1qkKywProW2SbIe/zv1J0laYQp6+QNryUKtUysvtf/F
-         jQUQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWpqmQgiwild57Pi1WBzsYcd+Tt1siWVojK9asqs62VTEhgkYWSy2qkmfsKz7Kbi4YVtH7kV1s7uwG7BVE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyCzCToZSoroOaZffZybdsu/9rkh/NH8ub3c0X8D6H6A7itkhN0
-	sgpR8b4euWmOdENHg13wJ5T1xzoWLPqez9KkpBveUNHC8n67IPsKwSnQC5wKgzaO+OlOJKcQMvW
-	KYTvoSMJtq7CLakBhliow5mhtwj6zFG4p6GX6KBOMmfgWm8vVkMBWKo2TnQHazUm+202+LQ==
-X-Gm-Gg: ASbGnct8AlJ3OvGSKeLqKrgSfmB7vBLk5mVsWo7K4VcmhJ2G10tVpEwqy0AdbspN+SC
-	66xo//6ofplc/7WQwBBx1l/Ht+LhmxKUc94WG0/VZcob1U9VgiJxZI/WCXai3FQGvEcpitfCGM9
-	NZW60u1GO50g34QwOp27nZnRA/DblRzrzvjh1ESeUTOUcgQSYmclnBF6ItgW6yi3zf/r0Gb6e4t
-	NPvKVlD/nffaOionTb+HSgxbAY6Tfs2XaXOHHTkjshJp9prWL+y5vrOL3aMhC9Y1JCp094fO0ZG
-	3/UCQLzoDthE3mp6i3Jflscrr/A9US3gVlaXgN/asbMXkV6rkZPGaeEy/oerzw==
-X-Received: by 2002:a05:622a:24c:b0:478:de14:135a with SMTP id d75a77b69052e-4792595adafmr51651961cf.20.1743787534885;
-        Fri, 04 Apr 2025 10:25:34 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEPaEDXj6BQIt1pawQwBSb2n8E48wuGD6upHv6D0WAjJO96YQubjDzEqlaf96Y8LIMcvLc1vg==
-X-Received: by 2002:a05:622a:24c:b0:478:de14:135a with SMTP id d75a77b69052e-4792595adafmr51651691cf.20.1743787534569;
-        Fri, 04 Apr 2025 10:25:34 -0700 (PDT)
-Received: from ?IPV6:2601:188:c100:5710:315f:57b3:b997:5fca? ([2601:188:c100:5710:315f:57b3:b997:5fca])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4791b0883f1sm25312231cf.42.2025.04.04.10.25.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Apr 2025 10:25:34 -0700 (PDT)
-From: Waiman Long <llong@redhat.com>
-X-Google-Original-From: Waiman Long <longman@redhat.com>
-Message-ID: <1ac51e8e-8dc0-4cd8-9414-f28125061bb3@redhat.com>
-Date: Fri, 4 Apr 2025 13:25:33 -0400
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="VXKxz8nD"
+Received: from fedora.home ([90.11.132.44])
+	by smtp.orange.fr with ESMTPA
+	id 0kpmujQtk0cMk0kppu7Xwj; Fri, 04 Apr 2025 19:28:05 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1743787685;
+	bh=IVF5MH+xrIg+FKCXHElsJo5pQsZIf4uqVbohRHguyNA=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=VXKxz8nD+qB8M9bxkYi5SuOD8uDi0oYHBR3SfucxOYlAx/Nh654Z5BQYqi2VCpATW
+	 n8dLPnYK6bDVwPp4xPQcKcAQm1U6Q060fBIzG9z3u8i97Qi+xFuf/M2kmKGgYLy3DM
+	 75Zvay3ky5Egz2TmEUEzxaLWufO9yePhrJaT/eAkAEgs1sNDL7JVQwiTopkoIyoj2V
+	 Jn68Y0OnTrHYplv4s/5OaID9BaMxX+D73brEOa1q7MKg7NzKGwFOzRzSIJ7PSlPzWA
+	 ywLl5XJzbanbd/IpAjwNyEeNf4T7xgWk/xArVtpKt6SoUxG065seFptoIg6TDoKPjR
+	 zvVWncsvcpDMQ==
+X-ME-Helo: fedora.home
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Fri, 04 Apr 2025 19:28:05 +0200
+X-ME-IP: 90.11.132.44
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: Sebastian Reichel <sre@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	patches@opensource.cirrus.com,
+	linux-pm@vger.kernel.org
+Subject: [PATCH] power: supply: wm831x: Constify struct chg_map and some arrays
+Date: Fri,  4 Apr 2025 19:27:38 +0200
+Message-ID: <0edde57b691db7f920d121fdbd5ebc3fb24f30f1.1743787625.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] memcg: Don't generate low/min events if either
- low/min or elow/emin is 0
-To: Tejun Heo <tj@kernel.org>
-Cc: Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
- Roman Gushchin <roman.gushchin@linux.dev>,
- Shakeel Butt <shakeel.butt@linux.dev>, Muchun Song <muchun.song@linux.dev>,
- Andrew Morton <akpm@linux-foundation.org>, =?UTF-8?Q?Michal_Koutn=C3=BD?=
- <mkoutny@suse.com>, Shuah Khan <shuah@kernel.org>,
- linux-kernel@vger.kernel.org, cgroups@vger.kernel.org, linux-mm@kvack.org,
- linux-kselftest@vger.kernel.org
-References: <20250404012435.656045-1-longman@redhat.com>
- <Z_ATAq-cwtv-9Atx@slm.duckdns.org>
-Content-Language: en-US
-In-Reply-To: <Z_ATAq-cwtv-9Atx@slm.duckdns.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+'struct chg_map' is not modified in this driver.
 
-On 4/4/25 1:12 PM, Tejun Heo wrote:
-> Hello,
->
-> On Thu, Apr 03, 2025 at 09:24:34PM -0400, Waiman Long wrote:
-> ...
->> The simple and naive fix of changing the operator to ">", however,
->> changes the memory reclaim behavior which can lead to other failures
->> as low events are needed to facilitate memory reclaim.  So we can't do
->> that without some relatively riskier changes in memory reclaim.
-> I'm doubtful using ">" would change reclaim behavior in a meaningful way and
-> that'd be more straightforward. What do mm people think?
+Constifying these structures moves some data to a read-only section, so
+increase overall security.
 
-I haven't looked deeply into why that is the case, but 
-test_memcg_low/min tests had other failures when I made this change.
+While at it, also constify a few other arrays.
 
-Cheers,
-Longman
+On a x86_64, with allmodconfig, as an example:
+Before:
+======
+   text	   data	    bss	    dec	    hex	filename
+  14263	   1744	      0	  16007	   3e87	drivers/power/supply/wm831x_power.o
 
->
-> Thanks.
->
+After:
+=====
+   text	   data	    bss	    dec	    hex	filename
+  14695	   1288	      0	  15983	   3e6f	drivers/power/supply/wm831x_power.o
+
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+Compile tested-only.
+---
+ drivers/power/supply/wm831x_power.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/power/supply/wm831x_power.c b/drivers/power/supply/wm831x_power.c
+index 538055b29dec..6acdba7885ca 100644
+--- a/drivers/power/supply/wm831x_power.c
++++ b/drivers/power/supply/wm831x_power.c
+@@ -89,7 +89,7 @@ static int wm831x_wall_get_prop(struct power_supply *psy,
+ 	return ret;
+ }
+ 
+-static enum power_supply_property wm831x_wall_props[] = {
++static const enum power_supply_property wm831x_wall_props[] = {
+ 	POWER_SUPPLY_PROP_ONLINE,
+ 	POWER_SUPPLY_PROP_VOLTAGE_NOW,
+ };
+@@ -120,7 +120,7 @@ static int wm831x_usb_get_prop(struct power_supply *psy,
+ 	return ret;
+ }
+ 
+-static enum power_supply_property wm831x_usb_props[] = {
++static const enum power_supply_property wm831x_usb_props[] = {
+ 	POWER_SUPPLY_PROP_ONLINE,
+ 	POWER_SUPPLY_PROP_VOLTAGE_NOW,
+ };
+@@ -171,21 +171,21 @@ struct chg_map {
+ 	int reg_val;
+ };
+ 
+-static struct chg_map trickle_ilims[] = {
++static const struct chg_map trickle_ilims[] = {
+ 	{  50, 0 << WM831X_CHG_TRKL_ILIM_SHIFT },
+ 	{ 100, 1 << WM831X_CHG_TRKL_ILIM_SHIFT },
+ 	{ 150, 2 << WM831X_CHG_TRKL_ILIM_SHIFT },
+ 	{ 200, 3 << WM831X_CHG_TRKL_ILIM_SHIFT },
+ };
+ 
+-static struct chg_map vsels[] = {
++static const struct chg_map vsels[] = {
+ 	{ 4050, 0 << WM831X_CHG_VSEL_SHIFT },
+ 	{ 4100, 1 << WM831X_CHG_VSEL_SHIFT },
+ 	{ 4150, 2 << WM831X_CHG_VSEL_SHIFT },
+ 	{ 4200, 3 << WM831X_CHG_VSEL_SHIFT },
+ };
+ 
+-static struct chg_map fast_ilims[] = {
++static const struct chg_map fast_ilims[] = {
+ 	{    0,  0 << WM831X_CHG_FAST_ILIM_SHIFT },
+ 	{   50,  1 << WM831X_CHG_FAST_ILIM_SHIFT },
+ 	{  100,  2 << WM831X_CHG_FAST_ILIM_SHIFT },
+@@ -204,7 +204,7 @@ static struct chg_map fast_ilims[] = {
+ 	{ 1000, 15 << WM831X_CHG_FAST_ILIM_SHIFT },
+ };
+ 
+-static struct chg_map eoc_iterms[] = {
++static const struct chg_map eoc_iterms[] = {
+ 	{ 20, 0 << WM831X_CHG_ITERM_SHIFT },
+ 	{ 30, 1 << WM831X_CHG_ITERM_SHIFT },
+ 	{ 40, 2 << WM831X_CHG_ITERM_SHIFT },
+@@ -215,7 +215,7 @@ static struct chg_map eoc_iterms[] = {
+ 	{ 90, 7 << WM831X_CHG_ITERM_SHIFT },
+ };
+ 
+-static struct chg_map chg_times[] = {
++static const struct chg_map chg_times[] = {
+ 	{  60,  0 << WM831X_CHG_TIME_SHIFT },
+ 	{  90,  1 << WM831X_CHG_TIME_SHIFT },
+ 	{ 120,  2 << WM831X_CHG_TIME_SHIFT },
+@@ -235,7 +235,7 @@ static struct chg_map chg_times[] = {
+ };
+ 
+ static void wm831x_battery_apply_config(struct wm831x *wm831x,
+-				       struct chg_map *map, int count, int val,
++				       const struct chg_map *map, int count, int val,
+ 				       int *reg, const char *name,
+ 				       const char *units)
+ {
+@@ -462,7 +462,7 @@ static int wm831x_bat_get_prop(struct power_supply *psy,
+ 	return ret;
+ }
+ 
+-static enum power_supply_property wm831x_bat_props[] = {
++static const enum power_supply_property wm831x_bat_props[] = {
+ 	POWER_SUPPLY_PROP_STATUS,
+ 	POWER_SUPPLY_PROP_ONLINE,
+ 	POWER_SUPPLY_PROP_VOLTAGE_NOW,
+@@ -470,7 +470,7 @@ static enum power_supply_property wm831x_bat_props[] = {
+ 	POWER_SUPPLY_PROP_CHARGE_TYPE,
+ };
+ 
+-static const char *wm831x_bat_irqs[] = {
++static const char * const wm831x_bat_irqs[] = {
+ 	"BATT HOT",
+ 	"BATT COLD",
+ 	"BATT FAIL",
+-- 
+2.49.0
 
