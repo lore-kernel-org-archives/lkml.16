@@ -1,242 +1,141 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A2C12144DC;
-	Fri,  4 Apr 2025 18:08:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E9B4207E03
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 18:13:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743790101; cv=none; b=F3NYZgidhLAbjWobaE79Z/ulN2+UC/V2mjBf9YPlSFsedBQ2vQhoKqIP0qG9cgtzBkjIP0GfTiGSoCvNQqihfoXiMWPBjNc/sKhSCIbxJWKzsK3Ue9bqOPbSp9CqGOBbOsNZ5xIXeByXvskd0NPe4tO6t+fKJgpQrpEf1xZ9GTU=
+	t=1743790397; cv=none; b=hY3sorb2s6X+8+cF1krrCelSozmN4dxxn2F9r3j519qJX0siLmEidFGPFtd58Txbj3uotf9VVva62V9fBVqtSy9l09WIF/ZUUs8CM7CG9tesOpT93AGy+ictk0k1CcZ80whKOzu7YG+QMSLwSm/iCzN4in2IvUmYkcV146E0iyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743790101; c=relaxed/simple;
-	bh=6cHkeL6FETpmpby8P+Sxg8uzoqLOjkiDsJMX9VjwYsE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=s6NC7d8JGyuBPTkDvpw985wHqt8eFlFg40fOKXiJ6RgRI6HvJaQGfCw0EbUaYefJBEp90+3KFFl+Hhx5i4kSOIEr8MGSwDUI+8KywJoJKxaIKelur8JBN0nhCPl1vgQPwgx+27/F5TH60Px5hvU3v3y9s1pZqjnRoZFvxP40o2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=W3NhHwOL; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1743790397; c=relaxed/simple;
+	bh=7rBihDPp9FTk+9h+YN3X6UN632wm8kddI1fTY9fA6gI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qCxrL++zLC9yqTLsWnx/I7srSeAa7WAmcn78e9S3mO3YlqS/cObBm4mjdhXBmwd5S4tJgoUbopSuh/cO6RKQRaCjGTv0rjgQY7t7YDDjoMUmSV9yy7qoBKDactfL8HVoS1C1Oc4A9q0BQjURVa44ycywRP2fhSuaU/fYwMraWs0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=00IvK2uO; arc=none smtp.client-ip=209.85.222.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="W3NhHwOL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743790099; x=1775326099;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=6cHkeL6FETpmpby8P+Sxg8uzoqLOjkiDsJMX9VjwYsE=;
-  b=W3NhHwOLfXYkB/+Ppt1xWwrHkc79DerF4jXJp6r/eWSGlDTvmtgSWTKY
-   LI3Iazw9E76EZqRW0+CRrG3Ja4CsJjz55lOOSc9SbeHG9zMeiwe0mDSlB
-   BmBLdTNBVzabgjdHI3vw2dawwZHSpnqdNHqn79uodBMTvu/lAkNAFca9D
-   rCBuVjNV1a/yrLBhODyBr6GIKmq/03LKm+f8H88AJB8KWUKHPmy6J7g+c
-   eOnIuMr/tilYIhbSUlOyVn7aeOXK6Wf8EOiB6YYDAv1QeWoPOSE9RfrqO
-   Voz5KybKfmkbK9RC5kl9pyCCwyGl/vyZoQjqGbLmwl09p4XgXHxl8IoSF
-   g==;
-X-CSE-ConnectionGUID: pC6FJsy6Tca89XZ/o20xDw==
-X-CSE-MsgGUID: Ubw7taCmRX2W1VVbgKOxFA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11394"; a="55871731"
-X-IronPort-AV: E=Sophos;i="6.15,189,1739865600"; 
-   d="scan'208";a="55871731"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 11:08:18 -0700
-X-CSE-ConnectionGUID: 2p8hjetBSImgAuDysM4x7Q==
-X-CSE-MsgGUID: RysEYU0yQnqd7KpAb9OCrg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,189,1739865600"; 
-   d="scan'208";a="158354509"
-Received: from daliomra-mobl3.amr.corp.intel.com (HELO [10.124.223.29]) ([10.124.223.29])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 11:08:14 -0700
-Message-ID: <fb0d5f33-4636-4de0-82f4-93a9def63a26@intel.com>
-Date: Fri, 4 Apr 2025 11:08:12 -0700
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="00IvK2uO"
+Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-7c5f720c717so347436385a.0
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 11:13:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1743790393; x=1744395193; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Z8cyC/DPxNVy17Lz/zroH2kHExcb4tpekU11b2nuA7o=;
+        b=00IvK2uOxq9Q2JG5F9RkhRyG5fPiDlKFA/3mwiN6pe5S/pqfySzSSMAI41NUHBJWOs
+         6eOKHpJoFSy1IEZnL+wu1ks9V8UhCHQmYcmxjMeuTFsOst7r2nQb1Mb75JUCxabo7Pzw
+         X51zHaB97rOp+l/yb3dk25G/99beROhMgUA0B0DhLOwUptUET1viYggNNIkDloJpTWWG
+         lwNN9SzhVCmO6/eiW0YiJmV+0JkfULRoleyvsxEgpmYJi9wCUhDQYTiEIRULlo9PjIed
+         Tjs/vxe4Pxrq3kA2AZVCtnS/xVBvmm4lljSDEhDyMTpF1ZYY4AAmmXwwCXTzGBU3J2Nc
+         mGsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743790393; x=1744395193;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Z8cyC/DPxNVy17Lz/zroH2kHExcb4tpekU11b2nuA7o=;
+        b=ikcOgNZ3m5xoniADPNxjS5sZABWe8g1z79qi3YblLoyDNPxQs9OKwfVTJwv54JLHY9
+         omMJwW3znCNfWrFrQ96MVIIIfW8oIMiKNUdHfrn2y8MCMiy8sn5Mtk0EQCURRmeAvv01
+         L4INEQWC8e/AEacNfQDPF3tmQRsqbLsN/Ln/sc/8Pq3xbZ/iSakdwlUAg2rzG3Xr++6B
+         I0WaWF565LAHAdtYH9iFswgNoNSTUFnpfGvnQKtD3HlwO8i3uyDTAi/4NrgSY+fO+SSd
+         ZAuFnqs9W16tK5fLZzlzWTVBcxw8N5XGL1n0wbCEVYhb5c433JXYGQYua9a1sssVzgXt
+         T0IQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXMeBgjSNwxdTwFrthsTmr7ogg87kG/WCNqvdRzXULVoKvhDm5bSQr/MxaHQGXj3Qmqg/eb2jojMrKg3rQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzjXiw6RBIyxKY2RdvdW8+e+YvwOa5w+x/6BkEbeFzopMleVaHi
+	b3udQTesYutj0Iin1VFh5GH0jGxkZRkmF8M7V6cW3yQEJeKUZbcHy6v2CzUlsew=
+X-Gm-Gg: ASbGncvkfv5Ls2dS2hE5zNN/JjNrQl4+VREuwRtovCyQ9zE5hSuBDd4vXlcmIJMhYV5
+	PaeyinvcSp06z2K8vWRry7dmfa48dVkazTzuJ93BPtFV6E+lTH6fahUW3Z554mWk4WsYkwXWRmu
+	cYI3jwzcDPc4JIkKm5U+AeOwaXZh3Ets7FF79a62F+OOOcTTmBirxMrauxuiVi8r+XfDm9/NhEf
+	2JfbM7vPLBCZq9KDc64G7qnMER6VV5RD4MQdTFeZsQ42TbxTkdvUHnwB3mCvrq6MUSK0w6oFrTq
+	5sZY93FaOwgHaCBn3We0UE99QQR8l/NSo+GYpMoGelE=
+X-Google-Smtp-Source: AGHT+IFDO9K2q73ZkHXh1q8bIV9QQbY3HITlSzjerFez+hyaMApgOpAFEuI1ij3Hx9STu1KB7K29hg==
+X-Received: by 2002:a05:620a:1aa6:b0:7b7:142d:53a8 with SMTP id af79cd13be357-7c774a3c100mr536465685a.19.1743790393005;
+        Fri, 04 Apr 2025 11:13:13 -0700 (PDT)
+Received: from localhost ([2603:7000:c01:2716:da5e:d3ff:fee7:26e7])
+        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7c76e96a1fcsm247409785a.54.2025.04.04.11.13.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Apr 2025 11:13:12 -0700 (PDT)
+Date: Fri, 4 Apr 2025 14:13:08 -0400
+From: Johannes Weiner <hannes@cmpxchg.org>
+To: Waiman Long <llong@redhat.com>
+Cc: Tejun Heo <tj@kernel.org>, Michal Hocko <mhocko@kernel.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Muchun Song <muchun.song@linux.dev>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
+	Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
+	cgroups@vger.kernel.org, linux-mm@kvack.org,
+	linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] memcg: Don't generate low/min events if either
+ low/min or elow/emin is 0
+Message-ID: <20250404181308.GA300138@cmpxchg.org>
+References: <20250404012435.656045-1-longman@redhat.com>
+ <Z_ATAq-cwtv-9Atx@slm.duckdns.org>
+ <1ac51e8e-8dc0-4cd8-9414-f28125061bb3@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 13/14] mm: Unpoison pcpu chunks with base address tag
-To: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>, hpa@zytor.com,
- hch@infradead.org, nick.desaulniers+lkml@gmail.com,
- kuan-ying.lee@canonical.com, masahiroy@kernel.org,
- samuel.holland@sifive.com, mingo@redhat.com, corbet@lwn.net,
- ryabinin.a.a@gmail.com, guoweikang.kernel@gmail.com, jpoimboe@kernel.org,
- ardb@kernel.org, vincenzo.frascino@arm.com, glider@google.com,
- kirill.shutemov@linux.intel.com, apopple@nvidia.com,
- samitolvanen@google.com, kaleshsingh@google.com, jgross@suse.com,
- andreyknvl@gmail.com, scott@os.amperecomputing.com, tony.luck@intel.com,
- dvyukov@google.com, pasha.tatashin@soleen.com, ziy@nvidia.com,
- broonie@kernel.org, gatlin.newhouse@gmail.com, jackmanb@google.com,
- wangkefeng.wang@huawei.com, thiago.bauermann@linaro.org, tglx@linutronix.de,
- kees@kernel.org, akpm@linux-foundation.org, jason.andryuk@amd.com,
- snovitoll@gmail.com, xin@zytor.com, jan.kiszka@siemens.com, bp@alien8.de,
- rppt@kernel.org, peterz@infradead.org, pankaj.gupta@amd.com,
- thuth@redhat.com, andriy.shevchenko@linux.intel.com,
- joel.granados@kernel.org, kbingham@kernel.org, nicolas@fjasle.eu,
- mark.rutland@arm.com, surenb@google.com, catalin.marinas@arm.com,
- morbo@google.com, justinstitt@google.com, ubizjak@gmail.com,
- jhubbard@nvidia.com, urezki@gmail.com, dave.hansen@linux.intel.com,
- bhe@redhat.com, luto@kernel.org, baohua@kernel.org, nathan@kernel.org,
- will@kernel.org, brgerst@gmail.com
-Cc: llvm@lists.linux.dev, linux-mm@kvack.org, linux-doc@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
- linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com, x86@kernel.org
-References: <cover.1743772053.git.maciej.wieczor-retman@intel.com>
- <61033ef5b70277039ceeb8f6173e8b3fbc271c08.1743772053.git.maciej.wieczor-retman@intel.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <61033ef5b70277039ceeb8f6173e8b3fbc271c08.1743772053.git.maciej.wieczor-retman@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1ac51e8e-8dc0-4cd8-9414-f28125061bb3@redhat.com>
 
-On 4/4/25 06:14, Maciej Wieczor-Retman wrote:
-> The problem presented here is related to NUMA systems and tag-based
-> KASAN mode. Getting to it can be explained in the following points:
+On Fri, Apr 04, 2025 at 01:25:33PM -0400, Waiman Long wrote:
 > 
-> 	1. A new chunk is created with pcpu_create_chunk() and
-> 	   vm_structs are allocated. On systems with one NUMA node only
-> 	   one is allocated, but with more NUMA nodes at least a second
-> 	   one will be allocated too.
-> 
-> 	2. chunk->base_addr is assigned the modified value of
-> 	   vms[0]->addr and thus inherits the tag of this allocated
-> 	   structure.
-> 
-> 	3. In pcpu_alloc() for each possible cpu pcpu_chunk_addr() is
-> 	   executed which calculates per cpu pointers that correspond to
-> 	   the vms structure addresses. The calculations are based on
-> 	   adding an offset from a table to chunk->base_addr.
-> 
-> Here the problem presents itself since for addresses based on vms[1] and
-> up, the tag will be different than the ones based on vms[0] (base_addr).
-> The tag mismatch happens and an error is reported.
-> 
-> Unpoison all the vms[]->addr with the same tag to resolve the mismatch.
+> On 4/4/25 1:12 PM, Tejun Heo wrote:
+> > Hello,
+> >
+> > On Thu, Apr 03, 2025 at 09:24:34PM -0400, Waiman Long wrote:
+> > ...
+> >> The simple and naive fix of changing the operator to ">", however,
+> >> changes the memory reclaim behavior which can lead to other failures
+> >> as low events are needed to facilitate memory reclaim.  So we can't do
+> >> that without some relatively riskier changes in memory reclaim.
+> > I'm doubtful using ">" would change reclaim behavior in a meaningful way and
+> > that'd be more straightforward. What do mm people think?
 
-I think there's a bit too much superfluous information in there. For
-instance, it's not important to talk about how or why there can be more
-than one chunk, just say there _can_ be more than one.
+The knob documentation uses "within low" and "above low" to
+distinguish whether you are protected or not, so at least from a code
+clarity pov, >= makes more sense to me: if your protection is N and
+you use exactly N, you're considered protected.
 
-	1. There can be more than one chunk
-	2. The chunks are virtually contiguous
-	3. Since they are virtually contiguous, the chunks are all
-	   addressed from a single base address
-	4. The base address has a tag
-	5. The base address points at the first chunk and thus inherits
-	   the tag of the first chunk
-	6. The subsequent chunks will be accessed with the tag from the
-	   first chunk
-	7. Thus, the subsequent chunks need to have their tag set to
-	   match that of the first chunk.
+That also means that by definition an empty cgroup is protected. It's
+not in excess of its protection. The test result isn't wrong.
 
-Right?
+The real weirdness is issuing a "low reclaim" event when no reclaim is
+going to happen*.
 
-> diff --git a/include/linux/kasan.h b/include/linux/kasan.h
-> index 54481f8c30c5..bd033b2ba383 100644
-> --- a/include/linux/kasan.h
-> +++ b/include/linux/kasan.h
-> @@ -613,6 +613,13 @@ static __always_inline void kasan_poison_vmalloc(const void *start,
->  		__kasan_poison_vmalloc(start, size);
->  }
->  
-> +void __kasan_unpoison_vmap_areas(struct vm_struct **vms, int nr_vms);
-> +static __always_inline void kasan_unpoison_vmap_areas(struct vm_struct **vms, int nr_vms)
-> +{
-> +	if (kasan_enabled())
-> +		__kasan_unpoison_vmap_areas(vms, nr_vms);
-> +}
-> +
->  #else /* CONFIG_KASAN_VMALLOC */
->  
->  static inline void kasan_populate_early_vm_area_shadow(void *start,
-> @@ -637,6 +644,9 @@ static inline void *kasan_unpoison_vmalloc(const void *start,
->  static inline void kasan_poison_vmalloc(const void *start, unsigned long size)
->  { }
->  
-> +static inline void kasan_unpoison_vmap_areas(struct vm_struct **vms, int nr_vms)
-> +{ }
-> +
->  #endif /* CONFIG_KASAN_VMALLOC */
->  
->  #if (defined(CONFIG_KASAN_GENERIC) || defined(CONFIG_KASAN_SW_TAGS)) && \
-> diff --git a/mm/kasan/shadow.c b/mm/kasan/shadow.c
-> index 88d1c9dcb507..9496f256bc0f 100644
-> --- a/mm/kasan/shadow.c
-> +++ b/mm/kasan/shadow.c
-> @@ -582,6 +582,17 @@ void __kasan_poison_vmalloc(const void *start, unsigned long size)
->  	kasan_poison(start, size, KASAN_VMALLOC_INVALID, false);
->  }
->  
-> +void __kasan_unpoison_vmap_areas(struct vm_struct **vms, int nr_vms)
-> +{
-> +	int area;
-> +
-> +	for (area = 0 ; area < nr_vms ; area++) {
-> +		kasan_poison(vms[area]->addr, vms[area]->size,
-> +			     arch_kasan_get_tag(vms[0]->addr), false);
-> +		arch_kasan_set_tag(vms[area]->addr, arch_kasan_get_tag(vms[0]->addr));
-> +	}
-> +}
+The patch effectively special cases "empty means in excess" to avoid
+the event and fall through to reclaim, which then does nothing as a
+result of its own scan target calculations. That seems convoluted.
 
--ENOCOMMENTS
+Why not skip empty cgroups before running inapplicable checks?
 
->  #else /* CONFIG_KASAN_VMALLOC */
->  
->  int kasan_alloc_module_shadow(void *addr, size_t size, gfp_t gfp_mask)
-> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-> index 61981ee1c9d2..fbd56bf8aeb2 100644
-> --- a/mm/vmalloc.c
-> +++ b/mm/vmalloc.c
-> @@ -4783,8 +4783,7 @@ struct vm_struct **pcpu_get_vm_areas(const unsigned long *offsets,
->  	 * non-VM_ALLOC mappings, see __kasan_unpoison_vmalloc().
->  	 */
->  	for (area = 0; area < nr_vms; area++)
-> -		vms[area]->addr = kasan_unpoison_vmalloc(vms[area]->addr,
-> -				vms[area]->size, KASAN_VMALLOC_PROT_NORMAL);
-> +		kasan_unpoison_vmap_areas(vms, nr_vms);
->  
->  	kfree(vas);
->  	return vms;
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index b620d74b0f66..260ab238ec22 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -5963,6 +5963,9 @@ static void shrink_node_memcgs(pg_data_t *pgdat, struct scan_control *sc)
+ 
+ 		mem_cgroup_calculate_protection(target_memcg, memcg);
+ 
++		if (!mem_cgroup_usage(memcg, false))
++			continue;
++
+ 		if (mem_cgroup_below_min(target_memcg, memcg)) {
+ 			/*
+ 			 * Hard protection.
 
-So, the right way to do this is refactor, first, then add your changes
-after. This really wants to be two patches.
+> I haven't looked deeply into why that is the case, but 
+> test_memcg_low/min tests had other failures when I made this change.
+
+It surprises me as well that it makes any practical difference.
+
+* Waiman points out that the weirdness is seeing low events without
+  having a low configured. Eh, this isn't really true with recursive
+  propagation; you may or may not have an elow depending on parental
+  configuration and sibling behavior.
