@@ -1,134 +1,117 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7AD320E33E;
-	Fri,  4 Apr 2025 18:02:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29B7D1F5859;
+	Fri,  4 Apr 2025 18:02:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743789750; cv=none; b=VDIcxSJf31aM3k0GiwIyb5xDOvQdLfIjwzgkr6fDyCJg0L83XS46MYNjaazcjKgc6+SqxH+YQKHqS6i5EgaGfNIqQE7Wq5drxLHKfTyynQiCXoOzRkvQJIsbWuELEH59s/izV1Fm76JpV1NaIQ6j3eQM349W7P8JPu44reeF3Jk=
+	t=1743789769; cv=none; b=Hk9vLN3DW6Hh5hDdYbILoEDy86e4wSPl56dZBOflX25imaUtmjHAlyvjpSNnyk3qOS4XtLyEEvZx9uiPRPewwO7LcHIuY0uUEMsxpF2zOEC9e6Nq1K4ETR4IC/AGuornUXvVy3fOiO1y/BBsslwlljCcQh5fhd6ugpxT/WAc8Ec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743789750; c=relaxed/simple;
-	bh=5bKVYp6tBNwdr8sgZ0U9e8u6ORf1X05snObhsyXiobo=;
+	s=arc-20240116; t=1743789769; c=relaxed/simple;
+	bh=sIFl/zVo7sWkaJsvC/EhT4RsCFGEr7FaDQFYhwOuRP8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UqzYcoucXaGiuhQDW+S1LmPQqO9FPzcbI36IoXFOb5GwI5ELXDh1KXQjoRhgWAYn4m1nSpqMjBYRTjvbLkSukaxBYSsrt7SAsW0QMXXQmYIxhd6Zfat6X4Kmju/geS4vh8HAq8EHGR+ATRijX7U14h88EFgoQcpuK+Pq40gCC/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bXn3kcS3; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=YW+waiWy7j8t15eoLNBsgFL4QzFIiNbukncDLRmUXSCyII7Vj9fJVBQngdkcOyCIVSKCKvPYse35/YEbCp+3x9+hLYbqblL0awE7CUm4VQFKcXlXA/C7yJ0TCKC0VA7GrKlLy1PKwUFitpdhdzO2mAaO6R13nA12d1D70/3ow0E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oJ3ume4b; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bXn3kcS3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6368C4CEDD;
-	Fri,  4 Apr 2025 18:02:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oJ3ume4b"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41E7CC4CEDD;
+	Fri,  4 Apr 2025 18:02:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743789749;
-	bh=5bKVYp6tBNwdr8sgZ0U9e8u6ORf1X05snObhsyXiobo=;
+	s=k20201202; t=1743789768;
+	bh=sIFl/zVo7sWkaJsvC/EhT4RsCFGEr7FaDQFYhwOuRP8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bXn3kcS3vzSNMwtLarNiOBfwO58rPmknbpijd8Uv+ITAAXbmwAiwsjIwQysWMkFO3
-	 7mMeGTOYwceb2UcShFbfLMgOEV+VyiYPYNp2TTkWbYLtRBF+eKxZRqoex6Aqw4Ol8t
-	 gD3sNPmlePpvvu1nPiiT0j0/hyE+n+kLTRhmiNTJutHlurS45WtHDvJInmXQe93J1I
-	 FPfb468LRXcoKBQy5Attz9hk+p53sp7KGsALKD/J+DSSXXKvN5T7RK0Kvu7PKh9nln
-	 dx0l75EIzRAjZK4TZvTHb25qmjoTtrfofJhxPwq4jmn0GKEs3/HMeKVrGiFgr6uwgg
-	 MNhqV4l2Ixp+A==
-Date: Fri, 4 Apr 2025 11:02:27 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Howard Chu <howardchu95@gmail.com>
-Cc: acme@kernel.org, mingo@redhat.com, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com, peterz@infradead.org,
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] perf trace: Fix inconsistent failures in perf trace's
- tests
-Message-ID: <Z_AeswETE5xLcPT8@google.com>
-References: <20250404041652.329340-1-howardchu95@gmail.com>
+	b=oJ3ume4b0BCSXvxNTZ+zTgH+wga0Rklsamxns/5CUHFZEGqO+gQ1Nr55A90L8Rmpb
+	 sN35fYoh5HnL3urNM+wqgOd/x0Sf/ZhY7b+cHyDMRxHdYKmNTP0GS3UHnaZHI/O2NR
+	 qBVg5F1USRrvBzh+/6r2Tlk1I7vJI41rkeNTLJ5819saPdBZ/0R4xoWUBLRfjx7zgd
+	 Y1/1tfc50NfttM58cJz/3p8bzqv4yv/Cf8mmUbm7tCmdw4uV7IY0d2y1uBb1hhR5Dx
+	 7DUXrVOdXzg3ik3+Ag/l4c2mZMoFBH58X81xidyqF9y4Fj8lnCswE1mOyonNpSvkqB
+	 dp3aUCCNjmQQw==
+Date: Fri, 4 Apr 2025 11:02:46 -0700
+From: Luis Chamberlain <mcgrof@kernel.org>
+To: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
+	willy@infradead.org, linux-mm@kvack.org,
+	Bagas Sanjaya <bagasdotme@gmail.com>,
+	David Hildenbrand <david@redhat.com>, da.gomez@kernel.org,
+	gost.dev@samsung.com, linux-doc@vger.kernel.org,
+	Pankaj Raghav <p.raghav@samsung.com>
+Subject: Re: [PATCH v3] docs: update THP admin guide about non-tmpfs
+ filesystem support
+Message-ID: <Z_Aexql5FDVLtuQp@bombadil.infradead.org>
+References: <20250404140657.29285-1-kernel@pankajraghav.com>
+ <Z-_7fzU02OU1hVOT@bombadil.infradead.org>
+ <qy52tvn6atrlt5rhgzbtueyqbs56ik3rfg2b7yopynhhoipvtj@qph743k6m7kg>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250404041652.329340-1-howardchu95@gmail.com>
+In-Reply-To: <qy52tvn6atrlt5rhgzbtueyqbs56ik3rfg2b7yopynhhoipvtj@qph743k6m7kg>
 
-On Thu, Apr 03, 2025 at 09:16:52PM -0700, Howard Chu wrote:
-> There are two failures that frequently occur in perf trace's tests. One
-> is the failure of 'perf trace BTF general tests'; The other one is the
-> failure of 'perf trace record and replay', which, when run independently,
-> always succeeds.
+On Fri, Apr 04, 2025 at 06:31:16PM +0200, Pankaj Raghav (Samsung) wrote:
+> On Fri, Apr 04, 2025 at 08:32:15AM -0700, Luis Chamberlain wrote:
+> > On Fri, Apr 04, 2025 at 04:06:57PM +0200, Pankaj Raghav (Samsung) wrote:
+> > > From: Pankaj Raghav <p.raghav@samsung.com>
+> > > 
+> > > THP support for non-tmpfs filesystem has been around for some time now.
+> > > Update the admin guide to reflect it.
+> > > 
+> > > While we are at it, move FilePmdMapped to previous paragraph for clarity,
+> > > and clarify ShmemPmdMapped & ShmemHugePage.
+> > > 
+> > > Signed-off-by: Pankaj Raghav <p.raghav@samsung.com>
+> > > Acked-by: David Hildenbrand <david@redhat.com>
+> > > ---
+> > > 
+> > > Changes since v2:
+> > > - Address comment from Bagas Sanjaya
+> > > - Squash commits and Ack from David
+> > > 
+> > >  Documentation/admin-guide/mm/transhuge.rst | 22 +++++++++++++++-------
+> > >  1 file changed, 15 insertions(+), 7 deletions(-)
+> > > 
+> > > diff --git a/Documentation/admin-guide/mm/transhuge.rst b/Documentation/admin-guide/mm/transhuge.rst
+> > > index dff8d5985f0f..f8aae64e38d0 100644
+> > > --- a/Documentation/admin-guide/mm/transhuge.rst
+> > > +++ b/Documentation/admin-guide/mm/transhuge.rst
+> > > @@ -12,8 +12,8 @@ using huge pages for the backing of virtual memory with huge pages
+> > >  that supports the automatic promotion and demotion of page sizes and
+> > >  without the shortcomings of hugetlbfs.
+> > >  
+> > > -Currently THP only works for anonymous memory mappings and tmpfs/shmem.
+> > > -But in the future it can expand to other filesystems.
+> > > +Currently, THP only works for anonymous memory mappings, tmpfs/shmem and
+> > > +filesystems that support large folios.
+> > 
+> > That seems to allude that THP can be supported on filesystems
+> > that suppor large folios. I don't think we want to call that THP
 > 
-> The root cause of the first failure, is that perf trace may give two types
-> of output, depending on whether the comm of a process can be parsed, for
-> example:
+> But we do allocate a THP in the page cache if we support large folios.
 > 
-> mv/312705 renameat2(CWD, "/tmp/file1_VJOT", CWD, "/tmp/file2_VJOT", NOREPLACE) = 0
-> :312774/312774 renameat2(CWD, "/tmp/file1_5YcE", CWD, "/tmp/file2_5YcE", NOREPLACE) = 0
-> 
-> In the test, however, grep is always looking for the comm 'mv', which
-> sometimes may not be present.
-> 
-> The cause of the second failure is that 'perf trace BTF general tests'
-> modifies the perf config, and because tests are run concurrently,
-> subsequent tests use the modified perf config before the BTF general
-> test can restore the original config. Mark the BTF general tests as
-> exclusive will solve the failure.
+> See [1] where THP was supported through page cache. From what I
+> understand, THP support was added first to the page cache and then large
+> folios (orders in between) support came later.
 
-I'm not sure if the config is the cause of the failure.  Also I don't
-see it restored.
+I see, yes Do we want to clarify this further?
 
-IIUC the export only affects child processes from the current shell.
-So other tests running in parallel won't see the config change.
-
-But still, there should be something to affect the behavior.  It's
-strange to miss the task name in COMM record.
-
-I also confirm that running the test serially fixes it.
-
-Thanks,
-Namhyung
-
+> For example, you can mount XFS and do a simple dd as follows:
 > 
-> Signed-off-by: Howard Chu <howardchu95@gmail.com>
-> Fixes: 0255338d6975 ("perf trace: Add tests for BTF general augmentation")
-> ---
->  tools/perf/tests/shell/trace_btf_general.sh | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+> $ dd if=/dev/random of=/mnt/hello bs=1G count=2
 > 
-> diff --git a/tools/perf/tests/shell/trace_btf_general.sh b/tools/perf/tests/shell/trace_btf_general.sh
-> index a25d8744695e..4833618a116b 100755
-> --- a/tools/perf/tests/shell/trace_btf_general.sh
-> +++ b/tools/perf/tests/shell/trace_btf_general.sh
-> @@ -1,5 +1,5 @@
->  #!/bin/bash
-> -# perf trace BTF general tests
-> +# perf trace BTF general tests (exclusive)
->  # SPDX-License-Identifier: GPL-2.0
->  
->  err=0
-> @@ -29,7 +29,7 @@ check_vmlinux() {
->  trace_test_string() {
->    echo "Testing perf trace's string augmentation"
->    if ! perf trace -e renameat* --max-events=1 -- mv ${file1} ${file2} 2>&1 | \
-> -    grep -q -E "^mv/[0-9]+ renameat(2)?\(.*, \"${file1}\", .*, \"${file2}\", .*\) += +[0-9]+$"
-> +    grep -q -E "^.*/[0-9]+ renameat(2)?\(.*, \"${file1}\", .*, \"${file2}\", .*\) += +[0-9]+$"
->    then
->      echo "String augmentation test failed"
->      err=1
-> @@ -40,7 +40,7 @@ trace_test_buffer() {
->    echo "Testing perf trace's buffer augmentation"
->    # echo will insert a newline (\10) at the end of the buffer
->    if ! perf trace -e write --max-events=1 -- echo "${buffer}" 2>&1 | \
-> -    grep -q -E "^echo/[0-9]+ write\([0-9]+, ${buffer}.*, [0-9]+\) += +[0-9]+$"
-> +    grep -q -E "^.*/[0-9]+ write\([0-9]+, ${buffer}.*, [0-9]+\) += +[0-9]+$"
->    then
->      echo "Buffer augmentation test failed"
->      err=1
-> @@ -50,7 +50,7 @@ trace_test_buffer() {
->  trace_test_struct_btf() {
->    echo "Testing perf trace's struct augmentation"
->    if ! perf trace -e clock_nanosleep --force-btf --max-events=1 -- sleep 1 2>&1 | \
-> -    grep -q -E "^sleep/[0-9]+ clock_nanosleep\(0, 0, \{1,\}, 0x[0-9a-f]+\) += +[0-9]+$"
-> +    grep -q -E "^.*/[0-9]+ clock_nanosleep\(0, 0, \{1,\}, 0x[0-9a-f]+\) += +[0-9]+$"
->    then
->      echo "BTF struct augmentation test failed"
->      err=1
-> -- 
-> 2.45.2
+> And if you monitor `FileHugePages` after dd is done, it would have filled
+> up if THP is enabled.
 > 
+> > and that can confuse folks. Leaving "currently" also seems to
+> > indicate that there is more work to be done for THP for filesystems
+> > but that's not true as well. So how about something like:
+> 
+> There is more work to be done in the filesystems right? Adding large
+> folio support is the prerequisite here to get the THP support.
+
+This would be good to clarify as well.
+
+  Luis
