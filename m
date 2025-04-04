@@ -1,195 +1,126 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD2A71F3B92;
-	Fri,  4 Apr 2025 13:56:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF8211F3FD2
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 13:56:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743774966; cv=none; b=mSGlj2rBmDfCJyLgaAnFp0PGi11qHaM1ydCzs8WcliDwpK6talLmRAbCGzToJeywLDii40QjBV8CthgWkvOYX1QTjzFxlg/awY/6od3WJ802K+fBt8I8o+Zf4MZGSvKX21TezJ8WIXmo4FIHXcgvkKnD86PaF3bhb5ieSCjqyGU=
+	t=1743774969; cv=none; b=WK4kawTuIbQp0UnPJe4jFDNTl1ZolauYKFuxjeL8khmzzLvRqD2NLcbBcDD20HsKtnsNdlEdNOIKYlspFiQaUYHQMe13RmbvXJQf+CFoGQ3zeDw9SimxQRjZi0hACJXc2SP1ETBEfz747JOIcewWE7RxlvCPTplchgVYyz/Z1/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743774966; c=relaxed/simple;
-	bh=0IzK1GaqJSOEk7/gJbwTksW3Z40WfQCCpHt0WvWAOjA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=IiI5wUp0cuHvbsVYMo8iR5CvT433r5I+mzcflrmi96ARjikHDT4pezfmt1bmUILs1mjob9QLFJGDiPCZLpL/ShI/lDrkjadS9Sn84PlrSOOpuINdrHzmeSOgS1BTFJpRzhetBd0exbhWIPDWDVzw+QTIhKqV3yB+JgQBhcqRaa0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Td5aqW2g; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
+	s=arc-20240116; t=1743774969; c=relaxed/simple;
+	bh=9Z5nMV9IYLL5j0FabMWUyd01PGQbHkohEb/0097qIE4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TAcLa90aDu3cSi2q3CJ2JWUeIitPQ4zVc/mMwLkinMM0FrpNgy2cx5fGHvXNtfLiMKa2fPoMcNIGezUjLkQIqrX4eOfESkDnD8EaEg9ocxPXO8RN4GFV034IlXoZ500mZMq2wJ3pHo5RkiYnrAz6REGdW9kTwvBSeICCL3ijWsE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SOVxdayl; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Td5aqW2g"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53434A1D024032;
-	Fri, 4 Apr 2025 13:56:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=qcppdkim1; bh=eDjJTamfxfsyMrd9Ovbt+ZI9usmPrYbuC0F
-	aitGEEM4=; b=Td5aqW2gF3bC2aS6O75lIAd0HRNK8kg4b2Cayj21kEPcuFENpnH
-	CC90MIOS56JBelvdaLfNqN4bBIUHWTQs5WdBsXrMR15AJOhVcdH+vN0lQLyU0Vqy
-	oGA9//k+mnmr2CySJ/Jo5iHIFCfCUin4vSBAzL6SQ1zqFg+zmblbKU1bNaJ5toiv
-	d3w9+mDWmcJq/ZUbBamTY8sJW8Hu++EBu9xL6kQT2ltXPkXPuztXa9qh6Pp2Wxm7
-	D9AUX/X3kKxenhocbFlHh1NN9Bh0PDhtdHk2PB5J6uxxJw4EaHgUtalcZyzGNVeo
-	Lj6E/huBjYdUsEX4/wHjMB4v6942MCiiKRg==
-Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45t2d89xa3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 04 Apr 2025 13:56:01 +0000 (GMT)
-Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 534DtvGT023904;
-	Fri, 4 Apr 2025 13:55:57 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 45p9xn8j03-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 04 Apr 2025 13:55:57 +0000
-Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 534Dtvhm023898;
-	Fri, 4 Apr 2025 13:55:57 GMT
-Received: from hu-maiyas-hyd.qualcomm.com (hu-msavaliy-hyd.qualcomm.com [10.213.110.207])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 534DtvAV023894
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 04 Apr 2025 13:55:57 +0000
-Received: by hu-maiyas-hyd.qualcomm.com (Postfix, from userid 429934)
-	id 96B5323168; Fri,  4 Apr 2025 19:25:56 +0530 (+0530)
-From: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
-To: broonie@kernel.org, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc: quic_tdas@quicinc.com, andersson@kernel.org, konradybcio@kernel.org,
-        Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
-Subject: [PATCH v2] spi: Add support for Double Transfer Rate (DTR) mode
-Date: Fri,  4 Apr 2025 19:24:27 +0530
-Message-Id: <20250404135427.313825-1-quic_msavaliy@quicinc.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SOVxdayl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743774968; x=1775310968;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=9Z5nMV9IYLL5j0FabMWUyd01PGQbHkohEb/0097qIE4=;
+  b=SOVxdayl7qlXJUI9hDbTZroZXOUI90c8N1htMVS8BMFxK/ohMAfDfbRT
+   v2OLl4bs24YNyS7I4e94Mn5O3rgSngwbUTXWkK56CvGNGRC9psSp51ATk
+   HCySTYKs29bObi/+6nP6tbmyTgbYoT3TYU+P9war1wXtM2MDIRzvXJRlF
+   My24NB3UnK5PvMcaL/M5idUf/eDS5t1FrxZOqWl9GvSBvm50gh+8ditG4
+   /qVphPqI6qE4iNn5S9AjcMYzzff0d5a7Zq6K8jcoz7Rsd+sMaPa23cgWt
+   H9Q5n65ar1PrW0aYtRu5oedxBmEprnt83n7MRfq21VwFkND5p7ZfzCfZe
+   Q==;
+X-CSE-ConnectionGUID: NnLEf+BORoug1Q/KFn16bg==
+X-CSE-MsgGUID: 6IWYCvqQRS+HHAzC/dPznA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11394"; a="48867122"
+X-IronPort-AV: E=Sophos;i="6.15,188,1739865600"; 
+   d="scan'208";a="48867122"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 06:56:08 -0700
+X-CSE-ConnectionGUID: eMiMXG92QSKNsdwjK3yeAA==
+X-CSE-MsgGUID: VPV/R1boRsa+oDHZhi8beg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,188,1739865600"; 
+   d="scan'208";a="128225276"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 06:56:06 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1u0hWd-000000099a9-0CWQ;
+	Fri, 04 Apr 2025 16:56:03 +0300
+Date: Fri, 4 Apr 2025 16:56:02 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Raag Jadav <raag.jadav@intel.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>, david.m.ertman@intel.com,
+	ira.weiny@intel.com, lee@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] mfd: core: Support auxiliary device
+Message-ID: <Z-_k8sLYNOxlkODo@smile.fi.intel.com>
+References: <20250403110053.1274521-1-raag.jadav@intel.com>
+ <2025040336-ethically-regulate-3594@gregkh>
+ <Z-_ESekESYYvMHeR@black.fi.intel.com>
+ <Z-_QwB1cExN1emMF@smile.fi.intel.com>
+ <Z-_SIbfBdMXXkkWG@black.fi.intel.com>
+ <Z-_X2j0yzyLCS3r2@smile.fi.intel.com>
+ <Z-_hBbqke1qPP_Gi@black.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=PqmTbxM3 c=1 sm=1 tr=0 ts=67efe4f1 cx=c_pps a=Ou0eQOY4+eZoSc0qltEV5Q==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8 a=COk6AnOGAAAA:8 a=L_hmj3AzAEoXzwg3iu4A:9 a=cvBusfyB2V15izCimMoJ:22
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: k76jc2HcK3aVLTtZGtR6Zd-carmfG-90
-X-Proofpoint-GUID: k76jc2HcK3aVLTtZGtR6Zd-carmfG-90
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-04_06,2025-04-03_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- priorityscore=1501 impostorscore=0 mlxlogscore=999 mlxscore=0
- clxscore=1015 suspectscore=0 adultscore=0 lowpriorityscore=0 phishscore=0
- malwarescore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504040097
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z-_hBbqke1qPP_Gi@black.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Introduce support for protocol drivers to specify whether a transfer
-should use single or dual transfer mode. Currently, the SPI controller
-cannot determine this information from the user, leading to potential
-limitations in transfer capabilities.
+On Fri, Apr 04, 2025 at 04:39:17PM +0300, Raag Jadav wrote:
+> On Fri, Apr 04, 2025 at 04:00:10PM +0300, Andy Shevchenko wrote:
+> > On Fri, Apr 04, 2025 at 03:35:45PM +0300, Raag Jadav wrote:
+> > > On Fri, Apr 04, 2025 at 03:29:52PM +0300, Andy Shevchenko wrote:
+> > > > On Fri, Apr 04, 2025 at 02:36:41PM +0300, Raag Jadav wrote:
+> > > > > On Thu, Apr 03, 2025 at 03:02:47PM +0100, Greg KH wrote:
+> > > > > > On Thu, Apr 03, 2025 at 04:30:53PM +0530, Raag Jadav wrote:
 
-Add a new field `dtr_mode` in the `spi_transfer` structure. The `dtr_mode`
-field allows protocol drivers to indicate if Double Transfer Rate (DTR)
-mode is supported for a given transfer. When `dtr_mode` is set to true,
-the SPI controller will use DTR mode; otherwise, it will default to single
-transfer mode.
+...
 
-Introduce another field `dtr_caps` to indicate if the QSPI controller is
-capable of supporting DTR mode (SDR and DDR). By default, both `dtr_caps`
-and `dtr_mode` will be false. These flags manage the QSPI controller's DTR
-mode capabilities within the SPI framework.
+> > > > > > > 2. Should we allow auxiliary drivers to manage their own resources
+> > > > > > >    (MEM, IO, IRQ etc)?
+> > > > > > 
+> > > > > > The resources are all shared by the "parent" device, that's what makes
+> > > > > > aux drivers work, they need to handle this as there is no unique way to
+> > > > > > carve up the resources here.
+> > > > > > 
+> > > > > > So I don't know how you would do this, sorry.
+> > > > > 
+> > > > > Perhaps we can carve it up in mfd_add_devices() using start and end members
+> > > > > and error out if they overlap.
+> > > > 
+> > > > I don't think we want a flag day. If anything, it should be a new call.
+> > > 
+> > > Yes, I mean in mfd_add_auxiliary_device() (as in this patch).
+> > > 
+> > > > > Can't we still have a struct resource that is unique to that specific
+> > > > > auxiliary device?
+> > > > 
+> > > > Oh, believe me, you won't do that. Save yourself from _a lot_ of troubles with
+> > > > different cases when the shared resources are required.
+> > > 
+> > > I think we already have ignore_resource_conflicts flag as part of mfd_cell,
+> > > no?
+> > 
+> > It's not so easy, and it's not the only thing that's needed. You can dive into
+> > it and see how the request of the resource work. Also note the hardware that
+> > has common registers. Again, using regmap solves most of these issues if not all.
+> 
+> What if there are multiple types of resources including multiple ones
+> of same type?
+> 
+> I know it's not common but we have such cases already in place.
 
-The QSPI controller driver uses these flags to configure single or double
-transfer rates using the controller register.
+Don't solve the problems that do not exist. Let's make it simple (following
+KISS principle).
 
-The existing spi-mem driver helps configure the DTR mode but is limited to
-memory devices. There is no support available to set DTR mode for non-memory
-devices, e.g., touch or any generic SPI sensor. This change is backward
-compatible and doesn't break existing SPI or QSPI drivers.
-
-Changes include:
-- Addition of `dtr_mode` and `dtr_caps` fields in the `spi_transfer`
-  structure.
-- Documentation updates to reflect the new `dtr_mode` and `dtr_caps` fields.
-
-Signed-off-by: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
----
-Link to v1: https://lore.kernel.org/all/fbad733f-d034-4d63-ab82-ed867f0ed5d4@linaro.org/T/
-
-Changes in V2:
- - Added dtr_caps flag to expose controllers capability and validate the
-   dtr_mode against it.
----
----
- drivers/spi/spi.c       |  7 +++++++
- include/linux/spi/spi.h | 10 ++++++++++
- 2 files changed, 17 insertions(+)
-
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index 27fc30fa39d6..d9ef785cb266 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -4092,6 +4092,13 @@ static int __spi_validate(struct spi_device *spi, struct spi_message *message)
- 		if (__spi_validate_bits_per_word(ctlr, xfer->bits_per_word))
- 			return -EINVAL;
- 
-+		/* DDR mode is supported only if controller has dtr_caps=true.
-+		 * default considered as SDR mode for SPI and QSPI controller.
-+		 * Note: This is applicable only to QSPI controller.
-+		 */
-+		if (xfer->dtr_mode && !ctlr->dtr_caps)
-+			return -EINVAL;
-+
- 		/*
- 		 * SPI transfer length should be multiple of SPI word size
- 		 * where SPI word size should be power-of-two multiple.
-diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
-index 0ba5e49bace4..c454abbda910 100644
---- a/include/linux/spi/spi.h
-+++ b/include/linux/spi/spi.h
-@@ -503,6 +503,8 @@ extern struct spi_device *spi_new_ancillary_device(struct spi_device *spi, u8 ch
-  *	found.
-  * @put_offload: release the offload instance acquired by @get_offload.
-  * @mem_caps: controller capabilities for the handling of memory operations.
-+ * @dtr_caps: true if controller has dtr(single/dual transfer rate) capability.
-+ *	QSPI based controller should fill this based on controller's capability.
-  * @unprepare_message: undo any work done by prepare_message().
-  * @target_abort: abort the ongoing transfer request on an SPI target controller
-  * @cs_gpiods: Array of GPIO descriptors to use as chip select lines; one per CS
-@@ -746,6 +748,9 @@ struct spi_controller {
- 	const struct spi_controller_mem_ops *mem_ops;
- 	const struct spi_controller_mem_caps *mem_caps;
- 
-+	/* SPI or QSPI controller can set to true if supports SDR/DDR transfer rate */
-+	bool			dtr_caps;
-+
- 	struct spi_offload *(*get_offload)(struct spi_device *spi,
- 					   const struct spi_offload_config *config);
- 	void (*put_offload)(struct spi_offload *offload);
-@@ -998,6 +1003,7 @@ struct spi_res {
-  *	processed the word, i.e. the "pre" timestamp should be taken before
-  *	transmitting the "pre" word, and the "post" timestamp after receiving
-  *	transmit confirmation from the controller for the "post" word.
-+ * @dtr_mode: true if supports double transfer rate.
-  * @timestamped: true if the transfer has been timestamped
-  * @error: Error status logged by SPI controller driver.
-  *
-@@ -1049,6 +1055,9 @@ struct spi_res {
-  * two should both be set. User can set transfer mode with SPI_NBITS_SINGLE(1x)
-  * SPI_NBITS_DUAL(2x) and SPI_NBITS_QUAD(4x) to support these three transfer.
-  *
-+ * User may also set dtr_mode to true to use dual transfer mode if desired. if
-+ * not, default considered as single transfer mode.
-+ *
-  * The code that submits an spi_message (and its spi_transfers)
-  * to the lower layers is responsible for managing its memory.
-  * Zero-initialize every field you don't set up explicitly, to
-@@ -1083,6 +1092,7 @@ struct spi_transfer {
- 	unsigned	tx_nbits:4;
- 	unsigned	rx_nbits:4;
- 	unsigned	timestamped:1;
-+	bool		dtr_mode;
- #define	SPI_NBITS_SINGLE	0x01 /* 1-bit transfer */
- #define	SPI_NBITS_DUAL		0x02 /* 2-bit transfer */
- #define	SPI_NBITS_QUAD		0x04 /* 4-bit transfer */
 -- 
-2.25.1
+With Best Regards,
+Andy Shevchenko
+
 
