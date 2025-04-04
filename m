@@ -1,66 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46FD9190462;
-	Fri,  4 Apr 2025 08:42:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A24C19D07B;
+	Fri,  4 Apr 2025 08:43:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743756155; cv=none; b=pd8alwKpxj8ibO5YaUf/y7GNeVbi9/mBOMSp4qWRimhojkFGFrYnCzfb1ZhTzdD0eVWVXr/9YzXB5PX11B93+3b4vr1/43c+lxGov+B5xEksGV9h3yohKshYUCml6iVNCfIBhWFB+jIusW5BDK35LZFVfAfE31ktDOFdagHENHo=
+	t=1743756204; cv=none; b=URzTptdTlqla4msp5y46/m1A/lO2TgzivOopqQqGKUoVBZBi+fjlV7+PUeaFWKp9drjFx6IclOjpzFFxP/qmnkmmKkQDGo5SWKJJcN9MdAin2Z0OlkZYUJlEQIAp5AE0yEIDxEZDBXospcafq3at1uZs3DGvEXU8cFJ16v1OdYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743756155; c=relaxed/simple;
-	bh=RgJixkR04iKIsejh5yldwMV/SMTQE2HdrbwYhuj/Atk=;
+	s=arc-20240116; t=1743756204; c=relaxed/simple;
+	bh=Bi9x/GwNotnQUoNI7E8KOs7TaFavJ0TZu5a21VBEtcM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ueD76XEMT0tCZWOpe63jR15S3b7Narvfia5dFj8amj2IO9RbeCnRllQ0or9y7S/66NI8OqHaG4SL9fPPNuJZm+0J0e/4DJoIQ3236xdOazrBxfstQCT46/MrtUtKUOUKwkUB6DK5lbMURGgRUMDfYVcR5FoPLgniUAJaodq292U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dj96f99r; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=XRkrxfMvwvXf8E5yq8HmU9OH8u9Yy6/cFmSxcfLWOKf1x9sY1Hvdgd/EObHh7Au2TfkjHTLzBjMk9st0ApDmY0qnht2DWiGmqjCojq2Jof/uQ//2FOZKcjcojKd40R/gC1fF7nt0S/aOBSZUer/5gm21n6kpnChCL9pG1wvCQW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f4dRfsZE; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dj96f99r"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 221C9C4CEEA;
-	Fri,  4 Apr 2025 08:42:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743756153;
-	bh=RgJixkR04iKIsejh5yldwMV/SMTQE2HdrbwYhuj/Atk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dj96f99rwas08z2n+1In5u0cV1BW5ido3bSR9VEEdeCWTde7CfhH33Wxl5CeivJF+
-	 CufSRBRy1AMA1otAtCLnnAWBWn25IKdNpPY+GeXWNUTWCsYP1Q3b3CXQ70//wyYDd/
-	 SYisxlDsswDxdRQiQoLAk7AXeSCeAZiA+EGODzqQQDdMHAhRNCsGXcagGgHToWsSyh
-	 yoPWJfzfAWOqfSJZVlM1q2PWQK4E3C4T4jdTrl8NTNFLstVU30bggJzsX1XtJpMQgP
-	 DIe+rfd/CIh5lm9F9eyo6HALpI/mvgokTSWRv9aft+30TJAyeQTPenwLCJ7s8nQYgD
-	 2Aie6oxZZAq0w==
-Date: Fri, 4 Apr 2025 10:42:29 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Christoph Hellwig <hch@infradead.org>
-Cc: Andreas Hindborg <a.hindborg@kernel.org>, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, Breno Leitao <leitao@debian.org>, 
-	Joel Becker <jlbec@evilplan.org>
-Subject: Re: [PATCH] MAINTAINERS: configfs: add Andreas Hindborg as maintainer
-Message-ID: <20250404-komodowaran-erspielen-cc2dcbcda3e3@brauner>
-References: <bHDR61l3TdaMVptxe5z4Q_3_EsRteMfNoygbiFYZ8AzNolk9DPRCG2YDD3_kKYP6kAYel9tPGsq9J8x7gpb-ww==@protonmail.internalid>
- <Z-aDV4ae3p8_C6k7@infradead.org>
- <87frix5dk3.fsf@kernel.org>
- <20250403-sauer-himmel-df90d0e9047c@brauner>
- <Z--Ae5-C8xlUeX8t@infradead.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f4dRfsZE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743756202; x=1775292202;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Bi9x/GwNotnQUoNI7E8KOs7TaFavJ0TZu5a21VBEtcM=;
+  b=f4dRfsZE3Rqc5lCSIF+SqST2mz7TDxUwUFr6y8gzaR3Dfc8MmD/RsC8q
+   nLlznDsq6pQKidFpM8TIFHky4FfYlQXOPWyI4sjhcgQZxNTornN2qRHmD
+   CX+Ohx6QXHtOS7mvgyPCCW5wVqMU1NOe/MTnSgX0PNL33YIjC2VrRI0hB
+   7Xlfy/jSivMuH4qaWUm7ViOLErh2GEteA2fFepagdTtIKFwjtKwUdp7RQ
+   3im1KZyQXwYH9GwpjZ0zGNaTGJ92PPknYTSuV4iECkpdsjlxJxfioEq3d
+   qUCgFKueF6JRIqVfuhDQtsjrLLDCdLmKZ/75O2zAbg0EwT6uUB1LXM2EN
+   A==;
+X-CSE-ConnectionGUID: Cm4FaumOSBWE+/qQutZ6Ew==
+X-CSE-MsgGUID: n0nj+KLoQIiWuiMOfzZmnQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11393"; a="56558053"
+X-IronPort-AV: E=Sophos;i="6.15,187,1739865600"; 
+   d="scan'208";a="56558053"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 01:43:21 -0700
+X-CSE-ConnectionGUID: y7dgSBLQTeKvjTRjwBSD2Q==
+X-CSE-MsgGUID: 5zGsE7QkShqTm6k3phutOg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,187,1739865600"; 
+   d="scan'208";a="132380185"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa004.fm.intel.com with ESMTP; 04 Apr 2025 01:43:19 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id 4D6A1123; Fri, 04 Apr 2025 11:43:18 +0300 (EEST)
+Date: Fri, 4 Apr 2025 11:43:18 +0300
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Ard Biesheuvel <ardb+git@google.com>
+Cc: linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	x86@kernel.org, Ard Biesheuvel <ardb@kernel.org>, 
+	Tom Lendacky <thomas.lendacky@amd.com>, Borislav Petkov <bp@alien8.de>, 
+	Dionna Amalie Glaze <dionnaglaze@google.com>, Kevin Loughlin <kevinloughlin@google.com>
+Subject: Re: [PATCH v2 3/3] x86/boot: Implement early memory acceptance for
+ SEV-SNP
+Message-ID: <l6izksy3qtvo6t6l3v44xhuzmrnl2ijv7fx5ypvaz7kjxvpwhh@4zwlvxyfrp43>
+References: <20250404082921.2767593-5-ardb+git@google.com>
+ <20250404082921.2767593-8-ardb+git@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z--Ae5-C8xlUeX8t@infradead.org>
+In-Reply-To: <20250404082921.2767593-8-ardb+git@google.com>
 
-On Thu, Apr 03, 2025 at 11:47:23PM -0700, Christoph Hellwig wrote:
-> On Thu, Apr 03, 2025 at 01:27:27PM +0200, Christian Brauner wrote:
-> > There's no need to get upset. Several people pointed out that Joel
-> > Becker retired and since he hasn't responded this felt like the right
-> > thing to do. Just send a patch to add him back. I see no reason to not
-> > have Andreas step up to maintain it.
+On Fri, Apr 04, 2025 at 10:29:25AM +0200, Ard Biesheuvel wrote:
+> From: Ard Biesheuvel <ardb@kernel.org>
 > 
-> Removing someone just because they have retired feels odd, but hey who
-> am I to complain.  I did reach out to him when giving maintainership
-> and he replied although it did indeed take a while.
+> Switch to a different API for accepting memory in SEV-SNP guests, one
+> which is actually supported at the point during boot where the EFI stub
+> may need to accept memory, but the SEV-SNP init code has not executed
+> yet.
 
-I mean, we can surely put Joel back in. My take would be to remove
-that person from the maintainer entry because people will get confused
-when they don't receive a reply. But I'm totally fine if we should leave
-Joel in.
+I probably miss the point, but why cannot decompressor use the same _early
+version of accept too and avoid code duplication?
+
+Maybe spell it out in the commit message for someone like me :P
+
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
