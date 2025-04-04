@@ -1,82 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B581199FC1;
-	Fri,  4 Apr 2025 12:01:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 664B0199FC1;
+	Fri,  4 Apr 2025 12:02:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.119
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743768119; cv=none; b=TCkrpk5himdOxo7cgTStAJOVDs+Xf8wF25mMdugSYG6vs2d57lnDp5n0Fng1Cf41pjdTOefuofa8MT6LK+CGuK09Mg6zs/353MqbOsMkx5GYFGFSL0M0BEcIVZe0lu3agvV4ljP2kfVRxVaYoeoAYMQB+4YrScVfhWTuWweVh64=
+	t=1743768145; cv=none; b=Mya1/1/C2tEUdZjQMywljKIwsQKvpgB4nDeKKiYAaWibMvWqY5X7XDJTtJDxO4pdSOSmxzTpgMxmas6DQN/0f7aGht4Or0LQXaYpIRsEjI8l9RK78RdzxDzOHuqgR2cj3Dd06JUl5Md88W2gDtSAByCGksSlWALgfFPLK95f1Rs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743768119; c=relaxed/simple;
-	bh=dv/CplDo9vNXhBqxBlkWDQ5GwazpbgFRv8Qt6GdjCS8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pz3mZYwZNQh4C4kUa0jlkZUQC5jiIm8wbMu/oQUxSLeVbMuN/XsXnydsrA41UoDtH+wU8qCtO5oP41zsWP9LpV5yNtj+zGtFGNKFdVkvYihBWJXudvfsft76xIzxG5KpGFrHi47D4Q9lLSrRqKuzDyXuNzU0rTOcuAKBvW5AQ/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cNSuaz/q; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743768145; c=relaxed/simple;
+	bh=hf1nUoBxIUkyIsDCr6cE4xMcCUwG5afMeqtD/lwPvdY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=h2D5WRmAwSYC4f5Ifge8AsbWXQ4+MmrCnl+33vlzOujUGmt/VlnDmsAPo+TsrUds+sWYbrR319Vg03E3Qq4xVjdgEgv5+8bZFrgMbhOFUKLCmh6xWTzFyGKShoEa7UMm/rqjQzOtUBZsLkEs3YFxwxY6bM9DUaIpZy3qjKDR5Nk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=iTinSIAq; arc=none smtp.client-ip=115.124.30.119
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cNSuaz/q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E489C4CEDD;
-	Fri,  4 Apr 2025 12:01:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743768118;
-	bh=dv/CplDo9vNXhBqxBlkWDQ5GwazpbgFRv8Qt6GdjCS8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cNSuaz/quXCcyL0N4/L/wwQPhwBp5xhj1UqGtpsRBDnSH+yQgXyaIpSrJHLxnKv5u
-	 9m2oi1v7n1+/HNF/dkKAc+V8mh17OpE4MPY+2VqB9IDChEm2CzgjBW4c35njmkpOaV
-	 refU+biN3J4kLDLbtQMs1OusEyJQbpn+h2qGtqPbMNBW+kDRmJRnGxCLcZY7GA80VY
-	 Zrt5w/84N3uwVad3eBiYHy6HyuZjpnW+oDWZFnjejCZEZSUOeotBvdwYsZ4ZJ6zHcU
-	 pK5kvxBtgLspNyRYAzP/6GzlSzk7KPpXTaZJeJgS4f/n/d6ktPlu6tYMzwE5X8ziJ5
-	 KTEHY6zveOROQ==
-Date: Fri, 4 Apr 2025 13:01:52 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
-	jonathanh@nvidia.com, f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-	conor@kernel.org, hargar@microsoft.com
-Subject: Re: [PATCH 6.14 00/21] 6.14.1-rc1 review
-Message-ID: <3aa766cc-5db3-4ce9-a2a8-e4ec105ff77e@sirena.org.uk>
-References: <20250403151621.130541515@linuxfoundation.org>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="iTinSIAq"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1743768139; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=DXqhybVw42vr+Uzpbj9gZAigGXTns6QEeApQhjx7zik=;
+	b=iTinSIAqclvLRXx84yw3rQ67Je4P9B0Yx40+m05zYKPCC1wYyR4QSm0oy1GSOMeeO5AlEJGy4A/Wjl5qx97rJt1toX5KkxT4OX7/kiKel5lcmLMTIScnN7r1V6hFwx27F6W1CWC7g5PSp0BDxJWUH7b36vkGS007dNWIMMxCH10=
+Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WUyld3Z_1743768138 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Fri, 04 Apr 2025 20:02:19 +0800
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+To: vinicius.gomes@intel.com,
+	dave.jiang@intel.com,
+	fenghuay@nvidia.com,
+	vkoul@kernel.org
+Cc: xueshuai@linux.alibaba.com,
+	dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/9] dmaengine: idxd: fix memory leak in error handling path
+Date: Fri,  4 Apr 2025 20:02:08 +0800
+Message-ID: <20250404120217.48772-1-xueshuai@linux.alibaba.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="VmLIId/CJTwHolHU"
-Content-Disposition: inline
-In-Reply-To: <20250403151621.130541515@linuxfoundation.org>
-X-Cookie: You will soon forget this.
+Content-Transfer-Encoding: 8bit
+
+changes since v3:
+- remove a blank line to fix checkpatch warning per Fenghua
+- collect Reviewed-by tags from Fenghua
 
 
---VmLIId/CJTwHolHU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+changes since v2:
+- add to cc stable per Markus
+- add patch 4 to fix memory leak in idxd_setup_internals per Fenghua
+- collect Reviewed-by tag for patch 2 from Fenghua
+- fix reference cnt in remove() per Fenghua
 
-On Thu, Apr 03, 2025 at 04:20:04PM +0100, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.14.1 release.
-> There are 21 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+changes since v1:
+- add Reviewed-by tag for patch 1-5 from Dave Jiang
+- add fixes tag
+- add patch 6 and 7 to fix memory leak in remove call per Vinicius
 
-Tested-by: Mark Brown <broonie@kernel.org>
+Shuai Xue (9):
+  dmaengine: idxd: fix memory leak in error handling path of
+    idxd_setup_wqs
+  dmaengine: idxd: fix memory leak in error handling path of
+    idxd_setup_engines
+  dmaengine: idxd: fix memory leak in error handling path of
+    idxd_setup_groups
+  dmaengine: idxd: Add missing cleanup for early error out in
+    idxd_setup_internals
+  dmaengine: idxd: Add missing cleanups in cleanup internals
+  dmaengine: idxd: fix memory leak in error handling path of idxd_alloc
+  dmaengine: idxd: fix memory leak in error handling path of
+    idxd_pci_probe
+  dmaengine: idxd: Add missing idxd cleanup to fix memory leak in remove
+    call
+  dmaengine: idxd: Refactor remove call with idxd_cleanup() helper
 
---VmLIId/CJTwHolHU
-Content-Type: application/pgp-signature; name="signature.asc"
+ drivers/dma/idxd/init.c | 159 ++++++++++++++++++++++++++++------------
+ 1 file changed, 113 insertions(+), 46 deletions(-)
 
------BEGIN PGP SIGNATURE-----
+-- 
+2.43.5
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmfvyi8ACgkQJNaLcl1U
-h9DVpAf9FcDroptnly+IOT4XrEO/Iwina2Arv34KCwvPEvvZ38rS7LIeboLGveza
-jDgmd5JIs41xREhD8Lt8eM7n49x4UBqUk3AY6iPTwFam2XgzjeVhaqTGCDEMk4F9
-xxp0km74vf0u/Qu+ZqQAsQEwQC6D3nN4VSkC1AA60KfcQXLHXxb9gTZvvVjkjgMo
-JtwVG7FqXItNQrQGC0G0BGrZzyRT7fX7Clil6urJIbE/iQIJd//bf6qVdA6cCGn2
-U0hWme3X2b4gBsmbhMWAkTX2p1OGIHZP8JqtXDqYneJgOvnPlICJQucT+CdSVX+2
-sqjH6d+28/p7ujru0p51vOLI/Dntmg==
-=l+bO
------END PGP SIGNATURE-----
-
---VmLIId/CJTwHolHU--
