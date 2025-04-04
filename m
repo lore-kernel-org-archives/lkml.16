@@ -1,205 +1,155 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8815194A59
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 12:36:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 549E2194A59
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 12:38:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743770184; cv=none; b=UK4R9Z6kJHmn5KnYTw+U1R24n1cJo+4xKw+0DcEOsJSvzfqYP6QRrmaxHhfYXnA5mk1Hj1qd3aAMiWvvLqkjGxkJjF1xyABkcR5xZwThi1mlMUMVGtTzf8cOAMx2gETHzBB1bvypxg9Lb/fNo9N2se5lZIcWu2e3ZeU5lRJzZOw=
+	t=1743770303; cv=none; b=dVDwkoP6CSeJNyw7O9mE+2DGfSK3IttiCf0cmj0stq3rKIJWBRRQUE00VtgWobGu7/VtxOKwySkF48AUBmFI8jUxMFS6lR/DY61KS3FIst1I/+Rqg5eGuL/KHLhQZ/Hv+knknRZGXHob9mMr8w1RhRMPy/li1jJ7fbmrKWR9aDA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743770184; c=relaxed/simple;
-	bh=0tg7jVgRBQbMi3XkrUnIiUDI/dM9GoFZjjsV6C1P8dI=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=IU+LHuJEywmI70ojRajs6e1mxmeWePi4mZnIsSS9Nj+6MvumBep1jPnX1hSgqSwVPVp/QIdOybbYpG+cn0yfnPlqksHMFJMLsZ3CCHspgKOFChO6rpY/GXT8vWVjZW+Cg4qCzwW9Zh7+ko98nqffF27Hk1UGbqosRDP5rb/D9ZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TdWdC8UW; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1743770303; c=relaxed/simple;
+	bh=RcMTWnmgUYFYD6VF2EaLBPiPWi7gChWHpBqLg+WBsDc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IrJ0AJ/aTwGCrBNMBR8bmImlhU+qcxfxd+ZHEfNmPT3UzLtQ/9nPrGREGllsumeQ+W/pLEzmNBirI1l+3Hnens078M/hqvz57zbsMeX+a0zlTHLduY5eHH4hxF9i6x88DjlMtTaY6OVrEVXj/J5+hZ3RDAv1yELG5cBzErjF0fQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=F/+AP8wq; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TdWdC8UW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743770182; x=1775306182;
-  h=date:from:to:cc:subject:message-id;
-  bh=0tg7jVgRBQbMi3XkrUnIiUDI/dM9GoFZjjsV6C1P8dI=;
-  b=TdWdC8UWbOSFMIrDqn6YmfJjsaUxrOJEgR3lG1y7B59dF2fuubDDHBGo
-   zJl0pX0kSrmiifxi1+BWjUlYNmCxCtvVaDb1V6ZBZrvsNVYrmA9GSnrr2
-   F1EVfDSJngC5CY8IqkZ0TnC+U/26vNDhB81Xl0OAmZhR/m9Qu+K76M2ce
-   C93OxJWscqG005HLlPq3WNzUmHz3QJXAV2lw4EhowKg9qEr8Hz80ybQfx
-   AkL/+TAoa4ceRrbUQD6PdEy/T+neMV82Xvza0ppTCvAdi5YlC2hCeoDwp
-   hzVWJMFcgCEouK9KtbRk8QPPdf7BnHr0SAOaG37io426C0/gn6Iw23TLD
-   g==;
-X-CSE-ConnectionGUID: RFttTuZXRReha+onQnleMg==
-X-CSE-MsgGUID: 3caLjcvHRamVU5DzbiyN5w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11393"; a="56574325"
-X-IronPort-AV: E=Sophos;i="6.15,188,1739865600"; 
-   d="scan'208";a="56574325"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 05:36:22 -0700
-X-CSE-ConnectionGUID: ixQWKyaWQ6q4dtmBksWO4A==
-X-CSE-MsgGUID: DqtLZxRwQgaGqZ3LjhT7uw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,188,1739865600"; 
-   d="scan'208";a="158288680"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by fmviesa001.fm.intel.com with ESMTP; 04 Apr 2025 05:36:21 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u0gHT-0001Ej-05;
-	Fri, 04 Apr 2025 12:36:19 +0000
-Date: Fri, 04 Apr 2025 20:36:13 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:sched/urgent] BUILD SUCCESS
- 169eae7711ea4b745e2d33d53e7b88689b10e1a0
-Message-ID: <202504042002.iBlOEc2q-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F/+AP8wq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743770299;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vJaPaLyX59V82xrNu9MClw/rdrscnEivzyc3CCiExGE=;
+	b=F/+AP8wqkq08W22jJUmITR9S20Xr0YpDbNin+dUKFO/E/xSwAkXtgZ+T48/r+0BKto8cs0
+	aMcNgwdH0xItZpThmC7LPoebqV+IcxIt18dB9Pq2WHisguD1fw4X5Xdo71Q4FObZDvGmIq
+	Xhh60pXjtox9E3TFXN0j6C9fTUNSneQ=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-161-2cAwC4iSPuq49jUPtuNGyA-1; Fri,
+ 04 Apr 2025 08:38:18 -0400
+X-MC-Unique: 2cAwC4iSPuq49jUPtuNGyA-1
+X-Mimecast-MFC-AGG-ID: 2cAwC4iSPuq49jUPtuNGyA_1743770297
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id F14E71956089;
+	Fri,  4 Apr 2025 12:38:16 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.144])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 053553003777;
+	Fri,  4 Apr 2025 12:38:13 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Fri,  4 Apr 2025 14:37:42 +0200 (CEST)
+Date: Fri, 4 Apr 2025 14:37:38 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Christian Brauner <brauner@kernel.org>
+Cc: linux-fsdevel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>,
+	Lennart Poettering <lennart@poettering.net>,
+	Daan De Meyer <daan.j.demeyer@gmail.com>,
+	Mike Yuan <me@yhndnzj.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC 3/4] pidfd: improve uapi when task isn't found
+Message-ID: <20250404123737.GC3720@redhat.com>
+References: <20250403-work-pidfd-fixes-v1-0-a123b6ed6716@kernel.org>
+ <20250403-work-pidfd-fixes-v1-3-a123b6ed6716@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250403-work-pidfd-fixes-v1-3-a123b6ed6716@kernel.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git sched/urgent
-branch HEAD: 169eae7711ea4b745e2d33d53e7b88689b10e1a0  rseq: Eliminate useless task_work on execve
+On 04/03, Christian Brauner wrote:
+>
+> We currently report EINVAL whenever a struct pid has no tasked attached
+> anymore thereby conflating two concepts:
+>
+> (1) The task has already been reaped.
+> (2) The caller requested a pidfd for a thread-group leader but the pid
+>     actually references a struct pid that isn't used as a thread-group
+>     leader.
+>
+> This is causing issues for non-threaded workloads as in [1].
+>
+> This patch tries to allow userspace to distinguish between (1) and (2).
+> This is racy of course but that shouldn't matter.
+>
+> Link: https://github.com/systemd/systemd/pull/36982 [1]
+> Signed-off-by: Christian Brauner <brauner@kernel.org>
 
-elapsed time: 1450m
+For this series:
 
-configs tested: 128
-configs skipped: 3
+Reviewed-by: Oleg Nesterov <oleg@redhat.com>
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
 
-tested configs:
-alpha                            alldefconfig    gcc-14.2.0
-alpha                             allnoconfig    gcc-14.2.0
-alpha                            allyesconfig    gcc-14.2.0
-arc                              allmodconfig    gcc-14.2.0
-arc                               allnoconfig    gcc-14.2.0
-arc                              allyesconfig    gcc-14.2.0
-arc                     haps_hs_smp_defconfig    gcc-14.2.0
-arc                   randconfig-001-20250404    gcc-14.2.0
-arc                   randconfig-002-20250404    gcc-14.2.0
-arm                              allmodconfig    gcc-14.2.0
-arm                               allnoconfig    clang-21
-arm                              allyesconfig    gcc-14.2.0
-arm                       imx_v4_v5_defconfig    clang-15
-arm                   randconfig-001-20250404    clang-21
-arm                   randconfig-002-20250404    gcc-7.5.0
-arm                   randconfig-003-20250404    clang-21
-arm                   randconfig-004-20250404    clang-21
-arm                           sama7_defconfig    clang-21
-arm                    vt8500_v6_v7_defconfig    gcc-14.2.0
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-14.2.0
-arm64                 randconfig-001-20250404    gcc-5.5.0
-arm64                 randconfig-002-20250404    gcc-7.5.0
-arm64                 randconfig-003-20250404    gcc-9.5.0
-arm64                 randconfig-004-20250404    clang-15
-csky                              allnoconfig    gcc-14.2.0
-csky                  randconfig-001-20250403    gcc-14.2.0
-csky                  randconfig-002-20250403    gcc-14.2.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-21
-hexagon                          allyesconfig    clang-21
-hexagon               randconfig-001-20250403    clang-21
-hexagon               randconfig-002-20250403    clang-21
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250403    clang-20
-i386        buildonly-randconfig-002-20250403    clang-20
-i386        buildonly-randconfig-003-20250403    clang-20
-i386        buildonly-randconfig-004-20250403    gcc-12
-i386        buildonly-randconfig-005-20250403    gcc-12
-i386        buildonly-randconfig-006-20250403    gcc-12
-i386                                defconfig    clang-20
-loongarch                        allmodconfig    gcc-14.2.0
-loongarch                         allnoconfig    gcc-14.2.0
-loongarch             randconfig-001-20250403    gcc-12.4.0
-loongarch             randconfig-002-20250403    gcc-14.2.0
-m68k                             allmodconfig    gcc-14.2.0
-m68k                              allnoconfig    gcc-14.2.0
-m68k                             allyesconfig    gcc-14.2.0
-m68k                          amiga_defconfig    gcc-14.2.0
-m68k                        m5272c3_defconfig    gcc-14.2.0
-m68k                           virt_defconfig    gcc-14.2.0
-microblaze                       allmodconfig    gcc-14.2.0
-microblaze                        allnoconfig    gcc-14.2.0
-microblaze                       allyesconfig    gcc-14.2.0
-mips                              allnoconfig    gcc-14.2.0
-mips                          ath79_defconfig    gcc-14.2.0
-mips                           ip32_defconfig    clang-21
-nios2                             allnoconfig    gcc-14.2.0
-nios2                 randconfig-001-20250403    gcc-10.5.0
-nios2                 randconfig-002-20250403    gcc-14.2.0
-openrisc                          allnoconfig    gcc-14.2.0
-openrisc                         allyesconfig    gcc-14.2.0
-openrisc                            defconfig    gcc-14.2.0
-openrisc                       virt_defconfig    gcc-14.2.0
-parisc                           allmodconfig    gcc-14.2.0
-parisc                            allnoconfig    gcc-14.2.0
-parisc                           allyesconfig    gcc-14.2.0
-parisc                              defconfig    gcc-14.2.0
-parisc                randconfig-001-20250403    gcc-13.3.0
-parisc                randconfig-002-20250403    gcc-11.5.0
-powerpc                          allmodconfig    gcc-14.2.0
-powerpc                           allnoconfig    gcc-14.2.0
-powerpc                          allyesconfig    clang-21
-powerpc                          g5_defconfig    gcc-14.2.0
-powerpc               randconfig-001-20250403    clang-16
-powerpc               randconfig-002-20250403    gcc-6.5.0
-powerpc               randconfig-003-20250403    clang-21
-powerpc64             randconfig-001-20250403    clang-19
-powerpc64             randconfig-002-20250403    clang-17
-powerpc64             randconfig-003-20250403    clang-21
-riscv                            allmodconfig    clang-21
-riscv                             allnoconfig    gcc-14.2.0
-riscv                            allyesconfig    clang-16
-riscv                               defconfig    clang-21
-riscv                 randconfig-001-20250403    clang-21
-riscv                 randconfig-002-20250403    clang-21
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-15
-s390                             allyesconfig    gcc-14.2.0
-s390                                defconfig    clang-15
-s390                  randconfig-001-20250403    gcc-9.3.0
-s390                  randconfig-002-20250403    gcc-7.5.0
-s390                       zfcpdump_defconfig    clang-15
-sh                               allmodconfig    gcc-14.2.0
-sh                                allnoconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                                  defconfig    gcc-14.2.0
-sh                     magicpanelr2_defconfig    gcc-14.2.0
-sh                    randconfig-001-20250403    gcc-6.5.0
-sh                    randconfig-002-20250403    gcc-14.2.0
-sh                          sdk7786_defconfig    gcc-14.2.0
-sparc                            allmodconfig    gcc-14.2.0
-sparc                             allnoconfig    gcc-14.2.0
-sparc                 randconfig-001-20250403    gcc-11.5.0
-sparc                 randconfig-002-20250403    gcc-13.3.0
-sparc64                             defconfig    gcc-14.2.0
-sparc64               randconfig-001-20250403    gcc-7.5.0
-sparc64               randconfig-002-20250403    gcc-13.3.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-21
-um                               allyesconfig    gcc-12
-um                                  defconfig    clang-21
-um                    randconfig-001-20250403    clang-19
-um                    randconfig-002-20250403    gcc-12
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250403    clang-20
-x86_64      buildonly-randconfig-002-20250403    clang-20
-x86_64      buildonly-randconfig-003-20250403    clang-20
-x86_64      buildonly-randconfig-004-20250403    clang-20
-x86_64      buildonly-randconfig-005-20250403    gcc-11
-x86_64      buildonly-randconfig-006-20250403    clang-20
-x86_64                              defconfig    gcc-11
-xtensa                            allnoconfig    gcc-14.2.0
-xtensa                randconfig-001-20250403    gcc-11.5.0
-xtensa                randconfig-002-20250403    gcc-13.3.0
+But I have a couple of cosmetic nits...
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+>  int pidfd_prepare(struct pid *pid, unsigned int flags, struct file **ret)
+>  {
+> -	bool thread = flags & PIDFD_THREAD;
+> +	int err = 0;
+>
+> -	if (!pid_has_task(pid, thread ? PIDTYPE_PID : PIDTYPE_TGID))
+> -		return -EINVAL;
+> +	if (!(flags & PIDFD_THREAD)) {
+> +		/*
+> +		 * If this is struct pid isn't used as a thread-group
+> +		 * leader pid but the caller requested to create a
+> +		 * thread-group leader pidfd then report ENOENT to the
+> +		 * caller as a hint.
+> +		 */
+> +		if (!pid_has_task(pid, PIDTYPE_TGID))
+> +			err = -ENOENT;
+> +	}
+> +
+> +	/*
+> +	 * If this wasn't a thread-group leader struct pid or the task
+> +	 * got reaped in the meantime report -ESRCH to userspace.
+> +	 *
+> +	 * This is racy of course. This could've not been a thread-group
+> +	 * leader struct pid and we set ENOENT above but in the meantime
+> +	 * the task got reaped. Or there was a multi-threaded-exec by a
+> +	 * subthread and we were a thread-group leader but now got
+> +	 * killed.
+
+The comment about the multi-threaded-exec looks a bit misleading to me.
+If this pid is a group-leader-pid and we race with de_thread() which does
+
+		exchange_tids(tsk, leader);
+		transfer_pid(leader, tsk, PIDTYPE_TGID);
+
+nothing "bad" can happen, both pid_has_task(PIDTYPE_PID) or
+pid_has_task(PIDTYPE_TGID) can't return NULL during (or after) this
+transition.
+
+hlists_swap_heads_rcu() or hlist_replace_rcu() can't make
+hlist_head->first == NULL during this transition...
+
+Or I misunderstood the comment?
+
+And... the code looks a bit overcomplicated to me, why not simply
+
+	int pidfd_prepare(struct pid *pid, unsigned int flags, struct file **ret)
+	{
+		if (!pid_has_task(pid, PIDTYPE_PID))
+			return -ESRCH;
+
+		if (!(flags & PIDFD_THREAD) && !pid_has_task(pid, PIDTYPE_TGID))
+			return -ENOENT;
+
+		return __pidfd_prepare(pid, flags, ret);
+	}
+
+? Of course, the comments should stay.
+
+But again, this is cosmetic/subjective, please do what you like more.
+
+Oleg.
+
