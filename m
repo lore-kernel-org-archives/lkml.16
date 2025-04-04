@@ -1,261 +1,85 @@
-Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F38BF1F582D
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 15:19:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D47F71E5B6C;
+	Fri,  4 Apr 2025 15:20:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743779969; cv=none; b=KSD9+BxHrsxebtflvA17yAa2StuTlufdEkdUfwA3gCxVljopM28ue1stSvx6N4RAKHKVxVjAOdLb5p2bp+EDLPIhMIdQZVYVP8CP3epPbxLLWNJXfJwAtADLlER3nHUYJJcve4SN8e0rntlqrOYZ8ve3eiHGc/Y1Deoq/BXuXLc=
+	t=1743780027; cv=none; b=fF1rlUtVVOpzLh5KpgCmK5xRDaymhFvX7U+hUY44vnJjSUVZqHonQT4LnlbnHHbjvCJyzeujoQuD3BkXz1wKNkJO0D8AaXUBC5UvGe2mAehngfQT2IA4zLwtkQGe7Obj73npwEJicKIt2GKGBYuNOXyMHiaeKEZme6ZXR62jPxo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743779969; c=relaxed/simple;
-	bh=eBQ9nNxE6lSXQIeYzj1Cau9JY6Jgqp7mRdU8CLlxMig=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KVlT5EoveLZdDWuzSFaSdGzi9P5Or2OoxyVeGQwDMY+u8iq8IXpG8Kfs+UAe3+xuEK0yO2xkMzp+YyfEgIqzotmdKzmW8xT/viIAdW8CM2zC9s++Y0EuZv2qJqDFSd0njHwVWFCGeFXSTZKpcywnTibNzbTvSfnVf3B716ctCOg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=TEdwwrAv; arc=none smtp.client-ip=91.218.175.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1743780027; c=relaxed/simple;
+	bh=wXfM6QyWAvK68QTm/0iU77QM/D2h3ToTPakJYOIk9MQ=;
+	h=Message-ID:From:To:Cc:Subject:Date; b=i+cwTGX87fRGpeuCTdoPaE/ZlJOMfzVz7cQosOKZq3w7N9yr+eHY7k6hZSe7dAzIC3WzCW0Vri89ABQwl0QY5JxAXMmc6W0vFrmyx/dwyYwO5Z37X74e3a7ODR9T/T+o5NgJ6qRWpPT9+1DAUmQgBnxzHZVrrjBNkNRMSTz/FyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TfQFiC9b; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="TEdwwrAv"
-Message-ID: <c9a69eda-e066-49e1-979a-b6ec5ef115ba@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1743779964;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UWX0HTz4vZa+tHFvj8jM2lcjDzCYW7m/OUMpzGk+52s=;
-	b=TEdwwrAv1AvChzcWpwOAmY9TNVC9ryZeMsF2AhYAiE/SgE2zWcHO8rgoiPlQPfmHpm4vZJ
-	Y1GrWAgWka1x006GeZk12ELJxehJ/BhINMU6qRe05vINZ1hdeBV6jC6Y4yd516v/7ToMd2
-	6HZ7ZSJdudDFrdTfrWqn+5cOVYysmC8=
-Date: Fri, 4 Apr 2025 11:19:18 -0400
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TfQFiC9b"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9A27C4CEDD;
+	Fri,  4 Apr 2025 15:20:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743780027;
+	bh=wXfM6QyWAvK68QTm/0iU77QM/D2h3ToTPakJYOIk9MQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=TfQFiC9bjaD53D1NaITDLMZKbXBpFKEeU+PwHXR8NFnQnUBQk0DEALQpNje1pBB3M
+	 tjSX280cQI7J92QMo8BYbnpmhXvLNmg9gMqqP2VwNGo0p6LlryoADFXGjeRfesO79p
+	 zNiuBWmOnIi1T7F3Kv8aojtQnPqFe6NEzhsDWGlY1X/O7VaNllKJ1nOafz7QwixlVO
+	 3dfCcQnnAcLrKW04+uVqRfb0XSbwf9KdUXiBXsJn53A+eDfoiplDGDetOcv378MqGq
+	 ShlaM5e/4gD5PLxxFShmdUhDx0HwbqX62TvwiD++XBUpf68LZp5YmUd4IXAIpwJnJH
+	 EMwlrQHz5uItA==
+Message-ID: <1fac1505c004071e4ad79df7e733d422.broonie@kernel.org>
+From: Mark Brown <broonie@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Subject: [GIT PULL] SPI fixes for v6.15-merge-window
+Date: Fri, 04 Apr 2025 16:20:13 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Subject: Re: [RFC net-next PATCH 01/13] dt-bindings: net: Add binding for
- Xilinx PCS
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: netdev@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S . Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Russell King <linux@armlinux.org.uk>,
- linux-kernel@vger.kernel.org, Christian Marangi <ansuelsmth@gmail.com>,
- upstream@airoha.com, Heiner Kallweit <hkallweit1@gmail.com>,
- Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Michal Simek <michal.simek@amd.com>,
- Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>,
- Rob Herring <robh@kernel.org>, Robert Hancock <robert.hancock@calian.com>,
- devicetree@vger.kernel.org
-References: <20250403181907.1947517-1-sean.anderson@linux.dev>
- <20250403181907.1947517-2-sean.anderson@linux.dev>
- <20250404-tench-of-heavenly-beauty-fb4ed1@shite>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Sean Anderson <sean.anderson@linux.dev>
-In-Reply-To: <20250404-tench-of-heavenly-beauty-fb4ed1@shite>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
 
-On 4/4/25 06:37, Krzysztof Kozlowski wrote:
-> On Thu, Apr 03, 2025 at 02:18:55PM GMT, Sean Anderson wrote:
->> This adds a binding for the Xilinx 1G/2.5G Ethernet PCS/PMA or SGMII
-> 
-> Incomplete review, since this is an RFC.
+The following changes since commit ee2ecf2cf501eaa69dcd723d76b434767195b64e:
 
-Only an RFC due to netdev's rules. I consider this patchset complete.
+  spi: dt-bindings: cdns,qspi-nor: Improve (2025-03-20 15:35:31 +0000)
 
-> Please do not use "This commit/patch/change", but imperative mood. See
-> longer explanation here:
-> https://elixir.bootlin.com/linux/v5.17.1/source/Documentation/process/submitting-patches.rst#L95
-> 
-> A nit, subject: drop second/last, redundant "binding for". The
-> "dt-bindings" prefix is already stating that these are bindings.
-> See also:
-> https://elixir.bootlin.com/linux/v6.7-rc8/source/Documentation/devicetree/bindings/submitting-patches.rst#L18
-> 
->> LogiCORE IP. This device is a soft device typically used to adapt
->> between GMII and SGMII or 1000BASE-X (possbilty in combination with a
->> serdes). pcs-modes reflects the modes available with the as configured
->> when the device is synthesized. Multiple modes may be specified if
->> dynamic reconfiguration is supported.
->> 
->> One PCS may contain "shared logic in core" which can be connected to
->> other PCSs with "shared logic in example design." This primarily refers
->> to clocking resources, allowing a reference clock to be shared by a bank
->> of PCSs. To support this, if #clock-cells is defined then the PCS will
->> register itself as a clock provider for other PCSs.
->> 
->> Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
->> ---
->> 
->>  .../devicetree/bindings/net/xilinx,pcs.yaml   | 129 ++++++++++++++++++
->>  1 file changed, 129 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/net/xilinx,pcs.yaml
->> 
->> diff --git a/Documentation/devicetree/bindings/net/xilinx,pcs.yaml b/Documentation/devicetree/bindings/net/xilinx,pcs.yaml
->> new file mode 100644
->> index 000000000000..56a3ce0c4ef0
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/net/xilinx,pcs.yaml
->> @@ -0,0 +1,129 @@
->> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/net/xilinx,pcs.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Xilinx 1G/2.5G Ethernet PCS/PMA or SGMII LogiCORE IP
->> +
->> +maintainers:
->> +  - Sean Anderson <sean.anderson@seco.com>
->> +
->> +description:
->> +  This is a soft device which implements the PCS and (depending on
->> +  configuration) PMA layers of an IEEE Ethernet PHY. On the MAC side, it
->> +  implements GMII. It may have an attached SERDES (internal or external), or
->> +  may directly use LVDS IO resources. Depending on the configuration, it may
->> +  implement 1000BASE-X, SGMII, 2500BASE-X, or 2.5G SGMII.
->> +
->> +  This device has a notion of "shared logic" such as reset and clocking
->> +  resources which must be shared between multiple PCSs using the same I/O
->> +  banks. Each PCS can be configured to have the shared logic in the "core"
->> +  (instantiated internally and made available to other PCSs) or in the "example
->> +  design" (provided by another PCS). PCSs with shared logic in the core are
->> +  reset controllers, and generally provide several resets for other PCSs in the
->> +  same bank.
->> +
->> +allOf:
->> +  - $ref: ethernet-controller.yaml#
->> +
->> +properties:
->> +  compatible:
->> +    contains:
-> 
-> From where did you get such syntax? What do you want to express?
+are available in the Git repository at:
 
-The compatible should contain this value, but we don't really care what else it
-contains. This aligns with how the kernel matches drivers to devices.
+  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git tags/spi-fix-v6.15-merge-window
 
->> +      const: xilinx,pcs-16.2
-> 
-> What does the number mean?
+for you to fetch changes up to e19c1272c80a5ecce387c1b0c3b995f4edf9c525:
 
-It's the version of the IP. 
+  spi: bcm2835: Restore native CS probing when pinctrl-bcm2835 is absent (2025-04-02 12:55:32 +0100)
 
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  "#clock-cells":
->> +    const: 0
->> +    description:
->> +      Register a clock representing the clocking resources shared with other
->> +      PCSs.
-> 
-> Drop description, redundant.
-> 
->> +
->> +  clocks:
->> +    items:
->> +      - description:
->> +          The reference clock for the PCS. Depending on your setup, this may be
->> +          the gtrefclk, refclk, clk125m signal, or clocks from another PCS.
->> +
->> +  clock-names:
->> +    const: refclk
->> +
->> +  done-gpios:
->> +    maxItems: 1
->> +    description:
->> +      GPIO connected to the reset-done output, if present.
->> +
->> +  interrupts:
->> +    items:
->> +      - description:
->> +          The an_interrupt autonegotiation-complete interrupt.
->> +
->> +  interrupt-names:
->> +    const: an
->> +
->> +  pcs-modes:
->> +    description:
->> +      The interfaces that the PCS supports.
->> +    oneOf:
->> +      - const: sgmii
->> +      - const: 1000base-x
->> +      - const: 2500base-x
->> +      - items:
->> +          - const: sgmii
->> +          - const: 1000base-x
-> 
-> This is confusing. Why fallbacks? Shouldn't this be just enum? And
-> where is the type or constraints about number of items?
+----------------------------------------------------------------
+spi: Fixes for v6.15
 
-As stated in the commit message, multiple modes may be specified if
-dynamic reconfiguration is supported. So I want to allow
+A small collection of fixes that came in during the merge window,
+everything is driver specific with nothing standing out particularly
 
-	pcs-modes = "sgmii"
-	pcs-modes = "1000base-x"
-	pcs-modes = "2500base-x"
-	pcs-modes = "sgmii", "1000base-x"
+----------------------------------------------------------------
+Florian Fainelli (2):
+      spi: bcm2835: Do not call gpiod_put() on invalid descriptor
+      spi: bcm2835: Restore native CS probing when pinctrl-bcm2835 is absent
 
->> +
->> +  reset-gpios:
->> +    maxItems: 1
->> +    description:
->> +      GPIO connected to the reset input.
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - pcs-modes
->> +
->> +additionalProperties: false
->> +
->> +examples:
->> +  - |
->> +    #include <dt-bindings/gpio/gpio.h>
->> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
->> +    #include <dt-bindings/interrupt-controller/irq.h>
->> +
->> +    mdio {
->> +        #address-cells = <1>;
->> +        #size-cells = <0>;
->> +
->> +        pcs0: ethernet-pcs@0 {
->> +            #clock-cells = <0>;
-> 
-> Follow DTS coding style. clock-cells are never the first property.
+Geert Uytterhoeven (1):
+      spi: SPI_QPIC_SNAND should be tristate and depend on MTD
 
-Where is this documented?
+Han Xu (1):
+      spi: fsl-qspi: use devm function instead of driver remove
 
->> +            compatible = "xlnx,pcs-16.2";
->> +            reg = <0>;
->> +            clocks = <&si570>;
->> +            clock-names = "refclk";
->> +            interrupts-extended = <&gic GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>;
->> +            interrupt-names = "an";
->> +            reset-gpios = <&gpio 5 GPIO_ACTIVE_HIGH>;
->> +            done-gpios = <&gpio 6 GPIO_ACTIVE_HIGH>;
->> +            pcs-modes = "sgmii", "1000base-x";
->> +        };
->> +
->> +        pcs1: ethernet-pcs@1 {
->> +            compatible = "xlnx,pcs-16.2";
->> +            reg = <1>;
->> +            clocks = <&pcs0>;
->> +            clock-names = "refclk";
->> +            interrupts-extended = <&gic GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>;
->> +            interrupt-names = "an";
->> +            reset-gpios = <&gpio 7 GPIO_ACTIVE_HIGH>;
->> +            done-gpios = <&gpio 8 GPIO_ACTIVE_HIGH>;
->> +            pcs-modes = "sgmii", "1000base-x";
-> 
-> Drop example, basically the same as previous.
-> 
-> Best regards,
-> Krzysztof
-> 
+Josh Poimboeuf (1):
+      spi: cadence: Fix out-of-bounds array access in cdns_mrvl_xspi_setup_clock()
+
+Luis de Arquer (1):
+      spi-rockchip: Fix register out of bounds access
+
+Miquel Raynal (1):
+      spi: cadence-qspi: revert "Improve spi memory performance"
+
+ drivers/spi/Kconfig               |  4 ++--
+ drivers/spi/spi-bcm2835.c         | 18 ++++++++++++++++--
+ drivers/spi/spi-cadence-quadspi.c |  2 +-
+ drivers/spi/spi-cadence-xspi.c    |  2 +-
+ drivers/spi/spi-fsl-qspi.c        | 31 +++++++++++++++++--------------
+ drivers/spi/spi-qpic-snand.c      |  2 +-
+ drivers/spi/spi-rockchip.c        |  2 +-
+ 7 files changed, 39 insertions(+), 22 deletions(-)
