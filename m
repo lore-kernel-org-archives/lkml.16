@@ -1,98 +1,114 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1A3D1C6FF0
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 10:55:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A6E11D95B4;
+	Fri,  4 Apr 2025 10:55:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743764135; cv=none; b=uhYOYaRoKo1qzTjkFUK6JcgV5Qhq2vGjmNe8+NzxljmFaIqKQNvIv7Yn+Im1/KW46iHgQj+epV4guvScKeUSfutFC8CKCfXnv28xXXXohpp4/duCTbvjySXXyei4OHW5vw7MErSNqj6xx1oAfgd4uQqmVlZup6eZ0OZLrKyWd8M=
+	t=1743764140; cv=none; b=YXdBiXBybvrEzvHRsdwtuxvRPLhRO0qLcfMKEHVb5o/Sj4y0QU0XBzn+kdaZm2jWW+iD4vyDmoOgcmifpEpm2Z9Mh/Th5nBd0gIxArwJq+vwtXyCTDqxRe+ZPzAI4Oz+XSB9ct9FIdOo0BYg+87nkbM6kw+99G/GA4hpanq4a6o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743764135; c=relaxed/simple;
-	bh=xqpAS31ZBEZf1xiiFrun1Td08VTphpaBJc/wf+7M9LU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cVuUZ+pd/CxCBQodCDE2HkaEj9+RRZep9nlnj5XwbniG5V1BBEgp6WjjQLcd651gTgsRc7k1aS98rwnkozcGSWpwvU3D0xEiVcsLZ5NbASAUI3nKAPunly+i7RY1eWLJebGlyiVNcbjBk0AysZamliEzMKBH+LA4Xq7Q3+cq2l8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C39i1eQU; arc=none smtp.client-ip=209.85.218.49
+	s=arc-20240116; t=1743764140; c=relaxed/simple;
+	bh=vVdmnFtLy/tw7aRM7sEWapxfTjOFIN1E2HeyTK+L92I=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=JApiGN5uD6e+oVPaA7W3iQGc+vx9ZrhC8gL9x0X+GXJ+P1xaX1gvchI2KDlmDCYGXttwtrtraBaAOrZ1dZVylFoRcG+YgHUULsPkyab/bOtb5SJtysE/IdeoRnpA/tE06kCUHmiOKIvQpCkXPFo+zlAnVTRLA62S58UnOtqGtYo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UTYZ4saZ; arc=none smtp.client-ip=209.85.221.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C39i1eQU"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ac2a9a74d9cso340255566b.1
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 03:55:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UTYZ4saZ"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-39c31e4c3e5so1007846f8f.0;
+        Fri, 04 Apr 2025 03:55:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743764132; x=1744368932; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1743764137; x=1744368937; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zqE+w6GsaVP58HzUCQPmIwumDxQp6utIDBfgrrVwKrQ=;
-        b=C39i1eQUIeLdroKLct7EHkgJ2KeIdMMXIbdCGiJWbI6l3l9wURoRSVzPUrDBhAdVTI
-         XqoCmXAkeaOCsZPQ1hih56R/XSaUeMqn+Yum0FsDUYo0Pc/coIhXphD2tGsVoqhS5Tzy
-         frATG6RDZ5CDxA501B7lZvwRLe0m7DBD8oRVtvm78O2MSD8AdYRVxvYc/PIdQlVgavmr
-         elQQ0yQfk+iAGVSJZ/EYHvLDxhR4rIYoCEgJRYuMIdFbHloomwmIwR2cFWctN7N02sub
-         axKKR3TEvu+a2VXjIZj5gZ2KBUnYAUxDJU2quub8JJ7xTOi1VD/uwvgBZmYFWZwnvz61
-         nH/w==
+        bh=1NoCVEHwihQ1loXx0nSFlkGqZPVNcZeJYP1pFpVRK6w=;
+        b=UTYZ4saZSaN4IIUzoE4SObmNJsO6vomVwADShigMCCHY1GHcHPpN0Jd2FYYyZm0Upt
+         w6o99VquMrHRIcgFFTQe4bich06lEmRK85kkDkw4SOY7vdrC3Bn5LpiiQHKzavH0cHLP
+         JtjzHQTUW3PtOKTEm6QVuGag7xc7P6cw4ZHJSXpbMhE3NawyqhHDFc2ZXzRe4TMAupxV
+         WkCc0rAqmHHy/+wSqpugcGcwqjR6fOINban923yZUZDwmbGT1cu+X3Zucyx8QY3fz5Hm
+         CvG7kqo6eyy2b93o8znNWXVkuvdqiif8lGr4Hy7Uvu9R8S/4mIrJpIcgWTZIBkbj++Iw
+         eDEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743764132; x=1744368932;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1743764137; x=1744368937;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=zqE+w6GsaVP58HzUCQPmIwumDxQp6utIDBfgrrVwKrQ=;
-        b=DYZx4D3vKWIHwji1z67PthS2zwqzhftFVMKmZUUBoor9/DiRBcVHhOyvfzNbM3V875
-         MblWWzUbUl01r+0NZxmbJSpNKTCSvgBsnwbT3zRyKldaPPAtSv2yqeWtVo//7KYHWtSD
-         qlTVFxOGdqbOI8ZBQTTVZkeVBxX2O5xFWnJrXp9b5tkVJ1VoNRtmV3Av5OwvChhkOUMu
-         R+9BGmId9AnsK9JuVNmNo1B9OfdcaSCVV18ujMPRXBLjvc4z72JC3r+ZXAOf4tgZT2Wz
-         4aCHW7+2y7VsOwakS1RinFPxr9pTj7iNUVjDM8Gt6VvseARUK/YhpWai8yGjcrIbXZ8B
-         /ajQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWAtBg4maxN7RgYYRceBXRXeSkdfb4dsw8ILeh+tnAjEoD9e7/M0i7WxR2H4PrRQBxnXMcbu8id12RM9QM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzceR3AS/sLANygwDtAGa6Jkb35pvCsDBzpO1dqhw0YJnGoLqkS
-	xrAnB0AgyS9B4Zrr29VICQ2KsH4V9vacKIuNxxASKw1InD9mQ1+tAlR2VxcQcrb8gIaiNqSsi0+
-	QIdmBkaqFMPDyaDb37VGCug/ZC8TMgUVVQ6w=
-X-Gm-Gg: ASbGncsOcdaN9PpoTEuvWO591OzA0BDD7V5A9j2KxgU/yUfkawTr6+1z8IMy/BPRDzS
-	SX1cyAEbluceyFzn0fURtA7NYem1m8J17J51Mh6hwbH7P0oA48dryfWxI/xp9/evlazbPGdFVmT
-	zRLP7nw5jEVTPGckAwL5/6X1KlwCNO
-X-Google-Smtp-Source: AGHT+IGNinU4zi/m+31hZicDCxBzNvfcIDFQS56Y1d4Nr7DOmJNAN9EwAxywt5r/kNUc3HaR+BFRb6Jc5r9alOYlVhU=
-X-Received: by 2002:a17:906:7955:b0:ac7:9835:995 with SMTP id
- a640c23a62f3a-ac7d181d57cmr304131366b.5.1743764132001; Fri, 04 Apr 2025
- 03:55:32 -0700 (PDT)
+        bh=1NoCVEHwihQ1loXx0nSFlkGqZPVNcZeJYP1pFpVRK6w=;
+        b=To8yFUFU+A0u0OT67THtsAVBC0V4lHCA+6zTkrP3Xa084F64ppD3iXsdVsX5U4gT0N
+         EUtEKuK2CbhZvOnHfLDW0xkS+l2r872pPJcn92wTfOqqRiUD1EbynKMy46sQZUVJfBNl
+         2D6tmeBGw+sTH73u55oEaggvaS2Cpp1PF2gbLD1h/o9w61WS0YTjQw+PwpYoK8izsHt5
+         BIV635htgTvkZQwY5P+TkdZTrXh3JDgRz9Txv4ChERSkk8LQ6wN9co/XIYr9G5PVL1+k
+         eTVeBUoh48K5NCanMJQO596kO/a94LjlH4JiP0zeobKVsYf5Wk1pjcYc6lJlskB7IJ37
+         5cOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUH2GZ3rA1DeV8Dk2e50pUuICefOnza3iaQHr15a9Htig+PfmIlbfephAwhSAWOllZ78LgNL9XyAqb8@vger.kernel.org, AJvYcCUj5IUDKIBDqHXHA6zK+us31OkgEiGBahhS0BWxZsMgOCdRFnN0JtWt2R3gYzn1KL+5x0dvkQMgNKW64jMx@vger.kernel.org
+X-Gm-Message-State: AOJu0YyRm/BLq3nCyPS16XenV+Kp03bKYFDvbY3Z4/IefE5Gd2eT24cc
+	yTgp4NzcZM95OsAsnkJkhQddLK/B6JwQHVbj6CS2NMbCQjK6VM2bMf4DAA==
+X-Gm-Gg: ASbGnctRghlRtgJMylY1QySwBHiiH5iMMgt5P0NYtapiobh9dUVPvcD/DUPq1Qa7Ghm
+	9o1coyh4F8FQsbvEMJTUHhSa/ab1LZ/+eXWVSz1yZxL4Hop//MPzYWaNKYXsg8FhEU8lIagDnFm
+	0gFyUdLAyvVQm+qOGZmTySDvfyNBZ8jfWBggLs29ihx+05t99y47ERluE2M2w6mgorZneu0wGrB
+	HV7jE25LcxrKSNwtnn06JPm/ioJtI5Wub6OilZpHo83IvK0q78mx3hkQbLY6MjubNwhFSljpXI9
+	tBgYWFz/IB5WY2yyWqNwMDUjoCljTf4MC9k/MWdF
+X-Google-Smtp-Source: AGHT+IFo7tlkl/+wMvwXptBvJkGXJEA8uG7yhSuxj7cy+rmK6b6ptf9ozqOVK6DTf/eox0u5cbJ7JA==
+X-Received: by 2002:a5d:64aa:0:b0:391:2f71:bbb3 with SMTP id ffacd0b85a97d-39cba9332f2mr2428269f8f.46.1743764136576;
+        Fri, 04 Apr 2025 03:55:36 -0700 (PDT)
+Received: from vitor-nb.. ([2001:8a0:e602:d900:7d1:e192:9339:cacd])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c3020d938sm4078097f8f.65.2025.04.04.03.55.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Apr 2025 03:55:36 -0700 (PDT)
+From: Vitor Soares <ivitro@gmail.com>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>
+Cc: Vitor Soares <vitor.soares@toradex.com>,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	ivitro@gmail.com
+Subject: [PATCH v1 1/2] dt-bindings: arm: fsl: add Toradex SMARC iMX8MP SoM and carrier
+Date: Fri,  4 Apr 2025 11:53:58 +0100
+Message-Id: <20250404105359.18632-1-ivitro@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <y>
+References: <y>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1743755621.git.abrahamadekunle50@gmail.com> <6852a0c603010345d646a9d1bba06631ee5c5cbd.1743755621.git.abrahamadekunle50@gmail.com>
-In-Reply-To: <6852a0c603010345d646a9d1bba06631ee5c5cbd.1743755621.git.abrahamadekunle50@gmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Fri, 4 Apr 2025 13:54:55 +0300
-X-Gm-Features: AQ5f1JqUozPnFgJdIT4pOelHcSqCJ5l6BNg2OqqLHneV3VukMeWc8lpWOwr7854
-Message-ID: <CAHp75VfqbO43KgMOuvuF4oGVp9m6UqbYJOtxTZoiiHwnXd13-g@mail.gmail.com>
-Subject: Re: [PATCH v4 1/1] staging: rtl8723bs: Prevent duplicate NULL tests
- on a value
-To: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
-Cc: outreachy@lists.linux.dev, julia.lawall@inria.fr, 
-	gregkh@linuxfoundation.org, linux-staging@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, andy@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, Apr 4, 2025 at 11:51=E2=80=AFAM Abraham Samuel Adekunle
-<abrahamadekunle50@gmail.com> wrote:
+From: Vitor Soares <vitor.soares@toradex.com>
 
-...
+Add DT compatible strings for Toradex SMARC iMX8MP SoM and
+Toradex SMARC Development carrier board.
 
-> While at it, convert '& 0xfff' cases to use modulo operator and
-> decimal number to make the upper limit visible and clear what the
-> semantic of it is.
+Link: https://www.toradex.com/computer-on-modules/smarc-arm-family/nxp-imx-8m-plus
+Link: https://www.toradex.com/products/carrier-board/smarc-development-board-kit
+Signed-off-by: Vitor Soares <vitor.soares@toradex.com>
+---
+ Documentation/devicetree/bindings/arm/fsl.yaml | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-I think there is a consensus now that this should be a separate followup ch=
-ange.
+diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
+index 1b90870958a2..daba8ba8c95f 100644
+--- a/Documentation/devicetree/bindings/arm/fsl.yaml
++++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+@@ -1176,6 +1176,12 @@ properties:
+           - const: polyhex,imx8mp-debix-som-a       # Polyhex Debix SOM A
+           - const: fsl,imx8mp
+ 
++      - description: Toradex Boards with SMARC iMX8M Plus Modules
++        items:
++          - const: toradex,smarc-imx8mp-dev # Toradex SMARC iMX8M Plus on Toradex SMARC Development Board
++          - const: toradex,smarc-imx8mp     # Toradex SMARC iMX8M Plus Module
++          - const: fsl,imx8mp
++
+       - description: Toradex Boards with Verdin iMX8M Plus Modules
+         items:
+           - enum:
+-- 
+2.34.1
 
-...
-
-> +                       psta->sta_xmitpriv.txseq_tid[pattrib->priority] &=
-=3D 0xFFF;
-
-This also has the same semantic and may be changed in that patch.
-
---=20
-With Best Regards,
-Andy Shevchenko
