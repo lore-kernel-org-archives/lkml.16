@@ -1,123 +1,198 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D90333997;
-	Fri,  4 Apr 2025 10:39:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75F3B1D7E54;
+	Fri,  4 Apr 2025 10:39:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743763159; cv=none; b=etsh803EkAvBP5XgKr7OMEPK00ZMwyBWNQzRClfgUj0bQVfEF438wuazF6b4i42dQsRDHEFaE3PTFbylqYtL/UjARjUSxXW9lriBiPTUUPPGfCy+KQVoRszVidkO4gMPIoRYERTapVwrabaDrOGyJdGbwltXOm02vxxO3N2JtoU=
+	t=1743763163; cv=none; b=tG2fG9p+OddDDX663JaF4vLE5Gnv3X0dPvzV+ooiXK4ICEJnGCDKG2YbXXEmvwWtKqyeBc6dIOS/rwOvnoAe0fOhyboi8+EjEJOD+CvUG+0f5Ggf9qbexFgAgAvUYJaydy/SW2nECcSr+jfWZ5PadI4MjRc5T0miEg/cyChdBEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743763159; c=relaxed/simple;
-	bh=Nhjw/1qgO802K9Dxvex0VqNz1I+f410ci7Gd/YQZ6EE=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=XGzbdaqc68p6SqesedCZqnd+6YC6AGTtsu5djMgMwohinHTW/OtpegKIIA1wbL/5OgI++zasmyc/D8tWbdjk8Q1PCctbVBdphRg1LU8hI55BON1MA9JmORukRO21XctwoHaoGB9xnoLY/poKWfpPUEX+am/qERaMTZdQB1ZJkus=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q9NiUfxW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743763163; c=relaxed/simple;
+	bh=4AdbkdDVyBX6jEBtq4y9rlrM1Cu82MlcstjsBSpa4gA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SoDOfb9YzErKKXA6WS5pZNc+3yWn08oNRHSBen2/wzvICiTTSbX9rEVu3ClVe7f4grqMWG5wYDWKx3VOqKhxwG1wi7PDwdQDBy9Skyq5X8UEXn3klr0SByFG6q/CW7X+FaoJxRkP0rvis9X8Mv50UkN9qOuH5G3u5yhwP+ns/Y8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wk1vR+zt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q9NiUfxW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8117AC4CEDD;
-	Fri,  4 Apr 2025 10:39:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wk1vR+zt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3DB9C4CEDD;
+	Fri,  4 Apr 2025 10:39:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743763156;
-	bh=Nhjw/1qgO802K9Dxvex0VqNz1I+f410ci7Gd/YQZ6EE=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=Q9NiUfxWdnjXgAN2oysQVyKQpX+FmF1efkNnxFUnJN2RMSTl8bT8PA4gi40u+QIyT
-	 tNLK4T3E+MjtQYDHs7tSwh2+cEXUqJHuCtP+cYCR5a4Fyopxi+EHzKuFXWwt4MMf67
-	 WUF/DjSdNow/hLbJp5HzCsEBh69yNIU3fXDmZ+a7Prr+eNm7a1jjtRIGfXpfBdP7tN
-	 4fiBbHLpOH0HOIBrzWJ/sv47MwKPNOR1bGReCb3rnQZStbhNZ48yThoJtszztRq1rx
-	 quY0GETAIjfEmXQqPPaKEbSDZ5cgrUT4x1654oDmdo439jwm0Ed5ZCHnxMh83BMn9u
-	 EIklTjEJzRtgA==
-Message-ID: <b4e2db47-eb56-4a9d-bcd7-52b23450ae48@kernel.org>
-Date: Fri, 4 Apr 2025 12:39:10 +0200
+	s=k20201202; t=1743763162;
+	bh=4AdbkdDVyBX6jEBtq4y9rlrM1Cu82MlcstjsBSpa4gA=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Wk1vR+zt8m2HitztpAjsi6Rr6Vz3v6/VfErgrusAcabl6MMcq1qgLLpe8IKkjbBPs
+	 J2MhMMT0zGhiuz95OqH8oTabjlHHkNu58urxqsj+VVxsCCwDIZiByQnKPPUwl7iLG1
+	 zjTXnXU4lz+SNVaMWnLPqy5ylfTI0U1O/RLh0DKHpXSDDrsBGZdWLC/UMQL1vqh9Dc
+	 RyZBZSPd/pnNnr+enJv38/PoiYFoS4+KHcbVYlmDa/XqfXCgcDJAeaJTBt6jh/ThFI
+	 lsbmOWVcMLC3+Ig0QHOtTCvsiPdj5phTnfOIv4nehtcHcXM29H5vZhq5Ad7+MwHviM
+	 tOhowTkLptFDg==
+From: Christian Brauner <brauner@kernel.org>
+To: Christoph Hellwig <hch@infradead.org>,
+	Mateusz Guzik <mjguzik@gmail.com>
+Cc: Christian Brauner <brauner@kernel.org>,
+	Penglei Jiang <superman.xpt@gmail.com>,
+	viro@zeniv.linux.org.uk,
+	jack@suse.cz,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	syzbot+5d8e79d323a13aa0b248@syzkaller.appspotmail.com
+Subject: [PATCH] anon_inode: use a proper mode internally
+Date: Fri,  4 Apr 2025 12:39:14 +0200
+Message-ID: <20250404-aphorismen-reibung-12028a1db7e3@brauner>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC net-next PATCH 01/13] dt-bindings: net: Add binding for
- Xilinx PCS
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Sean Anderson <sean.anderson@linux.dev>
-Cc: netdev@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S . Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Russell King <linux@armlinux.org.uk>,
- linux-kernel@vger.kernel.org, Christian Marangi <ansuelsmth@gmail.com>,
- upstream@airoha.com, Heiner Kallweit <hkallweit1@gmail.com>,
- Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Michal Simek <michal.simek@amd.com>,
- Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>,
- Rob Herring <robh@kernel.org>, Robert Hancock <robert.hancock@calian.com>,
- devicetree@vger.kernel.org
-References: <20250403181907.1947517-1-sean.anderson@linux.dev>
- <20250403181907.1947517-2-sean.anderson@linux.dev>
- <20250404-tench-of-heavenly-beauty-fb4ed1@shite>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250404-tench-of-heavenly-beauty-fb4ed1@shite>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4980; i=brauner@kernel.org; h=from:subject:message-id; bh=4AdbkdDVyBX6jEBtq4y9rlrM1Cu82MlcstjsBSpa4gA=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaS/33ZJbpXHxW0Hnnxs1c+V/Hj0+Y8EBc0TO06embq+5 kH7TQtZl45SFgYxLgZZMUUWh3aTcLnlPBWbjTI1YOawMoEMYeDiFICJfDFj+M3iPffxxrvHfBde uirsbRstf3jTPYlSodBzPdybtbYsZdzD8Jv9bo1PWmx7t+C6m921+6XOPuOapHy8a8mLRS5h+sw r3rEBAA==
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 
-On 04/04/2025 12:37, Krzysztof Kozlowski wrote:
->> +  pcs-modes:
->> +    description:
->> +      The interfaces that the PCS supports.
->> +    oneOf:
->> +      - const: sgmii
->> +      - const: 1000base-x
->> +      - const: 2500base-x
->> +      - items:
->> +          - const: sgmii
->> +          - const: 1000base-x
-> 
-> This is confusing. Why fallbacks? Shouldn't this be just enum? And
-> where is the type or constraints about number of items?
-> 
-I just double checked now in dtschema and latest next - there is no such
-property.
+This allows the VFS to not trip over anonymous inodes and we can add
+asserts based on the mode into the vfs. When we report it to userspace
+we can simply hide the mode to avoid regressions. I've audited all
+direct callers of alloc_anon_inode() and only secretmen overrides i_mode
+and i_op inode operations but it already uses a regular file.
 
-Best regards,
-Krzysztof
+Fixes: af153bb63a336 ("vfs: catch invalid modes in may_open()")
+Reported-by: syzbot+5d8e79d323a13aa0b248@syzkaller.appspotmail.com
+Closes: https://lore.kernel.org/all/67ed3fb3.050a0220.14623d.0009.GAE@google.com"
+Signed-off-by: Christian Brauner <brauner@kernel.org>
+---
+ fs/anon_inodes.c | 36 ++++++++++++++++++++++++++++++++++++
+ fs/internal.h    |  3 +++
+ fs/libfs.c       |  2 +-
+ fs/pidfs.c       | 24 +-----------------------
+ 4 files changed, 41 insertions(+), 24 deletions(-)
+
+diff --git a/fs/anon_inodes.c b/fs/anon_inodes.c
+index 583ac81669c2..42e4b9c34f89 100644
+--- a/fs/anon_inodes.c
++++ b/fs/anon_inodes.c
+@@ -24,9 +24,43 @@
+ 
+ #include <linux/uaccess.h>
+ 
++#include "internal.h"
++
+ static struct vfsmount *anon_inode_mnt __ro_after_init;
+ static struct inode *anon_inode_inode __ro_after_init;
+ 
++/*
++ * User space expects anonymous inodes to have no file type in st_mode.
++ *
++ * In particular, 'lsof' has this legacy logic:
++ *
++ *	type = s->st_mode & S_IFMT;
++ *	switch (type) {
++ *	  ...
++ *	case 0:
++ *		if (!strcmp(p, "anon_inode"))
++ *			Lf->ntype = Ntype = N_ANON_INODE;
++ *
++ * to detect our old anon_inode logic.
++ *
++ * Rather than mess with our internal sane inode data, just fix it
++ * up here in getattr() by masking off the format bits.
++ */
++int anon_inode_getattr(struct mnt_idmap *idmap, const struct path *path,
++		       struct kstat *stat, u32 request_mask,
++		       unsigned int query_flags)
++{
++	struct inode *inode = d_inode(path->dentry);
++
++	generic_fillattr(&nop_mnt_idmap, request_mask, inode, stat);
++	stat->mode &= ~S_IFMT;
++	return 0;
++}
++
++static const struct inode_operations anon_inode_operations = {
++	.getattr = anon_inode_getattr,
++};
++
+ /*
+  * anon_inodefs_dname() is called from d_path().
+  */
+@@ -66,6 +100,7 @@ static struct inode *anon_inode_make_secure_inode(
+ 	if (IS_ERR(inode))
+ 		return inode;
+ 	inode->i_flags &= ~S_PRIVATE;
++	inode->i_op = &anon_inode_operations;
+ 	error =	security_inode_init_security_anon(inode, &QSTR(name),
+ 						  context_inode);
+ 	if (error) {
+@@ -313,6 +348,7 @@ static int __init anon_inode_init(void)
+ 	anon_inode_inode = alloc_anon_inode(anon_inode_mnt->mnt_sb);
+ 	if (IS_ERR(anon_inode_inode))
+ 		panic("anon_inode_init() inode allocation failed (%ld)\n", PTR_ERR(anon_inode_inode));
++	anon_inode_inode->i_op = &anon_inode_operations;
+ 
+ 	return 0;
+ }
+diff --git a/fs/internal.h b/fs/internal.h
+index b9b3e29a73fd..717dc9eb6185 100644
+--- a/fs/internal.h
++++ b/fs/internal.h
+@@ -343,3 +343,6 @@ static inline bool path_mounted(const struct path *path)
+ void file_f_owner_release(struct file *file);
+ bool file_seek_cur_needs_f_lock(struct file *file);
+ int statmount_mnt_idmap(struct mnt_idmap *idmap, struct seq_file *seq, bool uid_map);
++int anon_inode_getattr(struct mnt_idmap *idmap, const struct path *path,
++		       struct kstat *stat, u32 request_mask,
++		       unsigned int query_flags);
+diff --git a/fs/libfs.c b/fs/libfs.c
+index 6393d7c49ee6..0ad3336f5b49 100644
+--- a/fs/libfs.c
++++ b/fs/libfs.c
+@@ -1647,7 +1647,7 @@ struct inode *alloc_anon_inode(struct super_block *s)
+ 	 * that it already _is_ on the dirty list.
+ 	 */
+ 	inode->i_state = I_DIRTY;
+-	inode->i_mode = S_IRUSR | S_IWUSR;
++	inode->i_mode = S_IFREG | S_IRUSR | S_IWUSR;
+ 	inode->i_uid = current_fsuid();
+ 	inode->i_gid = current_fsgid();
+ 	inode->i_flags |= S_PRIVATE;
+diff --git a/fs/pidfs.c b/fs/pidfs.c
+index d64a4cbeb0da..809c3393b6a3 100644
+--- a/fs/pidfs.c
++++ b/fs/pidfs.c
+@@ -572,33 +572,11 @@ static int pidfs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+ 	return -EOPNOTSUPP;
+ }
+ 
+-
+-/*
+- * User space expects pidfs inodes to have no file type in st_mode.
+- *
+- * In particular, 'lsof' has this legacy logic:
+- *
+- *	type = s->st_mode & S_IFMT;
+- *	switch (type) {
+- *	  ...
+- *	case 0:
+- *		if (!strcmp(p, "anon_inode"))
+- *			Lf->ntype = Ntype = N_ANON_INODE;
+- *
+- * to detect our old anon_inode logic.
+- *
+- * Rather than mess with our internal sane inode data, just fix it
+- * up here in getattr() by masking off the format bits.
+- */
+ static int pidfs_getattr(struct mnt_idmap *idmap, const struct path *path,
+ 			 struct kstat *stat, u32 request_mask,
+ 			 unsigned int query_flags)
+ {
+-	struct inode *inode = d_inode(path->dentry);
+-
+-	generic_fillattr(&nop_mnt_idmap, request_mask, inode, stat);
+-	stat->mode &= ~S_IFMT;
+-	return 0;
++	return anon_inode_getattr(idmap, path, stat, request_mask, query_flags);
+ }
+ 
+ static const struct inode_operations pidfs_inode_operations = {
+-- 
+2.47.2
+
