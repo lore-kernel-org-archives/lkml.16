@@ -1,66 +1,196 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF2F2209F2E
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 17:29:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75EFF1E1C29;
+	Fri,  4 Apr 2025 17:30:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743787773; cv=none; b=qOQqREG6rmoromh1n4uj3SOL09H3hol0laT//JvgRYAOzXVDkUXKneXpZz3ysSuuYc49DntvXDk6scVMbJkbOxaSpvtMabrvGa3TwzCu/V87e1mg/zS4pFt2f2BcC5YL7GQO2mSHDDMIJzhuPzrIzMMp28Cu+I2CGSMGvlcq4ZU=
+	t=1743787820; cv=none; b=iXMAMYvA9lm7MtCgI16PX0KkkzDfwQ+NMdRoiAvDKw9nbgFSOFXwKwVfVI5Gj/xQ5ZnmqW7NV5s9VaQ+TQWa3q+16u8rfkCqFaeXNvp4ubhA3T+/IJQzBh7d/CQBv/v/Febut0SZfaE/6HiMSt5LeXGgNtE7MLoA9lgcHjtnWh4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743787773; c=relaxed/simple;
-	bh=5f/iKFQSt2KeIDp+EV1K4kEUUEImeL1CQ44sRignQAk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iNW8uogQ16y59jnPhs/9y4VS55RkRK2HZkMQDBN2bVbzUdAUu5QRFWcvxnSRJaQOYtQeDIKEb62gYtiqTJAyLfFvqp5aqmhdnBtzyfPBk+9ODyxDNdw2BPCBQbTE0feK4CSMFH4uJNhb459mEVHKBPlcQCNC5O1HnIcgVK+Pnac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WC3gotgF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743787820; c=relaxed/simple;
+	bh=7mXI0zUWmkLg5JnS8/AH5K/69KTjGd1f1uUnxPdnQbE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uFHyeEqPMaccU2YvDqm4AtPNe0j9tJL/IBGpDvR9DUFNuWdGS16/hB0zNVIEasV5EisGg/aHS0i1+d2cNU3QMIHp6515qvbbl+Xlc80LssRv9p5N9t0Tun8fms/zN1BjqBpj4hb2nvVObK+C2EjlDycyTm2LsCxiIZCpZ/0Z634=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gy9pOQrl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WC3gotgF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 733F2C4CEE8;
-	Fri,  4 Apr 2025 17:29:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gy9pOQrl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07136C4CEDD;
+	Fri,  4 Apr 2025 17:30:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743787772;
-	bh=5f/iKFQSt2KeIDp+EV1K4kEUUEImeL1CQ44sRignQAk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WC3gotgFeaNgBNMdoa6RLjjQchA3nwY1eaKq/6mjaDrQcIvuvMdhBTWzh1DIZ3Imt
-	 HYI0yGB6yzEmewyEoSjWjEhA+sYT565NhsQV3C+5teyrObpVFsOsJIdlVFjcQT2lqx
-	 9xOwl17FlCmOavHTQjJgeI2tfD858Dg/JHZm6QoQZ1cxZtG/po21KRKXhKwuSSANS9
-	 jhIBoaq0acimH9obZSeu5rbaAFqBctYUWCZLCxllc7Eo5RGjtL0A2kDEenk2Ow8VgZ
-	 OUPO599Z5fd7OyRFAIEujH98Tw17pvJul3VC2e3jUGjtnqo9sqfByyzGsbMKCWbt0T
-	 Dl5yIQQFHHI4A==
-Date: Fri, 4 Apr 2025 10:29:29 -0700
-From: Kees Cook <kees@kernel.org>
-To: Shyam Saini <shyamsaini@linux.microsoft.com>
-Cc: masahiroy@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] init/Kconfig: conditionalize GCC10_NO_ARRAY_BOUNDS
-Message-ID: <202504041028.6E6C6268@keescook>
-References: <20250211221030.1815731-1-shyamsaini@linux.microsoft.com>
- <20250327183559.3339185-1-shyamsaini@linux.microsoft.com>
+	s=k20201202; t=1743787819;
+	bh=7mXI0zUWmkLg5JnS8/AH5K/69KTjGd1f1uUnxPdnQbE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=gy9pOQrlOtg/5RdGZcG/y23aCnQc9/97NZfyeL2/X415kEUILtVXTDDf/TixkT1tt
+	 AocwmqEa/D18Q8gsgwhsvmQXuWg2qYa82g6wsp8MipI40x6sy0oopQRT7+0rS9FsAI
+	 9aPM0spBLeuM2baeBc1D54SmS57CaIKRjPRhHLwsrvPWA9NecqhrfnvGSNonujYZxD
+	 76PaUjZUc06DtwkcieBVdNinYXyyf2dI77jnnorSHDz8c3rSE2v1W7dOy3joHMuYDd
+	 OM3mKZkdQNa10gcS0cV745c/eJwxWXNHvIjPAUIF2jcYx+GuCc7rfm03AAKHYTH+HS
+	 guF2bmL8ryFhQ==
+Message-ID: <d2ffca88-6773-4e40-b737-65a451ba1d01@kernel.org>
+Date: Fri, 4 Apr 2025 19:30:15 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250327183559.3339185-1-shyamsaini@linux.microsoft.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/3] dt-bindings: display: Add Sitronix ST7571 panel
+To: Marcus Folkesson <marcus.folkesson@gmail.com>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250404-st7571-v2-0-4c78aab9cd5a@gmail.com>
+ <20250404-st7571-v2-1-4c78aab9cd5a@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250404-st7571-v2-1-4c78aab9cd5a@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Mar 27, 2025 at 11:35:59AM -0700, Shyam Saini wrote:
-> do you have any reviews for this patch?
+On 04/04/2025 15:50, Marcus Folkesson wrote:
+> Sitronix ST7571 is a 4bit gray scale dot matrix LCD controller.
+> 
+> Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
+> ---
+>  .../bindings/display/sitronix,st7571.yaml          | 73 ++++++++++++++++++++++
+>  1 file changed, 73 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/sitronix,st7571.yaml b/Documentation/devicetree/bindings/display/sitronix,st7571.yaml
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..11575b820c59c5ada427fbb6b015c331215c8db6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/sitronix,st7571.yaml
+> @@ -0,0 +1,73 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/sitronix,st7571.yaml#
 
-It's a redundant change since CC_IS_GCC is checked later:
+Why isn't this in panels directory?
 
-config GCC10_NO_ARRAY_BOUNDS
-        def_bool y
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Sitronix ST7571 Display Panels
+> +
+> +maintainers:
+> +  - Marcus Folkesson <marcus.folkesson@gmail.com>
+> +
+> +description:
+> +  This binding is for display panels using a Sitronix ST7571 controller in I2C
 
-config CC_NO_ARRAY_BOUNDS
-        bool
-        default y if CC_IS_GCC && GCC_VERSION >= 90000 && GCC10_NO_ARRAY_BOUNDS
+Do not explain for a binding that it is a binding. Redundant. Instead
+describe the hardware.
 
+> +  mode.
+> +
+> +allOf:
+> +  - $ref: panel/panel-common.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    const: sitronix,st7571
+> +
+> +  reg: true
+> +  reset-gpios: true
+> +  width-mm: true
+> +  height-mm: true
+> +
+> +  panel-timing:
+> +    $ref: panel/panel-timing.yaml#
 
-If you wanted to make this change, then it would make sense to drop it
-from CC_NO_ARRAY_BOUNDS at the same time.
+Drop, already part of panel.
 
--Kees
+> +    description: |
+> +      The panel-timing node specifies the display resolution and timing
+> +      parameters. The hactive and vactive properties are mandatory.
+> +      The vback-porch property specifies the start line of the display.
+> +      The other properties should be set to zero.
 
--- 
-Kees Cook
+Drop description as well.
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - reset-gpios
+> +  - width-mm
+> +  - height-mm
+> +  - panel-timing
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +    
+> +    i2c {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        display@3f {
+
+Not much improved. How is this called in every other binding? panel.
+
+> +          compatible = "sitronix,st7571";
+
+Messed indentation.
+
+> +          reg = <0x3f>;
+> +          reset-gpios = <&gpio0 3 GPIO_ACTIVE_LOW>;
+> +          width-mm = <37>;
+> +          height-mm = <27>;
+> +
+> +            panel-timing {
+
+And here is even more confusing.
+
+Best regards,
+Krzysztof
