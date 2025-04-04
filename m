@@ -1,316 +1,350 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from webmail.webked.de (webmail.webked.de [159.69.203.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91F9D1D63E4
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 20:21:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8F7014F9F9;
+	Fri,  4 Apr 2025 20:23:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.203.94
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743798065; cv=none; b=SC1KJtADMqNvggrFzpI8oDTs67WMgIqnSGrrYm6P/wIVmaN6cjmhIpkKd0WDDSmMbbuP4XXkzgLjKlqkYf3TCbP4hhSTO3/RxDvr0bbvlE5nBm7A4+6VK9oln1gX0wmo5hLEF1lmOeHw347alK8FCc3rvMrLC/XfHr4jOu4ZhD4=
+	t=1743798204; cv=none; b=Q6jFamm1YI4i3AJnxplVVlI7jJZHJRmabXGkbfsYbK2JZiO93aT6y3q0QZ/TlLW/zu5dwWTzXiiI9HVswhXW5IDdIaPZ0pRicYSL1Cv6Y2n/fthu0CR/wyrnDcQo9oqyGxJg2CB7x9EPV6hVmv9c6Vji2mGcHkjyD2avVHjtBV4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743798065; c=relaxed/simple;
-	bh=qDEahmqWnDXLKBhzcad5fQtD9Wb59IoY2VHJb06XErI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=TGzNxUrCDBlw5KECH2LUgKgFKHQX/DeLR6GjErs88Ki1ywcaW6bA285Jlshy+i4+U+yR3RFv9QA6WtHE38GM0iV4UklneohMOhSb36W2qYovFZ+9G3nc638N4RjAK9pKf0l2KfdWPba7exE9567P+mauLECuYNTbCvmz4n+oTDU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BFwbgY2V; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BFwbgY2V"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743798062; x=1775334062;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=qDEahmqWnDXLKBhzcad5fQtD9Wb59IoY2VHJb06XErI=;
-  b=BFwbgY2Vjn7O2JYneSMYcPoMwIT3VMowOllDWi5Kcw3y4jcvL0WumzEX
-   rSpuqNHhYHUX2hbM6UB5tW7yya6wN+kfnycuFANuXkHpGsshjGngkDZRp
-   167dfFyZQpiZ75lD+gk8mz1cEiB+nqZwsD+WtjEn15/xWPcdIPf5ZVZci
-   0ItMJNpGTMtCBRbpSJ3Cf+IW1lUOIxUG0gGbcFS6bWlG3ytfJCe3VaefY
-   BPWe29T24dD4AbdOaUVKq0OUvK+ez6u/J3wnJ6GyNe7iBnvewyUuNKUFE
-   QRwiUrj1RZWvZPxpM2HPJ7gaMTYRPdxny/YVjmrfN1++uZ3z2vZDMZUYv
-   A==;
-X-CSE-ConnectionGUID: XbCGUAq9RGSbUCVHCM3jNQ==
-X-CSE-MsgGUID: YNnWfIQtTu+aN6XZEwBXcg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11394"; a="47960653"
-X-IronPort-AV: E=Sophos;i="6.15,189,1739865600"; 
-   d="scan'208";a="47960653"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 13:21:02 -0700
-X-CSE-ConnectionGUID: 1u0Ap7F2SPCFRQBSCCbgFA==
-X-CSE-MsgGUID: xEcPm7aHQFq3v91I5n/pRw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,189,1739865600"; 
-   d="scan'208";a="150616884"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by fmviesa002.fm.intel.com with ESMTP; 04 Apr 2025 13:21:00 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u0nX8-0001Wt-10;
-	Fri, 04 Apr 2025 20:20:58 +0000
-Date: Sat, 5 Apr 2025 04:20:10 +0800
-From: kernel test robot <lkp@intel.com>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	x86@kernel.org
-Subject: [tip:timers/cleanups 1/11] drivers/usb/host/xhci.c:1074:4: error:
- implicit declaration of function 'timer_delele_sync'; did you mean
- 'timer_delete_sync'?
-Message-ID: <202504050456.279VzOvY-lkp@intel.com>
+	s=arc-20240116; t=1743798204; c=relaxed/simple;
+	bh=KynK17m8gzCfpiirN3+RmhG9s7QXD8jjm7XlUSRzDBI=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=emNgZ1fDbVDh4BD2cgLq4En+tISGOau28KSoeLR23i2xrhhOJUi0EW110d89sLl3HFj0thmx6olqGD5jH1l1oB/uf9939YhHpCdAVrmI3G5fDU0OycgFclnWZhPpYU/1kmvBhodx1YNMKmcBx3yQPcRp9Cl+UTB7MfKXq3KxYcE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=webked.de; spf=pass smtp.mailfrom=webked.de; arc=none smtp.client-ip=159.69.203.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=webked.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=webked.de
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id AD1C061A78;
+	Fri,  4 Apr 2025 22:23:01 +0200 (CEST)
+Message-ID: <62a6bf463858c443f6380bbf7ae5a3cc76b81844.camel@webked.de>
+Subject: Re: [REGRESSION] Massive virtio-net throughput drop in guest VM
+ with Linux 6.8+
+From: Markus Fohrer <markus.fohrer@webked.de>
+To: Willem de Bruijn <willemdebruijn.kernel@gmail.com>, "Michael S. Tsirkin"
+	 <mst@redhat.com>
+Cc: virtualization@lists.linux-foundation.org, jasowang@redhat.com, 
+	davem@davemloft.net, edumazet@google.com, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Date: Fri, 04 Apr 2025 22:23:01 +0200
+In-Reply-To: <67eff7303df69_1ddca829490@willemb.c.googlers.com.notmuch>
+References: <1d388413ab9cfd765cd2c5e05b5e69cdb2ec5a10.camel@webked.de>
+	 <20250403090001-mutt-send-email-mst@kernel.org>
+	 <11c5cb52d024a5158c5b8c5e69e2e4639a055a31.camel@webked.de>
+	 <20250404042711-mutt-send-email-mst@kernel.org>
+	 <e75cb5881a97485b08cdd76efd8a7d2191ecd106.camel@webked.de>
+	 <3b02f37ee12232359672a6a6c2bccaa340fbb6ff.camel@webked.de>
+	 <67eff7303df69_1ddca829490@willemb.c.googlers.com.notmuch>
+Organization: WEBKED IT Markus Fohrer
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+X-Last-TLS-Session-Version: TLSv1.3
 
-Hi Thomas,
+Am Freitag, dem 04.04.2025 um 11:13 -0400 schrieb Willem de Bruijn:
+> Markus Fohrer wrote:
+> > Am Freitag, dem 04.04.2025 um 10:52 +0200 schrieb Markus Fohrer:
+> > > Am Freitag, dem 04.04.2025 um 04:29 -0400 schrieb Michael S.
+> > > Tsirkin:
+> > > > On Fri, Apr 04, 2025 at 10:16:55AM +0200, Markus Fohrer wrote:
+> > > > > Am Donnerstag, dem 03.04.2025 um 09:04 -0400 schrieb Michael
+> > > > > S.
+> > > > > Tsirkin:
+> > > > > > On Wed, Apr 02, 2025 at 11:12:07PM +0200, Markus Fohrer
+> > > > > > wrote:
+> > > > > > > Hi,
+> > > > > > >=20
+> > > > > > > I'm observing a significant performance regression in KVM
+> > > > > > > guest
+> > > > > > > VMs
+> > > > > > > using virtio-net with recent Linux kernels (6.8.1+ and
+> > > > > > > 6.14).
+> > > > > > >=20
+> > > > > > > When running on a host system equipped with a Broadcom
+> > > > > > > NetXtreme-E
+> > > > > > > (bnxt_en) NIC and AMD EPYC CPUs, the network throughput
+> > > > > > > in
+> > > > > > > the
+> > > > > > > guest drops to 100=E2=80=93200 KB/s. The same guest configura=
+tion
+> > > > > > > performs
+> > > > > > > normally (~100 MB/s) when using kernel 6.8.0 or when the
+> > > > > > > VM
+> > > > > > > is
+> > > > > > > moved to a host with Intel NICs.
+> > > > > > >=20
+> > > > > > > Test environment:
+> > > > > > > - Host: QEMU/KVM, Linux 6.8.1 and 6.14.0
+> > > > > > > - Guest: Linux with virtio-net interface
+> > > > > > > - NIC: Broadcom BCM57416 (bnxt_en driver, no issues at
+> > > > > > > host
+> > > > > > > level)
+> > > > > > > - CPU: AMD EPYC
+> > > > > > > - Storage: virtio-scsi
+> > > > > > > - VM network: virtio-net, virtio-scsi (no CPU or IO
+> > > > > > > bottlenecks)
+> > > > > > > - Traffic test: iperf3, scp, wget consistently slow in
+> > > > > > > guest
+> > > > > > >=20
+> > > > > > > This issue is not present:
+> > > > > > > - On 6.8.0=20
+> > > > > > > - On hosts with Intel NICs (same VM config)
+> > > > > > >=20
+> > > > > > > I have bisected the issue to the following upstream
+> > > > > > > commit:
+> > > > > > >=20
+> > > > > > > =C2=A0 49d14b54a527 ("virtio-net: Suppress tx timeout warning
+> > > > > > > for
+> > > > > > > small
+> > > > > > > tx")
+> > > > > > > =C2=A0 https://git.kernel.org/linus/49d14b54a527
+> > > > > >=20
+> > > > > > Thanks a lot for the info!
+> > > > > >=20
+> > > > > >=20
+> > > > > > both the link and commit point at:
+> > > > > >=20
+> > > > > > commit 49d14b54a527289d09a9480f214b8c586322310a
+> > > > > > Author: Eric Dumazet <edumazet@google.com>
+> > > > > > Date:=C2=A0=C2=A0 Thu Sep 26 16:58:36 2024 +0000
+> > > > > >=20
+> > > > > > =C2=A0=C2=A0=C2=A0 net: test for not too small csum_start in
+> > > > > > virtio_net_hdr_to_skb()
+> > > > > > =C2=A0=C2=A0=C2=A0=20
+> > > > > >=20
+> > > > > > is this what you mean?
+> > > > > >=20
+> > > > > > I don't know which commit is "virtio-net: Suppress tx
+> > > > > > timeout
+> > > > > > warning
+> > > > > > for small tx"
+> > > > > >=20
+> > > > > >=20
+> > > > > >=20
+> > > > > > > Reverting this commit restores normal network performance
+> > > > > > > in
+> > > > > > > affected guest VMs.
+> > > > > > >=20
+> > > > > > > I=E2=80=99m happy to provide more data or assist with testing=
+ a
+> > > > > > > potential
+> > > > > > > fix.
+> > > > > > >=20
+> > > > > > > Thanks,
+> > > > > > > Markus Fohrer
+> > > > > >=20
+> > > > > >=20
+> > > > > > Thanks! First I think it's worth checking what is the
+> > > > > > setup,
+> > > > > > e.g.
+> > > > > > which offloads are enabled.
+> > > > > > Besides that, I'd start by seeing what's doing on. Assuming
+> > > > > > I'm
+> > > > > > right
+> > > > > > about
+> > > > > > Eric's patch:
+> > > > > >=20
+> > > > > > diff --git a/include/linux/virtio_net.h
+> > > > > > b/include/linux/virtio_net.h
+> > > > > > index 276ca543ef44d8..02a9f4dc594d02 100644
+> > > > > > --- a/include/linux/virtio_net.h
+> > > > > > +++ b/include/linux/virtio_net.h
+> > > > > > @@ -103,8 +103,10 @@ static inline int
+> > > > > > virtio_net_hdr_to_skb(struct
+> > > > > > sk_buff *skb,
+> > > > > > =C2=A0
+> > > > > > =C2=A0		if (!skb_partial_csum_set(skb, start,
+> > > > > > off))
+> > > > > > =C2=A0			return -EINVAL;
+> > > > > > +		if (skb_transport_offset(skb) <
+> > > > > > nh_min_len)
+> > > > > > +			return -EINVAL;
+> > > > > > =C2=A0
+> > > > > > -		nh_min_len =3D max_t(u32, nh_min_len,
+> > > > > > skb_transport_offset(skb));
+> > > > > > +		nh_min_len =3D skb_transport_offset(skb);
+> > > > > > =C2=A0		p_off =3D nh_min_len + thlen;
+> > > > > > =C2=A0		if (!pskb_may_pull(skb, p_off))
+> > > > > > =C2=A0			return -EINVAL;
+> > > > > >=20
+> > > > > >=20
+> > > > > > sticking a printk before return -EINVAL to show the offset
+> > > > > > and
+> > > > > > nh_min_len
+> > > > > > would be a good 1st step. Thanks!
+> > > > > >=20
+> > > > >=20
+> > > > > I added the following printk inside virtio_net_hdr_to_skb():
+> > > > >=20
+> > > > > =C2=A0=C2=A0=C2=A0 if (skb_transport_offset(skb) < nh_min_len){
+> > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 printk(KERN_INFO "virt=
+io_net: 3 drop,
+> > > > > transport_offset=3D%u,
+> > > > > nh_min_len=3D%u\n",
+> > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 skb_transport_offset(skb), nh_min_len);
+> > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EINVAL;
+> > > > > =C2=A0=C2=A0=C2=A0 }
+> > > > >=20
+> > > > > Built and installed the kernel, then triggered a large
+> > > > > download
+> > > > > via:
+> > > > >=20
+> > > > > =C2=A0=C2=A0=C2=A0 wget http://speedtest.belwue.net/10G
+> > > > >=20
+> > > > > Relevant output from `dmesg -w`:
+> > > > >=20
+> > > > > [=C2=A0=C2=A0 57.327943] virtio_net: 3 drop, transport_offset=3D3=
+4,
+> > > > > nh_min_len=3D40=C2=A0=20
+> > > > > [=C2=A0=C2=A0 57.428942] virtio_net: 3 drop, transport_offset=3D3=
+4,
+> > > > > nh_min_len=3D40=C2=A0=20
+> > > > > [=C2=A0=C2=A0 57.428962] virtio_net: 3 drop, transport_offset=3D3=
+4,
+> > > > > nh_min_len=3D40=C2=A0=20
+> > > > > [=C2=A0=C2=A0 57.553068] virtio_net: 3 drop, transport_offset=3D3=
+4,
+> > > > > nh_min_len=3D40=C2=A0=20
+> > > > > [=C2=A0=C2=A0 57.553088] virtio_net: 3 drop, transport_offset=3D3=
+4,
+> > > > > nh_min_len=3D40=C2=A0=20
+> > > > > [=C2=A0=C2=A0 57.576678] virtio_net: 3 drop, transport_offset=3D3=
+4,
+> > > > > nh_min_len=3D40=C2=A0=20
+> > > > > [=C2=A0=C2=A0 57.618438] virtio_net: 3 drop, transport_offset=3D3=
+4,
+> > > > > nh_min_len=3D40=C2=A0=20
+> > > > > [=C2=A0=C2=A0 57.618453] virtio_net: 3 drop, transport_offset=3D3=
+4,
+> > > > > nh_min_len=3D40=C2=A0=20
+> > > > > [=C2=A0=C2=A0 57.703077] virtio_net: 3 drop, transport_offset=3D3=
+4,
+> > > > > nh_min_len=3D40=C2=A0=20
+> > > > > [=C2=A0=C2=A0 57.823072] virtio_net: 3 drop, transport_offset=3D3=
+4,
+> > > > > nh_min_len=3D40=C2=A0=20
+> > > > > [=C2=A0=C2=A0 57.891982] virtio_net: 3 drop, transport_offset=3D3=
+4,
+> > > > > nh_min_len=3D40=C2=A0=20
+> > > > > [=C2=A0=C2=A0 57.946190] virtio_net: 3 drop, transport_offset=3D3=
+4,
+> > > > > nh_min_len=3D40=C2=A0=20
+> > > > > [=C2=A0=C2=A0 58.218686] virtio_net: 3 drop, transport_offset=3D3=
+4,
+> > > > > nh_min_len=3D40=C2=A0=20
+> > > >=20
+> > > > Hmm indeed. And what about these values?
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 u32 start =3D __virtio16_to_cpu(little_endian,
+> > > > hdr-
+> > > > > csum_start);
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 u32 off =3D __virtio16_to_cpu(little_endian, hdr-
+> > > > > csum_offset);
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 u32 needed =3D start + max_t(u32, thlen, off +
+> > > > sizeof(__sum16));
+> > > > print them too?
+> > > >=20
+> > > >=20
+> > > >=20
+> > > > > I would now do the test with commit
+> > > > > 49d14b54a527289d09a9480f214b8c586322310a and commit
+> > > > > 49d14b54a527289d09a9480f214b8c586322310a~1
+> > > > >=20
+> > > >=20
+> > > > Worth checking though it seems likely now the hypervisor is
+> > > > doing
+> > > > weird
+> > > > things. what kind of backend is it? qemu? tun? vhost-user?
+> > > > vhost-
+> > > > net?
+> > > >=20
+> > >=20
+> > > Backend: QEMU/KVM hypervisor (Proxmox)
+> > >=20
+> > >=20
+> > > printk output:
+> > >=20
+> > > [=C2=A0=C2=A0 58.641906] virtio_net: drop, transport_offset=3D34=C2=
+=A0 start=3D34,
+> > > off=3D16,
+> > > needed=3D54, nh_min_len=3D40
+> > > [=C2=A0=C2=A0 58.678048] virtio_net: drop, transport_offset=3D34=C2=
+=A0 start=3D34,
+> > > off=3D16,
+> > > needed=3D54, nh_min_len=3D40
+> > > [=C2=A0=C2=A0 58.952871] virtio_net: drop, transport_offset=3D34=C2=
+=A0 start=3D34,
+> > > off=3D16,
+> > > needed=3D54, nh_min_len=3D40
+> > > [=C2=A0=C2=A0 58.962157] virtio_net: drop, transport_offset=3D34=C2=
+=A0 start=3D34,
+> > > off=3D16,
+> > > needed=3D54, nh_min_len=3D40
+> > > [=C2=A0=C2=A0 59.071645] virtio_net: drop, transport_offset=3D34=C2=
+=A0 start=3D34,
+> > > off=3D16,
+> > > needed=3D54, nh_min_len=3D40
+>=20
+> So likely a TCP/IPv4 packet, but with VIRTIO_NET_HDR_GSO_TCPV6.
+>=20
+> This is observed in the guest on the ingress path, right? In
+> virtnet_receive_done.
 
-FYI, the error/warning was bisected to this commit, please ignore it if it's irrelevant.
+Yes, all tests are done inside the guest system. Packet drops are seen
+when receiving traffic.
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers/cleanups
-head:   b33f0e454c28ce1fd504367575accecdf4c64dc3
-commit: 6bcfaeda89efec08e5fb2010927a1cf4e89f0f4d [1/11] treewide: Switch to timer_delete[_sync]()
-config: arm-randconfig-002-20250405 (https://download.01.org/0day-ci/archive/20250405/202504050456.279VzOvY-lkp@intel.com/config)
-compiler: arm-linux-gnueabi-gcc (GCC) 7.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250405/202504050456.279VzOvY-lkp@intel.com/reproduce)
+I hadn't tested upload before, so I did now:
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504050456.279VzOvY-lkp@intel.com/
+- Download is slow (<200 KB/s)
+- Upload works fine (~190 MB/s)
 
-All errors (new ones prefixed by >>):
+>=20
+> Is this using vhost-net in the host for pass-through? IOW, is
+> the host writing the virtio_net_hdr too?
 
-   drivers/usb/host/xhci.c: In function 'xhci_resume':
->> drivers/usb/host/xhci.c:1074:4: error: implicit declaration of function 'timer_delele_sync'; did you mean 'timer_delete_sync'? [-Werror=implicit-function-declaration]
-       timer_delele_sync(&xhci->comp_mode_recovery_timer);
-       ^~~~~~~~~~~~~~~~~
-       timer_delete_sync
-   cc1: some warnings being treated as errors
+Yes, the guest runs on a Proxmox host using QEMU/KVM with vhost-net.
 
+vhost_net module is loaded:
 
-vim +1074 drivers/usb/host/xhci.c
+  # lsmod | grep vhost
+  vhost_net              32768  30
+  vhost                  61440  1 vhost_net
+  vhost_iotlb            16384  1 vhost
+  tap                    28672  1 vhost_net
 
-   990	
-   991	/*
-   992	 * start xHC (not bus-specific)
-   993	 *
-   994	 * This is called when the machine transition from S3/S4 mode.
-   995	 *
-   996	 */
-   997	int xhci_resume(struct xhci_hcd *xhci, bool power_lost, bool is_auto_resume)
-   998	{
-   999		u32			command, temp = 0;
-  1000		struct usb_hcd		*hcd = xhci_to_hcd(xhci);
-  1001		int			retval = 0;
-  1002		bool			comp_timer_running = false;
-  1003		bool			pending_portevent = false;
-  1004		bool			suspended_usb3_devs = false;
-  1005	
-  1006		if (!hcd->state)
-  1007			return 0;
-  1008	
-  1009		/* Wait a bit if either of the roothubs need to settle from the
-  1010		 * transition into bus suspend.
-  1011		 */
-  1012	
-  1013		if (time_before(jiffies, xhci->usb2_rhub.bus_state.next_statechange) ||
-  1014		    time_before(jiffies, xhci->usb3_rhub.bus_state.next_statechange))
-  1015			msleep(100);
-  1016	
-  1017		set_bit(HCD_FLAG_HW_ACCESSIBLE, &hcd->flags);
-  1018		if (xhci->shared_hcd)
-  1019			set_bit(HCD_FLAG_HW_ACCESSIBLE, &xhci->shared_hcd->flags);
-  1020	
-  1021		spin_lock_irq(&xhci->lock);
-  1022	
-  1023		if (xhci->quirks & XHCI_RESET_ON_RESUME || xhci->broken_suspend)
-  1024			power_lost = true;
-  1025	
-  1026		if (!power_lost) {
-  1027			/*
-  1028			 * Some controllers might lose power during suspend, so wait
-  1029			 * for controller not ready bit to clear, just as in xHC init.
-  1030			 */
-  1031			retval = xhci_handshake(&xhci->op_regs->status,
-  1032						STS_CNR, 0, 10 * 1000 * 1000);
-  1033			if (retval) {
-  1034				xhci_warn(xhci, "Controller not ready at resume %d\n",
-  1035					  retval);
-  1036				spin_unlock_irq(&xhci->lock);
-  1037				return retval;
-  1038			}
-  1039			/* step 1: restore register */
-  1040			xhci_restore_registers(xhci);
-  1041			/* step 2: initialize command ring buffer */
-  1042			xhci_set_cmd_ring_deq(xhci);
-  1043			/* step 3: restore state and start state*/
-  1044			/* step 3: set CRS flag */
-  1045			command = readl(&xhci->op_regs->command);
-  1046			command |= CMD_CRS;
-  1047			writel(command, &xhci->op_regs->command);
-  1048			/*
-  1049			 * Some controllers take up to 55+ ms to complete the controller
-  1050			 * restore so setting the timeout to 100ms. Xhci specification
-  1051			 * doesn't mention any timeout value.
-  1052			 */
-  1053			if (xhci_handshake(&xhci->op_regs->status,
-  1054				      STS_RESTORE, 0, 100 * 1000)) {
-  1055				xhci_warn(xhci, "WARN: xHC restore state timeout\n");
-  1056				spin_unlock_irq(&xhci->lock);
-  1057				return -ETIMEDOUT;
-  1058			}
-  1059		}
-  1060	
-  1061		temp = readl(&xhci->op_regs->status);
-  1062	
-  1063		/* re-initialize the HC on Restore Error, or Host Controller Error */
-  1064		if ((temp & (STS_SRE | STS_HCE)) &&
-  1065		    !(xhci->xhc_state & XHCI_STATE_REMOVING)) {
-  1066			if (!power_lost)
-  1067				xhci_warn(xhci, "xHC error in resume, USBSTS 0x%x, Reinit\n", temp);
-  1068			power_lost = true;
-  1069		}
-  1070	
-  1071		if (power_lost) {
-  1072			if ((xhci->quirks & XHCI_COMP_MODE_QUIRK) &&
-  1073					!(xhci_all_ports_seen_u0(xhci))) {
-> 1074				timer_delele_sync(&xhci->comp_mode_recovery_timer);
-  1075				xhci_dbg_trace(xhci, trace_xhci_dbg_quirks,
-  1076					"Compliance Mode Recovery Timer deleted!");
-  1077			}
-  1078	
-  1079			/* Let the USB core know _both_ roothubs lost power. */
-  1080			usb_root_hub_lost_power(xhci->main_hcd->self.root_hub);
-  1081			if (xhci->shared_hcd)
-  1082				usb_root_hub_lost_power(xhci->shared_hcd->self.root_hub);
-  1083	
-  1084			xhci_dbg(xhci, "Stop HCD\n");
-  1085			xhci_halt(xhci);
-  1086			xhci_zero_64b_regs(xhci);
-  1087			retval = xhci_reset(xhci, XHCI_RESET_LONG_USEC);
-  1088			spin_unlock_irq(&xhci->lock);
-  1089			if (retval)
-  1090				return retval;
-  1091	
-  1092			xhci_dbg(xhci, "// Disabling event ring interrupts\n");
-  1093			temp = readl(&xhci->op_regs->status);
-  1094			writel((temp & ~0x1fff) | STS_EINT, &xhci->op_regs->status);
-  1095			xhci_disable_interrupter(xhci->interrupters[0]);
-  1096	
-  1097			xhci_dbg(xhci, "cleaning up memory\n");
-  1098			xhci_mem_cleanup(xhci);
-  1099			xhci_debugfs_exit(xhci);
-  1100			xhci_dbg(xhci, "xhci_stop completed - status = %x\n",
-  1101				    readl(&xhci->op_regs->status));
-  1102	
-  1103			/* USB core calls the PCI reinit and start functions twice:
-  1104			 * first with the primary HCD, and then with the secondary HCD.
-  1105			 * If we don't do the same, the host will never be started.
-  1106			 */
-  1107			xhci_dbg(xhci, "Initialize the xhci_hcd\n");
-  1108			retval = xhci_init(hcd);
-  1109			if (retval)
-  1110				return retval;
-  1111			comp_timer_running = true;
-  1112	
-  1113			xhci_dbg(xhci, "Start the primary HCD\n");
-  1114			retval = xhci_run(hcd);
-  1115			if (!retval && xhci->shared_hcd) {
-  1116				xhci_dbg(xhci, "Start the secondary HCD\n");
-  1117				retval = xhci_run(xhci->shared_hcd);
-  1118			}
-  1119			if (retval)
-  1120				return retval;
-  1121			/*
-  1122			 * Resume roothubs unconditionally as PORTSC change bits are not
-  1123			 * immediately visible after xHC reset
-  1124			 */
-  1125			hcd->state = HC_STATE_SUSPENDED;
-  1126	
-  1127			if (xhci->shared_hcd) {
-  1128				xhci->shared_hcd->state = HC_STATE_SUSPENDED;
-  1129				usb_hcd_resume_root_hub(xhci->shared_hcd);
-  1130			}
-  1131			usb_hcd_resume_root_hub(hcd);
-  1132	
-  1133			goto done;
-  1134		}
-  1135	
-  1136		/* step 4: set Run/Stop bit */
-  1137		command = readl(&xhci->op_regs->command);
-  1138		command |= CMD_RUN;
-  1139		writel(command, &xhci->op_regs->command);
-  1140		xhci_handshake(&xhci->op_regs->status, STS_HALT,
-  1141			  0, 250 * 1000);
-  1142	
-  1143		/* step 5: walk topology and initialize portsc,
-  1144		 * portpmsc and portli
-  1145		 */
-  1146		/* this is done in bus_resume */
-  1147	
-  1148		/* step 6: restart each of the previously
-  1149		 * Running endpoints by ringing their doorbells
-  1150		 */
-  1151	
-  1152		spin_unlock_irq(&xhci->lock);
-  1153	
-  1154		xhci_dbc_resume(xhci);
-  1155	
-  1156		if (retval == 0) {
-  1157			/*
-  1158			 * Resume roothubs only if there are pending events.
-  1159			 * USB 3 devices resend U3 LFPS wake after a 100ms delay if
-  1160			 * the first wake signalling failed, give it that chance if
-  1161			 * there are suspended USB 3 devices.
-  1162			 */
-  1163			if (xhci->usb3_rhub.bus_state.suspended_ports ||
-  1164			    xhci->usb3_rhub.bus_state.bus_suspended)
-  1165				suspended_usb3_devs = true;
-  1166	
-  1167			pending_portevent = xhci_pending_portevent(xhci);
-  1168	
-  1169			if (suspended_usb3_devs && !pending_portevent && is_auto_resume) {
-  1170				msleep(120);
-  1171				pending_portevent = xhci_pending_portevent(xhci);
-  1172			}
-  1173	
-  1174			if (pending_portevent) {
-  1175				if (xhci->shared_hcd)
-  1176					usb_hcd_resume_root_hub(xhci->shared_hcd);
-  1177				usb_hcd_resume_root_hub(hcd);
-  1178			}
-  1179		}
-  1180	done:
-  1181		/*
-  1182		 * If system is subject to the Quirk, Compliance Mode Timer needs to
-  1183		 * be re-initialized Always after a system resume. Ports are subject
-  1184		 * to suffer the Compliance Mode issue again. It doesn't matter if
-  1185		 * ports have entered previously to U0 before system's suspension.
-  1186		 */
-  1187		if ((xhci->quirks & XHCI_COMP_MODE_QUIRK) && !comp_timer_running)
-  1188			compliance_mode_recovery_timer_init(xhci);
-  1189	
-  1190		if (xhci->quirks & XHCI_ASMEDIA_MODIFY_FLOWCONTROL)
-  1191			usb_asmedia_modifyflowcontrol(to_pci_dev(hcd->self.controller));
-  1192	
-  1193		/* Re-enable port polling. */
-  1194		xhci_dbg(xhci, "%s: starting usb%d port polling.\n",
-  1195			 __func__, hcd->self.busnum);
-  1196		if (xhci->shared_hcd) {
-  1197			set_bit(HCD_FLAG_POLL_RH, &xhci->shared_hcd->flags);
-  1198			usb_hcd_poll_rh_status(xhci->shared_hcd);
-  1199		}
-  1200		set_bit(HCD_FLAG_POLL_RH, &hcd->flags);
-  1201		usb_hcd_poll_rh_status(hcd);
-  1202	
-  1203		return retval;
-  1204	}
-  1205	EXPORT_SYMBOL_GPL(xhci_resume);
-  1206	#endif	/* CONFIG_PM */
-  1207	
+QEMU is launched with:
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+  -netdev type=3Dtap,...,vhost=3Don
+  -device virtio-net-pci,...
+
+>=20
+> > >=20
+> > >=20
+> > >=20
+> > >=20
+> >=20
+> > I just noticed that commit 17bd3bd82f9f79f3feba15476c2b2c95a9b11ff8
+> > (tcp_offload.c: gso fix) also touches checksum handling and may
+> > affect how skb state is passed to virtio_net_hdr_to_skb().
+> >=20
+> > Is it possible that the regression only appears due to the
+> > combination
+> > of 17bd3bd8 and 49d14b54a5?
+>=20
+> That patch only affects packets with SKB_GSO_FRAGLIST. Which is only
+> set on forwarding if NETIF_F_FRAGLIST is set. I don=20
+
+Checked in the guest:
+
+  # ethtool -k eth0 | grep frag
+    tx-scatter-gather-fraglist: off [fixed]
+
+So fraglist offload is disabled in the guest.
