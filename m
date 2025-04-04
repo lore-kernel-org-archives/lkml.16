@@ -1,69 +1,72 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE2E4194A59
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 12:39:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C69026AFB
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 12:39:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743770388; cv=none; b=srGkFnY4BhyLj72XLQ3QJ0zE1ReAI8Sgbcdtv7+dzzi/JuJ0gFeXhr46OWzZCd4+mgf5Ja2uHTuuX+q9vlpGehNUMeyp587cv8XOTl+n92uDdR5W/z72zFQFSMeGB7/PMaKS+yWZkDYOedqnJ+ulaWfY3+7lc+bh2gLRSSgfL3A=
+	t=1743770396; cv=none; b=SaL5DJX1vBnpvs/mkg6ga4gC4KBpnIojrRkrdPdLZ4/W2fKDU0lMxh+5ncU49WwULHzCiAkKqHpAyxrQEz57npyniAdkLqvFNJZbiwaoeofvaTuEpqr/lA6KMDUiNd47tqKgX733N8qIgc4vZ765smBgzMGbEGrTG7q2twMmEeY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743770388; c=relaxed/simple;
-	bh=rWZrTo6CbOAZVlBYr0KMUl0bNmnyRfmlSthZhFH6jXo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Sk3jp/Ewm09Mglm6nxyaOub8X+ePH+YN/tvqNwLY91K4HGj936zn8gm1ofFEtX2psqpccAI+XNgkP/r3MgNU3Mggo9ocIMDULfo/pchxpNLPBEKvC2/fSoygZWJWKUOEsoUHzYWPSJffvHXulIwSJpObf87GwSByzCT3sI+LYM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lrXF5FpW; arc=none smtp.client-ip=209.85.221.51
+	s=arc-20240116; t=1743770396; c=relaxed/simple;
+	bh=nBLz1kTJ8NH5i/Yn/ykHHxiMfT5KmmPCMp7p2LIR8Sg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kwHEelK3n1fdJ5VYGJeIgoomY4nsEYkUTyifcEXPZvANtyiu2Ae+vTMS1/+iQFy72RNCBeXed1y3IpeX/WyQnLfueEVnXbXeFOW8E62ObG7EVhrV2NxmUogvJ3qoUAdB243mYNOTMGUa1HNaoh72CdKnY9seQQ3sPqDeUlOvUBA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vqH252cl; arc=none smtp.client-ip=209.85.128.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lrXF5FpW"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3913290f754so222640f8f.1
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 05:39:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vqH252cl"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43935d1321aso2167355e9.1
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 05:39:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743770385; x=1744375185; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1743770393; x=1744375193; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=d+xv3GCTllU74BY3qzp0YBkubI5fxJJbRLLZjqaSHDw=;
-        b=lrXF5FpWI9e1PtDl2+1ChwNy4SLmMRWVaon5B/MHSDauSDYitTv3heMuiGtzEzIQmj
-         5TvpBiR6HhcxjVQ8uJIsIYXJrCMxKniCSU9xWBkhXIFnF7vsmaTn2JsJki1SF2md7DBZ
-         A+nMQc5hoxeG+glu5+n4fX+TuPyIBpzWS3gNAOGI8G1jFsFKYEqjP5FVm6fth9Uvkqnr
-         banfSZx07534KMPVBbPqtnPq1Jw+fCaCDFc8h1rybQ3vH2NM0R3vyUdOXRc28S8uYTnI
-         ZJJMWEgyQHahjxvL41vXtV8PoCE3m/+DClrqCgUN7XQ1TD3je1TrVnLHk844ch50ghHX
-         JWZA==
+        bh=ZTU9ncN4gaPvvWv2/kPgQ7Y0Lxm8sALtBZAAIO+VFQ8=;
+        b=vqH252cltloAlxsvD26YYL2wfh0VRR8ytCvKX0opOaOxewYKgo/IwDLUjdY8sW1fmk
+         A5Z4poZrEGG6uwOsH8yp44cjI6mgm9tJ/TNwAKYCaOfk6pwdAInMZ8MlpNSQx6pbOfy4
+         Y0nJPksq8Sd9cDWie9/Em56ufAtMK46M5cpw1GwpwAV2m6seZVz5afZkWWiZia71+vYm
+         uAfY5/qtAGGs9Kk0cKbl/QcSuYDtBzWt4wuRuCqwEizJL1eLIvYRDC4KgyrY7IrCg6HZ
+         Rq7Xh2pDfGb/2LQ+bCyiE/ItFNlg0Ivl4JVGfgj5Ckg8bHG8UAsWMkyos8LjxbbKXYmc
+         E0WQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743770385; x=1744375185;
+        d=1e100.net; s=20230601; t=1743770393; x=1744375193;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=d+xv3GCTllU74BY3qzp0YBkubI5fxJJbRLLZjqaSHDw=;
-        b=t2dXinEGSNcAaUT2eetVkwpwRy7o/QXPteVEklh0rt/e1gsxEQdNf/MC6zt9Fm53Pw
-         OnZxIhJvXCyk1geb1zKzyygcdHRcW4Qaq1IXF4NPpQ4Mf8LQadTXDhUMSUhHEv2KslK9
-         tsRipZOkPW/pf6Rq0/rNqGgnAYqyWshEQ3Q/ppvwFbed7QYrWPo3ijAUVZOEv1TX2Qpi
-         S2es4j7u4DD5rhiHBjhJTKCUlYg6pZtcl1D5qUZ2kWDNGCl42lVXewdyyndhggf8BNaN
-         GfUY8DdChu3K3BIYDkU3BihucFjMwsyxaWo/me/qwL+py3zI+FCW7i+b4SjrYQJGSWVW
-         XJtQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWyg19HKuOndfqGvSaHVB/fcMUdSZ+W1FTV+izt8prR7SFYCnfDQkwbN5kg8BFMEcH0d1GqIaQyroZZ0QY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+/JP94kS9myTJdFmZQb3QoN46M4dDTVjQM9zwVztFVMzIhJbi
-	GZJ0xkoxNhufCsdNlqmr/9+5uvccCb0XcTJn9l0XObKqz4/4H3jn6cE95uAWS/U=
-X-Gm-Gg: ASbGncupwfxKbi3mM+VrrZANapevugpdx+pAM/19rfSQ7gLyVsD4k9tE3GuA/cfBv/h
-	9DXUTTdxRP0K1ISpl6YT+P9ac35Gf2eJ/Gin8mPSxTUkGQWjRG5k15fERbGef7mYWS7YasNmUOF
-	mVsUKjXbTNP1puVlfyc0H/BAXCGT2wwvzH5w7FkvJtF+CeW+/HuOmKiFLdnPX94ZXdVZhDPcfcS
-	y7LgukNgLs/5kGHbDRzs39FYp6tgyBg97FSbZ/r1xmswg4S0vuPzxW008YQDTHM1PgPaZ5w7Up1
-	U04P3G1pXnZmVZslt74rIe3VrJrj5HmL3t+4oQcswY7KEvhqsCglvA==
-X-Google-Smtp-Source: AGHT+IG+lKwfjMi8F019Bso/vFNO0xQAvVFuEUWApO7mpNXS+oQ2lkSC3va++KwObICvSEH0/L4KwQ==
-X-Received: by 2002:a05:6000:22c6:b0:38f:2685:8457 with SMTP id ffacd0b85a97d-39cadc76447mr939830f8f.0.1743770385087;
-        Fri, 04 Apr 2025 05:39:45 -0700 (PDT)
+        bh=ZTU9ncN4gaPvvWv2/kPgQ7Y0Lxm8sALtBZAAIO+VFQ8=;
+        b=EIXAszeMfhB8bzphgNEot2RotmBi68I27OoGWZdKwbIfschuh8zFx9/tgah+K0BHTu
+         l2bGUfIT1q1+gu915169XpNpxxz4u9e68YSOOrapKA+nKCCJrG74Z+ATkbbTZI3JFjG9
+         uH/Hlz7gQ1o0gq8Zsf7NUVS0kev++d1XAUHM6rZl5SHZyUp03R8XTqbbPVCxlwITrqzE
+         Gj4XMPqnmMaIT4B0MSa5sI8/4GwN1ywYwPUl1TG83TCZGr9LjMJdOpBOUUttk9C8Z4+v
+         84OumSUCj/ZGX0EAeBAknQPgQeH/1Cnx6j4YeUfq9CRgCcxVMcvjPVcGfw/oi5Bqe5Wp
+         dr3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVnlEcvSI3ibYGaS+7RpPq2mElYU8nKv/lMFRM/35GHOHolm3z5+O7ZB1xGGswgtN9ye9ybN6iQ3mxaIMw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxnfH5R8KzVpm10TpGg3Fzm7UgWxt7mtptjyL+9ZhizhZK9t/Ll
+	iFRWO6YdB1jZ3G4VJUDZT5xmT0V0I9mZUtHnA4l60PNnT6h1ksmZS5JYf1VUJQY=
+X-Gm-Gg: ASbGncuSN7m4YauUmw0B7DSBjotmkG55hpJZEKOFyBj1PN+d5kn60EYiJFX0Do0oQV+
+	X5/wt6nCqVmKHR8m2oC9Zdt8a8Wgh8gTd68HkXqaXCwnOkxPpumA0SPkOoms9td18CpP3ubDzvv
+	QwWkYlwWfMNHNM9f6joid4DCiZBkPVcdQ2gBSmVRTDvbkuIHIpOeKJE41PUnKnnlh5nXUXPptk+
+	ZWIr2hzggdvtBDWEpadT6iM9QgbbFpy7XHWDhRwtab8jEyeFyKfHZayoHPEQk70Am4eCCUZFG/n
+	2gIWH8LhN0IzPulOXSrm0pn9A6jqbNan5Mq23WeZzvBdKnLhNQyjnw==
+X-Google-Smtp-Source: AGHT+IFE/BNeQcKRRWZIPVRmYBmQ1t5nK5Wr5F4lJXYDnVHNSidWI2olRFDyeW5mBZo+ZjR5fCLwxA==
+X-Received: by 2002:a5d:5f44:0:b0:386:3a50:8c52 with SMTP id ffacd0b85a97d-39cb35a76e9mr962968f8f.7.1743770393235;
+        Fri, 04 Apr 2025 05:39:53 -0700 (PDT)
 Received: from shite.. ([178.197.198.86])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c301a67a1sm4203490f8f.24.2025.04.04.05.39.44
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c3020d98bsm4261898f8f.76.2025.04.04.05.39.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Apr 2025 05:39:44 -0700 (PDT)
+        Fri, 04 Apr 2025 05:39:52 -0700 (PDT)
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Wim Van Sebroeck <wim@linux-watchdog.org>,
-	Guenter Roeck <linux@roeck-us.net>,
-	linux-watchdog@vger.kernel.org,
+To: Neil Armstrong <neil.armstrong@linaro.org>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Jerome Brunet <jbrunet@baylibre.com>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-amlogic@lists.infradead.org,
 	linux-kernel@vger.kernel.org
 Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH] watchdog: Do not enable by default during compile testing
-Date: Fri,  4 Apr 2025 14:39:41 +0200
-Message-ID: <20250404123941.362620-1-krzysztof.kozlowski@linaro.org>
+Subject: [PATCH] firmware: meson: Do not enable MESON_SM by default during compile testing
+Date: Fri,  4 Apr 2025 14:39:49 +0200
+Message-ID: <20250404123949.362652-1-krzysztof.kozlowski@linaro.org>
 X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -78,40 +81,22 @@ drivers.
 
 Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
- drivers/watchdog/Kconfig | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/firmware/meson/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-index 0d8d37f712e8..1d29e5f4f40c 100644
---- a/drivers/watchdog/Kconfig
-+++ b/drivers/watchdog/Kconfig
-@@ -1001,7 +1001,7 @@ config STM32_WATCHDOG
- 	tristate "STM32 Independent WatchDoG (IWDG) support"
- 	depends on ARCH_STM32 || COMPILE_TEST
- 	select WATCHDOG_CORE
+diff --git a/drivers/firmware/meson/Kconfig b/drivers/firmware/meson/Kconfig
+index f2fdd3756648..179f5d46d8dd 100644
+--- a/drivers/firmware/meson/Kconfig
++++ b/drivers/firmware/meson/Kconfig
+@@ -5,7 +5,7 @@
+ config MESON_SM
+ 	tristate "Amlogic Secure Monitor driver"
+ 	depends on ARCH_MESON || COMPILE_TEST
 -	default y
-+	default ARCH_STM32
++	default ARCH_MESON
+ 	depends on ARM64_4K_PAGES
  	help
- 	  Say Y here to include support for the watchdog timer
- 	  in stm32 SoCs.
-@@ -1869,7 +1869,7 @@ config OCTEON_WDT
- config MARVELL_GTI_WDT
- 	tristate "Marvell GTI Watchdog driver"
- 	depends on ARCH_THUNDER || (COMPILE_TEST && 64BIT)
--	default y
-+	default ARCH_THUNDER
- 	select WATCHDOG_CORE
- 	help
- 	  Marvell GTI hardware supports watchdog timer. First timeout
-@@ -2035,7 +2035,7 @@ config 8xxx_WDT
- config PIKA_WDT
- 	tristate "PIKA FPGA Watchdog"
- 	depends on WARP || (PPC64 && COMPILE_TEST)
--	default y
-+	default WARP
- 	help
- 	  This enables the watchdog in the PIKA FPGA. Currently used on
- 	  the Warp platform.
+ 	  Say y here to enable the Amlogic secure monitor driver
 -- 
 2.45.2
 
