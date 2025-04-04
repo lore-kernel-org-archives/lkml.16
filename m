@@ -1,60 +1,76 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BF5320D4E4
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 17:04:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D551320B7E1
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 17:05:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743786290; cv=none; b=Zm9PJvm9UaG3YWDEPNOn1eu8I/RvaUl85sFnwf5jU/g1sQHubfx4XZEuilORPobcOJxHFD8lJxQQYAk8zqCqoBmF8vj38XN8LUGthIK0ErZnh82S05KH1+Gt4VgmC1jVLV1dyNIaQn97ilSeh2JDMDW/aahPa/VLHrR81DOP9mY=
+	t=1743786336; cv=none; b=kfBRpl706s6L3tHTutwpKUxdDiGLeIlH7NUP9VLPIA6kmjXfQHH74yTD0JTPtH4cEUYMR7tsnohRJ3+YlppXwk7gXVMC06tpZcVTOk1hMwVTk6/WkNmAuJ3bfTQPrVkfKvwZOQcHS6YVqELLl7RqYonxDu3t192diOEvBeigob8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743786290; c=relaxed/simple;
-	bh=Vz6/3lSvbp8sxTTg+vPwHJqhlJw2sSLK8z7UCA7Htqs=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=rCHVYxkIAGAyje+LLdzmmFfDPR9yMqNpF0wN6TnKRAnE8o6As24tKWiCAhPqskPDWf+IVf5YUyPwYqsTkLnW+jZdDqtMl8SLpg8MIw8mTtyZmAHwwcozHJIB/6uezYILek3jbROHZuAXh1awZTEojXWLgUjEKWICsiC07BxyZWk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TdiSxZA/; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1743786336; c=relaxed/simple;
+	bh=iO8nNca6CjCJe5afrLQ0fcpI2xk8JQtBj1QNgWxRfkg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PUXcI+PjrNc9/nUbQewPq4z1snDqFWcN6xbQ/6ZAylR/dGYWJJu6bjGyfiu3GEFHcqIqvYnKYAXfq9nG3pAlMR1PKfX+DNPmZTdqwKdHG2pm425olIaIWN29aLzpCAsWEC54Z4igQwDBylG2Y/6hTAAKcH6tz14S7JPgf74Sl1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=H3NVeW/H; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TdiSxZA/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743786289; x=1775322289;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=Vz6/3lSvbp8sxTTg+vPwHJqhlJw2sSLK8z7UCA7Htqs=;
-  b=TdiSxZA/D4d1xdsAMmfWwD1BMKfhv+ac245xAz6lhLpT45b2wkUG1qL7
-   1OEke6qDgGb34wNMYoKu5ZEQjWflK63XzYpfdgfEMb5tQLp/A3qC9FTcq
-   XUS6WlQ25ViTETkZmvCT+0p+SMsj93l+5mMEeTSlpWMC2eFG+qn3IlHaU
-   kriocvCdTV8Dr3l4xBAiIue5VRRTG5htIu/Y1a4wKm03NnaGaqCuikeXd
-   ghUEUAj/tk3bRtp51Ob6qlylJ4aQsYx1CQK/HQrfwyVi99UyA64/86MJN
-   8wv8gNtkEXTgjj9EaMRN2scP5GJQHIpM4E8PdePRXnGhTXiFYQ7BOsBz9
-   Q==;
-X-CSE-ConnectionGUID: qi8fe3FlTv25MHn7IL28pA==
-X-CSE-MsgGUID: 1wQTuyf7RpmriLPi7bfmJQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11394"; a="49027884"
-X-IronPort-AV: E=Sophos;i="6.15,188,1739865600"; 
-   d="scan'208";a="49027884"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 10:04:46 -0700
-X-CSE-ConnectionGUID: ODEgiN94RuedLBvJYcrMKw==
-X-CSE-MsgGUID: 4jvxsrPjR9yzT+CNn+bf4w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,188,1739865600"; 
-   d="scan'208";a="132564001"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by orviesa005.jf.intel.com with ESMTP; 04 Apr 2025 10:04:43 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u0kTB-0001PT-1Z;
-	Fri, 04 Apr 2025 17:04:41 +0000
-Date: Sat, 5 Apr 2025 01:04:05 +0800
-From: kernel test robot <lkp@intel.com>
-To: Nam Cao <namcao@linutronix.de>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>
-Subject: [tip:timers/cleanups 2/10]
- drivers/pps/generators/pps_gen_tio.c:230:9: error: implicit declaration of
- function 'hrtimer_init'; did you mean 'hrtimers_init'?
-Message-ID: <202504050126.K62Di5RY-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="H3NVeW/H"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ac2a9a74d9cso57949166b.1
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 10:05:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1743786333; x=1744391133; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=AwDqXCtOct8DsFXT3x26lNRUVVnIjXvE/cNDH38nXmY=;
+        b=H3NVeW/HN3E0huIvNXb9lCEax2z0Znt3OnAcWcqf/Tiv5frxz0TFmsDQKmZdzguxM2
+         9GIUroUoKLaJLJTM4ZAlMFAfD+fJF/AcR0RwW/DBzBQjhGX/mG5/jODlKXYUz7rbYkRa
+         swxhmjgtY4TIJd+4JOTOGyp9QGNIA3xyoARtdumoJWMH0Nodf/BMwzw4QIFFurTpDNpk
+         vANfrtKOSXaMQS8NMfy54Z+X2Jiy4O7cBZErXx7vumKtI+XopMNthIZBn/VGCq2izyIv
+         J7TM/tbaABp2tMsdTv78Eh2iDVYHpmTC6bpL/V8O3qCdD/eEkqKytRCU5vCSm1yvBiFQ
+         Ce1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743786333; x=1744391133;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AwDqXCtOct8DsFXT3x26lNRUVVnIjXvE/cNDH38nXmY=;
+        b=LIgU6NW0YpNTBzdCk5niw4EirT7NKebOKsjDefZruGwL1jj9Iz8DKxrz6HEVRNgLrb
+         f++f3ThI7hnd1sj1RUnMWV1BuXT13lpCiSMzopU+SEVbhKT02rJeABIsLJxbZjQKpZiz
+         ypjgZopUjrsRHxVQuJA9CLLtdEEC+4HN2CsGGGu+kuUzpP0i2irpxDxOLmN7YasucfvC
+         XFpcP7y2wyqNCQ2Ot6sZgxRILjHu1dUIXNypkOY1uZQdMeAyaqTcV5IJGSvFTvR/IzuR
+         zE4jss/4UFwJLflqIFaHFucdjNAtVwII15a00X4nv6hTZKom0xPfVJ8XuuwzIUvVkECK
+         W8JA==
+X-Forwarded-Encrypted: i=1; AJvYcCXh6hWpN2tYSosP0EtF33UEnMXZYRZNm1rzUwldVyp/ab8OppYS4ik8JP07xAh6agmifDnh8rd5kIKySCg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzkuXcKxW9Z359iu1y/QhLV5MBt9BYv0t2XDeDyEJBCtIQB4Itg
+	Ztp0vHgQQr4AMC7RVz1D3BJes/uFGBx1VQ6By7vafZz1n+C7OwSfPOLwS3Rutg==
+X-Gm-Gg: ASbGncuG4t4QtmXznAYu74rjwOiRNarlF+UoHNsi4T4LZ5KRdRF0QF0XelH+dblROTQ
+	6GfJ6PWcmwqPelTy01pL4vuZI+NQ2lmh/SVWOAQC0vv9Nm31+EtFDk4zxjdAtuBCrxiKqS2aJhP
+	tj/hshsxt2ehZE4S8QDn++DO+IcLe/eKNzUEF7HNubNOVDESGVAdmVVwkUqTfLqfluE7HDTedW9
+	fCsEMuZ/fPAFJjvXCpNFPvvHvOdomSMuC5uKT3CHgo3o7JdQrWsKq7kln9kkUOCAfDywmDEEwme
+	jBg1RNpEkXAyDmSi0wahpsJ5ErRRtYsQfHFAkuK2PnqjoGYRwDhxUsHg15DWnR4qI8hlgpr9WuQ
+	V1ZeaIhA=
+X-Google-Smtp-Source: AGHT+IHNmd6B42CvAAoOrmSaCgMaRG/rblZajqIa3A/ogW1Y5oG4oBfPNhJiyFRf09FleJPZU3ziJA==
+X-Received: by 2002:a17:907:9693:b0:ac3:3e43:3b2b with SMTP id a640c23a62f3a-ac7d1878c0amr443601366b.18.1743786332804;
+        Fri, 04 Apr 2025 10:05:32 -0700 (PDT)
+Received: from google.com (35.157.34.34.bc.googleusercontent.com. [34.34.157.35])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7c0184d0dsm280758066b.130.2025.04.04.10.05.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Apr 2025 10:05:32 -0700 (PDT)
+Date: Fri, 4 Apr 2025 18:05:28 +0100
+From: Vincent Donnefort <vdonnefort@google.com>
+To: Quentin Perret <qperret@google.com>
+Cc: maz@kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com,
+	suzuki.poulose@arm.com, yuzenghui@huawei.com,
+	catalin.marinas@arm.com, will@kernel.org,
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org, kernel-team@android.com
+Subject: Re: [PATCH v2 3/9] KVM: arm64: Add a range to
+ __pkvm_host_unshare_guest()
+Message-ID: <Z_ARWDH60WayM0MP@google.com>
+References: <20250306110038.3733649-1-vdonnefort@google.com>
+ <20250306110038.3733649-4-vdonnefort@google.com>
+ <Z-6p49EcsZKid7L1@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,77 +79,53 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <Z-6p49EcsZKid7L1@google.com>
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers/cleanups
-head:   5c4da3a96bf484f965057c281f1ef48ac46987bc
-commit: 58b3f2cce01bb48b6f6e0c1cdca5e5a2fc0c56ad [2/10] hrtimers: Delete hrtimer_init()
-config: i386-buildonly-randconfig-002-20250404 (https://download.01.org/0day-ci/archive/20250405/202504050126.K62Di5RY-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250405/202504050126.K62Di5RY-lkp@intel.com/reproduce)
+On Thu, Apr 03, 2025 at 03:31:47PM +0000, Quentin Perret wrote:
+> On Thursday 06 Mar 2025 at 11:00:32 (+0000), Vincent Donnefort wrote:
+> > @@ -1012,51 +1011,52 @@ static int __check_host_shared_guest(struct pkvm_hyp_vm *vm, u64 *__phys, u64 ip
+> >  		return ret;
+> >  	if (!kvm_pte_valid(pte))
+> >  		return -ENOENT;
+> > -	if (level != KVM_PGTABLE_LAST_LEVEL)
+> > +	if (kvm_granule_size(level) != size)
+> >  		return -E2BIG;
+> >  
+> > -	state = guest_get_page_state(pte, ipa);
+> > -	if (state != PKVM_PAGE_SHARED_BORROWED)
+> > -		return -EPERM;
+> > +	ret = __guest_check_page_state_range(vm, ipa, size, PKVM_PAGE_SHARED_BORROWED);
+> > +	if (ret)
+> > +		return ret;
+> 
+> Given that hard rely on kvm_granule_size(level) == size above, we should
+> be guaranteed that the PTE covers the entire range we're interested in.
+> So is there a point in starting a new page-table walk here? Could we
+> just keep guest_get_page_state() directly?
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504050126.K62Di5RY-lkp@intel.com/
+Ha yes, the walk wouldn't do anything more than what we can with that PTE!
 
-All errors (new ones prefixed by >>):
-
-   drivers/pps/generators/pps_gen_tio.c: In function 'pps_gen_tio_probe':
->> drivers/pps/generators/pps_gen_tio.c:230:9: error: implicit declaration of function 'hrtimer_init'; did you mean 'hrtimers_init'? [-Werror=implicit-function-declaration]
-     230 |         hrtimer_init(&tio->timer, CLOCK_REALTIME, HRTIMER_MODE_ABS);
-         |         ^~~~~~~~~~~~
-         |         hrtimers_init
-   cc1: some warnings being treated as errors
-
-
-vim +230 drivers/pps/generators/pps_gen_tio.c
-
-c89755d1111fa17 Subramanian Mohan 2025-02-19  199  
-c89755d1111fa17 Subramanian Mohan 2025-02-19  200  static int pps_gen_tio_probe(struct platform_device *pdev)
-c89755d1111fa17 Subramanian Mohan 2025-02-19  201  {
-c89755d1111fa17 Subramanian Mohan 2025-02-19  202  	struct device *dev = &pdev->dev;
-c89755d1111fa17 Subramanian Mohan 2025-02-19  203  	struct pps_tio *tio;
-c89755d1111fa17 Subramanian Mohan 2025-02-19  204  
-c89755d1111fa17 Subramanian Mohan 2025-02-19  205  	if (!(cpu_feature_enabled(X86_FEATURE_TSC_KNOWN_FREQ) &&
-c89755d1111fa17 Subramanian Mohan 2025-02-19  206  	      cpu_feature_enabled(X86_FEATURE_ART))) {
-c89755d1111fa17 Subramanian Mohan 2025-02-19  207  		dev_warn(dev, "TSC/ART is not enabled");
-c89755d1111fa17 Subramanian Mohan 2025-02-19  208  		return -ENODEV;
-c89755d1111fa17 Subramanian Mohan 2025-02-19  209  	}
-c89755d1111fa17 Subramanian Mohan 2025-02-19  210  
-c89755d1111fa17 Subramanian Mohan 2025-02-19  211  	tio = devm_kzalloc(dev, sizeof(*tio), GFP_KERNEL);
-c89755d1111fa17 Subramanian Mohan 2025-02-19  212  	if (!tio)
-c89755d1111fa17 Subramanian Mohan 2025-02-19  213  		return -ENOMEM;
-c89755d1111fa17 Subramanian Mohan 2025-02-19  214  
-c89755d1111fa17 Subramanian Mohan 2025-02-19  215  	tio->gen_info.use_system_clock = true;
-c89755d1111fa17 Subramanian Mohan 2025-02-19  216  	tio->gen_info.enable = pps_tio_gen_enable;
-c89755d1111fa17 Subramanian Mohan 2025-02-19  217  	tio->gen_info.get_time = pps_tio_get_time;
-c89755d1111fa17 Subramanian Mohan 2025-02-19  218  	tio->gen_info.owner = THIS_MODULE;
-c89755d1111fa17 Subramanian Mohan 2025-02-19  219  
-c89755d1111fa17 Subramanian Mohan 2025-02-19  220  	tio->pps_gen = pps_gen_register_source(&tio->gen_info);
-c89755d1111fa17 Subramanian Mohan 2025-02-19  221  	if (IS_ERR(tio->pps_gen))
-c89755d1111fa17 Subramanian Mohan 2025-02-19  222  		return PTR_ERR(tio->pps_gen);
-c89755d1111fa17 Subramanian Mohan 2025-02-19  223  
-c89755d1111fa17 Subramanian Mohan 2025-02-19  224  	tio->dev = dev;
-c89755d1111fa17 Subramanian Mohan 2025-02-19  225  	tio->base = devm_platform_ioremap_resource(pdev, 0);
-c89755d1111fa17 Subramanian Mohan 2025-02-19  226  	if (IS_ERR(tio->base))
-c89755d1111fa17 Subramanian Mohan 2025-02-19  227  		return PTR_ERR(tio->base);
-c89755d1111fa17 Subramanian Mohan 2025-02-19  228  
-c89755d1111fa17 Subramanian Mohan 2025-02-19  229  	pps_tio_disable(tio);
-c89755d1111fa17 Subramanian Mohan 2025-02-19 @230  	hrtimer_init(&tio->timer, CLOCK_REALTIME, HRTIMER_MODE_ABS);
-c89755d1111fa17 Subramanian Mohan 2025-02-19  231  	tio->timer.function = hrtimer_callback;
-c89755d1111fa17 Subramanian Mohan 2025-02-19  232  	spin_lock_init(&tio->lock);
-c89755d1111fa17 Subramanian Mohan 2025-02-19  233  	platform_set_drvdata(pdev, &tio);
-c89755d1111fa17 Subramanian Mohan 2025-02-19  234  
-c89755d1111fa17 Subramanian Mohan 2025-02-19  235  	return 0;
-c89755d1111fa17 Subramanian Mohan 2025-02-19  236  }
-c89755d1111fa17 Subramanian Mohan 2025-02-19  237  
-
-:::::: The code at line 230 was first introduced by commit
-:::::: c89755d1111fa17ecfb69b50c336778a2d37dae4 pps: generators: Add PPS Generator TIO Driver
-
-:::::: TO: Subramanian Mohan <subramanian.mohan@intel.com>
-:::::: CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> 
+> >  
+> >  	phys = kvm_pte_to_phys(pte);
+> > -	ret = check_range_allowed_memory(phys, phys + PAGE_SIZE);
+> > +	ret = check_range_allowed_memory(phys, phys + size);
+> >  	if (WARN_ON(ret))
+> >  		return ret;
+> >  
+> > -	page = hyp_phys_to_page(phys);
+> > -	if (page->host_state != PKVM_PAGE_SHARED_OWNED)
+> > -		return -EPERM;
+> > -	if (WARN_ON(!page->host_share_guest_count))
+> > -		return -EINVAL;
+> > +	for_each_hyp_page(phys, size, page) {
+> > +		if (page->host_state != PKVM_PAGE_SHARED_OWNED)
+> > +			return -EPERM;
+> > +		if (WARN_ON(!page->host_share_guest_count))
+> > +			return -EINVAL;
+> > +	}
+> >  
+> >  	*__phys = phys;
+> >  
+> >  	return 0;
+> >  }
