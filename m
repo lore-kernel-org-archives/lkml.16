@@ -1,177 +1,163 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D31C1917CD;
-	Fri,  4 Apr 2025 23:54:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51CC71917CD;
+	Fri,  4 Apr 2025 23:56:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743810887; cv=none; b=R8oHX53hhQKzEQr6bPi7D3LN4boDnctjtjSLYg2AJdJ17rZXuw3MQLN3y/w4fvZ2UyLzfprREj/G/Q+S1Xddllsg+8JzxfuugFmM07B7g4HO0cBnQYw6MJDhhmJZxDfbMMww/09ofY4FIEruLQ8LVnFCOxkzMBdeDCkzz/LVp54=
+	t=1743810961; cv=none; b=jlGZCaVArcQP4B0uKia9HQphRdaoT7Tyj+M6ZwbRjKWQNPufGU5T4PtCyZWwQZJZTF3Zo2N6xSQXSXwlkEKcDK9RauxdJRpvGXAefUMqWPlCW++JiRj4hIDODTFaCrPz/DGUvCj0yo2vXBV1LUiaN8Fsidfqgwh/QWM8JmOCc3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743810887; c=relaxed/simple;
-	bh=pER3aUoDgAqA2+VVwE0Vofm3FT0WcT6/M8BsxGqxujE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=QIEmhOLzEBghvsBxazzdbcZsVsBb1VttCfFgWbdaCcrwCutXMTrmKEuuil7nE4+1mkNQ0PEuftwPWbhgslOLaRxiv/mnfj23Db9uHu2Bd1zk+O/34UtZcN+QoChhj/Z3hjAUamb4CirFv4//UzHx67xQAYh0sC52g/Bo8//IVWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=AqwPLZms; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1743810961; c=relaxed/simple;
+	bh=AX/YYsl0Uu354FlrKcpzn234fsPZcHAP77j6aDninNk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LrRV5+RkkjZ3HHjRv9zKhY0yKJk8G2AuT4woz7aq3gWtVv0t4yqcKFUkMeOUBIiodZahHkjnjABSrHIYgxVzv8gJM233SvY8I5++uqfOGOPTyt/r1I0WJw/UB0XkZLsqAAmx74JbxF215eQtP+w2BMvUYEVkHCIZZZlRpCnZ5m0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fqfwvCVx; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="AqwPLZms"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 534KaFQK017550;
-	Fri, 4 Apr 2025 23:54:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:message-id:mime-version:subject:to; s=
-	pp1; bh=8pwM63EqW2WvsEd44FnIL5x8/UkpAY1JzF2h/xpHxtM=; b=AqwPLZms
-	LPC6Chn5tauOVu9vt1FbuCl24TL/K6TXYXRwSWmBpL2sfoXVMabg/mOGHF3ie3Pb
-	ddYiIioqga0eV2nLCztJwHQVr050EcmTYMVBLzZs9U0UmK4FkixUiwwSBCaSGzc0
-	Ipr74UHNOkWL6V70VQ+1SW9+c/xHfi+pIQRq61ZGWkeRtdcR/oPz8tarUK669YSK
-	kxf1111dKj/wZX41T9TNWFqHrHw/j7RIOR59F1hL6pvg4ws7OzD5hEDyBBCicsXs
-	APJ6pLCkxDTTiQKXUJyziBi9kraBB1mS+JKtaETQmsqDVYq1CZ2WdkxaVyKF2upc
-	4le/PWZKjVALKg==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45tpkq8mar-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 04 Apr 2025 23:54:43 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 534NZU11001877;
-	Fri, 4 Apr 2025 23:54:43 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45t2ch5d1f-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 04 Apr 2025 23:54:42 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 534Nsd0136831728
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 4 Apr 2025 23:54:39 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E7F1620043;
-	Fri,  4 Apr 2025 23:54:38 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 73ED520040;
-	Fri,  4 Apr 2025 23:54:38 +0000 (GMT)
-Received: from localhost (unknown [9.171.53.112])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Fri,  4 Apr 2025 23:54:38 +0000 (GMT)
-Date: Sat, 5 Apr 2025 01:54:36 +0200
-From: Vasily Gorbik <gor@linux.ibm.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Heiko Carstens <hca@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
-Subject: [GIT PULL] more s390 updates for 6.15 merge window
-Message-ID: <your-ad-here.call-01743810876-ext-9359@work.hours>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fqfwvCVx"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2260c91576aso21944825ad.3;
+        Fri, 04 Apr 2025 16:56:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743810959; x=1744415759; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=2Qbcg7beoc6Xu96NsYniUdclE5DhDfitSzlmmppCwV8=;
+        b=fqfwvCVxGLKTbhJQyq+knS1Lak3VGqTpyEdZYIl9rERjHNhAKX+D8T5SSlt9/srg6C
+         UB/2saG6IHnhFVxQPXFT7JgPL0SmTzdVObiGoRwYNEqIfb/bOWoNtmUcbOL7VA9wxzOt
+         g5ddwUaII60/22cB5y8G59EfAWrdEP10lrDoO/dk8k839Q6pmPFOVAdAJvh/DHIYF7Iu
+         I7vUFs6tpMO+1olaGpiajwDtE1VsCd+s+W0If6S4SviqC4YR+OL45hMJ8g/PzdENuSdI
+         eLX9Yu0XzVLy83Iqxr17o5MMuep/ZI2cW2wG1TD0YAFEVQowhza8rNeRmjVpQFDxGFx9
+         AReQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743810959; x=1744415759;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2Qbcg7beoc6Xu96NsYniUdclE5DhDfitSzlmmppCwV8=;
+        b=oDllmEkSbGGXV0HjVFt62s9w62gLIsx55ct+uKTL1m6C7cZu7L8UtdH9Ho1eCTd+ly
+         Qv7YZQHAmxvn4RQj/d6WdPwMkvyduYg3QfasKg5uH9aP+nax/y5G8YGQi7xYtpEq5xXh
+         vCpgjSI5s96XbFwiYl2211lqTMX9S/XVQPoDOYWuelaLyNeFBKHORN483Q8TEItfQblJ
+         aiB3G3860C10fSEI2KS71ueN6CfuAtnWUcAq82jdbovupbG/VnGtYHLLJkj30rDCsF1W
+         0oIAv4ZOeK25IswVwfoz7CgSjd+ylvWI7VqvQuDR7gV+y9pZVNq2AekciLlCgVAB+lHj
+         fJdA==
+X-Forwarded-Encrypted: i=1; AJvYcCWRQtsoCFCvwYUIc24XR6pdIztHKOQnRocRJ63/OGWUKxO5czx8LrzC38qXSpe0m+hYsksVL+zhj+Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwoIpNS8GWVKXhY2yLV77AqxxH0e3cmERafaygUZ4W2RT6BH88Z
+	dkCmL9OQcjmA2LyFZk11sCmdW27PeqEyzOIfxduHZ6TR10LH4qKS
+X-Gm-Gg: ASbGnctEui2Lqe8nrr5tf3mZFlQTyn6ZK3pz0tHbZWldnjKShFnK2rc+qxbEth56lSq
+	i2USxVXNr0jSoXO9O4IMGTbBe7uN64Vteei9QChdIOzM4W/E6C8YzWPFEPD3qQ3L89Nn+gJ3NEz
+	alGugme11J5AFUgowjPMsu7XK+S68DSc0+r8HyKd8h928CxKpvmrDhRd/hTHxkYyrUZ6FQpxBZR
+	1q1CRdK2X0vpzzni34vJjnzljQm3kYgRcZ6qvO5CXoPl7X1crMk/KOgS94gINodMiOjVIEQeziv
+	z6xbhsaz/e7crayttz8gsGRU7ryVhIen28otZHvSt7P1
+X-Google-Smtp-Source: AGHT+IGDHqCIcWJ1VVlBQCJ3ZYjTMz19C+w7npPLNO4tkDkiZoOk24haQWGTKLstZl1LKwOpDtISBA==
+X-Received: by 2002:a17:903:1b6d:b0:21f:68ae:56e3 with SMTP id d9443c01a7336-22a8a1b8c79mr64850695ad.39.1743810959244;
+        Fri, 04 Apr 2025 16:55:59 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22978772861sm38459045ad.234.2025.04.04.16.55.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Apr 2025 16:55:58 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id B5471420A696; Sat, 05 Apr 2025 06:55:55 +0700 (WIB)
+Date: Sat, 5 Apr 2025 06:55:55 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jonathan Corbet <corbet@lwn.net>
+Cc: linux-kernel@vger.kernel.org, willy@infradead.org, linux-mm@kvack.org,
+	David Hildenbrand <david@redhat.com>, da.gomez@kernel.org,
+	mcgrof@kernel.org, gost.dev@samsung.com, linux-doc@vger.kernel.org,
+	Pankaj Raghav <p.raghav@samsung.com>
+Subject: Re: [PATCH v3] docs: update THP admin guide about non-tmpfs
+ filesystem support
+Message-ID: <Z_Bxi-w8dhMLesKy@archie.me>
+References: <20250404140657.29285-1-kernel@pankajraghav.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="hE7iKIIkiNutKzNZ"
+Content-Disposition: inline
+In-Reply-To: <20250404140657.29285-1-kernel@pankajraghav.com>
+
+
+--hE7iKIIkiNutKzNZ
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: RytKj4lsZh2pV_K-ocq_Q5SDeXdf1YF-
-X-Proofpoint-GUID: RytKj4lsZh2pV_K-ocq_Q5SDeXdf1YF-
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-04_10,2025-04-03_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 clxscore=1015
- mlxlogscore=839 mlxscore=0 priorityscore=1501 phishscore=0 adultscore=0
- impostorscore=0 suspectscore=0 lowpriorityscore=0 malwarescore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2504040162
+Content-Transfer-Encoding: quoted-printable
 
-Hello Linus,
+On Fri, Apr 04, 2025 at 04:06:57PM +0200, Pankaj Raghav (Samsung) wrote:
+> diff --git a/Documentation/admin-guide/mm/transhuge.rst b/Documentation/a=
+dmin-guide/mm/transhuge.rst
+> index dff8d5985f0f..f8aae64e38d0 100644
+> --- a/Documentation/admin-guide/mm/transhuge.rst
+> +++ b/Documentation/admin-guide/mm/transhuge.rst
+> @@ -12,8 +12,8 @@ using huge pages for the backing of virtual memory with=
+ huge pages
+>  that supports the automatic promotion and demotion of page sizes and
+>  without the shortcomings of hugetlbfs.
+> =20
+> -Currently THP only works for anonymous memory mappings and tmpfs/shmem.
+> -But in the future it can expand to other filesystems.
+> +Currently, THP only works for anonymous memory mappings, tmpfs/shmem and
+> +filesystems that support large folios.
+> =20
+>  .. note::
+>     in the examples below we presume that the basic page size is 4K and
+> @@ -463,11 +463,19 @@ fields for each mapping. (Note that AnonHugePages o=
+nly applies to traditional
+>  PMD-sized THP for historical reasons and should have been called
+>  AnonHugePmdMapped).
+> =20
+> -The number of file transparent huge pages mapped to userspace is availab=
+le
+> -by reading ShmemPmdMapped and ShmemHugePages fields in ``/proc/meminfo``.
+> -To identify what applications are mapping file transparent huge pages, it
+> -is necessary to read ``/proc/PID/smaps`` and count the FilePmdMapped fie=
+lds
+> -for each mapping.
+> +The number of PMD-sized transparent huge pages currently used by
+> +filesystem data (page cache) is available by reading the FileHugePages f=
+ield
+> +in ``/proc/meminfo``. The number of these huge pages that are mapped to =
+userspace
+> +is available by reading FilePmdMapped field in ``proc/meminfo``. To iden=
+tify
+> +what applications are mapping these huge pages, it is necessary to read
+> +``/proc/PID/smaps`` and count the FilePmdMapped fields for each mapping.
+> +
+> +In similar fashion, the number of PMD-sized transparent huge pages curre=
+ntly
+> +used by tmpfs/shmem is available by reading the ShmemHugePages field
+> +in ``/proc/meminfo``. The number of these huge pages that are mapped to =
+userspace
+> +is available by reading ShmemPmdMapped field in ``proc/meminfo``. To ide=
+ntify
+> +what applications are mapping these huge pages, it is necessary to read
+> +``/proc/PID/smaps`` and count the ShmemPmdMapped fields for each mapping.
+> =20
+>  Note that reading the smaps file is expensive and reading it
+>  frequently will incur overhead.
+>=20
 
-please pull a few more s390 fixes and cleanups for the 6.15 merge window.
+Looks good, thanks!
 
-Thank you,
-Vasily
+Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
 
-The following changes since commit f90f2145b2804c0166126a6c8fbf51d695917df3:
+--=20
+An old man doll... just what I always wanted! - Clara
 
-  Merge tag 's390-6.15-1' of git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux (2025-03-29 11:59:43 -0700)
+--hE7iKIIkiNutKzNZ
+Content-Type: application/pgp-signature; name=signature.asc
 
-are available in the Git repository at:
+-----BEGIN PGP SIGNATURE-----
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-6.15-2
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZ/BxhgAKCRD2uYlJVVFO
+o9aXAQDXeJRYL8Ql9rfKPgO01q0Tg4hKcR91PSCos74scWsqWwD6Agz+YSUSGRTU
+ms/KfqjUA3brhTaTnV90IE6gDmf0yQA=
+=e6Cl
+-----END PGP SIGNATURE-----
 
-for you to fetch changes up to d33d729afcc8ad2148d99f9bc499b33fd0c0d73b:
-
-  s390/vfio-ap: Fix no AP queue sharing allowed message written to kernel log (2025-04-01 16:24:22 +0200)
-
-----------------------------------------------------------------
-more s390 updates for 6.15 merge window
-
-- Fix machine check handler _CIF_MCCK_GUEST bit setting by adding the
-  missing base register for relocated lowcore address
-
-- Fix build failure on older linkers by conditionally adding the -no-pie
-  linker option only when it is supported
-
-- Fix inaccurate kernel messages in vfio-ap by providing descriptive
-  error notifications for AP queue sharing violations
-
-- Fix PCI isolation logic by ensuring non-VF devices correctly return
-  false in zpci_bus_is_isolated_vf()
-
-- Fix PCI DMA range map setup by using dma_direct_set_offset() to add a
-  proper sentinel element, preventing potential overruns and translation
-  errors
-
-- Cleanup header dependency problems with asm-offsets.c
-
-- Add fault info for unexpected low-address protection faults in user mode
-
-- Add support for HOTPLUG_SMT, replacing the arch-specific "nosmt"
-  handling with common code handling
-
-- Use bitop functions to implement CPU flag helper functions to ensure
-  that bits cannot get lost if modified in different contexts on a CPU
-
-- Remove unused machine_flags for the lowcore
-
-----------------------------------------------------------------
-Anthony Krowiak (1):
-      s390/vfio-ap: Fix no AP queue sharing allowed message written to kernel log
-
-Heiko Carstens (7):
-      s390/lowcore: Remove unused machine_flags
-      s390/kvm: Split kvm_host header file
-      s390/asm-offsets: Include ftrace_regs.h instead of ftrace.h
-      s390/asm-offsets: Remove ASM_OFFSETS_C
-      s390/processor: Use bitop functions for cpu flag helper functions
-      s390/smp: Add support for HOTPLUG_SMT
-      s390/mm: Dump fault info in case of low address protection fault
-
-Niklas Schnelle (2):
-      s390/pci: Fix zpci_bus_is_isolated_vf() for non-VFs
-      s390/pci: Fix dev.dma_range_map missing sentinel element
-
-Sumanth Korikkar (1):
-      s390: Fix linker error when -no-pie option is unavailable
-
-Sven Schnelle (1):
-      s390/entry: Fix setting _CIF_MCCK_GUEST with lowcore relocation
-
- Documentation/admin-guide/kernel-parameters.txt |   4 +-
- arch/s390/Kconfig                               |   1 +
- arch/s390/Makefile                              |   2 +-
- arch/s390/include/asm/kvm_host.h                | 339 +----------------------
- arch/s390/include/asm/kvm_host_types.h          | 348 ++++++++++++++++++++++++
- arch/s390/include/asm/lowcore.h                 |   4 +-
- arch/s390/include/asm/processor.h               |  19 +-
- arch/s390/include/asm/thread_info.h             |   3 -
- arch/s390/include/asm/topology.h                |   6 +
- arch/s390/kernel/asm-offsets.c                  |   7 +-
- arch/s390/kernel/dumpstack.c                    |   1 +
- arch/s390/kernel/early.c                        |   1 +
- arch/s390/kernel/entry.S                        |   2 +-
- arch/s390/kernel/setup.c                        |   1 -
- arch/s390/kernel/smp.c                          |   9 +-
- arch/s390/kernel/stacktrace.c                   |   1 +
- arch/s390/mm/fault.c                            |   1 +
- arch/s390/mm/pfault.c                           |   1 +
- arch/s390/pci/pci_bus.c                         |  27 +-
- drivers/s390/crypto/vfio_ap_ops.c               |  72 +++--
- 20 files changed, 437 insertions(+), 412 deletions(-)
- create mode 100644 arch/s390/include/asm/kvm_host_types.h
+--hE7iKIIkiNutKzNZ--
