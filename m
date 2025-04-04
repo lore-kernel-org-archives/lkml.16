@@ -1,254 +1,367 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0E9521B9D4;
-	Fri,  4 Apr 2025 17:55:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E7F1215178;
+	Fri,  4 Apr 2025 17:56:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743789317; cv=none; b=SUXFwKfOj5AAwShGlTAkfcSYy0G6w8oqmRjOnZG0nBbNRjJMM0KEGUUdZLnlLLO+Am4LeFIJyKuRvWbA2IO6xPm4fthO0qq1VlJNat17qDyh9srpWXoCSaUMk7tOLvkGaiIro+4AaT9ftgNgqz0tdP5wDToCea9+z+48+ImYKHM=
+	t=1743789417; cv=none; b=UBKDdjDUTw2MgxVNk0TsXdi16rEQ3rTKtrZ6j8qvBCwfkiyZtDkp/VGb9m1N9b5UxzRf+hMt6x+D9cx/x2FRzlLLkIFf/3PyeIYaSuPd+9NJZQZPATZ4PwsWA3iopSJ1qMVSKH7yXo1nhVWaTeojhPjwTf7IcvqXCwHZhCCyhyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743789317; c=relaxed/simple;
-	bh=pIENLeWzTVJaaXaUldVebDEO8Uq2auKXJ/zTuKpRGc0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=c2VU/7AZR0zctPcXM65kesR369bik6ffmobTmvJ3ImFTrCE76yMFjtA/SP6hyIHRZKyV+EJfqCXhtpt5PBFv3KnCyUU4xzKTCz8bplh6Bkc6XxBfoT2DxHQsLL842LK61x5AnQp5BZKqc24ime2BvosDvqawSKjaFiwG/aWPRKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cS5RBcX8; arc=none smtp.client-ip=198.175.65.18
+	s=arc-20240116; t=1743789417; c=relaxed/simple;
+	bh=Dg2hW/aBpaDRA1oxjhtV/3dt/FgK15LMLusch/AwBEA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qTQDNc8CSgYD9OOBGSRRN4FNK5ZIKP/nZf6P1ggqfqoPAdChNgMOHvc1xA0/KhfG8WgQ7li0yL1yGHQ8qNWKhyMaJg1rECSh2HmlUGzZAWFscUjCYV0lv/m84r4R66gK/PolCAijvJhN6IAuw1DbOv0S89VhjomwLZxKm6Ltrq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iTuWCNW0; arc=none smtp.client-ip=198.175.65.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cS5RBcX8"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iTuWCNW0"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743789315; x=1775325315;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=pIENLeWzTVJaaXaUldVebDEO8Uq2auKXJ/zTuKpRGc0=;
-  b=cS5RBcX8WVQOf/JI3BbiZgxYeiEAgULmmu2NSzvq4yZ312VY93PDul9S
-   GWAo6FN2Tz1iF84duz1eS7C2kLL0Ne4wAb/4w5iUyNN7iFnCR3GewTOpC
-   JUrv0DGH4ffj2RY62mk+lQa4mQrf+PMQidr3FiuS947599PDdP8AfbHOD
-   FzID3hJpPW5/Ok3nwqXADYU9PKj39eRD8b1wwp/x+dLipq3abhOHt5fh0
-   mhxdLY2tnXPMpCwUEXUBk/wge3nOyTz5mXi74R9d7qUEPag5XWdClGDHh
-   E4Njzr3W9CgNayo3fI1FC2STBQ6k8SjHqzneYrAJ8WQmPN45O3T/Z2kU9
+  t=1743789415; x=1775325415;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Dg2hW/aBpaDRA1oxjhtV/3dt/FgK15LMLusch/AwBEA=;
+  b=iTuWCNW0XB4cnMIh43BCTBNFGDjGZx7HUbk3B6l6bUKq+LxaRmre0tY5
+   uzigfxqKRGrllo2HZNjttlaBflcIC3rBRE/NRMLBJdOsWZ4/FIEuJ2uP1
+   bCyTQJVnNAgZICMVFNBderxYU3BLaV+F7bKJkNhPhj5ZyhugttCyje2fG
+   azAg8/n4hSS13SLfnbZqD37/mAkP3XzH0lnVZ9bHncli1LIduieX7bzz+
+   eSfTu6xCQegNsaYs1GxY/NbTUXwMZkJ3DKESI6tTUAnz1gbnJE9kT1Ba5
+   wwIFs64QqJ4R4lq3FmmH/I1/+HO476BeU6aC0NhnnV4j4jPj+sxjU4GOn
    w==;
-X-CSE-ConnectionGUID: mFr2Ue2BTP2EZsE/gSOwjA==
-X-CSE-MsgGUID: lyQ3Vt/uQrOCJkcJTIGOsg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11394"; a="45379454"
+X-CSE-ConnectionGUID: zr9kFsQSQOOVhGNpFKnIUA==
+X-CSE-MsgGUID: MR2UwQ2NRKmSUC6RcBPtWw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11394"; a="45142916"
 X-IronPort-AV: E=Sophos;i="6.15,189,1739865600"; 
-   d="scan'208";a="45379454"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 10:55:14 -0700
-X-CSE-ConnectionGUID: XcFkPhxZTJWIrLqhXG8wPg==
-X-CSE-MsgGUID: DQH8Q7APT5qgIEL6nrV9GQ==
+   d="scan'208";a="45142916"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 10:56:51 -0700
+X-CSE-ConnectionGUID: /2xYXwjTR9aZPEhmvjgUsQ==
+X-CSE-MsgGUID: GkWhimOFQKm1WCN8kzfHgw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,189,1739865600"; 
-   d="scan'208";a="131512363"
-Received: from daliomra-mobl3.amr.corp.intel.com (HELO [10.124.223.29]) ([10.124.223.29])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 10:55:10 -0700
-Message-ID: <c797714b-4180-4439-8a02-3cfacd42dafe@intel.com>
-Date: Fri, 4 Apr 2025 10:55:09 -0700
+   d="scan'208";a="127261980"
+Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
+  by orviesa010.jf.intel.com with ESMTP; 04 Apr 2025 10:56:48 -0700
+Received: from kbuild by b207828170a5 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u0lHZ-0001RH-2B;
+	Fri, 04 Apr 2025 17:56:45 +0000
+Date: Sat, 5 Apr 2025 01:56:23 +0800
+From: kernel test robot <lkp@intel.com>
+To: "bo.kong" <bo.kong@mediatek.com>, Rob Herring <robh@kernel.org>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Cc: oe-kbuild-all@lists.linux.dev, linux-media@vger.kernel.org,
+	zhaoyuan.chen@mediatek.com, Teddy.Chen@mediatek.com,
+	Project_Global_Chrome_Upstream_Group@mediatek.com
+Subject: Re: [PATCH v5 4/4] media: mediatek: add MT8188 AIE driver
+Message-ID: <202504050137.vMfW5SAb-lkp@intel.com>
+References: <20250403074005.21472-5-bo.kong@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 11/14] x86: Handle int3 for inline KASAN reports
-To: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>, hpa@zytor.com,
- hch@infradead.org, nick.desaulniers+lkml@gmail.com,
- kuan-ying.lee@canonical.com, masahiroy@kernel.org,
- samuel.holland@sifive.com, mingo@redhat.com, corbet@lwn.net,
- ryabinin.a.a@gmail.com, guoweikang.kernel@gmail.com, jpoimboe@kernel.org,
- ardb@kernel.org, vincenzo.frascino@arm.com, glider@google.com,
- kirill.shutemov@linux.intel.com, apopple@nvidia.com,
- samitolvanen@google.com, kaleshsingh@google.com, jgross@suse.com,
- andreyknvl@gmail.com, scott@os.amperecomputing.com, tony.luck@intel.com,
- dvyukov@google.com, pasha.tatashin@soleen.com, ziy@nvidia.com,
- broonie@kernel.org, gatlin.newhouse@gmail.com, jackmanb@google.com,
- wangkefeng.wang@huawei.com, thiago.bauermann@linaro.org, tglx@linutronix.de,
- kees@kernel.org, akpm@linux-foundation.org, jason.andryuk@amd.com,
- snovitoll@gmail.com, xin@zytor.com, jan.kiszka@siemens.com, bp@alien8.de,
- rppt@kernel.org, peterz@infradead.org, pankaj.gupta@amd.com,
- thuth@redhat.com, andriy.shevchenko@linux.intel.com,
- joel.granados@kernel.org, kbingham@kernel.org, nicolas@fjasle.eu,
- mark.rutland@arm.com, surenb@google.com, catalin.marinas@arm.com,
- morbo@google.com, justinstitt@google.com, ubizjak@gmail.com,
- jhubbard@nvidia.com, urezki@gmail.com, dave.hansen@linux.intel.com,
- bhe@redhat.com, luto@kernel.org, baohua@kernel.org, nathan@kernel.org,
- will@kernel.org, brgerst@gmail.com
-Cc: llvm@lists.linux.dev, linux-mm@kvack.org, linux-doc@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
- linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com, x86@kernel.org
-References: <cover.1743772053.git.maciej.wieczor-retman@intel.com>
- <012c84049b853d6853a7d6c887ce0c2323bcd80a.1743772053.git.maciej.wieczor-retman@intel.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <012c84049b853d6853a7d6c887ce0c2323bcd80a.1743772053.git.maciej.wieczor-retman@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250403074005.21472-5-bo.kong@mediatek.com>
 
-On 4/4/25 06:14, Maciej Wieczor-Retman wrote:
-> When a tag mismatch happens in inline software tag-based KASAN on x86 an
-> int3 instruction is executed and needs proper handling.
+Hi bo.kong,
 
-Does this mean "inline software"? Or "inline" functions? I'm not quite
-parsing that. I think it needs some more background.
+kernel test robot noticed the following build warnings:
 
-> Call kasan_report() from the int3 handler and pass down the proper
-> information from registers - RDI should contain the problematic address
-> and RAX other metadata.
-> 
-> Also early return from the int3 selftest if inline KASAN is enabled
-> since it will cause a kernel panic otherwise.
-...
-> diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-> index bf82c6f7d690..ba277a25b57f 100644
-> --- a/arch/x86/kernel/alternative.c
-> +++ b/arch/x86/kernel/alternative.c
-> @@ -1979,6 +1979,9 @@ static noinline void __init int3_selftest(void)
->  	};
->  	unsigned int val = 0;
->  
-> +	if (IS_ENABLED(CONFIG_KASAN_INLINE))
-> +		return;
+[auto build test WARNING on robh/for-next]
+[also build test WARNING on linus/master v6.14 next-20250404]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Comments, please. This is a total non sequitur otherwise.
+url:    https://github.com/intel-lab-lkp/linux/commits/bo-kong/media-dt-bindings-add-MT8188-AIE/20250403-154205
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
+patch link:    https://lore.kernel.org/r/20250403074005.21472-5-bo.kong%40mediatek.com
+patch subject: [PATCH v5 4/4] media: mediatek: add MT8188 AIE driver
+config: alpha-allyesconfig (https://download.01.org/0day-ci/archive/20250405/202504050137.vMfW5SAb-lkp@intel.com/config)
+compiler: alpha-linux-gcc (GCC) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250405/202504050137.vMfW5SAb-lkp@intel.com/reproduce)
 
->  	BUG_ON(register_die_notifier(&int3_exception_nb));
->  
->  	/*
-> diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
-> index 9f88b8a78e50..32c81fc2d439 100644
-> --- a/arch/x86/kernel/traps.c
-> +++ b/arch/x86/kernel/traps.c
-...
-> @@ -849,6 +850,51 @@ DEFINE_IDTENTRY_ERRORCODE(exc_general_protection)
->  	cond_local_irq_disable(regs);
->  }
->  
-> +#ifdef CONFIG_KASAN_SW_TAGS
-> +
-> +#define KASAN_RAX_RECOVER	0x20
-> +#define KASAN_RAX_WRITE	0x10
-> +#define KASAN_RAX_SIZE_MASK	0x0f
-> +#define KASAN_RAX_SIZE(rax)	(1 << ((rax) & KASAN_RAX_SIZE_MASK))
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504050137.vMfW5SAb-lkp@intel.com/
 
-This ABI _looks_ like it was conjured out out of thin air. I assume it's
-coming from the compiler. Any pointers to that ABI definition in or out
-of the kernel would be appreciated.
+All warnings (new ones prefixed by >>):
 
-> +static bool kasan_handler(struct pt_regs *regs)
-> +{
-> +	int metadata = regs->ax;
-> +	u64 addr = regs->di;
-> +	u64 pc = regs->ip;
-> +	bool recover = metadata & KASAN_RAX_RECOVER;
-> +	bool write = metadata & KASAN_RAX_WRITE;
-> +	size_t size = KASAN_RAX_SIZE(metadata);
+   In file included from drivers/media/platform/mediatek/aie/mtk_aie_v4l2.c:14:
+>> drivers/media/platform/mediatek/aie/mtk_aie.h:569:27: warning: 'fld_face_info_0' defined but not used [-Wunused-const-variable=]
+     569 | static const unsigned int fld_face_info_0[FLD_MAX_FRAME] = {
+         |                           ^~~~~~~~~~~~~~~
+>> drivers/media/platform/mediatek/aie/mtk_aie.h:540:27: warning: 'attr_wdma_size' defined but not used [-Wunused-const-variable=]
+     540 | static const unsigned int attr_wdma_size[ATTR_LOOP_NUM][OUTPUT_WDMA_WRA_NUM] = {
+         |                           ^~~~~~~~~~~~~~
+>> drivers/media/platform/mediatek/aie/mtk_aie.h:511:25: warning: 'attr_rdma_en' defined but not used [-Wunused-const-variable=]
+     511 | static const signed int attr_rdma_en[ATTR_LOOP_NUM][INPUT_WDMA_WRA_NUM][2] = {
+         |                         ^~~~~~~~~~~~
+>> drivers/media/platform/mediatek/aie/mtk_aie.h:503:27: warning: 'attr_out_2size' defined but not used [-Wunused-const-variable=]
+     503 | static const unsigned int attr_out_2size[ATTR_LOOP_NUM] = { /* O */
+         |                           ^~~~~~~~~~~~~~
+>> drivers/media/platform/mediatek/aie/mtk_aie.h:498:27: warning: 'attr_out_stride2_as_in' defined but not used [-Wunused-const-variable=]
+     498 | static const unsigned int attr_out_stride2_as_in[ATTR_LOOP_NUM] = {
+         |                           ^~~~~~~~~~~~~~~~~~~~~~
+>> drivers/media/platform/mediatek/aie/mtk_aie.h:488:27: warning: 'attr_ker_rdma_size' defined but not used [-Wunused-const-variable=]
+     488 | static const unsigned int attr_ker_rdma_size[ATTR_LOOP_NUM] = {
+         |                           ^~~~~~~~~~~~~~~~~~
+>> drivers/media/platform/mediatek/aie/mtk_aie.h:478:27: warning: 'attr_wdma_en' defined but not used [-Wunused-const-variable=]
+     478 | static const unsigned int attr_wdma_en[ATTR_LOOP_NUM][OUTPUT_WDMA_WRA_NUM] = {
+         |                           ^~~~~~~~~~~~
+>> drivers/media/platform/mediatek/aie/mtk_aie.h:388:25: warning: 'fd_rdma_en' defined but not used [-Wunused-const-variable=]
+     388 | static const signed int fd_rdma_en[FD_LOOP_NUM][INPUT_WDMA_WRA_NUM][2] = {
+         |                         ^~~~~~~~~~
+>> drivers/media/platform/mediatek/aie/mtk_aie.h:380:27: warning: 'out_ch_pack' defined but not used [-Wunused-const-variable=]
+     380 | static const unsigned int out_ch_pack[FD_LOOP_NUM] = {
+         |                           ^~~~~~~~~~~
+>> drivers/media/platform/mediatek/aie/mtk_aie.h:373:27: warning: 'outlayer' defined but not used [-Wunused-const-variable=]
+     373 | static const unsigned int outlayer[FD_LOOP_NUM] = {
+         |                           ^~~~~~~~
+>> drivers/media/platform/mediatek/aie/mtk_aie.h:365:27: warning: 'in_ch_pack' defined but not used [-Wunused-const-variable=]
+     365 | static const unsigned int in_ch_pack[FD_LOOP_NUM] = {
+         |                           ^~~~~~~~~~
+>> drivers/media/platform/mediatek/aie/mtk_aie.h:358:27: warning: 'out_2size' defined but not used [-Wunused-const-variable=]
+     358 | static const unsigned int out_2size[FD_LOOP_NUM] = {
+         |                           ^~~~~~~~~
+>> drivers/media/platform/mediatek/aie/mtk_aie.h:354:27: warning: 'fd_maxpool_indices' defined but not used [-Wunused-const-variable=]
+     354 | static const unsigned int fd_maxpool_indices[FD_MAXPOOL_SIZE] = {
+         |                           ^~~~~~~~~~~~~~~~~~
+>> drivers/media/platform/mediatek/aie/mtk_aie.h:350:27: warning: 'fd_stride_indices' defined but not used [-Wunused-const-variable=]
+     350 | static const unsigned int fd_stride_indices[FD_STRIDE_SIZE] = {
+         |                           ^~~~~~~~~~~~~~~~~
+>> drivers/media/platform/mediatek/aie/mtk_aie.h:343:27: warning: 'fd_out_stride2_in' defined but not used [-Wunused-const-variable=]
+     343 | static const unsigned int fd_out_stride2_in[FD_LOOP_NUM] = {
+         |                           ^~~~~~~~~~~~~~~~~
+>> drivers/media/platform/mediatek/aie/mtk_aie.h:332:27: warning: 'fd_ker_rdma_size' defined but not used [-Wunused-const-variable=]
+     332 | static const unsigned int fd_ker_rdma_size[RPN_LOOP_NUM] = {
+         |                           ^~~~~~~~~~~~~~~~
+>> drivers/media/platform/mediatek/aie/mtk_aie.h:307:27: warning: 'out_stride_size' defined but not used [-Wunused-const-variable=]
+     307 | static const unsigned int out_stride_size[FD_LOOP_NUM][OUTPUT_WDMA_WRA_NUM] = {
+         |                           ^~~~~~~~~~~~~~~
+--
+   drivers/media/platform/mediatek/aie/mtk_aie_drv.c: In function 'aie_arrange_fddma_buf':
+>> drivers/media/platform/mediatek/aie/mtk_aie_drv.c:577:20: warning: variable 'current_pa' set but not used [-Wunused-but-set-variable]
+     577 |         dma_addr_t current_pa;
+         |                    ^~~~~~~~~~
+--
+>> drivers/media/platform/mediatek/aie/mtk_aie_drv.c:872: warning: This comment starts with '/**', but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst
+    * The aie driver just loads the bin file provided by algorithm.
 
-"metadata" is exactly the same length as "regs->ax", so it seems a
-little silly. Also, please use vertical alignment as a tool to make code
-more readable. Isn't this much more readable?
 
-	bool recover = regs->ax & KASAN_RAX_RECOVER;
-	bool write   = regs->ax & KASAN_RAX_WRITE;
-	size_t size  = KASAN_RAX_SIZE(regs->ax);
-	u64 addr     = regs->di;
-	u64 pc       = regs->ip;
+vim +/fld_face_info_0 +569 drivers/media/platform/mediatek/aie/mtk_aie.h
 
-> +	if (!IS_ENABLED(CONFIG_KASAN_INLINE))
-> +		return false;
-> +
-> +	if (user_mode(regs))
-> +		return false;
-> +
-> +	kasan_report((void *)addr, size, write, pc);
-> +
-> +	/*
-> +	 * The instrumentation allows to control whether we can proceed after
-> +	 * a crash was detected. This is done by passing the -recover flag to
-> +	 * the compiler. Disabling recovery allows to generate more compact
-> +	 * code.
-> +	 *
-> +	 * Unfortunately disabling recovery doesn't work for the kernel right
-> +	 * now. KASAN reporting is disabled in some contexts (for example when
-> +	 * the allocator accesses slab object metadata; this is controlled by
-> +	 * current->kasan_depth). All these accesses are detected by the tool,
-> +	 * even though the reports for them are not printed.
-> +	 *
-> +	 * This is something that might be fixed at some point in the future.
-> +	 */
+   372	
+ > 373	static const unsigned int outlayer[FD_LOOP_NUM] = {
+   374		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1,
+   375		1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+   376		0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+   377		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0
+   378	};
+   379	
+ > 380	static const unsigned int out_ch_pack[FD_LOOP_NUM] = {
+   381		16, 16, 16, 16, 16, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32,
+   382		32, 16, 16, 16, 32, 32, 32, 32, 32, 32, 0, 16, 16, 16, 16, 16, 32, 32,
+   383		32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 16, 16, 16, 32, 32, 32,
+   384		32, 32, 32, 0, 16, 16, 16, 16, 16, 32, 32, 32, 32, 32, 32, 32, 32, 32,
+   385		32, 32, 32, 32, 32, 16, 16, 16, 32, 32, 32, 32, 32, 32, 0
+   386	};
+   387	
+ > 388	static const signed int fd_rdma_en[FD_LOOP_NUM][INPUT_WDMA_WRA_NUM][2] = {
+   389		{ { 99, 99 }, { 99, 99 }, { 99, 99 }, { -1, -1 } },
+   390		{ { 0, 0 }, { -1, -1 }, { -1, -1 }, { -1, -1 } },
+   391		{ { 1, 0 }, { -1, -1 }, { -1, -1 }, { -1, -1 } },
+   392		{ { 1, 0 }, { 2, 0 }, { -1, -1 }, { -1, -1 } },
+   393		{ { 3, 0 }, { -1, -1 }, { -1, -1 }, { -1, -1 } },
+   394		{ { 1, 2 }, { 2, 2 }, { 4, 2 }, { 4, 3 } },
+   395		{ { 5, 0 }, { 5, 1 }, { -1, -1 }, { -1, -1 } },
+   396		{ { 6, 0 }, { -1, -1 }, { -1, -1 }, { -1, -1 } },
+   397		{ { 5, 0 }, { 5, 1 }, { 7, 0 }, { -1, -1 } },
+   398		{ { 8, 0 }, { 8, 1 }, { -1, -1 }, { -1, -1 } },
+   399		{ { 9, 0 }, { -1, -1 }, { -1, -1 }, { -1, -1 } },
+   400		{ { 5, 2 }, { 5, 3 }, { 7, 2 }, { 10, 2 } },
+   401		{ { 11, 0 }, { 11, 1 }, { -1, -1 }, { -1, -1 } },
+   402		{ { 12, 0 }, { -1, -1 }, { -1, -1 }, { -1, -1 } },
+   403		{ { 13, 0 }, { -1, -1 }, { -1, -1 }, { -1, -1 } },
+   404		{ { 11, 0 }, { 11, 1 }, { 14, 0 }, { -1, -1 } },
+   405		{ { 15, 0 }, { -1, -1 }, { -1, -1 }, { -1, -1 } },
+   406		{ { 16, 0 }, { -1, -1 }, { -1, -1 }, { -1, -1 } },
+   407		{ { 11, 0 }, { 11, 1 }, { 14, 0 }, { 17, 0 } },
+   408		{ { 18, 0 }, { 18, 1 }, { -1, -1 }, { -1, -1 } },
+   409		{ { 18, 0 }, { 18, 1 }, { -1, -1 }, { -1, -1 } },
+   410		{ { 18, 0 }, { 18, 1 }, { -1, -1 }, { -1, -1 } },
+   411		{ { 18, 0 }, { 18, 1 }, { -1, -1 }, { -1, -1 } },
+   412		{ { 18, 0 }, { 18, 1 }, { -1, -1 }, { -1, -1 } },
+   413		{ { 18, 0 }, { 18, 1 }, { -1, -1 }, { -1, -1 } },
+   414		{ { 18, 0 }, { 18, 1 }, { -1, -1 }, { -1, -1 } },
+   415		{ { 18, 0 }, { 18, 1 }, { -1, -1 }, { -1, -1 } },
+   416		{ { 18, 0 }, { 18, 1 }, { -1, -1 }, { -1, -1 } },
+   417		{ { 19, 0 }, { 22, 0 }, { 22, 1 }, { 25, 0 } },
+   418		{ { 99, 99 }, { 99, 99 }, { 99, 99 }, { -1, -1 } },
+   419		{ { 29, 0 }, { -1, -1 }, { -1, -1 }, { -1, -1 } },
+   420		{ { 30, 0 }, { -1, -1 }, { -1, -1 }, { -1, -1 } },
+   421		{ { 30, 0 }, { 31, 0 }, { -1, -1 }, { -1, -1 } },
+   422		{ { 32, 0 }, { -1, -1 }, { -1, -1 }, { -1, -1 } },
+   423		{ { 30, 2 }, { 31, 2 }, { 33, 2 }, { 33, 3 } },
+   424		{ { 34, 0 }, { 34, 1 }, { -1, -1 }, { -1, -1 } },
+   425		{ { 35, 0 }, { -1, -1 }, { -1, -1 }, { -1, -1 } },
+   426		{ { 34, 0 }, { 34, 1 }, { 36, 0 }, { -1, -1 } },
+   427		{ { 37, 0 }, { 37, 1 }, { -1, -1 }, { -1, -1 } },
+   428		{ { 38, 0 }, { -1, -1 }, { -1, -1 }, { -1, -1 } },
+   429		{ { 34, 2 }, { 34, 3 }, { 36, 2 }, { 39, 2 } },
+   430		{ { 40, 0 }, { 40, 1 }, { -1, -1 }, { -1, -1 } },
+   431		{ { 41, 0 }, { -1, -1 }, { -1, -1 }, { -1, -1 } },
+   432		{ { 42, 0 }, { -1, -1 }, { -1, -1 }, { -1, -1 } },
+   433		{ { 40, 0 }, { 40, 1 }, { 43, 0 }, { -1, -1 } },
+   434		{ { 44, 0 }, { -1, -1 }, { -1, -1 }, { -1, -1 } },
+   435		{ { 45, 0 }, { -1, -1 }, { -1, -1 }, { -1, -1 } },
+   436		{ { 40, 0 }, { 40, 1 }, { 43, 0 }, { 46, 0 } },
+   437		{ { 47, 0 }, { 47, 1 }, { -1, -1 }, { -1, -1 } },
+   438		{ { 47, 0 }, { 47, 1 }, { -1, -1 }, { -1, -1 } },
+   439		{ { 47, 0 }, { 47, 1 }, { -1, -1 }, { -1, -1 } },
+   440		{ { 47, 0 }, { 47, 1 }, { -1, -1 }, { -1, -1 } },
+   441		{ { 47, 0 }, { 47, 1 }, { -1, -1 }, { -1, -1 } },
+   442		{ { 47, 0 }, { 47, 1 }, { -1, -1 }, { -1, -1 } },
+   443		{ { 47, 0 }, { 47, 1 }, { -1, -1 }, { -1, -1 } },
+   444		{ { 47, 0 }, { 47, 1 }, { -1, -1 }, { -1, -1 } },
+   445		{ { 47, 0 }, { 47, 1 }, { -1, -1 }, { -1, -1 } },
+   446		{ { 48, 0 }, { 51, 0 }, { 51, 1 }, { 54, 0 } },
+   447		{ { 99, 99 }, { 99, 99 }, { 99, 99 }, { -1, -1 } },
+   448		{ { 58, 0 }, { -1, -1 }, { -1, -1 }, { -1, -1 } },
+   449		{ { 59, 0 }, { -1, -1 }, { -1, -1 }, { -1, -1 } },
+   450		{ { 59, 0 }, { 60, 0 }, { -1, -1 }, { -1, -1 } },
+   451		{ { 61, 0 }, { -1, -1 }, { -1, -1 }, { -1, -1 } },
+   452		{ { 59, 2 }, { 60, 2 }, { 62, 2 }, { 62, 3 } },
+   453		{ { 63, 0 }, { 63, 1 }, { -1, -1 }, { -1, -1 } },
+   454		{ { 64, 0 }, { -1, -1 }, { -1, -1 }, { -1, -1 } },
+   455		{ { 63, 0 }, { 63, 1 }, { 65, 0 }, { -1, -1 } },
+   456		{ { 66, 0 }, { 66, 1 }, { -1, -1 }, { -1, -1 } },
+   457		{ { 67, 0 }, { -1, -1 }, { -1, -1 }, { -1, -1 } },
+   458		{ { 63, 2 }, { 63, 3 }, { 65, 2 }, { 68, 2 } },
+   459		{ { 69, 0 }, { 69, 1 }, { -1, -1 }, { -1, -1 } },
+   460		{ { 70, 0 }, { -1, -1 }, { -1, -1 }, { -1, -1 } },
+   461		{ { 71, 0 }, { -1, -1 }, { -1, -1 }, { -1, -1 } },
+   462		{ { 69, 0 }, { 69, 1 }, { 72, 0 }, { -1, -1 } },
+   463		{ { 73, 0 }, { -1, -1 }, { -1, -1 }, { -1, -1 } },
+   464		{ { 74, 0 }, { -1, -1 }, { -1, -1 }, { -1, -1 } },
+   465		{ { 69, 0 }, { 69, 1 }, { 72, 0 }, { 75, 0 } },
+   466		{ { 76, 0 }, { 76, 1 }, { -1, -1 }, { -1, -1 } },
+   467		{ { 76, 0 }, { 76, 1 }, { -1, -1 }, { -1, -1 } },
+   468		{ { 76, 0 }, { 76, 1 }, { -1, -1 }, { -1, -1 } },
+   469		{ { 76, 0 }, { 76, 1 }, { -1, -1 }, { -1, -1 } },
+   470		{ { 76, 0 }, { 76, 1 }, { -1, -1 }, { -1, -1 } },
+   471		{ { 76, 0 }, { 76, 1 }, { -1, -1 }, { -1, -1 } },
+   472		{ { 76, 0 }, { 76, 1 }, { -1, -1 }, { -1, -1 } },
+   473		{ { 76, 0 }, { 76, 1 }, { -1, -1 }, { -1, -1 } },
+   474		{ { 76, 0 }, { 76, 1 }, { -1, -1 }, { -1, -1 } },
+   475		{ { 77, 0 }, { 80, 0 }, { 80, 1 }, { 83, 0 } }
+   476	};
+   477	
+ > 478	static const unsigned int attr_wdma_en[ATTR_LOOP_NUM][OUTPUT_WDMA_WRA_NUM] = {
+   479		{ 1, 0, 1, 0 }, { 1, 0, 1, 0 }, { 1, 0, 0, 0 }, { 1, 1, 1, 1 },
+   480		{ 1, 1, 1, 1 }, { 1, 0, 1, 0 }, { 1, 1, 0, 0 }, { 1, 0, 1, 0 },
+   481		{ 1, 1, 0, 0 }, { 1, 0, 0, 0 }, { 1, 0, 0, 0 }, { 1, 0, 0, 0 },
+   482		{ 1, 0, 0, 0 }, { 1, 0, 0, 0 }, { 1, 0, 0, 0 }, { 1, 1, 0, 0 },
+   483		{ 1, 0, 0, 0 }, { 1, 0, 0, 0 }, { 1, 0, 0, 0 }, { 1, 0, 0, 0 },
+   484		{ 1, 0, 0, 0 }, { 1, 0, 0, 0 }, { 1, 0, 0, 0 }, { 1, 0, 0, 0 },
+   485		{ 1, 0, 0, 0 }, { 1, 0, 0, 0 }
+   486	};
+   487	
+ > 488	static const unsigned int attr_ker_rdma_size[ATTR_LOOP_NUM] = {
+   489		240, 1168, 272, 2320,
+   490		2080, 9232, 3104, 9232,
+   491		4128, 1040, 4624, 4624,
+   492		1552, 4624, 4624, 4128,
+   493		9232, 272, 9232, 2320,
+   494		144, 9232, 272, 9232,
+   495		2320, 144
+   496	};
+   497	
+ > 498	static const unsigned int attr_out_stride2_as_in[ATTR_LOOP_NUM] = {
+   499		0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0,
+   500		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   501	};
+   502	
+ > 503	static const unsigned int attr_out_2size[ATTR_LOOP_NUM] = { /* O */
+   504		1, 1, 0, 1, 1, 1, 0,
+   505		1, 0, 0, 0, 0, 0, 0,
+   506		0, 0, 0, 0, 0, 0, 0,
+   507		0, 0, 0, 0, 0
+   508	};
+   509	
+   510	/* [loop][ch][output_index] */
+ > 511	static const signed int attr_rdma_en[ATTR_LOOP_NUM][INPUT_WDMA_WRA_NUM][2] = {
+   512		{ { 99, 99 }, { 99, 99 }, { 99, 99 }, { -1, -1 } },
+   513		{ { 0, 0 }, { -1, -1 }, { -1, -1 }, { -1, -1 } },
+   514		{ { 0, 0 }, { 1, 0 }, { -1, -1 }, { -1, -1 } },
+   515		{ { 2, 0 }, { -1, -1 }, { -1, -1 }, { -1, -1 } },
+   516		{ { 0, 2 }, { 1, 2 }, { 3, 2 }, { 3, 3 } },
+   517		{ { 4, 0 }, { 4, 1 }, { -1, -1 }, { -1, -1 } },
+   518		{ { 4, 0 }, { 4, 1 }, { 5, 0 }, { -1, -1 } },
+   519		{ { 6, 0 }, { 6, 1 }, { -1, -1 }, { -1, -1 } },
+   520		{ { 4, 2 }, { 4, 3 }, { 5, 2 }, { 7, 2 } },
+   521		{ { 8, 0 }, { 8, 1 }, { -1, -1 }, { -1, -1 } },
+   522		{ { 9, 0 }, { -1, -1 }, { -1, -1 }, { -1, -1 } },
+   523		{ { 10, 0 }, { -1, -1 }, { -1, -1 }, { -1, -1 } },
+   524		{ { 8, 0 }, { 8, 1 }, { 11, 0 }, { -1, -1 } },
+   525		{ { 12, 0 }, { -1, -1 }, { -1, -1 }, { -1, -1 } },
+   526		{ { 13, 0 }, { -1, -1 }, { -1, -1 }, { -1, -1 } },
+   527		{ { 8, 0 }, { 8, 1 }, { 11, 0 }, { 14, 0 } },
+   528		{ { 15, 0 }, { 15, 1 }, { -1, -1 }, { -1, -1 } },
+   529		{ { 16, 0 }, { -1, -1 }, { -1, -1 }, { -1, -1 } },
+   530		{ { 15, 0 }, { 15, 1 }, { -1, -1 }, { -1, -1 } },
+   531		{ { 18, 0 }, { -1, -1 }, { -1, -1 }, { -1, -1 } },
+   532		{ { 19, 0 }, { -1, -1 }, { -1, -1 }, { -1, -1 } },
+   533		{ { 15, 0 }, { 15, 1 }, { -1, -1 }, { -1, -1 } },
+   534		{ { 21, 0 }, { -1, -1 }, { -1, -1 }, { -1, -1 } },
+   535		{ { 15, 0 }, { 15, 1 }, { -1, -1 }, { -1, -1 } },
+   536		{ { 23, 0 }, { -1, -1 }, { -1, -1 }, { -1, -1 } },
+   537		{ { 24, 0 }, { -1, -1 }, { -1, -1 }, { -1, -1 } }
+   538	};
+   539	
+ > 540	static const unsigned int attr_wdma_size[ATTR_LOOP_NUM][OUTPUT_WDMA_WRA_NUM] = {
+   541		{ 16384, 0, 4096, 0 },
+   542		{ 16384, 0, 4096, 0 },
+   543		{ 16384, 0, 0, 0 },
+   544		{ 16384, 16384, 4096, 4096 },
+   545		{ 8192, 8192, 2048, 2048 },
+   546		{ 8192, 0, 2048, 0 },
+   547		{ 8192, 8192, 0, 0 },
+   548		{ 8192, 0, 2048, 0 },
+   549		{ 2048, 2048, 0, 0 },
+   550		{ 2048, 0, 0, 0 },
+   551		{ 2048, 0, 0, 0 },
+   552		{ 2048, 0, 0, 0 },
+   553		{ 2048, 0, 0, 0 },
+   554		{ 2048, 0, 0, 0 },
+   555		{ 2048, 0, 0, 0 },
+   556		{ 2048, 2048, 0, 0 },
+   557		{ 2048, 0, 0, 0 },
+   558		{ 0, 0, 0, 0 },
+   559		{ 2048, 0, 0, 0 },
+   560		{ 1024, 0, 0, 0 },
+   561		{ 0, 0, 0, 0 },
+   562		{ 2048, 0, 0, 0 },
+   563		{ 0, 0, 0, 0 },
+   564		{ 2048, 0, 0, 0 },
+   565		{ 1024, 0, 0, 0 },
+   566		{ 0, 0, 0, 0 }
+   567	};
+   568	
+ > 569	static const unsigned int fld_face_info_0[FLD_MAX_FRAME] = {
+   570		0x440, 0x44C, 0x458, 0x464, 0x470, 0x47C, 0x488, 0x494, 0x4A4,
+   571		0x4B0, 0x4BC, 0x4C8, 0x4D4, 0x4E0, 0x4EC
+   572	};
+   573	
 
-Can we please find a way to do this that doesn't copy and paste a rather
-verbose comment?
-
-What if we passed 'recover' into kasan_report() and had it do the die()?
-
-> +	if (!recover)
-> +		die("Oops - KASAN", regs, 0);
-> +	return true;
-> +}
-> +
-> +#endif
-> +
->  static bool do_int3(struct pt_regs *regs)
->  {
->  	int res;
-> @@ -863,6 +909,12 @@ static bool do_int3(struct pt_regs *regs)
->  	if (kprobe_int3_handler(regs))
->  		return true;
->  #endif
-> +
-> +#ifdef CONFIG_KASAN_SW_TAGS
-> +	if (kasan_handler(regs))
-> +		return true;
-> +#endif
-I won't get _too_ grumbly about ti since there's another culprit right
-above, but the "no #fidefs in .c files" rule still applies. The right
-way to do this is with a stub kasan_handler() in a header with the
-#ifdef in the header.
-
-Actually, ditto on the kasan_handler() #ifdef. I suspect it can go away
-too and be replaced with a IS_ENABLED(CONFIG_KASAN_SW_TAGS) check.
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
