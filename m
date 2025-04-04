@@ -1,100 +1,228 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 983B42E62B6
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 12:58:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743771504; cv=pass; b=eEpSbNPrzCcfthHpqisuIlyUvqyvhjaTkglurm2wCsB7/B2xo8lEqhdyLLquztC1tt5cYql5FgB6zVPTImxHrmM4QB6I9g55aduOt0L+OLiijAn+dfHfHV4CfdW14n03sPaLqwBc71I64cjd4QwO00E/cqrPx54VsstTE1n8WiY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743771504; c=relaxed/simple;
-	bh=1NUkmn93zltYrATavReLxL8vomELaK3wbCqJJBUtmVE=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=UyAOh+miCgLiuhk8TV3FwkBU1n3XHsSU7uq0pDoZ3CUJKnCL+ORAGBXfW+NycDJW6WSDhsZ1/gLIN7okEYCTPNh697/1sd2Zzi3mGRYoakU2OYlTDQ3/6+1RTuH3tRybUU/pRs8aj+7CbBRyUCZplITWKRt+Tv9eaGVCbXtzYnU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b=Aez8+8Xz; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b="Aez8+8Xz"
-ARC-Seal: i=1; a=rsa-sha256; t=1743771473; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=hEnfFmxvzdFtRTSIwelHkDDiIIwvmp8Z4eKlZmICISdRMJX7v+fzFk8QxMPKg8uBX9yZwEfSGys0h1Eb3xfvkMykCD/++APNnERrA4fDRusjHJUZEhEZEvw2atfXjjy060oObjE6LdUvbuSSOxN/iosEZtj5RDXkgpNbaYtKc6U=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1743771473; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=eACs556LWYn/VXJSp36c3evelj61tsdIYGmy50dFBBo=; 
-	b=kyF34fNHuTazzDNS8kvCRvhSx6EdtH6yZO6htz8OmU7P0tmx2gynHSQh+6rdBvb9/lLo79NaSMDab3XDrVqEYGy24dikUTYHawDcYbyniIan0jcbTMloyCLOjZW0L/a8gou1lO8yEmk/GCM1Q7D52rTG+V6bjTZn2pl2G2aS5j8=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=dmitry.osipenko@collabora.com;
-	dmarc=pass header.from=<dmitry.osipenko@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1743771473;
-	s=zohomail; d=collabora.com; i=dmitry.osipenko@collabora.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:From:From:To:To:Cc:Cc:References:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=eACs556LWYn/VXJSp36c3evelj61tsdIYGmy50dFBBo=;
-	b=Aez8+8XzBP6r/zqefw8kNqUqTy6KdxYrq0MNqyxj35+nbobgFrSbryqT8Ag/hJ1p
-	UOvBJjMeHrqgq//mVJlbFF4vyIaT2k1C6CO1K1e5X47v/3+kJO6cyfZYqrJHTFVnOln
-	ZEwdYQtNq006hGJe8MBjo48GcGBSdMeEuvJXqabk=
-Received: by mx.zohomail.com with SMTPS id 1743771470818665.4330160938939;
-	Fri, 4 Apr 2025 05:57:50 -0700 (PDT)
-Message-ID: <f59c4c85-0a64-4cb5-b16a-fa519a9c6fb1@collabora.com>
-Date: Fri, 4 Apr 2025 15:57:47 +0300
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED7B618D656;
+	Fri,  4 Apr 2025 12:59:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743771560; cv=none; b=r5tToBldexRqxfIZBQqfqfYq23cFSUTVJaeUqq0oGWhfsXqRIf2b41xAnMGU8DWqhygx9eDlS38U7eUZbESV6GLD0O3i3mtaBBc/PjEVFq16NDCmEfHJc11onsjFlzXHdWAj+xKX6LgdZd5bA7VO8aM7i4SIgpeboGbvHZsGyEs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743771560; c=relaxed/simple;
+	bh=A1YQV7DTUafA+9BT5+KgvszR0Cn++a78Zm/k3sbagI0=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hFuFeYufadKFX+1K1pGya/+y/4jfMb8xShRBYEiQOiigoo4ef+/ARv7D2RClMa2ljQpweg75D/MasRj3ijA2I/l4+vgPdgmGpD/HQTkBnqzF8QjYQdmBHUgm/qsJeNWeaUKw9MVZg9P5X3OmEJnrhi3N1ievOKV6FqFz5dCHB3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZTdr02jL4z6K9DN;
+	Fri,  4 Apr 2025 20:55:28 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id EC187140557;
+	Fri,  4 Apr 2025 20:59:08 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 4 Apr
+ 2025 14:59:08 +0200
+Date: Fri, 4 Apr 2025 13:59:06 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Rakie Kim <rakie.kim@sk.com>
+CC: <akpm@linux-foundation.org>, <gourry@gourry.net>, <linux-mm@kvack.org>,
+	<linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+	<joshua.hahnjy@gmail.com>, <dan.j.williams@intel.com>,
+	<ying.huang@linux.alibaba.com>, <david@redhat.com>, <osalvador@suse.de>,
+	<kernel_team@skhynix.com>, <honggyu.kim@sk.com>, <yunjeong.mun@sk.com>
+Subject: Re: [PATCH v6 1/3] mm/mempolicy: Fix memory leaks in weighted
+ interleave sysfs
+Message-ID: <20250404135906.0000308e@huawei.com>
+In-Reply-To: <20250404074623.1179-2-rakie.kim@sk.com>
+References: <20250404074623.1179-1-rakie.kim@sk.com>
+	<20250404074623.1179-2-rakie.kim@sk.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] drm/shmem-helper: Fix unsetting shmem vaddr while vmap
- refcount > 0
-From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
-To: Thomas Zimmermann <tzimmermann@suse.de>,
- Lucas De Marchi <lucas.demarchi@intel.com>,
- Boris Brezillon <boris.brezillon@collabora.com>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- kernel@collabora.com
-References: <20250403142633.484660-1-dmitry.osipenko@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20250403142633.484660-1-dmitry.osipenko@collabora.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-ZohoMailClient: External
+X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On 4/3/25 17:26, Dmitry Osipenko wrote:
-> We switched to use refcount_t for vmaps and missed to change the vunmap
-> code to properly unset the vmap pointer, which is now cleared while vmap's
-> refcount > 0. Clear the cached vmap pointer only when refcounting drops to
-> zero to fix the bug.
+On Fri, 4 Apr 2025 16:46:19 +0900
+Rakie Kim <rakie.kim@sk.com> wrote:
+
+> Memory leaks occurred when removing sysfs attributes for weighted
+> interleave. Improper kobject deallocation led to unreleased memory
+> when initialization failed or when nodes were removed.
 > 
-> Fixes: e1fc39a92332 ("drm/shmem-helper: Use refcount_t for vmap_use_count")
-> Reported-by: Lucas De Marchi <lucas.demarchi@intel.com>
-> Closes: https://lore.kernel.org/dri-devel/20250403105053.788b0f6e@collabora.com/T/#m3dca6d81bedc8d6146a56b82694624fbc6fa4c96
-> Signed-off-by: Dmitry Osipenko <dmitry.osipenko@collabora.com>
+> This patch resolves the issue by replacing unnecessary `kfree()`
+> calls with proper `kobject_del()` and `kobject_put()` sequences,
+> ensuring correct teardown and preventing memory leaks.
+> 
+> By explicitly calling `kobject_del()` before `kobject_put()`,
+> the release function is now invoked safely, and internal sysfs
+> state is correctly cleaned up. This guarantees that the memory
+> associated with the kobject is fully released and avoids
+> resource leaks, thereby improving system stability.
+> 
+> Fixes: dce41f5ae253 ("mm/mempolicy: implement the sysfs-based weighted_interleave interface")
+> Signed-off-by: Rakie Kim <rakie.kim@sk.com>
+> Signed-off-by: Honggyu Kim <honggyu.kim@sk.com>
+> Signed-off-by: Yunjeong Mun <yunjeong.mun@sk.com>
+> Reviewed-by: Gregory Price <gourry@gourry.net>
+I've pretty much forgotten earlier discussions so apologies if I revisit
+old ground! 
+
+The fix is fine I think. But the resulting code structure
+could be improved, without (I think) complicating what is here by much.
+
 > ---
->  drivers/gpu/drm/drm_gem_shmem_helper.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  mm/mempolicy.c | 64 +++++++++++++++++++++++++++-----------------------
+>  1 file changed, 34 insertions(+), 30 deletions(-)
 > 
-> diff --git a/drivers/gpu/drm/drm_gem_shmem_helper.c b/drivers/gpu/drm/drm_gem_shmem_helper.c
-> index 2d924d547a51..aa43265f4f4f 100644
-> --- a/drivers/gpu/drm/drm_gem_shmem_helper.c
-> +++ b/drivers/gpu/drm/drm_gem_shmem_helper.c
-> @@ -415,11 +415,11 @@ void drm_gem_shmem_vunmap_locked(struct drm_gem_shmem_object *shmem,
+> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+> index bbaadbeeb291..af3753925573 100644
+> --- a/mm/mempolicy.c
+> +++ b/mm/mempolicy.c
+> @@ -3448,7 +3448,9 @@ static void sysfs_wi_release(struct kobject *wi_kobj)
 >  
->  		if (refcount_dec_and_test(&shmem->vmap_use_count)) {
->  			vunmap(shmem->vaddr);
-> +			shmem->vaddr = NULL;
+>  	for (i = 0; i < nr_node_ids; i++)
+>  		sysfs_wi_node_release(node_attrs[i], wi_kobj);
+> -	kobject_put(wi_kobj);
 > +
->  			drm_gem_shmem_unpin_locked(shmem);
+> +	kfree(node_attrs);
+> +	kfree(wi_kobj);
+>  }
+>  
+>  static const struct kobj_type wi_ktype = {
+> @@ -3494,15 +3496,22 @@ static int add_weighted_interleave_group(struct kobject *root_kobj)
+>  	struct kobject *wi_kobj;
+>  	int nid, err;
+>  
+> -	wi_kobj = kzalloc(sizeof(struct kobject), GFP_KERNEL);
+> -	if (!wi_kobj)
+> +	node_attrs = kcalloc(nr_node_ids, sizeof(struct iw_node_attr *),
+> +			     GFP_KERNEL);
+> +	if (!node_attrs)
+>  		return -ENOMEM;
+>  
+> +	wi_kobj = kzalloc(sizeof(struct kobject), GFP_KERNEL);
+> +	if (!wi_kobj) {
+> +		err = -ENOMEM;
+> +		goto node_out;
+As this is only place where we do kfree(node_attrs)
+why not just do that here and return directly.
+
+		
+> +	}
+> +
+>  	err = kobject_init_and_add(wi_kobj, &wi_ktype, root_kobj,
+>  				   "weighted_interleave");
+>  	if (err) {
+> -		kfree(wi_kobj);
+> -		return err;
+> +		kobject_put(wi_kobj);
+> +		goto err_out;
+>  	}
+>  
+>  	for_each_node_state(nid, N_POSSIBLE) {
+> @@ -3512,9 +3521,18 @@ static int add_weighted_interleave_group(struct kobject *root_kobj)
+>  			break;
 >  		}
 >  	}
-> -
-> -	shmem->vaddr = NULL;
+> -	if (err)
+> +	if (err) {
+> +		kobject_del(wi_kobj);
+>  		kobject_put(wi_kobj);
+
+For this and the one above, a unified exit kind of makes sense as
+can do two labels and have the put only once.
+
+If not, why not move this up into the loop and return directly?
+If you move to an error handling block
+
+err_del_obj:
+	kobject_del(wi_kobj);
+err_put_obj:
+	kobject_put(wi_kobj);
+
+then you could also do the goto from within that loop.
+
+
+> +		goto err_out;
+> +	}
+> +
+>  	return 0;
+> +
+> +node_out:
+> +	kfree(node_attrs);
+> +err_out:
+> +	return err;
 >  }
->  EXPORT_SYMBOL_GPL(drm_gem_shmem_vunmap_locked);
+>  
+>  static void mempolicy_kobj_release(struct kobject *kobj)
+> @@ -3528,7 +3546,6 @@ static void mempolicy_kobj_release(struct kobject *kobj)
+>  	mutex_unlock(&iw_table_lock);
+>  	synchronize_rcu();
+>  	kfree(old);
+> -	kfree(node_attrs);
+>  	kfree(kobj);
+>  }
+>  
+> @@ -3542,37 +3559,24 @@ static int __init mempolicy_sysfs_init(void)
+>  	static struct kobject *mempolicy_kobj;
+>  
+>  	mempolicy_kobj = kzalloc(sizeof(*mempolicy_kobj), GFP_KERNEL);
+> -	if (!mempolicy_kobj) {
+> -		err = -ENOMEM;
+> -		goto err_out;
+> -	}
+> -
+> -	node_attrs = kcalloc(nr_node_ids, sizeof(struct iw_node_attr *),
+> -			     GFP_KERNEL);
+> -	if (!node_attrs) {
+> -		err = -ENOMEM;
+> -		goto mempol_out;
+> -	}
+> +	if (!mempolicy_kobj)
+> +		return -ENOMEM;
+>  
+>  	err = kobject_init_and_add(mempolicy_kobj, &mempolicy_ktype, mm_kobj,
+>  				   "mempolicy");
+>  	if (err)
+> -		goto node_out;
+> +		goto err_out;
+		goto err_put_kobj;
+ or something like that.
+
+>  
+>  	err = add_weighted_interleave_group(mempolicy_kobj);
+> -	if (err) {
+> -		pr_err("mempolicy sysfs structure failed to initialize\n");
+> -		kobject_put(mempolicy_kobj);
+> -		return err;
+> -	}
+> +	if (err)
+> +		goto err_del;
+>  
+> -	return err;
+> -node_out:
+> -	kfree(node_attrs);
+> -mempol_out:
+> -	kfree(mempolicy_kobj);
+> +	return 0;
+> +
+> +err_del:
+> +	kobject_del(mempolicy_kobj);
+>  err_out:
+> -	pr_err("failed to add mempolicy kobject to the system\n");
+> +	kobject_put(mempolicy_kobj);
+If we keep an err_out, usual expectation is all it does is return
++ maybe print a message. We'd not expect a put.
+
+>  	return err;
+>  }
 >  
 
-Applied to misc-next
-
--- 
-Best regards,
-Dmitry
