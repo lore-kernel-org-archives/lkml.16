@@ -1,198 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75F3B1D7E54;
-	Fri,  4 Apr 2025 10:39:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 538071B0439;
+	Fri,  4 Apr 2025 10:39:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.126.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743763163; cv=none; b=tG2fG9p+OddDDX663JaF4vLE5Gnv3X0dPvzV+ooiXK4ICEJnGCDKG2YbXXEmvwWtKqyeBc6dIOS/rwOvnoAe0fOhyboi8+EjEJOD+CvUG+0f5Ggf9qbexFgAgAvUYJaydy/SW2nECcSr+jfWZ5PadI4MjRc5T0miEg/cyChdBEI=
+	t=1743763166; cv=none; b=ptWy3cbPazlU56t7p7imii7ft/h+tn5YxhQ0xnCurMIrS0jjMpRG1ADq0yA8um/rkrafKw82zLclr/jjREUIMyTfGfIDp9mx76CTRszVTwXV7kiiy3dMTCsTAHLI6iiGEVqI8Dt0vJfWKO1FYTokNnJWs6pq0b1OZEVR/aK8Ncc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743763163; c=relaxed/simple;
-	bh=4AdbkdDVyBX6jEBtq4y9rlrM1Cu82MlcstjsBSpa4gA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SoDOfb9YzErKKXA6WS5pZNc+3yWn08oNRHSBen2/wzvICiTTSbX9rEVu3ClVe7f4grqMWG5wYDWKx3VOqKhxwG1wi7PDwdQDBy9Skyq5X8UEXn3klr0SByFG6q/CW7X+FaoJxRkP0rvis9X8Mv50UkN9qOuH5G3u5yhwP+ns/Y8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wk1vR+zt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743763166; c=relaxed/simple;
+	bh=RXAzAyUymUEGdjhF70f2rxVJquHJ+jHFiR1TdWzgpM4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=io5u7KGsfmjZtSSrI3fNhBwaBGiC/2HqYEH7ERoobGkm7HETOsbQlAvgRgKJJtG+xUhmz2J82jQA+279lUdFpM6AKgAFCcJNAIEOD3xqxcIHVVoOtMcl75l4wZLpqURl6Dc/kopYVS4D+XVdF9ATi01/a60CtwCXANgIfpl59MY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b=DkOST7wn; arc=none smtp.client-ip=212.227.126.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wk1vR+zt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3DB9C4CEDD;
-	Fri,  4 Apr 2025 10:39:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743763162;
-	bh=4AdbkdDVyBX6jEBtq4y9rlrM1Cu82MlcstjsBSpa4gA=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Wk1vR+zt8m2HitztpAjsi6Rr6Vz3v6/VfErgrusAcabl6MMcq1qgLLpe8IKkjbBPs
-	 J2MhMMT0zGhiuz95OqH8oTabjlHHkNu58urxqsj+VVxsCCwDIZiByQnKPPUwl7iLG1
-	 zjTXnXU4lz+SNVaMWnLPqy5ylfTI0U1O/RLh0DKHpXSDDrsBGZdWLC/UMQL1vqh9Dc
-	 RyZBZSPd/pnNnr+enJv38/PoiYFoS4+KHcbVYlmDa/XqfXCgcDJAeaJTBt6jh/ThFI
-	 lsbmOWVcMLC3+Ig0QHOtTCvsiPdj5phTnfOIv4nehtcHcXM29H5vZhq5Ad7+MwHviM
-	 tOhowTkLptFDg==
-From: Christian Brauner <brauner@kernel.org>
-To: Christoph Hellwig <hch@infradead.org>,
-	Mateusz Guzik <mjguzik@gmail.com>
-Cc: Christian Brauner <brauner@kernel.org>,
-	Penglei Jiang <superman.xpt@gmail.com>,
-	viro@zeniv.linux.org.uk,
-	jack@suse.cz,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	syzbot+5d8e79d323a13aa0b248@syzkaller.appspotmail.com
-Subject: [PATCH] anon_inode: use a proper mode internally
-Date: Fri,  4 Apr 2025 12:39:14 +0200
-Message-ID: <20250404-aphorismen-reibung-12028a1db7e3@brauner>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b="DkOST7wn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=heusel.eu;
+	s=s1-ionos; t=1743763136; x=1744367936; i=christian@heusel.eu;
+	bh=1Xvnr5xTHj5ffS6/z//aYoy8Zas4UgwcMAg/MTUZApk=;
+	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:References:
+	 MIME-Version:Content-Type:In-Reply-To:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=DkOST7wnNGh9FtRK5DDjFuAwMm/72uwDk7n9RYRjUnk2EvP34cetBuYXDl8dhmWa
+	 /DD07DF6tvql1+nFDy1Z+sDUpE1mTV/gGQPLJmZ7LNHTaYBu3Dx5FhHPDHxZDldGF
+	 /q+lC72d9aYrzU7Vz7KfWvwGzEGir3FcPMjLVqJUJEVBeAihPDbPVPuLkxsqZm5TO
+	 CxfBYRfLpi8dEXo6juL+inVFMJPlPjZWxMl/vedRZz7bD6i6QYKN5Bxyqs1y+VpOF
+	 wLiBokujTcyCDVmjqmzId5XQN+0AmYhmrvOlOyT16LKm3iEJoGAFcdP/o3Vm3DASS
+	 YH8j40AmbQ3H+nBY9Q==
+X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
+Received: from localhost ([94.31.113.55]) by mrelayeu.kundenserver.de
+ (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1Mnac9-1tH6V30reX-00edDE; Fri, 04 Apr 2025 12:38:56 +0200
+Date: Fri, 4 Apr 2025 12:38:54 +0200
+From: Christian Heusel <christian@heusel.eu>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, akpm@linux-foundation.org, 
+	linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org, 
+	lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com, f.fainelli@gmail.com, 
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, 
+	hargar@microsoft.com, broonie@kernel.org
+Subject: Re: [PATCH 6.14 00/21] 6.14.1-rc1 review
+Message-ID: <c06931c3-c691-4acb-b3a9-9b2df8ef30bc@heusel.eu>
+References: <20250403151621.130541515@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4980; i=brauner@kernel.org; h=from:subject:message-id; bh=4AdbkdDVyBX6jEBtq4y9rlrM1Cu82MlcstjsBSpa4gA=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaS/33ZJbpXHxW0Hnnxs1c+V/Hj0+Y8EBc0TO06embq+5 kH7TQtZl45SFgYxLgZZMUUWh3aTcLnlPBWbjTI1YOawMoEMYeDiFICJfDFj+M3iPffxxrvHfBde uirsbRstf3jTPYlSodBzPdybtbYsZdzD8Jv9bo1PWmx7t+C6m921+6XOPuOapHy8a8mLRS5h+sw r3rEBAA==
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="v5wn7utr7ycxg3wj"
+Content-Disposition: inline
+In-Reply-To: <20250403151621.130541515@linuxfoundation.org>
+X-Provags-ID: V03:K1:WLuhlQHS+PDXdBftMV8hO3bixlIHDBAynRCPn70q+P18m1hbFkk
+ m2QrMhxTRsbtnHGKw64LCCDYLJlPEYLy+1SweYKrH5JgasoW37G0aG/szo/0rrQHivh5aMV
+ GfYt78IsCAg9Rgl/o8FmoXxFVW7PnMk76z8YAvcmUr3HUUwtgqla1KG/NbuDPEYTBZY0d8i
+ VJeItaZ467vuSsOGkkLPw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:Fwx35pExTCk=;Sw0KzyRsOmAJETEZq5PX2yhvZO0
+ NjAHxLu1TjT3/cZirx/ETRYmwuVGiT0BH3URDz5zS0B+dylj5pX/xGDUUlm8IT1xh9jh1/w9A
+ vJm2QEl5pLORLfaDsJ+41VnacjmFHq3ANGLhQEORor3gPHCgSa2sGNUb+gH0rQJAKWsGHwaze
+ /zlzycft93Wdnnmw7KnuTIrcQAo5aqWalndBHk156KzGxhdoAq9RYL5F5Mbm8F4Toz1EHTusX
+ saPcmGVCjUWI1ujzIsITSOXtfFDqhCYkyhI1ypi2FZLm8IdW01o1TFc9ucCfq88P2FiWzk6Hv
+ 9RgrmtNaZaA48pyfN9iAIkf24F/OFQWAviwOlxt/7zY5vNkcGHSj8yMFTd4st4zDlHziqCubM
+ i4AtH/s9KeN5ADSKyRuY1JQHimK3mzW1dR5fm00YYwFgNUQTElphBR/kd/eYLlb3a5VpgNwyB
+ MYS98lsWIPxV5yI0OXwX/MGGBQptnQFan3s4tg1cYIPXiBH2ya6Xnk2M+QYWD69ffhsLCwsxj
+ kksRtGTQlJPFkWFUas8+Z1YntpoMwcxAxMmL5GgwUqlnPvXBDT9BXSWEhlGrv19pWhpEvv9UU
+ eBtdStbWBtfTum9PhRnuHSjOBcOat/b65XDGDAcu7DxXq3l8mzC1vC1DTzDHiZ4XS6GrJ5T7+
+ IdpejU+B9XTHWHHg8IBHz8ZYpA9Yg7DCmcX03fiU/bNtVQdobxD+uacnjsK1nZa/c6H1EQpoT
+ SAbrCMy+hH5lx+kTNWzQbHhZyQFpiMz5jNfHfXAR77jpM/MJjIzW/AwIU5SerO48Itv8GhBg3
+ McMznwT+B36QoYA7g7OISjEa52y/mJODt7qPiY1MrXUwHPJTYtx7I8cmekYeb43osUNTL0LDw
+ c3NVUClGNIVEFqbyh0gJ3Tno+gd7ZfG8kzVXLzL3ZK4WhuIcsH1/MqMaJqhXSQfv/VAOkxD0t
+ KdiRjyYlo2PU/zdKZJkuG8xHcRUXwaFYid4D6RNK1AC0mqlxpFd5GH+SOOx03dyEi3Fnn/NCM
+ EF9bWwwzWJFGClEh24AkP8k7g+Vj09EXdCT7UqnI2rgQZBWsfhYxWOJeoCMCswBHachfjgUql
+ utkEIE8Y7B+T3DwT7S2BM7foRKtobquJi7+YRN6mD3kFcOIo8k1qEaGgGLvGlEh34zX88V4C0
+ vRKu5hzAml8K2ZB0/wkkhnV97IwOse0lOQXrihOvdn/yaYTJZSJSo0EZyIJzKSfADkksV0AZS
+ pXBxmn8c3SUq/4noWUaUWneTRy0cR/Ob11td6ngpkkh435zoJZeHFX5jZqhlal8m57PfOUK15
+ Spr8lLV1uJhbDYo7AmVOldtXtoBGPn9x12k0lp+WIIEJkYRlEtFEY2IAqay2iwrmVfgwa9It0
+ 62Myp6dDz4DdHqrrEjpEtJf53sjbUnZNiqOLy09gjYNiPGRMiT7Ljsytgf
 
-This allows the VFS to not trip over anonymous inodes and we can add
-asserts based on the mode into the vfs. When we report it to userspace
-we can simply hide the mode to avoid regressions. I've audited all
-direct callers of alloc_anon_inode() and only secretmen overrides i_mode
-and i_op inode operations but it already uses a regular file.
 
-Fixes: af153bb63a336 ("vfs: catch invalid modes in may_open()")
-Reported-by: syzbot+5d8e79d323a13aa0b248@syzkaller.appspotmail.com
-Closes: https://lore.kernel.org/all/67ed3fb3.050a0220.14623d.0009.GAE@google.com"
-Signed-off-by: Christian Brauner <brauner@kernel.org>
----
- fs/anon_inodes.c | 36 ++++++++++++++++++++++++++++++++++++
- fs/internal.h    |  3 +++
- fs/libfs.c       |  2 +-
- fs/pidfs.c       | 24 +-----------------------
- 4 files changed, 41 insertions(+), 24 deletions(-)
+--v5wn7utr7ycxg3wj
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 6.14 00/21] 6.14.1-rc1 review
+MIME-Version: 1.0
 
-diff --git a/fs/anon_inodes.c b/fs/anon_inodes.c
-index 583ac81669c2..42e4b9c34f89 100644
---- a/fs/anon_inodes.c
-+++ b/fs/anon_inodes.c
-@@ -24,9 +24,43 @@
- 
- #include <linux/uaccess.h>
- 
-+#include "internal.h"
-+
- static struct vfsmount *anon_inode_mnt __ro_after_init;
- static struct inode *anon_inode_inode __ro_after_init;
- 
-+/*
-+ * User space expects anonymous inodes to have no file type in st_mode.
-+ *
-+ * In particular, 'lsof' has this legacy logic:
-+ *
-+ *	type = s->st_mode & S_IFMT;
-+ *	switch (type) {
-+ *	  ...
-+ *	case 0:
-+ *		if (!strcmp(p, "anon_inode"))
-+ *			Lf->ntype = Ntype = N_ANON_INODE;
-+ *
-+ * to detect our old anon_inode logic.
-+ *
-+ * Rather than mess with our internal sane inode data, just fix it
-+ * up here in getattr() by masking off the format bits.
-+ */
-+int anon_inode_getattr(struct mnt_idmap *idmap, const struct path *path,
-+		       struct kstat *stat, u32 request_mask,
-+		       unsigned int query_flags)
-+{
-+	struct inode *inode = d_inode(path->dentry);
-+
-+	generic_fillattr(&nop_mnt_idmap, request_mask, inode, stat);
-+	stat->mode &= ~S_IFMT;
-+	return 0;
-+}
-+
-+static const struct inode_operations anon_inode_operations = {
-+	.getattr = anon_inode_getattr,
-+};
-+
- /*
-  * anon_inodefs_dname() is called from d_path().
-  */
-@@ -66,6 +100,7 @@ static struct inode *anon_inode_make_secure_inode(
- 	if (IS_ERR(inode))
- 		return inode;
- 	inode->i_flags &= ~S_PRIVATE;
-+	inode->i_op = &anon_inode_operations;
- 	error =	security_inode_init_security_anon(inode, &QSTR(name),
- 						  context_inode);
- 	if (error) {
-@@ -313,6 +348,7 @@ static int __init anon_inode_init(void)
- 	anon_inode_inode = alloc_anon_inode(anon_inode_mnt->mnt_sb);
- 	if (IS_ERR(anon_inode_inode))
- 		panic("anon_inode_init() inode allocation failed (%ld)\n", PTR_ERR(anon_inode_inode));
-+	anon_inode_inode->i_op = &anon_inode_operations;
- 
- 	return 0;
- }
-diff --git a/fs/internal.h b/fs/internal.h
-index b9b3e29a73fd..717dc9eb6185 100644
---- a/fs/internal.h
-+++ b/fs/internal.h
-@@ -343,3 +343,6 @@ static inline bool path_mounted(const struct path *path)
- void file_f_owner_release(struct file *file);
- bool file_seek_cur_needs_f_lock(struct file *file);
- int statmount_mnt_idmap(struct mnt_idmap *idmap, struct seq_file *seq, bool uid_map);
-+int anon_inode_getattr(struct mnt_idmap *idmap, const struct path *path,
-+		       struct kstat *stat, u32 request_mask,
-+		       unsigned int query_flags);
-diff --git a/fs/libfs.c b/fs/libfs.c
-index 6393d7c49ee6..0ad3336f5b49 100644
---- a/fs/libfs.c
-+++ b/fs/libfs.c
-@@ -1647,7 +1647,7 @@ struct inode *alloc_anon_inode(struct super_block *s)
- 	 * that it already _is_ on the dirty list.
- 	 */
- 	inode->i_state = I_DIRTY;
--	inode->i_mode = S_IRUSR | S_IWUSR;
-+	inode->i_mode = S_IFREG | S_IRUSR | S_IWUSR;
- 	inode->i_uid = current_fsuid();
- 	inode->i_gid = current_fsgid();
- 	inode->i_flags |= S_PRIVATE;
-diff --git a/fs/pidfs.c b/fs/pidfs.c
-index d64a4cbeb0da..809c3393b6a3 100644
---- a/fs/pidfs.c
-+++ b/fs/pidfs.c
-@@ -572,33 +572,11 @@ static int pidfs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
- 	return -EOPNOTSUPP;
- }
- 
--
--/*
-- * User space expects pidfs inodes to have no file type in st_mode.
-- *
-- * In particular, 'lsof' has this legacy logic:
-- *
-- *	type = s->st_mode & S_IFMT;
-- *	switch (type) {
-- *	  ...
-- *	case 0:
-- *		if (!strcmp(p, "anon_inode"))
-- *			Lf->ntype = Ntype = N_ANON_INODE;
-- *
-- * to detect our old anon_inode logic.
-- *
-- * Rather than mess with our internal sane inode data, just fix it
-- * up here in getattr() by masking off the format bits.
-- */
- static int pidfs_getattr(struct mnt_idmap *idmap, const struct path *path,
- 			 struct kstat *stat, u32 request_mask,
- 			 unsigned int query_flags)
- {
--	struct inode *inode = d_inode(path->dentry);
--
--	generic_fillattr(&nop_mnt_idmap, request_mask, inode, stat);
--	stat->mode &= ~S_IFMT;
--	return 0;
-+	return anon_inode_getattr(idmap, path, stat, request_mask, query_flags);
- }
- 
- static const struct inode_operations pidfs_inode_operations = {
--- 
-2.47.2
+On 25/04/03 04:20PM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.14.1 release.
+> There are 21 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>=20
+> Responses should be made by Sat, 05 Apr 2025 15:16:11 +0000.
+> Anything received after that time might be too late.
 
+Tested-by: Christian Heusel <christian@heusel.eu>
+
+Tested on a ThinkPad E14 Gen 3 with a AMD Ryzen 5 5500U CPU and on the
+Steam Deck (LCD variant) aswell as a Framework Desktop.
+
+While testing I have found a regression that was already present in v6.14 t=
+hat I will report separately.
+
+Cheers,
+Chris
+
+--v5wn7utr7ycxg3wj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEb3ea3iR6a4oPcswTwEfU8yi1JYUFAmfvtr4ACgkQwEfU8yi1
+JYXKow//U0IOkLZJ2LbkAACQbWxGZCfcjMvN+GOh5EU64ecvFc0UxOnqVnC/xyHu
+up2JxT0kPJZ15zm4vgKWUlS383dUBuDlqEyvN6oEqZBuiiNivEyaEk06QgRlfAc4
+G7L3pDD71+MPa+FIsoja0wPeh/MX2f5ftvtsqvRET7ZijHY7wF+oZQ7RBTkW8yfb
+f0KufR/ml8ai6RLULP3BAwn8y6odAXbgdSzWy5S8tGEqCjdENdfG0/cL/xvXU69a
+qqBBaDMk1BVYW6Dt4NXWqoE1Dr1uJcjAA+9ItPMq4R/EglnWEB83mKru9EqXJJuE
+YgbMdRYKeRZ58IJy3+ww6yAVRMjNW6DyJ8atKpj7NLjWoF0FWFFbKh1Z4SF2zxWm
+FhkQZdVXKr/iTIjFrZiF+xCJjSce1GnERIrFkUvRHQdEo1O9v35ewjq1GAi25dle
+HijPdlpk9ZRxJM/UuBWSC/wR7MkObRfx6nZA250Nark5hO3nq4xpBPXezSL/WoFi
+1AispsVSj5JU61I7tO9sDV/iiV7tVG8RAzJ6o62t88NiynJmy0IcK1Xz8pkqWWyZ
+zzLL5rueRcRA5l7kPY45wmx+oJQIJGgPqrV62c9RYcKTOjVEpMUE2yk+UCu4tQ7G
+KXftXts0LNGcM/uGAuXJ/hD0wq0Tqe66od4Ghp/TCNSZ9DfAMLA=
+=DfJe
+-----END PGP SIGNATURE-----
+
+--v5wn7utr7ycxg3wj--
