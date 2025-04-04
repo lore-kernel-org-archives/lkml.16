@@ -1,129 +1,138 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33B3028E8;
-	Fri,  4 Apr 2025 14:09:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC0DA1F0E33;
+	Fri,  4 Apr 2025 14:10:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743775772; cv=none; b=VItF61+DSOnLM0AzXo4afGqi62EjOMvbiAYvD1MM6gNvS0prkMjfJzcAUeiYoB239MUfjlvkaXgatTsBp7AJKrbluUSVBPdD+JlrgsYAOkvEMMazuVkEcuOEsIg0jb40TpbutjVW40aWOKNZCqhtNpDCFroQEclzceNyqTrVg+w=
+	t=1743775832; cv=none; b=rlUJPj3OKROTl7DVSgDnA1X52xaoYnrMHCQdK+EWQ9F/wDITqd7oICnKi6dSPnquMbKIj4DC3s/RpkI8D3mIhMZkl6q32erhexdu9IPx0A1qBmIjc7FZYP1dKn4kK9QjrFGRqVZwi/qEx2cwpMYKPY96ZzdD+wOHtqSFM2QTvDA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743775772; c=relaxed/simple;
-	bh=7vkatnzzxhhVFbD4HxLrh/KjbSJzy28SNpvsJYk/8oM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=S1iRFfvZa2Uf91lkNj77jVv3hTlZ+bU5n5K1ZsEJGcoNRMgasnK4RUHpR1ztLhT2iF/BbYDq4Ef6S6fow6eKVjaHyJdeO6KjyGkcY/xsi3fXAvUq2Wwh9s85iFQVX82LYicvu0lvNsMExkN1RZoDL154Psvb11nw9rsKJsGwcq8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=m6kk7GVy; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1743775832; c=relaxed/simple;
+	bh=l2lzsNRrga+hAwlZPw2hZyVI7hOngQ48zjWgc72CGr4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uiChbc9rbv0oAZYXxsogvYs5aVUgEs0rbX+lxzlKrd8DAD6mm9JAQSIBkMf4XMIkZcHfR+Z1f81agX0MBuFQmF0F96aSPmOFQ+B2NTmRC9yGE2GXF/mc+cmlUZp38vE5w0nUNONnCUkT12TYBDVCP15p53grUQuOUX1Kz5/kOBQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MhXqLqpa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="m6kk7GVy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743775771; x=1775311771;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=7vkatnzzxhhVFbD4HxLrh/KjbSJzy28SNpvsJYk/8oM=;
-  b=m6kk7GVywsxUTuy8/ypS/ZLA3XODO/YPN061DVJySXVgbA+fs+mw0oz/
-   kcradNcEB0KxGIrBj80m0ljttrGkEiIbOJ4AFN/TYxTyPK99EHKKsS0UB
-   2/vo/Cxg/QipJ/Ib5Th36ixs7tHdmFs4az4p8qmFs+ikT2jYu1oQo2eu0
-   HjA3HfS7/clT99hQXFwSsidZqNySTxrk8yKXZtU3XF5AXZgtLbBtwmJlo
-   7dorC7ORm2+osMl3mA6jGddVojCw1b5P4LtTgQ3c96wR/8CgbjPxcT2Wj
-   TnMtOKMpzgBdyg7BfSHhLkwKN9bzTdfhK4c/krJozgKxr7yKm19MBvhwf
-   g==;
-X-CSE-ConnectionGUID: lEmXnVm9TLCDG7/xy6O7/A==
-X-CSE-MsgGUID: sp6jpCHvTi6rLAtooiFf/A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11394"; a="45389891"
-X-IronPort-AV: E=Sophos;i="6.15,188,1739865600"; 
-   d="scan'208";a="45389891"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 07:09:30 -0700
-X-CSE-ConnectionGUID: 0qZXDAKJT0y/buDtFmkciQ==
-X-CSE-MsgGUID: PO7ncICxSzGAixNyMY1Wxg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,188,1739865600"; 
-   d="scan'208";a="158308246"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 07:09:30 -0700
-Received: from [10.246.136.14] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.14])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 10E0120B5736;
-	Fri,  4 Apr 2025 07:09:27 -0700 (PDT)
-Message-ID: <c21d05c6-d71c-47e3-b4a2-e275d9d487f2@linux.intel.com>
-Date: Fri, 4 Apr 2025 10:09:27 -0400
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MhXqLqpa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBB8FC4CEEA;
+	Fri,  4 Apr 2025 14:10:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743775831;
+	bh=l2lzsNRrga+hAwlZPw2hZyVI7hOngQ48zjWgc72CGr4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=MhXqLqpa43mJjzUE+SiXJTbXwmVJ/HY6gBTctJU9FfRezIv1qLjartTS85rOgNg9a
+	 ZhN4HzOepVa85NDLlDWJODei3AOF6LINQBifXsj/9vcNkRNTNwOPyODWr//oY7SEXN
+	 pqbYfSz27XnI8DD+h0GaWdbcrDerOqpp+11Vuj4JYUOWKhgGITX67L3hbAOFtsPvzb
+	 xSZsVs/S+Pr54A87UysNCn/RkaXJaFv8XaW0L8BHyTXXNGj+g0awaZqTwq7UI8BMyg
+	 xtscO/vdTlk2M4zdjpWE5iml8FERUp0D7y1vv/91pL6IP0dkPhJrxNVtmC/K/73oRz
+	 naujA3WQObjpA==
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5e8be1c6ff8so3930496a12.1;
+        Fri, 04 Apr 2025 07:10:31 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU/HYiGx+FtNlR0TJnhe7+dbJvVvv7BYPCwwZZo9fMVyvGbkX9tfWUnNX9BRkWoEprg6QftNlycD/s5TKXbgA==@vger.kernel.org, AJvYcCUos1Wh+k96Mi1ay6x95OdBl2SSUiCVU6x1cIGINxc6URxwBLL27rGQN1VpTyTRXHqw/spppzw0BZvgka7M@vger.kernel.org, AJvYcCVXPYNlFRTU02+YVTQxTRvhY5j2eViWk+Ovzog7Ace3rtWp7gqtkEIJ52spXoszvWLm/2RLVBt7TXAhOA==@vger.kernel.org, AJvYcCWNuIi+rmAmwcOj9DrGjyfQmNW/qTFhmN+spqonpP2xpoqWsllRlFQtmOp5Ii2+ZmcJJiQ+/LGok3Y=@vger.kernel.org, AJvYcCXtyMtivy0pcEqlmg0HQOgccg+nhvSVoIcPCPep5ZVvMwJNavu7fEFoLrq4aHHe2K9thFum/xrdpHNDLrAP7g/kq/I=@vger.kernel.org, AJvYcCXwxksWcrYmHTidxE/WhYC+nvwzz2VVYWJY2GQhpxm64w/jlm5iRi9UkZtIrUwFbjkfzqhHcMdmYPuH@vger.kernel.org
+X-Gm-Message-State: AOJu0YwplwxXZQtHN5Tufv1r0UvtwQjoAVFhjReRqL4FlNwQErvoQ07w
+	vCfAQb3Qh0Dn4NUnMZCpw+BvMbvyf36umQj8+Y/4wtF5vRYr1eNWx2gJVX41k5hdVw3IWZxN6AO
+	3NsIg60Bo42Ay0iiFS8/F0ExQKw==
+X-Google-Smtp-Source: AGHT+IGYXjl+q1G3Ghk1zMOjaKXndZfqYp9hiiK7OTWs/zAZNM/+0QVdqEQQ+zuW4YRtKHDm+WaT1WT3knVA25eifPc=
+X-Received: by 2002:a05:6402:3481:b0:5ed:921a:ded6 with SMTP id
+ 4fb4d7f45d1cf-5f0b657862emr2694084a12.18.1743775830233; Fri, 04 Apr 2025
+ 07:10:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 0/4] Add support for cpu event term
-To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Leo Yan <leo.yan@arm.com>, James Clark <james.clark@linaro.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Weilin Wang <weilin.wang@intel.com>, Andi Kleen <ak@linux.intel.com>,
- Dominique Martinet <asmadeus@codewreck.org>,
- Yicong Yang <yangyicong@hisilicon.com>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250403194337.40202-1-irogers@google.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20250403194337.40202-1-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250403-dt-cpu-schema-v1-0-076be7171a85@kernel.org>
+ <20250403-dt-cpu-schema-v1-6-076be7171a85@kernel.org> <Z-_K2XDEcbtcCMVM@linaro.org>
+ <CAL_JsqJT-0gwvJnMb63izy6WwJpBVsswkauL8OMLCrF08q9HYQ@mail.gmail.com>
+In-Reply-To: <CAL_JsqJT-0gwvJnMb63izy6WwJpBVsswkauL8OMLCrF08q9HYQ@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Date: Fri, 4 Apr 2025 09:10:18 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJDkoj4d-aKvZ92kZ1mikqjJV4J4w=-3eNk3z6q6g0ssw@mail.gmail.com>
+X-Gm-Features: ATxdqUGgk50-VgqfiN2r-WHP1-0cyp1Dem4hGHbf6672N4-b5gggSNdLRbwnjDg
+Message-ID: <CAL_JsqJDkoj4d-aKvZ92kZ1mikqjJV4J4w=-3eNk3z6q6g0ssw@mail.gmail.com>
+Subject: Re: [PATCH 06/19] arm64: dts: qcom: msm8939: Fix CPU node
+ "enable-method" property dependencies
+To: Stephan Gerhold <stephan.gerhold@linaro.org>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Samuel Holland <samuel@sholland.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Viresh Kumar <viresh.kumar@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Vincenzo Frascino <vincenzo.frascino@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, 
+	Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Viresh Kumar <vireshk@kernel.org>, 
+	Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, zhouyanjie@wanyeetech.com, 
+	Conor Dooley <conor@kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, 
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>, Steen Hegelund <Steen.Hegelund@microchip.com>, 
+	Daniel Machon <daniel.machon@microchip.com>, UNGLinuxDriver@microchip.com, 
+	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
+	Heiko Stuebner <heiko@sntech.de>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, 
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	linux-pm@vger.kernel.org, linux-mediatek@lists.infradead.org, 
+	linux-arm-msm@vger.kernel.org, linux-mips@vger.kernel.org, 
+	imx@lists.linux.dev, linux-rockchip@lists.infradead.org, 
+	linux-amlogic@lists.infradead.org, linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, Apr 4, 2025 at 8:18=E2=80=AFAM Rob Herring <robh@kernel.org> wrote:
+>
+> On Fri, Apr 4, 2025 at 7:04=E2=80=AFAM Stephan Gerhold
+> <stephan.gerhold@linaro.org> wrote:
+> >
+> > On Thu, Apr 03, 2025 at 09:59:27PM -0500, Rob Herring (Arm) wrote:
+> > > The "qcom,acc" and "qcom,saw" properties aren't valid with "spin-tabl=
+e"
+> > > enable-method nor are they used on 64-bit kernels, so they can be
+> > > dropped.
+> > >
+> >
+> > The bootloader we currently use on these devices reads these properties
+> > to set up the spin-table, so removing these will break booting secondar=
+y
+> > CPU cores.
+> >
+> > The motivation for implementing it that way was that 32-bit vs 64-bit
+> > kernel shouldn't be relevant for the describing the hardware blocks in
+> > the device tree. The code in the bootloader is generic and handles
+> > different SoCs (e.g. msm8916 with 4 cores and msm8939 with 8 cores, the
+> > enable sequences are identical).
+> >
+> > Can we keep this in somehow? To be fair, I'm not sure what property we
+> > could match on to check if these properties are allowed ...
+>
+> Yes, we can keep them. We'll have to allow them with "spin-table" and
+> "psci" I guess.
+
+I came up with something like this instead:
+
+- if:
+  # 2 Qualcomm platforms bootloaders need qcom,acc and qcom,saw yet use
+  # "spin-table" or "psci" enable-methods. Disallowing the properties for
+  # all other CPUs is the best we can do as there's not any way to
+  # distinguish these Qualcomm platforms.
+    properties:
+      compatible:
+        not:
+          const: arm,cortex-a53
+  then:
+    properties:
+      qcom,acc: false
+      qcom,saw: false
+
+Not ideal as there are lots of A53s, but better than enabling for
+every 64-bit platform.
 
 
+Also, is adding the cpu-release-addr fine? It could trip up a
+bootloader tests if the property is already present and doesn't update
+it in that case.
 
-On 2025-04-03 3:43 p.m., Ian Rogers wrote:
-> Being able to set the cpu mask per event was discussed in the context
-> of a sysfs event.cpus file is discussed here:
-> https://lore.kernel.org/lkml/CAP-5=fXXuWchzUK0n5KTH8kamr=DQoEni+bUoo8f-4j8Y+eMBg@mail.gmail.com/
-> Ultimately Kan preferred to have multiple PMUs with a cpumask each
-> rather than an event.cpus file per event. It is still useful to have
-> the cpu event term and so the sysfs part of the original patch series
-> is dropped.
-> 
-> v6: Purely a rebase.
-> v5: Purely a rebase.
-> v4: Add the stat-display output change for zero counters Namhyung
->     requested as part of the series:
->     https://lore.kernel.org/lkml/Zvx9VbJWtmkcuSBs@google.com/
->     This skips zero values for CPUs not in the evsel's cpumask rather
->     than the evsel's PMU's cpumask.
-> v3: Drop sysfs event.cpus file support patch from series.  Reference
->     to using cpu to modify uncore events is dropped from the commit
->     message. Reference counting issues on the cpumap are addressed.
-> v2: Add support for multiple cpu terms on an event that are
->     merged. For example, an event of "l1d-misses/cpu=4,cpu=5/" will
->     now be opened on both CPU 4 and 5 rather than just CPU 4.
-> 
-> Ian Rogers (4):
->   libperf cpumap: Add ability to create CPU from a single CPU number
->   perf stat: Use counter cpumask to skip zero values
->   perf parse-events: Set is_pmu_core for legacy hardware events
->   perf parse-events: Add "cpu" term to set the CPU an event is recorded
->     on
-
-Tried on a Hybrid platform. Everything looks good.
-
-Tested-by: Kan Liang <kan.liang@linux.intel.com>
-
-Thanks,
-Kan>
->  tools/lib/perf/cpumap.c                |  10 +++
->  tools/lib/perf/include/perf/cpumap.h   |   2 +
->  tools/perf/Documentation/perf-list.txt |   9 ++
->  tools/perf/util/evsel_config.h         |   1 +
->  tools/perf/util/parse-events.c         | 113 ++++++++++++++++++-------
->  tools/perf/util/parse-events.h         |   3 +-
->  tools/perf/util/parse-events.l         |   1 +
->  tools/perf/util/pmu.c                  |   3 +-
->  tools/perf/util/stat-display.c         |  21 +++--
->  9 files changed, 124 insertions(+), 39 deletions(-)
-> 
-
+Rob
