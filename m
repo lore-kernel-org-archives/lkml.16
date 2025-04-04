@@ -1,205 +1,879 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8DBB1C5F07
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 10:29:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C49E21DF969
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 10:29:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743762581; cv=none; b=LqNorxjapFEQaXQ1USmSwOP6KuXaFXIreFZF++wE17RQVZSLXIr87nrgG8poQS5x+RhlKS1XzlMUBI3p1iHbo9XnFkP1rsZwFchcB0ch2J82hzCG2hmA3VADfOiJfW8PS84N/ZYK+H35kehUDJxT63h+Xc5gSU4i7XaSppiWhhw=
+	t=1743762579; cv=none; b=g3d1WFBd3fZ+5oDO7Q8q+x2Tsh/65O1FKt0LTV/DvgYyAlJTMw9m7EjVQ/fuBQ9iynui8/ygdPTzVYm8SegxlmlpWEO6ivvDK1eqVu272HD9n18Pa2pV8ATpXWNd6tEyc+8bv1aVfSkGksb+KV3dYFFecEprvAi0YNoKMBFG9Is=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743762581; c=relaxed/simple;
-	bh=mLcDru8eInjU0uOo91bIFQt4AIpvVW2OtKNAkdmIfV8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tQPGxt5AGC516UTNtlwzWfyhG4Z6DlBewlkttwWe0KpuCxd2ywrw7APkDvL7wumfxtlXHUq2rT/3rb47q78Q7xeXrp4tYq0cfrm5VeFjIW4xEbah0qylknuHacOMWHhrb5GdEgpbIUafIwxk9ffj3bhOwqHl3jGrYVhaBd3O82o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org; spf=none smtp.mailfrom=blackwall.org; dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b=qPPXEGtH; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=blackwall.org
+	s=arc-20240116; t=1743762579; c=relaxed/simple;
+	bh=CnGisSdUMgZmT1g+dRY1dxa5R+FZNycVlK/w/d90e7g=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=uUBoK3OA32sJsFpbIsdA3BW1YfK0yaoK1j5LveSSu9tMjXG3E2lQZVNJKCUjupXZK0WKwaINnkJS2qcpX1P9RWEsy3+3MqT/yWg5idyJiXLKyCuiJQHd5/vyZqK5yROXVRqovMbWbgawSQ5gkz1diGMgNn+nMVzEvHDCPB1q/88=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aJcxDyBS; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b="qPPXEGtH"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43ce70f9afbso19548625e9.0
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 03:29:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=blackwall-org.20230601.gappssmtp.com; s=20230601; t=1743762577; x=1744367377; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=4D5zlP7j1AtzmdD+fdYHZGrIA+c23RJYKMOt2bRJjqs=;
-        b=qPPXEGtHxrTS76JuycV1G2jNK4SiFQ+ocBJbfgVpdOGp3gAiIEb5mvVJQ6IPyBTuTt
-         hXZHMB2NXCXqeKmH6k20SVcXLyGDE3KdosWpnbAj8TWbudnesnLKK2qWZZ0Cn29zIO43
-         uYQ1nAp4IVKXyDK2x5KWZJrxW1xLF5jmto3ETasN0bGbliTLjZ4dxxFvMCNP4cZBYeK8
-         TGxEMhPlVn93W2hKHsdorKITagDbIQYFQUjCTmUjfw25TVplvju+YMtbXOC/ycr+c9YS
-         R/OogwrDyb9fbbFnbCd9blqXGeXCWS+ZCwrkngYavXBmTncuWCdYdmpbypqfmFZpFCxX
-         c3Dw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aJcxDyBS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743762575;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=j5MqRx8rKecmKEsI9m0q4clCM4JP8q1qj8d7wHp+XCA=;
+	b=aJcxDyBSIUDpOaKVzDtd46Av61RSezBQpKwFjIcWtqdpbW3ZCL2DuWDw/Ctft90z4Px7hn
+	RAO3vG2QFJ+gv/N+UJCip0rGPT06vSf24Beh9qG0sZGY2TIuI++hKh4ck5JYmTHnVeiepc
+	gPxabANwJHOORQs5lWzryvOPxt15rMs=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-203-kPPyBls2PhauiKmAsJyfVw-1; Fri, 04 Apr 2025 06:29:34 -0400
+X-MC-Unique: kPPyBls2PhauiKmAsJyfVw-1
+X-Mimecast-MFC-AGG-ID: kPPyBls2PhauiKmAsJyfVw_1743762573
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-ac27f00a8a5so143183466b.3
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 03:29:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743762577; x=1744367377;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4D5zlP7j1AtzmdD+fdYHZGrIA+c23RJYKMOt2bRJjqs=;
-        b=Y5bHUbX5uoNKKkLWs32bIcn4veLMAiCgD4LZA7Tg8mo+no8walRUkLYeSipcKAWDDr
-         WRDqIZ7YFdjH4vhUcqJh+XxzE0vVAbZQHMBhVAb1Hmc04RIXxQEbedvEkA4IlN1d3s/x
-         Z9SV0gTEiEeB1cW9511A43qbInyS167cI9l0YZoQQcuZPQwVzF+CSE4N2HIj+TKi2T2h
-         hmIgaSLbRDX1WQwe0rw5cvP3DFHqH8C3y5K1thTdlcNXC0XpQpXlcZXcd48urXSiHJm+
-         EI6slJ9i4q+wJeGxgfve3EIo29OM5jMKi9a+4/tsjblS24K+7fTRS9iu0j0OuaiIzTEj
-         O3bg==
-X-Forwarded-Encrypted: i=1; AJvYcCXL9v74b03pwETxUhUqWaR1gjBLmHFqZHsZCA84b06WbAWzVVkp/tACA++3jkh/omxUEvnYdVVC5MfE9pU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz8i9rxDxsI0VmGr1QOacY11FHCAWkXxDzkD8MYSOE2fA2YHpqA
-	CvwxYt/jv2jfIH4r9tPwxSxZHcIbRjqWqq7lRmubyhPOimMSslqlSCRVnYFQ0Tg=
-X-Gm-Gg: ASbGncsQiDtd27SXOC1O40o5AJlxMYggvqcGNcE0RwUHruYpInan9HeXLRNn3wNhi1Q
-	chEIjXLKkCE5XclZfebUER8oVCFCAibkTpMWArK7yrrWH74gjZZ+iYkkqVZzUy4Nw1QxM4zdW82
-	fKkMi2AAxiD1ZMmZHXk4GFDx5t8qnCLMoD1cbdPHpeUNu46dICm9wjSgGG1LVvAgUjjLL9BVTr+
-	VBLF9kUQHjzyYEMnKxuG4XAgDktJncMH/0W7kEdxq0aFvjwWs5DEzvEFaTwkASh3qR8+++ckFo3
-	e9GRP+fDpShdVgs4oIGLynA1n7HjpR4/+dQlU3nJi9NBwoMmGtFHcC9m97YjPHlBEI8LcOYk25l
-	1
-X-Google-Smtp-Source: AGHT+IEZYWLp5+FLqhn6UpFvGJp4isiBgQ145JbwTaagvs7RNoWX3qphA42f4gPmOqeyRlDNvtcuXQ==
-X-Received: by 2002:a05:600c:1994:b0:43c:ebc4:36a5 with SMTP id 5b1f17b1804b1-43ed0b4816dmr14529555e9.7.1743762576664;
-        Fri, 04 Apr 2025 03:29:36 -0700 (PDT)
-Received: from [192.168.0.205] (78-154-15-142.ip.btc-net.bg. [78.154.15.142])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec34a895fsm42197425e9.13.2025.04.04.03.29.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Apr 2025 03:29:36 -0700 (PDT)
-Message-ID: <36c7286d-b410-4695-b069-f79605feade4@blackwall.org>
-Date: Fri, 4 Apr 2025 13:29:35 +0300
+        d=1e100.net; s=20230601; t=1743762573; x=1744367373;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=j5MqRx8rKecmKEsI9m0q4clCM4JP8q1qj8d7wHp+XCA=;
+        b=w0RgxXmwieFvETX/vc1PdDg7N2brO78uKWAWsFiUVRn01uhm1b0E8x2XhUJLocFSce
+         8DQElMfVWrLSVEV/pIgdYVjjNJmxRIvVFv5A6G5dg4Xnbiai0oUSSSx/wpJdS+hlO+06
+         oALZroadPntVe2PgY/TYJqK++5MP9UQjmHEc3CPIY/FqVBz2d9D29nKoI4IaWtZJtdV7
+         RgUW8N+OGL2bC5VJV2Ey6Lg7vUMj3ko5Z6LLoDWa0yj8XS1TrrHZRqiJZ14o8pZmeSDM
+         xX10O3XKFa9CkvbCgrt4JFmIrDb44qPOhc6NSwDsBGsb758eZmObBNOtq4ZCbEtUo2ET
+         8rMA==
+X-Gm-Message-State: AOJu0YyiVac5wyoklwcOUNvD2a3siGuWz0voUYp7Uo+IlXUmZK4LsMCR
+	BTOA5WRffzUWXtkVXxIwkmAfBRKDPTfh6HXqscS/RMaEc6ujEUz6ePF5bjyiWy5t45vPqlxFMRu
+	g0XH7h5a4KpsMBuL1IuRBm+xOtZ+V/YjKJGPlaAjxLlZq4rohwxRkYz4hI3l2SO0LGBvagiqM1f
+	hdUyvityuZmipmvizVYciDPtaWaNUxC8lsPfCwxanMLz1GfA==
+X-Gm-Gg: ASbGncsbFuXoM7HRDC8Ms218Y3YHqK4xyyD4vZQmBE2FgBEmb+Ugw1/+z92+OENz3OR
+	hvF9KC7qnlFLhx+ytpmPACbbhSu+5a7QosB2+ob08DCWLTiOB0zrMjFWfAGKYv4z4BN3T1/IwTO
+	UzH9+4dj1is3FPJmxeC9i4Zqlwik1h33ckxJdiziXs8KO8T53j/WTUZkMvkjpA0MeaxV2QNmILL
+	AjQb26WbbmVmlA81wjwYhuqrFjq6fZsew2pKRRlWz9yTXQSA01ZoJBQBhwMUNC8UgWSXa63v+yQ
+	mmkJiQVHWMyl476gCYb3
+X-Received: by 2002:a17:907:97cd:b0:ac3:8537:904e with SMTP id a640c23a62f3a-ac7d6f1b6a3mr158990866b.49.1743762572252;
+        Fri, 04 Apr 2025 03:29:32 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFoWybIi6xBVg/aMencX10xR0oUAn/mlt2+KoUr5i2dDQh9XWIAXEK2jiDUiRR6Mz1lhLOy/Q==
+X-Received: by 2002:a17:907:97cd:b0:ac3:8537:904e with SMTP id a640c23a62f3a-ac7d6f1b6a3mr158985566b.49.1743762571089;
+        Fri, 04 Apr 2025 03:29:31 -0700 (PDT)
+Received: from [192.168.122.1] ([151.49.230.224])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7c013ebe9sm233275866b.99.2025.04.04.03.29.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Apr 2025 03:29:30 -0700 (PDT)
+From: Paolo Bonzini <pbonzini@redhat.com>
+To: linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org
+Subject: [PATCH 4/5] Documentation: kvm: organize capabilities in the right section
+Date: Fri,  4 Apr 2025 12:29:18 +0200
+Message-ID: <20250404102919.171952-5-pbonzini@redhat.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250404102919.171952-1-pbonzini@redhat.com>
+References: <20250404102919.171952-1-pbonzini@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v2 net-next 3/3] net: bridge: mcast: Notify on mdb offload
- failure
-To: Joseph Huang <Joseph.Huang@garmin.com>, netdev@vger.kernel.org
-Cc: Joseph Huang <joseph.huang.2024@gmail.com>,
- Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Roopa Prabhu <roopa@nvidia.com>, Simon Horman <horms@kernel.org>,
- linux-kernel@vger.kernel.org, bridge@lists.linux.dev
-References: <20250403234412.1531714-1-Joseph.Huang@garmin.com>
- <20250403234412.1531714-4-Joseph.Huang@garmin.com>
-Content-Language: en-US
-From: Nikolay Aleksandrov <razor@blackwall.org>
-In-Reply-To: <20250403234412.1531714-4-Joseph.Huang@garmin.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 4/4/25 02:44, Joseph Huang wrote:
-> Notify user space on mdb offload failure if mdb_offload_fail_notification
-> is set.
-> 
-> Signed-off-by: Joseph Huang <Joseph.Huang@garmin.com>
-> ---
->  net/bridge/br_mdb.c       | 26 +++++++++++++++++++++-----
->  net/bridge/br_private.h   |  9 +++++++++
->  net/bridge/br_switchdev.c |  4 ++++
->  3 files changed, 34 insertions(+), 5 deletions(-)
-> 
+Categorize the capabilities correctly.  Section 6 is for enabled vCPU
+capabilities; section 7 is for enabled VM capabilities; section 8 is
+for informational ones.
 
-The patch looks good, but one question - it seems we'll mark mdb entries with
-"offload failed" when we get -EOPNOTSUPP as an error as well. Is that intended?
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+---
+ Documentation/virt/kvm/api.rst | 678 +++++++++++++++++----------------
+ 1 file changed, 340 insertions(+), 338 deletions(-)
 
-That is, if the option is enabled and we have mixed bridge ports, we'll mark mdbs
-to the non-switch ports as offload failed, but it is not due to a switch offload
-error.
-
-> diff --git a/net/bridge/br_mdb.c b/net/bridge/br_mdb.c
-> index 0639691cd19b..5f53f387d251 100644
-> --- a/net/bridge/br_mdb.c
-> +++ b/net/bridge/br_mdb.c
-> @@ -519,16 +519,17 @@ static size_t rtnl_mdb_nlmsg_size(const struct net_bridge_port_group *pg)
->  	       rtnl_mdb_nlmsg_pg_size(pg);
->  }
->  
-> -void br_mdb_notify(struct net_device *dev,
-> -		   struct net_bridge_mdb_entry *mp,
-> -		   struct net_bridge_port_group *pg,
-> -		   int type)
-> +static void __br_mdb_notify(struct net_device *dev,
-> +			    struct net_bridge_mdb_entry *mp,
-> +			    struct net_bridge_port_group *pg,
-> +			    int type, bool notify_switchdev)
->  {
->  	struct net *net = dev_net(dev);
->  	struct sk_buff *skb;
->  	int err = -ENOBUFS;
->  
-> -	br_switchdev_mdb_notify(dev, mp, pg, type);
-> +	if (notify_switchdev)
-> +		br_switchdev_mdb_notify(dev, mp, pg, type);
->  
->  	skb = nlmsg_new(rtnl_mdb_nlmsg_size(pg), GFP_ATOMIC);
->  	if (!skb)
-> @@ -546,6 +547,21 @@ void br_mdb_notify(struct net_device *dev,
->  	rtnl_set_sk_err(net, RTNLGRP_MDB, err);
->  }
->  
-> +void br_mdb_notify(struct net_device *dev,
-> +		   struct net_bridge_mdb_entry *mp,
-> +		   struct net_bridge_port_group *pg,
-> +		   int type)
-> +{
-> +	__br_mdb_notify(dev, mp, pg, type, true);
-> +}
-> +
-> +void br_mdb_flag_change_notify(struct net_device *dev,
-> +			       struct net_bridge_mdb_entry *mp,
-> +			       struct net_bridge_port_group *pg)
-> +{
-> +	__br_mdb_notify(dev, mp, pg, RTM_NEWMDB, false);
-> +}
-> +
->  static int nlmsg_populate_rtr_fill(struct sk_buff *skb,
->  				   struct net_device *dev,
->  				   int ifindex, u16 vid, u32 pid,
-> diff --git a/net/bridge/br_private.h b/net/bridge/br_private.h
-> index 02188b7ff8e6..fc43ccc06ccb 100644
-> --- a/net/bridge/br_private.h
-> +++ b/net/bridge/br_private.h
-> @@ -1005,6 +1005,8 @@ int br_mdb_hash_init(struct net_bridge *br);
->  void br_mdb_hash_fini(struct net_bridge *br);
->  void br_mdb_notify(struct net_device *dev, struct net_bridge_mdb_entry *mp,
->  		   struct net_bridge_port_group *pg, int type);
-> +void br_mdb_flag_change_notify(struct net_device *dev, struct net_bridge_mdb_entry *mp,
-> +			       struct net_bridge_port_group *pg);
->  void br_rtr_notify(struct net_device *dev, struct net_bridge_mcast_port *pmctx,
->  		   int type);
->  void br_multicast_del_pg(struct net_bridge_mdb_entry *mp,
-> @@ -1354,6 +1356,13 @@ br_multicast_set_pg_offload_flags(struct net_bridge_port_group *p,
->  	p->flags |= (offloaded ? MDB_PG_FLAGS_OFFLOAD :
->  		MDB_PG_FLAGS_OFFLOAD_FAILED);
->  }
-> +
-> +static inline bool
-> +br_mdb_should_notify(const struct net_bridge *br, u8 changed_flags)
-> +{
-> +	return br_opt_get(br, BROPT_MDB_OFFLOAD_FAIL_NOTIFICATION) &&
-> +		(changed_flags & MDB_PG_FLAGS_OFFLOAD_FAILED);
-> +}
->  #else
->  static inline int br_multicast_rcv(struct net_bridge_mcast **brmctx,
->  				   struct net_bridge_mcast_port **pmctx,
-> diff --git a/net/bridge/br_switchdev.c b/net/bridge/br_switchdev.c
-> index 40f0b16e4df8..9b5005d0742a 100644
-> --- a/net/bridge/br_switchdev.c
-> +++ b/net/bridge/br_switchdev.c
-> @@ -504,6 +504,7 @@ static void br_switchdev_mdb_complete(struct net_device *dev, int err, void *pri
->  	struct net_bridge_mdb_entry *mp;
->  	struct net_bridge_port *port = data->port;
->  	struct net_bridge *br = port->br;
-> +	u8 old_flags;
->  
->  	spin_lock_bh(&br->multicast_lock);
->  	mp = br_mdb_ip_get(br, &data->ip);
-> @@ -514,7 +515,10 @@ static void br_switchdev_mdb_complete(struct net_device *dev, int err, void *pri
->  		if (p->key.port != port)
->  			continue;
->  
-> +		old_flags = p->flags;
->  		br_multicast_set_pg_offload_flags(p, !err);
-> +		if (br_mdb_should_notify(br, old_flags ^ p->flags))
-> +			br_mdb_flag_change_notify(br->dev, mp, p);
->  	}
->  out:
->  	spin_unlock_bh(&br->multicast_lock);
+diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
+index e5e7fd42b47c..469b64d229a6 100644
+--- a/Documentation/virt/kvm/api.rst
++++ b/Documentation/virt/kvm/api.rst
+@@ -7458,6 +7458,75 @@ Unused bitfields in the bitarrays must be set to zero.
+ 
+ This capability connects the vcpu to an in-kernel XIVE device.
+ 
++6.76 KVM_CAP_HYPERV_SYNIC
++-------------------------
++
++:Architectures: x86
++:Target: vcpu
++
++This capability, if KVM_CHECK_EXTENSION indicates that it is
++available, means that the kernel has an implementation of the
++Hyper-V Synthetic interrupt controller(SynIC). Hyper-V SynIC is
++used to support Windows Hyper-V based guest paravirt drivers(VMBus).
++
++In order to use SynIC, it has to be activated by setting this
++capability via KVM_ENABLE_CAP ioctl on the vcpu fd. Note that this
++will disable the use of APIC hardware virtualization even if supported
++by the CPU, as it's incompatible with SynIC auto-EOI behavior.
++
++6.77 KVM_CAP_HYPERV_SYNIC2
++--------------------------
++
++:Architectures: x86
++:Target: vcpu
++
++This capability enables a newer version of Hyper-V Synthetic interrupt
++controller (SynIC).  The only difference with KVM_CAP_HYPERV_SYNIC is that KVM
++doesn't clear SynIC message and event flags pages when they are enabled by
++writing to the respective MSRs.
++
++6.78 KVM_CAP_HYPERV_DIRECT_TLBFLUSH
++-----------------------------------
++
++:Architectures: x86
++:Target: vcpu
++
++This capability indicates that KVM running on top of Hyper-V hypervisor
++enables Direct TLB flush for its guests meaning that TLB flush
++hypercalls are handled by Level 0 hypervisor (Hyper-V) bypassing KVM.
++Due to the different ABI for hypercall parameters between Hyper-V and
++KVM, enabling this capability effectively disables all hypercall
++handling by KVM (as some KVM hypercall may be mistakenly treated as TLB
++flush hypercalls by Hyper-V) so userspace should disable KVM identification
++in CPUID and only exposes Hyper-V identification. In this case, guest
++thinks it's running on Hyper-V and only use Hyper-V hypercalls.
++
++6.79 KVM_CAP_HYPERV_ENFORCE_CPUID
++---------------------------------
++
++:Architectures: x86
++:Target: vcpu
++
++When enabled, KVM will disable emulated Hyper-V features provided to the
++guest according to the bits Hyper-V CPUID feature leaves. Otherwise, all
++currently implemented Hyper-V features are provided unconditionally when
++Hyper-V identification is set in the HYPERV_CPUID_INTERFACE (0x40000001)
++leaf.
++
++6.80 KVM_CAP_ENFORCE_PV_FEATURE_CPUID
++-------------------------------------
++
++:Architectures: x86
++:Target: vcpu
++
++When enabled, KVM will disable paravirtual features provided to the
++guest according to the bits in the KVM_CPUID_FEATURES CPUID leaf
++(0x40000001). Otherwise, a guest may use the paravirtual features
++regardless of what has actually been exposed through the CPUID leaf.
++
++.. _KVM_CAP_DIRTY_LOG_RING:
++
++
+ .. _cap_enable_vm:
+ 
+ 7. Capabilities that can be enabled on VMs
+@@ -7974,23 +8043,6 @@ default.
+ 
+ See Documentation/arch/x86/sgx.rst for more details.
+ 
+-7.26 KVM_CAP_PPC_RPT_INVALIDATE
+--------------------------------
+-
+-:Architectures: ppc
+-:Type: vm
+-
+-This capability indicates that the kernel is capable of handling
+-H_RPT_INVALIDATE hcall.
+-
+-In order to enable the use of H_RPT_INVALIDATE in the guest,
+-user space might have to advertise it for the guest. For example,
+-IBM pSeries (sPAPR) guest starts using it if "hcall-rpt-invalidate" is
+-present in the "ibm,hypertas-functions" device-tree property.
+-
+-This capability is enabled for hypervisors on platforms like POWER9
+-that support radix MMU.
+-
+ 7.27 KVM_CAP_EXIT_ON_EMULATION_FAILURE
+ --------------------------------------
+ 
+@@ -8048,19 +8100,6 @@ indicated by the fd to the VM this is called on.
+ This is intended to support intra-host migration of VMs between userspace VMMs,
+ upgrading the VMM process without interrupting the guest.
+ 
+-7.30 KVM_CAP_PPC_AIL_MODE_3
+--------------------------------
+-
+-:Architectures: ppc
+-:Type: vm
+-
+-This capability indicates that the kernel supports the mode 3 setting for the
+-"Address Translation Mode on Interrupt" aka "Alternate Interrupt Location"
+-resource that is controlled with the H_SET_MODE hypercall.
+-
+-This capability allows a guest kernel to use a better-performance mode for
+-handling interrupts and system calls.
+-
+ 7.31 KVM_CAP_DISABLE_QUIRKS2
+ ----------------------------
+ 
+@@ -8240,27 +8279,6 @@ This capability is aimed to mitigate the threat that malicious VMs can
+ cause CPU stuck (due to event windows don't open up) and make the CPU
+ unavailable to host or other VMs.
+ 
+-7.34 KVM_CAP_MEMORY_FAULT_INFO
+-------------------------------
+-
+-:Architectures: x86
+-:Returns: Informational only, -EINVAL on direct KVM_ENABLE_CAP.
+-
+-The presence of this capability indicates that KVM_RUN will fill
+-kvm_run.memory_fault if KVM cannot resolve a guest page fault VM-Exit, e.g. if
+-there is a valid memslot but no backing VMA for the corresponding host virtual
+-address.
+-
+-The information in kvm_run.memory_fault is valid if and only if KVM_RUN returns
+-an error with errno=EFAULT or errno=EHWPOISON *and* kvm_run.exit_reason is set
+-to KVM_EXIT_MEMORY_FAULT.
+-
+-Note: Userspaces which attempt to resolve memory faults so that they can retry
+-KVM_RUN are encouraged to guard against repeatedly receiving the same
+-error/annotated fault.
+-
+-See KVM_EXIT_MEMORY_FAULT for more information.
+-
+ 7.35 KVM_CAP_X86_APIC_BUS_CYCLES_NS
+ -----------------------------------
+ 
+@@ -8278,19 +8296,220 @@ by KVM_CHECK_EXTENSION.
+ Note: Userspace is responsible for correctly configuring CPUID 0x15, a.k.a. the
+ core crystal clock frequency, if a non-zero CPUID 0x15 is exposed to the guest.
+ 
+-7.36 KVM_CAP_X86_GUEST_MODE
+-------------------------------
++7.36 KVM_CAP_DIRTY_LOG_RING/KVM_CAP_DIRTY_LOG_RING_ACQ_REL
++----------------------------------------------------------
++
++:Architectures: x86, arm64
++:Type: vm
++:Parameters: args[0] - size of the dirty log ring
++
++KVM is capable of tracking dirty memory using ring buffers that are
++mmapped into userspace; there is one dirty ring per vcpu.
++
++The dirty ring is available to userspace as an array of
++``struct kvm_dirty_gfn``.  Each dirty entry is defined as::
++
++  struct kvm_dirty_gfn {
++          __u32 flags;
++          __u32 slot; /* as_id | slot_id */
++          __u64 offset;
++  };
++
++The following values are defined for the flags field to define the
++current state of the entry::
++
++  #define KVM_DIRTY_GFN_F_DIRTY           BIT(0)
++  #define KVM_DIRTY_GFN_F_RESET           BIT(1)
++  #define KVM_DIRTY_GFN_F_MASK            0x3
++
++Userspace should call KVM_ENABLE_CAP ioctl right after KVM_CREATE_VM
++ioctl to enable this capability for the new guest and set the size of
++the rings.  Enabling the capability is only allowed before creating any
++vCPU, and the size of the ring must be a power of two.  The larger the
++ring buffer, the less likely the ring is full and the VM is forced to
++exit to userspace. The optimal size depends on the workload, but it is
++recommended that it be at least 64 KiB (4096 entries).
++
++Just like for dirty page bitmaps, the buffer tracks writes to
++all user memory regions for which the KVM_MEM_LOG_DIRTY_PAGES flag was
++set in KVM_SET_USER_MEMORY_REGION.  Once a memory region is registered
++with the flag set, userspace can start harvesting dirty pages from the
++ring buffer.
++
++An entry in the ring buffer can be unused (flag bits ``00``),
++dirty (flag bits ``01``) or harvested (flag bits ``1X``).  The
++state machine for the entry is as follows::
++
++          dirtied         harvested        reset
++     00 -----------> 01 -------------> 1X -------+
++      ^                                          |
++      |                                          |
++      +------------------------------------------+
++
++To harvest the dirty pages, userspace accesses the mmapped ring buffer
++to read the dirty GFNs.  If the flags has the DIRTY bit set (at this stage
++the RESET bit must be cleared), then it means this GFN is a dirty GFN.
++The userspace should harvest this GFN and mark the flags from state
++``01b`` to ``1Xb`` (bit 0 will be ignored by KVM, but bit 1 must be set
++to show that this GFN is harvested and waiting for a reset), and move
++on to the next GFN.  The userspace should continue to do this until the
++flags of a GFN have the DIRTY bit cleared, meaning that it has harvested
++all the dirty GFNs that were available.
++
++Note that on weakly ordered architectures, userspace accesses to the
++ring buffer (and more specifically the 'flags' field) must be ordered,
++using load-acquire/store-release accessors when available, or any
++other memory barrier that will ensure this ordering.
++
++It's not necessary for userspace to harvest the all dirty GFNs at once.
++However it must collect the dirty GFNs in sequence, i.e., the userspace
++program cannot skip one dirty GFN to collect the one next to it.
++
++After processing one or more entries in the ring buffer, userspace
++calls the VM ioctl KVM_RESET_DIRTY_RINGS to notify the kernel about
++it, so that the kernel will reprotect those collected GFNs.
++Therefore, the ioctl must be called *before* reading the content of
++the dirty pages.
++
++The dirty ring can get full.  When it happens, the KVM_RUN of the
++vcpu will return with exit reason KVM_EXIT_DIRTY_LOG_FULL.
++
++The dirty ring interface has a major difference comparing to the
++KVM_GET_DIRTY_LOG interface in that, when reading the dirty ring from
++userspace, it's still possible that the kernel has not yet flushed the
++processor's dirty page buffers into the kernel buffer (with dirty bitmaps, the
++flushing is done by the KVM_GET_DIRTY_LOG ioctl).  To achieve that, one
++needs to kick the vcpu out of KVM_RUN using a signal.  The resulting
++vmexit ensures that all dirty GFNs are flushed to the dirty rings.
++
++NOTE: KVM_CAP_DIRTY_LOG_RING_ACQ_REL is the only capability that
++should be exposed by weakly ordered architecture, in order to indicate
++the additional memory ordering requirements imposed on userspace when
++reading the state of an entry and mutating it from DIRTY to HARVESTED.
++Architecture with TSO-like ordering (such as x86) are allowed to
++expose both KVM_CAP_DIRTY_LOG_RING and KVM_CAP_DIRTY_LOG_RING_ACQ_REL
++to userspace.
++
++After enabling the dirty rings, the userspace needs to detect the
++capability of KVM_CAP_DIRTY_LOG_RING_WITH_BITMAP to see whether the
++ring structures can be backed by per-slot bitmaps. With this capability
++advertised, it means the architecture can dirty guest pages without
++vcpu/ring context, so that some of the dirty information will still be
++maintained in the bitmap structure. KVM_CAP_DIRTY_LOG_RING_WITH_BITMAP
++can't be enabled if the capability of KVM_CAP_DIRTY_LOG_RING_ACQ_REL
++hasn't been enabled, or any memslot has been existing.
++
++Note that the bitmap here is only a backup of the ring structure. The
++use of the ring and bitmap combination is only beneficial if there is
++only a very small amount of memory that is dirtied out of vcpu/ring
++context. Otherwise, the stand-alone per-slot bitmap mechanism needs to
++be considered.
++
++To collect dirty bits in the backup bitmap, userspace can use the same
++KVM_GET_DIRTY_LOG ioctl. KVM_CLEAR_DIRTY_LOG isn't needed as long as all
++the generation of the dirty bits is done in a single pass. Collecting
++the dirty bitmap should be the very last thing that the VMM does before
++considering the state as complete. VMM needs to ensure that the dirty
++state is final and avoid missing dirty pages from another ioctl ordered
++after the bitmap collection.
++
++NOTE: Multiple examples of using the backup bitmap: (1) save vgic/its
++tables through command KVM_DEV_ARM_{VGIC_GRP_CTRL, ITS_SAVE_TABLES} on
++KVM device "kvm-arm-vgic-its". (2) restore vgic/its tables through
++command KVM_DEV_ARM_{VGIC_GRP_CTRL, ITS_RESTORE_TABLES} on KVM device
++"kvm-arm-vgic-its". VGICv3 LPI pending status is restored. (3) save
++vgic3 pending table through KVM_DEV_ARM_VGIC_{GRP_CTRL, SAVE_PENDING_TABLES}
++command on KVM device "kvm-arm-vgic-v3".
++
++7.37 KVM_CAP_PMU_CAPABILITY
++---------------------------
+ 
+ :Architectures: x86
+-:Returns: Informational only, -EINVAL on direct KVM_ENABLE_CAP.
++:Type: vm
++:Parameters: arg[0] is bitmask of PMU virtualization capabilities.
++:Returns: 0 on success, -EINVAL when arg[0] contains invalid bits
+ 
+-The presence of this capability indicates that KVM_RUN will update the
+-KVM_RUN_X86_GUEST_MODE bit in kvm_run.flags to indicate whether the
+-vCPU was executing nested guest code when it exited.
++This capability alters PMU virtualization in KVM.
+ 
+-KVM exits with the register state of either the L1 or L2 guest
+-depending on which executed at the time of an exit. Userspace must
+-take care to differentiate between these cases.
++Calling KVM_CHECK_EXTENSION for this capability returns a bitmask of
++PMU virtualization capabilities that can be adjusted on a VM.
++
++The argument to KVM_ENABLE_CAP is also a bitmask and selects specific
++PMU virtualization capabilities to be applied to the VM.  This can
++only be invoked on a VM prior to the creation of VCPUs.
++
++At this time, KVM_PMU_CAP_DISABLE is the only capability.  Setting
++this capability will disable PMU virtualization for that VM.  Usermode
++should adjust CPUID leaf 0xA to reflect that the PMU is disabled.
++
++7.38 KVM_CAP_VM_DISABLE_NX_HUGE_PAGES
++-------------------------------------
++
++:Architectures: x86
++:Type: vm
++:Parameters: arg[0] must be 0.
++:Returns: 0 on success, -EPERM if the userspace process does not
++          have CAP_SYS_BOOT, -EINVAL if args[0] is not 0 or any vCPUs have been
++          created.
++
++This capability disables the NX huge pages mitigation for iTLB MULTIHIT.
++
++The capability has no effect if the nx_huge_pages module parameter is not set.
++
++This capability may only be set before any vCPUs are created.
++
++7.39 KVM_CAP_ARM_EAGER_SPLIT_CHUNK_SIZE
++---------------------------------------
++
++:Architectures: arm64
++:Type: vm
++:Parameters: arg[0] is the new split chunk size.
++:Returns: 0 on success, -EINVAL if any memslot was already created.
++
++This capability sets the chunk size used in Eager Page Splitting.
++
++Eager Page Splitting improves the performance of dirty-logging (used
++in live migrations) when guest memory is backed by huge-pages.  It
++avoids splitting huge-pages (into PAGE_SIZE pages) on fault, by doing
++it eagerly when enabling dirty logging (with the
++KVM_MEM_LOG_DIRTY_PAGES flag for a memory region), or when using
++KVM_CLEAR_DIRTY_LOG.
++
++The chunk size specifies how many pages to break at a time, using a
++single allocation for each chunk. Bigger the chunk size, more pages
++need to be allocated ahead of time.
++
++The chunk size needs to be a valid block size. The list of acceptable
++block sizes is exposed in KVM_CAP_ARM_SUPPORTED_BLOCK_SIZES as a
++64-bit bitmap (each bit describing a block size). The default value is
++0, to disable the eager page splitting.
++
++7.40 KVM_CAP_EXIT_HYPERCALL
++---------------------------
++
++:Architectures: x86
++:Type: vm
++
++This capability, if enabled, will cause KVM to exit to userspace
++with KVM_EXIT_HYPERCALL exit reason to process some hypercalls.
++
++Calling KVM_CHECK_EXTENSION for this capability will return a bitmask
++of hypercalls that can be configured to exit to userspace.
++Right now, the only such hypercall is KVM_HC_MAP_GPA_RANGE.
++
++The argument to KVM_ENABLE_CAP is also a bitmask, and must be a subset
++of the result of KVM_CHECK_EXTENSION.  KVM will forward to userspace
++the hypercalls whose corresponding bit is in the argument, and return
++ENOSYS for the others.
++
++7.41 KVM_CAP_ARM_SYSTEM_SUSPEND
++-------------------------------
++
++:Architectures: arm64
++:Type: vm
++
++When enabled, KVM will exit to userspace with KVM_EXIT_SYSTEM_EVENT of
++type KVM_SYSTEM_EVENT_SUSPEND to process the guest suspend request.
+ 
+ 8. Other capabilities.
+ ======================
+@@ -8309,21 +8528,6 @@ H_RANDOM hypercall backed by a hardware random-number generator.
+ If present, the kernel H_RANDOM handler can be enabled for guest use
+ with the KVM_CAP_PPC_ENABLE_HCALL capability.
+ 
+-8.2 KVM_CAP_HYPERV_SYNIC
+-------------------------
+-
+-:Architectures: x86
+-
+-This capability, if KVM_CHECK_EXTENSION indicates that it is
+-available, means that the kernel has an implementation of the
+-Hyper-V Synthetic interrupt controller(SynIC). Hyper-V SynIC is
+-used to support Windows Hyper-V based guest paravirt drivers(VMBus).
+-
+-In order to use SynIC, it has to be activated by setting this
+-capability via KVM_ENABLE_CAP ioctl on the vcpu fd. Note that this
+-will disable the use of APIC hardware virtualization even if supported
+-by the CPU, as it's incompatible with SynIC auto-EOI behavior.
+-
+ 8.3 KVM_CAP_PPC_MMU_RADIX
+ -------------------------
+ 
+@@ -8469,16 +8673,6 @@ virtual SMT modes that can be set using KVM_CAP_PPC_SMT.  If bit N
+ (counting from the right) is set, then a virtual SMT mode of 2^N is
+ available.
+ 
+-8.11 KVM_CAP_HYPERV_SYNIC2
+---------------------------
+-
+-:Architectures: x86
+-
+-This capability enables a newer version of Hyper-V Synthetic interrupt
+-controller (SynIC).  The only difference with KVM_CAP_HYPERV_SYNIC is that KVM
+-doesn't clear SynIC message and event flags pages when they are enabled by
+-writing to the respective MSRs.
+-
+ 8.12 KVM_CAP_HYPERV_VP_INDEX
+ ----------------------------
+ 
+@@ -8493,7 +8687,6 @@ capability is absent, userspace can still query this msr's value.
+ -------------------------------
+ 
+ :Architectures: s390
+-:Parameters: none
+ 
+ This capability indicates if the flic device will be able to get/set the
+ AIS states for migration via the KVM_DEV_FLIC_AISM_ALL attribute and allows
+@@ -8567,21 +8760,6 @@ This capability indicates that KVM supports paravirtualized Hyper-V IPI send
+ hypercalls:
+ HvCallSendSyntheticClusterIpi, HvCallSendSyntheticClusterIpiEx.
+ 
+-8.21 KVM_CAP_HYPERV_DIRECT_TLBFLUSH
+------------------------------------
+-
+-:Architectures: x86
+-
+-This capability indicates that KVM running on top of Hyper-V hypervisor
+-enables Direct TLB flush for its guests meaning that TLB flush
+-hypercalls are handled by Level 0 hypervisor (Hyper-V) bypassing KVM.
+-Due to the different ABI for hypercall parameters between Hyper-V and
+-KVM, enabling this capability effectively disables all hypercall
+-handling by KVM (as some KVM hypercall may be mistakenly treated as TLB
+-flush hypercalls by Hyper-V) so userspace should disable KVM identification
+-in CPUID and only exposes Hyper-V identification. In this case, guest
+-thinks it's running on Hyper-V and only use Hyper-V hypercalls.
+-
+ 8.22 KVM_CAP_S390_VCPU_RESETS
+ -----------------------------
+ 
+@@ -8659,142 +8837,6 @@ In combination with KVM_CAP_X86_USER_SPACE_MSR, this allows user space to
+ trap and emulate MSRs that are outside of the scope of KVM as well as
+ limit the attack surface on KVM's MSR emulation code.
+ 
+-8.28 KVM_CAP_ENFORCE_PV_FEATURE_CPUID
+--------------------------------------
+-
+-:Architectures: x86
+-
+-When enabled, KVM will disable paravirtual features provided to the
+-guest according to the bits in the KVM_CPUID_FEATURES CPUID leaf
+-(0x40000001). Otherwise, a guest may use the paravirtual features
+-regardless of what has actually been exposed through the CPUID leaf.
+-
+-.. _KVM_CAP_DIRTY_LOG_RING:
+-
+-8.29 KVM_CAP_DIRTY_LOG_RING/KVM_CAP_DIRTY_LOG_RING_ACQ_REL
+-----------------------------------------------------------
+-
+-:Architectures: x86, arm64
+-:Parameters: args[0] - size of the dirty log ring
+-
+-KVM is capable of tracking dirty memory using ring buffers that are
+-mmapped into userspace; there is one dirty ring per vcpu.
+-
+-The dirty ring is available to userspace as an array of
+-``struct kvm_dirty_gfn``.  Each dirty entry is defined as::
+-
+-  struct kvm_dirty_gfn {
+-          __u32 flags;
+-          __u32 slot; /* as_id | slot_id */
+-          __u64 offset;
+-  };
+-
+-The following values are defined for the flags field to define the
+-current state of the entry::
+-
+-  #define KVM_DIRTY_GFN_F_DIRTY           BIT(0)
+-  #define KVM_DIRTY_GFN_F_RESET           BIT(1)
+-  #define KVM_DIRTY_GFN_F_MASK            0x3
+-
+-Userspace should call KVM_ENABLE_CAP ioctl right after KVM_CREATE_VM
+-ioctl to enable this capability for the new guest and set the size of
+-the rings.  Enabling the capability is only allowed before creating any
+-vCPU, and the size of the ring must be a power of two.  The larger the
+-ring buffer, the less likely the ring is full and the VM is forced to
+-exit to userspace. The optimal size depends on the workload, but it is
+-recommended that it be at least 64 KiB (4096 entries).
+-
+-Just like for dirty page bitmaps, the buffer tracks writes to
+-all user memory regions for which the KVM_MEM_LOG_DIRTY_PAGES flag was
+-set in KVM_SET_USER_MEMORY_REGION.  Once a memory region is registered
+-with the flag set, userspace can start harvesting dirty pages from the
+-ring buffer.
+-
+-An entry in the ring buffer can be unused (flag bits ``00``),
+-dirty (flag bits ``01``) or harvested (flag bits ``1X``).  The
+-state machine for the entry is as follows::
+-
+-          dirtied         harvested        reset
+-     00 -----------> 01 -------------> 1X -------+
+-      ^                                          |
+-      |                                          |
+-      +------------------------------------------+
+-
+-To harvest the dirty pages, userspace accesses the mmapped ring buffer
+-to read the dirty GFNs.  If the flags has the DIRTY bit set (at this stage
+-the RESET bit must be cleared), then it means this GFN is a dirty GFN.
+-The userspace should harvest this GFN and mark the flags from state
+-``01b`` to ``1Xb`` (bit 0 will be ignored by KVM, but bit 1 must be set
+-to show that this GFN is harvested and waiting for a reset), and move
+-on to the next GFN.  The userspace should continue to do this until the
+-flags of a GFN have the DIRTY bit cleared, meaning that it has harvested
+-all the dirty GFNs that were available.
+-
+-Note that on weakly ordered architectures, userspace accesses to the
+-ring buffer (and more specifically the 'flags' field) must be ordered,
+-using load-acquire/store-release accessors when available, or any
+-other memory barrier that will ensure this ordering.
+-
+-It's not necessary for userspace to harvest the all dirty GFNs at once.
+-However it must collect the dirty GFNs in sequence, i.e., the userspace
+-program cannot skip one dirty GFN to collect the one next to it.
+-
+-After processing one or more entries in the ring buffer, userspace
+-calls the VM ioctl KVM_RESET_DIRTY_RINGS to notify the kernel about
+-it, so that the kernel will reprotect those collected GFNs.
+-Therefore, the ioctl must be called *before* reading the content of
+-the dirty pages.
+-
+-The dirty ring can get full.  When it happens, the KVM_RUN of the
+-vcpu will return with exit reason KVM_EXIT_DIRTY_LOG_FULL.
+-
+-The dirty ring interface has a major difference comparing to the
+-KVM_GET_DIRTY_LOG interface in that, when reading the dirty ring from
+-userspace, it's still possible that the kernel has not yet flushed the
+-processor's dirty page buffers into the kernel buffer (with dirty bitmaps, the
+-flushing is done by the KVM_GET_DIRTY_LOG ioctl).  To achieve that, one
+-needs to kick the vcpu out of KVM_RUN using a signal.  The resulting
+-vmexit ensures that all dirty GFNs are flushed to the dirty rings.
+-
+-NOTE: KVM_CAP_DIRTY_LOG_RING_ACQ_REL is the only capability that
+-should be exposed by weakly ordered architecture, in order to indicate
+-the additional memory ordering requirements imposed on userspace when
+-reading the state of an entry and mutating it from DIRTY to HARVESTED.
+-Architecture with TSO-like ordering (such as x86) are allowed to
+-expose both KVM_CAP_DIRTY_LOG_RING and KVM_CAP_DIRTY_LOG_RING_ACQ_REL
+-to userspace.
+-
+-After enabling the dirty rings, the userspace needs to detect the
+-capability of KVM_CAP_DIRTY_LOG_RING_WITH_BITMAP to see whether the
+-ring structures can be backed by per-slot bitmaps. With this capability
+-advertised, it means the architecture can dirty guest pages without
+-vcpu/ring context, so that some of the dirty information will still be
+-maintained in the bitmap structure. KVM_CAP_DIRTY_LOG_RING_WITH_BITMAP
+-can't be enabled if the capability of KVM_CAP_DIRTY_LOG_RING_ACQ_REL
+-hasn't been enabled, or any memslot has been existing.
+-
+-Note that the bitmap here is only a backup of the ring structure. The
+-use of the ring and bitmap combination is only beneficial if there is
+-only a very small amount of memory that is dirtied out of vcpu/ring
+-context. Otherwise, the stand-alone per-slot bitmap mechanism needs to
+-be considered.
+-
+-To collect dirty bits in the backup bitmap, userspace can use the same
+-KVM_GET_DIRTY_LOG ioctl. KVM_CLEAR_DIRTY_LOG isn't needed as long as all
+-the generation of the dirty bits is done in a single pass. Collecting
+-the dirty bitmap should be the very last thing that the VMM does before
+-considering the state as complete. VMM needs to ensure that the dirty
+-state is final and avoid missing dirty pages from another ioctl ordered
+-after the bitmap collection.
+-
+-NOTE: Multiple examples of using the backup bitmap: (1) save vgic/its
+-tables through command KVM_DEV_ARM_{VGIC_GRP_CTRL, ITS_SAVE_TABLES} on
+-KVM device "kvm-arm-vgic-its". (2) restore vgic/its tables through
+-command KVM_DEV_ARM_{VGIC_GRP_CTRL, ITS_RESTORE_TABLES} on KVM device
+-"kvm-arm-vgic-its". VGICv3 LPI pending status is restored. (3) save
+-vgic3 pending table through KVM_DEV_ARM_VGIC_{GRP_CTRL, SAVE_PENDING_TABLES}
+-command on KVM device "kvm-arm-vgic-v3".
+-
+ 8.30 KVM_CAP_XEN_HVM
+ --------------------
+ 
+@@ -8893,65 +8935,6 @@ This capability indicates that the KVM virtual PTP service is
+ supported in the host. A VMM can check whether the service is
+ available to the guest on migration.
+ 
+-8.33 KVM_CAP_HYPERV_ENFORCE_CPUID
+----------------------------------
+-
+-:Architectures: x86
+-
+-When enabled, KVM will disable emulated Hyper-V features provided to the
+-guest according to the bits Hyper-V CPUID feature leaves. Otherwise, all
+-currently implemented Hyper-V features are provided unconditionally when
+-Hyper-V identification is set in the HYPERV_CPUID_INTERFACE (0x40000001)
+-leaf.
+-
+-8.34 KVM_CAP_EXIT_HYPERCALL
+----------------------------
+-
+-:Architectures: x86
+-:Type: vm
+-
+-This capability, if enabled, will cause KVM to exit to userspace
+-with KVM_EXIT_HYPERCALL exit reason to process some hypercalls.
+-
+-Calling KVM_CHECK_EXTENSION for this capability will return a bitmask
+-of hypercalls that can be configured to exit to userspace.
+-Right now, the only such hypercall is KVM_HC_MAP_GPA_RANGE.
+-
+-The argument to KVM_ENABLE_CAP is also a bitmask, and must be a subset
+-of the result of KVM_CHECK_EXTENSION.  KVM will forward to userspace
+-the hypercalls whose corresponding bit is in the argument, and return
+-ENOSYS for the others.
+-
+-8.35 KVM_CAP_PMU_CAPABILITY
+----------------------------
+-
+-:Architectures: x86
+-:Type: vm
+-:Parameters: arg[0] is bitmask of PMU virtualization capabilities.
+-:Returns: 0 on success, -EINVAL when arg[0] contains invalid bits
+-
+-This capability alters PMU virtualization in KVM.
+-
+-Calling KVM_CHECK_EXTENSION for this capability returns a bitmask of
+-PMU virtualization capabilities that can be adjusted on a VM.
+-
+-The argument to KVM_ENABLE_CAP is also a bitmask and selects specific
+-PMU virtualization capabilities to be applied to the VM.  This can
+-only be invoked on a VM prior to the creation of VCPUs.
+-
+-At this time, KVM_PMU_CAP_DISABLE is the only capability.  Setting
+-this capability will disable PMU virtualization for that VM.  Usermode
+-should adjust CPUID leaf 0xA to reflect that the PMU is disabled.
+-
+-8.36 KVM_CAP_ARM_SYSTEM_SUSPEND
+--------------------------------
+-
+-:Architectures: arm64
+-:Type: vm
+-
+-When enabled, KVM will exit to userspace with KVM_EXIT_SYSTEM_EVENT of
+-type KVM_SYSTEM_EVENT_SUSPEND to process the guest suspend request.
+-
+ 8.37 KVM_CAP_S390_PROTECTED_DUMP
+ --------------------------------
+ 
+@@ -8964,22 +8947,6 @@ PV guests. The `KVM_PV_DUMP` command is available for the
+ dump related UV data. Also the vcpu ioctl `KVM_S390_PV_CPU_COMMAND` is
+ available and supports the `KVM_PV_DUMP_CPU` subcommand.
+ 
+-8.38 KVM_CAP_VM_DISABLE_NX_HUGE_PAGES
+--------------------------------------
+-
+-:Architectures: x86
+-:Type: vm
+-:Parameters: arg[0] must be 0.
+-:Returns: 0 on success, -EPERM if the userspace process does not
+-          have CAP_SYS_BOOT, -EINVAL if args[0] is not 0 or any vCPUs have been
+-          created.
+-
+-This capability disables the NX huge pages mitigation for iTLB MULTIHIT.
+-
+-The capability has no effect if the nx_huge_pages module parameter is not set.
+-
+-This capability may only be set before any vCPUs are created.
+-
+ 8.39 KVM_CAP_S390_CPU_TOPOLOGY
+ ------------------------------
+ 
+@@ -9004,32 +8971,6 @@ structure.
+ When getting the Modified Change Topology Report value, the attr->addr
+ must point to a byte where the value will be stored or retrieved from.
+ 
+-8.40 KVM_CAP_ARM_EAGER_SPLIT_CHUNK_SIZE
+----------------------------------------
+-
+-:Architectures: arm64
+-:Type: vm
+-:Parameters: arg[0] is the new split chunk size.
+-:Returns: 0 on success, -EINVAL if any memslot was already created.
+-
+-This capability sets the chunk size used in Eager Page Splitting.
+-
+-Eager Page Splitting improves the performance of dirty-logging (used
+-in live migrations) when guest memory is backed by huge-pages.  It
+-avoids splitting huge-pages (into PAGE_SIZE pages) on fault, by doing
+-it eagerly when enabling dirty logging (with the
+-KVM_MEM_LOG_DIRTY_PAGES flag for a memory region), or when using
+-KVM_CLEAR_DIRTY_LOG.
+-
+-The chunk size specifies how many pages to break at a time, using a
+-single allocation for each chunk. Bigger the chunk size, more pages
+-need to be allocated ahead of time.
+-
+-The chunk size needs to be a valid block size. The list of acceptable
+-block sizes is exposed in KVM_CAP_ARM_SUPPORTED_BLOCK_SIZES as a
+-64-bit bitmap (each bit describing a block size). The default value is
+-0, to disable the eager page splitting.
+-
+ 8.41 KVM_CAP_VM_TYPES
+ ---------------------
+ 
+@@ -9049,6 +8990,67 @@ Do not use KVM_X86_SW_PROTECTED_VM for "real" VMs, and especially not in
+ production.  The behavior and effective ABI for software-protected VMs is
+ unstable.
+ 
++8.42 KVM_CAP_PPC_RPT_INVALIDATE
++-------------------------------
++
++:Architectures: ppc
++
++This capability indicates that the kernel is capable of handling
++H_RPT_INVALIDATE hcall.
++
++In order to enable the use of H_RPT_INVALIDATE in the guest,
++user space might have to advertise it for the guest. For example,
++IBM pSeries (sPAPR) guest starts using it if "hcall-rpt-invalidate" is
++present in the "ibm,hypertas-functions" device-tree property.
++
++This capability is enabled for hypervisors on platforms like POWER9
++that support radix MMU.
++
++8.43 KVM_CAP_PPC_AIL_MODE_3
++---------------------------
++
++:Architectures: ppc
++
++This capability indicates that the kernel supports the mode 3 setting for the
++"Address Translation Mode on Interrupt" aka "Alternate Interrupt Location"
++resource that is controlled with the H_SET_MODE hypercall.
++
++This capability allows a guest kernel to use a better-performance mode for
++handling interrupts and system calls.
++
++8.44 KVM_CAP_MEMORY_FAULT_INFO
++------------------------------
++
++:Architectures: x86
++
++The presence of this capability indicates that KVM_RUN will fill
++kvm_run.memory_fault if KVM cannot resolve a guest page fault VM-Exit, e.g. if
++there is a valid memslot but no backing VMA for the corresponding host virtual
++address.
++
++The information in kvm_run.memory_fault is valid if and only if KVM_RUN returns
++an error with errno=EFAULT or errno=EHWPOISON *and* kvm_run.exit_reason is set
++to KVM_EXIT_MEMORY_FAULT.
++
++Note: Userspaces which attempt to resolve memory faults so that they can retry
++KVM_RUN are encouraged to guard against repeatedly receiving the same
++error/annotated fault.
++
++See KVM_EXIT_MEMORY_FAULT for more information.
++
++8.45 KVM_CAP_X86_GUEST_MODE
++---------------------------
++
++:Architectures: x86
++
++The presence of this capability indicates that KVM_RUN will update the
++KVM_RUN_X86_GUEST_MODE bit in kvm_run.flags to indicate whether the
++vCPU was executing nested guest code when it exited.
++
++KVM exits with the register state of either the L1 or L2 guest
++depending on which executed at the time of an exit. Userspace must
++take care to differentiate between these cases.
++
+ 9. Known KVM API problems
+ =========================
+ 
+-- 
+2.49.0
 
