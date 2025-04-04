@@ -1,107 +1,117 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDD391F2B8B;
-	Fri,  4 Apr 2025 14:36:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FAA11F417E;
+	Fri,  4 Apr 2025 14:37:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743777388; cv=none; b=XDeWTvuiEB2zVh60O8uxWNOWUWQidHnjIt07ziVR85h5YI4NkLTry2d6qS+hKZMP3XDeYPj0XLXzMpZyPNh03HrNOVGYLWg/u43+KvYLK336YWgQIYDC9L2jIcey8tfL5xvNWugQ/IpB4nO4NlQuQjU7MYtnpSMRzymiZWM6Y9o=
+	t=1743777467; cv=none; b=Q/2knKbskCUm2k0HeAeapN3OzRaO9CChFJvRRI6eAel04tNggZsblMOO+wWG0M381CsCj3BKt8Xyb3nFrZ37KtuaqtbihPL/hXX+bFnhjHVlJqJJGe1ppkFhkuUeVJSIbNpvAWcjlQdSVRHkM4O4kzChPw1+t9dygMpbgDT/bYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743777388; c=relaxed/simple;
-	bh=UK1BKiKJxKtPapqgqQGXYWXj41M3zq5guZO07tuFTzs=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=Gp2OyVwtqYSf7Jq/YMzi/XD3qdjPtGTm1dNUdNNdg0j8BCWB0kI4Wkmwn/l9qRGUnaDZusjX8A/P7I4neAcbzi1ZaBb/H37ID5B9xcmMm4+fELzz+Wp+tdQSPqyKXYSyIYFYiNiXjxvNu8f4wzrmFPfBvTsS4ES8yvoLYTjh1/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DmW5wUih; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=D8aTHv15; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1743777467; c=relaxed/simple;
+	bh=YqDMor6o9KI305eh6RadR+0TcbnGSJ3Ae01+cgP/Mds=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KdhVAdvSLS+lyOoDFKm1ggs1FPzkEjHa6k/OZxNZNKmHAVFcKpI0xkg9bWtTw0H/O3wtQD50mPRsk8YPA7OyK03SlWkOWagUaGHdwpsqQH9QUfO5OSwd+oPppbOBXWdyrbKU0tHPjLChS+xmTaQ1at3DzBzyrf3qiBQ1Lf9KeVk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FiyrM54B; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DmW5wUih";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="D8aTHv15"
-Date: Fri, 04 Apr 2025 14:36:20 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1743777381;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qT2qL59BSYosvq1/lL7Tffo1PysWkyS+13wmfKdS5Rw=;
-	b=DmW5wUihok46wZKf/E8jsUNGKeWA7XKG/PJnpTMt/qV3kyhxfHtPZEVRebGZr4mrK9ASRI
-	N5ZrEHUx9DvIkJz7guK6SeZat1H26Tgyz58W7N0gQLW9kueN3Ulob0dEd9ZIvEBfTlGE55
-	RVm2n7VMurUseg+JAOVVXSdrKGoKKVMov3JN1WiGr/qf0uICIybVJY76NpgLOBmsMjWFe5
-	cHLM1KW4astWyY6ppeUji9ZY3iL6McdQ4NC7OzduDs2IE0png+NRXVBHYExldPE+1Ko7tJ
-	l9imGOzDd3IzsAnqoXOD3ts0LlqYX/Hjytfe9E029xOli5vuxy0te22egvAetQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1743777381;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qT2qL59BSYosvq1/lL7Tffo1PysWkyS+13wmfKdS5Rw=;
-	b=D8aTHv15Cc/BbsH/YJAbvW5FWZ+h6l/GJA7g/V6C8nW7uT2nmowRfJ0zDbt2dosjOIuBwq
-	mWTFc0aZMvXgJsDw==
-From: "tip-bot2 for Nam Cao" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/cleanups] hrtimers: Switch to use __htimer_setup()
-Cc: Nam Cao <namcao@linutronix.de>, Thomas Gleixner <tglx@linutronix.de>,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: =?utf-8?q?=3Cd9a45a51b6a8aa0045310d63f73753bf6b33f385=2E17387?=
- =?utf-8?q?46927=2Egit=2Enamcao=40linutronix=2Ede=3E?=
-References: =?utf-8?q?=3Cd9a45a51b6a8aa0045310d63f73753bf6b33f385=2E173874?=
- =?utf-8?q?6927=2Egit=2Enamcao=40linutronix=2Ede=3E?=
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FiyrM54B"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-54c0fa6d455so2574970e87.1;
+        Fri, 04 Apr 2025 07:37:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743777463; x=1744382263; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9ansAIEqHOdqhr/BlqzHJj/9+MuifCE4y7FGwh31nks=;
+        b=FiyrM54B4CgsjYVzKqWCFPEohgLYnmNE7dGCVLY1MA8ykQcAOLq2NjeRAyIo1E0nt5
+         DCYpIzIC6o2XZ0IqEilHOqCBf7wOu8+325Ai4yq6pwGtM3Lf6Dy9/0Vg7uFiaVzRKyio
+         Cs7F6jtQlIifcskn2li3q+Amx4h1/dcq90uNcVkQGsh8YYlHKdmcChGh+xeau+p9wABe
+         BoScC/44l3sr9V1jODv2JUuwc+dpAuNgpNLo09yaFkBlXPrUzsvhIiMOiocjVt87W+Ox
+         E9zHSDiLAuTks/BMvfJWUdLo//XXnurGD7LCadg9Qi3Q+kKhdVKpbU+w/oi6oAwRTw6z
+         0Pkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743777463; x=1744382263;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9ansAIEqHOdqhr/BlqzHJj/9+MuifCE4y7FGwh31nks=;
+        b=lD6NVk40W8XtflE67J2f6Bh/CEflSm67PwUGEta2m8OVIrUGov2KmXEBGSxAdfPA/f
+         fwWQ1xt97Ed9MwwUZtoF0RWA938hOSvEPuZ/f+/QF6PGF2b7C3LkA04GV4R2yL+1/drj
+         YQHqN8mw0Zg3LCIjjW2KaQHl+397U27rx0tl5x+6CqM+D62/faWNUSx8cgGU//QUKet2
+         T4h0H+Moji+2VzQc6IoAJNvLlQwdPWlrigTXiXy6Ew+syp+DkBwlDkZI+xD79DLE2JTK
+         bfPA53YwjOzlbYBtXvQRH0JetHkf1Qs1G/Ewhgh3UueNlcXBMx87vVSosbADAIPWPmyc
+         apJA==
+X-Forwarded-Encrypted: i=1; AJvYcCUgidjl4FOn9SDmP8zHidp8nN/K8Vq4mbwmFZLPbNpbFuo18y1DgrXHF+dS+9igDXp7D29ukVFeQx4LJcw0@vger.kernel.org, AJvYcCX7E3ZsUtEuD+Yi7AOzAHR72tBi462BqCzWlP2oPypwULw4op4WAlS4Ax1pgQxQV1bFgMc9pp6L13MwDdE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxgVUrzH71qehumt6xA+6VNQ78jDxr6z1IU+qeceJJv0QEfpeaU
+	4/2grXaJlT8e7Bv3FTYC/4lJiB+bZ6FYbGrJjC89kzs5d9cNork/Pm4wHW9FW+4BNZtB3exUJ+S
+	J1UK3/Ad27Z0tWaQzFCO0N88A/X0=
+X-Gm-Gg: ASbGncvDhJK8EqaQl7XkfOD33MiWr/xwEDA+gcDy/poDDbtm/YTgbR0InMIB8lQrkd7
+	Geo8rbVb9WE776jMlXtpCzP819+dk0cre3HNwG7VYJaU3CAQ3HfsoSSU8xuEjeEfEbPrf2jqtDX
+	UHAPxG0uRyZulNxEwG+bTEPyR1IQ==
+X-Google-Smtp-Source: AGHT+IHUwAyMXwZ7nTwa5Pdk8hBK90Mf1yR2C9DJh+uhCtwyRT12lKmJa+SPe4ZU+eO0c7owpRmkHptlUnogvP5xuLc=
+X-Received: by 2002:a05:651c:908:b0:30d:e104:cb72 with SMTP id
+ 38308e7fff4ca-30f0a192140mr14612551fa.39.1743777463158; Fri, 04 Apr 2025
+ 07:37:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174377738038.31282.2750269952539289520.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+References: <20250404102535.705090-1-ubizjak@gmail.com> <CAK7LNATO1RfACvWhHJuLi-FYWMnSn6+Tp67-EZtVWNk+RCSTVQ@mail.gmail.com>
+ <CAFULd4bx9BGKo_4kn14rsVr44otpdjpjn_o6=zMp8iu98f9Upg@mail.gmail.com> <CAK7LNATnactfA2U0CB2VcoE1eDc+bj=Jjye-Khsc3xG-iZ2XVQ@mail.gmail.com>
+In-Reply-To: <CAK7LNATnactfA2U0CB2VcoE1eDc+bj=Jjye-Khsc3xG-iZ2XVQ@mail.gmail.com>
+From: Uros Bizjak <ubizjak@gmail.com>
+Date: Fri, 4 Apr 2025 16:37:31 +0200
+X-Gm-Features: ATxdqUHaaND3bdLnb6MftUV3OsQvLaF7fsBq2r-5LL9FyP6o3GJZsEjHZO93ysg
+Message-ID: <CAFULd4b25r5wf31DJputSOZhhMTrejQ_3-2P5rpeOL8H=4_mcA@mail.gmail.com>
+Subject: Re: [PATCH] compiler.h: Avoid the usage of __typeof_unqual__() when
+ __GENKSYMS__ is defined
+To: Masahiro Yamada <masahiroy@kernel.org>
+Cc: linux-modules@vger.kernel.org, linux-kbuild@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Paul Menzel <pmenzel@molgen.mpg.de>, 
+	Sami Tolvanen <samitolvanen@google.com>, Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The following commit has been merged into the timers/cleanups branch of tip:
+On Fri, Apr 4, 2025 at 4:06=E2=80=AFPM Masahiro Yamada <masahiroy@kernel.or=
+g> wrote:
 
-Commit-ID:     8ed35ea9f00307a68c9b15b0b0ab927f552b1711
-Gitweb:        https://git.kernel.org/tip/8ed35ea9f00307a68c9b15b0b0ab927f552b1711
-Author:        Nam Cao <namcao@linutronix.de>
-AuthorDate:    Wed, 05 Feb 2025 11:55:11 +01:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Fri, 04 Apr 2025 16:26:09 +02:00
+> > > > Current version of genksyms doesn't know anything about __typeof_un=
+qual__()
+> > > > operator.  Avoid the usage of __typeof_unqual__() with genksyms to =
+prevent
+> > > > errors when symbols are versioned.
+> > > >
+> > > > There were no problems with gendwarfksyms.
+> > > >
+> > > > Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+> > > > Fixes: ac053946f5c40 ("compiler.h: introduce TYPEOF_UNQUAL() macro"=
+)
+> > > > Reported-by: Paul Menzel <pmenzel@molgen.mpg.de>
+> > > > Closes: https://lore.kernel.org/lkml/81a25a60-de78-43fb-b56a-131151=
+e1c035@molgen.mpg.de/
+> > > > Cc: Sami Tolvanen <samitolvanen@google.com>
+> > > > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > > > ---
+> > >
+> > >
+> > > Why don't you add it to the genksyms keyword table?
+> >
+> > It doesn't work, even if I patch it with an even more elaborate patch
+> > (attached).
+> >
+> > I guess some more surgery will be needed, but for now a fallback works
+> > as expected.
+> >
+> > Uros.
+>
+> The attached patch looks good to me.
 
-hrtimers: Switch to use __htimer_setup()
+FAOD - do you refer to the submitted one for compiler.h or to the one
+for scripts/genksyms/keywords.c? (The latter doesn't fix the warning,
+though).
 
-__hrtimer_init_sleeper() calls __hrtimer_init() and also setups the
-callback function. But there is already __hrtimer_setup() which does both
-actions.
-
-Switch to use __hrtimer_setup() to simplify the code.
-
-Signed-off-by: Nam Cao <namcao@linutronix.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/all/d9a45a51b6a8aa0045310d63f73753bf6b33f385.1738746927.git.namcao@linutronix.de
-
----
- kernel/time/hrtimer.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
-index b7555ba..2d2835c 100644
---- a/kernel/time/hrtimer.c
-+++ b/kernel/time/hrtimer.c
-@@ -2061,8 +2061,7 @@ static void __hrtimer_init_sleeper(struct hrtimer_sleeper *sl,
- 			mode |= HRTIMER_MODE_HARD;
- 	}
- 
--	__hrtimer_init(&sl->timer, clock_id, mode);
--	sl->timer.function = hrtimer_wakeup;
-+	__hrtimer_setup(&sl->timer, hrtimer_wakeup, clock_id, mode);
- 	sl->task = current;
- }
- 
+Thanks,
+Uros.
