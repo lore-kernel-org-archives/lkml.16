@@ -1,125 +1,81 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 553F11E51EC;
-	Fri,  4 Apr 2025 13:45:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EFAF2E62C4;
+	Fri,  4 Apr 2025 13:45:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743774308; cv=none; b=aOCjp/d8YvexeY4mGoVP6KVV5414WfVls85dUe9SgQj9EjYizOkafNaovTYwmUsiMQjv0OvuJlLHBslsqhzwdN5RG49rleHuaNKUTGn8sS/Li8Yo7eQac+8HeSofNLzDj/hHwkPims+fvjXbuAz8zLxaoiBKsRujpOQ2WfIF6p4=
+	t=1743774326; cv=none; b=JMQRpgig9ev/68x4S/grb6FXaLzEu6d8AF38gkZUTk5YuH598LoczXmvktZE8J0aBePzrBwnDiihYweOUNvStmCG+w/liZuacZRCUJH07xz2hivBHsn+9mJShmHefsM5mgbd6UP86OMPILAq5kI+NQ4q3m39d9ejoaKkt++BaEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743774308; c=relaxed/simple;
-	bh=hYzBcEMK2g7NFxBsAvkI946fDR+FoPc0bhqBZz/paf4=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OFrcnAuUb8EXShzdnCMS3IRefyuqld/dqJ/iZiAummY21YskHN0aGy8Rkzrn6pMt+UK9OCd2k3QF3nWD1kYe0kak3tBOfj4TLDy6ZtvNGhuLY5his9B//vNRqwKp/sCL+5F91lmt6tsNBSfeRzkRvgtYWlkn+3mDfGJL2J6luT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZTfwP0BGBz67kSy;
-	Fri,  4 Apr 2025 21:44:21 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 829FC14062A;
-	Fri,  4 Apr 2025 21:45:03 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 4 Apr
- 2025 15:45:03 +0200
-Date: Fri, 4 Apr 2025 14:45:01 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Gregory Price <gourry@gourry.net>
-CC: <linux-cxl@vger.kernel.org>, <nvdimm@lists.linux.dev>,
-	<linux-kernel@vger.kernel.org>, <kernel-team@meta.com>,
-	<dan.j.williams@intel.com>, <vishal.l.verma@intel.com>,
-	<dave.jiang@intel.com>, David Hildenbrand <david@redhat.com>
-Subject: Re: [PATCH v2] DAX: warn when kmem regions are truncated for memory
- block alignment.
-Message-ID: <20250404144501.00003149@huawei.com>
-In-Reply-To: <20250402015920.819077-1-gourry@gourry.net>
-References: <20250402015920.819077-1-gourry@gourry.net>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1743774326; c=relaxed/simple;
+	bh=RIjCzkBYrZ3eOlnkjx1fOdd9XKjiKDANIJ4T3CaLGWs=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XHmxZ5Qej8nLt1t5gNttuBuqCyZ9Xi61LNpnBoj61K474G/pVn17ZsylnSt26x5Ff0K2Tor78HHiAspSi02T0ALcZoZ2DFzXEJFdUpsRZzeuPOiJlDJxYifofheK+eYXpWmO9nv8sUNcocJMxINcREJ3AHBf2nvpRA+tI8ASdtI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01423C4CEDD;
+	Fri,  4 Apr 2025 13:45:24 +0000 (UTC)
+Date: Fri, 4 Apr 2025 09:46:32 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Devaansh Kumar <devaanshk840@gmail.com>
+Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ skhan@linuxfoundation.org, linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [PATCH v2] tracing: Replace deprecated strncpy() with strscpy()
+ for stack_trace_filter_buf
+Message-ID: <20250404094632.26f5b7c0@gandalf.local.home>
+In-Reply-To: <20250404133105.2660762-1-devaanshk840@gmail.com>
+References: <20250404133105.2660762-1-devaanshk840@gmail.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
- frapeml500008.china.huawei.com (7.182.85.71)
 
-On Tue,  1 Apr 2025 21:59:20 -0400
-Gregory Price <gourry@gourry.net> wrote:
+On Fri,  4 Apr 2025 19:01:03 +0530
+Devaansh Kumar <devaanshk840@gmail.com> wrote:
 
-> Device capacity intended for use as system ram should be aligned to the
-> archite-defined memory block size or that capacity will be silently
-
-archite?
-
-> truncated and capacity stranded.
+> strncpy() is deprecated for NUL-terminated destination buffers and must
+> be replaced by strscpy().
 > 
-> As hotplug dax memory becomes more prevelant, the memory block size
-> alignment becomes more important for platform and device vendors to
-> pay attention to - so this truncation should not be silent.
+> See issue: https://github.com/KSPP/linux/issues/90
 > 
-> This issue is particularly relevant for CXL Dynamic Capacity devices,
-> whose capacity may arrive in spec-aligned but block-misaligned chunks.
-> 
-> Suggested-by: David Hildenbrand <david@redhat.com>
-> Suggested-by: Dan Williams <dan.j.williams@intel.com>
-> Signed-off-by: Gregory Price <gourry@gourry.net>
-
-One trivial comment inline otherwise seems reasonable to me.
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
-
+> Signed-off-by: Devaansh Kumar <devaanshk840@gmail.com>
 > ---
->  drivers/dax/kmem.c | 10 +++++++++-
->  1 file changed, 9 insertions(+), 1 deletion(-)
+>  kernel/trace/trace_stack.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/dax/kmem.c b/drivers/dax/kmem.c
-> index e97d47f42ee2..32fe3215e11e 100644
-> --- a/drivers/dax/kmem.c
-> +++ b/drivers/dax/kmem.c
-> @@ -13,6 +13,7 @@
->  #include <linux/mman.h>
->  #include <linux/memory-tiers.h>
->  #include <linux/memory_hotplug.h>
-> +#include <linux/string_helpers.h>
->  #include "dax-private.h"
->  #include "bus.h"
->  
-> @@ -68,7 +69,7 @@ static void kmem_put_memory_types(void)
->  static int dev_dax_kmem_probe(struct dev_dax *dev_dax)
->  {
->  	struct device *dev = &dev_dax->dev;
-> -	unsigned long total_len = 0;
-> +	unsigned long total_len = 0, orig_len = 0;
->  	struct dax_kmem_data *data;
->  	struct memory_dev_type *mtype;
->  	int i, rc, mapped = 0;
-> @@ -97,6 +98,7 @@ static int dev_dax_kmem_probe(struct dev_dax *dev_dax)
->  	for (i = 0; i < dev_dax->nr_range; i++) {
->  		struct range range;
->  
-> +		orig_len += range_len(&dev_dax->ranges[i].range);
->  		rc = dax_kmem_range(dev_dax, i, &range);
->  		if (rc) {
->  			dev_info(dev, "mapping%d: %#llx-%#llx too small after alignment\n",
-> @@ -109,6 +111,12 @@ static int dev_dax_kmem_probe(struct dev_dax *dev_dax)
->  	if (!total_len) {
->  		dev_warn(dev, "rejecting DAX region without any memory after alignment\n");
->  		return -EINVAL;
-> +	} else if (total_len != orig_len) {
-> +		char buf[16];
-> +
-> +		string_get_size((orig_len - total_len), 1, STRING_UNITS_2,
+> diff --git a/kernel/trace/trace_stack.c b/kernel/trace/trace_stack.c
+> index 5a48dba912ea..982b1c88fce2 100644
+> --- a/kernel/trace/trace_stack.c
+> +++ b/kernel/trace/trace_stack.c
+> @@ -3,6 +3,7 @@
+>   * Copyright (C) 2008 Steven Rostedt <srostedt@redhat.com>
+>   *
+>   */
+> +#include <linux/string.h>
+>  #include <linux/sched/task_stack.h>
+>  #include <linux/stacktrace.h>
+>  #include <linux/security.h>
 
-Trivial but do those inner brackets really add anything?
+Is string.h really needed here? And if so, please keep the upside-down
+x-mas tree format:
 
-> +				buf, sizeof(buf));
-> +		dev_warn(dev, "DAX region truncated by %s due to alignment\n", buf);
->  	}
->  
->  	init_node_memory_type(numa_node, mtype);
+#include <linux/sched/task_stack.h>
+#include <linux/stacktrace.h>
+#include <linux/security.h>
+#include <linux/kallsyms.h>
+#include <linux/seq_file.h>
+#include <linux/spinlock.h>
+#include <linux/uaccess.h>
+#include <linux/ftrace.h>
+#include <linux/module.h>
+#include <linux/sysctl.h>
+#include <linux/init.h>
 
+The includes *are* ordered.
+
+-- Steve
