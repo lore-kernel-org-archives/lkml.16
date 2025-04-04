@@ -1,82 +1,68 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0686F13B2BB
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 23:32:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39F0A33FD
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 23:33:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743809557; cv=none; b=RB6YrjWx/Bo7nt+rb9BybD4ZXav+v17BNyR29dcSu/zHzYLfSnShoA104nQK7yvVts5dZFAX4ZJiJ8lKeaX5BZBlj6TaGOA1Oy9NttJbtfFpMkYCWjYmJbyQwMsMWfJJ8P1ZByM++S1QcBeRp80s2TXeVKiOP30/d5yQ7m00Lyo=
+	t=1743809603; cv=none; b=pRYf5RzxMdFEq1plW8C3dPiQyoEGPE3oljKaGKzoR9U0VuhWOjhEZCVDxPDyGsFSuSJih6daIwZRDlag1WOjiFNF6m9odZxAC97R6FmgyYONohEXJuZndbpAMR/2i9cMn+MTc1YRaIkBLBFaRVCm9pyLHm2n4rjF+3GEHL8XWKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743809557; c=relaxed/simple;
-	bh=QWHvkuK7/BjyMNtfSSarlERTr+8nkO0xsbug7SlJrFc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CsY/T9/s5Wh17nXe1q7VD5a6wG8IDtwVnrZypctXmROqK0obEpnaryQ6ufQqmzyUrc7nMjSXDrE+wTzCisAzf/bPpmJYeyOI/CElNvmzeh/5C0cW07XpxxUACEv/AAFve3BuYz08UgwnUSVFvbpZDcf2t6NN8tJk6GXv/vIDJX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gFxn3T88; arc=none smtp.client-ip=209.85.208.45
+	s=arc-20240116; t=1743809603; c=relaxed/simple;
+	bh=F01ob2aLQ3liUe4JNIsCv844jx2uuMudGq8B5gfh9E8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=q2KHGZPItgMc+EBr15tMrb5KzBq1b7DkomAIGG1LI/tJS1pmTeshVxxBpcDLolDQ9YvI4zlr/Q4qyH5TCORF06bTx3GmI9fN6HGcod3soB2zGCrsZ7jlX2VCVl07xoUr+7CGlTzOKGw4+3rMnPgIKCEAOlAbWOLA8mBNwpjZS2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CjfIPsc3; arc=none smtp.client-ip=209.85.208.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gFxn3T88"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5edc07c777eso3259453a12.3
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 16:32:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CjfIPsc3"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5e8be1c6ff8so4784206a12.1
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 16:33:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743809554; x=1744414354; darn=vger.kernel.org;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kzspiJbW7QmXEAVW2g03GHzOnq2e3N4wowbiLpToSCY=;
-        b=gFxn3T88DDS37tQdRp8CZKSRkybZURvkDae04imXZItzozWU2qqY4Ni3aJTQ8UL740
-         Igq+ZoYuiD2PMrgyfnO2RaJDEXBbhzcfBoEVUpXzjFlY3k8sAp0nDiKmDr+ICN7ruJhp
-         Vbe8lF1jVcsEOiG2sRm2YDdCUXH2/sPAy7TwWYYGYGi+nUZMEmNZYqB0y6zVBLs/I0WV
-         cv7DfwwrA3Q2p5jocnVl+kig2bxTYm6UjtygrXTCn8TZFC2Zjlfu0QuUOv+TnDUIB73h
-         Vsdl2bT0LIOTGnqlR1AyRP8n/9GWCOS/SPsRAmUsSW/L1B9MQQtpUGQlmWnTKze/cbPr
-         4kKw==
+        d=gmail.com; s=20230601; t=1743809600; x=1744414400; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=4EP4z1mChh3kJ48ZHpuKiS3iu2fY6RHMQL3FYeKcgZU=;
+        b=CjfIPsc307nD5aONdSO26TccQFQmb2eObHvwOmbG+RdS7hYiYC1Y6tW5o7yVfr3GAj
+         HGCpSJkEUMOkq/F3Ifz06n+gaBAE03B/o4eJCN1iaVXy2OKNncO81m+UllvuP95bgEYG
+         jztQtNfp8v9/wWlTccHI2y6H7LkEpm66sI3grRBtfVEWVX16ehjZGAEqeQ+pdPpA83IL
+         jEcSyfqO83TNqnwWz+/4026jnyzSPS0Ani+H8gqaAwLdYp6KllMNAa54C7lF/YxjyJT8
+         w71rWmZz8oPQ0KFWepq40f9f1CeMApQuAyVQVXKDLLSE9abpEXOFP8PgotBcNDnPHH9K
+         20ig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743809554; x=1744414354;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :reply-to:message-id:subject:cc:to:from:date:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=kzspiJbW7QmXEAVW2g03GHzOnq2e3N4wowbiLpToSCY=;
-        b=wTOO5KX7hSjoif68ucLbf5IO3EVUB3N76RPezrqumQSF5/VqLcxXSUKdeITGFqXnbd
-         RSNae4qXKD5xhXcVYr4fKBif86wtwXIkYRw7tpJ1MDGKlodycREJDbCRiBDpYN81X76p
-         0geJ/RpAa8A/qV0T6cua1CiCxQ5EB7PsGXejhQu06tgG8R9/7aTE7nX0fiq9rCFzAGed
-         bdMKRZbrMB6qIPSKeknOepjRLoVhKYpCLZCy595tToE2Y0w8WHXe6W93iiXx4JyeRRC3
-         T3C3WSuPhkVmuojvtbKWoF9xOd/Ed2QgpX5dyJuJznC1nDlCM170X0bvw3cCHdtiGy70
-         H52w==
-X-Forwarded-Encrypted: i=1; AJvYcCXZfQf1jTmkKAn1awZvNX4gzXLKVibaUC2fDCgzub8h1cxdOod0YzuYckGPGbuRzTIiacqQemt0VDke5p0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyR7PeNbfMm2QuV/vBH+Q5voRR4R7CRthqmYRD2M3FGCZNZ325U
-	Vod4ItI/y3YbID3gae5vPbk5kGbEfwfBoJxam+PEZjySmOxGzDxX
-X-Gm-Gg: ASbGnctbNHI1uQ0G2Vv2mrAIaPR7yThMCLnKlo/2UQ24rFaNvE3jW2OdyfDZ8CtklG3
-	xrbO1MZeHOZo/vmT9xlFJa2gjyjX56sN8Z6v1H4l8pp+gd6+xe20bE41Z9g+PhQgXUJHSHQh6V3
-	L86Qk8fl5OvxwK3a5KUBcXfO3vcUTzJuOX+EFbisobFG8tBAxumx1ZYmQ+Nv7ihRmbN1T/HGv5d
-	kFQOQ18SMxohOxJf81iUiZGv4O02swyevz6o/TScogeJQQibWeLYNyW+WKdoe/FrqvL2qPA7rL2
-	KwNKk5lFnUGWvxikJZU7IlL1gLXYPZwfJ0aHkmx+oMYq
-X-Google-Smtp-Source: AGHT+IE/vv1Smr2HKVwTss1S5tFHifeZYvCC4qt2WX7qSbvEhE97vHXCEg2l3mtN64QGaf4gVHTF7g==
-X-Received: by 2002:a05:6402:5c8:b0:5f0:d893:bf8a with SMTP id 4fb4d7f45d1cf-5f0db82be32mr619706a12.20.1743809554106;
-        Fri, 04 Apr 2025 16:32:34 -0700 (PDT)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f0880a476bsm3047900a12.72.2025.04.04.16.32.32
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 04 Apr 2025 16:32:32 -0700 (PDT)
-Date: Fri, 4 Apr 2025 23:32:31 +0000
-From: Wei Yang <richard.weiyang@gmail.com>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Wei Yang <richard.weiyang@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
-	Suren Baghdasaryan <surenb@google.com>,
-	David Hildenbrand <david@redhat.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Rik van Riel <riel@surriel.com>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] mm/vma: fix incorrectly disallowed anonymous VMA
- merges
-Message-ID: <20250404233231.bk62hjwq46vnrpmz@master>
-Reply-To: Wei Yang <richard.weiyang@gmail.com>
-References: <cover.1742245056.git.lorenzo.stoakes@oracle.com>
- <ab86a655c18cf9feb031a9b08b74812dcb432221.1742245056.git.lorenzo.stoakes@oracle.com>
- <20250404125315.5bou5ays7u7sv4rb@master>
- <2fcd2760-0116-491e-add2-c3277d5bb19b@lucifer.local>
+        d=1e100.net; s=20230601; t=1743809600; x=1744414400;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4EP4z1mChh3kJ48ZHpuKiS3iu2fY6RHMQL3FYeKcgZU=;
+        b=wBlqpxwAfuhFkBvZ00BjrPnqcY3PtO3iXIsg1L+GydGgmhqyIv4hjxaAjeiQogKdM1
+         6ZesfdvheovW5KbKmWJVY4M65ZFmtVa3adJVW5zhT825rfSF3WnL0BnN+KURh8i8V2+Y
+         WOqd8+8R/Z+8m7xIepzSnq0srS/synqIjTngNYgHV9eS2IaaM4E0isx1/eVfknLe6LdN
+         DiJYyzXYwLhH2XGS+vHzbxcgs6L4IRVcJE/wKbCM3cjyhmMqgqQ9pHCHlBQCOPL/+p18
+         aKoVqwbNSiVSniAF6XB71JA6CCxofmp/eP3PQCfjKj/alAuqDE7x7vGyaBmA+dmLKf7Z
+         gl9A==
+X-Forwarded-Encrypted: i=1; AJvYcCVq81exil8Db7ZYCQaBiTzV1mlla3t2i2WGS/8+Eg+G7r0cb1EyYrKg6rw6rNx+q5QyOy7l0OAbwY+UNEY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxW2B3RE7LR84kMnbnDMphcilsao3DtTFO8CryHXywwJUe9ICks
+	QHMshkHTff438k5bYRsM4tsrZbD3s9HntdqoZx0P3iRVfNKlCj+0
+X-Gm-Gg: ASbGncsxczWWFoQchjCEeKZwAP6iM1q3H7kOfCnLQjv6k/AvndTPFzYUNecE5xvfqUz
+	OMg22z+HdMzke9mPfMysqirUSh5hQ4U8CqRV8EEI5Ki97sm2m8HWFUu1qAtuMd4fNkEdJjlT9Wu
+	DAL1wiyKJN4DJWvIF+rMlBSFO/yIj53YRQZrjWFnVT8Y+0QJ4LFcEaxqClxXSFPwjy+cXjg2VjN
+	JeRYa66Zp3pdg1+mjnc+QmG8XA5j5W4ZlNTmHCHAAr9NyCd4gC1CGJb6CO7hVjakSp6+FjX4hNG
+	49C5JYiQ6bKDdTm2lpmMXbGdVH6cQpHRpahOVWFAtAyG/xifjg==
+X-Google-Smtp-Source: AGHT+IGJ0ANfNXgmMJj0Q1O1O/JVYiWXMA2oa4wpweViwDI5wrLYiU1Dge5Z4oCqR6T4shEd3Ne/9g==
+X-Received: by 2002:a05:6402:2712:b0:5de:39fd:b2f5 with SMTP id 4fb4d7f45d1cf-5f0b5d8b51bmr3718138a12.1.1743809600312;
+        Fri, 04 Apr 2025 16:33:20 -0700 (PDT)
+Received: from ubuntu ([105.112.234.193])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f087ed1c68sm2881390a12.17.2025.04.04.16.33.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Apr 2025 16:33:19 -0700 (PDT)
+Date: Fri, 4 Apr 2025 23:33:16 +0000
+From: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Julia Lawall <julia.lawall@inria.fr>, outreachy@lists.linux.dev
+Cc: linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Dan Carpenter <dan.carpenter@linaro.org>, andy.@kernel.org
+Subject: [PATCH] staging: rtl8723bs: Use % 4096 instead of & 0xfff
+Message-ID: <Z/Bro47isE8zhcu7@ubuntu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -85,101 +71,48 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2fcd2760-0116-491e-add2-c3277d5bb19b@lucifer.local>
-User-Agent: NeoMutt/20170113 (1.7.2)
 
-On Fri, Apr 04, 2025 at 02:04:10PM +0100, Lorenzo Stoakes wrote:
->On Fri, Apr 04, 2025 at 12:53:15PM +0000, Wei Yang wrote:
->> On Mon, Mar 17, 2025 at 09:15:03PM +0000, Lorenzo Stoakes wrote:
->> [...]
->> >However, we have a problem here - typically the vma passed here is the
->> >destination VMA.
->> >
->> >For instance in vma_merge_existing_range() we invoke:
->> >
->> >can_vma_merge_left()
->> >-> [ check that there is an immediately adjacent prior VMA ]
->> >-> can_vma_merge_after()
->> >  -> is_mergeable_vma() for general attribute check
->> >-> is_mergeable_anon_vma([ proposed anon_vma ], prev->anon_vma, prev)
->> >
->> >So if we were considering a target unfaulted 'prev':
->> >
->> >	  unfaulted    faulted
->> >	|-----------|-----------|
->> >	|    prev   |    vma    |
->> >	|-----------|-----------|
->> >
->> >This would call is_mergeable_anon_vma(NULL, vma->anon_vma, prev).
->> >
->> >The list_is_singular() check for vma->anon_vma_chain, an empty list on
->> >fault, would cause this merge to _fail_ even though all else indicates a
->> >merge.
->> >
->>
->> Great spot. It is hiding there for 15 years.
->
->Thanks!
->
->>
->> >Equally a simple merge into a next VMA would hit the same problem:
->> >
->> >	   faulted    unfaulted
->> >	|-----------|-----------|
->> >	|    vma    |    next   |
->> >	|-----------|-----------|
->> >
->> [...]
->> >---
->> > mm/vma.c                |  81 +++++++++++++++++++++++---------
->> > tools/testing/vma/vma.c | 100 +++++++++++++++++++++-------------------
->> > 2 files changed, 111 insertions(+), 70 deletions(-)
->> >
->> >diff --git a/mm/vma.c b/mm/vma.c
->> >index 5cdc5612bfc1..5418eef3a852 100644
->> >--- a/mm/vma.c
->> >+++ b/mm/vma.c
->> >@@ -57,6 +57,22 @@ struct mmap_state {
->> > 		.state = VMA_MERGE_START,				\
->> > 	}
->> >
->> >+/*
->> >+ * If, at any point, the VMA had unCoW'd mappings from parents, it will maintain
->> >+ * more than one anon_vma_chain connecting it to more than one anon_vma. A merge
->> >+ * would mean a wider range of folios sharing the root anon_vma lock, and thus
->> >+ * potential lock contention, we do not wish to encourage merging such that this
->> >+ * scales to a problem.
->> >+ */
->>
->> I don't follow here. Take a look into do_wp_page(), where CoW happens. But I
->> don't find where it will unlink parent anon_vma from vma->anon_vma_chain.
->
->Look at anon_vma_clone() in fork case. It's not the point of CoW that's the
->issue, it's propagation of AVC's upon fork.
->
->>
->> Per my understanding, the unlink behavior happens in unlink_anon_vma() which
->> unlink all anon_vma on vma->anon_vma_chain. And the normal caller of
->> unlink_anon_vma() is free_pgtables(). Other callers are on error path to
->> release prepared data. From this perspective, I don't see the chance to unlink
->> parent anon_vma from vma->anon_vma_chain either.
->>
->> But maybe I missed something. If it is not too bother, would you mind giving
->> me a hint?
->
->What you're saying is 'we never go back and fix this up once unCoW'd' which is
->true, but I don't want to write several page-length essays in comments, and this
->is a sensible way of looking at things for the purposes of this check.
->
->In future, we may want to actually do something like this, if it makes sense.
->
+Replace the bitwise AND operator `&` with a modulo
+operator `%` and decimal number to make the upper limit visible
+and clear what the semantic of it is.
 
-Ok, this is the future plan instead of current behavior.
+Also add white spaces around binary operators for improved
+readabiity and adherence to Linux kernel coding style.
 
-My personal feeling is it would misleading to readers. I would think if all
-pages mapping in VMA is Cow'd, the vma->anon_vma_chain becomes singular in
-current kernel. 
+Suggested-by Andy Shevchenko <andy.shevchenko@gmail.com>
 
-A page-length comment is not we want, how about "maybe_root_anon_vma"? When
-vma->anon_vma_chain is empty or singular, it means the (future) vma->anon_vma
-is the root anon_vma.
+Signed-off-by: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
+---
+ drivers/staging/rtl8723bs/core/rtw_xmit.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/staging/rtl8723bs/core/rtw_xmit.c b/drivers/staging/rtl8723bs/core/rtw_xmit.c
+index 297c93d65315..630669193be4 100644
+--- a/drivers/staging/rtl8723bs/core/rtw_xmit.c
++++ b/drivers/staging/rtl8723bs/core/rtw_xmit.c
+@@ -943,7 +943,7 @@ s32 rtw_make_wlanhdr(struct adapter *padapter, u8 *hdr, struct pkt_attrib *pattr
+ 
+ 			if (psta) {
+ 				psta->sta_xmitpriv.txseq_tid[pattrib->priority]++;
+-				psta->sta_xmitpriv.txseq_tid[pattrib->priority] &= 0xFFF;
++				psta->sta_xmitpriv.txseq_tid[pattrib->priority] %= 4096;
+ 				pattrib->seqnum = psta->sta_xmitpriv.txseq_tid[pattrib->priority];
+ 
+ 				SetSeqNum(hdr, pattrib->seqnum);
+@@ -963,11 +963,11 @@ s32 rtw_make_wlanhdr(struct adapter *padapter, u8 *hdr, struct pkt_attrib *pattr
+ 					if (SN_LESS(pattrib->seqnum, tx_seq)) {
+ 						pattrib->ampdu_en = false;/* AGG BK */
+ 					} else if (SN_EQUAL(pattrib->seqnum, tx_seq)) {
+-						psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (tx_seq+1)&0xfff;
++						psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (tx_seq + 1) % 4096;
+ 
+ 						pattrib->ampdu_en = true;/* AGG EN */
+ 					} else {
+-						psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (pattrib->seqnum+1)&0xfff;
++						psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (pattrib->seqnum + 1) % 4096;
+ 						pattrib->ampdu_en = true;/* AGG EN */
+ 					}
+ 				}
+-- 
+2.34.1
+
