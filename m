@@ -1,66 +1,97 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 953911B0413;
-	Fri,  4 Apr 2025 09:44:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 518BC2E62BC
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 09:46:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743759892; cv=none; b=gpn406d2dRu3yDcsLgQkXzsuqz8V9FBr/SiJ/fql3lEp9+H2zgVZcq+h5ohzRBkcEy2eIQ/BwMFv0ayWLWySY9QnJ1OlOzFY56I/EkKVpVd3rMG25r0VLJgp+RJ2oZ0v7QVb7oNDRJt84X9BI8KzqVFHhWvmDPb/1bFZdohZWYY=
+	t=1743760009; cv=none; b=dfhDi6OFU6yYLz7u+7zHDsNjgEAZW5dv6i5fRxG0rg2SjAzZ6wVwcZfKaw9oJ1VE+ieIv0GPWdw2ouywnLEVwRNZ8paj+7kjJH6Ora9ZNm/TuWLl77CXPmTJXzMcysJsh2DYGvxqXQuIb+r0NyJ2uh5D7TDnvbFtj8sqvNHYMFg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743759892; c=relaxed/simple;
-	bh=HD7kWkg7XSuXBSb2w/uqNbauod0izeN3YT2dEnrTrM0=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oOGxiOx9y1v2igMlDo1X4XgVlpxSoFGBLneb5x/bHjgycFxz75vKqMAoJDtr791jJcrvk1Lt7kpHs64KDRX3RFEF7iCoJMY1LEvbxGwzKpSfmrFAaRq8fia/a3QdoMb4AgRKhSO2pfJ20/J1HmjZKDjgqBivfjw+opaOdtPf3k4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZTY5w2qgnz6K5VN;
-	Fri,  4 Apr 2025 17:22:12 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 8A3B11408E8;
-	Fri,  4 Apr 2025 17:25:52 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 4 Apr
- 2025 11:25:51 +0200
-Date: Fri, 4 Apr 2025 10:25:50 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Zaid Alali <zaidal@os.amperecomputing.com>
-CC: <rafael@kernel.org>, <lenb@kernel.org>, <james.morse@arm.com>,
-	<tony.luck@intel.com>, <bp@alien8.de>, <robert.moore@intel.com>,
-	<dan.j.williams@intel.com>, <Benjamin.Cheatham@amd.com>,
-	<Avadhut.Naik@amd.com>, <viro@zeniv.linux.org.uk>, <arnd@arndb.de>,
-	<ira.weiny@intel.com>, <dave.jiang@intel.com>,
-	<sthanneeru.opensrc@micron.com>, <linux-acpi@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <acpica-devel@lists.linux.dev>
-Subject: Re: [PATCH v5 7/9] ACPI: APEI: EINJ: Add debugfs files for EINJv2
- support
-Message-ID: <20250404102550.00007d3e@huawei.com>
-In-Reply-To: <20250403231339.23708-8-zaidal@os.amperecomputing.com>
-References: <20250403231339.23708-1-zaidal@os.amperecomputing.com>
-	<20250403231339.23708-8-zaidal@os.amperecomputing.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1743760009; c=relaxed/simple;
+	bh=4vcuXbWePBB/fL1w+vdZnSlLMmRJFzfc5SznNyXcUbY=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=SZvpNr8TGuKhtPXbwhkClJYXDRo1MKgRs9TnUtZsA4nqSJarZzfVFvRidK5lkGRBK9iZ9Gafe+0rblrzWaGAd7Pitm784ZP6K4AKFmcLyq1zbWPtaKkUNbIzC7Y0MU+5Txgm4sU1qch4FsUe6CkZ/hylFg06eQeOuozI73nnwzA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9072A1515;
+	Fri,  4 Apr 2025 02:46:49 -0700 (PDT)
+Received: from [10.1.29.21] (unknown [10.1.29.21])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 06A633F59E;
+	Fri,  4 Apr 2025 02:46:45 -0700 (PDT)
+Message-ID: <69f3429a-57ba-4c02-b1a7-bbf95b2b19db@arm.com>
+Date: Fri, 4 Apr 2025 10:46:24 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500011.china.huawei.com (7.191.174.215) To
- frapeml500008.china.huawei.com (7.182.85.71)
+User-Agent: Mozilla Thunderbird
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+Subject: Re: [PATCH v2 1/3] coresight: catu: Introduce refcount and spinlock
+ for enabling/disabling
+To: Yabin Cui <yabinc@google.com>, Leo Yan <leo.yan@arm.com>
+Cc: Mike Leach <mike.leach@linaro.org>, James Clark <james.clark@linaro.org>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20250402011832.2970072-1-yabinc@google.com>
+ <20250402011832.2970072-2-yabinc@google.com>
+ <CALJ9ZPNBGBd9OTBgedoQStXh3d2oGDGi6fUF7PXbU5qTEBRHew@mail.gmail.com>
+ <20250402130145.GI115840@e132581.arm.com>
+ <CALJ9ZPMx7vqjgkn8OApLBAPwF35v=enHc07A==LXG0C+922rag@mail.gmail.com>
+Content-Language: en-GB
+In-Reply-To: <CALJ9ZPMx7vqjgkn8OApLBAPwF35v=enHc07A==LXG0C+922rag@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu,  3 Apr 2025 16:13:37 -0700
-Zaid Alali <zaidal@os.amperecomputing.com> wrote:
-
-> Create a debugfs blob file to be used for reading the user
-> input for the component array. EINJv2 enables users to inject
-> errors to multiple components/devices at the same time using
-> component array.
+On 03/04/2025 18:53, Yabin Cui wrote:
+> On Wed, Apr 2, 2025 at 6:01 AM Leo Yan <leo.yan@arm.com> wrote:
+>>
+>> Hi Yabin,
+>>
+>> On Tue, Apr 01, 2025 at 06:21:59PM -0700, Yabin Cui wrote:
+>>
+>> [...]
+>>
+>>>> @@ -486,12 +491,17 @@ static int catu_disable_hw(struct catu_drvdata *drvdata)
+>>>>
+>>>>   static int catu_disable(struct coresight_device *csdev, void *__unused)
+>>>>   {
+>>>> -       int rc;
+>>>> +       int rc = 0;
+>>>>          struct catu_drvdata *catu_drvdata = csdev_to_catu_drvdata(csdev);
+>>>> +       guard(raw_spinlock_irqsave)(&catu_drvdata->spinlock);
+>>>>
+>>>> -       CS_UNLOCK(catu_drvdata->base);
+>>>> -       rc = catu_disable_hw(catu_drvdata);
+>>>> -       CS_LOCK(catu_drvdata->base);
+>>>> +       if (--csdev->refcnt == 0) {
+>>>> +               CS_UNLOCK(catu_drvdata->base);
+>>>> +               rc = catu_disable_hw(catu_drvdata);
+>>>> +               CS_LOCK(catu_drvdata->base);
+>>>> +       } else {
+>>>> +               rc = -EBUSY;
+>>
+>> This is not an error if the decremented reference counter is not zero.
+>> It should return 0.  Otherwise, the change looks good to me.
 > 
-> Signed-off-by: Zaid Alali <zaidal@os.amperecomputing.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> In coresight_disable_helpers(), the return value of catu_disable()
+> isn't checked.
+> The -EBUSY return was used for consistency with other refcounted
+> disable functions
+> like tmc_disable_etf_sink() and tmc_disable_etr_sink(). I'm happy to
+> change it back
+> to 0 if you believe that would be the more accurate return value here.
 
-Hmm.  Maybe you didn't get my emails?
+Please stick to 0 here. This indicates there was no errors w.r.t the 
+current session. This is similar to what we do for TMC ETR for e.g.
+
+Suzuki
+
+
+> 
+>>
+>> Thanks,
+>> Leo
+
