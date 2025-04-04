@@ -1,209 +1,112 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C63451DF962;
-	Fri,  4 Apr 2025 15:49:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E4EB1DF962;
+	Fri,  4 Apr 2025 15:52:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743781795; cv=none; b=MoWxjE1QeGhfBmefxWkfVX25q94PxC6zk7FUMXfJuOcIJx9OrBLPVqGSKc86DDqbTPqKtwBF6d+NScziZIg+6fFoQCXH5WARYo5P8y0pP8rD30DNhtlW/nSr4PrmnH5Spvua0SZ2d4IVkCWg5n5u+k/p8t0KR+koqBIULabKMv8=
+	t=1743781930; cv=none; b=uvVhlLyBljaENYrc9I8DHH1fK6Ksv5bQhpvKROVxJ9oW3kQTv6fefO2ESpWbvQQBRqYX8b8YwUM7CoqMl9FcYc8YqPJcXw1u1Fi9u6fp1pYzZiQezXfGOW7q3svpvua68hdcniBQQu/UfiAOicd61UYkuI0D/tNesuRyNmjahvY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743781795; c=relaxed/simple;
-	bh=m4LCpakrwz86U21T1J3A9DSHDf8q+L/BJbl7HOX/PI8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=R9KOO3czw43iedvaLYKVKQkwmIFRnwFw9i7aqB2d0oCa2Bwo/MZp9BaxXo3ZdH6G0OLQFFVzk5uYm60x0kr0aslgrrDxDqY0pJ4LpplrQcqfPz97xJC0sXtzx+qmP21Hfh/AgkJkP36KSkqgVOYpBmSuBH5x1FoyQNas2jJYz20=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j74AMQRg; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743781930; c=relaxed/simple;
+	bh=sKfM3/qWS66bwPhUL7IpTrHtoJB9p8ob07Z9FKjYph8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=jrfo8W+ZZ62+qZ4atCTqNnNll0klvS4FrPHOf7YEdL6bEYi0q0d1DGKdI93dJrhZXlOX2NsJqD9E+xHDtLUXlorXm/LCdKd//SMDDqawpLdV4AfXxKXTNDSc/aQdFosj8CbHVI41vamHoLR32TsEedgqfkw8dcypIAosFTgciYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZajGI8Af; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j74AMQRg"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-736c1138ae5so2146389b3a.3;
-        Fri, 04 Apr 2025 08:49:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743781792; x=1744386592; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yP84vi9S/CO3pARMt8AsumexblRaEcsvg6qxFTYHyzU=;
-        b=j74AMQRgDit1YzGweT2uu4vHM7tHkKbbDV0lrYL22t1VNgE0dNGtApHGs+sr9MKAMo
-         uNXPV9PFEXtWQux+ZmsO+ECUoQG+odf/Y0+s/VsLYyOKGiBAXM92sZgbjW4kCF+zi7AO
-         eS7Jnw5lJAo3Z9ib38Y2IKPjd2B5GfzPWH8A0aiq1CSiW050gGdrE1xGPZs8GDRYG8E2
-         gIuvQmmlqr/mkZg+D4Tqw9a94mZ81ETrfJwW2eGaZhg3K6aTwqqnPYW0KY/Yh3xImQNt
-         Vw5jkQ1X8LnaxPm4N51tXVCgePw+V1hWREkb3/tX5vANgXSN61BuJxBaFS5uu90efOXw
-         rtUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743781792; x=1744386592;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yP84vi9S/CO3pARMt8AsumexblRaEcsvg6qxFTYHyzU=;
-        b=s9lRUW1CLb+8EG1Xpd/PjykkP8Rk7PJeTIwm0+kfk+fFslbeDKSFqTDE9sQxr1ZoZQ
-         WbVxx+OE2JymDKHz4Tr3J29RPrAtJzctLAshJO+i1qkGpdweBTT/h++DjByvc1o6ETg4
-         X+u6k1UstNv1qMCf/MTTwExQAdxt6KfEvRPm0Ah0Sp7OhBB3/3Q1IxiczGk6gqMmN8O8
-         8ueDi7MZV0UPOE9MWPyGT2qCHfq5IkYTXXbFhS5besSx1llcNInywXY5b+KAIawM9Cwm
-         rge7b9Fl4cvkY2B2jPbAmRAhtYJpUNBnMc1ihOnu9xPECt2HqP7pVpFy/ExpKP4UbBp4
-         M2jA==
-X-Forwarded-Encrypted: i=1; AJvYcCW1gTJBqxdqkJSuo1CJT+NDXnOVWxtzzVjKqeyDBXQw5xWfj1LOuHRKFNMpnRfAQ6HQKifUJA/GjzRthCM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx/kXSHJMhyam/6ZyXwOpmCqaPmsG4CaTMMpIRK3UV5ph0CerO3
-	h1qPsSVEzmk0NLRuHmzf/Nuz2iznPqKKDnzPPModCQ03vcI/G8y+GgO11iE7GCLknAJBpTyDJ+Y
-	AfGrBKz90+0gxvS3WFX0A4qKnFlY=
-X-Gm-Gg: ASbGncvaPdCrnc6qbk5BerZiwtPy+at6yrCuNAuXPF0Pv+kiFs24nF7XxNX0M4spoxO
-	tjOOG4U8XLbyTBVQ96SdkyecchG9mojlWugpaFhqbUoFStBYY4rckC7RzJ55WwTVW29nK7UaWct
-	BGJql0osIRuFqVZOkH4DMnzISiDmS3q4x6NNrKDTKLTrY3MKFRiHmS
-X-Google-Smtp-Source: AGHT+IEGSKaLUOWXoq7rVkkc1aMtN18O+AIOmTA0joIqPgtrP+lM3ynTb5VE7B3UzbDJr+PTPdU76v/awPgbgUIVPA0=
-X-Received: by 2002:a05:6a00:a89:b0:737:e73:f64b with SMTP id
- d2e1a72fcca58-739e48c6f91mr4748744b3a.1.1743781791914; Fri, 04 Apr 2025
- 08:49:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZajGI8Af"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id AB283C4CEE9;
+	Fri,  4 Apr 2025 15:52:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743781929;
+	bh=sKfM3/qWS66bwPhUL7IpTrHtoJB9p8ob07Z9FKjYph8=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=ZajGI8AfJ+OTEapXryO3n/CqNq75szJwqcRBo+M5qCTsGZMB5/EwkhRaXBoOkYEP6
+	 O1fSOLsZ1+vLsWQmCt3fB2ZkK79jB75b++tMXUssPScKBghBUR2Zgi1sKMcm9SsbQR
+	 Lnr5A9VZ3UIJFXQPq24R+Tx1gGTHdknmUxt+sTxO+/6s1bH6Li9NZvZmk+cUYnK62p
+	 Rp/Nj15Jsto1lnYHY2sAJ81YeP/sW6nK5rs8BFGvfyjgiHGkJlUu/+XTmnThsYMjW6
+	 um8U0OdxzfRFMpFm0tRt47YieTADfZ1BCKyjR6SSCWBB/knMQUw7J9DKEYhS3PvpA0
+	 H6ykI01MLc2WQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9145DC369A1;
+	Fri,  4 Apr 2025 15:52:09 +0000 (UTC)
+From: Jean-Baptiste Maneyrol via B4 Relay <devnull+jean-baptiste.maneyrol.tdk.com@kernel.org>
+Date: Fri, 04 Apr 2025 17:52:02 +0200
+Subject: [PATCH 1/2] dt-bindings: iio: imu: icm42600: add interrupt naming
+ support
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250402180925.90914-1-andrii@kernel.org> <174375584977.31282.8985910498663747932.tip-bot2@tip-bot2>
-In-Reply-To: <174375584977.31282.8985910498663747932.tip-bot2@tip-bot2>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Fri, 4 Apr 2025 08:49:39 -0700
-X-Gm-Features: AQ5f1Jqfd2hG6YA6tRwgUlmaICWmxlM7J06z-rwLADpQzMcIV0kKb2AsCOqMnwI
-Message-ID: <CAEf4BzavW0GpSU4aT_kXF_rjyrEAoYfW8Ld8LzsL1boGo=xa5g@mail.gmail.com>
-Subject: Re: [tip: sched/core] sched/tracepoints: Move and extend the
- sched_process_exit() tracepoint
-To: Ingo Molnar <mingo@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-tip-commits@vger.kernel.org, Andrii Nakryiko <andrii@kernel.org>, 
-	"Steven Rostedt (Google)" <rostedt@goodmis.org>, Oleg Nesterov <oleg@redhat.com>, 
-	Peter Zijlstra <peterz@infradead.org>, x86@kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250404-iio-imu-inv-icm42600-rework-interrupt-using-names-v1-1-72ed5100da14@tdk.com>
+References: <20250404-iio-imu-inv-icm42600-rework-interrupt-using-names-v1-0-72ed5100da14@tdk.com>
+In-Reply-To: <20250404-iio-imu-inv-icm42600-rework-interrupt-using-names-v1-0-72ed5100da14@tdk.com>
+To: Jonathan Cameron <jic23@kernel.org>, 
+ Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1743781928; l=1440;
+ i=jean-baptiste.maneyrol@tdk.com; s=20240923; h=from:subject:message-id;
+ bh=X6P4YWLOlhlgH2oiySbrJcpFo5s9IL+DV66p+lLJcwY=;
+ b=66OyozigM0/WCOaWLAve7lw3hDs54rZl+Te4eTcUVidKMgfkDjV+WDram63arJQQnyEL+RYWZ
+ kdsrqtTRJJBBjPKfGcFfT3NRzUt4UiFuzvdV4AZqkptjHcxOFVBkmme
+X-Developer-Key: i=jean-baptiste.maneyrol@tdk.com; a=ed25519;
+ pk=bRqF1WYk0hR3qrnAithOLXSD0LvSu8DUd+quKLxCicI=
+X-Endpoint-Received: by B4 Relay for
+ jean-baptiste.maneyrol@tdk.com/20240923 with auth_id=218
+X-Original-From: Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>
+Reply-To: jean-baptiste.maneyrol@tdk.com
 
-On Fri, Apr 4, 2025 at 1:37=E2=80=AFAM tip-bot2 for Andrii Nakryiko
-<tip-bot2@linutronix.de> wrote:
->
-> The following commit has been merged into the sched/core branch of tip:
->
-> Commit-ID:     3e816361e94a0e79b1aabf44abec552e9698b196
-> Gitweb:        https://git.kernel.org/tip/3e816361e94a0e79b1aabf44abec552=
-e9698b196
-> Author:        Andrii Nakryiko <andrii@kernel.org>
-> AuthorDate:    Wed, 02 Apr 2025 11:09:25 -07:00
-> Committer:     Ingo Molnar <mingo@kernel.org>
-> CommitterDate: Fri, 04 Apr 2025 10:30:19 +02:00
->
-> sched/tracepoints: Move and extend the sched_process_exit() tracepoint
->
-> It is useful to be able to access current->mm at task exit to, say,
-> record a bunch of VMA information right before the task exits (e.g., for
-> stack symbolization reasons when dealing with short-lived processes that
-> exit in the middle of profiling session). Currently,
-> trace_sched_process_exit() is triggered after exit_mm() which resets
-> current->mm to NULL making this tracepoint unsuitable for inspecting
-> and recording task's mm_struct-related data when tracing process
-> lifetimes.
->
-> There is a particularly suitable place, though, right after
-> taskstats_exit() is called, but before we do exit_mm() and other
-> exit_*() resource teardowns. taskstats performs a similar kind of
-> accounting that some applications do with BPF, and so co-locating them
-> seems like a good fit. So that's where trace_sched_process_exit() is
-> moved with this patch.
->
-> Also, existing trace_sched_process_exit() tracepoint is notoriously
-> missing `group_dead` flag that is certainly useful in practice and some
-> of our production applications have to work around this. So plumb
-> `group_dead` through while at it, to have a richer and more complete
-> tracepoint.
->
-> Note that we can't use sched_process_template anymore, and so we use
-> TRACE_EVENT()-based tracepoint definition. But all the field names and
-> order, as well as assign and output logic remain intact. We just add one
-> extra field at the end in backwards-compatible way.
->
-> Document the dependency to sched_process_template anyway.
->
-> Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
-> Signed-off-by: Ingo Molnar <mingo@kernel.org>
+From: Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>
 
-Adding Andrew.
+Add interrupt-names field for specifying interrupt used.
+Only INT1 is supported by the driver currently.
+---
+ .../devicetree/bindings/iio/imu/invensense,icm42600.yaml          | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-Seems like my patch was applied both by Andrew ([0], [1]) and Ingo.
-Andew, would it be possible to drop those from your tree and keep the
-one in Ingo's tip/sched/core? Thanks!
+diff --git a/Documentation/devicetree/bindings/iio/imu/invensense,icm42600.yaml b/Documentation/devicetree/bindings/iio/imu/invensense,icm42600.yaml
+index 7e4492bbd0278a336587dc5ac04da7153453da29..f19cdfd7450e04e7c984dc987f3c23f5ad89a248 100644
+--- a/Documentation/devicetree/bindings/iio/imu/invensense,icm42600.yaml
++++ b/Documentation/devicetree/bindings/iio/imu/invensense,icm42600.yaml
+@@ -41,6 +41,12 @@ properties:
+   interrupts:
+     maxItems: 1
+ 
++  interrupt-names:
++    enum:
++      - INT1
++    description: |
++      set to "INT1" the only supported interrupts pin
++
+   drive-open-drain:
+     type: boolean
+ 
+@@ -76,6 +82,7 @@ examples:
+             reg = <0x68>;
+             interrupt-parent = <&gpio2>;
+             interrupts = <7 IRQ_TYPE_EDGE_FALLING>;
++            interrupt-names = "INT1";
+             vdd-supply = <&vdd>;
+             vddio-supply = <&vddio>;
+         };
+@@ -95,6 +102,7 @@ examples:
+             spi-cpol;
+             interrupt-parent = <&gpio1>;
+             interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
++            interrupt-names = "INT1";
+             vdd-supply = <&vdd>;
+             vddio-supply = <&vddio>;
+         };
 
-  [0] https://git.kernel.org/pub/scm/linux/kernel/git/akpm/25-new.git/tree/=
-patches/exit-move-and-extend-sched_process_exit-tracepoint.patch
-  [1] https://git.kernel.org/pub/scm/linux/kernel/git/akpm/25-new.git/tree/=
-patches/exit-move-and-extend-sched_process_exit-tracepoint-fix.patch
+-- 
+2.49.0
 
-> Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> Acked-by: Oleg Nesterov <oleg@redhat.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Link: https://lore.kernel.org/r/20250402180925.90914-1-andrii@kernel.org
-> ---
->  include/trace/events/sched.h | 34 ++++++++++++++++++++++++++++++----
->  kernel/exit.c                |  2 +-
->  2 files changed, 31 insertions(+), 5 deletions(-)
->
-> diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
-> index 8994e97..3bec9fb 100644
-> --- a/include/trace/events/sched.h
-> +++ b/include/trace/events/sched.h
-> @@ -326,11 +326,37 @@ DEFINE_EVENT(sched_process_template, sched_process_=
-free,
->              TP_ARGS(p));
->
->  /*
-> - * Tracepoint for a task exiting:
-> + * Tracepoint for a task exiting.
-> + * Note, it's a superset of sched_process_template and should be kept
-> + * compatible as much as possible. sched_process_exits has an extra
-> + * `group_dead` argument, so sched_process_template can't be used,
-> + * unfortunately, just like sched_migrate_task above.
->   */
-> -DEFINE_EVENT(sched_process_template, sched_process_exit,
-> -            TP_PROTO(struct task_struct *p),
-> -            TP_ARGS(p));
-> +TRACE_EVENT(sched_process_exit,
-> +
-> +       TP_PROTO(struct task_struct *p, bool group_dead),
-> +
-> +       TP_ARGS(p, group_dead),
-> +
-> +       TP_STRUCT__entry(
-> +               __array(        char,   comm,   TASK_COMM_LEN   )
-> +               __field(        pid_t,  pid                     )
-> +               __field(        int,    prio                    )
-> +               __field(        bool,   group_dead              )
-> +       ),
-> +
-> +       TP_fast_assign(
-> +               memcpy(__entry->comm, p->comm, TASK_COMM_LEN);
-> +               __entry->pid            =3D p->pid;
-> +               __entry->prio           =3D p->prio; /* XXX SCHED_DEADLIN=
-E */
-> +               __entry->group_dead     =3D group_dead;
-> +       ),
-> +
-> +       TP_printk("comm=3D%s pid=3D%d prio=3D%d group_dead=3D%s",
-> +                 __entry->comm, __entry->pid, __entry->prio,
-> +                 __entry->group_dead ? "true" : "false"
-> +       )
-> +);
->
->  /*
->   * Tracepoint for waiting on task to unschedule:
-> diff --git a/kernel/exit.c b/kernel/exit.c
-> index 1b51dc0..f1db86d 100644
-> --- a/kernel/exit.c
-> +++ b/kernel/exit.c
-> @@ -936,12 +936,12 @@ void __noreturn do_exit(long code)
->
->         tsk->exit_code =3D code;
->         taskstats_exit(tsk, group_dead);
-> +       trace_sched_process_exit(tsk, group_dead);
->
->         exit_mm();
->
->         if (group_dead)
->                 acct_process();
-> -       trace_sched_process_exit(tsk);
->
->         exit_sem(tsk);
->         exit_shm(tsk);
+
