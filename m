@@ -1,52 +1,70 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDCAE1A3BA1;
-	Fri,  4 Apr 2025 09:20:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E18091A3144;
+	Fri,  4 Apr 2025 09:20:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743758428; cv=none; b=d5z3Nb6aKf0gR3WKy3kiv3OF/fQo5GEPRzfalX58e80//fmn+jNTt6XHs4VZKtMJ1pQub5fdr+VrF9xkksR6zO2mDOCeBNaq8GLih1Mrsbv4+EDEL6TwI0sF6ZS0YAR7b+A+U1k/TDn3YB1yufQ+ooEmhK4TP5ZJZ9XNQ7AT1Fo=
+	t=1743758457; cv=none; b=t5/koQe2f5OwIqfOp79EiV7xJ4q5ywaeCodViEbcCtxsyIM90/qCzL8x9nfT8/bV4gGXozMUqcpx48tiUX56Xo63Wnsf0H4ExW4cmsyECld7Fn9wsn2mWrpiLSx6q9QVIN6e5G4S/UmFD727vKnoMV3q0esJeLJ5K+cPFTBRtdQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743758428; c=relaxed/simple;
-	bh=ut9cSDbsDEKTYeR6bElefCMLv6ytlB7Y0CNMaxKsVAU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gqC4eZTwFb2AT2lQHs3ZLvoSY0C8UdSwqbvECTBBa+tPkf2U39xasX3KugDghJmJYPhc6klsRXYVu4WwoweoCAE0BmxWf3hE/tlJRVxL12IR7LcaC1pZ8z3SWHGYOb13u5d+KQtrVPWbNFbeWKIVwLoR6me4ibMOeUk0uIftGJY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 37D8268BEB; Fri,  4 Apr 2025 11:20:20 +0200 (CEST)
-Date: Fri, 4 Apr 2025 11:20:19 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: Chanho Min <chanho.min@lge.com>
-Cc: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Sven <dm-devel@schwermer.no>,
-	Neil Brown <neilb@suse.de>, hch@lst.de, dm-devel@lists.linux.dev,
-	Gunho Lee <gunho.lee@lge.com>
-Subject: Re: [PATCH] block: remove non-existent partition dev_t return from
- blk_lookup_devt
-Message-ID: <20250404092019.GA13334@lst.de>
-References: <20250403003532.412-1-chanho.min@lge.com>
+	s=arc-20240116; t=1743758457; c=relaxed/simple;
+	bh=/qhPQqDfPIlOx7DCzaQ3g+N4TaadMGauJvk2V7rJTEg=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Wnnr+uGgEsouy/pBms0d/2MOuao5QP1h9uOsGg9q/K39oei8lIM3KsB3BJix8JESpYS9nIe7WRh5ZsQIUK9/m83we18H++2T2kpUlEm01fSfFgFiGEOeUQhUCxG8ZhxfFwKF+je71PWwK1t+q9KQbF8A/InIwMaO2BOhRMK3OJk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZTY3Y5c5Kz67QRQ;
+	Fri,  4 Apr 2025 17:20:09 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id A7F9E14080B;
+	Fri,  4 Apr 2025 17:20:51 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 4 Apr
+ 2025 11:20:50 +0200
+Date: Fri, 4 Apr 2025 10:20:49 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Zaid Alali <zaidal@os.amperecomputing.com>
+CC: <rafael@kernel.org>, <lenb@kernel.org>, <james.morse@arm.com>,
+	<tony.luck@intel.com>, <bp@alien8.de>, <robert.moore@intel.com>,
+	<dan.j.williams@intel.com>, <Benjamin.Cheatham@amd.com>,
+	<Avadhut.Naik@amd.com>, <viro@zeniv.linux.org.uk>, <arnd@arndb.de>,
+	<ira.weiny@intel.com>, <dave.jiang@intel.com>,
+	<sthanneeru.opensrc@micron.com>, <linux-acpi@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <acpica-devel@lists.linux.dev>
+Subject: Re: [PATCH v5 3/9] ACPI: APEI: EINJ: Fix kernel test robot sparse
+ warning
+Message-ID: <20250404102049.0000308c@huawei.com>
+In-Reply-To: <20250403231339.23708-4-zaidal@os.amperecomputing.com>
+References: <20250403231339.23708-1-zaidal@os.amperecomputing.com>
+	<20250403231339.23708-4-zaidal@os.amperecomputing.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250403003532.412-1-chanho.min@lge.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500011.china.huawei.com (7.191.174.215) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-NAK.
+On Thu,  3 Apr 2025 16:13:33 -0700
+Zaid Alali <zaidal@os.amperecomputing.com> wrote:
 
-Don't do this.  Md at least has a reason for doing this silly things
-as in the code as written in the 1990s where people did not know better.
+Probably don't need to mention robot in the commit title.
 
-The dm-initwait code has no such excuse as it was written recently and
-explicitly ignored the rules to not use this early dev_t lookup code that
-is known to be broken.  You now have to live with the fallout because you
-decided to you this broken code.  Stop using it if you care.
+> This patch fixes the kernel test robot warning reported here:
+> https://lore.kernel.org/all/202410241620.oApALow5-lkp@intel.com/
 
-If there's one thing we need to do is to warn everyone in the Kconfig
-and boot time dmesg that dm-initwait is broken.
+Good perhaps to use the tags suggested in that message.
+That helps acknowledge the usefulness of that service and them
+tracking the closure of reports.
+
+> 
+> Signed-off-by: Zaid Alali <zaidal@os.amperecomputing.com>
+Otherwise you fixed the one thing I pointed out in v4 so
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
