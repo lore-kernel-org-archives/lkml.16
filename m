@@ -1,129 +1,111 @@
-Received: from out-176.mta1.migadu.com (out-176.mta1.migadu.com [95.215.58.176])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D7F5218ABA
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 17:35:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77AB521C184
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 17:35:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743788120; cv=none; b=n2U82RyOVVEBPmm7yhS9zl9x9wReOmx+Y+cWb478d6r19tFKrbcxQuXxkYnJpIYIYwIYnBhAV+q1fH3+cHuy83b5cB04WTzHJSvT9HBitKYoYeopVmN4ysD2fl8xFYVqr1aTZRUOT8Qs5iLE/bOd3sDeWx0OFQwiJC7fa3IXHSs=
+	t=1743788150; cv=none; b=KTEontZMDJGo3wtUL5EeAu0NQbicVhxz3qzXC2MroT6PiyLUpOx8NKoljKWVSjisoPxAzn9MNlXmAssd5SZTGpIOfUzrnLc82F/tzKONSQ991Y5UlJA6X4Wqcoudm9jvgklzLQz25q/7NS+pslrVC56eGP6tboza2ChEb+z2+rs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743788120; c=relaxed/simple;
-	bh=4qZMCacvIW/TYVtR6WWATCEGDTnUzOK2HOxQ7ZgRspo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uGvZG3WrVwQKU2/Ad8IttTLC2cXb3HmwMJC7ANv1y0bXxqIMlbapURipsLGYaMwNRO2r8XwuCkQ0dUhr7fefoz/apFj+mcBq0ACAvfNKKRsQ/qcGb+HDAppbbSP+HKlGuHsGorbgbPZQxFgJYpj25lls67XCh2kvk8PymFFTrcE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=iencinas.com; spf=pass smtp.mailfrom=iencinas.com; dkim=pass (2048-bit key) header.d=iencinas.com header.i=@iencinas.com header.b=Hl5AQsdv; arc=none smtp.client-ip=95.215.58.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=iencinas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iencinas.com
+	s=arc-20240116; t=1743788150; c=relaxed/simple;
+	bh=SMTilVN6x/E0WFJK/nmz+VVmcBRCXyfsBBBi5eJrBg0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=JV5Voxud9tY/B7Lod7lRkEbK06BcYqKE0uyZbiwYaV5jR73kjC+1LkLv6Rt/pU92Su8G4lLmCixEzwBF255VmLvcYby2JhO/eQcA4aPwwwCFwPuo1vb66rVX738SvtLDLKS1HRuZXri8JI8bEvBsLmPb/MclmThEERLZcCMGeJU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Kv3UlUL8; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=iencinas.com header.i=@iencinas.com header.b="Hl5AQsdv"
-Message-ID: <b3f8e641-9690-4792-974c-c895d2e4531a@iencinas.com>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=iencinas.com;
-	s=key1; t=1743788106;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=N2/fZZA4UL9XJIEHQ+/bBTVFu2hgzKlDY3S+eN0cDvg=;
-	b=Hl5AQsdv2ftxLfGgWfsSkVOMa+4AgcivN/fnTLwoWKanl5iGKyiragWuaSPdPfjF2x0FGX
-	zseE+ZwxVKLbsoZn+le3RmgYE5pbbj9YdfFnsF9fi1glUuSZL7ESp/Jj2oD12892ktWqCv
-	7q+ttQIaUabPjTD7bOfoTHuqFbLqNp3+wBi1uMKoNw6Yldd0Pm+XzzM8rvipfZiyKAe2cW
-	0zSRTFJ8CN1xo3GnysgVRKLiRiSEs/Gu8EF2P33sv6Xxi0we/InQTI8PC30T8e50Dt/5pC
-	WdxOGZ+Q0tTMDcEw/hvNvZnLVYZSbFAdBf/uxfZ+BN547fsyn1I2soTwOFQRUg==
-Date: Fri, 4 Apr 2025 19:35:00 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Kv3UlUL8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743788149; x=1775324149;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=SMTilVN6x/E0WFJK/nmz+VVmcBRCXyfsBBBi5eJrBg0=;
+  b=Kv3UlUL8B4CA/I56wwKudw2QC/ExrqIHfUVeX4XwJvm0HcpMSJgNrLSx
+   KBkJ/2mXzOVYJKWBrHLv6b5FAtiRdRgNPou4DkceClExqYqYa/2/m3KDe
+   Wh5wev9bkikAOYzTn2FpS26n9CpOtqS+880gOSOqXc3/S9Wwf/8RP1f0P
+   C+StD8sD6Ui4b5n0C3+xTpfrZnAa6bXxmVGNu0Yy5IQaaU4jgQWq4HskQ
+   EIU8CVeF4BJXpcbqEDcvlv4VfVcJnl3eX7ivZIH4zc7/x3s10dUqeQy73
+   s6aeNVb1GEBpSN5aND6EybAiV5DLMKXe9TxUboyoti+gTBBecLE7yha2h
+   A==;
+X-CSE-ConnectionGUID: Fo5abx0iT3SK4jkHHBLaKw==
+X-CSE-MsgGUID: DkFn4dCpSvC/c5yGoZEVzg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11394"; a="67708237"
+X-IronPort-AV: E=Sophos;i="6.15,188,1739865600"; 
+   d="scan'208";a="67708237"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 10:35:48 -0700
+X-CSE-ConnectionGUID: 5r/4FHUMRv+MLE8ULpeY8g==
+X-CSE-MsgGUID: sabSRLRAQjW5kAO58gXOow==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,188,1739865600"; 
+   d="scan'208";a="131508551"
+Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
+  by fmviesa003.fm.intel.com with ESMTP; 04 Apr 2025 10:35:46 -0700
+Received: from kbuild by b207828170a5 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u0kxE-0001QX-0e;
+	Fri, 04 Apr 2025 17:35:44 +0000
+Date: Sat, 5 Apr 2025 01:35:01 +0800
+From: kernel test robot <lkp@intel.com>
+To: Nam Cao <namcao@linutronix.de>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>
+Subject: [tip:timers/cleanups 5/10] kernel/time/timer_list.c:49:77: error:
+ macro "ACCESS_PRIVATE" requires 2 arguments, but only 1 given
+Message-ID: <202504050305.zbYN7qiW-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v3 2/2] riscv: introduce asm/swab.h
-To: Arnd Bergmann <arnd@arndb.de>, Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Alexandre Ghiti <alex@ghiti.fr>
-Cc: Eric Biggers <ebiggers@kernel.org>, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-kernel-mentees@lists.linux.dev,
- Shuah Khan <skhan@linuxfoundation.org>,
- Zhihang Shao <zhihang.shao.iscas@gmail.com>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?=
- <bjorn@kernel.org>, Linux-Arch <linux-arch@vger.kernel.org>
-References: <20250403-riscv-swab-v3-0-3bf705d80e33@iencinas.com>
- <20250403-riscv-swab-v3-2-3bf705d80e33@iencinas.com>
- <c6efcdca-5739-42b6-8cb4-f4d8cc85b6af@app.fastmail.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Ignacio Encinas <ignacio@iencinas.com>
-In-Reply-To: <c6efcdca-5739-42b6-8cb4-f4d8cc85b6af@app.fastmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers/cleanups
+head:   5c4da3a96bf484f965057c281f1ef48ac46987bc
+commit: 9453228aa82f20c07670d22c3d54f1be6c4244b4 [5/10] hrtimers: Make callback function pointer private
+config: arm-randconfig-002-20250404 (https://download.01.org/0day-ci/archive/20250405/202504050305.zbYN7qiW-lkp@intel.com/config)
+compiler: arm-linux-gnueabi-gcc (GCC) 7.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250405/202504050305.zbYN7qiW-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504050305.zbYN7qiW-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   kernel/time/timer_list.c: In function 'print_timer':
+>> kernel/time/timer_list.c:49:77: error: macro "ACCESS_PRIVATE" requires 2 arguments, but only 1 given
+     SEQ_printf(m, " #%d: <%p>, %ps", idx, taddr, ACCESS_PRIVATE(timer->function));
+                                                                                ^
+>> kernel/time/timer_list.c:49:47: error: 'ACCESS_PRIVATE' undeclared (first use in this function); did you mean 'DQF_PRIVATE'?
+     SEQ_printf(m, " #%d: <%p>, %ps", idx, taddr, ACCESS_PRIVATE(timer->function));
+                                                  ^~~~~~~~~~~~~~
+                                                  DQF_PRIVATE
+   kernel/time/timer_list.c:49:47: note: each undeclared identifier is reported only once for each function it appears in
 
 
+vim +/ACCESS_PRIVATE +49 kernel/time/timer_list.c
 
-On 4/4/25 7:58, Arnd Bergmann wrote:
-> On Thu, Apr 3, 2025, at 22:34, Ignacio Encinas wrote:
->> +#define ARCH_SWAB(size) \
->> +static __always_inline unsigned long __arch_swab##size(__u##size value) \
->> +{									\
->> +	unsigned long x = value;					\
->> +									\
->> +	if (riscv_has_extension_likely(RISCV_ISA_EXT_ZBB)) {            \
->> +		asm volatile (".option push\n"				\
->> +			      ".option arch,+zbb\n"			\
->> +			      "rev8 %0, %1\n"				\
->> +			      ".option pop\n"				\
->> +			      : "=r" (x) : "r" (x));			\
->> +		return x >> (BITS_PER_LONG - size);			\
->> +	}                                                               \
->> +	return  ___constant_swab##size(value);				\
->> +}
+    44	
+    45	static void
+    46	print_timer(struct seq_file *m, struct hrtimer *taddr, struct hrtimer *timer,
+    47		    int idx, u64 now)
+    48	{
+  > 49		SEQ_printf(m, " #%d: <%p>, %ps", idx, taddr, ACCESS_PRIVATE(timer->function));
+    50		SEQ_printf(m, ", S:%02x", timer->state);
+    51		SEQ_printf(m, "\n");
+    52		SEQ_printf(m, " # expires at %Lu-%Lu nsecs [in %Ld to %Ld nsecs]\n",
+    53			(unsigned long long)ktime_to_ns(hrtimer_get_softexpires(timer)),
+    54			(unsigned long long)ktime_to_ns(hrtimer_get_expires(timer)),
+    55			(long long)(ktime_to_ns(hrtimer_get_softexpires(timer)) - now),
+    56			(long long)(ktime_to_ns(hrtimer_get_expires(timer)) - now));
+    57	}
+    58	
 
-Hello Arnd!
-
-> I think the fallback should really just use the __builtin_bswap
-> helpers instead of the ___constant_swab variants. The output
-> would be the same, but you can skip patch 1/2.
-
-I tried, but that change causes build errors:
-
-```
-undefined reference to `__bswapsi2'
-
-[...]
-
-undefined reference to `__bswapdi2
-```
-
-I tried working around those, but couldn't find a good solution. I'm a 
-bit out of my depth here, but I "summarized" everything here [1]. Let me
-know if I'm missing something.
-
-[1] https://lore.kernel.org/linux-riscv/b3b59747-0484-4042-bdc4-c067688e3bfe@iencinas.com/
-
-> I would also suggest dumbing down the macro a bit so you can
-> still find the definition with 'git grep __arch_swab64'. Ideally
-> just put the function body into a macro but leave the three
-> separate inline function definitions.
-
-Good point, thanks for bringing it up. Just to be sure, is this what you
-had in mind? (Give or take formatting + naming of variables)
-
-#define arch_swab(size, value) 						\
-({                      						\
-	unsigned long x = value;					\
-									\
-	if (riscv_has_extension_likely(RISCV_ISA_EXT_ZBB)) {            \
-		asm volatile (".option push\n"				\
-			      ".option arch,+zbb\n"			\
-			      "rev8 %0, %1\n"				\
-			      ".option pop\n"				\
-			      : "=r" (x) : "r" (x));			\
-		x = x >> (BITS_PER_LONG - size);			\
-	} else {                                                        \
-		x = ___constant_swab##size(value);                      \
-	}								\
-	x;								\
-})
-
-static __always_inline unsigned long __arch_swab64(__u64 value) {
-	return arch_swab(64, value);
-}
-
-Thanks!
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
