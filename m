@@ -1,165 +1,109 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+Received: from mail.3xo.fr (mail.3xo.fr [212.129.21.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7035ADF49;
-	Fri,  4 Apr 2025 08:55:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 596E719D081;
+	Fri,  4 Apr 2025 08:57:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.129.21.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743756952; cv=none; b=XdJjqqGylET8Jy0fJOhTJxy5z/U3kn0kHQI0tRxKQj5lbZRXbwXyBLBD+pQ7SKrfaz1HkY62gDfUufc2cjg+B//A6NyiKzeZ1aOTiUd/HMtjJrXkHvrRe27zgAl3Sslj+WpvZy8rPGiLYS1ok4vkt5tlQ+mpfSUJUCqoPb9r0Xw=
+	t=1743757071; cv=none; b=jW+yyNWOsMhFFA4VHdgK/Bom4FR0CzXtamNO1p6w3BQxjbvR4uqQ5jVUIRQJJg+JgRX/MX3ZQ1djy1TsD98FPhZSiFqgld4wHdf2w82Gv+FOH3vDvlcu9gNd0z3hp3rJLfyKUZqfYFItptu1zU4awtIvTNhJOIermpYIHm1oHJs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743756952; c=relaxed/simple;
-	bh=yxBCbzoKp7KS7YTX84wHYXDQoY79bzGvyNbzcmYejE8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=mv3sYvI6FR5z038f/3bsnOPFmxeFDRvr29ro4ZhOkrwdHtQ4UKsyGbCzJcfpPQ5ev+xB+6apFJG9G6MLR2kJQOo6NGhdMsK3dwlWWUdwjnHTg5IrpYNpQcyrDmbXAMlx/scs+6/eJ96MWH5QAfc7gexgyqblONvf81vpOP4aOm4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=fIwd/wjv; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1743757071; c=relaxed/simple;
+	bh=qGpiBlKk4gUz7SGt4N7XSRFqC2Dp6ovYU5+SiSPQizM=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=oSRHVbAWEB4F7MrU7nN8kjBM2Z3OAH1vOv/0Q5zy7EjHUbWOt7wT0/gkBnQGjQv6tf0LJHyHyUpbyDzi4DdKMxdPcESE9I+taXUrlVM14RC7YWj9u9FBmXfJ5x5+yRhOtWfqyOR+tr/J18TXcvcRhCBZqsugQHc/+hKSuglo0K0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=3xo.fr; spf=pass smtp.mailfrom=3xo.fr; dkim=pass (2048-bit key) header.d=3xo.fr header.i=@3xo.fr header.b=lb20VlKf; arc=none smtp.client-ip=212.129.21.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=3xo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=3xo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fIwd/wjv"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 5348sv783766828
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 4 Apr 2025 03:54:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1743756897;
-	bh=CYUW+JoyF/G12mMwzahnbc23eTPvuYAy1EdgeaJckFw=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=fIwd/wjv9tNPGAqWuceipoxKdjUosBvrfZmw8J6brluxUGRxZXWtDFLp9q2ZJ/L65
-	 7/l11pcAprXbl2tvlbAGCi1BnOCF7vdiOReLao8ExUXRmO8ncRWKyTJNaTGCH91PXP
-	 qpunLiWN3HI6KJ/zWz+0USFzErUZnqPkxQjp+Sjc=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 5348svC1091374
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 4 Apr 2025 03:54:57 -0500
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 4
- Apr 2025 03:54:57 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 4 Apr 2025 03:54:57 -0500
-Received: from [172.24.23.235] (lt9560gk3.dhcp.ti.com [172.24.23.235])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 5348sonl071093;
-	Fri, 4 Apr 2025 03:54:51 -0500
-Message-ID: <d54d6d16-8422-4506-8f9a-24628dd95471@ti.com>
-Date: Fri, 4 Apr 2025 14:24:50 +0530
+	dkim=pass (2048-bit key) header.d=3xo.fr header.i=@3xo.fr header.b="lb20VlKf"
+Received: from localhost (mail.3xo.fr [212.129.21.66])
+	by mail.3xo.fr (Postfix) with ESMTP id 98EECCD;
+	Fri,  4 Apr 2025 10:50:29 +0200 (CEST)
+X-Virus-Scanned: Debian amavis at nxo2.3xo.fr
+Received: from mail.3xo.fr ([212.129.21.66])
+ by localhost (mail.3xo.fr [212.129.21.66]) (amavis, port 10024) with ESMTP
+ id 8mSLMhAe8CKe; Fri,  4 Apr 2025 10:50:27 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.3xo.fr 83FED8D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=3xo.fr; s=3xo;
+	t=1743756627; bh=CRAJN8+XEA5p31GSsFqFuEJaey0yqN9dDs07tGG1jQA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=lb20VlKfcjY8a7J/mtS3DUFvklSqJjYHbNOpvr5mvDuUiTcUAZTrS4jvwIYi8pDbd
+	 jngz7iyj2q4qcYbEo0GDpo08Z9QRGAjpQdVAP4VFFDrkW8nKXq1Eo/bYXKZQyW/m7B
+	 XtHudX59MBoF8M+9EXMuM/86MpKMuPEiXhr+YP1CU432PwUleI3pWhJKH/mAgcVGfr
+	 mdDYTpedNVvrT51XQzQsffn4Jv0RJ4oEF+cxyX+4fVC8705kTxtdIRIKH8XCDQCNsY
+	 a6gvuy2X4ZE69DNF8SCmUBX3heBPxYDV9qklLKzRt+nmF+63iq/i6DC6LOg1J4dW24
+	 aayyaaredgRCQ==
+Received: from mail.3xo.fr (mail.3xo.fr [212.129.21.66])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	(No client certificate requested)
+	by mail.3xo.fr (Postfix) with ESMTPSA id 83FED8D;
+	Fri,  4 Apr 2025 10:50:27 +0200 (CEST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [EXTERNAL] Re: [PATCH net v3 3/3] net: ti: icss-iep: Fix possible
- NULL pointer dereference for perout request
-To: Paolo Abeni <pabeni@redhat.com>, Roger Quadros <rogerq@kernel.org>,
-        <dan.carpenter@linaro.org>, <kuba@kernel.org>, <edumazet@google.com>,
-        <davem@davemloft.net>, <andrew+netdev@lunn.ch>
-CC: <bpf@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <namcao@linutronix.de>, <javier.carrasco.cruz@gmail.com>,
-        <diogo.ivo@siemens.com>, <horms@kernel.org>,
-        <jacob.e.keller@intel.com>, <john.fastabend@gmail.com>,
-        <hawk@kernel.org>, <daniel@iogearbox.net>, <ast@kernel.org>,
-        <srk@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
-        <danishanwar@ti.com>
-References: <20250328102403.2626974-1-m-malladi@ti.com>
- <20250328102403.2626974-4-m-malladi@ti.com>
- <0fb67fc2-4915-49af-aa20-8bdc9bed4226@kernel.org>
- <b0a099a6-33b2-49f9-9af7-580c60b98f55@ti.com>
- <469fd8d0-c72e-4ca6-87a9-2f42b180276b@redhat.com>
-Content-Language: en-US
-From: "Malladi, Meghana" <m-malladi@ti.com>
-In-Reply-To: <469fd8d0-c72e-4ca6-87a9-2f42b180276b@redhat.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Date: Fri, 04 Apr 2025 10:50:27 +0200
+From: Nicolas Baranger <nicolas.baranger@3xo.fr>
+To: Christoph Hellwig <hch@infradead.org>
+Cc: hch@lst.de, David Howells <dhowells@redhat.com>, netfs@lists.linux.dev,
+ linux-cifs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Steve French <smfrench@gmail.com>, Jeff Layton
+ <jlayton@kernel.org>, Christian Brauner <brauner@kernel.org>
+Subject: Re: [netfs/cifs - Linux 6.14] loop on file cat + file copy when files
+ are on CIFS share
+In-Reply-To: <Z-Z95ePf3KQZ2MnB@infradead.org>
+References: <10bec2430ed4df68bde10ed95295d093@3xo.fr>
+ <35940e6c0ed86fd94468e175061faeac@3xo.fr> <Z-Z95ePf3KQZ2MnB@infradead.org>
+Message-ID: <48685a06c2608b182df3b7a767520c1d@3xo.fr>
+X-Sender: nicolas.baranger@3xo.fr
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
 Content-Transfer-Encoding: 8bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+
+Hi Christoph
+
+Thanks for answer and help
+Did someone reproduced the issue (very easy) ?
 
 
+CIFS SHARE is mounted as /mnt/fbx/FBX-24T
+echo toto >/mnt/fbx/FBX-24T/toto
 
-On 4/3/2025 4:55 PM, Paolo Abeni wrote:
-> On 4/2/25 2: 37 PM, Malladi, Meghana wrote: > On 4/2/2025 5: 58 PM, 
-> Roger Quadros wrote: >> On 28/03/2025 12: 24, Meghana Malladi wrote: >>> 
-> ICSS IEP driver has flags to check if perout or pps has been enabled >>> at
-> ZjQcmQRYFpfptBannerStart
-> This message was sent from outside of Texas Instruments.
-> Do not click links or open attachments unless you recognize the source 
-> of this email and know the content is safe.
-> Report Suspicious
-> <https://us-phishalarm-ewt.proofpoint.com/EWT/v1/G3vK! 
-> updqndalvOwRqgXOXDPJf9wy4vKojW68gavBCIsz5DlBLvSeawwT53qgFGcvIm0ULRBQkJv028AcR194Ei9ZDPp5ily-uAw$>
-> ZjQcmQRYFpfptBannerEnd
+ls -l /mnt/fbx/FBX-24T/toto
+-rw-rw-rw- 1 root root 5 20 mars  09:20 /mnt/fbx/FBX-24T/toto
+
+cat /mnt/fbx/FBX-24T/toto
+toto
+toto
+toto
+toto
+toto
+toto
+toto
+^C
+
+
+CIFS mount options:
+grep cifs /proc/mounts
+//10.0.10.100/FBX24T /mnt/fbx/FBX-24T cifs 
+rw,nosuid,nodev,noexec,relatime,vers=3.1.1,cache=none,upcall_target=app,username=fbx,domain=HOMELAN,uid=0,noforceuid,gid=0,noforcegid,addr=10.0.10.100,file_mode=0666,dir_mode=0755,iocharset=utf8,soft,nounix,serverino,mapposix,mfsymlinks,reparse=nfs,nativesocket,symlink=mfsymlinks,rsize=65536,wsize=65536,bsize=16777216,retrans=1,echo_interval=60,actimeo=1,closetimeo=1 
+0 0
+
+KERNEL: uname -a
+Linux 14RV-SERVER.14rv.lan 6.14.0-rc2-amd64 #0 SMP PREEMPT_DYNAMIC Wed 
+Feb 12 18:23:00 CET 2025 x86_64 GNU/Linux
+
+
+Kind regards
+Nicolas Baranger
+
+
+Le 2025-03-28 11:45, Christoph Hellwig a écrit :
+
+> Hi Nicolas,
 > 
-> On 4/2/25 2:37 PM, Malladi, Meghana wrote:
->> On 4/2/2025 5:58 PM, Roger Quadros wrote:
->>> On 28/03/2025 12:24, Meghana Malladi wrote:
->>>> ICSS IEP driver has flags to check if perout or pps has been enabled
->>>> at any given point of time. Whenever there is request to enable or
->>>> disable the signal, the driver first checks its enabled or disabled
->>>> and acts accordingly.
->>>>
->>>> After bringing the interface down and up, calling PPS/perout enable
->>>> doesn't work as the driver believes PPS is already enabled,
->>>
->>> How? aren't we calling icss_iep_pps_enable(iep, false)?
->>> wouldn't this disable the IEP and clear the iep->pps_enabled flag?
->>>
->> 
->> The whole purpose of calling icss_iep_pps_enable(iep, false) is to clear 
->> iep->pps_enabled flag, because if this flag is not cleared it hinders 
->> generating new pps signal (with the newly loaded firmware) once any of 
->> the interfaces are up (check icss_iep_perout_enable()), so instead of 
->> calling icss_iep_pps_enable(iep, false) I am just clearing the 
->> iep->pps_enabled flag.
-> 
-> IDK what Roger thinks, but the above is not clear to me. I read it as
-> you are stating that icss_iep_pps_enable() indeed clears the flag, so i
-> don't see/follow the reasoning behind this change.
-> 
-
-The reason behind this change is to fix the possible null pointer 
-dereference which will occur when icss_iep_perout_enable(iep, NULL, 
-false) is called during icss_iep_exit(), my bad for not mentioning it 
-clearly in the commit message.
-
-> Skimmir over the code, icss_iep_pps_enable() could indeed avoid clearing
-> the flag under some circumstances is that the reason?
-> 
-
-icss_iep_pps_enable() does indeed clear the flag, but 
-icss_iep_perout_enable() doesn't due to the null pointer dereference. So 
-instead of calling these functions for clearing the flag, we can simply 
-just clear the flag directly.
-
-> Possibly a more describing commit message would help.
-> 
-
-Yes agreed. I will update it for v4.
-
->>> And, what if you brought 2 interfaces of the same ICSS instances up
->>> but put only 1 interface down and up?
->>>
->> 
->> Then the flag need not be disabled if only one interface is brought down 
->> because the IEP is still alive and all the IEP configuration (including 
->> pps/perout) is still valid.
-> 
-> I read the above as stating this fix is not correct in such scenario,
-> leading to the wrong final state.
-> 
-
-No it is the correct scenario. When you bring down all the existing 
-interfaces (be it one or two, when whatever is up goes down) you unload 
-the existing firmware and clear the all the driver configuration (this 
-flag also needs to be cleared) to ensure everything starts with a clean 
-state.
-
-> I think it would be better to either give a better reasoning about this
-> change in the commit message or refactor it to handle even such scenario,
-> 
-> Thanks,
-> 
-> Paolo
-> 
-
+> please wait a bit, many file system developers where at a conference
+> this week.
