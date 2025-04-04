@@ -1,50 +1,73 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65D222080D2;
-	Fri,  4 Apr 2025 17:38:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5A5F215075
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 17:38:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743788315; cv=none; b=DRyCff0rptZlAKB45+JGCIsz5MLgH867/QoRGLrmCy507WnBx7BFh6a2vd42m51Hpj3P7IoYnHrMCud4VYQPGBle5FOG3sMDmMQ1IidOE9pbFWmKFNhlC0KMKTqasbMiM0nnOELHgrINbBN5/flI2o31IbgZRO8/X29Aq44vb+k=
+	t=1743788321; cv=none; b=CvY6T7zxCNAK8eNcNpcGi/OfiIBoFs4I2S5O9FxC+vRzYlqUINNiZ4u2DCL93Ulht3wMy1q9/e3+RA9e2+hC3GBnlhtRaeSjucu1oVDiFMmMCjR7+m/AAYexSAAIMduv46OMwa11gPxM59xThkZCCMUPGprSZjEXiaTh2bEQi5c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743788315; c=relaxed/simple;
-	bh=g+uO3D1xVb3e3yklJX3PTIFd83TRp4sbPtUUCMweR8c=;
+	s=arc-20240116; t=1743788321; c=relaxed/simple;
+	bh=Rx70cSFRjQP66DjazQ0bfwm7xGG70ZkayZSk9Babtjs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=K12wAyx80Ek88GvxArTox9v58Ru0UVp2VxfxVwfcrV7mpE9HEyElwGEiF0cIxvnOr3C6h2oQf8rLriEa5tOYL9gIRCFNsJPH/Cs2kJhrA0/tdbcrmo4NJh66JVn5HZpRYSmRrjANU8wD1km3Vxe9rdaMPk9DV1IWtTl/9NEX5wU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LoGWg2zc; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 In-Reply-To:Content-Type; b=BgLCZOgqQY/jfXhX1wQE9f82UhSVsGVRszCbsFfV8Sj2bXlDeLNRaFGYLLRMclJJappoWdqBAmQdk7gT23izfEqcbwRp+l2A5CQrjMmg3hqdpxQaIhePbGk+yHjnj51CP9HLzMnadks9sotDUomgQGJSDyiE3mGeHo4NBSJQ2+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=B3gidHRT; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LoGWg2zc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743788313; x=1775324313;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=g+uO3D1xVb3e3yklJX3PTIFd83TRp4sbPtUUCMweR8c=;
-  b=LoGWg2zc85L3MtCW9M0RnRjYeUjfCfc0SbdjTpMnIE4ilWbDbrYdn4SJ
-   f8d7yHR8nIsgdvhl0i6ulaL/+I3ihAi9p9eyzeJ0/o+q843oefIrWKMGa
-   ycv8sGLfCjxiNKRfQtUNRCB58bqRSoxsM/oguUrwOfYjtBxDFx/tGCQCa
-   4eDfXKoIjJLmr7Set3KB8NnuJfrs8HZ2jnzcJ8Usnmq95ky1EQvkfgH8e
-   OWeOmxuGU54NHhP4fgu2sYtW5o9g/mkDdKDJUnrm18j5N8/w1EUmLfPnG
-   4qxesSKnpj/h9eDurB6pil5DZTAdt37Py8ixB8XqIGPuyKAPn+Sd10wKV
-   g==;
-X-CSE-ConnectionGUID: Fxrpikc1Rh+WP1ouzgzrGw==
-X-CSE-MsgGUID: FOd7TFfBRd6acvYzub51Pg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11394"; a="62773792"
-X-IronPort-AV: E=Sophos;i="6.15,188,1739865600"; 
-   d="scan'208";a="62773792"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 10:38:32 -0700
-X-CSE-ConnectionGUID: 3jueK+bYQvGsWn/SgG7b1Q==
-X-CSE-MsgGUID: vVkKM15nSt2oK2nSl/uuYA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,188,1739865600"; 
-   d="scan'208";a="128215225"
-Received: from daliomra-mobl3.amr.corp.intel.com (HELO [10.124.223.29]) ([10.124.223.29])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 10:37:54 -0700
-Message-ID: <8416848c-700a-4ff0-8a22-aa62579d60cd@intel.com>
-Date: Fri, 4 Apr 2025 10:37:53 -0700
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B3gidHRT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743788318;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=y/O3VVSysq4lCokMdVtnNB1uCls3f3ZbSmyJWqnskNE=;
+	b=B3gidHRTnQlqD2AnHkd0K5R2NVeV0Tgru2f1wRWKHd68RlTZsSdTeC1ICoB3YNNnMlp+C3
+	udMQBfWGy+xmFHLmwDIRhcpYRlLJ/iXFvrlzSZPjDFkDsNOIWm0GgSoY4r8FeeTEF5w+bw
+	3uh73XVsvDl5eM2sU+xdRI8usfY24UQ=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-388-Tw_rcOCWOUOw9eQErHxUfw-1; Fri, 04 Apr 2025 13:38:37 -0400
+X-MC-Unique: Tw_rcOCWOUOw9eQErHxUfw-1
+X-Mimecast-MFC-AGG-ID: Tw_rcOCWOUOw9eQErHxUfw_1743788316
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3914bc0cc4aso1255382f8f.3
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 10:38:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743788316; x=1744393116;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=y/O3VVSysq4lCokMdVtnNB1uCls3f3ZbSmyJWqnskNE=;
+        b=FdAAOXDZpKGWrvF4zHOAfdGnWPQCqgFN3ofUM4ZnbxO3gmU7RvhsIJFNPRld8fqPNY
+         h0zNsi9edEM025s4YuzU+OHtdYfz2LPQOgqcAznqDmyrugi+OJL0oj41t4jcfXbQhubm
+         yhGgtMEcOU/XPU2aju8NTeMK5UKeWlDxjtyjQkCOOavcym9RN7NFsREVkEEwNe74qP/V
+         ro5tvLLWI8ZLKF1PsA7quZkrdp3tQmU4Tl8ci6DoF0pB+mAOTQjSRXB4xwfws26jInTQ
+         KEbEuNGsFMQgkJioyS3DAC2cDhIzSa/p4W0X85fyFvmJVq50u1EUY0O/Ev0yFV3L2cAD
+         0/Yw==
+X-Forwarded-Encrypted: i=1; AJvYcCU7KwIrInruvMadmAbqxyruivPqwLPADHwEeKm+ZQMrsyzs6AxRBk2YjO4Ji52eer29qA4jpP2deREqWFs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwSIzIdVkYlCAFqrVBLYqgCMW/k/BMDz1LwIyVJQo3GDq3h4u7w
+	AQb+7i1ESjpRgnGxB8LXdlvo//DY/q3CtoKMBgeDVBQJTTxkgyWqwt4vONVz/iXn7Nylo4W61bp
+	C6j6a7kPp7BCpoPEqtVthPR98Womcc9E+KGxXPWheX8BzYooRMBIDJPAB7QHAag==
+X-Gm-Gg: ASbGncuK0ZpObWCsMMJU+LavD8thtIz86vSSVMKapbvPnbw7GcAr7G8nT9mGcguj1oe
+	XUZ7ZJRhBLmgr24jy8LLBThVFC0Nd1V4ZcOnX9zw5agBYsnL+rXzUmjkUovrMCRgi74kjMCx1ZM
+	+hW1NOFL+FrMBpZxMXOOTcroG/bhJgvhQxnPBZ6PPCH1gcHFZ9y9YX7UeSC5BYDBassNVAAMMVM
+	n0Jh6RnGzOlaozFTYFaEfuRfQVdqwlKqjQXqR+85mj4o+9HhfV32NgK5jnfHyNhy5OMjbR2nS+n
+	kikF7sQ+fIX0NhqNDuVIGWJNN1vVAA8omLo13UFN+cvCxaYPNOVWnQFX/7OxrXJUuNM6g3G+ejI
+	mcW7TVpaLu1OjTlbR6tGrKZiaWdvy7UqH0cestWVB8tQ=
+X-Received: by 2002:a05:6000:4010:b0:39a:c9fe:f069 with SMTP id ffacd0b85a97d-39d0de2b931mr3120011f8f.30.1743788316218;
+        Fri, 04 Apr 2025 10:38:36 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHFTWLzuO9d/y6p1DjF493CzzzwSItmtkfVF/1m36gzNFcf2uu0G5Iwwp7jdPzTD6CiNy9efQ==
+X-Received: by 2002:a05:6000:4010:b0:39a:c9fe:f069 with SMTP id ffacd0b85a97d-39d0de2b931mr3119966f8f.30.1743788315825;
+        Fri, 04 Apr 2025 10:38:35 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c71b:7900:8752:fae3:f9c9:a07e? (p200300cbc71b79008752fae3f9c9a07e.dip0.t-ipconnect.de. [2003:cb:c71b:7900:8752:fae3:f9c9:a07e])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec342babfsm52068935e9.1.2025.04.04.10.38.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 04 Apr 2025 10:38:35 -0700 (PDT)
+Message-ID: <1618bf36-7f7a-4d32-a6a6-242323007d67@redhat.com>
+Date: Fri, 4 Apr 2025 19:38:33 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,244 +75,82 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 10/14] x86: Update the KASAN non-canonical hook
-To: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>, hpa@zytor.com,
- hch@infradead.org, nick.desaulniers+lkml@gmail.com,
- kuan-ying.lee@canonical.com, masahiroy@kernel.org,
- samuel.holland@sifive.com, mingo@redhat.com, corbet@lwn.net,
- ryabinin.a.a@gmail.com, guoweikang.kernel@gmail.com, jpoimboe@kernel.org,
- ardb@kernel.org, vincenzo.frascino@arm.com, glider@google.com,
- kirill.shutemov@linux.intel.com, apopple@nvidia.com,
- samitolvanen@google.com, kaleshsingh@google.com, jgross@suse.com,
- andreyknvl@gmail.com, scott@os.amperecomputing.com, tony.luck@intel.com,
- dvyukov@google.com, pasha.tatashin@soleen.com, ziy@nvidia.com,
- broonie@kernel.org, gatlin.newhouse@gmail.com, jackmanb@google.com,
- wangkefeng.wang@huawei.com, thiago.bauermann@linaro.org, tglx@linutronix.de,
- kees@kernel.org, akpm@linux-foundation.org, jason.andryuk@amd.com,
- snovitoll@gmail.com, xin@zytor.com, jan.kiszka@siemens.com, bp@alien8.de,
- rppt@kernel.org, peterz@infradead.org, pankaj.gupta@amd.com,
- thuth@redhat.com, andriy.shevchenko@linux.intel.com,
- joel.granados@kernel.org, kbingham@kernel.org, nicolas@fjasle.eu,
- mark.rutland@arm.com, surenb@google.com, catalin.marinas@arm.com,
- morbo@google.com, justinstitt@google.com, ubizjak@gmail.com,
- jhubbard@nvidia.com, urezki@gmail.com, dave.hansen@linux.intel.com,
- bhe@redhat.com, luto@kernel.org, baohua@kernel.org, nathan@kernel.org,
- will@kernel.org, brgerst@gmail.com
-Cc: llvm@lists.linux.dev, linux-mm@kvack.org, linux-doc@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
- linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com, x86@kernel.org
-References: <cover.1743772053.git.maciej.wieczor-retman@intel.com>
- <c37c89e71ed5a8e404b24b31e23457af12f872f2.1743772053.git.maciej.wieczor-retman@intel.com>
-From: Dave Hansen <dave.hansen@intel.com>
+Subject: Re: [PATCH v2 0/4] support FEAT_MTE_STORE_ONLY feature
+To: Yeoreum Yun <yeoreum.yun@arm.com>, catalin.marinas@arm.com,
+ will@kernel.org, broonie@kernel.org, anshuman.khandual@arm.com,
+ joey.gouly@arm.com, maz@kernel.org, oliver.upton@linux.dev,
+ frederic@kernel.org, james.morse@arm.com,
+ hardevsinh.palaniya@siliconsignals.io, shameerali.kolothum.thodi@huawei.com,
+ huangxiaojia2@huawei.com, mark.rutland@arm.com, samuel.holland@sifive.com,
+ palmer@rivosinc.com, charlie@rivosinc.com, thiago.bauermann@linaro.org,
+ bgray@linux.ibm.com, tglx@linutronix.de, puranjay@kernel.org,
+ yang@os.amperecomputing.com, mbenes@suse.cz, joel.granados@kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ nd@arm.com
+References: <20250403174701.74312-1-yeoreum.yun@arm.com>
+From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <c37c89e71ed5a8e404b24b31e23457af12f872f2.1743772053.git.maciej.wieczor-retman@intel.com>
-Content-Type: text/plain; charset=UTF-8
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250403174701.74312-1-yeoreum.yun@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 4/4/25 06:14, Maciej Wieczor-Retman wrote:
-> The kasan_non_canonical_hook() is useful in pointing out that an address
-> which caused some kind of error could be the result of
-> kasan_mem_to_shadow() mapping. Currently it's called only in the general
-> protection handler code path but can give helpful information also in
-> page fault oops reports.
-> 
-> For example consider a page fault for address 0xffdefc0000000000 on a
-> 5-level paging system. It could have been accessed from KASAN's
-> kasan_mem_to_shadow() called on 0xfef0000000000000 address. Without the
-> kasan_non_canonical_hook() in the page fault case it might be hard to
-> figure out why an error occurred.
-> 
-> Add kasan_non_canonical_hook() to the beginning of show_fault_oops().
-> 
-> Update kasan_non_canonical_hook() to take into account the possible
-> memory to shadow mappings in the software tag-based mode of x86.
-> 
-> Patch was tested with positive results by accessing the following
-> addresses, causing #GPs and #PFs.
-> 
-> Valid mappings (showing kasan_non_canonical_hook() message):
-> 	0xFFFFFFFF8FFFFFFF
-> 	0xFEF0000000000000
-> 	0x7FFFFF4FFFFFFFFF
-> 	0x7EF0000000000000
-> Invalid mappings (not showing kasan_non_canonical_hook() message):
-> 	0xFFFFFFFFF8FFFFFF
-> 	0xFFBFFC0000000000
-> 	0x07EFFC0000000000
-> 	0x000E000000000000
-> 
-> Signed-off-by: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
-> ---
-> Changelog v3:
-> - Move the report.c part from first patch in the series to this new
->   patch to have x86 changes in one place.
-> - Add the call in fault oops.
-> - Extend the comment in report.c with a graphical representation of what
->   addresses are valid and invalid in memory to shadow mapping.
-> 
->  arch/x86/mm/fault.c |  2 ++
->  mm/kasan/report.c   | 36 +++++++++++++++++++++++++++++++++++-
->  2 files changed, 37 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
-> index 697432f63c59..16366af60ae5 100644
-> --- a/arch/x86/mm/fault.c
-> +++ b/arch/x86/mm/fault.c
-> @@ -511,6 +511,8 @@ show_fault_oops(struct pt_regs *regs, unsigned long error_code, unsigned long ad
->  	if (!oops_may_print())
->  		return;
->  
-> +	kasan_non_canonical_hook(address);
-> +
->  	if (error_code & X86_PF_INSTR) {
->  		unsigned int level;
->  		bool nx, rw;
-> diff --git a/mm/kasan/report.c b/mm/kasan/report.c
-> index f24f11cc644a..135307c93c2c 100644
-> --- a/mm/kasan/report.c
-> +++ b/mm/kasan/report.c
-> @@ -700,7 +700,7 @@ void kasan_non_canonical_hook(unsigned long addr)
->  	 * operation would overflow only for some memory addresses. However, due
->  	 * to the chosen KASAN_SHADOW_OFFSET values and the fact the
->  	 * kasan_mem_to_shadow() only operates on pointers with the tag reset,
-> -	 * the overflow always happens.
-> +	 * the overflow always happens (for both x86 and arm64).
->  	 *
->  	 * For arm64, the top byte of the pointer gets reset to 0xFF. Thus, the
->  	 * possible shadow addresses belong to a region that is the result of
-> @@ -715,6 +715,40 @@ void kasan_non_canonical_hook(unsigned long addr)
->  			return;
->  	}
->  
-> +	 /*
-> +	  * For x86-64, only the pointer bits [62:57] get reset, and bits #63
-> +	  * and #56 can be 0 or 1. Thus, kasan_mem_to_shadow() can be possibly
-> +	  * applied to two regions of memory:
-> +	  * [0x7E00000000000000, 0x7FFFFFFFFFFFFFFF] and
-> +	  * [0xFE00000000000000, 0xFFFFFFFFFFFFFFFF]. As the overflow happens
-> +	  * for both ends of both memory ranges, both possible shadow regions
-> +	  * are contiguous.
-> +	  *
-> +	  * Given the KASAN_SHADOW_OFFSET equal to 0xffeffc0000000000, the
-> +	  * following ranges are valid mem-to-shadow mappings:
-> +	  *
-> +	  * 0xFFFFFFFFFFFFFFFF
-> +	  *         INVALID
-> +	  * 0xFFEFFBFFFFFFFFFF - kasan_mem_to_shadow(~0UL)
-> +	  *         VALID   - kasan shadow mem
-> +	  *         VALID   - non-canonical kernel virtual address
-> +	  * 0xFFCFFC0000000000 - kasan_mem_to_shadow(0xFEUL << 56)
-> +	  *         INVALID
-> +	  * 0x07EFFBFFFFFFFFFF - kasan_mem_to_shadow(~0UL >> 1)
-> +	  *         VALID   - non-canonical user virtual addresses
-> +	  *         VALID   - user addresses
-> +	  * 0x07CFFC0000000000 - kasan_mem_to_shadow(0x7EUL << 56)
-> +	  *         INVALID
-> +	  * 0x0000000000000000
-> +	  */
-> +	if (IS_ENABLED(CONFIG_KASAN_SW_TAGS) && IS_ENABLED(CONFIG_X86_64)) {
+On 03.04.25 19:46, Yeoreum Yun wrote:
+> The FEAT_MTE_STORE_ONLY feature provides support for
+> tag check for store operation only. read operation is considered
+> as unchecked operation so it doesn't raise tag check fault.
 
-One overall comment on this series: there's a lot of unnecessary
-complexity. Case in point:
+Can you add/share more details of what the implications are, how it 
+would be used, who would set it, etc.
 
-	config ADDRESS_MASKING
-	        depends on X86_64
+Just from staring at this short paragraph leaves me rather clueless.
 
-and
+-- 
+Cheers,
 
-	select HAVE_ARCH_KASAN_SW_TAGS		if ADDRESS_MASKING
+David / dhildenb
 
-and
-
-	config KASAN_SW_TAGS
-        	depends on HAVE_ARCH_KASAN_SW_TAGS ...
-
-
-So you can't have CONFIG_KASAN_SW_TAGS set without CONFIG_X86_64.
-
-> +		if ((addr < (u64)kasan_mem_to_shadow((void *)(0x7E UL << 56)) ||
-> +		     addr > (u64)kasan_mem_to_shadow((void *)(~0UL >> 1))) &&
-> +		    (addr < (u64)kasan_mem_to_shadow((void *)(0xFE UL << 56)) ||
-> +		     addr > (u64)kasan_mem_to_shadow((void *)(~0UL))))
-> +			return;
-> +	}
-This isn't looking great.
-
-I'd much rather have those kasan_mem_to_shadow() arguments be built up
-programmatically.
-
-I'm also not following the description of where these ranges come from:
-
-	[0x7E00000000000000, 0x7FFFFFFFFFFFFFFF]
-	[0xFE00000000000000, 0xFFFFFFFFFFFFFFFF]
-
-I obviously recognize the top kernel and top userspace addresses, but
-there do 0x7E... and 0xFE... come from? Is that because both of them
-only have 56 actual bits of address space?
-
-Wouldn't we be better off writing that as, say:
-
-#define HIGHEST_KER_ADDR (void *)0xFFFFFFFFFFFFFFFF
-// ^ we probably have some macro for that already
-#define LOWEST_KERN_ADDR (void *)(HIGHEST_KERNEL_ADDRESS - \
-					(1<<56) + 1)
-// ^ or can this be calculated by tag manipulation?
-
-which yields:
-
-   void *_addr = (u64)addr;
-   ...
-
-   in_kern_shadow = (_addr >= kasan_mem_to_shadow(LOWEST_KERN_ADDR) ||
-		    (_addr <= kasan_mem_to_shadow(HIGHEST_KERN_ADDR);
-   in_user_shadow = (_addr >= kasan_mem_to_shadow(LOWEST_USER_ADDR) ||
-		    (_addr <= kasan_mem_to_shadow(HIGHEST_USER_ADDR);
-
-   if (!in_kern_shadow &&
-       !in_user_shadow)
-	return;
-
-I _think_ that's the same logic you have. Isn't it slightly more readable?
