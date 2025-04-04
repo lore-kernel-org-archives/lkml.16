@@ -1,112 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE7E31DC1A7;
-	Fri,  4 Apr 2025 12:45:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E06391DA53;
+	Fri,  4 Apr 2025 12:45:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743770712; cv=none; b=aH2CliDn9mDpk7qxZwNFEnDa6DuZnPibo1fKq6JxvpHEx8VxoxJ7EprHov3PIVh7LWrrRfwnWPNf+06Cijm7P19yL89n0/AvjjHrkk7G0U14GrsMOmBWDHmP5W8mp3g0MpVfNHrhEj9Ij25mOW2Hx7kDq6OltOyfEe77Mz0tiXs=
+	t=1743770759; cv=none; b=KScOFDC/A/o8ZGEj+V9MegFRYFc0c6tgDAuoLFnh90GMyuBf711jzds9xn/Q7YSWOIVuyDdHUvINA354Rr+FjoaTywWN2z7xzjDhpc7hpRZ/8swAsggn3SUHIt6FFMaFnetvJkkro7PKsmm/zShMkKkJHJUD0kPgabjCxakVlhM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743770712; c=relaxed/simple;
-	bh=+f9bptQzXW02fg/r/Fn12knWGTzQttrVy41KB2g3QZ4=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=X3PrFs0fwGonCshCSwfH1ORqGeHOeey0O2R32ui5nHd/ffNTzGntbrBRgOF+ProfiZRwinT0YxrK3aCDsr+ICHSXN5uCu0GdkVATcerQw9EAi/CVVGwlwV5yLqTg4FmPBw6c7zjNdJaNFyom+DoML0LTVh1wz70G7QR5bO6+Uh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dat10KXg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743770759; c=relaxed/simple;
+	bh=OwkZP4Kvea55R20rav/AJzdeiy1uMo+XKDTPci+yc7o=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=I6PCdcJfCF48qRb80a5BGPx0D7BzhgyBJfXBdEw8yTbcw3OvJj3lMKEoqWR2+dpMj/vevkvLphFLHUnDb62n8T+6E4sJxzFrp7JtIrhMYWrr7n3swRsiNhElAnATZWEv9iwW5X5I/8G5gvWAEHX7AIQc9fq1jDmRJ8+/nNY9ba0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fjeY+OBD; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dat10KXg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AFC4C4CEDD;
-	Fri,  4 Apr 2025 12:45:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743770711;
-	bh=+f9bptQzXW02fg/r/Fn12knWGTzQttrVy41KB2g3QZ4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=dat10KXg8qGBRc6wGr53pYS2oCTMA1VLmxkoVxpX7r9er25pw4MdWL04Hy1t+FRn0
-	 WvanxZFRMN0ABsf8CwgkBg7gqlnepiYF75sXDI7vaDepE0LKLRib2BhfcAaOil1Xbu
-	 1WUEK7IMvBY9QSX2qyr/uFjkct2AYFoL0FLzf969RVdpPn66mrYlBmRhteMQyz05HY
-	 4leuNuDOZvtElIeFwz/8qQhSjkQcxZrZiZP9ayeF75uNQ5clm/SLcn8MOOlExX2S0u
-	 XUtpWC5GICfNvbfbiRpuopV99cvd0gxQEV7eTgSZ/q/ah2HfvunyBscvuBxnR79dAC
-	 MVOO3KkpueQYg==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=lobster-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1u0gQ0-002LQk-R4;
-	Fri, 04 Apr 2025 13:45:09 +0100
-Date: Fri, 04 Apr 2025 13:45:11 +0100
-Message-ID: <87zfgwxfhk.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Christian Bruel <christian.bruel@foss.st.com>
-Cc: <tglx@linutronix.de>,
-	<robh@kernel.org>,
-	<krzk+dt@kernel.org>,
-	<conor+dt@kernel.org>,
-	<mcoquelin.stm32@gmail.com>,
-	<alexandre.torgue@foss.st.com>,
-	<linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>,
-	<devicetree@vger.kernel.org>,
-	<linux-stm32@st-md-mailman.stormreply.com>
-Subject: Re: [PATCH 3/3] arm64: dts: st: add st,stm32mp2-cortex-a7-gic in intc node in stm32mp251.dtsi
-In-Reply-To: <1c9a49cb-35a1-4bcc-abd5-b14a49d4d094@foss.st.com>
-References: <20250403122805.1574086-1-christian.bruel@foss.st.com>
-	<20250403122805.1574086-4-christian.bruel@foss.st.com>
-	<874iz5yx2c.wl-maz@kernel.org>
-	<1c9a49cb-35a1-4bcc-abd5-b14a49d4d094@foss.st.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fjeY+OBD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743770758; x=1775306758;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=OwkZP4Kvea55R20rav/AJzdeiy1uMo+XKDTPci+yc7o=;
+  b=fjeY+OBDIqb2x5B7WhHGkGtuc9ShP1wkVHqddHophmL4Xoqk3Ex5HdSQ
+   Dnm1m/GtwBXC6uLq5NFu1wn5x73kUrqaM4IIPWE4vAypNPx0ROcb3UKvW
+   ZuktGjgDaSnIJ48qYiDXK92x2/4sgxuosB6Z14MJVN3IbU13U+z8cppoP
+   USA/NoZrgIyjYcrKLWArQuOIZPzD+c/IaPFgvWsQsUaK7GQTL+VfGhNXc
+   HoMbYR44V+bsj2K/sCzbvdjUNTynR3Eshn1NZcl07+6ylt8E+/MR1/6Nx
+   UjBbGcwEd0lpRzXUn93WLzvrlMx40YhepH0BqfQBSS6jVzK4fF/i44DVM
+   g==;
+X-CSE-ConnectionGUID: LjAAp6ROQkivwRt/wdllQg==
+X-CSE-MsgGUID: l4MR0n6/SyuqTKEaWQT+fg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11393"; a="55872690"
+X-IronPort-AV: E=Sophos;i="6.15,188,1739865600"; 
+   d="scan'208";a="55872690"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 05:45:57 -0700
+X-CSE-ConnectionGUID: NjkaL768QlOg5yFFf60F6g==
+X-CSE-MsgGUID: jFM4pnOSR/2oSluuLfo7KA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,188,1739865600"; 
+   d="scan'208";a="132157881"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.54])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 05:45:55 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH 1/1] PCI: Unnecessary linesplit in __pci_setup_bridge()
+Date: Fri,  4 Apr 2025 15:45:47 +0300
+Message-Id: <20250404124547.51185-1-ilpo.jarvinen@linux.intel.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: christian.bruel@foss.st.com, tglx@linutronix.de, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, 04 Apr 2025 13:17:08 +0100,
-Christian Bruel <christian.bruel@foss.st.com> wrote:
-> 
-> 
-> 
-> On 4/3/25 19:27, Marc Zyngier wrote:
-> > On Thu, 03 Apr 2025 13:28:05 +0100,
-> > Christian Bruel <christian.bruel@foss.st.com> wrote:
-> >> 
-> >> Add st,stm32mp2-cortex-a7-gic to enable the GICC_DIR register remap
-> >> 
-> >> Signed-off-by: Christian Bruel <christian.bruel@foss.st.com>
-> >> ---
-> >>   arch/arm64/boot/dts/st/stm32mp251.dtsi | 2 +-
-> >>   1 file changed, 1 insertion(+), 1 deletion(-)
-> >> 
-> >> diff --git a/arch/arm64/boot/dts/st/stm32mp251.dtsi b/arch/arm64/boot/dts/st/stm32mp251.dtsi
-> >> index f3c6cdfd7008..030e5da67a7e 100644
-> >> --- a/arch/arm64/boot/dts/st/stm32mp251.dtsi
-> >> +++ b/arch/arm64/boot/dts/st/stm32mp251.dtsi
-> >> @@ -115,7 +115,7 @@ scmi_vdda18adc: regulator@7 {
-> >>   	};
-> >>     	intc: interrupt-controller@4ac00000 {
-> >> -		compatible = "arm,cortex-a7-gic";
-> >> +		compatible = "st,stm32mp2-cortex-a7-gic", "arm,cortex-a7-gic";
-> > 
-> > What nonsense is this? This is an *arm64* machine, with I expect a
-> > GIC400. Where is this A7 compat coming from?
-> 
-> Probably historical, as the first port was for aarch32. I will fix
-> this separately. thanks for the head up!
+No need to split the line in __pci_setup_bridge() as it is way shorter
+than the limit.
 
-Then while you're at it, you may want to consider removing the
-"always-on" property in the timer, because I'm pretty sure the
-comparator goes down in low power mode on A53 and A35, and loses its
-value.
+Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+---
+ drivers/pci/setup-bus.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-In general, only VMs can make use of this property.
+diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+index 54d6f4fa3ce1..45bf0ddff118 100644
+--- a/drivers/pci/setup-bus.c
++++ b/drivers/pci/setup-bus.c
+@@ -772,8 +772,7 @@ static void __pci_setup_bridge(struct pci_bus *bus, unsigned long type)
+ {
+ 	struct pci_dev *bridge = bus->self;
+ 
+-	pci_info(bridge, "PCI bridge to %pR\n",
+-		 &bus->busn_res);
++	pci_info(bridge, "PCI bridge to %pR\n", &bus->busn_res);
+ 
+ 	if (type & IORESOURCE_IO)
+ 		pci_setup_bridge_io(bridge);
 
-	M.
-
+base-commit: 7d06015d936c861160803e020f68f413b5c3cd9d
 -- 
-Jazz isn't dead. It just smells funny.
+2.39.5
+
