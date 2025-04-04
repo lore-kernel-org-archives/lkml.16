@@ -1,37 +1,37 @@
 Received: from mx2.securetransport.de (mx2.securetransport.de [188.68.39.254])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AACEB12D1F1;
-	Fri,  4 Apr 2025 13:42:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 302EA12D1F1;
+	Fri,  4 Apr 2025 13:42:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.39.254
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743774140; cv=none; b=RD/Cm0O5jsVl15K30XjwzPFAM1sbmN3A16t8o4JSs6ZSPWVvNztDj5JkTt44w+l2KIeabJH68oD6JqD0AB0AC0VPOMcvftkdKBw+UFwL7KRXOdz4RV/ToHfrNBRdQRCjpAm8aEBp+ISSca8Fky7/dXNkQduGSeELRbExgJMINXA=
+	t=1743774153; cv=none; b=b3iLjxcpF3gfdDQlGx2XMvbyjISTr2bwQmyA58LWyh3GCQ7NicbT1loDFQ2KBAHwpnvN3Osyq65UFwKWIeJuAixsuKW4QxLX1DmgziG9LRgNIF0FzU7sjSVrxvlMhWw9PfUdbvc2tdNP45ZV1XQM10OCN5hCoarxTbL8HNPJnnU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743774140; c=relaxed/simple;
-	bh=6SAs7ZiWvqWG3XPpQsQtnVyH6fMBaB/n6b1668EDrmw=;
+	s=arc-20240116; t=1743774153; c=relaxed/simple;
+	bh=m+p7eMnkKuhdy70SAUmOiT3zT3XpgZxgRzYdf5rk1J0=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TZrJHlkS5L/p8/nAOF3+IE+hzYINdpiS3HHKz4BVcf883VR/0J4JZQz+MgqyTTvZdeqQV0E1m13msu/jK66Sc4aTTv98dX2obM1nDAtAfMCzKlcAxfOXwFXKHvdS5umxmjWz9X/wQ0O7dUawjVhjco0naLJMLJkr4XEzZT6xwNI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=dh-electronics.com; spf=pass smtp.mailfrom=dh-electronics.com; dkim=pass (2048-bit key) header.d=dh-electronics.com header.i=@dh-electronics.com header.b=BwRXDgMb; arc=none smtp.client-ip=188.68.39.254
+	 MIME-Version:Content-Type; b=WitMaQ/ynTudxaOIv3Ga4QpZTKjI7cy0pSmqMaIpb9W926kLAWvmixWH6GM6RasWgnifZ3CXpU8cGiUfacGwWMhDvIMqV8/cBKnxCZ/1w86braC0FK/s4e0J4SNYbAKgmgMpg1r5h1eRaelIdVIXIHmrGwqw4Z4OdRJhFagT/Ws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=dh-electronics.com; spf=pass smtp.mailfrom=dh-electronics.com; dkim=pass (2048-bit key) header.d=dh-electronics.com header.i=@dh-electronics.com header.b=QAjTQBam; arc=none smtp.client-ip=188.68.39.254
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=dh-electronics.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dh-electronics.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dh-electronics.com header.i=@dh-electronics.com header.b="BwRXDgMb"
+	dkim=pass (2048-bit key) header.d=dh-electronics.com header.i=@dh-electronics.com header.b="QAjTQBam"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dh-electronics.com;
-	s=dhelectronicscom; t=1743774104;
-	bh=fy8WY+eU9dK+jaA1NumMddQBYAbhrFBEaD8MJdiHjGM=;
+	s=dhelectronicscom; t=1743774114;
+	bh=RZ0jmwBFYdzhS3iHe4uxhfbTjqPPf5KQuSOU+fJ9O28=;
 	h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-	b=BwRXDgMbbs8loO4tUgMIhxqSQHLV4AN1wy5ONt/s8y5vGULDMKD3ifMcWCBM+ILx8
-	 OwYhL5E8VDxKJ+n8y+ZgkgvlUWW2LpL+qNEJomFNQd3lNwEG7CI2LPXZcbcA3d3i/U
-	 xSF8LWYY7G2j8/9HNCoag9hfSgUGs+GlodFJMKDjQWl2XufgM5V0UpECnuf5IcEyFQ
-	 tHokH/b3Jt9GjxdA/qa4X+2z9lwIKQkSzakm/7/l3+UpfVb8AGewkeCnEMXXzDvmOr
-	 rGTur2v6Rq6lbrGWXvXowh20+xBjvDmLDgjsgciLPy2kLuzue3+1JNBa1zIA6ExdCq
-	 jGX7WJumfBRqg==
+	b=QAjTQBam+uaeNnDDCQGS8FYV0KabuM7uLlPVjaSZWAkaqPYaIVJerLyr96DWmkb42
+	 FkDtWhOCh5SWSXY1+++oLIFHHgAa55xFL46p29KmRsYt6WaZpZxu/TyA08WFdoTLn1
+	 XhbRzF//7VZiCjOlpGj5jUyy+T2KzKmY3VIqxY6LNwp7NyCa3JkLLMNhiah3cpI9G2
+	 rBOczeKhyKdGPRnAht3wVL7KGsOcx+ZGSv2iELc5Ba33zXb7IFdmI6OWOA/DlCA7t6
+	 D/RXVV7oonP8cRHVk6B5KnRiHOFRTMFfhTH0HyTHnrc7nYQUYwtjUIKMpe+Krn/NVJ
+	 w4rGFHR3IIKjQ==
 From: Johann Neuhauser <jneuhauser@dh-electronics.com>
 To: <linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>
 CC: Johann Neuhauser <jneuhauser@dh-electronics.com>, Jonathan Corbet
 	<corbet@lwn.net>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown
 	<broonie@kernel.org>
-Subject: [PATCH 1/3] regulator: userspace-consumer: Add uevent reporting for regulator events
-Date: Fri, 4 Apr 2025 15:40:07 +0200
-Message-ID: <20250404134009.2610460-2-jneuhauser@dh-electronics.com>
+Subject: [PATCH 2/3] ABI: sysfs-platform: Document uevent ABI for reg-userspace-consumer
+Date: Fri, 4 Apr 2025 15:40:08 +0200
+Message-ID: <20250404134009.2610460-3-jneuhauser@dh-electronics.com>
 X-klartext: yes
 In-Reply-To: <20250404134009.2610460-1-jneuhauser@dh-electronics.com>
 References: <20250404134009.2610460-1-jneuhauser@dh-electronics.com>
@@ -44,16 +44,12 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 
-Generate uevents when regulator events such as voltage changes, overcurrent,
-or enable/disable transitions occur. A separate uevent is emitted for each
-individual regulator event bit, allowing precise event handling in userspace
-via udev rules.
+Document the new uevent-based ABI provided by the userspace-consumer
+regulator driver. These uevents expose regulator events such as OVER_CURRENT,
+ENABLE, DISABLE, UNDER_VOLTAGE, and others to userspace.
 
-The emitted uevent key `EVENT=` corresponds directly to the event types defined
-in include/uapi/regulator/regulator.h.
-
-This provides a flexible, user-friendly mechanism to monitor and handle
-regulator events from userspace.
+Clearly describe the ABI entries and possible event values to ensure stable
+and predictable userspace integration.
 
 Signed-off-by: Johann Neuhauser <jneuhauser@dh-electronics.com>
 ---
@@ -63,134 +59,39 @@ Cc: linux-doc@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 Cc: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/userspace-consumer.c | 74 +++++++++++++++++++++++++-
- 1 file changed, 73 insertions(+), 1 deletion(-)
+ ...ysfs-platform-regulator-userspace-consumer | 23 +++++++++++++++++++
+ 1 file changed, 23 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-platform-regulator-userspace-consumer
 
-diff --git a/drivers/regulator/userspace-consumer.c b/drivers/regulator/userspace-consumer.c
-index 72bb5ffb49a8..01cf07d42682 100644
---- a/drivers/regulator/userspace-consumer.c
-+++ b/drivers/regulator/userspace-consumer.c
-@@ -11,6 +11,7 @@
-  *   Author: Mark Brown <broonie@opensource.wolfsonmicro.com>
-  */
- 
-+#include <linux/bitops.h>
- #include <linux/err.h>
- #include <linux/mutex.h>
- #include <linux/module.h>
-@@ -29,6 +30,9 @@ struct userspace_consumer_data {
- 
- 	int num_supplies;
- 	struct regulator_bulk_data *supplies;
+diff --git a/Documentation/ABI/testing/sysfs-platform-regulator-userspace-consumer b/Documentation/ABI/testing/sysfs-platform-regulator-userspace-consumer
+new file mode 100644
+index 000000000000..2d518afb0d32
+--- /dev/null
++++ b/Documentation/ABI/testing/sysfs-platform-regulator-userspace-consumer
+@@ -0,0 +1,23 @@
++What:		/devices/platform/<device>/uevent EVENT=
++Date:		April 2025
++Contact:	Johann Neuhauser <jneuhauser@dh-electronics.com>
++Description:
++		Reports regulator events via uevents for platform devices
++		controlled by the userspace-consumer regulator driver.
++		
++		Possible EVENT= values:
++		 - ABORT_DISABLE
++		 - ABORT_VOLTAGE_CHANGE
++		 - DISABLE
++		 - ENABLE
++		 - FAIL
++		 - FORCE_DISABLE
++		 - OVER_CURRENT
++		 - OVER_TEMP
++		 - PRE_DISABLE
++		 - PRE_VOLTAGE_CHANGE
++		 - REGULATION_OUT
++		 - UNDER_VOLTAGE
++		 - VOLTAGE_CHANGE
 +
-+	struct kobject *kobj;
-+	struct notifier_block nb;
- };
- 
- static ssize_t name_show(struct device *dev,
-@@ -115,12 +119,68 @@ static const struct attribute_group attr_group = {
- 	.is_visible =  attr_visible,
- };
- 
-+/*
-+ * This should probably be placed elsewhere in the regulator framework...
-+ */
-+static const char *regulator_event_str(unsigned long event)
-+{
-+	switch (event) {
-+	case REGULATOR_EVENT_ABORT_DISABLE:
-+		return "ABORT_DISABLE";
-+	case REGULATOR_EVENT_ABORT_VOLTAGE_CHANGE:
-+		return "ABORT_VOLTAGE_CHANGE";
-+	case REGULATOR_EVENT_DISABLE:
-+		return "DISABLE";
-+	case REGULATOR_EVENT_ENABLE:
-+		return "ENABLE";
-+	case REGULATOR_EVENT_FAIL:
-+		return "FAIL";
-+	case REGULATOR_EVENT_FORCE_DISABLE:
-+		return "FORCE_DISABLE";
-+	case REGULATOR_EVENT_OVER_CURRENT:
-+		return "OVER_CURRENT";
-+	case REGULATOR_EVENT_OVER_TEMP:
-+		return "OVER_TEMP";
-+	case REGULATOR_EVENT_PRE_DISABLE:
-+		return "PRE_DISABLE";
-+	case REGULATOR_EVENT_PRE_VOLTAGE_CHANGE:
-+		return "PRE_VOLTAGE_CHANGE";
-+	case REGULATOR_EVENT_REGULATION_OUT:
-+		return "REGULATION_OUT";
-+	case REGULATOR_EVENT_UNDER_VOLTAGE:
-+		return "UNDER_VOLTAGE";
-+	case REGULATOR_EVENT_VOLTAGE_CHANGE:
-+		return "VOLTAGE_CHANGE";
-+	default:
-+		return NULL;
-+	}
-+}
-+
-+static int regulator_userspace_notify(struct notifier_block *nb, unsigned long event, void *unused)
-+{
-+	struct userspace_consumer_data *drvdata = container_of(nb, struct userspace_consumer_data, nb);
-+	char env_buf[128];
-+	char *envp[] = { "NAME=event", env_buf, NULL };
-+	unsigned int bit;
-+
-+	for_each_set_bit(bit, &event, BITS_PER_TYPE(event)) {
-+		const char *event_str = regulator_event_str(BIT(bit));
-+
-+		if (event_str && event_str[0] != '\0') {
-+			scnprintf(env_buf, sizeof(env_buf), "EVENT=%s", event_str);
-+			kobject_uevent_env(drvdata->kobj, KOBJ_CHANGE, envp);
-+		}
-+	}
-+
-+	return NOTIFY_OK;
-+}
-+
- static int regulator_userspace_consumer_probe(struct platform_device *pdev)
- {
- 	struct regulator_userspace_consumer_data tmpdata;
- 	struct regulator_userspace_consumer_data *pdata;
- 	struct userspace_consumer_data *drvdata;
--	int ret;
-+	int i, ret;
- 
- 	pdata = dev_get_platdata(&pdev->dev);
- 	if (!pdata) {
-@@ -153,6 +213,7 @@ static int regulator_userspace_consumer_probe(struct platform_device *pdev)
- 	drvdata->num_supplies = pdata->num_supplies;
- 	drvdata->supplies = pdata->supplies;
- 	drvdata->no_autoswitch = pdata->no_autoswitch;
-+	drvdata->kobj = &pdev->dev.kobj;
- 
- 	mutex_init(&drvdata->lock);
- 
-@@ -184,6 +245,13 @@ static int regulator_userspace_consumer_probe(struct platform_device *pdev)
- 	}
- 	drvdata->enabled = !!ret;
- 
-+	drvdata->nb.notifier_call = regulator_userspace_notify;
-+	for (i = 0; i < drvdata->num_supplies; i++) {
-+		ret = devm_regulator_register_notifier(drvdata->supplies[i].consumer, &drvdata->nb);
-+		if (ret)
-+			goto err_enable;
-+	}
-+
- 	return 0;
- 
- err_enable:
-@@ -195,6 +263,10 @@ static int regulator_userspace_consumer_probe(struct platform_device *pdev)
- static void regulator_userspace_consumer_remove(struct platform_device *pdev)
- {
- 	struct userspace_consumer_data *data = platform_get_drvdata(pdev);
-+	int i;
-+
-+	for (i = 0; i < data->num_supplies; i++)
-+		devm_regulator_unregister_notifier(data->supplies[i].consumer, &data->nb);
- 
- 	sysfs_remove_group(&pdev->dev.kobj, &attr_group);
- 
++Userspace can monitor these events using udev and respond accordingly.
 -- 
 2.39.5
 
