@@ -1,217 +1,289 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25F5121171C
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 16:47:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 544E81DA53
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 16:49:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743785261; cv=none; b=mkvRwTb9WNxyZleQSQ4yDAqeRYQnT7x91EQj3CfBNmMn5jeElZcHwmxXnT72wa4FOh3JmBAaV+jTW3yp5h3MpbCStX7EyjiI6C7pnyAaBVKemptjtnKqKwPR7PFsOGS2jwMCxQX0aRFGldSfedjF3VDvHKXJFagCDLfgBHsRVqs=
+	t=1743785355; cv=none; b=GfUUke9cM38xhUzC7kYhsyMpoFDD1woeyGjaX4CfM78Dmjjjxs3UhwZRxU4cfHqkfGzW4fu3wnI7nj5LV9VlKZMLI52Q4RkGnQQhtE7ltVn4SLHE+m/CF2riZF8QjThvV5LvxrdSuhsHVm+gFVjd5BXkThSFVRCEQbaCtRNaIEs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743785261; c=relaxed/simple;
-	bh=kBOspWRNQ4BmOfPjA2PvOZq3vMDxXt5Q1YQqo0gJ9fo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oQbiFSAtbx2olXyXySk/L3gIcq7VFYf42qNA4RBrXXynhJhizghGcZSCt6HlXKUhPzgORuBn5dNTrRbQpyVaz/Iy0fqHY51JWoTHvUcREAq9gJlcIf0PRgw/l3fdecE+4z+uZk5G8uYJrKHy4RY49Q9Txmdzd0gLOwKe8fXtT6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=35za31AV; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1743785355; c=relaxed/simple;
+	bh=PYNaU9lNwh0QL80kukIz0Ezcn5YI0WJC/oBVbZDs7CM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jkoTqnCinqoT4ThWjWafBBMvmkObCtoaqmXkJ3ErgIYuWMNDjF9Kw8MQ3CyiEZjmf70Oa77whYaK4kBC/8JX87Y+TqqUfbLFn7x/MW8pmllFhyYpHNsb2aA2r0tpImFaDpuZEzIQYTflx+fKYOiQBbLbsFkCzJOFSVzQoO233yU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=D4/gF7VX; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="35za31AV"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-39c1ee0fd43so1919268f8f.0
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 09:47:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743785257; x=1744390057; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=YjzowwCzDt7F+kKBoh3+rUz7yp+YdCsAa/lYm8cjXDA=;
-        b=35za31AVfXdRc0/Zuc9pHXF/ltzmo6No3PSHGMxYB2iI/QqquaFTOqBTcQCu/rMNyd
-         CXjlFhyQiS3Be8lMG1jh0OapUBcfabh6GERsC4iR2L6UuJ7gupwUYDNBXQ25mvmvhbTO
-         lmJeQm0k+DUVgdp8v7NyFiiv0VOyuGc1tMs/okqYjC4geXheUxm4UkjD5c+4Wr1jFKgC
-         Q9WspE10YvcuKK44Q6RvXxvd+zmj7hcEGGOwwn5UZcoPG+IqsZa3MVsOI2dlEQB+Uyi1
-         xnZrLGFY3gKx0uscnD9Q6zBv7DwQGQGLf0cneDiWNjRXNCgR5uI8ABo8tGzsLMl9Hbxn
-         dSBg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D4/gF7VX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743785352;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=UOZ43bBKMC//JtK0X3dZk7WsbqEz50U4BfU4WlfUSoc=;
+	b=D4/gF7VX7dDqVEimYewPi3q8vFjXW+uF5R8aFFBPFkwG2XgYod9coX2yT4Sd+kZKvrFePN
+	4ipazGwQum2M3TBu4ckAJ7+vBtQ17IDVvbB0eh7AKUV7T0SsUExnKBGgG29wfd9mszy/7x
+	FA25GGI68fXwicCFmleadViAKEuudgw=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-459-rIS-SPS5Ma26AB04hUPwOA-1; Fri, 04 Apr 2025 12:49:10 -0400
+X-MC-Unique: rIS-SPS5Ma26AB04hUPwOA-1
+X-Mimecast-MFC-AGG-ID: rIS-SPS5Ma26AB04hUPwOA_1743785349
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43d6c65dc52so19105215e9.1
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 09:49:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743785257; x=1744390057;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1743785349; x=1744390149;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :references:cc:to:content-language:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=YjzowwCzDt7F+kKBoh3+rUz7yp+YdCsAa/lYm8cjXDA=;
-        b=PkaFAzQVWlZh7GhfSuUt5onkkZwetFPzjMVa8RJ/eCG/pcruE/Wm5gz0P8QSb3lxqZ
-         qp/QQN4dmEieOVMRQnqq6wLFs0tpQBTShzVR8ztQ3IYFh/mpHFq4JBFMgaDL911DRIwQ
-         86zbw8F+gfBAAEU5HLe8YCSjFz88SqQQoQ9a/qrlfTw1fkxO+gbuYZE5dIgWzHFBnT/t
-         4wGf6z6AKlc6wT9ob7/I5LoRUCU+EgeWqiRNbxHODTn0Li91cBHwDuA1eu3mumhKiBBj
-         2OU7aXFwdVeN/rrUgXTLQTq+KMnxnFRxRbI+q8M6EUX7FTh9v1h7RaNtf7BcvWtAFteU
-         oZQA==
-X-Forwarded-Encrypted: i=1; AJvYcCU+oKoa9aurWz6IP0LULoWP1deH30yklmJbk6OiaeE4ETb8op+Knos7T3Ng54DBII29YZZv7B0cJFV+OUc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YypdYGJtmeLT115vDLddJ9ezLfa2r4sH8bWFjK6Q/8mKtf2hBSN
-	h44VJ4pju6kCguo/ui+0qO0JQsg9mWY9kufWHGqwFWWPRYwMkaQRfLR/iYnpEg==
-X-Gm-Gg: ASbGncvM272BRp9oU50HXHM1jiZQgslK2jUd6tUT16MWBEWFA/MbHZCHBf5CB5aamCt
-	MOm1g8qjn2Y5ej/MEdkf88FAxHjLZzR2qW5KwW0R7jXSkF1lwDbppGCQAT9eaAEoRdhEaFzLiJ5
-	I7LIdJIxAwO4+IR1IuC++wPMgZtdE4F/kgc22RFkZ5s/01XYk1ebY1wXYeoBHpwotc3Eb4b9mYB
-	iAkzlPHuimxGdrxXQ1Pz7EU4ztJKAxfFnFbE4WoM/HBtYGq86ggSQg5Bqg8bbpVaBzDohOTZDHT
-	0r30QKn0l86rhwm7d69bNeGkLVw8ChdBsnuwG2XHgVKIXIQ2DgZ7UeGLOwK2wp7dxeNmW4TgIEH
-	q67vzOjU=
-X-Google-Smtp-Source: AGHT+IFzHQAEkpFtCO+t1gRCJIagbYhnnjuyRaUGQM6bW98s2AD1DwEmZUlzJZcYV+93fHKKsfUsjA==
-X-Received: by 2002:a5d:584a:0:b0:399:6dc0:f134 with SMTP id ffacd0b85a97d-39cba98b9c4mr4046259f8f.51.1743785257188;
-        Fri, 04 Apr 2025 09:47:37 -0700 (PDT)
-Received: from google.com (35.157.34.34.bc.googleusercontent.com. [34.34.157.35])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c3020d975sm4848736f8f.75.2025.04.04.09.47.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Apr 2025 09:47:36 -0700 (PDT)
-Date: Fri, 4 Apr 2025 17:47:33 +0100
-From: Vincent Donnefort <vdonnefort@google.com>
-To: Quentin Perret <qperret@google.com>
-Cc: maz@kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com,
-	suzuki.poulose@arm.com, yuzenghui@huawei.com,
-	catalin.marinas@arm.com, will@kernel.org,
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-	linux-kernel@vger.kernel.org, kernel-team@android.com
-Subject: Re: [PATCH v2 2/9] KVM: arm64: Add a range to
- __pkvm_host_share_guest()
-Message-ID: <Z_ANJQXw7maV8TlT@google.com>
-References: <20250306110038.3733649-1-vdonnefort@google.com>
- <20250306110038.3733649-3-vdonnefort@google.com>
- <Z-6o0zcLa4Aw0N6R@google.com>
+        bh=UOZ43bBKMC//JtK0X3dZk7WsbqEz50U4BfU4WlfUSoc=;
+        b=bkI/J5iK34G8//c4nR1cJWMTCgUdGmdlValEIFG6AUCAx98iHqrz0p8UG7b7MorehM
+         x6IS+VVToQTgneMIJJoo5CclaDzBR/kVV5dStrEFmSnjEbhTeeHkUM2g5q1TfstkMtUd
+         EuQ+EnmWobI3azmEOnhJI6UoG6ANhkMsD90gZL4r3Yp/ugXl6g0ie5SBYemhv8RjHSt4
+         /Zlj3ghX1IBo5+ACVwQDKSnADgjMtEGRfL3sbngH1H3bdxJ3Jr9qrRA8oa7IUA8Cd5ww
+         ZMbi9vrqAjaDX7cGhZVEj1QNpYlRLz68mVb5s6/LHLGM8FFIoqSiE0ATOEVldIjLocl1
+         RfEA==
+X-Gm-Message-State: AOJu0YwjjGLywx+m8rd7U5qUdg0f4CC1SuLH7WAUHgZkGcA0NPST4A2Y
+	wfSTnbVDPcsan9QG9hBGO5ObX7PTB7UM8rCEszoMXJMAtLjWQh3YxSHgFpao/cKsQc6UPfjXo4N
+	iSiuyntE4GnjdNwY78buSp5KnYPmCwSejGar4ZC4O5gPBW8o2qGGoluKzzenN7w==
+X-Gm-Gg: ASbGnctT8IvHt7pzwGyzsodUhnzVenHetAbk0fUWrtn81nTRtsZxD4Ct7RZhoq6hapY
+	Jv1B7AY8NVuPxPlp69Wan99aKMf8gjZHqcPvwrkXS4Q6jWfbuJ24dFaHIqmUC24EO/lOMrBVn0o
+	q9PxayF/QEM9zFeeO0aHjrxmE/TL02+iFKh2nlyo8IMAn+2cFO/exgMVG9IwFWoRMrTiASfNcT8
+	K5qlOwdEyAzP0xhztFAiOe35WMjZZJAovwQ4++vQBmnC+fQxd3WlpjvKt+9njVCPD6ug05Ersce
+	IbJ/T8zG3dkVOk3T7niew/qiq03OJ1cqKadeNqpAkrfIEwi2lCZ2gXwvV4eQAxGy3ekXlx1LM1A
+	T6soert/9XUzOGYrzN/gT6HJUCqVG6STu9HyZ61yptG8=
+X-Received: by 2002:a05:600c:5117:b0:43d:40b0:5b with SMTP id 5b1f17b1804b1-43ee076924bmr1492255e9.25.1743785349438;
+        Fri, 04 Apr 2025 09:49:09 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE1GRfHkFTJWrFhSjeHpBspaUl1rM/3LxWWUNyF4GOrAnX6k7onjQMMhVScWt01nnZ/ucUY1Q==
+X-Received: by 2002:a05:600c:5117:b0:43d:40b0:5b with SMTP id 5b1f17b1804b1-43ee076924bmr1491965e9.25.1743785349001;
+        Fri, 04 Apr 2025 09:49:09 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c71b:7900:8752:fae3:f9c9:a07e? (p200300cbc71b79008752fae3f9c9a07e.dip0.t-ipconnect.de. [2003:cb:c71b:7900:8752:fae3:f9c9:a07e])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec1794e94sm54808185e9.31.2025.04.04.09.49.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 04 Apr 2025 09:49:08 -0700 (PDT)
+Message-ID: <b30a0ff7-e885-462d-92d4-53f15accd1c0@redhat.com>
+Date: Fri, 4 Apr 2025 18:49:07 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z-6o0zcLa4Aw0N6R@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] s390/virtio_ccw: don't allocate/assign airqs for
+ non-existing queues
+Content-Language: en-US
+To: Halil Pasic <pasic@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+ virtualization@lists.linux.dev, kvm@vger.kernel.org,
+ Chandra Merla <cmerla@redhat.com>, Stable@vger.kernel.org,
+ Cornelia Huck <cohuck@redhat.com>, Thomas Huth <thuth@redhat.com>,
+ Eric Farman <farman@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>,
+ Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev
+ <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Sven Schnelle <svens@linux.ibm.com>, "Michael S. Tsirkin" <mst@redhat.com>,
+ Wei Wang <wei.w.wang@intel.com>
+References: <20250402203621.940090-1-david@redhat.com>
+ <20250403161836.7fe9fea5.pasic@linux.ibm.com>
+ <e2936e2f-022c-44ee-bb04-f07045ee2114@redhat.com>
+ <20250404063619.0fa60a41.pasic@linux.ibm.com>
+ <4a33daa3-7415-411e-a491-07635e3cfdc4@redhat.com>
+ <d54fbf56-b462-4eea-a86e-3a0defb6298b@redhat.com>
+ <20250404153620.04d2df05.pasic@linux.ibm.com>
+ <d6f5f854-1294-4afa-b02a-657713435435@redhat.com>
+ <20250404160025.3ab56f60.pasic@linux.ibm.com>
+ <6f548b8b-8c6e-4221-a5d5-8e7a9013f9c3@redhat.com>
+ <20250404173910.6581706a.pasic@linux.ibm.com>
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250404173910.6581706a.pasic@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Apr 03, 2025 at 03:27:15PM +0000, Quentin Perret wrote:
-> On Thursday 06 Mar 2025 at 11:00:31 (+0000), Vincent Donnefort wrote:
-> > +int __pkvm_host_share_guest(u64 pfn, u64 gfn, u64 nr_pages, struct pkvm_hyp_vcpu *vcpu,
-> >  			    enum kvm_pgtable_prot prot)
-> >  {
-> >  	struct pkvm_hyp_vm *vm = pkvm_hyp_vcpu_to_hyp_vm(vcpu);
-> >  	u64 phys = hyp_pfn_to_phys(pfn);
-> >  	u64 ipa = hyp_pfn_to_phys(gfn);
-> > +	enum pkvm_page_state state;
-> >  	struct hyp_page *page;
-> > +	u64 size;
-> >  	int ret;
-> >  
-> >  	if (prot & ~KVM_PGTABLE_PROT_RWX)
-> >  		return -EINVAL;
-> >  
-> > -	ret = check_range_allowed_memory(phys, phys + PAGE_SIZE);
-> > +	ret = __guest_check_transition_size(phys, ipa, nr_pages, &size);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	ret = check_range_allowed_memory(phys, phys + size);
-> >  	if (ret)
-> >  		return ret;
-> >  
-> >  	host_lock_component();
-> >  	guest_lock_component(vm);
-> >  
-> > -	ret = __guest_check_page_state_range(vcpu, ipa, PAGE_SIZE, PKVM_NOPAGE);
-> > +	ret = __guest_check_page_state_range(vm, ipa, size, PKVM_NOPAGE);
-> >  	if (ret)
-> >  		goto unlock;
-> >  
-> > -	page = hyp_phys_to_page(phys);
-> > -	switch (page->host_state) {
-> > +	state = hyp_phys_to_page(phys)->host_state;
-> > +	for_each_hyp_page(phys, size, page) {
-> > +		if (page->host_state != state) {
-> > +			ret = -EPERM;
-> > +			goto unlock;
-> > +		}
-> > +	}
-> > +
-> > +	switch (state) {
-> >  	case PKVM_PAGE_OWNED:
-> > -		WARN_ON(__host_set_page_state_range(phys, PAGE_SIZE, PKVM_PAGE_SHARED_OWNED));
-> > +		WARN_ON(__host_set_page_state_range(phys, size, PKVM_PAGE_SHARED_OWNED));
-> >  		break;
-> >  	case PKVM_PAGE_SHARED_OWNED:
-> > -		if (page->host_share_guest_count)
-> > -			break;
-> > -		/* Only host to np-guest multi-sharing is tolerated */
-> > -		WARN_ON(1);
-> > -		fallthrough;
-> > +		for_each_hyp_page(phys, size, page) {
-> > +			/* Only host to np-guest multi-sharing is tolerated */
-> > +			if (WARN_ON(!page->host_share_guest_count)) {
-> > +				ret = -EPERM;
-> > +				goto unlock;
-> > +			}
-> > +		}
-> > +		break;
-> >  	default:
-> >  		ret = -EPERM;
-> >  		goto unlock;
-> >  	}
-> >  
-> > -	WARN_ON(kvm_pgtable_stage2_map(&vm->pgt, ipa, PAGE_SIZE, phys,
-> > +	WARN_ON(kvm_pgtable_stage2_map(&vm->pgt, ipa, size, phys,
-> >  				       pkvm_mkstate(prot, PKVM_PAGE_SHARED_BORROWED),
-> >  				       &vcpu->vcpu.arch.pkvm_memcache, 0));
-> > -	page->host_share_guest_count++;
-> > +	__host_update_share_guest_count(phys, size, true);
+On 04.04.25 17:39, Halil Pasic wrote:
+> On Fri, 4 Apr 2025 16:17:14 +0200
+> David Hildenbrand <david@redhat.com> wrote:
 > 
-> So we're walking the entire phys range 3 times;
+>>> It is offered. And this is precisely why I'm so keen on having a
+>>> precise wording here.
+>>
+>> Yes, me too. The current phrasing in the spec is not clear.
+>>
+>> Linux similarly checks
+>> virtio_has_feature()->virtio_check_driver_offered_feature().
 > 
-> 	1. to check the host_state is consistent with that of the first
-> 	page;
-> 
-> 	2. to set the state to SHARED_OWNED or to check the
-> 	host_share_guest_count;
-> 
-> 	3. and then again here to update the host share guest count
-> 
-> I feel like we could probably remove at least one loop with a pattern
-> like so:
-> 
-> 	for_each_hyp_page(phys, size, page) {
-> 		switch (page->state) {
-> 		case PKVM_PAGE_OWNED:
-> 			continue;
-> 		case PKVM_PAGE_SHARED_BORROWED:
-> 			if (page->host_shared_guest_count)
-> 				continue;
-> 			fallthrough;
-> 		default;
-> 			ret = -EPERM;
-> 			goto unlock;
-> 		}
-> 	}
-> 
-> 	for_each_hyp_page(phys, size, page) {
-> 		page->host_state = PKVM_PAGE_SHARED_OWNED;
-> 		page->host_share_guest_count++;
-> 	}
-> 
-> That would also tolerate a mix of OWNED and SHARED_OWNED page in the
-> range, which I'm not sure is needed but it doesn't cost us anything to
-> support so ... :-)
-> 
-> Wdyt?
+> Careful, that is a *driver* offered and not a *device* offered!
 
-That sounds good, I'll drop __host_update_share_guest_count at the same
-time to fold it directly into the share/unshare functions.
+Right, I was pointing at the usage of the term "offered". 
+virtio_check_driver_offered_feature(). (but was also confused about that 
+function)
+
+virtio_has_feature() is clearer: "helper to determine if this device has 
+this feature."
+
+The way it's currently implemented is that it's essentially "device has 
+this feature and we know about it (->feature_table)"
 
 > 
-> >  unlock:
-> >  	guest_unlock_component(vm);
-> > diff --git a/arch/arm64/kvm/pkvm.c b/arch/arm64/kvm/pkvm.c
-> > index 930b677eb9b0..00fd9a524bf7 100644
-> > --- a/arch/arm64/kvm/pkvm.c
-> > +++ b/arch/arm64/kvm/pkvm.c
-> > @@ -361,7 +361,7 @@ int pkvm_pgtable_stage2_map(struct kvm_pgtable *pgt, u64 addr, u64 size,
-> >  		return -EINVAL;
-> >  
-> >  	lockdep_assert_held_write(&kvm->mmu_lock);
-> > -	ret = kvm_call_hyp_nvhe(__pkvm_host_share_guest, pfn, gfn, prot);
-> > +	ret = kvm_call_hyp_nvhe(__pkvm_host_share_guest, pfn, gfn, 1, prot);
-> >  	if (ret) {
-> >  		/* Is the gfn already mapped due to a racing vCPU? */
-> >  		if (ret == -EPERM)
-> > -- 
-> > 2.48.1.711.g2feabab25a-goog
-> > 
+> We basically mandate that one can only check for a feature F with
+> virtio_has_feature() such that it is either in drv->feature_table or in
+> drv->feature_table_legacy.
+> 
+> AFAICT *device_features* obtained via dev->config->get_features(dev)
+> isn't even saved but is only used for binary and-ing it with the
+> driver_features to obtain the negotiated features.
+> 
+> That basically means that if I was, for the sake of fun do
+> 
+> --- a/drivers/virtio/virtio_balloon.c
+> +++ b/drivers/virtio/virtio_balloon.c
+> @@ -1197,7 +1197,6 @@ static unsigned int features[] = {
+>          VIRTIO_BALLOON_F_MUST_TELL_HOST,
+>          VIRTIO_BALLOON_F_STATS_VQ,
+>          VIRTIO_BALLOON_F_DEFLATE_ON_OOM,
+> -       VIRTIO_BALLOON_F_FREE_PAGE_HINT,
+>          VIRTIO_BALLOON_F_PAGE_POISON,
+>          VIRTIO_BALLOON_F_REPORTING,
+>   };
+> 
+> I would end up with virtio_check_driver_offered_feature() calling
+> BUG().
+> 
+
+Right.
+
+> That basically means that Linux mandates implementing all previous
+> features regardless whether does are supposed to be optional ones or
+> not. Namely if you put the feature into drv->feature_table it will
+> get negotiated.
+> 
+> Which is not nice IMHO.
+
+I think the validate() callbacks allows for fixing that up.
+
+Like us unconditionally clearing VIRTIO_F_ACCESS_PLATFORM (I know, 
+that's a transport feature and a bit different for this reason).
+
+... not that I think the current way of achieving that is nice :)
+
+> 
+>>
+>>>
+>>> Usually for compatibility one needs negotiated. Because the feature
+>>> negotiation is mostly about compatibility. I.e. the driver should be
+>>> able to say, hey I don't know about that feature, and get compatible
+>>> behavior. If for example VIRTIO_BALLOON_F_FREE_PAGE_HINT and
+>>> VIRTIO_BALLOON_F_PAGE_REPORTING are both offered but only
+>>> VIRTIO_BALLOON_F_PAGE_REPORTING is negotiated. That would make
+>>> reporting_vq jump to +1 compared to the case where
+>>> VIRTIO_BALLOON_F_FREE_PAGE_HINT is not offered. Which is IMHO no
+>>> good, because for the features that the driver is going to reject in
+>>> most of the cases it should not matter if it was offered or not.
+>>
+>> Yes. The key part is that we may only add new features to the tail of
+>> our feature list; maybe we should document that as well.
+>>
+>> I agree that a driver that implements VIRTIO_BALLOON_F_PAGE_REPORTING
+>> *must* be aware that VIRTIO_BALLOON_F_FREE_PAGE_HINT exists. So queue
+>> existence is not about feature negotiation but about features being
+>> offered from the device.
+>>
+>> ... which is a bit the same behavior as with fixed-assigned numbers a
+>> bit. VIRTIO_BALLOON_F_PAGE_REPORTING was documented as "4" because
+>> VIRTIO_BALLOON_F_FREE_PAGE_HINT was documented to be "3" -- IOW, it
+>> already existed in the spec.
+> 
+> I don't agree with the comparison.  One obviously needs to avoid fatal
+> collisions when extending the spec, and has to consider prior art.
+
+Agreed. But IMHO it's similar to two out-of-spec driver starting to use 
+"queue index 5" in a fix-assigned world. It cannot work.
+
+> 
+> But ideally not implemented  or fenced optional features A should have no
+> impact to implemented optional or not optional features B -- unless the
+> features are actually interdependent, but then the spec would prohibit
+> the combo of having B but not A. And IMHO exactly this would have been
+> the advantage of fixed-assigned numbers: you may not care if the other
+> queueues exist or not.
+> 
+> Also like cloud-hypervisor has decided that they are going only to
+> support VIRTIO_BALLOON_F_REPORTING some weird OS could in theory
+> decide that they only care about VIRTIO_BALLOON_F_REPORTING. In that
+> setting having to look at VIRTIO_BALLOON_F_STATS_VQ and
+> VIRTIO_BALLOON_F_FREE_PAGE_HINT are offered is weird. But that is all water
+> under the bridge. We have to respect what is out there in the field.
+
+Yes, they would have to do the math based on offered features. 
+Definitely not nice, but as you say, that ship has sailed.
+
+[...]
+
+>>
+>> (as Linux supports all these features, it's easy. A driver that only
+>> supports some features has to calculate the queue index manually based
+>> on the offered features)
+> 
+> As I've tried to explain above, not implementing/accepting optional
+> features and then implementing/accepting a newer feature is problematic
+> with the current code. Supporting some features would work only as
+> supporting all features up to X.
+
+See above regarding validate().
+
+Again, doesn't win a beauty contest ... I'll send an improved 
+virtio-spec update next week, thanks!
+
+-- 
+Cheers,
+
+David / dhildenb
+
