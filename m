@@ -1,204 +1,364 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5D141EE7B1
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 13:54:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B4C91F416F
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 13:54:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743774881; cv=none; b=qA7m/s7pHkKC1SIFt7QjJnvELd09L2aFzOO0xxO4TPGuvCGR6NSVgFDrp8I8ev0BCiawlC313rBm3m/Zq1DA8kMuyxF1SB6zV9OKfIao3jX3j+ryrc7uvOW4z9Q7OYZK2wL+6U7hJAh6D0+b857QIMAe8f/mkLv9iK0IacKj0x4=
+	t=1743774886; cv=none; b=dymQ/mw1hlE2nkGR+QHNfG5DlZqDCFsZxzQM1O/P40RiUA63+4fh0s+wPkCVICdhsNzd1wT+KkJBriiq8r+ZXrjS5s127LbtHpa8BX2by6hcW/qwXV5hlSl2spRqAjjHTEY9YNvinm4x1LLyuZT4Dqq0qdHTbEnMjInxDFAgWOI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743774881; c=relaxed/simple;
-	bh=mH/oqrx10yvUQJlU2FYdxk0FHyhtYnIDSziZsAdWs70=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bqquzd/iG5m9TQwq+aKiwz+ZlsyU+7rnlpz/WpFArGWS8GZvE2/K4oULQGhfExGYXgbWKUPbZGQiJreaFN9Kgkr/5eTCnrL6KAiNLi5fsj9++svbV0olfLiUAM7ltFnyfcGjCyfYC0CEGbqchFn9ymfQ47pwXjo49DRYkbJ+G1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NTO9QCDx; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743774886; c=relaxed/simple;
+	bh=TzzAGUPZSfr3pJxORrzSYxXe5rbwSPVDubUqtayWsr8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HhjTF2zJKkKfomevAqKRTVkpMhSMI18EQ85hzS/P1i7BZUIMx3V+BFoPSdSq8+aCaYC0nitmzT3gCYxf5mdRICzkWUyjF1nsJgM7CCS8kcNVQPsE5FXpxZx3mvNj0OECpFOg+L4Gugnx2nbkpIxN9Fi8Et5TUKghANUdkoFwB8c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=smile.fr; spf=pass smtp.mailfrom=smile.fr; dkim=pass (1024-bit key) header.d=smile.fr header.i=@smile.fr header.b=J22En9fR; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=smile.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=smile.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NTO9QCDx"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-739525d4e12so1843658b3a.3
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 06:54:39 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=smile.fr header.i=@smile.fr header.b="J22En9fR"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5ed43460d6bso3398890a12.0
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 06:54:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743774879; x=1744379679; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=d8XupPhYtcgvW5/k1ZLQn1jc4P/+RcYSuqaM+or8g0w=;
-        b=NTO9QCDxt5FX8ab6lmLT1YrpNCHiA8bmFVSKydbEZCHIdpF+5MKdUH7rbOshAce17k
-         I7AI/3RtWBtoO5LIGofiBCFRJrzH43giwhKeOPKA4SAhdnMyFlmH8ohwvZmIEsP6fQIs
-         u8/+bt3PCOoprx9AKRJBF8SbM8aj/m1Ule+MTkHpfRuMPkuDhvuUgGbQHvPdvT4LLh1U
-         l0w/n8YITAdeX2IBhvWlrtqPOQlGd5QGtWFLZySCynMjb2WLvdJ1Sovn5q86r0cAD3Q6
-         iUjOwGz+W9yAIyB7zHlHY9qYv8HLH/wN7JtpWCdIRWCXqbjfOhVjJXeJABiQYv6XN0sL
-         6TlA==
+        d=smile.fr; s=google; t=1743774879; x=1744379679; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mq7JkICkqN6XgL6+CNdZ3+38WtNFoa8H0helDu0w6yI=;
+        b=J22En9fR1rqkKUj6eiJjtwVMhtno4mhgUWZZO9yYkXGxty5G9FLYlEdO3BYWy4s9QU
+         Nc7yI6SUgXADSVP23OqlWE0NcZdhWvKaQLKtDdcEtg9ZpfFJNPgAjAnuw1ZQ+Y3Xhvnh
+         7uiL1iSVpk3p3/5EhAzi9+y3YdHKnVBTumoVE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1743774879; x=1744379679;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=d8XupPhYtcgvW5/k1ZLQn1jc4P/+RcYSuqaM+or8g0w=;
-        b=vEGfrzVRdv7PqmssQC60JkTEM6+5okUWBfni/YTHBQfc5Sz/gHcOrbaDinqbPOllrM
-         rBpb13mbL0NWQmrGDvCo+zBmDIedChvUibRaencKOhEbmmbC6UwwTNFlzTUd61iSN2Hr
-         f4yP/HyQX+nEr134YMnKfGJoSgP9fSOTAoKT7PC+Um41KL8gLg5+KryfIzWbj/aZWXci
-         Fowl80zc94Co2DAia0L2iVU9AtZM6aJeTjzYVskdDF9DjFa0v8z2pZqJim9eXwv3NWx/
-         KU/l8QuTeAoTDKjHXWGuPkP43I7MKpTnNDqRSa+E4sp3+mB3DGjx9ijTPBlEoCkCRcgQ
-         7YtQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUlc0DL+f84vhH/7OYhjC0fET6vdE4RmejGd4B7TfG1Y5wyI+ZyWmCovMiLeKFRRFbOl5Pq8A2NuVG8IDk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxHs5bVkkhYPBoeeRjl7NvqXGr2bCsfXQzE9n8MgoFYgyzjZYVf
-	3sbUtj8dr4DpMcJAusaqCr3WvQV/ub/M7tppUa3V+3udrrMQgAKS
-X-Gm-Gg: ASbGnctd84zeWWsAdA3V7rc4fV6JqJvx7I+BAiPQo1zMewcMHze7NiUo0EQjovUw9Xd
-	/C3UfO/ZNWlYSRlryMde1QxQbv5FlFei5p6ik+igWYi+jxmPWZk+0h+uBCqL4f6RCBN3W7ot/WW
-	9xbFS4ZcXklGprd7+V5xoAqoL63xSP49M8/04F7RaatS9Cp/3rA9rZMQsj91ok2woG+B1DrmJ4/
-	ot2FuEyWZ+DCRDqJH1qhTeovd0wHCmAZqnL9ZPoSquhgbrfqwU9pP/hj3uDKiHJguS/tdZ9FBem
-	P1tBeB1ZQtn1TenHqPtnJx3COUc+P1fui63wFjcJa5De9v0/BWURwuR8uaadJfh9ssvTRRqG
-X-Google-Smtp-Source: AGHT+IFC9N2k/ioIXcpoV0BN/ew7bxsN6dtQL5Sstqa61qFrdL0M2RbG2UttbswEJ6RlGwal0h7JVw==
-X-Received: by 2002:a05:6a21:9201:b0:1f3:36f7:c0d2 with SMTP id adf61e73a8af0-20104769bb7mr5348532637.41.1743774878910;
-        Fri, 04 Apr 2025 06:54:38 -0700 (PDT)
-Received: from visitorckw-System-Product-Name ([140.113.216.168])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af9bc34e91asm2874206a12.33.2025.04.04.06.54.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Apr 2025 06:54:38 -0700 (PDT)
-Date: Fri, 4 Apr 2025 21:54:35 +0800
-From: Kuan-Wei Chiu <visitorckw@gmail.com>
-To: Alexandre Ghiti <alex@ghiti.fr>
-Cc: paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
-	jserv@ccns.ncku.edu.tw, eleanor15x@gmail.com,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [RFC PATCH] riscv: Optimize gcd() performance by selecting
- CPU_NO_EFFICIENT_FFS
-Message-ID: <Z+/km3h1ZmnJjyId@visitorckw-System-Product-Name>
-References: <20250217013708.1932496-1-visitorckw@gmail.com>
- <61173b04-faea-4dfe-8e82-95a55ee33f3f@ghiti.fr>
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mq7JkICkqN6XgL6+CNdZ3+38WtNFoa8H0helDu0w6yI=;
+        b=UUC2LOTxfARIqfzoFW5PourbpOCjOB0KDNUnODhk1T7+mBkmQXOlv/IgiaASbNTnrP
+         FWr7r8n2tC7vO3pjxzTGZRVWlImIwECVH6rnZ0go9WU5ksbeODj3rpp48/V/DmMvDr4s
+         NznTq7Nxz3zG/zMkiKj6OCKxsV2SGi8oLtWE+gKw31gUi1l+Zp/ihqRYKbD8UHeipXP3
+         GK4qxsN75124jQOlKnMNSyE4cVjVHUXtrmPMd7EWPZn16Rst2Y+ePq/AysqPBqnlLJeX
+         9FZbqS9mHFXvkM7+yXk+z8vuQWVsRfEIobL1StIHOWIFO55r9HExS2l4+eGyp53Ss13g
+         Atlg==
+X-Forwarded-Encrypted: i=1; AJvYcCWekXM8i6+Boj/G9ifDLyVl55zTc2hLuvXtVhUW33/A+Il0oMHKNU7KP1KeXyJy7/6GK74cDU/e8QeGG4A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyfVgCMeBaUNML/w2+1ABQ+L2JXp7+V1JncXMWCKrIXjJ/YOSRz
+	5KftVXqjnrIY/1so/U+PyV/5w9qsuql6UfVzcgSoleyAY8QhoEjKfzW9qDikf0ICHQpSK9Tac1x
+	OO3WwU2mZ8K8iSIg5crOGTC33SKuQF4/ZU72I6g==
+X-Gm-Gg: ASbGncvW/xgo/ISrCSPVqJ/UIbHMbfqFbj+C+Ss6VoiVlK6uJtaU3Gj1XzzBaIBQlpp
+	IBB74heRIl5YkRtgDdiRqtJQAL/H2NEO2ntnFxs5NDD/OKk8iRp7sOqXb36Y+nJ55PWLsODaXV2
+	tyzLTsjE35h16g1SAt4hdJjTAdRQ==
+X-Google-Smtp-Source: AGHT+IFXBMBQh84SPFA1ke6dDoxsNULs353AB4Sq132g1VTzqy7EZo9T/igMb43O4/eEIf9DuJ4q6ij914J5nItOfms=
+X-Received: by 2002:a05:6402:51c7:b0:5e8:bf8b:4396 with SMTP id
+ 4fb4d7f45d1cf-5f0b658917cmr2341509a12.13.1743774879374; Fri, 04 Apr 2025
+ 06:54:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <61173b04-faea-4dfe-8e82-95a55ee33f3f@ghiti.fr>
+References: <20250326153535.158137-1-corentin.guillevic@smile.fr> <3be3ca59-157d-4ceb-81bd-4a1acdbccb9c@wanadoo.fr>
+In-Reply-To: <3be3ca59-157d-4ceb-81bd-4a1acdbccb9c@wanadoo.fr>
+From: Corentin GUILLEVIC <corentin.guillevic@smile.fr>
+Date: Fri, 4 Apr 2025 15:54:28 +0200
+X-Gm-Features: ATxdqUHIMMxfhYog5N5EbMGu-cdJbJG577zcyhIzeQ6REUNq6nXWSs3jt6g3j5o
+Message-ID: <CAMFqQmpJB4WeOM7GF1dEuJDb27rf=CBC4UuROWA+AH2+ZbJE8w@mail.gmail.com>
+Subject: Re: [PATCH 1/2] leds: tlc5928: Driver for the TI 16 Channel spi LED driver
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-leds@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-+Cc Andrew, since this might touch lib/math/gcd.c
+Hi,
 
-On Fri, Mar 28, 2025 at 03:07:36PM +0100, Alexandre Ghiti wrote:
-> Hi Kuan-Wei,
-> 
-> First sorry for the late review.
-> 
-> On 17/02/2025 02:37, Kuan-Wei Chiu wrote:
-> > When the Zbb extension is not supported, ffs() falls back to a software
-> > implementation instead of leveraging the hardware ctz instruction for
-> > fast computation. In such cases, selecting CPU_NO_EFFICIENT_FFS
-> > optimizes the efficiency of gcd().
-> > 
-> > The implementation of gcd() depends on the CPU_NO_EFFICIENT_FFS option.
-> > With hardware support for ffs, the binary GCD algorithm is used.
-> > Without it, the odd-even GCD algorithm is employed for better
-> > performance.
-> > 
-> > Co-developed-by: Yu-Chun Lin <eleanor15x@gmail.com>
-> > Signed-off-by: Yu-Chun Lin <eleanor15x@gmail.com>
-> > Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail.com>
+Thank you for your review! I've fixed everything (new patch is
+coming), but I have issue for some of them: I can't use the suggested
+functions (guard(), for_each_available_child_of_node_scoped() and
+devm_mutex_init()) because the kernel version used on my device is too
+old (v5.15). No way to test with a newer version...
+
+Should I let the "old" functions because of my kernel version?
+
+>
+> Le 26/03/2025 =C3=A0 16:35, Corentin Guillevic a =C3=A9crit :
+> > The TLC59928 is an SPI-connected bus controlled 16-channel LED driver.
+> > A single 16-bit register handles the whole LEDs. Following a write, a
+> > latch GPIO applies the new LED configuration. An "enable" GPIO (blank
+> > in the TLC59928 datasheet) turns off the whole LEDs when active/high.
+> >
+> > This driver is able to handle a daisy-chain case, so when several
+> > TLC59928 controllers are connected in serie.
+> >
+> > Signed-off-by: Corentin Guillevic <corentin.guillevic@smile.fr>
 > > ---
-> > Although selecting NO_EFFICIENT_FFS seems reasonable without ctz
-> > instructions, this patch hasn't been tested on real hardware. We'd
-> > greatly appreciate it if someone could help test and provide
-> > performance numbers!
-> > 
-> >   arch/riscv/Kconfig | 1 +
-> >   1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> > index 7612c52e9b1e..2dd3699ad09b 100644
-> > --- a/arch/riscv/Kconfig
-> > +++ b/arch/riscv/Kconfig
-> > @@ -91,6 +91,7 @@ config RISCV
-> >   	select CLINT_TIMER if RISCV_M_MODE
-> >   	select CLONE_BACKWARDS
-> >   	select COMMON_CLK
-> > +	select CPU_NO_EFFICIENT_FFS if !RISCV_ISA_ZBB
-> >   	select CPU_PM if CPU_IDLE || HIBERNATION || SUSPEND
-> >   	select EDAC_SUPPORT
-> >   	select FRAME_POINTER if PERF_EVENTS || (FUNCTION_TRACER && !DYNAMIC_FTRACE)
-> 
-> 
-> So your patch is correct. But a kernel built with RISCV_ISA_ZBB does not
-> mean the platform supports zbb and in that case, we'd still use the slow
-> version of gcd().
-> 
-> Then I would use static keys instead, can you try to come up with a patch
-> that does that?
-> 
-Here's my current thought: I'd like to add a static key named
-efficient_ffs_key in gcd.c, and possibly call
-static_branch_disable(&efficient_ffs_key) somewhere under arch/riscv/
-when RISCV_ISA_ZBB is enabled but the Zbb extension is not detected at
-runtime.
+>
+> ...
+>
+> > +static int
+> > +tlc5928_set_ledout(struct tlc5928_led *led, bool val)
+> > +{
+> > +     struct tlc5928_chip *chip;
+> > +     struct tlc5928_chip *chip_owner =3D led->chip;
+> > +     struct tlc5928_priv *priv =3D chip_owner->priv;
+> > +     int ret;
+> > +
+> > +     mutex_lock(&priv->lock);
+> > +
+> > +     if (val)
+> > +             chip_owner->leds_state |=3D (1 << led->led_no);
+> > +     else
+> > +             chip_owner->leds_state &=3D ~(1 << led->led_no);
+> > +
+> > +     list_for_each_entry_reverse(chip, &priv->chips_list, list) {
+> > +             u16 leds_state =3D cpu_to_be16(chip->leds_state);
+> > +
+> > +             ret =3D spi_write(priv->spi, &(leds_state), sizeof(leds_s=
+tate));
+> > +
+> > +             if (ret)
+>
+> Missing unlock.
+> Or use guard()?
+>
 
-However, I'm new to the RISC-V kernel code and not sure where would be
-the most appropriate place to insert that static_branch_disable() call.
-Suggestions are very welcome!
+Fixed! But guard() is unavailable on my kernel.
 
-Below is the diff for context.
+> > +                     return ret;
+> > +     }
+> > +
+> > +     gpiod_set_value(priv->latch_gpio, 0);
+> > +     udelay(1);
+> > +     gpiod_set_value(priv->latch_gpio, 1);
+> > +
+> > +     mutex_unlock(&priv->lock);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static int
+> > +tlc5928_brightness_set(struct led_classdev *led_cdev,
+> > +                     enum led_brightness brightness)
+> > +{
+> > +     struct tlc5928_led *led =3D ldev_to_led(led_cdev);
+> > +
+> > +     /* TLC5928 only allows on/off, no brightness */
+> > +     return tlc5928_set_ledout(led, !!brightness);
+> > +}
+> > +
+> > +static const struct of_device_id of_tlc5928_leds_match[] __maybe_unuse=
+d =3D {
+> > +     { .compatible =3D "ti,tlc5928" },
+> > +     {},
+>
+> Unneeded trailing ,
+>
+> > +};
+> > +MODULE_DEVICE_TABLE(of, of_tlc5928_leds_match);
+> > +
+> > +static int tlc5928_probe_chip_dt(struct device *dev, struct device_nod=
+e *node,
+> > +             struct tlc5928_chip *chip)
+> > +{
+> > +     struct device_node *child;
+> > +     int count, err, reg;
+> > +
+> > +     count =3D of_get_available_child_count(node);
+> > +     if (!count)
+> > +             return -EINVAL;
+> > +
+> > +     chip->leds_state =3D 0;
+> > +
+> > +     for_each_available_child_of_node(node, child) {
+>
+> for_each_available_child_of_node_scoped()?
+>
 
-Regards,
-Kuan-Wei
+Same, not defined because my kernel is too old.
 
-diff --git a/lib/math/gcd.c b/lib/math/gcd.c
-index e3b042214d1b..514b8a86b461 100644
---- a/lib/math/gcd.c
-+++ b/lib/math/gcd.c
-@@ -2,6 +2,7 @@
- #include <linux/kernel.h>
- #include <linux/gcd.h>
- #include <linux/export.h>
-+#include <linux/jump_label.h>
+> > +             struct tlc5928_led *led;
+> > +             struct led_init_data init_data =3D {};
+> > +
+> > +             init_data.fwnode =3D of_fwnode_handle(child);
+> > +
+> > +             err =3D of_property_read_u32(child, "reg", &reg);
+> > +             if (err) {
+> > +                     dev_err(dev, "%pOF: failed to read reg\n", child)=
+;
+> > +                     of_node_put(child);
+> > +                     return err;
+> > +             }
+> > +
+> > +             if (reg < 0 || reg >=3D TLC5928_MAX_LEDS ||
+> > +                             chip->leds[reg].active) {
+> > +                     of_node_put(child);
+> > +                     return -EINVAL;
+> > +             }
+> > +
+> > +             led =3D &chip->leds[reg];
+> > +
+> > +             led->active =3D true;
+> > +             led->chip =3D chip;
+> > +             led->led_no =3D reg;
+> > +             led->ldev.brightness_set_blocking =3D tlc5928_brightness_=
+set;
+> > +             err =3D devm_led_classdev_register_ext(dev, &led->ldev,
+> > +                                                      &init_data);
+> > +             if (err < 0) {
+> > +                     of_node_put(child);
+> > +                     dev_err(dev, "Failed to register LED for node %pf=
+w\n",
+> > +                             init_data.fwnode);
+> > +                     return err;
+> > +             }
+> > +     }
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static int tlc5928_probe(struct spi_device *spi)
+> > +{
+> > +     struct device_node *node, *child;
+> > +     struct device *dev =3D &spi->dev;
+> > +     struct list_head *pos;
+> > +     struct tlc5928_chip *chip;
+> > +     struct tlc5928_priv *priv;
+> > +     int count, err, i;
+> > +
+> > +     node =3D dev_of_node(dev);
+> > +     if (!node)
+> > +             return -ENODEV;
+> > +
+> > +     count =3D of_get_available_child_count(node);
+> > +     if (!count)
+> > +             return -EINVAL;
+> > +
+> > +     priv =3D devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> > +     if (!priv)
+> > +             return -ENOMEM;
+> > +
+> > +     priv->spi =3D spi;
+> > +     priv->latch_gpio =3D devm_gpiod_get(dev, "latch", GPIOD_OUT_HIGH)=
+;
+> > +     if (IS_ERR(priv->latch_gpio))
+> > +             return dev_err_probe(dev, PTR_ERR(priv->latch_gpio),
+> > +                                  "Failed to get latch GPIO\n");
+> > +
+> > +     mutex_init(&priv->lock);
+>
+> Maybe:
+> err =3D devm_mutex_init(...);
+> if (err)
+>         return err;
+>
+> ?
 
- /*
-  * This implements the binary GCD algorithm. (Often attributed to Stein,
-@@ -11,6 +12,8 @@
-  * has decent hardware division.
-  */
+Same.
 
-+DEFINE_STATIC_KEY_TRUE(efficient_ffs_key);
-+
- #if !defined(CONFIG_CPU_NO_EFFICIENT_FFS)
+>
+> > +     INIT_LIST_HEAD(&priv->chips_list);
+> > +
+> > +     i =3D 0;
+> > +     for_each_available_child_of_node(node, child) {
+> > +             chip =3D devm_kzalloc(dev, sizeof(*chip), GFP_KERNEL);
+> > +             if (!chip)
+> > +                     return -ENOMEM;
+> > +
+> > +             list_add_tail(&chip->list, &priv->chips_list);
+> > +             chip->priv =3D priv;
+> > +             chip->enable_gpio =3D devm_gpiod_get_index_optional(dev, =
+"enable", i,
+> > +                             GPIOD_OUT_HIGH);
+> > +             if (IS_ERR(chip->enable_gpio)) {
+> > +                     dev_err(dev, "Error getting enable GPIO %i proper=
+ty: %ld\n", i,
+> > +                                     PTR_ERR(chip->enable_gpio));
+> > +                     return PTR_ERR(chip->enable_gpio);
+> > +             }
+> > +
+> > +             err =3D tlc5928_probe_chip_dt(dev, child, chip);
+> > +             if (err)
+> > +                     return err;
+> > +
+> > +             i++;
+> > +     }
+> > +
+> > +     list_for_each(pos, &priv->chips_list) {
+>
+> list_for_each_entry()?
+>
+> > +             chip =3D container_of(pos, struct tlc5928_chip, list);
+> > +             if (chip->enable_gpio)
+> > +                     gpiod_set_value(chip->enable_gpio, 0);
+> > +     }
+> > +
+> > +     spi_set_drvdata(spi, priv);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static int tlc5928_remove(struct spi_device *spi)
+> > +{
+> > +     struct list_head *pos;
+> > +     struct tlc5928_priv *priv =3D spi_get_drvdata(spi);
+> > +     int i;
+> > +
+> > +     list_for_each(pos, &priv->chips_list) {
+>
+> list_for_each_entry()?
+>
 
- /* If __ffs is available, the even/odd algorithm benchmarks slower. */
-@@ -20,7 +23,7 @@
-  * @a: first value
-  * @b: second value
-  */
--unsigned long gcd(unsigned long a, unsigned long b)
-+static unsigned long gcd_binary(unsigned long a, unsigned long b)
- {
- 	unsigned long r = a | b;
+Fixed!
 
-@@ -44,7 +47,7 @@ unsigned long gcd(unsigned long a, unsigned long b)
- 	}
- }
+> > +             struct tlc5928_chip *chip =3D container_of(pos, struct tl=
+c5928_chip,
+> > +                             list);
+> > +
+> > +             for (i =3D 0; i < TLC5928_MAX_LEDS; i++) {
+> > +                     if (chip->leds[i].active)
+> > +                             devm_led_classdev_unregister(&spi->dev,
+> > +                                          &chip->leds[i].ldev);
+>
+> Why is it needed?
+> devm_led_classdev_register_ext() was used.
+>
 
--#else
-+#endif
+Yes, because the latch GPIO is set each time a LED is set. But during
+the module removing process, devm releases before the GPIO and then
+each LED (turning them off). So the kernel gets a NULL pointer after
+deference.
 
- /* If normalization is done by loops, the even/odd algorithm is a win. */
- unsigned long gcd(unsigned long a, unsigned long b)
-@@ -54,6 +57,11 @@ unsigned long gcd(unsigned long a, unsigned long b)
- 	if (!a || !b)
- 		return r;
+An explicit unregister allows to free the LEDs before the GPIO.
 
-+#if !defined(CONFIG_CPU_NO_EFFICIENT_FFS)
-+	if (static_branch_likely(&efficient_ffs_key))
-+		return binary_gcd(a, b);
-+#endif
-+
- 	/* Isolate lsbit of r */
- 	r &= -r;
+> > +             }
+> > +
+> > +             if (chip->enable_gpio) {
+> > +                     gpiod_set_value(chip->enable_gpio, 1);
+> > +                     gpiod_put(chip->enable_gpio);
+>
+> Why is it needed?
+> devm_gpiod_get_index_optional() was used.
+>
 
-@@ -80,6 +88,4 @@ unsigned long gcd(unsigned long a, unsigned long b)
- 	}
- }
+Fixed!
 
--#endif
--
- EXPORT_SYMBOL_GPL(gcd);
+> > +             }
+> > +     }
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static const struct spi_device_id tlc5928_id[] =3D {
+> > +     { "tlc5928" },
+> > +     {},
+>
+> Unneeded trailing ,
+>
+> > +};
+> > +MODULE_DEVICE_TABLE(spi, tlc5928_id);
+>
+> ...
+>
+> CJ
+>
+
+Corentin Guillevic
