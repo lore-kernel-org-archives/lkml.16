@@ -1,248 +1,71 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 175E91F4265;
-	Fri,  4 Apr 2025 14:54:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5D9D1F4299
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 14:54:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743778451; cv=none; b=A6CT+9ub9064FpyPtpmgRoG8JNGvhNIi/suqcs9lkNo4yvAfD31GKib5OxDsUoBNvr7H8NijaytsN8Mz7DPaE4cSpdn41mHODRe5+7zi4VjUc+MPfCDN8GQk3eJ+Sm3514l34mrOgcv4EYU0dRD/iP/bVH5BUgW17lfmYD+lpxo=
+	t=1743778462; cv=none; b=o5ax1AF6H4+0jmQZuYeUO4k4o+4oZZaJcTiKXQVTpBThWkIMGu4RdJOojID708vxWVpkFljvm0kTy2qUypqFAepsApHwxzWcBA5+pcabj5Q/mAqpWm5RkkHRRgOE620gogQMyZRW6vFZ/UdjCyoDldZ1oIIb6w48pK4Sr5UmrF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743778451; c=relaxed/simple;
-	bh=ltxOTyeO04Wt1uUU5eVlgp7FhozyFZwWqUtRcFOCauA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=VEXGYpnBXKb9GwfeD5OH9UbhczzP5LhnUI+YVxfgPN3zqFRo6uEehTB75WX/p1Iczr9SWDzJ0dUXnCcVyxkWZFR1ax78MgiUSajgJUQVzXXCJ3hp9MC2oDHNWvaB3Eenmskp75tnckNChLd5W9Yrnf6FQmRPdoqMYAvjf8r1LkI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=B1yGMycj; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1743778462; c=relaxed/simple;
+	bh=svkucUlganAJo/xVbUO7ayZA0edzMW37/xslNvZp+gg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sIgL4kJNnEu2nouQvKEVKZ2Wu9Q6uubG3/YcGhqyryOOYbnCLtD0UpG4s3yNngMfk1InKVxevd/NJFQBS+dBi8F+UeWn7VsvEUMAx2gBQTUR8B+OfzbtUsTvgJMKBhldhNMJHsxEYsvqQivuBPAE3ilyY4Zf5XKUt0h4PV/o5Q4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=p/hPx0zQ; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="B1yGMycj"
-Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 534C4qcc029970;
-	Fri, 4 Apr 2025 16:53:59 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	mhU2CUm77zU9ySWU3DVC6yn8pSk2uVAfU+scG0hka6w=; b=B1yGMycjIluFqCmz
-	IJFeizWyfSAseuQjb79t/73MfgZ4zdP5SHLWUh5k0gOLQsKQqqHPD4+Gu8nb8B13
-	9TYqoT5gnmEuEfUR8M6xvsxdY6vLqpmZzNJ5jQpM5HzLi7KnCHUBfwaNf01tKbGw
-	FBTcLognIYYmYMfnTAKOgOt9IDLNY3pYT54OJLvVuTLjqX5ikrwDvTJUChtvccIm
-	OU0fg3GtDVCA4XvdaG/sNyNTUiFaynfNq+vjYTOAvz4vUI6poGFmwFz/7kpWbFIr
-	5eb5zg3xzz33s3LE+wNqN93/p+gV79mg918fuEF6kb5G6cYS5rjtAVHqTITADpad
-	6N/Yyg==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 45t2ct3sc9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 04 Apr 2025 16:53:59 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 1CF8A40050;
-	Fri,  4 Apr 2025 16:52:53 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B9F8393CD9F;
-	Fri,  4 Apr 2025 16:50:54 +0200 (CEST)
-Received: from localhost (10.252.23.40) by SHFDAG1NODE1.st.com (10.75.129.69)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 4 Apr
- 2025 16:50:54 +0200
-From: Benjamin Mugnier <benjamin.mugnier@foss.st.com>
-Date: Fri, 4 Apr 2025 16:50:51 +0200
-Subject: [PATCH v5 1/2] media: dt-bindings: Add ST VD55G1 camera sensor
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="p/hPx0zQ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=3f4sjl0SOnBVfAiT/z6/L3JUzr5aj/BpDpETUoVcQ7w=; b=p/hPx0zQ1us4HKITt3gMYkaQ6l
+	KmwoacsdzQzkEtTTkh4xoF04+aBaC3tlXdDC4F98vNs8YWN/qCrmJ298m4CahZN06MLFCrZ6Em/ir
+	hDhXi/F/X4T0QQdr2Yoh4TBLz0QNycztJEY8YfFXtIZRkiXLePQQb7O/vLNu1X7uo2RZWuabNI+Bx
+	enjCV5ZOPDGOzBgD/lYB9l5U/+wrDcoetIcqBog0wvjQ8EBWvxXFN4aOzasSPhKBw6PJJPnY6FrKp
+	cK6a74+0GzxRiciQU00doGzIf6fcILxD7jG25cC8ZHPV308KROsCKkbzbeOx9AI0TLWQiGPOThDY1
+	8qfEjWUw==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1u0iQv-0000000Fpp5-0myO;
+	Fri, 04 Apr 2025 14:54:13 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id ADFA830049D; Fri,  4 Apr 2025 16:54:12 +0200 (CEST)
+Date: Fri, 4 Apr 2025 16:54:12 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
+	Ingo Molnar <mingo@kernel.org>, Juergen Gross <jgross@suse.com>,
+	Andrew Cooper <andrew.cooper3@citrix.com>
+Subject: Re: [PATCH] objtool: Fix SYSCALL instruction handling and
+ INSN_CONTEXT_SWITCH
+Message-ID: <20250404145412.GP25239@noisy.programming.kicks-ass.net>
+References: <41761c1db9acfc34d4f71d44284aa23b3f020f74.1743706046.git.jpoimboe@kernel.org>
+ <20250404104938.GO25239@noisy.programming.kicks-ass.net>
+ <iqalk74mk6onmntltkpodnbtp7zxxgx3u3ycuipmkizcmz7uvm@b7j7kubwzpl6>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250404-b4-vd55g1-v5-1-98f2f02eec59@foss.st.com>
-References: <20250404-b4-vd55g1-v5-0-98f2f02eec59@foss.st.com>
-In-Reply-To: <20250404-b4-vd55g1-v5-0-98f2f02eec59@foss.st.com>
-To: Benjamin Mugnier <benjamin.mugnier@foss.st.com>,
-        Sylvain Petinot
-	<sylvain.petinot@foss.st.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Sakari Ailus
-	<sakari.ailus@linux.intel.com>
-CC: <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski@linaro.org>
-X-Mailer: b4 0.14.2
-X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-04_06,2025-04-03_03,2024-11-22_01
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <iqalk74mk6onmntltkpodnbtp7zxxgx3u3ycuipmkizcmz7uvm@b7j7kubwzpl6>
 
-Also update MAINTAINERS file accordingly.
+On Fri, Apr 04, 2025 at 07:46:52AM -0700, Josh Poimboeuf wrote:
+> On Fri, Apr 04, 2025 at 12:49:38PM +0200, Peter Zijlstra wrote:
+> > On Thu, Apr 03, 2025 at 11:48:13AM -0700, Josh Poimboeuf wrote:
+> > 
+> > > The real problem here is that INSN_CONTEXT_SWITCH is ambiguous.  It can
+> > > represent both call semantics (SYSCALL, SYSENTER) and return semantics
+> > > (SYSRET, IRET, RETS, RETU).  Those differ significantly: calls preserve
+> > > control flow whereas returns terminate it.
+> > 
+> > Does that not rather suggest we should perhaps have INSN_SYSCALL /
+> > INSN_SYSRET to replace the single ambiguous thing?
+> 
+> Is there any reason to have INSN_SYSCALL in the first place?
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Signed-off-by: Benjamin Mugnier <benjamin.mugnier@foss.st.com>
----
- .../devicetree/bindings/media/i2c/st,vd55g1.yaml   | 132 +++++++++++++++++++++
- MAINTAINERS                                        |   7 ++
- 2 files changed, 139 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/media/i2c/st,vd55g1.yaml b/Documentation/devicetree/bindings/media/i2c/st,vd55g1.yaml
-new file mode 100644
-index 0000000000000000000000000000000000000000..6b777f86790da4e5941ac1cad86dc1a5021f9f5b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/st,vd55g1.yaml
-@@ -0,0 +1,132 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+# Copyright (c) 2025 STMicroelectronics SA.
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/media/i2c/st,vd55g1.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: STMicroelectronics VD55G1 Global Shutter Image Sensor
-+
-+maintainers:
-+  - Benjamin Mugnier <benjamin.mugnier@foss.st.com>
-+  - Sylvain Petinot <sylvain.petinot@foss.st.com>
-+
-+description: |-
-+ The STMicroelectronics VD55G1 is a global shutter image sensor with an active
-+ array size of 804H x 704V. It is programmable through I2C interface. The I2C
-+ address is fixed to 0x10.
-+ Image data is sent through MIPI CSI-2, which is configured as only 1 data
-+ lane. The sensor provides 4 GPIOS that can be used for external LED signal
-+ (synchronized with sensor integration periods).
-+
-+allOf:
-+  - $ref: /schemas/media/video-interface-devices.yaml#
-+
-+properties:
-+  compatible:
-+    const: st,vd55g1
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  vcore-supply:
-+    description: Digital core power supply (1.15V)
-+
-+  vddio-supply:
-+    description: Digital IO power supply (1.8V)
-+
-+  vana-supply:
-+    description: Analog power supply (2.8V)
-+
-+  reset-gpios:
-+    description: Sensor reset active low GPIO (XSHUTDOWN)
-+    maxItems: 1
-+
-+  st,leds:
-+    description:
-+      List sensor's GPIOs used to control strobe light sources during exposure
-+      time. The numbers identify the sensor pin on which the illumination
-+      system is connected. GPIOs are active-high.
-+    $ref: /schemas/types.yaml#/definitions/uint32-array
-+    minItems: 1
-+    maxItems: 4
-+    items:
-+      minimum: 0
-+      maximum: 3
-+
-+  port:
-+    $ref: /schemas/graph.yaml#/$defs/port-base
-+    additionalProperties: false
-+
-+    properties:
-+      endpoint:
-+        $ref: /schemas/media/video-interfaces.yaml#
-+        unevaluatedProperties: false
-+
-+        properties:
-+          data-lanes:
-+            items:
-+              - const: 1
-+
-+          link-frequencies:
-+            maxItems: 1
-+            items:
-+              minimum: 125000000
-+              maximum: 600000000
-+
-+          lane-polarities:
-+            minItems: 1
-+            maxItems: 2
-+
-+        required:
-+          - data-lanes
-+          - link-frequencies
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - vcore-supply
-+  - vddio-supply
-+  - vana-supply
-+  - reset-gpios
-+  - port
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        camera-sensor@10 {
-+            compatible = "st,vd55g1";
-+            reg = <0x10>;
-+
-+            clocks = <&camera_clk_12M>;
-+
-+            vcore-supply = <&camera_vcore_v1v15>;
-+            vddio-supply = <&camera_vddio_v1v8>;
-+            vana-supply = <&camera_vana_v2v8>;
-+
-+            reset-gpios = <&gpio 5 GPIO_ACTIVE_LOW>;
-+            st,leds = <2>;
-+
-+            orientation = <2>;
-+            rotation = <0>;
-+
-+            port {
-+                endpoint {
-+                    data-lanes = <1>;
-+                    link-frequencies = /bits/ 64 <600000000>;
-+                    remote-endpoint = <&csiphy0_ep>;
-+                };
-+            };
-+        };
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 2286200b355bde3604607be916ef09aa88feed0e..4f5e9005063a157de69e81b10f8def9da9e6c04c 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -22410,6 +22410,13 @@ S:	Maintained
- F:	Documentation/hwmon/stpddc60.rst
- F:	drivers/hwmon/pmbus/stpddc60.c
- 
-+ST VD55G1 DRIVER
-+M:	Benjamin Mugnier <benjamin.mugnier@foss.st.com>
-+M:	Sylvain Petinot <sylvain.petinot@foss.st.com>
-+L:	linux-media@vger.kernel.org
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/media/i2c/st,vd55g1.yaml
-+
- ST VGXY61 DRIVER
- M:	Benjamin Mugnier <benjamin.mugnier@foss.st.com>
- M:	Sylvain Petinot <sylvain.petinot@foss.st.com>
-
--- 
-2.25.1
-
+This xen hyperclal thing?
