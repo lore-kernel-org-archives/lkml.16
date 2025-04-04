@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30D771624C9;
-	Fri,  4 Apr 2025 14:56:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D769B1F4631;
+	Fri,  4 Apr 2025 14:56:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743778564; cv=none; b=ikXIQBN7igLQTOxjkTAe23K84yMI/wpEje9cf18nMEa/XNtKeaahu2aWu8A/RqyB3+3ga/vom9ELldZyHF6RLgTTHXovJ2DHrCNh4N7eXn5jS2W6mnd4cjXItxdGpEpYyliePendZj3211jKy/EiLc6JxEwvr6woiYgTPyLg0dE=
+	t=1743778566; cv=none; b=OWXEAmgpiSwmmpmIiML/lezMxcwNKfHMjh0cprm2+lSaCAu+kaMXf9IU6JASs4AIh0rZTwjzjshGUapMCSHjaBVi6j4GPvBJcbnK/Wt6NsqIzBAuWv6Y0k3h9CuOU+F4Elk9k5XsI3XkC2W1ax/f3zWwEufxqgL+a5nSPuRprCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743778564; c=relaxed/simple;
-	bh=bsmW9y+0W+KUxx34ofruUlBo0xOvw2rXR++TeDi3AKA=;
+	s=arc-20240116; t=1743778566; c=relaxed/simple;
+	bh=ZKC9yGDKP7ZL9SggbwEVntc6h66l9cUcpFwGsLIdwyU=;
 	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=WPDd3Sh0lhpx4BEgHmL0chy8vKpymZgBwn9WpmADN+T3Buf+QgJZw8mE5OQy+wWc7Bd6cpxr564SmTtRNmRBr1lmz3mGr7qYol5BtZ/kWbnRDgKvBdvX66ScAyYMENTXxPKni7F+qG096Hgz8FcWNxs+2amRZ5Et9szFJTSh9Do=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rzZ8msxb; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id:Subject; b=lKA+zS0UMD6zZOeNFxnjNMCj9R6nqI9DB9yYT46K135ebojv/CpfWMZZjyAm3PiM6tP++k5i0URBuAKoodnyryACCX2RV0QPeJmZYimrisqd+8cqOCQYHtIjC6dI27WYKYVA/atlrQ5DYc7oSJb8xA95dGU02h5EcLp8OMcrLWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lYq0Ahwk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rzZ8msxb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E06CC4CEDD;
-	Fri,  4 Apr 2025 14:56:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lYq0Ahwk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08F3BC4CEDD;
+	Fri,  4 Apr 2025 14:56:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743778563;
-	bh=bsmW9y+0W+KUxx34ofruUlBo0xOvw2rXR++TeDi3AKA=;
+	s=k20201202; t=1743778565;
+	bh=ZKC9yGDKP7ZL9SggbwEVntc6h66l9cUcpFwGsLIdwyU=;
 	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=rzZ8msxb+/87y0OctRs5tOxOR6tE9h/KjZci7JmdyMbsLYl923ZVvR8wlqmckWIcm
-	 AG1QlHYsthO0au0/hChQLhy8gOzM9fw3c1F0qusmYKdvqb9U8zQpvj8bBIkFENqWbl
-	 8lBZRlX6JKPwiWazZloNOU53X50y4s00DY2MROrSpE/TF8T/hQrafuwTxpc8WWxvku
-	 YowoHFp9YHOAKDFCaqrWFTK9b9pGXoVobpR/TN/xgmNWuXFZKLalvSK7Bm6rzig2xF
-	 nd8CoY+0BnWvoEIhPgy8jUUE5Q6Ftadlo4feiT5exPfQpsVoFVkoZbZvyHED3yasvs
-	 dEHi3HN5tGQAQ==
-Date: Fri, 04 Apr 2025 09:56:01 -0500
+	b=lYq0AhwkZcTUWyVwicaZ1vvM7sdLhXVWb88uIIREKJeM4f4dFtPRR+5YtBnIQ3+8S
+	 4rmWfDWxmKz8BkutmGYcsQCbqBKQsOpb3vKdZoOj3zlMzyIr63+JtEno2kDqBxKGaL
+	 uSpnRzGTivLPzIQSa2vlGQgFkEoHK4Djr247EPkB1MI0mgoQqCboWVbZe1YDRxstNw
+	 XL6TPr4SJ3ntriVvow1CY9ZhW/TaC9VWQaFtDYXQkEycuv4vNUekj/x3m4CmjcWhg8
+	 J/6CXGfE842P8cqvOhDfI5vtBqXZj1W2sAP8ubZBZr4Jve8ltlaLGaw/5ccWSyVqKq
+	 iX0gZX5BzPDSQ==
+Date: Fri, 04 Apr 2025 09:56:03 -0500
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -36,39 +36,60 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Andreas Kemnade <andreas@kemnade.info>, 
- Michael Turquette <mturquette@baylibre.com>, 
- Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, 
- Stephen Boyd <sboyd@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Kevin Hilman <khilman@baylibre.com>, linux-clk@vger.kernel.org, 
- Tero Kristo <kristo@kernel.org>, linux-kernel@vger.kernel.org
-To: Sukrut Bellary <sbellary@baylibre.com>
-In-Reply-To: <20250404014500.2789830-3-sbellary@baylibre.com>
-References: <20250404014500.2789830-1-sbellary@baylibre.com>
- <20250404014500.2789830-3-sbellary@baylibre.com>
-Message-Id: <174377855887.1313159.8477749895324191477.robh@kernel.org>
-Subject: Re: [PATCH 2/4] dt-bindings: clock: ti: Convert to yaml
+Cc: Bjorn Andersson <andersson@kernel.org>, 
+ Viresh Kumar <viresh.kumar@linaro.org>, linux-kernel@vger.kernel.org, 
+ Conor Dooley <conor@kernel.org>, linux-rockchip@lists.infradead.org, 
+ Daniel Machon <daniel.machon@microchip.com>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+ UNGLinuxDriver@microchip.com, Jerome Brunet <jbrunet@baylibre.com>, 
+ Kevin Hilman <khilman@baylibre.com>, linux-sunxi@lists.linux.dev, 
+ Liviu Dudau <liviu.dudau@arm.com>, linux-arm-kernel@lists.infradead.org, 
+ Fabio Estevam <festevam@gmail.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, Stephen Boyd <sboyd@kernel.org>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Vincenzo Frascino <vincenzo.frascino@arm.com>, 
+ linux-renesas-soc@vger.kernel.org, 
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
+ Magnus Damm <magnus.damm@gmail.com>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Geert Uytterhoeven <geert+renesas@glider.be>, 
+ Viresh Kumar <vireshk@kernel.org>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, zhouyanjie@wanyeetech.com, 
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>, Heiko Stuebner <heiko@sntech.de>, 
+ Jernej Skrabec <jernej.skrabec@gmail.com>, linux-pm@vger.kernel.org, 
+ linux-mediatek@lists.infradead.org, Chen-Yu Tsai <wens@csie.org>, 
+ linux-mips@vger.kernel.org, imx@lists.linux.dev, 
+ Samuel Holland <samuel@sholland.org>, Sudeep Holla <sudeep.holla@arm.com>, 
+ Nishanth Menon <nm@ti.com>, devicetree@vger.kernel.org, 
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+ linux-arm-msm@vger.kernel.org, Nicolas Ferre <nicolas.ferre@microchip.com>, 
+ linux-amlogic@lists.infradead.org, Sascha Hauer <s.hauer@pengutronix.de>, 
+ Steen Hegelund <Steen.Hegelund@microchip.com>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ Matthias Brugger <matthias.bgg@gmail.com>
+To: "Rob Herring (Arm)" <robh@kernel.org>
+In-Reply-To: <20250403-dt-cpu-schema-v1-14-076be7171a85@kernel.org>
+References: <20250403-dt-cpu-schema-v1-0-076be7171a85@kernel.org>
+ <20250403-dt-cpu-schema-v1-14-076be7171a85@kernel.org>
+Message-Id: <174377856145.1313232.11316769002552655294.robh@kernel.org>
+Subject: Re: [PATCH 14/19] dt-bindings: arm/cpus: Add schemas for
+ "enable-method" dependencies
 
 
-On Thu, 03 Apr 2025 18:44:58 -0700, Sukrut Bellary wrote:
-> This binding doesn't define a new clock binding type,
-> it is used to group the existing clock nodes under the hardware hierarchy.
+On Thu, 03 Apr 2025 21:59:35 -0500, Rob Herring (Arm) wrote:
+> Replace the prose for properties dependent on specific "enable-method"
+> values with schemas defining the same requirements.
 > 
-> As this is not a provider clock, remove #clock-cells and
-> clock-output-names properties.
-> Though few clockdomain nodes in the dts use these properties,
-> we are not fixing dts here.
-> Clean up the example to meet the current standards.
+> Both "qcom,acc" and "qcom,saw" properties appear to be required for any
+> of the Qualcomm enable-method values, so the schema is a bit simpler
+> than what the text said. The references to arm/msm/qcom,saw2.txt and
+> arm/msm/qcom,kpss-acc.txt are out of date, so just drop them.
 > 
-> Add the creator of the original binding as a maintainer.
-> 
-> Signed-off-by: Sukrut Bellary <sbellary@baylibre.com>
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 > ---
->  .../bindings/clock/ti/clockdomain.txt         | 25 ------------
->  .../bindings/clock/ti/ti,clockdomain.yaml     | 38 +++++++++++++++++++
->  2 files changed, 38 insertions(+), 25 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/clock/ti/clockdomain.txt
->  create mode 100644 Documentation/devicetree/bindings/clock/ti/ti,clockdomain.yaml
+>  Documentation/devicetree/bindings/arm/cpus.yaml | 82 +++++++++++++++----------
+>  1 file changed, 49 insertions(+), 33 deletions(-)
 > 
 
 My bot found errors running 'make dt_binding_check' on your patch:
@@ -76,19 +97,14 @@ My bot found errors running 'make dt_binding_check' on your patch:
 yamllint warnings/errors:
 
 dtschema/dtc warnings/errors:
-
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/soc/qcom/qcom,saw2.example.dtb: cpu@0: 'qcom,acc' is a required property
+	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
 
 doc reference errors (make refcheckdocs):
-Warning: Documentation/devicetree/bindings/clock/ti/fixed-factor-clock.txt references a file that doesn't exist: Documentation/devicetree/bindings/clock/ti/autoidle.txt
-Warning: Documentation/devicetree/bindings/clock/ti/ti,divider-clock.yaml references a file that doesn't exist: Documentation/devicetree/bindings/clock/ti/autoidle.txt
-Warning: Documentation/devicetree/bindings/clock/ti/ti,gate-clock.yaml references a file that doesn't exist: Documentation/devicetree/bindings/clock/ti/clockdomain.txt
 Warning: Documentation/translations/ja_JP/process/submit-checklist.rst references a file that doesn't exist: Documentation/translations/ja_JP/SubmitChecklist
-Documentation/devicetree/bindings/clock/ti/fixed-factor-clock.txt: Documentation/devicetree/bindings/clock/ti/autoidle.txt
-Documentation/devicetree/bindings/clock/ti/ti,divider-clock.yaml: Documentation/devicetree/bindings/clock/ti/autoidle.txt
-Documentation/devicetree/bindings/clock/ti/ti,gate-clock.yaml: Documentation/devicetree/bindings/clock/ti/clockdomain.txt
 Documentation/translations/ja_JP/process/submit-checklist.rst: Documentation/translations/ja_JP/SubmitChecklist
 
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250404014500.2789830-3-sbellary@baylibre.com
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250403-dt-cpu-schema-v1-14-076be7171a85@kernel.org
 
 The base for the series is generally the latest rc1. A different dependency
 should be noted in *this* patch.
