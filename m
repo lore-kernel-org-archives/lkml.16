@@ -1,144 +1,145 @@
-Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8255421D5B5
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 20:03:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40ACF219A70
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 20:04:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743797010; cv=none; b=on0tj5ejSFqfVO3cpnngzctQAAg3u40KZAwExqqY2m8mUk3/qKbpKDYP8pzUjrMbc9mtS5eJYQU3Up+EMZBlOGLgYc+aOj2/mt55jpaHcq8PwIsz7pTFWbWy2C/It9yv/YpQKDo8dzV699PFlQgBe8PM82g4H5Y9B6iAtu+nHLk=
+	t=1743797050; cv=none; b=m2+eHBsUvoSPYOV1hV2pejoDnXK98YrwSLabJHKpC4GItEX20Un2w/lHxhJP8s2yQVZKMwc3uirKQPsQCdE4xSawyqcaANWHDvY7A6ve1ayLNPAoXWv9SPTq8aPgdLJeIvR/SA3m8Vo+EJIPmPMyefGgxoR7Z8kG0032h3idS5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743797010; c=relaxed/simple;
-	bh=DyJalFc9IvIlPQ0hAHs/kVVK3YCaVNKPLXqqkh+SLnw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DHs/BGmcR+Hn6U2jvN51URyvqrFP+Hn/LDQEp99eiEUHja9nzBtLB6X3hV6Gs3zXencRYAjEfYiKW2XtZrLygnEo/yKN8Kn1BdCjb36szzuETI2OilShBFiWKAAwthSgalGKjviVLIhhCmUZLUoL5tPAZ4d1GIMOOFuoNttWI38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=U5cw8A75; arc=none smtp.client-ip=209.85.219.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
+	s=arc-20240116; t=1743797050; c=relaxed/simple;
+	bh=ouROHuQWcAD3W9eytP+HmLUDp18dNL1U5cg3yioIUq8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=B2/TLBtFhdzzDMzq84TYA+WfX9nADcGiV97Nz1mZ/0QztO61XPwnSxeC+heqtAzqMr0eQU1U9rVKJNB951HWYBbQzpgCC2vlS92lj/ZMD22Yn6rFexgLTmc2mOKoJFYiRV3BeTpqSQwSyjy+QRhRUuytlSk67mBITKb/u5J41jE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org; spf=none smtp.mailfrom=blackwall.org; dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b=nhBbnOcr; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=blackwall.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="U5cw8A75"
-Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-6e904f53151so20513746d6.3
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 13:03:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b="nhBbnOcr"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43cebe06e9eso15873015e9.3
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 13:04:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1743797006; x=1744401806; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=cclz9oqGLWTaYFCssVoMtVZnVxrzRlRpqGeMDEZ9cgE=;
-        b=U5cw8A752k1KTcz8tAkITi8uV/P1ru8+Yne+q1cAH9GUGVWQ687/ZZevYJLEISox0r
-         67wtPCQKm+gjCg+R4W73C/Lk1Cu9hJzIF2GWQxONHFyFy+kE1xj3BzRCo4sPsbrNFmT2
-         Xb2yliuzUMuRyiUY6WEeYQtA57HDe4cOSqvuZXOgoDMLmPHV3MTHa0netLByXmfktqxq
-         SLK++APYvty7k0kIie8H4NRrWhdfclajkbaw2Jw0nWADzhfz/4PR4KJeocTbiulcAzV+
-         +52rALiW2moX94BxDWDsxKniiESxlWe1/uAJ9b19mO6MwwBhJM/kILSitDBxwxIqAe7U
-         kNIQ==
+        d=blackwall-org.20230601.gappssmtp.com; s=20230601; t=1743797046; x=1744401846; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=zP03ijhZ2aqQsthTQz8RL6yLJtMw3d+tIA07mCuHO+w=;
+        b=nhBbnOcrIqWB0T05XzOHUD5eFlb2gue27HNrW1UqvfEZBoCkYT2t/5KauD91hH4nXJ
+         EfPUNNdjmz3THQX/2ajgm7w8d4KjwjIjMBt2bHFxuLRCYJsFetoscTqATbHSUGHqct5K
+         iBXrCV/0ZOCFOPeISfSRuq3fnj8dBh8ghvOYiUEkFwoWMPu+KNAB+HPiJxNpLCShIa7y
+         eiJzogjm534RWzjdEoyEcvBjpFrqel2iA0DtlSvlaHQiQVjBu2BagA1b6W+1fjfKQRln
+         tERNUy780Oy2nzMCp+7LRCbxF+dwd39ikCE/QgzMKDr5/TtkRjDV1ESZ8rWAO7zudujf
+         J2HA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743797006; x=1744401806;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cclz9oqGLWTaYFCssVoMtVZnVxrzRlRpqGeMDEZ9cgE=;
-        b=X3mHdJvy6YobMqciYhvvKiBOLXrUE4ElaciHrHTHev0fxtnjeDQKK4o/JYpYqJMw0G
-         0B83EV9d0hKlVs4Ob7h02XMKww2aGjxKNqbFqtPo4uJvkRXr9euLz48AP+VWuN9rSmJE
-         QHvGgkbMnGMhsLjtPPcVmdJrRLH82wdPa6aHBDuIhbPCsTTpvqDervZ8j3zBE0XKQjSm
-         SHtUlmKElBFVVVIea+oxlXQIU47IvlfGGUPWXxDUXyFDhboou2/OsrnkFZJlQNv1WBYB
-         drB1+8GsoPSHGmu18x7qC2TT6zA4etaRTPvMgbRxfZRvGj3bc9Ap5GYOSfGV17cE1DY8
-         dM0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUpgEnPt8aF2SHOm89DSg/4t60dAwZF6MWMIJGv9qVtOmZ/xe+cZXVmx3+mTLBj2L0skQksm9KKLH8DezI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy5/qXsa1bYAWf9TsCDVmJO2sZQ867g5TkfFXWCG/4Gq4ULsH44
-	lZF6Eua/SfH+POtter25IOpYxvqjdXMlPtjW6wZRO4+F8JyXpzVAYXIfpPaPbNs=
-X-Gm-Gg: ASbGncvWR+VpGbqtbDWevOaZuoO+ioiRs08rxXLz808DDY23h0RGfZ5OfE4hbFvLFJ/
-	/xf/PiLPk12KM2rwWcGqJhMbKIYPfCnWnzwFicB7UlgDNeVcXG2smMqZHB0kIqHvA2LQUbOycq2
-	wm/q457puz/eXjqvun6AsPeY08EqMTFDoG9lUekvoWu6SIiss3OsKO4eimT+2v+rdj/vkKZIeSi
-	FfTTGBeDtLpLVpwrIoxP/O9laYwb8YarW5namEp08vHLVSTdG+Ge1T1+XQ2nOnZH61k2WNDVGcW
-	2O1mQ2x5atOCBslnjdo44Lj11+7Mmpf0lrsiaTcWKY0=
-X-Google-Smtp-Source: AGHT+IHEX1GGSr8Rz2mK8ZEWPKRs+r7Q4v4MEWtu7WIbX+t6qTFo6V56NTaAgz0a+ENJKN1hWNqbUQ==
-X-Received: by 2002:a05:6214:19cd:b0:6e6:61a5:aa57 with SMTP id 6a1803df08f44-6f05843ff4fmr65127836d6.14.1743797006271;
-        Fri, 04 Apr 2025 13:03:26 -0700 (PDT)
-Received: from localhost ([2603:7000:c01:2716:da5e:d3ff:fee7:26e7])
-        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6ef0f0483a3sm25545376d6.63.2025.04.04.13.03.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Apr 2025 13:03:25 -0700 (PDT)
-Date: Fri, 4 Apr 2025 16:03:21 -0400
-From: Johannes Weiner <hannes@cmpxchg.org>
-To: Vitaly Wool <vitaly.wool@konsulko.se>
-Cc: linux-mm@kvack.org, akpm@linux-foundation.org,
-	linux-kernel@vger.kernel.org, Nhat Pham <nphamcs@gmail.com>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Igor Belousov <igor.b@beldev.am>
-Subject: Re: [PATCH v2] mm: add zblock allocator
-Message-ID: <20250404200321.GB373778@cmpxchg.org>
-References: <20250404192813.925835-1-vitaly.wool@konsulko.se>
+        d=1e100.net; s=20230601; t=1743797046; x=1744401846;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zP03ijhZ2aqQsthTQz8RL6yLJtMw3d+tIA07mCuHO+w=;
+        b=dHDYJlCRucmCYNjiRk0FWAehyUcHAyo0qfK1e6tAM/ysklnZHYJNlEbm2tM/6emkei
+         F0WLFhy8r6j2F2uzA3Y1LP1H7IdSU+ocDl8I/u1uEwB63v5VnsE7JbzZH8+bWH+8rkXi
+         vORjNniNpHAar0n6aiPMtPKSkaS5DRWhOotA37pF8zjoSs0qTtswZsdL5SaN1BApnNZS
+         kx7l0q5kh5SBWhAyRMHeND9Q9U8p4OVqG8dNRKjYlRB2w3AGKGqLYB1T/FCQtP7EwsT2
+         IgG4VTwsu2S8sspSvtPaW6k4JZMmFTB3DiAFJlu/14d7VQW/bod3IU6RreJmpzmYBF6L
+         qiWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWddmyL23AV5dfvOylYxVLMYPSOcBykVOJUfVEpL02HPynwQ0A5gDJ1Dswh10X28zcFSgqdVoXbk93BzRk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7VoU8cHOs3qmayrwlik96MlbsU/ThTTPRc/kqDgv959E/+3v9
+	SyVwYp9uGDf9hZ8EXW3uj0zjvIJLf3doKA4goWJwYYFU19c/8x/D8X4v/SJ7LNc=
+X-Gm-Gg: ASbGncu+kjlOjV3UfUIt2pU1WxJqSV5nRI4gLnBQ2JCwZ5UIYJkj6ZeXMmb6d5KViJ7
+	aAlOo++5AMkHP1z/NldxuiKwL6nJ5TbikS4X3pq7RSEuycUX6ASIKSGTh+J/r/ik57y2g77Im61
+	vjgRUv5XCr4+rEOdnHnR9ITg/TWzFFv3kkvUOvEludnWny6OdYMBUALYYZjfYI9hci1A6m5IHFS
+	DPdBNdWB+Za5sRgEU1TSPEIpIQyQ6Ma/RrVHVN0LJ5Xn16PXbNbZM+ZtJACbkuTPAxr0O5iDB01
+	axjgPoe/J+rdwc82eB6gN/+b0WxZbAv9iKBX/MQQdGGdUB61QcLtZTabNYAtT9xsbLwjCWN0eXz
+	+
+X-Google-Smtp-Source: AGHT+IEjIxLY0tbFxlyNpcjKXrg78y2ZQb0LH2OPyUVnkkSD5YRsGWUpiwLCyDgfBVWGGqcG57xffQ==
+X-Received: by 2002:a05:600c:4513:b0:43c:ea1a:720a with SMTP id 5b1f17b1804b1-43ecf823163mr37804015e9.1.1743797046189;
+        Fri, 04 Apr 2025 13:04:06 -0700 (PDT)
+Received: from [192.168.0.205] (78-154-15-142.ip.btc-net.bg. [78.154.15.142])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec34af0e6sm55209205e9.16.2025.04.04.13.04.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 04 Apr 2025 13:04:05 -0700 (PDT)
+Message-ID: <abb9e2c1-c4b5-4ffa-b2e3-8b204da5efca@blackwall.org>
+Date: Fri, 4 Apr 2025 23:04:04 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250404192813.925835-1-vitaly.wool@konsulko.se>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Patch v2 net-next 3/3] net: bridge: mcast: Notify on mdb offload
+ failure
+To: Joseph Huang <joseph.huang.2024@gmail.com>,
+ Joseph Huang <Joseph.Huang@garmin.com>, netdev@vger.kernel.org
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Roopa Prabhu <roopa@nvidia.com>, Simon Horman <horms@kernel.org>,
+ linux-kernel@vger.kernel.org, bridge@lists.linux.dev
+References: <20250403234412.1531714-1-Joseph.Huang@garmin.com>
+ <20250403234412.1531714-4-Joseph.Huang@garmin.com>
+ <36c7286d-b410-4695-b069-f79605feade4@blackwall.org>
+ <917d4124-c389-4623-836d-357150b45240@gmail.com>
+Content-Language: en-US
+From: Nikolay Aleksandrov <razor@blackwall.org>
+In-Reply-To: <917d4124-c389-4623-836d-357150b45240@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hello Vitaly,
-
-On Fri, Apr 04, 2025 at 09:28:13PM +0200, Vitaly Wool wrote:
-> zblock is a special purpose allocator for storing compressed pages.
-> It stores integer number of compressed objects per its block. These
-> blocks consist of several physical pages (2**n, i. e. 1/2/4/8).
+On 4/4/25 18:25, Joseph Huang wrote:
+> On 4/4/2025 6:29 AM, Nikolay Aleksandrov wrote:
+>> On 4/4/25 02:44, Joseph Huang wrote:
+>>> Notify user space on mdb offload failure if mdb_offload_fail_notification
+>>> is set.
+>>>
+>>> Signed-off-by: Joseph Huang <Joseph.Huang@garmin.com>
+>>> ---
+>>>   net/bridge/br_mdb.c       | 26 +++++++++++++++++++++-----
+>>>   net/bridge/br_private.h   |  9 +++++++++
+>>>   net/bridge/br_switchdev.c |  4 ++++
+>>>   3 files changed, 34 insertions(+), 5 deletions(-)
+>>>
+>>
+>> The patch looks good, but one question - it seems we'll mark mdb entries with
+>> "offload failed" when we get -EOPNOTSUPP as an error as well. Is that intended?
+>>
+>> That is, if the option is enabled and we have mixed bridge ports, we'll mark mdbs
+>> to the non-switch ports as offload failed, but it is not due to a switch offload
+>> error.
 > 
-> With zblock, it is possible to densely arrange objects of various sizes
-> resulting in low internal fragmentation. Also this allocator tries to
-> fill incomplete blocks instead of adding new ones,  in many cases
-> providing a compression ratio substantially higher than z3fold and zbud
-> (though lower than zmalloc's).
-
-Do you have zswap/zswapped meminfo metrics from these tests?
-
-> 1.1 zblock
+> Good catch. No, that was not intended.
 > 
-> real    25m53.040s
-> user    96m43.424s
-> sys     4m56.652s
+> What if we short-circuit and just return like you'd suggested initially if err == -EOPNOTSUPP?
 > 
-> real    25m20.748s
-> user    94m24.324s
-> sys     4m58.005s
+>>> diff --git a/net/bridge/br_switchdev.c b/net/bridge/br_switchdev.c
+>>> index 40f0b16e4df8..9b5005d0742a 100644
+>>> --- a/net/bridge/br_switchdev.c
+>>> +++ b/net/bridge/br_switchdev.c
+>>> @@ -504,6 +504,7 @@ static void br_switchdev_mdb_complete(struct net_device *dev, int err, void *pri
+>>>       struct net_bridge_mdb_entry *mp;
+>>>       struct net_bridge_port *port = data->port;
+>>>       struct net_bridge *br = port->br;
+>>> +    u8 old_flags;
+>>>   
 > 
-> real    25m37.486s
-> user    95m35.913s
-> sys     4m55.892s
+> +    if (err == -EOPNOTSUPP)
+> +        goto notsupp;
 > 
-> 1.2 zsmalloc
+>>>       spin_lock_bh(&br->multicast_lock);
+>>>       mp = br_mdb_ip_get(br, &data->ip);
+>>> @@ -514,7 +515,10 @@ static void br_switchdev_mdb_complete(struct net_device *dev, int err, void *pri
+>>>           if (p->key.port != port)
+>>>               continue;
+>>>   +        old_flags = p->flags;
+>>>           br_multicast_set_pg_offload_flags(p, !err);
+>>> +        if (br_mdb_should_notify(br, old_flags ^ p->flags))
+>>> +            br_mdb_flag_change_notify(br->dev, mp, p);
+>>>       }
+>>>   out:
+>>>       spin_unlock_bh(&br->multicast_lock);
+>>
 > 
-> real    26m17.934s
-> user    97m13.342s
-> sys     5m2.415s
-> 
-> real    25m50.694s
-> user    95m22.065s
-> sys     5m1.305s
-> 
-> real    25m57.714s
-> user    96m14.675s
-> sys     4m59.081s
-> 
-> Since zswap is used starting from minute 21, this gives 9% in average in
-> advantage for zblock.
+> + notsupp:
+>     kfree(priv);
 
-This might be the linker step swapping out source files that are no
-longer needed. Do you have metrics for zswpout and zswpin as well?
-
-My concern with this allocator, and the other alternatives to zsmalloc
-before, is the following:
-
-You might be faster at allocating objects. But if storage density is
-worse, it means you have to zswap more pages to meet the same incoming
-allocation demand. That means more object allocations and more
-compression, and often a higher rate of refaults and decompressions.
-
-I would assume you're at least zswapping out more to make room for
-whatever happens at 21 minutes. This doesn't seem to hurt the time,
-which is promising and highlights how much faster zblock is.
-
-But for the full picture, it would be good to see the reuse/zswpin
-rates, especially in the context of overall swap activity.
-
-And if there is no notable swapin rate, maybe test without tmpfs and
-tune the memory allowance to force at least some degree of reuse.
+Looks good to me. Thanks!
