@@ -1,245 +1,215 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EABAE1C8600
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 10:23:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0A9B19DF66;
+	Fri,  4 Apr 2025 10:24:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743762233; cv=none; b=bgUqBmBZa3jxrsmutv/+KOSuWUv7dv2YiZWvWuoWrWsaXbInimdMDLfS6jsaFlTdTKn4QuMAfvK9d77EgAmlYPoAr7s2z/JkbNBhqFGtyNHvmcLCMts4opEacG0oYboM9Sl7A7FIIHkc3ThpP0WKwBFWIHwyyqyVQICbMfA8M54=
+	t=1743762280; cv=none; b=SVZgH+T+K2TezqjYITNCC0PwFnwx9g+HhNY2+p5h0ULXcUNwRky4D0Q9PtJJYk8BNcLaqZBTMTYdYwohW0Hzt3vYiqS61nd3ntm/gGk4J3qKrO9AZ8jyTVnbOplGotnRlX8psYB17FsfRcAM0xttfg5EyAWaKY93E2zTc36T0cU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743762233; c=relaxed/simple;
-	bh=gWphGMPeONRtVjLHXMNxQdsgAA1YrbCokB3soMFVFWA=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=J7hCTJ+B6i4Kx7lCGVNZ3fVJge84COUbx7mcuV4rHj3h9/O2IallIeWO3XAPxcVZslDJGpFFzTzvZ/xBj5z/z2T/AAcsqpL9fj1JOSGMQe4fY7DYotV0eG3Ysfwxsx4Xv1DHJE8/CIzJOF3VxwPvnsDlbv3il4HL0OQFQVJjU3o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IAiWFTci; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1743762280; c=relaxed/simple;
+	bh=7XhvsaAR1vcF0yyiP58bhi1Lq1t+C31IiBxcJ1YTFd0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ebr7kyCrdwnLi6TFf8yLkK6uykVkH7CtpgrILOZt8nRzJfQ2L8T+5J1oVgrgwSkQhPLw9tTK3waN6ps5SF2F4icIFBmgrf1ki3pDKSFj/sJxEL5k9aVaXaXTtAR1K9L51Ij1GXslkT5FBkCgsbezm5ucvfzRSUB3xJC05uzkYRQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ixYM1hnu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IAiWFTci"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743762230;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=An4YjWIIqwBPDKwmWWV8XK1pBrP+qzzs+GxOsTRdiuQ=;
-	b=IAiWFTciOmwaZejK8eN9g0J7PsttzQtAJot1+dK7/zUQE2vXRYMBdxIhJuYP9EmqgZCe8Q
-	FmCGpkLhjt+q8FKcj933RXTCpRt5mPxb7tAmSQ01WFKEiXE7hUagn5rCNil5afcVQdDifl
-	+k0qfRfDngLo+QSztQEzKdSS/NsmUpc=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-690-rhhZdiZLPWyzLTFsuMltAA-1; Fri, 04 Apr 2025 06:23:49 -0400
-X-MC-Unique: rhhZdiZLPWyzLTFsuMltAA-1
-X-Mimecast-MFC-AGG-ID: rhhZdiZLPWyzLTFsuMltAA_1743762228
-Received: by mail-ed1-f72.google.com with SMTP id 4fb4d7f45d1cf-5e5be5ec846so1746405a12.2
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 03:23:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743762228; x=1744367028;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :references:to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=An4YjWIIqwBPDKwmWWV8XK1pBrP+qzzs+GxOsTRdiuQ=;
-        b=FV/mEvnY2WzWSR+xfRrFlYXURL7nY7EIDWVdLp/x+m6M4+XjYSUYqjYZhbxCRW78qb
-         sJdCvvGDFDXcWdkn59374LI+kKBupf3prf1NpxR9nWV1IAlKakYiNukbQeqBr8escfcR
-         q7KqXNG44Ek6KGNA6Cg0i6+YQZtzh/q0QSvAgHPQB2vV7EvGNUJ3Gdyg/rIrRTRUhza0
-         qWozO0WVls8s5I49984bHews7HlZNkQt005SPk/3cRAgWEN+hN3Qmw2nYoaZ3qRgikq1
-         pKyn38ZeE0k+waCSKpTxVVP95oUQMN00j2Mo8dHm/NFH/XAgAoxuYvHrdIfv/gp7qCN4
-         e1dA==
-X-Gm-Message-State: AOJu0YwbvW2t3GXFEy/HnMt41mj3lJhJuf/EDPkLe0I7TN/Tu2fiOQbl
-	DwRiwFU/Gs0aE2v0qgiKs7V4a1jZbka5JJjNPOPOud4Nxo5Z6ZBeV+uhJylWduTlHasWHmlsWgi
-	xA9ylmS2GneyRmRUOUTYpXbqB+yakx9Sf/QHdnyOJ//3vzoKUyiMmhdZKDNO/nWM6y6qLoX4kvC
-	QTquFf87oh/erZJLKdO3xsg9W+5W8bxoO0PgKfYYF56Ip1UA==
-X-Gm-Gg: ASbGncscmjm3Bs991UQUnM7rg4+sEM8ndyW+jni6qFBVliVXjwQ4TYRbSiPYOu86dCe
-	5c8D6DBqFalzuO5NHDNzq6huJ5DtplfVvuLda/YfjBxTEdKE3d67g6Ob3TzZ7MUH+54/V1U0HFE
-	DenkUYFtpaJ/jiIFRxFp3G+VMAoxDSIN790rt3chS/qs1TD4aPmRL+O4emmJhZOYjRRUYcH9ksc
-	j0Je8nZlSMILkQ+Kohf3i4WUW68/s+iHv1dVtwzsAYLL+NzjmQejVrYKcIBvo93NKW3wM7NX7bF
-	uDMoVYNvYuxZiYvd7jD4
-X-Received: by 2002:a05:6402:84d:b0:5e7:73ad:60a2 with SMTP id 4fb4d7f45d1cf-5f0b663162amr1722940a12.30.1743762227713;
-        Fri, 04 Apr 2025 03:23:47 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHNEMsh2OHwerzBadXVfPUgWo3cu9lJw3Sv5S/um+CSfwYPELsN+T0XYt3uiiRnIG7a3CwquQ==
-X-Received: by 2002:a05:6402:84d:b0:5e7:73ad:60a2 with SMTP id 4fb4d7f45d1cf-5f0b663162amr1722920a12.30.1743762227300;
-        Fri, 04 Apr 2025 03:23:47 -0700 (PDT)
-Received: from [192.168.10.48] ([151.49.230.224])
-        by smtp.googlemail.com with ESMTPSA id 4fb4d7f45d1cf-5f0880b9ff1sm2094295a12.81.2025.04.04.03.23.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Apr 2025 03:23:46 -0700 (PDT)
-Message-ID: <93f75341-a194-46e3-8b01-8d75a55fbe69@redhat.com>
-Date: Fri, 4 Apr 2025 12:23:45 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ixYM1hnu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 813E6C4CEDD;
+	Fri,  4 Apr 2025 10:24:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743762280;
+	bh=7XhvsaAR1vcF0yyiP58bhi1Lq1t+C31IiBxcJ1YTFd0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=ixYM1hnuNyixIb7Ehti6HV/1A1n4LO9AHCzk4LSVvDq1DfBBZvh36tt7u54aWD1mS
+	 UDOkVj1nD1IxTSiHzT/MMjftL48YTbvDM39pHNtEIl0Hu4yRxE42AVtpbX9rNzExSJ
+	 8MP1O1VkDSzkL13dsN4bEdJ7kER0vs4/e4t3YNF3yYjXxTkf6704R1s0LRJXVjd5qd
+	 ls9QVYB9AJPtveEvQ3JckTQvvdLPgIQkcbXBKOBUbSEFimVhZd84VKr2QkgCNctzgk
+	 m1mUN6VMt1UwMHE3rPDj/tp79Q9OsRh+aPSG7OoleTFvqIZfm8hRnMNuvg7xIgK3kb
+	 2BVwJX7nJYwQQ==
+From: Christian Brauner <brauner@kernel.org>
+To: Jan Kara <jack@suse.cz>
+Cc: Christian Brauner <brauner@kernel.org>,
+	linux-fsdevel@vger.kernel.org,
+	Ard Biesheuvel <ardb@kernel.org>,
+	linux-efi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	James Bottomley <James.Bottomley@hansenpartnership.com>,
+	mcgrof@kernel.org,
+	hch@infradead.org,
+	david@fromorbit.com,
+	rafael@kernel.org,
+	djwong@kernel.org,
+	pavel@kernel.org,
+	peterz@infradead.org,
+	mingo@redhat.com,
+	will@kernel.org,
+	boqun.feng@gmail.com
+Subject: [PATCH] fs: allow nesting with FREEZE_EXCL
+Date: Fri,  4 Apr 2025 12:24:09 +0200
+Message-ID: <20250404-work-freeze-v1-1-31f9a26f7bc9@kernel.org>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <ilwyxf34ixfkhbylev6d76tz5ufzg2sdxxhy6i3tr4ko5dbefr@57yuviqrftzr>
+References: <ilwyxf34ixfkhbylev6d76tz5ufzg2sdxxhy6i3tr4ko5dbefr@57yuviqrftzr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] selftests: kvm: list once tests that are valid on all
- architectures
-From: Paolo Bonzini <pbonzini@redhat.com>
-To: linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-References: <20250401141327.785520-1-pbonzini@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=pbonzini@redhat.com; keydata=
- xsEhBFRCcBIBDqDGsz4K0zZun3jh+U6Z9wNGLKQ0kSFyjN38gMqU1SfP+TUNQepFHb/Gc0E2
- CxXPkIBTvYY+ZPkoTh5xF9oS1jqI8iRLzouzF8yXs3QjQIZ2SfuCxSVwlV65jotcjD2FTN04
- hVopm9llFijNZpVIOGUTqzM4U55sdsCcZUluWM6x4HSOdw5F5Utxfp1wOjD/v92Lrax0hjiX
- DResHSt48q+8FrZzY+AUbkUS+Jm34qjswdrgsC5uxeVcLkBgWLmov2kMaMROT0YmFY6A3m1S
- P/kXmHDXxhe23gKb3dgwxUTpENDBGcfEzrzilWueOeUWiOcWuFOed/C3SyijBx3Av/lbCsHU
- Vx6pMycNTdzU1BuAroB+Y3mNEuW56Yd44jlInzG2UOwt9XjjdKkJZ1g0P9dwptwLEgTEd3Fo
- UdhAQyRXGYO8oROiuh+RZ1lXp6AQ4ZjoyH8WLfTLf5g1EKCTc4C1sy1vQSdzIRu3rBIjAvnC
- tGZADei1IExLqB3uzXKzZ1BZ+Z8hnt2og9hb7H0y8diYfEk2w3R7wEr+Ehk5NQsT2MPI2QBd
- wEv1/Aj1DgUHZAHzG1QN9S8wNWQ6K9DqHZTBnI1hUlkp22zCSHK/6FwUCuYp1zcAEQEAAc0j
- UGFvbG8gQm9uemluaSA8cGJvbnppbmlAcmVkaGF0LmNvbT7CwU0EEwECACMFAlRCcBICGwMH
- CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRB+FRAMzTZpsbceDp9IIN6BIA0Ol7MoB15E
- 11kRz/ewzryFY54tQlMnd4xxfH8MTQ/mm9I482YoSwPMdcWFAKnUX6Yo30tbLiNB8hzaHeRj
- jx12K+ptqYbg+cevgOtbLAlL9kNgLLcsGqC2829jBCUTVeMSZDrzS97ole/YEez2qFpPnTV0
- VrRWClWVfYh+JfzpXmgyhbkuwUxNFk421s4Ajp3d8nPPFUGgBG5HOxzkAm7xb1cjAuJ+oi/K
- CHfkuN+fLZl/u3E/fw7vvOESApLU5o0icVXeakfSz0LsygEnekDbxPnE5af/9FEkXJD5EoYG
- SEahaEtgNrR4qsyxyAGYgZlS70vkSSYJ+iT2rrwEiDlo31MzRo6Ba2FfHBSJ7lcYdPT7bbk9
- AO3hlNMhNdUhoQv7M5HsnqZ6unvSHOKmReNaS9egAGdRN0/GPDWr9wroyJ65ZNQsHl9nXBqE
- AukZNr5oJO5vxrYiAuuTSd6UI/xFkjtkzltG3mw5ao2bBpk/V/YuePrJsnPFHG7NhizrxttB
- nTuOSCMo45pfHQ+XYd5K1+Cv/NzZFNWscm5htJ0HznY+oOsZvHTyGz3v91pn51dkRYN0otqr
- bQ4tlFFuVjArBZcapSIe6NV8C4cEiSTOwE0EVEJx7gEIAMeHcVzuv2bp9HlWDp6+RkZe+vtl
- KwAHplb/WH59j2wyG8V6i33+6MlSSJMOFnYUCCL77bucx9uImI5nX24PIlqT+zasVEEVGSRF
- m8dgkcJDB7Tps0IkNrUi4yof3B3shR+vMY3i3Ip0e41zKx0CvlAhMOo6otaHmcxr35sWq1Jk
- tLkbn3wG+fPQCVudJJECvVQ//UAthSSEklA50QtD2sBkmQ14ZryEyTHQ+E42K3j2IUmOLriF
- dNr9NvE1QGmGyIcbw2NIVEBOK/GWxkS5+dmxM2iD4Jdaf2nSn3jlHjEXoPwpMs0KZsgdU0pP
- JQzMUMwmB1wM8JxovFlPYrhNT9MAEQEAAcLBMwQYAQIACQUCVEJx7gIbDAAKCRB+FRAMzTZp
- sadRDqCctLmYICZu4GSnie4lKXl+HqlLanpVMOoFNnWs9oRP47MbE2wv8OaYh5pNR9VVgyhD
- OG0AU7oidG36OeUlrFDTfnPYYSF/mPCxHttosyt8O5kabxnIPv2URuAxDByz+iVbL+RjKaGM
- GDph56ZTswlx75nZVtIukqzLAQ5fa8OALSGum0cFi4ptZUOhDNz1onz61klD6z3MODi0sBZN
- Aj6guB2L/+2ZwElZEeRBERRd/uommlYuToAXfNRdUwrwl9gRMiA0WSyTb190zneRRDfpSK5d
- usXnM/O+kr3Dm+Ui+UioPf6wgbn3T0o6I5BhVhs4h4hWmIW7iNhPjX1iybXfmb1gAFfjtHfL
- xRUr64svXpyfJMScIQtBAm0ihWPltXkyITA92ngCmPdHa6M1hMh4RDX+Jf1fiWubzp1voAg0
- JBrdmNZSQDz0iKmSrx8xkoXYfA3bgtFN8WJH2xgFL28XnqY4M6dLhJwV3z08tPSRqYFm4NMP
- dRsn0/7oymhneL8RthIvjDDQ5ktUjMe8LtHr70OZE/TT88qvEdhiIVUogHdo4qBrk41+gGQh
- b906Dudw5YhTJFU3nC6bbF2nrLlB4C/XSiH76ZvqzV0Z/cAMBo5NF/w=
-In-Reply-To: <20250401141327.785520-1-pbonzini@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+X-Change-ID: 20250404-work-freeze-5eacb515f044
+X-Mailer: b4 0.15-dev-c25d1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5320; i=brauner@kernel.org; h=from:subject:message-id; bh=7XhvsaAR1vcF0yyiP58bhi1Lq1t+C31IiBxcJ1YTFd0=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaS/3xzDZb7MRtpzQfyEmY0Cu/ZeM40yU4/OKVrp+XvbN J7+64a5HaUsDGJcDLJiiiwO7Sbhcst5KjYbZWrAzGFlAhnCwMUpABNRLWJkmD7Tq4Wn8LYYI3t8 5NMkCy/7ReKX+5qzlmixO25SzL9exfDfad/X2eGMrlnhsfefKR8OeLT8xNWU2mctH/Zw5059JdP IBQA=
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 
-On 4/1/25 16:13, Paolo Bonzini wrote:
-> Several tests cover infrastructure from virt/kvm/ and userspace APIs that have
-> only minimal requirements from architecture-specific code.  As such, they are
-> available on all architectures that have libkvm support, and this presumably
-> will apply also in the future (for example if loongarch gets selftests support).
-> Put them in a separate variable and list them only once.
-> 
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+If hibernation races with filesystem freezing (e.g. DM reconfiguration),
+then hibernation need not freeze a filesystem because it's already
+frozen but userspace may thaw the filesystem before hibernation actually
+happens.
 
-Applied now.
+If the race happens the other way around, DM reconfiguration may
+unexpectedly fail with EBUSY.
 
-Paolo
+So allow FREEZE_EXCL to nest with other holders. An exclusive freezer
+cannot be undone by any of the other concurrent freezers.
 
-> ---
->   tools/testing/selftests/kvm/Makefile.kvm | 45 ++++++++----------------
->   1 file changed, 15 insertions(+), 30 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/kvm/Makefile.kvm b/tools/testing/selftests/kvm/Makefile.kvm
-> index f773f8f99249..f62b0a5aba35 100644
-> --- a/tools/testing/selftests/kvm/Makefile.kvm
-> +++ b/tools/testing/selftests/kvm/Makefile.kvm
-> @@ -50,8 +50,18 @@ LIBKVM_riscv += lib/riscv/ucall.c
->   # Non-compiled test targets
->   TEST_PROGS_x86 += x86/nx_huge_pages_test.sh
->   
-> +# Compiled test targets valid on all architectures with libkvm support
-> +TEST_GEN_PROGS_COMMON = demand_paging_test
-> +TEST_GEN_PROGS_COMMON += dirty_log_test
-> +TEST_GEN_PROGS_COMMON += guest_print_test
-> +TEST_GEN_PROGS_COMMON += kvm_binary_stats_test
-> +TEST_GEN_PROGS_COMMON += kvm_create_max_vcpus
-> +TEST_GEN_PROGS_COMMON += kvm_page_table_test
-> +TEST_GEN_PROGS_COMMON += set_memory_region_test
-> +
->   # Compiled test targets
-> -TEST_GEN_PROGS_x86 = x86/cpuid_test
-> +TEST_GEN_PROGS_x86 = $(TEST_GEN_PROGS_COMMON)
-> +TEST_GEN_PROGS_x86 += x86/cpuid_test
->   TEST_GEN_PROGS_x86 += x86/cr4_cpuid_sync_test
->   TEST_GEN_PROGS_x86 += x86/dirty_log_page_splitting_test
->   TEST_GEN_PROGS_x86 += x86/feature_msrs_test
-> @@ -119,27 +129,21 @@ TEST_GEN_PROGS_x86 += x86/triple_fault_event_test
->   TEST_GEN_PROGS_x86 += x86/recalc_apic_map_test
->   TEST_GEN_PROGS_x86 += access_tracking_perf_test
->   TEST_GEN_PROGS_x86 += coalesced_io_test
-> -TEST_GEN_PROGS_x86 += demand_paging_test
-> -TEST_GEN_PROGS_x86 += dirty_log_test
->   TEST_GEN_PROGS_x86 += dirty_log_perf_test
->   TEST_GEN_PROGS_x86 += guest_memfd_test
-> -TEST_GEN_PROGS_x86 += guest_print_test
->   TEST_GEN_PROGS_x86 += hardware_disable_test
-> -TEST_GEN_PROGS_x86 += kvm_create_max_vcpus
-> -TEST_GEN_PROGS_x86 += kvm_page_table_test
->   TEST_GEN_PROGS_x86 += memslot_modification_stress_test
->   TEST_GEN_PROGS_x86 += memslot_perf_test
->   TEST_GEN_PROGS_x86 += mmu_stress_test
->   TEST_GEN_PROGS_x86 += rseq_test
-> -TEST_GEN_PROGS_x86 += set_memory_region_test
->   TEST_GEN_PROGS_x86 += steal_time
-> -TEST_GEN_PROGS_x86 += kvm_binary_stats_test
->   TEST_GEN_PROGS_x86 += system_counter_offset_test
->   TEST_GEN_PROGS_x86 += pre_fault_memory_test
->   
->   # Compiled outputs used by test targets
->   TEST_GEN_PROGS_EXTENDED_x86 += x86/nx_huge_pages_test
->   
-> +TEST_GEN_PROGS_arm64 = $(TEST_GEN_PROGS_COMMON)
->   TEST_GEN_PROGS_arm64 += arm64/aarch32_id_regs
->   TEST_GEN_PROGS_arm64 += arm64/arch_timer_edge_cases
->   TEST_GEN_PROGS_arm64 += arm64/debug-exceptions
-> @@ -158,22 +162,16 @@ TEST_GEN_PROGS_arm64 += arm64/no-vgic-v3
->   TEST_GEN_PROGS_arm64 += access_tracking_perf_test
->   TEST_GEN_PROGS_arm64 += arch_timer
->   TEST_GEN_PROGS_arm64 += coalesced_io_test
-> -TEST_GEN_PROGS_arm64 += demand_paging_test
-> -TEST_GEN_PROGS_arm64 += dirty_log_test
->   TEST_GEN_PROGS_arm64 += dirty_log_perf_test
-> -TEST_GEN_PROGS_arm64 += guest_print_test
->   TEST_GEN_PROGS_arm64 += get-reg-list
-> -TEST_GEN_PROGS_arm64 += kvm_create_max_vcpus
-> -TEST_GEN_PROGS_arm64 += kvm_page_table_test
->   TEST_GEN_PROGS_arm64 += memslot_modification_stress_test
->   TEST_GEN_PROGS_arm64 += memslot_perf_test
->   TEST_GEN_PROGS_arm64 += mmu_stress_test
->   TEST_GEN_PROGS_arm64 += rseq_test
-> -TEST_GEN_PROGS_arm64 += set_memory_region_test
->   TEST_GEN_PROGS_arm64 += steal_time
-> -TEST_GEN_PROGS_arm64 += kvm_binary_stats_test
->   
-> -TEST_GEN_PROGS_s390 = s390/memop
-> +TEST_GEN_PROGS_s390 = $(TEST_GEN_PROGS_COMMON)
-> +TEST_GEN_PROGS_s390 += s390/memop
->   TEST_GEN_PROGS_s390 += s390/resets
->   TEST_GEN_PROGS_s390 += s390/sync_regs_test
->   TEST_GEN_PROGS_s390 += s390/tprot
-> @@ -182,27 +180,14 @@ TEST_GEN_PROGS_s390 += s390/debug_test
->   TEST_GEN_PROGS_s390 += s390/cpumodel_subfuncs_test
->   TEST_GEN_PROGS_s390 += s390/shared_zeropage_test
->   TEST_GEN_PROGS_s390 += s390/ucontrol_test
-> -TEST_GEN_PROGS_s390 += demand_paging_test
-> -TEST_GEN_PROGS_s390 += dirty_log_test
-> -TEST_GEN_PROGS_s390 += guest_print_test
-> -TEST_GEN_PROGS_s390 += kvm_create_max_vcpus
-> -TEST_GEN_PROGS_s390 += kvm_page_table_test
->   TEST_GEN_PROGS_s390 += rseq_test
-> -TEST_GEN_PROGS_s390 += set_memory_region_test
-> -TEST_GEN_PROGS_s390 += kvm_binary_stats_test
->   
-> +TEST_GEN_PROGS_riscv = $(TEST_GEN_PROGS_COMMON)
->   TEST_GEN_PROGS_riscv += riscv/sbi_pmu_test
->   TEST_GEN_PROGS_riscv += riscv/ebreak_test
->   TEST_GEN_PROGS_riscv += arch_timer
->   TEST_GEN_PROGS_riscv += coalesced_io_test
-> -TEST_GEN_PROGS_riscv += demand_paging_test
-> -TEST_GEN_PROGS_riscv += dirty_log_test
->   TEST_GEN_PROGS_riscv += get-reg-list
-> -TEST_GEN_PROGS_riscv += guest_print_test
-> -TEST_GEN_PROGS_riscv += kvm_binary_stats_test
-> -TEST_GEN_PROGS_riscv += kvm_create_max_vcpus
-> -TEST_GEN_PROGS_riscv += kvm_page_table_test
-> -TEST_GEN_PROGS_riscv += set_memory_region_test
->   TEST_GEN_PROGS_riscv += steal_time
->   
->   SPLIT_TESTS += arch_timer
+Signed-off-by: Christian Brauner <brauner@kernel.org>
+---
+ fs/super.c         | 71 ++++++++++++++++++++++++++++++++++++++++++------------
+ include/linux/fs.h |  2 +-
+ 2 files changed, 56 insertions(+), 17 deletions(-)
+
+diff --git a/fs/super.c b/fs/super.c
+index b4bdbc509dba..e2fee655fbed 100644
+--- a/fs/super.c
++++ b/fs/super.c
+@@ -1979,26 +1979,34 @@ static inline int freeze_dec(struct super_block *sb, enum freeze_holder who)
+ 	return sb->s_writers.freeze_kcount + sb->s_writers.freeze_ucount;
+ }
+ 
+-static inline bool may_freeze(struct super_block *sb, enum freeze_holder who)
++static inline bool may_freeze(struct super_block *sb, enum freeze_holder who,
++			      const void *freeze_owner)
+ {
++	lockdep_assert_held(&sb->s_umount);
++
+ 	WARN_ON_ONCE((who & ~FREEZE_FLAGS));
+ 	WARN_ON_ONCE(hweight32(who & FREEZE_HOLDERS) > 1);
+ 
+ 	if (who & FREEZE_EXCL) {
+ 		if (WARN_ON_ONCE(!(who & FREEZE_HOLDER_KERNEL)))
+ 			return false;
+-
+-		if (who & ~(FREEZE_EXCL | FREEZE_HOLDER_KERNEL))
++		if (WARN_ON_ONCE(who & ~(FREEZE_EXCL | FREEZE_HOLDER_KERNEL)))
+ 			return false;
+-
+-		return (sb->s_writers.freeze_kcount +
+-			sb->s_writers.freeze_ucount) == 0;
++		if (WARN_ON_ONCE(!freeze_owner))
++			return false;
++		/* This freeze already has a specific owner. */
++		if (sb->s_writers.freeze_owner)
++			return false;
++		/*
++		 * This is already frozen multiple times so we're just
++		 * going to take a reference count and mark it as
++		 * belonging to use.
++		 */
++		if (sb->s_writers.freeze_kcount + sb->s_writers.freeze_ucount)
++			sb->s_writers.freeze_owner = freeze_owner;
++		return true;
+ 	}
+ 
+-	/* This filesystem is already exclusively frozen. */
+-	if (sb->s_writers.freeze_owner)
+-		return false;
+-
+ 	if (who & FREEZE_HOLDER_KERNEL)
+ 		return (who & FREEZE_MAY_NEST) ||
+ 		       sb->s_writers.freeze_kcount == 0;
+@@ -2011,20 +2019,51 @@ static inline bool may_freeze(struct super_block *sb, enum freeze_holder who)
+ static inline bool may_unfreeze(struct super_block *sb, enum freeze_holder who,
+ 				const void *freeze_owner)
+ {
++	lockdep_assert_held(&sb->s_umount);
++
+ 	WARN_ON_ONCE((who & ~FREEZE_FLAGS));
+ 	WARN_ON_ONCE(hweight32(who & FREEZE_HOLDERS) > 1);
+ 
+ 	if (who & FREEZE_EXCL) {
+-		if (WARN_ON_ONCE(sb->s_writers.freeze_owner == NULL))
+-			return false;
+ 		if (WARN_ON_ONCE(!(who & FREEZE_HOLDER_KERNEL)))
+ 			return false;
+-		if (who & ~(FREEZE_EXCL | FREEZE_HOLDER_KERNEL))
++		if (WARN_ON_ONCE(who & ~(FREEZE_EXCL | FREEZE_HOLDER_KERNEL)))
++			return false;
++		if (WARN_ON_ONCE(!freeze_owner))
++			return false;
++		if (WARN_ON_ONCE(sb->s_writers.freeze_kcount == 0))
+ 			return false;
+-		return sb->s_writers.freeze_owner == freeze_owner;
++		/* This isn't exclusively frozen. */
++		if (!sb->s_writers.freeze_owner)
++			return false;
++		/* This isn't exclusively frozen by us. */
++		if (sb->s_writers.freeze_owner != freeze_owner)
++			return false;
++		/*
++		 * This is still frozen multiple times so we're just
++		 * going to drop our reference count and undo our
++		 * exclusive freeze.
++		 */
++		if ((sb->s_writers.freeze_kcount + sb->s_writers.freeze_ucount) > 1)
++			sb->s_writers.freeze_owner = NULL;
++		return true;
++	}
++
++	if (who & FREEZE_HOLDER_KERNEL) {
++		/*
++		 * Someone's trying to steal the reference belonging to
++		 * @sb->s_writers.freeze_owner.
++		 */
++		if (sb->s_writers.freeze_kcount == 1 &&
++		    sb->s_writers.freeze_owner)
++			return false;
++		return sb->s_writers.freeze_kcount > 0;
+ 	}
+ 
+-	return sb->s_writers.freeze_owner == NULL;
++	if (who & FREEZE_HOLDER_USERSPACE)
++		return sb->s_writers.freeze_ucount > 0;
++
++	return false;
+ }
+ 
+ /**
+@@ -2095,7 +2134,7 @@ int freeze_super(struct super_block *sb, enum freeze_holder who, const void *fre
+ 
+ retry:
+ 	if (sb->s_writers.frozen == SB_FREEZE_COMPLETE) {
+-		if (may_freeze(sb, who))
++		if (may_freeze(sb, who, freeze_owner))
+ 			ret = !!WARN_ON_ONCE(freeze_inc(sb, who) == 1);
+ 		else
+ 			ret = -EBUSY;
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 1edcba3cd68e..7a3f821d2723 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -2270,7 +2270,7 @@ extern loff_t vfs_dedupe_file_range_one(struct file *src_file, loff_t src_pos,
+  * @FREEZE_HOLDER_KERNEL: kernel wants to freeze or thaw filesystem
+  * @FREEZE_HOLDER_USERSPACE: userspace wants to freeze or thaw filesystem
+  * @FREEZE_MAY_NEST: whether nesting freeze and thaw requests is allowed
+- * @FREEZE_EXCL: whether actual freezing must be done by the caller
++ * @FREEZE_EXCL: a freeze that can only be undone by the owner
+  *
+  * Indicate who the owner of the freeze or thaw request is and whether
+  * the freeze needs to be exclusive or can nest.
+
+---
+base-commit: a83fe97e0d53f7d2b0fc62fd9a322a963cb30306
+change-id: 20250404-work-freeze-5eacb515f044
 
