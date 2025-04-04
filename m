@@ -1,104 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FEAF20766F;
-	Fri,  4 Apr 2025 00:07:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743725244; cv=none; b=fx157cp+utk7Vro/aJlPvTHcYuuXvBY2yFiAK01woh1vTnUuv79qeLIDdzd5Lx+nO8ULs8ufz5oo8Je0T2UlIstKpD/e351nmMMdJz/qIGEiEbDV5OgAFjV+wMrQFPZloQE/Etv9qDGGee/0VYtTV8mTAzUJjyHjQDcSgpEosTw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743725244; c=relaxed/simple;
-	bh=KtlHusmjeBo2ehofOvWtPiyNsUDcFcYrXb7AQYaismI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=nVsIlkz/GUv1JkzeSN4X0wQDEBV7c6c4Y92X3Mco548MePCRdSLTXmNCdDeuNFsHJienbueM892WOlpERY+knn2VM5fl3bK4/RVBQc2LNEQsGsCoDS1tjldmEY4SAcdDU7N1mMiIyGmQbvpy7siGzGd5tulqxiBTjcy0HHTxEYM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rs9YoA0s; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rs9YoA0s"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A7B5C4CEE3;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8726520765E;
 	Fri,  4 Apr 2025 00:07:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743725244;
-	bh=KtlHusmjeBo2ehofOvWtPiyNsUDcFcYrXb7AQYaismI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Rs9YoA0sa3KkIGTa+lCewrYq8uceQdS5afhY/u6DI/t18lAmB3ZquZZbv7KNJzmsi
-	 gyeZBf3UucPLVWUTYhLsJ6hrBAp0Ltgg2LhqtN0RrlZtEOtc83sO/tJt3pikWVzv3c
-	 8D655J63xserPiuBz5+I1BWKTZEKeVkQw5ClEx3vVfvUzLMkQyKseXiViolmCPuQgF
-	 oAkcb0fdOWuVaXusq+zW8iC1TdsWhfgQY0kvm4qjoUVSE6k47CZQ3RpYltGZhxC4G4
-	 IZvyPV2NMFzjReEq40RIsYjaG5FXaQEEBSuBXnAVFCMmUyiBxwo5buJrLKdkM+jkpW
-	 oPYHv+TAFKbLw==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Haoxiang Li <haoxiang_li2024@163.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Sasha Levin <sashal@kernel.org>,
-	agordeev@linux.ibm.com,
-	linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 09/10] s390/tty: Fix a potential memory leak bug
-Date: Thu,  3 Apr 2025 20:06:59 -0400
-Message-Id: <20250404000700.2689158-9-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250404000700.2689158-1-sashal@kernel.org>
-References: <20250404000700.2689158-1-sashal@kernel.org>
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743725245; cv=none; b=QHZrjTVdPXX38ZPyTAjlJd3sjrQtB5by1CdOXmxIDailcs+rI8ryloTYMWRgRderrS9ERXbXVuKSY31f1C1wfXdj/xaKkaU2lcMhhQOG6JVmHg0Tr8ZZ1ZZp43tAKpbrkf70KMJ+Yd8AhlwYeFv3f6r2YK61nvLXAo1Qwom/ewU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743725245; c=relaxed/simple;
+	bh=wwpb9s8kG3kLPEw7M7GRVujwurSFOziTKoDed26JFQA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RUMSyUdo0/4bCFf63O83e+IHX24Ues2bypptF9GoGHqB//A8KpyGiNkID5ShJpi5S39WxpbvoYN+vsxS//2qZZiOdod+gGy0YfR9wAX5bxxjAL9Hd4o51ALlIvNmMmkWyB1dT8jFHo29X+APR4I0v1uaUa06IpHlyRn0RD2WQOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kC335v8o; arc=none smtp.client-ip=209.85.167.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kC335v8o"
+Received: by mail-oi1-f182.google.com with SMTP id 5614622812f47-3f8d2f8d890so868981b6e.0;
+        Thu, 03 Apr 2025 17:07:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743725242; x=1744330042; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=xinD1XJ5zJ/zFBRlXFxdReOtuK0q42vMXByaQxIVb3M=;
+        b=kC335v8oSxt1oY/bwdJGqeO+gLkgDaEzRFJj2FqsdBPVlryP3KMzmcAP19qANs3CD9
+         XoKVOZ+IBm5CKtGLrZiYAtiCOY6d20ByosbppRHniviOGMfvuC7v4kX804bkd66fQZKj
+         yXz/HGnWHpLseszilWdeFxf2taJ4MN8J9PZ4t9g3Y9ecbGCUwyFipnEMLFPDlbm0tnCB
+         3N/0uRcMLMVESdhJ2fAp8enVlWLxwsGRsfVNjICWtWs4N6V2Gn1ajPyqhBWa5XP+RnpN
+         mg8/hDGpDevIMA5uawNIIKdX92VH6qVUwWABFC2UlyVkav0ayuE7uubNsBEnNk0TBMMk
+         cxMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743725242; x=1744330042;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xinD1XJ5zJ/zFBRlXFxdReOtuK0q42vMXByaQxIVb3M=;
+        b=Mv+RzWqPE7sAtveaGDQNTOGsUXenDiaK2oOIO9iJ2Y/VzsFffg5ZoNcv4Sub5OntAF
+         zYO6HZPifJkubQA3NP7o4AWmxjzF5bjXSPwtaOAd+N4BpxYB4HP2DABgLQrHrraA6KmF
+         wOF98stWa8mBA/eNniFMuRRIQmml/lWeeMsYmOqteEixVJOS559sljqOrHTmFnt8lw75
+         qUJAI5DyBBZg21YN4Gm+6ccw4ZnqdEaG150jXv61kKQJFXSJcXpbXtm3D1gBtOsZKvud
+         85b+r5den9piUFcbqrv5CuNjpo/jjzPM9t2fQw+rs6he5Ve3L40OHMbdrM8/0VB23jBk
+         a4ig==
+X-Forwarded-Encrypted: i=1; AJvYcCXfGRN5F23+2AwpwoNyDfgoJ/i95aADG//GSUWsAsF6s+g2hwCy5Wh/3P2yMYmPE1PGoxym/xZQoeZTxDE=@vger.kernel.org, AJvYcCXnprMxsht2KeoyjnvvwYxnNZaLVtMegNpg4oKNZc0Jrlkh05Nc33SeZDCL7SEYtduEQAP2pUya@vger.kernel.org
+X-Gm-Message-State: AOJu0YzgrTs4u+l8ycsj/T0S/SuikuxrAR4q5LVGp2P7ItjITQW4sMMZ
+	UZQrH0UNw+oZoV9ZbUgpko1f625Qx+QEMm8VkiBaI016vm07+Ind
+X-Gm-Gg: ASbGncsmUHzggfDlW2itm/onHsZSCI5KVQA3V2HV5qDQpgMjhBK9TYneE6lVnTflmLX
+	t2YatVv7K52ISQDoM4U4wnBjpnRo907j1aPrrt45endwSGLPeimYg++N/EzZjE35+0Etd9OzV+/
+	9bHziV/gAtmFxDPk78ygmSKYuoHVylcUCKObiQ+mXIUu6U1atzlcxsxlaSPUrT6FFoAAJBFN5I8
+	3CnW2dYYy4/J1LWns5L5xcslDm3XEqLfqqbB5iIa29eo00fYzYgX9vNPPiOwy+uA7uqqUO97sxs
+	B0TSRnZtRy7I93jG4bspwgCeH/yjhX//foFAbqDwtv2CRdJ9IuNPl/SgcWBteCskSJxxhezr
+X-Google-Smtp-Source: AGHT+IExKNvOJV29wP7FfCm4xMdNsOUlULzTGuvDptMUeEJuGnrdYvDkZy5Z1OSbjeNgQVjC4l0xqg==
+X-Received: by 2002:a05:6808:1644:b0:3f8:91d1:d950 with SMTP id 5614622812f47-4004564e62dmr774828b6e.38.1743725242536;
+        Thu, 03 Apr 2025 17:07:22 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-6040c4aab95sm428188eaf.1.2025.04.03.17.07.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Apr 2025 17:07:21 -0700 (PDT)
+Message-ID: <fd60ac3d-fb21-4a90-85eb-b065f8711b95@gmail.com>
+Date: Thu, 3 Apr 2025 17:07:18 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.1.132
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6.12 00/22] 6.12.22-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+ conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250403151622.055059925@linuxfoundation.org>
+Content-Language: en-US
+From: Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ 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
+ WlfRzlpjIPmdjgoicA==
+In-Reply-To: <20250403151622.055059925@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Haoxiang Li <haoxiang_li2024@163.com>
+On 4/3/25 08:20, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.12.22 release.
+> There are 22 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sat, 05 Apr 2025 15:16:11 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.12.22-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.12.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-[ Upstream commit ad9bb8f049717d64c5e62b2a44954be9f681c65b ]
+On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels, build tested on 
+BMIPS_GENERIC:
 
-The check for get_zeroed_page() leads to a direct return
-and overlooked the memory leak caused by loop allocation.
-Add a free helper to free spaces allocated by get_zeroed_page().
-
-Signed-off-by: Haoxiang Li <haoxiang_li2024@163.com>
-Acked-by: Heiko Carstens <hca@linux.ibm.com>
-Link: https://lore.kernel.org/r/20250218034104.2436469-1-haoxiang_li2024@163.com
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/s390/char/sclp_tty.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
-
-diff --git a/drivers/s390/char/sclp_tty.c b/drivers/s390/char/sclp_tty.c
-index 971fbb52740bf..432dad2a22664 100644
---- a/drivers/s390/char/sclp_tty.c
-+++ b/drivers/s390/char/sclp_tty.c
-@@ -490,6 +490,17 @@ static const struct tty_operations sclp_ops = {
- 	.flush_buffer = sclp_tty_flush_buffer,
- };
- 
-+/* Release allocated pages. */
-+static void __init __sclp_tty_free_pages(void)
-+{
-+	struct list_head *page, *p;
-+
-+	list_for_each_safe(page, p, &sclp_tty_pages) {
-+		list_del(page);
-+		free_page((unsigned long)page);
-+	}
-+}
-+
- static int __init
- sclp_tty_init(void)
- {
-@@ -516,6 +527,7 @@ sclp_tty_init(void)
- 	for (i = 0; i < MAX_KMEM_PAGES; i++) {
- 		page = (void *) get_zeroed_page(GFP_KERNEL | GFP_DMA);
- 		if (page == NULL) {
-+			__sclp_tty_free_pages();
- 			tty_driver_kref_put(driver);
- 			return -ENOMEM;
- 		}
+Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
 -- 
-2.39.5
-
+Florian
