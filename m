@@ -1,155 +1,114 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0A2C18D656
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 12:59:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCCBFCA6F
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 13:00:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743771571; cv=none; b=bAg2fTgF0q6XOnGooHbbHpppWDr+/3RCJXC6dSe7QRQvAkHabOvHxe+4/003QCLhKQdzVCpiReBAZ5IlK7rInhDaB/hAWBzkeaJm+8LK41bnSo0/D+Y71t+P52WmDIfzWhHlhMpMj7Q3b0mtOGcVgp0k/WkwBmakuA1L130/otc=
+	t=1743771620; cv=none; b=morwKSkaPuzsAlTBHIGC9CMT3WkhlOkBI/AmVGawc4oLzQPGn5GbMJ9kVMUwVfp9MFL6ZV6Ez79ptK8Lj5uWaUoJiLAMLBybYStXPuuj2ztTtSyVvHDmTTHUd1dxut1yfGcuUhCbnXAfKli2BS5Qoufq5ZmTmV3OTTOvdqrBdNI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743771571; c=relaxed/simple;
-	bh=kE3NpLXcAhKDrouxuIdErti4eFQEij/aA0GPYtPCqXE=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:Cc:
-	 In-Reply-To:Content-Type; b=X0rNYTe5X4YMYIxVZ3ypAD8mtb+E6FzDDwKL7Peod0qccEdnpcE3V+QQSpCweUEwNmexi2PYopemHMBnmWQYiQFCSUcxU8YhbL0aAFuOQHftUNRJ98b6hM2BnYBtBCqlp4h/5jsidxbI721UNs1r8Wzs8bpGpt/GFkGNmsdL3TY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BlGqni+A; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1743771620; c=relaxed/simple;
+	bh=paWnuA2/OlnputegLvkrnDVVL3qXwkPlKVLOwytIpWg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gk0nZ471SrvMQa3vpDHeLoaW9jlhEx8TyYaolyN4JDyKAgxX0GWvzyrztG1p7Sgxx+32O3/rrPB/XkAxEpuuXloQnB8vfceW55COP+qWpN8fnP5EJFFvRjOOTE2hCXAKLMhjzY43lUxC+z2cr1SnTMEU4asz6HftJlQDmZ4GN8g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OIvitMNK; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BlGqni+A"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43cf825f46bso1691555e9.3
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 05:59:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743771568; x=1744376368; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:cc:references:to
-         :from:content-language:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=peai6JkVMYY7lakrEi3u+WbVvVIrypT8y/AorA5z5gY=;
-        b=BlGqni+ABKLxqad68cbFVELRRwBl/tdTPewxwDfBk8qWV5jm6zKZzbnL5RHJQeh1Ku
-         tDQYK2tDBOMNXvJOqPxO7TyFuHn1kxkBdwLBADIXzwBbTIlGdvKfZOE/FktdP2EU86Cn
-         ZPehG1v5DrzQ71KGy1LZmdTNu2jzHJfmp0hOXueXFAlaVeiD2gFiQ280ylXU2Vigiq3w
-         8sqjAIfXC/OzVPSf9H0Qzsg2oon5oLCShF3Hm5zd7c9w8G9x+DmxaGa+vAXOtGGwNnoI
-         kMl/vTylvi0Md48Qo4cOdaKr32SMSk3kSyhBeMykq9PskRG/vUD4OPpxTci6Ave23w8p
-         jwYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743771568; x=1744376368;
-        h=content-transfer-encoding:in-reply-to:autocrypt:cc:references:to
-         :from:content-language:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=peai6JkVMYY7lakrEi3u+WbVvVIrypT8y/AorA5z5gY=;
-        b=vi5pVtmTQ0qk8MYZ0p/eSD0yux9WVfEVjnDTIeJ0dFH8d5h14xdZgf+lxggrpfIXZX
-         BX6RUHKJEO1hc3+MhIDEPIUd2cb023sTqSfTTcs1jBgeXc9b5cxRF3Ac3KiNkh9NW6J6
-         tpsC5pm6qearCrVVlhtF/dGflcazpdq8cEku/z8eJDK8z4ll3tDZcQ+oEH3ui5alhRyd
-         kT4iwQXmJwwK1p2+9irzRSJ/UVp7DCrlo6fXHPoxSJgqjrwqdy+AOwkhHGoTRtU4tFaA
-         CG2W35ypAA6YQG5F15URS5LcW/HHYU8BXsk0r4NRMLCzr6kKfHcJjZ2RonuxDlvsyU0A
-         KCfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXghBJvGe1wsCBi5KPOcZDO7GLQrJ7idIgFow2bA7zPH5n/ZQsNALmALgJG1mszGdobUEz+o1aDjqdSKRo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxT2MpGX2QaO3S2+5fEcg4PzowVifxlW6hH59AfIvk0aYqOjbNm
-	RGU+77ojN0Tg82jgawcgMqJS+DBhzcyk0127sJbV9E6okLyMPRwIhWTaXiI4Bsc=
-X-Gm-Gg: ASbGncsitn6HZgPFshbJDid0yoIVg4CD/1eA5hvktGJKbiE5nytJSuuS12iBA2DnWn8
-	zb3BHQidHxXLB2cijCDxRS2dAj3ZSGZI2CAIC4yDS8qAvwX0nj4htdtzw3/01EhaiYRxu4Ll+0Z
-	A+YVJ8CCodFnNaIWd13PWXb72EjAGrXkB162zSBbpgisCOHlD4PSVVIgKztJhwQv2/sLorYr4E/
-	ILge6NMZLgrQ/m6MhxyMV8oP/2oHctJaUsf61qDLBQePEdxl3LflTloPYkaq6W6cTR7LDKWrGuX
-	EgJZuq620nDpJpAn4Wp5vHeVf+mFbfTyUsy1f+fsnTSHBANtfRO1QXSQ/WIiwA52
-X-Google-Smtp-Source: AGHT+IFf0uNr8Eq9ADXBjwgbRjZ/26sTKnwO661Ft4qDLwqkO93kLd+WI49vCdH3eGbScEIxGEd/BQ==
-X-Received: by 2002:a05:600c:3b17:b0:43d:745a:5a49 with SMTP id 5b1f17b1804b1-43ecf9c6102mr10187705e9.4.1743771568235;
-        Fri, 04 Apr 2025 05:59:28 -0700 (PDT)
-Received: from [192.168.1.106] ([178.197.198.86])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec366aa29sm45466885e9.39.2025.04.04.05.59.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Apr 2025 05:59:27 -0700 (PDT)
-Message-ID: <05d96c93-f9a8-42ea-9c11-2d38a7dffff7@linaro.org>
-Date: Fri, 4 Apr 2025 14:59:26 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OIvitMNK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743771618; x=1775307618;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=paWnuA2/OlnputegLvkrnDVVL3qXwkPlKVLOwytIpWg=;
+  b=OIvitMNKf156uHGlnEgE7ALQwkq4CiooW2Kc3D9OoQu5RantlbKSQObo
+   OX65lBgZXHWGoIRGiwgOg7PaaED3kpslUujHUR2DRSYgFiiyJ6kZEbkaa
+   t2erKdYOcN6KxKWnyUBRFXJg63WFlbKMDAQEZQ3duMI8XDXYr4Bw5ivzD
+   U4ITgMjD4eSTTv0unLcyJnGxhx7KgjV4Ks5LUTFx+OlIEvnXrWLCR9wwJ
+   hIktgP3aHx1lp8TJFV+MJMVl/X96yogpAkIxs+Ut9rH926TMc4mn51fpB
+   nvLzeYnXdFT7npXMAkDf3f5PdrbThnA1qWzYfTSidC91GDYsJG0zWU2ro
+   w==;
+X-CSE-ConnectionGUID: aNwXVIe5Tr69Y0ZM3KMlYw==
+X-CSE-MsgGUID: uTGVfEBhTpCWU3hYRuihXA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11393"; a="62608223"
+X-IronPort-AV: E=Sophos;i="6.15,188,1739865600"; 
+   d="scan'208";a="62608223"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 06:00:15 -0700
+X-CSE-ConnectionGUID: SfkldhwtRc6/8OFIn2WR0A==
+X-CSE-MsgGUID: Xx668pnKR/S//nFr0gpmlA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,188,1739865600"; 
+   d="scan'208";a="132427704"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 06:00:13 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1u0geZ-000000098Zr-09NW;
+	Fri, 04 Apr 2025 16:00:11 +0300
+Date: Fri, 4 Apr 2025 16:00:10 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Raag Jadav <raag.jadav@intel.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>, david.m.ertman@intel.com,
+	ira.weiny@intel.com, lee@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] mfd: core: Support auxiliary device
+Message-ID: <Z-_X2j0yzyLCS3r2@smile.fi.intel.com>
+References: <20250403110053.1274521-1-raag.jadav@intel.com>
+ <2025040336-ethically-regulate-3594@gregkh>
+ <Z-_ESekESYYvMHeR@black.fi.intel.com>
+ <Z-_QwB1cExN1emMF@smile.fi.intel.com>
+ <Z-_SIbfBdMXXkkWG@black.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] watchdog: Do not enable by default during compile testing
-Content-Language: en-US
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Guenter Roeck <linux@roeck-us.net>,
- Wim Van Sebroeck <wim@linux-watchdog.org>, linux-watchdog@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250404123941.362620-1-krzysztof.kozlowski@linaro.org>
- <8b6ede05-281a-4fb1-bcdc-457e6f2610ff@roeck-us.net>
- <4f69f618-bb9f-4269-9467-40c0eb3bc1b9@linaro.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <4f69f618-bb9f-4269-9467-40c0eb3bc1b9@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z-_SIbfBdMXXkkWG@black.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On 04/04/2025 14:57, Krzysztof Kozlowski wrote:
-> On 04/04/2025 14:49, Guenter Roeck wrote:
->> On 4/4/25 05:39, Krzysztof Kozlowski wrote:
->>> Enabling the compile test should not cause automatic enabling of all
->>> drivers.
->>>
->>
->> Sorry, I seem to be missing something.
->>
->> Isn't that what COMPILE_TEST is all about, that it enables everything ?
+On Fri, Apr 04, 2025 at 03:35:45PM +0300, Raag Jadav wrote:
+> On Fri, Apr 04, 2025 at 03:29:52PM +0300, Andy Shevchenko wrote:
+> > On Fri, Apr 04, 2025 at 02:36:41PM +0300, Raag Jadav wrote:
+> > > On Thu, Apr 03, 2025 at 03:02:47PM +0100, Greg KH wrote:
+> > > > On Thu, Apr 03, 2025 at 04:30:53PM +0530, Raag Jadav wrote:
+
+...
+
+> > > > > 2. Should we allow auxiliary drivers to manage their own resources
+> > > > >    (MEM, IO, IRQ etc)?
+> > > > 
+> > > > The resources are all shared by the "parent" device, that's what makes
+> > > > aux drivers work, they need to handle this as there is no unique way to
+> > > > carve up the resources here.
+> > > > 
+> > > > So I don't know how you would do this, sorry.
+> > > 
+> > > Perhaps we can carve it up in mfd_add_devices() using start and end members
+> > > and error out if they overlap.
+> > 
+> > I don't think we want a flag day. If anything, it should be a new call.
 > 
-> No. Compile test *allows* to compile test, but it does not mean you want
-> immediately compile everything. allyesconfig is for everything. Maybe
-> you want to compile some subset of drivers.
+> Yes, I mean in mfd_add_auxiliary_device() (as in this patch).
 > 
-> BTW, I am aligning with the most frequent pattern (quickly judging), so
-> of course I also accept argument that we should revert that other
-> pattern and use "default y" everywhere.
+> > > Can't we still have a struct resource that is unique to that specific
+> > > auxiliary device?
+> > 
+> > Oh, believe me, you won't do that. Save yourself from _a lot_ of troubles with
+> > different cases when the shared resources are required.
+> 
+> I think we already have ignore_resource_conflicts flag as part of mfd_cell,
+> no?
 
-+Cc Arnd,
+It's not so easy, and it's not the only thing that's needed. You can dive into
+it and see how the request of the resource work. Also note the hardware that
+has common registers. Again, using regmap solves most of these issues if not all.
 
-I also dug out old recommendation from Arnd (so I am not making this
-stuff up):
+-- 
+With Best Regards,
+Andy Shevchenko
 
-https://lore.kernel.org/lkml/CAK8P3a1TY+XT1vF=wAh0XA5BXU5Z6Ab1d4DekXbVsN9aj3aL5w@mail.gmail.com/
 
-Best regards,
-Krzysztof
