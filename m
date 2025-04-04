@@ -1,191 +1,194 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DFE71F94C
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 08:14:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8851C1CD3F;
+	Fri,  4 Apr 2025 08:16:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743754501; cv=none; b=AonuAn2RU9KLCl3qon4OdUnsAhT7WRlpZ4HLW6dNWd/FvfvXzWqBKsbtIY1K4yACW10vju5u4VPalmveuY4mTpXtUU19R7xaWmmvj++3fMdBh3XX6ggegWMzxevfHEldzxi35eY6yr9K31ikS389p/YkWpdZmCNz46/B0E2YFmQ=
+	t=1743754610; cv=none; b=dGD2pej3ZNgCMZ2V2SPJeO1LtJK/n6ELJWElMSvKkOCuboE8qTmxw7axQqjrhmhuiBZ8BumxeL+okx5wg7sVOshvu/HDEV1veFK+V0IttQ6cHiZ8VpanOKqdOdlchXpowPgA3ZUtyldEdivNaJP7VYnSr9S/tAkhHpTZiaSZRlA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743754501; c=relaxed/simple;
-	bh=AuER94I0UTEjzFOjOSgVJU84xZwyeesTDx/OyQrBbzQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WJ9B7FdTYikBO6cChlooRN3n1qZ8QVOdrXq5tQQfmuG7FcTTgb7VNrqnq/6+bN7xpJFSsD+kwcPOxTbGry65Vf4178KJm1iCy/WnWXsfQ8mSo3sWJxMEJR6jJ/Zmv4tiVtMecjpEaQnZ/YVv0WtyUQRaIwXwa3ol41uki145jU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FaM1gGBA; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1743754610; c=relaxed/simple;
+	bh=VCbOhl97ps2Wxu6AXmDgJU24JFyi2bTPB0dOBgbs64g=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=f8QrH4u/nagIgR0Pb8bxxgCEE4GHlGUL/XwQnlfrst6wRV4UvRFKR/mkyG9bMuUEbfMdEufvT0HybRSk4qy+cKXl2jyoebdOwvIbnr+U8d3KxOvZuz3B3yD7lQuus9dH8iwdBcDlceZ7OAGmpc8CDSCMOR8zEdROEUhPPklIcI4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=desiato.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=fNu6Va7S; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=desiato.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FaM1gGBA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743754498;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kQ6LXxwBQfr8ph0usRujiqrcsoU2uzBJal5na1Y3wac=;
-	b=FaM1gGBAxiGt8PI+uuQs3rxUSSQjthJJoYVxpcTlGcpmnSXchY2vQEvoTASc5po4r6vu5t
-	8KVZQo8EauYx3OxwXhrZYNqdX92lIQHGH8vSETC25qNmeAI9M8RBeYobwxpKXyGwIaAOC8
-	wXyT4pKH1IHutB+1So98nqcHfDEJw+I=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-387-PpDrh2aIOWe6AEUQwfmcPQ-1; Fri, 04 Apr 2025 04:14:57 -0400
-X-MC-Unique: PpDrh2aIOWe6AEUQwfmcPQ-1
-X-Mimecast-MFC-AGG-ID: PpDrh2aIOWe6AEUQwfmcPQ_1743754496
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-391345e3aa3so1034790f8f.0
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 01:14:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743754496; x=1744359296;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kQ6LXxwBQfr8ph0usRujiqrcsoU2uzBJal5na1Y3wac=;
-        b=WGCsNVQ0MsM+dvGb1POPDiJzJeIQlkMll6210gU5vNWKli4LjY8xudtWTThVcT81Aw
-         bZ28UPo9nVgYJwkRnyvRLPF06bP5ZFp+OhSvFXNzb8y9bm+SlepORkkSdokyqmLHy1+t
-         orJtQO3heKdS1aDwqfV+gg+v+zBOVylvcK3WNqaP5rYRV7wYxBARKZUIBnOe6lEMR5mr
-         VtIk+SrHDEXqje0luZ7K7sTCv8/F0vv4NkVD/J124gqZeR8vQtbTgekVP5Miy0z44T/I
-         fEuC9jnInm7EPlZg7X5mJAgyAMsXReNMkPrkr8QQBOH9UWYUlSFANcyswajydk1O/zPR
-         CxLw==
-X-Forwarded-Encrypted: i=1; AJvYcCUyy1LhzT3vJQHKI6k068QsJ2PIg54gdr1ZxaS755KaCJksWBIdZ5GSNHDmfek6azltJaKA6T4D0DTWfqk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx8jJpT0s5vjCDbUIS8QXTv27v1BeBYMRAimFvL9BTFLQHXvVlO
-	tsuxHPSxIfdjRr/uMjKK6BtGvUp1STlzRjaKJC9eu/PSi8K/qmkzhBMzx/uF4KaFBB7aoC/vd2X
-	kUNl0AuIG4tLjRpz4rjboh14zogvH13qBMUwc5xQdyYv8OGcZIhmEeBZJO9a3ow==
-X-Gm-Gg: ASbGncvFFkep+bUfJDGbgiRv4K5l3X+2JsEBgMAoow4MmhbuggI6tpUenmBsrFQcbsT
-	AFYId0F9juO8gEfjHgJWjcaymqmtMDOyzge7/V8UyykKVL5MY2Wi7t4B3MpJH6SXhUKjCibR7tA
-	6qTX0O6VqC7AoPr3mkQCbLjWVgierhMy5arxyIx5JsjKSBh3m7gHkfMzibfBnZ7nwRMSvZQymV7
-	rVylAYXPG1S2VcBFgplZ8ESE2rEnbzustRLSZrDfxsCrtJworlEvy5g+qVgBCpQUA6ocdL+RnAe
-	7FJxmjOWuQ==
-X-Received: by 2002:a5d:5d13:0:b0:38d:eb33:79c2 with SMTP id ffacd0b85a97d-39cb35aed51mr1485120f8f.32.1743754495861;
-        Fri, 04 Apr 2025 01:14:55 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF+Vj4KGL4IGFJsWlV8HmZkBJfzGwgl/hz7tDn67gaKw13cLzScEH8EztFdEVpDbeUUKsnsgA==
-X-Received: by 2002:a5d:5d13:0:b0:38d:eb33:79c2 with SMTP id ffacd0b85a97d-39cb35aed51mr1485105f8f.32.1743754495425;
-        Fri, 04 Apr 2025 01:14:55 -0700 (PDT)
-Received: from redhat.com ([2a0d:6fc0:1517:1000:ea83:8e5f:3302:3575])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c3020dacfsm3754344f8f.72.2025.04.04.01.14.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Apr 2025 01:14:54 -0700 (PDT)
-Date: Fri, 4 Apr 2025 04:14:51 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Alexander Graf <graf@amazon.com>
-Cc: Stefan Hajnoczi <stefanha@redhat.com>, netdev@vger.kernel.org,
-	Stefano Garzarella <sgarzare@redhat.com>,
-	linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
-	kvm@vger.kernel.org, Asias He <asias@redhat.com>,
-	Paolo Abeni <pabeni@redhat.com>, Jakub Kicinski <kuba@kernel.org>,
-	Eric Dumazet <edumazet@google.com>,
-	"David S . Miller" <davem@davemloft.net>, nh-open-source@amazon.com
-Subject: Re: [PATCH v2] vsock/virtio: Remove queued_replies pushback logic
-Message-ID: <20250404041050-mutt-send-email-mst@kernel.org>
-References: <20250401201349.23867-1-graf@amazon.com>
- <20250402161424.GA305204@fedora>
- <20250403073111-mutt-send-email-mst@kernel.org>
- <32ca5221-5b25-4bfd-acd7-9eebae8c3635@amazon.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fNu6Va7S"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=MIME-Version:Content-Type:References:
+	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=VCbOhl97ps2Wxu6AXmDgJU24JFyi2bTPB0dOBgbs64g=; b=fNu6Va7S80ezdYELAHQvv03QPH
+	zLMc1wIg1oHWTAd+oS78Rvudj5EI3u/DLsxteb3rPOeWusDgMAp6zpc3scwKpMf43nLsO0DhtbHDb
+	MzzhBPdHOP3x6usjkT7gMT3+2b8DA9+ckbgvxvOfazd5f2xOtioeNkUUvPabmV6g2WrBEejVkmtFE
+	ptorCYxOaXATpMMs58sHjDdXFYM2uKgzNoO+aduzYq+w9SQfkea1XxUvUF/V2g0hedWtKf6c9sIWz
+	marHxd1klR6T3N895Tig0W5bn0Qc6ovyHUpMlTaRgscS8LMNOPhi24X5nTBOOTi3pn8JnaPGwZHIW
+	ztJIPJSw==;
+Received: from [172.31.31.145] (helo=u09cd745991455d.ant.amazon.com)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1u0cEG-00000007Jc6-1yCG;
+	Fri, 04 Apr 2025 08:16:44 +0000
+Message-ID: <67bd998bfe385088ef863342b9f8714754585476.camel@infradead.org>
+Subject: Re: [RFC PATCH 1/3] content: Add VIRTIO_F_SWIOTLB to negotiate use
+ of SWIOTLB bounce buffers
+From: David Woodhouse <dwmw2@infradead.org>
+To: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: Christoph Hellwig <hch@infradead.org>, virtio-comment@lists.linux.dev, 
+ Claire Chang <tientzu@chromium.org>, linux-devicetree
+ <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
+ =?ISO-8859-1?Q?J=F6rg?= Roedel <joro@8bytes.org>, 
+ iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+ graf@amazon.de
+Date: Fri, 04 Apr 2025 09:16:44 +0100
+In-Reply-To: <20250404040838-mutt-send-email-mst@kernel.org>
+References: <20250402112410.2086892-1-dwmw2@infradead.org>
+	 <20250402112410.2086892-2-dwmw2@infradead.org>
+	 <Z-43svGzwoUQaYvg@infradead.org>
+	 <148a3c8ee53af585b42ec025c2c7821ad852c66c.camel@infradead.org>
+	 <Z-46TDmspmX0BJ2H@infradead.org>
+	 <05abb68286dd4bc17b243130d7982a334503095b.camel@infradead.org>
+	 <Z-99snVF5ESyJDDs@infradead.org>
+	 <fb7ea3ee5bf970fa36b012e16750f533b72903a0.camel@infradead.org>
+	 <20250404040838-mutt-send-email-mst@kernel.org>
+Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
+	boundary="=-HSkiZLxvQpfsY04fmx1z"
+User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <32ca5221-5b25-4bfd-acd7-9eebae8c3635@amazon.com>
-
-On Fri, Apr 04, 2025 at 10:04:38AM +0200, Alexander Graf wrote:
-> 
-> On 03.04.25 14:21, Michael S. Tsirkin wrote:
-> > On Wed, Apr 02, 2025 at 12:14:24PM -0400, Stefan Hajnoczi wrote:
-> > > On Tue, Apr 01, 2025 at 08:13:49PM +0000, Alexander Graf wrote:
-> > > > Ever since the introduction of the virtio vsock driver, it included
-> > > > pushback logic that blocks it from taking any new RX packets until the
-> > > > TX queue backlog becomes shallower than the virtqueue size.
-> > > > 
-> > > > This logic works fine when you connect a user space application on the
-> > > > hypervisor with a virtio-vsock target, because the guest will stop
-> > > > receiving data until the host pulled all outstanding data from the VM.
-> > > > 
-> > > > With Nitro Enclaves however, we connect 2 VMs directly via vsock:
-> > > > 
-> > > >    Parent      Enclave
-> > > > 
-> > > >      RX -------- TX
-> > > >      TX -------- RX
-> > > > 
-> > > > This means we now have 2 virtio-vsock backends that both have the pushback
-> > > > logic. If the parent's TX queue runs full at the same time as the
-> > > > Enclave's, both virtio-vsock drivers fall into the pushback path and
-> > > > no longer accept RX traffic. However, that RX traffic is TX traffic on
-> > > > the other side which blocks that driver from making any forward
-> > > > progress. We're now in a deadlock.
-> > > > 
-> > > > To resolve this, let's remove that pushback logic altogether and rely on
-> > > > higher levels (like credits) to ensure we do not consume unbounded
-> > > > memory.
-> > > The reason for queued_replies is that rx packet processing may emit tx
-> > > packets. Therefore tx virtqueue space is required in order to process
-> > > the rx virtqueue.
-> > > 
-> > > queued_replies puts a bound on the amount of tx packets that can be
-> > > queued in memory so the other side cannot consume unlimited memory. Once
-> > > that bound has been reached, rx processing stops until the other side
-> > > frees up tx virtqueue space.
-> > > 
-> > > It's been a while since I looked at this problem, so I don't have a
-> > > solution ready. In fact, last time I thought about it I wondered if the
-> > > design of virtio-vsock fundamentally suffers from deadlocks.
-> > > 
-> > > I don't think removing queued_replies is possible without a replacement
-> > > for the bounded memory and virtqueue exhaustion issue though. Credits
-> > > are not a solution - they are about socket buffer space, not about
-> > > virtqueue space, which includes control packets that are not accounted
-> > > by socket buffer space.
-> > 
-> > Hmm.
-> > Actually, let's think which packets require a response.
-> > 
-> > VIRTIO_VSOCK_OP_REQUEST
-> > VIRTIO_VSOCK_OP_SHUTDOWN
-> > VIRTIO_VSOCK_OP_CREDIT_REQUEST
-> > 
-> > 
-> > the response to these always reports a state of an existing socket.
-> > and, only one type of response is relevant for each socket.
-> > 
-> > So here's my suggestion:
-> > stop queueing replies on the vsock device, instead,
-> > simply store the response on the socket, and create a list of sockets
-> > that have replies to be transmitted
-> > 
-> > 
-> > WDYT?
-> 
-> 
-> Wouldn't that create the same problem again? The socket will eventually push
-> back any new data that it can take because its FIFO is full. At that point,
-> the "other side" could still have a queue full of requests on exactly that
-> socket that need to get processed. We can now not pull those packets off the
-> virtio queue, because we can not enqueue responses.
-
-Either I don't understand what you wrote or I did not explain myself
-clearly. 
-
-In this idea there needs to be a single response enqueued
-like this in the socket, because, no more than one ever needs to
-be outstanding per socket.
-
-For example, until VIRTIO_VSOCK_OP_REQUEST
-is responded to, the socket is not active and does not need to
-send anything.
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
 
 
-> 
-> But that means now the one queue is blocked from making forward progress,
-> because we are applying back pressure. And that means everything can grind
-> to a halt and we have the same deadlock this patch is trying to fix.
-> 
-> I don't see how we can possibly guarantee a lossless data channel over a
-> tiny wire (single, fixed size, in order virtio ring) while also guaranteeing
-> bounded memory usage. One of the constraints need to go: Either we are no
-> longer lossless or we effectively allow unbounded memory usage.
-> 
-> 
-> Alex
+--=-HSkiZLxvQpfsY04fmx1z
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Fri, 2025-04-04 at 04:09 -0400, Michael S. Tsirkin wrote:
+> On Fri, Apr 04, 2025 at 08:50:47AM +0100, David Woodhouse wrote:
+> > What's annoying is that this should work out of the box *already* with
+> > virtio-mmio and a `restricted-dma-pool` =E2=80=94 for systems which are=
+n't
+> > afflicted by UEFI/ACPI/PCI as their discovery mechanisms.
+>=20
+>=20
+> That specifically would be just a driver bugfix then?
+
+I actually think it works out of the box and there isn't even a bug to
+fix. Haven't tested yet.
+
+The sad part is that the system does it all automatically *if* it has
+CONFIG_DMA_RESTRICTED_POOL (e.g. Linux) and the driver never even
+notices that the dma_ops it's using are the swiotlb ops using the
+provided buffer.
+
+Which is *kind* of nice... except that when on a guest OS which *isn't*
+Linux with CONFIG_DMA_RESTRICTED_POOL, the guest will just ignore the
+`restricted-dma-pool` node and try DMA to system memory anyway, which
+will fail.
+
+That's why my proposal adds the negotiated VIRTIO_F_SWIOTLB feature, so
+that the device side can refuse, if the guest *isn't* agreeing to use
+the bounce buffer in the situations where it must do so.
+
+--=-HSkiZLxvQpfsY04fmx1z
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Transfer-Encoding: base64
+
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCD9Aw
+ggSOMIIDdqADAgECAhAOmiw0ECVD4cWj5DqVrT9PMA0GCSqGSIb3DQEBCwUAMGUxCzAJBgNVBAYT
+AlVTMRUwEwYDVQQKEwxEaWdpQ2VydCBJbmMxGTAXBgNVBAsTEHd3dy5kaWdpY2VydC5jb20xJDAi
+BgNVBAMTG0RpZ2lDZXJ0IEFzc3VyZWQgSUQgUm9vdCBDQTAeFw0yNDAxMzAwMDAwMDBaFw0zMTEx
+MDkyMzU5NTlaMEExCzAJBgNVBAYTAkFVMRAwDgYDVQQKEwdWZXJva2V5MSAwHgYDVQQDExdWZXJv
+a2V5IFNlY3VyZSBFbWFpbCBHMjCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMjvgLKj
+jfhCFqxYyRiW8g3cNFAvltDbK5AzcOaR7yVzVGadr4YcCVxjKrEJOgi7WEOH8rUgCNB5cTD8N/Et
+GfZI+LGqSv0YtNa54T9D1AWJy08ZKkWvfGGIXN9UFAPMJ6OLLH/UUEgFa+7KlrEvMUupDFGnnR06
+aDJAwtycb8yXtILj+TvfhLFhafxroXrflspavejQkEiHjNjtHnwbZ+o43g0/yxjwnarGI3kgcak7
+nnI9/8Lqpq79tLHYwLajotwLiGTB71AGN5xK+tzB+D4eN9lXayrjcszgbOv2ZCgzExQUAIt98mre
+8EggKs9mwtEuKAhYBIP/0K6WsoMnQCcCAwEAAaOCAVwwggFYMBIGA1UdEwEB/wQIMAYBAf8CAQAw
+HQYDVR0OBBYEFIlICOogTndrhuWByNfhjWSEf/xwMB8GA1UdIwQYMBaAFEXroq/0ksuCMS1Ri6en
+IZ3zbcgPMA4GA1UdDwEB/wQEAwIBhjAdBgNVHSUEFjAUBggrBgEFBQcDBAYIKwYBBQUHAwIweQYI
+KwYBBQUHAQEEbTBrMCQGCCsGAQUFBzABhhhodHRwOi8vb2NzcC5kaWdpY2VydC5jb20wQwYIKwYB
+BQUHMAKGN2h0dHA6Ly9jYWNlcnRzLmRpZ2ljZXJ0LmNvbS9EaWdpQ2VydEFzc3VyZWRJRFJvb3RD
+QS5jcnQwRQYDVR0fBD4wPDA6oDigNoY0aHR0cDovL2NybDMuZGlnaWNlcnQuY29tL0RpZ2lDZXJ0
+QXNzdXJlZElEUm9vdENBLmNybDARBgNVHSAECjAIMAYGBFUdIAAwDQYJKoZIhvcNAQELBQADggEB
+ACiagCqvNVxOfSd0uYfJMiZsOEBXAKIR/kpqRp2YCfrP4Tz7fJogYN4fxNAw7iy/bPZcvpVCfe/H
+/CCcp3alXL0I8M/rnEnRlv8ItY4MEF+2T/MkdXI3u1vHy3ua8SxBM8eT9LBQokHZxGUX51cE0kwa
+uEOZ+PonVIOnMjuLp29kcNOVnzf8DGKiek+cT51FvGRjV6LbaxXOm2P47/aiaXrDD5O0RF5SiPo6
+xD1/ClkCETyyEAE5LRJlXtx288R598koyFcwCSXijeVcRvBB1cNOLEbg7RMSw1AGq14fNe2cH1HG
+W7xyduY/ydQt6gv5r21mDOQ5SaZSWC/ZRfLDuEYwggWbMIIEg6ADAgECAhAH5JEPagNRXYDiRPdl
+c1vgMA0GCSqGSIb3DQEBCwUAMEExCzAJBgNVBAYTAkFVMRAwDgYDVQQKEwdWZXJva2V5MSAwHgYD
+VQQDExdWZXJva2V5IFNlY3VyZSBFbWFpbCBHMjAeFw0yNDEyMzAwMDAwMDBaFw0yODAxMDQyMzU5
+NTlaMB4xHDAaBgNVBAMME2R3bXcyQGluZnJhZGVhZC5vcmcwggIiMA0GCSqGSIb3DQEBAQUAA4IC
+DwAwggIKAoICAQDali7HveR1thexYXx/W7oMk/3Wpyppl62zJ8+RmTQH4yZeYAS/SRV6zmfXlXaZ
+sNOE6emg8WXLRS6BA70liot+u0O0oPnIvnx+CsMH0PD4tCKSCsdp+XphIJ2zkC9S7/yHDYnqegqt
+w4smkqUqf0WX/ggH1Dckh0vHlpoS1OoxqUg+ocU6WCsnuz5q5rzFsHxhD1qGpgFdZEk2/c//ZvUN
+i12vPWipk8TcJwHw9zoZ/ZrVNybpMCC0THsJ/UEVyuyszPtNYeYZAhOJ41vav1RhZJzYan4a1gU0
+kKBPQklcpQEhq48woEu15isvwWh9/+5jjh0L+YNaN0I//nHSp6U9COUG9Z0cvnO8FM6PTqsnSbcc
+0j+GchwOHRC7aP2t5v2stVx3KbptaYEzi4MQHxm/0+HQpMEVLLUiizJqS4PWPU6zfQTOMZ9uLQRR
+ci+c5xhtMEBszlQDOvEQcyEG+hc++fH47K+MmZz21bFNfoBxLP6bjR6xtPXtREF5lLXxp+CJ6KKS
+blPKeVRg/UtyJHeFKAZXO8Zeco7TZUMVHmK0ZZ1EpnZbnAhKE19Z+FJrQPQrlR0gO3lBzuyPPArV
+hvWxjlO7S4DmaEhLzarWi/ze7EGwWSuI2eEa/8zU0INUsGI4ywe7vepQz7IqaAovAX0d+f1YjbmC
+VsAwjhLmveFjNwIDAQABo4IBsDCCAawwHwYDVR0jBBgwFoAUiUgI6iBOd2uG5YHI1+GNZIR//HAw
+HQYDVR0OBBYEFFxiGptwbOfWOtMk5loHw7uqWUOnMDAGA1UdEQQpMCeBE2R3bXcyQGluZnJhZGVh
+ZC5vcmeBEGRhdmlkQHdvb2Rob3Uuc2UwFAYDVR0gBA0wCzAJBgdngQwBBQEBMA4GA1UdDwEB/wQE
+AwIF4DAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwewYDVR0fBHQwcjA3oDWgM4YxaHR0
+cDovL2NybDMuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNybDA3oDWgM4YxaHR0
+cDovL2NybDQuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNybDB2BggrBgEFBQcB
+AQRqMGgwJAYIKwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmRpZ2ljZXJ0LmNvbTBABggrBgEFBQcwAoY0
+aHR0cDovL2NhY2VydHMuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNydDANBgkq
+hkiG9w0BAQsFAAOCAQEAQXc4FPiPLRnTDvmOABEzkIumojfZAe5SlnuQoeFUfi+LsWCKiB8Uextv
+iBAvboKhLuN6eG/NC6WOzOCppn4mkQxRkOdLNThwMHW0d19jrZFEKtEG/epZ/hw/DdScTuZ2m7im
+8ppItAT6GXD3aPhXkXnJpC/zTs85uNSQR64cEcBFjjoQDuSsTeJ5DAWf8EMyhMuD8pcbqx5kRvyt
+JPsWBQzv1Dsdv2LDPLNd/JUKhHSgr7nbUr4+aAP2PHTXGcEBh8lTeYea9p4d5k969pe0OHYMV5aL
+xERqTagmSetuIwolkAuBCzA9vulg8Y49Nz2zrpUGfKGOD0FMqenYxdJHgDCCBZswggSDoAMCAQIC
+EAfkkQ9qA1FdgOJE92VzW+AwDQYJKoZIhvcNAQELBQAwQTELMAkGA1UEBhMCQVUxEDAOBgNVBAoT
+B1Zlcm9rZXkxIDAeBgNVBAMTF1Zlcm9rZXkgU2VjdXJlIEVtYWlsIEcyMB4XDTI0MTIzMDAwMDAw
+MFoXDTI4MDEwNDIzNTk1OVowHjEcMBoGA1UEAwwTZHdtdzJAaW5mcmFkZWFkLm9yZzCCAiIwDQYJ
+KoZIhvcNAQEBBQADggIPADCCAgoCggIBANqWLse95HW2F7FhfH9bugyT/danKmmXrbMnz5GZNAfj
+Jl5gBL9JFXrOZ9eVdpmw04Tp6aDxZctFLoEDvSWKi367Q7Sg+ci+fH4KwwfQ8Pi0IpIKx2n5emEg
+nbOQL1Lv/IcNiep6Cq3DiyaSpSp/RZf+CAfUNySHS8eWmhLU6jGpSD6hxTpYKye7PmrmvMWwfGEP
+WoamAV1kSTb9z/9m9Q2LXa89aKmTxNwnAfD3Ohn9mtU3JukwILRMewn9QRXK7KzM+01h5hkCE4nj
+W9q/VGFknNhqfhrWBTSQoE9CSVylASGrjzCgS7XmKy/BaH3/7mOOHQv5g1o3Qj/+cdKnpT0I5Qb1
+nRy+c7wUzo9OqydJtxzSP4ZyHA4dELto/a3m/ay1XHcpum1pgTOLgxAfGb/T4dCkwRUstSKLMmpL
+g9Y9TrN9BM4xn24tBFFyL5znGG0wQGzOVAM68RBzIQb6Fz758fjsr4yZnPbVsU1+gHEs/puNHrG0
+9e1EQXmUtfGn4InoopJuU8p5VGD9S3Ikd4UoBlc7xl5yjtNlQxUeYrRlnUSmdlucCEoTX1n4UmtA
+9CuVHSA7eUHO7I88CtWG9bGOU7tLgOZoSEvNqtaL/N7sQbBZK4jZ4Rr/zNTQg1SwYjjLB7u96lDP
+sipoCi8BfR35/ViNuYJWwDCOEua94WM3AgMBAAGjggGwMIIBrDAfBgNVHSMEGDAWgBSJSAjqIE53
+a4blgcjX4Y1khH/8cDAdBgNVHQ4EFgQUXGIam3Bs59Y60yTmWgfDu6pZQ6cwMAYDVR0RBCkwJ4ET
+ZHdtdzJAaW5mcmFkZWFkLm9yZ4EQZGF2aWRAd29vZGhvdS5zZTAUBgNVHSAEDTALMAkGB2eBDAEF
+AQEwDgYDVR0PAQH/BAQDAgXgMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDBDB7BgNVHR8E
+dDByMDegNaAzhjFodHRwOi8vY3JsMy5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVtYWlsRzIu
+Y3JsMDegNaAzhjFodHRwOi8vY3JsNC5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVtYWlsRzIu
+Y3JsMHYGCCsGAQUFBwEBBGowaDAkBggrBgEFBQcwAYYYaHR0cDovL29jc3AuZGlnaWNlcnQuY29t
+MEAGCCsGAQUFBzAChjRodHRwOi8vY2FjZXJ0cy5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVt
+YWlsRzIuY3J0MA0GCSqGSIb3DQEBCwUAA4IBAQBBdzgU+I8tGdMO+Y4AETOQi6aiN9kB7lKWe5Ch
+4VR+L4uxYIqIHxR7G2+IEC9ugqEu43p4b80LpY7M4KmmfiaRDFGQ50s1OHAwdbR3X2OtkUQq0Qb9
+6ln+HD8N1JxO5nabuKbymki0BPoZcPdo+FeRecmkL/NOzzm41JBHrhwRwEWOOhAO5KxN4nkMBZ/w
+QzKEy4PylxurHmRG/K0k+xYFDO/UOx2/YsM8s138lQqEdKCvudtSvj5oA/Y8dNcZwQGHyVN5h5r2
+nh3mT3r2l7Q4dgxXlovERGpNqCZJ624jCiWQC4ELMD2+6WDxjj03PbOulQZ8oY4PQUyp6djF0keA
+MYIDuzCCA7cCAQEwVTBBMQswCQYDVQQGEwJBVTEQMA4GA1UEChMHVmVyb2tleTEgMB4GA1UEAxMX
+VmVyb2tleSBTZWN1cmUgRW1haWwgRzICEAfkkQ9qA1FdgOJE92VzW+AwDQYJYIZIAWUDBAIBBQCg
+ggE3MBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDQwNDA4MTY0
+NFowLwYJKoZIhvcNAQkEMSIEIFn3MonZ5cGXb7LniMcZe2cStTn0zVK8D0V8UeSjNDSxMGQGCSsG
+AQQBgjcQBDFXMFUwQTELMAkGA1UEBhMCQVUxEDAOBgNVBAoTB1Zlcm9rZXkxIDAeBgNVBAMTF1Zl
+cm9rZXkgU2VjdXJlIEVtYWlsIEcyAhAH5JEPagNRXYDiRPdlc1vgMGYGCyqGSIb3DQEJEAILMVeg
+VTBBMQswCQYDVQQGEwJBVTEQMA4GA1UEChMHVmVyb2tleTEgMB4GA1UEAxMXVmVyb2tleSBTZWN1
+cmUgRW1haWwgRzICEAfkkQ9qA1FdgOJE92VzW+AwDQYJKoZIhvcNAQEBBQAEggIANTjCuOdijOiP
+IwwzE0hudWax5FJ264XHEbKCl0qDRao5OQWhfjpNPuQMTqbjOnOE4DbuxMv/aA43h2SAv9IxePeN
+J4Ngjn9y8lsEOxGNl5x2yjF52OTfYUu1wg+aIXs1bKDQJxuOEr4lUXPjzJPM7AYcOBFRrfq8tIhn
+uLJLbm0A1SisL+VYBIt0ygCrElpHvljwHP3PimrmStipS4qRURGS2wwgROQ+9LayzKZI2BWvrHp6
+N1doghSyn7Bh/wquFSGdqXzruUDuP/6tlJQL9dJIDM0raYbnWdfEOximxIzp/uFXE+2rWFKPI/s+
+kpBWQqkpEhjbrixS6Uels5WgmYPAGjLBVttCVAByx9TpmxdbCw3PsI+wH7z4HPx5HrtGaTvv+x/6
+G9Oxcvb39ZI6vjb34LTHo/UFYEe+R/h0XP8nhzm/kMwqTclGXrAbP1i8lbW1o7X8Q1QZ6zXEY6zt
+ZjqdxZjynQnWBezFxju+2MeD9t+M2J1RVtS2tc2nQDbLX2PKlX9z8nOatwy6fsk4iHbZw0C5xNJN
+KjDb3lO0keIRDgYSbkb5wtBfSAc5IStS/FM6SHPuUC3q1IV3JUC7d+qTwuWksHW0mfJ4vOkknFoU
+lpR/F7Ah2fl5xpK+z1g00d+CUF2BklYHLew8usU+NW8WMejBRlPU8p6zUBStDwgAAAAAAAA=
+
+
+--=-HSkiZLxvQpfsY04fmx1z--
