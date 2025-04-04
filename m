@@ -1,184 +1,222 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE08719994F;
-	Fri,  4 Apr 2025 08:37:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B88E19995D
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 08:37:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743755858; cv=none; b=CrGgBzf5bhBrIcce6FUq4uH8zkw1/1G1Bed/L5Mf+HggycGqdxGIsCBm1+7mZAyLrgSgCwcAsY6WTyuAOYu9A2t4rbD6nGsyTRXMgOqrRzAiymntcvriTPm9olodVxV7e3j6CyIra/X23lz599M39pXX4hzlTYWBWTvOS1pc3Q0=
+	t=1743755866; cv=none; b=hFXJnAGcaXpniVtclD8v0INQnQsoqDg8XY6qGQR1sbRuMYIhgdZMPBHuxfsVOIedAOxRqXc+jot+eQhfl++HyrT3JXOT79t7HgUAf48zJ52K4C7NvwzO0Wd79kjwV0yFXsqz4q+0cda4A6FyjYaAU4deb4PcHbjYc5454XhGZWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743755858; c=relaxed/simple;
-	bh=7lKQpPKTVw0wqECtAGjx+cKAgoZ/IhDFDDXnVUzCXLE=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=NTcagKlIrWxPm+O2uoCrtBZgmUP8xPawlT5QIr4uwOnmByptPnRzYzc1F/L/kWSqHJZz265zCFu33xHZfwjRu3eKGwOnFjgSWF0IfL0CqWOh/BLaxe9eYo9U5rIgmJvg2m0MIrAx6p2qhPiuFya4oVHE48btNZ7+P9arEWsk8Ls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=eeyAbm89; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=JcN4S+2K; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1743755866; c=relaxed/simple;
+	bh=QAhyu4E7HQ19zzaz86rUGI9nPrmZDX3iMt2qJViTveA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KXrqctbXOqDJr1wEeO7o3K8CedISjcP8QypVY3jwMo6TapBYqIDFpuSLJ4iGpYifs1IOx3lKNx9Rv/4/AeP4DkgUXA0evqBbqmUhOt1OR0qwcW/Dm4yNUsCMl4mxGCiU6ux3qRsJYu+UdsiSYd9xkQLwYgFnAgBWpo4roPr1JCQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=McSve8l1; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="eeyAbm89";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JcN4S+2K"
-Date: Fri, 04 Apr 2025 08:37:29 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1743755854;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="McSve8l1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743755863;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=yAW4Iy6p573QrPBUU9MGrvgfkCxvi9ZQwji3B/2nL1k=;
-	b=eeyAbm89dTtoLDzDMwU9pWBX/cDqoZG2js00zWGrPQL16VxIeYmicIyggHiGKgQyBdz0nB
-	beYpczpVndCauFSOyFMuDyGxvzGqhfEoVzayrjlwfBgnaUh/beZdF+Vl3L6xS2H5dd8oTI
-	bFHSXRv3lxXkmldU/dROrB79XjTfVGASmr32AZcowRIeJeLA3QI+stiTTUOOxB+TR07EzJ
-	LRWsOYJkLD3SJQaX+oDK291Sx5xrABePvPpPQpK1w1L4Tfbc/lUBwvBrGnJ+17KS25jvTH
-	JxmJFun4BbSt6WUoDj+v+34uVg7GTUnTVsIFpCz2EV0NebUGPqaetwkmZKlgKA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1743755854;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yAW4Iy6p573QrPBUU9MGrvgfkCxvi9ZQwji3B/2nL1k=;
-	b=JcN4S+2K3PbG4LouIVNCGPIDcj0cxl8x0kSBSqSWQe1fnNiI6ei4hNBmeRwzPDVHfQ2orv
-	m3J+Oh1LPwMfuJCw==
-From: "tip-bot2 for Andrii Nakryiko" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] sched/tracepoints: Move and extend the
- sched_process_exit() tracepoint
-Cc: Andrii Nakryiko <andrii@kernel.org>, Ingo Molnar <mingo@kernel.org>,
- "Steven Rostedt (Google)" <rostedt@goodmis.org>,
- Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250402180925.90914-1-andrii@kernel.org>
-References: <20250402180925.90914-1-andrii@kernel.org>
+	bh=OI1Zt3NFcFi/P6TNraRk0oZkTYZ+LV6TSig6Xx970e4=;
+	b=McSve8l1yAtjAIJGkbT24GjnRJmi/TAnGmIC45h82EM7zuGHzwa2EM3+CvZ84RKxCLfydX
+	/7zg7w7M+KUPLqEn/cN5WTPGEes5tQX3n9I0Q+O6vyFlxJJEzwcUWL7Kp4sHMKrevD23Js
+	4E9iHYD0O0ek6pMIYC+71OglSxIkK5A=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-266-oiBp9rD5PGCwavJoh4vFGA-1; Fri, 04 Apr 2025 04:37:41 -0400
+X-MC-Unique: oiBp9rD5PGCwavJoh4vFGA-1
+X-Mimecast-MFC-AGG-ID: oiBp9rD5PGCwavJoh4vFGA_1743755861
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3914608e90eso1175182f8f.2
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 01:37:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743755860; x=1744360660;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OI1Zt3NFcFi/P6TNraRk0oZkTYZ+LV6TSig6Xx970e4=;
+        b=qqC80UHl3dbvKj+uOWyLGRU7QAf2t3endayG+Ap5jvFQmGNnO+xYTMwCwSCbxZwMse
+         RLbvyBx+a/MsJY58Luphm92DkeFJOYaW6P2nROVvkJIr9UUTfponu1R2oitZyMuwjoDM
+         UV6yFcvHcYdPxniWpsoxVsNJzT19ygpsSZveZ45LzmO/H/is/Hh7xag7HoxdAbCYPIYI
+         IVVtC/yOwq1dqqJRLhYHh8KEsQtUrV1LoYIz3RpxWI0YwOqYtaiulLCrQGkS6ZMZQQeh
+         JW2nbZO3A+a/Svcm4qIZbB5UbEsn4TkGxGz8JI+WQH14blh6gpuK8mZoHqF3u7d2X6lB
+         WuTw==
+X-Forwarded-Encrypted: i=1; AJvYcCVPQRNQk9xM/MIuuq4ZTUKsj0hu70SRgw/rL/bhp97uVXaBrspldfngQQ7D6eswc8E/KEUTR3Oj8HaO1cQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxVb2SkiJmywDssDAmFfgS5AVx6w1zJDz4N8GH7cvNDPEJr8Xwk
+	R736KZumKgTM52UvD5RM+Q2+b5JeHIqyD3bY/XouXi6TrRITw7ZRInFim1tGNAKdhIp1ATcKycd
+	hAy0ro74xBHbwXmuvNUDun0++vbvDIDkxVkZe9tuLLCPMbSJjLFmfskpnxUuaGA==
+X-Gm-Gg: ASbGnctfacp/hs8xtrXNKhnnXmGhyM8O5RNVvqC/t7UD7DDB9MiYWb/HvIYFP4zjdcM
+	/KhVMQx1Yq6K7OkXTOQ4ZZocauhoWdtvC+c/VKb1vp2Do/excwWiMenER7HdA7FLX3MWMbYUo8W
+	deq2WpJUrdJ9Nlq3MAOTcB30eEa5oS1dPtYR26sqPDL2BQZuxp6ZlLnVjn2EgZ0Ui9aJTzXRwO5
+	8fcKmuFHymnYx0NHgQU61wSDfy3OpCyZDnCLdOUT6vu5KmUda6WwM9WfGtWaK1awlATxcS2YPgP
+	jDxwSfiJEA==
+X-Received: by 2002:a05:6000:430c:b0:391:2e31:c7e5 with SMTP id ffacd0b85a97d-39cb36b2ab2mr2013767f8f.6.1743755860543;
+        Fri, 04 Apr 2025 01:37:40 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEeh87271OU/aKTaskLblwGps7bO+cJZTClXWXzF8apC0wBecu3MvRM0wP/QWFDltqL8vhYdA==
+X-Received: by 2002:a05:6000:430c:b0:391:2e31:c7e5 with SMTP id ffacd0b85a97d-39cb36b2ab2mr2013743f8f.6.1743755860159;
+        Fri, 04 Apr 2025 01:37:40 -0700 (PDT)
+Received: from redhat.com ([2a0d:6fc0:1517:1000:ea83:8e5f:3302:3575])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c301a7225sm3768866f8f.26.2025.04.04.01.37.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Apr 2025 01:37:39 -0700 (PDT)
+Date: Fri, 4 Apr 2025 04:37:36 -0400
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: Stefano Garzarella <sgarzare@redhat.com>
+Cc: Alexander Graf <graf@amazon.com>, Stefan Hajnoczi <stefanha@redhat.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	virtualization@lists.linux.dev, kvm@vger.kernel.org,
+	Asias He <asias@redhat.com>, Paolo Abeni <pabeni@redhat.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Eric Dumazet <edumazet@google.com>,
+	"David S . Miller" <davem@davemloft.net>, nh-open-source@amazon.com
+Subject: Re: [PATCH v2] vsock/virtio: Remove queued_replies pushback logic
+Message-ID: <20250404043326-mutt-send-email-mst@kernel.org>
+References: <20250401201349.23867-1-graf@amazon.com>
+ <20250402161424.GA305204@fedora>
+ <20250403073111-mutt-send-email-mst@kernel.org>
+ <32ca5221-5b25-4bfd-acd7-9eebae8c3635@amazon.com>
+ <20250404041050-mutt-send-email-mst@kernel.org>
+ <fiyxlnv7gglcfkr7ue4tiaktqjptdkr5or6skrr6f7dof26d56@wmg3zhhqlcoj>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174375584977.31282.8985910498663747932.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fiyxlnv7gglcfkr7ue4tiaktqjptdkr5or6skrr6f7dof26d56@wmg3zhhqlcoj>
 
-The following commit has been merged into the sched/core branch of tip:
+On Fri, Apr 04, 2025 at 10:30:43AM +0200, Stefano Garzarella wrote:
+> On Fri, Apr 04, 2025 at 04:14:51AM -0400, Michael S. Tsirkin wrote:
+> > On Fri, Apr 04, 2025 at 10:04:38AM +0200, Alexander Graf wrote:
+> > > 
+> > > On 03.04.25 14:21, Michael S. Tsirkin wrote:
+> > > > On Wed, Apr 02, 2025 at 12:14:24PM -0400, Stefan Hajnoczi wrote:
+> > > > > On Tue, Apr 01, 2025 at 08:13:49PM +0000, Alexander Graf wrote:
+> > > > > > Ever since the introduction of the virtio vsock driver, it included
+> > > > > > pushback logic that blocks it from taking any new RX packets until the
+> > > > > > TX queue backlog becomes shallower than the virtqueue size.
+> > > > > >
+> > > > > > This logic works fine when you connect a user space application on the
+> > > > > > hypervisor with a virtio-vsock target, because the guest will stop
+> > > > > > receiving data until the host pulled all outstanding data from the VM.
+> > > > > >
+> > > > > > With Nitro Enclaves however, we connect 2 VMs directly via vsock:
+> > > > > >
+> > > > > >    Parent      Enclave
+> > > > > >
+> > > > > >      RX -------- TX
+> > > > > >      TX -------- RX
+> > > > > >
+> > > > > > This means we now have 2 virtio-vsock backends that both have the pushback
+> > > > > > logic. If the parent's TX queue runs full at the same time as the
+> > > > > > Enclave's, both virtio-vsock drivers fall into the pushback path and
+> > > > > > no longer accept RX traffic. However, that RX traffic is TX traffic on
+> > > > > > the other side which blocks that driver from making any forward
+> > > > > > progress. We're now in a deadlock.
+> > > > > >
+> > > > > > To resolve this, let's remove that pushback logic altogether and rely on
+> > > > > > higher levels (like credits) to ensure we do not consume unbounded
+> > > > > > memory.
+> > > > > The reason for queued_replies is that rx packet processing may emit tx
+> > > > > packets. Therefore tx virtqueue space is required in order to process
+> > > > > the rx virtqueue.
+> > > > >
+> > > > > queued_replies puts a bound on the amount of tx packets that can be
+> > > > > queued in memory so the other side cannot consume unlimited memory. Once
+> > > > > that bound has been reached, rx processing stops until the other side
+> > > > > frees up tx virtqueue space.
+> > > > >
+> > > > > It's been a while since I looked at this problem, so I don't have a
+> > > > > solution ready. In fact, last time I thought about it I wondered if the
+> > > > > design of virtio-vsock fundamentally suffers from deadlocks.
+> > > > >
+> > > > > I don't think removing queued_replies is possible without a replacement
+> > > > > for the bounded memory and virtqueue exhaustion issue though. Credits
+> > > > > are not a solution - they are about socket buffer space, not about
+> > > > > virtqueue space, which includes control packets that are not accounted
+> > > > > by socket buffer space.
+> > > >
+> > > > Hmm.
+> > > > Actually, let's think which packets require a response.
+> > > >
+> > > > VIRTIO_VSOCK_OP_REQUEST
+> > > > VIRTIO_VSOCK_OP_SHUTDOWN
+> > > > VIRTIO_VSOCK_OP_CREDIT_REQUEST
+> > > >
+> > > >
+> > > > the response to these always reports a state of an existing socket.
+> > > > and, only one type of response is relevant for each socket.
+> > > >
+> > > > So here's my suggestion:
+> > > > stop queueing replies on the vsock device, instead,
+> > > > simply store the response on the socket, and create a list of sockets
+> > > > that have replies to be transmitted
+> > > >
+> > > >
+> > > > WDYT?
+> > > 
+> > > 
+> > > Wouldn't that create the same problem again? The socket will eventually push
+> > > back any new data that it can take because its FIFO is full. At that point,
+> > > the "other side" could still have a queue full of requests on exactly that
+> > > socket that need to get processed. We can now not pull those packets off the
+> > > virtio queue, because we can not enqueue responses.
+> > 
+> > Either I don't understand what you wrote or I did not explain myself
+> > clearly.
+> 
+> I didn't fully understand either, but with this last message of yours it's
+> clear to me and I like the idea!
+> 
+> > 
+> > In this idea there needs to be a single response enqueued
+> > like this in the socket, because, no more than one ever needs to
+> > be outstanding per socket.
+> > 
+> > For example, until VIRTIO_VSOCK_OP_REQUEST
+> > is responded to, the socket is not active and does not need to
+> > send anything.
+> 
+> One case I see is responding when we don't have the socket listening (e.g.
+> the port is not open), so if before the user had a message that the port was
+> not open, now instead connect() will timeout. So we could respond if we have
+> space in the virtqueue, otherwise discard it without losing any important
+> information or guarantee of a lossless channel.
+> 
+> So in summary:
+> 
+> - if we have an associated socket, then always respond (possibly
+>   allocating memory in the intermediate queue if the virtqueue is full
+>   as we already do). We need to figure out if a flood of
+>   VIRTIO_VSOCK_OP_CREDIT_REQUEST would cause problems, but we can always
+>   decide not to respond if we have sent this identical information
+>   before.
 
-Commit-ID:     3e816361e94a0e79b1aabf44abec552e9698b196
-Gitweb:        https://git.kernel.org/tip/3e816361e94a0e79b1aabf44abec552e9698b196
-Author:        Andrii Nakryiko <andrii@kernel.org>
-AuthorDate:    Wed, 02 Apr 2025 11:09:25 -07:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Fri, 04 Apr 2025 10:30:19 +02:00
+If taking this path, need to consider not responding is within spec or not.
+But again, credit update needed is just a single flag we need to set
+on a socket. If we have anything we need to send, it can also update
+the credits.
 
-sched/tracepoints: Move and extend the sched_process_exit() tracepoint
 
-It is useful to be able to access current->mm at task exit to, say,
-record a bunch of VMA information right before the task exits (e.g., for
-stack symbolization reasons when dealing with short-lived processes that
-exit in the middle of profiling session). Currently,
-trace_sched_process_exit() is triggered after exit_mm() which resets
-current->mm to NULL making this tracepoint unsuitable for inspecting
-and recording task's mm_struct-related data when tracing process
-lifetimes.
+> - if there is no associated socket, we only respond if virtqueue has
+>   space.
+> 
+> I like it and it seems feasible without changing anything in the
+> specification.
+> 
+> Did I get it right?
+> 
+> Thanks,
+> Stefano
 
-There is a particularly suitable place, though, right after
-taskstats_exit() is called, but before we do exit_mm() and other
-exit_*() resource teardowns. taskstats performs a similar kind of
-accounting that some applications do with BPF, and so co-locating them
-seems like a good fit. So that's where trace_sched_process_exit() is
-moved with this patch.
+That was the idea, yes.
 
-Also, existing trace_sched_process_exit() tracepoint is notoriously
-missing `group_dead` flag that is certainly useful in practice and some
-of our production applications have to work around this. So plumb
-`group_dead` through while at it, to have a richer and more complete
-tracepoint.
+-- 
+MST
 
-Note that we can't use sched_process_template anymore, and so we use
-TRACE_EVENT()-based tracepoint definition. But all the field names and
-order, as well as assign and output logic remain intact. We just add one
-extra field at the end in backwards-compatible way.
-
-Document the dependency to sched_process_template anyway.
-
-Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-Acked-by: Oleg Nesterov <oleg@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: https://lore.kernel.org/r/20250402180925.90914-1-andrii@kernel.org
----
- include/trace/events/sched.h | 34 ++++++++++++++++++++++++++++++----
- kernel/exit.c                |  2 +-
- 2 files changed, 31 insertions(+), 5 deletions(-)
-
-diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
-index 8994e97..3bec9fb 100644
---- a/include/trace/events/sched.h
-+++ b/include/trace/events/sched.h
-@@ -326,11 +326,37 @@ DEFINE_EVENT(sched_process_template, sched_process_free,
- 	     TP_ARGS(p));
- 
- /*
-- * Tracepoint for a task exiting:
-+ * Tracepoint for a task exiting.
-+ * Note, it's a superset of sched_process_template and should be kept
-+ * compatible as much as possible. sched_process_exits has an extra
-+ * `group_dead` argument, so sched_process_template can't be used,
-+ * unfortunately, just like sched_migrate_task above.
-  */
--DEFINE_EVENT(sched_process_template, sched_process_exit,
--	     TP_PROTO(struct task_struct *p),
--	     TP_ARGS(p));
-+TRACE_EVENT(sched_process_exit,
-+
-+	TP_PROTO(struct task_struct *p, bool group_dead),
-+
-+	TP_ARGS(p, group_dead),
-+
-+	TP_STRUCT__entry(
-+		__array(	char,	comm,	TASK_COMM_LEN	)
-+		__field(	pid_t,	pid			)
-+		__field(	int,	prio			)
-+		__field(	bool,	group_dead		)
-+	),
-+
-+	TP_fast_assign(
-+		memcpy(__entry->comm, p->comm, TASK_COMM_LEN);
-+		__entry->pid		= p->pid;
-+		__entry->prio		= p->prio; /* XXX SCHED_DEADLINE */
-+		__entry->group_dead	= group_dead;
-+	),
-+
-+	TP_printk("comm=%s pid=%d prio=%d group_dead=%s",
-+		  __entry->comm, __entry->pid, __entry->prio,
-+		  __entry->group_dead ? "true" : "false"
-+	)
-+);
- 
- /*
-  * Tracepoint for waiting on task to unschedule:
-diff --git a/kernel/exit.c b/kernel/exit.c
-index 1b51dc0..f1db86d 100644
---- a/kernel/exit.c
-+++ b/kernel/exit.c
-@@ -936,12 +936,12 @@ void __noreturn do_exit(long code)
- 
- 	tsk->exit_code = code;
- 	taskstats_exit(tsk, group_dead);
-+	trace_sched_process_exit(tsk, group_dead);
- 
- 	exit_mm();
- 
- 	if (group_dead)
- 		acct_process();
--	trace_sched_process_exit(tsk);
- 
- 	exit_sem(tsk);
- 	exit_shm(tsk);
