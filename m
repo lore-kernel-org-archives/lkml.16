@@ -1,114 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45A022E62B6;
-	Fri,  4 Apr 2025 12:48:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 891FC2E62B6;
+	Fri,  4 Apr 2025 12:49:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743770929; cv=none; b=WLoLNZ80ZhKQHldOaNVXiwnmeplM9gHbU8uxcQ2I0fRuFOScXXV9bPVKZiTRliKI/yjKjYkOFyvH4wtPHotL3jf95iZhv1pBezRnfFsGoHmDq+YgOV9ucI+GhInVmatJlJnYewvisiwMHJafuHPbOIyrppPeythC8imFI8OXs5c=
+	t=1743770949; cv=none; b=jpDgVUXsD6QzzOtrmdcXDPmvXq2GEYMU64Un73AF7u/vgReRw9PxuuMpg9UyXPhhmgyemrh3BhShqvtyOioRbeVyp2o7g8JSaqlSJs3pN//IqOzZAB29vY+25dA3UX1lq+TQVg9PkV/rEbrWf1xSXsfnAJW4ALBrAUhjcHtsXSE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743770929; c=relaxed/simple;
-	bh=zYJjcSRdAvrDmm7bH7Y5u4MmLCvdJZ/qXoWdwCyQawU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=snGF6tk9HnCuyczbG03F9ZSgcmhzOcVai9tdtiLG3AsfgLTuS0VgzEH+Zc4I0IWeLAKMU4+Y+af3g+uwPOs0g2Eah+mGbAttTowq68Pkur4kfxlOjoiovmTwJ4e8y3PcKA7UpcsTwsE19q2HVw+781NjaYHsIA7gdCcQGRkbvsE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l3JeW1le; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l3JeW1le"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2627C4CEDD;
-	Fri,  4 Apr 2025 12:48:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743770928;
-	bh=zYJjcSRdAvrDmm7bH7Y5u4MmLCvdJZ/qXoWdwCyQawU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=l3JeW1le3hfAiCPyZurtbNdQh3IxzzhvEMx8UTdbWwyLbWGem2GbhPgnQzRSPpLrN
-	 tHKPUKMjeAJT5b7Qk1LWke/SZMmr5ETBRo4mMkQTpBdiu9U4PwX/tdHdW3k1oQZnTw
-	 8NskChcmoDDu/FSs5kE6Bc3+nbWYo1BMmXZ2tkayEgbxXMQw4kXTjEjNDxczZGyG6L
-	 70zCWgJk4JnMqXAusTNziFcU+qoix1txb79CtY80JwsVlEae+PVoHaWBoOg+3hrNfM
-	 GDJ97h34BkMJy6h5v76C0o8L71t/TqejUv7xDC+qkJXA9hhX6ezzOqAxKRVd0KBYGN
-	 7XW7Odo9wN0pg==
-Message-ID: <e63c4f30-8311-4e55-af97-d7f9ae6858e3@kernel.org>
-Date: Fri, 4 Apr 2025 14:48:44 +0200
+	s=arc-20240116; t=1743770949; c=relaxed/simple;
+	bh=CEYtds7W6FcLLrM6Q6AVfowOXuAzfO5skyhiJ0Y81MA=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
+	 References:In-Reply-To; b=H93CJfG7+F1IxsNXrgx+Jm47SktureHJSVHocCv83bsKK/7wNvHY+tDrYAoYWImDfJNYOjxjeQ0XKexj0PbCjxRwySsIYuOk0q/oHU5NF5fjobmnizV4wRm95P8dRqeOrKTq1KvhCEkumQ7XCWe/QmBcFbmXSyEOKoGWvv6YQpM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev; spf=pass smtp.mailfrom=buenzli.dev; arc=none smtp.client-ip=80.241.56.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=buenzli.dev
+Received: from smtp102.mailbox.org (unknown [10.196.197.102])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4ZTdhT5NWYz9tkP;
+	Fri,  4 Apr 2025 14:48:57 +0200 (CEST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] dt-bindings: arm: qcom: Document HP EliteBook Ultra
- G1q
-To: Juerg Haefliger <juerg.haefliger@canonical.com>, andersson@kernel.org,
- konradybcio@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-References: <20250404090108.3333211-1-juerg.haefliger@canonical.com>
- <20250404090108.3333211-4-juerg.haefliger@canonical.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250404090108.3333211-4-juerg.haefliger@canonical.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Date: Fri, 04 Apr 2025 14:48:53 +0200
+Message-Id: <D8XV7FTGG0EC.K6P4J4IMUJAO@buenzli.dev>
+To: "Rob Herring" <robh@kernel.org>
+Cc: "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>, "Daniel Scally"
+ <djrscally@gmail.com>, "Heikki Krogerus" <heikki.krogerus@linux.intel.com>,
+ "Sakari Ailus" <sakari.ailus@linux.intel.com>, "Dirk Behme"
+ <dirk.behme@de.bosch.com>, "Greg Kroah-Hartman"
+ <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ "Danilo Krummrich" <dakr@kernel.org>, "Saravana Kannan"
+ <saravanak@google.com>, "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
+ <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
+ <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, "Benno Lossin" <benno.lossin@proton.me>,
+ "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl"
+ <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
+ <linux-kernel@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
+ <devicetree@vger.kernel.org>, <rust-for-linux@vger.kernel.org>
+Subject: Re: [PATCH 01/10] rust: Move property_present to property.rs
+From: "Remo Senekowitsch" <remo@buenzli.dev>
+References: <20250326171411.590681-1-remo@buenzli.dev>
+ <20250326171411.590681-2-remo@buenzli.dev>
+ <20250326205106.GB2787672-robh@kernel.org>
+In-Reply-To: <20250326205106.GB2787672-robh@kernel.org>
 
-On 04/04/2025 11:01, Juerg Haefliger wrote:
-> Add a compatible for the HP EliteBook Ultra G1q 14 inch Notebook AI PC.
-> The laptop is based on the Snapdragon X Elite (x1e80100) SoC.
-> 
-> PDF link: http://www8.hp.com/h20195/v2/GetDocument.aspx?docname=c08996392
-> 
-> Signed-off-by: Juerg Haefliger <juerg.haefliger@canonical.com>
+On Wed Mar 26, 2025 at 9:51 PM CET, Rob Herring wrote:
+> On Wed, Mar 26, 2025 at 06:13:40PM +0100, Remo Senekowitsch wrote:
+>>
+>> +impl Device {
+>> +    /// Obtain the fwnode corresponding to the device.
+>> +    fn fwnode(&self) -> &FwNode {
+>> +        // SAFETY: `self` is valid.
+>> +        let fwnode_handle =3D unsafe { bindings::dev_fwnode(self.as_raw=
+()) };
+>> +        if fwnode_handle.is_null() {
+>> +            panic!("fwnode_handle cannot be null");
+>
+> It's usually not a good idea to panic the kernel especially with=20
+> something a driver calls as that's probably recoverable.
+>
+> Users/drivers testing fwnode_handle/of_node for NULL is pretty common.=20
+> Though often that's a legacy code path, so maybe not allowing NULL is=20
+> fine for now.
 
+Just to be clear on this, should I keep this as is, or return a result?
+In the latter case, all the duplicated methods on `Device` that just
+call `self.fwnode().same_method()` would have a result in their function
+signatur as well. That includes `property_present`, `read_property`
+and `children`.
 
-If there is going to be new version, please re-order so this goes before
-the user of the binding.
+>> +        }
+>> +        // SAFETY: `fwnode_handle` is valid. Its lifetime is tied to `&=
+self`. We
+>> +        // return a reference instead of an `ARef<FwNode>` because `dev=
+_fwnode()`
+>> +        // doesn't increment the refcount.
+>> +        unsafe { &*fwnode_handle.cast() }
+>> +    }
+>> +
+>> +    /// Checks if property is present or not.
+>> +    pub fn property_present(&self, name: &CStr) -> bool {
+>> +        self.fwnode().property_present(name)
+>> +    }
+>> +}
+>
+> The C developer in me wants to put this after the FwNode stuff since=20
+> this uses it.
 
-Anyway:
+Is that just a comment or a call to action? :-)
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
-
-Best regards,
-Krzysztof
+Remo
