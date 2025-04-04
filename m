@@ -1,109 +1,226 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E90C2E62AA
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 02:26:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5E154A32
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 02:31:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743733593; cv=none; b=ZrNC166l2XpPeyhrj3aope7TzUcxWOfTl2KADHd9Pq7tgmCjmbYW1sVUFX7IELtth80soonF6nirO0sV2mquxWxJbIh6eJwuzdEJdcKG9wyceCzwTBBOzjHI6l2e/cU17Kjgl8HaZ9NXNBw0cRdcG8Qk/nuBb1vHVYUniTVNhQI=
+	t=1743733899; cv=none; b=uYb7xhSUBL+rSxDGh6Ve4ke/PY5e4Xh/Fx7bAORIUjW302gUd6blhrQOMZi2WZtRl8+Xu/8d1eEgiZZFRx1089C2d8MiexET50Uboyd7qwTEQZgrtqWczUQEEyHleoijz2Yc2VlQcJ+SJovly0tAqUKyDHTy73RpIyhlT0xwMCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743733593; c=relaxed/simple;
-	bh=IZa+Ryfe0cRInrTdslRNVibjEZlrl11gOjTc63NDrCs=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=gRCniAe8ZtcHTTCmGGsMAl+TfaHsB12Wvz4lBQYgPKyZzzgywz6gZjW6rbBP1jZycPINpalQdt2fpdfklP/QmtiF4RL/1c/zCCdBfBSp7lV0gEWLyeEaLiXgegSUl52Vgzhh4buSov1c4criDG26nhVbDvodVGewMdkPb+SPZTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hFJq0DDq; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1743733899; c=relaxed/simple;
+	bh=yHnZZpVl1yzU+3RWun8o5eoI7/TawRiNwZfiH6mye8k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sPhOLIEOE1GrmnOSiOaZDh3zOBYI8n2mluWogqOJQmlUGFhXeqtc5hXuQu+VcG3nXRledrd4Q8iIZt3HVp5GmV8qC0tJ7K7pKJb5amp4MVYhjXSeZ+d69Q5klIOhieFBzY7jPYiSSYfE5OptnMoVXQNP2kNR9H5H1NKdZRlOgSI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=VD2B2AyH; arc=none smtp.client-ip=209.85.161.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hFJq0DDq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743733590; x=1775269590;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=IZa+Ryfe0cRInrTdslRNVibjEZlrl11gOjTc63NDrCs=;
-  b=hFJq0DDqVnwIa9UVH8lG2XjZhcM00YtJi75E9lmEeKYRvACt7VktUs+/
-   Re1n/MtJeXqbHxfTP9VnjiIz+2ReLSfPppKOF7zS9fIWGoSCvtHrp/R/2
-   QSsOhw8PBtC5vRYTxPue2PHHs2sMiBvRbQkNIpEVkB+MizJ4Yid2xpDIM
-   9quETeyFNQ0qp0SpUfOVVVKEjyrMJlGZq3JZTddD0NJ6IisStrh385Tk5
-   P+BjMOss7bwUGwaI2ckB/TCTvFCaxsdZFZyzvfzgZgJeJyMtpFXGBVg3Z
-   dVcXcGJhbBVVPdZuFHy70zbIfJHk0u4GExiNkMz8l9TtomnW0Re7xSlks
-   g==;
-X-CSE-ConnectionGUID: TlVDd869SQyQkDdKXezZUg==
-X-CSE-MsgGUID: CrXDLE57Rd2e71dQ5U+i4w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11393"; a="45262955"
-X-IronPort-AV: E=Sophos;i="6.15,187,1739865600"; 
-   d="scan'208";a="45262955"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 19:26:29 -0700
-X-CSE-ConnectionGUID: pK7NvGhuTqGfA+dkFJzkfw==
-X-CSE-MsgGUID: LfqZrTYUT2Wnml6eFHkYvA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,187,1739865600"; 
-   d="scan'208";a="127713404"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by orviesa007.jf.intel.com with ESMTP; 03 Apr 2025 19:26:27 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u0WlF-0000wV-1P;
-	Fri, 04 Apr 2025 02:26:25 +0000
-Date: Fri, 4 Apr 2025 10:25:31 +0800
-From: kernel test robot <lkp@intel.com>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Li Ming <ming.li@zohomail.com>
-Subject: drivers/cxl/core/features.c:441 cxlctl_validate_hw_command() warn:
- always true condition '(scope >= 0) => (0-u32max >= 0)'
-Message-ID: <202504041033.2HBboAZR-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="VD2B2AyH"
+Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-603ff8e90acso412942eaf.1
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 19:31:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1743733897; x=1744338697; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=q2whIQD8KdpXADYPhBRKVcLNwmLnu/yZ5sYtE7xk5RY=;
+        b=VD2B2AyH5K3prI08Y98N6edl03rwk7kEGj0okk6eRw1SE3bRkC43z5NzbsUR6gIaHN
+         KcYorkJsl2A2u6PpvaiI7III3456VgCdgz90ZDobgR7zTRmFYHz6JdyMhZpxhhdKJQnz
+         ZFcoq+yF26yKf3t80KKay3OfKfadK2a+V+QEjs2NdDY/0xeG1X3SNG+nw7n/l1o0OAFU
+         HqJv6HQHDpvbkRJF0SQZRa3eiIPCtj4Pf9NuAUntzc2++SzQbQQRbiGPfII7rS8y7OtR
+         d3VuX+rIzxtcAv9SqkcxZLqbffc6uxgpjWkpY9yQ5piUcigEq+KYfB308aznHvj7Ufg0
+         hl7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743733897; x=1744338697;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=q2whIQD8KdpXADYPhBRKVcLNwmLnu/yZ5sYtE7xk5RY=;
+        b=NnmvsK/brYWGxs9nvrzB+hqQ050jh/dT3y+CzUHNgLxy9bYyVRntUGo5Lt5NofzJ+b
+         M5xkR9Wz2XiuPECT/oIY6khAUt4jR/eX7pq5/61osNXILRl70WYnqjrTxQBgFGJRhTew
+         VddJK7ATU+5ScRq9PjZwZF9TiF+xAWE/Ebxb1YLwm6vMtgP36Ark0mY1BH3kxXAz8xX5
+         gxPIMGBs3AZ6EDcW0OBQANUcK3GfZLQJjrI2sQ3FaNfkDaFZZ3pOVxfnf/uMvZ306NUT
+         a1bjDwpJDAFU8+puOe0I+AShGvQCVp7OJi6gDuZFESS1n7zH0y8IoNZ7xphiTxSF59Oh
+         NMPw==
+X-Forwarded-Encrypted: i=1; AJvYcCU33Leafyxmgv3gM9roI3PlR4zUGoZkfp8Bn0RZEZvaRFlFR/fjA7K7EVya+YBflE/Pz7y/9SnvheoNG2Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxjZ4S6itjLwq3QiQefWT8OWy12CQsA5Zy93ndxzWrkTVNbAy4b
+	tUWF8r1lmeS6BhZVlWxtO0B3q9Zz65gGIIHg0iSiyzWPRG6icNaUVNFvydEiZOSawxjS5KKe7RL
+	vfGiXM32RIvjPKctObzvCVIyINT3OWGft8v6peA==
+X-Gm-Gg: ASbGncu/ioEMD9cUpYFh29eOFRGT0Sb5XUb7e40FiRWZTZCKOJlsPYB7qZF1FHlEiJA
+	uEFke0sMsrv64bRKZB0mkjIzUed/52RWE4IV1T28Ueln5EsAEUZQwVifCBvRWq+n/7dGUlZAsVg
+	gr511rC+M4vJQxqkF0OSJDgY832eYE
+X-Google-Smtp-Source: AGHT+IH9gl4q75ltH2ZFe+KffjOAddtz44brumjLnokrgaEk7wAc7CLc6OwNvkK4AiXGIFpHGB8pVkw0ICZfkYYHRh0=
+X-Received: by 2002:a05:6820:2220:b0:603:f973:1b1 with SMTP id
+ 006d021491bc7-604154d63fdmr798732eaf.0.1743733896559; Thu, 03 Apr 2025
+ 19:31:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20250403090336.16643-1-cuiyunhui@bytedance.com>
+ <Z-5yr2mFaDt8kxC-@smile.fi.intel.com> <Z-51629pjyiZUIVy@smile.fi.intel.com>
+In-Reply-To: <Z-51629pjyiZUIVy@smile.fi.intel.com>
+From: yunhui cui <cuiyunhui@bytedance.com>
+Date: Fri, 4 Apr 2025 10:31:25 +0800
+X-Gm-Features: AQ5f1JploVvIX48e4bc9-Zvy4Mr-665fzaSUUegXQUAC-gU9ajtwKPkYszaiBXk
+Message-ID: <CAEEQ3w=xVNuSN-4tHx6ir-i+huN8m1JXgJz672=WHAVBqcP+TA@mail.gmail.com>
+Subject: Re: [External] Re: [PATCH] serial: 8250: fix panic due to PSLVERR
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: gregkh@linuxfoundation.org, jirislaby@kernel.org, 
+	john.ogness@linutronix.de, pmladek@suse.com, arnd@arndb.de, 
+	namcao@linutronix.de, benjamin.larsson@genexis.eu, schnelle@linux.ibm.com, 
+	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   06a22366d6a11ca8ed03c738171822ac9b714cfd
-commit: 4d1c09cef2c244bd19467c016a3e56ba28ecc59d cxl: Add support for fwctl RPC command to enable CXL feature commands
-date:   2 weeks ago
-config: loongarch-randconfig-r071-20250404 (https://download.01.org/0day-ci/archive/20250404/202504041033.2HBboAZR-lkp@intel.com/config)
-compiler: loongarch64-linux-gcc (GCC) 14.2.0
+Hi Andy,
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504041033.2HBboAZR-lkp@intel.com/
+On Thu, Apr 3, 2025 at 7:50=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Thu, Apr 03, 2025 at 02:36:16PM +0300, Andy Shevchenko wrote:
+> > On Thu, Apr 03, 2025 at 05:03:36PM +0800, Yunhui Cui wrote:
+>
+> A couple of more questions here:
+> 1) what is the DW IP version and where did you get the PSLVERR_RESP_EN
+> parameter from?
+> 2) what is the setting of the UART_16550_COMPATIBLE parameter?
 
-smatch warnings:
-drivers/cxl/core/features.c:441 cxlctl_validate_hw_command() warn: always true condition '(scope >= 0) => (0-u32max >= 0)'
+1): Refer to: https://www.synopsys.com/dw/ipdir.php?c=3DDW_apb_uart
 
-vim +441 drivers/cxl/core/features.c
+2): data->uart_16550_compatible =3D=3D 0
 
-   429	
-   430	static bool cxlctl_validate_hw_command(struct cxl_features_state *cxlfs,
-   431					       const struct fwctl_rpc_cxl *rpc_in,
-   432					       enum fwctl_rpc_scope scope,
-   433					       u16 opcode)
-   434	{
-   435		struct cxl_mailbox *cxl_mbox = &cxlfs->cxlds->cxl_mbox;
-   436	
-   437		switch (opcode) {
-   438		case CXL_MBOX_OP_GET_SUPPORTED_FEATURES:
-   439			if (cxl_mbox->feat_cap < CXL_FEATURES_RO)
-   440				return false;
- > 441			if (scope >= FWCTL_RPC_CONFIGURATION)
-   442				return true;
-   443			return false;
-   444		default:
-   445			return false;
-   446		}
-   447	}
-   448	
+>
+> > > When the PSLVERR_RESP_EN parameter is set to 1, the device generates
+> > > an error response if an attempt is made to read an empty RBR (Receive
+> > > Buffer Register) while the FIFO is enabled.
+> > >
+> > > In serial8250_do_startup, calling serial_port_out(port, UART_LCR,
+> >
+> > serial8250_do_startup()
+> >
+> > > UART_LCR_WLEN8) triggers dw8250_check_lcr(), which invokes
+> > > dw8250_force_idle() and serial8250_clear_and_reinit_fifos(). The latt=
+er
+> > > function enables the FIFO via serial_out(p, UART_FCR, p->fcr).
+> > > Execution proceeds to the dont_test_tx_en label:
+> > > ...
+> > > serial_port_in(port, UART_RX);
+> > > This satisfies the PSLVERR trigger condition.
+> > >
+> > > Because another CPU(e.g., using printk) is accessing the UART (UART
+> >
+> > printk()
+> >
+> > > is busy), the current CPU fails the check (value & ~UART_LCR_SPAR) =
+=3D=3D
+> > > (lcr & ~UART_LCR_SPAR), causing it to enter dw8250_force_idle().
+> > >
+> > > To resolve this issue, relevant serial_port_out operations should be
+> >
+> > serial_port_out()
+> >
+> > > placed in a critical section, and UART_RX data should only be read
+> > > when the UART_LSR DR bit is set.
+> >
+> > The last one is made in the common code, are you sure that all supporte=
+d UARTs
+> > will be okay with such a change?
+> >
+> > > Panic message:
+> >
+> > Please, read this
+> > https://www.kernel.org/doc/html/latest/process/submitting-patches.html#=
+backtraces-in-commit-messages
+> > and act accordingly.
+> >
+> > > [    0.442336] Oops - unknown exception [#1]
+> > > [    0.442337] Modules linked in:
+> > > [    0.442339] CPU: 3 UID: 0 PID: 1 Comm: swapper/0 Tainted: G       =
+ W          6.12.13-00102-gf1f43e345877 #1
+> >
+> > Is it still reproducible on v6.14 (and soon v6.15-rc1)?
+> >
+> > > [    0.442342] Tainted: [W]=3DWARN
+> > > [    0.442343] epc : dw8250_serial_in32+0x1e/0x4a
+> > > [    0.442351]  ra : serial8250_do_startup+0x2c8/0x88e
+> > > [    0.442354] epc : ffffffff8064efca ra : ffffffff8064af28 sp : ffff=
+8f8000103990
+> > > [    0.442355]  gp : ffffffff815bad28 tp : ffffaf807e36d400 t0 : ffff=
+af80804cf080
+> > > [    0.442356]  t1 : 0000000000000001 t2 : 0000000000000000 s0 : ffff=
+8f80001039a0
+> > > [    0.442358]  s1 : ffffffff81626fc0 a0 : ffffffff81626fc0 a1 : 0000=
+000000000000
+> > > [    0.442359]  a2 : 0000000000000000 a3 : 0000000000000000 a4 : ffff=
+ffff81626fc0
+> > > [    0.442360]  a5 : ffff8f800012d900 a6 : 000000000000000f a7 : 0000=
+00000fc648c1
+> > > [    0.442361]  s2 : 0000000000000000 s3 : 0000000200000022 s4 : 0000=
+000000000000
+> > > [    0.442362]  s5 : ffffffff81626fc0 s6 : ffffaf8085227000 s7 : ffff=
+ffff81073c58
+> > > [    0.442363]  s8 : 0000000000500000 s9 : ffffaf80851a5a60 s10: ffff=
+af80851a5a60
+> > > [    0.442365]  s11: ffffffff80e85980 t3 : ffffaf807e324600 t4 : 0000=
+000000000002
+> > > [    0.442365]  t5 : 0000000000000003 t6 : ffffaf80804cf072
+> > > [    0.442366] status: 0000000200000120 badaddr: 0000000000000000 cau=
+se: 0000000000000013
+> > > [    0.442368] [<ffffffff8064efca>] dw8250_serial_in32+0x1e/0x4a
+> > > [    0.442371] [<ffffffff8064af28>] serial8250_do_startup+0x2c8/0x88e
+> > > [    0.442373] [<ffffffff8064b514>] serial8250_startup+0x26/0x2e
+> > > [    0.442375] [<ffffffff806428a2>] uart_startup+0x13a/0x308
+> > > [    0.442377] [<ffffffff80642aa4>] uart_port_activate+0x34/0x50
+> > > [    0.442378] [<ffffffff8062ab6a>] tty_port_open+0xb4/0x110
+> > > [    0.442383] [<ffffffff8063f548>] uart_open+0x22/0x36
+> > > [    0.442389] [<ffffffff806234b4>] tty_open+0x1be/0x5e6
+> > > [    0.442396] [<ffffffff802f2d52>] chrdev_open+0x10a/0x2a8
+> > > [    0.442400] [<ffffffff802e7ab6>] do_dentry_open+0xf6/0x34e
+> > > [    0.442405] [<ffffffff802e9456>] vfs_open+0x2a/0xb4
+> > > [    0.442408] [<ffffffff80300124>] path_openat+0x676/0xf36
+> > > [    0.442410] [<ffffffff80300a58>] do_filp_open+0x74/0xfa
+> > > [    0.442412] [<ffffffff802e9900>] file_open_name+0x84/0x144
+> > > [    0.442414] [<ffffffff802e99f6>] filp_open+0x36/0x54
+> > > [    0.442416] [<ffffffff80a01232>] console_on_rootfs+0x26/0x70
+> > > [    0.442420] [<ffffffff80a0154e>] kernel_init_freeable+0x2d2/0x30e
+> > > [    0.442422] [<ffffffff8099c730>] kernel_init+0x2a/0x15e
+> > > [    0.442427] [<ffffffff809a7666>] ret_from_fork+0xe/0x1c
+> > > [    0.442430] Code: e022 e406 0800 4683 0c15 691c 872a 96bb 00d5 97b=
+6 (439c) 851b
+> > > [    0.442432] ---[ end trace 0000000000000000 ]---
+> > > [    0.442434] Kernel panic - not syncing: Fatal exception in interru=
+pt
+> > > [    0.442435] SMP: stopping secondary CPUs
+> > > [    0.451111] ---[ end Kernel panic - not syncing: Fatal exception i=
+n interrupt ]---
+> >
+> > Fixes tag?
+> > Cc to stable@?
+> >
+> > ...
+> >
+> > >     /*
+> > >      * Now, initialize the UART
+> > >      */
+> >
+> > + Blank line.
+> >
+> > > +   uart_port_lock_irqsave(port, &flags);
+> > >     serial_port_out(port, UART_LCR, UART_LCR_WLEN8);
+> > >
+> > > -   uart_port_lock_irqsave(port, &flags);
+> > >     if (up->port.flags & UPF_FOURPORT) {
+> > >             if (!up->port.irq)
+> > >                     up->port.mctrl |=3D TIOCM_OUT1;
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
+>
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thanks,
+Yunhui
