@@ -1,96 +1,120 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E524146588;
-	Fri,  4 Apr 2025 11:35:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C42A61DB34C
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 11:36:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743766537; cv=none; b=q8fwFb7CScM7OaVvInkcgUD+fzPk2pjMvNGQZibGaQa6SW/ocn5X/WfBe/CKwPb9oPF4gJutxq2sp0FRrQZsI/qLcER0KmXyWkodtnGSsHkE75HZhzBxq3bqwUBFGmGzI21xBBcYg8HxKr8VP8eUi8WCBDaAiPlvIpNZ9aCN14s=
+	t=1743766564; cv=none; b=retUm3xxsZzR890K9MPDmKj3Goa2GAyO5WDV7QhLXLraxP03Lsxc3kgjMkic/cbdJsf0PxqXsPRe76/qXgfY0Hv5Qu3hWHEZR8EU6RfdVQYnyzqwf7R6nSzPdsCdbGYfDkf6NQM+NUC7yxURlrm61+6KX+1wD22PXGkSF7FWq4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743766537; c=relaxed/simple;
-	bh=C2EbOJXZ4SFMszaSc0+T54wWbvFcCkJT7AbChKE5SOA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hdewS3FvQswMO/6wsGQjl9m8XYGbHbfbdsG0f2Qgg+bZrMwI0bL8ekCLBKu92M0uMa2VRXSvtSKtPQcQzX9e5ATHQpXS8xHHsPDcrJJa52ZbX7y+G1nAkaA5ibs2uE0mNH0wbXLPTrIq7v3cYCRsO06vlikhNzfOqt1j7XkxSSE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Y3AOOlEt; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1743766564; c=relaxed/simple;
+	bh=VESalJP7ZL+nitnbDAWdGop/8vGDiwf3xv7DdkO+lzo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=D2uEo2eqI3L1fhAAvgjp8lQDWQGmUSThF2dqXG8vhg1dec+JU+B9R17sKt9BqANlbTQjCafzJtU+rmlJMVa0j/7iR4cXRb3tby9rpZjfaqSgeMD3tCJvRDys7ISuyU2oZzdEVM09gQpPU3NggEEL+Qcl+GBd8OnHu9LbMxKQm9o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FuFVzkfU; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Y3AOOlEt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1743766533;
-	bh=C2EbOJXZ4SFMszaSc0+T54wWbvFcCkJT7AbChKE5SOA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Y3AOOlEtIhRpUcueVVGkPYW8bCRuNkUIytsushereC01TWMZH3/KeWeF/5RboaIAl
-	 78Klj2FgIPCFqwXtKWAIYom/8V3TetKbYBcKXAAjZmznbErK9Uy3Ej6xdDKrah2B/p
-	 sypEbyv/R5etYfGSVRah/b4dC1U5lEgPV/ktK5nL4S6SnHvfKwtEyH4AGpChDIJF4/
-	 IKpewUZwYX+a3pDV7RGc4L35inqoorMIUHzbP1wqQEJmYInIjjFGyc2UhPOUJ7aMHy
-	 Gu9migaijF/TNDu3DZCbDnQTP4lcm2KM93cy370gb/LJUB8t9ax8Po5mmy+5YX7DcU
-	 pI1ahFUleRAVQ==
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 17B4917E0865;
-	Fri,  4 Apr 2025 13:35:31 +0200 (CEST)
-Message-ID: <1b590b23-d18f-43db-ab39-cee8433fd9f6@collabora.com>
-Date: Fri, 4 Apr 2025 13:35:30 +0200
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FuFVzkfU"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2263428c8baso131465ad.1
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 04:36:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1743766561; x=1744371361; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1eyajWB+7jjTPaaR8yZhZbdWh1p1RlxmUfHflZtAUUo=;
+        b=FuFVzkfU6eCjMIEy36mpxT8o9gZKNIbRrU6B9ocGx6NWQ2kyiSkK6jvwe4Sighe3Pd
+         6qRPtxhi4eMqttxm6KN4DpHKIVAfulME0zOHr8QpabRl+YAIzqBWFatOyXqoopuaBdZy
+         3riJpo0eCscZzooxmGV+gUshQYnSTaEb6RWTdQ6D7rqpozNIlSAaIR8E6GIRvmp5czD4
+         8grbupVpqsa8fInPzQwJUuN1BkeP5znju0zX82YyGFTDo2SVcn6N+T4KVav81ggMJrTz
+         COHiLea5vl1ai7D3HkSvXFus/nMW6FxbXc/L3ptgc/0XwCOFn3S6gt0M5ExVBBBiE7cR
+         BhXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743766561; x=1744371361;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1eyajWB+7jjTPaaR8yZhZbdWh1p1RlxmUfHflZtAUUo=;
+        b=mWDZLA7e9RZZHzc+SBHrzhg71gJE9NBtGyh4AX+FcX9XDR/DrDvh0Vc4n6QT0koeSY
+         uxixPCIGCX/FKrLKXhVJo0ACOcb/qBSDTqb4HnhxzMb3Ip8lvxlwFtGwbeefKPRjdld0
+         8wl1G6CMzqyZsu7XztQHfQYm6VVyG3oU135PENBVqQEv0Nvuw2zWBNvkGW6YIZO7nPmF
+         0O7fS5hgUgyJyhrl4CEElhMbyyQa4imVk/8bT2dcu++LsvfNIrHIFZjImcQPxe89iPhF
+         Nw5J08Swki5QzRPZzIGnPUWTFLn4tGuDBd8hmhYTy/lKZSB7YUC9KJWxXsxk0yMWqTkE
+         1AOg==
+X-Forwarded-Encrypted: i=1; AJvYcCUxs1r1vqsSG4SkTdK48TwDtTc/4SdMy2RBAJ28yT9Fcq5qItj35RysGbC7/fgrg1AfeeY0TfEIVdhKRgc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YytT2sSQLibgIi/2YXuZT9nWWgtHdBg9OJc4eR8kiFW3XfTNuII
+	1vdZ7KTSLPNXMoy/lgFOotZ9AwJ//S17KalvYl4C84R0liL16vRYwtLxV8rXS8N/LYvcQtEQemy
+	NPZM9MWru84k0wSQW9XBEZqm0IJtBfpQEW6L5
+X-Gm-Gg: ASbGncuBe0fQfPFm1JANRsjv7teBtIzawjZ5PexI10Ay/skqSR9HG2L4IDmvMiP6Gjf
+	M93icKUP8m2AtAUvDD0FebfPn0dxU0pex02QqknmakkFxDxCTFg1uU7AkwHSKDVegcEQPKSVmTp
+	YcHKhMBfgIzM8SQYozj6LY3oGxQok=
+X-Google-Smtp-Source: AGHT+IED3d7Nee0RkFeQ/TfMnvqofVxnmkzP6wrLXFrYkWR2UjtCec6EbIVzIf0i4xh5ml+5Sm4+57ZZZARaNgNjLIY=
+X-Received: by 2002:a17:903:1cb:b0:215:8723:42d1 with SMTP id
+ d9443c01a7336-22a89eabbecmr2670415ad.10.1743766560729; Fri, 04 Apr 2025
+ 04:36:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 18/19] dt-bindings: arm/cpus: Add power-domains
- constraints
-To: "Rob Herring (Arm)" <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
- Jernej Skrabec <jernej.skrabec@gmail.com>,
- Samuel Holland <samuel@sholland.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- Vincenzo Frascino <vincenzo.frascino@arm.com>,
- Liviu Dudau <liviu.dudau@arm.com>, Sudeep Holla <sudeep.holla@arm.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
- Stephen Boyd <sboyd@kernel.org>, zhouyanjie@wanyeetech.com,
- Conor Dooley <conor@kernel.org>, Nicolas Ferre
- <nicolas.ferre@microchip.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>,
- Steen Hegelund <Steen.Hegelund@microchip.com>,
- Daniel Machon <daniel.machon@microchip.com>, UNGLinuxDriver@microchip.com,
- Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, Heiko Stuebner <heiko@sntech.de>,
- Neil Armstrong <neil.armstrong@linaro.org>,
- Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>,
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
- Geert Uytterhoeven <geert+renesas@glider.be>,
- Magnus Damm <magnus.damm@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-pm@vger.kernel.org, linux-mediatek@lists.infradead.org,
- linux-arm-msm@vger.kernel.org, linux-mips@vger.kernel.org,
- imx@lists.linux.dev, linux-rockchip@lists.infradead.org,
- linux-amlogic@lists.infradead.org, linux-renesas-soc@vger.kernel.org
-References: <20250403-dt-cpu-schema-v1-0-076be7171a85@kernel.org>
- <20250403-dt-cpu-schema-v1-18-076be7171a85@kernel.org>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20250403-dt-cpu-schema-v1-18-076be7171a85@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250403165702.396388-1-irogers@google.com> <20250403165702.396388-4-irogers@google.com>
+ <48a734d3-0920-402c-afab-f4f205cd6b0d@app.fastmail.com>
+In-Reply-To: <48a734d3-0920-402c-afab-f4f205cd6b0d@app.fastmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Fri, 4 Apr 2025 04:35:49 -0700
+X-Gm-Features: AQ5f1JpD8IxezKIMQJr341eabN5TwcT9DjE5US16IXc1hwT1GroRon_SXxjDvaQ
+Message-ID: <CAP-5=fUB=UWcrX4JJg5skJ30_mQTy4TwWVU-=g99WSjTg67Eig@mail.gmail.com>
+Subject: Re: [PATCH v1 3/5] bitops: Silence a clang -Wshorten-64-to-32 warning
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Yury Norov <yury.norov@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Jakub Kicinski <kuba@kernel.org>, Jacob Keller <jacob.e.keller@intel.com>, 
+	Linux-Arch <linux-arch@vger.kernel.org>, linux-kernel@vger.kernel.org, 
+	llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Il 04/04/25 04:59, Rob Herring (Arm) ha scritto:
-> The "power-domains" and "power-domains-names" properties are missing any
-> constraints. Add the constraints and drop the generic descriptions.
-> 
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+On Thu, Apr 3, 2025 at 10:43=E2=80=AFPM Arnd Bergmann <arnd@arndb.de> wrote=
+:
+>
+> On Thu, Apr 3, 2025, at 18:57, Ian Rogers wrote:
+> > The clang warning -Wshorten-64-to-32 can be useful to catch
+> > inadvertent truncation. In some instances this truncation can lead to
+> > changing the sign of a result, for example, truncation to return an
+> > int to fit a sort routine. Silence the warning by making the implicit
+> > truncation explicit.
+>
+> The fls64() function only seems to deal with unsigned values, so
+> I don't see how it would change the sign.
 
-For MediaTek:
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+You are right. I was trying to motivate in the message why building
+with -Wshorten-64-to-32 is a good thing, and in this case we're making
+an implicit cast explicit.
 
+> > diff --git a/include/asm-generic/bitops/fls64.h
+> > b/include/asm-generic/bitops/fls64.h
+> > index 866f2b2304ff..9ad3ff12f454 100644
+> > --- a/include/asm-generic/bitops/fls64.h
+> > +++ b/include/asm-generic/bitops/fls64.h
+> > @@ -21,7 +21,7 @@ static __always_inline int fls64(__u64 x)
+> >       __u32 h =3D x >> 32;
+> >       if (h)
+> >               return fls(h) + 32;
+> > -     return fls(x);
+> > +     return fls((__u32)x);
+> >  }
+>
+> Maybe this would be clearer with an explicit upper_32_bits()/
+> lower_32_bits() instead of the cast and the shift?
+
+It feels a little overkill to me, but if others prefer it then it is a
+minor change.
+
+Thanks,
+Ian
+
+>       Arnd
