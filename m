@@ -1,189 +1,316 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 229B6DDC1
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 20:18:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91F9D1D63E4
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 20:21:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743797897; cv=none; b=RMeV+NH1q1lxygnDBFLJRdwL8z017tHS0/tTL6u9FFFUzgb4ergaLlKUwR4hbpqJgjeJThkXAKcz6NN33EU7uLZpCkifjDr1pXM3mJrH70ej/kETiCPOXkBGWCMjrUUWK8olZtNFC9r5HsN0xv4epv/u4E757ykrcNedhYIjjnI=
+	t=1743798065; cv=none; b=SC1KJtADMqNvggrFzpI8oDTs67WMgIqnSGrrYm6P/wIVmaN6cjmhIpkKd0WDDSmMbbuP4XXkzgLjKlqkYf3TCbP4hhSTO3/RxDvr0bbvlE5nBm7A4+6VK9oln1gX0wmo5hLEF1lmOeHw347alK8FCc3rvMrLC/XfHr4jOu4ZhD4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743797897; c=relaxed/simple;
-	bh=l1LrzonE/ZqRQWf+zSt/07d2A3MYLCZVllDPBAIK7nA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fpNhS6DihGYDbKZpVoOlw32jbCO4uZvWMEt8wuOHeGlUYPEurs6gTta7KniSqQeQjluyHQ5hvVfm9tGwL0/Zp1TO6HjX6fG+moF0z6WGLSvs5H6Y8IIGoPqZkQZP3i+jA+XU/uDWAE+FZy4HXUCLgnP0TOtGfbInpa5ihaAWaSo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=h98ooW9d; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1743798065; c=relaxed/simple;
+	bh=qDEahmqWnDXLKBhzcad5fQtD9Wb59IoY2VHJb06XErI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=TGzNxUrCDBlw5KECH2LUgKgFKHQX/DeLR6GjErs88Ki1ywcaW6bA285Jlshy+i4+U+yR3RFv9QA6WtHE38GM0iV4UklneohMOhSb36W2qYovFZ+9G3nc638N4RjAK9pKf0l2KfdWPba7exE9567P+mauLECuYNTbCvmz4n+oTDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BFwbgY2V; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="h98ooW9d"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743797894;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=vi+0cSJTE6iZRGZetauXjMyGZcNe7axFfDHJbW+LGCg=;
-	b=h98ooW9dEh05YEEoNF6/wRTrNCKe5mfqnzBm9khKAo6jXZuqsNIsQzEeVLBoo+qeoCgScZ
-	tYBXUaTRqkO+epmHvdl5k16mPowwxUbEBIaAP5z6TLCXazBg9vTOcEqxWcTVCLmqzKl+68
-	5lzw9dcAS1xn5QBtfWgDl+8XLxNbV1w=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-375-pidSAIWVMKOqd8Xqi57jNA-1; Fri, 04 Apr 2025 16:18:13 -0400
-X-MC-Unique: pidSAIWVMKOqd8Xqi57jNA-1
-X-Mimecast-MFC-AGG-ID: pidSAIWVMKOqd8Xqi57jNA_1743797893
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43ceeaf1524so13962585e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 13:18:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743797892; x=1744402692;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=vi+0cSJTE6iZRGZetauXjMyGZcNe7axFfDHJbW+LGCg=;
-        b=aDZ9sCs64KpggvvGOGP3/DpM8p//Jc5tt1FcF+DegMWwAFHm3IoTjs9FjfcawBALpf
-         ew2yzMMALF49dWddRc0LwKmOtOhWOTlr1qcPMYl2kc1oD2Euo2UdXv/V2ohtOB44xeZT
-         FYSa9PvjxKO4wg6A6YDXzhkJHseo2yYzUkW5xjCiXMH+npPof63lIkorXkd4Okyb2C+h
-         15wO8BiOTavRD/45CgLs74+LJWOKxv50zJojdqUBzPZvXCcwW6NxKc1XjXaJ9gRbj8UY
-         PfiIWevolTaan4WBE9fonmLcpfniyfwIOezc+6ehyA1ESplaNq4DADLCFfUMRCxAUp+c
-         t2Tg==
-X-Forwarded-Encrypted: i=1; AJvYcCVwIfFD7RnoHhAynBzkR8IeJuc8/ORCiS4lsW/w/R/UlE0WfUogHGCUd+sgzQTv7yJXjJn/evFBJgHo1+E=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzls4Vj7O1MpDtv4B56GDV0wEN88+yJJ0a7z9b3EjEfY/VroO3w
-	6uLQpkSSvLvR7V3PN+E0S0DvNAdGQcbAcf91k5iqduKMn5gTqyF8WKZ1p8o2b6/z8tkQ1S6Ohe9
-	/c89KwTNZb4JhLREDy+Bdw9p7A4ilIMMwMQsQl8b+pBl4OLbKFcYfoJizElrrHQ==
-X-Gm-Gg: ASbGncs0eNrzH7gMTzj628AKWQ+CRvxi2C6JYglsqdtXnbniyZfOI+jNhADkAvZHdH2
-	MgfNDenZbWR9BPfkpTrtDVKo+u8LbLgRDAhqwoMM+35MZ/S3adVVKqYff8lHKxb/oUIOB3rJdwu
-	RNQtoWi2DAXvQczKW7jo9EqoBZoKFTh+BfwKkrMtiujLRvYBNdWMLVTyH+0jy4yyhOPlrRrELVy
-	ahM9Syv3dnpRMl7Q8ZWpW/1ID9ftanuVG3zVXzZz6ZtarxNrXKJgwkiwipf5PwUEV3OL9C0Wbj9
-	rDZSRSo1O+lQh/Q9k/9Rvt2DHF9kQGnd/etDBhgV7NcMRM2Mk1SerjF27Y7AemSBSMuww3lrPHE
-	R/o0LstpL28Gs/Klu28RVZLBTw98eTj9h1rpiTmzF7nw=
-X-Received: by 2002:a05:600c:1e0f:b0:43b:bfa7:c7d with SMTP id 5b1f17b1804b1-43ebee7417dmr99071635e9.2.1743797892632;
-        Fri, 04 Apr 2025 13:18:12 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH71E37FWqlUk0xsBgnBlJF2qjX7NqJqBhqH/W1b2t3I8kJZkGQcK6qSo10KHCgRRFmG7x9vQ==
-X-Received: by 2002:a05:600c:1e0f:b0:43b:bfa7:c7d with SMTP id 5b1f17b1804b1-43ebee7417dmr99071495e9.2.1743797892282;
-        Fri, 04 Apr 2025 13:18:12 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c71b:7900:8752:fae3:f9c9:a07e? (p200300cbc71b79008752fae3f9c9a07e.dip0.t-ipconnect.de. [2003:cb:c71b:7900:8752:fae3:f9c9:a07e])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c301ba2dfsm5197359f8f.60.2025.04.04.13.18.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Apr 2025 13:18:11 -0700 (PDT)
-Message-ID: <b9bef969-249a-41b6-8a28-a34be4318be7@redhat.com>
-Date: Fri, 4 Apr 2025 22:18:09 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BFwbgY2V"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743798062; x=1775334062;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=qDEahmqWnDXLKBhzcad5fQtD9Wb59IoY2VHJb06XErI=;
+  b=BFwbgY2Vjn7O2JYneSMYcPoMwIT3VMowOllDWi5Kcw3y4jcvL0WumzEX
+   rSpuqNHhYHUX2hbM6UB5tW7yya6wN+kfnycuFANuXkHpGsshjGngkDZRp
+   167dfFyZQpiZ75lD+gk8mz1cEiB+nqZwsD+WtjEn15/xWPcdIPf5ZVZci
+   0ItMJNpGTMtCBRbpSJ3Cf+IW1lUOIxUG0gGbcFS6bWlG3ytfJCe3VaefY
+   BPWe29T24dD4AbdOaUVKq0OUvK+ez6u/J3wnJ6GyNe7iBnvewyUuNKUFE
+   QRwiUrj1RZWvZPxpM2HPJ7gaMTYRPdxny/YVjmrfN1++uZ3z2vZDMZUYv
+   A==;
+X-CSE-ConnectionGUID: XbCGUAq9RGSbUCVHCM3jNQ==
+X-CSE-MsgGUID: YNnWfIQtTu+aN6XZEwBXcg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11394"; a="47960653"
+X-IronPort-AV: E=Sophos;i="6.15,189,1739865600"; 
+   d="scan'208";a="47960653"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 13:21:02 -0700
+X-CSE-ConnectionGUID: 1u0Ap7F2SPCFRQBSCCbgFA==
+X-CSE-MsgGUID: xEcPm7aHQFq3v91I5n/pRw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,189,1739865600"; 
+   d="scan'208";a="150616884"
+Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
+  by fmviesa002.fm.intel.com with ESMTP; 04 Apr 2025 13:21:00 -0700
+Received: from kbuild by b207828170a5 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u0nX8-0001Wt-10;
+	Fri, 04 Apr 2025 20:20:58 +0000
+Date: Sat, 5 Apr 2025 04:20:10 +0800
+From: kernel test robot <lkp@intel.com>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	x86@kernel.org
+Subject: [tip:timers/cleanups 1/11] drivers/usb/host/xhci.c:1074:4: error:
+ implicit declaration of function 'timer_delele_sync'; did you mean
+ 'timer_delete_sync'?
+Message-ID: <202504050456.279VzOvY-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/4] support FEAT_MTE_STORE_ONLY feature
-To: Yeoreum Yun <yeoreum.yun@arm.com>
-Cc: catalin.marinas@arm.com, will@kernel.org, broonie@kernel.org,
- anshuman.khandual@arm.com, joey.gouly@arm.com, maz@kernel.org,
- oliver.upton@linux.dev, frederic@kernel.org, james.morse@arm.com,
- hardevsinh.palaniya@siliconsignals.io, shameerali.kolothum.thodi@huawei.com,
- huangxiaojia2@huawei.com, mark.rutland@arm.com, samuel.holland@sifive.com,
- palmer@rivosinc.com, charlie@rivosinc.com, thiago.bauermann@linaro.org,
- bgray@linux.ibm.com, tglx@linutronix.de, puranjay@kernel.org,
- yang@os.amperecomputing.com, mbenes@suse.cz, joel.granados@kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- nd@arm.com
-References: <20250403174701.74312-1-yeoreum.yun@arm.com>
- <1618bf36-7f7a-4d32-a6a6-242323007d67@redhat.com>
- <Z/A0HJNtUkL+THCk@e129823.arm.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <Z/A0HJNtUkL+THCk@e129823.arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 04.04.25 21:33, Yeoreum Yun wrote:
-> Hi David.
-> 
->> On 03.04.25 19:46, Yeoreum Yun wrote:
->>> The FEAT_MTE_STORE_ONLY feature provides support for
->>> tag check for store operation only. read operation is considered
->>> as unchecked operation so it doesn't raise tag check fault.
->>
->> Can you add/share more details of what the implications are, how it would be
->> used, who would set it, etc.
->>
->> Just from staring at this short paragraph leaves me rather clueless.
->>
-> 
-> Sorry for my bad.
-> 
-> ARMv8.5 based processors introduce the Memory Tagging Extension (MTE) feature.
-> MTE is built on top of the ARMv8.0 virtual address tagging TBI
-> (Top Byte Ignore) feature and allows software to access a 4-bit
-> allocation tag for each 16-byte granule in the physical address space.
-> A logical tag is derived from bits 59-56 of the virtual
-> address used for the memory access. A CPU with MTE enabled will compare
-> the logical tag against the allocation tag and potentially raise an
-> tag check fault on mismatch, subject to system registers configuration.
-> 
-> Since ARMv8.9, FEAT_MTE_STORE_ONLY can be used to restrict raise of tag
-> check fault on store operation only.
+Hi Thomas,
 
-Oh, so other operations (read/fetch) will not check the tag.
+FYI, the error/warning was bisected to this commit, please ignore it if it's irrelevant.
 
-> For this, application can use PR_MTE_STORE_ONLY flag
-> when it sets the MTE setting with prctl().
-> 
-> This would be useful for debugging purpose
-> i.e) finding memory courruption point, use-after-free and etc.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers/cleanups
+head:   b33f0e454c28ce1fd504367575accecdf4c64dc3
+commit: 6bcfaeda89efec08e5fb2010927a1cf4e89f0f4d [1/11] treewide: Switch to timer_delete[_sync]()
+config: arm-randconfig-002-20250405 (https://download.01.org/0day-ci/archive/20250405/202504050456.279VzOvY-lkp@intel.com/config)
+compiler: arm-linux-gnueabi-gcc (GCC) 7.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250405/202504050456.279VzOvY-lkp@intel.com/reproduce)
 
-So what's the benefit of this relaxation? I assume it's faster because 
-less memory access has to perform tag checks, and the issues you mention 
-here can still be mostly caught (not all cases of use-after-free, but at 
-least the destructive ones).
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504050456.279VzOvY-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   drivers/usb/host/xhci.c: In function 'xhci_resume':
+>> drivers/usb/host/xhci.c:1074:4: error: implicit declaration of function 'timer_delele_sync'; did you mean 'timer_delete_sync'? [-Werror=implicit-function-declaration]
+       timer_delele_sync(&xhci->comp_mode_recovery_timer);
+       ^~~~~~~~~~~~~~~~~
+       timer_delete_sync
+   cc1: some warnings being treated as errors
+
+
+vim +1074 drivers/usb/host/xhci.c
+
+   990	
+   991	/*
+   992	 * start xHC (not bus-specific)
+   993	 *
+   994	 * This is called when the machine transition from S3/S4 mode.
+   995	 *
+   996	 */
+   997	int xhci_resume(struct xhci_hcd *xhci, bool power_lost, bool is_auto_resume)
+   998	{
+   999		u32			command, temp = 0;
+  1000		struct usb_hcd		*hcd = xhci_to_hcd(xhci);
+  1001		int			retval = 0;
+  1002		bool			comp_timer_running = false;
+  1003		bool			pending_portevent = false;
+  1004		bool			suspended_usb3_devs = false;
+  1005	
+  1006		if (!hcd->state)
+  1007			return 0;
+  1008	
+  1009		/* Wait a bit if either of the roothubs need to settle from the
+  1010		 * transition into bus suspend.
+  1011		 */
+  1012	
+  1013		if (time_before(jiffies, xhci->usb2_rhub.bus_state.next_statechange) ||
+  1014		    time_before(jiffies, xhci->usb3_rhub.bus_state.next_statechange))
+  1015			msleep(100);
+  1016	
+  1017		set_bit(HCD_FLAG_HW_ACCESSIBLE, &hcd->flags);
+  1018		if (xhci->shared_hcd)
+  1019			set_bit(HCD_FLAG_HW_ACCESSIBLE, &xhci->shared_hcd->flags);
+  1020	
+  1021		spin_lock_irq(&xhci->lock);
+  1022	
+  1023		if (xhci->quirks & XHCI_RESET_ON_RESUME || xhci->broken_suspend)
+  1024			power_lost = true;
+  1025	
+  1026		if (!power_lost) {
+  1027			/*
+  1028			 * Some controllers might lose power during suspend, so wait
+  1029			 * for controller not ready bit to clear, just as in xHC init.
+  1030			 */
+  1031			retval = xhci_handshake(&xhci->op_regs->status,
+  1032						STS_CNR, 0, 10 * 1000 * 1000);
+  1033			if (retval) {
+  1034				xhci_warn(xhci, "Controller not ready at resume %d\n",
+  1035					  retval);
+  1036				spin_unlock_irq(&xhci->lock);
+  1037				return retval;
+  1038			}
+  1039			/* step 1: restore register */
+  1040			xhci_restore_registers(xhci);
+  1041			/* step 2: initialize command ring buffer */
+  1042			xhci_set_cmd_ring_deq(xhci);
+  1043			/* step 3: restore state and start state*/
+  1044			/* step 3: set CRS flag */
+  1045			command = readl(&xhci->op_regs->command);
+  1046			command |= CMD_CRS;
+  1047			writel(command, &xhci->op_regs->command);
+  1048			/*
+  1049			 * Some controllers take up to 55+ ms to complete the controller
+  1050			 * restore so setting the timeout to 100ms. Xhci specification
+  1051			 * doesn't mention any timeout value.
+  1052			 */
+  1053			if (xhci_handshake(&xhci->op_regs->status,
+  1054				      STS_RESTORE, 0, 100 * 1000)) {
+  1055				xhci_warn(xhci, "WARN: xHC restore state timeout\n");
+  1056				spin_unlock_irq(&xhci->lock);
+  1057				return -ETIMEDOUT;
+  1058			}
+  1059		}
+  1060	
+  1061		temp = readl(&xhci->op_regs->status);
+  1062	
+  1063		/* re-initialize the HC on Restore Error, or Host Controller Error */
+  1064		if ((temp & (STS_SRE | STS_HCE)) &&
+  1065		    !(xhci->xhc_state & XHCI_STATE_REMOVING)) {
+  1066			if (!power_lost)
+  1067				xhci_warn(xhci, "xHC error in resume, USBSTS 0x%x, Reinit\n", temp);
+  1068			power_lost = true;
+  1069		}
+  1070	
+  1071		if (power_lost) {
+  1072			if ((xhci->quirks & XHCI_COMP_MODE_QUIRK) &&
+  1073					!(xhci_all_ports_seen_u0(xhci))) {
+> 1074				timer_delele_sync(&xhci->comp_mode_recovery_timer);
+  1075				xhci_dbg_trace(xhci, trace_xhci_dbg_quirks,
+  1076					"Compliance Mode Recovery Timer deleted!");
+  1077			}
+  1078	
+  1079			/* Let the USB core know _both_ roothubs lost power. */
+  1080			usb_root_hub_lost_power(xhci->main_hcd->self.root_hub);
+  1081			if (xhci->shared_hcd)
+  1082				usb_root_hub_lost_power(xhci->shared_hcd->self.root_hub);
+  1083	
+  1084			xhci_dbg(xhci, "Stop HCD\n");
+  1085			xhci_halt(xhci);
+  1086			xhci_zero_64b_regs(xhci);
+  1087			retval = xhci_reset(xhci, XHCI_RESET_LONG_USEC);
+  1088			spin_unlock_irq(&xhci->lock);
+  1089			if (retval)
+  1090				return retval;
+  1091	
+  1092			xhci_dbg(xhci, "// Disabling event ring interrupts\n");
+  1093			temp = readl(&xhci->op_regs->status);
+  1094			writel((temp & ~0x1fff) | STS_EINT, &xhci->op_regs->status);
+  1095			xhci_disable_interrupter(xhci->interrupters[0]);
+  1096	
+  1097			xhci_dbg(xhci, "cleaning up memory\n");
+  1098			xhci_mem_cleanup(xhci);
+  1099			xhci_debugfs_exit(xhci);
+  1100			xhci_dbg(xhci, "xhci_stop completed - status = %x\n",
+  1101				    readl(&xhci->op_regs->status));
+  1102	
+  1103			/* USB core calls the PCI reinit and start functions twice:
+  1104			 * first with the primary HCD, and then with the secondary HCD.
+  1105			 * If we don't do the same, the host will never be started.
+  1106			 */
+  1107			xhci_dbg(xhci, "Initialize the xhci_hcd\n");
+  1108			retval = xhci_init(hcd);
+  1109			if (retval)
+  1110				return retval;
+  1111			comp_timer_running = true;
+  1112	
+  1113			xhci_dbg(xhci, "Start the primary HCD\n");
+  1114			retval = xhci_run(hcd);
+  1115			if (!retval && xhci->shared_hcd) {
+  1116				xhci_dbg(xhci, "Start the secondary HCD\n");
+  1117				retval = xhci_run(xhci->shared_hcd);
+  1118			}
+  1119			if (retval)
+  1120				return retval;
+  1121			/*
+  1122			 * Resume roothubs unconditionally as PORTSC change bits are not
+  1123			 * immediately visible after xHC reset
+  1124			 */
+  1125			hcd->state = HC_STATE_SUSPENDED;
+  1126	
+  1127			if (xhci->shared_hcd) {
+  1128				xhci->shared_hcd->state = HC_STATE_SUSPENDED;
+  1129				usb_hcd_resume_root_hub(xhci->shared_hcd);
+  1130			}
+  1131			usb_hcd_resume_root_hub(hcd);
+  1132	
+  1133			goto done;
+  1134		}
+  1135	
+  1136		/* step 4: set Run/Stop bit */
+  1137		command = readl(&xhci->op_regs->command);
+  1138		command |= CMD_RUN;
+  1139		writel(command, &xhci->op_regs->command);
+  1140		xhci_handshake(&xhci->op_regs->status, STS_HALT,
+  1141			  0, 250 * 1000);
+  1142	
+  1143		/* step 5: walk topology and initialize portsc,
+  1144		 * portpmsc and portli
+  1145		 */
+  1146		/* this is done in bus_resume */
+  1147	
+  1148		/* step 6: restart each of the previously
+  1149		 * Running endpoints by ringing their doorbells
+  1150		 */
+  1151	
+  1152		spin_unlock_irq(&xhci->lock);
+  1153	
+  1154		xhci_dbc_resume(xhci);
+  1155	
+  1156		if (retval == 0) {
+  1157			/*
+  1158			 * Resume roothubs only if there are pending events.
+  1159			 * USB 3 devices resend U3 LFPS wake after a 100ms delay if
+  1160			 * the first wake signalling failed, give it that chance if
+  1161			 * there are suspended USB 3 devices.
+  1162			 */
+  1163			if (xhci->usb3_rhub.bus_state.suspended_ports ||
+  1164			    xhci->usb3_rhub.bus_state.bus_suspended)
+  1165				suspended_usb3_devs = true;
+  1166	
+  1167			pending_portevent = xhci_pending_portevent(xhci);
+  1168	
+  1169			if (suspended_usb3_devs && !pending_portevent && is_auto_resume) {
+  1170				msleep(120);
+  1171				pending_portevent = xhci_pending_portevent(xhci);
+  1172			}
+  1173	
+  1174			if (pending_portevent) {
+  1175				if (xhci->shared_hcd)
+  1176					usb_hcd_resume_root_hub(xhci->shared_hcd);
+  1177				usb_hcd_resume_root_hub(hcd);
+  1178			}
+  1179		}
+  1180	done:
+  1181		/*
+  1182		 * If system is subject to the Quirk, Compliance Mode Timer needs to
+  1183		 * be re-initialized Always after a system resume. Ports are subject
+  1184		 * to suffer the Compliance Mode issue again. It doesn't matter if
+  1185		 * ports have entered previously to U0 before system's suspension.
+  1186		 */
+  1187		if ((xhci->quirks & XHCI_COMP_MODE_QUIRK) && !comp_timer_running)
+  1188			compliance_mode_recovery_timer_init(xhci);
+  1189	
+  1190		if (xhci->quirks & XHCI_ASMEDIA_MODIFY_FLOWCONTROL)
+  1191			usb_asmedia_modifyflowcontrol(to_pci_dev(hcd->self.controller));
+  1192	
+  1193		/* Re-enable port polling. */
+  1194		xhci_dbg(xhci, "%s: starting usb%d port polling.\n",
+  1195			 __func__, hcd->self.busnum);
+  1196		if (xhci->shared_hcd) {
+  1197			set_bit(HCD_FLAG_POLL_RH, &xhci->shared_hcd->flags);
+  1198			usb_hcd_poll_rh_status(xhci->shared_hcd);
+  1199		}
+  1200		set_bit(HCD_FLAG_POLL_RH, &hcd->flags);
+  1201		usb_hcd_poll_rh_status(hcd);
+  1202	
+  1203		return retval;
+  1204	}
+  1205	EXPORT_SYMBOL_GPL(xhci_resume);
+  1206	#endif	/* CONFIG_PM */
+  1207	
 
 -- 
-Cheers,
-
-David / dhildenb
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
