@@ -1,57 +1,57 @@
 Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B352222570
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 19:40:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 653042236FB
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 19:40:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743795609; cv=none; b=MnodH+15skgKfAJ5n/V7W1ALCAwfkRl3N4DjIf1L1n5aMdvseKD9H/LPiXoeC6Up5D0xBWxb1Ua3OCyeeYAKc5LaZPRS0mb2SIeuw/G24Lpbv4lDkeDSLMlrvL5KlQmRVV2WQDRGDdBuGfDWmJK0LQ/HiploYZGW/PJ+J97RwVE=
+	t=1743795610; cv=none; b=a6Oh4TUeprzk1r/sj1DvQu/qICS0nITHsIjR6J51/FQo5CD/UVbjxu5ajJOJoaBiBgrWBXoXACV76Gh74kcjHUTHeiFTgUOd6ouSY1LD+jR7s7V3b4LK9tdxmwawRTxiLcnGVMDOXs6cg2lpB2oRFK6DhR3rMHaSw6sqer5BoIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743795609; c=relaxed/simple;
-	bh=ymgLNvDMBazjcOWHdM4TRBB8fRza/15wPWUAsosttHc=;
+	s=arc-20240116; t=1743795610; c=relaxed/simple;
+	bh=uzlVEbR4BTmFkBjn23KnqXJ/yIeZSAO1hkc8JxEHwWA=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=T7Cki+k6PESnX/f0CESOxVLqmsF4db5fo1jB7GqSw8hVLHe6r0mSVolBQP6dvkCfGBjWQu706u2cpHbDfJL6hbr4jZ0YIg9E6B/Un+6iSQdOEPsPV9k7SAHiiEKc3h3aiIXdyvdL+ufYVInqadv/sIjSRLe/8K1ZjG+VStQOcI4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DKNY5UbK; arc=none smtp.client-ip=209.85.210.202
+	 To:Cc:Content-Type; b=VVj7EcZH93dsBFFuL6avO0A6ETH6V0U8f8Vvuu+kNsvUme341b2eVl575pUvm+OHsstAOt3RiPFfd/5enbf6PWyqmvV621vzrNsG6ku0MAB/pDw4QiqKHG+jVN4SS+m7rMh8g8k0Md90acPff49ysr+QpEWs2A3ccgKmyf2Wd4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hiJvr4Vq; arc=none smtp.client-ip=209.85.210.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DKNY5UbK"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-7398d70abbfso3439794b3a.2
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 12:40:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hiJvr4Vq"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-736cd27d51fso2260406b3a.2
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 12:40:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743795606; x=1744400406; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1743795607; x=1744400407; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=FiKuf+KLGMevEl1JcUq8+wDFjGbG6tG3veWOyXB7Hl0=;
-        b=DKNY5UbKgwbgnpH8+tO8cF4nRJPTau2T4BuMH7aMan1MGphtVL9al3OGl6W0AIthwM
-         f/uzf7ZeT2/qX0tMsLGFMEr4JZCwJpHsHH6SqZavgvUZk2QdE3nWARBo0GtN1oIPVmGw
-         HKo/Lio+WQXeqvCq4nlYFMxoABEO9yHbgCOG6BDG6f7Qx8Rg2p63DBh3BYLDzvbSK3pj
-         ERuF3VPO09qeMENAHX1LxVKLoTD67zNNMO8wYb29fTFKjOtTqqBvBOQSepTHXiaCiV3X
-         Yu5e+GFQKKMCgp00bJCf4+gVOUtWdYBc4X46HZgR9TGZbLd+no70lJ2zitDjwEqcbv47
-         dWIQ==
+        bh=8U7fbiDc3fD3nWCIa5Kamzu6n5Z7wqEoDo9I5vrK7FA=;
+        b=hiJvr4VqkVJiCmGOi2ey/1zoe8cBlUvks4xmjkFjPojsk7j91i3R5p7uRlne8h7Fc1
+         EcKfh1e8+f2X7IhbrasqqaO9UqwOYJXX+Dk2YfzFoFiXZhfTpkwL5e+YHEA7n1Sp2u5i
+         G1VrBntKN9uBzIHuheyEgTTZHj6CyogUHblyygA7UypBqHE3QtaqsiUG6MjhkQHfwmbe
+         dMVVVvwlsXlnaNaHbYm1TNi60gvHpSyH8kJVVKCaTBUMN3Xl+4rzWj8LGmaq+hs5fLIA
+         ee+EyRS4Dcqb2RcybrB9fYPTuri967AaXQRGW04yeTuTK536U1MAF+zKdlSn2DANSOm9
+         QSNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743795606; x=1744400406;
+        d=1e100.net; s=20230601; t=1743795607; x=1744400407;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=FiKuf+KLGMevEl1JcUq8+wDFjGbG6tG3veWOyXB7Hl0=;
-        b=myeRlO/agy3fMhwBwHbojoSq4G+w+xdkkFYgEvTRVSbym0oTJBkVvgt5g6EYo3CqSp
-         Z11eSiGomJy5h1NjufKMjpKFHY4XNaFs6u6pZJjcCiRAaMbH2E25ofBbT9ETPNJMq7Hd
-         /0sByPCe5VsNMBEpXSWfSeC//dC3JSFLrILGA1CmlFlxxozErXXM5kwff8HaFX4tnofA
-         SVn99yk2kzM0VoXpi3MfBhO4KwfhStG4t+Xv8Td5okPSNp2cR9f8uc8HlfDyYvQmxGiL
-         fhcU4Qo4qKggWXvUFmbp+UB1jX3AtKSC67O7CcAUWv8wvDMp5kkW7m2nehB/Kc7e65rf
-         8P9A==
-X-Forwarded-Encrypted: i=1; AJvYcCVC+m/sVwkHy6bGICkjTNsqmHWptSfi1SOl0zlk2BgF5Hv3UVbmgWQTkZzGPRKA7XcMLyE23m+99ee8o14=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywn7T9Q+Fog5s2vUyPdkeHBbcY+1KNUjYVti/8C+6ked3W+95Q5
-	bMk9B08B8+/5pAZ1XwyECHlSHctG+NclBd5OgJdit7uUqUJpezVeyzE0zkEZUo3JSqlPzXLkorx
-	cgw==
-X-Google-Smtp-Source: AGHT+IFtyda/QQ9X0Y9KdE3cg1eDpGK8RDILaxqr6131sPdJg3+eJBnN0Hdt1DkeEPmuLwr7hr23wisO9LY=
-X-Received: from pfoi21.prod.google.com ([2002:aa7:87d5:0:b0:732:6c92:3f75])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:1941:b0:736:4e02:c543
- with SMTP id d2e1a72fcca58-73b6aa3d952mr644845b3a.9.1743795605825; Fri, 04
- Apr 2025 12:40:05 -0700 (PDT)
+        bh=8U7fbiDc3fD3nWCIa5Kamzu6n5Z7wqEoDo9I5vrK7FA=;
+        b=mJ+TpHGOPyWxVu+1c/EiIcJsdb+ndHyC6GJ/YgA4M51avYSvaTrSl1r+vmLR25pgyu
+         mFdCUMZd0UnlDxe+H3nUah8an0gUJwP3p7PVcQEo179K+4RvgxqdB5FZfFzqoHHwPg0e
+         BKrxtKnShcDTTuYWCiHsYcb8g6aQHscDEzu+IbFQoimNjwVIbW5kqJgLoRSzsf56MSu/
+         z0EPGeDJjUnhBQX1hbkeFaJ9yENv8w/UqaQLA+970veQZtUHpQkorankwckg7Px5bXV3
+         ZH+a+YhsxvuXbtspu4KNL/ydrqkL9EyIBh4e+M5ySBca0TzsGpIqpESSkmh8LBS7yIuz
+         HBMg==
+X-Forwarded-Encrypted: i=1; AJvYcCXYsPfH8x/bSC/aAp1jKiarLumHf+YuKxOtTvWqO3WtOTtqPOZvX1K/Y5wuoLzrzuiBik6m1VVMCe7OreQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw6JzSNJe1pQmNoMXb0JPUnsMQwS+UOIcumbpiWvRsHkd8zu27h
+	ignP9ZshllTzm8HxZ9LJcnika8quwnBWqAZ7ULVj7NF/UtRRE/l6MyHd5Fa1HazxQUhfuH0MjhL
+	KPQ==
+X-Google-Smtp-Source: AGHT+IH1FWkdivy4S+bLPUdZ+zOkMlZOgSIPe0C8D80kAIF34VnktZoafbX6YO039dybyFyARTj7CbbGk/k=
+X-Received: from pfxa1.prod.google.com ([2002:a05:6a00:1d01:b0:730:90b2:dab])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:561a:b0:1f5:9330:2a18
+ with SMTP id adf61e73a8af0-2010801c42emr4738241637.23.1743795607614; Fri, 04
+ Apr 2025 12:40:07 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Fri,  4 Apr 2025 12:38:26 -0700
+Date: Fri,  4 Apr 2025 12:38:27 -0700
 In-Reply-To: <20250404193923.1413163-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -61,9 +61,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250404193923.1413163-1-seanjc@google.com>
 X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
-Message-ID: <20250404193923.1413163-12-seanjc@google.com>
-Subject: [PATCH 11/67] KVM: SVM: Delete IRTE link from previous vCPU
- irrespective of new routing
+Message-ID: <20250404193923.1413163-13-seanjc@google.com>
+Subject: [PATCH 12/67] KVM: SVM: Drop pointless masking of default APIC base
+ when setting V_APIC_BAR
 From: Sean Christopherson <seanjc@google.com>
 To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
 	Joerg Roedel <joro@8bytes.org>, David Woodhouse <dwmw2@infradead.org>, 
@@ -73,41 +73,45 @@ Cc: kvm@vger.kernel.org, iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
 	David Matlack <dmatlack@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Delete the IRTE link from the previous vCPU irrespective of the new
-routing state.  This is a glorified nop (only the ordering changes), as
-both the "posting" and "remapped" mode paths pre-delete the link.
+Drop VMCB_AVIC_APIC_BAR_MASK, it's just a regurgitation of the maximum
+theoretical 4KiB-aligned physical address, i.e. is not novel in any way,
+and its only usage is to mask the default APIC base, which is 4KiB aligned
+and (obviously) a legal physical address.
+
+No functional change intended.
 
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/x86/kvm/svm/avic.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ arch/x86/include/asm/svm.h | 2 --
+ arch/x86/kvm/svm/avic.c    | 2 +-
+ 2 files changed, 1 insertion(+), 3 deletions(-)
 
+diff --git a/arch/x86/include/asm/svm.h b/arch/x86/include/asm/svm.h
+index 9b7fa99ae951..9d3f17732ab4 100644
+--- a/arch/x86/include/asm/svm.h
++++ b/arch/x86/include/asm/svm.h
+@@ -254,8 +254,6 @@ struct __attribute__ ((__packed__)) vmcb_control_area {
+ 
+ #define AVIC_DOORBELL_PHYSICAL_ID_MASK			GENMASK_ULL(11, 0)
+ 
+-#define VMCB_AVIC_APIC_BAR_MASK				0xFFFFFFFFFF000ULL
+-
+ #define AVIC_UNACCEL_ACCESS_WRITE_MASK		1
+ #define AVIC_UNACCEL_ACCESS_OFFSET_MASK		0xFF0
+ #define AVIC_UNACCEL_ACCESS_VECTOR_MASK		0xFFFFFFFF
 diff --git a/arch/x86/kvm/svm/avic.c b/arch/x86/kvm/svm/avic.c
-index 02b6f0007436..e9ded2488a0b 100644
+index e9ded2488a0b..69bf82fc7890 100644
 --- a/arch/x86/kvm/svm/avic.c
 +++ b/arch/x86/kvm/svm/avic.c
-@@ -870,6 +870,12 @@ int avic_pi_update_irte(struct kvm_kernel_irqfd *irqfd, struct kvm *kvm,
- 	if (!kvm_arch_has_assigned_device(kvm) || !kvm_arch_has_irq_bypass())
- 		return 0;
+@@ -253,7 +253,7 @@ void avic_init_vmcb(struct vcpu_svm *svm, struct vmcb *vmcb)
+ 	vmcb->control.avic_backing_page = bpa & AVIC_HPA_MASK;
+ 	vmcb->control.avic_logical_id = lpa & AVIC_HPA_MASK;
+ 	vmcb->control.avic_physical_id = ppa & AVIC_HPA_MASK;
+-	vmcb->control.avic_vapic_bar = APIC_DEFAULT_PHYS_BASE & VMCB_AVIC_APIC_BAR_MASK;
++	vmcb->control.avic_vapic_bar = APIC_DEFAULT_PHYS_BASE;
  
-+	/*
-+	 * If the IRQ was affined to a different vCPU, remove the IRTE metadata
-+	 * from the *previous* vCPU's list.
-+	 */
-+	svm_ir_list_del(irqfd);
-+
- 	pr_debug("SVM: %s: host_irq=%#x, guest_irq=%#x, set=%#x\n",
- 		 __func__, host_irq, guest_irq, set);
- 
-@@ -892,8 +898,6 @@ int avic_pi_update_irte(struct kvm_kernel_irqfd *irqfd, struct kvm *kvm,
- 
- 		WARN_ON_ONCE(new && memcmp(e, new, sizeof(*new)));
- 
--		svm_ir_list_del(irqfd);
--
- 		/**
- 		 * Here, we setup with legacy mode in the following cases:
- 		 * 1. When cannot target interrupt to a specific vcpu.
+ 	if (kvm_apicv_activated(svm->vcpu.kvm))
+ 		avic_activate_vmcb(svm);
 -- 
 2.49.0.504.g3bcea36a83-goog
 
