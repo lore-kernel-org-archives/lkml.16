@@ -1,104 +1,68 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7632E17A31B;
-	Fri,  4 Apr 2025 06:40:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 890DE847B
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 06:41:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743748815; cv=none; b=D2ITa8b6gIcr55FQBkcej7lNVo5YOgk0seEJIrbI0cA+tMuAFIeu6mATMISClK2T9YByNwNpmLVBqdrZIQo1nuBhLfw344AevMCtnbxoPKSn3mDEG7z53AacCxGVHlYsd3kVUDTJXC8yRlX/CD6ll5V+K/8bGa+SFL/87XApeUo=
+	t=1743748911; cv=none; b=LmAGEAsAz+hdwk9Ia6V3J4Ty+DQYBCo+yafph0q5AY9rPAPApnPuRpDr2H0+hnSm29znae8XUjMfrviVVEeUv7ZQbESvs1//vdYqz+nGQKy01UCndwvbzMSQf31iiLOWKeHoXVuoqJdGXVubLJDmd2jycq2P2VWKKtDqz+OGceg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743748815; c=relaxed/simple;
-	bh=LvXOJwYpeCUDmWDFM30zJvFIxLATT3JGqRx/e4h8Lug=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=dhxYT5OEX/pDl632Bk/MROvjApygdl1taCFrRs3MOQQ1ZMW75t3gxM+/jFKNUqiF83w70UZiFcR78K1tTKdSA2wbQtbPVEiVQemlBzMHVr/9ObaPlXM+HvHXeqjryt2aSRmsWgFrFFadLNjKffNnBrIBWPIHvdp2MPL3zqkxiMA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ToaEabsq; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1743748911; c=relaxed/simple;
+	bh=gNKz3ftSm+WCqgxdAGdG7TwBCa2MkJq8Xh2F2CQKuCg=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=XWrCCatPJ+McT0NsF+HMilPr2e6GmwU5vz/Rc+CIUwu7uUeS0LANWruhW62Uaoi1iTj1QVIvrfmhzIP3rwm+VTxA58bsXK7q6q8OtgvrdXObZigfcmMnsyWOR+pIQV9gwnFjjz44lsnoNGcuExl5bb//8jEmXTR5VbxQd3gb33E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PDzEykG1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ToaEabsq"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53433wkc016767;
-	Fri, 4 Apr 2025 06:40:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	HnTgQtPaAwIxPjdthGCDs1XTMfTKRZ4L7EzRuelR8oE=; b=ToaEabsq8cC+HROV
-	pjMnmbgL0fRwIfCO+CsgqAZaFUHpuax5CRmh5dWNz1qEHC/YCIMPVeQgudAB1J7E
-	AWQ7T7c/I7nngZPryQh2pTeMZL47U72ffdDx+Bco/WrTAPcWS27w0NtX+Fios95C
-	FCm0du7eh2RYWRBss+ssYUfNAL6tWe41X9T1y6KKpfpawwohDcVxJcrufb/Ruyb3
-	CEmWWbu1qvAbFkJvJpyZcOWP5Ix4JIsrbL411H4NAmuZW9ZJRML6jKRsM2qc+7Rf
-	s90pg7IWOFKAXSdSom7MftrpMqa93t2gYRPF5x1WF5huHZuljlmRmGH4IM1LZYyq
-	iC/d3Q==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45t2d98whg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 04 Apr 2025 06:40:00 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5346dxHC013652
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 4 Apr 2025 06:39:59 GMT
-Received: from [10.151.36.43] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 3 Apr 2025
- 23:39:57 -0700
-Message-ID: <97500c11-18a6-c9ab-fc95-cfb0d62c9c31@quicinc.com>
-Date: Fri, 4 Apr 2025 12:09:44 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PDzEykG1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C93B7C4CEDD;
+	Fri,  4 Apr 2025 06:41:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743748910;
+	bh=gNKz3ftSm+WCqgxdAGdG7TwBCa2MkJq8Xh2F2CQKuCg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=PDzEykG1/Osw1rmGAXcH6UBaAVJjINdrYfQIZrv1QW5fcr7rMtvtdA9citOOR8Lx+
+	 wL/T6VdxmRwLpRSfMohNdGbzzytrdggVbMyiYxWJvHrysJTN83dsI9Anoax6m3AmEm
+	 R98MwLA3MK8br3YGNOiBhqJQ4MV6Mee52BJGto4FNXg7gqppy4HxNa5jopbMyo+HFo
+	 9qSKauy2CblOeLXKLrix0VTtqMAf+d02qOtEHuTSzuo5mYIMrY/AC7JUqEHjkRnWL5
+	 aQmnEsLUOaK+jR6hrB08oOxDMeC29KlddDXgN9u7qthxIT8tDoKiqptEx3HC38blcA
+	 8oO8rvowKjFSA==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: linux-next: Tree for Apr 3 (drivers/spi/spi-qpic-snand)
-To: Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell
-	<sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-CC: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        <linux-spi@vger.kernel.org>
-References: <20250403171248.219e0e61@canb.auug.org.au>
- <4b964eb4-7d0f-40f5-bbc9-5039e075ff65@infradead.org>
-Content-Language: en-US
-From: Md Sadre Alam <quic_mdalam@quicinc.com>
-In-Reply-To: <4b964eb4-7d0f-40f5-bbc9-5039e075ff65@infradead.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Date: Fri, 04 Apr 2025 08:41:44 +0200
+From: Michael Walle <mwalle@kernel.org>
+To: Anusha Srivatsa <asrivats@redhat.com>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang
+ <quic_jesszhan@quicinc.com>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Icenowy Zheng <icenowy@aosc.io>, Jagan Teki
+ <jagan@amarulasolutions.com>, Ondrej Jirman <megi@xff.cz>, Javier Martinez
+ Canillas <javierm@redhat.com>, Michael Trimarchi
+ <michael@amarulasolutions.com>, Jagan Teki <jagan@edgeble.ai>,
+ =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>, Purism Kernel Team
+ <kernel@puri.sm>, Linus Walleij <linus.walleij@linaro.org>, Jianhua Lu
+ <lujianhua000@gmail.com>, Stefan Mavrodiev <stefan@olimex.com>,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 09/30] panel/ilitek-ili9806e: Use refcounted allocation
+ in place of devm_kzalloc()
+In-Reply-To: <20250403-b4-drm_panel_mass_convert_part2-v2-9-260c8a44c56b@redhat.com>
+References: <20250403-b4-drm_panel_mass_convert_part2-v2-0-260c8a44c56b@redhat.com>
+ <20250403-b4-drm_panel_mass_convert_part2-v2-9-260c8a44c56b@redhat.com>
+Message-ID: <0fed1ed195aac73395f20c14c29ef9af@kernel.org>
+X-Sender: mwalle@kernel.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 5j_G_FJd8EpXTIGKOktW6JFjG15jsn1f
-X-Authority-Analysis: v=2.4 cv=cpybk04i c=1 sm=1 tr=0 ts=67ef7ec0 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=rUSp2p67hj3hLfAB3vEA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: 5j_G_FJd8EpXTIGKOktW6JFjG15jsn1f
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-04_02,2025-04-03_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- lowpriorityscore=0 mlxscore=0 impostorscore=0 malwarescore=0 clxscore=1011
- phishscore=0 suspectscore=0 mlxlogscore=732 bulkscore=0 adultscore=0
- priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504040043
 
-Hi,
+> Move to using the new API devm_drm_panel_alloc() to allocate the
+> panel.
+> 
+> Signed-off-by: Anusha Srivatsa <asrivats@redhat.com>
 
-On 4/4/2025 6:54 AM, Randy Dunlap wrote:
-> 
-> 
-> On 4/2/25 11:12 PM, Stephen Rothwell wrote:
->> Hi all,
->>
->> Changes since 20250402:
->>
-> 
-> on x86_64:
-> 
-> ERROR: modpost: "qcom_nandc_unalloc" [drivers/spi/spi-qpic-snand.ko] undefined!
-Change already posted for this error at [1]
-[1] 
-https://lore.kernel.org/lkml/99eef91c334f3f2314c2f5671e1eb55211a5ff19.1743150196.git.geert+renesas@glider.be/T/
+Reviewed-by: Michael Walle <mwalle@kernel.org>
 
-Thanks,
-Alam.
+-michael
