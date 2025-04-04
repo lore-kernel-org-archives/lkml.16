@@ -1,160 +1,155 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64DF21917D0;
-	Fri,  4 Apr 2025 20:30:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9090A18DB0C
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 20:30:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743798617; cv=none; b=KEc4mUCq8g9+1hqSDanstcBbfyXwP68calr6ubkOXQJXva0+OYe9kVf52ubIYtAWsZzAPOQ+fztiTjsZtcEzSysU1KteIUNLa3T1/x+ULfbgRQoeidFGpsiHe8G9R51hyFqiRemuGG0PWgjqM6rtC6Fh2XrSbaEXkdeKhwZqIWM=
+	t=1743798654; cv=none; b=ncL0+F0eH1fwz7yarLimBaMbyb1ZDuy6uAiBr/ZY5t9/f+1CKJrI493BIDYtkgFJrwjKzWkh+KD+RBkv6cqSJYcUvHswxiHUrjRf+gnFIvZlRoXbSmek/YM1QZmYXqw0uruCNWEbeE66I+r8wcFjNJ/OCEKV1fr5OOceMLD+0dc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743798617; c=relaxed/simple;
-	bh=kYwC0sMPhRfUgeVTelJ0ONIbL1zcdBd3+FA/XQA+Oqk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PfH9QD5VXKPDDik0fpmQR8ZpDaTYRA1CFfpekshWLw1xL9avca7kOEaMNU2uwOVZl3pZMabO9J1d4HZWQ5fYpp25B64rYor9n/s6Hp+cDMYyt2dkgAkCL8lMwmLdISS6PQrdZQQSGRzc6i5v0056wK2JTEZXwxR6wc1vFWXFhJE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DEgcGN40; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743798654; c=relaxed/simple;
+	bh=oBT4dqU35i3jNYaDg/R08akXO2az0Oc76Luk1EkR+II=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ijcd4UW0dB1+aDRC9djSYPyJr4C8OgkCmoNm/ftY/Edxxm8MAYcIUEMXcOKYf6OlCtR42l3f3QhJo7OJnSiPEdmUxjS89pQK+G8aOsfmYE9A0Af33723gYei/TvWO6kruF5fukNqRAVaKThRnc+oMwHA7HO/sGtBu0Jn8C3Dn3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=VEtxvX0y; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DEgcGN40"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 605CBC4CEDD;
-	Fri,  4 Apr 2025 20:30:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743798616;
-	bh=kYwC0sMPhRfUgeVTelJ0ONIbL1zcdBd3+FA/XQA+Oqk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DEgcGN40Ia3PmMHmFVRXuggscU1dtop8KNBEGbEjNnkVHykH8+v2o7aRlqPfRmSfO
-	 MnOJIm5Dk5iTyKLXFgttz0T6gGVyEbE6rwttS8LjmU9ceElJ178S9Sg+tDQyuJrAue
-	 ic1uyqOIhilU6Cl2kX/nheqzq6ExMgr5yqeDVBpNkdtGulE42Mbh8He52GYz4svmFN
-	 rLQG66PF+T8EWo97Fgxk1c8ZItFC5i3+HTX0kvL3dLzVycK0NGi+R/1adP5ivBfy8s
-	 Ed+9W9n+DeP1lzYKbEayWwc4/ys9xESpbmnN97lcCUYH8dHE/m/jvVLar0Ax8TohFq
-	 noZ/hmndOP0tQ==
-Date: Fri, 4 Apr 2025 13:30:14 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
-	Dmitry Vyukov <dvyukov@google.com>, Ian Rogers <irogers@google.com>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 1/1] tools build: Don't set libunwind as available if
- test-all.c build succeeds
-Message-ID: <Z_BBVgJ1nZB_0klZ@z2>
-References: <Z_ArFrHU7hMNUOv3@x1>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="VEtxvX0y"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 534JEfKo029419
+	for <linux-kernel@vger.kernel.org>; Fri, 4 Apr 2025 20:30:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	7hWRzIPdUXdKBlWVaK7wwLn27NVVJ/zKlX8uz3CkEsU=; b=VEtxvX0y4phHJf4s
+	ehGLNsWkMXWxhM24EkpJXM1djb9W9Wd/DqXBlImXSexeCSqf0aHinkAWtpXeOUhm
+	T+bWRnySeVvjcmTbRvIJomfylivgX/XwN/q3x4eAIK9k4UaX83gwQivU0WML71ri
+	uFCGE35Hcpe1+xzY3YzLhY2hpPMu3O7nqNlV4ZL258Gxr+ppYvexR29GlatgQ0sD
+	7hYD1Gz4H4T4IIH/iI7zM9TDUKiPJxWmkmlOgCw/HyhoKDcF2jHiWzj94JFbf2dG
+	q5YHPB+Jn3QTgI3w5YXw0TPSfNoPfRjQr/xuuyhR2pi32nZy1WHUqP8XyES3Pwhj
+	MYhTyA==
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com [209.85.160.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45t2d52y3d-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 20:30:51 +0000 (GMT)
+Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-478f933cb4bso905591cf.3
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 13:30:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743798650; x=1744403450;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7hWRzIPdUXdKBlWVaK7wwLn27NVVJ/zKlX8uz3CkEsU=;
+        b=XK5fBFnfCt/nSn4IyQP/q9I+y/KS+14evHsqas2KztQ1XiGlYtb4Gx+MbOZm+HbZcV
+         ZCCXmAnI0Q+vdc2YbLwcGCrH5uJgMGWSGR59TqhzibC9kCFkpVQlLOzTlqjszlAbKir0
+         Ooi1ukhbkQOTvf8F/9HkqqySlIKGlFFHkWYQdcugdWc0bisNvWPCqS8xSW4zCe11WpOm
+         PnHuHuUX2F15efq0YVR9x8CiZ242PxALJymcLPVuHOXwjPzQ306FX7GZ4DRD9owwDMV7
+         yatm27AQgaZZRUI5hJt0MgSyc8eRHsOG+jRbwbIf/eQFy7u3WbV8exUDlzguguLCP5Ex
+         iibA==
+X-Forwarded-Encrypted: i=1; AJvYcCVFDD0QW5bSRmOz9XfxDqkhr0UJRosF7Q/EaidVYz39ABnU043LrtcFbxq6ZDNRyLSjcrvfAZ9F2fgmH9A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzBGsPXT9ywqHVcMKyJsMptUhoqwylbgUNGVsqXf+1LZdJmmZl9
+	8Ps/eIs1aXdJWMXquE9H50IMCHJHC6DXvzuVcwp+O7kkuCBU+JrpTVGP69lqpWHb+Wvrb7qHo/K
+	7WtJwkB44wZcc5qsV9nx4eni+BuBI4eoisEPDrpj4OBRH1omNK2rOl/jaGV9nQuQ=
+X-Gm-Gg: ASbGnctpBXfi60MOyuyaf1WJ+fASjD1njrrgFbAN9P6u1gagz6U5A87Sp/W6me4NW69
+	I3UTIit3VcNvAJKJKZnU2y+NenmaOAPPf+1MYSx3pDAs66OeYdz5/Px+OA+IPKjsktYadkiQMkJ
+	tUnCeM8fUIzwObMPPJ2glDaAAD0Wj+P79EdIgm1Api74pGQ3DHCVhxRtQxu/i33hh8mf71+OJFy
+	W/y6HtnVwZ5TRRjZ7ZC7hSjfgM/nCacNjeG8MsuVNFJBQwgJkH2vs1tMKvI10CYN2BKoo8BXWC/
+	ooXlM0vHJwGYVijOkoaPhRVG03d8DGjc0w8vj44AIB9gFFHdiQlIpy2mCPlOVpIkyX0QXA==
+X-Received: by 2002:a05:622a:2c3:b0:474:e4bd:834 with SMTP id d75a77b69052e-4792490427fmr26497671cf.2.1743798650372;
+        Fri, 04 Apr 2025 13:30:50 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGuSVd6Czwiac8qs9SQtzY9AT0v4N+1AWxlKTXMwazPDheG9mDDd7uUgjlpULwCLJqJUrfzww==
+X-Received: by 2002:a05:622a:2c3:b0:474:e4bd:834 with SMTP id d75a77b69052e-4792490427fmr26497151cf.2.1743798649900;
+        Fri, 04 Apr 2025 13:30:49 -0700 (PDT)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f0880a4027sm2911588a12.73.2025.04.04.13.30.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 04 Apr 2025 13:30:48 -0700 (PDT)
+Message-ID: <470e2155-7145-44ab-9d6d-117a2d98d7f8@oss.qualcomm.com>
+Date: Fri, 4 Apr 2025 22:30:43 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <Z_ArFrHU7hMNUOv3@x1>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 07/19] arm64: dts: qcom: msm8992-lg-h815: Fix CPU node
+ "enable-method" property dependencies
+To: "Rob Herring (Arm)" <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Samuel Holland <samuel@sholland.org>,
+        "Rafael J. Wysocki"
+ <rafael@kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Liviu Dudau <liviu.dudau@arm.com>, Sudeep Holla <sudeep.holla@arm.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>, zhouyanjie@wanyeetech.com,
+        Conor Dooley <conor@kernel.org>,
+        Nicolas Ferre
+ <nicolas.ferre@microchip.com>,
+        Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        Daniel Machon <daniel.machon@microchip.com>,
+        UNGLinuxDriver@microchip.com, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>, Heiko Stuebner <heiko@sntech.de>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-mips@vger.kernel.org,
+        imx@lists.linux.dev, linux-rockchip@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-renesas-soc@vger.kernel.org
+References: <20250403-dt-cpu-schema-v1-0-076be7171a85@kernel.org>
+ <20250403-dt-cpu-schema-v1-7-076be7171a85@kernel.org>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250403-dt-cpu-schema-v1-7-076be7171a85@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: WSUNdYzdLBBY_cyTFlLhzXRBPbPGuAS9
+X-Proofpoint-GUID: WSUNdYzdLBBY_cyTFlLhzXRBPbPGuAS9
+X-Authority-Analysis: v=2.4 cv=Cvu/cm4D c=1 sm=1 tr=0 ts=67f0417b cx=c_pps a=EVbN6Ke/fEF3bsl7X48z0g==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=HGLQH7UMpQlDbUUNBC0A:9 a=QEXdDO2ut3YA:10
+ a=a_PwQJl-kcHnX1M80qC6:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-04_09,2025-04-03_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 adultscore=0
+ bulkscore=0 suspectscore=0 mlxlogscore=744 malwarescore=0 spamscore=0
+ impostorscore=0 lowpriorityscore=0 priorityscore=1501 mlxscore=0
+ clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504040140
 
-On Fri, Apr 04, 2025 at 03:55:18PM -0300, Arnaldo Carvalho de Melo wrote:
-> The tools/build/feature/test-all.c file tries to detect the expected,
-> most common set of libraries/features we expect to have available to
-> build perf with.
+On 4/4/25 4:59 AM, Rob Herring (Arm) wrote:
+> The "spin-table" enable-method requires "cpu-release-addr" property,
+> so add a dummy entry. It is assumed the bootloader will fill in the
+> correct values.
 > 
-> At some point libunwind was deemed not to be part of that set of
-> libraries, but the patches making it to be opt-in ended up forgetting
-> some details, fix one more.
-> 
-> Testing it:
-> 
->   $ rm -rf /tmp/build/$(basename $PWD)/ ; mkdir -p /tmp/build/$(basename $PWD)/
->   $ rpm -q libunwind-devel
->   libunwind-devel-1.8.0-3.fc40.x86_64
->   $ make -k LIBUNWIND=1 CORESIGHT=1 O=/tmp/build/$(basename $PWD)/ -C tools/perf install-bin |& grep unwind && ldd ~/bin/perf | grep unwind
->   ...                               libunwind: [ on  ]
->     CC      /tmp/build/perf-tools-next/arch/x86/tests/dwarf-unwind.o
->     CC      /tmp/build/perf-tools-next/arch/x86/util/unwind-libunwind.o
->     CC      /tmp/build/perf-tools-next/util/arm64-frame-pointer-unwind-support.o
->     CC      /tmp/build/perf-tools-next/tests/dwarf-unwind.o
->     CC      /tmp/build/perf-tools-next/util/unwind-libunwind-local.o
->     CC      /tmp/build/perf-tools-next/util/unwind-libunwind.o
-> 	  libunwind-x86_64.so.8 => /lib64/libunwind-x86_64.so.8 (0x00007f615a549000)
-> 	  libunwind.so.8 => /lib64/libunwind.so.8 (0x00007f615a52f000)
->   $ sudo rpm -e libunwind-devel
->   $ rm -rf /tmp/build/$(basename $PWD)/ ; mkdir -p /tmp/build/$(basename $PWD)/
->   $ make -k LIBUNWIND=1 CORESIGHT=1 O=/tmp/build/$(basename $PWD)/ -C tools/perf install-bin |& grep unwind && ldd ~/bin/perf | grep unwind
->   Makefile.config:653: No libunwind found. Please install libunwind-dev[el] >= 1.1 and/or set LIBUNWIND_DIR
->   ...                               libunwind: [ OFF ]
->     CC      /tmp/build/perf-tools-next/arch/x86/tests/dwarf-unwind.o
->     CC      /tmp/build/perf-tools-next/arch/x86/util/unwind-libdw.o
->     CC      /tmp/build/perf-tools-next/util/arm64-frame-pointer-unwind-support.o
->     CC      /tmp/build/perf-tools-next/tests/dwarf-unwind.o
->     CC      /tmp/build/perf-tools-next/util/unwind-libdw.o
->   $
-> 
-> Should be in a separate patch, but tired now, so also adding a message
-> about the need to use LIBUNWIND=1 in the output when its not available,
-> so done here as well.
-> 
-> So, now when the devel files are not available we get:
-> 
->   $ make -k LIBUNWIND=1 CORESIGHT=1 O=/tmp/build/$(basename $PWD)/ -C tools/perf install-bin |& grep unwind && ldd ~/bin/perf | grep unwind
->   Makefile.config:653: No libunwind found. Please install libunwind-dev[el] >= 1.1 and/or set LIBUNWIND_DIR and set LIBUNWIND=1 in the make command line as it is opt-in now
->   ...                               libunwind: [ OFF ]
->   $
-> 
-> Fixes: 13e17c9ff49119aa ("perf build: Make libunwind opt-in rather than opt-out")
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: Dmitry Vyukov <dvyukov@google.com>
-> Cc: Ian Rogers <irogers@google.com>
-> Cc: Ingo Molnar <mingo@kernel.org>
-> Cc: James Clark <james.clark@linaro.org>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: Kan Liang <kan.liang@linux.intel.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Link: https://lore.kernel.org/lkml/Z_AnsW9oJzFbhIFC@x1
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 > ---
->  tools/build/Makefile.feature | 1 -
->  tools/perf/Makefile.config   | 4 +++-
->  2 files changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-> index 1931b6321314684c..54c8adfb94662c03 100644
-> --- a/tools/build/Makefile.feature
-> +++ b/tools/build/Makefile.feature
-> @@ -87,7 +87,6 @@ FEATURE_TESTS_BASIC :=                  \
->          libtracefs                      \
->          libcpupower                     \
->          libcrypto                       \
-> -        libunwind                       \
->          pthread-attr-setaffinity-np     \
->          pthread-barrier     		\
->          reallocarray                    \
-> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> index eea95c6c0c71f76e..8ff1d8ade73fc061 100644
-> --- a/tools/perf/Makefile.config
-> +++ b/tools/perf/Makefile.config
-> @@ -624,6 +624,8 @@ endif
->  ifndef NO_LIBUNWIND
->    have_libunwind :=
->  
-> +  $(call feature_check,libunwind)
-> +
->    $(call feature_check,libunwind-x86)
->    ifeq ($(feature-libunwind-x86), 1)
->      $(call detected,CONFIG_LIBUNWIND_X86)
-> @@ -648,7 +650,7 @@ ifndef NO_LIBUNWIND
->    endif
->  
->    ifneq ($(feature-libunwind), 1)
-> -    $(warning No libunwind found. Please install libunwind-dev[el] >= 1.1 and/or set LIBUNWIND_DIR)
-> +    $(warning No libunwind found. Please install libunwind-dev[el] >= 1.1 and/or set LIBUNWIND_DIR and set LIBUNWIND=1 in the make command line as it is opt-in now)
 
-I think this message is only visible if users already give LIBUNWIND=1.
+This looks good to me without knowing any better about the specifics
+of this device..
 
-Thanks,
-Namhyung
++Alexander - does the bootloader you use take care of this? Otherwise
+we can just do what Sony devices do and stop on removing the psci node
 
-
->      NO_LOCAL_LIBUNWIND := 1
->    else
->      have_libunwind := 1
-> -- 
-> 2.48.1
-> 
+Konrad
