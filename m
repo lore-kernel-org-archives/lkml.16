@@ -1,524 +1,122 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB7C21F2365;
-	Fri,  4 Apr 2025 14:03:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A88CDDF49;
+	Fri,  4 Apr 2025 14:05:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743775436; cv=none; b=e5DFgJHRFRddIN64hi+GQMALOcHhtxusoVFfpMtap3saiwC47ts99PYu8oZAW1cAg1m1CXBSEtpIpLmFJrNZKgZL1CGzHnxWLTDUTFFj2Hh0ZkPsNxxn8YOyaQKjaG3Hv2Y/hc5inx1o41flSbRmp+18HyAdiIdtFPq2uDTJO78=
+	t=1743775515; cv=none; b=bfGJWspo00jZbTmRtiloJRWM5x0o4/QWvuEFOnj+KdnykVyu6CoBxIu/XIxNJ59g1XYVftvRc+x3Jr99VCbt6vkUh7QcgSQioQvCLhHve/1Nq5uSLjJkoTtMJSkKzKYnTDQmE8Fy3A3YCgXp9+2WTYPKnUNfGJWlDjlSnkF0NO8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743775436; c=relaxed/simple;
-	bh=YM3rw6wN9CbasTPtZ1bQCgUavBT7JsEAebTgmjiRE9w=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=I8NCE6c8dp5mkjPQiXJj1dBy7eF5lRZzoWIwW7g8M/EBeCpNI9YSt7V27wbAsaEpGnmf7QSjPw/GdHU4ZK5UGHdBdsXhXSTR6Q8dSZyKbOOB5Ksd7KWUNF01PKHiYun4vXSmmebRxfYNQVQ6SK8UBkLoCNxBfUNYx3XDX9u3UYM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=KmY53IeS; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1743775515; c=relaxed/simple;
+	bh=sXc59e9oCS1JyARzmEkCFC/sWd+6b3k5Zd9xARKgKhU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=scQwsL74DJ9i8ZLDmSbqb/IsDF5s0KRrVcQA6rC+d/2eEjitOggss8bzUrnBrDoNSfp/5nq0ji4xjFW87GKYMphDMvCy208g882mwp5Fafapr5jOY/1icgQcA53ye/b8TmYYHDTO1CTYryg8OR8WfvtC2n4whhIC5HolPeXZP1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nCGf3I9t; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="KmY53IeS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1743775432;
-	bh=YM3rw6wN9CbasTPtZ1bQCgUavBT7JsEAebTgmjiRE9w=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=KmY53IeSHKrwgABezhFeODuUUPIkDQZSvvK+OM6HV9fQHDj+qlxphv3y3RrfEwJyF
-	 5XBJj8VjO+emAMy519/0XXT9+nFVI2lSQLnSDuNxAFjSbPhZ5MXB5jwY31QuI0IDyo
-	 JwlbdudkoZjeMF5GBDritFBS/3LgdbuYgXP1uQSZiWGv6Xda6akmU7X0zfCfCPyxOS
-	 DGumB+DDZgj/Y7cKeuQVt3mdMXFVFwh8BGQaHGQxdSduCOtLRKUSdgJXhaHCln5PwX
-	 ZfS2oTzzeHNiTJs7dPFBbGwXukuhlLu0lCsGRCpTzAhFVcvColnhJZOYpIMA25HBAb
-	 tqyHYbf1E52Xw==
-Received: from [192.168.1.63] (unknown [70.107.117.78])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: nfraprado)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 31FAF17E0C50;
-	Fri,  4 Apr 2025 16:03:50 +0200 (CEST)
-From: =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
-Date: Fri, 04 Apr 2025 10:02:52 -0400
-Subject: [PATCH RFC 1/2] docs: Add documentation generation for Kconfig
- symbols
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nCGf3I9t"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 209A1C4CEDD;
+	Fri,  4 Apr 2025 14:05:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743775515;
+	bh=sXc59e9oCS1JyARzmEkCFC/sWd+6b3k5Zd9xARKgKhU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=nCGf3I9tEmCSvB0E76/BUXH6Nk1Q786Smv1KYQf7QmCCD9o9Vf7Jhiuw+t0LRBV69
+	 fCQDUgY4uJnXj9Qtye3sGi5fSmLjQJjXNRK/EEEdrFO4FIOnMma7eAkGuyZRmfOSfg
+	 hldrIX+bb9WXeeI5iiR1rh1rVUuQqiXwgbhatKkxVl4shFjEMD6B/1hgd5VDxXk3s1
+	 2GLoeerZIcXyrkvsszXm+iKisJa7hv/VYq64834LR35wmHqQST9N7TujpLPgk8EdVT
+	 UcAJ9djGAUQ/qu7XPoq1vjZ58Lh+q8niDbtBdREOB9J7EnKo65uRZQ9qCRO90Gcjnk
+	 R08WFLmx941ew==
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5e6ff035e9aso4063969a12.0;
+        Fri, 04 Apr 2025 07:05:15 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU2zrgHEjqwRrk4VXO36IPQmUmdER/8GZEVHa43SWCov61RXGD24EBs9evYOqa8yra/7F28qQtc6ysEXOUZ@vger.kernel.org, AJvYcCU45wrw8nqttRz5PGcXQUAXucqrGzoTQ09xhlLy6tCjBUR2hsChEkwzZw/NsPHYl4TCY84+JnDU6nqbSw==@vger.kernel.org, AJvYcCUDT6aJqNRpGmWR2MDxiAJR3V8TYjdYaY3HuXmxESGCv1h8cz3fqKp3BrM0eql3rhdtvv99j06Y+BEO@vger.kernel.org, AJvYcCXfejW4WlIQOZ2wvbtvBUAr63p5knnISrwyByDANPqXmUclKeojJIHcezJQpVrAxsfkvndERgjyPYnmEGVxFg==@vger.kernel.org, AJvYcCXkxbntwdHCtE9dJD2l/SuN126GkpHAnQ3RlfOyGwYaK+TpOC22n01ZbV1OWn8cOK+Abyvy2KnlsKSNGtH0CtkkGcE=@vger.kernel.org, AJvYcCXliRt5smrn9iCUHiiSnlgpFOaTv0MgB9Ju8WjWTQ1fQXjFGZTtLV9IGTEn9r/NinbMIXhsgnHql5c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzlpcDNlrtUWN9LHNAO7w3tOOqlzydZCTLDt/SVzBgkaHtO7p6S
+	DI+295zicmM5UwERhi1Wb6fF3YZvEnUW5bcDaqSrmuLO1tZ6BWM+7U6g/66RQwM2+kQx3I/0/hC
+	E+V21n4DYGGZqfh62t61OdOfGYA==
+X-Google-Smtp-Source: AGHT+IGvjzmo+S0oZ7wclO731FKO/yFH3v6rfa52+MwQrSf/9tdEEQ9A/kWSXMLtJKL4wmLWRjaXPrcr+vGPnUPbJIE=
+X-Received: by 2002:a05:6402:5112:b0:5e7:8be5:d189 with SMTP id
+ 4fb4d7f45d1cf-5f0b3b62317mr2699905a12.4.1743775513430; Fri, 04 Apr 2025
+ 07:05:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250404-kconfig-docs-v1-1-4c3155d4ba44@collabora.com>
-References: <20250404-kconfig-docs-v1-0-4c3155d4ba44@collabora.com>
-In-Reply-To: <20250404-kconfig-docs-v1-0-4c3155d4ba44@collabora.com>
-To: Jonathan Corbet <corbet@lwn.net>, 
- Masahiro Yamada <masahiroy@kernel.org>, 
- Nathan Chancellor <nathan@kernel.org>, 
- Nicolas Schier <nicolas.schier@linux.dev>
-Cc: kernel@collabora.com, linux-doc@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
- Mauro Carvalho Chehab <mchehab@kernel.org>, 
- =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
-X-Mailer: b4 0.14.2
+References: <20250403-dt-cpu-schema-v1-0-076be7171a85@kernel.org>
+ <20250403-dt-cpu-schema-v1-9-076be7171a85@kernel.org> <CAPDyKFoEEp8AZ7aJ8-wwp8=n+T4gbij15oYaCNhF1Bd-E1nMbg@mail.gmail.com>
+In-Reply-To: <CAPDyKFoEEp8AZ7aJ8-wwp8=n+T4gbij15oYaCNhF1Bd-E1nMbg@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Date: Fri, 4 Apr 2025 09:05:02 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqLB7SpVNTVruAb98YEPC5sRpssjsSP=NkqdON6qP+74fw@mail.gmail.com>
+X-Gm-Features: ATxdqUGVc4_Mt0PqKKmf21CRVRmw-a_zuqLCxbME19ZuBODzSy1GgUUs6hNAKo0
+Message-ID: <CAL_JsqLB7SpVNTVruAb98YEPC5sRpssjsSP=NkqdON6qP+74fw@mail.gmail.com>
+Subject: Re: [PATCH 09/19] arm: dts: qcom: sdx55/sdx65: Fix CPU power-domain-names
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Samuel Holland <samuel@sholland.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Viresh Kumar <viresh.kumar@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Vincenzo Frascino <vincenzo.frascino@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, 
+	Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Viresh Kumar <vireshk@kernel.org>, 
+	Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, zhouyanjie@wanyeetech.com, 
+	Conor Dooley <conor@kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, 
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>, Steen Hegelund <Steen.Hegelund@microchip.com>, 
+	Daniel Machon <daniel.machon@microchip.com>, UNGLinuxDriver@microchip.com, 
+	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
+	Heiko Stuebner <heiko@sntech.de>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, 
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	linux-pm@vger.kernel.org, linux-mediatek@lists.infradead.org, 
+	linux-arm-msm@vger.kernel.org, linux-mips@vger.kernel.org, 
+	imx@lists.linux.dev, linux-rockchip@lists.infradead.org, 
+	linux-amlogic@lists.infradead.org, linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add the contents of all Kconfig files to the Documentation to both
-increase their visibility and allow for cross-referencing throughout the
-documentation. In order to achieve this:
-* Add a new script 'kconfig2rst' that converts a Kconfig file into a
-  reStructuredText document.
-* Add an extra step to the documentation building that runs the script
-  for every Kconfig in the source tree, generating a documentation page
-  for each one.
-* Add a new "Kconfig symbols" page in the documentation, that is listed
-  on the "Kernel Build System" page, which contains an index of all
-  Kconfig files and their Kconfig symbols, linking to the corresponding
-  pages.
+On Fri, Apr 4, 2025 at 5:31=E2=80=AFAM Ulf Hansson <ulf.hansson@linaro.org>=
+ wrote:
+>
+> On Fri, 4 Apr 2025 at 05:02, Rob Herring (Arm) <robh@kernel.org> wrote:
+> >
+> > "rpmhpd" is not documented nor used anywhere. As the enable-method is
+> > "psci" use "psci" for the power-domain name.
+> >
+> > Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+> > ---
+> >  arch/arm/boot/dts/qcom/qcom-sdx55.dtsi | 2 +-
+> >  arch/arm/boot/dts/qcom/qcom-sdx65.dtsi | 2 +-
+> >  2 files changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/arch/arm/boot/dts/qcom/qcom-sdx55.dtsi b/arch/arm/boot/dts=
+/qcom/qcom-sdx55.dtsi
+> > index 39530eb580ea..64d9858b4248 100644
+> > --- a/arch/arm/boot/dts/qcom/qcom-sdx55.dtsi
+> > +++ b/arch/arm/boot/dts/qcom/qcom-sdx55.dtsi
+> > @@ -57,7 +57,7 @@ cpu0: cpu@0 {
+> >                         enable-method =3D "psci";
+> >                         clocks =3D <&apcs>;
+> >                         power-domains =3D <&rpmhpd SDX55_CX>;
+> > -                       power-domain-names =3D "rpmhpd";
+> > +                       power-domain-names =3D "psci";
+>
+> As I understand it, this isn't for cpu-power-mgmt but for
+> cpu-performance-scaling.
+>
+> I have been thinking of adding a common power-domain-name for this,
+> but never reached to do it. I think the last one we added was the
+> Airoha SoC [1] which uses "perf", which seems to be the most common
+> one. Still I don't see that being documented.
 
-The generated documentation pages have the config symbols as sections
-with labels that can be referenced from anywhere in the documentation.
-The exceptions are configs that appear multiple times. Those don't get
-labels, as that would generate 'duplicate label' warnings from sphinx.
-To allow this, a list of configs that appear more than once is embedded
-in the kconfig2rst script. When a config appears more than once in the
-same Kconfig file, a count is appended in the section to prevent
-sphinx's auto-labeling to cause the same warning.
+It's all a mess and abuse of the power-domains binding...
 
-The paths in 'source' directives in the Kconfig files are turned into
-links to the generated documentation page to allow for navigation to
-included Kconfig files.
+"perf" is documented. I can add "rpmhpd" I suppose, but I don't see
+anything using the name. Or I can remove it.
 
-Config symbols on 'depends'/'select'/etc lines are prepended by
-'CONFIG_' to allow them to be cross-referenced by automarkup, though no
-cross-references are created in this commit.
-
-Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
----
- Documentation/.gitignore       |   2 +
- Documentation/Config/index.rst |  17 +++
- Documentation/Makefile         |  12 +-
- Documentation/kbuild/index.rst |   2 +
- scripts/kconfig2rst.py         | 336 +++++++++++++++++++++++++++++++++++++++++
- 5 files changed, 368 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/.gitignore b/Documentation/.gitignore
-index d6dc7c9b8e25020f1f3b28811df2291c38695d5f..2fc70a398dc874fcb83834cb6337f602c64a070a 100644
---- a/Documentation/.gitignore
-+++ b/Documentation/.gitignore
-@@ -1,3 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0-only
- output
- *.pyc
-+Config/
-+!Config/index.rst
-diff --git a/Documentation/Config/index.rst b/Documentation/Config/index.rst
-new file mode 100644
-index 0000000000000000000000000000000000000000..2abaa9844dd2a9f57bed0a8d050da3538865b1a5
---- /dev/null
-+++ b/Documentation/Config/index.rst
-@@ -0,0 +1,17 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+===============
-+Kconfig symbols
-+===============
-+
-+.. toctree::
-+   :glob:
-+   :maxdepth: 2
-+
-+   *
-+   */*
-+   */*/*
-+   */*/*/*
-+   */*/*/*/*
-+   */*/*/*/*/*
-+   */*/*/*/*/*/*
-diff --git a/Documentation/Makefile b/Documentation/Makefile
-index 63094646df2890a788542a273e4a828a844b2932..74ebc5303b47f0837a9ab31d39b5464af5f17995 100644
---- a/Documentation/Makefile
-+++ b/Documentation/Makefile
-@@ -115,7 +115,7 @@ $(YNL_INDEX): $(YNL_RST_FILES)
- $(YNL_RST_DIR)/%.rst: $(YNL_YAML_DIR)/%.yaml $(YNL_TOOL)
- 	$(Q)$(YNL_TOOL) -i $< -o $@
- 
--htmldocs texinfodocs latexdocs epubdocs xmldocs: $(YNL_INDEX)
-+htmldocs texinfodocs latexdocs epubdocs xmldocs: $(YNL_INDEX) kconfigdocs
- 
- htmldocs:
- 	@$(srctree)/scripts/sphinx-pre-install --version-check
-@@ -182,9 +182,19 @@ endif # HAVE_SPHINX
- refcheckdocs:
- 	$(Q)cd $(srctree);scripts/documentation-file-ref-check
- 
-+KCONFIG_DOC_DIR=$(srctree)/Documentation/Config
-+KCONFIGS := $(shell find $(srctree) -name Kconfig -type f)
-+KCONFIGS_RST := $(patsubst %, $(KCONFIG_DOC_DIR)/%.rst, $(KCONFIGS))
-+
-+$(KCONFIGS_RST): $(KCONFIGS)
-+	$(Q)cd $(srctree); $(foreach var,$^,$(shell mkdir -p $(KCONFIG_DOC_DIR)/$(shell dirname $(var)); scripts/kconfig2rst.py $(var) >$(KCONFIG_DOC_DIR)/$(var).rst))
-+
-+kconfigdocs: $(KCONFIGS_RST)
-+
- cleandocs:
- 	$(Q)rm -f $(YNL_INDEX) $(YNL_RST_FILES)
- 	$(Q)rm -rf $(BUILDDIR)
-+	$(Q)rm -rf $(filter-out %index.rst,$(wildcard $(KCONFIG_DOC_DIR)/*))
- 	$(Q)$(MAKE) BUILDDIR=$(abspath $(BUILDDIR)) $(build)=Documentation/userspace-api/media clean
- 
- dochelp:
-diff --git a/Documentation/kbuild/index.rst b/Documentation/kbuild/index.rst
-index 3731ab22bfe745c5c51963cffe58fb652dadf88c..47a1d9753a9fb7b55b8a7141da8123ca97b15cfb 100644
---- a/Documentation/kbuild/index.rst
-+++ b/Documentation/kbuild/index.rst
-@@ -15,6 +15,8 @@ Kernel Build System
-     makefiles
-     modules
- 
-+    /Config/index
-+
-     headers_install
- 
-     issues
-diff --git a/scripts/kconfig2rst.py b/scripts/kconfig2rst.py
-new file mode 100755
-index 0000000000000000000000000000000000000000..5af073a1c669ac43c95bb7af00099dcd9473a6ae
---- /dev/null
-+++ b/scripts/kconfig2rst.py
-@@ -0,0 +1,336 @@
-+#!/usr/bin/env python3
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright 2025 Collabora Ltd
-+
-+import sys
-+import re
-+import os
-+
-+import argparse
-+
-+BASE_PATH_DEFAULT = "Documentation/Config/"
-+CFG_LEN = 60
-+RE_indentation = r"^[ \t]*"
-+in_help_txt = False
-+help_txt = ""
-+
-+# These configs appear more than once, thus we don't generate labels or xrefs to
-+# them to avoid duplicate label warnings from Sphinx
-+REPEATED_CONFIGS = [
-+    "32BIT",
-+    "4KSTACKS",
-+    "64BIT",
-+    "A",
-+    "ADVANCED_OPTIONS",
-+    "ALPHA_LEGACY_START_ADDRESS",
-+    "ARCH_AIROHA",
-+    "ARCH_ALPINE",
-+    "ARCH_BCM2835",
-+    "ARCH_BCM_IPROC",
-+    "ARCH_BRCMSTB",
-+    "ARCH_DEFAULT_CRASH_DUMP",
-+    "ARCH_FLATMEM_ENABLE",
-+    "ARCH_FORCE_MAX_ORDER",
-+    "ARCH_HAS_ADD_PAGES",
-+    "ARCH_HAS_CACHE_LINE_SIZE",
-+    "ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION",
-+    "ARCH_HAS_ILOG2_U32",
-+    "ARCH_HAS_ILOG2_U64",
-+    "ARCH_HIBERNATION_HEADER",
-+    "ARCH_HIBERNATION_POSSIBLE",
-+    "ARCH_HISI",
-+    "ARCH_MAY_HAVE_PC_FDC",
-+    "ARCH_MEMORY_PROBE",
-+    "ARCH_MMAP_RND_BITS_MAX",
-+    "ARCH_MMAP_RND_BITS_MIN",
-+    "ARCH_MMAP_RND_COMPAT_BITS_MAX",
-+    "ARCH_MMAP_RND_COMPAT_BITS_MIN",
-+    "ARCH_MTD_XIP",
-+    "ARCH_OMAP",
-+    "ARCH_PKEY_BITS",
-+    "ARCH_PROC_KCORE_TEXT",
-+    "ARCH_R9A07G043",
-+    "ARCH_RENESAS",
-+    "ARCH_ROCKCHIP",
-+    "ARCH_SELECT_MEMORY_MODEL",
-+    "ARCH_SELECTS_CRASH_DUMP",
-+    "ARCH_SELECTS_KEXEC_FILE",
-+    "ARCH_SPARSEMEM_DEFAULT",
-+    "ARCH_SPARSEMEM_ENABLE",
-+    "ARCH_SUNXI",
-+    "ARCH_SUPPORTS_CRASH_DUMP",
-+    "ARCH_SUPPORTS_CRASH_HOTPLUG",
-+    "ARCH_SUPPORTS_KEXEC",
-+    "ARCH_SUPPORTS_KEXEC_FILE",
-+    "ARCH_SUPPORTS_KEXEC_JUMP",
-+    "ARCH_SUPPORTS_KEXEC_PURGATORY",
-+    "ARCH_SUPPORTS_KEXEC_SIG",
-+    "ARCH_SUPPORTS_UPROBES",
-+    "ARCH_SUSPEND_POSSIBLE",
-+    "ARCH_UNIPHIER",
-+    "ARCH_VIRT",
-+    "AUDIT_ARCH",
-+    "B",
-+    "BCH_CONST_M",
-+    "BCH_CONST_T",
-+    "BUILTIN_DTB",
-+    "BUILTIN_DTB_NAME",
-+    "C",
-+    "CC_HAVE_STACKPROTECTOR_TLS",
-+    "CHOICE_B",
-+    "CHOICE_C",
-+    "CMDLINE",
-+    "CMDLINE_BOOL",
-+    "CMDLINE_EXTEND",
-+    "CMDLINE_FORCE",
-+    "CMDLINE_FROM_BOOTLOADER",
-+    "CMDLINE_OVERRIDE",
-+    "CMM",
-+    "COMPAT",
-+    "COMPAT_VDSO",
-+    "CORE",
-+    "CORE_BELL_A",
-+    "CORE_BELL_A_ADVANCED",
-+    "CPU_BIG_ENDIAN",
-+    "CPU_HAS_FPU",
-+    "CPU_HAS_PREFETCH",
-+    "CPU_LITTLE_ENDIAN",
-+    "CRYPTO_CHACHA20_NEON",
-+    "CRYPTO_JITTERENTROPY_MEMORY_BLOCKS",
-+    "CRYPTO_JITTERENTROPY_MEMORY_BLOCKSIZE",
-+    "CRYPTO_JITTERENTROPY_OSR",
-+    "CRYPTO_JITTERENTROPY_TESTINTERFACE",
-+    "CRYPTO_NHPOLY1305_NEON",
-+    "DEBUG_ENTRY",
-+    "DMA_NONCOHERENT",
-+    "DMI",
-+    "DRAM_BASE",
-+    "DUMMY",
-+    "DUMMY_CONSOLE",
-+    "EARLY_PRINTK",
-+    "EFI",
-+    "EFI_STUB",
-+    "FIT_IMAGE_FDT_EPM5",
-+    "FIX_EARLYCON_MEM",
-+    "FPU",
-+    "GENERIC_BUG",
-+    "GENERIC_BUG_RELATIVE_POINTERS",
-+    "GENERIC_CALIBRATE_DELAY",
-+    "GENERIC_CSUM",
-+    "GENERIC_HWEIGHT",
-+    "GENERIC_ISA_DMA",
-+    "GENERIC_LOCKBREAK",
-+    "HAS_IOMEM",
-+    "HAVE_SMP",
-+    "HAVE_TCM",
-+    "HEARTBEAT",
-+    "HIGHMEM",
-+    "HOTPLUG_CPU",
-+    "HW_PERF_EVENTS",
-+    "HZ",
-+    "HZ_100",
-+    "HZ_1000",
-+    "HZ_1024",
-+    "HZ_128",
-+    "HZ_250",
-+    "HZ_256",
-+    "ILLEGAL_POINTER_VALUE",
-+    "IRQSTACKS",
-+    "ISA",
-+    "ISA_DMA_API",
-+    "KASAN_SHADOW_OFFSET",
-+    "KERNEL_MODE_NEON",
-+    "KERNEL_START",
-+    "KERNEL_START_BOOL",
-+    "KUSER_HELPERS",
-+    "KVM",
-+    "KVM_GUEST",
-+    "L1_CACHE_SHIFT",
-+    "LEDS_EXPRESSWIRE",
-+    "LOCKDEP_SUPPORT",
-+    "LOWMEM_SIZE",
-+    "LOWMEM_SIZE_BOOL",
-+    "MACH_LOONGSON32",
-+    "MACH_LOONGSON64",
-+    "MACH_TX49XX",
-+    "MAGIC_SYSRQ",
-+    "MATH_EMULATION",
-+    "MCOUNT",
-+    "MMU",
-+    "NODES_SHIFT",
-+    "NO_IOPORT_MAP",
-+    "NR_CPUS",
-+    "NR_CPUS_DEFAULT",
-+    "NR_CPUS_RANGE_END",
-+    "NUMA",
-+    "PAGE_OFFSET",
-+    "PANIC_TIMEOUT",
-+    "PARAVIRT",
-+    "PARAVIRT_SPINLOCKS",
-+    "PARAVIRT_TIME_ACCOUNTING",
-+    "PFAULT",
-+    "PGTABLE_LEVELS",
-+    "PHYSICAL_ALIGN",
-+    "PHYSICAL_START",
-+    "PID_IN_CONTEXTIDR",
-+    "PM",
-+    "POWERPC64_CPU",
-+    "PRINT_STACK_DEPTH",
-+    "RANDOMIZE_BASE",
-+    "RANDOMIZE_BASE_MAX_OFFSET",
-+    "RELOCATABLE",
-+    "SBUS",
-+    "SCHED_CLUSTER",
-+    "SCHED_HRTICK",
-+    "SCHED_MC",
-+    "SCHED_OMIT_FRAME_POINTER",
-+    "SCHED_SMT",
-+    "SERIAL_CONSOLE",
-+    "SMP",
-+    "STACKPROTECTOR_PER_TASK",
-+    "STACKTRACE_SUPPORT",
-+    "SWAP_IO_SPACE",
-+    "SYS_SUPPORTS_APM_EMULATION",
-+    "SYS_SUPPORTS_NUMA",
-+    "SYS_SUPPORTS_SMP",
-+    "TASK_SIZE",
-+    "TASK_SIZE_BOOL",
-+    "TCP_CONG_CUBIC",
-+    "TIME_LOW_RES",
-+    "UNWINDER_FRAME_POINTER",
-+    "UNWINDER_GUESS",
-+    "UNWINDER_ORC",
-+    "USE_OF",
-+    "VMSPLIT_1G",
-+    "VMSPLIT_2G",
-+    "VMSPLIT_3G",
-+    "VMSPLIT_3G_OPT",
-+    "X",
-+    "X86_32",
-+    "X86_64",
-+    "XEN",
-+    "XEN_DOM0",
-+    "XIP_KERNEL",
-+    "XIP_PHYS_ADDR",
-+    "ARCH_BCM",
-+    "VIRTUALIZATION",
-+]
-+
-+
-+def print_title(title):
-+    heading = "=" * len(title)
-+    print(heading)
-+    print(title)
-+    print(heading)
-+    print()
-+
-+
-+parser = argparse.ArgumentParser(
-+    prog="kconfig2rst", description="Convert a Kconfig file into ReStructuredText"
-+)
-+
-+parser.add_argument("kconfig", help="Path to input Kconfig file")
-+parser.add_argument(
-+    "--base-doc-path",
-+    default=BASE_PATH_DEFAULT,
-+    help="Base path of generated rST files for usage in 'source' links",
-+)
-+args = parser.parse_args()
-+
-+print_title(args.kconfig)
-+
-+line_accum = ""
-+continued_line = False
-+
-+repeated_config_count = {}
-+
-+with open(args.kconfig) as f:
-+    for il in f:
-+        # If line ends with \, accumulate it and handle full line
-+        if re.search(r"\\\n$", il):
-+            continued_line = True
-+            line_accum += il[:-2]  # accumulate without backslash and newline
-+            continue
-+
-+        if continued_line:
-+            continued_line = False
-+            l = line_accum + il
-+            line_accum = ""
-+        else:
-+            l = il
-+
-+        if in_help_txt:
-+            if l == "\n":
-+                help_txt += l
-+                continue
-+            if first_line_help_txt:
-+                help_txt_indentation = re.match(RE_indentation, l).group(0).expandtabs()
-+                first_line_help_txt = False
-+            # Consider any line with same or more indentation as part of help text
-+            if (
-+                help_txt_indentation
-+                in re.match(RE_indentation, l).group(0).expandtabs()
-+            ):
-+                help_txt += l
-+                continue
-+            else:
-+                in_help_txt = False
-+                print(help_txt)
-+                help_txt = ""
-+        else:
-+            l = re.sub(r"[*]", r"\*", l)  # Escape asterisks
-+
-+        if re.match(r"^[ \t]*#.*", l):
-+            # Skip comments
-+            continue
-+
-+        if re.match(r"^[ \t]*help", l):
-+            in_help_txt = True
-+            first_line_help_txt = True
-+            print("* help::\n")
-+            continue
-+
-+        m = re.match("^[ \t]*(menu)?config (?P<cfgname>[A-Za-z0-9_]+)", l)
-+        if m:
-+            section_name = f"\nCONFIG_{m.group('cfgname')}"
-+            underline = f"\n{'='*CFG_LEN}\n"
-+            if m.group("cfgname") in REPEATED_CONFIGS:
-+                repeated_config_count[m.group("cfgname")] = (
-+                    repeated_config_count.get(m.group("cfgname"), 0) + 1
-+                )
-+                if repeated_config_count[m.group("cfgname")] > 1:
-+                    section_name += f"({repeated_config_count[m.group('cfgname')]})"
-+                print(section_name + underline)
-+            else:
-+                print(f"\n.. _CONFIG_{m.group('cfgname')}:\n\n" + section_name + underline)
-+            continue
-+
-+        m = re.match(
-+            r"^[ \t]*(def_bool|def_tristate|depends on|select|range|visible if|imply|default|prompt|bool|tristate|string|hex|int|modules)( \"(.*)\")?(?P<expr> [^\"]*)?",
-+            l,
-+        )
-+        if m:
-+            expr = m.group('expr') if m.group('expr') else ''
-+            not_expr = l
-+            if expr:
-+                expr = re.sub(r'[A-Z0-9_]{2,}', rf" CONFIG_\g<0> ", expr)
-+                not_expr = l[:m.start('expr')]
-+            print("* " + not_expr.lstrip() + expr.rstrip())
-+            continue
-+
-+        m = re.match(r'^[ \t]*source "(.*)"', l)
-+        if m:
-+            # Format Kconfig file paths as Documentation/... so they can be turned
-+            # into links by the automarkup plugin
-+            print(f"\nsource {args.base_doc_path + m.group(1)}.rst\n")
-+            continue
-+
-+        m = re.match(r"[^ \t]*choice|endchoice|comment|menu|endmenu|if|endif", l)
-+        if m:
-+            print("\n" + l.strip() + "\n")
-+            continue
-+
-+        print(l.strip())
-+
-+if help_txt:
-+    print(help_txt)  # Flush any pending help text
-
--- 
-2.49.0
-
+Rob
