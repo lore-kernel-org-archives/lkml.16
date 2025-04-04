@@ -1,129 +1,219 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com [209.85.222.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3BC01CEAB2;
-	Fri,  4 Apr 2025 13:58:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9668B1F152A
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 13:58:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743775117; cv=none; b=rjLH4EaI8BiEn/L5nDRixOlZkpEuVtbAbB3DHGEkwDEhsYWNMxcLQtUy9Of4Gfzge2aI4wVe1IpKrTrDNmC0dilcKhkF4Wi1z6py+vxNp428Fb678Bq7iF1gTFq6KqFGW0EUA58p2Fosn1Ibn9s7hVQ6uhMKuARHM/oMHjVY6BU=
+	t=1743775125; cv=none; b=e6JMur7dMzcvMdFjijqzNpFzP+FoQFWNrRHMtiZvka0P3KftdmmZ8yIsOTd7Te6EqB9STH6sD6qCzeYt2TiRTBZDizjGt7x2MkLbZLRVYnsUWmCQu8XfUmuh2PaHCmx0cYk2ymnNIwSxotHYYsFCl1+lNjgCAwX8f1ZXpH59Hnc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743775117; c=relaxed/simple;
-	bh=NG7H7hLS4WQavrvWJPizCU0NvDUAAmaYN/JZ7/I5PN4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mnhSqfHIMd0F/n7ySAPqKCWkDmS0OARIe7KbfryzcS17nNR88md59D1/2qS9ZM50Ly5zimBMXC300CTmwk3rresABk6cVY7mdC3R/Ce6QVXW+jIg/p49SGvEf+MZCXlpdwKrelR8HCEhfxehIpxQiz09mEXpYu79CnU/FB9oHVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hTn0bPkJ; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1743775125; c=relaxed/simple;
+	bh=Pfj890P5IwbfTQahPjXr1drdBQeTDyPSELB4bM0oU9Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NDLBJraj0XKIqMxHOS1zpTb63RqTit4k19qhUPYBWCdt1A7wRZN6OBXDi6sN4uz/W7lTa4ABN+jp2PLJ0Hv8GAyX9ubQQL4f2hgmqfIPhKkg6xQ1Ppts3iZm3UWvy7X7YVNTTYFjxxPJsTs9Dk2ynFpzN6EEHwE++1gjASUIi6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mZn0YbpO; arc=none smtp.client-ip=209.85.222.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hTn0bPkJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743775114; x=1775311114;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=NG7H7hLS4WQavrvWJPizCU0NvDUAAmaYN/JZ7/I5PN4=;
-  b=hTn0bPkJyAeMWAx4OFS+4Xd5yFNYpb/1tuXfCW4OTCgP/xeMOehSpu5L
-   0lfbFouU/6BFkOW0U/y8VhYoEha2UygdWF6ao/DIorbgyP4GrPYFa5yYJ
-   k56D646P6axwYRRIniRyDI599CIdsb9X6ZDsnDgaaqHdjLFFji4oExLHk
-   sS+uR+yFaIfJtIpfrdQcWD3+bgM/Jo0aw3hRZ3G6FbvUcBI262yA7h5iA
-   hT877O6AXKFr3k2y+EAA1jgAp/ZLx7WpjIYIN5fJ2SWaSjOqdMml67yEt
-   MJJDu3sFlHGFdfJUoTIivz+wJ7fS1xXnHRCDCfhwcH8tZGR+rtxn01sX9
-   Q==;
-X-CSE-ConnectionGUID: xusNnNDHTQCEyqFtcHXi6Q==
-X-CSE-MsgGUID: dclFPhzYTTmD1Bed3CjQYg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11394"; a="45232313"
-X-IronPort-AV: E=Sophos;i="6.15,188,1739865600"; 
-   d="scan'208";a="45232313"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 06:58:34 -0700
-X-CSE-ConnectionGUID: XOMIdkoDTHShP7SLQujMJA==
-X-CSE-MsgGUID: +7NvfFxGQFSbrm+JYdjdRA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,188,1739865600"; 
-   d="scan'208";a="127256509"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by orviesa006.jf.intel.com with ESMTP; 04 Apr 2025 06:58:27 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u0hYu-0001H5-2T;
-	Fri, 04 Apr 2025 13:58:24 +0000
-Date: Fri, 4 Apr 2025 21:58:06 +0800
-From: kernel test robot <lkp@intel.com>
-To: Terry Bowman <terry.bowman@amd.com>, dave@stgolabs.net,
-	jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	alison.schofield@intel.com, vishal.l.verma@intel.com,
-	ira.weiny@intel.com, dan.j.williams@intel.com, willy@infradead.org,
-	jack@suse.cz, rafael@kernel.org, len.brown@intel.com, pavel@ucw.cz,
-	ming.li@zohomail.com, nathan.fontenot@amd.com,
-	Smita.KoralahalliChannabasappa@amd.com,
-	huang.ying.caritas@gmail.com, yaoxt.fnst@fujitsu.com,
-	peterz@infradead.org, gregkh@linuxfoundation.org,
-	quic_jjohnson@quicinc.com, ilpo.jarvinen@linux.intel.com,
-	bhelgaas@google.com, andriy.shevchenko@linux.intel.com,
-	mika.westerberg@linux.intel.com, akpm@linux-foundation.org,
-	gourry@gourry.net, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
-	linux-fsdevel@vger.kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev
-Subject: Re: [PATCH v3 2/4] cxl: Update Soft Reserved resources upon region
- creation
-Message-ID: <202504042103.wFCRBR7K-lkp@intel.com>
-References: <20250403183315.286710-3-terry.bowman@amd.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mZn0YbpO"
+Received: by mail-ua1-f43.google.com with SMTP id a1e0cc1a2514c-86b9d9b02cbso921691241.1
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 06:58:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1743775120; x=1744379920; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aB9/4tnJAtBLw0ZsGKRcy+CITdDU2AAS4m+EOvznbRo=;
+        b=mZn0YbpOkvivRmzb/qUSB3sbDjRxkXSChEkbxgrHMzMaTcFXXKswsFdcwWVf2nUGfl
+         rzvmbxEK/szrUtfV7NdqeHrLZz11iV7c1dfNYNKJVCgfDBftu1KR/HNzfu8STz/q15+q
+         bt2rtfMGobd3+4jLfp2biuCFr0sbz2xN40EjvYNq8yKwz5q3rsuYF+vH+IqQG4tAgwUh
+         OtFx+7H1hBMUqLFHuWz9vMjIAaFc8dFnB2JeV/FYudvQraSjE1deHOyTT72Lg2nol5lh
+         4FJ6QO010ErayqkSkNLfOgdnkpsKUkj+fv/kOUwrVOupMH3tpCWT0ia+IAghDPljQgNz
+         uWwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743775120; x=1744379920;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=aB9/4tnJAtBLw0ZsGKRcy+CITdDU2AAS4m+EOvznbRo=;
+        b=UidMq2KRNug4DLePw+Wv7Rc0NKgh9bMUj2Ybw3OKpniHI259NKB0zB+5K9ERFATIvZ
+         SCD9SPHlyhgauw/pPSltL/G5QqPhEnzX6nUErBaZ6gLIdGpev8oRsbImuTsaCu6PvHeD
+         xXSjfCXmG/2VdSJVNrfN1DqdDBRmsYZIP+ZDrMDM21KCvkOdXTtb101Psswsr5b8DWQw
+         jD2meky6Mn/AvbRxZJR6+Vg7ydqy0Za7MfsdfEhynA04/9PiB9SM5Wq5H1r+Innfjrqc
+         wC2w5vb/ZAlGs4Z4pJvRE23ERl9s88cTyeXieEzaQFXAQYi2pF6xyg6iea2qVpevt/m2
+         HFQw==
+X-Forwarded-Encrypted: i=1; AJvYcCWpIWFvCYsOp8tyZYHEnCbI/c1yZPA+2jjcbFFOfO2EXkFibm414wyahv95MQFgcwqVRVn8jIlChSdphHA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzptZg3gUQ9dzxd0Ur6zn7F/OzwCTkipYoqwKzGpms2eUf3Wj4K
+	X68ROAVoKCjTqsUFT+Vfe5HTDui4hXDdOQXQdJ/O/owE0A9BEtwHw7AQijm5dC/lfrgWBKeNJzw
+	SgVObFUfJNMH5TVDsT8ysnLiMnwqryUZeAQJPzQ==
+X-Gm-Gg: ASbGncsn/ou5dq6WpDaCv2kyJZFYmSx75nZbmNPUANFREAjXL0CV+8pxPuYgmHabo/x
+	ptxQVGjIOlRqCOlvITqqH6D4kTCJwOYVuJDTMuPEIZU2KHk3Y2gWgQukKBC5hujhRsR4UG5BOjK
+	ijeLh7cN8oQQgxDo7XEx0XV+yaanXVT2IG3ejVsb59HrBPOPNZ8OwIQOhaPtA=
+X-Google-Smtp-Source: AGHT+IGDDltg5ObO138k6zzOYL+wykiXZsnKn8Vh0cMA65TQ3tUMpH1ACOqRfxeVBXNWngIamyIeX+2FXG2uPojaJuY=
+X-Received: by 2002:a05:6102:3f42:b0:4bb:c8e5:aa8b with SMTP id
+ ada2fe7eead31-4c8554a106dmr2484511137.22.1743775120437; Fri, 04 Apr 2025
+ 06:58:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250403183315.286710-3-terry.bowman@amd.com>
+References: <20250403151621.130541515@linuxfoundation.org>
+In-Reply-To: <20250403151621.130541515@linuxfoundation.org>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Fri, 4 Apr 2025 19:28:28 +0530
+X-Gm-Features: ATxdqUHv-en8o0wookVpU3iUOk9afvCFPma7LGlR77epx5goUvKncGk2Siry8JI
+Message-ID: <CA+G9fYs22cxdKD24MzsBZnjVtHx1DpauDyKvLzecBaFjTy3G=w@mail.gmail.com>
+Subject: Re: [PATCH 6.14 00/21] 6.14.1-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
+	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
+	broonie@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Terry,
+On Thu, 3 Apr 2025 at 20:54, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 6.14.1 release.
+> There are 21 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Sat, 05 Apr 2025 15:16:11 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-=
+6.14.1-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-6.14.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-kernel test robot noticed the following build errors:
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-[auto build test ERROR on aae0594a7053c60b82621136257c8b648c67b512]
+## Build
+* kernel: 6.14.1-rc1
+* git: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-=
+rc.git
+* git commit: 8dba5209f1d8c122539b8f9f164a6ed44c025bcf
+* git describe: v6.14-rc6-492-g8dba5209f1d8
+* test details:
+https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.14.y/build/v6.14=
+-rc6-492-g8dba5209f1d8/
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Terry-Bowman/kernel-resource-Provide-mem-region-release-for-SOFT-RESERVES/20250404-023601
-base:   aae0594a7053c60b82621136257c8b648c67b512
-patch link:    https://lore.kernel.org/r/20250403183315.286710-3-terry.bowman%40amd.com
-patch subject: [PATCH v3 2/4] cxl: Update Soft Reserved resources upon region creation
-config: hexagon-randconfig-001-20250404 (https://download.01.org/0day-ci/archive/20250404/202504042103.wFCRBR7K-lkp@intel.com/config)
-compiler: clang version 15.0.7 (https://github.com/llvm/llvm-project 8dfdcc7b7bf66834a761bd8de445840ef68e4d1a)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250404/202504042103.wFCRBR7K-lkp@intel.com/reproduce)
+## Test Regressions (compared to v6.14.0)
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504042103.wFCRBR7K-lkp@intel.com/
+## Metric Regressions (compared to v6.14.0)
 
-All errors (new ones prefixed by >>):
+## Test Fixes (compared to v6.14.0)
 
-   In file included from drivers/cxl/core/suspend.c:7:
->> drivers/cxl/cxlpci.h:126:2: error: call to undeclared function 'pcie_capability_read_word'; ISO C99 and later do not support implicit function declarations [-Werror,-Wimplicit-function-declaration]
-           pcie_capability_read_word(pdev, PCI_EXP_LNKSTA2, &lnksta2);
-           ^
-   1 error generated.
+## Metric Fixes (compared to v6.14.0)
 
+## Test result summary
+total: 114030, pass: 88585, fail: 7464, skip: 17981, xfail: 0
 
-vim +/pcie_capability_read_word +126 drivers/cxl/cxlpci.h
+## Build Summary
+* arc: 6 total, 5 passed, 1 failed
+* arm: 143 total, 137 passed, 6 failed
+* arm64: 58 total, 57 passed, 1 failed
+* i386: 22 total, 19 passed, 3 failed
+* mips: 38 total, 33 passed, 5 failed
+* parisc: 5 total, 3 passed, 2 failed
+* powerpc: 44 total, 43 passed, 1 failed
+* riscv: 27 total, 24 passed, 3 failed
+* s390: 26 total, 25 passed, 1 failed
+* sh: 6 total, 5 passed, 1 failed
+* sparc: 5 total, 3 passed, 2 failed
+* x86_64: 50 total, 49 passed, 1 failed
 
-e0c818e00443ce Robert Richter 2024-02-16  116  
-4d07a05397c8c1 Dave Jiang     2023-12-21  117  /*
-4d07a05397c8c1 Dave Jiang     2023-12-21  118   * CXL v3.0 6.2.3 Table 6-4
-4d07a05397c8c1 Dave Jiang     2023-12-21  119   * The table indicates that if PCIe Flit Mode is set, then CXL is in 256B flits
-4d07a05397c8c1 Dave Jiang     2023-12-21  120   * mode, otherwise it's 68B flits mode.
-4d07a05397c8c1 Dave Jiang     2023-12-21  121   */
-4d07a05397c8c1 Dave Jiang     2023-12-21  122  static inline bool cxl_pci_flit_256(struct pci_dev *pdev)
-4d07a05397c8c1 Dave Jiang     2023-12-21  123  {
-4d07a05397c8c1 Dave Jiang     2023-12-21  124  	u16 lnksta2;
-4d07a05397c8c1 Dave Jiang     2023-12-21  125  
-4d07a05397c8c1 Dave Jiang     2023-12-21 @126  	pcie_capability_read_word(pdev, PCI_EXP_LNKSTA2, &lnksta2);
-4d07a05397c8c1 Dave Jiang     2023-12-21  127  	return lnksta2 & PCI_EXP_LNKSTA2_FLIT;
-4d07a05397c8c1 Dave Jiang     2023-12-21  128  }
-4d07a05397c8c1 Dave Jiang     2023-12-21  129  
+## Test suites summary
+* boot
+* commands
+* kselftest-arm64
+* kselftest-breakpoints
+* kselftest-capabilities
+* kselftest-cgroup
+* kselftest-clone3
+* kselftest-core
+* kselftest-cpu-hotplug
+* kselftest-cpufreq
+* kselftest-efivarfs
+* kselftest-exec
+* kselftest-fpu
+* kselftest-futex
+* kselftest-gpio
+* kselftest-intel_pstate
+* kselftest-ipc
+* kselftest-kcmp
+* kselftest-kvm
+* kselftest-livepatch
+* kselftest-membarrier
+* kselftest-memfd
+* kselftest-mincore
+* kselftest-mqueue
+* kselftest-net
+* kselftest-net-mptcp
+* kselftest-openat2
+* kselftest-ptrace
+* kselftest-rseq
+* kselftest-rtc
+* kselftest-rust
+* kselftest-seccomp
+* kselftest-sigaltstack
+* kselftest-size
+* kselftest-tc-testing
+* kselftest-timers
+* kselftest-tmpfs
+* kselftest-tpm2
+* kselftest-user_events
+* kselftest-vDSO
+* kselftest-x86
+* kunit
+* kvm-unit-tests
+* libgpiod
+* libhugetlbfs
+* log-parser-boot
+* log-parser-build-clang
+* log-parser-build-gcc
+* log-parser-test
+* ltp-capability
+* ltp-commands
+* ltp-containers
+* ltp-controllers
+* ltp-cpuhotplug
+* ltp-crypto
+* ltp-cve
+* ltp-dio
+* ltp-fcntl-locktests
+* ltp-filecaps
+* ltp-fs
+* ltp-fs_bind
+* ltp-fs_perms_simple
+* ltp-hugetlb
+* ltp-ipc
+* ltp-math
+* ltp-mm
+* ltp-nptl
+* ltp-pty
+* ltp-sched
+* ltp-smoke
+* ltp-syscalls
+* ltp-tracing
+* perf
+* rcutorture
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+--
+Linaro LKFT
+https://lkft.linaro.org
