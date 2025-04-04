@@ -1,161 +1,73 @@
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C8C71CD2C
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 03:16:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E94CDF59
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 03:18:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743736613; cv=none; b=Z5dWTkhwTpNGYzXBveEkBuX15MH0hiiPWhMCCJc86h/Ion9SuCrKmQ+CgbkEwv5u9Kn2mapq7sPgHcTrdr4eqN7D+CXzgtvd1IjfZl1CMCqFbLijcbbvJsMKlr8kzBGhQ8YHNugOsMMfsVUqjQF0InLjT9CZZTmVeom3WMETyHA=
+	t=1743736684; cv=none; b=ckbw5ztXdPN3SeThUWh8LdIITimaSyaQuxpt5SA/pcE86prqbOFwNgpsm6PnT/zHjlVZAHlDAvc7xp8bRUxTmViShPG+FBfa9bVTRhZrlgL2VdvvcnjEIysE6G/J/nEA4lN6iZ3YCW4Jo1Qi9QP31d3OXRFLddBk2wfJqkz7HSo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743736613; c=relaxed/simple;
-	bh=3MXgIml+EW4PElL/Kwn4VTBpv63yRiU0nx0DB63Rm/Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=njjhH6IPkNIoHh8e6B87syBSdbUDGJe0FYbKnvcJliW5DmxBrNz9YFdIt72LE/ttRYrbJLqLzseH8ZQPQ/PjKGLgA3C7m0AjvE0VD0jyWsYwh9qKK46/sXLsVDMuzlXVpltJTpmLF35vq06WhrFYnhEjrvNw1PlqIm/lXY8fbDQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dcrFUwQc; arc=none smtp.client-ip=209.85.160.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dcrFUwQc"
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-47664364628so16904961cf.1
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 20:16:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743736611; x=1744341411; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IsSiuImgPZJSIBkA0BbQR6qiZItpPbtmLSDASH6V+tw=;
-        b=dcrFUwQcdffASWW6nkoa0C2DMQt692Kl1ygLqNdDHbHQj30qgNRDvTDvTOkvQJtRLN
-         +nO28nse1gZxAeaIM2EV3tqZ3kUAhyxzInBEjui5wD47nADQ3GzbXjBBtiMImZC/CDKI
-         L0PiVJhGWPDsSB1aovHvlgf6Cbb9zclDhpCpc3wyEkPbYVFHB29ZZ1UjRYq+VTT9yBOZ
-         XB+Cbo7kGojEKhV5PlMgQJwFpKPsowLvbiy9FgaQ4tfc2Kke9gqFtut4B7KY4dSAb1Ue
-         tu8kXzUHkQjpUTtUPNO9e0UKJxry1O4RigRhpCi4KFgPqSaxv/LCkSQYfyQQFIzQ99ZE
-         DjMw==
+	s=arc-20240116; t=1743736684; c=relaxed/simple;
+	bh=Qxgro5oF22O8IrPnTha4/pEP42PMMbVux5sHKA5POK0=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=SANQwok/pwjV24rtveONO7rBUAvndRTTwWinjO3DjIeOADEFC9yJ+vnx6gltuJoJwVQjU1aBJhwiBxFOmfFMygofH3Z2JcUeNYRbcdNp59+++NDcussiy9xGRgji8hj2Xy6vCYP8KaUUv9FC8Bj9rqPRNs3kZJCxzukBNlIIiog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3d44b221f0dso31316385ab.1
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 20:18:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743736611; x=1744341411;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IsSiuImgPZJSIBkA0BbQR6qiZItpPbtmLSDASH6V+tw=;
-        b=m7JBfCRQQXeuIk/a1M+PnLmv/Ac+403PbzvOXSzerbPmyawIa6hPltQiaB1UdhQ+dw
-         fNCVZ175RODZesPynkRGT1t/P7SGiZOD9JpMzeZDLQ77GS2Enb1OK3Jh81r7lbMOSejU
-         rLMx9P7yA+oUgi1MdIesnZdOm+G9yNbmoucvI0qe16mQ7xuDRKpvuZV7872S1Ussj3sb
-         d+kphIEePPklHJnw6aQmLwXdT3dqHAKM4dZITin5MY9tuQ76dnmVGyZtdWUxYfsI5XkF
-         wcAk6dy/GvS7nXyVBzFQNP4cVuRMW9d23vH3rmKI/JuRokPOFSIdMs+KNRcdbZT7Z/Lp
-         Hxkw==
-X-Forwarded-Encrypted: i=1; AJvYcCVgQr62+mcxCy6GG5SVYslY2kCg0eL6BUhtD3q3XheW+deaIQGSE9oStWYeB/GYtBC6843ROHvp7eTZ/t8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzUSe43ANs+b9WpHwpqmX7cdYTkMZDyphu0FcMEwa0/789PEmrJ
-	1SwfJ8pcnfSgwhuzPOSUFlyaj+NaOCi8rX7b8im1uLbsFEudRmNcvDVFVokOiuNi3v2aGW/l8X/
-	4N6czJUr1zPFzrrfA1zBe/VaAHU0=
-X-Gm-Gg: ASbGncsPq4LwUQzjo7f8vFjNes81bAx9OMdsMw3cdIGxvcWClnJk8JXlaCyeKFTPUSO
-	Z/SbMkepFI7x9qNX28AE5PBR1sGOvx5TKfIffuZKHWbVBh/PyPbxQn8L+YaeHvDClZYmCYEuU21
-	hDTNHBt9O5vXzXAecBHsh2bZjYQo2SEcDQp+EJBd3ANZZo+LMmda34tHqU
-X-Google-Smtp-Source: AGHT+IGpiTixZuIRs+kppE3urPHfFJtlPJdUN9hFNOYrJjnOkr1+zSXc2rpdSynGOjeQZuL+Wsd27x7L1AuRkS0L988=
-X-Received: by 2002:a05:622a:143:b0:474:f5fb:b11a with SMTP id
- d75a77b69052e-47924c30da0mr21099711cf.3.1743736610677; Thu, 03 Apr 2025
- 20:16:50 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743736682; x=1744341482;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qNHCWNtIlckVIlEBFgaE8yVGQ+y7Bn6IfVLAuL99NE4=;
+        b=WB2wBZlzl/60kr7A67aPOdfjrAU3DyzRol/nsZVuEq6CwD4f9EAykmgOII/LUuELH+
+         JwPlkrcAV3MJR2Rs0Q9LWW9Y0Z7hkaN8woz4jS1B2GJ/MOh18XWFnjbcXTTVwfdwJEmf
+         M4v2nAdz4x/srbyMcBe1d0tbFI6fuWME0++1tSPpCyaTDX6o0wxJnDC2uVwJsfJTvDQV
+         xOr7Zn9ynodjxHhplrKRq2rUYRHzd1zVmLjb5rtFELPyZTMeLXvyjW5Qp4Vt0ifsm+si
+         k1hW5r00Ff1uWeFUYOVSjjXHj/eLQ1UnWN0co2qIpBM0n0tC8v8NBNJv+BT0MeIzUS5P
+         HdkA==
+X-Forwarded-Encrypted: i=1; AJvYcCWH76g5T5a18QLOyxV7Y/r3IyKa+99c0YjkwYzt/K4NS8RuKMFrq86Mqf9EovkJPEQgggPGjynHab6vp5w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxNod4BW05CYJJkliYyn9ZnhlVASZy0Ak5c5Ab61wg0TMeCQeYx
+	VujLjmYtrWY64j1mkhew2rngDZIMqTqPfUlvRnjC1fkvYMGL+wy7KB8qnHgt6lt6laNjULiCkfQ
+	rP4REt7U3YFF2UpyHslGl48vcMa0aDDuf5/19KXDaiscMxtsOq6cuifA=
+X-Google-Smtp-Source: AGHT+IGN5d1M5TSa+K3LKuBkoXF+OqySRjYxf+SLt7WcnzxPYCUvyo2jJaA2VHjOa0dkaJ9Nco1l2R/8AZkLKNB8YbL2ZRmAKAhO
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250402124207.5024-1-gshahrouzi@gmail.com> <2025040350-footnote-fanciness-50ac@gregkh>
- <CAKUZ0zLTCw3HDxmyiPD14TxQk-g90h=-7=e1Zp9ucDXQosPB2Q@mail.gmail.com>
-In-Reply-To: <CAKUZ0zLTCw3HDxmyiPD14TxQk-g90h=-7=e1Zp9ucDXQosPB2Q@mail.gmail.com>
-From: Gabriel <gshahrouzi@gmail.com>
-Date: Thu, 3 Apr 2025 23:15:00 -0400
-X-Gm-Features: AQ5f1JpalCZLl5SlsRZLQ88v9o549GZADtvsvlsr_FcvtanpDT1fJqMtiuQkCSo
-Message-ID: <CAKUZ0z+iL1TOLbddt5qbqNb_kAG5Ltta7Kw97wO0_S91DrQ8hw@mail.gmail.com>
-Subject: Re: [PATCH v2] staging: rtl8723bs: Remove trailing whitespace
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: linux-staging@lists.linux.dev, philipp.g.hortmann@gmail.com, 
-	eamanu@riseup.net, linux-kernel@vger.kernel.org, 
-	kernelmentees@lists.linuxfoundation.org, skhan@linuxfoundation.org
+X-Received: by 2002:a05:6e02:4401:20b0:3d0:10a6:99aa with SMTP id
+ e9e14a558f8ab-3d6e52eef27mr9570685ab.4.1743736682408; Thu, 03 Apr 2025
+ 20:18:02 -0700 (PDT)
+Date: Thu, 03 Apr 2025 20:18:02 -0700
+In-Reply-To: <tencent_0AEAEC8ECFCC7A2E6CC02DC16FBC9410E80A@qq.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67ef4f6a.050a0220.9040b.02f6.GAE@google.com>
+Subject: Re: [syzbot] [isofs?] KASAN: slab-out-of-bounds Read in isofs_fh_to_parent
+From: syzbot <syzbot+4d7cd7dd0ce1aa8d5c65@syzkaller.appspotmail.com>
+To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 3, 2025 at 11:03=E2=80=AFPM Gabriel <gshahrouzi@gmail.com> wrot=
-e:
->
-> On Thu, Apr 3, 2025 at 10:22=E2=80=AFAM Greg KH <gregkh@linuxfoundation.o=
-rg> wrote:
-> >
-> > On Wed, Apr 02, 2025 at 08:42:07AM -0400, Gabriel Shahrouzi wrote:
-> > > Remove trailing whitespace to comply with kernel coding style.
-> > >
-> > > Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-> > > ---
-> > > Changes in v2:
-> > >       - Resend using git send-email to fix formatting issues in the e=
-mail body.
-> > > ---
-> > >  drivers/staging/rtl8723bs/include/hal_pwr_seq.h | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git drivers/staging/rtl8723bs/include/hal_pwr_seq.h drivers/st=
-aging/rtl8723bs/include/hal_pwr_seq.h
-> > > index b93d74a5b9a5..48bf7f66a06e 100644
-> > > --- drivers/staging/rtl8723bs/include/hal_pwr_seq.h
-> > > +++ drivers/staging/rtl8723bs/include/hal_pwr_seq.h
-> >
-> > This wasn't made with git, was it?  You are "one" indent level off, the
-> > diff should say:
-> Interesting. Not entirely certain how this happened. Since it was from
-> an earlier commit I made, I rebased it, amended the changes, and then
-> formatted another patch using git. Apparently one of my other patches
-> for an earlier version had the same problem but the subsequent version
-> has the correct indent.
-> >
-> > --- a/drivers/staging/rtl8723bs/include/hal_pwr_seq.h
-> > +++ b/drivers/staging/rtl8723bs/include/hal_pwr_seq.h
-> >
-> > here, right?
-> Yes.
-> >
-> > Anyway, because of that, this does not apply to the tree at all :(
-> >
-> > Please fix and send a v3.
-> Got it.
-> >
-> > thanks,
-> >
-> > greg k-h
->
-> On Thu, Apr 3, 2025 at 10:22=E2=80=AFAM Greg KH <gregkh@linuxfoundation.o=
-rg> wrote:
-> >
-> > On Wed, Apr 02, 2025 at 08:42:07AM -0400, Gabriel Shahrouzi wrote:
-> > > Remove trailing whitespace to comply with kernel coding style.
-> > >
-> > > Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-> > > ---
-> > > Changes in v2:
-> > >       - Resend using git send-email to fix formatting issues in email=
- body.
-> > > ---
-> > >  drivers/staging/rtl8723bs/include/hal_pwr_seq.h | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git drivers/staging/rtl8723bs/include/hal_pwr_seq.h drivers/st=
-aging/rtl8723bs/include/hal_pwr_seq.h
-> > > index b93d74a5b9a5..48bf7f66a06e 100644
-> > > --- drivers/staging/rtl8723bs/include/hal_pwr_seq.h
-> > > +++ drivers/staging/rtl8723bs/include/hal_pwr_seq.h
-> >
-> > This wasn't made with git, was it?  You are "one" indent level off, the
-> > diff should say:
-> >
-> > --- a/drivers/staging/rtl8723bs/include/hal_pwr_seq.h
-> > +++ b/drivers/staging/rtl8723bs/include/hal_pwr_seq.h
-> >
-> > here, right?
-> >
-> > Anyway, because of that, this does not apply to the tree at all :(
-> >
-> > Please fix and send a v3.
-> >
-> > thanks,
-> >
-> > greg k-h
-Apologies for the duplicate post. I initially replied only to one
-person by accident and have resent it using 'reply all'
+Hello,
+
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+
+Reported-by: syzbot+4d7cd7dd0ce1aa8d5c65@syzkaller.appspotmail.com
+Tested-by: syzbot+4d7cd7dd0ce1aa8d5c65@syzkaller.appspotmail.com
+
+Tested on:
+
+commit:         d6b13dbd Merge branch 'for-next/core' into for-kernelci
+git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
+console output: https://syzkaller.appspot.com/x/log.txt?x=148de178580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=114db1c77c985e53
+dashboard link: https://syzkaller.appspot.com/bug?extid=4d7cd7dd0ce1aa8d5c65
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+userspace arch: arm64
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=120a2fb0580000
+
+Note: testing is done by a robot and is best-effort only.
