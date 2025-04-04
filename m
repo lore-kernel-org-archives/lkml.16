@@ -1,181 +1,150 @@
-Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74CAF26ADD
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 00:03:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38AC212B94;
+	Fri,  4 Apr 2025 00:04:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743725039; cv=none; b=BiVd7Q2z4fcuHFTaRZrn7iUPQVByXgbCyvpqTnVOskG3RqtQZIGCN8CHKVts0wZa201D8ySCm5zAGWgyMOh8D56SBU7Y2fEvyhAE/i3qeRdW+Cmdzt6wj9z08/9uMLqXJqev4w7Rc7UNQBYhsbIlaXXxDjvE3zyM0eBrYRmIUio=
+	t=1743725048; cv=none; b=MDo1yUXpNFzFrVb+gQ69gDzTN/RmWM6IwAO6w01Ke/E7sn2G2vzS5lAMtBewjCB4rSRn9sbTE40dOivQrCe/HGAyo7c4zJafGIjWHdEtUc2uRCLVzpj/gix7dWB7cegamRrx0zmXFlOaVpOScFhcOPqJ1mlhmWfDxw45iY2i6PQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743725039; c=relaxed/simple;
-	bh=m2F57u8l9CcfwoMZCeX23UViyjA9E828q9pBgxiHLoo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=r3q/eYduEuT0nyHvLJJriNvfT47NSZ9USkHH4BQhlxXmZLkohcWb1mpSsBhvpLDydZtZLpkJ8wglckRbBvUqtzX0XmUYol1ByJfmZkHQSVbmY3M+I6bKzwVmolqz1xyrbi3SKZWTqE1QDb0Ck0DXcNh3uavW8Zx68QgLTjoEPz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Vskhie7q; arc=none smtp.client-ip=209.85.219.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743725048; c=relaxed/simple;
+	bh=N1rx+buJgba+EBFZDjpuHz7VBrsBZQiPgC9nHkyWe28=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=bM3Ap4Q3wUDymVZf6mndcrj2dl6tclOBoLDb+5S4TFTqw8jJ7NWiROB13t6k4wGR05grithWvASJhgUbKHiKfbdqJ+YzzfQ4hXIGgowyTyjk2PANjwcG9jocwyZ6ijN40U1GVYYRjGDbplv0NUxnudIkti53kNNs6JwCgTs8XhA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OHYUn5Ag; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vskhie7q"
-Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-6e8f06e13a4so25287546d6.0
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Apr 2025 17:03:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743725035; x=1744329835; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Iy2OXo7NzZVl72EfjvZRrLBB8/XSbfcP58qqUv52zsY=;
-        b=Vskhie7qfzYomCA1qIoMC+8lasus39+90AarOJ3hKLoyEf6TXM6Afurhkn+rFt31Sd
-         0LUFc6sdNS60H1Sl0tdtUkKoamq7L4ga9AQpeMaonGeezLGUI7jYk5g5I7GOXQcGv+BF
-         jZzbFDkI7k1ff/PjD4YQYd/d+QB0f+0noxUkLt/B24JsnFbCJlXNHL6M9+EwRRA2YN4h
-         A6SQg2aLyRDtuxaAP6bRocJSHr1UAn+RQ3m2YfefA+whJj0q7nTEzXAp8Y42BfFvAj0J
-         tWSkNGQgq400sa9N9N4LWN/ZfBvijlZ5XdAJoEmmm0E1wNByfYKNaHIBTpYXWQKi4c8B
-         LJBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743725035; x=1744329835;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Iy2OXo7NzZVl72EfjvZRrLBB8/XSbfcP58qqUv52zsY=;
-        b=TRuuyRcYwwwQfRFpG8fnlLnggCy04CUSLzKNNm5qUHVY47/IJ0UqUU1a6dr1s5dpiC
-         TO6FNpWCLEnFhPPYCFvPfx3NPtCXD9kobMD8N07yZxJoVrVu7wVmEwr0C+FLUD0PshWX
-         E8uVpmq1RhZ6Q53a3Lw8SL6o7+XVPzoAwC7TDNzWbFuYY8l1R80YrBnpG+to932xvrgr
-         UYBJ2xus/4irjhJs8GhvAANb7YZbOP/3bFQaXJmdInbb4v/OSHr6c6d8xW8mRUz61xAD
-         RRXHAA4qKfkUt1aZ2BFaS68wXQzcmwjjQlo/dd7k7Kn/V2JJAKca3Kftpzg5vaKgooGO
-         Dc+A==
-X-Forwarded-Encrypted: i=1; AJvYcCWDRBAr70XsGth2dBqMEruaDD33umHDcJPQNXklz7Ax1luicBnGUuRzKtNvsLieuY7milMWSWkgFRUn55I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwLWLbsIfJ+yDOszgHBk9EgwqIDEZSFeXE0AQ2ztucqSw0PrL+2
-	jIil6JzFAyBCj9fCv38b22nGUFaOR4DfeiY4H8tnN3bLzZMi64gx7k5FkXXv
-X-Gm-Gg: ASbGncvHLOQ8cxx+lblUXk2EOzEODndi7HhEw9BYA042tciX8RelyjRV5Xm7F6aZ1Iu
-	4p0I4EjywkXJ2ed6d6HrScCsARVekfU+61Twz2VnWAkdnZIECt7exlyjRhrvj2LnKXH8VslZJzW
-	N4VvkMVKA2NnhfIT0pO8qe0EZvx1pZlraS9hg6Iu2ay7Nb3Kpc1uf8DlfXd+pBkQbqUzdY8kIq2
-	IGlzCl/XikxnGm53DMjlzbCcT4gcq1PkLTnRnybIlTfVwrYrM2Ec1k3Z59FFkmFv0mtYajS4rjU
-	bET7QKdZsjiMNbBlJgdux6e77m01b1H9QRrH8PKQXUlQ12uL
-X-Google-Smtp-Source: AGHT+IH0lE+f7I3vQYedfhF/yT+vf/DVVALZOAfOgkWOKX9NEf+lzxOG9vAyjG9SLtREfHZmKjQFug==
-X-Received: by 2002:a05:6214:5086:b0:6ea:d604:9e4f with SMTP id 6a1803df08f44-6ef0bfc8138mr83897806d6.19.1743725035304;
-        Thu, 03 Apr 2025 17:03:55 -0700 (PDT)
-Received: from HP-650 ([105.112.123.50])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c76ea59acasm138884885a.75.2025.04.03.17.03.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Apr 2025 17:03:55 -0700 (PDT)
-From: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
-To: outreachy@lists.linux.dev,
-	julia.lawall@inria.fr
-Cc: gregkh@linuxfoundation.org,
-	linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OHYUn5Ag"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A4D1C4CEE3;
+	Fri,  4 Apr 2025 00:04:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743725047;
+	bh=N1rx+buJgba+EBFZDjpuHz7VBrsBZQiPgC9nHkyWe28=;
+	h=From:To:Cc:Subject:Date:From;
+	b=OHYUn5AgMGdHuRCsuNl+u/8Ksx98wbWw8jgl+4Z3PvHOztRwR/Bp6L/232eV1R+u7
+	 J0VLq++fgUQQBc9RnpVM/zNIwi1x52cdQGsNUkzADBM0s5Z1xxUiq5dOiz96GFe6Z+
+	 Zuas4ry0tM29V7AOR5C841moSuA936/QJZnObCtWkwUdOg/fnuiKVcsQdrzFddSxcv
+	 eh7iNOU2edDymGwtbLPHre8cAbB/4467hrXkw2TnO7zNAvhCbVa3MDMJWsZ8ToAgxL
+	 g64h8LnyrQ4tutEZJNPFuy8L4QGovTD1Lvu+U7cTZcc7rqBHweC/rOTHCEZopBeATk
+	 7BXy19C4g2zSw==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Lukas Wunner <lukas@wunner.de>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Sasha Levin <sashal@kernel.org>,
+	ignat@cloudflare.com,
+	davem@davemloft.net,
 	andy@kernel.org,
-	Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
-Subject: [v3 1/1] staging: rtl8723bs: Prevent duplicate NULL tests on a value
-Date: Fri,  4 Apr 2025 01:02:20 +0100
-Message-Id: <6fe7cb92811d07865830974cb366d99981ab1755.1743723591.git.abrahamadekunle50@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <cover.1743723590.git.abrahamadekunle50@gmail.com>
-References: <cover.1743723590.git.abrahamadekunle50@gmail.com>
+	angelogioacchino.delregno@collabora.com,
+	Jonathan.Cameron@huawei.com,
+	linux-crypto@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.14 01/23] crypto: ecdsa - Harden against integer overflows in DIV_ROUND_UP()
+Date: Thu,  3 Apr 2025 20:03:38 -0400
+Message-Id: <20250404000402.2688049-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.14
 Content-Transfer-Encoding: 8bit
 
-When a value has been tested for NULL in an expression, a
-second NULL test on the same value in another expression
-is unnecessary when the value has not been assigned NULL.
+From: Lukas Wunner <lukas@wunner.de>
 
-Remove unnecessary duplicate NULL tests on the same value that
-has previously been NULL tested.
+[ Upstream commit b16510a530d1e6ab9683f04f8fb34f2e0f538275 ]
 
-Found by Coccinelle.
+Herbert notes that DIV_ROUND_UP() may overflow unnecessarily if an ecdsa
+implementation's ->key_size() callback returns an unusually large value.
+Herbert instead suggests (for a division by 8):
 
-Signed-off-by: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
+  X / 8 + !!(X & 7)
+
+Based on this formula, introduce a generic DIV_ROUND_UP_POW2() macro and
+use it in lieu of DIV_ROUND_UP() for ->key_size() return values.
+
+Additionally, use the macro in ecc_digits_from_bytes(), whose "nbytes"
+parameter is a ->key_size() return value in some instances, or a
+user-specified ASN.1 length in the case of ecdsa_get_signature_rs().
+
+Link: https://lore.kernel.org/r/Z3iElsILmoSu6FuC@gondor.apana.org.au/
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/rtl8723bs/core/rtw_mlme_ext.c |  2 +-
- drivers/staging/rtl8723bs/core/rtw_xmit.c     | 58 +++++++++----------
- 2 files changed, 30 insertions(+), 30 deletions(-)
+ crypto/ecc.c         |  2 +-
+ crypto/ecdsa-p1363.c |  2 +-
+ crypto/ecdsa-x962.c  |  4 ++--
+ include/linux/math.h | 12 ++++++++++++
+ 4 files changed, 16 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c b/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
-index 90966b7034ab..675226535cd1 100644
---- a/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
-+++ b/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
-@@ -1323,7 +1323,7 @@ unsigned int OnAssocReq(struct adapter *padapter, union recv_frame *precv_frame)
- 	spin_unlock_bh(&pstapriv->asoc_list_lock);
+diff --git a/crypto/ecc.c b/crypto/ecc.c
+index 50ad2d4ed672c..6cf9a945fc6c2 100644
+--- a/crypto/ecc.c
++++ b/crypto/ecc.c
+@@ -71,7 +71,7 @@ EXPORT_SYMBOL(ecc_get_curve);
+ void ecc_digits_from_bytes(const u8 *in, unsigned int nbytes,
+ 			   u64 *out, unsigned int ndigits)
+ {
+-	int diff = ndigits - DIV_ROUND_UP(nbytes, sizeof(u64));
++	int diff = ndigits - DIV_ROUND_UP_POW2(nbytes, sizeof(u64));
+ 	unsigned int o = nbytes & 7;
+ 	__be64 msd = 0;
  
- 	/*  now the station is qualified to join our BSS... */
--	if (pstat && (pstat->state & WIFI_FW_ASSOC_SUCCESS) && (status == WLAN_STATUS_SUCCESS)) {
-+	if ((pstat->state & WIFI_FW_ASSOC_SUCCESS) && (status == WLAN_STATUS_SUCCESS)) {
- 		/* 1 bss_cap_update & sta_info_update */
- 		bss_cap_update_on_sta_join(padapter, pstat);
- 		sta_info_update(padapter, pstat);
-diff --git a/drivers/staging/rtl8723bs/core/rtw_xmit.c b/drivers/staging/rtl8723bs/core/rtw_xmit.c
-index 026061b464f7..ae268dda4c4d 100644
---- a/drivers/staging/rtl8723bs/core/rtw_xmit.c
-+++ b/drivers/staging/rtl8723bs/core/rtw_xmit.c
-@@ -941,35 +941,35 @@ s32 rtw_make_wlanhdr(struct adapter *padapter, u8 *hdr, struct pkt_attrib *pattr
- 			if (!(psta->state & _FW_LINKED))
- 				return _FAIL;
+diff --git a/crypto/ecdsa-p1363.c b/crypto/ecdsa-p1363.c
+index eaae7214d69bc..4454f1f8f33f5 100644
+--- a/crypto/ecdsa-p1363.c
++++ b/crypto/ecdsa-p1363.c
+@@ -22,7 +22,7 @@ static int ecdsa_p1363_verify(struct crypto_sig *tfm,
+ {
+ 	struct ecdsa_p1363_ctx *ctx = crypto_sig_ctx(tfm);
+ 	unsigned int keylen = crypto_sig_keysize(ctx->child);
+-	unsigned int ndigits = DIV_ROUND_UP(keylen, sizeof(u64));
++	unsigned int ndigits = DIV_ROUND_UP_POW2(keylen, sizeof(u64));
+ 	struct ecdsa_raw_sig sig;
  
--			if (psta) {
--				psta->sta_xmitpriv.txseq_tid[pattrib->priority]++;
--				psta->sta_xmitpriv.txseq_tid[pattrib->priority] &= 0xFFF;
--				pattrib->seqnum = psta->sta_xmitpriv.txseq_tid[pattrib->priority];
--
--				SetSeqNum(hdr, pattrib->seqnum);
--
--				/* check if enable ampdu */
--				if (pattrib->ht_en && psta->htpriv.ampdu_enable)
--					if (psta->htpriv.agg_enable_bitmap & BIT(pattrib->priority))
--						pattrib->ampdu_en = true;
--
--				/* re-check if enable ampdu by BA_starting_seqctrl */
--				if (pattrib->ampdu_en == true) {
--					u16 tx_seq;
--
--					tx_seq = psta->BA_starting_seqctrl[pattrib->priority & 0x0f];
--
--					/* check BA_starting_seqctrl */
--					if (SN_LESS(pattrib->seqnum, tx_seq)) {
--						pattrib->ampdu_en = false;/* AGG BK */
--					} else if (SN_EQUAL(pattrib->seqnum, tx_seq)) {
--						psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (tx_seq+1)&0xfff;
--
--						pattrib->ampdu_en = true;/* AGG EN */
--					} else {
--						psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (pattrib->seqnum+1)&0xfff;
--						pattrib->ampdu_en = true;/* AGG EN */
--					}
-+			psta->sta_xmitpriv.txseq_tid[pattrib->priority]++;
-+			psta->sta_xmitpriv.txseq_tid[pattrib->priority] &= 0xFFF;
-+			pattrib->seqnum = psta->sta_xmitpriv.txseq_tid[pattrib->priority];
+ 	if (slen != 2 * keylen)
+diff --git a/crypto/ecdsa-x962.c b/crypto/ecdsa-x962.c
+index 6a77c13e192b1..90a04f4b9a2f5 100644
+--- a/crypto/ecdsa-x962.c
++++ b/crypto/ecdsa-x962.c
+@@ -81,8 +81,8 @@ static int ecdsa_x962_verify(struct crypto_sig *tfm,
+ 	struct ecdsa_x962_signature_ctx sig_ctx;
+ 	int err;
+ 
+-	sig_ctx.ndigits = DIV_ROUND_UP(crypto_sig_keysize(ctx->child),
+-				       sizeof(u64));
++	sig_ctx.ndigits = DIV_ROUND_UP_POW2(crypto_sig_keysize(ctx->child),
++					    sizeof(u64));
+ 
+ 	err = asn1_ber_decoder(&ecdsasignature_decoder, &sig_ctx, src, slen);
+ 	if (err < 0)
+diff --git a/include/linux/math.h b/include/linux/math.h
+index f5f18dc3616b0..0198c92cbe3ef 100644
+--- a/include/linux/math.h
++++ b/include/linux/math.h
+@@ -34,6 +34,18 @@
+  */
+ #define round_down(x, y) ((x) & ~__round_mask(x, y))
+ 
++/**
++ * DIV_ROUND_UP_POW2 - divide and round up
++ * @n: numerator
++ * @d: denominator (must be a power of 2)
++ *
++ * Divides @n by @d and rounds up to next multiple of @d (which must be a power
++ * of 2). Avoids integer overflows that may occur with __KERNEL_DIV_ROUND_UP().
++ * Performance is roughly equivalent to __KERNEL_DIV_ROUND_UP().
++ */
++#define DIV_ROUND_UP_POW2(n, d) \
++	((n) / (d) + !!((n) & ((d) - 1)))
 +
-+			SetSeqNum(hdr, pattrib->seqnum);
-+
-+			/* check if enable ampdu */
-+			if (pattrib->ht_en && psta->htpriv.ampdu_enable)
-+				if (psta->htpriv.agg_enable_bitmap & BIT(pattrib->priority))
-+					pattrib->ampdu_en = true;
-+
-+			/* re-check if enable ampdu by BA_starting_seqctrl */
-+			if (pattrib->ampdu_en == true) {
-+				u16 tx_seq;
-+
-+				tx_seq = psta->BA_starting_seqctrl[pattrib->priority & 0x0f];
-+
-+				/* check BA_starting_seqctrl */
-+				if (SN_LESS(pattrib->seqnum, tx_seq)) {
-+					pattrib->ampdu_en = false;/* AGG BK */
-+				} else if (SN_EQUAL(pattrib->seqnum, tx_seq)) {
-+					psta->BA_starting_seqctrl[pattrib->priority & 0x0f] =
-+						(tx_seq + 1) & 0xfff;
-+
-+					pattrib->ampdu_en = true;/* AGG EN */
-+				} else {
-+					psta->BA_starting_seqctrl[pattrib->priority & 0x0f] =
-+						(pattrib->seqnum + 1) % 4096;
-+					pattrib->ampdu_en = true;/* AGG EN */
- 				}
- 			}
- 		}
+ #define DIV_ROUND_UP __KERNEL_DIV_ROUND_UP
+ 
+ #define DIV_ROUND_DOWN_ULL(ll, d) \
 -- 
-2.34.1
+2.39.5
 
