@@ -1,99 +1,157 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0854F170A0B
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 10:30:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22DDC1DE2CC
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 10:31:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743762633; cv=none; b=RMPWR13rpxq4ZhAQ/PETjgABTsjA1YCc45k0yD/53dDmOvEjnMvH6FmveAwsziYAGJ9kBV7PtCIodiEK1TCwVAcRYpiW/3omcVHLx1qq/mwsFhKPzMYH03BO21MzY+pYYoLnXbJE+xzWH7ykFIv01G6c38XYmPmZfVNzpWIKr6w=
+	t=1743762710; cv=none; b=QLVNMX+6G4wsyIl2XdEgt/K5glkUj/2mcRO2uDgzFXlMgtBkL4k2iDyICdV2XcinEKSAGGJkUbJ3E+MBv9i8mQbQEOKWa2g8Kp6S35j11mBzjDj6KG7PZLjzQHjAdL6yS/1b2nR3isb0B6+IofoHRSAV0WgJrSKBsdpy4fYLInE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743762633; c=relaxed/simple;
-	bh=tuR8ogLN+102A8mr0se4sJNMwYt11xopo3TwsfwUfn4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Q/zmkeN1uU/2YBSgpLncz1nLwNy1R3bl24OE1hShfjMLCXQW0PnoC15m16B7iDcBzQWVpwMdLL897hqYK4bKGZfhHgjhfws6xj+Hr/Qeqsswtb8tzGcGm9vS86yqZ5BfiBht7N23JqYDKwh9FloFaUf0iyazr+BrRMWoAjTJZSE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org; spf=none smtp.mailfrom=blackwall.org; dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b=ESGUk8Qv; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=blackwall.org
+	s=arc-20240116; t=1743762710; c=relaxed/simple;
+	bh=puo0zeWGfg/XrDDKhEtVrd4WcWPM6KhzepuNu4U2cy4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RMukXNDxuFQN7FnsScdIqYh1a0vOfW8Sbl1BEYFJ2JLo68rpITQinUQSybDhk0vBoyoYYoqIXmy40SCaQmEDQrRtsU14BW5qLKdvpBnHvhlXK/M5XYf7rc0xezfA2agvSNbQU2TvAQECA8CkmOk3nk6sFzmdW7dshHPpWodlvYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=m/4st2RZ; arc=none smtp.client-ip=209.85.128.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b="ESGUk8Qv"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43cf3192f3bso18724605e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 03:30:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="m/4st2RZ"
+Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-6ff1e375a47so19347357b3.1
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 03:31:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=blackwall-org.20230601.gappssmtp.com; s=20230601; t=1743762630; x=1744367430; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=fCa0h1WYmNfXaxL3CdCkJZxEN7JBqurAiMu0YdgPsPE=;
-        b=ESGUk8QvIMctsPN8EqZtBUXj07M1RaQDyuFedSPB3jtBSMz6CzyQgnUT3ZSNXj6mav
-         OYQZPaxjaGgYV93bw1Rhe9Tuj7venj3uHQo6fX/SD2Z0Q9p4JBm8iLGeJJRecC6UM1DN
-         UXc1VLnLkM8670N8+dscrLazVAq4Cz/eyIeHr9XucScvtpMECt8St2yQbT4Qu/Y1VKxu
-         Nw96WfhIMFF+OdZICvSeIeZgqK1IveZnhF4PKMt80u2lVIBG84ul6NU7Pi9NPunywKzz
-         JGstyGCsj/gEHgsU/PTaCP2/RqlTVUW//49gu+L0WzAaI92N+vHAP1B3PmP/YOfRMJJf
-         3KoA==
+        d=linaro.org; s=google; t=1743762707; x=1744367507; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=p2d7X4LZ95qskY0j6wRpuQmYie6Gy7m1icDTnjrkreI=;
+        b=m/4st2RZ1mYZE75yFAAubk3/IIDJ6JIabR/ozRM8VS8xImfsqQIuAVxlGtQU97pD/N
+         at9MecDkuLyDTFBTc/GnSfKatPHJXGGwPdSlb62nm79r/vCFoKJhws0GY0YYQdx6I9do
+         yc7ttS8xCmP/SM5eAR8IoV5v4lD5mxYS74ErF7dLTE1RcqS4ijiM5nZ1nrMGuJO+cmiB
+         7mnsRQRQDIFoc6BZxTFQAwLXf+0JHDocNLZKYAci5Rki3RGyrtWdNLmNjsNCdXAniL6Y
+         iHoJNl2txeZVsiBZJY783GrBNnFFFqE3lVM/e4l3QrhuC5MYIOWYY2fi4NrLLRA+Jcwo
+         aLeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743762630; x=1744367430;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fCa0h1WYmNfXaxL3CdCkJZxEN7JBqurAiMu0YdgPsPE=;
-        b=XSc10S7eL1fdzlwgbEA3V7NBROu9MTMjRo3GtE+mud0c/l/EDF1BVZReRd8ffULG4j
-         gLX/Sk4H0+Nr/o70XmAqVoyk0FjQ2BdcKDynL6GN/BB4rP6Dqc4weqoTIlMhZBzhGbvt
-         Wk30qsbEMbLk2koOrPfpVCNtn/fpHqZ94AiF3wB89MfVUmRfwhR0bTWy+x7h+6eGt6dQ
-         AAULr0ZbVsBkwMlTAGQUHGgD9Jpq+vmEYYKMGzXdRxEFTrJAPhKQpimTFhz8ELB6wYBI
-         PDy3cx+EqoyTQgE7r8yXgkg5Cn1SW/gcJvlguFs9aSC7nCxJZB0jH90Z5zTcOJgndJuT
-         dAkQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV2zyJJnym/Gd2P7bSbSwRL1oZjNdK7wgxVvXK0uSdwSs+bcGn3PzrLg10pCHg8thevBra514cXKnojedQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxuJEEdkPLTMxB2mINxoLGJJu/j0RQWZruUuCaF/XiQBU+M6wK2
-	G9/QaXF4hsxTmlRltuCoYUCelyLh861IJs/0PGnwhQUHEmmyMjE/1PyoZBOK+bI=
-X-Gm-Gg: ASbGncvK5P4Ln+psWxyom17tHlrJV1qeuZpUurIg8Rc0CAQrc7TjpNsKGvcWiufDFwg
-	CkiJfqttQDKhtgBRJHZDP4jz2FzKawlogLaZtiU6r95DmsUEy7TMF0sJNyTxP83HnAZyr/lyOp2
-	+SxbjCNVqLIVeaKX17oMuwoYtA/u/PX07zgMKaZXkyNtXehiveTzLwBLyB4IrWctY0b0wrx2VP1
-	RwLNEhf66ESfGuxOO8N4csCD6kTVS6qPOrilXMzDKQBK4U1n5hrI+Q1muq5SP+nvObOCvQOELbQ
-	YW1OoEmjrmdkCAmta5GSdbRJYHmTOsQMnCgMeDh4Efh5gD/nA6mynOsqTOvbL6ekpfd+FxV1mUl
-	t
-X-Google-Smtp-Source: AGHT+IEj/9kwyzS+lDrHuF1aDtd7ZnFRYoi1f0ub48TiwcmQog45MqDKf6yHGPbubxz8L3SJeZRakw==
-X-Received: by 2002:a05:600c:198d:b0:43c:fe15:41c9 with SMTP id 5b1f17b1804b1-43ed0bf6378mr20646095e9.9.1743762630130;
-        Fri, 04 Apr 2025 03:30:30 -0700 (PDT)
-Received: from [192.168.0.205] (78-154-15-142.ip.btc-net.bg. [78.154.15.142])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec1663046sm46400095e9.13.2025.04.04.03.30.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Apr 2025 03:30:29 -0700 (PDT)
-Message-ID: <804b495b-eb2a-46a6-a42f-bee87fd45abe@blackwall.org>
-Date: Fri, 4 Apr 2025 13:30:28 +0300
+        d=1e100.net; s=20230601; t=1743762707; x=1744367507;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=p2d7X4LZ95qskY0j6wRpuQmYie6Gy7m1icDTnjrkreI=;
+        b=rYHc00mIZVZ0AKnZUFLBY8OFscBmYu1ESr2DPg+cHkl+y4QNArUnzZfuMJi78fh2aD
+         Qv25wbwMPV7N/A6PtIMR4u7KEXJd67F1Wz/RwescPOrmXSSAWbg9dsfjNQuWyybTMxOM
+         HPQuJGY2qRrkfem86r8IBLVd7rfwxjL5L9CFlE6zqoMSoo2cM/oyYWArCXSZin37vUie
+         fkslx+1uq3nk5VSahINsDGCoHhSYoKS8ZSe8x3PrsCR+uBu6mDFLsQEhEQKFFGAWqQpo
+         BJnql5kXuMFFUl0Q5tTo5Il/hrGeJL8705SbOt3nnfBnvhaxsrIMlRD4C+uWyzdUC1ay
+         RcLg==
+X-Forwarded-Encrypted: i=1; AJvYcCVSFyZGwDhOzYhu8nqlS+Yu6B/9n2kkSK0GBwItaNWMahD9kDyyVlCsLgvwPaIp7AEMqVjvCfaxUeZE+HQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwbftO8IoRmpMEcB0duClul+l1g1GYj147o3mY8a2GYKY4g7JKU
+	jFvk7U2g6UJNJFfo3fimh8t4tTV4p9flPzbv7RoP7iieLxj58GnpivmAtgfxArjHlY/UxbYUtXz
+	c3zX2ItYe20OLZCo9EyEtogqon05ILjnD8l4o4g==
+X-Gm-Gg: ASbGncvUQShSkj5M5uPFvoPzu/skIV7JmauMTT1uLOT4GeevMcOlVjUO9M8Gb6mzC7R
+	EH8JQ1pr2IP1O3nhnI88X5AMUZczkuaoQzxXhcG4/tGhOEnH8ZJjJ6p0EBHpmavNz//V/yZgiOJ
+	OE335UtUJug7k+CG6O0Dc8wvC2ImJkplS4Gm1eAQ==
+X-Google-Smtp-Source: AGHT+IHL6tNiMt83fP/8QoVhxPRtZTRBqTJ/Cw9tCME3kjDGJ0WhVAtLf3L7QrkxkDkyR8ahdAf3HNvn/ambJdKtSJE=
+X-Received: by 2002:a05:690c:9a0d:b0:702:d85:5347 with SMTP id
+ 00721157ae682-703e16473e9mr44558927b3.36.1743762706998; Fri, 04 Apr 2025
+ 03:31:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v2 net-next 2/3] net: bridge: Add
- offload_fail_notification bopt
-To: Joseph Huang <Joseph.Huang@garmin.com>, netdev@vger.kernel.org
-Cc: Joseph Huang <joseph.huang.2024@gmail.com>,
- Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Roopa Prabhu <roopa@nvidia.com>, Simon Horman <horms@kernel.org>,
- linux-kernel@vger.kernel.org, bridge@lists.linux.dev
-References: <20250403234412.1531714-1-Joseph.Huang@garmin.com>
- <20250403234412.1531714-3-Joseph.Huang@garmin.com>
-Content-Language: en-US
-From: Nikolay Aleksandrov <razor@blackwall.org>
-In-Reply-To: <20250403234412.1531714-3-Joseph.Huang@garmin.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250403-dt-cpu-schema-v1-0-076be7171a85@kernel.org> <20250403-dt-cpu-schema-v1-9-076be7171a85@kernel.org>
+In-Reply-To: <20250403-dt-cpu-schema-v1-9-076be7171a85@kernel.org>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Fri, 4 Apr 2025 12:30:59 +0200
+X-Gm-Features: AQ5f1JoO4h1zt0Jv8N6Q3VB80QU6oNypKSnO1edlCmwT1znvOfAf3BOWzm_IC6U
+Message-ID: <CAPDyKFoEEp8AZ7aJ8-wwp8=n+T4gbij15oYaCNhF1Bd-E1nMbg@mail.gmail.com>
+Subject: Re: [PATCH 09/19] arm: dts: qcom: sdx55/sdx65: Fix CPU power-domain-names
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Samuel Holland <samuel@sholland.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Viresh Kumar <viresh.kumar@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Vincenzo Frascino <vincenzo.frascino@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, 
+	Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Viresh Kumar <vireshk@kernel.org>, 
+	Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, zhouyanjie@wanyeetech.com, 
+	Conor Dooley <conor@kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, 
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>, Steen Hegelund <Steen.Hegelund@microchip.com>, 
+	Daniel Machon <daniel.machon@microchip.com>, UNGLinuxDriver@microchip.com, 
+	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
+	Heiko Stuebner <heiko@sntech.de>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, 
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	linux-pm@vger.kernel.org, linux-mediatek@lists.infradead.org, 
+	linux-arm-msm@vger.kernel.org, linux-mips@vger.kernel.org, 
+	imx@lists.linux.dev, linux-rockchip@lists.infradead.org, 
+	linux-amlogic@lists.infradead.org, linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 4/4/25 02:44, Joseph Huang wrote:
-> Add BR_BOOLOPT_MDB_OFFLOAD_FAIL_NOTIFICATION bool option.
-> 
-> Signed-off-by: Joseph Huang <Joseph.Huang@garmin.com>
+On Fri, 4 Apr 2025 at 05:02, Rob Herring (Arm) <robh@kernel.org> wrote:
+>
+> "rpmhpd" is not documented nor used anywhere. As the enable-method is
+> "psci" use "psci" for the power-domain name.
+>
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 > ---
->  include/uapi/linux/if_bridge.h | 1 +
->  net/bridge/br.c                | 5 +++++
->  net/bridge/br_private.h        | 1 +
->  3 files changed, 7 insertions(+)
-> 
+>  arch/arm/boot/dts/qcom/qcom-sdx55.dtsi | 2 +-
+>  arch/arm/boot/dts/qcom/qcom-sdx65.dtsi | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/qcom/qcom-sdx55.dtsi b/arch/arm/boot/dts/qcom/qcom-sdx55.dtsi
+> index 39530eb580ea..64d9858b4248 100644
+> --- a/arch/arm/boot/dts/qcom/qcom-sdx55.dtsi
+> +++ b/arch/arm/boot/dts/qcom/qcom-sdx55.dtsi
+> @@ -57,7 +57,7 @@ cpu0: cpu@0 {
+>                         enable-method = "psci";
+>                         clocks = <&apcs>;
+>                         power-domains = <&rpmhpd SDX55_CX>;
+> -                       power-domain-names = "rpmhpd";
+> +                       power-domain-names = "psci";
 
-Acked-by: Nikolay Aleksandrov <razor@blackwall.org>
+As I understand it, this isn't for cpu-power-mgmt but for
+cpu-performance-scaling.
 
+I have been thinking of adding a common power-domain-name for this,
+but never reached to do it. I think the last one we added was the
+Airoha SoC [1] which uses "perf", which seems to be the most common
+one. Still I don't see that being documented.
+
+>                         operating-points-v2 = <&cpu_opp_table>;
+>                 };
+>         };
+> diff --git a/arch/arm/boot/dts/qcom/qcom-sdx65.dtsi b/arch/arm/boot/dts/qcom/qcom-sdx65.dtsi
+> index 6b23ee676c9e..bfd04e53c5a8 100644
+> --- a/arch/arm/boot/dts/qcom/qcom-sdx65.dtsi
+> +++ b/arch/arm/boot/dts/qcom/qcom-sdx65.dtsi
+> @@ -58,7 +58,7 @@ cpu0: cpu@0 {
+>                         enable-method = "psci";
+>                         clocks = <&apcs>;
+>                         power-domains = <&rpmhpd SDX65_CX_AO>;
+> -                       power-domain-names = "rpmhpd";
+> +                       power-domain-names = "psci";
+
+Ditto.
+
+>                         operating-points-v2 = <&cpu_opp_table>;
+>                 };
+>         };
+>
+> --
+> 2.47.2
+>
+>
+
+Kind regards
+Uffe
+
+[1]
+drivers/cpufreq/airoha-cpufreq.c
+Documentation/devicetree/bindings/cpufreq/airoha,en7581-cpufreq.yaml
+drivers/pmdomain/mediatek/airoha-cpu-pmdomain.c
