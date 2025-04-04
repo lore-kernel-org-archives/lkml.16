@@ -1,138 +1,191 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC0DA1F0E33;
-	Fri,  4 Apr 2025 14:10:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743775832; cv=none; b=rlUJPj3OKROTl7DVSgDnA1X52xaoYnrMHCQdK+EWQ9F/wDITqd7oICnKi6dSPnquMbKIj4DC3s/RpkI8D3mIhMZkl6q32erhexdu9IPx0A1qBmIjc7FZYP1dKn4kK9QjrFGRqVZwi/qEx2cwpMYKPY96ZzdD+wOHtqSFM2QTvDA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743775832; c=relaxed/simple;
-	bh=l2lzsNRrga+hAwlZPw2hZyVI7hOngQ48zjWgc72CGr4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uiChbc9rbv0oAZYXxsogvYs5aVUgEs0rbX+lxzlKrd8DAD6mm9JAQSIBkMf4XMIkZcHfR+Z1f81agX0MBuFQmF0F96aSPmOFQ+B2NTmRC9yGE2GXF/mc+cmlUZp38vE5w0nUNONnCUkT12TYBDVCP15p53grUQuOUX1Kz5/kOBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MhXqLqpa; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF19F1EB191;
+	Fri,  4 Apr 2025 14:11:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.21
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743775889; cv=fail; b=GwHTeq0dM3hhlZL9hChlBKbjgkXbzUtFGK9WbwuKHwSLsV2npCOTcUxqbQbJbhGnB+uI9WlhYPNOBBnRIvyyj5nLHuAxRsJB1Vvw1Q3anAtNcIQ8byCJZ0dS3K+wttuRhGZT79eOAL2UNlYzhmUB1rV7yQ8DTAYdtihSQDnr/x4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743775889; c=relaxed/simple;
+	bh=yZrXIULEuPA3K3j1eXXh2/5kwpifsFHBvCrcV2MYcJM=;
+	h=Date:From:To:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=OlgnvYNIyw7ymqSfzX5BqMPZ+63tg6QwOVI3zLmtL+2Hw+LTEM91EVyxMIsSX+wdxyAoqrsvgjuswhHMKrVXbBVl4Ql0Io/CLNOlQqcK7DwqHFTwpV1ppk3sGRhJGuE0OiG9XkLc+j+z0wGVW8NjXo9YrAvfLVLbZ4XlzMqtE3k=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GwfZdxFs; arc=fail smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MhXqLqpa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBB8FC4CEEA;
-	Fri,  4 Apr 2025 14:10:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743775831;
-	bh=l2lzsNRrga+hAwlZPw2hZyVI7hOngQ48zjWgc72CGr4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=MhXqLqpa43mJjzUE+SiXJTbXwmVJ/HY6gBTctJU9FfRezIv1qLjartTS85rOgNg9a
-	 ZhN4HzOepVa85NDLlDWJODei3AOF6LINQBifXsj/9vcNkRNTNwOPyODWr//oY7SEXN
-	 pqbYfSz27XnI8DD+h0GaWdbcrDerOqpp+11Vuj4JYUOWKhgGITX67L3hbAOFtsPvzb
-	 xSZsVs/S+Pr54A87UysNCn/RkaXJaFv8XaW0L8BHyTXXNGj+g0awaZqTwq7UI8BMyg
-	 xtscO/vdTlk2M4zdjpWE5iml8FERUp0D7y1vv/91pL6IP0dkPhJrxNVtmC/K/73oRz
-	 naujA3WQObjpA==
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5e8be1c6ff8so3930496a12.1;
-        Fri, 04 Apr 2025 07:10:31 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU/HYiGx+FtNlR0TJnhe7+dbJvVvv7BYPCwwZZo9fMVyvGbkX9tfWUnNX9BRkWoEprg6QftNlycD/s5TKXbgA==@vger.kernel.org, AJvYcCUos1Wh+k96Mi1ay6x95OdBl2SSUiCVU6x1cIGINxc6URxwBLL27rGQN1VpTyTRXHqw/spppzw0BZvgka7M@vger.kernel.org, AJvYcCVXPYNlFRTU02+YVTQxTRvhY5j2eViWk+Ovzog7Ace3rtWp7gqtkEIJ52spXoszvWLm/2RLVBt7TXAhOA==@vger.kernel.org, AJvYcCWNuIi+rmAmwcOj9DrGjyfQmNW/qTFhmN+spqonpP2xpoqWsllRlFQtmOp5Ii2+ZmcJJiQ+/LGok3Y=@vger.kernel.org, AJvYcCXtyMtivy0pcEqlmg0HQOgccg+nhvSVoIcPCPep5ZVvMwJNavu7fEFoLrq4aHHe2K9thFum/xrdpHNDLrAP7g/kq/I=@vger.kernel.org, AJvYcCXwxksWcrYmHTidxE/WhYC+nvwzz2VVYWJY2GQhpxm64w/jlm5iRi9UkZtIrUwFbjkfzqhHcMdmYPuH@vger.kernel.org
-X-Gm-Message-State: AOJu0YwplwxXZQtHN5Tufv1r0UvtwQjoAVFhjReRqL4FlNwQErvoQ07w
-	vCfAQb3Qh0Dn4NUnMZCpw+BvMbvyf36umQj8+Y/4wtF5vRYr1eNWx2gJVX41k5hdVw3IWZxN6AO
-	3NsIg60Bo42Ay0iiFS8/F0ExQKw==
-X-Google-Smtp-Source: AGHT+IGYXjl+q1G3Ghk1zMOjaKXndZfqYp9hiiK7OTWs/zAZNM/+0QVdqEQQ+zuW4YRtKHDm+WaT1WT3knVA25eifPc=
-X-Received: by 2002:a05:6402:3481:b0:5ed:921a:ded6 with SMTP id
- 4fb4d7f45d1cf-5f0b657862emr2694084a12.18.1743775830233; Fri, 04 Apr 2025
- 07:10:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GwfZdxFs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743775888; x=1775311888;
+  h=date:from:to:subject:message-id:references:in-reply-to:
+   mime-version;
+  bh=yZrXIULEuPA3K3j1eXXh2/5kwpifsFHBvCrcV2MYcJM=;
+  b=GwfZdxFswJTEeb7rVB8v5rPBMobkZatP3YJ1Hn1ei65HT2Jh6ukM1vwV
+   p2F+8aBL1rUtdh5Hx2EgNW+C9fGAYLHdle2CT+9h6ZJGOglJNfXOs3F3U
+   9rBqQ8ZkOAFK4UcMKb290Y00RFFRNTQM38tFXqv9FFkNSvpD8MyxrycpE
+   nlfrLH8rPn0gBE9HHh+4bIiiX4TqScIVzg4xAZDJzmcFT7sctnWiFPIwT
+   9lkTCx40j1W5ltte4qDoMAH3lR6RNYCfp52AiZEwTlJf/emKwP5Y+PCZk
+   Wvk+RmJCfG3zqxvtQeLKK+2sfsQox3W3KYnz1ZfoS//x52a+jFtkalylM
+   A==;
+X-CSE-ConnectionGUID: z/SqJf+6Rae3rVhDSCbAcQ==
+X-CSE-MsgGUID: Q7llxc6cTza5GUSgt+dSkQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11394"; a="45124083"
+X-IronPort-AV: E=Sophos;i="6.15,188,1739865600"; 
+   d="scan'208";a="45124083"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 07:11:27 -0700
+X-CSE-ConnectionGUID: 2nv+8XwcRYyI/dAe4jR4EA==
+X-CSE-MsgGUID: WB75C0wqRl6AzSwtyVCf6w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,188,1739865600"; 
+   d="scan'208";a="127078687"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by orviesa009.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 04 Apr 2025 07:11:27 -0700
+Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Fri, 4 Apr 2025 07:11:26 -0700
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Fri, 4 Apr 2025 07:11:26 -0700
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.44) by
+ edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Fri, 4 Apr 2025 07:11:26 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=nobjuR4VZ8AaHlRJPXPgQ7In7L+m3LXrgDpFCz5uBQc+vulKus63ghW6KrBps5Igefz2y2w15xt5BKvYh711T8iMkCGa19lQsinBagT19Knb5ZtJDJWjV/CNwCatjWj4A2FO0keAU6xgL9FS6vJ5gmhIKbPFP5GGIa766WiMJi3j064BuvH0vAGI8mco4Ffxvs4I1Shzd07iGLUicgsmtBtkTxzQ4xM0MMnxwWKcZHGMQivcCOGxFle9gaCK/wW46zaK0VR+CZC4vm/2JrW+z5pefWw0SHyXwsdKpsx9JptkzyT+zU/z9rspiomWsfom7wzgR/WAh+KNj5uICm6DHQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=1opCS0wOOqwn4fPmMdGU4uLHuo77+3plk6H97ECkU5Q=;
+ b=o2kKO2Dt9D2RMOea8eIfNwU9qCVc4770W+7Exb0+vzUzY/DjKDzE3IEaueBqQDTEavWRyalo49ULV/GzVkimRvKN+m24DAuj0dum+NWPvo2Mx6XCp+/mErREAr+B1GHzPJeWaKI/rL29eiHVSVFxNnLFUPnlJFh1sag8tbMaNtF45f1nrmsTotFjz06mNGWjJywlrP9fd53a72AyyGSyCih2zBFlKp19YevNFDDaL4rOUrVdZDn1pfI2ChIgCXGeVg0eJ4KYELbII4tglnq2J6iUuM5j+YeNMgPrOiKhLmb3TBdQULsc3huFpI+8mEYMFrOfT/5/Br4XU830LPvZnQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
+ by LV8PR11MB8698.namprd11.prod.outlook.com (2603:10b6:408:205::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8583.42; Fri, 4 Apr
+ 2025 14:11:18 +0000
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::cf7d:9363:38f4:8c57]) by SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::cf7d:9363:38f4:8c57%5]) with mapi id 15.20.8534.052; Fri, 4 Apr 2025
+ 14:11:18 +0000
+Date: Fri, 4 Apr 2025 09:11:40 -0500
+From: Ira Weiny <ira.weiny@intel.com>
+To: Zaid Alali <zaidal@os.amperecomputing.com>, <rafael@kernel.org>,
+	<lenb@kernel.org>, <james.morse@arm.com>, <tony.luck@intel.com>,
+	<bp@alien8.de>, <robert.moore@intel.com>, <dan.j.williams@intel.com>,
+	<Jonathan.Cameron@huawei.com>, <Benjamin.Cheatham@amd.com>,
+	<Avadhut.Naik@amd.com>, <viro@zeniv.linux.org.uk>, <arnd@arndb.de>,
+	<ira.weiny@intel.com>, <dave.jiang@intel.com>,
+	<sthanneeru.opensrc@micron.com>, <linux-acpi@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <acpica-devel@lists.linux.dev>
+Subject: Re: [PATCH v5 4/9] ACPI: APEI: EINJ: Remove redundant calls to
+ einj_get_available_error_type
+Message-ID: <67efe89ca38ac_9807c29472@iweiny-mobl.notmuch>
+References: <20250403231339.23708-1-zaidal@os.amperecomputing.com>
+ <20250403231339.23708-5-zaidal@os.amperecomputing.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250403231339.23708-5-zaidal@os.amperecomputing.com>
+X-ClientProxiedBy: MW4PR04CA0283.namprd04.prod.outlook.com
+ (2603:10b6:303:89::18) To SA1PR11MB6733.namprd11.prod.outlook.com
+ (2603:10b6:806:25c::17)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250403-dt-cpu-schema-v1-0-076be7171a85@kernel.org>
- <20250403-dt-cpu-schema-v1-6-076be7171a85@kernel.org> <Z-_K2XDEcbtcCMVM@linaro.org>
- <CAL_JsqJT-0gwvJnMb63izy6WwJpBVsswkauL8OMLCrF08q9HYQ@mail.gmail.com>
-In-Reply-To: <CAL_JsqJT-0gwvJnMb63izy6WwJpBVsswkauL8OMLCrF08q9HYQ@mail.gmail.com>
-From: Rob Herring <robh@kernel.org>
-Date: Fri, 4 Apr 2025 09:10:18 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJDkoj4d-aKvZ92kZ1mikqjJV4J4w=-3eNk3z6q6g0ssw@mail.gmail.com>
-X-Gm-Features: ATxdqUGgk50-VgqfiN2r-WHP1-0cyp1Dem4hGHbf6672N4-b5gggSNdLRbwnjDg
-Message-ID: <CAL_JsqJDkoj4d-aKvZ92kZ1mikqjJV4J4w=-3eNk3z6q6g0ssw@mail.gmail.com>
-Subject: Re: [PATCH 06/19] arm64: dts: qcom: msm8939: Fix CPU node
- "enable-method" property dependencies
-To: Stephan Gerhold <stephan.gerhold@linaro.org>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	Samuel Holland <samuel@sholland.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Viresh Kumar <viresh.kumar@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Vincenzo Frascino <vincenzo.frascino@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, 
-	Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Viresh Kumar <vireshk@kernel.org>, 
-	Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, zhouyanjie@wanyeetech.com, 
-	Conor Dooley <conor@kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, 
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>, Steen Hegelund <Steen.Hegelund@microchip.com>, 
-	Daniel Machon <daniel.machon@microchip.com>, UNGLinuxDriver@microchip.com, 
-	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
-	Heiko Stuebner <heiko@sntech.de>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-pm@vger.kernel.org, linux-mediatek@lists.infradead.org, 
-	linux-arm-msm@vger.kernel.org, linux-mips@vger.kernel.org, 
-	imx@lists.linux.dev, linux-rockchip@lists.infradead.org, 
-	linux-amlogic@lists.infradead.org, linux-renesas-soc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|LV8PR11MB8698:EE_
+X-MS-Office365-Filtering-Correlation-Id: fec0ae8c-9998-4877-d31b-08dd738291b8
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|10070799003|366016|1800799024|376014|7416014|921020|7053199007;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?LDff5il2LdoEn8fBwjF8YrXwBXMgU+1CegQEcRvrYRMiiLDOi166rCLX/uTm?=
+ =?us-ascii?Q?dJVccmcKAE2k3A2gqnnYxyZXh4kZrs1HbJ8iTJDr9xN4ADWtGDnA9ASBA+0U?=
+ =?us-ascii?Q?4MpLYa2HNRA7faXbLiHxKYqomm4Dq3B4v5x9VU3BIduFtH5/XaN0AiTIWS9D?=
+ =?us-ascii?Q?J25ypKJMXcPUzjq1IPYUak7n3WgvUBpOlATFVfeHaXetYPSMcvd+j0hKAfEs?=
+ =?us-ascii?Q?qIuYVkIwfz5pQv96Nk48FA92uP2Ri31dI7XsFtpl8kqcJ5txT+NEBgI4JNum?=
+ =?us-ascii?Q?VxAMUAvlD6ycvU4oipWy1HevFWk25DRvKXFH/gP++o+8I7Z4PqlFDSWWBPV9?=
+ =?us-ascii?Q?1iQKl3hAMfpTX9byhfs39zeNVtIZ99S+A1dAndR/NJ9zt8PjyFipgyX63O7c?=
+ =?us-ascii?Q?R6XPcSio4xTTPrbyaocr0vSoCKwW51MhmuGyZPXTqupqHXMqZq10Ds2/i0By?=
+ =?us-ascii?Q?P0CFg+94eRIa4klxWArZKfsgfVHJBnTMlS+LhaYC1SAxvM5nBqUsVqEbiLQd?=
+ =?us-ascii?Q?WzLfMhBHoT+U0/01yvFBhaNQqSRiu5jFa8QbeIALAHjzGoDcm/cTIO/l4w1Q?=
+ =?us-ascii?Q?jAh0vRfvtVPv1oz3cvVLN57b4yDSxKISf/2f2i82Q6WxWtvPU8hqkeaUZZc4?=
+ =?us-ascii?Q?m4JrRWTPi5Z+Qmy7xjudxQk6F9flFy4LdljVMvFoVcRt5CTrx8BaTXDax108?=
+ =?us-ascii?Q?8N7PMEE8dOVXax5BKjh5kp/kbIJyYo5waPCfBM1QUVfTWuR347qaaq/VQ5pU?=
+ =?us-ascii?Q?7BAtwx9mP+2tjDO2ETVdXfYwU9wVqNa22b18xGKmRqAdKn1jgBN2LoqnVhtT?=
+ =?us-ascii?Q?rgdqG8SuFe2p/OY4XWu+zgzrSJXE96Loh0Oy6wfmGY7kGorpcV/lsgsLm6i9?=
+ =?us-ascii?Q?5P7/oBUsY4l+xFTWvpQcCD4TMj+W9L7uHLD66nVuKAmj+shgRC9KdxUC9a3R?=
+ =?us-ascii?Q?J8OWmdb9xDYGPnRMaWluppHqXKpr0Nu4E9tSgz2/WMjdwynDu1v1ZkdF6OYs?=
+ =?us-ascii?Q?Q3V0c6TgwQX6ID0baowzI75Y820CURM3RttHDcJKeJmUHXb61Jt/LCw4uz6k?=
+ =?us-ascii?Q?Ad2+5fnJQlgvVSPYG1pwaB5WhWTXFKxr6InkepuQPcnHOYc8/uYDLkVEg0Rk?=
+ =?us-ascii?Q?5M6F30RQwkYIxghr6+a7VAbUzyePsIe18iyqfBon7o0mdaHcOvv+a1+r4DPr?=
+ =?us-ascii?Q?uxU4+6bEQoLmhCQAqN5Xd4AbuEo/Bg+olM+A26U074nwymEoteNxvltLiV2e?=
+ =?us-ascii?Q?6xNAE5tTy42E8bKuedj4UOHeAc+mvuEMzw02ooVuZ7Q6iW2NIX1/H4k4R+9f?=
+ =?us-ascii?Q?62x5dZxMln8o7L1rlwsjAMtWkiWL3I453l4b0V1N4v63O0VV1zgJba81GUA7?=
+ =?us-ascii?Q?9cr4G5JWQFEXWMrRr/gPx8SA8VyKUAAAdcbdhNb1RFVfw37+qZ0maTQ4OLLV?=
+ =?us-ascii?Q?mVZ6x01pArE=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(366016)(1800799024)(376014)(7416014)(921020)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?RjDLUoPDEynBNgxUDfYrptS01NLjcSiLs6gWbLFADIfADCTb0TMc9EKQuEK8?=
+ =?us-ascii?Q?8QEYgZ6re3/o0v/KO5/p72C4AYdd1fDGnW2GwZX2aH4m5qjKrMKallYBjERG?=
+ =?us-ascii?Q?T4igqsesmaZgpbM/xgyOhHWLzli1ZH7rCcnCfWR0oUGTaLQZ3Pd3Eq3iqE9+?=
+ =?us-ascii?Q?3Q6E+k3FUtVLLOu6EZhY5BoNqHRF/GtlILmmKkq3GiihdPljMWYHO1iih82b?=
+ =?us-ascii?Q?hf6cSOI9FuO7JqLhahZGvfW5jegJFdxtQooGnLzqlCxbj5y92FYUVvte6qFx?=
+ =?us-ascii?Q?XknlTCDkAJX4IbGuzTIT7lGJaEY7hz5MiOCWCG7j2VmcDj6LLXX3tYT6NnNW?=
+ =?us-ascii?Q?lKUTTQql5r57cQ1BDEnnkTSVbS9Ih9mcQ/PH5hQ1Gy9R8i8UsuyrPp1kLOY3?=
+ =?us-ascii?Q?Doplho7goZ/S0Pi0GtnVUdUtRS01hTpFUW+ieSDltEB5xyqgfRPQtdigwGHZ?=
+ =?us-ascii?Q?szuDskDQHhNwVR3QEBQE7ug6HGqWqf5zZHEmyZEtjDm8hXzGBFqlr9+G0S9L?=
+ =?us-ascii?Q?f3UvUL5dQ/qYYQ54Zf22aRtwwFUM1oNa8p/BhO0Ojpafbuj5wAoUMquA68Ra?=
+ =?us-ascii?Q?/q6l3uQRzDVTovg2cJjj70+1cVHiCOeFCi3n+9LyjJJ9uW8L1XsPdSL2UaCf?=
+ =?us-ascii?Q?kmqvE2jlGFJ66W3vHL7wk2b10behy0RiDenThc/209LJLgi/5Gi2ky9vl7n9?=
+ =?us-ascii?Q?0PaV5fNIHjhqumK80XwLaQqmnA8NW/VPxXAdU5RwS+KzNeCrmBnDs5c9GeyQ?=
+ =?us-ascii?Q?o/EcxVgbn1nSxmdpIqPGFwXazqN6rwNoQhBJDFBqDcZcNNE/n4sf9VufGElJ?=
+ =?us-ascii?Q?3duWyUDUhyJfnrO1oV+RQ1TmmyYVdPHY4pgJJltm9VsNtGWIH4wd3A+JwM7S?=
+ =?us-ascii?Q?+A0dYuL5a042NeALJM8wHuCEdCWOw3B1iH6naljbHTk26TEk0OLKD0wgXTAk?=
+ =?us-ascii?Q?GTTcm1cbmmFtkkxQqsuTHtteC6rkm2S4hTz4oYqZ9atC21L+ZRWueOnsdjbH?=
+ =?us-ascii?Q?8El/POPqh3hvzbmlTI5uy5SuJwFDfq9JQqk1lN99LLKYAIF1X4U5FVztou2f?=
+ =?us-ascii?Q?F1Y+H7YAiRrImRHvjDF0hyVxQMbgMEvM4jYtdEYlfvKCfTYde1jC96I/QodW?=
+ =?us-ascii?Q?Ii31Y/vNQ81bOLyVaQW4Gt6rUi/wg+M/L+OfhySxJhWMs/4QjvZCUjW345Dv?=
+ =?us-ascii?Q?GX0PQucoACAr8x80JBmCK6rcpATKenAp2rPJYAyyL+mJ/0Kcho2SbYaBVf+E?=
+ =?us-ascii?Q?EzdqbuCjAggQJJGaBOLyNqsf23bUE8Iv1+28ruJserzFWOVzhQXkYFCy3JC+?=
+ =?us-ascii?Q?9pT4SFmzC6lqTxlYAkEo9bDq/71Lw8Hjwhvs8jK+lRBnypHdYoZzjGKdOxSt?=
+ =?us-ascii?Q?5DizLlsgHRqR/mzOoiBZnCBLT30ncmpxvDvgecSwdFVHKIAJCPq/5ehubVSQ?=
+ =?us-ascii?Q?ueqsBIDHEclcNSJaWyhN1yhq/p65KT3Sye5JScVfkXJROSY7eLx3H/QkWL/T?=
+ =?us-ascii?Q?k8mFVPwzcE0cfBXqU2cGQhC5e8Po984IbbZj3ZuGPHN75k6T9lCQpNSA/ExY?=
+ =?us-ascii?Q?qeS4ySz5y8LMZFG4coR+u1CT1NC0OI+vwpfx16rN0YMDq1/Pf7ZQ7Qw2e2Zy?=
+ =?us-ascii?Q?0eJgJ7Z+1NP17R4ZeANL6c+QUGI+cCry2NuhbJdJNUu2?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: fec0ae8c-9998-4877-d31b-08dd738291b8
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Apr 2025 14:11:18.6454
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: NyUBcRLsX8hddf3sQaHanj8s4Up0uQWY9GQFdnrBWYEfv96Y1TahUp6WkHsoE/mGL5T3MFIfD+YvP4cIkdCAdw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR11MB8698
+X-OriginatorOrg: intel.com
 
-On Fri, Apr 4, 2025 at 8:18=E2=80=AFAM Rob Herring <robh@kernel.org> wrote:
->
-> On Fri, Apr 4, 2025 at 7:04=E2=80=AFAM Stephan Gerhold
-> <stephan.gerhold@linaro.org> wrote:
-> >
-> > On Thu, Apr 03, 2025 at 09:59:27PM -0500, Rob Herring (Arm) wrote:
-> > > The "qcom,acc" and "qcom,saw" properties aren't valid with "spin-tabl=
-e"
-> > > enable-method nor are they used on 64-bit kernels, so they can be
-> > > dropped.
-> > >
-> >
-> > The bootloader we currently use on these devices reads these properties
-> > to set up the spin-table, so removing these will break booting secondar=
-y
-> > CPU cores.
-> >
-> > The motivation for implementing it that way was that 32-bit vs 64-bit
-> > kernel shouldn't be relevant for the describing the hardware blocks in
-> > the device tree. The code in the bootloader is generic and handles
-> > different SoCs (e.g. msm8916 with 4 cores and msm8939 with 8 cores, the
-> > enable sequences are identical).
-> >
-> > Can we keep this in somehow? To be fair, I'm not sure what property we
-> > could match on to check if these properties are allowed ...
->
-> Yes, we can keep them. We'll have to allow them with "spin-table" and
-> "psci" I guess.
+Zaid Alali wrote:
+> A single call to einj_get_available_error_type in init function is
+> sufficient to save the return value in a global variable to be used
+> later in various places in the code. This commit does not introduce
+> any functional changes, but only removing unnecessary redundant
+> function calls.
+> 
+> Signed-off-by: Zaid Alali <zaidal@os.amperecomputing.com>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-I came up with something like this instead:
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
 
-- if:
-  # 2 Qualcomm platforms bootloaders need qcom,acc and qcom,saw yet use
-  # "spin-table" or "psci" enable-methods. Disallowing the properties for
-  # all other CPUs is the best we can do as there's not any way to
-  # distinguish these Qualcomm platforms.
-    properties:
-      compatible:
-        not:
-          const: arm,cortex-a53
-  then:
-    properties:
-      qcom,acc: false
-      qcom,saw: false
-
-Not ideal as there are lots of A53s, but better than enabling for
-every 64-bit platform.
-
-
-Also, is adding the cpu-release-addr fine? It could trip up a
-bootloader tests if the property is already present and doesn't update
-it in that case.
-
-Rob
+[snip]
