@@ -1,219 +1,209 @@
-Received: from smtp-fw-80006.amazon.com (smtp-fw-80006.amazon.com [99.78.197.217])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1BCB7E110;
-	Fri,  4 Apr 2025 15:45:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.217
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C63451DF962;
+	Fri,  4 Apr 2025 15:49:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743781527; cv=none; b=mQGWgxWnJm+rNvgPV82L0c8WwBz7/JYeH8Q1duXaKgGpX0vA3b2unRCvnysGs/YuAwnCvqzIPKoHkUuNxp5bJDavEuQJSC7+wAap8UabNxHULXVlWeWGddxfuwUmjj/nAItzbqVczGAQOD2tbiu7nfdIjlyQsrCFB+JTUfFl4Cc=
+	t=1743781795; cv=none; b=MoWxjE1QeGhfBmefxWkfVX25q94PxC6zk7FUMXfJuOcIJx9OrBLPVqGSKc86DDqbTPqKtwBF6d+NScziZIg+6fFoQCXH5WARYo5P8y0pP8rD30DNhtlW/nSr4PrmnH5Spvua0SZ2d4IVkCWg5n5u+k/p8t0KR+koqBIULabKMv8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743781527; c=relaxed/simple;
-	bh=ihDN7/DxACvpk0yyZBzdmxHvkWRzBDnaG9K8bSUk2mQ=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rgVFBEpwVJee2DQQMIG1iWI1XvuTReHsRKAKIRODSFMVj5GjGw8SWnehkuDcAWv5Wh06uj31z3/xdpFoy7F+aHnSEWJ+NyIg/gb/f9v122c1B7q/nZonfR+ubKw6yJoznOBoNUU/Y3y5HbBJXSLLWdI7D0Y2hpMCgvPUgXCNqio=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.uk; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=cn5LQ44B; arc=none smtp.client-ip=99.78.197.217
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.uk
+	s=arc-20240116; t=1743781795; c=relaxed/simple;
+	bh=m4LCpakrwz86U21T1J3A9DSHDf8q+L/BJbl7HOX/PI8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=R9KOO3czw43iedvaLYKVKQkwmIFRnwFw9i7aqB2d0oCa2Bwo/MZp9BaxXo3ZdH6G0OLQFFVzk5uYm60x0kr0aslgrrDxDqY0pJ4LpplrQcqfPz97xJC0sXtzx+qmP21Hfh/AgkJkP36KSkqgVOYpBmSuBH5x1FoyQNas2jJYz20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j74AMQRg; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="cn5LQ44B"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j74AMQRg"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-736c1138ae5so2146389b3a.3;
+        Fri, 04 Apr 2025 08:49:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1743781526; x=1775317526;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=yc6GH0/dKmQ7WSv9wb3vUThoZ6MNVvGsszSJT/iNJmY=;
-  b=cn5LQ44BUJS+sYWWoYKtainZBWpBWaMBtYp4cSPIDLC6Hh6MZWzdLma7
-   0fQ6nn9WdGSwRtarmJHWCBQY1OND6Z6xnl77ulnn1NCxPe+FjmLcvO7qP
-   R9m6nIIglBeVum0m8MrHot7WJRWQs9nydDtjETLeH/fSP+JV13dZ7PKSD
-   Y=;
-X-IronPort-AV: E=Sophos;i="6.15,188,1739836800"; 
-   d="scan'208";a="37863645"
-Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.25.36.214])
-  by smtp-border-fw-80006.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 15:45:22 +0000
-Received: from EX19MTAEUB002.ant.amazon.com [10.0.43.254:25779]
- by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.18.64:2525] with esmtp (Farcaster)
- id bc1466b6-dabf-4c34-ba00-853571b00927; Fri, 4 Apr 2025 15:45:20 +0000 (UTC)
-X-Farcaster-Flow-ID: bc1466b6-dabf-4c34-ba00-853571b00927
-Received: from EX19D030EUB002.ant.amazon.com (10.252.61.16) by
- EX19MTAEUB002.ant.amazon.com (10.252.51.79) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Fri, 4 Apr 2025 15:45:16 +0000
-Received: from EX19MTAUEA002.ant.amazon.com (10.252.134.9) by
- EX19D030EUB002.ant.amazon.com (10.252.61.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Fri, 4 Apr 2025 15:45:16 +0000
-Received: from email-imr-corp-prod-pdx-all-2b-dbd438cc.us-west-2.amazon.com
- (10.43.8.2) by mail-relay.amazon.com (10.252.134.34) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id
- 15.2.1544.14 via Frontend Transport; Fri, 4 Apr 2025 15:45:15 +0000
-Received: from dev-dsk-kalyazin-1a-a12e27e2.eu-west-1.amazon.com (dev-dsk-kalyazin-1a-a12e27e2.eu-west-1.amazon.com [172.19.103.116])
-	by email-imr-corp-prod-pdx-all-2b-dbd438cc.us-west-2.amazon.com (Postfix) with ESMTPS id CCF7BA047C;
-	Fri,  4 Apr 2025 15:45:11 +0000 (UTC)
-From: Nikita Kalyazin <kalyazin@amazon.com>
-To: <akpm@linux-foundation.org>, <pbonzini@redhat.com>, <shuah@kernel.org>,
-	<viro@zeniv.linux.org.uk>, <brauner@kernel.org>, <muchun.song@linux.dev>,
-	<hughd@google.com>
-CC: <kvm@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
-	<linux-fsdevel@vger.kernel.org>, <jack@suse.cz>,
-	<lorenzo.stoakes@oracle.com>, <Liam.Howlett@Oracle.com>, <jannh@google.com>,
-	<ryan.roberts@arm.com>, <david@redhat.com>, <jthoughton@google.com>,
-	<peterx@redhat.com>, <graf@amazon.de>, <jgowans@amazon.com>,
-	<roypat@amazon.co.uk>, <derekmn@amazon.com>, <nsaenz@amazon.es>,
-	<xmarcalx@amazon.com>, <kalyazin@amazon.com>
-Subject: [PATCH v3 6/6] KVM: selftests: test userfaultfd minor for guest_memfd
-Date: Fri, 4 Apr 2025 15:43:52 +0000
-Message-ID: <20250404154352.23078-7-kalyazin@amazon.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250404154352.23078-1-kalyazin@amazon.com>
-References: <20250404154352.23078-1-kalyazin@amazon.com>
+        d=gmail.com; s=20230601; t=1743781792; x=1744386592; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yP84vi9S/CO3pARMt8AsumexblRaEcsvg6qxFTYHyzU=;
+        b=j74AMQRgDit1YzGweT2uu4vHM7tHkKbbDV0lrYL22t1VNgE0dNGtApHGs+sr9MKAMo
+         uNXPV9PFEXtWQux+ZmsO+ECUoQG+odf/Y0+s/VsLYyOKGiBAXM92sZgbjW4kCF+zi7AO
+         eS7Jnw5lJAo3Z9ib38Y2IKPjd2B5GfzPWH8A0aiq1CSiW050gGdrE1xGPZs8GDRYG8E2
+         gIuvQmmlqr/mkZg+D4Tqw9a94mZ81ETrfJwW2eGaZhg3K6aTwqqnPYW0KY/Yh3xImQNt
+         Vw5jkQ1X8LnaxPm4N51tXVCgePw+V1hWREkb3/tX5vANgXSN61BuJxBaFS5uu90efOXw
+         rtUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743781792; x=1744386592;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yP84vi9S/CO3pARMt8AsumexblRaEcsvg6qxFTYHyzU=;
+        b=s9lRUW1CLb+8EG1Xpd/PjykkP8Rk7PJeTIwm0+kfk+fFslbeDKSFqTDE9sQxr1ZoZQ
+         WbVxx+OE2JymDKHz4Tr3J29RPrAtJzctLAshJO+i1qkGpdweBTT/h++DjByvc1o6ETg4
+         X+u6k1UstNv1qMCf/MTTwExQAdxt6KfEvRPm0Ah0Sp7OhBB3/3Q1IxiczGk6gqMmN8O8
+         8ueDi7MZV0UPOE9MWPyGT2qCHfq5IkYTXXbFhS5besSx1llcNInywXY5b+KAIawM9Cwm
+         rge7b9Fl4cvkY2B2jPbAmRAhtYJpUNBnMc1ihOnu9xPECt2HqP7pVpFy/ExpKP4UbBp4
+         M2jA==
+X-Forwarded-Encrypted: i=1; AJvYcCW1gTJBqxdqkJSuo1CJT+NDXnOVWxtzzVjKqeyDBXQw5xWfj1LOuHRKFNMpnRfAQ6HQKifUJA/GjzRthCM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/kXSHJMhyam/6ZyXwOpmCqaPmsG4CaTMMpIRK3UV5ph0CerO3
+	h1qPsSVEzmk0NLRuHmzf/Nuz2iznPqKKDnzPPModCQ03vcI/G8y+GgO11iE7GCLknAJBpTyDJ+Y
+	AfGrBKz90+0gxvS3WFX0A4qKnFlY=
+X-Gm-Gg: ASbGncvaPdCrnc6qbk5BerZiwtPy+at6yrCuNAuXPF0Pv+kiFs24nF7XxNX0M4spoxO
+	tjOOG4U8XLbyTBVQ96SdkyecchG9mojlWugpaFhqbUoFStBYY4rckC7RzJ55WwTVW29nK7UaWct
+	BGJql0osIRuFqVZOkH4DMnzISiDmS3q4x6NNrKDTKLTrY3MKFRiHmS
+X-Google-Smtp-Source: AGHT+IEGSKaLUOWXoq7rVkkc1aMtN18O+AIOmTA0joIqPgtrP+lM3ynTb5VE7B3UzbDJr+PTPdU76v/awPgbgUIVPA0=
+X-Received: by 2002:a05:6a00:a89:b0:737:e73:f64b with SMTP id
+ d2e1a72fcca58-739e48c6f91mr4748744b3a.1.1743781791914; Fri, 04 Apr 2025
+ 08:49:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain
+References: <20250402180925.90914-1-andrii@kernel.org> <174375584977.31282.8985910498663747932.tip-bot2@tip-bot2>
+In-Reply-To: <174375584977.31282.8985910498663747932.tip-bot2@tip-bot2>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Fri, 4 Apr 2025 08:49:39 -0700
+X-Gm-Features: AQ5f1Jqfd2hG6YA6tRwgUlmaICWmxlM7J06z-rwLADpQzMcIV0kKb2AsCOqMnwI
+Message-ID: <CAEf4BzavW0GpSU4aT_kXF_rjyrEAoYfW8Ld8LzsL1boGo=xa5g@mail.gmail.com>
+Subject: Re: [tip: sched/core] sched/tracepoints: Move and extend the
+ sched_process_exit() tracepoint
+To: Ingo Molnar <mingo@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-tip-commits@vger.kernel.org, Andrii Nakryiko <andrii@kernel.org>, 
+	"Steven Rostedt (Google)" <rostedt@goodmis.org>, Oleg Nesterov <oleg@redhat.com>, 
+	Peter Zijlstra <peterz@infradead.org>, x86@kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The test demonstrates that a minor userfaultfd event in guest_memfd can
-be resolved via a memcpy followed by a UFFDIO_CONTINUE ioctl.
+On Fri, Apr 4, 2025 at 1:37=E2=80=AFAM tip-bot2 for Andrii Nakryiko
+<tip-bot2@linutronix.de> wrote:
+>
+> The following commit has been merged into the sched/core branch of tip:
+>
+> Commit-ID:     3e816361e94a0e79b1aabf44abec552e9698b196
+> Gitweb:        https://git.kernel.org/tip/3e816361e94a0e79b1aabf44abec552=
+e9698b196
+> Author:        Andrii Nakryiko <andrii@kernel.org>
+> AuthorDate:    Wed, 02 Apr 2025 11:09:25 -07:00
+> Committer:     Ingo Molnar <mingo@kernel.org>
+> CommitterDate: Fri, 04 Apr 2025 10:30:19 +02:00
+>
+> sched/tracepoints: Move and extend the sched_process_exit() tracepoint
+>
+> It is useful to be able to access current->mm at task exit to, say,
+> record a bunch of VMA information right before the task exits (e.g., for
+> stack symbolization reasons when dealing with short-lived processes that
+> exit in the middle of profiling session). Currently,
+> trace_sched_process_exit() is triggered after exit_mm() which resets
+> current->mm to NULL making this tracepoint unsuitable for inspecting
+> and recording task's mm_struct-related data when tracing process
+> lifetimes.
+>
+> There is a particularly suitable place, though, right after
+> taskstats_exit() is called, but before we do exit_mm() and other
+> exit_*() resource teardowns. taskstats performs a similar kind of
+> accounting that some applications do with BPF, and so co-locating them
+> seems like a good fit. So that's where trace_sched_process_exit() is
+> moved with this patch.
+>
+> Also, existing trace_sched_process_exit() tracepoint is notoriously
+> missing `group_dead` flag that is certainly useful in practice and some
+> of our production applications have to work around this. So plumb
+> `group_dead` through while at it, to have a richer and more complete
+> tracepoint.
+>
+> Note that we can't use sched_process_template anymore, and so we use
+> TRACE_EVENT()-based tracepoint definition. But all the field names and
+> order, as well as assign and output logic remain intact. We just add one
+> extra field at the end in backwards-compatible way.
+>
+> Document the dependency to sched_process_template anyway.
+>
+> Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+> Signed-off-by: Ingo Molnar <mingo@kernel.org>
 
-Signed-off-by: Nikita Kalyazin <kalyazin@amazon.com>
----
- .../testing/selftests/kvm/guest_memfd_test.c  | 99 +++++++++++++++++++
- 1 file changed, 99 insertions(+)
+Adding Andrew.
 
-diff --git a/tools/testing/selftests/kvm/guest_memfd_test.c b/tools/testing/selftests/kvm/guest_memfd_test.c
-index 38c501e49e0e..9a06c2486218 100644
---- a/tools/testing/selftests/kvm/guest_memfd_test.c
-+++ b/tools/testing/selftests/kvm/guest_memfd_test.c
-@@ -10,12 +10,16 @@
- #include <errno.h>
- #include <stdio.h>
- #include <fcntl.h>
-+#include <pthread.h>
- 
- #include <linux/bitmap.h>
- #include <linux/falloc.h>
-+#include <linux/userfaultfd.h>
- #include <sys/mman.h>
- #include <sys/types.h>
- #include <sys/stat.h>
-+#include <sys/syscall.h>
-+#include <sys/ioctl.h>
- 
- #include "kvm_util.h"
- #include "test_util.h"
-@@ -206,6 +210,98 @@ static void test_create_guest_memfd_multiple(struct kvm_vm *vm)
- 	close(fd1);
- }
- 
-+struct fault_args {
-+	char *addr;
-+	volatile char value;
-+};
-+
-+static void *fault_thread_fn(void *arg)
-+{
-+	struct fault_args *args = arg;
-+
-+	/* Trigger page fault */
-+	args->value = *args->addr;
-+	return NULL;
-+}
-+
-+static void test_uffd_minor(int fd, size_t page_size, size_t total_size)
-+{
-+	struct uffdio_register uffd_reg;
-+	struct uffdio_continue uffd_cont;
-+	struct uffd_msg msg;
-+	struct fault_args args;
-+	pthread_t fault_thread;
-+	void *mem, *mem_nofault, *buf = NULL;
-+	int uffd, ret;
-+	off_t offset = page_size;
-+	void *fault_addr;
-+
-+	ret = posix_memalign(&buf, page_size, total_size);
-+	TEST_ASSERT_EQ(ret, 0);
-+
-+	uffd = syscall(__NR_userfaultfd, O_CLOEXEC);
-+	TEST_ASSERT(uffd != -1, "userfaultfd creation should succeed");
-+
-+	struct uffdio_api uffdio_api = {
-+		.api = UFFD_API,
-+		.features = UFFD_FEATURE_MINOR_GUEST_MEMFD,
-+	};
-+	ret = ioctl(uffd, UFFDIO_API, &uffdio_api);
-+	TEST_ASSERT(ret != -1, "ioctl(UFFDIO_API) should succeed");
-+
-+	mem = mmap(NULL, total_size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
-+	TEST_ASSERT(mem != MAP_FAILED, "mmap should succeed");
-+
-+	mem_nofault = mmap(NULL, total_size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
-+	TEST_ASSERT(mem_nofault != MAP_FAILED, "mmap should succeed");
-+
-+	uffd_reg.range.start = (unsigned long)mem;
-+	uffd_reg.range.len = total_size;
-+	uffd_reg.mode = UFFDIO_REGISTER_MODE_MINOR;
-+	ret = ioctl(uffd, UFFDIO_REGISTER, &uffd_reg);
-+	TEST_ASSERT(ret != -1, "ioctl(UFFDIO_REGISTER) should succeed");
-+
-+	ret = fallocate(fd, FALLOC_FL_KEEP_SIZE | FALLOC_FL_PUNCH_HOLE,
-+			offset, page_size);
-+	TEST_ASSERT(!ret, "fallocate(PUNCH_HOLE) should succeed");
-+
-+	fault_addr = mem + offset;
-+	args.addr = fault_addr;
-+
-+	ret = pthread_create(&fault_thread, NULL, fault_thread_fn, &args);
-+	TEST_ASSERT(ret == 0, "pthread_create should succeed");
-+
-+	ret = read(uffd, &msg, sizeof(msg));
-+	TEST_ASSERT(ret != -1, "read from userfaultfd should succeed");
-+	TEST_ASSERT(msg.event == UFFD_EVENT_PAGEFAULT, "event type should be pagefault");
-+	TEST_ASSERT((void *)(msg.arg.pagefault.address & ~(page_size - 1)) == fault_addr,
-+		    "pagefault should occur at expected address");
-+
-+	memcpy(mem_nofault + offset, buf + offset, page_size);
-+
-+	uffd_cont.range.start = (unsigned long)fault_addr;
-+	uffd_cont.range.len = page_size;
-+	uffd_cont.mode = 0;
-+	ret = ioctl(uffd, UFFDIO_CONTINUE, &uffd_cont);
-+	TEST_ASSERT(ret != -1, "ioctl(UFFDIO_CONTINUE) should succeed");
-+
-+	TEST_ASSERT(args.value == *(char *)(mem_nofault + offset),
-+		    "memory should contain the value that was copied");
-+	TEST_ASSERT(args.value == *(char *)(mem + offset),
-+		    "no further fault is expected");
-+
-+	ret = pthread_join(fault_thread, NULL);
-+	TEST_ASSERT(ret == 0, "pthread_join should succeed");
-+
-+	ret = munmap(mem_nofault, total_size);
-+	TEST_ASSERT(!ret, "munmap should succeed");
-+
-+	ret = munmap(mem, total_size);
-+	TEST_ASSERT(!ret, "munmap should succeed");
-+	free(buf);
-+	close(uffd);
-+}
-+
- unsigned long get_shared_type(void)
- {
- #ifdef __x86_64__
-@@ -244,6 +340,9 @@ void test_vm_type(unsigned long type, bool is_shared)
- 	test_fallocate(fd, page_size, total_size);
- 	test_invalid_punch_hole(fd, page_size, total_size);
- 
-+	if (is_shared)
-+		test_uffd_minor(fd, page_size, total_size);
-+
- 	close(fd);
- 	kvm_vm_release(vm);
- }
--- 
-2.47.1
+Seems like my patch was applied both by Andrew ([0], [1]) and Ingo.
+Andew, would it be possible to drop those from your tree and keep the
+one in Ingo's tip/sched/core? Thanks!
 
+  [0] https://git.kernel.org/pub/scm/linux/kernel/git/akpm/25-new.git/tree/=
+patches/exit-move-and-extend-sched_process_exit-tracepoint.patch
+  [1] https://git.kernel.org/pub/scm/linux/kernel/git/akpm/25-new.git/tree/=
+patches/exit-move-and-extend-sched_process_exit-tracepoint-fix.patch
+
+> Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> Acked-by: Oleg Nesterov <oleg@redhat.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Link: https://lore.kernel.org/r/20250402180925.90914-1-andrii@kernel.org
+> ---
+>  include/trace/events/sched.h | 34 ++++++++++++++++++++++++++++++----
+>  kernel/exit.c                |  2 +-
+>  2 files changed, 31 insertions(+), 5 deletions(-)
+>
+> diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
+> index 8994e97..3bec9fb 100644
+> --- a/include/trace/events/sched.h
+> +++ b/include/trace/events/sched.h
+> @@ -326,11 +326,37 @@ DEFINE_EVENT(sched_process_template, sched_process_=
+free,
+>              TP_ARGS(p));
+>
+>  /*
+> - * Tracepoint for a task exiting:
+> + * Tracepoint for a task exiting.
+> + * Note, it's a superset of sched_process_template and should be kept
+> + * compatible as much as possible. sched_process_exits has an extra
+> + * `group_dead` argument, so sched_process_template can't be used,
+> + * unfortunately, just like sched_migrate_task above.
+>   */
+> -DEFINE_EVENT(sched_process_template, sched_process_exit,
+> -            TP_PROTO(struct task_struct *p),
+> -            TP_ARGS(p));
+> +TRACE_EVENT(sched_process_exit,
+> +
+> +       TP_PROTO(struct task_struct *p, bool group_dead),
+> +
+> +       TP_ARGS(p, group_dead),
+> +
+> +       TP_STRUCT__entry(
+> +               __array(        char,   comm,   TASK_COMM_LEN   )
+> +               __field(        pid_t,  pid                     )
+> +               __field(        int,    prio                    )
+> +               __field(        bool,   group_dead              )
+> +       ),
+> +
+> +       TP_fast_assign(
+> +               memcpy(__entry->comm, p->comm, TASK_COMM_LEN);
+> +               __entry->pid            =3D p->pid;
+> +               __entry->prio           =3D p->prio; /* XXX SCHED_DEADLIN=
+E */
+> +               __entry->group_dead     =3D group_dead;
+> +       ),
+> +
+> +       TP_printk("comm=3D%s pid=3D%d prio=3D%d group_dead=3D%s",
+> +                 __entry->comm, __entry->pid, __entry->prio,
+> +                 __entry->group_dead ? "true" : "false"
+> +       )
+> +);
+>
+>  /*
+>   * Tracepoint for waiting on task to unschedule:
+> diff --git a/kernel/exit.c b/kernel/exit.c
+> index 1b51dc0..f1db86d 100644
+> --- a/kernel/exit.c
+> +++ b/kernel/exit.c
+> @@ -936,12 +936,12 @@ void __noreturn do_exit(long code)
+>
+>         tsk->exit_code =3D code;
+>         taskstats_exit(tsk, group_dead);
+> +       trace_sched_process_exit(tsk, group_dead);
+>
+>         exit_mm();
+>
+>         if (group_dead)
+>                 acct_process();
+> -       trace_sched_process_exit(tsk);
+>
+>         exit_sem(tsk);
+>         exit_shm(tsk);
