@@ -1,141 +1,84 @@
-Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-186.mta1.migadu.com (out-186.mta1.migadu.com [95.215.58.186])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E9B4207E03
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 18:13:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74CA721507F
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 18:13:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743790397; cv=none; b=hY3sorb2s6X+8+cF1krrCelSozmN4dxxn2F9r3j519qJX0siLmEidFGPFtd58Txbj3uotf9VVva62V9fBVqtSy9l09WIF/ZUUs8CM7CG9tesOpT93AGy+ictk0k1CcZ80whKOzu7YG+QMSLwSm/iCzN4in2IvUmYkcV146E0iyw=
+	t=1743790419; cv=none; b=QVaeTVbg6SUqiOFcYv2N+gMk/pL8RedV3lfF7iG07B+5bVs7ggfMBYkzgW2QlVyCTunWO3YDejlbBI05ONmWpxU6z+V8peBBMZ1s/TQ32iSWMeJO62JUEpcN+tZ7bjxBMl6904kaqHwybHu94f8h1obR+R+oa3g7Bgf82lpnW/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743790397; c=relaxed/simple;
-	bh=7rBihDPp9FTk+9h+YN3X6UN632wm8kddI1fTY9fA6gI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qCxrL++zLC9yqTLsWnx/I7srSeAa7WAmcn78e9S3mO3YlqS/cObBm4mjdhXBmwd5S4tJgoUbopSuh/cO6RKQRaCjGTv0rjgQY7t7YDDjoMUmSV9yy7qoBKDactfL8HVoS1C1Oc4A9q0BQjURVa44ycywRP2fhSuaU/fYwMraWs0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=00IvK2uO; arc=none smtp.client-ip=209.85.222.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
+	s=arc-20240116; t=1743790419; c=relaxed/simple;
+	bh=18hN5x2RADFXLM5oIMb+dmlprtIX5ukfJpyHhTr93nE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qxMpv2SocMtHi1jAV0zElRn0ynFMJOYMz7TOZINFos4Lg7KhHfEPPVG71RDYNdy0OJof3W3alnDbqxFTRjQ4gD+Z0JnHBt9zihXKykSP1GHCZgUAoaK2cFtWONfEiirzofrKYoWbCHXvr0WxICJtwF6W+9OuWAQK4D1suK+vwns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=iencinas.com; spf=pass smtp.mailfrom=iencinas.com; dkim=pass (2048-bit key) header.d=iencinas.com header.i=@iencinas.com header.b=X7/KzN87; arc=none smtp.client-ip=95.215.58.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=iencinas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iencinas.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="00IvK2uO"
-Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-7c5f720c717so347436385a.0
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 11:13:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1743790393; x=1744395193; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Z8cyC/DPxNVy17Lz/zroH2kHExcb4tpekU11b2nuA7o=;
-        b=00IvK2uOxq9Q2JG5F9RkhRyG5fPiDlKFA/3mwiN6pe5S/pqfySzSSMAI41NUHBJWOs
-         6eOKHpJoFSy1IEZnL+wu1ks9V8UhCHQmYcmxjMeuTFsOst7r2nQb1Mb75JUCxabo7Pzw
-         X51zHaB97rOp+l/yb3dk25G/99beROhMgUA0B0DhLOwUptUET1viYggNNIkDloJpTWWG
-         lwNN9SzhVCmO6/eiW0YiJmV+0JkfULRoleyvsxEgpmYJi9wCUhDQYTiEIRULlo9PjIed
-         Tjs/vxe4Pxrq3kA2AZVCtnS/xVBvmm4lljSDEhDyMTpF1ZYY4AAmmXwwCXTzGBU3J2Nc
-         mGsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743790393; x=1744395193;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Z8cyC/DPxNVy17Lz/zroH2kHExcb4tpekU11b2nuA7o=;
-        b=ikcOgNZ3m5xoniADPNxjS5sZABWe8g1z79qi3YblLoyDNPxQs9OKwfVTJwv54JLHY9
-         omMJwW3znCNfWrFrQ96MVIIIfW8oIMiKNUdHfrn2y8MCMiy8sn5Mtk0EQCURRmeAvv01
-         L4INEQWC8e/AEacNfQDPF3tmQRsqbLsN/Ln/sc/8Pq3xbZ/iSakdwlUAg2rzG3Xr++6B
-         I0WaWF565LAHAdtYH9iFswgNoNSTUFnpfGvnQKtD3HlwO8i3uyDTAi/4NrgSY+fO+SSd
-         ZAuFnqs9W16tK5fLZzlzWTVBcxw8N5XGL1n0wbCEVYhb5c433JXYGQYua9a1sssVzgXt
-         T0IQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXMeBgjSNwxdTwFrthsTmr7ogg87kG/WCNqvdRzXULVoKvhDm5bSQr/MxaHQGXj3Qmqg/eb2jojMrKg3rQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzjXiw6RBIyxKY2RdvdW8+e+YvwOa5w+x/6BkEbeFzopMleVaHi
-	b3udQTesYutj0Iin1VFh5GH0jGxkZRkmF8M7V6cW3yQEJeKUZbcHy6v2CzUlsew=
-X-Gm-Gg: ASbGncvkfv5Ls2dS2hE5zNN/JjNrQl4+VREuwRtovCyQ9zE5hSuBDd4vXlcmIJMhYV5
-	PaeyinvcSp06z2K8vWRry7dmfa48dVkazTzuJ93BPtFV6E+lTH6fahUW3Z554mWk4WsYkwXWRmu
-	cYI3jwzcDPc4JIkKm5U+AeOwaXZh3Ets7FF79a62F+OOOcTTmBirxMrauxuiVi8r+XfDm9/NhEf
-	2JfbM7vPLBCZq9KDc64G7qnMER6VV5RD4MQdTFeZsQ42TbxTkdvUHnwB3mCvrq6MUSK0w6oFrTq
-	5sZY93FaOwgHaCBn3We0UE99QQR8l/NSo+GYpMoGelE=
-X-Google-Smtp-Source: AGHT+IFDO9K2q73ZkHXh1q8bIV9QQbY3HITlSzjerFez+hyaMApgOpAFEuI1ij3Hx9STu1KB7K29hg==
-X-Received: by 2002:a05:620a:1aa6:b0:7b7:142d:53a8 with SMTP id af79cd13be357-7c774a3c100mr536465685a.19.1743790393005;
-        Fri, 04 Apr 2025 11:13:13 -0700 (PDT)
-Received: from localhost ([2603:7000:c01:2716:da5e:d3ff:fee7:26e7])
-        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7c76e96a1fcsm247409785a.54.2025.04.04.11.13.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Apr 2025 11:13:12 -0700 (PDT)
-Date: Fri, 4 Apr 2025 14:13:08 -0400
-From: Johannes Weiner <hannes@cmpxchg.org>
-To: Waiman Long <llong@redhat.com>
-Cc: Tejun Heo <tj@kernel.org>, Michal Hocko <mhocko@kernel.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Muchun Song <muchun.song@linux.dev>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
-	Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
-	cgroups@vger.kernel.org, linux-mm@kvack.org,
-	linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] memcg: Don't generate low/min events if either
- low/min or elow/emin is 0
-Message-ID: <20250404181308.GA300138@cmpxchg.org>
-References: <20250404012435.656045-1-longman@redhat.com>
- <Z_ATAq-cwtv-9Atx@slm.duckdns.org>
- <1ac51e8e-8dc0-4cd8-9414-f28125061bb3@redhat.com>
+	dkim=pass (2048-bit key) header.d=iencinas.com header.i=@iencinas.com header.b="X7/KzN87"
+Message-ID: <d03cb69d-d9a3-46fb-a283-d429a9389606@iencinas.com>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=iencinas.com;
+	s=key1; t=1743790405;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uVNe9DB4JVS7mxluiBxcFesLyFlFXgqdxhl/MDOzqcY=;
+	b=X7/KzN87/UO8MjCyQhAFLFpd4xU4Rssl/ezCIa3HYBH0BOtlU/YCJSSqcZERqRM4yKYu8A
+	yMgGqdW/7vIuBTYE67LVQN6hxapbTAuWawGihHgrN8uS4frbqmiAK6cErBHgI2KNfm4r7m
+	yiDIp6BGrDZj93AUpKiTQZJJWivU7jFr/DZTs3njv1dAgahFs4hmePYI8CumIlaU4G5gCZ
+	NMENgUzoNCwqr612hNffJ/t8O42gPP1I/0yHjzl2xBQQArcDxfbBxEkL1+CiQ0GGzkhiP4
+	FCZypS8QGicnAUx90Gj93LPTSr4iGs/DsdNl4j0zDU7RtLVftfXntQv1lL4Hug==
+Date: Fri, 4 Apr 2025 20:13:17 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1ac51e8e-8dc0-4cd8-9414-f28125061bb3@redhat.com>
+Subject: Re: [PATCH v3 2/2] riscv: introduce asm/swab.h
+To: Ben Dooks <ben.dooks@codethink.co.uk>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Alexandre Ghiti <alex@ghiti.fr>,
+ Arnd Bergmann <arnd@arndb.de>
+Cc: Eric Biggers <ebiggers@kernel.org>, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-kernel-mentees@lists.linux.dev,
+ skhan@linuxfoundation.org, Zhihang Shao <zhihang.shao.iscas@gmail.com>,
+ =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>,
+ linux-arch@vger.kernel.org
+References: <20250403-riscv-swab-v3-0-3bf705d80e33@iencinas.com>
+ <20250403-riscv-swab-v3-2-3bf705d80e33@iencinas.com>
+ <99b7b45a-4b18-4f0d-a197-4dccbb6c2352@codethink.co.uk>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Ignacio Encinas <ignacio@iencinas.com>
+In-Reply-To: <99b7b45a-4b18-4f0d-a197-4dccbb6c2352@codethink.co.uk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On Fri, Apr 04, 2025 at 01:25:33PM -0400, Waiman Long wrote:
+
+
+On 4/4/25 17:55, Ben Dooks wrote:
+> On 03/04/2025 21:34, Ignacio Encinas wrote:
+>> +#ifdef CONFIG_64BIT
+>> +ARCH_SWAB(64)
+>> +#define __arch_swab64 __arch_swab64
+>> +#endif
 > 
-> On 4/4/25 1:12 PM, Tejun Heo wrote:
-> > Hello,
-> >
-> > On Thu, Apr 03, 2025 at 09:24:34PM -0400, Waiman Long wrote:
-> > ...
-> >> The simple and naive fix of changing the operator to ">", however,
-> >> changes the memory reclaim behavior which can lead to other failures
-> >> as low events are needed to facilitate memory reclaim.  So we can't do
-> >> that without some relatively riskier changes in memory reclaim.
-> > I'm doubtful using ">" would change reclaim behavior in a meaningful way and
-> > that'd be more straightforward. What do mm people think?
+> I suppose if we're 64bit we can't just rely on values being in one
+> register so this'd need special casing here?
 
-The knob documentation uses "within low" and "above low" to
-distinguish whether you are protected or not, so at least from a code
-clarity pov, >= makes more sense to me: if your protection is N and
-you use exactly N, you're considered protected.
+Oops... I somehow decided that __arch_swab64 wasn't worth having for
+CONFIG_32BIT. I can't tell how useful it is to have it, but it is
+doable and already present in the codebase (include/uapi/linux/swab.h):
 
-That also means that by definition an empty cgroup is protected. It's
-not in excess of its protection. The test result isn't wrong.
+	__u32 h = val >> 32;
+	__u32 l = val & ((1ULL << 32) - 1);
+	return (((__u64)__fswab32(l)) << 32) | ((__u64)(__fswab32(h)));
 
-The real weirdness is issuing a "low reclaim" event when no reclaim is
-going to happen*.
+I'll excuse myself on this one because I'm not sure I have ever used a
+32 bit CPU (other than the very occasional and quick school project)
 
-The patch effectively special cases "empty means in excess" to avoid
-the event and fall through to reclaim, which then does nothing as a
-result of its own scan target calculations. That seems convoluted.
-
-Why not skip empty cgroups before running inapplicable checks?
-
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index b620d74b0f66..260ab238ec22 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -5963,6 +5963,9 @@ static void shrink_node_memcgs(pg_data_t *pgdat, struct scan_control *sc)
- 
- 		mem_cgroup_calculate_protection(target_memcg, memcg);
- 
-+		if (!mem_cgroup_usage(memcg, false))
-+			continue;
-+
- 		if (mem_cgroup_below_min(target_memcg, memcg)) {
- 			/*
- 			 * Hard protection.
-
-> I haven't looked deeply into why that is the case, but 
-> test_memcg_low/min tests had other failures when I made this change.
-
-It surprises me as well that it makes any practical difference.
-
-* Waiman points out that the weirdness is seeing low events without
-  having a low configured. Eh, this isn't really true with recursive
-  propagation; you may or may not have an elow depending on parental
-  configuration and sibling behavior.
+Thanks for catching this one! I'll make sure to add __arch_swab64 for
+the 32BIT version mimicking the snippet from above.
