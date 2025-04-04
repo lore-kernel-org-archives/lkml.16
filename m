@@ -1,73 +1,78 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8310F198E63
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 10:29:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 887A01BEF87
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 10:29:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743762568; cv=none; b=no8FoMhAH8U2t12eqTHmzifIQCZyvSGO17iO4bIrvS8Wlz/772hdo8s37MQI/zdUAugPtveCw12PavuWS+6d3o2tUUlgQBU6EH4CU5RE0NhY9Dwl1nf68G6cxaotRo2Y+0WGvSD5wDhWMuHJ69NjTz7UaYEzM1wVf59IMjoGJwA=
+	t=1743762571; cv=none; b=HwfyNLLAdJjOh1GIbPSL7oU9gNVlA7pYsVvWEroXKsESfqnWF/Kk2VIG04NBwWXP32Bu7gYkgj6F7WajSZWKCXhcFJZAzH2lg/KPe8uBkqTM4nEzKowgxlbbgARYuTszD80KOH/ktekngXl6MQ5guZwiI8mE41uLQnTowRNFu8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743762568; c=relaxed/simple;
-	bh=4tdmetf1lCXliEewrbfbIOmwuXj1mc0LGbqbXi+55wc=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=obpBSNdW8CCSjC9BO0ncll4EUq3dAUp9rn9jwzaSbrhbNrU7kSWrKYFiUYGeZ19cf08YUgHX5sNBsC4h0msUYYYNyhlWtTKwV5Stb0KW36ipksj2PaFTZzk09jduaqywQ1LSYtzhPT25f+WUHynFDO+bhhRGHXhAuRdCBO0W6ik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IIyaNQ/c; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1743762571; c=relaxed/simple;
+	bh=wPnxq84hCxnZktHB5n2SHxZDe2iMMhApu5mhJ8fGjr0=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=gvdTf9h01+t4yhIOztOH2q5DizLsBPC2oqgqwJB1DvJIClbcBA+yD6Z7PNkjbySS1tjYr55N1bc7CN6zldhJCHKTDXvfdVCAcaKFruZ8D+/F57M/pU9lDWEy3PVJ8X26Zsmjt4YzBYo2s5gitkLUvteW3gZ3M5+N4ywtTv9XlpY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EGeP6yY9; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IIyaNQ/c"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EGeP6yY9"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743762565;
+	s=mimecast20190719; t=1743762568;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=T6NquZdovmTMsUinuO4eB4LIwS+YsKGYMLukNBFuSdg=;
-	b=IIyaNQ/c3gppgtOnh26zi3fqEDbHl2yqc+cWA52l69TG08x16tgNrWaMKtFT1YWTQj6KEe
-	S1/p7BYQX4fnzr7+vxYVgBIPWPotd5roRp7WC9zEbZO/Ryi3qeJBUyEGfes1F1NaEqjvNi
-	+cZk6Eo/LIbvU6L3mLrEt1l1RcbBJ7w=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wxOnUPdlMvuJ8v48pnMnggaUsB9ujf80p/0TOnoHhrk=;
+	b=EGeP6yY9g19O+cGlZW/oHtFixl/XbdVG+4j+JlzD/WFj8UxghPbVuMmqIgJ4/pmhxz7sA5
+	ZBJ7EtLKaT5IalMPpAlF1LRRjMr6PebssTgx/Gnl/odhASm3b59bBwfPsyIdoMCbNgTBcT
+	TauF6mgUbJcGU/x9CHHflN1qFPfRTSs=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-158-lUt2h3zuO6K2LQcnju5vVA-1; Fri, 04 Apr 2025 06:29:24 -0400
-X-MC-Unique: lUt2h3zuO6K2LQcnju5vVA-1
-X-Mimecast-MFC-AGG-ID: lUt2h3zuO6K2LQcnju5vVA_1743762563
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-ac37ed2b99fso169928166b.3
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 03:29:24 -0700 (PDT)
+ us-mta-282-iBigO-E8OzqDZYk0sJVpNQ-1; Fri, 04 Apr 2025 06:29:27 -0400
+X-MC-Unique: iBigO-E8OzqDZYk0sJVpNQ-1
+X-Mimecast-MFC-AGG-ID: iBigO-E8OzqDZYk0sJVpNQ_1743762566
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-ac297c7a0c2so153818666b.3
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 03:29:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743762562; x=1744367362;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=T6NquZdovmTMsUinuO4eB4LIwS+YsKGYMLukNBFuSdg=;
-        b=bZcHMZ1MtgVest2rIbNNiHGNYQyOKgnF2cXG+lluRdwdLHDFGN3HOgQpmHdV2exfid
-         6WVPtsEAM8FAhht0gqfpsovhButDLx70UGSdyET35cxEh4lajDfzav+4tRvMef37HZiJ
-         4Bmi+cVXWgUlkYsVzlJSocAfLqtaRQ58+ugEvJI0tKT1GaUwY0kixGY4nraA6UO2IWVu
-         P0i+n0G2C1QLg2z85PFNFWKoQpHk/vZXIoIaxVBFVi3pCDaFZT0vwlK9hOLWuXoDZY3r
-         xJYVbIZWcvFFXnLcNRQcOxJGMZi+nQQQw/T0+fBZmS0SEsXk7lu+XCgR9t1R5ljSD1WJ
-         rlAA==
-X-Gm-Message-State: AOJu0YxA7ujffJQoy754GKCF+Uaz8pa+PklZwlpcKMP8xDzeo+CCOpGX
-	iKsfHdABMJNuNZZzo/WbFy86qro9Uys77ouBjbqrXHyDPNh9ic160mXkLKZU45JQSR8I+35pJV+
-	KgDLFDJ0Vr2bzIAhQnSDAH8Q+M3aN1Zspu+WDfl5ANvN2r44Wx/hGRSUdBRI6RfNEMOKaRUAqjd
-	y1FA6xcMwdpabgjKJKVv/UIPsaWNV99cKmzlZ8hlpMcV33Xg==
-X-Gm-Gg: ASbGncuf1Dz5OgUVe3JeWsTWnQuv6PijUcD/zBVD3PyegiWwU8ap4PgSxO5iwR3LAVK
-	vb73Gzg24Ulx16jTDJddaUzBb9kqVVlwTfy1/2JkXPyDyV3H0Mf05gaqwhFB66eewQrkGvYTfgv
-	CpzEc5hv+Yl5JpSTaOsY+CDwmqs+QOM/+ls7jBDZYs6t0cVQ1/nbKpNExNYEjCVSk9DJnRYCnhM
-	Kkmc4Wu53IO2OedZIpSh70l9b5tvkdagOYF265IgAd/k4aj3DDX6eNOsK/PTZAZUF7rECE5xOYJ
-	x7xTDO/sTAR+8RA3lB9k
-X-Received: by 2002:a17:907:970b:b0:ac6:edd3:e466 with SMTP id a640c23a62f3a-ac7d6d03dc7mr161145066b.19.1743762562307;
-        Fri, 04 Apr 2025 03:29:22 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEfA32d489HvKK0l5PnqVrR3kR//7KWWZo584P/Gc87QpdSbTdgAfAHbKrKml5QdqYMR+aH2Q==
-X-Received: by 2002:a17:907:970b:b0:ac6:edd3:e466 with SMTP id a640c23a62f3a-ac7d6d03dc7mr161143766b.19.1743762561960;
-        Fri, 04 Apr 2025 03:29:21 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743762565; x=1744367365;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wxOnUPdlMvuJ8v48pnMnggaUsB9ujf80p/0TOnoHhrk=;
+        b=oBNUxc2ExoZXgvA6S7u4/ISPS//rKLuosQKW+mzNrtuWmbGZhRPxVKFQeK5RjHOWaQ
+         2LkBymHvuBww3AC2TDx3D4Bzx9wpAcDqe5y11ZsX6UpA5VIWKx/uVsG1O1RLtUEpQymc
+         GB6QO1STcE/eLdfkI3q9STy17vXSisbzmywDJCMgOB3Rntj42ItRhXxXfWOFhKMB0Cd5
+         5TYj2H+P22LmA1udFm6KFUHFtB/P5YKvXLdz1fO436rgw+zUYrkTPFekPI/SoQa1KBhA
+         1t3teO9GB/HSf+D+sMwzICc379qcxEuuf+dO5EQvCMwqvFGMY+RWFDSygFCP12YsvDu0
+         oOow==
+X-Gm-Message-State: AOJu0Yz8A8DQpmMMyp3Mb1T20bdNdn1GEA08fisoSJkdu5gD1bwtDwkq
+	7hUB58NpxmJ+bQo7SurTw7DbPRH2u7381RgJ5DuRs6uG4nN4Y8mknxubHCWla6s3WIOmM+MzF7W
+	ANHqop6WsnHOB/pBagkBQugFTdxbMpBWsBlc7Zuk/md2xCww7xx9vQCNaYNsPLbtrQWSrJlq4bI
+	XWoDt73WGz4haqpLo1CWTmTaJOMGYfRBD3mEiIpGePb3Yqgw==
+X-Gm-Gg: ASbGncseAH1Dt4JZXZNrH7oCIcX3udinZRcr2ohRUrexp9671zrxvti0uapYc/++WSB
+	dTM9jitw8R3t6yWWTM+B+tX7XmueD0fJH5mvctMKFq0CNDvOW44GIqj/i7As373GcRj+0HzbXNx
+	BogmfomcloCqHdGKsSgu8M3cbP1x1dv2dyyDuT5W/hctH/U3319YRHAoMsWtsBQC+IVmExJXjjW
+	xhjkgJNJI/7XhIUPyQ/0yb32FQ63E27RMAYKP8YQVGynHHQRKjh0IvzHvSVyeWmBr2oIB/Isu2I
+	iZs3vddb2cwG3OTKw0A2
+X-Received: by 2002:a17:907:9801:b0:ac6:e33a:6a0d with SMTP id a640c23a62f3a-ac7d199c8e5mr253555266b.55.1743762565276;
+        Fri, 04 Apr 2025 03:29:25 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH8o0pRabc4+gB4uulEDJjEE2gwOSpzOcpXqcH6CxNlDKuFME6qGnzVcNfndR6IyXcr7RMoSA==
+X-Received: by 2002:a17:907:9801:b0:ac6:e33a:6a0d with SMTP id a640c23a62f3a-ac7d199c8e5mr253553166b.55.1743762564788;
+        Fri, 04 Apr 2025 03:29:24 -0700 (PDT)
 Received: from [192.168.122.1] ([151.49.230.224])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7bfe9bb8esm228306666b.48.2025.04.04.03.29.21
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7bfe5d688sm228256566b.33.2025.04.04.03.29.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Apr 2025 03:29:21 -0700 (PDT)
+        Fri, 04 Apr 2025 03:29:23 -0700 (PDT)
 From: Paolo Bonzini <pbonzini@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org
-Subject: [PATCH 0/5] Documentation: kvm: fixes for capability section
-Date: Fri,  4 Apr 2025 12:29:14 +0200
-Message-ID: <20250404102919.171952-1-pbonzini@redhat.com>
+Subject: [PATCH 1/5] Documentation: kvm: give correct name for KVM_CAP_SPAPR_MULTITCE
+Date: Fri,  4 Apr 2025 12:29:15 +0200
+Message-ID: <20250404102919.171952-2-pbonzini@redhat.com>
 X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250404102919.171952-1-pbonzini@redhat.com>
+References: <20250404102919.171952-1-pbonzini@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,23 +81,30 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Several capabilities are documented in the wrong section (6 is for
-vCPU-enabled capabilities, 7 for VM-enabled capabilities, 8 for
-informational ones) or have incorrect information.  Fix a bunch of
-things.
+The capability is incorrectly called KVM_CAP_PPC_MULTITCE in the documentation.
 
-Paolo
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+---
+ Documentation/virt/kvm/api.rst | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-Paolo Bonzini (5):
-  Documentation: kvm: give correct name for KVM_CAP_SPAPR_MULTITCE
-  Documentation: kvm: drop "Capability" heading from capabilities
-  Documentation: kvm: fix some definition lists
-  Documentation: kvm: organize capabilities in the right section
-  Documentation: kvm: remove KVM_CAP_MIPS_TE
-
- Documentation/virt/kvm/api.rst | 1104 ++++++++++++++++----------------
- 1 file changed, 540 insertions(+), 564 deletions(-)
-
+diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
+index ef894e11727c..49a604154564 100644
+--- a/Documentation/virt/kvm/api.rst
++++ b/Documentation/virt/kvm/api.rst
+@@ -8862,10 +8862,9 @@ clearing the PVCLOCK_TSC_STABLE_BIT flag in Xen pvclock sources. This will be
+ done when the KVM_CAP_XEN_HVM ioctl sets the
+ KVM_XEN_HVM_CONFIG_PVCLOCK_TSC_UNSTABLE flag.
+ 
+-8.31 KVM_CAP_PPC_MULTITCE
+--------------------------
++8.31 KVM_CAP_SPAPR_MULTITCE
++---------------------------
+ 
+-:Capability: KVM_CAP_PPC_MULTITCE
+ :Architectures: ppc
+ :Type: vm
+ 
 -- 
 2.49.0
 
