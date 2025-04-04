@@ -1,247 +1,239 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6DFF18B494;
-	Fri,  4 Apr 2025 20:05:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B5EB21CFEA
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 20:06:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743797121; cv=none; b=BpLekwJo/F/CENbaNoiQjuviK7BYTx4SrjBQyf4Jz2KsaSTPp8gZVhwRzK9bcqGnV09Bzjv3rmRMXmJHg+zsQFHiRNFZOmuoZfkLao2GGeUZc3ZnCiUNR5nx62lE+wheSeMQFPNhb69o0lJDlNyAfiNftG6juHLt68ZISFQ874U=
+	t=1743797205; cv=none; b=FuXkkOd7k+6Pwog028R0EV7CQRZVUy2nCAO+IaIY6lwar7CEX0ptWIg035iFqi/6vbL30xLo0WuMAhq4FFztloT/arNxNorQpgsdSZRyToBD+9mSPbSHIJUSSiYhjms0nZk8AY28B6Jbv75Ze5DvSnFVlfFCH+n5R9nEa6rVBCM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743797121; c=relaxed/simple;
-	bh=GMCfGIgOJjz961NHnxEEdClQb5C3/47hhGB/CNUCJTo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WbfTCdYa+tnlKT3v1E+ffLbPVLCjL8yFhbJUxkLLzSCkNWgeA7Men+bppRnpaf6Q05/Mx1rWVZtsilQsA43qLHILDc7NZ0YA1pGiP+dCWxaXouQ7G/klbjSFfkNgeYK7Vkap5PBtJNYdke8KHs4TP1OanOesUlkXEfOF3/MifIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hZsxJU/i; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743797205; c=relaxed/simple;
+	bh=9+WuXZjXc9DbmTVWSy7YUuSmEAnLH0pAzkMsugcCiU0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=its++WgtD4x48sWhautsi55ENCS4yDCe3+dffPbNreY/+rRmbrWzUzRrdALsNRuPqyC561rpeU2PZNjiEyHPoTDwYpKmlh39UNnOFdX1kG6USzoueH6G82ceNIT42lpRfaCgUw0YP2aBgtu3ryQowoVvYr0/YVDSeER+Gvfnxtk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RQ0B6JU4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hZsxJU/i"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DD0DC4CEDD;
-	Fri,  4 Apr 2025 20:05:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RQ0B6JU4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A538C4CEDD;
+	Fri,  4 Apr 2025 20:06:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743797120;
-	bh=GMCfGIgOJjz961NHnxEEdClQb5C3/47hhGB/CNUCJTo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hZsxJU/ibkUpFtrAwJ3jYKNR1R6qfnuuyI2rfGYCVlL4kq7SCowZvHnlpga98ja8W
-	 mPbTGk22CHvTtppR4GuF34C5AH58V6r/NjtvEV3b0J4HoC9cpipRhEM7/XxmQDnw2A
-	 p035DU8YqscCUvo2oVYWXPFsPOMRnACVlc+NR1jsnq5YD8vEYu19HXPpuSc1w+Djkb
-	 Ym0WU2XVD4aJhij2vNplXJhXq7C698CcTGZF7dfXjpjdXHkWJp40uyau5UYKKBiyw5
-	 dGXMN/JRBUPG7GrC/BC/KOKh4AnwMSD5LEuPxZ9uDPgMle2bH/iy9kDGh3Qzfm+OHO
-	 oJ/5uxNypPf0w==
-Date: Fri, 4 Apr 2025 15:05:19 -0500
-From: Rob Herring <robh@kernel.org>
-To: cy_huang@richtek.com
-Cc: Mark Brown <broonie@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	Otto lin <otto_lin@richtek.com>, Allen Lin <allen_lin@richtek.com>,
-	devicetree@vger.kernel.org, linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/4] ASoC: codecs: Add support for Richtek rt9123p
-Message-ID: <20250404200519.GA198531-robh@kernel.org>
-References: <cover.1743774849.git.cy_huang@richtek.com>
- <27583d8f9bb07351e5c9ea78ed286ca6daa74a8d.1743774849.git.cy_huang@richtek.com>
+	s=k20201202; t=1743797204;
+	bh=9+WuXZjXc9DbmTVWSy7YUuSmEAnLH0pAzkMsugcCiU0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=RQ0B6JU4F2UVkd5L+RwC7TNLE9YBYVwusbt2dIS3RSuNUZd2ISZcHY7s4sIgNzp/c
+	 EDwR9t5TYEKrOcSM+tWEB/x04qiHXg+dO/e5oTC5Tk2Me9HByG7Whf4bU+DZEbFOFY
+	 YkIZOXBpLPjWSnb1q8s6flTZd+nFwzrb6Q2PeVUXjXUfrUKOhM9Er4hX3OfWCIYJQ+
+	 LkR7el2lKOKH5+LTMMiwNfBoRMn8honjarsgDa0ehIkPntFhjNU8Imwa5Fm8XgtRPC
+	 Q0iaZJEADON2Wyku07qTcUITf0vKcG8rsQGzB2vHKpijB9dVtNFM4GGVX+xJdK6U0g
+	 Y/XzLdNHnnh1w==
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: x86@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	Juergen Gross <jgross@suse.com>,
+	Andrew Cooper <andrew.cooper3@citrix.com>
+Subject: [PATCH v2] objtool: Fix SYSCALL instruction handling and INSN_CONTEXT_SWITCH
+Date: Fri,  4 Apr 2025 13:06:26 -0700
+Message-ID: <b1c60a498c6146de0706572d3f47d3723ca91743.1743797052.git.jpoimboe@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <27583d8f9bb07351e5c9ea78ed286ca6daa74a8d.1743774849.git.cy_huang@richtek.com>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Apr 04, 2025 at 10:22:14PM +0800, cy_huang@richtek.com wrote:
-> From: ChiYuan Huang <cy_huang@richtek.com>
-> 
-> Add codec driver for Richtek rt9123p.
-> 
-> Signed-off-by: ChiYuan Huang <cy_huang@richtek.com>
-> ---
->  sound/soc/codecs/Kconfig   |   6 ++
->  sound/soc/codecs/Makefile  |   2 +
->  sound/soc/codecs/rt9123p.c | 171 +++++++++++++++++++++++++++++++++++++
->  3 files changed, 179 insertions(+)
->  create mode 100644 sound/soc/codecs/rt9123p.c
-> 
-> diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
-> index c61b2d3cf284..b0fa935846c0 100644
-> --- a/sound/soc/codecs/Kconfig
-> +++ b/sound/soc/codecs/Kconfig
-> @@ -1832,6 +1832,12 @@ config SND_SOC_RT9123
->  	  Enable support for the I2C control mode of Richtek RT9123 3.2W mono
->  	  Class-D audio amplifier.
->  
-> +config SND_SOC_RT9123P
-> +	tristate "Richtek RT9123P Mono Class-D Amplifier"
-> +	help
-> +	  Enable support for the HW control mode of Richtek RT9123P 3.2W mono
-> +	  Class-D audio amplifier.
-> +
->  config SND_SOC_RTQ9128
->  	tristate "Richtek RTQ9128 45W Digital Input Amplifier"
->  	depends on I2C
-> diff --git a/sound/soc/codecs/Makefile b/sound/soc/codecs/Makefile
-> index d8d0bc367af8..fba699701804 100644
-> --- a/sound/soc/codecs/Makefile
-> +++ b/sound/soc/codecs/Makefile
-> @@ -271,6 +271,7 @@ snd-soc-rt721-sdca-y := rt721-sdca.o rt721-sdca-sdw.o
->  snd-soc-rt722-sdca-y := rt722-sdca.o rt722-sdca-sdw.o
->  snd-soc-rt9120-y := rt9120.o
->  snd-soc-rt9123-y := rt9123.o
-> +snd-soc-rt9123p-y := rt9123p.o
->  snd-soc-rtq9128-y := rtq9128.o
->  snd-soc-sdw-mockup-y := sdw-mockup.o
->  snd-soc-sgtl5000-y := sgtl5000.o
-> @@ -686,6 +687,7 @@ obj-$(CONFIG_SND_SOC_RT721_SDCA_SDW)     += snd-soc-rt721-sdca.o
->  obj-$(CONFIG_SND_SOC_RT722_SDCA_SDW)     += snd-soc-rt722-sdca.o
->  obj-$(CONFIG_SND_SOC_RT9120)	+= snd-soc-rt9120.o
->  obj-$(CONFIG_SND_SOC_RT9123)	+= snd-soc-rt9123.o
-> +obj-$(CONFIG_SND_SOC_RT9123P)	+= snd-soc-rt9123p.o
->  obj-$(CONFIG_SND_SOC_RTQ9128)	+= snd-soc-rtq9128.o
->  obj-$(CONFIG_SND_SOC_SDW_MOCKUP)     += snd-soc-sdw-mockup.o
->  obj-$(CONFIG_SND_SOC_SGTL5000)  += snd-soc-sgtl5000.o
-> diff --git a/sound/soc/codecs/rt9123p.c b/sound/soc/codecs/rt9123p.c
-> new file mode 100644
-> index 000000000000..b0ff5f856e4c
-> --- /dev/null
-> +++ b/sound/soc/codecs/rt9123p.c
-> @@ -0,0 +1,171 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +//
-> +// rt9123p.c -- RT9123 (HW Mode) ALSA SoC Codec driver
-> +//
-> +// Author: ChiYuan Huang <cy_huang@richtek.com>
-> +
-> +#include <linux/acpi.h>
-> +#include <linux/delay.h>
-> +#include <linux/err.h>
-> +#include <linux/gpio/consumer.h>
-> +#include <linux/kernel.h>
-> +#include <linux/mod_devicetable.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/property.h>
-> +#include <sound/pcm.h>
-> +#include <sound/soc.h>
-> +#include <sound/soc-dai.h>
-> +#include <sound/soc-dapm.h>
-> +
-> +struct rt9123p_priv {
-> +	struct gpio_desc *enable;
-> +	unsigned int enable_delay;
-> +	int enable_switch;
-> +};
-> +
-> +static int rt9123p_daiops_trigger(struct snd_pcm_substream *substream, int cmd,
-> +				  struct snd_soc_dai *dai)
-> +{
-> +	struct snd_soc_component *comp = dai->component;
-> +	struct rt9123p_priv *rt9123p = snd_soc_component_get_drvdata(comp);
-> +
-> +	if (!rt9123p->enable)
-> +		return 0;
-> +
-> +	switch (cmd) {
-> +	case SNDRV_PCM_TRIGGER_START:
-> +	case SNDRV_PCM_TRIGGER_RESUME:
-> +	case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
-> +		mdelay(rt9123p->enable_delay);
-> +		if (rt9123p->enable_switch) {
-> +			gpiod_set_value(rt9123p->enable, 1);
-> +			dev_dbg(comp->dev, "set enable to 1");
-> +		}
-> +		break;
-> +	case SNDRV_PCM_TRIGGER_STOP:
-> +	case SNDRV_PCM_TRIGGER_SUSPEND:
-> +	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
-> +		gpiod_set_value(rt9123p->enable, 0);
-> +		dev_dbg(comp->dev, "set enable to 0");
-> +		break;
-> +	default:
-> +		break;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int rt9123p_enable_event(struct snd_soc_dapm_widget *w, struct snd_kcontrol *kcontrol,
-> +				int event)
-> +{
-> +	struct snd_soc_component *comp = snd_soc_dapm_to_component(w->dapm);
-> +	struct rt9123p_priv *rt9123p = snd_soc_component_get_drvdata(comp);
-> +
-> +	if (event & SND_SOC_DAPM_POST_PMU)
-> +		rt9123p->enable_switch = 1;
-> +	else if (event & SND_SOC_DAPM_POST_PMD)
-> +		rt9123p->enable_switch = 0;
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct snd_soc_dapm_widget rt9123p_dapm_widgets[] = {
-> +	SND_SOC_DAPM_OUTPUT("SPK"),
-> +	SND_SOC_DAPM_OUT_DRV_E("Amp Drv", SND_SOC_NOPM, 0, 0, NULL, 0, rt9123p_enable_event,
-> +			       SND_SOC_DAPM_POST_PMU | SND_SOC_DAPM_POST_PMD),
-> +};
-> +
-> +static const struct snd_soc_dapm_route rt9123p_dapm_routes[] = {
-> +	{"Amp Drv", NULL, "HiFi Playback"},
-> +	{"SPK", NULL, "Amp Drv"},
-> +};
-> +
-> +static const struct snd_soc_component_driver rt9123p_comp_driver = {
-> +	.dapm_widgets		= rt9123p_dapm_widgets,
-> +	.num_dapm_widgets	= ARRAY_SIZE(rt9123p_dapm_widgets),
-> +	.dapm_routes		= rt9123p_dapm_routes,
-> +	.num_dapm_routes	= ARRAY_SIZE(rt9123p_dapm_routes),
-> +	.idle_bias_on		= 1,
-> +	.use_pmdown_time	= 1,
-> +	.endianness		= 1,
-> +};
-> +
-> +static const struct snd_soc_dai_ops rt9123p_dai_ops = {
-> +	.trigger        = rt9123p_daiops_trigger,
-> +};
-> +
-> +static struct snd_soc_dai_driver rt9123p_dai_driver = {
-> +	.name = "HiFi",
-> +	.playback = {
-> +		.stream_name	= "HiFi Playback",
-> +		.formats	= SNDRV_PCM_FMTBIT_S16 | SNDRV_PCM_FMTBIT_S24 |
-> +				  SNDRV_PCM_FMTBIT_S32,
-> +		.rates		= SNDRV_PCM_RATE_8000 | SNDRV_PCM_RATE_16000 |
-> +				  SNDRV_PCM_RATE_22050 | SNDRV_PCM_RATE_24000 |
-> +				  SNDRV_PCM_RATE_32000 | SNDRV_PCM_RATE_44100 |
-> +				  SNDRV_PCM_RATE_48000 | SNDRV_PCM_RATE_88200 |
-> +				  SNDRV_PCM_RATE_96000,
-> +		.rate_min	= 8000,
-> +		.rate_max	= 96000,
-> +		.channels_min	= 1,
-> +		.channels_max	= 2,
-> +	},
-> +	.ops    = &rt9123p_dai_ops,
-> +};
-> +
-> +static int rt9123p_platform_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct rt9123p_priv *rt9123p;
-> +	int ret;
-> +
-> +	rt9123p = devm_kzalloc(dev, sizeof(*rt9123p), GFP_KERNEL);
-> +	if (!rt9123p)
-> +		return -ENOMEM;
-> +
-> +	rt9123p->enable = devm_gpiod_get_optional(dev, "enable", GPIOD_OUT_LOW);
-> +	if (IS_ERR(rt9123p->enable))
-> +		return PTR_ERR(rt9123p->enable);
-> +
-> +	ret = device_property_read_u32(dev, "enable-delay", &rt9123p->enable_delay);
+The !CONFIG_IA32_EMULATION version of xen_entry_SYSCALL_compat() ends
+with a SYSCALL instruction.  In Xen, SYSCALL is a hypercall.  Usually
+that would return, but in this case it's a hypercall to IRET, which
+doesn't return.
 
-Not documented. You have a single GPIO for any sort of control. What is 
-this delay relative to? Why does it need to be tuned per board? 
-Properties with units have unit suffix.
+Objtool doesn't know that, so it falls through to the next function,
+triggering a false positive:
 
-Rob
+  vmlinux.o: warning: objtool: xen_reschedule_interrupt+0x2a: RET before UNTRAIN
+
+Fix that by adding UD2 after the SYSCALL to avoid the undefined behavior
+and prevent the objtool fallthrough, and teach validate_unret() to stop
+control flow on the UD2 like validate_branch() already does.
+
+Unfortunately that's not the whole story.  While that works for
+validate_unret(), it breaks validate_branch() which terminates control
+flow after the SYSCALL, triggering an unreachable instruction warning on
+the UD2.
+
+The real problem here is that INSN_CONTEXT_SWITCH is ambiguous.  It can
+represent both call semantics (SYSCALL, SYSENTER) and return semantics
+(SYSRET, IRET, RETS, RETU).  Those differ significantly: calls preserve
+control flow whereas returns terminate it.
+
+validate_branch() uses an arbitrary rule for INSN_CONTEXT_SWITCH that
+almost works by accident: if in a function, keep going; otherwise stop.
+It should instead be based on the semantics of the underlying
+instruction.
+
+INSN_CONTEXT_SWITCH's original purpose was to enable the "unsupported
+instruction in callable function" warning.  But that warning really has
+no reason to exist.  It has never found any bugs, and those instructions
+are only in entry code anyway.  So just get rid of it.
+
+That in turn allows objtool to stop caring about SYSCALL or SYSENTER.
+Their call semantic means they usually don't affect control flow in the
+containing function/code, and can just be INSN_OTHER.  The far
+returns/jumps can also be ignored as those aren't used anywhere.
+
+With SYSCALL and SYSENTER removed, INSN_CONTEXT_SWITCH now has a sane
+well-defined return semantic.
+
+Fixes: a2796dff62d6 ("x86/xen: don't do PV iret hypercall through hypercall page")
+Reported-by: Andrew Cooper <andrew.cooper3@citrix.com>
+Tested-by: Andrew Cooper <andrew.cooper3@citrix.com>
+Reviewed-by: Juergen Gross <jgross@suse.com>
+Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
+---
+v2:
+- rename INSN_CONTEXT_SWITCH -> INSN_EXCEPTION_RETURN
+- clarify that xen SYSCALL is a hypercall
+- check for SYSEXIT
+
+ arch/x86/xen/xen-asm.S               |  6 +-----
+ tools/objtool/arch/x86/decode.c      | 20 ++++----------------
+ tools/objtool/check.c                | 15 +++++++--------
+ tools/objtool/include/objtool/arch.h |  2 +-
+ 4 files changed, 13 insertions(+), 30 deletions(-)
+
+diff --git a/arch/x86/xen/xen-asm.S b/arch/x86/xen/xen-asm.S
+index 109af12f7647..5bdae7839c08 100644
+--- a/arch/x86/xen/xen-asm.S
++++ b/arch/x86/xen/xen-asm.S
+@@ -38,9 +38,7 @@ SYM_FUNC_START(xen_hypercall_pv)
+ 	ANNOTATE_NOENDBR
+ 	push %rcx
+ 	push %r11
+-	UNWIND_HINT_SAVE
+ 	syscall
+-	UNWIND_HINT_RESTORE
+ 	pop %r11
+ 	pop %rcx
+ 	RET
+@@ -226,9 +224,7 @@ SYM_CODE_END(xen_early_idt_handler_array)
+ 	push %rax
+ 	mov  $__HYPERVISOR_iret, %eax
+ 	syscall		/* Do the IRET. */
+-#ifdef CONFIG_MITIGATION_SLS
+-	int3
+-#endif
++	ud2		/* The SYSCALL should never return. */
+ .endm
+ 
+ SYM_CODE_START(xen_iret)
+diff --git a/tools/objtool/arch/x86/decode.c b/tools/objtool/arch/x86/decode.c
+index 33d861c04ebd..992665ba41d7 100644
+--- a/tools/objtool/arch/x86/decode.c
++++ b/tools/objtool/arch/x86/decode.c
+@@ -522,7 +522,7 @@ int arch_decode_instruction(struct objtool_file *file, const struct section *sec
+ 			case INAT_PFX_REPNE:
+ 				if (modrm == 0xca)
+ 					/* eretu/erets */
+-					insn->type = INSN_CONTEXT_SWITCH;
++					insn->type = INSN_EXCEPTION_RETURN;
+ 				break;
+ 			default:
+ 				if (modrm == 0xca)
+@@ -535,11 +535,10 @@ int arch_decode_instruction(struct objtool_file *file, const struct section *sec
+ 
+ 			insn->type = INSN_JUMP_CONDITIONAL;
+ 
+-		} else if (op2 == 0x05 || op2 == 0x07 || op2 == 0x34 ||
+-			   op2 == 0x35) {
++		} else if (op2 == 0x07 || op2 == 0x35) {
+ 
+-			/* sysenter, sysret */
+-			insn->type = INSN_CONTEXT_SWITCH;
++			/* sysret, sysexit */
++			insn->type = INSN_EXCEPTION_RETURN;
+ 
+ 		} else if (op2 == 0x0b || op2 == 0xb9) {
+ 
+@@ -671,12 +670,6 @@ int arch_decode_instruction(struct objtool_file *file, const struct section *sec
+ 			}
+ 			break;
+ 		}
+-
+-		fallthrough;
+-
+-	case 0xca: /* retf */
+-	case 0xcb: /* retf */
+-		insn->type = INSN_CONTEXT_SWITCH;
+ 		break;
+ 
+ 	case 0xe0: /* loopne */
+@@ -718,11 +711,6 @@ int arch_decode_instruction(struct objtool_file *file, const struct section *sec
+ 			if (has_notrack_prefix(&ins))
+ 				WARN("notrack prefix found at %s:0x%lx", sec->name, offset);
+ 
+-		} else if (modrm_reg == 5) {
+-
+-			/* jmpf */
+-			insn->type = INSN_CONTEXT_SWITCH;
+-
+ 		} else if (modrm_reg == 6) {
+ 
+ 			/* push from mem */
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index 4a1f6c3169b3..e04ce065a08b 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -3684,14 +3684,7 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
+ 
+ 			break;
+ 
+-		case INSN_CONTEXT_SWITCH:
+-			if (func) {
+-				if (!next_insn || !next_insn->hint) {
+-					WARN_INSN(insn, "unsupported instruction in callable function");
+-					return 1;
+-				}
+-				break;
+-			}
++		case INSN_EXCEPTION_RETURN:
+ 			return 0;
+ 
+ 		case INSN_STAC:
+@@ -3886,6 +3879,9 @@ static int validate_unret(struct objtool_file *file, struct instruction *insn)
+ 			WARN_INSN(insn, "RET before UNTRAIN");
+ 			return 1;
+ 
++		case INSN_EXCEPTION_RETURN:
++			return 0;
++
+ 		case INSN_NOP:
+ 			if (insn->retpoline_safe)
+ 				return 0;
+@@ -3895,6 +3891,9 @@ static int validate_unret(struct objtool_file *file, struct instruction *insn)
+ 			break;
+ 		}
+ 
++		if (insn->dead_end)
++			return 0;
++
+ 		if (!next) {
+ 			WARN_INSN(insn, "teh end!");
+ 			return 1;
+diff --git a/tools/objtool/include/objtool/arch.h b/tools/objtool/include/objtool/arch.h
+index 089a1acc48a8..5bba1a894e5c 100644
+--- a/tools/objtool/include/objtool/arch.h
++++ b/tools/objtool/include/objtool/arch.h
+@@ -19,7 +19,7 @@ enum insn_type {
+ 	INSN_CALL,
+ 	INSN_CALL_DYNAMIC,
+ 	INSN_RETURN,
+-	INSN_CONTEXT_SWITCH,
++	INSN_EXCEPTION_RETURN,
+ 	INSN_BUG,
+ 	INSN_NOP,
+ 	INSN_STAC,
+-- 
+2.49.0
+
