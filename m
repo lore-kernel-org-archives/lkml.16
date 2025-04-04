@@ -1,124 +1,93 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75A9313D531
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 19:11:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92E6C13D531
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 19:12:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743793913; cv=none; b=CIa6lVBlIbouV/Uo8AzpyJt29gLb2shACWHaCMO3L2F3bumtpf++iuAW/scfzfLzz9TMTkm5Vyn+wQX09yePxhsUoFZrCY78JZHIVPeCo2kmUS7gxNLftxNHPGBsy0Gb0Jt57UcObupf+4LHINS4JzIKqsPbjxZ+k2uIJ9YC+Tw=
+	t=1743793929; cv=none; b=Z5HjwqWsbNaasOGrmhlWNdg4jqi6PfuKyqrMUweLuZ+jELBHPkJN1SdjdEqOqe/0TAIm5D8p3rCYjPxfg/VBvkzk2ic860MX62Km7+HW5gFPoFmjESmUBvlFea7Z51ekHiaCsTuuXY2okAPuVgEYz5/xS0VyrZ7E9RJdbPN9ozk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743793913; c=relaxed/simple;
-	bh=xi19atCPonx7ikyWbXZW2dlKdhfpRJYt1yc54MrA1E8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=S+xux9gdx2c+yTgyJt+k8s7evnwt+lL+2pL0gjBmWyyb+RmmNU/y9e8p3y3xCzl3yWQXXxiYSUZeJJsr3CM+fuoc4Zw7QkpH37PCr4QjHieeE+f0kRkJcG2r4aMD4e0iWxOX1GjhXIUM6uXnTTkvzactRxaYpyPed+g1BiXRCTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wkennington.com; spf=none smtp.mailfrom=wkennington.com; dkim=pass (2048-bit key) header.d=wkennington-com.20230601.gappssmtp.com header.i=@wkennington-com.20230601.gappssmtp.com header.b=I9WM4FUQ; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wkennington.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=wkennington.com
+	s=arc-20240116; t=1743793929; c=relaxed/simple;
+	bh=M8mA04qIj++/2rLS7Wzuz9LkobWBYGEwrJTGJFsBVo4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RI1RBDNkXPbLsaE1LVkNZiFqcWIZZ5y0rF/vYo2CWN/BbAIp+YpUiWwmoaDwlDayjXpdTciM6n7AD9r0ev9oryuGNunpLKZm57IFMy5DzxPlIcRVeMPWKNuGEVYujfqezKbpMC1f1atYt1lHIjczJd2H0UW4A93+0Vp0jETOmOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sEr8MJ6x; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wkennington-com.20230601.gappssmtp.com header.i=@wkennington-com.20230601.gappssmtp.com header.b="I9WM4FUQ"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-227b650504fso23665285ad.0
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 12:11:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=wkennington-com.20230601.gappssmtp.com; s=20230601; t=1743793911; x=1744398711; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=P2Rxwu2W6v3oVYS31v0sGvc4FOg7imKPmmcVRwTmg0c=;
-        b=I9WM4FUQE2YS8rqE9cWKA7dC1EGNG6c7Jn7osTv2Mrj1wJ0wkw4lRdfB/J9Jf7bVav
-         5kW1TBC9gQJ7SSgo2H+ialXjRtrSJ2y0qCzBjH9tDZq4xhHWNXRAmFBTXS5R47uDW9HI
-         nKaxMbL6Vkz96Y5xcvkE0LXiOXaIOTtDUk+KvX/+JldhDsnS36Ijm9CVs5AQZzvE1Rgo
-         qMQd42uEAiDsCEzkXj5RUFeUHohcP6IzTqDg3LP84AXLurAlbq4r8wZNtoRYQEzTxBkp
-         fQWXCVsQeIfma7N0+fDx8ivb1neK3XAHOiqVAHgtUwqVR5uS+wFK+/vihfhQgvqQrKy6
-         JrAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743793911; x=1744398711;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=P2Rxwu2W6v3oVYS31v0sGvc4FOg7imKPmmcVRwTmg0c=;
-        b=cz+jyya1SaqOxUYdbxKSizALpsKYazZIl1U1EB8tbLjGT2kbIG98Ib8ouK+WeMNPBQ
-         S6P5rUpE4y/ip5dQ6JAkp3KjLiRw/qgJxfy4uLoXlpeIkU3+Fye1FckGxtyRdxVAgRqv
-         y6m6P8NWfe/wOFGfhBrki+lod3RFnuIFlhajxF4KPJT5ij9pV6mglIOTUjPidkz1PXRa
-         zxd9hzB0xAArK2MS4sYHcFG1/OIi48IlvKaZHjm8LnPy7ZIohIXo23jeUBf3yvmWZ68R
-         YZsoP3l4KleR3RLc5sipWZpOHoiBOv9WwWjkh1W7sPxr+xG6ik6aDXwTNr7pkfOyn93q
-         Op/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWbw2203B7wyXen0t18aA0zGJeUdUZKAEKEo4zbBQxiaBTQetJkOyORbnD9qWT/ENz/qRJEfrC/McMf5wo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwYLMkYjzHm5d+pW0B6UjjMbEBGh2WLyOn2UbXkVMk+1XueLjz9
-	tmMk8R7j2ap4l4hXyGjNwuJMKRueC9tj87pxCFHqiMHCbRF8sArY7fzd49v93Dw=
-X-Gm-Gg: ASbGncs46p/5KF+nxELlW0SHdC1TqQisO7ikcjffjN1HBp1MkkNQ/ylrokwh573A4T/
-	PZyqW9zEHSp/DRKZMIfnGEZ1mbNEr1Hp4Scura72RWA+mMZXksMT1ukCdS0A3zyxTPIM4jeViTc
-	AmVQXwXSu4cnHG4dOLMNZrILEopeD+GxlK1F83ZSQ6FhiJtyXRd3AmgcRa+W1dHtvIwrHJgB42W
-	h6v4O3EOZihvfjqtbVpA0kLYtqTagzW3vTNHCnZZlEPXJVm/BbpkVuVhh7505ZGmQNKqk69Crxk
-	IS13YzBHz6syUxo3Wi3Vnt65gkrEZqBWMu8180fGTNjZAb1kJrsP7Fn+WrE0QC5GQLom9VbKQEe
-	Ytn1qqquUezpHvuFeJmy0upi/H0xVpNkj
-X-Google-Smtp-Source: AGHT+IEeaWCRdJ1SjZlMdTv0mv60UblHOMQY35gjKkojH5fDMz6tEXAoQmV0/K8Q81Wh61GvPwgWpg==
-X-Received: by 2002:a17:902:ef03:b0:21f:6fb9:9299 with SMTP id d9443c01a7336-22a8a06cc5dmr54287345ad.27.1743793910520;
-        Fri, 04 Apr 2025 12:11:50 -0700 (PDT)
-Received: from wak-linux.svl.corp.google.com ([2a00:79e0:2e5b:9:2c9e:1e72:3ae7:b81c])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2297866e1bfsm36105765ad.168.2025.04.04.12.11.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Apr 2025 12:11:50 -0700 (PDT)
-From: "William A. Kennington III" <william@wkennington.com>
-To: Tomer Maimon <tmaimon77@gmail.com>,
-	Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	openbmc@lists.ozlabs.org,
-	"William A. Kennington III" <william@wkennington.com>
-Subject: [PATCH] ARM: dts: nuvoton: Add MMC Nodes
-Date: Fri,  4 Apr 2025 12:11:44 -0700
-Message-ID: <20250404191144.4111788-1-william@wkennington.com>
-X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sEr8MJ6x"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E58B4C4CEDD;
+	Fri,  4 Apr 2025 19:12:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743793929;
+	bh=M8mA04qIj++/2rLS7Wzuz9LkobWBYGEwrJTGJFsBVo4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sEr8MJ6xdjFZOoYNIXFfQAQ5nGX5+4j+ZyUgNqZMTSIgNUwG2AFzdp6CfYWM8LXJE
+	 mVKEz2zChNH08sJvYLOb6z9lOwy0bkwsnSw4jLazZKOhQq3SE1tKfxV41JmOnC/TrO
+	 iyCSiuZU4YYorIK9FD0Q1ZhS58vrLaTgP7ItvJjyFtPZZHLAQWqDMISmEr+eBs9Gws
+	 tkrw0B/QvqrO2gHoMYVMKyEASBCSeSsgovXIrhQM61gWzzRwlxx7ohjkTuu8Tpo+bw
+	 FaxmutS0G4NPrl2guwg8ikqmliuFs5fQu1hSq+tdxyI815NNnmuVXc+3gpEBECCCrS
+	 IyXFrVOJqRdOA==
+Date: Fri, 4 Apr 2025 09:12:08 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Andrea Righi <arighi@nvidia.com>
+Cc: void@manifault.com, multics69@gmail.com, linux-kernel@vger.kernel.org,
+	sched-ext@meta.com
+Subject: [PATCH 6/5] sched_ext: Drop "ops" from SCX_OPS_TASK_ITER_BATCH
+Message-ID: <Z_AvCG5HcMV6b_xT@slm.duckdns.org>
+References: <20250403225026.838987-1-tj@kernel.org>
+ <Z--NLGOGQe_9xULR@gpd3>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z--NLGOGQe_9xULR@gpd3>
 
-We have the driver support code, now we just need to expose the device
-node which can export the SDHCI and SDMMC properties for the 2 MMC
-controllers in the npcm7xx. Tested on real hardware to verify that the
-MMC controller is functional with filesystem access.
+The tag "ops" is used for two different purposes. First, to indicate that
+the entity is directly related to the operations such as flags carried in
+sched_ext_ops. Second, to indicate that the entity applies to something
+global such as enable or bypass states. The second usage is historical and
+causes confusion rather than clarifying anything. For example,
+scx_ops_enable_state enums are named SCX_OPS_* and thus conflict with
+scx_ops_flags. Let's drop the second usages.
 
-Signed-off-by: William A. Kennington III <william@wkennington.com>
+Drop "ops" from SCX_OPS_TASK_ITER_BATCH.
+
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Suggested-by: Andrea Righi <arighi@nvidia.com>
 ---
- .../dts/nuvoton/nuvoton-common-npcm7xx.dtsi   | 23 +++++++++++++++++++
- 1 file changed, 23 insertions(+)
+ kernel/sched/ext.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/boot/dts/nuvoton/nuvoton-common-npcm7xx.dtsi b/arch/arm/boot/dts/nuvoton/nuvoton-common-npcm7xx.dtsi
-index e337f40ae0f2..791090f54d8b 100644
---- a/arch/arm/boot/dts/nuvoton/nuvoton-common-npcm7xx.dtsi
-+++ b/arch/arm/boot/dts/nuvoton/nuvoton-common-npcm7xx.dtsi
-@@ -149,6 +149,29 @@ gmac0: eth@f0802000 {
- 			status = "disabled";
- 		};
+--- a/kernel/sched/ext.c
++++ b/kernel/sched/ext.c
+@@ -26,7 +26,7 @@ enum scx_consts {
+ 	 * Iterating all tasks may take a while. Periodically drop
+ 	 * scx_tasks_lock to avoid causing e.g. CSD and RCU stalls.
+ 	 */
+-	SCX_OPS_TASK_ITER_BATCH		= 32,
++	SCX_TASK_ITER_BATCH		= 32,
+ };
  
-+		sdmmc: mmc@f0842000 {
-+			compatible = "nuvoton,npcm750-sdhci";
-+			status = "disabled";
-+			reg = <0xf0842000 0x200>;
-+			interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks =  <&clk NPCM7XX_CLK_AHB>;
-+			clock-names = "clk_mmc";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&mmc8_pins
-+					&mmc_pins>;
-+		};
-+
-+		sdhci: mmc@f0840000 {
-+			compatible = "nuvoton,npcm750-sdhci";
-+			status = "disabled";
-+			reg = <0xf0840000 0x200>;
-+			interrupts = <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks =  <&clk NPCM7XX_CLK_AHB>;
-+			clock-names = "clk_sdhc";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&sd1_pins>;
-+		};
-+
- 		ehci1: usb@f0806000 {
- 			compatible = "nuvoton,npcm750-ehci";
- 			reg = <0xf0806000 0x1000>;
--- 
-2.49.0.504.g3bcea36a83-goog
-
+ enum scx_exit_kind {
+@@ -1401,15 +1401,15 @@ static void scx_task_iter_stop(struct sc
+  * @iter: iterator to walk
+  *
+  * Visit the next task. See scx_task_iter_start() for details. Locks are dropped
+- * and re-acquired every %SCX_OPS_TASK_ITER_BATCH iterations to avoid causing
+- * stalls by holding scx_tasks_lock for too long.
++ * and re-acquired every %SCX_TASK_ITER_BATCH iterations to avoid causing stalls
++ * by holding scx_tasks_lock for too long.
+  */
+ static struct task_struct *scx_task_iter_next(struct scx_task_iter *iter)
+ {
+ 	struct list_head *cursor = &iter->cursor.tasks_node;
+ 	struct sched_ext_entity *pos;
+ 
+-	if (!(++iter->cnt % SCX_OPS_TASK_ITER_BATCH)) {
++	if (!(++iter->cnt % SCX_TASK_ITER_BATCH)) {
+ 		scx_task_iter_unlock(iter);
+ 		cond_resched();
+ 		scx_task_iter_relock(iter);
