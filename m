@@ -1,97 +1,125 @@
-Received: from out-176.mta1.migadu.com (out-176.mta1.migadu.com [95.215.58.176])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F84E215077
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 17:54:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECA0420ADD8;
+	Fri,  4 Apr 2025 17:54:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743789246; cv=none; b=EJeejlMYBcM2vQmQXMAiDrE11krEQP/xiVaQ6ljJ7CZN6hEVeVDF9ymHnZigJsUitDsuX2iU9zOE63CkhLG/PblVyhvOSDLUwrTXe3/NNvIkqey4zuraeOQvWZY5OE5ZMx7j9glWA036VLAjm/RHtKZHU/5MyDHSXwSMPtfVgh0=
+	t=1743789276; cv=none; b=ViIdldV3UfskU0/pOxgZxYzpF53a7ZM2Guw2z2mvtPCLk2YVEkf33slNE/m/l8JNCqBHpVuDrJivMLRfH3F9pMx384P/ecijsiDKXNBY0N4feYD63fJD5CYeTDq5rMo9oJJ8iEo1YvpNoauo10J+c/k5fj+/OgrpExzUtXQkOe0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743789246; c=relaxed/simple;
-	bh=NukG3uMrPNlDIzqm6kxfZKYvKoPfRKbsl1MqHOykOZk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TK0U9O74f0sLIkPF7INeifL/Y5mZBSJWNG18rimFLMw5xiehv073Q6Rp1JMpGTOkWtCiY5fStVMlsSkWBeJXiE9iLg35lz/X4oXD7HUPLtHN3cri4ycb3spd8olOH0j3zU3O9VrjX0wFxTK52AYTkxXA+54Ek3V94g7ACoqzIOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=iencinas.com; spf=pass smtp.mailfrom=iencinas.com; dkim=pass (2048-bit key) header.d=iencinas.com header.i=@iencinas.com header.b=OJWqMBN1; arc=none smtp.client-ip=95.215.58.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=iencinas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iencinas.com
+	s=arc-20240116; t=1743789276; c=relaxed/simple;
+	bh=FF5lNFZoXP8BV9H7u53J+lvmPN2gRSsfC3sKjksnSMk=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=nm809kYUoZ35XvNfd7QadO4e8lz8ptc5/kkb9iqDxbl5Q8l3pPLpFM5+s4HC5VCE3BCTdFaRTFGWr6ScUYMHuH29wEgtcyy2Paylrs2AJ9lduXvmtiXzp5/XJvjFoGHE6XPYhDxF2BsmfAH7gfDU16aOZWoQ2JAY640pW1XlsGY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NGiApybb; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lzWta90Z; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=iencinas.com header.i=@iencinas.com header.b="OJWqMBN1"
-Message-ID: <5348670b-1bbf-4948-9b3a-9da210debf03@iencinas.com>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=iencinas.com;
-	s=key1; t=1743789231;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NGiApybb";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lzWta90Z"
+Date: Fri, 04 Apr 2025 17:54:32 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1743789273;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=1W01rl80m0H+/UfHPagC4644fJ169vg9eQeKL5M7SrY=;
-	b=OJWqMBN1YxCoLFXWKHl/O9O9Rc2L/2yYoFUoofAtfxbdw6A1EN6Gd63XQ5lMZig7zs20+N
-	m8EsYSHFfkr7fFUY5mJ8teFtWcfBQ3Y80cgrUkWCp+txnJCF1uPRwJz3tt2Q7HO8Ltwyc8
-	Fr+yw+f9VdHtOPG2JSkoQoVCw67eY8i63qxC1obKnR7gYXbZZli5aPQERgGFnXlGNMw7md
-	V3OEj6QxRM9nevr9NylA3vhJ5M0uLtn3ADVLt/btIzcRfMq6DFtQM5oZi5xhi3uqHkjYCD
-	e1VO0jacI8rz+YDDg3Ad3yF2fsxFtrdO32O2w1gWUTaJ5y3i+PoyL6mP8SBaGg==
-Date: Fri, 4 Apr 2025 19:53:46 +0200
+	bh=IEFJRO7J/e79e7EMUY38TrMg6EafizVxz/TWO9tA+gQ=;
+	b=NGiApybbMKG1xGeNjyB1elrvXNlsIxi8bVdbCQp0lwhKcHLvjWgEfiT71Mq39vH8wSvdCH
+	PvRkTetNYOjxg8N6G/KnmpZNwqvLOJiKe0WZAyis8nawD+clShSj6HPRqMpsDbJzjrnnUh
+	Ngcdss7b2tHXMqA+FLg/TliMt/5d8GLNGCW/+9hcbaehWGd7g7B07IJ0e6ZXuRCPqImQG9
+	165r+BCsCSqzNKiGvbV6sXjXkRecMRU/rbwfSro2K/LHnYaFnf44aKwaUE/j8Os8d11dxW
+	2yZtYsEmms47jgqbVtqeFejnOXIpnxOt4s+cgvj+MhKHZoyW307MuHiSOOZB/Q==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1743789273;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IEFJRO7J/e79e7EMUY38TrMg6EafizVxz/TWO9tA+gQ=;
+	b=lzWta90Z9kgQTU3IWf32So3nSa2QGDwwBydDJ6LxbPiYWaibXjURh706wNEvvW3YZ4UUgE
+	Z8cGqUz+ucIRDyBA==
+From: "tip-bot2 for Nam Cao" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: timers/cleanups] hrtimers: Rename debug_init_on_stack() to
+ debug_setup_on_stack()
+Cc: Nam Cao <namcao@linutronix.de>, Thomas Gleixner <tglx@linutronix.de>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: =?utf-8?q?=3C073cf6162779a2f5b12624677d4c49ee7eccc1ed=2E17387?=
+ =?utf-8?q?46927=2Egit=2Enamcao=40linutronix=2Ede=3E?=
+References: =?utf-8?q?=3C073cf6162779a2f5b12624677d4c49ee7eccc1ed=2E173874?=
+ =?utf-8?q?6927=2Egit=2Enamcao=40linutronix=2Ede=3E?=
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v3 2/2] riscv: introduce asm/swab.h
-To: Ben Dooks <ben.dooks@codethink.co.uk>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Alexandre Ghiti <alex@ghiti.fr>,
- Arnd Bergmann <arnd@arndb.de>
-Cc: Eric Biggers <ebiggers@kernel.org>, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-kernel-mentees@lists.linux.dev,
- skhan@linuxfoundation.org, Zhihang Shao <zhihang.shao.iscas@gmail.com>,
- =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>,
- linux-arch@vger.kernel.org
-References: <20250403-riscv-swab-v3-0-3bf705d80e33@iencinas.com>
- <20250403-riscv-swab-v3-2-3bf705d80e33@iencinas.com>
- <aa29e983-78b9-430b-b8a6-e64de5f4ca12@codethink.co.uk>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Ignacio Encinas <ignacio@iencinas.com>
-In-Reply-To: <aa29e983-78b9-430b-b8a6-e64de5f4ca12@codethink.co.uk>
-Content-Type: text/plain; charset=UTF-8
+Message-ID: <174378927257.31282.13128569756433879412.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
 
+The following commit has been merged into the timers/cleanups branch of tip:
 
+Commit-ID:     d83e17721ede8d83d20c4261dd308ac553ed720f
+Gitweb:        https://git.kernel.org/tip/d83e17721ede8d83d20c4261dd308ac553ed720f
+Author:        Nam Cao <namcao@linutronix.de>
+AuthorDate:    Wed, 05 Feb 2025 11:55:20 +01:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Fri, 04 Apr 2025 19:46:07 +02:00
 
-On 4/4/25 17:47, Ben Dooks wrote:
-> I was having a look at this as well, using the alternatives macros.
-> 
-> It would be nice to have a __zbb_swab defined so that you could do some
-> time checks with this, because it would be interesting to see the
-> benchmark of how much these improve byteswapping.
+hrtimers: Rename debug_init_on_stack() to debug_setup_on_stack()
 
-I get your point, but isn't what you propose equivalent to benchmarking 
-__arch_swab vs ___constant_swab? 
+All the hrtimer_init*() functions have been renamed to hrtimer_setup*().
+Rename debug_init_on_stack() to debug_setup_on_stack() as well, to keep the
+names consistent.
+
+Signed-off-by: Nam Cao <namcao@linutronix.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/all/073cf6162779a2f5b12624677d4c49ee7eccc1ed.1738746927.git.namcao@linutronix.de
+
+---
+ kernel/time/hrtimer.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
+index 472c298..4bf91fa 100644
+--- a/kernel/time/hrtimer.c
++++ b/kernel/time/hrtimer.c
+@@ -471,8 +471,8 @@ static inline void debug_setup(struct hrtimer *timer, clockid_t clockid, enum hr
+ 	trace_hrtimer_init(timer, clockid, mode);
+ }
  
-> Also, I wonder if it is possible to say to the build system we must
-> have ZBB therefore only emit ZBB for cases where you are building a
-> kernel for an known ZBB system.
-
-You can disable ZBB instructions if you do RISCV_ISA_ZBB=n. 
-
-config RISCV_ISA_ZBB
-	bool "Zbb extension support for bit manipulation instructions"
-	depends on TOOLCHAIN_HAS_ZBB
-	depends on RISCV_ALTERNATIVE
-	default y
-	help
-	   Adds support to dynamically detect the presence of the ZBB
-	   extension (basic bit manipulation) and enable its usage.
-
-	   The Zbb extension provides instructions to accelerate a number
-	   of bit-specific operations (count bit population, sign extending,
-	   bitrotation, etc).
-
-	   If you don't know what to do here, say Y.
-
-However, statically assuming ZBB instruction support is another beast
-and I don't really have an informed opinion about this. Perhaps in a few
-years?
-
-Thanks for the review!
+-static inline void debug_init_on_stack(struct hrtimer *timer, clockid_t clockid,
+-				       enum hrtimer_mode mode)
++static inline void debug_setup_on_stack(struct hrtimer *timer, clockid_t clockid,
++					enum hrtimer_mode mode)
+ {
+ 	debug_hrtimer_init_on_stack(timer);
+ 	trace_hrtimer_init(timer, clockid, mode);
+@@ -1665,7 +1665,7 @@ void hrtimer_setup_on_stack(struct hrtimer *timer,
+ 			    enum hrtimer_restart (*function)(struct hrtimer *),
+ 			    clockid_t clock_id, enum hrtimer_mode mode)
+ {
+-	debug_init_on_stack(timer, clock_id, mode);
++	debug_setup_on_stack(timer, clock_id, mode);
+ 	__hrtimer_setup(timer, function, clock_id, mode);
+ }
+ EXPORT_SYMBOL_GPL(hrtimer_setup_on_stack);
+@@ -2064,7 +2064,7 @@ static void __hrtimer_setup_sleeper(struct hrtimer_sleeper *sl,
+ void hrtimer_setup_sleeper_on_stack(struct hrtimer_sleeper *sl,
+ 				    clockid_t clock_id, enum hrtimer_mode mode)
+ {
+-	debug_init_on_stack(&sl->timer, clock_id, mode);
++	debug_setup_on_stack(&sl->timer, clock_id, mode);
+ 	__hrtimer_setup_sleeper(sl, clock_id, mode);
+ }
+ EXPORT_SYMBOL_GPL(hrtimer_setup_sleeper_on_stack);
