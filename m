@@ -1,158 +1,104 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD7B64689
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 21:45:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4766B182BC;
+	Fri,  4 Apr 2025 21:52:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743803141; cv=none; b=d4zrCazLp6mhF36IOORyxd/nkzv1Z8qq95q84LirUdzuOn3CX+rlLtSsjY2dVt1EQELa0DJcH1xhflnSwqL7zxX66V2L7ReZB90nz20jgh4RmfkWl2B1w55jejEn5uvjQqGkYKhvsjuQb7+zLJr3oOB2rbdLKJWNw8zHjjn+oQ8=
+	t=1743803565; cv=none; b=M2GfQ6Gu0VI8xZdoo8Yl0lCs9XWjBjA9FYUEU0XCRmTjlo6PtVJv2UHMaFBVAscJChqdoK/ZKJzGpt6vCqEe06Ik6q3N+pf8sly22wIr8d0z+2z/1/m719TQjForpqERI5p6nzxn+whMGvck4nt+YFN6lAmIJnynbaGgoPw97Gc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743803141; c=relaxed/simple;
-	bh=86K/5TRz9CHCJdgWshNoul6LvLef4+rDFWtRbEoCmF4=;
+	s=arc-20240116; t=1743803565; c=relaxed/simple;
+	bh=zfKuyAqEThSpITUsQxukfzwj1EOtZMLMZc21pVrK58U=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nOpwy6MUH8NYcl1oufTGRdO2kKj1Q4SiX/rKHn+9WXP1mCGj9+2Sr9nBj1pEYcmW2M6TKGTjKHyLiUOmOO+IYvspWgt03bZjEAZY4jHvbVh8/YY0UX1HNq6KvjmxIGrJz8hyaKXPUVsuyElFv898iidCkmb8A45sgsn17r03nq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=pQrc0buc; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=kSRpmvxG; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=pQrc0buc; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=kSRpmvxG; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	 Content-Type:Content-Disposition:In-Reply-To; b=f0UbaV2cq9eZCGbKqzsV3+FD/xqfwMZAPHI5xgetSCqnHog2C2oNGb2gCUiFiryp/RbVX7zVPq9M20xjL7xx3FVYkcv5t3938bFTUvSbHMkYxZcxdwyoI6sNloU/LQXMeALJWUcWNxLWKoqb0jUZQvml3q2/bRLzLdDX/qHcTwA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UJLbDe1U; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="pQrc0buc";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="kSRpmvxG";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="pQrc0buc";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="kSRpmvxG"
-Received: from lion.mk-sys.cz (unknown [10.100.225.114])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id A75B0211A6;
-	Fri,  4 Apr 2025 21:45:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1743803137; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=86K/5TRz9CHCJdgWshNoul6LvLef4+rDFWtRbEoCmF4=;
-	b=pQrc0bucqhAPabBYv09DCexAJA1/xF91EOVy4SkcJeNZqmJW6FtWxYJHRwZL/okODGyWOh
-	Nqc2z/gBUT5DIBM4pSoLZF9UY+FkVVUnPSANW3FBWF7YN0KuXyZboZ4oWI5t6Qn2iQiCSa
-	xcOTZnlicH6+/FBxFNLpl0i8+Xcs/yA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1743803137;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=86K/5TRz9CHCJdgWshNoul6LvLef4+rDFWtRbEoCmF4=;
-	b=kSRpmvxGbrMS53C1acis6iU4mIcSkrkDpQPXoiS7oHdjpeEriOB4S+7YrPNt0r7rEarR0q
-	ByZnuiFr6ZMf27Cg==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1743803137; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=86K/5TRz9CHCJdgWshNoul6LvLef4+rDFWtRbEoCmF4=;
-	b=pQrc0bucqhAPabBYv09DCexAJA1/xF91EOVy4SkcJeNZqmJW6FtWxYJHRwZL/okODGyWOh
-	Nqc2z/gBUT5DIBM4pSoLZF9UY+FkVVUnPSANW3FBWF7YN0KuXyZboZ4oWI5t6Qn2iQiCSa
-	xcOTZnlicH6+/FBxFNLpl0i8+Xcs/yA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1743803137;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=86K/5TRz9CHCJdgWshNoul6LvLef4+rDFWtRbEoCmF4=;
-	b=kSRpmvxGbrMS53C1acis6iU4mIcSkrkDpQPXoiS7oHdjpeEriOB4S+7YrPNt0r7rEarR0q
-	ByZnuiFr6ZMf27Cg==
-Received: by lion.mk-sys.cz (Postfix, from userid 1000)
-	id 92F0D20057; Fri,  4 Apr 2025 23:45:37 +0200 (CEST)
-Date: Fri, 4 Apr 2025 23:45:37 +0200
-From: Michal Kubecek <mkubecek@suse.cz>
-To: Maxime Chevallier <maxime.chevallier@bootlin.com>
-Cc: davem@davemloft.net, Andrew Lunn <andrew@lunn.ch>, 
-	Jakub Kicinski <kuba@kernel.org>, Eric Dumazet <edumazet@google.com>, 
-	Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	thomas.petazzoni@bootlin.com, Simon Horman <horms@kernel.org>, 
-	Florian Fainelli <f.fainelli@gmail.com>, Kory Maincent <kory.maincent@bootlin.com>
-Subject: Re: [PATCH net] net: ethtool: Don't call .cleanup_data when
- prepare_data fails
-Message-ID: <jbrczz3ylkccyw332pkrzpphe3nrhkcfx3pup6adiufrrwe5s7@zfpk343qajtc>
-References: <20250403132448.405266-1-maxime.chevallier@bootlin.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UJLbDe1U"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 572D5C4CEDD;
+	Fri,  4 Apr 2025 21:52:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743803564;
+	bh=zfKuyAqEThSpITUsQxukfzwj1EOtZMLMZc21pVrK58U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UJLbDe1UWCik0+X07dueePSGryP67mZMHCTK2OzoZPKRioPAbyPo+4gCEfNLSf/eJ
+	 6Qp/fWuBKrJZcXMd9IBvlrMC7FDFLvFwYuHitO3LfWNKxm4RJBKVnp7hMAQE+tzITt
+	 69k+1zH8kTEd28hZmQfjiOn9K8j6bLQE+0Uvbs0+QcmhRs1SR11IH9Hmv0VB3QH/uW
+	 FiuzBA7y52ebnEEM/TyOrp7u58pqPS7CqUwVi0vd5I9IXodxKzKb6QlvgMe121GNPr
+	 j4sgKOfZ5dHAnqMYTvJHCltafWgeDABxruiSkEoUaAizrenp3zqr0t2kNnm9w/nyQ1
+	 qeQkrB9FIcjRg==
+Date: Fri, 4 Apr 2025 16:52:43 -0500
+From: Rob Herring <robh@kernel.org>
+To: Frank Li <Frank.li@nxp.com>
+Cc: Kishon Vijay Abraham I <kishon@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Anup Patel <apatel@ventanamicro.com>, Marc Zyngier <maz@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
+	Shuah Khan <shuah@kernel.org>, Richard Zhu <hongxing.zhu@nxp.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Niklas Cassel <cassel@kernel.org>, dlemoal@kernel.org,
+	jdmason@kudzu.us, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, imx@lists.linux.dev,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v16 04/15] dt-bindings: pci: pci-msi: Add support for PCI
+ Endpoint msi-map
+Message-ID: <20250404215243.GA412761-robh@kernel.org>
+References: <20250404-ep-msi-v16-0-d4919d68c0d0@nxp.com>
+ <20250404-ep-msi-v16-4-d4919d68c0d0@nxp.com>
+ <20250404201140.GA236599-robh@kernel.org>
+ <Z/BB/Maq4253H7N2@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="3gxmzin6gbc74vrl"
-Content-Disposition: inline
-In-Reply-To: <20250403132448.405266-1-maxime.chevallier@bootlin.com>
-X-Spam-Score: -4.40
-X-Spamd-Result: default: False [-4.40 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	SIGNED_PGP(-2.00)[];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	MIME_GOOD(-0.20)[multipart/signed,text/plain];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	ARC_NA(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RCVD_COUNT_ONE(0.00)[1];
-	TAGGED_RCPT(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_CC(0.00)[davemloft.net,lunn.ch,kernel.org,google.com,redhat.com,vger.kernel.org,bootlin.com,gmail.com];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[]
-X-Spam-Flag: NO
-X-Spam-Level: 
-
-
---3gxmzin6gbc74vrl
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <Z/BB/Maq4253H7N2@lizhi-Precision-Tower-5810>
 
-On Thu, Apr 03, 2025 at 03:24:46PM +0200, Maxime Chevallier wrote:
-> There's a consistent pattern where the .cleanup_data() callback is
-> called when .prepare_data() fails, when it should really be called to
-> clean after a successfull .prepare_data() as per the documentation.
+On Fri, Apr 04, 2025 at 04:33:00PM -0400, Frank Li wrote:
+> On Fri, Apr 04, 2025 at 03:11:40PM -0500, Rob Herring wrote:
+> > On Fri, Apr 04, 2025 at 03:01:05PM -0400, Frank Li wrote:
+> > > Document the use of msi-map for PCI Endpoint (EP) controllers, which can
+> > > use MSI as a doorbell mechanism. Each EP controller can support up to 8
+> > > physical functions and 65,536 virtual functions.
+> > >
+> > > Define how to construct device IDs using function bits [2:0] and virtual
+> > > function index bits [31:3], enabling msi-map to associate each child device
+> > > with a specific msi-specifier.
+> > >
+> > > Include a device tree example illustrating this configuration.
+> > >
+> > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> > > ---
+> > > change from v15 to v16
+> > > - new patch
+> > > ---
+> > >  Documentation/devicetree/bindings/pci/pci-msi.txt | 51 +++++++++++++++++++++++
+> > >  1 file changed, 51 insertions(+)
+> >
+> > Please don't add to .txt files.
+> 
+> where should put?
 
-Agreed. The rationale is that only ->prepare_data() callback knows
-what exactly failed and what needs to be reverted. And it makes much
-more sense for it to do the necessary cleanup than to provide enough
-information for it to be done elsewhere. Except, of course, the simple
-cases where ->cleanup() is just a bunch of kfree() calls with zeroing
-those pointers so that it can be called repeatedly.
+Where ever you are putting the schema for msi-map for endpoints... Looks 
+like that's nowhere currently. The endpoint side is documented in 
+pci-ep.yaml, so there I suppose.
 
->=20
-> Rewrite the error-handling paths to make sure we don't cleanup
-> un-prepared data.
->=20
-> Fixes: 728480f12442 ("ethtool: default handlers for GET requests")
-> Reviewed-by: Kory Maincent <kory.maincent@bootlin.com>
-> Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+What's in pci-msi.txt already has mostly moved to dtschema 
+dtschema/schemas/pci/pci-host-bridge.yaml. 
 
-Reviewed-by: Michal Kubecek <mkubecek@suse.cz>
-
-Michal
-
---3gxmzin6gbc74vrl
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEWN3j3bieVmp26mKO538sG/LRdpUFAmfwUv4ACgkQ538sG/LR
-dpV9WAgAmAQvOmiUsfgCtsDtNaPQ2jFdGJ9EcfJx2h/fk5NXz/Erg6BWtLcr5Kqv
-8Ox4G4BWUCv3IK2hADvoDKXm13DhT0ykeIFEgIldD4gn0yypZMzb3tz1RmRRgtfB
-yKEqB+Q6/KVscxJhvDdXHdC+p7aloDAvrKqp7RiBU46uafLtXTzNjLHh8mcWhiAM
-19JxyGPCpSWjtJ4BMeDz6KDkib/t+yKcRWtQwCngkbzDoJQhRP+YsRytM5w/Acsb
-5WwdDTvzYe2vjmZ9gD8Nf4I3WRAWbVyIphwL+hlEDeQdDtKyUQxZFVEUvNq0nOMS
-KaI6him2/ydDyjUIQjT0kV8D3JGW5Q==
-=jzlY
------END PGP SIGNATURE-----
-
---3gxmzin6gbc74vrl--
+Rob
