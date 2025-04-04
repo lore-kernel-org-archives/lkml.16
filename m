@@ -1,411 +1,138 @@
-Received: from smtpgw-1-2.nogo.comp.nus.edu.sg (84-20.comp.nus.edu.sg [137.132.84.20])
+Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 358E1101F2
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 10:07:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=137.132.84.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78B5A1A7044
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 10:08:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743761247; cv=none; b=F1yz+6keOlvDGCoYExHCNVrdrO2W3FjvCywLvJmyYPYOhyF0TNusmw2geFsJLmIOWzdzmoInD5AVUsE72lYy7FnYik9A5N7DUPAcFqyWBGrb5TWTgEg6QB0eNlohnUALvuQXfw2YRLw8sV/Qguhk3zinyupRQbKZ+3eb2tZ1K/M=
+	t=1743761331; cv=none; b=YkABVR4j10HT7zvrsGzZX7PTunt+qXEnDhd4Nkg2J2h1rzy5y7T6YP0RgtY5c0y4ff+Uw8EAJfkOXbZi18BrlO3ppd7U5gZhZauXQj9/J9FsMhoy2oSx9Vepfwst7rexWb3AaSBVZPbbYvs5JbZbg+t6PGXg9y3+PtcrxA48Hs4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743761247; c=relaxed/simple;
-	bh=3897f+7hwiKaoRxyUmq7GI7ztVqgyFGJt5e3hNj/ndw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VHlUl9plLJW2DMAac+4Sl1ayXbHTmURGUtAzk0jzg6KSIbBwhF1xYYOKpV1y7K9n/qUNvshl1nIgYbYq7cKW9ywVbdW5Xph5IIRaf/EtigtgvG2rgr6M5lZF6K3Alb1vuUvXcKm0XCyucYVEU4lItsguLAOX6F8ekjMYzxXflOk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=comp.nus.edu.sg; spf=pass smtp.mailfrom=comp.nus.edu.sg; arc=none smtp.client-ip=137.132.84.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=comp.nus.edu.sg
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=comp.nus.edu.sg
-Received: from localhost (localhost [127.0.0.1])
-	by smtpgw-1-2.nogo.comp.nus.edu.sg (Postfix) with ESMTP id 15E5816148C
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 18:07:16 +0800 (+08)
-X-Virus-Scanned: Debian amavisd-new at smtpgw-1-2.comp.nus.edu.sg
-Received: from smtpgw-1-2.nogo.comp.nus.edu.sg ([127.0.0.1])
-	by localhost (smtpgw-1-2.comp.nus.edu.sg [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id qPxigFyi6KSc for <linux-kernel@vger.kernel.org>;
-	Fri,  4 Apr 2025 18:07:13 +0800 (+08)
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com [209.85.221.71])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtpgw-1-2.nogo.comp.nus.edu.sg (Postfix) with ESMTPS
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 18:07:13 +0800 (+08)
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3912b54611dso1116526f8f.1
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 03:07:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743761231; x=1744366031;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3ZpNezVgO9x7n4qO105SQS96YwFjL8olWX+bTsb/hm8=;
-        b=JDVZMgMQ2hyPINYPyfwuoPlXTEu35Tj6yG0QIO+qpu/aT7y9AQ6X/6q6++c9VcKDQq
-         JQ4gGcoJJ3Q8r/oeDqvsYzWSvsbstWkKzRZgKQ/MnFiSed1x5qd0uSOnbAXPGaYEMHjN
-         jlgv6FKn/GzPgT1Rm8NMoSDUWMxObzbw8n5U602aywhkFAHaeNK7AzaNYJQVXkFW6rhG
-         OjPrw52rgjWMhaA19btCPfrEAI1ww8UNJfF/OArvYwOAfh/H+0FZ5fjRB/4sHblGXqT4
-         oymROf4ukZgIE4YnDfWhkFKiUoeEDnMSRK8+/orAlTraU8+Zzdl5dngz7pZBdSG5Zx1c
-         4EzA==
-X-Forwarded-Encrypted: i=1; AJvYcCWWOopo4XnMtaDCbtzt9AXroXfQce2UYeZmRfHBMaxPlBeKiC0AnsxpHOu27WzB2GfFFhY0T1adw5B7l8k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyKMI+QPfLlyh7hF14JkZK6qEDZyJ49mq8szaycdD7QNAl+tyCD
-	CmCcr8zbrtN2e25JL4Nqsv2mpGrC9ZKhO+rbI5ber2k1dDWdvapQ4itx4tbG9KvhofXsv0QAXLV
-	J/BdHWvz6Psju1356B1QXEEWy11wpNq0GHr6TrQcPcdoe1rrOTbyGiixo3OWybvkUCsb1E0dAnq
-	26olr3pEmTKcX9+46WjZ4gptCuoy3OORFuAr3yJZo=
-X-Gm-Gg: ASbGncuD3V8RXf6fR57oP3kk423aWZA6WMBmdgH69BGkC6IVoBV7QeG3ndQaYXIhiAK
-	Hq9Uu6ytD6wpFQgv6VfPrAR2o2N7deFTK0MV7IJ8efltmT2rylVx5npu3ohzB5L+VzYhWYkBI
-X-Received: by 2002:a05:6000:250a:b0:391:12a5:3cb3 with SMTP id ffacd0b85a97d-39d0873fd19mr1961979f8f.3.1743761231035;
-        Fri, 04 Apr 2025 03:07:11 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFnV9UwamRIyUKW4GOeVIE6okjNq3Qre3D7SkA3sH+0E9q8u3+uxXUpzfrOeOLdg3VB/t7Fg1OQd0ITTfIEdyI=
-X-Received: by 2002:a05:6000:250a:b0:391:12a5:3cb3 with SMTP id
- ffacd0b85a97d-39d0873fd19mr1961925f8f.3.1743761230468; Fri, 04 Apr 2025
- 03:07:10 -0700 (PDT)
+	s=arc-20240116; t=1743761331; c=relaxed/simple;
+	bh=IfOkvZ5xzGioGR8Ov7Gy3KqIuipOAaItVq5A+VFLtrI=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=HnH8H2NnJe4jY+BAnutk//oGnpmDLSlU1px+yuDbenbWBSWHo8tUyssW8ek04zvHSVftcxg3xtXMJY06HLSVyNxC7OoZyUZbyhGxFKD5GkhX0bBz5P/n4mGPhN0dBnCfb4HOBVN1KbKcEu9vHrSncDyGrqOPCl7CJbX7nyzqHeU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=l55TQE1g; arc=none smtp.client-ip=91.218.175.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="l55TQE1g"
+Content-Type: text/plain;
+	charset=us-ascii
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1743761317;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=H3vWWRH8W6vSZf9b1BUtRvjzptf2hYf7bVz0hYZoaVk=;
+	b=l55TQE1g/+e4KBgCOcGnu2XR1SFz6vXlDu9SB52QszYdsR2e9jqG5Puuvjqj6894HcRP7g
+	AXC+6FHsyF38ePGmjeNrpYfvmhkC+Gr97PBm4ZQ2YcTxuop+qctK73VjuvsL1xsVpFVxo5
+	oWgIrkZXg5yN42z6egTF3GqXNsWU2B4=
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <CAJeEPuJHMKo9T3GcAQH2+X3Rke3b4YH3_S6FmnBp4tQqLciYxA@mail.gmail.com>
- <d9a7af40-84f9-446e-a708-d989b322a675@redhat.com>
-In-Reply-To: <d9a7af40-84f9-446e-a708-d989b322a675@redhat.com>
-From: Dylan Wolff <wolffd@comp.nus.edu.sg>
-Date: Fri, 4 Apr 2025 11:06:54 +0100
-X-Gm-Features: ATxdqUGjSovVAVF6K8PXa6s9vuuhQUTiYOJzVc35JHTkd4RbECGCtmQYxgPvbLQ
-Message-ID: <CAJeEPuLOz45eOt0_Uab-XtOxYwEOpw4Mq3SZDw21T=wUBVL2TQ@mail.gmail.com>
-Subject: Re: Concurrent slab-use-after-free in netdev_next_lower_dev
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: Wenjia Zhang <wenjia@linux.ibm.com>, Jan Karcher <jaka@linux.ibm.com>, 
-	"D. Wythe" <alibuda@linux.alibaba.com>, Tony Lu <tonylu@linux.alibaba.com>, 
-	Wen Gu <guwen@linux.alibaba.com>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>, 
-	linux-rdma@vger.kernel.org, linux-s390@vger.kernel.org, 
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Jiacheng Xu <3170103308@zju.edu.cn>
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.400.131.1.6\))
+Subject: Re: CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP is broken, was Re: [RFC
+ PATCH 0/6] Deep talk about folio vmap
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Muchun Song <muchun.song@linux.dev>
+In-Reply-To: <9A899641-BDED-4773-B349-56AF1DD58B21@linux.dev>
+Date: Fri, 4 Apr 2025 18:07:50 +0800
+Cc: bingbu.cao@linux.intel.com,
+ Christoph Hellwig <hch@lst.de>,
+ Matthew Wilcox <willy@infradead.org>,
+ Gerd Hoffmann <kraxel@redhat.com>,
+ Vivek Kasireddy <vivek.kasireddy@intel.com>,
+ Sumit Semwal <sumit.semwal@linaro.org>,
+ =?utf-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Uladzislau Rezki <urezki@gmail.com>,
+ Shuah Khan <shuah@kernel.org>,
+ linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org,
+ linux-media@vger.kernel.org,
+ linaro-mm-sig@lists.linaro.org,
+ linux-mm@kvack.org,
+ linux-kselftest@vger.kernel.org,
+ opensource.kernel@vivo.com
 Content-Transfer-Encoding: quoted-printable
+Message-Id: <43DD699A-5C5D-429B-A2B5-61FBEAE2E252@linux.dev>
+References: <20250327092922.536-1-link@vivo.com>
+ <20250404090111.GB11105@lst.de>
+ <9A899641-BDED-4773-B349-56AF1DD58B21@linux.dev>
+To: Huan Yang <link@vivo.com>
+X-Migadu-Flow: FLOW_OUT
 
-> Please share the decoded syzkaller/kasan splat in plaintext instead of
-describing it in natural language, and please avoid attachments unless
-explicitly asked for.
 
-Got it! Here is the report:
 
-```
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-BUG: KASAN: slab-use-after-free in netdev_next_lower_dev
-net/core/dev.c:7522 [inline]
-BUG: KASAN: slab-use-after-free in
-netdev_walk_all_lower_dev+0x1e6/0x4f0 net/core/dev.c:7570
-Read of size 8 at addr ffff888058cdc1b8 by task syz-executor.3/14127
+> On Apr 4, 2025, at 17:38, Muchun Song <muchun.song@linux.dev> wrote:
+>=20
+>=20
+>=20
+>> On Apr 4, 2025, at 17:01, Christoph Hellwig <hch@lst.de> wrote:
+>>=20
+>> After the btrfs compressed bio discussion I think the hugetlb changes =
+that
+>> skip the tail pages are fundamentally unsafe in the current kernel.
+>>=20
+>> That is because the bio_vec representation assumes tail pages do =
+exist, so
+>> as soon as you are doing direct I/O that generates a bvec starting =
+beyond
+>> the present head page things will blow up.  Other users of bio_vecs =
+might
+>> do the same, but the way the block bio_vecs are generated are very =
+suspect
+>> to that.  So we'll first need to sort that out and a few other things
+>> before we can even think of enabling such a feature.
+>>=20
+>=20
+> I would like to express my gratitude to Christoph for including me in =
+the
+> thread. I have carefully read the cover letter in [1], which indicates
+> that an issue has arisen due to the improper use of `vmap_pfn()`. I'm
+> wondering if we could consider using `vmap()` instead. In the HVO =
+scenario,
+> the tail struct pages do **exist**, but they are read-only. I've =
+examined
+> the code of `vmap()`, and it appears that it only reads the struct =
+page.
+> Therefore, it seems feasible for us to use `vmap()` (I am not a expert =
+in
+> udmabuf.). Right?
 
-CPU: 1 UID: 0 PID: 14127 Comm: syz-executor.3 Not tainted 6.13.0-rc4 #2
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/01/=
-2014
-Sched_ext: serialise (enabled+all), task: runnable_at=3D-10ms
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x229/0x350 lib/dump_stack.c:120
- print_address_description mm/kasan/report.c:378 [inline]
- print_report+0x164/0x530 mm/kasan/report.c:489
- kasan_report+0x147/0x180 mm/kasan/report.c:602
- netdev_next_lower_dev net/core/dev.c:7522 [inline]
- netdev_walk_all_lower_dev+0x1e6/0x4f0 net/core/dev.c:7570
- smc_vlan_by_tcpsk+0x45a/0x5b0 net/smc/smc_core.c:1904
- __smc_connect+0x391/0x1af0 net/smc/af_smc.c:1517
- smc_connect+0x610/0x8e0 net/smc/af_smc.c:1693
- __sys_connect+0x181/0x220 net/socket.c:2074
- __do_sys_connect net/socket.c:2080 [inline]
- __se_sys_connect net/socket.c:2077 [inline]
- __x64_sys_connect+0x9e/0xb0 net/socket.c:2077
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf6/0x210 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f168ca903ad
-Code: c3 e8 a7 2b 00 00 0f 1f 80 00 00 00 00 f3 0f 1e fa 48 89 f8 48
-89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d
-01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f168d843fc8 EFLAGS: 00000246 ORIG_RAX: 000000000000002a
-RAX: ffffffffffffffda RBX: 00007f168cbcc050 RCX: 00007f168ca903ad
-RDX: 000000000000001c RSI: 0000000020000080 RDI: 000000000000000a
-RBP: 00007f168cbcc050 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 00007f168cbcc050 R14: 00007f168ca4fc90 R15: 00007f168d824000
- </TASK>
+I believe my stance is correct. I've also reviewed another thread in =
+[2].
+Allow me to clarify and correct the viewpoints you presented. You =
+stated:
+  "
+   So by HVO, it also not backed by pages, only contains folio head, =
+each
+   tail pfn's page struct go away.
+  "
+This statement is entirely inaccurate. The tail pages do not cease to =
+exist;
+rather, they are read-only. For your specific use-case, please use =
+`vmap()`
+to resolve the issue at hand. If you wish to gain a comprehensive =
+understanding
+of the fundamentals of HVO, I kindly suggest a thorough review of the =
+document
+in [3].
 
-Allocated by task 11284:
- kasan_save_stack mm/kasan/common.c:47 [inline]
- kasan_save_track+0x3f/0x80 mm/kasan/common.c:68
- poison_kmalloc_redzone mm/kasan/common.c:377 [inline]
- __kasan_kmalloc+0x89/0xa0 mm/kasan/common.c:394
- kasan_kmalloc include/linux/kasan.h:260 [inline]
- __do_kmalloc_node mm/slub.c:4298 [inline]
- __kmalloc_node_noprof+0x28c/0x530 mm/slub.c:4304
- __kvmalloc_node_noprof+0x70/0x180 mm/util.c:650
- alloc_netdev_mqs+0xa7/0x1870 net/core/dev.c:11209
- rtnl_create_link+0x371/0xeb0 net/core/rtnetlink.c:3595
- rtnl_newlink_create+0x257/0x690 net/core/rtnetlink.c:3771
- __rtnl_newlink net/core/rtnetlink.c:3897 [inline]
- rtnl_newlink+0x13a9/0x1ac0 net/core/rtnetlink.c:4012
- rtnetlink_rcv_msg+0x8e1/0xf50 net/core/rtnetlink.c:6922
- netlink_rcv_skb+0x248/0x4e0 net/netlink/af_netlink.c:2542
- netlink_unicast_kernel net/netlink/af_netlink.c:1321 [inline]
- netlink_unicast+0x7b8/0x8e0 net/netlink/af_netlink.c:1347
- netlink_sendmsg+0xb42/0xe90 net/netlink/af_netlink.c:1891
- sock_sendmsg_nosec+0x1f5/0x250 net/socket.c:711
- __sock_sendmsg net/socket.c:726 [inline]
- __sys_sendto+0x45d/0x5d0 net/socket.c:2197
- __do_sys_sendto net/socket.c:2204 [inline]
- __se_sys_sendto net/socket.c:2200 [inline]
- __x64_sys_sendto+0x128/0x140 net/socket.c:2200
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf6/0x210 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[2] =
+https://lore.kernel.org/lkml/5229b24f-1984-4225-ae03-8b952de56e3b@vivo.com=
+/#t
+[3] Documentation/mm/vmemmap_dedup.rst
 
-Freed by task 14126:
- kasan_save_stack mm/kasan/common.c:47 [inline]
- kasan_save_track+0x3f/0x80 mm/kasan/common.c:68
- kasan_save_free_info+0x40/0x50 mm/kasan/generic.c:582
- poison_slab_object mm/kasan/common.c:247 [inline]
- __kasan_slab_free+0x5a/0x70 mm/kasan/common.c:264
- kasan_slab_free include/linux/kasan.h:233 [inline]
- slab_free_hook mm/slub.c:2353 [inline]
- slab_free mm/slub.c:4613 [inline]
- kfree+0x196/0x450 mm/slub.c:4761
- device_release+0xbd/0x220
- kobject_cleanup lib/kobject.c:689 [inline]
- kobject_release lib/kobject.c:720 [inline]
- kref_put include/linux/kref.h:65 [inline]
- kobject_put+0x248/0x490 lib/kobject.c:737
- netdev_run_todo+0x10e0/0x1280 net/core/dev.c:10924
- rtnl_unlock net/core/rtnetlink.c:152 [inline]
- rtnl_net_unlock include/linux/rtnetlink.h:133 [inline]
- rtnl_dellink+0x850/0x9c0 net/core/rtnetlink.c:3526
- rtnetlink_rcv_msg+0x8e1/0xf50 net/core/rtnetlink.c:6922
- netlink_rcv_skb+0x248/0x4e0 net/netlink/af_netlink.c:2542
- netlink_unicast_kernel net/netlink/af_netlink.c:1321 [inline]
- netlink_unicast+0x7b8/0x8e0 net/netlink/af_netlink.c:1347
- netlink_sendmsg+0xb42/0xe90 net/netlink/af_netlink.c:1891
- sock_sendmsg_nosec+0x1f5/0x250 net/socket.c:711
- __sock_sendmsg net/socket.c:726 [inline]
- sock_write_iter+0x3a5/0x4f0 net/socket.c:1147
- new_sync_write fs/read_write.c:586 [inline]
- vfs_write+0x7dd/0x950 fs/read_write.c:679
- ksys_write+0x24d/0x400 fs/read_write.c:731
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf6/0x210 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-Last potentially related work creation:
- kasan_save_stack+0x3e/0x60 mm/kasan/common.c:47
- __kasan_record_aux_stack+0xaa/0xc0 mm/kasan/generic.c:544
- insert_work+0x3d/0x330 kernel/workqueue.c:2183
- __queue_work+0xc87/0xf50 kernel/workqueue.c:2339
- queue_work_on+0x1c8/0x390 kernel/workqueue.c:2390
- queue_work include/linux/workqueue.h:662 [inline]
- schedule_work include/linux/workqueue.h:723 [inline]
- __rhashtable_remove_fast_one include/linux/rhashtable.h:1069 [inline]
- __rhashtable_remove_fast include/linux/rhashtable.h:1093 [inline]
- rhashtable_remove_fast+0xbd7/0xc60 include/linux/rhashtable.h:1122
- br_multicast_del_mdb_entry+0x7d/0x300 net/bridge/br_multicast.c:642
- br_multicast_dev_del+0x11e/0x2d0 net/bridge/br_multicast.c:4366
- br_dev_uninit+0x1c/0x40 net/bridge/br_device.c:155
- unregister_netdevice_many_notify+0x1a4f/0x2110 net/core/dev.c:11548
- rtnl_delete_link net/core/rtnetlink.c:3476 [inline]
- rtnl_dellink+0x6de/0x9c0 net/core/rtnetlink.c:3518
- rtnetlink_rcv_msg+0x8e1/0xf50 net/core/rtnetlink.c:6922
- netlink_rcv_skb+0x248/0x4e0 net/netlink/af_netlink.c:2542
- netlink_unicast_kernel net/netlink/af_netlink.c:1321 [inline]
- netlink_unicast+0x7b8/0x8e0 net/netlink/af_netlink.c:1347
- netlink_sendmsg+0xb42/0xe90 net/netlink/af_netlink.c:1891
- sock_sendmsg_nosec+0x1f5/0x250 net/socket.c:711
- __sock_sendmsg net/socket.c:726 [inline]
- sock_write_iter+0x3a5/0x4f0 net/socket.c:1147
- new_sync_write fs/read_write.c:586 [inline]
- vfs_write+0x7dd/0x950 fs/read_write.c:679
- ksys_write+0x24d/0x400 fs/read_write.c:731
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf6/0x210 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-Second to last potentially related work creation:
- kasan_save_stack+0x3e/0x60 mm/kasan/common.c:47
- __kasan_record_aux_stack+0xaa/0xc0 mm/kasan/generic.c:544
- insert_work+0x3d/0x330 kernel/workqueue.c:2183
- __queue_work+0xc87/0xf50 kernel/workqueue.c:2339
- queue_work_on+0x1c8/0x390 kernel/workqueue.c:2390
- br_multicast_dev_del+0x11e/0x2d0 net/bridge/br_multicast.c:4366
- br_dev_uninit+0x1c/0x40 net/bridge/br_device.c:155
- unregister_netdevice_many_notify+0x1a4f/0x2110 net/core/dev.c:11548
- rtnl_delete_link net/core/rtnetlink.c:3476 [inline]
- rtnl_dellink+0x6de/0x9c0 net/core/rtnetlink.c:3518
- rtnetlink_rcv_msg+0x8e1/0xf50 net/core/rtnetlink.c:6922
- netlink_rcv_skb+0x248/0x4e0 net/netlink/af_netlink.c:2542
- netlink_unicast_kernel net/netlink/af_netlink.c:1321 [inline]
- netlink_unicast+0x7b8/0x8e0 net/netlink/af_netlink.c:1347
- netlink_sendmsg+0xb42/0xe90 net/netlink/af_netlink.c:1891
- sock_sendmsg_nosec+0x1f5/0x250 net/socket.c:711
- __sock_sendmsg net/socket.c:726 [inline]
- sock_write_iter+0x3a5/0x4f0 net/socket.c:1147
- new_sync_write fs/read_write.c:586 [inline]
- vfs_write+0x7dd/0x950 fs/read_write.c:679
- ksys_write+0x24d/0x400 fs/read_write.c:731
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf6/0x210 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-The buggy address belongs to the object at ffff888058cdc000
- which belongs to the cache kmalloc-cg-8k of size 8192
-The buggy address is located 440 bytes inside of
- freed 8192-byte region [ffff888058cdc000, ffff888058cde000)
-
-The buggy address belongs to the physical page:
-page: refcount:1 mapcount:0 mapping:0000000000000000
-index:0xffff888058cdc000 pfn:0x58cd8
-head: order:3 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
-memcg:ffff888056dd42c1
-flags: 0x4fff00000000040(head|node=3D1|zone=3D1|lastcpupid=3D0x7ff)
-page_type: f5(slab)
-raw: 04fff00000000040 ffff88801d44f640 ffffea000050d800 dead000000000004
-raw: ffff888058cdc000 0000000000020001 00000001f5000000 ffff888056dd42c1
-head: 04fff00000000040 ffff88801d44f640 ffffea000050d800 dead000000000004
-head: ffff888058cdc000 0000000000020001 00000001f5000000 ffff888056dd42c1
-head: 04fff00000000003 ffffea0001633601 ffffffffffffffff 0000000000000000
-head: 0000000000000008 0000000000000000 00000000ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-page_owner tracks the page as allocated
-page last allocated via order 3, migratetype Unmovable, gfp_mask
-0xd60c0(__GFP_IO|__GFP_FS|__GFP_NOWARN|__GFP_RETRY_MAYFAIL|__GFP_NORETRY|__=
-GFP_COMP|__GFP_NOMEMALLOC),
-pid 9657, tgid 9657 (syz-executor.2), ts 72098481985, free_ts
-71817430134
- set_page_owner include/linux/page_owner.h:32 [inline]
- post_alloc_hook+0x1f6/0x240 mm/page_alloc.c:1558
- prep_new_page mm/page_alloc.c:1566 [inline]
- get_page_from_freelist+0x3586/0x36d0 mm/page_alloc.c:3476
- __alloc_pages_noprof+0x260/0x680 mm/page_alloc.c:4753
- alloc_pages_mpol_noprof+0x3c8/0x650 mm/mempolicy.c:2269
- alloc_slab_page+0x6a/0x110 mm/slub.c:2423
- allocate_slab+0x5f/0x2b0 mm/slub.c:2589
- new_slab mm/slub.c:2642 [inline]
- ___slab_alloc+0xbdf/0x1490 mm/slub.c:3830
- __slab_alloc mm/slub.c:3920 [inline]
- __slab_alloc_node mm/slub.c:3995 [inline]
- slab_alloc_node mm/slub.c:4156 [inline]
- __do_kmalloc_node mm/slub.c:4297 [inline]
- __kmalloc_node_noprof+0x314/0x530 mm/slub.c:4304
- __kvmalloc_node_noprof+0x70/0x180 mm/util.c:650
- alloc_netdev_mqs+0xa7/0x1870 net/core/dev.c:11209
- rtnl_create_link+0x371/0xeb0 net/core/rtnetlink.c:3595
- rtnl_newlink_create+0x257/0x690 net/core/rtnetlink.c:3771
- __rtnl_newlink net/core/rtnetlink.c:3897 [inline]
- rtnl_newlink+0x13a9/0x1ac0 net/core/rtnetlink.c:4012
- rtnetlink_rcv_msg+0x8e1/0xf50 net/core/rtnetlink.c:6922
- netlink_rcv_skb+0x248/0x4e0 net/netlink/af_netlink.c:2542
- netlink_unicast_kernel net/netlink/af_netlink.c:1321 [inline]
- netlink_unicast+0x7b8/0x8e0 net/netlink/af_netlink.c:1347
-page last free pid 98 tgid 98 stack trace:
- reset_page_owner include/linux/page_owner.h:25 [inline]
- free_pages_prepare mm/page_alloc.c:1127 [inline]
- free_unref_folios+0xe03/0x1860 mm/page_alloc.c:2706
- shrink_folio_list+0x5304/0x5c80 mm/vmscan.c:1551
- evict_folios+0x3b12/0x5610 mm/vmscan.c:4593
- try_to_shrink_lruvec+0x941/0xc10 mm/vmscan.c:4789
- shrink_one+0x20e/0x870 mm/vmscan.c:4834
- shrink_many mm/vmscan.c:4897 [inline]
- lru_gen_shrink_node mm/vmscan.c:4975 [inline]
- shrink_node+0x3862/0x3f20 mm/vmscan.c:5956
- kswapd_shrink_node mm/vmscan.c:6785 [inline]
- balance_pgdat mm/vmscan.c:6977 [inline]
- kswapd+0x1c9f/0x36f0 mm/vmscan.c:7246
- kthread+0x2c3/0x360 kernel/kthread.c:389
- ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
-
-Memory state around the buggy address:
- ffff888058cdc080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff888058cdc100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->ffff888058cdc180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                        ^
- ffff888058cdc200: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff888058cdc280: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-```
-
-> Also, can you reproduce the issue on top of the current net tree?
-
-No, but we are having trouble reproducing it even on 6.13.0-rc4. Since
-I don't fully understand the root cause, it's hard to say if it is
-fixed in the current tree or just hard to reproduce.
-
-> netdev_walk_all_lower_dev() should not need additional refcounting, as
-it is traversing the list under rtnl lock, and device should be removed
-from the adjacency list before the actual device free under such lock, too.
-
-I see. Then I confess I'm really not sure what is happening with this
-crash. If you have any pointers for where to look or why it is so
-difficult to reproduce, let me know. Otherwise I will keep working on
-trying to find a reproducible setup.
-
-Thanks for your help!
-Dylan
-On Tue, Apr 1, 2025 at 8:45=E2=80=AFAM Paolo Abeni <pabeni@redhat.com> wrot=
-e:
->
-> On 3/31/25 3:00 PM, Dylan Wolff wrote:
-> > From the report, it looks like the net_device is freed at the end of an
-> > rtnl critical section in netdev_run_todo. At the time of the crash, the
-> > *use* thread has acquired rtnl_lock() in smc_vlan_by_tcpsk. The crash
-> > occurred at the line preceded by `>>>` below in 6.13 rc4 while iteratin=
-g
-> > over devices with netdev_walk_all_lower_dev:
-> >
-> > ```
-> > static struct net_device *netdev_next_lower_dev(struct net_device *dev,
-> > struct list_head **iter)
-> > {
-> > struct netdev_adjacent *lower;
-> >
-> >>>> lower =3D list_entry((*iter)->next, struct netdev_adjacent, list);
-> >
-> > if (&lower->list =3D=3D &dev->adj_list.lower)
-> > return NULL;
-> >
-> > *iter =3D &lower->list;
-> >
-> > return lower->dev;
-> > }
-> > ```
->
-> Please share the decoded syzkaller/kasan splat in plaintext instead of
-> describing it in natural language, and please avoid attachments unless
-> explicitly asked for.
->
-> Also, can you reproduce the issue on top of the current net tree?
->
-> > This looks to me like it is an issue with reference counting; I see tha=
-t
-> > netdev_refcnt_read is checked in netdev_run_todo before the device is
-> > freed, but I don't see anything in netdev_walk_all_lower_dev /
-> > netdev_next_lower_dev that is incrementing netdev_refcnt_read when it i=
-s
-> > iterating over the devices. I'm guessing the fix is to either add refer=
-ence
-> > counting to netdev_walk_all_lower_dev or to use a different,
-> > concurrency-safe iterator over the devices in the caller (smc_vlan_by_t=
-cpsk
-> > ).
-> >
-> > Could someone confirm if I am on the right track here? If so I am happy=
- to
-> > try to come up with the patch.
->
-> netdev_walk_all_lower_dev() should not need additional refcounting, as
-> it is traversing the list under rtnl lock, and device should be removed
-> from the adjacency list  before the actual device free under such lock, t=
-oo.
->
+>=20
+> [1] =
+https://lore.kernel.org/linux-mm/20250327092922.536-1-link@vivo.com/T/#m05=
+5b34978cf882fd44d2d08d929b50292d8502b4
+>=20
 > Thanks,
->
-> Paolo
->
+> Muchun.
+>=20
+
