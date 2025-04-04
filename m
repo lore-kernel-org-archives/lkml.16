@@ -1,122 +1,116 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F5561F2C56;
-	Fri,  4 Apr 2025 13:53:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8D431EE7B1;
+	Fri,  4 Apr 2025 13:53:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743774818; cv=none; b=jN/OggD3QKW6WkRv2q/Wb+Xbmfieu0rdhQMphjCrUyHzyp/He5Aw62rKBgoviU3hCKjokX0mrRrPi5/jm8WQCA9ixed52yT73zX45Cn9cPuIp0qgpBW1kpqDxKRvxHWp8clB0RDR8gtzuq1UKRuP/JWmBICJKY3bfKQw4hC+/Og=
+	t=1743774833; cv=none; b=mbgdcwNQ7KPYZ+XpbA/xsCRkjrHc0+x8oL6AMAG4tqGOqAtzn19mtZwh2M5x3TeAFTb23TTZKl6P9XkyAzlEIUh+RDb1WJKgRT3HYsiw9o/JLB2FyWtvLKjoyY52TQ121+PKItRdimh8QsH19yyA/E7Lmg+AG1xLbzOJwyFEQgE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743774818; c=relaxed/simple;
-	bh=10U8NdtmwB1T4+mE7hjOFF0m9/uG3tbjwAiz9Gypt7Y=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=o5XKynj09ORCLqYkr3jemhcotkn8chSnuK+1rmNY7N/C0ZJq0TKiVm1liRUXzPljfflo4DMEV8WBFCCg03lF6MRiPH7nOkpdKYNpD3nWCDpWsa2SnKXw6mt8OdmR9YCNIPBmp+e3IG9043NtawtWDclxhRA3g0kovfn5LI2KwAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZTg2l66Zpz6M4WH;
-	Fri,  4 Apr 2025 21:49:51 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id B1E71140595;
-	Fri,  4 Apr 2025 21:53:33 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 4 Apr
- 2025 15:53:33 +0200
-Date: Fri, 4 Apr 2025 14:53:31 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: "Zhijian Li (Fujitsu)" <lizhijian@fujitsu.com>
-CC: Dan Williams <dan.j.williams@intel.com>, Ira Weiny <ira.weiny@intel.com>,
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, Dave Jiang
-	<dave.jiang@intel.com>, "Alison Schofield" <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] cxl/acpi: Verify CHBS length for CXL2.0
-Message-ID: <20250404145331.00001559@huawei.com>
-In-Reply-To: <7bbf602d-6900-4179-9737-efeb40e1566f@fujitsu.com>
-References: <20250326074450.937819-1-lizhijian@fujitsu.com>
-	<67e4c9aaedd08_138d3294ca@iweiny-mobl.notmuch>
-	<1ed912df-42c7-4319-8765-3167963df7b3@fujitsu.com>
-	<67e5544237027_13cb29432@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-	<7bbf602d-6900-4179-9737-efeb40e1566f@fujitsu.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1743774833; c=relaxed/simple;
+	bh=p8rx4DvKHuiWLCW5BhOxMGRORIoDJG/rcapRZ8TljNE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=BNhaWa7OVAkiSI1KrXYBhRig7hwOxVU25p4HQbgQStuO26gUwYZ3tQkrxB37lvGaVgXIbnkNhPY1MOthTnAQMgA8/Q06cuYbRd2w7iJ1a+Lx2MRs9zKg0zk2f306IeBcjvuaofU+F5IlAyFAO+sVrOrVclQqHEms+0RGjNEK+rE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=hzpfFXHR; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="hzpfFXHR"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 534DeOmV012515;
+	Fri, 4 Apr 2025 13:53:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	FF/G+62gbziLK/MLsC90I1hCGvLPbivGzK2fBOYHZV8=; b=hzpfFXHR3p6rlnCh
+	aOmtzgqESPz1qhMtbs9KHJ68jlXcYBFpEvlogibUxADnzu49eaWWS0gD68y9qVZl
+	XcGX701tEPR7WSQl2E9VCSixAgOgfzeyQqYDcw+XQ9Q74kSR+bM+jlHyDKawe6Re
+	0Z00Gi3h884/cAyDHzqpB3hh2+PDEUDeJFPAjJCV8IJ4uDsbVcpYya87TdywQ2OO
+	vw3u0CyFG6+up6WFhoujDiO2JnOJcay1fLWUlpoiS5x4VSi8QjHFYgkAUmH80ZZX
+	l+5Og3x78slWn9CjnfggI8IzwXa/iU9mNegRLBi5l7bG3HANr4GJbkO7NxkLtaxU
+	5lxHfw==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45t2d520a6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 04 Apr 2025 13:53:47 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 534DrkrO005331
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 4 Apr 2025 13:53:46 GMT
+Received: from [10.216.18.202] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 4 Apr 2025
+ 06:53:44 -0700
+Message-ID: <e7b19ae8-9619-412c-8aec-fb822c44384d@quicinc.com>
+Date: Fri, 4 Apr 2025 19:23:40 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V1] spi: Add support for Double Transfer Rate (DTR) mode
+To: Mark Brown <broonie@kernel.org>
+CC: <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <andersson@kernel.org>, <konradybcio@kernel.org>
+References: <20250326083954.3338597-1-quic_msavaliy@quicinc.com>
+ <40db39ef-7ef3-4720-9c85-ccfe1c11c299@sirena.org.uk>
+ <c89603b7-b70c-4b55-ac87-f84ce5be2c6c@quicinc.com>
+ <3aa2c190-ce4d-4805-943b-f65e98ce762c@sirena.org.uk>
+ <8435b037-8b54-401a-b4f6-b4b497c4c3eb@quicinc.com>
+ <f3115251-8fa9-4019-8fb0-145daf32cfa2@sirena.org.uk>
+Content-Language: en-US
+From: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
+In-Reply-To: <f3115251-8fa9-4019-8fb0-145daf32cfa2@sirena.org.uk>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
- frapeml500008.china.huawei.com (7.182.85.71)
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: U7JyMVzf47frauUsck6HSgkKF6DHevM9
+X-Proofpoint-GUID: U7JyMVzf47frauUsck6HSgkKF6DHevM9
+X-Authority-Analysis: v=2.4 cv=Cvu/cm4D c=1 sm=1 tr=0 ts=67efe46b cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=FzMNM0dDwMXFT6OeTboA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-04_06,2025-04-03_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 adultscore=0
+ bulkscore=0 suspectscore=0 mlxlogscore=993 malwarescore=0 spamscore=0
+ impostorscore=0 lowpriorityscore=0 priorityscore=1501 mlxscore=0
+ clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504040096
 
-On Fri, 28 Mar 2025 04:15:13 +0000
-"Zhijian Li (Fujitsu)" <lizhijian@fujitsu.com> wrote:
+Thanks Mark !
 
-> On 27/03/2025 21:36, Dan Williams wrote:
-> > Zhijian Li (Fujitsu) wrote:  
-> >>
-> >>
-> >> On 27/03/2025 11:44, Ira Weiny wrote:  
-> >>> Li Zhijian wrote:  
-> >>>> Per CXL Spec r3.1 Table 9-21, both CXL1.1 and CXL2.0 have defined their
-> >>>> own length, verify it to avoid an invalid CHBS  
-> >>>
-> >>>
-> >>> I think this looks fine.  But did a platform have issues with this?  
-> >>
-> >> Not really, actually, I discovered it while reviewing the code and
-> >> CXL specification.
-> >>
-> >> Currently, this issue arises only when I inject an incorrect length
-> >> via QEMU environment. Our hardware does not experience this problem.
-> >>
-> >>  
-> >>> Does this need to be backported?  
-> >> I remain neutral :)  
-> > 
-> > What does the kernel do with this invalid CHBS from QEMU? I would be
-> > happy to let whatever bad effect from injecting a corrupted CHBS just
-> > happen because there are plenty of ways for QEMU to confuse the kernel
-> > even if the table lengths are correct.
-> > 
-> > Unless it has real impact I would rather not touch the kernel for every
-> > possible way that QEMU can make a mistake.  
+On 3/27/2025 7:37 PM, Mark Brown wrote:
+> On Thu, Mar 27, 2025 at 03:33:15PM +0530, Mukesh Kumar Savaliya wrote:
 > 
+>> IIUC, It comes to the point of first identifying if it's in context of QSPI
+>> controller or SPI controller right ?
 > 
+>> Identify if SPI/QSPI controller has this capability using dtr_caps =
+>> true/false. Then check if it's supporting SDR/DDR mode. Can we then
+>> introduce below struct to first mark capability as true/false and then
+>> process dtr_mode ?
 > 
-> Thank you for the feedback.
+>> if not supported (dtr_caps = false), then don't care dtr_mode.
 > 
-> If your earlier comments were specifically about ***backporting*** this patch,
-> I agree there might not be an urgent need for that.
+> We should complain if the device requsted anything the controller can't
+> support.
 > 
-> However, regarding the discussion on whether this patch should be accepted
-> upstream, TBH, I believe it is necessary.
+Yes, makes sense. i have added dtr_caps into controller data structure 
+and validating it inside the __spi_validate().
+>> struct spi_caps {
+>> 	bool dtr_mode;
+>> 	bool dtr_caps;
+>> };
 > 
-> 1. The **CXL Specification (r3.1, Table 9-21)** explicitly defines `length`
-> requirements for CHBS in both CXL 1.1 and CXL 2.0 cases. Failing to
-> validate this field against the spec risks misinterpretation of invalid
-> configurations.
-> 
-> 2. As mentioned in section **2.13.8** of the *CXL Memory Device Software Guide (Rev 1.0)*,
-> It's recommended to verify the CHBS length.
-> 
-> While the immediate impact might be limited to edge cases (e.g., incorrect QEMU configurations),
-> upstreaming this aligns the kernel with spec-mandated checks and improves
-> robustness for future use cases.
-> 
-> [1] https://cdrdv2-public.intel.com/643805/643805_CXL_Memory_Device_SW_Guide_Rev1_1.pdf
-
-Just to check - are we talking hacked QEMU or some configuration of QEMU that
-can generate the wrong length?
-
-Jonathan
-
-> 
-> 
-> > 
-> > I.e. if it was a widespread problem that affected multiple QEMU users by
-> > default then maybe. Just your local test gone awry? Maybe not  
+> The controller capabilities are currently mainly advertised via the
+> SPI_CONTROLLER_ flags but adding some bools also works, some things
+> already do use that.  I'm not sure we need to wrap things in a further
+> struct though.
+Uploaded Patch V2. Please help review and suggest next. it may require 
+still some fine stunning.
 
