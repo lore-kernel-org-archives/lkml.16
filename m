@@ -1,37 +1,37 @@
 Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A9A41F3D59
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 16:01:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AD8A1FF1D3
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 16:01:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743782513; cv=none; b=V1C0fLojIzBFLiaR+goRkdt80PA+pfQwQlztJRDp8wwqjox94eEWjqdDoce99DIFCzcblqWzTdyoyApwbqGM0Dt44JWMOFnk9LMOpAFVtTYRb9M6uJZKsL2W+kuKTIN7rvaLp3XPDTS2Q0UEFsVJf606Mb45S3ss8HzFd1ss16o=
+	t=1743782514; cv=none; b=MjGXZLqnz5sUKvguURKwS2ZJftNVDinZcB900uzv4XX2pw3u0jmyzUe2ySElvN1WIKQxy6KwjmGvbQQZoNg3YzJVNkeQ10C2zeg83XtpMViCoV1NPIHs6lShhcKjS2FyGKEuPxZ21mPCFFcR80UnxkQcejdsmngt2lOikVJO7O8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743782513; c=relaxed/simple;
-	bh=DAthZNw+5o9GgAEXHRLIN9HoWnIvnt3Jx7BcQo+HyKQ=;
+	s=arc-20240116; t=1743782514; c=relaxed/simple;
+	bh=/cSuZ2ry+Hjly/otfqO/xvLUJU3iF2v3OiKaziTIISI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bESg3GJmygA2Xc1ThFCtnGWQeYH9cJTmxnvKkaoi2y4n/uBkFCEJvah3O0cbRlqsPpMSs9nx9mnDDEG+r0Q696MCu+uBRuD/6UZEtzzMPDPvMY5M7wdsntB+GYNPUvYKkesZ8hrkCSumV/CxvNfbPCdCNNsj9QpAEBqXTfUs8co=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=casper.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=rcQ/TZXn; arc=none smtp.client-ip=90.155.50.34
+	 MIME-Version; b=ON8twSAFCFXt/VNErPz2zjcdex10iFcw7GIBLlXrWJjDyAKy0pvakGoLXGOYMl8FE5pRmyt527TavFeg4YX8kXAQjnAje+byj24NKaMngW9Ax6Xe+12ZAqTC8W5VUC5NtIAQg+k5TA08PgHU53sY8VdLlScb6SB0xFGcGDbh9F4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=casper.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=DXHzSB3s; arc=none smtp.client-ip=90.155.50.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=casper.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rcQ/TZXn"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DXHzSB3s"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=casper.20170209; h=Sender:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=zwrAwVynWffEuxKPl0OEyEEBjA9QOQig2FF2bzdhEpA=; b=rcQ/TZXnLakdQxL4crd49SXX3c
-	edNsEOVe5KuObd9N9FvHOyENAzG1hCUGVegfPjAUI+DESeHQ2QnvFHahouiLIKJXGm/9RbMSGbECY
-	3H7F9hOPYEdMTiEfgcGsbG7aWDxhy3ZY9WqpRK44a5vaJHV37Lx6OginK6lDUrp+urL++BV2mtbH5
-	p+ZFyzIAKAcSjEt2BvR0qBo1O4L3+1RqPBeKcN2MGAKLhzlFZ2wIbiVn+ohK9/LZ1v86JEJ+uw17N
-	4zNZ8gbxTQmZ4FYx30Cw1FcflV3mnJKiulvzObmjLOk24f6Y0o78MuVRM7S5DrvoDrcue1z65zfMb
-	chjOXhaA==;
+	bh=O+396y0rDBKXn/tGzn/xwAn8Ku375WZ2ZAT9PS+Ub5w=; b=DXHzSB3si2aN61sd7dOw7Dkduk
+	TfChbYRNdb3ACgbes0kuBN7Ps4Sy5/UipeFG8/Xla7pFYuFAZjAv8ghlbw60pID0KBmbGy7KhdoZX
+	xFeg4W6Khe91Ifz1tB9jPFsxfe3bqKisa6rPuuYszWXM+JzP0nj3JG8rUww67uY/Mv9WHKvRsSeQX
+	Ok99/gqCaltwnaMSZvz4drLWaLh2mGbx5jBswPyNZtO7LBeN9BcJh4IWoGNNd4OiLAnX2VY16JZlL
+	QP6zoE/Go4gQZXoAjZGtme0XAK6mXGvw/o5DoYFynT49usw3UBp1GA3ggRsbCxmI+nr/eYZ4vp6BK
+	LUawAvyw==;
 Received: from [2001:8b0:10b:1::ebe] (helo=i7.infradead.org)
 	by casper.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u0jSa-0000000GFHw-3A3Z;
+	id 1u0jSa-0000000GFHy-3ANo;
 	Fri, 04 Apr 2025 16:01:01 +0000
 Received: from dwoodhou by i7.infradead.org with local (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u0jSZ-0000000ERST-48Ac;
+	id 1u0jSZ-0000000ERSK-3V46;
 	Fri, 04 Apr 2025 16:59:59 +0100
 From: David Woodhouse <dwmw2@infradead.org>
 To: Mike Rapoport <rppt@kernel.org>
@@ -49,9 +49,9 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	linux-mm@kvack.org
-Subject: [RFC PATCH v2 7/7] mm: use for_each_valid_pfn() in memory_hotplug
-Date: Fri,  4 Apr 2025 16:59:59 +0100
-Message-ID: <20250404155959.3442111-7-dwmw2@infradead.org>
+Subject: [RFC PATCH v2 4/7] mm: Optimise SPARSEMEM implementation of for_each_valid_pfn()
+Date: Fri,  4 Apr 2025 16:59:56 +0100
+Message-ID: <20250404155959.3442111-4-dwmw2@infradead.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250404155959.3442111-1-dwmw2@infradead.org>
 References: <20250404155959.3442111-1-dwmw2@infradead.org>
@@ -67,41 +67,83 @@ X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.
 
 From: David Woodhouse <dwmw@amazon.co.uk>
 
+There's no point in checking the section and subsection bitmap for *every*
+PFN in the same section; they're either all valid or they aren't.
+
 Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
 ---
- mm/memory_hotplug.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ include/linux/mmzone.h | 39 +++++++++++++++++++++++++++++----------
+ 1 file changed, 29 insertions(+), 10 deletions(-)
 
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index 75401866fb76..20c39ae45016 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -1756,12 +1756,10 @@ static int scan_movable_pages(unsigned long start, unsigned long end,
+diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+index 67cdf675a4b9..0da1b0ba5d9f 100644
+--- a/include/linux/mmzone.h
++++ b/include/linux/mmzone.h
+@@ -2154,21 +2154,20 @@ static inline int pfn_valid(unsigned long pfn)
+ 	return ret;
+ }
+ 
+-static inline bool first_valid_pfn(unsigned long *p_pfn)
++/* Returns -1 (an invalid PFN) if no valid PFN remaining */
++static inline unsigned long first_valid_pfn(unsigned long pfn, unsigned long end_pfn)
  {
- 	unsigned long pfn;
+-	unsigned long pfn = *p_pfn;
+ 	unsigned long nr = pfn_to_section_nr(pfn);
  
--	for (pfn = start; pfn < end; pfn++) {
-+	for_each_valid_pfn (pfn, start, end) {
- 		struct page *page;
- 		struct folio *folio;
+ 	rcu_read_lock_sched();
  
--		if (!pfn_valid(pfn))
--			continue;
- 		page = pfn_to_page(pfn);
- 		if (PageLRU(page))
- 			goto found;
-@@ -1805,11 +1803,9 @@ static void do_migrate_range(unsigned long start_pfn, unsigned long end_pfn)
- 	static DEFINE_RATELIMIT_STATE(migrate_rs, DEFAULT_RATELIMIT_INTERVAL,
- 				      DEFAULT_RATELIMIT_BURST);
+-	while (nr <= __highest_present_section_nr) {
++	while (nr <= __highest_present_section_nr && pfn < end_pfn) {
+ 		struct mem_section *ms = __pfn_to_section(pfn);
  
--	for (pfn = start_pfn; pfn < end_pfn; pfn++) {
-+	for_each_valid_pfn (pfn, start_pfn, end_pfn) {
- 		struct page *page;
+ 		if (valid_section(ms) &&
+ 		    (early_section(ms) || pfn_section_first_valid(ms, &pfn))) {
+-			*p_pfn = pfn;
+ 			rcu_read_unlock_sched();
+-			return true;
++			return pfn;
+ 		}
  
--		if (!pfn_valid(pfn))
--			continue;
- 		page = pfn_to_page(pfn);
- 		folio = page_folio(page);
+ 		/* Nothing left in this section? Skip to next section */
+@@ -2177,14 +2176,34 @@ static inline bool first_valid_pfn(unsigned long *p_pfn)
+ 	}
+ 
+ 	rcu_read_unlock_sched();
++	return (unsigned long)-1;
++}
+ 
+-	return false;
++static inline unsigned long next_valid_pfn(unsigned long pfn, unsigned long end_pfn)
++{
++	pfn++;
++
++	if (pfn >= end_pfn)
++		return (unsigned long)-1;
++
++	/*
++	 * Either every PFN within the section (or subsection for VMEMMAP) is
++	 * valid, or none of them are. So there's no point repeating the check
++	 * for every PFN; only call first_valid_pfn() the first time, and when
++	 * crossing a (sub)section boundary (i.e. !(pfn & ~PFN_VALID_MASK)).
++	 */
++	if (pfn & (IS_ENABLED(CONFIG_SPARSEMEM_VMEMMAP) ?
++		   PAGE_SUBSECTION_MASK : PAGE_SECTION_MASK))
++		return pfn;
++
++	return first_valid_pfn(pfn, end_pfn);
+ }
+ 
+-#define for_each_valid_pfn(_pfn, _start_pfn, _end_pfn)	       \
+-	for ((_pfn) = (_start_pfn);			       \
+-	     first_valid_pfn(&(_pfn)) && (_pfn) < (_end_pfn);  \
+-	     (_pfn)++)
++
++#define for_each_valid_pfn(_pfn, _start_pfn, _end_pfn)			\
++	for ((_pfn) = first_valid_pfn((_start_pfn), (_end_pfn));	\
++	     (_pfn) != (unsigned long)-1;				\
++	     (_pfn) = next_valid_pfn((_pfn), (_end_pfn)))
+ 
+ #endif
  
 -- 
 2.49.0
