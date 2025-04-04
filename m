@@ -1,91 +1,109 @@
-Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06291282EE
-	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 15:36:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1C98282EE
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 15:36:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743781010; cv=none; b=FWb7G9pufS2oQMKrTvfcxUdo5QTUbtk7LeUw5d+pGHoRATe7D3ArBeFdDGk+URrMz4abcIpnjrM2NsWmZRWCNsqRLVmz5Mq9AaRKz0QBHrDd72dFdNmEX+RVf+AVRwZ9MGwsDVgA+u4htLE+PMwwNRGQHuhguVyoy8IBe0WCcKw=
+	t=1743781016; cv=none; b=mDBippKCb2xaXr6Hk/IRyKAdB77Lk1M5SxMMEd0YYTkMMyrHjz7u52tAxy6eLLHFzDtkKmZE9PA/G5xN8LOf1zGugTTvDSkWD6H5B+FdwyNpjY2s6gHvRS2zSedOCLf1N1kUIsucH9OafrsnSMlDhjA8fJAwHbpTvstQQHm8TAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743781010; c=relaxed/simple;
-	bh=Wm0hlOk2KjnydJuWr4Tp+yAP5KMUtZGePGoHip7UhjQ=;
+	s=arc-20240116; t=1743781016; c=relaxed/simple;
+	bh=g+0h4aQ5Z70IQPz+rQ/77kw7q+wdFaAD9l7dNG9FGbQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jeP8hcXCxZdqdk3zDQtnJ5Ms3sh3jLYNM8BpS2z+TxXUel7NKBP/i+dKLERCFKR3m2DyB3PJSSak9ThjT/+EjLdSUu2WH+eyQMvWlUvkJDF68LFtWWhCQ0Ps2qzAF3M9Yj0yxhRNsUmQ1xABZE7PBgYL8vh+9p5wb2pXEUiW+E8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Kozys/Ds; arc=none smtp.client-ip=91.218.175.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 Content-Type:Content-Disposition:In-Reply-To; b=HFOV3uT3quuYWTNg1ssHGSSNvOLUvW5zfz6b7+x5n1K4X0Rsggy9jfeXPdRcEn7sUoRdADztSZdv1uENI7+ZIJwi4bwoCXHDCj72NncwWaeP2bRF0ZHPAtOo/pHG+FKKRvLl2WxEiOyV7jXx1uc5alLHUid/9VJbSN7hRnYmPkw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=XW0si7me; arc=none smtp.client-ip=209.85.219.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Kozys/Ds"
-Date: Fri, 4 Apr 2025 11:36:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1743780996;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=s4sptiDS64TqakxXpUmcHXO8tnkrK0BIqcsdKGFEneU=;
-	b=Kozys/Ds7/cg6lJiuP9pxF9pevq4wb5QSquXowWNSK/3r/thjFBnegULAihzhspi5PSuJH
-	ryd9tEkOfDKiFseeiNb/uCMcURT7IlHxZIS/3NwP6TzCs2JLRjIIRypw87bfMuyOVGZSMw
-	bhWzTBj9OqnQLGrPoZTwTZHHJYTvWNA=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Bharadwaj Raju <bharadwaj.raju777@gmail.com>
-Cc: linux-bcachefs@vger.kernel.org, shuah@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-kernel-mentees@lists.linux.dev, 
-	syzbot+c82cd2906e2f192410bb@syzkaller.appspotmail.com
-Subject: Re: [PATCH] bcachefs: don't call sleeping funcs when handling
- inconsistency errors
-Message-ID: <6jgqlz555qrn3l34e45nc6ubg53ydtzh6l7ghra7od2xjctugp@ztmjdn3cwt6h>
-References: <20250402161043.161795-1-bharadwaj.raju777@gmail.com>
- <zjqewsg6ijvol3x3rdjfyjeji3wy24nw45yb6mkqj7vwsk7mrn@yxnvgpj4i24k>
- <CAPZ5DTEGi8RXBMui823bwnt96PcqZSavH8AQ+LPhRs=sJ-Br1Q@mail.gmail.com>
- <ciw5ocj6io5q5p2tsv3sqpga2ff73eqwhlrrug4el63ggolcho@iviprrqsaemj>
- <CAPZ5DTGWC2Xemgby9E8EL61Vio0NYQrKBd5FNpvERwwBoEP8tg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="XW0si7me"
+Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-6eb16dfa988so21720996d6.2
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 08:36:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1743781012; x=1744385812; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=B43g9c/o/rHrH7JhcXRPYa2+wmwxTP1Eq/J3fv7ix5U=;
+        b=XW0si7medXYMH1akXerlW+mAmFPq58TS6+AvvXR1ls++jbvBFHIlAawhVHOal22VTD
+         WvcBmnReOZfN6EOGQLmlrZ/MoSYuiN/1UszsFhDHtv3pLMNq5ZkYIvptOKZiqJ9szZXl
+         BzLCvhkqj64PS/NoW/9jxMoviD/WYmrOHNA0LILvDylzangvBjKdxm2XEWLj1VQD/wbT
+         FywYuB21hGPcAy82DNL8rdfFdBJwxjml7rKYWT381XmosA3D1kxJOEEXyUi0VPJ0Y1hU
+         fKDgsJHMuyqJjrI3Q+KsAJON1Z3txkdhoYR2IO1Goo2zxU4CvQ3gTeCPscA1JjlXu1rb
+         xFuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743781012; x=1744385812;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=B43g9c/o/rHrH7JhcXRPYa2+wmwxTP1Eq/J3fv7ix5U=;
+        b=hK71EpYansD9nFsMO/2A3c36dXgvoFB8Nnxeq0DV791TzT7wXpV5UGqXJ87FylI+/F
+         f7w9jKwGETWRCk/O9nFHXiB2cBNRErEw0jRCMlVcchmIZWQK2ErmKT5NeAbjNVYBNpgB
+         BnnRUxsxiN8AQqYFsK5NvtuUs5tp5dnoYrYBGUl+pDDfkkLQK/4wpW+lYluZpNHD9zwj
+         huqeuVKX09f4/6kqANca4O/1zvTtMipZljs1014o61FUEGkthlHOxSsU1AHHg9ERMdnX
+         mzztGGIb+/yytfl2+zIKp4iFo5hwck4UT2Rfz64LTY0qyoyFCrgMgsi81cn1VLpeApXF
+         tZIg==
+X-Forwarded-Encrypted: i=1; AJvYcCWXz/dEnKwH27rx9XuUHMMEYPGz8Z/SPF5jVt5R10aNx8HC2S+FN540dXTk74FsN78dMr5sd1qE3azkCMM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxYUhU1XD1bSPQrNMLIk/3gB7cQ62ah6KL8C9M1jvMYp0QnA2Gh
+	XzVbR85CaBLaN92rN9zYpaBoP10TrOpn11w1u0BLu9ymCBTHINPsMgcTbAtiP5A=
+X-Gm-Gg: ASbGncvCLS7H0DDvqTDfmZ2Uar0S86ameFM5kz6/YdXpj8ny5UYjYc1Vr7d8dR1c7vC
+	AV9bvqTRpNGhZjrNjmdkClEVNc8R9YbPj/CP0WTZkQfJrNFLFSHzRLfY8S829mpX/L2f9f/S2yS
+	zcZYfvZBRdiz8MYD7MxOFhEk6ZjHZx1ExmvzEZ+V9Xu5Mg2CWHYzuA8h7AjMNxfL1hy39fD7vee
+	LqOA+EOp7AkyD1be/X8HcqdZVKCD3p7hqWAA/Gu+76u8YYWqsCrX0bZnZC557YfMbIhSGGO5flm
+	8BqiIEbZ7NBShiPeMZKk7ND9x2cqdjBe0LlcMcuG6A==
+X-Google-Smtp-Source: AGHT+IHzsl/rGB5TpApac3V8REUo608kA5vX5R7bGjjtuDduI5bJPlPMS8A6Ptby0Z2FAVJ2aWmSPQ==
+X-Received: by 2002:a05:6214:f08:b0:6eb:26ed:4d87 with SMTP id 6a1803df08f44-6f064aef3abmr49700076d6.31.1743781011733;
+        Fri, 04 Apr 2025 08:36:51 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F ([2620:10d:c091:500::6:e00b])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6ef0f047c9asm22850266d6.59.2025.04.04.08.36.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Apr 2025 08:36:51 -0700 (PDT)
+Date: Fri, 4 Apr 2025 10:36:49 -0500
+From: Gregory Price <gourry@gourry.net>
+To: Robert Richter <rrichter@amd.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+	Terry Bowman <terry.bowman@amd.com>
+Subject: [PATCH] cxl/region: Continue recalculating position during sort
+Message-ID: <Z-_8kRHep5LVeuvS@gourry-fedora-PF4VCD3F>
+References: <20250218132356.1809075-1-rrichter@amd.com>
+ <20250218132356.1809075-5-rrichter@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAPZ5DTGWC2Xemgby9E8EL61Vio0NYQrKBd5FNpvERwwBoEP8tg@mail.gmail.com>
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <20250218132356.1809075-5-rrichter@amd.com>
 
-On Fri, Apr 04, 2025 at 12:22:45PM +0530, Bharadwaj Raju wrote:
-> On Wed, Apr 2, 2025 at 10:08 PM Kent Overstreet
-> <kent.overstreet@linux.dev> wrote:
-> >
-> > On Wed, Apr 02, 2025 at 10:03:10PM +0530, Bharadwaj Raju wrote:
-> > > On Wed, Apr 2, 2025 at 9:47 PM Kent Overstreet
-> > > <kent.overstreet@linux.dev> wrote:
-> >
-> > If you're feeling particularly adventurous - print_string_as_lines() is
-> > a hack, I think we should be able to do something more robust by
-> > skipping printk (that's where the 1k limit comes from) and calling
-> > something lower level - that will require digging into the printk
-> > codepath and finding lower level we can call.
-> 
-> I tried looking into the printk codepath, namely vprintk_emit -> vprintk_store.
-> It doesn't seem like there's a convenient single lower-level
-> entrypoint we could
-> call which just avoids the 1k limit, rather there's a lot of internal
-> code mixed with
-> the truncation that we'd have to just copy if we want printk behavior.
-> I don't think that's a reasonable option for us.
+The auto decoder probe proess overwrites the endpoint position
+temporarily to record its temporary location in the region target list.
+This patch restores the pos recalculation during the sort target process
+so that decoder probe order doesn't affect region probe.
 
-Yeah that does look a bit messy - and it doesn't exactly explain where
-the 1k limit comes in.
+Signed-off-by: Gregory Price <gourry@gourry.net>
+---
+ drivers/cxl/core/region.c | 1 +
+ 1 file changed, 1 insertion(+)
 
+diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+index e1ef0d577b35..8c79c0a39d56 100644
+--- a/drivers/cxl/core/region.c
++++ b/drivers/cxl/core/region.c
+@@ -2061,6 +2061,7 @@ static int cxl_region_sort_targets(struct cxl_region *cxlr)
+        for (i = 0; i < p->nr_targets; i++) {
+                struct cxl_endpoint_decoder *cxled = p->targets[i];
 
-> > I also just noticed that print_string_as_lines() needs to check for
-> > being passed a NULL pointer - in case the printbuf memory allocation
-> > fails. Want to get that one too?
-> 
-> From what I'm seeing __bch2_print_string_as_lines already checks
-> for the lines pointer being NULL. The only unchecked pointer is prefix,
-> which I don't think needs to be checked since it will be something constant
-> from kern_levels.h, not something which could be NULL.
-
-Yep, I should've checked the code before I said that :)
++               cxled->pos = cxl_calc_interleave_pos(cxled);
+                /*
+                 * Record that sorting failed, but still continue to calc
+                 * cxled->pos so that follow-on code paths can reliably
+--
+2.47.1
