@@ -1,62 +1,89 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A24C19D07B;
-	Fri,  4 Apr 2025 08:43:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A67A190462
+	for <linux-kernel@vger.kernel.org>; Fri,  4 Apr 2025 08:43:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743756204; cv=none; b=URzTptdTlqla4msp5y46/m1A/lO2TgzivOopqQqGKUoVBZBi+fjlV7+PUeaFWKp9drjFx6IclOjpzFFxP/qmnkmmKkQDGo5SWKJJcN9MdAin2Z0OlkZYUJlEQIAp5AE0yEIDxEZDBXospcafq3at1uZs3DGvEXU8cFJ16v1OdYU=
+	t=1743756205; cv=none; b=qZEiptrcEWI6jPNsFm88/nAUtOwjksgO3fZAeFgZI6xJdN4VpbkoEIHHSUcFEdaegHZWjejw6jkax95BVt3NGJ/CFrj//FKNAvz6jsflWAz7aMClTgnhfyunhib4yY87vMtjmz1TVh2Mxe2hMdfn9GFKtrfDMcu8zfaZTTgtVAM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743756204; c=relaxed/simple;
-	bh=Bi9x/GwNotnQUoNI7E8KOs7TaFavJ0TZu5a21VBEtcM=;
+	s=arc-20240116; t=1743756205; c=relaxed/simple;
+	bh=xTZjdyz7Hd09YT23p68mLHwQ4x1O7/z84eAdnFI1vPY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XRkrxfMvwvXf8E5yq8HmU9OH8u9Yy6/cFmSxcfLWOKf1x9sY1Hvdgd/EObHh7Au2TfkjHTLzBjMk9st0ApDmY0qnht2DWiGmqjCojq2Jof/uQ//2FOZKcjcojKd40R/gC1fF7nt0S/aOBSZUer/5gm21n6kpnChCL9pG1wvCQW4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f4dRfsZE; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=SjGMvHDX5NXN8eQClRexl5qknbvk36AgXyqvLu4Ktyy+SCrUL8SvRGJSFFX/HWgjE7CifC2HpPitSQ6fpePyeLhMeQr/FsqcazyvPq/FqmEKao8amDXa/qM0Rc9wtu+nt5KhOKB2VBHunAoHvqCNiPV2lyvfHYtBUYVjA2vYEyg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=POTkSHk0; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=cn32Yqx+; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ED9O2Vx0; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=69FstQe9; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f4dRfsZE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743756202; x=1775292202;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Bi9x/GwNotnQUoNI7E8KOs7TaFavJ0TZu5a21VBEtcM=;
-  b=f4dRfsZE3Rqc5lCSIF+SqST2mz7TDxUwUFr6y8gzaR3Dfc8MmD/RsC8q
-   nLlznDsq6pQKidFpM8TIFHky4FfYlQXOPWyI4sjhcgQZxNTornN2qRHmD
-   CX+Ohx6QXHtOS7mvgyPCCW5wVqMU1NOe/MTnSgX0PNL33YIjC2VrRI0hB
-   7Xlfy/jSivMuH4qaWUm7ViOLErh2GEteA2fFepagdTtIKFwjtKwUdp7RQ
-   3im1KZyQXwYH9GwpjZ0zGNaTGJ92PPknYTSuV4iECkpdsjlxJxfioEq3d
-   qUCgFKueF6JRIqVfuhDQtsjrLLDCdLmKZ/75O2zAbg0EwT6uUB1LXM2EN
-   A==;
-X-CSE-ConnectionGUID: Cm4FaumOSBWE+/qQutZ6Ew==
-X-CSE-MsgGUID: n0nj+KLoQIiWuiMOfzZmnQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11393"; a="56558053"
-X-IronPort-AV: E=Sophos;i="6.15,187,1739865600"; 
-   d="scan'208";a="56558053"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 01:43:21 -0700
-X-CSE-ConnectionGUID: y7dgSBLQTeKvjTRjwBSD2Q==
-X-CSE-MsgGUID: 5zGsE7QkShqTm6k3phutOg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,187,1739865600"; 
-   d="scan'208";a="132380185"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa004.fm.intel.com with ESMTP; 04 Apr 2025 01:43:19 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id 4D6A1123; Fri, 04 Apr 2025 11:43:18 +0300 (EEST)
-Date: Fri, 4 Apr 2025 11:43:18 +0300
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: Ard Biesheuvel <ardb+git@google.com>
-Cc: linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	x86@kernel.org, Ard Biesheuvel <ardb@kernel.org>, 
-	Tom Lendacky <thomas.lendacky@amd.com>, Borislav Petkov <bp@alien8.de>, 
-	Dionna Amalie Glaze <dionnaglaze@google.com>, Kevin Loughlin <kevinloughlin@google.com>
-Subject: Re: [PATCH v2 3/3] x86/boot: Implement early memory acceptance for
- SEV-SNP
-Message-ID: <l6izksy3qtvo6t6l3v44xhuzmrnl2ijv7fx5ypvaz7kjxvpwhh@4zwlvxyfrp43>
-References: <20250404082921.2767593-5-ardb+git@google.com>
- <20250404082921.2767593-8-ardb+git@google.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="POTkSHk0";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="cn32Yqx+";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ED9O2Vx0";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="69FstQe9"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id ACF401F385;
+	Fri,  4 Apr 2025 08:43:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1743756201; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OrZgIzLm3PyWeKUSNlcKFVAqLYDLMpRNMU+d2NZfOsE=;
+	b=POTkSHk0i8Pb4qfwOG3XpgMZMazbhvYt2nQi00ULHevtqUgSyvJthWeCQg1JsmVNX2nHpt
+	L2q4gstO5+dB57+gZyH+Te7LpuQNzcz7Bv6nCkO8+sFNGVaq6K/IgpDO3rnaoNKAOUH5TT
+	x+XbG4PnT/mEeFftxF8GvYyw/PGYOMU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1743756201;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OrZgIzLm3PyWeKUSNlcKFVAqLYDLMpRNMU+d2NZfOsE=;
+	b=cn32Yqx+3rr4MqtGfBzfHXiFyrBsZF9h82Facd3KMo2ojv3Y0cnltjhQXFe86ZolzrtfoI
+	GzY0Fl/TD5HxI4Bw==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=ED9O2Vx0;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=69FstQe9
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1743756200; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OrZgIzLm3PyWeKUSNlcKFVAqLYDLMpRNMU+d2NZfOsE=;
+	b=ED9O2Vx0E8yHxc7oS7PQlGnuI6L4rcC+V3IAK0rajq+1rZdW5Br7OcjuUNQY4EINXgRmjM
+	dla+CUwyuy87W/p1XEYXrQi4oDc3uj3L2q3dKXIbuxOaJw5R34G2d5SIVQdxHBLdR0bJSO
+	k9+GPuDJxmbEDMFJR2ELVF9A2zXGFsY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1743756200;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OrZgIzLm3PyWeKUSNlcKFVAqLYDLMpRNMU+d2NZfOsE=;
+	b=69FstQe9GZGgTWIuTDFf4ZPVfR9uLJDZLTAAWcyoZcP3ogXeCUSxs2aRlfyplPFUqY0bcF
+	0oaqhW32i3osceCQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id DDCFA13691;
+	Fri,  4 Apr 2025 08:43:19 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id gCVpM6eb72fofAAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Fri, 04 Apr 2025 08:43:19 +0000
+Date: Fri, 4 Apr 2025 10:43:18 +0200
+From: Oscar Salvador <osalvador@suse.de>
+To: Rakie Kim <rakie.kim@sk.com>
+Cc: akpm@linux-foundation.org, gourry@gourry.net, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+	joshua.hahnjy@gmail.com, dan.j.williams@intel.com,
+	ying.huang@linux.alibaba.com, david@redhat.com,
+	Jonathan.Cameron@huawei.com, kernel_team@skhynix.com,
+	honggyu.kim@sk.com, yunjeong.mun@sk.com
+Subject: Re: [PATCH v6 3/3] mm/mempolicy: Support memory hotplug in weighted
+ interleave
+Message-ID: <Z--bppMUIo5k5eOF@localhost.localdomain>
+References: <20250404074623.1179-1-rakie.kim@sk.com>
+ <20250404074623.1179-4-rakie.kim@sk.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,20 +92,82 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250404082921.2767593-8-ardb+git@google.com>
+In-Reply-To: <20250404074623.1179-4-rakie.kim@sk.com>
+X-Rspamd-Queue-Id: ACF401F385
+X-Spam-Score: -3.01
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-3.01 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	RCPT_COUNT_TWELVE(0.00)[14];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	RCVD_TLS_ALL(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[linux-foundation.org,gourry.net,kvack.org,vger.kernel.org,gmail.com,intel.com,linux.alibaba.com,redhat.com,huawei.com,skhynix.com,sk.com];
+	TAGGED_RCPT(0.00)[];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:email,suse.de:dkim]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On Fri, Apr 04, 2025 at 10:29:25AM +0200, Ard Biesheuvel wrote:
-> From: Ard Biesheuvel <ardb@kernel.org>
+On Fri, Apr 04, 2025 at 04:46:21PM +0900, Rakie Kim wrote:
+> The weighted interleave policy distributes page allocations across multiple
+> NUMA nodes based on their performance weight, thereby improving memory
+> bandwidth utilization. The weight values for each node are configured
+> through sysfs.
 > 
-> Switch to a different API for accepting memory in SEV-SNP guests, one
-> which is actually supported at the point during boot where the EFI stub
-> may need to accept memory, but the SEV-SNP init code has not executed
-> yet.
+> Previously, sysfs entries for configuring weighted interleave were created
+> for all possible nodes (N_POSSIBLE) at initialization, including nodes that
+> might not have memory. However, not all nodes in N_POSSIBLE are usable at
+> runtime, as some may remain memoryless or offline.
+> This led to sysfs entries being created for unusable nodes, causing
+> potential misconfiguration issues.
+> 
+> To address this issue, this patch modifies the sysfs creation logic to:
+> 1) Limit sysfs entries to nodes that are online and have memory, avoiding
+>    the creation of sysfs entries for nodes that cannot be used.
+> 2) Support memory hotplug by dynamically adding and removing sysfs entries
+>    based on whether a node transitions into or out of the N_MEMORY state.
+> 
+> Additionally, the patch ensures that sysfs attributes are properly managed
+> when nodes go offline, preventing stale or redundant entries from persisting
+> in the system.
+> 
+> By making these changes, the weighted interleave policy now manages its
+> sysfs entries more efficiently, ensuring that only relevant nodes are
+> considered for interleaving, and dynamically adapting to memory hotplug
+> events.
+> 
+> Signed-off-by: Rakie Kim <rakie.kim@sk.com>
+> Signed-off-by: Honggyu Kim <honggyu.kim@sk.com>
+> Signed-off-by: Yunjeong Mun <yunjeong.mun@sk.com>
 
-I probably miss the point, but why cannot decompressor use the same _early
-version of accept too and avoid code duplication?
+For the memory-hotplug bits: Reviewed-by: Oscar Salvador
+<osalvador@suse.de<
 
-Maybe spell it out in the commit message for someone like me :P
+Just one thing that caught my eye:
+
+Cannot add_weighted_interleave_group be __init? AFAICS, it only gets
+called at boot time?
+
 
 -- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+Oscar Salvador
+SUSE Labs
