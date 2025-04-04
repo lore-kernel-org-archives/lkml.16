@@ -1,51 +1,121 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 022691A5BB1;
-	Fri,  4 Apr 2025 09:27:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F100A1AA7BF;
+	Fri,  4 Apr 2025 09:27:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743758867; cv=none; b=Ad5q7ksHEHgpK0JzZGtnS2h6D7VnhBc4Rm+IfHzPiNy4FM9j8cf6QcrwOSA71o0+M6K+XhwRsqYFF7l1J/sX3zvAwMhjQUwcVHI386t1b8FHLwf2XRHwJi/8HdlGAELN+cNF7XGDdXFfbARg3ghEpZByewe+paE6NWxgYtoRc8s=
+	t=1743758871; cv=none; b=EKrehvC+OdtoQp1XBHciDMeHTXSKwHk3aIUa6mgcxla1hIXRcNYfzk33CJdd5TBPGTqVOngmpwuo/ze1n75dyRNChewASorAHHryZiKxixMx+6+aRTENqXN9oEefrXuH0Ym9IuaIEOCL4lqMW3b6eU7cwVZo7OAEOYfCH9Q5NLg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743758867; c=relaxed/simple;
-	bh=aAD5iFrq3/jJIUHExCWlYV/HCg1lmL3zH3x/zCqIb2A=;
+	s=arc-20240116; t=1743758871; c=relaxed/simple;
+	bh=j0RVHsK+8Z70siy6KizMbeUUMr7khc2n2FyBiYwSGY0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hu3RVG9PThV/np2QsB4PX8pPU8ywotSk3zCWkWtcWZ+DVqXEFFI0BSnEDHM0pGL3oS01q/09s3PAL7C2FOP7yFul4q/kXEXoQpCqT/xo5Ag8L2rstlWBRZqpVTHj/sF/sAzFH/GmDF0yfuqPf1hxOj0xJ8K1DWM2tKuvQgxlUCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 1635B68B05; Fri,  4 Apr 2025 11:27:40 +0200 (CEST)
-Date: Fri, 4 Apr 2025 11:27:39 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: Yu Kuai <yukuai1@huaweicloud.com>
-Cc: hch@lst.de, xni@redhat.com, colyli@kernel.org, axboe@kernel.dk,
-	agk@redhat.com, snitzer@kernel.org, mpatocka@redhat.com,
-	song@kernel.org, yukuai3@huawei.com, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org, dm-devel@lists.linux.dev,
-	linux-raid@vger.kernel.org, yi.zhang@huawei.com,
-	yangerkun@huawei.com
-Subject: Re: [PATCH RFC v2 00/14] md: introduce a new lockless bitmap
-Message-ID: <20250404092739.GA14046@lst.de>
-References: <20250328060853.4124527-1-yukuai1@huaweicloud.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=h2enPROEcpLQDFT/BM1U29E630eWjNFskIAxHssr6h7oBuD/Gf8d5qerBxVOrHITQ39rYP/YddA0nb4LaaCj3LBGayG7lrA5w7QNsuyfTK6H/vy4QlzlUjdikTIHUJZ2bqgKh/7W7jasHyhafrDwXstyVRY1DzFz5JMDXoCE7ew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k2mNmYL+; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k2mNmYL+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41D4DC4CEDD;
+	Fri,  4 Apr 2025 09:27:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743758870;
+	bh=j0RVHsK+8Z70siy6KizMbeUUMr7khc2n2FyBiYwSGY0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=k2mNmYL+Tn1jkYo6pbOKWN+sdTq6/m14DMgEi0eE9QfpMdbwetp53Q1//RfKRHqfJ
+	 2a8UyNCncTI5cIVqNggzKoCvtwGmhBscLRlfO2qSRbvjhTD+0jCwLIeonWZaHheBuv
+	 yXi7owlf6dD2e9L1gA5Iu28WHOv/F4mvVTGUnRwgQ44MOB4cqizdCNs1uwfBWA8yAW
+	 LGdA+Q7J2ngW0r3OMnnjFVbZA7lCnxyV9NsQs7q9F9trZ5DQDm7fV1H2/FR6JVzBaV
+	 yLHAMQVYISyQdLymipvLBbT7uCjf+438NTx0U0kSMJxiqOfGtwA9fNFmEzqrrkD4vz
+	 9Pi8tJCQTKGwQ==
+Date: Fri, 4 Apr 2025 10:27:43 +0100
+From: Lee Jones <lee@kernel.org>
+To: =?iso-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sylwester Nawrocki <s.nawrocki@samsung.com>,
+	Chanwoo Choi <cw00.choi@samsung.com>,
+	Alim Akhtar <alim.akhtar@samsung.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Peter Griffin <peter.griffin@linaro.org>,
+	Tudor Ambarus <tudor.ambarus@linaro.org>,
+	Will McVicker <willmcvicker@google.com>, kernel-team@android.com,
+	linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-rtc@vger.kernel.org
+Subject: Re: [PATCH v3 11/32] mfd: sec: fix open parenthesis alignment
+ (multiple)
+Message-ID: <20250404092743.GC43241@google.com>
+References: <20250403-s2mpg10-v3-0-b542b3505e68@linaro.org>
+ <20250403-s2mpg10-v3-11-b542b3505e68@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250328060853.4124527-1-yukuai1@huaweicloud.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250403-s2mpg10-v3-11-b542b3505e68@linaro.org>
 
-On Fri, Mar 28, 2025 at 02:08:39PM +0800, Yu Kuai wrote:
-> 1) user must apply the following mdadm patch, and then llbitmap can be
-> enabled by --bitmap=lockless
-> https://lore.kernel.org/all/20250327134853.1069356-1-yukuai1@huaweicloud.com/
-> 2) this set is cooked on the top of my other set:
-> https://lore.kernel.org/all/20250219083456.941760-1-yukuai1@huaweicloud.com/
+On Thu, 03 Apr 2025, André Draszik wrote:
 
-I tried to create a tree to review the entire thing but failed.  Can you
-please also provide a working git branch?
+> checkpatch complains about unexpected alignment issues in this file -
 
+Fine, but either call it by it's name 'Checkpatch' or the command 'checkpatch.pl'.
+
+> update the code accordingly.
+
+This phrasing and grammar is odd.  How about?
+
+  Subject: mfd: sec-common: Fix multiple trivial whitespace issues
+
+  Rectify a couple of alignment problems reported by Checkpatch.
+
+> Signed-off-by: André Draszik <andre.draszik@linaro.org>
+> 
+> ---
+> v2:
+> * make new alignment more readable (Krzysztof)
+> ---
+>  drivers/mfd/sec-common.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/mfd/sec-common.c b/drivers/mfd/sec-common.c
+> index 782dec1956a5fd7bf0dbb2159f9d222ad3fea942..1a6f14dda825adeaeee1a677459c7399c144d553 100644
+> --- a/drivers/mfd/sec-common.c
+> +++ b/drivers/mfd/sec-common.c
+> @@ -149,9 +149,9 @@ sec_pmic_parse_dt_pdata(struct device *dev)
+>  		return ERR_PTR(-ENOMEM);
+>  
+>  	pd->manual_poweroff = of_property_read_bool(dev->of_node,
+> -						"samsung,s2mps11-acokb-ground");
+> +						    "samsung,s2mps11-acokb-ground");
+>  	pd->disable_wrstbi = of_property_read_bool(dev->of_node,
+> -						"samsung,s2mps11-wrstbi-ground");
+> +						   "samsung,s2mps11-wrstbi-ground");
+>  	return pd;
+>  }
+>  
+> @@ -264,8 +264,8 @@ void sec_pmic_shutdown(struct device *dev)
+>  		 * ignore the rest.
+>  		 */
+>  		dev_warn(sec_pmic->dev,
+> -			"Unsupported device %lu for manual power off\n",
+> -			sec_pmic->device_type);
+> +			 "Unsupported device %lu for manual power off\n",
+> +			 sec_pmic->device_type);
+>  		return;
+>  	}
+>  
+> 
+> -- 
+> 2.49.0.472.ge94155a9ec-goog
+> 
+
+-- 
+Lee Jones [李琼斯]
