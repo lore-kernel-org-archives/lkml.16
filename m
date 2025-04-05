@@ -1,95 +1,72 @@
-Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BA101A23AD;
-	Sat,  5 Apr 2025 11:53:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD1EE1A23AD
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 11:54:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743854006; cv=none; b=lP7gaaZOXm1JWsDXDNKVMflSXPUtvhZAU4bv3FKf+mzEKa1eZwkwnFElt8o2vTnl1ljw20EVUjyIaM/DmlvmMZM5wNYbCSgnxbLrpqjwiq3jC245V3fluTRd6ee8KqlbFKweLJjGaGcb7pMK3z/jlfUZ5+brmozw2B7AxfvOoFo=
+	t=1743854048; cv=none; b=N235GnuBWc9afGvDYKACv8el8BKufrx3roElvBMdhF/uOAcvogodgnN8zObPk7/sW2aT5xKKdeElKWJaivn+vWWRky5dREXsYTUBuKbter+PeG6LeM+NbN16fDdd2ck3MUud/lQpTeA50gM9xkInuIaMY0XoXn4JONcGMh4DY9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743854006; c=relaxed/simple;
-	bh=4udH6z3AtFCgu6jjn/q9CPU++JiXf3aqebXlTaavKbg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PGQN4pUemWZ+iwjxlAS007ssk2XppLSUbnN6FkxuzGNdemQLgJcZ4ZWUggqxsPSebDGvhxrn5oU+XaskKvSYfUMomh+lkOdX6MjubXukiP1rg4lgs41ln9GVd1ivihDQdZgdm5LWa+/81+yeT5ytQZ51zGE4F3TWFkT4qL3AGJI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost.localdomain (unknown [221.222.48.127])
-	by APP-01 (Coremail) with SMTP id qwCowABH7v6VGfFnwIQ9Bg--.48370S2;
-	Sat, 05 Apr 2025 19:52:55 +0800 (CST)
-From: Wentao Liang <vulab@iscas.ac.cn>
-To: m.chetan.kumar@intel.com,
-	loic.poulain@linaro.org,
-	ryazanov.s.a@gmail.com,
-	johannes@sipsolutions.net,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com
-Cc: netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Wentao Liang <vulab@iscas.ac.cn>
-Subject: [PATCH net-next v3] net: wwan: Add error handling for ipc_mux_dl_acb_send_cmds().
-Date: Sat,  5 Apr 2025 19:52:36 +0800
-Message-ID: <20250405115236.2091-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.42.0.windows.2
+	s=arc-20240116; t=1743854048; c=relaxed/simple;
+	bh=IeYlXCt5JMnOFxuixSugd4eqg36qYeJp2KDtTmOJ0U0=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=JD/BKLe80ZXo+YpCQMLbgDyVYtSmlmodYza3X5ukxJoQY1eetqejtk9IBHF20gjvW7NKpuxvW4rZvB8PnbGei7JZ0rTjCxyCY+hR1sDWJzWNFpplNVhmcPPnBuRayrHqkTY4z7U8nx548pYfDTer6DECCJoxh8P6iMsZln+w6L4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3d451ad5b2dso41049685ab.0
+        for <linux-kernel@vger.kernel.org>; Sat, 05 Apr 2025 04:54:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743854046; x=1744458846;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=g6QGw704mEv4OcXYynpX2W+5Bss0PvmKHeyj2BymGNI=;
+        b=NJ+Hgrn8mOSd98B7+r/ig/RHyqCnX/OoquoPDjqs1jk1oe2bY4lShWu4lcAUiByk5m
+         WxxvOwKeJxcQIEJnzDIZFBtoUAh8auJBM2RI1/BQmCEB8pWAW4SDkU9d0A3u7AfDwLrD
+         RYrWEpqc3Cu7ZHpVJovp3lga1B3gwQLzWRz3GJTAhJ3BtNRmM9Ll9CAaqWBb8dmawISI
+         GINVEN6qHO5SlJTRHZBUmG3j7cfe8hJYMOQRasTobH1ZPbfQdBhyojShjxgDBVBLQDBY
+         KqbYb6nCsIf1CW9TSVmOCMVUuXnqpqTbwlk5FhlF5SWnGhtRznqCRmgShekVHEqXFyNM
+         D7Xw==
+X-Forwarded-Encrypted: i=1; AJvYcCWBC5Epx4XR8uLAChs5GtH3gJoAKp8dQ7uojoYnpwVxcktZ4NWndyX7kzhli6i5yQNXq3dAmz/taA4kA8E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzgZwYv1yOKmIl2aNSEkvwWU6qPcpWPGPfN1E6HJEH5i3hRUcjC
+	IALCYVX6D4AW9eafEEFFPNeEkvb1x9W60jAOVow1Fnlb4hVp0zJWj2mf2wXda4rmwn5NTtY0Z0t
+	AursdKbLUOhwVJoZ8M3K1HwosujCVVuoBED9SQROnr9/RidWWK7+tudM=
+X-Google-Smtp-Source: AGHT+IFDZXcKVSMVarO/YcvZCZ5KOi5HdhP7Ju6biaIHlIXItcRHqMVRuGXXvDlZGzIbXkwHmpgMncknKVnKcjpbnavmKmhFAOC7
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qwCowABH7v6VGfFnwIQ9Bg--.48370S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7Cw4DArW3JFyrKrWDKF48Zwb_yoW8JFyUpF
-	WrWw109F90yF4rAa18CrWDZa4YqayUXF97Kw1jv3Z5WFsrGF47trWxX3429rn7AF45WFnr
-	Ar4jyry3W3WUGr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9F14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-	6F4UM28EF7xvwVC2z280aVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr
-	0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
-	6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr
-	0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E
-	8cxan2IY04v7MxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFV
-	Cjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWl
-	x4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r
-	1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_
-	JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcS
-	sGvfC2KfnxnUUI43ZEXa7VUbGQ6JUUUUU==
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiBwkDA2fwn8GfzwABsW
+X-Received: by 2002:a05:6e02:1905:b0:3d3:d1a8:8e82 with SMTP id
+ e9e14a558f8ab-3d6e3ff99a0mr61383505ab.9.1743854045919; Sat, 05 Apr 2025
+ 04:54:05 -0700 (PDT)
+Date: Sat, 05 Apr 2025 04:54:05 -0700
+In-Reply-To: <tencent_7B7B46D79363637D4967A3BDE448F772D705@qq.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67f119dd.050a0220.0a13.0236.GAE@google.com>
+Subject: Re: [syzbot] [media?] KMSAN: uninit-value in cxusb_i2c_xfer
+From: syzbot <syzbot+526bd95c0ec629993bf3@syzkaller.appspotmail.com>
+To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-The ipc_mux_dl_acbcmd_decode() calls the ipc_mux_dl_acb_send_cmds(),
-but does not report the error if ipc_mux_dl_acb_send_cmds() fails.
-This makes it difficult to detect command sending failures. A proper
-implementation can be found in ipc_mux_dl_cmd_decode().
+Hello,
 
-Add error reporting to the call, logging an error message using dev_err()
-if the command sending fails.
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
----
- drivers/net/wwan/iosm/iosm_ipc_mux_codec.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+Reported-by: syzbot+526bd95c0ec629993bf3@syzkaller.appspotmail.com
+Tested-by: syzbot+526bd95c0ec629993bf3@syzkaller.appspotmail.com
 
-diff --git a/drivers/net/wwan/iosm/iosm_ipc_mux_codec.c b/drivers/net/wwan/iosm/iosm_ipc_mux_codec.c
-index bff46f7ca59f..478c9c8b638b 100644
---- a/drivers/net/wwan/iosm/iosm_ipc_mux_codec.c
-+++ b/drivers/net/wwan/iosm/iosm_ipc_mux_codec.c
-@@ -509,8 +509,11 @@ static void ipc_mux_dl_acbcmd_decode(struct iosm_mux *ipc_mux,
- 			return;
- 			}
- 		trans_id = le32_to_cpu(cmdh->transaction_id);
--		ipc_mux_dl_acb_send_cmds(ipc_mux, cmd, cmdh->if_id,
--					 trans_id, cmd_p, size, false, true);
-+		if (ipc_mux_dl_acb_send_cmds(ipc_mux, cmd, cmdh->if_id,
-+					     trans_id, cmd_p, size, false, true))
-+			dev_err(ipc_mux->dev,
-+				"if_id %d: cmd send failed",
-+				cmdh->if_id);
- 	}
- }
- 
--- 
-2.42.0.windows.2
+Tested on:
 
+commit:         a8662bcd Merge tag 'v6.15-p3' of git://git.kernel.org/..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=14d64be4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=47d69504cb18f07a
+dashboard link: https://syzkaller.appspot.com/bug?extid=526bd95c0ec629993bf3
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=1300efb0580000
+
+Note: testing is done by a robot and is best-effort only.
