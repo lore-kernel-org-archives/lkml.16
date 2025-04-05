@@ -1,64 +1,112 @@
-Received: from fgw21-7.mail.saunalahti.fi (fgw21-7.mail.saunalahti.fi [62.142.5.82])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A28AD1474DA
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 16:52:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.82
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB65218C932;
+	Sat,  5 Apr 2025 16:52:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743871967; cv=none; b=NZAh+yzy6rcYW848+8tfG93P441M/tMqog++XYSIyRbqY4ZUyFmUMHkB3GzeRgipiqthy8wPueUjnSE50ojRUFWd6l176nzBLQLiN62eufg56q1Nutv02zEr4gZpU0B7MIqbgj9IvPPWNzFpYzOdTSG7b5Ql3WsyFZnjDsw5Wis=
+	t=1743871969; cv=none; b=GL/CIr/j2lHctw7+mZnclP+MSZ5LRrZYqh0JoN8JL6d0SYyUK5uRaDYZC/xT+1iCc6zkuvXUJqaGF45tqY1jRWJcWJh3UR0skbW5lekVB31BjNtX/0hZcEnvMgdNa9pORPiJoy5eShdfDHUR7Zxfi2+CLmYh+xWbNB4G7mTOObw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743871967; c=relaxed/simple;
-	bh=jJ3mb4c3z2kc0eSvWidn9TeLPFxiIvBg/fYo5CDBNB8=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Qd+souEh3m1kJ49K4FHuRtQ5zQxMI0fBt8J6igPlvFxBWDJinCR7EvnPc2DUuQEAyNG1fPkjGh1M3GS1aGSC8thj4NiKbStS7YXFpj9OuDVTEuVDYu3tVI6v9WyHTk52dzzQX8ebfChJgBHfO/yAemiKn1GbyjjE7O7RfQgnDIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.82
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
-Received: from localhost (88-113-26-232.elisa-laajakaista.fi [88.113.26.232])
-	by fgw21.mail.saunalahti.fi (Halon) with ESMTP
-	id 3a5c86d8-123e-11f0-9629-005056bdd08f;
-	Sat, 05 Apr 2025 19:51:33 +0300 (EEST)
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Sat, 5 Apr 2025 19:51:32 +0300
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-	Petr Mladek <pmladek@suse.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH 0/2] vsprintf: Use __diag macros to disable
- '-Wsuggest-attribute=format'
-Message-ID: <Z_FflEgssFzw0tzC@surfacebook.localdomain>
-References: <20250404-vsprintf-convert-pragmas-to-__diag-v1-0-5d6c5c55b2bd@kernel.org>
+	s=arc-20240116; t=1743871969; c=relaxed/simple;
+	bh=r3O4BpTT/ZiR3XrJhquwxnOiMY1jmDNuWmM5GyHaCuI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bA2CLLWpI1ynAhSmjcQYTgrngz69saQtb4cR+fJZHLJ7lo09Rx8YaCeVVmVp9SXXItqPZ1zd5AQc9PjQTsE+96P/udvR8KElJ50BFZ6L3xxwuxIj9qUt59t0dSn4+kekbKRuwy2q26/3B/tMSzoWmjSffhQ8Twxts2s9VOPJD7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nmhFKTq3; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nmhFKTq3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0ACB1C4CEE4;
+	Sat,  5 Apr 2025 16:52:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743871968;
+	bh=r3O4BpTT/ZiR3XrJhquwxnOiMY1jmDNuWmM5GyHaCuI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=nmhFKTq39Bze5TMVmQh+w1HU9uFs/GvlceV816CevJJzQAIHa0S8kp6ATOu9fYP1y
+	 YlEHl09qStM8wbXFFSbynU8vDKsQMskBjVENCRdpmOHMA16CKZD3DgBGe9g+DBhZNW
+	 e3vSGGDUAZsHv47xaV+f2LOUrbzIiPSoSpTdVfMzA5ZL9WIXfDHDiva/W3vrx8pCox
+	 zdL+9y0yvBWnl+wRpqVySw3nSOmK/+kTuXG80OWbKogY0SE+y39Q6L1Y21woRT66Z4
+	 tnK/qv2CyxKJe+0+3GFDQVTxYC/ozJk4WIq3Dk0nvcuViGbPR5MDd66lGDmL+DX73j
+	 05jSLxZkhmO3Q==
+Date: Sat, 5 Apr 2025 17:52:35 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: devnull+david.ixit.cz@kernel.org, clamor95@gmail.com, david@ixit.cz,
+ lars@metafoo.de, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ longnoserob@gmail.com
+Subject: Re: [PATCH v4 1/5] iio: light: al3010: Improve al3010_init error
+ handling with dev_err_probe()
+Message-ID: <20250405175235.0b9d2508@jic23-huawei>
+In-Reply-To: <eda0d691-93ac-4833-8978-6d39730c4db2@wanadoo.fr>
+References: <20250402-al3010-iio-regmap-v4-0-d189bea87261@ixit.cz>
+	<20250402-al3010-iio-regmap-v4-1-d189bea87261@ixit.cz>
+	<eda0d691-93ac-4833-8978-6d39730c4db2@wanadoo.fr>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250404-vsprintf-convert-pragmas-to-__diag-v1-0-5d6c5c55b2bd@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Fri, Apr 04, 2025 at 03:10:01PM -0700, Nathan Chancellor kirjoitti:
-> Hi all,
-> 
-> This is a follow up to the complaint that Linus made at [1] about how
-> the #pragma and #ifdef to disable -Wsuggest-attribute=format is
-> currently ugly. Convert the #pragma and #ifdef to the existing __diag()
-> infrastructure in the kernel to hide some of the ugliness.
-> 
-> I am sending it to both the vsprintf maintainers/reviewers and Linus, in
-> case he wants to apply it himself (since it is pretty simple).
+On Thu, 3 Apr 2025 20:01:46 +0200
+Christophe JAILLET <christophe.jaillet@wanadoo.fr> wrote:
 
-Hmm... You haven't put my tag, nor added me to Cc list...
+> Le 02/04/2025 =C3=A0 21:33, David Heidelberg via B4 Relay a =C3=A9crit=C2=
+=A0:
+> > From: David Heidelberg <david-W22tF5X+A20@public.gmane.org>
+> >=20
+> > Minor code simplifications and improved error reporting.
+> >=20
+> > Signed-off-by: David Heidelberg <david-W22tF5X+A20@public.gmane.org>
+> > ---
+> >   drivers/iio/light/al3010.c | 10 ++++------
+> >   1 file changed, 4 insertions(+), 6 deletions(-)
+> >=20
+> > diff --git a/drivers/iio/light/al3010.c b/drivers/iio/light/al3010.c
+> > index 8c004a9239aef246a8c6f6c3f4acd6b760ee8249..34a29a51c5f9e8aa143d3ba=
+195b79a19793e4f88 100644
+> > --- a/drivers/iio/light/al3010.c
+> > +++ b/drivers/iio/light/al3010.c
+> > @@ -92,8 +92,8 @@ static int al3010_init(struct al3010_data *data)
+> >   	ret =3D devm_add_action_or_reset(&data->client->dev,
+> >   				       al3010_set_pwr_off,
+> >   				       data);
+> > -	if (ret < 0)
+> > -		return ret;
+> > +	if (ret)
+> > +		return dev_err_probe(&data->client->dev, ret, "failed to add action\=
+n"); =20
+>=20
+> Not sure this new message is needed.
+>=20
+> The error is unlikely, and kmalloc(), which is used in is=20
+> devm_add_action_or_reset(), is already verbose.
+Good point. I agree this should stay as a simple return. =20
 
-> [1]: https://lore.kernel.org/CAHk-=wgfX9nBGE0Ap9GjhOy7Mn=RSy=rx0MvqfYFFDx31KJXqQ@mail.gmail.com/
+If nothing else comes up I'll tidy that up whilst applying,
 
--- 
-With Best Regards,
-Andy Shevchenko
+Jonathan
 
+>=20
+> CJ
+>=20
+> >  =20
+> >   	ret =3D i2c_smbus_write_byte_data(data->client, AL3010_REG_CONFIG,
+> >   					FIELD_PREP(AL3010_GAIN_MASK,
+> > @@ -190,10 +190,8 @@ static int al3010_probe(struct i2c_client *client)
+> >   	indio_dev->modes =3D INDIO_DIRECT_MODE;
+> >  =20
+> >   	ret =3D al3010_init(data);
+> > -	if (ret < 0) {
+> > -		dev_err(dev, "al3010 chip init failed\n");
+> > -		return ret;
+> > -	}
+> > +	if (ret)
+> > +		return dev_err_probe(dev, ret, "failed to init ALS\n");
+> >  =20
+> >   	return devm_iio_device_register(dev, indio_dev);
+> >   }
+> >  =20
+>=20
 
