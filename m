@@ -1,595 +1,274 @@
-Received: from mail2-relais-roc.national.inria.fr (mail2-relais-roc.national.inria.fr [192.134.164.83])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 046CA182BC
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 10:27:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.134.164.83
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 157F2194A60
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 10:32:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743848841; cv=none; b=Ihn66+dH/T0Y8IDtu/ppibJ/BEnukLhOSp9KnYV/tAWSCYfSEVOny4wH2qzTJoc4ZOebLhkSYoLR7Rx4RMxCduPzzzLwuk8GZMzUCeIzLAhOB0txuV6QNN2Lt0iMZehMzzAK4KqogWDq3QCkI09cejPPV5Mq44ehIe89VtuMFPs=
+	t=1743849152; cv=none; b=ahlYfpTghOfZVH/Lxb7nc+NVFhZ58ctixtWgMdmrFrwieH/uPNdh+woI6YQmQC0U8SJEAdbcJQUXCtVLysRs83g6dqesQ+vTNt5hNYkTJn2U00sNbhJBrpvaOQFOYRdVk7BW6s4xuPxZTB3ZGH4OOxwOQxFfrfXcZZ+L7qdRw7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743848841; c=relaxed/simple;
-	bh=aQWO0wqCOttP53VNG9q2bPz85ydeXhzdLYYdm/7A9II=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=R5mW/8YmJr2jgFewNjGTSptPUYilvegZVcKe1ow3fIXgaGD5izWXuJcu5O4rIclfkPcdCeBwJp1ssmVHHEF5YNeBF389dTDVWskGEEEHbv5xH85uieF11XeswSwoupG+DoNVzAxqID20W+4NsR7uMjbj2IQrNcvFJ1AV90UlWrA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr; spf=pass smtp.mailfrom=inria.fr; dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b=taz3uhH1; arc=none smtp.client-ip=192.134.164.83
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inria.fr
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b="taz3uhH1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=inria.fr; s=dc;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=FL52wYnV3dZXzwLUbZdJ2gZxK2zVacPTq9bGDC3b3ig=;
-  b=taz3uhH1YDfo8JILYaWL263AJkk0+i2UiRF5nNklsebhW9WyVybrm+BA
-   JV/O2sTgZlRFDbz0WvxsuGesalK7nTNtjZibkE77VLqBtAyol/H1DpmsN
-   AYr9tghX23zW4AS2Y8rfR7+Z3pI6WJGrvHOR2ZC2GgcU1yim7GNWUdkfd
-   A=;
-Authentication-Results: mail2-relais-roc.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=julia.lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
-X-IronPort-AV: E=Sophos;i="6.15,191,1739833200"; 
-   d="scan'208";a="216493513"
-Received: from unknown (HELO hadrien) ([50.225.219.62])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2025 12:27:15 +0200
-Date: Sat, 5 Apr 2025 06:27:13 -0400 (EDT)
-From: Julia Lawall <julia.lawall@inria.fr>
-To: Erick Karanja <karanja99erick@gmail.com>
-cc: gregkh@linuxfoundation.org, outreachy@lists.linux.dev, 
-    philipp.g.hortmann@gmail.com, linux-staging@lists.linux.dev, 
-    linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] staging: rtl8723bs: Optimize variable initialization
- in rtl8723b_hal_init.c
-In-Reply-To: <c5e0fd619a04ee2f890735927aaf10a2e213f4bd.camel@gmail.com>
-Message-ID: <2f1e13fe-887c-4178-8a9c-2227e042ce26@inria.fr>
-References: <cover.1743820815.git.karanja99erick@gmail.com>  <f7b63d834b98aedfe2ce277d8008d7e398ea29ba.1743820815.git.karanja99erick@gmail.com>  <ee285a5a-ff49-5b87-1f29-48b68115b7d7@inria.fr> <c5e0fd619a04ee2f890735927aaf10a2e213f4bd.camel@gmail.com>
+	s=arc-20240116; t=1743849152; c=relaxed/simple;
+	bh=3cp0SH55YiReXnJ8UsxAtPrCjubgnDRfbg45lvWTmA8=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=XrwNvKCuzV77Lh/g+b4IViYTG+ivknt7+RDgH5JN4Vrqo2cRFaYRfMznADexvHShoLDILJGMptHY2GI4De++dyww8IHC0ZThkncT2ImZ9ycokoVbCLLUYt+6B8KGwomtnapBAcKZIMg53tyqa3+ngNl0YZNi4OuGCWLGLPV1f9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3d43541a706so30665855ab.1
+        for <linux-kernel@vger.kernel.org>; Sat, 05 Apr 2025 03:32:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743849149; x=1744453949;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=CALj1vUlZ1NSx9LpykhmLtRFtU3x4ub3pHEdhE9SlmI=;
+        b=hsGQf23iBrjHU8n//oNm1lRlJHpagKC+J6f/1xZ8mRrQJ9Wd9OSTxq92djXbn+XZQ9
+         jnOADIdTIIO8goyHwTpPDxPr3J7ll6h8Mrshf6TmazmdBnezQY2ODJBd9yADRitE0Kjw
+         RLLfnk8MXhpmDTIX9XYLT0qcRus2syLffhcLSOTNWKadCDeEGVaH6z6yX2I2TUlIIhWj
+         LtbSK1FFSEjHowbLCwPVU/kqfNPi1l2IR0RtENI00kpX5H8+Toszzrar17v5dRcsT75G
+         OdHHdXKQKz8F0rfpO3qt5XWGVgou018ZlMzoUPjsiBWj0KOfJ8BHweae2Xs+WctEvmc8
+         qvOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVQbKuI8mxVJ9TIqwHhubhXPp/C9PkdZWkm/bgfflJXry+pDIjEDa08iM70xXFuaNtB0YnlnI/9XcPOaOY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyEeRDHzS44LqeDQaEtUegnQYo+0DffYVMgRHEiFKl0ocNl4uEU
+	3LFrvtO4E3tS8z53ejINSTYOhI2x9E8ukQZqTOH3C9isv3X/B07D7PHcDTouLVIsA8NuHj5gur8
+	Uqz4A0sWYtaRaoW0nVVWBEMnJQteyZewB8ymxk+RifPsBA+zSuORQLfM=
+X-Google-Smtp-Source: AGHT+IGOwU4ZLqFJFlzTs6oLQX3KjQuj17dfXOwXdZ68t6qzRUJdFgydDTcmdgXFwiWPoJ6QriMffRyPs5Qh5bNK8NouugP4Hi/z
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-595273396-1743848835=:3184"
+X-Received: by 2002:a05:6e02:3088:b0:3d3:f9e0:709b with SMTP id
+ e9e14a558f8ab-3d6e576d541mr57143835ab.17.1743849149168; Sat, 05 Apr 2025
+ 03:32:29 -0700 (PDT)
+Date: Sat, 05 Apr 2025 03:32:29 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67f106bd.050a0220.0a13.0235.GAE@google.com>
+Subject: [syzbot] [bcachefs?] KASAN: slab-use-after-free Read in bchfs_read
+From: syzbot <syzbot+2deb10b8dc9aae6fab67@syzkaller.appspotmail.com>
+To: kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hello,
 
---8323329-595273396-1743848835=:3184
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+syzbot found the following issue on:
+
+HEAD commit:    acc4d5ff0b61 Merge tag 'net-6.15-rc0' of git://git.kernel...
+git tree:       upstream
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=15425274580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=1dd3eb8e9a9c75c9
+dashboard link: https://syzkaller.appspot.com/bug?extid=2deb10b8dc9aae6fab67
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=177d894c580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=127d4fb0580000
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/ee88ff7b5f77/disk-acc4d5ff.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/ad1210e493cd/vmlinux-acc4d5ff.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/1f3cc7813b7a/bzImage-acc4d5ff.xz
+mounted in repro: https://storage.googleapis.com/syzbot-assets/7f634c35cdf6/mount_0.gz
+
+The issue was bisected to:
+
+commit 3ba0240a8789f8c059990b81c6f34c29769a5a49
+Author: Kent Overstreet <kent.overstreet@linux.dev>
+Date:   Mon Mar 24 15:51:01 2025 +0000
+
+    bcachefs: Fix silent short reads in data read retry path
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1215494c580000
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=1115494c580000
+console output: https://syzkaller.appspot.com/x/log.txt?x=1615494c580000
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+2deb10b8dc9aae6fab67@syzkaller.appspotmail.com
+Fixes: 3ba0240a8789 ("bcachefs: Fix silent short reads in data read retry path")
+
+==================================================================
+BUG: KASAN: slab-use-after-free in bchfs_read+0x2b48/0x3350 fs/bcachefs/fs-io-buffered.c:228
+Read of size 4 at addr ffff8880756ac148 by task syz-executor406/5854
+
+CPU: 0 UID: 0 PID: 5854 Comm: syz-executor406 Not tainted 6.14.0-syzkaller-12456-gacc4d5ff0b61 #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
+ print_address_description mm/kasan/report.c:408 [inline]
+ print_report+0x16e/0x5b0 mm/kasan/report.c:521
+ kasan_report+0x143/0x180 mm/kasan/report.c:634
+ bchfs_read+0x2b48/0x3350 fs/bcachefs/fs-io-buffered.c:228
+ bch2_readahead+0xe7a/0x12d0 fs/bcachefs/fs-io-buffered.c:301
+ read_pages+0x193/0x590 mm/readahead.c:160
+ page_cache_ra_order+0xa37/0xca0 mm/readahead.c:515
+ filemap_get_pages+0x59f/0x1fc0 mm/filemap.c:2590
+ filemap_read+0x466/0x1260 mm/filemap.c:2701
+ bch2_read_iter+0x1179/0x14b0 fs/bcachefs/fs-io-direct.c:221
+ new_sync_read fs/read_write.c:489 [inline]
+ vfs_read+0x9a0/0xb90 fs/read_write.c:570
+ ksys_read+0x19d/0x2d0 fs/read_write.c:713
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fc1adbabc59
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 01 1b 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007ffd419910a8 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
+RAX: ffffffffffffffda RBX: 00007ffd419910d0 RCX: 00007fc1adbabc59
+RDX: 0000000000002020 RSI: 0000200000000800 RDI: 0000000000000004
+RBP: 0000000000000001 R08: 00007ffd41990e47 R09: 00007ffd419910f0
+R10: 0000000000000001 R11: 0000000000000246 R12: 00007ffd419910cc
+R13: 0000000000000002 R14: 431bde82d7b634db R15: 00007ffd41991110
+ </TASK>
+
+Allocated by task 5854:
+ kasan_save_stack mm/kasan/common.c:47 [inline]
+ kasan_save_track+0x3f/0x80 mm/kasan/common.c:68
+ unpoison_slab_object mm/kasan/common.c:319 [inline]
+ __kasan_mempool_unpoison_object+0x9e/0x170 mm/kasan/common.c:547
+ kasan_unpoison_element mm/mempool.c:-1 [inline]
+ remove_element+0x129/0x1a0 mm/mempool.c:150
+ mempool_alloc_noprof+0x552/0x5a0 mm/mempool.c:408
+ bio_alloc_bioset+0x26f/0x1130 block/bio.c:554
+ bch2_readahead+0xbaf/0x12d0 fs/bcachefs/fs-io-buffered.c:290
+ read_pages+0x193/0x590 mm/readahead.c:160
+ page_cache_ra_order+0xa37/0xca0 mm/readahead.c:515
+ filemap_get_pages+0x59f/0x1fc0 mm/filemap.c:2590
+ filemap_read+0x466/0x1260 mm/filemap.c:2701
+ bch2_read_iter+0x1179/0x14b0 fs/bcachefs/fs-io-direct.c:221
+ new_sync_read fs/read_write.c:489 [inline]
+ vfs_read+0x9a0/0xb90 fs/read_write.c:570
+ ksys_read+0x19d/0x2d0 fs/read_write.c:713
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Freed by task 5854:
+ kasan_save_stack mm/kasan/common.c:47 [inline]
+ kasan_save_track+0x3f/0x80 mm/kasan/common.c:68
+ kasan_save_free_info+0x40/0x50 mm/kasan/generic.c:576
+ poison_slab_object mm/kasan/common.c:247 [inline]
+ __kasan_mempool_poison_object+0xaa/0x120 mm/kasan/common.c:522
+ kasan_mempool_poison_object include/linux/kasan.h:360 [inline]
+ kasan_poison_element mm/mempool.c:118 [inline]
+ add_element mm/mempool.c:141 [inline]
+ mempool_free+0x1c8/0x390 mm/mempool.c:541
+ bch2_readpages_end_io+0x17c/0x1d0 fs/bcachefs/fs-io-buffered.c:36
+ bch2_rbio_done fs/bcachefs/io_read.c:430 [inline]
+ __bch2_read_extent+0x1348/0x4400 fs/bcachefs/io_read.c:1257
+ bch2_read_extent fs/bcachefs/io_read.h:140 [inline]
+ bchfs_read+0x251a/0x3350 fs/bcachefs/fs-io-buffered.c:226
+ bch2_readahead+0xe7a/0x12d0 fs/bcachefs/fs-io-buffered.c:301
+ read_pages+0x193/0x590 mm/readahead.c:160
+ page_cache_ra_order+0xa37/0xca0 mm/readahead.c:515
+ filemap_get_pages+0x59f/0x1fc0 mm/filemap.c:2590
+ filemap_read+0x466/0x1260 mm/filemap.c:2701
+ bch2_read_iter+0x1179/0x14b0 fs/bcachefs/fs-io-direct.c:221
+ new_sync_read fs/read_write.c:489 [inline]
+ vfs_read+0x9a0/0xb90 fs/read_write.c:570
+ ksys_read+0x19d/0x2d0 fs/read_write.c:713
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+The buggy address belongs to the object at ffff8880756ac000
+ which belongs to the cache bio-488 of size 488
+The buggy address is located 328 bytes inside of
+ freed 488-byte region [ffff8880756ac000, ffff8880756ac1e8)
+
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x756ac
+head: order:1 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
+flags: 0xfff00000000040(head|node=0|zone=1|lastcpupid=0x7ff)
+page_type: f5(slab)
+raw: 00fff00000000040 ffff888033497a00 dead000000000122 0000000000000000
+raw: 0000000000000000 00000000800c000c 00000000f5000000 0000000000000000
+head: 00fff00000000040 ffff888033497a00 dead000000000122 0000000000000000
+head: 0000000000000000 00000000800c000c 00000000f5000000 0000000000000000
+head: 00fff00000000001 ffffea0001d5ab01 00000000ffffffff 00000000ffffffff
+head: ffffffffffffffff 0000000000000000 00000000ffffffff 0000000000000002
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 1, migratetype Unmovable, gfp_mask 0xd20c0(__GFP_IO|__GFP_FS|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 5854, tgid 5854 (syz-executor406), ts 92613750343, free_ts 91077243774
+ set_page_owner include/linux/page_owner.h:32 [inline]
+ post_alloc_hook+0x1f4/0x240 mm/page_alloc.c:1717
+ prep_new_page mm/page_alloc.c:1725 [inline]
+ get_page_from_freelist+0x351d/0x36b0 mm/page_alloc.c:3652
+ __alloc_frozen_pages_noprof+0x211/0x5b0 mm/page_alloc.c:4934
+ alloc_pages_mpol+0x339/0x690 mm/mempolicy.c:2301
+ alloc_slab_page mm/slub.c:2459 [inline]
+ allocate_slab+0x8f/0x3a0 mm/slub.c:2623
+ new_slab mm/slub.c:2676 [inline]
+ ___slab_alloc+0xc3b/0x1500 mm/slub.c:3862
+ __slab_alloc+0x58/0xa0 mm/slub.c:3952
+ __slab_alloc_node mm/slub.c:4027 [inline]
+ slab_alloc_node mm/slub.c:4188 [inline]
+ kmem_cache_alloc_noprof+0x270/0x390 mm/slub.c:4207
+ mempool_init_node+0x1ee/0x4e0 mm/mempool.c:217
+ mempool_init_noprof+0x3a/0x50 mm/mempool.c:246
+ bioset_init+0x2ea/0x820 block/bio.c:1709
+ bch2_fs_io_read_init+0x29/0xc0 fs/bcachefs/io_read.c:1377
+ bch2_fs_alloc fs/bcachefs/super.c:944 [inline]
+ bch2_fs_open+0x2f2f/0x32a0 fs/bcachefs/super.c:2182
+ bch2_fs_get_tree+0x77b/0x18f0 fs/bcachefs/fs.c:2172
+ vfs_get_tree+0x90/0x2b0 fs/super.c:1759
+ do_new_mount+0x2cf/0xb70 fs/namespace.c:3878
+page last free pid 5830 tgid 5830 stack trace:
+ reset_page_owner include/linux/page_owner.h:25 [inline]
+ free_pages_prepare mm/page_alloc.c:1262 [inline]
+ __free_pages_ok+0xb17/0xd90 mm/page_alloc.c:1437
+ __folio_put+0x2b5/0x360 mm/swap.c:112
+ folio_put include/linux/mm.h:1563 [inline]
+ free_large_kmalloc+0x143/0x1e0 mm/slub.c:4771
+ kfree+0x216/0x430 mm/slub.c:4839
+ bch2_dev_journal_exit+0x2ba/0x4a0 fs/bcachefs/journal.c:1478
+ bch2_dev_free+0x14d/0x230 fs/bcachefs/super.c:1220
+ bch2_fs_free+0x27b/0x3c0 fs/bcachefs/super.c:679
+ deactivate_locked_super+0xc4/0x130 fs/super.c:473
+ cleanup_mnt+0x422/0x4c0 fs/namespace.c:1435
+ task_work_run+0x251/0x310 kernel/task_work.c:227
+ ptrace_notify+0x2dc/0x390 kernel/signal.c:2522
+ ptrace_report_syscall include/linux/ptrace.h:415 [inline]
+ ptrace_report_syscall_exit include/linux/ptrace.h:477 [inline]
+ syscall_exit_work+0xc7/0x1d0 kernel/entry/common.c:173
+ syscall_exit_to_user_mode_prepare kernel/entry/common.c:200 [inline]
+ __syscall_exit_to_user_mode_work kernel/entry/common.c:205 [inline]
+ syscall_exit_to_user_mode+0x24a/0x340 kernel/entry/common.c:218
+ do_syscall_64+0x100/0x230 arch/x86/entry/syscall_64.c:100
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Memory state around the buggy address:
+ ffff8880756ac000: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff8880756ac080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff8880756ac100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                              ^
+ ffff8880756ac180: fb fb fb fb fb fb fb fb fb fb fb fb fb fc fc fc
+ ffff8880756ac200: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+==================================================================
 
 
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-On Sat, 5 Apr 2025, Erick Karanja wrote:
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
 
-> On Sat, 2025-04-05 at 04:45 -0400, Julia Lawall wrote:
-> >
-> >
-> > On Sat, 5 Apr 2025, Erick Karanja wrote:
-> >
-> > > Optimize variable initialization by integrating the initialization
-> >
-> > I would not use the work "optimize" for this.  "Optimize" generally
-> > means
-> > run faster, or use less resources.  Here you are just making the code
-> > more
-> > concise.  There shouldn't be any significant changes in the generated
-> > code.
-> >
-> > The goal is to make the code more readable, by moving trivial
-> > initializations up with the declarations instead of wasting a line on
-> > that.  Since "trivial initialization" may be an opinion, the semantic
-> > patch is not very constrained about what the initialization is.  But
-> > this
-> > means that the user has to use some judgement about this.  Many
-> > results
-> > may be unsuitable.
-> Hello Julia. I agree that a change in the wording is necessary. When
-> working on this patch I excluded spatch suggestions that would affect
-> the code readability and make debugging difficult. I believe I should
-> further inspect this scenarios as suggested.
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
-It takes some time to get a feeling for what others may find readable.
-That's the whole point of the application period.
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
 
-julia
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
 
-> Thank you.
-> >
-> > julia
-> >
-> > > directly into the variable declaration in cases where the
-> > > initialization
-> > > is simple and doesn't depend on other variables or complex
-> > > expressions.
-> > > This makes the code more concise and readable.
-> > >
-> > > Signed-off-by: Erick Karanja <karanja99erick@gmail.com>
-> > > ---
-> > >  .../staging/rtl8723bs/hal/rtl8723b_hal_init.c | 155 +++++---------
-> > > ----
-> > >  1 file changed, 41 insertions(+), 114 deletions(-)
-> > >
-> > > diff --git a/drivers/staging/rtl8723bs/hal/rtl8723b_hal_init.c
-> > > b/drivers/staging/rtl8723bs/hal/rtl8723b_hal_init.c
-> > > index e15ec6452fd0..1e980b291e90 100644
-> > > --- a/drivers/staging/rtl8723bs/hal/rtl8723b_hal_init.c
-> > > +++ b/drivers/staging/rtl8723bs/hal/rtl8723b_hal_init.c
-> > > @@ -152,13 +152,12 @@ static int _WriteFW(struct adapter *padapter,
-> > > void *buffer, u32 size)
-> > >  void _8051Reset8723(struct adapter *padapter)
-> > >  {
-> > >  	u8 cpu_rst;
-> > > -	u8 io_rst;
-> > > +	u8 io_rst = rtw_read8(padapter, REG_RSV_CTRL + 1);
-> > >
-> > >
-> > >  	/*  Reset 8051(WLMCU) IO wrapper */
-> > >  	/*  0x1c[8] = 0 */
-> > >  	/*  Suggested by Isaac@SD1 and Gimmy@SD1, coding by
-> > > Lucas@20130624 */
-> > > -	io_rst = rtw_read8(padapter, REG_RSV_CTRL+1);
-> > >  	io_rst &= ~BIT(0);
-> > >  	rtw_write8(padapter, REG_RSV_CTRL+1, io_rst);
-> > >
-> > > @@ -218,11 +217,10 @@ u8 g_fwdl_wintint_rdy_fail;
-> > >  static s32 _FWFreeToGo(struct adapter *adapter, u32 min_cnt, u32
-> > > timeout_ms)
-> > >  {
-> > >  	s32 ret = _FAIL;
-> > > -	u32 value32;
-> > > +	u32 value32 = rtw_read32(adapter, REG_MCUFWDL);
-> > >  	unsigned long start = jiffies;
-> > >  	u32 cnt = 0;
-> > >
-> > > -	value32 = rtw_read32(adapter, REG_MCUFWDL);
-> > >  	value32 |= MCUFWDL_RDY;
-> > >  	value32 &= ~WINTINI_RDY;
-> > >  	rtw_write32(adapter, REG_MCUFWDL, value32);
-> > > @@ -501,8 +499,7 @@ void Hal_GetEfuseDefinition(
-> > >  	switch (type) {
-> > >  	case TYPE_EFUSE_MAX_SECTION:
-> > >  		{
-> > > -			u8 *pMax_section;
-> > > -			pMax_section = pOut;
-> > > +			u8 *pMax_section = pOut;
-> > >
-> > >  			if (efuseType == EFUSE_WIFI)
-> > >  				*pMax_section =
-> > > EFUSE_MAX_SECTION_8723B;
-> > > @@ -513,8 +510,7 @@ void Hal_GetEfuseDefinition(
-> > >
-> > >  	case TYPE_EFUSE_REAL_CONTENT_LEN:
-> > >  		{
-> > > -			u16 *pu2Tmp;
-> > > -			pu2Tmp = pOut;
-> > > +			u16 *pu2Tmp = pOut;
-> > >
-> > >  			if (efuseType == EFUSE_WIFI)
-> > >  				*pu2Tmp =
-> > > EFUSE_REAL_CONTENT_LEN_8723B;
-> > > @@ -525,8 +521,7 @@ void Hal_GetEfuseDefinition(
-> > >
-> > >  	case TYPE_AVAILABLE_EFUSE_BYTES_BANK:
-> > >  		{
-> > > -			u16 *pu2Tmp;
-> > > -			pu2Tmp = pOut;
-> > > +			u16 *pu2Tmp = pOut;
-> > >
-> > >  			if (efuseType == EFUSE_WIFI)
-> > >  				*pu2Tmp =
-> > > (EFUSE_REAL_CONTENT_LEN_8723B-EFUSE_OOB_PROTECT_BYTES);
-> > > @@ -537,8 +532,7 @@ void Hal_GetEfuseDefinition(
-> > >
-> > >  	case TYPE_AVAILABLE_EFUSE_BYTES_TOTAL:
-> > >  		{
-> > > -			u16 *pu2Tmp;
-> > > -			pu2Tmp = pOut;
-> > > +			u16 *pu2Tmp = pOut;
-> > >
-> > >  			if (efuseType == EFUSE_WIFI)
-> > >  				*pu2Tmp =
-> > > (EFUSE_REAL_CONTENT_LEN_8723B-EFUSE_OOB_PROTECT_BYTES);
-> > > @@ -549,8 +543,7 @@ void Hal_GetEfuseDefinition(
-> > >
-> > >  	case TYPE_EFUSE_MAP_LEN:
-> > >  		{
-> > > -			u16 *pu2Tmp;
-> > > -			pu2Tmp = pOut;
-> > > +			u16 *pu2Tmp = pOut;
-> > >
-> > >  			if (efuseType == EFUSE_WIFI)
-> > >  				*pu2Tmp = EFUSE_MAX_MAP_LEN;
-> > > @@ -561,8 +554,7 @@ void Hal_GetEfuseDefinition(
-> > >
-> > >  	case TYPE_EFUSE_PROTECT_BYTES_BANK:
-> > >  		{
-> > > -			u8 *pu1Tmp;
-> > > -			pu1Tmp = pOut;
-> > > +			u8 *pu1Tmp = pOut;
-> > >
-> > >  			if (efuseType == EFUSE_WIFI)
-> > >  				*pu1Tmp = EFUSE_OOB_PROTECT_BYTES;
-> > > @@ -573,8 +565,7 @@ void Hal_GetEfuseDefinition(
-> > >
-> > >  	case TYPE_EFUSE_CONTENT_LEN_BANK:
-> > >  		{
-> > > -			u16 *pu2Tmp;
-> > > -			pu2Tmp = pOut;
-> > > +			u16 *pu2Tmp = pOut;
-> > >
-> > >  			if (efuseType == EFUSE_WIFI)
-> > >  				*pu2Tmp =
-> > > EFUSE_REAL_CONTENT_LEN_8723B;
-> > > @@ -585,8 +576,7 @@ void Hal_GetEfuseDefinition(
-> > >
-> > >  	default:
-> > >  		{
-> > > -			u8 *pu1Tmp;
-> > > -			pu1Tmp = pOut;
-> > > +			u8 *pu1Tmp = pOut;
-> > >  			*pu1Tmp = 0;
-> > >  		}
-> > >  		break;
-> > > @@ -729,10 +719,9 @@ static void hal_ReadEFuse_WiFi(
-> > >  		}
-> > >
-> > >  		if (offset < EFUSE_MAX_SECTION_8723B) {
-> > > -			u16 addr;
-> > > +			u16 addr = offset * PGPKT_DATA_SIZE;
-> > >  			/*  Get word enable value from PG header
-> > > */
-> > >
-> > > -			addr = offset * PGPKT_DATA_SIZE;
-> > >  			for (i = 0; i < EFUSE_MAX_WORD_UNIT; i++)
-> > > {
-> > >  				/*  Check word enable condition in
-> > > the section */
-> > >  				if (!(wden & (0x01<<i))) {
-> > > @@ -835,9 +824,8 @@ static void hal_ReadEFuse_BT(
-> > >  			}
-> > >
-> > >  			if (offset < EFUSE_BT_MAX_SECTION) {
-> > > -				u16 addr;
-> > > +				u16 addr = offset *
-> > > PGPKT_DATA_SIZE;
-> > >
-> > > -				addr = offset * PGPKT_DATA_SIZE;
-> > >  				for (i = 0; i <
-> > > EFUSE_MAX_WORD_UNIT; i++) {
-> > >  					/*  Check word enable
-> > > condition in the section */
-> > >  					if (!(wden & (0x01<<i))) {
-> > > @@ -1153,14 +1141,10 @@ static u8 Hal_EfuseWordEnableDataWrite(
-> > >
-> > >  static struct hal_version ReadChipVersion8723B(struct adapter
-> > > *padapter)
-> > >  {
-> > > -	u32 value32;
-> > > +	u32 value32 = rtw_read32(padapter, REG_SYS_CFG);
-> > >  	struct hal_version ChipVersion;
-> > > -	struct hal_com_data *pHalData;
-> > > -
-> > > -/* YJ, TODO, move read chip type here */
-> > > -	pHalData = GET_HAL_DATA(padapter);
-> > > +	struct hal_com_data *pHalData = GET_HAL_DATA(padapter);
-> > >
-> > > -	value32 = rtw_read32(padapter, REG_SYS_CFG);
-> > >  	ChipVersion.ICType = CHIP_8723B;
-> > >  	ChipVersion.ChipType = ((value32 & RTL_ID) ? TEST_CHIP :
-> > > NORMAL_CHIP);
-> > >  	ChipVersion.VendorType = ((value32 & VENDOR_ID) ?
-> > > CHIP_VENDOR_UMC : CHIP_VENDOR_TSMC);
-> > > @@ -1196,10 +1180,9 @@ void rtl8723b_InitBeaconParameters(struct
-> > > adapter *padapter)
-> > >  {
-> > >  	struct hal_com_data *pHalData = GET_HAL_DATA(padapter);
-> > >  	u16 val16;
-> > > -	u8 val8;
-> > > +	u8 val8 = DIS_TSF_UDT;
-> > >
-> > >
-> > > -	val8 = DIS_TSF_UDT;
-> > >  	val16 = val8 | (val8 << 8); /*  port0 and port1 */
-> > >
-> > >  	/*  Enable prot0 beacon function for PSTDMA */
-> > > @@ -1287,22 +1270,7 @@ void
-> > > rtl8723b_SetBeaconRelatedRegisters(struct adapter *padapter)
-> > >  	u32 value32;
-> > >  	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
-> > >  	struct mlme_ext_info *pmlmeinfo = &pmlmeext->mlmext_info;
-> > > -	u32 bcn_ctrl_reg;
-> > > -
-> > > -	/* reset TSF, enable update TSF, correcting TSF On Beacon
-> > > */
-> > > -
-> > > -	/* REG_BCN_INTERVAL */
-> > > -	/* REG_BCNDMATIM */
-> > > -	/* REG_ATIMWND */
-> > > -	/* REG_TBTT_PROHIBIT */
-> > > -	/* REG_DRVERLYINT */
-> > > -	/* REG_BCN_MAX_ERR */
-> > > -	/* REG_BCNTCFG (0x510) */
-> > > -	/* REG_DUAL_TSF_RST */
-> > > -	/* REG_BCN_CTRL (0x550) */
-> > > -
-> > > -
-> > > -	bcn_ctrl_reg = REG_BCN_CTRL;
-> > > +	u32 bcn_ctrl_reg = REG_BCN_CTRL;
-> > >
-> > >  	/*  */
-> > >  	/*  ATIM window */
-> > > @@ -1416,9 +1384,7 @@ void rtl8723b_set_hal_ops(struct hal_ops
-> > > *pHalFunc)
-> > >
-> > >  void rtl8723b_InitAntenna_Selection(struct adapter *padapter)
-> > >  {
-> > > -	u8 val;
-> > > -
-> > > -	val = rtw_read8(padapter, REG_LEDCFG2);
-> > > +	u8 val = rtw_read8(padapter, REG_LEDCFG2);
-> > >  	/*  Let 8051 take control antenna setting */
-> > >  	val |= BIT(7); /*  DPDT_SEL_EN, 0x4C[23] */
-> > >  	rtw_write8(padapter, REG_LEDCFG2, val);
-> > > @@ -1426,14 +1392,10 @@ void rtl8723b_InitAntenna_Selection(struct
-> > > adapter *padapter)
-> > >
-> > >  void rtl8723b_init_default_value(struct adapter *padapter)
-> > >  {
-> > > -	struct hal_com_data *pHalData;
-> > > -	struct dm_priv *pdmpriv;
-> > > +	struct hal_com_data *pHalData = GET_HAL_DATA(padapter);
-> > > +	struct dm_priv *pdmpriv = &pHalData->dmpriv;
-> > >  	u8 i;
-> > >
-> > > -
-> > > -	pHalData = GET_HAL_DATA(padapter);
-> > > -	pdmpriv = &pHalData->dmpriv;
-> > > -
-> > >  	padapter->registrypriv.wireless_mode = WIRELESS_11BG_24N;
-> > >
-> > >  	/*  init default value */
-> > > @@ -1478,9 +1440,7 @@ void rtl8723b_init_default_value(struct
-> > > adapter *padapter)
-> > >  u8 GetEEPROMSize8723B(struct adapter *padapter)
-> > >  {
-> > >  	u8 size = 0;
-> > > -	u32 cr;
-> > > -
-> > > -	cr = rtw_read16(padapter, REG_9346CR);
-> > > +	u32 cr = rtw_read16(padapter, REG_9346CR);
-> > >  	/*  6: EEPROM used is 93C46, 4: boot from E-Fuse. */
-> > >  	size = (cr & BOOT_FROM_EEPROM) ? 6 : 4;
-> > >
-> > > @@ -1495,13 +1455,9 @@ u8 GetEEPROMSize8723B(struct adapter
-> > > *padapter)
-> > >  s32 rtl8723b_InitLLTTable(struct adapter *padapter)
-> > >  {
-> > >  	unsigned long start, passing_time;
-> > > -	u32 val32;
-> > > -	s32 ret;
-> > > -
-> > > -
-> > > -	ret = _FAIL;
-> > > +	u32 val32 = rtw_read32(padapter, REG_AUTO_LLT);
-> > > +	s32 ret = _FAIL;
-> > >
-> > > -	val32 = rtw_read32(padapter, REG_AUTO_LLT);
-> > >  	val32 |= BIT_AUTO_INIT_LLT;
-> > >  	rtw_write32(padapter, REG_AUTO_LLT, val32);
-> > >
-> > > @@ -1559,11 +1515,10 @@ void Hal_EfuseParseIDCode(struct adapter
-> > > *padapter, u8 *hwinfo)
-> > >  {
-> > >  	struct eeprom_priv *pEEPROM =
-> > > GET_EEPROM_EFUSE_PRIV(padapter);
-> > >  /* 	struct hal_com_data	*pHalData =
-> > > GET_HAL_DATA(padapter); */
-> > > -	u16 EEPROMId;
-> > > +	u16 EEPROMId = le16_to_cpu(*((__le16 *)hwinfo));
-> > >
-> > >
-> > >  	/*  Check 0x8129 again for making sure autoload status!!
-> > > */
-> > > -	EEPROMId = le16_to_cpu(*((__le16 *)hwinfo));
-> > >  	if (EEPROMId != RTL_EEPROM_ID) {
-> > >  		pEEPROM->bautoload_fail_flag = true;
-> > >  	} else
-> > > @@ -2273,9 +2228,8 @@ void rtl8723b_fill_fake_txdesc(
-> > >  	/*  Encrypt the data frame if under security mode excepct
-> > > null data. Suggested by CCW. */
-> > >  	/*  */
-> > >  	if (bDataFrame) {
-> > > -		u32 EncAlg;
-> > > +		u32 EncAlg = padapter-
-> > > >securitypriv.dot11PrivacyAlgrthm;
-> > >
-> > > -		EncAlg = padapter-
-> > > >securitypriv.dot11PrivacyAlgrthm;
-> > >  		switch (EncAlg) {
-> > >  		case _NO_PRIVACY_:
-> > >  			SET_TX_DESC_SEC_TYPE_8723B(pDesc, 0x0);
-> > > @@ -2378,9 +2332,7 @@ static void hw_var_set_opmode(struct adapter
-> > > *padapter, u8 variable, u8 *val)
-> > >  static void hw_var_set_macaddr(struct adapter *padapter, u8
-> > > variable, u8 *val)
-> > >  {
-> > >  	u8 idx = 0;
-> > > -	u32 reg_macid;
-> > > -
-> > > -	reg_macid = REG_MACID;
-> > > +	u32 reg_macid = REG_MACID;
-> > >
-> > >  	for (idx = 0 ; idx < 6; idx++)
-> > >  		rtw_write8(GET_PRIMARY_ADAPTER(padapter),
-> > > (reg_macid+idx), val[idx]);
-> > > @@ -2389,9 +2341,7 @@ static void hw_var_set_macaddr(struct adapter
-> > > *padapter, u8 variable, u8 *val)
-> > >  static void hw_var_set_bssid(struct adapter *padapter, u8
-> > > variable, u8 *val)
-> > >  {
-> > >  	u8 idx = 0;
-> > > -	u32 reg_bssid;
-> > > -
-> > > -	reg_bssid = REG_BSSID;
-> > > +	u32 reg_bssid = REG_BSSID;
-> > >
-> > >  	for (idx = 0 ; idx < 6; idx++)
-> > >  		rtw_write8(padapter, (reg_bssid+idx), val[idx]);
-> > > @@ -2399,15 +2349,12 @@ static void hw_var_set_bssid(struct adapter
-> > > *padapter, u8 variable, u8 *val)
-> > >
-> > >  static void hw_var_set_bcn_func(struct adapter *padapter, u8
-> > > variable, u8 *val)
-> > >  {
-> > > -	u32 bcn_ctrl_reg;
-> > > -
-> > > -	bcn_ctrl_reg = REG_BCN_CTRL;
-> > > +	u32 bcn_ctrl_reg = REG_BCN_CTRL;
-> > >
-> > >  	if (*(u8 *)val)
-> > >  		rtw_write8(padapter, bcn_ctrl_reg,
-> > > (EN_BCN_FUNCTION | EN_TXBCN_RPT));
-> > >  	else {
-> > > -		u8 val8;
-> > > -		val8 = rtw_read8(padapter, bcn_ctrl_reg);
-> > > +		u8 val8 = rtw_read8(padapter, bcn_ctrl_reg);
-> > >  		val8 &= ~(EN_BCN_FUNCTION | EN_TXBCN_RPT);
-> > >
-> > >  		/*  Always enable port0 beacon function for PSTDMA
-> > > */
-> > > @@ -2422,12 +2369,8 @@ static void hw_var_set_correct_tsf(struct
-> > > adapter *padapter, u8 variable, u8 *va
-> > >  {
-> > >  	u8 val8;
-> > >  	u64 tsf;
-> > > -	struct mlme_ext_priv *pmlmeext;
-> > > -	struct mlme_ext_info *pmlmeinfo;
-> > > -
-> > > -
-> > > -	pmlmeext = &padapter->mlmeextpriv;
-> > > -	pmlmeinfo = &pmlmeext->mlmext_info;
-> > > +	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
-> > > +	struct mlme_ext_info *pmlmeinfo = &pmlmeext->mlmext_info;
-> > >
-> > >  	tsf = pmlmeext->TSFValue-do_div(pmlmeext->TSFValue,
-> > > (pmlmeinfo->bcn_interval*1024))-1024; /* us */
-> > >
-> > > @@ -2479,17 +2422,11 @@ static void
-> > > hw_var_set_mlme_disconnect(struct adapter *padapter, u8 variable,
-> > > u8
-> > >
-> > >  static void hw_var_set_mlme_sitesurvey(struct adapter *padapter,
-> > > u8 variable, u8 *val)
-> > >  {
-> > > -	u32 value_rcr, rcr_clear_bit, reg_bcn_ctl;
-> > > +	u32 value_rcr, rcr_clear_bit, reg_bcn_ctl = REG_BCN_CTRL;
-> > >  	u16 value_rxfltmap2;
-> > >  	u8 val8;
-> > > -	struct hal_com_data *pHalData;
-> > > -	struct mlme_priv *pmlmepriv;
-> > > -
-> > > -
-> > > -	pHalData = GET_HAL_DATA(padapter);
-> > > -	pmlmepriv = &padapter->mlmepriv;
-> > > -
-> > > -	reg_bcn_ctl = REG_BCN_CTRL;
-> > > +	struct hal_com_data *pHalData = GET_HAL_DATA(padapter);
-> > > +	struct mlme_priv *pmlmepriv = &padapter->mlmepriv;
-> > >
-> > >  	rcr_clear_bit = RCR_CBSSID_BCN;
-> > >
-> > > @@ -2543,15 +2480,12 @@ static void hw_var_set_mlme_join(struct
-> > > adapter *padapter, u8 variable, u8 *val)
-> > >  	u8 val8;
-> > >  	u16 val16;
-> > >  	u32 val32;
-> > > -	u8 RetryLimit;
-> > > -	u8 type;
-> > > -	struct mlme_priv *pmlmepriv;
-> > > +	u8 RetryLimit = 0x30;
-> > > +	u8 type = *(u8 *)val;
-> > > +	struct mlme_priv *pmlmepriv = &padapter->mlmepriv;
-> > >  	struct eeprom_priv *pEEPROM;
-> > >
-> > >
-> > > -	RetryLimit = 0x30;
-> > > -	type = *(u8 *)val;
-> > > -	pmlmepriv = &padapter->mlmepriv;
-> > >  	pEEPROM = GET_EEPROM_EFUSE_PRIV(padapter);
-> > >
-> > >  	if (type == 0) { /*  prepare to join */
-> > > @@ -2779,8 +2713,7 @@ void SetHwReg8723B(struct adapter *padapter,
-> > > u8 variable, u8 *val)
-> > >
-> > >  	case HW_VAR_CHECK_BSSID:
-> > >  		{
-> > > -			u32 val32;
-> > > -			val32 = rtw_read32(padapter, REG_RCR);
-> > > +			u32 val32 = rtw_read32(padapter, REG_RCR);
-> > >  			if (*val)
-> > >  				val32 |=
-> > > RCR_CBSSID_DATA|RCR_CBSSID_BCN;
-> > >  			else
-> > > @@ -2850,12 +2783,11 @@ void SetHwReg8723B(struct adapter
-> > > *padapter, u8 variable, u8 *val)
-> > >
-> > >  	case HW_VAR_ACK_PREAMBLE:
-> > >  		{
-> > > -			u8 regTmp;
-> > > +			u8 regTmp = 0;
-> > >  			u8 bShortPreamble = *val;
-> > >
-> > >  			/*  Joseph marked out for Netgear 3500
-> > > TKIP channel 7 issue.(Temporarily) */
-> > >  			/* regTmp = (pHalData-
-> > > >nCur40MhzPrimeSC)<<5; */
-> > > -			regTmp = 0;
-> > >  			if (bShortPreamble)
-> > >  				regTmp |= 0x80;
-> > >  			rtw_write8(padapter, REG_RRSR+2, regTmp);
-> > > @@ -3226,9 +3158,7 @@ void GetHwReg8723B(struct adapter *padapter,
-> > > u8 variable, u8 *val)
-> > >   */
-> > >  u8 SetHalDefVar8723B(struct adapter *padapter, enum
-> > > hal_def_variable variable, void *pval)
-> > >  {
-> > > -	u8 bResult;
-> > > -
-> > > -	bResult = _SUCCESS;
-> > > +	u8 bResult = _SUCCESS;
-> > >
-> > >  	switch (variable) {
-> > >  	default:
-> > > @@ -3244,9 +3174,7 @@ u8 SetHalDefVar8723B(struct adapter
-> > > *padapter, enum hal_def_variable variable, v
-> > >   */
-> > >  u8 GetHalDefVar8723B(struct adapter *padapter, enum
-> > > hal_def_variable variable, void *pval)
-> > >  {
-> > > -	u8 bResult;
-> > > -
-> > > -	bResult = _SUCCESS;
-> > > +	u8 bResult = _SUCCESS;
-> > >
-> > >  	switch (variable) {
-> > >  	case HAL_DEF_MAX_RECVBUF_SZ:
-> > > @@ -3281,9 +3209,8 @@ u8 GetHalDefVar8723B(struct adapter
-> > > *padapter, enum hal_def_variable variable, v
-> > >  	case HW_DEF_RA_INFO_DUMP:
-> > >  		{
-> > >  			u8 mac_id = *(u8 *)pval;
-> > > -			u32 cmd;
-> > > +			u32 cmd = 0x40000100 | mac_id;
-> > >
-> > > -			cmd = 0x40000100 | mac_id;
-> > >  			rtw_write32(padapter,
-> > > REG_HMEBOX_DBG_2_8723B, cmd);
-> > >  			msleep(10);
-> > >  			rtw_read32(padapter, 0x2F0);	// info 1
-> > > --
-> > > 2.43.0
-> > >
-> > >
-> > >
->
->
---8323329-595273396-1743848835=:3184--
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
