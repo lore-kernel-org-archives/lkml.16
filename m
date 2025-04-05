@@ -1,136 +1,128 @@
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
+Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFBDA1BC3C;
-	Sat,  5 Apr 2025 02:12:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF32C33FD
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 02:17:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743819160; cv=none; b=DUkaQxRObyrhXZ/sXVtvWq4h4wqnxnhV72M2B8qLXvKxO6isoJKGDjaKQQSFdyG7QYc2J7Z8R9lzh80U3YPpbdGHwd1UiVq56z0xd9ypo0TK0+val4AX/9v6eNcDV0baBCArrmAzsbkliCVVdYQwdMbQ6aRpj9poG7fqQGoxtRg=
+	t=1743819448; cv=none; b=ldhVW18QH0hfNZn1Vx5ifg7PXfws8kHst6tImPg28qG1b3fJYdOAcqG45iyEoRTD7JRpVQiHYK60ZSELR/whuOI9L1AggQckUmTV3meb37Xq/4qXZiFjyDqdLp+U9NNO5VlKFxhOIKq3jBBBKt+fUBhhkYwu6oax+S6+1EdkzO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743819160; c=relaxed/simple;
-	bh=W5Tzc7JfwoCkRtbCcIhlN4rJMkRNvq6L/QweDaUZzpw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=o9D2LY7d3grrtSwA+0R9HDUEQsqzQlMrgGLadBpWzMIygW8VytuQMp1kmo1WbY/wmlqE9uFNVSIY1Lq6NQccCokC1LNWLT7RG7oopWH3MOAHcau7tgkx8Fh3/uOcGThniPVxFV4WvfsogBGZjcsuWUeczAYeDbNN2kUjGOU75Qk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mO3hSEww; arc=none smtp.client-ip=209.85.128.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mO3hSEww"
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-7020d8b110aso26648727b3.1;
-        Fri, 04 Apr 2025 19:12:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743819158; x=1744423958; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1cRBLCNvFO2BQ8b6lAHPXIKGCL8sfpGqe9b8U9EIe8o=;
-        b=mO3hSEwwToIBjroR1I6Hajpi8EWqxTgdA9kKkHkgUxwkvhi/43ZVgtsPJaaCJvn0f2
-         JO8v9udMAVC7S7fNIrGVVKz0uNimMlXHM4ZJwx+J/zh9BXITz1zpWjAPzOMOXLx/fI7W
-         A/gc4umkm08OHn2974KfakwbcQK+sRE9Tj2c8S1ADzXtmvABWuY9rh661EKWBzVKueSD
-         vYwrDfOWXjCUS6BkE3l8CwmrtkxyjiR5HZ5FAQfL5JTpVcJzQWzAxwWhLqXScwLif2fp
-         Hrq9wcIdPg5fB7nyAuW20LXFfazKsxS+nD0oB4wuBIAPxq0rAjLzNTkM3FTzFAARyCYU
-         a8yQ==
+	s=arc-20240116; t=1743819448; c=relaxed/simple;
+	bh=VE4ZqmH9qeb2H5bgc34Kqry1FAWH4BX2S79NGkfvMD0=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=pGnaWqyrrqfhEXiYHhp87j1u6f8lZVf7T76E7zbjarCVYHfibgFBHLS6xNPfp7rTy9AaKu3wb20o7mIU2E/y7o01M0/fbhveAMRcb6tQFUto129zVUaTBR3k87oAVpmLVVUTF/znAaKC+aSsWnAuADKw+zszIwBfaNJRtQEOZLk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3d43b460970so54035515ab.2
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 19:17:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743819158; x=1744423958;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1cRBLCNvFO2BQ8b6lAHPXIKGCL8sfpGqe9b8U9EIe8o=;
-        b=c3alC9AyjmJm+Pav+uX1wul91UtZUVUQiB+JTObeHUnR1uG++jJ2DNToW3cjXB8yHc
-         IINtOlSmFAmQdf44ho8Omgv4BTLvuzbKfXwJthZvC4M/3rgnUd1Wkn+UsmPywzMRAb1Y
-         t0VZe30+/rIOiXpItLc3UvdDpvWclhw5ZVsSsmXSQAUQCYGf7uc8unNQqj1eRp3fKtkO
-         FAggxF6VliqxgGgANWO9ly0w/7Y3Np0NvB8DpC+4+QVtMKe3dR6bOySHWWIq7kgUKuin
-         bsaTydlQcwoAe/yCJ/5QPIz1zoy41YYgp1HvGP0mDXe+HWsgPlPI4kXugKr8TK1NA+/n
-         ynRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVfqhniX/CACV2tji7LT5kmcQz9/25Td/edlMi7Wwo+Sok7H05C86YJfgz1OUOQXkr+U2xQ3aGsQPCnbw+U0wjC6g==@vger.kernel.org, AJvYcCX6oeCrPyCFT0DqKQKEaW9Vo82FS04b0MaQW+vTPKQJhYVWmpUJzcyspJCHWpdgFjJiGNnrioHIH3Fadpw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwKPFSg2P3w083FskI8JfP2avJpkYav7BKoFcXTV7ym+T0Jgzg7
-	xXqPtcsPN4nPNC1H/hr6rTzSUJOsQOsPsUonwA1sHZWWvCYoCHmUIxDFCu+0c0Bz7uSb1p9g+qP
-	//jQ8gLoTMtkvmz6eZcTPwFCi+xc=
-X-Gm-Gg: ASbGnctgFcnp4sENi+rC3E4Bafb1f5hb/UyqNtJg/GA1oOeZ4CNgimGsHP0yery+wow
-	t7mC4sYgOgvO7vN8MIxZf3lFUzo3AgBBbK58zze2OKgkuoQJwfzQ5W6BT+eVn70WS9/HHg+q92V
-	gVqTnysDx5wzAFznrHjcvlXR5b72whLvB/0/cBJg==
-X-Google-Smtp-Source: AGHT+IEQcZRdLea1/0WnC2nuMK4ftQxEivjv4H1y9ZSeO58vv92QoIjZvBmX74tvbAz4od/7SxnzK62u6IrI9iKhZmk=
-X-Received: by 2002:a05:690c:670e:b0:6f9:4bb6:eb4e with SMTP id
- 00721157ae682-703e1623ab2mr95514937b3.31.1743819157649; Fri, 04 Apr 2025
- 19:12:37 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743819446; x=1744424246;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=wpnBAfM4qhuAgDMWO83CoYcvdmUbKhSinhUkIuqQoTk=;
+        b=HiLPFsjna9OOf9X6rlqOsRzkZie8InopeMhfO3+9QYnXOjxsoCwRcREmu6xJkOImZ4
+         e0Xk0HcGb649twLeIzwk1pyI/r8BqdF2UCTVZxJFGvMirWDWFo/KMiFY+Wh9XW6Rg3yO
+         y7VYw3jLOMG6Y/QTM/Ab+YIjqm4EkQRLN7uMoEGI63z4pcVtGG0RDzYL6/2TFzL/M5VV
+         VkL6YDdsK+OtoSQMkT65vx7pylFPIm+wNYLeSiz8C2jR7rJwbZIEmdKsfUuOrASOQ+bl
+         9fi62P61whLF6dIqX6I04+qEvYVuVZMhpfxK+8l4tjntpbc1i4CGyQr/uGBzAEmF8F84
+         AA0A==
+X-Gm-Message-State: AOJu0Yy9xIfiYRv6WkAdsilI6RB6UWKG/JfGQ/PkTxbfMHPXf8t8sW3i
+	TqWQulcahb/pAaKKOEK8XceZwbQV50oJhjLjFqTkXlBpE6tyvXyUmnrhI7YpRbRTuyAzXbELVrf
+	iPFtrzaAtvByN6wkTwSwko4tvRZPtWWpW5W92jSRKkX5i5QOAVIKSUDXGrw==
+X-Google-Smtp-Source: AGHT+IG3G67a6Sgd7/mRMdBUyMuLMc2OZnTB9uJeOwPl6HE/W8B/zWSxy68OaplcgyH36x24pIW2fzADSIRBT9rCHy8g+yNproe1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250404041652.329340-1-howardchu95@gmail.com> <Z_AeswETE5xLcPT8@google.com>
-In-Reply-To: <Z_AeswETE5xLcPT8@google.com>
-From: Howard Chu <howardchu95@gmail.com>
-Date: Fri, 4 Apr 2025 19:12:26 -0700
-X-Gm-Features: ATxdqUEX8pXe9mH4oICRNlnT0EcrLojM4xc4hg4lm2HoaUoTmZqbesT-yiFtNzg
-Message-ID: <CAH0uvoiOA654mB-gjWTM8TTtVh+c6DvfgD6dh6VWkxrj7prPAA@mail.gmail.com>
-Subject: Re: [PATCH v1] perf trace: Fix inconsistent failures in perf trace's tests
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: acme@kernel.org, mingo@redhat.com, mark.rutland@arm.com, 
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
-	adrian.hunter@intel.com, peterz@infradead.org, kan.liang@linux.intel.com, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+X-Received: by 2002:a05:6e02:3186:b0:3d4:3ef4:d4d9 with SMTP id
+ e9e14a558f8ab-3d6e58722dfmr50493145ab.14.1743819445985; Fri, 04 Apr 2025
+ 19:17:25 -0700 (PDT)
+Date: Fri, 04 Apr 2025 19:17:25 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67f092b5.050a0220.0a13.0229.GAE@google.com>
+Subject: [syzbot] [media?] KMSAN: uninit-value in cxusb_i2c_xfer
+From: syzbot <syzbot+526bd95c0ec629993bf3@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
+	mchehab@kernel.org, mkrufky@linuxtv.org, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
 Hello,
 
-On Fri, Apr 4, 2025 at 11:02=E2=80=AFAM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> On Thu, Apr 03, 2025 at 09:16:52PM -0700, Howard Chu wrote:
-> > There are two failures that frequently occur in perf trace's tests. One
-> > is the failure of 'perf trace BTF general tests'; The other one is the
-> > failure of 'perf trace record and replay', which, when run independentl=
-y,
-> > always succeeds.
-> >
-> > The root cause of the first failure, is that perf trace may give two ty=
-pes
-> > of output, depending on whether the comm of a process can be parsed, fo=
-r
-> > example:
-> >
-> > mv/312705 renameat2(CWD, "/tmp/file1_VJOT", CWD, "/tmp/file2_VJOT", NOR=
-EPLACE) =3D 0
-> > :312774/312774 renameat2(CWD, "/tmp/file1_5YcE", CWD, "/tmp/file2_5YcE"=
-, NOREPLACE) =3D 0
-> >
-> > In the test, however, grep is always looking for the comm 'mv', which
-> > sometimes may not be present.
-> >
-> > The cause of the second failure is that 'perf trace BTF general tests'
-> > modifies the perf config, and because tests are run concurrently,
-> > subsequent tests use the modified perf config before the BTF general
-> > test can restore the original config. Mark the BTF general tests as
-> > exclusive will solve the failure.
+syzbot found the following issue on:
 
-Yeah, I was wrong =E2=80=94 I now suspect it has something to do with two
-augmented_syscall BPF programs running at the same time. I noticed the
-offcpu test has '(exclusive)' too. Do you think it's a BPF triggering
-issue? Like, if test A is trying to capture the clock_nanosleep
-syscall and test B is also trying to capture it, could it be that A
-ends up capturing both calls while B gets nothing? Just asking before
-I dig in further. :)
+HEAD commit:    4e82c87058f4 Merge tag 'rust-6.15' of git://git.kernel.org..
+git tree:       upstream
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=166a7bcf980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=378acbc45ac948ee
+dashboard link: https://syzkaller.appspot.com/bug?extid=526bd95c0ec629993bf3
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13488fb0580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1595dc74580000
 
->
-> I'm not sure if the config is the cause of the failure.  Also I don't
-> see it restored.
->
-> IIUC the export only affects child processes from the current shell.
-> So other tests running in parallel won't see the config change.
->
-> But still, there should be something to affect the behavior.  It's
-> strange to miss the task name in COMM record.
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/6045aa9da8ac/disk-4e82c870.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/1adf8802c9fe/vmlinux-4e82c870.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/9eb6c71670e3/bzImage-4e82c870.xz
 
-I can look into that too.
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+526bd95c0ec629993bf3@syzkaller.appspotmail.com
 
->
-> I also confirm that running the test serially fixes it.
->
-> Thanks,
-> Namhyung
+dvb-usb: bulk message failed: -22 (3/0)
+=====================================================
+BUG: KMSAN: uninit-value in cxusb_gpio_tuner drivers/media/usb/dvb-usb/cxusb.c:124 [inline]
+BUG: KMSAN: uninit-value in cxusb_i2c_xfer+0x153a/0x1a60 drivers/media/usb/dvb-usb/cxusb.c:196
+ cxusb_gpio_tuner drivers/media/usb/dvb-usb/cxusb.c:124 [inline]
+ cxusb_i2c_xfer+0x153a/0x1a60 drivers/media/usb/dvb-usb/cxusb.c:196
+ __i2c_transfer+0xe25/0x3150 drivers/i2c/i2c-core-base.c:-1
+ i2c_transfer+0x317/0x4a0 drivers/i2c/i2c-core-base.c:2315
+ i2c_transfer_buffer_flags+0x125/0x1e0 drivers/i2c/i2c-core-base.c:2343
+ i2c_master_send include/linux/i2c.h:109 [inline]
+ i2cdev_write+0x210/0x280 drivers/i2c/i2c-dev.c:183
+ do_loop_readv_writev fs/read_write.c:848 [inline]
+ vfs_writev+0x963/0x14e0 fs/read_write.c:1057
+ do_writev+0x247/0x5c0 fs/read_write.c:1101
+ __do_sys_writev fs/read_write.c:1169 [inline]
+ __se_sys_writev fs/read_write.c:1166 [inline]
+ __x64_sys_writev+0x98/0xe0 fs/read_write.c:1166
+ x64_sys_call+0x2229/0x3c80 arch/x86/include/generated/asm/syscalls_64.h:21
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xcd/0x1e0 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
 
-Thanks,
-Howard
+Local variable i.i809 created at:
+ cxusb_gpio_tuner drivers/media/usb/dvb-usb/cxusb.c:116 [inline]
+ cxusb_i2c_xfer+0x323/0x1a60 drivers/media/usb/dvb-usb/cxusb.c:196
+ __i2c_transfer+0xe25/0x3150 drivers/i2c/i2c-core-base.c:-1
+
+CPU: 0 UID: 0 PID: 5806 Comm: syz-executor225 Not tainted 6.14.0-syzkaller-10892-g4e82c87058f4 #0 PREEMPT(undef) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+=====================================================
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
