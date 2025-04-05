@@ -1,150 +1,273 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 104028BEC;
-	Sat,  5 Apr 2025 17:43:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1054F70838;
+	Sat,  5 Apr 2025 17:45:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743875034; cv=none; b=ZM7g/bkaCMPMFEVqbPz3S4rAqagz3ywYwuZ/JCE4ljnfLzBpylBOnAHh3rIdIntmtR7HGmq1N0Yf2uP3lfQnTOIVkqGkJgjtaqqutd0UUxWHkn+mTwGKQ81wybpO7a7wnqC1jJvnoaswBi+kyqBSWuNbx8v2LZ1Ak1MDIjKPyik=
+	t=1743875130; cv=none; b=YALZjCh4w1vERhvtbGaeZoheNPTE59EJYPDMEvooIgjOCDCpfa2lV0CDhzNhvjUcIO9TCfipiqW8SRISVYB2DvHnhsEHY8Lp42vL1QP+KGl9wUMzDyYz1zZQ3iksiSy0ChxTrCKBnJaaO57EvpCVT2ebpOA6Hdpy5yilW/QPnq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743875034; c=relaxed/simple;
-	bh=e2838gU8k00sWId3MP1GDzBEfwrfssO77mfORDdiLFs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eKeOru0cawI8FnYRCUROXgQncQge8GaTWwM3fbW5yLe6bzYtW1PSF8X96LyDfwesVAo4yF/Wi5i+CfxC2sik7DNP1YSFOHUBJdx2zJGNiDam3ZbmEWoaEHKlzeejy1XQ0/ijFT5OdFNlktYQbBCLmoVOhI3yqCFh6zZeFcRMuEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lls14qjG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743875130; c=relaxed/simple;
+	bh=Ml9G9ULATq3giFLsg/UVYtT11OMEdGKcJeqrvzQu3eI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Xr9f2TQe8xNUvPXTZsioQYtMAWmKISUBLB0zfDvpovA21o6KmhoNOwCjpXqWbCI16brJdFfx/ZW5Y7Z4hDDZRd34810x9Bp1QDo9rjkprZSVbXO40QZGfd842lThCW+3UMmb/gSFngsmTcmkdxPfa/JR/z6KxSsLG4JyQVghwXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TmRji+Lq; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lls14qjG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C9BBC4CEE4;
-	Sat,  5 Apr 2025 17:43:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743875033;
-	bh=e2838gU8k00sWId3MP1GDzBEfwrfssO77mfORDdiLFs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Lls14qjGUwCKnRJMGiSl8SMfyX7pTIrkS0/rRm/Ih0WC3UMsU7F3pe40zHVNVATfm
-	 qeoWePe00j+vgPzbq1s5wMCBpTSmERGg1vi3bS2wKRo4/AJICbQsbnebcRGEOBouBK
-	 nuAzs1fyllBiePezIZC+hzQ5TaQZYU14Vc48HLr4epoGI1R/uGCIZpGag9y+Qibdi5
-	 pI18yDAb/Tzs/GwhWNxQY6xl3aTOhrgwA2PqRaGtySCvond2XcO9XvlB7CiX2vB6tj
-	 Eb6yiEkyXPmudDYPAq4hEQD4x/RViMz/28bQWFAGdPQBOFPlufp9AvdUs1LDeMzZb4
-	 oBw2nwbwyuM+A==
-Date: Sat, 5 Apr 2025 18:43:46 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Matti Vaittinen <mazziesaccount@gmail.com>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, Lars-Peter Clausen
- <lars@metafoo.de>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Nuno Sa
- <nuno.sa@analog.com>, David Lechner <dlechner@baylibre.com>, Javier
- Carrasco <javier.carrasco.cruz@gmail.com>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 6/6] iio: adc: ti-adc128s052: Support ROHM BD79104
-Message-ID: <20250405184346.3c4b1234@jic23-huawei>
-In-Reply-To: <a35ab4b1-4d6a-4b95-963a-96b2ab4c05e9@gmail.com>
-References: <cover.1742474322.git.mazziesaccount@gmail.com>
-	<8e10f2d82362ca7c207324a5a97bb1759581acea.1742474322.git.mazziesaccount@gmail.com>
-	<20250331122247.05c6b09d@jic23-huawei>
-	<a35ab4b1-4d6a-4b95-963a-96b2ab4c05e9@gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TmRji+Lq"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-736c1138ae5so2981998b3a.3;
+        Sat, 05 Apr 2025 10:45:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743875128; x=1744479928; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=k8JylLaT6hrTHNf9AdJnwsccmzcqkaZsXAyvhlHxaK0=;
+        b=TmRji+LqVua4MGN+HtNuzWADrYAWcDQJZCx4pT5t3fZlt6b0rcytRmgJoM91blIHEO
+         z09NENUdWDFlOB+ay1hKSLsEUx005dhIhRPfJ5aum+C+AcvDBVChr5Ybq2jLrD7Tkcca
+         aZdLH1P2aLNKaCMeZ8iaQJ3T/71j6Q+SFVKovd5Q9CUhBGXmqTDVjZq3+WHwm41Lcria
+         eSz/qAfKEW8NJVcBNxJ7asQGUfuvjYn31T2I0C+54aLzWxvOoe+IZuzjJji5mVuaQuba
+         zsIBM478wQST4HdRt8oXqO9ZlxqVWIwA+5adnm7Qod4sUAnc0BnY4C/kLyPkcnp/mMpg
+         ARgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743875128; x=1744479928;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=k8JylLaT6hrTHNf9AdJnwsccmzcqkaZsXAyvhlHxaK0=;
+        b=PYTaDgj6wddYNzAIhI/W/pYawrXeNot7Nug35j2GDzRCdZqKFxWBt+JscIHBW9RsBO
+         auHuCm/T8vMnwPR0yz1qWvQmeAAoMGabCAUHGTGhl/zjIlto0AjpH1kYvtAd3xcSr1dK
+         yauSFqPtavTihEoIQXE9KkdehiXAmSzJqEcyBhGt8boXZUgJwNELcUpvftlN2JfOzafT
+         MXjaHKWmTNrazWi/NGxGk0frWKBOVmqIl0A+eLKaM55x5SRmWRjPmXNLrCTxPR5yJgn/
+         cJCz2fd/5jt0p+AnU8Xeil8FBRqmL7t6xuswSj69ZKy/8B3YybUShfQi2w8WuwkvYRPl
+         LChg==
+X-Forwarded-Encrypted: i=1; AJvYcCVhk2+YeHgEHgV5O3BTHf1zcD8ZvkjVXXf78qWmKRsaMGqGb+2hDVvtjsk16lc6MqTAn7TFhQF7FZtEBWid6w==@vger.kernel.org, AJvYcCVwmmy71D9heCfUGxidyDEYj+p3dE6l9E/quhVu5IPn1qNLb8aL+2OboFtO1p9ree/E4835b9GSe5RK92BZ@vger.kernel.org, AJvYcCWoB1CwdhhxHuYccgRxrT2HCHruWug46BFjzpHeBP7LQ6fkWgdvjhHfKvT5j8iyzGy7t5gaE40sICrL@vger.kernel.org
+X-Gm-Message-State: AOJu0Yytv2z+/Rev7tITlTFMxoKUpGmNgwCVwI4tTcNfqjdcneel1PO0
+	LgREgpfJgtiWo3uVr/emP1R+Dw8cpU5qCDaaT8XxQwAssNCbRqUm
+X-Gm-Gg: ASbGncvLdZghbK5evjYcuHY/1R8cwmSSG8GNtC1O0xsEB0N9RRdCeYuQmFrCpNeAhUn
+	RTJobzV73MT/k1sx9MgmrJ+Bdm5gheErKib8oAym3Kp3/BE9Ive0qIrmEw/6M8yzrOAr43vkzNG
+	qtP6xY9/+qzhsAUyukOEYaH/FdHI31yFtees4A7h+6CQjRuuLTX3Tnn/E7LpSsFrOvxK58s3B1o
+	eDkssy896eDRwt71Uh3ZjG0AQ1XEZlNfw7oaQ3kWLX4AbymaGAfX6ZoN6SyJWs51kQAZPBB53F7
+	Tge/8QZlYhz1fGC2BxiMkYqfKqDOFpvWkZJHPx5Y/Hs=
+X-Google-Smtp-Source: AGHT+IE8/SKNOkh3OWD691lYQAnb2nSVSyMVuxAUKB46j38xJ+sPYkhr14o+4KJZ0ykyZ+9mo6MOwg==
+X-Received: by 2002:a05:6a00:a89:b0:737:e73:f64b with SMTP id d2e1a72fcca58-739e48c6f91mr9436320b3a.1.1743875128199;
+        Sat, 05 Apr 2025 10:45:28 -0700 (PDT)
+Received: from nuvole.. ([144.202.86.13])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739d97f2fd3sm5680631b3a.69.2025.04.05.10.45.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 05 Apr 2025 10:45:27 -0700 (PDT)
+From: Pengyu Luo <mitltlatltl@gmail.com>
+To: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>
+Cc: Pengyu Luo <mitltlatltl@gmail.com>,
+	linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-phy@lists.infradead.org
+Subject: [PATCH] phy: qualcomm: phy-qcom-eusb2-repeater: rework reg override handler
+Date: Sun,  6 Apr 2025 01:43:18 +0800
+Message-ID: <20250405174319.405975-1-mitltlatltl@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Tue, 1 Apr 2025 15:33:15 +0300
-Matti Vaittinen <mazziesaccount@gmail.com> wrote:
+In downstream tree, many registers need to be overrided, it varies
+from devices and platforms, not only HS trasmit amplitude(0x51),
+HS disconnect threshold(0x53), Tx pre-emphasis tuning(0x57).
 
-> On 31/03/2025 14:22, Jonathan Cameron wrote:
-> > On Mon, 31 Mar 2025 11:03:58 +0300
-> > Matti Vaittinen <mazziesaccount@gmail.com> wrote:
-> >   
-> >> The ROHM BD79104 ADC has identical SPI communication logic as the
-> >> ti-adc128s052. Eg, SPI transfer should be 16 clk cycles, conversion is
-> >> started when the CS is pulled low, and channel selection is done by
-> >> writing the channel ID after two zero bits. Data is contained in
-> >> big-endian format in the last 12 bits.  
-> > 
-> > Nicely found match.  Sometimes these are tricky to spot.
-> >   
-> >>
-> >> The BD79104 has two input voltage pins. Data sheet uses terms "vdd" and
-> >> "iovdd". The "vdd" is used also as an analog reference voltage. Hence
-> >> the driver expects finding these from the device-tree, instead of having
-> >> the "vref" only as TI's driver.
-> >>
-> >> NOTE: The TI's data sheet[1] does show that the TI's IC does actually
-> >> have two voltage inputs as well. Pins are called Va (analog reference)
-> >> and Vd (digital supply pin) - but I keep the existing driver behaviour
-> >> for the TI's IC "as is", because I have no HW to test changes, and
-> >> because I have no real need to touch it.
-> >>
-> >> NOTE II: The BD79104 requires SPI MODE 3.
-> >>
-> >> NOTE III: I used evaluation board "BD79104FV-EVK-001" made by ROHM. With
-> >> this board I had to drop the SPI speed below the 20M which is mentioned
-> >> in the data-sheet [2]. This, however, may be a limitation of the EVK
-> >> board, not the component itself.
-> >>
-> >> [1]: https://www.ti.com/lit/ds/symlink/adc128s052.pdf
-> >>
-> >> [2]:
-> >> https://fscdn.rohm.com/en/products/databook/datasheet/ic/data_converter/dac/bd79104fv-la-e.pdf
-> >>  
-> > Prefer Datasheet tags with # [1]
-> > after them for the cross references.
-> > 
-> > Those belong here in the tag block (no blank lines)  
-> >> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>  
-> > 
-> > One request for an additional cleanup precursor patch given you are
-> > touching the relevant code anyway.   It's a small one that you can
-> > test so hope you don't mind doing that whilst here.
-> > 
-> > I'm relying on the incredibly small chance anyone has a variable
-> > regulator wired up to the reference that they are modifying at runtime.
-> > I have seen that done (once long ago on a crazy dev board for a really
-> > noisy humidity sensor) when the reference was VDD but not on a separate
-> > reference pin.  That means we almost certainly won't break the existing
-> > parts and can't have a regression on your new one so we should be fine
-> > to make the change.  
-> 
-> The change you ask for is indeed small. I have no real objections 
-> against implementing it (and I actually wrote it already) - but I am 
-> still somewhat hesitant. As you say, (it seems like) the idea of the 
-> original code is to allow changing the vref at runtime. It looks to me 
-> this might've been intentional choice. I am not terribly happy about 
-> dropping the working functionality, when the gained simplification isn't 
-> particularly massive.
+The device I plan to upstream also uses it, so I write the patch for
+it (Oneplus Pad Pro / Oneplus Pad 2, sm8650-mtp based).
 
-Hmm. I suspect this was added at my request (or copied from where I requested
-it)  Back when we did this there was no advantage in doing it at probe
-as it was just a question of store a value or store a pointer we had
-to get anyway.  So I tended to advocate what I now think was a bit silly,
-that someone elses board might have it changing...
+In upstream, only Sony Xperia 1 V is using this, so fixing it for sony,
+in downstream, some crd, mtp, htk devices also use it, I have no
+such device, don't set it for them.
 
-User space wise, what code checks for random scaling changes?  So it
-was best effort at best anyway!
+Signed-off-by: Pengyu Luo <mitltlatltl@gmail.com>
+---
+ .../qcom/sm8550-sony-xperia-yodo-pdx234.dts   |  5 +-
+ .../phy/qualcomm/phy-qcom-eusb2-repeater.c    | 86 +++++++++++++++----
+ 2 files changed, 72 insertions(+), 19 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/qcom/sm8550-sony-xperia-yodo-pdx234.dts b/arch/arm64/boot/dts/qcom/sm8550-sony-xperia-yodo-pdx234.dts
+index d90dc7b37..99f5fd32c 100644
+--- a/arch/arm64/boot/dts/qcom/sm8550-sony-xperia-yodo-pdx234.dts
++++ b/arch/arm64/boot/dts/qcom/sm8550-sony-xperia-yodo-pdx234.dts
+@@ -673,9 +673,8 @@ cam_pwr_a_cs: cam-pwr-a-cs-state {
+ };
  
-> 
-> Because of this, I am thinking of adding the patch dropping the 
-> functionality as an RFC. Leaving that floating on the list for a while 
-> would at least have my ass partially covered ;)
-> 
-> I'd rather not delayed the support for the BD79104 though. So - would it 
-> be okay if I didn't implement the clean-up as a precursory patch, but 
-> did it as a last patch of the series? That will make it a tad more 
-> complex to review, but it'd allow taking the BD79104 changes in while 
-> leaving the RFC to float on a list. (Also, I'm not sure if you can push 
-> an RFC in next without taking it in for the cycle?)
-
-I'll probably just merge it even as an RFC :)  That way it's my
-fault if we break someone and they shout!
-
-Jonathan
-
-> 
-> Yours,
-> 	-- Matti
-> 
+ &pm8550b_eusb2_repeater {
+-	qcom,tune-usb2-disc-thres = /bits/ 8 <0x6>;
+-	qcom,tune-usb2-amplitude = /bits/ 8 <0xf>;
+-	qcom,tune-usb2-preem = /bits/ 8 <0x7>;
++	qcom,param-override-seq = <0x51 0x08 0x53 0x06 0x57 0x07>;
++	qcom,host-param-override-seq = <0x51 0x08 0x53 0x06 0x57 0x07>;
+ 	vdd18-supply = <&pm8550_l15>;
+ 	vdd3-supply = <&pm8550_l5>;
+ };
+diff --git a/drivers/phy/qualcomm/phy-qcom-eusb2-repeater.c b/drivers/phy/qualcomm/phy-qcom-eusb2-repeater.c
+index 6bd1b3c75..151e93cd0 100644
+--- a/drivers/phy/qualcomm/phy-qcom-eusb2-repeater.c
++++ b/drivers/phy/qualcomm/phy-qcom-eusb2-repeater.c
+@@ -76,6 +76,11 @@ struct eusb2_repeater {
+ 	const struct eusb2_repeater_cfg *cfg;
+ 	u32 base;
+ 	enum phy_mode mode;
++
++	u32 *param_override_seq;
++	u32 *host_param_override_seq;
++	u8 param_override_seq_cnt;
++	u8 host_param_override_seq_cnt;
+ };
+ 
+ static const char * const pm8550b_vreg_l[] = {
+@@ -108,6 +113,63 @@ static const struct eusb2_repeater_cfg smb2360_eusb2_cfg = {
+ 	.num_vregs	= ARRAY_SIZE(pm8550b_vreg_l),
+ };
+ 
++static void eusb2_repeater_write_overrides(struct eusb2_repeater *rptr,
++					   u32 *seq, u8 cnt)
++{
++	int i;
++
++	for (i = 0; i < cnt; i += 2)
++		regmap_write(rptr->regmap, rptr->base + seq[i], seq[i + 1]);
++}
++
++static int eusb2_repeater_read_overrides(struct device *dev, const char *prop,
++					 u32 **seq, u8 *seq_cnt)
++{
++	int num_elem, ret;
++
++	num_elem = of_property_count_elems_of_size(dev->of_node, prop, sizeof(**seq));
++	if (num_elem > 0) {
++		if (num_elem % 2) {
++			dev_err(dev, "invalid len for %s\n", prop);
++			return -EINVAL;
++		}
++
++		*seq_cnt = num_elem;
++		*seq = devm_kcalloc(dev, num_elem, sizeof(**seq), GFP_KERNEL);
++		if (!*seq)
++			return -ENOMEM;
++
++		ret = of_property_read_u32_array(dev->of_node, prop, *seq, num_elem);
++		if (ret) {
++			dev_err(dev, "%s read failed %d\n", prop, ret);
++			return ret;
++		}
++	}
++
++	return 0;
++}
++
++static int eusb2_repeater_parse_dt(struct eusb2_repeater *rptr)
++{
++	int ret;
++
++	ret = of_property_read_u32(rptr->dev->of_node, "reg", &rptr->base);
++	if (ret < 0)
++		return ret;
++
++	ret = eusb2_repeater_read_overrides(rptr->dev, "qcom,param-override-seq",
++					    &rptr->param_override_seq,
++					    &rptr->param_override_seq_cnt);
++	if (ret < 0)
++		return ret;
++
++	ret = eusb2_repeater_read_overrides(rptr->dev, "qcom,host-param-override-seq",
++					    &rptr->host_param_override_seq,
++					    &rptr->host_param_override_seq_cnt);
++
++	return ret;
++}
++
+ static int eusb2_repeater_init_vregs(struct eusb2_repeater *rptr)
+ {
+ 	int num = rptr->cfg->num_vregs;
+@@ -127,20 +189,12 @@ static int eusb2_repeater_init_vregs(struct eusb2_repeater *rptr)
+ static int eusb2_repeater_init(struct phy *phy)
+ {
+ 	struct eusb2_repeater *rptr = phy_get_drvdata(phy);
+-	struct device_node *np = rptr->dev->of_node;
+ 	struct regmap *regmap = rptr->regmap;
+ 	const u32 *init_tbl = rptr->cfg->init_tbl;
+-	u8 tune_usb2_preem = init_tbl[TUNE_USB2_PREEM];
+-	u8 tune_hsdisc = init_tbl[TUNE_HSDISC];
+-	u8 tune_iusb2 = init_tbl[TUNE_IUSB2];
+ 	u32 base = rptr->base;
+ 	u32 val;
+ 	int ret;
+ 
+-	of_property_read_u8(np, "qcom,tune-usb2-amplitude", &tune_iusb2);
+-	of_property_read_u8(np, "qcom,tune-usb2-disc-thres", &tune_hsdisc);
+-	of_property_read_u8(np, "qcom,tune-usb2-preem", &tune_usb2_preem);
+-
+ 	ret = regulator_bulk_enable(rptr->cfg->num_vregs, rptr->vregs);
+ 	if (ret)
+ 		return ret;
+@@ -156,10 +210,9 @@ static int eusb2_repeater_init(struct phy *phy)
+ 	regmap_write(regmap, base + EUSB2_TUNE_SQUELCH_U, init_tbl[TUNE_SQUELCH_U]);
+ 	regmap_write(regmap, base + EUSB2_TUNE_RES_FSDIF, init_tbl[TUNE_RES_FSDIF]);
+ 	regmap_write(regmap, base + EUSB2_TUNE_USB2_CROSSOVER, init_tbl[TUNE_USB2_CROSSOVER]);
+-
+-	regmap_write(regmap, base + EUSB2_TUNE_USB2_PREEM, tune_usb2_preem);
+-	regmap_write(regmap, base + EUSB2_TUNE_HSDISC, tune_hsdisc);
+-	regmap_write(regmap, base + EUSB2_TUNE_IUSB2, tune_iusb2);
++	regmap_write(regmap, base + EUSB2_TUNE_USB2_PREEM, init_tbl[TUNE_USB2_PREEM]);
++	regmap_write(regmap, base + EUSB2_TUNE_HSDISC, init_tbl[TUNE_HSDISC]);
++	regmap_write(regmap, base + EUSB2_TUNE_IUSB2, init_tbl[TUNE_IUSB2]);
+ 
+ 	ret = regmap_read_poll_timeout(regmap, base + EUSB2_RPTR_STATUS, val, val & RPTR_OK, 10, 5);
+ 	if (ret)
+@@ -177,6 +230,8 @@ static int eusb2_repeater_set_mode(struct phy *phy,
+ 
+ 	switch (mode) {
+ 	case PHY_MODE_USB_HOST:
++		eusb2_repeater_write_overrides(rptr, rptr->host_param_override_seq,
++					       rptr->host_param_override_seq_cnt);
+ 		/*
+ 		 * CM.Lx is prohibited when repeater is already into Lx state as
+ 		 * per eUSB 1.2 Spec. Below implement software workaround until
+@@ -186,6 +241,8 @@ static int eusb2_repeater_set_mode(struct phy *phy,
+ 		regmap_write(regmap, base + EUSB2_FORCE_VAL_5, V_CLK_19P2M_EN);
+ 		break;
+ 	case PHY_MODE_USB_DEVICE:
++		eusb2_repeater_write_overrides(rptr, rptr->param_override_seq,
++					       rptr->param_override_seq_cnt);
+ 		/*
+ 		 * In device mode clear host mode related workaround as there
+ 		 * is no repeater reset available, and enable/disable of
+@@ -222,7 +279,6 @@ static int eusb2_repeater_probe(struct platform_device *pdev)
+ 	struct device *dev = &pdev->dev;
+ 	struct phy_provider *phy_provider;
+ 	struct device_node *np = dev->of_node;
+-	u32 res;
+ 	int ret;
+ 
+ 	rptr = devm_kzalloc(dev, sizeof(*rptr), GFP_KERNEL);
+@@ -240,12 +296,10 @@ static int eusb2_repeater_probe(struct platform_device *pdev)
+ 	if (!rptr->regmap)
+ 		return -ENODEV;
+ 
+-	ret = of_property_read_u32(np, "reg", &res);
++	ret = eusb2_repeater_parse_dt(rptr);
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	rptr->base = res;
+-
+ 	ret = eusb2_repeater_init_vregs(rptr);
+ 	if (ret < 0) {
+ 		dev_err(dev, "unable to get supplies\n");
+-- 
+2.49.0
 
