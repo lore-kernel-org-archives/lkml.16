@@ -1,152 +1,193 @@
-Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E518F182CD
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 13:17:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E7E51D47A2
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 13:21:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743859050; cv=none; b=hnMovW8K2RvEnn5OHMfg1RUwQKxlY5K32fKEq7RlfPoFJvTJQdMJ/Mui1JYYj3N7x3KSrWszMI01jn/4KObgoT996bEf+BDt+E4cgHcphlfVx3HdQIl23ZxNai0rehR/T/Okz9MguKeVQrEv1BJRE3r9FfyiMxG0ki0wV4/Upsc=
+	t=1743859321; cv=none; b=ayEQ4yP571N18fj33zicYXu1m385uvi6t2/2OLdLQt4M8/QEzRm+ZgbSRV2OxwJXSyaT2xEVyk9zp6n4Aj0gibEBLbtPrRJQLUnbsuV+SNJb8mT/XpNfVx+c08i28AxWJS94k+Ae0KGE+SezEDS8dAMLPPw+EwBdzGJkwv5jOgI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743859050; c=relaxed/simple;
-	bh=BfPeNSA7V2p5NyJodokIRVJiGG/29AvblmZjrvX7ufw=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=dQpqNQ4Ux2R3vGHk7v6aEoAsPE5kKvn1gZtFvnJ0+bPBDYF8KBYnmBHQDDQV41HvEknF+OFLTC3YOrDAsXDtarYmXRzx/yYQZMJqDWbTnBj5myeMrJRYAx2gwW88r6sEJmbYJA+twGMYH7cFgd5TJLB4a2JrWp2VWlVxdPBMN6Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3ce843b51c3so67436565ab.0
-        for <linux-kernel@vger.kernel.org>; Sat, 05 Apr 2025 06:17:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743859048; x=1744463848;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+	s=arc-20240116; t=1743859321; c=relaxed/simple;
+	bh=AcXfO0TA7CuyZGUY7wAR0A6TkpZyJhEUtb1u7nKFghg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=HIe1cY+9ulKbO2o6TQF78luOYpx1+hsPKHkP1La2kySCEZss11OpNwtwxUl0XRP9MCPeMkECKLmfxahdq6Is7wxH35e7lQAsc8pf3EyTOMP7hbKaxcu+J2xqh3DzkB2c7aGUmNZ4GCa9Vd53VN+B/WmDd4IrzoffuHQa7ndNgu8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=myoHDm18; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="myoHDm18"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ac2bdea5a38so470639666b.0
+        for <linux-kernel@vger.kernel.org>; Sat, 05 Apr 2025 06:21:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743859317; x=1744464117; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=wq6bB4Fh3aAKVP1l0YLV7cBg60hZg+PIl33zPkvZtt8=;
-        b=Ea8rCrSrkydMPhoiogLzMoHmWVOKdJWQftsTuQmLoKCgwQ77uLsoNyIXG7LK+3an0L
-         DtybTps4u0HUwt2Pf3jb/+9eF+kEcDZs7QtUN453xpu1BcVmRDhruFJQGOlwNJLNOAG8
-         t+BP8BpSoZ2usikWIlgI4lMrk61h74PuVAuPMRXUeTvcbhllNb9THaI3k7buJfqAPaNW
-         MR6AMWf7KzbuNoXfVfDRhzwaCWvADDxe7rzkAKDCR3YOU65FY0TkFc6ZDUmqcdOChy7K
-         FXzMjZ4iuMnkphU0oUxFmYDEpN6C2u55qT0DWMJeWnRgAgEpTtrlIn2zhmtx6irwutAi
-         12xQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWje1o8xxG4hTh2v7ahvalThYW11A5QI0mTzWSDmYX8WgWvqZuuHvgIQoTKszQGMstzTk/CwkAv3o2+4qc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxpsa+v6c50Bd4URGWhVN5u2eQwghu8+ZST/ybhYXx56qG6pYLL
-	2iLHnTxazw2ciuDuhRLY7hBqyGl5T0PfTfjslSkQR2mnchD0t2Kd+a3B49cUC4XJGBN4bVDgwWV
-	xDYTiL/EoTSdX2XADyW/iH0Ukpr15wTUni84RxLvlZB7VcyxHowZfOoU=
-X-Google-Smtp-Source: AGHT+IE/kEkriqFi/9Z9gP7VTL08EAEeFstomW3IRxCoOb1zweUOTs1LmAGn1GOqT0EXQCeunrNi4ZPMpOVbtakgWBd631UsQeGR
+        bh=n1GAF1aPCvVcJSW85GNnW6pXEVSfQN39zL3/eF/KMRk=;
+        b=myoHDm18ojTeMEjDVj4l7VN8LIeqPqf6B6c/IYdGB681G0BdxCqaUjUKVyWpIJB97b
+         RQ9WtMp6rZi8lU2JCI9y9FKLdZT+qIuUMu7vfi1D7GamBn0gpaZYnXA9dmt3oJYXX5TR
+         A8Wx9bnr1l/iW7bcR7NmzT5gH865l8x84ZGJbC4Bh26YJ5JrV8hJJqaoYbq25Knz2k7H
+         EYPreifJ886HzDV0pzO74TNcahtA8N3urF0/2d9TxaoDbfR/wleGtJZeI989U4KcAhYS
+         kSCFAIpW1uvM/y/tsDOMWbdyWIllYRuX+w+7TLhQAENxdTuca8AWhwd1wTvO77fypdkh
+         RFuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743859317; x=1744464117;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=n1GAF1aPCvVcJSW85GNnW6pXEVSfQN39zL3/eF/KMRk=;
+        b=OCPmAm8LgnmB81yevpYiS8UJ2zDFa5m1TxqkWtbngY1IlqiV9mnJnxTesrVytMX8bt
+         5KeImhLLt4zTSmt2E/rahVaODpRvowIbhjus11pjqf8Ni0GSdkY1lsKroBdy6Ebx0xkZ
+         IptD7ApiSad7tlJroQUWfATzk25f8MuG7wQNfRT5TAHh4Li86LmHFQHya9OoUA25SUB+
+         spcCnfVsSoHZcsvqgp4y7JGxI5OHA63+qMqLLbjWmVO0pOKGZRIWgMkEl3hZLFVxIpDA
+         1mSn8/EwasoPoHxJD6wJQGJ0FQP1CrWvMLkXoZh3Kkno0clzhXjg/YSGCnL+6+U7OGUj
+         kr4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCU9odaS2uhQyEYxRDPELaq34IU2syKjL5RfKUFppro+Lz+FKuo7ucoEX0ktTcksJwQuRDU1sREuzTAtXS4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyj1VdpWqNxvVfJb8mh9kxqHcRG63RrARIHHltCFA4gpNP86ZAH
+	7lmeukL6xArrHv14Tbj7DfyuBngRu1L7AiI1DOPr+Fts0SrfkqUhEhV9wCCC
+X-Gm-Gg: ASbGnctBURJfC+ZCEFtBkXWzWExQ6w1HPXJHosmb03yhUJCPWa04l3FVi/omakGKAeY
+	M4Z93nXlbGo+ikGyriDGjrRNyGidzCYeFkVAQphQ1VJYJsrUsZVdzSoBonYxWSdSUb6wrGkoviE
+	u3FohT2RcKvbXEO480F71iKapjFRBF33VCM8T9r11AqbeGmRJaNfXXgDOZzZw1uUPlJTg6+3+q0
+	0K0OaDRPeCq5nBmdB1OEd7dtZFrpxiKoJCxglvcVhmgmrIfg4MnecAsbH+/So4KqSZOe4jXXTdN
+	j1U2r1tZaYRdqhGtaj6eYAv2rr9J9Wx2ee83oa2ULWDQ2uhWHQ==
+X-Google-Smtp-Source: AGHT+IEuJ1jCs5lLbeZPk7dMSX7AGKDeD1AsWwl/QLtrHRYxpxUMnE17PiDNTeDM7alfgQo1hpW+oA==
+X-Received: by 2002:a17:907:f1c1:b0:ac7:edfb:5210 with SMTP id a640c23a62f3a-ac7edfb536dmr165647266b.20.1743859316998;
+        Sat, 05 Apr 2025 06:21:56 -0700 (PDT)
+Received: from HP-650 ([105.112.234.193])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7bfe996f5sm427498966b.64.2025.04.05.06.21.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 05 Apr 2025 06:21:56 -0700 (PDT)
+Date: Sat, 5 Apr 2025 14:21:42 +0100
+From: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Julia Lawall <julia.lawall@inria.fr>, outreachy@lists.linux.dev
+Cc: linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: [PATCH v5] staging: rtl8723bs: Prevent duplicate NULL tests on a
+ value
+Message-ID: <Z/EuZuvGyQ9QBl6z@HP-650>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:cda7:0:b0:3d5:d71f:75b3 with SMTP id
- e9e14a558f8ab-3d6ec57f9damr31562235ab.15.1743859048043; Sat, 05 Apr 2025
- 06:17:28 -0700 (PDT)
-Date: Sat, 05 Apr 2025 06:17:28 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67f12d68.050a0220.0a13.023b.GAE@google.com>
-Subject: [syzbot] [kernfs?] KMSAN: uninit-value in __kernfs_remove
-From: syzbot <syzbot+cc330991864da84c780a@syzkaller.appspotmail.com>
-To: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com, tj@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hello,
+When a value has been tested for NULL in an expression, a
+second NULL test on the same value in another expression
+is unnecessary when the value has not been assigned to NULL.
 
-syzbot found the following issue on:
+Remove unnecessary duplicate NULL tests on the same value
+that has previously been tested.
 
-HEAD commit:    08733088b566 Merge tag 'rust-fixes-6.15-merge' of git://gi..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=13e28fb0580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=28536ac4fd53e6d4
-dashboard link: https://syzkaller.appspot.com/bug?extid=cc330991864da84c780a
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+Found by Coccinelle.
 
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/116bb82e120a/disk-08733088.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/bb780f6a4805/vmlinux-08733088.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/520911c58caf/bzImage-08733088.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+cc330991864da84c780a@syzkaller.appspotmail.com
-
-netdevsim netdevsim3 eth3 (unregistering): unset [1, 0] type 2 family 0 port 6081 - 0
-=====================================================
-BUG: KMSAN: uninit-value in __rb_change_child include/linux/rbtree_augmented.h:-1 [inline]
-BUG: KMSAN: uninit-value in __rb_erase_augmented include/linux/rbtree_augmented.h:242 [inline]
-BUG: KMSAN: uninit-value in rb_erase+0x597/0x23b0 lib/rbtree.c:443
- __rb_change_child include/linux/rbtree_augmented.h:-1 [inline]
- __rb_erase_augmented include/linux/rbtree_augmented.h:242 [inline]
- rb_erase+0x597/0x23b0 lib/rbtree.c:443
- kernfs_unlink_sibling fs/kernfs/dir.c:419 [inline]
- __kernfs_remove+0xbd5/0xfd0 fs/kernfs/dir.c:1493
- kernfs_remove+0xa5/0xf0 fs/kernfs/dir.c:1529
- sysfs_remove_dir+0x102/0x170 fs/sysfs/dir.c:101
- __kobject_del+0x13e/0x4b0 lib/kobject.c:604
- kobject_del lib/kobject.c:627 [inline]
- kset_unregister+0x4d/0x90 lib/kobject.c:890
- remove_queue_kobjects net/core/net-sysfs.c:2156 [inline]
- netdev_unregister_kobject+0x527/0x570 net/core/net-sysfs.c:2304
- unregister_netdevice_many_notify+0x3a00/0x4600 net/core/dev.c:12009
- unregister_netdevice_many net/core/dev.c:12037 [inline]
- unregister_netdevice_queue+0x598/0x5f0 net/core/dev.c:11889
- unregister_netdevice include/linux/netdevice.h:3374 [inline]
- nsim_destroy+0x147/0x720 drivers/net/netdevsim/netdev.c:1051
- __nsim_dev_port_del+0x1e9/0x320 drivers/net/netdevsim/dev.c:1428
- nsim_dev_port_del_all drivers/net/netdevsim/dev.c:1440 [inline]
- nsim_dev_reload_destroy+0x464/0x7b0 drivers/net/netdevsim/dev.c:1661
- nsim_drv_remove+0x93/0x310 drivers/net/netdevsim/dev.c:1676
- nsim_bus_remove+0x1e/0x30 drivers/net/netdevsim/bus.c:398
- device_remove drivers/base/dd.c:567 [inline]
- __device_release_driver drivers/base/dd.c:1273 [inline]
- device_release_driver_internal+0x58a/0x990 drivers/base/dd.c:1296
- device_release_driver+0x22/0x30 drivers/base/dd.c:1319
- bus_remove_device+0x71b/0x760 drivers/base/bus.c:579
- device_del+0x7ee/0xd40 drivers/base/core.c:3855
- device_unregister+0x1e/0x40 drivers/base/core.c:3896
- nsim_bus_dev_del drivers/net/netdevsim/bus.c:462 [inline]
- del_device_store+0x421/0x640 drivers/net/netdevsim/bus.c:226
- bus_attr_store+0x92/0xf0 drivers/base/bus.c:172
- sysfs_kf_write+0x19a/0x250 fs/sysfs/file.c:139
- kernfs_fop_write_iter+0x525/0x910 fs/kernfs/file.c:334
- new_sync_write fs/read_write.c:591 [inline]
- vfs_write+0xb34/0x1540 fs/read_write.c:684
- ksys_write+0x240/0x4b0 fs/read_write.c:736
- __do_sys_write fs/read_write.c:747 [inline]
- __se_sys_write fs/read_write.c:744 [inline]
- __x64_sys_write+0x93/0xe0 fs/read_write.c:744
- x64_sys_call+0x34de/0x3c80 arch/x86/include/generated/asm/syscalls_64.h:2
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xcd/0x1e0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-Local variable tmp created at:
- number+0x8f/0x1e70 lib/vsprintf.c:455
- vsnprintf+0x91b/0x1a10 lib/vsprintf.c:2811
-
-CPU: 1 UID: 0 PID: 8025 Comm: syz-executor Not tainted 6.14.0-syzkaller-11270-g08733088b566 #0 PREEMPT(undef) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-=====================================================
-
-
+Signed-off-by: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+Changed in v4:
+	- Separated initially integrated suggested change
+	 "use modulo % 4096 over & 0xfff" to a different patch.
+Changes in v3:
+	- Changed other cases to use modulo (% 4096) over (& 0xofff).
+	- Modified commit message to reflect these changes.
+Changes in v2:
+	- Dropped patch files for media drivers from patchset as it is
+	  not meant for outreachy applicants.
+	- Added full-stop aign to text in commit message.
+	- Made code more readable by adding a line break.
+	- Changed cases to use modulo (% 4096) over (& 0xfff).
+Changes in v1
+	- Patch for drivers/staging/media/av7110/sp8870.c and
+	- drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c
+	  is split into two different patches in the patchset for use by the different
+	  driver maintainers.
+	- Added subject title for each of the separated patches.
+	- Patch 1: Removed unnecessary curly braces {} initially inserted.
+	- Patch 2: Unnecessary {} was also removed for v1.
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+ drivers/staging/rtl8723bs/core/rtw_mlme_ext.c |  2 +-
+ drivers/staging/rtl8723bs/core/rtw_xmit.c     | 56 +++++++++----------
+ 2 files changed, 28 insertions(+), 30 deletions(-)
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
+diff --git a/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c b/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
+index 90966b7034ab..675226535cd1 100644
+--- a/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
++++ b/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
+@@ -1323,7 +1323,7 @@ unsigned int OnAssocReq(struct adapter *padapter, union recv_frame *precv_frame)
+ 	spin_unlock_bh(&pstapriv->asoc_list_lock);
+ 
+ 	/*  now the station is qualified to join our BSS... */
+-	if (pstat && (pstat->state & WIFI_FW_ASSOC_SUCCESS) && (status == WLAN_STATUS_SUCCESS)) {
++	if ((pstat->state & WIFI_FW_ASSOC_SUCCESS) && (status == WLAN_STATUS_SUCCESS)) {
+ 		/* 1 bss_cap_update & sta_info_update */
+ 		bss_cap_update_on_sta_join(padapter, pstat);
+ 		sta_info_update(padapter, pstat);
+diff --git a/drivers/staging/rtl8723bs/core/rtw_xmit.c b/drivers/staging/rtl8723bs/core/rtw_xmit.c
+index 026061b464f7..f817cab2f831 100644
+--- a/drivers/staging/rtl8723bs/core/rtw_xmit.c
++++ b/drivers/staging/rtl8723bs/core/rtw_xmit.c
+@@ -941,35 +941,33 @@ s32 rtw_make_wlanhdr(struct adapter *padapter, u8 *hdr, struct pkt_attrib *pattr
+ 			if (!(psta->state & _FW_LINKED))
+ 				return _FAIL;
+ 
+-			if (psta) {
+-				psta->sta_xmitpriv.txseq_tid[pattrib->priority]++;
+-				psta->sta_xmitpriv.txseq_tid[pattrib->priority] &= 0xFFF;
+-				pattrib->seqnum = psta->sta_xmitpriv.txseq_tid[pattrib->priority];
+-
+-				SetSeqNum(hdr, pattrib->seqnum);
+-
+-				/* check if enable ampdu */
+-				if (pattrib->ht_en && psta->htpriv.ampdu_enable)
+-					if (psta->htpriv.agg_enable_bitmap & BIT(pattrib->priority))
+-						pattrib->ampdu_en = true;
+-
+-				/* re-check if enable ampdu by BA_starting_seqctrl */
+-				if (pattrib->ampdu_en == true) {
+-					u16 tx_seq;
+-
+-					tx_seq = psta->BA_starting_seqctrl[pattrib->priority & 0x0f];
+-
+-					/* check BA_starting_seqctrl */
+-					if (SN_LESS(pattrib->seqnum, tx_seq)) {
+-						pattrib->ampdu_en = false;/* AGG BK */
+-					} else if (SN_EQUAL(pattrib->seqnum, tx_seq)) {
+-						psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (tx_seq+1)&0xfff;
+-
+-						pattrib->ampdu_en = true;/* AGG EN */
+-					} else {
+-						psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (pattrib->seqnum+1)&0xfff;
+-						pattrib->ampdu_en = true;/* AGG EN */
+-					}
++			psta->sta_xmitpriv.txseq_tid[pattrib->priority]++;
++			psta->sta_xmitpriv.txseq_tid[pattrib->priority] &= 0xFFF;
++			pattrib->seqnum = psta->sta_xmitpriv.txseq_tid[pattrib->priority];
++
++			SetSeqNum(hdr, pattrib->seqnum);
++
++			/* check if enable ampdu */
++			if (pattrib->ht_en && psta->htpriv.ampdu_enable)
++				if (psta->htpriv.agg_enable_bitmap & BIT(pattrib->priority))
++					pattrib->ampdu_en = true;
++
++			/* re-check if enable ampdu by BA_starting_seqctrl */
++			if (pattrib->ampdu_en == true) {
++				u16 tx_seq;
++
++				tx_seq = psta->BA_starting_seqctrl[pattrib->priority & 0x0f];
++
++				/* check BA_starting_seqctrl */
++				if (SN_LESS(pattrib->seqnum, tx_seq)) {
++					pattrib->ampdu_en = false;/* AGG BK */
++				} else if (SN_EQUAL(pattrib->seqnum, tx_seq)) {
++					psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (tx_seq+1)&0xfff;
++
++					pattrib->ampdu_en = true;/* AGG EN */
++				} else {
++					psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (pattrib->seqnum+1)&0xfff;
++					pattrib->ampdu_en = true;/* AGG EN */
+ 				}
+ 			}
+ 		}
+-- 
+2.34.1
 
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
