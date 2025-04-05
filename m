@@ -1,127 +1,121 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FDC732C8B
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 14:34:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 312B36FC3;
+	Sat,  5 Apr 2025 14:37:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743863701; cv=none; b=c6fOqngxaYXGHUeGEWUyX+G6shERr9em/OVNdvte4vmqWSZHUPSbdyWwrvFFm21SqM8f0ALt31sjBjzlI1FxjarEc59B/ua0bf7fwiEtUr1bm0anCpxcAkVaIET9SgJqN2YXjLSEumqyQNzKvRuaxZuQuySIIpZFBKyE+CfTmY4=
+	t=1743863839; cv=none; b=gaBI0ysq1mosEbImdz3BlRXEn97lIyjbfL9d35ebpG8V8Sk/ZOrnL+E0mFnwPKAkQJKEDa1hkXFpVMyDp/NkO6T+uvgUDYHrku4IiZNvrS4RoIrShzUdF/8P8EuXSdbjWmvB6vsd5C0zi/myFtgXLf01xrjIhOZiff7TjBety4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743863701; c=relaxed/simple;
-	bh=Jz2jG35a8jxkfJR/K1JGWyUsAohw0IVAj9COzgsDaK0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W1UTN6BCipJHP6bWGCsgQA4bYe+fDXteIB50T4inwyFvwGikaejwxogE18aNO/QK1YFM21e3xVrt33TYO+xfx3dRImbc3yD/kgdyXsG3yvHmMKiUdHOWWoURDAh2Z6lHnNgMxcCzyAo9U3hoEM6/VftUXzTLVl/eMiDVC9rTkTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wwansMkW; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1743863839; c=relaxed/simple;
+	bh=63F5xTkitsYyHm/pyJpFkBLkPS4nsTIzUTBp3RDPaz4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=fu3jwB+MLklkr9ZsJ4jsN+Mk39JggcHAYJO6nke8qe8U6LlZFhIol8Tnb1H+HPbDHjIq0+XNjZbKAy6gsJedCJeRajeKlhXx138f4cIjim7NKdb6bVMH7mGQPF0ZaHiRkKh//uP8BWhyu7mysba/CBaxAmprdF6oFK9H0tpytkU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LKLKaFu2; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wwansMkW"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3913d129c1aso2050900f8f.0
-        for <linux-kernel@vger.kernel.org>; Sat, 05 Apr 2025 07:34:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LKLKaFu2"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4394a0c65fcso27363255e9.1;
+        Sat, 05 Apr 2025 07:37:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743863698; x=1744468498; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=zhyg0t58cU1vi3f6vTrT4cSrowyxcOvo1z5RkDWvOMc=;
-        b=wwansMkWvgZTGyCaz691HGawa2IHcI4N/4QQAolFtDP8yQCSuT9jWXSCz+yHS4q1tz
-         yQwpPzNIVZ8v+tcwmAwkD2ldIK+S+rhkzBVFIGktjGzaVgZmhtgM29CE+kMDWvB6IV10
-         7FO4fCe+HFmsm+kv2BN0P2BosXnh6ouo8eJgjSfPPJ17As0N7bYmsK/jy3UT6u1OBLHH
-         A3a/l+pj/84GWozfC1F6kHIqYnG1120jUbnIfUfPP0jEfxgUo8ICgZc1lUumyQnR1EUW
-         DSeo+WHSgQU7S4DlPTwx1NRbQLdjhdEKFXGWMO+lsDBuVA2ejr5o01NbwrfEf5mo9NWx
-         /a+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743863698; x=1744468498;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1743863836; x=1744468636; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zhyg0t58cU1vi3f6vTrT4cSrowyxcOvo1z5RkDWvOMc=;
-        b=RLI3DH4HoCiKoagqENRPp47KkWHQvYgBmQNp/HV/bJbYC9yFS5zDSl0M0Oh88YQ1oo
-         OgqvaNT/MQwnTbJp2EA1Rn5bxpZ2454QwuITiPJyKC4gAhKyRH0tcdS5DS9GTKP339MO
-         azfOV2MTY1Diw9YhCMutfMHBWv5G2KZvpSkJ68xNdtde3ryKzw9vUrLzA+5vGwvhjUSA
-         zcYaDBoyWotYhQCqnZvlYKEsuFdQHxBt21gmNvNX7jz9Z0vp3SifYII8StuxJxKHsw5F
-         4YfzGtdhIpHNvivkLdm/fxz0VGMFtdOoRTbQhSt2GrujwxmCTZ1nfe2Oy94hyEbzd7xA
-         ZUJA==
-X-Forwarded-Encrypted: i=1; AJvYcCUEp5Vg7F0W8HRmHuldCSOdaSCG6oZ8pp9boTuJ38uRWkiZmO0twZ7DTHZ+fBAuc241BeluvOWgiIwRg6g=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yww84Un8GoiLAVkE/DHQCfASBCidZcAQv/1SKJMIxOHfVjaP5mH
-	HOp4VQJusHrevWqLf7LXULoGVSLKgj0mUmZVrYzbFzLpX8LRinUgz958Sf9ntCM=
-X-Gm-Gg: ASbGncvU8eC2u4vKKGi5L8GWdj9yRbUFWQgCRhquscW+zp6kNIYWawu1uVcbYnPZLZC
-	y9dxXEUZO7SKD5owPhPXoY6aX4x6GBHND0DlGAWqXLQgTcoafj24hW+FhdNb3ws23WIp+sWrHhe
-	LGeUQXlUktOIEffky9GL5RVuifsYweRIJWIulo4CHYdImoF8EnyHQ/PFFZvxbsndk6wLW5N1t+j
-	V/nUe0bI6cAC8uqmiAQplemT+1eo7XF1dhcHvmUgQ7IzM5KER8AcSfyXiXQBqPSTUccCoSUyfub
-	A0K9jowv6f8y+vZPevVJnSB6OH8nGw/cFyiAmedQLYPygPd7Naw9hQiR5qHs
-X-Google-Smtp-Source: AGHT+IE/M9txzHe0PtFaLgR9ct861DaYcfnp5n7x7JLLBKwz5m7VyOjZai/5+5Yi3USWwxC/jRVIdg==
-X-Received: by 2002:a5d:6d8f:0:b0:39c:e0e:b7ea with SMTP id ffacd0b85a97d-39cba942a90mr5605476f8f.20.1743863697655;
-        Sat, 05 Apr 2025 07:34:57 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-39c301a7586sm7163739f8f.38.2025.04.05.07.34.56
+        bh=87i242gNmmnQ0/JIgcQs2sxcKZ2HnRDUKllGCKseh+0=;
+        b=LKLKaFu2cjIH+fPmUKzuD2iKy+Rtn9w9v8hUrhO7wfjwluBWy7OLswGpKymvFCKkzr
+         bHJNohNjzM+XMkBpiiMqrK7ONeAPUcLKWmfpP5TJtaIe2uiXIjPGNeR0GK2fstX0wLpa
+         u5uQ71Z+aeTIK0eu9bXwXWJ2H/SyCuDlitC0cjxwW/oEdeLr5ij/uXvqmWnn1MkluMMX
+         6bdNZ8GUPK0LJYHlxAMGR0W5pvlLPiMaf9UA2uXZkY9QaU7bDF/ymwGX2tEk2nur0YG5
+         UE9F+Sz/vULdmcVpYwQhkUTPb37zUVsH+rSObJNPk3KAJ7HyyzxGwR1qNqC8jkKjRyY9
+         TE1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743863836; x=1744468636;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=87i242gNmmnQ0/JIgcQs2sxcKZ2HnRDUKllGCKseh+0=;
+        b=THuQsSvO1jGi0B6/au8SntxZtYYW+91jOH/f48G4lcPDsK/Xd4XirZ64NRrOo35bLo
+         9EDivRF9zYX4uQbBp72AOke8f8OyZns+j1oO+2WyaB+/ZLKh2ZbV/KijBGU+dNH7jXYi
+         wxMOrJs/livgIAP1jJXudlS+vTY1VHrjCtANsx0sejBpLI99hbZ9jjFeWx1HQGhaBQpZ
+         u5+/lgHamaayQpDnaPBpQ2IeBTbEuRoDTpm51HVUxiT4OvK99IUfy7Fp6cy1nbFQjQXd
+         ZHzwF9CmlqQI8JFvs9IhYdBXa3CPJMEhIy/cjT8EoRVgKN46aNC4QD+rPhVOKB9/VUhC
+         4c/w==
+X-Forwarded-Encrypted: i=1; AJvYcCUkAtmCgS/XvPjNpHitedechDxkMgYvnSpU54oTJ+QNxtv2L83K2KHgVvGesOgITAY8mpN8VsAdKyi24LrC@vger.kernel.org, AJvYcCX0eD9+0XDcSQ5088Xd43xRPtiuePp/Wnhc7rUuaYKUgMI5U2VfhQEmhroCqHOv0Rsar+RUN1KOrqGxVSI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzvlKqNBpc8HksIawyu+JkdWMKVR36+u99bGCnZ9aZCJoS7T7DY
+	tRkHonPjIeMzuEklutcX43hB3kPWxKTK7tE+k5U23ri6Jk18l4/5
+X-Gm-Gg: ASbGnctazEHKpXqrRT2x5P1ZqhJrK2/JGbQJn8aInfk8Rf4hKLEdrh+Ef7tZ/Pi2aKY
+	s+3Ly5SDKmU5A9qdPH7Ijpsb5vu+QZXNBWh/XSXcsJkzfQuotKU1nsFz6m8IpqQ2fZeuTYBYSfn
+	COK0o5v8LFKNq7KxINFB6J45xZkPc5TGqOflXgh3EA6vOq0dGNuq56KEt5itjSfAr7lGIdtvtfB
+	sja4CNqXbF5QlrWAUABKFd6TonMUNDU5piR4kXx+VCuM/65BPopaQ2FuUAXfB5x6ZGJUQeV28Iy
+	Gb4JoLx0w/KLIxIMIpdLBGZYLf2/16YKsbQOPpNrdeefLiIWQf5oRrok51U=
+X-Google-Smtp-Source: AGHT+IG/l4yCRNfI7DOPZyV8ReShUgrZ6Qt3TdLxndrrMT9p3qU8mq+mnkWp4ubxVT/SvOshXTzAcQ==
+X-Received: by 2002:a05:600c:a07:b0:43c:fb95:c752 with SMTP id 5b1f17b1804b1-43ecf843e91mr75410255e9.3.1743863836147;
+        Sat, 05 Apr 2025 07:37:16 -0700 (PDT)
+Received: from localhost.localdomain ([78.170.183.130])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c3009644dsm6964693f8f.6.2025.04.05.07.37.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Apr 2025 07:34:57 -0700 (PDT)
-Date: Sat, 5 Apr 2025 17:34:53 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Wentao Liang <vulab@iscas.ac.cn>
-Cc: gregkh@linuxfoundation.org, philipp.g.hortmann@gmail.com,
-	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH v3] staging: rtl8723bs: Add error handling for sd_read().
-Message-ID: <948e34d5-95b0-4f7f-acf2-c93cd2536300@stanley.mountain>
-References: <20250405140703.2419-1-vulab@iscas.ac.cn>
+        Sat, 05 Apr 2025 07:37:15 -0700 (PDT)
+From: Baris Can Goral <goralbaris@gmail.com>
+To: martin.petersen@oracle.com
+Cc: linux-scsi@vger.kernel.org,
+	target-devel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	skhan@linuxfoundation.org,
+	linux-kernel-mentees@lists.linux.dev,
+	Baris Can Goral <goralbaris@gmail.com>
+Subject: [PATCH v4] scsi: target: transform strncpy into strscpy
+Date: Sat,  5 Apr 2025 17:36:47 +0300
+Message-Id: <20250405143646.10722-1-goralbaris@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250402204554.205560-1-goralbaris@gmail.com>
+References: <20250402204554.205560-1-goralbaris@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250405140703.2419-1-vulab@iscas.ac.cn>
+Content-Transfer-Encoding: 8bit
 
-On Sat, Apr 05, 2025 at 10:07:02PM +0800, Wentao Liang wrote:
-> The sdio_read32() calls sd_read(), but does not handle the error if
-> sd_read() fails. This could lead to subsequent operations processing
-> invalid data. A proper implementation can be found in sdio_readN().
-> 
-> Add error handling to the sd_read(), ensuring that the memcpy() is
-> only performed when the read operation is successful.
-> 
-> Fixes: 554c0a3abf21 ("staging: Add rtl8723bs sdio wifi driver")
-> Cc: stable@vger.kernel.org # v4.12+
-> Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
-> ---
+The strncpy() function is actively dangerous to use since it may not
+NULL-terminate the destination string,resulting in potential memory
+content exposures, unbounded reads, or crashes.
 
+Link:https://github.com/KSPP/linux/issues/90
+Signed-off-by: Baris Can Goral <goralbaris@gmail.com>
+---
+Changes from v4:
+	-Description added
+	-User name corrected
+	-formatting issues.
+	-commit name changed
+ drivers/target/target_core_configfs.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-You need to add an explanation here what changed in v3.
+diff --git a/drivers/target/target_core_configfs.c b/drivers/target/target_core_configfs.c
+index c40217f44b1b..5c0b74e76be2 100644
+--- a/drivers/target/target_core_configfs.c
++++ b/drivers/target/target_core_configfs.c
+@@ -143,7 +143,7 @@ static ssize_t target_core_item_dbroot_store(struct config_item *item,
+ 	}
+ 	filp_close(fp, NULL);
+ 
+-	strncpy(db_root, db_root_stage, read_bytes);
++	strscpy(db_root, db_root_stage, read_bytes);
+ 	pr_debug("Target_Core_ConfigFS: db_root set to %s\n", db_root);
+ 
+ 	r = read_bytes;
+@@ -3664,7 +3664,7 @@ static void target_init_dbroot(void)
+ 	}
+ 	filp_close(fp, NULL);
+ 
+-	strncpy(db_root, db_root_stage, DB_ROOT_LEN);
++	strscpy(db_root, db_root_stage, DB_ROOT_LEN);
+ 	pr_debug("Target_Core_ConfigFS: db_root set to %s\n", db_root);
+ }
+ 
+-- 
+2.34.1
 
-https://staticthinking.wordpress.com/2022/07/27/how-to-send-a-v2-patch/
-
->  drivers/staging/rtl8723bs/hal/sdio_ops.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/staging/rtl8723bs/hal/sdio_ops.c b/drivers/staging/rtl8723bs/hal/sdio_ops.c
-> index 21e9f1858745..b21fd087c9a0 100644
-> --- a/drivers/staging/rtl8723bs/hal/sdio_ops.c
-> +++ b/drivers/staging/rtl8723bs/hal/sdio_ops.c
-> @@ -185,9 +185,11 @@ static u32 sdio_read32(struct intf_hdl *intfhdl, u32 addr)
->  			return SDIO_ERR_VAL32;
->  
->  		ftaddr &= ~(u16)0x3;
-> -		sd_read(intfhdl, ftaddr, 8, tmpbuf);
-> -		memcpy(&le_tmp, tmpbuf + shift, 4);
-> -		val = le32_to_cpu(le_tmp);
-> +		val = sd_read(intfhdl, ftaddr, 8, tmpbuf);
-> +		if (!val) {
-
-The sdio_read32() function now returns negative error codes.  Probably
-a bad idea.
-
-regards,
-dan carpenter
-
-> +			memcpy(&le_tmp, tmpbuf + shift, 4);
-> +			val = le32_to_cpu(le_tmp);
-> +		}
->  
->  		kfree(tmpbuf);
->  	}
-> -- 
-> 2.42.0.windows.2
-> 
