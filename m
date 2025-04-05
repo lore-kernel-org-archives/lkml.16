@@ -1,121 +1,105 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+Received: from mail-io1-f74.google.com (mail-io1-f74.google.com [209.85.166.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9F92366
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 00:10:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A11A36C
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 00:10:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743811809; cv=none; b=eqG78YvJNqY47K8o7zlNtMw3AcrtbrZMKKe6KqEW0ZYnV5Nz8BchXAjZ1luKDlZHVWnEWftb0caDbZkQNhQJ2CtFNmMbTWXIvRX3PvpAqm/ugdREcKAFnY9j2ik7nKQwFoH+snaEZ+yDbql2bfl13BOkxPkCvwmQrhIDq07I0xk=
+	t=1743811847; cv=none; b=ori2AEDZFLiA+UqSWJp8QU7ZJpL4B1dQFA+WXGFyGVMl7CdIRghtQb2IQBYinULf2rCmxvhFtkheGG3+DURdk8gqOw7oeJTjQ6PfNy74UmQGW7n91nRNCV7PjQ6Zi1ghrQNZVemAkAHiNhFsJiMZ2UlkY9KpzbnPuLnglMHl7UM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743811809; c=relaxed/simple;
-	bh=pmmaRqN7rXALYQH83hlqR8An1ishV5jBJzRY+eC4NUE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=cDoitd7CRlZNCcwkU22Kj4sfhRYppCW2286bqh7UF0OGmGcTZsIVh+POURHA+yEsBM0qVKaVv851NVBT4h/s5ohER0NalX6V0elwCwl0mxT0ULceQtEPff+nYRrFXVTSuN/XlgTsF51G0xFOxp/N38ARjkIQd4cTh7ZABE03O24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LPkvwtOh; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743811847; c=relaxed/simple;
+	bh=9OLt6CxBIy6kqbClRlpyjmlyZ3nlZBIi/b6vLEkxDsk=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=SFRrs6vRyg5AqFhV33E4L6e/AcKLIXJ3HW4viBNZj6wTL+FgFf07eq6TWfx9VlnujIYK3d86RL7eWAFEmR2/vGSpteED2FEqEkI00VO8RQtIUEvBFwnOF1QkNdAjna4vh6spq1j1azw9BIaMBxR8dw0P5d7YyWl2bPvMUskWvBQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--rananta.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qbmowckC; arc=none smtp.client-ip=209.85.166.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--rananta.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LPkvwtOh"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5e686d39ba2so4832807a12.2
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 17:10:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qbmowckC"
+Received: by mail-io1-f74.google.com with SMTP id ca18e2360f4ac-8610d7ec4d3so468467239f.0
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 17:10:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743811804; x=1744416604; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=HEjVc9ejEgtKhgMciej+qKT5ntFRA2f8i3TphBlRWL4=;
-        b=LPkvwtOhtJ6OMsgrCBUrwFSwy0/aorNJCzqZzz1ldY+ICTFRFccd2HlXJQNkBxm1ll
-         RBv1bFZCbkB7kvZqrUDek/64Bz48gpKYldwhyCMBRyJvJlSg0vG+YNbJPl4v4BOyDdWA
-         9VgEfCzd2sf8c16q7Ye04GKdxjQdDycJhYUjSZQ6Px9esnt0UJXW33LCc7C/fz0pC/P2
-         5nI9ogu4wHjZ4vTMnYXFK+Lr7zJFLKlIN67xW0DUakaFxw+3Eayzmpv+6Q+6WzwXMbs3
-         DUXr6LE73sLpliLuiycgXvoSV+jHMMaKf2uVQEOlFUtTwqUzkZAfVKZJzZEacMu+uQVP
-         9YIw==
+        d=google.com; s=20230601; t=1743811844; x=1744416644; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=2DNvYO0bTfj7X+8PQ13cmGZGTNT4dkdJknnzMC9cIXk=;
+        b=qbmowckCZVnv6vID2Wd1kKSBQ6IxjJUhQ+3TsMqsu5z9LhKAOxiphE/L3+sK3cMqKT
+         EVgABvnXzUHDebplvyC4+TnY4WQPG3tGsBkP5lw04hLY2z7BKKkuPTsQGTprqK+R9I16
+         lLSLrwqOF4bY0R/DnDin1y3/L/IZyZyLuqQKehM6Wr9jPG7OiHwczmB1sq+l5GipMZkt
+         T5coN4Kh6Gn5tyrkhjmJbO9+FRsRpPa1Zzy86TbqmjBafeKGLIMsGqXkNcvP2oq9Tx8r
+         Dvh+PAslSaw+sqQPbE70KthqqXQaZ3hNHhGjNMHcRX/azXDcwc2AawB0sIalftLGrnrt
+         3coQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743811804; x=1744416604;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HEjVc9ejEgtKhgMciej+qKT5ntFRA2f8i3TphBlRWL4=;
-        b=ktFmAx0AeApp2H/14uAprG6SFcodna6K871uzWV4yAWMoAkx4adcWAqzRE7L4E2eTZ
-         dKSDlSVazfYD8YxOSeCq25zpvbCfzR9ngBeIU341rG35jNG9C7VCkr8pjR5mvGvcGzOY
-         8haCbhNlGEYSy92AdwAueBg+C2rGfZqf5+l8ieK5d6uhZOYvC/qxET+snbj+UK56kFMK
-         e6/w1pfPTPV7f9/zgKFqFs9RYcwjC+p1dlCU7MUMsP5KAPrsQ96wDlZcWxQ9OLX5oP1y
-         ZPCt/IaJqFDljFFTkBmoaLAOcI68vntF7KJOiLjZUAPGl3Tqh5FIYoHOeLyhNhHJkhGo
-         Ppsg==
-X-Forwarded-Encrypted: i=1; AJvYcCU9GRU+/+hLTkl9OxwMEwNaDLFErEwKW9OSXjljeSyWc1M4vRhnq5KY2Q/svYH2y46cs3GZVqaemLqZosc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXL6ighdvz09PVEGZhiLjELHtX5NFbeKW5x3TQPaj8p5dDpogs
-	Qj04tq9d9Z72E1j/DBarBdpkD6cwq74gX7qF63kK6rUn6XGKEJBv
-X-Gm-Gg: ASbGncsTRMYbBPD6+kk6tVQxqO5wXafp+omXhhnn7OPj5Bx+OstcV3RPJb2injQHINp
-	lDxd3/842RJ6vtCt5bMdYJMgMhhRr/6Z5V3J8tObSOjI75zPPtjvNvuKjgxFOImlvHzoontOExL
-	NtfavnUbxDstVO2Pp3tZX9l/bs0BmQWq/bJuNLzQL+7uWSmvH8nbieQnmkRr0N4XblMscwh0df/
-	Qqdjyqpjcn8/Yo4+U9zTWpYu5rf1vNeppNkln36skeDKFtQLzbqivPlI/+jb7S37Qk4gY5D+T5A
-	gOG0ge4gB6MAidDY7NHPkfgJTtf8SpIRYMMd70XUxdfyyd6GpQ==
-X-Google-Smtp-Source: AGHT+IE85esx6A4PJTGOWVHuGgOO4I7v2jLl1nJD1tUzIsDLj020wHzfyh82c5B1ItMJEym95jd1hA==
-X-Received: by 2002:a05:6402:210c:b0:5e7:8efa:ba13 with SMTP id 4fb4d7f45d1cf-5f0b3b61098mr4010902a12.7.1743811803658;
-        Fri, 04 Apr 2025 17:10:03 -0700 (PDT)
-Received: from ubuntu ([105.112.234.193])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f087ed19e7sm3039854a12.20.2025.04.04.17.10.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Apr 2025 17:10:02 -0700 (PDT)
-Date: Sat, 5 Apr 2025 00:09:59 +0000
-From: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, julia.lawall@inria.fr,
-	andy@kernel.org, dan.carpenter@linaro.org
-Cc: linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org,
-	outreachy@lists.linux.dev
-Subject: [PATCH v2] staging: rtl8723bs: Use % 4096 instead of & 0xfff
-Message-ID: <Z/B019elTtKG/PvD@ubuntu>
+        d=1e100.net; s=20230601; t=1743811844; x=1744416644;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=2DNvYO0bTfj7X+8PQ13cmGZGTNT4dkdJknnzMC9cIXk=;
+        b=Zk++MVUAexCuyKu3fA9q8sf84AvCOzb/IIUcNUEfLheIK0nvibaE3zVAqdt3lMAvfW
+         PD8SQMXPOoyUKGFnT+hN3Ehx9LiwqBVawP2rZ9rb/OHnM4DwDxX1Cr3oAh0PhkivxTF4
+         fb5v56eCZTegDhqE0jYKckLY7Pwb+A8rft0OOMz1GLbpOL/LJFZFdGNl4acejuE1QlQ1
+         QVVUpD7OcSdlxQZFGAagxGGmfkkxoOnt0Hxs5gfeLztQ5ABmjFeUSR7t1P2Ype//R//+
+         fGEzjn+a18cCzUN+8KpHrCaGRiPf4FOS7mObAbDxfvOkK+g33Z483Vic8DCPo3T4fDPF
+         vVQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU8gVtEPTJYwPm24qAXibiCrZ6robyMvIMIo1FroLOIqrCXHB8XyRrJfU0yEwDgvp1unVD7O7FrgnnK4Ys=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxYj6/nubmOSBtC6PrqGZH1Hc85l7v+Ahz1o2F/c8pSIjmx0lsw
+	9wMyHnv299Y/151cR9cPBWpxk8YGfjmCyYG6MEqqlW5kK73MNkBq6NcwSQmaQCsUXmFrEzAO7oo
+	Q6B88sA==
+X-Google-Smtp-Source: AGHT+IESzYBYMsy8TcNeSXmOCuIMcY0rfkLLxruZnkYbIer8gFLQRo6rMLnXbA8I1jN134maNpjGU7IZC4nb
+X-Received: from iobbk9.prod.google.com ([2002:a05:6602:4009:b0:85b:3e10:d317])
+ (user=rananta job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6602:3a12:b0:85d:a211:9883
+ with SMTP id ca18e2360f4ac-8611c3bae5bmr467620239f.10.1743811844346; Fri, 04
+ Apr 2025 17:10:44 -0700 (PDT)
+Date: Sat,  5 Apr 2025 00:10:40 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
+Message-ID: <20250405001042.1470552-1-rananta@google.com>
+Subject: [PATCH v2 0/2] KVM : selftests: arm64: Explicitly set the page attrs
+ to Inner-Shareable
+From: Raghavendra Rao Ananta <rananta@google.com>
+To: Oliver Upton <oliver.upton@linux.dev>, Marc Zyngier <maz@kernel.org>
+Cc: Raghavendra Rao Anata <rananta@google.com>, Mingwei Zhang <mizhang@google.com>, 
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Replace the bitwise AND operator `&` with a modulo
-operator `%` and decimal number to make the upper limit visible
-and clear what the semantic of it is.
+The series fixes a conflict in memory attributes in some
+implementations,
+such as Neoverse-N3, that causes a data abort in guest EL1 with FSC
+0x35 (IMPLEMENTATION DEFINED fault (Unsupported Exclusive or Atomic
+access)).
 
-Also add white spaces around binary operators for improved
-readabiity and adherence to Linux kernel coding style.
+Patch-1 is a cleanup patch that replaces numbers (and comments) to
+using proper macros for hardware configuration, such as registers and
+page-table entries.
 
-Suggested-by Andy Shevchenko <andy.shevchenko@gmail.com>
+Patch-2 fixes the actual bug and sets the page attrs to Inner-Shareable
+by default for the VMs created in the selftests. More details are
+presented in the commit text.
 
-Signed-off-by: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
----
-Changes in v1:
-	- Added more patch recipients.
+v1: https://lore.kernel.org/all/20250404220659.1312465-1-rananta@google.com/
 
- drivers/staging/rtl8723bs/core/rtw_xmit.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+v1 -> v2: Addressed Oliver's comments (thank you)
+ - Moved the TCR_* macros from tools' sysreg.h to selftests' local processor.h
+   in patch-1.
+ - Adjsted the citations to describe the issue more appropriately in
+   patch-2.
 
-diff --git a/drivers/staging/rtl8723bs/core/rtw_xmit.c b/drivers/staging/rtl8723bs/core/rtw_xmit.c
-index 297c93d65315..630669193be4 100644
---- a/drivers/staging/rtl8723bs/core/rtw_xmit.c
-+++ b/drivers/staging/rtl8723bs/core/rtw_xmit.c
-@@ -943,7 +943,7 @@ s32 rtw_make_wlanhdr(struct adapter *padapter, u8 *hdr, struct pkt_attrib *pattr
- 
- 			if (psta) {
- 				psta->sta_xmitpriv.txseq_tid[pattrib->priority]++;
--				psta->sta_xmitpriv.txseq_tid[pattrib->priority] &= 0xFFF;
-+				psta->sta_xmitpriv.txseq_tid[pattrib->priority] %= 4096;
- 				pattrib->seqnum = psta->sta_xmitpriv.txseq_tid[pattrib->priority];
- 
- 				SetSeqNum(hdr, pattrib->seqnum);
-@@ -963,11 +963,11 @@ s32 rtw_make_wlanhdr(struct adapter *padapter, u8 *hdr, struct pkt_attrib *pattr
- 					if (SN_LESS(pattrib->seqnum, tx_seq)) {
- 						pattrib->ampdu_en = false;/* AGG BK */
- 					} else if (SN_EQUAL(pattrib->seqnum, tx_seq)) {
--						psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (tx_seq+1)&0xfff;
-+						psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (tx_seq + 1) % 4096;
- 
- 						pattrib->ampdu_en = true;/* AGG EN */
- 					} else {
--						psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (pattrib->seqnum+1)&0xfff;
-+						psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (pattrib->seqnum + 1) % 4096;
- 						pattrib->ampdu_en = true;/* AGG EN */
- 					}
- 				}
+Raghavendra Rao Ananta (2):
+  KVM: selftests: arm64: Introduce and use hardware-definition macros
+  KVM: selftests: arm64: Explicitly set the page attrs to
+    Inner-Shareable
+
+ .../selftests/kvm/arm64/page_fault_test.c     |  2 +-
+ .../selftests/kvm/include/arm64/processor.h   | 67 +++++++++++++++++--
+ .../selftests/kvm/lib/arm64/processor.c       | 60 ++++++++++-------
+ 3 files changed, 96 insertions(+), 33 deletions(-)
+
+
+base-commit: 38fec10eb60d687e30c8c6b5420d86e8149f7557
 -- 
-2.34.1
+2.49.0.504.g3bcea36a83-goog
 
