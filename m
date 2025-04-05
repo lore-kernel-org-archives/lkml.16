@@ -1,126 +1,114 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BD1E2576;
-	Sat,  5 Apr 2025 14:28:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8495F1DE3BB
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 14:29:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743863340; cv=none; b=kWJS8gXiZTmtlaQLKDV+cYqYIKR6vETO2zkZdxSca8naCCM6OwG02xLi3du5AQVp1MUH7PiBSgSLNMx29sNxtnk9/+N8D7hks5sN0RxTq+mDnv0QL0jrgtpAVTT420Rp9hcjkLh+0tDvKH3NB3wMLnCq5dpURK1fRWNZcqtErxc=
+	t=1743863352; cv=none; b=uSduzv0Ut131361lNcF9AQtpjsv8l80C+VWVyVGaj1ymP33XLgtbZpYoiooAhejXbMYlZ+E2r8v0Z8/R1ZjO2NCjrH0YF0Bm3fGAU3WjD7HhvSt2Fb/TGbEX5524bAI4OcliSPpkFHhx/VzVqXyJysIiLjNxs73O7w012fgKMu4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743863340; c=relaxed/simple;
-	bh=4JfXyCl3pyf7S5ubtESdWHCjWxur7IoQ3C8ULhskaLE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=RzTtjWhciqa1/Oh8LvUzKvdDRlFq5qOHhs/cpmoaQB61xHvRoEr8uSju7J9Z8Chex02cCBG+HmX5iIBjmSqjc1elBr47ZLOIIwmo9KYWw/TPKP9KCer1WQSUTOmKMIMzfsGtBRE1yMqo0/ZJlmBPz0rHMkg3cFoFZz8jofyqTIo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J07iPH8x; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743863352; c=relaxed/simple;
+	bh=GiHxnNFMXpNIIyTnynX7IxDP/p9NCTJMguIsJZ7Y6h0=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=fNujs0BCz99COMaOQF4nf0UCQPfjd/DEEUZ15CO14TXtsN7+qhf2Qa+h3/B7Z9lHJT64d2agAu8Tsnqd2yLTnxUjagWCdypej52rEgmOTWrQv1uZj/XfVyXf7asqkjyOmnqy8S0NlX5c7FtFYslgK9V3QFOknct3wBq91b+JK5o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Dl0xft0C; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J07iPH8x"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-227b650504fso27385745ad.0;
-        Sat, 05 Apr 2025 07:28:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Dl0xft0C"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-39bf44be22fso2031735f8f.0
+        for <linux-kernel@vger.kernel.org>; Sat, 05 Apr 2025 07:29:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743863338; x=1744468138; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ahwQ81oXocQBWNsh5IPSlPP/mK02nGlAnWcU1yfQR7E=;
-        b=J07iPH8xNc2bdnOVw0OsnJLOUYYze0LcRoboyeS7QJxexRoTj4/P5uqcQ+OLkAwx8R
-         ilwITvrUPRyXVUbLPYIOs4uhGYwgEdEPUYTnzpelNX46sUNuoaWJdXFUxFqvBBKMXWg5
-         IWa2+0R61AB/ztEEeavpnDYHDdyV2/lkyzJaAqS5zdDme0N+VTorPTbqc/SZs2yDbVSV
-         PPI82/5m/YyQWNNRTqMucbs1DYhRNIajKta8yssXZ05bQ7MmLskd5mqTrjsIBZI5ygGd
-         /1tgtjUKBrcEyMy06YfO2hDGad/y8lff2jxBIZWbfulmk2Ad78QgEBn6Xkkb4kpZ8QZe
-         zHBw==
+        d=linaro.org; s=google; t=1743863349; x=1744468149; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=GiHxnNFMXpNIIyTnynX7IxDP/p9NCTJMguIsJZ7Y6h0=;
+        b=Dl0xft0C1X6gds1VaxF4D5yQc5Q88d18FDmfNNaoHDAeEbBFisYX9phxnpr1nP/Gxj
+         8QEoy+ztXWcQ9J2mbRIfa4u8GkQf0qP+xsm7bfceb5+HGS6QG8SuJ18Bc8VXUvaQJiKY
+         s6yC/lmUCLL8sndZj7Ts/n3mOClo8tclwSL6dUQubk2xc5Qpt61Xs0C9mzzhIm9VNmhA
+         0o4FMCDxMN8x094tEbzL4bQP6/fLF65CYZ76CUVLCF/HtfURT0eWs5fNCKBTKPFRzUbM
+         KFCF0tWTOKc01yLQVVmzaGoK5NLzZfLS/Jzfs5iUk9VHJf8a7SF0h19/6yx1d8tLwrHO
+         Lcbg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743863338; x=1744468138;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ahwQ81oXocQBWNsh5IPSlPP/mK02nGlAnWcU1yfQR7E=;
-        b=oQnEEESsmAVlzCYp1AOA5TImz6QwMgUoOkP56LzY0xi4zQjQhX6K1ZVoLQfORA43Vv
-         6F8VAEUrgal1hb0ZCXffbgqEcaxpIytxlafJsVr1D+drB+2fU6jRXu6TTUyFQ0O0Qmte
-         hVoZ69xZ2p6Y+o7Il/o8gmAYpcZL2e0jtsWvFLzn6jWVlcMbPQwR/8NoZ+j0NcwRBvKQ
-         WlCsG8D3X6XVDM07MDbVWinUFdBEjMbAngXUyRH67N5mo3Chg6lSl23ylptiQMbtRSqY
-         DopRDSQxptJzj4lWH3NhAvt/FdL7HqHwG1MDb5jOs5P8fMZLngu8Pbv4R1iT9OrzlpwE
-         AWcQ==
-X-Forwarded-Encrypted: i=1; AJvYcCULDnEjAfTlHIcAfzBXibfyzdTnYfk0QXt9wfswzkutGNsa2sX9HjKsRF96O6zdkFDhAVE8mztjOKWtOqKb@vger.kernel.org, AJvYcCUYep1Rn8E44IKDMfvXNzpGq6pm6jOE/vfiw4mbU9zuwB+oMszBCI7DSXj0eK9OALv5Xf4+UrEUg56+tRI=@vger.kernel.org, AJvYcCUtzcB3Yn3GEUXzT3HpXzMVFKGKaJ4vL/9jrcm34smLkF2B1u/0cNQjoOLUoADCcs1DEeWx7BGD@vger.kernel.org
-X-Gm-Message-State: AOJu0YxF3feEi4uHWCAfBqK/L8CDd3EHnvdY5YaWgVeNoMKFso5q6dNd
-	1kyl5VOZf7P99z01hZY0oIIsPYKd3LBjAcjwMHrMdgFtd4HFXQ1i
-X-Gm-Gg: ASbGncskdahp1dcZSH7SjYsHF1TA4e0fclnmteQGtYtRlndxq0fpi+Ub7yU1US6ELnO
-	eqU44BymyV55cFzdc8AXuBlnN2CJit2FJcynxR4qjsIfvg4O2+6NFTccA1NQiMlfF3jNAWW1+1m
-	6zP1JOSoGgDDpRmir6+o1xQt/9cu9LTPGRnhVDOPLlemIMwZDTKzdcKGPiPt1nO0sm7y0VNV/gj
-	HA7xAaLec18hsCerRojH5Xhjs4y2JR7FtxuUvJBxMTz+2cMu+Lv5y20a8LX7xn3bJ5qdYe5l8K0
-	93zH/jUNL/ndIZiKAjRsA4XWY1HPzC2x3krrrze5c9OfBn+1+3/MIiTEzmjXevHHJ8FMNNjhye3
-	SCt/zWopXXlcgcbp6INMNwEC9l2UGlv4=
-X-Google-Smtp-Source: AGHT+IErW+VC7cKEtMFmjVemula5pnmsuaKk1cpS31e1xYdUj8s0o8v1uVlk17v8qniHfkpWedVWsw==
-X-Received: by 2002:a17:902:ec86:b0:21f:5cd8:c67 with SMTP id d9443c01a7336-22a8a080701mr97537995ad.31.1743863337699;
-        Sat, 05 Apr 2025 07:28:57 -0700 (PDT)
-Received: from localhost.localdomain (p12284229-ipxg45101marunouchi.tokyo.ocn.ne.jp. [60.39.60.229])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-229785aea7fsm50296915ad.2.2025.04.05.07.28.54
+        d=1e100.net; s=20230601; t=1743863349; x=1744468149;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=GiHxnNFMXpNIIyTnynX7IxDP/p9NCTJMguIsJZ7Y6h0=;
+        b=JUJdT4cLXRqXl9Un3HUwonjkol2zSvSPVlkuujqigtVSy/sn1eA+fnmyWOHu/TxW72
+         ovUor+Azk2aS14KomGbhpZ6sLJMFezwMxkgOeNTK3DcVCQeq1p7RnqhTcNmU/1H9gE3i
+         XgpBMlQcStBML6pTCZATcP1XBOeg/m+p1RrvN3LpgRBFqu6KtXGaMkvSK+BuBsrSHGJV
+         1reERHRUTGwfABnTlK+c/CplcuE7rfbkbePguJ0aMMrAMAHbFsrwinvBunQE6wBGrRbh
+         VoyyaLRyNysnT6y4N96qiHu0ME+NflDR+tZVctiFUwS4SoEib/MRr6ypjAU2kI8jKrwV
+         lwmA==
+X-Forwarded-Encrypted: i=1; AJvYcCWXjnnbQyZnBums4nNspaz5f71A6TJkn4B7SzapkdN1u7/+ibT05nYGa49wGrV7ZHG3tr7qGrS0/pQnvKg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyGxMQmPDjbMYcFUlmcAnVSATvNZ3tdKGYtbdGFRxgogO9+VTIm
+	BmYdA2ZxdajTLZCJEQuGXX2sKHlbwxEhLI138JPPXPtjnSfEEX4w0/oaGyqquyc=
+X-Gm-Gg: ASbGncvj246RTUcvMm+2UkODexZBd8QcfpfN8yMaEysJ0W9YQF0EKKoWr26mwI3VvQ4
+	SrmAqIm+Naipsh9MN+pJQoTWokkyXfHuci7BH6I7z36KIUxP1IP1F2NKIhNOukacAfdanjSDCkw
+	+Y/Ro3QuBaOKoVUfEiwyS5z3bP6WGgFti4/mSnBZsDaJ5v48Z23dDLl8ARxCBXjmJCZIb2ffwNP
+	JIdl1chZ1r5ph1Jb+pyEKM76n+e5kNdojYy8H0pZOqLCsV0uDsf+Rnhs8lLXcwalQcnUg/doFmq
+	XSgIbrZlP9mal38Wsxft5iw0/Es8IN+EYI6WkK+YzEa+Ht6v
+X-Google-Smtp-Source: AGHT+IG+Z0ir3xm5RCrAq1SN4ZDlwjVRgFNS1Hr6WM6JjZY4zAku9AfXOB4reUpFaHMAVqmVf3D7Rw==
+X-Received: by 2002:a5d:6d8a:0:b0:39a:cc34:2f9b with SMTP id ffacd0b85a97d-39d6fc291b3mr2358345f8f.16.1743863348783;
+        Sat, 05 Apr 2025 07:29:08 -0700 (PDT)
+Received: from draszik.lan ([80.111.64.44])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c3020d63csm7230344f8f.69.2025.04.05.07.29.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Apr 2025 07:28:57 -0700 (PDT)
-From: Ryo Takakura <ryotkkr98@gmail.com>
-To: gregkh@linuxfoundation.org
-Cc: alex@ghiti.fr,
-	aou@eecs.berkeley.edu,
-	bigeasy@linutronix.de,
-	conor.dooley@microchip.com,
-	jirislaby@kernel.org,
-	john.ogness@linutronix.de,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-serial@vger.kernel.org,
-	palmer@dabbelt.com,
-	paul.walmsley@sifive.com,
-	pmladek@suse.com,
-	ryotkkr98@gmail.com,
-	samuel.holland@sifive.com,
-	stable@vger.kernel.org,
-	u.kleine-koenig@baylibre.com
-Subject: Re: [PATCH] serial: sifive: lock port in startup()/shutdown() callbacks
-Date: Sat,  5 Apr 2025 23:28:32 +0900
-Message-Id: <20250405142832.491151-1-ryotkkr98@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <2025040513-bronco-capsule-91aa@gregkh>
-References: <2025040513-bronco-capsule-91aa@gregkh>
+        Sat, 05 Apr 2025 07:29:08 -0700 (PDT)
+Message-ID: <73d99b656c405a19f75633796b696cc1aae71b90.camel@linaro.org>
+Subject: Re: [PATCH v3 00/32] Samsung S2MPG10 PMIC MFD-based drivers
+From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
+To: Lee Jones <lee@kernel.org>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Sylwester Nawrocki
+ <s.nawrocki@samsung.com>, Chanwoo Choi	 <cw00.choi@samsung.com>, Alim
+ Akhtar <alim.akhtar@samsung.com>, Michael Turquette
+ <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Russell King	
+ <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will
+ Deacon	 <will@kernel.org>, Alexandre Belloni
+ <alexandre.belloni@bootlin.com>, Peter Griffin <peter.griffin@linaro.org>,
+ Tudor Ambarus <tudor.ambarus@linaro.org>, Will McVicker	
+ <willmcvicker@google.com>, kernel-team@android.com, 
+	linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-clk@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-rtc@vger.kernel.org, Krzysztof
+ Kozlowski <krzysztof.kozlowski@linaro.org>
+Date: Sat, 05 Apr 2025 15:29:06 +0100
+In-Reply-To: <20250404093035.GD43241@google.com>
+References: <20250403-s2mpg10-v3-0-b542b3505e68@linaro.org>
+	 <20250404093035.GD43241@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.2-1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Hi Greg,
+On Fri, 2025-04-04 at 10:30 +0100, Lee Jones wrote:
+> On Thu, 03 Apr 2025, Andr=C3=A9 Draszik wrote:
+>=20
+> > This series adds initial support for the Samsung S2MPG10 PMIC using the
+> > MFD framework. This is a PMIC for mobile applications and is used on
+> > the Google Pixel 6 and 6 Pro (oriole / raven).
+>=20
+> When you resubmit these, please note that MFD subjects take the form:
+>=20
+> =C2=A0 mfd: <file>: Succinct change description starting with an uppercas=
+e char
 
-On Sat, 5 Apr 2025 14:40:33 +0100, Greg KH wrote:
->On Sat, Apr 05, 2025 at 10:24:58PM +0900, Ryo Takakura wrote:
->> startup()/shutdown() callbacks access SIFIVE_SERIAL_IE_OFFS.
->> The register is also accessed from write() callback.
->> 
->> If console were printing and startup()/shutdown() callback
->> gets called, its access to the register could be overwritten.
->> 
->> Add port->lock to startup()/shutdown() callbacks to make sure
->> their access to SIFIVE_SERIAL_IE_OFFS is synchronized against
->> write() callback.
->> 
->> Fixes: 45c054d0815b ("tty: serial: add driver for the SiFive UART")
->> Signed-off-by: Ryo Takakura <ryotkkr98@gmail.com>
->> Cc: stable@vger.kernel.org
->> ---
->> 
->> This patch used be part of a series for converting sifive driver to
->> nbcon[0]. It's now sent seperatly as the rest of the series does not
->> need be applied to the stable branch.
->
->That means this is a v2 patch, and you should also send the other patch
->as a v2 as well, right?
+I've followed your suggestion regarding the prefix when patches touch just =
+one
+file, but for patches that touch multiple files, I've kept the 'mfd: sec:'
+prefix, e.g. in patch 18.
 
-Oh yes. I wasn't sure about the versioning for this patch. Let me resend
-this patch as v2.
-Also for the other patch, as now its sent as a single standalone patch,
-I'll resend it as v2.
+Hope that's OK.
 
->thanks,
->
->greg k-h
+
+Cheers,
+Andre'
+
