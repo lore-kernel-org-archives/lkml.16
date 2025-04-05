@@ -1,274 +1,148 @@
-Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 157F2194A60
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 10:32:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F51F19D8BC;
+	Sat,  5 Apr 2025 10:34:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743849152; cv=none; b=ahlYfpTghOfZVH/Lxb7nc+NVFhZ58ctixtWgMdmrFrwieH/uPNdh+woI6YQmQC0U8SJEAdbcJQUXCtVLysRs83g6dqesQ+vTNt5hNYkTJn2U00sNbhJBrpvaOQFOYRdVk7BW6s4xuPxZTB3ZGH4OOxwOQxFfrfXcZZ+L7qdRw7c=
+	t=1743849287; cv=none; b=BGdTw0jhr0dINQK5u5qqdKlfOVbZdBmEuJHviauloXuYXRBvk/WA/kqnmJ5LM5VkpXcFUB006HLhiv0d3r1SB/9sE7gL3M+jVl1QtfsIwXsSmyesRLPAgTC2i3dt63/09vx3sDNYU3sm99Ed+e3g8zNUSsM0UI3r29WzJUomrKQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743849152; c=relaxed/simple;
-	bh=3cp0SH55YiReXnJ8UsxAtPrCjubgnDRfbg45lvWTmA8=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=XrwNvKCuzV77Lh/g+b4IViYTG+ivknt7+RDgH5JN4Vrqo2cRFaYRfMznADexvHShoLDILJGMptHY2GI4De++dyww8IHC0ZThkncT2ImZ9ycokoVbCLLUYt+6B8KGwomtnapBAcKZIMg53tyqa3+ngNl0YZNi4OuGCWLGLPV1f9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3d43541a706so30665855ab.1
-        for <linux-kernel@vger.kernel.org>; Sat, 05 Apr 2025 03:32:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743849149; x=1744453949;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+	s=arc-20240116; t=1743849287; c=relaxed/simple;
+	bh=vQj84IzAyMbsqXmdqTC73l509pCAn1/REbFySFYyqoE=;
+	h=Message-ID:Date:From:To:Cc:Subject:MIME-Version:Content-Type:
+	 Content-Disposition; b=BdxmOwENpyDIWY93EbQ2e9PxcXpQq4UY8EgXDC8B+ep1BvOK7CE0ZW2kFzlkYPDs6OYrkOkiTZg8x0dxHfT3YtchRZULWrsK5mmEvCf+mv/3q8XVcCRQTCUTefKa8BdLj5TJlapH9INgmDZ0T06j4JmEQB/dccRT+m4WZVvbdVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YEGzPu0e; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YEGzPu0e"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43cfba466b2so28228865e9.3;
+        Sat, 05 Apr 2025 03:34:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743849283; x=1744454083; darn=vger.kernel.org;
+        h=content-disposition:mime-version:subject:cc:to:from:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=CALj1vUlZ1NSx9LpykhmLtRFtU3x4ub3pHEdhE9SlmI=;
-        b=hsGQf23iBrjHU8n//oNm1lRlJHpagKC+J6f/1xZ8mRrQJ9Wd9OSTxq92djXbn+XZQ9
-         jnOADIdTIIO8goyHwTpPDxPr3J7ll6h8Mrshf6TmazmdBnezQY2ODJBd9yADRitE0Kjw
-         RLLfnk8MXhpmDTIX9XYLT0qcRus2syLffhcLSOTNWKadCDeEGVaH6z6yX2I2TUlIIhWj
-         LtbSK1FFSEjHowbLCwPVU/kqfNPi1l2IR0RtENI00kpX5H8+Toszzrar17v5dRcsT75G
-         OdHHdXKQKz8F0rfpO3qt5XWGVgou018ZlMzoUPjsiBWj0KOfJ8BHweae2Xs+WctEvmc8
-         qvOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVQbKuI8mxVJ9TIqwHhubhXPp/C9PkdZWkm/bgfflJXry+pDIjEDa08iM70xXFuaNtB0YnlnI/9XcPOaOY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyEeRDHzS44LqeDQaEtUegnQYo+0DffYVMgRHEiFKl0ocNl4uEU
-	3LFrvtO4E3tS8z53ejINSTYOhI2x9E8ukQZqTOH3C9isv3X/B07D7PHcDTouLVIsA8NuHj5gur8
-	Uqz4A0sWYtaRaoW0nVVWBEMnJQteyZewB8ymxk+RifPsBA+zSuORQLfM=
-X-Google-Smtp-Source: AGHT+IGOwU4ZLqFJFlzTs6oLQX3KjQuj17dfXOwXdZ68t6qzRUJdFgydDTcmdgXFwiWPoJ6QriMffRyPs5Qh5bNK8NouugP4Hi/z
+        bh=zir1NDA8An9XMiM9quRa114yNTaeYbAjAw+vpjLNbb0=;
+        b=YEGzPu0eiqv7wSZyoPLb3JdunfIRrGgnEU3qzGFfFjluj1QpUIQq3yAhbYr7zGkd99
+         7Q+u5FYz9OUrHKf1DanmSZGzlT9xmkT1N7c/BOugNdEDHKTGYU61ks4LgDN274/nmG4w
+         mneqMlvSyzSbRYstmiHWAzwhIInTQyoqZuE8cfl2PMNmcmmyHDPlAg7hfo73r4NI8asx
+         sx5jaPm4v8Bs6bZDQhSf3NwTU0VmpDfdIqU2BkdvTSCVX6aj+sY3jyp6QN9U1VOz4TOy
+         kDDlg7trrkCYSb+/f9NyLxmNLI5umJfHovzXP75XAaUrYMc1nnByTWOktqRzhXgo8r57
+         3VGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743849283; x=1744454083;
+        h=content-disposition:mime-version:subject:cc:to:from:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zir1NDA8An9XMiM9quRa114yNTaeYbAjAw+vpjLNbb0=;
+        b=f75OR6hf9qTL9bZKhAEI4vnRm7B9zEysTpbHIQpigA0Y+TwnOkK+0RECXwyy7DTxiT
+         eUFRSDg/s2wIdJ1WSTDtVa66wig5u5TgPJ/lhb7T+JotbXd0gZcgLcWpNl3h4/jG1EQ5
+         Ll+cQSI+NQxKEJahb0evEz6bRhBZzpQ9iX3ZgQck9mAKAx9f1IGxvghlTVJNGYFBaA9v
+         vx2U0KpVo+eTDQ7C7aAySTSseu5FMbapk9OCQ+G31Jb75Tghu0apki/zJjMLchO4BOBE
+         E6rKllfndXwhlJGevixTN5xl5ptX9s67wBylf1iFJJ97LfnQu5sGXA9l+c1J+zNj/D16
+         m/Wg==
+X-Forwarded-Encrypted: i=1; AJvYcCUCA6XC/8Zm97WdpqiBrpxRIeaFeY6KcwxgI02QTIZo1DCML+TUp6Lw1RTuZGWTUtpy9sJmtb97c7YiSIEb@vger.kernel.org, AJvYcCVg49HmgdHedRq7t1JXFBjDn1+NhH1qqv94emr8OOokuUP+0ptaggo+VMtYmqquBhCchYKEGGgG4LrZbA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzVze+T9fz97lUER8btYeC1/iNrGtO2y+YGVgwdZPChhQQsTtMp
+	g51hQLoCWy7UmU6gxMTCQRv/aJ71oTUrnza6SajoiYAoD6USK+gc
+X-Gm-Gg: ASbGncveq+xjbh1tWHP7qObd5D7A70tpIcdEL6vcDicLokb8oU2qes0GpdxId6Um67x
+	FNUgV8DDYHJ1sUqQegEgmrtJCNscgef0ynCPqpYM//6fTZQ13WQWFHosXVuSs0noPRgLtwaoOUD
+	mTPMzGZzkQRLsioDN0/zG+r8lKd3iDmlZ0krTlDL3b/fpGg9PfpaCMZVGIYjFrEB3xaPb+42gMc
+	36z4cfq/mlq6EyreZ3KeGBZBoM5YNnWy/VlM0iptlMZH4j/anOk1bonYcwSwYbuCz9ZwaBRFF4C
+	Fv+yUGh0YgBsssaOfz75dXaRtA==
+X-Google-Smtp-Source: AGHT+IFW+PCxU83RMGKoX5jqWZE3GsGc0tiWA4M86TTqRF8tPreBQsld3XTsJZwtSgX02+c9xwwgWg==
+X-Received: by 2002:a05:600c:3b08:b0:43d:b85:1831 with SMTP id 5b1f17b1804b1-43ecf585cacmr61148015e9.0.1743849283522;
+        Sat, 05 Apr 2025 03:34:43 -0700 (PDT)
+Received: from parrot ([105.112.71.96])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec34bb7bfsm68117315e9.17.2025.04.05.03.34.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 05 Apr 2025 03:34:43 -0700 (PDT)
+Message-ID: <67f10743.050a0220.34c5be.0d2a@mx.google.com>
+X-Google-Original-Message-ID: <Z_EHQCIv8tl1ff0x@princerichard17a@gmail.com>
+Date: Sat, 5 Apr 2025 11:34:40 +0100
+From: Richard Akintola <princerichard17a@gmail.com>
+To: sudipm.mukherjee@gmail.com, teddy.wang@siliconmotion.com,
+	gregkh@linuxfoundation.org, linux-fbdev@vger.kernel.org,
+	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org,
+	outreachy@lists.linux.dev
+Cc: julia.lawall@inria.fr, princerichard17a@gmail.com
+Subject: [PATCH 3/8] staging: sm750fb: change sii164SetPower to snake_case
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:3088:b0:3d3:f9e0:709b with SMTP id
- e9e14a558f8ab-3d6e576d541mr57143835ab.17.1743849149168; Sat, 05 Apr 2025
- 03:32:29 -0700 (PDT)
-Date: Sat, 05 Apr 2025 03:32:29 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67f106bd.050a0220.0a13.0235.GAE@google.com>
-Subject: [syzbot] [bcachefs?] KASAN: slab-use-after-free Read in bchfs_read
-From: syzbot <syzbot+2deb10b8dc9aae6fab67@syzkaller.appspotmail.com>
-To: kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hello,
+Change camelCase function name sii164SetPower to sii164_set_power
+to conform to kernel code styles as reported by checkpatch.pl
 
-syzbot found the following issue on:
+CHECK: Avoid camelCase: <sii164SetPower>
 
-HEAD commit:    acc4d5ff0b61 Merge tag 'net-6.15-rc0' of git://git.kernel...
-git tree:       upstream
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=15425274580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=1dd3eb8e9a9c75c9
-dashboard link: https://syzkaller.appspot.com/bug?extid=2deb10b8dc9aae6fab67
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=177d894c580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=127d4fb0580000
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/ee88ff7b5f77/disk-acc4d5ff.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/ad1210e493cd/vmlinux-acc4d5ff.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/1f3cc7813b7a/bzImage-acc4d5ff.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/7f634c35cdf6/mount_0.gz
-
-The issue was bisected to:
-
-commit 3ba0240a8789f8c059990b81c6f34c29769a5a49
-Author: Kent Overstreet <kent.overstreet@linux.dev>
-Date:   Mon Mar 24 15:51:01 2025 +0000
-
-    bcachefs: Fix silent short reads in data read retry path
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1215494c580000
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=1115494c580000
-console output: https://syzkaller.appspot.com/x/log.txt?x=1615494c580000
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+2deb10b8dc9aae6fab67@syzkaller.appspotmail.com
-Fixes: 3ba0240a8789 ("bcachefs: Fix silent short reads in data read retry path")
-
-==================================================================
-BUG: KASAN: slab-use-after-free in bchfs_read+0x2b48/0x3350 fs/bcachefs/fs-io-buffered.c:228
-Read of size 4 at addr ffff8880756ac148 by task syz-executor406/5854
-
-CPU: 0 UID: 0 PID: 5854 Comm: syz-executor406 Not tainted 6.14.0-syzkaller-12456-gacc4d5ff0b61 #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
- print_address_description mm/kasan/report.c:408 [inline]
- print_report+0x16e/0x5b0 mm/kasan/report.c:521
- kasan_report+0x143/0x180 mm/kasan/report.c:634
- bchfs_read+0x2b48/0x3350 fs/bcachefs/fs-io-buffered.c:228
- bch2_readahead+0xe7a/0x12d0 fs/bcachefs/fs-io-buffered.c:301
- read_pages+0x193/0x590 mm/readahead.c:160
- page_cache_ra_order+0xa37/0xca0 mm/readahead.c:515
- filemap_get_pages+0x59f/0x1fc0 mm/filemap.c:2590
- filemap_read+0x466/0x1260 mm/filemap.c:2701
- bch2_read_iter+0x1179/0x14b0 fs/bcachefs/fs-io-direct.c:221
- new_sync_read fs/read_write.c:489 [inline]
- vfs_read+0x9a0/0xb90 fs/read_write.c:570
- ksys_read+0x19d/0x2d0 fs/read_write.c:713
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fc1adbabc59
-Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 01 1b 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ffd419910a8 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
-RAX: ffffffffffffffda RBX: 00007ffd419910d0 RCX: 00007fc1adbabc59
-RDX: 0000000000002020 RSI: 0000200000000800 RDI: 0000000000000004
-RBP: 0000000000000001 R08: 00007ffd41990e47 R09: 00007ffd419910f0
-R10: 0000000000000001 R11: 0000000000000246 R12: 00007ffd419910cc
-R13: 0000000000000002 R14: 431bde82d7b634db R15: 00007ffd41991110
- </TASK>
-
-Allocated by task 5854:
- kasan_save_stack mm/kasan/common.c:47 [inline]
- kasan_save_track+0x3f/0x80 mm/kasan/common.c:68
- unpoison_slab_object mm/kasan/common.c:319 [inline]
- __kasan_mempool_unpoison_object+0x9e/0x170 mm/kasan/common.c:547
- kasan_unpoison_element mm/mempool.c:-1 [inline]
- remove_element+0x129/0x1a0 mm/mempool.c:150
- mempool_alloc_noprof+0x552/0x5a0 mm/mempool.c:408
- bio_alloc_bioset+0x26f/0x1130 block/bio.c:554
- bch2_readahead+0xbaf/0x12d0 fs/bcachefs/fs-io-buffered.c:290
- read_pages+0x193/0x590 mm/readahead.c:160
- page_cache_ra_order+0xa37/0xca0 mm/readahead.c:515
- filemap_get_pages+0x59f/0x1fc0 mm/filemap.c:2590
- filemap_read+0x466/0x1260 mm/filemap.c:2701
- bch2_read_iter+0x1179/0x14b0 fs/bcachefs/fs-io-direct.c:221
- new_sync_read fs/read_write.c:489 [inline]
- vfs_read+0x9a0/0xb90 fs/read_write.c:570
- ksys_read+0x19d/0x2d0 fs/read_write.c:713
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-Freed by task 5854:
- kasan_save_stack mm/kasan/common.c:47 [inline]
- kasan_save_track+0x3f/0x80 mm/kasan/common.c:68
- kasan_save_free_info+0x40/0x50 mm/kasan/generic.c:576
- poison_slab_object mm/kasan/common.c:247 [inline]
- __kasan_mempool_poison_object+0xaa/0x120 mm/kasan/common.c:522
- kasan_mempool_poison_object include/linux/kasan.h:360 [inline]
- kasan_poison_element mm/mempool.c:118 [inline]
- add_element mm/mempool.c:141 [inline]
- mempool_free+0x1c8/0x390 mm/mempool.c:541
- bch2_readpages_end_io+0x17c/0x1d0 fs/bcachefs/fs-io-buffered.c:36
- bch2_rbio_done fs/bcachefs/io_read.c:430 [inline]
- __bch2_read_extent+0x1348/0x4400 fs/bcachefs/io_read.c:1257
- bch2_read_extent fs/bcachefs/io_read.h:140 [inline]
- bchfs_read+0x251a/0x3350 fs/bcachefs/fs-io-buffered.c:226
- bch2_readahead+0xe7a/0x12d0 fs/bcachefs/fs-io-buffered.c:301
- read_pages+0x193/0x590 mm/readahead.c:160
- page_cache_ra_order+0xa37/0xca0 mm/readahead.c:515
- filemap_get_pages+0x59f/0x1fc0 mm/filemap.c:2590
- filemap_read+0x466/0x1260 mm/filemap.c:2701
- bch2_read_iter+0x1179/0x14b0 fs/bcachefs/fs-io-direct.c:221
- new_sync_read fs/read_write.c:489 [inline]
- vfs_read+0x9a0/0xb90 fs/read_write.c:570
- ksys_read+0x19d/0x2d0 fs/read_write.c:713
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-The buggy address belongs to the object at ffff8880756ac000
- which belongs to the cache bio-488 of size 488
-The buggy address is located 328 bytes inside of
- freed 488-byte region [ffff8880756ac000, ffff8880756ac1e8)
-
-The buggy address belongs to the physical page:
-page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x756ac
-head: order:1 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
-flags: 0xfff00000000040(head|node=0|zone=1|lastcpupid=0x7ff)
-page_type: f5(slab)
-raw: 00fff00000000040 ffff888033497a00 dead000000000122 0000000000000000
-raw: 0000000000000000 00000000800c000c 00000000f5000000 0000000000000000
-head: 00fff00000000040 ffff888033497a00 dead000000000122 0000000000000000
-head: 0000000000000000 00000000800c000c 00000000f5000000 0000000000000000
-head: 00fff00000000001 ffffea0001d5ab01 00000000ffffffff 00000000ffffffff
-head: ffffffffffffffff 0000000000000000 00000000ffffffff 0000000000000002
-page dumped because: kasan: bad access detected
-page_owner tracks the page as allocated
-page last allocated via order 1, migratetype Unmovable, gfp_mask 0xd20c0(__GFP_IO|__GFP_FS|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 5854, tgid 5854 (syz-executor406), ts 92613750343, free_ts 91077243774
- set_page_owner include/linux/page_owner.h:32 [inline]
- post_alloc_hook+0x1f4/0x240 mm/page_alloc.c:1717
- prep_new_page mm/page_alloc.c:1725 [inline]
- get_page_from_freelist+0x351d/0x36b0 mm/page_alloc.c:3652
- __alloc_frozen_pages_noprof+0x211/0x5b0 mm/page_alloc.c:4934
- alloc_pages_mpol+0x339/0x690 mm/mempolicy.c:2301
- alloc_slab_page mm/slub.c:2459 [inline]
- allocate_slab+0x8f/0x3a0 mm/slub.c:2623
- new_slab mm/slub.c:2676 [inline]
- ___slab_alloc+0xc3b/0x1500 mm/slub.c:3862
- __slab_alloc+0x58/0xa0 mm/slub.c:3952
- __slab_alloc_node mm/slub.c:4027 [inline]
- slab_alloc_node mm/slub.c:4188 [inline]
- kmem_cache_alloc_noprof+0x270/0x390 mm/slub.c:4207
- mempool_init_node+0x1ee/0x4e0 mm/mempool.c:217
- mempool_init_noprof+0x3a/0x50 mm/mempool.c:246
- bioset_init+0x2ea/0x820 block/bio.c:1709
- bch2_fs_io_read_init+0x29/0xc0 fs/bcachefs/io_read.c:1377
- bch2_fs_alloc fs/bcachefs/super.c:944 [inline]
- bch2_fs_open+0x2f2f/0x32a0 fs/bcachefs/super.c:2182
- bch2_fs_get_tree+0x77b/0x18f0 fs/bcachefs/fs.c:2172
- vfs_get_tree+0x90/0x2b0 fs/super.c:1759
- do_new_mount+0x2cf/0xb70 fs/namespace.c:3878
-page last free pid 5830 tgid 5830 stack trace:
- reset_page_owner include/linux/page_owner.h:25 [inline]
- free_pages_prepare mm/page_alloc.c:1262 [inline]
- __free_pages_ok+0xb17/0xd90 mm/page_alloc.c:1437
- __folio_put+0x2b5/0x360 mm/swap.c:112
- folio_put include/linux/mm.h:1563 [inline]
- free_large_kmalloc+0x143/0x1e0 mm/slub.c:4771
- kfree+0x216/0x430 mm/slub.c:4839
- bch2_dev_journal_exit+0x2ba/0x4a0 fs/bcachefs/journal.c:1478
- bch2_dev_free+0x14d/0x230 fs/bcachefs/super.c:1220
- bch2_fs_free+0x27b/0x3c0 fs/bcachefs/super.c:679
- deactivate_locked_super+0xc4/0x130 fs/super.c:473
- cleanup_mnt+0x422/0x4c0 fs/namespace.c:1435
- task_work_run+0x251/0x310 kernel/task_work.c:227
- ptrace_notify+0x2dc/0x390 kernel/signal.c:2522
- ptrace_report_syscall include/linux/ptrace.h:415 [inline]
- ptrace_report_syscall_exit include/linux/ptrace.h:477 [inline]
- syscall_exit_work+0xc7/0x1d0 kernel/entry/common.c:173
- syscall_exit_to_user_mode_prepare kernel/entry/common.c:200 [inline]
- __syscall_exit_to_user_mode_work kernel/entry/common.c:205 [inline]
- syscall_exit_to_user_mode+0x24a/0x340 kernel/entry/common.c:218
- do_syscall_64+0x100/0x230 arch/x86/entry/syscall_64.c:100
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-Memory state around the buggy address:
- ffff8880756ac000: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff8880756ac080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->ffff8880756ac100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                              ^
- ffff8880756ac180: fb fb fb fb fb fb fb fb fb fb fb fb fb fc fc fc
- ffff8880756ac200: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-==================================================================
-
-
+Signed-off-by: Richard Akintola <princerichard17a@gmail.com>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ drivers/staging/sm750fb/ddk750_dvi.c    | 2 +-
+ drivers/staging/sm750fb/ddk750_sii164.c | 8 ++++----
+ drivers/staging/sm750fb/ddk750_sii164.h | 2 +-
+ 3 files changed, 6 insertions(+), 6 deletions(-)
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+diff --git a/drivers/staging/sm750fb/ddk750_dvi.c b/drivers/staging/sm750fb/ddk750_dvi.c
+index 6dee95e60a6e..bb7538682b7d 100644
+--- a/drivers/staging/sm750fb/ddk750_dvi.c
++++ b/drivers/staging/sm750fb/ddk750_dvi.c
+@@ -20,7 +20,7 @@ static struct dvi_ctrl_device dcft_supported_dvi_controller[] = {
+ #ifdef SII164_FULL_FUNCTIONS
+ 		.reset_chip = sii164_reset_chip,
+ 		.get_chip_string = sii164GetChipString,
+-		.set_power = sii164SetPower,
++		.set_power = sii164_set_power,
+ 		.enable_hot_plug_detection = sii164EnableHotPlugDetection,
+ 		.is_connected = sii164IsConnected,
+ 		.check_interrupt = sii164CheckInterrupt,
+diff --git a/drivers/staging/sm750fb/ddk750_sii164.c b/drivers/staging/sm750fb/ddk750_sii164.c
+index 284c32f7e9b4..b96f9369fab4 100644
+--- a/drivers/staging/sm750fb/ddk750_sii164.c
++++ b/drivers/staging/sm750fb/ddk750_sii164.c
+@@ -256,8 +256,8 @@ long sii164_init_chip(unsigned char edge_select,
+ void sii164_reset_chip(void)
+ {
+ 	/* Power down */
+-	sii164SetPower(0);
+-	sii164SetPower(1);
++	sii164_set_power(0);
++	sii164_set_power(1);
+ }
+ 
+ /*
+@@ -273,13 +273,13 @@ char *sii164GetChipString(void)
+ }
+ 
+ /*
+- *  sii164SetPower
++ *  sii164_set_power
+  *      This function sets the power configuration of the DVI Controller Chip.
+  *
+  *  Input:
+  *      powerUp - Flag to set the power down or up
+  */
+-void sii164SetPower(unsigned char powerUp)
++void sii164_set_power(unsigned char powerUp)
+ {
+ 	unsigned char config;
+ 
+diff --git a/drivers/staging/sm750fb/ddk750_sii164.h b/drivers/staging/sm750fb/ddk750_sii164.h
+index 7a71f94a1e9b..45a90489c95c 100644
+--- a/drivers/staging/sm750fb/ddk750_sii164.h
++++ b/drivers/staging/sm750fb/ddk750_sii164.h
+@@ -33,7 +33,7 @@ unsigned short sii164_get_device_id(void);
+ #ifdef SII164_FULL_FUNCTIONS
+ void sii164_reset_chip(void);
+ char *sii164GetChipString(void);
+-void sii164SetPower(unsigned char powerUp);
++void sii164_set_power(unsigned char powerUp);
+ void sii164EnableHotPlugDetection(unsigned char enableHotPlug);
+ unsigned char sii164IsConnected(void);
+ unsigned char sii164CheckInterrupt(void);
+-- 
+2.39.5
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
