@@ -1,157 +1,164 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E01225634
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 05:30:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 807632E62B0
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 05:49:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743831026; cv=none; b=UxDabuSTLXwihXYYkprV+O9WIv4pUzCXgUCfCpm1AnwQGTCAsG/656obQodozuUX/UNy1UqUGpTGlDi50ObemTVKvNZ67ghwnFNOH5/N/UVxWCuxpVN/1ZQfE99orrcAtZ0OuIfeNi9q1ABKPyLMnEBBcP4lkcrKvc42MfeOT3A=
+	t=1743832145; cv=none; b=H3zbzITyM5GIjee5y1hDzInMfwvF9fBxmGrzybcus/xfQZH+8PSO+P1SmPd+IFol9AUlLBwbk84KYGPUH+4/6LOXEMG9mnWWqklNRJFAoJ5TlF1Q6ogHjkZbig+vU/OOTh8CNdKixo1o4Lq5w81h4wgumkssezZFvc3uwiqGnZU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743831026; c=relaxed/simple;
-	bh=zEsc7b6P2dS3SJaNmkZRSte+pyqL0ydAbw4F1IszLMU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tTgdXYreh/FvlBOzaYj27jDpS0cNQjYeRTBCJ3lQkdCSjpjqnx8zz51/8PLn9hL2HK0QBwGh3hWMIBjxXthkSal3xx1fJwTzz9aULNCPlZ3Y+pnPnK3ZF/iuWEO5Q6zO7HkBMC6K7QMaSyIuDapnNtcM+KdVrdHm30NKq4Oqb1w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=L68jQYbp; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1743832145; c=relaxed/simple;
+	bh=z8RTvjawnGTEHyIZBz4FrhjLiT2GoRRi+ucde51ywu4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=jRRevl3WrMTt86qb4TrNqSwi1SNI+DMNXQMHzJL4ViHH3p+4cAJMfkYYlVW2SAMQwZdisB1vaIpWL2zCmJMeVjdSbnrnnGqsODILDXdK0Uu55LueCQ9S2aG90SpQSh7r8C37Utw5cvcKcdmYWEX236G+0tR6Lgmvi0fbzjiilNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=aCK0QmyE; arc=none smtp.client-ip=209.85.216.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="L68jQYbp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743831024; x=1775367024;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=zEsc7b6P2dS3SJaNmkZRSte+pyqL0ydAbw4F1IszLMU=;
-  b=L68jQYbpp7tj8QRpAw9sm1Nuk8cwMT2cRAprCrdpsgjQ8VfMOnviD/7b
-   7FohePAJE/tgm/IL8IFZ0pXuJqwI4eftMTo46ik+3MS1ZkohTDsoCXY8z
-   nUm/Mt1DH0ret6mCa1i++sAbzcJ77pu0AeXht2M/O97Hn2r73SmFXe9Tx
-   J5v3h8cU+paG9dNRyL3+u4GBAKXPb/NB3/QCdUdA/3qrmAWWYkTZnJklE
-   pXNxUFr1JZkXq9U+tjXgSRm4FZqd88TbLE/HWy7w4bLkZeLvQ7SdGAOw0
-   ufiO3AmcI1oy7VAifFyf46fpxPPTEiqID+abneWjy/K3qGqyK71JkHeHx
-   g==;
-X-CSE-ConnectionGUID: kA039/RaRQWdFoVuusCC5Q==
-X-CSE-MsgGUID: PSdP1KzgRTGWDbRaBYJ7pA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11394"; a="55942271"
-X-IronPort-AV: E=Sophos;i="6.15,190,1739865600"; 
-   d="scan'208";a="55942271"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 22:30:21 -0700
-X-CSE-ConnectionGUID: OyKeFk3YT56cuwkUVwSO5g==
-X-CSE-MsgGUID: H9DYO3P+SwiMemLl0bBCoQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,190,1739865600"; 
-   d="scan'208";a="127474228"
-Received: from zhiquan-linux-dev.bj.intel.com ([10.238.156.102])
-  by fmviesa007.fm.intel.com with ESMTP; 04 Apr 2025 22:30:17 -0700
-From: Zhiquan Li <zhiquan1.li@intel.com>
-To: bhe@redhat.com,
-	vgoyal@redhat.com,
-	dyoung@redhat.com,
-	kirill.shutemov@linux.intel.com,
-	akpm@linux-foundation.org
-Cc: kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	k-hagio-ab@nec.com,
-	yamazaki-msmt@nec.com,
-	lijiang@redhat.com,
-	ltao@redhat.com,
-	zhiquan1.li@intel.com
-Subject: [PATCH v3] crash: Export PAGE_UNACCEPTED_MAPCOUNT_VALUE to vmcoreinfo
-Date: Sat,  5 Apr 2025 14:06:10 +0800
-Message-Id: <20250405060610.860465-1-zhiquan1.li@intel.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="aCK0QmyE"
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2ff694d2d4dso2317898a91.0
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 22:49:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=purestorage.com; s=google2022; t=1743832143; x=1744436943; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=z9okLDTgArbJRsWAIomNX+0oF72yzuEPIm4Cyepbc2s=;
+        b=aCK0QmyExmw7/J95YNhlWA05I83YOWdSAdtr9EvfYhCOfAn2bUgRQmBEewrk5Bl6i4
+         M5mv1MgD7aHOOJ5gUoOjPowj4TdKhAuu8KXFLfCymJojvubaPhMDAewjc7CrTwYCa0jj
+         /4fftMuzh2VIDA9nqUTx6vno8JeTTCQqNEnP3zf1OYXfJXy0/3mVyUfWIXe/GFS8HDkc
+         8Fu05hq6gGyKWpPVB/WsaCr3Eg1s519RirtQS2vlzV/NZmt1mOjTUWIWnx9e6ERl/TZO
+         1RJeh/OrPIQEWktDwNQayW5Ga78weOWrEPDPFFt6qOcqMEhtqtkTIYkyQswpyCPpNrPo
+         LKlA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743832143; x=1744436943;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=z9okLDTgArbJRsWAIomNX+0oF72yzuEPIm4Cyepbc2s=;
+        b=Mj92fEEqhdza5CXY34SQWAnBPraVB5FNYd4SgNNbzHfnwb0nz4xm1rn7FFg3qcq3y2
+         REPRKqtmTg92EkEdlAF2RvGiLwjITsO/I94ttGgr3hMvhlVwPTAE+SMY+mltcPxRYsHM
+         gwJWdQfonrtfQEjRpk++gDBAD0ozSoSeKAhSFhlOCBSBb4mDTErWJcuhpPjWHJBLholA
+         k4qwetl8BW0a/0EXREnle8EIPTZ/5zKgWjVzGiEQxV8UoW5Dohjk/RQFny/HJ/6PFEkt
+         eL1CKryUUJbuyQ1m1HsP6+wlroWW6P7ERiCWLmuwND05cEKIQ3KN7W7UHxfFd5dnhfPr
+         OQoQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW7MxTHoybq27hEiscTkw46esewLyjlgeKOhma3fJVQlh6lSd4L+mdgXWrzBsY7zxGKvMcGrwm56j+H2Do=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxLzlAa1Soe75FDNqpTcK/0qFZX603Xvcdkq52ish4bkG2PWfUu
+	WRjd123odUiJXCoZ50MO9tEI21aFaV/xUCHaxRvuX40yMkimzjzQHIUHzZ0GXcs=
+X-Gm-Gg: ASbGncugIDLkQ3VnjXsCpXyfPEI0rK+6EI9AmIxw4Iskh/vSoSEu5TLYiRaBF3t8afQ
+	9yhEObFoYLfN8GfBxG0Dq2hlKHGVmINzNi29z6vprfJ4iMewK33gVbDgUBkhEdHIrWdWslHHfae
+	O6qT6YS+ornPgBM2uR4JBhn0HqL77/c930EMXHSKSd8jALDCjEbmvEsiWasmtBGMaBS/wJ7llE6
+	7HtLptIILJ4w9nNFVZ44WATUROLidP7qDvFhsLf25T9evtkNdisFZIoiG66HHT16GKS0/4lpsZ1
+	Hm9v/CqLaMhaqZQgL7abLNzjB8e3sNbqRMoC36QvU7OEIn2mWrdR5oontwT+4lBbkcLwbjs8iyF
+	D/JFFowA=
+X-Google-Smtp-Source: AGHT+IHFlL8yAtLJIGh/nZnzxRPL2dsvOXC7sATN3B9Az7sYa4+SKAV2ggejLCCXPe1erV8dkaxOew==
+X-Received: by 2002:a17:90b:2804:b0:2ee:cded:9ac7 with SMTP id 98e67ed59e1d1-306a61659c2mr6677747a91.20.1743832142622;
+        Fri, 04 Apr 2025 22:49:02 -0700 (PDT)
+Received: from dev-mliang.dev.purestorage.com ([208.88.159.129])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3058494ab14sm4591129a91.17.2025.04.04.22.49.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Apr 2025 22:49:02 -0700 (PDT)
+From: Michael Liang <mliang@purestorage.com>
+To: Keith Busch <kbusch@kernel.org>,
+	Jens Axboe <axboe@kernel.dk>,
+	Christoph Hellwig <hch@lst.de>,
+	Sagi Grimberg <sagi@grimberg.me>
+Cc: Michael Liang <mliang@purestorage.com>,
+	Mohamed Khalfella <mkhalfella@purestorage.com>,
+	Randy Jennings <randyj@purestorage.com>,
+	linux-nvme@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] nvme-tcp: wait socket wmem to drain in queue stop
+Date: Fri,  4 Apr 2025 23:48:48 -0600
+Message-Id: <20250405054848.3773471-1-mliang@purestorage.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On Intel TDX guest, unaccepted memory is unusable free memory which is
-not managed by buddy, until it's accepted by guest.  Before that, it
-cannot be accessed by the first kernel as well as the kexec'ed kernel.
-The kexec'ed kernel will skip these pages and fill in zero data for the
-reader of vmcore.
+This patch addresses a data corruption issue observed in nvme-tcp during
+testing.
 
-The dump tool like makedumpfile creates a page descriptor (size 24
-bytes) for each non-free page, including zero data page, but it will not
-create descriptor for free pages.  If it is not able to distinguish
-these unaccepted pages with zero data pages, a certain amount of space
-will be wasted in proportion (~1/170).  In fact, as a special kind of
-free page the unaccepted pages should be excluded, like the real free
-pages.
+Issue description:
+In an NVMe native multipath setup, when an I/O timeout occurs, all inflight
+I/Os are canceled almost immediately after the kernel socket is shut down.
+These canceled I/Os are reported as host path errors, triggering a failover
+that succeeds on a different path.
 
-Export the page type PAGE_UNACCEPTED_MAPCOUNT_VALUE to vmcoreinfo, so
-that dump tool can identify whether a page is unaccepted.
+However, at this point, the original I/O may still be outstanding in the
+host's network transmission path (e.g., the NIC’s TX queue). From the
+user-space app's perspective, the buffer associated with the I/O is considered
+completed since they're acked on the different path and may be reused for new
+I/O requests.
 
-Link: https://lore.kernel.org/all/20240809114854.3745464-5-kirill.shutemov@linux.intel.com/
+Because nvme-tcp enables zero-copy by default in the transmission path,
+this can lead to corrupted data being sent to the original target, ultimately
+causing data corruption.
 
-Signed-off-by: Zhiquan Li <zhiquan1.li@intel.com>
-Reviewed-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Acked-by: Baoquan He <bhe@redhat.com>
+We can reproduce this data corruption by injecting delay on one path and
+triggering i/o timeout.
 
+To prevent this issue, this change ensures that all inflight transmissions are
+fully completed from host's perspective before returning from queue stop.
+This aligns with the behavior of queue stopping in other NVMe fabric transports.
+
+Reviewed-by: Mohamed Khalfella <mkhalfella@purestorage.com>
+Reviewed-by: Randy Jennings <randyj@purestorage.com>
+Signed-off-by: Michael Liang <mliang@purestorage.com>
 ---
-Vmcore size statistic of a freshly booted TD VM with different memory
-sizes:
+ drivers/nvme/host/tcp.c | 21 ++++++++++++++++++++-
+ 1 file changed, 20 insertions(+), 1 deletion(-)
 
-  VM.mem | Before  After
-  -------+----------------
-  512G   | ~4.9G   ~2.0G
-  256G   | ~2.0G   ~1.1G
-
-Most of changes are done by makedumpfile, but the prerequisite is kernel
-needs to export an indicator to identify unaccepted pages in vmcoreinfo.
-
-V2: https://lore.kernel.org/all/20250403030801.758687-1-zhiquan1.li@intel.com/
-
-Changes since V2:
-- Add Baoquan's Acked-by tag.
-- Fix docs: "Title underline too short" warning.
-
-V1: https://lore.kernel.org/all/20250103074941.3651765-1-zhiquan1.li@intel.com/
-
-Changes since V1:
-- Rebase to v6.14.
-- Added document into admin-guide/kdump/vmcoreinfo.rst per Dave's
-  suggestion.
-- Add Kirill's Reviewed-by tag.
----
- Documentation/admin-guide/kdump/vmcoreinfo.rst | 4 ++--
- kernel/vmcore_info.c                           | 4 ++++
- 2 files changed, 6 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/admin-guide/kdump/vmcoreinfo.rst b/Documentation/admin-guide/kdump/vmcoreinfo.rst
-index 0f714fc945ac..8cf4614385b7 100644
---- a/Documentation/admin-guide/kdump/vmcoreinfo.rst
-+++ b/Documentation/admin-guide/kdump/vmcoreinfo.rst
-@@ -331,8 +331,8 @@ PG_lru|PG_private|PG_swapcache|PG_swapbacked|PG_slab|PG_hwpoision|PG_head_mask|P
- Page attributes. These flags are used to filter various unnecessary for
- dumping pages.
+diff --git a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c
+index 26c459f0198d..837684918aa1 100644
+--- a/drivers/nvme/host/tcp.c
++++ b/drivers/nvme/host/tcp.c
+@@ -1944,10 +1944,26 @@ static void __nvme_tcp_stop_queue(struct nvme_tcp_queue *queue)
+ 	cancel_work_sync(&queue->io_work);
+ }
  
--PAGE_BUDDY_MAPCOUNT_VALUE(~PG_buddy)|PAGE_OFFLINE_MAPCOUNT_VALUE(~PG_offline)
-------------------------------------------------------------------------------
-+PAGE_BUDDY_MAPCOUNT_VALUE(~PG_buddy)|PAGE_OFFLINE_MAPCOUNT_VALUE(~PG_offline)|PAGE_OFFLINE_MAPCOUNT_VALUE(~PG_unaccepted)
-+-------------------------------------------------------------------------------------------------------------------------
++static void nvme_tcp_stop_queue_wait(struct nvme_tcp_queue *queue)
++{
++	int timeout = 100;
++
++	while (timeout > 0) {
++		if (!sk_wmem_alloc_get(queue->sock->sk))
++			return;
++		msleep(2);
++		timeout -= 2;
++	}
++	dev_warn(queue->ctrl->ctrl.device,
++		 "qid %d: wait draining sock wmem allocation timeout\n",
++		 nvme_tcp_queue_id(queue));
++}
++
+ static void nvme_tcp_stop_queue(struct nvme_ctrl *nctrl, int qid)
+ {
+ 	struct nvme_tcp_ctrl *ctrl = to_tcp_ctrl(nctrl);
+ 	struct nvme_tcp_queue *queue = &ctrl->queues[qid];
++	bool was_alive = false;
  
- More page attributes. These flags are used to filter various unnecessary for
- dumping pages.
-diff --git a/kernel/vmcore_info.c b/kernel/vmcore_info.c
-index 1fec61603ef3..e066d31d08f8 100644
---- a/kernel/vmcore_info.c
-+++ b/kernel/vmcore_info.c
-@@ -210,6 +210,10 @@ static int __init crash_save_vmcoreinfo_init(void)
- 	VMCOREINFO_NUMBER(PAGE_HUGETLB_MAPCOUNT_VALUE);
- #define PAGE_OFFLINE_MAPCOUNT_VALUE	(PGTY_offline << 24)
- 	VMCOREINFO_NUMBER(PAGE_OFFLINE_MAPCOUNT_VALUE);
-+#ifdef CONFIG_UNACCEPTED_MEMORY
-+#define PAGE_UNACCEPTED_MAPCOUNT_VALUE	(PGTY_unaccepted << 24)
-+	VMCOREINFO_NUMBER(PAGE_UNACCEPTED_MAPCOUNT_VALUE);
-+#endif
+ 	if (!test_bit(NVME_TCP_Q_ALLOCATED, &queue->flags))
+ 		return;
+@@ -1956,11 +1972,14 @@ static void nvme_tcp_stop_queue(struct nvme_ctrl *nctrl, int qid)
+ 		atomic_dec(&nvme_tcp_cpu_queues[queue->io_cpu]);
  
- #ifdef CONFIG_KALLSYMS
- 	VMCOREINFO_SYMBOL(kallsyms_names);
-
-base-commit: 38fec10eb60d687e30c8c6b5420d86e8149f7557
+ 	mutex_lock(&queue->queue_lock);
+-	if (test_and_clear_bit(NVME_TCP_Q_LIVE, &queue->flags))
++	was_alive = test_and_clear_bit(NVME_TCP_Q_LIVE, &queue->flags);
++	if (was_alive)
+ 		__nvme_tcp_stop_queue(queue);
+ 	/* Stopping the queue will disable TLS */
+ 	queue->tls_enabled = false;
+ 	mutex_unlock(&queue->queue_lock);
++	if (was_alive)
++		nvme_tcp_stop_queue_wait(queue);
+ }
+ 
+ static void nvme_tcp_setup_sock_ops(struct nvme_tcp_queue *queue)
 -- 
-2.25.1
+2.34.1
 
