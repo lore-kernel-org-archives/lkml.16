@@ -1,198 +1,105 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1706E160783;
-	Sat,  5 Apr 2025 20:07:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E122770838;
+	Sat,  5 Apr 2025 20:29:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743883635; cv=none; b=hzm5cjT82poOZ8d3uwow61qNGBGUMClrsx0izX76W/53WYM8rBhN+9Pi7xXJ78HkuOCZX157t9TwdG3F2Bx2ed5S2wvUEcydE2+PY7vL+GYZvtN+UdJ97HGApENNlkRUBbHUPhCGgPW+ib91m2XrzAUw5eyT60+1hXM40tYT1F8=
+	t=1743884977; cv=none; b=dTHmKJIexugZd/4wZDQ6ve0M9a3JWN0Nx3cGB1mHzWz9NSi7yWlGYVYyah/R8XfXOjKe9Lx2cHJ2OjXJRDmazHA8TUBUHacpogSJLQpkxZ4S5uVDZnGhY/PI3xF9jrlwWAC/ZascBCWO8dwHDHQURWs7fxtEnZ0WxTUjLa3EYq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743883635; c=relaxed/simple;
-	bh=s+1xl9zZIPyMcvQv6/4pFdGe03l0dIhLHCNrlLurVYg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sgkNCzP7dI5o4SXbL4lFy39Si6Ee9Rf9ofTCeWZ2MNJ0bmUjz5E380kYeC0pcnkiZ3R4WkcSRKyTjz7VlbtuHlj/1NeXwuKAvHIeKXQV9ozaIDB4f05xgCm6B8Gygll+6DHQu1ITI+0jBpGlSEWiy+3HEs5OT07zVZKEi2/n7Nw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MMp1vtEn; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743884977; c=relaxed/simple;
+	bh=2F21dY0co0+OxqOCz3O3iDpHTcAXTJvg8NLZSgAARaU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z+ZYxiFQBuehhHDkKv2RXE+wo97zTMrRCMMNvv7dFR8uuetA/GViJ7EnIkEfoX64sno97OglvD/1NfKxN3B5347K+wOeoKGyu/5o7ovmQkgm6ce+EGNx/eV5nIbFWqbNjuq9IctN2OSaFU2XiBbYwCdbDi8U/uy6qLa7SkJYyu8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=evilplan.org; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=fail (0-bit key) header.d=infradead.org header.i=@infradead.org header.b=S0yC2KCE reason="key not found in DNS"; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=evilplan.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MMp1vtEn"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43cfb6e9031so28843045e9.0;
-        Sat, 05 Apr 2025 13:07:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743883632; x=1744488432; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FkhRHjIp0Jk3pbrjZYxlvTBw6U6EDhWF+U5runkFqfg=;
-        b=MMp1vtEn7yaZqzEAmOEEVDWi7QyDOI4trsjwYPYedm+PmXKmELgDDRNVZxpfKP8Jr9
-         l2oXIn3dR1DMxNKkZ4pq3I3nn7f2sjV1spF2+vEbKULfaX2Lqjhw1K5ruo0rLLsjnf/h
-         fJTtDyTI/IgcEN5N5h+T7jp3m1HI5pIRaRCaMi4URoLNWiTmjQ2oHsIwljjCXCWBPu7q
-         u/DngnLFKDB5HcRnAsWmJ5+Ll+fzvOfsSlr04W/bjW9qp1u34XaTGLYmSZCaXsX6oPZM
-         chaH2dPs4rGM1r1c4BhOwTs4km6HiZj0imI/3f/n05FASUOevgdW/YZx34o65g/yFdXO
-         cstQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743883632; x=1744488432;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FkhRHjIp0Jk3pbrjZYxlvTBw6U6EDhWF+U5runkFqfg=;
-        b=Yga6CA1Gc3IcUxgFD4lHTlcddei6BXx959fj9qdigTHSEJuDF6WstY/P2d2I+ARQYb
-         9gHOnmB4YbkUveH2V74nI8qm6rY//bFsCCMSivdAa1xDxKmHTccDhJTrbg8V/Az1DYMh
-         owm9ABz5KF8j3ly35um6nWxHIDwp4VilHD3OWnjYsVVFRgNToazl0OW/4om0hh94RXs6
-         gZN2QQ2vf4s0Sf0hI5zi5pjxkxYZkNj1x8UI8IrU86Ve28irtPKj+5f1pkcXuxMKsly+
-         yqcsN4MxUd8D7R4Odm5Ym7l+K+zPgvq7sDXXG25HCnDwxg3zdks7TmAZHTBnuyz4kRR1
-         w1fA==
-X-Forwarded-Encrypted: i=1; AJvYcCVrbcKbQYk6KDTV65dqbtlAZrV/Q2vXFOjAp10QvsbV8fk05KznSU4Zl/PdcqK+A1Fn/k2tMw9EmBsz/5eZ@vger.kernel.org, AJvYcCWvI2sIiw51rav7B/YVDdGDLRA5xS049Wn9ZzKDv8NRWVF1sRUyclagJdKuM73LMtU4HezAgKFFNmQvMw==@vger.kernel.org, AJvYcCX/C+OJol67VGPXUHhhLsZX9Js50XwBj+HeUgLNO/NBh1fulLChygcQoREkInbTGqR9vkQbhoZePDB5bvo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQGaifTfQrOfnkvgzuy+HA88/J0jHCEy4kT4Mux/MkZbhfZJWp
-	gz8ID8XiAgntBfsUJLtqkWaamx+b4FDyKZSzZ4DxpG5rO/Q6vUgm
-X-Gm-Gg: ASbGncvfyB0lsllNjEYFMAWm/KPUAQRSmRhd/QFHMp0RLckKJAHg716q/om3pW8cnJb
-	S6D7Ia3GIEct2GPANFh3MqG5HYBgtnBGhUTGpGQyJmnwZSd7d+dGXe+3IKMnVSExnsW+1k4fYIH
-	cQrU731FsUYq0R4K3244oU8NIlaEtlY2KsxOihVH8f/4yURosdYQolt/zNIZK2ZJFGtpfy2MlHd
-	ShjV4CTK9kFoWOc6O04iXWomGsV7MAsiMMU/Pe6alHg8HoI1znjh36hT1RtrtbFI87t43R/+RbO
-	oOJuC6mhiONOwCLZHeQU2RYbDRr6CFhEQ/A8gkRZrRbQIgQL2DsOLjMUquDeHmFnWyc6O4iZMvw
-	l2R4Rq7Az2yfBI9BKvw==
-X-Google-Smtp-Source: AGHT+IF4nfvge+ucrCiitotjfMWNu0lp42u6AmcvfVrGTbCSyC9Virf9RRKHitdcFSlJnBqkmsImbg==
-X-Received: by 2002:a05:600c:4449:b0:43c:fe9f:ab90 with SMTP id 5b1f17b1804b1-43ecfa18d6amr51264995e9.28.1743883632150;
-        Sat, 05 Apr 2025 13:07:12 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec16f1a73sm85075035e9.24.2025.04.05.13.07.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Apr 2025 13:07:11 -0700 (PDT)
-Date: Sat, 5 Apr 2025 21:07:10 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: baris goral <goralbaris@gmail.com>
-Cc: martin.petersen@oracle.com, linux-scsi@vger.kernel.org,
- target-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
- skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev
-Subject: Re: [PATCH v4] scsi: target: transform strncpy into strscpy
-Message-ID: <20250405210710.309ed5d6@pumpkin>
-In-Reply-To: <CAJOJxizEDm_th4G=BvejM4_jGcF6+QYT=LjD_J_FTbsNFVTjCQ@mail.gmail.com>
-References: <20250402204554.205560-1-goralbaris@gmail.com>
-	<20250405143646.10722-1-goralbaris@gmail.com>
-	<20250405162548.310dea37@pumpkin>
-	<CAJOJxizEDm_th4G=BvejM4_jGcF6+QYT=LjD_J_FTbsNFVTjCQ@mail.gmail.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=infradead.org header.i=@infradead.org header.b="S0yC2KCE"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=FrDWFndKUQJt5tv+AT2agX+G7gxd/pGXR3tr7CSlT/E=; b=S0yC2KCEctypd/CXya7VN+BSBv
+	1EqWuDsoZ312Loo9QULq4hrX2mX7xUxZ06KZGw7v+9JnmJySPc+QBbrLbodgy+FvGewwylJcXXZ4U
+	gEGLV2Yz+009gTWVLXcFpY6K80jziPoXC9V4E7oYEu96yNssNwxKCbyFscVIzufQ7nV2n//71PFmF
+	h8zUbVB+09ycTtCZGF14o8fUE90wXDtQFWKzjC6LVhfitlPf3XuC5UKpUaQja4xG9jAZ35vUlOdWC
+	cvdpkhDMuFgE1+2Qsb/5g10HfAnkcUIxEh9j9iXge/e1vMYy+0obKTKMMjmxznBjKPlz3XxEzdKjq
+	VENKdKYA==;
+Received: from jlbec by zeniv.linux.org.uk with local (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1u1A8u-0000000Fkyb-3Lba;
+	Sat, 05 Apr 2025 20:29:29 +0000
+Date: Sat, 5 Apr 2025 13:29:25 -0700
+From: Joel Becker <jlbec@evilplan.org>
+To: Christian Brauner <brauner@kernel.org>
+Cc: Christoph Hellwig <hch@infradead.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Breno Leitao <leitao@debian.org>
+Subject: Re: [PATCH] MAINTAINERS: configfs: add Andreas Hindborg as maintainer
+Message-ID: <Z_GSpcn3bMRStzf4@google.com>
+Mail-Followup-To: Christian Brauner <brauner@kernel.org>,
+	Christoph Hellwig <hch@infradead.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Breno Leitao <leitao@debian.org>
+References: <bHDR61l3TdaMVptxe5z4Q_3_EsRteMfNoygbiFYZ8AzNolk9DPRCG2YDD3_kKYP6kAYel9tPGsq9J8x7gpb-ww==@protonmail.internalid>
+ <Z-aDV4ae3p8_C6k7@infradead.org>
+ <87frix5dk3.fsf@kernel.org>
+ <20250403-sauer-himmel-df90d0e9047c@brauner>
+ <Z--Ae5-C8xlUeX8t@infradead.org>
+ <20250404-komodowaran-erspielen-cc2dcbcda3e3@brauner>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250404-komodowaran-erspielen-cc2dcbcda3e3@brauner>
+X-Burt-Line: Trees are cool.
+X-Red-Smith: Ninety feet between bases is perhaps as close as man has ever
+ come to perfection.
+Sender: Joel Becker <jlbec@ftp.linux.org.uk>
 
-On Sat, 5 Apr 2025 19:35:01 +0300
-baris goral <goralbaris@gmail.com> wrote:
+On Fri, Apr 04, 2025 at 10:42:29AM +0200, Christian Brauner wrote:
+> On Thu, Apr 03, 2025 at 11:47:23PM -0700, Christoph Hellwig wrote:
+> > On Thu, Apr 03, 2025 at 01:27:27PM +0200, Christian Brauner wrote:
+> > > There's no need to get upset. Several people pointed out that Joel
+> > > Becker retired and since he hasn't responded this felt like the right
+> > > thing to do. Just send a patch to add him back. I see no reason to not
+> > > have Andreas step up to maintain it.
+> > 
+> > Removing someone just because they have retired feels odd, but hey who
+> > am I to complain.  I did reach out to him when giving maintainership
+> > and he replied although it did indeed take a while.
+> 
+> I mean, we can surely put Joel back in. My take would be to remove
+> that person from the maintainer entry because people will get confused
+> when they don't receive a reply. But I'm totally fine if we should leave
+> Joel in.
 
-> Hi,
-> Trying to understand, it has if check a few lines above:
->=20
-> if (count > (DB_ROOT_LEN - 1))
->=20
-> Does not it met our expectations?
+Howdy folks,
 
-Don't top post on mailing lists.
+I do apologize for my delayed responses.  I try to review patches as I
+find them, but I haven't yet set up a dedicated tree -- a bit out of
+practice.
 
-The first issue is that the return value of snprintf() is the number
-of characters that would be written into the buffer were it long enough.
-The kernel's scnprintf() will return the number of characters written.
+The Rust patches gave me pause.  I have no context to review them --
+even the little Rust I am familiar with looks nothing like the complex
+stuff the kernel bindings are doing.  For that part, all I can do is
+hope someone other than I knows what the Rust should be doing.
 
-But why is it using snprintf() just to copy a string?
-Why is truncation at all safe here?
-Why is a '\n' being removed without the length being changed.
-The length argument to strscpy() should be the length of the destination
-(to stop overruns), not the number of characters.
-In this case it is the number of characters - so will delete another
-character (unless a '\n' was removed).
-The return value is just garbage.
+Thanks,
+Joel
 
-You may have opened a bag of worms, but you've also made it worse.
 
-	David
+-- 
 
->=20
-> David Laight <david.laight.linux@gmail.com>, 5 Nis 2025 Cmt, 18:25
-> tarihinde =C5=9Funu yazd=C4=B1:
->=20
-> > On Sat,  5 Apr 2025 17:36:47 +0300
-> > Baris Can Goral <goralbaris@gmail.com> wrote:
-> > =20
-> > > The strncpy() function is actively dangerous to use since it may not
-> > > NULL-terminate the destination string,resulting in potential memory
-> > > content exposures, unbounded reads, or crashes.
-> > >
-> > > Link:https://github.com/KSPP/linux/issues/90
-> > > Signed-off-by: Baris Can Goral <goralbaris@gmail.com>
-> > > ---
-> > > Changes from v4:
-> > >       -Description added
-> > >       -User name corrected
-> > >       -formatting issues.
-> > >       -commit name changed
-> > >  drivers/target/target_core_configfs.c | 4 ++--
-> > >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/drivers/target/target_core_configfs.c =20
-> > b/drivers/target/target_core_configfs.c =20
-> > > index c40217f44b1b..5c0b74e76be2 100644
-> > > --- a/drivers/target/target_core_configfs.c
-> > > +++ b/drivers/target/target_core_configfs.c
-> > > @@ -143,7 +143,7 @@ static ssize_t target_core_item_dbroot_store(stru=
-ct =20
-> > config_item *item, =20
-> > >       }
-> > >       filp_close(fp, NULL);
-> > >
-> > > -     strncpy(db_root, db_root_stage, read_bytes);
-> > > +     strscpy(db_root, db_root_stage, read_bytes);
-> > >       pr_debug("Target_Core_ConfigFS: db_root set to %s\n", db_root);=
- =20
-> >
-> > That code is broken, it reads:
-> >         read_bytes =3D snprintf(db_root_stage, DB_ROOT_LEN, "%s", page);
-> >         if (!read_bytes)
-> >                 goto unlock;
-> >
-> >         if (db_root_stage[read_bytes - 1] =3D=3D '\n')
-> >                 db_root_stage[read_bytes - 1] =3D '\0';
-> >
-> >         /* validate new db root before accepting it */
-> >         fp =3D filp_open(db_root_stage, O_RDONLY, 0);
-> >         if (IS_ERR(fp)) {
-> >                 pr_err("db_root: cannot open: %s\n", db_root_stage);
-> >                 goto unlock;
-> >         }
-> >         if (!S_ISDIR(file_inode(fp)->i_mode)) {
-> >                 filp_close(fp, NULL);
-> >                 pr_err("db_root: not a directory: %s\n", db_root_stage);
-> >                 goto unlock;
-> >         }
-> >         filp_close(fp, NULL);
-> >
-> >         strncpy(db_root, db_root_stage, read_bytes);
-> >         pr_debug("Target_Core_ConfigFS: db_root set to %s\n", db_root);
-> >
-> >         r =3D read_bytes;
-> >
-> > unlock:
-> >         mutex_unlock(&target_devices_lock);
-> >         return r;
-> >
-> > 'Really nasty (tm)' things happen if 'page' is too long.
-> >
-> >         David
-> > =20
-> > >
-> > >       r =3D read_bytes;
-> > > @@ -3664,7 +3664,7 @@ static void target_init_dbroot(void)
-> > >       }
-> > >       filp_close(fp, NULL);
-> > >
-> > > -     strncpy(db_root, db_root_stage, DB_ROOT_LEN);
-> > > +     strscpy(db_root, db_root_stage, DB_ROOT_LEN);
-> > >       pr_debug("Target_Core_ConfigFS: db_root set to %s\n", db_root);
-> > >  }
-> > > =20
-> >
-> > =20
+"What no boss of a programmer can ever understand is that a programmer
+ is working when he's staring out of the window"
+	- With apologies to Burton Rascoe
 
+			http://www.jlbec.org/
+			jlbec@evilplan.org
