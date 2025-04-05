@@ -1,116 +1,102 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB7A72E62C8
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 08:05:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD1B04C74
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 08:09:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743840341; cv=none; b=fi2rBGpIqQyfIg05aa6oUWFYpxZgTtXAnCGhJVnIWO1wZlcvkZGQclcK32HGhS1fToDgbBCoKJk4cdnb1jHjI9TXVauP/J5pyPZvY4mEXU9y37eXTGCHfJJvt7LfKaSsUi2wjT8Q8zq0ZHds97hSlxii0mjxXSX17URYhe7OKpo=
+	t=1743840589; cv=none; b=iQDWMmJS8+fPhCSp4EaSJTpAKHQA7L9V1KusdF53yYvAIJFnMQQLMhRTj3wvJ3qnoHfIdrnnuqRCkztHPQTOP7KAwf7nHE6BVnUz/Ao2k2cvQrMDoRg+XwBpcIkMbhNDyjstoM4HiY5FnQ8IcYh3nIRS6mdv7m/GFKYpL+/QuyM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743840341; c=relaxed/simple;
-	bh=9fRuxTFU5oLgs8XD26/uTt5ovEGzMUiT1mZ4PMzsLFM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fOOY6EbFrWYWkorh8VgpewJ4btoznl+sYmCovVk3LwjM22b/3loo8PzgBx62KJJCPoxe8lNMbj6rK9ZvpfgSs2j/SLnI6GoXqRKGD5UF+yLXVezyz5G9YLL/YsbOPF9grR/8Kl5qUJSuAPko4t9TGdMSNWSVkHVgwWS9mJm0CDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mrRWNW2f; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743840589; c=relaxed/simple;
+	bh=xpYMAwtnNfE9chsuIaMja5VW7WUGODl8F8mPADK0ESA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DDFsBCsq3/UcWJbLBnBAjq7ghLE7+AhNR8SAfDCYMrOKIEHbG7AJEpoSagxF5hAIgdbr1tGGR0vdhkwhn92vtkLQcn1Q5wD/1CvE+2Fer+X0NVbPBRBAJuVsQ31cLsFP9kYpEaQaP3znAe1NtCNsKT+x0hTn5QaXXok1QC+pOt4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org; spf=none smtp.mailfrom=blackwall.org; dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b=QhnZebYv; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=blackwall.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mrRWNW2f"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2295d78b433so27092295ad.2
-        for <linux-kernel@vger.kernel.org>; Sat, 05 Apr 2025 01:05:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b="QhnZebYv"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-38f2f391864so1536373f8f.3
+        for <linux-kernel@vger.kernel.org>; Sat, 05 Apr 2025 01:09:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743840339; x=1744445139; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tw71iD/nbizJYv4HCNdLTNaax1TiS5PV/IuJM3UEBzM=;
-        b=mrRWNW2fpaQsarDqsqbeG/k7FxfJJFW/ylKOaMeOWYmXBtk3tRIwufHjorkDLK5lyK
-         Vt3BPyD6GmuRDp3+YfLSzvNgP+4gPcoWHPNdLOKjoyWV9A/uWoXfWXTddCLR2un5Uabs
-         /IsTckElAEv3dEkRX2ImrbLZaNy4yWKPcp0VZGdziQGlGm+m0kyDWIp4A1mnB6Q0yuE+
-         e0S1MLON4r7AJouiR40tLPW5+JVBjnHeQY0cPOX2utAIYIQyMrObD4Gp8nOtGZ3dQEn0
-         xvlRvK3f+oVeoW8/2vOcZynqzU4mOkOrD97mOTnX6pgwszJCPkizjjN4Zr36V1z6874g
-         XXWQ==
+        d=blackwall-org.20230601.gappssmtp.com; s=20230601; t=1743840586; x=1744445386; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=/QZsIuICHFoqyu64ZjWWku6z9fVSAzGTu2pQOtSacSA=;
+        b=QhnZebYvfDeV2b4ILAagTGkiuWwI9ZG7Db8hbnxraAfcAvKzaD1OlbWoJvZKERDPT9
+         8jLML4/gNTNhpLgNV7c3OxT2iQlnqjFG1YrW6mEDVQ7vWLovVNUx3OkfiB3JGSQJ95nw
+         zCPC/z+Pc4USt0QFsfrEUoLniNsBnji9ThFK7/i2vJvGlAi3muoNl+JUo53KnzWc7iD7
+         xsiOMXztdiSRZwXpdogNOdmWjsqHepBNcvms5Wvxv7IL6LKlzys8IQYgmCfugBYvHOX0
+         WLif55iHi2NByiuLuzdJE/PCchCiwU7QhssetVKdk5bD6G2YssGqRSYjCtQd+8bTXaz/
+         BK8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743840339; x=1744445139;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tw71iD/nbizJYv4HCNdLTNaax1TiS5PV/IuJM3UEBzM=;
-        b=vY+9A+8WXB+QSreg5wMkeaFjeRMgo5Vw8z38kysBT+ew9FX5bZ4ZXI0ndqnQuN6FMO
-         UBQtoTMBXergVm6y4tgOlObq+Sr20ZuV8nmsN9bDTVmiAQ5C25alYlWcLhaUBSrDsl9e
-         cf0Uy2LTOknudOHbXOpF37JQHC1QQp/uyX11GPaKzfo0MyLCzrR+4JmKA3BLVnMplOcV
-         sdAocxIid4n9xGg0VKZ8cVAlTmjd7n3Row8Ce5Cu03f0TodIa3BhGhtGhsg2xZPgbFlB
-         nY7dpzrOgTUkTXrqFoEPMgZzV4xZhdWgZJdcxMDCts4fSebEAvTxzy9uvJAkQi3prwaB
-         WUMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW1jMeWtWl7YD7anQ82Edaex2nViIttDAwZD9vq8EPRhSV8WZPGRp8JiZxEirMh+6wsY+5gJwYyDuyFrXo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwlnyFADRGBC2KT0IrlK0lS7DpmxdKlF3osInGXl1Nf+3oZc1Ov
-	w7JymJvu8HoF5j1RKIYA+NFuqdUNdFMKRp6YTpE/LRr4zikZPLQb
-X-Gm-Gg: ASbGncsx+N5XJvyc099uLoIil1QpfHkiGN6uYO4plcYp79Q0SngkAPD2J5ECvgNC6k7
-	GxA9o5ys6c8uWrEzQCpFF9M9B0dxju2HWRN8tg3rYlJC3aDZTIasktAQ5YayYkavcGkrHCuh/1z
-	1uY0kPWlgMaTUkg/6uwihWX856yGkCtB1leUcvL5YbVaOQqgUQsjHSfIf7l/418fEysUKuxznri
-	oGMAtoGiS8yf/9l5EboXco2NWPUEUyZ6iZHdZaNv1rKlySIzX+9UIXDUydk4gZHIshBdicb8xoN
-	Exm5WuFa4YsOcr5SYQRKR9zsp3/pw2fcPPrRGs4T0ROZ1xo94rdoeamJUh2xiDwvkvO+3LAIBPY
-	=
-X-Google-Smtp-Source: AGHT+IG62rRg4p8BBxkBYpaofP+J1OF89us4nRxT9kjfJNoJk3QZJxsWI5NfrFxqwGRxJiLMHHMsCQ==
-X-Received: by 2002:a17:903:1c1:b0:220:fe51:1aab with SMTP id d9443c01a7336-22a8a0a33ffmr82796885ad.38.1743840338948;
-        Sat, 05 Apr 2025 01:05:38 -0700 (PDT)
-Received: from vaxr-ASUSPRO-D840MB-M840MB.. ([2001:288:7001:2703:309d:74e8:7ab1:1579])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-229785c0901sm44607305ad.58.2025.04.05.01.05.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Apr 2025 01:05:38 -0700 (PDT)
-From: I Hsin Cheng <richard120310@gmail.com>
-To: syzbot+d5e61dcfda08821a226d@syzkaller.appspotmail.com
-Cc: anna-maria@linutronix.de,
-	frederic@kernel.org,
-	linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com,
-	tglx@linutronix.de,
-	linux-kernel-mentees@lists.linux.dev,
-	skhan@linuxfoundation.org,
-	I Hsin Cheng <richard120310@gmail.com>
-Subject: [RFC PATCH RESEND] timerqueue: Complete rb_node initialization within timerqueue_init
-Date: Sat,  5 Apr 2025 16:05:33 +0800
-Message-ID: <20250405080533.519290-1-richard120310@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <67e52451.050a0220.2f068f.0027.GAE@google.com>
-References: <67e52451.050a0220.2f068f.0027.GAE@google.com>
+        d=1e100.net; s=20230601; t=1743840586; x=1744445386;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/QZsIuICHFoqyu64ZjWWku6z9fVSAzGTu2pQOtSacSA=;
+        b=o6tbCaLaTY3HwIZTgYafCMwMdJiDmkhYW6IYVRAiXZ7/thcMK3ci84kca0YdYZrBfj
+         MjOoyroc6QN/m02d3MQ4YWscKmDZd207ZBwGQt0YkenR31bsAXM8crZtg1obmrRP6kVN
+         2nSSbqnESSuLpCPELWFuJEUJfSeTgp+XijHx43lpfYY85UBUhXhOCz8zN+gFmMiqN40g
+         Fq2viBgD4U85PkIbvOkDb7r6mLoag4MsSGk19SS3SX9LCCteXhK1dMflpO1aVNWKcQzr
+         fxPHswO003De4HXIcHk7K0FTL8kr4LV8mo9d5MiqvpHX6KdQD3CLmmi+WHY7TkRnGZbm
+         s3/g==
+X-Forwarded-Encrypted: i=1; AJvYcCWK5R4sBxKap4QqHEUBT5ZqffcP9Zk7A/nVcNbwPJCE5rH+PZbBv1rC/CLXgehL1w78BNS4XavF1UtHTc0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxBBqPxe8cAMPzDoiLZbhX9JF8yURmgaEszSEUsoyqUTVKTuRka
+	DVz4A+y2mg9KucbzFiTjgKi4LqeNytQFYaDcqwXCpftgS9wpdzrckxfpcS46jrM=
+X-Gm-Gg: ASbGncsGgsP50lhyKyXPh58CE/QCaSfIkd6cqyCBcs+jMcM1Ysnj3/W/6rM9NZesM+4
+	pROZzq9/DAsBQHrJaGj4hj7N2sTCfAY7OTqGWBAzigiHgUz3p9yiIlrOzjQJg1y/p6Uh8lHLwaJ
+	3cUklxONwl4PkkDDtHMYSZj5iJRjQXWKbf43ORbrJ3i3Lt7JCi4bMeM6/0juthkouShJonlhAXO
+	us6cWOnkwuvnppK++kharhrxhg9H9nMFhscN131kZxOIAP0fQ3lFdTfUv6P+MCionqGx5pL8WHP
+	RqrECl88QQULaYfvK/mCS8CiML6T+H25hbPb6m2FwrYfGtmhWXfvhyC3DZutSnxBlJmRVxyywa+
+	H
+X-Google-Smtp-Source: AGHT+IFHXyrO4duwB/8ct3hbp2ZVFrHLWPnHZ+LzJPJBWsvwvWdFic7KtYfCRYh4AG6VhKDgfHE1gw==
+X-Received: by 2002:a05:6000:270d:b0:39c:1257:dba9 with SMTP id ffacd0b85a97d-39d14762337mr3053384f8f.57.1743840585714;
+        Sat, 05 Apr 2025 01:09:45 -0700 (PDT)
+Received: from [192.168.0.205] (78-154-15-142.ip.btc-net.bg. [78.154.15.142])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c301a7045sm6325826f8f.39.2025.04.05.01.09.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 05 Apr 2025 01:09:45 -0700 (PDT)
+Message-ID: <0c42671d-31cf-401d-8c40-be43b9c83ab3@blackwall.org>
+Date: Sat, 5 Apr 2025 11:09:43 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Patch v3 net-next 1/3] net: bridge: mcast: Add offload failed
+ mdb flag
+To: Joseph Huang <Joseph.Huang@garmin.com>, netdev@vger.kernel.org
+Cc: Joseph Huang <joseph.huang.2024@gmail.com>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Roopa Prabhu <roopa@nvidia.com>, Simon Horman <horms@kernel.org>,
+ linux-kernel@vger.kernel.org, bridge@lists.linux.dev
+References: <20250404212940.1837879-1-Joseph.Huang@garmin.com>
+ <20250404212940.1837879-2-Joseph.Huang@garmin.com>
+Content-Language: en-US
+From: Nikolay Aleksandrov <razor@blackwall.org>
+In-Reply-To: <20250404212940.1837879-2-Joseph.Huang@garmin.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The children of "node" within "struct timerqueue_node" may be uninit
-status after the initialization. Initialize them as NULL under
-timerqueue_init to prevent the problem.
+On 4/5/25 00:29, Joseph Huang wrote:
+> Add MDB_FLAGS_OFFLOAD_FAILED and MDB_PG_FLAGS_OFFLOAD_FAILED to indicate
+> that an attempt to offload the MDB entry to switchdev has failed.
+> 
+> Signed-off-by: Joseph Huang <Joseph.Huang@garmin.com>
+> ---
+>  include/uapi/linux/if_bridge.h |  9 +++++----
+>  net/bridge/br_mdb.c            |  2 ++
+>  net/bridge/br_private.h        | 20 +++++++++++++++-----
+>  net/bridge/br_switchdev.c      |  9 +++++----
+>  4 files changed, 27 insertions(+), 13 deletions(-)
+> 
 
-However, syzbot doesn't have any corresponding reproducer yet, please
-let me know if it makes sense or not, or any test can help to further
-validate it, thanks!
+Acked-by: Nikolay Aleksandrov <razor@blackwall.org>
 
-Fixes: '1f5a24794a545 ("timers: Rename timerlist infrastructure to
-timerqueue")'
-Reported-by: syzbot+d5e61dcfda08821a226d@syzkaller.appspotmail.com
-Signed-off-by: I Hsin Cheng <richard120310@gmail.com>
----
- include/linux/timerqueue.h | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/include/linux/timerqueue.h b/include/linux/timerqueue.h
-index d306d9dd2207..a42fdc83f694 100644
---- a/include/linux/timerqueue.h
-+++ b/include/linux/timerqueue.h
-@@ -30,6 +30,8 @@ struct timerqueue_node *timerqueue_getnext(struct timerqueue_head *head)
- static inline void timerqueue_init(struct timerqueue_node *node)
- {
- 	RB_CLEAR_NODE(&node->node);
-+	node->node.rb_right = NULL;
-+	node->node.rb_left = NULL;
- }
- 
- static inline bool timerqueue_node_queued(struct timerqueue_node *node)
--- 
-2.43.0
 
