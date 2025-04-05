@@ -1,180 +1,298 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 159E55695;
-	Sat,  5 Apr 2025 17:29:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17B6913B2BB
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 17:34:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743874197; cv=none; b=VGZdBEGTGeAKdrBOA3KXuPEPSfTR7M7PRhuRNG6Es5U9EjVLOwqSnf1cI+nia0f+fCUZ/LyXUK2VOFXX/LBRyfAVvccPDhB3pebcoUHFfclqHCS7BKUuFSQL2bYGWMw8q40z2ojE2rJWXGz37sCuTbv4uLuAA1h2+x51w0o6b40=
+	t=1743874478; cv=none; b=X3jxT4cv2fG+vMBQEewg/bT0FSa18b6TiQj4gjeODEfLmIhDIstLyFb6XveNl061/qVu9EIT/aSn282ql2rscp20yOwKUfQxhZca0ll3BLztXBQyeXUXSOzj4yyDg9eczmF0itAPfNjyNS3+IoYSMsaVhbRWhOPVsHpA/8Jsxhc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743874197; c=relaxed/simple;
-	bh=tzXibo8LLKtevA8p4RlDqCPis5OweDdf/jmNMoHM7LI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=E2mmbdbhXDFv8VHPbOkUvrb/H5hPWqzJJUUnRIe3w8pfBPqKT8aifnPaRrxoGQF/YnO4A+amxQ4FXf00l07NEakYsKa224zFyIq/D1biwww711i0xOaS4Dt+a+TYTZL8MHBt+AR/PKjHuFDyIGbsVwzcPPtO6CyNsAydJRTmjNM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ImfPRnbD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743874478; c=relaxed/simple;
+	bh=zNbMsd5ZMKQEgcUqH2G9jdZjS7mVpjxPElH2t8AaYBk=;
+	h=Date:Subject:In-Reply-To:CC:From:To:Message-ID; b=RfM36lC5wlfG7Ekx5nrgWP260b0MQj+qscyi0T9FtrGZCnMdfNIE84E/0HbJYwlEm8kdbrfg4YnyBGXaEzmwLZC2hFW2W36WNNB3v0leUdzcMl/n22lsUwGtdDGw21j5BAWDQXzSVuF5ym6+qA6lvw2KbEFOtrDLoNoFlZSMTOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com; spf=pass smtp.mailfrom=dabbelt.com; dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b=lrsHelYW; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dabbelt.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ImfPRnbD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C8DCC4CEE4;
-	Sat,  5 Apr 2025 17:29:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743874196;
-	bh=tzXibo8LLKtevA8p4RlDqCPis5OweDdf/jmNMoHM7LI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ImfPRnbDGl4DRxtqt4CsGc8D4PavM3/4rRJA1EPwTmLvhWNyTtpOgT88HnOLuukc0
-	 59FuvV+7OfdyZ8A9cD/P6fAxKzSc2wYfh5HewKdjNWxjB4T21+wF8KpYrefUSCOR2B
-	 /rcnTWkS6X1945uuLDZN31pZr/oxL/eSg22liQctWmDP6wM9NzEH6UZbHhdwyK2mo2
-	 yi83Ab+tCzUEUvy1QHfCTSYAJbLIo0Q/4UYRczwda7CPJC1bbA0twKyFFzLkB2vU78
-	 Hw3em3g6cy9xrPC5v8iFZb4DV9TxPyDVuN+4+E8rpPttQ8IbVXNmz97E2aaeskwo14
-	 WazXAoYhuXigA==
-Date: Sat, 5 Apr 2025 18:29:47 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Matti Vaittinen <mazziesaccount@gmail.com>
-Cc: David Lechner <dlechner@baylibre.com>, Matti Vaittinen
- <matti.vaittinen@fi.rohmeurope.com>, Lars-Peter Clausen <lars@metafoo.de>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Nuno Sa <nuno.sa@analog.com>, Javier
- Carrasco <javier.carrasco.cruz@gmail.com>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/7] iio: adc: ti-adc128s052: Simplify using
- be16_to_cpu()
-Message-ID: <20250405182947.06d5e67f@jic23-huawei>
-In-Reply-To: <1189b539-adb4-46f9-9783-c6577b57a304@gmail.com>
-References: <cover.1743573284.git.mazziesaccount@gmail.com>
-	<feeabbfd3d3916c7497dfd94423ff83ef5f654f1.1743573284.git.mazziesaccount@gmail.com>
-	<4c3e0d23-2582-4acf-8e90-542c8f8c385f@baylibre.com>
-	<1189b539-adb4-46f9-9783-c6577b57a304@gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b="lrsHelYW"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-22401f4d35aso32341185ad.2
+        for <linux-kernel@vger.kernel.org>; Sat, 05 Apr 2025 10:34:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dabbelt-com.20230601.gappssmtp.com; s=20230601; t=1743874475; x=1744479275; darn=vger.kernel.org;
+        h=message-id:to:from:cc:in-reply-to:subject:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=OCQtICYkn6uP4Xo9tW2ueXrTg+tiER3HquLdyfSwfUI=;
+        b=lrsHelYWL2bwtrA6DRb0QpmpWv1r5nOqAWF/3bPLr+92+DWMq0ZwhWGyzbD+yeIyQo
+         TRilBAWfTrVBOPBUP/eSsMm8UsJaS2+04xqvZsF4MU/tf9Ldb+pQ/NcdX6j19d2l11dU
+         jmmi6WEHR7mtbeE3bz3/0G6bYpQrNJNopoEjGqQ5x0Zkg1H3vxwbjkZ3NXD0iDt6ny+t
+         l7zamgX2qfMnvPSXHspDdKH2z0xtTJ+sa3Z89tquiHluZYxP4tICUd1RyspX3bq19MpL
+         PFNRShtRBzn9WJ4ms0fV9U6UbM+e0Sx7jaGK/PlSXp5DEyMJFJNOKUos/OSi+1tTJwP2
+         YN3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743874475; x=1744479275;
+        h=message-id:to:from:cc:in-reply-to:subject:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=OCQtICYkn6uP4Xo9tW2ueXrTg+tiER3HquLdyfSwfUI=;
+        b=nhZpdG8qNqVjkSc9Y3en+WZHjf4r8jsEm1YpWVrekJOL2r+mZbXCWDzP7pUqBM7Dlp
+         35qbtFRCoEKo4b7fogP0cQVPjWatc2f7S7dy6rgQHyX3mYprx0bDgasJ72IPwD+ugMya
+         m7h1nmWfaKKve/j0hPzuuwo0V/M5OimtY2sCtErQx4ENQhawGlze7x1pHKjIIja+pRDR
+         3l7BD9kkbs0WZU6qEw//SqT1f/4fKvrBT+wC1aXX0NCOjg3lCEyCjiMZhZuzy+R7gJuo
+         ydzmGsMRwGPzct35ZYryyI2wyyDhs5z9uPLkapZPOlD9+EVg4XZxKsoTA+Ojhs/TNds0
+         /xnQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWk6DpXS1it5GsayFOcrXlyQ2dcmKx/udnXdNNdVlCigqR9i3vg/UxhuGZOD4g951KasobPtyTnhSsi5o0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwE0SBN3cN483Alq+HmFL948CWSMn4Nm54xq4ftzlc5oo01Bth4
+	6fIT5aYsFKJUJHknmxPU4wZlUIdo7AKjtIruO/2utfVomZ+J1CglgN23j5WfcgQ0fAyozRBn7be
+	vDIE=
+X-Gm-Gg: ASbGncs98LREL8SYj8v0alG/P+qlngXmJvkGyapFjOYB7KKIb06ZQngBtV2+g0EJNOT
+	DA07c5E5NAxxUtHiJi225NFJpeeYufUKiypPCI5Kskug4JZAkjTLhNF8FLbZyMj9snhMFSwiE3N
+	flmvfeqVvQb7matrtfXFKRJFYnBVCxEy2wbrOlVh7DZi6oxiJJSFL40cI6YvoGHoKASBVdw6K9o
+	tBoXQR+wFTHBJbd8xSdPW+2FDYZQTUymzKWDjUIjRB83VEd7ciuRISUfpuYXUt5BrhN2idc3uVx
+	wFI6ywvOZWsnGhajKw/x89zNIu3MV9gvAGn44s+kPw==
+X-Google-Smtp-Source: AGHT+IF80lvJLAgMXgSxNXCpMXC/gbO5XZ3y9Dd2bI9pYYdOBComYrwaxqbJakPqUqjZ8rd4ZAFXkg==
+X-Received: by 2002:a17:902:cf4b:b0:224:1220:7f40 with SMTP id d9443c01a7336-22a9551417fmr46708245ad.3.1743874475182;
+        Sat, 05 Apr 2025 10:34:35 -0700 (PDT)
+Received: from localhost ([192.184.165.199])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-229785bff96sm52456355ad.59.2025.04.05.10.34.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 05 Apr 2025 10:34:34 -0700 (PDT)
+Date: Sat, 05 Apr 2025 10:34:34 -0700 (PDT)
+X-Google-Original-Date: Sat, 05 Apr 2025 10:34:32 PDT (-0700)
+Subject:     Re: [BUG -next] ./usr/include/cxl/features.h:11:10: fatal error: uuid/uuid.h: No such file or directory
+In-Reply-To: <67e7301dc8ad7_201f0294a5@dwillia2-xfh.jf.intel.com.notmuch>
+CC: paulmck@kernel.org, dave.jiang@intel.com, linux-cxl@vger.kernel.org,
+  dave@stgolabs.net, jonathan.cameron@huawei.com, alison.schofield@intel.com,
+  vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com, gourry@gourry.net,
+  linux-kernel@vger.kernel.org, linux-next@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>
+From: Palmer Dabbelt <palmer@dabbelt.com>
+To: dan.j.williams@intel.com
+Message-ID: <mhng-2b1b4293-576d-4ba1-a4c6-1109a50ce058@palmer-ri-x1c9>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 
-On Thu, 3 Apr 2025 08:16:43 +0300
-Matti Vaittinen <mazziesaccount@gmail.com> wrote:
+On Fri, 28 Mar 2025 16:26:21 PDT (-0700), dan.j.williams@intel.com wrote:
+> Paul E. McKenney wrote:
+> [..]
+>> > > Making the above change got me this:
+>> > >
+>> > > usr/include/cxl/features.h:59:9: error: unknown type name ‘uuid_t’
+>> > I wasn't able to hit that with allmodconfig on x86 with a Fedora 41 build setup. What is the specific command lines you are using?
+>>
+>> make clean
+>> make allmodconfig
+>> make -j$N
+>>
+>> Though encapsulated as follows:
+>>
+>> tools/testing/selftests/rcutorture/bin/torture.sh --do-none --do-allmodconfig
+>
+> The problem is that uuid_t is not defined for uapi headers to reuse.
+> Perhaps checkpatch should be checking for uuid_t in uapi headers going
+> forward.
+>
+> For now the following builds for me, but it is a quite a mess to undo
+> the assumption that that the hardware object definitions can not use
+> uuid_t:
+>
+> -- 8< --
+> diff --git a/drivers/cxl/core/features.c b/drivers/cxl/core/features.c
+> index f4daefe3180e..d626dd7c5fbf 100644
+> --- a/drivers/cxl/core/features.c
+> +++ b/drivers/cxl/core/features.c
+> @@ -33,7 +33,11 @@ static bool is_cxl_feature_exclusive_by_uuid(const uuid_t *uuid)
+>
+>  static bool is_cxl_feature_exclusive(struct cxl_feat_entry *entry)
+>  {
+> -	return is_cxl_feature_exclusive_by_uuid(&entry->uuid);
+> +	uuid_t uuid;
+> +
+> +	import_uuid(&uuid, entry->uuid);
+> +
+> +	return is_cxl_feature_exclusive_by_uuid(&uuid);
+>  }
+>
+>  inline struct cxl_features_state *to_cxlfs(struct cxl_dev_state *cxlds)
+> @@ -228,7 +232,7 @@ size_t cxl_get_feature(struct cxl_mailbox *cxl_mbox, const uuid_t *feat_uuid,
+>  		return 0;
+>
+>  	size_out = min(feat_out_size, cxl_mbox->payload_size);
+> -	uuid_copy(&pi.uuid, feat_uuid);
+> +	export_uuid(pi.uuid, feat_uuid);
+>  	pi.selection = selection;
+>  	do {
+>  		data_to_rd_size = min(feat_out_size - data_rcvd_size,
+> @@ -282,7 +286,7 @@ int cxl_set_feature(struct cxl_mailbox *cxl_mbox,
+>  	if (!pi)
+>  		return -ENOMEM;
+>
+> -	uuid_copy(&pi->uuid, feat_uuid);
+> +	export_uuid(pi->uuid, feat_uuid);
+>  	pi->version = feat_version;
+>  	feat_flag &= ~CXL_SET_FEAT_FLAG_DATA_TRANSFER_MASK;
+>  	feat_flag |= CXL_SET_FEAT_FLAG_DATA_SAVED_ACROSS_RESET;
+> @@ -360,16 +364,19 @@ get_support_feature_info(struct cxl_features_state *cxlfs,
+>  			 const struct fwctl_rpc_cxl *rpc_in)
+>  {
+>  	struct cxl_feat_entry *feat;
+> -	const uuid_t *uuid;
+> +	uuid_t in_uuid;
+>
+> -	if (rpc_in->op_size < sizeof(uuid))
+> +	if (rpc_in->op_size < sizeof(in_uuid))
+>  		return ERR_PTR(-EINVAL);
+>
+> -	uuid = &rpc_in->set_feat_in.uuid;
+> +	import_uuid(&in_uuid, rpc_in->set_feat_in.uuid);
+>
+>  	for (int i = 0; i < cxlfs->entries->num_features; i++) {
+> +		uuid_t feat_uuid;
+> +
+>  		feat = &cxlfs->entries->ent[i];
+> -		if (uuid_equal(uuid, &feat->uuid))
+> +		import_uuid(&feat_uuid, feat->uuid);
+> +		if (uuid_equal(&in_uuid, &feat_uuid))
+>  			return feat;
+>  	}
+>
+> @@ -461,6 +468,7 @@ static void *cxlctl_get_feature(struct cxl_features_state *cxlfs,
+>  	const struct cxl_mbox_get_feat_in *feat_in;
+>  	u16 offset, count, return_code;
+>  	size_t out_size = *out_len;
+> +	uuid_t uuid;
+>
+>  	if (rpc_in->op_size != sizeof(*feat_in))
+>  		return ERR_PTR(-EINVAL);
+> @@ -477,9 +485,10 @@ static void *cxlctl_get_feature(struct cxl_features_state *cxlfs,
+>  	if (!rpc_out)
+>  		return ERR_PTR(-ENOMEM);
+>
+> -	out_size = cxl_get_feature(cxl_mbox, &feat_in->uuid,
+> -				   feat_in->selection, rpc_out->payload,
+> -				   count, offset, &return_code);
+> +	import_uuid(&uuid, feat_in->uuid);
+> +	out_size = cxl_get_feature(cxl_mbox, &uuid, feat_in->selection,
+> +				   rpc_out->payload, count, offset,
+> +				   &return_code);
+>  	*out_len = sizeof(struct fwctl_rpc_cxl_out);
+>  	if (!out_size) {
+>  		rpc_out->size = 0;
+> @@ -502,6 +511,7 @@ static void *cxlctl_set_feature(struct cxl_features_state *cxlfs,
+>  	const struct cxl_mbox_set_feat_in *feat_in;
+>  	size_t out_size, data_size;
+>  	u16 offset, return_code;
+> +	uuid_t uuid;
+>  	u32 flags;
+>  	int rc;
+>
+> @@ -510,7 +520,8 @@ static void *cxlctl_set_feature(struct cxl_features_state *cxlfs,
+>
+>  	feat_in = &rpc_in->set_feat_in;
+>
+> -	if (is_cxl_feature_exclusive_by_uuid(&feat_in->uuid))
+> +	import_uuid(&uuid, feat_in->uuid);
+> +	if (is_cxl_feature_exclusive_by_uuid(&uuid))
+>  		return ERR_PTR(-EPERM);
+>
+>  	offset = le16_to_cpu(feat_in->offset);
+> @@ -525,9 +536,9 @@ static void *cxlctl_set_feature(struct cxl_features_state *cxlfs,
+>  	rpc_out->size = 0;
+>
+>  	data_size = rpc_in->op_size - sizeof(feat_in->hdr);
+> -	rc = cxl_set_feature(cxl_mbox, &feat_in->uuid,
+> -			     feat_in->version, feat_in->feat_data,
+> -			     data_size, flags, offset, &return_code);
+> +	rc = cxl_set_feature(cxl_mbox, &uuid, feat_in->version,
+> +			     feat_in->feat_data, data_size, flags, offset,
+> +			     &return_code);
+>  	if (rc) {
+>  		rpc_out->retval = return_code;
+>  		return no_free_ptr(rpc_out);
+> diff --git a/include/uapi/cxl/features.h b/include/uapi/cxl/features.h
+> index d6db8984889f..1e3323854994 100644
+> --- a/include/uapi/cxl/features.h
+> +++ b/include/uapi/cxl/features.h
+> @@ -8,11 +8,6 @@
+>  #define _UAPI_CXL_FEATURES_H_
+>
+>  #include <linux/types.h>
+> -#ifndef __KERNEL__
+> -#include <uuid/uuid.h>
+> -#else
+> -#include <linux/uuid.h>
+> -#endif
+>
+>  /*
+>   * struct cxl_mbox_get_sup_feats_in - Get Supported Features input
+> @@ -60,7 +55,7 @@ struct cxl_mbox_get_sup_feats_in {
+>   * Get Supported Features Supported Feature Entry
+>   */
+>  struct cxl_feat_entry {
+> -	uuid_t uuid;
+> +	__u8 uuid[16];
+>  	__le16 id;
+>  	__le16 get_feat_size;
+>  	__le16 set_feat_size;
+> @@ -110,7 +105,7 @@ struct cxl_mbox_get_sup_feats_out {
+>   * CXL spec r3.2 section 8.2.9.6.2 Table 8-99
+>   */
+>  struct cxl_mbox_get_feat_in {
+> -	uuid_t uuid;
+> +	__u8 uuid[16];
+>  	__le16 offset;
+>  	__le16 count;
+>  	__u8 selection;
+> @@ -143,7 +138,7 @@ enum cxl_get_feat_selection {
+>   */
+>  struct cxl_mbox_set_feat_in {
+>  	__struct_group(cxl_mbox_set_feat_hdr, hdr, /* no attrs */,
+> -		uuid_t uuid;
+> +		__u8 uuid[16];
+>  		__le32 flags;
+>  		__le16 offset;
+>  		__u8 version;
+> diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
+> index f2957a3e36fe..d0276ab3a92f 100644
+> --- a/tools/testing/cxl/test/mem.c
+> +++ b/tools/testing/cxl/test/mem.c
+> @@ -1397,7 +1397,7 @@ static int mock_activate_fw(struct cxl_mockmem_data *mdata,
+>
+>  static void fill_feature_vendor_test(struct cxl_feat_entry *feat)
+>  {
+> -	feat->uuid = CXL_VENDOR_FEATURE_TEST;
+> +	export_uuid(feat->uuid, &CXL_VENDOR_FEATURE_TEST);
+>  	feat->id = 0;
+>  	feat->get_feat_size = cpu_to_le16(0x4);
+>  	feat->set_feat_size = cpu_to_le16(0x4);
+> @@ -1441,8 +1441,10 @@ static int mock_get_feature(struct cxl_mockmem_data *mdata,
+>  			    struct cxl_mbox_cmd *cmd)
+>  {
+>  	struct cxl_mbox_get_feat_in *input = cmd->payload_in;
+> +	uuid_t in_uuid;
+>
+> -	if (uuid_equal(&input->uuid, &CXL_VENDOR_FEATURE_TEST))
+> +	import_uuid(&in_uuid, input->uuid);
+> +	if (uuid_equal(&in_uuid, &CXL_VENDOR_FEATURE_TEST))
+>  		return mock_get_test_feature(mdata, cmd);
+>
+>  	cmd->return_code = CXL_MBOX_CMD_RC_UNSUPPORTED;
+> @@ -1485,8 +1487,10 @@ static int mock_set_feature(struct cxl_mockmem_data *mdata,
+>  			    struct cxl_mbox_cmd *cmd)
+>  {
+>  	struct cxl_mbox_set_feat_in *input = cmd->payload_in;
+> +	uuid_t in_uuid;
+>
+> -	if (uuid_equal(&input->hdr.uuid, &CXL_VENDOR_FEATURE_TEST))
+> +	import_uuid(&in_uuid, input->hdr.uuid);
+> +	if (uuid_equal(&in_uuid, &CXL_VENDOR_FEATURE_TEST))
+>  		return mock_set_test_feature(mdata, cmd);
+>
+>  	cmd->return_code = CXL_MBOX_CMD_RC_UNSUPPORTED;
 
-> On 03/04/2025 00:04, David Lechner wrote:
-> > On 4/2/25 1:09 AM, Matti Vaittinen wrote:  
-> >> The register data is 12-bit big-endian data. Use be16_to_cpu() to do
-> >> the conversion, and simple bitwise AND for masking to make it more
-> >> obvious.
-> >>
-> >> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
-> >> ---
-> >> Revision history:
-> >> v1 => v2:
-> >>   - Fix commit msg to reflect the fact there was no bug
-> >>   - Drop Fixes tag
-> >>   - Use union for rx / tx buffer to avoid casting
-> >>   - Keep the shared message protected by the mutex
-> >> ---
-> >>   drivers/iio/adc/ti-adc128s052.c | 18 ++++++++++--------
-> >>   1 file changed, 10 insertions(+), 8 deletions(-)
-> >>
-> >> diff --git a/drivers/iio/adc/ti-adc128s052.c b/drivers/iio/adc/ti-adc128s052.c
-> >> index a456ea78462f..3e69a5fce010 100644
-> >> --- a/drivers/iio/adc/ti-adc128s052.c
-> >> +++ b/drivers/iio/adc/ti-adc128s052.c
-> >> @@ -28,32 +28,34 @@ struct adc128 {
-> >>   	struct regulator *reg;
-> >>   	struct mutex lock;
-> >>   
-> >> -	u8 buffer[2] __aligned(IIO_DMA_MINALIGN);
-> >> +	union {
-> >> +		__be16 rx_buffer;
-> >> +		u8 tx_buffer[2];
-As below. Maybe
-		__be16 buffer16;
-		u8 buffer[2];
+I hit this too, also in allmodconfig (and in my case for a cross build, 
+so I have very few system headers).  This seems to fix it, so
 
-> >> +	} __aligned(IIO_DMA_MINALIGN);
-> >>   };
-> >>   
-> >>   static int adc128_adc_conversion(struct adc128 *adc, u8 channel)
-> >>   {
-> >>   	int ret;
-> >> +	char *msg = &adc->tx_buffer[0];
-> >>   
-> >>   	mutex_lock(&adc->lock);
-> >>   
-> >> -	adc->buffer[0] = channel << 3;
-> >> -	adc->buffer[1] = 0;
-> >> +	msg[0] = channel << 3;
-> >> +	msg[1] = 0;
-> >>   
-> >> -	ret = spi_write(adc->spi, &adc->buffer, 2);
-> >> +	ret = spi_write(adc->spi, msg, sizeof(adc->tx_buffer));
+Tested-by: Palmer Dabbelt <palmer@rivosinc.com>
 
-I'd get rid of msg as it's now just confusing given we are
-using the sizeof() here.
-
-> >>   	if (ret < 0) {
-> >>   		mutex_unlock(&adc->lock);
-> >>   		return ret;
-> >>   	}
-> >>   
-> >> -	ret = spi_read(adc->spi, &adc->buffer, 2);
-> >> -
-> >> +	ret = spi_read(adc->spi, &adc->rx_buffer, 2);
-
-sizeof(adc->rx_buffer)
-
-> >>   	mutex_unlock(&adc->lock);
-> >> -
-> >>   	if (ret < 0)
-> >>   		return ret;
-> >>   
-> >> -	return ((adc->buffer[0] << 8 | adc->buffer[1]) & 0xFFF);
-> >> +	return be16_to_cpu(adc->rx_buffer) & 0xFFF;  
-> > 
-> > 
-> > The cast isn't exactly beautiful, but this would save a lot of
-> > lines of diff and a few lines of code by avoiding the need for
-> > the union and the local msg variable.
-> > 
-> > 	return be16_to_cpup((__be16 *)adc->buffer) & 0xFFF;  
-
-The cast only works because we have forced the alignment for DMA safety.
-That to me is a little fragile.
-
-You could do get_unaligned_be16() which doesn't need the cast then carry
-on using the original buffer.  
-
-> 
-> Thanks again for the review David :)
-> 
-> I am unsure which way to go. I kind of like having the __be16 in the 
-> struct, as it immediately yells "data from device is big-endian". OTOH, 
-> I've never loved unions (and, it silences the above "yelling" quite a 
-> bit). I still think this might be the first time I really see a valid 
-> use-case for an union :) And, you're right this adds more lines, 
-> besides, the cast doesn't look that ugly to me. Yet, I originally had a 
-> cast probably as simple as this (and I also had the __be16 in the 
-> struct), and Jonathan suggested using union to avoid it...
-> 
-> At the end of the day, I suppose I am Okay with any of these 3 
-> approaches. Original cast, union or this cast you suggest. Jonathan, any 
-> preferences on your side?
-
-Majority of the diff is really about renaming buffer to tx_buffer.
-Could just not bother doing that and instead have buffer and buffer16
-as the two union elements. With msg gone as suggested above, then the diff
-becomes only a few lines and you get to keep the nicety of it being either
-a pair of u8s or a __be16.
-
-Jonathan
-
-> 
-> >   
-> >>   }
-> >>   
-> >>   static int adc128_read_raw(struct iio_dev *indio_dev,  
-> >   
-> 
-> Yours,
-> 	-- Matti
-> 
-
+Thanks!
