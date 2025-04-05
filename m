@@ -1,346 +1,191 @@
-Received: from mail-io1-f73.google.com (mail-io1-f73.google.com [209.85.166.73])
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2954964D
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 00:10:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E51628EB;
+	Sat,  5 Apr 2025 00:13:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743811848; cv=none; b=WwHtwHPngZm6rR+cKED8HwjpF8QNdCGpfYFXnXErF0WoTvHQGKiTxKuwrnC7r+QGFqCWiXohVmjnWnM78DEedXNA/iJAHmMh+OJCj/RulK1mOtczuWUBtLv3sJ5kCxpKxJEYhXncmqbpDk/OdXot6IDbzuQYb7heMMJnLLWQhEc=
+	t=1743811985; cv=none; b=AC/Gu3Y7UA+K/37OpEGsG/P2teb28xxQPlLMYdXuLY7VTNcCGvaQ8EVOm8sd2j2P7fV7jZ1uq+nfePSwsp8PizYOJVUNXdhoEPAdY6LURhjA2rTpKF9/4BSRE/JTgd3QhbOQJJBBe1MnY/pyTYqxOEYmptCJUCx6YhhRbylfbNQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743811848; c=relaxed/simple;
-	bh=YCFqf2q84Sm/Q1XdtLaGCo1ig5fqocJsCum2qPik8l4=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=RBZUmj5WAmQQAZvTv1XlrfpzqbXktp51Hr6tAygr+poUjbVZAcweSf5DQ0Lrh11RQC2zVLIij+dI1cErc8Y13lAhxLmmcHJFiFRhG+C/J6QcUGfatx6WLDdiifEy7oqmd0+iAvTHAvt/IrcayoAgPoLoTXoLzbDxk0htPtib/JI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--rananta.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2M7rRo9t; arc=none smtp.client-ip=209.85.166.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--rananta.bounces.google.com
+	s=arc-20240116; t=1743811985; c=relaxed/simple;
+	bh=KjmspBpiu6mD534nIbOHzgRUTwHmzEQbjmM6iuUZ4SY=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=djcR54nWOyzzxLet+muTHyoprJlscpLCOGzLmm9fZe54eT0SmlfFJqRoeVL/49XVWXdWyH8W+RqIj+Jf4/XCMWOXdKeug4/ASATgKFF2RqzfziJ8t0buZfYzplBtba/HZdus9em59IoYJ1jKEaLDlkagBWY7XcriiX8CG4el2bA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l9NhBhMj; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2M7rRo9t"
-Received: by mail-io1-f73.google.com with SMTP id ca18e2360f4ac-85b5875e250so297045039f.0
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 17:10:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l9NhBhMj"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-301918a4e3bso2402984a91.3;
+        Fri, 04 Apr 2025 17:13:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743811845; x=1744416645; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ClkE+3sE7+kWf5twKe62RSOxAn4PaMKVpn27pL4jQgU=;
-        b=2M7rRo9teU2nK1k1js+aJocmVljva2ihGTldCcutgZtkN5b/KTAPswQRq0Doadwn8E
-         1Els+/FMlqqLSch2nsU9fP4I1sudNGmDNFSPGmLQqJrk9hbnZ1qBZeXlaSJXrS2azNYj
-         ni7vlBUkkNLgRfqQGQ4PEAC4qdhNXGNTcRJU09dXt3YOprBdGtaUHaKrKNAz4K8uZljP
-         1C4xBxNoli5If24Gcn1PQfustYayokPYSZSc5cmZT2FaI2Oh0mwt58v7uGxGmgSFuJhi
-         aqyq2utS8BAV6OY4hL+O/jM8nxBKjr8wMa49RVAfZz6zf3rY/slZVucGp44ldhrqUVyk
-         HZxA==
+        d=gmail.com; s=20230601; t=1743811982; x=1744416782; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=lVB5BztCQcbNtQipgi9Dw0n6uAY2frFJeooMsuQ6oIc=;
+        b=l9NhBhMjlivIW2xPkP7yWrN6hq9LmKJsHcPV83KR+kF/USCJS+HpuZUVPhjPIjOzxm
+         Hh8+U/BQEZsND+J8kHDXbmo6kj7LOmuMKt6glnHt1CuX745ii9TyXyVdRqT8ZquJgHt/
+         eZLuBcn66PACOyo0v8sQ7UhsQIgXdSyq+Mk/bUdOBe1svqIa2TmuamCqjPusHk5+s0z/
+         u42zC+l/3t6t5lNmzJTwE8eDBVdQsWe9um6wbTKhZl37GtiXUjZZnaYBlkfbHFRbfXMh
+         1qloVnxXPpsHojwP8rRK64jh8Gj+iWu6aqrqPJL0969FY03IW8hl/G7hUCNqIE+Zz7QE
+         ZTSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743811845; x=1744416645;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ClkE+3sE7+kWf5twKe62RSOxAn4PaMKVpn27pL4jQgU=;
-        b=PbpJHFzkoXzJrBCWIyVVzeOQwNQMGqBF5uuw2g+AjHZo91gEw41T/GhPz2LftCF7MR
-         qrKA8wxhqRsFuSUWAm8ACYT3/ctWHn++6Cs2IiMNeMOkfFBZddJ66En6U3wgzGw8mAM6
-         av8B5rF9p7mdsenLYKq7wQWZ4yURwjF6yaV5VgTPa0Eui8zQfLQy4jvncvllvajZipxU
-         GxiMfVPbRNam76bF4aQI1eOWaEyr0Tl6OuWB+KA3NCsOCEsrTA/woEajPFpFiy2sTzJT
-         FtrpbU5l0qLVqe35ZHp8LMsKPi5xKEMYFb6godmq8EEEUNHqDAw4seXz3PHwz2pBfKMk
-         ax4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUO3fFs3hAJ3WoiWGT0XsiAuCFQ45YwmL+0jECxlgVmQgJpv5/aErY3ytO6kX3WJf5zoscgtoDCO1xbVf0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzG1dEkejHJURSxbq7kG2kG47pR5ujVqYxOIsxMLVg8go1MiQZb
-	yU+YsEWUyQMoO6uOYnpNE91azg04USZB3FpbxmywCmW6oEa4kp6yDXC3XQEgiYLxWzSZo1zeZEa
-	UMPhKxQ==
-X-Google-Smtp-Source: AGHT+IFEzmu31Uxv85/V+P1AR0jWlTmxgY/d6+j9O8XSeTzHg8/BNrhKvi96jcabZLHsWj6TArg5/rVTxVZf
-X-Received: from ilbbb4.prod.google.com ([2002:a05:6e02:4:b0:3d3:fe6e:97b4])
- (user=rananta job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6e02:1542:b0:3d5:d743:8089
- with SMTP id e9e14a558f8ab-3d6ec5336fdmr15573115ab.7.1743811845390; Fri, 04
- Apr 2025 17:10:45 -0700 (PDT)
-Date: Sat,  5 Apr 2025 00:10:41 +0000
-In-Reply-To: <20250405001042.1470552-1-rananta@google.com>
+        d=1e100.net; s=20230601; t=1743811982; x=1744416782;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lVB5BztCQcbNtQipgi9Dw0n6uAY2frFJeooMsuQ6oIc=;
+        b=jGRW1tKfu8CwuigWdtvVgMlutVQaeUFVdKEDyUWNgMnUbelQ/r0/FfWAyevOQzA0xi
+         Ncg4+q5WzjZ6AXlpPmIGFGIJGvKOqLN0Hovz7lRgTYx97CuAnVHTEDUowWN992x0bACk
+         cbCx6sjf2gTBLyubjqBpMTWFQDdKgGP8a7GCvFUaTUGJVemsoeqpY3FPDpRgDIEtbgJW
+         htganTpeMj6wWqSUXesaIgzibsTJ6hJvOuMcfgGsPv24xR5yhAF/UslaMtugYurBJ/wg
+         Nw7LKr6Q/VaWUmEODaW/K8Wh+TVAyqOEw55doaqPD5xDUnjJ3u022LJWfKSaULOW+5ZJ
+         v/kg==
+X-Forwarded-Encrypted: i=1; AJvYcCUhx5+VJEM/QwbXO22czO0Nh928TWxhF1pCSxWE/6I7+XkdfkUuxLofCWsjNXvIPB1aKemZUf6ETEW49Os=@vger.kernel.org, AJvYcCUjCW5L9qpESXhpENEBLiE7G3KYxxUF8PmQt42iV7O/hjw6R4IKmsMRH4OfDiklTaPyJnqyxmrxvz9SMdBX@vger.kernel.org, AJvYcCWENM5iz7g1yoXxJAQXqb6CLqotSWbt5x798dF6SF4RQaKZK0kb9qLpIGTdpit9lP3EJcJjohCrr2s4MAM=@vger.kernel.org, AJvYcCWreYvLMYayKK2qQJsAQ7xIGejfrx+8MddK76DvOEx52wRurk/U9v2fw+z6iE+LDl9J5agdqz9UEEVw@vger.kernel.org
+X-Gm-Message-State: AOJu0YxMhx1b/4YNNoZMQrixFFiM10dASbitH1ERg1UtMTRzk61QtY58
+	oaZ2pUrQ8yHHaY9NpxRmcu08QjCLYeMvpyvijKp3IUf9R+iUFAnZxTKqtgDk
+X-Gm-Gg: ASbGncs6XntY+1V+CSjo+gqA9HQRYzuHwCNAgimafBVvnBdNjiBYpUstPgURLgVHRX4
+	IVLpH+bZ9o/kj/6B7kNvBvE5R/59rmpRdeUHPDkDc3vBxz6yHyMkcrx6II9vZwnxKYLao5ZF34+
+	7NTM2Is2XhzbGdb99VVqfAaWuTuOdhT5J8MHwxV1II4rb0e6gPbc8bhfULwxzTQiLfZ69Xa6eP5
+	IFvElxkM5IFMZd0wdElctWNalekehS8CYL2CP9OVhkb9RqX3/QJb4ci+zXJCSoAmYugT3aPO9y2
+	L5eu1hUJ7ozJyLCWv9BJFuHqAwKg2spEBJHW/+ai/eJvEbSXGKlDAYcSxnqDJBRzZo1GmWMLj8H
+	08aMW9qzjayHPtd3sq2MmB4ymWpvBilaX3tNVq0Fcy2nz17bd1Q==
+X-Google-Smtp-Source: AGHT+IGrwu27oF8ex/7piw96e+w8tE/abSdux4k8o9zBQQLxkK/kmB/PCrq8JJx1uFaSmXIk45Yzfg==
+X-Received: by 2002:a17:90b:56cf:b0:2ee:45fd:34f2 with SMTP id 98e67ed59e1d1-306a61208demr5871471a91.6.1743811982462;
+        Fri, 04 Apr 2025 17:13:02 -0700 (PDT)
+Received: from [192.168.2.3] (2403-580a-80ed-0-4835-5a07-49e7-f115.ip6.aussiebb.net. [2403:580a:80ed:0:4835:5a07:49e7:f115])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3057cb5d665sm4327855a91.30.2025.04.04.17.12.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Apr 2025 17:13:02 -0700 (PDT)
+From: James Calligeros <jcalligeros99@gmail.com>
+Subject: [PATCH v4 00/10] ASoC: tas27{64,70}: improve support for Apple
+ codec variants
+Date: Sat, 05 Apr 2025 10:12:37 +1000
+Message-Id: <20250405-apple-codec-changes-v4-0-d007e46ce4a2@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250405001042.1470552-1-rananta@google.com>
-X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
-Message-ID: <20250405001042.1470552-2-rananta@google.com>
-Subject: [PATCH v2 1/2] KVM: selftests: arm64: Introduce and use
- hardware-definition macros
-From: Raghavendra Rao Ananta <rananta@google.com>
-To: Oliver Upton <oliver.upton@linux.dev>, Marc Zyngier <maz@kernel.org>
-Cc: Raghavendra Rao Anata <rananta@google.com>, Mingwei Zhang <mizhang@google.com>, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
-	Oliver Upton <oupton@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAHV18GcC/23NwQqDMAyA4VeRntfRpradO+09xg61jVpQK3bIh
+ vjuq46BDI9/SL7MJOLoMZJrNpMRJx996FPkp4zYxvQ1Uu9SE2AgGfCcmmFokdrg0NLvRqQKlVT
+ OcoTckXQ5jFj516beH6kbH59hfG9PJr5Of5489CZOGdUgpCpK4CUvbnVnfHu2oSOrN8HeuBwbk
+ IxCgFaschqZ/jfEzgB9bIhk2LLkgjHBjK32xrIsH4MQNUM+AQAA
+X-Change-ID: 20250214-apple-codec-changes-6e656dc1e24d
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+ Shenghao Ding <shenghao-ding@ti.com>, Kevin Lu <kevin-lu@ti.com>, 
+ Baojun Xu <baojun.xu@ti.com>, Dan Murphy <dmurphy@ti.com>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Shi Fu <shifu0704@thundersoft.com>, 
+ Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>
+Cc: Alyssa Rosenzweig <alyssa@rosenzweig.io>, 
+ =?utf-8?q?Martin_Povi=C5=A1er?= <povik+lin@cutebit.org>, 
+ Hector Martin <marcan@marcan.st>, linux-sound@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+ asahi@lists.linux.dev, linux-hwmon@vger.kernel.org, 
+ Neal Gompa <neal@gompa.dev>, James Calligeros <jcalligeros99@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3691;
+ i=jcalligeros99@gmail.com; h=from:subject:message-id;
+ bh=KjmspBpiu6mD534nIbOHzgRUTwHmzEQbjmM6iuUZ4SY=;
+ b=owGbwMvMwCV2xczoYuD3ygTG02pJDOkfSlulp10oyHoUveehUZ7i6UXywj4iKxbKHt/y9/DrT
+ XV+qV3WHaUsDGJcDLJiiiwbmoQ8Zhux3ewXqdwLM4eVCWQIAxenAExkkSIjw7NvpVMMrk1giMuq
+ muSxvknT+L3JsZcOjeXvfHbea6uVW8zIcGDJ0vfOh+a96A2o3hj4kuncWsvgl0uEErepC1yp35K
+ +gBcA
+X-Developer-Key: i=jcalligeros99@gmail.com; a=openpgp;
+ fpr=B08212489B3206D98F1479BDD43632D151F77960
 
-The kvm selftest library for arm64 currently configures the hardware
-fields, such as shift and mask in the page-table entries and registers,
-directly with numbers. While it add comments at places, it's better to
-rewrite them with appropriate macros to improve the readability and
-reduce the risk of errors. Hence, introduce macros to define the
-hardware fields and use them in the arm64 processor library.
+Hi all,
 
-Most of the definitions are primary copied from the Linux's header,
-arch/arm64/include/asm/pgtable-hwdef.h.
+This series introduces a number of changes to the drivers for
+the Texas Instruments TAS2764 and TAS2770 amplifiers in order to
+introduce (and improve in the case of TAS2770) support for the
+variants of these amps found in Apple Silicon Macs.
 
-No functional change intended.
+Apple's variant of TAS2764 is known as SN012776, and as always with
+Apple is a subtly incompatible variant with a number of quirks. It
+is not publicly available. The TAS2770 variant is known as TAS5770L,
+and does not require incompatible handling.
 
-Suggested-by: Oliver Upton <oupton@google.com>
-Signed-off-by: Raghavendra Rao Ananta <rananta@google.com>
+Much as with the Cirrus codec patches, I do not
+expect that we will get any official acknowledgement that these parts
+exist from TI, however I would be delighted to be proven wrong.
+
+This series has been living in the downstream Asahi kernel tree[1]
+for over two years, and has been tested by many thousands of users
+by this point[2].
+
+v4 drops the TDM idle TX slot behaviour patches. I experimented with
+the API discussed in v3, however this did not work on any of the machines
+I tested it with. More tweaking is probably needed.
+
+[1] https://github.com/AsahiLinux/linux/tree/asahi-wip
+[2] https://stats.asahilinux.org/
+
 ---
- .../selftests/kvm/arm64/page_fault_test.c     |  2 +-
- .../selftests/kvm/include/arm64/processor.h   | 66 +++++++++++++++++--
- .../selftests/kvm/lib/arm64/processor.c       | 57 ++++++++--------
- 3 files changed, 92 insertions(+), 33 deletions(-)
+Changes in v4:
+- Moved remaining changes to the top of the set
+- Dropped already merged commits
+- hwmon now reads temp from regmap
+- Bumped regmap max reg patch above Apple quirks patch
+- Dropped TDM idle slot TX behaviour patches
+- Link to v3: https://lore.kernel.org/r/20250227-apple-codec-changes-v3-0-cbb130030acf@gmail.com
 
-diff --git a/tools/testing/selftests/kvm/arm64/page_fault_test.c b/tools/testing/selftests/kvm/arm64/page_fault_test.c
-index ec33a8f9c908..dc6559dad9d8 100644
---- a/tools/testing/selftests/kvm/arm64/page_fault_test.c
-+++ b/tools/testing/selftests/kvm/arm64/page_fault_test.c
-@@ -199,7 +199,7 @@ static bool guest_set_ha(void)
- 	if (hadbs == 0)
- 		return false;
- 
--	tcr = read_sysreg(tcr_el1) | TCR_EL1_HA;
-+	tcr = read_sysreg(tcr_el1) | TCR_HA;
- 	write_sysreg(tcr, tcr_el1);
- 	isb();
- 
-diff --git a/tools/testing/selftests/kvm/include/arm64/processor.h b/tools/testing/selftests/kvm/include/arm64/processor.h
-index 1e8d0d531fbd..7d88ff22013a 100644
---- a/tools/testing/selftests/kvm/include/arm64/processor.h
-+++ b/tools/testing/selftests/kvm/include/arm64/processor.h
-@@ -62,6 +62,66 @@
- 	 MAIR_ATTRIDX(MAIR_ATTR_NORMAL, MT_NORMAL) |				\
- 	 MAIR_ATTRIDX(MAIR_ATTR_NORMAL_WT, MT_NORMAL_WT))
- 
-+/* TCR_EL1 specific flags */
-+#define TCR_T0SZ_OFFSET	0
-+#define TCR_T0SZ(x)		((UL(64) - (x)) << TCR_T0SZ_OFFSET)
-+
-+#define TCR_IRGN0_SHIFT	8
-+#define TCR_IRGN0_MASK		(UL(3) << TCR_IRGN0_SHIFT)
-+#define TCR_IRGN0_NC		(UL(0) << TCR_IRGN0_SHIFT)
-+#define TCR_IRGN0_WBWA		(UL(1) << TCR_IRGN0_SHIFT)
-+#define TCR_IRGN0_WT		(UL(2) << TCR_IRGN0_SHIFT)
-+#define TCR_IRGN0_WBnWA	(UL(3) << TCR_IRGN0_SHIFT)
-+
-+#define TCR_ORGN0_SHIFT	10
-+#define TCR_ORGN0_MASK		(UL(3) << TCR_ORGN0_SHIFT)
-+#define TCR_ORGN0_NC		(UL(0) << TCR_ORGN0_SHIFT)
-+#define TCR_ORGN0_WBWA		(UL(1) << TCR_ORGN0_SHIFT)
-+#define TCR_ORGN0_WT		(UL(2) << TCR_ORGN0_SHIFT)
-+#define TCR_ORGN0_WBnWA	(UL(3) << TCR_ORGN0_SHIFT)
-+
-+#define TCR_SH0_SHIFT		12
-+#define TCR_SH0_MASK		(UL(3) << TCR_SH0_SHIFT)
-+#define TCR_SH0_INNER		(UL(3) << TCR_SH0_SHIFT)
-+
-+#define TCR_TG0_SHIFT		14
-+#define TCR_TG0_MASK		(UL(3) << TCR_TG0_SHIFT)
-+#define TCR_TG0_4K		(UL(0) << TCR_TG0_SHIFT)
-+#define TCR_TG0_64K		(UL(1) << TCR_TG0_SHIFT)
-+#define TCR_TG0_16K		(UL(2) << TCR_TG0_SHIFT)
-+
-+#define TCR_IPS_SHIFT		32
-+#define TCR_IPS_MASK		(UL(7) << TCR_IPS_SHIFT)
-+#define TCR_IPS_52_BITS	(UL(6) << TCR_IPS_SHIFT)
-+#define TCR_IPS_48_BITS	(UL(5) << TCR_IPS_SHIFT)
-+#define TCR_IPS_40_BITS	(UL(2) << TCR_IPS_SHIFT)
-+#define TCR_IPS_36_BITS	(UL(1) << TCR_IPS_SHIFT)
-+
-+#define TCR_HA			(UL(1) << 39)
-+#define TCR_DS			(UL(1) << 59)
-+
-+/*
-+ * AttrIndx[2:0] encoding (mapping attributes defined in the MAIR* registers).
-+ */
-+#define PTE_ATTRINDX(t)	((t) << 2)
-+#define PTE_ATTRINDX_MASK	GENMASK(4, 2)
-+#define PTE_ATTRINDX_SHIFT	2
-+
-+#define PTE_VALID		BIT(0)
-+#define PGD_TYPE_TABLE		BIT(1)
-+#define PUD_TYPE_TABLE		BIT(1)
-+#define PMD_TYPE_TABLE		BIT(1)
-+#define PTE_TYPE_PAGE		BIT(1)
-+
-+#define PTE_AF			BIT(10)
-+
-+#define PTE_ADDR_MASK(page_shift)	GENMASK(47, (page_shift))
-+#define PTE_ADDR_51_48			GENMASK(15, 12)
-+#define PTE_ADDR_51_48_SHIFT		12
-+#define PTE_ADDR_MASK_LPA2(page_shift)	GENMASK(49, (page_shift))
-+#define PTE_ADDR_51_50_LPA2		GENMASK(9, 8)
-+#define PTE_ADDR_51_50_LPA2_SHIFT	8
-+
- void aarch64_vcpu_setup(struct kvm_vcpu *vcpu, struct kvm_vcpu_init *init);
- struct kvm_vcpu *aarch64_vcpu_add(struct kvm_vm *vm, uint32_t vcpu_id,
- 				  struct kvm_vcpu_init *init, void *guest_code);
-@@ -102,12 +162,6 @@ enum {
- 			   (v) == VECTOR_SYNC_LOWER_64    || \
- 			   (v) == VECTOR_SYNC_LOWER_32)
- 
--/* Access flag */
--#define PTE_AF			(1ULL << 10)
--
--/* Access flag update enable/disable */
--#define TCR_EL1_HA		(1ULL << 39)
--
- void aarch64_get_supported_page_sizes(uint32_t ipa, uint32_t *ipa4k,
- 					uint32_t *ipa16k, uint32_t *ipa64k);
- 
-diff --git a/tools/testing/selftests/kvm/lib/arm64/processor.c b/tools/testing/selftests/kvm/lib/arm64/processor.c
-index 7ba3aa3755f3..da5802c8a59c 100644
---- a/tools/testing/selftests/kvm/lib/arm64/processor.c
-+++ b/tools/testing/selftests/kvm/lib/arm64/processor.c
-@@ -72,13 +72,13 @@ static uint64_t addr_pte(struct kvm_vm *vm, uint64_t pa, uint64_t attrs)
- 	uint64_t pte;
- 
- 	if (use_lpa2_pte_format(vm)) {
--		pte = pa & GENMASK(49, vm->page_shift);
--		pte |= FIELD_GET(GENMASK(51, 50), pa) << 8;
--		attrs &= ~GENMASK(9, 8);
-+		pte = pa & PTE_ADDR_MASK_LPA2(vm->page_shift);
-+		pte |= FIELD_GET(GENMASK(51, 50), pa) << PTE_ADDR_51_50_LPA2_SHIFT;
-+		attrs &= ~PTE_ADDR_51_50_LPA2;
- 	} else {
--		pte = pa & GENMASK(47, vm->page_shift);
-+		pte = pa & PTE_ADDR_MASK(vm->page_shift);
- 		if (vm->page_shift == 16)
--			pte |= FIELD_GET(GENMASK(51, 48), pa) << 12;
-+			pte |= FIELD_GET(GENMASK(51, 48), pa) << PTE_ADDR_51_48_SHIFT;
- 	}
- 	pte |= attrs;
- 
-@@ -90,12 +90,12 @@ static uint64_t pte_addr(struct kvm_vm *vm, uint64_t pte)
- 	uint64_t pa;
- 
- 	if (use_lpa2_pte_format(vm)) {
--		pa = pte & GENMASK(49, vm->page_shift);
--		pa |= FIELD_GET(GENMASK(9, 8), pte) << 50;
-+		pa = pte & PTE_ADDR_MASK_LPA2(vm->page_shift);
-+		pa |= FIELD_GET(PTE_ADDR_51_50_LPA2, pte) << 50;
- 	} else {
--		pa = pte & GENMASK(47, vm->page_shift);
-+		pa = pte & PTE_ADDR_MASK(vm->page_shift);
- 		if (vm->page_shift == 16)
--			pa |= FIELD_GET(GENMASK(15, 12), pte) << 48;
-+			pa |= FIELD_GET(PTE_ADDR_51_48, pte) << 48;
- 	}
- 
- 	return pa;
-@@ -128,7 +128,8 @@ void virt_arch_pgd_alloc(struct kvm_vm *vm)
- static void _virt_pg_map(struct kvm_vm *vm, uint64_t vaddr, uint64_t paddr,
- 			 uint64_t flags)
- {
--	uint8_t attr_idx = flags & 7;
-+	uint8_t attr_idx = flags & (PTE_ATTRINDX_MASK >> PTE_ATTRINDX_SHIFT);
-+	uint64_t pg_attr;
- 	uint64_t *ptep;
- 
- 	TEST_ASSERT((vaddr % vm->page_size) == 0,
-@@ -147,18 +148,21 @@ static void _virt_pg_map(struct kvm_vm *vm, uint64_t vaddr, uint64_t paddr,
- 
- 	ptep = addr_gpa2hva(vm, vm->pgd) + pgd_index(vm, vaddr) * 8;
- 	if (!*ptep)
--		*ptep = addr_pte(vm, vm_alloc_page_table(vm), 3);
-+		*ptep = addr_pte(vm, vm_alloc_page_table(vm),
-+				 PGD_TYPE_TABLE | PTE_VALID);
- 
- 	switch (vm->pgtable_levels) {
- 	case 4:
- 		ptep = addr_gpa2hva(vm, pte_addr(vm, *ptep)) + pud_index(vm, vaddr) * 8;
- 		if (!*ptep)
--			*ptep = addr_pte(vm, vm_alloc_page_table(vm), 3);
-+			*ptep = addr_pte(vm, vm_alloc_page_table(vm),
-+					 PUD_TYPE_TABLE | PTE_VALID);
- 		/* fall through */
- 	case 3:
- 		ptep = addr_gpa2hva(vm, pte_addr(vm, *ptep)) + pmd_index(vm, vaddr) * 8;
- 		if (!*ptep)
--			*ptep = addr_pte(vm, vm_alloc_page_table(vm), 3);
-+			*ptep = addr_pte(vm, vm_alloc_page_table(vm),
-+					 PMD_TYPE_TABLE | PTE_VALID);
- 		/* fall through */
- 	case 2:
- 		ptep = addr_gpa2hva(vm, pte_addr(vm, *ptep)) + pte_index(vm, vaddr) * 8;
-@@ -167,7 +171,8 @@ static void _virt_pg_map(struct kvm_vm *vm, uint64_t vaddr, uint64_t paddr,
- 		TEST_FAIL("Page table levels must be 2, 3, or 4");
- 	}
- 
--	*ptep = addr_pte(vm, paddr, (attr_idx << 2) | (1 << 10) | 3);  /* AF */
-+	pg_attr = PTE_AF | PTE_ATTRINDX(attr_idx) | PTE_TYPE_PAGE | PTE_VALID;
-+	*ptep = addr_pte(vm, paddr, pg_attr);
- }
- 
- void virt_arch_pg_map(struct kvm_vm *vm, uint64_t vaddr, uint64_t paddr)
-@@ -293,20 +298,20 @@ void aarch64_vcpu_setup(struct kvm_vcpu *vcpu, struct kvm_vcpu_init *init)
- 	case VM_MODE_P48V48_64K:
- 	case VM_MODE_P40V48_64K:
- 	case VM_MODE_P36V48_64K:
--		tcr_el1 |= 1ul << 14; /* TG0 = 64KB */
-+		tcr_el1 |= TCR_TG0_64K;
- 		break;
- 	case VM_MODE_P52V48_16K:
- 	case VM_MODE_P48V48_16K:
- 	case VM_MODE_P40V48_16K:
- 	case VM_MODE_P36V48_16K:
- 	case VM_MODE_P36V47_16K:
--		tcr_el1 |= 2ul << 14; /* TG0 = 16KB */
-+		tcr_el1 |= TCR_TG0_16K;
- 		break;
- 	case VM_MODE_P52V48_4K:
- 	case VM_MODE_P48V48_4K:
- 	case VM_MODE_P40V48_4K:
- 	case VM_MODE_P36V48_4K:
--		tcr_el1 |= 0ul << 14; /* TG0 = 4KB */
-+		tcr_el1 |= TCR_TG0_4K;
- 		break;
- 	default:
- 		TEST_FAIL("Unknown guest mode, mode: 0x%x", vm->mode);
-@@ -319,35 +324,35 @@ void aarch64_vcpu_setup(struct kvm_vcpu *vcpu, struct kvm_vcpu_init *init)
- 	case VM_MODE_P52V48_4K:
- 	case VM_MODE_P52V48_16K:
- 	case VM_MODE_P52V48_64K:
--		tcr_el1 |= 6ul << 32; /* IPS = 52 bits */
-+		tcr_el1 |= TCR_IPS_52_BITS;
- 		ttbr0_el1 |= FIELD_GET(GENMASK(51, 48), vm->pgd) << 2;
- 		break;
- 	case VM_MODE_P48V48_4K:
- 	case VM_MODE_P48V48_16K:
- 	case VM_MODE_P48V48_64K:
--		tcr_el1 |= 5ul << 32; /* IPS = 48 bits */
-+		tcr_el1 |= TCR_IPS_48_BITS;
- 		break;
- 	case VM_MODE_P40V48_4K:
- 	case VM_MODE_P40V48_16K:
- 	case VM_MODE_P40V48_64K:
--		tcr_el1 |= 2ul << 32; /* IPS = 40 bits */
-+		tcr_el1 |= TCR_IPS_40_BITS;
- 		break;
- 	case VM_MODE_P36V48_4K:
- 	case VM_MODE_P36V48_16K:
- 	case VM_MODE_P36V48_64K:
- 	case VM_MODE_P36V47_16K:
--		tcr_el1 |= 1ul << 32; /* IPS = 36 bits */
-+		tcr_el1 |= TCR_IPS_36_BITS;
- 		break;
- 	default:
- 		TEST_FAIL("Unknown guest mode, mode: 0x%x", vm->mode);
- 	}
- 
--	sctlr_el1 |= (1 << 0) | (1 << 2) | (1 << 12) /* M | C | I */;
--	/* TCR_EL1 |= IRGN0:WBWA | ORGN0:WBWA | SH0:Inner-Shareable */;
--	tcr_el1 |= (1 << 8) | (1 << 10) | (3 << 12);
--	tcr_el1 |= (64 - vm->va_bits) /* T0SZ */;
-+	sctlr_el1 |= SCTLR_ELx_M | SCTLR_ELx_C | SCTLR_ELx_I;
-+
-+	tcr_el1 |= TCR_IRGN0_WBWA | TCR_ORGN0_WBWA | TCR_SH0_INNER;
-+	tcr_el1 |= TCR_T0SZ(vm->va_bits);
- 	if (use_lpa2_pte_format(vm))
--		tcr_el1 |= (1ul << 59) /* DS */;
-+		tcr_el1 |= TCR_DS;
- 
- 	vcpu_set_reg(vcpu, KVM_ARM64_SYS_REG(SYS_SCTLR_EL1), sctlr_el1);
- 	vcpu_set_reg(vcpu, KVM_ARM64_SYS_REG(SYS_TCR_EL1), tcr_el1);
+Changes in v3:
+- Add Rob's Acked-by to Devicetree compatible additions
+- Dropped cherry-picked patches
+- Droped abuse of regulator API
+- Droped bespoke sysfs interface
+- Rationalised temperature reading for hwmon interface
+- Set SN012776 device ID with OF match data
+- Changed probe ops reliant on device ID to case/switch statement
+- Added documentation for new Devicetree properties
+- Improved a number of poor quality commit messages
+- Documented behaviour of die temperature ADC
+- Link to v2: https://lore.kernel.org/r/20250218-apple-codec-changes-v2-0-932760fd7e07@gmail.com
+
+Changes in v2:
+- Changed author field of patch to match Martin's Signed-off-by
+- Added Neal's Reviewed-by to reviewed patches
+- Moved fixes to existing code to the top of the series
+- Removed tas2764's explicit dependency on OF
+- Removed complicated single-use tas2764 quirks macro and replaced with
+  if block
+- Added hwmon interface for codec die temp
+- Fixed a malformed commit message
+- Link to v1: https://lore.kernel.org/r/20250215-apple-codec-changes-v1-0-723569b21b19@gmail.com
+
+---
+Hector Martin (4):
+      ASoC: tas2770: Power cycle amp on ISENSE/VSENSE change
+      ASoC: tas2770: Support setting the PDM TX slot
+      ASoC: tas2770: Set the SDOUT polarity correctly
+      ASoC: tas2764: Enable main IRQs
+
+James Calligeros (2):
+      ASoC: tas2770: expose die temp to hwmon
+      ASoC: tas2764: expose die temp to hwmon
+
+Martin Povišer (4):
+      ASoC: tas2764: Reinit cache on part reset
+      ASoC: tas2764: Crop SDOUT zero-out mask based on BCLK ratio
+      ASoC: tas2764: Raise regmap range maximum
+      ASoC: tas2764: Apply Apple quirks
+
+ sound/soc/codecs/tas2764-quirks.h | 180 +++++++++++++++++++++++++
+ sound/soc/codecs/tas2764.c        | 176 +++++++++++++++++++++++-
+ sound/soc/codecs/tas2764.h        |   3 +
+ sound/soc/codecs/tas2770.c        | 160 +++++++++++++++++++++-
+ sound/soc/codecs/tas2770.h        |   6 +
+ 5 files changed, 519 insertions(+), 6 deletions(-)
+---
+base-commit: 3a0f0a4355df0240485ed62b6bd6afa5b3e689c5
+change-id: 20250214-apple-codec-changes-6e656dc1e24d
+
+Best regards,
 -- 
-2.49.0.504.g3bcea36a83-goog
+James Calligeros <jcalligeros99@gmail.com>
 
