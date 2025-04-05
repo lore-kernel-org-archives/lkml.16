@@ -1,298 +1,90 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17B6913B2BB
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 17:34:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8F3D1BC2A;
+	Sat,  5 Apr 2025 17:37:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743874478; cv=none; b=X3jxT4cv2fG+vMBQEewg/bT0FSa18b6TiQj4gjeODEfLmIhDIstLyFb6XveNl061/qVu9EIT/aSn282ql2rscp20yOwKUfQxhZca0ll3BLztXBQyeXUXSOzj4yyDg9eczmF0itAPfNjyNS3+IoYSMsaVhbRWhOPVsHpA/8Jsxhc=
+	t=1743874623; cv=none; b=NXCoQnGMP0Lt1IVVAOYkDeHbsGSjrsCRuFVbO63q2m42bbkNBgz1fxBfV75Nz7nIDDCub3vswotw+oZg2PCNTKa8/p3k27bomYFfshIy6JVe/yV3gAyeds5UyMyXMGEgttH8B3hY91YdtsuJnt2bzxinGqoIwTHJ0LjH6e+vRCk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743874478; c=relaxed/simple;
-	bh=zNbMsd5ZMKQEgcUqH2G9jdZjS7mVpjxPElH2t8AaYBk=;
-	h=Date:Subject:In-Reply-To:CC:From:To:Message-ID; b=RfM36lC5wlfG7Ekx5nrgWP260b0MQj+qscyi0T9FtrGZCnMdfNIE84E/0HbJYwlEm8kdbrfg4YnyBGXaEzmwLZC2hFW2W36WNNB3v0leUdzcMl/n22lsUwGtdDGw21j5BAWDQXzSVuF5ym6+qA6lvw2KbEFOtrDLoNoFlZSMTOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com; spf=pass smtp.mailfrom=dabbelt.com; dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b=lrsHelYW; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dabbelt.com
+	s=arc-20240116; t=1743874623; c=relaxed/simple;
+	bh=aKxW/34NvhkrP64K8xfQVQKDk9SoRViYqKXGYjflamI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ZMeR2Fua7oOhxUgxeKlI64fdmbA8aW/IKDATgCOgTg9EPGX9fxzn4QNIFTRq+zBsOYnaNItR+VYB6NdOvQwRr/vBtaBN4jMo4k22aLebBnEMBrerEJW+oEUcd9IcH3w9GnhEPVzBJeYIi4GbzQqAw9JXsOZ4m9llUAiJJiiZoZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JVCIjYsS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b="lrsHelYW"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-22401f4d35aso32341185ad.2
-        for <linux-kernel@vger.kernel.org>; Sat, 05 Apr 2025 10:34:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20230601.gappssmtp.com; s=20230601; t=1743874475; x=1744479275; darn=vger.kernel.org;
-        h=message-id:to:from:cc:in-reply-to:subject:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=OCQtICYkn6uP4Xo9tW2ueXrTg+tiER3HquLdyfSwfUI=;
-        b=lrsHelYWL2bwtrA6DRb0QpmpWv1r5nOqAWF/3bPLr+92+DWMq0ZwhWGyzbD+yeIyQo
-         TRilBAWfTrVBOPBUP/eSsMm8UsJaS2+04xqvZsF4MU/tf9Ldb+pQ/NcdX6j19d2l11dU
-         jmmi6WEHR7mtbeE3bz3/0G6bYpQrNJNopoEjGqQ5x0Zkg1H3vxwbjkZ3NXD0iDt6ny+t
-         l7zamgX2qfMnvPSXHspDdKH2z0xtTJ+sa3Z89tquiHluZYxP4tICUd1RyspX3bq19MpL
-         PFNRShtRBzn9WJ4ms0fV9U6UbM+e0Sx7jaGK/PlSXp5DEyMJFJNOKUos/OSi+1tTJwP2
-         YN3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743874475; x=1744479275;
-        h=message-id:to:from:cc:in-reply-to:subject:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=OCQtICYkn6uP4Xo9tW2ueXrTg+tiER3HquLdyfSwfUI=;
-        b=nhZpdG8qNqVjkSc9Y3en+WZHjf4r8jsEm1YpWVrekJOL2r+mZbXCWDzP7pUqBM7Dlp
-         35qbtFRCoEKo4b7fogP0cQVPjWatc2f7S7dy6rgQHyX3mYprx0bDgasJ72IPwD+ugMya
-         m7h1nmWfaKKve/j0hPzuuwo0V/M5OimtY2sCtErQx4ENQhawGlze7x1pHKjIIja+pRDR
-         3l7BD9kkbs0WZU6qEw//SqT1f/4fKvrBT+wC1aXX0NCOjg3lCEyCjiMZhZuzy+R7gJuo
-         ydzmGsMRwGPzct35ZYryyI2wyyDhs5z9uPLkapZPOlD9+EVg4XZxKsoTA+Ojhs/TNds0
-         /xnQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWk6DpXS1it5GsayFOcrXlyQ2dcmKx/udnXdNNdVlCigqR9i3vg/UxhuGZOD4g951KasobPtyTnhSsi5o0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwE0SBN3cN483Alq+HmFL948CWSMn4Nm54xq4ftzlc5oo01Bth4
-	6fIT5aYsFKJUJHknmxPU4wZlUIdo7AKjtIruO/2utfVomZ+J1CglgN23j5WfcgQ0fAyozRBn7be
-	vDIE=
-X-Gm-Gg: ASbGncs98LREL8SYj8v0alG/P+qlngXmJvkGyapFjOYB7KKIb06ZQngBtV2+g0EJNOT
-	DA07c5E5NAxxUtHiJi225NFJpeeYufUKiypPCI5Kskug4JZAkjTLhNF8FLbZyMj9snhMFSwiE3N
-	flmvfeqVvQb7matrtfXFKRJFYnBVCxEy2wbrOlVh7DZi6oxiJJSFL40cI6YvoGHoKASBVdw6K9o
-	tBoXQR+wFTHBJbd8xSdPW+2FDYZQTUymzKWDjUIjRB83VEd7ciuRISUfpuYXUt5BrhN2idc3uVx
-	wFI6ywvOZWsnGhajKw/x89zNIu3MV9gvAGn44s+kPw==
-X-Google-Smtp-Source: AGHT+IF80lvJLAgMXgSxNXCpMXC/gbO5XZ3y9Dd2bI9pYYdOBComYrwaxqbJakPqUqjZ8rd4ZAFXkg==
-X-Received: by 2002:a17:902:cf4b:b0:224:1220:7f40 with SMTP id d9443c01a7336-22a9551417fmr46708245ad.3.1743874475182;
-        Sat, 05 Apr 2025 10:34:35 -0700 (PDT)
-Received: from localhost ([192.184.165.199])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-229785bff96sm52456355ad.59.2025.04.05.10.34.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Apr 2025 10:34:34 -0700 (PDT)
-Date: Sat, 05 Apr 2025 10:34:34 -0700 (PDT)
-X-Google-Original-Date: Sat, 05 Apr 2025 10:34:32 PDT (-0700)
-Subject:     Re: [BUG -next] ./usr/include/cxl/features.h:11:10: fatal error: uuid/uuid.h: No such file or directory
-In-Reply-To: <67e7301dc8ad7_201f0294a5@dwillia2-xfh.jf.intel.com.notmuch>
-CC: paulmck@kernel.org, dave.jiang@intel.com, linux-cxl@vger.kernel.org,
-  dave@stgolabs.net, jonathan.cameron@huawei.com, alison.schofield@intel.com,
-  vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com, gourry@gourry.net,
-  linux-kernel@vger.kernel.org, linux-next@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>
-From: Palmer Dabbelt <palmer@dabbelt.com>
-To: dan.j.williams@intel.com
-Message-ID: <mhng-2b1b4293-576d-4ba1-a4c6-1109a50ce058@palmer-ri-x1c9>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JVCIjYsS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1510BC4CEE4;
+	Sat,  5 Apr 2025 17:36:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743874622;
+	bh=aKxW/34NvhkrP64K8xfQVQKDk9SoRViYqKXGYjflamI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=JVCIjYsSs+4xDpk17pFba12noAXPc3fcONWlomTEI/CYiSXTiK12+BbztQHKLymdS
+	 v9ouaEKuZXny9652HQYcVvKakkKTvfe24fQzbb/KPkUSqQ+4c7oe1fWdZYHj+ZYr4e
+	 rBWfGIoyhtMYD1pAhq7qyft0ACJnDrLL0f2F6SBq6jcrOUpIiSpgcyUpT+/w2QoF8V
+	 TMy7DkMWtKuQoy4CryHC6sB1EbfFNKAtsj7JzlLjm2DR4wj3V5htgv3xDXCTfDwa1G
+	 JEqWP4uYDPqJamHHnxNISnXoSp32wpp9sanav+ZHBrmQZ/aQagWJwjoH7VRq9vJEZa
+	 7mNntDFKnIUpA==
+Date: Sat, 5 Apr 2025 18:36:54 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, Lars-Peter Clausen
+ <lars@metafoo.de>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Nuno Sa
+ <nuno.sa@analog.com>, David Lechner <dlechner@baylibre.com>, Javier
+ Carrasco <javier.carrasco.cruz@gmail.com>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/7] Support ROHM BD79104 ADC
+Message-ID: <20250405183654.6bd4a52d@jic23-huawei>
+In-Reply-To: <6acb2692-8946-4ab2-b433-4f68c080f6b9@gmail.com>
+References: <cover.1743573284.git.mazziesaccount@gmail.com>
+	<6acb2692-8946-4ab2-b433-4f68c080f6b9@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, 28 Mar 2025 16:26:21 PDT (-0700), dan.j.williams@intel.com wrote:
-> Paul E. McKenney wrote:
-> [..]
->> > > Making the above change got me this:
->> > >
->> > > usr/include/cxl/features.h:59:9: error: unknown type name ‘uuid_t’
->> > I wasn't able to hit that with allmodconfig on x86 with a Fedora 41 build setup. What is the specific command lines you are using?
->>
->> make clean
->> make allmodconfig
->> make -j$N
->>
->> Though encapsulated as follows:
->>
->> tools/testing/selftests/rcutorture/bin/torture.sh --do-none --do-allmodconfig
->
-> The problem is that uuid_t is not defined for uapi headers to reuse.
-> Perhaps checkpatch should be checking for uuid_t in uapi headers going
-> forward.
->
-> For now the following builds for me, but it is a quite a mess to undo
-> the assumption that that the hardware object definitions can not use
-> uuid_t:
->
-> -- 8< --
-> diff --git a/drivers/cxl/core/features.c b/drivers/cxl/core/features.c
-> index f4daefe3180e..d626dd7c5fbf 100644
-> --- a/drivers/cxl/core/features.c
-> +++ b/drivers/cxl/core/features.c
-> @@ -33,7 +33,11 @@ static bool is_cxl_feature_exclusive_by_uuid(const uuid_t *uuid)
->
->  static bool is_cxl_feature_exclusive(struct cxl_feat_entry *entry)
->  {
-> -	return is_cxl_feature_exclusive_by_uuid(&entry->uuid);
-> +	uuid_t uuid;
-> +
-> +	import_uuid(&uuid, entry->uuid);
-> +
-> +	return is_cxl_feature_exclusive_by_uuid(&uuid);
->  }
->
->  inline struct cxl_features_state *to_cxlfs(struct cxl_dev_state *cxlds)
-> @@ -228,7 +232,7 @@ size_t cxl_get_feature(struct cxl_mailbox *cxl_mbox, const uuid_t *feat_uuid,
->  		return 0;
->
->  	size_out = min(feat_out_size, cxl_mbox->payload_size);
-> -	uuid_copy(&pi.uuid, feat_uuid);
-> +	export_uuid(pi.uuid, feat_uuid);
->  	pi.selection = selection;
->  	do {
->  		data_to_rd_size = min(feat_out_size - data_rcvd_size,
-> @@ -282,7 +286,7 @@ int cxl_set_feature(struct cxl_mailbox *cxl_mbox,
->  	if (!pi)
->  		return -ENOMEM;
->
-> -	uuid_copy(&pi->uuid, feat_uuid);
-> +	export_uuid(pi->uuid, feat_uuid);
->  	pi->version = feat_version;
->  	feat_flag &= ~CXL_SET_FEAT_FLAG_DATA_TRANSFER_MASK;
->  	feat_flag |= CXL_SET_FEAT_FLAG_DATA_SAVED_ACROSS_RESET;
-> @@ -360,16 +364,19 @@ get_support_feature_info(struct cxl_features_state *cxlfs,
->  			 const struct fwctl_rpc_cxl *rpc_in)
->  {
->  	struct cxl_feat_entry *feat;
-> -	const uuid_t *uuid;
-> +	uuid_t in_uuid;
->
-> -	if (rpc_in->op_size < sizeof(uuid))
-> +	if (rpc_in->op_size < sizeof(in_uuid))
->  		return ERR_PTR(-EINVAL);
->
-> -	uuid = &rpc_in->set_feat_in.uuid;
-> +	import_uuid(&in_uuid, rpc_in->set_feat_in.uuid);
->
->  	for (int i = 0; i < cxlfs->entries->num_features; i++) {
-> +		uuid_t feat_uuid;
-> +
->  		feat = &cxlfs->entries->ent[i];
-> -		if (uuid_equal(uuid, &feat->uuid))
-> +		import_uuid(&feat_uuid, feat->uuid);
-> +		if (uuid_equal(&in_uuid, &feat_uuid))
->  			return feat;
->  	}
->
-> @@ -461,6 +468,7 @@ static void *cxlctl_get_feature(struct cxl_features_state *cxlfs,
->  	const struct cxl_mbox_get_feat_in *feat_in;
->  	u16 offset, count, return_code;
->  	size_t out_size = *out_len;
-> +	uuid_t uuid;
->
->  	if (rpc_in->op_size != sizeof(*feat_in))
->  		return ERR_PTR(-EINVAL);
-> @@ -477,9 +485,10 @@ static void *cxlctl_get_feature(struct cxl_features_state *cxlfs,
->  	if (!rpc_out)
->  		return ERR_PTR(-ENOMEM);
->
-> -	out_size = cxl_get_feature(cxl_mbox, &feat_in->uuid,
-> -				   feat_in->selection, rpc_out->payload,
-> -				   count, offset, &return_code);
-> +	import_uuid(&uuid, feat_in->uuid);
-> +	out_size = cxl_get_feature(cxl_mbox, &uuid, feat_in->selection,
-> +				   rpc_out->payload, count, offset,
-> +				   &return_code);
->  	*out_len = sizeof(struct fwctl_rpc_cxl_out);
->  	if (!out_size) {
->  		rpc_out->size = 0;
-> @@ -502,6 +511,7 @@ static void *cxlctl_set_feature(struct cxl_features_state *cxlfs,
->  	const struct cxl_mbox_set_feat_in *feat_in;
->  	size_t out_size, data_size;
->  	u16 offset, return_code;
-> +	uuid_t uuid;
->  	u32 flags;
->  	int rc;
->
-> @@ -510,7 +520,8 @@ static void *cxlctl_set_feature(struct cxl_features_state *cxlfs,
->
->  	feat_in = &rpc_in->set_feat_in;
->
-> -	if (is_cxl_feature_exclusive_by_uuid(&feat_in->uuid))
-> +	import_uuid(&uuid, feat_in->uuid);
-> +	if (is_cxl_feature_exclusive_by_uuid(&uuid))
->  		return ERR_PTR(-EPERM);
->
->  	offset = le16_to_cpu(feat_in->offset);
-> @@ -525,9 +536,9 @@ static void *cxlctl_set_feature(struct cxl_features_state *cxlfs,
->  	rpc_out->size = 0;
->
->  	data_size = rpc_in->op_size - sizeof(feat_in->hdr);
-> -	rc = cxl_set_feature(cxl_mbox, &feat_in->uuid,
-> -			     feat_in->version, feat_in->feat_data,
-> -			     data_size, flags, offset, &return_code);
-> +	rc = cxl_set_feature(cxl_mbox, &uuid, feat_in->version,
-> +			     feat_in->feat_data, data_size, flags, offset,
-> +			     &return_code);
->  	if (rc) {
->  		rpc_out->retval = return_code;
->  		return no_free_ptr(rpc_out);
-> diff --git a/include/uapi/cxl/features.h b/include/uapi/cxl/features.h
-> index d6db8984889f..1e3323854994 100644
-> --- a/include/uapi/cxl/features.h
-> +++ b/include/uapi/cxl/features.h
-> @@ -8,11 +8,6 @@
->  #define _UAPI_CXL_FEATURES_H_
->
->  #include <linux/types.h>
-> -#ifndef __KERNEL__
-> -#include <uuid/uuid.h>
-> -#else
-> -#include <linux/uuid.h>
-> -#endif
->
->  /*
->   * struct cxl_mbox_get_sup_feats_in - Get Supported Features input
-> @@ -60,7 +55,7 @@ struct cxl_mbox_get_sup_feats_in {
->   * Get Supported Features Supported Feature Entry
->   */
->  struct cxl_feat_entry {
-> -	uuid_t uuid;
-> +	__u8 uuid[16];
->  	__le16 id;
->  	__le16 get_feat_size;
->  	__le16 set_feat_size;
-> @@ -110,7 +105,7 @@ struct cxl_mbox_get_sup_feats_out {
->   * CXL spec r3.2 section 8.2.9.6.2 Table 8-99
->   */
->  struct cxl_mbox_get_feat_in {
-> -	uuid_t uuid;
-> +	__u8 uuid[16];
->  	__le16 offset;
->  	__le16 count;
->  	__u8 selection;
-> @@ -143,7 +138,7 @@ enum cxl_get_feat_selection {
->   */
->  struct cxl_mbox_set_feat_in {
->  	__struct_group(cxl_mbox_set_feat_hdr, hdr, /* no attrs */,
-> -		uuid_t uuid;
-> +		__u8 uuid[16];
->  		__le32 flags;
->  		__le16 offset;
->  		__u8 version;
-> diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
-> index f2957a3e36fe..d0276ab3a92f 100644
-> --- a/tools/testing/cxl/test/mem.c
-> +++ b/tools/testing/cxl/test/mem.c
-> @@ -1397,7 +1397,7 @@ static int mock_activate_fw(struct cxl_mockmem_data *mdata,
->
->  static void fill_feature_vendor_test(struct cxl_feat_entry *feat)
->  {
-> -	feat->uuid = CXL_VENDOR_FEATURE_TEST;
-> +	export_uuid(feat->uuid, &CXL_VENDOR_FEATURE_TEST);
->  	feat->id = 0;
->  	feat->get_feat_size = cpu_to_le16(0x4);
->  	feat->set_feat_size = cpu_to_le16(0x4);
-> @@ -1441,8 +1441,10 @@ static int mock_get_feature(struct cxl_mockmem_data *mdata,
->  			    struct cxl_mbox_cmd *cmd)
->  {
->  	struct cxl_mbox_get_feat_in *input = cmd->payload_in;
-> +	uuid_t in_uuid;
->
-> -	if (uuid_equal(&input->uuid, &CXL_VENDOR_FEATURE_TEST))
-> +	import_uuid(&in_uuid, input->uuid);
-> +	if (uuid_equal(&in_uuid, &CXL_VENDOR_FEATURE_TEST))
->  		return mock_get_test_feature(mdata, cmd);
->
->  	cmd->return_code = CXL_MBOX_CMD_RC_UNSUPPORTED;
-> @@ -1485,8 +1487,10 @@ static int mock_set_feature(struct cxl_mockmem_data *mdata,
->  			    struct cxl_mbox_cmd *cmd)
->  {
->  	struct cxl_mbox_set_feat_in *input = cmd->payload_in;
-> +	uuid_t in_uuid;
->
-> -	if (uuid_equal(&input->hdr.uuid, &CXL_VENDOR_FEATURE_TEST))
-> +	import_uuid(&in_uuid, input->hdr.uuid);
-> +	if (uuid_equal(&in_uuid, &CXL_VENDOR_FEATURE_TEST))
->  		return mock_set_test_feature(mdata, cmd);
->
->  	cmd->return_code = CXL_MBOX_CMD_RC_UNSUPPORTED;
+On Wed, 2 Apr 2025 09:19:19 +0300
+Matti Vaittinen <mazziesaccount@gmail.com> wrote:
 
-I hit this too, also in allmodconfig (and in my case for a cross build, 
-so I have very few system headers).  This seems to fix it, so
+> On 02/04/2025 09:07, Matti Vaittinen wrote:
+> 
+> > Finally, I didn't find maintainer information for this driver from the
+> > MAINTAINERS file. I would like to add myself as a reviewer for the
+> > driver, so I can stay on track of the changes to it. AFAIR, having
+> > R-entry without M-entry was not appreciated. Any suggestions how to
+> > handle this?  
+> 
+> Jonathan, I suppose this, by default,  falls under the umbrella of your 
+> IIO maintainership. Are you Okay with it if I'll add a maintainer entry 
+> which sets you explicitly as a maintainer for this, and list myself as a 
+> reviewer?
 
-Tested-by: Palmer Dabbelt <palmer@rivosinc.com>
+Absolutely.  I'm find with you adding yourself as either R or M.
+If you go with M and anyone objects, we can have more maintainers ;)
+If you go with R the catch all is fine. I've never insisted on everyone
+adding entries to maintainers on basis the catch all means I get
+them all anyway.
 
-Thanks!
+Jonathan
+
+
+> 
+> I suppose I could also add myself as a maintainer for this, but I am 
+> unsure how well it would be received by the TI people ;)
+> 
+> > This series was based on the v6.14, but it should apply cleanly on
+> > iio/testing - please let me know if I should rebase.  
+> 
+> Just realized I forgot to update this. The series is now based on 
+> 543da6252b48 in the iio/testing. Nonetheless, I can still rebase if needed.
+> 
+> Yours,
+> 	-- Matti
+
