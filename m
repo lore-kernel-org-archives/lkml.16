@@ -1,169 +1,144 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B941D1C5D7C;
-	Sat,  5 Apr 2025 09:33:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F03671CB518;
+	Sat,  5 Apr 2025 09:38:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743845608; cv=none; b=SPZhaT0h4YGv4Y2CuNre6KsGdxz539yclIhmIB9ruITd+/UgFoFZ8S0CY3MMCbjWg6WWLVHzsbj1y0TSwtXReI7drnsLg3JdcasNOu0l6fICL31VWsILL3SYemwBnC7ZbHV37LV4OZWvkxR53K78tYV58ixMu+4QCP3pw4cZj90=
+	t=1743845892; cv=none; b=XE9gfaRhPLwvw/OUq+mS1TBhMyQk8Oz9tyC2v8EfdSbQpLVuaUyTP3WT+UCnnpQK59uW8MKjKv/mXWvewPTpzhx8AiN0BxfWBdXsHhtELqpRYpVF1VFA2e/PXKiSpV4Ue8i6cYbDYFQH4Y84/e0wnSgYbkAFmEMBPLbbGwuk2G0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743845608; c=relaxed/simple;
-	bh=kriz03AnZEeQQvO1jAPNT+Mky6ppncxoMV3q3M6sSRo=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IsZwZL+jRCLCf2UCxhNOw/6iSZ0CegpsO7jYAWRM9EosHHOOqVneJh/pBq4mt1Aj5sZ095kYutv0+G0prSf1hFnMTMPXUUcNJsLKDJrrgqzbfF3wG76PSjn0VNiFACzayhH+OISRZ2980MM2aGs9oNp5V+WKmIX18BddX2zRRGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ti+/oISw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743845892; c=relaxed/simple;
+	bh=nhp0kQBdBvzm61TCBnE5PQzUBlWBFK07rS78WI6dAtY=;
+	h=Message-ID:Date:From:To:Subject:MIME-Version:Content-Type:
+	 Content-Disposition; b=lESiy17LhyCnlW6JF9MIzA+iiAWIpLzmFg9HMvPocmp8QRqnaXd5BfgrCJ7v3ALe3CCY+bgI4lEvYZQEC390OAKEb1kYy3d15Hvxv5CnUu+Z3jvAd9NXjG15v+lvhkdygyRcfhh1TaeU0P41wH0ZOnTyPgL891bUkGQFcGKLe9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BxF/a9Dn; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ti+/oISw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 279DCC4CEE4;
-	Sat,  5 Apr 2025 09:33:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743845608;
-	bh=kriz03AnZEeQQvO1jAPNT+Mky6ppncxoMV3q3M6sSRo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ti+/oISwOwauLDwS0nQMoncUJeCMwNjrfS6t3dHuXPWrwQH0AAyvbqSOh2aJL3As5
-	 ln/1Za6oi7agd2hl3dhzSrmNp9VEMQr5702xR9irXYJ6fQp+xOb+UjhhFS89P0h4nw
-	 8dGM5yX9rYbqSacrDl762Hq70+TznUBdC1J3ebusu0ZeOAfvIAKhBc7BcGRBqRTA/J
-	 VCkKGy1nBHNT/YHB/PuGFpWuew4FLjz9ErEjuZKvY7e1/ZZsH522RYW/yUdSfvIMSO
-	 np2s53T7AKn/9WV0Dfwm0qnFJpVQ3nBaoPBoRrHDtQUAHMvV7843GxtZi5xVxnihip
-	 1DO1yNeDclc2A==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=lobster-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1u0zu1-002Z6m-Ju;
-	Sat, 05 Apr 2025 10:33:25 +0100
-Date: Sat, 05 Apr 2025 10:33:28 +0100
-Message-ID: <87wmbzx89j.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Mingwei Zhang <mizhang@google.com>
-Cc: Oliver Upton <oliver.upton@linux.dev>,
-	Raghavendra Rao Ananta <rananta@google.com>,
-	linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org,
-	Oliver Upton <oupton@google.com>
-Subject: Re: [PATCH v2 2/2] KVM: selftests: arm64: Explicitly set the page attrs to Inner-Shareable
-In-Reply-To: <CAL715W+v-BgHr5FwgDnct5nQ3RV-FXMkuSaCG7DaDoQVnZeDpg@mail.gmail.com>
-References: <20250405001042.1470552-1-rananta@google.com>
-	<20250405001042.1470552-3-rananta@google.com>
-	<CAL715WKaAHSgUhtMMT3Ztw90mMoHpVLdKUgVM15xx6yoUws9+Q@mail.gmail.com>
-	<Z_CaiKsi42ho8DoK@linux.dev>
-	<CAL715W+v-BgHr5FwgDnct5nQ3RV-FXMkuSaCG7DaDoQVnZeDpg@mail.gmail.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BxF/a9Dn"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-39c266c2dd5so2370197f8f.3;
+        Sat, 05 Apr 2025 02:38:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743845888; x=1744450688; darn=vger.kernel.org;
+        h=content-disposition:mime-version:subject:to:from:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=0Z+grPb8I7BvHVVGAjeZ+6sPEqrTjykvJDq5w4Vs7D0=;
+        b=BxF/a9DnVSiYKQfQpjdNGjKs5tMcGCCBXBKToxMnT3FVnF2IBADobqFVcWB060SXkY
+         ROApWFKlZ6pbnlJnWlwh9zdSHNBRG2XUOzjwoaBIvvqhZUPCF6dpzN/85WKZExg8DNBW
+         oJ1LH/TRGafLsUpyk/Qn2xhW61a/za5uqdIhibLxlB0kWzcNxXUdQkik72eNIYs9home
+         Zvg32WVbAS1jD6cFrwWvr/QnbAKSCBbHYMEo5keXtfOSEVRY5PmXVxKM4Ro104hVLKKn
+         CbJB+K9VfdWm87XAnnYONiAAEcoH73GsXDmTJZmyl3LjG52jOnrnp6M2+GQ7cEqS2pjt
+         3zhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743845888; x=1744450688;
+        h=content-disposition:mime-version:subject:to:from:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0Z+grPb8I7BvHVVGAjeZ+6sPEqrTjykvJDq5w4Vs7D0=;
+        b=TnLcGWwhs4Wy4XhzJ+5WG6g+0dMTBpcvI74VglN1r3kQSLTAZE43Sdt8nDWWR7RN99
+         McS3PMb0i+ACNPM+O4lGXNoVp2nSjfos0WakEVOyeqc3CKXx7yWFobKSu6u85r/OwUH6
+         9A8ix1ia247+d0LL1gnEmfPlM2HMCkE09GMM8pHwF9dPMZ0/F+v1zLr6njsi2hCoYa69
+         5CSbj5oUynwP/wDuSE9eCgS9YNd2jIh/d9byfKbpDju1b1udT9uDVCl+68x78KNZLhXJ
+         vPmGF79iN3vOK27xg+UZYgE8gC94oKkgGWJT4xFZ9/DW1sAvMIsaTKcKIcFIlLQOX1NF
+         T5uA==
+X-Forwarded-Encrypted: i=1; AJvYcCU0MffDO6TyE1Dk5L18zaujpuU/IcV0X7VlCmlV6wDIAuORKHwgBfjSAgl5lf90rxcpuHj33yYdVJBVBg==@vger.kernel.org, AJvYcCVKfaOAO2S87LERQqIEho7u4H/FX1b/GkxUVwYRjRRJZHMYdzFi7KaqQOfrwdFZAkc1ixTMyCba72WYd0SF@vger.kernel.org
+X-Gm-Message-State: AOJu0YyJy6Y1G9u3p4xZi81XuO1SSUZu6HefX53tDhbS6vlSXphMIg0J
+	ro5hHgxsu+uLgMBqpb+i6ifueKTO+lPs3ASwjVs9EBac25RRpltOtzW9f1E0KQg=
+X-Gm-Gg: ASbGncu//QTZ4z1sUVDMj4Fn66bJvFQcEXcNE1PfGHqRCHjDIBn2SNphLW19t3cb0un
+	+aO7XX/YwVe94jnC5ch4MDQwE/9Vcj66KAQ+c4B5TcfoiAMwPolAR1zqGU6M75YPe9g9cgW4g1Q
+	6RbAoRjA93HYDRFEkcug3Y0HnaCshnpxoq1u0Mvv4OV4yOcp+OoyO757wyT/YmBq1UNWWNtbGeQ
+	DjoZKIvCWH5u6UHOSkUdVqRVIx9WdT3cVv42aF7trtYcyMiCS31Vy8NodS+7AI5OwiFLNJiIm2i
+	6MYoGCkRE9BShcfFM1dbIMrn5g==
+X-Google-Smtp-Source: AGHT+IGIFJ/B9HcTfFsyw3jLL0mVGCHmD/FUbG6bazt95trNFXWXG4lipr0vJbpr563Oru3iHKbbHA==
+X-Received: by 2002:a5d:5986:0:b0:391:466f:314e with SMTP id ffacd0b85a97d-39d0de17029mr4637918f8f.16.1743845887913;
+        Sat, 05 Apr 2025 02:38:07 -0700 (PDT)
+Received: from parrot ([105.112.71.96])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c30226959sm6263884f8f.82.2025.04.05.02.38.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 05 Apr 2025 02:38:07 -0700 (PDT)
+Message-ID: <67f0f9ff.df0a0220.33076c.f0e5@mx.google.com>
+X-Google-Original-Message-ID: <Z_D5_KrpCr_K84vh@princerichard17a@gmail.com>
+Date: Sat, 5 Apr 2025 10:38:04 +0100
+From: Richard Akintola <princerichard17a@gmail.com>
+To: sudipm.mukherjee@gmail.com, gregkh@linuxfoundation.org,
+	linux-fbdev@vger.kernel.org, linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/8] staging: sm750fb: change sii164GetDeviceID to snake_case
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: mizhang@google.com, oliver.upton@linux.dev, rananta@google.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, kvm@vger.kernel.org, oupton@google.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Sat, 05 Apr 2025 08:24:30 +0100,
-Mingwei Zhang <mizhang@google.com> wrote:
->=20
-> On Fri, Apr 4, 2025 at 7:51=E2=80=AFPM Oliver Upton <oliver.upton@linux.d=
-ev> wrote:
-> >
-> > On Fri, Apr 04, 2025 at 05:31:49PM -0700, Mingwei Zhang wrote:
-> > > On Fri, Apr 4, 2025 at 5:10=E2=80=AFPM Raghavendra Rao Ananta
-> > > <rananta@google.com> wrote:
-> > > >
-> > > > Atomic instructions such as 'ldset' over (global) variables in the =
-guest
-> > > > is observed to cause an EL1 data abort with FSC 0x35 (IMPLEMENTATION
-> > > > DEFINED fault (Unsupported Exclusive or Atomic access)). The observ=
-ation
-> > > > was particularly apparent on Neoverse-N3.
-> > > >
-> > > > According to ARM ARM DDI0487L.a B2.2.6 (Possible implementation
-> > > > restrictions on using atomic instructions), atomic instructions are
-> > > > architecturally guaranteed for Inner Shareable and Outer Shareable
-> > > > attributes. For Non-Shareable attribute, the atomic instructions are
-> > > > not atomic and issuing such an instruction can lead to the FSC
-> > > > mentioned in this case (among other things).
-> > > >
-> > > > Moreover, according to DDI0487L.a C3.2.6 (Single-copy atomic 64-byte
-> > > > load/store), it is implementation defined that a data abort with the
-> > > > mentioned FSC is reported for the first stage of translation that
-> > > > provides an inappropriate memory type. It's likely that Neoverse-N3
-> > > > chose to implement these two and why we see an FSC of 0x35 in EL1 u=
-pon
-> > > > executing atomic instructions.
-> >
-> > Ok, can we please drop this second reference?
-> >
-> > This is talking about something else (FEAT_LS64) that happens to share
-> > the same FSC as an unsupported atomic instruction. I mentioned this to
-> > you internally as an illustration of how different implementations may
-> > behave when determining if the attributes support a particular access,
-> > but it isn't actually relevant to this change.
-> >
-> > > nit: It's likely that Neoverse-N3 chose to implement this option (the
-> > > first option) instead of reporting at the final enabled stage of
-> > > translation
-> >
-> > I would much rather we rely on the language that describes what the
-> > architecture guarantees rather than speculate as to how Neoverse-N3
-> > behaves.
-> >
-> > Mentioning that the breakage was observed on Neoverse-N3 is still useful
-> > to add to the changelog.
-> >
-> > > I have minor question here: The DDI0487L C3.2.6 (Single-copy atomic
-> > > 64-byte load/store) mentioned
-> > >
-> > > """
-> > > When the instructions access a memory type that is not one of the
-> > > following, a data abort for unsupported Exclusive or atomic access is
-> > > generated:
-> > >
-> > > =E2=80=A2 Normal Inner Non-cacheable, Outer Non-cacheable.
-> > > """
-> > >
-> > > So, the above is the "Normal Inner Non-cacheable", but in our case we
-> > > have "Normal and non-shareable" in stage-1 mapping, right? I know it
-> > > is very close, but it seems the situation is still only "one bit" away
-> > > in my understanding...
-> >
-> > This citation relates to FEAT_LS64. If you look at B2.2.6 instead, it
-> > reads:
-> >
-> > """
-> > The memory types for which it is architecturally guaranteed that the
-> > atomic instructions will be atomic are:
-> >
-> >  - Inner Shareable, Inner Write-Back, Outer Write-Back Normal memory
-> >    with Read allocation hints and Write allocation hints and not
-> >    transient.
-> >
-> >  - Outer Shareable, Inner Write-Back, Outer Write-Back Normal memory
-> >    with Read allocation hints and Write allocation hints and not
-> >    transient.
-> > """
->=20
-> Agree that the above should be the right place to cite. C3.2.6 seems
-> to discuss atomic instruction with memory attributes bits(which points
-> to MAIR_EL1 and MAIR_EL2?). In this case, it is more related to
-> shareability bits instead.
+Change camelCase function name sii164GetDeviceID to sii164_reset_chip
+to conform to kernel code styles as reported by checkpatch.pl
 
-Not sure what you mean by this reference to MAIR.
+CHECK: Avoid camelCase: <sii164GetDeviceID>
 
-These constraints apply to any memory access, including those that are
-*not* the direct effect of an instruction.  For example, an atomic
-page table update generated by the HW (AF or DB update) is only
-guaranteed to succeed if the PTW is itself configured to use ISH+WB or
-OSH+WB, and could otherwise result in any of the ill effects described
-in B2.2.6.
+Signed-off-by: Richard Akintola <princerichard17a@gmail.com>
+---
+ drivers/staging/sm750fb/ddk750_dvi.c    | 2 +-
+ drivers/staging/sm750fb/ddk750_sii164.c | 6 +++---
+ drivers/staging/sm750fb/ddk750_sii164.h | 2 +-
+ 3 files changed, 5 insertions(+), 5 deletions(-)
 
-	M.
+diff --git a/drivers/staging/sm750fb/ddk750_dvi.c b/drivers/staging/sm750fb/ddk750_dvi.c
+index 8b81e8642f9e..3fb14eff2de1 100644
+--- a/drivers/staging/sm750fb/ddk750_dvi.c
++++ b/drivers/staging/sm750fb/ddk750_dvi.c
+@@ -16,7 +16,7 @@ static struct dvi_ctrl_device dcft_supported_dvi_controller[] = {
+ 	{
+ 		.init = sii164_init_chip,
+ 		.get_vendor_id = sii164_get_vendor_id,
+-		.get_device_id = sii164GetDeviceID,
++		.get_device_id = sii164_get_device_id,
+ #ifdef SII164_FULL_FUNCTIONS
+ 		.reset_chip = sii164ResetChip,
+ 		.get_chip_string = sii164GetChipString,
+diff --git a/drivers/staging/sm750fb/ddk750_sii164.c b/drivers/staging/sm750fb/ddk750_sii164.c
+index 2532b60245ac..223c181dc649 100644
+--- a/drivers/staging/sm750fb/ddk750_sii164.c
++++ b/drivers/staging/sm750fb/ddk750_sii164.c
+@@ -48,13 +48,13 @@ unsigned short sii164_get_vendor_id(void)
+ }
+ 
+ /*
+- *  sii164GetDeviceID
++ *  sii164_get_device_id
+  *      This function gets the device ID of the DVI controller chip.
+  *
+  *  Output:
+  *      Device ID
+  */
+-unsigned short sii164GetDeviceID(void)
++unsigned short sii164_get_device_id(void)
+ {
+ 	unsigned short deviceID;
+ 
+@@ -141,7 +141,7 @@ long sii164_init_chip(unsigned char edge_select,
+ 
+ 	/* Check if SII164 Chip exists */
+ 	if ((sii164_get_vendor_id() == SII164_VENDOR_ID) &&
+-	    (sii164GetDeviceID() == SII164_DEVICE_ID)) {
++	    (sii164_get_device_id() == SII164_DEVICE_ID)) {
+ 		/*
+ 		 *  Initialize SII164 controller chip.
+ 		 */
+diff --git a/drivers/staging/sm750fb/ddk750_sii164.h b/drivers/staging/sm750fb/ddk750_sii164.h
+index 71a7c1cb42c4..a76091f6622b 100644
+--- a/drivers/staging/sm750fb/ddk750_sii164.h
++++ b/drivers/staging/sm750fb/ddk750_sii164.h
+@@ -28,7 +28,7 @@ long sii164_init_chip(unsigned char edgeSelect,
+ 		      unsigned char pllFilterValue);
+ 
+ unsigned short sii164_get_vendor_id(void);
+-unsigned short sii164GetDeviceID(void);
++unsigned short sii164_get_device_id(void);
+ 
+ #ifdef SII164_FULL_FUNCTIONS
+ void sii164ResetChip(void);
+-- 
+2.39.5
 
---=20
-Jazz isn't dead. It just smells funny.
