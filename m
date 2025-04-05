@@ -1,131 +1,63 @@
-Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 856D51BC2A;
-	Sat,  5 Apr 2025 17:39:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.133.4.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0CB61BC2A;
+	Sat,  5 Apr 2025 17:39:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743874743; cv=none; b=Sc5TJPE6T7kWZTSg5/s8pvUsEH/Hcj5IwVYyqC2e9JnFgjelVCbIi4cYmg9fXxEl/tObKvTn7WtiYFRbbqQ+/qw8gNQgpAAXxdalWhckXzLDzDYYF4K378f5lXecw9ucXc5sZ8DOuDN4soYlGOuSXjx0ICJQYgNnWVT/A9fajQU=
+	t=1743874769; cv=none; b=CxgTTXYfjfPS8VAKr8Qhsg7jn/DDsdVJypIm5c/1cC8HrzBQDA/frAN0fo0bXe3hk44mAv5M8Jonxu5b+xr93bon0+CYdbtodWJBplkUgtnKa7UQ6B11oBg+26V+gsf1PQzFciD6bYkL/EjsPnS2lRW9dALe0SSy/HMrkefiaLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743874743; c=relaxed/simple;
-	bh=gX0ZLQEjnzU3TBvfxOtgjXwaDdYCJbrEpsKU8RAV1no=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=hn04jAVc6F/eflHwsfiIpwCt491qb3Ju9vueiifR2+uTSNBlf1jo+fyasLBbYLJlmsgypbZN9a5uyFV9/Gpj1PxCkWElAkJK1Qn6ApJR1RO/vYnrCn6mL+pzBNI3rp68S9bd1VNyvHs3UEdXnCu50DxxTr0HnBIAKLEPguoFDCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b=gdgzTirl; arc=none smtp.client-ip=130.133.4.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zedat.fu-berlin.de
+	s=arc-20240116; t=1743874769; c=relaxed/simple;
+	bh=r7hWoeiWW6+IyVGlW22CCvHlBvsdxJ1PRdcqEFGKY1c=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RjRLBL6kDlOZhhMqsg09nmZYUamO/F1fRDEcKdESLdaCCxgsgjdp9e/rxAlfHhMDHNjhBkUBe8YDrU3lXcL8dXSplKp6sJJmeQmdp53OQAligPLCiw6rlloXYV3VxltiN3wQpG983doWeKreVkInDnuMGOQobewgBtMQIOgH5qE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ARaMUjFY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b="gdgzTirl"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=fu-berlin.de; s=fub01; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=WX9E6DgiY2D01qB2SzZpeJfoy+tNUxzhlIlzO5bFJoo=; t=1743874740; x=1744479540; 
-	b=gdgzTirlr0KTpdqDC2l0cw8SQJcaK50iVN76+6fo+0p9Fd70DoSG8zmIoIizdM5/198wzCYBJB1
-	EzgpLiodz/zcNI1XJp5nXiX+/5bp26mcIGx1+BUeIzKY5zFl7lcmrQ8cDd95gTyvYVTbG6pYqxd6F
-	KQILRl2OFOlztXPFTN8wH0BWYiBZOAjh3t2NZAsc6MFn3G8DGcW8ZT9hM2peHwsMqRMMMo1saUOsh
-	JsV8aei0Xqe25bHVESi2GR45qwrXwv04U1ZU302zVzROr4Jq5qNnHYd9ypEcJtp7+JGF97AlFyJzG
-	pvSGuuIvAVCK5C6DGgT7LIbl/Ma/r+iJGcJg==;
-Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
-          by outpost.zedat.fu-berlin.de (Exim 4.98)
-          with esmtps (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@zedat.fu-berlin.de>)
-          id 1u17Tq-000000045Ay-0u8m; Sat, 05 Apr 2025 19:38:54 +0200
-Received: from dynamic-002-242-014-214.2.242.pool.telefonica.de ([2.242.14.214] helo=[192.168.178.50])
-          by inpost2.zedat.fu-berlin.de (Exim 4.98)
-          with esmtpsa (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id 1u17Tp-00000000dWk-48nP; Sat, 05 Apr 2025 19:38:54 +0200
-Message-ID: <a3faf6820b43cca25c3384d0248f494be7312598.camel@physik.fu-berlin.de>
-Subject: Re: [PATCH 1/2] sh: align .bss section padding to 8-byte boundary
-From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-To: Artur Rojek <contact@artur-rojek.eu>, Yoshinori Sato	
- <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, Daniel Lezcano
-	 <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Uros
- Bizjak	 <ubizjak@gmail.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, "D . Jeff Dionne"	
- <jeff@coresemi.io>, Rob Landley <rob@landley.net>,
- linux-sh@vger.kernel.org, 	linux-kernel@vger.kernel.org
-Date: Sat, 05 Apr 2025 19:38:53 +0200
-In-Reply-To: <20250216175545.35079-2-contact@artur-rojek.eu>
-References: <20250216175545.35079-1-contact@artur-rojek.eu>
-	 <20250216175545.35079-2-contact@artur-rojek.eu>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.0 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ARaMUjFY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E00DC4CEE4;
+	Sat,  5 Apr 2025 17:39:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743874769;
+	bh=r7hWoeiWW6+IyVGlW22CCvHlBvsdxJ1PRdcqEFGKY1c=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ARaMUjFYbVb+6iNrDv+AxvX1dx9XG+fr2pXdZ23BATscdMqNjesQYDlcKPQzVabdM
+	 k7jCW3axNQxPP+BWCfLssjWnD5PXNpNLWGQshVKxyCAJc+XB288FWQlSHSrr2m0DLW
+	 nKbPxALiBa5shPzGSphebQ3S4rnCsowZfFCrCxN/jGfpwTTEQ48lDaW2eWW5RFynHd
+	 ia4LVOyGh83UaWig+D+Xg8K7drZo0/t27bjr+wYGfn/psAfjwA0kMjHIvxPqLIP53F
+	 TxORJpp2N0Vajd1JBDDjaYk36xoDlCwfTSOF42ocoeoyrCrxvebC93QCP4Mt5LYSM5
+	 Tt8syFqNZpeqg==
+Date: Sat, 5 Apr 2025 18:39:24 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Nuno =?UTF-8?B?U8Oh?= <noname.nuno@gmail.com>
+Cc: David Lechner <dlechner@baylibre.com>, linux-iio@vger.kernel.org,
+ Michael Hennerich <michael.hennerich@analog.com>, Nuno =?UTF-8?B?U8Oh?= 
+ <nuno.sa@analog.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iio: adc: ad7944: drop bits_per_word hack
+Message-ID: <20250405183924.5b3eff1f@jic23-huawei>
+In-Reply-To: <1f6116071b20846d07406a613d77fd45e5353690.camel@gmail.com>
+References: <20250331-iio-adc-ad7944-drop-bits_per_word-hack-v1-1-2b952e033340@baylibre.com>
+	<1f6116071b20846d07406a613d77fd45e5353690.camel@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Original-Sender: glaubitz@physik.fu-berlin.de
-X-ZEDAT-Hint: PO
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi Artur,
+On Tue, 01 Apr 2025 10:11:40 +0100
+Nuno S=C3=A1 <noname.nuno@gmail.com> wrote:
 
-On Sun, 2025-02-16 at 18:55 +0100, Artur Rojek wrote:
-> J2 based devices expect to find a devicetree blob at the end of the bss
-> section. As of a77725a9a3c5, libfdt enforces 8-byte alignment for the
-> dtb, causing J2 devices to fail early in sh_fdt_init.
+> On Mon, 2025-03-31 at 14:29 -0500, David Lechner wrote:
+> > Remove setting bits_per_word in SPI xfers without data. The shortcoming
+> > that this was working around was fixed in the SPI controller driver, so
+> > it is no longer necessary. And we don't need this to be cargo-culted to
+> > new drivers.
+> >=20
+> > Signed-off-by: David Lechner <dlechner@baylibre.com>
+> > --- =20
 >=20
-> As J2 loader firmware calculates the dtb location based on the kernel
-> image .bss section size, rather than the __bss_stop symbol offset, the
-> required alignment can't be enforced with BSS_SECTION(0, PAGE_SIZE, 8).
-> Instead, inline modified version of the above macro, which grows .bss
-> by the required size.
->=20
-> While this change affects all existing SH boards, it should be benign on
-> platforms which don't need this alignment.
->=20
-> Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
-> ---
->  arch/sh/kernel/vmlinux.lds.S | 15 ++++++++++++++-
->  1 file changed, 14 insertions(+), 1 deletion(-)
->=20
-> diff --git a/arch/sh/kernel/vmlinux.lds.S b/arch/sh/kernel/vmlinux.lds.S
-> index 9644fe187a3f..008c30289eaa 100644
-> --- a/arch/sh/kernel/vmlinux.lds.S
-> +++ b/arch/sh/kernel/vmlinux.lds.S
-> @@ -71,7 +71,20 @@ SECTIONS
-> =20
->  	. =3D ALIGN(PAGE_SIZE);
->  	__init_end =3D .;
-> -	BSS_SECTION(0, PAGE_SIZE, 4)
-> +	__bss_start =3D .;
-> +	SBSS(0)
-> +	. =3D ALIGN(PAGE_SIZE);
-> +	.bss : AT(ADDR(.bss) - LOAD_OFFSET) {
-> +		BSS_FIRST_SECTIONS
-> +		. =3D ALIGN(PAGE_SIZE);
-> +		*(.bss..page_aligned)
-> +		. =3D ALIGN(PAGE_SIZE);
-> +		*(.dynbss)
-> +		*(BSS_MAIN)
-> +		*(COMMON)
-> +		. =3D ALIGN(8);
-> +	}
-> +	__bss_stop =3D .;
->  	_end =3D . ;
-> =20
->  	STABS_DEBUG
-
-I'll pick this up for now since Uros has confirmed that the compiler
-won't just use SBSS without breaking the ABI, so I think to use this
-fix for now.
-
-If it breaks in the future, we can change it again.
-
-Reviewed-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-
-Adrian
-
---=20
- .''`.  John Paul Adrian Glaubitz
-: :' :  Debian Developer
-`. `'   Physicist
-  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
+> Reviewed-by: Nuno S=C3=A1 <nuno.sa@analog.com>
+Applied.
