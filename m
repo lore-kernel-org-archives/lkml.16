@@ -1,102 +1,162 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-20.smtpout.orange.fr [80.12.242.20])
+	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 978CE189F57;
-	Sat,  5 Apr 2025 16:59:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7E6C1547FF;
+	Sat,  5 Apr 2025 17:04:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743872389; cv=none; b=Ehb+Sn/hJETij/4gIOfJgdiVQNt5YBvOUchqRcSwNYObL4u8ICfTqjNVm6n/VB66dX9884ZpxI1HlPwvp/jJKexdHr2Lyze19FZY1bkVk+nzcLfUUGOrgHPyj51/BBhVlyY/mr+LpECiH9VoWiFtTS1I+/izUoX/ThJ3EDQydFU=
+	t=1743872685; cv=none; b=QrJFI7p4tklVFJ+vdCOfhoTnqgX4/J8igr8my4FnUoM7LwHOSTuoffTflKpFr3rxeGBEXKV/AZ3hZsZIg0R9QwOS84SEh8FUo43fS7GqNcj3IBQ/4BV8vRD28+vUKgXeoP3hyeROzY4pzM0xKRSiRaRt51U9cE7emrDDcCbnYBU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743872389; c=relaxed/simple;
-	bh=8Z+qB0+ZAEPeA7z/Q+xgsiWWJz8q0lFh0xPu5FcI6RA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ew8XSFgumy/md0uJyqeiQ7rs94mMMYddNH7u8YKcHGma01K4tsqT5f8MHzJR5Q2sPO/j6tNDjBBrpjffnWsfl/dN83vHivojMT1i2ryT8F7qaMkSgdwAQzZjUwDzsEU6HRYIHh0lkT5RMaF77Kq7WfvaxziBa+XirXwid9C0Nno=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P6i/FRyt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743872685; c=relaxed/simple;
+	bh=x6vJorC7CCB06TsHXSak2CLHvj10aucshsXOu6l/5LQ=;
+	h=Message-ID:Date:MIME-Version:Subject:References:From:To:Cc:
+	 In-Reply-To:Content-Type; b=YD3Ym2v+Z37C30xWS2TKCl6Ju4JSMT6zTg4cAy2utPCWeHv8LvRBbTF6MMuMyxh1b22lFgX6MXoTsQTsSS8totnOztGdpd/++1FvNK/DF10hurf/dvxjyTLgxVF/+IIUPn6jaG+gdjqGJ6SW7WZq1/YicmuJdOEi9clF94Zqlpw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=Yrg8cb0h; arc=none smtp.client-ip=80.12.242.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P6i/FRyt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 545B5C4CEE4;
-	Sat,  5 Apr 2025 16:59:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743872389;
-	bh=8Z+qB0+ZAEPeA7z/Q+xgsiWWJz8q0lFh0xPu5FcI6RA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=P6i/FRyt00/YSuyvUkN7hweN9l4kKVsxwcV3wvoAPEzvkm2CxM/CzL9lpQE6vaWCy
-	 upCPu8Bj0NTFYurPMrCfZjw7Y2MpXukafU1CYXiB9j8ht7suBSeFyMBu6IoTbXgoCJ
-	 GHkCNyrqiAzQhDOipA1H/ILnTNuc6nqe7or0NECEqKZUhsjes81REWC4n4TFnVAbZQ
-	 ro6/NoGdrsWZWTr4lBG3/rLqD88wPxkjtWcIZGLbsiuTglb9DftD4j9qdFfg6eHHGB
-	 Lpy3HTK5pgqFnV5UDdxNSjDq0KZC/+f2MQQLAAgePMUURju0Su+mvj3eOR6z9/KnxN
-	 z94K+lHJTvSPg==
-Date: Sat, 5 Apr 2025 17:59:42 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: David Heidelberg via B4 Relay <devnull+david.ixit.cz@kernel.org>
-Cc: david@ixit.cz, Lars-Peter Clausen <lars@metafoo.de>, Svyatoslav Ryhel
- <clamor95@gmail.com>, Robert Eckelmann <longnoserob@gmail.com>,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 3/5] iio: light: al3320a: Fix an error handling path
- in al3320a_probe()
-Message-ID: <20250405175942.6264673f@jic23-huawei>
-In-Reply-To: <20250402-al3010-iio-regmap-v4-3-d189bea87261@ixit.cz>
-References: <20250402-al3010-iio-regmap-v4-0-d189bea87261@ixit.cz>
-	<20250402-al3010-iio-regmap-v4-3-d189bea87261@ixit.cz>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="Yrg8cb0h"
+Received: from [192.168.1.37] ([90.11.132.44])
+	by smtp.orange.fr with ESMTPA
+	id 16weujbtUB4qz16whugCaF; Sat, 05 Apr 2025 19:04:40 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1743872680;
+	bh=0pn3FlBiCPwJnTvXthRIxPP8fbFuHWesKZt8cTu3Qlo=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To;
+	b=Yrg8cb0hgmqiMiJQZjbsltBQpElSa1erz6auxeo5Dhl+urBMDlUY1LK2FruJxsbqI
+	 HdLZsWZRyX/OW6SsIH3LL4oc38tj55pn0Y9ZIdyaTkZfPO4ygKrygBtwIXC+MWv0hF
+	 +B4GbOTiLzGoyAzhPgGUd9H1zm9cZ2AhhYRH80BQv7qsCkHPSKf86NCN+nNodkH9KS
+	 uVySt530mupOsMa4eUMMMYWy40xhuBf3u/q56hcKTqif2OUOqcuPJAnWoNpmfPRMq3
+	 cSL8eaVIzwVr/DKaUv8fajGNpe8WIwWXWyjZK9x6UrcyBHqCPzNjfxIxl4bo0w6VYi
+	 VzteoWvQ/8WtQ==
+X-ME-Helo: [192.168.1.37]
+X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
+X-ME-Date: Sat, 05 Apr 2025 19:04:40 +0200
+X-ME-IP: 90.11.132.44
+Message-ID: <c0c1476c-75a2-4d45-83a2-4751a7487892@wanadoo.fr>
+Date: Sat, 5 Apr 2025 19:04:36 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] pci: tegra194: Fix debugfs cleanup for !CONFIG_PCIEASPM
+References: <20250405152818.GA107831@bhelgaas>
+ <c52ac489-51e9-4803-bf64-2bb6cfbf30bf@163.com>
+ <da261a4c-6c27-454f-b21d-af1814b58b91@wanadoo.fr>
+ <fa44eac9-8986-46d2-899d-df8811131925@163.com>
+ <9dcd70b1-a146-419f-aa5e-bacf52cf81e8@163.com>
+Content-Language: en-US, fr-FR
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: 18255117159@163.com
+Cc: bhelgaas@google.com, jonathanh@nvidia.com, kw@linux.com,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-tegra@vger.kernel.org, lpieralisi@kernel.org,
+ manivannan.sadhasivam@linaro.org, robh@kernel.org, thierry.reding@gmail.com
+In-Reply-To: <9dcd70b1-a146-419f-aa5e-bacf52cf81e8@163.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, 02 Apr 2025 21:33:26 +0200
-David Heidelberg via B4 Relay <devnull+david.ixit.cz@kernel.org> wrote:
+Le 05/04/2025 à 18:47, Hans Zhang a écrit :
+> 
+> 
+> On 2025/4/6 00:35, Hans Zhang wrote:
+>>
+>>
+>> On 2025/4/6 00:17, Christophe JAILLET wrote:
+>>> Le 05/04/2025 à 17:49, Hans Zhang a écrit :
+>>>>
+>>>>
+>>>> On 2025/4/5 23:28, Bjorn Helgaas wrote:
+>>>>> Follow subject line capitalization convention.
+>>>>>
+>>>>> On Sat, Apr 05, 2025 at 10:54:59PM +0800, Hans Zhang wrote:
+>>>>>> When CONFIG_PCIEASPM is disabled, debugfs entries are not created, 
+>>>>>> but
+>>>>>> tegra_pcie_dw_remove() and tegra_pcie_dw_shutdown() 
+>>>>>> unconditionally call
+>>>>>> debugfs_remove_recursive(), leading to potential NULL pointer 
+>>>>>> operations.
+>>>>>>
+>>>>>> Introduce deinit_debugfs() to wrap debugfs_remove_recursive(), 
+>>>>>> which is
+>>>>>> stubbed for !CONFIG_PCIEASPM. Use this function during removal/ 
+>>>>>> shutdown to
+>>>>>> ensure debugfs cleanup only occurs when entries were initialized.
+>>>>>>
+>>>>>> This prevents kernel warnings and instability when ASPM support is
+>>>>>> disabled.
+>>>>>
+>>>>> This looks like there should be a Fixes: tag to connect this to the
+>>>>> commit that introduced the problem.
+>>>>
+>>>> Hi Bjorn,
+>>>>
+>>>> Thanks your for reply. Will add.
+>>>>
+>>>> Fixes: bb617cbd8151 (PCI: tegra194: Clean up the exit path for 
+>>>> Endpoint mode)
+>>>>
+>>>>>
+>>>>> If this is something that broke with the v6.15 merge window, we should
+>>>>> include this in v6.15 via pci/for-linus.  If this broke earlier, we
+>>>>> would have to decide whether pci/for-linus is still appropriate or a
+>>>>> stable tag.
+>>>>>
+>>>>
+>>>> The original code that introduced the unconditional 
+>>>> `debugfs_remove_recursive()` calls was actually merged in an earlier 
+>>>> cycle.
+>>>>
+>>>>> We did merge some debugfs things for v6.15, but I don't see anything
+>>>>> specific to pcie-tegra194.c, so I'm confused about why this fix would
+>>>>> be in pcie-tegra194.c instead of some more generic place.
+>>>>>
+>>>>
+>>>> The Tegra194 driver conditionally initializes pcie->debugfs based on 
+>>>> CONFIG_PCIEASPM. When ASPM is disabled, pcie->debugfs remains 
+>>>> uninitialized, but tegra_pcie_dw_remove() and 
+>>>> tegra_pcie_dw_shutdown() unconditionally call 
+>>>> debugfs_remove_recursive(), leading to a NULL 
+>>>
+>>> debugfs IS initialized, because it is in a structure allocated with 
+>>> devm_kzalloc().
+>>>
+>>> And debugfs functions handle such cases.
+>>>
+>>
+>> Oh, my mind went wrong and I didn't pay attention to devm, and I'm 
 
-> From: David Heidelberg <david@ixit.cz>
-> 
-> If regmap_write() fails in al3320a_init(), al3320a_set_pwr_off is
-> not called.
-> 
-> In order to avoid such a situation, move the devm_add_action_or_reset()
-> which calls al3320a_set_pwr_off right after a successful
-> al3320a_set_pwr_on.
-> 
-> Signed-off-by: David Heidelberg <david@ixit.cz>
-> ---
->  drivers/iio/light/al3320a.c | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/iio/light/al3320a.c b/drivers/iio/light/al3320a.c
-> index 1b2b0359ed5dad5e00d2fe584f8f3495c13c997e..1fa693d54ae2a6e5ead3a9c7ac7018afeba9b760 100644
-> --- a/drivers/iio/light/al3320a.c
-> +++ b/drivers/iio/light/al3320a.c
-> @@ -101,6 +101,12 @@ static int al3320a_init(struct al3320a_data *data)
->  	if (ret < 0)
->  		return ret;
->  
-> +	ret = devm_add_action_or_reset(&data->client->dev,
-> +				       al3320a_set_pwr_off,
-> +				       data);
-> +	if (ret)
-> +		return dev_err_probe(&data->client->dev, ret, "failed to add action\n");
-This one I'll drop whilst applying given we are adding a message with little
-purpose (or chance of occurring) rather than moving one as we were in patch 2.
+Here, what is relevant in devm_kzalloc() is not devm but the kzalloc 
+part. the "z" is for zeroing the allocated memory.
 
-I've applied up to this patch with those tweaks. I might well pick up the others but
-not looked closely at them yet!
-> +
->  	ret = i2c_smbus_write_byte_data(data->client, AL3320A_REG_CONFIG_RANGE,
->  					FIELD_PREP(AL3320A_GAIN_MASK,
->  						   AL3320A_RANGE_3));
-> @@ -211,10 +217,6 @@ static int al3320a_probe(struct i2c_client *client)
->  		return ret;
->  	}
->  
-> -	ret = devm_add_action_or_reset(dev, al3320a_set_pwr_off, data);
-> -	if (ret < 0)
-> -		return ret;
-> -
->  	return devm_iio_device_register(dev, indio_dev);
->  }
->  
+>> really sorry about that.
+>>
+>> Another problem I noticed here is that currently, no matter what, 
+>> pcie->debugfs = debugfs_create_dir(name, NULL) is executed; if #if 
+>> defined(CONFIG_PCIEASPM) is valid, then pcie->debugfs = 
+>> debugfs_create_dir(name, NULL); Is it superfluous?
+> 
+> Sorry, let me reply again:
+> Another problem I noticed here is that currently, no matter what, pcie- 
+>  >debugfs = debugfs_create_dir(name, NULL) is executed; if #if 
+> defined(CONFIG_PCIEASPM) is invalid, then pcie->debugfs = 
+> debugfs_create_dir(name, NULL); Is it superfluous?
+
+AFAICT, it looks useless in this case.
+
+I guess that moving debugfs_create_dir() and the
+name = devm_kasprintf()...
+above it, into init_debugfs() would do the trick.
+
+CJ
+
+> 
+> Best regards,
+> Hans
+> 
+> 
 > 
 
