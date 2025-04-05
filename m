@@ -1,121 +1,118 @@
-Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com [209.85.221.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E4C819F495
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 14:55:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.179
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09E1D19F495;
+	Sat,  5 Apr 2025 14:55:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743864930; cv=none; b=EG+2lNwT+R6nylh1W98owvUCZQ1JFKvcEyiYIyrekR3dRog7tNq8OUxg5JJHiz1VoxVn4TxJZ8sHQe+WVghwYLQkNyU8aoLxlFnmw7d35exOKlLSCXzelrMC0q0vL8KuXW8OrRNdnoLHvKtn59xbtOtlWNtWs31unLVN3GiQ3Q0=
+	t=1743864949; cv=none; b=oESouPuOAR5qUa5JJ/LiChek/obMt6iivQ/6170bhxwmp0/k5TF7Z5+sVvJjhCqan/TLy0CFWpnSq5kOwcTkJ53JdWSFFBrpMh0/lF/NGv4C4ybfev9c6W5d4KmANp4Zh4ov9aY17h+65eeLKrfWIdTHTzN6xkuVWjqVUqnxpzM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743864930; c=relaxed/simple;
-	bh=KN+GUQaDkyiC/q46ZCA0E+OC/aTo3sC5uzl2Y4YoofI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BgFi/lEY9Am10q0LWalu1LmApgTsvn0UgDxmZ3yBhf1N8blrnu1uJ/U3+d+8StAlTwOEF7H6yrzoKCJD0gWM0av9AregsxRBIi5PXbGKdpu+vdGJFbLz8Iz7uH0SbCn9DsvbDDz5TRMwsYURqCjdzKeXmRFNA6nYXETevtNUimM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dawX8ZJM; arc=none smtp.client-ip=209.85.221.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743864949; c=relaxed/simple;
+	bh=/GjtInTCch7d5NxppHPedqVptXogneqaqqWeKaunG9k=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=egJnwbXg7erWGiOx6bqavO08MVt+dWBHYtdkYYxpDDazj/L3V8o9Li752fCOGZrJr5UKXB2s5zoxB7M5fgTvug+vZXpJDGLI7kL74H963mBFRZ5kCxHYWNOn8H818dN8klZuGceF7Tee/qVOkgEZAiLdcxrpMJp0If6PjkLlmLI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=dowsKjXY; arc=none smtp.client-ip=220.197.31.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dawX8ZJM"
-Received: by mail-vk1-f179.google.com with SMTP id 71dfb90a1353d-523f670ca99so1338732e0c.1
-        for <linux-kernel@vger.kernel.org>; Sat, 05 Apr 2025 07:55:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743864928; x=1744469728; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=k0bylYK4rbcZkE8OQEolRnIpH1EzfwJRH0eir4LBzBk=;
-        b=dawX8ZJMGmvrfrCU+zejubtPw0GAQB8f193VmiONcQOqFjb717X4l7aIw0+tUbPke7
-         8jfpOxNmkorL04rQk/MEx7kDjldMVuJLkXgxzqF15fQ76O5mm0Km9mUWcRJBxUAHJl9j
-         QtMlGq6tl8k/1cgZtxYg5MEWXZaQEDnt2SONgLZfw7RjFLaCReUabXlD8II2SMCH+5Qn
-         rx3qlNC0uAsL1/KPlZKnj3Gpn1ukI69h3LhfNlMkex31dxVXJ8rV1FJxzGTcMbwN2vcX
-         CEDLHXnXCTZL2aCAJ79JCH7eZgxf7x6y6g/6vJdvF2bhWgBiUSne2b4vZaXstao6fvPR
-         phHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743864928; x=1744469728;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=k0bylYK4rbcZkE8OQEolRnIpH1EzfwJRH0eir4LBzBk=;
-        b=cw/L6bEhLSYRvK92/jsbkX8BTgQ9IaQhLh7PtTxvIjX47AJiMZavvIgJOSeIyAc6zF
-         HvNC51HrfWZ34I6pmfACVZ9MuPwjEPv8E0pteX4JZI5h24P46uf5pZGubCaZghegySsA
-         ppDIIHeVu1IRrthDCPNJpROY2axwbuEs/86MlnJvFQBem9M/RLvZraSEyV5ihJiNP/tV
-         HX/blfZzhUam9lAma66eZ83EqOACOe+ri9eMNo3Ibk6kpyjDM4IcX91G00x2Drzuj/4I
-         a9EUCHmdqTS1S+tSBlpFoird+7R2Rd9mrrT1BcdnY/aAOmZPItjpc5zxP0uMxnsG7riU
-         5Irg==
-X-Forwarded-Encrypted: i=1; AJvYcCUhfWnfIimEtOG6dXdzkhVe4jT7O006gZTl6mhzuLHlY6I38VQQWRXYnfhEDwXf/TNLvHOvWJnbItLvc8s=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxj6Krbyk7AcIqJhTinY3j4ptNl58J8DO87Z/x5P2RU/vGjX5ZH
-	RyjpFAPM6keje3GOV+BllXxQN5VYYqLSCXdWllYcnxxtjnLKTQocR3zGAGVR1/Q+VxKk2GMNQK9
-	NV+htLBVsO10KQd2gftQBG/98c50=
-X-Gm-Gg: ASbGnct4C6rtTHrGEFMao/1vna0F2xvx4MXiihln4ch5AlYR+2pr8Al7RS/K4mlngf5
-	hQDFdIw5OOceTBVhDDe0b8Wbl2DOUI8IETUAzMzkVuY4f/RSrs/x1M9k5MPt9VlXCcVh8kBP6PM
-	6yv2UP72d+VLNPNAM+fgMX/iELIL1a
-X-Google-Smtp-Source: AGHT+IFXdU/YZAvxOJqqLDDhDC6P7HTyP2c16ab3xeaYKa0koLLHuUjJ71njQgO24nXztiAlRXq0RvDB6HV8pHKbYt0=
-X-Received: by 2002:a05:6122:a09:b0:520:42d3:91c1 with SMTP id
- 71dfb90a1353d-527645a5e5dmr5259213e0c.10.1743864928204; Sat, 05 Apr 2025
- 07:55:28 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="dowsKjXY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=Vo0bu
+	L7Qftd1Y/xHSGSRWoItUidHgPXW0u87rQlDK1g=; b=dowsKjXY0ZVH+D9jKBYas
+	65fTtu0cOH7kedicd66xkeOG1+TsNCfffOJ2fx4MRgi/W0UfUmEWf5rt5UgpJipp
+	8smk1bndKcUUInXZqfeQdK22NJNRcEM8oyo1EWQdF3sndl6FrwXUgtoYHLoMgEBj
+	Osb2nvVgrmkGdfoZIk4Guc=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g0-2 (Coremail) with SMTP id _____wDXovlFRPFnYnFlEQ--.24006S2;
+	Sat, 05 Apr 2025 22:55:01 +0800 (CST)
+From: Hans Zhang <18255117159@163.com>
+To: lpieralisi@kernel.org
+Cc: manivannan.sadhasivam@linaro.org,
+	thierry.reding@gmail.com,
+	kw@linux.com,
+	robh@kernel.org,
+	bhelgaas@google.com,
+	jonathanh@nvidia.com,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-tegra@vger.kernel.org,
+	Hans Zhang <18255117159@163.com>
+Subject: [PATCH] pci: tegra194: Fix debugfs cleanup for !CONFIG_PCIEASPM
+Date: Sat,  5 Apr 2025 22:54:59 +0800
+Message-Id: <20250405145459.26800-1-18255117159@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <Z/B019elTtKG/PvD@ubuntu> <2025040547-vagrancy-imagines-384b@gregkh>
- <CAHp75Vc0vOB1nDLrV+wmYeshxTsDwYq0xBkmJiOH=d5HONRpNQ@mail.gmail.com> <d3b4e3b4-b5cc-5b5f-26b6-1d726f5e57c@inria.fr>
-In-Reply-To: <d3b4e3b4-b5cc-5b5f-26b6-1d726f5e57c@inria.fr>
-From: Samuel Abraham <abrahamadekunle50@gmail.com>
-Date: Sat, 5 Apr 2025 15:55:18 +0100
-X-Gm-Features: ATxdqUHEUzZewfl8XOUc_Hod2fcZH_lElHfHjiW2nrFT1vgN6wa3S2r6Ya11cKI
-Message-ID: <CADYq+fYMPGFdFvNPyo_XoNdMhh6qu=h10Gb2EDc2Jw=JK9iXig@mail.gmail.com>
-Subject: Re: [PATCH v2] staging: rtl8723bs: Use % 4096 instead of & 0xfff
-To: Julia Lawall <julia.lawall@inria.fr>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, andy@kernel.org, dan.carpenter@linaro.org, 
-	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	outreachy@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wDXovlFRPFnYnFlEQ--.24006S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7urykCr13Zw4fKFyftr4rGrg_yoW5JFy8pa
+	yUG3yYkw1DAFyYgFW3Aan8Zr1SyrZav34xJ3s3uwn2vFs8Gry5XFyDKFWFqFyfJrWkKF17
+	Ar4YkFnrGr43JF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zNfOwUUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWxYmo2fxO-u5uAAAsf
 
-On Sat, Apr 5, 2025 at 1:30=E2=80=AFPM Julia Lawall <julia.lawall@inria.fr>=
- wrote:
->
->
->
-> On Sat, 5 Apr 2025, Andy Shevchenko wrote:
->
-> > On Sat, Apr 5, 2025 at 11:23=E2=80=AFAM Greg Kroah-Hartman
-> > <gregkh@linuxfoundation.org> wrote:
-> > > On Sat, Apr 05, 2025 at 12:09:59AM +0000, Abraham Samuel Adekunle wro=
-te:
-> > > > Replace the bitwise AND operator `&` with a modulo
-> > > > operator `%` and decimal number to make the upper limit visible
-> > > > and clear what the semantic of it is.
-> > >
-> > > Eeek, no.  We all "know" what & means (it's a bit mask to handle the
-> > > issues involved), and we all do NOT know that % will do the same thin=
-g
-> > > at all.
-> >
-> > And that is exactly the purpose of the change. The % 4096 makes it
-> > clearer on what's going on, i.e. we are doing indexes that are wrapped
-> > around the given number.
->
-> Ah, OK.  Samuel, indeed, the log message was going in that direction.  Bu=
-t
-> probably it should be more clear.  Why is 4096 the upper limit in this
-> case, for example.
+When CONFIG_PCIEASPM is disabled, debugfs entries are not created, but
+tegra_pcie_dw_remove() and tegra_pcie_dw_shutdown() unconditionally call
+debugfs_remove_recursive(), leading to potential NULL pointer operations.
 
-Okay thank you Julia.
-So I can add something like this to the commit message?
+Introduce deinit_debugfs() to wrap debugfs_remove_recursive(), which is
+stubbed for !CONFIG_PCIEASPM. Use this function during removal/shutdown to
+ensure debugfs cleanup only occurs when entries were initialized.
 
-"Replace the bitwise AND operator `&` with a modulo
-operator `%` and decimal number to make the upper limit visible
-and clear that we are doing indexes that are wrapped around the given numbe=
-r"?
+This prevents kernel warnings and instability when ASPM support is
+disabled.
 
-You also said I should add a patch for the white space around binary operat=
-ors.
-I did it together because the changes were on the same line.
-Should I still add a second patch for that change?
-Thanks
+Signed-off-by: Hans Zhang <18255117159@163.com>
+---
+ drivers/pci/controller/dwc/pcie-tegra194.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-Adekunle.
+diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+index 5103995cd6c7..d762e733c2d8 100644
+--- a/drivers/pci/controller/dwc/pcie-tegra194.c
++++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+@@ -716,11 +716,20 @@ static void init_debugfs(struct tegra_pcie_dw *pcie)
+ 	debugfs_create_devm_seqfile(pcie->dev, "aspm_state_cnt", pcie->debugfs,
+ 				    aspm_state_cnt);
+ }
++
++static void deinit_debugfs(struct tegra_pcie_dw *pcie)
++{
++	if (!pcie->debugfs)
++		return;
++
++	debugfs_remove_recursive(pcie->debugfs);
++}
+ #else
+ static inline void disable_aspm_l12(struct tegra_pcie_dw *pcie) { return; }
+ static inline void disable_aspm_l11(struct tegra_pcie_dw *pcie) { return; }
+ static inline void init_host_aspm(struct tegra_pcie_dw *pcie) { return; }
+ static inline void init_debugfs(struct tegra_pcie_dw *pcie) { return; }
++static inline void deinit_debugfs(struct tegra_pcie_dw *pcie) { return; }
+ #endif
+ 
+ static void tegra_pcie_enable_system_interrupts(struct dw_pcie_rp *pp)
+@@ -2289,7 +2298,7 @@ static void tegra_pcie_dw_remove(struct platform_device *pdev)
+ 		if (!pcie->link_state)
+ 			return;
+ 
+-		debugfs_remove_recursive(pcie->debugfs);
++		deinit_debugfs(pcie->debugfs);
+ 		tegra_pcie_deinit_controller(pcie);
+ 		pm_runtime_put_sync(pcie->dev);
+ 	} else {
+@@ -2408,7 +2417,7 @@ static void tegra_pcie_dw_shutdown(struct platform_device *pdev)
+ 		if (!pcie->link_state)
+ 			return;
+ 
+-		debugfs_remove_recursive(pcie->debugfs);
++		deinit_debugfs(pcie->debugfs);
+ 		tegra_pcie_downstream_dev_to_D0(pcie);
+ 
+ 		disable_irq(pcie->pci.pp.irq);
+
+base-commit: a8662bcd2ff152bfbc751cab20f33053d74d0963
+-- 
+2.25.1
+
