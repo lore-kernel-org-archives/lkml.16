@@ -1,189 +1,184 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6CAC2FB6
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 01:57:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAEEC2E62BD
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 02:02:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743818260; cv=none; b=bVmopH+XoNmJi8BSg89OvdfvFOTp2MK2wlsUxxg1xr4qGKFEL34UjvvO5CMY+MaNfR1MmC/khp2i79xNa4TVcSdU7T93mUcdL5Wnf6v2ZzYiCi1gi1wyotB2rilpD8M0zP4BtGW+VpL5SJ/SQnIuTNu1vrnc9r+n9mGoHpvStlo=
+	t=1743818555; cv=none; b=aJaUBfuiHgYwlkgPCZNL8+l0xKsaIX1GoCNWde3nx1kBdHmjsETYShbOEeUU4dFMPcmFslJ7JBOpGK8My6eZ2HMAv1embqQgB4nJFQLiNw3IOeJecC+l/AyCjmut3+dG/sI8Ibs88Sza72o3HPMWmzqMkqueJ3QoQSix9BdF3Y0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743818260; c=relaxed/simple;
-	bh=OAoewxTDbadnGF1GAguojqOu/hTz+6xUWg05jevi4+Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MzXQffjwM1xkji66CKhcXWkhkphEiQbps6HuBR6u3tL645Dl8sa+3mHnPJCE0zS+Xrg4/pVSTFDNZ2YTYW477SNxsMOgjVhSrwE/uX2PM9JFGGvneAzKzA/mHMF3uyLYrtJA9hGXlv1fP9Acb2WB+Yqw+vL2Ah+QRcOdQc0MdPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=La/q+6ES; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1743818555; c=relaxed/simple;
+	bh=n55XbygekPuRSftRNaBTCpWgjPxbf0+xzTKJHWs1Faw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZR7StdBZvpl5TL9ImDwveZKDOpJdv9exzFEi2U1Bu0IZ6LhoXjfpw0SngBa828tksxi2xwvuNbzsLx2RACtW6+V7KaMHPVJYDYw6aomjVauK7DZnJ1412zw+EYLoCrHEpVnFNE8nAnopq7JyFEaH62+3OQ7Hd4c07UX5pQ7/jRA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MNNqg8or; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="La/q+6ES"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4393ee912e1so12675e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 18:57:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743818257; x=1744423057; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OAoewxTDbadnGF1GAguojqOu/hTz+6xUWg05jevi4+Q=;
-        b=La/q+6ESAJCdBnxXGPCM3hVWPLt3P10a8VOFaG/P0Mn/fgxSJpS1O9yrsd1Vb0cq1B
-         OeGogdzMRYwmEtApp86F1BSFpd37LbtGW9HFJDuj7uRqM/V84PXR/DdBoqyNgwnMK/dO
-         HC+uk+jr72HLdGWuBAD1AVtnqkRI5kf8XSwcx3b+sgIi7dI21QWbr8ybTQzeMaZyeUeh
-         hUondTkDNHDJa7vIxWO+KDQ7ZeaERnW2NWBP7CID9z+a55U2Sa9mwWip87OoYaXQv3b9
-         5ftL89jmIOpDceULmbFOiBUsXPShBvDEGS1YwtRs9Tyy2gJK1u0wHCsXEDkHGr7GUkOr
-         vvkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743818257; x=1744423057;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OAoewxTDbadnGF1GAguojqOu/hTz+6xUWg05jevi4+Q=;
-        b=r7JXOC6dDWOeQOUmo+pp03t62qMWfsk/Mx4AjJ+029ufUbdjyflXgnzSjE1wRWAqkt
-         oozGiKxo//UdHbe4qqh8hmNdElHXRg07LwjT7ExlzX7L8ohPUUboUE/F7/SSEC3bqd9N
-         HLrcVguaM2Tqb+CsI9BEYJFuWr6t8oES8RDAwX2KCV/s7AkCm6QpCswc5KzjiBrW58ge
-         bna4zzyUJVcCKGJsW4NlExSmjOxGozUc/MxLM8cCBxFe/fQPUdbV96fRUH1zTD8bjfIl
-         FWM+K+wCPBhs7T9DFrWsVx4ywCaAr7Shi7/Bi4NpqSqFJU0RYJ/R+0e5mQgPrIhU53FP
-         xGWQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWESt2c1ggN53qIOkPiJ3I5ooNlBdIC0MeIUV1FgfZlbB+gUvW8DuLKii8sYcjH4atdlTFNJS5Wl16zdE8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwBHDjki0J82ccifAX1zTtC2LXpZsknLzJpjQHheAZCZUzmhIRO
-	NvOneBBJ8gVLUCDJU+MDoyQXHDNMbEyJcmkPICFKSdzfA4jEJPZe43YVaPQcdDSX9UVrsHefK+9
-	B8C9HZkjwY7ASUo6d+R36Uftep1BN09gP0T4y
-X-Gm-Gg: ASbGncslP7jtp1wJ1AM674DKZtgiJAy3j8W2zFCLg4KIYnCoTOK56r18Ingdv7k80aO
-	ZSMncdhKbZUrW+szYrIcwtg6Ab+V3/HWpyo7MvshubVhGeVLEXD38R+QK5J7P0uNOjuK5WS3gqS
-	tcO92YqIvhOyd47m8RP/y7wsxY
-X-Google-Smtp-Source: AGHT+IEZgBBuLcDuNWx/jFE8YY2SlwYmrCbwtiJPDyDgjgoOsHULjpV/CWiTVdB4+NcESAdkrCw+xWEHlXEt9xlkY4M=
-X-Received: by 2002:a05:600c:3548:b0:43d:409c:6142 with SMTP id
- 5b1f17b1804b1-43ee0e84029mr527915e9.0.1743818256732; Fri, 04 Apr 2025
- 18:57:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MNNqg8or"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743818554; x=1775354554;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=n55XbygekPuRSftRNaBTCpWgjPxbf0+xzTKJHWs1Faw=;
+  b=MNNqg8orUjdY2+D6jTDC3WhVaGuKPfW2EZmQxAk0VKc642gFWQb5HPDN
+   ZDzKRhyHowlTmrMRlpL99KQ0brUMfpk7Q9EnrSmPqv+2eeThWYzRormPz
+   Hnxh4z6e4znTb8mu1meLh12KZgE6IwiZATvisG8iv+/AXg/uK7HyHIAA8
+   2E3adRQDIFkzDr6gTg8tbMGE/+oknyH2Z3CNKenOaC7sBSL+IK6fa1P0z
+   wL0puquWHo1bnEIBUbyX9If2CpqW6+NMh+/kOguPa/45qIHCj0U7rsckU
+   C9BR4AXM+4AZvPteyKtIyfILPC0JLajAmF3AnlYY9H2SgWv886cIR9oJJ
+   w==;
+X-CSE-ConnectionGUID: MEG72f5cS3+vlJoi2BjgGQ==
+X-CSE-MsgGUID: gvFF3oPOQtyx71e3H3FmSQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11394"; a="49064523"
+X-IronPort-AV: E=Sophos;i="6.15,189,1739865600"; 
+   d="scan'208";a="49064523"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 19:02:33 -0700
+X-CSE-ConnectionGUID: 1a/Sqrq0QAqulzvOM4QDhA==
+X-CSE-MsgGUID: OciFOaSYQwuAk8MVNQiG1w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,189,1739865600"; 
+   d="scan'208";a="127954060"
+Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
+  by fmviesa010.fm.intel.com with ESMTP; 04 Apr 2025 19:02:28 -0700
+Received: from kbuild by b207828170a5 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u0srZ-0001jb-2I;
+	Sat, 05 Apr 2025 02:02:25 +0000
+Date: Sat, 5 Apr 2025 10:01:40 +0800
+From: kernel test robot <lkp@intel.com>
+To: Anusha Srivatsa <asrivats@redhat.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Jessica Zhang <quic_jesszhan@quicinc.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Robert Chiras <robert.chiras@nxp.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Markuss Broks <markuss.broks@gmail.com>,
+	Artur Weber <aweber.kernel@gmail.com>,
+	Dzmitry Sankouski <dsankouski@gmail.com>,
+	Jagan Teki <jagan@amarulasolutions.com>,
+	Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>,
+	Purism Kernel Team <kernel@puri.sm>, Ondrej Jirman <megi@xff.cz>,
+	Sasha Finkelstein <fnkl.kernel@gmail.com>,
+	Janne Grunau <j@jannau.net>,
+	Michael Trimarchi <michael@amarulasolutions.com>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: oe-kbuild-all@lists.linux.dev, dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org, asahi@lists.linux.dev,
+	Anusha Srivatsa <asrivats@redhat.com>
+Subject: Re: [PATCH 41/46] panel/widechips-ws2401: Use refcounted allocation
+ in place of devm_kzalloc()
+Message-ID: <202504050919.KlKBUNDh-lkp@intel.com>
+References: <20250403-b4-drm_panel_mass_driver_convert_part3-v1-41-965b15ad5b8e@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250310-dmem-cgroups-v1-0-2984c1bc9312@kernel.org>
- <f5fdc666-dd72-4a4f-9270-b539a3179382@amd.com> <20250310-eccentric-wonderful-puffin-ddbb26@houat>
- <CAPM=9tzkLXOz=-3eujUbbjMHunR+_5JZ4oQaqNmbrWWF9WZJ0w@mail.gmail.com>
- <e08f10da-b0cd-444b-8e0b-11009b05b161@amd.com> <CAPM=9twgFt43OKqUY0TNopTmibnR_d891xmV=wFM91n604NUCw@mail.gmail.com>
- <5ed87c80-6fe3-4f8c-bb98-ca07f1db8c34@amd.com> <20250403-quick-salamander-of-charisma-cab289@houat>
- <202c3a58-97a3-489c-b3f2-b1fd2735bd19@amd.com>
-In-Reply-To: <202c3a58-97a3-489c-b3f2-b1fd2735bd19@amd.com>
-From: "T.J. Mercier" <tjmercier@google.com>
-Date: Fri, 4 Apr 2025 18:57:25 -0700
-X-Gm-Features: ATxdqUG3Y0HIBufABo7xowgVhlloVVBpkM4JhVkK9QLhPMspK9dsEIobBZzLpG8
-Message-ID: <CABdmKX2LhrcyDM0r1tytt2vKLuCLGsxZaGHgN+u1hUmEMXuGtw@mail.gmail.com>
-Subject: Re: [PATCH RFC 00/12] dma: Enable dmem cgroup tracking
-To: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-Cc: Maxime Ripard <mripard@kernel.org>, Dave Airlie <airlied@gmail.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Marek Szyprowski <m.szyprowski@samsung.com>, 
-	Robin Murphy <robin.murphy@arm.com>, Sumit Semwal <sumit.semwal@linaro.org>, 
-	Benjamin Gaignard <benjamin.gaignard@collabora.com>, Brian Starkey <Brian.Starkey@arm.com>, 
-	John Stultz <jstultz@google.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, Simona Vetter <simona@ffwll.ch>, Tomasz Figa <tfiga@chromium.org>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, Ben Woodard <woodard@redhat.com>, 
-	Hans Verkuil <hverkuil@xs4all.nl>, 
-	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, iommu@lists.linux.dev, 
-	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	linaro-mm-sig@lists.linaro.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250403-b4-drm_panel_mass_driver_convert_part3-v1-41-965b15ad5b8e@redhat.com>
 
-On Fri, Apr 4, 2025 at 1:47=E2=80=AFAM Christian K=C3=B6nig <christian.koen=
-ig@amd.com> wrote:
->
-> Hi Maxime,
->
-> Am 03.04.25 um 17:47 schrieb Maxime Ripard:
-> > On Thu, Apr 03, 2025 at 09:39:52AM +0200, Christian K=C3=B6nig wrote:
-> >>> For the UMA GPU case where there is no device memory or eviction
-> >>> problem, perhaps a configurable option to just say account memory in
-> >>> memcg for all allocations done by this process, and state yes you can
-> >>> work around it with allocation servers or whatever but the behaviour
-> >>> for well behaved things is at least somewhat defined.
-> >> We can have that as a workaround, but I think we should approach that
-> >> differently.
-> >>
-> >> With upcoming CXL even coherent device memory is exposed to the core
-> >> OS as NUMA memory with just a high latency.
-> >>
-> >> So both in the CXL and UMA case it actually doesn't make sense to
-> >> allocate the memory through the driver interfaces any more. With
-> >> AMDGPU for example we are just replicating mbind()/madvise() within
-> >> the driver.
-> >>
-> >> Instead what the DRM subsystem should aim for is to allocate memory
-> >> using the normal core OS functionality and then import it into the
-> >> driver.
-> >>
-> >> AMD, NVidia and Intel have HMM working for quite a while now but it
-> >> has some limitations, especially on the performance side.
-> >>
-> >> So for AMDGPU we are currently evaluating udmabuf as alternative. That
-> >> seems to be working fine with different NUMA nodes, is perfectly memcg
-> >> accounted and gives you a DMA-buf which can be imported everywhere.
-> >>
-> >> The only show stopper might be the allocation performance, but even if
-> >> that's the case I think the ongoing folio work will properly resolve
-> >> that.
-> > I mean, no, the showstopper to that is that using udmabuf has the
-> > assumption that you have an IOMMU for every device doing DMA, which is
-> > absolutely not true on !x86 platforms.
-> >
-> > It might be true for all GPUs, but it certainly isn't for display
-> > controllers, and it's not either for codecs, ISPs, and cameras.
-> >
-> > And then there's the other assumption that all memory is under the
-> > memory allocator control, which isn't the case on most recent platforms
-> > either.
-> >
-> > We *need* to take CMA into account there, all the carved-out, device
-> > specific memory regions, and the memory regions that aren't even under
-> > Linux supervision like protected memory that is typically handled by th=
-e
-> > firmware and all you get is a dma-buf.
-> >
-> > Saying that it's how you want to workaround it on AMD is absolutely
-> > fine, but DRM as a whole should certainly not aim for that, because it
-> > can't.
->
-> A bunch of good points you bring up here but it sounds like you misunders=
-tood me a bit.
->
-> I'm certainly *not* saying that we should push for udmabuf for everything=
-, that is clearly use case specific.
->
-> For use cases like CMA or protected carve-out the question what to do doe=
-sn't even arise in the first place.
->
-> When you have CMA which dynamically steals memory from the core OS then o=
-f course it should be accounted to memcg.
->
-> When you have carve-out which the core OS memory management doesn't even =
-know about then it should certainly be handled by dmem.
->
-> The problematic use cases are the one where a buffer can sometimes be bac=
-ked by system memory and sometime by something special. For this we don't h=
-ave a good approach what to do since every approach seems to have a draw ba=
-ck for some use case.
+Hi Anusha,
 
-This reminds me of memory.memsw in cgroup v1, where both resident and
-swapped memory show up under the same memcg counter. In this dmem
-scenario it's similar but across two different cgroup controllers
-instead of two different types of system memory under the same
-controller.
+kernel test robot noticed the following build errors:
 
-memsw doesn't exist in v2, and users are asking for it back. [1] I
-tend to agree that a combined counter is useful as I don't see a great
-way to apply meaningful limits to individual counters (or individual
-controller limits in the dmem+memcg case) when multiple cgroups are
-involved and eviction can cause memory to be transferred from one
-place to another. Sorry I'm not really offering a solution to this,
-but I feel like only transferring the charge between cgroups is a
-partial solution since the enforcement by the kernel is independent
-for each controller. So yeah as Dave and Sima said for accounting I
-guess it works, and maybe that's good enough if you have userspace
-enforcement that's smart enough to look in all the different places.
-But then there are the folks asking for kernel enforcement. Maybe just
-accounting as best we can is a good place to start?
+[auto build test ERROR on de04bb0089a96cc00d13b12cbf66a088befe3057]
 
-[1] https://lore.kernel.org/all/20250319064148.774406-5-jingxiangzeng.cas@g=
-mail.com/
+url:    https://github.com/intel-lab-lkp/linux/commits/Anusha-Srivatsa/panel-orisetech-otm8009a-Use-refcounted-allocation-in-place-of-devm_kzalloc/20250404-052751
+base:   de04bb0089a96cc00d13b12cbf66a088befe3057
+patch link:    https://lore.kernel.org/r/20250403-b4-drm_panel_mass_driver_convert_part3-v1-41-965b15ad5b8e%40redhat.com
+patch subject: [PATCH 41/46] panel/widechips-ws2401: Use refcounted allocation in place of devm_kzalloc()
+config: x86_64-buildonly-randconfig-001-20250405 (https://download.01.org/0day-ci/archive/20250405/202504050919.KlKBUNDh-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250405/202504050919.KlKBUNDh-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504050919.KlKBUNDh-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   ld: drivers/gpu/drm/panel/panel-widechips-ws2401.o: in function `ws2401_probe':
+>> drivers/gpu/drm/panel/panel-widechips-ws2401.c:350: undefined reference to `__devm_drm_panel_alloc'
+
+
+vim +350 drivers/gpu/drm/panel/panel-widechips-ws2401.c
+
+   343	
+   344	static int ws2401_probe(struct spi_device *spi)
+   345	{
+   346		struct device *dev = &spi->dev;
+   347		struct ws2401 *ws;
+   348		int ret;
+   349	
+ > 350		ws = devm_drm_panel_alloc(dev, struct ws2401, panel, &ws2401_drm_funcs,
+   351					   DRM_MODE_CONNECTOR_DPI);
+   352		if (IS_ERR(ws))
+   353			return PTR_ERR(ws);
+   354	
+   355		ws->dev = dev;
+   356	
+   357		/*
+   358		 * VCI   is the analog voltage supply
+   359		 * VCCIO is the digital I/O voltage supply
+   360		 */
+   361		ws->regulators[0].supply = "vci";
+   362		ws->regulators[1].supply = "vccio";
+   363		ret = devm_regulator_bulk_get(dev,
+   364					      ARRAY_SIZE(ws->regulators),
+   365					      ws->regulators);
+   366		if (ret)
+   367			return dev_err_probe(dev, ret, "failed to get regulators\n");
+   368	
+   369		ws->reset = devm_gpiod_get(dev, "reset", GPIOD_OUT_HIGH);
+   370		if (IS_ERR(ws->reset)) {
+   371			ret = PTR_ERR(ws->reset);
+   372			return dev_err_probe(dev, ret, "no RESET GPIO\n");
+   373		}
+   374	
+   375		ret = mipi_dbi_spi_init(spi, &ws->dbi, NULL);
+   376		if (ret)
+   377			return dev_err_probe(dev, ret, "MIPI DBI init failed\n");
+   378		ws->dbi.read_commands = ws2401_dbi_read_commands;
+   379	
+   380		ws2401_power_on(ws);
+   381		ws2401_read_mtp_id(ws);
+   382		ws2401_power_off(ws);
+   383	
+   384		ret = drm_panel_of_backlight(&ws->panel);
+   385		if (ret)
+   386			return dev_err_probe(dev, ret,
+   387					"failed to get external backlight device\n");
+   388	
+   389		if (!ws->panel.backlight) {
+   390			dev_dbg(dev, "no external backlight, using internal backlight\n");
+   391			ws->panel.backlight =
+   392				devm_backlight_device_register(dev, "ws2401", dev, ws,
+   393					&ws2401_bl_ops, &ws2401_bl_props);
+   394			if (IS_ERR(ws->panel.backlight))
+   395				return dev_err_probe(dev, PTR_ERR(ws->panel.backlight),
+   396					"failed to register backlight device\n");
+   397		} else {
+   398			dev_dbg(dev, "using external backlight\n");
+   399		}
+   400	
+   401		spi_set_drvdata(spi, ws);
+   402	
+   403		drm_panel_add(&ws->panel);
+   404		dev_dbg(dev, "added panel\n");
+   405	
+   406		return 0;
+   407	}
+   408	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
