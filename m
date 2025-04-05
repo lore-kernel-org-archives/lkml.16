@@ -1,66 +1,66 @@
 Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 792FF1DE4DC;
-	Sat,  5 Apr 2025 23:16:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 820071DFDAE;
+	Sat,  5 Apr 2025 23:16:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743894979; cv=none; b=GXmTDtrqSpyzgjXXD6CCi7Abuvxdkxwzf3Yefgy1eP3zBYooQ92g9a4TNr/Eer8vnolsJ0d9ASCvlv8DlXGSWFzAf5YtSGXevfA3jy2kqrZ/dEp4FJiSidIHvfUm5xwlUxVvYlPjPkwcUw13IucVYmE67kLtNaH2MPDJlkqq9fk=
+	t=1743894987; cv=none; b=t5bKtOsLrQayC1enh4whZm8SpCX95lrp9/wGLrB0kQyOcnpDzGAga8FyoxZBO8meVqoCB0zIySI7VuBrWo4w9LtVqO3dBwtJalnEfaruY6qMozhmtcfQFuTDZCChHAJPhnKgAr5et55hYTyO2tU5Iu/gU+60bl+hs/nXOoN0mhQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743894979; c=relaxed/simple;
-	bh=XXV0remiboIC8vT/YM3SXXEpSLWra8NHMrXB3bAOdSc=;
+	s=arc-20240116; t=1743894987; c=relaxed/simple;
+	bh=HzPCNCOaGfHJ1SZafUSoMYOx1UbS0RK4HV+uhmMxEog=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=N0NKoe9RsTM0+u9+yJKobMcgbVYk3yHEXa/cpk6k2vhVp85zefQksdsJgVJprUkDxv/qq8QrAdKotvFzXO5ERITbpiiIKItJ7iUFAZ8XI+AudLNXoUDIyEOhYsW69Gok3IO4QxZdO9S/P38CYiC3/j9/3/YGNoxICV1cV1aJw70=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZeJm+CxQ; arc=none smtp.client-ip=209.85.214.169
+	 In-Reply-To:To:Cc; b=EAEHsajNec+AhObmCybq4fDUpdivlv82ZE2k1CGnxUshYsNtRBtlpv63m+ZNXRWJZiY50VuVevN0YygkRqsFVaETZDqMBzDO/IPjd2uFJXZPrFmUI/Qooz8dFQ2MANJey3STIySrkZnX6gPAjaHECL4UMKH/wJNeaeTLaUG3dtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QdV1l83f; arc=none smtp.client-ip=209.85.214.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZeJm+CxQ"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-225477548e1so29965715ad.0;
-        Sat, 05 Apr 2025 16:16:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QdV1l83f"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-22403cbb47fso32889405ad.0;
+        Sat, 05 Apr 2025 16:16:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743894977; x=1744499777; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1743894985; x=1744499785; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=JHqAHfmXNcrBiUX48Wdw61sXBWXoE7oTU9Eeqw/vr3c=;
-        b=ZeJm+CxQo5Dx2UR0JKlbwJ6XkoXIyykwSnNB23Lwp/K63nNMDdRFbse/up9oY7R3+s
-         bDsGWiuEYEE6vL/bh2erBDNGmSAkgtHfLeN+c7Egw/vjLxH6HlkBfdZIltwXL253oLfL
-         OnknUmU4iotWRTuPaajoPC5JAo+IJPz7chB1iPeH21I/Obpw4Psw3ZgndOxa45JxhMHH
-         mPeerNnS2vgB+7m0kzgZuEASn8R+Nuu7bWy9dG8bvQNAFU9v7FfE/e1dI3fwsOtpP6ly
-         0PRpmdTzmz5+KmPS/gikaRrJQQS10cltIkQi4VUU+XY8qovUkVvt6Cm6iuLaef+LnPaj
-         d7MQ==
+        bh=oJgUl+Lri83Oq+9zJGLqwIEzCS7Ndje3xSETbGABjZc=;
+        b=QdV1l83fcAcs5HIb+CfPN+5ql0QNDYGugIjUTaaBzIi3qf9CQwh3Z8zLYCMxmi46zP
+         LovEVsg9bMIIuKstzX3tWTtVW5N5yNk5Eh+GLebEmkUYlpWaZHY46HsLHW3hZ/KPM46X
+         kIIagHZ4THtPVJ94qyHNTvVFugmA785WnGjh6atCpRDkzp+JmYzf3PbiF+8Uf1LOkSSg
+         rJ62zL+PAtimK8wE5AW6CbIDuiZGO8OfCq650M3V/6Gq10+Koqg4/dsOmhhOK95lvecO
+         Ic8/XRGcgO/ryLww0QM3qwb6mcurepK79qc9epX4kLQoBBiWObIsxr+NwMje5ybA+OGH
+         SCIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743894977; x=1744499777;
+        d=1e100.net; s=20230601; t=1743894985; x=1744499785;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=JHqAHfmXNcrBiUX48Wdw61sXBWXoE7oTU9Eeqw/vr3c=;
-        b=rQ3oGNP7hK06tWYKdZRzOghotUhqVAUqVG9LUhNeV9oeBdTOZ1kwemjNg7pC19Bl06
-         DnEXv1UWdTn/bNMsiDw3i3ClVPVC1k5ZbishKotW4PK/wGlm8VTK1aLTGcbqlzFFzZE7
-         VS8FZ5EV6E82LUfzl6N8LFYOmfKv8DrTIGCi78DeO0Brc/bQEOGSTdKhh00aenVx+tGH
-         QaTRQlw+aewfVlFCko8svESlpAH2LVAHVSsPfLh80hOtJSTCQ1tZ0Upcdsd1hCqydpZt
-         epZDieiNaj9/RYAAbjl6SXO4pc9Qd0nKPjKdscxCyGp0n6FIlLRbDDq8o50Rgs2omYSh
-         iBvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU2q58DdLydJDro1jUhBhLVh/l0Pv4I/pKm3z2QYtUBbq5QB5TsKl09wYBcTFDsJzb/RndVkhnQzGdjNfg=@vger.kernel.org, AJvYcCUBK6yBUeCU5Ru/y61xySMdqyNthsDcjjda0Q/fJ3Op4Y26b+k0+lIlQPLoau+sm4nSTq35kJhDasns/j8z@vger.kernel.org, AJvYcCV7fBVuZbCI4L3Squml/bm0TzwFDcwcbS6RDYd1CvTVVUtW5cuNVgxmvT75SYLg0X76qDAQUJWQ7bsH@vger.kernel.org, AJvYcCXrXVA+nO0DZ42j6ll3fLoRoCiotTVyswu+J/2oCN/vf4tzj29TWX3Y2hX/DXyD8Z3qtkH2Wznwx4n9bj4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+h91siSzLSwjfjK9hH5mr4mSnVH3SwdNwWZTs0jpYwsn3X+QF
-	7otCUbQ+mU4nnnTm1UYlzQj0yUHF/UGrjZMi7HfnRSa3qvL4Nt9v
-X-Gm-Gg: ASbGncsL9Jygpv1/WgreL6ZWJGCBdJTjGq5cQu/o21zWcWz/NXUdAyJaXZVxB2WHXMW
-	BeBHpCpkicoqy+9DjGT9AFtah9jOk4P0kFE0TS0avVAjqQVPI3lk6LpKtfeGpB0xoO39zmrP7z0
-	AP8I1tN92H9MCF6pqYabedEnrm6RXDeVfGxAJuI7DV9cHwKJKDgydpulg6C9ht1I5pmv7EqAlgL
-	RLDhTZfrwJ124+L0GBMkhmblyE21PNOri1Rbe/jSCvX9hfk6vJMBy3G3zld2h5AjlL+GeRS8J61
-	b9iIDi9OOqEK/DpsEqV0c52/2jBWymGDJ/3kDD07q62CuQNvbg84nPP+0xdS2xyV0jxHl/6lSeG
-	6XKJN4UVl+BFoiUO1K/xfw4mLaNImBncyZ5WOtVI=
-X-Google-Smtp-Source: AGHT+IHzW/mEX3whjkwPsQueexYlvcirJnhXqeAaYH9+txAPgZ2hsFsVnFWAoyuWrrUtE4gQMK6Rdw==
-X-Received: by 2002:a17:902:f690:b0:220:c34c:5760 with SMTP id d9443c01a7336-22a8a8e4508mr99504385ad.51.1743894976729;
-        Sat, 05 Apr 2025 16:16:16 -0700 (PDT)
+        bh=oJgUl+Lri83Oq+9zJGLqwIEzCS7Ndje3xSETbGABjZc=;
+        b=I3mobKIb6FrlW32UF43EOasPSiP5EIY7Fx7xnYz/dIytpwmY4GgxH/XDKCHxtE5jB3
+         0Y/R4aoMcMEMoXwba4qb0W51EFq92+YDXWrHw1c4fyXG6VrYZ2ZWOq0OstR7ti4TMXPa
+         gunBjQUkpq4XXUctkEoOydmHmQvgAB5GtSjeGY+EpZkCyrkcTwZc/263egrfvrZKLkum
+         q2PcaeSHT8sQn3ptdLHddVIvgC7BgA7DaDFjrjdroCXBt2kkkQkm9RSCZ3enQZS6BmRn
+         tdEzduwffu/zBhhZx8TlDf1I6ptlEser/duxV3afZov3fkj8/DIcc+Hr0tHT/NJOZXJa
+         ytjg==
+X-Forwarded-Encrypted: i=1; AJvYcCVQBLYeRgyn/jdmkDJuJm/qJ0KfHvpcQsF2CaoWgi+cZTedCqR6lpsozD3y3cwC5DJtalrtjui7bFkfNN8L@vger.kernel.org, AJvYcCWSoPPFNUJJDi1MUIcSIRphJKzgdCYb+OndPnvTEbANGogLD9FvUmdkWnXp+U7iEVP5mnuFM9Hz82b2@vger.kernel.org, AJvYcCWz0PP7r6QOLBJVynmHPwf5ubTmhYpHxbmQIn4KpUB2Kb7k8TvZV5I8tLwH7ezFwDxlwzSLcCWQWKW8G6M=@vger.kernel.org, AJvYcCXTEuuI2lVp2+/AJmwuPjmF9IuCn4LnNvFrxiNz1ozxEQ3AEcioGIHIUpd2a0k6d+aeDZIt1z+1GmZ9xQ8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwQOMp0hSdyWY7ai2HJ0DN2xRhkgBkewHbdnVd9mnuRc0yTUcWD
+	NFZRFhfC/rZLvu8kxGglutE1hz5mdu+njcvdgUPM3ptb03wok2iR
+X-Gm-Gg: ASbGncutcx1UT00+EVNvq8fx6oicqn4MoL4z4bGc0omg5Nx7nDJbJj4ZZrFp2HCxP27
+	TAZjdKOmJUH79KSYY1WjRXyg/R8CrgMG0Uh2YPmg+1Ms5fti7vl/wwqo5FUsjEPzcRN4LVc+jv4
+	mXxmGkVPOZb6An5WRvU1C4b3sUko6D2nyaUFbRX1xPn5qqMUpMVst7W3ql5sAjedFD7EaGi8eTl
+	UVEXmxHmRqX3W9dEkF8vTdbXp8WtbHfdtQyPK/cRBLoQru6vQfEnO7R5Ckxr/lGPhFGvjlMH1G3
+	ysqsLlVlViG8Ig5tXasvi1Ei9IbkxEYmSFdB6lKN2MSd2G+12XPKvQcw+cK4vSonaQpevoJRnSM
+	ulXlldE7Ehd4qREUo5x8YZNUbYWq4hMckzINDwLM=
+X-Google-Smtp-Source: AGHT+IEVN5VB9kZvBYQ0TjCkqo4Wt7GleWXD5XDgrsFGv91UONf5YKT42TApbq/Y0lwjk+7IjZk+Mg==
+X-Received: by 2002:a17:903:1cc:b0:224:1e7a:43fe with SMTP id d9443c01a7336-22a8a8ddc27mr89469255ad.46.1743894984690;
+        Sat, 05 Apr 2025 16:16:24 -0700 (PDT)
 Received: from [192.168.2.3] (2403-580a-80ed-0-4835-5a07-49e7-f115.ip6.aussiebb.net. [2403:580a:80ed:0:4835:5a07:49e7:f115])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-229785c994esm55048345ad.102.2025.04.05.16.16.09
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-229785c994esm55048345ad.102.2025.04.05.16.16.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Apr 2025 16:16:16 -0700 (PDT)
+        Sat, 05 Apr 2025 16:16:24 -0700 (PDT)
 From: James Calligeros <jcalligeros99@gmail.com>
-Date: Sun, 06 Apr 2025 09:15:10 +1000
-Subject: [PATCH v5 6/8] ASoC: tas2764: Apply Apple quirks
+Date: Sun, 06 Apr 2025 09:15:11 +1000
+Subject: [PATCH v5 7/8] ASoC: tas2770: expose die temp to hwmon
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,7 +69,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250406-apple-codec-changes-v5-6-50a00ec850a3@gmail.com>
+Message-Id: <20250406-apple-codec-changes-v5-7-50a00ec850a3@gmail.com>
 References: <20250406-apple-codec-changes-v5-0-50a00ec850a3@gmail.com>
 In-Reply-To: <20250406-apple-codec-changes-v5-0-50a00ec850a3@gmail.com>
 To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
@@ -84,305 +84,161 @@ Cc: Alyssa Rosenzweig <alyssa@rosenzweig.io>,
  Hector Martin <marcan@marcan.st>, linux-sound@vger.kernel.org, 
  linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
  asahi@lists.linux.dev, linux-hwmon@vger.kernel.org, 
- Neal Gompa <neal@gompa.dev>, James Calligeros <jcalligeros99@gmail.com>
+ James Calligeros <jcalligeros99@gmail.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=9009;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4412;
  i=jcalligeros99@gmail.com; h=from:subject:message-id;
- bh=qZEzaa+3EpSBuiO12afRrJd3nOAchCfoa8/x3EZzfv0=;
- b=owGbwMvMwCV2xczoYuD3ygTG02pJDOkfd3a5Hd5UlBPmKLMn9fjPK4Z7n51+90xG9OZKlYPnR
- WMXHRFR7yhlYRDjYpAVU2TZ0CTkMduI7Wa/SOVemDmsTCBDGLg4BWAiEQKMDHcafj3l0+7w43ad
- 67duuxbHtIwkmaVbX5bOWL3Q5PHph00Mf7jnLdgw9VS5ycIGibUJ1eFrGy72SZfnPLQ2cTvtW+7
- sxwUA
+ bh=HzPCNCOaGfHJ1SZafUSoMYOx1UbS0RK4HV+uhmMxEog=;
+ b=owGbwMvMwCV2xczoYuD3ygTG02pJDOkfd3a9FRTbd79/3ka+ZWv6g3MjFB5rpcw8M+NjWMn13
+ q8pTByJHaUsDGJcDLJiiiwbmoQ8Zhux3ewXqdwLM4eVCWQIAxenAEzk3VWG/z5Nr94WLd8RJsYe
+ 6Nr5XPx44Ke9Kj43PflyDjSdiFho4MDw37+lImpP1j9h/rgP7+8s2LFbff2uhcyf70lPD/NftUx
+ iNRMA
 X-Developer-Key: i=jcalligeros99@gmail.com; a=openpgp;
  fpr=B08212489B3206D98F1479BDD43632D151F77960
 
-From: Martin Povišer <povik+lin@cutebit.org>
+TAS2770 includes an ADC which reports the chip's die temperature.
+As per the datasheet, the temperature in degrees Celsius is derived
+by taking the raw value stored in the ADC's registers, dividing by 16,
+then subtracting 93.
 
-Apple's SN012776 driver has some peculiar aspects to its behavior that
-are suspected to work around issues in the codec part. Add a module
-parameter for enabling individual quirks that should be imitated after
-the Apple driver.
+Create and register a hwmon device to expose the chip's die temperature
+to the hwmon interface.
 
-Setting some of these by default seems to be required. For example,
-setting 0xf fixes an issue with transient overcurrent errors which
-can crash the chip until the next system reboot. To be safe, let's
-enable all of them by default.
+The ADC is shut down during software shutdown mode, and its registers
+are initialised to 0 on reset. This means that the die temperature will
+read -93 *C until the chip has been fully powered up at least once (e.g.
+the PCM its attached to is opened). Once the chip is put into software
+shutdown again, the ADC will also shut down. The last value sampled
+before this happens will persist in the ADC's registers.
 
-Reviewed-by: Neal Gompa <neal@gompa.dev>
-Co-developed-by: Hector Martin <marcan@marcan.st>
-Signed-off-by: Hector Martin <marcan@marcan.st>
+Co-developed-by: Martin Povišer <povik+lin@cutebit.org>
 Signed-off-by: Martin Povišer <povik+lin@cutebit.org>
-Co-developed-by: James Calligeros <jcalligeros99@gmail.com>
 Signed-off-by: James Calligeros <jcalligeros99@gmail.com>
 ---
- sound/soc/codecs/tas2764-quirks.h | 180 +++++++++++++++++++++++++
- sound/soc/codecs/tas2764.c        |  39 ++++++
- 2 files changed, 219 insertions(+)
+ sound/soc/codecs/tas2770.c | 96 +++++++++++++++++++++++++
+ 1 file changed, 96 insertions(+)
 
-diff --git a/sound/soc/codecs/tas2764-quirks.h b/sound/soc/codecs/tas2764-quirks.h
-new file mode 100644
-index 0000000000000000000000000000000000000000..7a62b3ba5b40b3f06fc1ebeb590d9c32b1b2c7d3
---- /dev/null
-+++ b/sound/soc/codecs/tas2764-quirks.h
-@@ -0,0 +1,180 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+#ifndef __TAS2764_QUIRKS__
-+#define __TAS2764_QUIRKS__
-+
-+#include <linux/regmap.h>
-+
-+#include "tas2764.h"
-+
-+/* Bitmask of enabled Apple quirks */
-+#define ENABLED_APPLE_QUIRKS	0x3f
-+
-+/*
-+ * Disable noise gate and flip down reserved bit in NS_CFG0
-+ */
-+#define TAS2764_NOISE_GATE_DISABLE	BIT(0)
-+
-+static const struct reg_sequence tas2764_noise_gate_dis_seq[] = {
-+	REG_SEQ0(TAS2764_REG(0x0, 0x35), 0xb0)
-+};
-+
-+/*
-+ * CONV_VBAT_PVDD_MODE=1
-+ */
-+#define TAS2764_CONV_VBAT_PVDD_MODE	BIT(1)
-+
-+static const struct reg_sequence tas2764_conv_vbat_pvdd_mode_seq[] = {
-+	REG_SEQ0(TAS2764_REG(0x0, 0x6b), 0x41)
-+};
-+
-+/*
-+ * Reset of DAC modulator when DSP is OFF
-+ */
-+#define TAS2764_DMOD_RST		BIT(2)
-+
-+static const struct reg_sequence tas2764_dmod_rst_seq[] = {
-+	REG_SEQ0(TAS2764_REG(0x0, 0x76), 0x0)
-+};
-+
-+/*
-+ * Unknown 0x133/0x137 writes (maybe TDM related)
-+ */
-+#define TAS2764_UNK_SEQ0		BIT(3)
-+
-+static const struct reg_sequence tas2764_unk_seq0[] = {
-+	REG_SEQ0(TAS2764_REG(0x1, 0x33), 0x80),
-+	REG_SEQ0(TAS2764_REG(0x1, 0x37), 0x3a),
-+};
-+
-+/*
-+ * Unknown 0x614 - 0x61f writes
-+ */
-+#define TAS2764_APPLE_UNK_SEQ1		BIT(4)
-+
-+static const struct reg_sequence tas2764_unk_seq1[] = {
-+	REG_SEQ0(TAS2764_REG(0x6, 0x14), 0x0),
-+	REG_SEQ0(TAS2764_REG(0x6, 0x15), 0x13),
-+	REG_SEQ0(TAS2764_REG(0x6, 0x16), 0x52),
-+	REG_SEQ0(TAS2764_REG(0x6, 0x17), 0x0),
-+	REG_SEQ0(TAS2764_REG(0x6, 0x18), 0xe4),
-+	REG_SEQ0(TAS2764_REG(0x6, 0x19), 0xc),
-+	REG_SEQ0(TAS2764_REG(0x6, 0x16), 0xaa),
-+	REG_SEQ0(TAS2764_REG(0x6, 0x1b), 0x0),
-+	REG_SEQ0(TAS2764_REG(0x6, 0x1c), 0x12),
-+	REG_SEQ0(TAS2764_REG(0x6, 0x1d), 0xa0),
-+	REG_SEQ0(TAS2764_REG(0x6, 0x1e), 0xd8),
-+	REG_SEQ0(TAS2764_REG(0x6, 0x1f), 0x0),
-+};
-+
-+/*
-+ * Unknown writes in the 0xfd page (with secondary paging inside)
-+ */
-+#define TAS2764_APPLE_UNK_SEQ2		BIT(5)
-+
-+static const struct reg_sequence tas2764_unk_seq2[] = {
-+	REG_SEQ0(TAS2764_REG(0xfd, 0x0d), 0xd),
-+	REG_SEQ0(TAS2764_REG(0xfd, 0x6c), 0x2),
-+	REG_SEQ0(TAS2764_REG(0xfd, 0x6d), 0xf),
-+	REG_SEQ0(TAS2764_REG(0xfd, 0x0d), 0x0),
-+};
-+
-+/*
-+ * Disable 'Thermal Threshold 1'
-+ */
-+#define TAS2764_THERMAL_TH1_DISABLE	BIT(6)
-+
-+static const struct reg_sequence tas2764_thermal_th1_dis_seq[] = {
-+	REG_SEQ0(TAS2764_REG(0x1, 0x47), 0x2),
-+};
-+
-+/*
-+ * Imitate Apple's shutdown dance
-+ */
-+#define TAS2764_SHUTDOWN_DANCE		BIT(7)
-+
-+static const struct reg_sequence tas2764_shutdown_dance_init_seq[] = {
-+	/*
-+	 * SDZ_MODE=01 (immediate)
-+	 *
-+	 * We want the shutdown to happen under the influence of
-+	 * the magic writes in the 0xfdXX region, so make sure
-+	 * the shutdown is immediate and there's no grace period
-+	 * followed by the codec part.
-+	 */
-+	REG_SEQ0(TAS2764_REG(0x0, 0x7), 0x60),
-+};
-+
-+static const struct reg_sequence tas2764_pre_shutdown_seq[] = {
-+	REG_SEQ0(TAS2764_REG(0xfd, 0x0d), 0xd), /* switch hidden page */
-+	REG_SEQ0(TAS2764_REG(0xfd, 0x64), 0x4), /* do write (unknown semantics) */
-+	REG_SEQ0(TAS2764_REG(0xfd, 0x0d), 0x0), /* switch hidden page back */
-+};
-+
-+static const struct reg_sequence tas2764_post_shutdown_seq[] = {
-+	REG_SEQ0(TAS2764_REG(0xfd, 0x0d), 0xd),
-+	REG_SEQ0(TAS2764_REG(0xfd, 0x64), 0x0), /* revert write from pre sequence */
-+	REG_SEQ0(TAS2764_REG(0xfd, 0x0d), 0x0),
-+};
-+
-+static int tas2764_do_quirky_pwr_ctrl_change(struct tas2764_priv *tas2764,
-+					     unsigned int target)
-+{
-+	unsigned int curr;
-+	int ret;
-+
-+	curr = snd_soc_component_read_field(tas2764->component,
-+					       TAS2764_PWR_CTRL,
-+					       TAS2764_PWR_CTRL_MASK);
-+
-+	if (target == curr)
-+		return 0;
-+
-+	/* Handle power state transition to shutdown */
-+	if (target == TAS2764_PWR_CTRL_SHUTDOWN &&
-+	   (curr == TAS2764_PWR_CTRL_MUTE || curr == TAS2764_PWR_CTRL_ACTIVE)) {
-+		ret = regmap_multi_reg_write(tas2764->regmap, tas2764_pre_shutdown_seq,
-+					ARRAY_SIZE(tas2764_pre_shutdown_seq));
-+		if (!ret)
-+			ret = snd_soc_component_update_bits(tas2764->component,
-+							TAS2764_PWR_CTRL,
-+							TAS2764_PWR_CTRL_MASK,
-+							TAS2764_PWR_CTRL_SHUTDOWN);
-+		if (!ret)
-+			ret = regmap_multi_reg_write(tas2764->regmap,
-+						tas2764_post_shutdown_seq,
-+						ARRAY_SIZE(tas2764_post_shutdown_seq));
-+	}
-+
-+	ret = snd_soc_component_update_bits(tas2764->component, TAS2764_PWR_CTRL,
-+						    TAS2764_PWR_CTRL_MASK, target);
-+
-+	return ret;
-+}
-+
-+/*
-+ * Via devicetree (TODO):
-+ *  - switch from spread spectrum to class-D switching
-+ *  - disable edge control
-+ *  - set BOP settings (the BOP config bits *and* BOP_SRC)
-+ */
-+
-+/*
-+ * Other setup TODOs:
-+ *  - DVC ramp rate
-+ */
-+
-+static const struct tas2764_quirk_init_sequence {
-+	const struct reg_sequence *seq;
-+	int len;
-+} tas2764_quirk_init_sequences[] = {
-+	{ tas2764_noise_gate_dis_seq, ARRAY_SIZE(tas2764_noise_gate_dis_seq) },
-+	{ tas2764_dmod_rst_seq, ARRAY_SIZE(tas2764_dmod_rst_seq) },
-+	{ tas2764_conv_vbat_pvdd_mode_seq, ARRAY_SIZE(tas2764_conv_vbat_pvdd_mode_seq) },
-+	{ tas2764_unk_seq0, ARRAY_SIZE(tas2764_unk_seq0) },
-+	{ tas2764_unk_seq1, ARRAY_SIZE(tas2764_unk_seq1) },
-+	{ tas2764_unk_seq2, ARRAY_SIZE(tas2764_unk_seq2) },
-+	{ tas2764_thermal_th1_dis_seq, ARRAY_SIZE(tas2764_thermal_th1_dis_seq) },
-+	{ tas2764_shutdown_dance_init_seq, ARRAY_SIZE(tas2764_shutdown_dance_init_seq) },
-+};
-+
-+#endif /* __TAS2764_QUIRKS__ */
-diff --git a/sound/soc/codecs/tas2764.c b/sound/soc/codecs/tas2764.c
-index 718107fce3bcf6ef081f6fced7b89c708518b1a5..21c38b2394b71ef7d05b4c2e781fdf73926fec5b 100644
---- a/sound/soc/codecs/tas2764.c
-+++ b/sound/soc/codecs/tas2764.c
-@@ -45,6 +45,8 @@ struct tas2764_priv {
- 	bool unmuted;
+diff --git a/sound/soc/codecs/tas2770.c b/sound/soc/codecs/tas2770.c
+index 55e4723044044338bd941763240d24ccfef6e8f3..6f878b01716f728724a00ba3e1ce7afe3a420eda 100644
+--- a/sound/soc/codecs/tas2770.c
++++ b/sound/soc/codecs/tas2770.c
+@@ -12,6 +12,7 @@
+ #include <linux/err.h>
+ #include <linux/init.h>
+ #include <linux/delay.h>
++#include <linux/hwmon.h>
+ #include <linux/pm.h>
+ #include <linux/i2c.h>
+ #include <linux/gpio/consumer.h>
+@@ -530,6 +531,88 @@ static struct snd_soc_dai_driver tas2770_dai_driver[] = {
+ 	},
  };
  
-+#include "tas2764-quirks.h"
-+
- static const char *tas2764_int_ltch0_msgs[8] = {
- 	"fault: over temperature", /* INT_LTCH0 & BIT(0) */
- 	"fault: over current",
-@@ -122,6 +124,9 @@ static int tas2764_update_pwr_ctrl(struct tas2764_priv *tas2764)
- 	else
- 		val = TAS2764_PWR_CTRL_SHUTDOWN;
- 
-+	if (ENABLED_APPLE_QUIRKS & TAS2764_SHUTDOWN_DANCE)
-+		return tas2764_do_quirky_pwr_ctrl_change(tas2764, val);
-+
- 	ret = snd_soc_component_update_bits(component, TAS2764_PWR_CTRL,
- 					    TAS2764_PWR_CTRL_MASK, val);
- 	if (ret < 0)
-@@ -548,6 +553,30 @@ static uint8_t sn012776_bop_presets[] = {
- 
- static const struct regmap_config tas2764_i2c_regmap;
- 
-+static int tas2764_apply_init_quirks(struct tas2764_priv *tas2764)
++static int tas2770_read_die_temp(struct tas2770_priv *tas2770, long *result)
 +{
-+	int ret, i;
++	int ret = 0;
++	int reading, msb, lsb;
 +
-+	for (i = 0; i < ARRAY_SIZE(tas2764_quirk_init_sequences); i++) {
-+		const struct tas2764_quirk_init_sequence *init_seq =
-+						&tas2764_quirk_init_sequences[i];
++	ret = regmap_read(tas2770->regmap, TAS2770_TEMP_MSB, &msb);
++	if (ret)
++		return ret;
 +
-+		if (!init_seq->seq)
-+			continue;
++	ret = regmap_read(tas2770->regmap, TAS2770_TEMP_LSB, &lsb);
++	if (ret)
++		return ret;
 +
-+		if (!(BIT(i) & ENABLED_APPLE_QUIRKS))
-+			continue;
++	reading = (msb << 4) | (lsb >> 4);
 +
-+		ret = regmap_multi_reg_write(tas2764->regmap, init_seq->seq,
-+					     init_seq->len);
++	/*
++	 * As per datasheet: divide register by 16 and subtract 93 to get
++	 * degrees Celsius. hwmon requires millidegrees. Let's avoid rounding
++	 * errors by subtracting 93 * 16 then multiplying by 1000 / 16.
++	 *
++	 * NOTE: The ADC registers are initialised to 0 on reset. This means
++	 * that the temperature will read -93 *C until the chip is brought out
++	 * of software shutdown (e.g. the PCM it's attached to is opened). The
++	 * ADC is also shut down in software shutdown/low-power mode, so the
++	 * value read back from its registers will be the last value sampled
++	 * before entering software shutdown.
++	 */
++	*result = (reading - (93 * 16)) * (1000 / 16);
++	return 0;
++}
 +
-+		if (ret < 0)
-+			return ret;
++static umode_t tas2770_hwmon_is_visible(const void *data,
++					enum hwmon_sensor_types type, u32 attr,
++					int channel)
++{
++	if (type != hwmon_temp)
++		return 0;
++
++	switch (attr) {
++	case hwmon_temp_input:
++		return 0444;
++	default:
++		break;
 +	}
 +
 +	return 0;
 +}
 +
- static int tas2764_codec_probe(struct snd_soc_component *component)
- {
- 	struct tas2764_priv *tas2764 = snd_soc_component_get_drvdata(component);
-@@ -617,6 +646,13 @@ static int tas2764_codec_probe(struct snd_soc_component *component)
- 			if (ret < 0)
- 				return ret;
++static int tas2770_hwmon_read(struct device *dev,
++			      enum hwmon_sensor_types type,
++			      u32 attr, int channel, long *val)
++{
++	struct tas2770_priv *tas2770 = dev_get_drvdata(dev);
++	int ret;
++
++	switch (attr) {
++	case hwmon_temp_input:
++		ret = tas2770_read_die_temp(tas2770, val);
++		break;
++	default:
++		ret = -EOPNOTSUPP;
++		break;
++	}
++
++	return ret;
++}
++
++static const struct hwmon_channel_info *const tas2770_hwmon_info[] = {
++	HWMON_CHANNEL_INFO(temp, HWMON_T_INPUT),
++	NULL
++};
++
++static const struct hwmon_ops tas2770_hwmon_ops = {
++	.is_visible	= tas2770_hwmon_is_visible,
++	.read		= tas2770_hwmon_read,
++};
++
++static const struct hwmon_chip_info tas2770_hwmon_chip_info = {
++	.ops	= &tas2770_hwmon_ops,
++	.info	= tas2770_hwmon_info,
++};
++
+ static const struct regmap_config tas2770_i2c_regmap;
+ 
+ static int tas2770_codec_probe(struct snd_soc_component *component)
+@@ -758,6 +841,19 @@ static int tas2770_i2c_probe(struct i2c_client *client)
  		}
-+
-+		/* Apply all enabled Apple quirks */
-+		ret = tas2764_apply_init_quirks(tas2764);
-+
-+		if (ret < 0)
-+			return ret;
-+
- 		break;
- 	default:
- 		break;
-@@ -701,6 +737,9 @@ static bool tas2764_volatile_register(struct device *dev, unsigned int reg)
- 	case TAS2764_INT_LTCH0 ... TAS2764_INT_LTCH4:
- 	case TAS2764_INT_CLK_CFG:
- 		return true;
-+	case TAS2764_REG(0xf0, 0x0) ... TAS2764_REG(0xff, 0x0):
-+		/* TI's undocumented registers for the application of quirks */
-+		return true;
- 	default:
- 		return false;
  	}
+ 
++	if (IS_REACHABLE(CONFIG_HWMON)) {
++		struct device *hwmon;
++
++		hwmon = devm_hwmon_device_register_with_info(&client->dev, "tas2770",
++							tas2770,
++							&tas2770_hwmon_chip_info,
++							NULL);
++		if (IS_ERR(hwmon)) {
++			return dev_err_probe(&client->dev, PTR_ERR(hwmon),
++					     "Failed to register temp sensor\n");
++		}
++	}
++
+ 	result = tas2770_register_codec(tas2770);
+ 	if (result)
+ 		dev_err(tas2770->dev, "Register codec failed.\n");
 
 -- 
 2.49.0
