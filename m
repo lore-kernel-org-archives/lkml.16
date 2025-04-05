@@ -1,146 +1,72 @@
-Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3816F5695
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 02:51:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABA50C8E0;
+	Sat,  5 Apr 2025 03:08:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743821471; cv=none; b=UNoxG+6qszy4daH3Yo8pKsVZw2gf5DEtHZNfLkSlZN2mmRLoefq0BnqL+kOG7aria1ciS8ng7diiaWiZ1CWdnjGwOftkv+1vosLbG7YV5FZkn3731c5FLBnbsOwwTztwI01u3oMGTqA4KkfIGyz0e5qIwAfp2z75T6TgcUA6opw=
+	t=1743822507; cv=none; b=nK8EylEYD3DDuVH45i9m9vVzy7b6cgDi+2OX70G43HftbwYcLQTjXgh+/XNXhJes2N44I2kcoy5ZaEfWjr3taFJBUeLZsv2eM9ZsW+P2YFYkjX7K7E69+EGEmb4tdWloR+rC9LmrQPvb3Ov6VBmYMFhbQwirPBrEYVt3NDzA2+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743821471; c=relaxed/simple;
-	bh=3iG4uszjJhYz1xN5KTHblBC7rKWOYr8Zu82RAVweGu4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oVRERs9veHt/HkgKLAwkeAVuajy7rNLtvmkOMprJpJTC//lVtnn4kjJiTfIetEQ/bNSaQ/bVAX40i0bSgDIkBwG+KZJR27XMdSu9FW330osqTTfUzjlYXYaaYazSSiTtp+u4W4XQBEiFEbJXRkbImOo+C8GttYNCnYkNP8qaaSI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=wuZTNv4A; arc=none smtp.client-ip=91.218.175.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1743822507; c=relaxed/simple;
+	bh=hY3qBxjnUeZNl+dbRmdPNBeOglco3GBszbi2Y72/3b0=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=Csti01+KLPvYE0lWRIPRCZrygqbR2hwn7vhcBO97nvfB9ecPmzLrkV87CZh+fos79paTbN4Dc9NYpCyzrSQFAe8o4sqKnHI+kf1gjerOi7LzlFpvtS2MDe++lo6jTGLOzYr32Gb/j1El4X//xK4y9Ckavr0xItWSAGRgkDpp9UY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H81Swo9p; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="wuZTNv4A"
-Date: Fri, 4 Apr 2025 19:50:48 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1743821457;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QhuOOLdy9BplIOjwl5SEjiFDq9KRcuImi5tiBulKOHg=;
-	b=wuZTNv4A8KHVliI7RVi1iq+KyXkkEpVXmobDwuSfJ9jC8v/d5c4jG9aKVyhGLgutSACa+p
-	b7yQoi8ZZUiOQIdBt+InpQt4A/6qxUhExtd68Vqs6sb3UFkP45CYt9Is6Pyf9vvaO4updu
-	JiTYbbTedWepNbQD4ccJn7P+3rF9OrE=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Oliver Upton <oliver.upton@linux.dev>
-To: Mingwei Zhang <mizhang@google.com>
-Cc: Raghavendra Rao Ananta <rananta@google.com>,
-	Marc Zyngier <maz@kernel.org>, linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org, Oliver Upton <oupton@google.com>
-Subject: Re: [PATCH v2 2/2] KVM: selftests: arm64: Explicitly set the page
- attrs to Inner-Shareable
-Message-ID: <Z_CaiKsi42ho8DoK@linux.dev>
-References: <20250405001042.1470552-1-rananta@google.com>
- <20250405001042.1470552-3-rananta@google.com>
- <CAL715WKaAHSgUhtMMT3Ztw90mMoHpVLdKUgVM15xx6yoUws9+Q@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H81Swo9p"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18261C4CEDD;
+	Sat,  5 Apr 2025 03:08:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743822507;
+	bh=hY3qBxjnUeZNl+dbRmdPNBeOglco3GBszbi2Y72/3b0=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=H81Swo9p3GDmnSHphwJd/Jpns9BhPSCCvyamA2NWTCNqrWYr4Cee2WaERRdbq4DEw
+	 w/DjVHydprarNhDtLJEdv4Vr4yukuD5eQhLwp8W/2skUnoTHuE9V4eHfmogiXTrAH0
+	 a1yQsTkjEqofHY9Yp9uJOZ/JEBROm5mcVIKV1ZTHMcEVR6gaRW7U0VrZ4VCiuozDmz
+	 zWFscMGP1MLcAAAaRrwIt/Z6giXx+70BiCRNb2kT8LiK/FAMmsBmq08qaOo/FFqavp
+	 Mr8LW/RGmRZTbA6fjBG/evpQZA6wrMvRoObb1nEH8gQEIEoP6zwD7+P/d+egyi+Oe3
+	 sdIPsmid+TlOA==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70F853822D19;
+	Sat,  5 Apr 2025 03:09:05 +0000 (UTC)
+Subject: Re: [GIT PULL] Crypto Fixes for 6.15
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <Z_CUFE0pA3l6IwfC@gondor.apana.org.au>
+References: <ZJ0RSuWLwzikFr9r@gondor.apana.org.au>
+ <ZOxnTFhchkTvKpZV@gondor.apana.org.au>
+ <ZUNIBcBJ0VeZRmT9@gondor.apana.org.au>
+ <ZZ3F/Pp1pxkdqfiD@gondor.apana.org.au>
+ <ZbstBewmaIfrFocE@gondor.apana.org.au>
+ <ZgFIP3x1w294DIxQ@gondor.apana.org.au>
+ <ZkrC8u1NmwpldTOH@gondor.apana.org.au>
+ <ZvDbn6lSNdWG9P6f@gondor.apana.org.au>
+ <Z11ODNgZwlA9vhfx@gondor.apana.org.au>
+ <Z-ofAGzvFfuGucld@gondor.apana.org.au> <Z_CUFE0pA3l6IwfC@gondor.apana.org.au>
+X-PR-Tracked-List-Id: <linux-crypto.vger.kernel.org>
+X-PR-Tracked-Message-Id: <Z_CUFE0pA3l6IwfC@gondor.apana.org.au>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git tags/v6.15-p3
+X-PR-Tracked-Commit-Id: 12e0b15b1986736af8c64b920efad00c655a3c79
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: a8662bcd2ff152bfbc751cab20f33053d74d0963
+Message-Id: <174382254400.3509887.2094987018379246467.pr-tracker-bot@kernel.org>
+Date: Sat, 05 Apr 2025 03:09:04 +0000
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAL715WKaAHSgUhtMMT3Ztw90mMoHpVLdKUgVM15xx6yoUws9+Q@mail.gmail.com>
-X-Migadu-Flow: FLOW_OUT
 
-On Fri, Apr 04, 2025 at 05:31:49PM -0700, Mingwei Zhang wrote:
-> On Fri, Apr 4, 2025 at 5:10 PM Raghavendra Rao Ananta
-> <rananta@google.com> wrote:
-> >
-> > Atomic instructions such as 'ldset' over (global) variables in the guest
-> > is observed to cause an EL1 data abort with FSC 0x35 (IMPLEMENTATION
-> > DEFINED fault (Unsupported Exclusive or Atomic access)). The observation
-> > was particularly apparent on Neoverse-N3.
-> >
-> > According to ARM ARM DDI0487L.a B2.2.6 (Possible implementation
-> > restrictions on using atomic instructions), atomic instructions are
-> > architecturally guaranteed for Inner Shareable and Outer Shareable
-> > attributes. For Non-Shareable attribute, the atomic instructions are
-> > not atomic and issuing such an instruction can lead to the FSC
-> > mentioned in this case (among other things).
-> >
-> > Moreover, according to DDI0487L.a C3.2.6 (Single-copy atomic 64-byte
-> > load/store), it is implementation defined that a data abort with the
-> > mentioned FSC is reported for the first stage of translation that
-> > provides an inappropriate memory type. It's likely that Neoverse-N3
-> > chose to implement these two and why we see an FSC of 0x35 in EL1 upon
-> > executing atomic instructions.
+The pull request you sent on Sat, 5 Apr 2025 10:23:16 +0800:
 
-Ok, can we please drop this second reference?
+> git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git tags/v6.15-p3
 
-This is talking about something else (FEAT_LS64) that happens to share
-the same FSC as an unsupported atomic instruction. I mentioned this to
-you internally as an illustration of how different implementations may
-behave when determining if the attributes support a particular access,
-but it isn't actually relevant to this change.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/a8662bcd2ff152bfbc751cab20f33053d74d0963
 
-> nit: It's likely that Neoverse-N3 chose to implement this option (the
-> first option) instead of reporting at the final enabled stage of
-> translation
+Thank you!
 
-I would much rather we rely on the language that describes what the
-architecture guarantees rather than speculate as to how Neoverse-N3
-behaves.
-
-Mentioning that the breakage was observed on Neoverse-N3 is still useful
-to add to the changelog.
-
-> I have minor question here: The DDI0487L C3.2.6 (Single-copy atomic
-> 64-byte load/store) mentioned
-> 
-> """
-> When the instructions access a memory type that is not one of the
-> following, a data abort for unsupported Exclusive or atomic access is
-> generated:
-> 
-> • Normal Inner Non-cacheable, Outer Non-cacheable.
-> """
-> 
-> So, the above is the "Normal Inner Non-cacheable", but in our case we
-> have "Normal and non-shareable" in stage-1 mapping, right? I know it
-> is very close, but it seems the situation is still only "one bit" away
-> in my understanding...
-
-This citation relates to FEAT_LS64. If you look at B2.2.6 instead, it
-reads:
-
-"""
-The memory types for which it is architecturally guaranteed that the
-atomic instructions will be atomic are:
-
- - Inner Shareable, Inner Write-Back, Outer Write-Back Normal memory
-   with Read allocation hints and Write allocation hints and not
-   transient.
-
- - Outer Shareable, Inner Write-Back, Outer Write-Back Normal memory
-   with Read allocation hints and Write allocation hints and not
-   transient.
-"""
-
-and
-
-"""
-If the atomic insturctions are not atomic in regard to other agents that
-access memory, then performing an atomic instruction to such a location
-can have one or more of the following effects:
-
-[...]
-
- - The instruction generates an IMPLEMENTATION DEFINED fault reported
-   using the Data Abort Fault status code of ESR_ELx.DFSC = 110101
-"""
-
-The memory type used by KVM selftests is *Non-Shareable*, which is not
-one of the memory types guaranteed by the architecture to work.
-
-Thanks,
-Oliver
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
