@@ -1,167 +1,169 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D055FDF59
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 09:32:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B941D1C5D7C;
+	Sat,  5 Apr 2025 09:33:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743845580; cv=none; b=ENqaG9QYBMpZDOh1uWuGFdsgab+mX3cCoS+4FadSLOtKpsLF1M2d3PONDTiQDD/GeRandV5RtKK3V7iQjv+l5/1nc+5vGaJdsBBqFeHX6W+xh0T/hm3MdoPcAFfMHHIGvrY6/HafIpPtqFqi8g91wDTBlatW2fHA9hbQzmH5f34=
+	t=1743845608; cv=none; b=SPZhaT0h4YGv4Y2CuNre6KsGdxz539yclIhmIB9ruITd+/UgFoFZ8S0CY3MMCbjWg6WWLVHzsbj1y0TSwtXReI7drnsLg3JdcasNOu0l6fICL31VWsILL3SYemwBnC7ZbHV37LV4OZWvkxR53K78tYV58ixMu+4QCP3pw4cZj90=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743845580; c=relaxed/simple;
-	bh=ZtnldJ4aHLx80uqAG3xwd0UUoMHMSrLb0C1E/w6fF90=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nJnWRqtrlJQNzvphfK24mXRWSNn5JWmxQQIx6+giihlf0Zt6d8E0nLl6izFgSDjVLlg8vQQp8Eog1FIGJ4WEITRc1vNDsGEl6CecnlNGnB6DrxW8rnkz7WKm30kU/gRTywST2q+O0ISLB/uDOX9V0D8j1bzMpEGXy7JGkH2mP1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=Cg6D7dlk; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1743845608; c=relaxed/simple;
+	bh=kriz03AnZEeQQvO1jAPNT+Mky6ppncxoMV3q3M6sSRo=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=IsZwZL+jRCLCf2UCxhNOw/6iSZ0CegpsO7jYAWRM9EosHHOOqVneJh/pBq4mt1Aj5sZ095kYutv0+G0prSf1hFnMTMPXUUcNJsLKDJrrgqzbfF3wG76PSjn0VNiFACzayhH+OISRZ2980MM2aGs9oNp5V+WKmIX18BddX2zRRGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ti+/oISw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="Cg6D7dlk"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 850BE40E0214;
-	Sat,  5 Apr 2025 09:32:45 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id gnp02nHDlOLS; Sat,  5 Apr 2025 09:32:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1743845561; bh=jsvXZ74841MsrS2xtyuWcjLCsPRFhPZs8mVdawU7Zno=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Cg6D7dlkZ+sQQ72sEIeu0I2yGvs8z7LG1I9xH7/3+wXzzGGCJeynb0VR6WOjEMj4Y
-	 M132gIzpDNIZC+I6VlBpOq+ywJe3MLtUBRf+piOi0qi3YWj16W1hYaNr0eT/anwV+W
-	 7Uz1rihsWkcuTIV23vVhMFl75dsjzDaCyGBL2DHyVtkE+n6T2/4jqHhv7nyy9QeNzV
-	 vRkeE/yaSCbJCl2fp1W4U3vVobDZawIZbb4lnC8vlqGRJrivNA5GpFO7A0MZ4O8p5k
-	 pOiIf1pFxL6e6eyW98Z6rHw0vPeg9/nSOWS5SLnGBYyrj3rZy99LemT9Ss++muq5Hm
-	 iY4/EbBqv7lpy0tkZkNp2OvoQOMakZm1jcPGb5jhZLX3yDNPFuncGURiCYl2vBkuo9
-	 iMZS2Y7r8iFgeG8SA9s5HyLGzP1kZORrgqCgwlI7Hlw1inuZ1+SLWx6RdLqUO90QiC
-	 XIhniQWDegYXu2a/8oVFNH/cbzfoQo+D4ZcsHAKl4juaNP00K2M8RAZKJZWCzU2Qi5
-	 gmsgmTfO9I7X+ugKxKUa087XUZ2Ho5q+szOpBiuZzIntAB+ctJWBvGHCMgHth5PmxI
-	 L+q0nAgNZP4FBTS2vFmc9q7YiKtnVVOfUEPhGhcUqbC3YTnvUj5pRM92tB5oirb9b3
-	 XpCffz01rT7OojlD8tWbvNio=
-Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 16AAA40E01FF;
-	Sat,  5 Apr 2025 09:32:33 +0000 (UTC)
-Date: Sat, 5 Apr 2025 11:32:26 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Kevin Koster <lkml@ombertech.com>, Oerg866 <oerg866@googlemail.com>
-Cc: linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [PATCH] x86/microcode: Fix crashes on early 486 CPUs due to
- usage of 'cpuid'.
-Message-ID: <20250405093127.GAZ_D4b6NdyTS-UW1J@fat_crate.local>
-References: <CANpbe9Wm3z8fy9HbgS8cuhoj0TREYEEkBipDuhgkWFvqX0UoVQ@mail.gmail.com>
- <20250405130306.ca9822c1f27db119cc973603@ombertech.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ti+/oISw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 279DCC4CEE4;
+	Sat,  5 Apr 2025 09:33:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743845608;
+	bh=kriz03AnZEeQQvO1jAPNT+Mky6ppncxoMV3q3M6sSRo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ti+/oISwOwauLDwS0nQMoncUJeCMwNjrfS6t3dHuXPWrwQH0AAyvbqSOh2aJL3As5
+	 ln/1Za6oi7agd2hl3dhzSrmNp9VEMQr5702xR9irXYJ6fQp+xOb+UjhhFS89P0h4nw
+	 8dGM5yX9rYbqSacrDl762Hq70+TznUBdC1J3ebusu0ZeOAfvIAKhBc7BcGRBqRTA/J
+	 VCkKGy1nBHNT/YHB/PuGFpWuew4FLjz9ErEjuZKvY7e1/ZZsH522RYW/yUdSfvIMSO
+	 np2s53T7AKn/9WV0Dfwm0qnFJpVQ3nBaoPBoRrHDtQUAHMvV7843GxtZi5xVxnihip
+	 1DO1yNeDclc2A==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=lobster-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1u0zu1-002Z6m-Ju;
+	Sat, 05 Apr 2025 10:33:25 +0100
+Date: Sat, 05 Apr 2025 10:33:28 +0100
+Message-ID: <87wmbzx89j.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Mingwei Zhang <mizhang@google.com>
+Cc: Oliver Upton <oliver.upton@linux.dev>,
+	Raghavendra Rao Ananta <rananta@google.com>,
+	linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org,
+	Oliver Upton <oupton@google.com>
+Subject: Re: [PATCH v2 2/2] KVM: selftests: arm64: Explicitly set the page attrs to Inner-Shareable
+In-Reply-To: <CAL715W+v-BgHr5FwgDnct5nQ3RV-FXMkuSaCG7DaDoQVnZeDpg@mail.gmail.com>
+References: <20250405001042.1470552-1-rananta@google.com>
+	<20250405001042.1470552-3-rananta@google.com>
+	<CAL715WKaAHSgUhtMMT3Ztw90mMoHpVLdKUgVM15xx6yoUws9+Q@mail.gmail.com>
+	<Z_CaiKsi42ho8DoK@linux.dev>
+	<CAL715W+v-BgHr5FwgDnct5nQ3RV-FXMkuSaCG7DaDoQVnZeDpg@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250405130306.ca9822c1f27db119cc973603@ombertech.com>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: mizhang@google.com, oliver.upton@linux.dev, rananta@google.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, kvm@vger.kernel.org, oupton@google.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Sat, Apr 05, 2025 at 01:03:06PM +1100, Kevin Koster wrote:
-> On Sat, 19 Oct 2024 08:29:04 +0200
-> Oerg866 <oerg866@googlemail.com> wrote:
-> 
-> > Starting with v6.7-rc1, the kernel was no longer able to boot on early
-> > i486-class CPUs.
-> 
-> Thanks for this patch! It solves my problem with kernel 6.12.11
-> rebooting at start-up on 486 CPUs, which had me puzzled. (tested on
-> AM486DX2-66 and CX486DX4-100)
-> 
-> Is there a reason why the patch wasn't accepted?
+On Sat, 05 Apr 2025 08:24:30 +0100,
+Mingwei Zhang <mizhang@google.com> wrote:
+>=20
+> On Fri, Apr 4, 2025 at 7:51=E2=80=AFPM Oliver Upton <oliver.upton@linux.d=
+ev> wrote:
+> >
+> > On Fri, Apr 04, 2025 at 05:31:49PM -0700, Mingwei Zhang wrote:
+> > > On Fri, Apr 4, 2025 at 5:10=E2=80=AFPM Raghavendra Rao Ananta
+> > > <rananta@google.com> wrote:
+> > > >
+> > > > Atomic instructions such as 'ldset' over (global) variables in the =
+guest
+> > > > is observed to cause an EL1 data abort with FSC 0x35 (IMPLEMENTATION
+> > > > DEFINED fault (Unsupported Exclusive or Atomic access)). The observ=
+ation
+> > > > was particularly apparent on Neoverse-N3.
+> > > >
+> > > > According to ARM ARM DDI0487L.a B2.2.6 (Possible implementation
+> > > > restrictions on using atomic instructions), atomic instructions are
+> > > > architecturally guaranteed for Inner Shareable and Outer Shareable
+> > > > attributes. For Non-Shareable attribute, the atomic instructions are
+> > > > not atomic and issuing such an instruction can lead to the FSC
+> > > > mentioned in this case (among other things).
+> > > >
+> > > > Moreover, according to DDI0487L.a C3.2.6 (Single-copy atomic 64-byte
+> > > > load/store), it is implementation defined that a data abort with the
+> > > > mentioned FSC is reported for the first stage of translation that
+> > > > provides an inappropriate memory type. It's likely that Neoverse-N3
+> > > > chose to implement these two and why we see an FSC of 0x35 in EL1 u=
+pon
+> > > > executing atomic instructions.
+> >
+> > Ok, can we please drop this second reference?
+> >
+> > This is talking about something else (FEAT_LS64) that happens to share
+> > the same FSC as an unsupported atomic instruction. I mentioned this to
+> > you internally as an illustration of how different implementations may
+> > behave when determining if the attributes support a particular access,
+> > but it isn't actually relevant to this change.
+> >
+> > > nit: It's likely that Neoverse-N3 chose to implement this option (the
+> > > first option) instead of reporting at the final enabled stage of
+> > > translation
+> >
+> > I would much rather we rely on the language that describes what the
+> > architecture guarantees rather than speculate as to how Neoverse-N3
+> > behaves.
+> >
+> > Mentioning that the breakage was observed on Neoverse-N3 is still useful
+> > to add to the changelog.
+> >
+> > > I have minor question here: The DDI0487L C3.2.6 (Single-copy atomic
+> > > 64-byte load/store) mentioned
+> > >
+> > > """
+> > > When the instructions access a memory type that is not one of the
+> > > following, a data abort for unsupported Exclusive or atomic access is
+> > > generated:
+> > >
+> > > =E2=80=A2 Normal Inner Non-cacheable, Outer Non-cacheable.
+> > > """
+> > >
+> > > So, the above is the "Normal Inner Non-cacheable", but in our case we
+> > > have "Normal and non-shareable" in stage-1 mapping, right? I know it
+> > > is very close, but it seems the situation is still only "one bit" away
+> > > in my understanding...
+> >
+> > This citation relates to FEAT_LS64. If you look at B2.2.6 instead, it
+> > reads:
+> >
+> > """
+> > The memory types for which it is architecturally guaranteed that the
+> > atomic instructions will be atomic are:
+> >
+> >  - Inner Shareable, Inner Write-Back, Outer Write-Back Normal memory
+> >    with Read allocation hints and Write allocation hints and not
+> >    transient.
+> >
+> >  - Outer Shareable, Inner Write-Back, Outer Write-Back Normal memory
+> >    with Read allocation hints and Write allocation hints and not
+> >    transient.
+> > """
+>=20
+> Agree that the above should be the right place to cite. C3.2.6 seems
+> to discuss atomic instruction with memory attributes bits(which points
+> to MAIR_EL1 and MAIR_EL2?). In this case, it is more related to
+> shareability bits instead.
 
-Yes, too many patches, too little time. :-(
+Not sure what you mean by this reference to MAIR.
 
-Anyway, does the one below - only build-tested - work for both y'all too?
+These constraints apply to any memory access, including those that are
+*not* the direct effect of an instruction.  For example, an atomic
+page table update generated by the HW (AF or DB update) is only
+guaranteed to succeed if the PTW is itself configured to use ISH+WB or
+OSH+WB, and could otherwise result in any of the ill effects described
+in B2.2.6.
 
----
-diff --git a/arch/x86/include/asm/microcode.h b/arch/x86/include/asm/microcode.h
-index 695e569159c1..d53148fb893a 100644
---- a/arch/x86/include/asm/microcode.h
-+++ b/arch/x86/include/asm/microcode.h
-@@ -17,10 +17,12 @@ struct ucode_cpu_info {
- void load_ucode_bsp(void);
- void load_ucode_ap(void);
- void microcode_bsp_resume(void);
-+bool __init microcode_loader_disabled(void);
- #else
- static inline void load_ucode_bsp(void)	{ }
- static inline void load_ucode_ap(void) { }
- static inline void microcode_bsp_resume(void) { }
-+bool __init microcode_loader_disabled(void) { return false; }
- #endif
- 
- extern unsigned long initrd_start_early;
-diff --git a/arch/x86/kernel/cpu/microcode/amd.c b/arch/x86/kernel/cpu/microcode/amd.c
-index b61028cf5c8a..dda7f0d409e9 100644
---- a/arch/x86/kernel/cpu/microcode/amd.c
-+++ b/arch/x86/kernel/cpu/microcode/amd.c
-@@ -1099,7 +1099,7 @@ static int __init save_microcode_in_initrd(void)
- 	enum ucode_state ret;
- 	struct cpio_data cp;
- 
--	if (dis_ucode_ldr || c->x86_vendor != X86_VENDOR_AMD || c->x86 < 0x10)
-+	if (microcode_loader_disabled() || c->x86_vendor != X86_VENDOR_AMD || c->x86 < 0x10)
- 		return 0;
- 
- 	if (!find_blobs_in_containers(&cp))
-diff --git a/arch/x86/kernel/cpu/microcode/core.c b/arch/x86/kernel/cpu/microcode/core.c
-index b3658d11e7b6..972338a2abae 100644
---- a/arch/x86/kernel/cpu/microcode/core.c
-+++ b/arch/x86/kernel/cpu/microcode/core.c
-@@ -95,12 +95,15 @@ static bool amd_check_current_patch_level(void)
- 	return false;
- }
- 
--static bool __init check_loader_disabled_bsp(void)
-+bool __init microcode_loader_disabled(void)
- {
- 	static const char *__dis_opt_str = "dis_ucode_ldr";
- 	const char *cmdline = boot_command_line;
- 	const char *option  = __dis_opt_str;
- 
-+	if (!have_cpuid_p())
-+		return true;
-+
- 	/*
- 	 * CPUID(1).ECX[31]: reserved for hypervisor use. This is still not
- 	 * completely accurate as xen pv guests don't see that CPUID bit set but
-@@ -146,7 +149,7 @@ void __init load_ucode_bsp(void)
- 		return;
- 	}
- 
--	if (check_loader_disabled_bsp())
-+	if (microcode_loader_disabled())
- 		return;
- 
- 	if (intel)
-diff --git a/arch/x86/kernel/head32.c b/arch/x86/kernel/head32.c
-index de001b2146ab..f29dc9c95c50 100644
---- a/arch/x86/kernel/head32.c
-+++ b/arch/x86/kernel/head32.c
-@@ -145,8 +145,7 @@ void __init __no_stack_protector mk_early_pgtbl_32(void)
- 	*ptr = (unsigned long)ptep + PAGE_OFFSET;
- 
- #ifdef CONFIG_MICROCODE_INITRD32
--	/* Running on a hypervisor? */
--	if (native_cpuid_ecx(1) & BIT(31))
-+	if (microcode_loader_disabled())
- 		return;
- 
- 	params = (struct boot_params *)__pa_nodebug(&boot_params);
+	M.
 
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+--=20
+Jazz isn't dead. It just smells funny.
