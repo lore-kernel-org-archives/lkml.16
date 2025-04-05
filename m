@@ -1,201 +1,134 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DFACEED8;
-	Sat,  5 Apr 2025 14:22:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 467F73A1BA;
+	Sat,  5 Apr 2025 14:23:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743862952; cv=none; b=TgkJCv9PvIERK0YZFRSVEJXf07RMpDsMxcLFRs8ATreDi0e+ggRJTpA/wURjNp7XRRWAfF+zN4xweXv3eCfvC8zGtlLC907LxldjcgifX8+GJMO4fwS0rrVVA2HQVeSwirvkIPRj7+uIh3pN9D26Kbax52wrM9qvpL6+xH/dguI=
+	t=1743863022; cv=none; b=q4qkUh6hlLHFM0SIz9U6MuvdctQNYwgCyTDN4dZs1tZ33GnUOB4srcB644mZZQJYo0vgwo/dfQb1IoLAD9bgC4+ACgKyvcoKn5u3BYgAc6qAGCjb0H4N+nsRxTQxptWb2p8x0+PYhwwJeWemppXnyP5LWM7jEV3MLf2uL3r05H8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743862952; c=relaxed/simple;
-	bh=4TlZYBczBvOtge2KRLN9HBOYe1GtJnM1LarhN79o9NI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=a4wwIAqI2JRxF6RF6y8SGU3JR98UZ4J/DiXHyTmUooG6sAtJA4AvlU9CMz9fKxIiRHjjZWZyZSORb4Bm/ZWDVhvTHEuINvuuA1GVRMMdU1XM/sdOlGgb82gqrjoAH9yQ81pK8r2JDNjIPJ1QE3HSQX7GZMNSMAaasYFpx6ZQR4E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CaniO4sJ; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1743863022; c=relaxed/simple;
+	bh=Fb6nWConfM+SUWjQ8BRZyfSFDinOwn/Nox294oZsV6o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GUtFt2BAVTPpkXltQanr3jfpXMMRhAgPB/H0I+B+s6LGI9UpolVETP0K9cAYUutbaBPwcg1wnoa4q3K93T+xzoqg4YUqPgc3TgnNkOQvPRPm0C69+K0xZmGGo/5wb09W60usddvEO9F7+qAizBLyU2mzTgWxeyh6ro5QQHYJ/5E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EEB06SwF; arc=none smtp.client-ip=209.85.221.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CaniO4sJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743862951; x=1775398951;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=4TlZYBczBvOtge2KRLN9HBOYe1GtJnM1LarhN79o9NI=;
-  b=CaniO4sJ9ogqQfQgofKFJl29SnTIj9EwY2bsZkui7Ipg/41K/sh0wyVl
-   BYG0e3e5TZoQy5oh+7LXwtlmXzGhHYNW0cxU66H///SbakZdQZXNlL/NQ
-   jN2VswzgQNj7kqizQJUPF16VXAMbS7J58hqHAwUnxcPctMypzJrCm03AU
-   WusklESXzm2RWo6IArbw2I/fVM90gnKnDXYLkSdkuQXqrltdN3yj8GOmC
-   vhY8AJeQicoFW1mXEGW8gvIBL9+xCJwDq+MiQVEJpfl3GcffdbPZAHS7f
-   8zKVk3OPwpB9xDZJu6xQAGFFP/f5vjGb0zkMnhvY9LUo7EK60mGmwkPQd
-   A==;
-X-CSE-ConnectionGUID: p6cFW4s1R22aw9fz05nB3A==
-X-CSE-MsgGUID: m8/wSJfFQZ+s8/5PQhx5ew==
-X-IronPort-AV: E=McAfee;i="6700,10204,11395"; a="62693245"
-X-IronPort-AV: E=Sophos;i="6.15,191,1739865600"; 
-   d="scan'208";a="62693245"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2025 07:22:30 -0700
-X-CSE-ConnectionGUID: 2kRR535sQ+2ZOiH1PAhaow==
-X-CSE-MsgGUID: YNTyaPyDTs2VGc+DlORbOQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,191,1739865600"; 
-   d="scan'208";a="127428025"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by orviesa010.jf.intel.com with ESMTP; 05 Apr 2025 07:22:27 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u14Pg-000255-1f;
-	Sat, 05 Apr 2025 14:22:24 +0000
-Date: Sat, 5 Apr 2025 22:21:51 +0800
-From: kernel test robot <lkp@intel.com>
-To: cy_huang@richtek.com, Mark Brown <broonie@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, Rob Herring <robh@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	ChiYuan Huang <cy_huang@richtek.com>,
-	Otto lin <otto_lin@richtek.com>, Allen Lin <allen_lin@richtek.com>,
-	devicetree@vger.kernel.org, linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/4] ASoC: codecs: Add support for Richtek rt9123
-Message-ID: <202504052206.HFqFRXUk-lkp@intel.com>
-References: <cff65757c4665a81397ef5f559b277f96d4236c3.1743774849.git.cy_huang@richtek.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EEB06SwF"
+Received: by mail-vk1-f170.google.com with SMTP id 71dfb90a1353d-524125f6cadso2872783e0c.2;
+        Sat, 05 Apr 2025 07:23:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743863020; x=1744467820; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/p/4bsPFAwsntA6dFF/zQ5mVNq7asuGZ7eLM61oyzaQ=;
+        b=EEB06SwFvC2qZsjfhre88djhOx7u5SKOF5IVP5BhNfcsIYWX/cnfHVlYTC518gp00H
+         e9CQIzGYAX2UNgX1h64ndusD3scEBfQadA1+lqMNmSXefW22mDakOHiKgqZR4I4NfLzx
+         DdLMalSN4srZZDxgQAi4uYzeuSSwzbyGmJClweTgnCo7zeWcxc1pRrM8bbmmuwFi1zSN
+         7GmiGwxtIyxvHZWxRrKIKNQyxGSAkFBRME7n7fNr1EmXvCeMdmHN0TLXkexfvR2DlYBY
+         /0RKPMYq/FABl6oCa4OF+7oYAp9XxruDcYB6Iul+jmO5FPgbUrmFK6g6AVlBRYNkWY6r
+         N/Iw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743863020; x=1744467820;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/p/4bsPFAwsntA6dFF/zQ5mVNq7asuGZ7eLM61oyzaQ=;
+        b=q7l7aUbRyBu0x+lMoL+944qJiah/TCLOUkAbj44G/A5uus0anKArLcInBv2h5yIrRc
+         39fV7977TocUhktd2FPxAht+QaMr8sp04M0THe70DnxaINv3o9BsYgocPHQdD4F8aNK7
+         8H+7vUlvtJfrXNpg9bMNsJk9m+wvADo/TB82cq5MwWOzh0SdrvcZ3ka7bl8gq6caJ/Fa
+         XGcdP3Hbikw+EV7AKwyM1WWVTXF0+3u3eP3JcJKTNXWWh2SIxgfXcmhFbZr9g113m2t/
+         MONOI2r34DiFdaq+30BNmNq/DPqUao2o1rg4zHE42k6VHRxxnMFMIyhN31xSEnM7V/05
+         DxTg==
+X-Forwarded-Encrypted: i=1; AJvYcCUVX9C2fC1SZgE3KZkIfF9JRClff54jYENU76Ot2dUNJYPnihEbHVw0KhmkyzbJPl+tE/o86GIRW/XGLQ==@vger.kernel.org, AJvYcCXbt/lvpzRLR+Ijj9I7CaKRac0t7kJmSIfhIFC/trejeTBCGTbEDg5KCuheUjSBe7hJz8h8OHgNjwpXlxeJ@vger.kernel.org
+X-Gm-Message-State: AOJu0YwoDDrCqCFws0QiQq5T/sLCqS3xfXbaw0YLDsO97C8xYr6Kftr2
+	FLUzmgZTUZGTTDqntNNQRILSyO1iBTj89/xVAI0uy69L14Waefciiyk+Ho6R1QvEorxtntophk5
+	5YlI/nu2/9qtV6W2kyqvkn9K0t7I=
+X-Gm-Gg: ASbGnctom2VfLYBVHD3lfXowQ44oaq+QlzG/AJTp7Px67RTS4cnyNKiSp49wFg82vC8
+	lN5rf1vN17cIwJruS0tMNCf8yu2AR9j5JuIef8qCIkrf8pqBEOZHYXsV9T/1/MUwukULYKv2GO7
+	014GI3AnQzKvIGZRUjfUDBmOXUyyGl
+X-Google-Smtp-Source: AGHT+IHFtRTL3RqrMIPJ8vf/tHEaDt1ARljHgx7WlPToBdwqJ724tsN+pZxlRaKfRKWlCe/z7fwyCcOgbtVY3pZp2Rk=
+X-Received: by 2002:a05:6122:168f:b0:520:5185:1c71 with SMTP id
+ 71dfb90a1353d-52765d2d188mr4284391e0c.7.1743863020171; Sat, 05 Apr 2025
+ 07:23:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cff65757c4665a81397ef5f559b277f96d4236c3.1743774849.git.cy_huang@richtek.com>
+References: <cover.1743857160.git.princerichard17a@gmail.com>
+ <2025040538-breeze-espionage-dc6e@gregkh> <CAMyr_bL4Qo_eeVSHhy-_z9_PwcQAvD6N4jfqBb+rtN-Lj+YdmA@mail.gmail.com>
+ <CADYq+fY-twT=NruAmfb6EpmYJLM971aTu-CUi-We_Fd6JSP47Q@mail.gmail.com>
+In-Reply-To: <CADYq+fY-twT=NruAmfb6EpmYJLM971aTu-CUi-We_Fd6JSP47Q@mail.gmail.com>
+From: Samuel Abraham <abrahamadekunle50@gmail.com>
+Date: Sat, 5 Apr 2025 15:23:30 +0100
+X-Gm-Features: ATxdqUE8ROfu-fqiRiJp-D_rItN8bhudjw6IQvFtkopPWSBx-EbHPIFhi5qw-FY
+Message-ID: <CADYq+faiOqMVsi6KDiR2GkYrU4FCqv7j0fo3fw_R=72=UL2oPQ@mail.gmail.com>
+Subject: Re: [PATCH 0/8] staging: sm750fb: change function naming style
+To: Richard Akintola <princerichard17a@gmail.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>, outreachy@lists.linux.dev, 
+	sudipm.mukherjee@gmail.com, teddy.wang@siliconmotion.com, 
+	linux-fbdev@vger.kernel.org, linux-staging@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Sat, Apr 5, 2025 at 3:16=E2=80=AFPM Samuel Abraham
+<abrahamadekunle50@gmail.com> wrote:
+>
+> On Sat, Apr 5, 2025 at 3:07=E2=80=AFPM Richard Akintola
+> <princerichard17a@gmail.com> wrote:
+> >
+> > On Sat, Apr 5, 2025 at 2:37=E2=80=AFPM Greg KH <gregkh@linuxfoundation.=
+org> wrote:
+> >
+> > > - This looks like a new version of a previously submitted patch, but =
+you
+> > >   did not list below the --- line any changes from the previous versi=
+on.
+> >
+> > Please, how do I resolve this issue?
+> >
+> > Richard Akintola
+>
+> Hello Richard
+>
+> THis is the main message from the bot
+>
+> This looks like a new version of a previously submitted patch, but you
+>   did not list below the --- line any changes from the previous version.
+>   Please read the section entitled "The canonical patch format" in the
+>   kernel file, Documentation/process/submitting-patches.rst for what
+>   needs to be done here to properly describe this.
+>
+> It basically means that if you made a change to a patch, you will have
+> a new version.
+> You will have to indicate the patch version and also what changed
+>
+> So lets say you have a first Patch then after review, or you edited
+> the commit message
+> or made a change in the code or something,
+> you will now have a new patch which you will call v2.
+>
+> you will use git format-patch -o /tmp/ --subject-prefix=3D"PATCH v2" <com=
+mit-ID>
+>
+> then when you want to send with mutt, immediately after the signed-off
+> by line there are three dashes (---),
+> You will then write what changes under these three dashes in the format
+>
+> signedoff-by: Richard
+> ---
+> Changes in v1:
+>    - This is what changed in v1.
+>
+> I hope this helps
+>
+Also, you can go to the "Submitting a Patchset" section down the page
+of the firstPatch
+documentation for more information on versioning patchsets.
 
-kernel test robot noticed the following build errors:
-
-[auto build test ERROR on a2cc6ff5ec8f91bc463fd3b0c26b61166a07eb11]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/cy_huang-richtek-com/ASoC-dt-bindings-Add-bindings-for-Richtek-rt9123/20250404-223054
-base:   a2cc6ff5ec8f91bc463fd3b0c26b61166a07eb11
-patch link:    https://lore.kernel.org/r/cff65757c4665a81397ef5f559b277f96d4236c3.1743774849.git.cy_huang%40richtek.com
-patch subject: [PATCH 2/4] ASoC: codecs: Add support for Richtek rt9123
-config: loongarch-randconfig-001-20250405 (https://download.01.org/0day-ci/archive/20250405/202504052206.HFqFRXUk-lkp@intel.com/config)
-compiler: loongarch64-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250405/202504052206.HFqFRXUk-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504052206.HFqFRXUk-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   sound/soc/codecs/rt9123.c: In function 'rt9123_dai_hw_params':
->> sound/soc/codecs/rt9123.c:233:18: error: implicit declaration of function 'FIELD_GET' [-Wimplicit-function-declaration]
-     233 |         fmtval = FIELD_GET(SND_SOC_DAIFMT_FORMAT_MASK, rt9123->dai_fmt);
-         |                  ^~~~~~~~~
-   In file included from include/linux/cpumask.h:11,
-                    from arch/loongarch/include/asm/processor.h:9,
-                    from arch/loongarch/include/asm/thread_info.h:15,
-                    from include/linux/thread_info.h:60,
-                    from include/asm-generic/preempt.h:5,
-                    from ./arch/loongarch/include/generated/asm/preempt.h:1,
-                    from include/linux/preempt.h:79,
-                    from include/linux/spinlock.h:56,
-                    from include/linux/mmzone.h:8,
-                    from include/linux/gfp.h:7,
-                    from include/linux/slab.h:16,
-                    from include/linux/resource_ext.h:11,
-                    from include/linux/acpi.h:13,
-                    from sound/soc/codecs/rt9123.c:7:
-   sound/soc/codecs/rt9123.c: At top level:
->> sound/soc/codecs/rt9123.c:476:31: error: 'rt9123_dev_pm_ops' undeclared here (not in a function); did you mean 'rt9123_dai_ops'?
-     476 |                 .pm = pm_ptr(&rt9123_dev_pm_ops),
-         |                               ^~~~~~~~~~~~~~~~~
-   include/linux/kernel.h:48:44: note: in definition of macro 'PTR_IF'
-      48 | #define PTR_IF(cond, ptr)       ((cond) ? (ptr) : NULL)
-         |                                            ^~~
-   sound/soc/codecs/rt9123.c:476:23: note: in expansion of macro 'pm_ptr'
-     476 |                 .pm = pm_ptr(&rt9123_dev_pm_ops),
-         |                       ^~~~~~
-
-
-vim +/FIELD_GET +233 sound/soc/codecs/rt9123.c
-
-   223	
-   224	static int rt9123_dai_hw_params(struct snd_pcm_substream *substream,
-   225					struct snd_pcm_hw_params *param, struct snd_soc_dai *dai)
-   226	{
-   227		struct rt9123_priv *rt9123 = snd_soc_dai_get_drvdata(dai);
-   228		struct snd_soc_component *comp = dai->component;
-   229		unsigned int fmtval, width, slot_width;
-   230		struct device *dev = dai->dev;
-   231		unsigned int audfmt, audbit;
-   232	
- > 233		fmtval = FIELD_GET(SND_SOC_DAIFMT_FORMAT_MASK, rt9123->dai_fmt);
-   234		if (rt9123->tdm_slots && fmtval != SND_SOC_DAIFMT_DSP_A && fmtval != SND_SOC_DAIFMT_DSP_B) {
-   235			dev_err(dev, "TDM only can support DSP_A or DSP_B format\n");
-   236			return -EINVAL;
-   237		}
-   238	
-   239		switch (fmtval) {
-   240		case SND_SOC_DAIFMT_I2S:
-   241			audfmt = 0;
-   242			break;
-   243		case SND_SOC_DAIFMT_LEFT_J:
-   244			audfmt = 1;
-   245			break;
-   246		case SND_SOC_DAIFMT_RIGHT_J:
-   247			audfmt = 2;
-   248			break;
-   249		case SND_SOC_DAIFMT_DSP_B:
-   250			audfmt = rt9123->tdm_slots ? 4 : 3;
-   251			break;
-   252		case SND_SOC_DAIFMT_DSP_A:
-   253			audfmt = rt9123->tdm_slots ? 12 : 11;
-   254			break;
-   255		default:
-   256			dev_err(dev, "Unsupported format %d\n", fmtval);
-   257			return -EINVAL;
-   258		}
-   259	
-   260		switch (width = params_width(param)) {
-   261		case 16:
-   262			audbit = 0;
-   263			break;
-   264		case 20:
-   265			audbit = 1;
-   266			break;
-   267		case 24:
-   268			audbit = 2;
-   269			break;
-   270		case 32:
-   271			audbit = 3;
-   272			break;
-   273		case 8:
-   274			audbit = 4;
-   275			break;
-   276		default:
-   277			dev_err(dev, "Unsupported width %d\n", width);
-   278			return -EINVAL;
-   279		}
-   280	
-   281		slot_width = params_physical_width(param);
-   282		if (rt9123->tdm_slots && slot_width > rt9123->tdm_slot_width) {
-   283			dev_err(dev, "Slot width is larger than TDM slot width\n");
-   284			return -EINVAL;
-   285		}
-   286	
-   287		snd_soc_component_write_field(comp, RT9123_REG_I2SOPT, RT9123_MASK_AUDFMT, audfmt);
-   288		snd_soc_component_write_field(comp, RT9123_REG_I2SOPT, RT9123_MASK_AUDBIT, audbit);
-   289	
-   290		return 0;
-   291	}
-   292	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Adekunle
