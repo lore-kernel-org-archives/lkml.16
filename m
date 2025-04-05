@@ -1,362 +1,325 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 133591A5B8E;
-	Sat,  5 Apr 2025 21:40:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCE9A1519A3
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 21:51:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743889237; cv=none; b=Zd570AhvHc5pXDY0fKOl9AwxWQuL0vagFXoXJu6CGauvGDOE2auKn/53RRvbOtvWUMUj0IcQzESD7ClhTGkq598ZoqMlZzzDdC7EOmcdoSQ+cfKNk1E9yefa9NpiqzC7ql2YIKR9UOr/4/fAiJKcRNzIlD4qjKG8MeALMkwRQNA=
+	t=1743889879; cv=none; b=lBtn6TRCqlISs4R2rdTUEXxD1ef9w2FMe7stI+U6h71HuI+btQ4tX0STgDC1wEwK24UwwmAbJbm6HW8S01W//lLNDV3itPpXxTR7dLJzeN5T5tifYevXcMd5l5NGsPSJhZI2MyAsliE6GKTtEltcbPanl8ywyNADFIdoGXeXyTg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743889237; c=relaxed/simple;
-	bh=kprPlZZJiNMgWvA/NE/VYNCv1+PSLSeS4FCZkoRgwmM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=ez3xpk3ohAREZOmzTw0+B4aJKz7hKaoc8Mlks35MAT6udNj4CpT0HfzclB7TuMplglNBBYUwr1dX4PIrQS45Vbhsa4oj3murwF1/I+1xcwb+2cSPxWUKoLxVGzfxzNNqkgdk6If4SJMar266++MY53EY0WO+Uhz1hlPUrBHPcMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=TW4SZQc1; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NhzGtdeU; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1743889879; c=relaxed/simple;
+	bh=P5DWl2I30SyfhYHAxACQ2xYl9w3uaYoXBVfAENUMvZU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=W2CFTME40+rFUdT64NjA7ULzi6JaP3PyR0iavizgvkK66T4+F6uHLRaJ1HEeOVBTz0gEw+SdsMxEXfcjS2MNXfaR4wwzl6/AoJf8dqJYU+YZWUlW/Y8HyLoJ8ZGE9hJG4/N6qSn4eXMI90dd5kzigNCeKlFgJ9U8pWqYJhoO3e8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E8EW2Xze; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TW4SZQc1";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NhzGtdeU"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1743889232;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7QU3+HHdh2agb5fZtEaD6Yh66AlIt9/giV7XCKXqObU=;
-	b=TW4SZQc1h7FhzNZKqP3L615qfmY87W77rJQax+PdGAWM+ZDnPUKAk79mY5DL0pPSwvafsF
-	6DLlp5ISKeMW8nx/WJMhkt08aqUg26gB/Xn3q4LcTHvyYrFfynpfLPw+R7C9aWkTam411e
-	OivRn7EEyjKZBrUtLhZu/nIfgk7hyocSsxUNOyAfYp111LizlHJc/rM19unewU2pHy1PxC
-	uyOSGcEjdJMtY3AE97Yq2nQbuu7vLS7CuxBvlhyNsUZgqpNyAohq/2hcMjX3hhQ/jZXZzP
-	L0WvouoxSEFSVfxqg0bpsNzM02EEAtY5pM23BGTJsH7FLmKrLhNfLY/g8TpHAw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1743889232;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7QU3+HHdh2agb5fZtEaD6Yh66AlIt9/giV7XCKXqObU=;
-	b=NhzGtdeUKUwyNwtzCDMzACgnzXrAi3aiefvxJ0DnLW2TRRleXdep1af9Sr+/gjsb35swSm
-	aGMhEIHAy45QyECg==
-To: Miroslav Lichvar <mlichvar@redhat.com>
-Cc: John Stultz <jstultz@google.com>, LKML <linux-kernel@vger.kernel.org>,
- Stephen Boyd <sboyd@kernel.org>, Anna-Maria Behnsen
- <anna-maria@linutronix.de>, Frederic Weisbecker <frederic@kernel.org>,
- Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
- kernel-team@android.com, Lei Chen <lei.chen@smartx.com>
-Subject: [PATCH] timekeeping: Prevent coarse clocks going backwards
-In-Reply-To: <877c41wkis.ffs@tglx>
-References: <20250320200306.1712599-1-jstultz@google.com>
- <Z-KURRE_Gr72Xv_n@localhost> <874izezv3c.ffs@tglx>
- <Z-Vx8kV4M3khPknC@localhost> <Z-qsg6iDGlcIJulJ@localhost>
- <87o6xgwftc.ffs@tglx> <Z-vL3cVZuQ8XQXhG@localhost> <87iknnwxa4.ffs@tglx>
- <Z-5HlSUEh1xgCi4f@localhost> <877c41wkis.ffs@tglx>
-Date: Sat, 05 Apr 2025 23:40:31 +0200
-Message-ID: <87h632wals.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E8EW2Xze"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5efe8d9eb12so4735516a12.1
+        for <linux-kernel@vger.kernel.org>; Sat, 05 Apr 2025 14:51:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743889876; x=1744494676; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ud/ewkyrMmecxCAoYghhiOwHotHzqr4g+GeslqjCe6c=;
+        b=E8EW2XzeoIkI6AFp5jcenN5fbTdAaQ9TeKD1rxBt3XHNTN+HBVAT9cNSJKbgYzIEyC
+         jMhqcgoApNgOt5VRIXCS9npW2ddLFeQGTBD1aaFxgjkSbUGCU+5IeA+fQ6nuLNxWLoaL
+         4m/k6yNzBwp16JemNl+xhx6T45GxF6933BW4oyMQZ4PyibNhLJgu4tmCke18bF0QjzJB
+         jpc3Lw3RG9VAkOwyNJL2cI6BAa/HGqQWLqa9WB97FNxQCcEC6Kdx6eKtW8SwGuBCCwNf
+         NHnZczzkS6xcxc7ibIHesopB3cajbf+AoZiw59bnYjLSxQPMq8STEMgY9euwe+Ynet49
+         wUfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743889876; x=1744494676;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ud/ewkyrMmecxCAoYghhiOwHotHzqr4g+GeslqjCe6c=;
+        b=MltF5sST4tUl53/pqr1elXI7wYrjGNjbyCTodVORL+wQywTXezp5Fwlno8iULeeFlO
+         15J/vhfdBkED+1pnz2YUay7a+KEzYvfpB/9dA/FGs90M+OKGX+oArfaAyLACFhThAeuT
+         cNzzGoVPjY69EpQPVwciKn+1+w8JPSbL23TNIBzOQQKSYwadzwnNO72y1VeVNvzHPzKb
+         6BJeJIcjNTsWNLxhPWdsoNr1wqc/SRu1DiroH0PLBHKWdcY+DrNAgSjkNe63IrJLp8mp
+         6mYB3U3+CtTn6glZjVt1H6Myn1ag6qn92r7AxhUZIvtvYa2Llb88cVBQw8syVD5155RK
+         T81A==
+X-Forwarded-Encrypted: i=1; AJvYcCUz7pOAokYhC8ReM5zfmYWv4fo6MJJE4ybvP/sCDIZBab7TRZvTzrwbHnrZaC2TLIqtcFVFDPyck50Sl/Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YztUWMAF/iL+qdZte8dymA3Q0f4dDV/c2VgrZlrHGWlwpl0RR1S
+	0GDbNGmEpvNftOpmWHTummTnt6/opG0cXfGszUPgPoGhwNN1WI5Oday3e/1SoQJ43R6whe3X0Mf
+	/txTnVodXSNSp/JCaxVLMXHFmr14ppw==
+X-Gm-Gg: ASbGncufD55TU0Oufj9zJ6xF8AIXOmTRytufN7kEntFOIc8e1HNReVFhw7wNRr4uzxW
+	pq8DCIpQ4sMPjzPvVpYmgOkdLtrAGjP+6E10gFaGG9hkf/voWAqxrwloFOTCDcVzq0IEJICIiBt
+	WGPdGZ5GZDYv3XGJIe8k7k+w5K
+X-Google-Smtp-Source: AGHT+IFAxhkDCFaJYi76qMBfOVKfjwDqSmg52QSiii9D3+n5VtMsTZujiMhS77XfBrD2y9NbKG6S5rcj6BGl5aWIm2Y=
+X-Received: by 2002:a17:907:9728:b0:ac6:b853:d07f with SMTP id
+ a640c23a62f3a-ac7d185e3c9mr623776766b.2.1743889875776; Sat, 05 Apr 2025
+ 14:51:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <CAPM=9twD=Epq278=nVGxMU4veeEpznYLnr_PVQ9WqvdnxZac_w@mail.gmail.com>
+In-Reply-To: <CAPM=9twD=Epq278=nVGxMU4veeEpznYLnr_PVQ9WqvdnxZac_w@mail.gmail.com>
+From: Dave Airlie <airlied@gmail.com>
+Date: Sun, 6 Apr 2025 07:51:03 +1000
+X-Gm-Features: ATxdqUF9yBPE7wBNvjm6ewMZPMXF5vH9OnQtUrcGioOiPWZxiCWpEwcZdeL2T_Y
+Message-ID: <CAPM=9tw5SBS_P1oX+ySAhNx-M_NeO4RzK249i6vtwSU0V4mbDA@mail.gmail.com>
+Subject: Fwd: [git pull] drm fixes for 6.15-rc1
+To: Linus Torvalds <torvalds@linux-foundation.org>, Simona Vetter <simona@ffwll.ch>
+Cc: dri-devel <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Lei Chen raised an issue with CLOCK_MONOTONIC_COARSE seeing time
-inconsistencies. Lei tracked down that this was being caused by the
-adjustment
+(resend including Linus this time, autocomplete picked the mailing list)
 
-    tk->tkr_mono.xtime_nsec -= offset;
+Hi Linus,
 
-which is made to compensate for the unaccumulated cycles in offset when the
-multiplicator is adjusted forward, so that the non-_COARSE clockids don't
-see inconsistencies.
+Weekly fixes, mostly from the end of last week, this week was very
+quiet, maybe you scared everyone away. I probably should have
+highlighted Jani's work more closely, but it never occured that anyone
+would willingingly build a kernel without O=3D../toilet-builddir. This
+doesn't contain any fixes for that stuff, Jani is working on it, and
+hopefully you can help that make forward progress.
 
-However, the _COARSE clockid getter functions use the adjusted xtime_nsec
-value directly and do not compensate the negative offset via the
-clocksource delta multiplied with the new multiplicator. In that case the
-caller can observe time going backwards in consecutive calls.
+As for this, it's mostly amdgpu, and xe, with some i915, adp and
+bridge bits, since I think this is overly quiet I'd expect rc2 to be a
+bit more lively.
 
-By design, this negative adjustment should be fine, because the logic run
-from timekeeping_adjust() is done after it accumulated approximately
+Regards,
+Dave.
 
-     multiplicator * interval_cycles
+drm-next-2025-04-05:
+drm fixes for 6.15-rc1
 
-into xtime_nsec.  The accumulated value is always larger then the
+bridge:
+- tda998x: Select CONFIG_DRM_KMS_HELPER
 
-     mult_adj * offset
+amdgpu:
+- Guard against potential division by 0 in fan code
+- Zero RPM support for SMU 14.0.2
+- Properly handle SI and CIK support being disabled
+- PSR fixes
+- DML2 fixes
+- DP Link training fix
+- Vblank fixes
+- RAS fixes
+- Partitioning fix
+- SDMA fix
+- SMU 13.0.x fixes
+- Rom fetching fix
+- MES fixes
+- Queue reset fix
 
-value, which is subtracted from xtime_nsec. Both operations are done
-together under the tk_core.lock, so the net change to xtime_nsec is always
-always be positive.
+xe:
+- Fix NULL pointer dereference on error path
+- Add missing HW workaround for BMG
+- Fix survivability mode not triggering
+- Fix build warning when DRM_FBDEV_EMULATION is not set
 
-However, do_adjtimex() calls into timekeeping_advance() as well, to
-apply the NTP frequency adjustment immediately. In this case,
-timekeeping_advance() does not return early when the offset is smaller
-then interval_cycles. In that case there is no time accumulated into
-xtime_nsec. But the subsequent call into timekeeping_adjust(), which
-modifies the multiplicator, subtracts from xtime_nsec to correct for the
-new multiplicator.
+i915:
+- Bounds check for scalers in DSC prefill latency computation
+- Fix build by adding a missing include
 
-Here because there was no accumulation, xtime_nsec becomes smaller than
-before, which opens a window up to the next accumulation, where the
-_COARSE clockid getters, which don't compensate for the offset, can
-observe the inconsistency.
+adp:
+- Fix error handling in plane setup
+The following changes since commit cf05922d63e2ae6a9b1b52ff5236a44c3b29f78c=
+:
 
-This has been tried to be fixed by forwarding the timekeeper in the case
-that adjtimex() adjusts the multiplier, which resets the offset to zero:
+  Merge tag 'drm-intel-gt-next-2025-03-12' of
+https://gitlab.freedesktop.org/drm/i915/kernel into drm-next
+(2025-03-25 08:21:07 +1000)
 
-  757b000f7b93 ("timekeeping: Fix possible inconsistencies in _COARSE clockids")
+are available in the Git repository at:
 
-That works correctly, but unfortunately causes a regression on the
-adjtimex() side. There are two issues:
-    
-   1) The forwarding of the base time moves the update out of the original
-      period and establishes a new one.
-    
-   2) The clearing of the accumulated NTP error is changing the behaviour as
-      well.
-    
-Userspace expects that multiplier/frequency updates are in effect, when the
-syscall returns, so delaying the update to the next tick is not solving the
-problem either.
-    
-Commit 757b000f7b93 was reverted so that the established expectations of
-user space implementations (ntpd, chronyd) are restored, but that obviously
-brought the inconsistencies back.
+  https://gitlab.freedesktop.org/drm/kernel.git tags/drm-next-2025-04-05
 
-One of the initial approaches to fix this was to establish a seperate
-storage for the coarse time getter nanoseconds part by calculating it from
-the offset. That was dropped on the floor because not having yet another
-state to maintain was simpler. But given the result of the above exercise,
-this solution turns out to be the right one. Bring it back in a slightly
-modified form.
+for you to fetch changes up to e2cb28ea3e01cb25095d1a341459901363dc39e9:
 
-The coarse time keeper uses xtime_nsec for calculating the nanoseconds part
-of the coarse time stamp. After timekeeping_advance() adjusted the
-multiplier in timekeeping_adjust(), the current time's nanosecond part is:
+  Merge tag 'drm-misc-next-fixes-2025-04-04' of
+https://gitlab.freedesktop.org/drm/misc/kernel into drm-next
+(2025-04-05 06:28:03 +1000)
 
-  nsec = (xtime_nsec + offset * mult) >> shift;
+----------------------------------------------------------------
+drm fixes for 6.15-rc1
 
-Introduce timekeeper::coarse_nsec and store that nanoseconds part in it,
-switch the time getter functions and the VDSO update to use that value.
-coarse_nsec is cleared on all operations which forward or initialize the
-timekeeper because those operations do not have a remaining offset.
+bridge:
+- tda998x: Select CONFIG_DRM_KMS_HELPER
 
-This leaves the adjtimex() behaviour unmodified and prevents coarse time
-from going backwards.
+amdgpu:
+- Guard against potential division by 0 in fan code
+- Zero RPM support for SMU 14.0.2
+- Properly handle SI and CIK support being disabled
+- PSR fixes
+- DML2 fixes
+- DP Link training fix
+- Vblank fixes
+- RAS fixes
+- Partitioning fix
+- SDMA fix
+- SMU 13.0.x fixes
+- Rom fetching fix
+- MES fixes
+- Queue reset fix
 
-Fixes: da15cfdae033 ("time: Introduce CLOCK_REALTIME_COARSE")
-Reported-by: Lei Chen <lei.chen@smartx.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Closes: https://lore.kernel.org/lkml/20250310030004.3705801-1-lei.chen@smartx.com/
----
- include/linux/timekeeper_internal.h |    8 +++-
- kernel/time/timekeeping.c           |   60 ++++++++++++++++++++++++++++++++----
- kernel/time/vsyscall.c              |    4 +-
- 3 files changed, 61 insertions(+), 11 deletions(-)
+xe:
+- Fix NULL pointer dereference on error path
+- Add missing HW workaround for BMG
+- Fix survivability mode not triggering
+- Fix build warning when DRM_FBDEV_EMULATION is not set
 
---- a/include/linux/timekeeper_internal.h
-+++ b/include/linux/timekeeper_internal.h
-@@ -51,7 +51,7 @@ struct tk_read_base {
-  * @offs_real:			Offset clock monotonic -> clock realtime
-  * @offs_boot:			Offset clock monotonic -> clock boottime
-  * @offs_tai:			Offset clock monotonic -> clock tai
-- * @tai_offset:			The current UTC to TAI offset in seconds
-+ * @coarse_nsec:		The nanoseconds part for coarse time getters
-  * @tkr_raw:			The readout base structure for CLOCK_MONOTONIC_RAW
-  * @raw_sec:			CLOCK_MONOTONIC_RAW  time in seconds
-  * @clock_was_set_seq:		The sequence number of clock was set events
-@@ -76,6 +76,7 @@ struct tk_read_base {
-  *				ntp shifted nano seconds.
-  * @ntp_err_mult:		Multiplication factor for scaled math conversion
-  * @skip_second_overflow:	Flag used to avoid updating NTP twice with same second
-+ * @tai_offset:			The current UTC to TAI offset in seconds
-  *
-  * Note: For timespec(64) based interfaces wall_to_monotonic is what
-  * we need to add to xtime (or xtime corrected for sub jiffy times)
-@@ -100,7 +101,7 @@ struct tk_read_base {
-  * which results in the following cacheline layout:
-  *
-  * 0:	seqcount, tkr_mono
-- * 1:	xtime_sec ... tai_offset
-+ * 1:	xtime_sec ... coarse_nsec
-  * 2:	tkr_raw, raw_sec
-  * 3,4: Internal variables
-  *
-@@ -121,7 +122,7 @@ struct timekeeper {
- 	ktime_t			offs_real;
- 	ktime_t			offs_boot;
- 	ktime_t			offs_tai;
--	s32			tai_offset;
-+	u32			coarse_nsec;
- 
- 	/* Cacheline 2: */
- 	struct tk_read_base	tkr_raw;
-@@ -144,6 +145,7 @@ struct timekeeper {
- 	u32			ntp_error_shift;
- 	u32			ntp_err_mult;
- 	u32			skip_second_overflow;
-+	s32			tai_offset;
- };
- 
- #ifdef CONFIG_GENERIC_TIME_VSYSCALL
---- a/kernel/time/timekeeping.c
-+++ b/kernel/time/timekeeping.c
-@@ -164,6 +164,15 @@ static inline struct timespec64 tk_xtime
- 	return ts;
- }
- 
-+static inline struct timespec64 tk_xtime_coarse(const struct timekeeper *tk)
-+{
-+	struct timespec64 ts;
-+
-+	ts.tv_sec = tk->xtime_sec;
-+	ts.tv_nsec = tk->coarse_nsec;
-+	return ts;
-+}
-+
- static void tk_set_xtime(struct timekeeper *tk, const struct timespec64 *ts)
- {
- 	tk->xtime_sec = ts->tv_sec;
-@@ -252,6 +261,7 @@ static void tk_setup_internals(struct ti
- 	tk->tkr_raw.clock = clock;
- 	tk->tkr_raw.mask = clock->mask;
- 	tk->tkr_raw.cycle_last = tk->tkr_mono.cycle_last;
-+	tk->coarse_nsec = 0;
- 
- 	/* Do the ns -> cycle conversion first, using original mult */
- 	tmp = NTP_INTERVAL_LENGTH;
-@@ -708,6 +718,12 @@ static void timekeeping_forward_now(stru
- 		tk_normalize_xtime(tk);
- 		delta -= incr;
- 	}
-+
-+	/*
-+	 * Clear the offset for the coarse time as the above forward
-+	 * brought the offset down to zero.
-+	 */
-+	tk->coarse_nsec = 0;
- }
- 
- /**
-@@ -804,8 +820,8 @@ EXPORT_SYMBOL_GPL(ktime_get_with_offset)
- ktime_t ktime_get_coarse_with_offset(enum tk_offsets offs)
- {
- 	struct timekeeper *tk = &tk_core.timekeeper;
--	unsigned int seq;
- 	ktime_t base, *offset = offsets[offs];
-+	unsigned int seq;
- 	u64 nsecs;
- 
- 	WARN_ON(timekeeping_suspended);
-@@ -813,7 +829,7 @@ ktime_t ktime_get_coarse_with_offset(enu
- 	do {
- 		seq = read_seqcount_begin(&tk_core.seq);
- 		base = ktime_add(tk->tkr_mono.base, *offset);
--		nsecs = tk->tkr_mono.xtime_nsec >> tk->tkr_mono.shift;
-+		nsecs = tk->coarse_nsec;
- 
- 	} while (read_seqcount_retry(&tk_core.seq, seq));
- 
-@@ -1831,6 +1847,8 @@ void timekeeping_resume(void)
- 	/* Re-base the last cycle value */
- 	tks->tkr_mono.cycle_last = cycle_now;
- 	tks->tkr_raw.cycle_last  = cycle_now;
-+	/* Reset the offset for the coarse time getters */
-+	tks->coarse_nsec = 0;
- 
- 	tks->ntp_error = 0;
- 	timekeeping_suspended = 0;
-@@ -2152,6 +2170,33 @@ static u64 logarithmic_accumulation(stru
- }
- 
- /*
-+ * Update the nanoseconds part for the coarse time keepers. They can't rely
-+ * on xtime_nsec because xtime_nsec is adjusted when the multiplication
-+ * factor of the clock is adjusted. See timekeeping_apply_adjustment().
-+ *
-+ * This is required because tk_read::cycle_last must be advanced by
-+ * timekeeper::cycle_interval so that the accumulation happens with a
-+ * periodic reference.
-+ *
-+ * But that adjustment of xtime_nsec can make it go backward to compensate
-+ * for a larger multiplicator.
-+ *
-+ * timekeeper::offset contains the leftover cycles which were not accumulated.
-+ * Therefore the nanoseconds portion of the time when the clocksource was
-+ * read in timekeeping_advance() is:
-+ *
-+ *	nsec = (xtime_nsec + offset * mult) >> shift;
-+ *
-+ * Calculate that value and store it in timekeeper::coarse_nsec, from where
-+ * the coarse time getters consume it.
-+ */
-+static inline void tk_update_coarse_nsecs(struct timekeeper *tk, u64 offset)
-+{
-+	offset *= tk->tkr_mono.mult;
-+	tk->coarse_nsec = (tk->tkr_mono.xtime_nsec + offset) >> tk->tkr_mono.shift;
-+}
-+
-+/*
-  * timekeeping_advance - Updates the timekeeper to the current time and
-  * current NTP tick length
-  */
-@@ -2205,6 +2250,9 @@ static bool timekeeping_advance(enum tim
- 	 */
- 	clock_set |= accumulate_nsecs_to_secs(tk);
- 
-+	/* Compensate the coarse time getters xtime_nsec offset */
-+	tk_update_coarse_nsecs(tk, offset);
-+
- 	timekeeping_update_from_shadow(&tk_core, clock_set);
- 
- 	return !!clock_set;
-@@ -2248,7 +2296,7 @@ void ktime_get_coarse_real_ts64(struct t
- 	do {
- 		seq = read_seqcount_begin(&tk_core.seq);
- 
--		*ts = tk_xtime(tk);
-+		*ts = tk_xtime_coarse(tk);
- 	} while (read_seqcount_retry(&tk_core.seq, seq));
- }
- EXPORT_SYMBOL(ktime_get_coarse_real_ts64);
-@@ -2271,7 +2319,7 @@ void ktime_get_coarse_real_ts64_mg(struc
- 
- 	do {
- 		seq = read_seqcount_begin(&tk_core.seq);
--		*ts = tk_xtime(tk);
-+		*ts = tk_xtime_coarse(tk);
- 		offset = tk_core.timekeeper.offs_real;
- 	} while (read_seqcount_retry(&tk_core.seq, seq));
- 
-@@ -2350,12 +2398,12 @@ void ktime_get_coarse_ts64(struct timesp
- 	do {
- 		seq = read_seqcount_begin(&tk_core.seq);
- 
--		now = tk_xtime(tk);
-+		now = tk_xtime_coarse(tk);
- 		mono = tk->wall_to_monotonic;
- 	} while (read_seqcount_retry(&tk_core.seq, seq));
- 
- 	set_normalized_timespec64(ts, now.tv_sec + mono.tv_sec,
--				now.tv_nsec + mono.tv_nsec);
-+				  now.tv_nsec + mono.tv_nsec);
- }
- EXPORT_SYMBOL(ktime_get_coarse_ts64);
- 
---- a/kernel/time/vsyscall.c
-+++ b/kernel/time/vsyscall.c
-@@ -98,12 +98,12 @@ void update_vsyscall(struct timekeeper *
- 	/* CLOCK_REALTIME_COARSE */
- 	vdso_ts		= &vc[CS_HRES_COARSE].basetime[CLOCK_REALTIME_COARSE];
- 	vdso_ts->sec	= tk->xtime_sec;
--	vdso_ts->nsec	= tk->tkr_mono.xtime_nsec >> tk->tkr_mono.shift;
-+	vdso_ts->nsec	= tk->coarse_nsec;
- 
- 	/* CLOCK_MONOTONIC_COARSE */
- 	vdso_ts		= &vc[CS_HRES_COARSE].basetime[CLOCK_MONOTONIC_COARSE];
- 	vdso_ts->sec	= tk->xtime_sec + tk->wall_to_monotonic.tv_sec;
--	nsec		= tk->tkr_mono.xtime_nsec >> tk->tkr_mono.shift;
-+	nsec		= tk->coarse_nsec;
- 	nsec		= nsec + tk->wall_to_monotonic.tv_nsec;
- 	vdso_ts->sec	+= __iter_div_u64_rem(nsec, NSEC_PER_SEC, &vdso_ts->nsec);
- 
+i915:
+- Bounds check for scalers in DSC prefill latency computation
+- Fix build by adding a missing include
+
+adp:
+- Fix error handling in plane setup
+
+----------------------------------------------------------------
+Alex Deucher (2):
+      drm/amdgpu/gfx11: fix num_mec
+      drm/amdgpu/gfx12: fix num_mec
+
+Ankit Nautiyal (1):
+      drm/i915/watermark: Check bounds for scaler_users for dsc prefill lat=
+ency
+
+Arnd Bergmann (1):
+      drm/i2c: tda998x: select CONFIG_DRM_KMS_HELPER
+
+Asad Kamal (3):
+      drm/amd/pm: Remove host limit metrics support
+      drm/amd/pm: Update smu metrics table for smu_v13_0_6
+      drm/amd/pm: Add gpu_metrics_v1_8
+
+Brendan Tam (1):
+      drm/amd/display: prevent hang on link training fail
+
+Candice Li (1):
+      Remove unnecessary firmware version check for gc v9_4_2
+
+Charlene Liu (1):
+      Revert "drm/amd/display: dml2 soc dscclk use DPM table clk setting"
+
+Christian K=C3=B6nig (1):
+      drm/amdgpu: stop unmapping MQD for kernel queues v3
+
+Dan Carpenter (1):
+      drm: adp: Fix NULL vs IS_ERR() check in adp_plane_new()
+
+Dave Airlie (5):
+      Merge tag 'drm-misc-next-fixes-2025-03-27' of
+https://gitlab.freedesktop.org/drm/misc/kernel into drm-next
+      Merge tag 'drm-intel-next-fixes-2025-03-25' of
+https://gitlab.freedesktop.org/drm/i915/kernel into drm-next
+      Merge tag 'drm-xe-next-fixes-2025-03-27' of
+https://gitlab.freedesktop.org/drm/xe/kernel into drm-next
+      Merge tag 'amd-drm-next-6.15-2025-03-27' of
+https://gitlab.freedesktop.org/agd5f/linux into drm-next
+      Merge tag 'drm-misc-next-fixes-2025-04-04' of
+https://gitlab.freedesktop.org/drm/misc/kernel into drm-next
+
+Denis Arefev (5):
+      drm/amd/pm: Prevent division by zero
+      drm/amd/pm: Prevent division by zero
+      drm/amd/pm: Prevent division by zero
+      drm/amd/pm: Prevent division by zero
+      drm/amd/pm: Prevent division by zero
+
+Harish Chegondi (1):
+      drm/xe/eustall: Fix a possible pointer dereference after free
+
+Jesse.zhang@amd.com (1):
+      Revert "drm/amdgpu/sdma_v4_4_2: update VM flush implementation for SD=
+MA"
+
+Leo Li (2):
+      drm/amd/display: Increase vblank offdelay for PSR panels
+      drm/amd/display: Actually do immediate vblank disable
+
+Lijo Lazar (2):
+      drm/amdgpu: Add NPS2 to DPX compatible mode
+      drm/amdgpu: Prefer shadow rom when available
+
+Lucas De Marchi (2):
+      drm/xe: Move survivability back to xe
+      drm/xe: Set survivability mode before heci init
+
+Mario Limonciello (1):
+      drm/amd: Handle being compiled without SI or CIK support better
+
+Michal Wajdeczko (1):
+      drm/xe/vf: Don't check CTC_MODE[0] if VF
+
+Stanley.Yang (1):
+      drm/amdgpu: Update ta ras block
+
+Tomasz Paku=C5=82a (1):
+      drm/amd/pm: Add zero RPM enabled OD setting support for SMU14.0.2
+
+Vinay Belgaumkar (1):
+      drm/xe: Apply Wa_16023105232
+
+Xiang Liu (2):
+      drm/amdgpu: Use correct gfx deferred error count
+      drm/amdgpu: Parse all deferred errors with UMC aca handle
+
+Yue Haibing (2):
+      drm/i915/display: Fix build error without DRM_FBDEV_EMULATION
+      drm/xe: Fix unmet direct dependencies warning
+
+ drivers/gpu/drm/adp/adp_drv.c                      |   4 +-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_aca.c            |   4 +
+ drivers/gpu/drm/amd/amdgpu/amdgpu_aca.h            |   8 --
+ drivers/gpu/drm/amd/amdgpu/amdgpu_bios.c           |  34 ++++--
+ drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c            |  44 ++++----
+ drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c            |   1 +
+ drivers/gpu/drm/amd/amdgpu/amdgpu_ras.h            |   7 ++
+ drivers/gpu/drm/amd/amdgpu/amdgpu_ring.c           |  58 ++---------
+ drivers/gpu/drm/amd/amdgpu/amdgpu_xgmi.c           |   2 +-
+ drivers/gpu/drm/amd/amdgpu/aqua_vanjaram.c         |   3 +-
+ drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c             |  88 ++--------------
+ drivers/gpu/drm/amd/amdgpu/gfx_v11_0.c             |  90 ++--------------
+ drivers/gpu/drm/amd/amdgpu/gfx_v12_0.c             | 104 +++--------------=
+--
+ drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c              |  45 +-------
+ drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c              |  58 ++---------
+ drivers/gpu/drm/amd/amdgpu/gfx_v9_4_3.c            |  66 +++---------
+ drivers/gpu/drm/amd/amdgpu/jpeg_v4_0_3.c           |   2 +-
+ drivers/gpu/drm/amd/amdgpu/mmhub_v1_8.c            |   2 +-
+ drivers/gpu/drm/amd/amdgpu/sdma_v4_4_2.c           |  79 +++-----------
+ drivers/gpu/drm/amd/amdgpu/ta_ras_if.h             |   3 +
+ drivers/gpu/drm/amd/amdgpu/umc_v12_0.c             |   3 +-
+ drivers/gpu/drm/amd/amdgpu/vcn_v4_0_3.c            |   2 +-
+ drivers/gpu/drm/amd/amdgpu/vega10_sdma_pkt_open.h  |  70 -------------
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c  |  41 ++++++--
+ .../amd/display/dc/dml2/dml2_translation_helper.c  |   2 +-
+ .../drm/amd/display/dc/hwss/dcn20/dcn20_hwseq.c    |   6 +-
+ .../drm/amd/display/dc/hwss/dcn401/dcn401_hwseq.c  |   7 +-
+ drivers/gpu/drm/amd/include/kgd_pp_interface.h     | 114 +++++++++++++++++=
+++++
+ .../gpu/drm/amd/pm/powerplay/hwmgr/smu7_thermal.c  |   4 +-
+ .../drm/amd/pm/powerplay/hwmgr/vega10_thermal.c    |   4 +-
+ .../drm/amd/pm/powerplay/hwmgr/vega20_thermal.c    |   2 +-
+ .../amd/pm/swsmu/inc/pmfw_if/smu_v13_0_6_pmfw.h    |   7 +-
+ drivers/gpu/drm/amd/pm/swsmu/smu11/arcturus_ppt.c  |   3 +
+ drivers/gpu/drm/amd/pm/swsmu/smu13/smu_v13_0.c     |   2 +-
+ .../gpu/drm/amd/pm/swsmu/smu13/smu_v13_0_6_ppt.c   |  15 ---
+ .../gpu/drm/amd/pm/swsmu/smu14/smu_v14_0_2_ppt.c   |  55 +++++++++-
+ drivers/gpu/drm/amd/pm/swsmu/smu_cmn.c             |   3 +
+ drivers/gpu/drm/bridge/Kconfig                     |  13 +--
+ drivers/gpu/drm/i915/display/intel_fbdev.h         |   2 +
+ drivers/gpu/drm/i915/display/skl_watermark.c       |   5 +-
+ drivers/gpu/drm/xe/Kconfig                         |   2 +-
+ drivers/gpu/drm/xe/regs/xe_engine_regs.h           |   4 +
+ drivers/gpu/drm/xe/xe_device.c                     |  17 ++-
+ drivers/gpu/drm/xe/xe_eu_stall.c                   |   8 +-
+ drivers/gpu/drm/xe/xe_gt_clock.c                   |  54 +++++++---
+ drivers/gpu/drm/xe/xe_gt_types.h                   |   2 +
+ drivers/gpu/drm/xe/xe_hw_engine.c                  |  33 ++++++
+ drivers/gpu/drm/xe/xe_pci.c                        |  16 ++-
+ drivers/gpu/drm/xe/xe_survivability_mode.c         |  31 ++++--
+ drivers/gpu/drm/xe/xe_survivability_mode.h         |   1 -
+ drivers/gpu/drm/xe/xe_wa.c                         |   6 ++
+ drivers/gpu/drm/xe/xe_wa_oob.rules                 |   2 +
+ 52 files changed, 537 insertions(+), 701 deletions(-)
