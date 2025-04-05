@@ -1,162 +1,66 @@
-Received: from smtp.smtpout.orange.fr (smtp-20.smtpout.orange.fr [80.12.242.20])
-	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7E6C1547FF;
-	Sat,  5 Apr 2025 17:04:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2D2B14B07A;
+	Sat,  5 Apr 2025 17:09:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743872685; cv=none; b=QrJFI7p4tklVFJ+vdCOfhoTnqgX4/J8igr8my4FnUoM7LwHOSTuoffTflKpFr3rxeGBEXKV/AZ3hZsZIg0R9QwOS84SEh8FUo43fS7GqNcj3IBQ/4BV8vRD28+vUKgXeoP3hyeROzY4pzM0xKRSiRaRt51U9cE7emrDDcCbnYBU=
+	t=1743872961; cv=none; b=Y1XT6Zjo4hqqDBWpyRrlsi72YUw3eT4kjzNGE4eSBOlpkqBpJ1REOM3vWFSCRUS+5m0fBtKBZjILF4G17n+VstCI8NchR2bkYQxaTJdcXcaxMtFfoYiZvsSN/+tzrLPcgwIi1qj6lPo8NgIfYNgeIW2APN6BB3zsbv9aiAt/hTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743872685; c=relaxed/simple;
-	bh=x6vJorC7CCB06TsHXSak2CLHvj10aucshsXOu6l/5LQ=;
-	h=Message-ID:Date:MIME-Version:Subject:References:From:To:Cc:
-	 In-Reply-To:Content-Type; b=YD3Ym2v+Z37C30xWS2TKCl6Ju4JSMT6zTg4cAy2utPCWeHv8LvRBbTF6MMuMyxh1b22lFgX6MXoTsQTsSS8totnOztGdpd/++1FvNK/DF10hurf/dvxjyTLgxVF/+IIUPn6jaG+gdjqGJ6SW7WZq1/YicmuJdOEi9clF94Zqlpw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=Yrg8cb0h; arc=none smtp.client-ip=80.12.242.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="Yrg8cb0h"
-Received: from [192.168.1.37] ([90.11.132.44])
-	by smtp.orange.fr with ESMTPA
-	id 16weujbtUB4qz16whugCaF; Sat, 05 Apr 2025 19:04:40 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1743872680;
-	bh=0pn3FlBiCPwJnTvXthRIxPP8fbFuHWesKZt8cTu3Qlo=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To;
-	b=Yrg8cb0hgmqiMiJQZjbsltBQpElSa1erz6auxeo5Dhl+urBMDlUY1LK2FruJxsbqI
-	 HdLZsWZRyX/OW6SsIH3LL4oc38tj55pn0Y9ZIdyaTkZfPO4ygKrygBtwIXC+MWv0hF
-	 +B4GbOTiLzGoyAzhPgGUd9H1zm9cZ2AhhYRH80BQv7qsCkHPSKf86NCN+nNodkH9KS
-	 uVySt530mupOsMa4eUMMMYWy40xhuBf3u/q56hcKTqif2OUOqcuPJAnWoNpmfPRMq3
-	 cSL8eaVIzwVr/DKaUv8fajGNpe8WIwWXWyjZK9x6UrcyBHqCPzNjfxIxl4bo0w6VYi
-	 VzteoWvQ/8WtQ==
-X-ME-Helo: [192.168.1.37]
-X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
-X-ME-Date: Sat, 05 Apr 2025 19:04:40 +0200
-X-ME-IP: 90.11.132.44
-Message-ID: <c0c1476c-75a2-4d45-83a2-4751a7487892@wanadoo.fr>
-Date: Sat, 5 Apr 2025 19:04:36 +0200
+	s=arc-20240116; t=1743872961; c=relaxed/simple;
+	bh=tmIf37hkJseqnFO4ijvf4xA+K3JIaSwLPz9+OPSHUO4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=HuaWonn4wOGF1Lodg+c2ZK9OU8iK9TsBHktj8nIIoACvFzt/Sn3nWCPMHULErFdt64+DTHDIq2DVSf9Wzf80NpR7R2K0T93I/RB4hALEZv3FIU4Q3JOP23ysOF37Gqw60XdEC2zj9sEZRVD8n1xFMkvWCajfrJY8gcrRal+ZRds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+Received: from mop.sam.mop (unknown [82.8.138.118])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: sam)
+	by smtp.gentoo.org (Postfix) with ESMTPSA id 5C1583430E5;
+	Sat, 05 Apr 2025 17:09:14 +0000 (UTC)
+From: Sam James <sam@gentoo.org>
+To: linmag7@gmail.com, Al Viro <viro@ftp.linux.org.uk>
+Cc: arnd@arndb.de, chris@zankel.net, dinguyen@kernel.org,
+ glaubitz@physik.fu-berlin.de, ink@unseen.parts, jcmvbkbc@gmail.com,
+ kees@kernel.org, linux-alpha@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+ linux-hexagon@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+ linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org,
+ linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+ linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+ linux-um@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+ loongarch@lists.linux.dev, mattst88@gmail.com, monstr@monstr.eu,
+ richard.henderson@linaro.org, sparclinux@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH v2 1/1] mm: pgtable: fix pte_swp_exclusive
+In-Reply-To: <87cyfejafj.fsf@gentoo.org>
+Organization: Gentoo
+References: <87cyfejafj.fsf@gentoo.org>
+User-Agent: mu4e 1.12.9; emacs 31.0.50
+Date: Sat, 05 Apr 2025 18:09:11 +0100
+Message-ID: <87v7rik020.fsf@gentoo.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] pci: tegra194: Fix debugfs cleanup for !CONFIG_PCIEASPM
-References: <20250405152818.GA107831@bhelgaas>
- <c52ac489-51e9-4803-bf64-2bb6cfbf30bf@163.com>
- <da261a4c-6c27-454f-b21d-af1814b58b91@wanadoo.fr>
- <fa44eac9-8986-46d2-899d-df8811131925@163.com>
- <9dcd70b1-a146-419f-aa5e-bacf52cf81e8@163.com>
-Content-Language: en-US, fr-FR
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: 18255117159@163.com
-Cc: bhelgaas@google.com, jonathanh@nvidia.com, kw@linux.com,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-tegra@vger.kernel.org, lpieralisi@kernel.org,
- manivannan.sadhasivam@linaro.org, robh@kernel.org, thierry.reding@gmail.com
-In-Reply-To: <9dcd70b1-a146-419f-aa5e-bacf52cf81e8@163.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-Le 05/04/2025 à 18:47, Hans Zhang a écrit :
-> 
-> 
-> On 2025/4/6 00:35, Hans Zhang wrote:
->>
->>
->> On 2025/4/6 00:17, Christophe JAILLET wrote:
->>> Le 05/04/2025 à 17:49, Hans Zhang a écrit :
->>>>
->>>>
->>>> On 2025/4/5 23:28, Bjorn Helgaas wrote:
->>>>> Follow subject line capitalization convention.
->>>>>
->>>>> On Sat, Apr 05, 2025 at 10:54:59PM +0800, Hans Zhang wrote:
->>>>>> When CONFIG_PCIEASPM is disabled, debugfs entries are not created, 
->>>>>> but
->>>>>> tegra_pcie_dw_remove() and tegra_pcie_dw_shutdown() 
->>>>>> unconditionally call
->>>>>> debugfs_remove_recursive(), leading to potential NULL pointer 
->>>>>> operations.
->>>>>>
->>>>>> Introduce deinit_debugfs() to wrap debugfs_remove_recursive(), 
->>>>>> which is
->>>>>> stubbed for !CONFIG_PCIEASPM. Use this function during removal/ 
->>>>>> shutdown to
->>>>>> ensure debugfs cleanup only occurs when entries were initialized.
->>>>>>
->>>>>> This prevents kernel warnings and instability when ASPM support is
->>>>>> disabled.
->>>>>
->>>>> This looks like there should be a Fixes: tag to connect this to the
->>>>> commit that introduced the problem.
->>>>
->>>> Hi Bjorn,
->>>>
->>>> Thanks your for reply. Will add.
->>>>
->>>> Fixes: bb617cbd8151 (PCI: tegra194: Clean up the exit path for 
->>>> Endpoint mode)
->>>>
->>>>>
->>>>> If this is something that broke with the v6.15 merge window, we should
->>>>> include this in v6.15 via pci/for-linus.  If this broke earlier, we
->>>>> would have to decide whether pci/for-linus is still appropriate or a
->>>>> stable tag.
->>>>>
->>>>
->>>> The original code that introduced the unconditional 
->>>> `debugfs_remove_recursive()` calls was actually merged in an earlier 
->>>> cycle.
->>>>
->>>>> We did merge some debugfs things for v6.15, but I don't see anything
->>>>> specific to pcie-tegra194.c, so I'm confused about why this fix would
->>>>> be in pcie-tegra194.c instead of some more generic place.
->>>>>
->>>>
->>>> The Tegra194 driver conditionally initializes pcie->debugfs based on 
->>>> CONFIG_PCIEASPM. When ASPM is disabled, pcie->debugfs remains 
->>>> uninitialized, but tegra_pcie_dw_remove() and 
->>>> tegra_pcie_dw_shutdown() unconditionally call 
->>>> debugfs_remove_recursive(), leading to a NULL 
->>>
->>> debugfs IS initialized, because it is in a structure allocated with 
->>> devm_kzalloc().
->>>
->>> And debugfs functions handle such cases.
->>>
->>
->> Oh, my mind went wrong and I didn't pay attention to devm, and I'm 
+Sam James <sam@gentoo.org> writes:
 
-Here, what is relevant in devm_kzalloc() is not devm but the kzalloc 
-part. the "z" is for zeroing the allocated memory.
+> Lovely cleanup and a great suggestion from Al.
+>
+> Reviewed-by: Sam James <sam@gentoo.org>
+>
+> I'd suggest adding a:
+> Suggested-by: Al Viro <viro@zeniv.linux.org.uk>
 
->> really sorry about that.
->>
->> Another problem I noticed here is that currently, no matter what, 
->> pcie->debugfs = debugfs_create_dir(name, NULL) is executed; if #if 
->> defined(CONFIG_PCIEASPM) is valid, then pcie->debugfs = 
->> debugfs_create_dir(name, NULL); Is it superfluous?
-> 
-> Sorry, let me reply again:
-> Another problem I noticed here is that currently, no matter what, pcie- 
->  >debugfs = debugfs_create_dir(name, NULL) is executed; if #if 
-> defined(CONFIG_PCIEASPM) is invalid, then pcie->debugfs = 
-> debugfs_create_dir(name, NULL); Is it superfluous?
+Al, were you planning on taking this through your tree?
 
-AFAICT, it looks useless in this case.
-
-I guess that moving debugfs_create_dir() and the
-name = devm_kasprintf()...
-above it, into init_debugfs() would do the trick.
-
-CJ
-
-> 
-> Best regards,
-> Hans
-> 
-> 
-> 
-
+>
+> thanks,
+> sam
