@@ -1,140 +1,171 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8ED01C8FD6;
-	Sat,  5 Apr 2025 11:34:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743852862; cv=none; b=pBIQRnCpASTb/ljjE6rPFGyUgwgpYYajDCkiFU46OuKxCrOoeyByMx2SLnS3IEO6xfNrsEBxPrWBXZKXqYewkKguyONxB7fkGPrzCNIshMZ5KopYT1Pe8KNiT/kL5f6DBqT6aXGtenSQq7yfZ00wma+b8CCgDyWe/4oBAPnJUIU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743852862; c=relaxed/simple;
-	bh=JHgSmpHywThLvhaNGwqkN6rlBmIZHywWloaU6MKIwBE=;
-	h=Message-ID:Date:From:To:Cc:Subject:MIME-Version:Content-Type:
-	 Content-Disposition; b=QSuBjA5oLzVm1lztxwH87JxmXOxarUVhsQVbvZFCBllVoBwzMnniFrZCSWhkjUfDZ7OVL8iaR9LQhUEJehlD0C+zHJ/S03eEeQtNvG7hzTDE9B1ld8CvSbxH96en+9B9iyf+kVDokznSx0mlwviSPANBBnc50v/TlH2kjgvhRf0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WKXS9lZf; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 771F81A23AD;
+	Sat,  5 Apr 2025 11:40:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743853217; cv=pass; b=nMrIdU6DiLg6VO8BUESuiaHyDNIUYEXHClbuJR41XfzgApqBKdIPr7o2KbT6nWh7nnrdcpzBlebQArCAU4s2NLCqdmvZ/1lnmHaOHyE68SYaWnaSrcKChhFX2rOQ8qAEtxhTgHJFihbP12pvuO5Nm8zz+jmUxHxJfUDmzsIudZI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743853217; c=relaxed/simple;
+	bh=YZadl+yLPrZm8P8cf6VUmKDW6UATrz99dXVhQSX50Ms=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=j/RyrW+Ea+mUGd5gRDVbrySpZCFO7SaN5h/QinhqaqbFt7TyI23K+Joz3x1GQc6DwaSVMAh6va/1MxKxLRSso/Lm9sGRGyAKuHf0f/bml+Uggn82FSAHn2YX/Bvj+HvHFjqdkXpa89rLjIKyrxqz6UDBpoD/auNz+s5hY/GCjwc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.fricke@collabora.com header.b=N5V51+Jb; arc=pass smtp.client-ip=136.143.188.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WKXS9lZf"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43edb40f357so8264335e9.0;
-        Sat, 05 Apr 2025 04:34:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743852859; x=1744457659; darn=vger.kernel.org;
-        h=content-disposition:mime-version:subject:cc:to:from:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=qAIrh/4WE88oUvyzDDtUAXVVh7UEV5wee/SgtjWD0Rc=;
-        b=WKXS9lZfXvwwMV1KvvOPnD1KxcLziu9YoQSIa0jitqCInDG1c8dMEjZbOi2E6PF7fF
-         JaXyvaKMwoQ/u7TU8X21CIoLCa00Wg94R/vNwoTM7WcmJe4sZv69XAeG970Wj2NolzuM
-         ipXRWGPg5DKBCKp82E9vZYl5XVs8VUv6tAXnL+k4/ozaVkIOrB6gm0DYFVE+jABVzctk
-         n+5o0ISjJIsmA+90Ftba7NN+5QjUEowpjth5SqXOC6pjMZl8LdfUUP0CPBzU6yS343O5
-         x4v51/txq7RSiJt8TFXnQgfvN9IbgxBmHsPYxo70c6GugDEioQHkSifsBfhCk0Q212xs
-         XoUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743852859; x=1744457659;
-        h=content-disposition:mime-version:subject:cc:to:from:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qAIrh/4WE88oUvyzDDtUAXVVh7UEV5wee/SgtjWD0Rc=;
-        b=xTbxF9c6qm1Ibple0Agh9cwVo5kfTZjh4HTkbUqOpwgSeJULvl41PMv+4GUeKfI6xS
-         29/v3/BIqFzu8vvA25pXZk5lSWu5oLZBhsGDZxhRcHMqFZyxSlChhH1njqX/BuivqY3P
-         2O8GbtqBP75z+AzK0sZhlDTC3Pzu7QaO8PkP9BAzSRA+q/jDWG7jBKcC7Wdxo06/2d9s
-         15YNd0k/SBgZi4bhwV50AdjAiJ3ThJtSWYjsdwv2uiEUxhRIyGttRy/kuzHNL0kNNocm
-         KKdtQ2CxkLAHM0CPxFQr+1jWd4zpyrPNzjruMWGT6gPt+MPWaXEUZxlPPVXbksvGbDJk
-         1RyA==
-X-Forwarded-Encrypted: i=1; AJvYcCVbCWexPedCnq3iIkChAvkRE2QTPlxAoUnRGRKegPhsktfXRLuBWmC5yMXR2gTsLQOkvdwooRaTsEEkTg==@vger.kernel.org, AJvYcCW5NdZ/4kwZhtuNRpJZNcspAEwFOyFRWO6IO79T8nERP1XqObY/UXw4Zd6nBVs9oySUXpOUX5zJADN8e73W@vger.kernel.org
-X-Gm-Message-State: AOJu0YwXrgFBAcf6eRHLjvxeqiTurVnBxuLaY20afIg48XjxXGM5tRGl
-	PYkBpE9vcV7eDemlFdQsjgrsQTrqdycbD5Fprjs1EwrIyICzBgQhDiiDfa5o3sw=
-X-Gm-Gg: ASbGnct1D7vRllxe2+ODWbYOnYk/6UIO59bs++XxfSH23qMAD8KTYm/0bqKw4100F7p
-	9v5qnITu8g7LwUeThLQuTKECH3TQm6LvZo7tmdFluAebpOapkEfQkjik/uKeCYYoDk6NnnULTin
-	cOoJROZfezcCfhyh1lMY2qcrjKSIYag1xnr9cO4uuqC7AnCR6DujdA1GgMK2xY8XHQa7pojWaKB
-	wpU03yrPAn8IfEB8v+Xk7aSHzg1cvrBUZ8jfDzxz2swEaW/D3QvL4SXGXu7J9s9yLq0Gv/j+wy9
-	6Mu9jnCg3yFtXs9H+kBWsJysgw==
-X-Google-Smtp-Source: AGHT+IFemI35QNKyVOaqohFG+CqnKVeTP+GFL3QtSqb2csXBz3rnonb0On1EkabRo5049E0IfrLQDQ==
-X-Received: by 2002:a05:600c:a4c:b0:43d:1840:a13f with SMTP id 5b1f17b1804b1-43ee076ca6bmr13194675e9.25.1743852858882;
-        Sat, 05 Apr 2025 04:34:18 -0700 (PDT)
-Received: from parrot ([105.112.71.96])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c30096923sm6749640f8f.17.2025.04.05.04.34.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Apr 2025 04:34:18 -0700 (PDT)
-Message-ID: <67f1153a.5d0a0220.4e813.17ad@mx.google.com>
-X-Google-Original-Message-ID: <Z_EVOA9BY2i9bZiY@princerichard17a@gmail.com>
-Date: Sat, 5 Apr 2025 12:34:16 +0100
-From: Richard Akintola <princerichard17a@gmail.com>
-To: sudipm.mukherjee@gmail.com, teddy.wang@siliconmotion.com,
-	gregkh@linuxfoundation.org, linux-fbdev@vger.kernel.org,
-	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org,
-	outreachy@lists.linux.dev
-Cc: julia.lawall@inria.fr, princerichard17a@gmail.com
-Subject: [PATCH 7/8] staging: sm750fb: change sii164CheckInterrupt to
- snake_case
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.fricke@collabora.com header.b="N5V51+Jb"
+ARC-Seal: i=1; a=rsa-sha256; t=1743853187; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=Aa6oaPo1O8q5AnU3Y1pDWWTPdKizSQIPiPsuolBj0+UXeYqsgn0k47Anir04kue1g6//wjVUP2WdE5A5T1jazvVJ+dRrp+PeVACtY7tDohXss+Dy6KSxROCdjHxfq138OoQ6nk540GNEiVO7kf2DWUPZnlSLqiEOS0lVvGQkv5Y=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1743853187; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=u22/p801QpjbmO2uhuEVgNGBkidyKPFcQ/iS9BFuS5s=; 
+	b=C6tx3IbtjTxMSj1ltGQIdc0SqC41cRFACrYH6ttVX+mZ0bAu/JRCUlY7SDnMlzS/F2uPl+b1I+67ID/JPyyVD0iYag6OvfmnT6n/X3T0X8P54b+wFS0VN8XDL0BzEheNhrUPzaEud8+Nxc7sLGGI2w0w8VTNFzFuBkAIaAVs0ck=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=sebastian.fricke@collabora.com;
+	dmarc=pass header.from=<sebastian.fricke@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1743853187;
+	s=zohomail; d=collabora.com; i=sebastian.fricke@collabora.com;
+	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
+	bh=u22/p801QpjbmO2uhuEVgNGBkidyKPFcQ/iS9BFuS5s=;
+	b=N5V51+Jb9Oh2VGeiRlqjxid+joMaQTSEkiQ9MwACEgsC7n39G9abF4/SBpLXjn+3
+	k0EBFHBIzQ+Buelbr5cpB2kxwFQ9i0zv3t7mUBJZlUFlcZf01TgEZNpBYSPdaG5HCLD
+	8NQpC9CzYLcbnkQBXVUcc0bjmGU7L9QQal3l2dO0=
+Received: by mx.zohomail.com with SMTPS id 1743853184816112.34259230527698;
+	Sat, 5 Apr 2025 04:39:44 -0700 (PDT)
+Date: Sat, 5 Apr 2025 13:39:36 +0200
+From: Sebastian Fricke <sebastian.fricke@collabora.com>
+To: ming.qian@oss.nxp.com
+Cc: mchehab@kernel.org, hverkuil-cisco@xs4all.nl,
+	mirela.rabulea@oss.nxp.com, shawnguo@kernel.org,
+	s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+	xiahong.bao@nxp.com, eagle.zhou@nxp.com, linux-imx@nxp.com,
+	imx@lists.linux.dev, linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 1/3] media: imx-jpeg: Enhance error handling in buffer
+ allocation
+Message-ID: <20250405113936.oepkmoz2czytbuxy@basti-XPS-13-9310>
+References: <20250328063056.762-1-ming.qian@oss.nxp.com>
+ <20250328063056.762-2-ming.qian@oss.nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Disposition: inline
+In-Reply-To: <20250328063056.762-2-ming.qian@oss.nxp.com>
+X-ZohoMailClient: External
 
-Change camelCase function name sii164CheckInterrupt to
-sii164_check_interrupt in order to conform to kernel code styles
-as reported by checkpatch.pl
+Hey Ming,
 
-CHECK: Avoid camelCase: <sii164CheckInterrupt>
+In the title I'd suggest:
+media: imx-jpeg: Cleanup after an allocation error
 
-Signed-off-by: Richard Akintola <princerichard17a@gmail.com>
----
- drivers/staging/sm750fb/ddk750_dvi.c    | 2 +-
- drivers/staging/sm750fb/ddk750_sii164.c | 4 ++--
- drivers/staging/sm750fb/ddk750_sii164.h | 2 +-
- 3 files changed, 4 insertions(+), 4 deletions(-)
+To be a bit more concrete, enhance error handling can mean pretty much
+anything.
 
-diff --git a/drivers/staging/sm750fb/ddk750_dvi.c b/drivers/staging/sm750fb/ddk750_dvi.c
-index ac1aab77da28..1def02be4cce 100644
---- a/drivers/staging/sm750fb/ddk750_dvi.c
-+++ b/drivers/staging/sm750fb/ddk750_dvi.c
-@@ -23,7 +23,7 @@ static struct dvi_ctrl_device dcft_supported_dvi_controller[] = {
- 		.set_power = sii164_set_power,
- 		.enable_hot_plug_detection = sii164_enable_hot_plug_detection,
- 		.is_connected = sii164_is_connected,
--		.check_interrupt = sii164CheckInterrupt,
-+		.check_interrupt = sii164_check_interrupt,
- 		.clear_interrupt = sii164ClearInterrupt,
- #endif
- 	},
-diff --git a/drivers/staging/sm750fb/ddk750_sii164.c b/drivers/staging/sm750fb/ddk750_sii164.c
-index 6ce15b7816d9..aebde3d8b903 100644
---- a/drivers/staging/sm750fb/ddk750_sii164.c
-+++ b/drivers/staging/sm750fb/ddk750_sii164.c
-@@ -370,14 +370,14 @@ unsigned char sii164_is_connected(void)
- }
- 
- /*
-- *  sii164CheckInterrupt
-+ *  sii164_check_interrupt
-  *      Checks if interrupt has occurred.
-  *
-  *  Output:
-  *      0   - No interrupt
-  *      1   - Interrupt occurs
-  */
--unsigned char sii164CheckInterrupt(void)
-+unsigned char sii164_check_interrupt(void)
- {
- 	unsigned char detectReg;
- 
-diff --git a/drivers/staging/sm750fb/ddk750_sii164.h b/drivers/staging/sm750fb/ddk750_sii164.h
-index 90b7ae823a10..aa3f34c13979 100644
---- a/drivers/staging/sm750fb/ddk750_sii164.h
-+++ b/drivers/staging/sm750fb/ddk750_sii164.h
-@@ -36,7 +36,7 @@ char *sii164_get_chip_string(void);
- void sii164_set_power(unsigned char powerUp);
- void sii164_enable_hot_plug_detection(unsigned char enable_hot_plug);
- unsigned char sii164_is_connected(void);
--unsigned char sii164CheckInterrupt(void);
-+unsigned char sii164_check_interrupt(void);
- void sii164ClearInterrupt(void);
- #endif
- /*
--- 
-2.39.5
+On 28.03.2025 14:30, ming.qian@oss.nxp.com wrote:
+>From: Ming Qian <ming.qian@oss.nxp.com>
+>
+>In function mxc_jpeg_alloc_slot_data, driver will allocate some dma
+>buffer, but only return error if certain allocation failed.
+>
+>Without cleanup the allocation failure, the next time it will return
+>success directly, but let some buffer be uninitialized.
+>It may result in accessing a null pointer.
+>
+>Clean up if error occurs in the allocation.
 
+I'd suggest:
+
+When allocation failures are not cleaned up by the driver, further allocation
+errors will be false-positives, which will cause buffers to remain
+uninitialized and cause NULL pointer dereferences.
+Clean up the errors accordingly.
+
+>
+>Fixes: 2db16c6ed72c ("media: imx-jpeg: Add V4L2 driver for i.MX8 JPEG Encoder/Decoder")
+>Signed-off-by: Ming Qian <ming.qian@oss.nxp.com>
+>---
+>v2
+>- Add the Fixes tag
+>
+> .../media/platform/nxp/imx-jpeg/mxc-jpeg.c    | 47 +++++++++++--------
+> 1 file changed, 27 insertions(+), 20 deletions(-)
+>
+>diff --git a/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c b/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c
+>index 0e6ee997284b..12661c177f5a 100644
+>--- a/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c
+>+++ b/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c
+>@@ -752,6 +752,32 @@ static int mxc_get_free_slot(struct mxc_jpeg_slot_data *slot_data)
+> 	return -1;
+> }
+>
+>+static void mxc_jpeg_free_slot_data(struct mxc_jpeg_dev *jpeg)
+>+{
+>+	/* free descriptor for decoding/encoding phase */
+>+	dma_free_coherent(jpeg->dev, sizeof(struct mxc_jpeg_desc),
+>+			  jpeg->slot_data.desc,
+>+			  jpeg->slot_data.desc_handle);
+>+	jpeg->slot_data.desc = NULL;
+>+	jpeg->slot_data.desc_handle = 0;
+>+
+>+	/* free descriptor for encoder configuration phase / decoder DHT */
+>+	dma_free_coherent(jpeg->dev, sizeof(struct mxc_jpeg_desc),
+>+			  jpeg->slot_data.cfg_desc,
+>+			  jpeg->slot_data.cfg_desc_handle);
+>+	jpeg->slot_data.cfg_desc_handle = 0;
+>+	jpeg->slot_data.cfg_desc = NULL;
+>+
+>+	/* free configuration stream */
+>+	dma_free_coherent(jpeg->dev, MXC_JPEG_MAX_CFG_STREAM,
+>+			  jpeg->slot_data.cfg_stream_vaddr,
+>+			  jpeg->slot_data.cfg_stream_handle);
+>+	jpeg->slot_data.cfg_stream_vaddr = NULL;
+>+	jpeg->slot_data.cfg_stream_handle = 0;
+>+
+>+	jpeg->slot_data.used = false;
+>+}
+>+
+> static bool mxc_jpeg_alloc_slot_data(struct mxc_jpeg_dev *jpeg)
+> {
+> 	struct mxc_jpeg_desc *desc;
+>@@ -794,30 +820,11 @@ static bool mxc_jpeg_alloc_slot_data(struct mxc_jpeg_dev *jpeg)
+> 	return true;
+> err:
+> 	dev_err(jpeg->dev, "Could not allocate descriptors for slot %d", jpeg->slot_data.slot);
+>+	mxc_jpeg_free_slot_data(jpeg);
+>
+> 	return false;
+> }
+>
+>-static void mxc_jpeg_free_slot_data(struct mxc_jpeg_dev *jpeg)
+>-{
+>-	/* free descriptor for decoding/encoding phase */
+>-	dma_free_coherent(jpeg->dev, sizeof(struct mxc_jpeg_desc),
+>-			  jpeg->slot_data.desc,
+>-			  jpeg->slot_data.desc_handle);
+>-
+>-	/* free descriptor for encoder configuration phase / decoder DHT */
+>-	dma_free_coherent(jpeg->dev, sizeof(struct mxc_jpeg_desc),
+>-			  jpeg->slot_data.cfg_desc,
+>-			  jpeg->slot_data.cfg_desc_handle);
+>-
+>-	/* free configuration stream */
+>-	dma_free_coherent(jpeg->dev, MXC_JPEG_MAX_CFG_STREAM,
+>-			  jpeg->slot_data.cfg_stream_vaddr,
+>-			  jpeg->slot_data.cfg_stream_handle);
+>-
+>-	jpeg->slot_data.used = false;
+>-}
+
+Can you split the moving of the code from the changes you do?
+Otherwise the reviewer is forced to get the diff manually.
+
+Regards,
+Sebastian Fricke
