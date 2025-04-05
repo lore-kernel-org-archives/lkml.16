@@ -1,113 +1,114 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from omta036.useast.a.cloudfilter.net (omta036.useast.a.cloudfilter.net [44.202.169.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3D731BC3C
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 02:02:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDA6B2E62BD
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 02:03:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743818558; cv=none; b=ZJnpQawm7sgYB8571oSVcy/pYNELF2L7rT+eljSfXer8SYmBALmatGPl+e0bY2GKRM75P+IWd8d4jzEYof6PWKNLbsIzpiZH39w5DIdZiwRmgbjIcYbBJw0DwlOVXfOtw+F5R2DXHHtz3+B4Xfzh3xocmqzbdEenANtHtKa/gXw=
+	t=1743818608; cv=none; b=Y+AnV61Ywg01HdB1o2zyUMoDENYV2YNZUTDCplcxdoOT3EpM8gokunvyw2gYZ3PIbJaJrORruIEdyjV3lROdJB7W+ijDczcEFCdMG7C3qpWscwQZDxF9HxRrJZTWpY31ZsWLktW/0KO4E8Dm3uCQ04q7ezoflfD5YdFZhXCJEls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743818558; c=relaxed/simple;
-	bh=giulut+PrxF/O0P30CwxI5j9ksQr3ldBC5eDinXEP3c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KHqPK4yWa2K8M3ZF2DtM2A+f5WLiUnjlv3T7cKmmv+d+wPVPwBQKD9V8zlTR8YL7u20RfXK6A4bN/4RaQBFuI+6EYq35ssrqZPhYfjFUwox7B97au1p7RhR1O04v9Czc6OGub73IBNsUzKXUaOTE92MGhK+xjqR4TMoKR0t0h9o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZJi2baZO; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1743818608; c=relaxed/simple;
+	bh=fuQhpdRVbRiGalBCawn6B9is5VlOAPgqH5fCPw9Qs4w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MH72MjwMfu60PPvdvMFdJ5/VemudFOlS4uKmcJleW8tTtxenags27w1dCe+ap5DUxw+++8LR0MPZ8uNag1JMxpTKY0jtaFc18aj0gcbSJoF5Yne1M0wxQSbdHtvBoTe7Fz1UjsOWF9OyiZjT8r2KEQ7GmRk/R/XyQVdSSXeA11c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net; spf=pass smtp.mailfrom=w6rz.net; dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b=3myCfCWP; arc=none smtp.client-ip=44.202.169.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w6rz.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZJi2baZO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743818556; x=1775354556;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=giulut+PrxF/O0P30CwxI5j9ksQr3ldBC5eDinXEP3c=;
-  b=ZJi2baZOQkFSQOYkks+/IkqkG9TMOd7SrhNHK0NAHjB33FiD9JSzyP8r
-   bFHjjwbm+cghjG1duyNczIBAHwxwJL2YCbMqA0daxRMq8x5bNxcY0Fwzg
-   /6VH7xkvhEvQeN7YoASV291H25CQYN5XFqBUAoB/f/qkRRuL9OOJa7d05
-   8UTCxD3IOUv05Yon/qfEQWJCXA28DkTkCzjKPyeu5eVuQrKjJU+lcZ3n1
-   djXEyfpgQ6XQY8r4datZTvc3TmDROjRmdU/91IGt5cKnowxPfeEq/39sU
-   Wd4cDNG94GXPgUPUpF3jN+7tepgZ1mPpDYxwVE4pOSEq8yRJfeFptCwqg
-   Q==;
-X-CSE-ConnectionGUID: siOqq8vTS4+nREasVANftw==
-X-CSE-MsgGUID: ZuFiVlfYRQ6Ivx2V7TY+mw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11394"; a="49064539"
-X-IronPort-AV: E=Sophos;i="6.15,189,1739865600"; 
-   d="scan'208";a="49064539"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 19:02:34 -0700
-X-CSE-ConnectionGUID: phdwfIJuQnmfaBYBelhYdw==
-X-CSE-MsgGUID: RtJF8pFtRCWo8Pibg7DFqQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,189,1739865600"; 
-   d="scan'208";a="127954061"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by fmviesa010.fm.intel.com with ESMTP; 04 Apr 2025 19:02:28 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u0srZ-0001jY-2G;
-	Sat, 05 Apr 2025 02:02:25 +0000
-Date: Sat, 5 Apr 2025 10:01:39 +0800
-From: kernel test robot <lkp@intel.com>
-To: Anusha Srivatsa <asrivats@redhat.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Jessica Zhang <quic_jesszhan@quicinc.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Robert Chiras <robert.chiras@nxp.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Markuss Broks <markuss.broks@gmail.com>,
-	Artur Weber <aweber.kernel@gmail.com>,
-	Dzmitry Sankouski <dsankouski@gmail.com>,
-	Jagan Teki <jagan@amarulasolutions.com>,
-	Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>,
-	Purism Kernel Team <kernel@puri.sm>, Ondrej Jirman <megi@xff.cz>,
-	Sasha Finkelstein <fnkl.kernel@gmail.com>,
-	Janne Grunau <j@jannau.net>,
-	Michael Trimarchi <michael@amarulasolutions.com>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	asahi@lists.linux.dev, Anusha Srivatsa <asrivats@redhat.com>
-Subject: Re: [PATCH 41/46] panel/widechips-ws2401: Use refcounted allocation
- in place of devm_kzalloc()
-Message-ID: <202504050913.gq6yJY4f-lkp@intel.com>
-References: <20250403-b4-drm_panel_mass_driver_convert_part3-v1-41-965b15ad5b8e@redhat.com>
+	dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b="3myCfCWP"
+Received: from eig-obgw-6002a.ext.cloudfilter.net ([10.0.30.222])
+	by cmsmtp with ESMTPS
+	id 0i3Xuw39SzZPa0ssQuczGz; Sat, 05 Apr 2025 02:03:18 +0000
+Received: from box5620.bluehost.com ([162.241.219.59])
+	by cmsmtp with ESMTPS
+	id 0ssPurDeG1vNy0ssPukzBr; Sat, 05 Apr 2025 02:03:18 +0000
+X-Authority-Analysis: v=2.4 cv=VMQWnMPX c=1 sm=1 tr=0 ts=67f08f66
+ a=30941lsx5skRcbJ0JMGu9A==:117 a=30941lsx5skRcbJ0JMGu9A==:17
+ a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=7vwVE5O1G3EA:10 a=VwQbUJbxAAAA:8
+ a=HaFmDPmJAAAA:8 a=CTIpb7JmY0c5bVNJeN8A:9 a=QEXdDO2ut3YA:10
+ a=nmWuMzfKamIsx3l42hEX:22 a=hTR6fmoedSdf3N0JiVF8:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=w6rz.net;
+	s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=AJC+nePnc1vsop4r0gMH0MPyBkTzpRtJTmZjmkecJC8=; b=3myCfCWP2PBQx1IG2QDeZBzIUY
+	HjAoiGUrsfIYr+DUsEDzT4ItWyKopJ+FWAG0TV2a/V2GJ4aVImR20y8zTFS+vVZLBRniy7xwZCtOB
+	6JWxLAFpTHTTMMlIf0NmNYjGwnPNfkQ7ze5ZEDd8KssFE7kvrukeEZ3Y4VQzYz8Rm+s59Y6+ETcNn
+	++haajsM6IN8H9B1JEs4dO5wKIWzybr6Q64vI/Pf7+Cj4EGge5lrW1y2eA4Yul4xlgHv+KIyQg7KD
+	Aifr6ARRqy36DnCxOktOsFiZFu4f2h49d6hp/FWMkPRO8OM5LpRtQFpDMi2HmIQ8Vu2ywODEW1Vqv
+	D2HTxJUw==;
+Received: from c-73-223-253-157.hsd1.ca.comcast.net ([73.223.253.157]:33232 helo=[10.0.1.116])
+	by box5620.bluehost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.98.1)
+	(envelope-from <re@w6rz.net>)
+	id 1u0ssN-00000001Q7A-3COW;
+	Fri, 04 Apr 2025 20:03:15 -0600
+Message-ID: <9f287720-8bc6-410a-9b2f-0fc15cee6c6b@w6rz.net>
+Date: Fri, 4 Apr 2025 19:03:11 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250403-b4-drm_panel_mass_driver_convert_part3-v1-41-965b15ad5b8e@redhat.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6.14 00/21] 6.14.1-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250403151621.130541515@linuxfoundation.org>
+Content-Language: en-US
+From: Ron Economos <re@w6rz.net>
+In-Reply-To: <20250403151621.130541515@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - box5620.bluehost.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - w6rz.net
+X-BWhitelist: no
+X-Source-IP: 73.223.253.157
+X-Source-L: No
+X-Exim-ID: 1u0ssN-00000001Q7A-3COW
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: c-73-223-253-157.hsd1.ca.comcast.net ([10.0.1.116]) [73.223.253.157]:33232
+X-Source-Auth: re@w6rz.net
+X-Email-Count: 16
+X-Org: HG=bhshared;ORG=bluehost;
+X-Source-Cap: d3NpeHJ6bmU7d3NpeHJ6bmU7Ym94NTYyMC5ibHVlaG9zdC5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfOWg2vdtUaAvkv1kYlj77ZWNRfpUJXk1btGU1u/yuj1g+6t45YpbQH0tqV8c75C3zuoHenvTfMPJKANPxeyvdqZWf3W7wDkI/mJhSGZAjIfuttpr4wAd
+ MGf+0V/drLhM6rGD2emQfw+416d9SASQp6eCRA31WcYzDD/V8wZ7mcHi1umtgUqOfHGMOtQN+H7qgI5cxeAHxTlqJybsqKmzxts=
 
-Hi Anusha,
+On 4/3/25 08:20, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.14.1 release.
+> There are 21 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Sat, 05 Apr 2025 15:16:11 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.14.1-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.14.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-kernel test robot noticed the following build errors:
+Built and booted successfully on RISC-V RV64 (HiFive Unmatched).
 
-[auto build test ERROR on de04bb0089a96cc00d13b12cbf66a088befe3057]
+Tested-by: Ron Economos <re@w6rz.net>
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Anusha-Srivatsa/panel-orisetech-otm8009a-Use-refcounted-allocation-in-place-of-devm_kzalloc/20250404-052751
-base:   de04bb0089a96cc00d13b12cbf66a088befe3057
-patch link:    https://lore.kernel.org/r/20250403-b4-drm_panel_mass_driver_convert_part3-v1-41-965b15ad5b8e%40redhat.com
-patch subject: [PATCH 41/46] panel/widechips-ws2401: Use refcounted allocation in place of devm_kzalloc()
-config: x86_64-buildonly-randconfig-004-20250405 (https://download.01.org/0day-ci/archive/20250405/202504050913.gq6yJY4f-lkp@intel.com/config)
-compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250405/202504050913.gq6yJY4f-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504050913.gq6yJY4f-lkp@intel.com/
-
-All errors (new ones prefixed by >>, old ones prefixed by <<):
-
->> ERROR: modpost: "__devm_drm_panel_alloc" [drivers/gpu/drm/panel/panel-widechips-ws2401.ko] undefined!
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
