@@ -1,121 +1,135 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23B82199E94;
-	Sat,  5 Apr 2025 18:25:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 546BCEAE7;
+	Sat,  5 Apr 2025 18:30:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743877515; cv=none; b=b3z65htrNl3dCNGmdaldsJwRia/3xCv6kuE4Z6LoeLqjDRKH9JO9YFZAg6zYpeiokliCLQEXXGwLjfZJrBApWuu2jJKC3hv1wVk2emsULb+T9JwKm4LS7qxbvrFyun3qExFhJbk+PV+Iq9Gt5xN2Croa76LcgMR8mwBdbxQeQjw=
+	t=1743877853; cv=none; b=IsUJUOhY2wuGqVeahrReauCaLclnmnKtw3TRo2czQgrt0nZt7BMbm+ck6Nx9kOO85zBEw/THK4mgCIYoUhwsYrnpyjL/oibmOS0hv8eXlsFQ+UZ0rjGPLtgmj9rWB2q7wD4Rq+yYG4zOpBDHiWueaXYwYDR6g1lre7r4SnGN6IU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743877515; c=relaxed/simple;
-	bh=Kmh0m40Q+BhvO7eXvmH87q7FUqp9NDHftacPbN+IbLM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bF9iRw2jrdsiOD7NOfUATwWlR4FeG85PhuGZH+mdO/huLycSS+m6x+maEnffrpmX4Acw5RRA4aSntGmrXvZgzvKBBd/zQtd2I8GhHTc+APndPMqZRdDXSs1RUBb872C1VqWZveeMjBup5UXP/+VPXkMg0LvXqWwYiRHPxFzhdJk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=im0xEPSG; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743877853; c=relaxed/simple;
+	bh=NUeI4U0WXhSt3zBtNRQTMMK3/MdfX1g2dDF6Z2qmcBk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Nn1cxXV1o53a8jwDsUQbf6Uzz2EVvewGG37Ao9G/kA44sFaXcnF69rmJ+ShJAzDfh3m2z1hpnAUREhsBUBmvJkaV53hnvi/B3dKRbdTylgA5SL3zc0Ts7UbELQBNHyNkJp1TyCdeB7psKhW65i43YvKhfuaHS2qs6vKkrV+zndc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZADTKA2X; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="im0xEPSG"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-73712952e1cso2784675b3a.1;
-        Sat, 05 Apr 2025 11:25:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743877513; x=1744482313; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=F7ewSWaS2GVG56nYgK2WLjkB3agbziznkvkwItHJZzw=;
-        b=im0xEPSGmEFBxvbE8XOOx6aDE4yNAq6C5pIA2e5K6dGa/K7OcbnapO1fgT80fUHwLX
-         UyPriJtyhuM8+QTmLfOyfvkB9OwRYNV3qQ4eBCnRK/9OnOMvhcgx5SCPAiOkZuXOUe/5
-         +zADmoLcYz9XdNGo0i+U9LgE7BwDB+vqiF/5pSkK7emZsmXVLpkwn1fDZpZeLHsMtvf+
-         qO9nbGTPAAUt8C2NwvKe3ZdiUFRX4pXebwaG6K5ZSDOzXBdwGGDj3NlpVxPsT83/+B0b
-         Ztyp0RXNrkvlUr1l8NUDg2lPGdZisnxpSgxZ2egPbd6isG/oEKHUt9qyJ+ScdM1NpUGr
-         UEfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743877513; x=1744482313;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=F7ewSWaS2GVG56nYgK2WLjkB3agbziznkvkwItHJZzw=;
-        b=TOCoVdTu1pj2zVqSJxLrY2ZxH0hLkW9EvBIvOHOdEwHbH2xXCRyOEDyKvjStaFL1FO
-         HnS/JX7/9sVDjJGzipCfhWgcr64cCSO2KeM5Jimi85VetT5zKDxVzKNeeSXVy+Q4ShPy
-         iznsgjKuAAjsmpuLRPgvzrGEbGQU0Puxyhmr7Bo42kzlfNoNqqscaPUdN3CKNoxjXMgR
-         dC3wGm7+XLUlzcJCPXklqf0VZw+k1NK/pRc/BoktAnt+Sx2di7QDbq2qtttn9vTMslE8
-         uQesS1rfDDtBZh2j0wUSPFgsfVIN9YWrwYkCOIS2qVkqezJrMRRRpmwb2t5fVh2bCw/k
-         YZug==
-X-Forwarded-Encrypted: i=1; AJvYcCXebsoQm3k7yW6ilq6CmlSDlDfRaoRpnLWGDYNAQpUGP697FPxlOvqwAwOsiYL3VP7YWWd2WXUlufA=@vger.kernel.org, AJvYcCXehtWO0puOyrrmsoKdl0eDfjjK2yD4KxsEpoFxEmk1EqTbxFgqbOImcqMNW80ELKwTS9ldFvaMGzvoodrK@vger.kernel.org
-X-Gm-Message-State: AOJu0YxraC1hEaUKVcxyJF7VVSRIo24t92SoKHUbBlTf7K0eAahjdHfi
-	IM+3b//7+lFDb+znekB4v6cmTn6RYfug7NcQAk3zZqTKYaMZA+v9
-X-Gm-Gg: ASbGnctuTZgxBsIu0QR7Ao0jv1QP8B3Ddf6LgfN5FV0cxkYPQYfFFUSfBzsEyeXT1v9
-	DK7Vq5CCorXwdoQUoShKKhSJFT7ZGPwVITb0oIKr4iW4urIu6ocsMch4aJpUdxsSvS65tBALxm/
-	KM4vkZqxYX1rLdQSj039EFctAV+IHO6YCYXdgcgGTf+Cr1ctmPVnYkmX+6gx/t9QKfglyXw5Z56
-	9r2yJBSZdYPiO4yhFsBcIcD3AxT53q7YQ/JsrxoKmKQbB+WlqCkYP82WD+9rIi2Mkb8QSTzaqCj
-	zyrLWNx+dCJWaqtRMk+x8FKofBw8XAFGAWJYy2qrGIPgfmHRLbJ0rLE=
-X-Google-Smtp-Source: AGHT+IFO1XcsQBOIYFVKaw4dyooP2Io5d1+/q+uwLQDAK9JS5XR9w23ocEXj/CPJYCJ4P5CoT1Pwsg==
-X-Received: by 2002:a05:6a21:3942:b0:1f5:59e5:8adb with SMTP id adf61e73a8af0-20103fd9495mr11402778637.0.1743877513060;
-        Sat, 05 Apr 2025 11:25:13 -0700 (PDT)
-Received: from localhost ([2804:30c:1f4f:6800:9245:316f:6226:cc1e])
-        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-739d9ea0a71sm5500382b3a.113.2025.04.05.11.25.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Apr 2025 11:25:12 -0700 (PDT)
-Date: Sat, 5 Apr 2025 15:26:17 -0300
-From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-To: Saalim Quadri <danascape@gmail.com>
-Cc: jic23@kernel.org, dragos.bogdan@analog.com, linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, marcelo.schmitt@analog.com
-Subject: Re: GSoC Proposal 2025
-Message-ID: <Z_F1ybM7B3g2WHvx@debian-BULLSEYE-live-builder-AMD64>
-References: <20250309161905.4b029278@jic23-huawei>
- <20250405062348.43025-1-danascape@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZADTKA2X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 571E2C4CEE4;
+	Sat,  5 Apr 2025 18:30:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743877852;
+	bh=NUeI4U0WXhSt3zBtNRQTMMK3/MdfX1g2dDF6Z2qmcBk=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ZADTKA2XpWmUoC1UvEdiBW5vfd7VpA7EcazTAeFqV6IYRAcTwJj32Vg1Wq5fCGLgs
+	 7JyOAjRuSsqqgqYWs71EQVJOb9Z2n5pA17nrPeJlhMKCA/eAK9NXkFZR3p91Y8caSt
+	 jinR8neVOTsIM05C1MclF0w8iWixTieJ05Msm7l1WKlKmf9VdzyhgwbvbhsJ497vsg
+	 XywIxp8b7zKgwiB5AvFpxMRMingbmpZEm6NwEgL/uIHCSdA3oOaTUTX2dXfFwk4hjZ
+	 yqf7tRidgJduOJ/eghplQ3/3xFBzLYQ40Eu7Y4R9D9qCW1JAc/ukkE3kpFwTEyuN6k
+	 35/hTz+afw7oA==
+From: Eric Biggers <ebiggers@kernel.org>
+To: linux-crypto@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mips@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	x86@kernel.org,
+	Ard Biesheuvel <ardb@kernel.org>,
+	"Jason A . Donenfeld " <Jason@zx2c4.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 0/9] Remove per-architecture ChaCha skcipher glue code
+Date: Sat,  5 Apr 2025 11:26:00 -0700
+Message-ID: <20250405182609.404216-1-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250405062348.43025-1-danascape@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Saalim,
+Currently each architecture exposes ChaCha not only through the library
+API, but also through the crypto_skcipher API.  That requires each
+architecture to implement essentially the same skcipher glue code.
 
-On 04/05, Saalim Quadri wrote:
-> Thank you very much for the responses, albeit late, it took me sometime
-> I was studying about the working on IIO, and the proposed driver on the GSoC page [1]
-> 
-> This is my draft proposal: [2]
-> I am continuing on the same thread, as you mentioned, to keep it on the public list.
-> I have enabled comments, to ease up the review on your end, such that you can identify if any issue is present and point it out.
-> 
-> My major doubt in the proposal is regarding the timeline of the project.
+Following the example of what's been done for crc32 and crc32c,
+eliminate this redundancy by making crypto/chacha.c register both the
+generic and architecture-optimized skcipher algorithms, implemented on
+top of the appropriate library functions.  This removes almost 800 lines
+of code and disentangles the library code from the skcipher API.
 
-I've added a proposal template to the IIO project page. The template has a
-timeline initial draft. You may check out the template and adapt/extend the
-initial timeline from there.
+From what I remember, the following are the reasons why it wasn't just
+done this way originally.  But none of these really hold water:
 
-Elaborating a good work plan is probably the hardest part of making a good
-proposal and requires students to either study the provided material in the
-project page or have some development experience (or both). The work schedule
-doesn't need to describe everything in detail, but the more reasonable your plan
-to achieve project goals is, the better it may convey you as a good candidate.
+- The skcipher code was there first, so it may have seemed more natural
+  to add onto it rather than replace it.
 
-I'll review all proposals after they are submitted.
+- Architectures could register multiple skcipher algorithms using
+  different CPU features and have them all be tested in a single boot.
+  This was convenient in theory, but it never really worked properly.
+  It didn't apply to the library code, the x86 ChaCha code wasn't
+  actually doing this (it used static keys instead), and this cannot
+  catch bugs like accidentally using an AVX instruction in SSE code.
+  Instead, a correct solution, which also doesn't require any special
+  kernel support, is to just boot the kernel in QEMU using different
+  -cpu arguments as needed to test all the code.
 
-> 
-> I also would like to suggest, if we are able to complete our first driver before the evaluation, then we can discuss working on
-> a second sensor, if that is alright and if we are able to complete it within the time.
+- There was a concern about changing cra_driver_names potentially
+  breaking users.  But in practice users rely on cra_name, not
+  cra_driver_name.  We already change, add, and remove cra_driver_names
+  occasionally for various reasons.  And even if someone was relying on
+  a specific cra_driver_name, there are some more lightweight
+  compatibility tricks that could be used.
 
-When time and energy allow, the sky is the limit. My estimation, though, is that
-developing a driver for one part will be more than enough work for a GSoC.
-Still, if you are excited about doing more for IIO, then sure, add that to your
-proposal.
+- There was a desire for users to be able to override the kernel's
+  choice of ChaCha implementation by blacklisting the arch-optimized
+  ChaCha module.  But that already became mostly impossible when the
+  library functions were added to the same module.  And in practice
+  users don't do this anyway.  Even if, hypothetically, someone really
+  needed to do this and for some reason the kernel couldn't be fixed to
+  make the right choice in their case automatically, there are other
+  ways this could be implemented such as a module parameter.
 
-> 
-> [1]: https://wiki.linuxfoundation.org/gsoc/2025-gsoc-iio-driver
-> [2]: https://docs.google.com/document/d/18R_ZNWn36mAG9gb2TqepuxBwj-Hck3CrZHFfWUuNmyo/edit?usp=sharing
-> 
-> Thank you very much,
-> 
-> Sincerely,
-> Saalim Quadri
+Eric Biggers (9):
+  crypto: riscv/chacha - implement library instead of skcipher
+  crypto: chacha - centralize the skcipher wrappers for arch code
+  crypto: arm/chacha - remove the redundant skcipher algorithms
+  crypto: arm64/chacha - remove the skcipher algorithms
+  crypto: mips/chacha - remove the skcipher algorithms
+  crypto: powerpc/chacha - remove the skcipher algorithms
+  crypto: s390/chacha - remove the skcipher algorithms
+  crypto: x86/chacha - remove the skcipher algorithms
+  crypto: chacha - remove <crypto/internal/chacha.h>
 
-Regards,
-Marcelo
+ arch/arm/crypto/Kconfig                 |   7 -
+ arch/arm/crypto/chacha-glue.c           | 243 +---------------------
+ arch/arm/crypto/chacha-neon-core.S      |   2 +-
+ arch/arm64/crypto/Kconfig               |   7 -
+ arch/arm64/crypto/chacha-neon-core.S    |   2 +-
+ arch/arm64/crypto/chacha-neon-glue.c    | 146 +------------
+ arch/mips/crypto/Kconfig                |   6 -
+ arch/mips/crypto/chacha-glue.c          | 131 +-----------
+ arch/powerpc/crypto/Kconfig             |   8 -
+ arch/powerpc/crypto/chacha-p10-glue.c   | 147 +-------------
+ arch/riscv/crypto/Kconfig               |  11 +-
+ arch/riscv/crypto/chacha-riscv64-glue.c | 112 ++++------
+ arch/riscv/crypto/chacha-riscv64-zvkb.S |  71 +++----
+ arch/s390/crypto/Kconfig                |   7 -
+ arch/s390/crypto/chacha-glue.c          |  99 ++-------
+ arch/x86/crypto/Kconfig                 |   9 -
+ arch/x86/crypto/chacha_glue.c           | 144 +------------
+ crypto/Makefile                         |   3 +-
+ crypto/chacha.c                         | 260 ++++++++++++++++++++++++
+ crypto/chacha_generic.c                 | 139 -------------
+ include/crypto/chacha.h                 |   9 +
+ include/crypto/internal/chacha.h        |  43 ----
+ 22 files changed, 413 insertions(+), 1193 deletions(-)
+ create mode 100644 crypto/chacha.c
+ delete mode 100644 crypto/chacha_generic.c
+ delete mode 100644 include/crypto/internal/chacha.h
+
+base-commit: 56f944529ec2292cbe63377a76df3759d702dd39
+-- 
+2.49.0
+
