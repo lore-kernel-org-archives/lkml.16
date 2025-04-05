@@ -1,30 +1,79 @@
-Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mail-pg1-f193.google.com (mail-pg1-f193.google.com [209.85.215.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E68F95695;
-	Sat,  5 Apr 2025 09:57:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE9241CD1F;
+	Sat,  5 Apr 2025 10:00:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743847044; cv=none; b=V22IEBU4xWaTl035WBAuN38DOebzJMQIopgHPGHanm0wxE1hnzhACZgxDU3a4bvPVXG+rtexoodXlJRZfTCgvx24YtvjABU+Sfw4MsxT9w4vLhYigWteoO+0XL0IjPQzaJUO0m5yPvcapDw4VQ1410IpfscEnW6CUhNxzJvmx9g=
+	t=1743847232; cv=none; b=rXtmUmvY3p41N/W6SwzBKboHZfYWmU3Hf9/OjdqReaNOdc50DMzQpvRxoQMeegOxTUX/tuIjJgQKIUCSaEJj5dDMn1hdy/HzaYK9rJFbRJxmFFXT2hPTfCAhGXy0slW5uHNlqKNb18ETijTMoyzkqbuQUqXq9qDNWN6TxYscX6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743847044; c=relaxed/simple;
-	bh=gcqY1n1uy0b5quuVXJUS/njdTpe4/lxKq7CipKuDqLY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=G08G0VWiJGDR7LvoKwRciHOpXnG3jfPF3CUPdsdQKZHPyZqg6P4kUX6KGaUO6AGCmaMjY6rrxnuqx7mVcJZNIRq1Xmuhjl3I0rwGcVQsUCSOhBdVqHmP3U3RlQhDyeCjjzz1KO1l6h34p/o6NV2GHU/oyZ6XBX1tlQNIn4f3wWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost.localdomain (unknown [221.222.48.127])
-	by APP-05 (Coremail) with SMTP id zQCowAAnYwtt_vBn7PY1Bg--.43264S2;
-	Sat, 05 Apr 2025 17:57:07 +0800 (CST)
-From: Wentao Liang <vulab@iscas.ac.cn>
-To: konishi.ryusuke@gmail.com
-Cc: linux-nilfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Wentao Liang <vulab@iscas.ac.cn>
-Subject: [PATCH v2] nilfs2: Add pointer check for nilfs_direct_propagate()
-Date: Sat,  5 Apr 2025 17:56:40 +0800
-Message-ID: <20250405095641.2009-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.42.0.windows.2
+	s=arc-20240116; t=1743847232; c=relaxed/simple;
+	bh=LfbT/pV1MEvKouNwSFfzncvEKPvDUF4+mjpJJYotvwg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=L/2IxmPrZNORW46MupFHlGf/Ajw+9BvvXZ1az8CraqIUkJd455y/lXkY7D8WahTvGN2xuB4PNtsLUJqTMJHJIVhaQO0dD+8QgRTI3GFQXxYwC+eJwO4pkBl94D/y7qj9yOwjWqgJGVyOi/zkUzjjZOEHsGlqM8kdkD/bgPqyBS4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YaDQNKQ1; arc=none smtp.client-ip=209.85.215.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YaDQNKQ1"
+Received: by mail-pg1-f193.google.com with SMTP id 41be03b00d2f7-7fd35b301bdso2868040a12.2;
+        Sat, 05 Apr 2025 03:00:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743847230; x=1744452030; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=4Z0x7UfGjyU+L6BdoZHIxdtNwtWq7UYxGCsAvxv24QY=;
+        b=YaDQNKQ1LkBRQL5dKKBnaE8U7pqcbB2MUZrnefRsPK+uYbUs+OKROtVOg1MCLT3RvM
+         2ruDVspxrm8KW/biGVKIzHLZO9rkJKXWUA8wXzEfEsIhZpHyJckg0kMf9IQ/znWeJb5m
+         txNtMsZaO6xyINzxcY+0+3L8E799xecDwsRjMa/wMR8IBMSZ1KvvWdfrNkD6As3LHg21
+         Fvm3lFkqSWj6ESm6vgp7v9LTMNRVWos7JzsVKFpuFcMPYQPyJ8IfDlWtQHMF3gZKQ9oi
+         wOZNTlj/xyLza09RS6U3Mm31IFNAOMSicnM31Y8ttnlgcRr9heMHzin4XW0iQuWWbHCS
+         hi1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743847230; x=1744452030;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4Z0x7UfGjyU+L6BdoZHIxdtNwtWq7UYxGCsAvxv24QY=;
+        b=tgld4LeT0h8mCRKkconLvIrOu0dOCg7J55VVn1Endp4O7gekJHb7MOI2umPcCyJwCn
+         7Rkj0uqFe5waxia9I1vI+DpGYPe04yeNijB8bZUVnbPMUQzKHU2+11GESkzMjTxiO9aL
+         obD3LzdI5vY1TM9SdNXRKCK6Uq3xrurEv2Jm41VOja2jNRUgugWiAhNiifKXXOdXuAQo
+         LU16ClABGGGmfoIs20zC530Djg7WXzun+dzwzXPUjN/ZzcUvjMI0bO+AZp1I8VRgLW1w
+         ZXR5i7NQbPM+UzS/EvGEKOkNGK4MtTjo9RrSkvSJ8D8EALvzR9k0isbv3O7c3PVXbD7L
+         VRTg==
+X-Forwarded-Encrypted: i=1; AJvYcCU1BKkJazBiwZ+e4LZjkHFV8YbkY/UrdPUqAXGdaXK0+X84bqnZt4zxHtZIZ7VtT4IdfFr7TQokSeYvJA==@vger.kernel.org, AJvYcCVCP381L+ahyBdzePX0d75FC99gIMw37W3pBobTu8QX2cCU445i1osr6qwbrI3jmSEReUPhr3mQnqMNXW4=@vger.kernel.org, AJvYcCVVrgjvEhp4JtU+QbGnYkPHAk2+dp/DHI5GxdALDx06d82uD7rYg1mdAmSSK3nYogRH2KP700Uv@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw/3n8YqBj9emFq0vOBEVoeH2esQaBJRYxLwdjZqFdZfUpCEis9
+	zcVFulL8NnWvDEWnTyNreCt3W3TODAmfXxmVdWKkzucs1LAD9HhY
+X-Gm-Gg: ASbGncvCYSSPDzMnJj9NQ5HH98gmzViMmfsoBDGnr/+W2QXn2HYan6oI1jeEp5oxgmh
+	i0J7Y9b2VItxmZ4abeZ1tVNE6iCLZnm8cnLf5OMaepIy5zSIVlZ/D3bk35gCO0csuWxnRZwBkmF
+	uSh/5mb7/mlS+ymeBJK0I8KJPKDHx5hlkK+6/MxDWExNdjzstZ4fHV0ZG1ZQ8wV5RGup+mD0bQO
+	jpvihfKR0gCSTARS/m5XSau85bbrimLEwVCRCFKDgk8d1q2GGz65vZFpqbk5xXA43zN0o1ZQxdu
+	AQ2K9GmKof69n/QMqLx6BNCofaCT/mjKHWyVLLbVXK8cy/nwWJVyudMUaO+fH7+HBamL
+X-Google-Smtp-Source: AGHT+IGk/pMlQoTwUAGoTx0kGi+pMe676B141VJcZm0iGympXQhR/bfzbuVXJSXxkGIXukIVTzulVw==
+X-Received: by 2002:a17:90b:224d:b0:2ff:4f04:4261 with SMTP id 98e67ed59e1d1-306a48b308cmr6494817a91.34.1743847230052;
+        Sat, 05 Apr 2025 03:00:30 -0700 (PDT)
+Received: from henry.localdomain ([223.72.104.24])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-305983d7f57sm5580161a91.41.2025.04.05.03.00.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 05 Apr 2025 03:00:29 -0700 (PDT)
+From: Henry Martin <bsdhenrymartin@gmail.com>
+To: saeedm@nvidia.com,
+	leon@kernel.org,
+	tariqt@nvidia.com
+Cc: andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	amirtz@nvidia.com,
+	ayal@nvidia.com,
+	bsdhenrymartin@gmail.com,
+	netdev@vger.kernel.org,
+	linux-rdma@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v1] net/mlx5:  Fix null-ptr-deref in mlx5_create_inner_ttc_table()
+Date: Sat,  5 Apr 2025 18:00:17 +0800
+Message-Id: <20250405100017.77498-1-bsdhenrymartin@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -32,55 +81,29 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:zQCowAAnYwtt_vBn7PY1Bg--.43264S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7XF1DAr4kuw4kCw1xtr45Awb_yoW8JrWxpr
-	W7KF17KFs5J3yIgrn29a15Zr13Cr17uwsrJr48Ca4xZrnxKF10qFyUta48Aa13Cr45XFya
-	v3yjy3WYqFyUAaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUyl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r1j
-	6r4UM28EF7xvwVC2z280aVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr
-	0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
-	6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr
-	0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxAIw28IcxkI7VAK
-	I48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7
-	xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xII
-	jxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw2
-	0EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x02
-	67AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjfU5WlkUUUUU
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiBwsDA2fwn8GfzgAAsU
 
-In nilfs_direct_propagate(), the printer get from nilfs_direct_get_ptr()
-need to be checked to ensure it is not an invalid pointer.
+Add NULL check for mlx5_get_flow_namespace() returns in
+mlx5_create_inner_ttc_table() to prevent NULL pointer dereference.
 
-If the pointer value obtained by nilfs_direct_get_ptr() is
-NILFS_BMAP_INVALID_PTR, means that the metadata (in this case,
-i_bmap in the nilfs_inode_info struct) thatshould  point to the data
-block at the buffer head of the argument is corrupted and the data
-block is orphaned, meaning that the file system has lost consistency.
-
-Add a value check and return -EINVAL when it is an invalid pointer.
-
-Fixes: 36a580eb489f ("nilfs2: direct block mapping")
-Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+Fixes: 137f3d50ad2a ("net/mlx5: Support matching on l4_type for ttc_table")
+Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
 ---
- fs/nilfs2/direct.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/ethernet/mellanox/mlx5/core/lib/fs_ttc.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/fs/nilfs2/direct.c b/fs/nilfs2/direct.c
-index 893ab36824cc..2d8dc6b35b54 100644
---- a/fs/nilfs2/direct.c
-+++ b/fs/nilfs2/direct.c
-@@ -273,6 +273,9 @@ static int nilfs_direct_propagate(struct nilfs_bmap *bmap,
- 	dat = nilfs_bmap_get_dat(bmap);
- 	key = nilfs_bmap_data_get_key(bmap, bh);
- 	ptr = nilfs_direct_get_ptr(bmap, key);
-+	if (ptr == NILFS_BMAP_INVALID_PTR)
-+		return -EINVAL;
-+
- 	if (!buffer_nilfs_volatile(bh)) {
- 		oldreq.pr_entry_nr = ptr;
- 		newreq.pr_entry_nr = ptr;
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/lib/fs_ttc.c b/drivers/net/ethernet/mellanox/mlx5/core/lib/fs_ttc.c
+index eb3bd9c7f66e..4e964ca5367e 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/lib/fs_ttc.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/lib/fs_ttc.c
+@@ -655,6 +655,8 @@ struct mlx5_ttc_table *mlx5_create_inner_ttc_table(struct mlx5_core_dev *dev,
+ 	}
+ 
+ 	ns = mlx5_get_flow_namespace(dev, params->ns_type);
++	if (!ns)
++		return ERR_PTR(-EOPNOTSUPP);
+ 	groups = use_l4_type ? &inner_ttc_groups[TTC_GROUPS_USE_L4_TYPE] :
+ 			       &inner_ttc_groups[TTC_GROUPS_DEFAULT];
+ 
 -- 
-2.42.0.windows.2
+2.34.1
 
