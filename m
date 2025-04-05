@@ -1,222 +1,183 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from mail3-relais-sop.national.inria.fr (mail3-relais-sop.national.inria.fr [192.134.164.104])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 729AE1D47A2
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 13:27:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 968026FC3
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 13:30:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.134.164.104
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743859646; cv=none; b=a7Sit9fqQxUOqZtmg4+K58v4sOHCh7N2aTBypUzClZp1CV3l3CZ89UVINOsJsqW5vVUu8pkFGXRNbtnDHGfuxYkYeE1VgxQ5ttAS1ALXqFzf7xMT6TuttV6SmFmyOqqo5J5WgoqtOqFFtozRNxhBncGnj4+6pXpYQ/QGyIMWUao=
+	t=1743859836; cv=none; b=aPCLT5427ZFAhOaXRx2s1o2yjiJ5ODA+xxFja0FloTNw1Yi2AkI9eAn4SpjP4l1YjMDVh1860Nr83SCqwReJlklB9f6R6H4yc4iRI1nCwJEtqgn4mtYeYQISdnuTufN7v/TTHNUy71C4pslX5cmyWd/B6PWhXi9rHXcoFmHjX8w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743859646; c=relaxed/simple;
-	bh=PhxZXSsULPsD4mO8+edV5H0C2P/rskNqBj+w/eJH1Ss=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=VstiI4O+PzZ7ohZcVYVZF9kLJuPdzpXXv2vuDaT8KVYq0psLEEslbSgqYEHWRMlype59/vgEtBfnLQB/YVVYU5EBrww3MnSy1ep1EEI3IpIDhbnUE7QbVZ7YI7yS6Jkh8ae5xwfIfZH6MPK3dJQFSdC2swdrcg0R9Vp1lOsJ9W4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fCCxifuW; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1743859836; c=relaxed/simple;
+	bh=JOrHW40c/wdD71gv/ine87UQBGNMiHaE+KSyW2J7UXA=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=b8ua0xDVbwxZZL2GOTlK8b0klqf6ACvH/4t5R1n2ns9RNZlhbiIBNteWsiLtbx/5l2htUHAheuKPdpKj9gj29xz2miPNsOAnb+LpB3YjF8QuerpesiPhXXHZ2CO8DbpzGrSQ9keLs4cKnkvuNCPXC7xxopQybr6MoCry4hUbbEs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr; spf=pass smtp.mailfrom=inria.fr; dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b=hlZAU06k; arc=none smtp.client-ip=192.134.164.104
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inria.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fCCxifuW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743859645; x=1775395645;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=PhxZXSsULPsD4mO8+edV5H0C2P/rskNqBj+w/eJH1Ss=;
-  b=fCCxifuWKWdahvZ4qotPPCQL2lpUgks98t0yHNYvG6mfsB5teOeks0wz
-   trwuCTXUGFe0WrId5KpDYJZKx6DH3N1nxkKJy1iSDpAfrYI1vD7fhoc0G
-   xbNcEE5woXnjgmhiFTHoaHanD2EPIBD6zSGwBWjhWr3idoHavoaUu8OFi
-   DMO/eyD7/JYcajC4pOpXid/Aqi89Aa9F5Wz/YWzT6F1t9v40REzoG0dDb
-   arvQRX6W3lUGucoCSWUm40IsfHrDC3U/8bPSciP0keq6UQBF2xTa//nRn
-   5v0Gm57vvhW6iqV2/JDAGzIJ1WK/SOoVDOlSrjqjRVe0g9qO/47XlwVZl
-   w==;
-X-CSE-ConnectionGUID: CuAW89T1T8+wEYQtOesEUw==
-X-CSE-MsgGUID: mADZQEccTmW/MHLJukVLbQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11395"; a="45428670"
-X-IronPort-AV: E=Sophos;i="6.15,191,1739865600"; 
-   d="scan'208";a="45428670"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2025 06:27:24 -0700
-X-CSE-ConnectionGUID: 6q9IScSFQve322yI6xyTFg==
-X-CSE-MsgGUID: uTkR2OvDRHezxOJrTbFY7Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,191,1739865600"; 
-   d="scan'208";a="127853495"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by fmviesa008.fm.intel.com with ESMTP; 05 Apr 2025 06:27:22 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u13YO-00022q-0Q;
-	Sat, 05 Apr 2025 13:27:20 +0000
-Date: Sat, 5 Apr 2025 21:26:45 +0800
-From: kernel test robot <lkp@intel.com>
-To: Jani Nikula <jani.nikula@intel.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Philipp Zabel <p.zabel@pengutronix.de>
-Subject: drivers/gpu/drm/imx/ipuv3/imx-ldb.c:658:57: warning: '_sel'
- directive output may be truncated writing 4 bytes into a region of size
- between 3 and 13
-Message-ID: <202504052118.HCpNF13P-lkp@intel.com>
+	dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b="hlZAU06k"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=inria.fr; s=dc;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=je9cwcx6iqQa2t88dHW5/qrKP7V/BgyuZ0xSoOY+EFQ=;
+  b=hlZAU06kFnHL3j4PzmF/BgSB/RVfq4tRvI5iQrvkMtorpCSZXw7ndR3g
+   jU3xOM3kPsYkUwtPCEfflumgOzsv4phFz8iIdPQ6utv02ruc1MxJ6w2RH
+   9VoudccMJnmfGPUhKvD3rfr2IMSufDEe85Pd+2RARK4lCzcOP6+E6ZS5Q
+   s=;
+Authentication-Results: mail3-relais-sop.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=julia.lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
+X-IronPort-AV: E=Sophos;i="6.15,191,1739833200"; 
+   d="scan'208";a="113531443"
+Received: from unknown (HELO hadrien) ([50.225.219.62])
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2025 15:30:31 +0200
+Date: Sat, 5 Apr 2025 09:30:29 -0400 (EDT)
+From: Julia Lawall <julia.lawall@inria.fr>
+To: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
+cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, outreachy@lists.linux.dev, 
+    linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5] staging: rtl8723bs: Prevent duplicate NULL tests on
+ a value
+In-Reply-To: <Z/EuZuvGyQ9QBl6z@HP-650>
+Message-ID: <7e94b75e-6959-75c-ab4f-58147fc37dc@inria.fr>
+References: <Z/EuZuvGyQ9QBl6z@HP-650>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-Hi Jani,
-
-FYI, the error/warning still remains.
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   a8662bcd2ff152bfbc751cab20f33053d74d0963
-commit: 03ee752f00fd0daa082b43774cfd03a7f9a17385 drm/imx: prefer snprintf over sprintf
-date:   1 year, 2 months ago
-config: csky-randconfig-r053-20231127 (https://download.01.org/0day-ci/archive/20250405/202504052118.HCpNF13P-lkp@intel.com/config)
-compiler: csky-linux-gcc (GCC) 12.4.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250405/202504052118.HCpNF13P-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504052118.HCpNF13P-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   drivers/gpu/drm/imx/ipuv3/imx-ldb.c: In function 'imx_ldb_probe':
->> drivers/gpu/drm/imx/ipuv3/imx-ldb.c:658:57: warning: '_sel' directive output may be truncated writing 4 bytes into a region of size between 3 and 13 [-Wformat-truncation=]
-     658 |                 snprintf(clkname, sizeof(clkname), "di%d_sel", i);
-         |                                                         ^~~~
-   drivers/gpu/drm/imx/ipuv3/imx-ldb.c:658:17: note: 'snprintf' output between 8 and 18 bytes into a destination of size 16
-     658 |                 snprintf(clkname, sizeof(clkname), "di%d_sel", i);
-         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Content-Type: text/plain; charset=US-ASCII
 
 
-vim +/_sel +658 drivers/gpu/drm/imx/ipuv3/imx-ldb.c
 
-   617	
-   618	static int imx_ldb_probe(struct platform_device *pdev)
-   619	{
-   620		struct device *dev = &pdev->dev;
-   621		struct device_node *np = dev->of_node;
-   622		struct device_node *child;
-   623		struct imx_ldb *imx_ldb;
-   624		int dual;
-   625		int ret;
-   626		int i;
-   627	
-   628		imx_ldb = devm_kzalloc(dev, sizeof(*imx_ldb), GFP_KERNEL);
-   629		if (!imx_ldb)
-   630			return -ENOMEM;
-   631	
-   632		imx_ldb->regmap = syscon_regmap_lookup_by_phandle(np, "gpr");
-   633		if (IS_ERR(imx_ldb->regmap)) {
-   634			dev_err(dev, "failed to get parent regmap\n");
-   635			return PTR_ERR(imx_ldb->regmap);
-   636		}
-   637	
-   638		/* disable LDB by resetting the control register to POR default */
-   639		regmap_write(imx_ldb->regmap, IOMUXC_GPR2, 0);
-   640	
-   641		imx_ldb->dev = dev;
-   642		imx_ldb->lvds_mux = device_get_match_data(dev);
-   643	
-   644		dual = of_property_read_bool(np, "fsl,dual-channel");
-   645		if (dual)
-   646			imx_ldb->ldb_ctrl |= LDB_SPLIT_MODE_EN;
-   647	
-   648		/*
-   649		 * There are three different possible clock mux configurations:
-   650		 * i.MX53:  ipu1_di0_sel, ipu1_di1_sel
-   651		 * i.MX6q:  ipu1_di0_sel, ipu1_di1_sel, ipu2_di0_sel, ipu2_di1_sel
-   652		 * i.MX6dl: ipu1_di0_sel, ipu1_di1_sel, lcdif_sel
-   653		 * Map them all to di0_sel...di3_sel.
-   654		 */
-   655		for (i = 0; i < 4; i++) {
-   656			char clkname[16];
-   657	
- > 658			snprintf(clkname, sizeof(clkname), "di%d_sel", i);
-   659			imx_ldb->clk_sel[i] = devm_clk_get(imx_ldb->dev, clkname);
-   660			if (IS_ERR(imx_ldb->clk_sel[i])) {
-   661				ret = PTR_ERR(imx_ldb->clk_sel[i]);
-   662				imx_ldb->clk_sel[i] = NULL;
-   663				break;
-   664			}
-   665	
-   666			imx_ldb->clk_parent[i] = clk_get_parent(imx_ldb->clk_sel[i]);
-   667		}
-   668		if (i == 0)
-   669			return ret;
-   670	
-   671		for_each_child_of_node(np, child) {
-   672			struct imx_ldb_channel *channel;
-   673			int bus_format;
-   674	
-   675			ret = of_property_read_u32(child, "reg", &i);
-   676			if (ret || i < 0 || i > 1) {
-   677				ret = -EINVAL;
-   678				goto free_child;
-   679			}
-   680	
-   681			if (!of_device_is_available(child))
-   682				continue;
-   683	
-   684			if (dual && i > 0) {
-   685				dev_warn(dev, "dual-channel mode, ignoring second output\n");
-   686				continue;
-   687			}
-   688	
-   689			channel = &imx_ldb->channel[i];
-   690			channel->ldb = imx_ldb;
-   691			channel->chno = i;
-   692	
-   693			/*
-   694			 * The output port is port@4 with an external 4-port mux or
-   695			 * port@2 with the internal 2-port mux.
-   696			 */
-   697			ret = drm_of_find_panel_or_bridge(child,
-   698							  imx_ldb->lvds_mux ? 4 : 2, 0,
-   699							  &channel->panel, &channel->bridge);
-   700			if (ret && ret != -ENODEV)
-   701				goto free_child;
-   702	
-   703			/* panel ddc only if there is no bridge */
-   704			if (!channel->bridge) {
-   705				ret = imx_ldb_panel_ddc(dev, channel, child);
-   706				if (ret)
-   707					goto free_child;
-   708			}
-   709	
-   710			bus_format = of_get_bus_format(dev, child);
-   711			if (bus_format == -EINVAL) {
-   712				/*
-   713				 * If no bus format was specified in the device tree,
-   714				 * we can still get it from the connected panel later.
-   715				 */
-   716				if (channel->panel && channel->panel->funcs &&
-   717				    channel->panel->funcs->get_modes)
-   718					bus_format = 0;
-   719			}
-   720			if (bus_format < 0) {
-   721				dev_err(dev, "could not determine data mapping: %d\n",
-   722					bus_format);
-   723				ret = bus_format;
-   724				goto free_child;
-   725			}
-   726			channel->bus_format = bus_format;
-   727			channel->child = child;
-   728		}
-   729	
-   730		platform_set_drvdata(pdev, imx_ldb);
-   731	
-   732		return component_add(&pdev->dev, &imx_ldb_ops);
-   733	
-   734	free_child:
-   735		of_node_put(child);
-   736		return ret;
-   737	}
-   738	
+On Sat, 5 Apr 2025, Abraham Samuel Adekunle wrote:
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> When a value has been tested for NULL in an expression, a
+> second NULL test on the same value in another expression
+> is unnecessary when the value has not been assigned to NULL.
+>
+> Remove unnecessary duplicate NULL tests on the same value
+> that has previously been tested.
+>
+> Found by Coccinelle.
+
+The changes are found in the same way, but the code patterns are overall
+quite different.  It could make sense to make separate patches for them.
+Then you could make a log message that is really specialized to the code
+in each patch and it would be easier for the reviewer to be convinced that
+you have done the right thing.
+
+julia
+
+>
+> Signed-off-by: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
+> ---
+> Changed in v4:
+> 	- Separated initially integrated suggested change
+> 	 "use modulo % 4096 over & 0xfff" to a different patch.
+> Changes in v3:
+> 	- Changed other cases to use modulo (% 4096) over (& 0xofff).
+> 	- Modified commit message to reflect these changes.
+> Changes in v2:
+> 	- Dropped patch files for media drivers from patchset as it is
+> 	  not meant for outreachy applicants.
+> 	- Added full-stop aign to text in commit message.
+> 	- Made code more readable by adding a line break.
+> 	- Changed cases to use modulo (% 4096) over (& 0xfff).
+> Changes in v1
+> 	- Patch for drivers/staging/media/av7110/sp8870.c and
+> 	- drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c
+> 	  is split into two different patches in the patchset for use by the different
+> 	  driver maintainers.
+> 	- Added subject title for each of the separated patches.
+> 	- Patch 1: Removed unnecessary curly braces {} initially inserted.
+> 	- Patch 2: Unnecessary {} was also removed for v1.
+>
+>  drivers/staging/rtl8723bs/core/rtw_mlme_ext.c |  2 +-
+>  drivers/staging/rtl8723bs/core/rtw_xmit.c     | 56 +++++++++----------
+>  2 files changed, 28 insertions(+), 30 deletions(-)
+>
+> diff --git a/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c b/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
+> index 90966b7034ab..675226535cd1 100644
+> --- a/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
+> +++ b/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
+> @@ -1323,7 +1323,7 @@ unsigned int OnAssocReq(struct adapter *padapter, union recv_frame *precv_frame)
+>  	spin_unlock_bh(&pstapriv->asoc_list_lock);
+>
+>  	/*  now the station is qualified to join our BSS... */
+> -	if (pstat && (pstat->state & WIFI_FW_ASSOC_SUCCESS) && (status == WLAN_STATUS_SUCCESS)) {
+> +	if ((pstat->state & WIFI_FW_ASSOC_SUCCESS) && (status == WLAN_STATUS_SUCCESS)) {
+>  		/* 1 bss_cap_update & sta_info_update */
+>  		bss_cap_update_on_sta_join(padapter, pstat);
+>  		sta_info_update(padapter, pstat);
+> diff --git a/drivers/staging/rtl8723bs/core/rtw_xmit.c b/drivers/staging/rtl8723bs/core/rtw_xmit.c
+> index 026061b464f7..f817cab2f831 100644
+> --- a/drivers/staging/rtl8723bs/core/rtw_xmit.c
+> +++ b/drivers/staging/rtl8723bs/core/rtw_xmit.c
+> @@ -941,35 +941,33 @@ s32 rtw_make_wlanhdr(struct adapter *padapter, u8 *hdr, struct pkt_attrib *pattr
+>  			if (!(psta->state & _FW_LINKED))
+>  				return _FAIL;
+>
+> -			if (psta) {
+> -				psta->sta_xmitpriv.txseq_tid[pattrib->priority]++;
+> -				psta->sta_xmitpriv.txseq_tid[pattrib->priority] &= 0xFFF;
+> -				pattrib->seqnum = psta->sta_xmitpriv.txseq_tid[pattrib->priority];
+> -
+> -				SetSeqNum(hdr, pattrib->seqnum);
+> -
+> -				/* check if enable ampdu */
+> -				if (pattrib->ht_en && psta->htpriv.ampdu_enable)
+> -					if (psta->htpriv.agg_enable_bitmap & BIT(pattrib->priority))
+> -						pattrib->ampdu_en = true;
+> -
+> -				/* re-check if enable ampdu by BA_starting_seqctrl */
+> -				if (pattrib->ampdu_en == true) {
+> -					u16 tx_seq;
+> -
+> -					tx_seq = psta->BA_starting_seqctrl[pattrib->priority & 0x0f];
+> -
+> -					/* check BA_starting_seqctrl */
+> -					if (SN_LESS(pattrib->seqnum, tx_seq)) {
+> -						pattrib->ampdu_en = false;/* AGG BK */
+> -					} else if (SN_EQUAL(pattrib->seqnum, tx_seq)) {
+> -						psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (tx_seq+1)&0xfff;
+> -
+> -						pattrib->ampdu_en = true;/* AGG EN */
+> -					} else {
+> -						psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (pattrib->seqnum+1)&0xfff;
+> -						pattrib->ampdu_en = true;/* AGG EN */
+> -					}
+> +			psta->sta_xmitpriv.txseq_tid[pattrib->priority]++;
+> +			psta->sta_xmitpriv.txseq_tid[pattrib->priority] &= 0xFFF;
+> +			pattrib->seqnum = psta->sta_xmitpriv.txseq_tid[pattrib->priority];
+> +
+> +			SetSeqNum(hdr, pattrib->seqnum);
+> +
+> +			/* check if enable ampdu */
+> +			if (pattrib->ht_en && psta->htpriv.ampdu_enable)
+> +				if (psta->htpriv.agg_enable_bitmap & BIT(pattrib->priority))
+> +					pattrib->ampdu_en = true;
+> +
+> +			/* re-check if enable ampdu by BA_starting_seqctrl */
+> +			if (pattrib->ampdu_en == true) {
+> +				u16 tx_seq;
+> +
+> +				tx_seq = psta->BA_starting_seqctrl[pattrib->priority & 0x0f];
+> +
+> +				/* check BA_starting_seqctrl */
+> +				if (SN_LESS(pattrib->seqnum, tx_seq)) {
+> +					pattrib->ampdu_en = false;/* AGG BK */
+> +				} else if (SN_EQUAL(pattrib->seqnum, tx_seq)) {
+> +					psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (tx_seq+1)&0xfff;
+> +
+> +					pattrib->ampdu_en = true;/* AGG EN */
+> +				} else {
+> +					psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (pattrib->seqnum+1)&0xfff;
+> +					pattrib->ampdu_en = true;/* AGG EN */
+>  				}
+>  			}
+>  		}
+> --
+> 2.34.1
+>
+>
