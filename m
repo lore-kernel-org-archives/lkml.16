@@ -1,216 +1,189 @@
-Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A002634
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 01:52:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6CAC2FB6
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 01:57:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743817946; cv=none; b=sq5kVL/hwB8M1xPOuo99ISDbndDnNRndZQYkNFaFZ0ehFNQyXMtW4ezwL7mFQPHaTmP15szPqfl7N0tdpMJUVDZfJS7R2nTUmM0U5PxMrYc425KqJM4bQH1N32PnXQ0QjYRsa4bexxjJ0CvBn3MlhT+EnBxEENj8Kz6ZoiYMkT0=
+	t=1743818260; cv=none; b=bVmopH+XoNmJi8BSg89OvdfvFOTp2MK2wlsUxxg1xr4qGKFEL34UjvvO5CMY+MaNfR1MmC/khp2i79xNa4TVcSdU7T93mUcdL5Wnf6v2ZzYiCi1gi1wyotB2rilpD8M0zP4BtGW+VpL5SJ/SQnIuTNu1vrnc9r+n9mGoHpvStlo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743817946; c=relaxed/simple;
-	bh=Dtod8DZ7V8khq16mweI5CRWWsY2J2/EWu6YusiiwwQo=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=ZhgpAQ4G+daJx+gu5nJwA0DgEJj9rLl+m4uRTUxyIzNw0h/7djaaHD7Yixv0Q0/Q8PbI94LAqCHdiNbAa8JFn1dBYU/zZ8yjpdEeLRsNrdfyL3TPcACPToa7A5MqlcgEBLTC37YD/jnzP976SSjKbG1mQ+n7rLMLgBEIbAVKKXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3d6e10f4b85so40776995ab.0
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 18:52:24 -0700 (PDT)
+	s=arc-20240116; t=1743818260; c=relaxed/simple;
+	bh=OAoewxTDbadnGF1GAguojqOu/hTz+6xUWg05jevi4+Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MzXQffjwM1xkji66CKhcXWkhkphEiQbps6HuBR6u3tL645Dl8sa+3mHnPJCE0zS+Xrg4/pVSTFDNZ2YTYW477SNxsMOgjVhSrwE/uX2PM9JFGGvneAzKzA/mHMF3uyLYrtJA9hGXlv1fP9Acb2WB+Yqw+vL2Ah+QRcOdQc0MdPk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=La/q+6ES; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="La/q+6ES"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4393ee912e1so12675e9.1
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 18:57:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1743818257; x=1744423057; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OAoewxTDbadnGF1GAguojqOu/hTz+6xUWg05jevi4+Q=;
+        b=La/q+6ESAJCdBnxXGPCM3hVWPLt3P10a8VOFaG/P0Mn/fgxSJpS1O9yrsd1Vb0cq1B
+         OeGogdzMRYwmEtApp86F1BSFpd37LbtGW9HFJDuj7uRqM/V84PXR/DdBoqyNgwnMK/dO
+         HC+uk+jr72HLdGWuBAD1AVtnqkRI5kf8XSwcx3b+sgIi7dI21QWbr8ybTQzeMaZyeUeh
+         hUondTkDNHDJa7vIxWO+KDQ7ZeaERnW2NWBP7CID9z+a55U2Sa9mwWip87OoYaXQv3b9
+         5ftL89jmIOpDceULmbFOiBUsXPShBvDEGS1YwtRs9Tyy2gJK1u0wHCsXEDkHGr7GUkOr
+         vvkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743817943; x=1744422743;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6nCJrw6qAEnDPjaAhoB/Zn3Anwy2j3VO4X4vlAKVz7c=;
-        b=EudYrOZ17Cgo0KCGk58iuX4jrdcig7Cs10QdiXwfalQAgVPejbksdU6pw9KCyyoeam
-         /bM4629XwfvlMpA2SfrT5mzUTtcGW/GFQc90RJHq9oHxYYaSgD5FpdG3nW0bOvLxu23T
-         fnITcs7qKdIAhduzThA/3sGO6QLbU/xZG7bPeNE5W2t2MfDKdMZOFWGLrYbi3I+wUzQ+
-         emnyguU7LRHu2EjVjUnuPRF+5q/kxGKd6UWP9wKM8W+g2B3oWnRxC58ltsXwa65Pc9rt
-         bOyMgcJ2pmyQfH1VhiO5QV1XOuMBHk6AoYFHh4s4/H/nTuoWJTXstVqWfTMb+PqKlS19
-         9pnw==
-X-Forwarded-Encrypted: i=1; AJvYcCXke+t+hFrHabAPymJ+1euwgqibwIXkZIpyMvpZpUTXvjDwQDzCqMnN5ziipA5YxNb6H15r8sYj8IADF/Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwvvJrXM3jSEd23hxdq/1Gf21KNh3Y8oEPI3bJuper/NgDzW3Ts
-	pWubnO50JCkjQYUHeX8xFOQLePna5jBj2haqJ/6/QFc2TYLZiERPnqwLTjUIdfrMSNahDwsI24Z
-	c7tKd0lRCt+KriVEbvGz4RdRN4LEpUJetaWR2RF6yrEvI0nhz1LJwBoA=
-X-Google-Smtp-Source: AGHT+IE+nJP/PTdyrlhdCBCnhMuwLyYvE945m1tRQoSAs9/Nb5TSC1ff8ItfRopYIKG1TVc4yivJUgnGdj/ZkdGvEAeSiLS0+sVb
+        d=1e100.net; s=20230601; t=1743818257; x=1744423057;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OAoewxTDbadnGF1GAguojqOu/hTz+6xUWg05jevi4+Q=;
+        b=r7JXOC6dDWOeQOUmo+pp03t62qMWfsk/Mx4AjJ+029ufUbdjyflXgnzSjE1wRWAqkt
+         oozGiKxo//UdHbe4qqh8hmNdElHXRg07LwjT7ExlzX7L8ohPUUboUE/F7/SSEC3bqd9N
+         HLrcVguaM2Tqb+CsI9BEYJFuWr6t8oES8RDAwX2KCV/s7AkCm6QpCswc5KzjiBrW58ge
+         bna4zzyUJVcCKGJsW4NlExSmjOxGozUc/MxLM8cCBxFe/fQPUdbV96fRUH1zTD8bjfIl
+         FWM+K+wCPBhs7T9DFrWsVx4ywCaAr7Shi7/Bi4NpqSqFJU0RYJ/R+0e5mQgPrIhU53FP
+         xGWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWESt2c1ggN53qIOkPiJ3I5ooNlBdIC0MeIUV1FgfZlbB+gUvW8DuLKii8sYcjH4atdlTFNJS5Wl16zdE8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwBHDjki0J82ccifAX1zTtC2LXpZsknLzJpjQHheAZCZUzmhIRO
+	NvOneBBJ8gVLUCDJU+MDoyQXHDNMbEyJcmkPICFKSdzfA4jEJPZe43YVaPQcdDSX9UVrsHefK+9
+	B8C9HZkjwY7ASUo6d+R36Uftep1BN09gP0T4y
+X-Gm-Gg: ASbGncslP7jtp1wJ1AM674DKZtgiJAy3j8W2zFCLg4KIYnCoTOK56r18Ingdv7k80aO
+	ZSMncdhKbZUrW+szYrIcwtg6Ab+V3/HWpyo7MvshubVhGeVLEXD38R+QK5J7P0uNOjuK5WS3gqS
+	tcO92YqIvhOyd47m8RP/y7wsxY
+X-Google-Smtp-Source: AGHT+IEZgBBuLcDuNWx/jFE8YY2SlwYmrCbwtiJPDyDgjgoOsHULjpV/CWiTVdB4+NcESAdkrCw+xWEHlXEt9xlkY4M=
+X-Received: by 2002:a05:600c:3548:b0:43d:409c:6142 with SMTP id
+ 5b1f17b1804b1-43ee0e84029mr527915e9.0.1743818256732; Fri, 04 Apr 2025
+ 18:57:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:16ca:b0:3d0:19c6:c9e1 with SMTP id
- e9e14a558f8ab-3d6e3f1a40fmr59337975ab.13.1743817943570; Fri, 04 Apr 2025
- 18:52:23 -0700 (PDT)
-Date: Fri, 04 Apr 2025 18:52:23 -0700
-In-Reply-To: <67bf3ddd.050a0220.1ebef.002d.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67f08cd7.050a0220.0a13.0228.GAE@google.com>
-Subject: Re: [syzbot] [net?] possible deadlock in ipv6_sock_ac_close (4)
-From: syzbot <syzbot+be6f4b383534d88989f7@syzkaller.appspotmail.com>
-To: davem@davemloft.net, dsahern@kernel.org, edumazet@google.com, 
-	horms@kernel.org, kuba@kernel.org, linux-kernel@vger.kernel.org, 
-	netdev@vger.kernel.org, pabeni@redhat.com, syzkaller-bugs@googlegroups.com
+References: <20250310-dmem-cgroups-v1-0-2984c1bc9312@kernel.org>
+ <f5fdc666-dd72-4a4f-9270-b539a3179382@amd.com> <20250310-eccentric-wonderful-puffin-ddbb26@houat>
+ <CAPM=9tzkLXOz=-3eujUbbjMHunR+_5JZ4oQaqNmbrWWF9WZJ0w@mail.gmail.com>
+ <e08f10da-b0cd-444b-8e0b-11009b05b161@amd.com> <CAPM=9twgFt43OKqUY0TNopTmibnR_d891xmV=wFM91n604NUCw@mail.gmail.com>
+ <5ed87c80-6fe3-4f8c-bb98-ca07f1db8c34@amd.com> <20250403-quick-salamander-of-charisma-cab289@houat>
+ <202c3a58-97a3-489c-b3f2-b1fd2735bd19@amd.com>
+In-Reply-To: <202c3a58-97a3-489c-b3f2-b1fd2735bd19@amd.com>
+From: "T.J. Mercier" <tjmercier@google.com>
+Date: Fri, 4 Apr 2025 18:57:25 -0700
+X-Gm-Features: ATxdqUG3Y0HIBufABo7xowgVhlloVVBpkM4JhVkK9QLhPMspK9dsEIobBZzLpG8
+Message-ID: <CABdmKX2LhrcyDM0r1tytt2vKLuCLGsxZaGHgN+u1hUmEMXuGtw@mail.gmail.com>
+Subject: Re: [PATCH RFC 00/12] dma: Enable dmem cgroup tracking
+To: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+Cc: Maxime Ripard <mripard@kernel.org>, Dave Airlie <airlied@gmail.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Marek Szyprowski <m.szyprowski@samsung.com>, 
+	Robin Murphy <robin.murphy@arm.com>, Sumit Semwal <sumit.semwal@linaro.org>, 
+	Benjamin Gaignard <benjamin.gaignard@collabora.com>, Brian Starkey <Brian.Starkey@arm.com>, 
+	John Stultz <jstultz@google.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, Simona Vetter <simona@ffwll.ch>, Tomasz Figa <tfiga@chromium.org>, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, Ben Woodard <woodard@redhat.com>, 
+	Hans Verkuil <hverkuil@xs4all.nl>, 
+	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, iommu@lists.linux.dev, 
+	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	linaro-mm-sig@lists.linaro.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-syzbot has found a reproducer for the following issue on:
+On Fri, Apr 4, 2025 at 1:47=E2=80=AFAM Christian K=C3=B6nig <christian.koen=
+ig@amd.com> wrote:
+>
+> Hi Maxime,
+>
+> Am 03.04.25 um 17:47 schrieb Maxime Ripard:
+> > On Thu, Apr 03, 2025 at 09:39:52AM +0200, Christian K=C3=B6nig wrote:
+> >>> For the UMA GPU case where there is no device memory or eviction
+> >>> problem, perhaps a configurable option to just say account memory in
+> >>> memcg for all allocations done by this process, and state yes you can
+> >>> work around it with allocation servers or whatever but the behaviour
+> >>> for well behaved things is at least somewhat defined.
+> >> We can have that as a workaround, but I think we should approach that
+> >> differently.
+> >>
+> >> With upcoming CXL even coherent device memory is exposed to the core
+> >> OS as NUMA memory with just a high latency.
+> >>
+> >> So both in the CXL and UMA case it actually doesn't make sense to
+> >> allocate the memory through the driver interfaces any more. With
+> >> AMDGPU for example we are just replicating mbind()/madvise() within
+> >> the driver.
+> >>
+> >> Instead what the DRM subsystem should aim for is to allocate memory
+> >> using the normal core OS functionality and then import it into the
+> >> driver.
+> >>
+> >> AMD, NVidia and Intel have HMM working for quite a while now but it
+> >> has some limitations, especially on the performance side.
+> >>
+> >> So for AMDGPU we are currently evaluating udmabuf as alternative. That
+> >> seems to be working fine with different NUMA nodes, is perfectly memcg
+> >> accounted and gives you a DMA-buf which can be imported everywhere.
+> >>
+> >> The only show stopper might be the allocation performance, but even if
+> >> that's the case I think the ongoing folio work will properly resolve
+> >> that.
+> > I mean, no, the showstopper to that is that using udmabuf has the
+> > assumption that you have an IOMMU for every device doing DMA, which is
+> > absolutely not true on !x86 platforms.
+> >
+> > It might be true for all GPUs, but it certainly isn't for display
+> > controllers, and it's not either for codecs, ISPs, and cameras.
+> >
+> > And then there's the other assumption that all memory is under the
+> > memory allocator control, which isn't the case on most recent platforms
+> > either.
+> >
+> > We *need* to take CMA into account there, all the carved-out, device
+> > specific memory regions, and the memory regions that aren't even under
+> > Linux supervision like protected memory that is typically handled by th=
+e
+> > firmware and all you get is a dma-buf.
+> >
+> > Saying that it's how you want to workaround it on AMD is absolutely
+> > fine, but DRM as a whole should certainly not aim for that, because it
+> > can't.
+>
+> A bunch of good points you bring up here but it sounds like you misunders=
+tood me a bit.
+>
+> I'm certainly *not* saying that we should push for udmabuf for everything=
+, that is clearly use case specific.
+>
+> For use cases like CMA or protected carve-out the question what to do doe=
+sn't even arise in the first place.
+>
+> When you have CMA which dynamically steals memory from the core OS then o=
+f course it should be accounted to memcg.
+>
+> When you have carve-out which the core OS memory management doesn't even =
+know about then it should certainly be handled by dmem.
+>
+> The problematic use cases are the one where a buffer can sometimes be bac=
+ked by system memory and sometime by something special. For this we don't h=
+ave a good approach what to do since every approach seems to have a draw ba=
+ck for some use case.
 
-HEAD commit:    e48e99b6edf4 Merge tag 'pull-fixes' of git://git.kernel.or..
-git tree:       upstream
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=12afa7cf980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f2054704dd53fb80
-dashboard link: https://syzkaller.appspot.com/bug?extid=be6f4b383534d88989f7
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=140a294c580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1486994c580000
+This reminds me of memory.memsw in cgroup v1, where both resident and
+swapped memory show up under the same memcg counter. In this dmem
+scenario it's similar but across two different cgroup controllers
+instead of two different types of system memory under the same
+controller.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/b03407c4ab24/disk-e48e99b6.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/03f6746c0414/vmlinux-e48e99b6.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/4b3909ad8728/bzImage-e48e99b6.xz
+memsw doesn't exist in v2, and users are asking for it back. [1] I
+tend to agree that a combined counter is useful as I don't see a great
+way to apply meaningful limits to individual counters (or individual
+controller limits in the dmem+memcg case) when multiple cgroups are
+involved and eviction can cause memory to be transferred from one
+place to another. Sorry I'm not really offering a solution to this,
+but I feel like only transferring the charge between cgroups is a
+partial solution since the enforcement by the kernel is independent
+for each controller. So yeah as Dave and Sima said for accounting I
+guess it works, and maybe that's good enough if you have userspace
+enforcement that's smart enough to look in all the different places.
+But then there are the folks asking for kernel enforcement. Maybe just
+accounting as best we can is a good place to start?
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+be6f4b383534d88989f7@syzkaller.appspotmail.com
-
-======================================================
-WARNING: possible circular locking dependency detected
-6.14.0-syzkaller-13189-ge48e99b6edf4 #0 Not tainted
-------------------------------------------------------
-syz-executor200/5838 is trying to acquire lock:
-ffffffff900fc808 (rtnl_mutex){+.+.}-{4:4}, at: ipv6_sock_ac_close+0xc9/0x130 net/ipv6/anycast.c:220
-
-but task is already holding lock:
-ffff888035260aa0 (&smc->clcsock_release_lock){+.+.}-{4:4}, at: smc_clcsock_release+0x82/0xf0 net/smc/smc_close.c:30
-
-which lock already depends on the new lock.
-
-
-the existing dependency chain (in reverse order) is:
-
--> #2 (&smc->clcsock_release_lock){+.+.}-{4:4}:
-       lock_acquire+0x116/0x2f0 kernel/locking/lockdep.c:5866
-       __mutex_lock_common kernel/locking/mutex.c:601 [inline]
-       __mutex_lock+0x1a5/0x10c0 kernel/locking/mutex.c:746
-       smc_switch_to_fallback+0x35/0xda0 net/smc/af_smc.c:903
-       smc_setsockopt+0x765/0xd50 net/smc/af_smc.c:3104
-       do_sock_setsockopt+0x3b1/0x710 net/socket.c:2296
-       __sys_setsockopt net/socket.c:2321 [inline]
-       __do_sys_setsockopt net/socket.c:2327 [inline]
-       __se_sys_setsockopt net/socket.c:2324 [inline]
-       __x64_sys_setsockopt+0x1ee/0x280 net/socket.c:2324
-       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-       do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
--> #1 (sk_lock-AF_INET6){+.+.}-{0:0}:
-       lock_acquire+0x116/0x2f0 kernel/locking/lockdep.c:5866
-       lock_sock_nested+0x48/0x100 net/core/sock.c:3697
-       do_ipv6_setsockopt+0xccd/0x3680 net/ipv6/ipv6_sockglue.c:567
-       ipv6_setsockopt+0x5d/0x170 net/ipv6/ipv6_sockglue.c:993
-       do_sock_setsockopt+0x3b1/0x710 net/socket.c:2296
-       __sys_setsockopt net/socket.c:2321 [inline]
-       __do_sys_setsockopt net/socket.c:2327 [inline]
-       __se_sys_setsockopt net/socket.c:2324 [inline]
-       __x64_sys_setsockopt+0x1ee/0x280 net/socket.c:2324
-       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-       do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
--> #0 (rtnl_mutex){+.+.}-{4:4}:
-       check_prev_add kernel/locking/lockdep.c:3166 [inline]
-       check_prevs_add kernel/locking/lockdep.c:3285 [inline]
-       validate_chain+0xa69/0x24e0 kernel/locking/lockdep.c:3909
-       __lock_acquire+0xad5/0xd80 kernel/locking/lockdep.c:5235
-       lock_acquire+0x116/0x2f0 kernel/locking/lockdep.c:5866
-       __mutex_lock_common kernel/locking/mutex.c:601 [inline]
-       __mutex_lock+0x1a5/0x10c0 kernel/locking/mutex.c:746
-       ipv6_sock_ac_close+0xc9/0x130 net/ipv6/anycast.c:220
-       inet6_release+0x4f/0x70 net/ipv6/af_inet6.c:485
-       __sock_release net/socket.c:647 [inline]
-       sock_release+0x82/0x150 net/socket.c:675
-       smc_clcsock_release+0xcc/0xf0 net/smc/smc_close.c:34
-       __smc_release+0x683/0x800 net/smc/af_smc.c:301
-       smc_release+0x2dc/0x540 net/smc/af_smc.c:344
-       __sock_release net/socket.c:647 [inline]
-       sock_close+0xbc/0x240 net/socket.c:1391
-       __fput+0x3e9/0x9f0 fs/file_table.c:465
-       task_work_run+0x251/0x310 kernel/task_work.c:227
-       exit_task_work include/linux/task_work.h:40 [inline]
-       do_exit+0xa11/0x27f0 kernel/exit.c:953
-       do_group_exit+0x207/0x2c0 kernel/exit.c:1102
-       __do_sys_exit_group kernel/exit.c:1113 [inline]
-       __se_sys_exit_group kernel/exit.c:1111 [inline]
-       __x64_sys_exit_group+0x3f/0x40 kernel/exit.c:1111
-       x64_sys_call+0x26c3/0x26d0 arch/x86/include/generated/asm/syscalls_64.h:232
-       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-       do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-other info that might help us debug this:
-
-Chain exists of:
-  rtnl_mutex --> sk_lock-AF_INET6 --> &smc->clcsock_release_lock
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(&smc->clcsock_release_lock);
-                               lock(sk_lock-AF_INET6);
-                               lock(&smc->clcsock_release_lock);
-  lock(rtnl_mutex);
-
- *** DEADLOCK ***
-
-2 locks held by syz-executor200/5838:
- #0: ffff888078efc408 (&sb->s_type->i_mutex_key#10){+.+.}-{4:4}, at: inode_lock include/linux/fs.h:867 [inline]
- #0: ffff888078efc408 (&sb->s_type->i_mutex_key#10){+.+.}-{4:4}, at: __sock_release net/socket.c:646 [inline]
- #0: ffff888078efc408 (&sb->s_type->i_mutex_key#10){+.+.}-{4:4}, at: sock_close+0x90/0x240 net/socket.c:1391
- #1: ffff888035260aa0 (&smc->clcsock_release_lock){+.+.}-{4:4}, at: smc_clcsock_release+0x82/0xf0 net/smc/smc_close.c:30
-
-stack backtrace:
-CPU: 0 UID: 0 PID: 5838 Comm: syz-executor200 Not tainted 6.14.0-syzkaller-13189-ge48e99b6edf4 #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
- print_circular_bug+0x2e1/0x300 kernel/locking/lockdep.c:2079
- check_noncircular+0x142/0x160 kernel/locking/lockdep.c:2211
- check_prev_add kernel/locking/lockdep.c:3166 [inline]
- check_prevs_add kernel/locking/lockdep.c:3285 [inline]
- validate_chain+0xa69/0x24e0 kernel/locking/lockdep.c:3909
- __lock_acquire+0xad5/0xd80 kernel/locking/lockdep.c:5235
- lock_acquire+0x116/0x2f0 kernel/locking/lockdep.c:5866
- __mutex_lock_common kernel/locking/mutex.c:601 [inline]
- __mutex_lock+0x1a5/0x10c0 kernel/locking/mutex.c:746
- ipv6_sock_ac_close+0xc9/0x130 net/ipv6/anycast.c:220
- inet6_release+0x4f/0x70 net/ipv6/af_inet6.c:485
- __sock_release net/socket.c:647 [inline]
- sock_release+0x82/0x150 net/socket.c:675
- smc_clcsock_release+0xcc/0xf0 net/smc/smc_close.c:34
- __smc_release+0x683/0x800 net/smc/af_smc.c:301
- smc_release+0x2dc/0x540 net/smc/af_smc.c:344
- __sock_release net/socket.c:647 [inline]
- sock_close+0xbc/0x240 net/socket.c:1391
- __fput+0x3e9/0x9f0 fs/file_table.c:465
- task_work_run+0x251/0x310 kernel/task_work.c:227
- exit_task_work include/linux/task_work.h:40 [inline]
- do_exit+0xa11/0x27f0 kernel/exit.c:953
- do_group_exit+0x207/0x2c0 kernel/exit.c:1102
- __do_sys_exit_group kernel/exit.c:1113 [inline]
- __se_sys_exit_group kernel/exit.c:1111 [inline]
- __x64_sys_exit_group+0x3f/0x40 kernel/exit.c:1111
- x64_sys_call+0x26c3/0x26d0 arch/x86/include/generated/asm/syscalls_64.h:232
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fd6e1b18d39
-Code: Unable to access opcode bytes at 0x7fd6e1b18d0f.
-R
-
-
----
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+[1] https://lore.kernel.org/all/20250319064148.774406-5-jingxiangzeng.cas@g=
+mail.com/
