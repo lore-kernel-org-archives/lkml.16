@@ -1,61 +1,94 @@
-Received: from mail-4322.protonmail.ch (mail-4322.protonmail.ch [185.70.43.22])
+Received: from s1.g1.infrastructure.qtmlabs.xyz (s1.g1.infrastructure.qtmlabs.xyz [107.172.1.117])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A904729B0
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 05:11:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 796641C27;
+	Sat,  5 Apr 2025 05:15:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=107.172.1.117
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743829868; cv=none; b=hlrubnofA9oPBCMbUuMHG1vRG7IMXxw9j9SYUNkVdGG8Klq8LNcKiqWlBoyqM1e/vimNGNRPlP3sVvuBv23bUx84IzLgdBz5xU8I+h7uuTx7XiMShKrM30alunDe8hqjMHu8h04qjGYtS1ww2J4hOrM0QntHLxxjBiseWrakxsU=
+	t=1743830132; cv=none; b=moW0jCMXTOHozp8ZIn+ZH7ExcwZYthqIBXWtGm4rUPHjWGHs2MN56Qz1cQD5vF5Ua7ulxRdEG4hAxSD8HntVNwb6nJHPO3lMv2SSk/+pRR/j372tMy3MvY/MHO9CVoWnppKNmCAL4EImxrEumUm3MNtna+ZqLkYaHsbFDkZ9vjw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743829868; c=relaxed/simple;
-	bh=s/3QcHGjO/8t32wn3PtatkPXfh2YqwYfqpLUyTjj3vE=;
-	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=EgawKM88BjdYKfRV1sEJPYTShZd4AC9ebuQBx+03oCTF1JXX92rSZRh1brVYoh8e6nUd0h1cJYXpluGw0Rr/9+JfaElknekfa6CQUvh7U2Kfh1tOiTNxpdIWVduBsgcleC62uwiBbY+BJDzIYzi1FBgLH5XLumezb4vJc9ufEiQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me; spf=pass smtp.mailfrom=pm.me; dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b=cptfdJO4; arc=none smtp.client-ip=185.70.43.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
+	s=arc-20240116; t=1743830132; c=relaxed/simple;
+	bh=i2DeLSvosoDmthVPnFC9xDx3X9coPCSU4D2OwPh+kNA=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=PTHGV923e3uY+zqitljMG0OeY5s3aJzybuYMgA+E/1T0ptbMKDlfDhDqTwR7lVv8srLTGRDygpY3vVQZXApeACaA6rL9+oU4/0GNooPr8ANhbgculnTH0eFQ9X+PEzE6j4N0s/TSzYH4y8jkI8NKRD2pwvfsV8ZLggGUn8hYH5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qtmlabs.xyz; spf=pass smtp.mailfrom=qtmlabs.xyz; dkim=pass (2048-bit key) header.d=qtmlabs.xyz header.i=@qtmlabs.xyz header.b=WC/Jj2uS; arc=none smtp.client-ip=107.172.1.117
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qtmlabs.xyz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qtmlabs.xyz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="cptfdJO4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
-	s=protonmail3; t=1743829861; x=1744089061;
-	bh=s/3QcHGjO/8t32wn3PtatkPXfh2YqwYfqpLUyTjj3vE=;
-	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector:
-	 List-Unsubscribe:List-Unsubscribe-Post;
-	b=cptfdJO4y/ITOU1J0VvIo8vlx3BLqDI3ktao7DRgyKJtrRm/Th/KknG5JOheHeAh/
-	 9pwRd6M14siajvfgDh7xB9ZouYWRsOKv6n8MHMCOXBlVuF6MmNY20NNYtGzP713JP0
-	 kNWBAuUMqBKEED2tII1KoaiOBeokIBspxoZuKjUDArMT9KX/MeTDYN66sBElk76eXb
-	 xtUzjjA3KrHlFV1F659Z5sp7ZDqV/mw67dQmxI+2n193RHJPL/E/yqRW9C27iAMeAX
-	 RnDh+A3RpXQsydZpUC8WxEyVel1bSuCGpPceUX9spcxoSqPbZiFUCJZ3n0qnlHo0qr
-	 uBp+9VXpLjA2Q==
-Date: Sat, 05 Apr 2025 05:10:58 +0000
-To: srinivas.kandagatla@linaro.org
-From: "Michael C. Pratt" <mcpratt@pm.me>
-Cc: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 00/13] nvmem: patches (set 1) for 6.15
-Message-ID: <20250405051053.27676-1-mcpratt@pm.me>
-Feedback-ID: 27397442:user:proton
-X-Pm-Message-ID: 9bc7ccd46f0b1eb48897c616bb81738c224b9a1b
+	dkim=pass (2048-bit key) header.d=qtmlabs.xyz header.i=@qtmlabs.xyz header.b="WC/Jj2uS"
+Message-ID: <b09aab52-8fba-49c4-8dc7-9d5cca0f5b98@qtmlabs.xyz>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qtmlabs.xyz; s=dkim;
+	t=1743830128;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cYhB80NQAEOdELsTajiPWw1wUNFuHRaAVe3BXK9EaeI=;
+	b=WC/Jj2uSSBgrctke8lvLcxJfUYYOWf5ktSNDeGd2JRF9/8K3BMadYBjX7si/0FkQpYEozs
+	TAT2hjGjSnQ99oP5s6oaIgNx0KhAMZ4PDoj+CoOczq6IQEdwBATSwrBt2GpxFDiMGYHfhE
+	eJW4rsq1R+xMMJaBoMo8Ro2uA9MHL7GidG3yZmW6mgZsydLvf3tQQEsr04495XHTC0B3I1
+	DLz5b8IEvjFYDnNrATl4uR546D6zy792Ub3hVgqXgs3BXqdqSfDAEb7woCbjelDFX6AcdZ
+	qFbWJROMbvUQle+DkdGsHLZLh5yYvKxLSjn9vIsSWkQR4d9mmQO3Qf4wCoj41Q==
+Authentication-Results: s1.g1.infrastructure.qtmlabs.xyz;
+	auth=pass smtp.mailfrom=msizanoen@qtmlabs.xyz
+Date: Sat, 5 Apr 2025 12:15:20 +0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [REGRESSION] Kernel booted via kexec fails to resume from
+ hibernation
+From: msizanoen <msizanoen@qtmlabs.xyz>
+To: Roberto Ricci <io@r-ricci.it>
+Cc: ebiederm@xmission.com, rafael@kernel.org, pavel@ucw.cz,
+ ytcoode@gmail.com, kexec@lists.infradead.org, linux-pm@vger.kernel.org,
+ akpm@linux-foundation.org, regressions@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+References: <Z4WFjBVHpndct7br@desktop0a> <Z4WGSMdF6seQm9GV@desktop0a>
+ <b9f6ed5a-74b9-47c0-b073-9922dbe6119b@qtmlabs.xyz>
+ <Z-8E-LLs1dFWfn6J@desktop0a>
+ <691be719-7d4c-4cb1-87d6-cca7834547fe@qtmlabs.xyz>
+ <004d85e4-d23d-43af-87ca-8d037abba51d@qtmlabs.xyz>
+ <4081fbd9-0a5f-49d6-9553-4f964bf5ef27@qtmlabs.xyz>
+Content-Language: en-US
+In-Reply-To: <4081fbd9-0a5f-49d6-9553-4f964bf5ef27@qtmlabs.xyz>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spamd-Bar: /
 
-Hi Srinivas,
+Submitted for review: 
+https://lore.kernel.org/stable/20250405-fix-e820-nosave-v1-1-162633199548@qtmlabs.xyz/
 
-Have you taken a look at the patch I sent last week?
-No one is replying for whatever reason...
-
-It is a simple alternative and more appropriate fix
-for an older patch that the Openwrt community has been
-holding onto for years now and previously proposed here.
-
-I just resent it.
-Thanks for your time,
-
---
-MCP
-
+On 4/4/25 12:50, msizanoen wrote:
+> Here's an updated version of the patch that better handles 
+> pathological e820 tables.
+>
+> On 4/4/25 11:56, msizanoen wrote:
+>> Also, can you reproduce this issue with a target kernel (the kernel 
+>> being kexec-ed) that has one of the patches attached (select the 
+>> correct one according to your kernel version) applied, with either 
+>> kexec_load or kexec_file_load?
+>>
+>> On 4/4/25 09:54, msizanoen wrote:
+>>> Can you send the dmesg logs for this case (6.13 + mentioned patch 
+>>> series backported as target kernel, using kexec_load)?
+>>>
+>>> On 4/4/25 05:00, Roberto Ricci wrote:
+>>>> On 2025-04-01 19:59 +0700, msizanoen wrote:
+>>>>> [snip]
+>>>>> It seems like `e820__register_nosave_regions` is erroneously 
+>>>>> marking some
+>>>>> kernel memory as nosave in the presence of sub-page e820 regions. 
+>>>>> In theory
+>>>>> backporting
+>>>>> https://lore.kernel.org/all/20250214090651.3331663-1-rppt@kernel.org/ 
+>>>>> should
+>>>>> be sufficient to avoid this but a fix for the actual root cause is
+>>>>> preferred.
+>>>> When using kexec_file_load, this patch series fixes the issue not only
+>>>> in theory but also in practice.
+>>>> But the issue with kexec_load (see
+>>>> https://lore.kernel.org/all/Z-hYWc9LtBU1Yhtg@desktop0a/
+>>>> ), which might be related, is not fixed.
