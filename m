@@ -1,161 +1,182 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1155F2E62C1;
-	Sat,  5 Apr 2025 01:17:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E7F32C9D
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 01:31:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743815848; cv=none; b=Sc8gzpWqGIh2GS44P+bmhBD5J/psYQwr1jz92yZbcmmnpAzHY4TIA2mTTH0+slwtKLeVykYubqD4PJUwmjbmKcxxdkgkNKA9Z3okfAVKGfApwo82BOLVjxXzuQep/xMofsjOckYNx8FdO/VJuafemIGBlJ/v7VPxTxt5tNkqJqo=
+	t=1743816690; cv=none; b=eGxQe4dS3TkjuiV+eapmr2hx49BbtMykUDAOQTz+KGp7e0fU6pg5imzUdCDhYnD534RqFzvqE1cT3rZOVI7h9IncwaUVcHYtyqrBdCxXu+UFRFxSKvdP0qdvvOqsb5L1rS2DV8eJzHOodo6eHkZElyMg+B1D3xmBgGv1daUVrQM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743815848; c=relaxed/simple;
-	bh=f3i7y9qJZMSTYCRTNPf2EJF6SHSdbXnOdImAqF1W99g=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=KwPRGuLq/r+uRRcMvlsTrxmbpue912LVugJGBSjOPteHARpxK9tWjQv5yEweZEvtSe8MIHzH7gzFDjanseh9fQjpegP717+rSbRtzZOBNFSI31ZgZNlDPIIndWyY+wRdeBt0BR32l7XrDg101n5CzI8Fu7VyRomrYH8+S8UsRRk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YRnurKuH; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743816690; c=relaxed/simple;
+	bh=6YuxP86QElVc/IotRs1nJatt8CYhXJyPpzx+X+1oofE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=V7geumNC2pshTP0WfmPHsq7vzALNUBnv9FOj9y9kKs6MK8AOLdnaq/CbznWi0foztw5KWo+/2mVEn5pcGMXjOd3taJbltn3uomCZiTPkUHQaFqCydWCJA42TMD9PAnlFlclPh4gqK7s9N9Vvbvc1rBMZggszT6intR6evzLO8Cw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KLbtFUt/; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YRnurKuH"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2243803b776so37806955ad.0;
-        Fri, 04 Apr 2025 18:17:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743815846; x=1744420646; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language:subject
-         :references:cc:to:user-agent:mime-version:date:message-id:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NRiuL4Sy1s+c/lXgB3vFyCUJTB29r4cpXB4vQmrcmqI=;
-        b=YRnurKuH0qf8QZ1KCUwm5y0Za2vb8zsJBV5R9jIeOPcHdOS2Y1x2cC9u18+sOLLm3V
-         Vgao4vJjL7NF1PUiRYzGDDwSvbsJr4iEgNRAvvUwKQQFPg4FDRGXPwf9vwatDsYut9RP
-         r2RgB7tx8Pm3ecjNlusVzcWtgXYg2tisennGcVuDQt64BV4jGjFT8ebw3CJ6k7/fTscF
-         5p0rHmXQd3P0JUGdGGtvjjYZeeALHHVJoHFSa8Xdpy+8IULCU2KrSfJp6fPSLbhmaYRd
-         Pr9jo7SrBt3qoQ24Bf4Oi48YcL6Lu5sXehSxcZmBDNkR7kRLSt2c+dow5tDaUrr/TFNg
-         bZLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743815846; x=1744420646;
-        h=content-transfer-encoding:in-reply-to:from:content-language:subject
-         :references:cc:to:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NRiuL4Sy1s+c/lXgB3vFyCUJTB29r4cpXB4vQmrcmqI=;
-        b=JHLrp3NVp/SMPJ1GTJaDcfNB78Xr9OvSse6kWADJGEKlTf+RjJA4Fkah4epIGQigGH
-         juqh0LlakK+D162kGm6hXKSfssMM2WiN7E9f85+2WcGqghwhZOlmBUGpE5FkozdTA16G
-         qALNOwgIk0ImH9vVPCXQ75LvqAhnBwwOpnC+Ob8J7+VIA/r0KXSB7EzwBczecF9l5wSi
-         0vmu/KbwAK/u78Vi8gm84GIsrn6ACreBXE/a9J/YeA5fTkEJj9mGawIz+yvzy62ZqP3t
-         /82nn5WLqy+h2roZoTvsAlzFq/TLSW1RrwrwRJJAyF6e1OFAM8RMNvRwlP2lOg9JOo8r
-         6OwA==
-X-Forwarded-Encrypted: i=1; AJvYcCUWlDFizJ72L4JaLpGMGIXwPVkkry0CxprxOxHRciM+kbDmneQ/BvwS/4Z9t6b6hHswwZsZIhEUcr66SQ9s@vger.kernel.org, AJvYcCV5YymNw437k3DF6kKFAwfK3U2exxJWUISpUaX+DQIMatGKsTnW7b51mOoli9iXf8Jm6BVqH9MY483MU/YGLg==@vger.kernel.org, AJvYcCV73uF6MlopNrW2+1X8virrsE1CN1EbJ82LQ3FfZSkFJ+ek2Ms0nesputnSByKTAhpkx+yT0XK/@vger.kernel.org, AJvYcCVMi0tnSlpsyUu9NCHb33HIHlEWwl25WXGtTP0H5l19Gh81q5ug1vd/CfdjApdJoCuSvRjAiSm7Zw4tAssV6DBY@vger.kernel.org, AJvYcCVNCQVqTlSFPXisH9bZc4eTOctWFTgsksSkc3GHeu/NuKsr3Qzkgwi2Te2fYJKcQ5BaPZ+1wgdVWCLw@vger.kernel.org, AJvYcCWhZFY9l4lNdSkHoLCWyE3EuOFxfqkiLQah38cNgKePAtSELcneThA51vDR3UHagmV8RSQZaQfCGSc=@vger.kernel.org, AJvYcCWlrI/JSZ/JuzS25BJBuyhHkRldgpr04/5qaY/YnqEBG1YHrboHaYDpqGjpmTgrNJP3ChrkytKYAEs=@vger.kernel.org, AJvYcCX6Ssa8979EneFfYhtaAKodjajDjHOfsHL5SXVQjWL+Wpt/AirlpUm/5S9S3MkohbdN32hAInPZsS3k@vger.kernel.org, AJvYcCXGOZOkI9lE0ylnkW0ktt7aPVyh/RRvJqqZibl8nWD0+nU5bBc4/Jn50bSdtN32AQibAfnZmQxuLyTG/XU=@vger.kernel.org, AJvYcCXMMuu1sTDouy7+bUG/G9YWJANtU5x7ZyVtgwZpr347i2TCa6jfm7ldLE32U0FxTgjN+pO4rSUPcf7Iew0=@vger.kernel.org, AJvYcCXRKSALrXbi3YbfbNZTUz7Ps+pdGKDPFa5OCJciAmpTHN3Su5BptmzAObQG6GDmH08H2h7+Q9Vhm0vp@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxr3CPhGm8W4iDr6QTqTstL9azX+Uw+8RfXnyLamw8fGI/bUBtC
-	YUmaEC7MECJEamEdzBjCIxA++D9v2aQD7VB7huqGNe63OUgohkpK
-X-Gm-Gg: ASbGnct0KFiIGSMKavchuzIRbJohlzYkeVSZP914WZK+mCplAHw3Yoy/mlyvKfJsgye
-	Cf2C4Bs4B2WNfX6Cnqvwo6zR1/QValY51yjC3Sg3KrsJ58GwlOJzW/5y8SJriFsdgnVnqMhZTL3
-	PTfsq25FUzSCX9ZzIUin0Z/QwIKZ3lenAGyKYxGF/KBrKjNd3IE6uZ5ynP5BeCriY4Rg7VxjH83
-	Hrf1ArhW4TpfLkSJ8AO9YujF7wAVjYscCfZCHxq0g+OX/Tb+mTI6RlVEfoyj7fLQyv+dVJwn5K5
-	wI9ck+8z03mRtxCCet1nvTA97oh58E89BEywJeZaMHosMno2zLF53pJHEiS2coOqaWJ1h5ZeqXQ
-	4LekjcPW+js7527c=
-X-Google-Smtp-Source: AGHT+IGrKFiapGLIEGHnSEZIAujUvj6ZJLSj064m/nFeE0wcOjOeNVFt0u8EmZ8qnV5tFeQau4dR7A==
-X-Received: by 2002:a17:903:3c6b:b0:224:24d3:6103 with SMTP id d9443c01a7336-22a955734f5mr25800795ad.35.1743815846125;
-        Fri, 04 Apr 2025 18:17:26 -0700 (PDT)
-Received: from [10.0.2.15] (KD106167137155.ppp-bb.dion.ne.jp. [106.167.137.155])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-229785b352esm39374225ad.18.2025.04.04.18.17.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Apr 2025 18:17:25 -0700 (PDT)
-Message-ID: <811c4103-08b1-4288-9a15-bd9795bc59f4@gmail.com>
-Date: Sat, 5 Apr 2025 10:17:16 +0900
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KLbtFUt/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743816688; x=1775352688;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=6YuxP86QElVc/IotRs1nJatt8CYhXJyPpzx+X+1oofE=;
+  b=KLbtFUt/ylKX0P3fOunWypS0uNSm7OtQ7RQBCb7NONy5CiPmWW0qOp+y
+   sYsB7yWFzezPgH4T12bgB5tNWNrmSRUSP1n6RXl8uplFP4hQtnOqY0FbD
+   a3FhsA/9EAJI0Io9SdSSoGGTrCqfZjRcNUSSDhkQJddfnx+GD2cd3vpPt
+   mguj3Bk9E3tyy5sJtHfv4v8gSJPxg3x6+6Qnp/WDXohNK2T1cd6en7WnD
+   mIbITN+uGhgd1ty2iLIywucGO/+Fic1zau+huCpjHvW1eH0c+eb2gsZnj
+   oN8AZY63+30Y4t8ip4BVP3Bmzi1bQfGKd3yoQgYd1dCjwELoW03rfRtre
+   g==;
+X-CSE-ConnectionGUID: YCtNSghmQp2SXQQrFzHuOg==
+X-CSE-MsgGUID: ZKC1jjGpR2uO8R0KhHYvHg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11394"; a="55459365"
+X-IronPort-AV: E=Sophos;i="6.15,189,1739865600"; 
+   d="scan'208";a="55459365"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 18:31:27 -0700
+X-CSE-ConnectionGUID: eeyKfLsaTMyTxxKItBTvsw==
+X-CSE-MsgGUID: k1+FQjZWTAqiNWEYL0GVbA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,189,1739865600"; 
+   d="scan'208";a="127767144"
+Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
+  by fmviesa008.fm.intel.com with ESMTP; 04 Apr 2025 18:31:25 -0700
+Received: from kbuild by b207828170a5 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u0sNW-0001iR-3A;
+	Sat, 05 Apr 2025 01:31:22 +0000
+Date: Sat, 5 Apr 2025 09:30:58 +0800
+From: kernel test robot <lkp@intel.com>
+To: Ivan Orlov <ivan.orlov0322@gmail.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Takashi Iwai <tiwai@suse.de>
+Subject: include/kunit/test.h:528:3: warning: '%s' directive argument is null
+Message-ID: <202504050922.ZzbkiojG-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: nfraprado@collabora.com
-Cc: James.Bottomley@HansenPartnership.com, akpm@linux-foundation.org,
- anton.ivanov@cambridgegreys.com, corbet@lwn.net, davem@davemloft.net,
- dmaengine@vger.kernel.org, ebiggers@kernel.org, edumazet@google.com,
- horms@kernel.org, jaegeuk@kernel.org, jarkko@kernel.org, jic23@kernel.org,
- johannes@sipsolutions.net, kernel@collabora.com, keyrings@vger.kernel.org,
- kuba@kernel.org, lars@metafoo.de, linux-doc@vger.kernel.org,
- linux-fscrypt@vger.kernel.org, linux-iio@vger.kernel.org,
- linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-media@vger.kernel.org, linux-mm@kvack.org,
- linux-sound@vger.kernel.org, linux-um@lists.infradead.org,
- maxime.chevallier@bootlin.com, mchehab@kernel.org, netdev@vger.kernel.org,
- pabeni@redhat.com, perex@perex.cz, richard@nod.at, tiwai@suse.com,
- tytso@mit.edu, vkoul@kernel.org, workflows@vger.kernel.org,
- zohar@linux.ibm.com, Akira Yokosawa <akiyks@gmail.com>
-References: <20250404-doc-paths-unliteral-v1-1-74718785444e@collabora.com>
-Subject: Re: [PATCH] docs: Remove literal markup from Documentation/ paths
-Content-Language: en-US
-From: Akira Yokosawa <akiyks@gmail.com>
-In-Reply-To: <20250404-doc-paths-unliteral-v1-1-74718785444e@collabora.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hi,
+Hi Ivan,
 
-Nícolas F. R. A. Prado wrote:
-> Given that the automarkup Sphinx plugin cross-references
-> "Documentation/*.rst" strings in the text to the corresponding
-> documents, surrounding those strings with the literal markup (``) not
-> only adds unnecessary markup in the source files, but actually prevents
-> the automatic cross-referencing to happen (as it doesn't happen in
-> literal blocks).
-> 
-> Remove all the occurrences of the literal markup in
-> "Documentation/*.rst" paths, except when the actual source file is being
-> referred. Also change the surrounding text when needed so it reads well
-> both in the source and the web page (eg. 'see file Doc...' -> 'see
-> Doc...').
-> 
-> Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
-> ---
-[...]
+FYI, the error/warning still remains.
 
->  Documentation/process/submit-checklist.rst                | 7 ++++---
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   9f867ba24d3665d9ac9d9ef1f51844eb4479b291
+commit: 3e39acf56ededdebd1033349a16b704839b94b28 ALSA: core: Add sound core KUnit test
+date:   1 year, 2 months ago
+config: csky-randconfig-002-20250405 (https://download.01.org/0day-ci/archive/20250405/202504050922.ZzbkiojG-lkp@intel.com/config)
+compiler: csky-linux-gcc (GCC) 10.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250405/202504050922.ZzbkiojG-lkp@intel.com/reproduce)
 
-I have updated ja_JP translation of this recently.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504050922.ZzbkiojG-lkp@intel.com/
 
-> diff --git a/Documentation/process/submit-checklist.rst b/Documentation/process/submit-checklist.rst
-> index beb7f94279fdb6a1d9b4aa86b2bea031f140732b..3ae31c5af2cb5c374658c1fb7125e70bf36e911c 100644
-> --- a/Documentation/process/submit-checklist.rst
-> +++ b/Documentation/process/submit-checklist.rst
-> @@ -30,7 +30,8 @@ Review Kconfig changes
->  
->  1) Any new or modified ``CONFIG`` options do not muck up the config menu and
->     default to off unless they meet the exception criteria documented in
-> -   ``Documentation/kbuild/kconfig-language.rst`` Menu attributes: default value.
-> +   Documentation/kbuild/kconfig-language.rst, under "Menu attributes", "default
-> +   value".
+All warnings (new ones prefixed by >>):
 
-I have made the same change in the translation, but failed to submit a patch...
+   In file included from include/kunit/assert.h:13,
+                    from include/kunit/test.h:12,
+                    from sound/core/sound_kunit.c:7:
+   sound/core/sound_kunit.c: In function 'test_card_set_id':
+   include/linux/printk.h:455:44: warning: '%s' directive argument is null [-Wformat-overflow=]
+     455 | #define printk(fmt, ...) printk_index_wrap(_printk, fmt, ##__VA_ARGS__)
+         |                                            ^
+   include/linux/printk.h:427:3: note: in definition of macro 'printk_index_wrap'
+     427 |   _p_func(_fmt, ##__VA_ARGS__);    \
+         |   ^~~~~~~
+   include/kunit/test.h:527:3: note: in expansion of macro 'printk'
+     527 |   printk(lvl fmt, ##__VA_ARGS__);    \
+         |   ^~~~~~
+   include/kunit/test.h:533:2: note: in expansion of macro 'kunit_log'
+     533 |  kunit_log(lvl, test, KUNIT_SUBTEST_INDENT "# %s: " fmt,  \
+         |  ^~~~~~~~~
+   include/kunit/test.h:546:2: note: in expansion of macro 'kunit_printk'
+     546 |  kunit_printk(KERN_INFO, test, fmt, ##__VA_ARGS__)
+         |  ^~~~~~~~~~~~
+   sound/core/sound_kunit.c:259:2: note: in expansion of macro 'kunit_info'
+     259 |  kunit_info(test, "%s", card->id);
+         |  ^~~~~~~~~~
+   In file included from sound/core/sound_kunit.c:7:
+>> include/kunit/test.h:528:3: warning: '%s' directive argument is null [-Wformat-overflow=]
+     528 |   kunit_log_append((test_or_suite)->log, fmt,  \
+         |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     529 |      ##__VA_ARGS__);   \
+         |      ~~~~~~~~~~~~~~
+   include/kunit/test.h:533:2: note: in expansion of macro 'kunit_log'
+     533 |  kunit_log(lvl, test, KUNIT_SUBTEST_INDENT "# %s: " fmt,  \
+         |  ^~~~~~~~~
+   include/kunit/test.h:546:2: note: in expansion of macro 'kunit_printk'
+     546 |  kunit_printk(KERN_INFO, test, fmt, ##__VA_ARGS__)
+         |  ^~~~~~~~~~~~
+   sound/core/sound_kunit.c:259:2: note: in expansion of macro 'kunit_info'
+     259 |  kunit_info(test, "%s", card->id);
+         |  ^~~~~~~~~~
 
->  
->  2) All new ``Kconfig`` options have help text.
->  
-> @@ -47,7 +48,7 @@ Provide documentation
->  2) All new ``/proc`` entries are documented under ``Documentation/``
->  
->  3) All new kernel boot parameters are documented in
-> -   ``Documentation/admin-guide/kernel-parameters.rst``.
-> +   Documentation/admin-guide/kernel-parameters.rst.
 
-Hmm, this item is asking "Have you documented the new params in that
-particular file?", so I don't think this change should be made.
+vim +528 include/kunit/test.h
 
->  
->  4) All new module parameters are documented with ``MODULE_PARM_DESC()``
->  
-> @@ -58,7 +59,7 @@ Provide documentation
->     linux-api@vger.kernel.org.
->  
->  6) If any ioctl's are added by the patch, then also update
-> -   ``Documentation/userspace-api/ioctl/ioctl-number.rst``.
-> +   Documentation/userspace-api/ioctl/ioctl-number.rst.
+e2219db280e3fe Alan Maguire 2020-03-26  484  
+6d2426b2f258da David Gow    2021-06-24  485  /**
+6d2426b2f258da David Gow    2021-06-24  486   * kunit_mark_skipped() - Marks @test_or_suite as skipped
+6d2426b2f258da David Gow    2021-06-24  487   *
+6d2426b2f258da David Gow    2021-06-24  488   * @test_or_suite: The test context object.
+6d2426b2f258da David Gow    2021-06-24  489   * @fmt:  A printk() style format string.
+6d2426b2f258da David Gow    2021-06-24  490   *
+6d2426b2f258da David Gow    2021-06-24  491   * Marks the test as skipped. @fmt is given output as the test status
+6d2426b2f258da David Gow    2021-06-24  492   * comment, typically the reason the test was skipped.
+6d2426b2f258da David Gow    2021-06-24  493   *
+6d2426b2f258da David Gow    2021-06-24  494   * Test execution continues after kunit_mark_skipped() is called.
+6d2426b2f258da David Gow    2021-06-24  495   */
+6d2426b2f258da David Gow    2021-06-24  496  #define kunit_mark_skipped(test_or_suite, fmt, ...)			\
+6d2426b2f258da David Gow    2021-06-24  497  	do {								\
+6d2426b2f258da David Gow    2021-06-24  498  		WRITE_ONCE((test_or_suite)->status, KUNIT_SKIPPED);	\
+6d2426b2f258da David Gow    2021-06-24  499  		scnprintf((test_or_suite)->status_comment,		\
+6d2426b2f258da David Gow    2021-06-24  500  			  KUNIT_STATUS_COMMENT_SIZE,			\
+6d2426b2f258da David Gow    2021-06-24  501  			  fmt, ##__VA_ARGS__);				\
+6d2426b2f258da David Gow    2021-06-24  502  	} while (0)
+6d2426b2f258da David Gow    2021-06-24  503  
+6d2426b2f258da David Gow    2021-06-24  504  /**
+6d2426b2f258da David Gow    2021-06-24  505   * kunit_skip() - Marks @test_or_suite as skipped
+6d2426b2f258da David Gow    2021-06-24  506   *
+6d2426b2f258da David Gow    2021-06-24  507   * @test_or_suite: The test context object.
+6d2426b2f258da David Gow    2021-06-24  508   * @fmt:  A printk() style format string.
+6d2426b2f258da David Gow    2021-06-24  509   *
+6d2426b2f258da David Gow    2021-06-24  510   * Skips the test. @fmt is given output as the test status
+6d2426b2f258da David Gow    2021-06-24  511   * comment, typically the reason the test was skipped.
+6d2426b2f258da David Gow    2021-06-24  512   *
+6d2426b2f258da David Gow    2021-06-24  513   * Test execution is halted after kunit_skip() is called.
+6d2426b2f258da David Gow    2021-06-24  514   */
+6d2426b2f258da David Gow    2021-06-24  515  #define kunit_skip(test_or_suite, fmt, ...)				\
+6d2426b2f258da David Gow    2021-06-24  516  	do {								\
+6d2426b2f258da David Gow    2021-06-24  517  		kunit_mark_skipped((test_or_suite), fmt, ##__VA_ARGS__);\
+6d2426b2f258da David Gow    2021-06-24  518  		kunit_try_catch_throw(&((test_or_suite)->try_catch));	\
+6d2426b2f258da David Gow    2021-06-24  519  	} while (0)
+e2219db280e3fe Alan Maguire 2020-03-26  520  
+e2219db280e3fe Alan Maguire 2020-03-26  521  /*
+e2219db280e3fe Alan Maguire 2020-03-26  522   * printk and log to per-test or per-suite log buffer.  Logging only done
+e2219db280e3fe Alan Maguire 2020-03-26  523   * if CONFIG_KUNIT_DEBUGFS is 'y'; if it is 'n', no log is allocated/used.
+e2219db280e3fe Alan Maguire 2020-03-26  524   */
+e2219db280e3fe Alan Maguire 2020-03-26  525  #define kunit_log(lvl, test_or_suite, fmt, ...)				\
+e2219db280e3fe Alan Maguire 2020-03-26  526  	do {								\
+e2219db280e3fe Alan Maguire 2020-03-26  527  		printk(lvl fmt, ##__VA_ARGS__);				\
+2c6a96dad5797e Rae Moar     2023-03-08 @528  		kunit_log_append((test_or_suite)->log,	fmt,		\
+e2219db280e3fe Alan Maguire 2020-03-26  529  				 ##__VA_ARGS__);			\
+e2219db280e3fe Alan Maguire 2020-03-26  530  	} while (0)
+e2219db280e3fe Alan Maguire 2020-03-26  531  
 
-Ditto.
+:::::: The code at line 528 was first introduced by commit
+:::::: 2c6a96dad5797e57b4cf04101d6c8d5c7a571603 kunit: fix bug of extra newline characters in debugfs logs
 
-        Thanks, Akira
+:::::: TO: Rae Moar <rmoar@google.com>
+:::::: CC: Shuah Khan <skhan@linuxfoundation.org>
 
->  
->  Check your code with tools
->  ==========================
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
