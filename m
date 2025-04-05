@@ -1,89 +1,81 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 229161DC070
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 09:00:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80B741991DD
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 09:00:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743843606; cv=none; b=fI872jclEA3MLgBM7DrXJJi4bTFHMUOwZA3Q74B5tdTDSt+gaKUjmlW9wjRJPG+ZtZbnQQZzO++VbFlIDCzS4Y0kG0l9nISk5cnCG3LGsHcR6rWGmpCaroSWQgOE5ZhuETnkE45QwUKXGp+QPJKxZpAgXvAggyFHdcQ+LnaUjkM=
+	t=1743843633; cv=none; b=LTqthsX2ddWemwM1t/5QCGPTb25pFz0XNAoL2SfpqVpNo//PMajMTkLmyQRhvXqUiLgGkCRu+agvT9gYo5DhjS5nAWnBEINki1VyDRqI+FmeHpUeEIXGGXW7s3DnQltFcFTmw56AV47BtRkRc3omtkTqXHDo7jiIJmlbi0YshhI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743843606; c=relaxed/simple;
-	bh=TKvKDAN4GsHZkJe3UwrKQKpPP0RTmrvgyn/tSmf0FqE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=bYqonlFlsUhYntxSckv8X8ZWMjplh6Xw/HsCiQO5gdIAtyI//RAIp9hKLhexoNEZr3jc5syfFmCDIJhJYoqCQhpHY0HLv1FmZPNRH94M1MNlAPubdu6R+ju/ugu/4N7zyN9Mmf7H3AoP+UY38jfawolQmL3H/wmayMw/XT9G4D8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YP61XgHa; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YP61XgHa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743843605; x=1775379605;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=TKvKDAN4GsHZkJe3UwrKQKpPP0RTmrvgyn/tSmf0FqE=;
-  b=YP61XgHaMHOTzWV6McbtIwa7f/w3MaY0pYUHxMtsCweaYNBj7kRArjPw
-   YhboMVsePEBd1U3FruBx0dBPauOias+SVMKrqEXMXu15nCgeqHxP/6ECv
-   NxSGV800t6igSoc6DVMFHapA5upHNxLDkAS1fE8mtrfgPA3BpjWdZoojv
-   L/yZq6cat58Cci3tvKevn+tFN6kG2X/ZynpzlrPqIueaG96Mt6vqI36ba
-   Q8DTfS/dQ6xuOS3O/0T3IwbhwNZ6Vsf8cGkNPOGSt+Slvs+Nv/vBrj+Z9
-   xEY9Xp3iHp8FP1YgPfsOfUWu7zn2B1Dch5KL26LoTKAqVFx2dzyUi3UIK
-   A==;
-X-CSE-ConnectionGUID: /vlT8k9aSt2vL7NirVQ55w==
-X-CSE-MsgGUID: jwxlnIBBSmKjStcGyaK20Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11394"; a="48936694"
-X-IronPort-AV: E=Sophos;i="6.15,190,1739865600"; 
-   d="scan'208";a="48936694"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2025 02:00:04 -0700
-X-CSE-ConnectionGUID: 6YacWV+JSdquAdD59VTQmw==
-X-CSE-MsgGUID: gNjQeGu9Q5uT0E/Q+rjBDg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,190,1739865600"; 
-   d="scan'208";a="128357313"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by fmviesa009.fm.intel.com with ESMTP; 05 Apr 2025 02:00:01 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u0zNf-0001v3-1V;
-	Sat, 05 Apr 2025 08:59:59 +0000
-Date: Sat, 5 Apr 2025 16:59:41 +0800
-From: kernel test robot <lkp@intel.com>
-To: Paul Mackerras <paulus@ozlabs.org>
-Cc: Paul Gazzillo <paul@pgazz.com>,
-	Necip Fazil Yildiran <fazilyildiran@gmail.com>,
-	oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Madhavan Srinivasan <maddy@linux.ibm.com>
-Subject: kismet: WARNING: unmet direct dependencies detected for
- PPC_RADIX_BROADCAST_TLBIE when selected by PPC_POWERNV
-Message-ID: <202504051629.XUa1kN12-lkp@intel.com>
+	s=arc-20240116; t=1743843633; c=relaxed/simple;
+	bh=7kv95dNYS32/zpDOmSMdisTpeAMQ2Sf7NYS51PE41XA=;
+	h=Message-ID:Date:MIME-Version:Cc:From:To:Subject:Content-Type; b=g6ZfJTGfeWtdEzesCSI9uKvQ8J6pmhyAymcy6aljZd2TO8N7olMJNkaBEkPznLT6j+qtuN/0PVS0I86oUOjZZCcJsjXhVB3MVN6FNA4pQiwn3iEZ2NOQkrR+xIsg42LqTBdV+ntCoiqTaI9Sv3XFM3fkxFp6wfLLI0sYH2/vMx0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
+Received: from [192.168.0.2] (ip5f5af06b.dynamic.kabel-deutschland.de [95.90.240.107])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 8425961E64799;
+	Sat, 05 Apr 2025 11:00:17 +0200 (CEST)
+Message-ID: <eb3c109f-550f-44ce-b0a1-3837aef1d02a@molgen.mpg.de>
+Date: Sat, 5 Apr 2025 11:00:17 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+Cc: regressions@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+To: Uros Bizjak <ubizjak@gmail.com>, Andrew Morton <akpm@linux-foundation.org>
+Subject: =?UTF-8?B?V0FSTklORzogbW9kcG9zdDogRVhQT1JUIHN5bWJvbCAi4oCmIiBbdm1s?=
+ =?UTF-8?Q?inux=5D_version_generation_failed=2C_symbol_will_not_be_versioned?=
+ =?UTF-8?B?Li8i4oCmIiBb4oCmXSBoYXMgbm8gQ1JDIQ==?=
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   a8662bcd2ff152bfbc751cab20f33053d74d0963
-commit: 3d45a3d0d2e6b5cf47c6f0ab890f6ce762d9fd23 powerpc: Define config option for processors with broadcast TLBIE
-date:   5 weeks ago
-config: powerpc-kismet-CONFIG_PPC_RADIX_BROADCAST_TLBIE-CONFIG_PPC_POWERNV-0-0 (https://download.01.org/0day-ci/archive/20250405/202504051629.XUa1kN12-lkp@intel.com/config)
-reproduce: (https://download.01.org/0day-ci/archive/20250405/202504051629.XUa1kN12-lkp@intel.com/reproduce)
+#regzbot introduced: 6a367577153acd9b432a5340fb10891eeb7e10f1
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504051629.XUa1kN12-lkp@intel.com/
 
-kismet warnings: (new ones prefixed by >>)
->> kismet: WARNING: unmet direct dependencies detected for PPC_RADIX_BROADCAST_TLBIE when selected by PPC_POWERNV
-   WARNING: unmet direct dependencies detected for PPC_RADIX_BROADCAST_TLBIE
-     Depends on [n]: PPC_RADIX_MMU [=n]
-     Selected by [y]:
-     - PPC_POWERNV [=y] && PPC64 [=y] && PPC_BOOK3S [=y]
+Dear Linux folks,
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+
+If I didn’t screw up `git bisect`, then commit 6a367577153a (percpu/x86: 
+enable strict percpu checks via named AS qualifiers) [1] causes the 
+build warnings below:
+
+     $ make olddefconfig && make -j128
+     […]
+     WARNING: modpost: EXPORT symbol "xen_vcpu_id" [vmlinux] version 
+generation failed, symbol will not be versioned.
+     Is "xen_vcpu_id" prototyped in <asm/asm-prototypes.h>?
+     WARNING: modpost: EXPORT symbol "irq_stat" [vmlinux] version 
+generation failed, symbol will not be versioned.
+     Is "irq_stat" prototyped in <asm/asm-prototypes.h>?
+     […]
+     WARNING: modpost: EXPORT symbol "__irq_regs" [vmlinux] version 
+generation failed, symbol will not be versioned.
+     Is "__irq_regs" prototyped in <asm/asm-prototypes.h>?
+     WARNING: modpost: EXPORT symbol "radix_tree_preloads" [vmlinux] 
+version generation failed, symbol will not be versioned.
+     Is "radix_tree_preloads" prototyped in <asm/asm-prototypes.h>?
+     WARNING: modpost: "pcpu_hot" 
+[arch/x86/events/intel/intel-uncore.ko] has no CRC!
+     WARNING: modpost: "numa_node" 
+[arch/x86/events/intel/intel-uncore.ko] has no CRC!
+     […]
+
+
+Kind regards,
+
+Paul
+
+
+[1]: 
+https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=6a367577153acd9b432a5340fb10891eeb7e10f1
+[2]: https://bugzilla.kernel.org/show_bug.cgi?id=219966
