@@ -1,139 +1,63 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 004114502A;
-	Sat,  5 Apr 2025 16:47:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A0DB4502A;
+	Sat,  5 Apr 2025 16:52:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743871679; cv=none; b=OkbzTfbvsapAaTP63i7pP1m19KQZtYiiFDYLc0TFHeKDH6IukmyHhJtWljsxKKjeIR9KQyyG83DcvzoU6fL5D3sg4YTp2japBrGPwfcYmIT6WYFPCrwEL/hBiVYb3eJaIZoxsJggHWrifU7c4By0/752MJ9iJKE8uT8HBsF5tVg=
+	t=1743871945; cv=none; b=bMJG0klYAP00wcPcWDM+OsGYLY/GvNLe+YB+GAnuYjvydFzFfry2HjFxab1nRayLC7ActDg6g4kOMPXx/+9klbstQejBs5cmqyu0aaR1pbf9nZaENm1AnmfndEYrsVhzT6cekF+zZ6PIy33hxzC58CjYcVjq9XaRKMEug/hUrWE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743871679; c=relaxed/simple;
-	bh=9BGLYqTQZu2s7kzI0dsjUtxU1pnjhjkWcecnNApDEUM=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=BieTnR5CPPDiuGNLpr889hvJuHJdH79hM3OtZBNW2L9qElt+dNSHBLis8jBiu0NZUyK40wBv5wt0/vkgfSjF5v7j2TUv938LuhrdfpOnSs/6D9VVd5u8xMea2MYjx3AxkFfPhTBigtEpbNhOxRNGmeckfgrB7xUi2A1vrd2g9io=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=l55OxA1w; arc=none smtp.client-ip=220.197.31.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1743871945; c=relaxed/simple;
+	bh=bOR+VfY6TqkDFm0hn489XWjflDLv0kuxOwfi65ZbteY=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=MrhZJsME9p7MF0Vzf1I3QoVSIBCRdMvNUyx748/8kvSm6s9yYGANBzBNDeAsJWwx4fqSpkvvxr33pnu/qLYkkXqCwez3nzP6w2aCSFidMePyojRp1YLHIWtvu0W3T5kq9lDYnW3iJ5kXyUqsDwnQVOw16Yk/SiL7cUklgUvrGV4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OP6kaOj7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="l55OxA1w"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=MDq1cM7gEdiK3Cx5k/Cw1x0umVJ9hEJWVQHhrti4x+E=;
-	b=l55OxA1w3Ne6EVRXZr1+QCnc6P2cEIQqyoDUVyyljagj6H3l8gmmXUSJ2lHIum
-	9yIW+UgGwmsdCJynOPksX3pLhPuvsIQ/LQaUfeLv5ckrIumqA1Ib1y1fS4am/Y5H
-	EBbrg6OzyuMjCfadC6NcNI1bJrOrDWRSTURV+sq22BWv0=
-Received: from [192.168.71.89] (unknown [])
-	by gzga-smtp-mtada-g1-0 (Coremail) with SMTP id _____wCHIJWXXvFnNg2yCA--.4226S2;
-	Sun, 06 Apr 2025 00:47:20 +0800 (CST)
-Message-ID: <9dcd70b1-a146-419f-aa5e-bacf52cf81e8@163.com>
-Date: Sun, 6 Apr 2025 00:47:19 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OP6kaOj7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EB2DC4CEE4;
+	Sat,  5 Apr 2025 16:52:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743871945;
+	bh=bOR+VfY6TqkDFm0hn489XWjflDLv0kuxOwfi65ZbteY=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=OP6kaOj7oFIdGb5KHGn/wjkoVnQV+XV7MO6VJkugkyg6LAxyQo4qRJGQxmzOa1MgA
+	 cowRvKt+XZUC8vmp7FLfMY3awP0rhTtIZHzc+i3IG3cbdz6Tj8NibprUR/rnmgN2P2
+	 zqchSHtvJwE2HBpmopHOTu5uoCWvoahqYuP2/EpF++l/ALRxDgDFWc8LkVTSmtwElc
+	 urHo+CF+8cOzMSBRR07YAY898lJO2Yozi6vRkadH5aZu8UNgZHr3whkKE8kKHspJDX
+	 0kqatuXlIDJlWa4yr54z/5tU0r1Lo1Z/zQFnwt25ZxgJ0q3+bLTgjP2nHHe5nthmgt
+	 uspELfwo2df9A==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 71E04380CEE3;
+	Sat,  5 Apr 2025 16:53:03 +0000 (UTC)
+Subject: Re: [git pull] Input updates for v6.15-rc0
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <Z_DKFUmQJg8idRsZ@google.com>
+References: <Z_DKFUmQJg8idRsZ@google.com>
+X-PR-Tracked-List-Id: <linux-input.vger.kernel.org>
+X-PR-Tracked-Message-Id: <Z_DKFUmQJg8idRsZ@google.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git tags/input-for-v6.15-rc0
+X-PR-Tracked-Commit-Id: 946661e3bef8efa11ba8079d4ebafe6fc3b0aaad
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 56f944529ec2292cbe63377a76df3759d702dd39
+Message-Id: <174387198197.3666769.17506150534736407534.pr-tracker-bot@kernel.org>
+Date: Sat, 05 Apr 2025 16:53:01 +0000
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] pci: tegra194: Fix debugfs cleanup for !CONFIG_PCIEASPM
-From: Hans Zhang <18255117159@163.com>
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: bhelgaas@google.com, jonathanh@nvidia.com, kw@linux.com,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-tegra@vger.kernel.org, lpieralisi@kernel.org,
- manivannan.sadhasivam@linaro.org, robh@kernel.org, thierry.reding@gmail.com
-References: <20250405152818.GA107831@bhelgaas>
- <c52ac489-51e9-4803-bf64-2bb6cfbf30bf@163.com>
- <da261a4c-6c27-454f-b21d-af1814b58b91@wanadoo.fr>
- <fa44eac9-8986-46d2-899d-df8811131925@163.com>
-Content-Language: en-US
-In-Reply-To: <fa44eac9-8986-46d2-899d-df8811131925@163.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wCHIJWXXvFnNg2yCA--.4226S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxZr4UCw1kZrWrAF1UtFWUArb_yoW5ArW7p3
-	ykGay5KF4DAw1ft3sa9a1kAF1ft395Zr17X345uryIyw4vvr1rXr47KF4Y9Fyfur4kGF18
-	XF4Fv3WfuFn0yF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UyUDAUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDxwmo2fxWi1E5gABsU
 
+The pull request you sent on Fri, 4 Apr 2025 23:13:41 -0700:
 
+> git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git tags/input-for-v6.15-rc0
 
-On 2025/4/6 00:35, Hans Zhang wrote:
-> 
-> 
-> On 2025/4/6 00:17, Christophe JAILLET wrote:
->> Le 05/04/2025 à 17:49, Hans Zhang a écrit :
->>>
->>>
->>> On 2025/4/5 23:28, Bjorn Helgaas wrote:
->>>> Follow subject line capitalization convention.
->>>>
->>>> On Sat, Apr 05, 2025 at 10:54:59PM +0800, Hans Zhang wrote:
->>>>> When CONFIG_PCIEASPM is disabled, debugfs entries are not created, but
->>>>> tegra_pcie_dw_remove() and tegra_pcie_dw_shutdown() unconditionally 
->>>>> call
->>>>> debugfs_remove_recursive(), leading to potential NULL pointer 
->>>>> operations.
->>>>>
->>>>> Introduce deinit_debugfs() to wrap debugfs_remove_recursive(), 
->>>>> which is
->>>>> stubbed for !CONFIG_PCIEASPM. Use this function during removal/ 
->>>>> shutdown to
->>>>> ensure debugfs cleanup only occurs when entries were initialized.
->>>>>
->>>>> This prevents kernel warnings and instability when ASPM support is
->>>>> disabled.
->>>>
->>>> This looks like there should be a Fixes: tag to connect this to the
->>>> commit that introduced the problem.
->>>
->>> Hi Bjorn,
->>>
->>> Thanks your for reply. Will add.
->>>
->>> Fixes: bb617cbd8151 (PCI: tegra194: Clean up the exit path for 
->>> Endpoint mode)
->>>
->>>>
->>>> If this is something that broke with the v6.15 merge window, we should
->>>> include this in v6.15 via pci/for-linus.  If this broke earlier, we
->>>> would have to decide whether pci/for-linus is still appropriate or a
->>>> stable tag.
->>>>
->>>
->>> The original code that introduced the unconditional 
->>> `debugfs_remove_recursive()` calls was actually merged in an earlier 
->>> cycle.
->>>
->>>> We did merge some debugfs things for v6.15, but I don't see anything
->>>> specific to pcie-tegra194.c, so I'm confused about why this fix would
->>>> be in pcie-tegra194.c instead of some more generic place.
->>>>
->>>
->>> The Tegra194 driver conditionally initializes pcie->debugfs based on 
->>> CONFIG_PCIEASPM. When ASPM is disabled, pcie->debugfs remains 
->>> uninitialized, but tegra_pcie_dw_remove() and 
->>> tegra_pcie_dw_shutdown() unconditionally call 
->>> debugfs_remove_recursive(), leading to a NULL 
->>
->> debugfs IS initialized, because it is in a structure allocated with 
->> devm_kzalloc().
->>
->> And debugfs functions handle such cases.
->>
-> 
-> Oh, my mind went wrong and I didn't pay attention to devm, and I'm 
-> really sorry about that.
-> 
-> Another problem I noticed here is that currently, no matter what, 
-> pcie->debugfs = debugfs_create_dir(name, NULL) is executed; if #if 
-> defined(CONFIG_PCIEASPM) is valid, then pcie->debugfs = 
-> debugfs_create_dir(name, NULL); Is it superfluous?
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/56f944529ec2292cbe63377a76df3759d702dd39
 
-Sorry, let me reply again:
-Another problem I noticed here is that currently, no matter what, 
-pcie->debugfs = debugfs_create_dir(name, NULL) is executed; if #if 
-defined(CONFIG_PCIEASPM) is invalid, then pcie->debugfs = 
-debugfs_create_dir(name, NULL); Is it superfluous?
+Thank you!
 
-Best regards,
-Hans
-
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
