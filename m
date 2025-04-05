@@ -1,120 +1,158 @@
-Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AB751E1E19
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 14:42:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07EC918BC3D
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 14:43:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743864158; cv=none; b=SLguJUIkctXZqzObNQ6hqgq3tozs/ehjGs55ooBK9/IxBZfVyVYE64f8y3hPOW1vSyj64QVjB0HlGRgRHEhEQPOzPM+2DJaH3zC1i3hIVTziRB14UPOWGJlyU/CcEAMa12/OND8IyIWWDx8XnE0I4HPryAoQbegke6BkT6uzpxk=
+	t=1743864225; cv=none; b=qTQ72WTqAkzfcZIdAhSAsic1MaV6ERbYzHM/VehRKBl10kjiywDZzJiDj7ufg9R4F5x9LEq8UYHNTk+lETyQoLN88iIY2BQdjpvGIYCptDNqxNZ1nAg5m9P6dvZTPWw+QWjyplAtnpMjrieLEMbkIefHEEOaday2nACe6pl8rGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743864158; c=relaxed/simple;
-	bh=XfnEVi3ovC/zw6g3a+nScy1RtngEkEo5Aoq+dlPJPpk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=S+RAVpoxNpZqlPgw/ESe17A+xjCfwYJ0sFVyCM7NjHGzxKQYMkn3uztWsfSaIgqgJ7427eUueAGD6bfC1FfuR2bFCoPC5RIeIOKhiuieCcgx93s3cAZe+C+cvKW15BVCVZhkQfycVuwiHDs6e3CSW7K0XTSlLDRZaKXIiLtmGGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de; spf=pass smtp.mailfrom=posteo.de; dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b=kpKTySCR; arc=none smtp.client-ip=185.67.36.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.de
+	s=arc-20240116; t=1743864225; c=relaxed/simple;
+	bh=/RGGbQE7wSqcx/CNweEXfbTvRvbRag9wVbkeqkx8iS4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=CsB9JsNnd5FNW90Ao9b9VAVceFTpZe2FfSiz/fLcdbsCPq2TfTvELpSykkuW+GVvdQGhRrvCM61+gSs7SLDS8CCkZvpyDPQgJx/HhFlgPGeU61erF5UI3I7vxgsYzvaYYzTnDGrRTzFJGt5MHUDWnTncJ4MjII4FvUDY8BfucTk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PuK7UCMc; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b="kpKTySCR"
-Received: from submission (posteo.de [185.67.36.169]) 
-	by mout01.posteo.de (Postfix) with ESMTPS id A28B8240028
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 16:42:28 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.de; s=2017;
-	t=1743864148; bh=XfnEVi3ovC/zw6g3a+nScy1RtngEkEo5Aoq+dlPJPpk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:
-	 Content-Transfer-Encoding:Content-Type:Autocrypt:OpenPGP:From;
-	b=kpKTySCR9tVzJeZkrRR96FmaI5z2uTfS1UgZ1LpQ3uiZDUhk5hZl1Wg7atK7sF7Py
-	 t2asO+qjhckqLWTAXxzO0qKwssbnQJVHhCap2/Ttyl5qFKDRg6KUJBn1mT57NZN74A
-	 U2yd4Y81VINm50wKMQoE5w5YEKYFNIWFZlwKMcZMeKWKbJuW5GTkUsl3J5sqBlokOe
-	 HlMB62MvRhv1jhGOhOHSSQuYMBXt7PXHJVTolJDFbkwv334aH2+ZC//yE6KFT/KF6+
-	 fWFBhnGyRrDLlxlIWTNnqZLWzpqSPXXxc6mO/SFGpd74DILF9X3KADVWBTc4IBkgvM
-	 JBCaAeSLwoOlg==
-Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4ZVJ8s527hz9rxK;
-	Sat,  5 Apr 2025 16:42:21 +0200 (CEST)
-From: Alexander Reimelt <alexander.reimelt@posteo.de>
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
- "Rob Herring (Arm)" <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>,
- Samuel Holland <samuel@sholland.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Viresh Kumar <viresh.kumar@linaro.org>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Vincenzo Frascino <vincenzo.frascino@arm.com>,
- Liviu Dudau <liviu.dudau@arm.com>, Sudeep Holla <sudeep.holla@arm.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
- Stephen Boyd <sboyd@kernel.org>, zhouyanjie@wanyeetech.com,
- Conor Dooley <conor@kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>,
- Claudiu Beznea <claudiu.beznea@tuxon.dev>,
- Steen Hegelund <Steen.Hegelund@microchip.com>,
- Daniel Machon <daniel.machon@microchip.com>, UNGLinuxDriver@microchip.com,
- Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, Heiko Stuebner <heiko@sntech.de>,
- Neil Armstrong <neil.armstrong@linaro.org>,
- Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>,
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
- Geert Uytterhoeven <geert+renesas@glider.be>,
- Magnus Damm <magnus.damm@gmail.com>,
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-pm@vger.kernel.org, linux-mediatek@lists.infradead.org,
- linux-arm-msm@vger.kernel.org, linux-mips@vger.kernel.org,
- imx@lists.linux.dev, linux-rockchip@lists.infradead.org,
- linux-amlogic@lists.infradead.org, linux-renesas-soc@vger.kernel.org
-Subject:
- Re: [PATCH 07/19] arm64: dts: qcom: msm8992-lg-h815: Fix CPU node
- "enable-method" property dependencies
-Date: Sat, 05 Apr 2025 14:42:21 +0000
-Message-ID: <4999945.OV4Wx5bFTl@stinkpad>
-In-Reply-To: <d3592f32-e29c-4b40-b045-7267795a9617@oss.qualcomm.com>
-References:
- <20250403-dt-cpu-schema-v1-0-076be7171a85@kernel.org>
- <470e2155-7145-44ab-9d6d-117a2d98d7f8@oss.qualcomm.com>
- <d3592f32-e29c-4b40-b045-7267795a9617@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PuK7UCMc"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3912fdddf8fso2513429f8f.1
+        for <linux-kernel@vger.kernel.org>; Sat, 05 Apr 2025 07:43:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743864220; x=1744469020; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=/RGGbQE7wSqcx/CNweEXfbTvRvbRag9wVbkeqkx8iS4=;
+        b=PuK7UCMcgtMbUmfa8VWp/btgkGrAd/8F1sFlbNjO//TMIF40zcBi2NJPTDpUUO+Wmy
+         +mcwOfgIUdpiY1zNEVk+Fbr1VWMzZ6nh2I16BGV6kYCyjDLb9rf8dwujRkc+DpcaGkTr
+         idMoYajXeYZo410tZHdJkUE2DGcJVpe8swWWlyGuWCKC2cjevk+qijvc3ThSIQ6+mzw8
+         IgqEn2k8beFMNUbS5aEIALsF+U1qY66y4ZXa79+BWypkNZ1ZXL9K3aTeIM59vsG7UyKj
+         UtD8m7V/AyRA+0/DliLc4oInOwMhqgym/zAPwe/JNrEZiRvQwrfJueO7qehQsAycNOAI
+         E2lA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743864220; x=1744469020;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=/RGGbQE7wSqcx/CNweEXfbTvRvbRag9wVbkeqkx8iS4=;
+        b=xVhGKNYEetdtdECTzTIIZiroRASkbP3fsrlUpQkLVmqSF0QSYbn8gSc2kzJh79ccCm
+         tDlfR8wGQmw07mQKxNH6UOH9vBL1QV12G0fL/xpagMFNnNHXT0GXm0CatquEOP+Ju01h
+         GsbH7kwM7xr5Hk3P65+/5yz2V6Se3G5XRjeOkSgX340x0lIAewU6/mCARCAJq5TIqCI4
+         R7DDwT/+cFsNZD94+ACsbqBRflAkni6uvgWQ+RUVhOUnj5vyGXe1VemrZLk+OhL3GpyD
+         GoWpI5syoy88Ly15LF/7P1lvkzla2HlScJxiEljj/6ZxRkz4xM826+9fQGgJOhB4qgWk
+         V28w==
+X-Forwarded-Encrypted: i=1; AJvYcCXXadk65OUMJV6tQBZzScjafYBbhrWm5OUGTs/gLQ4OQ8qr2YBH81r1AML5FxsX0Ej7x4+rNv/0N8KbBvA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4nWl6YpaHSIy3JeXTFwLA5vJU+NRsVZxbLcnOy0iiDg/ScAOI
+	bWkCHQyxO/UW5jR0Z9/qnbvPSNHdNiQLsI+YSm4Ig5mdnHWzXD3SW45uAlSZnGQ=
+X-Gm-Gg: ASbGncsoVP3lxNRGOhHvPaYRaT5XG7FGi+JtbtoiPFUFjXrvunLXOFPsAKQu39EMKh5
+	BTDRITLQVr+B1Yu5He9ItRNNKuBfdhq1TZRSNU9+M9ZHdRdlLar3Umj4t/Vsazo5xh25kQkSovT
+	uVInSZ6xtVAgY/LSg3UGZ70f6DrV8F6AuEYUAPOar97C5qr6dasRIubdjtHERmJgVrlWvdZFFZS
+	d+RqujOnfI8TjdTXdUqsi227xnx5SNn8XpN9WblUWeTe8+L7120sie/3AXTgn5WyAKFWPKbJSQ2
+	BG+dkKSw7pV5PfFmAzoidMWgiBR6EaoUzgjFZKxuG9UY/5ot7WlFrcHksg==
+X-Google-Smtp-Source: AGHT+IHkyI+chZMq2B1z4osT+V2Q5vUQS53pGFGGOllCNhmpztRxq/RKdq0sPw9xsvq9dYkLFHhWiA==
+X-Received: by 2002:a5d:5848:0:b0:39c:1efb:f7c4 with SMTP id ffacd0b85a97d-39c2e65a54fmr9106559f8f.25.1743864220048;
+        Sat, 05 Apr 2025 07:43:40 -0700 (PDT)
+Received: from [192.168.43.251] ([197.232.62.164])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c300969e1sm7151427f8f.10.2025.04.05.07.43.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 05 Apr 2025 07:43:39 -0700 (PDT)
+Message-ID: <92f451551548518fe2bc6ebbdbc84efb8cf5ca32.camel@gmail.com>
+Subject: Re: [PATCH 1/2] staging: rtl8723bs: Optimize variable
+ initialization in rtl8723b_hal_init.c
+From: Erick Karanja <karanja99erick@gmail.com>
+To: Julia Lawall <Julia.Lawall@inria.fr>, Dan Carpenter
+	 <dan.carpenter@linaro.org>
+Cc: gregkh@linuxfoundation.org, outreachy@lists.linux.dev, 
+	philipp.g.hortmann@gmail.com, linux-staging@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Date: Sat, 05 Apr 2025 17:43:35 +0300
+In-Reply-To: <F6AA5BB6-46A1-457C-BB99-D26D3744738F@inria.fr>
+References: <8ce041b2-087c-4d47-891f-28ecc0c91c76@stanley.mountain>
+	 <F6AA5BB6-46A1-457C-BB99-D26D3744738F@inria.fr>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="utf-8"
-Autocrypt: addr=alexander.reimelt@posteo.de;
-  keydata=xjMEZg0fSRYJKwYBBAHaRw8BAQdAIcaNTdj3NWDe5HQPCUs6oYyQygAJWP9LCzhr+C7RwMrNG2Fs
-  ZXhhbmRlci5yZWltZWx0QHBvc3Rlby5kZcKZBBMWCgBBFiEEM+Wy6sI/mP5S0zIFHqi3OKk8uRIF
-  AmYNH0kCGwMFCQWjo9cFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgkQHqi3OKk8uRJ8ogD9
-  EVg4zgfmC2SqXCgms6LETAzVX4CrAS8yMhyd7Md921cA/R8lhm9B96RYgA7MvFPFJb1T6JFY75Jg
-  QLXrtIE5llwHzjgEZg0fSRIKKwYBBAGXVQEFAQEHQBGDuxZLOTvppxyM4G18fSR6xzT0xkkPOia7
-  Bh6L1vAAAwEIB8J+BBgWCgAmFiEEM+Wy6sI/mP5S0zIFHqi3OKk8uRIFAmYNH0kCGwwFCQWjo9cA
-  CgkQHqi3OKk8uRIa1wD8CZDdCAKXstgXY96eeSSP7MecEF5TBdmWOiVgjlEIpoEA/RnGuDaj06B1
-  F51wyGAjYXSmn5qFoNHu3yXyLUkFz1ME
-OpenPGP: url=https://posteo.de/keys/alexander.reimelt@posteo.de.asc
 
-> On 4/4/25 10:30 PM, Konrad Dybcio wrote:
-> > On 4/4/25 4:59 AM, Rob Herring (Arm) wrote:
-> >> The "spin-table" enable-method requires "cpu-release-addr" property,
-> >> so add a dummy entry. It is assumed the bootloader will fill in the
-> >> correct values.
-> >> 
-> >> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> >> ---
-> > 
-> > This looks good to me without knowing any better about the specifics
-> > of this device..
-> > 
-> > +Alexander - does the bootloader you use take care of this? Otherwise
-> > we can just do what Sony devices do and stop on removing the psci node
-
-I currently can't test this, but the bootloader (lk2nd) will set it.
-
-Alexander
-
+On Sat, 2025-04-05 at 10:28 -0400, Julia Lawall wrote:
+>=20
+> > On 5 Apr 2025, at 10:19, Dan Carpenter <dan.carpenter@linaro.org>
+> > wrote:
+> >=20
+> > =EF=BB=BFOn Sat, Apr 05, 2025 at 06:14:48AM +0300, Erick Karanja wrote:
+> > > Optimize variable initialization by integrating the
+> > > initialization
+> > > directly into the variable declaration in cases where the
+> > > initialization
+> > > is simple and doesn't depend on other variables or complex
+> > > expressions.
+> > > This makes the code more concise and readable.
+> > >=20
+> > > Signed-off-by: Erick Karanja <karanja99erick@gmail.com>
+> > > ---
+> > > .../staging/rtl8723bs/hal/rtl8723b_hal_init.c | 155 +++++--------
+> > > -----
+> > > 1 file changed, 41 insertions(+), 114 deletions(-)
+> > >=20
+> > > diff --git a/drivers/staging/rtl8723bs/hal/rtl8723b_hal_init.c
+> > > b/drivers/staging/rtl8723bs/hal/rtl8723b_hal_init.c
+> > > index e15ec6452fd0..1e980b291e90 100644
+> > > --- a/drivers/staging/rtl8723bs/hal/rtl8723b_hal_init.c
+> > > +++ b/drivers/staging/rtl8723bs/hal/rtl8723b_hal_init.c
+> > > @@ -152,13 +152,12 @@ static int _WriteFW(struct adapter
+> > > *padapter, void *buffer, u32 size)
+> > > void _8051Reset8723(struct adapter *padapter)
+> > > {
+> > > =C2=A0=C2=A0 u8 cpu_rst;
+> > > -=C2=A0=C2=A0=C2=A0 u8 io_rst;
+> > > +=C2=A0=C2=A0=C2=A0 u8 io_rst =3D rtw_read8(padapter, REG_RSV_CTRL + =
+1);
+> > >=20
+> > >=20
+> > > =C2=A0=C2=A0 /*=C2=A0 Reset 8051(WLMCU) IO wrapper */
+> > > =C2=A0=C2=A0 /*=C2=A0 0x1c[8] =3D 0 */
+> > > =C2=A0=C2=A0 /*=C2=A0 Suggested by Isaac@SD1 and Gimmy@SD1, coding by
+> > > Lucas@20130624 */
+> > > -=C2=A0=C2=A0=C2=A0 io_rst =3D rtw_read8(padapter, REG_RSV_CTRL+1);
+> > > =C2=A0=C2=A0 io_rst &=3D ~BIT(0);
+> > > =C2=A0=C2=A0 rtw_write8(padapter, REG_RSV_CTRL+1, io_rst);
+> >=20
+> > I hate this.=C2=A0 It's a bad idea to put "code" in the declaration
+> > block.
+>=20
+> Erick, you can look around in the output of the semantic patch and
+> see if all of the ones with function calls are undesirable. If that=E2=80=
+=99s
+> the case you can post to the outreachy mailing list a revised
+> semantic patch that doesn=E2=80=99t report on that case.
+Thanks Julia I will look at it.
+>=20
+> Julia
+>=20
+> > > @@ -501,8 +499,7 @@ void Hal_GetEfuseDefinition(
+> > > =C2=A0=C2=A0 switch (type) {
+> > > =C2=A0=C2=A0 case TYPE_EFUSE_MAX_SECTION:
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 {
+> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 u=
+8 *pMax_section;
+> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 p=
+Max_section =3D pOut;
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 u=
+8 *pMax_section =3D pOut;
+> >=20
+> > This is fine because "pOut" is a variable.=C2=A0 It doesn't have side
+> > effects
+> > and it's not "code" in that sense.
+> >=20
+> > regards,
+> > dan carpenter
+> >=20
+> >=20
+>=20
 
