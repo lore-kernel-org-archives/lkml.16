@@ -1,94 +1,72 @@
-Received: from mail.andi.de1.cc (mail.andi.de1.cc [178.238.236.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90061335BA;
-	Sat,  5 Apr 2025 19:55:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.238.236.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77B89335BA
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 19:56:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743882936; cv=none; b=n7A9zZIwVIWg1ZMYvZ8BydVccijgJWHGFwQ5H7LRSxHCTvJnyWPwv6MhkG++cfz+ywDywpYAab/cLbb9ZUY3MmzjTDi+WEwWjmU4Rnv+6AdjIsyZFXjHZTIsQFYfME55M0ZW5qzmgb1X/5TpaXbx8+ct25A+7+XGKYINT5SpwaA=
+	t=1743882965; cv=none; b=QURV8zNIEff6jmcOvvt8tE9P9t/H4jOX660jArOFsY0GqCjzrXwcJ1xxmHFE9vKLkJaH8I7JA3suBqLU/LGP6hGvyndoj7ABuPNg9S/V+qEn4s5eMVlw9a1iAL6nPqr/GMiQ/gd274xtJd6gqnQu0nw8aOI5PA/rXWgnxx9/4eQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743882936; c=relaxed/simple;
-	bh=mA62SvgnY0e1J30LBflKoeGcr5R1xE9ehUM6YaHUWRs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SSIo5M7P0z/ZewuMuUE5Y9sGjQGnWnV0BRAGZ+P5av9oEXCVS+KLqdSr1TUg23kKdc0j3FMgxoWdC4QTFcM0576dbfi7/gL9hjIkEiKcOrxc4DAk88fhRVsC1g5PLeBeTZBkk6+fGsIGKLwZHKPFNKYvobfpJaCvfb+Mawsj3P0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kemnade.info; spf=pass smtp.mailfrom=kemnade.info; dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b=2FAF61Fy; arc=none smtp.client-ip=178.238.236.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kemnade.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kemnade.info
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="2FAF61Fy"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=kemnade.info; s=20220719; h=References:In-Reply-To:Cc:From:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=VIlpE3NxkylOLZaGankjQvG+NCkJiZ7fNj2FI1yhm0Y=; b=2FAF61FyTtP9ub/wAHnTdE20Xz
-	MFLUxx9b73VUxOAJ/MkepZz9slP+ifXJ7fsq/3tYTdQF4W8iLUuKq/zkOxi7zpASUu20L+rBXWFon
-	h6OYn8ttxDe3ChVRKVju3mpJQVQ3n/QdI8GSmvd+XyditedcWSBP4c40o7fk6nJLtI7sPGWuuHHW2
-	eqwHrm1odRr9Xr0qyBWXwU6FMpsXEo4aHp52tW3C+3KapFR3HmnphZGP56iGECUlNwrxC0xCqCHm8
-	DqEK9ka/w1ALOpB1RwB5rB2u+ufFkC6BN2qIRh+TtR1LjnOJfi/CAjZPKZ7Nyc0sL2LiIBU33R9GU
-	H4ZARX4g==;
-Date: Sat, 5 Apr 2025 21:55:29 +0200
-From: Andreas Kemnade <andreas@kemnade.info>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Sukrut Bellary <sbellary@baylibre.com>, Michael Turquette
- <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring
- <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Tero Kristo <kristo@kernel.org>, Kevin Hilman
- <khilman@baylibre.com>, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/4] dt-bindings: clock: ti: Convert to yaml
-Message-ID: <20250405215529.7f3f3253@akair>
-In-Reply-To: <20250404-famous-rottweiler-of-perspective-e5dcbc@shite>
-References: <20250404014500.2789830-1-sbellary@baylibre.com>
-	<20250404014500.2789830-2-sbellary@baylibre.com>
-	<20250404-famous-rottweiler-of-perspective-e5dcbc@shite>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1743882965; c=relaxed/simple;
+	bh=pp+gU6q2X8jmA2HgYrgWk833yDw6nt8vTIAOrrXSbeQ=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=sa+zFuO1nthp9tpxkWr4AZNknvY84VydM/NDqvLv5kXl9JxDWREvuxMxhOuCQFf18iqnTawwp+cMAsXz2sflsoOun0+FT7fY6ZyB2x6m5yunO8oIFZpcGP7G9sRiqLr5uV2x60Vf2YxQfbhc81RKombJOfUfpKmLhZujpgY0dGA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3d6d6d82603so29910605ab.2
+        for <linux-kernel@vger.kernel.org>; Sat, 05 Apr 2025 12:56:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743882963; x=1744487763;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8Hm8eM0LgqeHm2e5edqCzh5LAaCNPzPWs2dgSjTS7SU=;
+        b=bDWeRW+KCvlraAy9tgVlmaoAxCumdx7PiFWhIgCblIMx/ZH2MA+nOaPOdWn4lUsJ5p
+         fmZNaeWDT/V2gVdNidPgXHc6go771rO2RMO1CjYt7BUqpTWYa8vFc+5t/d4tL+JR0caT
+         7euSm5Wr3UaDXBVGBVLaOTSX+PKBcyKdlL2y/bFYHyBBw2hKrFn9cNynjzW3lJxYmkYo
+         t/dOzkvsFxDKv2/r0GvYpfC+nsHAaHspGvhcWw8sdt7D3YKqyY5Gra3tbL1YqninkzVZ
+         l93VErcw/rmNufpk1oLS15FAfYK2oJV9miQGquqMQtmssovEu/l1SqOlgPkTX/zjgL6x
+         fPuA==
+X-Forwarded-Encrypted: i=1; AJvYcCXTLBH6NzpirsA3VU7oAefuKll53Z2d47BgxDvACr3atnVA79vsKu7xsAuuLgC+REHYeav4rRCahemQHwI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx0tf2FY1fDxfmbESYcOtnhGmgTjCGranbx1hQw2iL+VgAG5K4Y
+	a1fizoKy8bh07unwAwNu5Rs23cJZ3Y6mIMzYfXjGyu7QLsJqnr5cFx0FEK/fP36rqNbXeZVf3QM
+	GYImZhiPgbOBzHE6P+ilEFb7HfyyWV+8arUZFPw92Dv4b/mUFR3xEq/w=
+X-Google-Smtp-Source: AGHT+IGNJ/ZH8fm9v+6nUbPybtNaKru9G9hrW854Ja7Bw19aoQfnh9x+ZL4k6PKTYPkJ+UtjD9C3KIsqbfO0Sej+NeWS/POAvs+I
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6e02:3081:b0:3d3:cdb0:a227 with SMTP id
+ e9e14a558f8ab-3d6e5324ab2mr68055775ab.9.1743882963610; Sat, 05 Apr 2025
+ 12:56:03 -0700 (PDT)
+Date: Sat, 05 Apr 2025 12:56:03 -0700
+In-Reply-To: <20250405193222.577992-1-gshahrouzi@gmail.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67f18ad3.050a0220.0a13.0249.GAE@google.com>
+Subject: Re: [syzbot] [perf?] WARNING in __free_event
+From: syzbot <syzbot+ff3aa851d46ab82953a3@syzkaller.appspotmail.com>
+To: gshahrouzi@gmail.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Am Fri, 4 Apr 2025 12:44:39 +0200
-schrieb Krzysztof Kozlowski <krzk@kernel.org>:
+Hello,
 
-> On Thu, Apr 03, 2025 at 06:44:57PM GMT, Sukrut Bellary wrote:
-> > +properties:
-> > +  reg:
-> > +    maxItems: 1  
-> 
-> How reg is part of this? Every clock has reg, doesn't it? Otherwise how
-> do you control it? Drop.
-> 
-> > +
-> > +  ti,autoidle-shift:
-> > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > +    description:
-> > +      bit shift of the autoidle enable bit for the clock
-> > +    maximum: 31
-> > +    default: 0
-> > +
-> > +  ti,invert-autoidle-bit:
-> > +    type: boolean
-> > +    description:
-> > +      autoidle is enabled by setting the bit to 0  
-> 
-> required:
->   - ti,autoidle-shift
->   - ti,invert-autoidle-bit - although this makes no sense, so probably
-> old binding was not correct here
-> 
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+unregister_netdevice: waiting for DEV to become free
 
-well, the more informal definition in the txt file can be read as: if
-the clock supports autoidle, then ti,autoidle-shift is required. But
-that does not
-translate to the formal definition in the yaml file.
-So we have nothing required here.
+unregister_netdevice: waiting for batadv0 to become free. Usage count = 3
 
-I am a bit wondering whether we should just drop the autoidle.txt. The
-only thing worth there is the description.
 
-Regards,
-Andreas
+Tested on:
+
+commit:         c9661394 selftests/bpf: Convert comma to semicolon
+git tree:       bpf-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=17df2b4c580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=f2054704dd53fb80
+dashboard link: https://syzkaller.appspot.com/bug?extid=ff3aa851d46ab82953a3
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=165f0d78580000
+
