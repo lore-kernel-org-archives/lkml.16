@@ -1,132 +1,113 @@
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F129E14830A;
-	Sat,  5 Apr 2025 22:23:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A794619E998
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 22:34:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743891801; cv=none; b=uVeKFazsdQrVPPY0jvRgiJT1QhrkC/TJZk950UFBsTxBTIHF16VjGBQcd+65kUPq2Nf8bcGcUcADfEHl2OOXaWgAvUSWITUp2A/Ne2eT7J8ScgLk+tKsPXumhP6b18jo6foaYQMgdiiMEg5OnDQbOEImicx3NeaIpK1s3pzPiOE=
+	t=1743892492; cv=none; b=qVVULPS8BbT3SuXbIg4KZsBDqnwKV0/IHBODB24TQcfnbLp4dYpoHS/X2FB5e9Gkgdlnd2cFXHRyQEibY57Cw02nUqvxF7D0fJwTZQsbPR6Omxk12yo/HxmdIBzKN+Ag9EB3FB76vvp+hZAUtac36cSOeCE8xGApYhuSoqGXo1g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743891801; c=relaxed/simple;
-	bh=oSOxn6FhZZvHYraduFxsagghJPONh/WWivVo7aF/Izk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gP6e9NJAQY/SNFdXzXwoHy4SOG48oeMT9603KRox72qZzVMXE3R2MX9G0XRihEGHue/FEU4p4pFnJd76fHHsQF4JKswyW+MpeFkWsH1lnoXP2AXKXXQ5K67sxS3XNxAkTJ5EhlinZ6J9jqjmsoovB4BH1ThkwRpvCN79i1cs5ao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KUgbedQS; arc=none smtp.client-ip=209.85.208.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743892492; c=relaxed/simple;
+	bh=Jwa7WVh1Mbn44z4uCieGuSkSoP/aImVcM5D1P7xUJgU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=e023iIzLU0HmIhJInQ2uObQnUYHG/rWQTF1QpD6tw8aStNskIchD+0hJchroOW4qsKU1WDk21mh52V/hgY0ZqgOQHD1xAYhyQY3lSOI2v4Gwt5y4mfy9/zqbNT1hvCAJ2p+sHNFU2O+lTOJ/ywkFX45p9gqPXNFzU2g21j024Dc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=UiDZJUH1; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KUgbedQS"
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-30beedb99c9so29636181fa.3;
-        Sat, 05 Apr 2025 15:23:19 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="UiDZJUH1"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5e686d39ba2so5847066a12.2
+        for <linux-kernel@vger.kernel.org>; Sat, 05 Apr 2025 15:34:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743891798; x=1744496598; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ipwWy+VwOq5W2zp861WDwncOrbNpmHHEfeOWsU6uii8=;
-        b=KUgbedQSFaqhA9PEdNe78Q2lYvZ+9rdfUnmOTwEnyWAhA50RWkUTgwWi4coLNqpBti
-         AyOi21YMpCsQTcff6k6Q910iAOpNM8f7pkIDR4EO3qNjC5G4ztaqq3PBEgOnSQtiizDs
-         36iz09VrWdTbzcIe80ZpnOJiMWx5H9s7y67GbM8OyW8nyIEl7x2oD5V+VZxEGz57w39V
-         xsfk+W3ksBtYqPRNd74bKQV8g87gGvFDkSWievpAyRkWcDOmoSqbxDmkkcjTgw4i+kth
-         +wYpCy34QO3RGgM+cNVk+fAZ/ts5Edn89KHxOGb82SESD3KqJjwtFzyecCWbFXolL6dt
-         mmEg==
+        d=linux-foundation.org; s=google; t=1743892486; x=1744497286; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=tT2mm+ItL4N6xmscnWjjPD3E7M42LVXxM6kDybYeTbg=;
+        b=UiDZJUH17t+AyovH+OqMVfIorL37ganWheYitYfqRxarhEdGGAAt/c1SF/xbXTaWxK
+         d4O9ZzNPA7HqrpOtEoGZmO65kCchTT0hmbryWAusrUU2h6yk9F7dVqDp+ScNm8TcAsj0
+         cDJCA1n6UouCp3/EBH+TFS1ym/4/TVgEp8tHI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743891798; x=1744496598;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ipwWy+VwOq5W2zp861WDwncOrbNpmHHEfeOWsU6uii8=;
-        b=fKBmTtLjEmjy37QEXBw+Ta8N3YRrVHgkGbacWQXRs9+O5Nt3Cneb5+srpj6kZryO4P
-         OfMSVdLbBLDf0YHonR8xKH1M4QG9D4a79EQh63h9EIfwZwbYihIVVOeIdzUI1XOGD82S
-         RMW0fDpD3xItnWvH5eh4EqA+7J/Hwu9VCEVFCmJgj+/0ytIgdnOLAeoecZfzMml/52LX
-         eK8AYoDibPGXY39IXRX33XNy1GmV6Hp7eDoQcJWc8Imt2x0L5MRF3xrenjZoAH/IlNIM
-         pglVROBR2MOrS5B6P0dgI+d9ZRsE63UQrsq+nuGbPVdERFpTU9djIPnUGsz6rmqnqEmz
-         mzWA==
-X-Forwarded-Encrypted: i=1; AJvYcCUJeRDGC5RFzHpD6g4QSKrLoWFz96FRRU6ryachHYuIhAgiRGXgElzxatR6WoPyU95/MR9+jNZ2PjRcgcw=@vger.kernel.org, AJvYcCVRptOi/QrLFYFcIIouK7jFWDjmF7ZAeoZVcmju8k/6+r7UuuhuNia5cYFu6UVWDs04bmiOhMCOaABV@vger.kernel.org
-X-Gm-Message-State: AOJu0YwVRcACwyfNjigOGQAkJo6IfiWFA8XeJASI8x2bnCU8dEDd+C8e
-	Rx2R4khTf7NSHGr0mQQUjJ0feSLTM0GXKDk4hXMVZMeibdo9PYPH
-X-Gm-Gg: ASbGncuFL3Jt3Cpf/fykcI1C9W+hyQFyxch1/cl/osUWMFuZtYzHpjAoczwfhZZ2Aae
-	CHOYqMNuEeitXFKJ5D4gvrHivhKPKeKqc4j7OAA52CIcQZuLdz049LgR1ApebZD5zuTIzgTCJA6
-	KyvGnOjPcnS6S7c0E5oMnU6Ziaj5jf8QSC6sFDtt+aqAa6Q8afFfdjgjXXLUNQ+xTnoO3r5ivlf
-	H6/EYEl50x5XBJxoav5Rt3yUKyWIt6/PSXNjBiSqlL6VX+LIvVVK5ULVNwWWZ8aVHHe42UNyKSs
-	X2zExa0i80nSbJjYWexJwx/7xjTvQzZ48n1Br+tWObGVBA7VizTRAIrz7rO2UA==
-X-Google-Smtp-Source: AGHT+IFad0LPAwoSJ2xd14ieDtcaVkm6Sw82CnPHctH4LC9DfuTYjPEFmqrTy7QJo2jkpnnH4m5VQw==
-X-Received: by 2002:a05:651c:1b06:b0:30b:c96a:775 with SMTP id 38308e7fff4ca-30f16517206mr9882131fa.14.1743891797303;
-        Sat, 05 Apr 2025 15:23:17 -0700 (PDT)
-Received: from foxbook (adtt225.neoplus.adsl.tpnet.pl. [79.185.231.225])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30f031bcdd4sm10453821fa.69.2025.04.05.15.23.15
-        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
-        Sat, 05 Apr 2025 15:23:17 -0700 (PDT)
-Date: Sun, 6 Apr 2025 00:23:11 +0200
-From: =?UTF-8?B?TWljaGHFgg==?= Pecio <michal.pecio@gmail.com>
-To: Paul Menzel <pmenzel@molgen.mpg.de>
-Cc: Mathias Nyman <mathias.nyman@linux.intel.com>, Mathias Nyman
- <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- linux-usb@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: xhci: WARN Set TR Deq Ptr cmd failed due to incorrect slot or
- ep state.
-Message-ID: <20250406002311.2a76fc64@foxbook>
-In-Reply-To: <84b400f8-2943-44e0-8803-f3aac3b670af@molgen.mpg.de>
-References: <c279bd85-3069-4841-b1be-20507ac9f2d7@molgen.mpg.de>
-	<b356f743-44b5-4f48-a289-fae0afe106ff@linux.intel.com>
-	<84b400f8-2943-44e0-8803-f3aac3b670af@molgen.mpg.de>
+        d=1e100.net; s=20230601; t=1743892486; x=1744497286;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=tT2mm+ItL4N6xmscnWjjPD3E7M42LVXxM6kDybYeTbg=;
+        b=HchHh8wgNiRKFFXWcDZ6I283ggD9vfEMMin+PlFJVqtd1Ci7pt5KYpXzwzQmvr3eTW
+         QZwsltH1Oj45zwO56bJFqhEuIzAvj4p06YTOUQWTUO9ncaBpn6XcbVVlwPuXfMHFxPNc
+         jG8eoIg1Dn/XDc2ZVZw/bIfg1jaVnGhLED5xylXjRVCr4NfOH46zPP9MUgFb42kbFmZf
+         YnU4+1rKq9eyPTU0SROSSYobBNPbgAB3//ZQFG5sUySyxwtYFS6tFn0Wdv16f+6zhBnN
+         p4nIpLdoDnEsn5V+FtLpwsekn9ztusITrwyPcsfpBZkpyHO4qJw5lCU0mHzyjuvtEP0q
+         ExLw==
+X-Forwarded-Encrypted: i=1; AJvYcCXsAFe/15bkl05j7VJalldomIwL+s8GppUZtrbtw277lghY5afURmRunwagjEQGlRduiKPle/Tm3KDDkHo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw9wXGbCviTDBVWlmka37lTZk0JgeOZYUdbT/Y0Pwi9p+GiRgOQ
+	ZObLPJtoxL0L+ulQR/a3G3M3MuggTBSpx7xHYow1qUbbXbuM6TVjVEP/joJWC1qowAFXcbO4+q3
+	4XzE=
+X-Gm-Gg: ASbGncvxjQb3nnm+Aj042pj7fhpg79YKX7vk6D9tgTzXa1vukhLjcIoSulUw6wO9YCg
+	HTTXbiPvJ0YsrJb7TrXQm7VPWvrR60Abe6IYxDrBsLP+KSg1QfytJMfclimWsTG2SegU4wUKtCf
+	fhECynqOSzXeM9ASjzH/T1JJRoIxMG4VaZAdjFccJA2H4luDHSxA6WcrmLF7VZJdnNZkGWhez5J
+	CMd+sPnD9Y0mnB5slq78/tYRmTbqXyVfG+r2SrTSj/nStfF5yBGziiR6aC9nzcZwDnz/oUrokcz
+	r8O9KSF1+DK2uaG2kKpNGvLxBh66jYn0g7XLco17zkSJNNFTceht4BaZ7MBDNLjbQge7G22CINF
+	3XqdRR2x2//JXAExR9Nc68F1r109qHA==
+X-Google-Smtp-Source: AGHT+IHlrT/mLxdqVtlAJvTG4uWTNCX3xW1BdZ5kxSPv6mGGTqnH3T/IyHGcs3ML37LL9FDHPCDLZg==
+X-Received: by 2002:a17:906:f5a2:b0:ac3:5c8e:d3f6 with SMTP id a640c23a62f3a-ac7d1cce91emr775324966b.55.1743892486563;
+        Sat, 05 Apr 2025 15:34:46 -0700 (PDT)
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com. [209.85.218.47])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7c01c2170sm490983766b.170.2025.04.05.15.34.44
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 05 Apr 2025 15:34:45 -0700 (PDT)
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ac3eb3fdd2eso240242066b.0
+        for <linux-kernel@vger.kernel.org>; Sat, 05 Apr 2025 15:34:44 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUo144y6aCphXmAFmernsvGuYuCecBb/SaqZG69Qv0rVytFBcMO+wB8iUbyHdiCgQkK77uQcEn0Ba+L7S0=@vger.kernel.org
+X-Received: by 2002:a17:906:dc8f:b0:abf:8f56:fe76 with SMTP id
+ a640c23a62f3a-ac7d18bbd79mr666317166b.25.1743892484382; Sat, 05 Apr 2025
+ 15:34:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <CAPM=9twD=Epq278=nVGxMU4veeEpznYLnr_PVQ9WqvdnxZac_w@mail.gmail.com>
+ <CAPM=9tw5SBS_P1oX+ySAhNx-M_NeO4RzK249i6vtwSU0V4mbDA@mail.gmail.com>
+In-Reply-To: <CAPM=9tw5SBS_P1oX+ySAhNx-M_NeO4RzK249i6vtwSU0V4mbDA@mail.gmail.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Sat, 5 Apr 2025 15:34:28 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wi+93hTajFWaRL+vih3NjrwsNe8gzgMxmQc5BE+gPQnoA@mail.gmail.com>
+X-Gm-Features: ATxdqUEiA6LOTMVfYZDKtw0Uy6wB6ERJBodsv9nW5wea49PdH9NSkRvjU3sFM0w
+Message-ID: <CAHk-=wi+93hTajFWaRL+vih3NjrwsNe8gzgMxmQc5BE+gPQnoA@mail.gmail.com>
+Subject: Re: [git pull] drm fixes for 6.15-rc1
+To: Dave Airlie <airlied@gmail.com>, Alex Deucher <alexander.deucher@amd.com>, 
+	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+Cc: Simona Vetter <simona@ffwll.ch>, dri-devel <dri-devel@lists.freedesktop.org>, 
+	LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-OK, I think I see it.
+I was going to report this separately, but then the pull came in, so
+I'm just replying to that one instead...
 
-On Sat, 05 Apr 2025 05:23:12 +0000, Paul Menzel wrote:
-> [  326.543262] xhci_hcd 0000:39:00.0: Resetting device with slot ID 5
-> [  326.543294] xhci_hcd 0000:39:00.0: // Ding dong!
-> [  326.543549] xhci_hcd 0000:39:00.0: Completed reset device command.
-> [  326.543588] xhci_hcd 0000:39:00.0: Successful reset device command.
-> [  326.543730] xhci_hcd 0000:39:00.0: // Ding dong!
-> [  326.543838] xhci_hcd 0000:39:00.0: Successful setup address command
-> [  326.543858] xhci_hcd 0000:39:00.0: Op regs DCBAA ptr = 0x00000133845000
-> [  326.543876] xhci_hcd 0000:39:00.0: Slot ID 5 dcbaa entry @00000000ced6807f = 0x000001339f4000
-> [  326.543897] xhci_hcd 0000:39:00.0: Output Context DMA address = 0x1339f4000
-> [  326.543904] xhci_hcd 0000:39:00.0: Internal device address = 5
-> [  326.543935] usb 4-1.4: reset SuperSpeed USB device number 4 using xhci_hcd
-> [  326.560391] xhci_hcd 0000:39:00.0: Waiting for status stage event
-> [  326.560446] xhci_hcd 0000:39:00.0: xhci_drop_endpoint called for udev 000000008c832e88
-> [  326.560465] xhci_hcd 0000:39:00.0: xhci_drop_endpoint called for udev 000000008c832e88
-> [  326.560483] xhci_hcd 0000:39:00.0: add ep 0x1, slot id 5, new drop flags = 0x0, new add flags = 0x4
-> [  326.560499] xhci_hcd 0000:39:00.0: add ep 0x82, slot id 5, new drop flags = 0x0, new add flags = 0x24
-> [  326.560508] xhci_hcd 0000:39:00.0: xhci_check_bandwidth called for udev 000000008c832e88
-> [  326.560520] xhci_hcd 0000:39:00.0: // Ding dong!
-> [  326.561031] xhci_hcd 0000:39:00.0: Successful Endpoint Configure command
-> [  326.561209] xhci_hcd 0000:39:00.0: endpoint disable with ep_state 0x40
-> [  326.561217] xhci_hcd 0000:39:00.0: endpoint disable with ep_state 0x240
+On Sat, 5 Apr 2025 at 14:51, Dave Airlie <airlied@gmail.com> wrote:
+>
+> amdgpu:
 
-Looks like some URB stalled and usb_storage reset the device without
-usb_clear_halt(). Then the core didn't usb_hcd_reset_endpoint() either.
-And apparently EP_STALLED is still set in xhci_hcd after all that time.
+Does any of this happen to fix this (repeated a couple of hundred
+times each time):
 
-Then usb_storage submits one URB which never executes because the EP
-is in Running-Idle state and the doorbell is inhibited by EP_STALLED.
-30s later it times out, unlinks the URB and resets again. Set TR Deq
-fails because the endpoint is Running.
+  [drm] scheduler comp_1.1.1 is not ready, skipping
+  [drm] scheduler comp_1.3.0 is not ready, skipping
+  [drm] scheduler comp_1.0.1 is not ready, skipping
 
-> [  326.562226] usb 4-1.4: URB 00000000a9556a5f queued before clearing halt
-> [  357.198396] xhci_hcd 0000:39:00.0: Invalidating TDs instantly on slot 5 ep 4 in state 0x240
-> [  357.198405] xhci_hcd 0000:39:00.0: Removing canceled TD starting at 0x1645d5000 (dma) in stream 0 URB 00000000a9556a5f
-> [  357.198422] xhci_hcd 0000:39:00.0: Set TR Deq ptr 0x1645d5010, cycle 1
-> [  357.198429] xhci_hcd 0000:39:00.0: // Ding dong!
-> [  357.198435] xhci_hcd 0000:39:00.0: xhci_giveback_invalidated_tds: Keep cancelled URB 00000000a9556a5f TD as cancel_status is 2
-> [  357.198505] xhci_hcd 0000:39:00.0: WARN Set TR Deq Ptr cmd failed due to incorrect slot or ep state.
-> [  357.198516] xhci_hcd 0000:39:00.0: Slot state = 3, EP state = 1
-> [  357.198525] xhci_hcd 0000:39:00.0: xhci_handle_cmd_set_deq: Giveback cancelled URB 00000000a9556a5f TD
-> [  357.198539] xhci_hcd 0000:39:00.0: xhci_handle_cmd_set_deq: All TDs cleared, ring doorbell
+which seems to happen on my machine when the display goes to sleep and
+then comes back from low-power state.
 
-Not sure if it's a USB core bug or something that xHCI should take
-care of on its own. For now, reverting those two "stall" patches ought
-to clean up the noise.
+It also seems to make the power resume quite a bit slower. Everything
+still seems to *work*, just annoying messages and an extra several
+seconds of black screen...
 
-Not 100% sure if this caused the stuck task issue, but 6.15 has this
-CONFIG_DETECT_HUNG_TASK_BLOCKER which might be helpful in such cases.
+This is on my threadripper with the same ancient "Sapphire Pulse RX
+580 8GB" or whatever it is. lspci calls it "Ellesmere [Radeon RX
+470/480/570/570X/580/580X/590] (rev e7)"
+
+I will be pulling and testing, but I thought I'd mention this issue regardless.
+
+                Linus
