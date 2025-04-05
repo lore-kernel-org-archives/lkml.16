@@ -1,121 +1,295 @@
-Received: from s1.g1.infrastructure.qtmlabs.xyz (s1.g1.infrastructure.qtmlabs.xyz [107.172.1.117])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC027101EE;
-	Sat,  5 Apr 2025 03:09:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=107.172.1.117
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5AD2C8E0;
+	Sat,  5 Apr 2025 03:12:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743822582; cv=none; b=X49zDEioXbVWYowQ8HMvRfsJqg2F7drh/a6AonAiRrMg32ZP7OrQCHr+w6A+QuiWyvIlIJPh5smsP/o/Md18xcLlZF+/+zBiadeDOGxWSEf/PP3C3LCYmbI0I204G//98jGFwfBMv4TiX2+sGi3xVX+OuQmxQ8pvSYLJTXcSDv8=
+	t=1743822741; cv=none; b=df3o+uTxSHKkP+W2PEacFTHEuTPgrsPI9os6i56WUYq6T425V6MRtlXAq0uP3uU7mlZ2uA41JoYlJtYAv5MlH6XQKUnLBvlzhoQv4cdJ10No8gYp3tyUnaRJrdOEZSZ4XOH6GDwj1gPdzsoyX/UhcJYsmD693S0uQopwWidcAV4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743822582; c=relaxed/simple;
-	bh=hujQm0HClXP7xjO2znk9QgTnRzmTHqA4LUOAnZTczgw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=KrOZeexpJiY/nVLbacCNmIhShcj6/q+g85aeIgU0fbIQfqEPf3d4Fq6hX0CoH+JBXg+Rz4AP6TCyZBftbB5KF8jt6E+1CFlV0httAX2s52q53gvXBMQkcdxZJqI7CUPZwGFzQfya0mj8JPDzz9hxj21qXc6I9feLNcO5B+vfbCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qtmlabs.xyz; spf=pass smtp.mailfrom=qtmlabs.xyz; dkim=pass (2048-bit key) header.d=qtmlabs.xyz header.i=@qtmlabs.xyz header.b=iAFiv0oy; arc=none smtp.client-ip=107.172.1.117
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qtmlabs.xyz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qtmlabs.xyz
+	s=arc-20240116; t=1743822741; c=relaxed/simple;
+	bh=VGgGPh2VsvYfcOMo2vW3z6LzrYp44V2jkmrZPkzfvz8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=oXDzHvNJhHlWKhd7k03gU3VUA9Od7sPigfPUAS4pZcXEAKAfnSOo+OnNvUqhOcOA4Fif5luc/fn/ds343zmkCyomeT3LOvDDWg1QPFhnlSlecEdcWfpkGEsZ/3PE5uKEtvWqxUdyeY/cT7jgAZuJf/7qa4STjfXkeHfhobgm3xg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g8XU0BVg; arc=none smtp.client-ip=209.85.219.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qtmlabs.xyz header.i=@qtmlabs.xyz header.b="iAFiv0oy"
-From: msizanoen <msizanoen@qtmlabs.xyz>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qtmlabs.xyz; s=dkim;
-	t=1743822571;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=rTf9akzD0dNQb/RAitsDp1AU3nLBLkrnu2RP1/sYscY=;
-	b=iAFiv0oyfxQUliXn0AizR88bACAQCDhmG0mq5j4RGh4Tt+E2JogHQNidoQ74gMce+nJ+g1
-	As/M8IyoByEO4TwTws9COQO9oKQ6uf0PNRI/ECmuK6jEJfoS6G9zNjALImaSsvLLclbRsx
-	/GUHxxQB0OhC2A23zGURT0gTwYg2F6mQvik/++4khVDYW4UhAq3rOGefHANyxtdT8FqYJ5
-	c9/LHU0h7wbuth7EfQc6Oe37ixp9MqkJQ2NSSe82yjZeGbvJblemqzMKZDequUy4kxVmPz
-	eCx39SoxYHTh/j3+EfjN0gbGi3XoU6Lqq5+SmopUbGKWb2H7TjYlAzRwYtefcQ==
-Authentication-Results: s1.g1.infrastructure.qtmlabs.xyz;
-	auth=pass smtp.mailfrom=msizanoen@qtmlabs.xyz
-Date: Sat, 05 Apr 2025 10:09:24 +0700
-Subject: [PATCH] x86/e820: Fix handling of subpage regions when calculating
- nosave ranges
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g8XU0BVg"
+Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-6ecf0e07954so35189446d6.1;
+        Fri, 04 Apr 2025 20:12:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743822738; x=1744427538; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=QMFI/YdgSQtSX1ODi42VtJ+bjgy/ZFD0RdBy7KOKgO0=;
+        b=g8XU0BVgsTZcKiSMf6IZlN/1MthdsDD1ARCEnd4GCvUzS4cbYVNtLPyuxVwoMwW6bL
+         nRGOZ79TpThNR3Zn5d7r59/tF/2NOKkXB/FkjrqA3ErnHuDGaI804RlPzXEhPEOCoqta
+         ///zTMTPwxC/gbRGPMP+k0vmVdnP13SgkVeF4/xFImZ353ZNdgInh8g0SNtSUQWm74AO
+         QUjk7b7Y/Jh3WrSTkkq48ad5zrO/CB3EKzzHtEyLtrtwwcMMnMUl3h4OgOXbeAAVOEdI
+         9E4OfS6fvD5Cu4XXUSCaO8izZ9oTyT4WB7IbfIvc0/XLUne+NH0GWdDp762PQkULP5TD
+         7LLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743822738; x=1744427538;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=QMFI/YdgSQtSX1ODi42VtJ+bjgy/ZFD0RdBy7KOKgO0=;
+        b=KtzoIExL0jANEBF1jNJJmiwxIkcUQegCMV+3bFN0nJO7xlEuE0iiAreQsSOyMMmZAB
+         fRSE6LgqvXG1Zm/lGu8MCsGKkR8/E/iaIA5Skc0y2DVs//DgmfXPdW8lHPBx/z6NdLNy
+         l09OEsjrfI7TZdugcDYuUux2jl6p8omA4K9MyfG5QDOUS0yMwe03jH/I8rG3fdG6NDpr
+         MKTpz2aEdm6yCDgMWa2mOIuxQOuXBT6pgvGWCrn4eRcw2OmaIkt1qhK6deT6H+CA15J5
+         R1+xLtTnDYB5lZ4Q7edgZjU5RJ8ES/Qo82Sd/0ebwSSRCX+8LPg7aHBicDY231i4Buru
+         IsjQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU3Xun1684ftOXhGWviKaZV7vnvTgcKg6YL1xo08XetyTPzmgM4tFBqrOpCgA8GaKjCD5OXmx4HRz7q2/Q=@vger.kernel.org, AJvYcCXR84IDk2DLrH0txTvDA/OpvdyKIxTKAxrNPjqk2T6xprGO+1FaYv5JAK+oW9bnQO2Iqrzq3aI7XkAUMhF9VjIoGg==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxx9r44VGx3CP1EGQaDLrGCFa53z955p1rFIi6wF9wdb49wKD1N
+	jAMVvC6Rgvi0fBgRP5vaeZYVVmpn9LU7B1Jq4AmGv0cp+u6fL9uw
+X-Gm-Gg: ASbGncuWEkF3aOCEU08BeDHQw/PJf31sEYPOgHlyTpSRv8zMtPQp9g/UerJngnfuX6D
+	J2u/QzGK4CUc9ISL4g2Z1o+WkKHKrBiLB4UjK9miIFw7CRyFhQLuKh7iQRkN09d69h40pZhwOSw
+	0pDBXCjJE29RC54+Kw+F/nMAJHSSC8lbh/CmzS2O+A5gEvMT8vYYbIzA5TFXHQzg2QqNkXcHBWl
+	Xi4I+SpiSYqJA2AayCjG61Gq4AlWLBEAKWhWo61XbFDCjeKwuU/MCWWKg3nrXkhbCHncD8qY0aq
+	/Wq5867EnIw7Epro5u0NONa54Vq1gAr462zJQmj/+6bUtvz9q5dGazMSzR0=
+X-Google-Smtp-Source: AGHT+IG9SCiijd5s9anYpfKr0j+IeyyhTDaMtWL9AkRebpEOO0iUBXDtoVsGwQSgm0fURGxsTiWefw==
+X-Received: by 2002:a05:6214:404:b0:6e8:fee2:aae4 with SMTP id 6a1803df08f44-6f01e769f7cmr85407006d6.28.1743822738537;
+        Fri, 04 Apr 2025 20:12:18 -0700 (PDT)
+Received: from howard.neu.edu ([4.53.135.106])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6ef0f14e93fsm28616766d6.110.2025.04.04.20.12.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Apr 2025 20:12:18 -0700 (PDT)
+From: Howard Chu <howardchu95@gmail.com>
+To: peterz@infradead.org
+Cc: mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
+	james.clark@linaro.org,
+	howardchu95@gmail.com,
+	charlie@rivosinc.com,
+	mpetlan@redhat.com,
+	vmolnaro@redhat.com,
+	linux@treblig.org,
+	mhiramat@kernel.org,
+	leo.yan@arm.com,
+	dima@secretsauce.net,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	krzysztof.m.lopatowski@gmail.com
+Subject: [PATCH v1] perf trace: Speed up startup time by bypassing the creation of kernel maps
+Date: Fri,  4 Apr 2025 20:12:13 -0700
+Message-ID: <20250405031213.3502708-1-howardchu95@gmail.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250405-fix-e820-nosave-v1-1-162633199548@qtmlabs.xyz>
-X-B4-Tracking: v=1; b=H4sIAOOe8GcC/x2MywqAIBAAfyX23IL5QOtXooPZVnuxUIhA/Pek4
- 8DMFMiUmDJMXYFED2e+YoOh7yCcPh6EvDUGKaQRWhjc+UVyUmC8sn8Ig1bWjsYpvxK06k7UlP8
- 4L7V+3SveKGEAAAA=
-X-Change-ID: 20250405-fix-e820-nosave-c43779583abe
-To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org, 
- Roberto Ricci <io@r-ricci.it>, msizanoen <msizanoen@qtmlabs.xyz>, 
- stable@vger.kernel.org
-X-Spamd-Bar: /
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Handle better cases where there might be non-page-aligned RAM e820
-regions so we don't end up marking kernel memory as nosave.
+If perf trace isn't run with '--call-graph' and '--kernel-syscall-graph'
+options, e.g.
 
-This also simplifies the calculation of nosave ranges by treating
-non-RAM regions as holes.
+sudo ./perf trace --call-graph fp --kernel-syscall-graph -a
 
-Fixes: e5540f875404 ("x86/boot/e820: Consolidate 'struct e820_entry *entry' local variable names")
-Tested-by: Roberto Ricci <io@r-ricci.it>
-Reported-by: Roberto Ricci <io@r-ricci.it>
-Closes: https://lore.kernel.org/all/Z4WFjBVHpndct7br@desktop0a/
-Signed-off-by: msizanoen <msizanoen@qtmlabs.xyz>
-Cc: stable@vger.kernel.org
+there is no need for creating kernel maps.
+
+before:
+
+perf $ time sudo ./perf trace -- sleep 1
+         ? (         ): sleep/3462908  ... [continued]: execve())                                           = 0
+	 ...
+  1001.459 (         ): sleep/3463166 exit_group()                                                          = ?
+
+real    0m2.834s
+user    0m0.011s
+sys     0m0.012s
+
+after:
+
+perf $ time sudo ./perf trace -- sleep 1
+         ? (         ): sleep/3459948  ... [continued]: execve())                                           = 0
+	 ...
+  1001.471 (         ): 3459948 exit_group()                                                          = ?
+
+real    0m1.810s
+user    0m0.008s
+sys     0m0.015s
+
+I also want to express my gratitude to Krzysztof Łopatowski—his
+profiling of the perf trace [1] inspired this patch. I'm not sure why
+the discussion stalled, and I apologize for not being able to answer his
+questions. Since his findings significantly improve the startup time of
+perf trace, I don't want to take credit for that. So Krzysztof, please
+let me know if you'd like a Suggested-by: or anything else.
+
+[1]: https://lore.kernel.org/linux-perf-users/CAOQCU67EsHyw_FsqGbRuityahZTSAtWzffU=hLUJ7K=aZ=1hhA@mail.gmail.com/
+Signed-off-by: Howard Chu <howardchu95@gmail.com>
+Cc: "Krzysztof Łopatowski" <krzysztof.m.lopatowski@gmail.com>
 ---
-The issue of the kernel failing to resume from hibernation after
-kexec_load() is used is likely due to kexec-tools passing in a different
-e820 memory map from the one provided by system firmware, causing the
-e820 consistency check to fail. That issue is not addressed in this
-patch and will need to be fixed in kexec-tools instead.
----
- arch/x86/kernel/e820.c | 17 ++++++++---------
- 1 file changed, 8 insertions(+), 9 deletions(-)
+ tools/perf/builtin-buildid-list.c     | 2 +-
+ tools/perf/builtin-trace.c            | 2 +-
+ tools/perf/tests/code-reading.c       | 2 +-
+ tools/perf/tests/dlfilter-test.c      | 2 +-
+ tools/perf/tests/dwarf-unwind.c       | 2 +-
+ tools/perf/tests/mmap-thread-lookup.c | 2 +-
+ tools/perf/tests/symbols.c            | 2 +-
+ tools/perf/util/machine.c             | 6 +++---
+ tools/perf/util/machine.h             | 2 +-
+ tools/perf/util/probe-event.c         | 2 +-
+ 10 files changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
-index 57120f0749cc3c23844eeb36820705687e08bbf7..656ed7abd28de180b842a8d7993e9708f9f17026 100644
---- a/arch/x86/kernel/e820.c
-+++ b/arch/x86/kernel/e820.c
-@@ -753,22 +753,21 @@ void __init e820__memory_setup_extended(u64 phys_addr, u32 data_len)
- void __init e820__register_nosave_regions(unsigned long limit_pfn)
+diff --git a/tools/perf/builtin-buildid-list.c b/tools/perf/builtin-buildid-list.c
+index 52dfacaff8e3..357201d8ef0c 100644
+--- a/tools/perf/builtin-buildid-list.c
++++ b/tools/perf/builtin-buildid-list.c
+@@ -47,7 +47,7 @@ static void buildid__show_kernel_maps(void)
  {
- 	int i;
--	unsigned long pfn = 0;
-+	u64 last_addr = 0;
+ 	struct machine *machine;
  
- 	for (i = 0; i < e820_table->nr_entries; i++) {
- 		struct e820_entry *entry = &e820_table->entries[i];
+-	machine = machine__new_host();
++	machine = machine__new_host(true);
+ 	machine__for_each_kernel_map(machine, buildid__map_cb, NULL);
+ 	machine__delete(machine);
+ }
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index f55a8a6481f2..39f23ce39842 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -1963,7 +1963,7 @@ static int trace__symbols_init(struct trace *trace, struct evlist *evlist)
+ 	if (err)
+ 		return err;
  
--		if (pfn < PFN_UP(entry->addr))
--			register_nosave_region(pfn, PFN_UP(entry->addr));
--
--		pfn = PFN_DOWN(entry->addr + entry->size);
--
- 		if (entry->type != E820_TYPE_RAM)
--			register_nosave_region(PFN_UP(entry->addr), pfn);
-+			continue;
+-	trace->host = machine__new_host();
++	trace->host = machine__new_host(callchain_param.enabled && trace->kernel_syscallchains);
+ 	if (trace->host == NULL)
+ 		return -ENOMEM;
  
--		if (pfn >= limit_pfn)
--			break;
-+		if (last_addr < entry->addr)
-+			register_nosave_region(PFN_UP(last_addr), PFN_DOWN(entry->addr));
-+
-+		last_addr = entry->addr + entry->size;
- 	}
-+
-+	register_nosave_region(PFN_UP(last_addr), limit_pfn);
+diff --git a/tools/perf/tests/code-reading.c b/tools/perf/tests/code-reading.c
+index cf6edbe697b2..17c7b9f95532 100644
+--- a/tools/perf/tests/code-reading.c
++++ b/tools/perf/tests/code-reading.c
+@@ -654,7 +654,7 @@ static int do_test_code_reading(bool try_kcore)
+ 
+ 	pid = getpid();
+ 
+-	machine = machine__new_host();
++	machine = machine__new_host(true);
+ 	machine->env = &perf_env;
+ 
+ 	ret = machine__create_kernel_maps(machine);
+diff --git a/tools/perf/tests/dlfilter-test.c b/tools/perf/tests/dlfilter-test.c
+index 54f59d1246bc..11f70ebabacf 100644
+--- a/tools/perf/tests/dlfilter-test.c
++++ b/tools/perf/tests/dlfilter-test.c
+@@ -352,7 +352,7 @@ static int test__dlfilter_test(struct test_data *td)
+ 		return test_result("Failed to find program symbols", TEST_FAIL);
+ 
+ 	pr_debug("Creating new host machine structure\n");
+-	td->machine = machine__new_host();
++	td->machine = machine__new_host(true);
+ 	td->machine->env = &perf_env;
+ 
+ 	td->fd = creat(td->perf_data_file_name, 0644);
+diff --git a/tools/perf/tests/dwarf-unwind.c b/tools/perf/tests/dwarf-unwind.c
+index 4803ab2d97ba..b76712f68403 100644
+--- a/tools/perf/tests/dwarf-unwind.c
++++ b/tools/perf/tests/dwarf-unwind.c
+@@ -203,7 +203,7 @@ noinline int test__dwarf_unwind(struct test_suite *test __maybe_unused,
+ 	struct thread *thread;
+ 	int err = -1;
+ 
+-	machine = machine__new_host();
++	machine = machine__new_host(true);
+ 	if (!machine) {
+ 		pr_err("Could not get machine\n");
+ 		return -1;
+diff --git a/tools/perf/tests/mmap-thread-lookup.c b/tools/perf/tests/mmap-thread-lookup.c
+index ddd1da9a4ba9..194b5affaa41 100644
+--- a/tools/perf/tests/mmap-thread-lookup.c
++++ b/tools/perf/tests/mmap-thread-lookup.c
+@@ -167,7 +167,7 @@ static int mmap_events(synth_cb synth)
+ 	 */
+ 	TEST_ASSERT_VAL("failed to create threads", !threads_create());
+ 
+-	machine = machine__new_host();
++	machine = machine__new_host(true);
+ 
+ 	dump_trace = verbose > 1 ? 1 : 0;
+ 
+diff --git a/tools/perf/tests/symbols.c b/tools/perf/tests/symbols.c
+index ee20a366f32f..6b22a451211a 100644
+--- a/tools/perf/tests/symbols.c
++++ b/tools/perf/tests/symbols.c
+@@ -19,7 +19,7 @@ struct test_info {
+ 
+ static int init_test_info(struct test_info *ti)
+ {
+-	ti->machine = machine__new_host();
++	ti->machine = machine__new_host(true);
+ 	if (!ti->machine) {
+ 		pr_debug("machine__new_host() failed!\n");
+ 		return TEST_FAIL;
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index 55d4977b9913..b1828e3922f2 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -125,14 +125,14 @@ int machine__init(struct machine *machine, const char *root_dir, pid_t pid)
+ 	return 0;
  }
  
- #ifdef CONFIG_ACPI
-
----
-base-commit: e48e99b6edf41c69c5528aa7ffb2daf3c59ee105
-change-id: 20250405-fix-e820-nosave-c43779583abe
-
-Best regards,
+-struct machine *machine__new_host(void)
++struct machine *machine__new_host(bool create_kmaps)
+ {
+ 	struct machine *machine = malloc(sizeof(*machine));
+ 
+ 	if (machine != NULL) {
+ 		machine__init(machine, "", HOST_KERNEL_ID);
+ 
+-		if (machine__create_kernel_maps(machine) < 0)
++		if (create_kmaps && machine__create_kernel_maps(machine) < 0)
+ 			goto out_delete;
+ 
+ 		machine->env = &perf_env;
+@@ -146,7 +146,7 @@ struct machine *machine__new_host(void)
+ 
+ struct machine *machine__new_kallsyms(void)
+ {
+-	struct machine *machine = machine__new_host();
++	struct machine *machine = machine__new_host(true);
+ 	/*
+ 	 * FIXME:
+ 	 * 1) We should switch to machine__load_kallsyms(), i.e. not explicitly
+diff --git a/tools/perf/util/machine.h b/tools/perf/util/machine.h
+index ae3e5542d57d..e6faf8cd06e7 100644
+--- a/tools/perf/util/machine.h
++++ b/tools/perf/util/machine.h
+@@ -163,7 +163,7 @@ struct thread *machine__findnew_guest_code(struct machine *machine, pid_t pid);
+ void machines__set_id_hdr_size(struct machines *machines, u16 id_hdr_size);
+ void machines__set_comm_exec(struct machines *machines, bool comm_exec);
+ 
+-struct machine *machine__new_host(void);
++struct machine *machine__new_host(bool create_kmaps);
+ struct machine *machine__new_kallsyms(void);
+ int machine__init(struct machine *machine, const char *root_dir, pid_t pid);
+ void machine__exit(struct machine *machine);
+diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
+index 307ad6242a4e..6b5b5542f454 100644
+--- a/tools/perf/util/probe-event.c
++++ b/tools/perf/util/probe-event.c
+@@ -94,7 +94,7 @@ int init_probe_symbol_maps(bool user_only)
+ 	if (symbol_conf.vmlinux_name)
+ 		pr_debug("Use vmlinux: %s\n", symbol_conf.vmlinux_name);
+ 
+-	host_machine = machine__new_host();
++	host_machine = machine__new_host(true);
+ 	if (!host_machine) {
+ 		pr_debug("machine__new_host() failed.\n");
+ 		symbol__exit();
 -- 
-msizanoen <msizanoen@qtmlabs.xyz>
+2.45.2
 
