@@ -1,105 +1,94 @@
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59CD82E62D4
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 19:31:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B8ED186A
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 19:32:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743881494; cv=none; b=hUiT1c/RwoNbHkQBJ+pD4dL6cH9UDLyBB3FOijbgXqLWvQvH//gX/iN1I4uqhXcVq74U5qkKiEzh4jIza8c1ocBGv0O0TMl1PlEnfWnkPgHvvCPnpI/WW8EOnIYbIDV5pCzE+KkUbraJ6UVQtSdHZTzfHQxIl3WsgTMNXctkmGY=
+	t=1743881548; cv=none; b=Sajx7vTldSztPO9SW4Z4SLS0/5dJopEpNMiBWFDqKJHexsfMuQBXfctVFuuGZ8onbpXcVXdKORnk3HB7YBpG0ujNwQyGdRuxMkbnJcPh6S6eIARfKPuiKnMBQZDEnD78C2Gg5optPvDEdtpi0U/dUrAuGKGyyHrBAvTK7PHjEbs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743881494; c=relaxed/simple;
-	bh=ckL0wj4wzzCLyhMDNM4zVoDN/rgXxLAGSMJbG2KJYHM=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:Cc:
-	 Content-Type; b=b/Ty/LJgTKbjhO9UbWzc+49z1lCUTvf0yYOmiZkiuOFXEYCzTxBQyF2fkKnbrFb6nbiTH2+0x8TXU/SUSTQIpzP2CytcwGrNuFlPj9IVUgmUZDa88Y4czNiQLTSnxVGYuNFhgEV+Z8R1xatNQR52K8XLbqbHUuKVKNccnjorNHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
+	s=arc-20240116; t=1743881548; c=relaxed/simple;
+	bh=vHvqCSiW2MGBRz0l9bOc/zefZZh5UYTVjxHO1zNxoSA=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=WP1qNEffb3y08OGJ9u01VvUD/y6P+ciH67DXiwLYjQTovro+wL3D9CbsW1ZTMTB7jsjtIAM5G9gp4I2jLihnNrgqI8JaJ33wy+c9r+f+NJ9vtIoEhcm56s+AyQIfFjlU9BgjVITxdFrwWwzSvaAIbu80S7Iiep9fazQr2Gujv5o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-85b5a7981ccso263731439f.2
-        for <linux-kernel@vger.kernel.org>; Sat, 05 Apr 2025 12:31:31 -0700 (PDT)
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-8610d7ec4d3so583194939f.0
+        for <linux-kernel@vger.kernel.org>; Sat, 05 Apr 2025 12:32:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743881491; x=1744486291;
-        h=cc:to:from:subject:message-id:in-reply-to:date:mime-version
+        d=1e100.net; s=20230601; t=1743881546; x=1744486346;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gnfN+OSgoeqXWHgA1gS+R5i5TDEDoO3FJ5IgOyRixwg=;
-        b=VS//xZmVe6tj+QSyX+mxvDov603PilYGG5tmx8an47MH2SMxz/ik9jcLDlXDfgOVr+
-         0HZycn2mdvBI3vuLKgX+y5jjDiG8CFVhkhrwiF6aRz/pu57TebQMn9W7fPXGBR4t2EWH
-         esk1iWiBS03gGeMyk8rAjBuC3yx4NiPDu/LsU6rsg5mEOj3xpWzjhM1rsvhpqm71R5di
-         C99Hian035ggi+w24ureOjzJJLemNwKzFtxPf+NXfleBhHy86Xx9Qwviy5qCDEiyJdHz
-         YiVpTLHxC+WxFWazUxX/qRcuO5Bv2s+0kLLU2uIj3V4TDGRAybQPBszfMvmbjrlMfJFz
-         MpkQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUU6ZzdCu3InxPhJm87jjZuhyMpShsdKm1+/Nh/w+sg6xk74WiB6Oz/aGsqf/IdXf69f4rTsQOc0tygd+k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxekPUBlmgW8oYl4XaTjLIOq6AdqucvnLU4pjSPZwK5bgcp2zaN
-	j3dp3hZyWSJYyhNsOvUXi3NTFP4sUmXZPAK+erL/pWG7OQbQYgxUXx/gU5hWImApD6EmwR3kGgI
-	1n1vXFu0VwOkGZNWeHCxHz+extMUMZb/vYj92cHSLtQyv9KDXRUba8O8=
-X-Google-Smtp-Source: AGHT+IH4zdUDu40swxHd+oqi0UZ1gfIGTlaQwfyDjxXL3xNTGNIB2VQ11/7WDHiUKMeMsq1+h6Pljq14rJQEbGy+KFzmmcqKHMGA
+        bh=g4bBjSLnZErUVvggytsybtPgXceJw1g6sQ/JR4P2izE=;
+        b=n79GJK+kit5W9QHQESwfKKk5nKQq4vLXBcGcWZchVqrg/AXIGQkC4GbtrJkgcKTMhG
+         n+uuWjABsb5MnJTCWTXhHkft/1DTdwNlnfN6wPox3fggsLGqp2fmKrkf8aTSTuOb3bA7
+         NTXpR55PpDhPWpwKPY+cemZCZ7BrHVLg60j2LH9P3O01zsls/tLYzzghgvQZwNfe2iZs
+         pSzKcS3RplK4F3oYU/KE8Z7YRvJvK29TD7p2EVXFj8/5S4G9D8Vzyl75zqLXsTMRzZAR
+         /XH2KMSuuzJKlUUfFVtEHQCfxUfYiC5F/Q0yMc2vAZskfe4hdE16WHFR9PJGD4lXD2/P
+         XuTQ==
+X-Gm-Message-State: AOJu0Ywnzqek96vkIGv6WzfzHNb0hFF3/33BXcR98XQ0evVxcILB7YOg
+	KwvqIJcdPYGvReqDJwS+8OEpbyHqwO/Mg6+mF0kYBAemIkvAx/DTYogL5+2fTT1TmPFxTxmvJpF
+	Hu64zr4vP/Cw5mW99EODCPo8MA+d/8EuNtyHRLfz7q+76n5e2BbChtuE=
+X-Google-Smtp-Source: AGHT+IFgRmEzTEj1oJB91prtSC1x+VEzViUUFN5u8ltAtCczIpDJxkL5cgxBz6VCx2oqSf4qXu45vtyi/r1ignLWXkMcTm9/mP8m
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:3802:b0:3d3:f64a:38b9 with SMTP id
- e9e14a558f8ab-3d6e5876fb4mr74071535ab.15.1743881491392; Sat, 05 Apr 2025
- 12:31:31 -0700 (PDT)
-Date: Sat, 05 Apr 2025 12:31:31 -0700
-In-Reply-To: <20250405193128.577856-1-gshahrouzi@gmail.com>
+X-Received: by 2002:a05:6e02:188b:b0:3d4:e6:d872 with SMTP id
+ e9e14a558f8ab-3d6e533d77amr72903865ab.9.1743881546238; Sat, 05 Apr 2025
+ 12:32:26 -0700 (PDT)
+Date: Sat, 05 Apr 2025 12:32:26 -0700
+In-Reply-To: <67ef83fe.050a0220.9040b.0366.GAE@google.com>
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67f18513.050a0220.0a13.0247.GAE@google.com>
-Subject: Re: #syz test: perf/core: Prevent WARN_ON(!ctx) in __free_event for
- partial init failure
+Message-ID: <67f1854a.050a0220.0a13.0248.GAE@google.com>
+Subject: Re: [syzbot] #syz test
 From: syzbot <syzbot+ff3aa851d46ab82953a3@syzkaller.appspotmail.com>
-To: gshahrouzi@gmail.com
-Cc: gshahrouzi@gmail.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
+To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 
-> Move the get_ctx(child_ctx) call and the child_event->ctx assignment
-> to occur immediately after the child event is allocated via
-> perf_event_alloc(). This ensures that child_event->ctx is always
-> non-NULL before any subsequent error path within inherit_event calls
-> free_event(), satisfying the assumptions of the cleanup code.
->
-> Reported-by: syzbot+ff3aa851d46ab82953a3@syzkaller.appspotmail.com
-> Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-> ---
->  kernel/events/core.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 0bb21659e252..153ba622cfa0 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -14016,6 +14016,9 @@ inherit_event(struct perf_event *parent_event,
->  	if (IS_ERR(child_event))
->  		return child_event;
->  
-> +	get_ctx(child_ctx);
-> +	child_event->ctx = child_ctx;
-> +
->  	pmu_ctx = find_get_pmu_context(child_event->pmu, child_ctx, child_event);
->  	if (IS_ERR(pmu_ctx)) {
->  		free_event(child_event);
-> @@ -14037,8 +14040,6 @@ inherit_event(struct perf_event *parent_event,
->  		return NULL;
->  	}
->  
-> -	get_ctx(child_ctx);
-> -
->  	/*
->  	 * Make the child state follow the state of the parent event,
->  	 * not its attr.disabled bit.  We hold the parent's mutex,
-> @@ -14059,7 +14060,6 @@ inherit_event(struct perf_event *parent_event,
->  		local64_set(&hwc->period_left, sample_period);
->  	}
->  
-> -	child_event->ctx = child_ctx;
->  	child_event->overflow_handler = parent_event->overflow_handler;
->  	child_event->overflow_handler_context
->  		= parent_event->overflow_handler_context;
-> -- 
-> 2.43.0
->
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
 
-want either no args or 2 args (repo, branch), got 9
+***
+
+Subject: #syz test
+Author: gshahrouzi@gmail.com
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 0bb21659e252..153ba622cfa0 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -14016,6 +14016,9 @@ inherit_event(struct perf_event *parent_event,
+ 	if (IS_ERR(child_event))
+ 		return child_event;
+ 
++	get_ctx(child_ctx);
++	child_event->ctx = child_ctx;
++
+ 	pmu_ctx = find_get_pmu_context(child_event->pmu, child_ctx, child_event);
+ 	if (IS_ERR(pmu_ctx)) {
+ 		free_event(child_event);
+@@ -14037,8 +14040,6 @@ inherit_event(struct perf_event *parent_event,
+ 		return NULL;
+ 	}
+ 
+-	get_ctx(child_ctx);
+-
+ 	/*
+ 	 * Make the child state follow the state of the parent event,
+ 	 * not its attr.disabled bit.  We hold the parent's mutex,
+@@ -14059,7 +14060,6 @@ inherit_event(struct perf_event *parent_event,
+ 		local64_set(&hwc->period_left, sample_period);
+ 	}
+ 
+-	child_event->ctx = child_ctx;
+ 	child_event->overflow_handler = parent_event->overflow_handler;
+ 	child_event->overflow_handler_context
+ 		= parent_event->overflow_handler_context;
+-- 
+2.43.0
 
