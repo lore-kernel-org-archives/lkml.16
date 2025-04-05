@@ -1,102 +1,129 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0B90335BA;
-	Sat,  5 Apr 2025 07:32:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86A10111BF
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 07:36:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743838352; cv=none; b=V1hQHwL+1Vb+klyTK/LX7GUdypuOZ2OTvnsFIrPhZtlG8rm11REG5B5teAYSsAEg3rIg2gehS+eqqkN2V91oPUEPyyhmP0sfCoSkNpcihQUvE8bja5ci78gf7d7QnSntoD0dsqZhWrs1mCOUMePFlVbazKTDNlHCD1aSFWzMeTI=
+	t=1743838589; cv=none; b=hsy0aanFeHZZafp20TE4OmDdD6cPp70285eC7gl4HARZLSgt9ulHX52QRyv6vMt4qX895cZCitRjarlqLspSMNxZy5OjGmRfJFAyxtKlpy3u0Lgkm5wxGPZRZFizcKdD1Rx7kfOsCv+0tmWANcEMVdEwkdABi4BYw1IZgNaJmO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743838352; c=relaxed/simple;
-	bh=r2rZzCXm8yoJzmjoZJmKvHtZzk0bDrhACQdYpABXyrM=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=jFHYexD9QFMt0+/EZkzNsnxVq9UAunC8xGAX5Y1g2QFiKlTO3geWd5Rr6AixHvMl+Byv4khv0C1L3imB1PRFZ1bZTuvQZuLMow2n1xW/qoLPsxg/DO11ltAD+75vyO7Nl0rsGxBVmHyIAFBsADB9iWsfjWSSWvjNqaKkHaGdpsI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H3njx6D7; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H3njx6D7"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-73972a54919so2595232b3a.3;
-        Sat, 05 Apr 2025 00:32:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743838350; x=1744443150; darn=vger.kernel.org;
-        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sx8f3AHgyGqnhZdoodbs2e+2zLcVzYAtnkoxcx7HJx8=;
-        b=H3njx6D7PpvIYGDY2eYflTi6ClwKdXLAzbAvdNV5xgbdWO+bJxKBmHzR83uqf9qhK5
-         e9JA57h4EnEu+m/HLYkrUqZEUNfvPgKnqCNTT5GNyGXoNKLiot4bSBNJLks0w2J7wrGH
-         iT6ZHxW7AJvC6VB4YXD45EF260gm6NxIFhBg/UOeYDc97yvRdnmjXgB3x7x1PgNPrfQ0
-         X9sVIKlXGQGjDd9QfPvrtrgwd+r3jtOaXC7mjwyb3yJnoxjiVxH4dVZlcig2x6+6TllG
-         8uZV3/kjJxS1L3WQhI3GPBTu7kAnRatt8e/e+GK1mGB37yCYZXpiBuQMYeKNi2e0rTjh
-         Vr2w==
+	s=arc-20240116; t=1743838589; c=relaxed/simple;
+	bh=5VJ8xgJipaVSEHLn9ulv2z4DQjA3azRtgAV0f1b1q/o=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=geZKpJI0VZluR54L/JrSHlPV+6o6zg1wpEag9h1Ns82JrdXyR7rzL/CAHKHEnWX2rzLyDnOlhtTjroN+WrkSHNUckyhyQdt+veLYYjtsw8HnFQi2xF8HeNKYJvHhSSz9HNsgPG5SpqKXBQlOXgHDsxaKVbf0FApaFH4Gy9yfMoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3d43d333855so25269415ab.0
+        for <linux-kernel@vger.kernel.org>; Sat, 05 Apr 2025 00:36:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743838350; x=1744443150;
-        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sx8f3AHgyGqnhZdoodbs2e+2zLcVzYAtnkoxcx7HJx8=;
-        b=nTPj7magQvx2E8aLtWoWJgqds4nQItc3asi0NmuwHeZ/JdYXZaXfR7g0LdJh8jNP25
-         cfBZQy7qBoFOcrWYACWp26dHRS8VhGeZIVi+xUw5+sayBj9kzGbrQEXtNcOR6Vdh+cZu
-         moLreSNuDawH+nDyvWEa9bLWbVnQjEa757UlrWexzbPSXrakPPnF1GBYp4fWI5jdF6A+
-         YFy3QMSAZ2vDCOX8+ntspQh0fi0o273sKsvVyQxfx87mPMN5XP5KfbVMRqZ6sHJ6wsnS
-         bHLzv0tY4Kt1lGJC9wYTRuiqFocwbubcy3NWvhTpvmMrOCV4oE7+qvW2RRNt6++Nydaz
-         RsPw==
-X-Forwarded-Encrypted: i=1; AJvYcCXIjwYusdLyP2zMKfjIMyfFbQmaNSepPJh5JXmiYjH0019cVMEhTmIR9FReRRlxDWccCUxuN6X4QO2hBUU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwiT0du4BAkyClevPnwswvHfW5qomMDoGduZtrfz3PHayieM/yP
-	mTC77EEl4dRVnlB7sugvAXr3yJDIUSjcF3LETbY81fhwB/alDU/dnf9fOPJ96R4=
-X-Gm-Gg: ASbGncuDWK3s5FefVfuGhYwrnAkdEUZz0hi5Uos+WoN/rfV3ibfFADNbUuuM1ZdVwrP
-	RrP8Gbk5gXuTRsUWnulU2yyTfGbqtjzwG56KxhwRc0M/cjUg9v+LfnuuEK6kiC5C4tfqZmi/TVG
-	tQfie7+BDeifJ4xv3khk91ERsaZ1PopNowijFEfJscS0c8ARiOPsWgKupDWw90xcoqsqS0BOdMv
-	UsgnLSvIHF+p3Poz/OG9n2xE186y6D3yy374iJ8Iv41OHrc5WBtkEowoIctDw/KEMeavWfhaW7n
-	O8/+TGcZvBin/7VOhHWo7PBWmY9uwrfp0JgfGoZ8HyMzyO0o9ul9FXZ1GkoCrCI+cwZqF4OfIg=
-	=
-X-Google-Smtp-Source: AGHT+IHg8GP1IxbFWkGEIiL5VYzfqXb7H2e6qlFRDRw9Z8WJ3E3SMZHg1YAUcKj5iIj6xeC457Vcdw==
-X-Received: by 2002:a05:6a00:1942:b0:732:2923:b70f with SMTP id d2e1a72fcca58-739e7050374mr5902984b3a.11.1743838350038;
-        Sat, 05 Apr 2025 00:32:30 -0700 (PDT)
-Received: from localhost.localdomain ([221.214.202.225])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af9bc31be94sm3295395a12.23.2025.04.05.00.32.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Apr 2025 00:32:29 -0700 (PDT)
-From: Penglei Jiang <superman.xpt@gmail.com>
-To: mkrufky@linuxtv.org,
-	mchehab@kernel.org
-Cc: linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Penglei Jiang <superman.xpt@gmail.com>
-Subject: [PATCH v2] media: cxusb: fix uninitialized var in cxusb_gpio_tuner()
-Date: Sat,  5 Apr 2025 00:31:59 -0700
-Message-Id: <20250405073159.87021-1-superman.xpt@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        d=1e100.net; s=20230601; t=1743838586; x=1744443386;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=NYdqOKBhO4Y7x/Q9Fwh+sEk7DN7IEzXW2QV85ZrostY=;
+        b=J/7hRPk9u+zM21c9JcILIL2/mjXdMsw7Lu34iGTDM62RT5Uw+rrODEYokZ5iyzF+qu
+         /p/NLE6bALThZDDrJ2GjeixkP8S1kX6OcmApIfm8ww1r+d37dh3veLMKFD4O+SQnLxBL
+         xir5rrbBRtf4SgnhlAy/ywmqfWXtKkSddbZmiZjYyojBmipUrOWo07+lv6jSEHKj4afC
+         bcGWKNp8U18Y6v7jefLaReXzqEEpxVnWRchHxqV0z2qj0xgXH+wUu2YYtO+lw8veCDwC
+         q3S/6/UpNKYvDsvi2LeTa285Rj+ciU+3qG3TTO8pvpNJL7lF7Hez9r/vqgtiLXio4Tmx
+         du5g==
+X-Gm-Message-State: AOJu0Yz1DYowDzXERRdWfywRJwdka5QTTvndFccHsy8WNrHuRLhSD/jF
+	m4lGjx4iewq8rnhxzpf+cDorIJzRXdh4hyWHtcRJiRJCw5PzcQzHTeO5rXFVuaVWdPyUSHE29in
+	zHTjlfTzzx2YYqz6OGpGLRzAbK59AcPREx6/hN9k/zZnTpqpArXHL+onSZg==
+X-Google-Smtp-Source: AGHT+IHG/QT7SwrpCdY173BXAt35jTs+xqLIW7NkdioBxsaePLV8xWPiqets58ebi0zrJaLiQhyRA1P4Y8dauq9PFwnYwPQ/nVv2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+X-Received: by 2002:a05:6e02:1a4d:b0:3d3:fdb8:1799 with SMTP id
+ e9e14a558f8ab-3d6ec590c21mr24114215ab.22.1743838586662; Sat, 05 Apr 2025
+ 00:36:26 -0700 (PDT)
+Date: Sat, 05 Apr 2025 00:36:26 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67f0dd7a.050a0220.0a13.0230.GAE@google.com>
+Subject: [syzbot] [squashfs?] UBSAN: shift-out-of-bounds in squashfs_bio_read
+From: syzbot <syzbot+65761fc25a137b9c8c6e@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, phillip@squashfs.org.uk, 
+	squashfs-devel@lists.sourceforge.net, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-The function cxusb_ctrl_msg() may not set the value of the variable i,
-but the code uses it later. Initialize the local variable i to 0 to
-prevent potential issues.
+Hello,
 
-Reported-by: syzbot+526bd95c0ec629993bf3@syzkaller.appspotmail.com
-Closes: https://lore.kernel.org/all/67f092b5.050a0220.0a13.0229.GAE@google.com
-Signed-off-by: Penglei Jiang <superman.xpt@gmail.com>
+syzbot found the following issue on:
+
+HEAD commit:    609706855d90 Merge tag 'trace-latency-v6.15-3' of git://gi..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=12a88fb0580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=f8721be6a767792
+dashboard link: https://syzkaller.appspot.com/bug?extid=65761fc25a137b9c8c6e
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/48bd65025d89/disk-60970685.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/332202d68035/vmlinux-60970685.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/1c4aa49d3e14/bzImage-60970685.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+65761fc25a137b9c8c6e@syzkaller.appspotmail.com
+
+loop0: detected capacity change from 0 to 8
+------------[ cut here ]------------
+UBSAN: shift-out-of-bounds in fs/squashfs/block.c:195:36
+shift exponent 64 is too large for 64-bit type 'u64' (aka 'unsigned long long')
+CPU: 0 UID: 0 PID: 6373 Comm: syz.0.109 Not tainted 6.14.0-syzkaller-11125-g609706855d90 #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
+ ubsan_epilogue lib/ubsan.c:231 [inline]
+ __ubsan_handle_shift_out_of_bounds+0x3c8/0x420 lib/ubsan.c:492
+ squashfs_bio_read+0x1050/0x1180 fs/squashfs/block.c:195
+ squashfs_read_data+0x2e7/0xba0 fs/squashfs/block.c:333
+ squashfs_read_table+0x338/0x390 fs/squashfs/cache.c:436
+ squashfs_fill_super+0x238/0x21e0 fs/squashfs/super.c:216
+ get_tree_bdev_flags+0x492/0x5c0 fs/super.c:1636
+ vfs_get_tree+0x92/0x2b0 fs/super.c:1759
+ do_new_mount+0x2cf/0xb70 fs/namespace.c:3878
+ do_mount fs/namespace.c:4218 [inline]
+ __do_sys_mount fs/namespace.c:4429 [inline]
+ __se_sys_mount+0x38c/0x400 fs/namespace.c:4406
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f229398e90a
+Code: d8 64 89 02 48 c7 c0 ff ff ff ff eb a6 e8 de 1a 00 00 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f2294866e68 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
+RAX: ffffffffffffffda RBX: 00007f2294866ef0 RCX: 00007f229398e90a
+RDX: 0000200000000040 RSI: 0000200000000240 RDI: 00007f2294866eb0
+RBP: 0000200000000040 R08: 00007f2294866ef0 R09: 0000000000210c00
+R10: 0000000000210c00 R11: 0000000000000246 R12: 0000200000000240
+R13: 00007f2294866eb0 R14: 00000000000001ad R15: 0000200000001480
+ </TASK>
+---[ end trace ]---
+
+
 ---
-V1 -> V2: Updated the Subject
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
- drivers/media/usb/dvb-usb/cxusb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-diff --git a/drivers/media/usb/dvb-usb/cxusb.c b/drivers/media/usb/dvb-usb/cxusb.c
-index f44529b40989..7fe858bb665e 100644
---- a/drivers/media/usb/dvb-usb/cxusb.c
-+++ b/drivers/media/usb/dvb-usb/cxusb.c
-@@ -111,7 +111,7 @@ int cxusb_ctrl_msg(struct dvb_usb_device *d,
- static void cxusb_gpio_tuner(struct dvb_usb_device *d, int onoff)
- {
- 	struct cxusb_state *st = d->priv;
--	u8 o[2], i;
-+	u8 o[2], i = 0;
- 
- 	if (st->gpio_write_state[GPIO_TUNER] == onoff &&
- 	    !st->gpio_write_refresh[GPIO_TUNER])
--- 
-2.17.1
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
