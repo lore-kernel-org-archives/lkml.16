@@ -1,97 +1,164 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AA5D15746F;
-	Sat,  5 Apr 2025 17:10:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B720615746F;
+	Sat,  5 Apr 2025 17:10:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743873027; cv=none; b=LwzfPuiybAjulYFOoMxr9vFS4LvEL5qXJtJ2NLM2FkvxX1RzF7VDYOj57rr343F5J6cnD6pxicWZ50uGVk+JTq8R6Mh45efSzdJaI6ccRYpBKhVTp820b16gPsG2F4c5/HzGvJvmFiGjNfV2+sgRHw+2Wrl0xuH6UcYUb8SPU6I=
+	t=1743873062; cv=none; b=CxbZt9f/JEQvNEkVEiCqMX4Xdyc4KVtd8rMVUkf5ajMwQAIabvulD4l7SG222AcCvVlSa2P2epjuD8zIekYjYo44uiojerrtQ2fYhfvQAXsXluWWN7+7Gy8Or1LuDnWGiOHrHCvNHjkGOiDkrn47BLPtzTm3VojIELZhPn5hQtk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743873027; c=relaxed/simple;
-	bh=/xWkdnqp2z0xd4Qr23smKMD7mOJNO1DVLMn67LA7XM0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ax8wSOly9wch9gJmBzxWTPN9yTM3SDPGfQK7BxiCkxanTkfaGIpLrRadEbdm3QgX9++8uB88KDdLa/okFHoQvPoOcZDiDdMu0nlBXrgbbZEFNOXb0lm8iX4+gs9yv2f6sW9zr0UGeLwhYrG9V67gvlbZ0BZzrx+hbQiFFKXbez8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cY031RlA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743873062; c=relaxed/simple;
+	bh=JqX86buw9HHooGIvsI0QsPGGPblozuLApWe0OsA9GRw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RhymAysD8pj9oYmuIQaXXsWbLddWxHRzs1YsBCF5nGQu4TV6n6H6W6kZaAALnNrGJBAGCHdbCm9lrxk3XHT2wBms6Vv2RYd3ZFTqqQXPZNS0+ekuqqfi2dAiiK/ULHXL/QHlicUoXTm4vJu2g1Q1gEsVSQUbVQhvQiOOOdIYKKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=aXrl7SbA; arc=none smtp.client-ip=220.197.31.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cY031RlA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13B5CC4CEE4;
-	Sat,  5 Apr 2025 17:10:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743873027;
-	bh=/xWkdnqp2z0xd4Qr23smKMD7mOJNO1DVLMn67LA7XM0=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=cY031RlAca2NX4hkAmNuDTM0cM8sdAavQHATQmdcXGS1lrqc5UZXI9MBNV1QlRW0y
-	 kSIyVHnhQMPSgKNnHxgcoj7ZBxxKob+7kkAXpqS30y0/0zQLf6UJxX0IUUZ/1VivY9
-	 0lNugt0Ti7o0V+qtStYEYXvyZwG4PecTS9f06pRLU3RjSF8Sn/yq4w7GbnP/Sy6Apv
-	 Vljcyy+DFNbeUor9JZDzJncefiSLdMYYdsuBSVeak83bH7hjPoSIzJ2NcWOW1J//Co
-	 RPjK/2hj9Q0FEpxZheowyG2I5kquyMv2ARKuMgYgoYuu3SDC/BptidCDxFga4BfnWH
-	 jUHAaX1PFB9WA==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id AB095CE0565; Sat,  5 Apr 2025 10:10:26 -0700 (PDT)
-Date: Sat, 5 Apr 2025 10:10:26 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Joel Fernandes <joelagnelf@nvidia.com>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	rcu <rcu@vger.kernel.org>,
-	linux-kernel <linux-kernel@vger.kernel.org>,
-	kernel-team <kernel-team@meta.com>, rostedt <rostedt@goodmis.org>
-Subject: Re: [v2,04/12] rcutorture: Make torture.sh --do-rt use
- CONFIG_PREEMPT_RT
-Message-ID: <7cf5ad76-7624-4714-a6d1-3e1dbb9ab7b3@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <5da8ff7a10670359647fc8135668be7c.joelagnelf@nvidia.com>
- <72693320-1863-4e47-941f-0e887f87a855@paulmck-laptop>
- <0dc1bec4-ed35-4852-a15b-781041d26df9@nvidia.com>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="aXrl7SbA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=A6OD+nPI3zJQy3gtWa6Pq3ez60axHp3q2+HfcZNxkxo=;
+	b=aXrl7SbA8gu2qJU8/UG8FP0vdx8c2FVx8N+Dw2v+4MDUtc9QhVXMQyO0XpzIhT
+	eLjHZ1+j9YneUEr3nCoMQNAL/liaRgquVXb85DXG/4Q0iYc9UONF946Qv3X4rS5j
+	sODPumDfAO6Ky02VzIidiAMn2ObBw554pftwOVMNIEoVI=
+Received: from [192.168.71.89] (unknown [])
+	by gzga-smtp-mtada-g1-0 (Coremail) with SMTP id _____wD3PlsIZPFnVxK1CA--.4162S2;
+	Sun, 06 Apr 2025 01:10:33 +0800 (CST)
+Message-ID: <ce8bf6d5-9783-4bb5-9aa3-1c697978084f@163.com>
+Date: Sun, 6 Apr 2025 01:10:32 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0dc1bec4-ed35-4852-a15b-781041d26df9@nvidia.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] pci: tegra194: Fix debugfs cleanup for !CONFIG_PCIEASPM
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: bhelgaas@google.com, jonathanh@nvidia.com, kw@linux.com,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-tegra@vger.kernel.org, lpieralisi@kernel.org,
+ manivannan.sadhasivam@linaro.org, robh@kernel.org, thierry.reding@gmail.com
+References: <20250405152818.GA107831@bhelgaas>
+ <c52ac489-51e9-4803-bf64-2bb6cfbf30bf@163.com>
+ <da261a4c-6c27-454f-b21d-af1814b58b91@wanadoo.fr>
+ <fa44eac9-8986-46d2-899d-df8811131925@163.com>
+ <9dcd70b1-a146-419f-aa5e-bacf52cf81e8@163.com>
+ <c0c1476c-75a2-4d45-83a2-4751a7487892@wanadoo.fr>
+Content-Language: en-US
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <c0c1476c-75a2-4d45-83a2-4751a7487892@wanadoo.fr>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wD3PlsIZPFnVxK1CA--.4162S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxGryxJF4fAr4DKFy5Ar1DKFg_yoWrJrW3p3
+	ykG3W5Kr4DJw15tr9ava1kAF1ft3ykAr1UX345uryIyr1vqr1rJr4Utr45uF9xur4kJF1U
+	XF4Fq3W3WF15AF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jbo7NUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOhAmo2fxWvLLhQAAsf
 
-On Sat, Apr 05, 2025 at 07:01:13AM -0400, Joel Fernandes wrote:
+
+
+On 2025/4/6 01:04, Christophe JAILLET wrote:
+> Le 05/04/2025 à 18:47, Hans Zhang a écrit :
+>>
+>>
+>> On 2025/4/6 00:35, Hans Zhang wrote:
+>>>
+>>>
+>>> On 2025/4/6 00:17, Christophe JAILLET wrote:
+>>>> Le 05/04/2025 à 17:49, Hans Zhang a écrit :
+>>>>>
+>>>>>
+>>>>> On 2025/4/5 23:28, Bjorn Helgaas wrote:
+>>>>>> Follow subject line capitalization convention.
+>>>>>>
+>>>>>> On Sat, Apr 05, 2025 at 10:54:59PM +0800, Hans Zhang wrote:
+>>>>>>> When CONFIG_PCIEASPM is disabled, debugfs entries are not 
+>>>>>>> created, but
+>>>>>>> tegra_pcie_dw_remove() and tegra_pcie_dw_shutdown() 
+>>>>>>> unconditionally call
+>>>>>>> debugfs_remove_recursive(), leading to potential NULL pointer 
+>>>>>>> operations.
+>>>>>>>
+>>>>>>> Introduce deinit_debugfs() to wrap debugfs_remove_recursive(), 
+>>>>>>> which is
+>>>>>>> stubbed for !CONFIG_PCIEASPM. Use this function during removal/ 
+>>>>>>> shutdown to
+>>>>>>> ensure debugfs cleanup only occurs when entries were initialized.
+>>>>>>>
+>>>>>>> This prevents kernel warnings and instability when ASPM support is
+>>>>>>> disabled.
+>>>>>>
+>>>>>> This looks like there should be a Fixes: tag to connect this to the
+>>>>>> commit that introduced the problem.
+>>>>>
+>>>>> Hi Bjorn,
+>>>>>
+>>>>> Thanks your for reply. Will add.
+>>>>>
+>>>>> Fixes: bb617cbd8151 (PCI: tegra194: Clean up the exit path for 
+>>>>> Endpoint mode)
+>>>>>
+>>>>>>
+>>>>>> If this is something that broke with the v6.15 merge window, we 
+>>>>>> should
+>>>>>> include this in v6.15 via pci/for-linus.  If this broke earlier, we
+>>>>>> would have to decide whether pci/for-linus is still appropriate or a
+>>>>>> stable tag.
+>>>>>>
+>>>>>
+>>>>> The original code that introduced the unconditional 
+>>>>> `debugfs_remove_recursive()` calls was actually merged in an 
+>>>>> earlier cycle.
+>>>>>
+>>>>>> We did merge some debugfs things for v6.15, but I don't see anything
+>>>>>> specific to pcie-tegra194.c, so I'm confused about why this fix would
+>>>>>> be in pcie-tegra194.c instead of some more generic place.
+>>>>>>
+>>>>>
+>>>>> The Tegra194 driver conditionally initializes pcie->debugfs based 
+>>>>> on CONFIG_PCIEASPM. When ASPM is disabled, pcie->debugfs remains 
+>>>>> uninitialized, but tegra_pcie_dw_remove() and 
+>>>>> tegra_pcie_dw_shutdown() unconditionally call 
+>>>>> debugfs_remove_recursive(), leading to a NULL 
+>>>>
+>>>> debugfs IS initialized, because it is in a structure allocated with 
+>>>> devm_kzalloc().
+>>>>
+>>>> And debugfs functions handle such cases.
+>>>>
+>>>
+>>> Oh, my mind went wrong and I didn't pay attention to devm, and I'm 
 > 
+> Here, what is relevant in devm_kzalloc() is not devm but the kzalloc 
+> part. the "z" is for zeroing the allocated memory.
 > 
-> On 4/2/2025 3:17 PM, Paul E. McKenney wrote:
-> > On Wed, Apr 02, 2025 at 12:19:13PM -0400, Joel Fernandes wrote:
-> >> Hello,
-> >>
-> >> On Wed, 2 Apr 2025 16:17:06 GMT, Sebastian Andrzej Siewior wrote:
-> >>> On 2025-03-31 14:03:06 [-0700], Paul E. McKenney wrote:
-> >>>> The torture.sh --do-rt command-line parameter is intended to mimic -rt
-> >>>> kernels.  Now that CONFIG_PREEMPT_RT is upstream, this commit makes this
-> >>>> mimicking more precise.
-> >>>>
-> >>>> Note that testing of RCU priority boosting is disabled in favor
-> >>>> of forward-progress testing of RCU callbacks.  If it turns out to be
-> >>>> possible to make kernels built with CONFIG_PREEMPT_RT=y to tolerate
-> >>>> testing of both, both will be enabled.
-> >>>
-> >>> Not sure what you point at here: You can build a PREEMPT_RT kernel and
-> >>> RCU boosting is enabled by default. You could disable it if needed.
-> >>
-> >> Yeah, RCU_BOOST has default y if PREEMPT_RT.
-> >>
-> >> Paul, should we be disabling it in the --do-rt script?
-> > 
-> > You should have a "rcutorture.test_boost=0" from f2ac55968df2
-> > ("rcutorture: Make torture.sh --do-rt use CONFIG_PREEMPT_RT").
-> > 
-> > Plus I just now made additional adjustments based on Sebastian Siewior's
-> > feedback.  He is likely to have additional feedback, so this is currently
-> > a "squash!" commit in my tree.
-> Ok, thanks. If you could repost whenever it is ready to the list, I'll pull it.
 
-If there are no complaints by Monday, Pacific Time, I will resend it.
+Hi Christophe,
 
-> Also I'm guessing that checkpatch one does not need any changes, but we've to
-> add a reminder to revert it in the future.
+Thanks your for reply. I understand.
 
-I have added a reminder in my usual todo.txt file.  I have no objection
-to it being added to a more visible location.  On possible place would
-be the RCU Design Documents gdoc, but I will let you guys choose.
+>>> really sorry about that.
+>>>
+>>> Another problem I noticed here is that currently, no matter what, 
+>>> pcie->debugfs = debugfs_create_dir(name, NULL) is executed; if #if 
+>>> defined(CONFIG_PCIEASPM) is valid, then pcie->debugfs = 
+>>> debugfs_create_dir(name, NULL); Is it superfluous?
+>>
+>> Sorry, let me reply again:
+>> Another problem I noticed here is that currently, no matter what, 
+>> pcie-  >debugfs = debugfs_create_dir(name, NULL) is executed; if #if 
+>> defined(CONFIG_PCIEASPM) is invalid, then pcie->debugfs = 
+>> debugfs_create_dir(name, NULL); Is it superfluous?
+> 
+> AFAICT, it looks useless in this case.
+> 
+> I guess that moving debugfs_create_dir() and the
+> name = devm_kasprintf()...
+> above it, into init_debugfs() would do the trick.
 
-							Thanx, Paul
+That's what I was thinking. I will submit the version again in the future.
+
+Best regards,
+Hans
+
