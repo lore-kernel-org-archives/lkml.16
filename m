@@ -1,137 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 729322BCF5;
-	Sat,  5 Apr 2025 15:40:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6CD51D52B;
+	Sat,  5 Apr 2025 15:50:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743867651; cv=none; b=XshH5zWqwJCAaXCkZyuc562YEILNuqfsNXWCmwisO3O1w2rch0iAbDmU+E3DJ4BwvfuSbS6oXptQKdqLmMk0AHS3FtmDqipcnEx1toLRm5RN9LWUD3yq/usn9VyjC+mfdJEhp0p9+VrLEDugK4AgCAxxiNVZBqGoAIIUf8xbcus=
+	t=1743868207; cv=none; b=t5H2FGz85IBE03B0gwvNvvJ7i0uWBxmBbDDRvQSJn/zFH1sAU0gaY6fCxpyQ++R53+xqfbvGgwrBxx4dSu+My6pRKUMqtuU6M68VZVJGhsbZseNx/4M+fcmnxKzWCtFm4jxwU7oYQdRTXKLYfOZEKo7HJBMa7eeeoLfXDTR5VFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743867651; c=relaxed/simple;
-	bh=LI2K+tXsrt+xkorD2Q3Y2V8s6J7dF31sI326xEe91tk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LAp/gAoA2/JkE42ZtAREoqRMNn1r7QMMTfdVu1plqq/sF2GfF8wyl3mCSSwqwqVwHme3OZi1NkgXHyfDublZ0KTR1VkTXpfD1X+D8xZ1YI/AWQNKq1frZWaVMcNsGkj1hYL2yCsEvoXsRr81FAMSqdlucSWxOGFBxzYrnaCrFH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YD7sGTlY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743868207; c=relaxed/simple;
+	bh=PVpdjH9nvgFGickOdTwkkGNNRjtGLJ4GsjI6sxDj0/Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eDaGuUmiVadzH1tCE8eDU7bOSjjjv/jKMtWKq3tdxJ8S0b73Xv4OsoLnlXu6mfVwZ6sG0noSRMp2Ir2I6Smxqf1jZf/llpWyQIvzVC11NNs77Y1O7PJZWNo6if+qqEGpnyf4biWtGK2pWPhGzBlCbqbknK4SPnajU9yCQtsfusU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=MeiqUMvU; arc=none smtp.client-ip=117.135.210.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YD7sGTlY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A521C4CEE4;
-	Sat,  5 Apr 2025 15:40:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743867650;
-	bh=LI2K+tXsrt+xkorD2Q3Y2V8s6J7dF31sI326xEe91tk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=YD7sGTlYUKBbnuaoKQmSMvR/QYHogoeKBE7mehUn1BmB8R2qyPou0TzsIyTOWW7ud
-	 DYKruRV1pEnIwWqMcsAy21UaGgVZJJ8GomHU+O0GvlgE8clTpwGDNo5RQ6crH82KV4
-	 uLikPWrHH1Kx9HBL8oZDiVSg7hUbLcDwEX+94GOdAEXfAkbVksVgMSricsbNKOfuaM
-	 EYRw3BxpA03BSHuo1Ka4pNnJNTckUVQy2StXiRDs4PDmAWIXuEbWkTqWps3Lf+ZXC6
-	 Z+HrSfoEHAqd7aF0t4rBSMG1fhwWalNg5bnq0Ed3jZ9Pg9/5hOfDaBnoYgtJjCL0Gg
-	 omsXkE47++gNQ==
-Date: Sat, 5 Apr 2025 16:40:41 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Angelo Dureghello <adureghello@baylibre.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich
- <Michael.Hennerich@analog.com>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Jonathan Corbet <corbet@lwn.net>, David Lechner <dlechner@baylibre.com>,
- linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH 3/3] iio: adc: ad7606: add SPI offload support
-Message-ID: <20250405164041.7d2e586b@jic23-huawei>
-In-Reply-To: <20250403-wip-bl-spi-offload-ad7606-v1-3-1b00cb638b12@baylibre.com>
-References: <20250403-wip-bl-spi-offload-ad7606-v1-0-1b00cb638b12@baylibre.com>
-	<20250403-wip-bl-spi-offload-ad7606-v1-3-1b00cb638b12@baylibre.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="MeiqUMvU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=+t0sKLMwS+prv7H4cHe9k+nGJ49pCP3R5uikJVhJsa8=;
+	b=MeiqUMvUKfXeF16EiXubdslrqk0qhFr98e0ZZwz2cGcpWptiYNSz/Nrvi8Onet
+	qzAL2F1I9SH9UTDL8pJX6U4CI4TRDzOfZgJ0PfazPZU2EoeP5m4k6Qm1MuklwPXR
+	kbGNsneR31Il7EAKK94F9tcIIDOquQLW2d/Mo39ben8qI=
+Received: from [192.168.71.89] (unknown [])
+	by gzga-smtp-mtada-g0-3 (Coremail) with SMTP id _____wAH1zb8UPFnaPO8EA--.23000S2;
+	Sat, 05 Apr 2025 23:49:16 +0800 (CST)
+Message-ID: <c52ac489-51e9-4803-bf64-2bb6cfbf30bf@163.com>
+Date: Sat, 5 Apr 2025 23:49:16 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] pci: tegra194: Fix debugfs cleanup for !CONFIG_PCIEASPM
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: lpieralisi@kernel.org, manivannan.sadhasivam@linaro.org,
+ thierry.reding@gmail.com, kw@linux.com, robh@kernel.org,
+ bhelgaas@google.com, jonathanh@nvidia.com, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org
+References: <20250405152818.GA107831@bhelgaas>
+Content-Language: en-US
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <20250405152818.GA107831@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:_____wAH1zb8UPFnaPO8EA--.23000S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7urykGrWfGw15Ar45GF45Wrg_yoW8Zw1rpw
+	4kG345Kr4qy34SyF97Ca1kAF1Fy395Aw13Jw13urs7Zw4DAryDXFy8Ka1j9Fyfuw4DtF1U
+	XFsY9Fn5G3WDZFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UVMKtUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWwwmo2fxR0BtuAABsX
 
-On Thu, 03 Apr 2025 18:19:06 +0200
-Angelo Dureghello <adureghello@baylibre.com> wrote:
 
-> From: Angelo Dureghello <adureghello@baylibre.com>
+
+On 2025/4/5 23:28, Bjorn Helgaas wrote:
+> Follow subject line capitalization convention.
 > 
-> Add SPI offload support for this family.
+> On Sat, Apr 05, 2025 at 10:54:59PM +0800, Hans Zhang wrote:
+>> When CONFIG_PCIEASPM is disabled, debugfs entries are not created, but
+>> tegra_pcie_dw_remove() and tegra_pcie_dw_shutdown() unconditionally call
+>> debugfs_remove_recursive(), leading to potential NULL pointer operations.
+>>
+>> Introduce deinit_debugfs() to wrap debugfs_remove_recursive(), which is
+>> stubbed for !CONFIG_PCIEASPM. Use this function during removal/shutdown to
+>> ensure debugfs cleanup only occurs when entries were initialized.
+>>
+>> This prevents kernel warnings and instability when ASPM support is
+>> disabled.
 > 
-> Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
-Hi Angelo,
+> This looks like there should be a Fixes: tag to connect this to the
+> commit that introduced the problem.
 
-Code looks fine, but there is a TODO I'd like to know more about
-as it sounds 'ominous'. 
+Hi Bjorn,
 
-Otherwise this needs a dt review for patch 1 before I queue it up.
+Thanks your for reply. Will add.
 
-Jonathan
-> diff --git a/drivers/iio/adc/ad7606_spi.c b/drivers/iio/adc/ad7606_spi.c
-> index b2b975fb7fea4d1af6caef59e75ca495501bc140..b086122497eb22042171580878160334f56baa23 100644
-> --- a/drivers/iio/adc/ad7606_spi.c
-> +++ b/drivers/iio/adc/ad7606_spi.c
+Fixes: bb617cbd8151 (PCI: tegra194: Clean up the exit path for Endpoint 
+mode)
 
-> +static int ad7606_spi_offload_probe(struct device *dev,
-> +				    struct iio_dev *indio_dev)
-> +{
-> +	struct ad7606_state *st = iio_priv(indio_dev);
-> +	struct spi_device *spi = to_spi_device(dev);
-> +	struct spi_bus_data *bus_data;
-> +	struct dma_chan *rx_dma;
-> +	struct spi_offload_trigger_info trigger_info = {
-> +		.fwnode = dev_fwnode(dev),
-> +		.ops = &ad7606_offload_trigger_ops,
-> +		.priv = st,
-> +	};
-> +	int ret;
-> +
-> +	bus_data = devm_kzalloc(dev, sizeof(*bus_data), GFP_KERNEL);
-> +	if (!bus_data)
-> +		return -ENOMEM;
-> +	st->bus_data = bus_data;
-> +
-> +	bus_data->offload = devm_spi_offload_get(dev, spi,
-> +						 &ad7606_spi_offload_config);
-> +	ret = PTR_ERR_OR_ZERO(bus_data->offload);
-> +	if (ret && ret != -ENODEV)
-> +		return dev_err_probe(dev, ret, "failed to get SPI offload\n");
-> +	/* Allow main ad7606_probe function to continue. */
-> +	if (ret == -ENODEV)
-> +		return 0;
-> +
-> +	ret = devm_spi_offload_trigger_register(dev, &trigger_info);
-> +	if (ret)
-> +		return dev_err_probe(dev, ret,
-> +				     "failed to register offload trigger\n");
-> +
-> +	bus_data->offload_trigger = devm_spi_offload_trigger_get(dev,
-> +		bus_data->offload, SPI_OFFLOAD_TRIGGER_DATA_READY);
-> +	if (IS_ERR(bus_data->offload_trigger))
-> +		return dev_err_probe(dev, PTR_ERR(bus_data->offload_trigger),
-> +				     "failed to get offload trigger\n");
-> +
-> +	/* TODO: PWM setup should be ok, done for the backend. PWM mutex ? */
+> 
+> If this is something that broke with the v6.15 merge window, we should
+> include this in v6.15 via pci/for-linus.  If this broke earlier, we
+> would have to decide whether pci/for-linus is still appropriate or a
+> stable tag.
+> 
 
-I don't understand this todo. Perhaps some more details?
+The original code that introduced the unconditional 
+`debugfs_remove_recursive()` calls was actually merged in an earlier cycle.
 
-> +	rx_dma = devm_spi_offload_rx_stream_request_dma_chan(dev,
-> +							     bus_data->offload);
-> +	if (IS_ERR(rx_dma))
-> +		return dev_err_probe(dev, PTR_ERR(rx_dma),
-> +				     "failed to get offload RX DMA\n");
-> +
-> +	ret = devm_iio_dmaengine_buffer_setup_with_handle(dev, indio_dev,
-> +		rx_dma, IIO_BUFFER_DIRECTION_IN);
-> +	if (ret)
-> +		return dev_err_probe(dev, PTR_ERR(rx_dma),
-> +				     "failed to setup offload RX DMA\n");
-> +
-> +	/* Use offload ops. */
-> +	indio_dev->setup_ops = &ad7606_offload_buffer_setup_ops;
-> +
-> +	st->offload_en = true;
-> +
-> +	return 0;
-> +}
+> We did merge some debugfs things for v6.15, but I don't see anything
+> specific to pcie-tegra194.c, so I'm confused about why this fix would
+> be in pcie-tegra194.c instead of some more generic place.
+> 
 
+The Tegra194 driver conditionally initializes pcie->debugfs based on 
+CONFIG_PCIEASPM. When ASPM is disabled, pcie->debugfs remains 
+uninitialized, but tegra_pcie_dw_remove() and tegra_pcie_dw_shutdown() 
+unconditionally call debugfs_remove_recursive(), leading to a NULL 
+pointer dereference. This is specific to the Tegra194 implementation, as 
+other drivers or core PCI code may already guard debugfs cleanup against 
+uninitialized states through different mechanisms.
+
+Best regards,
+Hans
 
