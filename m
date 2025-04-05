@@ -1,163 +1,72 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7FFC160783
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 20:34:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D2651993BD
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 20:37:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743885281; cv=none; b=Ic0tJZSXQfaE8cdd8YSXSdM30JFWBwFUIIsOFeu3djNxInvmCNw17BABFPGZHxMh5ZcbfMMDn2kYtzXlgNVZe6on8hzK6M69QJ4k4svL692mzteKEYGN6AjxexRKa+7JAP2ioFi8Jkvui7HsGUcGUcQXdm07ubREARIGwhUqDVw=
+	t=1743885424; cv=none; b=aTM3/N8QJFc5ytpFO0Nc1SIZKt72iD7iOXu1XGNI3+QqaEBfxGmmkLGJPOcHAravEWYkpiKdXpwnDfiE+PE3c7h8EHZ3ylZpXO84YHvoz0isMraC84VGarEsqJPKspFTHTELQjSu/f8C3MXbEOdUdvpGUBWHLyVKvmoczKPVPf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743885281; c=relaxed/simple;
-	bh=v61BhWwATA4KOhgsMu7FZcgQjluYJqfLdjooILwM6Ag=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=J13iiCLzJsWkUNqWeJEDW45PFs0ZABDXfnk089/VddeMT+c8j6TU7NdxuUlva5x0DswzoAfU3wJMcbAooHS3E/9oWK5yHV9jW5rMF5GgKbtOJWm10qUordz7XSmbZPzzQF5Bg/di1+ioXZYZ81Br/lEZOBVehQiiiZqJEhRpdHk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=Tub6aUhc; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Tub6aUhc"
-Received: from [127.0.0.1] ([76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 535KXlxQ1640815
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Sat, 5 Apr 2025 13:33:48 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 535KXlxQ1640815
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025032001; t=1743885229;
-	bh=pHH++npD0a2GOVXNaA+Sl7u0eZKfC4tVk6Fz4FSWzA8=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=Tub6aUhcNkZz3Mz7X9vAccxd5ieCJL18xhwLwhObwRkiGuKMC9qoh7JDjfNmQ4scT
-	 eu/ji0iNHEPeS5ITbyX/GfqqjOqlg05iS8z97xHYpmEEwyApeyBtj35mKYQEa5lcBU
-	 Q2Aet2wZvY0YejHF3UzmxxtBOFmWSozKj78nscXooSa5IUfHQ0ddLhBJcuVk0kPcCp
-	 s0OYcF6sTABWWW4YjYicu92ymsIPs6zQp0OmPwNjJyZKW3LGgq+D7OK4sEwT2sp6GE
-	 +wHengZkHUnMQrgL9uxWQ+loy9Jfe0T/OgLVeBd++5iBhqfA+7JkYsWvuLX9issJxk
-	 2Y9xy+XAKOPzw==
-Date: Sat, 05 Apr 2025 13:33:46 -0700
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: Borislav Petkov <bp@alien8.de>, Kevin Koster <lkml@ombertech.com>,
-        Oerg866 <oerg866@googlemail.com>
-CC: linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH=5D_x86/microcode=3A_Fix_crashes_o?=
- =?US-ASCII?Q?n_early_486_CPUs_due_to_usage_of_=27cpuid=27=2E?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20250405093127.GAZ_D4b6NdyTS-UW1J@fat_crate.local>
-References: <CANpbe9Wm3z8fy9HbgS8cuhoj0TREYEEkBipDuhgkWFvqX0UoVQ@mail.gmail.com> <20250405130306.ca9822c1f27db119cc973603@ombertech.com> <20250405093127.GAZ_D4b6NdyTS-UW1J@fat_crate.local>
-Message-ID: <DB27EAFA-8793-4B0E-BC33-C9E9E2C41777@zytor.com>
+	s=arc-20240116; t=1743885424; c=relaxed/simple;
+	bh=zMlGhzgFbrY+JgytX4DSew8HdhGgXgAXG3V2s6Em6EM=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=WpE3X8l5aQL7qsbkkwek+SlFsptFPX4sRpjxqSxkONjxRSy+R6kh79J2ajTtqTxFvphllskDvzPcqJUpNTY8H/8CTp+yE5g+dfGzJpjll+jn6PNizpYJpgm9XeSMei2rjsn3mzQVNGBvdI3Xl4dL68eP3W38OWr5f3mOX1Bjlzs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-85dad58e80fso693030939f.3
+        for <linux-kernel@vger.kernel.org>; Sat, 05 Apr 2025 13:37:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743885422; x=1744490222;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=lq0z+umsMa3af9r59F6XIYQZFJYrSAW7N+r8MIuKdAA=;
+        b=nW+iOVV0NwPBwIqoDvFn8H7kG+lrOpXHdJdnArqKSW/mSdLywUiHHjbhocZw0SxUnC
+         zVGqklbT14N+I+XN2fRj1fJtF5mzjCFxaJDoSPd1L/6U0Sn6phH2gAfbULkoUnwP76+i
+         rfn5EbsoNX/3o9G3kUGOPZMTOgRWTdoZW2+/3G89mjE76w7FN2yW3Nbromwbm31032Ik
+         tRHUY2IdxZXX180rii6t4pvil3Y5kOzfmW7XjQfr00pwAqzQeYNt26yZD2lMZ2iQy8O4
+         Dt7uTG2pqXSzAWg6FK/vhGKrd4twBpV5ctqJN3czcI5wOwM7Vn7MJKdKTKinx+tgzDhm
+         zo+g==
+X-Forwarded-Encrypted: i=1; AJvYcCUNVPgPYogxsdhV2PULsCFKWlk4GhqcxdcI62klbETSILQZjqh/is7+JACrRFdf/L3BR5oM9GPCXShTNl0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyhxkudgE/0KLmL5sA7d6vDqFWDYGAlyDZBacBcbY3KTW74qGwx
+	NspFbh0Sd7spUPtLOB8w57oJl4A5QwOYQGfF5uXie3YoMZbrK7T5OL+aMF6lf1zp5SwINxG5wxm
+	8wNiF6hMRY27e2ws4AwjIx5X24WVswjkI+qAWy4oN0f4mcv/USKhhxmY=
+X-Google-Smtp-Source: AGHT+IFvSmJDsxHAwQYwXiAQnd+JyWMem4t0sD8xvT9TVS+OdfxxwESWuFt2rpSClIIsw4UVMiYD2fBoy9yBKty1smk2JpYpCtcw
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+X-Received: by 2002:a05:6e02:4401:20b0:3d4:38a4:388e with SMTP id
+ e9e14a558f8ab-3d6e52ee9c1mr58296805ab.1.1743885422287; Sat, 05 Apr 2025
+ 13:37:02 -0700 (PDT)
+Date: Sat, 05 Apr 2025 13:37:02 -0700
+In-Reply-To: <ic4vadw4umsgdkx7mopnq2gxf33eoglf3ln6kfs4n7kihr6jz3@zmq2iyakast4>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67f1946e.050a0220.0a13.024a.GAE@google.com>
+Subject: Re: [syzbot] [bcachefs?] KASAN: slab-use-after-free Read in bchfs_read
+From: syzbot <syzbot+2deb10b8dc9aae6fab67@syzkaller.appspotmail.com>
+To: kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On April 5, 2025 2:32:26 AM PDT, Borislav Petkov <bp@alien8=2Ede> wrote:
->On Sat, Apr 05, 2025 at 01:03:06PM +1100, Kevin Koster wrote:
->> On Sat, 19 Oct 2024 08:29:04 +0200
->> Oerg866 <oerg866@googlemail=2Ecom> wrote:
->>=20
->> > Starting with v6=2E7-rc1, the kernel was no longer able to boot on ea=
-rly
->> > i486-class CPUs=2E
->>=20
->> Thanks for this patch! It solves my problem with kernel 6=2E12=2E11
->> rebooting at start-up on 486 CPUs, which had me puzzled=2E (tested on
->> AM486DX2-66 and CX486DX4-100)
->>=20
->> Is there a reason why the patch wasn't accepted?
->
->Yes, too many patches, too little time=2E :-(
->
->Anyway, does the one below - only build-tested - work for both y'all too?
->
->---
->diff --git a/arch/x86/include/asm/microcode=2Eh b/arch/x86/include/asm/mi=
-crocode=2Eh
->index 695e569159c1=2E=2Ed53148fb893a 100644
->--- a/arch/x86/include/asm/microcode=2Eh
->+++ b/arch/x86/include/asm/microcode=2Eh
->@@ -17,10 +17,12 @@ struct ucode_cpu_info {
-> void load_ucode_bsp(void);
-> void load_ucode_ap(void);
-> void microcode_bsp_resume(void);
->+bool __init microcode_loader_disabled(void);
-> #else
-> static inline void load_ucode_bsp(void)	{ }
-> static inline void load_ucode_ap(void) { }
-> static inline void microcode_bsp_resume(void) { }
->+bool __init microcode_loader_disabled(void) { return false; }
-> #endif
->=20
-> extern unsigned long initrd_start_early;
->diff --git a/arch/x86/kernel/cpu/microcode/amd=2Ec b/arch/x86/kernel/cpu/=
-microcode/amd=2Ec
->index b61028cf5c8a=2E=2Edda7f0d409e9 100644
->--- a/arch/x86/kernel/cpu/microcode/amd=2Ec
->+++ b/arch/x86/kernel/cpu/microcode/amd=2Ec
->@@ -1099,7 +1099,7 @@ static int __init save_microcode_in_initrd(void)
-> 	enum ucode_state ret;
-> 	struct cpio_data cp;
->=20
->-	if (dis_ucode_ldr || c->x86_vendor !=3D X86_VENDOR_AMD || c->x86 < 0x10=
-)
->+	if (microcode_loader_disabled() || c->x86_vendor !=3D X86_VENDOR_AMD ||=
- c->x86 < 0x10)
-> 		return 0;
->=20
-> 	if (!find_blobs_in_containers(&cp))
->diff --git a/arch/x86/kernel/cpu/microcode/core=2Ec b/arch/x86/kernel/cpu=
-/microcode/core=2Ec
->index b3658d11e7b6=2E=2E972338a2abae 100644
->--- a/arch/x86/kernel/cpu/microcode/core=2Ec
->+++ b/arch/x86/kernel/cpu/microcode/core=2Ec
->@@ -95,12 +95,15 @@ static bool amd_check_current_patch_level(void)
-> 	return false;
-> }
->=20
->-static bool __init check_loader_disabled_bsp(void)
->+bool __init microcode_loader_disabled(void)
-> {
-> 	static const char *__dis_opt_str =3D "dis_ucode_ldr";
-> 	const char *cmdline =3D boot_command_line;
-> 	const char *option  =3D __dis_opt_str;
->=20
->+	if (!have_cpuid_p())
->+		return true;
->+
-> 	/*
-> 	 * CPUID(1)=2EECX[31]: reserved for hypervisor use=2E This is still not
-> 	 * completely accurate as xen pv guests don't see that CPUID bit set bu=
-t
->@@ -146,7 +149,7 @@ void __init load_ucode_bsp(void)
-> 		return;
-> 	}
->=20
->-	if (check_loader_disabled_bsp())
->+	if (microcode_loader_disabled())
-> 		return;
->=20
-> 	if (intel)
->diff --git a/arch/x86/kernel/head32=2Ec b/arch/x86/kernel/head32=2Ec
->index de001b2146ab=2E=2Ef29dc9c95c50 100644
->--- a/arch/x86/kernel/head32=2Ec
->+++ b/arch/x86/kernel/head32=2Ec
->@@ -145,8 +145,7 @@ void __init __no_stack_protector mk_early_pgtbl_32(vo=
-id)
-> 	*ptr =3D (unsigned long)ptep + PAGE_OFFSET;
->=20
-> #ifdef CONFIG_MICROCODE_INITRD32
->-	/* Running on a hypervisor? */
->-	if (native_cpuid_ecx(1) & BIT(31))
->+	if (microcode_loader_disabled())
-> 		return;
->=20
-> 	params =3D (struct boot_params *)__pa_nodebug(&boot_params);
->
+Hello,
 
-How the Hades does c->x86 not get set to 4 (hence < 0x10) on this CPU?
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+unregister_netdevice: waiting for DEV to become free
 
-That's the real bug imo=2E=2E=2E
+unregister_netdevice: waiting for batadv0 to become free. Usage count = 3
+
+
+Tested on:
+
+commit:         56f94452 Merge tag 'input-for-v6.15-rc0' of git://git...
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1299e23f980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=695196aa2bd08d99
+dashboard link: https://syzkaller.appspot.com/bug?extid=2deb10b8dc9aae6fab67
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=16d32b4c580000
+
