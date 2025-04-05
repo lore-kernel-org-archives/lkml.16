@@ -1,102 +1,167 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1A51101FF
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 16:16:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32AC52C9D;
+	Sat,  5 Apr 2025 16:21:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743869783; cv=none; b=ONqwKhPR0T6Ycq785HhUB/6VYyAD+NAvnSpX7D9v5KnoK3ImJSKoDDXnQea3I6EewcDZtvATZXBT7SC+s+ThE1uivxCYbwXXj1P6IHiyKii/XgGCvtvWf4GeY7Tl0wC2Tdl3PXMbeA1c/8DLDXnOIkrgcoDyeWbqGdJgWSzlPeo=
+	t=1743870098; cv=none; b=H4CygYrnJP1U7YSMjukBbZa94Q0+BPLC2La1cDC7LdONb3MhoqUfkkiEjTkEtC4iInyI12xwuXfjGAjwZ4nq4IBYNdqWIFssls/d1yPC9uIjTXLs540qjBJJdRRMspDWz/1P64HcD5DLAuSmI8Gs42F4KkE6MFOBcQXgfrRzPkM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743869783; c=relaxed/simple;
-	bh=f9fwwNv03NbODRWqKK9+JE9Q2mHw9mQ/GAhJTTxPSIo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DSrRZ0Lr3SWohJQUBiGcCarpUdoNti5Cn28maaZ0N8YdF6rvil1oLA9nZ03qYLwHy3s6izfLKcvq9pQMf2MyrCMT+jwOg1/r9ODfeJpWIplAnUvx0Mp3ZNR8ouYoWE3b2i5StQx4jwOgCAFTjEdrXJCKkp+1Jp83hGN9RRzPYyI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=u22BHMrn; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1743870098; c=relaxed/simple;
+	bh=FMZsCjVJoDuC4NgUGqJMQBqh8VxxWlRRa7DVpA+BNz8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Dst2p1pBPGHBcTlMa2otlGvRcj1v+3a8qFHY6es/UNbBeRifiGBgH+VVqn5p7gODSEPrtIb5Kcwd4MvammbrYMNQQLv1ZZ49Y/JKC05gr8ehpzQLID4zS/PvsmA+4ThaHECtsN7D+b8HNqMZbcqpGA0/0iFnWnbzB7xEle1jgqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kTpEFuVj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="u22BHMrn"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43cf06eabdaso27251325e9.2
-        for <linux-kernel@vger.kernel.org>; Sat, 05 Apr 2025 09:16:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743869780; x=1744474580; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=kQA4y1FzPmhivnWC1Pgg4oxOyq8Cr4ueMJktDOHR4oo=;
-        b=u22BHMrnba6WGRrZkRRO89X1aOUWuFyfznNTg8J/QoFW3mK6pTahHpXX1oBsRZqNWh
-         P4+BCR+v40UHS+lPyq+nQjxsYcl/XcDPR8J+4CC1QPwxln1W4T38oZJmljIZhv5Q0cvA
-         iXR66EHP7IbkmvBVIzUki72ahB2/iFzafiRCrDrd5b9rtFuJ6gqQcFmq2gXk00FzpvbK
-         D0WS1vLUSPiDkYkje9gFLDIEOeCbqK7Ovo4U0hKqv+DeGLnPDLiV7u2E2tL0ZoWPEdCo
-         QLYXFERS5lgndpeCRhIvpNsDN9ZmNre1SRd3QrYYaYVfs0hRznxIbrYXWF8j+CmfrMAp
-         k9XQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743869780; x=1744474580;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kQA4y1FzPmhivnWC1Pgg4oxOyq8Cr4ueMJktDOHR4oo=;
-        b=m7NJLthUo0bRjhtQ9CQaiX6Ob0gsTk90omipbeG8yI0vZAISQ0Yxda7Uqel8O2CGfJ
-         btf3td2/uJ0x0EvMW0Kbb24HV0DC89iTs9fiPVG7eWXmFd409Ugg7OzE9RzRZnkkA58s
-         EaOKi8fpls5lFiPys66+JbXm5SDtCwahWVS7soFtr9SCOybMjlMd2VI9TDQXa84ieTnc
-         1/qktOsd2ewb3ZND5jwMt2aVuQZLg5DTJ67UHTgwdISIazjXm+FjmHkEfeA367rX7A7v
-         8r0+BMs8QUAMKg7Rp+346wggLDIDFQYpgY4IS0IAhvqoUdf8Yh/6pRNb8UtMNI0oA2mO
-         cmlw==
-X-Forwarded-Encrypted: i=1; AJvYcCU1P5lPzi7Qab6p1NCq197IhVhzBcN0HO6UySEyqrjECX30whHdnMb4Ml/oGja81Rz8vQFbA7sEBFOWnZE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyt/e/3uNPbVc6vk6UiB4H0DtmnUS9oTnzwM/NgFGPf06kw/uzZ
-	eepZcQKKEFhU/WPFWQwdQIuqwarF2s2iQISv3n+vM1vh1B6Jy41Xqq1HgVUzW9g=
-X-Gm-Gg: ASbGnctkmS9O1Hr+IjDGjbyQsm2Prhke0shESHRE0t6eHSonad4mjSl95LFwyA3kXhx
-	a+FiC3ljqdsp9yQrphnpfiY7JqbYMgIDvMMmEMR3ytCOsFUeJh42TZmv2W9r0LO0rcx1/a1f8px
-	YM7f0IX2fMWgZUfenbHR0Yi+T3W5O3bQVo4b7oIQQXAcPg3cBJPl1UMrvh17LV1JnAaIl/K8Nog
-	oEU1P+YSkmn70+up6Q+6h3VwIFoGjYPl2WwVpAkPBfsstE1OMOaPIdy8B2tq9mW+aMtugaYzarc
-	rPSp3b+Dfr6KjlbdOJ7q8Kyy6L6CU3HFWy+5F7jHPOmSxfJyOQHF5lugEUz1
-X-Google-Smtp-Source: AGHT+IHUbTxn+Ru3ccdmf6QiLK+OvdKs5Vbjv0pWdVZVEKvUSxpiHrDhuhyHXkzdAGYKFCiWEJML5g==
-X-Received: by 2002:a05:6000:4282:b0:39a:c9b3:e1d7 with SMTP id ffacd0b85a97d-39cba93ca51mr6004112f8f.29.1743869780109;
-        Sat, 05 Apr 2025 09:16:20 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-39c301a9da1sm7148016f8f.22.2025.04.05.09.16.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Apr 2025 09:16:19 -0700 (PDT)
-Date: Sat, 5 Apr 2025 19:16:16 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Wentao Liang <vulab@iscas.ac.cn>
-Cc: gregkh@linuxfoundation.org, philipp.g.hortmann@gmail.com,
-	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH v4] staging: rtl8723bs: Add error handling for sd_read()
-Message-ID: <8fd63a84-0fd1-4596-a9da-913e9c8eb110@stanley.mountain>
-References: <20250405160546.2639-1-vulab@iscas.ac.cn>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kTpEFuVj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F58BC4CEE4;
+	Sat,  5 Apr 2025 16:21:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743870097;
+	bh=FMZsCjVJoDuC4NgUGqJMQBqh8VxxWlRRa7DVpA+BNz8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=kTpEFuVj9WbNNF0JOAUOLOzD02K9mz5bX9PGJGxcGVPiMmdetz3CfdLCvv1JGSdG0
+	 QI0mtEGCVzWR5i8on75QqhwgmM60YmhkAsncPmXhzOdSjGm+JMWsibClEP60B/Qiq8
+	 P9jwFv9cGPsNszJ+zYwb4mlO808zrskESmXWWIkS8tk3Rsz56xgmS54PadhIiQvOIZ
+	 Y8B56mRSdpDmd9rbVdBzuOw0YM7tFn2DmqPMMpGM9DHlKL3mEpH3XZUtfqwPwAidZY
+	 gecW013ZzURN1j+Riwl8ZPgNB1CF6SdgBK42nUwYcTseBtRWI2tWC/sgnvdUG4t9D+
+	 khSyy0Gh+Clzg==
+Date: Sat, 5 Apr 2025 17:21:33 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Julien Stephan <jstephan@baylibre.com>
+Cc: David Lechner <dlechner@baylibre.com>, Michael Hennerich
+ <michael.hennerich@analog.com>, Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iio: adc: ad7380: fix event threshold shift
+Message-ID: <20250405172133.3262bed0@jic23-huawei>
+In-Reply-To: <CAEHHSvbt7v7OCbW4PEwgop74n_5NW8Una1-R3w3yUqu8-22=Dg@mail.gmail.com>
+References: <20250402-iio-adc-ad7380-fix-event-threshold-shift-v1-1-ad4975c296b2@baylibre.com>
+	<CAEHHSvbt7v7OCbW4PEwgop74n_5NW8Una1-R3w3yUqu8-22=Dg@mail.gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250405160546.2639-1-vulab@iscas.ac.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, Apr 06, 2025 at 12:05:46AM +0800, Wentao Liang wrote:
-> The sdio_read32() calls sd_read(), but does not handle the error if
-> sd_read() fails. This could lead to subsequent operations processing
-> invalid data. A proper implementation can be found in sdio_readN().
-> 
-> Add error handling for the sd_read() to free tmpbuf and return error
-> code if sd_read() fails. This ensure that the memcpy() is only performed
-> when the read operation is successful.
-> 
-> Fixes: 554c0a3abf21 ("staging: Add rtl8723bs sdio wifi driver")
-> Cc: stable@vger.kernel.org # v4.12+
-> Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
-> ---
-> v4: Add change log and fix error code
-> v3: Add Cc flag
-> v2: Change code to initialize val
-> 
+On Thu, 3 Apr 2025 13:45:41 +0200
+Julien Stephan <jstephan@baylibre.com> wrote:
 
-Thanks!
+> Le jeu. 3 avr. 2025 =C3=A0 01:56, David Lechner <dlechner@baylibre.com> a=
+ =C3=A9crit :
+> >
+> > Add required bit shift to the event threshold read function to get
+> > correct scaling.
+> >
+> > When alert support was added, the write function correctly included the
+> > required shift needed to convert the threshold register value to the
+> > same scale as the raw ADC value. However, the shift got missed in the
+> > read function. =20
+>=20
+> Hi David,
+>=20
+> Thank you for fixing that. LGTM
+>=20
+> Reviewed-by: Julien Stephan <jstephan@baylibre.com>
+Applied to the fixes-togreg branch of iio.git
 
-Reviewed-by: Dan Carpenter <dan.carpenter@linaro.org>
+Thanks,
 
-regards,
-dan carpenter
+J
+>=20
+> >
+> > Fixes: 27d1a4dbe1e1 ("iio: adc: ad7380: add alert support")
+> > Signed-off-by: David Lechner <dlechner@baylibre.com>
+> > ---
+> >  drivers/iio/adc/ad7380.c | 25 +++++++++++++++++++------
+> >  1 file changed, 19 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/drivers/iio/adc/ad7380.c b/drivers/iio/adc/ad7380.c
+> > index 4fcb49fdf56639784098f0147a9faef8dcb6b0f6..f3962a45e1e5b88cebf712c=
+c867fbb576d3ca058 100644
+> > --- a/drivers/iio/adc/ad7380.c
+> > +++ b/drivers/iio/adc/ad7380.c
+> > @@ -1611,11 +1611,25 @@ static int ad7380_write_event_config(struct iio=
+_dev *indio_dev,
+> >         return ret;
+> >  }
+> >
+> > -static int ad7380_get_alert_th(struct ad7380_state *st,
+> > +static int ad7380_get_alert_th(struct iio_dev *indio_dev,
+> > +                              const struct iio_chan_spec *chan,
+> >                                enum iio_event_direction dir,
+> >                                int *val)
+> >  {
+> > -       int ret, tmp;
+> > +       struct ad7380_state *st =3D iio_priv(indio_dev);
+> > +       const struct iio_scan_type *scan_type;
+> > +       int ret, tmp, shift;
+> > +
+> > +       scan_type =3D iio_get_current_scan_type(indio_dev, chan);
+> > +       if (IS_ERR(scan_type))
+> > +               return PTR_ERR(scan_type);
+> > +
+> > +       /*
+> > +        * The register value is 12-bits and is compared to the most si=
+gnificant
+> > +        * bits of raw value, therefore a shift is required to convert =
+this to
+> > +        * the same scale as the raw value.
+> > +        */
+> > +       shift =3D scan_type->realbits - 12;
+> >
+> >         switch (dir) {
+> >         case IIO_EV_DIR_RISING:
+> > @@ -1625,7 +1639,7 @@ static int ad7380_get_alert_th(struct ad7380_stat=
+e *st,
+> >                 if (ret)
+> >                         return ret;
+> >
+> > -               *val =3D FIELD_GET(AD7380_ALERT_HIGH_TH, tmp);
+> > +               *val =3D FIELD_GET(AD7380_ALERT_HIGH_TH, tmp) << shift;
+> >                 return IIO_VAL_INT;
+> >         case IIO_EV_DIR_FALLING:
+> >                 ret =3D regmap_read(st->regmap,
+> > @@ -1634,7 +1648,7 @@ static int ad7380_get_alert_th(struct ad7380_stat=
+e *st,
+> >                 if (ret)
+> >                         return ret;
+> >
+> > -               *val =3D FIELD_GET(AD7380_ALERT_LOW_TH, tmp);
+> > +               *val =3D FIELD_GET(AD7380_ALERT_LOW_TH, tmp) << shift;
+> >                 return IIO_VAL_INT;
+> >         default:
+> >                 return -EINVAL;
+> > @@ -1648,7 +1662,6 @@ static int ad7380_read_event_value(struct iio_dev=
+ *indio_dev,
+> >                                    enum iio_event_info info,
+> >                                    int *val, int *val2)
+> >  {
+> > -       struct ad7380_state *st =3D iio_priv(indio_dev);
+> >         int ret;
+> >
+> >         switch (info) {
+> > @@ -1656,7 +1669,7 @@ static int ad7380_read_event_value(struct iio_dev=
+ *indio_dev,
+> >                 if (!iio_device_claim_direct(indio_dev))
+> >                         return -EBUSY;
+> >
+> > -               ret =3D ad7380_get_alert_th(st, dir, val);
+> > +               ret =3D ad7380_get_alert_th(indio_dev, chan, dir, val);
+> >
+> >                 iio_device_release_direct(indio_dev);
+> >                 return ret;
+> >
+> > ---
+> > base-commit: f8ffc92ae9052e6615896052f0c5b808bfc17520
+> > change-id: 20250402-iio-adc-ad7380-fix-event-threshold-shift-b614db1a30=
+7f
+> >
+> > Best regards,
+> > --
+> > David Lechner <dlechner@baylibre.com>
+> > =20
 
