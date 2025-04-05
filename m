@@ -1,164 +1,391 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from webmail.webked.de (webmail.webked.de [159.69.203.94])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41DD018EB0;
-	Sat,  5 Apr 2025 06:13:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 761B71392;
+	Sat,  5 Apr 2025 06:15:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.203.94
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743833627; cv=none; b=Lz7crkYZdMW5UmTguIm2gYmZpliHrKC1IMn1sZ+tZxiUQIcDO9f2cSxkNEduNceEUb+TnL88vr6QwzIJbCS8Vu4+pNcfmO8sIgx2hqH+YpTsqSVMqxz1rhQ/hqDzJuM/zvVPY3NYVGwX/3I5d7GEpWKHhMrKlBlwk8w9cDSuWKM=
+	t=1743833749; cv=none; b=PwarJJ8Z47MCLS04zWucUd8Izy2zTsmQzDoSqeUVCqv5cfU8kd/JsbB/UjKgeRWxc/PxE8bO6WF1sMVpQR8RNH4Or0CefvlKa62SzC1ZCupVMK0XKVugvvbcrZzwSIEZDFVmbj5LmSAx5yvwsMa2mwKuLazpOWawFOafYjTeZNo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743833627; c=relaxed/simple;
-	bh=56YJfasTV8vnQVogFUmEf7vvczfa3mxItVXwzG9KQbs=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=OM8DObNn7X3319nU/dbmKan1TgLjp2VvgyqDxEiqO8N4jUiwPws6dOoeRYExHVgkIJ0ReljyokuPRWhvm22dr7gRKRo8KFOow6wj2VS/pPptuVrltXXoCTjg41rjjVKabqqB3AQJuthGVjp19Vv6h9ybKBrWhhPghxbLq7pB0YA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CwG8IQfV; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CwG8IQfV"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-736b350a22cso2342449b3a.1;
-        Fri, 04 Apr 2025 23:13:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743833624; x=1744438424; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=euskE8pjAxrzfyE6ym9pPmGxJmax028R61ycUMVQkoU=;
-        b=CwG8IQfV72oAwR61nOXTBEgXm7/ltZYswz09iR+61ZSiCkksMt346dHN5dUNNi4m71
-         wVfbpzZzC0hbBlxqMnVoJRsRYrcTj5VksBzvRQtHpP9pRAHroHYK1gndIKFUVl0P+4NG
-         3f8UJZySE1ZiQ1AGefOX+MDLa++vuRD+dTy6LFag1739bSKU3brLYuqJgfIEae+5+KAS
-         41/R5P9Pv42JoEDYTluAjQvXPTnxeoxVojk040hz0GR+IgiesBRSIhxbsFcm1ldZo1kg
-         qVBvGVm6o4gweA4/UdIDXPgkP/uIk7tDQEdFhXRo49tgxFX6oUraq/YogPAxz1RbecEp
-         49VA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743833624; x=1744438424;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=euskE8pjAxrzfyE6ym9pPmGxJmax028R61ycUMVQkoU=;
-        b=OQgYtn8yPICvhZRkkAsCr68z0unoFvMovREmiRXcHf+EVjKS/xd2tXJtByOPGwDOpg
-         D9hPCvt8A/Uk6R4tfSRQxa97SdDD42oxv24+FxaB9nUfN4GRlaRBBfIM2lotNJVA3tq+
-         bY7+ns2KBJLxZS7UUXLKE3xyJkEUBeNYfo645ZqKK0VZPZWkQyMHhPIHiSYfCaoxdnoP
-         aPJgiIcx/FsOMBktWvsTT3paNfwovAmfOJNT4hTRoskvPC5sm2UzF7eyTZ0UHcpQPDXV
-         28ykF/G4y1Up8R2s+FCySkbTadYk0gvdhDeE0YKC1L3Z46cWlE1ZApfRk2ZgSutOhmd6
-         t7qA==
-X-Forwarded-Encrypted: i=1; AJvYcCV9zbE0aWZsCi63qEIe5YdIu2gPcLeAD7bdjI53aE+h0HyY9uq7gKfaET0k3l93FYluoZd8jNRwQwsbsA==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxUEv+RgMGBamUQN23A+7ttyRwyXDeXdr+oGGRxFrazsvAhUiOL
-	G4Y3rGToq3PVaV+FL0y/f54ezdumwaR26j+c7qf9gYbw71mEe/Zh
-X-Gm-Gg: ASbGncsAJmKUai2q/4aQb0lPrFA+vRX3rJdhZqcxjfS+do/+4vKjuNg3jKHnNJNrNSt
-	gIszKyzli/0BSwe+LFnSquLVNVadzk1zz5u7y41wT0QI2Dk6ZD5k3s6Z8sf9h4SxtR1Q6MP4L+e
-	9IBRPkBpuMAT3OIow/yClz5C+VQxWue1HgFgmpRZvA7stsChWrR6wE5qzhs5GjIp42J9vTjHbCW
-	0/d+wiT3FdDte3xtpBPRO/2LME+Nw7wHLQOqGEhxHVhL+XtD0i/5ykyuZvu8AfG7T9SiZRX/yCT
-	Mucq0Vu5Z/oVteXujZdpvR3xbQG1WKd6+H/1WboBJqflcA==
-X-Google-Smtp-Source: AGHT+IF0682hI7oeSNEVYzp4EjWzOxCGfPpQ6cOGwF74lif+2StyXJR40MDTMeaRpTP1xQSkoW0y7w==
-X-Received: by 2002:a05:6a20:2585:b0:1f5:87ea:2a10 with SMTP id adf61e73a8af0-2010447bd76mr9132772637.9.1743833624239;
-        Fri, 04 Apr 2025 23:13:44 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:8e71:597c:7192:29ce])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af9bc35137csm3785702a12.44.2025.04.04.23.13.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Apr 2025 23:13:43 -0700 (PDT)
-Date: Fri, 4 Apr 2025 23:13:41 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
-Subject: [git pull] Input updates for v6.15-rc0
-Message-ID: <Z_DKFUmQJg8idRsZ@google.com>
+	s=arc-20240116; t=1743833749; c=relaxed/simple;
+	bh=J56/d6ZYegHEszM3w8u1yCB2xhkDtPT0B0GKcYkQgNU=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=nQCYocDSNDJaR2LIl1I5qJLnH6gVld+Bzmbeo5rIktZ/FuAmkkcrCO8JVRxJfjKbLb9+lilOXDnL1+p6ER8EP5833yXjglpb6CbIltKTCiF5BRg83D35MrDuKhEKZTf9wBBwRRVAXxwdVLgj67fXGIHyPdH4lz5O5CedjHwXjvs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=webked.de; spf=pass smtp.mailfrom=webked.de; arc=none smtp.client-ip=159.69.203.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=webked.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=webked.de
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 79FC962BED;
+	Sat,  5 Apr 2025 08:15:20 +0200 (CEST)
+Message-ID: <8a5012787351ece41cfcd19b05ba60ad336fe29f.camel@webked.de>
+Subject: Re: [REGRESSION] Massive virtio-net throughput drop in guest VM
+ with Linux 6.8+
+From: Markus Fohrer <markus.fohrer@webked.de>
+To: Ilya Maximets <i.maximets@ovn.org>, Willem de Bruijn
+	 <willemdebruijn.kernel@gmail.com>, "Michael S. Tsirkin" <mst@redhat.com>
+Cc: virtualization@lists.linux-foundation.org, jasowang@redhat.com, 
+	davem@davemloft.net, edumazet@google.com, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Date: Sat, 05 Apr 2025 08:15:15 +0200
+In-Reply-To: <d50c0384-4607-4890-8012-e2e7032a5354@ovn.org>
+References: <1d388413ab9cfd765cd2c5e05b5e69cdb2ec5a10.camel@webked.de>
+	 <20250403090001-mutt-send-email-mst@kernel.org>
+	 <11c5cb52d024a5158c5b8c5e69e2e4639a055a31.camel@webked.de>
+	 <20250404042711-mutt-send-email-mst@kernel.org>
+	 <e75cb5881a97485b08cdd76efd8a7d2191ecd106.camel@webked.de>
+	 <3b02f37ee12232359672a6a6c2bccaa340fbb6ff.camel@webked.de>
+	 <67eff7303df69_1ddca829490@willemb.c.googlers.com.notmuch>
+	 <d50c0384-4607-4890-8012-e2e7032a5354@ovn.org>
+Organization: WEBKED IT Markus Fohrer
+Content-Type: text/markdown; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+X-Last-TLS-Session-Version: TLSv1.3
 
-Hi Linus,
+Am Samstag, dem 05.04.2025 um 00:05 +0200 schrieb Ilya Maximets:
 
-Please pull from:
+> On 4/4/25 5:13 PM, Willem de Bruijn wrote:
+>=20
+> > Markus Fohrer wrote:
+> >=20
+> > > Am Freitag, dem 04.04.2025 um 10:52 +0200 schrieb Markus Fohrer:
+> > >=20
+> > > > Am Freitag, dem 04.04.2025 um 04:29 -0400 schrieb Michael S. Tsirki=
+n:
+> > > >=20
+> > > > > On Fri, Apr 04, 2025 at 10:16:55AM +0200, Markus Fohrer wrote:
+> > > > >=20
+> > > > > > Am Donnerstag, dem 03.04.2025 um 09:04 -0400 schrieb Michael S.
+> > > > > > Tsirkin:
+> > > > > >=20
+> > > > > > > On Wed, Apr 02, 2025 at 11:12:07PM +0200, Markus Fohrer wrote=
+:
+> > > > > > >=20
+> > > > > > > > Hi,
+> > > > > > > >=20
+> > > > > > > > I'm observing a significant performance regression in KVM
+> > > > > > > > guest
+> > > > > > > > VMs
+> > > > > > > > using virtio-net with recent Linux kernels (6.8.1+ and 6.14=
+).
+> > > > > > > >=20
+> > > > > > > > When running on a host system equipped with a Broadcom
+> > > > > > > > NetXtreme-E
+> > > > > > > > (bnxt_en) NIC and AMD EPYC CPUs, the network throughput in
+> > > > > > > > the
+> > > > > > > > guest drops to 100=E2=80=93200 KB/s. The same guest configu=
+ration
+> > > > > > > > performs
+> > > > > > > > normally (~100 MB/s) when using kernel 6.8.0 or when the VM
+> > > > > > > > is
+> > > > > > > > moved to a host with Intel NICs.
+> > > > > > > >=20
+> > > > > > > > Test environment:
+> > > > > > > > - Host: QEMU/KVM, Linux 6.8.1 and 6.14.0
+> > > > > > > > - Guest: Linux with virtio-net interface
+> > > > > > > > - NIC: Broadcom BCM57416 (bnxt_en driver, no issues at host
+> > > > > > > > level)
+> > > > > > > > - CPU: AMD EPYC
+> > > > > > > > - Storage: virtio-scsi
+> > > > > > > > - VM network: virtio-net, virtio-scsi (no CPU or IO
+> > > > > > > > bottlenecks)
+> > > > > > > > - Traffic test: iperf3, scp, wget consistently slow in gues=
+t
+> > > > > > > >=20
+> > > > > > > > This issue is not present:
+> > > > > > > > - On 6.8.0=20
+> > > > > > > > - On hosts with Intel NICs (same VM config)
+> > > > > > > >=20
+> > > > > > > > I have bisected the issue to the following upstream commit:
+> > > > > > > >=20
+> > > > > > > > =C2=A0 49d14b54a527 ("virtio-net: Suppress tx timeout warni=
+ng for
+> > > > > > > > small
+> > > > > > > > tx")
+> > > > > > > > =C2=A0 [https://git.kernel.org/linus/49d14b54a527](https://=
+git.kernel.org/linus/49d14b54a527)
+> > > > > > >=20
+> > > > > > >=20
+> > > > > > > Thanks a lot for the info!
+> > > > > > >=20
+> > > > > > >=20
+> > > > > > > both the link and commit point at:
+> > > > > > >=20
+> > > > > > > commit 49d14b54a527289d09a9480f214b8c586322310a
+> > > > > > > Author: Eric Dumazet <[edumazet@google.com](mailto:edumazet@g=
+oogle.com)>
+> > > > > > > Date:=C2=A0=C2=A0 Thu Sep 26 16:58:36 2024 +0000
+> > > > > > >=20
+> > > > > > > =C2=A0=C2=A0=C2=A0 net: test for not too small csum_start in
+> > > > > > > virtio_net_hdr_to_skb()
+> > > > > > > =C2=A0=C2=A0=C2=A0=20
+> > > > > > >=20
+> > > > > > > is this what you mean?
+> > > > > > >=20
+> > > > > > > I don't know which commit is "virtio-net: Suppress tx timeout
+> > > > > > > warning
+> > > > > > > for small tx"
+> > > > > > >=20
+> > > > > > >=20
+> > > > > > >=20
+> > > > > > >=20
+> > > > > > > > Reverting this commit restores normal network performance i=
+n
+> > > > > > > > affected guest VMs.
+> > > > > > > >=20
+> > > > > > > > I=E2=80=99m happy to provide more data or assist with testi=
+ng a
+> > > > > > > > potential
+> > > > > > > > fix.
+> > > > > > > >=20
+> > > > > > > > Thanks,
+> > > > > > > > Markus Fohrer
+> > > > > > >=20
+> > > > > > >=20
+> > > > > > >=20
+> > > > > > > Thanks! First I think it's worth checking what is the setup,
+> > > > > > > e.g.
+> > > > > > > which offloads are enabled.
+> > > > > > > Besides that, I'd start by seeing what's doing on. Assuming I=
+'m
+> > > > > > > right
+> > > > > > > about
+> > > > > > > Eric's patch:
+> > > > > > >=20
+> > > > > > > diff --git a/include/linux/virtio_net.h
+> > > > > > > b/include/linux/virtio_net.h
+> > > > > > > index 276ca543ef44d8..02a9f4dc594d02 100644
+> > > > > > > --- a/include/linux/virtio_net.h
+> > > > > > > +++ b/include/linux/virtio_net.h
+> > > > > > > @@ -103,8 +103,10 @@ static inline int
+> > > > > > > virtio_net_hdr_to_skb(struct
+> > > > > > > sk_buff *skb,
+> > > > > > > =C2=A0
+> > > > > > > =C2=A0		if (!skb_partial_csum_set(skb, start, off))
+> > > > > > > =C2=A0			return -EINVAL;
+> > > > > > > +		if (skb_transport_offset(skb) < nh_min_len)
+> > > > > > > +			return -EINVAL;
+> > > > > > > =C2=A0
+> > > > > > > -		nh_min_len =3D max_t(u32, nh_min_len,
+> > > > > > > skb_transport_offset(skb));
+> > > > > > > +		nh_min_len =3D skb_transport_offset(skb);
+> > > > > > > =C2=A0		p_off =3D nh_min_len + thlen;
+> > > > > > > =C2=A0		if (!pskb_may_pull(skb, p_off))
+> > > > > > > =C2=A0			return -EINVAL;
+> > > > > > >=20
+> > > > > > >=20
+> > > > > > > sticking a printk before return -EINVAL to show the offset an=
+d
+> > > > > > > nh_min_len
+> > > > > > > would be a good 1st step. Thanks!
+> > > > > > >=20
+> > > > > >=20
+> > > > > >=20
+> > > > > > I added the following printk inside virtio_net_hdr_to_skb():
+> > > > > >=20
+> > > > > > =C2=A0=C2=A0=C2=A0 if (skb_transport_offset(skb) < nh_min_len){
+> > > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 printk(KERN_INFO "vi=
+rtio_net: 3 drop,
+> > > > > > transport_offset=3D%u,
+> > > > > > nh_min_len=3D%u\n",
+> > > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 skb_transport_offset(skb), nh_min_len);
+> > > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EINVAL;
+> > > > > > =C2=A0=C2=A0=C2=A0 }
+> > > > > >=20
+> > > > > > Built and installed the kernel, then triggered a large download
+> > > > > > via:
+> > > > > >=20
+> > > > > > =C2=A0=C2=A0=C2=A0 wget [http://speedtest.belwue.net/10G](http:=
+//speedtest.belwue.net/10G)
+> > > > > >=20
+> > > > > > Relevant output from `dmesg -w`:
+> > > > > >=20
+> > > > > > [=C2=A0=C2=A0 57.327943] virtio_net: 3 drop, transport_offset=
+=3D34,
+> > > > > > nh_min_len=3D40=C2=A0=20
+> > > > > > [=C2=A0=C2=A0 57.428942] virtio_net: 3 drop, transport_offset=
+=3D34,
+> > > > > > nh_min_len=3D40=C2=A0=20
+> > > > > > [=C2=A0=C2=A0 57.428962] virtio_net: 3 drop, transport_offset=
+=3D34,
+> > > > > > nh_min_len=3D40=C2=A0=20
+> > > > > > [=C2=A0=C2=A0 57.553068] virtio_net: 3 drop, transport_offset=
+=3D34,
+> > > > > > nh_min_len=3D40=C2=A0=20
+> > > > > > [=C2=A0=C2=A0 57.553088] virtio_net: 3 drop, transport_offset=
+=3D34,
+> > > > > > nh_min_len=3D40=C2=A0=20
+> > > > > > [=C2=A0=C2=A0 57.576678] virtio_net: 3 drop, transport_offset=
+=3D34,
+> > > > > > nh_min_len=3D40=C2=A0=20
+> > > > > > [=C2=A0=C2=A0 57.618438] virtio_net: 3 drop, transport_offset=
+=3D34,
+> > > > > > nh_min_len=3D40=C2=A0=20
+> > > > > > [=C2=A0=C2=A0 57.618453] virtio_net: 3 drop, transport_offset=
+=3D34,
+> > > > > > nh_min_len=3D40=C2=A0=20
+> > > > > > [=C2=A0=C2=A0 57.703077] virtio_net: 3 drop, transport_offset=
+=3D34,
+> > > > > > nh_min_len=3D40=C2=A0=20
+> > > > > > [=C2=A0=C2=A0 57.823072] virtio_net: 3 drop, transport_offset=
+=3D34,
+> > > > > > nh_min_len=3D40=C2=A0=20
+> > > > > > [=C2=A0=C2=A0 57.891982] virtio_net: 3 drop, transport_offset=
+=3D34,
+> > > > > > nh_min_len=3D40=C2=A0=20
+> > > > > > [=C2=A0=C2=A0 57.946190] virtio_net: 3 drop, transport_offset=
+=3D34,
+> > > > > > nh_min_len=3D40=C2=A0=20
+> > > > > > [=C2=A0=C2=A0 58.218686] virtio_net: 3 drop, transport_offset=
+=3D34,
+> > > > > > nh_min_len=3D40=C2=A0=20
+> > > > >=20
+> > > > >=20
+> > > > > Hmm indeed. And what about these values?
+> > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 u32 start =3D __virtio16_to_cpu(little_endian, =
+hdr-
+> > > > >=20
+> > > > > > csum_start);
+> > > > >=20
+> > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 u32 off =3D __virtio16_to_cpu(little_endian, hd=
+r-
+> > > > >=20
+> > > > > > csum_offset);
+> > > > >=20
+> > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 u32 needed =3D start + max_t(u32, thlen, off +
+> > > > > sizeof(__sum16));
+> > > > > print them too?
+> > > > >=20
+> > > > >=20
+> > > > >=20
+> > > > >=20
+> > > > > > I would now do the test with commit
+> > > > > > 49d14b54a527289d09a9480f214b8c586322310a and commit
+> > > > > > 49d14b54a527289d09a9480f214b8c586322310a~1
+> > > > > >=20
+> > > > >=20
+> > > > >=20
+> > > > > Worth checking though it seems likely now the hypervisor is doing
+> > > > > weird
+> > > > > things. what kind of backend is it? qemu? tun? vhost-user? vhost-
+> > > > > net?
+> > > > >=20
+> > > >=20
+> > > >=20
+> > > > Backend: QEMU/KVM hypervisor (Proxmox)
+> > > >=20
+> > > >=20
+> > > > printk output:
+> > > >=20
+> > > > [=C2=A0=C2=A0 58.641906] virtio_net: drop, transport_offset=3D34=C2=
+=A0 start=3D34,
+> > > > off=3D16,
+> > > > needed=3D54, nh_min_len=3D40
+> > > > [=C2=A0=C2=A0 58.678048] virtio_net: drop, transport_offset=3D34=C2=
+=A0 start=3D34,
+> > > > off=3D16,
+> > > > needed=3D54, nh_min_len=3D40
+> > > > [=C2=A0=C2=A0 58.952871] virtio_net: drop, transport_offset=3D34=C2=
+=A0 start=3D34,
+> > > > off=3D16,
+> > > > needed=3D54, nh_min_len=3D40
+> > > > [=C2=A0=C2=A0 58.962157] virtio_net: drop, transport_offset=3D34=C2=
+=A0 start=3D34,
+> > > > off=3D16,
+> > > > needed=3D54, nh_min_len=3D40
+> > > > [=C2=A0=C2=A0 59.071645] virtio_net: drop, transport_offset=3D34=C2=
+=A0 start=3D34,
+> > > > off=3D16,
+> > > > needed=3D54, nh_min_len=3D40
+> > >=20
+> >=20
+> >=20
+> > So likely a TCP/IPv4 packet, but with VIRTIO_NET_HDR_GSO_TCPV6.
+>=20
+>=20
+>=20
+> Hi, Markus.
+>=20
+> Given this and the fact that the issue depends on the bnxt_en NIC on the
+> hist, I'd make an educated guess that the problem is the host NIC driver.
+>=20
+> There are some known GRO issues in the nbxt_en driver fixed recently in
+>=20
+> =C2=A0 commit de37faf41ac55619dd329229a9bd9698faeabc52
+> =C2=A0 Author: Michael Chan <[michael.chan@broadcom.com](mailto:michael.c=
+han@broadcom.com)>
+> =C2=A0 Date:=C2=A0=C2=A0 Wed Dec 4 13:59:17 2024 -0800
+>=20
+> =C2=A0=C2=A0=C2=A0 bnxt_en: Fix GSO type for HW GRO packets on 5750X chip=
+s
+>=20
+> It's not clear to me what's your host kernel version.=C2=A0 But the commi=
+t
+> above was introduced in 6.14 and may be in fairly recent stable kernels.
+> The oldest is v6.12.6 AFAICT.=C2=A0 Can you try one of these host kernels=
+?
+>=20
+> Also, to confirm and workaround the problem, please, try disabling HW GRO
+> on the bnxt_en NIC first:
+>=20
+> =C2=A0 ethtool -K <BNXT_EN NIC IFACE> rx-gro-hw off
+>=20
+> If that doesn't help, then the problem is likely something different.
+>=20
+> Best regards, Ilya Maximets.
 
-	git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git tags/input-for-v6.15-rc0
 
-to receive updates for the input subsystem. You will get:
+Setting `rx-gro-hw off` on the Broadcom interfaces also resolves the issue:
 
-- a brand new driver for touchpads and touchbars in newer Apple devices
+ethtool -K ens1f0np0 rx-gro-hw off =20
+ethtool -K ens1f1np1 rx-gro-hw off =20
+ethtool -K ens1f2np2 rx-gro-hw off =20
+ethtool -K ens1f3np3 rx-gro-hw off
 
-- support for Berlin-A series in goodix-berlin touchscreen driver
+With this setting applied, the guest receives traffic correctly even when G=
+RO is enabled on the host.
 
-- improvements to matrix_keypad driver to better handle GPIOs toggling
+The system is running the latest Proxmox kernel:
 
-- assorted small cleanups in other input drivers.
-
-Changelog:
----------
-
-Arnd Bergmann (1):
-      Input: synaptics - hide unused smbus_pnp_ids[] array
-
-Dmitry Antipov (1):
-      Input: pm8941-pwrkey - fix dev_dbg() output in pm8941_pwrkey_irq()
-
-Dmitry Torokhov (1):
-      dt-bindings: input: matrix_keypad - add wakeup-source property
-
-Hans Verkuil (1):
-      Input: drop vb2_ops_wait_prepare/finish
-
-Jens Reidel (2):
-      dt-bindings: input: goodix,gt9916: Document gt9897 compatible
-      Input: goodix_berlin - add support for Berlin-A series
-
-Krzysztof Kozlowski (1):
-      dt-bindings: input: Correct indentation and style in DTS example
-
-Markus Burri (5):
-      dt-bindings: input: matrix_keypad: convert to YAML
-      dt-bindings: input: matrix_keypad: add settle time after enabling all columns
-      Input: matrix_keypad - add settle time after enabling all columns
-      Input: matrix_keypad - use fsleep for delays after activating columns
-      dt-bindings: input: matrix_keypad - add missing property
-
-Nam Cao (1):
-      Input: Switch to use hrtimer_setup()
-
-Sasha Finkelstein (4):
-      dt-bindings: input: touchscreen: Add Z2 controller
-      Input: apple_z2 - add a driver for Apple Z2 touchscreens
-      MAINTAINERS: Add entries for Apple Z2 touchscreen driver
-      Input: apple_z2 - fix potential confusion in Kconfig
-
-Diffstat:
---------
-
- .../bindings/input/gpio-matrix-keypad.txt          |  49 ---
- .../bindings/input/gpio-matrix-keypad.yaml         | 103 +++++
- .../bindings/input/qcom,pm8921-keypad.yaml         |  46 +-
- .../bindings/input/qcom,pm8921-pwrkey.yaml         |  36 +-
- .../input/touchscreen/apple,z2-multitouch.yaml     |  70 +++
- .../bindings/input/touchscreen/goodix,gt9916.yaml  |   1 +
- .../bindings/input/touchscreen/ti,ads7843.yaml     |  32 +-
- .../devicetree/bindings/power/wakeup-source.txt    |   2 +-
- MAINTAINERS                                        |   2 +
- drivers/input/joystick/walkera0701.c               |   3 +-
- drivers/input/keyboard/gpio_keys.c                 |  10 +-
- drivers/input/keyboard/matrix_keypad.c             |   8 +-
- drivers/input/misc/pm8941-pwrkey.c                 |   4 +-
- drivers/input/mouse/synaptics.c                    |   2 +
- drivers/input/rmi4/rmi_f54.c                       |   2 -
- drivers/input/touchscreen/Kconfig                  |  13 +
- drivers/input/touchscreen/Makefile                 |   1 +
- drivers/input/touchscreen/apple_z2.c               | 477 +++++++++++++++++++++
- drivers/input/touchscreen/atmel_mxt_ts.c           |   2 -
- drivers/input/touchscreen/goodix_berlin.h          |  16 +-
- drivers/input/touchscreen/goodix_berlin_core.c     |  21 +-
- drivers/input/touchscreen/goodix_berlin_i2c.c      |  14 +-
- drivers/input/touchscreen/goodix_berlin_spi.c      |  48 ++-
- drivers/input/touchscreen/sur40.c                  |   2 -
- 24 files changed, 814 insertions(+), 150 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/input/gpio-matrix-keypad.txt
- create mode 100644 Documentation/devicetree/bindings/input/gpio-matrix-keypad.yaml
- create mode 100644 Documentation/devicetree/bindings/input/touchscreen/apple,z2-multitouch.yaml
- create mode 100644 drivers/input/touchscreen/apple_z2.c
-
-Thanks.
+6.8.12-9-pve
 
 
--- 
-Dmitry
+
+
+> > This is observed in the guest on the ingress path, right? In
+> > virtnet_receive_done.
+> >=20
+> > Is this using vhost-net in the host for pass-through? IOW, is
+> > the host writing the virtio_net_hdr too?
+> >=20
+> >=20
+> > >=20
+> > > >=20
+> > > >=20
+> > > >=20
+> > > >=20
+> > >=20
+> > >=20
+> > > I just noticed that commit 17bd3bd82f9f79f3feba15476c2b2c95a9b11ff8
+> > > (tcp_offload.c: gso fix) also touches checksum handling and may
+> > > affect how skb state is passed to virtio_net_hdr_to_skb().
+> > >=20
+> > > Is it possible that the regression only appears due to the combinatio=
+n
+> > > of 17bd3bd8 and 49d14b54a5?
+> >=20
+> >=20
+> > That patch only affects packets with SKB_GSO_FRAGLIST. Which is only
+> > set on forwarding if NETIF_F_FRAGLIST is set. I don=20
+>=20
+>
+
