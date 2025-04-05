@@ -1,114 +1,133 @@
-Received: from omta034.useast.a.cloudfilter.net (omta034.useast.a.cloudfilter.net [44.202.169.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDAD2288DB
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 02:33:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F01C018859B
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 02:35:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743820432; cv=none; b=nzOQYNlmXxgsA4YHnzd7INFYsEqVG+KBX3TjFqgU6INCeC+UWd69maCzA3tC1dAF4tSUeLFUisQyg1OxyAiafvtm3nMA+olrtiaUbCEwHRysfSpvv6hHijVb1R+9JtGApBr77KovnKYbp4tL0k7NIl4Mf/JATgz6cPgC/YORXcA=
+	t=1743820528; cv=none; b=Hji8HP+HB7j3/A8KQhRsxp8jdRTmuXCSAg0OUnQQFiCHoRjpWTHue7VRDf2cTGWj5J7uzlYvqM/qkvrJJq1ClzVLMdF5W23DOWLL5hDoeooGJRSX3rdvOKn9f/wIiZlJa6RHT0za5ky7A51wvri85QuFMU2F/fTBwBCt0effJS8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743820432; c=relaxed/simple;
-	bh=I8uvn4WY/+vMALnYlWhpp6p0Y4qVPa5pt8h/vT7Ij1I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AZjyNME/O5Kn1nd0OnUYOpNaJwG/sye6vE4ocaueyNITqJQbZKckvmr1WbpnHK+QFATkUjLlW3X4R3yg1+nt1mx0K2jkbX51tWLA7AYJKIRbcCY+nIZTIytIOR1V26N5+qFEp8xEKMEv5Do/PnNCGHx351KoR1DwZyQVDaF4AnU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net; spf=pass smtp.mailfrom=w6rz.net; dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b=XZeX1G/B; arc=none smtp.client-ip=44.202.169.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w6rz.net
+	s=arc-20240116; t=1743820528; c=relaxed/simple;
+	bh=jHD5+DAZY+3plQkqy8z/PJIC+7WjoIdTe9Vwt7TmY3I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fnijfA/FT/Kbd6r52d6m4gnOXvsWEHmwSfXNu1G8ocU0OpMDY5wp+lrC+Rl1REEeHKU2qN6J5GBm5yY0qAfQp2ufpFhSZku8OWz1FRAjn4qcb5B5pRP+jEmGLOWTotLyseSJlePRz0BIbwPh1t97SY17SbcCG/MruuXfUZVmluc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=sq1qKmN5; arc=none smtp.client-ip=209.85.219.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b="XZeX1G/B"
-Received: from eig-obgw-6009a.ext.cloudfilter.net ([10.0.30.184])
-	by cmsmtp with ESMTPS
-	id 0mGquaMdnXshw0tLwuyB8r; Sat, 05 Apr 2025 02:33:49 +0000
-Received: from box5620.bluehost.com ([162.241.219.59])
-	by cmsmtp with ESMTPS
-	id 0tLwucLYZ1ywG0tLwuhVdR; Sat, 05 Apr 2025 02:33:48 +0000
-X-Authority-Analysis: v=2.4 cv=bqlKBlai c=1 sm=1 tr=0 ts=67f0968c
- a=30941lsx5skRcbJ0JMGu9A==:117 a=30941lsx5skRcbJ0JMGu9A==:17
- a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=7vwVE5O1G3EA:10 a=VwQbUJbxAAAA:8
- a=HaFmDPmJAAAA:8 a=CTIpb7JmY0c5bVNJeN8A:9 a=QEXdDO2ut3YA:10
- a=nmWuMzfKamIsx3l42hEX:22 a=hTR6fmoedSdf3N0JiVF8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=w6rz.net;
-	s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=9jg908sd79yyPAeoc450hkP/QBwbmDpq9MxRNa/8FY8=; b=XZeX1G/BltX6cynHRyRsJImCDo
-	qgitfZB+lB+fzSTEAN4d77jBOVCV5k4qmB6RtbePUl0gboDxpVzWLYF1XSSOrZGMsUs0wDDQRODxR
-	fEfvob7DuJ0uoKxm8ytOSfB3tWdfqHmu9fZba3F6YACfGxZdHyO7uOy3V+qotrO04UqB1Dn4RWLS6
-	MjZo9FjXJKiuRs1TOYrZM5aRVT+yeQPyi2d5Tg5siOWTPTLu9FZpb8jYlZYUIxqd4mrW5STgP/SM1
-	XaAvgPTPbBpY/ZdZCeVBLV2fTxfKO8Dk/9hcxbKuP0aAB9mOmMjWnvk4lq/G7AcJsw/4s0I7dRQJW
-	J59x8mTg==;
-Received: from c-73-223-253-157.hsd1.ca.comcast.net ([73.223.253.157]:50074 helo=[10.0.1.116])
-	by box5620.bluehost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <re@w6rz.net>)
-	id 1u0tLu-00000001ebZ-0Dvo;
-	Fri, 04 Apr 2025 20:33:46 -0600
-Message-ID: <dc1025fe-346a-47b7-ae9a-b17966bc747b@w6rz.net>
-Date: Fri, 4 Apr 2025 19:33:42 -0700
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="sq1qKmN5"
+Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-6ecfbf1c7cbso45449386d6.2
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 19:35:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1743820524; x=1744425324; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=7YeznBtZ8u4TGia1mzGvTnb61Iecrwihl8v/8aHcOYI=;
+        b=sq1qKmN5YOJPHqZ4jvNgl8BfKoQQSxZLhrKLu5WA3xx8RThvY+n14Gq8mAcJ8NcsY2
+         Cswj4edhlJDxRTftQHpi7MEDlQ8VrVl7688PDgAdKHmm+G9p5r6w7rQ975HslkYbtuxY
+         lVL+7i6Z3qxUS0v9/zhGrfP9hyQGHplLAKsG54phQrRjgyG1BWOskMuawTmZteNFe9Rz
+         9smHsdeUj3zw3QXKs1CqgNFEY67CUFjDwpj6v36dwFO30zROvGnnWb9yx0tmq+7bFEsz
+         Vjs/IQHfl494/Nl+LeD3zOoF8SlJ2KhbJAxu1h+XFVsHT0yWsvvoVAugoSPAYT4gEQ0i
+         eThg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743820524; x=1744425324;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7YeznBtZ8u4TGia1mzGvTnb61Iecrwihl8v/8aHcOYI=;
+        b=fvPVZiEyoh8lzHu75KIqDBI5W5RIh/mcqRChl7aIsj60rEFfQd1PxdK6Ozm9VyK6Aa
+         e2zvW8W1TNzeTk3PdqHxAvk1/v2kmGWuTR/U6Z12X61MxuBsOsz6x9QgQDUMw+KPDnEP
+         achdU6Tkp2JlmCObetLyQk0l0YKTVaDAMw6Kvh5/XcZCWxLegdWtRYnDCLaWoal5cvgI
+         G/9+vofIucK7NvoQLKrLGz3gLL4NX+8J3m4Xu6cIPbvXwWenA9gKxKpss8dXzOxeqZs7
+         UUlZbstE2gHNXapV/PBC9bTh73RPWQn4EOZSDDOluabZeyLJptI0tdqoZaewPpyVq/wR
+         iqqA==
+X-Forwarded-Encrypted: i=1; AJvYcCUEU3zEz7uQazpW/HRswUnmgOiGEzKTSp3rm7315BTCeZQAD7jPJvgCF1qUTDs9xdQecmOiXSnsUYb+vdg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwN/1kUqm9y6JegiqSq19A4i24LyUnwUeVGQPpUHfpgukF23H9g
+	chRrkEK89keIdkzTDj3ZnpBfgSxsqp6Uyww6/a0PabQqMPq7cHENnYN7MrcVago=
+X-Gm-Gg: ASbGncv7IPnF503M+mvMLiujLwQmEAam+VA3nl9WnnNnu+HzPf0J7EwCW9ENEDj/TnN
+	Hv5d/tM8kgosX3VW5QJXXO6Q8N2L0e3Y+tHze1anGYftaHqI/P55Dv0Bq0xLwJY0gjjsZrlmTFT
+	QBW4Rpv4sqwf/5XFBGWwesxBZaFa0oesYunYKlp8O+twRt5GysbCRlg0rmu26YacUSMXUNeVEke
+	h6rt5nrsLoBf44EwRGzuM2Qdc3zbFDdEpCW7ipYCss4wEtKnVYhYGk2JDM4Fz01aTsC+8STnGkH
+	eUAyZ1DPGi9lfS+77t6LyUjdHf6XSONO2HJGSREk
+X-Google-Smtp-Source: AGHT+IFGBVP3BvIBJ9Dexuubh9wtOH03Pga1EqEaf+7mTsjbwZCmarvITX5eoWkuNhU+NhV/tpF3DA==
+X-Received: by 2002:a05:6214:21a6:b0:6ea:d388:dc09 with SMTP id 6a1803df08f44-6f00de70533mr79533606d6.8.1743820523802;
+        Fri, 04 Apr 2025 19:35:23 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F ([2620:10d:c091:400::5:ba7b])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6ef0efc05d3sm28642776d6.9.2025.04.04.19.35.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Apr 2025 19:35:22 -0700 (PDT)
+Date: Fri, 4 Apr 2025 22:35:20 -0400
+From: Gregory Price <gourry@gourry.net>
+To: Robert Richter <rrichter@amd.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+	Terry Bowman <terry.bowman@amd.com>
+Subject: [PATCH] cxl region: recalculate interleave pos during region probe
+Message-ID: <Z_CW6AIE1zoA80qB@gourry-fedora-PF4VCD3F>
+References: <20250218132356.1809075-1-rrichter@amd.com>
+ <20250218132356.1809075-5-rrichter@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.1 00/22] 6.1.133-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250403151620.960551909@linuxfoundation.org>
-Content-Language: en-US
-From: Ron Economos <re@w6rz.net>
-In-Reply-To: <20250403151620.960551909@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - box5620.bluehost.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - w6rz.net
-X-BWhitelist: no
-X-Source-IP: 73.223.253.157
-X-Source-L: No
-X-Exim-ID: 1u0tLu-00000001ebZ-0Dvo
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: c-73-223-253-157.hsd1.ca.comcast.net ([10.0.1.116]) [73.223.253.157]:50074
-X-Source-Auth: re@w6rz.net
-X-Email-Count: 92
-X-Org: HG=bhshared;ORG=bluehost;
-X-Source-Cap: d3NpeHJ6bmU7d3NpeHJ6bmU7Ym94NTYyMC5ibHVlaG9zdC5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfDXn/ry1XZlkSzQOv9yunvg4L5ULM80hfgIhU6X0u6wqWP1csO+tmAgrSbROh5MLrVlbGnXKQ3k11D4v8p4/kFUak4q5mH4jwzEy2xZhn7Y5kYP4UT0A
- Qom0Ok/10HbCsaUsu6qFjzxicFP7ykV2CddtpAatWrVakvFq51OtPpTaIRxS0IC2CedpzBwaR/d6m74zKc+tTwRTa36PkPnminE=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250218132356.1809075-5-rrichter@amd.com>
 
-On 4/3/25 08:19, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.1.133 release.
-> There are 22 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Sat, 05 Apr 2025 15:16:11 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.133-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+There are at least 3 bugs at this point in the patch series.
 
-Built and booted successfully on RISC-V RV64 (HiFive Unmatched).
+1. cxl_calc_interleave_pos should be using cxled->spa_range
+2. cxl_calc_interleave_pos should be returning ctx->pos
+3. cxl_region_sort_targets still needs to call cxl_calc_interleave_pos
 
-Tested-by: Ron Economos <re@w6rz.net>
+The auto decoder probe proess overwrites the endpoint position
+temporarily to record its temporary location in the region target list.
+This patch restores the pos recalculation during the sort target process
+so that decoder probe order doesn't affect region probe.
 
+Signed-off-by: Gregory Price <gourry@gourry.net>
+---
+ drivers/cxl/core/region.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+index 934dcb2daa15..5c9e2b747731 100644
+--- a/drivers/cxl/core/region.c
++++ b/drivers/cxl/core/region.c
+@@ -1879,7 +1879,7 @@ static int cxl_calc_interleave_pos(struct cxl_endpoint_decoder *cxled)
+ 	int pos = 0;
+
+ 	ctx = (struct cxl_interleave_context) {
+-		.hpa_range = &cxled->cxld.hpa_range,
++		.hpa_range = &cxled->spa_range,
+ 	};
+
+ 	for (iter = cxled_to_port(cxled); pos >= 0 && iter;
+@@ -1892,7 +1892,7 @@ static int cxl_calc_interleave_pos(struct cxl_endpoint_decoder *cxled)
+ 		dev_name(&port->dev), ctx.hpa_range->start, ctx.hpa_range->end,
+ 		ctx.pos);
+
+-	return pos;
++	return ctx.pos;
+ }
+
+ static int cxl_region_sort_targets(struct cxl_region *cxlr)
+@@ -1903,6 +1903,7 @@ static int cxl_region_sort_targets(struct cxl_region *cxlr)
+ 	for (i = 0; i < p->nr_targets; i++) {
+ 		struct cxl_endpoint_decoder *cxled = p->targets[i];
+
++		cxled->pos = cxl_calc_interleave_pos(cxled);
+ 		/*
+ 		 * Record that sorting failed, but still continue to calc
+ 		 * cxled->pos so that follow-on code paths can reliably
+--
+2.47.1
