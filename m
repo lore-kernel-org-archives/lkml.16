@@ -1,98 +1,116 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from mail.andi.de1.cc (mail.andi.de1.cc [178.238.236.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD5CD2556E;
-	Sat,  5 Apr 2025 19:45:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92ED32556E;
+	Sat,  5 Apr 2025 19:49:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.238.236.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743882323; cv=none; b=QH8dhSDXGrSrMVmtIkbx1bL8t1hG3D5g2/1TEWKZiZ9nuZnI3NjxaekG1YrCE9awRQcwRu88U2R13kRHPfgMJ143zZg3puwiXD6IaYN1G0yZ7T4EW1CoJwwzHmD1f+WEO7oCoQvS6vW2A3zcu6+q9vfjNBs7AW4+gXJx8/ErYiw=
+	t=1743882558; cv=none; b=dYhJJKb69FZ2ln0nwIaidkokhJsB3skLpKsqyXU0fn0MAhhs0BWHjMBDIzZ68h6785enZ4oAfoBQKkz0xDRoQdVyeaZhh50ANLnH4wmVTbXFk4JABDZpPmE9Do0sMAsHWsxNVKlfH85S1KCYZC0178rjEF0sSMsBRYIhPZt13bk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743882323; c=relaxed/simple;
-	bh=iCkXQLl2AeMQ163QzwK+67auGpNYL3LE/p1KEupkDmc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qcw+ZDp1jNbQuuxajJe7hk6iPAFvhor5+r8kTiuDWimEzfN8zwgU1m7DBpnoR8nP/7h+GQFAxE3XftgQqCNw0dfDVswRZ/zJBxKzTuaT4PICYGugsoExDsAWdbu3ApJYv3zCAhu4ebV+yoNv30mVJDAtlhAatksYG5UCDhZRfsg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=bvJ1+0h+; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1743882558; c=relaxed/simple;
+	bh=RhGwmaIlf4cQcamJj9eBRN68N78PwPXPgg/TzHaXYb4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=KfwqmDRJ5bHNKbYqHCfM3DE8VC1/PWCQnRu74pwRLqfhO0DBtdwWtMUmSkD8Ya58b3eVxssnuGDY5DuaMyEGTp8ScPFIzrExpBUAlYHGF5LLC5QaPB12OODFlf+bS8Kthe0S4PPqFg65FZPxmj7KCl+OhL5dR4hs3RP8cJYEXrU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kemnade.info; spf=pass smtp.mailfrom=kemnade.info; dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b=Wqv3Fu4e; arc=none smtp.client-ip=178.238.236.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kemnade.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kemnade.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="bvJ1+0h+"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=rD24ROOlKYnLzGW6Wv6olDZU8vcz7uYQ6z7dsj6jbMs=; b=bvJ1+0h+YCOt6pmqt7+UVGBIKw
-	EPFsHXUhuTsvXJcgWNmUGCHOIJEQo5ryCYH8OnqNjAc1IhkwADJQKEPGNM+UuYEbFMecUYtrtTRKc
-	KP6pW7ipwrtGHQaPPzWFBioLx6nfoCBice55rdWi5P+n/3gQgoa8qfrj+LAe9SsgfBDk=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1u19Rw-0087wx-5e; Sat, 05 Apr 2025 21:45:04 +0200
-Date: Sat, 5 Apr 2025 21:45:04 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Aleksander Jan Bajkowski <olek2@wp.pl>
-Cc: lxu@maxlinear.com, hkallweit1@gmail.com, linux@armlinux.org.uk,
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, lee@kernel.org,
-	linux-leds@vger.kernel.org, Daniel Golle <daniel@makrotopia.org>
-Subject: Re: [PATCH net-next,v2 1/2] net: phy: add LED dimming support
-Message-ID: <11bb4bcf-c3e6-4ab0-b61c-ef7f37dd695c@lunn.ch>
-References: <20250405190954.703860-1-olek2@wp.pl>
+	dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="Wqv3Fu4e"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=kemnade.info; s=20220719; h=References:In-Reply-To:Cc:From:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=ikLwVlTRba3+LN49BpvyjGaUmSoJftuu577LiJ63LfA=; b=Wqv3Fu4egKakj7QWHFyzaSXle/
+	HdkG1PXrgz3cYrzY4my3fI/pQxLt9WRsqx0pzXNfcQtmSeqs5GiXBlWTV1IjCDlNoy4UWZh1ALfKk
+	oAXETPkWPTYVh0ShetgRHrCfh6SiWT+2BjHLn75bqRDZYjqsuYDiOhkXdIugg9iO16uPX0VRp1hpQ
+	01PXXnBJef8DQMDmPMdDpt1AjNsnv+GugXJujTRQDsYyXbntSSqoDIQckP3tF3OfBEeeuZgAw/R75
+	cZqZL1XEmchfFH4r2gZObnNry1Pck2NLcKW4GSIrKcNxN8XTtvQcI+dzBybN03Z1f1So0ppW83rAE
+	qJKsNMYg==;
+Date: Sat, 5 Apr 2025 21:49:04 +0200
+From: Andreas Kemnade <andreas@kemnade.info>
+To: Sukrut Bellary <sbellary@baylibre.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Tero Kristo
+ <kristo@kernel.org>, Kevin Hilman <khilman@baylibre.com>,
+ linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/4] dt-bindings: clock: ti: add ti,autoidle.yaml
+ reference
+Message-ID: <20250405214904.0b07b26f@akair>
+In-Reply-To: <20250404014500.2789830-5-sbellary@baylibre.com>
+References: <20250404014500.2789830-1-sbellary@baylibre.com>
+	<20250404014500.2789830-5-sbellary@baylibre.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250405190954.703860-1-olek2@wp.pl>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Sat, Apr 05, 2025 at 09:09:53PM +0200, Aleksander Jan Bajkowski wrote:
-> Some PHYs support LED dimming. The use case is a router that dims LEDs
-> at night. PHYs from different manufacturers support a different number of
-> brightness levels, so it was necessary to extend the API with the
-> led_max_brightness() function. If this function is omitted, a default
-> value is used, assuming that only two levels are supported.
+Am Thu,  3 Apr 2025 18:45:00 -0700
+schrieb Sukrut Bellary <sbellary@baylibre.com>:
+
+> ti,divider-clock uses properties from ti,autoidle.
 > 
-> Signed-off-by: Aleksander Jan Bajkowski <olek2@wp.pl>
-> Reviewed-by: Daniel Golle <daniel@makrotopia.org>
-
-The merge window is still open at the moment, so you will need to
-repost next week.
-
-
+> As we are converting autoidle binding to ti,autoidle.yaml,
+> fix the reference here.
+> 
+> Add dual license.
+> 
+> Signed-off-by: Sukrut Bellary <sbellary@baylibre.com>
 > ---
->  drivers/net/phy/phy_device.c | 7 ++++++-
->  include/linux/phy.h          | 7 +++++++
->  2 files changed, 13 insertions(+), 1 deletion(-)
+>  .../bindings/clock/ti/ti,divider-clock.yaml   | 24 ++++---------------
+>  1 file changed, 5 insertions(+), 19 deletions(-)
 > 
-> diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-> index 675fbd225378..4011ececca70 100644
-> --- a/drivers/net/phy/phy_device.c
-> +++ b/drivers/net/phy/phy_device.c
-> @@ -3106,7 +3106,12 @@ static int of_phy_led(struct phy_device *phydev,
+> diff --git a/Documentation/devicetree/bindings/clock/ti/ti,divider-clock.yaml b/Documentation/devicetree/bindings/clock/ti/ti,divider-clock.yaml
+> index 3fbe236eb565..aba879ae302d 100644
+> --- a/Documentation/devicetree/bindings/clock/ti/ti,divider-clock.yaml
+> +++ b/Documentation/devicetree/bindings/clock/ti/ti,divider-clock.yaml
+> @@ -1,4 +1,4 @@
+> -# SPDX-License-Identifier: GPL-2.0-only
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+>  %YAML 1.2
+>  ---
+>  $id: http://devicetree.org/schemas/clock/ti/ti,divider-clock.yaml#
+> @@ -55,9 +55,10 @@ description: |
+>    is missing it is the same as supplying a zero shift.
 >  
->  	cdev->hw_control_get_device = phy_led_hw_control_get_device;
->  #endif
-> -	cdev->max_brightness = 1;
-> +	if (phydev->drv->led_max_brightness)
-> +		cdev->max_brightness =
-> +			phydev->drv->led_max_brightness(phydev, index);
-> +	else
-> +		cdev->max_brightness = 1;
+>    This binding can also optionally provide support to the hardware autoidle
+> -  feature, see [1].
+> +  feature.
+>  
+> -  [1] Documentation/devicetree/bindings/clock/ti/autoidle.txt
+> +allOf:
+> +  - $ref: /schemas/clock/ti/ti,autoidle.yaml#
+>  
+>  properties:
+>    compatible:
+> @@ -97,7 +98,6 @@ properties:
+>      minimum: 1
+>      default: 1
+>  
+> -
+>    ti,max-div:
+>      $ref: /schemas/types.yaml#/definitions/uint32
+>      description:
+> @@ -116,20 +116,6 @@ properties:
+>        valid divisor programming must be a power of two,
+>        only valid if ti,dividers is not defined.
+>  
+> -  ti,autoidle-shift:
+> -    $ref: /schemas/types.yaml#/definitions/uint32
+> -    description:
+> -      bit shift of the autoidle enable bit for the clock,
+> -      see [1].
+> -    maximum: 31
+> -    default: 0
+> -
+now you make ti,autoidle-shift required. That makes so sense. A clock
+does not necessarily support autoidle.
 
-> +	/**
-> +	 * @led_max_brightness: Maximum number of brightness levels
-> +	 * supported by hardware. When only two levels are supported
-> +	 * i.e. LED_ON and LED_OFF the function can be omitted.
-> +	 */
-> +	int (*led_max_brightness)(struct phy_device *dev, u8 index);
-
-We might want to consider types here. led_classdev->max_brightness is
-an unsigned int. Your callback returns int, so it could include
--EOPNOTSUPP, -EINVAL, -ENODEV etc. There is no check for an error
-code, so max_brightness is going to end up ~ 2^32, and not work very
-well.
-
-	Andrew
+Regards,
+Andreas
