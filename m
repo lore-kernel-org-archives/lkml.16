@@ -1,138 +1,142 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE3CBDDCD;
-	Sat,  5 Apr 2025 15:13:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5533135957;
+	Sat,  5 Apr 2025 15:15:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743866017; cv=none; b=qS5NadQp7NK7mC3PmkBlcX9aQNMsVLo2zPyfAcQnO7H/Gmg5SS6VKTqvk/R/QkSyAyUei8AoMalcfbMHMQlt8FRKQgt2tiA8agtFKpxES/fhnpFPwlyt3M45WLqXzC5x+JfLBlWDxYIvyd//LyrqYFwoKqEyfiR3pD9771Oprwo=
+	t=1743866113; cv=none; b=UzSOpo7XD1kIUH1W0B53XjjKMklFbWaUZO7x8T/p/jGZDSmGtuXqh2MBY9YCDyuLuMIu4M1FH4Tx5Yd2O+DySRsB7xZQv700EFBBJ0stNJYXfgMsSI5DY7CjMuwLRN+nP0TlcQUeRXmkIvAoMvGCMB5cjex3EeXvVe6otam0HBM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743866017; c=relaxed/simple;
-	bh=exAiWMVcVghnujtvzA2RVuKbjqWm3hf7kt/Likz2WQQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BbYZittmkqYV72/igV3YNTkz+JXgrSCCBlWvcuLwnpxOwRXiIgb/Fr1FSOlhj02Cb6d1KFsphRnjkfjQR6ibCME/BEHFiI7aDto5SRrY4RARh8qBMi0xJrTK66uDXk2y/I3c8u76NKHJ8UTz3zVuk0dm6IYWHI+Hrslvu+iUK08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gdZShphc; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1743866113; c=relaxed/simple;
+	bh=yARVkcdohPfQmnXkIQCzfyOpcF1SCB0AE+9reKP2B20=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GXtYHgPvG90sms7ZCJKt2CmI+1BUaRF9UNZHk2nhTERNAQI4tCpcLWo5h8QRuy0A0TqWYKA/RaO/UGaUK9dvBMDAxsFIM1xUR5V9DURSSEdAQh0qMFU59IgafLVu1sIASflhQm5vQHX/tlvA17bm7CwQjhp0hiqqIB0uCW5/C0A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=soXIQXuo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gdZShphc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743866015; x=1775402015;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=exAiWMVcVghnujtvzA2RVuKbjqWm3hf7kt/Likz2WQQ=;
-  b=gdZShphcTgnxsCsPBfG28QLK81F9aBdURZzJB9/0G/svronP66qQCHs6
-   LZSupYZDSWM07O3epBsgwWbIEZfWwPfz81452q+VPoLTCUN+puL0lKE7z
-   COfupvblyL5vEi8RBUhFDJDEvwxlw+XuzJ3cuKrxJi6B8WqvDZmd8sCEd
-   qGRguqWjZQa+q1Uxb7aSmJ/F6W90wZdGCHa51x6kLnN1WSw1XBMyddPhu
-   YHe+UyBJa5tl/TbodIXN2gUR7dFHYAjuJI5I5DxUIIRoYbIZI25FX3F69
-   CJNFP/Tt5UORuc6C4IKop8UDeVgw7kbFnZVP7wr5HT4DdbvlPk0V9A4Z8
-   g==;
-X-CSE-ConnectionGUID: MDnlRLpuR2S0LoHO5EtL5A==
-X-CSE-MsgGUID: uJY8+XQATUGv6AnFTNOBYw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11395"; a="45014094"
-X-IronPort-AV: E=Sophos;i="6.15,191,1739865600"; 
-   d="scan'208";a="45014094"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2025 08:13:35 -0700
-X-CSE-ConnectionGUID: 95EZI4G0TZOmXHh6xGe3nQ==
-X-CSE-MsgGUID: IRo0FDanT9qEpCbFSvqdgA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,191,1739865600"; 
-   d="scan'208";a="132688010"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by fmviesa004.fm.intel.com with ESMTP; 05 Apr 2025 08:13:30 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u15D6-00026t-2E;
-	Sat, 05 Apr 2025 15:13:28 +0000
-Date: Sat, 5 Apr 2025 23:13:27 +0800
-From: kernel test robot <lkp@intel.com>
-To: cy_huang@richtek.com, Mark Brown <broonie@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Rob Herring <robh@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	ChiYuan Huang <cy_huang@richtek.com>,
-	Otto lin <otto_lin@richtek.com>, Allen Lin <allen_lin@richtek.com>,
-	devicetree@vger.kernel.org, linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/4] ASoC: codecs: Add support for Richtek rt9123
-Message-ID: <202504052244.bgS5yxev-lkp@intel.com>
-References: <cff65757c4665a81397ef5f559b277f96d4236c3.1743774849.git.cy_huang@richtek.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="soXIQXuo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DAD4C4CEE4;
+	Sat,  5 Apr 2025 15:15:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743866112;
+	bh=yARVkcdohPfQmnXkIQCzfyOpcF1SCB0AE+9reKP2B20=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=soXIQXuo0bkqepraJrNrC5lVOcZrYCHP3zd0g0pscbfmxxhg9tHbeBStQkX1s8zjc
+	 56glFahxiGSfR3h/lmlmrCP2seJ6RL5uj62tJEaIp7KNEqcqv3Fj5ZThpxiniVUC6b
+	 bjqjgt7zdGgkwpchrhqCZ19RSVgmmNbKy3EV6TwicdlBMM+kWjYG1mT5CUQB32P4co
+	 gELjnHIk0I0Kx3In7IGlaiiRfRES0YCTZ8uFA9tcbc1svHxQZDJEmH8j1A/NRl2dg/
+	 YykIHc9DAc1aYrRadMU/5RBBk/FvuonFyO+WIqRGTp3W2jKpa9qw7+X4a5bmYMeNNy
+	 o3mtDAeTe5d3A==
+Date: Sat, 5 Apr 2025 16:15:04 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Lukasz Luba <lukasz.luba@arm.com>
+Cc: Svyatoslav Ryhel <clamor95@gmail.com>, linux-pm@vger.kernel.org,
+ devicetree@vger.kernel.org, Laxman Dewangan <ldewangan@nvidia.com>, Conor
+ Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Rob
+ Herring <robh@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>,
+ Zhang Rui <rui.zhang@intel.com>, linux-kernel@vger.kernel.org, "Rafael J.
+ Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH v3 2/2] thermal: thermal-generic-adc: add temperature
+ sensor channel
+Message-ID: <20250405161504.6d2cc27d@jic23-huawei>
+In-Reply-To: <67659d9d-f228-42ac-b096-01020bf66b7f@arm.com>
+References: <20250303122151.91557-1-clamor95@gmail.com>
+	<20250303122151.91557-3-clamor95@gmail.com>
+	<3bc7c5a5-8fe7-4c4b-a80e-23522922debb@arm.com>
+	<CAPVz0n0yvw4kyYKSve9sSZEvcZrCYZ6RqCjFSO5OCqtvRZSfJg@mail.gmail.com>
+	<f56596fe-92e8-481b-b15b-29b531eaec32@arm.com>
+	<CAPVz0n2ywjm+nLQ+ZAYbR1P6yCr8FQgOMeDT07s_YHZ7xA_6uA@mail.gmail.com>
+	<67659d9d-f228-42ac-b096-01020bf66b7f@arm.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cff65757c4665a81397ef5f559b277f96d4236c3.1743774849.git.cy_huang@richtek.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Thu, 6 Mar 2025 10:04:01 +0000
+Lukasz Luba <lukasz.luba@arm.com> wrote:
 
-kernel test robot noticed the following build errors:
+> On 3/6/25 09:49, Svyatoslav Ryhel wrote:
+> > =D1=81=D1=80, 5 =D0=B1=D0=B5=D1=80. 2025=E2=80=AF=D1=80. =D0=BE 16:37 L=
+ukasz Luba <lukasz.luba@arm.com> =D0=BF=D0=B8=D1=88=D0=B5: =20
+> >>
+> >>
+> >>
+> >> On 3/5/25 10:06, Svyatoslav Ryhel wrote: =20
+> >>> =D1=81=D1=80, 5 =D0=B1=D0=B5=D1=80. 2025=E2=80=AF=D1=80. =D0=BE 11:52=
+ Lukasz Luba <lukasz.luba@arm.com> =D0=BF=D0=B8=D1=88=D0=B5: =20
+> >>>>
+> >>>>
+> >>>>
+> >>>> On 3/3/25 12:21, Svyatoslav Ryhel wrote: =20
+> >>>>> To avoid duplicating sensor functionality and conversion tables, th=
+is design
+> >>>>> allows converting an ADC IIO channel's output directly into a tempe=
+rature IIO
+> >>>>> channel. This is particularly useful for devices where hwmon isn't =
+suitable
+> >>>>> or where temperature data must be accessible through IIO.
+> >>>>>
+> >>>>> One such device is, for example, the MAX17040 fuel gauge.
+> >>>>>
+> >>>>> Signed-off-by: Svyatoslav Ryhel <clamor95@gmail.com>
+> >>>>> ---
+> >>>>>     drivers/thermal/thermal-generic-adc.c | 54 ++++++++++++++++++++=
+++++++-
+> >>>>>     1 file changed, 53 insertions(+), 1 deletion(-)
+> >>>>>
+> >>>>> diff --git a/drivers/thermal/thermal-generic-adc.c b/drivers/therma=
+l/thermal-generic-adc.c =20
+> >>> ... =20
+> >>>>>
+> >>>>> +static const struct iio_chan_spec gadc_thermal_iio_channel[] =3D {
+> >>>>> +     {
+> >>>>> +             .type =3D IIO_TEMP,
+> >>>>> +             .info_mask_separate =3D BIT(IIO_CHAN_INFO_PROCESSED),=
+ =20
+> >>>>
+> >>>> I would add the IIO_CHAN_INFO_SCALE and say it's in milli-degrees.
+> >>>> =20
+> >>>
+> >>> I have hit this issue already with als sensor. This should definitely
+> >>> be a IIO_CHAN_INFO_PROCESSED since there is no raw temp data we have,
+> >>> it gets processed into temp data via conversion table. I will add
+> >>> Jonathan Cameron to list if you don't mind, he might give some good
+> >>> advice. =20
+> >>
+> >> I'm not talking about 'PROCESSED' vs 'RAW'...
+> >> I'm asking if you can add the 'SCALE' case to handle and report
+> >> that this device will report 'processed' temp value in milli-degrees
+> >> of Celsius.
+> >> =20
+> >=20
+> > It seems that SCALE is not applied to PROCESSED channel. I can use RAW
+> > which would work as intended and I will add a note in commit
+> > description why I used RAW. Would that be acceptable?
 
-[auto build test ERROR on a2cc6ff5ec8f91bc463fd3b0c26b61166a07eb11]
+Indeed. SCALE is only about RAW channels because if they are processed
+you have already applied the scale (typically because it wasn't linear)
 
-url:    https://github.com/intel-lab-lkp/linux/commits/cy_huang-richtek-com/ASoC-dt-bindings-Add-bindings-for-Richtek-rt9123/20250404-223054
-base:   a2cc6ff5ec8f91bc463fd3b0c26b61166a07eb11
-patch link:    https://lore.kernel.org/r/cff65757c4665a81397ef5f559b277f96d4236c3.1743774849.git.cy_huang%40richtek.com
-patch subject: [PATCH 2/4] ASoC: codecs: Add support for Richtek rt9123
-config: powerpc64-randconfig-003-20250405 (https://download.01.org/0day-ci/archive/20250405/202504052244.bgS5yxev-lkp@intel.com/config)
-compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250405/202504052244.bgS5yxev-lkp@intel.com/reproduce)
+> >  =20
+>=20
+> In that case, yes that would be the preferred solution.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504052244.bgS5yxev-lkp@intel.com/
+I nearly missed this entirely as it was buried in my unfiltered email.
+Thanks for the +CC.
 
-All errors (new ones prefixed by >>):
+Given this is a IIO driver (be it in thermal)
+please +CC linux-iio@vger.kernel.org to get review of that part of it.
 
->> sound/soc/codecs/rt9123.c:476:17: error: use of undeclared identifier 'rt9123_dev_pm_ops'; did you mean 'rt9123_dai_ops'?
-     476 |                 .pm = pm_ptr(&rt9123_dev_pm_ops),
-         |                               ^~~~~~~~~~~~~~~~~
-         |                               rt9123_dai_ops
-   include/linux/pm.h:471:53: note: expanded from macro 'pm_ptr'
-     471 | #define pm_ptr(_ptr) PTR_IF(IS_ENABLED(CONFIG_PM), (_ptr))
-         |                                                     ^
-   include/linux/kernel.h:48:38: note: expanded from macro 'PTR_IF'
-      48 | #define PTR_IF(cond, ptr)       ((cond) ? (ptr) : NULL)
-         |                                            ^
-   sound/soc/codecs/rt9123.c:293:37: note: 'rt9123_dai_ops' declared here
-     293 | static const struct snd_soc_dai_ops rt9123_dai_ops = {
-         |                                     ^
->> sound/soc/codecs/rt9123.c:476:9: error: incompatible pointer types initializing 'const struct dev_pm_ops *' with an expression of type 'const struct snd_soc_dai_ops *' [-Werror,-Wincompatible-pointer-types]
-     476 |                 .pm = pm_ptr(&rt9123_dev_pm_ops),
-         |                       ^~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/pm.h:471:22: note: expanded from macro 'pm_ptr'
-     471 | #define pm_ptr(_ptr) PTR_IF(IS_ENABLED(CONFIG_PM), (_ptr))
-         |                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/kernel.h:48:27: note: expanded from macro 'PTR_IF'
-      48 | #define PTR_IF(cond, ptr)       ((cond) ? (ptr) : NULL)
-         |                                 ^~~~~~~~~~~~~~~~~~~~~~~
-   2 errors generated.
+Note, in general if you do a driver out of subsystem (and there
+are good reasons to do that!) please +CC the other subsystem and
+maintainers as well. We do that for IIO drivers that have a gpio
+chip for instance. I specifically check they are +CC and wait for
+an Ack before merging such drivers.
 
+Thanks,
 
-vim +476 sound/soc/codecs/rt9123.c
+Jonathan
 
-   470	
-   471	static struct i2c_driver rt9123_i2c_driver = {
-   472		.driver = {
-   473			.name = "rt9123",
-   474			.of_match_table = of_match_ptr(rt9123_device_id),
-   475			.acpi_match_table = ACPI_PTR(rt9123_acpi_match),
- > 476			.pm = pm_ptr(&rt9123_dev_pm_ops),
-   477		},
-   478		.probe	= rt9123_i2c_probe,
-   479	};
-   480	module_i2c_driver(rt9123_i2c_driver);
-   481	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
