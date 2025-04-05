@@ -1,86 +1,95 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 748481C84B1;
-	Sat,  5 Apr 2025 11:43:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BB3014F125
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 11:46:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743853387; cv=none; b=oNW1JfOOdaTa+zJQ/GdIvuosxQ3UZMow2jxNRkoJYpyOl1Vx92RsTRm5oBnzT7901ol9XVbEG/CCSD9YUSxpoKOs7XK7+JIK7Y074BIV3DqNm/i5G13TrSP8j97Qm5PocQQ08CApot4CYFwjm8Kf4hA2XXk4NIiWDQ5M/egVQOU=
+	t=1743853584; cv=none; b=hW/+/N0uUzvUM8NNlEdk15SDEhczV+jaAzbT/exYeAPXedPyeUOTK5GIVzBMjJj+eY2GJzRNeYybpgZwlw9xxJcm6t5FxTookcL5YMt4QwW+ZTDjsEhy1N2IDDvXECeiWFCw1vA3HyIPM4qQf/6RIP6ra7d/X1P5wBwE11roGCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743853387; c=relaxed/simple;
-	bh=IeHWiIJlta9V/CcKkQRliZD2ZLDbrn5xIAUOm4xlQVI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZCqRLM15DqDMw+22gxWZcADKMmIurwEiqgegMNyyh7HrLTJLIhmMyhtHDxaU9pCnku6gTv833taWvJRYuudRF1rNM+hTA7S3/U3yAfRIZzBwub4Li4Mp7AqQ4wV5GfgpUaC0FxkTO/o0eHPCRBghapNQQjG6kezey0GMjrRXkKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Fv/saHJr; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743853584; c=relaxed/simple;
+	bh=E3cJzFO09HHlBuLQngMYyTEI3wsR9XGMgQn5Osybd8w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=T4k0Rg7Yk47sIoKbaq/39gwDa8fqlmoZ0C6lrHKbAv6XAEFzbT6vxLHdubrVisx7rdeH1NmMKBtoSs8YPNrQk7BbDXGmLyKCj+FrVfnioKvModZzY1ItooJSuJmxp6JfwO5xNVWGPcV8H6tD3Pk/X9Yh2pRnqJTUCLUgCBdfzLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=gpxvxE6N; arc=none smtp.client-ip=209.85.166.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fv/saHJr"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5e677f59438so4496509a12.2;
-        Sat, 05 Apr 2025 04:43:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="gpxvxE6N"
+Received: by mail-il1-f176.google.com with SMTP id e9e14a558f8ab-3d58908c43fso8338215ab.0
+        for <linux-kernel@vger.kernel.org>; Sat, 05 Apr 2025 04:46:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743853384; x=1744458184; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AAQCxkgn54QHpXGK+XuJQEXzbLMiEpvUoIf5Iinc0gE=;
-        b=Fv/saHJrjyX3cexJlO0aOUuZfmdZlkeQIJfN0r5C7hSKeU7rNWu4qdXWM77i0z+R8L
-         kT3cOA8q9v2f8W38GU0wqPOveIv11EFC2Ll+6j/LpF/KueOuss5135HIVt7D5tWUdkFA
-         HVqE6v68itnIK0tt3PAmxm0iEGAKv5RQqiocnJ+hLZ/AZbcW26yuzAVRHfDqMojf9mc7
-         mfobIu3agnQb5zXbXL6XuwBvC4tPuUzVgtVkdg2AkCfys9VMNM7FuNGB/X1k3tcRLxIe
-         sxPiqhu/JyOrgn3QtxuT1H0xMRhIDr3QruqnOz2qRSWn7ShgI8Qo6BscfnDiiI1TMT+E
-         FdZQ==
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1743853580; x=1744458380; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=dHH9C4N5IBPt5oRyziyD2Fv2/x4KMGs0avXPaT06lvw=;
+        b=gpxvxE6NN9k6hxgcy9R1XtP3QqcAlPUBAG/v6HI7Apy73VZNbziBjjSs82oO0kHoe5
+         GiB28JMDNiBTuLj9UguxL6+cVVH84MCvzTQpOml3nqu2IPonJoJ0RVKXdsot5xvU2myF
+         tZvCTD3wJ/x8938grP0BG7y1I/hcmxVnE2qzs+3GaHzc7DvCQ7/1xX8MeCyIlKJxnjuN
+         JCqk0P/RR1B4EI6S+GaSXiI0nkSBc/zc7rECDAxBeK+mSrHW4Wk2P7I1je/q7sAGEk99
+         lHVv96kiE87DaN1p9YfAc5HGYoDUOoGJxH4zQXBz6kieiHmR4l2BT2sVk9zv72BFDi2O
+         DhGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743853384; x=1744458184;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AAQCxkgn54QHpXGK+XuJQEXzbLMiEpvUoIf5Iinc0gE=;
-        b=aimd3G+lvH1NUd19ZBl5jfXnx7VrUU6ApMyb9zdp9DXZxHO1+PHYjTH/q1nW9ThfaJ
-         th9xH97JV9GJ2cqVO7UX+7LyDWtmK70s98G8ggfEDkoBKgQgzbgMslDjT9dTFe3foOam
-         y2DwQvhRCr1Qv7Af1LaJRTvA39v2brrm5tsOqXeXIYjNRn3jRYDGVlIB2qtSlp3K5bnp
-         Sgq7dg2gG7jk7y0uOMsuZKhZmnCe/rv9BStbhmmBQr5UZF/P4k31qXjNmyRCcqYu2I6m
-         JYxhwumIvx1rxay7f02UjA5jjRonrOY96Dqf4joFCvrZZN1pIh/YCuwQajLNzq1T8uGZ
-         hNZg==
-X-Forwarded-Encrypted: i=1; AJvYcCVXqPMZKxLjD3swwCmWXN3Y4Jl5z/d5TBElUL/uUgwk4/N6Zbe/8HauA3k82CQafantqVO6okJk158XFA==@vger.kernel.org, AJvYcCWNdSsF8eQWMT5P8lC/8gvz0UHzcZspAbEf0IXqgpK2Ss0o2A/epD6fvONBmJsyPQaAxbDV1Mb4GSmLPUjU@vger.kernel.org
-X-Gm-Message-State: AOJu0YzaZMw9USU7a7wgQtkVrXplYBgCDichpmeiqRArxwhF+eEkBMU2
-	YZ2Qv+5yiG5Gv3dJzQFYbRucn1yHxzY48tTSP25khGhqJ5Gz4Es+R9f7B13T7HTBlxddYBTv8wX
-	q/iYvJdGL7lPM057sOQUYb8BXf9o=
-X-Gm-Gg: ASbGncvQcRYOwzAf6mJFBUt6Kn36oVuboinviR/KsOSeKRxqZHAZMADQ4Fz9erWnqfG
-	e855OafqJdU0Uvz8YjufBl9SMjqMeLaE5Sz071iI4vz9GqD0w14EuFBLzezK7fd46eRa4Hr/014
-	ko+szfRsPYzTod23iLY9SK8Cj21w==
-X-Google-Smtp-Source: AGHT+IGR49Meudv61iYvBzrEPGWBseWjPkmDlmkAguahpWMV8F7NVB92wvM8pzyr8lhEzQ+Zp2Axv76kLM28VS0iFds=
-X-Received: by 2002:a05:6402:350e:b0:5ec:9e9e:3c3 with SMTP id
- 4fb4d7f45d1cf-5f0b5da703fmr3990871a12.6.1743853383704; Sat, 05 Apr 2025
- 04:43:03 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743853580; x=1744458380;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dHH9C4N5IBPt5oRyziyD2Fv2/x4KMGs0avXPaT06lvw=;
+        b=DQQ+6gOAHeTWMyVmMyS7b8AaL9mr5kRkxiWDCFbmY7+ThCpfAGjZcMkGEE06RFkKXw
+         J+gFkwcuYkAByfbyaeLaZvyYvAoT9Mo3aO1xEbSaRWV1ooQPh3MoTAKUGasHr0voMlfR
+         RPguTfnlh2kK/pukHyEaQUTT7B3KYrRybAVXEOmrIHunCj1Zo110RYehLSsZGGukk7qi
+         nosZPy12XKSOaJC3llWMR/XOYmsQpGaOCcXNyB7WAHv1N1JJnRRS1wFkPKpRNgkX+yzE
+         CV6YCJ0/8ioD0H7VlH1M4Z1UbfYtyHVpfkzlcc2aDYFh86IWmX9DCsH6ENYUoY+vBwSO
+         C+nw==
+X-Forwarded-Encrypted: i=1; AJvYcCUQLzLGpnl/olt+rWTrh2H1eGHNTmIWMMjcHfkO+nT4UdUdsjmh/fgM9x0EhYqMnWoL4yRFxW0UjX8phkk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy66gL4XE/X6++6WrTwxVTiFlKKiL9A5bzcnGWU/+3WTMw66VOJ
+	mc84NNWGaPpbC2X7kmo33Kxw4mUZp3S7Cqs1N1KNMjkaO+20+MLdJMmNCM2mnBw=
+X-Gm-Gg: ASbGncvAlIGCtUMD2WqaEqReHLPyAlk42MkfgRITi/RLmbrwemMwvALcZQrOIck4SQT
+	0MHRoepLEi4HZCnlQ3Fqkmq9ENd6Myb/MbtueEgIlwwI1yScxvEfaIZYxJ2Pfj1jp/Wvs6Kugzy
+	WekAkVtCXrB/AtCXlcq5XVk8LtqFCeiPCdtd4d4jcq+4Ptg8hPD27mczdE4U0GVrvGa19cFp5Su
+	zJ27f3cnCuR980idTp2GWYnKhCvLDMQE+03LrKr2yzEdLzq4VImcBzVDD6Xhqh5kG7tVRwK/ynA
+	u3xqTZ2jPz9ejdDFf0h147vgxkb7Mby1yxnmF3JewQ==
+X-Google-Smtp-Source: AGHT+IEz7a+AUeoKGFZJv6A4BD3/TV3i+nexKQiCSL2XlPf9+gyFp+g4JfLTGFfUvvHvAzp0z8yiKg==
+X-Received: by 2002:a05:6e02:152a:b0:3d3:d994:e92e with SMTP id e9e14a558f8ab-3d6e5876fa9mr59647335ab.17.1743853580162;
+        Sat, 05 Apr 2025 04:46:20 -0700 (PDT)
+Received: from [192.168.1.150] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f4b5c2e0a8sm1286698173.14.2025.04.05.04.46.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 05 Apr 2025 04:46:19 -0700 (PDT)
+Message-ID: <67159ae6-3dd9-4d40-a6b1-643d18e8b3a1@kernel.dk>
+Date: Sat, 5 Apr 2025 05:46:18 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <67f0f9ff.df0a0220.33076c.f0e5@mx.google.com> <CAMyr_bJpE=NHi4bS=_eAWcm1gxKiKDA3YQ_mYRCDi3tjuBjknQ@mail.gmail.com>
- <2025040505-colonial-pencil-69b4@gregkh>
-In-Reply-To: <2025040505-colonial-pencil-69b4@gregkh>
-From: Richard Akintola <princerichard17a@gmail.com>
-Date: Sat, 5 Apr 2025 12:42:35 +0100
-X-Gm-Features: ATxdqUFvWlhgf0Awd-vyZfu_-zhGNfH85tFXXZeE6evOOSEAfi9M90Pk7W_DZtQ
-Message-ID: <CAMyr_bKq9dnc2bzu=qq1pCsqkHwMxK+xLApbOy45MYtXLXnTBg@mail.gmail.com>
-Subject: Re: [PATCH 1/8] staging: sm750fb: change sii164GetDeviceID to snake_case
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: sudipm.mukherjee@gmail.com, linux-fbdev@vger.kernel.org, 
-	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [syzbot] [io-uring?] INFO: task hung in io_wq_put_and_exit (4)
+To: syzbot <syzbot+58928048fd1416f1457c@syzkaller.appspotmail.com>,
+ asml.silence@gmail.com, io-uring@vger.kernel.org,
+ linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+References: <67f06309.050a0220.0a13.0226.GAE@google.com>
+Content-Language: en-US
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <67f06309.050a0220.0a13.0226.GAE@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sat, Apr 5, 2025 at 12:06=E2=80=AFPM Greg KH <gregkh@linuxfoundation.org=
-> wrote:
+On 4/4/25 4:54 PM, syzbot wrote:
+> Hello,
+> 
+> syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+> unregister_netdevice: waiting for DEV to become free
+> 
+> unregister_netdevice: waiting for batadv0 to become free. Usage count = 3
 
-> All of these need to be linked together, you are sending them
-> individually.  Please use a tool like 'git send-email' that does this
-> automatically for you, because as-is, I can't take these, sorry.
+Guess there's some mainline issue causing these failures... Let's try
+on a 6.14 base:
 
-Noted, would do just that.
-Thanks.
+#syz test: git://git.kernel.dk/linux.git syztest
 
-Richard Akintola
+-- 
+Jens Axboe
+
