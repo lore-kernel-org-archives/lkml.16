@@ -1,55 +1,55 @@
-Received: from mail-io1-f74.google.com (mail-io1-f74.google.com [209.85.166.74])
+Received: from mail-io1-f73.google.com (mail-io1-f73.google.com [209.85.166.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C4A91C27
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 00:10:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2954964D
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 00:10:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743811848; cv=none; b=dxRQrPrFc0PcFt/LzDw70Q4urVoNJjRZl8aieQ8g73vBDA5iz5VH7yGJsA9HTA/TKa5gXkZKljk8SiLvHCGWIWmBe+yVFkX1YfUEfBFdAbS4/NqQltZf2+Jr1E3ON6wYFIDXswCTLs4IUxSTqwEsuHBO3baaltjTJpJl04qXVjw=
+	t=1743811848; cv=none; b=WwHtwHPngZm6rR+cKED8HwjpF8QNdCGpfYFXnXErF0WoTvHQGKiTxKuwrnC7r+QGFqCWiXohVmjnWnM78DEedXNA/iJAHmMh+OJCj/RulK1mOtczuWUBtLv3sJ5kCxpKxJEYhXncmqbpDk/OdXot6IDbzuQYb7heMMJnLLWQhEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1743811848; c=relaxed/simple;
-	bh=eb9ivKenV6eSeMfJ8jsJ4zcf/HhA0ll43TAeZRApRYE=;
+	bh=YCFqf2q84Sm/Q1XdtLaGCo1ig5fqocJsCum2qPik8l4=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Wv7oBhYZsioPgiEV8llmXUjtWezwjNg7/cKj1Z+PUz7PTe7CWMdHTDiPdKusx9JLJdKKxoIhZq+kMYyBi0oitqTkiZfx8sXcmIELF+Jn0S70neKS73h9gK/s7Re711mTC1zXTnYwkvSvGGB1a+HJfK/RNuT3ibxeQBNM6UouM9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--rananta.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HZJjVgfU; arc=none smtp.client-ip=209.85.166.74
+	 To:Cc:Content-Type; b=RBZUmj5WAmQQAZvTv1XlrfpzqbXktp51Hr6tAygr+poUjbVZAcweSf5DQ0Lrh11RQC2zVLIij+dI1cErc8Y13lAhxLmmcHJFiFRhG+C/J6QcUGfatx6WLDdiifEy7oqmd0+iAvTHAvt/IrcayoAgPoLoTXoLzbDxk0htPtib/JI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--rananta.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2M7rRo9t; arc=none smtp.client-ip=209.85.166.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--rananta.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HZJjVgfU"
-Received: by mail-io1-f74.google.com with SMTP id ca18e2360f4ac-85d9a52717aso360125139f.1
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 17:10:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2M7rRo9t"
+Received: by mail-io1-f73.google.com with SMTP id ca18e2360f4ac-85b5875e250so297045039f.0
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 17:10:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743811847; x=1744416647; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1743811845; x=1744416645; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Pe2bIRfllqLhJxxHpJNmnpza0I+tDqutdvnRlHikMBQ=;
-        b=HZJjVgfU7N7pa6L1D0+d8FOwL6YmONikNUdAbK2u4bcAcLaEGxnqbaHFYyFsOcdeMk
-         8iFvDch1eLKL22N3w1bt5hN92AoicwYHpTfgVPYSyZDmeGplVrfLgUXK2ijKYV9IuvK5
-         5L/1r5jnsN33IWmM6wzZcDanwTsK7Z/pCdMlTkHPSkH3os7S7naojAYZYL4MVU9qn948
-         6wiAn4cYYICZNViupPpw4Km6mkoZHTIDPknUAw6pC4hPFqunkCkmLrc1tdPi7j/tsF3L
-         2za3n8TlmZMABPed312qYh3n5FHpodACepxf7zHnzPgPpwxkBlDu04m0/yCeBYWiOjAd
-         27CQ==
+        bh=ClkE+3sE7+kWf5twKe62RSOxAn4PaMKVpn27pL4jQgU=;
+        b=2M7rRo9teU2nK1k1js+aJocmVljva2ihGTldCcutgZtkN5b/KTAPswQRq0Doadwn8E
+         1Els+/FMlqqLSch2nsU9fP4I1sudNGmDNFSPGmLQqJrk9hbnZ1qBZeXlaSJXrS2azNYj
+         ni7vlBUkkNLgRfqQGQ4PEAC4qdhNXGNTcRJU09dXt3YOprBdGtaUHaKrKNAz4K8uZljP
+         1C4xBxNoli5If24Gcn1PQfustYayokPYSZSc5cmZT2FaI2Oh0mwt58v7uGxGmgSFuJhi
+         aqyq2utS8BAV6OY4hL+O/jM8nxBKjr8wMa49RVAfZz6zf3rY/slZVucGp44ldhrqUVyk
+         HZxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743811847; x=1744416647;
+        d=1e100.net; s=20230601; t=1743811845; x=1744416645;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Pe2bIRfllqLhJxxHpJNmnpza0I+tDqutdvnRlHikMBQ=;
-        b=bnzWCBVGyPcpfBjMkTYqxWTWfGBT7uzkDBVIWw4nWv0nXBIh7iQKgAij4a3KGivHtc
-         62yVVdkmjsZGPYjjJ6LlqpN2vPB6v0vWoRHhBXcNHP91dsT4wdKytG07JeIjtFNW3u8Y
-         JLoKLVFTuUVjp0smbV1njbwG+XG7HhSR4mlonAUJaGIO1LmlxetEM0Qpm7MYWZbEg+Yn
-         hjFOeAWJFfnU/Q1YUDzVKk7euD5SJcs6mPjHwm8eVj08eVjLLQCudulMBoLWiyDnP2x/
-         Vt7ImF0EJeaR2lvEVUHAF/Ssuv3FDGSnuvWQF6gIauTJfQb3YbnXLEPG4606sROEhRQ5
-         zwXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXG+LinWUjAZe5tCb5JwMZbqUusPJ3dkfOxLR929/VuW6/HF4MuUumbkHtUopZCLfYMS620jJGmJjsTTpw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx42zYgQOUo1Q50r+vts/TWGgfJ5m3pRYIyxatjWrDerIEuii+V
-	rmKjJM7gPTy6BojTMskUWZthbGxH2UUYUdLj5doH44t+QE9YzRzrGnbexEiBDEGVkhb+4YFW6gK
-	zLxJ9aQ==
-X-Google-Smtp-Source: AGHT+IF1StR86BOR3Add0XYDFbLf59K7X1ePZtATYMdVN91h6vHs+7fhLEgNJ0U//lXVpSgwej6JAhyyVci0
-X-Received: from iovo14.prod.google.com ([2002:a05:6602:13ce:b0:861:1f46:a1e3])
- (user=rananta job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6602:3a09:b0:85d:b26e:e194
- with SMTP id ca18e2360f4ac-8611c2f92e0mr488329639f.7.1743811846805; Fri, 04
- Apr 2025 17:10:46 -0700 (PDT)
-Date: Sat,  5 Apr 2025 00:10:42 +0000
+        bh=ClkE+3sE7+kWf5twKe62RSOxAn4PaMKVpn27pL4jQgU=;
+        b=PbpJHFzkoXzJrBCWIyVVzeOQwNQMGqBF5uuw2g+AjHZo91gEw41T/GhPz2LftCF7MR
+         qrKA8wxhqRsFuSUWAm8ACYT3/ctWHn++6Cs2IiMNeMOkfFBZddJ66En6U3wgzGw8mAM6
+         av8B5rF9p7mdsenLYKq7wQWZ4yURwjF6yaV5VgTPa0Eui8zQfLQy4jvncvllvajZipxU
+         GxiMfVPbRNam76bF4aQI1eOWaEyr0Tl6OuWB+KA3NCsOCEsrTA/woEajPFpFiy2sTzJT
+         FtrpbU5l0qLVqe35ZHp8LMsKPi5xKEMYFb6godmq8EEEUNHqDAw4seXz3PHwz2pBfKMk
+         ax4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUO3fFs3hAJ3WoiWGT0XsiAuCFQ45YwmL+0jECxlgVmQgJpv5/aErY3ytO6kX3WJf5zoscgtoDCO1xbVf0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzG1dEkejHJURSxbq7kG2kG47pR5ujVqYxOIsxMLVg8go1MiQZb
+	yU+YsEWUyQMoO6uOYnpNE91azg04USZB3FpbxmywCmW6oEa4kp6yDXC3XQEgiYLxWzSZo1zeZEa
+	UMPhKxQ==
+X-Google-Smtp-Source: AGHT+IFEzmu31Uxv85/V+P1AR0jWlTmxgY/d6+j9O8XSeTzHg8/BNrhKvi96jcabZLHsWj6TArg5/rVTxVZf
+X-Received: from ilbbb4.prod.google.com ([2002:a05:6e02:4:b0:3d3:fe6e:97b4])
+ (user=rananta job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6e02:1542:b0:3d5:d743:8089
+ with SMTP id e9e14a558f8ab-3d6ec5336fdmr15573115ab.7.1743811845390; Fri, 04
+ Apr 2025 17:10:45 -0700 (PDT)
+Date: Sat,  5 Apr 2025 00:10:41 +0000
 In-Reply-To: <20250405001042.1470552-1-rananta@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,9 +59,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250405001042.1470552-1-rananta@google.com>
 X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
-Message-ID: <20250405001042.1470552-3-rananta@google.com>
-Subject: [PATCH v2 2/2] KVM: selftests: arm64: Explicitly set the page attrs
- to Inner-Shareable
+Message-ID: <20250405001042.1470552-2-rananta@google.com>
+Subject: [PATCH v2 1/2] KVM: selftests: arm64: Introduce and use
+ hardware-definition macros
 From: Raghavendra Rao Ananta <rananta@google.com>
 To: Oliver Upton <oliver.upton@linux.dev>, Marc Zyngier <maz@kernel.org>
 Cc: Raghavendra Rao Anata <rananta@google.com>, Mingwei Zhang <mizhang@google.com>, 
@@ -70,62 +70,277 @@ Cc: Raghavendra Rao Anata <rananta@google.com>, Mingwei Zhang <mizhang@google.co
 	Oliver Upton <oupton@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Atomic instructions such as 'ldset' over (global) variables in the guest
-is observed to cause an EL1 data abort with FSC 0x35 (IMPLEMENTATION
-DEFINED fault (Unsupported Exclusive or Atomic access)). The observation
-was particularly apparent on Neoverse-N3.
+The kvm selftest library for arm64 currently configures the hardware
+fields, such as shift and mask in the page-table entries and registers,
+directly with numbers. While it add comments at places, it's better to
+rewrite them with appropriate macros to improve the readability and
+reduce the risk of errors. Hence, introduce macros to define the
+hardware fields and use them in the arm64 processor library.
 
-According to ARM ARM DDI0487L.a B2.2.6 (Possible implementation
-restrictions on using atomic instructions), atomic instructions are
-architecturally guaranteed for Inner Shareable and Outer Shareable
-attributes. For Non-Shareable attribute, the atomic instructions are
-not atomic and issuing such an instruction can lead to the FSC
-mentioned in this case (among other things).
+Most of the definitions are primary copied from the Linux's header,
+arch/arm64/include/asm/pgtable-hwdef.h.
 
-Moreover, according to DDI0487L.a C3.2.6 (Single-copy atomic 64-byte
-load/store), it is implementation defined that a data abort with the
-mentioned FSC is reported for the first stage of translation that
-provides an inappropriate memory type. It's likely that Neoverse-N3
-chose to implement these two and why we see an FSC of 0x35 in EL1 upon
-executing atomic instructions.
-
-ARM64 KVM selftests sets no shareable attributes, which makes them
-Non-Shareable by default. Hence, explicitly set them as Inner-Shareable
-to fix this issue.
+No functional change intended.
 
 Suggested-by: Oliver Upton <oupton@google.com>
 Signed-off-by: Raghavendra Rao Ananta <rananta@google.com>
 ---
- tools/testing/selftests/kvm/include/arm64/processor.h | 1 +
- tools/testing/selftests/kvm/lib/arm64/processor.c     | 3 +++
- 2 files changed, 4 insertions(+)
+ .../selftests/kvm/arm64/page_fault_test.c     |  2 +-
+ .../selftests/kvm/include/arm64/processor.h   | 66 +++++++++++++++++--
+ .../selftests/kvm/lib/arm64/processor.c       | 57 ++++++++--------
+ 3 files changed, 92 insertions(+), 33 deletions(-)
 
+diff --git a/tools/testing/selftests/kvm/arm64/page_fault_test.c b/tools/testing/selftests/kvm/arm64/page_fault_test.c
+index ec33a8f9c908..dc6559dad9d8 100644
+--- a/tools/testing/selftests/kvm/arm64/page_fault_test.c
++++ b/tools/testing/selftests/kvm/arm64/page_fault_test.c
+@@ -199,7 +199,7 @@ static bool guest_set_ha(void)
+ 	if (hadbs == 0)
+ 		return false;
+ 
+-	tcr = read_sysreg(tcr_el1) | TCR_EL1_HA;
++	tcr = read_sysreg(tcr_el1) | TCR_HA;
+ 	write_sysreg(tcr, tcr_el1);
+ 	isb();
+ 
 diff --git a/tools/testing/selftests/kvm/include/arm64/processor.h b/tools/testing/selftests/kvm/include/arm64/processor.h
-index 7d88ff22013a..b0fc0f945766 100644
+index 1e8d0d531fbd..7d88ff22013a 100644
 --- a/tools/testing/selftests/kvm/include/arm64/processor.h
 +++ b/tools/testing/selftests/kvm/include/arm64/processor.h
-@@ -113,6 +113,7 @@
- #define PMD_TYPE_TABLE		BIT(1)
- #define PTE_TYPE_PAGE		BIT(1)
+@@ -62,6 +62,66 @@
+ 	 MAIR_ATTRIDX(MAIR_ATTR_NORMAL, MT_NORMAL) |				\
+ 	 MAIR_ATTRIDX(MAIR_ATTR_NORMAL_WT, MT_NORMAL_WT))
  
-+#define PTE_SHARED		(UL(3) << 8) /* SH[1:0], inner shareable */
- #define PTE_AF			BIT(10)
++/* TCR_EL1 specific flags */
++#define TCR_T0SZ_OFFSET	0
++#define TCR_T0SZ(x)		((UL(64) - (x)) << TCR_T0SZ_OFFSET)
++
++#define TCR_IRGN0_SHIFT	8
++#define TCR_IRGN0_MASK		(UL(3) << TCR_IRGN0_SHIFT)
++#define TCR_IRGN0_NC		(UL(0) << TCR_IRGN0_SHIFT)
++#define TCR_IRGN0_WBWA		(UL(1) << TCR_IRGN0_SHIFT)
++#define TCR_IRGN0_WT		(UL(2) << TCR_IRGN0_SHIFT)
++#define TCR_IRGN0_WBnWA	(UL(3) << TCR_IRGN0_SHIFT)
++
++#define TCR_ORGN0_SHIFT	10
++#define TCR_ORGN0_MASK		(UL(3) << TCR_ORGN0_SHIFT)
++#define TCR_ORGN0_NC		(UL(0) << TCR_ORGN0_SHIFT)
++#define TCR_ORGN0_WBWA		(UL(1) << TCR_ORGN0_SHIFT)
++#define TCR_ORGN0_WT		(UL(2) << TCR_ORGN0_SHIFT)
++#define TCR_ORGN0_WBnWA	(UL(3) << TCR_ORGN0_SHIFT)
++
++#define TCR_SH0_SHIFT		12
++#define TCR_SH0_MASK		(UL(3) << TCR_SH0_SHIFT)
++#define TCR_SH0_INNER		(UL(3) << TCR_SH0_SHIFT)
++
++#define TCR_TG0_SHIFT		14
++#define TCR_TG0_MASK		(UL(3) << TCR_TG0_SHIFT)
++#define TCR_TG0_4K		(UL(0) << TCR_TG0_SHIFT)
++#define TCR_TG0_64K		(UL(1) << TCR_TG0_SHIFT)
++#define TCR_TG0_16K		(UL(2) << TCR_TG0_SHIFT)
++
++#define TCR_IPS_SHIFT		32
++#define TCR_IPS_MASK		(UL(7) << TCR_IPS_SHIFT)
++#define TCR_IPS_52_BITS	(UL(6) << TCR_IPS_SHIFT)
++#define TCR_IPS_48_BITS	(UL(5) << TCR_IPS_SHIFT)
++#define TCR_IPS_40_BITS	(UL(2) << TCR_IPS_SHIFT)
++#define TCR_IPS_36_BITS	(UL(1) << TCR_IPS_SHIFT)
++
++#define TCR_HA			(UL(1) << 39)
++#define TCR_DS			(UL(1) << 59)
++
++/*
++ * AttrIndx[2:0] encoding (mapping attributes defined in the MAIR* registers).
++ */
++#define PTE_ATTRINDX(t)	((t) << 2)
++#define PTE_ATTRINDX_MASK	GENMASK(4, 2)
++#define PTE_ATTRINDX_SHIFT	2
++
++#define PTE_VALID		BIT(0)
++#define PGD_TYPE_TABLE		BIT(1)
++#define PUD_TYPE_TABLE		BIT(1)
++#define PMD_TYPE_TABLE		BIT(1)
++#define PTE_TYPE_PAGE		BIT(1)
++
++#define PTE_AF			BIT(10)
++
++#define PTE_ADDR_MASK(page_shift)	GENMASK(47, (page_shift))
++#define PTE_ADDR_51_48			GENMASK(15, 12)
++#define PTE_ADDR_51_48_SHIFT		12
++#define PTE_ADDR_MASK_LPA2(page_shift)	GENMASK(49, (page_shift))
++#define PTE_ADDR_51_50_LPA2		GENMASK(9, 8)
++#define PTE_ADDR_51_50_LPA2_SHIFT	8
++
+ void aarch64_vcpu_setup(struct kvm_vcpu *vcpu, struct kvm_vcpu_init *init);
+ struct kvm_vcpu *aarch64_vcpu_add(struct kvm_vm *vm, uint32_t vcpu_id,
+ 				  struct kvm_vcpu_init *init, void *guest_code);
+@@ -102,12 +162,6 @@ enum {
+ 			   (v) == VECTOR_SYNC_LOWER_64    || \
+ 			   (v) == VECTOR_SYNC_LOWER_32)
  
- #define PTE_ADDR_MASK(page_shift)	GENMASK(47, (page_shift))
+-/* Access flag */
+-#define PTE_AF			(1ULL << 10)
+-
+-/* Access flag update enable/disable */
+-#define TCR_EL1_HA		(1ULL << 39)
+-
+ void aarch64_get_supported_page_sizes(uint32_t ipa, uint32_t *ipa4k,
+ 					uint32_t *ipa16k, uint32_t *ipa64k);
+ 
 diff --git a/tools/testing/selftests/kvm/lib/arm64/processor.c b/tools/testing/selftests/kvm/lib/arm64/processor.c
-index da5802c8a59c..9d69904cb608 100644
+index 7ba3aa3755f3..da5802c8a59c 100644
 --- a/tools/testing/selftests/kvm/lib/arm64/processor.c
 +++ b/tools/testing/selftests/kvm/lib/arm64/processor.c
-@@ -172,6 +172,9 @@ static void _virt_pg_map(struct kvm_vm *vm, uint64_t vaddr, uint64_t paddr,
+@@ -72,13 +72,13 @@ static uint64_t addr_pte(struct kvm_vm *vm, uint64_t pa, uint64_t attrs)
+ 	uint64_t pte;
+ 
+ 	if (use_lpa2_pte_format(vm)) {
+-		pte = pa & GENMASK(49, vm->page_shift);
+-		pte |= FIELD_GET(GENMASK(51, 50), pa) << 8;
+-		attrs &= ~GENMASK(9, 8);
++		pte = pa & PTE_ADDR_MASK_LPA2(vm->page_shift);
++		pte |= FIELD_GET(GENMASK(51, 50), pa) << PTE_ADDR_51_50_LPA2_SHIFT;
++		attrs &= ~PTE_ADDR_51_50_LPA2;
+ 	} else {
+-		pte = pa & GENMASK(47, vm->page_shift);
++		pte = pa & PTE_ADDR_MASK(vm->page_shift);
+ 		if (vm->page_shift == 16)
+-			pte |= FIELD_GET(GENMASK(51, 48), pa) << 12;
++			pte |= FIELD_GET(GENMASK(51, 48), pa) << PTE_ADDR_51_48_SHIFT;
+ 	}
+ 	pte |= attrs;
+ 
+@@ -90,12 +90,12 @@ static uint64_t pte_addr(struct kvm_vm *vm, uint64_t pte)
+ 	uint64_t pa;
+ 
+ 	if (use_lpa2_pte_format(vm)) {
+-		pa = pte & GENMASK(49, vm->page_shift);
+-		pa |= FIELD_GET(GENMASK(9, 8), pte) << 50;
++		pa = pte & PTE_ADDR_MASK_LPA2(vm->page_shift);
++		pa |= FIELD_GET(PTE_ADDR_51_50_LPA2, pte) << 50;
+ 	} else {
+-		pa = pte & GENMASK(47, vm->page_shift);
++		pa = pte & PTE_ADDR_MASK(vm->page_shift);
+ 		if (vm->page_shift == 16)
+-			pa |= FIELD_GET(GENMASK(15, 12), pte) << 48;
++			pa |= FIELD_GET(PTE_ADDR_51_48, pte) << 48;
  	}
  
- 	pg_attr = PTE_AF | PTE_ATTRINDX(attr_idx) | PTE_TYPE_PAGE | PTE_VALID;
-+	if (!use_lpa2_pte_format(vm))
-+		pg_attr |= PTE_SHARED;
-+
- 	*ptep = addr_pte(vm, paddr, pg_attr);
+ 	return pa;
+@@ -128,7 +128,8 @@ void virt_arch_pgd_alloc(struct kvm_vm *vm)
+ static void _virt_pg_map(struct kvm_vm *vm, uint64_t vaddr, uint64_t paddr,
+ 			 uint64_t flags)
+ {
+-	uint8_t attr_idx = flags & 7;
++	uint8_t attr_idx = flags & (PTE_ATTRINDX_MASK >> PTE_ATTRINDX_SHIFT);
++	uint64_t pg_attr;
+ 	uint64_t *ptep;
+ 
+ 	TEST_ASSERT((vaddr % vm->page_size) == 0,
+@@ -147,18 +148,21 @@ static void _virt_pg_map(struct kvm_vm *vm, uint64_t vaddr, uint64_t paddr,
+ 
+ 	ptep = addr_gpa2hva(vm, vm->pgd) + pgd_index(vm, vaddr) * 8;
+ 	if (!*ptep)
+-		*ptep = addr_pte(vm, vm_alloc_page_table(vm), 3);
++		*ptep = addr_pte(vm, vm_alloc_page_table(vm),
++				 PGD_TYPE_TABLE | PTE_VALID);
+ 
+ 	switch (vm->pgtable_levels) {
+ 	case 4:
+ 		ptep = addr_gpa2hva(vm, pte_addr(vm, *ptep)) + pud_index(vm, vaddr) * 8;
+ 		if (!*ptep)
+-			*ptep = addr_pte(vm, vm_alloc_page_table(vm), 3);
++			*ptep = addr_pte(vm, vm_alloc_page_table(vm),
++					 PUD_TYPE_TABLE | PTE_VALID);
+ 		/* fall through */
+ 	case 3:
+ 		ptep = addr_gpa2hva(vm, pte_addr(vm, *ptep)) + pmd_index(vm, vaddr) * 8;
+ 		if (!*ptep)
+-			*ptep = addr_pte(vm, vm_alloc_page_table(vm), 3);
++			*ptep = addr_pte(vm, vm_alloc_page_table(vm),
++					 PMD_TYPE_TABLE | PTE_VALID);
+ 		/* fall through */
+ 	case 2:
+ 		ptep = addr_gpa2hva(vm, pte_addr(vm, *ptep)) + pte_index(vm, vaddr) * 8;
+@@ -167,7 +171,8 @@ static void _virt_pg_map(struct kvm_vm *vm, uint64_t vaddr, uint64_t paddr,
+ 		TEST_FAIL("Page table levels must be 2, 3, or 4");
+ 	}
+ 
+-	*ptep = addr_pte(vm, paddr, (attr_idx << 2) | (1 << 10) | 3);  /* AF */
++	pg_attr = PTE_AF | PTE_ATTRINDX(attr_idx) | PTE_TYPE_PAGE | PTE_VALID;
++	*ptep = addr_pte(vm, paddr, pg_attr);
  }
  
+ void virt_arch_pg_map(struct kvm_vm *vm, uint64_t vaddr, uint64_t paddr)
+@@ -293,20 +298,20 @@ void aarch64_vcpu_setup(struct kvm_vcpu *vcpu, struct kvm_vcpu_init *init)
+ 	case VM_MODE_P48V48_64K:
+ 	case VM_MODE_P40V48_64K:
+ 	case VM_MODE_P36V48_64K:
+-		tcr_el1 |= 1ul << 14; /* TG0 = 64KB */
++		tcr_el1 |= TCR_TG0_64K;
+ 		break;
+ 	case VM_MODE_P52V48_16K:
+ 	case VM_MODE_P48V48_16K:
+ 	case VM_MODE_P40V48_16K:
+ 	case VM_MODE_P36V48_16K:
+ 	case VM_MODE_P36V47_16K:
+-		tcr_el1 |= 2ul << 14; /* TG0 = 16KB */
++		tcr_el1 |= TCR_TG0_16K;
+ 		break;
+ 	case VM_MODE_P52V48_4K:
+ 	case VM_MODE_P48V48_4K:
+ 	case VM_MODE_P40V48_4K:
+ 	case VM_MODE_P36V48_4K:
+-		tcr_el1 |= 0ul << 14; /* TG0 = 4KB */
++		tcr_el1 |= TCR_TG0_4K;
+ 		break;
+ 	default:
+ 		TEST_FAIL("Unknown guest mode, mode: 0x%x", vm->mode);
+@@ -319,35 +324,35 @@ void aarch64_vcpu_setup(struct kvm_vcpu *vcpu, struct kvm_vcpu_init *init)
+ 	case VM_MODE_P52V48_4K:
+ 	case VM_MODE_P52V48_16K:
+ 	case VM_MODE_P52V48_64K:
+-		tcr_el1 |= 6ul << 32; /* IPS = 52 bits */
++		tcr_el1 |= TCR_IPS_52_BITS;
+ 		ttbr0_el1 |= FIELD_GET(GENMASK(51, 48), vm->pgd) << 2;
+ 		break;
+ 	case VM_MODE_P48V48_4K:
+ 	case VM_MODE_P48V48_16K:
+ 	case VM_MODE_P48V48_64K:
+-		tcr_el1 |= 5ul << 32; /* IPS = 48 bits */
++		tcr_el1 |= TCR_IPS_48_BITS;
+ 		break;
+ 	case VM_MODE_P40V48_4K:
+ 	case VM_MODE_P40V48_16K:
+ 	case VM_MODE_P40V48_64K:
+-		tcr_el1 |= 2ul << 32; /* IPS = 40 bits */
++		tcr_el1 |= TCR_IPS_40_BITS;
+ 		break;
+ 	case VM_MODE_P36V48_4K:
+ 	case VM_MODE_P36V48_16K:
+ 	case VM_MODE_P36V48_64K:
+ 	case VM_MODE_P36V47_16K:
+-		tcr_el1 |= 1ul << 32; /* IPS = 36 bits */
++		tcr_el1 |= TCR_IPS_36_BITS;
+ 		break;
+ 	default:
+ 		TEST_FAIL("Unknown guest mode, mode: 0x%x", vm->mode);
+ 	}
+ 
+-	sctlr_el1 |= (1 << 0) | (1 << 2) | (1 << 12) /* M | C | I */;
+-	/* TCR_EL1 |= IRGN0:WBWA | ORGN0:WBWA | SH0:Inner-Shareable */;
+-	tcr_el1 |= (1 << 8) | (1 << 10) | (3 << 12);
+-	tcr_el1 |= (64 - vm->va_bits) /* T0SZ */;
++	sctlr_el1 |= SCTLR_ELx_M | SCTLR_ELx_C | SCTLR_ELx_I;
++
++	tcr_el1 |= TCR_IRGN0_WBWA | TCR_ORGN0_WBWA | TCR_SH0_INNER;
++	tcr_el1 |= TCR_T0SZ(vm->va_bits);
+ 	if (use_lpa2_pte_format(vm))
+-		tcr_el1 |= (1ul << 59) /* DS */;
++		tcr_el1 |= TCR_DS;
+ 
+ 	vcpu_set_reg(vcpu, KVM_ARM64_SYS_REG(SYS_SCTLR_EL1), sctlr_el1);
+ 	vcpu_set_reg(vcpu, KVM_ARM64_SYS_REG(SYS_TCR_EL1), tcr_el1);
 -- 
 2.49.0.504.g3bcea36a83-goog
 
