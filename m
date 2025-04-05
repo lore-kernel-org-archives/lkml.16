@@ -1,167 +1,147 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-20.smtpout.orange.fr [80.12.242.20])
+	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32AC52C9D;
-	Sat,  5 Apr 2025 16:21:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBE3F156F20;
+	Sat,  5 Apr 2025 16:23:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743870098; cv=none; b=H4CygYrnJP1U7YSMjukBbZa94Q0+BPLC2La1cDC7LdONb3MhoqUfkkiEjTkEtC4iInyI12xwuXfjGAjwZ4nq4IBYNdqWIFssls/d1yPC9uIjTXLs540qjBJJdRRMspDWz/1P64HcD5DLAuSmI8Gs42F4KkE6MFOBcQXgfrRzPkM=
+	t=1743870227; cv=none; b=rrOwtKwcs4K36Xsg/tZeQpvwaVG4MfAZfkXTQNESacASb0gjQ4dhaS+guHD/rZZ0yoNB/5VS9zhjDC+/2gOAGvmrkkNKzeGWg7IlNlI3J/6I9wu0L9wcLFS9lwJdqkTeFvqqcAxoAxKETJdM2v51+QqPTydIISce8rA73QWx2cg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743870098; c=relaxed/simple;
-	bh=FMZsCjVJoDuC4NgUGqJMQBqh8VxxWlRRa7DVpA+BNz8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Dst2p1pBPGHBcTlMa2otlGvRcj1v+3a8qFHY6es/UNbBeRifiGBgH+VVqn5p7gODSEPrtIb5Kcwd4MvammbrYMNQQLv1ZZ49Y/JKC05gr8ehpzQLID4zS/PvsmA+4ThaHECtsN7D+b8HNqMZbcqpGA0/0iFnWnbzB7xEle1jgqE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kTpEFuVj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743870227; c=relaxed/simple;
+	bh=U8/92TQg+GZ8k1Y8xxenbWikuxiwCkpnyeA42/KioUM=;
+	h=Message-ID:Date:MIME-Version:Subject:References:From:To:Cc:
+	 In-Reply-To:Content-Type; b=DuBgdaYkXQVSy3WdYGyo0j3LA5yD5zVf0VG25rjTFuW31yWy0Hbl97S6ULnk+Hiu4p78SPqlsUSkA/kZFSkbq6hFu370UKxzAqrr6K04Dn0vPzloRJerUmtnIrqq8t/ElCn/jDjRp8w96/fCQwwszqYOnoJdfylhdUjt7WIxSYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=Lm+A/M6F; arc=none smtp.client-ip=80.12.242.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kTpEFuVj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F58BC4CEE4;
-	Sat,  5 Apr 2025 16:21:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743870097;
-	bh=FMZsCjVJoDuC4NgUGqJMQBqh8VxxWlRRa7DVpA+BNz8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=kTpEFuVj9WbNNF0JOAUOLOzD02K9mz5bX9PGJGxcGVPiMmdetz3CfdLCvv1JGSdG0
-	 QI0mtEGCVzWR5i8on75QqhwgmM60YmhkAsncPmXhzOdSjGm+JMWsibClEP60B/Qiq8
-	 P9jwFv9cGPsNszJ+zYwb4mlO808zrskESmXWWIkS8tk3Rsz56xgmS54PadhIiQvOIZ
-	 Y8B56mRSdpDmd9rbVdBzuOw0YM7tFn2DmqPMMpGM9DHlKL3mEpH3XZUtfqwPwAidZY
-	 gecW013ZzURN1j+Riwl8ZPgNB1CF6SdgBK42nUwYcTseBtRWI2tWC/sgnvdUG4t9D+
-	 khSyy0Gh+Clzg==
-Date: Sat, 5 Apr 2025 17:21:33 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Julien Stephan <jstephan@baylibre.com>
-Cc: David Lechner <dlechner@baylibre.com>, Michael Hennerich
- <michael.hennerich@analog.com>, Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iio: adc: ad7380: fix event threshold shift
-Message-ID: <20250405172133.3262bed0@jic23-huawei>
-In-Reply-To: <CAEHHSvbt7v7OCbW4PEwgop74n_5NW8Una1-R3w3yUqu8-22=Dg@mail.gmail.com>
-References: <20250402-iio-adc-ad7380-fix-event-threshold-shift-v1-1-ad4975c296b2@baylibre.com>
-	<CAEHHSvbt7v7OCbW4PEwgop74n_5NW8Una1-R3w3yUqu8-22=Dg@mail.gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="Lm+A/M6F"
+Received: from [192.168.1.37] ([90.11.132.44])
+	by smtp.orange.fr with ESMTPA
+	id 16AQujHB2B4qz16ATueFIa; Sat, 05 Apr 2025 18:14:51 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1743869691;
+	bh=PMs5hy77UDHTud4mAKxiw5m0lSdqrg7l0TCWcb/Kf1c=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To;
+	b=Lm+A/M6FhcWWTUFBQLrfwyGVyYoZrKAUQqERyJYPKQ1yYc5RoHFez35SBba908sFr
+	 2PDnRHRuEqdtQCiWJSyY41hCi32HUmnB9hS2v09l6roFlrx6g1P+ROTOUm8MnwmyvW
+	 p1u7T+gQRYW0alXO75PVlRTajw+ZclgysJi+I0gY+0B/xBihJSIsb+TaEP8pe+aaGb
+	 CU+4CgZ5GTP9LpMDZ9k0tdqQj/XBb1ceJaNtnU+q/D9HLm/iDZoVM+nmN0B85gh1Rp
+	 ZPJ9WoHK2A1yGY9QYXhIC4WRqzt6kJib1mSZkPYKFuNJsR2HD/m+jraHANzqimYfkN
+	 uu5/rUTdzg3PQ==
+X-ME-Helo: [192.168.1.37]
+X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
+X-ME-Date: Sat, 05 Apr 2025 18:14:51 +0200
+X-ME-IP: 90.11.132.44
+Message-ID: <727b55b6-ccba-4498-be95-027a9f67dfa9@wanadoo.fr>
+Date: Sat, 5 Apr 2025 18:14:46 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] pci: tegra194: Fix debugfs cleanup for !CONFIG_PCIEASPM
+References: <20250405145459.26800-1-18255117159@163.com>
+Content-Language: en-US, fr-FR
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: 18255117159@163.com
+Cc: bhelgaas@google.com, jonathanh@nvidia.com, kw@linux.com,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-tegra@vger.kernel.org, lpieralisi@kernel.org,
+ manivannan.sadhasivam@linaro.org, robh@kernel.org, thierry.reding@gmail.com
+In-Reply-To: <20250405145459.26800-1-18255117159@163.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, 3 Apr 2025 13:45:41 +0200
-Julien Stephan <jstephan@baylibre.com> wrote:
+Le 05/04/2025 à 16:54, Hans Zhang a écrit :
+> When CONFIG_PCIEASPM is disabled, debugfs entries are not created, but
+> tegra_pcie_dw_remove() and tegra_pcie_dw_shutdown() unconditionally call
+> debugfs_remove_recursive(), leading to potential NULL pointer operations.
+> 
+> Introduce deinit_debugfs() to wrap debugfs_remove_recursive(), which is
+> stubbed for !CONFIG_PCIEASPM. Use this function during removal/shutdown to
+> ensure debugfs cleanup only occurs when entries were initialized.
+> 
+> This prevents kernel warnings and instability when ASPM support is
+> disabled.
+> 
 
-> Le jeu. 3 avr. 2025 =C3=A0 01:56, David Lechner <dlechner@baylibre.com> a=
- =C3=A9crit :
-> >
-> > Add required bit shift to the event threshold read function to get
-> > correct scaling.
-> >
-> > When alert support was added, the write function correctly included the
-> > required shift needed to convert the threshold register value to the
-> > same scale as the raw ADC value. However, the shift got missed in the
-> > read function. =20
->=20
-> Hi David,
->=20
-> Thank you for fixing that. LGTM
->=20
-> Reviewed-by: Julien Stephan <jstephan@baylibre.com>
-Applied to the fixes-togreg branch of iio.git
+Could you elaborate?
 
-Thanks,
 
-J
->=20
-> >
-> > Fixes: 27d1a4dbe1e1 ("iio: adc: ad7380: add alert support")
-> > Signed-off-by: David Lechner <dlechner@baylibre.com>
-> > ---
-> >  drivers/iio/adc/ad7380.c | 25 +++++++++++++++++++------
-> >  1 file changed, 19 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/drivers/iio/adc/ad7380.c b/drivers/iio/adc/ad7380.c
-> > index 4fcb49fdf56639784098f0147a9faef8dcb6b0f6..f3962a45e1e5b88cebf712c=
-c867fbb576d3ca058 100644
-> > --- a/drivers/iio/adc/ad7380.c
-> > +++ b/drivers/iio/adc/ad7380.c
-> > @@ -1611,11 +1611,25 @@ static int ad7380_write_event_config(struct iio=
-_dev *indio_dev,
-> >         return ret;
-> >  }
-> >
-> > -static int ad7380_get_alert_th(struct ad7380_state *st,
-> > +static int ad7380_get_alert_th(struct iio_dev *indio_dev,
-> > +                              const struct iio_chan_spec *chan,
-> >                                enum iio_event_direction dir,
-> >                                int *val)
-> >  {
-> > -       int ret, tmp;
-> > +       struct ad7380_state *st =3D iio_priv(indio_dev);
-> > +       const struct iio_scan_type *scan_type;
-> > +       int ret, tmp, shift;
-> > +
-> > +       scan_type =3D iio_get_current_scan_type(indio_dev, chan);
-> > +       if (IS_ERR(scan_type))
-> > +               return PTR_ERR(scan_type);
-> > +
-> > +       /*
-> > +        * The register value is 12-bits and is compared to the most si=
-gnificant
-> > +        * bits of raw value, therefore a shift is required to convert =
-this to
-> > +        * the same scale as the raw value.
-> > +        */
-> > +       shift =3D scan_type->realbits - 12;
-> >
-> >         switch (dir) {
-> >         case IIO_EV_DIR_RISING:
-> > @@ -1625,7 +1639,7 @@ static int ad7380_get_alert_th(struct ad7380_stat=
-e *st,
-> >                 if (ret)
-> >                         return ret;
-> >
-> > -               *val =3D FIELD_GET(AD7380_ALERT_HIGH_TH, tmp);
-> > +               *val =3D FIELD_GET(AD7380_ALERT_HIGH_TH, tmp) << shift;
-> >                 return IIO_VAL_INT;
-> >         case IIO_EV_DIR_FALLING:
-> >                 ret =3D regmap_read(st->regmap,
-> > @@ -1634,7 +1648,7 @@ static int ad7380_get_alert_th(struct ad7380_stat=
-e *st,
-> >                 if (ret)
-> >                         return ret;
-> >
-> > -               *val =3D FIELD_GET(AD7380_ALERT_LOW_TH, tmp);
-> > +               *val =3D FIELD_GET(AD7380_ALERT_LOW_TH, tmp) << shift;
-> >                 return IIO_VAL_INT;
-> >         default:
-> >                 return -EINVAL;
-> > @@ -1648,7 +1662,6 @@ static int ad7380_read_event_value(struct iio_dev=
- *indio_dev,
-> >                                    enum iio_event_info info,
-> >                                    int *val, int *val2)
-> >  {
-> > -       struct ad7380_state *st =3D iio_priv(indio_dev);
-> >         int ret;
-> >
-> >         switch (info) {
-> > @@ -1656,7 +1669,7 @@ static int ad7380_read_event_value(struct iio_dev=
- *indio_dev,
-> >                 if (!iio_device_claim_direct(indio_dev))
-> >                         return -EBUSY;
-> >
-> > -               ret =3D ad7380_get_alert_th(st, dir, val);
-> > +               ret =3D ad7380_get_alert_th(indio_dev, chan, dir, val);
-> >
-> >                 iio_device_release_direct(indio_dev);
-> >                 return ret;
-> >
-> > ---
-> > base-commit: f8ffc92ae9052e6615896052f0c5b808bfc17520
-> > change-id: 20250402-iio-adc-ad7380-fix-event-threshold-shift-b614db1a30=
-7f
-> >
-> > Best regards,
-> > --
-> > David Lechner <dlechner@baylibre.com>
-> > =20
+debugfs_remove_recursive() ends either to:
+
+static inline void debugfs_remove(struct dentry *dentry)
+{ }
+if CONFIG_DEBUG_FS is not set,
+
+or
+to a function which starts with:
+	if (IS_ERR_OR_NULL(dentry))
+		return;
+if it is set.
+
+
+So what does this new deinit_debugfs() add?
+
+
+Which NULL pointer are you seeing?
+Did you actually manage to trigger it?
+
+CJ
+
+
+
+> Signed-off-by: Hans Zhang <18255117159-9Onoh4P/yGk@public.gmane.org>
+> ---
+>   drivers/pci/controller/dwc/pcie-tegra194.c | 13 +++++++++++--
+>   1 file changed, 11 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+> index 5103995cd6c7..d762e733c2d8 100644
+> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
+> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+> @@ -716,11 +716,20 @@ static void init_debugfs(struct tegra_pcie_dw *pcie)
+>   	debugfs_create_devm_seqfile(pcie->dev, "aspm_state_cnt", pcie->debugfs,
+>   				    aspm_state_cnt);
+>   }
+> +
+> +static void deinit_debugfs(struct tegra_pcie_dw *pcie)
+> +{
+> +	if (!pcie->debugfs)
+> +		return;
+> +
+> +	debugfs_remove_recursive(pcie->debugfs);
+> +}
+>   #else
+>   static inline void disable_aspm_l12(struct tegra_pcie_dw *pcie) { return; }
+>   static inline void disable_aspm_l11(struct tegra_pcie_dw *pcie) { return; }
+>   static inline void init_host_aspm(struct tegra_pcie_dw *pcie) { return; }
+>   static inline void init_debugfs(struct tegra_pcie_dw *pcie) { return; }
+> +static inline void deinit_debugfs(struct tegra_pcie_dw *pcie) { return; }
+>   #endif
+>   
+>   static void tegra_pcie_enable_system_interrupts(struct dw_pcie_rp *pp)
+> @@ -2289,7 +2298,7 @@ static void tegra_pcie_dw_remove(struct platform_device *pdev)
+>   		if (!pcie->link_state)
+>   			return;
+>   
+> -		debugfs_remove_recursive(pcie->debugfs);
+> +		deinit_debugfs(pcie->debugfs);
+>   		tegra_pcie_deinit_controller(pcie);
+>   		pm_runtime_put_sync(pcie->dev);
+>   	} else {
+> @@ -2408,7 +2417,7 @@ static void tegra_pcie_dw_shutdown(struct platform_device *pdev)
+>   		if (!pcie->link_state)
+>   			return;
+>   
+> -		debugfs_remove_recursive(pcie->debugfs);
+> +		deinit_debugfs(pcie->debugfs);
+>   		tegra_pcie_downstream_dev_to_D0(pcie);
+>   
+>   		disable_irq(pcie->pci.pp.irq);
+> 
+> base-commit: a8662bcd2ff152bfbc751cab20f33053d74d0963
 
