@@ -1,146 +1,141 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from s1.g1.infrastructure.qtmlabs.xyz (s1.g1.infrastructure.qtmlabs.xyz [107.172.1.117])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C47B1C861C;
-	Sat,  5 Apr 2025 10:14:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B184E2E62A0;
+	Sat,  5 Apr 2025 10:18:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=107.172.1.117
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743848045; cv=none; b=L2Xwwd+G0vpS8c/kBWuNjspidgyvBaUcGWAeg6WoZ7cY2ALDIEf6vjuCnOkw+55PQ1GaLHp2X4N3Oy93GdOaiwXZ3GQUhDYpGuqc6VYzLRCWyJ37psKeiGd2ma0PCztVwXN6CW6WvJihZu7si4QPTUirePM1y4ZOCAO3pTemHRQ=
+	t=1743848315; cv=none; b=APMa34UHbBuaZAgLcNG5GIBVIKJ4JIFSUyEn0GlyZLAvUndqG9HAgKtlv8uHz6VwKqEphtEHa0HPlbxKz/yET5JHgaIJEzmzZvawHg/wqF/WwTzDsnYEEMpoq8jRM4sp/oB376XIQu3V0FTfVGZvebr0Da3NpiDub6bPBKZxHHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743848045; c=relaxed/simple;
-	bh=Z6xq/h+Qly0PKUGsSPTgPJbf66WR5pT+E85G1cdl378=;
-	h=Message-ID:Date:From:To:Cc:Subject:MIME-Version:Content-Type:
-	 Content-Disposition; b=lwjkal6jCoOo6H4IKoQegYDAXZEcd6pD9OclC3wnMiqRQ/D1AaPIhcDzK2omUyL0InhSmOvdFChZE7Sbeo18bsNmato6ZNJDgXvyPkUcE5bnUn/YYzhlR2pYNOMnNYDJjuA1CIrjbDlt9uHnw1l88nSDo0bliajI6rFv0z9W+HQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j+0r3Oev; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743848315; c=relaxed/simple;
+	bh=IypuKgTLxyWMiKMncuEE745MxIy60JBJBCOJ3LDQkR0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=mqfK4CNPmGrBjUuN5NbPXmrHTOUGVX+Fsb2vj3fPOEaBwHZ9eKseZf6cb3IhlWg6sGhForUO1qkFF+dZyqa+NzaxjRAJYuWUb7O4g18bvFXM6ml7+STxZoC2IxkHuQYtlwOjbTAlqoxwzOXSzjRmvMWHMId02GgBjcc35F3vDtk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qtmlabs.xyz; spf=pass smtp.mailfrom=qtmlabs.xyz; dkim=pass (2048-bit key) header.d=qtmlabs.xyz header.i=@qtmlabs.xyz header.b=GbwZv5Eb; arc=none smtp.client-ip=107.172.1.117
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qtmlabs.xyz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qtmlabs.xyz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j+0r3Oev"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43cfe574976so19070085e9.1;
-        Sat, 05 Apr 2025 03:14:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743848041; x=1744452841; darn=vger.kernel.org;
-        h=content-disposition:mime-version:subject:cc:to:from:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=yVTlKXlj09u3x3cF5cGmCUxBsTXjfJU7FwaBPii2bKY=;
-        b=j+0r3Oevq7yIrIfiBpNy95DerqzYUM1rZqJab1hmRaApibzd5WvN3gESJ74IRjUj54
-         ODZ9PteN9wh6NQex57G7MGp/0Pdy7MCM4lorY0PI9x3o7Y/7Yht0NwNtFpGpJwnvZjU+
-         udKcqQR9GIvZRDRS3/rKcPK+zvw8wC9lx4FJbfWAGMQNPEtG8xHFSgC0NNpE+8PD6vK2
-         GDGYwDfEbW8VKU3QW9vHwB/h6Irh/t091sHkhF6woEkNixWd4MJA9ZQs0sYSMws2O5QF
-         nHmNl3Bw4CuZdzXeKWxqP+pkpQMUSB/m2hQ0TM5lwCz74CP2AGs2Ky5JUJoRoW7L2fMk
-         H0aA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743848041; x=1744452841;
-        h=content-disposition:mime-version:subject:cc:to:from:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yVTlKXlj09u3x3cF5cGmCUxBsTXjfJU7FwaBPii2bKY=;
-        b=QaPheNJQ8T0LIffVSqsp5El3uXGv9g1yJ1MvvkudgL54x1cM64yjDYilE7qnPk/BqH
-         nY2nseUQkDSe3L1THxYDkw3duh62sWJLn64Xhb3hsN65PIoYJdNdQ2eoJ7MW8dOTrOM2
-         gl1nSAsRgzk613vLTAMwRQ2TwpLs1lQo6TtzzERR3KUbohlf7PE0DeymWsSsPJL/W3WJ
-         nkjbZ9CVumT+4VIfZLcHv18ndY83iyP+BVuoGmUJp6w28HCqSMPdTkow7cnA2PcgI+fP
-         Dlhhk234P12/qhvfnNf6OnvGdEW+Alb8GHKUk8OOxrGArSB6ghX3Lx6A3WGbHMsZqc8x
-         5gSg==
-X-Forwarded-Encrypted: i=1; AJvYcCX3/8T/Ee16u4OwO1ILPDuuA/9L3oftUpHqIlh27kxSj1NLztWGvI0uCC51yqZMLYcBgueVQA6a/2dFkAWy@vger.kernel.org, AJvYcCXdvgk+St6q94ylbGD3tPhzPy/vGKp9borb0k2fvAOPmOwaCHDq9MWlM0C/8bwTlDNeqZX6fGMAVgjB+g==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyXs3LJPY7q+5R6M9EaDuHZ9Dgkebrcn+OT5zqMfKiMfbGmjkGG
-	xejM7juu12DlmkKtbtw28nyHieJEkt0SsnsRu+3mI8F97+drxZOo
-X-Gm-Gg: ASbGnct/d8mLg1KILIybW/EhmFlNy7SKzUvNvkDiYgeuLY8bPNL9EH1UHYajwv0FYMU
-	bxuYJ6JYKc2lP1QsqsGOjLTiNK5c+iM/GGW/LxOZcp8y0GRCJ3hZkLwfg1ykLAfG3QcNfYdstTC
-	7nHrsrN46PpfNXCuovNjZ7yBpE1b5EFCJOXJMFpu92m09pCHK6vA/NtLsZTvhCzAUuAtjDXmyP4
-	rTYmy+s8yDXjHLc9nGd2JTDeX+faSDaqH9Z8yLVkVtr+jCSS4mvmFYPpK785gEt6QU2AkOMJHHP
-	3js46Mgz4AornJFb25MER52N3Q==
-X-Google-Smtp-Source: AGHT+IFCh0hVBGoDPAG7S2CedA/2FDhHjSLG9yIfWQFMEtwHcSqkydT2iBYHe3/5ULlE8y5r40hTWw==
-X-Received: by 2002:a05:6000:40d9:b0:39c:1257:feb9 with SMTP id ffacd0b85a97d-39cba980edamr5166552f8f.57.1743848041232;
-        Sat, 05 Apr 2025 03:14:01 -0700 (PDT)
-Received: from parrot ([105.112.71.96])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c30226acfsm6358675f8f.88.2025.04.05.03.14.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Apr 2025 03:14:00 -0700 (PDT)
-Message-ID: <67f10268.5d0a0220.18864.f8cf@mx.google.com>
-X-Google-Original-Message-ID: <Z_ECRdLnNb-6bR35@princerichard17a@gmail.com>
-Date: Sat, 5 Apr 2025 11:13:58 +0100
-From: Richard Akintola <princerichard17a@gmail.com>
-To: sudipm.mukherjee@gmail.com, teddy.wang@siliconmotion.com,
-	gregkh@linuxfoundation.org, linux-fbdev@vger.kernel.org,
-	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org,
-	outreachy@lists.linux.dev
-Cc: julia.lawall@inria.fr, princerichard17a@gmail.com
-Subject: [PATCH 1/8] staging: sm750fb: change sii164GetDeviceID to snake_case
+	dkim=pass (2048-bit key) header.d=qtmlabs.xyz header.i=@qtmlabs.xyz header.b="GbwZv5Eb"
+From: Myrrh Periwinkle <myrrhperiwinkle@qtmlabs.xyz>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qtmlabs.xyz; s=dkim;
+	t=1743848311;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=+FF1j3m2nFZN9HdZH57mTig2YFbN5qGWD9iMio6Um34=;
+	b=GbwZv5Eb+YNsDGz7nSouL617GazWZMeG9Tb1eyVbz33xg3/7/IMisVL5C2tsNT/fr10s5n
+	h2QXpLCpM7RxiqxQ0Ffp2vHDNKG8LcCGGJWwPCabYhpdf5SRDSR3f9kRT4vZvubS98fPc9
+	xRq5EudfmqmzHaPv+V+yMQLQG6vSJvZxSLbIHYXitMlxVBxD70qsz4tbXh/Iw15ce05SXl
+	C4+sblNpCZxdmzNWupHtTf+wMo59iwcRnaXD4aZ28EHy/1BmbmR9lep7QIkVDjWmAXNme0
+	hpOK5Gt2zEcwBh8/dMHiVVtSaEAq8WXxPTpWySzXHhDgLdBKJlDcOTjGDF5t4Q==
+Authentication-Results: s1.g1.infrastructure.qtmlabs.xyz;
+	auth=pass smtp.mailfrom=myrrhperiwinkle@qtmlabs.xyz
+Date: Sat, 05 Apr 2025 17:18:24 +0700
+Subject: [PATCH v2] x86/e820: Fix handling of subpage regions when
+ calculating nosave ranges
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250405-fix-e820-nosave-v2-1-d40dbe457c95@qtmlabs.xyz>
+X-B4-Tracking: v=1; b=H4sIAG8D8WcC/x2MQQqAIBAAvxJ7bsEkQ/tKdDBbay8aChKIf086D
+ sxMhUyJKcM6VEhUOHMMHeQ4gLttuAj57AxSSCVmodDzi6SlwBCzLYReucNoZY1dJujVk6gr/3H
+ bW/sA8JeBK2EAAAA=
+X-Change-ID: 20250405-fix-e820-nosave-f5cb985a9a61
+To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org, 
+ Roberto Ricci <io@r-ricci.it>, 
+ Myrrh Periwinkle <myrrhperiwinkle@qtmlabs.xyz>, stable@vger.kernel.org
+X-Spamd-Bar: /
 
-Change camelCase function name sii164GetDeviceID to sii164_get_device_id
-to conform to kernel code styles as reported by checkpatch.pl
+The current implementation of e820__register_nosave_regions suffers from
+multiple serious issues:
+ - The end of last region is tracked by PFN, causing it to find holes
+   that aren't there if two consecutive subpage regions are present
+ - The nosave PFN ranges derived from holes are rounded out (instead of
+   rounded in, which makes it inconsistent with how explicitly reserved
+   regions are handled), which may cause us to erroneously mark some
+   kernel memory as nosave
 
-CHECK: Avoid camelCase: <sii164GetDeviceID>
+Fix this by:
+ - Treating reserved regions as if they were holes, to ensure consistent
+   handling
+ - Tracking the end of the last RAM region by address instead of pages
+ - Rounding in (instead of out) the nosave PFN ranges so we never mark
+   any kernel memory as nosave
 
-Signed-off-by: Richard Akintola <princerichard17a@gmail.com>
+Fixes: e5540f875404 ("x86/boot/e820: Consolidate 'struct e820_entry *entry' local variable names")
+Link: https://lore.kernel.org/all/Z_BDbwmFV6wxDPV1@desktop0a/
+Tested-by: Roberto Ricci <io@r-ricci.it>
+Reported-by: Roberto Ricci <io@r-ricci.it>
+Closes: https://lore.kernel.org/all/Z4WFjBVHpndct7br@desktop0a/
+Signed-off-by: Myrrh Periwinkle <myrrhperiwinkle@qtmlabs.xyz>
+Cc: stable@vger.kernel.org
 ---
- drivers/staging/sm750fb/ddk750_dvi.c    | 2 +-
- drivers/staging/sm750fb/ddk750_sii164.c | 6 +++---
- drivers/staging/sm750fb/ddk750_sii164.h | 2 +-
- 3 files changed, 5 insertions(+), 5 deletions(-)
+The issue of the kernel failing to resume from hibernation after
+kexec_load() is used is likely due to kexec-tools passing in a different
+e820 memory map from the one provided by system firmware, causing the
+e820 consistency check to fail. That issue is not addressed in this
+patch and will need to be fixed in kexec-tools instead.
 
-diff --git a/drivers/staging/sm750fb/ddk750_dvi.c b/drivers/staging/sm750fb/ddk750_dvi.c
-index 8b81e8642f9e..3fb14eff2de1 100644
---- a/drivers/staging/sm750fb/ddk750_dvi.c
-+++ b/drivers/staging/sm750fb/ddk750_dvi.c
-@@ -16,7 +16,7 @@ static struct dvi_ctrl_device dcft_supported_dvi_controller[] = {
- 	{
- 		.init = sii164_init_chip,
- 		.get_vendor_id = sii164_get_vendor_id,
--		.get_device_id = sii164GetDeviceID,
-+		.get_device_id = sii164_get_device_id,
- #ifdef SII164_FULL_FUNCTIONS
- 		.reset_chip = sii164ResetChip,
- 		.get_chip_string = sii164GetChipString,
-diff --git a/drivers/staging/sm750fb/ddk750_sii164.c b/drivers/staging/sm750fb/ddk750_sii164.c
-index 2532b60245ac..223c181dc649 100644
---- a/drivers/staging/sm750fb/ddk750_sii164.c
-+++ b/drivers/staging/sm750fb/ddk750_sii164.c
-@@ -48,13 +48,13 @@ unsigned short sii164_get_vendor_id(void)
+Changes in v2:
+ - Updated author details
+ - Rewrote commit message
+
+Link to v1: https://lore.kernel.org/lkml/20250405-fix-e820-nosave-v1-1-162633199548@qtmlabs.xyz/
+
+P.S. Does anybody know how to move b4 (https://b4.docs.kernel.org/)
+state between machines?
+---
+ arch/x86/kernel/e820.c | 17 ++++++++---------
+ 1 file changed, 8 insertions(+), 9 deletions(-)
+
+diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
+index 57120f0749cc3c23844eeb36820705687e08bbf7..656ed7abd28de180b842a8d7993e9708f9f17026 100644
+--- a/arch/x86/kernel/e820.c
++++ b/arch/x86/kernel/e820.c
+@@ -753,22 +753,21 @@ void __init e820__memory_setup_extended(u64 phys_addr, u32 data_len)
+ void __init e820__register_nosave_regions(unsigned long limit_pfn)
+ {
+ 	int i;
+-	unsigned long pfn = 0;
++	u64 last_addr = 0;
+ 
+ 	for (i = 0; i < e820_table->nr_entries; i++) {
+ 		struct e820_entry *entry = &e820_table->entries[i];
+ 
+-		if (pfn < PFN_UP(entry->addr))
+-			register_nosave_region(pfn, PFN_UP(entry->addr));
+-
+-		pfn = PFN_DOWN(entry->addr + entry->size);
+-
+ 		if (entry->type != E820_TYPE_RAM)
+-			register_nosave_region(PFN_UP(entry->addr), pfn);
++			continue;
+ 
+-		if (pfn >= limit_pfn)
+-			break;
++		if (last_addr < entry->addr)
++			register_nosave_region(PFN_UP(last_addr), PFN_DOWN(entry->addr));
++
++		last_addr = entry->addr + entry->size;
+ 	}
++
++	register_nosave_region(PFN_UP(last_addr), limit_pfn);
  }
  
- /*
-- *  sii164GetDeviceID
-+ *  sii164_get_device_id
-  *      This function gets the device ID of the DVI controller chip.
-  *
-  *  Output:
-  *      Device ID
-  */
--unsigned short sii164GetDeviceID(void)
-+unsigned short sii164_get_device_id(void)
- {
- 	unsigned short deviceID;
- 
-@@ -141,7 +141,7 @@ long sii164_init_chip(unsigned char edge_select,
- 
- 	/* Check if SII164 Chip exists */
- 	if ((sii164_get_vendor_id() == SII164_VENDOR_ID) &&
--	    (sii164GetDeviceID() == SII164_DEVICE_ID)) {
-+	    (sii164_get_device_id() == SII164_DEVICE_ID)) {
- 		/*
- 		 *  Initialize SII164 controller chip.
- 		 */
-diff --git a/drivers/staging/sm750fb/ddk750_sii164.h b/drivers/staging/sm750fb/ddk750_sii164.h
-index 71a7c1cb42c4..a76091f6622b 100644
---- a/drivers/staging/sm750fb/ddk750_sii164.h
-+++ b/drivers/staging/sm750fb/ddk750_sii164.h
-@@ -28,7 +28,7 @@ long sii164_init_chip(unsigned char edgeSelect,
- 		      unsigned char pllFilterValue);
- 
- unsigned short sii164_get_vendor_id(void);
--unsigned short sii164GetDeviceID(void);
-+unsigned short sii164_get_device_id(void);
- 
- #ifdef SII164_FULL_FUNCTIONS
- void sii164ResetChip(void);
+ #ifdef CONFIG_ACPI
+
+---
+base-commit: a8662bcd2ff152bfbc751cab20f33053d74d0963
+change-id: 20250405-fix-e820-nosave-f5cb985a9a61
+
+Best regards,
 -- 
-2.39.5
+Myrrh Periwinkle <myrrhperiwinkle@qtmlabs.xyz>
 
