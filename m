@@ -1,53 +1,31 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F2344C74;
-	Sat,  5 Apr 2025 13:53:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F121D4C74;
+	Sat,  5 Apr 2025 13:53:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743861229; cv=none; b=UbqlmgXvex6xn3D+BCrMaWqxB3J+X3OveuzPlAM5IFlcAg7a3pfEyQCd1C3WK6r5Tq91nahEMeGJWk47uPeluj2KBcYQTaLZ2/bZDpYXVxBGtuhNsLQUoXAwkHcysvtvqdtr2n3QFC0sbK7Ns2Avd+3Bcaup8yuOkg+yylFxZVk=
+	t=1743861239; cv=none; b=LVTg2PLBUwiCjiwap/jXf+uIZfggojifp2SSpvyiTmUD0wvNddwfq8TlsN3BVsiGNSiz2KMlI7jHLYtevb+OI+TUNkPvSy0FCwDPl89qqXTdwlvZP5/Z7K+HwTboDJVv97JAwf+/KmWLGliqGQDzXzyYoA/fkrOLIOrmiZMEAzU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743861229; c=relaxed/simple;
-	bh=6kbRGQd1SkeeAIEBr/yL2/lIqNa6RfTO2IR0o/S3lgk=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=MbqSVAcsL+exM6b/6QLQIG3z9SjEPdImE6jo7Ulo3vhcziLpvHcJndD+4wGLiR1w5NO0ffe2HlWGvN9VJynu88XLLESx5ZYM+HtIl9MYduo8lzHf7+25I88hEqmKQ6OPev1Z179yl7iEPvBWe+j0O/z73dBQ2FVX6MdN6faVT4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=AaJJ56Kw; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="AaJJ56Kw"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 535B9sHA027789;
-	Sat, 5 Apr 2025 13:53:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=djBv5Xe95ErQ/suR/GZcXg
-	HV0QBorZnp1GcAyIUIdhM=; b=AaJJ56KwtiBjpqBlELAEXNwshqt78+pT+MjeUN
-	vHhk7oU1X5aqljTSRQfG9k5zXwf6w/RualNoBJmicJxPDV4qhBS5iEUn0dehzcoj
-	Gdi/Irzb5M2YZNI7HkmE/6vyR13myVMZhdOtpj5Z9lHyT6VXqCSSXCsynMtFg3ep
-	JKkxw/+9tNmedqHcwyUXPLdG/aoicBUPG70wuqwaVLHChZsFUEvY+zTNYii83zuS
-	q1rZBr4j183XjszIaN6hpY+izjORm9yPFtuvqHPKEGn5J2PeCejkwKIXPXCM+zxW
-	qi1j5EKonpriHENWZCOmn7lOzAPX+gosnuWnpm6K4mqN01bA==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twbe0je6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 05 Apr 2025 13:53:33 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 535DrXJe023032
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 5 Apr 2025 13:53:33 GMT
-Received: from zhonhan-gv.qualcomm.com (10.80.80.8) by
- nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Sat, 5 Apr 2025 06:53:31 -0700
-From: Zhongqiu Han <quic_zhonhan@quicinc.com>
-To: <rafael@kernel.org>, <daniel.lezcano@linaro.org>,
-        <christian.loehle@arm.com>
-CC: <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <quic_zhonhan@quicinc.com>
-Subject: [PATCH v2] cpuidle: menu: Optimize bucket assignment when next_timer_ns equals KTIME_MAX
-Date: Sat, 5 Apr 2025 21:53:08 +0800
-Message-ID: <20250405135308.1854342-1-quic_zhonhan@quicinc.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1743861239; c=relaxed/simple;
+	bh=T1RSvScvxcv7Zj/q/d+mJYeaaKbUugb3H5HHiUp7Vu4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BKfCt1ju1Hj0hBrFYP8GARE2cQtSMaBsmGRCCqzkNW2IDys/bLX+1QSKnLe0ZiPnngQ2ZM0z5B2pr+gGhQaTnoy2Yrp1jcNDBuBhHmLhtnk6+UVuJUOUz41GyTTgxnrYTv1ZlAw4t8e8n8ysHEIVfbbNqxyHv2XXHAzqYHfY2tg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost.localdomain (unknown [221.222.48.127])
+	by APP-05 (Coremail) with SMTP id zQCowABHdv7uNfFnjG5FBg--.45561S2;
+	Sat, 05 Apr 2025 21:53:51 +0800 (CST)
+From: Wentao Liang <vulab@iscas.ac.cn>
+To: dlemoal@kernel.org,
+	cassel@kernel.org
+Cc: linux-ide@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Wentao Liang <vulab@iscas.ac.cn>
+Subject: [PATCH v2] libata: Add error handling for pdc20621_i2c_read()
+Date: Sat,  5 Apr 2025 21:53:33 +0800
+Message-ID: <20250405135333.2348-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.42.0.windows.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,54 +33,76 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: _JCNgLbSgJlseBRLWeykxQOEX2ZMpXJ6
-X-Authority-Analysis: v=2.4 cv=T7OMT+KQ c=1 sm=1 tr=0 ts=67f135dd cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=7CQSdrXTAAAA:8 a=8PjpGhcAf3todJjbOTUA:9
- a=TjNXssC_j7lpFel5tvFf:22 a=a-qgeE7W1pNrGK8U0ZQC:22
-X-Proofpoint-ORIG-GUID: _JCNgLbSgJlseBRLWeykxQOEX2ZMpXJ6
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-05_06,2025-04-03_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- mlxlogscore=708 lowpriorityscore=0 adultscore=0 phishscore=0 bulkscore=0
- mlxscore=0 malwarescore=0 suspectscore=0 priorityscore=1501 spamscore=0
- clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504050086
+X-CM-TRANSID:zQCowABHdv7uNfFnjG5FBg--.45561S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7KFWkWFW7Wr4xWw4xtF1xGrg_yoW8tFy5pr
+	4xKas8KryUWa12vF9xJrZxXFyfWr4kGa47KFWkC34fZw1Sqws7ZFySgay5tw1jkF17J3Wx
+	X3W8tFWDCrWUXFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkK14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r1j
+	6r4UM28EF7xvwVC2z280aVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr
+	0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
+	6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr
+	0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkF7I0En4kS14v2
+	6r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrV
+	AFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCI
+	c40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267
+	AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_
+	Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUjuHq7
+	UUUUU==
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiDAcDA2fwnxr5MQAAsR
 
-Directly assign the last bucket value instead of calling which_bucket()
-when next_timer_ns equals KTIME_MAX, the largest possible value that
-always falls into the last bucket. This avoids unnecessary calculations
-and enhances performance.
+The function pdc20621_prog_dimm0() calls the function pdc20621_i2c_read()
+but does not handle the error if the read fails. This could lead to
+process with invalid data. A proper inplementation can be found in
+/source/drivers/ata/sata_sx4.c, pdc20621_prog_dimm_global(). As mentioned
+in its commit: bb44e154e25125bef31fa956785e90fccd24610b, the variable spd0
+might be used uninitialized when pdc20621_i2c_read() fails.
 
-Reviewed-by: Christian Loehle <christian.loehle@arm.com>
-Signed-off-by: Zhongqiu Han <quic_zhonhan@quicinc.com>
+Add error handling to the pdc20621_i2c_read(). If a read operation fails,
+an error message is logged via dev_err(), and return a negative error
+code.
+
+Add error handling to pdc20621_prog_dimm0() in pdc20621_dimm_init(), and
+return a negative error code if pdc20621_prog_dimm0() fails.
+
+Fixes: 4447d3515616 ("libata: convert the remaining SATA drivers to new init model")
+Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
 ---
-v1 -> v2:
-- Rebased on top of current next.
-- Following Christian's review suggestions, remove unnecessary code comments.
-- Link to v1: https://lore.kernel.org/all/20250403092852.1072015-1-quic_zhonhan@quicinc.com/
+ drivers/ata/sata_sx4.c | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
- drivers/cpuidle/governors/menu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/cpuidle/governors/menu.c b/drivers/cpuidle/governors/menu.c
-index 39aa0aea61c6..52d5d26fc7c6 100644
---- a/drivers/cpuidle/governors/menu.c
-+++ b/drivers/cpuidle/governors/menu.c
-@@ -255,7 +255,7 @@ static int menu_select(struct cpuidle_driver *drv, struct cpuidle_device *dev,
- 		 */
- 		data->next_timer_ns = KTIME_MAX;
- 		delta_tick = TICK_NSEC / 2;
--		data->bucket = which_bucket(KTIME_MAX);
-+		data->bucket = BUCKETS - 1;
- 	}
+diff --git a/drivers/ata/sata_sx4.c b/drivers/ata/sata_sx4.c
+index a482741eb181..c3042eca6332 100644
+--- a/drivers/ata/sata_sx4.c
++++ b/drivers/ata/sata_sx4.c
+@@ -1117,9 +1117,14 @@ static int pdc20621_prog_dimm0(struct ata_host *host)
+ 	mmio += PDC_CHIP0_OFS;
  
- 	if (unlikely(drv->state_count <= 1 || latency_req == 0) ||
+ 	for (i = 0; i < ARRAY_SIZE(pdc_i2c_read_data); i++)
+-		pdc20621_i2c_read(host, PDC_DIMM0_SPD_DEV_ADDRESS,
+-				  pdc_i2c_read_data[i].reg,
+-				  &spd0[pdc_i2c_read_data[i].ofs]);
++		if (!pdc20621_i2c_read(host, PDC_DIMM0_SPD_DEV_ADDRESS,
++				       pdc_i2c_read_data[i].reg,
++				       &spd0[pdc_i2c_read_data[i].ofs])) {
++			dev_err(host->dev,
++				"Failed in i2c read at index %d: device=%#x, reg=%#x\n",
++				i, PDC_DIMM0_SPD_DEV_ADDRESS, pdc_i2c_read_data[i].reg);
++			return -EIO;
++		}
+ 
+ 	data |= (spd0[4] - 8) | ((spd0[21] != 0) << 3) | ((spd0[3]-11) << 4);
+ 	data |= ((spd0[17] / 4) << 6) | ((spd0[5] / 2) << 7) |
+@@ -1284,6 +1289,8 @@ static unsigned int pdc20621_dimm_init(struct ata_host *host)
+ 
+ 	/* Programming DIMM0 Module Control Register (index_CID0:80h) */
+ 	size = pdc20621_prog_dimm0(host);
++	if (size < 0)
++		return size;
+ 	dev_dbg(host->dev, "Local DIMM Size = %dMB\n", size);
+ 
+ 	/* Programming DIMM Module Global Control Register (index_CID0:88h) */
 -- 
-2.25.1
+2.42.0.windows.2
 
