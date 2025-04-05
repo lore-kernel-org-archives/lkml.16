@@ -1,180 +1,180 @@
-Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3D9213D52F;
-	Sat,  5 Apr 2025 17:28:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 159E55695;
+	Sat,  5 Apr 2025 17:29:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743874137; cv=none; b=ty07BCJuoEUceDEyhimz5I9JyOPXQtcZc4l3uneOXxZOpd7f1HfEgIgeMLvVIObV7svCoQtyeeUrqr55bn9sEmzYUDY7fLxcvERDrG8dUEswG7ZMr0Ktkq2B+s8T+kPTwWyG6msWOF63UL+xcTe+T5rZQc3WtiGxtdR2k6UI3PI=
+	t=1743874197; cv=none; b=VGZdBEGTGeAKdrBOA3KXuPEPSfTR7M7PRhuRNG6Es5U9EjVLOwqSnf1cI+nia0f+fCUZ/LyXUK2VOFXX/LBRyfAVvccPDhB3pebcoUHFfclqHCS7BKUuFSQL2bYGWMw8q40z2ojE2rJWXGz37sCuTbv4uLuAA1h2+x51w0o6b40=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743874137; c=relaxed/simple;
-	bh=zj/fmiI253uvBAVahnE/+QFJ/fun3Lssp1wjLuyp634=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LkgYJJE+zo1Yq5ThcJr5OqXsQOMr/kaB/mEHP3wYJncQMrFJutlOnjavUsbgxIr1Ddc1Fs1FOMuYR+TY1A652i6rNsgMr3fojHPXU70VPWzJ6R1q5ETHdJh2+N9c8R3neOXLvzeEXrQV8nLb5VNzxjaVSWhWLob3bCCwBKXOnrY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h0m/Q7yS; arc=none smtp.client-ip=209.85.219.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743874197; c=relaxed/simple;
+	bh=tzXibo8LLKtevA8p4RlDqCPis5OweDdf/jmNMoHM7LI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=E2mmbdbhXDFv8VHPbOkUvrb/H5hPWqzJJUUnRIe3w8pfBPqKT8aifnPaRrxoGQF/YnO4A+amxQ4FXf00l07NEakYsKa224zFyIq/D1biwww711i0xOaS4Dt+a+TYTZL8MHBt+AR/PKjHuFDyIGbsVwzcPPtO6CyNsAydJRTmjNM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ImfPRnbD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h0m/Q7yS"
-Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-e3978c00a5aso2441286276.1;
-        Sat, 05 Apr 2025 10:28:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743874134; x=1744478934; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jW1xAus8FHDpywvQBlSsYf1NBRChzXtls8jPIo8+8H0=;
-        b=h0m/Q7ySs3L8RGcvaEOmGHq04EayLXaLAmv2zLZrfXl9MvOY8Zyh/nbvQGMrahnKW1
-         anBfAAz14YmwO217v15iKW1fwrkixJiaUVZ777qf1e+QXtBUCOKEYkoAvX586byMxiHx
-         R75nsmwlbP893bNe4vfKWpPJqUQvJBpZqZ4WzczCwp2HITxSh1KZCOa7c6QEZAN+rqoi
-         cebfbNtfw3i7va+5HY58XsnJ47hT3/Fhe1C/n8+YNzHCCcEkmfJufBoM40CTWCQhoAwG
-         THhNDaRPDiCtzAqLD/b3uzR8anVEdS5vX/HeaJiJri0VJ1mAAwFImGu0U8ocphyqx+px
-         6vWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743874134; x=1744478934;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jW1xAus8FHDpywvQBlSsYf1NBRChzXtls8jPIo8+8H0=;
-        b=MHqqQHykW3AleqLn6w4dr9LPOoD4rUgZ1YHIh+2WlSfT9yBhP3Ai4MYOWBurGePacg
-         VAkQKZvHLPMpK+fczDzniVVxNfxKfQjePWQipJE9rUTJm0L6A5ilmlKg6d7AV+t9w9LC
-         GBceFYbZV4WQmovgBzBMu9b7W21a1wSBNBBFOWctH5oQGnel87yB93/HP2t4HMOYmQre
-         WO4D8zyS/yGcesYymoeNog3zyl4WcICEBerVKw3cYPa1HntJ8AKh4sYpgVD0gGUEplV5
-         G29RNoki+yqL1ctb7lGzieqU4+n1mTz/jBPYycVMdiV01dbzXhGSNuytHanHhrs+ak2Q
-         GkCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUeGkrFHZsp/e2Lcfmys6WaHzAJEj0MYjSFcINZdjCITq6IH4/7BSC11aYfg9t7PZ3+9bOARIUO2y4CWM68@vger.kernel.org, AJvYcCVZxjNJgIJq6qZ+cZOtbPF9qyFaGQ8aAsKVi3+V/6zDBQK7xNDGE11zCLOlP2Hx8v2caLWhMgFHZFGDow==@vger.kernel.org, AJvYcCX+YK7MaEhbpFBy7S3igJXOGg8uIDhAoPurOfPB4r5FL/DRapsiTFoVG39c1tq2g0bdQqt3+HJGpfc9tbg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzc5jGDaQeKs2cRA5kPehF3cE7nDpt2NmSFP8NFGfw2kZcBaHT/
-	0EtddtVnqFJ4jo75Z7qMYG4I7+VPSTIFn0ryp7tMW84LxIwnS8C7Q2pNHpbmJhEwZLWVDHzo94T
-	LzrPu8PW+CMHy9BC7GliXgo53+ao=
-X-Gm-Gg: ASbGncs+x+2seKiXxO931jrt56QW05f4ZQ4OMzJbqnNV+xSTnSzfVKwlM0tf4B7jmS6
-	tBj1jf+QVaLzbfCUd7gEgS4/pWMolnxnjMdimxq/29IXbbk6v1i9A4jR2voQb3tNysl+GrXHMvK
-	pM7a+cXzOZ30kV0vamhnraZiDb
-X-Google-Smtp-Source: AGHT+IESo5T95fFyvW3R59tyJsVhxEya1iUHOTcTxLLMetNdAkOMzfreJMAvHRkABNsC5C5mnlH10P5ER6FbNPfqX1I=
-X-Received: by 2002:a05:690c:6d02:b0:6fd:a226:fb4c with SMTP id
- 00721157ae682-703e154f5a0mr132981617b3.15.1743874134572; Sat, 05 Apr 2025
- 10:28:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ImfPRnbD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C8DCC4CEE4;
+	Sat,  5 Apr 2025 17:29:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743874196;
+	bh=tzXibo8LLKtevA8p4RlDqCPis5OweDdf/jmNMoHM7LI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ImfPRnbDGl4DRxtqt4CsGc8D4PavM3/4rRJA1EPwTmLvhWNyTtpOgT88HnOLuukc0
+	 59FuvV+7OfdyZ8A9cD/P6fAxKzSc2wYfh5HewKdjNWxjB4T21+wF8KpYrefUSCOR2B
+	 /rcnTWkS6X1945uuLDZN31pZr/oxL/eSg22liQctWmDP6wM9NzEH6UZbHhdwyK2mo2
+	 yi83Ab+tCzUEUvy1QHfCTSYAJbLIo0Q/4UYRczwda7CPJC1bbA0twKyFFzLkB2vU78
+	 Hw3em3g6cy9xrPC5v8iFZb4DV9TxPyDVuN+4+E8rpPttQ8IbVXNmz97E2aaeskwo14
+	 WazXAoYhuXigA==
+Date: Sat, 5 Apr 2025 18:29:47 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: David Lechner <dlechner@baylibre.com>, Matti Vaittinen
+ <matti.vaittinen@fi.rohmeurope.com>, Lars-Peter Clausen <lars@metafoo.de>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Nuno Sa <nuno.sa@analog.com>, Javier
+ Carrasco <javier.carrasco.cruz@gmail.com>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/7] iio: adc: ti-adc128s052: Simplify using
+ be16_to_cpu()
+Message-ID: <20250405182947.06d5e67f@jic23-huawei>
+In-Reply-To: <1189b539-adb4-46f9-9783-c6577b57a304@gmail.com>
+References: <cover.1743573284.git.mazziesaccount@gmail.com>
+	<feeabbfd3d3916c7497dfd94423ff83ef5f654f1.1743573284.git.mazziesaccount@gmail.com>
+	<4c3e0d23-2582-4acf-8e90-542c8f8c385f@baylibre.com>
+	<1189b539-adb4-46f9-9783-c6577b57a304@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250402204554.205560-1-goralbaris@gmail.com> <20250405143646.10722-1-goralbaris@gmail.com>
- <20250405162548.310dea37@pumpkin> <CAJOJxizEDm_th4G=BvejM4_jGcF6+QYT=LjD_J_FTbsNFVTjCQ@mail.gmail.com>
-In-Reply-To: <CAJOJxizEDm_th4G=BvejM4_jGcF6+QYT=LjD_J_FTbsNFVTjCQ@mail.gmail.com>
-From: baris goral <goralbaris@gmail.com>
-Date: Sat, 5 Apr 2025 20:28:42 +0300
-X-Gm-Features: ATxdqUFXJGOJznQfdtlC7tZTYAw3xNF7XEDd6qaqt_Ax-jNxnhVZ9v2lAxz3u3E
-Message-ID: <CAJOJxiyOZgRrf=e3tJuKiAdZP4U4MS4Y0EQFd5HPYAHgUhXVww@mail.gmail.com>
-Subject: Re: [PATCH v4] scsi: target: transform strncpy into strscpy
-To: David Laight <david.laight.linux@gmail.com>
-Cc: martin.petersen@oracle.com, linux-scsi@vger.kernel.org, 
-	target-devel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi,
-Trying to understand, it has if check a few lines above:
+On Thu, 3 Apr 2025 08:16:43 +0300
+Matti Vaittinen <mazziesaccount@gmail.com> wrote:
 
-if (count > (DB_ROOT_LEN - 1))
+> On 03/04/2025 00:04, David Lechner wrote:
+> > On 4/2/25 1:09 AM, Matti Vaittinen wrote:  
+> >> The register data is 12-bit big-endian data. Use be16_to_cpu() to do
+> >> the conversion, and simple bitwise AND for masking to make it more
+> >> obvious.
+> >>
+> >> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
+> >> ---
+> >> Revision history:
+> >> v1 => v2:
+> >>   - Fix commit msg to reflect the fact there was no bug
+> >>   - Drop Fixes tag
+> >>   - Use union for rx / tx buffer to avoid casting
+> >>   - Keep the shared message protected by the mutex
+> >> ---
+> >>   drivers/iio/adc/ti-adc128s052.c | 18 ++++++++++--------
+> >>   1 file changed, 10 insertions(+), 8 deletions(-)
+> >>
+> >> diff --git a/drivers/iio/adc/ti-adc128s052.c b/drivers/iio/adc/ti-adc128s052.c
+> >> index a456ea78462f..3e69a5fce010 100644
+> >> --- a/drivers/iio/adc/ti-adc128s052.c
+> >> +++ b/drivers/iio/adc/ti-adc128s052.c
+> >> @@ -28,32 +28,34 @@ struct adc128 {
+> >>   	struct regulator *reg;
+> >>   	struct mutex lock;
+> >>   
+> >> -	u8 buffer[2] __aligned(IIO_DMA_MINALIGN);
+> >> +	union {
+> >> +		__be16 rx_buffer;
+> >> +		u8 tx_buffer[2];
+As below. Maybe
+		__be16 buffer16;
+		u8 buffer[2];
 
-Does not it met our expectations?
+> >> +	} __aligned(IIO_DMA_MINALIGN);
+> >>   };
+> >>   
+> >>   static int adc128_adc_conversion(struct adc128 *adc, u8 channel)
+> >>   {
+> >>   	int ret;
+> >> +	char *msg = &adc->tx_buffer[0];
+> >>   
+> >>   	mutex_lock(&adc->lock);
+> >>   
+> >> -	adc->buffer[0] = channel << 3;
+> >> -	adc->buffer[1] = 0;
+> >> +	msg[0] = channel << 3;
+> >> +	msg[1] = 0;
+> >>   
+> >> -	ret = spi_write(adc->spi, &adc->buffer, 2);
+> >> +	ret = spi_write(adc->spi, msg, sizeof(adc->tx_buffer));
 
+I'd get rid of msg as it's now just confusing given we are
+using the sizeof() here.
 
-Best Reagrds,
-Baris
+> >>   	if (ret < 0) {
+> >>   		mutex_unlock(&adc->lock);
+> >>   		return ret;
+> >>   	}
+> >>   
+> >> -	ret = spi_read(adc->spi, &adc->buffer, 2);
+> >> -
+> >> +	ret = spi_read(adc->spi, &adc->rx_buffer, 2);
 
+sizeof(adc->rx_buffer)
 
-baris goral <goralbaris@gmail.com>, 5 Nis 2025 Cmt, 19:35 tarihinde =C5=9Fu=
-nu yazd=C4=B1:
->
-> Hi,
-> Trying to understand, it has if check a few lines above:
->
-> if (count > (DB_ROOT_LEN - 1))
->
-> Does not it met our expectations?
->
->
-> David Laight <david.laight.linux@gmail.com>, 5 Nis 2025 Cmt, 18:25 tarihi=
-nde =C5=9Funu yazd=C4=B1:
->>
->> On Sat,  5 Apr 2025 17:36:47 +0300
->> Baris Can Goral <goralbaris@gmail.com> wrote:
->>
->> > The strncpy() function is actively dangerous to use since it may not
->> > NULL-terminate the destination string,resulting in potential memory
->> > content exposures, unbounded reads, or crashes.
->> >
->> > Link:https://github.com/KSPP/linux/issues/90
->> > Signed-off-by: Baris Can Goral <goralbaris@gmail.com>
->> > ---
->> > Changes from v4:
->> >       -Description added
->> >       -User name corrected
->> >       -formatting issues.
->> >       -commit name changed
->> >  drivers/target/target_core_configfs.c | 4 ++--
->> >  1 file changed, 2 insertions(+), 2 deletions(-)
->> >
->> > diff --git a/drivers/target/target_core_configfs.c b/drivers/target/ta=
-rget_core_configfs.c
->> > index c40217f44b1b..5c0b74e76be2 100644
->> > --- a/drivers/target/target_core_configfs.c
->> > +++ b/drivers/target/target_core_configfs.c
->> > @@ -143,7 +143,7 @@ static ssize_t target_core_item_dbroot_store(struc=
-t config_item *item,
->> >       }
->> >       filp_close(fp, NULL);
->> >
->> > -     strncpy(db_root, db_root_stage, read_bytes);
->> > +     strscpy(db_root, db_root_stage, read_bytes);
->> >       pr_debug("Target_Core_ConfigFS: db_root set to %s\n", db_root);
->>
->> That code is broken, it reads:
->>         read_bytes =3D snprintf(db_root_stage, DB_ROOT_LEN, "%s", page);
->>         if (!read_bytes)
->>                 goto unlock;
->>
->>         if (db_root_stage[read_bytes - 1] =3D=3D '\n')
->>                 db_root_stage[read_bytes - 1] =3D '\0';
->>
->>         /* validate new db root before accepting it */
->>         fp =3D filp_open(db_root_stage, O_RDONLY, 0);
->>         if (IS_ERR(fp)) {
->>                 pr_err("db_root: cannot open: %s\n", db_root_stage);
->>                 goto unlock;
->>         }
->>         if (!S_ISDIR(file_inode(fp)->i_mode)) {
->>                 filp_close(fp, NULL);
->>                 pr_err("db_root: not a directory: %s\n", db_root_stage);
->>                 goto unlock;
->>         }
->>         filp_close(fp, NULL);
->>
->>         strncpy(db_root, db_root_stage, read_bytes);
->>         pr_debug("Target_Core_ConfigFS: db_root set to %s\n", db_root);
->>
->>         r =3D read_bytes;
->>
->> unlock:
->>         mutex_unlock(&target_devices_lock);
->>         return r;
->>
->> 'Really nasty (tm)' things happen if 'page' is too long.
->>
->>         David
->>
->> >
->> >       r =3D read_bytes;
->> > @@ -3664,7 +3664,7 @@ static void target_init_dbroot(void)
->> >       }
->> >       filp_close(fp, NULL);
->> >
->> > -     strncpy(db_root, db_root_stage, DB_ROOT_LEN);
->> > +     strscpy(db_root, db_root_stage, DB_ROOT_LEN);
->> >       pr_debug("Target_Core_ConfigFS: db_root set to %s\n", db_root);
->> >  }
->> >
->>
+> >>   	mutex_unlock(&adc->lock);
+> >> -
+> >>   	if (ret < 0)
+> >>   		return ret;
+> >>   
+> >> -	return ((adc->buffer[0] << 8 | adc->buffer[1]) & 0xFFF);
+> >> +	return be16_to_cpu(adc->rx_buffer) & 0xFFF;  
+> > 
+> > 
+> > The cast isn't exactly beautiful, but this would save a lot of
+> > lines of diff and a few lines of code by avoiding the need for
+> > the union and the local msg variable.
+> > 
+> > 	return be16_to_cpup((__be16 *)adc->buffer) & 0xFFF;  
+
+The cast only works because we have forced the alignment for DMA safety.
+That to me is a little fragile.
+
+You could do get_unaligned_be16() which doesn't need the cast then carry
+on using the original buffer.  
+
+> 
+> Thanks again for the review David :)
+> 
+> I am unsure which way to go. I kind of like having the __be16 in the 
+> struct, as it immediately yells "data from device is big-endian". OTOH, 
+> I've never loved unions (and, it silences the above "yelling" quite a 
+> bit). I still think this might be the first time I really see a valid 
+> use-case for an union :) And, you're right this adds more lines, 
+> besides, the cast doesn't look that ugly to me. Yet, I originally had a 
+> cast probably as simple as this (and I also had the __be16 in the 
+> struct), and Jonathan suggested using union to avoid it...
+> 
+> At the end of the day, I suppose I am Okay with any of these 3 
+> approaches. Original cast, union or this cast you suggest. Jonathan, any 
+> preferences on your side?
+
+Majority of the diff is really about renaming buffer to tx_buffer.
+Could just not bother doing that and instead have buffer and buffer16
+as the two union elements. With msg gone as suggested above, then the diff
+becomes only a few lines and you get to keep the nicety of it being either
+a pair of u8s or a __be16.
+
+Jonathan
+
+> 
+> >   
+> >>   }
+> >>   
+> >>   static int adc128_read_raw(struct iio_dev *indio_dev,  
+> >   
+> 
+> Yours,
+> 	-- Matti
+> 
+
