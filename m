@@ -1,142 +1,201 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5533135957;
-	Sat,  5 Apr 2025 15:15:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20ECA8BEC
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 15:21:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743866113; cv=none; b=UzSOpo7XD1kIUH1W0B53XjjKMklFbWaUZO7x8T/p/jGZDSmGtuXqh2MBY9YCDyuLuMIu4M1FH4Tx5Yd2O+DySRsB7xZQv700EFBBJ0stNJYXfgMsSI5DY7CjMuwLRN+nP0TlcQUeRXmkIvAoMvGCMB5cjex3EeXvVe6otam0HBM=
+	t=1743866495; cv=none; b=KeCun3SgY3peoM0l62bQMjyakWVyYR0wF9xiOqUsrMkaFBI+N+o4cS1zSq7W4sMuOYW/CcvDeRmRZ4tYEdIZ3/HKT0eM3fzeJisBKXRwaqZx93My4MROnJyajHW9vd2gT0qrE9lSM+i3l5nTqm2+arRY0DG4w/E6I12kg2FVeTA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743866113; c=relaxed/simple;
-	bh=yARVkcdohPfQmnXkIQCzfyOpcF1SCB0AE+9reKP2B20=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GXtYHgPvG90sms7ZCJKt2CmI+1BUaRF9UNZHk2nhTERNAQI4tCpcLWo5h8QRuy0A0TqWYKA/RaO/UGaUK9dvBMDAxsFIM1xUR5V9DURSSEdAQh0qMFU59IgafLVu1sIASflhQm5vQHX/tlvA17bm7CwQjhp0hiqqIB0uCW5/C0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=soXIQXuo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743866495; c=relaxed/simple;
+	bh=NSfL7cYMIvWF854H9Yh2Fd2LhyjzCG2CG70hSBBWy0A=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=jDXSvVG/588RLkBFPIuJtbeAU4FFFQfmeIoPsf6cGZ4KYp0t2ie7ISRA9o5/6T/zzxszZ+JHmxDYhD9MISBMXhSPQactYB8DyJsI8DCBNao1Q0Q7E4fZiabiZkuVM8kddGO7Pwj5Gh0dHMvo6ebqd6dROkzjUb8cvhvT7Vgew7M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LpUwaHLW; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="soXIQXuo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DAD4C4CEE4;
-	Sat,  5 Apr 2025 15:15:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743866112;
-	bh=yARVkcdohPfQmnXkIQCzfyOpcF1SCB0AE+9reKP2B20=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=soXIQXuo0bkqepraJrNrC5lVOcZrYCHP3zd0g0pscbfmxxhg9tHbeBStQkX1s8zjc
-	 56glFahxiGSfR3h/lmlmrCP2seJ6RL5uj62tJEaIp7KNEqcqv3Fj5ZThpxiniVUC6b
-	 bjqjgt7zdGgkwpchrhqCZ19RSVgmmNbKy3EV6TwicdlBMM+kWjYG1mT5CUQB32P4co
-	 gELjnHIk0I0Kx3In7IGlaiiRfRES0YCTZ8uFA9tcbc1svHxQZDJEmH8j1A/NRl2dg/
-	 YykIHc9DAc1aYrRadMU/5RBBk/FvuonFyO+WIqRGTp3W2jKpa9qw7+X4a5bmYMeNNy
-	 o3mtDAeTe5d3A==
-Date: Sat, 5 Apr 2025 16:15:04 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Lukasz Luba <lukasz.luba@arm.com>
-Cc: Svyatoslav Ryhel <clamor95@gmail.com>, linux-pm@vger.kernel.org,
- devicetree@vger.kernel.org, Laxman Dewangan <ldewangan@nvidia.com>, Conor
- Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Rob
- Herring <robh@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>,
- Zhang Rui <rui.zhang@intel.com>, linux-kernel@vger.kernel.org, "Rafael J.
- Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH v3 2/2] thermal: thermal-generic-adc: add temperature
- sensor channel
-Message-ID: <20250405161504.6d2cc27d@jic23-huawei>
-In-Reply-To: <67659d9d-f228-42ac-b096-01020bf66b7f@arm.com>
-References: <20250303122151.91557-1-clamor95@gmail.com>
-	<20250303122151.91557-3-clamor95@gmail.com>
-	<3bc7c5a5-8fe7-4c4b-a80e-23522922debb@arm.com>
-	<CAPVz0n0yvw4kyYKSve9sSZEvcZrCYZ6RqCjFSO5OCqtvRZSfJg@mail.gmail.com>
-	<f56596fe-92e8-481b-b15b-29b531eaec32@arm.com>
-	<CAPVz0n2ywjm+nLQ+ZAYbR1P6yCr8FQgOMeDT07s_YHZ7xA_6uA@mail.gmail.com>
-	<67659d9d-f228-42ac-b096-01020bf66b7f@arm.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LpUwaHLW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743866493; x=1775402493;
+  h=date:from:to:cc:subject:message-id;
+  bh=NSfL7cYMIvWF854H9Yh2Fd2LhyjzCG2CG70hSBBWy0A=;
+  b=LpUwaHLWmvFjXHydRwZi2qmzfPInCeUsSJ963HDP3IDKiFDX6rj3FSsg
+   Nbe4fQObIf0hLHGyh5I7K4ajfIMZXzxLgkyhh1yFloN/xQtqGvQjn5Psm
+   dbSJQLJ5BCq8rpLsdAIoSfBWjwPmGYjJwnpZDWvlg622VCYXTtMdxnjNg
+   A+9W7iRfLS/wlKm4at3MgvrnuRbnV/+rMm2sTwsmaf/phiacfYAGjRUAo
+   saXPK6HXLwXcmCF28bZGs5vCkM4DJ7A9YFBQD4YeQl3SdG3ZMcs4ghXeR
+   8iPNFc3YK1ow/3l9VbTPzxKfywx16lNzCzXRAzza+x8hoQxhbFX2cR6C4
+   g==;
+X-CSE-ConnectionGUID: 6P2aB6yNRhmjSeD4POD1Ng==
+X-CSE-MsgGUID: VwZhspJnQ+id5PSF1/HIbA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11395"; a="48947969"
+X-IronPort-AV: E=Sophos;i="6.15,191,1739865600"; 
+   d="scan'208";a="48947969"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2025 08:21:32 -0700
+X-CSE-ConnectionGUID: slqnApqpRAOnV9zIPE2bFQ==
+X-CSE-MsgGUID: zKIh2Dc1TRmdR74zzarwoQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,191,1739865600"; 
+   d="scan'208";a="164754356"
+Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
+  by orviesa001.jf.intel.com with ESMTP; 05 Apr 2025 08:21:31 -0700
+Received: from kbuild by b207828170a5 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u15Kr-00027C-1K;
+	Sat, 05 Apr 2025 15:21:29 +0000
+Date: Sat, 05 Apr 2025 23:21:10 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:irq/urgent] BUILD SUCCESS
+ 9b305678c55dd45044aa565fee04f8d88382bc4d
+Message-ID: <202504052300.FPRpnpYh-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, 6 Mar 2025 10:04:01 +0000
-Lukasz Luba <lukasz.luba@arm.com> wrote:
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq/urgent
+branch HEAD: 9b305678c55dd45044aa565fee04f8d88382bc4d  genirq/migration: Use irqd_get_parent_data() in irq_force_complete_move()
 
-> On 3/6/25 09:49, Svyatoslav Ryhel wrote:
-> > =D1=81=D1=80, 5 =D0=B1=D0=B5=D1=80. 2025=E2=80=AF=D1=80. =D0=BE 16:37 L=
-ukasz Luba <lukasz.luba@arm.com> =D0=BF=D0=B8=D1=88=D0=B5: =20
-> >>
-> >>
-> >>
-> >> On 3/5/25 10:06, Svyatoslav Ryhel wrote: =20
-> >>> =D1=81=D1=80, 5 =D0=B1=D0=B5=D1=80. 2025=E2=80=AF=D1=80. =D0=BE 11:52=
- Lukasz Luba <lukasz.luba@arm.com> =D0=BF=D0=B8=D1=88=D0=B5: =20
-> >>>>
-> >>>>
-> >>>>
-> >>>> On 3/3/25 12:21, Svyatoslav Ryhel wrote: =20
-> >>>>> To avoid duplicating sensor functionality and conversion tables, th=
-is design
-> >>>>> allows converting an ADC IIO channel's output directly into a tempe=
-rature IIO
-> >>>>> channel. This is particularly useful for devices where hwmon isn't =
-suitable
-> >>>>> or where temperature data must be accessible through IIO.
-> >>>>>
-> >>>>> One such device is, for example, the MAX17040 fuel gauge.
-> >>>>>
-> >>>>> Signed-off-by: Svyatoslav Ryhel <clamor95@gmail.com>
-> >>>>> ---
-> >>>>>     drivers/thermal/thermal-generic-adc.c | 54 ++++++++++++++++++++=
-++++++-
-> >>>>>     1 file changed, 53 insertions(+), 1 deletion(-)
-> >>>>>
-> >>>>> diff --git a/drivers/thermal/thermal-generic-adc.c b/drivers/therma=
-l/thermal-generic-adc.c =20
-> >>> ... =20
-> >>>>>
-> >>>>> +static const struct iio_chan_spec gadc_thermal_iio_channel[] =3D {
-> >>>>> +     {
-> >>>>> +             .type =3D IIO_TEMP,
-> >>>>> +             .info_mask_separate =3D BIT(IIO_CHAN_INFO_PROCESSED),=
- =20
-> >>>>
-> >>>> I would add the IIO_CHAN_INFO_SCALE and say it's in milli-degrees.
-> >>>> =20
-> >>>
-> >>> I have hit this issue already with als sensor. This should definitely
-> >>> be a IIO_CHAN_INFO_PROCESSED since there is no raw temp data we have,
-> >>> it gets processed into temp data via conversion table. I will add
-> >>> Jonathan Cameron to list if you don't mind, he might give some good
-> >>> advice. =20
-> >>
-> >> I'm not talking about 'PROCESSED' vs 'RAW'...
-> >> I'm asking if you can add the 'SCALE' case to handle and report
-> >> that this device will report 'processed' temp value in milli-degrees
-> >> of Celsius.
-> >> =20
-> >=20
-> > It seems that SCALE is not applied to PROCESSED channel. I can use RAW
-> > which would work as intended and I will add a note in commit
-> > description why I used RAW. Would that be acceptable?
+elapsed time: 1444m
 
-Indeed. SCALE is only about RAW channels because if they are processed
-you have already applied the scale (typically because it wasn't linear)
+configs tested: 124
+configs skipped: 2
 
-> >  =20
->=20
-> In that case, yes that would be the preferred solution.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-I nearly missed this entirely as it was buried in my unfiltered email.
-Thanks for the +CC.
+tested configs:
+alpha                             allnoconfig    gcc-14.2.0
+alpha                            allyesconfig    gcc-14.2.0
+arc                              allmodconfig    gcc-14.2.0
+arc                               allnoconfig    gcc-14.2.0
+arc                              allyesconfig    gcc-14.2.0
+arc                   randconfig-001-20250405    gcc-14.2.0
+arc                   randconfig-002-20250405    gcc-14.2.0
+arm                              allmodconfig    gcc-14.2.0
+arm                               allnoconfig    clang-21
+arm                              allyesconfig    gcc-14.2.0
+arm                            hisi_defconfig    gcc-14.2.0
+arm                          pxa910_defconfig    gcc-14.2.0
+arm                   randconfig-001-20250405    clang-18
+arm                   randconfig-002-20250405    gcc-7.5.0
+arm                   randconfig-003-20250405    gcc-8.5.0
+arm                   randconfig-004-20250405    clang-21
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    gcc-14.2.0
+arm64                 randconfig-001-20250405    clang-19
+arm64                 randconfig-002-20250405    gcc-8.5.0
+arm64                 randconfig-003-20250405    gcc-8.5.0
+arm64                 randconfig-004-20250405    gcc-6.5.0
+csky                              allnoconfig    gcc-14.2.0
+csky                  randconfig-001-20250405    gcc-14.2.0
+csky                  randconfig-002-20250405    gcc-10.5.0
+hexagon                          allmodconfig    clang-17
+hexagon                           allnoconfig    clang-21
+hexagon                          allyesconfig    clang-21
+hexagon               randconfig-001-20250405    clang-21
+hexagon               randconfig-002-20250405    clang-21
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250404    gcc-12
+i386        buildonly-randconfig-002-20250404    gcc-12
+i386        buildonly-randconfig-003-20250404    gcc-12
+i386        buildonly-randconfig-004-20250404    gcc-12
+i386        buildonly-randconfig-005-20250404    gcc-12
+i386        buildonly-randconfig-006-20250404    gcc-12
+i386                                defconfig    clang-20
+loongarch                        allmodconfig    gcc-14.2.0
+loongarch                         allnoconfig    gcc-14.2.0
+loongarch             randconfig-001-20250405    gcc-14.2.0
+loongarch             randconfig-002-20250405    gcc-14.2.0
+m68k                             allmodconfig    gcc-14.2.0
+m68k                              allnoconfig    gcc-14.2.0
+m68k                             allyesconfig    gcc-14.2.0
+m68k                         apollo_defconfig    gcc-14.2.0
+m68k                       m5208evb_defconfig    gcc-14.2.0
+m68k                        m5272c3_defconfig    gcc-14.2.0
+m68k                        stmark2_defconfig    gcc-14.2.0
+microblaze                       allmodconfig    gcc-14.2.0
+microblaze                        allnoconfig    gcc-14.2.0
+microblaze                       allyesconfig    gcc-14.2.0
+mips                              allnoconfig    gcc-14.2.0
+nios2                         10m50_defconfig    gcc-14.2.0
+nios2                             allnoconfig    gcc-14.2.0
+nios2                 randconfig-001-20250405    gcc-12.4.0
+nios2                 randconfig-002-20250405    gcc-6.5.0
+openrisc                          allnoconfig    gcc-14.2.0
+openrisc                         allyesconfig    gcc-14.2.0
+openrisc                            defconfig    gcc-14.2.0
+parisc                           allmodconfig    gcc-14.2.0
+parisc                            allnoconfig    gcc-14.2.0
+parisc                           allyesconfig    gcc-14.2.0
+parisc                              defconfig    gcc-14.2.0
+parisc                randconfig-001-20250405    gcc-11.5.0
+parisc                randconfig-002-20250405    gcc-9.3.0
+powerpc                          allmodconfig    gcc-14.2.0
+powerpc                           allnoconfig    gcc-14.2.0
+powerpc                          allyesconfig    clang-21
+powerpc                 linkstation_defconfig    clang-20
+powerpc                      mgcoge_defconfig    clang-21
+powerpc                 mpc832x_rdb_defconfig    gcc-14.2.0
+powerpc                 mpc836x_rdk_defconfig    clang-21
+powerpc                     mpc83xx_defconfig    clang-21
+powerpc                  mpc885_ads_defconfig    clang-21
+powerpc                       ppc64_defconfig    clang-21
+powerpc               randconfig-001-20250405    gcc-8.5.0
+powerpc               randconfig-002-20250405    gcc-8.5.0
+powerpc               randconfig-003-20250405    gcc-8.5.0
+powerpc64             randconfig-001-20250405    clang-21
+powerpc64             randconfig-002-20250405    clang-21
+powerpc64             randconfig-003-20250405    clang-18
+riscv                            allmodconfig    clang-21
+riscv                             allnoconfig    gcc-14.2.0
+riscv                            allyesconfig    clang-16
+riscv                 randconfig-001-20250405    clang-21
+riscv                 randconfig-002-20250405    clang-16
+s390                             allmodconfig    clang-18
+s390                              allnoconfig    clang-15
+s390                             allyesconfig    gcc-14.2.0
+s390                  randconfig-001-20250405    clang-15
+s390                  randconfig-002-20250405    clang-15
+sh                               allmodconfig    gcc-14.2.0
+sh                                allnoconfig    gcc-14.2.0
+sh                               allyesconfig    gcc-14.2.0
+sh                    randconfig-001-20250405    gcc-14.2.0
+sh                    randconfig-002-20250405    gcc-14.2.0
+sh                           se7705_defconfig    gcc-14.2.0
+sh                            shmin_defconfig    gcc-14.2.0
+sparc                            allmodconfig    gcc-14.2.0
+sparc                             allnoconfig    gcc-14.2.0
+sparc                 randconfig-001-20250405    gcc-11.5.0
+sparc                 randconfig-002-20250405    gcc-10.3.0
+sparc64               randconfig-001-20250405    gcc-9.3.0
+sparc64               randconfig-002-20250405    gcc-11.5.0
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-21
+um                               allyesconfig    gcc-12
+um                    randconfig-001-20250405    clang-17
+um                    randconfig-002-20250405    clang-21
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250405    gcc-12
+x86_64      buildonly-randconfig-002-20250405    clang-20
+x86_64      buildonly-randconfig-003-20250405    clang-20
+x86_64      buildonly-randconfig-004-20250405    clang-20
+x86_64      buildonly-randconfig-005-20250405    gcc-12
+x86_64      buildonly-randconfig-006-20250405    clang-20
+x86_64                              defconfig    gcc-11
+xtensa                            allnoconfig    gcc-14.2.0
+xtensa                randconfig-001-20250405    gcc-11.5.0
+xtensa                randconfig-002-20250405    gcc-13.3.0
 
-Given this is a IIO driver (be it in thermal)
-please +CC linux-iio@vger.kernel.org to get review of that part of it.
-
-Note, in general if you do a driver out of subsystem (and there
-are good reasons to do that!) please +CC the other subsystem and
-maintainers as well. We do that for IIO drivers that have a gpio
-chip for instance. I specifically check they are +CC and wait for
-an Ack before merging such drivers.
-
-Thanks,
-
-Jonathan
-
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
