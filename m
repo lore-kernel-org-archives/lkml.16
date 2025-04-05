@@ -1,134 +1,81 @@
-Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 467F73A1BA;
-	Sat,  5 Apr 2025 14:23:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86061EED8;
+	Sat,  5 Apr 2025 14:24:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743863022; cv=none; b=q4qkUh6hlLHFM0SIz9U6MuvdctQNYwgCyTDN4dZs1tZ33GnUOB4srcB644mZZQJYo0vgwo/dfQb1IoLAD9bgC4+ACgKyvcoKn5u3BYgAc6qAGCjb0H4N+nsRxTQxptWb2p8x0+PYhwwJeWemppXnyP5LWM7jEV3MLf2uL3r05H8=
+	t=1743863091; cv=none; b=fVOKd1X07ztyeOxqBnVkTyILWcWtueGsQp9hsvduauMv9yZEaOIpEFJgLpIHEbOsW5whTCbaALL29Lt+Fp/0HlFpAigW1hCS77VeBYbet3kJ6J3It6RpBRaoBr2/iXBJ8hvBbLDpyL/mhWvh2ACnpWCs9VT0xy9PXMwdm3usynY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743863022; c=relaxed/simple;
-	bh=Fb6nWConfM+SUWjQ8BRZyfSFDinOwn/Nox294oZsV6o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GUtFt2BAVTPpkXltQanr3jfpXMMRhAgPB/H0I+B+s6LGI9UpolVETP0K9cAYUutbaBPwcg1wnoa4q3K93T+xzoqg4YUqPgc3TgnNkOQvPRPm0C69+K0xZmGGo/5wb09W60usddvEO9F7+qAizBLyU2mzTgWxeyh6ro5QQHYJ/5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EEB06SwF; arc=none smtp.client-ip=209.85.221.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743863091; c=relaxed/simple;
+	bh=pHS9rgj9jKOtlDClit2+WuZ05wbCL1erGt/di+Sgy8E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SXY5Ig5y6Lf5VdL7q+1fyX0x0dDyJD+0zeMmsxj4Z1lVXyQuWANC4Yjc7hZSHTy7i9p1qTE07AWe7NnCpHZ1BZcbDFtkj9VpUcVeDHHZow4nmTuByUcChFcioHzpZ5xYRTD5pzT1VoSWa5fE44lnFYblOe0AJztAldrdg6G+hRQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=s36N66d3; arc=none smtp.client-ip=82.195.75.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=debian.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EEB06SwF"
-Received: by mail-vk1-f170.google.com with SMTP id 71dfb90a1353d-524125f6cadso2872783e0c.2;
-        Sat, 05 Apr 2025 07:23:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743863020; x=1744467820; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/p/4bsPFAwsntA6dFF/zQ5mVNq7asuGZ7eLM61oyzaQ=;
-        b=EEB06SwFvC2qZsjfhre88djhOx7u5SKOF5IVP5BhNfcsIYWX/cnfHVlYTC518gp00H
-         e9CQIzGYAX2UNgX1h64ndusD3scEBfQadA1+lqMNmSXefW22mDakOHiKgqZR4I4NfLzx
-         DdLMalSN4srZZDxgQAi4uYzeuSSwzbyGmJClweTgnCo7zeWcxc1pRrM8bbmmuwFi1zSN
-         7GmiGwxtIyxvHZWxRrKIKNQyxGSAkFBRME7n7fNr1EmXvCeMdmHN0TLXkexfvR2DlYBY
-         /0RKPMYq/FABl6oCa4OF+7oYAp9XxruDcYB6Iul+jmO5FPgbUrmFK6g6AVlBRYNkWY6r
-         N/Iw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743863020; x=1744467820;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/p/4bsPFAwsntA6dFF/zQ5mVNq7asuGZ7eLM61oyzaQ=;
-        b=q7l7aUbRyBu0x+lMoL+944qJiah/TCLOUkAbj44G/A5uus0anKArLcInBv2h5yIrRc
-         39fV7977TocUhktd2FPxAht+QaMr8sp04M0THe70DnxaINv3o9BsYgocPHQdD4F8aNK7
-         8H+7vUlvtJfrXNpg9bMNsJk9m+wvADo/TB82cq5MwWOzh0SdrvcZ3ka7bl8gq6caJ/Fa
-         XGcdP3Hbikw+EV7AKwyM1WWVTXF0+3u3eP3JcJKTNXWWh2SIxgfXcmhFbZr9g113m2t/
-         MONOI2r34DiFdaq+30BNmNq/DPqUao2o1rg4zHE42k6VHRxxnMFMIyhN31xSEnM7V/05
-         DxTg==
-X-Forwarded-Encrypted: i=1; AJvYcCUVX9C2fC1SZgE3KZkIfF9JRClff54jYENU76Ot2dUNJYPnihEbHVw0KhmkyzbJPl+tE/o86GIRW/XGLQ==@vger.kernel.org, AJvYcCXbt/lvpzRLR+Ijj9I7CaKRac0t7kJmSIfhIFC/trejeTBCGTbEDg5KCuheUjSBe7hJz8h8OHgNjwpXlxeJ@vger.kernel.org
-X-Gm-Message-State: AOJu0YwoDDrCqCFws0QiQq5T/sLCqS3xfXbaw0YLDsO97C8xYr6Kftr2
-	FLUzmgZTUZGTTDqntNNQRILSyO1iBTj89/xVAI0uy69L14Waefciiyk+Ho6R1QvEorxtntophk5
-	5YlI/nu2/9qtV6W2kyqvkn9K0t7I=
-X-Gm-Gg: ASbGnctom2VfLYBVHD3lfXowQ44oaq+QlzG/AJTp7Px67RTS4cnyNKiSp49wFg82vC8
-	lN5rf1vN17cIwJruS0tMNCf8yu2AR9j5JuIef8qCIkrf8pqBEOZHYXsV9T/1/MUwukULYKv2GO7
-	014GI3AnQzKvIGZRUjfUDBmOXUyyGl
-X-Google-Smtp-Source: AGHT+IHFtRTL3RqrMIPJ8vf/tHEaDt1ARljHgx7WlPToBdwqJ724tsN+pZxlRaKfRKWlCe/z7fwyCcOgbtVY3pZp2Rk=
-X-Received: by 2002:a05:6122:168f:b0:520:5185:1c71 with SMTP id
- 71dfb90a1353d-52765d2d188mr4284391e0c.7.1743863020171; Sat, 05 Apr 2025
- 07:23:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="s36N66d3"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=pHS9rgj9jKOtlDClit2+WuZ05wbCL1erGt/di+Sgy8E=; b=s36N66d3TQmACyBQqzoE8vOusD
+	HI99V6a+itAzx/XzYDwk6iR5i3LfhNmusECk139DY49f04UKzsLS1uSIfyKcHBPTu1lcQz8IjJi4D
+	f7qb8NUzCAker1S+cUWT0axDeegkwmwv054YYObeNdDEZ5iPELTmbHKfZ3WnvB0FpAh6sIqAPz/gE
+	omLsQGlIrmh2LhTt9l6cI+Z/sDKhSulD8JHCtU4SxunPs715nVJThFfFIziIwxbX2ekel0IGsFj1N
+	4iwmJGZQT4mraXoxwFwyYSkdBc0o93jxzTQca6Nwj0jT8lP2PcP7vd3GKapeyFd/AACvyF6C/IeDU
+	554l+Lsw==;
+Received: from authenticated user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.94.2)
+	(envelope-from <carnil@debian.org>)
+	id 1u14Ry-00D929-8C; Sat, 05 Apr 2025 14:24:46 +0000
+Received: by eldamar.lan (Postfix, from userid 1000)
+	id 44D23BE2DE0; Sat, 05 Apr 2025 16:24:45 +0200 (CEST)
+Date: Sat, 5 Apr 2025 16:24:45 +0200
+From: Salvatore Bonaccorso <carnil@debian.org>
+To: "C.D. MacEachern" <craig.daniel.maceachern@gmail.com>,
+	1100928@bugs.debian.org, Takashi Iwai <tiwai@suse.de>
+Cc: Kuan-Wei Chiu <visitorckw@gmail.com>, linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: Bug#1100928: [regression 6.1.y] microphone no longer records (on
+ VivoBook_ASUSLaptop TP401MARB_J401MA)
+Message-ID: <Z_E9LbOiYN5dPpSb@eldamar.lan>
+References: <CAJ8x=4ibzvVxxv7FzswtwTcYT73XaDOUr7gHWMcdxB+j8+zyyw@mail.gmail.com>
+ <878qojypu6.wl-tiwai@suse.de>
+ <CAJ8x=4gN1fH6chp4C3jX1OXq2-JhbP5yUzLbqvWrAJ-u=+VNhw@mail.gmail.com>
+ <87mscw4dst.wl-tiwai@suse.de>
+ <Z_AxsuGoaVK9P3L4@eldamar.lan>
+ <174248253267.1718.4037292692790831697.reportbug@x>
+ <CAJ8x=4gQQeh+yuUrBDT3P_ZkWRT+7pPujq-ZF6Fcao0V7kohFw@mail.gmail.com>
+ <Z_DNcG7wp4iPh5NH@eldamar.lan>
+ <174248253267.1718.4037292692790831697.reportbug@x>
+ <CAJ8x=4hmi0Afneepe15Ef-kzVZO+uyw5Row+Cooob_QR=DpwQg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1743857160.git.princerichard17a@gmail.com>
- <2025040538-breeze-espionage-dc6e@gregkh> <CAMyr_bL4Qo_eeVSHhy-_z9_PwcQAvD6N4jfqBb+rtN-Lj+YdmA@mail.gmail.com>
- <CADYq+fY-twT=NruAmfb6EpmYJLM971aTu-CUi-We_Fd6JSP47Q@mail.gmail.com>
-In-Reply-To: <CADYq+fY-twT=NruAmfb6EpmYJLM971aTu-CUi-We_Fd6JSP47Q@mail.gmail.com>
-From: Samuel Abraham <abrahamadekunle50@gmail.com>
-Date: Sat, 5 Apr 2025 15:23:30 +0100
-X-Gm-Features: ATxdqUE8ROfu-fqiRiJp-D_rItN8bhudjw6IQvFtkopPWSBx-EbHPIFhi5qw-FY
-Message-ID: <CADYq+faiOqMVsi6KDiR2GkYrU4FCqv7j0fo3fw_R=72=UL2oPQ@mail.gmail.com>
-Subject: Re: [PATCH 0/8] staging: sm750fb: change function naming style
-To: Richard Akintola <princerichard17a@gmail.com>
-Cc: Greg KH <gregkh@linuxfoundation.org>, outreachy@lists.linux.dev, 
-	sudipm.mukherjee@gmail.com, teddy.wang@siliconmotion.com, 
-	linux-fbdev@vger.kernel.org, linux-staging@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJ8x=4hmi0Afneepe15Ef-kzVZO+uyw5Row+Cooob_QR=DpwQg@mail.gmail.com>
+X-Debian-User: carnil
 
-On Sat, Apr 5, 2025 at 3:16=E2=80=AFPM Samuel Abraham
-<abrahamadekunle50@gmail.com> wrote:
->
-> On Sat, Apr 5, 2025 at 3:07=E2=80=AFPM Richard Akintola
-> <princerichard17a@gmail.com> wrote:
-> >
-> > On Sat, Apr 5, 2025 at 2:37=E2=80=AFPM Greg KH <gregkh@linuxfoundation.=
-org> wrote:
-> >
-> > > - This looks like a new version of a previously submitted patch, but =
-you
-> > >   did not list below the --- line any changes from the previous versi=
-on.
-> >
-> > Please, how do I resolve this issue?
-> >
-> > Richard Akintola
->
-> Hello Richard
->
-> THis is the main message from the bot
->
-> This looks like a new version of a previously submitted patch, but you
->   did not list below the --- line any changes from the previous version.
->   Please read the section entitled "The canonical patch format" in the
->   kernel file, Documentation/process/submitting-patches.rst for what
->   needs to be done here to properly describe this.
->
-> It basically means that if you made a change to a patch, you will have
-> a new version.
-> You will have to indicate the patch version and also what changed
->
-> So lets say you have a first Patch then after review, or you edited
-> the commit message
-> or made a change in the code or something,
-> you will now have a new patch which you will call v2.
->
-> you will use git format-patch -o /tmp/ --subject-prefix=3D"PATCH v2" <com=
-mit-ID>
->
-> then when you want to send with mutt, immediately after the signed-off
-> by line there are three dashes (---),
-> You will then write what changes under these three dashes in the format
->
-> signedoff-by: Richard
-> ---
-> Changes in v1:
->    - This is what changed in v1.
->
-> I hope this helps
->
-Also, you can go to the "Submitting a Patchset" section down the page
-of the firstPatch
-documentation for more information on versioning patchsets.
+Control: tags -1 - moreinfo
 
-Adekunle
+On Sat, Apr 05, 2025 at 09:08:38AM -0400, C.D. MacEachern wrote:
+> Thanks, running it now, microphone levels working fine now! Testing
+> recording and playback, working perfectly.
+
+Many thanks for testing the patch and confirming the fix.
+
+Takashi, assume you will monitor that 8983dc1b66c0 ("ALSA:
+hda/realtek: Fix built-in mic on another ASUS VivoBook model") get
+backported to all the relevant stable series? TTBOM, it won't apply
+cleanly to 6.1.y so Greg or Sasha might not get it down to 6.1.y
+witout explicit backport request?
+
+Regards,
+Salvatore
