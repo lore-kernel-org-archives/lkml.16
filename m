@@ -1,134 +1,163 @@
-Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B76E03FC3;
-	Sat,  5 Apr 2025 20:30:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7FFC160783
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 20:34:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743885045; cv=none; b=m3TMEu7xlj5shg50OFM4tIyM1aATxuOnZg1V04qCY5SGvw5FKLP1058MAbY1zWKP0kIaCkvarAompKRkZCdF3kFVNxssQohDkqrbhNZA+6I0gwaw4SgjVP+/oXyjcQWGNsNXn3/Gm23Re0QK5oSR9kzJ1aHRHVFwaSu1o/h6TrQ=
+	t=1743885281; cv=none; b=Ic0tJZSXQfaE8cdd8YSXSdM30JFWBwFUIIsOFeu3djNxInvmCNw17BABFPGZHxMh5ZcbfMMDn2kYtzXlgNVZe6on8hzK6M69QJ4k4svL692mzteKEYGN6AjxexRKa+7JAP2ioFi8Jkvui7HsGUcGUcQXdm07ubREARIGwhUqDVw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743885045; c=relaxed/simple;
-	bh=592/DYeE4rV/PvvRdjDT+n9BuKH+8hLaJtJPesSSxkw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CUDmtDqLREzaDudngYYvokJ52el7H98Ur05V8843ZimMr2pyrhc39wZBDA6nTfj84+0M4hZwud+gu2jSKguVWRGl6YrNOMR7pRvM1Rc1eNaZa4l5Z+AmRqrspnzsRe0aHpeYxcTciOHuRRKClxT06LtP1uq/REZUDI3rSb534oE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Osit0nMV; arc=none smtp.client-ip=209.85.222.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743885281; c=relaxed/simple;
+	bh=v61BhWwATA4KOhgsMu7FZcgQjluYJqfLdjooILwM6Ag=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=J13iiCLzJsWkUNqWeJEDW45PFs0ZABDXfnk089/VddeMT+c8j6TU7NdxuUlva5x0DswzoAfU3wJMcbAooHS3E/9oWK5yHV9jW5rMF5GgKbtOJWm10qUordz7XSmbZPzzQF5Bg/di1+ioXZYZ81Br/lEZOBVehQiiiZqJEhRpdHk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=Tub6aUhc; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Osit0nMV"
-Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-7c55500cf80so260906185a.1;
-        Sat, 05 Apr 2025 13:30:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743885042; x=1744489842; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=QFZ87RkgEvE5OWvML1O0pzoNbsXsPPEFnlwAAyAkpNU=;
-        b=Osit0nMV/bsOUhBri8cFNjncQIhIpTQVcuzeYr0GhqOETuUhLjjZKLxx5BnMylO+PM
-         gzB9B5gglbiDvVBbYqHc+pZsTFt3t4rwtlHhGXE6hAzEFyE41ZP08FvI277lPjhz8fgt
-         He+XAfIAgt3HSZL+tELFBnNTJ3auBLXsqP3mOhOVuRJb007giMMxxa9P6t9ItC24qIXj
-         GxCJY/hYB+SUnVZCyKMdYAadS/6X1Z6TgsaGRAtc0jlNpKxSQKQpELBiU2XAmu/gHTZ5
-         z7uTNR1NmSX81yyG7QYCCVQ5wHA2HcQ82ARMqP4RM5RRmBqxlv3PfdoXk7kMC6Gva8if
-         No3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743885042; x=1744489842;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QFZ87RkgEvE5OWvML1O0pzoNbsXsPPEFnlwAAyAkpNU=;
-        b=v8YvrU1cpon9mnAenwGqU9ZWuPFxmtxKM9RW2Yn8XaBvhmGRHrwrx3tvTLZ/AFVcqt
-         z0EpEQNA2QNasskHEGe4i7TO3OxyLXbybvTCFmJveprSk/Z21yp2i+sgK7WzUmrLb8Us
-         tpr66Bp2fDehXVOzNN7oMd3LWbg2pO6wW6BY+xidy5P6TZ3ze09E5802UnAwfptrBb1e
-         VeKjCMtR2QL+T1hn1PlPqvf+SCcJukvAggFV2lphVFmq2ymqlSX2LKSwCcT83ncIJqQy
-         BJtux4bI2kIDI9NiFjMMXFfF/5J2SackOP3qDEawzJPyeD7XF71SL7XSI0TW08isu3gz
-         IBnA==
-X-Forwarded-Encrypted: i=1; AJvYcCXnyx0DpPeRUCojdgUgJ65thNOHSIqf3eWwBRDXgAlcumhCfE1WzvwHtWRuMKrKz7e/qqCageyboPTW2lYkG2E0@vger.kernel.org
-X-Gm-Message-State: AOJu0YxyY2UsJFMpELcAa3IuE5RSQ90nUnznRln05xfhZH5zAq2GZwE7
-	l7Fx0MbXK0QaMRGCWpCNn7nvf+o9eMNyCCjNTjEfCs9z4WkomhpA
-X-Gm-Gg: ASbGncsNM8nmvl3q55OLhL9tdzsynG+fyOjdxs4RqJAjnNXZTl+692WgktXwesBg98E
-	DDFD1zYNm64UaS13IF+VOY+H8xKcVUYBbYleBASEatSgSP5k4xuOT5vhxhz0nJc0DS5+PSNiQZB
-	ACFH0zNZBJw/gwWC+b/tzLPqqkmJuSBrR5OuNZLF7h8oStzz8d27oyImScpIsRQuIXFxWIZ0y2U
-	WxT7LpORbwKKRungWKXJ9SB0U9CwDpNKyTdov3jk8VlzEUoQNzZcJK7/b0YZR39NDhf+VglqugK
-	+o/VO7CiWgRlftKHB+IgjfcNzE1pv0R5RZe0j5EQ9PCQrXaAHfzo/gH+JCo=
-X-Google-Smtp-Source: AGHT+IGqvxIn7+jtL/y34/XygapLxgoGndRyHSw1XKBdPKp4mDWf3UFd4ITwDeNHFgIJ0JPUcEXFyg==
-X-Received: by 2002:a05:620a:3723:b0:7c5:cdb5:271b with SMTP id af79cd13be357-7c775a0f60dmr965736585a.15.1743885042551;
-        Sat, 05 Apr 2025 13:30:42 -0700 (PDT)
-Received: from theriatric.mshome.net ([73.123.232.110])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c76e96e566sm384878985a.63.2025.04.05.13.30.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Apr 2025 13:30:42 -0700 (PDT)
-From: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	linux-perf-users@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	linux-kernel-mentees@lists.linux.dev,
-	Gustavo Shahrouzi <gshahrouzi@gmail.com>,
-	syzkaller-bugs@googlegroups.com,
-	syzbot+ff3aa851d46ab82953a3@syzkaller.appspotmail.com
-Subject: [PATCH] perf/core: Prevent WARN_ON(!ctx) in __free_event for partial init
-Date: Sat,  5 Apr 2025 16:30:36 -0400
-Message-ID: <20250405203036.582721-1-gshahrouzi@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Tub6aUhc"
+Received: from [127.0.0.1] ([76.133.66.138])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 535KXlxQ1640815
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Sat, 5 Apr 2025 13:33:48 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 535KXlxQ1640815
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025032001; t=1743885229;
+	bh=pHH++npD0a2GOVXNaA+Sl7u0eZKfC4tVk6Fz4FSWzA8=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=Tub6aUhcNkZz3Mz7X9vAccxd5ieCJL18xhwLwhObwRkiGuKMC9qoh7JDjfNmQ4scT
+	 eu/ji0iNHEPeS5ITbyX/GfqqjOqlg05iS8z97xHYpmEEwyApeyBtj35mKYQEa5lcBU
+	 Q2Aet2wZvY0YejHF3UzmxxtBOFmWSozKj78nscXooSa5IUfHQ0ddLhBJcuVk0kPcCp
+	 s0OYcF6sTABWWW4YjYicu92ymsIPs6zQp0OmPwNjJyZKW3LGgq+D7OK4sEwT2sp6GE
+	 +wHengZkHUnMQrgL9uxWQ+loy9Jfe0T/OgLVeBd++5iBhqfA+7JkYsWvuLX9issJxk
+	 2Y9xy+XAKOPzw==
+Date: Sat, 05 Apr 2025 13:33:46 -0700
+From: "H. Peter Anvin" <hpa@zytor.com>
+To: Borislav Petkov <bp@alien8.de>, Kevin Koster <lkml@ombertech.com>,
+        Oerg866 <oerg866@googlemail.com>
+CC: linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH=5D_x86/microcode=3A_Fix_crashes_o?=
+ =?US-ASCII?Q?n_early_486_CPUs_due_to_usage_of_=27cpuid=27=2E?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20250405093127.GAZ_D4b6NdyTS-UW1J@fat_crate.local>
+References: <CANpbe9Wm3z8fy9HbgS8cuhoj0TREYEEkBipDuhgkWFvqX0UoVQ@mail.gmail.com> <20250405130306.ca9822c1f27db119cc973603@ombertech.com> <20250405093127.GAZ_D4b6NdyTS-UW1J@fat_crate.local>
+Message-ID: <DB27EAFA-8793-4B0E-BC33-C9E9E2C41777@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Move the get_ctx(child_ctx) call and the child_event->ctx assignment to
-occur immediately after the child event is allocated. Ensure that
-child_event->ctx is non-NULL before any subsequent error path within
-inherit_event calls free_event(), satisfying the assumptions of the
-cleanup code.
+On April 5, 2025 2:32:26 AM PDT, Borislav Petkov <bp@alien8=2Ede> wrote:
+>On Sat, Apr 05, 2025 at 01:03:06PM +1100, Kevin Koster wrote:
+>> On Sat, 19 Oct 2024 08:29:04 +0200
+>> Oerg866 <oerg866@googlemail=2Ecom> wrote:
+>>=20
+>> > Starting with v6=2E7-rc1, the kernel was no longer able to boot on ea=
+rly
+>> > i486-class CPUs=2E
+>>=20
+>> Thanks for this patch! It solves my problem with kernel 6=2E12=2E11
+>> rebooting at start-up on 486 CPUs, which had me puzzled=2E (tested on
+>> AM486DX2-66 and CX486DX4-100)
+>>=20
+>> Is there a reason why the patch wasn't accepted?
+>
+>Yes, too many patches, too little time=2E :-(
+>
+>Anyway, does the one below - only build-tested - work for both y'all too?
+>
+>---
+>diff --git a/arch/x86/include/asm/microcode=2Eh b/arch/x86/include/asm/mi=
+crocode=2Eh
+>index 695e569159c1=2E=2Ed53148fb893a 100644
+>--- a/arch/x86/include/asm/microcode=2Eh
+>+++ b/arch/x86/include/asm/microcode=2Eh
+>@@ -17,10 +17,12 @@ struct ucode_cpu_info {
+> void load_ucode_bsp(void);
+> void load_ucode_ap(void);
+> void microcode_bsp_resume(void);
+>+bool __init microcode_loader_disabled(void);
+> #else
+> static inline void load_ucode_bsp(void)	{ }
+> static inline void load_ucode_ap(void) { }
+> static inline void microcode_bsp_resume(void) { }
+>+bool __init microcode_loader_disabled(void) { return false; }
+> #endif
+>=20
+> extern unsigned long initrd_start_early;
+>diff --git a/arch/x86/kernel/cpu/microcode/amd=2Ec b/arch/x86/kernel/cpu/=
+microcode/amd=2Ec
+>index b61028cf5c8a=2E=2Edda7f0d409e9 100644
+>--- a/arch/x86/kernel/cpu/microcode/amd=2Ec
+>+++ b/arch/x86/kernel/cpu/microcode/amd=2Ec
+>@@ -1099,7 +1099,7 @@ static int __init save_microcode_in_initrd(void)
+> 	enum ucode_state ret;
+> 	struct cpio_data cp;
+>=20
+>-	if (dis_ucode_ldr || c->x86_vendor !=3D X86_VENDOR_AMD || c->x86 < 0x10=
+)
+>+	if (microcode_loader_disabled() || c->x86_vendor !=3D X86_VENDOR_AMD ||=
+ c->x86 < 0x10)
+> 		return 0;
+>=20
+> 	if (!find_blobs_in_containers(&cp))
+>diff --git a/arch/x86/kernel/cpu/microcode/core=2Ec b/arch/x86/kernel/cpu=
+/microcode/core=2Ec
+>index b3658d11e7b6=2E=2E972338a2abae 100644
+>--- a/arch/x86/kernel/cpu/microcode/core=2Ec
+>+++ b/arch/x86/kernel/cpu/microcode/core=2Ec
+>@@ -95,12 +95,15 @@ static bool amd_check_current_patch_level(void)
+> 	return false;
+> }
+>=20
+>-static bool __init check_loader_disabled_bsp(void)
+>+bool __init microcode_loader_disabled(void)
+> {
+> 	static const char *__dis_opt_str =3D "dis_ucode_ldr";
+> 	const char *cmdline =3D boot_command_line;
+> 	const char *option  =3D __dis_opt_str;
+>=20
+>+	if (!have_cpuid_p())
+>+		return true;
+>+
+> 	/*
+> 	 * CPUID(1)=2EECX[31]: reserved for hypervisor use=2E This is still not
+> 	 * completely accurate as xen pv guests don't see that CPUID bit set bu=
+t
+>@@ -146,7 +149,7 @@ void __init load_ucode_bsp(void)
+> 		return;
+> 	}
+>=20
+>-	if (check_loader_disabled_bsp())
+>+	if (microcode_loader_disabled())
+> 		return;
+>=20
+> 	if (intel)
+>diff --git a/arch/x86/kernel/head32=2Ec b/arch/x86/kernel/head32=2Ec
+>index de001b2146ab=2E=2Ef29dc9c95c50 100644
+>--- a/arch/x86/kernel/head32=2Ec
+>+++ b/arch/x86/kernel/head32=2Ec
+>@@ -145,8 +145,7 @@ void __init __no_stack_protector mk_early_pgtbl_32(vo=
+id)
+> 	*ptr =3D (unsigned long)ptep + PAGE_OFFSET;
+>=20
+> #ifdef CONFIG_MICROCODE_INITRD32
+>-	/* Running on a hypervisor? */
+>-	if (native_cpuid_ecx(1) & BIT(31))
+>+	if (microcode_loader_disabled())
+> 		return;
+>=20
+> 	params =3D (struct boot_params *)__pa_nodebug(&boot_params);
+>
 
-Reported-by: syzbot+ff3aa851d46ab82953a3@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=ff3aa851d46ab82953a3
-Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
----
- kernel/events/core.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+How the Hades does c->x86 not get set to 4 (hence < 0x10) on this CPU?
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 0bb21659e252..153ba622cfa0 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -14016,6 +14016,9 @@ inherit_event(struct perf_event *parent_event,
- 	if (IS_ERR(child_event))
- 		return child_event;
- 
-+	get_ctx(child_ctx);
-+	child_event->ctx = child_ctx;
-+
- 	pmu_ctx = find_get_pmu_context(child_event->pmu, child_ctx, child_event);
- 	if (IS_ERR(pmu_ctx)) {
- 		free_event(child_event);
-@@ -14037,8 +14040,6 @@ inherit_event(struct perf_event *parent_event,
- 		return NULL;
- 	}
- 
--	get_ctx(child_ctx);
--
- 	/*
- 	 * Make the child state follow the state of the parent event,
- 	 * not its attr.disabled bit.  We hold the parent's mutex,
-@@ -14059,7 +14060,6 @@ inherit_event(struct perf_event *parent_event,
- 		local64_set(&hwc->period_left, sample_period);
- 	}
- 
--	child_event->ctx = child_ctx;
- 	child_event->overflow_handler = parent_event->overflow_handler;
- 	child_event->overflow_handler_context
- 		= parent_event->overflow_handler_context;
--- 
-2.43.0
-
+That's the real bug imo=2E=2E=2E
