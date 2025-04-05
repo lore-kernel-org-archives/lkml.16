@@ -1,345 +1,323 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A44DC17B421
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 18:07:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFE4C17B421;
+	Sat,  5 Apr 2025 18:07:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743876440; cv=none; b=afKLyNtkz+/66llBfbG/MccNa/tMSsgozvmBnIBIIE9B0rx52undUAZ5ZuQ8A72UCHsOCBYpcK2ODhcRdXeLkBY/WKpdFgVYpZ6qw5JA7iDkaew+PhY8kLqW3P3zs44LCrSP9lgXNyTMzrnD4CfEU12+HXFcGLHqcueAzG8kxTU=
+	t=1743876449; cv=none; b=qcmwWTHS7F4ZlDk2BWakJ/p3WNT17hPnbsseNxpKBbUOdTcd6miBiwyy1AuTsrFGBB6I1zLU8flS61A/jiBV0j9s9WkboXjVDxS3OZHR9w69GcZP/JvJmD1JODMyKKv2RjmgeeDslkL3lqoIrw0Vu7GeL4rDH3wSedta1K/HWk8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743876440; c=relaxed/simple;
-	bh=l6e+d6JdKfJaD7MlskTP5DBpYGDzt7bpPPMTd1EEoRs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nJ03hUTrvM1CkJHNsXg0bMi0UB6VOi/CAVbG5yZSdazHErwy6OcfKihqk6sWP8lsEOLhOJAtQJL4UFfyNc2KVt2SVGlldhLiyIntmv2bxgU2FKRjrkdtVFWXOfhLJgWIRzz9ReNTSu3Csp6O71IuiR+auHCnYInpl4HpfPINda8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=bardXfuD; arc=none smtp.client-ip=178.60.130.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1743876449; c=relaxed/simple;
+	bh=I8erWoAdZheeFtsRfzVoa/12nlxCIJWuxyAxJ+m2xxg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=srVDbbYexrAboYA4QqLfDMvy0hs9qfaYA9B97blL/NeIEfI2QzFaPvABu37W3ZRQPQdnT+hDcSoiBEYnRv0+e0hUr/VdRhzvaJ2Ykd4Guj7mwT3YkEj/8UTxf5yHS+Z0l2fCgrnZMrcm5FwPj5svlOP/wWAnSJLdxvy8Wrm6ze8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sp4jPzql; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="bardXfuD"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=ffoiDfGVv0vgJEbN88wEP/EagWrUG7dXjyM/xbICAUI=; b=bardXfuDuUG/s8XHD4EMEd/vwu
-	K88caKbdvGO6+gkvsnFgKlRUHHEDsdZnDe9P22KwptN1+vTGNcTyLrii8351aWv2TSeLkfmq7+Lr2
-	UTaWTm/sdA5lo7GBMeTTG374uSnNugq/GOORJK1q4UUYjHVpVzF5cRUVqU1mjEyOv7Hoi7zAZG4Cy
-	jjTT1TEOWpY0qwCvJ9QQJ7OkBcxf5sUY+q0mHhDK6HkTDv51jbEz4xdttAfHrts5mPuAmq+VTzdXc
-	8SjPxk4Bt/WA55ZK7whaEpYvBKdYOhxsQC2Uf7dHtbYAfBSsz60cEat69/yZptO3LuQFiNJ1UzJLx
-	kmrM253A==;
-Received: from [189.7.87.174] (helo=[192.168.0.224])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1u17uv-00C0Qj-GF; Sat, 05 Apr 2025 20:06:53 +0200
-Message-ID: <399026f9-9cde-48c5-80ee-f725fbc737fc@igalia.com>
-Date: Sat, 5 Apr 2025 15:06:47 -0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sp4jPzql"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A60B0C4CEE4;
+	Sat,  5 Apr 2025 18:07:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743876449;
+	bh=I8erWoAdZheeFtsRfzVoa/12nlxCIJWuxyAxJ+m2xxg=;
+	h=Date:From:To:Cc:Subject:From;
+	b=sp4jPzqlox+EG4rwruvo+rLC+HVSbGQTCINsqk/a1sG4BPPzL45YDZaegKxNN3sXv
+	 v41teruSsJCos/jtKzzFE4RrRa8NG1ARlKWtA1pwOamBaTnhwIwF0bDpTDef/RISHn
+	 hmQ2SeJ4fZxzSRSpjznJP8IUjs2jcn5SBoaAdm7loXZKRzsxnvlyL6HrbVlkzTMiUa
+	 gkNXS+H0pvl3Clg0/CksYY7BVtdcAjSpZEjWTbRouz7Ikr8ksACq7fmKIMfNJlb5U5
+	 ysN1K2CN06XDU3SxIRrO/1Zln7D1IZx/GuRq3MT4z9A0I6AL/WU2S25/+lPyywpZPn
+	 9cCJKH1dtUDjA==
+Date: Sat, 5 Apr 2025 12:07:26 -0600
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Miri Korenblit <miriam.rachel.korenblit@intel.com>,
+	Johannes Berg <johannes.berg@intel.com>
+Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH][next] wifi: iwlwifi: mvm: d3: Avoid
+ -Wflex-array-member-not-at-end warnings
+Message-ID: <Z_FxXjiMvG5u73fi@kspp>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/4] drm/vc4: tests: Retry pv-muxing tests when EDEADLK
-To: Maxime Ripard <mripard@kernel.org>,
- Dave Stevenson <dave.stevenson@raspberrypi.com>,
- Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <20250403-drm-vc4-kunit-failures-v2-0-e09195cc8840@kernel.org>
- <20250403-drm-vc4-kunit-failures-v2-4-e09195cc8840@kernel.org>
-Content-Language: en-US
-From: =?UTF-8?Q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>
-In-Reply-To: <20250403-drm-vc4-kunit-failures-v2-4-e09195cc8840@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hi Maxime,
+-Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+getting ready to enable it, globally.
 
-On 03/04/25 10:33, Maxime Ripard wrote:
-> Some functions used by the HVS->PV muxing tests can return with EDEADLK,
-> meaning the entire sequence should be restarted. It's not a fatal error
-> and we should treat it as a recoverable error, and recover, instead of
-> failing the test like we currently do.
-> 
-> Fixes: 76ec18dc5afa ("drm/vc4: tests: Add unit test suite for the PV muxing")
-> Signed-off-by: Maxime Ripard <mripard@kernel.org>
+Use the `DEFINE_RAW_FLEX()` helper for on-stack definitions of
+a flexible structure where the size of the flexible-array member
+is known at compile-time, and refactor the rest of the code,
+accordingly.
 
-Reviewed-by: Maíra Canal <mcanal@igalia.com>
+So, with these changes, fix the following warnings:
 
-Best Regards,
-- Maíra
+drivers/net/wireless/intel/iwlwifi/mvm/d3.c:124:52: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/net/wireless/intel/iwlwifi/mvm/d3.c:2067:51: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/net/wireless/intel/iwlwifi/mvm/d3.c:2162:43: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/net/wireless/intel/iwlwifi/mvm/d3.c:2225:43: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 
-> ---
->   drivers/gpu/drm/vc4/tests/vc4_test_pv_muxing.c | 113 ++++++++++++++++++++++++-
->   1 file changed, 112 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/vc4/tests/vc4_test_pv_muxing.c b/drivers/gpu/drm/vc4/tests/vc4_test_pv_muxing.c
-> index 52c04ef33206bf4f9e21e3c8b7cea932824a67fa..d1f694029169adf6a907a72614bc66afd745017e 100644
-> --- a/drivers/gpu/drm/vc4/tests/vc4_test_pv_muxing.c
-> +++ b/drivers/gpu/drm/vc4/tests/vc4_test_pv_muxing.c
-> @@ -685,20 +685,34 @@ static void drm_vc4_test_pv_muxing(struct kunit *test)
->   
->   	drm_modeset_acquire_init(&ctx, 0);
->   
->   	vc4 = priv->vc4;
->   	drm = &vc4->base;
-> +
-> +retry:
->   	state = drm_kunit_helper_atomic_state_alloc(test, drm, &ctx);
->   	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, state);
->   	for (i = 0; i < params->nencoders; i++) {
->   		enum vc4_encoder_type enc_type = params->encoders[i];
->   
->   		ret = vc4_mock_atomic_add_output(test, state, enc_type);
-> +		if (ret == -EDEADLK) {
-> +			drm_atomic_state_clear(state);
-> +			ret = drm_modeset_backoff(&ctx);
-> +			if (!ret)
-> +				goto retry;
-> +		}
->   		KUNIT_ASSERT_EQ(test, ret, 0);
->   	}
->   
->   	ret = drm_atomic_check_only(state);
-> +	if (ret == -EDEADLK) {
-> +		drm_atomic_state_clear(state);
-> +		ret = drm_modeset_backoff(&ctx);
-> +		if (!ret)
-> +			goto retry;
-> +	}
->   	KUNIT_EXPECT_EQ(test, ret, 0);
->   
->   	KUNIT_EXPECT_TRUE(test,
->   			  check_fifo_conflict(test, state));
->   
-> @@ -726,21 +740,35 @@ static void drm_vc4_test_pv_muxing_invalid(struct kunit *test)
->   
->   	drm_modeset_acquire_init(&ctx, 0);
->   
->   	vc4 = priv->vc4;
->   	drm = &vc4->base;
-> +
-> +retry:
->   	state = drm_kunit_helper_atomic_state_alloc(test, drm, &ctx);
->   	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, state);
->   
->   	for (i = 0; i < params->nencoders; i++) {
->   		enum vc4_encoder_type enc_type = params->encoders[i];
->   
->   		ret = vc4_mock_atomic_add_output(test, state, enc_type);
-> +		if (ret == -EDEADLK) {
-> +			drm_atomic_state_clear(state);
-> +			ret = drm_modeset_backoff(&ctx);
-> +			if (!ret)
-> +				goto retry;
-> +		}
->   		KUNIT_ASSERT_EQ(test, ret, 0);
->   	}
->   
->   	ret = drm_atomic_check_only(state);
-> +	if (ret == -EDEADLK) {
-> +		drm_atomic_state_clear(state);
-> +		ret = drm_modeset_backoff(&ctx);
-> +		if (!ret)
-> +			goto retry;
-> +	}
->   	KUNIT_EXPECT_LT(test, ret, 0);
->   
->   	drm_modeset_drop_locks(&ctx);
->   	drm_modeset_acquire_fini(&ctx);
->   }
-> @@ -811,17 +839,30 @@ static void drm_test_vc5_pv_muxing_bugs_subsequent_crtc_enable(struct kunit *tes
->   	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, vc4);
->   
->   	drm_modeset_acquire_init(&ctx, 0);
->   
->   	drm = &vc4->base;
-> +retry_first:
->   	state = drm_kunit_helper_atomic_state_alloc(test, drm, &ctx);
->   	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, state);
->   
->   	ret = vc4_mock_atomic_add_output(test, state, VC4_ENCODER_TYPE_HDMI0);
-> +	if (ret == -EDEADLK) {
-> +		drm_atomic_state_clear(state);
-> +		ret = drm_modeset_backoff(&ctx);
-> +		if (!ret)
-> +			goto retry_first;
-> +	}
->   	KUNIT_ASSERT_EQ(test, ret, 0);
->   
->   	ret = drm_atomic_check_only(state);
-> +	if (ret == -EDEADLK) {
-> +		drm_atomic_state_clear(state);
-> +		ret = drm_modeset_backoff(&ctx);
-> +		if (!ret)
-> +			goto retry_first;
-> +	}
->   	KUNIT_ASSERT_EQ(test, ret, 0);
->   
->   	new_hvs_state = vc4_hvs_get_new_global_state(state);
->   	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, new_hvs_state);
->   
-> @@ -834,17 +875,30 @@ static void drm_test_vc5_pv_muxing_bugs_subsequent_crtc_enable(struct kunit *tes
->   	KUNIT_ASSERT_TRUE(test, new_hvs_state->fifo_state[hdmi0_channel].in_use);
->   
->   	ret = drm_atomic_helper_swap_state(state, false);
->   	KUNIT_ASSERT_EQ(test, ret, 0);
->   
-> +retry_second:
->   	state = drm_kunit_helper_atomic_state_alloc(test, drm, &ctx);
->   	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, state);
->   
->   	ret = vc4_mock_atomic_add_output(test, state, VC4_ENCODER_TYPE_HDMI1);
-> +	if (ret == -EDEADLK) {
-> +		drm_atomic_state_clear(state);
-> +		ret = drm_modeset_backoff(&ctx);
-> +		if (!ret)
-> +			goto retry_second;
-> +	}
->   	KUNIT_ASSERT_EQ(test, ret, 0);
->   
->   	ret = drm_atomic_check_only(state);
-> +	if (ret == -EDEADLK) {
-> +		drm_atomic_state_clear(state);
-> +		ret = drm_modeset_backoff(&ctx);
-> +		if (!ret)
-> +			goto retry_second;
-> +	}
->   	KUNIT_ASSERT_EQ(test, ret, 0);
->   
->   	new_hvs_state = vc4_hvs_get_new_global_state(state);
->   	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, new_hvs_state);
->   
-> @@ -885,20 +939,39 @@ static void drm_test_vc5_pv_muxing_bugs_stable_fifo(struct kunit *test)
->   	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, vc4);
->   
->   	drm_modeset_acquire_init(&ctx, 0);
->   
->   	drm = &vc4->base;
-> +retry_first:
->   	state = drm_kunit_helper_atomic_state_alloc(test, drm, &ctx);
->   	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, state);
->   
->   	ret = vc4_mock_atomic_add_output(test, state, VC4_ENCODER_TYPE_HDMI0);
-> +	if (ret == -EDEADLK) {
-> +		drm_atomic_state_clear(state);
-> +		ret = drm_modeset_backoff(&ctx);
-> +		if (!ret)
-> +			goto retry_first;
-> +	}
->   	KUNIT_ASSERT_EQ(test, ret, 0);
->   
->   	ret = vc4_mock_atomic_add_output(test, state, VC4_ENCODER_TYPE_HDMI1);
-> +	if (ret == -EDEADLK) {
-> +		drm_atomic_state_clear(state);
-> +		ret = drm_modeset_backoff(&ctx);
-> +		if (!ret)
-> +			goto retry_first;
-> +	}
->   	KUNIT_ASSERT_EQ(test, ret, 0);
->   
->   	ret = drm_atomic_check_only(state);
-> +	if (ret == -EDEADLK) {
-> +		drm_atomic_state_clear(state);
-> +		ret = drm_modeset_backoff(&ctx);
-> +		if (!ret)
-> +			goto retry_first;
-> +	}
->   	KUNIT_ASSERT_EQ(test, ret, 0);
->   
->   	new_hvs_state = vc4_hvs_get_new_global_state(state);
->   	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, new_hvs_state);
->   
-> @@ -919,17 +992,30 @@ static void drm_test_vc5_pv_muxing_bugs_stable_fifo(struct kunit *test)
->   	KUNIT_ASSERT_TRUE(test, new_hvs_state->fifo_state[old_hdmi1_channel].in_use);
->   
->   	ret = drm_atomic_helper_swap_state(state, false);
->   	KUNIT_ASSERT_EQ(test, ret, 0);
->   
-> +retry_second:
->   	state = drm_kunit_helper_atomic_state_alloc(test, drm, &ctx);
->   	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, state);
->   
->   	ret = vc4_mock_atomic_del_output(test, state, VC4_ENCODER_TYPE_HDMI0);
-> +	if (ret == -EDEADLK) {
-> +		drm_atomic_state_clear(state);
-> +		ret = drm_modeset_backoff(&ctx);
-> +		if (!ret)
-> +			goto retry_second;
-> +	}
->   	KUNIT_ASSERT_EQ(test, ret, 0);
->   
->   	ret = drm_atomic_check_only(state);
-> +	if (ret == -EDEADLK) {
-> +		drm_atomic_state_clear(state);
-> +		ret = drm_modeset_backoff(&ctx);
-> +		if (!ret)
-> +			goto retry_second;
-> +	}
->   	KUNIT_ASSERT_EQ(test, ret, 0);
->   
->   	new_hvs_state = vc4_hvs_get_new_global_state(state);
->   	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, new_hvs_state);
->   
-> @@ -979,29 +1065,54 @@ drm_test_vc5_pv_muxing_bugs_subsequent_crtc_enable_too_many_crtc_state(struct ku
->   	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, vc4);
->   
->   	drm_modeset_acquire_init(&ctx, 0);
->   
->   	drm = &vc4->base;
-> +retry_first:
->   	state = drm_kunit_helper_atomic_state_alloc(test, drm, &ctx);
->   	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, state);
->   
->   	ret = vc4_mock_atomic_add_output(test, state, VC4_ENCODER_TYPE_HDMI0);
-> +	if (ret == -EDEADLK) {
-> +		drm_atomic_state_clear(state);
-> +		ret = drm_modeset_backoff(&ctx);
-> +		if (!ret)
-> +			goto retry_first;
-> +	}
->   	KUNIT_ASSERT_EQ(test, ret, 0);
->   
->   	ret = drm_atomic_check_only(state);
-> +	if (ret == -EDEADLK) {
-> +		drm_atomic_state_clear(state);
-> +		ret = drm_modeset_backoff(&ctx);
-> +		if (!ret)
-> +			goto retry_first;
-> +	}
->   	KUNIT_ASSERT_EQ(test, ret, 0);
-> -
->   	ret = drm_atomic_helper_swap_state(state, false);
->   	KUNIT_ASSERT_EQ(test, ret, 0);
->   
-> +retry_second:
->   	state = drm_kunit_helper_atomic_state_alloc(test, drm, &ctx);
->   	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, state);
->   
->   	ret = vc4_mock_atomic_add_output(test, state, VC4_ENCODER_TYPE_HDMI1);
-> +	if (ret == -EDEADLK) {
-> +		drm_atomic_state_clear(state);
-> +		ret = drm_modeset_backoff(&ctx);
-> +		if (!ret)
-> +			goto retry_second;
-> +	}
->   	KUNIT_ASSERT_EQ(test, ret, 0);
->   
->   	ret = drm_atomic_check_only(state);
-> +	if (ret == -EDEADLK) {
-> +		drm_atomic_state_clear(state);
-> +		ret = drm_modeset_backoff(&ctx);
-> +		if (!ret)
-> +			goto retry_second;
-> +	}
->   	KUNIT_ASSERT_EQ(test, ret, 0);
->   
->   	new_vc4_crtc_state = get_vc4_crtc_state_for_encoder(test, state,
->   							    VC4_ENCODER_TYPE_HDMI0);
->   	KUNIT_EXPECT_NULL(test, new_vc4_crtc_state);
-> 
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/net/wireless/intel/iwlwifi/mvm/d3.c | 129 +++++++++-----------
+ 1 file changed, 61 insertions(+), 68 deletions(-)
+
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/d3.c b/drivers/net/wireless/intel/iwlwifi/mvm/d3.c
+index 3e8b7168af01..3e95799208fc 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/d3.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/d3.c
+@@ -120,19 +120,17 @@ static void iwl_mvm_wowlan_program_keys(struct ieee80211_hw *hw,
+ 	switch (key->cipher) {
+ 	case WLAN_CIPHER_SUITE_WEP40:
+ 	case WLAN_CIPHER_SUITE_WEP104: { /* hack it for now */
+-		struct {
+-			struct iwl_mvm_wep_key_cmd wep_key_cmd;
+-			struct iwl_mvm_wep_key wep_key;
+-		} __packed wkc = {
+-			.wep_key_cmd.mac_id_n_color =
+-				cpu_to_le32(FW_CMD_ID_AND_COLOR(mvmvif->id,
+-								mvmvif->color)),
+-			.wep_key_cmd.num_keys = 1,
+-			/* firmware sets STA_KEY_FLG_WEP_13BYTES */
+-			.wep_key_cmd.decryption_type = STA_KEY_FLG_WEP,
+-			.wep_key.key_index = key->keyidx,
+-			.wep_key.key_size = key->keylen,
+-		};
++		DEFINE_RAW_FLEX(struct iwl_mvm_wep_key_cmd, wkc, wep_key, 1);
++		struct iwl_mvm_wep_key *wep_key = wkc->wep_key;
++
++		wkc->mac_id_n_color =
++			cpu_to_le32(FW_CMD_ID_AND_COLOR(mvmvif->id,
++							mvmvif->color));
++		wkc->num_keys = 1;
++		/* firmware sets STA_KEY_FLG_WEP_13BYTES */
++		wkc->decryption_type = STA_KEY_FLG_WEP;
++		wep_key->key_index = key->keyidx;
++		wep_key->key_size = key->keylen;
+ 
+ 		/*
+ 		 * This will fail -- the key functions don't set support
+@@ -142,18 +140,19 @@ static void iwl_mvm_wowlan_program_keys(struct ieee80211_hw *hw,
+ 		if (key->flags & IEEE80211_KEY_FLAG_PAIRWISE)
+ 			break;
+ 
+-		memcpy(&wkc.wep_key.key[3], key->key, key->keylen);
++		memcpy(&wep_key->key[3], key->key, key->keylen);
+ 		if (key->keyidx == mvmvif->tx_key_idx) {
+ 			/* TX key must be at offset 0 */
+-			wkc.wep_key.key_offset = 0;
++			wep_key->key_offset = 0;
+ 		} else {
+ 			/* others start at 1 */
+ 			data->wep_key_idx++;
+-			wkc.wep_key.key_offset = data->wep_key_idx;
++			wep_key->key_offset = data->wep_key_idx;
+ 		}
+ 
+ 		mutex_lock(&mvm->mutex);
+-		ret = iwl_mvm_send_cmd_pdu(mvm, WEP_KEY, 0, sizeof(wkc), &wkc);
++		ret = iwl_mvm_send_cmd_pdu(mvm, WEP_KEY, 0,
++					   __struct_size(wkc), wkc);
+ 		data->error = ret != 0;
+ 
+ 		mvm->ptk_ivlen = key->iv_len;
+@@ -2063,10 +2062,8 @@ static bool iwl_mvm_mlo_gtk_rekey(struct iwl_wowlan_status_data *status,
+ 		struct iwl_wowlan_mlo_gtk *mlo_key = &status->mlo_keys[i];
+ 		struct ieee80211_key_conf *key, *old_key;
+ 		struct ieee80211_key_seq seq;
+-		struct {
+-			struct ieee80211_key_conf conf;
+-			u8 key[32];
+-		} conf = {};
++		DEFINE_RAW_FLEX(struct ieee80211_key_conf, conf, key,
++				WOWLAN_KEY_MAX_SIZE);
+ 		u16 flags = le16_to_cpu(mlo_key->flags);
+ 		int j, link_id, key_id, key_type;
+ 
+@@ -2083,40 +2080,40 @@ static bool iwl_mvm_mlo_gtk_rekey(struct iwl_wowlan_status_data *status,
+ 			    key_type >= WOWLAN_MLO_GTK_KEY_NUM_TYPES))
+ 			continue;
+ 
+-		conf.conf.cipher = old_keys->cipher[link_id][key_type];
++		conf->cipher = old_keys->cipher[link_id][key_type];
+ 		/* WARN_ON? */
+-		if (!conf.conf.cipher)
++		if (!conf->cipher)
+ 			continue;
+ 
+-		conf.conf.keylen = 0;
+-		switch (conf.conf.cipher) {
++		conf->keylen = 0;
++		switch (conf->cipher) {
+ 		case WLAN_CIPHER_SUITE_CCMP:
+ 		case WLAN_CIPHER_SUITE_GCMP:
+-			conf.conf.keylen = WLAN_KEY_LEN_CCMP;
++			conf->keylen = WLAN_KEY_LEN_CCMP;
+ 			break;
+ 		case WLAN_CIPHER_SUITE_GCMP_256:
+-			conf.conf.keylen = WLAN_KEY_LEN_GCMP_256;
++			conf->keylen = WLAN_KEY_LEN_GCMP_256;
+ 			break;
+ 		case WLAN_CIPHER_SUITE_BIP_GMAC_128:
+-			conf.conf.keylen = WLAN_KEY_LEN_BIP_GMAC_128;
++			conf->keylen = WLAN_KEY_LEN_BIP_GMAC_128;
+ 			break;
+ 		case WLAN_CIPHER_SUITE_BIP_GMAC_256:
+-			conf.conf.keylen = WLAN_KEY_LEN_BIP_GMAC_256;
++			conf->keylen = WLAN_KEY_LEN_BIP_GMAC_256;
+ 			break;
+ 		case WLAN_CIPHER_SUITE_AES_CMAC:
+-			conf.conf.keylen = WLAN_KEY_LEN_AES_CMAC;
++			conf->keylen = WLAN_KEY_LEN_AES_CMAC;
+ 			break;
+ 		case WLAN_CIPHER_SUITE_BIP_CMAC_256:
+-			conf.conf.keylen = WLAN_KEY_LEN_BIP_CMAC_256;
++			conf->keylen = WLAN_KEY_LEN_BIP_CMAC_256;
+ 			break;
+ 		}
+ 
+-		if (WARN_ON(!conf.conf.keylen ||
+-			    conf.conf.keylen > sizeof(conf.key)))
++		if (WARN_ON(!conf->keylen ||
++			    conf->keylen > WOWLAN_KEY_MAX_SIZE))
+ 			continue;
+ 
+-		memcpy(conf.conf.key, mlo_key->key, conf.conf.keylen);
+-		conf.conf.keyidx = key_id;
++		memcpy(conf->key, mlo_key->key, conf->keylen);
++		conf->keyidx = key_id;
+ 
+ 		old_key = old_keys->key[link_id][key_id];
+ 		if (old_key) {
+@@ -2128,7 +2125,7 @@ static bool iwl_mvm_mlo_gtk_rekey(struct iwl_wowlan_status_data *status,
+ 
+ 		IWL_DEBUG_WOWLAN(mvm, "Add MLO key id %d, link id %d\n",
+ 				 key_id, link_id);
+-		key = ieee80211_gtk_rekey_add(vif, &conf.conf, link_id);
++		key = ieee80211_gtk_rekey_add(vif, conf, link_id);
+ 		if (WARN_ON(IS_ERR(key))) {
+ 			ret = false;
+ 			goto out;
+@@ -2158,30 +2155,28 @@ static bool iwl_mvm_gtk_rekey(struct iwl_wowlan_status_data *status,
+ {
+ 	int i, j;
+ 	struct ieee80211_key_conf *key;
+-	struct {
+-		struct ieee80211_key_conf conf;
+-		u8 key[32];
+-	} conf = {
+-		.conf.cipher = gtk_cipher,
+-	};
++	DEFINE_RAW_FLEX(struct ieee80211_key_conf, conf, key,
++			WOWLAN_KEY_MAX_SIZE);
+ 	int link_id = vif->active_links ? __ffs(vif->active_links) : -1;
+ 
++	conf->cipher = gtk_cipher;
++
+ 	BUILD_BUG_ON(WLAN_KEY_LEN_CCMP != WLAN_KEY_LEN_GCMP);
+-	BUILD_BUG_ON(sizeof(conf.key) < WLAN_KEY_LEN_CCMP);
+-	BUILD_BUG_ON(sizeof(conf.key) < WLAN_KEY_LEN_GCMP_256);
+-	BUILD_BUG_ON(sizeof(conf.key) < WLAN_KEY_LEN_TKIP);
+-	BUILD_BUG_ON(sizeof(conf.key) < sizeof(status->gtk[0].key));
++	BUILD_BUG_ON(WOWLAN_KEY_MAX_SIZE < WLAN_KEY_LEN_CCMP);
++	BUILD_BUG_ON(WOWLAN_KEY_MAX_SIZE < WLAN_KEY_LEN_GCMP_256);
++	BUILD_BUG_ON(WOWLAN_KEY_MAX_SIZE < WLAN_KEY_LEN_TKIP);
++	BUILD_BUG_ON(WOWLAN_KEY_MAX_SIZE < sizeof(status->gtk[0].key));
+ 
+ 	switch (gtk_cipher) {
+ 	case WLAN_CIPHER_SUITE_CCMP:
+ 	case WLAN_CIPHER_SUITE_GCMP:
+-		conf.conf.keylen = WLAN_KEY_LEN_CCMP;
++		conf->keylen = WLAN_KEY_LEN_CCMP;
+ 		break;
+ 	case WLAN_CIPHER_SUITE_GCMP_256:
+-		conf.conf.keylen = WLAN_KEY_LEN_GCMP_256;
++		conf->keylen = WLAN_KEY_LEN_GCMP_256;
+ 		break;
+ 	case WLAN_CIPHER_SUITE_TKIP:
+-		conf.conf.keylen = WLAN_KEY_LEN_TKIP;
++		conf->keylen = WLAN_KEY_LEN_TKIP;
+ 		break;
+ 	default:
+ 		WARN_ON(1);
+@@ -2191,14 +2186,14 @@ static bool iwl_mvm_gtk_rekey(struct iwl_wowlan_status_data *status,
+ 		if (!status->gtk[i].len)
+ 			continue;
+ 
+-		conf.conf.keyidx = status->gtk[i].id;
++		conf->keyidx = status->gtk[i].id;
+ 		IWL_DEBUG_WOWLAN(mvm,
+ 				 "Received from FW GTK cipher %d, key index %d\n",
+-				 conf.conf.cipher, conf.conf.keyidx);
+-		memcpy(conf.conf.key, status->gtk[i].key,
++				 conf->cipher, conf->keyidx);
++		memcpy(conf->key, status->gtk[i].key,
+ 		       sizeof(status->gtk[i].key));
+ 
+-		key = ieee80211_gtk_rekey_add(vif, &conf.conf, link_id);
++		key = ieee80211_gtk_rekey_add(vif, conf, link_id);
+ 		if (IS_ERR(key))
+ 			return false;
+ 
+@@ -2220,42 +2215,40 @@ iwl_mvm_d3_igtk_bigtk_rekey_add(struct iwl_wowlan_status_data *status,
+ 				struct ieee80211_vif *vif, u32 cipher,
+ 				struct iwl_multicast_key_data *key_data)
+ {
++	DEFINE_RAW_FLEX(struct ieee80211_key_conf, conf, key,
++			WOWLAN_KEY_MAX_SIZE);
+ 	struct ieee80211_key_conf *key_config;
+-	struct {
+-		struct ieee80211_key_conf conf;
+-		u8 key[WOWLAN_KEY_MAX_SIZE];
+-	} conf = {
+-		.conf.cipher = cipher,
+-		.conf.keyidx = key_data->id,
+-	};
+ 	struct ieee80211_key_seq seq;
+ 	int link_id = vif->active_links ? __ffs(vif->active_links) : -1;
+ 
++	conf->cipher = cipher;
++	conf->keyidx = key_data->id;
++
+ 	if (!key_data->len)
+ 		return true;
+ 
+-	iwl_mvm_d3_set_igtk_bigtk_ipn(key_data, &seq, conf.conf.cipher);
++	iwl_mvm_d3_set_igtk_bigtk_ipn(key_data, &seq, conf->cipher);
+ 
+ 	switch (cipher) {
+ 	case WLAN_CIPHER_SUITE_BIP_GMAC_128:
+-		conf.conf.keylen = WLAN_KEY_LEN_BIP_GMAC_128;
++		conf->keylen = WLAN_KEY_LEN_BIP_GMAC_128;
+ 		break;
+ 	case WLAN_CIPHER_SUITE_BIP_GMAC_256:
+-		conf.conf.keylen = WLAN_KEY_LEN_BIP_GMAC_256;
++		conf->keylen = WLAN_KEY_LEN_BIP_GMAC_256;
+ 		break;
+ 	case WLAN_CIPHER_SUITE_AES_CMAC:
+-		conf.conf.keylen = WLAN_KEY_LEN_AES_CMAC;
++		conf->keylen = WLAN_KEY_LEN_AES_CMAC;
+ 		break;
+ 	case WLAN_CIPHER_SUITE_BIP_CMAC_256:
+-		conf.conf.keylen = WLAN_KEY_LEN_BIP_CMAC_256;
++		conf->keylen = WLAN_KEY_LEN_BIP_CMAC_256;
+ 		break;
+ 	default:
+ 		WARN_ON(1);
+ 	}
+-	BUILD_BUG_ON(sizeof(conf.key) < sizeof(key_data->key));
+-	memcpy(conf.conf.key, key_data->key, conf.conf.keylen);
++	BUILD_BUG_ON(WOWLAN_KEY_MAX_SIZE < sizeof(key_data->key));
++	memcpy(conf->key, key_data->key, conf->keylen);
+ 
+-	key_config = ieee80211_gtk_rekey_add(vif, &conf.conf, link_id);
++	key_config = ieee80211_gtk_rekey_add(vif, conf, link_id);
+ 	if (IS_ERR(key_config))
+ 		return false;
+ 	ieee80211_set_key_rx_seq(key_config, 0, &seq);
+-- 
+2.43.0
 
