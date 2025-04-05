@@ -1,313 +1,73 @@
-Received: from mx4.wp.pl (mx4.wp.pl [212.77.101.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DE0E1B424D
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 19:10:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.77.101.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACA35140E30
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 19:12:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743880210; cv=none; b=Ezbc82jMDaS6JHPIWu5e1i4wSqM/9bT5JHHW9mWXcbYtiwExXAgPdvk6Wxbc12mM/TOrA1le1lc8mA09s/+cq9v6RuktFPEdE5AD5J7mNdU9Ek92JcdX6y4ZeeMmSJWFaCv7dixoycaX+7tGDHoUEZB4LtH28LQZAJKIBO+subk=
+	t=1743880324; cv=none; b=RHkRR0E+39jpWazbvJ307slKdYV+08P+L9HgwqwjsLYdvrrIALDl/Jn+plB9v16SmUTg/91lquQH0rMm4yfGMKho5dpR5ZVFQjTRCNFKI0JV5FBBSX/KdYXZ9wNv71eyrwVcBckDieeuhZ4YHsfYyFzipqq2bao8J3bMYcSiK/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743880210; c=relaxed/simple;
-	bh=Vl8ufjeJm9EAdi+slpXjwjQcR+NfxnPbjRcq3pcVcRs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Rj1glippYyqYrTlluGKgkuK6ccjAmoMIh05Insev2s3y9oOKjMRcj47lz633o8k/Anh7Z7kuALPdDBZJo4CZD49CR98m7a8Enxi4u6jk70PO7Xw/zGy39C4qdzOWTWmTdyWDnGb5gl4GFI4Aqx97dyvbR7Zj1p3rGdvg/SoScTU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wp.pl; spf=pass smtp.mailfrom=wp.pl; dkim=pass (2048-bit key) header.d=wp.pl header.i=@wp.pl header.b=Rpb+4INM; arc=none smtp.client-ip=212.77.101.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wp.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wp.pl
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wp.pl header.i=@wp.pl header.b="Rpb+4INM"
-Received: (wp-smtpd smtp.wp.pl 46982 invoked from network); 5 Apr 2025 21:09:59 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wp.pl; s=20241105;
-          t=1743880199; bh=FolYfmHo02aZCyreVn2MKr8iJn0pLVohaMtXtghqsgg=;
-          h=From:To:Cc:Subject;
-          b=Rpb+4INMiK7LQFGY+iBMKnWOYU14zcy6c5XQoOEUUQgUuhpyZtAd1tzurcTlfK8k2
-           JsCRygE3KRbFAmptwQCoPrEHFsBkcC1PcoOf9in+zTgYfxnDybRUgd/tB0GfzBwg/F
-           YHNyM58vbd+PPBC4eALt2N19oHiDz+zuy1tJn3T9FRmpwFEIQX3XTm2mrXwzvUwyZh
-           4DO3ct/bZb6OrONGZGAXgI7Uhqoijw15fAKzAHSF5I6+/VSsm0bY5MX6EhignfLuy0
-           PgOSyA2Zi7z/ru04QCapcbkAvK05PblvWaf6Tn4nLEG7/qqSSObyD0GSntjT+PFqZa
-           8D0aWc3ZHNAsA==
-Received: from 83.5.244.88.ipv4.supernova.orange.pl (HELO laptop-olek.home) (olek2@wp.pl@[83.5.244.88])
-          (envelope-sender <olek2@wp.pl>)
-          by smtp.wp.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
-          for <lxu@maxlinear.com>; 5 Apr 2025 21:09:59 +0200
-From: Aleksander Jan Bajkowski <olek2@wp.pl>
-To: lxu@maxlinear.com,
-	andrew@lunn.ch,
-	hkallweit1@gmail.com,
-	linux@armlinux.org.uk,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	lee@kernel.org,
-	linux-leds@vger.kernel.org
-Cc: Aleksander Jan Bajkowski <olek2@wp.pl>,
-	Daniel Golle <daniel@makrotopia.org>
-Subject: [PATCH net-next,v2 2/2] net: phy: mxl-gpy: add LED dimming support
-Date: Sat,  5 Apr 2025 21:09:54 +0200
-Message-Id: <20250405190954.703860-2-olek2@wp.pl>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250405190954.703860-1-olek2@wp.pl>
-References: <20250405190954.703860-1-olek2@wp.pl>
+	s=arc-20240116; t=1743880324; c=relaxed/simple;
+	bh=xmIicbNlPLuWI3TV1FkKv59gUwXqz0Q2csDzatNcnng=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=rumlOoUthJTjd9n7pF44V5tehGTEZsCz/reT/DKrDEtl5pdCN3kzpprgQwGe/1ZBEgLdMRmhoKC/VvdCfMRnE9mky6//qZOo6YgIjR5iUhx1iLvV52XGIM8VGFhamxhauVZZ8ay+vOoAbHHyTd+LjF5GMRk+zRywIA1lJUyDkNk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-85e7e0413c2so299538439f.3
+        for <linux-kernel@vger.kernel.org>; Sat, 05 Apr 2025 12:12:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743880322; x=1744485122;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yeDX7B2Vp7KEiddHCuJLEas57zvKxlOxK04Xcaq7N8Q=;
+        b=wjQNeDuF7iwuysEJsFQlnIlVbTJ5PJf3IYwPur54wPXBSZejmMyVio4p2bzV9H3I0Q
+         FzUh1cW8ZXs+TWaLD4xvBCGYWNYfUZXIHKomwSCARWG5eIFpEkZu5ONBKpzf4iaQNTft
+         cOwE+gAKhM53IMZyG4uZz/ybloGKHELDuWCfRueQEDQfgtEHOo9oueXVMObuvA4pwZAZ
+         A8j2joINuknaHThAyHLvPYBhq2pit8vuxDvjw4dypix9VcNrvOuAOkWixz7mjKa+QQ5O
+         lHR4VOD5yNuMR2ouzYxgmeR/KT2ur9LR+/L4xK03ZQLsP7yybQC6mDPMS6AuZT89aSIC
+         6MXA==
+X-Forwarded-Encrypted: i=1; AJvYcCV5mcJiNBDpe19yq8mfWbjlVzzKTiLa+1ehU9Xvu7K0pFSVfVEnWrroTfY/cwbpAwpBGloUycDq2GCI1Pc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx8qIhqtREixi5gXHTj1jp7uHTPkgaiirndLkMJwtXcvHKwEQWx
+	FUVjCRh+9ko7iypt/QJITbJ1sb1F3q9aqGb+88hheEEfySYgZuhs8Dc7LHY1ClfQFTQcuS5QU1k
+	k7j1keFojzGy73eljpY9kkg5meNrK/iiocZqKrANgAAU3J4Rv5xnwbZU=
+X-Google-Smtp-Source: AGHT+IFx71HeBbjUM48kC5aK964SkqKRjITO4L+2jfQVMfU9KhWE1/9PZLYw7uK8XmJEqN1u+Xy5c8HW187xn2nCtvgbQKh8xGZk
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-WP-MailID: 1ce82d4fe9c468bf0637ffa6a36f47b2
-X-WP-AV: skaner antywirusowy Poczty Wirtualnej Polski
-X-WP-SPAM: NO 0000000 [sTPk]                               
+X-Received: by 2002:a05:6e02:3081:b0:3d3:cdb0:a227 with SMTP id
+ e9e14a558f8ab-3d6e5324ab2mr67339875ab.9.1743880321770; Sat, 05 Apr 2025
+ 12:12:01 -0700 (PDT)
+Date: Sat, 05 Apr 2025 12:12:01 -0700
+In-Reply-To: <CAKUZ0zKBp3iZkykFjVhxo0by38T138+JQ_cRY0C_20cPVF9PJw@mail.gmail.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67f18081.050a0220.0a13.0244.GAE@google.com>
+Subject: Re: [syzbot] [perf?] WARNING in __free_event
+From: syzbot <syzbot+ff3aa851d46ab82953a3@syzkaller.appspotmail.com>
+To: gshahrouzi@gmail.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Some PHYs support LED dimming. The use case is a router that dims LEDs
-at night. In the GPY2xx series, the PWM control register is common to
-all LEDs. To avoid confusing users, only the first LED used has
-brightness control enabled. In many routers only one LED is connected
-to PHY. When the minimum or maximum value is set, the PWM is turned off.
+Hello,
 
-As of now, only Maxlinear PHYs support dimming. In the future, support
-may be extended to other PHYs such as the Realtek RTL8221B.
+syzbot tried to test the proposed patch but the build/boot failed:
 
-Signed-off-by: Aleksander Jan Bajkowski <olek2@wp.pl>
-Reviewed-by: Daniel Golle <daniel@makrotopia.org>
----
- drivers/net/phy/mxl-gpy.c | 100 ++++++++++++++++++++++++++++++++++++--
- 1 file changed, 95 insertions(+), 5 deletions(-)
+failed to apply patch:
+checking file kernel/events/core.c
+patch: **** unexpected end of file in patch
 
-diff --git a/drivers/net/phy/mxl-gpy.c b/drivers/net/phy/mxl-gpy.c
-index 0c8dc16ee7bd..a89a6a57bf34 100644
---- a/drivers/net/phy/mxl-gpy.c
-+++ b/drivers/net/phy/mxl-gpy.c
-@@ -110,9 +110,11 @@
- #define VSPEC1_MBOX_DATA	0x5
- #define VSPEC1_MBOX_ADDRLO	0x6
- #define VSPEC1_MBOX_CMD		0x7
--#define VSPEC1_MBOX_CMD_ADDRHI	GENMASK(7, 0)
--#define VSPEC1_MBOX_CMD_RD	(0 << 8)
- #define VSPEC1_MBOX_CMD_READY	BIT(15)
-+#define VSPEC1_MBOX_CMD_MASK	GENMASK(11, 8)
-+#define VSPEC1_MBOX_CMD_WR	0x1
-+#define VSPEC1_MBOX_CMD_RD	0x0
-+#define VSPEC1_MBOX_CMD_ADDRHI	GENMASK(7, 0)
- 
- /* WoL */
- #define VPSPEC2_WOL_CTL		0x0E06
-@@ -124,6 +126,15 @@
- /* Internal registers, access via mbox */
- #define REG_GPIO0_OUT		0xd3ce00
- 
-+/* LED Brightness registers, access via mbox */
-+#define LED_BRT_CTRL		0xd3cf84
-+#define LED_BRT_CTRL_LVLMAX	GENMASK(15, 12)
-+#define LED_BRT_CTRL_LVLMIN	GENMASK(11, 8)
-+#define LED_BRT_CTRL_EN		BIT(5)
-+#define LED_BRT_CTRL_TSEN	BIT(4)
-+
-+#define GPY_MAX_BRIGHTNESS	15
-+
- struct gpy_priv {
- 	/* serialize mailbox acesses */
- 	struct mutex mbox_lock;
-@@ -138,6 +149,9 @@ struct gpy_priv {
- 	 * is enabled.
- 	 */
- 	u64 lb_dis_to;
-+
-+	/* LED index with brightness control enabled */
-+	int br_led_index;
- };
- 
- static const struct {
-@@ -261,7 +275,7 @@ static int gpy_mbox_read(struct phy_device *phydev, u32 addr)
- 	if (ret)
- 		goto out;
- 
--	cmd = VSPEC1_MBOX_CMD_RD;
-+	cmd = FIELD_PREP(VSPEC1_MBOX_CMD_MASK, VSPEC1_MBOX_CMD_RD);
- 	cmd |= FIELD_PREP(VSPEC1_MBOX_CMD_ADDRHI, addr >> 16);
- 
- 	ret = phy_write_mmd(phydev, MDIO_MMD_VEND1, VSPEC1_MBOX_CMD, cmd);
-@@ -287,6 +301,46 @@ static int gpy_mbox_read(struct phy_device *phydev, u32 addr)
- 	return ret;
- }
- 
-+static int gpy_mbox_write(struct phy_device *phydev, u32 addr, u16 data)
-+{
-+	struct gpy_priv *priv = phydev->priv;
-+	int val, ret;
-+	u16 cmd;
-+
-+	mutex_lock(&priv->mbox_lock);
-+
-+	ret = phy_write_mmd(phydev, MDIO_MMD_VEND1, VSPEC1_MBOX_DATA,
-+			    data);
-+	if (ret)
-+		goto out;
-+
-+	ret = phy_write_mmd(phydev, MDIO_MMD_VEND1, VSPEC1_MBOX_ADDRLO,
-+			    addr);
-+	if (ret)
-+		goto out;
-+
-+	cmd = FIELD_PREP(VSPEC1_MBOX_CMD_MASK, VSPEC1_MBOX_CMD_WR);
-+	cmd |= FIELD_PREP(VSPEC1_MBOX_CMD_ADDRHI, addr >> 16);
-+
-+	ret = phy_write_mmd(phydev, MDIO_MMD_VEND1, VSPEC1_MBOX_CMD, cmd);
-+	if (ret)
-+		goto out;
-+
-+	/* The mbox read is used in the interrupt workaround. It was observed
-+	 * that a read might take up to 2.5ms. This is also the time for which
-+	 * the interrupt line is stuck low. To be on the safe side, poll the
-+	 * ready bit for 10ms.
-+	 */
-+	ret = phy_read_mmd_poll_timeout(phydev, MDIO_MMD_VEND1,
-+					VSPEC1_MBOX_CMD, val,
-+					(val & VSPEC1_MBOX_CMD_READY),
-+					500, 10000, false);
-+
-+out:
-+	mutex_unlock(&priv->mbox_lock);
-+	return ret;
-+}
-+
- static int gpy_config_init(struct phy_device *phydev)
- {
- 	/* Nothing to configure. Configuration Requirement Placeholder */
-@@ -317,6 +371,7 @@ static int gpy_probe(struct phy_device *phydev)
- 	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
- 	if (!priv)
- 		return -ENOMEM;
-+	priv->br_led_index = -1;
- 	phydev->priv = priv;
- 	mutex_init(&priv->mbox_lock);
- 
-@@ -858,7 +913,8 @@ static int gpy115_loopback(struct phy_device *phydev, bool enable, int speed)
- static int gpy_led_brightness_set(struct phy_device *phydev,
- 				  u8 index, enum led_brightness value)
- {
--	int ret;
-+	struct gpy_priv *priv = phydev->priv;
-+	int ret, reg;
- 
- 	if (index >= GPY_MAX_LEDS)
- 		return -EINVAL;
-@@ -871,7 +927,21 @@ static int gpy_led_brightness_set(struct phy_device *phydev,
- 	if (ret)
- 		return ret;
- 
--	/* ToDo: set PWM brightness */
-+	/* Set PWM brightness */
-+	if (index == priv->br_led_index) {
-+		if (value > LED_OFF && value < GPY_MAX_BRIGHTNESS) {
-+			reg = LED_BRT_CTRL_EN;
-+
-+			reg |= FIELD_PREP(LED_BRT_CTRL_LVLMIN, 0x4);
-+			reg |= FIELD_PREP(LED_BRT_CTRL_LVLMAX, value);
-+		} else {
-+			reg = LED_BRT_CTRL_TSEN;
-+		}
-+
-+		ret = gpy_mbox_write(phydev, LED_BRT_CTRL, reg);
-+		if (ret < 0)
-+			return ret;
-+	}
- 
- 	/* clear HW LED setup */
- 	if (value == LED_OFF)
-@@ -880,6 +950,17 @@ static int gpy_led_brightness_set(struct phy_device *phydev,
- 		return 0;
- }
- 
-+static int gpy_led_max_brightness(struct phy_device *phydev, u8 index)
-+{
-+	struct gpy_priv *priv = phydev->priv;
-+
-+	if (priv->br_led_index < 0) {
-+		priv->br_led_index = index;
-+		return GPY_MAX_BRIGHTNESS;
-+	}
-+
-+	return 1;
-+}
- static const unsigned long supported_triggers = (BIT(TRIGGER_NETDEV_LINK) |
- 						 BIT(TRIGGER_NETDEV_LINK_10) |
- 						 BIT(TRIGGER_NETDEV_LINK_100) |
-@@ -1032,6 +1113,7 @@ static struct phy_driver gpy_drivers[] = {
- 		.get_wol	= gpy_get_wol,
- 		.set_loopback	= gpy_loopback,
- 		.led_brightness_set = gpy_led_brightness_set,
-+		.led_max_brightness = gpy_led_max_brightness,
- 		.led_hw_is_supported = gpy_led_hw_is_supported,
- 		.led_hw_control_get = gpy_led_hw_control_get,
- 		.led_hw_control_set = gpy_led_hw_control_set,
-@@ -1055,6 +1137,7 @@ static struct phy_driver gpy_drivers[] = {
- 		.get_wol	= gpy_get_wol,
- 		.set_loopback	= gpy115_loopback,
- 		.led_brightness_set = gpy_led_brightness_set,
-+		.led_max_brightness = gpy_led_max_brightness,
- 		.led_hw_is_supported = gpy_led_hw_is_supported,
- 		.led_hw_control_get = gpy_led_hw_control_get,
- 		.led_hw_control_set = gpy_led_hw_control_set,
-@@ -1077,6 +1160,7 @@ static struct phy_driver gpy_drivers[] = {
- 		.get_wol	= gpy_get_wol,
- 		.set_loopback	= gpy115_loopback,
- 		.led_brightness_set = gpy_led_brightness_set,
-+		.led_max_brightness = gpy_led_max_brightness,
- 		.led_hw_is_supported = gpy_led_hw_is_supported,
- 		.led_hw_control_get = gpy_led_hw_control_get,
- 		.led_hw_control_set = gpy_led_hw_control_set,
-@@ -1100,6 +1184,7 @@ static struct phy_driver gpy_drivers[] = {
- 		.get_wol	= gpy_get_wol,
- 		.set_loopback	= gpy_loopback,
- 		.led_brightness_set = gpy_led_brightness_set,
-+		.led_max_brightness = gpy_led_max_brightness,
- 		.led_hw_is_supported = gpy_led_hw_is_supported,
- 		.led_hw_control_get = gpy_led_hw_control_get,
- 		.led_hw_control_set = gpy_led_hw_control_set,
-@@ -1122,6 +1207,7 @@ static struct phy_driver gpy_drivers[] = {
- 		.get_wol	= gpy_get_wol,
- 		.set_loopback	= gpy_loopback,
- 		.led_brightness_set = gpy_led_brightness_set,
-+		.led_max_brightness = gpy_led_max_brightness,
- 		.led_hw_is_supported = gpy_led_hw_is_supported,
- 		.led_hw_control_get = gpy_led_hw_control_get,
- 		.led_hw_control_set = gpy_led_hw_control_set,
-@@ -1145,6 +1231,7 @@ static struct phy_driver gpy_drivers[] = {
- 		.get_wol	= gpy_get_wol,
- 		.set_loopback	= gpy_loopback,
- 		.led_brightness_set = gpy_led_brightness_set,
-+		.led_max_brightness = gpy_led_max_brightness,
- 		.led_hw_is_supported = gpy_led_hw_is_supported,
- 		.led_hw_control_get = gpy_led_hw_control_get,
- 		.led_hw_control_set = gpy_led_hw_control_set,
-@@ -1167,6 +1254,7 @@ static struct phy_driver gpy_drivers[] = {
- 		.get_wol	= gpy_get_wol,
- 		.set_loopback	= gpy_loopback,
- 		.led_brightness_set = gpy_led_brightness_set,
-+		.led_max_brightness = gpy_led_max_brightness,
- 		.led_hw_is_supported = gpy_led_hw_is_supported,
- 		.led_hw_control_get = gpy_led_hw_control_get,
- 		.led_hw_control_set = gpy_led_hw_control_set,
-@@ -1190,6 +1278,7 @@ static struct phy_driver gpy_drivers[] = {
- 		.get_wol	= gpy_get_wol,
- 		.set_loopback	= gpy_loopback,
- 		.led_brightness_set = gpy_led_brightness_set,
-+		.led_max_brightness = gpy_led_max_brightness,
- 		.led_hw_is_supported = gpy_led_hw_is_supported,
- 		.led_hw_control_get = gpy_led_hw_control_get,
- 		.led_hw_control_set = gpy_led_hw_control_set,
-@@ -1212,6 +1301,7 @@ static struct phy_driver gpy_drivers[] = {
- 		.get_wol	= gpy_get_wol,
- 		.set_loopback	= gpy_loopback,
- 		.led_brightness_set = gpy_led_brightness_set,
-+		.led_max_brightness = gpy_led_max_brightness,
- 		.led_hw_is_supported = gpy_led_hw_is_supported,
- 		.led_hw_control_get = gpy_led_hw_control_get,
- 		.led_hw_control_set = gpy_led_hw_control_set,
--- 
-2.39.5
+
+
+Tested on:
+
+commit:         c9661394 selftests/bpf: Convert comma to semicolon
+git tree:       bpf-next
+kernel config:  https://syzkaller.appspot.com/x/.config?x=6631c78ce6cb228d
+dashboard link: https://syzkaller.appspot.com/bug?extid=ff3aa851d46ab82953a3
+compiler:       
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=144b2b4c580000
 
