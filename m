@@ -1,210 +1,99 @@
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail2-relais-roc.national.inria.fr (mail2-relais-roc.national.inria.fr [192.134.164.83])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 478D31D47A2
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 12:30:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 928081F94C
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 12:30:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.134.164.83
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743856206; cv=none; b=PJG+9gl2NFGtrrtvnLDTFvg1+LB+wr7gQcM5Si/qnJmhczRArfqj6mtPYgBqiZJCmIOuSlxlFmd6VQwDUlmQ2pSgGK6GYIchbv+msSLu8GYl+OQ+5Gc0pCKrax0FZFPodrAQowqq6b/SRrNRgU+FR5mthcVxwNXKQcb482tK8RI=
+	t=1743856262; cv=none; b=Y7VdOUJrbYvruzKQWLiqMaE4rGZT9MxvUSJLhFJv3YZ0OSqyPi7h/o/Pjli4DMp1Gnj2uZ1HImBaF29sloUeKd+v38PturuDXdcLMWIeg4F/rjXMyEYYpLoMP5SIHDX19a9Lm+LvkVGVx6J3QZm26eFuN3yzmQzX9Sj2YDzGfD4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743856206; c=relaxed/simple;
-	bh=Jv29XiEWWp8oDJ1NzImIyXE8eeckhaM8RLs9PpNuQEU=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=EFK857nZRkkDsHaVOLz+wVj+vlwII5pxyDXYe75vB3m3lNVpf5M6/VQwoxuKQ6YxUg0AJVruBi9LmcA6ZgHrzvFvGWvNKzi5SIbA9fMpOO8CSqp82JAdhsOZpQfALajYrS/IWvx9XH5MNzaKN6gEwBQ34IK3dJxKOA+UVbRumIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3d5b38276deso50763035ab.3
-        for <linux-kernel@vger.kernel.org>; Sat, 05 Apr 2025 05:30:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743856203; x=1744461003;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BsWZGaUwGSYyvlgaO7DAahj15TOUicmvbWsBvTMNy1Q=;
-        b=dyMnvcm+3yeKg3c4GQJWIdENkyDLsUMecVBW4HE8+y6KGEBhY6A6kuewiwbdrLgGWX
-         +BAcFQf2bhFuRj6DS+fNIc1jhPHp6J9Fxx2cU8q7bNBpcmoac/mIIc6UcfViiaas7Oc5
-         tlI/FYLGfw4hnFmIbxtDBJQH+6zXwJzQD4hMW+4Wi53ZuKs/JbUsh2cuD68JWoNtrXAs
-         AlmFb4AvC30ezysiqWrnlmb75heQ/H10bC2SKZSxKFFUoKemDUVYx96tKO5iPHsAJ9+G
-         nHjdq97DJp72ArpCzLUvLmK9FIddtEB/eOc6Xfxu5RC7GUlIZMID4eJx9ozpjMXQoo8N
-         y62w==
-X-Forwarded-Encrypted: i=1; AJvYcCVYCh++jXvnLRKtHwgaqIebhhHgNjw5prAHOWEdHMifSTRMM0j4xKvTrv6qlr0kCUyLzv2F9XpjicfEzhA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwBjDIQ6tl3tbmTRCzKW20cuXGiXOyiJaupgvxTPguguDco//6z
-	+0vgfI8xUH6XItfrC+C2V18iZGQ7OWdhool4Zl6rIYCV57KSIlaFD7WniHImu6oOQyHiORGKkGx
-	Th9xjOZZJxUBisj4ISIn9atlbmSCKDmhyGI3BoG6BsNwtUP8YAzOWtP4=
-X-Google-Smtp-Source: AGHT+IFUvnTNoYo+63VRPiMThILr+p2GvOT33z9m/c2TRSJ035imEQGLsa7a6ute9wI7lgkUj3EvZgXQOCvc7Cm3OIgIVnPRg5S6
+	s=arc-20240116; t=1743856262; c=relaxed/simple;
+	bh=81plf3/w6quAlw7/zz3YblJKNJguEXCh6bbRvciU79w=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=F9WvvJod6eL0of9uOEjveNiQpTt88oybw9atafUZKSEDwPUbPMcLTiaW1HWzM64+64SezTd1oPROBD+1ZFIjVBaPLZSD3uokkEqAZvLU1pkdZnDlxEhXDgMFJjw9bAIflbzP5JMTBVTGPbNeTAlBZI9m3igomLkHQFVVOUghVHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr; spf=pass smtp.mailfrom=inria.fr; dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b=kv5EXRRp; arc=none smtp.client-ip=192.134.164.83
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inria.fr
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b="kv5EXRRp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=inria.fr; s=dc;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=z/G7qa+fQsWq4iFFgwBbIjTn3Bug/NzKd2K5h+dOShM=;
+  b=kv5EXRRpNpOfo8tjU+QRWHW4GKqLoSU0HqhPDShDqyk+0Hh+igCk8ZT5
+   a0JFFPFF7u4OufcYBfeJJKeYszJIkowj0oUEfJG8DzaIt+4TKkcdkMmz5
+   HUlozvmJwYWHACy9zlPXY1p5hgygvlugp5anITrIfbIcc3PZ5+b9+kpdc
+   k=;
+Authentication-Results: mail2-relais-roc.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=julia.lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
+X-IronPort-AV: E=Sophos;i="6.15,191,1739833200"; 
+   d="scan'208";a="216498276"
+Received: from unknown (HELO hadrien) ([50.225.219.62])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2025 14:30:57 +0200
+Date: Sat, 5 Apr 2025 08:30:55 -0400 (EDT)
+From: Julia Lawall <julia.lawall@inria.fr>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+    Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>, 
+    julia.lawall@inria.fr, andy@kernel.org, dan.carpenter@linaro.org, 
+    linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org, 
+    outreachy@lists.linux.dev
+Subject: Re: [PATCH v2] staging: rtl8723bs: Use % 4096 instead of & 0xfff
+In-Reply-To: <CAHp75Vc0vOB1nDLrV+wmYeshxTsDwYq0xBkmJiOH=d5HONRpNQ@mail.gmail.com>
+Message-ID: <d3b4e3b4-b5cc-5b5f-26b6-1d726f5e57c@inria.fr>
+References: <Z/B019elTtKG/PvD@ubuntu> <2025040547-vagrancy-imagines-384b@gregkh> <CAHp75Vc0vOB1nDLrV+wmYeshxTsDwYq0xBkmJiOH=d5HONRpNQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:3789:b0:3d0:4e0c:2c96 with SMTP id
- e9e14a558f8ab-3d6e52f0481mr62556225ab.2.1743856203449; Sat, 05 Apr 2025
- 05:30:03 -0700 (PDT)
-Date: Sat, 05 Apr 2025 05:30:03 -0700
-In-Reply-To: <67159ae6-3dd9-4d40-a6b1-643d18e8b3a1@kernel.dk>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67f1224b.050a0220.0a13.0239.GAE@google.com>
-Subject: Re: [syzbot] [io-uring?] INFO: task hung in io_wq_put_and_exit (4)
-From: syzbot <syzbot+58928048fd1416f1457c@syzkaller.appspotmail.com>
-To: asml.silence@gmail.com, axboe@kernel.dk, io-uring@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/mixed; boundary="8323329-663152129-1743856257=:3184"
 
-Hello,
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-INFO: task hung in io_wq_put_and_exit
-
-INFO: task syz.0.15:6739 blocked for more than 143 seconds.
-      Not tainted 6.14.0-syzkaller-00001-g626e6212aaf6 #0
-      Blocked by coredump.
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-task:syz.0.15        state:D stack:23744 pid:6739  tgid:6738  ppid:6553   task_flags:0x400548 flags:0x00024000
-Call Trace:
- <TASK>
- context_switch kernel/sched/core.c:5378 [inline]
- __schedule+0x18bc/0x4c40 kernel/sched/core.c:6765
- __schedule_loop kernel/sched/core.c:6842 [inline]
- schedule+0x14b/0x320 kernel/sched/core.c:6857
- schedule_timeout+0xb0/0x290 kernel/time/sleep_timeout.c:75
- do_wait_for_common kernel/sched/completion.c:95 [inline]
- __wait_for_common kernel/sched/completion.c:116 [inline]
- wait_for_common kernel/sched/completion.c:127 [inline]
- wait_for_completion+0x355/0x620 kernel/sched/completion.c:148
- io_wq_exit_workers io_uring/io-wq.c:1262 [inline]
- io_wq_put_and_exit+0x344/0x720 io_uring/io-wq.c:1290
- io_uring_clean_tctx+0x168/0x1e0 io_uring/tctx.c:205
- io_uring_cancel_generic+0x751/0x800 io_uring/io_uring.c:3183
- io_uring_files_cancel include/linux/io_uring.h:19 [inline]
- do_exit+0x6a3/0x2940 kernel/exit.c:894
- do_group_exit+0x207/0x2c0 kernel/exit.c:1087
- get_signal+0x16b2/0x1750 kernel/signal.c:3036
- arch_do_signal_or_restart+0x96/0x860 arch/x86/kernel/signal.c:337
- exit_to_user_mode_loop kernel/entry/common.c:111 [inline]
- exit_to_user_mode_prepare include/linux/entry-common.h:329 [inline]
- __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
- syscall_exit_to_user_mode+0xce/0x340 kernel/entry/common.c:218
- do_syscall_64+0x100/0x230 arch/x86/entry/common.c:89
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f2dc697e719
-RSP: 002b:00007f2dc77490e8 EFLAGS: 00000246 ORIG_RAX: 00000000000000ca
-RAX: fffffffffffffe00 RBX: 00007f2dc6b35f88 RCX: 00007f2dc697e719
-RDX: 0000000000000000 RSI: 0000000000000080 RDI: 00007f2dc6b35f88
-RBP: 00007f2dc6b35f80 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f2dc6b35f8c
-R13: 0000000000000000 R14: 00007ffdb8b1f290 R15: 00007ffdb8b1f378
- </TASK>
-INFO: task syz.4.19:6783 blocked for more than 146 seconds.
-      Not tainted 6.14.0-syzkaller-00001-g626e6212aaf6 #0
-      Blocked by coredump.
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-task:syz.4.19        state:D stack:25696 pid:6783  tgid:6779  ppid:6564   task_flags:0x400548 flags:0x00024000
-Call Trace:
- <TASK>
- context_switch kernel/sched/core.c:5378 [inline]
- __schedule+0x18bc/0x4c40 kernel/sched/core.c:6765
- __schedule_loop kernel/sched/core.c:6842 [inline]
- schedule+0x14b/0x320 kernel/sched/core.c:6857
- schedule_timeout+0xb0/0x290 kernel/time/sleep_timeout.c:75
- do_wait_for_common kernel/sched/completion.c:95 [inline]
- __wait_for_common kernel/sched/completion.c:116 [inline]
- wait_for_common kernel/sched/completion.c:127 [inline]
- wait_for_completion+0x355/0x620 kernel/sched/completion.c:148
- io_wq_exit_workers io_uring/io-wq.c:1262 [inline]
- io_wq_put_and_exit+0x344/0x720 io_uring/io-wq.c:1290
- io_uring_clean_tctx+0x168/0x1e0 io_uring/tctx.c:205
- io_uring_cancel_generic+0x751/0x800 io_uring/io_uring.c:3183
- io_uring_files_cancel include/linux/io_uring.h:19 [inline]
- do_exit+0x6a3/0x2940 kernel/exit.c:894
- do_group_exit+0x207/0x2c0 kernel/exit.c:1087
- get_signal+0x16b2/0x1750 kernel/signal.c:3036
- arch_do_signal_or_restart+0x96/0x860 arch/x86/kernel/signal.c:337
- exit_to_user_mode_loop kernel/entry/common.c:111 [inline]
- exit_to_user_mode_prepare include/linux/entry-common.h:329 [inline]
- __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
- syscall_exit_to_user_mode+0xce/0x340 kernel/entry/common.c:218
- do_syscall_64+0x100/0x230 arch/x86/entry/common.c:89
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f6cf337e719
-RSP: 002b:00007f6cf40d00e8 EFLAGS: 00000246 ORIG_RAX: 00000000000000ca
-RAX: fffffffffffffe00 RBX: 00007f6cf3535f88 RCX: 00007f6cf337e719
-RDX: 0000000000000000 RSI: 0000000000000080 RDI: 00007f6cf3535f88
-RBP: 00007f6cf3535f80 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f6cf3535f8c
-R13: 0000000000000000 R14: 00007ffd41156d10 R15: 00007ffd41156df8
- </TASK>
-INFO: task syz.2.17:6784 blocked for more than 148 seconds.
-      Not tainted 6.14.0-syzkaller-00001-g626e6212aaf6 #0
-      Blocked by coredump.
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-task:syz.2.17        state:D stack:23744 pid:6784  tgid:6780  ppid:6562   task_flags:0x400548 flags:0x00024000
-Call Trace:
- <TASK>
- context_switch kernel/sched/core.c:5378 [inline]
- __schedule+0x18bc/0x4c40 kernel/sched/core.c:6765
- __schedule_loop kernel/sched/core.c:6842 [inline]
- schedule+0x14b/0x320 kernel/sched/core.c:6857
- schedule_timeout+0xb0/0x290 kernel/time/sleep_timeout.c:75
- do_wait_for_common kernel/sched/completion.c:95 [inline]
- __wait_for_common kernel/sched/completion.c:116 [inline]
- wait_for_common kernel/sched/completion.c:127 [inline]
- wait_for_completion+0x355/0x620 kernel/sched/completion.c:148
- io_wq_exit_workers io_uring/io-wq.c:1262 [inline]
- io_wq_put_and_exit+0x344/0x720 io_uring/io-wq.c:1290
- io_uring_clean_tctx+0x168/0x1e0 io_uring/tctx.c:205
- io_uring_cancel_generic+0x751/0x800 io_uring/io_uring.c:3183
- io_uring_files_cancel include/linux/io_uring.h:19 [inline]
- do_exit+0x6a3/0x2940 kernel/exit.c:894
- do_group_exit+0x207/0x2c0 kernel/exit.c:1087
- get_signal+0x16b2/0x1750 kernel/signal.c:3036
- arch_do_signal_or_restart+0x96/0x860 arch/x86/kernel/signal.c:337
- exit_to_user_mode_loop kernel/entry/common.c:111 [inline]
- exit_to_user_mode_prepare include/linux/entry-common.h:329 [inline]
- __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
- syscall_exit_to_user_mode+0xce/0x340 kernel/entry/common.c:218
- do_syscall_64+0x100/0x230 arch/x86/entry/common.c:89
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fbb9517e719
-RSP: 002b:00007fbb95f3b0e8 EFLAGS: 00000246 ORIG_RAX: 00000000000000ca
-RAX: fffffffffffffe00 RBX: 00007fbb95335f88 RCX: 00007fbb9517e719
-RDX: 0000000000000000 RSI: 0000000000000080 RDI: 00007fbb95335f88
-RBP: 00007fbb95335f80 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007fbb95335f8c
-R13: 0000000000000000 R14: 00007ffc20ba6bf0 R15: 00007ffc20ba6cd8
- </TASK>
-INFO: task syz.3.18:6820 blocked for more than 151 seconds.
-      Not tainted 6.14.0-syzkaller-00001-g626e6212aaf6 #0
-      Blocked by coredump.
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-task:syz.3.18        state:D stack:25184 pid:6820  tgid:6819  ppid:6563   task_flags:0x400548 flags:0x00024000
-Call Trace:
- <TASK>
- context_switch kernel/sched/core.c:5378 [inline]
- __schedule+0x18bc/0x4c40 kernel/sched/core.c:6765
- __schedule_loop kernel/sched/core.c:6842 [inline]
- schedule+0x14b/0x320 kernel/sched/core.c:6857
- schedule_timeout+0xb0/0x290 kernel/time/sleep_timeout.c:75
- do_wait_for_common kernel/sched/completion.c:95 [inline]
- __wait_for_common kernel/sched/completion.c:116 [inline]
- wait_for_common kernel/sched/completion.c:127 [inline]
- wait_for_completion+0x355/0x620 kernel/sched/completion.c:148
- io_wq_exit_workers io_uring/io-wq.c:1262 [inline]
- io_wq_put_and_exit+0x344/0x720 io_uring/io-wq.c:1290
- io_uring_clean_tctx+0x168/0x1e0 io_uring/tctx.c:205
- io_uring_cancel_generic+0x751/0x800 io_uring/io_uring.c:3183
- io_uring_files_cancel include/linux/io_uring.h:19 [inline]
- do_exit+0x6a3/0x2940 kernel/exit.c:894
+--8323329-663152129-1743856257=:3184
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 
 
-Tested on:
 
-commit:         626e6212 io_uring/kbuf: conditional schedule on buffer..
-git tree:       git://git.kernel.dk/linux.git syztest
-console output: https://syzkaller.appspot.com/x/log.txt?x=105c9b4c580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a3f7ddbc4e0c74f1
-dashboard link: https://syzkaller.appspot.com/bug?extid=58928048fd1416f1457c
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+On Sat, 5 Apr 2025, Andy Shevchenko wrote:
 
-Note: no patches were applied.
+> On Sat, Apr 5, 2025 at 11:23 AM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> > On Sat, Apr 05, 2025 at 12:09:59AM +0000, Abraham Samuel Adekunle wrote:
+> > > Replace the bitwise AND operator `&` with a modulo
+> > > operator `%` and decimal number to make the upper limit visible
+> > > and clear what the semantic of it is.
+> >
+> > Eeek, no.  We all "know" what & means (it's a bit mask to handle the
+> > issues involved), and we all do NOT know that % will do the same thing
+> > at all.
+>
+> And that is exactly the purpose of the change. The % 4096 makes it
+> clearer on what's going on, i.e. we are doing indexes that are wrapped
+> around the given number.
+
+Ah, OK.  Samuel, indeed, the log message was going in that direction.  But
+probably it should be more clear.  Why is 4096 the upper limit in this
+case, for example.
+
+Thanks for the feedback Andy,
+
+julia
+
+>
+> > So this just made things more difficult to maintain over time.
+> >
+> > What tool suggested this type of change to be made to this driver and
+> > these lines?
+>
+> It's not a tool, it was me. I read the code and suggested that change.
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
+--8323329-663152129-1743856257=:3184--
