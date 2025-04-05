@@ -1,310 +1,222 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2048.outbound.protection.outlook.com [40.107.223.48])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 359BF19F495;
-	Sat,  5 Apr 2025 13:26:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.48
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743859604; cv=fail; b=XQK0xaW6zCwKRGDrGES9efXD2vcrBE44U/68uNb2h/9YmYgRnKKYohxKzByc+ssLSi6s503ncSZSpg5HaperZvEF3JV56G1DoDWhhjyuxskIptxdWMmrNle1tL59b65vGklmnAIV5vVN8YS1o6RzrBXeUn3FLkq7KjDieMZU0RM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743859604; c=relaxed/simple;
-	bh=zx/herELpIcyIcFoRjSNPRjVfrs+/GTKds0Kge73J4Q=;
-	h=From:Date:Subject:Content-Type:Message-Id:To:Cc:MIME-Version; b=MNjJxbNFtaMc6eXai94aNdphioU15p7oUs8lb+2CNuJWrc18ozt5FJf2vOb+3WDqsqpW4x3OWj8WqadMrN08Cm4xUaB6lq+qzpFbLe1VLGMy7DTkr3OJMFOKuMvN/eryUCuicuxUUzxvlioW8ytrikv0IabKfwuolPV6bGK+Fhc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=RPgpaSh8; arc=fail smtp.client-ip=40.107.223.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 729AE1D47A2
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 13:27:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743859646; cv=none; b=a7Sit9fqQxUOqZtmg4+K58v4sOHCh7N2aTBypUzClZp1CV3l3CZ89UVINOsJsqW5vVUu8pkFGXRNbtnDHGfuxYkYeE1VgxQ5ttAS1ALXqFzf7xMT6TuttV6SmFmyOqqo5J5WgoqtOqFFtozRNxhBncGnj4+6pXpYQ/QGyIMWUao=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743859646; c=relaxed/simple;
+	bh=PhxZXSsULPsD4mO8+edV5H0C2P/rskNqBj+w/eJH1Ss=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=VstiI4O+PzZ7ohZcVYVZF9kLJuPdzpXXv2vuDaT8KVYq0psLEEslbSgqYEHWRMlype59/vgEtBfnLQB/YVVYU5EBrww3MnSy1ep1EEI3IpIDhbnUE7QbVZ7YI7yS6Jkh8ae5xwfIfZH6MPK3dJQFSdC2swdrcg0R9Vp1lOsJ9W4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fCCxifuW; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="RPgpaSh8"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=EvsHhKNReCLgY11QFxJq81acmm1ekgsttbJ4/31fteYJzrWr+2/hSVTyZr3TkhNz8HOyRZafr7yF+oWblBRrFTtSDJV8oYBos4EFvoJVY4p+7b4KBdFnA6+FdAi0vxNDSOJ1JcFapSn4sDh/EjS+yTyOKl8nCO9KyEiwO914mxxj+CHXi6Uh6d6PyFthWG2U2FPeQ+eprdlOmXNLGCEvbxB1aUnxfyeIWCJIkzVL8YDC5yf+ykg3EFYzPlSEEZn24VpUggqlC3KqJyEVYdXnX5GFHxdupRfTNSmsg6GJAMGGjdcH6FqnyDxuYTaleivjecvSI63kv/59aMZiPcF/3Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3exyJR8Yu3x3M9NeGgWNtGSeZHoXRDP0gVqhwywFd2c=;
- b=golsGgfNSV1oWBnguTvPQQhUDo0ef5/TPSlI/fM015YT8KPg3zJF7UG1iFfCZcrOHWozIvWMTKKrRiOapXdyUwjCYb7PqF61JwDciemcQZwv7TGtAJbfBKa3Lnhx2tMhkrQujbE+cIiCDtsKU+spsil6PDt3DP4++QKuSlbS8HDYwqtoXKkcpCDupcKkdof6iREBtB5M6QKuRjqnDod8PJErNShOA5JSSDy8PVQdYJphs5asgUiKrc6QQFUe+YvbGJUXBGD5L1Tco2/umfCcRd13i46ZxhPJve89AZEUWFot+4A0rSw7W5pd6DuZCFjlT2/Hbz7JC8AEUykRRZ2yog==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3exyJR8Yu3x3M9NeGgWNtGSeZHoXRDP0gVqhwywFd2c=;
- b=RPgpaSh8PcPKPskqevWgwcRLF1zp8y+gz+JLYLmhW4JGAUQWtCnEPqWvCXKTKYT7qZwLu/kCPklO3IG8sGDfplsufTsfxF4kpeo6/E8pZM7IpUtQpwX+UYvC7u3+GyXycA1ma3tIFD1AYqEV+HPCl0uHNjIWxZYFttM68KLUyIuaXqKNfOqzMLDpUpJUptPRCs1GIsKEC81WlyNd+s3Ly0kjgotn8mKpjsGxLglIM2rwYyIOEP75qSLvTaxYRWUP6DExW6r2LZFJOaFPaEo4M8fPG8+u5ldEX7XPm4rcpPGJ/7sQTUTXbhqce+m5PqJtMEMzKRGnZ+R2T7Ngazf0mg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH2PR12MB3990.namprd12.prod.outlook.com (2603:10b6:610:28::18)
- by SJ0PR12MB6928.namprd12.prod.outlook.com (2603:10b6:a03:47a::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.27; Sat, 5 Apr
- 2025 13:26:37 +0000
-Received: from CH2PR12MB3990.namprd12.prod.outlook.com
- ([fe80::6e37:569f:82ee:3f99]) by CH2PR12MB3990.namprd12.prod.outlook.com
- ([fe80::6e37:569f:82ee:3f99%6]) with mapi id 15.20.8606.027; Sat, 5 Apr 2025
- 13:26:36 +0000
-From: Alexandre Courbot <acourbot@nvidia.com>
-Date: Sat, 05 Apr 2025 22:26:22 +0900
-Subject: [PATCH] rust: alloc: implement `extend` for `Vec`
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250405-vec_extend-v1-1-bb7d19b47adc@nvidia.com>
-X-B4-Tracking: v=1; b=H4sIAH0v8WcC/y3MwQ5AMBCE4VeRPWvSLr14FRGRGuylaBGJeHcNj
- t8k818UEQSRquyigEOizD7B5Bm5qfMjlPTJxJqtLrVVB1yLc4PvVVmwYWs659hQOiwBg5xvrG4
- +B6x7am7/eN8P1JMpOnEAAAA=
-X-Change-ID: 20250405-vec_extend-4321251acc21
-To: Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
- Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
- Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <benno.lossin@proton.me>, 
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
- Trevor Gross <tmgross@umich.edu>
-Cc: Joel Fernandes <joelagnelf@nvidia.com>, 
- John Hubbard <jhubbard@nvidia.com>, rust-for-linux@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Alexandre Courbot <acourbot@nvidia.com>
-X-Mailer: b4 0.14.2
-X-ClientProxiedBy: OS3P286CA0112.JPNP286.PROD.OUTLOOK.COM
- (2603:1096:604:1f7::17) To CH2PR12MB3990.namprd12.prod.outlook.com
- (2603:10b6:610:28::18)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fCCxifuW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743859645; x=1775395645;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=PhxZXSsULPsD4mO8+edV5H0C2P/rskNqBj+w/eJH1Ss=;
+  b=fCCxifuWKWdahvZ4qotPPCQL2lpUgks98t0yHNYvG6mfsB5teOeks0wz
+   trwuCTXUGFe0WrId5KpDYJZKx6DH3N1nxkKJy1iSDpAfrYI1vD7fhoc0G
+   xbNcEE5woXnjgmhiFTHoaHanD2EPIBD6zSGwBWjhWr3idoHavoaUu8OFi
+   DMO/eyD7/JYcajC4pOpXid/Aqi89Aa9F5Wz/YWzT6F1t9v40REzoG0dDb
+   arvQRX6W3lUGucoCSWUm40IsfHrDC3U/8bPSciP0keq6UQBF2xTa//nRn
+   5v0Gm57vvhW6iqV2/JDAGzIJ1WK/SOoVDOlSrjqjRVe0g9qO/47XlwVZl
+   w==;
+X-CSE-ConnectionGUID: CuAW89T1T8+wEYQtOesEUw==
+X-CSE-MsgGUID: mADZQEccTmW/MHLJukVLbQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11395"; a="45428670"
+X-IronPort-AV: E=Sophos;i="6.15,191,1739865600"; 
+   d="scan'208";a="45428670"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2025 06:27:24 -0700
+X-CSE-ConnectionGUID: 6q9IScSFQve322yI6xyTFg==
+X-CSE-MsgGUID: uTkR2OvDRHezxOJrTbFY7Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,191,1739865600"; 
+   d="scan'208";a="127853495"
+Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
+  by fmviesa008.fm.intel.com with ESMTP; 05 Apr 2025 06:27:22 -0700
+Received: from kbuild by b207828170a5 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u13YO-00022q-0Q;
+	Sat, 05 Apr 2025 13:27:20 +0000
+Date: Sat, 5 Apr 2025 21:26:45 +0800
+From: kernel test robot <lkp@intel.com>
+To: Jani Nikula <jani.nikula@intel.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Philipp Zabel <p.zabel@pengutronix.de>
+Subject: drivers/gpu/drm/imx/ipuv3/imx-ldb.c:658:57: warning: '_sel'
+ directive output may be truncated writing 4 bytes into a region of size
+ between 3 and 13
+Message-ID: <202504052118.HCpNF13P-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH2PR12MB3990:EE_|SJ0PR12MB6928:EE_
-X-MS-Office365-Filtering-Correlation-Id: da394711-f644-4311-8524-08dd74457d52
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|10070799003|366016|1800799024|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?SVNVUG9DaUczR3lRaDJ5dk1Ya0dCemNQWTlFRktiVCtoNDJzTXhRTCthQldk?=
- =?utf-8?B?OGNXSTRacWpBeldrTTVzNVUxM2pGYk5UdXlEUGZGUWVuWXNWYjhTb0NqZDRG?=
- =?utf-8?B?RDFHS3hSZlE5eXliekRVVnF1cUJsbGE2TUwzVEhicytPQVFuK25BTkJ6TEdh?=
- =?utf-8?B?ei9kbXBXazhtODRXNUh4SytjL3hCMVhNY1RQazQ3aUNmdUg2ckthMmxIL3hL?=
- =?utf-8?B?WWZVWTNhRVp0d28vWURkMVpxc05aODFCUFNNbkxjU0RlU2N5dFVMSWFDUlVv?=
- =?utf-8?B?U1pHV2NZTGcybEdwcW5kcjJWZWVCUlU0Q1FpbFd1K29WU0VPMlhvam9Fc28x?=
- =?utf-8?B?NDJFcE5sZnAzbkh1czZ6empmMHJHQ2pLTG1DT24ySzNqRXFiSlk3ejQ1TWFy?=
- =?utf-8?B?b2d1YklLYVBtaEFtVjhMakhPblQyeDJaZ0RLVzFyMm42UmE0ZlMyOG10RU41?=
- =?utf-8?B?QzZBbGRlR21tOVdaOUFsRmdxQm5IZXp3aXUzRGcyWXVweHl3VzZHZUI5N21X?=
- =?utf-8?B?MnRjdVdtWHR5bjBDNVQ2ZGpndTE1UC8yNTM1OVpzYnB4Z1FRdGFxcTRQWVNH?=
- =?utf-8?B?M1Z5Nm9CSGZ5c0pWZ2JoSzI2ZDNGenQwNExZb2VkRVlJbG9zZldiMXpCbWNa?=
- =?utf-8?B?N0NWNDZyMnhhYXhrZzIydWJtV2JTVVI2dWszOXFuOEZZY1ExUElsMW5NN2xm?=
- =?utf-8?B?RndablRLdGUxZU1vY1JVT21SaDdUdWJHTVNpQ3pqVHdFWnBiVXMrdjcvYWJl?=
- =?utf-8?B?YVllR0dJQ2gwMXYrd21MMjNzTWt1VVlvK0RpWXZLc3N2TkpYWDg4Z050STIy?=
- =?utf-8?B?Y1QvMnBYZFhkOU0zOUgxR3NMRmR1SFhmVHFJK1pTbXNDK3JmQ1NJNGNlb3pS?=
- =?utf-8?B?ZTRkaXkvTmVVK0NCdTg5aFp0R1BJTUFBazRwWWIyZDNneVVXK3ZyRU1VREp5?=
- =?utf-8?B?NmZDVlVsSzZ6MUtEYzIyVGVMN25WL2ltdjQvZkx5TUg5OHFnWGZlVnZPYnlv?=
- =?utf-8?B?RWpUM095UG81K0crQkE0c3BiZ1lsL05yMlZmNi9zWktJWVZuMzlXa3dKa1ZI?=
- =?utf-8?B?b2FXK0ZqMjUzZDZIWHg5c2JJd2dLOGI4d2x1SjVpSGF1WUlPWVpaN3U3QUh0?=
- =?utf-8?B?Z0pKWnN4ZVZjK1ZsTWNnS3BWZTl6VTAwRWNleXdURkhnSEgwM0YxZS9DamV0?=
- =?utf-8?B?UEJzd0FuWGpjc0dRVms1MDlpZ2czUE5Zck5NTTNKaFUrMnFycmExclhwdUgz?=
- =?utf-8?B?TkJOem9rWjdheHhGNjF3aTZZQnBic09WOE5KSDFMcG1CdGJyNVQxaXVBUHBv?=
- =?utf-8?B?OFl1MWZJOTlCY2JoWGRlMVdEU2U4K1lyMjBhdDRwU3NXbEF4b0xVaXdaRTdr?=
- =?utf-8?B?QWJWVVh4TXFLeWRRNnZkVzRibWQrMFdsUGhybDUxOTI2TUlwQnpCalMzdWN3?=
- =?utf-8?B?eEduZFU2TjZNejFydDBtK2JKbFpLL1JwYVFGL01BamZrRzNDSkxTSUhtK3dV?=
- =?utf-8?B?UUNFMmhySHVYU0ZTRDRVNjc2SzN1TDNnSDVoekJRdHVEUFVkbmtUMm1xem9s?=
- =?utf-8?B?T3JOalIwZ3hWM2RkbXZ5MUpBR1JoK2Uvd1BDQ1BaQ2dOL2JsVWF1TGRjeXZS?=
- =?utf-8?B?VDVoU0NMNWFKTnd4QXR0VjNDb2pqSzAzd3pEN0VrRWIxVCtKelNBNU9LUTdj?=
- =?utf-8?B?SVBiL0xuUnBDWElEa1daRkNqaGxVU0h0Rms2bE9PM1M3VVE2RXRSZnpmYVNs?=
- =?utf-8?B?Q2NvU3llaFoyUFlNTFdUcFZPWUZUSyt2TU5OVUFpS0ZrL2k4TVhCclJXejFy?=
- =?utf-8?B?cXZ0ZVdOYXNuVkkyNlRRaGpjUHdxYXEybVE2OTVUUHR0ZGI1amVRU204NWhU?=
- =?utf-8?B?VXRnNFpsekFpdnBWQldUSURuV0g4UmxTcXJacXRDTFdxV1lMZzROSTE0WHN5?=
- =?utf-8?Q?F+Zpl4QDAiQ=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3990.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(10070799003)(366016)(1800799024)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?U05abFh0T1ZuaHVzaVB5MXdHMStsN2NSeDR2ZU1wSXV0ZVp4Mmc5TUFtaXZ4?=
- =?utf-8?B?ZC9Qc3VkSUI1NW45TUFOOTdQeklkSnZhWmszY2ZYajJacFA2VERNOFRNc0ts?=
- =?utf-8?B?OGlsdTE5MkJTMzExSVg5c1ZkbklnWDYrMWppTGQyLzgvRTZlMmxYTzZEQ21u?=
- =?utf-8?B?ek9PaXlyZ1lTL2JSaGdGa1c2RWZnUytKRExYckpVSWhiQVdoZ1FDTGFENVk1?=
- =?utf-8?B?bU9vT1kwMmlvRnhWVG0rbCtFSWpRUXdXbzhYWWdRWS9ZWTNuRnZtbVArQ2VV?=
- =?utf-8?B?eGV6MVdwVmJqbFFQWFE2UDUwN0ZjeFdNZjY3YWE3Qk10Mm5SeWUwY3pYa1Vv?=
- =?utf-8?B?S1BLSnc2YlQxd2NKcFNCMEp1b29mMFNFekprQ2dyT0lEQmw3NDNHd011elBL?=
- =?utf-8?B?di84NUQ1VjBscjRERnhtQzlOY0Vudk9LWThNSzJFSFpyUDRySFZ1eVpFSlJ5?=
- =?utf-8?B?L0taMnRkWUJ6RHRDVmlKb0dKcU1TaUNteDhBeUU0cTRXZXVzVDJtZVphMEEr?=
- =?utf-8?B?WWd6UVlSOUkxaE0vYVRaVXdrdkFxaG5JTlNXSktVK2xUTWZTSjE4dzY4aGIy?=
- =?utf-8?B?TnpBS1UwNFpKSml0OHlNQ3FiQWxiYklqNkZTeC9vSzdKNCtLaWYxTW5ZNVlX?=
- =?utf-8?B?c2lZSVNWdmJmUHRlQXVrNk5tYVlDaHUxYjhJb2ozYkd5M1dZczRMSzQ4K3ZT?=
- =?utf-8?B?TTBqNmdnanBlU2RrcWRvRVNoakFFR1hUWmV2WUwvNHZ4WVh0YXJFMGUydDg3?=
- =?utf-8?B?UDZsaEhUL0t5YkdPMWFpQm9FclZqeTBpdkVHZXpuc0lhUXFNUDV3MUhCTW00?=
- =?utf-8?B?Z1lEckgxUWhlc1VEdU1ibkFwYysydDNoMHBKUlpkWVY5eUhDZUV6am5MZ0xk?=
- =?utf-8?B?eFV3Sm9sTm41YjdaSE1jUXBEVEErQzA0dUd3ZHJsbmo2UlpWVTJ3VjhBN214?=
- =?utf-8?B?eFQ1RTNuSEJGa2h0MGlnL1hNeEpNeHB6bWlOTmlyVnNZYndtR2JsRGh1b2gz?=
- =?utf-8?B?TXRFYkRjYllLbmtWWm5CVWI1c0dOR3BCWGpkQVNic3dmNVNQV3FVc3h0Z0Vw?=
- =?utf-8?B?R2xidTM5RVJNMC92TU9VLzVOakpMK2l3eW5EN0lETDNKYjZNZFdKak5GTmJ0?=
- =?utf-8?B?S0RPRjJ2UFNOMFIyYmc4OUNIVDBGblZuU3dKYit2SmFCVGFsdmd6aVBsdFFy?=
- =?utf-8?B?VFJERGxuWnh4UTFjRDAzLzVFdDNqNkZTSStxVWtpTENsZHFwRzZMZTJaNFNh?=
- =?utf-8?B?YXpZZFRlMFhNOVdkZG10bUFwVHlTYUtLTVgvNWZXZ3BaeGUzNjF4QUhEOHJ1?=
- =?utf-8?B?MzVDRDllQnhwdzI4ZW1GUjRFRXl4bVNsYmlqc2ZhVUFMNUxTcDh1ODBHRGdq?=
- =?utf-8?B?NjRLV05iK0VMZEdpbWxXaHZxU0IzZTJLZ240VG1adktIRjl2OFgwVmdablI5?=
- =?utf-8?B?ODFoNHZMS2dmN05idG9iQ1NVMFBlNHYzcGh1Y3F0b3Y0RGNIcU0yQ0prYlZU?=
- =?utf-8?B?YWVkY1hOenBNNmxiYmZlZyt0WE9XTXhBRWRSSGxaYUpuODRYditlalJWbm03?=
- =?utf-8?B?aUdDSE5ZcWl3TmM5OG12RGF2dEo2RWxOaUxjM2tRcVh6VFQyZnFDSDlhblZr?=
- =?utf-8?B?ckpNYUt1SkxkRS9ySG5TUmJVNlA2Q3FRRmMzd2h0ZXRDM2Nrcm93bmQxWng3?=
- =?utf-8?B?VlFwLzRjYzJrTDFhZ1FhajkwRnlsM00yRW84SWlKMFM1NW14cGh2L3hFNmNm?=
- =?utf-8?B?L2EvYlN3ZkZzK3k3WTdNYVRiMU8rL1lpZ1dta00wUGxsWlBvSkFmU09tb3My?=
- =?utf-8?B?NVNsNWhKcDdGaG55UWxRc0xRVHMvTmlrWUlFRVVINzdSRTNGa2pHTHNhSDJw?=
- =?utf-8?B?UTNpcGxZaHZDOStnbm5yQk1KRHNJUWFjT3hjdUxkMDd5cnUzRk5FZStXRlZD?=
- =?utf-8?B?WWhwMStUL1NvUElRdVhQQXVGdmtCWDJHbnlXczMrUmMxSmhRZXRPMnMvSU8y?=
- =?utf-8?B?MGF3YnNPNjJ3dGFoMlE0bmRJcU9mejRjMWdCZFk0RXBraHhtOVY4a2toWnZD?=
- =?utf-8?B?WWVOS01HQUljN0VpSGtWb0RoM1BEdzBEK2l4dmJGUVNpangxTlBhZzBzMFNG?=
- =?utf-8?B?K2E0UDBxdEt5dFc4aUdESE0rbkVUZlhKOTJFM2tkeW1WdmsrRU1WaVhYSVBQ?=
- =?utf-8?Q?bvTlDaRcchW84fST/8NvuYP4mYcWI0toMdiT6+wpfaz+?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: da394711-f644-4311-8524-08dd74457d52
-X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB3990.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Apr 2025 13:26:36.4387
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: m3uMT6T6/Qt26UzUQvL22zxW7CQrjYvEP0rbL7GIF79jDyhQy+Hq8iMClLRGOY9ZhbxaIbX4Ggv3fZIWdBlgtQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB6928
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-KVec currently has `extend_with` and `extend_from_slice` methods, but no
-way extend a vector from a regular iterator as provided by the `Extend`
-trait.
+Hi Jani,
 
-Due to the need to provide the GFP flags, `Extend` cannot be implemented
-directly, so simply define a homonymous method that takes an extra
-`flags` argument.
+FYI, the error/warning still remains.
 
-The aforementioned `extend_with` and `extend_from_slice` can then be
-reimplemented as direct invocations of this new method - maybe they can
-eventually be removed.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   a8662bcd2ff152bfbc751cab20f33053d74d0963
+commit: 03ee752f00fd0daa082b43774cfd03a7f9a17385 drm/imx: prefer snprintf over sprintf
+date:   1 year, 2 months ago
+config: csky-randconfig-r053-20231127 (https://download.01.org/0day-ci/archive/20250405/202504052118.HCpNF13P-lkp@intel.com/config)
+compiler: csky-linux-gcc (GCC) 12.4.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250405/202504052118.HCpNF13P-lkp@intel.com/reproduce)
 
-Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
----
-I was a bit surprised to find no equivalent of the `Extend` trait for
-KVec, and while I anticipate to be told the reason for this, I also
-didn't hit any hard wall trying to come with my own implementation so
-here it is.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504052118.HCpNF13P-lkp@intel.com/
 
-I expect the new `extend_with` and `extend_from_slice` to be optimized
-into something close to their previous implementations, but am not sure
-how I can simply verify that this is the case - any hint would be
-appreciated!
----
- rust/kernel/alloc/kvec.rs | 81 ++++++++++++++++++++++++++++++-----------------
- 1 file changed, 52 insertions(+), 29 deletions(-)
+All warnings (new ones prefixed by >>):
 
-diff --git a/rust/kernel/alloc/kvec.rs b/rust/kernel/alloc/kvec.rs
-index ae9d072741cedbb34bed0be0c20cc75472aa53be..e78cb5ee575ce01e44283f8b4905689fb1e96165 100644
---- a/rust/kernel/alloc/kvec.rs
-+++ b/rust/kernel/alloc/kvec.rs
-@@ -454,31 +454,65 @@ pub fn reserve(&mut self, additional: usize, flags: Flags) -> Result<(), AllocEr
-     }
- }
- 
--impl<T: Clone, A: Allocator> Vec<T, A> {
--    /// Extend the vector by `n` clones of `value`.
--    pub fn extend_with(&mut self, n: usize, value: T, flags: Flags) -> Result<(), AllocError> {
--        if n == 0 {
--            return Ok(());
--        }
-+impl<T, A: Allocator> Vec<T, A> {
-+    /// Extends the vector by the elements of `iter`.
-+    ///
-+    /// This uses [`Iterator::size_hint`] to optimize reallocation of memory, but will work even
-+    /// with imprecise implementations - albeit with potentially more memory reallocations.
-+    ///
-+    /// In the kernel most iterators are expected to have a precise `size_hint` implementation, so
-+    /// this should nicely optimize out in most cases.
-+    pub fn extend<I>(&mut self, iter: I, flags: Flags) -> Result<(), AllocError>
-+    where
-+        I: IntoIterator<Item = T>,
-+    {
-+        let mut iter = iter.into_iter();
-+
-+        loop {
-+            let low_bound = match iter.size_hint() {
-+                // No more items expected, we can return.
-+                (0, Some(0)) => break,
-+                // Possibly more items but not certain, tentatively add one.
-+                (0, _) => 1,
-+                // More items pending, reserve space for the lower bound.
-+                (low_bound, _) => low_bound,
-+            };
- 
--        self.reserve(n, flags)?;
-+            self.reserve(low_bound, flags)?;
- 
--        let spare = self.spare_capacity_mut();
-+            // Number of items we effectively added.
-+            let added_items = self
-+                .spare_capacity_mut()
-+                .into_iter()
-+                // Take a mutable reference to the iterator so we can reuse it in the next
-+                // iteration of the loop if needed.
-+                .zip(&mut iter)
-+                .fold(0, |count, (dst, src)| {
-+                    dst.write(src);
- 
--        for item in spare.iter_mut().take(n - 1) {
--            item.write(value.clone());
--        }
-+                    count + 1
-+                });
- 
--        // We can write the last element directly without cloning needlessly.
--        spare[n - 1].write(value);
-+            // SAFETY:
-+            // - `self.len() + added_items <= self.capacity()` due to the call to `reserve` above,
-+            // - items `[self.len()..self.len() + added_items - 1]` are initialized.
-+            unsafe { self.set_len(self.len() + added_items) };
- 
--        // SAFETY:
--        // - `self.len() + n < self.capacity()` due to the call to reserve above,
--        // - the loop and the line above initialized the next `n` elements.
--        unsafe { self.set_len(self.len() + n) };
-+            // `size_hint` was incorrect and our iterator ended before its advertized low bound.
-+            if added_items < low_bound {
-+                break;
-+            }
-+        }
- 
-         Ok(())
-     }
-+}
-+
-+impl<T: Clone, A: Allocator> Vec<T, A> {
-+    /// Extend the vector by `n` clones of `value`.
-+    pub fn extend_with(&mut self, n: usize, value: T, flags: Flags) -> Result<(), AllocError> {
-+        self.extend(core::iter::repeat(value).take(n), flags)
-+    }
- 
-     /// Pushes clones of the elements of slice into the [`Vec`] instance.
-     ///
-@@ -496,18 +530,7 @@ pub fn extend_with(&mut self, n: usize, value: T, flags: Flags) -> Result<(), Al
-     /// # Ok::<(), Error>(())
-     /// ```
-     pub fn extend_from_slice(&mut self, other: &[T], flags: Flags) -> Result<(), AllocError> {
--        self.reserve(other.len(), flags)?;
--        for (slot, item) in core::iter::zip(self.spare_capacity_mut(), other) {
--            slot.write(item.clone());
--        }
--
--        // SAFETY:
--        // - `other.len()` spare entries have just been initialized, so it is safe to increase
--        //   the length by the same number.
--        // - `self.len() + other.len() <= self.capacity()` is guaranteed by the preceding `reserve`
--        //   call.
--        unsafe { self.set_len(self.len() + other.len()) };
--        Ok(())
-+        self.extend(other.into_iter().cloned(), flags)
-     }
- 
-     /// Create a new `Vec<T, A>` and extend it by `n` clones of `value`.
+   drivers/gpu/drm/imx/ipuv3/imx-ldb.c: In function 'imx_ldb_probe':
+>> drivers/gpu/drm/imx/ipuv3/imx-ldb.c:658:57: warning: '_sel' directive output may be truncated writing 4 bytes into a region of size between 3 and 13 [-Wformat-truncation=]
+     658 |                 snprintf(clkname, sizeof(clkname), "di%d_sel", i);
+         |                                                         ^~~~
+   drivers/gpu/drm/imx/ipuv3/imx-ldb.c:658:17: note: 'snprintf' output between 8 and 18 bytes into a destination of size 16
+     658 |                 snprintf(clkname, sizeof(clkname), "di%d_sel", i);
+         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
----
-base-commit: a2cc6ff5ec8f91bc463fd3b0c26b61166a07eb11
-change-id: 20250405-vec_extend-4321251acc21
 
-Best regards,
+vim +/_sel +658 drivers/gpu/drm/imx/ipuv3/imx-ldb.c
+
+   617	
+   618	static int imx_ldb_probe(struct platform_device *pdev)
+   619	{
+   620		struct device *dev = &pdev->dev;
+   621		struct device_node *np = dev->of_node;
+   622		struct device_node *child;
+   623		struct imx_ldb *imx_ldb;
+   624		int dual;
+   625		int ret;
+   626		int i;
+   627	
+   628		imx_ldb = devm_kzalloc(dev, sizeof(*imx_ldb), GFP_KERNEL);
+   629		if (!imx_ldb)
+   630			return -ENOMEM;
+   631	
+   632		imx_ldb->regmap = syscon_regmap_lookup_by_phandle(np, "gpr");
+   633		if (IS_ERR(imx_ldb->regmap)) {
+   634			dev_err(dev, "failed to get parent regmap\n");
+   635			return PTR_ERR(imx_ldb->regmap);
+   636		}
+   637	
+   638		/* disable LDB by resetting the control register to POR default */
+   639		regmap_write(imx_ldb->regmap, IOMUXC_GPR2, 0);
+   640	
+   641		imx_ldb->dev = dev;
+   642		imx_ldb->lvds_mux = device_get_match_data(dev);
+   643	
+   644		dual = of_property_read_bool(np, "fsl,dual-channel");
+   645		if (dual)
+   646			imx_ldb->ldb_ctrl |= LDB_SPLIT_MODE_EN;
+   647	
+   648		/*
+   649		 * There are three different possible clock mux configurations:
+   650		 * i.MX53:  ipu1_di0_sel, ipu1_di1_sel
+   651		 * i.MX6q:  ipu1_di0_sel, ipu1_di1_sel, ipu2_di0_sel, ipu2_di1_sel
+   652		 * i.MX6dl: ipu1_di0_sel, ipu1_di1_sel, lcdif_sel
+   653		 * Map them all to di0_sel...di3_sel.
+   654		 */
+   655		for (i = 0; i < 4; i++) {
+   656			char clkname[16];
+   657	
+ > 658			snprintf(clkname, sizeof(clkname), "di%d_sel", i);
+   659			imx_ldb->clk_sel[i] = devm_clk_get(imx_ldb->dev, clkname);
+   660			if (IS_ERR(imx_ldb->clk_sel[i])) {
+   661				ret = PTR_ERR(imx_ldb->clk_sel[i]);
+   662				imx_ldb->clk_sel[i] = NULL;
+   663				break;
+   664			}
+   665	
+   666			imx_ldb->clk_parent[i] = clk_get_parent(imx_ldb->clk_sel[i]);
+   667		}
+   668		if (i == 0)
+   669			return ret;
+   670	
+   671		for_each_child_of_node(np, child) {
+   672			struct imx_ldb_channel *channel;
+   673			int bus_format;
+   674	
+   675			ret = of_property_read_u32(child, "reg", &i);
+   676			if (ret || i < 0 || i > 1) {
+   677				ret = -EINVAL;
+   678				goto free_child;
+   679			}
+   680	
+   681			if (!of_device_is_available(child))
+   682				continue;
+   683	
+   684			if (dual && i > 0) {
+   685				dev_warn(dev, "dual-channel mode, ignoring second output\n");
+   686				continue;
+   687			}
+   688	
+   689			channel = &imx_ldb->channel[i];
+   690			channel->ldb = imx_ldb;
+   691			channel->chno = i;
+   692	
+   693			/*
+   694			 * The output port is port@4 with an external 4-port mux or
+   695			 * port@2 with the internal 2-port mux.
+   696			 */
+   697			ret = drm_of_find_panel_or_bridge(child,
+   698							  imx_ldb->lvds_mux ? 4 : 2, 0,
+   699							  &channel->panel, &channel->bridge);
+   700			if (ret && ret != -ENODEV)
+   701				goto free_child;
+   702	
+   703			/* panel ddc only if there is no bridge */
+   704			if (!channel->bridge) {
+   705				ret = imx_ldb_panel_ddc(dev, channel, child);
+   706				if (ret)
+   707					goto free_child;
+   708			}
+   709	
+   710			bus_format = of_get_bus_format(dev, child);
+   711			if (bus_format == -EINVAL) {
+   712				/*
+   713				 * If no bus format was specified in the device tree,
+   714				 * we can still get it from the connected panel later.
+   715				 */
+   716				if (channel->panel && channel->panel->funcs &&
+   717				    channel->panel->funcs->get_modes)
+   718					bus_format = 0;
+   719			}
+   720			if (bus_format < 0) {
+   721				dev_err(dev, "could not determine data mapping: %d\n",
+   722					bus_format);
+   723				ret = bus_format;
+   724				goto free_child;
+   725			}
+   726			channel->bus_format = bus_format;
+   727			channel->child = child;
+   728		}
+   729	
+   730		platform_set_drvdata(pdev, imx_ldb);
+   731	
+   732		return component_add(&pdev->dev, &imx_ldb_ops);
+   733	
+   734	free_child:
+   735		of_node_put(child);
+   736		return ret;
+   737	}
+   738	
+
 -- 
-Alexandre Courbot <acourbot@nvidia.com>
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
