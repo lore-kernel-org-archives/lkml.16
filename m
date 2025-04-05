@@ -1,172 +1,148 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DE95381AF
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 14:49:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B763C51C5A;
+	Sat,  5 Apr 2025 14:54:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743864544; cv=none; b=rcUHXO0nwCRAYUePjk5VQq3IFfmY+piTYzHfO/yxsMAM3HwY/QtQvyueQ/xYVLfMEWgz7jJbSOA3huOIDcZDAS9atvTpiMvjVvyOOvSitBAwVTHySeJFifn+q0knduxpWhxZvGHWL3AJ4KD+Yqgahtyq/7sVX0U94YSzB+6kU4Q=
+	t=1743864881; cv=none; b=OQuhQr12opkReYP63metO65hLe5uo7g3IZNNf3gPP0C4/anIIYvpoIIiZypkB37CEmmPTtaEYeRGDjps5WDqwEnluBMKzMUYW846L2xUFD3mUEFOrWM7fbeuuAkA8ziwGGKqLTyL3w9oLE7ogIdSvgm+MgUrO+cSkjIqe7mw9+8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743864544; c=relaxed/simple;
-	bh=cMQjM++Dxc5Sp0/UX+qLKMmSrpRpvoeH0ZmSjyYi0+s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gmw1U0NjbRGp+FwlfdUOlbtiE1b9izGWkg6/9w69Vjzitwnvi7qa5kdVixpPxPWvKfsumWBZeEZUt0EzmhsFoIZgBsJL12w6T873SHHlMIVotTGkIJJPez7FsTE84lnF5/xRum3RxLxoFmm5rnkzJiEu5uIj53AhIC8omrUH+gs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=ic6VdYU9; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1743864881; c=relaxed/simple;
+	bh=W0hFo83763PwHhqGjvqrSnEmlQxHpIjB+dI7T/lyDqw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MZt6cFYHfLxK1VjxvZcIVBB9v0W136g9P+UsagVp7ympaNojeHT4gJJAXRa50K3KYZelPZuhVFvxsa7ZjK0K5ONb8kKt9tXk8K6+Me+nvVLURY6dZH61YrYJeq6tZ6l/8FiAxG29MlfI6Tf3Q7/89kYYfFGShwn2ZBMIFbSCoow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k7qxemuh; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="ic6VdYU9"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 535BeDuL020934
-	for <linux-kernel@vger.kernel.org>; Sat, 5 Apr 2025 14:49:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	M+PEihR5tW26XOtjKkNuGBixh9BPxadJqebcLYBJWDI=; b=ic6VdYU9A10z6CuU
-	UoeHanu6cMwKCA3TYWexR5qTJ25J0UdLeur+q3ttTzYaSW7ZluL176OQnn4oVhHq
-	gWLON3KUFtL/3wSgg2l1cZvhGmMf0XZ5vCmAt+rm8c6ocgs+CgM0QAAkXROW/w9T
-	MnldOjyiloX1KHqp1vVYrHAEBztXepmsN/bBYxYnMz47POU+S0u+lYPLfBXv4uu2
-	mbYwjABSSw4yNJrodffY33eItMuDT84Yu2sMSsQGuogry0bUx+bZrBAEWCXLxmc2
-	gm1q4eDi4c98BrKVYETAk1wQBnXta6dhcghRP4r4UZn8m8XGYRsr/fzb13oaNucL
-	VbrA7w==
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twcr8kyu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Sat, 05 Apr 2025 14:49:01 +0000 (GMT)
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c3c8f8ab79so463707785a.2
-        for <linux-kernel@vger.kernel.org>; Sat, 05 Apr 2025 07:49:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k7qxemuh"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2264aefc45dso39739265ad.0;
+        Sat, 05 Apr 2025 07:54:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743864879; x=1744469679; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=nKs0lwSpjYnhUeQPgpDR5O6PnIX9bK5Z7Homt3o7Oqw=;
+        b=k7qxemuhxC82lHrW4JLnQUnrZsxYNqvECxL9xsv8LHbtXQHRMgiUqXrK5BnL8bK0J1
+         96l6uf4qQ9CZjxKrw39nYtjpL3kqc6AcXTmqxRGn8ZHo9Ea1A6g0Dc47KXDFzYq5gtyW
+         nNb1mVqMN9oPgXUY7o3H1QLfQ6UTwHqwJVpbZAYEZDG90x+Sd6drbb94MogkEShWNVwa
+         0Zd4rYDGzQ72m3z1j3DAeQLsqnOH04vOXR/CA2048o8EYkl3TkAvncwzp4o2cdUOjmz2
+         Fft+0Hif78JqYe3EdY8U2twOm+Rm/Mb7gAb9em5ReBM62vH3okLwdNF4ckwjk5B0HmFg
+         nRzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743864540; x=1744469340;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=M+PEihR5tW26XOtjKkNuGBixh9BPxadJqebcLYBJWDI=;
-        b=Gti+bPp9KJznnKv122qxQEmvuojrDUKiiw6T6i5xkhB3PbCCpjeM1fkJAgudvo0a3m
-         rIILr9Lp7MO87car6HmB3IQjhDLqJl7ehPflrrWe9KAfTuB57GOGQ1oRH+HlU6HqYpHD
-         WObn/k3pdAuduDEq4y4g3Ay2sgWaNhterYuLE774V5gx0cHmvDIr29FWU4n+ZroUsCGZ
-         UyLxefJt15kdU8LBGhWw+ynTpy1JzlrsOVtr8BljLVq4e9DVVmOT3iZnYf1u0scSR0Ok
-         1WDy9vWoHDBEYlVsfpf7CQQ+BVTKvWu4/XjK3RdAWbeJ8/wh4ImX6+2YPXYM+k9NY+Qa
-         UBww==
-X-Forwarded-Encrypted: i=1; AJvYcCXYfOWJ6U0msKW8pKWO7UGcxyUe0/hruMUxqBUNKkCMpXzmCK8ZqqPfHLcyEfrWry6BULecDeFYYbZR+Ho=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy4aOTaFjc4Crafy4/zE9fCm4zczLp6fL+3zNsJDcAcpzeX16zf
-	+rrJH8WsvtRlBgNt/OYJe3++WEh2huBX9TNsBaztt2pqQXRcCtos3gg3XdUiEYmoXR06EoyOxHY
-	LqefxxpKZz+Td0+2CkroEjAqYMOmCPpKBhUnHI+pqs0PPgWhB9HiNl9T5rmkQc5I=
-X-Gm-Gg: ASbGncsPz9z/cEDro1+XFzRfp6Q0l23WzzSEZ6M7poz3cZi3DTi9fiU1Mu9rahpy78U
-	rOAfvT0pv+3ISnVdWSgSkXtzGTgXKpGFta6ICDsskfuNGFv8dJkVdcnRMZvD9RqrHXWeMGwRTwv
-	RA8x5uJpMFu7f2Kp1Zj0lCKmmIwf0aiQzDdjdVWzRWq/awEMVRchfM5WapXkdJxBx5YMjTvd++E
-	9P9f0VphDpnqCGFD7HKdghHxWDnttBPIyi/SqxJvKCLHY9jzbgMoDpC1oE6++ST3mU8W/E+q+LR
-	7lzvmFP3IAHaMN/cAMta5bpLvGPbekDH65k1H0zcRMrwMjO2XqPGjBECm1BVeOIGXxtWnh4epKD
-	BkIqkF6/X94tVwSE/yjxvddclH9ukC0XGeENS6CvIBNFTxxEKaOsFN9j5l7dxcRF+18HI
-X-Received: by 2002:a05:620a:28ca:b0:7c5:d72b:1a00 with SMTP id af79cd13be357-7c77dd61ac1mr391249585a.15.1743864540355;
-        Sat, 05 Apr 2025 07:49:00 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEutc1kNv9JQea/tmH5cHUtkD2IZVayC2pgcE7eKc+f/LQTGUDJVkqGd0AbWMhRe0FcVGQgsg==
-X-Received: by 2002:a05:620a:28ca:b0:7c5:d72b:1a00 with SMTP id af79cd13be357-7c77dd61ac1mr391246485a.15.1743864539939;
-        Sat, 05 Apr 2025 07:48:59 -0700 (PDT)
-Received: from ?IPV6:2001:14bb:c4:a6bd:f097:4050:9ce6:5d7f? (2001-14bb-c4-a6bd-f097-4050-9ce6-5d7f.rev.dnainternet.fi. [2001:14bb:c4:a6bd:f097:4050:9ce6:5d7f])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54c1e670d1bsm730472e87.214.2025.04.05.07.48.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 05 Apr 2025 07:48:59 -0700 (PDT)
-Message-ID: <bdd47a5a-c9d3-484e-b2ff-2167c54dfb20@oss.qualcomm.com>
-Date: Sat, 5 Apr 2025 17:48:57 +0300
+        d=1e100.net; s=20230601; t=1743864879; x=1744469679;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=nKs0lwSpjYnhUeQPgpDR5O6PnIX9bK5Z7Homt3o7Oqw=;
+        b=iQqvW/kwHiMNLXEdB/CkECrSzd7c4Y1QCn8Pt8EEhgXivaAViRUoz6Z484bjTbVvGq
+         1raJ7jEASJrnfiHb/MWjo7trIkXKYyXNzo1JEu4TO19EhB6H6t0pxxkWbL5T3W+iqO4r
+         ASuFpyqhA5o8EFKmwvC5Gj+l8OwdGM+lLe4RBCfz/05vmuWAb566m/lD8alhqpmcGmRH
+         io+jKLPbsDsex8e5H1/QsPlSjO8Ckac3PSrWTq5lezuq4WyJvvh5bksxwSOLshIXtMPc
+         VIYjnetZoSpzmm+N48T1hhzchQnWRebAimTBE46fB8lSdMRSGCSOHCw3cGfQSxUkRkCc
+         944g==
+X-Forwarded-Encrypted: i=1; AJvYcCU459nXDQ8KkiRt9sl5hvTsOqO8RNLLqf9dydjhadAT7AF1G1Wqgxbo9NXbk4GIq1gSXp654GUw9Ra19hw=@vger.kernel.org, AJvYcCVVd0Nx9M/7AKaJ4i3qc6EiONSc7WUBMY22XIkSkFiOCdDDoxXRSpWExoHz87TgKEuoZ6XTgnV2@vger.kernel.org
+X-Gm-Message-State: AOJu0YxObmSIZo1C0BKsUGcXUzdfEbhBnYsZEVA3pyYddhW6dF1HOrax
+	RpEgN8g4dhTl/udmud8MV+fM94LtmDjXqivaLFaMS15YJq2XwVg/
+X-Gm-Gg: ASbGncvt6CA9SGA6uAoUeCiV4GC5DYzFXAqlm140BVC1mL4JiYWoEPg8Xk+YzK00J05
+	lPPVKbq24ohql0l9KkQERCr56VdA4QJ5IsfL9XEWG2TAumWrBpg5F5Geqju45bdx06OT9MnouU2
+	gWDhBCCQKVeFLmOsgh9U+FHDl8hRLTbS+prbiBCvTwKA7KaYAjhIZRJVlrC13wmACypkdPpfG3G
+	b/sf+5+HRajurhpH08O1dEGFeyYWpzneQ1FR8lGOCw2Gdiunltox3Nino7qLkmib2OqvoxCDGF0
+	IUbQeAtOOYduc77djJK7ulsFoTkeDZqYhbOZxoF+1Fsr/PJHprpJaMWyZ4KizeJP/dNHd+ZOe88
+	bacuEyya0WM2gNOoKwOYtVAAqCJ3uhW8sLoJ7Fl3/rQ==
+X-Google-Smtp-Source: AGHT+IGaG+x1ud/97AzdLIBHj4DsVwQhF6qAy3rP10DkocE71F8Il3Fty01NOhrk0Z8YGiYjGzJaQg==
+X-Received: by 2002:a17:902:e552:b0:220:c813:dfcc with SMTP id d9443c01a7336-22a8a8b80a3mr92472285ad.40.1743864878867;
+        Sat, 05 Apr 2025 07:54:38 -0700 (PDT)
+Received: from localhost.localdomain (p12284229-ipxg45101marunouchi.tokyo.ocn.ne.jp. [60.39.60.229])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2297866dccbsm50694485ad.176.2025.04.05.07.54.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 05 Apr 2025 07:54:38 -0700 (PDT)
+From: Ryo Takakura <ryotkkr98@gmail.com>
+To: alex@ghiti.fr,
+	aou@eecs.berkeley.edu,
+	bigeasy@linutronix.de,
+	conor.dooley@microchip.com,
+	gregkh@linuxfoundation.org,
+	jirislaby@kernel.org,
+	john.ogness@linutronix.de,
+	palmer@dabbelt.com,
+	paul.walmsley@sifive.com,
+	pmladek@suse.com,
+	samuel.holland@sifive.com,
+	u.kleine-koenig@baylibre.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-serial@vger.kernel.org,
+	stable@vger.kernel.org,
+	Ryo Takakura <ryotkkr98@gmail.com>
+Subject: [PATCH v2] serial: sifive: lock port in startup()/shutdown() callbacks
+Date: Sat,  5 Apr 2025 23:53:54 +0900
+Message-Id: <20250405145354.492947-1-ryotkkr98@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/8] Reup: SM8350 and SC8280XP venus support
-To: Vikash Garodia <quic_vgarodia@quicinc.com>
-Cc: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Stanimir Varbanov <stanimir.k.varbanov@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>, linux-media@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Johan Hovold <johan+linaro@kernel.org>
-References: <20250304-b4-linux-media-comitters-sc8280xp-venus-v1-0-279c7ea55493@linaro.org>
- <8cfaeb25-2657-9df4-5cea-018aad62f579@quicinc.com>
- <it3njgklhnedjzojafuxpjy3o5zfulgdclweyobv7kjgtpjmzx@6opje7yms4yg>
- <1dd6e03d-09be-4853-741a-4fb47b7619a0@quicinc.com>
-Content-Language: en-US
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-In-Reply-To: <1dd6e03d-09be-4853-741a-4fb47b7619a0@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: CHJKpsneU8z4O3Hw3G8vleqfB6QV7e8j
-X-Authority-Analysis: v=2.4 cv=QuVe3Uyd c=1 sm=1 tr=0 ts=67f142dd cx=c_pps a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8 a=fIlTlRh94wJvY906GsMA:9 a=QEXdDO2ut3YA:10
- a=bTQJ7kPSJx9SKPbeHEYW:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-GUID: CHJKpsneU8z4O3Hw3G8vleqfB6QV7e8j
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-05_06,2025-04-03_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
- spamscore=0 malwarescore=0 mlxlogscore=999 bulkscore=0 priorityscore=1501
- clxscore=1015 phishscore=0 impostorscore=0 suspectscore=0
- lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504050093
+Content-Transfer-Encoding: 8bit
 
-On 04/04/2025 08:24, Vikash Garodia wrote:
-> Hi Dmitry,
-> 
-> On 4/3/2025 10:28 PM, Dmitry Baryshkov wrote:
->> On Wed, Mar 05, 2025 at 08:49:37AM +0530, Vikash Garodia wrote:
->>>
->>> On 3/4/2025 6:37 PM, Bryan O'Donoghue wrote:
->>>> This series is a re-up of Konrad's original venus series for sc8280xp and
->>>> sm8350.Why this is enabled on venus driver ? Why not iris driver ? This needs an
->>> explanation on was this even tried to bring up on iris driver.
->>>
->>> How different is this from sm8250 which is already enabled on iris driver ?
->>
->> As far as I remember, SM8250 support in Iris did not reach
->> feature-parity yet. So in my opinion it is fine to add new platforms to
->> the Venus driver, that will later migrate to the Iris driver.
-> I would say, from decoder side all codecs are there now on Iris. H264 merged,
-> while h265 and VP9 dec are posted as RFC, there is one compliance failure which
-> is under debug to post them as regular patches.
-> If we are mainly looking for decode usecases, then we should be on Iris.
+startup()/shutdown() callbacks access SIFIVE_SERIAL_IE_OFFS.
+The register is also accessed from write() callback.
 
-No, we are not limited to the decode use case.
+If console were printing and startup()/shutdown() callback
+gets called, its access to the register could be overwritten.
 
-> Preference would be to stay on Iris, otherwise we would have that extra ask to
-> port it later from venus to iris.
+Add port->lock to startup()/shutdown() callbacks to make sure
+their access to SIFIVE_SERIAL_IE_OFFS is synchronized against
+write() callback.
 
-Yes, but that would (hopefully) be easy to handle.
+Fixes: 45c054d0815b ("tty: serial: add driver for the SiFive UART")
+Signed-off-by: Ryo Takakura <ryotkkr98@gmail.com>
+Cc: stable@vger.kernel.org
+---
 
->>
->> Otherwise users of SC8280XP either have to use external patchsets (like
->> this one) or a non-full-featured driver (and still possibly external
->> patchsets, I didn't check if these two platforms can use
->> qcom,sm8250-venus as a fallback compat string).
-> It should, atleast from the hardware spec perspective, AFAIK.
->>
->> Bryan, Konrad, in my opinion, let's get these patches merged :-)
->>
->>>
->>>> Link: https://lore.kernel.org/all/20230731-topic-8280_venus-v1-0-8c8bbe1983a5@linaro.org/
->>>>
->>>> The main obstacle to merging that series at the time was the longstanding
->>>> but invalid usage of "video-encoder" and "video-decoder" which is a
->>>> driver level configuration option not a description of hardware.
->>>>
->>>> Following on from that discussion a backwards compatible means of
->>>> statically selecting transcoder mode was upstreamed
->>>>
->>>> commit: 687bfbba5a1c ("media: venus: Add support for static video encoder/decoder declarations")
->>>>
->>>> Reworking this series from Konrad to incorporate this simple change
->>>>
->>
-> Regards,
-> Vikash
+This patch used be part of a series for converting sifive driver to
+nbcon[0]. It's now sent seperatly as the rest of the series does not
+need be applied to the stable branch.
 
+Sincerely,
+Ryo Takakura
 
+[0] https://lore.kernel.org/all/20250405043833.397020-1-ryotkkr98@gmail.com/
+
+---
+ drivers/tty/serial/sifive.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/drivers/tty/serial/sifive.c b/drivers/tty/serial/sifive.c
+index 5904a2d4c..054a8e630 100644
+--- a/drivers/tty/serial/sifive.c
++++ b/drivers/tty/serial/sifive.c
+@@ -563,8 +563,11 @@ static void sifive_serial_break_ctl(struct uart_port *port, int break_state)
+ static int sifive_serial_startup(struct uart_port *port)
+ {
+ 	struct sifive_serial_port *ssp = port_to_sifive_serial_port(port);
++	unsigned long flags;
+ 
++	uart_port_lock_irqsave(&ssp->port, &flags);
+ 	__ssp_enable_rxwm(ssp);
++	uart_port_unlock_irqrestore(&ssp->port, flags);
+ 
+ 	return 0;
+ }
+@@ -572,9 +575,12 @@ static int sifive_serial_startup(struct uart_port *port)
+ static void sifive_serial_shutdown(struct uart_port *port)
+ {
+ 	struct sifive_serial_port *ssp = port_to_sifive_serial_port(port);
++	unsigned long flags;
+ 
++	uart_port_lock_irqsave(&ssp->port, &flags);
+ 	__ssp_disable_rxwm(ssp);
+ 	__ssp_disable_txwm(ssp);
++	uart_port_unlock_irqrestore(&ssp->port, flags);
+ }
+ 
+ /**
 -- 
-With best wishes
-Dmitry
+2.34.1
+
