@@ -1,157 +1,229 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45D8A71747;
-	Sat,  5 Apr 2025 15:25:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743866754; cv=none; b=Cv34a+TG1UkrlVf50GHHbqNAQi/2JYguRWA6z9b4WInpEJQns2pcts9nF2yCqyEGGFGRdg3P48ukygQbbg3rYuWZTUe2Lhc3Wzmp7KOKPrjVKhVexJfxLstDL2BF59vhUqQJsswyk4CrLXjJQekMCvWST3Gw3F7dWaS1Avu3ZVE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743866754; c=relaxed/simple;
-	bh=h3GhfBIiVRF/Pd3aAJkjlB+5zHbq5qv4N3L5/N+zLiM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BvvafGH5T9JtKAdlqkmpkPUiEJyALvmDp0vepsWwfcDmrfnrll9aCtmeCVhUr9PuH+f63plUxGZqJ/lepQ89sALvCP5NNcqcj2tZlb8INyLG2bRNmJrEmh8KLJ2N2fH/LcXNbFkeUBeBf5dpWxdfJmPHU6Cvtb4wUBrsW/u7eHY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BUb/gVZn; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 227582E62C;
+	Sat,  5 Apr 2025 15:27:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743866823; cv=pass; b=iV5PCtQopMixi57eWu5ZknrsfWZNl291XcRggjsmx4BvH728AEhXW1JGFGgFZLKsXg8/XHbWBmDV6Nc3ul1eXuvujwV7UrdKBEU47FTThNH390wHv1G/iYI1OTy9ZievvaOxe7zhvk7d9K8V6z9BK6rMaeaLpbt/yGXuxaoYWfo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743866823; c=relaxed/simple;
+	bh=81R8hcDuXNZXFBByfRqUJBW7Zl3bfLaSfhF8twQruvk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=W+Nf1qCal5stMTtlPj82m6YLKxoKIuBThhvK/WDtSfsSrWbSOnNnQDyTAM4vYqLprCOsuyOup9s6Fa6mNF+9YSME+Swu+qHuPAq6m34PzTmUzf0hmVDkmNuDy1Gl7umDGz3AHkLXfsQZ8asdoieHdjIT5uQ4gB6P6OI5HgCY1oc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.fricke@collabora.com header.b=SAH+0v2w; arc=pass smtp.client-ip=136.143.188.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BUb/gVZn"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43d07ca6a80so15409535e9.1;
-        Sat, 05 Apr 2025 08:25:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743866750; x=1744471550; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4rYQcQMBl9xOlGSmouhghPZmgfZgiwJh9mi25o4o0Nw=;
-        b=BUb/gVZnYPLhA5OyXM7YsnAU0KmjS726XXtBnD5UKj25w7yJvptuZV1WG7SX88EpaW
-         EqGY0LTVEn341Atj6+UJycIZFdNTuZFOEWSLMVeQyZHWewsi1QAwNJVOl4WYtsm1nSJ3
-         5ua48qjviu0WMZjbKVnLpfAFJSfWmOVxSHWBhwWCFebkmfbAv/EA1T5fWSzWHDQOMS8T
-         /ieugtAMFoMj1H2gt3d+lHgEjH9irN8CHwPm5N9fRJFk8lvSV1L2V+tgcyyOCdZ/mJqh
-         RDAfd35aIX6GNtqMVHz2qI0kydiH7MByFjcnZljlz8E8Gt/2xZkjWQ/4jsu6nbRXk5sy
-         BfvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743866750; x=1744471550;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4rYQcQMBl9xOlGSmouhghPZmgfZgiwJh9mi25o4o0Nw=;
-        b=plKUeNma/9Hk5hh7yZe5ikMuzjAKhn5LiDiLWSzMKDy1k5yAYMaL09x40B1Y1aFcys
-         jMu6XQvhyCnVoObsBCBJyvvooOhRqoSsC+BIjkf1S0fiPXc1xN8Ic6yiUyLWmVrjkBrc
-         OtQaju9qr1p71PxXFsQLkmtEl87P+RreM1VPQEaMiWyzCjvmA0oHktF0ZkyCzWm25igE
-         0S+T/PDfdjpOGHmH9+tet9ufBtFty9r1IXvZ9gPvM253B6VLnjYMQRqrFwNWenE1EkCK
-         v4/pHuroohNFF4cFDTMMP+/UgMhl7WiJCNGp7fF0XebrkdhaCa6JqH1Vz7/YhUoONLR7
-         ctBA==
-X-Forwarded-Encrypted: i=1; AJvYcCVPBugbQ4+TAlSMitSBRHGFXIJe445+VFaKGb+vxa7Jg6cAIJ/9ToOogsueD0HFfqDSTAiJFThQX8Q84mtc@vger.kernel.org, AJvYcCVfNfdHi4sx1wb40uENI0mDdGK9U9UX4FSgy5cXHhNb1ZilUl+bpNxydkeJx3nJl+LcvEyc7oT+2pDQ3A0=@vger.kernel.org, AJvYcCWT/lckKlSUuX2gFBMEw29Mu+Fe4AY4UDyKIFZpjwwx5H/qXSaLztR0IMz/wR2pWe102NyRH9PCKwfRng==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw5wUabVYAJAeLZ3mAGArdFHlt0q3R5nNHDVTqYeVDRPgECZfaF
-	tgaTVng96UPX8HvOWoVQrWWgl2lXLD0dFKtO2d2lrr+/Xcf41AWA
-X-Gm-Gg: ASbGncvcbVUcceRTL/YF8m8IYrXVROmfjKmeCi6bYU2p1uKPOSQfFH67ROtcF+Ch+TB
-	jqSof5i07bp5Hux+SjITIPakrrhsU/fv9A90NkGoeIezM1Mle9mqYKUWk1AmIgCp6dTv3FqG+zj
-	3D6jd2OSpHEtXAFh0yIE9w0Q30CrFpb7g6j7uTal2QH/WeICnq8+QsRDwffdwVi/fYTFvRu1svq
-	R6GRld5kCQxJR7v2Mvk64Ov7SblW0Fpe3ipKsb/n5venD3sSYXmu6iKQIPl5oxctAFxmsiZWfxt
-	eZPkHyPikRomAM/ZmJqzamCltj1iV6IgIradK1s2p78VrS+CHPMqwNfLV9W51J5ab77Fffq6TJS
-	TuXrNanM=
-X-Google-Smtp-Source: AGHT+IHP3tRbXf7i8RI1670OlH08T8lHDdFW9fMLv8Xn/kEmEaNz4d/F/FiflXkACwCWZkgl8ZM6+Q==
-X-Received: by 2002:a05:600c:8719:b0:43c:f85d:1245 with SMTP id 5b1f17b1804b1-43ecf8e7321mr76664845e9.17.1743866750233;
-        Sat, 05 Apr 2025 08:25:50 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec364c959sm75438015e9.25.2025.04.05.08.25.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Apr 2025 08:25:49 -0700 (PDT)
-Date: Sat, 5 Apr 2025 16:25:48 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: Baris Can Goral <goralbaris@gmail.com>
-Cc: martin.petersen@oracle.com, linux-scsi@vger.kernel.org,
- target-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
- skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev
-Subject: Re: [PATCH v4] scsi: target: transform strncpy into strscpy
-Message-ID: <20250405162548.310dea37@pumpkin>
-In-Reply-To: <20250405143646.10722-1-goralbaris@gmail.com>
-References: <20250402204554.205560-1-goralbaris@gmail.com>
-	<20250405143646.10722-1-goralbaris@gmail.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.fricke@collabora.com header.b="SAH+0v2w"
+ARC-Seal: i=1; a=rsa-sha256; t=1743866792; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=MoS8Jz1hhaALz29iYgPf+kAxJ5sjtO/8hAqhjIJs5LIy5qfjBN7FBRfRpskvI6nQVJFk946OAbBAYAf3p27nryKb5h68vztGrNC4/K1Msgx58P+peOqIKBwVaOy8ZiGeALAnXdzz4AZH/4AQTYzdoEucpXdpoorFVDnm49N2gko=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1743866792; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=a6STbV+NwzNcHIr/JnBgDeICaBXLJ4QoQ1ZaZwuZ1t0=; 
+	b=Zydx8zmaSZn3ebG76vrRs3tjCsSF/KCIo/pse2+N/RDmTxuCRErEi3NluCuNY3hdgU2J4qbBLjHNxsNLYtIKoX3WzTVobt8BdnI/OEL5wVvLfBtEDMRlek9an6fQc3rnIM8PlOSvyeDTVZb2l3rsN00BkAq0muovi1ZBlk8Pqks=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=sebastian.fricke@collabora.com;
+	dmarc=pass header.from=<sebastian.fricke@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1743866792;
+	s=zohomail; d=collabora.com; i=sebastian.fricke@collabora.com;
+	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
+	bh=a6STbV+NwzNcHIr/JnBgDeICaBXLJ4QoQ1ZaZwuZ1t0=;
+	b=SAH+0v2wJskYvfjcWHaJjHkHjHI/92k/+QeZ26a6Ofe9aeUySgjbLJ8oqY2Pf0u6
+	X0p57p9Y31T9NNzluN1tpIKJkNIpoK5P0d+Em+rGZUlxXL2yH2gu9U4IoakStgedTVV
+	/rUYw4Ruc7dSgc+u/AiLIz0nfYlfR4wuaJXyp5VU=
+Received: by mx.zohomail.com with SMTPS id 1743866790660738.8941385178805;
+	Sat, 5 Apr 2025 08:26:30 -0700 (PDT)
+Date: Sat, 5 Apr 2025 17:26:22 +0200
+From: Sebastian Fricke <sebastian.fricke@collabora.com>
+To: ming.qian@oss.nxp.com
+Cc: mchehab@kernel.org, hverkuil-cisco@xs4all.nl,
+	mirela.rabulea@oss.nxp.com, shawnguo@kernel.org,
+	s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+	xiahong.bao@nxp.com, eagle.zhou@nxp.com, linux-imx@nxp.com,
+	imx@lists.linux.dev, linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 2/3] media: imx-jpeg: Change the pattern size to 128x64
+Message-ID: <20250405152622.2nvwultytxnvqcki@basti-XPS-13-9310>
+References: <20250328063056.762-1-ming.qian@oss.nxp.com>
+ <20250328063056.762-3-ming.qian@oss.nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20250328063056.762-3-ming.qian@oss.nxp.com>
+X-ZohoMailClient: External
 
-On Sat,  5 Apr 2025 17:36:47 +0300
-Baris Can Goral <goralbaris@gmail.com> wrote:
+Hey Ming,
 
-> The strncpy() function is actively dangerous to use since it may not
-> NULL-terminate the destination string,resulting in potential memory
-> content exposures, unbounded reads, or crashes.
-> 
-> Link:https://github.com/KSPP/linux/issues/90
-> Signed-off-by: Baris Can Goral <goralbaris@gmail.com>
-> ---
-> Changes from v4:
-> 	-Description added
-> 	-User name corrected
-> 	-formatting issues.
-> 	-commit name changed
->  drivers/target/target_core_configfs.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/target/target_core_configfs.c b/drivers/target/target_core_configfs.c
-> index c40217f44b1b..5c0b74e76be2 100644
-> --- a/drivers/target/target_core_configfs.c
-> +++ b/drivers/target/target_core_configfs.c
-> @@ -143,7 +143,7 @@ static ssize_t target_core_item_dbroot_store(struct config_item *item,
->  	}
->  	filp_close(fp, NULL);
->  
-> -	strncpy(db_root, db_root_stage, read_bytes);
-> +	strscpy(db_root, db_root_stage, read_bytes);
->  	pr_debug("Target_Core_ConfigFS: db_root set to %s\n", db_root);
+On 28.03.2025 14:30, ming.qian@oss.nxp.com wrote:
+>From: Ming Qian <ming.qian@oss.nxp.com>
+>
+>To support decoding motion-jpeg without DHT, driver will try to decode a
+>pattern jpeg before actual jpeg frame by use of linked descriptors
+>(This is called "repeat mode"), then the DHT in the pattern jpeg can be
+>used for decoding the motion-jpeg.
+>
+>To avoid performance loss, use the smallest supported resolution 64x64
+>as the pattern jpeg size.
+>
+>But there is a hardware issue: when the JPEG decoded frame with a
+>resolution that is no larger than 64x64 and it is followed by a next
+>decoded frame with a larger resolution but not 64 aligned, then this
+>next decoded frame may be corrupted.
+>
+>To avoid corruption of the decoded image, we change the pattern jpeg
+>size to 128x64, as we confirmed with the hardware designer that this is
+>a safe size.
+>
+>Besides, we also need to allocate a dma buffer to store the decoded
+>picture for the pattern image.
 
-That code is broken, it reads:
-	read_bytes = snprintf(db_root_stage, DB_ROOT_LEN, "%s", page);
-	if (!read_bytes)
-		goto unlock;
+Why is that related to the change of the pattern size? Like why wasn't
+that needed for 64x64? And if this solves a different issue, can you put
+that into an extra patch?
 
-	if (db_root_stage[read_bytes - 1] == '\n')
-		db_root_stage[read_bytes - 1] = '\0';
+This is a bit hard to understand, maybe this is better:
 
-	/* validate new db root before accepting it */
-	fp = filp_open(db_root_stage, O_RDONLY, 0);
-	if (IS_ERR(fp)) {
-		pr_err("db_root: cannot open: %s\n", db_root_stage);
-		goto unlock;
-	}
-	if (!S_ISDIR(file_inode(fp)->i_mode)) {
-		filp_close(fp, NULL);
-		pr_err("db_root: not a directory: %s\n", db_root_stage);
-		goto unlock;
-	}
-	filp_close(fp, NULL);
+In order to decode a motion-jpeg bitstream, which doesn't provide a DHT,
+the driver will first decode a pattern jpeg and use the DHT found in the
+pattern to decode the first actual frame. This mode is called
+"repeat-mode" and it utilizes linked descriptors.
+The smallest supported resolution of 64x64 was used for that pattern to
+not cause unneeded performance delay. This choice, however, can cause a
+corrupted decoded picture of the first frame after the pattern, when the
+resolution of that frame is larger than the pattern and is not aligned
+to 64.
+By altering the pattern size to 128x64, this corruption can be avoided.
+That size has been confirmed to be safe by the hardware designers.
+Additionally, a DMA buffer needs to be allocated to store the decoded
+picture of the pattern image.
 
-	strncpy(db_root, db_root_stage, read_bytes);
-	pr_debug("Target_Core_ConfigFS: db_root set to %s\n", db_root);
+The rest looks good.
 
-	r = read_bytes;
+Regards,
+Sebastian
 
-unlock:
-	mutex_unlock(&target_devices_lock);
-	return r;
-
-'Really nasty (tm)' things happen if 'page' is too long.
-
-	David
-
->  
->  	r = read_bytes;
-> @@ -3664,7 +3664,7 @@ static void target_init_dbroot(void)
->  	}
->  	filp_close(fp, NULL);
->  
-> -	strncpy(db_root, db_root_stage, DB_ROOT_LEN);
-> +	strscpy(db_root, db_root_stage, DB_ROOT_LEN);
->  	pr_debug("Target_Core_ConfigFS: db_root set to %s\n", db_root);
->  }
->  
-
+>
+>Signed-off-by: Ming Qian <ming.qian@oss.nxp.com>
+>---
+> .../media/platform/nxp/imx-jpeg/mxc-jpeg.c    | 42 +++++++++++++++----
+> .../media/platform/nxp/imx-jpeg/mxc-jpeg.h    |  5 +++
+> 2 files changed, 39 insertions(+), 8 deletions(-)
+>
+>diff --git a/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c b/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c
+>index 12661c177f5a..45705c606769 100644
+>--- a/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c
+>+++ b/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c
+>@@ -535,7 +535,18 @@ static const unsigned char jpeg_sos_maximal[] = {
+> };
+>
+> static const unsigned char jpeg_image_red[] = {
+>-	0xFC, 0x5F, 0xA2, 0xBF, 0xCA, 0x73, 0xFE, 0xFE,
+>+	0xF9, 0xFE, 0x8A, 0xFC, 0x34, 0xFD, 0xC4, 0x28,
+>+	0xA0, 0x02, 0x8A, 0x00, 0x28, 0xA0, 0x02, 0x8A,
+>+	0x00, 0x28, 0xA0, 0x02, 0x8A, 0x00, 0x28, 0xA0,
+>+	0x02, 0x8A, 0x00, 0x28, 0xA0, 0x02, 0x8A, 0x00,
+>+	0x28, 0xA0, 0x02, 0x8A, 0x00, 0x28, 0xA0, 0x02,
+>+	0x8A, 0x00, 0x28, 0xA0, 0x02, 0x8A, 0x00, 0x28,
+>+	0xA0, 0x02, 0x8A, 0x00, 0x28, 0xA0, 0x02, 0x8A,
+>+	0x00, 0x28, 0xA0, 0x02, 0x8A, 0x00, 0x28, 0xA0,
+>+	0x02, 0x8A, 0x00, 0x28, 0xA0, 0x02, 0x8A, 0x00,
+>+	0x28, 0xA0, 0x02, 0x8A, 0x00, 0x28, 0xA0, 0x02,
+>+	0x8A, 0x00, 0x28, 0xA0, 0x0F, 0xFF, 0xD0, 0xF9,
+>+	0xFE, 0x8A, 0xFC, 0x34, 0xFD, 0xC4, 0x28, 0xA0,
+> 	0x02, 0x8A, 0x00, 0x28, 0xA0, 0x02, 0x8A, 0x00,
+> 	0x28, 0xA0, 0x02, 0x8A, 0x00, 0x28, 0xA0, 0x02,
+> 	0x8A, 0x00, 0x28, 0xA0, 0x02, 0x8A, 0x00, 0x28,
+>@@ -545,7 +556,7 @@ static const unsigned char jpeg_image_red[] = {
+> 	0x28, 0xA0, 0x02, 0x8A, 0x00, 0x28, 0xA0, 0x02,
+> 	0x8A, 0x00, 0x28, 0xA0, 0x02, 0x8A, 0x00, 0x28,
+> 	0xA0, 0x02, 0x8A, 0x00, 0x28, 0xA0, 0x02, 0x8A,
+>-	0x00, 0x28, 0xA0, 0x02, 0x8A, 0x00
+>+	0x00, 0x28, 0xA0, 0x0F
+> };
+>
+> static const unsigned char jpeg_eoi[] = {
+>@@ -775,6 +786,13 @@ static void mxc_jpeg_free_slot_data(struct mxc_jpeg_dev *jpeg)
+> 	jpeg->slot_data.cfg_stream_vaddr = NULL;
+> 	jpeg->slot_data.cfg_stream_handle = 0;
+>
+>+	dma_free_coherent(jpeg->dev, jpeg->slot_data.cfg_dec_size,
+>+			  jpeg->slot_data.cfg_dec_vaddr,
+>+			  jpeg->slot_data.cfg_dec_daddr);
+>+	jpeg->slot_data.cfg_dec_size = 0;
+>+	jpeg->slot_data.cfg_dec_vaddr = NULL;
+>+	jpeg->slot_data.cfg_dec_daddr = 0;
+>+
+> 	jpeg->slot_data.used = false;
+> }
+>
+>@@ -814,6 +832,14 @@ static bool mxc_jpeg_alloc_slot_data(struct mxc_jpeg_dev *jpeg)
+> 		goto err;
+> 	jpeg->slot_data.cfg_stream_vaddr = cfg_stm;
+>
+>+	jpeg->slot_data.cfg_dec_size = MXC_JPEG_PATTERN_WIDTH * MXC_JPEG_PATTERN_HEIGHT * 2;
+>+	jpeg->slot_data.cfg_dec_vaddr = dma_alloc_coherent(jpeg->dev,
+>+							   jpeg->slot_data.cfg_dec_size,
+>+							   &jpeg->slot_data.cfg_dec_daddr,
+>+							   GFP_ATOMIC);
+>+	if (!jpeg->slot_data.cfg_dec_vaddr)
+>+		goto err;
+>+
+> skip_alloc:
+> 	jpeg->slot_data.used = true;
+>
+>@@ -1216,14 +1242,14 @@ static void mxc_jpeg_config_dec_desc(struct vb2_buffer *out_buf,
+> 	 */
+> 	*cfg_size = mxc_jpeg_setup_cfg_stream(cfg_stream_vaddr,
+> 					      V4L2_PIX_FMT_YUYV,
+>-					      MXC_JPEG_MIN_WIDTH,
+>-					      MXC_JPEG_MIN_HEIGHT);
+>+					      MXC_JPEG_PATTERN_WIDTH,
+>+					      MXC_JPEG_PATTERN_HEIGHT);
+> 	cfg_desc->next_descpt_ptr = desc_handle | MXC_NXT_DESCPT_EN;
+>-	cfg_desc->buf_base0 = vb2_dma_contig_plane_dma_addr(dst_buf, 0);
+>+	cfg_desc->buf_base0 = jpeg->slot_data.cfg_dec_daddr;
+> 	cfg_desc->buf_base1 = 0;
+>-	cfg_desc->imgsize = MXC_JPEG_MIN_WIDTH << 16;
+>-	cfg_desc->imgsize |= MXC_JPEG_MIN_HEIGHT;
+>-	cfg_desc->line_pitch = MXC_JPEG_MIN_WIDTH * 2;
+>+	cfg_desc->imgsize = MXC_JPEG_PATTERN_WIDTH << 16;
+>+	cfg_desc->imgsize |= MXC_JPEG_PATTERN_HEIGHT;
+>+	cfg_desc->line_pitch = MXC_JPEG_PATTERN_WIDTH * 2;
+> 	cfg_desc->stm_ctrl = STM_CTRL_IMAGE_FORMAT(MXC_JPEG_YUV422);
+> 	cfg_desc->stm_ctrl |= STM_CTRL_BITBUF_PTR_CLR(1);
+> 	cfg_desc->stm_bufbase = cfg_stream_handle;
+>diff --git a/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.h b/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.h
+>index 86e324b21aed..fdde45f7e163 100644
+>--- a/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.h
+>+++ b/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.h
+>@@ -28,6 +28,8 @@
+> #define MXC_JPEG_W_ALIGN		3
+> #define MXC_JPEG_MAX_SIZEIMAGE		0xFFFFFC00
+> #define MXC_JPEG_MAX_PLANES		2
+>+#define MXC_JPEG_PATTERN_WIDTH		128
+>+#define MXC_JPEG_PATTERN_HEIGHT		64
+>
+> enum mxc_jpeg_enc_state {
+> 	MXC_JPEG_ENCODING	= 0, /* jpeg encode phase */
+>@@ -117,6 +119,9 @@ struct mxc_jpeg_slot_data {
+> 	dma_addr_t desc_handle;
+> 	dma_addr_t cfg_desc_handle; // configuration descriptor dma address
+> 	dma_addr_t cfg_stream_handle; // configuration bitstream dma address
+>+	dma_addr_t cfg_dec_size;
+>+	void *cfg_dec_vaddr;
+>+	dma_addr_t cfg_dec_daddr;
+> };
+>
+> struct mxc_jpeg_dev {
+>-- 
+>2.43.0-rc1
+>
+>
