@@ -1,148 +1,121 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com [209.85.221.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B763C51C5A;
-	Sat,  5 Apr 2025 14:54:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E4C819F495
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 14:55:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743864881; cv=none; b=OQuhQr12opkReYP63metO65hLe5uo7g3IZNNf3gPP0C4/anIIYvpoIIiZypkB37CEmmPTtaEYeRGDjps5WDqwEnluBMKzMUYW846L2xUFD3mUEFOrWM7fbeuuAkA8ziwGGKqLTyL3w9oLE7ogIdSvgm+MgUrO+cSkjIqe7mw9+8=
+	t=1743864930; cv=none; b=EG+2lNwT+R6nylh1W98owvUCZQ1JFKvcEyiYIyrekR3dRog7tNq8OUxg5JJHiz1VoxVn4TxJZ8sHQe+WVghwYLQkNyU8aoLxlFnmw7d35exOKlLSCXzelrMC0q0vL8KuXW8OrRNdnoLHvKtn59xbtOtlWNtWs31unLVN3GiQ3Q0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743864881; c=relaxed/simple;
-	bh=W0hFo83763PwHhqGjvqrSnEmlQxHpIjB+dI7T/lyDqw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MZt6cFYHfLxK1VjxvZcIVBB9v0W136g9P+UsagVp7ympaNojeHT4gJJAXRa50K3KYZelPZuhVFvxsa7ZjK0K5ONb8kKt9tXk8K6+Me+nvVLURY6dZH61YrYJeq6tZ6l/8FiAxG29MlfI6Tf3Q7/89kYYfFGShwn2ZBMIFbSCoow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k7qxemuh; arc=none smtp.client-ip=209.85.214.170
+	s=arc-20240116; t=1743864930; c=relaxed/simple;
+	bh=KN+GUQaDkyiC/q46ZCA0E+OC/aTo3sC5uzl2Y4YoofI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BgFi/lEY9Am10q0LWalu1LmApgTsvn0UgDxmZ3yBhf1N8blrnu1uJ/U3+d+8StAlTwOEF7H6yrzoKCJD0gWM0av9AregsxRBIi5PXbGKdpu+vdGJFbLz8Iz7uH0SbCn9DsvbDDz5TRMwsYURqCjdzKeXmRFNA6nYXETevtNUimM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dawX8ZJM; arc=none smtp.client-ip=209.85.221.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k7qxemuh"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2264aefc45dso39739265ad.0;
-        Sat, 05 Apr 2025 07:54:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dawX8ZJM"
+Received: by mail-vk1-f179.google.com with SMTP id 71dfb90a1353d-523f670ca99so1338732e0c.1
+        for <linux-kernel@vger.kernel.org>; Sat, 05 Apr 2025 07:55:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743864879; x=1744469679; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=nKs0lwSpjYnhUeQPgpDR5O6PnIX9bK5Z7Homt3o7Oqw=;
-        b=k7qxemuhxC82lHrW4JLnQUnrZsxYNqvECxL9xsv8LHbtXQHRMgiUqXrK5BnL8bK0J1
-         96l6uf4qQ9CZjxKrw39nYtjpL3kqc6AcXTmqxRGn8ZHo9Ea1A6g0Dc47KXDFzYq5gtyW
-         nNb1mVqMN9oPgXUY7o3H1QLfQ6UTwHqwJVpbZAYEZDG90x+Sd6drbb94MogkEShWNVwa
-         0Zd4rYDGzQ72m3z1j3DAeQLsqnOH04vOXR/CA2048o8EYkl3TkAvncwzp4o2cdUOjmz2
-         Fft+0Hif78JqYe3EdY8U2twOm+Rm/Mb7gAb9em5ReBM62vH3okLwdNF4ckwjk5B0HmFg
-         nRzg==
+        d=gmail.com; s=20230601; t=1743864928; x=1744469728; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=k0bylYK4rbcZkE8OQEolRnIpH1EzfwJRH0eir4LBzBk=;
+        b=dawX8ZJMGmvrfrCU+zejubtPw0GAQB8f193VmiONcQOqFjb717X4l7aIw0+tUbPke7
+         8jfpOxNmkorL04rQk/MEx7kDjldMVuJLkXgxzqF15fQ76O5mm0Km9mUWcRJBxUAHJl9j
+         QtMlGq6tl8k/1cgZtxYg5MEWXZaQEDnt2SONgLZfw7RjFLaCReUabXlD8II2SMCH+5Qn
+         rx3qlNC0uAsL1/KPlZKnj3Gpn1ukI69h3LhfNlMkex31dxVXJ8rV1FJxzGTcMbwN2vcX
+         CEDLHXnXCTZL2aCAJ79JCH7eZgxf7x6y6g/6vJdvF2bhWgBiUSne2b4vZaXstao6fvPR
+         phHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743864879; x=1744469679;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=nKs0lwSpjYnhUeQPgpDR5O6PnIX9bK5Z7Homt3o7Oqw=;
-        b=iQqvW/kwHiMNLXEdB/CkECrSzd7c4Y1QCn8Pt8EEhgXivaAViRUoz6Z484bjTbVvGq
-         1raJ7jEASJrnfiHb/MWjo7trIkXKYyXNzo1JEu4TO19EhB6H6t0pxxkWbL5T3W+iqO4r
-         ASuFpyqhA5o8EFKmwvC5Gj+l8OwdGM+lLe4RBCfz/05vmuWAb566m/lD8alhqpmcGmRH
-         io+jKLPbsDsex8e5H1/QsPlSjO8Ckac3PSrWTq5lezuq4WyJvvh5bksxwSOLshIXtMPc
-         VIYjnetZoSpzmm+N48T1hhzchQnWRebAimTBE46fB8lSdMRSGCSOHCw3cGfQSxUkRkCc
-         944g==
-X-Forwarded-Encrypted: i=1; AJvYcCU459nXDQ8KkiRt9sl5hvTsOqO8RNLLqf9dydjhadAT7AF1G1Wqgxbo9NXbk4GIq1gSXp654GUw9Ra19hw=@vger.kernel.org, AJvYcCVVd0Nx9M/7AKaJ4i3qc6EiONSc7WUBMY22XIkSkFiOCdDDoxXRSpWExoHz87TgKEuoZ6XTgnV2@vger.kernel.org
-X-Gm-Message-State: AOJu0YxObmSIZo1C0BKsUGcXUzdfEbhBnYsZEVA3pyYddhW6dF1HOrax
-	RpEgN8g4dhTl/udmud8MV+fM94LtmDjXqivaLFaMS15YJq2XwVg/
-X-Gm-Gg: ASbGncvt6CA9SGA6uAoUeCiV4GC5DYzFXAqlm140BVC1mL4JiYWoEPg8Xk+YzK00J05
-	lPPVKbq24ohql0l9KkQERCr56VdA4QJ5IsfL9XEWG2TAumWrBpg5F5Geqju45bdx06OT9MnouU2
-	gWDhBCCQKVeFLmOsgh9U+FHDl8hRLTbS+prbiBCvTwKA7KaYAjhIZRJVlrC13wmACypkdPpfG3G
-	b/sf+5+HRajurhpH08O1dEGFeyYWpzneQ1FR8lGOCw2Gdiunltox3Nino7qLkmib2OqvoxCDGF0
-	IUbQeAtOOYduc77djJK7ulsFoTkeDZqYhbOZxoF+1Fsr/PJHprpJaMWyZ4KizeJP/dNHd+ZOe88
-	bacuEyya0WM2gNOoKwOYtVAAqCJ3uhW8sLoJ7Fl3/rQ==
-X-Google-Smtp-Source: AGHT+IGaG+x1ud/97AzdLIBHj4DsVwQhF6qAy3rP10DkocE71F8Il3Fty01NOhrk0Z8YGiYjGzJaQg==
-X-Received: by 2002:a17:902:e552:b0:220:c813:dfcc with SMTP id d9443c01a7336-22a8a8b80a3mr92472285ad.40.1743864878867;
-        Sat, 05 Apr 2025 07:54:38 -0700 (PDT)
-Received: from localhost.localdomain (p12284229-ipxg45101marunouchi.tokyo.ocn.ne.jp. [60.39.60.229])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2297866dccbsm50694485ad.176.2025.04.05.07.54.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Apr 2025 07:54:38 -0700 (PDT)
-From: Ryo Takakura <ryotkkr98@gmail.com>
-To: alex@ghiti.fr,
-	aou@eecs.berkeley.edu,
-	bigeasy@linutronix.de,
-	conor.dooley@microchip.com,
-	gregkh@linuxfoundation.org,
-	jirislaby@kernel.org,
-	john.ogness@linutronix.de,
-	palmer@dabbelt.com,
-	paul.walmsley@sifive.com,
-	pmladek@suse.com,
-	samuel.holland@sifive.com,
-	u.kleine-koenig@baylibre.com
-Cc: linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-serial@vger.kernel.org,
-	stable@vger.kernel.org,
-	Ryo Takakura <ryotkkr98@gmail.com>
-Subject: [PATCH v2] serial: sifive: lock port in startup()/shutdown() callbacks
-Date: Sat,  5 Apr 2025 23:53:54 +0900
-Message-Id: <20250405145354.492947-1-ryotkkr98@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        d=1e100.net; s=20230601; t=1743864928; x=1744469728;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=k0bylYK4rbcZkE8OQEolRnIpH1EzfwJRH0eir4LBzBk=;
+        b=cw/L6bEhLSYRvK92/jsbkX8BTgQ9IaQhLh7PtTxvIjX47AJiMZavvIgJOSeIyAc6zF
+         HvNC51HrfWZ34I6pmfACVZ9MuPwjEPv8E0pteX4JZI5h24P46uf5pZGubCaZghegySsA
+         ppDIIHeVu1IRrthDCPNJpROY2axwbuEs/86MlnJvFQBem9M/RLvZraSEyV5ihJiNP/tV
+         HX/blfZzhUam9lAma66eZ83EqOACOe+ri9eMNo3Ibk6kpyjDM4IcX91G00x2Drzuj/4I
+         a9EUCHmdqTS1S+tSBlpFoird+7R2Rd9mrrT1BcdnY/aAOmZPItjpc5zxP0uMxnsG7riU
+         5Irg==
+X-Forwarded-Encrypted: i=1; AJvYcCUhfWnfIimEtOG6dXdzkhVe4jT7O006gZTl6mhzuLHlY6I38VQQWRXYnfhEDwXf/TNLvHOvWJnbItLvc8s=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxj6Krbyk7AcIqJhTinY3j4ptNl58J8DO87Z/x5P2RU/vGjX5ZH
+	RyjpFAPM6keje3GOV+BllXxQN5VYYqLSCXdWllYcnxxtjnLKTQocR3zGAGVR1/Q+VxKk2GMNQK9
+	NV+htLBVsO10KQd2gftQBG/98c50=
+X-Gm-Gg: ASbGnct4C6rtTHrGEFMao/1vna0F2xvx4MXiihln4ch5AlYR+2pr8Al7RS/K4mlngf5
+	hQDFdIw5OOceTBVhDDe0b8Wbl2DOUI8IETUAzMzkVuY4f/RSrs/x1M9k5MPt9VlXCcVh8kBP6PM
+	6yv2UP72d+VLNPNAM+fgMX/iELIL1a
+X-Google-Smtp-Source: AGHT+IFXdU/YZAvxOJqqLDDhDC6P7HTyP2c16ab3xeaYKa0koLLHuUjJ71njQgO24nXztiAlRXq0RvDB6HV8pHKbYt0=
+X-Received: by 2002:a05:6122:a09:b0:520:42d3:91c1 with SMTP id
+ 71dfb90a1353d-527645a5e5dmr5259213e0c.10.1743864928204; Sat, 05 Apr 2025
+ 07:55:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <Z/B019elTtKG/PvD@ubuntu> <2025040547-vagrancy-imagines-384b@gregkh>
+ <CAHp75Vc0vOB1nDLrV+wmYeshxTsDwYq0xBkmJiOH=d5HONRpNQ@mail.gmail.com> <d3b4e3b4-b5cc-5b5f-26b6-1d726f5e57c@inria.fr>
+In-Reply-To: <d3b4e3b4-b5cc-5b5f-26b6-1d726f5e57c@inria.fr>
+From: Samuel Abraham <abrahamadekunle50@gmail.com>
+Date: Sat, 5 Apr 2025 15:55:18 +0100
+X-Gm-Features: ATxdqUHEUzZewfl8XOUc_Hod2fcZH_lElHfHjiW2nrFT1vgN6wa3S2r6Ya11cKI
+Message-ID: <CADYq+fYMPGFdFvNPyo_XoNdMhh6qu=h10Gb2EDc2Jw=JK9iXig@mail.gmail.com>
+Subject: Re: [PATCH v2] staging: rtl8723bs: Use % 4096 instead of & 0xfff
+To: Julia Lawall <julia.lawall@inria.fr>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, andy@kernel.org, dan.carpenter@linaro.org, 
+	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	outreachy@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-startup()/shutdown() callbacks access SIFIVE_SERIAL_IE_OFFS.
-The register is also accessed from write() callback.
+On Sat, Apr 5, 2025 at 1:30=E2=80=AFPM Julia Lawall <julia.lawall@inria.fr>=
+ wrote:
+>
+>
+>
+> On Sat, 5 Apr 2025, Andy Shevchenko wrote:
+>
+> > On Sat, Apr 5, 2025 at 11:23=E2=80=AFAM Greg Kroah-Hartman
+> > <gregkh@linuxfoundation.org> wrote:
+> > > On Sat, Apr 05, 2025 at 12:09:59AM +0000, Abraham Samuel Adekunle wro=
+te:
+> > > > Replace the bitwise AND operator `&` with a modulo
+> > > > operator `%` and decimal number to make the upper limit visible
+> > > > and clear what the semantic of it is.
+> > >
+> > > Eeek, no.  We all "know" what & means (it's a bit mask to handle the
+> > > issues involved), and we all do NOT know that % will do the same thin=
+g
+> > > at all.
+> >
+> > And that is exactly the purpose of the change. The % 4096 makes it
+> > clearer on what's going on, i.e. we are doing indexes that are wrapped
+> > around the given number.
+>
+> Ah, OK.  Samuel, indeed, the log message was going in that direction.  Bu=
+t
+> probably it should be more clear.  Why is 4096 the upper limit in this
+> case, for example.
 
-If console were printing and startup()/shutdown() callback
-gets called, its access to the register could be overwritten.
+Okay thank you Julia.
+So I can add something like this to the commit message?
 
-Add port->lock to startup()/shutdown() callbacks to make sure
-their access to SIFIVE_SERIAL_IE_OFFS is synchronized against
-write() callback.
+"Replace the bitwise AND operator `&` with a modulo
+operator `%` and decimal number to make the upper limit visible
+and clear that we are doing indexes that are wrapped around the given numbe=
+r"?
 
-Fixes: 45c054d0815b ("tty: serial: add driver for the SiFive UART")
-Signed-off-by: Ryo Takakura <ryotkkr98@gmail.com>
-Cc: stable@vger.kernel.org
----
+You also said I should add a patch for the white space around binary operat=
+ors.
+I did it together because the changes were on the same line.
+Should I still add a second patch for that change?
+Thanks
 
-This patch used be part of a series for converting sifive driver to
-nbcon[0]. It's now sent seperatly as the rest of the series does not
-need be applied to the stable branch.
-
-Sincerely,
-Ryo Takakura
-
-[0] https://lore.kernel.org/all/20250405043833.397020-1-ryotkkr98@gmail.com/
-
----
- drivers/tty/serial/sifive.c | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/drivers/tty/serial/sifive.c b/drivers/tty/serial/sifive.c
-index 5904a2d4c..054a8e630 100644
---- a/drivers/tty/serial/sifive.c
-+++ b/drivers/tty/serial/sifive.c
-@@ -563,8 +563,11 @@ static void sifive_serial_break_ctl(struct uart_port *port, int break_state)
- static int sifive_serial_startup(struct uart_port *port)
- {
- 	struct sifive_serial_port *ssp = port_to_sifive_serial_port(port);
-+	unsigned long flags;
- 
-+	uart_port_lock_irqsave(&ssp->port, &flags);
- 	__ssp_enable_rxwm(ssp);
-+	uart_port_unlock_irqrestore(&ssp->port, flags);
- 
- 	return 0;
- }
-@@ -572,9 +575,12 @@ static int sifive_serial_startup(struct uart_port *port)
- static void sifive_serial_shutdown(struct uart_port *port)
- {
- 	struct sifive_serial_port *ssp = port_to_sifive_serial_port(port);
-+	unsigned long flags;
- 
-+	uart_port_lock_irqsave(&ssp->port, &flags);
- 	__ssp_disable_rxwm(ssp);
- 	__ssp_disable_txwm(ssp);
-+	uart_port_unlock_irqrestore(&ssp->port, flags);
- }
- 
- /**
--- 
-2.34.1
-
+Adekunle.
