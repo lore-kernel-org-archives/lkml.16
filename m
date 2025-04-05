@@ -1,110 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-24.smtpout.orange.fr [80.12.242.24])
+	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB786535D8;
-	Sat,  5 Apr 2025 16:25:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDA2F2C9D;
+	Sat,  5 Apr 2025 16:26:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743870356; cv=none; b=BydO4Yh9m0sxLtw4Dl9aAJWwJ+v81gOCCY7NvGPx0NZ4v4Xl/Ghr0tL2O8p6tBBctOxwgGA8ohSim7ZgpX9ediaM/icK47l1hTxizpcnynebromk+1vW0o9myeQ9DleHiNdhG5oMGJODqdCeXowFh7Aa1BwuO6pzDISm213YBfQ=
+	t=1743870390; cv=none; b=Jr2sF2foBmw7Xunwjq7N54+WCFKClm5/Fji1KQvxNDM2nBiTvr1YlTmmkjXrewrWOlNhbaJoiQb/G6JQAJfYijcPaYnFZbhFfQHWB1qMTpew9zDjvVAv7vW5JD6SBbrfRpdOC9I0YcK8Yjk8HoqWXzQJHX1WtuyONtu0yGmk1VM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743870356; c=relaxed/simple;
-	bh=9R51YVvFpedGOOfa/HArTN7EaPaCOdkm9MmZsv4uSLE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GgGMkpjA7u5HfN77bjBQodKT6TFKWvrtt83oJy3JYIaaK+ctynqFbKlLrszT+Iu2o+Y/l1uvRhvY7qgnmhRh6+pEDZLtUg9yr/7irOnZ4w9hUBWa9Ybo+HrGo58+/HFfKNyAS67OoFw5kf/tAvrcAmpl7b5utmdNjabeUXnEf84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WZfRhWha; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743870390; c=relaxed/simple;
+	bh=mYq9OKULKeqOBXMkGiEw/GWMKLrP18Gu6bJE+ZmUXSc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
+	 In-Reply-To:Content-Type; b=WwuHZlAZe4ofbH6AKxGPnJn4O/pVqtDEqaei9EpY9ZRPPqfN1NXJaG2n5jiPPKfueLBMYxdfBC4KC871pS8rOyYvcQ/iq5QE/0s0DfCoiJ0vL8wJPckxvai78zRv/n9YpqAyTywmEzVsVA3g1UzatJfGcIqgg5TsWcF8ygDb6GU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=j8gemYBm; arc=none smtp.client-ip=80.12.242.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WZfRhWha"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E11A4C4CEE4;
-	Sat,  5 Apr 2025 16:25:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743870356;
-	bh=9R51YVvFpedGOOfa/HArTN7EaPaCOdkm9MmZsv4uSLE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=WZfRhWhaND4CSSKaZzuCrtrVZ1I//D39DgMH/uUXCLkRYnzwLHKlq4xU/mHJkSefI
-	 icGw/QU8XV2ytk/sRzgwMmSR+3l4zEkz7lB+IvCgfIs0HfmHTDYyzG2Mm/yH+wEwJQ
-	 O9nYIet/m965kkqts95bs1S+SPbxpsSV9zbnvG0j4CcPxB4g1e2+TJFwHS5cbcwkRy
-	 MlN5Ru84fnbacK/ItTDcWtrFgU2YFSjNWycb84pDKrezC8NVRyyriz3C9EfRbGzrf7
-	 szTQBb7bz6khdr293fnpASduFQJMRG5cz3BoL9O5RbEkMYpuCrhv9pece5qUjuU+lT
-	 tZqp3C+4oIeLQ==
-Date: Sat, 5 Apr 2025 17:25:41 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Matti Vaittinen <mazziesaccount@gmail.com>, Matti Vaittinen
- <matti.vaittinen@fi.rohmeurope.com>, Lars-Peter Clausen <lars@metafoo.de>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Nuno Sa <nuno.sa@analog.com>, Javier
- Carrasco <javier.carrasco.cruz@gmail.com>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC v2 7/7] iio: ti-adc128s052: Drop variable vref
-Message-ID: <20250405172541.641ddb39@jic23-huawei>
-In-Reply-To: <c42b1dc3-34d9-4419-ae2e-5bacffa070b6@baylibre.com>
-References: <cover.1743573284.git.mazziesaccount@gmail.com>
-	<dda9e0710a9293a9f52e64c092f79afd4b719536.1743573284.git.mazziesaccount@gmail.com>
-	<c42b1dc3-34d9-4419-ae2e-5bacffa070b6@baylibre.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="j8gemYBm"
+Received: from [192.168.1.37] ([90.11.132.44])
+	by smtp.orange.fr with ESMTPA
+	id 16CiuEOpJD5XP16Cmu4Amd; Sat, 05 Apr 2025 18:17:14 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1743869834;
+	bh=8Tm1DIxWvLsvP/29X659pawW7f1pRJuuvMiLNwxibuU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=j8gemYBm8JtPHPA7uomST3S3QhTXO4w27OLLk1fo+KAcX82J+2aGxS1LeG+35vnmK
+	 KMBzVt/l4DCVx7fvL3tMLPkGNBozNS2Io13ZSXOcd1J3vomsnpqSDTfaxsh+F/b4hE
+	 rJeRs1mXEThSToV18LvV+LXhjp7Q/4KhT6hHMKmKq0ycoP1+V8bHE5It3REhLzoofz
+	 maWgJiWYUrifkiQOieg2X526e1oMx8q3E/q2BE6pi9KsLvx/NYbI8EwSq+yPbbgXR7
+	 5rMS/gsaNcksVOD9+K3u6nfzoewaYfSKaSHVHqme/3/oc62+o7Sd/YRXxqniFPmiQn
+	 w3mk6KfEgQwEA==
+X-ME-Helo: [192.168.1.37]
+X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
+X-ME-Date: Sat, 05 Apr 2025 18:17:14 +0200
+X-ME-IP: 90.11.132.44
+Message-ID: <da261a4c-6c27-454f-b21d-af1814b58b91@wanadoo.fr>
+Date: Sat, 5 Apr 2025 18:17:08 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] pci: tegra194: Fix debugfs cleanup for !CONFIG_PCIEASPM
+To: 18255117159@163.com
+References: <20250405152818.GA107831@bhelgaas>
+ <c52ac489-51e9-4803-bf64-2bb6cfbf30bf@163.com>
+Content-Language: en-US, fr-FR
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: bhelgaas@google.com, jonathanh@nvidia.com, kw@linux.com,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-tegra@vger.kernel.org, lpieralisi@kernel.org,
+ manivannan.sadhasivam@linaro.org, robh@kernel.org, thierry.reding@gmail.com
+In-Reply-To: <c52ac489-51e9-4803-bf64-2bb6cfbf30bf@163.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, 2 Apr 2025 15:49:01 -0500
-David Lechner <dlechner@baylibre.com> wrote:
+Le 05/04/2025 à 17:49, Hans Zhang a écrit :
+> 
+> 
+> On 2025/4/5 23:28, Bjorn Helgaas wrote:
+>> Follow subject line capitalization convention.
+>>
+>> On Sat, Apr 05, 2025 at 10:54:59PM +0800, Hans Zhang wrote:
+>>> When CONFIG_PCIEASPM is disabled, debugfs entries are not created, but
+>>> tegra_pcie_dw_remove() and tegra_pcie_dw_shutdown() unconditionally call
+>>> debugfs_remove_recursive(), leading to potential NULL pointer 
+>>> operations.
+>>>
+>>> Introduce deinit_debugfs() to wrap debugfs_remove_recursive(), which is
+>>> stubbed for !CONFIG_PCIEASPM. Use this function during removal/ 
+>>> shutdown to
+>>> ensure debugfs cleanup only occurs when entries were initialized.
+>>>
+>>> This prevents kernel warnings and instability when ASPM support is
+>>> disabled.
+>>
+>> This looks like there should be a Fixes: tag to connect this to the
+>> commit that introduced the problem.
+> 
+> Hi Bjorn,
+> 
+> Thanks your for reply. Will add.
+> 
+> Fixes: bb617cbd8151 (PCI: tegra194: Clean up the exit path for Endpoint 
+> mode)
+> 
+>>
+>> If this is something that broke with the v6.15 merge window, we should
+>> include this in v6.15 via pci/for-linus.  If this broke earlier, we
+>> would have to decide whether pci/for-linus is still appropriate or a
+>> stable tag.
+>>
+> 
+> The original code that introduced the unconditional 
+> `debugfs_remove_recursive()` calls was actually merged in an earlier cycle.
+> 
+>> We did merge some debugfs things for v6.15, but I don't see anything
+>> specific to pcie-tegra194.c, so I'm confused about why this fix would
+>> be in pcie-tegra194.c instead of some more generic place.
+>>
+> 
+> The Tegra194 driver conditionally initializes pcie->debugfs based on 
+> CONFIG_PCIEASPM. When ASPM is disabled, pcie->debugfs remains 
+> uninitialized, but tegra_pcie_dw_remove() and tegra_pcie_dw_shutdown() 
+> unconditionally call debugfs_remove_recursive(), leading to a NULL 
 
-> On 4/2/25 1:10 AM, Matti Vaittinen wrote:
-> > According to Jonathan, variable reference voltages are very rare. It is
-> > unlikely it is needed, and supporting it makes the code a bit more
-> > complex.  
-> 
-> There is also around 60 other drivers where we could do something like this
-> in case anyone is bored. :-p
+debugfs IS initialized, because it is in a structure allocated with 
+devm_kzalloc().
 
-Hmm. It would be a gamble but also a nice cleanup.
+And debugfs functions handle such cases.
 
-We 'might' meet a case where someone notices it but seems fairly unlikely...
+CJ
 
-J
+> pointer dereference. This is specific to the Tegra194 implementation, as 
+> other drivers or core PCI code may already guard debugfs cleanup against 
+> uninitialized states through different mechanisms.
 > 
-> > 
-> > Simplify the driver and drop the variable vref support.
-> > 
-> > Suggested-by: Jonathan Cameron <jic23@kernel.org>
-> > Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
-> > ---
-> > Revision History:
-> >  v2:
-> >   - New patch
-> > ---
-> >  drivers/iio/adc/ti-adc128s052.c | 29 ++++++-----------------------
-> >  1 file changed, 6 insertions(+), 23 deletions(-)
-> > 
-> > diff --git a/drivers/iio/adc/ti-adc128s052.c b/drivers/iio/adc/ti-adc128s052.c
-> > index 0f93c6266527..0bfe4e558c69 100644
-> > --- a/drivers/iio/adc/ti-adc128s052.c
-> > +++ b/drivers/iio/adc/ti-adc128s052.c
-> > @@ -29,13 +29,12 @@ struct adc128_configuration {
-> >  struct adc128 {
-> >  	struct spi_device *spi;
-> >  
-> > -	struct regulator *reg;
-> >  	/*
-> >  	 * Serialize the SPI 'write-channel + read data' accesses and protect
-> >  	 * the shared buffer.
-> >  	 */
-> >  	struct mutex lock;
-> > -
-> > +	int vref;  
+> Best regards,
+> Hans
 > 
-> Units in the name are helpful: vref_uv.
 > 
-> Could also consider doing division in probe and storing vref_mv instead
-> since we never use the microvolts part.
-> 
-> >  	union {
-> >  		__be16 rx_buffer;
-> >  		u8 tx_buffer[2];  
 > 
 
