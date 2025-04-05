@@ -1,43 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBD7C191F89;
-	Sat,  5 Apr 2025 07:37:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE06B3FC3;
+	Sat,  5 Apr 2025 07:38:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743838633; cv=none; b=Ceink6J3t2KAj91HbjDwhqh3t1yRwW9fR34k33QaDn7GJ8qGAMyB75Gkn6k8fj3EK+vZXljXAf9IhjWjajIiWUsuWPAJthagoA9w9zd9GwPx2ohemRm0rkKWYLUw1J0QOGuQMyVAwPJa+1KWuN13CbUSXux3oxkOoV1XXzt9Bsw=
+	t=1743838727; cv=none; b=RkGXuR5PsecKqxaHFgHcuQ8uwpAe5a7Bw5QCF09u/qMQlbLRIZ9XQvqDHBqRGot/YQeumcYHgNl2xzV4hR0KYCialqU71dIVcsGkXTnl5LbdinU6DlgDlvuIF3zgwC0JDqdhpQlBAsrwyZm9Luply49afKGPDW9xoI7ryW6OxjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743838633; c=relaxed/simple;
-	bh=SMWsKryjlEudisI7vSbfFoDtNgIR3H1MEF8h/a/GMKQ=;
+	s=arc-20240116; t=1743838727; c=relaxed/simple;
+	bh=WLxOEAlNOQ4Xkv5hySHgQVLD+Z9CjIai20RwwfQBSlE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XM4jng0eAB07gYFv6sT1V3qeYeMszydZmY+ZpQgpRu8QNs8DQ0yu0kb4qTx8O8BtKiGY+LE4uyE+HdbOEIKidTqCQY4JICuVcQyq4+T70EGrXEyICUnUbcfkAREVljvK8LZHwqJmGpOBvNJFCGQaRa+hUqwJPy+ZOVjUfg8u2dY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=YCbfqK1U; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=H7k+lWmQqJ5L4tw7p/lsxduVDI4FViFsJEDOj4P3H3duNMA1u5lNWLTK6dDNDe1fL0yQevNIcYNdM+QJ+lhk2yd5gx+WDssW9qV+RjkLUfC25R7QD8m8al0bekLLjPqun872FvJ0Tm25G1XpH0yftcRYFgHGwkSTCq3U2ClK/Gw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=sCEafKo6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="YCbfqK1U"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8B39C4CEE4;
-	Sat,  5 Apr 2025 07:37:11 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="sCEafKo6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9619C4CEE4;
+	Sat,  5 Apr 2025 07:38:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1743838632;
-	bh=SMWsKryjlEudisI7vSbfFoDtNgIR3H1MEF8h/a/GMKQ=;
+	s=korg; t=1743838726;
+	bh=WLxOEAlNOQ4Xkv5hySHgQVLD+Z9CjIai20RwwfQBSlE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YCbfqK1UEhEtBfJLZTRQOJcyActqHfTLGkzrpSYdkqkLLEG2U1qCgTNKJlJlxsej5
-	 vDaCKOHPz5OWgjTqpxlsTxqlKfIEs5Swe4Wnphp7C8gMD9fl8YVOrqwVOjgPtXfIv8
-	 9q0GRVYPDs2sE1CFy69gT+9x4VqFQ0wDRVue1egw=
-Date: Sat, 5 Apr 2025 08:35:44 +0100
+	b=sCEafKo6lzUG1gUFjQ22zB7MAGnLi1CTQe+KEU4jNh5woae5aOqxSXcbOTfmMWOnb
+	 R9aUzhQf/QZvc+wvKhyNNIRSvHErOooH/SqGJGkf9NeP7HThxq/zCbwNJdgIb3uJx7
+	 pDAdkxDUonmNYuyl3sUosLrDMTaUSL7z9gj1U1cY=
+Date: Sat, 5 Apr 2025 08:37:18 +0100
 From: Greg KH <gregkh@linuxfoundation.org>
-To: Ryo Takakura <ryotkkr98@gmail.com>
-Cc: alex@ghiti.fr, aou@eecs.berkeley.edu, bigeasy@linutronix.de,
-	conor.dooley@microchip.com, jirislaby@kernel.org,
-	john.ogness@linutronix.de, palmer@dabbelt.com,
-	paul.walmsley@sifive.com, pmladek@suse.com,
-	samuel.holland@sifive.com, u.kleine-koenig@baylibre.com,
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-serial@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v4 1/2] serial: sifive: lock port in startup()/shutdown()
- callbacks
-Message-ID: <2025040553-video-declared-7d54@gregkh>
-References: <20250405043833.397020-1-ryotkkr98@gmail.com>
- <20250405044338.397237-1-ryotkkr98@gmail.com>
+To: Erick Karanja <karanja99erick@gmail.com>
+Cc: outreachy@lists.linux.dev, philipp.g.hortmann@gmail.com,
+	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] staging: rtl8723bs: Initialize local variables at
+ declaration
+Message-ID: <2025040507-attest-hyphen-5dae@gregkh>
+References: <cover.1743820815.git.karanja99erick@gmail.com>
+ <ef29adfe7c8a189009b07c2873aa48782cd594ca.1743820815.git.karanja99erick@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,28 +41,58 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250405044338.397237-1-ryotkkr98@gmail.com>
+In-Reply-To: <ef29adfe7c8a189009b07c2873aa48782cd594ca.1743820815.git.karanja99erick@gmail.com>
 
-On Sat, Apr 05, 2025 at 01:43:38PM +0900, Ryo Takakura wrote:
-> startup()/shutdown() callbacks access SIFIVE_SERIAL_IE_OFFS.
-> The register is also accessed from write() callback.
+On Sat, Apr 05, 2025 at 06:14:49AM +0300, Erick Karanja wrote:
+> Optimize variable initialization by integrating the initialization
+> directly into the variable declaration in cases where the initialization
+> is simple and doesn't depend on other variables or complex expressions.
+> This makes the code more concise and readable.
 > 
-> If console were printing and startup()/shutdown() callback
-> gets called, its access to the register could be overwritten.
+> Signed-off-by: Erick Karanja <karanja99erick@gmail.com>
+> ---
+>  .../staging/rtl8723bs/hal/rtl8723bs_xmit.c    | 56 ++++++-------------
+>  1 file changed, 16 insertions(+), 40 deletions(-)
 > 
-> Add port->lock to startup()/shutdown() callbacks to make sure
-> their access to SIFIVE_SERIAL_IE_OFFS is synchronized against
-> write() callback.
-> 
-> Signed-off-by: Ryo Takakura <ryotkkr98@gmail.com>
-> Cc: stable@vger.kernel.org
+> diff --git a/drivers/staging/rtl8723bs/hal/rtl8723bs_xmit.c b/drivers/staging/rtl8723bs/hal/rtl8723bs_xmit.c
+> index 5dc1c12fe03e..ebe9562a9606 100644
+> --- a/drivers/staging/rtl8723bs/hal/rtl8723bs_xmit.c
+> +++ b/drivers/staging/rtl8723bs/hal/rtl8723bs_xmit.c
+> @@ -120,13 +120,10 @@ static s32 rtl8723_dequeue_writeport(struct adapter *padapter)
+>   */
+>  s32 rtl8723bs_xmit_buf_handler(struct adapter *padapter)
+>  {
+> -	struct xmit_priv *pxmitpriv;
+> +	struct xmit_priv *pxmitpriv = &padapter->xmitpriv;
+>  	u8 queue_empty, queue_pending;
+>  	s32 ret;
+>  
+> -
+> -	pxmitpriv = &padapter->xmitpriv;
+> -
+>  	if (wait_for_completion_interruptible(&pxmitpriv->xmit_comp)) {
+>  		netdev_emerg(padapter->pnetdev,
+>  			     "%s: down SdioXmitBufSema fail!\n", __func__);
+> @@ -168,10 +165,10 @@ s32 rtl8723bs_xmit_buf_handler(struct adapter *padapter)
+>   */
+>  static s32 xmit_xmitframes(struct adapter *padapter, struct xmit_priv *pxmitpriv)
+>  {
+> -	s32 err, ret;
+> +	s32 err = 0, ret;
+>  	u32 k = 0;
+> -	struct hw_xmit *hwxmits, *phwxmit;
+> -	u8 idx, hwentry;
+> +	struct hw_xmit *hwxmits = pxmitpriv->hwxmits, *phwxmit;
+> +	u8 idx, hwentry = pxmitpriv->hwxmit_entry;
 
-What commit id does this fix?
+These lines are NOT more understandable and readable at all, sorry.  You
+are mixing pre-initialized variables with not-initialized ones, making
+this harder to read and maintain over time.
 
-Why does patch 1/2 need to go to stable, but patch 2/2 does not?  Please
-do not mix changes like this in the same series, otherwise we have to
-split them up manually when we apply them to the different branches,
-right?
+Which would you want to come back to in 5 years to try to understand
+what is going on?
+
+Keep it simple please.
 
 thanks,
 
