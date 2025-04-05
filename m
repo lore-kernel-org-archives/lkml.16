@@ -1,254 +1,169 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A899E1C27;
-	Sat,  5 Apr 2025 22:05:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 549F452F88;
+	Sat,  5 Apr 2025 22:16:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743890706; cv=none; b=gGv9lW9KkX6L36nKqplzO0PuVBlip3lW4cESh8GPGpxk+JrC/tk1j7itvxGbRTvJQIP3FDwI5jnedw8sYtW43WFy2vcd8tX7RImgK+KClrGE1kFUko8t75g9jbniuuzi6vtgIPQSEgA70eUYiLmaT0U1TlBsOxCDywQluXYz5S4=
+	t=1743891370; cv=none; b=G2wpx4ReEOnE4gL5VcMKTsNdAGI2TdUIAlZXPCOMQNU2vWC98RWMLwWfmsGVUPxsYYzbTd+dFfMYKREBth3j3Aw2qUjQc/9CavKUn10bhodl4qIFq6Sz5mx9CDplqjdp/WiILaCiRqxJOUYZJx0aCx1GMSc6HzDLobarYNcogQQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743890706; c=relaxed/simple;
-	bh=cEiIbotG147pXZCx594XmcLOKgd/Q44o08EkQKm3CUY=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=uzwNgo4XH8RAEi3hFlsPQQVgtzYh2fWKETdcq7ZXnzJNWTjdNjXgtmPkjfk4vTX1iu5czO9jCH+tBAybSHdfySbk8y3ARl+CkKYlg5dZ+EX+GWJu6J9DrZF06Wo1UdO7hE1RXJxqWhYwEeTvb94tPNLkvey7ojun5uiEkh5uD/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=beEXuG2j; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743891370; c=relaxed/simple;
+	bh=xXUS4GgMNiPbO1jwMYGA+GWr2ekyWvBCCBz0RyIJHDM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=unT1p3zvZaf+AMjCcisO/+RrIkQd5r46ja8qmUKkkQhV9RLc8R68jcvYk+7XVIcG2DkpB3qlzLAGp8rBuow2R3K2DB4CCT8KM+AKTefIMNLp/eQZ4yjC1NksH96/9XydXWz9Avl9SQx3RFnvFncSuf9sO+vJ60nkecWQVcPRsWk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lrKCwQhv; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="beEXuG2j"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14490C4CEE4;
-	Sat,  5 Apr 2025 22:05:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743890705;
-	bh=cEiIbotG147pXZCx594XmcLOKgd/Q44o08EkQKm3CUY=;
-	h=From:Date:Subject:To:Cc:From;
-	b=beEXuG2jdJ7Izz/lzCoJT7FKCucU3gVhuDe8LLi2qs18KM0pEZsqWf/2PZF9HOvGM
-	 AUNhe5HxJy9uGQQCmT4oeOiNTMV1FlJvbPtaAUlHwv8INhFOtAJX6Divlox182lLqN
-	 f5XIqhhllBsAlXQyJxQ1VJND/LXr0qTseDKEX1hsg5n98h7FwiXrRhT0go2GX/jsXT
-	 JSwEpBkXlKS90z397ScdU9P4VyVGT+zB0z6B91RvHYRDY2md+bt2PbJLgwbXNZD8FQ
-	 o9IMv0NM3/Hvx3zHbNXsHKveg0Ks4zn47aNVc9VbYHhg/coYM2c+wjEk0FSCaIpKPY
-	 1wRe2ubxJYlbA==
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-5493b5bc6e8so4003290e87.2;
-        Sat, 05 Apr 2025 15:05:04 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWRbUHE3r2njTzhLz5a1ZHV9cloXMBql63sP8+DYM3+wuJ/ZSyabxh2MJmI2AqpvYyhDml83zieddT7cVY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw9naHYZmx+Ort3of/gcjNj8CFDL2rOt4sMPdB+wPdpClb8cj0q
-	13oSdAO/RIT6lYDOOO6IjpVMnO7iYHWy/yDRp96cEfIOqerzP5pZed2zgoWFyINi5owGGwBRH7M
-	9ZgctpofFo25+zSm2U5k51M3fnEk=
-X-Google-Smtp-Source: AGHT+IFwC8F9VkzeXg6ut7ygBHrKWEAqU5SbHZ+Wq1+J4Op7XVd5k7qRg1YQ2EyXPie1SX9Bk+5E4c43Np3LKthnmgg=
-X-Received: by 2002:a05:6512:230f:b0:545:d27:e367 with SMTP id
- 2adb3069b0e04-54c233746d6mr2229376e87.42.1743890703680; Sat, 05 Apr 2025
- 15:05:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lrKCwQhv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743891367; x=1775427367;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=xXUS4GgMNiPbO1jwMYGA+GWr2ekyWvBCCBz0RyIJHDM=;
+  b=lrKCwQhvpTnMwSii3OI/oBUwnxNR9Swv5WbZ1an/oLFTObx9unTEQcpy
+   93VMz/6JUMeIdUTuacWXuomvzPSpkafR5Ur5rFoD+XW5xmpEM372rDijT
+   nkjogkzqGLVle/Rodbmf6HjWPqwsVTGznc3vquiBkpAsk4ELRMWPGIMo1
+   FECpaPYTBedIBE7t2HADvHG5YS9ks77gv2D8bTRPCpY38dcAondk9wnIF
+   d24tuuXTzehLp8as6qaQMbnpZlKL4N/lbqh2ESnIaMFswsm1/TL+WrPHH
+   TYXMGc9eO+h82+UbeG5pb28JHw0IOAekJuFm5CY35r5QyijsObWRrM9uU
+   A==;
+X-CSE-ConnectionGUID: 8mYkUIeRQT+OWBoiUeYaAQ==
+X-CSE-MsgGUID: ehCe5JSSQFe1ubzyC0l+WA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11395"; a="48018097"
+X-IronPort-AV: E=Sophos;i="6.15,192,1739865600"; 
+   d="scan'208";a="48018097"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2025 15:16:06 -0700
+X-CSE-ConnectionGUID: g4MEpJ50TTiUgcuNLPmOSw==
+X-CSE-MsgGUID: C0wrrevxTpKJWYkd9AmLDg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,192,1739865600"; 
+   d="scan'208";a="128116775"
+Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
+  by orviesa007.jf.intel.com with ESMTP; 05 Apr 2025 15:16:04 -0700
+Received: from kbuild by b207828170a5 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u1Bo2-0002Jz-06;
+	Sat, 05 Apr 2025 22:16:02 +0000
+Date: Sun, 6 Apr 2025 06:15:44 +0800
+From: kernel test robot <lkp@intel.com>
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>,
+	linux-pwm@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev,
+	Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/6] pwm: stm32: Emit debug output also for corner cases
+ of the rounding callbacks
+Message-ID: <202504060517.dHXuUANs-lkp@intel.com>
+References: <fe154e79319da5ff4159cdc71201a9d3b395e491.1743844730.git.u.kleine-koenig@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Sun, 6 Apr 2025 07:04:27 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATT_+Z6x0kBy9fkTTucM5NTv0XiG9TYKNDOwL2M9y3WhA@mail.gmail.com>
-X-Gm-Features: ATxdqUElUR9iPWDdCA1lo3BlEZO9promOLPJCGTPn8Eat2UfghrDAeXfflnvJBM
-Message-ID: <CAK7LNATT_+Z6x0kBy9fkTTucM5NTv0XiG9TYKNDOwL2M9y3WhA@mail.gmail.com>
-Subject: [GIT PULL] Kbuild updates for v6.15-rc1
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fe154e79319da5ff4159cdc71201a9d3b395e491.1743844730.git.u.kleine-koenig@baylibre.com>
 
-Hello Linus,
+Hi Uwe,
 
-Please pull Kbuild updates for v6.15-rc1.
+kernel test robot noticed the following build errors:
 
-You will get a merge conflict in rust/Makefile.
-You can find the resolution in linux-next.
+[auto build test ERROR on e48e99b6edf41c69c5528aa7ffb2daf3c59ee105]
 
-Thank you
+url:    https://github.com/intel-lab-lkp/linux/commits/Uwe-Kleine-K-nig/pwm-Let-pwm_set_waveform-succeed-even-if-lowlevel-driver-rounded-up/20250405-173024
+base:   e48e99b6edf41c69c5528aa7ffb2daf3c59ee105
+patch link:    https://lore.kernel.org/r/fe154e79319da5ff4159cdc71201a9d3b395e491.1743844730.git.u.kleine-koenig%40baylibre.com
+patch subject: [PATCH 4/6] pwm: stm32: Emit debug output also for corner cases of the rounding callbacks
+config: arm-randconfig-004-20250406 (https://download.01.org/0day-ci/archive/20250406/202504060517.dHXuUANs-lkp@intel.com/config)
+compiler: arm-linux-gnueabi-gcc (GCC) 10.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250406/202504060517.dHXuUANs-lkp@intel.com/reproduce)
 
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504060517.dHXuUANs-lkp@intel.com/
 
+All errors (new ones prefixed by >>):
 
-The following changes since commit 80e54e84911a923c40d7bee33a34c1b4be148d7a=
-:
-
-  Linux 6.14-rc6 (2025-03-09 13:45:25 -1000)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git
-tags/kbuild-v6.15
-
-for you to fetch changes up to a7c699d090a1f3795c3271c2b399230e182db06e:
-
-  kbuild: rpm-pkg: build a debuginfo RPM (2025-04-06 06:22:01 +0900)
-
-----------------------------------------------------------------
-Kbuild updates for v6.15
-
- - Improve performance in gendwarfksyms
-
- - Remove deprecated EXTRA_*FLAGS and KBUILD_ENABLE_EXTRA_GCC_CHECKS
-
- - Support CONFIG_HEADERS_INSTALL for ARCH=3Dum
-
- - Use more relative paths to sources files for better reproducibility
-
- - Support the loong64 Debian architecture
-
- - Add Kbuild bash completion
-
- - Introduce intermediate vmlinux.unstripped for architectures that need
-   static relocations to be stripped from the final vmlinux
-
- - Fix versioning in Debian packages for -rc releases
-
- - Treat missing MODULE_DESCRIPTION() as an error
-
- - Convert Nios2 Makefiles to use the generic rule for built-in DTB
-
- - Add debuginfo support to the RPM package
-
-----------------------------------------------------------------
-Alexandru Gagniuc (1):
-      kbuild: deb-pkg: don't set KBUILD_BUILD_VERSION unconditionally
-
-Ard Biesheuvel (4):
-      kbuild: link-vmlinux.sh: Make output file name configurable
-      kbuild: Introduce Kconfig symbol for linking vmlinux with relocations
-      kbuild: Create intermediate vmlinux build with relocations preserved
-      x86: Get rid of Makefile.postlink
-
-Daniel Gomez (1):
-      kconfig: merge_config: use an empty file as initfile
-
-Jeff Johnson (1):
-      modpost: require a MODULE_DESCRIPTION()
-
-Kefan Liu (1):
-      Documentation/kbuild: Fix indentation in modules.rst example
-
-Kris Van Hees (1):
-      kbuild: exclude .rodata.(cst|str)* when building ranges
-
-Krzysztof Kozlowski (1):
-      docs: kconfig: Mention IS_REACHABLE as way for optional dependency
-
-Masahiro Yamada (17):
-      kbuild: remove EXTRA_*FLAGS support
-      gen_compile_commands.py: remove code for '\#' replacement
-      genksyms: factor out APP for the ST_NORMAL state
-      kconfig: do not clear SYMBOL_VALID when reading include/config/auto.c=
-onf
-      kconfig: remove unnecessary cast in sym_get_string()
-      modpost: introduce get_basename() helper
-      modpost: use strstarts() to clean up parse_source_files()
-      kbuild: move -fzero-init-padding-bits=3Dall to the top-level Makefile
-      kbuild: remove KBUILD_ENABLE_EXTRA_GCC_CHECKS support
-      kbuild: add Kbuild bash completion
-      Revert "kheaders: Ignore silly-rename files"
-      kbuild: do not generate .tmp_vmlinux*.map when CONFIG_VMLINUX_MAP=3Dy
-      kbuild: deb-pkg: fix versioning for -rc releases
-      kbuild: deb-pkg: remove "version" variable in mkdebian
-      kbuild: deb-pkg: add comment about future removal of KDEB_COMPRESS
-      kbuild: pacman-pkg: hardcode module installation path
-      nios2: migrate to the generic rule for built-in DTB
-
-Miguel Ojeda (2):
-      kbuild: rust: add rustc-min-version support function
-      rust: kbuild: skip `--remap-path-prefix` for `rustdoc`
-
-Sami Tolvanen (1):
-      gendwarfksyms: Add a separate pass to resolve FQNs
-
-Seyediman Seyedarab (1):
-      kbuild: fix argument parsing in scripts/config
-
-Thomas Wei=C3=9Fschuh (4):
-      kbuild: implement CONFIG_HEADERS_INSTALL for Usermode Linux
-      kbuild, rust: use -fremap-path-prefix to make paths relative
-      x86: drop unnecessary prefix map configuration
-      kbuild: make all file references relative to source root
-
-Uday Shankar (2):
-      scripts: make python shebangs specific about desired version
-      kbuild: rpm-pkg: build a debuginfo RPM
-
-WangYuli (1):
-      kbuild: deb-pkg: add debarch for ARCH=3Dloongarch64
-
-Xi Ruoyao (1):
-      kbuild: add dependency from vmlinux to sorttable
-
-Xin Li (Intel) (1):
-      kbuild: Add a help message for "headers"
-
- .gitignore                                   |   1 +
- Documentation/dev-tools/checkpatch.rst       |  18 --
- Documentation/kbuild/bash-completion.rst     |  65 ++++
- Documentation/kbuild/index.rst               |   2 +
- Documentation/kbuild/kconfig-language.rst    |  29 +-
- Documentation/kbuild/makefiles.rst           |  17 +-
- Documentation/kbuild/modules.rst             |   2 +-
- Documentation/kbuild/reproducible-builds.rst |  17 --
- MAINTAINERS                                  |   1 +
- Makefile                                     |  23 +-
- arch/Kconfig                                 |   7 +
- arch/arm64/Makefile                          |   2 +-
- arch/mips/Kconfig                            |   1 +
- arch/mips/Makefile                           |   4 -
- arch/mips/Makefile.postlink                  |   2 +-
- arch/nios2/Kbuild                            |   2 +-
- arch/nios2/boot/dts/Makefile                 |   4 +-
- arch/nios2/kernel/prom.c                     |   2 +-
- arch/nios2/platform/Kconfig.platform         |  11 +-
- arch/riscv/Kconfig                           |   1 +
- arch/riscv/Makefile                          |   2 +-
- arch/riscv/Makefile.postlink                 |  11 +-
- arch/riscv/boot/Makefile                     |   5 +-
- arch/s390/Kconfig                            |   1 +
- arch/s390/Makefile                           |   2 +-
- arch/s390/Makefile.postlink                  |   4 +-
- arch/x86/Kconfig                             |   1 +
- arch/x86/Makefile                            |   6 -
- arch/x86/Makefile.postlink                   |  40 ---
- arch/x86/boot/Makefile                       |   1 -
- arch/x86/boot/compressed/Makefile            |  10 +-
- kernel/gen_kheaders.sh                       |   1 -
- lib/Kconfig.debug                            |   7 +-
- rust/Makefile                                |   8 +-
- scripts/Makefile.build                       |   4 -
- scripts/Makefile.compiler                    |   4 +
- scripts/Makefile.extrawarn                   |   3 -
- scripts/Makefile.lib                         |   8 -
- scripts/Makefile.vmlinux                     |  34 ++-
- scripts/bash-completion/make                 | 451 +++++++++++++++++++++++=
-+++++
- scripts/checkpatch.pl                        |  14 -
- scripts/clang-tools/gen_compile_commands.py  |   8 +-
- scripts/config                               |  26 +-
- scripts/gendwarfksyms/die.c                  |   2 +-
- scripts/gendwarfksyms/dwarf.c                | 154 +++++-----
- scripts/gendwarfksyms/gendwarfksyms.h        |   2 +
- scripts/gendwarfksyms/types.c                |   2 +-
- scripts/generate_builtin_ranges.awk          |   5 +
- scripts/genksyms/lex.l                       |   6 +-
- scripts/kconfig/confdata.c                   |  19 +-
- scripts/kconfig/merge_config.sh              |   4 +-
- scripts/kconfig/symbol.c                     |   2 +-
- scripts/link-vmlinux.sh                      |  24 +-
- scripts/mod/modpost.c                        |  45 ++-
- scripts/mod/modpost.h                        |   1 +
- scripts/mod/sumversion.c                     |  17 +-
- scripts/package/PKGBUILD                     |   6 +-
- scripts/package/debian/rules                 |  10 +-
- scripts/package/kernel.spec                  |  46 ++-
- scripts/package/mkdebian                     |  23 +-
- scripts/package/mkspec                       |  10 +
- scripts/show_delta                           |   2 +-
- scripts/tracing/draw_functrace.py            |   2 +-
- 63 files changed, 892 insertions(+), 352 deletions(-)
- create mode 100644 Documentation/kbuild/bash-completion.rst
- delete mode 100644 arch/x86/Makefile.postlink
- create mode 100644 scripts/bash-completion/make
+   In file included from include/linux/device.h:15,
+                    from include/linux/dmaengine.h:8,
+                    from include/linux/mfd/stm32-timers.h:11,
+                    from drivers/pwm/pwm-stm32.c:12:
+   drivers/pwm/pwm-stm32.c: In function 'stm32_pwm_round_waveform_fromhw':
+>> drivers/pwm/pwm-stm32.c:246:60: error: 'rate' undeclared (first use in this function)
+     246 |   pwm->hwpwm, wfhw->ccer, wfhw->psc, wfhw->arr, wfhw->ccr, rate,
+         |                                                            ^~~~
+   include/linux/dev_printk.h:139:35: note: in definition of macro 'dev_no_printk'
+     139 |    _dev_printk(level, dev, fmt, ##__VA_ARGS__); \
+         |                                   ^~~~~~~~~~~
+   drivers/pwm/pwm-stm32.c:245:2: note: in expansion of macro 'dev_dbg'
+     245 |  dev_dbg(&chip->dev, "pwm#%u: CCER: %08x, PSC: %08x, ARR: %08x, CCR: %08x @%lu -> %lld/%lld [+%lld]\n",
+         |  ^~~~~~~
+   drivers/pwm/pwm-stm32.c:246:60: note: each undeclared identifier is reported only once for each function it appears in
+     246 |   pwm->hwpwm, wfhw->ccer, wfhw->psc, wfhw->arr, wfhw->ccr, rate,
+         |                                                            ^~~~
+   include/linux/dev_printk.h:139:35: note: in definition of macro 'dev_no_printk'
+     139 |    _dev_printk(level, dev, fmt, ##__VA_ARGS__); \
+         |                                   ^~~~~~~~~~~
+   drivers/pwm/pwm-stm32.c:245:2: note: in expansion of macro 'dev_dbg'
+     245 |  dev_dbg(&chip->dev, "pwm#%u: CCER: %08x, PSC: %08x, ARR: %08x, CCR: %08x @%lu -> %lld/%lld [+%lld]\n",
+         |  ^~~~~~~
 
 
+vim +/rate +246 drivers/pwm/pwm-stm32.c
 
---=20
-Best Regards
-Masahiro Yamada
+   208	
+   209	static int stm32_pwm_round_waveform_fromhw(struct pwm_chip *chip,
+   210						   struct pwm_device *pwm,
+   211						   const void *_wfhw,
+   212						   struct pwm_waveform *wf)
+   213	{
+   214		const struct stm32_pwm_waveform *wfhw = _wfhw;
+   215		struct stm32_pwm *priv = to_stm32_pwm_dev(chip);
+   216		unsigned int ch = pwm->hwpwm;
+   217	
+   218		if (wfhw->ccer & TIM_CCER_CCxE(ch + 1)) {
+   219			unsigned long rate = clk_get_rate(priv->clk);
+   220			u64 ccr_ns;
+   221	
+   222			/* The result doesn't overflow for rate >= 15259 */
+   223			wf->period_length_ns = stm32_pwm_mul_u64_u64_div_u64_roundup(((u64)wfhw->psc + 1) * (wfhw->arr + 1),
+   224										     NSEC_PER_SEC, rate);
+   225	
+   226			ccr_ns = stm32_pwm_mul_u64_u64_div_u64_roundup(((u64)wfhw->psc + 1) * wfhw->ccr,
+   227								       NSEC_PER_SEC, rate);
+   228	
+   229			if (wfhw->ccer & TIM_CCER_CCxP(ch + 1)) {
+   230				wf->duty_length_ns =
+   231					stm32_pwm_mul_u64_u64_div_u64_roundup(((u64)wfhw->psc + 1) * (wfhw->arr + 1 - wfhw->ccr),
+   232									      NSEC_PER_SEC, rate);
+   233	
+   234				wf->duty_offset_ns = ccr_ns;
+   235			} else {
+   236				wf->duty_length_ns = ccr_ns;
+   237				wf->duty_offset_ns = 0;
+   238			}
+   239		} else {
+   240			*wf = (struct pwm_waveform){
+   241				.period_length_ns = 0,
+   242			};
+   243		}
+   244	
+   245		dev_dbg(&chip->dev, "pwm#%u: CCER: %08x, PSC: %08x, ARR: %08x, CCR: %08x @%lu -> %lld/%lld [+%lld]\n",
+ > 246			pwm->hwpwm, wfhw->ccer, wfhw->psc, wfhw->arr, wfhw->ccr, rate,
+   247			wf->duty_length_ns, wf->period_length_ns, wf->duty_offset_ns);
+   248	
+   249		return 0;
+   250	}
+   251	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
