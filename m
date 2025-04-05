@@ -1,95 +1,95 @@
-Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BB3014F125
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 11:46:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BA101A23AD;
+	Sat,  5 Apr 2025 11:53:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743853584; cv=none; b=hW/+/N0uUzvUM8NNlEdk15SDEhczV+jaAzbT/exYeAPXedPyeUOTK5GIVzBMjJj+eY2GJzRNeYybpgZwlw9xxJcm6t5FxTookcL5YMt4QwW+ZTDjsEhy1N2IDDvXECeiWFCw1vA3HyIPM4qQf/6RIP6ra7d/X1P5wBwE11roGCA=
+	t=1743854006; cv=none; b=lP7gaaZOXm1JWsDXDNKVMflSXPUtvhZAU4bv3FKf+mzEKa1eZwkwnFElt8o2vTnl1ljw20EVUjyIaM/DmlvmMZM5wNYbCSgnxbLrpqjwiq3jC245V3fluTRd6ee8KqlbFKweLJjGaGcb7pMK3z/jlfUZ5+brmozw2B7AxfvOoFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743853584; c=relaxed/simple;
-	bh=E3cJzFO09HHlBuLQngMYyTEI3wsR9XGMgQn5Osybd8w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=T4k0Rg7Yk47sIoKbaq/39gwDa8fqlmoZ0C6lrHKbAv6XAEFzbT6vxLHdubrVisx7rdeH1NmMKBtoSs8YPNrQk7BbDXGmLyKCj+FrVfnioKvModZzY1ItooJSuJmxp6JfwO5xNVWGPcV8H6tD3Pk/X9Yh2pRnqJTUCLUgCBdfzLA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=gpxvxE6N; arc=none smtp.client-ip=209.85.166.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="gpxvxE6N"
-Received: by mail-il1-f176.google.com with SMTP id e9e14a558f8ab-3d58908c43fso8338215ab.0
-        for <linux-kernel@vger.kernel.org>; Sat, 05 Apr 2025 04:46:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1743853580; x=1744458380; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=dHH9C4N5IBPt5oRyziyD2Fv2/x4KMGs0avXPaT06lvw=;
-        b=gpxvxE6NN9k6hxgcy9R1XtP3QqcAlPUBAG/v6HI7Apy73VZNbziBjjSs82oO0kHoe5
-         GiB28JMDNiBTuLj9UguxL6+cVVH84MCvzTQpOml3nqu2IPonJoJ0RVKXdsot5xvU2myF
-         tZvCTD3wJ/x8938grP0BG7y1I/hcmxVnE2qzs+3GaHzc7DvCQ7/1xX8MeCyIlKJxnjuN
-         JCqk0P/RR1B4EI6S+GaSXiI0nkSBc/zc7rECDAxBeK+mSrHW4Wk2P7I1je/q7sAGEk99
-         lHVv96kiE87DaN1p9YfAc5HGYoDUOoGJxH4zQXBz6kieiHmR4l2BT2sVk9zv72BFDi2O
-         DhGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743853580; x=1744458380;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dHH9C4N5IBPt5oRyziyD2Fv2/x4KMGs0avXPaT06lvw=;
-        b=DQQ+6gOAHeTWMyVmMyS7b8AaL9mr5kRkxiWDCFbmY7+ThCpfAGjZcMkGEE06RFkKXw
-         J+gFkwcuYkAByfbyaeLaZvyYvAoT9Mo3aO1xEbSaRWV1ooQPh3MoTAKUGasHr0voMlfR
-         RPguTfnlh2kK/pukHyEaQUTT7B3KYrRybAVXEOmrIHunCj1Zo110RYehLSsZGGukk7qi
-         nosZPy12XKSOaJC3llWMR/XOYmsQpGaOCcXNyB7WAHv1N1JJnRRS1wFkPKpRNgkX+yzE
-         CV6YCJ0/8ioD0H7VlH1M4Z1UbfYtyHVpfkzlcc2aDYFh86IWmX9DCsH6ENYUoY+vBwSO
-         C+nw==
-X-Forwarded-Encrypted: i=1; AJvYcCUQLzLGpnl/olt+rWTrh2H1eGHNTmIWMMjcHfkO+nT4UdUdsjmh/fgM9x0EhYqMnWoL4yRFxW0UjX8phkk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy66gL4XE/X6++6WrTwxVTiFlKKiL9A5bzcnGWU/+3WTMw66VOJ
-	mc84NNWGaPpbC2X7kmo33Kxw4mUZp3S7Cqs1N1KNMjkaO+20+MLdJMmNCM2mnBw=
-X-Gm-Gg: ASbGncvAlIGCtUMD2WqaEqReHLPyAlk42MkfgRITi/RLmbrwemMwvALcZQrOIck4SQT
-	0MHRoepLEi4HZCnlQ3Fqkmq9ENd6Myb/MbtueEgIlwwI1yScxvEfaIZYxJ2Pfj1jp/Wvs6Kugzy
-	WekAkVtCXrB/AtCXlcq5XVk8LtqFCeiPCdtd4d4jcq+4Ptg8hPD27mczdE4U0GVrvGa19cFp5Su
-	zJ27f3cnCuR980idTp2GWYnKhCvLDMQE+03LrKr2yzEdLzq4VImcBzVDD6Xhqh5kG7tVRwK/ynA
-	u3xqTZ2jPz9ejdDFf0h147vgxkb7Mby1yxnmF3JewQ==
-X-Google-Smtp-Source: AGHT+IEz7a+AUeoKGFZJv6A4BD3/TV3i+nexKQiCSL2XlPf9+gyFp+g4JfLTGFfUvvHvAzp0z8yiKg==
-X-Received: by 2002:a05:6e02:152a:b0:3d3:d994:e92e with SMTP id e9e14a558f8ab-3d6e5876fa9mr59647335ab.17.1743853580162;
-        Sat, 05 Apr 2025 04:46:20 -0700 (PDT)
-Received: from [192.168.1.150] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f4b5c2e0a8sm1286698173.14.2025.04.05.04.46.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 05 Apr 2025 04:46:19 -0700 (PDT)
-Message-ID: <67159ae6-3dd9-4d40-a6b1-643d18e8b3a1@kernel.dk>
-Date: Sat, 5 Apr 2025 05:46:18 -0600
+	s=arc-20240116; t=1743854006; c=relaxed/simple;
+	bh=4udH6z3AtFCgu6jjn/q9CPU++JiXf3aqebXlTaavKbg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PGQN4pUemWZ+iwjxlAS007ssk2XppLSUbnN6FkxuzGNdemQLgJcZ4ZWUggqxsPSebDGvhxrn5oU+XaskKvSYfUMomh+lkOdX6MjubXukiP1rg4lgs41ln9GVd1ivihDQdZgdm5LWa+/81+yeT5ytQZ51zGE4F3TWFkT4qL3AGJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost.localdomain (unknown [221.222.48.127])
+	by APP-01 (Coremail) with SMTP id qwCowABH7v6VGfFnwIQ9Bg--.48370S2;
+	Sat, 05 Apr 2025 19:52:55 +0800 (CST)
+From: Wentao Liang <vulab@iscas.ac.cn>
+To: m.chetan.kumar@intel.com,
+	loic.poulain@linaro.org,
+	ryazanov.s.a@gmail.com,
+	johannes@sipsolutions.net,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com
+Cc: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Wentao Liang <vulab@iscas.ac.cn>
+Subject: [PATCH net-next v3] net: wwan: Add error handling for ipc_mux_dl_acb_send_cmds().
+Date: Sat,  5 Apr 2025 19:52:36 +0800
+Message-ID: <20250405115236.2091-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.42.0.windows.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [syzbot] [io-uring?] INFO: task hung in io_wq_put_and_exit (4)
-To: syzbot <syzbot+58928048fd1416f1457c@syzkaller.appspotmail.com>,
- asml.silence@gmail.com, io-uring@vger.kernel.org,
- linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-References: <67f06309.050a0220.0a13.0226.GAE@google.com>
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <67f06309.050a0220.0a13.0226.GAE@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qwCowABH7v6VGfFnwIQ9Bg--.48370S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7Cw4DArW3JFyrKrWDKF48Zwb_yoW8JFyUpF
+	WrWw109F90yF4rAa18CrWDZa4YqayUXF97Kw1jv3Z5WFsrGF47trWxX3429rn7AF45WFnr
+	Ar4jyry3W3WUGr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9F14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr
+	0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
+	6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr
+	0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E
+	8cxan2IY04v7MxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFV
+	Cjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWl
+	x4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r
+	1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_
+	JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcS
+	sGvfC2KfnxnUUI43ZEXa7VUbGQ6JUUUUU==
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiBwkDA2fwn8GfzwABsW
 
-On 4/4/25 4:54 PM, syzbot wrote:
-> Hello,
-> 
-> syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-> unregister_netdevice: waiting for DEV to become free
-> 
-> unregister_netdevice: waiting for batadv0 to become free. Usage count = 3
+The ipc_mux_dl_acbcmd_decode() calls the ipc_mux_dl_acb_send_cmds(),
+but does not report the error if ipc_mux_dl_acb_send_cmds() fails.
+This makes it difficult to detect command sending failures. A proper
+implementation can be found in ipc_mux_dl_cmd_decode().
 
-Guess there's some mainline issue causing these failures... Let's try
-on a 6.14 base:
+Add error reporting to the call, logging an error message using dev_err()
+if the command sending fails.
 
-#syz test: git://git.kernel.dk/linux.git syztest
+Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+---
+ drivers/net/wwan/iosm/iosm_ipc_mux_codec.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/net/wwan/iosm/iosm_ipc_mux_codec.c b/drivers/net/wwan/iosm/iosm_ipc_mux_codec.c
+index bff46f7ca59f..478c9c8b638b 100644
+--- a/drivers/net/wwan/iosm/iosm_ipc_mux_codec.c
++++ b/drivers/net/wwan/iosm/iosm_ipc_mux_codec.c
+@@ -509,8 +509,11 @@ static void ipc_mux_dl_acbcmd_decode(struct iosm_mux *ipc_mux,
+ 			return;
+ 			}
+ 		trans_id = le32_to_cpu(cmdh->transaction_id);
+-		ipc_mux_dl_acb_send_cmds(ipc_mux, cmd, cmdh->if_id,
+-					 trans_id, cmd_p, size, false, true);
++		if (ipc_mux_dl_acb_send_cmds(ipc_mux, cmd, cmdh->if_id,
++					     trans_id, cmd_p, size, false, true))
++			dev_err(ipc_mux->dev,
++				"if_id %d: cmd send failed",
++				cmdh->if_id);
+ 	}
+ }
+ 
 -- 
-Jens Axboe
+2.42.0.windows.2
 
