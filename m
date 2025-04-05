@@ -1,112 +1,126 @@
-Received: from mail3-relais-sop.national.inria.fr (mail3-relais-sop.national.inria.fr [192.134.164.104])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A93542576
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 14:28:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.134.164.104
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BD1E2576;
+	Sat,  5 Apr 2025 14:28:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743863326; cv=none; b=tNS6BJN1Nni4i7f6KQhtFXprumUBvnMKOJA8xDS0/VM65Wny6NC5fEW9WHV8kHCbduYna1xkpMyeB7Qo2brory0YronNsNxYAGRnvkeKgauJb9+trOZiLBoI+3+et5RSkSvEsKwLat2yqVrPz3T14n0wWm9FRTexUWZ2yjHalJU=
+	t=1743863340; cv=none; b=kWJS8gXiZTmtlaQLKDV+cYqYIKR6vETO2zkZdxSca8naCCM6OwG02xLi3du5AQVp1MUH7PiBSgSLNMx29sNxtnk9/+N8D7hks5sN0RxTq+mDnv0QL0jrgtpAVTT420Rp9hcjkLh+0tDvKH3NB3wMLnCq5dpURK1fRWNZcqtErxc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743863326; c=relaxed/simple;
-	bh=s7/cJNmm+2NmqLkSz3SjmhLIehPf9JyMBVsRjXT+41U=;
-	h=Content-Type:From:Mime-Version:Subject:Date:Message-Id:References:
-	 Cc:In-Reply-To:To; b=jUwCjD0ASuJDTfVQfUs3famYXxx4fcsRfT5nJlmusjVtWXUFj/ecuuGnTe2FRgocIzANykvtIEd67VNbGqTQ+kY+WAtVCWKPKb7t5rPjI4TYMxhzZHngTE3WN1Grg4x8XAt07k6ijqOQIpfGVV2kay5QWvIOPPuhbIwfk1Nr+MU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr; spf=pass smtp.mailfrom=inria.fr; dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b=XBMTTHWB; arc=none smtp.client-ip=192.134.164.104
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inria.fr
+	s=arc-20240116; t=1743863340; c=relaxed/simple;
+	bh=4JfXyCl3pyf7S5ubtESdWHCjWxur7IoQ3C8ULhskaLE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=RzTtjWhciqa1/Oh8LvUzKvdDRlFq5qOHhs/cpmoaQB61xHvRoEr8uSju7J9Z8Chex02cCBG+HmX5iIBjmSqjc1elBr47ZLOIIwmo9KYWw/TPKP9KCer1WQSUTOmKMIMzfsGtBRE1yMqo0/ZJlmBPz0rHMkg3cFoFZz8jofyqTIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J07iPH8x; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b="XBMTTHWB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J07iPH8x"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-227b650504fso27385745ad.0;
+        Sat, 05 Apr 2025 07:28:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=inria.fr; s=dc;
-  h=content-transfer-encoding:from:mime-version:subject:date:
-   message-id:references:cc:in-reply-to:to;
-  bh=rAnRKWYqjI/iF90KH/8ta6DJgK2orXELRXpPhPkXWYI=;
-  b=XBMTTHWBVwZbRE97F/N02k83BRYGbVUK+WjOz3Q38Wp6pjON1aPFo29H
-   9/X2r6epsGslx5WG0SwO5yVV/2PLTpKfqUwQp86vVUX7stRL2LWbsn6gV
-   vQuhkj/7uZrhGioLWRCYvWy5kMEqCu7n/peCByZ/Apj0laTD2YKGY5xPX
-   w=;
-Authentication-Results: mail3-relais-sop.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=Julia.Lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
-X-IronPort-AV: E=Sophos;i="6.15,191,1739833200"; 
-   d="scan'208";a="113533554"
-Received: from 193.164.185.81.rev.sfr.net (HELO smtpclient.apple) ([81.185.164.193])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2025 16:28:40 +0200
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From: Julia Lawall <Julia.Lawall@inria.fr>
+        d=gmail.com; s=20230601; t=1743863338; x=1744468138; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ahwQ81oXocQBWNsh5IPSlPP/mK02nGlAnWcU1yfQR7E=;
+        b=J07iPH8xNc2bdnOVw0OsnJLOUYYze0LcRoboyeS7QJxexRoTj4/P5uqcQ+OLkAwx8R
+         ilwITvrUPRyXVUbLPYIOs4uhGYwgEdEPUYTnzpelNX46sUNuoaWJdXFUxFqvBBKMXWg5
+         IWa2+0R61AB/ztEEeavpnDYHDdyV2/lkyzJaAqS5zdDme0N+VTorPTbqc/SZs2yDbVSV
+         PPI82/5m/YyQWNNRTqMucbs1DYhRNIajKta8yssXZ05bQ7MmLskd5mqTrjsIBZI5ygGd
+         /1tgtjUKBrcEyMy06YfO2hDGad/y8lff2jxBIZWbfulmk2Ad78QgEBn6Xkkb4kpZ8QZe
+         zHBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743863338; x=1744468138;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ahwQ81oXocQBWNsh5IPSlPP/mK02nGlAnWcU1yfQR7E=;
+        b=oQnEEESsmAVlzCYp1AOA5TImz6QwMgUoOkP56LzY0xi4zQjQhX6K1ZVoLQfORA43Vv
+         6F8VAEUrgal1hb0ZCXffbgqEcaxpIytxlafJsVr1D+drB+2fU6jRXu6TTUyFQ0O0Qmte
+         hVoZ69xZ2p6Y+o7Il/o8gmAYpcZL2e0jtsWvFLzn6jWVlcMbPQwR/8NoZ+j0NcwRBvKQ
+         WlCsG8D3X6XVDM07MDbVWinUFdBEjMbAngXUyRH67N5mo3Chg6lSl23ylptiQMbtRSqY
+         DopRDSQxptJzj4lWH3NhAvt/FdL7HqHwG1MDb5jOs5P8fMZLngu8Pbv4R1iT9OrzlpwE
+         AWcQ==
+X-Forwarded-Encrypted: i=1; AJvYcCULDnEjAfTlHIcAfzBXibfyzdTnYfk0QXt9wfswzkutGNsa2sX9HjKsRF96O6zdkFDhAVE8mztjOKWtOqKb@vger.kernel.org, AJvYcCUYep1Rn8E44IKDMfvXNzpGq6pm6jOE/vfiw4mbU9zuwB+oMszBCI7DSXj0eK9OALv5Xf4+UrEUg56+tRI=@vger.kernel.org, AJvYcCUtzcB3Yn3GEUXzT3HpXzMVFKGKaJ4vL/9jrcm34smLkF2B1u/0cNQjoOLUoADCcs1DEeWx7BGD@vger.kernel.org
+X-Gm-Message-State: AOJu0YxF3feEi4uHWCAfBqK/L8CDd3EHnvdY5YaWgVeNoMKFso5q6dNd
+	1kyl5VOZf7P99z01hZY0oIIsPYKd3LBjAcjwMHrMdgFtd4HFXQ1i
+X-Gm-Gg: ASbGncskdahp1dcZSH7SjYsHF1TA4e0fclnmteQGtYtRlndxq0fpi+Ub7yU1US6ELnO
+	eqU44BymyV55cFzdc8AXuBlnN2CJit2FJcynxR4qjsIfvg4O2+6NFTccA1NQiMlfF3jNAWW1+1m
+	6zP1JOSoGgDDpRmir6+o1xQt/9cu9LTPGRnhVDOPLlemIMwZDTKzdcKGPiPt1nO0sm7y0VNV/gj
+	HA7xAaLec18hsCerRojH5Xhjs4y2JR7FtxuUvJBxMTz+2cMu+Lv5y20a8LX7xn3bJ5qdYe5l8K0
+	93zH/jUNL/ndIZiKAjRsA4XWY1HPzC2x3krrrze5c9OfBn+1+3/MIiTEzmjXevHHJ8FMNNjhye3
+	SCt/zWopXXlcgcbp6INMNwEC9l2UGlv4=
+X-Google-Smtp-Source: AGHT+IErW+VC7cKEtMFmjVemula5pnmsuaKk1cpS31e1xYdUj8s0o8v1uVlk17v8qniHfkpWedVWsw==
+X-Received: by 2002:a17:902:ec86:b0:21f:5cd8:c67 with SMTP id d9443c01a7336-22a8a080701mr97537995ad.31.1743863337699;
+        Sat, 05 Apr 2025 07:28:57 -0700 (PDT)
+Received: from localhost.localdomain (p12284229-ipxg45101marunouchi.tokyo.ocn.ne.jp. [60.39.60.229])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-229785aea7fsm50296915ad.2.2025.04.05.07.28.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 05 Apr 2025 07:28:57 -0700 (PDT)
+From: Ryo Takakura <ryotkkr98@gmail.com>
+To: gregkh@linuxfoundation.org
+Cc: alex@ghiti.fr,
+	aou@eecs.berkeley.edu,
+	bigeasy@linutronix.de,
+	conor.dooley@microchip.com,
+	jirislaby@kernel.org,
+	john.ogness@linutronix.de,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-serial@vger.kernel.org,
+	palmer@dabbelt.com,
+	paul.walmsley@sifive.com,
+	pmladek@suse.com,
+	ryotkkr98@gmail.com,
+	samuel.holland@sifive.com,
+	stable@vger.kernel.org,
+	u.kleine-koenig@baylibre.com
+Subject: Re: [PATCH] serial: sifive: lock port in startup()/shutdown() callbacks
+Date: Sat,  5 Apr 2025 23:28:32 +0900
+Message-Id: <20250405142832.491151-1-ryotkkr98@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <2025040513-bronco-capsule-91aa@gregkh>
+References: <2025040513-bronco-capsule-91aa@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH 1/2] staging: rtl8723bs: Optimize variable initialization in rtl8723b_hal_init.c
-Date: Sat, 5 Apr 2025 10:28:27 -0400
-Message-Id: <F6AA5BB6-46A1-457C-BB99-D26D3744738F@inria.fr>
-References: <8ce041b2-087c-4d47-891f-28ecc0c91c76@stanley.mountain>
-Cc: Erick Karanja <karanja99erick@gmail.com>, gregkh@linuxfoundation.org,
- outreachy@lists.linux.dev, philipp.g.hortmann@gmail.com,
- linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
-In-Reply-To: <8ce041b2-087c-4d47-891f-28ecc0c91c76@stanley.mountain>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-X-Mailer: iPhone Mail (22C152)
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
+Hi Greg,
 
-> On 5 Apr 2025, at 10:19, Dan Carpenter <dan.carpenter@linaro.org> wrote:
->=20
-> =EF=BB=BFOn Sat, Apr 05, 2025 at 06:14:48AM +0300, Erick Karanja wrote:
->> Optimize variable initialization by integrating the initialization
->> directly into the variable declaration in cases where the initialization
->> is simple and doesn't depend on other variables or complex expressions.
->> This makes the code more concise and readable.
->>=20
->> Signed-off-by: Erick Karanja <karanja99erick@gmail.com>
+On Sat, 5 Apr 2025 14:40:33 +0100, Greg KH wrote:
+>On Sat, Apr 05, 2025 at 10:24:58PM +0900, Ryo Takakura wrote:
+>> startup()/shutdown() callbacks access SIFIVE_SERIAL_IE_OFFS.
+>> The register is also accessed from write() callback.
+>> 
+>> If console were printing and startup()/shutdown() callback
+>> gets called, its access to the register could be overwritten.
+>> 
+>> Add port->lock to startup()/shutdown() callbacks to make sure
+>> their access to SIFIVE_SERIAL_IE_OFFS is synchronized against
+>> write() callback.
+>> 
+>> Fixes: 45c054d0815b ("tty: serial: add driver for the SiFive UART")
+>> Signed-off-by: Ryo Takakura <ryotkkr98@gmail.com>
+>> Cc: stable@vger.kernel.org
 >> ---
->> .../staging/rtl8723bs/hal/rtl8723b_hal_init.c | 155 +++++-------------
->> 1 file changed, 41 insertions(+), 114 deletions(-)
->>=20
->> diff --git a/drivers/staging/rtl8723bs/hal/rtl8723b_hal_init.c b/drivers/=
-staging/rtl8723bs/hal/rtl8723b_hal_init.c
->> index e15ec6452fd0..1e980b291e90 100644
->> --- a/drivers/staging/rtl8723bs/hal/rtl8723b_hal_init.c
->> +++ b/drivers/staging/rtl8723bs/hal/rtl8723b_hal_init.c
->> @@ -152,13 +152,12 @@ static int _WriteFW(struct adapter *padapter, void *=
-buffer, u32 size)
->> void _8051Reset8723(struct adapter *padapter)
->> {
->>    u8 cpu_rst;
->> -    u8 io_rst;
->> +    u8 io_rst =3D rtw_read8(padapter, REG_RSV_CTRL + 1);
->>=20
->>=20
->>    /*  Reset 8051(WLMCU) IO wrapper */
->>    /*  0x1c[8] =3D 0 */
->>    /*  Suggested by Isaac@SD1 and Gimmy@SD1, coding by Lucas@20130624 */
->> -    io_rst =3D rtw_read8(padapter, REG_RSV_CTRL+1);
->>    io_rst &=3D ~BIT(0);
->>    rtw_write8(padapter, REG_RSV_CTRL+1, io_rst);
->=20
-> I hate this.  It's a bad idea to put "code" in the declaration block.
+>> 
+>> This patch used be part of a series for converting sifive driver to
+>> nbcon[0]. It's now sent seperatly as the rest of the series does not
+>> need be applied to the stable branch.
+>
+>That means this is a v2 patch, and you should also send the other patch
+>as a v2 as well, right?
 
-Erick, you can look around in the output of the semantic patch and see if al=
-l of the ones with function calls are undesirable. If that=E2=80=99s the cas=
-e you can post to the outreachy mailing list a revised semantic patch that d=
-oesn=E2=80=99t report on that case.
+Oh yes. I wasn't sure about the versioning for this patch. Let me resend
+this patch as v2.
+Also for the other patch, as now its sent as a single standalone patch,
+I'll resend it as v2.
 
-Julia
-
->> @@ -501,8 +499,7 @@ void Hal_GetEfuseDefinition(
->>    switch (type) {
->>    case TYPE_EFUSE_MAX_SECTION:
->>        {
->> -            u8 *pMax_section;
->> -            pMax_section =3D pOut;
->> +            u8 *pMax_section =3D pOut;
->=20
-> This is fine because "pOut" is a variable.  It doesn't have side effects
-> and it's not "code" in that sense.
->=20
-> regards,
-> dan carpenter
->=20
->=20
-
+>thanks,
+>
+>greg k-h
