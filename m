@@ -1,376 +1,541 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtpout.efficios.com (smtpout.efficios.com [158.69.130.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72E8F1F37D1
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 14:59:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC21E1CA81;
+	Sat,  5 Apr 2025 15:02:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=158.69.130.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743865191; cv=none; b=QxNvi/Vtu+tlU3ZzJGOvVeaj2hpD3S3SybbNSZHs1R8b+ssy1+EOK0peXrxQceDezLvTgkyu0Hdm8n+CLvRJLQhVbkS5r9WOWDtp4fbHip1K6Fhx5NmpFr73xXE1gRfhRQ6gZFanjOfwb3geJ8DOxnhetv3vPv4WaR1ygPRKPdI=
+	t=1743865334; cv=none; b=bMVYY+gCryiF/OmNA8odSaiHG1sA0ht65poEWsB10Vgfcnkjy1PGu35X2r7eSpoBVQGmQbpAW5gC0kE19plv+ZSZPDQ/8ewJBuY7VoxU511V7ACKlFuV30jm9jGNhZ/zEL61D1tU8m1igwW6M8pCJRUD8ElxznL2SDYpwEa0ZLY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743865191; c=relaxed/simple;
-	bh=MujoFMWO97NvPreyL+B/x2WoeplqxRBvEV79sESwlJQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m3YkO7xME1PM15V3OoEK2leX4svPxI7SmNFbrEb/u1Qyp1y9FWIWWzKEeM0L7Jky3XxpbmdwVVEt4rpOUwTP00ioLeMp8kRW3+woP+OpQ+79cKIy8XMIdKbrgcfAwx1r5cQOPiHzCtXTtCWM2VyETinJEphB/EveRdjz04TZonI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YWaFTks4; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1743865334; c=relaxed/simple;
+	bh=0OtykuqpxeW7rYrgaVmT4bGRZtfNmygke5WZFpzMIbU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=ludEgd7za8mS+4HlWrVE6mtj3wcyIT1xJDtfUeblX5MvQEox+Ywi4QXfvp6y6CL1eJNJ5jw8TutOgfR4gd72hRgmn4ma6NJTTxwkGThhRbtYwx0LzSrT6d3oDu83a+MCEhKvIoJIWABPzn2p5IOlxYmnGKe/2yi417LO1ZpwIZo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=Eov2IRsr; arc=none smtp.client-ip=158.69.130.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YWaFTks4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743865188;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cbkTzprJIlguje41tLks2OTXlNo6AoyMKZsgeX069d4=;
-	b=YWaFTks4Fdrwsr5uIw9L9n265THCDdmbo//j7YO4z58U/G/TsG5+iBjgpBsR1UQIWE0Cmh
-	pPf6Qs3I3l87aWDoOhGmpQrPGin8yd2XTtzpALTTn2+n/tf+/7vAsTD520CDcv059YjubL
-	w84MZ0RqcqyW0AlcfKNdcG5/Tkvu/kI=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-593-T_9m49wINh-rUSJBmh1fAw-1; Sat,
- 05 Apr 2025 10:59:44 -0400
-X-MC-Unique: T_9m49wINh-rUSJBmh1fAw-1
-X-Mimecast-MFC-AGG-ID: T_9m49wINh-rUSJBmh1fAw_1743865181
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3BF52180049D;
-	Sat,  5 Apr 2025 14:59:41 +0000 (UTC)
-Received: from fedora (unknown [10.72.120.4])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 150B7180B489;
-	Sat,  5 Apr 2025 14:59:35 +0000 (UTC)
-Date: Sat, 5 Apr 2025 22:59:29 +0800
-From: Ming Lei <ming.lei@redhat.com>
-To: Uday Shankar <ushankar@purestorage.com>
-Cc: Shuah Khan <shuah@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-	linux-block@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] ublk: improve detection and handling of ublk server
- exit
-Message-ID: <Z_FFUXINspN8G0y0@fedora>
-References: <20250403-ublk_timeout-v3-1-aa09f76c7451@purestorage.com>
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="Eov2IRsr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
+	s=smtpout1; t=1743864745;
+	bh=0OtykuqpxeW7rYrgaVmT4bGRZtfNmygke5WZFpzMIbU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Eov2IRsrBLc9AFMLv0MTQrpqXTJDkmRJUbPsQJnWTa6+l1VynJJZcG5ylrPBGDN9j
+	 bDUNKHKhfTCiICLG7YVatMW8nLr5Z8Qie+zRgpLZRGj5Kwzf7VTRwNx9l0mFj8SqB1
+	 xJCVOEyy9Q6rpWi5jk505KfT4586Ns+UQ/c+EWd6flNwFViTQavQVWxlRbpbxVV/ib
+	 HTkM0Ecb4hpqDL/QnQkI2vGQurZ1M6hmUlaWwOZplt+XT6bcXD7oYy8EDLCMCQeRwt
+	 ApIzO0W/17YJSOB90km59hwFtCUl+D/RcgMOKEYkD6L9bRQm7hXBCDwYHrpNz7mprj
+	 fVvGpbPb3/0FQ==
+Received: from thinkos.internal.efficios.com (unknown [IPv6:2606:6d00:100:4000:cacb:9855:de1f:ded2])
+	by smtpout.efficios.com (Postfix) with ESMTPSA id 4ZVJNS5tSYzYB2;
+	Sat,  5 Apr 2025 10:52:24 -0400 (EDT)
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To: Sweet Tea Dorminy <sweettea@google.com>
+Cc: linux-kernel@vger.kernel.org,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Dennis Zhou <dennis@kernel.org>,
+	Tejun Heo <tj@kernel.org>,
+	Christoph Lameter <cl@linux.com>,
+	Martin Liu <liumartin@google.com>,
+	David Rientjes <rientjes@google.com>,
+	christian.koenig@amd.com,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R . Howlett" <Liam.Howlett@Oracle.com>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Christian Brauner <brauner@kernel.org>,
+	Wei Yang <richard.weiyang@gmail.com>,
+	David Hildenbrand <david@redhat.com>,
+	Miaohe Lin <linmiaohe@huawei.com>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org,
+	Yu Zhao <yuzhao@google.com>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Mateusz Guzik <mjguzik@gmail.com>,
+	Matthew Wilcox <willy@infradead.org>
+Subject: [RFC PATCH] Introduce Hierarchical Per-CPU Counters
+Date: Sat,  5 Apr 2025 10:52:10 -0400
+Message-Id: <20250405145210.616206-1-mathieu.desnoyers@efficios.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250403-ublk_timeout-v3-1-aa09f76c7451@purestorage.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, Apr 03, 2025 at 06:05:57PM -0600, Uday Shankar wrote:
-> There are currently two ways in which ublk server exit is detected by
-> ublk_drv:
-> 
-> 1. uring_cmd cancellation. If there are any outstanding uring_cmds which
->    have not been completed to the ublk server when it exits, io_uring
->    calls the uring_cmd callback with a special cancellation flag as the
->    issuing task is exiting.
-> 2. I/O timeout. This is needed in addition to the above to handle the
->    "saturated queue" case, when all I/Os for a given queue are in the
->    ublk server, and therefore there are no outstanding uring_cmds to
->    cancel when the ublk server exits.
-> 
-> There are a couple of issues with this approach:
-> 
-> - It is complex and inelegant to have two methods to detect the same
->   condition
-> - The second method detects ublk server exit only after a long delay
->   (~30s, the default timeout assigned by the block layer). This delays
->   the nosrv behavior from kicking in and potential subsequent recovery
->   of the device.
-> 
-> The second issue is brought to light with the new test_generic_04. It
-> fails before this fix:
-> 
-> selftests: ublk: test_generic_04.sh
-> dev id is 0
-> dd: error writing '/dev/ublkb0': Input/output error
-> 1+0 records in
-> 0+0 records out
-> 0 bytes copied, 30.0611 s, 0.0 kB/s
-> DEAD
-> dd took 31 seconds to exit (>= 5s tolerance)!
-> generic_04 : [FAIL]
-> 
-> Fix this by instead detecting and handling ublk server exit in the
-> character file release callback. This has several advantages:
-> 
-> - This one place can handle both saturated and unsaturated queues. Thus,
->   it replaces both preexisting methods of detecting ublk server exit.
-> - It runs quickly on ublk server exit - there is no 30s delay.
-> - It starts the process of removing task references in ublk_drv. This is
->   needed if we want to relax restrictions in the driver like letting
->   only one thread serve each queue
-> 
-> There is also the disadvantage that the character file release callback
-> can also be triggered by intentional close of the file, which is a
-> significant behavior change. Preexisting ublk servers (libublksrv) are
-> dependent on the ability to open/close the file multiple times. To
-> address this, only transition to a nosrv state if the file is released
-> while the ublk device is live. This allows for programs to open/close
-> the file multiple times during setup. It is still a behavior change if a
-> ublk server decides to close/reopen the file while the device is LIVE
-> (i.e. while it is responsible for serving I/O), but that would be highly
-> unusual. This behavior is in line with what is done by FUSE, which is
-> very similar to ublk in that a userspace daemon is providing services
-> traditionally provided by the kernel.
-> 
-> With this change in, the new test (and all other selftests, and all
-> ublksrv tests) pass:
-> 
-> selftests: ublk: test_generic_04.sh
-> dev id is 0
-> dd: error writing '/dev/ublkb0': Input/output error
-> 1+0 records in
-> 0+0 records out
-> 0 bytes copied, 0.0376731 s, 0.0 kB/s
-> DEAD
-> generic_04 : [PASS]
-> 
-> Signed-off-by: Uday Shankar <ushankar@purestorage.com>
-> ---
-> Changes in v3:
-> - Quiesce queue earlier to avoid concurrent cancellation and "normal"
->   completion of io_uring cmds (Ming Lei)
-> - Fix del_gendisk hang, found by test_stress_02
-> - Remove unnecessary parameters in fault_inject target (Ming Lei)
-> - Fix delay implementation to have separate per-I/O delay instead of
->   blocking the whole thread (Ming Lei)
-> - Add delay_us to docs
-> - Link to v2: https://lore.kernel.org/r/20250402-ublk_timeout-v2-1-249bc5523000@purestorage.com
-> 
-> Changes in v2:
-> - Leave null ublk selftests target untouched, instead create new
->   fault_inject target for injecting per-I/O delay (Ming Lei)
-> - Allow multiple open/close of ublk character device with some
->   restrictions
-> - Drop patches which made it in separately at https://lore.kernel.org/r/20250401-ublk_selftests-v1-1-98129c9bc8bb@purestorage.com
-> - Consolidate more nosrv logic in ublk character device release, and
->   associated code cleanup
-> - Link to v1: https://lore.kernel.org/r/20250325-ublk_timeout-v1-0-262f0121a7bd@purestorage.com
-> ---
->  drivers/block/ublk_drv.c                        | 228 +++++++++---------------
->  tools/testing/selftests/ublk/Makefile           |   4 +-
->  tools/testing/selftests/ublk/fault_inject.c     |  72 ++++++++
->  tools/testing/selftests/ublk/kublk.c            |   6 +-
->  tools/testing/selftests/ublk/kublk.h            |   4 +
->  tools/testing/selftests/ublk/test_generic_04.sh |  43 +++++
->  6 files changed, 215 insertions(+), 142 deletions(-)
-> 
-> diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
-> index 2fd05c1bd30b03343cb6f357f8c08dd92ff47af9..73baa9d22ccafb00723defa755a0b3aab7238934 100644
-> --- a/drivers/block/ublk_drv.c
-> +++ b/drivers/block/ublk_drv.c
-> @@ -162,7 +162,6 @@ struct ublk_queue {
->  
->  	bool force_abort;
->  	bool timeout;
-> -	bool canceling;
->  	bool fail_io; /* copy of dev->state == UBLK_S_DEV_FAIL_IO */
->  	unsigned short nr_io_ready;	/* how many ios setup */
->  	spinlock_t		cancel_lock;
-> @@ -199,8 +198,6 @@ struct ublk_device {
->  	struct completion	completion;
->  	unsigned int		nr_queues_ready;
->  	unsigned int		nr_privileged_daemon;
-> -
-> -	struct work_struct	nosrv_work;
->  };
->  
->  /* header of ublk_params */
-> @@ -209,8 +206,9 @@ struct ublk_params_header {
->  	__u32	types;
->  };
->  
-> -static bool ublk_abort_requests(struct ublk_device *ub, struct ublk_queue *ubq);
-> -
-> +static void ublk_stop_dev_unlocked(struct ublk_device *ub);
-> +static void ublk_abort_queue(struct ublk_device *ub, struct ublk_queue *ubq);
-> +static void __ublk_quiesce_dev(struct ublk_device *ub);
->  static inline struct request *__ublk_check_and_get_req(struct ublk_device *ub,
->  		struct ublk_queue *ubq, int tag, size_t offset);
->  static inline unsigned int ublk_req_build_flags(struct request *req);
-> @@ -1314,8 +1312,6 @@ static void ublk_queue_cmd_list(struct ublk_queue *ubq, struct rq_list *l)
->  static enum blk_eh_timer_return ublk_timeout(struct request *rq)
->  {
->  	struct ublk_queue *ubq = rq->mq_hctx->driver_data;
-> -	unsigned int nr_inflight = 0;
-> -	int i;
->  
->  	if (ubq->flags & UBLK_F_UNPRIVILEGED_DEV) {
->  		if (!ubq->timeout) {
-> @@ -1326,26 +1322,6 @@ static enum blk_eh_timer_return ublk_timeout(struct request *rq)
->  		return BLK_EH_DONE;
->  	}
->  
-> -	if (!ubq_daemon_is_dying(ubq))
-> -		return BLK_EH_RESET_TIMER;
-> -
-> -	for (i = 0; i < ubq->q_depth; i++) {
-> -		struct ublk_io *io = &ubq->ios[i];
-> -
-> -		if (!(io->flags & UBLK_IO_FLAG_ACTIVE))
-> -			nr_inflight++;
-> -	}
-> -
-> -	/* cancelable uring_cmd can't help us if all commands are in-flight */
-> -	if (nr_inflight == ubq->q_depth) {
-> -		struct ublk_device *ub = ubq->dev;
-> -
-> -		if (ublk_abort_requests(ub, ubq)) {
-> -			schedule_work(&ub->nosrv_work);
-> -		}
-> -		return BLK_EH_DONE;
-> -	}
-> -
->  	return BLK_EH_RESET_TIMER;
->  }
->  
-> @@ -1356,19 +1332,16 @@ static blk_status_t ublk_prep_req(struct ublk_queue *ubq, struct request *rq)
->  	if (unlikely(ubq->fail_io))
->  		return BLK_STS_TARGET;
->  
-> -	/* With recovery feature enabled, force_abort is set in
-> -	 * ublk_stop_dev() before calling del_gendisk(). We have to
-> -	 * abort all requeued and new rqs here to let del_gendisk()
-> -	 * move on. Besides, we cannot not call io_uring_cmd_complete_in_task()
-> -	 * to avoid UAF on io_uring ctx.
-> +	/*
-> +	 * force_abort is set in ublk_stop_dev() before calling
-> +	 * del_gendisk(). We have to abort all requeued and new rqs here
-> +	 * to let del_gendisk() move on. Besides, we cannot not call
-> +	 * io_uring_cmd_complete_in_task() to avoid UAF on io_uring ctx.
->  	 *
->  	 * Note: force_abort is guaranteed to be seen because it is set
->  	 * before request queue is unqiuesced.
->  	 */
-> -	if (ublk_nosrv_should_queue_io(ubq) && unlikely(ubq->force_abort))
-> -		return BLK_STS_IOERR;
-> -
-> -	if (unlikely(ubq->canceling))
-> +	if (unlikely(ubq->force_abort))
->  		return BLK_STS_IOERR;
->  
->  	/* fill iod to slot in io cmd buffer */
-> @@ -1391,16 +1364,6 @@ static blk_status_t ublk_queue_rq(struct blk_mq_hw_ctx *hctx,
->  	if (res != BLK_STS_OK)
->  		return res;
->  
-> -	/*
-> -	 * ->canceling has to be handled after ->force_abort and ->fail_io
-> -	 * is dealt with, otherwise this request may not be failed in case
-> -	 * of recovery, and cause hang when deleting disk
-> -	 */
-> -	if (unlikely(ubq->canceling)) {
-> -		__ublk_abort_rq(ubq, rq);
-> -		return BLK_STS_OK;
-> -	}
-> -
+* Motivation
 
-If `ubq->canceling` is removed, how to handle recovery? The request has to
-be requeued in case of ublk_nosrv_dev_should_queue_io().
+The purpose of this hierarchical split-counter scheme is to:
 
-And that should be the reason why 'make test T=generic/004' hangs forever
-after applying this patch.
+- Minimize contention when incrementing and decrementing counters,
+- Provide fast access to a sum approximation,
+- Provide a sum approximation with an acceptable accuracy level when
+  scaling to many-core systems.
 
->  	ublk_queue_cmd(ubq, rq);
->  	return BLK_STS_OK;
->  }
-> @@ -1461,8 +1424,71 @@ static int ublk_ch_open(struct inode *inode, struct file *filp)
->  static int ublk_ch_release(struct inode *inode, struct file *filp)
->  {
->  	struct ublk_device *ub = filp->private_data;
-> +	int i;
-> +
-> +	mutex_lock(&ub->mutex);
-> +	/*
-> +	 * If the device is not live, we will not transition to a nosrv
-> +	 * state. This protects against:
-> +	 * - accidental poking of the ublk character device
-> +	 * - some ublk servers which may open/close the ublk character
-> +	 *   device during startup
-> +	 */
-> +	if (ub->dev_info.state != UBLK_S_DEV_LIVE)
-> +		goto out;
-> +
-> +	/*
-> +	 * Since we are releasing the ublk character file descriptor, we
-> +	 * know that there cannot be any concurrent file-related
-> +	 * activity (e.g. uring_cmds or reads/writes). However, I/O
-> +	 * might still be getting dispatched. Quiesce that too so that
-> +	 * we don't need to worry about anything concurrent.
-> +	 *
-> +	 * We may have already quiesced the queue if we canceled any
-> +	 * uring_cmds, so only quiesce if necessary (quiesce is not
-> +	 * idempotent, it has an internal counter which we need to
-> +	 * manage carefully).
-> +	 */
-> +	if (!blk_queue_quiesced(ub->ub_disk->queue))
-> +		blk_mq_quiesce_queue(ub->ub_disk->queue);
-> +
-> +	/*
-> +	 * Handle any requests outstanding to the ublk server
-> +	 */
-> +	for (i = 0; i < ub->dev_info.nr_hw_queues; i++)
-> +		ublk_abort_queue(ub, ublk_get_queue(ub, i));
->  
-> +	/*
-> +	 * Transition the device to the nosrv state. What exactly this
-> +	 * means depends on the recovery flags
-> +	 */
-> +	if (ublk_nosrv_should_stop_dev(ub)) {
-> +		/*
-> +		 * Allow any pending/future I/O to pass through quickly
-> +		 * with an error. This is needed because del_gendisk
-> +		 * waits for all pending I/O to complete
-> +		 */
-> +		for (i = 0; i < ub->dev_info.nr_hw_queues; i++)
-> +			ublk_get_queue(ub, i)->force_abort = true;
-> +		blk_mq_unquiesce_queue(ub->ub_disk->queue);
-> +
-> +		ublk_stop_dev_unlocked(ub);
-> +	} else {
-> +		if (ublk_nosrv_dev_should_queue_io(ub)) {
-> +			__ublk_quiesce_dev(ub);
+It aims at fixing the per-mm RSS tracking which has become too
+inaccurate for OOM killer purposes on large many-core systems [1].
 
-Here only inflight IOs are drained, new IO still comes after queue is
-unquiesced, then uring_cmd UAF is triggered.
+* Design
 
-...
+The hierarchical per-CPU counters propagate a sum approximation through
+a binary tree. When reaching the batch size, the carry is propagated
+through a binary tree of which consists of log2(nr_cpu_ids) levels. The
+batch size for each level is twice the batch size of the prior level.
 
-> --- /dev/null
-> +++ b/tools/testing/selftests/ublk/test_generic_04.sh
-> @@ -0,0 +1,43 @@
-> +#!/bin/bash
-> +# SPDX-License-Identifier: GPL-2.0
-> +
-> +. "$(cd "$(dirname "$0")" && pwd)"/test_common.sh
-> +
-> +TID="generic_04"
-> +ERR_CODE=0
-> +
-> +_prep_test "fault_inject" "fast cleanup when all I/Os of one hctx are in server"
-> +
-> +# configure ublk server to sleep 2s before completing each I/O
-> +dev_id=$(_add_ublk_dev -t fault_inject -q 2 -d 1 --delay_us 2000000)
-> +_check_add_dev $TID $?
-> +
-> +echo "dev id is ${dev_id}"
-> +
-> +STARTTIME=${SECONDS}
-> +
-> +dd if=/dev/urandom of=/dev/ublkb${dev_id} oflag=direct bs=4k count=1 &
+Example propagation diagram with 8 cpus:
 
-stdout/stderr need to be discarded.
+Level 0:  0    1    2    3    4    5    6    7
+          |   /     |   /     |   /     |   /
+          |  /      |  /      |  /      |  /
+          | /       | /       | /       | /
+Level 1:  0         1         2         3
+          |       /           |       /
+          |    /              |    /
+          | /                 | /
+Level 2:  0                   1
+          |               /
+          |         /
+          |   /
+Level 3:  0
 
-Also I'd suggest to make the selftest part as one standalone patch.
+The maximum inaccuracy is bound by: batch_size * log2(nr_cpus) * nr_cpus
+which evolves with O(n*log(n)) as the number of CPUs increases.
 
+Link: https://lore.kernel.org/lkml/20250331223516.7810-2-sweettea-kernel@dorminy.me/ # [1]
+Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Dennis Zhou <dennis@kernel.org>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Christoph Lameter <cl@linux.com>
+Cc: Martin Liu <liumartin@google.com>
+Cc: David Rientjes <rientjes@google.com>
+Cc: christian.koenig@amd.com
+Cc: Shakeel Butt <shakeel.butt@linux.dev>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Sweet Tea Dorminy <sweettea@google.com>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: "Liam R . Howlett" <Liam.Howlett@Oracle.com>
+Cc: Suren Baghdasaryan <surenb@google.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Christian Brauner <brauner@kernel.org>
+Cc: Wei Yang <richard.weiyang@gmail.com>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: Miaohe Lin <linmiaohe@huawei.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: linux-mm@kvack.org
+Cc: linux-trace-kernel@vger.kernel.org
+Cc: Yu Zhao <yuzhao@google.com>
+Cc: Roman Gushchin <roman.gushchin@linux.dev>
+Cc: Mateusz Guzik <mjguzik@gmail.com>
+Cc: Matthew Wilcox <willy@infradead.org>
+---
+ include/linux/percpu_counter_tree.h |  98 ++++++++++
+ lib/Makefile                        |   1 +
+ lib/percpu_counter_tree.c           | 265 ++++++++++++++++++++++++++++
+ 3 files changed, 364 insertions(+)
+ create mode 100644 include/linux/percpu_counter_tree.h
+ create mode 100644 lib/percpu_counter_tree.c
 
-thanks,
-Ming
+diff --git a/include/linux/percpu_counter_tree.h b/include/linux/percpu_counter_tree.h
+new file mode 100644
+index 000000000000..9668e9673099
+--- /dev/null
++++ b/include/linux/percpu_counter_tree.h
+@@ -0,0 +1,98 @@
++/* SPDX-License-Identifier: GPL-2.0+ OR MIT */
++/* SPDX-FileCopyrightText: 2025 Mathieu Desnoyers <mathieu.desnoyers@efficios.com> */
++
++#ifndef _PERCPU_COUNTER_TREE_H
++#define _PERCPU_COUNTER_TREE_H
++
++#include <linux/cleanup.h>
++#include <linux/preempt.h>
++#include <linux/atomic.h>
++#include <linux/percpu.h>
++
++struct percpu_counter_tree_level_item {
++	atomic_t count;
++} ____cacheline_aligned_in_smp;
++
++struct percpu_counter_tree {
++	unsigned int level0_bit_mask;
++	unsigned int __percpu *level0;
++
++	unsigned int nr_levels;
++	unsigned int nr_cpus;
++	unsigned int batch_size;
++	struct percpu_counter_tree_level_item *items;
++	unsigned int inaccuracy;	/* approximation imprecise within ± inaccuracy */
++	int bias;			/* bias for counter_set */
++};
++
++int percpu_counter_tree_init(struct percpu_counter_tree *counter, unsigned int batch_size);
++void percpu_counter_tree_destroy(struct percpu_counter_tree *counter);
++void percpu_counter_tree_add_slowpath(struct percpu_counter_tree *counter, int inc);
++int percpu_counter_tree_precise_sum_unbiased(struct percpu_counter_tree *counter);
++int percpu_counter_tree_precise_sum(struct percpu_counter_tree *counter);
++int percpu_counter_tree_approximate_compare(struct percpu_counter_tree *counter, int v);
++int percpu_counter_tree_precise_compare(struct percpu_counter_tree *counter, int v);
++void percpu_counter_tree_set_bias(struct percpu_counter_tree *counter, int bias);
++void percpu_counter_tree_set(struct percpu_counter_tree *counter, int v);
++unsigned int percpu_counter_tree_inaccuracy(struct percpu_counter_tree *counter);
++
++/* Fast paths */
++
++static inline
++int percpu_counter_tree_carry(int orig, int res, int inc, unsigned int bit_mask)
++{
++	if (inc < 0) {
++		inc = -(-inc & ~(bit_mask - 1));
++		/*
++		 * xor bit_mask: underflow.
++		 *
++		 * If inc has bit set, decrement an additional bit if
++		 * there is _no_ bit transition between orig and res.
++		 * Else, inc has bit cleared, decrement an additional
++		 * bit if there is a bit transition between orig and
++		 * res.
++		 */
++		if ((inc ^ orig ^ res) & bit_mask)
++			inc -= bit_mask;
++	} else {
++		inc &= ~(bit_mask - 1);
++		/*
++		 * xor bit_mask: overflow.
++		 *
++		 * If inc has bit set, increment an additional bit if
++		 * there is _no_ bit transition between orig and res.
++		 * Else, inc has bit cleared, increment an additional
++		 * bit if there is a bit transition between orig and
++		 * res.
++		 */
++		if ((inc ^ orig ^ res) & bit_mask)
++			inc += bit_mask;
++	}
++	return inc;
++}
++
++static inline
++void percpu_counter_tree_add(struct percpu_counter_tree *counter, int inc)
++{
++	unsigned int bit_mask = counter->level0_bit_mask, orig, res;
++
++	if (!inc)
++		return;
++	/* Make sure the fast and slow paths use the same cpu number. */
++	guard(migrate)();
++	res = this_cpu_add_return(*counter->level0, inc);
++	orig = res - inc;
++	inc = percpu_counter_tree_carry(orig, res, inc, bit_mask);
++        if (!inc)
++		return;
++	percpu_counter_tree_add_slowpath(counter, inc);
++}
++
++static inline
++int percpu_counter_tree_approx_sum(struct percpu_counter_tree *counter)
++{
++	return (int) (atomic_read(&counter->items[counter->nr_cpus - 2].count) +
++		      READ_ONCE(counter->bias));
++}
++
++#endif  /* _PERCPU_COUNTER_TREE_H */
+diff --git a/lib/Makefile b/lib/Makefile
+index d5cfc7afbbb8..d803a3a63288 100644
+--- a/lib/Makefile
++++ b/lib/Makefile
+@@ -201,6 +201,7 @@ obj-$(CONFIG_TEXTSEARCH_KMP) += ts_kmp.o
+ obj-$(CONFIG_TEXTSEARCH_BM) += ts_bm.o
+ obj-$(CONFIG_TEXTSEARCH_FSM) += ts_fsm.o
+ obj-$(CONFIG_SMP) += percpu_counter.o
++obj-$(CONFIG_SMP) += percpu_counter_tree.o
+ obj-$(CONFIG_AUDIT_GENERIC) += audit.o
+ obj-$(CONFIG_AUDIT_COMPAT_GENERIC) += compat_audit.o
+ 
+diff --git a/lib/percpu_counter_tree.c b/lib/percpu_counter_tree.c
+new file mode 100644
+index 000000000000..8e456bfd0907
+--- /dev/null
++++ b/lib/percpu_counter_tree.c
+@@ -0,0 +1,265 @@
++// SPDX-License-Identifier: GPL-2.0+ OR MIT
++// SPDX-FileCopyrightText: 2025 Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
++
++/*
++ * Split Counters With Binary Tree Approximation Propagation
++ *
++ * * Propagation diagram when reaching batch size thresholds (± batch size):
++ *
++ * Example diagram for 8 CPUs:
++ *
++ * log2(8) = 3 levels
++ *
++ * At each level, each pair propagates its values to the next level when
++ * reaching the batch size thresholds.
++ *
++ * Counters at levels 0, 1, 2 can be kept on a single byte (±128 range),
++ * although it may be relevant to keep them on 32-bit counters for
++ * simplicity. (complexity vs memory footprint tradeoff)
++ *
++ * Counter at level 3 can be kept on a 32-bit counter.
++ *
++ * Level 0:  0    1    2    3    4    5    6    7
++ *           |   /     |   /     |   /     |   /
++ *           |  /      |  /      |  /      |  /
++ *           | /       | /       | /       | /
++ * Level 1:  0         1         2         3
++ *           |       /           |       /
++ *           |    /              |    /
++ *           | /                 | /
++ * Level 2:  0                   1
++ *           |               /
++ *           |         /
++ *           |   /
++ * Level 3:  0
++ *
++ * * Approximation inaccuracy:
++ *
++ * BATCH(level N): Level N batch size.
++ *
++ * Example for BATCH(level 0) = 32.
++ *
++ * BATCH(level 0) =  32
++ * BATCH(level 1) =  64
++ * BATCH(level 2) = 128
++ * BATCH(level N) = BATCH(level 0) * 2^N
++ *
++ *            per-counter     global
++ *            inaccuracy      inaccuracy
++ * Level 0:   [ -32 ..  +31]  ±256  (8 * 32)
++ * Level 1:   [ -64 ..  +63]  ±256  (4 * 64)
++ * Level 2:   [-128 .. +127]  ±256  (2 * 128)
++ * Total:      ------         ±768  (log2(nr_cpu_ids) * BATCH(level 0) * nr_cpu_ids)
++ *
++ * -----
++ *
++ * Approximate Sum Carry Propagation
++ *
++ * Let's define a number of counter bits for each level, e.g.:
++ *
++ * log2(BATCH(level 0)) = log2(32) = 5
++ *
++ *               nr_bit        value_mask                      range
++ * Level 0:      5 bits        v                             0 ..  +31
++ * Level 1:      1 bit        (v & ~((1UL << 5) - 1))        0 ..  +63
++ * Level 2:      1 bit        (v & ~((1UL << 6) - 1))        0 .. +127
++ * Level 3:     25 bits       (v & ~((1UL << 7) - 1))        0 .. 2^32-1
++ *
++ * Note: Use a full 32-bit per-cpu counter at level 0 to allow precise sum.
++ *
++ * Note: Use cacheline aligned counters at levels above 0 to prevent false sharing.
++ *       If memory footprint is an issue, a specialized allocator could be used
++ *       to eliminate padding.
++ *
++ * Example with expanded values:
++ *
++ * counter_add(counter, inc):
++ *
++ *         if (!inc)
++ *                 return;
++ *
++ *         res = percpu_add_return(counter @ Level 0, inc);
++ *         orig = res - inc;
++ *         if (inc < 0) {
++ *                 inc = -(-inc & ~0b00011111);  // Clear used bits
++ *                 // xor bit 5: underflow
++ *                 if ((inc ^ orig ^ res) & 0b00100000)
++ *                         inc -= 0b00100000;
++ *         } else {
++ *                 inc &= ~0b00011111;           // Clear used bits
++ *                 // xor bit 5: overflow
++ *                 if ((inc ^ orig ^ res) & 0b00100000)
++ *                         inc += 0b00100000;
++ *         }
++ *         if (!inc)
++ *                 return;
++ *
++ *         res = atomic_add_return(counter @ Level 1, inc);
++ *         orig = res - inc;
++ *         if (inc < 0) {
++ *                 inc = -(-inc & ~0b00111111);  // Clear used bits
++ *                 // xor bit 6: underflow
++ *                 if ((inc ^ orig ^ res) & 0b01000000)
++ *                         inc -= 0b01000000;
++ *         } else {
++ *                 inc &= ~0b00111111;           // Clear used bits
++ *                 // xor bit 6: overflow
++ *                 if ((inc ^ orig ^ res) & 0b01000000)
++ *                         inc += 0b01000000;
++ *         }
++ *         if (!inc)
++ *                 return;
++ *
++ *         res = atomic_add_return(counter @ Level 2, inc);
++ *         orig = res - inc;
++ *         if (inc < 0) {
++ *                 inc = -(-inc & ~0b01111111);  // Clear used bits
++ *                 // xor bit 7: underflow
++ *                 if ((inc ^ orig ^ res) & 0b10000000)
++ *                         inc -= 0b10000000;
++ *         } else {
++ *                 inc &= ~0b01111111;           // Clear used bits
++ *                 // xor bit 7: overflow
++ *                 if ((inc ^ orig ^ res) & 0b10000000)
++ *                         inc += 0b10000000;
++ *         }
++ *         if (!inc)
++ *                 return;
++ *
++ *         atomic_add(counter @ Level 3, inc);
++ */
++
++#include <linux/percpu_counter_tree.h>
++#include <linux/cpumask.h>
++#include <linux/percpu.h>
++#include <linux/atomic.h>
++#include <linux/errno.h>
++#include <linux/slab.h>
++#include <linux/math.h>
++
++int percpu_counter_tree_init(struct percpu_counter_tree *counter, unsigned int batch_size)
++{
++	/* Batch size must be power of 2 */
++	if (!batch_size || (batch_size & (batch_size - 1)))
++		return -EINVAL;
++	counter->nr_levels = get_count_order(nr_cpu_ids);
++	counter->nr_cpus = 1UL << counter->nr_levels;
++	counter->batch_size = batch_size;
++	counter->level0_bit_mask = 1UL << get_count_order(batch_size);
++	counter->inaccuracy = counter->nr_levels * batch_size * counter->nr_cpus;
++	counter->bias = 0;
++	counter->level0 = alloc_percpu(unsigned int);
++	if (!counter->level0)
++		return -ENOMEM;
++	counter->items = kzalloc(counter->nr_cpus - 1 *
++				 sizeof(struct percpu_counter_tree_level_item),
++				 GFP_KERNEL);
++	if (!counter->items) {
++		free_percpu(counter->level0);
++		return -ENOMEM;
++	}
++	return 0;
++}
++
++void percpu_counter_tree_destroy(struct percpu_counter_tree *counter)
++{
++	free_percpu(counter->level0);
++	kfree(counter->items);
++}
++
++/* Called with migration disabled. */
++void percpu_counter_tree_add_slowpath(struct percpu_counter_tree *counter, int inc)
++{
++	struct percpu_counter_tree_level_item *item = counter->items;
++	unsigned int level_items = counter->nr_cpus >> 1;
++	unsigned int level, nr_levels = counter->nr_levels;
++	unsigned int bit_mask = counter->level0_bit_mask;
++	unsigned int cpu = smp_processor_id();
++
++	for (level = 1; level < nr_levels; level++) {
++		atomic_t *count = &item[cpu & (level_items - 1)].count;
++		unsigned int orig, res;
++
++		bit_mask <<= 1;
++		res = atomic_add_return_relaxed(inc, count);
++		orig = res - inc;
++		inc = percpu_counter_tree_carry(orig, res, inc, bit_mask);
++		item += level_items;
++		level_items >>= 1;
++		if (!inc)
++			return;
++	}
++	atomic_add(inc, &item->count);
++}
++
++/*
++ * Precise sum.
++ * Keep "int" counters per-cpu, and perform the sum of all per-cpu
++ * counters.
++ */
++int percpu_counter_tree_precise_sum_unbiased(struct percpu_counter_tree *counter)
++{
++	unsigned int sum = 0;
++	int cpu;
++
++	for_each_possible_cpu(cpu)
++		sum += *per_cpu_ptr(counter->level0, cpu);
++	return (int) sum;
++}
++
++int percpu_counter_tree_precise_sum(struct percpu_counter_tree *counter)
++{
++	return percpu_counter_tree_precise_sum_unbiased(counter) + READ_ONCE(counter->bias);
++}
++
++/*
++ * Do an approximate comparison of a counter against a given value.
++ * Return 1 if the value is greater than counter,
++ * Return -1 if the value lower than counter,
++ * Return 0 if the value is within the inaccuracy range of the counter.
++ */
++int percpu_counter_tree_approximate_compare(struct percpu_counter_tree *counter, int v)
++{
++	int count = percpu_counter_tree_approx_sum(counter);
++
++	if (abs(v - count) <= counter->inaccuracy)
++		return 0;
++	if (v > count)
++		return 1;
++	return -1;
++}
++
++/*
++ * Compare counter against a given value.
++ * Return 1 if the value is greater than counter,
++ * Return -1 if the value lower than counter,
++ * Return 0 if the value is equal to the counter.
++ */
++int percpu_counter_tree_precise_compare(struct percpu_counter_tree *counter, int v)
++{
++	int count = percpu_counter_tree_approx_sum(counter);
++
++	if (abs(v - count) <= counter->inaccuracy)
++		count = percpu_counter_tree_precise_sum(counter);
++	if (v > count)
++		return 1;
++	if (v < count)
++		return -1;
++	return 0;
++}
++
++void percpu_counter_tree_set_bias(struct percpu_counter_tree *counter, int bias)
++{
++	WRITE_ONCE(counter->bias, bias);
++}
++
++void percpu_counter_tree_set(struct percpu_counter_tree *counter, int v)
++{
++	percpu_counter_tree_set_bias(counter,
++				     v - percpu_counter_tree_precise_sum_unbiased(counter));
++}
++
++unsigned int percpu_counter_tree_inaccuracy(struct percpu_counter_tree *counter)
++{
++	return counter->inaccuracy;
++}
+-- 
+2.39.5
 
