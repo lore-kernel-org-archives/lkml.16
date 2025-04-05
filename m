@@ -1,76 +1,77 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 312B36FC3;
-	Sat,  5 Apr 2025 14:37:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1E5F6FC3
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 14:37:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743863839; cv=none; b=gaBI0ysq1mosEbImdz3BlRXEn97lIyjbfL9d35ebpG8V8Sk/ZOrnL+E0mFnwPKAkQJKEDa1hkXFpVMyDp/NkO6T+uvgUDYHrku4IiZNvrS4RoIrShzUdF/8P8EuXSdbjWmvB6vsd5C0zi/myFtgXLf01xrjIhOZiff7TjBety4k=
+	t=1743863856; cv=none; b=kUwIB51Nlfjk5NE00kDpwoVeM28s24IVkt2cftLcqF7fPfYND5f+WsQxKwGoYv1XNSIzjkD+B11tuGfA6BlBdANTdvD9ELhTeP1bcGsiIqzJ3WLkaOKGG+UOkZpKp3gdbRNvweTHYlvf12+8Y8lZM9HjqgR/67ekaxOKsOK8wzY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743863839; c=relaxed/simple;
-	bh=63F5xTkitsYyHm/pyJpFkBLkPS4nsTIzUTBp3RDPaz4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=fu3jwB+MLklkr9ZsJ4jsN+Mk39JggcHAYJO6nke8qe8U6LlZFhIol8Tnb1H+HPbDHjIq0+XNjZbKAy6gsJedCJeRajeKlhXx138f4cIjim7NKdb6bVMH7mGQPF0ZaHiRkKh//uP8BWhyu7mysba/CBaxAmprdF6oFK9H0tpytkU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LKLKaFu2; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743863856; c=relaxed/simple;
+	bh=pXLKmEwNDTBZtCeK7Q8AWrXj9MMBRKoyR3cM3epQvv4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ltyvfs0WQbEb8mzi5pf8KQEt8zvzIRjmEz27eXntucdIMYUEMJ0nxYVKBAKQs6z4Ib5CTxbzsDclHfMP/kfXjxoQTs9t6vcK+PanUOdHVhD5BnyjwKsALC7Ok7mSt93wKZGu6TF/+bvN4+z17gAMOp8Wl5ZQCa6NqpZJJ5NrWjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=IM+tizNF; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LKLKaFu2"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4394a0c65fcso27363255e9.1;
-        Sat, 05 Apr 2025 07:37:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="IM+tizNF"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3996af42857so2675397f8f.0
+        for <linux-kernel@vger.kernel.org>; Sat, 05 Apr 2025 07:37:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743863836; x=1744468636; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=87i242gNmmnQ0/JIgcQs2sxcKZ2HnRDUKllGCKseh+0=;
-        b=LKLKaFu2cjIH+fPmUKzuD2iKy+Rtn9w9v8hUrhO7wfjwluBWy7OLswGpKymvFCKkzr
-         bHJNohNjzM+XMkBpiiMqrK7ONeAPUcLKWmfpP5TJtaIe2uiXIjPGNeR0GK2fstX0wLpa
-         u5uQ71Z+aeTIK0eu9bXwXWJ2H/SyCuDlitC0cjxwW/oEdeLr5ij/uXvqmWnn1MkluMMX
-         6bdNZ8GUPK0LJYHlxAMGR0W5pvlLPiMaf9UA2uXZkY9QaU7bDF/ymwGX2tEk2nur0YG5
-         UE9F+Sz/vULdmcVpYwQhkUTPb37zUVsH+rSObJNPk3KAJ7HyyzxGwR1qNqC8jkKjRyY9
-         TE1g==
+        d=suse.com; s=google; t=1743863852; x=1744468652; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=N9OlVokaPz3TD7YpKo822xXOy7MwdDKOxXITZ4KWICw=;
+        b=IM+tizNF6oWcTZWnv3uLMli5NIxBk3M3x0q/BqYqsshnCeWizkSoH4r8N/rBNNIqUD
+         uC/5nx92wNBUSKr3kmV5JcvYoIY+BjuoHyS4oGvZMdWJfqzauI6Qt0GpuGPBOzX+LyaK
+         xc5PhW+hkNTIFS1P77E3gLbV4BjH7DES7rgA+hsJOIiZJsVTzshqlXO5e/NYMacPEM+Y
+         gb+MNKnbjFN5yPvMLd6496yGMlMas4fWiRoeaHutec3xTFJcf2euxVcaaiRHcExNr4Ov
+         wQrbsW00XeLHCh7zS1H1ISn9Yrs2tnUzu1rzhEUEjehAOmPcU2+VmMt0ijfJWXTABugO
+         GHAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743863836; x=1744468636;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=87i242gNmmnQ0/JIgcQs2sxcKZ2HnRDUKllGCKseh+0=;
-        b=THuQsSvO1jGi0B6/au8SntxZtYYW+91jOH/f48G4lcPDsK/Xd4XirZ64NRrOo35bLo
-         9EDivRF9zYX4uQbBp72AOke8f8OyZns+j1oO+2WyaB+/ZLKh2ZbV/KijBGU+dNH7jXYi
-         wxMOrJs/livgIAP1jJXudlS+vTY1VHrjCtANsx0sejBpLI99hbZ9jjFeWx1HQGhaBQpZ
-         u5+/lgHamaayQpDnaPBpQ2IeBTbEuRoDTpm51HVUxiT4OvK99IUfy7Fp6cy1nbFQjQXd
-         ZHzwF9CmlqQI8JFvs9IhYdBXa3CPJMEhIy/cjT8EoRVgKN46aNC4QD+rPhVOKB9/VUhC
-         4c/w==
-X-Forwarded-Encrypted: i=1; AJvYcCUkAtmCgS/XvPjNpHitedechDxkMgYvnSpU54oTJ+QNxtv2L83K2KHgVvGesOgITAY8mpN8VsAdKyi24LrC@vger.kernel.org, AJvYcCX0eD9+0XDcSQ5088Xd43xRPtiuePp/Wnhc7rUuaYKUgMI5U2VfhQEmhroCqHOv0Rsar+RUN1KOrqGxVSI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzvlKqNBpc8HksIawyu+JkdWMKVR36+u99bGCnZ9aZCJoS7T7DY
-	tRkHonPjIeMzuEklutcX43hB3kPWxKTK7tE+k5U23ri6Jk18l4/5
-X-Gm-Gg: ASbGnctazEHKpXqrRT2x5P1ZqhJrK2/JGbQJn8aInfk8Rf4hKLEdrh+Ef7tZ/Pi2aKY
-	s+3Ly5SDKmU5A9qdPH7Ijpsb5vu+QZXNBWh/XSXcsJkzfQuotKU1nsFz6m8IpqQ2fZeuTYBYSfn
-	COK0o5v8LFKNq7KxINFB6J45xZkPc5TGqOflXgh3EA6vOq0dGNuq56KEt5itjSfAr7lGIdtvtfB
-	sja4CNqXbF5QlrWAUABKFd6TonMUNDU5piR4kXx+VCuM/65BPopaQ2FuUAXfB5x6ZGJUQeV28Iy
-	Gb4JoLx0w/KLIxIMIpdLBGZYLf2/16YKsbQOPpNrdeefLiIWQf5oRrok51U=
-X-Google-Smtp-Source: AGHT+IG/l4yCRNfI7DOPZyV8ReShUgrZ6Qt3TdLxndrrMT9p3qU8mq+mnkWp4ubxVT/SvOshXTzAcQ==
-X-Received: by 2002:a05:600c:a07:b0:43c:fb95:c752 with SMTP id 5b1f17b1804b1-43ecf843e91mr75410255e9.3.1743863836147;
-        Sat, 05 Apr 2025 07:37:16 -0700 (PDT)
-Received: from localhost.localdomain ([78.170.183.130])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c3009644dsm6964693f8f.6.2025.04.05.07.37.14
+        d=1e100.net; s=20230601; t=1743863852; x=1744468652;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=N9OlVokaPz3TD7YpKo822xXOy7MwdDKOxXITZ4KWICw=;
+        b=Fk7SCavqg7F38tq8rxX9ghS/whz+rBv+HERGkiDEYSqabSNdCAA19o4j7WxgiTS9U7
+         pAFaK84BXaBzoHpSCnzxq3dj4srZb5IaS+lRqjL8CpmUxfM60PF3d+QfaQUdYV17BNux
+         xis0kpUr1IR3TwUKASsPhVE3xulPRicMSqu6tmmfHrH4K0xJOS659GwaB9JlPOG75XB7
+         Z3R+7DMhWyxHda6FGGk6LWFuvfG9A3uYmD9cq8TCGrecm90CBXF433H3qUaxPqHdYhQq
+         CVQllA/pCf9AY+yfQR1KY1ArY4fwcRDIfj4t2TIvs5f2G3kzF+QKfAizg8KOaJMFX6/H
+         WY3w==
+X-Forwarded-Encrypted: i=1; AJvYcCUh5gysNuPwGKTa9m+9B3rUXOjfmyanfxbOn3PD2rbQvHWLvcid7NXRxUDqS4tXP3FQMvogvg+zc66EHTo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwreJVZvJnG0DJ3SfyYEvJ7uP2hXY1EfbwWeeCXOdW6npI1kp76
+	DEhXTj35u8g+B+peI3GndR7tLa9XAxH9SdCQvB1eNFtSiDKVqJYCwthwq+dTxxXytLVn/fEoIL3
+	T
+X-Gm-Gg: ASbGncsOnvUISgQrNvSlMdHQ1gJLeuhZYeWqpgc9dKlm8d2Hb8bb9aavw9YjhYqBSU+
+	IPbFR+4GNsKDCYSN33xhSle67C584q2ti4zkwrPoBSd0I5EFGEslFypP20p0rBsueqjX0GSjbjY
+	iyVTKRABsAVQTTJUegQPGavLkoqxLU5+aeZkMCYWGgKGPyaFX1CrN+z5UT2ChU6AoWj1M2YGAVC
+	tK7xxDog+NjcuyUFKA/8AlAqYNbS0zuCjXkR0rtmtNmz/csJKE8ycHVaMG0m7b7uMLmlfaKlW14
+	J+sizWpYiUqWbYZ3nuIjAoyxVcI2d9IMwjKwHVasfSIMpdfZb5yh9TGv+b/q1dgqUv9+XSVccwg
+	ePSY=
+X-Google-Smtp-Source: AGHT+IHb3QJwOjlJgpqTi5VzDr1QcD7qjQLv6niEM8Jbh6KrXovQeFV4QfcID6UNo7WIbiuJ1fvxWg==
+X-Received: by 2002:a05:6000:4304:b0:39c:dfa:e86c with SMTP id ffacd0b85a97d-39c2e621d14mr9954585f8f.13.1743863851873;
+        Sat, 05 Apr 2025 07:37:31 -0700 (PDT)
+Received: from localhost.localdomain ([2a00:6d43:105:c401:e307:1a37:2e76:ce91])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec1794e94sm79341045e9.31.2025.04.05.07.37.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Apr 2025 07:37:15 -0700 (PDT)
-From: Baris Can Goral <goralbaris@gmail.com>
-To: martin.petersen@oracle.com
-Cc: linux-scsi@vger.kernel.org,
-	target-devel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	skhan@linuxfoundation.org,
-	linux-kernel-mentees@lists.linux.dev,
-	Baris Can Goral <goralbaris@gmail.com>
-Subject: [PATCH v4] scsi: target: transform strncpy into strscpy
-Date: Sat,  5 Apr 2025 17:36:47 +0300
-Message-Id: <20250405143646.10722-1-goralbaris@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250402204554.205560-1-goralbaris@gmail.com>
-References: <20250402204554.205560-1-goralbaris@gmail.com>
+        Sat, 05 Apr 2025 07:37:31 -0700 (PDT)
+From: Marco Crivellari <marco.crivellari@suse.com>
+To: linux-mips@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Marco Crivellari <marco.crivellari@suse.com>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	"Maciej W . Rozycki" <macro@orcam.me.uk>
+Subject: [PATCH] MIPS: rename rollback_handler with skipover_handler
+Date: Sat,  5 Apr 2025 16:37:05 +0200
+Message-ID: <20250405143705.343960-1-marco.crivellari@suse.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,43 +80,116 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The strncpy() function is actively dangerous to use since it may not
-NULL-terminate the destination string,resulting in potential memory
-content exposures, unbounded reads, or crashes.
+Recently the rollback region has been changed into an
+idle interrupt region [1]. This patch make the appropriate
+changes renaming functions and macro, to reflact the change.
 
-Link:https://github.com/KSPP/linux/issues/90
-Signed-off-by: Baris Can Goral <goralbaris@gmail.com>
+[1] https://lore.kernel.org/linux-mips/20250403161143.361461-2-marco.crivellari@suse.com/
+
+Signed-off-by: Marco Crivellari <marco.crivellari@suse.com>
 ---
-Changes from v4:
-	-Description added
-	-User name corrected
-	-formatting issues.
-	-commit name changed
- drivers/target/target_core_configfs.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/mips/include/asm/idle.h |  2 +-
+ arch/mips/kernel/genex.S     | 10 +++++-----
+ arch/mips/kernel/traps.c     | 10 +++++-----
+ 3 files changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/target/target_core_configfs.c b/drivers/target/target_core_configfs.c
-index c40217f44b1b..5c0b74e76be2 100644
---- a/drivers/target/target_core_configfs.c
-+++ b/drivers/target/target_core_configfs.c
-@@ -143,7 +143,7 @@ static ssize_t target_core_item_dbroot_store(struct config_item *item,
- 	}
- 	filp_close(fp, NULL);
+diff --git a/arch/mips/include/asm/idle.h b/arch/mips/include/asm/idle.h
+index 2bc3678455ed..c7d75807d13f 100644
+--- a/arch/mips/include/asm/idle.h
++++ b/arch/mips/include/asm/idle.h
+@@ -9,7 +9,7 @@ extern void (*cpu_wait)(void);
+ extern asmlinkage void r4k_wait(void);
+ extern void r4k_wait_irqoff(void);
  
--	strncpy(db_root, db_root_stage, read_bytes);
-+	strscpy(db_root, db_root_stage, read_bytes);
- 	pr_debug("Target_Core_ConfigFS: db_root set to %s\n", db_root);
- 
- 	r = read_bytes;
-@@ -3664,7 +3664,7 @@ static void target_init_dbroot(void)
- 	}
- 	filp_close(fp, NULL);
- 
--	strncpy(db_root, db_root_stage, DB_ROOT_LEN);
-+	strscpy(db_root, db_root_stage, DB_ROOT_LEN);
- 	pr_debug("Target_Core_ConfigFS: db_root set to %s\n", db_root);
+-static inline int using_rollback_handler(void)
++static inline int using_skipover_handler(void)
+ {
+ 	return cpu_wait == r4k_wait;
  }
+diff --git a/arch/mips/kernel/genex.S b/arch/mips/kernel/genex.S
+index 2cf312d9a3b0..08c0a01d9a29 100644
+--- a/arch/mips/kernel/genex.S
++++ b/arch/mips/kernel/genex.S
+@@ -116,7 +116,7 @@ LEAF(r4k_wait)
+ 	 * If an interrupt lands here, before going idle on the next
+ 	 * instruction, we must *NOT* go idle since the interrupt could
+ 	 * have set TIF_NEED_RESCHED or caused a timer to need resched.
+-	 * Fall through -- see rollback_handler below -- and have the
++	 * Fall through -- see skipover_handler below -- and have the
+ 	 * idle loop take care of things.
+ 	 */
+ 1:	.fill	0
+@@ -139,8 +139,8 @@ r4k_wait_exit:
+ 	END(r4k_wait)
+ 	.previous
  
+-	.macro	BUILD_ROLLBACK_PROLOGUE handler
+-	FEXPORT(rollback_\handler)
++	.macro	BUILD_SKIPOVER_PROLOGUE handler
++	FEXPORT(skipover_\handler)
+ 	.set	push
+ 	.set	noat
+ 	MFC0	k0, CP0_EPC
+@@ -156,7 +156,7 @@ r4k_wait_exit:
+ 	.endm
+ 
+ 	.align	5
+-BUILD_ROLLBACK_PROLOGUE handle_int
++BUILD_SKIPOVER_PROLOGUE handle_int
+ NESTED(handle_int, PT_SIZE, sp)
+ 	.cfi_signal_frame
+ #ifdef CONFIG_TRACE_IRQFLAGS
+@@ -276,7 +276,7 @@ NESTED(except_vec_ejtag_debug, 0, sp)
+  * This prototype is copied to ebase + n*IntCtl.VS and patched
+  * to invoke the handler
+  */
+-BUILD_ROLLBACK_PROLOGUE except_vec_vi
++BUILD_SKIPOVER_PROLOGUE except_vec_vi
+ NESTED(except_vec_vi, 0, sp)
+ 	SAVE_SOME docfi=1
+ 	SAVE_AT docfi=1
+diff --git a/arch/mips/kernel/traps.c b/arch/mips/kernel/traps.c
+index 39e248d0ed59..8ec1e185b35c 100644
+--- a/arch/mips/kernel/traps.c
++++ b/arch/mips/kernel/traps.c
+@@ -77,7 +77,7 @@
+ #include "access-helper.h"
+ 
+ extern void check_wait(void);
+-extern asmlinkage void rollback_handle_int(void);
++extern asmlinkage void skipover_handle_int(void);
+ extern asmlinkage void handle_int(void);
+ extern asmlinkage void handle_adel(void);
+ extern asmlinkage void handle_ades(void);
+@@ -2066,7 +2066,7 @@ void *set_vi_handler(int n, vi_handler_t addr)
+ {
+ 	extern const u8 except_vec_vi[];
+ 	extern const u8 except_vec_vi_ori[], except_vec_vi_end[];
+-	extern const u8 rollback_except_vec_vi[];
++	extern const u8 skipover_except_vec_vi[];
+ 	unsigned long handler;
+ 	unsigned long old_handler = vi_handlers[n];
+ 	int srssets = current_cpu_data.srsets;
+@@ -2095,7 +2095,7 @@ void *set_vi_handler(int n, vi_handler_t addr)
+ 			change_c0_srsmap(0xf << n*4, 0 << n*4);
+ 	}
+ 
+-	vec_start = using_rollback_handler() ? rollback_except_vec_vi :
++	vec_start = using_skipover_handler() ? skipover_except_vec_vi :
+ 					       except_vec_vi;
+ #if defined(CONFIG_CPU_MICROMIPS) || defined(CONFIG_CPU_BIG_ENDIAN)
+ 	ori_offset = except_vec_vi_ori - vec_start + 2;
+@@ -2426,8 +2426,8 @@ void __init trap_init(void)
+ 	if (board_be_init)
+ 		board_be_init();
+ 
+-	set_except_vector(EXCCODE_INT, using_rollback_handler() ?
+-					rollback_handle_int : handle_int);
++	set_except_vector(EXCCODE_INT, using_skipover_handler() ?
++					skipover_handle_int : handle_int);
+ 	set_except_vector(EXCCODE_MOD, handle_tlbm);
+ 	set_except_vector(EXCCODE_TLBL, handle_tlbl);
+ 	set_except_vector(EXCCODE_TLBS, handle_tlbs);
 -- 
-2.34.1
+2.49.0
 
