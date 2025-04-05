@@ -1,106 +1,150 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C99B1991B8
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 17:42:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 104028BEC;
+	Sat,  5 Apr 2025 17:43:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743874937; cv=none; b=hq74ni2q7Vtu6ZlC8RjdkKLaB8VVWVm3BLW0mdH/LWEXayvkHf6oJMQqAqYlnLQxY390rPjpmY8wVY38Y+E+Ix26ZqiRcpBPWs7KGNWMtVZihZdnhANUWUoU0WRit8yuX6TOKLq1pyDN8Q/u0I+C4Ji0Nt967K2eR26UDZYpGrc=
+	t=1743875034; cv=none; b=ZM7g/bkaCMPMFEVqbPz3S4rAqagz3ywYwuZ/JCE4ljnfLzBpylBOnAHh3rIdIntmtR7HGmq1N0Yf2uP3lfQnTOIVkqGkJgjtaqqutd0UUxWHkn+mTwGKQ81wybpO7a7wnqC1jJvnoaswBi+kyqBSWuNbx8v2LZ1Ak1MDIjKPyik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743874937; c=relaxed/simple;
-	bh=DMruvwZj9pN+nRLYEysIuozn5rHzpma6PJ+sm5luUPE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=uhuouNuf+O4Hg82Nl/9e7eI83LAoF4rfmmBG75Jwrrpjzh52roY5Jhsw/aPyyo1RDhJx63vJyJRAxfBxExtbVSucob4Sig7I+JyXd8JeNNnvdZmZDojs+ckfdvWp0GFaaea8l63XE468Q63pp7YMdNcloCR1MaYtLxdcAS8mqMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=c+Sos4TZ; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1743875034; c=relaxed/simple;
+	bh=e2838gU8k00sWId3MP1GDzBEfwrfssO77mfORDdiLFs=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=eKeOru0cawI8FnYRCUROXgQncQge8GaTWwM3fbW5yLe6bzYtW1PSF8X96LyDfwesVAo4yF/Wi5i+CfxC2sik7DNP1YSFOHUBJdx2zJGNiDam3ZbmEWoaEHKlzeejy1XQ0/ijFT5OdFNlktYQbBCLmoVOhI3yqCFh6zZeFcRMuEg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lls14qjG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c+Sos4TZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743874934; x=1775410934;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=DMruvwZj9pN+nRLYEysIuozn5rHzpma6PJ+sm5luUPE=;
-  b=c+Sos4TZVzYYyh46wqEVIy8nwuQMyVb0CnKoxJrO72KW+JgM2iEKfpNH
-   zv41V3MCRAwNAKFe7ETGRtOmEzsbyC2WDH8HiHOGI/59Pv3/BJc6/PLoy
-   q1UVk97D7Ttpw+tW+A97a5d1Ggb8R1WcPNeoLQHeSKZbpbVSn8TspbXJc
-   FRa1OFk4KTVnuSQLVrl4ylT+iGunSRe5zL9wZTO/y4RJIwqkAofj9ciPQ
-   l8r5dOGF8q7FOwJBlEePTaNJ33JvKLzmpAQSWzdnzQD6sbcXuUs/8RpVU
-   QtONJTUOZ7jS9Ukm2lZrzi55LWDPwro0BfGf37I+3J8U2YfArG3Wx4RVb
-   w==;
-X-CSE-ConnectionGUID: e4n7EBEARfCVYGCjlTmiHQ==
-X-CSE-MsgGUID: FJYIYCT3TQ+k/OtIFZhnXg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11395"; a="48010549"
-X-IronPort-AV: E=Sophos;i="6.15,191,1739865600"; 
-   d="scan'208";a="48010549"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2025 10:42:14 -0700
-X-CSE-ConnectionGUID: BF3zq3WHT0eL0ODX/E6tRA==
-X-CSE-MsgGUID: u64enPA/RdGx4pTyuvd0rg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,191,1739865600"; 
-   d="scan'208";a="127556461"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by fmviesa007.fm.intel.com with ESMTP; 05 Apr 2025 10:39:42 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u17Ua-0002BF-0X;
-	Sat, 05 Apr 2025 17:39:40 +0000
-Date: Sun, 6 Apr 2025 01:38:40 +0800
-From: kernel test robot <lkp@intel.com>
-To: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Subject: arch/mips/boot/dts/ralink/rt3052_eval.dtb: syscon@0: compatible:1:
- 'syscon' was expected
-Message-ID: <202504060140.bDmNDvJV-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lls14qjG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C9BBC4CEE4;
+	Sat,  5 Apr 2025 17:43:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743875033;
+	bh=e2838gU8k00sWId3MP1GDzBEfwrfssO77mfORDdiLFs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Lls14qjGUwCKnRJMGiSl8SMfyX7pTIrkS0/rRm/Ih0WC3UMsU7F3pe40zHVNVATfm
+	 qeoWePe00j+vgPzbq1s5wMCBpTSmERGg1vi3bS2wKRo4/AJICbQsbnebcRGEOBouBK
+	 nuAzs1fyllBiePezIZC+hzQ5TaQZYU14Vc48HLr4epoGI1R/uGCIZpGag9y+Qibdi5
+	 pI18yDAb/Tzs/GwhWNxQY6xl3aTOhrgwA2PqRaGtySCvond2XcO9XvlB7CiX2vB6tj
+	 Eb6yiEkyXPmudDYPAq4hEQD4x/RViMz/28bQWFAGdPQBOFPlufp9AvdUs1LDeMzZb4
+	 oBw2nwbwyuM+A==
+Date: Sat, 5 Apr 2025 18:43:46 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, Lars-Peter Clausen
+ <lars@metafoo.de>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Nuno Sa
+ <nuno.sa@analog.com>, David Lechner <dlechner@baylibre.com>, Javier
+ Carrasco <javier.carrasco.cruz@gmail.com>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6/6] iio: adc: ti-adc128s052: Support ROHM BD79104
+Message-ID: <20250405184346.3c4b1234@jic23-huawei>
+In-Reply-To: <a35ab4b1-4d6a-4b95-963a-96b2ab4c05e9@gmail.com>
+References: <cover.1742474322.git.mazziesaccount@gmail.com>
+	<8e10f2d82362ca7c207324a5a97bb1759581acea.1742474322.git.mazziesaccount@gmail.com>
+	<20250331122247.05c6b09d@jic23-huawei>
+	<a35ab4b1-4d6a-4b95-963a-96b2ab4c05e9@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   a8662bcd2ff152bfbc751cab20f33053d74d0963
-commit: acf13fc60cfa0824cafd7ce9ab0784ffc87a5d86 mips: dts: ralink: rt3050: update system controller node and its consumers
-date:   6 weeks ago
-config: mips-randconfig-052-20250406 (https://download.01.org/0day-ci/archive/20250406/202504060140.bDmNDvJV-lkp@intel.com/config)
-compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project 92c93f5286b9ff33f27ff694d2dc33da1c07afdd)
-dtschema version: 2025.3.dev6+gb64c5c3
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250406/202504060140.bDmNDvJV-lkp@intel.com/reproduce)
+On Tue, 1 Apr 2025 15:33:15 +0300
+Matti Vaittinen <mazziesaccount@gmail.com> wrote:
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504060140.bDmNDvJV-lkp@intel.com/
+> On 31/03/2025 14:22, Jonathan Cameron wrote:
+> > On Mon, 31 Mar 2025 11:03:58 +0300
+> > Matti Vaittinen <mazziesaccount@gmail.com> wrote:
+> >   
+> >> The ROHM BD79104 ADC has identical SPI communication logic as the
+> >> ti-adc128s052. Eg, SPI transfer should be 16 clk cycles, conversion is
+> >> started when the CS is pulled low, and channel selection is done by
+> >> writing the channel ID after two zero bits. Data is contained in
+> >> big-endian format in the last 12 bits.  
+> > 
+> > Nicely found match.  Sometimes these are tricky to spot.
+> >   
+> >>
+> >> The BD79104 has two input voltage pins. Data sheet uses terms "vdd" and
+> >> "iovdd". The "vdd" is used also as an analog reference voltage. Hence
+> >> the driver expects finding these from the device-tree, instead of having
+> >> the "vref" only as TI's driver.
+> >>
+> >> NOTE: The TI's data sheet[1] does show that the TI's IC does actually
+> >> have two voltage inputs as well. Pins are called Va (analog reference)
+> >> and Vd (digital supply pin) - but I keep the existing driver behaviour
+> >> for the TI's IC "as is", because I have no HW to test changes, and
+> >> because I have no real need to touch it.
+> >>
+> >> NOTE II: The BD79104 requires SPI MODE 3.
+> >>
+> >> NOTE III: I used evaluation board "BD79104FV-EVK-001" made by ROHM. With
+> >> this board I had to drop the SPI speed below the 20M which is mentioned
+> >> in the data-sheet [2]. This, however, may be a limitation of the EVK
+> >> board, not the component itself.
+> >>
+> >> [1]: https://www.ti.com/lit/ds/symlink/adc128s052.pdf
+> >>
+> >> [2]:
+> >> https://fscdn.rohm.com/en/products/databook/datasheet/ic/data_converter/dac/bd79104fv-la-e.pdf
+> >>  
+> > Prefer Datasheet tags with # [1]
+> > after them for the cross references.
+> > 
+> > Those belong here in the tag block (no blank lines)  
+> >> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>  
+> > 
+> > One request for an additional cleanup precursor patch given you are
+> > touching the relevant code anyway.   It's a small one that you can
+> > test so hope you don't mind doing that whilst here.
+> > 
+> > I'm relying on the incredibly small chance anyone has a variable
+> > regulator wired up to the reference that they are modifying at runtime.
+> > I have seen that done (once long ago on a crazy dev board for a really
+> > noisy humidity sensor) when the reference was VDD but not on a separate
+> > reference pin.  That means we almost certainly won't break the existing
+> > parts and can't have a regression on your new one so we should be fine
+> > to make the change.  
+> 
+> The change you ask for is indeed small. I have no real objections 
+> against implementing it (and I actually wrote it already) - but I am 
+> still somewhat hesitant. As you say, (it seems like) the idea of the 
+> original code is to allow changing the vref at runtime. It looks to me 
+> this might've been intentional choice. I am not terribly happy about 
+> dropping the working functionality, when the gained simplification isn't 
+> particularly massive.
 
-dtcheck warnings: (new ones prefixed by >>)
-   arch/mips/boot/dts/ralink/rt3050.dtsi:10.9-12.5: Warning (unit_address_vs_reg): /cpus/cpu@0: node has a unit name, but no reg or ranges property
-   arch/mips/boot/dts/ralink/rt3052_eval.dtb: cpus: cpu@0: 'cache-level' is a required property
-   	from schema $id: http://devicetree.org/schemas/cpus.yaml#
-   arch/mips/boot/dts/ralink/rt3052_eval.dtb: cpus: '#address-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/cpus.yaml#
-   arch/mips/boot/dts/ralink/rt3052_eval.dtb: cpus: '#size-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/cpus.yaml#
-   arch/mips/boot/dts/ralink/rt3052_eval.dtb: cpu@0: 'reg' is a required property
-   	from schema $id: http://devicetree.org/schemas/mips/cpus.yaml#
->> arch/mips/boot/dts/ralink/rt3052_eval.dtb: syscon@0: compatible:1: 'syscon' was expected
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mtmips-sysc.yaml#
->> arch/mips/boot/dts/ralink/rt3052_eval.dtb: syscon@0: compatible: ['ralink,rt3052-sysc', 'ralink,rt3050-sysc', 'syscon'] is too long
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mtmips-sysc.yaml#
-   arch/mips/boot/dts/ralink/rt3052_eval.dtb: intc@200: $nodename:0: 'intc@200' does not match '^interrupt-controller(@[0-9a-f,]+)*$'
-   	from schema $id: http://devicetree.org/schemas/interrupt-controller/ralink,rt2880-intc.yaml#
-   arch/mips/boot/dts/ralink/rt3052_eval.dtb: intc@200: compatible:0: 'ralink,rt2880-intc' was expected
-   	from schema $id: http://devicetree.org/schemas/interrupt-controller/ralink,rt2880-intc.yaml#
-   arch/mips/boot/dts/ralink/rt3052_eval.dtb: intc@200: compatible: ['ralink,rt3052-intc', 'ralink,rt2880-intc'] is too long
-   	from schema $id: http://devicetree.org/schemas/interrupt-controller/ralink,rt2880-intc.yaml#
-   arch/mips/boot/dts/ralink/rt3052_eval.dtb: /palmbus@10000000/intc@200: failed to match any schema with compatible: ['ralink,rt3052-intc', 'ralink,rt2880-intc']
-   arch/mips/boot/dts/ralink/rt3052_eval.dtb: /palmbus@10000000/memc@300: failed to match any schema with compatible: ['ralink,rt3052-memc', 'ralink,rt3050-memc']
-   arch/mips/boot/dts/ralink/rt3052_eval.dtb: /palmbus@10000000/memc@300: failed to match any schema with compatible: ['ralink,rt3052-memc', 'ralink,rt3050-memc']
+Hmm. I suspect this was added at my request (or copied from where I requested
+it)  Back when we did this there was no advantage in doing it at probe
+as it was just a question of store a value or store a pointer we had
+to get anyway.  So I tended to advocate what I now think was a bit silly,
+that someone elses board might have it changing...
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+User space wise, what code checks for random scaling changes?  So it
+was best effort at best anyway!
+ 
+> 
+> Because of this, I am thinking of adding the patch dropping the 
+> functionality as an RFC. Leaving that floating on the list for a while 
+> would at least have my ass partially covered ;)
+> 
+> I'd rather not delayed the support for the BD79104 though. So - would it 
+> be okay if I didn't implement the clean-up as a precursory patch, but 
+> did it as a last patch of the series? That will make it a tad more 
+> complex to review, but it'd allow taking the BD79104 changes in while 
+> leaving the RFC to float on a list. (Also, I'm not sure if you can push 
+> an RFC in next without taking it in for the cycle?)
+
+I'll probably just merge it even as an RFC :)  That way it's my
+fault if we break someone and they shout!
+
+Jonathan
+
+> 
+> Yours,
+> 	-- Matti
+> 
+
