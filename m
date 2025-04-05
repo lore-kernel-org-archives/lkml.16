@@ -1,195 +1,120 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1E5F6FC3
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 14:37:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AB751E1E19
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 14:42:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743863856; cv=none; b=kUwIB51Nlfjk5NE00kDpwoVeM28s24IVkt2cftLcqF7fPfYND5f+WsQxKwGoYv1XNSIzjkD+B11tuGfA6BlBdANTdvD9ELhTeP1bcGsiIqzJ3WLkaOKGG+UOkZpKp3gdbRNvweTHYlvf12+8Y8lZM9HjqgR/67ekaxOKsOK8wzY=
+	t=1743864158; cv=none; b=SLguJUIkctXZqzObNQ6hqgq3tozs/ehjGs55ooBK9/IxBZfVyVYE64f8y3hPOW1vSyj64QVjB0HlGRgRHEhEQPOzPM+2DJaH3zC1i3hIVTziRB14UPOWGJlyU/CcEAMa12/OND8IyIWWDx8XnE0I4HPryAoQbegke6BkT6uzpxk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743863856; c=relaxed/simple;
-	bh=pXLKmEwNDTBZtCeK7Q8AWrXj9MMBRKoyR3cM3epQvv4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ltyvfs0WQbEb8mzi5pf8KQEt8zvzIRjmEz27eXntucdIMYUEMJ0nxYVKBAKQs6z4Ib5CTxbzsDclHfMP/kfXjxoQTs9t6vcK+PanUOdHVhD5BnyjwKsALC7Ok7mSt93wKZGu6TF/+bvN4+z17gAMOp8Wl5ZQCa6NqpZJJ5NrWjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=IM+tizNF; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1743864158; c=relaxed/simple;
+	bh=XfnEVi3ovC/zw6g3a+nScy1RtngEkEo5Aoq+dlPJPpk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=S+RAVpoxNpZqlPgw/ESe17A+xjCfwYJ0sFVyCM7NjHGzxKQYMkn3uztWsfSaIgqgJ7427eUueAGD6bfC1FfuR2bFCoPC5RIeIOKhiuieCcgx93s3cAZe+C+cvKW15BVCVZhkQfycVuwiHDs6e3CSW7K0XTSlLDRZaKXIiLtmGGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de; spf=pass smtp.mailfrom=posteo.de; dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b=kpKTySCR; arc=none smtp.client-ip=185.67.36.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="IM+tizNF"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3996af42857so2675397f8f.0
-        for <linux-kernel@vger.kernel.org>; Sat, 05 Apr 2025 07:37:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1743863852; x=1744468652; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=N9OlVokaPz3TD7YpKo822xXOy7MwdDKOxXITZ4KWICw=;
-        b=IM+tizNF6oWcTZWnv3uLMli5NIxBk3M3x0q/BqYqsshnCeWizkSoH4r8N/rBNNIqUD
-         uC/5nx92wNBUSKr3kmV5JcvYoIY+BjuoHyS4oGvZMdWJfqzauI6Qt0GpuGPBOzX+LyaK
-         xc5PhW+hkNTIFS1P77E3gLbV4BjH7DES7rgA+hsJOIiZJsVTzshqlXO5e/NYMacPEM+Y
-         gb+MNKnbjFN5yPvMLd6496yGMlMas4fWiRoeaHutec3xTFJcf2euxVcaaiRHcExNr4Ov
-         wQrbsW00XeLHCh7zS1H1ISn9Yrs2tnUzu1rzhEUEjehAOmPcU2+VmMt0ijfJWXTABugO
-         GHAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743863852; x=1744468652;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=N9OlVokaPz3TD7YpKo822xXOy7MwdDKOxXITZ4KWICw=;
-        b=Fk7SCavqg7F38tq8rxX9ghS/whz+rBv+HERGkiDEYSqabSNdCAA19o4j7WxgiTS9U7
-         pAFaK84BXaBzoHpSCnzxq3dj4srZb5IaS+lRqjL8CpmUxfM60PF3d+QfaQUdYV17BNux
-         xis0kpUr1IR3TwUKASsPhVE3xulPRicMSqu6tmmfHrH4K0xJOS659GwaB9JlPOG75XB7
-         Z3R+7DMhWyxHda6FGGk6LWFuvfG9A3uYmD9cq8TCGrecm90CBXF433H3qUaxPqHdYhQq
-         CVQllA/pCf9AY+yfQR1KY1ArY4fwcRDIfj4t2TIvs5f2G3kzF+QKfAizg8KOaJMFX6/H
-         WY3w==
-X-Forwarded-Encrypted: i=1; AJvYcCUh5gysNuPwGKTa9m+9B3rUXOjfmyanfxbOn3PD2rbQvHWLvcid7NXRxUDqS4tXP3FQMvogvg+zc66EHTo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwreJVZvJnG0DJ3SfyYEvJ7uP2hXY1EfbwWeeCXOdW6npI1kp76
-	DEhXTj35u8g+B+peI3GndR7tLa9XAxH9SdCQvB1eNFtSiDKVqJYCwthwq+dTxxXytLVn/fEoIL3
-	T
-X-Gm-Gg: ASbGncsOnvUISgQrNvSlMdHQ1gJLeuhZYeWqpgc9dKlm8d2Hb8bb9aavw9YjhYqBSU+
-	IPbFR+4GNsKDCYSN33xhSle67C584q2ti4zkwrPoBSd0I5EFGEslFypP20p0rBsueqjX0GSjbjY
-	iyVTKRABsAVQTTJUegQPGavLkoqxLU5+aeZkMCYWGgKGPyaFX1CrN+z5UT2ChU6AoWj1M2YGAVC
-	tK7xxDog+NjcuyUFKA/8AlAqYNbS0zuCjXkR0rtmtNmz/csJKE8ycHVaMG0m7b7uMLmlfaKlW14
-	J+sizWpYiUqWbYZ3nuIjAoyxVcI2d9IMwjKwHVasfSIMpdfZb5yh9TGv+b/q1dgqUv9+XSVccwg
-	ePSY=
-X-Google-Smtp-Source: AGHT+IHb3QJwOjlJgpqTi5VzDr1QcD7qjQLv6niEM8Jbh6KrXovQeFV4QfcID6UNo7WIbiuJ1fvxWg==
-X-Received: by 2002:a05:6000:4304:b0:39c:dfa:e86c with SMTP id ffacd0b85a97d-39c2e621d14mr9954585f8f.13.1743863851873;
-        Sat, 05 Apr 2025 07:37:31 -0700 (PDT)
-Received: from localhost.localdomain ([2a00:6d43:105:c401:e307:1a37:2e76:ce91])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec1794e94sm79341045e9.31.2025.04.05.07.37.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Apr 2025 07:37:31 -0700 (PDT)
-From: Marco Crivellari <marco.crivellari@suse.com>
-To: linux-mips@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Marco Crivellari <marco.crivellari@suse.com>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	"Maciej W . Rozycki" <macro@orcam.me.uk>
-Subject: [PATCH] MIPS: rename rollback_handler with skipover_handler
-Date: Sat,  5 Apr 2025 16:37:05 +0200
-Message-ID: <20250405143705.343960-1-marco.crivellari@suse.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b="kpKTySCR"
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout01.posteo.de (Postfix) with ESMTPS id A28B8240028
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 16:42:28 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.de; s=2017;
+	t=1743864148; bh=XfnEVi3ovC/zw6g3a+nScy1RtngEkEo5Aoq+dlPJPpk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:
+	 Content-Transfer-Encoding:Content-Type:Autocrypt:OpenPGP:From;
+	b=kpKTySCR9tVzJeZkrRR96FmaI5z2uTfS1UgZ1LpQ3uiZDUhk5hZl1Wg7atK7sF7Py
+	 t2asO+qjhckqLWTAXxzO0qKwssbnQJVHhCap2/Ttyl5qFKDRg6KUJBn1mT57NZN74A
+	 U2yd4Y81VINm50wKMQoE5w5YEKYFNIWFZlwKMcZMeKWKbJuW5GTkUsl3J5sqBlokOe
+	 HlMB62MvRhv1jhGOhOHSSQuYMBXt7PXHJVTolJDFbkwv334aH2+ZC//yE6KFT/KF6+
+	 fWFBhnGyRrDLlxlIWTNnqZLWzpqSPXXxc6mO/SFGpd74DILF9X3KADVWBTc4IBkgvM
+	 JBCaAeSLwoOlg==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4ZVJ8s527hz9rxK;
+	Sat,  5 Apr 2025 16:42:21 +0200 (CEST)
+From: Alexander Reimelt <alexander.reimelt@posteo.de>
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+ "Rob Herring (Arm)" <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Samuel Holland <samuel@sholland.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Viresh Kumar <viresh.kumar@linaro.org>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Vincenzo Frascino <vincenzo.frascino@arm.com>,
+ Liviu Dudau <liviu.dudau@arm.com>, Sudeep Holla <sudeep.holla@arm.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+ Stephen Boyd <sboyd@kernel.org>, zhouyanjie@wanyeetech.com,
+ Conor Dooley <conor@kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>,
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+ Steen Hegelund <Steen.Hegelund@microchip.com>,
+ Daniel Machon <daniel.machon@microchip.com>, UNGLinuxDriver@microchip.com,
+ Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Heiko Stuebner <heiko@sntech.de>,
+ Neil Armstrong <neil.armstrong@linaro.org>,
+ Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>,
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+ Geert Uytterhoeven <geert+renesas@glider.be>,
+ Magnus Damm <magnus.damm@gmail.com>,
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
+ linux-pm@vger.kernel.org, linux-mediatek@lists.infradead.org,
+ linux-arm-msm@vger.kernel.org, linux-mips@vger.kernel.org,
+ imx@lists.linux.dev, linux-rockchip@lists.infradead.org,
+ linux-amlogic@lists.infradead.org, linux-renesas-soc@vger.kernel.org
+Subject:
+ Re: [PATCH 07/19] arm64: dts: qcom: msm8992-lg-h815: Fix CPU node
+ "enable-method" property dependencies
+Date: Sat, 05 Apr 2025 14:42:21 +0000
+Message-ID: <4999945.OV4Wx5bFTl@stinkpad>
+In-Reply-To: <d3592f32-e29c-4b40-b045-7267795a9617@oss.qualcomm.com>
+References:
+ <20250403-dt-cpu-schema-v1-0-076be7171a85@kernel.org>
+ <470e2155-7145-44ab-9d6d-117a2d98d7f8@oss.qualcomm.com>
+ <d3592f32-e29c-4b40-b045-7267795a9617@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"
+Autocrypt: addr=alexander.reimelt@posteo.de;
+  keydata=xjMEZg0fSRYJKwYBBAHaRw8BAQdAIcaNTdj3NWDe5HQPCUs6oYyQygAJWP9LCzhr+C7RwMrNG2Fs
+  ZXhhbmRlci5yZWltZWx0QHBvc3Rlby5kZcKZBBMWCgBBFiEEM+Wy6sI/mP5S0zIFHqi3OKk8uRIF
+  AmYNH0kCGwMFCQWjo9cFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgkQHqi3OKk8uRJ8ogD9
+  EVg4zgfmC2SqXCgms6LETAzVX4CrAS8yMhyd7Md921cA/R8lhm9B96RYgA7MvFPFJb1T6JFY75Jg
+  QLXrtIE5llwHzjgEZg0fSRIKKwYBBAGXVQEFAQEHQBGDuxZLOTvppxyM4G18fSR6xzT0xkkPOia7
+  Bh6L1vAAAwEIB8J+BBgWCgAmFiEEM+Wy6sI/mP5S0zIFHqi3OKk8uRIFAmYNH0kCGwwFCQWjo9cA
+  CgkQHqi3OKk8uRIa1wD8CZDdCAKXstgXY96eeSSP7MecEF5TBdmWOiVgjlEIpoEA/RnGuDaj06B1
+  F51wyGAjYXSmn5qFoNHu3yXyLUkFz1ME
+OpenPGP: url=https://posteo.de/keys/alexander.reimelt@posteo.de.asc
 
-Recently the rollback region has been changed into an
-idle interrupt region [1]. This patch make the appropriate
-changes renaming functions and macro, to reflact the change.
+> On 4/4/25 10:30 PM, Konrad Dybcio wrote:
+> > On 4/4/25 4:59 AM, Rob Herring (Arm) wrote:
+> >> The "spin-table" enable-method requires "cpu-release-addr" property,
+> >> so add a dummy entry. It is assumed the bootloader will fill in the
+> >> correct values.
+> >> 
+> >> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+> >> ---
+> > 
+> > This looks good to me without knowing any better about the specifics
+> > of this device..
+> > 
+> > +Alexander - does the bootloader you use take care of this? Otherwise
+> > we can just do what Sony devices do and stop on removing the psci node
 
-[1] https://lore.kernel.org/linux-mips/20250403161143.361461-2-marco.crivellari@suse.com/
+I currently can't test this, but the bootloader (lk2nd) will set it.
 
-Signed-off-by: Marco Crivellari <marco.crivellari@suse.com>
----
- arch/mips/include/asm/idle.h |  2 +-
- arch/mips/kernel/genex.S     | 10 +++++-----
- arch/mips/kernel/traps.c     | 10 +++++-----
- 3 files changed, 11 insertions(+), 11 deletions(-)
+Alexander
 
-diff --git a/arch/mips/include/asm/idle.h b/arch/mips/include/asm/idle.h
-index 2bc3678455ed..c7d75807d13f 100644
---- a/arch/mips/include/asm/idle.h
-+++ b/arch/mips/include/asm/idle.h
-@@ -9,7 +9,7 @@ extern void (*cpu_wait)(void);
- extern asmlinkage void r4k_wait(void);
- extern void r4k_wait_irqoff(void);
- 
--static inline int using_rollback_handler(void)
-+static inline int using_skipover_handler(void)
- {
- 	return cpu_wait == r4k_wait;
- }
-diff --git a/arch/mips/kernel/genex.S b/arch/mips/kernel/genex.S
-index 2cf312d9a3b0..08c0a01d9a29 100644
---- a/arch/mips/kernel/genex.S
-+++ b/arch/mips/kernel/genex.S
-@@ -116,7 +116,7 @@ LEAF(r4k_wait)
- 	 * If an interrupt lands here, before going idle on the next
- 	 * instruction, we must *NOT* go idle since the interrupt could
- 	 * have set TIF_NEED_RESCHED or caused a timer to need resched.
--	 * Fall through -- see rollback_handler below -- and have the
-+	 * Fall through -- see skipover_handler below -- and have the
- 	 * idle loop take care of things.
- 	 */
- 1:	.fill	0
-@@ -139,8 +139,8 @@ r4k_wait_exit:
- 	END(r4k_wait)
- 	.previous
- 
--	.macro	BUILD_ROLLBACK_PROLOGUE handler
--	FEXPORT(rollback_\handler)
-+	.macro	BUILD_SKIPOVER_PROLOGUE handler
-+	FEXPORT(skipover_\handler)
- 	.set	push
- 	.set	noat
- 	MFC0	k0, CP0_EPC
-@@ -156,7 +156,7 @@ r4k_wait_exit:
- 	.endm
- 
- 	.align	5
--BUILD_ROLLBACK_PROLOGUE handle_int
-+BUILD_SKIPOVER_PROLOGUE handle_int
- NESTED(handle_int, PT_SIZE, sp)
- 	.cfi_signal_frame
- #ifdef CONFIG_TRACE_IRQFLAGS
-@@ -276,7 +276,7 @@ NESTED(except_vec_ejtag_debug, 0, sp)
-  * This prototype is copied to ebase + n*IntCtl.VS and patched
-  * to invoke the handler
-  */
--BUILD_ROLLBACK_PROLOGUE except_vec_vi
-+BUILD_SKIPOVER_PROLOGUE except_vec_vi
- NESTED(except_vec_vi, 0, sp)
- 	SAVE_SOME docfi=1
- 	SAVE_AT docfi=1
-diff --git a/arch/mips/kernel/traps.c b/arch/mips/kernel/traps.c
-index 39e248d0ed59..8ec1e185b35c 100644
---- a/arch/mips/kernel/traps.c
-+++ b/arch/mips/kernel/traps.c
-@@ -77,7 +77,7 @@
- #include "access-helper.h"
- 
- extern void check_wait(void);
--extern asmlinkage void rollback_handle_int(void);
-+extern asmlinkage void skipover_handle_int(void);
- extern asmlinkage void handle_int(void);
- extern asmlinkage void handle_adel(void);
- extern asmlinkage void handle_ades(void);
-@@ -2066,7 +2066,7 @@ void *set_vi_handler(int n, vi_handler_t addr)
- {
- 	extern const u8 except_vec_vi[];
- 	extern const u8 except_vec_vi_ori[], except_vec_vi_end[];
--	extern const u8 rollback_except_vec_vi[];
-+	extern const u8 skipover_except_vec_vi[];
- 	unsigned long handler;
- 	unsigned long old_handler = vi_handlers[n];
- 	int srssets = current_cpu_data.srsets;
-@@ -2095,7 +2095,7 @@ void *set_vi_handler(int n, vi_handler_t addr)
- 			change_c0_srsmap(0xf << n*4, 0 << n*4);
- 	}
- 
--	vec_start = using_rollback_handler() ? rollback_except_vec_vi :
-+	vec_start = using_skipover_handler() ? skipover_except_vec_vi :
- 					       except_vec_vi;
- #if defined(CONFIG_CPU_MICROMIPS) || defined(CONFIG_CPU_BIG_ENDIAN)
- 	ori_offset = except_vec_vi_ori - vec_start + 2;
-@@ -2426,8 +2426,8 @@ void __init trap_init(void)
- 	if (board_be_init)
- 		board_be_init();
- 
--	set_except_vector(EXCCODE_INT, using_rollback_handler() ?
--					rollback_handle_int : handle_int);
-+	set_except_vector(EXCCODE_INT, using_skipover_handler() ?
-+					skipover_handle_int : handle_int);
- 	set_except_vector(EXCCODE_MOD, handle_tlbm);
- 	set_except_vector(EXCCODE_TLBL, handle_tlbl);
- 	set_except_vector(EXCCODE_TLBS, handle_tlbs);
--- 
-2.49.0
 
