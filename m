@@ -1,248 +1,125 @@
-Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03B47383;
-	Sat,  5 Apr 2025 04:48:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9216383;
+	Sat,  5 Apr 2025 04:54:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743828508; cv=none; b=QgF0J7cbMGDB32H7Wg4iK4J/RoH0Vk/5yX5tzVHGBw4r3YYIR1+8J76Wi5/syQYhqd9pL+zMSM7gNm7s1mwntugWzaO0nQ4sHBRq7+HZRsGCgi+ChoQ8ZRhZE0oVQ91FXUIQYl67bJxSALV98zJp+MjNyFRU9fr2U7y7jeVGvY0=
+	t=1743828884; cv=none; b=QkvJdgGr39brcP/A1Mct98cPRx0+oAnDkNlxEIPogXEYZZa5i2DM40Arh+WTPbVfR14/GI9TS/2e1Z+QMnHuSNogWC6MpLb9+5BJYvAs0zr8Agsq8o3aGrMaBqqSaolFISlw/Cz2DX7UCNN2aN98NLzVUCwYwgY/UzytHBL0rDA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743828508; c=relaxed/simple;
-	bh=7mIr9M2omHGTkBUxaaJB3QxfmS2mOT5iUI9JQCvVPkU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=uY94CAqxJ/ztIYzQsQCtfVAvoVpzEGKntAU2dV5UEnmtRmHCsQo70vZTsCdxdSa7lhY1p5FyYZ6d+AtUvRvLWs1O7Z0vRdHPBLURsnCewqltSsI0BOJ/KFBAO3MTZdNaX9Crss7vQozezuEe8RJQHE6BXSWMi4G7D0rSUsDNpqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IRpQ955m; arc=none smtp.client-ip=209.85.215.171
+	s=arc-20240116; t=1743828884; c=relaxed/simple;
+	bh=nG1KfMCi21VkoOyncF8iU+MfDl1vw2VY6RLzovYDyHA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=B1IRf0drt3dc7tSDnhlU6VduJYXPf0bJWiftlMpRiHJ4mXCoak/kXvjjq866nwDDdZFy1E23cQow3F/WAybsTi6JjxrB6nHCDTBiFwN2jxC3aSswobfq6pdFdKh8RfF0EafAaY61YZHOzoFbttxOkKoW2De61btoZa0spyG9MjU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ca5kWAPj; arc=none smtp.client-ip=209.85.218.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IRpQ955m"
-Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-af980595952so1771036a12.2;
-        Fri, 04 Apr 2025 21:48:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ca5kWAPj"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-abec8b750ebso437325466b.0;
+        Fri, 04 Apr 2025 21:54:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743828506; x=1744433306; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1743828881; x=1744433681; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=MOkDjWl0tPtnVRw3Yhbh47uy8y4J+a0KMVbJXu1GpRE=;
-        b=IRpQ955mGJKVV1QQYkX85CAmgZ+dKTw8pqUNRMgorOJerqRwarran25gtjTR74LD+T
-         QXl/ZUl1NDyNOEPWd6ZAzTlrLMmE0oDCgbHSUStx80SfYdtrbEWCqwVWM9N7grNfFDlM
-         dt/pekiAvyvTXMiExk9JYVUk+KQpUCRUDlak7IlmcGxnp3070DLDwkVNxZ9mhCvedyin
-         NjV3OD066h889O5mPWEfQQ6GBY9PaenFQ0OomjQqrTgtmKPCV4zBSYYWghh/99nGUvii
-         0AUi9MlXJLCHUJmcoglO6fQgIUQmlFWlKxjIjeJfKAPjtinhxphD3pGoyfsdpqw7lwLr
-         /4Tw==
+        bh=FgwIujxgtv6O8+KgB2lsc89nQ1Y4gBaGdTYk/GzsDIk=;
+        b=Ca5kWAPjb9AAtRmQOBhLdObOZKkEgjuitVau4Hs/er7nRWN/GRDkCfzH4OBAN6I4OZ
+         X+3YTSDEVBK4debHJjpYhn13Glv9Bq+t9h9bigvBp4mNp8B3ScLIv33vg58DUimjSVh9
+         a4amDgCm/t4GBjGspM97PinyVSSb8W5wUvOPquz5a2ED3eSYErsHQ7Tj+B9dU6AmkLa1
+         L7XRbgmKV1CJg9kV/AcbTkHUcL+kGJH0YRGKP2cC41U/tBienOw8gagUuEm2e2kpDcbm
+         K9i3xu4lvdtKfHqT250GB3FurDSU6BDmcLKJKJcNAYVQN+1ffaAEPnFsNQ7O3JIXNkkV
+         Vpuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743828506; x=1744433306;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1743828881; x=1744433681;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=MOkDjWl0tPtnVRw3Yhbh47uy8y4J+a0KMVbJXu1GpRE=;
-        b=ExNSwgUuTsOqElVXyiFFOBSCwfh8v/eYz20W9FGKMADqsJUp+yfHB2lgHz00XHpZd2
-         Yd140jzAnNJimwUYWrBTcPoMdqhEG3WhLEvSNq9NgTTtrvOE0y5XOngEeSEXDVSlZ8sb
-         /hfehFutnReQWv2h2brEctHuddhZ2oRqpcIeajWKAmu4Lgxf73/Y4t3e1hFrMBQy9C+j
-         xU2p+Kfa8+xENEALFAKxtiTsGXPRm+bnD4nrqsvjFf7ryeS3uhgOHqbrchBlAwnpFO0z
-         D5F67iB7RBeV+ZSP+nxWUwvaK2CvArqhawy/c0+wGD+Y+gH4VJlDU8FiuoO2slBBoom3
-         pBAg==
-X-Forwarded-Encrypted: i=1; AJvYcCWcZ6OGMdlW6xqn8ueGa/Rtdn1ClziowYY9sO/cBKL033EBxVYVtb75Ax2E7Kz0I6LdDZd9gam0wxfts1U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzTY8cYM4+P6byya1LoXePLhVYfBjl6T4FjUoBSuApXtVFv/Sj/
-	seFzUflzE/Gi5aezCQg/K9Uoqbnp29Q+kH7w9NW1JFjCuBGmY6fH
-X-Gm-Gg: ASbGncu2tQ2zF5BBgfyCDtj6MfOVrndiHc4MU+g2/lwldNZsFgHW7vqCW389RuZgyoj
-	tSJ1xX+aT+hpKMBblys6bM9iCLOIN6m/ilddI4WTFeGOkIo5ADqEIFWQ/SAaqk2b61ErJeQdh1b
-	k+mlmL5sh0AnJpL1LkUL474+OLNmPkRTgrV0r91xm7XX76V2dtjmKYV84R7Ayd0HZgieJnTb3QC
-	74WyU8eDpM4ko/iTY6BwGW94bbwrp4JwgQe1SJVItKBx+gqhADNhJrz6SU8nRxkWd5vfl5t4CFV
-	aEcYyGlcJB//tSUqoG+NUuWSYwEMvzOSWdEdCEuPfw457PxhVyKQhX/+NQB8DnHDHzD+sDZEFtJ
-	jnKHbX1L6ks62IC9sPKkSD6MT0FfeJ30=
-X-Google-Smtp-Source: AGHT+IHayKYESoyQUebzW8OHMxuspJNCiiNnavvSdkWttXkg7u4SpFb0YVtZ8myPQ+8pc7VdcOH8RQ==
-X-Received: by 2002:a17:90b:50c7:b0:2ff:71ad:e84e with SMTP id 98e67ed59e1d1-306a612c906mr7676516a91.10.1743828506170;
-        Fri, 04 Apr 2025 21:48:26 -0700 (PDT)
-Received: from localhost.localdomain (p12284229-ipxg45101marunouchi.tokyo.ocn.ne.jp. [60.39.60.229])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3057ca5163fsm5196338a91.19.2025.04.04.21.48.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Apr 2025 21:48:25 -0700 (PDT)
-From: Ryo Takakura <ryotkkr98@gmail.com>
-To: alex@ghiti.fr,
-	aou@eecs.berkeley.edu,
-	bigeasy@linutronix.de,
-	conor.dooley@microchip.com,
-	gregkh@linuxfoundation.org,
-	jirislaby@kernel.org,
-	john.ogness@linutronix.de,
-	palmer@dabbelt.com,
-	paul.walmsley@sifive.com,
-	pmladek@suse.com,
-	samuel.holland@sifive.com,
-	u.kleine-koenig@baylibre.com
-Cc: linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-serial@vger.kernel.org,
-	Ryo Takakura <ryotkkr98@gmail.com>
-Subject: [PATCH v4 2/2] serial: sifive: Switch to nbcon console
-Date: Sat,  5 Apr 2025 13:47:39 +0900
-Message-Id: <20250405044739.397456-1-ryotkkr98@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250405043833.397020-1-ryotkkr98@gmail.com>
-References: <20250405043833.397020-1-ryotkkr98@gmail.com>
+        bh=FgwIujxgtv6O8+KgB2lsc89nQ1Y4gBaGdTYk/GzsDIk=;
+        b=LXcIMpxrDPEowXTlKUEc41nlwD2dVYr6FW0VCUSAFgFpTka5YvCVpHbfNRtnIKXraa
+         jFZvBQZLN814s0UKTW+noejnPs//rDzeeo5rjXXegYgHy+9RfTKJCEG+FjSGG8ZuFSVQ
+         otq7t6StlAL7FLg5AbX68yuOhvb/QnyBlLYhUb32mUr92+hiyIic2qxgueyPyW4TLORo
+         maj5DqRrerGtF4UZG88VZEwxIfJ765pgJIwWwWdtR96jhlJkb0eZKFRtyGfrJqmKEMKn
+         WxGif6H5+MnVupP4CUZIyRugfvV6i+B7tyRVlIDA2bQDUbEWFQd1RZjtAPAPsdlxPGl7
+         p00w==
+X-Forwarded-Encrypted: i=1; AJvYcCVFizq6ZlVFM7nrVQQIwuueLwJ3Y7cc+WYg1awbw/w2nFCkMbFviK0xFSZov6SL8OvYS559ify7RWOk7yUj@vger.kernel.org, AJvYcCXa7ATjzt7qQ26br1a3PLI5u67HatvgB/NyP1ZLef+jgtF4TO6+t2jc5AKgCS9/JekTVFVPrEn9iXL260JP@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxf75OY0+04CJOF9ozRzfNOWnDkh2TJsb5CB5STZeIjUASoMx2Q
+	dXEVs/dzhnOtnq3lftwpQB4sWXcusf7DZ4mDwceRXvMEV342YY9FYrQnOKou/IHq1tijf0vXv2y
+	Oeg0fc+bitOAnV774IhxhlMo9fls=
+X-Gm-Gg: ASbGncuJEZup4RDR98dGBFF2VeDTJClJSyMGnCg7Rq/pu0JGHjo4WI6qj/fCtnkPSf4
+	v3SSJQfLMhtpLsmui7HB5uM6KCyoRYKIb36+3zpMIYWKNyhdYue/Bo2dTPfYmfgGUr0CeBFDjB+
+	O2l9DhU0nhR+95Fqp0UPnGjHM/W/XF7NJyI4QP
+X-Google-Smtp-Source: AGHT+IHGm6jty/xrik/LLAA2yfqwc3FBj+1A8wlfL2BLBGLK9diLFUNYnjX3V31wG5kbaDGMuimmimOUYBPG1ZUQojo=
+X-Received: by 2002:a17:907:980a:b0:ac2:1c64:b0a with SMTP id
+ a640c23a62f3a-ac7e71b254amr134374366b.14.1743828880636; Fri, 04 Apr 2025
+ 21:54:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250404-aphorismen-reibung-12028a1db7e3@brauner>
+In-Reply-To: <20250404-aphorismen-reibung-12028a1db7e3@brauner>
+From: Mateusz Guzik <mjguzik@gmail.com>
+Date: Sat, 5 Apr 2025 06:54:28 +0200
+X-Gm-Features: ATxdqUErTBYUalbu-PjJY5f368bM4E-9i7AOj9x_3AzQ16plWjvFowNSDLsYL4o
+Message-ID: <CAGudoHErv6sX+Tq=NNLL3b61Q70TeZxi93Nx_MEcMrQSg47JGA@mail.gmail.com>
+Subject: Re: [PATCH] anon_inode: use a proper mode internally
+To: Christian Brauner <brauner@kernel.org>
+Cc: Christoph Hellwig <hch@infradead.org>, Penglei Jiang <superman.xpt@gmail.com>, viro@zeniv.linux.org.uk, 
+	jack@suse.cz, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzbot+5d8e79d323a13aa0b248@syzkaller.appspotmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add the necessary callbacks(write_atomic, write_thread, device_lock
-and device_unlock) and CON_NBCON flag to switch the sifive console
-driver to perform as nbcon console.
+On Fri, Apr 4, 2025 at 12:39=E2=80=AFPM Christian Brauner <brauner@kernel.o=
+rg> wrote:
+>
+> This allows the VFS to not trip over anonymous inodes and we can add
+> asserts based on the mode into the vfs. When we report it to userspace
+> we can simply hide the mode to avoid regressions. I've audited all
+> direct callers of alloc_anon_inode() and only secretmen overrides i_mode
+> and i_op inode operations but it already uses a regular file.
+>
+[snip]
+> diff --git a/fs/libfs.c b/fs/libfs.c
+> index 6393d7c49ee6..0ad3336f5b49 100644
+> --- a/fs/libfs.c
+> +++ b/fs/libfs.c
+> @@ -1647,7 +1647,7 @@ struct inode *alloc_anon_inode(struct super_block *=
+s)
+>          * that it already _is_ on the dirty list.
+>          */
+>         inode->i_state =3D I_DIRTY;
+> -       inode->i_mode =3D S_IRUSR | S_IWUSR;
+> +       inode->i_mode =3D S_IFREG | S_IRUSR | S_IWUSR;
+>         inode->i_uid =3D current_fsuid();
+>         inode->i_gid =3D current_fsgid();
+>         inode->i_flags |=3D S_PRIVATE;
 
-Both ->write_atomic() and ->write_thread() will check for console
-ownership whenever they are accessing registers.
+Switching the mode to S_IFREG imo can open a can of worms (perhaps a
+dedicated in-kernel only mode would be better? S_IFANON?), but that's
+a long and handwave-y subject, so I'm going to stop at this remark.
 
-The ->device_lock()/unlock() will provide the additional serilization
-necessary for ->write_thread() which is called from dedicated printing
-thread.
+I think the key here is to provide an invariant that anon inodes don't
+pass MAY_EXEC in may_open() regardless of their specific i_mode and
+which the kernel fails to provide at the moment afaics.
 
-Signed-off-by: Ryo Takakura <ryotkkr98@gmail.com>
-Reviewed-by: John Ogness <john.ogness@linutronix.de>
----
- drivers/tty/serial/sifive.c | 87 +++++++++++++++++++++++++++++++------
- 1 file changed, 74 insertions(+), 13 deletions(-)
+With the patch as proposed in the other thread this is handled with
+MAY_EXEC check added to the default: clause.
 
-diff --git a/drivers/tty/serial/sifive.c b/drivers/tty/serial/sifive.c
-index 054a8e630..8f7f770ec 100644
---- a/drivers/tty/serial/sifive.c
-+++ b/drivers/tty/serial/sifive.c
-@@ -151,6 +151,7 @@ struct sifive_serial_port {
- 	unsigned long		baud_rate;
- 	struct clk		*clk;
- 	struct notifier_block	clk_notifier;
-+	bool			console_line_ended;
- };
- 
- /*
-@@ -785,33 +786,88 @@ static void sifive_serial_console_putchar(struct uart_port *port, unsigned char
- 
- 	__ssp_wait_for_xmitr(ssp);
- 	__ssp_transmit_char(ssp, ch);
-+
-+	ssp->console_line_ended = (ch == '\n');
-+}
-+
-+static void sifive_serial_device_lock(struct console *co, unsigned long *flags)
-+{
-+	struct uart_port *up = &sifive_serial_console_ports[co->index]->port;
-+
-+	__uart_port_lock_irqsave(up, flags);
-+}
-+
-+static void sifive_serial_device_unlock(struct console *co, unsigned long flags)
-+{
-+	struct uart_port *up = &sifive_serial_console_ports[co->index]->port;
-+
-+	__uart_port_unlock_irqrestore(up, flags);
- }
- 
--static void sifive_serial_console_write(struct console *co, const char *s,
--					unsigned int count)
-+static void sifive_serial_console_write_atomic(struct console *co,
-+					       struct nbcon_write_context *wctxt)
- {
- 	struct sifive_serial_port *ssp = sifive_serial_console_ports[co->index];
--	unsigned long flags;
-+	struct uart_port *port = &ssp->port;
- 	unsigned int ier;
--	int locked = 1;
- 
- 	if (!ssp)
- 		return;
- 
--	if (oops_in_progress)
--		locked = uart_port_trylock_irqsave(&ssp->port, &flags);
--	else
--		uart_port_lock_irqsave(&ssp->port, &flags);
-+	if (!nbcon_enter_unsafe(wctxt))
-+		return;
- 
- 	ier = __ssp_readl(ssp, SIFIVE_SERIAL_IE_OFFS);
- 	__ssp_writel(0, SIFIVE_SERIAL_IE_OFFS, ssp);
- 
--	uart_console_write(&ssp->port, s, count, sifive_serial_console_putchar);
-+	if (!ssp->console_line_ended)
-+		uart_console_write(port, "\n", 1, sifive_serial_console_putchar);
-+	uart_console_write(port, wctxt->outbuf, wctxt->len,
-+			   sifive_serial_console_putchar);
- 
- 	__ssp_writel(ier, SIFIVE_SERIAL_IE_OFFS, ssp);
- 
--	if (locked)
--		uart_port_unlock_irqrestore(&ssp->port, flags);
-+	nbcon_exit_unsafe(wctxt);
-+}
-+
-+static void sifive_serial_console_write_thread(struct console *co,
-+					       struct nbcon_write_context *wctxt)
-+{
-+	struct sifive_serial_port *ssp = sifive_serial_console_ports[co->index];
-+	struct uart_port *port = &ssp->port;
-+	unsigned int ier;
-+
-+	if (!ssp)
-+		return;
-+
-+	if (!nbcon_enter_unsafe(wctxt))
-+		return;
-+
-+	ier = __ssp_readl(ssp, SIFIVE_SERIAL_IE_OFFS);
-+	__ssp_writel(0, SIFIVE_SERIAL_IE_OFFS, ssp);
-+
-+	if (nbcon_exit_unsafe(wctxt)) {
-+		int len = READ_ONCE(wctxt->len);
-+		int i;
-+
-+		for (i = 0; i < len; i++) {
-+			if (!nbcon_enter_unsafe(wctxt))
-+				break;
-+
-+			uart_console_write(port, wctxt->outbuf + i, 1,
-+					   sifive_serial_console_putchar);
-+
-+			if (!nbcon_exit_unsafe(wctxt))
-+				break;
-+		}
-+	}
-+
-+	while (!nbcon_enter_unsafe(wctxt))
-+		nbcon_reacquire_nobuf(wctxt);
-+
-+	__ssp_writel(ier, SIFIVE_SERIAL_IE_OFFS, ssp);
-+
-+	nbcon_exit_unsafe(wctxt);
- }
- 
- static int sifive_serial_console_setup(struct console *co, char *options)
-@@ -829,6 +885,8 @@ static int sifive_serial_console_setup(struct console *co, char *options)
- 	if (!ssp)
- 		return -ENODEV;
- 
-+	ssp->console_line_ended = true;
-+
- 	if (options)
- 		uart_parse_options(options, &baud, &parity, &bits, &flow);
- 
-@@ -839,10 +897,13 @@ static struct uart_driver sifive_serial_uart_driver;
- 
- static struct console sifive_serial_console = {
- 	.name		= SIFIVE_TTY_PREFIX,
--	.write		= sifive_serial_console_write,
-+	.write_atomic	= sifive_serial_console_write_atomic,
-+	.write_thread	= sifive_serial_console_write_thread,
-+	.device_lock	= sifive_serial_device_lock,
-+	.device_unlock	= sifive_serial_device_unlock,
- 	.device		= uart_console_device,
- 	.setup		= sifive_serial_console_setup,
--	.flags		= CON_PRINTBUFFER,
-+	.flags		= CON_PRINTBUFFER | CON_NBCON,
- 	.index		= -1,
- 	.data		= &sifive_serial_uart_driver,
- };
--- 
-2.34.1
+With your patch this is going to depend on the i_mode not allowing
+exec or at least the anon inode having a mount or sb with noexec flags
+(thus failing path_noexec() check), but from code reading I'm not at
+all confident it has one (if it does not, it should get it). Merely
+depending on mode is imo too risky as sooner or later there may be a
+way to add +x to it. That is to say I think your patch works, provided
+the backing mount or sb for anon inodes is guaranteed to have noexec
+on it.
 
+
+
+
+--
+Mateusz Guzik <mjguzik gmail.com>
