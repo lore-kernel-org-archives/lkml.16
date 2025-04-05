@@ -1,28 +1,33 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA5F215AF6;
-	Sat,  5 Apr 2025 07:43:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F329B3FC3;
+	Sat,  5 Apr 2025 07:48:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743839040; cv=none; b=m8GqIbFB8JzlkBjeS6JPVVg/+c4aF3Zbi33vK+PjIW9K7PszMK8Aaull6XEs6rN9oUqNKn06HX5k02E2Pp5y+GhNyPKGUrHCl+j51kOvBuPCesL0VTKxHDNYyC40wSPjOhSFs6RagyMcXFgIHFMJ5ZxmP+BCsYk+4XCMGKAt9GI=
+	t=1743839336; cv=none; b=Vi15MWxaLRxJr05Agp4RIcJ6lQkNnTWxkNp3937Yc7rUSDJphyX7xPc1sia/5tGXbGPtoy5mjwoq2xn5fXS7RRRi7p23gQg2ygJy3O55tyH9Wlk6yVxGFjG0p1EKDITVp4PkVI4OeoKbV9H3T7LJtr4n6trzcS+/eY0fsv4FGKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743839040; c=relaxed/simple;
-	bh=0LUP14LmWesBPAsxBEvQb6xYnuZfcBhUaCYe7j9olQY=;
+	s=arc-20240116; t=1743839336; c=relaxed/simple;
+	bh=qSAjI2E+tEYEM0N/MFL6Ug4lRw8s4ygUndqmmsXk7U8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Qx2otDgHsxqZYmt9es7jdo9jjTQJkf7SpydJtOnzlp5ntNhuc4WdgOe2eWQ3HDv7NNcjB9LwktbMceLOOOi4GVCy+S1YPK1+VH953GpbAieJm5EUsyeOp/EbnExueHOzZvkaPj2i5LL3SsKJ0RBB8E76eARpt/scuhv16Ta0V+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [192.168.0.2] (ip5f5af06b.dynamic.kabel-deutschland.de [95.90.240.107])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id ACAF361E6479B;
-	Sat, 05 Apr 2025 09:43:29 +0200 (CEST)
-Message-ID: <417f41b3-b343-46ca-9efe-fa815e85bdd3@molgen.mpg.de>
-Date: Sat, 5 Apr 2025 09:43:29 +0200
+	 In-Reply-To:Content-Type; b=ALHjguU+3z3FXpePacMq5BwYqrYSOUoW4mzkam3yz9DE3lXqRAJRt3cqhrpLhK10MOu2dBy59Gbx6OIwJSCWian3DqZZHwJhZ1FMrHlLPo4dH4m7CkCFmRAhGEoMXyun755enBp9inPURRWfmkaNMzgSTrnCUAuVML1QjwSos7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ysvju0Ij; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ysvju0Ij"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1773C4CEE4;
+	Sat,  5 Apr 2025 07:48:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743839335;
+	bh=qSAjI2E+tEYEM0N/MFL6Ug4lRw8s4ygUndqmmsXk7U8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Ysvju0IjPsxskJ9tgek7o9PMWwtfb4UKUUo6G3cKCOxGgD5qIlc26qJhXVQWDfJfa
+	 6jOZb3O7h4LiyXSJ3OdcWwW95uXZXKfxTm+ABJbAcR53nGA6QWgiT89PgiAAqvBbE4
+	 IMTdZMRiM8x8sk0lR8nfLvK48U+SegTgvrZFLHs9VWtc5pNNqh7+FEHUOJlVqMDouM
+	 fIGBCuGMpr6rJUTU+VZoRS6vn6RP90UOi+zTY1KIfppmfhyd/H6w72a4JiDc3l33rG
+	 uDhtLBa0MHKaZr200PuwP7ox+97zB1tAR7K6okIBHszjktrmCzA5ST8Xl/ETrIplGn
+	 jrDzkt1VtzRDg==
+Message-ID: <5cfdb91e-54d3-4871-a09c-5ece37099b6a@kernel.org>
+Date: Sat, 5 Apr 2025 09:48:47 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -30,109 +35,105 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] Chrome and VSCode breakage with the commit
- b9b588f22a0c
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Chuck Lever <chuck.lever@oracle.com>, Takashi Iwai <tiwai@suse.de>,
- linux-fsdevel@vger.kernel.org, stable@vger.kernel.org,
- regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
- Christian Brauner <brauner@kernel.org>
-References: <874j0lvy89.wl-tiwai@suse.de> <87wmc83uaf.wl-tiwai@suse.de>
- <445aeb83-5d84-4b4b-8d87-e7f17c97e6bf@oracle.com>
- <16e0466d-1f16-4e9a-9799-4c01bd2bb005@molgen.mpg.de>
- <2025040551-catatonic-reflex-2ebf@gregkh>
+Subject: Re: [PATCH v3 03/10] dt-bindings: display: msm: document DSI
+ controller and phy on SA8775P
+To: Ayushi Makhija <quic_amakhija@quicinc.com>,
+ linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: robdclark@gmail.com, dmitry.baryshkov@linaro.org, sean@poorly.run,
+ marijn.suijten@somainline.org, andersson@kernel.org, robh@kernel.org,
+ robh+dt@kernel.org, krzk+dt@kernel.org, konradybcio@kernel.org,
+ conor+dt@kernel.org, andrzej.hajda@intel.com, neil.armstrong@linaro.org,
+ rfoss@kernel.org, Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
+ jernej.skrabec@gmail.com, quic_abhinavk@quicinc.com,
+ quic_rajeevny@quicinc.com, quic_vproddut@quicinc.com,
+ quic_jesszhan@quicinc.com
+References: <20250404115539.1151201-1-quic_amakhija@quicinc.com>
+ <20250404115539.1151201-4-quic_amakhija@quicinc.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <2025040551-catatonic-reflex-2ebf@gregkh>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Autocrypt: addr=krzk@kernel.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
+ FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
+ QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
+ gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
+ /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
+ iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
+ VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
+ 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
+ xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
+ eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
+ AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
+ MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
+ Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
+ MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
+ OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
+ GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
+ 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
+ YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
+ 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
+ BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
+ JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
+ 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
+ YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
+ Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
+ ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
+ vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
+ oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
+ lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
+ t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
+ uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
+ 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
+ 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
+In-Reply-To: <20250404115539.1151201-4-quic_amakhija@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Dear Greg,
-
-
-Thank you for replying on a Saturday.
-
-Am 05.04.25 um 09:29 schrieb Greg KH:
-> On Sat, Apr 05, 2025 at 08:32:13AM +0200, Paul Menzel wrote:
-
->> Am 29.03.25 um 15:57 schrieb Chuck Lever:
->>> On 3/29/25 8:17 AM, Takashi Iwai wrote:
->>>> On Sun, 23 Feb 2025 09:53:10 +0100, Takashi Iwai wrote:
->>
->>>>> we received a bug report showing the regression on 6.13.1 kernel
->>>>> against 6.13.0.  The symptom is that Chrome and VSCode stopped working
->>>>> with Gnome Scaling, as reported on openSUSE Tumbleweed bug tracker
->>>>>     https://bugzilla.suse.com/show_bug.cgi?id=1236943
->>>>>
->>>>> Quoting from there:
->>>>> """
->>>>> I use the latest TW on Gnome with a 4K display and 150%
->>>>> scaling. Everything has been working fine, but recently both Chrome
->>>>> and VSCode (installed from official non-openSUSE channels) stopped
->>>>> working with Scaling.
->>>>> ....
->>>>> I am using VSCode with:
->>>>> `--enable-features=UseOzonePlatform --enable-features=WaylandWindowDecorations --ozone-platform-hint=auto` and for Chrome, I select `Preferred Ozone platform` == `Wayland`.
->>>>> """
->>>>>
->>>>> Surprisingly, the bisection pointed to the backport of the commit
->>>>> b9b588f22a0c049a14885399e27625635ae6ef91 ("libfs: Use d_children list
->>>>> to iterate simple_offset directories").
->>>>>
->>>>> Indeed, the revert of this patch on the latest 6.13.4 was confirmed to
->>>>> fix the issue.  Also, the reporter verified that the latest 6.14-rc
->>>>> release is still affected, too.
->>>>>
->>>>> For now I have no concrete idea how the patch could break the behavior
->>>>> of a graphical application like the above.  Let us know if you need
->>>>> something for debugging.  (Or at easiest, join to the bugzilla entry
->>>>> and ask there; or open another bug report at whatever you like.)
->>>>>
->>>>> BTW, I'll be traveling tomorrow, so my reply will be delayed.
->>
->>>>> #regzbot introduced: b9b588f22a0c049a14885399e27625635ae6ef91
->>>>> #regzbot monitor: https://bugzilla.suse.com/show_bug.cgi?id=1236943
->>>>
->>>> After all, this seems to be a bug in Chrome and its variant, which was
->>>> surfaced by the kernel commit above: as the commit changes the
->>>> directory enumeration, it also changed the list order returned from
->>>> libdrm drmGetDevices2(), and it screwed up the application that worked
->>>> casually beforehand.  That said, the bug itself has been already
->>>> present.  The Chrome upstream tracker:
->>>>     https://issuetracker.google.com/issues/396434686
->>>>
->>>> #regzbot invalid: problem has always existed on Chrome and related code
->>
->>> Thank you very much for your report and for chasing this to conclusion.
->> Doesn’t marking this an invalid contradict Linux’ no regression policy to
->> never break user space, so users can always update the Linux kernel?
->> Shouldn’t this commit still be reverted, and another way be found keeping
->> the old ordering?
->>
->> Greg, Sasha, in stable/linux-6.13.y the two commits below would need to be
->> reverted:
->>
->> 180c7e44a18bbd7db89dfd7e7b58d920c44db0ca
->> d9da7a68a24518e93686d7ae48937187a80944ea
->>
->> For stable/linux-6.12.y:
->>
->> 176d0333aae43bd0b6d116b1ff4b91e9a15f88ef
->> 639b40424d17d9eb1d826d047ab871fe37897e76
+On 04/04/2025 13:55, Ayushi Makhija wrote:
+> Document DSI controller and phy on SA8775P platform.
 > 
-> Unless the changes are also reverted in Linus's tree, we'll be keeping
-> these in.  Please work with the maintainers to resolve this in mainline
-> and we will be glad to mirror that in the stable trees as well.
+> Signed-off-by: Ayushi Makhija <quic_amakhija@quicinc.com>
+> ---
+>  .../display/msm/qcom,sa8775p-mdss.yaml        | 183 +++++++++++++++++-
+>  1 file changed, 182 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/msm/qcom,sa8775p-mdss.yaml b/Documentation/devicetree/bindings/display/msm/qcom,sa8775p-mdss.yaml
+> index 5fac3e266703..1be26137b7b6 100644
+> --- a/Documentation/devicetree/bindings/display/msm/qcom,sa8775p-mdss.yaml
+> +++ b/Documentation/devicetree/bindings/display/msm/qcom,sa8775p-mdss.yaml
+> @@ -52,12 +52,25 @@ patternProperties:
+>          items:
+>            - const: qcom,sa8775p-dp
+>  
+> +  "^dsi@[0-9a-f]+$":
+> +    type: object
+> +    additionalProperties: true
+> +    properties:
+> +      compatible:
+> +        contains:
+> +          enum:
 
-Commit b9b588f22a0c (libfs: Use d_children list to iterate simple_offset 
-directories) does not have a Fixes: tag or Cc: stable@vger.kernel.org. I 
-do not understand, why it was applied to the stable series at all [1], 
-and cannot be reverted when it breaks userspace?
+huh?
+
+> +            - qcom,sa8775p-dsi-ctrl
+> +            - qcom,mdss-dsi-ctrl
+
+This makes no sense and I am pretty sure it breaks everything and was
+not tested.
+
+All previous comments apply.
 
 
-Kind regards,
-
-Paul
-
-
-[1]: https://docs.kernel.org/process/stable-kernel-rules.html
+Best regards,
+Krzysztof
