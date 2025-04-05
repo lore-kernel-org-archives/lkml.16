@@ -1,273 +1,198 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1054F70838;
-	Sat,  5 Apr 2025 17:45:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BE0070838
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 17:51:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743875130; cv=none; b=YALZjCh4w1vERhvtbGaeZoheNPTE59EJYPDMEvooIgjOCDCpfa2lV0CDhzNhvjUcIO9TCfipiqW8SRISVYB2DvHnhsEHY8Lp42vL1QP+KGl9wUMzDyYz1zZQ3iksiSy0ChxTrCKBnJaaO57EvpCVT2ebpOA6Hdpy5yilW/QPnq8=
+	t=1743875506; cv=none; b=D5Yo4ptsXQbveieszBUi5TxuOxaGMMW2+WraveYzGpBISZkxC2DIDwun0APnNtOmnR67Q2oj4L97DZOripZ4qecqcx4gjXLXKqIUZM2suTT6Ac/9QF9rFCYTMWhgvEQDhm76OlA5AhWdnQpLicevVgZv80m5xcMXLn7oGrDFBCI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743875130; c=relaxed/simple;
-	bh=Ml9G9ULATq3giFLsg/UVYtT11OMEdGKcJeqrvzQu3eI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Xr9f2TQe8xNUvPXTZsioQYtMAWmKISUBLB0zfDvpovA21o6KmhoNOwCjpXqWbCI16brJdFfx/ZW5Y7Z4hDDZRd34810x9Bp1QDo9rjkprZSVbXO40QZGfd842lThCW+3UMmb/gSFngsmTcmkdxPfa/JR/z6KxSsLG4JyQVghwXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TmRji+Lq; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743875506; c=relaxed/simple;
+	bh=mOrCQuammENPolmsvjWIWW9WrnDeWqx/DzuZM5FjbG4=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=u7WD417TJ+8kJ6tzuVWdLxd1qtKdCHNzHEWxmJCt8VVeoJj5sXGad6rfVuQ7esEiEfrh52OyuneBkf7lJYP+q30fmZdNWggWe/SU+eHPDPB/KKdzPod5VOSUKujRKGU7GZtVK7CvXDSe0+fMlaIQD68nW22FwH75IGh6bbnGKJo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iyB91aWB; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TmRji+Lq"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-736c1138ae5so2981998b3a.3;
-        Sat, 05 Apr 2025 10:45:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743875128; x=1744479928; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=k8JylLaT6hrTHNf9AdJnwsccmzcqkaZsXAyvhlHxaK0=;
-        b=TmRji+LqVua4MGN+HtNuzWADrYAWcDQJZCx4pT5t3fZlt6b0rcytRmgJoM91blIHEO
-         z09NENUdWDFlOB+ay1hKSLsEUx005dhIhRPfJ5aum+C+AcvDBVChr5Ybq2jLrD7Tkcca
-         aZdLH1P2aLNKaCMeZ8iaQJ3T/71j6Q+SFVKovd5Q9CUhBGXmqTDVjZq3+WHwm41Lcria
-         eSz/qAfKEW8NJVcBNxJ7asQGUfuvjYn31T2I0C+54aLzWxvOoe+IZuzjJji5mVuaQuba
-         zsIBM478wQST4HdRt8oXqO9ZlxqVWIwA+5adnm7Qod4sUAnc0BnY4C/kLyPkcnp/mMpg
-         ARgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743875128; x=1744479928;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=k8JylLaT6hrTHNf9AdJnwsccmzcqkaZsXAyvhlHxaK0=;
-        b=PYTaDgj6wddYNzAIhI/W/pYawrXeNot7Nug35j2GDzRCdZqKFxWBt+JscIHBW9RsBO
-         auHuCm/T8vMnwPR0yz1qWvQmeAAoMGabCAUHGTGhl/zjIlto0AjpH1kYvtAd3xcSr1dK
-         yauSFqPtavTihEoIQXE9KkdehiXAmSzJqEcyBhGt8boXZUgJwNELcUpvftlN2JfOzafT
-         MXjaHKWmTNrazWi/NGxGk0frWKBOVmqIl0A+eLKaM55x5SRmWRjPmXNLrCTxPR5yJgn/
-         cJCz2fd/5jt0p+AnU8Xeil8FBRqmL7t6xuswSj69ZKy/8B3YybUShfQi2w8WuwkvYRPl
-         LChg==
-X-Forwarded-Encrypted: i=1; AJvYcCVhk2+YeHgEHgV5O3BTHf1zcD8ZvkjVXXf78qWmKRsaMGqGb+2hDVvtjsk16lc6MqTAn7TFhQF7FZtEBWid6w==@vger.kernel.org, AJvYcCVwmmy71D9heCfUGxidyDEYj+p3dE6l9E/quhVu5IPn1qNLb8aL+2OboFtO1p9ree/E4835b9GSe5RK92BZ@vger.kernel.org, AJvYcCWoB1CwdhhxHuYccgRxrT2HCHruWug46BFjzpHeBP7LQ6fkWgdvjhHfKvT5j8iyzGy7t5gaE40sICrL@vger.kernel.org
-X-Gm-Message-State: AOJu0Yytv2z+/Rev7tITlTFMxoKUpGmNgwCVwI4tTcNfqjdcneel1PO0
-	LgREgpfJgtiWo3uVr/emP1R+Dw8cpU5qCDaaT8XxQwAssNCbRqUm
-X-Gm-Gg: ASbGncvLdZghbK5evjYcuHY/1R8cwmSSG8GNtC1O0xsEB0N9RRdCeYuQmFrCpNeAhUn
-	RTJobzV73MT/k1sx9MgmrJ+Bdm5gheErKib8oAym3Kp3/BE9Ive0qIrmEw/6M8yzrOAr43vkzNG
-	qtP6xY9/+qzhsAUyukOEYaH/FdHI31yFtees4A7h+6CQjRuuLTX3Tnn/E7LpSsFrOvxK58s3B1o
-	eDkssy896eDRwt71Uh3ZjG0AQ1XEZlNfw7oaQ3kWLX4AbymaGAfX6ZoN6SyJWs51kQAZPBB53F7
-	Tge/8QZlYhz1fGC2BxiMkYqfKqDOFpvWkZJHPx5Y/Hs=
-X-Google-Smtp-Source: AGHT+IE8/SKNOkh3OWD691lYQAnb2nSVSyMVuxAUKB46j38xJ+sPYkhr14o+4KJZ0ykyZ+9mo6MOwg==
-X-Received: by 2002:a05:6a00:a89:b0:737:e73:f64b with SMTP id d2e1a72fcca58-739e48c6f91mr9436320b3a.1.1743875128199;
-        Sat, 05 Apr 2025 10:45:28 -0700 (PDT)
-Received: from nuvole.. ([144.202.86.13])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739d97f2fd3sm5680631b3a.69.2025.04.05.10.45.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Apr 2025 10:45:27 -0700 (PDT)
-From: Pengyu Luo <mitltlatltl@gmail.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>
-Cc: Pengyu Luo <mitltlatltl@gmail.com>,
-	linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-phy@lists.infradead.org
-Subject: [PATCH] phy: qualcomm: phy-qcom-eusb2-repeater: rework reg override handler
-Date: Sun,  6 Apr 2025 01:43:18 +0800
-Message-ID: <20250405174319.405975-1-mitltlatltl@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iyB91aWB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743875505; x=1775411505;
+  h=date:from:to:cc:subject:message-id;
+  bh=mOrCQuammENPolmsvjWIWW9WrnDeWqx/DzuZM5FjbG4=;
+  b=iyB91aWBObraTWJgB50NqEnTK1dkHyXqDbT6rXVhF/Nj7VCvIb4ar0xb
+   INfwIMBrqGC0qz85KFZGN5JNnB73Th7MZIJMIXrk9I75PAMuarWvCg8fs
+   FR54bHoZJYhnr0XUlFcSTZ0JR2gl74ygNZZ64xb2JzZJukWk96HQmTJj7
+   OTxvmefux5nyf2jgARsxGE/AhaVefK883AZs8GzBnJIuDpnVTtsuQyba1
+   nJ769WnxI91l/Sv6lOVN7nQHVWXqqbemfSS7/UH1M9+8mD4o5Q3ec8xq4
+   4hvH9g9niUvtiOEpOGNauyW96EgpsTovUy9zkz5o/07K0q50c+kr8uV7B
+   A==;
+X-CSE-ConnectionGUID: pZmdNjTkRtuwH76wry2vRA==
+X-CSE-MsgGUID: dF7XXCE5R8O6/R+1aIOCZA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11395"; a="45188669"
+X-IronPort-AV: E=Sophos;i="6.15,191,1739865600"; 
+   d="scan'208";a="45188669"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2025 10:51:45 -0700
+X-CSE-ConnectionGUID: L1pXFR8zTcmmaMDEKt8DAA==
+X-CSE-MsgGUID: YYZxmMYARpKwiJEKgJTglg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,191,1739865600"; 
+   d="scan'208";a="127884876"
+Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
+  by fmviesa008.fm.intel.com with ESMTP; 05 Apr 2025 10:51:44 -0700
+Received: from kbuild by b207828170a5 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u17gD-0002C1-1w;
+	Sat, 05 Apr 2025 17:51:41 +0000
+Date: Sun, 06 Apr 2025 01:51:39 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:timers/urgent] BUILD SUCCESS
+ 324a2219ba38b00ab0e53bd535782771ba9614b2
+Message-ID: <202504060128.SBZzzxVE-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-In downstream tree, many registers need to be overrided, it varies
-from devices and platforms, not only HS trasmit amplitude(0x51),
-HS disconnect threshold(0x53), Tx pre-emphasis tuning(0x57).
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers/urgent
+branch HEAD: 324a2219ba38b00ab0e53bd535782771ba9614b2  Revert "timekeeping: Fix possible inconsistencies in _COARSE clockids"
 
-The device I plan to upstream also uses it, so I write the patch for
-it (Oneplus Pad Pro / Oneplus Pad 2, sm8650-mtp based).
+elapsed time: 1450m
 
-In upstream, only Sony Xperia 1 V is using this, so fixing it for sony,
-in downstream, some crd, mtp, htk devices also use it, I have no
-such device, don't set it for them.
+configs tested: 121
+configs skipped: 4
 
-Signed-off-by: Pengyu Luo <mitltlatltl@gmail.com>
----
- .../qcom/sm8550-sony-xperia-yodo-pdx234.dts   |  5 +-
- .../phy/qualcomm/phy-qcom-eusb2-repeater.c    | 86 +++++++++++++++----
- 2 files changed, 72 insertions(+), 19 deletions(-)
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-diff --git a/arch/arm64/boot/dts/qcom/sm8550-sony-xperia-yodo-pdx234.dts b/arch/arm64/boot/dts/qcom/sm8550-sony-xperia-yodo-pdx234.dts
-index d90dc7b37..99f5fd32c 100644
---- a/arch/arm64/boot/dts/qcom/sm8550-sony-xperia-yodo-pdx234.dts
-+++ b/arch/arm64/boot/dts/qcom/sm8550-sony-xperia-yodo-pdx234.dts
-@@ -673,9 +673,8 @@ cam_pwr_a_cs: cam-pwr-a-cs-state {
- };
- 
- &pm8550b_eusb2_repeater {
--	qcom,tune-usb2-disc-thres = /bits/ 8 <0x6>;
--	qcom,tune-usb2-amplitude = /bits/ 8 <0xf>;
--	qcom,tune-usb2-preem = /bits/ 8 <0x7>;
-+	qcom,param-override-seq = <0x51 0x08 0x53 0x06 0x57 0x07>;
-+	qcom,host-param-override-seq = <0x51 0x08 0x53 0x06 0x57 0x07>;
- 	vdd18-supply = <&pm8550_l15>;
- 	vdd3-supply = <&pm8550_l5>;
- };
-diff --git a/drivers/phy/qualcomm/phy-qcom-eusb2-repeater.c b/drivers/phy/qualcomm/phy-qcom-eusb2-repeater.c
-index 6bd1b3c75..151e93cd0 100644
---- a/drivers/phy/qualcomm/phy-qcom-eusb2-repeater.c
-+++ b/drivers/phy/qualcomm/phy-qcom-eusb2-repeater.c
-@@ -76,6 +76,11 @@ struct eusb2_repeater {
- 	const struct eusb2_repeater_cfg *cfg;
- 	u32 base;
- 	enum phy_mode mode;
-+
-+	u32 *param_override_seq;
-+	u32 *host_param_override_seq;
-+	u8 param_override_seq_cnt;
-+	u8 host_param_override_seq_cnt;
- };
- 
- static const char * const pm8550b_vreg_l[] = {
-@@ -108,6 +113,63 @@ static const struct eusb2_repeater_cfg smb2360_eusb2_cfg = {
- 	.num_vregs	= ARRAY_SIZE(pm8550b_vreg_l),
- };
- 
-+static void eusb2_repeater_write_overrides(struct eusb2_repeater *rptr,
-+					   u32 *seq, u8 cnt)
-+{
-+	int i;
-+
-+	for (i = 0; i < cnt; i += 2)
-+		regmap_write(rptr->regmap, rptr->base + seq[i], seq[i + 1]);
-+}
-+
-+static int eusb2_repeater_read_overrides(struct device *dev, const char *prop,
-+					 u32 **seq, u8 *seq_cnt)
-+{
-+	int num_elem, ret;
-+
-+	num_elem = of_property_count_elems_of_size(dev->of_node, prop, sizeof(**seq));
-+	if (num_elem > 0) {
-+		if (num_elem % 2) {
-+			dev_err(dev, "invalid len for %s\n", prop);
-+			return -EINVAL;
-+		}
-+
-+		*seq_cnt = num_elem;
-+		*seq = devm_kcalloc(dev, num_elem, sizeof(**seq), GFP_KERNEL);
-+		if (!*seq)
-+			return -ENOMEM;
-+
-+		ret = of_property_read_u32_array(dev->of_node, prop, *seq, num_elem);
-+		if (ret) {
-+			dev_err(dev, "%s read failed %d\n", prop, ret);
-+			return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static int eusb2_repeater_parse_dt(struct eusb2_repeater *rptr)
-+{
-+	int ret;
-+
-+	ret = of_property_read_u32(rptr->dev->of_node, "reg", &rptr->base);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = eusb2_repeater_read_overrides(rptr->dev, "qcom,param-override-seq",
-+					    &rptr->param_override_seq,
-+					    &rptr->param_override_seq_cnt);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = eusb2_repeater_read_overrides(rptr->dev, "qcom,host-param-override-seq",
-+					    &rptr->host_param_override_seq,
-+					    &rptr->host_param_override_seq_cnt);
-+
-+	return ret;
-+}
-+
- static int eusb2_repeater_init_vregs(struct eusb2_repeater *rptr)
- {
- 	int num = rptr->cfg->num_vregs;
-@@ -127,20 +189,12 @@ static int eusb2_repeater_init_vregs(struct eusb2_repeater *rptr)
- static int eusb2_repeater_init(struct phy *phy)
- {
- 	struct eusb2_repeater *rptr = phy_get_drvdata(phy);
--	struct device_node *np = rptr->dev->of_node;
- 	struct regmap *regmap = rptr->regmap;
- 	const u32 *init_tbl = rptr->cfg->init_tbl;
--	u8 tune_usb2_preem = init_tbl[TUNE_USB2_PREEM];
--	u8 tune_hsdisc = init_tbl[TUNE_HSDISC];
--	u8 tune_iusb2 = init_tbl[TUNE_IUSB2];
- 	u32 base = rptr->base;
- 	u32 val;
- 	int ret;
- 
--	of_property_read_u8(np, "qcom,tune-usb2-amplitude", &tune_iusb2);
--	of_property_read_u8(np, "qcom,tune-usb2-disc-thres", &tune_hsdisc);
--	of_property_read_u8(np, "qcom,tune-usb2-preem", &tune_usb2_preem);
--
- 	ret = regulator_bulk_enable(rptr->cfg->num_vregs, rptr->vregs);
- 	if (ret)
- 		return ret;
-@@ -156,10 +210,9 @@ static int eusb2_repeater_init(struct phy *phy)
- 	regmap_write(regmap, base + EUSB2_TUNE_SQUELCH_U, init_tbl[TUNE_SQUELCH_U]);
- 	regmap_write(regmap, base + EUSB2_TUNE_RES_FSDIF, init_tbl[TUNE_RES_FSDIF]);
- 	regmap_write(regmap, base + EUSB2_TUNE_USB2_CROSSOVER, init_tbl[TUNE_USB2_CROSSOVER]);
--
--	regmap_write(regmap, base + EUSB2_TUNE_USB2_PREEM, tune_usb2_preem);
--	regmap_write(regmap, base + EUSB2_TUNE_HSDISC, tune_hsdisc);
--	regmap_write(regmap, base + EUSB2_TUNE_IUSB2, tune_iusb2);
-+	regmap_write(regmap, base + EUSB2_TUNE_USB2_PREEM, init_tbl[TUNE_USB2_PREEM]);
-+	regmap_write(regmap, base + EUSB2_TUNE_HSDISC, init_tbl[TUNE_HSDISC]);
-+	regmap_write(regmap, base + EUSB2_TUNE_IUSB2, init_tbl[TUNE_IUSB2]);
- 
- 	ret = regmap_read_poll_timeout(regmap, base + EUSB2_RPTR_STATUS, val, val & RPTR_OK, 10, 5);
- 	if (ret)
-@@ -177,6 +230,8 @@ static int eusb2_repeater_set_mode(struct phy *phy,
- 
- 	switch (mode) {
- 	case PHY_MODE_USB_HOST:
-+		eusb2_repeater_write_overrides(rptr, rptr->host_param_override_seq,
-+					       rptr->host_param_override_seq_cnt);
- 		/*
- 		 * CM.Lx is prohibited when repeater is already into Lx state as
- 		 * per eUSB 1.2 Spec. Below implement software workaround until
-@@ -186,6 +241,8 @@ static int eusb2_repeater_set_mode(struct phy *phy,
- 		regmap_write(regmap, base + EUSB2_FORCE_VAL_5, V_CLK_19P2M_EN);
- 		break;
- 	case PHY_MODE_USB_DEVICE:
-+		eusb2_repeater_write_overrides(rptr, rptr->param_override_seq,
-+					       rptr->param_override_seq_cnt);
- 		/*
- 		 * In device mode clear host mode related workaround as there
- 		 * is no repeater reset available, and enable/disable of
-@@ -222,7 +279,6 @@ static int eusb2_repeater_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	struct phy_provider *phy_provider;
- 	struct device_node *np = dev->of_node;
--	u32 res;
- 	int ret;
- 
- 	rptr = devm_kzalloc(dev, sizeof(*rptr), GFP_KERNEL);
-@@ -240,12 +296,10 @@ static int eusb2_repeater_probe(struct platform_device *pdev)
- 	if (!rptr->regmap)
- 		return -ENODEV;
- 
--	ret = of_property_read_u32(np, "reg", &res);
-+	ret = eusb2_repeater_parse_dt(rptr);
- 	if (ret < 0)
- 		return ret;
- 
--	rptr->base = res;
--
- 	ret = eusb2_repeater_init_vregs(rptr);
- 	if (ret < 0) {
- 		dev_err(dev, "unable to get supplies\n");
--- 
-2.49.0
+tested configs:
+alpha                             allnoconfig    gcc-14.2.0
+alpha                            allyesconfig    gcc-14.2.0
+arc                              allmodconfig    gcc-14.2.0
+arc                               allnoconfig    gcc-14.2.0
+arc                              allyesconfig    gcc-14.2.0
+arc                   randconfig-001-20250405    gcc-14.2.0
+arc                   randconfig-002-20250405    gcc-14.2.0
+arm                               allnoconfig    clang-21
+arm                              allyesconfig    gcc-14.2.0
+arm                            hisi_defconfig    gcc-14.2.0
+arm                           imxrt_defconfig    clang-21
+arm                          pxa910_defconfig    gcc-14.2.0
+arm                   randconfig-001-20250405    clang-18
+arm                   randconfig-002-20250405    gcc-7.5.0
+arm                   randconfig-003-20250405    gcc-8.5.0
+arm                   randconfig-004-20250405    clang-21
+arm                        spear3xx_defconfig    clang-17
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    gcc-14.2.0
+arm64                 randconfig-001-20250405    clang-19
+arm64                 randconfig-002-20250405    gcc-8.5.0
+arm64                 randconfig-003-20250405    gcc-8.5.0
+arm64                 randconfig-004-20250405    gcc-6.5.0
+csky                              allnoconfig    gcc-14.2.0
+csky                  randconfig-001-20250405    gcc-14.2.0
+csky                  randconfig-002-20250405    gcc-10.5.0
+hexagon                          allmodconfig    clang-17
+hexagon                           allnoconfig    clang-21
+hexagon                          allyesconfig    clang-21
+hexagon               randconfig-001-20250405    clang-21
+hexagon               randconfig-002-20250405    clang-21
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250405    gcc-12
+i386        buildonly-randconfig-002-20250405    clang-20
+i386        buildonly-randconfig-003-20250405    clang-20
+i386        buildonly-randconfig-004-20250405    clang-20
+i386        buildonly-randconfig-005-20250405    clang-20
+i386        buildonly-randconfig-006-20250405    gcc-12
+i386                                defconfig    clang-20
+loongarch                        allmodconfig    gcc-14.2.0
+loongarch                         allnoconfig    gcc-14.2.0
+loongarch             randconfig-001-20250405    gcc-14.2.0
+loongarch             randconfig-002-20250405    gcc-14.2.0
+m68k                             allmodconfig    gcc-14.2.0
+m68k                              allnoconfig    gcc-14.2.0
+m68k                             allyesconfig    gcc-14.2.0
+m68k                        m5272c3_defconfig    gcc-14.2.0
+m68k                        stmark2_defconfig    gcc-14.2.0
+microblaze                       allmodconfig    gcc-14.2.0
+microblaze                        allnoconfig    gcc-14.2.0
+microblaze                       allyesconfig    gcc-14.2.0
+mips                              allnoconfig    gcc-14.2.0
+nios2                         10m50_defconfig    gcc-14.2.0
+nios2                             allnoconfig    gcc-14.2.0
+nios2                 randconfig-001-20250405    gcc-12.4.0
+nios2                 randconfig-002-20250405    gcc-6.5.0
+openrisc                          allnoconfig    gcc-14.2.0
+openrisc                         allyesconfig    gcc-14.2.0
+openrisc                            defconfig    gcc-14.2.0
+openrisc                  or1klitex_defconfig    gcc-14.2.0
+parisc                           allmodconfig    gcc-14.2.0
+parisc                            allnoconfig    gcc-14.2.0
+parisc                           allyesconfig    gcc-14.2.0
+parisc                randconfig-001-20250405    gcc-11.5.0
+parisc                randconfig-002-20250405    gcc-9.3.0
+powerpc                          allmodconfig    gcc-14.2.0
+powerpc                           allnoconfig    gcc-14.2.0
+powerpc                          allyesconfig    clang-21
+powerpc                 linkstation_defconfig    clang-20
+powerpc                     mpc83xx_defconfig    clang-21
+powerpc                      pcm030_defconfig    clang-15
+powerpc                     ppa8548_defconfig    gcc-14.2.0
+powerpc               randconfig-001-20250405    gcc-8.5.0
+powerpc               randconfig-002-20250405    gcc-8.5.0
+powerpc               randconfig-003-20250405    gcc-8.5.0
+powerpc                     tqm8555_defconfig    gcc-14.2.0
+powerpc64                        alldefconfig    clang-21
+powerpc64             randconfig-001-20250405    clang-21
+powerpc64             randconfig-002-20250405    clang-21
+powerpc64             randconfig-003-20250405    clang-18
+riscv                            allmodconfig    clang-21
+riscv                             allnoconfig    gcc-14.2.0
+riscv                            allyesconfig    clang-16
+riscv                 randconfig-001-20250405    clang-21
+riscv                 randconfig-002-20250405    clang-16
+s390                             allmodconfig    clang-18
+s390                              allnoconfig    clang-15
+s390                             allyesconfig    gcc-14.2.0
+s390                  randconfig-001-20250405    clang-15
+s390                  randconfig-002-20250405    clang-15
+sh                               allmodconfig    gcc-14.2.0
+sh                                allnoconfig    gcc-14.2.0
+sh                               allyesconfig    gcc-14.2.0
+sh                    randconfig-001-20250405    gcc-14.2.0
+sh                    randconfig-002-20250405    gcc-14.2.0
+sh                           se7705_defconfig    gcc-14.2.0
+sparc                            allmodconfig    gcc-14.2.0
+sparc                             allnoconfig    gcc-14.2.0
+sparc                 randconfig-001-20250405    gcc-11.5.0
+sparc                 randconfig-002-20250405    gcc-10.3.0
+sparc64               randconfig-001-20250405    gcc-9.3.0
+sparc64               randconfig-002-20250405    gcc-11.5.0
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-21
+um                               allyesconfig    gcc-12
+um                    randconfig-001-20250405    clang-17
+um                    randconfig-002-20250405    clang-21
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250405    gcc-12
+x86_64      buildonly-randconfig-002-20250405    clang-20
+x86_64      buildonly-randconfig-003-20250405    clang-20
+x86_64      buildonly-randconfig-004-20250405    clang-20
+x86_64      buildonly-randconfig-005-20250405    gcc-12
+x86_64      buildonly-randconfig-006-20250405    clang-20
+x86_64                              defconfig    gcc-11
+xtensa                            allnoconfig    gcc-14.2.0
+xtensa                randconfig-001-20250405    gcc-11.5.0
+xtensa                randconfig-002-20250405    gcc-13.3.0
 
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
