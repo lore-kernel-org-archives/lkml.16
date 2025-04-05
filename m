@@ -1,146 +1,194 @@
-Received: from out-183.mta0.migadu.com (out-183.mta0.migadu.com [91.218.175.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81DB91A9B4D
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 23:06:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F10541A2541;
+	Sat,  5 Apr 2025 23:15:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743894381; cv=none; b=d5r5BTpuDdJKKW9t47aalK1Hna4y0hjRQG7vSAFBgretrqWdT53uJ1DwMP875U3+lTZcNgO5+/+z8+Uy/n+ENbWKvEspgOJOMdsq8wZOu7JF/wcqbnGdsx2FiRqnonvllktdqKo3TKCLRe+o9f9gHVAeZxLm9zvyw8G8ZqfeQtk=
+	t=1743894933; cv=none; b=iTwRvxhR2ag/Kg1MT5N/smd+VVRshMJDXr8BkmjmkZ9xvw5dgFw0ishzvdhNACZoYbJdnnajA/nL57hw1nja+CVqPL74btIY5o806/QwsbMdIcQtLZJCpPNSP4Aupl/5ftPOPv1k1FJo/Qx0R5S4jIGQR0RkFgfB6I8EIUESePI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743894381; c=relaxed/simple;
-	bh=0v8cRu38jhoEvajLr3/Yy6r1v7oNO3+xH7Dq99LVUQg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=A52T8WfVeCpm92pfXobBY56ljdJdmu+ikX4Oguq0vV5s3Vp13WZLmJTaQa5vvCr5jcwyCMtqvoxx/AxV/ze0X0JwVdaYkRKdF5acneqU6XcBh6Wr/7XBJkEyz64xivlVzJpZJ8v/nrfOfMhNxIkq8DlKxYITj54+Uu3pGhTX9bM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=sW0432Wa; arc=none smtp.client-ip=91.218.175.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1743894933; c=relaxed/simple;
+	bh=+ihPfzH3562UQtCkvXWrZQHAlhmM8DF7Fjo0KjAuRP4=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=RXXK7FNb8bMr72k5mczuUbF5jCmE+JYcvVSMSOk3y/srF7yGDzsb7Jt8JS4MbvQz9PX5/ioocCmKByeknt3msnv2Qk6MM3JNko7kQGhabMk1euS0f9hXpNhQVdXQpmSrwkdwMoGHCBfaIUwQoYVPSEf5K8bjsNFF3JZz/RJNCJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VoAJixm+; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="sW0432Wa"
-Message-ID: <659945fe-3ed8-4c1c-8d25-99a187bbda8a@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1743894366;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kgau1UgxxQ9YuYZL9yzM9VjfRAvhpGuLePfS/enPJc8=;
-	b=sW0432WaOd1QFVFIbDPwJOwUh8EiJtSSPYoseYiv8+KYUZyF0WWi2FB7V2q/sx1Dnw6Efe
-	eZtGAhptRbsrtjzXJY/J+tb9vw2twhLWLGbOfN4lZndK9yxLMAEG3H3nneGGLgk6Uyqzs5
-	nLsDcJzmd90d2lYABvxaNB/xDza0dzo=
-Date: Sun, 6 Apr 2025 07:05:54 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VoAJixm+"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-22401f4d35aso33487395ad.2;
+        Sat, 05 Apr 2025 16:15:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743894930; x=1744499730; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=WRWHl1bFUEsL1BhGfTHMioZdh6c81qArx4e/ZrHW8Ks=;
+        b=VoAJixm+MLx1h0Kwtjg7cOBTe0QKu+1qK0A3XJBAjuuFqRZIkk38NuOM1nwYyxKzHZ
+         IsRaJilqbZCD2qzp+m86WKIUsSXXAXapeEiyg3sBbDAglVcZ6e3erMkINOp/QTB2JCKo
+         diZht5x2O8v8Uyljm7lWe057H6vvVHhtVW/zUWfyP3GIQYHAbR7arIQAW9b0F98f/HJ+
+         k8RXnMVX7fuG/QT2oIzBL0mgxlgp6ajOizxTkK4FkgE1uLt/Kju5j84Xt00P2mziKaUQ
+         YVFgYmfoYLXQwaB5zFxxDpeXGjUXujMHx0xHHIlLzok7QLFDpRGqH9NbFgUhyK1ibji4
+         nOoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743894930; x=1744499730;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WRWHl1bFUEsL1BhGfTHMioZdh6c81qArx4e/ZrHW8Ks=;
+        b=IJ57RV+YUbQ+kfrXcUUPBuTZpHfu2MTupVn0+Gt208NO+eJfeGnem6a6w/Gh2u6wg6
+         4HRMIXtZuuI3YYCL890eIWf7WUG26nLIxEVPChvfDg7kAI+pLipo5v0rvCuuMnBRwW5a
+         FnkYzoWEJBBfxxhxdrbxpurxc3S/PgxqwfK2vgzZEECaaabAF6g4LxrrrmCr+yR/lz0e
+         LeFzOZYHglgCdGsaib6ZCgt9b+IIKRFy62TmgvLWu3k1PklwuT7LjIBIj8N7Uvql/AM0
+         FJAj+z4HegOfR+mJA5X86A4R+NwP/ria3SR+Jjm59ec5CyPo8k0BB/gZock8TiFQZuQm
+         JTkQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVmXMG6jKZo3QYCNM5YZTlU15kHSzD6LMcLV7piGienlkD+eErFmWMXXtxedCTfNNm7wTMWkwwwFdKHNN0=@vger.kernel.org, AJvYcCVuUl/vGJMq3c2lZ/MTGnPiWMiGHB8zVU/CMrR1xgRMn9Ssbxhg2tIzVpwLu8cOTxqQj14UM4NDDcg/@vger.kernel.org, AJvYcCW/ox3WnCzRVivHjKJXGZHrOPfoznLcqwNgkAsyZL54lxo7BEm9hd7lIp0R6vEN45dlJiinhkAcLniwoOc=@vger.kernel.org, AJvYcCWeHVaJzr/8FMUCLQVAzkvN6O2r02O1tAMq0RzNEy99/phLEWPh3qIEgdC7Wm9w7YS4VaOkRKF3uw8OtecA@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw9wAG6pMXPUtV6fVEZXTlHEETfPoXUER0VtJSeoFCYXjtP/7fh
+	ZSZ3RpRrh/MRqMpiieAsViAUhr1KHDE0CtiRSWBwld7l/Zcdduwx
+X-Gm-Gg: ASbGncv8cgaCARo2DSJEnHajCiUXYiNqrJqSWx60RCMVME8YAVIauNdoIhx/+jtVT1+
+	rz/gXShhUWLB1fJA+IKd/TWEwshw+wrRmsgZxL54M0yD1ILJntX37jd6jMGxv8cV0g3W8Dlqu1X
+	yW6e4NvDPyFkds5EyMzmr0IUXoDTHNjoAngWuS73VwTEQQVpqITeeCp7Eozmv2tYknrZEAKjg2/
+	38j0fryz8JTCmkLqeHIwmxyAInfcLDfOrxvI439xpcJvqRYk1bHZBVpNcrPUV0Wxq+BNsPksQhb
+	f/NGIIwsss2nHM8HRmtTXOZ0kYHuW6xJL+Y1m40cMl6+nQVUy7jX2Mhkc+iLTYBO3gLn073US9/
+	qmchVNUF2xjYnuYt5yGD6yKV85mfSm0YN5+6uAto=
+X-Google-Smtp-Source: AGHT+IFJLoi+t1h6nfqNpimMSmHCghVaKYsuJd3xWLFkG11VixjKp/kboYhogtSKHpLi5Rt4egiZ/A==
+X-Received: by 2002:a17:903:19c6:b0:223:50f0:b97 with SMTP id d9443c01a7336-22a955a19a0mr58857915ad.52.1743894930124;
+        Sat, 05 Apr 2025 16:15:30 -0700 (PDT)
+Received: from [192.168.2.3] (2403-580a-80ed-0-4835-5a07-49e7-f115.ip6.aussiebb.net. [2403:580a:80ed:0:4835:5a07:49e7:f115])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-229785c994esm55048345ad.102.2025.04.05.16.15.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 05 Apr 2025 16:15:29 -0700 (PDT)
+From: James Calligeros <jcalligeros99@gmail.com>
+Subject: [PATCH v5 0/8] ASoC: tas27{64,70}: improve support for Apple codec
+ variants
+Date: Sun, 06 Apr 2025 09:15:04 +1000
+Message-Id: <20250406-apple-codec-changes-v5-0-50a00ec850a3@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH bpf-next 2/2] bpf: Check link_create parameter for
- multi_uprobe
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>, song@kernel.org,
- ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
- martin.lau@linux.dev, eddyz87@gmail.com, yonghong.song@linux.dev,
- john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me,
- haoluo@google.com, rostedt@goodmis.org, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, laoar.shao@gmail.com, bpf@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-References: <20250331094745.336010-1-chen.dylane@linux.dev>
- <20250331094745.336010-2-chen.dylane@linux.dev> <Z-vH_HiJhR3cwLhF@krava>
- <918395a6-122c-4fb0-9761-892b8020b95e@linux.dev>
- <CAEf4BzbOirQiAmowckX8OeiFUTR8yfkO6m+kY96VMy5f9rG26A@mail.gmail.com>
- <Z-z8_HlpMk39SHUD@krava> <Z-2N0Z6UxVx7mpYp@krava>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Tao Chen <chen.dylane@linux.dev>
-In-Reply-To: <Z-2N0Z6UxVx7mpYp@krava>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+X-B4-Tracking: v=1; b=H4sIAHi58WcC/3XPTQrCMBAF4KtI1kYmkz/rynuIizSZ1oDa0khRS
+ u9uVMRS6vIN875hBpaoi5TYbjWwjvqYYnPNQa9XzJ/ctSYeQ84MATWgUNy17Zm4bwJ5/tlI3JD
+ RJnhBqALLzbajKt7f6uGY8ymmW9M93kd68Zp+Pb3o9YIDtyi1KUoUpSj29cXF88Y3F/byepwa2
+ 2UDs1FItAaqYAns3JATA+2yIbPhy1JIAAnOV3ND/QwFf35R2QgAlpTxpBxOjXEcn1dbIO+CAQA
+ A
+X-Change-ID: 20250214-apple-codec-changes-6e656dc1e24d
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+ Shenghao Ding <shenghao-ding@ti.com>, Kevin Lu <kevin-lu@ti.com>, 
+ Baojun Xu <baojun.xu@ti.com>, Dan Murphy <dmurphy@ti.com>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Shi Fu <shifu0704@thundersoft.com>, 
+ Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>
+Cc: Alyssa Rosenzweig <alyssa@rosenzweig.io>, 
+ =?utf-8?q?Martin_Povi=C5=A1er?= <povik+lin@cutebit.org>, 
+ Hector Martin <marcan@marcan.st>, linux-sound@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+ asahi@lists.linux.dev, linux-hwmon@vger.kernel.org, 
+ Neal Gompa <neal@gompa.dev>, James Calligeros <jcalligeros99@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3741;
+ i=jcalligeros99@gmail.com; h=from:subject:message-id;
+ bh=+ihPfzH3562UQtCkvXWrZQHAlhmM8DF7Fjo0KjAuRP4=;
+ b=owGbwMvMwCV2xczoYuD3ygTG02pJDOkfd9bW+P9R/LDzSkdAcU3B687lKwLevJl3WO361IsSH
+ nt3bGkX7yhlYRDjYpAVU2TZ0CTkMduI7Wa/SOVemDmsTCBDGLg4BWAi04oY/jsvmvqh5rzXjJsf
+ +O1Fm5WmHbepia58e5j570T7o+u+arIx/K92mnVK8MS1ykkOMVNFjIT2Oz8VjtwWMen9spOKk89
+ oreEDAA==
+X-Developer-Key: i=jcalligeros99@gmail.com; a=openpgp;
+ fpr=B08212489B3206D98F1479BDD43632D151F77960
 
-在 2025/4/3 03:19, Jiri Olsa 写道:
-> On Wed, Apr 02, 2025 at 11:01:48AM +0200, Jiri Olsa wrote:
->> On Tue, Apr 01, 2025 at 03:06:22PM -0700, Andrii Nakryiko wrote:
->>> On Tue, Apr 1, 2025 at 5:40 AM Tao Chen <chen.dylane@linux.dev> wrote:
->>>>
->>>> 在 2025/4/1 19:03, Jiri Olsa 写道:
->>>>> On Mon, Mar 31, 2025 at 05:47:45PM +0800, Tao Chen wrote:
->>>>>> The target_fd and flags in link_create no used in multi_uprobe
->>>>>> , return -EINVAL if they assigned, keep it same as other link
->>>>>> attach apis.
->>>>>>
->>>>>> Fixes: 89ae89f53d20 ("bpf: Add multi uprobe link")
->>>>>> Signed-off-by: Tao Chen <chen.dylane@linux.dev>
->>>>>> ---
->>>>>>    kernel/trace/bpf_trace.c | 3 +++
->>>>>>    1 file changed, 3 insertions(+)
->>>>>>
->>>>>> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
->>>>>> index 2f206a2a2..f7ebf17e3 100644
->>>>>> --- a/kernel/trace/bpf_trace.c
->>>>>> +++ b/kernel/trace/bpf_trace.c
->>>>>> @@ -3385,6 +3385,9 @@ int bpf_uprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *pr
->>>>>>       if (sizeof(u64) != sizeof(void *))
->>>>>>               return -EOPNOTSUPP;
->>>>>>
->>>>>> +    if (attr->link_create.target_fd || attr->link_create.flags)
->>>>>> +            return -EINVAL;
->>>>>
->>>>> I think the CI is failing because usdt code does uprobe multi detection
->>>>> with target_fd = -1 and it fails and perf-uprobe fallback will fail on
->>>>> not having enough file descriptors
->>>>>
->>>>
->>>> Hi jiri
->>>>
->>>> As you said, i found it, thanks.
->>>>
->>>> static int probe_uprobe_multi_link(int token_fd)
->>>> {
->>>>           LIBBPF_OPTS(bpf_prog_load_opts, load_opts,
->>>>                   .expected_attach_type = BPF_TRACE_UPROBE_MULTI,
->>>>                   .token_fd = token_fd,
->>>>                   .prog_flags = token_fd ? BPF_F_TOKEN_FD : 0,
->>>>           );
->>>>           LIBBPF_OPTS(bpf_link_create_opts, link_opts);
->>>>           struct bpf_insn insns[] = {
->>>>                   BPF_MOV64_IMM(BPF_REG_0, 0),
->>>>                   BPF_EXIT_INSN(),
->>>>           };
->>>>           int prog_fd, link_fd, err;
->>>>           unsigned long offset = 0;
->>>>
->>>>           prog_fd = bpf_prog_load(BPF_PROG_TYPE_KPROBE, NULL, "GPL",
->>>>                                   insns, ARRAY_SIZE(insns), &load_opts);
->>>>           if (prog_fd < 0)
->>>>                   return -errno;
->>>>
->>>>           /* Creating uprobe in '/' binary should fail with -EBADF. */
->>>>           link_opts.uprobe_multi.path = "/";
->>>>           link_opts.uprobe_multi.offsets = &offset;
->>>>           link_opts.uprobe_multi.cnt = 1;
->>>>
->>>>           link_fd = bpf_link_create(prog_fd, -1, BPF_TRACE_UPROBE_MULTI,
->>>> &link_opts);
->>>>
->>>>> but I think at this stage we will brake some user apps by introducing
->>>>> this check, link ebpf go library, which passes 0
->>>>>
->>>>
->>>> So is it ok just check the flags?
->>>
->>> good catch, Jiri! Yep, let's validate just flags?
->>
->> I think so.. I'll test that with ebpf/go to make sure we are safe
->> at least there ;-) I'll let you know
-> 
-> sorry, got stuck.. link_create.flags are initialized to zero,
-> so I think flags check should be fine (at least for ebpf/go)
+Hi all,
 
-Thank you very much for your detailed check. I will send it v2.
+This series introduces a number of changes to the drivers for
+the Texas Instruments TAS2764 and TAS2770 amplifiers in order to
+introduce (and improve in the case of TAS2770) support for the
+variants of these amps found in Apple Silicon Macs.
 
-> 
-> jirka
+Apple's variant of TAS2764 is known as SN012776, and as always with
+Apple is a subtly incompatible variant with a number of quirks. It
+is not publicly available. The TAS2770 variant is known as TAS5770L,
+and does not require incompatible handling.
 
+Much as with the Cirrus codec patches, I do not
+expect that we will get any official acknowledgement that these parts
+exist from TI, however I would be delighted to be proven wrong.
 
+This series has been living in the downstream Asahi kernel tree[1]
+for over two years, and has been tested by many thousands of users
+by this point[2].
+
+v4 drops the TDM idle TX slot behaviour patches. I experimented with
+the API discussed in v3, however this did not work on any of the machines
+I tested it with. More tweaking is probably needed.
+
+[1] https://github.com/AsahiLinux/linux/tree/asahi-wip
+[2] https://stats.asahilinux.org/
+
+---
+Changes in v5:
+- Dropped two commits that depended on TX idle stuff (sorry)
+- Link to v4: https://lore.kernel.org/r/20250405-apple-codec-changes-v4-0-d007e46ce4a2@gmail.com
+
+Changes in v4:
+- Moved remaining changes to the top of the set
+- Dropped already merged commits
+- hwmon now reads temp from regmap
+- Bumped regmap max reg patch above Apple quirks patch
+- Dropped TDM idle slot TX behaviour patches
+- Link to v3: https://lore.kernel.org/r/20250227-apple-codec-changes-v3-0-cbb130030acf@gmail.com
+
+Changes in v3:
+- Add Rob's Acked-by to Devicetree compatible additions
+- Dropped cherry-picked patches
+- Droped abuse of regulator API
+- Droped bespoke sysfs interface
+- Rationalised temperature reading for hwmon interface
+- Set SN012776 device ID with OF match data
+- Changed probe ops reliant on device ID to case/switch statement
+- Added documentation for new Devicetree properties
+- Improved a number of poor quality commit messages
+- Documented behaviour of die temperature ADC
+- Link to v2: https://lore.kernel.org/r/20250218-apple-codec-changes-v2-0-932760fd7e07@gmail.com
+
+Changes in v2:
+- Changed author field of patch to match Martin's Signed-off-by
+- Added Neal's Reviewed-by to reviewed patches
+- Moved fixes to existing code to the top of the series
+- Removed tas2764's explicit dependency on OF
+- Removed complicated single-use tas2764 quirks macro and replaced with
+  if block
+- Added hwmon interface for codec die temp
+- Fixed a malformed commit message
+- Link to v1: https://lore.kernel.org/r/20250215-apple-codec-changes-v1-0-723569b21b19@gmail.com
+
+---
+Hector Martin (3):
+      ASoC: tas2770: Power cycle amp on ISENSE/VSENSE change
+      ASoC: tas2770: Support setting the PDM TX slot
+      ASoC: tas2764: Enable main IRQs
+
+James Calligeros (2):
+      ASoC: tas2770: expose die temp to hwmon
+      ASoC: tas2764: expose die temp to hwmon
+
+Martin Povišer (3):
+      ASoC: tas2764: Reinit cache on part reset
+      ASoC: tas2764: Raise regmap range maximum
+      ASoC: tas2764: Apply Apple quirks
+
+ sound/soc/codecs/tas2764-quirks.h | 180 +++++++++++++++++++++++++
+ sound/soc/codecs/tas2764.c        | 137 ++++++++++++++++++-
+ sound/soc/codecs/tas2764.h        |   3 +
+ sound/soc/codecs/tas2770.c        | 151 ++++++++++++++++++++-
+ sound/soc/codecs/tas2770.h        |   6 +
+ 5 files changed, 472 insertions(+), 5 deletions(-)
+---
+base-commit: 3a0f0a4355df0240485ed62b6bd6afa5b3e689c5
+change-id: 20250214-apple-codec-changes-6e656dc1e24d
+
+Best regards,
 -- 
-Best Regards
-Tao Chen
+James Calligeros <jcalligeros99@gmail.com>
+
