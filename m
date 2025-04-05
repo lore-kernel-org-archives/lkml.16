@@ -1,120 +1,84 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDBCB8BE8
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 14:33:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0B8870825
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 14:34:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743863622; cv=none; b=VKjxAmX5jYfm/TdD0QJKDZkVtobslChDnEOzmZjxo58Y2m4dVTRS5DnRz0rHzQLaZXeNduYArACgPTV8fpsKZRcyPshdOvJJ56gShc2DxAvycctYaMBqdf7Z+MYfmErhqSUbgq66+V+9jryIzWZXQo3qnuNQO0ydJz13KFxVfN8=
+	t=1743863664; cv=none; b=NPx7jhGovBiE1U9QK+eE2QfMGXy9U+eOhiie3Fq381GTRXnHakh8aPvk4ykwpm71YoMIMpuokZS4BJRl8DAI/qZD84q6ZEYOSrtkep8yNv9HL/POjtPJ8Ic9p++L0IeOaaD36UjuE2irX3a9pumj2pitFR+M/Revni9igrG8xV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743863622; c=relaxed/simple;
-	bh=n6rWsRfQhHOnDdcNMoA4eBWpEZyRhkYlhRd6+rT4QLc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dud5fjNnjfr4VyFveCwGxEae/s1gUo03ayjGyVEYTVcWPy/U2+DamCbFv+uO5Aj7PL+FgL9ipxAaYHnuNwSFOFnqP/zLivkxyUko8pegaJjWjT1OGqlTxHP21tsP3QLO1Uabdr8JpwllAF8Go8iZO/kzsvqYurA4zjCYcjMAThg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Wr9mf7vM; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Wr9mf7vM"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43cf848528aso23889145e9.2
-        for <linux-kernel@vger.kernel.org>; Sat, 05 Apr 2025 07:33:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743863619; x=1744468419; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=OoxNzsNchDHOU70Y3i7GeAy+PllFDOdfRlUFcH/VIg4=;
-        b=Wr9mf7vM0y10pGXbHfqbSTioVDegoZptVFo6FTCob5GLWYjnGKuTbpOA6XYE5vmkfv
-         tE8VipFvuzXD/ouFybGDqfhNUwTTx40wHU9lkc34MNRVHaeBf3sJ5Ijs7csU+dJw9hvE
-         2gJkBAxW1Km95L/Wd5sdWNSNqmsG+NpalbyIAZJX6EhdYA5vNMBR/BEkL50ypHr48x2j
-         ZSR6VPw7vroITx+/UeZeuN1x68dXxROAtpwVr9RlESXs7xtPB1tThhwbVZIDkR1HYry7
-         5XifgCaK9/M40KMZb7jEuiwYSxJY5yvFE9Zut8JzZwJt/jD8vVCGa61Da38xNMvPyGuj
-         xz2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743863619; x=1744468419;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OoxNzsNchDHOU70Y3i7GeAy+PllFDOdfRlUFcH/VIg4=;
-        b=mXS5hEb4tmnNiNqnkjMHTdC60rC8IyvQoHICH094nn+hJCK4GIn7mexQoPp4isyWfJ
-         hvgGm9R/F7ohEQanKJsEmXMH9P5sGhW2C0evGFYN4Tyf4UbNGtZ7UnmGW1ZTbgSI52lx
-         dHt+rWalkgSzsBUfw56IgM/zqDxaj02tmWDCDvb7Qdz/a6+9K+udTuRTvzBm+RYJPwzI
-         i81l5X8T3FzRuDLig6KAOqCFjVLFtjyw6HWIvnJVcfx08uFNeBACQRY8SzZBOaXRmhry
-         KdVxkdttVz6Mm1rdGcXR1G34a6/e0xvLMuQYspRiZdZBQ9SHsJhLZ6m5DxHM34XHDECL
-         2M3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXMB+JlvObrSWTUX6ceJPzlXSzJgqGgOuagnh4XNF5UO0UXIGtA8HizR0Ht8lB4Tqm+1j1N7uQigSSEbQk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxbyTghe/279/TYe6Y2s2P0ZS1a2+dL/spVP5rN8dppYnAhjt+U
-	uaj6fBQU5WjdzIDTP14yRyGJzd6tQmVJHOJV12UagtdSXdrY2jrdZPzLpFS5FUuPCB1MViv6M3h
-	AKQs=
-X-Gm-Gg: ASbGncvUJ9VIMDp1X1d2BkJrI7c52CyCZCopS4f7uxUCIJitD9oYd3d6fJrniD0wVOB
-	MYlLbzNV01kGkvNBTrf59k0NIs5X9lCaKR+kqSeUA0+gssmtaRRs8GLcn3DxTqeRbyy8gQhIX5U
-	uMWN/3Dr5oPFgGu0Tcm7GxjOv+QeyEpgalFNpruXq94tLbFgJBrYFsWoqaLp/qpTYulDDFxVGKk
-	WZA8PfZmxzEedUTioBzUqeWTs+ui9AxwNy0bGOlMfjCaAsIXhci5mZ+ZK+pY6dsQU5qwuZb92Ze
-	UfWz7AqdsenteInKc18htAVg9vU2rag358b4+Gca2kxt1fBQlQ==
-X-Google-Smtp-Source: AGHT+IGu4vtuFZZLiDsfaR5UTawWVxjaUy8tYom98X0dcbHdh+wzwt4Sj7ZBAAkC9odrdw/Fyb2qoQ==
-X-Received: by 2002:a05:600c:a4c:b0:43c:e7a7:aea0 with SMTP id 5b1f17b1804b1-43ee0768c6dmr19825025e9.26.1743863619058;
-        Sat, 05 Apr 2025 07:33:39 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-39c30226e9asm7222515f8f.94.2025.04.05.07.33.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Apr 2025 07:33:38 -0700 (PDT)
-Date: Sat, 5 Apr 2025 17:33:34 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Wentao Liang <vulab@iscas.ac.cn>
-Cc: gregkh@linuxfoundation.org, philipp.g.hortmann@gmail.com,
-	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] staging: rtl8723bs: Add error handling for sd_read().
-Message-ID: <e8a075e6-1c55-4c61-bc4b-51764b8b2e15@stanley.mountain>
-References: <20250405130642.2255-1-vulab@iscas.ac.cn>
+	s=arc-20240116; t=1743863664; c=relaxed/simple;
+	bh=dfmumo5haEZjBqDujLKNN2Ikj572t97r/iEAFhQZp9s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IBvFufowwTeSjRFGULPdLhwp3z6TZ73Iz07tvknQkt2Y46PDxxd3pdCX8KNoJ8AMbtGYBXlalv7AcmaTe2av7hThoyBUfaFhSNjUvbP36l3ey8PZxuAVi3IogzTFiGe3oI2iDNh5xtiNPctXn9OMu2loMDWQrXoc3WpIowWPq04=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost.localdomain (unknown [221.222.48.127])
+	by APP-05 (Coremail) with SMTP id zQCowACn3gZcP_FnV_ZHBg--.47430S2;
+	Sat, 05 Apr 2025 22:34:05 +0800 (CST)
+From: Wentao Liang <vulab@iscas.ac.cn>
+To: miquel.raynal@bootlin.com,
+	richard@nod.at,
+	vigneshr@ti.com
+Cc: linux-mtd@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Wentao Liang <vulab@iscas.ac.cn>
+Subject: [PATCH v2] mtd: bcm47xxnflash: Add error handling for bcm47xxnflash_ops_bcm4706_ctl_cmd()
+Date: Sat,  5 Apr 2025 22:33:47 +0800
+Message-ID: <20250405143348.2477-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.42.0.windows.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250405130642.2255-1-vulab@iscas.ac.cn>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:zQCowACn3gZcP_FnV_ZHBg--.47430S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrZry3ZF4fCryUZr18Xw1xGrg_yoWkKFb_GF
+	1avr9Fy3yYyw1xZFn5Ar4kA3sIqr4kurnYqwsIvr43G3y3uF18Wa4kZr1Ygr40yF48tF15
+	A3ySvF4Fq3WkGjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUb4kFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Jr0_
+	Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJV
+	WxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7CjxVAaw2AFwI0_
+	JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67
+	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIY
+	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14
+	v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8
+	JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUehL0UU
+	UUU
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiCRADA2fxOpwG7AAAsD
 
-On Sat, Apr 05, 2025 at 09:06:42PM +0800, Wentao Liang wrote:
-> The sdio_read32() calls sd_read(), but does not handle the error if
-> sd_read() fails. This could lead to subsequent operations processing
-> invalid data. A proper implementation can be found in sdio_readN().
-> 
-> Add error handling to the sd_read(), ensuring that the memcpy() is
-> only performed when the read operation is successful.
-> 
-> Fixes: 554c0a3abf21 ("staging: Add rtl8723bs sdio wifi driver")
-> Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
-> ---
->  drivers/staging/rtl8723bs/hal/sdio_ops.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/staging/rtl8723bs/hal/sdio_ops.c b/drivers/staging/rtl8723bs/hal/sdio_ops.c
-> index 21e9f1858745..b21fd087c9a0 100644
-> --- a/drivers/staging/rtl8723bs/hal/sdio_ops.c
-> +++ b/drivers/staging/rtl8723bs/hal/sdio_ops.c
-> @@ -185,9 +185,11 @@ static u32 sdio_read32(struct intf_hdl *intfhdl, u32 addr)
->  			return SDIO_ERR_VAL32;
->  
->  		ftaddr &= ~(u16)0x3;
-> -		sd_read(intfhdl, ftaddr, 8, tmpbuf);
-> -		memcpy(&le_tmp, tmpbuf + shift, 4);
-> -		val = le32_to_cpu(le_tmp);
-> +		val = sd_read(intfhdl, ftaddr, 8, tmpbuf);
-> +		if (!val) {
+The bcm47xxnflash_ops_bcm4706_cmd_ctrl() calls
+bcm47xxnflash_ops_bcm4706_ctl_cmd() without printing error message. A
+proper implementation can be found in bcm47xxnflash_ops_bcm4706_write().
 
-You've changed the sdio_read32() function to return negative errors.
-That's probably a bad idea.
+Add error log to the bcm47xxnflash_ops_bcm4706_ctl_cmd() to prevent
+silent failure.
 
-regards,
-dan carpenter
+Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+---
+ drivers/mtd/nand/raw/bcm47xxnflash/ops_bcm4706.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-> +			memcpy(&le_tmp, tmpbuf + shift, 4);
-> +			val = le32_to_cpu(le_tmp);
-> +		}
->  
->  		kfree(tmpbuf);
->  	}
-> -- 
-> 2.42.0.windows.2
-> 
+diff --git a/drivers/mtd/nand/raw/bcm47xxnflash/ops_bcm4706.c b/drivers/mtd/nand/raw/bcm47xxnflash/ops_bcm4706.c
+index 6487dfc64258..c89129588bb6 100644
+--- a/drivers/mtd/nand/raw/bcm47xxnflash/ops_bcm4706.c
++++ b/drivers/mtd/nand/raw/bcm47xxnflash/ops_bcm4706.c
+@@ -182,7 +182,8 @@ static void bcm47xxnflash_ops_bcm4706_cmd_ctrl(struct nand_chip *nand_chip,
+ 	if (cmd != NAND_CMD_RESET)
+ 		code |= NCTL_CSA;
+ 
+-	bcm47xxnflash_ops_bcm4706_ctl_cmd(b47n->cc, code);
++	if (bcm47xxnflash_ops_bcm4706_ctl_cmd(b47n->cc, code))
++		pr_err("%s ctl_cmd didn't work!\n", __func__);
+ }
+ 
+ /* Default nand_select_chip calls cmd_ctrl, which is not used in BCM4706 */
+-- 
+2.42.0.windows.2
+
