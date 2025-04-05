@@ -1,131 +1,227 @@
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74DDB18859B
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 02:39:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2F30189F20
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 02:39:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743820744; cv=none; b=XnqR+974ZJiy/gHwLALk2AfxNxbOufFwIhTPwSu7+hADONTCBfpGY0ck40+J87MJGdDb7CVfz2OsqiWS+w2UpzdTg0zDtfySRJKoN976zNRl/JT4ykSeYt+w8gZJTGhEQo3f8PG/c4sxKowT/xN0kofQBCsc1/m8XJFC6/j/cpQ=
+	t=1743820771; cv=none; b=MrS6Qar+GnXg3FUJ5HcyN5BuJB6jWg7PxuuK7aKPPDmypB4CtoQqCGuXA6fS6JFqt8R5BkEks+aKtqJKi3ymeXC5gaTJ+bgpnr61F2Hu0NFi+wmEuuXCanIO0YFLshjIr7mabr19zvfHRpC8s5lzfmvo6/k34OpASaQ/y3LopF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743820744; c=relaxed/simple;
-	bh=YDm36M0PZoh2wJalWFye5VmTzcZORjqMjz4J3L1IT9k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u+z75UgEW22hQTjHfbQjuuUq62Z9RpbRvxbKlXwXrk/jjeqtfV+JjUxrQFGonXAffqWqjnLL3KyvGROttWwr7Q1riFU1RQ52keqr5vBtkmDAdN729KsJYQnngdJzgW2PYdwOyu/T7zzIj/ixKjQoeMu8STThhC+2fHhVxRT9gFc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=IETT7Z8l; arc=none smtp.client-ip=209.85.222.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="IETT7Z8l"
-Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-7c5e2fe5f17so259159985a.3
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 19:39:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1743820741; x=1744425541; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=I7IsqKmVEgRJ8CUWYczM7gURcQ3woAE5XWEEXNva28o=;
-        b=IETT7Z8l4eqtWmuoYJUD/peo38BNbTTZczqJPscvT+gUakNg5b2nDNMEpGay10zc64
-         2BWRhB2FdkFeG3auOAMVfw6Zh+IB4Qsu99Mmv/qfWGIENCc3WfoZzb52mUdnHdoHz+ZB
-         +CHDM8SbGB7sq6mRSFO8a5aQ59nICFI3pX9G5/YjS5hpg9LyBrv/7lO2c4UOu+5TmUH3
-         N9UNJLk+rAwplY2Bbme8GcA/8julb3T0TEgrmme7T65zkydIJZy76eVAdSYUxEdbOYnB
-         Ad8MQ0f5WFLpKycSqJbrzDSVB1OPU4zh+T2e70ZJNCDhDai2WLXcQbJy+rbcHzz8y+W3
-         DXmg==
+	s=arc-20240116; t=1743820771; c=relaxed/simple;
+	bh=140Qvm25bvAzjxAZ3dwrAS1nnOhO4eH2AExbSqYqQU8=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=c9JFRpsrXUsuC6GmNi8tOOb68fAsDqUrciJgS23P3qPjUCBZ/TNPEt2/uXv8UPKVS47dJPXIsin4mFlxLk8e0psW3BeJUl/cEdzlE+72vMtV2j3TNgST/Ur2BQ80Izw5s2x/e2EpsDxP4HKrbG06nOMuGJMiTuI50l5t7qpgwEg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3d44a3882a0so25997145ab.1
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 19:39:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743820741; x=1744425541;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=I7IsqKmVEgRJ8CUWYczM7gURcQ3woAE5XWEEXNva28o=;
-        b=Xdt5gnnmPEkWXEKK4KGfcmleNl7CSji8pj6zm9da7jamulnC57un8ea8ZAaNUphZlE
-         uZLzk2xGM1Be8KHYdgVZZRZMerC9Tt2hkK2jfJUcUxxJ49lSXmK3DT7StSHvlILKsZIe
-         py9X3OOwnyKnxSiDnplZx2qgdTIqJBNnpU8bxvOhZqxt3baezz9HAOKAwmFbxrxaQ/Eb
-         0PX56ag/52PJxjPFovK7dWSfH5axG+EUPMWL2sVoOE8J1Y+p+gPNAmst8Tr+NYumCc1F
-         nAeWbtgxg8KvdaKE51acF7MN25hSE/rGGHigiSqBVxZn4kb9sI3OMxirCGqf+LZoSr67
-         ctPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXqoXAiXW0RGDMZdNaYa1SedYfu8Qa+gIuXhpgX8gisnNJc164Pa53+Q405JQK4lAkEK0XoK0IYwjeohPs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJHC2G9i8lA279ZisxKPATAeAQ9LzbXn0/20/GJ9m1Erlx3HLO
-	F391S9yCgJ6yRkmlgLzI0rU/56ClnD6fvTbJ6e7QZwwc+wX2+9ym6ZBCBpSKdXE=
-X-Gm-Gg: ASbGncslkmg0r0/ngqyZilJCmCb25ayhRDZXuYY+EG3wuzN8oUPnMNvE1OoqTU7djGp
-	Evu8K+/su+V9d/VeltIsGEmNzS+FmC1fwmxt1XEOc2uJg9LkAEDGdyTKDchShRkYrUHora+GaCS
-	dYPAz5BwByFnlj6cM7RqBwL3VtACRyDrB7RVEx4gPbuF99hMUEUvFj87zexpabEYr0dFI8jcgiY
-	9o/JggGs5cH+9CA8ccMFcyEVUeJUfUd3WH5nT4yTIu3sgClcRFwqpzSui04s78BPJUOwUT+z2hr
-	dAn8/I+v9upcqI62C65gsqwe5JEZ0B8JBBQQzQ+v
-X-Google-Smtp-Source: AGHT+IFnJamifOhKJVBVNrAfXybocKxTriUWdF1eOL+oFEZRHhkZ/jQC1+bclnbNTY4UiyVy2rPBOA==
-X-Received: by 2002:a05:620a:1a0f:b0:7c7:5387:c754 with SMTP id af79cd13be357-7c77dd892b6mr210748585a.24.1743820741316;
-        Fri, 04 Apr 2025 19:39:01 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F ([2620:10d:c091:400::5:ba7b])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c76e75ad69sm289271385a.33.2025.04.04.19.39.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Apr 2025 19:39:00 -0700 (PDT)
-Date: Fri, 4 Apr 2025 22:38:58 -0400
-From: Gregory Price <gourry@gourry.net>
-To: Robert Richter <rrichter@amd.com>
-Cc: Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Terry Bowman <terry.bowman@amd.com>, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
-Subject: [PATCH] [HACK] drop zen5_init checks due to segfault
-Message-ID: <Z_CXwnILDyn3e-v0@gourry-fedora-PF4VCD3F>
-References: <20250218132356.1809075-1-rrichter@amd.com>
- <20250218132356.1809075-15-rrichter@amd.com>
+        d=1e100.net; s=20230601; t=1743820769; x=1744425569;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=QtwH2AaWubu33ySkf+L6hSVADT3A6b2bPhj7AM0h9iI=;
+        b=ndNsXwm14bXel1A26LgfTYeDOlJ9LFoG8RkedNLL3mMsEx3RdbHp/Sxu0m+l9mYuWV
+         FV5Qu3hHNK/Xb0GKlmrCVsn4/dDSFZyuQjmBU9hrnvnRYZgxIHgiaIpmQrpn/ArPK4Hs
+         mePMSXi83uDmzn0109Dtna+v6WUFhbz3WPTF9disKTvP+0UAIZrkiC5H0hhfdKcALf5W
+         xwA3IOaS4LvvOKbaVqXd+0w0eAr8yzEZSK4ch6JFm/ijYVAhaea6nXSiLHcZIdKVszos
+         BftH2El5lNh/AsE1t66jldAdWKz4+FwXqI+30mpgXPaLAzlyqU3CUh60x5jyW+tcjWXA
+         mpTw==
+X-Forwarded-Encrypted: i=1; AJvYcCVE9M6RRGevSPPdxPuYjTMHKIOUV+vatEbmCDw1uEQ/gHwjWThFBl14lV65N22jhVSg7Eysxd7nWGVEwWU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwenLtfyEn9Kh5G9kfpM/yrx4ug76v7kFN1T0xzPJ1/lRC4IbaT
+	LsEZc0HKcpuxyvtTzD/esF14Y4PTJE3hfPchpWL7LMsA7voRyuhba9m+frEOUDgHfNFk6/hwtcX
+	yotKuvEqlHtbR69oCFbVB5WCLLVWcmC8UTXShlmlJPaoGCwNyiWB7hUU=
+X-Google-Smtp-Source: AGHT+IG19L+ZJcEmRZXzBKt84A28fCbPoMlA8n7/wMknyvgj5+WKdq4bZprHLSOmyuR629YIaEBCxFFtTBthsgU1ADR4UeuSgBId
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250218132356.1809075-15-rrichter@amd.com>
+X-Received: by 2002:a05:6e02:2506:b0:3d4:44:958a with SMTP id
+ e9e14a558f8ab-3d6e3f999b0mr64123455ab.3.1743820768746; Fri, 04 Apr 2025
+ 19:39:28 -0700 (PDT)
+Date: Fri, 04 Apr 2025 19:39:28 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67f097e0.050a0220.0a13.022a.GAE@google.com>
+Subject: [syzbot] [block?] possible deadlock in queue_wb_lat_store
+From: syzbot <syzbot+5a9d5d7faa80fa15e3db@syzkaller.appspotmail.com>
+To: axboe@kernel.dk, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Unclear why this is occuring, but a raw call to the PRM at this point
-causes segfaults on my Zen5 system.  Later calls to the prm work just
-fine, and modifying the structure to include pci_dev info still results
-in a segfault.
+Hello,
 
-Debugging this is not possible on my end since the crash happens deep in
-the ACPI prm code.  Seems maybe the PRM interface isn't ready or something?
+syzbot found the following issue on:
+
+HEAD commit:    609706855d90 Merge tag 'trace-latency-v6.15-3' of git://gi..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=11ea1998580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=f51da9763f36e4c7
+dashboard link: https://syzkaller.appspot.com/bug?extid=5a9d5d7faa80fa15e3db
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/1e24dc4cf329/disk-60970685.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/616648e7703d/vmlinux-60970685.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/faec611db102/bzImage-60970685.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+5a9d5d7faa80fa15e3db@syzkaller.appspotmail.com
+
+======================================================
+WARNING: possible circular locking dependency detected
+6.14.0-syzkaller-11125-g609706855d90 #0 Not tainted
+------------------------------------------------------
+syz.0.753/9197 is trying to acquire lock:
+ffff8881437e2318 (&q->elevator_lock){+.+.}-{4:4}, at: queue_wb_lat_store+0x187/0x3d0 block/blk-sysfs.c:596
+
+but task is already holding lock:
+ffff8881437e1de8 (&q->q_usage_counter(io)#24){++++}-{0:0}, at: blk_mq_freeze_queue_nomemsave+0x15/0x20 block/blk-mq.c:215
+
+which lock already depends on the new lock.
+
+
+the existing dependency chain (in reverse order) is:
+
+-> #2 (&q->q_usage_counter(io)#24){++++}-{0:0}:
+       blk_alloc_queue+0x619/0x760 block/blk-core.c:461
+       blk_mq_alloc_queue+0x179/0x290 block/blk-mq.c:4349
+       __blk_mq_alloc_disk+0x29/0x120 block/blk-mq.c:4396
+       loop_add+0x496/0xb70 drivers/block/loop.c:2067
+       loop_init+0x164/0x270 drivers/block/loop.c:2302
+       do_one_initcall+0x120/0x6e0 init/main.c:1257
+       do_initcall_level init/main.c:1319 [inline]
+       do_initcalls init/main.c:1335 [inline]
+       do_basic_setup init/main.c:1354 [inline]
+       kernel_init_freeable+0x5c2/0x900 init/main.c:1567
+       kernel_init+0x1c/0x2b0 init/main.c:1457
+       ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:153
+       ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+-> #1 (fs_reclaim){+.+.}-{0:0}:
+       __fs_reclaim_acquire mm/page_alloc.c:3914 [inline]
+       fs_reclaim_acquire+0x102/0x150 mm/page_alloc.c:3928
+       might_alloc include/linux/sched/mm.h:318 [inline]
+       xa_insert include/linux/xarray.h:783 [inline]
+       blk_mq_init_hctx block/blk-mq.c:3924 [inline]
+       blk_mq_alloc_and_init_hctx+0x503/0x11c0 block/blk-mq.c:4457
+       blk_mq_realloc_hw_ctxs+0x8f6/0xc00 block/blk-mq.c:4486
+       blk_mq_init_allocated_queue+0x3af/0x1230 block/blk-mq.c:4540
+       blk_mq_alloc_queue+0x1c2/0x290 block/blk-mq.c:4353
+       __blk_mq_alloc_disk+0x29/0x120 block/blk-mq.c:4396
+       loop_add+0x496/0xb70 drivers/block/loop.c:2067
+       loop_init+0x164/0x270 drivers/block/loop.c:2302
+       do_one_initcall+0x120/0x6e0 init/main.c:1257
+       do_initcall_level init/main.c:1319 [inline]
+       do_initcalls init/main.c:1335 [inline]
+       do_basic_setup init/main.c:1354 [inline]
+       kernel_init_freeable+0x5c2/0x900 init/main.c:1567
+       kernel_init+0x1c/0x2b0 init/main.c:1457
+       ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:153
+       ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+-> #0 (&q->elevator_lock){+.+.}-{4:4}:
+       check_prev_add kernel/locking/lockdep.c:3166 [inline]
+       check_prevs_add kernel/locking/lockdep.c:3285 [inline]
+       validate_chain kernel/locking/lockdep.c:3909 [inline]
+       __lock_acquire+0x1173/0x1ba0 kernel/locking/lockdep.c:5235
+       lock_acquire kernel/locking/lockdep.c:5866 [inline]
+       lock_acquire+0x179/0x350 kernel/locking/lockdep.c:5823
+       __mutex_lock_common kernel/locking/mutex.c:587 [inline]
+       __mutex_lock+0x199/0xb90 kernel/locking/mutex.c:732
+       queue_wb_lat_store+0x187/0x3d0 block/blk-sysfs.c:596
+       queue_attr_store+0x270/0x310 block/blk-sysfs.c:799
+       sysfs_kf_write+0x117/0x170 fs/sysfs/file.c:139
+       kernfs_fop_write_iter+0x351/0x510 fs/kernfs/file.c:334
+       new_sync_write fs/read_write.c:591 [inline]
+       vfs_write+0x5ba/0x1180 fs/read_write.c:684
+       ksys_write+0x12a/0x240 fs/read_write.c:736
+       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+       do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
+       entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+other info that might help us debug this:
+
+Chain exists of:
+  &q->elevator_lock --> fs_reclaim --> &q->q_usage_counter(io)#24
+
+ Possible unsafe locking scenario:
+
+       CPU0                    CPU1
+       ----                    ----
+  lock(&q->q_usage_counter(io)#24);
+                               lock(fs_reclaim);
+                               lock(&q->q_usage_counter(io)#24);
+  lock(&q->elevator_lock);
+
+ *** DEADLOCK ***
+
+6 locks held by syz.0.753/9197:
+ #0: ffff88806a44d278 (&f->f_pos_lock){+.+.}-{4:4}, at: fdget_pos+0x2a2/0x370 fs/file.c:1213
+ #1: ffff888035a20420 (sb_writers#7){.+.+}-{0:0}, at: ksys_write+0x12a/0x240 fs/read_write.c:736
+ #2: ffff888061625888 (&of->mutex){+.+.}-{4:4}, at: kernfs_fop_write_iter+0x28f/0x510 fs/kernfs/file.c:325
+ #3: ffff8880213fbb48 (kn->active#125){.+.+}-{0:0}, at: kernfs_fop_write_iter+0x2b2/0x510 fs/kernfs/file.c:326
+ #4: ffff8881437e1de8 (&q->q_usage_counter(io)#24){++++}-{0:0}, at: blk_mq_freeze_queue_nomemsave+0x15/0x20 block/blk-mq.c:215
+ #5: ffff8881437e1e20 (&q->q_usage_counter(queue)#21){+.+.}-{0:0}, at: blk_mq_freeze_queue_nomemsave+0x15/0x20 block/blk-mq.c:215
+
+stack backtrace:
+CPU: 1 UID: 0 PID: 9197 Comm: syz.0.753 Not tainted 6.14.0-syzkaller-11125-g609706855d90 #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
+ print_circular_bug+0x275/0x350 kernel/locking/lockdep.c:2079
+ check_noncircular+0x14c/0x170 kernel/locking/lockdep.c:2211
+ check_prev_add kernel/locking/lockdep.c:3166 [inline]
+ check_prevs_add kernel/locking/lockdep.c:3285 [inline]
+ validate_chain kernel/locking/lockdep.c:3909 [inline]
+ __lock_acquire+0x1173/0x1ba0 kernel/locking/lockdep.c:5235
+ lock_acquire kernel/locking/lockdep.c:5866 [inline]
+ lock_acquire+0x179/0x350 kernel/locking/lockdep.c:5823
+ __mutex_lock_common kernel/locking/mutex.c:587 [inline]
+ __mutex_lock+0x199/0xb90 kernel/locking/mutex.c:732
+ queue_wb_lat_store+0x187/0x3d0 block/blk-sysfs.c:596
+ queue_attr_store+0x270/0x310 block/blk-sysfs.c:799
+ sysfs_kf_write+0x117/0x170 fs/sysfs/file.c:139
+ kernfs_fop_write_iter+0x351/0x510 fs/kernfs/file.c:334
+ new_sync_write fs/read_write.c:591 [inline]
+ vfs_write+0x5ba/0x1180 fs/read_write.c:684
+ ksys_write+0x12a/0x240 fs/read_write.c:736
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fb5d6d8d169
+Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fb5d7bca038 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007fb5d6fa5fa0 RCX: 00007fb5d6d8d169
+RDX: 0000000000000081 RSI: 0000200000000040 RDI: 0000000000000003
+RBP: 00007fb5d6e0e2a0 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 0000000000000000 R14: 00007fb5d6fa5fa0 R15: 00007ffce0809d88
+ </TASK>
+
 
 ---
- drivers/cxl/core/x86/amd.c | 17 -----------------
- 1 file changed, 17 deletions(-)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/cxl/core/x86/amd.c b/drivers/cxl/core/x86/amd.c
-index 483c92c18054..5e3708f9e179 100644
---- a/drivers/cxl/core/x86/amd.c
-+++ b/drivers/cxl/core/x86/amd.c
-@@ -227,26 +227,9 @@ static u64 cxl_zen5_to_hpa(struct cxl_decoder *cxld, u64 hpa)
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
- static void cxl_zen5_init(struct cxl_port *port)
- {
--	u64 spa;
--	struct prm_cxl_dpa_spa_data data = { .out = &spa, };
--	int rc;
--
- 	if (!is_zen5(port))
- 		return;
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
--	/* Check kernel and firmware support */
--	rc = acpi_call_prm_handler(prm_cxl_dpa_spa_guid, &data);
--
--	if (rc == -EOPNOTSUPP) {
--		pr_warn_once("ACPI PRMT: PRM address translation not supported by kernel\n");
--		return;
--	}
--
--	if (rc == -ENODEV) {
--		pr_warn_once("ACPI PRMT: PRM address translation not supported by firmware\n");
--		return;
--	}
--
- 	port->to_hpa = cxl_zen5_to_hpa;
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
 
- 	dev_dbg(port->host_bridge, "PRM address translation enabled for %s.\n",
---
-2.47.1
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
 
+If you want to undo deduplication, reply with:
+#syz undup
