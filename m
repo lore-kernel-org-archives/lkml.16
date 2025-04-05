@@ -1,111 +1,134 @@
-Received: from mail3-relais-sop.national.inria.fr (mail3-relais-sop.national.inria.fr [192.134.164.104])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD399748F
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 00:33:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.134.164.104
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 195682F36;
+	Sat,  5 Apr 2025 00:34:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743813229; cv=none; b=UwqWh12dSoADI4NZDX1bIu3V8tIOme3Gj1Tda2plNIAMqwnqhBq3691MrbF0bKY8HWJKIfJOgvdgeSBNbT9U1MfTO4fcbq8+xky/aBv3yaurSS0SZxU715jVyQwe+iJtVXPyiGmrga36s9b6enz0ijW9XSMpayQqD8pT3HaRiKo=
+	t=1743813264; cv=none; b=WMyYxgMAKXv5LjsTiBfYKSDWu9VtC/gbJn15B8WSFkp4FRX8ESJZZUJmmUsLrC4Qqb8+H8/02MtIV6hiPkJgyIw6cKIeMQ60rC74F8SoYRH5BFjKJz3NpmVQ4T40HYczgbAjqTyqo1vMA4CkKG/E9Mq/taQ7zb4bbIhgGlWoAO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743813229; c=relaxed/simple;
-	bh=CQJRQ11RqfvELfWpJQkseDZvm3TQu1lz6j3vtH3TxYU=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=CkZLvbYwKrq5QJ9Dwr2bI6tTA9+0R28GGtKPMFVwDwDclJZ4yU7f1IAVQow79unQRf5OTLe6p1iQrJmbpqbhNbTOEhqGsArMYEUNC9NwkcGhK8d0eDsFp7zvJ2I+O0VWKNK8r7E1dRMtBCBYGBsK1Sg+oL6rj7DQPAxXMHRCjNI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr; spf=pass smtp.mailfrom=inria.fr; dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b=asNUaDHJ; arc=none smtp.client-ip=192.134.164.104
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inria.fr
+	s=arc-20240116; t=1743813264; c=relaxed/simple;
+	bh=B/ZwLAKVHDWZLN1BSpH4RObsOdIRC6/Zi/NLODnIi+o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=s5ywE/4B72Gy1HOcjyOWnKez0FOcOJgkmrXLxCUnXNBOx66M3Rs10UfPVpmcqqvBf0cAT3F3JIg4IuMx3DavQLXb/PGc4JTArhD77C2/4T8evFf+Nh0qBBcU4rKJrLLeETMnHq829gm/F7rGG3BnFy7RNB7yHLoAcPK7hrSUCVQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ypnk8H0I; arc=none smtp.client-ip=209.85.128.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b="asNUaDHJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ypnk8H0I"
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-6feb229b716so26451477b3.3;
+        Fri, 04 Apr 2025 17:34:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=inria.fr; s=dc;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=CIP45yUlml7IuIoe9Z3XWr8F+65YLSo36Wrup9WoaCo=;
-  b=asNUaDHJj7ezB4IPOB2dlEYeiPHLQnV7KhgKf8Y+2RIOTidlWfK2W/Y6
-   dr8VvRdqdvpl0E2irATXVbcrk85ukUWc6vGEu3yitgQm0dSB66d1QSdnP
-   o36m/8zAyNHj3o7CQpUCx+xcnNlRDcrX92uw+DPEy5fjLzGs8uAkwPbiU
-   8=;
-Authentication-Results: mail3-relais-sop.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=julia.lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
-X-IronPort-AV: E=Sophos;i="6.15,189,1739833200"; 
-   d="scan'208";a="113511471"
-Received: from unknown (HELO hadrien) ([50.225.219.62])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2025 02:33:37 +0200
-Date: Fri, 4 Apr 2025 20:33:33 -0400 (EDT)
-From: Julia Lawall <julia.lawall@inria.fr>
-To: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
-cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, julia.lawall@inria.fr, 
-    andy@kernel.org, dan.carpenter@linaro.org, linux-staging@lists.linux.dev, 
-    linux-kernel@vger.kernel.org, outreachy@lists.linux.dev
-Subject: Re: [PATCH v2] staging: rtl8723bs: Use % 4096 instead of & 0xfff
-In-Reply-To: <Z/B019elTtKG/PvD@ubuntu>
-Message-ID: <2d2dbebf-b4bb-74c0-14cd-b7ffbe3894e4@inria.fr>
-References: <Z/B019elTtKG/PvD@ubuntu>
+        d=gmail.com; s=20230601; t=1743813262; x=1744418062; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1vM9cC/NGrRojvvJMDDud8eS5qlET0jOCaPQVrH3OSk=;
+        b=Ypnk8H0IQitSzDtLct6oX91j59YFV9zMXoxgHqoQ7biP9bOZE9aCNPP9DY8HYQccAq
+         sMSs5sRyTeZoSjCxDMWN8yZKo/XNP+XYGA7Hc7dP+13s97hjoIYKAi8/lXMjAv/wN+Oz
+         I1U00nocllx24lx2hnz6827+arclVJBgvr3d95JDMReIP9g+ZI8Lq3pw/Huw+lnkHH2G
+         TtmNRTKP6MOs2GH9mtZvn+VI1lyHO5mO6NBXfA11NvUPYEr82i9mC5TQ9YlnkwjiKqAd
+         yKJKcFhghKxTVDFTEPLnuc3BM/jOx3hVjevnBhESRuEn9pvNL6pgpFAKMWZ5uHox8BCZ
+         pI3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743813262; x=1744418062;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1vM9cC/NGrRojvvJMDDud8eS5qlET0jOCaPQVrH3OSk=;
+        b=kZ9A/a+op9cFo28aDOV4DCWrSXmZ42CtxY69UdqpKnQum7yl/+qH2zGV335a5u6BBU
+         vPdoWMNWwovbiGQifdEH4CHbLJGkMIZxyQ2mg0ohdtrJpCwy0NkFobFidWEfBUfARmgK
+         6m1jC+LHu6vsbQFimADXhE97pl44q29uYGYJqdgMzlShhils27zS3GETvRygHOeVggTj
+         nu3HHTcRvNd17r0orWkKRMHy0sF037rH6zxXjMR76JHe8T0BDwTea361jVBHnLHBHhuY
+         DehRToIQwBrGKRAZ4PmdZE4sU8XfG+f8QE7AsVQwV0jJ6/cp5CNsJJ4nK8fVxnrCWBzn
+         Tzdw==
+X-Forwarded-Encrypted: i=1; AJvYcCWnajYT/qbox10aksjid7ft1Y3nemjU7DTDxOA9owOiu46OzQS06RYb0enlWNeQYbzEqz98Y1pzkQBYvwE=@vger.kernel.org, AJvYcCXigP/zmwUAY83SHNBLLn+6hH6Bv+9PiwmVNzO6yY4f81edG8nP9IVxON8apS4YKYwkb3YAoUNXEeRMqswjIl9hpA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzFpOuOgpb341gDMdD/Mvs5S5FRIXwpy5eQjREt2jmptEt+y9B0
+	K/PC47B8D07UJUDySDDHRgOlFh/EXIJFIanCcQLBKqr5O1jdj2AOnhmsJDC7Ki8qS7q7j8f8EKv
+	IFmx7ieSv9tEkZJa0eedy0laYeQE=
+X-Gm-Gg: ASbGncs5LkxIFJSs0tW7ntwGKn4cZ/J1bXfZ1VqZLY0tpwKNnHer7CUQpDYN0F4EIw4
+	p7O13hCoA14MLHwS8WLQtpUwmdoBDMAYVx1Zp5ksB6POXYvn9GcV22j4Jl6TXQCrJgVnRxdkWVI
+	jskrjnlKDe2QQC9M59f06zCofVOIIVtjx7ruKG4w==
+X-Google-Smtp-Source: AGHT+IEUB5fROKPu/BRTo2LDDb4fpCml3iuVHxzJWYMOvwrTq/vPLrg+oa2cuxcOvukL9jdPhDqzeXR03D+gGeR0pDk=
+X-Received: by 2002:a05:690c:dd0:b0:6fb:9c08:4980 with SMTP id
+ 00721157ae682-703e1632403mr87608987b3.27.1743813261771; Fri, 04 Apr 2025
+ 17:34:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20250404041652.329340-1-howardchu95@gmail.com> <Z_AeswETE5xLcPT8@google.com>
+In-Reply-To: <Z_AeswETE5xLcPT8@google.com>
+From: Howard Chu <howardchu95@gmail.com>
+Date: Fri, 4 Apr 2025 17:34:11 -0700
+X-Gm-Features: ATxdqUH85tTK9fhPrlOYCq-5At9ozoUFJrRKzaN8LYPxKOht6-23DElyDA418Po
+Message-ID: <CAH0uvoiDqn=2ySAYfn7HsNsnu3W8zED5jFqOPTpjW++pmrbbEg@mail.gmail.com>
+Subject: Re: [PATCH v1] perf trace: Fix inconsistent failures in perf trace's tests
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: acme@kernel.org, mingo@redhat.com, mark.rutland@arm.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
+	adrian.hunter@intel.com, peterz@infradead.org, kan.liang@linux.intel.com, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hello Namhyung,
 
+On Fri, Apr 4, 2025 at 11:02=E2=80=AFAM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> On Thu, Apr 03, 2025 at 09:16:52PM -0700, Howard Chu wrote:
+> > There are two failures that frequently occur in perf trace's tests. One
+> > is the failure of 'perf trace BTF general tests'; The other one is the
+> > failure of 'perf trace record and replay', which, when run independentl=
+y,
+> > always succeeds.
+> >
+> > The root cause of the first failure, is that perf trace may give two ty=
+pes
+> > of output, depending on whether the comm of a process can be parsed, fo=
+r
+> > example:
+> >
+> > mv/312705 renameat2(CWD, "/tmp/file1_VJOT", CWD, "/tmp/file2_VJOT", NOR=
+EPLACE) =3D 0
+> > :312774/312774 renameat2(CWD, "/tmp/file1_5YcE", CWD, "/tmp/file2_5YcE"=
+, NOREPLACE) =3D 0
+> >
+> > In the test, however, grep is always looking for the comm 'mv', which
+> > sometimes may not be present.
+> >
+> > The cause of the second failure is that 'perf trace BTF general tests'
+> > modifies the perf config, and because tests are run concurrently,
+> > subsequent tests use the modified perf config before the BTF general
+> > test can restore the original config. Mark the BTF general tests as
+> > exclusive will solve the failure.
+>
+> I'm not sure if the config is the cause of the failure.  Also I don't
+> see it restored.
 
-On Sat, 5 Apr 2025, Abraham Samuel Adekunle wrote:
-
-> Replace the bitwise AND operator `&` with a modulo
-> operator `%` and decimal number to make the upper limit visible
-> and clear what the semantic of it is.
-
-I think that the & and the Fs are more understandable than using the % and
-4096.  I would say no for this idea.
-
-> Also add white spaces around binary operators for improved
-> readabiity and adherence to Linux kernel coding style.
-
-The "Also" is a hint that you are doing two things.  So they can be in two
-different patches.
-
-julia
+Yeah because (exclusive) got it fixed, I didn't restore the
+environment variable, just deleted the config file.
 
 >
-> Suggested-by Andy Shevchenko <andy.shevchenko@gmail.com>
+> IIUC the export only affects child processes from the current shell.
+> So other tests running in parallel won't see the config change.
+
+I'll look into it thanks.
+
 >
-> Signed-off-by: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
-> ---
-> Changes in v1:
-> 	- Added more patch recipients.
+> But still, there should be something to affect the behavior.  It's
+> strange to miss the task name in COMM record.
 >
->  drivers/staging/rtl8723bs/core/rtw_xmit.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+> I also confirm that running the test serially fixes it.
+
+Thanks, do you want a tested-by?
+
+Thanks,
+Howard
+
 >
-> diff --git a/drivers/staging/rtl8723bs/core/rtw_xmit.c b/drivers/staging/rtl8723bs/core/rtw_xmit.c
-> index 297c93d65315..630669193be4 100644
-> --- a/drivers/staging/rtl8723bs/core/rtw_xmit.c
-> +++ b/drivers/staging/rtl8723bs/core/rtw_xmit.c
-> @@ -943,7 +943,7 @@ s32 rtw_make_wlanhdr(struct adapter *padapter, u8 *hdr, struct pkt_attrib *pattr
->
->  			if (psta) {
->  				psta->sta_xmitpriv.txseq_tid[pattrib->priority]++;
-> -				psta->sta_xmitpriv.txseq_tid[pattrib->priority] &= 0xFFF;
-> +				psta->sta_xmitpriv.txseq_tid[pattrib->priority] %= 4096;
->  				pattrib->seqnum = psta->sta_xmitpriv.txseq_tid[pattrib->priority];
->
->  				SetSeqNum(hdr, pattrib->seqnum);
-> @@ -963,11 +963,11 @@ s32 rtw_make_wlanhdr(struct adapter *padapter, u8 *hdr, struct pkt_attrib *pattr
->  					if (SN_LESS(pattrib->seqnum, tx_seq)) {
->  						pattrib->ampdu_en = false;/* AGG BK */
->  					} else if (SN_EQUAL(pattrib->seqnum, tx_seq)) {
-> -						psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (tx_seq+1)&0xfff;
-> +						psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (tx_seq + 1) % 4096;
->
->  						pattrib->ampdu_en = true;/* AGG EN */
->  					} else {
-> -						psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (pattrib->seqnum+1)&0xfff;
-> +						psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (pattrib->seqnum + 1) % 4096;
->  						pattrib->ampdu_en = true;/* AGG EN */
->  					}
->  				}
-> --
-> 2.34.1
->
->
+> Thanks,
+> Namhyung
