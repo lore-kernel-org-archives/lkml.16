@@ -1,141 +1,107 @@
-Received: from s1.g1.infrastructure.qtmlabs.xyz (s1.g1.infrastructure.qtmlabs.xyz [107.172.1.117])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f65.google.com (mail-pj1-f65.google.com [209.85.216.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B184E2E62A0;
-	Sat,  5 Apr 2025 10:18:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=107.172.1.117
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F8EF1BEF74;
+	Sat,  5 Apr 2025 10:20:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743848315; cv=none; b=APMa34UHbBuaZAgLcNG5GIBVIKJ4JIFSUyEn0GlyZLAvUndqG9HAgKtlv8uHz6VwKqEphtEHa0HPlbxKz/yET5JHgaIJEzmzZvawHg/wqF/WwTzDsnYEEMpoq8jRM4sp/oB376XIQu3V0FTfVGZvebr0Da3NpiDub6bPBKZxHHg=
+	t=1743848421; cv=none; b=oxNVU4TSrWMapsf8mE20w+ocUiLEil09dzVZz7XpKEFu8rk95jL4AZqBEMGzrNit5kEw39vGBtXihjQwZ3Vrdp1vvnuVKcECBEsqIx4zVSQozM2JYGIMAeaDPIKGpvYdrVGKup/5Cgh6AyJrRfS8nUyPBSRT3ygpQ4fPus68gag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743848315; c=relaxed/simple;
-	bh=IypuKgTLxyWMiKMncuEE745MxIy60JBJBCOJ3LDQkR0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=mqfK4CNPmGrBjUuN5NbPXmrHTOUGVX+Fsb2vj3fPOEaBwHZ9eKseZf6cb3IhlWg6sGhForUO1qkFF+dZyqa+NzaxjRAJYuWUb7O4g18bvFXM6ml7+STxZoC2IxkHuQYtlwOjbTAlqoxwzOXSzjRmvMWHMId02GgBjcc35F3vDtk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qtmlabs.xyz; spf=pass smtp.mailfrom=qtmlabs.xyz; dkim=pass (2048-bit key) header.d=qtmlabs.xyz header.i=@qtmlabs.xyz header.b=GbwZv5Eb; arc=none smtp.client-ip=107.172.1.117
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qtmlabs.xyz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qtmlabs.xyz
+	s=arc-20240116; t=1743848421; c=relaxed/simple;
+	bh=NjumOkPoCMJz5c1o9rgfdcQn7cAjdMYNDLoKq4jWNzI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=D9n+g/IVYHCPDybdM+iqxYcbH29GlQitDKfuN6cqYFuP4FEgv1qXEQ+HMefzYsuBkD8ka9lcHxsM1ORXikYp3/T5rK9o+G31Io871yQJ57gdTyP+hJuwlhKwjTtiNPhkyhUV8LFqnyFbkvzANPzLonlO1LE6ReEHLONcAhdMvOs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nRwAhZAV; arc=none smtp.client-ip=209.85.216.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qtmlabs.xyz header.i=@qtmlabs.xyz header.b="GbwZv5Eb"
-From: Myrrh Periwinkle <myrrhperiwinkle@qtmlabs.xyz>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qtmlabs.xyz; s=dkim;
-	t=1743848311;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=+FF1j3m2nFZN9HdZH57mTig2YFbN5qGWD9iMio6Um34=;
-	b=GbwZv5Eb+YNsDGz7nSouL617GazWZMeG9Tb1eyVbz33xg3/7/IMisVL5C2tsNT/fr10s5n
-	h2QXpLCpM7RxiqxQ0Ffp2vHDNKG8LcCGGJWwPCabYhpdf5SRDSR3f9kRT4vZvubS98fPc9
-	xRq5EudfmqmzHaPv+V+yMQLQG6vSJvZxSLbIHYXitMlxVBxD70qsz4tbXh/Iw15ce05SXl
-	C4+sblNpCZxdmzNWupHtTf+wMo59iwcRnaXD4aZ28EHy/1BmbmR9lep7QIkVDjWmAXNme0
-	hpOK5Gt2zEcwBh8/dMHiVVtSaEAq8WXxPTpWySzXHhDgLdBKJlDcOTjGDF5t4Q==
-Authentication-Results: s1.g1.infrastructure.qtmlabs.xyz;
-	auth=pass smtp.mailfrom=myrrhperiwinkle@qtmlabs.xyz
-Date: Sat, 05 Apr 2025 17:18:24 +0700
-Subject: [PATCH v2] x86/e820: Fix handling of subpage regions when
- calculating nosave ranges
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nRwAhZAV"
+Received: by mail-pj1-f65.google.com with SMTP id 98e67ed59e1d1-30572effb26so2546680a91.0;
+        Sat, 05 Apr 2025 03:20:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743848420; x=1744453220; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=e8oqq+1z5lcjup3ct51URpJrm2ZmWv0Mc4Ufm2gfQM4=;
+        b=nRwAhZAV28+XHQfHykZ9n1+hU4kVjQTYybnLd1EkcUBjDuGJng1WiDLfpYARjcTeCz
+         wrmzdf0f5ZE1KfvaTFeLboJ465b2TQiy9NR9xB87fLoAvBAw3b1FDc38fv3drIwrfbQx
+         pT2h+Y84F4wsw+xqz4y7nJuvW3rzj4Sf57vmKkqKQCgR3OtaXkyF1OymcXdaAYkeAuIi
+         B4uBrMFejJPSrjU+ldU5CS9P5KdtheVRN5D8Y3Un885jYe0s6qvvuWkgKQMq4BrCFnc+
+         duWDo+ufaDIrn5jmJRNQLKHlc2AELyuJqZbqSn/gyMvpIXmHiUNZ+W/hNo2sLkwSj4qp
+         Q8uQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743848420; x=1744453220;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=e8oqq+1z5lcjup3ct51URpJrm2ZmWv0Mc4Ufm2gfQM4=;
+        b=jCMRGDOWd9hXbvE6huMwfJUWjx6s8gS1Pw1BC13L9Q0ZUID9X01mFXfCT8+D5kWHlh
+         kOSNeX2eymBfxQVAyhYmys0oWerlowS58i72tIrqjqGA11Ei/3l+IboXc3a4E71gG3GD
+         t/jVtZXa6x2a4POJUeRZDRlnqiK9YXXzeuLKmBzKKkGOJZrEdHAxktUCiBWRf22zRQvq
+         JToRHghS7Q0lqSNGZsnVGld10fNHSYs0JvVqxM8VE51sRmLO/f0U6tI2bKU6tsR2+689
+         RlN/uvpjLhZTR1CH4COGm0Jq9zAeTKD93ZPmDW4Mlb44W9JsY8Zxza2l5cgtZsQkOsU4
+         6eWw==
+X-Forwarded-Encrypted: i=1; AJvYcCVeXlhXncKdP2PYYYDGAlfW6iZQwFFjBIUv9RDvu5ZePiKlo4IL2EhQDl3+r0f8/bXvqSGoJbv8XRoEXg==@vger.kernel.org, AJvYcCVh7ZUU2kOU31EE73sjZPti75ghZEFfjh38vjQZCCcr5qhpJDPnLRr142onRMtNmxGY1Eixrrnc@vger.kernel.org, AJvYcCVuWlMykddYJclERl0vAl865DuON4BJpUk/LAQ7IRB7yeleXuQhHqRk30UrFwF/HBzAwCE+RDANI2EIj/k=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywyy8AJNI3w9qM3G1wQBATFGY/wTziES5KC1c7V/74Q6eKJ8M3t
+	C11HKE08mAO9hY+REQ1g+mx+1Mu+ebIBq3IcO3Pn3/VAxAj0DsJU
+X-Gm-Gg: ASbGncvtmJ9cLYWk571ag54FItA8cxGi2dFMqyUmT9lcJRGiyPj+rZYV4hNWrcrbuag
+	h9HF/aDHvOQ3C3VuBjOsUiSCutG+aitHKa1/2sxEDF/rBqza499ZRJ3jX1xKkh+8O4FQ6+fBf8d
+	n2VNiyhou6aqDBbE1AwOJa+IkUP8mKHdLvFBbFtU0aTHZQ+pwOvX/ZS5LP7yR60UVht8/ghncU2
+	awIg3K2Vw39HqZ29M3bXfVLbtJJaeCyHI7ekH931DMF9eA34SfPoExuhfL+WM1HeemfrFz/HfrD
+	QOXw9oqY1cqaG9LAqPG86xwRYvPk4vrlfKQtVk8Jkn9HfRECFNLsMaK8RKkkFUpGt98=
+X-Google-Smtp-Source: AGHT+IFnd+DDSixqNXBrpZFTBCxr48qyQWCpFj3gJUCh9eJfdNvZofLt59fbaDPpLX6t1EVxd6cx6g==
+X-Received: by 2002:a17:90b:5242:b0:2fe:e9c6:689e with SMTP id 98e67ed59e1d1-306a4860b0dmr8718871a91.8.1743848419770;
+        Sat, 05 Apr 2025 03:20:19 -0700 (PDT)
+Received: from henry.localdomain ([223.72.104.9])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-305983b9cfbsm5053185a91.31.2025.04.05.03.20.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 05 Apr 2025 03:20:19 -0700 (PDT)
+From: Henry Martin <bsdhenrymartin@gmail.com>
+To: saeedm@nvidia.com,
+	tariqt@nvidia.com
+Cc: leon@kernel.org,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	netdev@vger.kernel.org,
+	linux-rdma@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Henry Martin <bsdhenrymartin@gmail.com>
+Subject: [PATCH v1] net/mlx5:  Fix null-ptr-deref in mlx5e_tc_nic_create_miss_table()
+Date: Sat,  5 Apr 2025 18:20:08 +0800
+Message-Id: <20250405102008.78451-1-bsdhenrymartin@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250405-fix-e820-nosave-v2-1-d40dbe457c95@qtmlabs.xyz>
-X-B4-Tracking: v=1; b=H4sIAG8D8WcC/x2MQQqAIBAAvxJ7bsEkQ/tKdDBbay8aChKIf086D
- sxMhUyJKcM6VEhUOHMMHeQ4gLttuAj57AxSSCVmodDzi6SlwBCzLYReucNoZY1dJujVk6gr/3H
- bW/sA8JeBK2EAAAA=
-X-Change-ID: 20250405-fix-e820-nosave-f5cb985a9a61
-To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org, 
- Roberto Ricci <io@r-ricci.it>, 
- Myrrh Periwinkle <myrrhperiwinkle@qtmlabs.xyz>, stable@vger.kernel.org
-X-Spamd-Bar: /
+Content-Transfer-Encoding: 8bit
 
-The current implementation of e820__register_nosave_regions suffers from
-multiple serious issues:
- - The end of last region is tracked by PFN, causing it to find holes
-   that aren't there if two consecutive subpage regions are present
- - The nosave PFN ranges derived from holes are rounded out (instead of
-   rounded in, which makes it inconsistent with how explicitly reserved
-   regions are handled), which may cause us to erroneously mark some
-   kernel memory as nosave
+Add NULL check for mlx5_get_flow_namespace() returns in
+mlx5e_tc_nic_create_miss_table() to prevent NULL pointer dereference.
 
-Fix this by:
- - Treating reserved regions as if they were holes, to ensure consistent
-   handling
- - Tracking the end of the last RAM region by address instead of pages
- - Rounding in (instead of out) the nosave PFN ranges so we never mark
-   any kernel memory as nosave
-
-Fixes: e5540f875404 ("x86/boot/e820: Consolidate 'struct e820_entry *entry' local variable names")
-Link: https://lore.kernel.org/all/Z_BDbwmFV6wxDPV1@desktop0a/
-Tested-by: Roberto Ricci <io@r-ricci.it>
-Reported-by: Roberto Ricci <io@r-ricci.it>
-Closes: https://lore.kernel.org/all/Z4WFjBVHpndct7br@desktop0a/
-Signed-off-by: Myrrh Periwinkle <myrrhperiwinkle@qtmlabs.xyz>
-Cc: stable@vger.kernel.org
+Fixes: 66cb64e292d2 ("net/mlx5e: TC NIC mode, fix tc chains miss table")
+Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
 ---
-The issue of the kernel failing to resume from hibernation after
-kexec_load() is used is likely due to kexec-tools passing in a different
-e820 memory map from the one provided by system firmware, causing the
-e820 consistency check to fail. That issue is not addressed in this
-patch and will need to be fixed in kexec-tools instead.
+ drivers/net/ethernet/mellanox/mlx5/core/en_tc.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Changes in v2:
- - Updated author details
- - Rewrote commit message
-
-Link to v1: https://lore.kernel.org/lkml/20250405-fix-e820-nosave-v1-1-162633199548@qtmlabs.xyz/
-
-P.S. Does anybody know how to move b4 (https://b4.docs.kernel.org/)
-state between machines?
----
- arch/x86/kernel/e820.c | 17 ++++++++---------
- 1 file changed, 8 insertions(+), 9 deletions(-)
-
-diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
-index 57120f0749cc3c23844eeb36820705687e08bbf7..656ed7abd28de180b842a8d7993e9708f9f17026 100644
---- a/arch/x86/kernel/e820.c
-+++ b/arch/x86/kernel/e820.c
-@@ -753,22 +753,21 @@ void __init e820__memory_setup_extended(u64 phys_addr, u32 data_len)
- void __init e820__register_nosave_regions(unsigned long limit_pfn)
- {
- 	int i;
--	unsigned long pfn = 0;
-+	u64 last_addr = 0;
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c b/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
+index 9ba99609999f..538c33c353ad 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
+@@ -5216,6 +5216,8 @@ static int mlx5e_tc_nic_create_miss_table(struct mlx5e_priv *priv)
+ 	ft_attr.level = MLX5E_TC_MISS_LEVEL;
+ 	ft_attr.prio = 0;
+ 	ns = mlx5_get_flow_namespace(priv->mdev, MLX5_FLOW_NAMESPACE_KERNEL);
++	if (!ns)
++		return -EOPNOTSUPP;
  
- 	for (i = 0; i < e820_table->nr_entries; i++) {
- 		struct e820_entry *entry = &e820_table->entries[i];
- 
--		if (pfn < PFN_UP(entry->addr))
--			register_nosave_region(pfn, PFN_UP(entry->addr));
--
--		pfn = PFN_DOWN(entry->addr + entry->size);
--
- 		if (entry->type != E820_TYPE_RAM)
--			register_nosave_region(PFN_UP(entry->addr), pfn);
-+			continue;
- 
--		if (pfn >= limit_pfn)
--			break;
-+		if (last_addr < entry->addr)
-+			register_nosave_region(PFN_UP(last_addr), PFN_DOWN(entry->addr));
-+
-+		last_addr = entry->addr + entry->size;
- 	}
-+
-+	register_nosave_region(PFN_UP(last_addr), limit_pfn);
- }
- 
- #ifdef CONFIG_ACPI
-
----
-base-commit: a8662bcd2ff152bfbc751cab20f33053d74d0963
-change-id: 20250405-fix-e820-nosave-f5cb985a9a61
-
-Best regards,
+ 	*ft = mlx5_create_auto_grouped_flow_table(ns, &ft_attr);
+ 	if (IS_ERR(*ft)) {
 -- 
-Myrrh Periwinkle <myrrhperiwinkle@qtmlabs.xyz>
+2.34.1
 
