@@ -1,255 +1,376 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF1B91CD1F;
-	Sat,  5 Apr 2025 14:59:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72E8F1F37D1
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 14:59:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743865184; cv=none; b=hxlzP/YRjMvhFj7BI/clGaauybUGr3hrIIi/5FMi0iVj0dO1YA6HTq2m+Dx89+wFLi27lUM25Y56kN6njaHlLme1aR7WM4qUKLsOa8BupPKCV7j5+LZI+wr6EXiVl/MROsnrK8bCxnunJPAMr25Dcokr3ZyF086XxIcs80gIkVs=
+	t=1743865191; cv=none; b=QxNvi/Vtu+tlU3ZzJGOvVeaj2hpD3S3SybbNSZHs1R8b+ssy1+EOK0peXrxQceDezLvTgkyu0Hdm8n+CLvRJLQhVbkS5r9WOWDtp4fbHip1K6Fhx5NmpFr73xXE1gRfhRQ6gZFanjOfwb3geJ8DOxnhetv3vPv4WaR1ygPRKPdI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743865184; c=relaxed/simple;
-	bh=aMgVLr2gZ/zm9nchcvfQf1DOEODdM7BVtdc8Y3vrn50=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Rs6Ry2M+RAFz5mYU5oqhLHLxm6/lsJFHmq5XxMK74E4wL3OlhSWtCCh1w0+RHTBo24dDwN/hZzdJFQ8Ps8VlrWpqV1sCpgGBT35vaSK3s8oHSRwDrCk0IWoPpiemJGdpmPbUN7wXoFMoUuaO/goTbF9WOKn21/+J/m89pJCYj9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y+y65FEr; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743865191; c=relaxed/simple;
+	bh=MujoFMWO97NvPreyL+B/x2WoeplqxRBvEV79sESwlJQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=m3YkO7xME1PM15V3OoEK2leX4svPxI7SmNFbrEb/u1Qyp1y9FWIWWzKEeM0L7Jky3XxpbmdwVVEt4rpOUwTP00ioLeMp8kRW3+woP+OpQ+79cKIy8XMIdKbrgcfAwx1r5cQOPiHzCtXTtCWM2VyETinJEphB/EveRdjz04TZonI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YWaFTks4; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y+y65FEr"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-736aaeed234so2472556b3a.0;
-        Sat, 05 Apr 2025 07:59:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743865182; x=1744469982; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=U78dvPgCsVKsDHDJLPZBi8BzFbKiqAV3z5zJs3Q3Vas=;
-        b=Y+y65FEr9MwImQNNNWkU5c8m5L3sBuzx46+/FBmu++xitHlr+QQOYtzgu1SQs2ndgs
-         a+egQXxlKRZxDgIWTLDLji9NGNEWCGsGCwMfAdtmO8cSYPRkMZ7XTKAtmXvIkPfkYyI+
-         j1ZMo8cHhm5n5WrYs4H5BNAjp5UINjH1fq2dW/Pw8oCP5B35HehiAaCb9sqXfNX0Duhr
-         HQBB9yCJXAGgOuvG2J9JkFGdmoOGcIQu8qGItuzWl/ynVBy6auvizBaAXRCTsiDsiyhJ
-         fvh7UCfM4so8RJQ7DCpTIRT3w8JP9s1JZ2l2GSdNiPBeYW6t/bYObzEDZ26/3Nekl2Tv
-         8wmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743865182; x=1744469982;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=U78dvPgCsVKsDHDJLPZBi8BzFbKiqAV3z5zJs3Q3Vas=;
-        b=W4/TbOOH/n+r9dMZTBZdVQp8aJwcoUu5Nl30dnbQIJvtYa5PpklxL8nd0U+k5JT9H4
-         54zb0Lf6VMqnTaQalyqwYCdNxrprkLDwAGDDQqxv+0UtOSEqJCQhMBhqLsGTHNM7UYzN
-         N3OaRh1xINAoNcKUM1nm8KpxrwGssqcjMxJHQEF3vWqUVUPCaVXHFh1JNYEpwK9umcxW
-         Yg7Jd+uv03mDAN+XBbc741spFmAPxRB6nv7qdVOroGQiSA0hPzJ6o1X3HLIpE56Pdgvv
-         5VGBNeTkEUENilbT9QD2j/b3V4ItmoWkiiV5qSmSVJC2dvY620kraPWoMUZ+FbwEy/L0
-         dMHg==
-X-Forwarded-Encrypted: i=1; AJvYcCXc0trmI/SD+KDgIndGFrYFuk54n2hMWp8miKMOAmBQYFCfgTAMoNZEgyTfURP3pYWugbIyB71aazRB54o=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw90YFQQU5/edD/kjcu+YOxwIXh15XczTlaR+EN1VDSxu+fvNLP
-	dv8ymVFNcIUel+T3lorvInnaF0eNWOuKnDdAY9Sfd72L3r8iHEGn
-X-Gm-Gg: ASbGncsox4xtqyClqsYNZBXHRJeJkU+q6czgRbjgrymj9024CWrcM/8q57sdf7iHsBG
-	RjY4atysGOf12AEb0MxsAFEy+ylWKu9Jb22X9Xorhec2O65QbmYVqivqAHN4Hy8hEBAo0g1JVH4
-	x2+fF8a9yIOEkWg/ycUUfKQT8jEtyRuHTVToQFkjOlD1/yXRyl71o7IKWZ8ZSc2NbI/umvwJuVU
-	xbmMxSxUs6exsuzytBE+Uul7G6AzGHDTM6lfkxaUhae7JO+y3epfT1gUW0X8t1Xj6Vstu0AZt+i
-	f/w0Nsx7G148Zc5TN7UgsPCr3e4H7A5Ddlk34g8dJlhGb3SvsrCu0eaZOdlXyJFMEwxPUcQQu3C
-	Lc+3WfJA3KuuyT5EnJdWy/F0nfQC7LpG5hTX72SB/+w==
-X-Google-Smtp-Source: AGHT+IEIfr1PeRtQ/aHXxthPr+Pi+Ht9Cr3z0rBJ0mKi+8MkYMU1eZES+TqJkWwXtuflwGedDx7QRA==
-X-Received: by 2002:a05:6a00:3a0f:b0:736:4e0a:7e82 with SMTP id d2e1a72fcca58-739e6ff6b10mr8332137b3a.10.1743865181802;
-        Sat, 05 Apr 2025 07:59:41 -0700 (PDT)
-Received: from localhost.localdomain (p12284229-ipxg45101marunouchi.tokyo.ocn.ne.jp. [60.39.60.229])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739d9ea0991sm5497003b3a.106.2025.04.05.07.59.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Apr 2025 07:59:41 -0700 (PDT)
-From: Ryo Takakura <ryotkkr98@gmail.com>
-To: alex@ghiti.fr,
-	aou@eecs.berkeley.edu,
-	bigeasy@linutronix.de,
-	conor.dooley@microchip.com,
-	gregkh@linuxfoundation.org,
-	jirislaby@kernel.org,
-	john.ogness@linutronix.de,
-	palmer@dabbelt.com,
-	paul.walmsley@sifive.com,
-	pmladek@suse.com,
-	samuel.holland@sifive.com,
-	u.kleine-koenig@baylibre.com
-Cc: linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-serial@vger.kernel.org,
-	Ryo Takakura <ryotkkr98@gmail.com>
-Subject: [PATCH v2] serial: sifive: Switch to nbcon console
-Date: Sat,  5 Apr 2025 23:59:15 +0900
-Message-Id: <20250405145915.493173-1-ryotkkr98@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YWaFTks4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743865188;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cbkTzprJIlguje41tLks2OTXlNo6AoyMKZsgeX069d4=;
+	b=YWaFTks4Fdrwsr5uIw9L9n265THCDdmbo//j7YO4z58U/G/TsG5+iBjgpBsR1UQIWE0Cmh
+	pPf6Qs3I3l87aWDoOhGmpQrPGin8yd2XTtzpALTTn2+n/tf+/7vAsTD520CDcv059YjubL
+	w84MZ0RqcqyW0AlcfKNdcG5/Tkvu/kI=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-593-T_9m49wINh-rUSJBmh1fAw-1; Sat,
+ 05 Apr 2025 10:59:44 -0400
+X-MC-Unique: T_9m49wINh-rUSJBmh1fAw-1
+X-Mimecast-MFC-AGG-ID: T_9m49wINh-rUSJBmh1fAw_1743865181
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3BF52180049D;
+	Sat,  5 Apr 2025 14:59:41 +0000 (UTC)
+Received: from fedora (unknown [10.72.120.4])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 150B7180B489;
+	Sat,  5 Apr 2025 14:59:35 +0000 (UTC)
+Date: Sat, 5 Apr 2025 22:59:29 +0800
+From: Ming Lei <ming.lei@redhat.com>
+To: Uday Shankar <ushankar@purestorage.com>
+Cc: Shuah Khan <shuah@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+	linux-block@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] ublk: improve detection and handling of ublk server
+ exit
+Message-ID: <Z_FFUXINspN8G0y0@fedora>
+References: <20250403-ublk_timeout-v3-1-aa09f76c7451@purestorage.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250403-ublk_timeout-v3-1-aa09f76c7451@purestorage.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-Add the necessary callbacks(write_atomic, write_thread, device_lock
-and device_unlock) and CON_NBCON flag to switch the sifive console
-driver to perform as nbcon console.
+On Thu, Apr 03, 2025 at 06:05:57PM -0600, Uday Shankar wrote:
+> There are currently two ways in which ublk server exit is detected by
+> ublk_drv:
+> 
+> 1. uring_cmd cancellation. If there are any outstanding uring_cmds which
+>    have not been completed to the ublk server when it exits, io_uring
+>    calls the uring_cmd callback with a special cancellation flag as the
+>    issuing task is exiting.
+> 2. I/O timeout. This is needed in addition to the above to handle the
+>    "saturated queue" case, when all I/Os for a given queue are in the
+>    ublk server, and therefore there are no outstanding uring_cmds to
+>    cancel when the ublk server exits.
+> 
+> There are a couple of issues with this approach:
+> 
+> - It is complex and inelegant to have two methods to detect the same
+>   condition
+> - The second method detects ublk server exit only after a long delay
+>   (~30s, the default timeout assigned by the block layer). This delays
+>   the nosrv behavior from kicking in and potential subsequent recovery
+>   of the device.
+> 
+> The second issue is brought to light with the new test_generic_04. It
+> fails before this fix:
+> 
+> selftests: ublk: test_generic_04.sh
+> dev id is 0
+> dd: error writing '/dev/ublkb0': Input/output error
+> 1+0 records in
+> 0+0 records out
+> 0 bytes copied, 30.0611 s, 0.0 kB/s
+> DEAD
+> dd took 31 seconds to exit (>= 5s tolerance)!
+> generic_04 : [FAIL]
+> 
+> Fix this by instead detecting and handling ublk server exit in the
+> character file release callback. This has several advantages:
+> 
+> - This one place can handle both saturated and unsaturated queues. Thus,
+>   it replaces both preexisting methods of detecting ublk server exit.
+> - It runs quickly on ublk server exit - there is no 30s delay.
+> - It starts the process of removing task references in ublk_drv. This is
+>   needed if we want to relax restrictions in the driver like letting
+>   only one thread serve each queue
+> 
+> There is also the disadvantage that the character file release callback
+> can also be triggered by intentional close of the file, which is a
+> significant behavior change. Preexisting ublk servers (libublksrv) are
+> dependent on the ability to open/close the file multiple times. To
+> address this, only transition to a nosrv state if the file is released
+> while the ublk device is live. This allows for programs to open/close
+> the file multiple times during setup. It is still a behavior change if a
+> ublk server decides to close/reopen the file while the device is LIVE
+> (i.e. while it is responsible for serving I/O), but that would be highly
+> unusual. This behavior is in line with what is done by FUSE, which is
+> very similar to ublk in that a userspace daemon is providing services
+> traditionally provided by the kernel.
+> 
+> With this change in, the new test (and all other selftests, and all
+> ublksrv tests) pass:
+> 
+> selftests: ublk: test_generic_04.sh
+> dev id is 0
+> dd: error writing '/dev/ublkb0': Input/output error
+> 1+0 records in
+> 0+0 records out
+> 0 bytes copied, 0.0376731 s, 0.0 kB/s
+> DEAD
+> generic_04 : [PASS]
+> 
+> Signed-off-by: Uday Shankar <ushankar@purestorage.com>
+> ---
+> Changes in v3:
+> - Quiesce queue earlier to avoid concurrent cancellation and "normal"
+>   completion of io_uring cmds (Ming Lei)
+> - Fix del_gendisk hang, found by test_stress_02
+> - Remove unnecessary parameters in fault_inject target (Ming Lei)
+> - Fix delay implementation to have separate per-I/O delay instead of
+>   blocking the whole thread (Ming Lei)
+> - Add delay_us to docs
+> - Link to v2: https://lore.kernel.org/r/20250402-ublk_timeout-v2-1-249bc5523000@purestorage.com
+> 
+> Changes in v2:
+> - Leave null ublk selftests target untouched, instead create new
+>   fault_inject target for injecting per-I/O delay (Ming Lei)
+> - Allow multiple open/close of ublk character device with some
+>   restrictions
+> - Drop patches which made it in separately at https://lore.kernel.org/r/20250401-ublk_selftests-v1-1-98129c9bc8bb@purestorage.com
+> - Consolidate more nosrv logic in ublk character device release, and
+>   associated code cleanup
+> - Link to v1: https://lore.kernel.org/r/20250325-ublk_timeout-v1-0-262f0121a7bd@purestorage.com
+> ---
+>  drivers/block/ublk_drv.c                        | 228 +++++++++---------------
+>  tools/testing/selftests/ublk/Makefile           |   4 +-
+>  tools/testing/selftests/ublk/fault_inject.c     |  72 ++++++++
+>  tools/testing/selftests/ublk/kublk.c            |   6 +-
+>  tools/testing/selftests/ublk/kublk.h            |   4 +
+>  tools/testing/selftests/ublk/test_generic_04.sh |  43 +++++
+>  6 files changed, 215 insertions(+), 142 deletions(-)
+> 
+> diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
+> index 2fd05c1bd30b03343cb6f357f8c08dd92ff47af9..73baa9d22ccafb00723defa755a0b3aab7238934 100644
+> --- a/drivers/block/ublk_drv.c
+> +++ b/drivers/block/ublk_drv.c
+> @@ -162,7 +162,6 @@ struct ublk_queue {
+>  
+>  	bool force_abort;
+>  	bool timeout;
+> -	bool canceling;
+>  	bool fail_io; /* copy of dev->state == UBLK_S_DEV_FAIL_IO */
+>  	unsigned short nr_io_ready;	/* how many ios setup */
+>  	spinlock_t		cancel_lock;
+> @@ -199,8 +198,6 @@ struct ublk_device {
+>  	struct completion	completion;
+>  	unsigned int		nr_queues_ready;
+>  	unsigned int		nr_privileged_daemon;
+> -
+> -	struct work_struct	nosrv_work;
+>  };
+>  
+>  /* header of ublk_params */
+> @@ -209,8 +206,9 @@ struct ublk_params_header {
+>  	__u32	types;
+>  };
+>  
+> -static bool ublk_abort_requests(struct ublk_device *ub, struct ublk_queue *ubq);
+> -
+> +static void ublk_stop_dev_unlocked(struct ublk_device *ub);
+> +static void ublk_abort_queue(struct ublk_device *ub, struct ublk_queue *ubq);
+> +static void __ublk_quiesce_dev(struct ublk_device *ub);
+>  static inline struct request *__ublk_check_and_get_req(struct ublk_device *ub,
+>  		struct ublk_queue *ubq, int tag, size_t offset);
+>  static inline unsigned int ublk_req_build_flags(struct request *req);
+> @@ -1314,8 +1312,6 @@ static void ublk_queue_cmd_list(struct ublk_queue *ubq, struct rq_list *l)
+>  static enum blk_eh_timer_return ublk_timeout(struct request *rq)
+>  {
+>  	struct ublk_queue *ubq = rq->mq_hctx->driver_data;
+> -	unsigned int nr_inflight = 0;
+> -	int i;
+>  
+>  	if (ubq->flags & UBLK_F_UNPRIVILEGED_DEV) {
+>  		if (!ubq->timeout) {
+> @@ -1326,26 +1322,6 @@ static enum blk_eh_timer_return ublk_timeout(struct request *rq)
+>  		return BLK_EH_DONE;
+>  	}
+>  
+> -	if (!ubq_daemon_is_dying(ubq))
+> -		return BLK_EH_RESET_TIMER;
+> -
+> -	for (i = 0; i < ubq->q_depth; i++) {
+> -		struct ublk_io *io = &ubq->ios[i];
+> -
+> -		if (!(io->flags & UBLK_IO_FLAG_ACTIVE))
+> -			nr_inflight++;
+> -	}
+> -
+> -	/* cancelable uring_cmd can't help us if all commands are in-flight */
+> -	if (nr_inflight == ubq->q_depth) {
+> -		struct ublk_device *ub = ubq->dev;
+> -
+> -		if (ublk_abort_requests(ub, ubq)) {
+> -			schedule_work(&ub->nosrv_work);
+> -		}
+> -		return BLK_EH_DONE;
+> -	}
+> -
+>  	return BLK_EH_RESET_TIMER;
+>  }
+>  
+> @@ -1356,19 +1332,16 @@ static blk_status_t ublk_prep_req(struct ublk_queue *ubq, struct request *rq)
+>  	if (unlikely(ubq->fail_io))
+>  		return BLK_STS_TARGET;
+>  
+> -	/* With recovery feature enabled, force_abort is set in
+> -	 * ublk_stop_dev() before calling del_gendisk(). We have to
+> -	 * abort all requeued and new rqs here to let del_gendisk()
+> -	 * move on. Besides, we cannot not call io_uring_cmd_complete_in_task()
+> -	 * to avoid UAF on io_uring ctx.
+> +	/*
+> +	 * force_abort is set in ublk_stop_dev() before calling
+> +	 * del_gendisk(). We have to abort all requeued and new rqs here
+> +	 * to let del_gendisk() move on. Besides, we cannot not call
+> +	 * io_uring_cmd_complete_in_task() to avoid UAF on io_uring ctx.
+>  	 *
+>  	 * Note: force_abort is guaranteed to be seen because it is set
+>  	 * before request queue is unqiuesced.
+>  	 */
+> -	if (ublk_nosrv_should_queue_io(ubq) && unlikely(ubq->force_abort))
+> -		return BLK_STS_IOERR;
+> -
+> -	if (unlikely(ubq->canceling))
+> +	if (unlikely(ubq->force_abort))
+>  		return BLK_STS_IOERR;
+>  
+>  	/* fill iod to slot in io cmd buffer */
+> @@ -1391,16 +1364,6 @@ static blk_status_t ublk_queue_rq(struct blk_mq_hw_ctx *hctx,
+>  	if (res != BLK_STS_OK)
+>  		return res;
+>  
+> -	/*
+> -	 * ->canceling has to be handled after ->force_abort and ->fail_io
+> -	 * is dealt with, otherwise this request may not be failed in case
+> -	 * of recovery, and cause hang when deleting disk
+> -	 */
+> -	if (unlikely(ubq->canceling)) {
+> -		__ublk_abort_rq(ubq, rq);
+> -		return BLK_STS_OK;
+> -	}
+> -
 
-Both ->write_atomic() and ->write_thread() will check for console
-ownership whenever they are accessing registers.
+If `ubq->canceling` is removed, how to handle recovery? The request has to
+be requeued in case of ublk_nosrv_dev_should_queue_io().
 
-The ->device_lock()/unlock() will provide the additional serilization
-necessary for ->write_thread() which is called from dedicated printing
-thread.
+And that should be the reason why 'make test T=generic/004' hangs forever
+after applying this patch.
 
-Signed-off-by: Ryo Takakura <ryotkkr98@gmail.com>
-Reviewed-by: John Ogness <john.ogness@linutronix.de>
----
+>  	ublk_queue_cmd(ubq, rq);
+>  	return BLK_STS_OK;
+>  }
+> @@ -1461,8 +1424,71 @@ static int ublk_ch_open(struct inode *inode, struct file *filp)
+>  static int ublk_ch_release(struct inode *inode, struct file *filp)
+>  {
+>  	struct ublk_device *ub = filp->private_data;
+> +	int i;
+> +
+> +	mutex_lock(&ub->mutex);
+> +	/*
+> +	 * If the device is not live, we will not transition to a nosrv
+> +	 * state. This protects against:
+> +	 * - accidental poking of the ublk character device
+> +	 * - some ublk servers which may open/close the ublk character
+> +	 *   device during startup
+> +	 */
+> +	if (ub->dev_info.state != UBLK_S_DEV_LIVE)
+> +		goto out;
+> +
+> +	/*
+> +	 * Since we are releasing the ublk character file descriptor, we
+> +	 * know that there cannot be any concurrent file-related
+> +	 * activity (e.g. uring_cmds or reads/writes). However, I/O
+> +	 * might still be getting dispatched. Quiesce that too so that
+> +	 * we don't need to worry about anything concurrent.
+> +	 *
+> +	 * We may have already quiesced the queue if we canceled any
+> +	 * uring_cmds, so only quiesce if necessary (quiesce is not
+> +	 * idempotent, it has an internal counter which we need to
+> +	 * manage carefully).
+> +	 */
+> +	if (!blk_queue_quiesced(ub->ub_disk->queue))
+> +		blk_mq_quiesce_queue(ub->ub_disk->queue);
+> +
+> +	/*
+> +	 * Handle any requests outstanding to the ublk server
+> +	 */
+> +	for (i = 0; i < ub->dev_info.nr_hw_queues; i++)
+> +		ublk_abort_queue(ub, ublk_get_queue(ub, i));
+>  
+> +	/*
+> +	 * Transition the device to the nosrv state. What exactly this
+> +	 * means depends on the recovery flags
+> +	 */
+> +	if (ublk_nosrv_should_stop_dev(ub)) {
+> +		/*
+> +		 * Allow any pending/future I/O to pass through quickly
+> +		 * with an error. This is needed because del_gendisk
+> +		 * waits for all pending I/O to complete
+> +		 */
+> +		for (i = 0; i < ub->dev_info.nr_hw_queues; i++)
+> +			ublk_get_queue(ub, i)->force_abort = true;
+> +		blk_mq_unquiesce_queue(ub->ub_disk->queue);
+> +
+> +		ublk_stop_dev_unlocked(ub);
+> +	} else {
+> +		if (ublk_nosrv_dev_should_queue_io(ub)) {
+> +			__ublk_quiesce_dev(ub);
 
-This patch is once again sent as a standalone patch for converting sifive
-driver to nbcon. It used to be sent as a part of series. The related fixes
-along the way can be found [0].
+Here only inflight IOs are drained, new IO still comes after queue is
+unquiesced, then uring_cmd UAF is triggered.
 
-Sincerely,
-Ryo Takakura
+...
 
-[0] https://lore.kernel.org/all/20250405043833.397020-1-ryotkkr98@gmail.com/
+> --- /dev/null
+> +++ b/tools/testing/selftests/ublk/test_generic_04.sh
+> @@ -0,0 +1,43 @@
+> +#!/bin/bash
+> +# SPDX-License-Identifier: GPL-2.0
+> +
+> +. "$(cd "$(dirname "$0")" && pwd)"/test_common.sh
+> +
+> +TID="generic_04"
+> +ERR_CODE=0
+> +
+> +_prep_test "fault_inject" "fast cleanup when all I/Os of one hctx are in server"
+> +
+> +# configure ublk server to sleep 2s before completing each I/O
+> +dev_id=$(_add_ublk_dev -t fault_inject -q 2 -d 1 --delay_us 2000000)
+> +_check_add_dev $TID $?
+> +
+> +echo "dev id is ${dev_id}"
+> +
+> +STARTTIME=${SECONDS}
+> +
+> +dd if=/dev/urandom of=/dev/ublkb${dev_id} oflag=direct bs=4k count=1 &
 
----
- drivers/tty/serial/sifive.c | 87 +++++++++++++++++++++++++++++++------
- 1 file changed, 74 insertions(+), 13 deletions(-)
+stdout/stderr need to be discarded.
 
-diff --git a/drivers/tty/serial/sifive.c b/drivers/tty/serial/sifive.c
-index 054a8e630..8f7f770ec 100644
---- a/drivers/tty/serial/sifive.c
-+++ b/drivers/tty/serial/sifive.c
-@@ -151,6 +151,7 @@ struct sifive_serial_port {
- 	unsigned long		baud_rate;
- 	struct clk		*clk;
- 	struct notifier_block	clk_notifier;
-+	bool			console_line_ended;
- };
- 
- /*
-@@ -785,33 +786,88 @@ static void sifive_serial_console_putchar(struct uart_port *port, unsigned char
- 
- 	__ssp_wait_for_xmitr(ssp);
- 	__ssp_transmit_char(ssp, ch);
-+
-+	ssp->console_line_ended = (ch == '\n');
-+}
-+
-+static void sifive_serial_device_lock(struct console *co, unsigned long *flags)
-+{
-+	struct uart_port *up = &sifive_serial_console_ports[co->index]->port;
-+
-+	__uart_port_lock_irqsave(up, flags);
-+}
-+
-+static void sifive_serial_device_unlock(struct console *co, unsigned long flags)
-+{
-+	struct uart_port *up = &sifive_serial_console_ports[co->index]->port;
-+
-+	__uart_port_unlock_irqrestore(up, flags);
- }
- 
--static void sifive_serial_console_write(struct console *co, const char *s,
--					unsigned int count)
-+static void sifive_serial_console_write_atomic(struct console *co,
-+					       struct nbcon_write_context *wctxt)
- {
- 	struct sifive_serial_port *ssp = sifive_serial_console_ports[co->index];
--	unsigned long flags;
-+	struct uart_port *port = &ssp->port;
- 	unsigned int ier;
--	int locked = 1;
- 
- 	if (!ssp)
- 		return;
- 
--	if (oops_in_progress)
--		locked = uart_port_trylock_irqsave(&ssp->port, &flags);
--	else
--		uart_port_lock_irqsave(&ssp->port, &flags);
-+	if (!nbcon_enter_unsafe(wctxt))
-+		return;
- 
- 	ier = __ssp_readl(ssp, SIFIVE_SERIAL_IE_OFFS);
- 	__ssp_writel(0, SIFIVE_SERIAL_IE_OFFS, ssp);
- 
--	uart_console_write(&ssp->port, s, count, sifive_serial_console_putchar);
-+	if (!ssp->console_line_ended)
-+		uart_console_write(port, "\n", 1, sifive_serial_console_putchar);
-+	uart_console_write(port, wctxt->outbuf, wctxt->len,
-+			   sifive_serial_console_putchar);
- 
- 	__ssp_writel(ier, SIFIVE_SERIAL_IE_OFFS, ssp);
- 
--	if (locked)
--		uart_port_unlock_irqrestore(&ssp->port, flags);
-+	nbcon_exit_unsafe(wctxt);
-+}
-+
-+static void sifive_serial_console_write_thread(struct console *co,
-+					       struct nbcon_write_context *wctxt)
-+{
-+	struct sifive_serial_port *ssp = sifive_serial_console_ports[co->index];
-+	struct uart_port *port = &ssp->port;
-+	unsigned int ier;
-+
-+	if (!ssp)
-+		return;
-+
-+	if (!nbcon_enter_unsafe(wctxt))
-+		return;
-+
-+	ier = __ssp_readl(ssp, SIFIVE_SERIAL_IE_OFFS);
-+	__ssp_writel(0, SIFIVE_SERIAL_IE_OFFS, ssp);
-+
-+	if (nbcon_exit_unsafe(wctxt)) {
-+		int len = READ_ONCE(wctxt->len);
-+		int i;
-+
-+		for (i = 0; i < len; i++) {
-+			if (!nbcon_enter_unsafe(wctxt))
-+				break;
-+
-+			uart_console_write(port, wctxt->outbuf + i, 1,
-+					   sifive_serial_console_putchar);
-+
-+			if (!nbcon_exit_unsafe(wctxt))
-+				break;
-+		}
-+	}
-+
-+	while (!nbcon_enter_unsafe(wctxt))
-+		nbcon_reacquire_nobuf(wctxt);
-+
-+	__ssp_writel(ier, SIFIVE_SERIAL_IE_OFFS, ssp);
-+
-+	nbcon_exit_unsafe(wctxt);
- }
- 
- static int sifive_serial_console_setup(struct console *co, char *options)
-@@ -829,6 +885,8 @@ static int sifive_serial_console_setup(struct console *co, char *options)
- 	if (!ssp)
- 		return -ENODEV;
- 
-+	ssp->console_line_ended = true;
-+
- 	if (options)
- 		uart_parse_options(options, &baud, &parity, &bits, &flow);
- 
-@@ -839,10 +897,13 @@ static struct uart_driver sifive_serial_uart_driver;
- 
- static struct console sifive_serial_console = {
- 	.name		= SIFIVE_TTY_PREFIX,
--	.write		= sifive_serial_console_write,
-+	.write_atomic	= sifive_serial_console_write_atomic,
-+	.write_thread	= sifive_serial_console_write_thread,
-+	.device_lock	= sifive_serial_device_lock,
-+	.device_unlock	= sifive_serial_device_unlock,
- 	.device		= uart_console_device,
- 	.setup		= sifive_serial_console_setup,
--	.flags		= CON_PRINTBUFFER,
-+	.flags		= CON_PRINTBUFFER | CON_NBCON,
- 	.index		= -1,
- 	.data		= &sifive_serial_uart_driver,
- };
--- 
-2.34.1
+Also I'd suggest to make the selftest part as one standalone patch.
+
+
+thanks,
+Ming
 
