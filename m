@@ -1,107 +1,134 @@
-Received: from mail-pj1-f65.google.com (mail-pj1-f65.google.com [209.85.216.65])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F8EF1BEF74;
-	Sat,  5 Apr 2025 10:20:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F07D1BD9C5;
+	Sat,  5 Apr 2025 10:21:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743848421; cv=none; b=oxNVU4TSrWMapsf8mE20w+ocUiLEil09dzVZz7XpKEFu8rk95jL4AZqBEMGzrNit5kEw39vGBtXihjQwZ3Vrdp1vvnuVKcECBEsqIx4zVSQozM2JYGIMAeaDPIKGpvYdrVGKup/5Cgh6AyJrRfS8nUyPBSRT3ygpQ4fPus68gag=
+	t=1743848510; cv=none; b=IQjN+bfdd0rQ6rWh3bCgqmLQgrEtZegrHO/mnO92d4067obV6xPjL/kYsvGFn4xQqMn9qQIJPk58+wj8dWotqI+vfXlKHrsFfrET4P5juv6mwtgs/OtOlWVZpf948IWlZXWoGy50y0najZhFFBn4HwyQUNjWzyBeHA0JoVvwtqg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743848421; c=relaxed/simple;
-	bh=NjumOkPoCMJz5c1o9rgfdcQn7cAjdMYNDLoKq4jWNzI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=D9n+g/IVYHCPDybdM+iqxYcbH29GlQitDKfuN6cqYFuP4FEgv1qXEQ+HMefzYsuBkD8ka9lcHxsM1ORXikYp3/T5rK9o+G31Io871yQJ57gdTyP+hJuwlhKwjTtiNPhkyhUV8LFqnyFbkvzANPzLonlO1LE6ReEHLONcAhdMvOs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nRwAhZAV; arc=none smtp.client-ip=209.85.216.65
+	s=arc-20240116; t=1743848510; c=relaxed/simple;
+	bh=gcvZnMhtR0XkyTMXHmFjgItkzTjcKo4d+SyWoFfroaA=;
+	h=Message-ID:Date:From:To:Cc:Subject:MIME-Version:Content-Type:
+	 Content-Disposition; b=ZwIDcaR9dm5sxyfCMMZe4q1vdl5pkyr+cH/3Z6C0Tui7bHqPyhZesUTKQiblNCO+QLTGuRguC6ytKQssiUcWHin4jW14Pu7UZuRX4g6C9kRPFBxKTC57HJOmy5j8ys5WHO5k49VG6yYaiQpkX5t6se9IdvRaC+SQ/p6xa8mSzus=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PnbZtIEt; arc=none smtp.client-ip=209.85.128.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nRwAhZAV"
-Received: by mail-pj1-f65.google.com with SMTP id 98e67ed59e1d1-30572effb26so2546680a91.0;
-        Sat, 05 Apr 2025 03:20:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PnbZtIEt"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43ed8d32a95so9489115e9.3;
+        Sat, 05 Apr 2025 03:21:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743848420; x=1744453220; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=e8oqq+1z5lcjup3ct51URpJrm2ZmWv0Mc4Ufm2gfQM4=;
-        b=nRwAhZAV28+XHQfHykZ9n1+hU4kVjQTYybnLd1EkcUBjDuGJng1WiDLfpYARjcTeCz
-         wrmzdf0f5ZE1KfvaTFeLboJ465b2TQiy9NR9xB87fLoAvBAw3b1FDc38fv3drIwrfbQx
-         pT2h+Y84F4wsw+xqz4y7nJuvW3rzj4Sf57vmKkqKQCgR3OtaXkyF1OymcXdaAYkeAuIi
-         B4uBrMFejJPSrjU+ldU5CS9P5KdtheVRN5D8Y3Un885jYe0s6qvvuWkgKQMq4BrCFnc+
-         duWDo+ufaDIrn5jmJRNQLKHlc2AELyuJqZbqSn/gyMvpIXmHiUNZ+W/hNo2sLkwSj4qp
-         Q8uQ==
+        d=gmail.com; s=20230601; t=1743848507; x=1744453307; darn=vger.kernel.org;
+        h=content-disposition:mime-version:subject:cc:to:from:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=NZIIlDBSj3POSZxjDzaSA5f1J19DQOtsWmRISrShn7M=;
+        b=PnbZtIEtoGZ8aEweVOnmG2BnbM3Cm0Wo1n+ZalxhyekOwStunHTIfnqom4xjDTnCDP
+         STijKFqwmqTg4AH+pXt51InVB0sznxWbtOBsnQNshoonFu9awcW+ocC109fn+ZZAXPhz
+         ok57hGXNBKvC+h5tzcz8prfwhd1IcfhTPaGvXdGSxF017m6tXvjmAsXVponP3hmi2H9v
+         Sd7nC6Zw0aZquOqbX4IxaBicW00LgYWl8hkMNI0feWiCyyTZPfU7D/VEzoM+KrpxOnyD
+         AyYSDfpA7Y3X9h1syJSO3OlIAG/2T5qyZ1gobfmb7GPi6TjkeAcK4CNTe/2T8XjSo/3b
+         /Z/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743848420; x=1744453220;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=e8oqq+1z5lcjup3ct51URpJrm2ZmWv0Mc4Ufm2gfQM4=;
-        b=jCMRGDOWd9hXbvE6huMwfJUWjx6s8gS1Pw1BC13L9Q0ZUID9X01mFXfCT8+D5kWHlh
-         kOSNeX2eymBfxQVAyhYmys0oWerlowS58i72tIrqjqGA11Ei/3l+IboXc3a4E71gG3GD
-         t/jVtZXa6x2a4POJUeRZDRlnqiK9YXXzeuLKmBzKKkGOJZrEdHAxktUCiBWRf22zRQvq
-         JToRHghS7Q0lqSNGZsnVGld10fNHSYs0JvVqxM8VE51sRmLO/f0U6tI2bKU6tsR2+689
-         RlN/uvpjLhZTR1CH4COGm0Jq9zAeTKD93ZPmDW4Mlb44W9JsY8Zxza2l5cgtZsQkOsU4
-         6eWw==
-X-Forwarded-Encrypted: i=1; AJvYcCVeXlhXncKdP2PYYYDGAlfW6iZQwFFjBIUv9RDvu5ZePiKlo4IL2EhQDl3+r0f8/bXvqSGoJbv8XRoEXg==@vger.kernel.org, AJvYcCVh7ZUU2kOU31EE73sjZPti75ghZEFfjh38vjQZCCcr5qhpJDPnLRr142onRMtNmxGY1Eixrrnc@vger.kernel.org, AJvYcCVuWlMykddYJclERl0vAl865DuON4BJpUk/LAQ7IRB7yeleXuQhHqRk30UrFwF/HBzAwCE+RDANI2EIj/k=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywyy8AJNI3w9qM3G1wQBATFGY/wTziES5KC1c7V/74Q6eKJ8M3t
-	C11HKE08mAO9hY+REQ1g+mx+1Mu+ebIBq3IcO3Pn3/VAxAj0DsJU
-X-Gm-Gg: ASbGncvtmJ9cLYWk571ag54FItA8cxGi2dFMqyUmT9lcJRGiyPj+rZYV4hNWrcrbuag
-	h9HF/aDHvOQ3C3VuBjOsUiSCutG+aitHKa1/2sxEDF/rBqza499ZRJ3jX1xKkh+8O4FQ6+fBf8d
-	n2VNiyhou6aqDBbE1AwOJa+IkUP8mKHdLvFBbFtU0aTHZQ+pwOvX/ZS5LP7yR60UVht8/ghncU2
-	awIg3K2Vw39HqZ29M3bXfVLbtJJaeCyHI7ekH931DMF9eA34SfPoExuhfL+WM1HeemfrFz/HfrD
-	QOXw9oqY1cqaG9LAqPG86xwRYvPk4vrlfKQtVk8Jkn9HfRECFNLsMaK8RKkkFUpGt98=
-X-Google-Smtp-Source: AGHT+IFnd+DDSixqNXBrpZFTBCxr48qyQWCpFj3gJUCh9eJfdNvZofLt59fbaDPpLX6t1EVxd6cx6g==
-X-Received: by 2002:a17:90b:5242:b0:2fe:e9c6:689e with SMTP id 98e67ed59e1d1-306a4860b0dmr8718871a91.8.1743848419770;
-        Sat, 05 Apr 2025 03:20:19 -0700 (PDT)
-Received: from henry.localdomain ([223.72.104.9])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-305983b9cfbsm5053185a91.31.2025.04.05.03.20.14
+        d=1e100.net; s=20230601; t=1743848507; x=1744453307;
+        h=content-disposition:mime-version:subject:cc:to:from:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=NZIIlDBSj3POSZxjDzaSA5f1J19DQOtsWmRISrShn7M=;
+        b=PLgigkDuhd3A+ZGCe0k1ah7ub4sjAf+e9kF99PeDrhCILScEZg3Ilg/2lFKCGSEq70
+         UClSqitrpxrhSKKqorFr9/SSGQYvKhhULuGhRYO/Kdnb1Ok05D20XX9FifKP8SZQitku
+         NNT68IPyu65oyjAl5aBy5LABQL+c8ad8K5zeCTfx1x+wYHlaMzagGm2bUZ/TX4gTCx0v
+         thPSYgPJmluA9eYGZEYIfoJIvTyWvH5WloMlcgoonHgvf1sirIMRP1VjjcEV7kaMQWwy
+         wh3KN4UV3a/0enoIc7OPtG9l/SMePmqZ0kUBqkiw4YQpjRoM/Ht8OqAsoAYFtYUOE2j1
+         2UKw==
+X-Forwarded-Encrypted: i=1; AJvYcCUWBftMqUo/i0J2hRcmV7oHmx4/I2K/n4Gk0mrCuxPEK4Ret4yB9ntRrRXEaidZnD0m6QMIUJDMCkqQfQL2@vger.kernel.org, AJvYcCXqJgKKenoiKhjPzxGu7NiVJhpnFV7Lx/6uL3dX4Cduh05fVOPJu7q86HUSsXwpNnhTyZ7sHSffZIp+Qg==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxqyLhaxi9XlEMmNB6N2kWj5JFoNxo9n0SaDtZe/Cf0C0Bz8Xmx
+	FyljlcOJa4WdO2u5reiphMKxaIVjzC+iVMVZvdoY93QpTYCeIVHOHJeBdkoDJLA7PA==
+X-Gm-Gg: ASbGncvoW9/q0yngjBnfOT+erE17yImzRorrmp0vG5wosBdgjRrEX58rO1Wp/GJZtHy
+	IkErO+/iGfNMW3e9gIdauK75hadRma9Fm4c3IrQFvsMkUf/2Kg0gA+/SN78BJ+4izIxft+Vnotr
+	slFf9PSavX/fwVYHBbYrLBYNBPxYdirTLKNP71M6kDcADjcTGmMrEZvF6jn0i7Yg7Cl/83WOcC1
+	RY11CQvAxmSHB0m+mN61HINe5Rp2mUZeuZPa7m3++Zu7vFb9DlC+bgJ3AmEn12mYSOvN1kJbjAd
+	ksi5BHbhNNYY15evapvy+HEY7eCNUetwe3vbPq4hDSM9BQ==
+X-Google-Smtp-Source: AGHT+IFX2FgU3KYdXbaa36WOLfwPuuMmwTH6yElauBd+O8zkOzKMJ0wadJJuG0+BEJMaktWStARE/g==
+X-Received: by 2002:a05:600c:b89:b0:43d:7413:cb3e with SMTP id 5b1f17b1804b1-43ecf81bb90mr53955755e9.1.1743848507281;
+        Sat, 05 Apr 2025 03:21:47 -0700 (PDT)
+Received: from parrot ([105.112.71.96])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec1698081sm71621805e9.17.2025.04.05.03.21.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Apr 2025 03:20:19 -0700 (PDT)
-From: Henry Martin <bsdhenrymartin@gmail.com>
-To: saeedm@nvidia.com,
-	tariqt@nvidia.com
-Cc: leon@kernel.org,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Henry Martin <bsdhenrymartin@gmail.com>
-Subject: [PATCH v1] net/mlx5:  Fix null-ptr-deref in mlx5e_tc_nic_create_miss_table()
-Date: Sat,  5 Apr 2025 18:20:08 +0800
-Message-Id: <20250405102008.78451-1-bsdhenrymartin@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        Sat, 05 Apr 2025 03:21:46 -0700 (PDT)
+Message-ID: <67f1043a.050a0220.2c342a.1767@mx.google.com>
+X-Google-Original-Message-ID: <Z_EEK9K_bR-W1n2i@princerichard17a@gmail.com>
+Date: Sat, 5 Apr 2025 11:21:31 +0100
+From: Richard Akintola <princerichard17a@gmail.com>
+To: sudipm.mukherjee@gmail.com, teddy.wang@siliconmotion.com,
+	gregkh@linuxfoundation.org, linux-fbdev@vger.kernel.org,
+	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org,
+	outreachy@lists.linux.dev
+Cc: julia.lawall@inria.fr, princerichard17a@gmail.com
+Subject: [PATCH 2/8] staging: sm750fb: change sii164ResetChip to snake_case
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Add NULL check for mlx5_get_flow_namespace() returns in
-mlx5e_tc_nic_create_miss_table() to prevent NULL pointer dereference.
+Change camelCase function name sii164ResetChip to sii164_reset_chip
+to conform to kernel code styles as reported by checkpatch.pl
 
-Fixes: 66cb64e292d2 ("net/mlx5e: TC NIC mode, fix tc chains miss table")
-Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
+CHECK: Avoid camelCase: <sii164ResetChip>
+
+Signed-off-by: Richard Akintola <princerichard17a@gmail.com>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/en_tc.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/staging/sm750fb/ddk750_dvi.c    | 2 +-
+ drivers/staging/sm750fb/ddk750_sii164.c | 4 ++--
+ drivers/staging/sm750fb/ddk750_sii164.h | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c b/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
-index 9ba99609999f..538c33c353ad 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
-@@ -5216,6 +5216,8 @@ static int mlx5e_tc_nic_create_miss_table(struct mlx5e_priv *priv)
- 	ft_attr.level = MLX5E_TC_MISS_LEVEL;
- 	ft_attr.prio = 0;
- 	ns = mlx5_get_flow_namespace(priv->mdev, MLX5_FLOW_NAMESPACE_KERNEL);
-+	if (!ns)
-+		return -EOPNOTSUPP;
+diff --git a/drivers/staging/sm750fb/ddk750_dvi.c b/drivers/staging/sm750fb/ddk750_dvi.c
+index 3fb14eff2de1..6dee95e60a6e 100644
+--- a/drivers/staging/sm750fb/ddk750_dvi.c
++++ b/drivers/staging/sm750fb/ddk750_dvi.c
+@@ -18,7 +18,7 @@ static struct dvi_ctrl_device dcft_supported_dvi_controller[] = {
+ 		.get_vendor_id = sii164_get_vendor_id,
+ 		.get_device_id = sii164_get_device_id,
+ #ifdef SII164_FULL_FUNCTIONS
+-		.reset_chip = sii164ResetChip,
++		.reset_chip = sii164_reset_chip,
+ 		.get_chip_string = sii164GetChipString,
+ 		.set_power = sii164SetPower,
+ 		.enable_hot_plug_detection = sii164EnableHotPlugDetection,
+diff --git a/drivers/staging/sm750fb/ddk750_sii164.c b/drivers/staging/sm750fb/ddk750_sii164.c
+index 223c181dc649..284c32f7e9b4 100644
+--- a/drivers/staging/sm750fb/ddk750_sii164.c
++++ b/drivers/staging/sm750fb/ddk750_sii164.c
+@@ -250,10 +250,10 @@ long sii164_init_chip(unsigned char edge_select,
+ #ifdef SII164_FULL_FUNCTIONS
  
- 	*ft = mlx5_create_auto_grouped_flow_table(ns, &ft_attr);
- 	if (IS_ERR(*ft)) {
+ /*
+- *  sii164ResetChip
++ *  sii164_reset_chip
+  *      This function resets the DVI Controller Chip.
+  */
+-void sii164ResetChip(void)
++void sii164_reset_chip(void)
+ {
+ 	/* Power down */
+ 	sii164SetPower(0);
+diff --git a/drivers/staging/sm750fb/ddk750_sii164.h b/drivers/staging/sm750fb/ddk750_sii164.h
+index a76091f6622b..7a71f94a1e9b 100644
+--- a/drivers/staging/sm750fb/ddk750_sii164.h
++++ b/drivers/staging/sm750fb/ddk750_sii164.h
+@@ -31,7 +31,7 @@ unsigned short sii164_get_vendor_id(void);
+ unsigned short sii164_get_device_id(void);
+ 
+ #ifdef SII164_FULL_FUNCTIONS
+-void sii164ResetChip(void);
++void sii164_reset_chip(void);
+ char *sii164GetChipString(void);
+ void sii164SetPower(unsigned char powerUp);
+ void sii164EnableHotPlugDetection(unsigned char enableHotPlug);
 -- 
-2.34.1
+2.39.5
 
