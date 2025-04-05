@@ -1,161 +1,140 @@
-Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FE2F3209
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 04:40:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DB9B3209;
+	Sat,  5 Apr 2025 04:44:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743828027; cv=none; b=GQXJVUyU3WvleLICn1OUb9p56io1PHtjIHQnrEZK+ps0uQgEjQsT9UCO+WXlVpVTT4z6ULz3vaR9YBd/Y5eUSWIXuT7iVgY0P0nPFUdyg372kI+yzA7rlqH1uQUFE8Kmqr2L3vXkBDU7d8wUwgsij7S4hO9nzyPYf+rZmMhdGUg=
+	t=1743828255; cv=none; b=VTlBYaGAsx2Kopq5XlCR6ueRC/eCCwuud3fROLXpf6H4VOnQ7zZ4ZV4YQ923XYAhwMVl5/e7vsTbSxpoeg6v073CaGGuU1fwsdThRUd2R2ayODA1vl+pa9idlll0mVOzDryMBT8uM60c2Tl7ihDiYF9/b9IDhhhy+FHWil9mU6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743828027; c=relaxed/simple;
-	bh=v1caOgm4fpmCGdF1gRlU9xYWPJkOTxoAUVtf7oF1zxg=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=rFjQ3K0N0T6ALhO/HFFHS4KqTBhrBFOxk5toEOSnrvhMs3V/GzwLfuWYXdYIKFTUR0UZVw46vYiWCcflBX0jMRNjgQuRpUDqds4ePOfC2cL9v/YY3oC2UktnBObsmn2A+ei/SSbYNURq6T9ROzWsFV9yDypEJDTPyl8lznQxDh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3d6d6d82603so26337085ab.2
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 21:40:23 -0700 (PDT)
+	s=arc-20240116; t=1743828255; c=relaxed/simple;
+	bh=ECt91EY7sdi+ZAZgpiRGsq2myEddr0gF5Q/4CRaCPSw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=GdvrW2zuD8D4OxZI9J2e6tx3ynEL4SS+fjj1I8jfwcphSxaztvRsLv15ykGxdlVVIpO60zoMZ6PItlUN7yQBK7iol5ddO9rc1iDf7Opkg1Tyam+So7emxgxH7Jrto3PExL6uncZ0ceLTDLyFv+gc3byeoh/KP6UJ2PrqDBVyg0E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GflzerBU; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GflzerBU"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-7394945d37eso2278167b3a.3;
+        Fri, 04 Apr 2025 21:44:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743828253; x=1744433053; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8bOkg965odz+QE9cKXvYVRkNTxhqTHUa1qzYcFa9wPk=;
+        b=GflzerBUUFahB2xxCzC/pAFn8RTEtbsVca82RV5/bphc1gC8fpxfhg17zmolZ8MTpK
+         tVsvjwat8U6Bw3DgIIi8+8ZHTAAmNwEzVhp/qjl3xshRKw5rW26kSy/LQRYhsP4u8DT5
+         riCt3c0IhBxHw2pBcubefoaOlb34M4mkor6Z7UvZtBgvy+npuC2ThrIKxBj7yyMQiiIw
+         bbXE/IIL6/Gye5ZZfnFSsW9zN/VRFsupvIXoyJLLNLZJgSsjxn23mSvDluMwKjmZDNgm
+         3EhSjUmTWLHVv22yuOrGJFnhRv2grsCndTwZrXtKLhSpG2ZZWh8QLzZiglvVQGr7d7Ec
+         XsbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743828023; x=1744432823;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=BFFaBriBmJgnYk25YbvDbKaHtKR4RSRpt9Ymik6Fqr0=;
-        b=EG4EAYdLwbYxSQo5KFsnDSLonF5r9V70dFe0gHKUT3UUVBBwlUF+Xy4RsaQeQbCZbV
-         imqZGpZLIRgW1Z7XYfWEOj5/iyV2/fIFLpsumVRWxsH736efmWSuo26M95i6nW76knf5
-         sFG6N9HZqjwZvnCIw+LUZq1UF6lbC3WUzJui5iO0OVE4i9JTAfoCY9QliQ/OSGe4Ex+1
-         bd96Wv8WegdLKrv53D+oXMpVvxD4ic59oRZsmxOjX7Yr0q2JY8uXWu4AaN3jNJoSf3Ku
-         wzktW2LmSpBJ2BFrnmaI4kGUf9Md6WAwyYCxOgkZTl0zQMoCz4sZnbgdA5pzcubBSqZE
-         SQmg==
-X-Forwarded-Encrypted: i=1; AJvYcCXwIPUVrGyTi7PQsBNUfR055Z3ixG28CDY8QPDTdrTh5shDXXbOm0q87uDEEAc91bfO85ss7SC4e11Pk7c=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw9gaS32sMGY8zeoH4kSjb0vim/E2WiQCKFJKeOJu1rY88DTltA
-	t6xWkR/bRUDxP/XRcnrPvEvHsZD8V3lXBEnROvqAPLx6ySJzu2vUyIICqnJqZ4qiVtkLNSNeJqv
-	CtJgkDIwpO1qGRQpCylr/W61CRFSYyX6hFwzZztZ+yQ26hWUbaLGQgkw=
-X-Google-Smtp-Source: AGHT+IHW1mBYyOKEDn2PwTlxFF5CRpkQgMFG6nagUq72KS6h7iMgo09EPzbXuzf6K0vlvazKz+8UT7nXR4WT0cXdZuVwbSxzXDv0
+        d=1e100.net; s=20230601; t=1743828253; x=1744433053;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8bOkg965odz+QE9cKXvYVRkNTxhqTHUa1qzYcFa9wPk=;
+        b=h1PJW2YPYg9PxNuz+NJ1EQIk4ihxzc3tVi/BtxZWJlHkPQvpwWxVS8Mdq0deNf1kOU
+         7P29ie/yi2d3g0Okg4mKshvv3/GViU2QmL3ITVKnJXUtpvdE5P2LAMV29KKd8QDTVewX
+         1oQYivxt19F9GFk8E0DQ+wo9Xyyn7+1ExE9yr7DcVKeqlYRLrHb+HC/SnTtdp2QgCrVr
+         yEdG8KeocEDULi+bqlMgCPkhniid8a7R3y9KNeKrwMzBMI2n354joY0u0EkSQiMPubfL
+         bwhVZd5tLIi+rrkz6oX6h2O6EtnKbSMnHsMwfIPpj1QftgCfMVdlVifdhrRYJj/bI0hf
+         ZkRQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUI7vgpdW5Ua1at5n8nPQnQhxIOIPaLEbf+VBYewHd9791v9h38F1U1J8LmlMJGrCiAXTKFpn5o@vger.kernel.org, AJvYcCVb8aktieriFnyz61emcCGKzTRLzcsTWcq5GdIfRp4AR7nuvBXJinEaF2Owm5cCN257uAzlOuhvLmDRCN0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwOa5pu+C4MSECPPi0OoACJ6qsASgSf0pY6i8sHUKK2AJXu0TSC
+	GuNbix3EmNTGsF8CzSJF1M7y2R+HtuhhEc8pUC632OZew/bg+Y/C
+X-Gm-Gg: ASbGncvbXEh6SS0zJEDxTzLue9fX2qWlknAEK3DqNQzaovOE/qjkuAV5WokFIceWz7K
+	FmIk/MauuiMcim+B+lhEc08YjpB5Zs5UWnHpVIdzs6qI+k811ZZ7pm2Ofv5DMKbXui0hBTJvYr2
+	OxpuUfqIBWwAV7l1zyegXtIC88cL5f47pGK7OSvfmdWfxIOBJm98XZmaF12T+FMRVHGSTCo+JXa
+	j6oeX6AdpI+SuO+qRb1sdcu/ge21ea03hm75Zj+6RLGKjfKwP+tHflEppwPsYTpd3E2M/ezOzLm
+	kX8PJv1KuEEE7SSFzVP7ho/cW5h/Fih/kN5YKTOG/ofypz9MUZHSUq5EK5GyRF/xlZAwtDFRgaZ
+	ayGXmDhnE2nq4DYgu3uDxzJoqVCODcY0=
+X-Google-Smtp-Source: AGHT+IH6x7bxx7g+YFTtM+ge7TYGa+a/bsXzLkrOIrtKg+MV0AgtjofqDOvWHcwFk7z0p2vkRCK1/w==
+X-Received: by 2002:a05:6a00:1414:b0:736:5725:59b4 with SMTP id d2e1a72fcca58-739e47da9cdmr8628640b3a.3.1743828252726;
+        Fri, 04 Apr 2025 21:44:12 -0700 (PDT)
+Received: from localhost.localdomain (p12284229-ipxg45101marunouchi.tokyo.ocn.ne.jp. [60.39.60.229])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739da0b4317sm4486035b3a.148.2025.04.04.21.44.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Apr 2025 21:44:12 -0700 (PDT)
+From: Ryo Takakura <ryotkkr98@gmail.com>
+To: alex@ghiti.fr,
+	aou@eecs.berkeley.edu,
+	bigeasy@linutronix.de,
+	conor.dooley@microchip.com,
+	gregkh@linuxfoundation.org,
+	jirislaby@kernel.org,
+	john.ogness@linutronix.de,
+	palmer@dabbelt.com,
+	paul.walmsley@sifive.com,
+	pmladek@suse.com,
+	samuel.holland@sifive.com,
+	u.kleine-koenig@baylibre.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-serial@vger.kernel.org,
+	stable@vger.kernel.org,
+	Ryo Takakura <ryotkkr98@gmail.com>
+Subject: [PATCH v4 1/2] serial: sifive: lock port in startup()/shutdown() callbacks
+Date: Sat,  5 Apr 2025 13:43:38 +0900
+Message-Id: <20250405044338.397237-1-ryotkkr98@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250405043833.397020-1-ryotkkr98@gmail.com>
+References: <20250405043833.397020-1-ryotkkr98@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:2785:b0:3d3:d965:62c4 with SMTP id
- e9e14a558f8ab-3d6e5329212mr51377515ab.10.1743828023214; Fri, 04 Apr 2025
- 21:40:23 -0700 (PDT)
-Date: Fri, 04 Apr 2025 21:40:23 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67f0b437.050a0220.0a13.022c.GAE@google.com>
-Subject: [syzbot] [sctp?] KMSAN: uninit-value in sctp_assoc_bh_rcv
-From: syzbot <syzbot+773e51afe420baaf0e2b@syzkaller.appspotmail.com>
-To: davem@davemloft.net, edumazet@google.com, horms@kernel.org, 
-	kuba@kernel.org, linux-kernel@vger.kernel.org, linux-sctp@vger.kernel.org, 
-	lucien.xin@gmail.com, marcelo.leitner@gmail.com, netdev@vger.kernel.org, 
-	pabeni@redhat.com, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hello,
+startup()/shutdown() callbacks access SIFIVE_SERIAL_IE_OFFS.
+The register is also accessed from write() callback.
 
-syzbot found the following issue on:
+If console were printing and startup()/shutdown() callback
+gets called, its access to the register could be overwritten.
 
-HEAD commit:    a2cc6ff5ec8f Merge tag 'firewire-updates-6.15' of git://gi..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=14bfcfb0580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=bace10fc34ab2694
-dashboard link: https://syzkaller.appspot.com/bug?extid=773e51afe420baaf0e2b
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+Add port->lock to startup()/shutdown() callbacks to make sure
+their access to SIFIVE_SERIAL_IE_OFFS is synchronized against
+write() callback.
 
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/7c6e49399ec3/disk-a2cc6ff5.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/bd9ebb7bb091/vmlinux-a2cc6ff5.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/b416a727e72b/bzImage-a2cc6ff5.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+773e51afe420baaf0e2b@syzkaller.appspotmail.com
-
-=====================================================
-BUG: KMSAN: uninit-value in sctp_assoc_bh_rcv+0x38e/0xc50 net/sctp/associola.c:1005
- sctp_assoc_bh_rcv+0x38e/0xc50 net/sctp/associola.c:1005
- sctp_inq_push+0x2ef/0x380 net/sctp/inqueue.c:88
- sctp_backlog_rcv+0x397/0xdb0 net/sctp/input.c:331
- sk_backlog_rcv+0x13b/0x420 include/net/sock.h:1126
- __release_sock+0x1da/0x330 net/core/sock.c:3158
- release_sock+0x6b/0x250 net/core/sock.c:3712
- sctp_wait_for_connect+0x487/0x820 net/sctp/socket.c:9360
- sctp_sendmsg_to_asoc+0x1ec1/0x1f00 net/sctp/socket.c:1885
- sctp_sendmsg+0x32b9/0x4a90 net/sctp/socket.c:2031
- inet_sendmsg+0x25a/0x280 net/ipv4/af_inet.c:851
- sock_sendmsg_nosec net/socket.c:712 [inline]
- __sock_sendmsg+0x267/0x380 net/socket.c:727
- __sys_sendto+0x594/0x750 net/socket.c:2180
- __do_sys_sendto net/socket.c:2187 [inline]
- __se_sys_sendto net/socket.c:2183 [inline]
- __x64_sys_sendto+0x125/0x1d0 net/socket.c:2183
- x64_sys_call+0x37e7/0x3c80 arch/x86/include/generated/asm/syscalls_64.h:45
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xcd/0x1e0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-Uninit was created at:
- slab_post_alloc_hook mm/slub.c:4157 [inline]
- slab_alloc_node mm/slub.c:4200 [inline]
- __do_kmalloc_node mm/slub.c:4330 [inline]
- __kmalloc_node_track_caller_noprof+0x962/0x1260 mm/slub.c:4350
- kmalloc_reserve+0x23e/0x4a0 net/core/skbuff.c:599
- __alloc_skb+0x366/0x7b0 net/core/skbuff.c:668
- alloc_skb include/linux/skbuff.h:1340 [inline]
- sctp_packet_pack net/sctp/output.c:472 [inline]
- sctp_packet_transmit+0x1811/0x4470 net/sctp/output.c:621
- sctp_outq_flush_transports net/sctp/outqueue.c:1173 [inline]
- sctp_outq_flush+0x1b2f/0x6590 net/sctp/outqueue.c:1221
- sctp_outq_uncork+0x9c/0xb0 net/sctp/outqueue.c:764
- sctp_cmd_interpreter net/sctp/sm_sideeffect.c:-1 [inline]
- sctp_side_effects net/sctp/sm_sideeffect.c:1198 [inline]
- sctp_do_sm+0x8c5d/0x93e0 net/sctp/sm_sideeffect.c:1169
- sctp_assoc_bh_rcv+0x8fe/0xc50 net/sctp/associola.c:1052
- sctp_inq_push+0x2ef/0x380 net/sctp/inqueue.c:88
- sctp_backlog_rcv+0x397/0xdb0 net/sctp/input.c:331
- sk_backlog_rcv+0x13b/0x420 include/net/sock.h:1126
- __release_sock+0x1da/0x330 net/core/sock.c:3158
- release_sock+0x6b/0x250 net/core/sock.c:3712
- sctp_wait_for_connect+0x487/0x820 net/sctp/socket.c:9360
- sctp_sendmsg_to_asoc+0x1ec1/0x1f00 net/sctp/socket.c:1885
- sctp_sendmsg+0x32b9/0x4a90 net/sctp/socket.c:2031
- inet_sendmsg+0x25a/0x280 net/ipv4/af_inet.c:851
- sock_sendmsg_nosec net/socket.c:712 [inline]
- __sock_sendmsg+0x267/0x380 net/socket.c:727
- __sys_sendto+0x594/0x750 net/socket.c:2180
- __do_sys_sendto net/socket.c:2187 [inline]
- __se_sys_sendto net/socket.c:2183 [inline]
- __x64_sys_sendto+0x125/0x1d0 net/socket.c:2183
- x64_sys_call+0x37e7/0x3c80 arch/x86/include/generated/asm/syscalls_64.h:45
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xcd/0x1e0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-CPU: 1 UID: 0 PID: 10529 Comm: syz.3.1552 Tainted: G        W           6.14.0-syzkaller-12966-ga2cc6ff5ec8f #0 PREEMPT(undef) 
-Tainted: [W]=WARN
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-=====================================================
-
-
+Signed-off-by: Ryo Takakura <ryotkkr98@gmail.com>
+Cc: stable@vger.kernel.org
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ drivers/tty/serial/sifive.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+diff --git a/drivers/tty/serial/sifive.c b/drivers/tty/serial/sifive.c
+index 5904a2d4c..054a8e630 100644
+--- a/drivers/tty/serial/sifive.c
++++ b/drivers/tty/serial/sifive.c
+@@ -563,8 +563,11 @@ static void sifive_serial_break_ctl(struct uart_port *port, int break_state)
+ static int sifive_serial_startup(struct uart_port *port)
+ {
+ 	struct sifive_serial_port *ssp = port_to_sifive_serial_port(port);
++	unsigned long flags;
+ 
++	uart_port_lock_irqsave(&ssp->port, &flags);
+ 	__ssp_enable_rxwm(ssp);
++	uart_port_unlock_irqrestore(&ssp->port, flags);
+ 
+ 	return 0;
+ }
+@@ -572,9 +575,12 @@ static int sifive_serial_startup(struct uart_port *port)
+ static void sifive_serial_shutdown(struct uart_port *port)
+ {
+ 	struct sifive_serial_port *ssp = port_to_sifive_serial_port(port);
++	unsigned long flags;
+ 
++	uart_port_lock_irqsave(&ssp->port, &flags);
+ 	__ssp_disable_rxwm(ssp);
+ 	__ssp_disable_txwm(ssp);
++	uart_port_unlock_irqrestore(&ssp->port, flags);
+ }
+ 
+ /**
+-- 
+2.34.1
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
