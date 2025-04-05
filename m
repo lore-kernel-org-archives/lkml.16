@@ -1,137 +1,180 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.netcube.li (mail.netcube.li [173.249.15.149])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 625F91A9B23
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 12:48:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D9501DDC21;
+	Sat,  5 Apr 2025 12:49:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=173.249.15.149
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743857318; cv=none; b=aKEK0cvYWtXGImuuccOgea1NBrfJy/JgzR4i4rX0iKXPIlM/LoHVC94XIgiEssM/vFciOS/LngoURHn5rKrL0usIT+kALqn4N52SWEBxPVP2kDMDApBYhhrGHTs6dZ+GR+7JDClV2Bc506/BZM+EWuSPwZgtOTFZJtcBFN7O6Wo=
+	t=1743857361; cv=none; b=CWwAlLDUlXZZtnu8uEWfuf9pfUzRyZ7CGd2/pYAoP2Udv4f79K48tiYIhpRsae2nc820+SFm5XtRc9pzCHn4QPwKqVfJG/dGLj+P1jzNr9XTRdcJ2FkJipL2OqPqQplaXtuiUwKps560+HdjAPuRmAIMbDjtb5sVZef/dgvdOWA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743857318; c=relaxed/simple;
-	bh=rEKB5o3tXinJ0e4nM3y2sFbzk380OYk6wMscqAt4kac=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f6eScvCZtnqAQt6YjGPEI58p7UsprdUug8fD5Zm2KO6ypbgI0dNQIj9GJ1N7BdveDYx0i06ZFd2mc+e8oMgzblpFc/hSGATQCUKmw6P+v9/Z2u+cdnaczhSmfATDZkidOjJI4VMFGa719G9bQ+JO0rnBBcsAWY+ndHMVwhNuiYo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XNmlsjFJ; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1743857361; c=relaxed/simple;
+	bh=POHAFotKd8e1O+6O+b9w5tEhRIF3sEA2eTNlYAQuvOk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=sczQzC69iU6+lD7DcVVTWeZwWnaIsxH3iK4Lh/9fb8qaPMCvi2EnQqm1NvoSkESY7+zXEWU2rPlMPQxk3oIEEN8Ub4bkw8wZFPHD9IL6Z6mq8dGigStYyMU/mNXyVZ6/K1jW3hxLUop+jNgrkq925p+olDq46n5kOqEzkhGoN5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=netcube.li; spf=pass smtp.mailfrom=netcube.li; dkim=pass (1024-bit key) header.d=netcube.li header.i=@netcube.li header.b=fqlzOnRL; arc=none smtp.client-ip=173.249.15.149
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=netcube.li
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netcube.li
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XNmlsjFJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743857316; x=1775393316;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=rEKB5o3tXinJ0e4nM3y2sFbzk380OYk6wMscqAt4kac=;
-  b=XNmlsjFJ68V6IwbsCtfW7zRkeK1r15THeHLFZTX5ixvkrCmpp1CxfJsj
-   eInUPujYQ2RUIqR6qJF8MfWUXro/zpL1P0MEBQsYWKD1C/GUj1rgpqbd+
-   R+7V1+1h0pn899zx0FzDrcg/qJsJco1h3/FQGKyzzo7RAzjG9wf+/zTEV
-   +8GuZRtMBPE68IKOdD1B5JZYlLBecTKGcKGCJLg/SgIfANLAnGTeVoBYW
-   tLtjv/e7YqMFH0MVkc0dRGXTjZZJI3WewPEK3LolH+CfI/8/q2PfMVi71
-   U51E0YYOcNKKOL4HamlJJr3BTGWfkm9bN5GO2AJenyg5CmLtOcf+jXC9B
-   g==;
-X-CSE-ConnectionGUID: jdQ7WEx3T7WHT1Gn6KXxkg==
-X-CSE-MsgGUID: MwYi3EMuT4yyt52npjutDg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11395"; a="44435481"
-X-IronPort-AV: E=Sophos;i="6.15,191,1739865600"; 
-   d="scan'208";a="44435481"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2025 05:46:23 -0700
-X-CSE-ConnectionGUID: FKz5BdQuSRG15LyZFBxneA==
-X-CSE-MsgGUID: agc02w7UT6SGrQ+nBl7REw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,191,1739865600"; 
-   d="scan'208";a="132389101"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by orviesa003.jf.intel.com with ESMTP; 05 Apr 2025 05:46:19 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u12uf-00021r-15;
-	Sat, 05 Apr 2025 12:46:17 +0000
-Date: Sat, 5 Apr 2025 20:45:30 +0800
-From: kernel test robot <lkp@intel.com>
-To: Roger Pau Monne <roger.pau@citrix.com>, Juergen Gross <jgross@suse.com>,
-	xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev,
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Stefano Stabellini <sstabellini@kernel.org>,
-	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
-Subject: Re: [PATCH v2] x86/xen: fix balloon target initialization for PVH
- dom0
-Message-ID: <202504052022.avvx45LI-lkp@intel.com>
-References: <20250404133459.16125-1-roger.pau@citrix.com>
+	dkim=pass (1024-bit key) header.d=netcube.li header.i=@netcube.li header.b="fqlzOnRL"
+dkim-signature: v=1; a=rsa-sha256; d=netcube.li; s=s1;
+	c=relaxed/relaxed; q=dns/txt; h=From:Subject:Date:Message-ID:To:CC:MIME-Version:Content-Type;
+	bh=+lj06kP7F8HTAAzSL4UU5vQVmYs6pDrrt0YSXXnbsUM=;
+	b=fqlzOnRLRyUuGGefktblktLzYyLfea5KMiTjVD1wykqt04dKGS3U8F/WoHWkTW8kgRjMaQRPeycvDE80NrfCHesWrcsCi7yLj5PsIkNIeedknZIodKPhAOdpWcBeJFFKKqLRspJzAXNHeiIj+VmMoItzRI58iV+HUuqJgcVaiXM=
+Received: from lukas-hpz440workstation.localnet (cm70-231.liwest.at [212.241.70.231])
+	by mail.netcube.li with ESMTPSA
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256)
+	; Sat, 5 Apr 2025 13:48:26 +0200
+From: Lukas Schmid <lukas.schmid@netcube.li>
+To: linus.walleij@linaro.org
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject:
+ [BUG] pinctrl_mcp23s08_i2c: mutex used in irq_bus_lock causes 'scheduling
+ while atomic' with matrix_keypad
+Date: Sat, 05 Apr 2025 13:48:25 +0200
+Message-ID: <5879304.DvuYhMxLoT@lukas-hpz440workstation>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250404133459.16125-1-roger.pau@citrix.com>
+Content-Type: multipart/signed; boundary="nextPart6148072.lOV4Wx5bFT";
+ micalg="pgp-sha512"; protocol="application/pgp-signature"
 
-Hi Roger,
+--nextPart6148072.lOV4Wx5bFT
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"; protected-headers="v1"
+From: Lukas Schmid <lukas.schmid@netcube.li>
+To: linus.walleij@linaro.org
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Sat, 05 Apr 2025 13:48:25 +0200
+Message-ID: <5879304.DvuYhMxLoT@lukas-hpz440workstation>
+MIME-Version: 1.0
 
-kernel test robot noticed the following build errors:
+Hi all,
 
-[auto build test ERROR on xen-tip/linux-next]
-[also build test ERROR on tip/x86/core linus/master v6.14 next-20250404]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+I'm encountering a "BUG: scheduling while atomic" when using the MCP23017 GPIO 
+expander with the `matrix_keypad` driver in IRQ mode on Linux v6.12.20
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Roger-Pau-Monne/x86-xen-fix-balloon-target-initialization-for-PVH-dom0/20250404-214218
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/xen/tip.git linux-next
-patch link:    https://lore.kernel.org/r/20250404133459.16125-1-roger.pau%40citrix.com
-patch subject: [PATCH v2] x86/xen: fix balloon target initialization for PVH dom0
-config: x86_64-buildonly-randconfig-001-20250405 (https://download.01.org/0day-ci/archive/20250405/202504052022.avvx45LI-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250405/202504052022.avvx45LI-lkp@intel.com/reproduce)
+Hardware setup:
+- MCP23017 connected via I2C
+- 4x4 matrix keypad hooked to MCP23017 GPIOs
+- SoC: Allwinner V3s SoC
+- Using devicetree-overlay configuration for `microchip,mcp23017` and `gpio-
+matrix-keypad`
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504052022.avvx45LI-lkp@intel.com/
+When I press buttons on the keypad, after some amount of presses I get the 
+following error from the Kernel:
 
-All errors (new ones prefixed by >>):
+[   92.820159] BUG: scheduling while atomic: kworker/0:2/46/0x00000002
+[   92.826577] Modules linked in: bluetooth ecdh_generic ecc cfg80211 rfkill 
+ipv6 af_packet evdev mcp251xfd can_dev matrix_keypad matrix_keymap 
+gpio_pcf857x pinctrl_mcp23s08_i2c pinctrl_mcp23s08 hd44780 hd44780_common 
+charlcd sun4i_ss libdes sun4i_codec sun8i_codec_analog sun8i_adda_pr_regmap 
+snd_soc_core snd_pcm_dmaengine snd_pcm snd_timer snd soundcore uio_pdrv_genirq 
+uio [last unloaded: esp32_sdio(O)]
+[   92.862336] CPU: 0 UID: 0 PID: 46 Comm: kworker/0:2 Tainted: G           O       
+6.12.20 #1
+[   92.862362] Tainted: [O]=OOT_MODULE
+[   92.862368] Hardware name: Allwinner sun8i Family
+[   92.862378] Workqueue: events matrix_keypad_scan [matrix_keypad]
+[   92.862415] Call trace: 
+[   92.862429]  unwind_backtrace from show_stack+0x18/0x1c
+[   92.862469]  show_stack from dump_stack_lvl+0x68/0x74
+[   92.862490]  dump_stack_lvl from __schedule_bug+0x5c/0x70
+[   92.862518]  __schedule_bug from __schedule+0xab4/0xc94
+[   92.862541]  __schedule from schedule+0x34/0x14c
+[   92.862560]  schedule from schedule_preempt_disabled+0x24/0x34
+[   92.862580]  schedule_preempt_disabled from __mutex_lock.constprop.
+0+0x2e4/0x940
+[   92.862605]  __mutex_lock.constprop.0 from mcp23s08_irq_bus_lock+0x20/0x30 
+[pinctrl_mcp23s08]
+[   92.862650]  mcp23s08_irq_bus_lock [pinctrl_mcp23s08] from 
+__irq_get_desc_lock+0x84/0xa8
+[   92.862682]  __irq_get_desc_lock from enable_irq+0x38/0xa8
+[   92.862710]  enable_irq from matrix_keypad_scan+0x2e0/0x324 [matrix_keypad]
+[   92.862738]  matrix_keypad_scan [matrix_keypad] from 
+process_one_work+0x160/0x410
+[   92.862763]  process_one_work from worker_thread+0x258/0x3f8
+[   92.862782]  worker_thread from kthread+0x118/0x134
+[   92.862801]  kthread from ret_from_fork+0x14/0x38
+[   92.862817] Exception stack(0xc4989fb0 to 0xc4989ff8)
+[   92.862829] 9fa0:                                     00000000 00000000 
+00000000 00000000
+[   92.862840] 9fc0: 00000000 00000000 00000000 00000000 00000000 00000000 
+00000000 00000000
+[   92.862849] 9fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+[   93.007968] BUG: workqueue leaked atomic, lock or RCU: kworker/0:2[46]
+[   93.007968]      preempt=0xffffffff lock=0->0 RCU=0->0 
+workfn=matrix_keypad_scan [matrix_keypad]
+[   93.008051] CPU: 0 UID: 0 PID: 46 Comm: kworker/0:2 Tainted: G        W  O       
+6.12.20 #1
+[   93.008071] Tainted: [W]=WARN, [O]=OOT_MODULE
+[   93.008076] Hardware name: Allwinner sun8i Family
+[   93.008085] Workqueue: events matrix_keypad_scan [matrix_keypad]
+[   93.008108] Call trace: 
+[   93.008121]  unwind_backtrace from show_stack+0x18/0x1c
+[   93.008158]  show_stack from dump_stack_lvl+0x68/0x74
+[   93.008179]  dump_stack_lvl from process_one_work+0x40c/0x410
+[   93.008202]  process_one_work from worker_thread+0x258/0x3f8
+[   93.008221]  worker_thread from kthread+0x118/0x134
+[   93.008240]  kthread from ret_from_fork+0x14/0x38
+[   93.008256] Exception stack(0xc4989fb0 to 0xc4989ff8)
+[   93.008267] 9fa0:                                     00000000 00000000 
+00000000 00000000
+[   93.008277] 9fc0: 00000000 00000000 00000000 00000000 00000000 00000000 
+00000000 00000000
+[   93.008286] 9fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+[   93.008300] BUG: scheduling while atomic: kworker/0:2/46/0x00000000
+[   93.115583] Modules linked in: bluetooth ecdh_generic ecc cfg80211 rfkill 
+ipv6 af_packet evdev mcp251xfd can_dev matrix_keypad matrix_keymap 
+gpio_pcf857x pinctrl_mcp23s08_i2c pinctrl_mcp23s08 hd44780 hd44780_common 
+charlcd sun4i_ss libdes sun4i_codec sun8i_codec_analog sun8i_adda_pr_regmap 
+snd_soc_core snd_pcm_dmaengine snd_pcm snd_timer snd soundcore uio_pdrv_genirq 
+uio [last unloaded: esp32_sdio(O)]
+[   93.151453] CPU: 0 UID: 0 PID: 46 Comm: kworker/0:2 Tainted: G        W  O       
+6.12.20 #1
+[   93.151483] Tainted: [W]=WARN, [O]=OOT_MODULE
+[   93.151488] Hardware name: Allwinner sun8i Family
+[   93.151496] Workqueue:  0x0 (events)
+[   93.151525] Call trace: 
+[   93.151537]  unwind_backtrace from show_stack+0x18/0x1c
+[   93.151570]  show_stack from dump_stack_lvl+0x68/0x74
+[   93.151589]  dump_stack_lvl from __schedule_bug+0x5c/0x70
+[   93.151615]  __schedule_bug from __schedule+0xab4/0xc94
+[   93.151640]  __schedule from schedule+0x34/0x14c
+[   93.151659]  schedule from worker_thread+0x1c8/0x3f8
+[   93.151681]  worker_thread from kthread+0x118/0x134
+[   93.151698]  kthread from ret_from_fork+0x14/0x38
+[   93.151713] Exception stack(0xc4989fb0 to 0xc4989ff8)
+[   93.151725] 9fa0:                                     00000000 00000000 
+00000000 00000000
+[   93.151736] 9fc0: 00000000 00000000 00000000 00000000 00000000 00000000 
+00000000 00000000
+[   93.151746] 9fe0: 00000000 00000000 00000000 00000000 00000013 00000000
 
-   ld: drivers/xen/balloon.o: in function `balloon_init':
->> drivers/xen/balloon.c:727: undefined reference to `xen_released_pages'
+Happy to test patches or provide further debugging info.
+
+Best regards,  
+Lukas Schmid
+--nextPart6148072.lOV4Wx5bFT
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEPv6dcBmn59ssZMkSJnN+drMVRtgFAmfxGIkACgkQJnN+drMV
+RtieUAf8CVbgPNCJYR+490fKHa8mOTrB03Mqkd1SXjfN0AMt+cbhmEQ/ELW7GYgG
+DTTrUqpeyDzxc85HVHWA8wk2hWN4CTnPl7C855fiCHq7yy1yiG/VMGR5hEW0izPC
+Fe4PZ6T1E6G7WigaamERePFcyqD79oAWyVYvBvGInY1MZHgIEJi82ZFw88dQpcaE
+UtEbVyDFnCvMupueBs/40bIxfqqA43XhIEzlqJ5e6XeZlfODnT+xCG58Pd2N5QCB
+jMsld05LWjEmRZSynXwHDXDUTrwRnYhxfCw0JSw4bOZeX+5FADJmF/0J+c5afXiS
+GMRp1ld2id2V1zpucE2hZDj/jsJW6A==
+=tCzG
+-----END PGP SIGNATURE-----
+
+--nextPart6148072.lOV4Wx5bFT--
 
 
-vim +727 drivers/xen/balloon.c
 
-   716	
-   717	static int __init balloon_init(void)
-   718	{
-   719		struct task_struct *task;
-   720		int rc;
-   721	
-   722		if (!xen_domain())
-   723			return -ENODEV;
-   724	
-   725		pr_info("Initialising balloon driver\n");
-   726	
- > 727		if (xen_released_pages >= get_num_physpages()) {
-   728			WARN(1, "Released pages underflow current target");
-   729			return -ERANGE;
-   730		}
-   731	
-   732		balloon_stats.current_pages = get_num_physpages() - xen_released_pages;
-   733		balloon_stats.target_pages  = balloon_stats.current_pages;
-   734		balloon_stats.balloon_low   = 0;
-   735		balloon_stats.balloon_high  = 0;
-   736		balloon_stats.total_pages   = balloon_stats.current_pages;
-   737	
-   738		balloon_stats.schedule_delay = 1;
-   739		balloon_stats.max_schedule_delay = 32;
-   740		balloon_stats.retry_count = 1;
-   741		balloon_stats.max_retry_count = 4;
-   742	
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
