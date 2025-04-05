@@ -1,90 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8F3D1BC2A;
-	Sat,  5 Apr 2025 17:37:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 856D51BC2A;
+	Sat,  5 Apr 2025 17:39:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.133.4.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743874623; cv=none; b=NXCoQnGMP0Lt1IVVAOYkDeHbsGSjrsCRuFVbO63q2m42bbkNBgz1fxBfV75Nz7nIDDCub3vswotw+oZg2PCNTKa8/p3k27bomYFfshIy6JVe/yV3gAyeds5UyMyXMGEgttH8B3hY91YdtsuJnt2bzxinGqoIwTHJ0LjH6e+vRCk=
+	t=1743874743; cv=none; b=Sc5TJPE6T7kWZTSg5/s8pvUsEH/Hcj5IwVYyqC2e9JnFgjelVCbIi4cYmg9fXxEl/tObKvTn7WtiYFRbbqQ+/qw8gNQgpAAXxdalWhckXzLDzDYYF4K378f5lXecw9ucXc5sZ8DOuDN4soYlGOuSXjx0ICJQYgNnWVT/A9fajQU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743874623; c=relaxed/simple;
-	bh=aKxW/34NvhkrP64K8xfQVQKDk9SoRViYqKXGYjflamI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZMeR2Fua7oOhxUgxeKlI64fdmbA8aW/IKDATgCOgTg9EPGX9fxzn4QNIFTRq+zBsOYnaNItR+VYB6NdOvQwRr/vBtaBN4jMo4k22aLebBnEMBrerEJW+oEUcd9IcH3w9GnhEPVzBJeYIi4GbzQqAw9JXsOZ4m9llUAiJJiiZoZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JVCIjYsS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743874743; c=relaxed/simple;
+	bh=gX0ZLQEjnzU3TBvfxOtgjXwaDdYCJbrEpsKU8RAV1no=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=hn04jAVc6F/eflHwsfiIpwCt491qb3Ju9vueiifR2+uTSNBlf1jo+fyasLBbYLJlmsgypbZN9a5uyFV9/Gpj1PxCkWElAkJK1Qn6ApJR1RO/vYnrCn6mL+pzBNI3rp68S9bd1VNyvHs3UEdXnCu50DxxTr0HnBIAKLEPguoFDCM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b=gdgzTirl; arc=none smtp.client-ip=130.133.4.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zedat.fu-berlin.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JVCIjYsS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1510BC4CEE4;
-	Sat,  5 Apr 2025 17:36:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743874622;
-	bh=aKxW/34NvhkrP64K8xfQVQKDk9SoRViYqKXGYjflamI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=JVCIjYsSs+4xDpk17pFba12noAXPc3fcONWlomTEI/CYiSXTiK12+BbztQHKLymdS
-	 v9ouaEKuZXny9652HQYcVvKakkKTvfe24fQzbb/KPkUSqQ+4c7oe1fWdZYHj+ZYr4e
-	 rBWfGIoyhtMYD1pAhq7qyft0ACJnDrLL0f2F6SBq6jcrOUpIiSpgcyUpT+/w2QoF8V
-	 TMy7DkMWtKuQoy4CryHC6sB1EbfFNKAtsj7JzlLjm2DR4wj3V5htgv3xDXCTfDwa1G
-	 JEqWP4uYDPqJamHHnxNISnXoSp32wpp9sanav+ZHBrmQZ/aQagWJwjoH7VRq9vJEZa
-	 7mNntDFKnIUpA==
-Date: Sat, 5 Apr 2025 18:36:54 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Matti Vaittinen <mazziesaccount@gmail.com>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, Lars-Peter Clausen
- <lars@metafoo.de>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Nuno Sa
- <nuno.sa@analog.com>, David Lechner <dlechner@baylibre.com>, Javier
- Carrasco <javier.carrasco.cruz@gmail.com>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/7] Support ROHM BD79104 ADC
-Message-ID: <20250405183654.6bd4a52d@jic23-huawei>
-In-Reply-To: <6acb2692-8946-4ab2-b433-4f68c080f6b9@gmail.com>
-References: <cover.1743573284.git.mazziesaccount@gmail.com>
-	<6acb2692-8946-4ab2-b433-4f68c080f6b9@gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b="gdgzTirl"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=fu-berlin.de; s=fub01; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=WX9E6DgiY2D01qB2SzZpeJfoy+tNUxzhlIlzO5bFJoo=; t=1743874740; x=1744479540; 
+	b=gdgzTirlr0KTpdqDC2l0cw8SQJcaK50iVN76+6fo+0p9Fd70DoSG8zmIoIizdM5/198wzCYBJB1
+	EzgpLiodz/zcNI1XJp5nXiX+/5bp26mcIGx1+BUeIzKY5zFl7lcmrQ8cDd95gTyvYVTbG6pYqxd6F
+	KQILRl2OFOlztXPFTN8wH0BWYiBZOAjh3t2NZAsc6MFn3G8DGcW8ZT9hM2peHwsMqRMMMo1saUOsh
+	JsV8aei0Xqe25bHVESi2GR45qwrXwv04U1ZU302zVzROr4Jq5qNnHYd9ypEcJtp7+JGF97AlFyJzG
+	pvSGuuIvAVCK5C6DGgT7LIbl/Ma/r+iJGcJg==;
+Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
+          by outpost.zedat.fu-berlin.de (Exim 4.98)
+          with esmtps (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@zedat.fu-berlin.de>)
+          id 1u17Tq-000000045Ay-0u8m; Sat, 05 Apr 2025 19:38:54 +0200
+Received: from dynamic-002-242-014-214.2.242.pool.telefonica.de ([2.242.14.214] helo=[192.168.178.50])
+          by inpost2.zedat.fu-berlin.de (Exim 4.98)
+          with esmtpsa (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id 1u17Tp-00000000dWk-48nP; Sat, 05 Apr 2025 19:38:54 +0200
+Message-ID: <a3faf6820b43cca25c3384d0248f494be7312598.camel@physik.fu-berlin.de>
+Subject: Re: [PATCH 1/2] sh: align .bss section padding to 8-byte boundary
+From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+To: Artur Rojek <contact@artur-rojek.eu>, Yoshinori Sato	
+ <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, Daniel Lezcano
+	 <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Uros
+ Bizjak	 <ubizjak@gmail.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, "D . Jeff Dionne"	
+ <jeff@coresemi.io>, Rob Landley <rob@landley.net>,
+ linux-sh@vger.kernel.org, 	linux-kernel@vger.kernel.org
+Date: Sat, 05 Apr 2025 19:38:53 +0200
+In-Reply-To: <20250216175545.35079-2-contact@artur-rojek.eu>
+References: <20250216175545.35079-1-contact@artur-rojek.eu>
+	 <20250216175545.35079-2-contact@artur-rojek.eu>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.0 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Original-Sender: glaubitz@physik.fu-berlin.de
+X-ZEDAT-Hint: PO
 
-On Wed, 2 Apr 2025 09:19:19 +0300
-Matti Vaittinen <mazziesaccount@gmail.com> wrote:
+Hi Artur,
 
-> On 02/04/2025 09:07, Matti Vaittinen wrote:
-> 
-> > Finally, I didn't find maintainer information for this driver from the
-> > MAINTAINERS file. I would like to add myself as a reviewer for the
-> > driver, so I can stay on track of the changes to it. AFAIR, having
-> > R-entry without M-entry was not appreciated. Any suggestions how to
-> > handle this?  
-> 
-> Jonathan, I suppose this, by default,  falls under the umbrella of your 
-> IIO maintainership. Are you Okay with it if I'll add a maintainer entry 
-> which sets you explicitly as a maintainer for this, and list myself as a 
-> reviewer?
+On Sun, 2025-02-16 at 18:55 +0100, Artur Rojek wrote:
+> J2 based devices expect to find a devicetree blob at the end of the bss
+> section. As of a77725a9a3c5, libfdt enforces 8-byte alignment for the
+> dtb, causing J2 devices to fail early in sh_fdt_init.
+>=20
+> As J2 loader firmware calculates the dtb location based on the kernel
+> image .bss section size, rather than the __bss_stop symbol offset, the
+> required alignment can't be enforced with BSS_SECTION(0, PAGE_SIZE, 8).
+> Instead, inline modified version of the above macro, which grows .bss
+> by the required size.
+>=20
+> While this change affects all existing SH boards, it should be benign on
+> platforms which don't need this alignment.
+>=20
+> Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
+> ---
+>  arch/sh/kernel/vmlinux.lds.S | 15 ++++++++++++++-
+>  1 file changed, 14 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/arch/sh/kernel/vmlinux.lds.S b/arch/sh/kernel/vmlinux.lds.S
+> index 9644fe187a3f..008c30289eaa 100644
+> --- a/arch/sh/kernel/vmlinux.lds.S
+> +++ b/arch/sh/kernel/vmlinux.lds.S
+> @@ -71,7 +71,20 @@ SECTIONS
+> =20
+>  	. =3D ALIGN(PAGE_SIZE);
+>  	__init_end =3D .;
+> -	BSS_SECTION(0, PAGE_SIZE, 4)
+> +	__bss_start =3D .;
+> +	SBSS(0)
+> +	. =3D ALIGN(PAGE_SIZE);
+> +	.bss : AT(ADDR(.bss) - LOAD_OFFSET) {
+> +		BSS_FIRST_SECTIONS
+> +		. =3D ALIGN(PAGE_SIZE);
+> +		*(.bss..page_aligned)
+> +		. =3D ALIGN(PAGE_SIZE);
+> +		*(.dynbss)
+> +		*(BSS_MAIN)
+> +		*(COMMON)
+> +		. =3D ALIGN(8);
+> +	}
+> +	__bss_stop =3D .;
+>  	_end =3D . ;
+> =20
+>  	STABS_DEBUG
 
-Absolutely.  I'm find with you adding yourself as either R or M.
-If you go with M and anyone objects, we can have more maintainers ;)
-If you go with R the catch all is fine. I've never insisted on everyone
-adding entries to maintainers on basis the catch all means I get
-them all anyway.
+I'll pick this up for now since Uros has confirmed that the compiler
+won't just use SBSS without breaking the ABI, so I think to use this
+fix for now.
 
-Jonathan
+If it breaks in the future, we can change it again.
 
+Reviewed-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
 
-> 
-> I suppose I could also add myself as a maintainer for this, but I am 
-> unsure how well it would be received by the TI people ;)
-> 
-> > This series was based on the v6.14, but it should apply cleanly on
-> > iio/testing - please let me know if I should rebase.  
-> 
-> Just realized I forgot to update this. The series is now based on 
-> 543da6252b48 in the iio/testing. Nonetheless, I can still rebase if needed.
-> 
-> Yours,
-> 	-- Matti
+Adrian
 
+--=20
+ .''`.  John Paul Adrian Glaubitz
+: :' :  Debian Developer
+`. `'   Physicist
+  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
