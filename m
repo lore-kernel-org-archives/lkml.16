@@ -1,131 +1,133 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-b8-smtp.messagingengine.com (fhigh-b8-smtp.messagingengine.com [202.12.124.159])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F2553FC3
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 09:13:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92ED71CD1F
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 09:16:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.159
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743844403; cv=none; b=ZEqJ97q8GnJbZvlyK/5k0BHccONfY4m1h7Yssl4PRMZHGGTaI+7LcSCr1WwM7re+1Firh5tlzUAiOKLdqlRpNvikZ66a7ADU8ALrQCEa+qUPQr3+boe8BubuhklvmSIlFV0jLpz7uUsZ2rkJvvcsyVu6VXlrGXGfwVR+LVX00hA=
+	t=1743844608; cv=none; b=uzPW8kRSIECE9xg7HXdfCSs0GVo2cW0iKmj8qn8n5haj8zHnmdiv5eiQyRY0VQ287nkKBPDsxfue0vUbsEKRRo5Pnn7A4wTByxDBfshSe9zS4VY3XtwfZrtvB7uzM/BIX//ImzEJya9Y0NUuZBWgg7ujrB1rh//fTY4jwnVSWGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743844403; c=relaxed/simple;
-	bh=pfEubIKNeeFOnL5gyDmaebVebKzbDrXCOVJJAbB4UVU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=etvxqeJFAs4i9JiaQ7YFsEaXX2UWuotGaixWq5lwBPfgl4YoQO1X1gTLpPKtOaQTFfWiJry58CfIbu8//fye2SicLj05yXtdQ2ecm1i0mTqCSXUarMU8jpoVUjVF7g0DVjjXX+COfuvPx7eqDxVpSPYRJbeHL4Mmaq99TZ4S7rU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KRIZf88D; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743844608; c=relaxed/simple;
+	bh=8dZVrC21x4sNEoxcaPiodzEkucs1LufvZ3mrlPOFyXk=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=mFu4I8gR4lHfrJrSuddCF2OPnIaSUF8oSRBYR1/CX9WcjzguCj7xgNijTzXTf6WBgb/wkQyNmD6OpxuuC+UAiFFNhV038Zf7rVgmcvSdyyAHeWlFSQLdh7Dw224ZWRYARiQUGkgpt3dRGf28c600C+cRNCv2IFL7xVhwzH0ypB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=STgz+viE; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=siPShLhn; arc=none smtp.client-ip=202.12.124.159
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KRIZf88D"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43cfe63c592so26810345e9.2
-        for <linux-kernel@vger.kernel.org>; Sat, 05 Apr 2025 02:13:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743844400; x=1744449200; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=q6ZR9eFKjGpMS/icjDm1o4uzi+JHmRFmvVzNAUIZTO0=;
-        b=KRIZf88D+o/FZRCoe2S8mY/b6SR8p4IpxmgZ0d4DWMH04oH1WUYx8dsQAVN4osNNbc
-         L39xVveJOqd6V6LiKmXe2wsKIJR8a5R70CvfolMVaHPYCcOuJq5MZ2T4yyN5MOKTiiCH
-         lsP64Ul8Jx/3PEZli13+eG5Li8FJT/hreC/Y3Djc7YR17ALpetcxZQ115X4hsKc6c7ie
-         kNsniKdNRb9f5N1PWrVmF3ssYYUPOEfanQJJuNxa/pqJxgTctxAONG8UaCG2rWcpVPfN
-         I2Je3ZTDPBKCsXY/DwUUH3+gPU8Rhzwyx9/4j9AVWQ/gy8CwqZVZ+7G1WHW3flpDAzuK
-         er2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743844400; x=1744449200;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=q6ZR9eFKjGpMS/icjDm1o4uzi+JHmRFmvVzNAUIZTO0=;
-        b=fKJCJ4HQyk9mZKZmjRCESGH3BjOeLB9wqyW+QcyHn6MKU+y5YB7vI7UWdiBtRGk4Yp
-         vhq0A2tyupVQB02e8p3LGdrWnVBJD0NH7hgxC9RWM7F7xn8ZWh1W8FIyNA7eueVgQUNR
-         GywWMUyKcQ3ZSvsBWhzo8X3EYxu8r4qN6PT5GKn8uVP1rOQXma03tkV1Xxp2+vv55YE6
-         +qoqBmKxCc7FON1gKrj5cidUeG8kx6+KRDA0PRI9v7wALJFSsOicuMqrzYNq+cta0eRl
-         fVjyyDrEHJLqoVBlZxxpARRKMhLC/vkNg3jOjgbiNsWNnyXrUcTAB5+pAZK0o06clEVB
-         Frkg==
-X-Forwarded-Encrypted: i=1; AJvYcCXk66E3e8R/d33fd3tLatavKb2g3j93MoWZi6akOdAmMYK8ff8NSdlkSEzGrRTPFz5ahiZZXzRv0fVmzus=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzvKE3QLA0BdAujnZ4cWavVnXP9L4ZAkXk9BDW4raL8r7OKYweu
-	9/JRQwjgBgINI82phzSpoqYt2SmNFt5RspUFblt2pYmCn70d1H+a
-X-Gm-Gg: ASbGncv8CMnSqEbxZpbFyonOmWvDwcD4ret0XS6IwmUtOV6hnoUvYQ2oWo/9qr8XLP5
-	E8iSbK8+JLq3UJLtM8J0M9jNj8Cg5P55XWi3/lGM2CxVvEgWc/UCPNUF5lZ5DbMZW//tGGbuuxz
-	BRM71cNU1kxOM1VC3Q6aV45VkliWyPmSw8E8MWeOBxl+WnUhLz1zsamuIuBdQ0bPa096EvzaX1v
-	VnkuCjYy4Khy1zZRTbUNGWvb7v0Tu6o/tEbT8mhTnqXjvrhFPCEJ7AFUuPTrtAtxFROR0hjpbDE
-	dXrpyrr+M2ha2chtv50k6d4azwXn8oHn1LqTS02qKsdgntMzPUZPBC2tLoQEp2SzkwrABkcDU86
-	7RyK3xoY=
-X-Google-Smtp-Source: AGHT+IGfzl2pv5IsDRt5SKn785/yDIiUNWg/VF2UgOdPy4T5iI2Zl3GW3bzzP63OL0/FBxHZiPw/Lw==
-X-Received: by 2002:a05:6000:1a8d:b0:39c:1f10:d294 with SMTP id ffacd0b85a97d-39d0de28a44mr4865881f8f.26.1743844399679;
-        Sat, 05 Apr 2025 02:13:19 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c3020d980sm6444591f8f.61.2025.04.05.02.13.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Apr 2025 02:13:19 -0700 (PDT)
-Date: Sat, 5 Apr 2025 10:13:18 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Julia Lawall
- <julia.lawall@inria.fr>, outreachy@lists.linux.dev,
- linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org, Dan Carpenter
- <dan.carpenter@linaro.org>, "andy."@kernel.org
-Subject: Re: [PATCH] staging: rtl8723bs: Use % 4096 instead of & 0xfff
-Message-ID: <20250405101318.3fce2dd5@pumpkin>
-In-Reply-To: <Z/Bro47isE8zhcu7@ubuntu>
-References: <Z/Bro47isE8zhcu7@ubuntu>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="STgz+viE";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="siPShLhn"
+Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 2FCF0254014C;
+	Sat,  5 Apr 2025 05:16:44 -0400 (EDT)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-12.internal (MEProxy); Sat, 05 Apr 2025 05:16:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1743844604;
+	 x=1743931004; bh=ZefRnKcg9csk1WVXJb5wsqwFMPldXUXsiKieW8/coqw=; b=
+	STgz+viEhLjhEgumMyHT1EKQCekpeJJfz2ZaQveWeWZBJ9tNMmtdhPa0g82Duqwu
+	DbXHy6EzS1MUVnQnducA3+m+AiLV325Y2cDTGwc+4V7EbO6WfcvOWamOCu7Bpgto
+	fHx/RFaNtTBryd8h/ZKNZzD3PD9QK2VZkzZUm0FVeVuyx4YhD1YZRq53UPlKmGhJ
+	9x1gRE3jW2bkAwzXgHjC/Mj5wgdhC2FT6Kwu/WG0YYHXsthHwgX9GNargNxaeDlT
+	QhoSTApNlB48vKYl8EI3/e0FBN0vbKAQyZDaEfbk4fjpKPOsHUCoer7TdKZcS0eC
+	1xDt4wGk+tigNz0+pTMP+Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1743844604; x=
+	1743931004; bh=ZefRnKcg9csk1WVXJb5wsqwFMPldXUXsiKieW8/coqw=; b=s
+	iPShLhnlm1HtPtXIN1mCDx2Pj0BfvhjsptfzA8BZfmIMd1LkLTe61v/YbHC73hKE
+	ROFrqkz6Adj2IyEbKS+gSE20lSLXXvhzqdlx2xTTljmt0W2jN3spEm4Os0NYWy38
+	47aZzHz6c6pQppDrRAMzXO/5XVdi2ymznfEREhag02/3ZgFMuInkZR3u9z4O7nC1
+	DJygpD/giOa8Rct6EoSbeoCRHf4VNNpC9SojE/rr/8QLGN044fPrpCfo37yslXBZ
+	DBXeMehKvr0cxWxyI8bbgDCtDkuWJnEkx97hDxipmnuSYa/H3b07bJA8DxwOQG8S
+	uFNh6vO+xf5QG4m05o+1g==
+X-ME-Sender: <xms:-_TwZ-r4BbzppX0DuNM5bRss5bWuhvCi7mpcy7g1hJW7hFOq_UVuwg>
+    <xme:-_TwZ8pT2xfd3oSDQRW0tE-gDk8g3NEw-fqkotcva5fEWvI8hqt8XqQh4v5Ur175F
+    kg7e2srL5s68AGr1ME>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduleefleehucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtqhertder
+    tdejnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
+    gsrdguvgeqnecuggftrfgrthhtvghrnhepkedvuefhiedtueeijeevtdeiieejfeelveff
+    feelkeeiteejffdvkefgteeuhffgnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenuc
+    evlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnuges
+    rghrnhgusgdruggvpdhnsggprhgtphhtthhopeejpdhmohguvgepshhmthhpohhuthdprh
+    gtphhtthhopegsohhquhhnrdhfvghnghesghhmrghilhdrtghomhdprhgtphhtthhopehp
+    vghtvghriiesihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopeifihhllheskhgvrh
+    hnvghlrdhorhhgpdhrtghpthhtoheprghnughrihihrdhshhgvvhgthhgvnhhkoheslhhi
+    nhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehlohhnghhmrghnsehrvgguhhgrth
+    drtghomhdprhgtphhtthhopehmihhnghhosehrvgguhhgrthdrtghomhdprhgtphhtthho
+    pehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:-_TwZzOBQpcJZK9HIycH8yjdtPL6QLQcy4tvKNg2htkKcBK2omSXwA>
+    <xmx:-_TwZ95ATME8to3ku065BjISs5uJs_S3ZT5QRzAZTyH-k5jg4oyy3g>
+    <xmx:-_TwZ97WqlzZb7iwdYLR9B-p0QiRAMSiRGltZ0lJeVJV0B9jbb-mJA>
+    <xmx:-_TwZ9iMVwvifRmdCwAugFY2meAr6qkYqsV7DyeZoddFGi0kAuMcgg>
+    <xmx:_PTwZzFKUMcOuiLx2wYn6wJfnN1xcfBti16UfTkP37_3Z8WHThctASLp>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 374062220073; Sat,  5 Apr 2025 05:16:43 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-ThreadId: T5984b91550484a78
+Date: Sat, 05 Apr 2025 11:16:19 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
+ linux-kernel@vger.kernel.org
+Cc: "Peter Zijlstra" <peterz@infradead.org>, "Ingo Molnar" <mingo@redhat.com>,
+ "Will Deacon" <will@kernel.org>, "Boqun Feng" <boqun.feng@gmail.com>,
+ "Waiman Long" <longman@redhat.com>
+Message-Id: <52d144d1-ffda-4b41-9ed5-2a4fcd4f08d7@app.fastmail.com>
+In-Reply-To: <20250404165204.3657093-1-andriy.shevchenko@linux.intel.com>
+References: <20250404165204.3657093-1-andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v1 1/1] sched/fair: Mark some static const with __maybe_unused
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 4 Apr 2025 23:33:16 +0000
-Abraham Samuel Adekunle <abrahamadekunle50@gmail.com> wrote:
+On Fri, Apr 4, 2025, at 18:52, Andy Shevchenko wrote:
+> GCC considers that some static const defined in the lockdep_internals.h
+> are unused, which prevents `make W=3D1` and CONFIG_WERROR=3Dy builds:
+>
+> kernel/locking/lockdep_internals.h:69:28: error:=20
+> =E2=80=98LOCKF_USED_IN_IRQ_READ=E2=80=99 defined but not used=20
+> [-Werror=3Dunused-const-variable=3D]
+>    69 | static const unsigned long LOCKF_USED_IN_IRQ_READ =3D
+>       |                            ^~~~~~~~~~~~~~~~~~~~~~
+> kernel/locking/lockdep_internals.h:63:28: error:=20
+> =E2=80=98LOCKF_ENABLED_IRQ_READ=E2=80=99 defined but not used=20
+> [-Werror=3Dunused-const-variable=3D]
+>    63 | static const unsigned long LOCKF_ENABLED_IRQ_READ =3D
+>       |                            ^~~~~~~~~~~~~~~~~~~~~~
+> kernel/locking/lockdep_internals.h:57:28: error: =E2=80=98LOCKF_USED_I=
+N_IRQ=E2=80=99=20
+> defined but not used [-Werror=3Dunused-const-variable=3D]
+>    57 | static const unsigned long LOCKF_USED_IN_IRQ =3D
+>       |                            ^~~~~~~~~~~~~~~~~
+> kernel/locking/lockdep_internals.h:51:28: error: =E2=80=98LOCKF_ENABLE=
+D_IRQ=E2=80=99=20
+> defined but not used [-Werror=3Dunused-const-variable=3D]
+>    51 | static const unsigned long LOCKF_ENABLED_IRQ =3D
+>       |                            ^~~~~~~~~~~~~~~~~
+>
+> Fix this by marking them with __maybe_unused.
+>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-> Replace the bitwise AND operator `&` with a modulo
-> operator `%` and decimal number to make the upper limit visible
-> and clear what the semantic of it is.
+I posted as different patch for this a while ago:
 
-Use 4096u to make absolutely certain an unsigned module is used.
+https://lore.kernel.org/lkml/20250225200830.4031742-1-arnd@kernel.org/
 
-	David
+Either of the two should be fine here, though I still like my
+version a bit better.
 
-> 
-> Also add white spaces around binary operators for improved
-> readabiity and adherence to Linux kernel coding style.
-> 
-> Suggested-by Andy Shevchenko <andy.shevchenko@gmail.com>
-> 
-> Signed-off-by: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
-> ---
->  drivers/staging/rtl8723bs/core/rtw_xmit.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/staging/rtl8723bs/core/rtw_xmit.c b/drivers/staging/rtl8723bs/core/rtw_xmit.c
-> index 297c93d65315..630669193be4 100644
-> --- a/drivers/staging/rtl8723bs/core/rtw_xmit.c
-> +++ b/drivers/staging/rtl8723bs/core/rtw_xmit.c
-> @@ -943,7 +943,7 @@ s32 rtw_make_wlanhdr(struct adapter *padapter, u8 *hdr, struct pkt_attrib *pattr
->  
->  			if (psta) {
->  				psta->sta_xmitpriv.txseq_tid[pattrib->priority]++;
-> -				psta->sta_xmitpriv.txseq_tid[pattrib->priority] &= 0xFFF;
-> +				psta->sta_xmitpriv.txseq_tid[pattrib->priority] %= 4096;
->  				pattrib->seqnum = psta->sta_xmitpriv.txseq_tid[pattrib->priority];
->  
->  				SetSeqNum(hdr, pattrib->seqnum);
-> @@ -963,11 +963,11 @@ s32 rtw_make_wlanhdr(struct adapter *padapter, u8 *hdr, struct pkt_attrib *pattr
->  					if (SN_LESS(pattrib->seqnum, tx_seq)) {
->  						pattrib->ampdu_en = false;/* AGG BK */
->  					} else if (SN_EQUAL(pattrib->seqnum, tx_seq)) {
-> -						psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (tx_seq+1)&0xfff;
-> +						psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (tx_seq + 1) % 4096;
->  
->  						pattrib->ampdu_en = true;/* AGG EN */
->  					} else {
-> -						psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (pattrib->seqnum+1)&0xfff;
-> +						psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (pattrib->seqnum + 1) % 4096;
->  						pattrib->ampdu_en = true;/* AGG EN */
->  					}
->  				}
-
+       Arnd
