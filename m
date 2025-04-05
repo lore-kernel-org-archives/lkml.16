@@ -1,114 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7993625771
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 22:52:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4EF942069
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 22:52:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743893528; cv=none; b=IFPaM26CVPcFR28lLN4ym0P9Vve45r51YFgHol/ebwPQUEEjrEpMOOTnaptU6O2fsCbnIQxsDRjdthHMT8JnKM1+qxDEKd3+GWa3ryaZ4DwuC17bBfE1BTczp22VtVUx/YAqFmGOw/v8LkufFsbvPAx6qG2H4hvaQOF/my3jZ0c=
+	t=1743893578; cv=none; b=ZZpWjxKXewem74oqFRkZ6vxMlppYSpizsd3Av+cjYyOTH7i7s14B5GY9YOpgvW2c6DP7oL9ZaY3QepZImAZIuE8GMDub1L43U5R4gKUhK77OCjMUh38rUYP0WA1WU1uk5D3SeDLIdOhO+oS1aJ/vI5wJ6IFt/IpAJZmiEfIFoFU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743893528; c=relaxed/simple;
-	bh=37ierGzLms8gEL0XYMmMxMlfTj5nUKgmwzztyAPpT5M=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=TYibT4sDddp0G8JsOD6tXXViLkq2kemV74ccCrF9itoWUPb6ZUEOGtXNTTYyy7gL53cZV7jvPCUUHZjXQIG2Acpz8qvaTTI/cOtf1scVd5SDzkG91FBiuFEMKuGWSKuvmP3GMHtw9Z6RsFcnk3z9xNr/v6duInMJJFKLo7tYiy4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=0zLUwp8u; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="0zLUwp8u"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB869C4CEE4;
-	Sat,  5 Apr 2025 22:52:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1743893528;
-	bh=37ierGzLms8gEL0XYMmMxMlfTj5nUKgmwzztyAPpT5M=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=0zLUwp8unbokB9HzwHURcnY3RWQPfZAvdgJVsdft2+9kOWj8Qu2YKHdfaIhlH8O1e
-	 s+gw5OfEOBlNTIAzYS2AOinc/kJmoyomqWnw1pkxD6onNRCK5KByhTx4WqrghCpbjw
-	 DMd2hzHhvTKF3V/N7Yk2MOabBcRITDXo+BBrI/48=
-Date: Sat, 5 Apr 2025 15:52:07 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: zhoumin <teczm@foxmail.com>
-Cc: gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org,
- linux-kernel@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>
-Subject: Re: [PATCH] kobject_uevent: add uevent_helper exist check
-Message-Id: <20250405155207.aac347bcdc56e43cb0cae3cb@linux-foundation.org>
-In-Reply-To: <tencent_B971903B40AFCF5878B6532261672A5D6A0A@qq.com>
-References: <tencent_B971903B40AFCF5878B6532261672A5D6A0A@qq.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1743893578; c=relaxed/simple;
+	bh=vLAgDUGwFY1RpwaMRwbUxIAOvcczmxQd8B4F18vrRTk=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=H577e3FI+gEgSz7/4b4MtIJUvzLXldHgXfgcDLbLLtDwolExK1Udsuf+1meMgilcAnUHg6jw3QWbFmzGJubP+QQ9LwffDmUksqWDF5tyszVxUqRTDa9R39SWCBiBb/MUOTPsXLd96wymtz61REs1wxs/a1KnjsvqQp5Oqk63kEg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3ce8dadfb67so40426755ab.1
+        for <linux-kernel@vger.kernel.org>; Sat, 05 Apr 2025 15:52:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743893576; x=1744498376;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vM2U36HAJ7vgnqg7dmENYBbu8/qhFzocNaHLQf68foE=;
+        b=NGQEQGGhbdzcxxDsROn+enw6t0bhrAYHZwZ5Wr6iRP6Qpmu8lYjoHRJx5ooKqz6RXj
+         yykwcjbTn1MBdDbE8uCc3J49okmTvdhTT4woRspUamX73LNy/w7rofXOh26rtsrI88DN
+         mK8LAD2ELDIRAGn83WQozns5VREFQxGo8Cr7k/009TWB0yB+lQWij3YqbnDXs/yHXiXR
+         k2k+aZtvwI9OCYFuhBDtZ8NFnrUR/ioG/KPKrRtljSvjsYyw/ksdPRrSRPl9pPyMuAFb
+         vs6p/Osve4f8RdTsesblVoMBaCl2uGUaa7ACgp37eA3ZxLqrGO8KnZgFuvLeXdx4vR1I
+         eGdQ==
+X-Gm-Message-State: AOJu0Yxg8x+G1WoQ9PY0O091RElZJHB1/yFGbeRpiHRGSLs6WQrf9lVK
+	Jne1r1JQyBMYbVM1lBVnZkDgXaTjz5RwpbpwVmlWVcNAt9u7kQgvVdsfMxCAoaPXYC5broh7pn0
+	1VGh/JRKrp0s5yY8dhKyFH9j8K16LrATIV/YMpycYEGKYXseBF7Dsvv0=
+X-Google-Smtp-Source: AGHT+IEGcfBkjlTyrqpFLx4LFda6UTljl8JpKzObVYu5PQEapXpU4nn87nDdBQBEokPmMG7rIJF97/mr1APXPZqS+EtLdC03wTXu
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+X-Received: by 2002:a05:6e02:3081:b0:3d3:cdb0:a227 with SMTP id
+ e9e14a558f8ab-3d6e5324ab2mr71173785ab.9.1743893576079; Sat, 05 Apr 2025
+ 15:52:56 -0700 (PDT)
+Date: Sat, 05 Apr 2025 15:52:56 -0700
+In-Reply-To: <67ef83fe.050a0220.9040b.0366.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67f1b448.050a0220.0a13.024d.GAE@google.com>
+Subject: Re: [syzbot] #syz test: git://git.kernel.dk/linux.git master
+From: syzbot <syzbot+ff3aa851d46ab82953a3@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Sat,  5 Apr 2025 01:31:02 +0800 zhoumin <teczm@foxmail.com> wrote:
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
 
-> The kernel creates uevent_helper process for every uevent sent,
-> even if the uevent_helper does not exist. Before the rootfs is
-> mounted, a large number of events are generated. This change
-> introduces uevent_helper existence check to prevent unnecessary
-> operations.
-> 
-> Logs a debug messase before call_usermodehelper_setup.
-> e.g.: pr_emerg("action:%s devpath:%s\n", action_string, devpath);
-> You will see a large number of uevent_helper processes
-> are attempted to be created before the rootfs is mounted.
+***
 
-Is there any measurable reduction in boot time?
+Subject: #syz test: git://git.kernel.dk/linux.git master
+Author: gshahrouzi@gmail.com
 
-> ...
->
-> --- a/lib/kobject_uevent.c
-> +++ b/lib/kobject_uevent.c
-> @@ -28,6 +28,7 @@
->  #include <net/sock.h>
->  #include <net/netlink.h>
->  #include <net/net_namespace.h>
-> +#include <linux/namei.h>
->  
->  
->  atomic64_t uevent_seqnum;
-> @@ -58,6 +59,23 @@ static const char *kobject_actions[] = {
->  	[KOBJ_UNBIND] =		"unbind",
->  };
->  
-> +#ifdef CONFIG_UEVENT_HELPER
-> +static int uevent_helper_lookup(void)
-> +{
-> +	static int ret = -ENOENT;
-> +	struct path path;
-> +
-> +	if (!ret)
-> +		return ret;
+Move the get_ctx(child_ctx) call and the child_event->ctx assignment to
+occur immediately after the child event is allocated. Ensure that
+child_event->ctx is non-NULL before any subsequent error path within
+inherit_event calls free_event(), satisfying the assumptions of the
+cleanup code.
 
-Cached in a static variable.  So if a uevent helper later becomes
-available, we won't know that and a reboot will be needed?
+Reported-by: syzbot+ff3aa851d46ab82953a3@syzkaller.appspotmail.com
+Closes: https://syzkaller.appspot.com/bug?extid=ff3aa851d46ab82953a3
+Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+---
+ kernel/events/core.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-> +
-> +	ret = kern_path(uevent_helper, LOOKUP_FOLLOW, &path);
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 0bb21659e252..153ba622cfa0 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -14016,6 +14016,9 @@ inherit_event(struct perf_event *parent_event,
+ 	if (IS_ERR(child_event))
+ 		return child_event;
+ 
++	get_ctx(child_ctx);
++	child_event->ctx = child_ctx;
++
+ 	pmu_ctx = find_get_pmu_context(child_event->pmu, child_ctx, child_event);
+ 	if (IS_ERR(pmu_ctx)) {
+ 		free_event(child_event);
+@@ -14037,8 +14040,6 @@ inherit_event(struct perf_event *parent_event,
+ 		return NULL;
+ 	}
+ 
+-	get_ctx(child_ctx);
+-
+ 	/*
+ 	 * Make the child state follow the state of the parent event,
+ 	 * not its attr.disabled bit.  We hold the parent's mutex,
+@@ -14059,7 +14060,6 @@ inherit_event(struct perf_event *parent_event,
+ 		local64_set(&hwc->period_left, sample_period);
+ 	}
+ 
+-	child_event->ctx = child_ctx;
+ 	child_event->overflow_handler = parent_event->overflow_handler;
+ 	child_event->overflow_handler_context
+ 		= parent_event->overflow_handler_context;
+-- 
+2.43.0
 
-I wonder if this is the official/preferred way of detecting the
-presence of a file.
-
-> +	if (!ret)
-> +		path_put(&path);
-> +
-> +	return ret;
-> +}
-> +#endif
-> +
->  static int kobject_action_type(const char *buf, size_t count,
->  			       enum kobject_action *type,
->  			       const char **args)
-> @@ -610,7 +628,7 @@ int kobject_uevent_env(struct kobject *kobj, enum kobject_action action,
->  
->  #ifdef CONFIG_UEVENT_HELPER
->  	/* call uevent_helper, usually only enabled during early boot */
-> -	if (uevent_helper[0] && !kobj_usermode_filter(kobj)) {
-> +	if (uevent_helper[0] && !uevent_helper_lookup() && !kobj_usermode_filter(kobj)) {
->  		struct subprocess_info *info;
->  
->  		retval = add_uevent_var(env, "HOME=/");
-> -- 
-> 2.43.0
