@@ -1,100 +1,89 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BC98224D7;
-	Sat,  5 Apr 2025 03:22:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D13560DCF
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 03:25:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743823374; cv=none; b=tHCsrfYS3NyFyWxyiDhFh88tWfCDJzV26LjBKYLB5fMWJDagMSWI5qjgqqkickIed68XHgIG68wER/SITYmqIfcuozYMpTKj+X2KXeD2MwjXKRMJNnDHoraNx/QXl02j9lvagnMo58VYFRW8IBkd7xWYg6kx+4vQ4THvnDN4lN8=
+	t=1743823539; cv=none; b=ODvFy03YTfEoj7LynEopFIhC7G3QHdWoKBQyY9LkBL062rdu2rZPaPKENBVbK0E7UY1xPKH91GVrQXJUT7QDO9RBQyciJXHG2xO9er/HuHhkFKdfa5gX6Me85isxkmSWnJutCBcmXbtovQbUOp7nWMEsj0VDbBR48FhL7Gq3uM8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743823374; c=relaxed/simple;
-	bh=zfQS1I0/t8iogZE8epP0+gzjhlZo+95crijG7v9ksOo=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=pFiVRQ0kl7pwS+SPTS0dCOpyfyDSbZfp+2pRJZ7U+XG+Sq9HuBXhmvzQQpB67Jcm7YNDOs1XQGw8URTpw9E0FQUm8y0QsmEFS4UoSXSc25nwu3OT6U5cDV5KycxXICXsf/RtqpXNBK0GkUaVMYK8dnNQbrkfFrOh5CYqgP0bPaE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gwIYbhEy; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743823539; c=relaxed/simple;
+	bh=X01rqDU5Op3B89pGcWSLkKOSDzDTX/aGpUgeE5itfNc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=DDTwfG/7p1Jx3te7l65onfyr3PMH/7HxDMUUOxqGaA2SUZ+gck6vkdbV5T+WybbUHe/Jk7FX3y3WXBq40gX8gIS0PEi5/+ArOwxv/P6mAMtT+bsQvH06E+lshm/6IVvrwqfEisKKyobd0FpyDDMzJc6k0d9nq5boJQs2rAG0FEo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AkbPWw6C; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gwIYbhEy"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2279915e06eso26663245ad.1;
-        Fri, 04 Apr 2025 20:22:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743823373; x=1744428173; darn=vger.kernel.org;
-        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZWRKBHVVWSm0lUJY6W3wVCTy+8cpaJF59WRnWiheJY0=;
-        b=gwIYbhEyo0MUyATYwLW1QdRVD1zzjlhPfXS/WoiSk3/PNtHUz2TcFmC6Qs1SWmfh9m
-         fEGZtToHy1O564rklvonJKJoh05UAcOvjRmF87zajuUgX9K5oZ/wkhaUxoizGeGjLRma
-         +YIkW6rwMsWiVe/0z+EXq3XEWA4QkUbM+XAEcDj208txOVBIGi8lLcPhiYK4JP8Z3kr6
-         fUvBXfX+HE2xQoi7tqtQKcGJdWUp25musUzs9scPHsjqO0/Ox7E8aJ5PMboXN8MeHWOy
-         s9WkCs4RDXLPXJXttmQ1KvRzTT7oI7Kkh8+ugV13uMC1irbE3EwPf0Q8Dqawog/tfumG
-         txJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743823373; x=1744428173;
-        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZWRKBHVVWSm0lUJY6W3wVCTy+8cpaJF59WRnWiheJY0=;
-        b=tu0VytJM+h6mmnu9uoumrVI8GliuWWGrm+XZ1c8tBiffK+yiq58yYAf2gb9KhLsZ8w
-         BiN/gT+uIV9l6ZhCBc3svFaNgzjhAbK3L0WJ4yRZGCJLSM/E+zH0bDWoSCydT4cbkzCY
-         NQ1M1AICwU0esnk7O0fsolnt2qPnoW6Pg7yd808paNsXjx8qOhMjanx2kNhogDfmeHnm
-         cAWBg7BQZGTvgYaF9QjmW2bj8G7Dl5q7TtguOxxm24FxJdAjkMGc0QSGyrWUcpfrL1TC
-         eHEIzfHHOHih4oAzRquvJjwFLp3pIXPNR25sBHP8Pf4RQ1tKmnaTTJtHbm9fw+TIKwN7
-         1A2g==
-X-Forwarded-Encrypted: i=1; AJvYcCVI5WWjo5EQA0x+m0/zA7+KffzIOV9lP5FV1Gk2ucouzvv5c2B9n8Aj1heci0cpjPvLfhpnYdeBRdryj+4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwxIx3VDuawx1i1e/8I3VDzNf5H0f9sICSm0e1n2vQj3Bssg2MT
-	e6ckoREC3au0ox21GhTk4LE2VvFEg7KLLp6hR0OW67R6MpdotAp4
-X-Gm-Gg: ASbGncslnfsF5pPKi7LfxmrZCgVHYXSbIioWKTMedaqN9tqqDr7sXH18WsQgSnd6gPR
-	jUc16t6FZqnZEc3CFCUyIWY4OpwNP3hElHatJ3twjyJlyk/BqCBPSvN6r6hckXwaZsUOzvuaiMJ
-	nB8OylA9yaJT2H27rkLQWGFonG0ums+KVUeE3YhqU4yNTQUH1UGtrnCKK4Ih2w9bNkUmx6GQKsx
-	joaNAxmGc15FeEfL1VMxYAjcITkHejFnyuKsGTGM4yykKhYsXnbcjuO1NdiNhaJuLITHGCl0kQr
-	tCQCBvVG2Dft1WXH+Vn+W6n9jSjalELHWA4Y/TMq8Ovefpe3s85DzDSnMmixjSWNAtW70e7ydw=
-	=
-X-Google-Smtp-Source: AGHT+IF/zDKC2Hdq9bRQnZYs3Y9Diqdg85UuB/J08Jf4aozSYYtaOYfXLjAmn5vjI78AYJOJ2c+qvA==
-X-Received: by 2002:a17:903:1205:b0:223:fdac:2e4 with SMTP id d9443c01a7336-22a8a04a753mr77416265ad.1.1743823372677;
-        Fri, 04 Apr 2025 20:22:52 -0700 (PDT)
-Received: from localhost.localdomain ([221.214.202.225])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-229785c2791sm40505815ad.80.2025.04.04.20.22.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Apr 2025 20:22:52 -0700 (PDT)
-From: Penglei Jiang <superman.xpt@gmail.com>
-To: mkrufky@linuxtv.org,
-	mchehab@kernel.org
-Cc: linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Penglei Jiang <superman.xpt@gmail.com>
-Subject: [PATCH] dvb: usb: cxusb: fix uninitialized var in cxusb_gpio_tuner()
-Date: Fri,  4 Apr 2025 20:21:50 -0700
-Message-Id: <20250405032150.123786-1-superman.xpt@gmail.com>
-X-Mailer: git-send-email 2.17.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AkbPWw6C"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743823537; x=1775359537;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=X01rqDU5Op3B89pGcWSLkKOSDzDTX/aGpUgeE5itfNc=;
+  b=AkbPWw6Cmh2T3yK11avjvrkn4WbhnmHyk8xcdvv9ngmMcCdzURSbMjfL
+   lPRx9LMDSX6tb2Do4eHiQhvFuQ/DgnnO9TlREgFDxHTfPetWZcT4g4f/y
+   OcDwm33P5cUDpe38ach87najDoVT+BPJCgZTHXYQnz+FE5BfvjeoE76pd
+   oJlgHAKz7sQck/jUrZLIRffXQXyI0zNaQl8YaH79cyIAJPt8cyJWYj9sl
+   O7JiKAE9nH3p0q+TGHk0nGp+tdthXCt2jFqlxXPdmhstWqml1nfdCAJZU
+   DaYpskn+duskj4QioEHml4Nci5E79JPUZqxhfdDsMgcFbpiESKD9e8P50
+   w==;
+X-CSE-ConnectionGUID: FXrWoNuxT+Cdc83twDuSpw==
+X-CSE-MsgGUID: YDAcTDCgQh6ppST72IGjSw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11394"; a="67750625"
+X-IronPort-AV: E=Sophos;i="6.15,190,1739865600"; 
+   d="scan'208";a="67750625"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 20:25:36 -0700
+X-CSE-ConnectionGUID: xJR6rhzbT06w42Fo7qq+Mg==
+X-CSE-MsgGUID: B4SVEAN6RPW54k/EaHWtHg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,190,1739865600"; 
+   d="scan'208";a="128317345"
+Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
+  by fmviesa009.fm.intel.com with ESMTP; 04 Apr 2025 20:25:35 -0700
+Received: from kbuild by b207828170a5 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u0uA0-0001mR-2x;
+	Sat, 05 Apr 2025 03:25:32 +0000
+Date: Sat, 5 Apr 2025 11:25:21 +0800
+From: kernel test robot <lkp@intel.com>
+To: Necip Fazil Yildiran <fazilyildiran@gmail.com>
+Cc: Paul Gazzillo <paul@pgazz.com>,
+	Necip Fazil Yildiran <fazilyildiran@gmail.com>,
+	oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Rich Felker <dalias@libc.org>
+Subject: kismet: WARNING: unmet direct dependencies detected for G2_DMA when
+ selected by SND_AICA
+Message-ID: <202504051109.Z0c2GF9q-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-The function cxusb_ctrl_msg() may not set the value of the variable i,
-but the code uses it later. Initialize the local variable i to 0 to
-prevent potential issues.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   9f867ba24d3665d9ac9d9ef1f51844eb4479b291
+commit: f477a538c14d07f8c45e554c8c5208d588514e98 sh: dma: fix kconfig dependency for G2_DMA
+date:   4 years, 3 months ago
+config: sh-kismet-CONFIG_G2_DMA-CONFIG_SND_AICA-0-0 (https://download.01.org/0day-ci/archive/20250405/202504051109.Z0c2GF9q-lkp@intel.com/config)
+reproduce: (https://download.01.org/0day-ci/archive/20250405/202504051109.Z0c2GF9q-lkp@intel.com/reproduce)
 
-Reported-by: syzbot+526bd95c0ec629993bf3@syzkaller.appspotmail.com
-Closes: https://lore.kernel.org/all/67f092b5.050a0220.0a13.0229.GAE@google.com
-Signed-off-by: Penglei Jiang <superman.xpt@gmail.com>
----
- drivers/media/usb/dvb-usb/cxusb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504051109.Z0c2GF9q-lkp@intel.com/
 
-diff --git a/drivers/media/usb/dvb-usb/cxusb.c b/drivers/media/usb/dvb-usb/cxusb.c
-index f44529b40989..7fe858bb665e 100644
---- a/drivers/media/usb/dvb-usb/cxusb.c
-+++ b/drivers/media/usb/dvb-usb/cxusb.c
-@@ -111,7 +111,7 @@ int cxusb_ctrl_msg(struct dvb_usb_device *d,
- static void cxusb_gpio_tuner(struct dvb_usb_device *d, int onoff)
- {
- 	struct cxusb_state *st = d->priv;
--	u8 o[2], i;
-+	u8 o[2], i = 0;
- 
- 	if (st->gpio_write_state[GPIO_TUNER] == onoff &&
- 	    !st->gpio_write_refresh[GPIO_TUNER])
+kismet warnings: (new ones prefixed by >>)
+>> kismet: WARNING: unmet direct dependencies detected for G2_DMA when selected by SND_AICA
+   WARNING: unmet direct dependencies detected for G2_DMA
+     Depends on [n]: SH_DREAMCAST [=y] && SH_DMA_API [=n]
+     Selected by [y]:
+     - SND_AICA [=y] && SOUND [=y] && !UML && SND [=y] && SND_SUPERH [=y] && SH_DREAMCAST [=y]
+
 -- 
-2.17.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
