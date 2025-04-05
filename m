@@ -1,56 +1,57 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C34291B87C9;
-	Sat,  5 Apr 2025 08:46:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C33D719F495;
+	Sat,  5 Apr 2025 08:46:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743842804; cv=none; b=rIqMotouFkJ4atS5PN40167vXhhOlZ4AKjzR0PnzkC8cESK9Xqx9H1Ypj2Rf//72968NvlMo7qz14P55+hIZ+iwhyALGcoqMsgghM/7G5YPPqmT7Oe8W3s6dw+D5rKmVyp7bnKKjvX84FETmHen97JNI82XfZCBkCILhbWUZcnw=
+	t=1743842804; cv=none; b=HiiQIeCqGekl7B80erVA1E3niQXhnTfWPSSoW110oVH0Auq7Rffc3NepK1nj7secsf/sa7tt3Puj+bLSzk6Cflu8gUr1sRMkrYGYmMXasGn17bl002Cx9i7ArjNhdDUANQkoxyu3V/MnueP3+UbYt3ep2ypb9LUH6TgbMeG7hiM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1743842804; c=relaxed/simple;
-	bh=IYitlTjVcPDz6mNynKP8KbvGV1x4q7JuPjJjnaU/s1k=;
+	bh=GlPn0908UzrC07DfI7gTgI/SKb07ptkDzOwBEDwZPGc=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=OMbOUqJzWJ40bmCuLjJJtiMs7vWCEDmSKWINWDIcpYNe58cg8uGkssdNroHmnbcwkSTA6tayBo329Q66tewNEEnYFyrbbRtgoGQ8m+C6wwhHg9IjwcdvYUasFERAdIPiabP8Bt0AwAVGBwLDjTTpCYxrf5rbz6Am5+kr8eItsR0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gilk6vyx; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=GFA9p8Wd; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=ALB6AHW9TsddGAWO7bIX/cfEpe3UKiB8T6NB8hdr8TTqvTG4cpN5f9syhr16tUy06jTMwKJUtht1yZSKBgSaBZzfDLPMvrHBC9LbtswoSh7t5/4wtw0ZHaw1J9A+1Moqj8QduqY6j9S5pANvxQbvC+e2tAVnCQg1GgfnzM81JFA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Coaf6DF/; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=HwxhPHcp; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gilk6vyx";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="GFA9p8Wd"
-Date: Sat, 05 Apr 2025 08:46:33 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Coaf6DF/";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HwxhPHcp"
+Date: Sat, 05 Apr 2025 08:46:32 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1743842794;
+	s=2020; t=1743842793;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=TEmE5H74BezLYhChlKQwNrNmBn8dkyse5SSbJSxHXeg=;
-	b=gilk6vyxscYrjcC0YXtfG7eFg1/6pz+XquDE3GNUntDzebbVF6rUyKwtwaXw8eMa0bGFMc
-	NuSsmyR0O1dVzc8bb2OeVBcIaeEYWgvVExfzqtQwHkE7kK6B1VkQDIoxAErWlY8eA1s9XZ
-	/xg1rlDX9PkuloKSGIzMP0HaXx3vNC+psrEoC4HA9P/ZqyDu2n/AkMEJAAQHZ7ky9Ecxaq
-	HCmRWf/JRPobXRNywBWXjfMsnX50/pkWjx254WBb3CiXN867jAKtR0FqdEil/zWwPuYsDR
-	UV2lw0fnp0k81i1buy7R+nlBdvVl4wL8gkcmazsTf/fcHE2VbmoU/BrB/CSwjA==
+	bh=R2BVXczvDBhZK3wccapgjs0ivCGnuiUdizVO4xc7cKo=;
+	b=Coaf6DF/hNs/ilKWe0LzDLFGPjXDynAUEMh8/yIMM8bZnJi9YLMBEOcXylsX/0zZlmP5sA
+	U8m8iljbHlLCk0XjAUhlrBCXvslNyg+59XUcoeNqXEW5K8O13J+eP1PZSVdtumxBSqgVvF
+	nMlcc/LVmXzyD/YRaJFLmTDHnInwi8H6HDkSW3aAx08WsYZ2VOueCOykwhSZo+gOAh3Q8X
+	COHCrsm50yGOfWACMCE8uOSjyQaWea4UkuFyqfwqiZBE9QcoQZE5INoGR9/pbI8DUX6J9W
+	ZLtcFGhldioJfXXse2J1qe7cXvJsmEbUJ6KJ02ipZFYlUPShYzxgUVXfG0fnbQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1743842794;
+	s=2020e; t=1743842793;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=TEmE5H74BezLYhChlKQwNrNmBn8dkyse5SSbJSxHXeg=;
-	b=GFA9p8Wd/8pU73802e9Y2k3gbj6qUhZ/mhJkDHku715yQX6thlHMdqsUjePfWsd0pO6XEw
-	2DfYZjeo98Qj1FBw==
+	bh=R2BVXczvDBhZK3wccapgjs0ivCGnuiUdizVO4xc7cKo=;
+	b=HwxhPHcpM337n9AH9bAZAkuvNMrzru1JMTEbFnNmWmI8UFVTXhXSZc+iJsfSnZrg0cSwAu
+	C9u45SdfHof+WjBg==
 From: "tip-bot2 for Nam Cao" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/cleanups] hrtimers: Rename debug_init() to debug_setup()
+Subject: [tip: timers/cleanups] hrtimers: Rename debug_init_on_stack() to
+ debug_setup_on_stack()
 Cc: Nam Cao <namcao@linutronix.de>, Thomas Gleixner <tglx@linutronix.de>,
  Ingo Molnar <mingo@kernel.org>, x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: =?utf-8?q?=3C4b730c1f79648b16a1c5413f928fdc2e138dfc43=2E17387?=
+In-Reply-To: =?utf-8?q?=3C073cf6162779a2f5b12624677d4c49ee7eccc1ed=2E17387?=
  =?utf-8?q?46927=2Egit=2Enamcao=40linutronix=2Ede=3E?=
-References: =?utf-8?q?=3C4b730c1f79648b16a1c5413f928fdc2e138dfc43=2E173874?=
+References: =?utf-8?q?=3C073cf6162779a2f5b12624677d4c49ee7eccc1ed=2E173874?=
  =?utf-8?q?6927=2Egit=2Enamcao=40linutronix=2Ede=3E?=
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -58,7 +59,7 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174384279393.31282.8824980074719438452.tip-bot2@tip-bot2>
+Message-ID: <174384279261.31282.11456944974988835609.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -68,47 +69,57 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the timers/cleanups branch of tip:
 
-Commit-ID:     e9ef2093ad9edec8d8a060e14891952570c82b8b
-Gitweb:        https://git.kernel.org/tip/e9ef2093ad9edec8d8a060e14891952570c82b8b
+Commit-ID:     59c9edafc0f3843c3e616eb8136a310c7c552595
+Gitweb:        https://git.kernel.org/tip/59c9edafc0f3843c3e616eb8136a310c7c552595
 Author:        Nam Cao <namcao@linutronix.de>
-AuthorDate:    Wed, 05 Feb 2025 11:55:19 +01:00
+AuthorDate:    Wed, 05 Feb 2025 11:55:20 +01:00
 Committer:     Ingo Molnar <mingo@kernel.org>
 CommitterDate: Sat, 05 Apr 2025 10:30:17 +02:00
 
-hrtimers: Rename debug_init() to debug_setup()
+hrtimers: Rename debug_init_on_stack() to debug_setup_on_stack()
 
 All the hrtimer_init*() functions have been renamed to hrtimer_setup*().
-Rename debug_init() to debug_setup() as well, to keep the names consistent.
+Rename debug_init_on_stack() to debug_setup_on_stack() as well, to keep the
+names consistent.
 
 Signed-off-by: Nam Cao <namcao@linutronix.de>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/all/4b730c1f79648b16a1c5413f928fdc2e138dfc43.1738746927.git.namcao@linutronix.de
+Link: https://lore.kernel.org/all/073cf6162779a2f5b12624677d4c49ee7eccc1ed.1738746927.git.namcao@linutronix.de
 ---
- kernel/time/hrtimer.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ kernel/time/hrtimer.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
-index 8cb2c85..472c298 100644
+index 472c298..4bf91fa 100644
 --- a/kernel/time/hrtimer.c
 +++ b/kernel/time/hrtimer.c
-@@ -465,9 +465,7 @@ static inline void debug_hrtimer_activate(struct hrtimer *timer,
- static inline void debug_hrtimer_deactivate(struct hrtimer *timer) { }
- #endif
- 
--static inline void
--debug_init(struct hrtimer *timer, clockid_t clockid,
--	   enum hrtimer_mode mode)
-+static inline void debug_setup(struct hrtimer *timer, clockid_t clockid, enum hrtimer_mode mode)
- {
- 	debug_hrtimer_init(timer);
+@@ -471,8 +471,8 @@ static inline void debug_setup(struct hrtimer *timer, clockid_t clockid, enum hr
  	trace_hrtimer_init(timer, clockid, mode);
-@@ -1648,7 +1646,7 @@ static void __hrtimer_setup(struct hrtimer *timer,
- void hrtimer_setup(struct hrtimer *timer, enum hrtimer_restart (*function)(struct hrtimer *),
- 		   clockid_t clock_id, enum hrtimer_mode mode)
+ }
+ 
+-static inline void debug_init_on_stack(struct hrtimer *timer, clockid_t clockid,
+-				       enum hrtimer_mode mode)
++static inline void debug_setup_on_stack(struct hrtimer *timer, clockid_t clockid,
++					enum hrtimer_mode mode)
  {
--	debug_init(timer, clock_id, mode);
-+	debug_setup(timer, clock_id, mode);
+ 	debug_hrtimer_init_on_stack(timer);
+ 	trace_hrtimer_init(timer, clockid, mode);
+@@ -1665,7 +1665,7 @@ void hrtimer_setup_on_stack(struct hrtimer *timer,
+ 			    enum hrtimer_restart (*function)(struct hrtimer *),
+ 			    clockid_t clock_id, enum hrtimer_mode mode)
+ {
+-	debug_init_on_stack(timer, clock_id, mode);
++	debug_setup_on_stack(timer, clock_id, mode);
  	__hrtimer_setup(timer, function, clock_id, mode);
  }
- EXPORT_SYMBOL_GPL(hrtimer_setup);
+ EXPORT_SYMBOL_GPL(hrtimer_setup_on_stack);
+@@ -2064,7 +2064,7 @@ static void __hrtimer_setup_sleeper(struct hrtimer_sleeper *sl,
+ void hrtimer_setup_sleeper_on_stack(struct hrtimer_sleeper *sl,
+ 				    clockid_t clock_id, enum hrtimer_mode mode)
+ {
+-	debug_init_on_stack(&sl->timer, clock_id, mode);
++	debug_setup_on_stack(&sl->timer, clock_id, mode);
+ 	__hrtimer_setup_sleeper(sl, clock_id, mode);
+ }
+ EXPORT_SYMBOL_GPL(hrtimer_setup_sleeper_on_stack);
