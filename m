@@ -1,133 +1,183 @@
-Received: from fhigh-b8-smtp.messagingengine.com (fhigh-b8-smtp.messagingengine.com [202.12.124.159])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92ED71CD1F
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 09:16:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90EA61CD1F
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 09:17:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743844608; cv=none; b=uzPW8kRSIECE9xg7HXdfCSs0GVo2cW0iKmj8qn8n5haj8zHnmdiv5eiQyRY0VQ287nkKBPDsxfue0vUbsEKRRo5Pnn7A4wTByxDBfshSe9zS4VY3XtwfZrtvB7uzM/BIX//ImzEJya9Y0NUuZBWgg7ujrB1rh//fTY4jwnVSWGQ=
+	t=1743844636; cv=none; b=H3f6F9p3XNshCUV9L7ntCDlcmIMHvK9tqKDO5azahnqP/Q5TTgOLmubaPStZlOZ97mqVj8jNTw57ORlRIp584V4JmXHi9MV3wkv1oSH9ACxkSKfXyMyhZF+f9G7GKRTb5NMK4OzOBj02U//vX0nZGFXbuxM+hlwjTVR5Pq2YcrU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743844608; c=relaxed/simple;
-	bh=8dZVrC21x4sNEoxcaPiodzEkucs1LufvZ3mrlPOFyXk=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=mFu4I8gR4lHfrJrSuddCF2OPnIaSUF8oSRBYR1/CX9WcjzguCj7xgNijTzXTf6WBgb/wkQyNmD6OpxuuC+UAiFFNhV038Zf7rVgmcvSdyyAHeWlFSQLdh7Dw224ZWRYARiQUGkgpt3dRGf28c600C+cRNCv2IFL7xVhwzH0ypB8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=STgz+viE; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=siPShLhn; arc=none smtp.client-ip=202.12.124.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1743844636; c=relaxed/simple;
+	bh=2rCy+Ck5yfAgzHT45oha42fKEAaYt70tftTo7+nyLPc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=k2LVXT7f7ffhDbVAtOMjq0MXwaCwmj8S/PENaJ36sf8uZXlFAt+GRH654f+JCeVh9qUe2kBFdOGSil/hGjw9sHCCBLXSz/WI2Ennz6NWXV0VqgxbTYYajB/hxQFrhH78Y0tchpNkown8jn8iCb6UFq38YB8jjvNizjMR+E/6HiY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H5aagnOZ; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="STgz+viE";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="siPShLhn"
-Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 2FCF0254014C;
-	Sat,  5 Apr 2025 05:16:44 -0400 (EDT)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-12.internal (MEProxy); Sat, 05 Apr 2025 05:16:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1743844604;
-	 x=1743931004; bh=ZefRnKcg9csk1WVXJb5wsqwFMPldXUXsiKieW8/coqw=; b=
-	STgz+viEhLjhEgumMyHT1EKQCekpeJJfz2ZaQveWeWZBJ9tNMmtdhPa0g82Duqwu
-	DbXHy6EzS1MUVnQnducA3+m+AiLV325Y2cDTGwc+4V7EbO6WfcvOWamOCu7Bpgto
-	fHx/RFaNtTBryd8h/ZKNZzD3PD9QK2VZkzZUm0FVeVuyx4YhD1YZRq53UPlKmGhJ
-	9x1gRE3jW2bkAwzXgHjC/Mj5wgdhC2FT6Kwu/WG0YYHXsthHwgX9GNargNxaeDlT
-	QhoSTApNlB48vKYl8EI3/e0FBN0vbKAQyZDaEfbk4fjpKPOsHUCoer7TdKZcS0eC
-	1xDt4wGk+tigNz0+pTMP+Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1743844604; x=
-	1743931004; bh=ZefRnKcg9csk1WVXJb5wsqwFMPldXUXsiKieW8/coqw=; b=s
-	iPShLhnlm1HtPtXIN1mCDx2Pj0BfvhjsptfzA8BZfmIMd1LkLTe61v/YbHC73hKE
-	ROFrqkz6Adj2IyEbKS+gSE20lSLXXvhzqdlx2xTTljmt0W2jN3spEm4Os0NYWy38
-	47aZzHz6c6pQppDrRAMzXO/5XVdi2ymznfEREhag02/3ZgFMuInkZR3u9z4O7nC1
-	DJygpD/giOa8Rct6EoSbeoCRHf4VNNpC9SojE/rr/8QLGN044fPrpCfo37yslXBZ
-	DBXeMehKvr0cxWxyI8bbgDCtDkuWJnEkx97hDxipmnuSYa/H3b07bJA8DxwOQG8S
-	uFNh6vO+xf5QG4m05o+1g==
-X-ME-Sender: <xms:-_TwZ-r4BbzppX0DuNM5bRss5bWuhvCi7mpcy7g1hJW7hFOq_UVuwg>
-    <xme:-_TwZ8pT2xfd3oSDQRW0tE-gDk8g3NEw-fqkotcva5fEWvI8hqt8XqQh4v5Ur175F
-    kg7e2srL5s68AGr1ME>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduleefleehucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtqhertder
-    tdejnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
-    gsrdguvgeqnecuggftrfgrthhtvghrnhepkedvuefhiedtueeijeevtdeiieejfeelveff
-    feelkeeiteejffdvkefgteeuhffgnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenuc
-    evlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnuges
-    rghrnhgusgdruggvpdhnsggprhgtphhtthhopeejpdhmohguvgepshhmthhpohhuthdprh
-    gtphhtthhopegsohhquhhnrdhfvghnghesghhmrghilhdrtghomhdprhgtphhtthhopehp
-    vghtvghriiesihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopeifihhllheskhgvrh
-    hnvghlrdhorhhgpdhrtghpthhtoheprghnughrihihrdhshhgvvhgthhgvnhhkoheslhhi
-    nhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehlohhnghhmrghnsehrvgguhhgrth
-    drtghomhdprhgtphhtthhopehmihhnghhosehrvgguhhgrthdrtghomhdprhgtphhtthho
-    pehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:-_TwZzOBQpcJZK9HIycH8yjdtPL6QLQcy4tvKNg2htkKcBK2omSXwA>
-    <xmx:-_TwZ95ATME8to3ku065BjISs5uJs_S3ZT5QRzAZTyH-k5jg4oyy3g>
-    <xmx:-_TwZ97WqlzZb7iwdYLR9B-p0QiRAMSiRGltZ0lJeVJV0B9jbb-mJA>
-    <xmx:-_TwZ9iMVwvifRmdCwAugFY2meAr6qkYqsV7DyeZoddFGi0kAuMcgg>
-    <xmx:_PTwZzFKUMcOuiLx2wYn6wJfnN1xcfBti16UfTkP37_3Z8WHThctASLp>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 374062220073; Sat,  5 Apr 2025 05:16:43 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H5aagnOZ"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ac73723b2d5so575803966b.3
+        for <linux-kernel@vger.kernel.org>; Sat, 05 Apr 2025 02:17:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743844633; x=1744449433; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=s3HK5SswwBYFo1XBkr/esZ4pnjyWcYzsoqyCNgrNyeE=;
+        b=H5aagnOZQdCazb3l6izBrvs/Mdv1LILs6Fl0kKjlSHgBDuXLVntXQwBJUrIQBrvcfj
+         vcYqC16D3fjKmn/75DjL3w8kFUCQigI+IJmLKODv83gTbvjRC8eR2CsgvJoJvqGVccmD
+         4UJvYW59ctEy0Ac4ZPocGdm/CLuvSkLLkZD87uOnFvILGYdiENeIpshXQy5fuBCahIDS
+         0cXIBEDIQqhgm/NRhKgO1PzHDJtFxWV5Q+PfklqDryK4CvhLUGvigZzgRpUQ8aaRFdEX
+         pRHbL+Or+j1FMtFm3dlBLJ/MWgKHSW3ooM3ZEc/75ZVq/rCBAEg3QXGpy6hGRFVJe8r1
+         vcEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743844633; x=1744449433;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=s3HK5SswwBYFo1XBkr/esZ4pnjyWcYzsoqyCNgrNyeE=;
+        b=PwAzF5dkR3jhKHP37io2XSKUSLbNu9fkdcOp7S6r4jPJm++cG/RllwFi5NuGMPgteI
+         pfmgyXoeigxJGO0duq+mmdD9eq91Oyvv1XyJGSFWDI5hlPvusMOhMbeN1RfcmOr/M6eB
+         EqIvwpFCTvZYAexG8fL0j9o4+6fQrosst/SVIi1zQcsC91BlmmCsbstgc9dRiq1+zPqc
+         21JvbCzV4eUyjeRg371WpLXXuOy7+NZRPBDiss6uP4Hwt7vLXjC+wsX2SIgNE+orYCb+
+         vUPzDWaDbeRs5LRanMdY8j+M/aOmbwuZIJOMDc0iwR3iXeSvGXo4Lo6ZclApIf53x75/
+         Ap0A==
+X-Gm-Message-State: AOJu0YwJdRP84kXt20SWMz8oy2131lz3nU2SIC843AF+ppx/x3wtUXf4
+	NNFtDlkgxiBn5okOEwWue7xp7ddMy/L/MEIESuhavMYkTdob/H0NX0PkS3ZaByr45tvQuyu3fur
+	ofJRbMhDFYmxcNxdJDCNZ/oneHec=
+X-Gm-Gg: ASbGnctiIz6AQdo74CtfPRM3JxKVLAGl76Z3kif7pKQq7gxu0nSGShzkvXr1tRSLJez
+	BqDvVx9DNZ31oDXFpp0Q8nJfFVjUg3PVYocSJlYUuvWXzd5RhDCuzUgBfqd6BR+38jG7tggY4q0
+	+mhgTldBwobO/0iDvXucg0P+BMLw==
+X-Google-Smtp-Source: AGHT+IEXQSHcKKdsgkzg+T5/88jXY+7/6c5qylSKz4j83+1NKlhfPEqvuygrVOOgrnC01HZH4rWhmhO9dVWwxWDnQ/Y=
+X-Received: by 2002:a17:907:6e90:b0:ac3:991:a631 with SMTP id
+ a640c23a62f3a-ac7e72c54a8mr188731766b.34.1743844632500; Sat, 05 Apr 2025
+ 02:17:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: T5984b91550484a78
-Date: Sat, 05 Apr 2025 11:16:19 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
- linux-kernel@vger.kernel.org
-Cc: "Peter Zijlstra" <peterz@infradead.org>, "Ingo Molnar" <mingo@redhat.com>,
- "Will Deacon" <will@kernel.org>, "Boqun Feng" <boqun.feng@gmail.com>,
- "Waiman Long" <longman@redhat.com>
-Message-Id: <52d144d1-ffda-4b41-9ed5-2a4fcd4f08d7@app.fastmail.com>
-In-Reply-To: <20250404165204.3657093-1-andriy.shevchenko@linux.intel.com>
-References: <20250404165204.3657093-1-andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v1 1/1] sched/fair: Mark some static const with __maybe_unused
-Content-Type: text/plain; charset=utf-8
+References: <fbe93a52-365e-47fe-93a4-44a44547d601@paulmck-laptop> <20250403211514.985900-8-paulmck@kernel.org>
+In-Reply-To: <20250403211514.985900-8-paulmck@kernel.org>
+From: Mateusz Guzik <mjguzik@gmail.com>
+Date: Sat, 5 Apr 2025 11:17:00 +0200
+X-Gm-Features: ATxdqUGiaXMHdgdwkAept-ze_vXP0L7Dpaam7fKl7Kd9RXf0HaVktL-bzMWIewQ
+Message-ID: <CAGudoHF5H0NhCu-mCjtd1SGRc5P=8X7jmTaP9k12zZixX1-9LA@mail.gmail.com>
+Subject: Re: [PATCH RFC 8/9] ratelimit: Reduce ratelimit's false-positive misses
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: linux-kernel@vger.kernel.org, kernel-team@meta.com, 
+	Andrew Morton <akpm@linux-foundation.org>, Kuniyuki Iwashima <kuniyu@amazon.com>, 
+	Petr Mladek <pmladek@suse.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	John Ogness <john.ogness@linutronix.de>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
+	Jon Pan-Doh <pandoh@google.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Karolina Stolarek <karolina.stolarek@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 4, 2025, at 18:52, Andy Shevchenko wrote:
-> GCC considers that some static const defined in the lockdep_internals.h
-> are unused, which prevents `make W=3D1` and CONFIG_WERROR=3Dy builds:
+On Thu, Apr 3, 2025 at 11:15=E2=80=AFPM Paul E. McKenney <paulmck@kernel.or=
+g> wrote:
 >
-> kernel/locking/lockdep_internals.h:69:28: error:=20
-> =E2=80=98LOCKF_USED_IN_IRQ_READ=E2=80=99 defined but not used=20
-> [-Werror=3Dunused-const-variable=3D]
->    69 | static const unsigned long LOCKF_USED_IN_IRQ_READ =3D
->       |                            ^~~~~~~~~~~~~~~~~~~~~~
-> kernel/locking/lockdep_internals.h:63:28: error:=20
-> =E2=80=98LOCKF_ENABLED_IRQ_READ=E2=80=99 defined but not used=20
-> [-Werror=3Dunused-const-variable=3D]
->    63 | static const unsigned long LOCKF_ENABLED_IRQ_READ =3D
->       |                            ^~~~~~~~~~~~~~~~~~~~~~
-> kernel/locking/lockdep_internals.h:57:28: error: =E2=80=98LOCKF_USED_I=
-N_IRQ=E2=80=99=20
-> defined but not used [-Werror=3Dunused-const-variable=3D]
->    57 | static const unsigned long LOCKF_USED_IN_IRQ =3D
->       |                            ^~~~~~~~~~~~~~~~~
-> kernel/locking/lockdep_internals.h:51:28: error: =E2=80=98LOCKF_ENABLE=
-D_IRQ=E2=80=99=20
-> defined but not used [-Werror=3Dunused-const-variable=3D]
->    51 | static const unsigned long LOCKF_ENABLED_IRQ =3D
->       |                            ^~~~~~~~~~~~~~~~~
+> The current ratelimit implementation can suffer from false-positive
+> misses.  That is, ___ratelimit() might return zero (causing the caller
+> to invoke rate limiting, for example, by dropping printk()s) even when
+> the current burst has not yet been consumed.  This happens when one CPU
+> holds a given ratelimit structure's lock and some other CPU concurrently
+> invokes ___ratelimit().  The fact that the lock is a raw irq-disabled
+> spinlock might make low-contention trylock failure seem unlikely, but
+> vCPU preemption, NMIs, and firmware interrupts can greatly extend the
+> trylock-failure window.
 >
-> Fix this by marking them with __maybe_unused.
+> Avoiding these false-positive misses is especially important when
+> correlating console logged hardware failures with other information.
 >
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Therefore, instead of attempting to acquire the lock on each call to
+> ___ratelimit(), construct a lockless fastpath and only acquire the lock
+> when retriggering (for the next burst) or when resynchronizing (due to
+> either a long idle period or due to ratelimiting having been disabled).
+> This reduces the number of lock-hold periods that can be extended
+> by vCPU preemption, NMIs and firmware interrupts, but also means that
+> these extensions must be of much longer durations (generally moving from
+> milliseconds to seconds) before they can result in false-positive drops.
+>
+> In addition, the lockless fastpath gets a 10-20% speedup compared to
+> the old fully locked code on my x86 laptop.  Your mileage will of course
+> vary depending on your hardware, workload, and configuration.
+>
 
-I posted as different patch for this a while ago:
+First a nit: the func returns an int with 1 or 0, perhaps one extra
+patch to make it bool can be squeezed in here?
 
-https://lore.kernel.org/lkml/20250225200830.4031742-1-arnd@kernel.org/
+One of the previous patches fixes a bug on 32-bit archs.
 
-Either of the two should be fine here, though I still like my
-version a bit better.
+Maybe it will sound silly, but my suggestion below hinges on it: is
+this patchset written with 32-bit kernels in mind?
 
-       Arnd
+If not, I wonder if the 32-bit stuff can stay with the locked variant
+and the 64-bit can get a lockless fast path which issues 8-byte
+cmpxchg on the event count + (to be introduced) sequence counter.
+
+I think that would be significantly easier to reason about as it would
+guarantee no changes are made if someone is reconfiguring the struct,
+while providing the same win from single-threaded standpoint.
+
+I think you know what you mean, but just in case here is a pseudocode
+draft of the fast path:
+
+#define RATELIMIT_NEED_INIT BIT(31)
+#define RATELIMIT_IN_FLUX BIT(0)
+
+struct ratelimit_state_change {
+        int             events_left;
+        unsigned int    seq;
+};
+
+struct ratelimit_state {
+        raw_spinlock_t  lock;
+
+        int             interval;
+        int             burst;
+        int             missed;
+        struct ratelimit_state_change rsc;
+        unsigned long   begin;
+};
+
+seq =3D READ_ONCE(rs->rsc.seq);
+smp_rmb();
+if (seq & (RATELIMIT_NEED_INIT | RATELIMIT_IN_FLUX))
+        goto bad;
+begin =3D READ_ONCE(rs->begin);
+burst =3D READ_ONCE(rs->burst);
+interval =3D READ_ONCE(rs->interval);
+events_left =3D READ_ONCE(rs->rsc.events_left;
+smp_rmb();
+/* checks if we can cmpxchg go here */
+....
+/* now the work */
+struct ratelimit_state_change new =3D {
+        .events_left =3D events_left - 1;
+        .seq =3D seq;
+}
+if (try_cmpxchg64_relaxed(&rs->rsc, ......)) {
+        return true; /* succeeded */
+}
+/* ... retry based on what we got, most likely only ->events_left has chang=
+ed */
+
+On the stock kernel the struct is 32 bytes. I'm combining flags and
+the new seq field to avoid growing it.
+
+This does cut down on available seq size, but it should be plenty as
+is. This also means the slowpath will have to be careful to not
+blindly ++ it to not walk into flags, but I think that's easier to
+handle that races. ;)
+
+That said this is merely a suggestion, I'm not going to push for it.
+
+I recognize this swaps atomic_dec into an cmpxchg loop which in
+principle will have worse throughput in face of multiple CPUs messing
+with it. However, the fast path in both your and my variant issues
+loads prior to the atomic op which already do most of the damage, so I
+don't think this bit matters that much.
+--=20
+Mateusz Guzik <mjguzik gmail.com>
