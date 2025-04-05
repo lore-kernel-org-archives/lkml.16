@@ -1,106 +1,109 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6CD51D52B;
-	Sat,  5 Apr 2025 15:50:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6D1213AA31
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 15:56:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743868207; cv=none; b=t5H2FGz85IBE03B0gwvNvvJ7i0uWBxmBbDDRvQSJn/zFH1sAU0gaY6fCxpyQ++R53+xqfbvGgwrBxx4dSu+My6pRKUMqtuU6M68VZVJGhsbZseNx/4M+fcmnxKzWCtFm4jxwU7oYQdRTXKLYfOZEKo7HJBMa7eeeoLfXDTR5VFo=
+	t=1743868599; cv=none; b=pOUw10ZDto2YctmMkW4PwOCjeLjrbn4oqtp1lMqk78qVC/b2mX0mwWokzTIhs2SLdGyJMKdLIS64n7ck8luSiys/HXVWswTSa6Y1UCdYSxG0sN+QIEEN+L6TtORadsj3x9rYw1/CqTZyFX9TCBndepiDWRol+SZcPm0Lf4P7l/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743868207; c=relaxed/simple;
-	bh=PVpdjH9nvgFGickOdTwkkGNNRjtGLJ4GsjI6sxDj0/Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eDaGuUmiVadzH1tCE8eDU7bOSjjjv/jKMtWKq3tdxJ8S0b73Xv4OsoLnlXu6mfVwZ6sG0noSRMp2Ir2I6Smxqf1jZf/llpWyQIvzVC11NNs77Y1O7PJZWNo6if+qqEGpnyf4biWtGK2pWPhGzBlCbqbknK4SPnajU9yCQtsfusU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=MeiqUMvU; arc=none smtp.client-ip=117.135.210.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1743868599; c=relaxed/simple;
+	bh=l2vXHFW49XxHHHkNIgLn8Ijs9q+hx64EoXxG3KaCq3g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oetfU0ZlE4r6qAq2yHg/dkA4sy6klM+rTnikxp6bbkDu0k2ob/5fWcTHTB6LzP5yMoFR8GMwSgZ6H8JTYaLnL3KIj2UgHu2uEzxz+8aVLbfszl3iUOye0pUXn4VNrTRJrRKsN3LWgUTX2ey02OVGswx+XNQMT5Ypz2km9aTYhAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EP3notwM; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="MeiqUMvU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=+t0sKLMwS+prv7H4cHe9k+nGJ49pCP3R5uikJVhJsa8=;
-	b=MeiqUMvUKfXeF16EiXubdslrqk0qhFr98e0ZZwz2cGcpWptiYNSz/Nrvi8Onet
-	qzAL2F1I9SH9UTDL8pJX6U4CI4TRDzOfZgJ0PfazPZU2EoeP5m4k6Qm1MuklwPXR
-	kbGNsneR31Il7EAKK94F9tcIIDOquQLW2d/Mo39ben8qI=
-Received: from [192.168.71.89] (unknown [])
-	by gzga-smtp-mtada-g0-3 (Coremail) with SMTP id _____wAH1zb8UPFnaPO8EA--.23000S2;
-	Sat, 05 Apr 2025 23:49:16 +0800 (CST)
-Message-ID: <c52ac489-51e9-4803-bf64-2bb6cfbf30bf@163.com>
-Date: Sat, 5 Apr 2025 23:49:16 +0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EP3notwM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743868598; x=1775404598;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=l2vXHFW49XxHHHkNIgLn8Ijs9q+hx64EoXxG3KaCq3g=;
+  b=EP3notwMZWIddYRkvFgMI8tkFqIUXBP6+9Ou0UJ0Hd/8/izl8Hhg6WyV
+   PEbkMM8zxUeWeGj37cvIWFslWg8tPWMsfMTkb0T+UA1jczaL5yYdkF0kj
+   aSloQaVmF2XfRmxOXLqXD1n3TDMkUo9s/CkTJ9dgJMMdPjbgjlr+CVgoD
+   H9Iw1fonMGSorDaamQNEPcnnexJVXGQ7hPBIiNgllgmqO2ofdnE1jXSSx
+   3rDzDDseloYFl2nNqcs3gT91E9+bifxOPKeMttf7P0Tirr1smMhL5vR8x
+   oPO5M+E7WCNc0o2JR6XWhBzOoWKe3Jgq60rW7fqhcxgRPusznaghismAP
+   A==;
+X-CSE-ConnectionGUID: BDZAWFgHQvuzTgzREHN2xQ==
+X-CSE-MsgGUID: brt0wAxBSZag/qy7+XEp6A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11395"; a="56670383"
+X-IronPort-AV: E=Sophos;i="6.15,191,1739865600"; 
+   d="scan'208";a="56670383"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2025 08:56:37 -0700
+X-CSE-ConnectionGUID: Tx+rfS8cSc6qdurkrXso9w==
+X-CSE-MsgGUID: /Bwu7ftWSsW9TUWtnRsVkw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,191,1739865600"; 
+   d="scan'208";a="150766546"
+Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
+  by fmviesa002.fm.intel.com with ESMTP; 05 Apr 2025 08:56:34 -0700
+Received: from kbuild by b207828170a5 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u15sl-00028B-2b;
+	Sat, 05 Apr 2025 15:56:31 +0000
+Date: Sat, 5 Apr 2025 23:55:56 +0800
+From: kernel test robot <lkp@intel.com>
+To: Roger Pau Monne <roger.pau@citrix.com>, Juergen Gross <jgross@suse.com>,
+	xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Stefano Stabellini <sstabellini@kernel.org>,
+	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
+Subject: Re: [PATCH v2] x86/xen: fix balloon target initialization for PVH
+ dom0
+Message-ID: <202504052301.dMtJILzp-lkp@intel.com>
+References: <20250404133459.16125-1-roger.pau@citrix.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] pci: tegra194: Fix debugfs cleanup for !CONFIG_PCIEASPM
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: lpieralisi@kernel.org, manivannan.sadhasivam@linaro.org,
- thierry.reding@gmail.com, kw@linux.com, robh@kernel.org,
- bhelgaas@google.com, jonathanh@nvidia.com, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org
-References: <20250405152818.GA107831@bhelgaas>
-Content-Language: en-US
-From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <20250405152818.GA107831@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_____wAH1zb8UPFnaPO8EA--.23000S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7urykGrWfGw15Ar45GF45Wrg_yoW8Zw1rpw
-	4kG345Kr4qy34SyF97Ca1kAF1Fy395Aw13Jw13urs7Zw4DAryDXFy8Ka1j9Fyfuw4DtF1U
-	XFsY9Fn5G3WDZFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UVMKtUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWwwmo2fxR0BtuAABsX
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250404133459.16125-1-roger.pau@citrix.com>
 
+Hi Roger,
 
+kernel test robot noticed the following build errors:
 
-On 2025/4/5 23:28, Bjorn Helgaas wrote:
-> Follow subject line capitalization convention.
-> 
-> On Sat, Apr 05, 2025 at 10:54:59PM +0800, Hans Zhang wrote:
->> When CONFIG_PCIEASPM is disabled, debugfs entries are not created, but
->> tegra_pcie_dw_remove() and tegra_pcie_dw_shutdown() unconditionally call
->> debugfs_remove_recursive(), leading to potential NULL pointer operations.
->>
->> Introduce deinit_debugfs() to wrap debugfs_remove_recursive(), which is
->> stubbed for !CONFIG_PCIEASPM. Use this function during removal/shutdown to
->> ensure debugfs cleanup only occurs when entries were initialized.
->>
->> This prevents kernel warnings and instability when ASPM support is
->> disabled.
-> 
-> This looks like there should be a Fixes: tag to connect this to the
-> commit that introduced the problem.
+[auto build test ERROR on xen-tip/linux-next]
+[also build test ERROR on tip/x86/core linus/master v6.14 next-20250404]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Hi Bjorn,
+url:    https://github.com/intel-lab-lkp/linux/commits/Roger-Pau-Monne/x86-xen-fix-balloon-target-initialization-for-PVH-dom0/20250404-214218
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/xen/tip.git linux-next
+patch link:    https://lore.kernel.org/r/20250404133459.16125-1-roger.pau%40citrix.com
+patch subject: [PATCH v2] x86/xen: fix balloon target initialization for PVH dom0
+config: x86_64-buildonly-randconfig-003-20250405 (https://download.01.org/0day-ci/archive/20250405/202504052301.dMtJILzp-lkp@intel.com/config)
+compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250405/202504052301.dMtJILzp-lkp@intel.com/reproduce)
 
-Thanks your for reply. Will add.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504052301.dMtJILzp-lkp@intel.com/
 
-Fixes: bb617cbd8151 (PCI: tegra194: Clean up the exit path for Endpoint 
-mode)
+All errors (new ones prefixed by >>):
 
-> 
-> If this is something that broke with the v6.15 merge window, we should
-> include this in v6.15 via pci/for-linus.  If this broke earlier, we
-> would have to decide whether pci/for-linus is still appropriate or a
-> stable tag.
-> 
+>> ld.lld: error: undefined symbol: xen_released_pages
+   >>> referenced by balloon.c
+   >>>               drivers/xen/balloon.o:(balloon_init) in archive vmlinux.a
+   >>> referenced by balloon.c
+   >>>               drivers/xen/balloon.o:(balloon_init) in archive vmlinux.a
 
-The original code that introduced the unconditional 
-`debugfs_remove_recursive()` calls was actually merged in an earlier cycle.
-
-> We did merge some debugfs things for v6.15, but I don't see anything
-> specific to pcie-tegra194.c, so I'm confused about why this fix would
-> be in pcie-tegra194.c instead of some more generic place.
-> 
-
-The Tegra194 driver conditionally initializes pcie->debugfs based on 
-CONFIG_PCIEASPM. When ASPM is disabled, pcie->debugfs remains 
-uninitialized, but tegra_pcie_dw_remove() and tegra_pcie_dw_shutdown() 
-unconditionally call debugfs_remove_recursive(), leading to a NULL 
-pointer dereference. This is specific to the Tegra194 implementation, as 
-other drivers or core PCI code may already guard debugfs cleanup against 
-uninitialized states through different mechanisms.
-
-Best regards,
-Hans
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
