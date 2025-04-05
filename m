@@ -1,125 +1,73 @@
-Received: from smtp.smtpout.orange.fr (smtp-24.smtpout.orange.fr [80.12.242.24])
-	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDA2F2C9D;
-	Sat,  5 Apr 2025 16:26:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA7EE29B0
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 16:30:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743870390; cv=none; b=Jr2sF2foBmw7Xunwjq7N54+WCFKClm5/Fji1KQvxNDM2nBiTvr1YlTmmkjXrewrWOlNhbaJoiQb/G6JQAJfYijcPaYnFZbhFfQHWB1qMTpew9zDjvVAv7vW5JD6SBbrfRpdOC9I0YcK8Yjk8HoqWXzQJHX1WtuyONtu0yGmk1VM=
+	t=1743870638; cv=none; b=TTc6tt2kUc5e2ahcX0gV4ItY18juazzrxgFPH2xhtTb80Uuog0kyiOd8Q2oGiYpNNZoUK0uWLCqGt6XTK8Q1mFd2Ww6DntYxUHd/EaNntedDRl+Yis5oRrPDkQrmsy5mOi2OmcVmLcWA7tsNC0OhWli4uEAN6fE7CTdP1lN4k4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743870390; c=relaxed/simple;
-	bh=mYq9OKULKeqOBXMkGiEw/GWMKLrP18Gu6bJE+ZmUXSc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
-	 In-Reply-To:Content-Type; b=WwuHZlAZe4ofbH6AKxGPnJn4O/pVqtDEqaei9EpY9ZRPPqfN1NXJaG2n5jiPPKfueLBMYxdfBC4KC871pS8rOyYvcQ/iq5QE/0s0DfCoiJ0vL8wJPckxvai78zRv/n9YpqAyTywmEzVsVA3g1UzatJfGcIqgg5TsWcF8ygDb6GU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=j8gemYBm; arc=none smtp.client-ip=80.12.242.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1743870638; c=relaxed/simple;
+	bh=iWgEZftyGtFM5UmeMg9l/DtOQzjAfp6fIREhwn8F1zs=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=djThItHDW+7fklCVtLDc0D7+tuzVU/jwId0fWmUOKOjGXryrdfQuqPgleRm11sMiu4REEmr5G7PNcdqCN8SG5ghsoo5OE0PqYHKa2wdFMWIXE0wz0cos9A1jK8PR5ykek8gdBx+9iBZAC9PGxLRDee7S7vSi/EVvwP0q6S2umVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L1oBLN4y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="j8gemYBm"
-Received: from [192.168.1.37] ([90.11.132.44])
-	by smtp.orange.fr with ESMTPA
-	id 16CiuEOpJD5XP16Cmu4Amd; Sat, 05 Apr 2025 18:17:14 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1743869834;
-	bh=8Tm1DIxWvLsvP/29X659pawW7f1pRJuuvMiLNwxibuU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=j8gemYBm8JtPHPA7uomST3S3QhTXO4w27OLLk1fo+KAcX82J+2aGxS1LeG+35vnmK
-	 KMBzVt/l4DCVx7fvL3tMLPkGNBozNS2Io13ZSXOcd1J3vomsnpqSDTfaxsh+F/b4hE
-	 rJeRs1mXEThSToV18LvV+LXhjp7Q/4KhT6hHMKmKq0ycoP1+V8bHE5It3REhLzoofz
-	 maWgJiWYUrifkiQOieg2X526e1oMx8q3E/q2BE6pi9KsLvx/NYbI8EwSq+yPbbgXR7
-	 5rMS/gsaNcksVOD9+K3u6nfzoewaYfSKaSHVHqme/3/oc62+o7Sd/YRXxqniFPmiQn
-	 w3mk6KfEgQwEA==
-X-ME-Helo: [192.168.1.37]
-X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
-X-ME-Date: Sat, 05 Apr 2025 18:17:14 +0200
-X-ME-IP: 90.11.132.44
-Message-ID: <da261a4c-6c27-454f-b21d-af1814b58b91@wanadoo.fr>
-Date: Sat, 5 Apr 2025 18:17:08 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L1oBLN4y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BDAEC4CEE4;
+	Sat,  5 Apr 2025 16:30:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743870637;
+	bh=iWgEZftyGtFM5UmeMg9l/DtOQzjAfp6fIREhwn8F1zs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=L1oBLN4yRCvE/hf2QdwBCtua+suSwmqshi+rqVmxJ726br5dHinPbS14XoDc0uxH7
+	 NYSF5AzhPWJZguesKJDCP4g5aHhpvwVpefRfBeA58YyPRpt2CSjsGPZRO2VD+5mB4L
+	 Yg4qkYAl5aYmQsEHXaBYU8jHGjWZ8KfUnxV2Lu2pMRQNrUwVC0eixNlUtjZ9RM1J8L
+	 I2GgWcipAdkNoPwhVs2BaaVbBGWcBYkIRCCixAWcQtkZEplsIPkVtVd5NTcIzjwO2g
+	 3KpqKFmTpVLPF1+EqKJfZGcrxdEQ135dbX8vTOXGcPTh55ChDmSDdWrsryrcESKKzb
+	 oY16cMgPQeanw==
+From: SeongJae Park <sj@kernel.org>
+To: 
+Cc: SeongJae Park <sj@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@redhat.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Rik van Riel <riel@surriel.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	conduct@kernel.org
+Subject: Re: [PATCH v2 2/4] mm/madvise: batch tlb flushes for MADV_FREE
+Date: Sat,  5 Apr 2025 09:30:35 -0700
+Message-Id: <20250405163035.8906-1-sj@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250405013136.3863-1-hdanton@sina.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] pci: tegra194: Fix debugfs cleanup for !CONFIG_PCIEASPM
-To: 18255117159@163.com
-References: <20250405152818.GA107831@bhelgaas>
- <c52ac489-51e9-4803-bf64-2bb6cfbf30bf@163.com>
-Content-Language: en-US, fr-FR
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: bhelgaas@google.com, jonathanh@nvidia.com, kw@linux.com,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-tegra@vger.kernel.org, lpieralisi@kernel.org,
- manivannan.sadhasivam@linaro.org, robh@kernel.org, thierry.reding@gmail.com
-In-Reply-To: <c52ac489-51e9-4803-bf64-2bb6cfbf30bf@163.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Le 05/04/2025 à 17:49, Hans Zhang a écrit :
-> 
-> 
-> On 2025/4/5 23:28, Bjorn Helgaas wrote:
->> Follow subject line capitalization convention.
->>
->> On Sat, Apr 05, 2025 at 10:54:59PM +0800, Hans Zhang wrote:
->>> When CONFIG_PCIEASPM is disabled, debugfs entries are not created, but
->>> tegra_pcie_dw_remove() and tegra_pcie_dw_shutdown() unconditionally call
->>> debugfs_remove_recursive(), leading to potential NULL pointer 
->>> operations.
->>>
->>> Introduce deinit_debugfs() to wrap debugfs_remove_recursive(), which is
->>> stubbed for !CONFIG_PCIEASPM. Use this function during removal/ 
->>> shutdown to
->>> ensure debugfs cleanup only occurs when entries were initialized.
->>>
->>> This prevents kernel warnings and instability when ASPM support is
->>> disabled.
->>
->> This looks like there should be a Fixes: tag to connect this to the
->> commit that introduced the problem.
-> 
-> Hi Bjorn,
-> 
-> Thanks your for reply. Will add.
-> 
-> Fixes: bb617cbd8151 (PCI: tegra194: Clean up the exit path for Endpoint 
-> mode)
-> 
->>
->> If this is something that broke with the v6.15 merge window, we should
->> include this in v6.15 via pci/for-linus.  If this broke earlier, we
->> would have to decide whether pci/for-linus is still appropriate or a
->> stable tag.
->>
-> 
-> The original code that introduced the unconditional 
-> `debugfs_remove_recursive()` calls was actually merged in an earlier cycle.
-> 
->> We did merge some debugfs things for v6.15, but I don't see anything
->> specific to pcie-tegra194.c, so I'm confused about why this fix would
->> be in pcie-tegra194.c instead of some more generic place.
->>
-> 
-> The Tegra194 driver conditionally initializes pcie->debugfs based on 
-> CONFIG_PCIEASPM. When ASPM is disabled, pcie->debugfs remains 
-> uninitialized, but tegra_pcie_dw_remove() and tegra_pcie_dw_shutdown() 
-> unconditionally call debugfs_remove_recursive(), leading to a NULL 
+Deleting Hillf and adding conduct@ from/to recipients.
 
-debugfs IS initialized, because it is in a structure allocated with 
-devm_kzalloc().
+On Sat, 5 Apr 2025 09:31:35 +0800 Hillf Danton <hdanton@sina.com> wrote:
 
-And debugfs functions handle such cases.
+To my understanding Hillf is banned from the community for now, due to a CoC
+violation.  I'm gonna ignore his reply until his mail can seen on mailing list
+again.  I believe that aligns with meaning of the ban, and help people less
+confused by mails that replying to mails that not visible on the mailing list
+archives.  Please let me know if you have any concern about this.
 
-CJ
+And I have a humble suggestion for conduct@.  This time I was luckily aware of
+the fact that Hillf is banned for now.  I think having an official and formal
+way for knowing who are banned for what time period, and a guideline about what
+reaction to this kind of mails from banned people is supposed could be helpful.
 
-> pointer dereference. This is specific to the Tegra194 implementation, as 
-> other drivers or core PCI code may already guard debugfs cleanup against 
-> uninitialized states through different mechanisms.
-> 
-> Best regards,
-> Hans
-> 
-> 
-> 
 
+Thanks,
+SJ
+
+[...]
