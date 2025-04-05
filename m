@@ -1,66 +1,67 @@
 Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F10541A2541;
-	Sat,  5 Apr 2025 23:15:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B85F51A2541;
+	Sat,  5 Apr 2025 23:15:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743894933; cv=none; b=iTwRvxhR2ag/Kg1MT5N/smd+VVRshMJDXr8BkmjmkZ9xvw5dgFw0ishzvdhNACZoYbJdnnajA/nL57hw1nja+CVqPL74btIY5o806/QwsbMdIcQtLZJCpPNSP4Aupl/5ftPOPv1k1FJo/Qx0R5S4jIGQR0RkFgfB6I8EIUESePI=
+	t=1743894940; cv=none; b=QJIvkxii0mXXPSGYQsEzccnkrasKODk554iv3Uk84GXEXdRWWqGDPDixDJ5tHnKaNwwJFyAlcrv/Hgb57Luy81fvtbV66YMw4CE1+/stL3crkkqGS3d1HcDuQ/KIknavK0GOurjG3dRHd41vHfdLhz1eCb9Myx6En/NzIkRnDMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743894933; c=relaxed/simple;
-	bh=+ihPfzH3562UQtCkvXWrZQHAlhmM8DF7Fjo0KjAuRP4=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=RXXK7FNb8bMr72k5mczuUbF5jCmE+JYcvVSMSOk3y/srF7yGDzsb7Jt8JS4MbvQz9PX5/ioocCmKByeknt3msnv2Qk6MM3JNko7kQGhabMk1euS0f9hXpNhQVdXQpmSrwkdwMoGHCBfaIUwQoYVPSEf5K8bjsNFF3JZz/RJNCJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VoAJixm+; arc=none smtp.client-ip=209.85.214.176
+	s=arc-20240116; t=1743894940; c=relaxed/simple;
+	bh=HqJUvE3cm056/al8IELSKt4YG1QY6I7o2vDGy5tCaZA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=WhDkUukTZXqiPNrjFLG/kqOTx8rBymJp89tyCaIV193NsELXpBri/RlP3Kgu3rnt5cz1gy9UaY4BpkEVacAohC3oL2uCBIAHuQ1a3A6Yd3tvQ/xhEqwSc/VQgy83sNn7OqQ5xeWkYpeS2hxVk+difom3/ci0ECw3tmcgT7/C2aQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SeNe683I; arc=none smtp.client-ip=209.85.214.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VoAJixm+"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-22401f4d35aso33487395ad.2;
-        Sat, 05 Apr 2025 16:15:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SeNe683I"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-227aaa82fafso27108195ad.2;
+        Sat, 05 Apr 2025 16:15:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743894930; x=1744499730; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=WRWHl1bFUEsL1BhGfTHMioZdh6c81qArx4e/ZrHW8Ks=;
-        b=VoAJixm+MLx1h0Kwtjg7cOBTe0QKu+1qK0A3XJBAjuuFqRZIkk38NuOM1nwYyxKzHZ
-         IsRaJilqbZCD2qzp+m86WKIUsSXXAXapeEiyg3sBbDAglVcZ6e3erMkINOp/QTB2JCKo
-         diZht5x2O8v8Uyljm7lWe057H6vvVHhtVW/zUWfyP3GIQYHAbR7arIQAW9b0F98f/HJ+
-         k8RXnMVX7fuG/QT2oIzBL0mgxlgp6ajOizxTkK4FkgE1uLt/Kju5j84Xt00P2mziKaUQ
-         YVFgYmfoYLXQwaB5zFxxDpeXGjUXujMHx0xHHIlLzok7QLFDpRGqH9NbFgUhyK1ibji4
-         nOoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743894930; x=1744499730;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=gmail.com; s=20230601; t=1743894938; x=1744499738; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=WRWHl1bFUEsL1BhGfTHMioZdh6c81qArx4e/ZrHW8Ks=;
-        b=IJ57RV+YUbQ+kfrXcUUPBuTZpHfu2MTupVn0+Gt208NO+eJfeGnem6a6w/Gh2u6wg6
-         4HRMIXtZuuI3YYCL890eIWf7WUG26nLIxEVPChvfDg7kAI+pLipo5v0rvCuuMnBRwW5a
-         FnkYzoWEJBBfxxhxdrbxpurxc3S/PgxqwfK2vgzZEECaaabAF6g4LxrrrmCr+yR/lz0e
-         LeFzOZYHglgCdGsaib6ZCgt9b+IIKRFy62TmgvLWu3k1PklwuT7LjIBIj8N7Uvql/AM0
-         FJAj+z4HegOfR+mJA5X86A4R+NwP/ria3SR+Jjm59ec5CyPo8k0BB/gZock8TiFQZuQm
-         JTkQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVmXMG6jKZo3QYCNM5YZTlU15kHSzD6LMcLV7piGienlkD+eErFmWMXXtxedCTfNNm7wTMWkwwwFdKHNN0=@vger.kernel.org, AJvYcCVuUl/vGJMq3c2lZ/MTGnPiWMiGHB8zVU/CMrR1xgRMn9Ssbxhg2tIzVpwLu8cOTxqQj14UM4NDDcg/@vger.kernel.org, AJvYcCW/ox3WnCzRVivHjKJXGZHrOPfoznLcqwNgkAsyZL54lxo7BEm9hd7lIp0R6vEN45dlJiinhkAcLniwoOc=@vger.kernel.org, AJvYcCWeHVaJzr/8FMUCLQVAzkvN6O2r02O1tAMq0RzNEy99/phLEWPh3qIEgdC7Wm9w7YS4VaOkRKF3uw8OtecA@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw9wAG6pMXPUtV6fVEZXTlHEETfPoXUER0VtJSeoFCYXjtP/7fh
-	ZSZ3RpRrh/MRqMpiieAsViAUhr1KHDE0CtiRSWBwld7l/Zcdduwx
-X-Gm-Gg: ASbGncv8cgaCARo2DSJEnHajCiUXYiNqrJqSWx60RCMVME8YAVIauNdoIhx/+jtVT1+
-	rz/gXShhUWLB1fJA+IKd/TWEwshw+wrRmsgZxL54M0yD1ILJntX37jd6jMGxv8cV0g3W8Dlqu1X
-	yW6e4NvDPyFkds5EyMzmr0IUXoDTHNjoAngWuS73VwTEQQVpqITeeCp7Eozmv2tYknrZEAKjg2/
-	38j0fryz8JTCmkLqeHIwmxyAInfcLDfOrxvI439xpcJvqRYk1bHZBVpNcrPUV0Wxq+BNsPksQhb
-	f/NGIIwsss2nHM8HRmtTXOZ0kYHuW6xJL+Y1m40cMl6+nQVUy7jX2Mhkc+iLTYBO3gLn073US9/
-	qmchVNUF2xjYnuYt5yGD6yKV85mfSm0YN5+6uAto=
-X-Google-Smtp-Source: AGHT+IFJLoi+t1h6nfqNpimMSmHCghVaKYsuJd3xWLFkG11VixjKp/kboYhogtSKHpLi5Rt4egiZ/A==
-X-Received: by 2002:a17:903:19c6:b0:223:50f0:b97 with SMTP id d9443c01a7336-22a955a19a0mr58857915ad.52.1743894930124;
-        Sat, 05 Apr 2025 16:15:30 -0700 (PDT)
+        bh=/zT7z/HktyzmUzeS1R/jDHnCVkQulwygo5o6mh5iuzs=;
+        b=SeNe683IHdxrYkSQwUNW8+MQA9S6LhlRi/ctCvxhnADqaN3KzGte9PEwgeOYvi1RQ1
+         Y4QzBkAPxRLpgIfihoibFAuJm5lxeo1jgF4HmJuDYE/3cUGKAcWqy8I3z9egZyer+0Bj
+         IKBXylWOureMdVA8H4th7nDpxnkFGoqBxcBE+mxfNV1d2m465EJwvFE+cKQa+ilNLfRj
+         Ny94q3w3nmo+XKbbaMAx33Nj7i7n0hJF3tU//hsrvjCWXGCM5fKxMNkCNmToj5gzfG1e
+         atOWnsEs+hC4QTDHB3hQsf75ypzek5AMmHzymypMJpGFbRpm+T5okyWpbQqu48WnH0+k
+         s46w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743894938; x=1744499738;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/zT7z/HktyzmUzeS1R/jDHnCVkQulwygo5o6mh5iuzs=;
+        b=YWYiQWo7mcG+ZHMEHwK8q9bdPX2+L8RdmCyyb8LbUjplLECJPL29ykQCRzX6r0ZgeD
+         OYy9b5nkPh3nQDuafc2ghSxXEIWc1ghJxvw+TvD+Tiuv25k8Ecdaj1lZM1IYtwBKlnp9
+         yclPNeTnk/1sgNBYpVw8BgFniQi99Nk8FWJRLFeo8eppDLOrg6u3Qq+OBmEmdw4zJ5AG
+         iayNRwGr1wLv7Mg8PruHgWFblce7+FfgSjp1sORhqihfStWaRX1p17KMnZfZRGmpIf8z
+         JG5+/eC4xE+M+gzcUy0X3jORvwSm2CxxiDVxzuPYDOoFnwa9OGDfQd7FHbXO2VBulY21
+         Vfug==
+X-Forwarded-Encrypted: i=1; AJvYcCUFGLjXPjCdZmrdzHxKZH2XfnHlF4R700jCFeYYdV00NDKeaVkwggFbPl4VLQBC3FOjWnIh73xesoWB@vger.kernel.org, AJvYcCUtfwctNHlWM75zaqNh+D20qJFyNqnSAzbYWA2VB8GIo5mfz1XeoI5BVJNZT+5qC1gGmBjVS33a+n8Fm4c=@vger.kernel.org, AJvYcCV4MYg9T1ScRDJ+2FQ6WIlAekDRkH+i6THtX+IcSXoiWLNt6REmLczm+8UEcI9e7CcITeze+UTCS9cOBuA=@vger.kernel.org, AJvYcCX6jJA9FhnODUUv4eHFesY7Ei7q93/QVYTg/aieYEDrf2jOz1wBlOxybla0daVFnXf5jDLkBzw4oDL25pyH@vger.kernel.org
+X-Gm-Message-State: AOJu0YxoYrSarWNNhviiYs0BlvpckYEbzeM4MoEBF3Bxy4TaRAm8cbbe
+	Le6jM8BuGIXhZvfvRqUInJa9BM80MzLI2HwXdgOS+MD7piC7pLki
+X-Gm-Gg: ASbGncugiFKEojvbUY3FBeAQNf39KKjrb6VQpbegIIfU13MFCMl71bO6ahrT3WX9U3v
+	DpjCk55YVT4hm1SP41cbs185a+0ky6pE3RZsFmbdfjK5P1orlA4XFmWTWaflidfI1pnMLk6HKKt
+	qdp88ONUFKDIBSYGzM5G3DRTYdeRy36HrpZvSDfY3j5GiatAyzymTUTmyEr+ItK8S/WUmTUT49s
+	w89ONbgcm91ijVwzFsNfigSXMEaRCavAvMlbLgH+67rmC1brk8IHtMlLL7JC7qZ52FCoRlish+x
+	HYZWH2mF92qhPCAOleqhWx4vOnuKMm7vi+hmPwSNh8e8Hp/XhqUzYMW+8Ap1JcL8XdrHGSZZrfz
+	EtJbfIew4fL1S9XAQKTH9RkJg4Xa4TaueUlmFsAo=
+X-Google-Smtp-Source: AGHT+IGRchoS/CucZE1tgNu5aAkMlUokbSk42txl/eCkLWISpt+NHELUlUL8kUdOf6jUGAiNHPSQzQ==
+X-Received: by 2002:a17:902:d4c4:b0:226:4764:1963 with SMTP id d9443c01a7336-22a8a1d6f93mr108621555ad.51.1743894937944;
+        Sat, 05 Apr 2025 16:15:37 -0700 (PDT)
 Received: from [192.168.2.3] (2403-580a-80ed-0-4835-5a07-49e7-f115.ip6.aussiebb.net. [2403:580a:80ed:0:4835:5a07:49e7:f115])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-229785c994esm55048345ad.102.2025.04.05.16.15.22
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-229785c994esm55048345ad.102.2025.04.05.16.15.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Apr 2025 16:15:29 -0700 (PDT)
+        Sat, 05 Apr 2025 16:15:37 -0700 (PDT)
 From: James Calligeros <jcalligeros99@gmail.com>
-Subject: [PATCH v5 0/8] ASoC: tas27{64,70}: improve support for Apple codec
- variants
-Date: Sun, 06 Apr 2025 09:15:04 +1000
-Message-Id: <20250406-apple-codec-changes-v5-0-50a00ec850a3@gmail.com>
+Date: Sun, 06 Apr 2025 09:15:05 +1000
+Subject: [PATCH v5 1/8] ASoC: tas2770: Power cycle amp on ISENSE/VSENSE
+ change
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,13 +69,10 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAHi58WcC/3XPTQrCMBAF4KtI1kYmkz/rynuIizSZ1oDa0khRS
- u9uVMRS6vIN875hBpaoi5TYbjWwjvqYYnPNQa9XzJ/ctSYeQ84MATWgUNy17Zm4bwJ5/tlI3JD
- RJnhBqALLzbajKt7f6uGY8ymmW9M93kd68Zp+Pb3o9YIDtyi1KUoUpSj29cXF88Y3F/byepwa2
- 2UDs1FItAaqYAns3JATA+2yIbPhy1JIAAnOV3ND/QwFf35R2QgAlpTxpBxOjXEcn1dbIO+CAQA
- A
-X-Change-ID: 20250214-apple-codec-changes-6e656dc1e24d
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250406-apple-codec-changes-v5-1-50a00ec850a3@gmail.com>
+References: <20250406-apple-codec-changes-v5-0-50a00ec850a3@gmail.com>
+In-Reply-To: <20250406-apple-codec-changes-v5-0-50a00ec850a3@gmail.com>
 To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
  Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
  Shenghao Ding <shenghao-ding@ti.com>, Kevin Lu <kevin-lu@ti.com>, 
@@ -89,106 +87,77 @@ Cc: Alyssa Rosenzweig <alyssa@rosenzweig.io>,
  asahi@lists.linux.dev, linux-hwmon@vger.kernel.org, 
  Neal Gompa <neal@gompa.dev>, James Calligeros <jcalligeros99@gmail.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3741;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2687;
  i=jcalligeros99@gmail.com; h=from:subject:message-id;
- bh=+ihPfzH3562UQtCkvXWrZQHAlhmM8DF7Fjo0KjAuRP4=;
- b=owGbwMvMwCV2xczoYuD3ygTG02pJDOkfd9bW+P9R/LDzSkdAcU3B687lKwLevJl3WO361IsSH
- nt3bGkX7yhlYRDjYpAVU2TZ0CTkMduI7Wa/SOVemDmsTCBDGLg4BWAi04oY/jsvmvqh5rzXjJsf
- +O1Fm5WmHbepia58e5j570T7o+u+arIx/K92mnVK8MS1ykkOMVNFjIT2Oz8VjtwWMen9spOKk89
- oreEDAA==
+ bh=PCUEqTWLJugE/p5yI6mH/FN1rmh28HR0YZQdpuB+rAk=;
+ b=owGbwMvMwCV2xczoYuD3ygTG02pJDOkfd3b2a/nYCfT0nL4YrvFb7HqT7zcR00neorqzFc8c+
+ Si8neFwRykLgxgXg6yYIsuGJiGP2UZsN/tFKvfCzGFlAhnCwMUpABNp4WBkuFtR9ji/W7hnX/7N
+ 4rzy4K4L/d/NHNgW5RjWfD4hZVVQxchwOMtVzKTE+DmbivP2w5NW21VeLf7y8/zmCSv2+L+Yzaf
+ HDgA=
 X-Developer-Key: i=jcalligeros99@gmail.com; a=openpgp;
  fpr=B08212489B3206D98F1479BDD43632D151F77960
 
-Hi all,
+From: Hector Martin <marcan@marcan.st>
 
-This series introduces a number of changes to the drivers for
-the Texas Instruments TAS2764 and TAS2770 amplifiers in order to
-introduce (and improve in the case of TAS2770) support for the
-variants of these amps found in Apple Silicon Macs.
+The ISENSE/VSENSE blocks are only powered up when the amplifier
+transitions from shutdown to active. This means that if those controls
+are flipped on while the amplifier is already playing back audio, they
+will have no effect.
 
-Apple's variant of TAS2764 is known as SN012776, and as always with
-Apple is a subtly incompatible variant with a number of quirks. It
-is not publicly available. The TAS2770 variant is known as TAS5770L,
-and does not require incompatible handling.
+Fix this by forcing a power cycle around transitions in those controls.
 
-Much as with the Cirrus codec patches, I do not
-expect that we will get any official acknowledgement that these parts
-exist from TI, however I would be delighted to be proven wrong.
-
-This series has been living in the downstream Asahi kernel tree[1]
-for over two years, and has been tested by many thousands of users
-by this point[2].
-
-v4 drops the TDM idle TX slot behaviour patches. I experimented with
-the API discussed in v3, however this did not work on any of the machines
-I tested it with. More tweaking is probably needed.
-
-[1] https://github.com/AsahiLinux/linux/tree/asahi-wip
-[2] https://stats.asahilinux.org/
-
+Reviewed-by: Neal Gompa <neal@gompa.dev>
+Signed-off-by: Hector Martin <marcan@marcan.st>
+Signed-off-by: James Calligeros <jcalligeros99@gmail.com>
 ---
-Changes in v5:
-- Dropped two commits that depended on TX idle stuff (sorry)
-- Link to v4: https://lore.kernel.org/r/20250405-apple-codec-changes-v4-0-d007e46ce4a2@gmail.com
+ sound/soc/codecs/tas2770.c | 30 +++++++++++++++++++++++--
+ 1 file changed, 28 insertions(+), 2 deletions(-)
 
-Changes in v4:
-- Moved remaining changes to the top of the set
-- Dropped already merged commits
-- hwmon now reads temp from regmap
-- Bumped regmap max reg patch above Apple quirks patch
-- Dropped TDM idle slot TX behaviour patches
-- Link to v3: https://lore.kernel.org/r/20250227-apple-codec-changes-v3-0-cbb130030acf@gmail.com
+diff --git a/sound/soc/codecs/tas2770.c b/sound/soc/codecs/tas2770.c
+index 7f219df8be7046912bf3ef452f75c17b5118bcf6..8de7e94d4ba478aa9b705a81e7276bd005c8a18e 100644
+--- a/sound/soc/codecs/tas2770.c
++++ b/sound/soc/codecs/tas2770.c
+@@ -156,11 +156,37 @@ static const struct snd_kcontrol_new isense_switch =
+ static const struct snd_kcontrol_new vsense_switch =
+ 	SOC_DAPM_SINGLE("Switch", TAS2770_PWR_CTRL, 2, 1, 1);
+ 
++static int sense_event(struct snd_soc_dapm_widget *w,
++			struct snd_kcontrol *kcontrol, int event)
++{
++	struct snd_soc_component *component = snd_soc_dapm_to_component(w->dapm);
++	struct tas2770_priv *tas2770 = snd_soc_component_get_drvdata(component);
++
++	/*
++	 * Powering up ISENSE/VSENSE requires a trip through the shutdown state.
++	 * Do that here to ensure that our changes are applied properly, otherwise
++	 * we might end up with non-functional IVSENSE if playback started earlier,
++	 * which would break software speaker protection.
++	 */
++	switch (event) {
++	case SND_SOC_DAPM_PRE_REG:
++		return snd_soc_component_update_bits(component, TAS2770_PWR_CTRL,
++						    TAS2770_PWR_CTRL_MASK,
++						    TAS2770_PWR_CTRL_SHUTDOWN);
++	case SND_SOC_DAPM_POST_REG:
++		return tas2770_update_pwr_ctrl(tas2770);
++	default:
++		return 0;
++	}
++}
++
+ static const struct snd_soc_dapm_widget tas2770_dapm_widgets[] = {
+ 	SND_SOC_DAPM_AIF_IN("ASI1", "ASI1 Playback", 0, SND_SOC_NOPM, 0, 0),
+ 	SND_SOC_DAPM_MUX("ASI1 Sel", SND_SOC_NOPM, 0, 0, &tas2770_asi1_mux),
+-	SND_SOC_DAPM_SWITCH("ISENSE", TAS2770_PWR_CTRL, 3, 1, &isense_switch),
+-	SND_SOC_DAPM_SWITCH("VSENSE", TAS2770_PWR_CTRL, 2, 1, &vsense_switch),
++	SND_SOC_DAPM_SWITCH_E("ISENSE", TAS2770_PWR_CTRL, 3, 1, &isense_switch,
++		sense_event, SND_SOC_DAPM_PRE_REG | SND_SOC_DAPM_POST_REG),
++	SND_SOC_DAPM_SWITCH_E("VSENSE", TAS2770_PWR_CTRL, 2, 1, &vsense_switch,
++		sense_event, SND_SOC_DAPM_PRE_REG | SND_SOC_DAPM_POST_REG),
+ 	SND_SOC_DAPM_DAC_E("DAC", NULL, SND_SOC_NOPM, 0, 0, tas2770_dac_event,
+ 			   SND_SOC_DAPM_POST_PMU | SND_SOC_DAPM_PRE_PMD),
+ 	SND_SOC_DAPM_OUTPUT("OUT"),
 
-Changes in v3:
-- Add Rob's Acked-by to Devicetree compatible additions
-- Dropped cherry-picked patches
-- Droped abuse of regulator API
-- Droped bespoke sysfs interface
-- Rationalised temperature reading for hwmon interface
-- Set SN012776 device ID with OF match data
-- Changed probe ops reliant on device ID to case/switch statement
-- Added documentation for new Devicetree properties
-- Improved a number of poor quality commit messages
-- Documented behaviour of die temperature ADC
-- Link to v2: https://lore.kernel.org/r/20250218-apple-codec-changes-v2-0-932760fd7e07@gmail.com
-
-Changes in v2:
-- Changed author field of patch to match Martin's Signed-off-by
-- Added Neal's Reviewed-by to reviewed patches
-- Moved fixes to existing code to the top of the series
-- Removed tas2764's explicit dependency on OF
-- Removed complicated single-use tas2764 quirks macro and replaced with
-  if block
-- Added hwmon interface for codec die temp
-- Fixed a malformed commit message
-- Link to v1: https://lore.kernel.org/r/20250215-apple-codec-changes-v1-0-723569b21b19@gmail.com
-
----
-Hector Martin (3):
-      ASoC: tas2770: Power cycle amp on ISENSE/VSENSE change
-      ASoC: tas2770: Support setting the PDM TX slot
-      ASoC: tas2764: Enable main IRQs
-
-James Calligeros (2):
-      ASoC: tas2770: expose die temp to hwmon
-      ASoC: tas2764: expose die temp to hwmon
-
-Martin Povišer (3):
-      ASoC: tas2764: Reinit cache on part reset
-      ASoC: tas2764: Raise regmap range maximum
-      ASoC: tas2764: Apply Apple quirks
-
- sound/soc/codecs/tas2764-quirks.h | 180 +++++++++++++++++++++++++
- sound/soc/codecs/tas2764.c        | 137 ++++++++++++++++++-
- sound/soc/codecs/tas2764.h        |   3 +
- sound/soc/codecs/tas2770.c        | 151 ++++++++++++++++++++-
- sound/soc/codecs/tas2770.h        |   6 +
- 5 files changed, 472 insertions(+), 5 deletions(-)
----
-base-commit: 3a0f0a4355df0240485ed62b6bd6afa5b3e689c5
-change-id: 20250214-apple-codec-changes-6e656dc1e24d
-
-Best regards,
 -- 
-James Calligeros <jcalligeros99@gmail.com>
+2.49.0
 
