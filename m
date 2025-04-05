@@ -1,193 +1,148 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E7E51D47A2
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 13:21:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 288B21D47A2;
+	Sat,  5 Apr 2025 13:25:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743859321; cv=none; b=ayEQ4yP571N18fj33zicYXu1m385uvi6t2/2OLdLQt4M8/QEzRm+ZgbSRV2OxwJXSyaT2xEVyk9zp6n4Aj0gibEBLbtPrRJQLUnbsuV+SNJb8mT/XpNfVx+c08i28AxWJS94k+Ae0KGE+SezEDS8dAMLPPw+EwBdzGJkwv5jOgI=
+	t=1743859560; cv=none; b=M8G0q94yW0bMW/MRv0CIGf5W1QKweYiEdgl/FaPjgHOEM3unE88eo5nPypZc8pLAeW4o2ZknOW7GRYCLH39rvjwTHjrnYWkhiNdIV1p8Bp48v8p8XQpjC2N59jYjNZO+EAXhv+ieUTOlQazr3L0lJ6KWSptzghGpyXoupT7r51o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743859321; c=relaxed/simple;
-	bh=AcXfO0TA7CuyZGUY7wAR0A6TkpZyJhEUtb1u7nKFghg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=HIe1cY+9ulKbO2o6TQF78luOYpx1+hsPKHkP1La2kySCEZss11OpNwtwxUl0XRP9MCPeMkECKLmfxahdq6Is7wxH35e7lQAsc8pf3EyTOMP7hbKaxcu+J2xqh3DzkB2c7aGUmNZ4GCa9Vd53VN+B/WmDd4IrzoffuHQa7ndNgu8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=myoHDm18; arc=none smtp.client-ip=209.85.218.52
+	s=arc-20240116; t=1743859560; c=relaxed/simple;
+	bh=W0hFo83763PwHhqGjvqrSnEmlQxHpIjB+dI7T/lyDqw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Qa7Od6APZzgtNT6F2ztH9hbJ1Czfjdx9zdWYNfUfoowSx3Xc3oEawQCfwXTCVRFp3QwTTDNvgrtFgblQv+ZaAnZwN80LrQ/GaoJMSSa5afKl3dLeAaoVH+//1HKhwExvmpNaKBKirFe+EobLmkD83NYBsoFK7rmvv7bBXiQuOtA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HkvmSFme; arc=none smtp.client-ip=209.85.210.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="myoHDm18"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ac2bdea5a38so470639666b.0
-        for <linux-kernel@vger.kernel.org>; Sat, 05 Apr 2025 06:21:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HkvmSFme"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-736dd9c4b40so2591979b3a.0;
+        Sat, 05 Apr 2025 06:25:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743859317; x=1744464117; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=n1GAF1aPCvVcJSW85GNnW6pXEVSfQN39zL3/eF/KMRk=;
-        b=myoHDm18ojTeMEjDVj4l7VN8LIeqPqf6B6c/IYdGB681G0BdxCqaUjUKVyWpIJB97b
-         RQ9WtMp6rZi8lU2JCI9y9FKLdZT+qIuUMu7vfi1D7GamBn0gpaZYnXA9dmt3oJYXX5TR
-         A8Wx9bnr1l/iW7bcR7NmzT5gH865l8x84ZGJbC4Bh26YJ5JrV8hJJqaoYbq25Knz2k7H
-         EYPreifJ886HzDV0pzO74TNcahtA8N3urF0/2d9TxaoDbfR/wleGtJZeI989U4KcAhYS
-         kSCFAIpW1uvM/y/tsDOMWbdyWIllYRuX+w+7TLhQAENxdTuca8AWhwd1wTvO77fypdkh
-         RFuQ==
+        d=gmail.com; s=20230601; t=1743859558; x=1744464358; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=nKs0lwSpjYnhUeQPgpDR5O6PnIX9bK5Z7Homt3o7Oqw=;
+        b=HkvmSFmel3Km6zqRJMxfwqRxUu0OJp5P48GNimoSYv/vHaaYHv61nhbwEWggt0ON0C
+         Hzf/kOAMPys1Ub66FiKG5y/FHiRKzTvKzoH9r0eLoMV+eXuEqHmPZbK1NU2Luz7MLfE/
+         SuXl2YOSja/z7nx7w00z2sQrPrO3A/AKYRHMNIBg0fu15RYPsuWkpILWk3/NFgCgRfJd
+         tOEQuZWonUm+tN39VsGXbYEYbocujiCZjcvcN26RBwDi3yKJ8cGRZJMRuwQk8fi6MDVi
+         SDU3JgaXr/RgeUrNylHef/e5YYRRYgmwvH/y2x1FMHC6ihBnTP7fVl3tdR91BA0CW49b
+         Qklg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743859317; x=1744464117;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=n1GAF1aPCvVcJSW85GNnW6pXEVSfQN39zL3/eF/KMRk=;
-        b=OCPmAm8LgnmB81yevpYiS8UJ2zDFa5m1TxqkWtbngY1IlqiV9mnJnxTesrVytMX8bt
-         5KeImhLLt4zTSmt2E/rahVaODpRvowIbhjus11pjqf8Ni0GSdkY1lsKroBdy6Ebx0xkZ
-         IptD7ApiSad7tlJroQUWfATzk25f8MuG7wQNfRT5TAHh4Li86LmHFQHya9OoUA25SUB+
-         spcCnfVsSoHZcsvqgp4y7JGxI5OHA63+qMqLLbjWmVO0pOKGZRIWgMkEl3hZLFVxIpDA
-         1mSn8/EwasoPoHxJD6wJQGJ0FQP1CrWvMLkXoZh3Kkno0clzhXjg/YSGCnL+6+U7OGUj
-         kr4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCU9odaS2uhQyEYxRDPELaq34IU2syKjL5RfKUFppro+Lz+FKuo7ucoEX0ktTcksJwQuRDU1sREuzTAtXS4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyj1VdpWqNxvVfJb8mh9kxqHcRG63RrARIHHltCFA4gpNP86ZAH
-	7lmeukL6xArrHv14Tbj7DfyuBngRu1L7AiI1DOPr+Fts0SrfkqUhEhV9wCCC
-X-Gm-Gg: ASbGnctBURJfC+ZCEFtBkXWzWExQ6w1HPXJHosmb03yhUJCPWa04l3FVi/omakGKAeY
-	M4Z93nXlbGo+ikGyriDGjrRNyGidzCYeFkVAQphQ1VJYJsrUsZVdzSoBonYxWSdSUb6wrGkoviE
-	u3FohT2RcKvbXEO480F71iKapjFRBF33VCM8T9r11AqbeGmRJaNfXXgDOZzZw1uUPlJTg6+3+q0
-	0K0OaDRPeCq5nBmdB1OEd7dtZFrpxiKoJCxglvcVhmgmrIfg4MnecAsbH+/So4KqSZOe4jXXTdN
-	j1U2r1tZaYRdqhGtaj6eYAv2rr9J9Wx2ee83oa2ULWDQ2uhWHQ==
-X-Google-Smtp-Source: AGHT+IEuJ1jCs5lLbeZPk7dMSX7AGKDeD1AsWwl/QLtrHRYxpxUMnE17PiDNTeDM7alfgQo1hpW+oA==
-X-Received: by 2002:a17:907:f1c1:b0:ac7:edfb:5210 with SMTP id a640c23a62f3a-ac7edfb536dmr165647266b.20.1743859316998;
-        Sat, 05 Apr 2025 06:21:56 -0700 (PDT)
-Received: from HP-650 ([105.112.234.193])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7bfe996f5sm427498966b.64.2025.04.05.06.21.53
+        d=1e100.net; s=20230601; t=1743859558; x=1744464358;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=nKs0lwSpjYnhUeQPgpDR5O6PnIX9bK5Z7Homt3o7Oqw=;
+        b=qz45hGSOXtyULqjsmCQjEdhVT2lWhYJ8zpdgraIyfSo6bkQp5LdhDK3jgj7XYScSa8
+         xzW0Va1CmK3cqaqeZtffQ6F33SYv3COkRLpq56BHLWeM9a8eqqQwVWaUC9kUogt/dt8I
+         wqY6clrlJ8Fh1y+vi7pGROJXhIeT4ufr7R/mWJdZHOSJN3fD9yXp/IklFDC14uCenj/f
+         gHjnyIGOU/CVsyGfJb+Xf9PZn8gH6hIOfaes05VsSpCCZ+Bh+tAVbjvBZTKkIltmkk4l
+         +wA06p/6qHm9oaHrtUfEn1QRcrAVy+kDj0TmedYC65ukNd1+eHHqvbDtVil0YRHbza4E
+         SiPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCViwteBP1/xVXn8Do/evaBDR58tDHyhjSFBOggLYm3GcArWohvXSchsOMTDkEFZzLyXi2+TwKPtwnoK3Vo=@vger.kernel.org, AJvYcCX9qMYA1lTMevR7OVju2U4+5zmhoTk2WMHL9hMNmplwLLknu/icXcsCgrJDL19hMxA4xHp5spzf@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyc61MFPyS0mgnfsfUe1FbWm26+jn8iDqPZKEK/R/X9pqsIvg6c
+	4ckN2HVVApJeO5PFSdk1Qzyc4g3qrpyO3hyHqkuKzE1rA2LhdJ8M
+X-Gm-Gg: ASbGncsb7sRoG1sIlfsPNZ98T9miERvp+L5cHJvnMCkwaS/b+ccD/PzP6hhVe5LlZw8
+	l/60GoSS3JGNYAUiMxUNpvXCN15lkgHdhnbBjcuEZUqaKMRfAdlpyDeExibyKdP0FwCvHKKlp+5
+	VPxQoOzurKs8D5JriKSbyU4le3v3saHW7SV1R+N1g1ZfwIfw6+FtZg3K6LATPL/HxyL9WP8tA67
+	6j0zGgG84hE46KNDFykOhruuX5tY0IzTJ/P0yAyOqZBDJfMAtyc76elzKfvz15FLkOKvclv2YsQ
+	XxsgX7wbcVqlljEK/TCbXCQ6vQVwcUM8eCYMTfPR6vcySYNZtMel3pAymmvApMp2CzvApvIdOpd
+	4tyDZvAyg3yqi7CoYKDciP7gHNjHaAt8=
+X-Google-Smtp-Source: AGHT+IG1Q4lj2kvYXbd1JXXsWrnfajZnJiCpu1OsmZxghmbQZjNxXaov1rF97YvrfNBWxpHmvMDgAQ==
+X-Received: by 2002:a05:6a20:6f05:b0:1f3:237b:5997 with SMTP id adf61e73a8af0-2010517563amr9491084637.14.1743859558310;
+        Sat, 05 Apr 2025 06:25:58 -0700 (PDT)
+Received: from localhost.localdomain (p12284229-ipxg45101marunouchi.tokyo.ocn.ne.jp. [60.39.60.229])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739d97ee2b3sm5200206b3a.46.2025.04.05.06.25.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Apr 2025 06:21:56 -0700 (PDT)
-Date: Sat, 5 Apr 2025 14:21:42 +0100
-From: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Julia Lawall <julia.lawall@inria.fr>, outreachy@lists.linux.dev
-Cc: linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: [PATCH v5] staging: rtl8723bs: Prevent duplicate NULL tests on a
- value
-Message-ID: <Z/EuZuvGyQ9QBl6z@HP-650>
+        Sat, 05 Apr 2025 06:25:58 -0700 (PDT)
+From: Ryo Takakura <ryotkkr98@gmail.com>
+To: alex@ghiti.fr,
+	aou@eecs.berkeley.edu,
+	bigeasy@linutronix.de,
+	conor.dooley@microchip.com,
+	gregkh@linuxfoundation.org,
+	jirislaby@kernel.org,
+	john.ogness@linutronix.de,
+	palmer@dabbelt.com,
+	paul.walmsley@sifive.com,
+	pmladek@suse.com,
+	samuel.holland@sifive.com,
+	u.kleine-koenig@baylibre.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-serial@vger.kernel.org,
+	stable@vger.kernel.org,
+	Ryo Takakura <ryotkkr98@gmail.com>
+Subject: [PATCH] serial: sifive: lock port in startup()/shutdown() callbacks
+Date: Sat,  5 Apr 2025 22:24:58 +0900
+Message-Id: <20250405132458.488942-1-ryotkkr98@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-When a value has been tested for NULL in an expression, a
-second NULL test on the same value in another expression
-is unnecessary when the value has not been assigned to NULL.
+startup()/shutdown() callbacks access SIFIVE_SERIAL_IE_OFFS.
+The register is also accessed from write() callback.
 
-Remove unnecessary duplicate NULL tests on the same value
-that has previously been tested.
+If console were printing and startup()/shutdown() callback
+gets called, its access to the register could be overwritten.
 
-Found by Coccinelle.
+Add port->lock to startup()/shutdown() callbacks to make sure
+their access to SIFIVE_SERIAL_IE_OFFS is synchronized against
+write() callback.
 
-Signed-off-by: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
+Fixes: 45c054d0815b ("tty: serial: add driver for the SiFive UART")
+Signed-off-by: Ryo Takakura <ryotkkr98@gmail.com>
+Cc: stable@vger.kernel.org
 ---
-Changed in v4:
-	- Separated initially integrated suggested change
-	 "use modulo % 4096 over & 0xfff" to a different patch.
-Changes in v3:
-	- Changed other cases to use modulo (% 4096) over (& 0xofff).
-	- Modified commit message to reflect these changes.
-Changes in v2:
-	- Dropped patch files for media drivers from patchset as it is
-	  not meant for outreachy applicants.
-	- Added full-stop aign to text in commit message.
-	- Made code more readable by adding a line break.
-	- Changed cases to use modulo (% 4096) over (& 0xfff).
-Changes in v1
-	- Patch for drivers/staging/media/av7110/sp8870.c and
-	- drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c
-	  is split into two different patches in the patchset for use by the different
-	  driver maintainers.
-	- Added subject title for each of the separated patches.
-	- Patch 1: Removed unnecessary curly braces {} initially inserted.
-	- Patch 2: Unnecessary {} was also removed for v1.
 
- drivers/staging/rtl8723bs/core/rtw_mlme_ext.c |  2 +-
- drivers/staging/rtl8723bs/core/rtw_xmit.c     | 56 +++++++++----------
- 2 files changed, 28 insertions(+), 30 deletions(-)
+This patch used be part of a series for converting sifive driver to
+nbcon[0]. It's now sent seperatly as the rest of the series does not
+need be applied to the stable branch.
 
-diff --git a/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c b/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
-index 90966b7034ab..675226535cd1 100644
---- a/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
-+++ b/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
-@@ -1323,7 +1323,7 @@ unsigned int OnAssocReq(struct adapter *padapter, union recv_frame *precv_frame)
- 	spin_unlock_bh(&pstapriv->asoc_list_lock);
+Sincerely,
+Ryo Takakura
+
+[0] https://lore.kernel.org/all/20250405043833.397020-1-ryotkkr98@gmail.com/
+
+---
+ drivers/tty/serial/sifive.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/drivers/tty/serial/sifive.c b/drivers/tty/serial/sifive.c
+index 5904a2d4c..054a8e630 100644
+--- a/drivers/tty/serial/sifive.c
++++ b/drivers/tty/serial/sifive.c
+@@ -563,8 +563,11 @@ static void sifive_serial_break_ctl(struct uart_port *port, int break_state)
+ static int sifive_serial_startup(struct uart_port *port)
+ {
+ 	struct sifive_serial_port *ssp = port_to_sifive_serial_port(port);
++	unsigned long flags;
  
- 	/*  now the station is qualified to join our BSS... */
--	if (pstat && (pstat->state & WIFI_FW_ASSOC_SUCCESS) && (status == WLAN_STATUS_SUCCESS)) {
-+	if ((pstat->state & WIFI_FW_ASSOC_SUCCESS) && (status == WLAN_STATUS_SUCCESS)) {
- 		/* 1 bss_cap_update & sta_info_update */
- 		bss_cap_update_on_sta_join(padapter, pstat);
- 		sta_info_update(padapter, pstat);
-diff --git a/drivers/staging/rtl8723bs/core/rtw_xmit.c b/drivers/staging/rtl8723bs/core/rtw_xmit.c
-index 026061b464f7..f817cab2f831 100644
---- a/drivers/staging/rtl8723bs/core/rtw_xmit.c
-+++ b/drivers/staging/rtl8723bs/core/rtw_xmit.c
-@@ -941,35 +941,33 @@ s32 rtw_make_wlanhdr(struct adapter *padapter, u8 *hdr, struct pkt_attrib *pattr
- 			if (!(psta->state & _FW_LINKED))
- 				return _FAIL;
++	uart_port_lock_irqsave(&ssp->port, &flags);
+ 	__ssp_enable_rxwm(ssp);
++	uart_port_unlock_irqrestore(&ssp->port, flags);
  
--			if (psta) {
--				psta->sta_xmitpriv.txseq_tid[pattrib->priority]++;
--				psta->sta_xmitpriv.txseq_tid[pattrib->priority] &= 0xFFF;
--				pattrib->seqnum = psta->sta_xmitpriv.txseq_tid[pattrib->priority];
--
--				SetSeqNum(hdr, pattrib->seqnum);
--
--				/* check if enable ampdu */
--				if (pattrib->ht_en && psta->htpriv.ampdu_enable)
--					if (psta->htpriv.agg_enable_bitmap & BIT(pattrib->priority))
--						pattrib->ampdu_en = true;
--
--				/* re-check if enable ampdu by BA_starting_seqctrl */
--				if (pattrib->ampdu_en == true) {
--					u16 tx_seq;
--
--					tx_seq = psta->BA_starting_seqctrl[pattrib->priority & 0x0f];
--
--					/* check BA_starting_seqctrl */
--					if (SN_LESS(pattrib->seqnum, tx_seq)) {
--						pattrib->ampdu_en = false;/* AGG BK */
--					} else if (SN_EQUAL(pattrib->seqnum, tx_seq)) {
--						psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (tx_seq+1)&0xfff;
--
--						pattrib->ampdu_en = true;/* AGG EN */
--					} else {
--						psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (pattrib->seqnum+1)&0xfff;
--						pattrib->ampdu_en = true;/* AGG EN */
--					}
-+			psta->sta_xmitpriv.txseq_tid[pattrib->priority]++;
-+			psta->sta_xmitpriv.txseq_tid[pattrib->priority] &= 0xFFF;
-+			pattrib->seqnum = psta->sta_xmitpriv.txseq_tid[pattrib->priority];
-+
-+			SetSeqNum(hdr, pattrib->seqnum);
-+
-+			/* check if enable ampdu */
-+			if (pattrib->ht_en && psta->htpriv.ampdu_enable)
-+				if (psta->htpriv.agg_enable_bitmap & BIT(pattrib->priority))
-+					pattrib->ampdu_en = true;
-+
-+			/* re-check if enable ampdu by BA_starting_seqctrl */
-+			if (pattrib->ampdu_en == true) {
-+				u16 tx_seq;
-+
-+				tx_seq = psta->BA_starting_seqctrl[pattrib->priority & 0x0f];
-+
-+				/* check BA_starting_seqctrl */
-+				if (SN_LESS(pattrib->seqnum, tx_seq)) {
-+					pattrib->ampdu_en = false;/* AGG BK */
-+				} else if (SN_EQUAL(pattrib->seqnum, tx_seq)) {
-+					psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (tx_seq+1)&0xfff;
-+
-+					pattrib->ampdu_en = true;/* AGG EN */
-+				} else {
-+					psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (pattrib->seqnum+1)&0xfff;
-+					pattrib->ampdu_en = true;/* AGG EN */
- 				}
- 			}
- 		}
+ 	return 0;
+ }
+@@ -572,9 +575,12 @@ static int sifive_serial_startup(struct uart_port *port)
+ static void sifive_serial_shutdown(struct uart_port *port)
+ {
+ 	struct sifive_serial_port *ssp = port_to_sifive_serial_port(port);
++	unsigned long flags;
+ 
++	uart_port_lock_irqsave(&ssp->port, &flags);
+ 	__ssp_disable_rxwm(ssp);
+ 	__ssp_disable_txwm(ssp);
++	uart_port_unlock_irqrestore(&ssp->port, flags);
+ }
+ 
+ /**
 -- 
 2.34.1
 
