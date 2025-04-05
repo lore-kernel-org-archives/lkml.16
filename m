@@ -1,111 +1,72 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fgw23-7.mail.saunalahti.fi (fgw23-7.mail.saunalahti.fi [62.142.5.84])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5146527456;
-	Sat,  5 Apr 2025 16:58:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A3FE2556E
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 16:59:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743872281; cv=none; b=DsK62bYbGPFUhH7x3AtIcy5oNVyzCr92oPad/SC8Af461ZUrscq9UlePr0H4267uY8h6ApRPtSpegG2X3dGgvDDzq7MANFXWvyn4y3FRJNbp8JVXYMcvpDMOOVKx84dtVQd0FYOtedJkBJrLSmC4KFTFpa3x+E868hKeOBbbBpw=
+	t=1743872377; cv=none; b=KqmCtL9gJP84BHO2wjk2yUSK93dFOSi+r8FzcdptvoBKdMbZ99VgosZQaXrbwAIIywGE9WWgBUAMpUs8IepjGccwAsFPym5sMG3HgCwGidSv0rUWY3EYK3vp1bwsZ3SIP41Q5y87ZKvkyBDIo5I6Al6FJX89C2JoKj2VsLJKXh4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743872281; c=relaxed/simple;
-	bh=aBT+7PFrGC/kKA8DXJUdHAINSOVJOoDuou0OXI3rA3Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=syeQeolvt6q9iKPcMnugBv89CNyZpG7e+HSaeRMGzaH2V5+dLIbAgpkYBhQ/M0je1fJaxh1yxR8la6jpKvIBOzGWsHSu0GHvJ8L7yTYKFxkPgXrQEq2WMdBl5guHhZ0ugNLD1FvL6Jk+X/8YwxCgNUYnBNj8Nkik3BC2EeoZUlw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lsX0eCu/; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lsX0eCu/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1768C4CEE4;
-	Sat,  5 Apr 2025 16:57:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743872280;
-	bh=aBT+7PFrGC/kKA8DXJUdHAINSOVJOoDuou0OXI3rA3Q=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=lsX0eCu/IgotzswIka5vBTlSqSYJuOWJ3KUWO251NUmuziMECG0c/1UVCTkjfouqX
-	 3HigR7luvMeHzVj7sAUxCNfS4MPzEA4D7dmao2bFGDYeDv2byN0m4rlsJkVkWafS9T
-	 HtpyGWMasL8n5u1wlgXnWXAfNA5wFrS1Zn+G6J8UNS8ie++RVc41a882zmG6DFSuDO
-	 OVhtjlVueZmZhyQMmfcIps5cv8Yza89GrqG5YCYxPT4gcPAsmgXpTStocNb1A86rbw
-	 I/axQYbtstYQrE4nr/e10H736zw+WJY0vZhSt0ybgaPK//6AyB02Lw9rB4jTmVtKM8
-	 dd9mU7zKg3Efw==
-Date: Sat, 5 Apr 2025 17:57:55 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: David Heidelberg via B4 Relay <devnull+david.ixit.cz@kernel.org>
-Cc: david@ixit.cz, Lars-Peter Clausen <lars@metafoo.de>, Svyatoslav Ryhel
- <clamor95@gmail.com>, Robert Eckelmann <longnoserob@gmail.com>,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 2/5] iio: light: al3000a: Fix an error handling path
- in al3000a_probe()
-Message-ID: <20250405175755.4f5d57e3@jic23-huawei>
-In-Reply-To: <20250402-al3010-iio-regmap-v4-2-d189bea87261@ixit.cz>
-References: <20250402-al3010-iio-regmap-v4-0-d189bea87261@ixit.cz>
-	<20250402-al3010-iio-regmap-v4-2-d189bea87261@ixit.cz>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1743872377; c=relaxed/simple;
+	bh=7zqQATNtcMuf8kuuQ1J4Uj5NGNLcqvtOgnurkLSLZMM=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dGLCSj3euMOd4xOPT47sCewXsGawEZSPbYikUhCrLnlhmrgrOn43FEnDDTdqoAWzVH4Btfqi+bbU7rELGncvwSLpu3zw4xJhpJo4NfMUYgiRCF2eW6iDp+pGoy2N1OnrSZePq1DiXxzG33MrR3eFflUn0XY+Cwom8F5ksOw82K0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
+Received: from localhost (88-113-26-232.elisa-laajakaista.fi [88.113.26.232])
+	by fgw22.mail.saunalahti.fi (Halon) with ESMTP
+	id 2fca9e7a-123f-11f0-9b84-005056bdf889;
+	Sat, 05 Apr 2025 19:58:24 +0300 (EEST)
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Sat, 5 Apr 2025 19:58:24 +0300
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Nathan Chancellor <nathan@kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Petr Mladek <pmladek@suse.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH 0/2] vsprintf: Use __diag macros to disable
+ '-Wsuggest-attribute=format'
+Message-ID: <Z_FhMJRlBXOKeetD@surfacebook.localdomain>
+References: <20250404-vsprintf-convert-pragmas-to-__diag-v1-0-5d6c5c55b2bd@kernel.org>
+ <Z_FflEgssFzw0tzC@surfacebook.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z_FflEgssFzw0tzC@surfacebook.localdomain>
 
-On Wed, 02 Apr 2025 21:33:25 +0200
-David Heidelberg via B4 Relay <devnull+david.ixit.cz@kernel.org> wrote:
+Sat, Apr 05, 2025 at 07:51:32PM +0300, Andy Shevchenko kirjoitti:
+> Fri, Apr 04, 2025 at 03:10:01PM -0700, Nathan Chancellor kirjoitti:
+> > Hi all,
+> > 
+> > This is a follow up to the complaint that Linus made at [1] about how
+> > the #pragma and #ifdef to disable -Wsuggest-attribute=format is
+> > currently ugly. Convert the #pragma and #ifdef to the existing __diag()
+> > infrastructure in the kernel to hide some of the ugliness.
+> > 
+> > I am sending it to both the vsprintf maintainers/reviewers and Linus, in
+> > case he wants to apply it himself (since it is pretty simple).
+> 
+> Hmm... You haven't put my tag, nor added me to Cc list...
 
-> From: David Heidelberg <david@ixit.cz>
-> 
-> If regmap_write() fails in al3000a_init(), al3000a_set_pwr_off is
-> not called.
-> 
-> In order to avoid such a situation, move the devm_add_action_or_reset()
-> which calls al3000a_set_pwr_off right after a successful
-> al3000a_set_pwr_on.
-> 
-> Signed-off-by: David Heidelberg <david@ixit.cz>
-> ---
->  drivers/iio/light/al3000a.c | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/iio/light/al3000a.c b/drivers/iio/light/al3000a.c
-> index e2fbb1270040f43d9f0a97838861818a8eaef813..6d5115b2a06c5acce18d831b9c41d3d5121fba12 100644
-> --- a/drivers/iio/light/al3000a.c
-> +++ b/drivers/iio/light/al3000a.c
-> @@ -85,12 +85,17 @@ static void al3000a_set_pwr_off(void *_data)
->  
->  static int al3000a_init(struct al3000a_data *data)
->  {
-> +	struct device *dev = regmap_get_device(data->regmap);
->  	int ret;
->  
->  	ret = al3000a_set_pwr_on(data);
->  	if (ret)
->  		return ret;
->  
-> +	ret = devm_add_action_or_reset(dev, al3000a_set_pwr_off, data);
-> +	if (ret)
-> +		return dev_err_probe(dev, ret, "failed to add action\n");
-Whilst this is the same thing Christophe pointed out in patch 1, as it is simple code
-movement I think it is fine to leave it here 'for now'. 
+Ah, now I see it, it was send to the @linux.intel.com address. What is strange
+is that lore web UI doesn't show it for me:
 
-It probably makes sense to scrub IIO in general for cases of this if we decide
-the general rule is no error messages for devm_add_action* failures (given they
-are only possible if memory allocation fails).
+https://lore.kernel.org/all/?q=%22Andy+Shevchenko%22+-f%3A%22Andy+Shevchenko%22
 
-Jonathan
+> > [1]: https://lore.kernel.org/CAHk-=wgfX9nBGE0Ap9GjhOy7Mn=RSy=rx0MvqfYFFDx31KJXqQ@mail.gmail.com/
 
-> +
->  	ret = regmap_write(data->regmap, AL3000A_REG_SYSTEM, AL3000A_CONFIG_RESET);
->  	if (ret)
->  		return ret;
-> @@ -157,10 +162,6 @@ static int al3000a_probe(struct i2c_client *client)
->  	if (ret)
->  		return dev_err_probe(dev, ret, "failed to init ALS\n");
->  
-> -	ret = devm_add_action_or_reset(dev, al3000a_set_pwr_off, data);
-> -	if (ret)
-> -		return dev_err_probe(dev, ret, "failed to add action\n");
-> -
->  	return devm_iio_device_register(dev, indio_dev);
->  }
->  
-> 
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
