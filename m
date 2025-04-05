@@ -1,118 +1,81 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BBA91B0437;
-	Sat,  5 Apr 2025 07:06:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A3B91C68F
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 07:12:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743836773; cv=none; b=ZRi55OYGi2fwePLGIRm6Zc9VTdGb6dyVfMTZiLq5rKO1IgsEZCeez2tLsEPKKnpg2/JiBhZKhIuv7rWeG9vpPVccwFsJVikssrrlLVjlpkJDLfTt5bK9NIySHZlLq/LFejfcCHkhav/NaqSvqWDRavZrFXd7+J8hu0xnQQjzKO4=
+	t=1743837164; cv=none; b=opmxU8zMlDTRZvEETTSFirQrhB/hDfh55jQOMIenScxTQ6OMONEOIFf7Zz1SY0Y9XEsZyYDhzxWK0Sw7djoUS92vMaFRVqbBYkaFFnIphZqPLAajPu/03/EJ+wjofCXjnOeHT5aZceYX5HkVrjca/jrzBg+6vNO8rT0deyKrA8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743836773; c=relaxed/simple;
-	bh=c6pVeoNRFL0+YVb4Jo8fBY1tS3Gnyl5Tlg2+CQkLYkI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e6gwe3efLOXYSyV7Xf53DwqJmh9LAF40K3D+K40llk4THxb3lAIQyTvhCVeBRwY8BNT87LLTVas/xsVA1X/dwSfE3FJN3x6I0GTidMs7lGdZjVVAHOPPy1IlS5KuUeorntKRy2RpRwf28u1WXIbC7vZHG0QYwYIhpEP3nxJSYU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B0Yx41ir; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B0Yx41ir"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743836773; x=1775372773;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=c6pVeoNRFL0+YVb4Jo8fBY1tS3Gnyl5Tlg2+CQkLYkI=;
-  b=B0Yx41irlJaKW60PGwTv4TqET/d15iuU4r8EXecF/1aYhBTJz7Lp9Js2
-   ckzzpASIw2etm4B/3ZElk3MaaKwcHWCUXQ3xk4ssKqDOADS+RUojJQDVO
-   Brl9x/CmwcztlglCk5MbpidtJsbI1CLlM9zqJdWgi0SdPbSJBRtm6Kl8g
-   0WMSoqXNaXjqIsVx5l1MbNQ6v0JEsqAJWqYfaWhFfI9xz2fgORNG5yDmB
-   5yR/AUs1dwDV6CZh3rH39Y3TqHquwsYoY77EK9xQyUm2BIkUn0Uu0b66I
-   SvD1RfgOHF2MeIochEg4Tubgbpdqu99ErQcdOjGKV6LNTrH/saJJpxBxH
-   A==;
-X-CSE-ConnectionGUID: ewl8LuCjSAWjmzeitVrKYw==
-X-CSE-MsgGUID: OFjWnz1LSWSIY/adNNk0JQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11394"; a="49072310"
-X-IronPort-AV: E=Sophos;i="6.15,190,1739865600"; 
-   d="scan'208";a="49072310"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2025 00:06:09 -0700
-X-CSE-ConnectionGUID: gAUA3IfzRCe9ESoQV2bv5Q==
-X-CSE-MsgGUID: +NpNIIZ+TPOZvAzfnJgRgQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,190,1739865600"; 
-   d="scan'208";a="132472871"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by orviesa004.jf.intel.com with ESMTP; 05 Apr 2025 00:06:02 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u0xbC-0001sB-2q;
-	Sat, 05 Apr 2025 07:05:50 +0000
-Date: Sat, 5 Apr 2025 15:04:55 +0800
-From: kernel test robot <lkp@intel.com>
-To: Ahmed Salem <x0rw3ll@gmail.com>, robert.moore@intel.com,
-	rafael.j.wysocki@intel.com, lenb@kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	skhan@linuxfoundation.org,
-	linux-kernel-mentees@lists.linuxfoundation.org,
-	linux-acpi@vger.kernel.org, acpica-devel@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] ACPI: sysfs: apply ACPI_NONSTRING annotation
-Message-ID: <202504051453.3rcptolF-lkp@intel.com>
-References: <dcc3a018fb28899b277df2e154740d59d4e404af.1743754416.git.x0rw3ll@gmail.com>
+	s=arc-20240116; t=1743837164; c=relaxed/simple;
+	bh=+CLtaAqxyY1kCkSI/TbT0Hpexgft+vPPXfaxQR1q6Wc=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:Cc:
+	 Content-Type; b=dd/DhCOVAczao2DVK+NXWT58smN9G5hsAJOuhkRoPF0eIiM3ZE4kkAiVbSjKhrqs60Nkhw7Xq2P3DN8zd8CvZ7NNzDZjiHAkDqlZtVds+nW5t95P9RA1WOPFTVaiu1KB5X7L2ckc6hFwseB7gsUXKKOi/VJkIQ5+bKK/dEqiJMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-85b41b906b3so331743839f.0
+        for <linux-kernel@vger.kernel.org>; Sat, 05 Apr 2025 00:12:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743837162; x=1744441962;
+        h=cc:to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6SLEoDZmTy/XerrBCsldm2bLs8g5zzhOp22FWJJvKtg=;
+        b=reVkEicvd/DSOO83WSDHJRVBpmU0ij6gJiqPTPCbMBb0Rzwwvz71ue3F/XEbauX3CQ
+         3C33yM6CKWNimliGXwTxT1OwVEz4+r2jFCrtAw0b3Ps6vbckOS6vqyC73Xy+BefH5P0/
+         E/hjhxXAqLGfSKAeD6mhtp/xvZaAE0ZS1vwOsXiV2R+PUdVjNVIkJkoUct/9b+ObPxVu
+         VXkCPgkk4twAVKWq1iYjSC4Fe6R2mrfBJO1B0ddzcANCOsKdgGjjXwVqeJuhe4nc7t96
+         3aK+rS9kzuQxNGjsDBwZYCVT/psNmVY8hgQb9RPw5Jo/6IBoQUJ0Fxvn1bSTYqqoYSb5
+         NRfw==
+X-Forwarded-Encrypted: i=1; AJvYcCWznnf/vftWVgFEhZ1pLqSAEuI2KwUcMgiIck67kltKQjwebOgpm2AzUE58pnLfItomoF6FuMEgPjETIwA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyzuYVn2nbbO4V1jTx4IOxX0s8MR+0cE1lgm+me99KbjXx8hn9/
+	wf8uNzqsQdw/wQDpJL6W+Im5mMw7Ag/3OKyYlw5WcZWgNCCHMkak8+Umw07ZnW8W1JiF8gKd6eC
+	o6Wp4d5HR9Wjb8VntR6nN/VPc7ie/ugc8n+yKPmLrkyth2Yg6v2Ns4oo=
+X-Google-Smtp-Source: AGHT+IFEg8/USpU309g8eg2t943s8651rBDNT1Wm17z63JLZDAtKE1TqBqOiPjzmYG4ywF2yLevYwqkE30xcnMDywaiAbk8sp4Ms
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <dcc3a018fb28899b277df2e154740d59d4e404af.1743754416.git.x0rw3ll@gmail.com>
+X-Received: by 2002:a05:6e02:12cc:b0:3d4:3fbf:967d with SMTP id
+ e9e14a558f8ab-3d6e3f01680mr64748535ab.7.1743837162230; Sat, 05 Apr 2025
+ 00:12:42 -0700 (PDT)
+Date: Sat, 05 Apr 2025 00:12:42 -0700
+In-Reply-To: <20250405071234.16795-1-richard120310@gmail.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67f0d7ea.050a0220.0a13.022e.GAE@google.com>
+Subject: Re: [PATCH] timerqueue: Fix uninit value
+From: syzbot <syzbot+d5e61dcfda08821a226d@syzkaller.appspotmail.com>
+To: richard120310@gmail.com
+Cc: richard120310@gmail.com, syzkaller-bugs@googlegroups.com, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Ahmed,
+> #syz test: git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 1e1ba8d23dae
 
-kernel test robot noticed the following build errors:
+This crash does not have a reproducer. I cannot test it.
 
-[auto build test ERROR on b3c623b9a94f7f798715c87e7a75ceeecf15292f]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Ahmed-Salem/ACPI-PRM-apply-ACPI_NONSTRING-annotation/20250404-162651
-base:   b3c623b9a94f7f798715c87e7a75ceeecf15292f
-patch link:    https://lore.kernel.org/r/dcc3a018fb28899b277df2e154740d59d4e404af.1743754416.git.x0rw3ll%40gmail.com
-patch subject: [PATCH 2/2] ACPI: sysfs: apply ACPI_NONSTRING annotation
-config: i386-buildonly-randconfig-004-20250405 (https://download.01.org/0day-ci/archive/20250405/202504051453.3rcptolF-lkp@intel.com/config)
-compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250405/202504051453.3rcptolF-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504051453.3rcptolF-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> drivers/acpi/sysfs.c:310:30: error: expected ';' at end of declaration list
-     310 |         char name[ACPI_NAMESEG_SIZE] ACPI_NONSTRING;
-         |                                     ^
-         |                                     ;
-   drivers/acpi/sysfs.c:312:49: error: expected ';' at end of declaration list
-     312 |         char filename[ACPI_NAMESEG_SIZE+ACPI_INST_SIZE] ACPI_NONSTRING;
-         |                                                        ^
-         |                                                        ;
-   2 errors generated.
-
-
-vim +310 drivers/acpi/sysfs.c
-
-   307	
-   308	struct acpi_table_attr {
-   309		struct bin_attribute attr;
- > 310		char name[ACPI_NAMESEG_SIZE] ACPI_NONSTRING;
-   311		int instance;
-   312		char filename[ACPI_NAMESEG_SIZE+ACPI_INST_SIZE] ACPI_NONSTRING;
-   313		struct list_head node;
-   314	};
-   315	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+>
+> Signed-off-by: I Hsin Cheng <richard120310@gmail.com>
+> ---
+>  include/linux/timerqueue.h | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/include/linux/timerqueue.h b/include/linux/timerqueue.h
+> index d306d9dd2207..a42fdc83f694 100644
+> --- a/include/linux/timerqueue.h
+> +++ b/include/linux/timerqueue.h
+> @@ -30,6 +30,8 @@ struct timerqueue_node *timerqueue_getnext(struct timerqueue_head *head)
+>  static inline void timerqueue_init(struct timerqueue_node *node)
+>  {
+>  	RB_CLEAR_NODE(&node->node);
+> +	node->node.rb_right = NULL;
+> +	node->node.rb_left = NULL;
+>  }
+>  
+>  static inline bool timerqueue_node_queued(struct timerqueue_node *node)
+> -- 
+> 2.43.0
+>
