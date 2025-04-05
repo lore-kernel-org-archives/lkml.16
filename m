@@ -1,63 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from s1.g1.infrastructure.qtmlabs.xyz (s1.g1.infrastructure.qtmlabs.xyz [107.172.1.117])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2F23C8E0;
-	Sat,  5 Apr 2025 03:08:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC027101EE;
+	Sat,  5 Apr 2025 03:09:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=107.172.1.117
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743822519; cv=none; b=dm4K7xKB5jJsFUgEG/GFvDs22efF3szpied4pd2Tk/y0dEQPcwcx6TrEOMuIc5SHOVRzak+auEyT+WG+yXhwVZJ6FZ12qcqAfLlL3ZNdiK4LXuIszO2hyKcZLN7Z+RTBSCu/DOcpOtONF90d/ZAiB4MEL90U14ZJ6w4GEpiHhcg=
+	t=1743822582; cv=none; b=X49zDEioXbVWYowQ8HMvRfsJqg2F7drh/a6AonAiRrMg32ZP7OrQCHr+w6A+QuiWyvIlIJPh5smsP/o/Md18xcLlZF+/+zBiadeDOGxWSEf/PP3C3LCYmbI0I204G//98jGFwfBMv4TiX2+sGi3xVX+OuQmxQ8pvSYLJTXcSDv8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743822519; c=relaxed/simple;
-	bh=e/scFmECGgqKcSZic7AuDsqesiVKC2vjEDZ1wqrQl9k=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=hhZbffvJPGWI0sW+wlBZ2UA0G6932BMx1lnRJWvnBxTUIzs6h6YqwfyWa+BvrgZKNOF2/2PCknv2nZSqNIvKVUkG+1XkmVcngLuaK8t/EQN2aSiiNop8rrRCdGJwR7u9Lp+VPkclF87MyS4IFibFORwVFGGWkw/cuWdzrlb5PgM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U5C2Fa1Q; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743822582; c=relaxed/simple;
+	bh=hujQm0HClXP7xjO2znk9QgTnRzmTHqA4LUOAnZTczgw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=KrOZeexpJiY/nVLbacCNmIhShcj6/q+g85aeIgU0fbIQfqEPf3d4Fq6hX0CoH+JBXg+Rz4AP6TCyZBftbB5KF8jt6E+1CFlV0httAX2s52q53gvXBMQkcdxZJqI7CUPZwGFzQfya0mj8JPDzz9hxj21qXc6I9feLNcO5B+vfbCU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qtmlabs.xyz; spf=pass smtp.mailfrom=qtmlabs.xyz; dkim=pass (2048-bit key) header.d=qtmlabs.xyz header.i=@qtmlabs.xyz header.b=iAFiv0oy; arc=none smtp.client-ip=107.172.1.117
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qtmlabs.xyz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qtmlabs.xyz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U5C2Fa1Q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D21EDC4CEDD;
-	Sat,  5 Apr 2025 03:08:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743822518;
-	bh=e/scFmECGgqKcSZic7AuDsqesiVKC2vjEDZ1wqrQl9k=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=U5C2Fa1QiS5EkmDM6TGu67fOdlw+ozBB5EsxzSHJPIE58WUs7biBK2u2fBeFlzNVx
-	 zSDD+8gnNhUeleOkrkW/JLXDP76d5NTC/bk+l79YtOQ+8Y7maGOAP2h+i4tJXa39m1
-	 vMXXlL2C5yrXrh/aqxH6+mIVMHHBJGrmBBizHD9DYf7IdC0sYMNXEC1PUUkwh2nMVL
-	 SO2m9kkHFpB5opfvV33HNoTiVeJ3KVo2MeU4s8QfIO5unI2ywmhMOnDr7IBnCjqYXj
-	 5hkB/vpncOvg+aak72W0BsoS/LpPWR4m1AO0+36i3JPPhMIABvtvMinKmQvU/uP33U
-	 q9AL6v9qx/sQg==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33BA03822D19;
-	Sat,  5 Apr 2025 03:09:17 +0000 (UTC)
-Subject: Re: [GIT PULL] more s390 updates for 6.15 merge window
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <your-ad-here.call-01743810876-ext-9359@work.hours>
-References: <your-ad-here.call-01743810876-ext-9359@work.hours>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <your-ad-here.call-01743810876-ext-9359@work.hours>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-6.15-2
-X-PR-Tracked-Commit-Id: d33d729afcc8ad2148d99f9bc499b33fd0c0d73b
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: dd9db3bff8ec419ab0e5f18092f89a8fddc37f15
-Message-Id: <174382255578.3509887.16988107816757366805.pr-tracker-bot@kernel.org>
-Date: Sat, 05 Apr 2025 03:09:15 +0000
-To: Vasily Gorbik <gor@linux.ibm.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Heiko Carstens <hca@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
+	dkim=pass (2048-bit key) header.d=qtmlabs.xyz header.i=@qtmlabs.xyz header.b="iAFiv0oy"
+From: msizanoen <msizanoen@qtmlabs.xyz>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qtmlabs.xyz; s=dkim;
+	t=1743822571;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=rTf9akzD0dNQb/RAitsDp1AU3nLBLkrnu2RP1/sYscY=;
+	b=iAFiv0oyfxQUliXn0AizR88bACAQCDhmG0mq5j4RGh4Tt+E2JogHQNidoQ74gMce+nJ+g1
+	As/M8IyoByEO4TwTws9COQO9oKQ6uf0PNRI/ECmuK6jEJfoS6G9zNjALImaSsvLLclbRsx
+	/GUHxxQB0OhC2A23zGURT0gTwYg2F6mQvik/++4khVDYW4UhAq3rOGefHANyxtdT8FqYJ5
+	c9/LHU0h7wbuth7EfQc6Oe37ixp9MqkJQ2NSSe82yjZeGbvJblemqzMKZDequUy4kxVmPz
+	eCx39SoxYHTh/j3+EfjN0gbGi3XoU6Lqq5+SmopUbGKWb2H7TjYlAzRwYtefcQ==
+Authentication-Results: s1.g1.infrastructure.qtmlabs.xyz;
+	auth=pass smtp.mailfrom=msizanoen@qtmlabs.xyz
+Date: Sat, 05 Apr 2025 10:09:24 +0700
+Subject: [PATCH] x86/e820: Fix handling of subpage regions when calculating
+ nosave ranges
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250405-fix-e820-nosave-v1-1-162633199548@qtmlabs.xyz>
+X-B4-Tracking: v=1; b=H4sIAOOe8GcC/x2MywqAIBAAfyX23IL5QOtXooPZVnuxUIhA/Pek4
+ 8DMFMiUmDJMXYFED2e+YoOh7yCcPh6EvDUGKaQRWhjc+UVyUmC8sn8Ig1bWjsYpvxK06k7UlP8
+ 4L7V+3SveKGEAAAA=
+X-Change-ID: 20250405-fix-e820-nosave-c43779583abe
+To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org, 
+ Roberto Ricci <io@r-ricci.it>, msizanoen <msizanoen@qtmlabs.xyz>, 
+ stable@vger.kernel.org
+X-Spamd-Bar: /
 
-The pull request you sent on Sat, 5 Apr 2025 01:54:36 +0200:
+Handle better cases where there might be non-page-aligned RAM e820
+regions so we don't end up marking kernel memory as nosave.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-6.15-2
+This also simplifies the calculation of nosave ranges by treating
+non-RAM regions as holes.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/dd9db3bff8ec419ab0e5f18092f89a8fddc37f15
+Fixes: e5540f875404 ("x86/boot/e820: Consolidate 'struct e820_entry *entry' local variable names")
+Tested-by: Roberto Ricci <io@r-ricci.it>
+Reported-by: Roberto Ricci <io@r-ricci.it>
+Closes: https://lore.kernel.org/all/Z4WFjBVHpndct7br@desktop0a/
+Signed-off-by: msizanoen <msizanoen@qtmlabs.xyz>
+Cc: stable@vger.kernel.org
+---
+The issue of the kernel failing to resume from hibernation after
+kexec_load() is used is likely due to kexec-tools passing in a different
+e820 memory map from the one provided by system firmware, causing the
+e820 consistency check to fail. That issue is not addressed in this
+patch and will need to be fixed in kexec-tools instead.
+---
+ arch/x86/kernel/e820.c | 17 ++++++++---------
+ 1 file changed, 8 insertions(+), 9 deletions(-)
 
-Thank you!
+diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
+index 57120f0749cc3c23844eeb36820705687e08bbf7..656ed7abd28de180b842a8d7993e9708f9f17026 100644
+--- a/arch/x86/kernel/e820.c
++++ b/arch/x86/kernel/e820.c
+@@ -753,22 +753,21 @@ void __init e820__memory_setup_extended(u64 phys_addr, u32 data_len)
+ void __init e820__register_nosave_regions(unsigned long limit_pfn)
+ {
+ 	int i;
+-	unsigned long pfn = 0;
++	u64 last_addr = 0;
+ 
+ 	for (i = 0; i < e820_table->nr_entries; i++) {
+ 		struct e820_entry *entry = &e820_table->entries[i];
+ 
+-		if (pfn < PFN_UP(entry->addr))
+-			register_nosave_region(pfn, PFN_UP(entry->addr));
+-
+-		pfn = PFN_DOWN(entry->addr + entry->size);
+-
+ 		if (entry->type != E820_TYPE_RAM)
+-			register_nosave_region(PFN_UP(entry->addr), pfn);
++			continue;
+ 
+-		if (pfn >= limit_pfn)
+-			break;
++		if (last_addr < entry->addr)
++			register_nosave_region(PFN_UP(last_addr), PFN_DOWN(entry->addr));
++
++		last_addr = entry->addr + entry->size;
+ 	}
++
++	register_nosave_region(PFN_UP(last_addr), limit_pfn);
+ }
+ 
+ #ifdef CONFIG_ACPI
 
+---
+base-commit: e48e99b6edf41c69c5528aa7ffb2daf3c59ee105
+change-id: 20250405-fix-e820-nosave-c43779583abe
+
+Best regards,
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+msizanoen <msizanoen@qtmlabs.xyz>
+
