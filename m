@@ -1,61 +1,63 @@
-Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
+Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71D1218EB0;
-	Sat,  5 Apr 2025 06:03:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64A1D18EB0;
+	Sat,  5 Apr 2025 06:03:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743833010; cv=none; b=mjH4K+sPHE+pK+G3DDIMpL1n9NFHDSWMdCL1DaBXqP1TY1xPy6UUINaEAKbn5t73eMxeSf8m28aFT8CLoRI5ZzbOfA7ba4U5gKc9xgopXPllv6OZYdqB65iwHu+WzzIuo8+k0NdGqtM3EUfebM44Oikk8ZidRWeXdj/ew+kZSic=
+	t=1743833016; cv=none; b=FTjCUVhufsaBuWol2+NEBGSu8VC78WrSbCTDEXAVzS6FTPp0vbhSWZKYJ8Fd7jjnoQn+HZEQQQbpfdkOASqnxG3+OKNq4inzXlALZ08gjdb4TcswyKtCmqJJbgeS9P4P8Uu93m5AHdo9/oSsy8MaO5xmpINQOQaaoun+giM6iJI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743833010; c=relaxed/simple;
-	bh=YmJwQEXqahgapK0oajiNluXqZwbnM6g7h6Zu/n1mYeA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VpRK30wdP72VvZKjRIJtgjXXhPotoJAJoun3a8D4nZlRYOvuAaJnM+VbU7T23m37BgIs1dBUH3L1Xud9TnyVNS0JoknAgkmlyhfUc1xJnSTTwhlMnACZ1Hr6ttPnxuR+ZTncPo5U5IhfaC4gmyrOSMKqMqbs6SKQpLcSQe2g3ho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H6eDFa6J; arc=none smtp.client-ip=209.85.167.180
+	s=arc-20240116; t=1743833016; c=relaxed/simple;
+	bh=bo/KXiEjIA/Jw0Q24hjagPlbmm7eInVvvsfeNlJRgNk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=JBrs8oOdqhlCtawjAUXzGD8FnskM2p5veZ/5GhC1CpBK1Nm9UDGU+lroUihLOSnbp2/XrG6jrlAQSIVyu+37hZ8rkwYS2GVAxQjAv1Wuv9KvDP1Slps9gWgdDz6u3yriZufLFYUeTS38o1Uh06v7wFoYkE2cH5IOmSuJuEYFL6M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RheKCZhm; arc=none smtp.client-ip=209.85.167.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H6eDFa6J"
-Received: by mail-oi1-f180.google.com with SMTP id 5614622812f47-4003b22c2f4so1712920b6e.0;
-        Fri, 04 Apr 2025 23:03:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RheKCZhm"
+Received: by mail-oi1-f171.google.com with SMTP id 5614622812f47-3fea0363284so1566363b6e.1;
+        Fri, 04 Apr 2025 23:03:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743833008; x=1744437808; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Vmo855L+OJY9wWVTPniaeELLqvSXz8qMxqdDHxIVTqU=;
-        b=H6eDFa6JDHMtpaGvUX6lGmIHqKWV4kmvemGmVC5eL7xk1FIeWg5Ec4jLvrL6v5HiKh
-         676ka+QU3vAc7U1Pyyycg83MrpnKM6OdyEUQ0Mo1oP21gpViy4iYzepqEe6qGMCHKCRn
-         ODHunWiknn+hKnCfrGXrRGY11dODvFNloSEF+gKfEoUbdYrt2yWLR+XJ5nDZUHTAgvln
-         h5hF42kkZYOTlpHGG7B5d6AW8pb4nJyQKqhob2pTavtAKJSZyuiSn3TbJH0X8UgaLsJf
-         /pF17ZCxfz8gs5hADl4ArrpDuDpPssq+YQI6YUg6o8vWHT/q8E25fyA1bZZFYtgJd7rU
-         VbYA==
+        d=gmail.com; s=20230601; t=1743833014; x=1744437814; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nRO81KAlWVAUMNmlMPrVLR3d+OGjp9Qz/jso9myHPaY=;
+        b=RheKCZhmL1gvb2Q6dHUF/4eiNd4Wtw2ES0UKCkQXnfP5pK7zpwuFgB5ckAFhEbA5yp
+         luYVLClnD5ER8AWZ/pe4805VoSMAEY2KEEZXHyGdDHmlH9ezsnKMDLKKxw1WOIZt8PbP
+         jM5Z+kiS10ISBR7eRWTBIWD/GF/GZC4y/Jd3/2Bt88gqyi2RMGVk8wKpATsRTaelGg9T
+         eYYlynN7lp+p2xJybo8sklI8u59tG1kHTMLPJlOavNqOlNTux0+5Qat5nJykWKKumkzO
+         Roz8vnGQ/8bflP5FYrE+13sz5vg1csMZhR2tmz+8/S/otmYVi/myiJEeAOSDsgi1deaE
+         X3NQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743833008; x=1744437808;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Vmo855L+OJY9wWVTPniaeELLqvSXz8qMxqdDHxIVTqU=;
-        b=LJKjPdV9XujKdzk2NdsF2epFUmdjg61DH9VJLhnhdMfraIU0RLGWRxW4GFzTkjh0Y/
-         0yiMH51JsbtJiud+U4V6f82k4RpJfwOF8LHnjBiA0lRYpR6vP3qKCxkkLG9KRPra2Fs4
-         nmXiyMIRflc7MwDWA7q+wB2uowio5i69RMD15rCuuwbf4Vnh0dn0ha6E3mJcu40kS6xR
-         mpb99An65G2yyg/l1DRkzQo3Rkcbvis7KNf0jgC3jOcfVk4HNNJXBCpCTzua5ThVFQhT
-         UFjqtFMQzwWktBFG1gElXnHxPDn4xKeRHK25tF+6Y6wELLYW2irc9WGLGWdN3ULn+ej3
-         h9/A==
-X-Forwarded-Encrypted: i=1; AJvYcCV7qkymkVJRn3RvL2JOUb31FQ1+bkuh4G936fJWAKXFut9+xwETQJrmqIVDveW5auoIg0cxk5iJuWFyVPTIITw=@vger.kernel.org, AJvYcCXL1mt5u6m24Ke/Em/qMfsP12B3fKpgAyq/woXnFxP1MohnGp0PmKVI/RicPA4xZDM6Bx0zoK4MH/5bV7c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxIi869NoLT29aGntioWWcmfhrMxqEI0WPClfJX7Zg0zIqd/P55
-	BBpjfuoahCtWT+l4alOw3tABws64lKs5B2ukMaQ0m0LS286oxSQ1
-X-Gm-Gg: ASbGncvbcG/cEK0JEua/Q4dvp76ExnMFJ9eOVgLIWyvnahnOPrd0BwMhaFG8Wz336s9
-	f/YCW8JYgPAvcBFHVwrDF21XWXwW+rU0udoasOxzp8sIZIoagSqxbL+02KVXScjdD1nUtOyB/EF
-	vVgcrQdfXRPiLdxeNtp1NtcgBbV1wy2HvNi+SVfphoXiuiPlmGyJbK0oKHBcm3TyTCuf2wHNLVC
-	aP+b+QY6Y1idUUWJbT5Q7Un/hFrpOfptZ/GkOX9Y9pP0ZrdJN98QHXCvYAHQOTOPqq8bZQiZLin
-	v54GcFbp4fVCIYMLCDci5Z3e7fTJCwWTiwIGhjhtpxgOULtmasxYYSGEkQYIXyI0wbbWuii70C9
-	vZOCJTHckvIZgNcmx
-X-Google-Smtp-Source: AGHT+IELtUR04lQJCB4Zo+IW0AifuT9GmUm5yuYn3qvlJ/xjFCgZEenYq5QySgDL4xLzlnxXgPoQfg==
-X-Received: by 2002:a05:6808:1811:b0:3f8:587:dacb with SMTP id 5614622812f47-4004658c82amr3137388b6e.9.1743833008281;
-        Fri, 04 Apr 2025 23:03:28 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743833014; x=1744437814;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nRO81KAlWVAUMNmlMPrVLR3d+OGjp9Qz/jso9myHPaY=;
+        b=OKzOJEQ2T+eHR10bxTsQbcjAzhW/dsJN2fDwSY4riclIoJeLttkhAM/NJScoxMREu/
+         pZAmHXK3SmUbOmaW1j5H7dW3XuqAvgoF1KmJAsYPMwIfQLaN6gpC57plMKIBGzxE0mFS
+         0FJcdMcNmBBhqytFT8Tu6qelB1bIX6lGONQIBTGiSMUtowLFPS6V6Ag/s55VYXlGGOLb
+         t/Dg8m6A57MsoZPv7B4llotpSzIJWj/tOPBL1qDpuDM0KTUBvY2cDgu4C2DFPgSRJc76
+         ERmBsepoQbFUijaV1bDbMxklzuebPcLHjXctvviPr753BpjR4EquVn7lCavn0okoBv19
+         LI7g==
+X-Forwarded-Encrypted: i=1; AJvYcCU/oZ/uOl/U92E5sSzRkt565IDRbgE9QXivKCMhRXEJyWjbrOsgvDBe+3FdQuN6mUC+w1yYW8F7g1e/BLgy2xw=@vger.kernel.org, AJvYcCVWcjctrpQlsdkVOVMBSkMIUUey5WA5XoZT/uwivwN8p4wjz7lFVm/ksLgI4UFZC89lp/WvrgNn1OIZT5U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzqjPl0UDBmtM2hv0S3ms+FtNrwqGRt7kKez8cl4UZh0UU4FQNm
+	Z3A6QwoywxLGXfryvPzIG0nyzOxVVT8y1QQa4Rn91wykOJFT+F3S
+X-Gm-Gg: ASbGncvduRthnQ/EwSVjCpJGZ2fdHEQeU2skChUryquA3uRLyY9eReKoxyYcLGUU1ec
+	lymUG6V2CHMfzKT6qxOdPikv62H2VMjy0yeB9KYXe1aXcf5E3bcXsRode+jcxqpjPjHk/4HSSD2
+	WTjZexKk1mBGXv5oc/0SgbWRgg5+3gAarKONfNIKSIZ7p/XmRP4Y1a+6lgmqZFaJZ2zGZk2gMn7
+	cI/vUOj61xbkjQL5uMW5w9jocFWWOevFfKc0OOXDPpo8zJxnxcWpPEnXlK2OdILMWhsk1AJnZMK
+	5v3UP3tPiSiF5ImKfnt0hicEhPIr5381CIy+1v3Shh6u34MwIm3MnaZNyCur6nOxMqIsMRby7+c
+	WKlaLwQi/8oN1jdUy
+X-Google-Smtp-Source: AGHT+IGmLCehceYuxYnDZ8h/6oqAfC1whuCNoJZaNCcyzQLynV+wCAvXVR0Q9D/33wJuDcE0mzaGpg==
+X-Received: by 2002:aca:2b16:0:b0:3f8:93c5:6d9a with SMTP id 5614622812f47-40045602addmr2712809b6e.15.1743833014243;
+        Fri, 04 Apr 2025 23:03:34 -0700 (PDT)
 Received: from my-computer.lan (c-73-76-29-249.hsd1.tx.comcast.net. [73.76.29.249])
-        by smtp.googlemail.com with ESMTPSA id 5614622812f47-40040080a15sm926565b6e.34.2025.04.04.23.03.25
+        by smtp.googlemail.com with ESMTPSA id 5614622812f47-40040080a15sm926565b6e.34.2025.04.04.23.03.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Apr 2025 23:03:27 -0700 (PDT)
+        Fri, 04 Apr 2025 23:03:33 -0700 (PDT)
 From: Andrew Ballance <andrewjballance@gmail.com>
 To: Liam.Howlett@oracle.com,
 	ojeda@kernel.org,
@@ -78,10 +80,12 @@ Cc: akpm@linux-foundation.org,
 	maple-tree@lists.infradead.org,
 	linux-mm@kvack.org,
 	rust-for-linux@vger.kernel.org
-Subject: [RFC PATCH 0/2] rust: add support for maple trees
-Date: Sat,  5 Apr 2025 01:01:52 -0500
-Message-ID: <20250405060154.1550858-1-andrewjballance@gmail.com>
+Subject: [RFC PATCH 1/2] maple_tree: add __mtree_insert_range function
+Date: Sat,  5 Apr 2025 01:01:53 -0500
+Message-ID: <20250405060154.1550858-2-andrewjballance@gmail.com>
 X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250405060154.1550858-1-andrewjballance@gmail.com>
+References: <20250405060154.1550858-1-andrewjballance@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -90,28 +94,78 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This RFC adds an initial implementation of maple tree abstractions.
-I would like any feedback possible.
+adds the __mtree_insert_range which is identical to mtree_insert_range
+but does not aquire ma_lock.
+This function is needed for the rust bindings for maple trees because
+the locking is handled on the rust side.
 
-I would like to upstream this eventually but, it's probably going to
-be a bit until there is a user.
+Signed-off-by: Andrew Ballance <andrewjballance@gmail.com>
+---
+ include/linux/maple_tree.h |  2 ++
+ lib/maple_tree.c           | 37 +++++++++++++++++++++++++++++++++++++
+ 2 files changed, 39 insertions(+)
 
-Andrew Ballance (2):
-  maple_tree: add __mtree_insert_range function
-  rust: add maple tree abstractions
-
- include/linux/maple_tree.h |   2 +
- lib/maple_tree.c           |  37 ++++
- rust/helpers/helpers.c     |   1 +
- rust/helpers/maple_tree.c  |  25 +++
- rust/kernel/lib.rs         |   1 +
- rust/kernel/maple_tree.rs  | 340 +++++++++++++++++++++++++++++++++++++
- 6 files changed, 406 insertions(+)
- create mode 100644 rust/helpers/maple_tree.c
- create mode 100644 rust/kernel/maple_tree.rs
-
-
-base-commit: 38fec10eb60d687e30c8c6b5420d86e8149f7557
+diff --git a/include/linux/maple_tree.h b/include/linux/maple_tree.h
+index cbbcd18d4186..b849d57e627e 100644
+--- a/include/linux/maple_tree.h
++++ b/include/linux/maple_tree.h
+@@ -329,6 +329,8 @@ int mtree_insert(struct maple_tree *mt, unsigned long index,
+ 		void *entry, gfp_t gfp);
+ int mtree_insert_range(struct maple_tree *mt, unsigned long first,
+ 		unsigned long last, void *entry, gfp_t gfp);
++int __mtree_insert_range(struct maple_tree *mt, unsigned long first,
++		unsigned long last, void *entry, gfp_t gfp);
+ int mtree_alloc_range(struct maple_tree *mt, unsigned long *startp,
+ 		void *entry, unsigned long size, unsigned long min,
+ 		unsigned long max, gfp_t gfp);
+diff --git a/lib/maple_tree.c b/lib/maple_tree.c
+index f7153ade1be5..e0db5d3b5254 100644
+--- a/lib/maple_tree.c
++++ b/lib/maple_tree.c
+@@ -6387,6 +6387,43 @@ int mtree_insert_range(struct maple_tree *mt, unsigned long first,
+ 	return ret;
+ }
+ EXPORT_SYMBOL(mtree_insert_range);
++/**
++ * __mtree_insert_range() - Insert an entry at a given range if there is no value. without locking
++ * @mt: The maple tree
++ * @first: The start of the range
++ * @last: The end of the range
++ * @entry: The entry to store
++ * @gfp: The GFP_FLAGS to use for allocations.
++ *
++ * Return: 0 on success, -EEXISTS if the range is occupied, -EINVAL on invalid
++ * request, -ENOMEM if memory could not be allocated.
++ * Note that the user needs to manually lock the  tree.
++ */
++int __mtree_insert_range(struct maple_tree *mt, unsigned long first,
++		unsigned long last, void *entry, gfp_t gfp)
++{
++	MA_STATE(ms, mt, first, last);
++	int ret = 0;
++
++	if (WARN_ON_ONCE(xa_is_advanced(entry)))
++		return -EINVAL;
++
++	if (first > last)
++		return -EINVAL;
++
++retry:
++	mas_insert(&ms, entry);
++	if (mas_nomem(&ms, gfp))
++		goto retry;
++
++	if (mas_is_err(&ms))
++		ret = xa_err(ms.node);
++
++	mas_destroy(&ms);
++	return ret;
++
++}
++EXPORT_SYMBOL(__mtree_insert_range);
+ 
+ /**
+  * mtree_insert() - Insert an entry at a given index if there is no value.
 -- 
 2.49.0
 
