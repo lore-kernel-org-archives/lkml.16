@@ -1,103 +1,116 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C80EB1C861A;
-	Sat,  5 Apr 2025 09:24:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3F471C861A
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 09:27:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743845099; cv=none; b=o/Z/iwMBtI6y0+feY22eaEwP8yPqnaG0BmbUux0Tpui8nh8KAr8nUw8ZlgutV6GonbZwCAS3NZEYH2WmnP8llinl4b/icuPCzCT4uCqWzhG7vQGKGCd/VR/0J8womtSLXh3uzkitB5XnSLC+3ywfE2RpIt7og1KKylnijfeLsCI=
+	t=1743845261; cv=none; b=NGNYbQgwNAHBGvIrEUriTOlCtstJCOOjjNNAU6SyZzduDWtUT0uHbBVF2e3SvVFu0g/BOS8lnHoZso5FeGC/Ukvciju/Ws0MheCDhfzWyqf1rTuNb3A0GgFDvJ9ZkiVFo0FIZUF3c7zbLXkP8+ECvHfQzf+20vg7NYOKavGaZ2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743845099; c=relaxed/simple;
-	bh=CYC+j8DE1LKhEPIIAtWsmhv3JgdGMKg+YUwLj9onV54=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G9Mn2XeqzU7iwFz3dATtqVw1GjDCkj+/bHX/ZxvXywWuAz6kgTQLpfWUu+Jsl+fp1sUvVzDJIJ88YNz2buhRB/Qf/MDZkShy5LUvL43P91h07D2vec46wIkJ6sDKUAEmuU3dgDvtJQcVRMAXbRyc9htxof1UN+z6HTp+9NP5H6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=I0fqSA6s; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743845261; c=relaxed/simple;
+	bh=SdTjxolhxMdpEMLdv2bok/HJQZH5YHyXLZcK4xTHZec=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=HCP+dNDa0PIjGEeuZ1c/3o2LoFimBuRCd6kULYPAXtZQpKkGs2qZnlDgQ1aUQHgIhMp6Jz6qvdp53/b/CWpu+KqiyHXqHXm2CZiyIs6gmQtK/MKXIeUdnoLhrcR1rxM5xF9rjNdQW02k5iPsbajZOvHSiD7WHU5NjE8kuvjdrnU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=f8oe5KuG; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I0fqSA6s"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-7399838db7fso2562106b3a.0;
-        Sat, 05 Apr 2025 02:24:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="f8oe5KuG"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5eb5ecf3217so4810850a12.3
+        for <linux-kernel@vger.kernel.org>; Sat, 05 Apr 2025 02:27:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743845097; x=1744449897; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=dEK0W0QpAa1ZezYhp/Ge5p3VJ+97NZtwm+z2v9PIHNw=;
-        b=I0fqSA6sQj/0zzw30vfPDTIc2k4qiKmNNjjulS5lwaBtXAQnnpWUlORXP1SXp3ZDsO
-         wotSjHUGfgn8Y4Jl7RHh4m2nPqxrglhB9uXCdVPf9JUhKs6+9HMge9VoIaWTidYQE0Uv
-         qXwpGHheTNhhG4WJDDoUUo9Z5oSsOpROGxeGgV6SnnnQpex28dOx/gwcNty3ERptjMYC
-         lKkMc323bkjMALVwI1zqHOIkc3/b+PNvMzn/71BaQoAP6IbKn6+bi/zjsDsfP+62Famy
-         vFTWq+V0wSxP2n3Nq4FA4XvKodzhYUB8V8s/hPEXtKbp5yJ65FeHHhMbckh6s8DAI3a8
-         C3OQ==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1743845256; x=1744450056; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=9QgniJ6UdmWL8To9NYgCLVFTHa10nmpPKSIlfTFU2tU=;
+        b=f8oe5KuGorMguiFhBIf0tDLKaA9DQqdvfhkOei5wAJCxhJLa/YkAaLKLuLm2en6XNA
+         t0XGEWdNOC6KrF+/OvP2IMcLuOkN0ujAdkr3ODufuOzcDR5d69se5ZfWtA+gVmk6RIhC
+         La9i3eS3iBVeiB6MNpOJ/B/egCp+heXmyTszzhk6Cpg0nYRP/yWn1E1AWWfgJsW7awnD
+         RHBXpQR6xxLOvoA/wRFNHTF3esQcWBIJTPAsXTBnDaosgs5nRqbKDu61P/eR30Md/s6B
+         u2Bl3pwOfhRpV3qW5881na9PQFIr+ezbvibtR9HwazvwGyAQktqoEZMXA+SRC3z/9dWe
+         jIyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743845097; x=1744449897;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dEK0W0QpAa1ZezYhp/Ge5p3VJ+97NZtwm+z2v9PIHNw=;
-        b=d9KMjNfSeJCXsGLuw8HbINSbQMtmYnfPQvok1wmPUtm/aYZ5VyTcLLvnPnBBwyAQBb
-         zulxaexJhQ1rOdbSSoWKctJnV9SLo9unAAc+rOgoBHLz5x4aNU6MhlEIfSrvWwm9CY+9
-         ssKneTAq56r0LzrbrM6wnCs+ND4ut8DwWHzs/yMjFiikTbKXC+846ufovLWnrX7H7U2E
-         Tqzv193U5jMAqd+dceJ0doONsTEwI6AmhSVUVXjuE5txl21UwZUdsCUugZGjP46yQubB
-         usH6tmfK98pc7kjAYuAep7lEay5+wX1+eiVcy8gtDPnj/Jz8AVv98iAUVgMQbjVUXZaw
-         VwyA==
-X-Forwarded-Encrypted: i=1; AJvYcCUy/h47WIg/i5XCwrI3KDNp7IyYszm0mWTS11zk1h7MxBT3iESpZ3qrIKYcIFC2aKNQRZYmdqQHkiMXgyViRGex@vger.kernel.org, AJvYcCVde5KqDiNwsTL+YAHNU307Ug+C0zEDKeGenXxWW47622aEuP+ElGuMwjxwpkIPiKXZHtBoXvfmQO8ro5o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQlCfLnhEtJ05U0CMKDUiSyDj4kojUCU3AmC1m5XB6c7tTtXvg
-	M3n1mGThn0jU0w9xXnDY5pJfCAqUYmDf8qOWFD7Gtu9G1CrQ49yo
-X-Gm-Gg: ASbGncvadCrwTditiZ99JQvVq7LBSYGIGDxTlbCHSmGFnq3wcQMXEnDj0BpiXTfKrA9
-	drG7VYvfrHNEgCVncpV9PPzgwapE1KTI8NPNvhKl/nB4PBPRNtQ2T+M93ncjOVhXomNBhQ6FtB+
-	OlqFBAqBGhEQzu1ZcWsokvTaulV/GqwC+30c0uj1FYpuJh5jPAJtDovAmdprIOoEwhe4NbMwJoY
-	8jO7APYgNsI1Lfx7558cz3Kga/8sNSrKtVmHXM/W8m1/Q3KXZcsRNzUdpj957eX/EX27AZUuc0w
-	CPqJg2IyhIb3yMO/K+Xe4gyylKAQj7fa3G7cBlnZ85mWhkaUxBPXsU1KsGW13Q==
-X-Google-Smtp-Source: AGHT+IHSH7e84O9pcdFgnOtCs0i95OtpNIn1swFj4yYiGDsyPfoRCp6D/9QBy7kZxrLD01zIqjbo+A==
-X-Received: by 2002:a05:6a00:c92:b0:736:4d05:2e35 with SMTP id d2e1a72fcca58-739e590a313mr8719587b3a.3.1743845096937;
-        Sat, 05 Apr 2025 02:24:56 -0700 (PDT)
-Received: from vaxr-BM6660-BM6360 ([2001:288:7001:2703:fb4b:850a:b504:c8c8])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739d97effb7sm5017104b3a.60.2025.04.05.02.24.55
+        d=1e100.net; s=20230601; t=1743845256; x=1744450056;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9QgniJ6UdmWL8To9NYgCLVFTHa10nmpPKSIlfTFU2tU=;
+        b=bmZRDlfthH14uo5bPBQ1KlH3DbZs6qnrfx/7l6ttroyJgmv0VXNbV+xMmuXOc1kq1L
+         2r25CEVL+s6sDbOW+aNXa1huBRkT0vACwLzQnfcvbHC4DY/+6JPDW47XhqVe3bzkK102
+         5kVcJaHCjWUsxkjEa4A1XiMdsMrg2eGeQsKKickUfVq1BpOox6sWKvYul0tOyxw45C+I
+         zJkTn4jLzOIrF/lj/i8MTNHXXn2AqJ26RkFKiHAHEfYzMCUYtB7P0dzwsPJERLinibNv
+         8yaSbviEoBZC/ldzJeyBBgdJsvNUGN4lpzwJ51nMB32idUwvZAq1VDfE7QvN1ldJ1gIG
+         C0OQ==
+X-Gm-Message-State: AOJu0Yw1xjBsmtdHVQtlHQxL/pq2MJXmlfbDIVB2AxZkvdTI3XWjnkK9
+	fHCOp9LxJFYFeKccJ2Q0jUDCURqweJDnlr8ZTuRYkquOskYlakTM9e1lzwwxvl4=
+X-Gm-Gg: ASbGnctbtKwEJV9LqqP1suI7dDAsQlRH3vjIvJksKvDUAtNcrow9wni6yC3kQ7DmEjG
+	bdgoNsmIB+HAt18fZIKYAUhGaHERmvpKmLvLHcUBvgoYjsVqAWu3IpvIpIehnadwp6E8svDnMZI
+	0waSfoET2qDKQD2wpkegh3RLuYb5cki3gwLtZqKuQWo4QfR/o9YKJkb1fjCKfzzpfJZEJ9qz/xa
+	6olu7MMJo/pEwqDZf06K+x85EFwgcGkCDRwD6rHcmKVtRTBO2WFVwUfgo2P5czMREfnEdHRJvJz
+	x86PctEVXn7PTDAVGYnxmG+t5aH5JJNlDz5uChB3QJuleTxtmw==
+X-Google-Smtp-Source: AGHT+IEbL8c+JGzPbn45puOitVnDeaHIThpApjBbi0QC6iao2fwFoA3sj7pZiaJmhvJQOzAGSNO8Mg==
+X-Received: by 2002:a05:6402:280b:b0:5e6:44d9:57f7 with SMTP id 4fb4d7f45d1cf-5f0b3e4732amr4711403a12.26.1743845255834;
+        Sat, 05 Apr 2025 02:27:35 -0700 (PDT)
+Received: from localhost ([2a02:8071:b783:6940:36f3:9aff:fec2:7e46])
+        by smtp.gmail.com with UTF8SMTPSA id 4fb4d7f45d1cf-5f087ed1f40sm3442815a12.26.2025.04.05.02.27.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Apr 2025 02:24:56 -0700 (PDT)
-Date: Sat, 5 Apr 2025 17:24:52 +0800
-From: I Hsin Cheng <richard120310@gmail.com>
-To: akpm@linux-foundation.org
-Cc: shuah@kernel.org, linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-kernel-mentees@lists.linux.dev,
-	skhan@linuxfoundation.org
-Subject: Re: [PATCH] selftests/mm: Add missing gitignore file
-Message-ID: <Z_D25JBTUcZia2GW@vaxr-BM6660-BM6360>
-References: <20250405091913.520889-1-richard120310@gmail.com>
+        Sat, 05 Apr 2025 02:27:35 -0700 (PDT)
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: linux-pwm@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org,
+	Michael Hennerich <michael.hennerich@analog.com>,
+	=?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
+	Trevor Gamblin <tgamblin@baylibre.com>
+Subject: [PATCH 0/6] pwm: Some fixes preparing chardev support
+Date: Sat,  5 Apr 2025 11:27:11 +0200
+Message-ID: <cover.1743844730.git.u.kleine-koenig@baylibre.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250405091913.520889-1-richard120310@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1226; i=u.kleine-koenig@baylibre.com; h=from:subject:message-id; bh=SdTjxolhxMdpEMLdv2bok/HJQZH5YHyXLZcK4xTHZec=; b=owGbwMvMwMXY3/A7olbonx/jabUkhvQP3wue3FO2D7yoPyX3tFXWCtPSC9wxXg/6hGTMVGZbB hUsSOLvZDRmYWDkYpAVU2Sxb1yTaVUlF9m59t9lmEGsTCBTGLg4BWAid05wMHQGvZ3cUu4YtHTp 6coW45J/V5ef4p8hFa0cvPZHwTankIZ5zcd8X3KV8W84vpJ5YuP6zPN+y88nLy7l0rM9cTnLuLL G9WP4rv+Zdsb3XjxQMVAW9f434WduiGpiv0aE95O5T7uZZdvK018/ruj1KZ8/V5DXo1la9VhDeo WpifGV+IOPl7c+yAsWdTY8WLbKvITd6Gy/u5Yi644lPVpzN8zxZt5i+P/zp7dX91xz9WTX1bK+p cu+IOJaaHvGkjkhBT0V6rM6e5jK8kSW7S57pxZz4oXsBE8nxqu1joLhd8+JX1m41p9XW9U+ba9B 0fzGfZ32j64rr7YwizpmKp1fVFSz83yM3/11HQna2zcAAA==
+X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Transfer-Encoding: 8bit
 
-On Sat, Apr 05, 2025 at 05:19:13PM +0800, I Hsin Cheng wrote:
-> Add "guard-pages" binary file into .gitignore.
-> 
-> Signed-off-by: I Hsin Cheng <richard120310@gmail.com>
-> ---
->  tools/testing/selftests/mm/.gitignore | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/tools/testing/selftests/mm/.gitignore b/tools/testing/selftests/mm/.gitignore
-> index c5241b193db8..c9fd69ece95c 100644
-> --- a/tools/testing/selftests/mm/.gitignore
-> +++ b/tools/testing/selftests/mm/.gitignore
-> @@ -58,3 +58,4 @@ hugetlb_dio
->  pkey_sighandler_tests_32
->  pkey_sighandler_tests_64
->  guard-regions
-> +guard-pages
-> -- 
-> 2.43.0
->
+Hello,
 
-Sorry, please ignore this. I overlook it's being renamed to
-"guard-regions".
+while working on character device support for PWMs I found a few
+inconsistencies that are fixed in this series. After that I plan to work
+on getting the character device support into shape to get it into
+mainline, too.
 
-Best regards,
-I Hsin Cheng
+While some of these patches qualify as fixes I think there is no urge to
+get them into 6.15, but given there is a bunch of such changes I might
+send them to all together to Linus for inclusion to 6.15.
+
+Best regards
+Uwe
+
+Uwe Kleine-König (6):
+  pwm: Let pwm_set_waveform() succeed even if lowlevel driver rounded up
+  pwm: stm32: Search an appropriate duty_cycle if period cannot be
+    modified
+  pwm: stm32: Don't open-code TIM_CCER_CCxE()
+  pwm: stm32: Emit debug output also for corner cases of the rounding
+    callbacks
+  pwm: axi-pwmgen: Let .round_waveform_tohw() signal when request was
+    rounded up
+  pwm: Do stricter return value checking for .round_waveform_tohw()
+
+ drivers/pwm/core.c           | 23 ++++++++++++-----------
+ drivers/pwm/pwm-axi-pwmgen.c | 10 +++++++---
+ drivers/pwm/pwm-stm32.c      | 25 +++++++++----------------
+ 3 files changed, 28 insertions(+), 30 deletions(-)
+
+base-commit: e48e99b6edf41c69c5528aa7ffb2daf3c59ee105
+-- 
+2.47.2
+
