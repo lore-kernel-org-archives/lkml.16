@@ -1,94 +1,114 @@
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A2601BC2A
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 17:12:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68CD01993B2;
+	Sat,  5 Apr 2025 17:12:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743873137; cv=none; b=kxdjggsvqQK2PIUZHEjlkMLs0Skw4Yy9/oD9ZxJgh5w0gzuCDVAunC7Y9B3P+KjSvNSkoot4kg1rK3jOH4RhQ8UI9V42n/Jjfc0C3o5QH5WkEBu3bubcTo2b1dujqTgJ0URn5av7+1Q4bEhX6HsSK5y4tgsJxz7A9VVZgUrLfU8=
+	t=1743873138; cv=none; b=R7VZArB8BJ/5YLe3CONLlKolBVDBZs0IGp7CMYgi0Gt25zM6BbRraqzisEBloQC6/Bo/bHjfIQNS5BcoWxalLnkyn/ayHYex28JZ+oer2UkNh7SiVvjRh4FnoLlYnuj0m0CSq/7//Sjp1ywgJIiYzZwHByrFRt0EkVVR0oJECKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743873137; c=relaxed/simple;
-	bh=CVOcKUDZBIPDU8lXdK+Y0lVv6c+uU5JjYv7RWMPVzqs=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=qqI8VwXPy7DBTouIhXM8+bAg8+ENE9lwIr8MlgBvQGwyxy2aQ96UJ1Yn3NvydHfiK/C6HvroxoVFOB0xXRY5IR+3ympC78El5FV5dXqrfCuDJ+y5qym3u9G9ntMMVCmeocLb3+9RRkl6C6P7ttNNe0Pjdz+ttWRfRaxgomkOVKc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3d5b38276deso53410045ab.3
-        for <linux-kernel@vger.kernel.org>; Sat, 05 Apr 2025 10:12:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743873134; x=1744477934;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nT+HSTHiZ9CsHaz5CeBYSjEeXYVheQIiifj11yIZg9s=;
-        b=Fa8DI56XiL9hBPf+mGynBxGtvm+hhEvLKyBZtjz8MVLvSd9Uusv5Z+N3gL+ZiUGUua
-         gnWeu24NnWL8nakmrkKdn8I/bxln54+kO2BZsFmBJyfxLo+SanjAYzX8+aMmOA1eSnPw
-         ILyovLMQ/A2q7g0iV9iIkY9bWmR+K2lujQjgash2ITGOebny6C+pwQ/SkIP8x93low/Z
-         GDmsfOVUftKndNG4hMKH204QGtr1bTufaLrjPF7bl4Ao6mFhn3npK06VRpNoc2Tl0S8j
-         8rxUqLC2gLOD62DyamCM9VHBIKhaYR3OVGQzrUe7a0JPL30m1xrqLk9wzZ78xQ0ejnMs
-         tmkg==
-X-Gm-Message-State: AOJu0YxaIgoIZNHcQf3sWTP1zwexGa4svY5NJkjL2m3mM+Wu82a7kDOr
-	8mQJx8lEIjqa+LBWnS4Z8YHwyXkJmk9lO21eCsFQ1tRrchflNNh8hCoo1lPKcO5ey7R7k5a970M
-	xL52aLCJLW8sS4+uZVi1xow9A1GEi2Pz7sGPJBy5denJKhRVIR2BJmPs=
-X-Google-Smtp-Source: AGHT+IGSYu5a65fgnsqoWEpL4xU+Z+4XO0o5Xuv7h/2MYMzgKYNA+3jIEDgSrziQlRknQyuFDLWzXRWqB+1EUxRpjBu7/Vq78ZQs
+	s=arc-20240116; t=1743873138; c=relaxed/simple;
+	bh=Oc4uyqHtOPFNtYHEZPJaclnM3in6j64NjiX3Ew8Xm5U=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PuE1PR6tPDyLmAd+5obfkwE6Tsw+FOf4+IL1jPkcJNpfjUbao3xYVPMimwwgueNY6oV7MUu0Bhg036adtVkxOqICbv+x/fjnLWOHbN/e6NLFh7GRkyAhSarG0/7m0FN5SHCU6LHKBA7VhWVWm7H8RkFSpsA5og1j7U0H64N6cR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Of4FwQRs; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Of4FwQRs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E29FC4CEE4;
+	Sat,  5 Apr 2025 17:12:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743873137;
+	bh=Oc4uyqHtOPFNtYHEZPJaclnM3in6j64NjiX3Ew8Xm5U=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Of4FwQRszpMcns+kgRM4Apg1oV7ZC7LZWaz1ZMoxOHHSC5p6DkM8MTkq6Fub7LcL0
+	 99GIGrIvz+6zu1nWA6auKVu2JRpMH78lHYp+ulqZqjrK6OX4bzeDn+CtV5b5mMCWAK
+	 sjvVFjZR8WTBO0vW5voAyw+Pv+wGzWLs3LOLipDReO3oDCQWlH3ls7PwI7ddpis3EG
+	 yHm2GQ1gbTVn3/qb9ieBgC1QRro8xYefAOYPVlKBbvn6LVzR1aSwvOvnr3ZfdnRM6o
+	 g//upi+9V2bYmzyIb2HKkcHXHm+z/OTT+lq1jeDlhA142xhoL3eYDRvT34EK51b/CD
+	 Us25Zmz+Cvxuw==
+Date: Sat, 5 Apr 2025 18:12:10 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: David Heidelberg via B4 Relay <devnull+david.ixit.cz@kernel.org>
+Cc: david@ixit.cz, Lars-Peter Clausen <lars@metafoo.de>, Svyatoslav Ryhel
+ <clamor95@gmail.com>, Robert Eckelmann <longnoserob@gmail.com>,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 0/5] iio: light: Modernize al3010 and al3320a
+ codebase
+Message-ID: <20250405181210.5e7a181a@jic23-huawei>
+In-Reply-To: <20250402-al3010-iio-regmap-v4-0-d189bea87261@ixit.cz>
+References: <20250402-al3010-iio-regmap-v4-0-d189bea87261@ixit.cz>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:3089:b0:3d1:7835:1031 with SMTP id
- e9e14a558f8ab-3d6e53181dfmr82745475ab.7.1743873134667; Sat, 05 Apr 2025
- 10:12:14 -0700 (PDT)
-Date: Sat, 05 Apr 2025 10:12:14 -0700
-In-Reply-To: <67ef83fe.050a0220.9040b.0366.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67f1646e.050a0220.0a13.0243.GAE@google.com>
-Subject: Re: [syzbot] #syz test
-From: syzbot <syzbot+ff3aa851d46ab82953a3@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-For archival purposes, forwarding an incoming command email to
-linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
+On Wed, 02 Apr 2025 21:33:23 +0200
+David Heidelberg via B4 Relay <devnull+david.ixit.cz@kernel.org> wrote:
 
-***
+> This series aims to improve code readability and modernize it to align
+> with the recently upstreamed AL3000a.
+> 
+> Apart from slightly improved error reporting, and error handling
+> there should be no functional changes.
+> 
+> Module  before after
+> al3010  72 kB  58 kB
+> al3320a 72 kB  58 kB
+> 
+> Signed-off-by: David Heidelberg <david@ixit.cz>
+> ---
+Applied, but with tweaks to not add print messages as described in patches 1 and 3.
+That meant a bunch of hand application was needed for 4-5.  Please check the result
+in the testing branch of iio.git.
 
-Subject: #syz test
-Author: gshahrouzi@gmail.com
+Thanks,
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 0bb21659e252..153ba622cfa0 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -14016,6 +14016,9 @@ inherit_event(struct perf_event *parent_event,
-        if (IS_ERR(child_event))
-                return child_event;
+Jonathan
 
-+       get_ctx(child_ctx);
-+       child_event->ctx = child_ctx;
-+
-        pmu_ctx = find_get_pmu_context(child_event->pmu, child_ctx,
-child_event);
-        if (IS_ERR(pmu_ctx)) {
-                free_event(child_event);
-@@ -14037,8 +14040,6 @@ inherit_event(struct perf_event *parent_event,
-                return NULL;
-        }
+> Changes in v4:
+> - Fixed mixed-up rebase changes between commits and added
+>   regmap_get_device into _init functions to get the device.
+> - Link to v3: https://lore.kernel.org/r/20250402-al3010-iio-regmap-v3-0-cc3da273b5b2@ixit.cz
+> 
+> Changes in v3:
+> - Stripped patches merged from second version of patchset.
+> - Dropped iio: light: al3010: Move devm_add_action_or_reset back to _probe
+>   in favor of opposite approach moving devm_add.. to _init for al3xx0a:
+>   - iio: light: al3000a: Fix an error handling path in al3000a_probe()
+>   - iio: light: al3320a: Fix an error handling path in al3320a_probe()
+> - Link to v2: https://lore.kernel.org/r/20250319-al3010-iio-regmap-v2-0-1310729d0543@ixit.cz
+> 
+> Changes in v2:
+> - Dropped Daniel's email update.
+> - Dropped DRV_NAME introduction for al3000a
+> - Added DRV_NAME define removal for al3010 and al3320a.
+> - Splitted unsigned int conversion into separate patches.
+> - Replaced generic value with specific raw and gain variable.
+> - Use dev_err_probe() for error handling.
+> - Separated devm_add_action_or_reset move from _init back to _probe.
+> - Dropped copyright update.
+> - Link to v1: https://lore.kernel.org/r/20250308-al3010-iio-regmap-v1-0-b672535e8213@ixit.cz
+> 
+> ---
+> David Heidelberg (5):
+>       iio: light: al3010: Improve al3010_init error handling with dev_err_probe()
+>       iio: light: al3000a: Fix an error handling path in al3000a_probe()
+>       iio: light: al3320a: Fix an error handling path in al3320a_probe()
+>       iio: light: al3010: Implement regmap support
+>       iio: light: al3320a: Implement regmap support
+> 
+>  drivers/iio/light/al3000a.c |  9 +++--
+>  drivers/iio/light/al3010.c  | 85 +++++++++++++++++++++++--------------------
+>  drivers/iio/light/al3320a.c | 89 +++++++++++++++++++++++++--------------------
+>  3 files changed, 100 insertions(+), 83 deletions(-)
+> ---
+> base-commit: f8ffc92ae9052e6615896052f0c5b808bfc17520
+> change-id: 20250308-al3010-iio-regmap-038cea39f85d
+> 
+> Best regards,
 
--       get_ctx(child_ctx);
--
-        /*
-         * Make the child state follow the state of the parent event,
-         * not its attr.disabled bit.  We hold the parent's mutex,
-@@ -14059,7 +14060,6 @@ inherit_event(struct perf_event *parent_event,
-                local64_set(&hwc->period_left, sample_period);
-        }
-
--       child_event->ctx = child_ctx;
-        child_event->overflow_handler = parent_event->overflow_handler;
-        child_event->overflow_handler_context
-                = parent_event->overflow_handler_context;
--- 
-2.43.0
