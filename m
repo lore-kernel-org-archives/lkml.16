@@ -1,111 +1,116 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B5BC3FC3;
-	Sat,  5 Apr 2025 14:09:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96C1282D98;
+	Sat,  5 Apr 2025 14:13:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743862149; cv=none; b=FkWL86LmEkSWQ9MU/++caqlaLZzgWZRHK8BOrPPeyhfeBXgeNSLzQqP3E2YOdfF7ylLxPM7/SpHH9KLANDkt5OI5Lip1VUH7bqkRW78CKNYSymbjOfhhd64xHcBtDPYhxRBjDJIyDPVve46IoplG+tIkdcGhN6BPoLxzGX/OQps=
+	t=1743862440; cv=none; b=fawtEAGUIWbgBZyva4BECh1ASMTZd11oIXrlxHSCU7XzKD7iKj8d2M1FJ0FkZNsQj0VxaGphdAI4zYsc5UXzDOs36uINA5dg6jfs8prllCgkJytgrwgRW/Tj8oV6ljl4BCDV7dOnGiFVcCNbtTQUFkKEzubcEvJF2PM2f3SbBxE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743862149; c=relaxed/simple;
-	bh=aPiGerDof7zYDp81C0rPZwzQgTelHPEeK8XxpmDKjbg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=H1mJxYSrBlGwoTxeJPgruPukEj7B4OqNdie86jSrJjZMu0g0ko9XJeL5Vk/K7ldVI6uZlXLjM9eiZ7cacx9ybIVlRDY0uP1SykegLv5ntdQVAXtlCKlmyaera3kR46fye0REXbO+WRrzy9O5oqknHjEyHsB9BKQvx3gQU+1Kzt8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [192.168.0.2] (ip5f5af06c.dynamic.kabel-deutschland.de [95.90.240.108])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id AF7C561E64799;
-	Sat, 05 Apr 2025 16:08:26 +0200 (CEST)
-Message-ID: <20a4400e-a175-47e2-91ce-a6b475a14b33@molgen.mpg.de>
-Date: Sat, 5 Apr 2025 16:08:24 +0200
+	s=arc-20240116; t=1743862440; c=relaxed/simple;
+	bh=P4J9KS6HKX854uNiABwvLAKikcCrRXqFEIVa83Zf9WI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EDXB2wUiCUHgpX+/k+iKcX1qMh6wnQ5Z7sOLA0ak8cUwsBtESKJJZ8rMcJhQtdj5kSfKI5swHOXfRMsopSG2kfZv9+q+CyrL+u+ehHEqU8TR1hKe75VUe7JLJgca3HXMG/3GG7EqbqWyB2+Rcft4Fznnn6+rWJ2Nd3jmv2cAr70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VCEcmjBz; arc=none smtp.client-ip=209.85.208.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VCEcmjBz"
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-30db2c2c609so28534541fa.3;
+        Sat, 05 Apr 2025 07:13:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743862436; x=1744467236; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AZgFOhif6AUBxl+oaVaiAPhmHvSBVyu1yIQjR+GE1eQ=;
+        b=VCEcmjBzEBdzyx3zZbb6iOUlP1vSYw/cPNXXGXefiaynlrwj0Z/Owo8Ut7PAoEd9jW
+         ZxLXtqZpVsxipRt8Qy4DjC46S0jAN9hiFcDT8TT34DrW1vuo2ERrgQhFO7tHaPrXVmBO
+         d8JGOHx4fqEuU/BqFylaMIokUqksTEOuvTN1/6uimubiK4bRZCCdMNBgWjIlf8Db4+hO
+         c/fATwOei0YCjjqnVClpfPP7yGj9dv+FY6lKMM2PHtmgV18u3I6RqtpdOIJTB98Kw5zT
+         nJVgjQOzzqOI1olV1RphoRhMfmxOJGbrsFbS/PPFn8X6hELXko55t7MJjVJMC8ZBr4zt
+         KN4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743862436; x=1744467236;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=AZgFOhif6AUBxl+oaVaiAPhmHvSBVyu1yIQjR+GE1eQ=;
+        b=KpLIL3PWSf4dTTpRJZIKC1jdteWLOVrAf7XeS+RotYB+qOgWRK1TOirEARbHRvKIwa
+         6OZ7D6knuavkccJYO4NE19aBG0MNS4w+FaVc/P2KRh1BgXDtRZ8vORqWC8tnvEyNB5ft
+         oPFJxrW5lYqIf8P9zw9isFtYuGdTWrUrjaA7IrjNC8ZpvsdIfvD4h6ctTDsU+/Wckarb
+         mmqGYm8bjc7xIem0CWvsLLwjPr2gw80Xp3OhwbcoV2g49o5DbjyHj23fl19G0vu34Cma
+         ch3wwZa+9HK7YJGhiPmVJKp59NlhyFPCgtagNtvNqpHkGqWvb2xWTtd7FuQVaeXscmAI
+         IJog==
+X-Forwarded-Encrypted: i=1; AJvYcCWsf4hfpfd1a58d0yp6R8BeF1y9UQ1aR/CwdLSpYdyYPQKii71FxeK66/cyujhrz0Kk4TVErkYfVQyaPus=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwC+mjstmvhCy7ZGzvgoeYE5nJoAAavbL8T06ELtkqM+CGsfRYk
+	lhdnVGXdXikSsHCEhQUNVq67IgOpC1mYrOElYJHINHDSMluCUQMNpuiAxZox2WKKfxBlphCFCiP
+	Cn+LLDwbxe3gampW3TC+wQP2bOkWnzRsG
+X-Gm-Gg: ASbGncuM2lFwQ4OkFNa9a3Lk7NTqrJ0VHvFSJSqG2QpHaG2tGOCsgQMKo1SHBbVDFKk
+	HFZcW9UGkmkeDjSBIot5kl7Hrzr1kaTQTdOw2O8+Fkv8WlEn8OlrAperkdEPl1v2FZirM3XoDd8
+	jv4ALKsu025EeidedcpGMgMhrjEqxq89IjuRp6W8NXdHeaQGrrZ+PoGGid21D47IE2jaJQ1A==
+X-Google-Smtp-Source: AGHT+IGISO1oEBMOP1pM1Z1rBBoXBXuhqvrd86bMxAIHDyBnh9d/puxeci2e6CwCDKEcvHLikD07am+C2lf3kKwU5pY=
+X-Received: by 2002:a2e:a80c:0:b0:30b:f52d:148f with SMTP id
+ 38308e7fff4ca-30f0a12ef9emr19757481fa.18.1743862436318; Sat, 05 Apr 2025
+ 07:13:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: xhci: WARN Set TR Deq Ptr cmd failed due to incorrect slot or ep
- state.
-To: =?UTF-8?Q?Micha=C5=82_Pecio?= <michal.pecio@gmail.com>
-Cc: Mathias Nyman <mathias.nyman@linux.intel.com>,
- Mathias Nyman <mathias.nyman@intel.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>
-References: <c279bd85-3069-4841-b1be-20507ac9f2d7@molgen.mpg.de>
- <20250405084307.4080edf4@foxbook>
- <7ec5ba1d-1de7-409d-882c-2efab4922ed4@molgen.mpg.de>
- <20250405114924.7aa7f3a1@foxbook>
-Content-Language: en-US
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <20250405114924.7aa7f3a1@foxbook>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20250405095641.2009-1-vulab@iscas.ac.cn>
+In-Reply-To: <20250405095641.2009-1-vulab@iscas.ac.cn>
+From: Ryusuke Konishi <konishi.ryusuke@gmail.com>
+Date: Sat, 5 Apr 2025 23:13:39 +0900
+X-Gm-Features: ATxdqUGOJhkEs4mkL5fNoc2aqdXOeEQlW-XZxZKDZQbmr-Jplo3H-P1kEDgei-E
+Message-ID: <CAKFNMon67-aNMFEd1yhYGqvfabob7RxTo0aQFGUUpKxOH4YF+g@mail.gmail.com>
+Subject: Re: [PATCH v2] nilfs2: Add pointer check for nilfs_direct_propagate()
+To: Wentao Liang <vulab@iscas.ac.cn>
+Cc: linux-nilfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Dear Michał,
+On Sat, Apr 5, 2025 at 6:57=E2=80=AFPM Wentao Liang wrote:
+>
+> In nilfs_direct_propagate(), the printer get from nilfs_direct_get_ptr()
+> need to be checked to ensure it is not an invalid pointer.
+>
+> If the pointer value obtained by nilfs_direct_get_ptr() is
+> NILFS_BMAP_INVALID_PTR, means that the metadata (in this case,
+> i_bmap in the nilfs_inode_info struct) thatshould  point to the data
+> block at the buffer head of the argument is corrupted and the data
+> block is orphaned, meaning that the file system has lost consistency.
+>
+> Add a value check and return -EINVAL when it is an invalid pointer.
+>
+> Fixes: 36a580eb489f ("nilfs2: direct block mapping")
+> Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+> ---
+>  fs/nilfs2/direct.c | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/fs/nilfs2/direct.c b/fs/nilfs2/direct.c
+> index 893ab36824cc..2d8dc6b35b54 100644
+> --- a/fs/nilfs2/direct.c
+> +++ b/fs/nilfs2/direct.c
+> @@ -273,6 +273,9 @@ static int nilfs_direct_propagate(struct nilfs_bmap *=
+bmap,
+>         dat =3D nilfs_bmap_get_dat(bmap);
+>         key =3D nilfs_bmap_data_get_key(bmap, bh);
+>         ptr =3D nilfs_direct_get_ptr(bmap, key);
+> +       if (ptr =3D=3D NILFS_BMAP_INVALID_PTR)
+> +               return -EINVAL;
+> +
+>         if (!buffer_nilfs_volatile(bh)) {
+>                 oldreq.pr_entry_nr =3D ptr;
+>                 newreq.pr_entry_nr =3D ptr;
+> --
+> 2.42.0.windows.2
+>
 
+Thanks for your help!
 
-Thank you for your reply.
+I'll handle this patch.
 
-Am 05.04.25 um 11:49 schrieb Michał Pecio:
-> On Sat, 5 Apr 2025 09:36:03 +0200, Paul Menzel wrote:
->>> And the problem appears to be that some USB device gets reset
->>> periodically, probably /dev/sda, whatever it is. This reset loop is
->>> also visible in your new log today.
->> I guess it’s the SD/eMMC card slot, which I do not use though.
-> 
-> Yep, I just realized that your dmesg shows it clearly:
-> 
-> [   37.517985] usb 4-1.4: new SuperSpeed USB device number 5 using xhci_hcd
-> [   37.535773] usb 4-1.4: New USB device found, idVendor=058f, idProduct=8468, bcdDevice= 1.00
-> [   37.535780] usb 4-1.4: New USB device strings: Mfr=1, Product=2, SerialNumber=3
-> [   37.535782] usb 4-1.4: Product: Mass Storage Device
-> [   37.535783] usb 4-1.4: Manufacturer: Generic
-> [   37.535785] usb 4-1.4: SerialNumber: 058F84688461
-> [   37.552531] usb-storage 4-1.4:1.0: USB Mass Storage device detected
-> 
->>> 3. is it reproducible on 6.14, 6.13, ...
->>
->> As written, from my logs it happened sporadically in the past, but
->> since at least commit a2cc6ff5ec8f it happens almost always. I didn’t
->> see it with commit 08733088b566, and after that I didn’t use any
->> USB-C adapters for three days.
-> 
-> To be exact, I'm wondering if the reset loop itself is a regression, or
-> business as usual. So simply look for this repeating every few seconds:
-> 
-> [   74.898485] usb 4-1.4: reset SuperSpeed USB device number 5 using xhci_hcd
-> 
-> Relevant commits in your range are:
-> 
-> 0c74d232578b xhci: Avoid queuing redundant Stop Endpoint command for stalled endpoint
-> 860f5d0d3594 xhci: Prevent early endpoint restart when handling STALL errors.
-> 
-> Reverting 0c74d232578b will remove the warning, but this means that
-> 860f5d0d3594 isn't having the intended effect. Not sure  if reverting
-> the latter will solve the reset loop or if it was always there. And
-> these commits look alright, so IDK what's going wrong.
-> 
-> I could send a debug patch which might clear some things up.
-
-That’d be awesome.
-
->> PS: Hints on how to try to reproduce this in QEMU would be welcome.
->> (Passing the controller and device to the VM.)
-> 
-> If you need help setting up PCI passthrough, I'm afraid I can't help.
-> As for reproduction, simply booting a buggy kernel should give those
-> repeating resets and xHCI warnings if you are lucky.
-
-After this morning I wasn’t able to reproduce it by un-/replugging. 
-Maybe I am lucky to find a reproducer (reboot needed?).
-
-
-Kind regards,
-
-Paul
+Ryusuke Konishi
