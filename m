@@ -1,104 +1,156 @@
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8672625569
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 05:57:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6EE925569;
+	Sat,  5 Apr 2025 06:00:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743832624; cv=none; b=DV1ETi9v0gER7hqH1GUe1StAPJ06qQCa9785KZUEsgkjIQYgl6IstbcFNF799bqlaYDmZ1tS/mWMEuD7QpreHzqavyeK1jpkLqPPLrDCSemyPIrQs9wqwIztgOkgrmmXhlCjA5uoJ1a+HoT1+L3qa2WDl75SZKvIPrtd69PrSY0=
+	t=1743832802; cv=none; b=Z6TXhqaWMeGWEpkN6z8bgi9/OzHwIHNpiWzaeFu0ZFWEBFDlHAwWz4WmrON3KCpzX6AEylN9cw4KBcwmhp1sEUukC9hivnWe9z7hmVwQRmJiVaHNv+Bnaz3N6zTUpUSWTs5S8OzRa2JKIB+09NInyOLcH6ejJM1ZIYY8hsqSv+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743832624; c=relaxed/simple;
-	bh=3GbTpxF2qobSJ72OAqmH8chJX9p3IrPLJsuJKlDgEjs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SCzKcgcO/uO9FwtL+2QyUiS9WEHu6z5x8r4sr5EyHItUMi4qekZlrCGUThqBb/ft1X8O/2zCLr1+5rsq9YENGdDN4DQYf/aTmmVDkH5+DvNDfDULUf0njKgGS9SVLUUjsZYITSJwegl+EPhpgTfoZri9Lu+zmdchAt2tow88Ixc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g5RnI/7a; arc=none smtp.client-ip=209.85.160.175
+	s=arc-20240116; t=1743832802; c=relaxed/simple;
+	bh=FXKswitWL8pGh7AXLWw7Y/+Gu9zaQV0t/C3KcdBRwkw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=vE/uHPPVTfJJziiuhhNj8C/uBJvsNbtTvEIJjKDxfqjvYt6y7alfQawzQW4gvs80BugK+baihnRR+xK2qGBxjjtfeaCo5ZK0/AbK7PNRoGiwGoUM0cotDXhqrMy1lL72lBFPiRvSA94Sj1ZkKTY9WuE7SkPh+Szo0fInwR9STcw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mrSKivsW; arc=none smtp.client-ip=209.85.218.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g5RnI/7a"
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-476a720e806so25404491cf.0
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Apr 2025 22:57:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mrSKivsW"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ac2a089fbbdso488461066b.1;
+        Fri, 04 Apr 2025 23:00:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743832621; x=1744437421; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=cXoXu32p+yvTpl/FA9Tehjz+TiUIPbg3Cf0b50lx5gA=;
-        b=g5RnI/7a0CIACoDWqrjNMPUzRMe+V27M0eI3VQTvZjpK4Cu+xBHBbUx2zqVd4Yc1u6
-         77UhKXW7QN0PGvg9yUIiWC9MqAGSr6hv0zWknvDaUDH481zgQ3GDrzrHeQKZ6QdZmpkj
-         wzIPSP30JBeQdBYDgALHeVp+SpszpxGbRhEBsfq9bXX3pKFyz76+3SBAWQC2dZGtmCTA
-         9+CBCwmp5UZNpWHolopcYUEF4HclFNQyyupKNIZktR24eyAWuVc3EGZYkmHQXZ6g1p6t
-         GM9mg0ucGujNmmk5FubA05e49bbn0NnP/NwLe+X3nBZK67/H7MRDfCUIRv7hApKFx7pf
-         6QJA==
+        d=gmail.com; s=20230601; t=1743832799; x=1744437599; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Z4I6lkE4MBJ+2RjskTnudiDh0Y26BC1z7LHd2waUKGM=;
+        b=mrSKivsWRIPCeQ8KCrGEEWlN2mVcnkEdWmgpzYk+0yA8lxbV+iNMsW/80TFQqyNnMA
+         75Gw5WbxovP57lLRGxPefxLsA9y6qyCdLv3EsunHL90y4oY0ug8K+urGUzYg2ABmRD7V
+         vGVQbSrVlGJz+ltRT4hQ4E39t9JbBW1eshcQgrPQU6dtQndPpjzMwUxQArYOnfoQQnRs
+         AFT9syWFYAkO9K6dBe2wI2tOYBh2J5VGw/htIxhvhuU01WwmJ5GmsudPEg/I47s9wGC9
+         Vcw0LV487zP/CWfkDQfC0UC7hkyvWA7TkF0/hcr0VN5t1v4kge2OmQi+p2+29Pj1CPSq
+         YH9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743832621; x=1744437421;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=cXoXu32p+yvTpl/FA9Tehjz+TiUIPbg3Cf0b50lx5gA=;
-        b=j5/iKunTYmyno1lEIMAemEkPLrMOG62j0CqaeNWbZrKVLPmXkpuwl6i8LAS6tQ/mHl
-         B933UrmJBd0JmQXZzmV8/HNzuL2XMzeRpRv5YwZ9FvC802WS5Bfhg0E7iIJqX91ZcdJs
-         k1TTf4axxmngFr3dXc3esVhsE9lFqB+yqSAotbhMNGEb0je9vY3l5eXl1Z4L53TZpzy4
-         JRwqPjyhyXDhJHkHOgOZ1/3MRsu86VHEaBQmVhviNjrv0uIEgW7cgOo2Gj8BjQOx47dH
-         c6EsAcbDkQcySqH1JDjWRFraNktIdG0GbgPHEZwOvmsOB1spnBdctlOGPa7ArDZWCTt6
-         KPDA==
-X-Gm-Message-State: AOJu0YwAkAhGMeYRPCUSIiBmh4SuBPjCOA6AATjhp6fHOsjZHjjTeNv1
-	9V7Ca4jApZwXJqqQZd/yBDRDii2/eL5ZMyufEFOCcTIWnLMloE+M
-X-Gm-Gg: ASbGncvftYzHIHCkNkeAa7ee5ZjTHeO3RjO5y1FFBYgcUmPVzZ1+cwjrxLXck5UBIWr
-	+H5+OAUYLJYsK+CPxSKlfnlqZff1ouRSv0256HL/g6Z+V3T40NNW1pJPQ4lajFCOqEe12gQ/sVa
-	lnzxL/aZhjaJxTkmE1sLeP2nNWUB/az2TkqAXQJIM08eiCS1S4ts38lA/rcRiJ9AykhEgdrlE7O
-	IFcCbIr1t+9v9TzvAvQ/KBHFzDWbwJU0jy94bptAJwB3tebJbOcOdhtl46ZDcniPDr5CLu5j82y
-	VpDmFJL1xqSRaTQ1eYh8
-X-Google-Smtp-Source: AGHT+IHAkPXVNuZK8g4LJVmN9ULIIsQVLAhkLP0CEKfRTTKkKgAPfpJtdiPWCmOWoxI+XPLm+vZfnw==
-X-Received: by 2002:a05:622a:1994:b0:476:7b0b:30fb with SMTP id d75a77b69052e-47924953eaemr93760161cf.22.1743832621375;
-        Fri, 04 Apr 2025 22:57:01 -0700 (PDT)
-Received: from localhost ([2001:da8:7001:11::cb])
-        by smtp.gmail.com with UTF8SMTPSA id d75a77b69052e-4791b071b42sm31190551cf.27.2025.04.04.22.57.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Apr 2025 22:57:01 -0700 (PDT)
-From: Inochi Amaoto <inochiama@gmail.com>
-To: Thomas Gleixner <tglx@linutronix.de>,
-	Inochi Amaoto <inochiama@gmail.com>,
-	Chen Wang <unicorn_wang@outlook.com>
-Cc: linux-kernel@vger.kernel.org,
-	Yixun Lan <dlan@gentoo.org>,
-	Longbin Li <looong.bin@gmail.com>
-Subject: [PATCH] irq: sg2042-msi: add missed chip flags
-Date: Sat,  5 Apr 2025 13:56:24 +0800
-Message-ID: <20250405055625.1530180-1-inochiama@gmail.com>
-X-Mailer: git-send-email 2.49.0
+        d=1e100.net; s=20230601; t=1743832799; x=1744437599;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Z4I6lkE4MBJ+2RjskTnudiDh0Y26BC1z7LHd2waUKGM=;
+        b=hxZRdfp4v6P2wHfs2FJqxTDE8gPsiAjsxd/7UJlGabV9jL4yDClSpPB7a+l4Zj3cHp
+         p45FioHTte54Hjoww8W8oONdF24UBJ3YHOl48fOfv2ESIlt+x8DxmmAa4R1oUBYydjyL
+         QM7cLA1H2qJYVaS+RDItkHTUYSo9sXkvdz07xIasAyo6D3vrP045vbvw8ouyiVLN1p0v
+         JUay2TpVXJ+RYVFXDXNS9sCnENKLeud3SdlcKEPq3hgUoHQRkvQ34PAj7tZ79u8UbgSQ
+         lvavHUMXuvP/AAJ8vVDu8k3pE6xyIjgjt7cb7f09pkXoGFbbcCVPt3rBDN3UVFoDysnb
+         2NDw==
+X-Forwarded-Encrypted: i=1; AJvYcCWtlfb2wvWxb3Sl1b1YF06PXm0dkQEKwMnrYgU1vs1J+1SZq68hU4QgsWT61CU5DW7cH3d66RIwSCFMBbmO@vger.kernel.org, AJvYcCXPMFowgja98XTrVzSHyn75anJQxyrWm4rN9YZmc2+015dxs2FjbhFDTrC/4k8eDi1fD+Q2ZleXz9zQNyuLzuPB@vger.kernel.org, AJvYcCXtRdmUZH9LbPhM6A8v48/ZWeQogndrzWk2LulFeXVC6d8bV+lnfaskeE+SSFH5R4rTIOw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzYVgle57sdxYupUbRbG2XdkK3epj2H1wMKIK38CeTXHsTLW8Rp
+	ffE/F8U37vSirfFGURnYhcWNlW/peaH6n5fLhCt4igGXesjYcHRuds2GiurhRRUAIMaaKCoGPZU
+	trbHcruBd4478EP3jqbiXq90+lyw=
+X-Gm-Gg: ASbGnctLGeqYsFoNPTT+YG8mpvz+Ae41ft3xCbRsctHfspi7EO6to04Gu+uD3dgJCAK
+	mfKhPSsDwuuL1IxrYw/FUNfVKX+HvEWrhQn9Bze/mRUthcXiQ1faH2rueOJol/Pva64yWcO7XHz
+	+wHNIAjejzjQm5n36yA2hVyeow0hth
+X-Google-Smtp-Source: AGHT+IHxbXwFZRwhjL4+35MMRvltBeoPQ5AJrjqgpmvMvZjFZ4JS9/zwBlhGHwZG7uR51OR9yaipTdFEiruAzGgc49A=
+X-Received: by 2002:a17:907:6d0f:b0:ac7:b8d3:df9c with SMTP id
+ a640c23a62f3a-ac7d2d85eb8mr353399966b.1.1743832798766; Fri, 04 Apr 2025
+ 22:59:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <malayarout91@gmail.com> <20250324064234.853591-1-malayarout91@gmail.com>
+ <CAEf4BzagSxO-fNeeWfFPu2vpnbEUBnS7Y2P=ODGks_zVEg1mkg@mail.gmail.com>
+In-Reply-To: <CAEf4BzagSxO-fNeeWfFPu2vpnbEUBnS7Y2P=ODGks_zVEg1mkg@mail.gmail.com>
+From: malaya kumar rout <malayarout91@gmail.com>
+Date: Sat, 5 Apr 2025 11:29:44 +0530
+X-Gm-Features: ATxdqUFk_e0oBjZcLoboSguatZkSXBMa6QLz1qHPNjitlpaZ-6NXXNaB8KhmYcs
+Message-ID: <CAE2+fR83Y8ZKk8fqM0WgZeK4Zm4PZjBzoPMyMptVHfk81eXEtw@mail.gmail.com>
+Subject: Re: [PATCH] selftests/bpf: close the file descriptor to avoid
+ resource leaks
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
+	Geliang Tang <geliang@kernel.org>, bpf@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-sg2042-msi driver used fallback set by msi_lib_init_dev_msi_info()
-As commit 1c000dcaad2b ("irqchip/irq-msi-lib: Optionally set default
-irq_eoi()/irq_ack()") changes the behavior of the default fallback,
-which break the driver and causes NULL pointer dereference.
+On Fri, Apr 4, 2025 at 9:22=E2=80=AFPM Andrii Nakryiko
+<andrii.nakryiko@gmail.com> wrote:
+>
+> On Sun, Mar 23, 2025 at 11:43=E2=80=AFPM Malaya Kumar Rout
+> <malayarout91@gmail.com> wrote:
+> >
+> > Static Analyis for bench_htab_mem.c with cppcheck:error
+> > tools/testing/selftests/bpf/benchs/bench_htab_mem.c:284:3:
+> > error: Resource leak: fd [resourceLeak]
+> > tools/testing/selftests/bpf/prog_tests/sk_assign.c:41:3:
+> > error: Resource leak: tc [resourceLeak]
+> >
+> > fix the issue  by closing the file descriptor (fd & tc) when
+> > read & fgets operation fails.
+> >
+> > Signed-off-by: Malaya Kumar Rout <malayarout91@gmail.com>
+> > ---
+> >  tools/testing/selftests/bpf/benchs/bench_htab_mem.c | 1 +
+> >  tools/testing/selftests/bpf/prog_tests/sk_assign.c  | 4 +++-
+> >  2 files changed, 4 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/tools/testing/selftests/bpf/benchs/bench_htab_mem.c b/tool=
+s/testing/selftests/bpf/benchs/bench_htab_mem.c
+> > index 926ee822143e..59746fd2c23a 100644
+> > --- a/tools/testing/selftests/bpf/benchs/bench_htab_mem.c
+> > +++ b/tools/testing/selftests/bpf/benchs/bench_htab_mem.c
+> > @@ -281,6 +281,7 @@ static void htab_mem_read_mem_cgrp_file(const char =
+*name, unsigned long *value)
+> >         got =3D read(fd, buf, sizeof(buf) - 1);
+>
+> It could be a bit cleaner to add close(fd) here and drop the one we
+> have at the end of the function.
+>
+Here, close(fd)  is now positioned within the error handling block,
+guaranteeing that
+the file descriptor will be closed prior to returning from the
+function in the event of a read error.
+Meanwhile, the final close(fd) at the end of the function is retained
+for successful execution,
+thereby avoiding any potential resource leaks.
+Hence, It is essential to add the close(fd) in both locations to
+prevent resource leakage.
 
-Add necessary chip flags of msi_parent_ops in this driver to fix it.
-
-Fixes: c66741549424 ("irqchip: Add the Sophgo SG2042 MSI interrupt controller")
-Link: https://lore.kernel.org/all/20250217085657.789309-3-apatel@ventanamicro.com
-Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
----
- drivers/irqchip/irq-sg2042-msi.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/irqchip/irq-sg2042-msi.c b/drivers/irqchip/irq-sg2042-msi.c
-index ee682e87eb8b..375b55aa0acd 100644
---- a/drivers/irqchip/irq-sg2042-msi.c
-+++ b/drivers/irqchip/irq-sg2042-msi.c
-@@ -151,6 +151,7 @@ static const struct irq_domain_ops sg2042_msi_middle_domain_ops = {
- static const struct msi_parent_ops sg2042_msi_parent_ops = {
- 	.required_flags		= SG2042_MSI_FLAGS_REQUIRED,
- 	.supported_flags	= SG2042_MSI_FLAGS_SUPPORTED,
-+	.chip_flags		= MSI_CHIP_FLAG_SET_ACK,
- 	.bus_select_mask	= MATCH_PCI_MSI,
- 	.bus_select_token	= DOMAIN_BUS_NEXUS,
- 	.prefix			= "SG2042-",
--- 
-2.49.0
-
+> pw-bot: cr
+>
+> >         if (got <=3D 0) {
+> >                 *value =3D 0;
+> > +               close(fd);
+> >                 return;
+> >         }
+> >         buf[got] =3D 0;
+> > diff --git a/tools/testing/selftests/bpf/prog_tests/sk_assign.c b/tools=
+/testing/selftests/bpf/prog_tests/sk_assign.c
+> > index 0b9bd1d6f7cc..10a0ab954b8a 100644
+> > --- a/tools/testing/selftests/bpf/prog_tests/sk_assign.c
+> > +++ b/tools/testing/selftests/bpf/prog_tests/sk_assign.c
+> > @@ -37,8 +37,10 @@ configure_stack(void)
+> >         tc =3D popen("tc -V", "r");
+> >         if (CHECK_FAIL(!tc))
+> >                 return false;
+> > -       if (CHECK_FAIL(!fgets(tc_version, sizeof(tc_version), tc)))
+> > +       if (CHECK_FAIL(!fgets(tc_version, sizeof(tc_version), tc))) {
+> > +               pclose(tc);
+>
+> this one looks good
+>
+> >                 return false;
+> > +       }
+> >         if (strstr(tc_version, ", libbpf "))
+> >                 prog =3D "test_sk_assign_libbpf.bpf.o";
+> >         else
+> > --
+> > 2.43.0
+> >
