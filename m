@@ -1,81 +1,81 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+Received: from out203-205-221-149.mail.qq.com (out203-205-221-149.mail.qq.com [203.205.221.149])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80B741991DD
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 09:00:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64BFD1CAA95
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 09:07:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.149
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743843633; cv=none; b=LTqthsX2ddWemwM1t/5QCGPTb25pFz0XNAoL2SfpqVpNo//PMajMTkLmyQRhvXqUiLgGkCRu+agvT9gYo5DhjS5nAWnBEINki1VyDRqI+FmeHpUeEIXGGXW7s3DnQltFcFTmw56AV47BtRkRc3omtkTqXHDo7jiIJmlbi0YshhI=
+	t=1743844049; cv=none; b=JhJJ8bc9AOSCYNF3yigJ8l4FcnuW85aHSzxWkDm2QTN1orw6sFLW3bFKrm2u1F4lgYIzgKJEqreO45zifDqA9s6fyHGLnUepod3mMMGj2Xjv1kilp/nQrfc8y6hJuaBuYmWjeA5wMJ9H0+VQww4gwBTGspA42ut2G8M5uwTrdz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743843633; c=relaxed/simple;
-	bh=7kv95dNYS32/zpDOmSMdisTpeAMQ2Sf7NYS51PE41XA=;
-	h=Message-ID:Date:MIME-Version:Cc:From:To:Subject:Content-Type; b=g6ZfJTGfeWtdEzesCSI9uKvQ8J6pmhyAymcy6aljZd2TO8N7olMJNkaBEkPznLT6j+qtuN/0PVS0I86oUOjZZCcJsjXhVB3MVN6FNA4pQiwn3iEZ2NOQkrR+xIsg42LqTBdV+ntCoiqTaI9Sv3XFM3fkxFp6wfLLI0sYH2/vMx0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [192.168.0.2] (ip5f5af06b.dynamic.kabel-deutschland.de [95.90.240.107])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 8425961E64799;
-	Sat, 05 Apr 2025 11:00:17 +0200 (CEST)
-Message-ID: <eb3c109f-550f-44ce-b0a1-3837aef1d02a@molgen.mpg.de>
-Date: Sat, 5 Apr 2025 11:00:17 +0200
+	s=arc-20240116; t=1743844049; c=relaxed/simple;
+	bh=wwrAlHje0rKotGRKlzMY7JtifDyNieixwMFkmGtZ/WY=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=AFw93h3gtiBZTuwP2iiRkN7qzgBQ0TvNvfQytXmhS16K6Oy2GaRKIticb6/aAZKxqKzWsR+vnSRCb2fgKU9HQq4o823rS2hRn+lhooccAzp0FAzztaarLdRFJ1/uOGrPoPt6U9wMiM3YJg8/qjvjr93fR34MB53MWT/mp7OtsYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=yPsByj2+; arc=none smtp.client-ip=203.205.221.149
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="yPsByj2+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1743843731; bh=KKFlAe1j4RzCkFSf96l5RSY4ididJUtIe/eaMXCShoM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=yPsByj2+YrPx9NP/5eNuFk5J5DmMRrpDWQAgFfoaDUld84jqsmyITCna34BMD9hG+
+	 QqSKek5lFojEeKUdlMhem7HO2Uk2QZQt+bbp81D6a6a5sy1IJH+mYFFrbgv71h9dpq
+	 ItNvGapXbTeQn6PflFqi5RHwNkGBBrLfxD2qynDM=
+Received: from pek-lxu-l1.wrs.com ([114.244.57.157])
+	by newxmesmtplogicsvrszc16-0.qq.com (NewEsmtp) with SMTP
+	id 89324E0; Sat, 05 Apr 2025 17:02:09 +0800
+X-QQ-mid: xmsmtpt1743843729t9vqfyrgf
+Message-ID: <tencent_7B7B46D79363637D4967A3BDE448F772D705@qq.com>
+X-QQ-XMAILINFO: NDAhN78L72+TSkgFZK690s4kofen6fH2LpNseRxNR3n/omBdTcFSX0jDvZAzHa
+	 99QcVZsQKE46ujw+NpNHj48chwJiy28q8onIxRPq0gjxDonWtgbjQyaGl3xCphjsV3Bw19MQkSFG
+	 OMKxeWtKhZ5xlgAKnBQE8bBI4xHMxXzYWtm9gGOdhuFySt+fGzgIJrfu57lbnLhTzNA/OK4exR8e
+	 svzOo/f9ke5hgxuiTn0P3h3hoSH/1+5SEPk2wVSk36Y35jFil0kgP5n2qZMdMJ+iG568Npi2n4kJ
+	 2RVMsAHWP1j/v3PcA5FpsmUVwZ7f/g/5hHxnKBOvXhW/Cd6u0VD6gXCya/sCd72A41XyP6xwTG46
+	 xChlDvjG/rwbDmfE6SkZpefy2w4kQAh7gz8eoWcpsjFxDW5AYmJVH5tp7EeuQEUD6mcyCIdrDXhv
+	 +aXxPO64TnvaGG8h++MdxrY1GCfn0BcvkFdmDT33AWYHOYJ4q/xNxVFV0KuXzO04768Em6+U6PYc
+	 G53FsJvRVPzmnUes3LjmcBODbk8Ni1F23J6AtiyOQPZo1MGPcDU8zxcxpjaYv5S3eBoqJIVlYDIK
+	 +qDzp7JlsG3Kyn45Uh+PxkwkvlQ2ZWq/oQ+dBJZv9MAtdabocv/m3RI3P5rfdWzihBVSuHmspIi3
+	 JcMUAtzq6JZpe6zoshwhY8e9vdclojj1NfJuZdaja3jisFvzJQsFbaVUysACf01TILhDHu5m3YE5
+	 69grGFuLG7WmlGCfCIAywohltrSePvISwZobYO3YTIojSb2ju6e32DAk0hTlHTXKMBTL9FYzWJNj
+	 gwhljmVcft7SmpqjAcoESus7on5PXO0VlFedpanNVGAiApVXskDmN20ss2a6tkEM8RHg51CKvdW1
+	 O7+8VOtNjD30AS4VO70tL5w4/bY8/V09YcXnOB3esm
+X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+526bd95c0ec629993bf3@syzkaller.appspotmail.com
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [media?] KMSAN: uninit-value in cxusb_i2c_xfer
+Date: Sat,  5 Apr 2025 17:02:09 +0800
+X-OQ-MSGID: <20250405090208.3719887-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <67f092b5.050a0220.0a13.0229.GAE@google.com>
+References: <67f092b5.050a0220.0a13.0229.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-Cc: regressions@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-To: Uros Bizjak <ubizjak@gmail.com>, Andrew Morton <akpm@linux-foundation.org>
-Subject: =?UTF-8?B?V0FSTklORzogbW9kcG9zdDogRVhQT1JUIHN5bWJvbCAi4oCmIiBbdm1s?=
- =?UTF-8?Q?inux=5D_version_generation_failed=2C_symbol_will_not_be_versioned?=
- =?UTF-8?B?Li8i4oCmIiBb4oCmXSBoYXMgbm8gQ1JDIQ==?=
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-#regzbot introduced: 6a367577153acd9b432a5340fb10891eeb7e10f1
+#syz test
 
+diff --git a/drivers/media/usb/dvb-usb/cxusb.c b/drivers/media/usb/dvb-usb/cxusb.c
+index f44529b40989..d0501c1e81d6 100644
+--- a/drivers/media/usb/dvb-usb/cxusb.c
++++ b/drivers/media/usb/dvb-usb/cxusb.c
+@@ -119,9 +119,8 @@ static void cxusb_gpio_tuner(struct dvb_usb_device *d, int onoff)
+ 
+ 	o[0] = GPIO_TUNER;
+ 	o[1] = onoff;
+-	cxusb_ctrl_msg(d, CMD_GPIO_WRITE, o, 2, &i, 1);
+ 
+-	if (i != 0x01)
++	if (!cxusb_ctrl_msg(d, CMD_GPIO_WRITE, o, 2, &i, 1) && i != 0x01)
+ 		dev_info(&d->udev->dev, "gpio_write failed.\n");
+ 
+ 	st->gpio_write_state[GPIO_TUNER] = onoff;
+-- 
+2.43.0
 
-Dear Linux folks,
-
-
-If I didn’t screw up `git bisect`, then commit 6a367577153a (percpu/x86: 
-enable strict percpu checks via named AS qualifiers) [1] causes the 
-build warnings below:
-
-     $ make olddefconfig && make -j128
-     […]
-     WARNING: modpost: EXPORT symbol "xen_vcpu_id" [vmlinux] version 
-generation failed, symbol will not be versioned.
-     Is "xen_vcpu_id" prototyped in <asm/asm-prototypes.h>?
-     WARNING: modpost: EXPORT symbol "irq_stat" [vmlinux] version 
-generation failed, symbol will not be versioned.
-     Is "irq_stat" prototyped in <asm/asm-prototypes.h>?
-     […]
-     WARNING: modpost: EXPORT symbol "__irq_regs" [vmlinux] version 
-generation failed, symbol will not be versioned.
-     Is "__irq_regs" prototyped in <asm/asm-prototypes.h>?
-     WARNING: modpost: EXPORT symbol "radix_tree_preloads" [vmlinux] 
-version generation failed, symbol will not be versioned.
-     Is "radix_tree_preloads" prototyped in <asm/asm-prototypes.h>?
-     WARNING: modpost: "pcpu_hot" 
-[arch/x86/events/intel/intel-uncore.ko] has no CRC!
-     WARNING: modpost: "numa_node" 
-[arch/x86/events/intel/intel-uncore.ko] has no CRC!
-     […]
-
-
-Kind regards,
-
-Paul
-
-
-[1]: 
-https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=6a367577153acd9b432a5340fb10891eeb7e10f1
-[2]: https://bugzilla.kernel.org/show_bug.cgi?id=219966
