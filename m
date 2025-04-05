@@ -1,156 +1,117 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6EE925569;
-	Sat,  5 Apr 2025 06:00:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71D1218EB0;
+	Sat,  5 Apr 2025 06:03:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743832802; cv=none; b=Z6TXhqaWMeGWEpkN6z8bgi9/OzHwIHNpiWzaeFu0ZFWEBFDlHAwWz4WmrON3KCpzX6AEylN9cw4KBcwmhp1sEUukC9hivnWe9z7hmVwQRmJiVaHNv+Bnaz3N6zTUpUSWTs5S8OzRa2JKIB+09NInyOLcH6ejJM1ZIYY8hsqSv+Q=
+	t=1743833010; cv=none; b=mjH4K+sPHE+pK+G3DDIMpL1n9NFHDSWMdCL1DaBXqP1TY1xPy6UUINaEAKbn5t73eMxeSf8m28aFT8CLoRI5ZzbOfA7ba4U5gKc9xgopXPllv6OZYdqB65iwHu+WzzIuo8+k0NdGqtM3EUfebM44Oikk8ZidRWeXdj/ew+kZSic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743832802; c=relaxed/simple;
-	bh=FXKswitWL8pGh7AXLWw7Y/+Gu9zaQV0t/C3KcdBRwkw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=vE/uHPPVTfJJziiuhhNj8C/uBJvsNbtTvEIJjKDxfqjvYt6y7alfQawzQW4gvs80BugK+baihnRR+xK2qGBxjjtfeaCo5ZK0/AbK7PNRoGiwGoUM0cotDXhqrMy1lL72lBFPiRvSA94Sj1ZkKTY9WuE7SkPh+Szo0fInwR9STcw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mrSKivsW; arc=none smtp.client-ip=209.85.218.42
+	s=arc-20240116; t=1743833010; c=relaxed/simple;
+	bh=YmJwQEXqahgapK0oajiNluXqZwbnM6g7h6Zu/n1mYeA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VpRK30wdP72VvZKjRIJtgjXXhPotoJAJoun3a8D4nZlRYOvuAaJnM+VbU7T23m37BgIs1dBUH3L1Xud9TnyVNS0JoknAgkmlyhfUc1xJnSTTwhlMnACZ1Hr6ttPnxuR+ZTncPo5U5IhfaC4gmyrOSMKqMqbs6SKQpLcSQe2g3ho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H6eDFa6J; arc=none smtp.client-ip=209.85.167.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mrSKivsW"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ac2a089fbbdso488461066b.1;
-        Fri, 04 Apr 2025 23:00:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H6eDFa6J"
+Received: by mail-oi1-f180.google.com with SMTP id 5614622812f47-4003b22c2f4so1712920b6e.0;
+        Fri, 04 Apr 2025 23:03:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743832799; x=1744437599; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Z4I6lkE4MBJ+2RjskTnudiDh0Y26BC1z7LHd2waUKGM=;
-        b=mrSKivsWRIPCeQ8KCrGEEWlN2mVcnkEdWmgpzYk+0yA8lxbV+iNMsW/80TFQqyNnMA
-         75Gw5WbxovP57lLRGxPefxLsA9y6qyCdLv3EsunHL90y4oY0ug8K+urGUzYg2ABmRD7V
-         vGVQbSrVlGJz+ltRT4hQ4E39t9JbBW1eshcQgrPQU6dtQndPpjzMwUxQArYOnfoQQnRs
-         AFT9syWFYAkO9K6dBe2wI2tOYBh2J5VGw/htIxhvhuU01WwmJ5GmsudPEg/I47s9wGC9
-         Vcw0LV487zP/CWfkDQfC0UC7hkyvWA7TkF0/hcr0VN5t1v4kge2OmQi+p2+29Pj1CPSq
-         YH9Q==
+        d=gmail.com; s=20230601; t=1743833008; x=1744437808; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Vmo855L+OJY9wWVTPniaeELLqvSXz8qMxqdDHxIVTqU=;
+        b=H6eDFa6JDHMtpaGvUX6lGmIHqKWV4kmvemGmVC5eL7xk1FIeWg5Ec4jLvrL6v5HiKh
+         676ka+QU3vAc7U1Pyyycg83MrpnKM6OdyEUQ0Mo1oP21gpViy4iYzepqEe6qGMCHKCRn
+         ODHunWiknn+hKnCfrGXrRGY11dODvFNloSEF+gKfEoUbdYrt2yWLR+XJ5nDZUHTAgvln
+         h5hF42kkZYOTlpHGG7B5d6AW8pb4nJyQKqhob2pTavtAKJSZyuiSn3TbJH0X8UgaLsJf
+         /pF17ZCxfz8gs5hADl4ArrpDuDpPssq+YQI6YUg6o8vWHT/q8E25fyA1bZZFYtgJd7rU
+         VbYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743832799; x=1744437599;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Z4I6lkE4MBJ+2RjskTnudiDh0Y26BC1z7LHd2waUKGM=;
-        b=hxZRdfp4v6P2wHfs2FJqxTDE8gPsiAjsxd/7UJlGabV9jL4yDClSpPB7a+l4Zj3cHp
-         p45FioHTte54Hjoww8W8oONdF24UBJ3YHOl48fOfv2ESIlt+x8DxmmAa4R1oUBYydjyL
-         QM7cLA1H2qJYVaS+RDItkHTUYSo9sXkvdz07xIasAyo6D3vrP045vbvw8ouyiVLN1p0v
-         JUay2TpVXJ+RYVFXDXNS9sCnENKLeud3SdlcKEPq3hgUoHQRkvQ34PAj7tZ79u8UbgSQ
-         lvavHUMXuvP/AAJ8vVDu8k3pE6xyIjgjt7cb7f09pkXoGFbbcCVPt3rBDN3UVFoDysnb
-         2NDw==
-X-Forwarded-Encrypted: i=1; AJvYcCWtlfb2wvWxb3Sl1b1YF06PXm0dkQEKwMnrYgU1vs1J+1SZq68hU4QgsWT61CU5DW7cH3d66RIwSCFMBbmO@vger.kernel.org, AJvYcCXPMFowgja98XTrVzSHyn75anJQxyrWm4rN9YZmc2+015dxs2FjbhFDTrC/4k8eDi1fD+Q2ZleXz9zQNyuLzuPB@vger.kernel.org, AJvYcCXtRdmUZH9LbPhM6A8v48/ZWeQogndrzWk2LulFeXVC6d8bV+lnfaskeE+SSFH5R4rTIOw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYVgle57sdxYupUbRbG2XdkK3epj2H1wMKIK38CeTXHsTLW8Rp
-	ffE/F8U37vSirfFGURnYhcWNlW/peaH6n5fLhCt4igGXesjYcHRuds2GiurhRRUAIMaaKCoGPZU
-	trbHcruBd4478EP3jqbiXq90+lyw=
-X-Gm-Gg: ASbGnctLGeqYsFoNPTT+YG8mpvz+Ae41ft3xCbRsctHfspi7EO6to04Gu+uD3dgJCAK
-	mfKhPSsDwuuL1IxrYw/FUNfVKX+HvEWrhQn9Bze/mRUthcXiQ1faH2rueOJol/Pva64yWcO7XHz
-	+wHNIAjejzjQm5n36yA2hVyeow0hth
-X-Google-Smtp-Source: AGHT+IHxbXwFZRwhjL4+35MMRvltBeoPQ5AJrjqgpmvMvZjFZ4JS9/zwBlhGHwZG7uR51OR9yaipTdFEiruAzGgc49A=
-X-Received: by 2002:a17:907:6d0f:b0:ac7:b8d3:df9c with SMTP id
- a640c23a62f3a-ac7d2d85eb8mr353399966b.1.1743832798766; Fri, 04 Apr 2025
- 22:59:58 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743833008; x=1744437808;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Vmo855L+OJY9wWVTPniaeELLqvSXz8qMxqdDHxIVTqU=;
+        b=LJKjPdV9XujKdzk2NdsF2epFUmdjg61DH9VJLhnhdMfraIU0RLGWRxW4GFzTkjh0Y/
+         0yiMH51JsbtJiud+U4V6f82k4RpJfwOF8LHnjBiA0lRYpR6vP3qKCxkkLG9KRPra2Fs4
+         nmXiyMIRflc7MwDWA7q+wB2uowio5i69RMD15rCuuwbf4Vnh0dn0ha6E3mJcu40kS6xR
+         mpb99An65G2yyg/l1DRkzQo3Rkcbvis7KNf0jgC3jOcfVk4HNNJXBCpCTzua5ThVFQhT
+         UFjqtFMQzwWktBFG1gElXnHxPDn4xKeRHK25tF+6Y6wELLYW2irc9WGLGWdN3ULn+ej3
+         h9/A==
+X-Forwarded-Encrypted: i=1; AJvYcCV7qkymkVJRn3RvL2JOUb31FQ1+bkuh4G936fJWAKXFut9+xwETQJrmqIVDveW5auoIg0cxk5iJuWFyVPTIITw=@vger.kernel.org, AJvYcCXL1mt5u6m24Ke/Em/qMfsP12B3fKpgAyq/woXnFxP1MohnGp0PmKVI/RicPA4xZDM6Bx0zoK4MH/5bV7c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxIi869NoLT29aGntioWWcmfhrMxqEI0WPClfJX7Zg0zIqd/P55
+	BBpjfuoahCtWT+l4alOw3tABws64lKs5B2ukMaQ0m0LS286oxSQ1
+X-Gm-Gg: ASbGncvbcG/cEK0JEua/Q4dvp76ExnMFJ9eOVgLIWyvnahnOPrd0BwMhaFG8Wz336s9
+	f/YCW8JYgPAvcBFHVwrDF21XWXwW+rU0udoasOxzp8sIZIoagSqxbL+02KVXScjdD1nUtOyB/EF
+	vVgcrQdfXRPiLdxeNtp1NtcgBbV1wy2HvNi+SVfphoXiuiPlmGyJbK0oKHBcm3TyTCuf2wHNLVC
+	aP+b+QY6Y1idUUWJbT5Q7Un/hFrpOfptZ/GkOX9Y9pP0ZrdJN98QHXCvYAHQOTOPqq8bZQiZLin
+	v54GcFbp4fVCIYMLCDci5Z3e7fTJCwWTiwIGhjhtpxgOULtmasxYYSGEkQYIXyI0wbbWuii70C9
+	vZOCJTHckvIZgNcmx
+X-Google-Smtp-Source: AGHT+IELtUR04lQJCB4Zo+IW0AifuT9GmUm5yuYn3qvlJ/xjFCgZEenYq5QySgDL4xLzlnxXgPoQfg==
+X-Received: by 2002:a05:6808:1811:b0:3f8:587:dacb with SMTP id 5614622812f47-4004658c82amr3137388b6e.9.1743833008281;
+        Fri, 04 Apr 2025 23:03:28 -0700 (PDT)
+Received: from my-computer.lan (c-73-76-29-249.hsd1.tx.comcast.net. [73.76.29.249])
+        by smtp.googlemail.com with ESMTPSA id 5614622812f47-40040080a15sm926565b6e.34.2025.04.04.23.03.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Apr 2025 23:03:27 -0700 (PDT)
+From: Andrew Ballance <andrewjballance@gmail.com>
+To: Liam.Howlett@oracle.com,
+	ojeda@kernel.org,
+	alex.gaynor@gmail.com,
+	boqun.feng@gmail.com,
+	gary@garyguo.net,
+	bjorn3_gh@protonmail.com,
+	benno.lossin@proton.me,
+	a.hindborg@kernel.org,
+	aliceryhl@google.com,
+	tmgross@umich.edu,
+	dakr@kernel.org
+Cc: akpm@linux-foundation.org,
+	gregkh@linuxfoundation.org,
+	wedsonaf@gmail.com,
+	brauner@kernel.org,
+	andrewjballance@gmail.com,
+	dingxiangfei2009@gmail.com,
+	linux-kernel@vger.kernel.org,
+	maple-tree@lists.infradead.org,
+	linux-mm@kvack.org,
+	rust-for-linux@vger.kernel.org
+Subject: [RFC PATCH 0/2] rust: add support for maple trees
+Date: Sat,  5 Apr 2025 01:01:52 -0500
+Message-ID: <20250405060154.1550858-1-andrewjballance@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <malayarout91@gmail.com> <20250324064234.853591-1-malayarout91@gmail.com>
- <CAEf4BzagSxO-fNeeWfFPu2vpnbEUBnS7Y2P=ODGks_zVEg1mkg@mail.gmail.com>
-In-Reply-To: <CAEf4BzagSxO-fNeeWfFPu2vpnbEUBnS7Y2P=ODGks_zVEg1mkg@mail.gmail.com>
-From: malaya kumar rout <malayarout91@gmail.com>
-Date: Sat, 5 Apr 2025 11:29:44 +0530
-X-Gm-Features: ATxdqUFk_e0oBjZcLoboSguatZkSXBMa6QLz1qHPNjitlpaZ-6NXXNaB8KhmYcs
-Message-ID: <CAE2+fR83Y8ZKk8fqM0WgZeK4Zm4PZjBzoPMyMptVHfk81eXEtw@mail.gmail.com>
-Subject: Re: [PATCH] selftests/bpf: close the file descriptor to avoid
- resource leaks
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
-	Geliang Tang <geliang@kernel.org>, bpf@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, Apr 4, 2025 at 9:22=E2=80=AFPM Andrii Nakryiko
-<andrii.nakryiko@gmail.com> wrote:
->
-> On Sun, Mar 23, 2025 at 11:43=E2=80=AFPM Malaya Kumar Rout
-> <malayarout91@gmail.com> wrote:
-> >
-> > Static Analyis for bench_htab_mem.c with cppcheck:error
-> > tools/testing/selftests/bpf/benchs/bench_htab_mem.c:284:3:
-> > error: Resource leak: fd [resourceLeak]
-> > tools/testing/selftests/bpf/prog_tests/sk_assign.c:41:3:
-> > error: Resource leak: tc [resourceLeak]
-> >
-> > fix the issue  by closing the file descriptor (fd & tc) when
-> > read & fgets operation fails.
-> >
-> > Signed-off-by: Malaya Kumar Rout <malayarout91@gmail.com>
-> > ---
-> >  tools/testing/selftests/bpf/benchs/bench_htab_mem.c | 1 +
-> >  tools/testing/selftests/bpf/prog_tests/sk_assign.c  | 4 +++-
-> >  2 files changed, 4 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/tools/testing/selftests/bpf/benchs/bench_htab_mem.c b/tool=
-s/testing/selftests/bpf/benchs/bench_htab_mem.c
-> > index 926ee822143e..59746fd2c23a 100644
-> > --- a/tools/testing/selftests/bpf/benchs/bench_htab_mem.c
-> > +++ b/tools/testing/selftests/bpf/benchs/bench_htab_mem.c
-> > @@ -281,6 +281,7 @@ static void htab_mem_read_mem_cgrp_file(const char =
-*name, unsigned long *value)
-> >         got =3D read(fd, buf, sizeof(buf) - 1);
->
-> It could be a bit cleaner to add close(fd) here and drop the one we
-> have at the end of the function.
->
-Here, close(fd)  is now positioned within the error handling block,
-guaranteeing that
-the file descriptor will be closed prior to returning from the
-function in the event of a read error.
-Meanwhile, the final close(fd) at the end of the function is retained
-for successful execution,
-thereby avoiding any potential resource leaks.
-Hence, It is essential to add the close(fd) in both locations to
-prevent resource leakage.
+This RFC adds an initial implementation of maple tree abstractions.
+I would like any feedback possible.
 
-> pw-bot: cr
->
-> >         if (got <=3D 0) {
-> >                 *value =3D 0;
-> > +               close(fd);
-> >                 return;
-> >         }
-> >         buf[got] =3D 0;
-> > diff --git a/tools/testing/selftests/bpf/prog_tests/sk_assign.c b/tools=
-/testing/selftests/bpf/prog_tests/sk_assign.c
-> > index 0b9bd1d6f7cc..10a0ab954b8a 100644
-> > --- a/tools/testing/selftests/bpf/prog_tests/sk_assign.c
-> > +++ b/tools/testing/selftests/bpf/prog_tests/sk_assign.c
-> > @@ -37,8 +37,10 @@ configure_stack(void)
-> >         tc =3D popen("tc -V", "r");
-> >         if (CHECK_FAIL(!tc))
-> >                 return false;
-> > -       if (CHECK_FAIL(!fgets(tc_version, sizeof(tc_version), tc)))
-> > +       if (CHECK_FAIL(!fgets(tc_version, sizeof(tc_version), tc))) {
-> > +               pclose(tc);
->
-> this one looks good
->
-> >                 return false;
-> > +       }
-> >         if (strstr(tc_version, ", libbpf "))
-> >                 prog =3D "test_sk_assign_libbpf.bpf.o";
-> >         else
-> > --
-> > 2.43.0
-> >
+I would like to upstream this eventually but, it's probably going to
+be a bit until there is a user.
+
+Andrew Ballance (2):
+  maple_tree: add __mtree_insert_range function
+  rust: add maple tree abstractions
+
+ include/linux/maple_tree.h |   2 +
+ lib/maple_tree.c           |  37 ++++
+ rust/helpers/helpers.c     |   1 +
+ rust/helpers/maple_tree.c  |  25 +++
+ rust/kernel/lib.rs         |   1 +
+ rust/kernel/maple_tree.rs  | 340 +++++++++++++++++++++++++++++++++++++
+ 6 files changed, 406 insertions(+)
+ create mode 100644 rust/helpers/maple_tree.c
+ create mode 100644 rust/kernel/maple_tree.rs
+
+
+base-commit: 38fec10eb60d687e30c8c6b5420d86e8149f7557
+-- 
+2.49.0
+
