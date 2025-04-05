@@ -1,96 +1,143 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-10631.protonmail.ch (mail-10631.protonmail.ch [79.135.106.31])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9575E383;
-	Sat,  5 Apr 2025 04:55:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7C5E383
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 04:58:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.31
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743828948; cv=none; b=KrHbFv6NHzAcXeb9lU5Jk7qGMdH8W3773b6KPBRY2Bcx7U0pd6ClOgJ5WUN0B+iO2xCX//tXr/UCovEFkANAtv5HlhYPCOmWKeKqPtGUgAXFZx/L6cmGOyDrjMoMFWLBf1x8tAJechJaVzy3peq/z2v1OOr7BUAlTcZ3Y/QKTEM=
+	t=1743829083; cv=none; b=cDJLj3zI/JiBcTIbWxMQZpL1LmsGyKUu8ZUYqmUKQ4ETislxDDBvwnAZeyfoBblaTVo7j18u1qHFwHSXljOCfu2ngEgXgRNK5//OpFcM9cUOJ0tHxq1dFTHfq5nG2Jdf6BIvCCD9GGMd+1cd31paB8isoW1SkFHlt0M7xRfeUtw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743828948; c=relaxed/simple;
-	bh=kG4T87z8sYPGaxgwKwahuOOk4nDjhUhydb9Avm3K0Y8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qwfVmyc7aYvYZhfwXWqWJbo9eOTKA7mBzQdpi46+H/Ks4obVw8YlItizVwXQLfycxO3zDVxFBHb72ozORvFnwx7jyCfy+Oi7L7/5F3FtE4jLmAL2urDGPgaBODttBf84bnOPuTf0mxgLvdx5wV8RINy1o6ha8341ZGX0y7PKhCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QSMf0Ydx; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743829083; c=relaxed/simple;
+	bh=I2stVIQnV1JMUDp1WceN/ExXStfJmwaVDIpVO4V2QNw=;
+	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=TnB1Ey7xw1NyMlsPNekoGlIkJsSTI18bI3j3qp9JF1GKKeD4R3JXGA5BDGRm0ieQ6/gplLfV3EETiJYz9EEgLoY7hOJmUuZVnnAS5ixKLweqBj/BvUWK4y2wgPskMP1LEE4CvwwO85qPLUmzxRPz8lGzwTe3pSu32oGnkk3wnTY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me; spf=pass smtp.mailfrom=pm.me; dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b=Wv8tljyn; arc=none smtp.client-ip=79.135.106.31
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QSMf0Ydx"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ac2dfdf3c38so517672866b.3;
-        Fri, 04 Apr 2025 21:55:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743828945; x=1744433745; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kG4T87z8sYPGaxgwKwahuOOk4nDjhUhydb9Avm3K0Y8=;
-        b=QSMf0YdxGOVpBp1vrZX/n7oDCPzdd3e8+0Lar+OaLTTI2sqlKSPxAWrnEFd7RtGA9D
-         CcL+HqGZ/SpxhBGDTVOwe3qhzFqVbY2FAK4KUHZcVz7Epqh0FEes8/gT1a7j8wNTbnd8
-         Rx+1EbHnVUBCOwfRi1tEedalyI1SKNyqQ8MFChp+AhUtNSRp22g3VxCDVujnhAt4auGF
-         fH2QJHwZ4LC8LrLPvUu3oX4q65v5oWKtNGpo5fZZG6s5mHRQGSrsb3rvswSrkWftaE/D
-         /CICiMvUGUQIwfUqODvwu+cpIpsWphSCWv4OrDvKddp8fr3DpZnJDifrd/vf/YBRywhX
-         LHgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743828945; x=1744433745;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kG4T87z8sYPGaxgwKwahuOOk4nDjhUhydb9Avm3K0Y8=;
-        b=ZTZ/dZI4lUT3EwBQMCikRJaEZDkGW+cBwV3XoXgNCmQfq7BsqBK5ooj1wQxb1XDG9r
-         Sy1drCfbgB44MfcVX9/niVSce9dFUjUTcn1zRItqBhjHLIa1pQWZfiLna1Tocsn9BeV3
-         Q1jxQdDBOXaOYv5f3hl/mHzbh9C6RNpGU2z8w0ggJ5LyXSZKt9nyMcDdeCPCS+1Pu2Qx
-         JvWhn7UTk35wSG4gY/Wi6JTQBhuHpZDUmJWl/MaL+P7CkFECqNglrpu592BfA8hoFXiP
-         uHGLiNz22j8hEvHB/FzYg/KH4TLuyiZ0Cn0boOHoWRfUaOUWnjJVz/AVFmzQ1YW4j9zs
-         AeQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVJef8iFFVzJVklLqePc7uCcohUAP1onmEafI7VhBlSXfQJIoAO7Jd215B5AkoyidwFgSUSbg/92PuTwheV@vger.kernel.org, AJvYcCVndTDjyeiy2tzLiFUzMmAq2Utb6Mh8ql3D1KTeoTGBEt2FK3nbHeFEbsqfM4/kuIUThK/j3D5kFqL1H9jE@vger.kernel.org
-X-Gm-Message-State: AOJu0YxpvdLcEB/V6KoHtU87pBMvRpC48ctCF6kqUDs0wu+2aE8tHrAS
-	aSYOec1VJaDFalc7+UjFn+AzUSk0r3bF/KgdcP2keKq16IQMqLb0bT4Ago4C7gdPrin9ceu3uXs
-	AGtGHhCZc2uZbawkBtoIy+XD55x8=
-X-Gm-Gg: ASbGncuO+EnRflILPme6K7XGjt6ygfHoFUF3boYXJLXg0T5mDz10FFrWCiOtooTkCvO
-	284QBoL5JuJ42s71w/v2t7INIUoNkC5Qot9TW3nfwsYrj/Xa8I+UnVFwHkQvKK4kruy5l9MSPSF
-	kW1K/pH2EmeeBMZ8mzbaLPqnzZYg==
-X-Google-Smtp-Source: AGHT+IFcUVeXXZxdo7j1ulhpZ0rOcuuR8gAaHePRUA3DnIZWmW3HhrCh7oQTXbro0DlpRy0xFni1HW1GW1tSbk16ZPE=
-X-Received: by 2002:a17:907:3f93:b0:ac7:9828:ea41 with SMTP id
- a640c23a62f3a-ac7d1bca584mr424341266b.41.1743828944788; Fri, 04 Apr 2025
- 21:55:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="Wv8tljyn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
+	s=protonmail3; t=1743829072; x=1744088272;
+	bh=A2xev0rDxddos5NidDPQixrRYQvSFIIjKdpJyFe5F/U=;
+	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector:
+	 List-Unsubscribe:List-Unsubscribe-Post;
+	b=Wv8tljynKiqeb4/qBvUPtzfbDTItGI6C17/B4h+L8cZqi1D9oC0y+9PU3u7pvgbF3
+	 jpVYyVIY515dYEc0WNm5j1AjTWrt3QYbgg5MYxnvtZX7K0ZfAaCRA22S+kip44j4v5
+	 lxKpRfnxVQ3zS6QM0FJfvwBDbTDz+mD4kPHoevM4vTnZeT2vc0lvA4A9xeIQF9KhK4
+	 Jxi3QTL9pqYwIF7kBv5Omdbmvd9cA8U/cBrw8vb0hzxvTsTnvUZlK/d6JqSv0s/44o
+	 xjMjfkhjKLFvvjTUiZgkBOMpluiDOaQ4mROb1Kk0/+LitFMSo2XVIcvcr40OsBLqQc
+	 OLEs+zyQlDrog==
+Date: Sat, 05 Apr 2025 04:57:48 +0000
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+From: "Michael C. Pratt" <mcpratt@pm.me>
+Cc: Christian Lamparter <chunkeey@gmail.com>, =?utf-8?Q?Rafa=C5=82_Mi=C5=82ecki?= <rafal@milecki.pl>, linux-kernel@vger.kernel.org, "Michael C . Pratt" <mcpratt@pm.me>, INAGAKI Hiroshi <musashino.open@gmail.com>
+Subject: [PATCH v1 RESEND] nvmem: layouts: u-boot-env: remove crc32 endianness conversion
+Message-ID: <20250405045617.26106-1-mcpratt@pm.me>
+Feedback-ID: 27397442:user:proton
+X-Pm-Message-ID: 55cbcd0545ede1fe5bb9544bdcfe6a873d5b7599
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250329192821.822253-1-mjguzik@gmail.com> <20250329192821.822253-3-mjguzik@gmail.com>
- <87h63bpnib.fsf@igel.home> <Z--bN3WetGcsQmnx@infradead.org>
-In-Reply-To: <Z--bN3WetGcsQmnx@infradead.org>
-From: Mateusz Guzik <mjguzik@gmail.com>
-Date: Sat, 5 Apr 2025 06:55:33 +0200
-X-Gm-Features: ATxdqUGZVV2m3-29AEJfDylOnEd-fQAW1DdjQBXQ1-IcltKzJ7udo6Hoht0qQ9c
-Message-ID: <CAGudoHF2RbaEAUYcWBZCo=4KvRroEcotAjtZEnoTG1qTYA5+eg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] fs: cache the string generated by reading /proc/filesystems
-To: Christoph Hellwig <hch@infradead.org>
-Cc: Andreas Schwab <schwab@linux-m68k.org>, brauner@kernel.org, viro@zeniv.linux.org.uk, 
-	jack@suse.cz, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 4, 2025 at 10:41=E2=80=AFAM Christoph Hellwig <hch@infradead.or=
-g> wrote:
->
-> On Sat, Mar 29, 2025 at 09:53:16PM +0100, Andreas Schwab wrote:
-> > On M=C3=A4r 29 2025, Mateusz Guzik wrote:
-> >
-> > > It is being read surprisingly often (e.g., by mkdir, ls and even sed!=
-).
-> >
-> > It is part of libselinux (selinuxfs_exits), called by its library
-> > initializer.
->
-> Can we please fix libselinux instead of working around this really
-> broken behavior in the kernel?
->
+On 11 Oct 2022, it was reported that the crc32 verification
+of the u-boot environment failed only on big-endian systems
+for the u-boot-env nvmem layout driver with the following error.
 
-That's a fair point, I'm going to ask them about it. If they fix it
-then I'll probably self-NAK the patch.
+  Invalid calculated CRC32: 0x88cd6f09 (expected: 0x096fcd88)
 
+This problem has been present since the driver was introduced,
+and before it was made into a layout driver.
+
+The suggested fix at the time was to use further endianness
+conversion macros in order to have both the stored and calculated
+crc32 values to compare always represented in the system's endianness.
+This was not accepted due to sparse warnings
+and some disagreement on how to handle the situation.
+Later on in a newer revision of the patch, it was proposed to use
+cpu_to_le32() for both values to compare instead of le32_to_cpu()
+and store the values as __le32 type to remove compilation errors.
+
+The necessity of this is based on the assumption that the use of crc32()
+requires endianness conversion because the algorithm uses little-endian,
+however, this does not prove to be the case and the issue is unrelated.
+
+Upon inspecting the current kernel code,
+there already is an existing use of le32_to_cpu() in this driver,
+which suggests there already is special handling for big-endian systems,
+however, it is big-endian systems that have the problem.
+
+This, being the only functional difference between architectures
+in the driver combined with the fact that the suggested fix
+was to use the exact same endianness conversion for the values
+brings up the possibility that it was not necessary to begin with,
+as the same endianness conversion for two values expected to be the same
+is expected to be equivalent to no conversion at all.
+
+After inspecting the u-boot environment of devices of both endianness
+and trying to remove the existing endianness conversion,
+the problem is resolved in an equivalent way as the other suggested fixes.
+
+Ultimately, it seems that u-boot is agnostic to endianness
+at least for the purpose of environment variables.
+In other words, u-boot reads and writes the stored crc32 value
+with the same endianness that the crc32 value is calculated with
+in whichever endianness a certain architecture runs on.
+
+Therefore, the u-boot-env driver does not need to convert endianness.
+Remove the usage of endianness macros in the u-boot-env driver,
+and change the type of local variables to maintain the same return type.
+
+If there is a special situation in the case of endianness,
+it would be a corner case and should be handled by a unique "compatible".
+
+Even though it is not necessary to use endianness conversion macros here,
+it may be useful to use them in the future for consistent error printing.
+
+Fixes: d5542923f200 ("nvmem: add driver handling U-Boot environment variabl=
+es")
+Reported-by: INAGAKI Hiroshi <musashino.open@gmail.com>
+Link: https://lore.kernel.org/all/20221011024928.1807-1-musashino.open@gmai=
+l.com
+Signed-off-by: Michael C. Pratt <mcpratt@pm.me>
+---
+ drivers/nvmem/layouts/u-boot-env.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/nvmem/layouts/u-boot-env.c b/drivers/nvmem/layouts/u-b=
+oot-env.c
+index 731e6f4f12b2..21f6dcf905dd 100644
+--- a/drivers/nvmem/layouts/u-boot-env.c
++++ b/drivers/nvmem/layouts/u-boot-env.c
+@@ -92,7 +92,7 @@ int u_boot_env_parse(struct device *dev, struct nvmem_dev=
+ice *nvmem,
+ =09size_t crc32_data_offset;
+ =09size_t crc32_data_len;
+ =09size_t crc32_offset;
+-=09__le32 *crc32_addr;
++=09uint32_t *crc32_addr;
+ =09size_t data_offset;
+ =09size_t data_len;
+ =09size_t dev_size;
+@@ -143,8 +143,8 @@ int u_boot_env_parse(struct device *dev, struct nvmem_d=
+evice *nvmem,
+ =09=09goto err_kfree;
+ =09}
+=20
+-=09crc32_addr =3D (__le32 *)(buf + crc32_offset);
+-=09crc32 =3D le32_to_cpu(*crc32_addr);
++=09crc32_addr =3D (uint32_t *)(buf + crc32_offset);
++=09crc32 =3D *crc32_addr;
+ =09crc32_data_len =3D dev_size - crc32_data_offset;
+ =09data_len =3D dev_size - data_offset;
+=20
+
+base-commit: 38fec10eb60d687e30c8c6b5420d86e8149f7557
 --=20
-Mateusz Guzik <mjguzik gmail.com>
+2.30.2
+
+
