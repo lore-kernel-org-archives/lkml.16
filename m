@@ -1,113 +1,107 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A794619E998
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 22:34:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D92061865E3
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 22:45:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743892492; cv=none; b=qVVULPS8BbT3SuXbIg4KZsBDqnwKV0/IHBODB24TQcfnbLp4dYpoHS/X2FB5e9Gkgdlnd2cFXHRyQEibY57Cw02nUqvxF7D0fJwTZQsbPR6Omxk12yo/HxmdIBzKN+Ag9EB3FB76vvp+hZAUtac36cSOeCE8xGApYhuSoqGXo1g=
+	t=1743893144; cv=none; b=Rgfcdo4k0iMDy6fvS/1gzaGhHfnAh4qggclx4nlfnu9Kw8hJznCCO5VWAh6xatKJMWl/rLgG1GFW/MfL4JTvcxQ4/yydA+sJP3In6c/e5WI0AljgfEDX5VGrjzT7gAvkh6mzO/TpZ8zfDQvznrjotFRqX8gQ6Q0skQ34SEzjDBM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743892492; c=relaxed/simple;
-	bh=Jwa7WVh1Mbn44z4uCieGuSkSoP/aImVcM5D1P7xUJgU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=e023iIzLU0HmIhJInQ2uObQnUYHG/rWQTF1QpD6tw8aStNskIchD+0hJchroOW4qsKU1WDk21mh52V/hgY0ZqgOQHD1xAYhyQY3lSOI2v4Gwt5y4mfy9/zqbNT1hvCAJ2p+sHNFU2O+lTOJ/ywkFX45p9gqPXNFzU2g21j024Dc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=UiDZJUH1; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="UiDZJUH1"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5e686d39ba2so5847066a12.2
-        for <linux-kernel@vger.kernel.org>; Sat, 05 Apr 2025 15:34:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1743892486; x=1744497286; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=tT2mm+ItL4N6xmscnWjjPD3E7M42LVXxM6kDybYeTbg=;
-        b=UiDZJUH17t+AyovH+OqMVfIorL37ganWheYitYfqRxarhEdGGAAt/c1SF/xbXTaWxK
-         d4O9ZzNPA7HqrpOtEoGZmO65kCchTT0hmbryWAusrUU2h6yk9F7dVqDp+ScNm8TcAsj0
-         cDJCA1n6UouCp3/EBH+TFS1ym/4/TVgEp8tHI=
+	s=arc-20240116; t=1743893144; c=relaxed/simple;
+	bh=vXrhIOF4ZU3aW0HkhIw3HhIbl7AJE4qK7/LV2XqqabI=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=HuRhvyfw2tfqj5zE9Ije9HWoO1l6nW/48zYxaSjZshx09+phre4wFDOg9BlmvxPwmZJoNSFJqnjL2qjw47MhW4tCRc7z8Dmqb0KxCjaBb/OGnXkO1rZ529WrzVHPLqAK3PmSGRsAHJAfl+i+SM4otolG4en5JCyGMyaMkoUJc6Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-85b418faf73so740508039f.1
+        for <linux-kernel@vger.kernel.org>; Sat, 05 Apr 2025 15:45:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743892486; x=1744497286;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tT2mm+ItL4N6xmscnWjjPD3E7M42LVXxM6kDybYeTbg=;
-        b=HchHh8wgNiRKFFXWcDZ6I283ggD9vfEMMin+PlFJVqtd1Ci7pt5KYpXzwzQmvr3eTW
-         QZwsltH1Oj45zwO56bJFqhEuIzAvj4p06YTOUQWTUO9ncaBpn6XcbVVlwPuXfMHFxPNc
-         jG8eoIg1Dn/XDc2ZVZw/bIfg1jaVnGhLED5xylXjRVCr4NfOH46zPP9MUgFb42kbFmZf
-         YnU4+1rKq9eyPTU0SROSSYobBNPbgAB3//ZQFG5sUySyxwtYFS6tFn0Wdv16f+6zhBnN
-         p4nIpLdoDnEsn5V+FtLpwsekn9ztusITrwyPcsfpBZkpyHO4qJw5lCU0mHzyjuvtEP0q
-         ExLw==
-X-Forwarded-Encrypted: i=1; AJvYcCXsAFe/15bkl05j7VJalldomIwL+s8GppUZtrbtw277lghY5afURmRunwagjEQGlRduiKPle/Tm3KDDkHo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw9wXGbCviTDBVWlmka37lTZk0JgeOZYUdbT/Y0Pwi9p+GiRgOQ
-	ZObLPJtoxL0L+ulQR/a3G3M3MuggTBSpx7xHYow1qUbbXbuM6TVjVEP/joJWC1qowAFXcbO4+q3
-	4XzE=
-X-Gm-Gg: ASbGncvxjQb3nnm+Aj042pj7fhpg79YKX7vk6D9tgTzXa1vukhLjcIoSulUw6wO9YCg
-	HTTXbiPvJ0YsrJb7TrXQm7VPWvrR60Abe6IYxDrBsLP+KSg1QfytJMfclimWsTG2SegU4wUKtCf
-	fhECynqOSzXeM9ASjzH/T1JJRoIxMG4VaZAdjFccJA2H4luDHSxA6WcrmLF7VZJdnNZkGWhez5J
-	CMd+sPnD9Y0mnB5slq78/tYRmTbqXyVfG+r2SrTSj/nStfF5yBGziiR6aC9nzcZwDnz/oUrokcz
-	r8O9KSF1+DK2uaG2kKpNGvLxBh66jYn0g7XLco17zkSJNNFTceht4BaZ7MBDNLjbQge7G22CINF
-	3XqdRR2x2//JXAExR9Nc68F1r109qHA==
-X-Google-Smtp-Source: AGHT+IHlrT/mLxdqVtlAJvTG4uWTNCX3xW1BdZ5kxSPv6mGGTqnH3T/IyHGcs3ML37LL9FDHPCDLZg==
-X-Received: by 2002:a17:906:f5a2:b0:ac3:5c8e:d3f6 with SMTP id a640c23a62f3a-ac7d1cce91emr775324966b.55.1743892486563;
-        Sat, 05 Apr 2025 15:34:46 -0700 (PDT)
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com. [209.85.218.47])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7c01c2170sm490983766b.170.2025.04.05.15.34.44
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 05 Apr 2025 15:34:45 -0700 (PDT)
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ac3eb3fdd2eso240242066b.0
-        for <linux-kernel@vger.kernel.org>; Sat, 05 Apr 2025 15:34:44 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUo144y6aCphXmAFmernsvGuYuCecBb/SaqZG69Qv0rVytFBcMO+wB8iUbyHdiCgQkK77uQcEn0Ba+L7S0=@vger.kernel.org
-X-Received: by 2002:a17:906:dc8f:b0:abf:8f56:fe76 with SMTP id
- a640c23a62f3a-ac7d18bbd79mr666317166b.25.1743892484382; Sat, 05 Apr 2025
- 15:34:44 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743893142; x=1744497942;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=O2qfbwdToQX+L9OrY30l80wmXKfRnxSnf5RIZPHXkVc=;
+        b=gohcecIfigorZKNmrqBpnNa6FzlDbuy/VMLTVcX2JmxFw7or9KH/RuDe+XwCK0HR3t
+         HT/v7UoV1av/J/6xbPs8vtrDtdtxWaWFVsZajuLbWvnDcj4qAxhaSsBxdGEVROB2SJB3
+         IkoNHD1VMS/sLa98Gcu6QkoEySMKHCP7QxjmTUsYHsXymTdku5Z0X10o7pZm3S3p6Rg9
+         dKJPAgSh5BD20I4SFKZkLFdJV/a47VqS7HKeI7RcBsd4McZNCXrW2gfgetD+8HQ5htln
+         o79aL/O27UrDTe/iZtYEPGYMGvWzc1tF9Ge1dE1M71Q2T0e5ScAyxdyCpVvim57n45S8
+         femg==
+X-Gm-Message-State: AOJu0YzGCHi3ypc9zsHZ3QOeYGYILelr5dU9H5vSt/enSPF25NbEuDz+
+	9G1JGc0sXcnmwWZy5RDxxcg/keex33lS4HrTCstldHz/9lHCdR5kjRWPDUnUlGqktheAQFUorWX
+	UXruThAlUEOYJbzS4/MHoCmJZkLIS6X2THX97yjbnr5fAv9g+0esk92E=
+X-Google-Smtp-Source: AGHT+IGZCzIGT3Yy+6p05jbQkgK/WkUjoNNX73ciCqfxvySOybq/Lmaa9CC9zQCz6rlYSs2829xwVfR3yATgklf3LwMzv9OP4AME
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAPM=9twD=Epq278=nVGxMU4veeEpznYLnr_PVQ9WqvdnxZac_w@mail.gmail.com>
- <CAPM=9tw5SBS_P1oX+ySAhNx-M_NeO4RzK249i6vtwSU0V4mbDA@mail.gmail.com>
-In-Reply-To: <CAPM=9tw5SBS_P1oX+ySAhNx-M_NeO4RzK249i6vtwSU0V4mbDA@mail.gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Sat, 5 Apr 2025 15:34:28 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wi+93hTajFWaRL+vih3NjrwsNe8gzgMxmQc5BE+gPQnoA@mail.gmail.com>
-X-Gm-Features: ATxdqUEiA6LOTMVfYZDKtw0Uy6wB6ERJBodsv9nW5wea49PdH9NSkRvjU3sFM0w
-Message-ID: <CAHk-=wi+93hTajFWaRL+vih3NjrwsNe8gzgMxmQc5BE+gPQnoA@mail.gmail.com>
-Subject: Re: [git pull] drm fixes for 6.15-rc1
-To: Dave Airlie <airlied@gmail.com>, Alex Deucher <alexander.deucher@amd.com>, 
-	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-Cc: Simona Vetter <simona@ffwll.ch>, dri-devel <dri-devel@lists.freedesktop.org>, 
-	LKML <linux-kernel@vger.kernel.org>
+X-Received: by 2002:a05:6e02:339f:b0:3d3:f040:5878 with SMTP id
+ e9e14a558f8ab-3d6e5999368mr91080625ab.21.1743893141972; Sat, 05 Apr 2025
+ 15:45:41 -0700 (PDT)
+Date: Sat, 05 Apr 2025 15:45:41 -0700
+In-Reply-To: <67ef83fe.050a0220.9040b.0366.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67f1b295.050a0220.0a13.024b.GAE@google.com>
+Subject: Re: [syzbot] #syz test: git://git.kernel.dk/linux.git syztest
+From: syzbot <syzbot+ff3aa851d46ab82953a3@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 
-I was going to report this separately, but then the pull came in, so
-I'm just replying to that one instead...
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
 
-On Sat, 5 Apr 2025 at 14:51, Dave Airlie <airlied@gmail.com> wrote:
->
-> amdgpu:
+***
 
-Does any of this happen to fix this (repeated a couple of hundred
-times each time):
+Subject: #syz test: git://git.kernel.dk/linux.git syztest
+Author: gshahrouzi@gmail.com
 
-  [drm] scheduler comp_1.1.1 is not ready, skipping
-  [drm] scheduler comp_1.3.0 is not ready, skipping
-  [drm] scheduler comp_1.0.1 is not ready, skipping
+Move the get_ctx(child_ctx) call and the child_event->ctx assignment to
+occur immediately after the child event is allocated. Ensure that
+child_event->ctx is non-NULL before any subsequent error path within
+inherit_event calls free_event(), satisfying the assumptions of the
+cleanup code.
 
-which seems to happen on my machine when the display goes to sleep and
-then comes back from low-power state.
+Reported-by: syzbot+ff3aa851d46ab82953a3@syzkaller.appspotmail.com
+Closes: https://syzkaller.appspot.com/bug?extid=ff3aa851d46ab82953a3
+Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+---
+ kernel/events/core.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-It also seems to make the power resume quite a bit slower. Everything
-still seems to *work*, just annoying messages and an extra several
-seconds of black screen...
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 0bb21659e252..153ba622cfa0 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -14016,6 +14016,9 @@ inherit_event(struct perf_event *parent_event,
+ 	if (IS_ERR(child_event))
+ 		return child_event;
+ 
++	get_ctx(child_ctx);
++	child_event->ctx = child_ctx;
++
+ 	pmu_ctx = find_get_pmu_context(child_event->pmu, child_ctx, child_event);
+ 	if (IS_ERR(pmu_ctx)) {
+ 		free_event(child_event);
+@@ -14037,8 +14040,6 @@ inherit_event(struct perf_event *parent_event,
+ 		return NULL;
+ 	}
+ 
+-	get_ctx(child_ctx);
+-
+ 	/*
+ 	 * Make the child state follow the state of the parent event,
+ 	 * not its attr.disabled bit.  We hold the parent's mutex,
+@@ -14059,7 +14060,6 @@ inherit_event(struct perf_event *parent_event,
+ 		local64_set(&hwc->period_left, sample_period);
+ 	}
+ 
+-	child_event->ctx = child_ctx;
+ 	child_event->overflow_handler = parent_event->overflow_handler;
+ 	child_event->overflow_handler_context
+ 		= parent_event->overflow_handler_context;
+-- 
+2.43.0
 
-This is on my threadripper with the same ancient "Sapphire Pulse RX
-580 8GB" or whatever it is. lspci calls it "Ellesmere [Radeon RX
-470/480/570/570X/580/580X/590] (rev e7)"
-
-I will be pulling and testing, but I thought I'd mention this issue regardless.
-
-                Linus
