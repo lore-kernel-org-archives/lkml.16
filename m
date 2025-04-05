@@ -1,53 +1,53 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAEEC2E62BD
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 02:02:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3D731BC3C
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 02:02:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743818555; cv=none; b=aJaUBfuiHgYwlkgPCZNL8+l0xKsaIX1GoCNWde3nx1kBdHmjsETYShbOEeUU4dFMPcmFslJ7JBOpGK8My6eZ2HMAv1embqQgB4nJFQLiNw3IOeJecC+l/AyCjmut3+dG/sI8Ibs88Sza72o3HPMWmzqMkqueJ3QoQSix9BdF3Y0=
+	t=1743818558; cv=none; b=ZJnpQawm7sgYB8571oSVcy/pYNELF2L7rT+eljSfXer8SYmBALmatGPl+e0bY2GKRM75P+IWd8d4jzEYof6PWKNLbsIzpiZH39w5DIdZiwRmgbjIcYbBJw0DwlOVXfOtw+F5R2DXHHtz3+B4Xfzh3xocmqzbdEenANtHtKa/gXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743818555; c=relaxed/simple;
-	bh=n55XbygekPuRSftRNaBTCpWgjPxbf0+xzTKJHWs1Faw=;
+	s=arc-20240116; t=1743818558; c=relaxed/simple;
+	bh=giulut+PrxF/O0P30CwxI5j9ksQr3ldBC5eDinXEP3c=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZR7StdBZvpl5TL9ImDwveZKDOpJdv9exzFEi2U1Bu0IZ6LhoXjfpw0SngBa828tksxi2xwvuNbzsLx2RACtW6+V7KaMHPVJYDYw6aomjVauK7DZnJ1412zw+EYLoCrHEpVnFNE8nAnopq7JyFEaH62+3OQ7Hd4c07UX5pQ7/jRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MNNqg8or; arc=none smtp.client-ip=198.175.65.14
+	 Content-Type:Content-Disposition:In-Reply-To; b=KHqPK4yWa2K8M3ZF2DtM2A+f5WLiUnjlv3T7cKmmv+d+wPVPwBQKD9V8zlTR8YL7u20RfXK6A4bN/4RaQBFuI+6EYq35ssrqZPhYfjFUwox7B97au1p7RhR1O04v9Czc6OGub73IBNsUzKXUaOTE92MGhK+xjqR4TMoKR0t0h9o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZJi2baZO; arc=none smtp.client-ip=198.175.65.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MNNqg8or"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZJi2baZO"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743818554; x=1775354554;
+  t=1743818556; x=1775354556;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=n55XbygekPuRSftRNaBTCpWgjPxbf0+xzTKJHWs1Faw=;
-  b=MNNqg8orUjdY2+D6jTDC3WhVaGuKPfW2EZmQxAk0VKc642gFWQb5HPDN
-   ZDzKRhyHowlTmrMRlpL99KQ0brUMfpk7Q9EnrSmPqv+2eeThWYzRormPz
-   Hnxh4z6e4znTb8mu1meLh12KZgE6IwiZATvisG8iv+/AXg/uK7HyHIAA8
-   2E3adRQDIFkzDr6gTg8tbMGE/+oknyH2Z3CNKenOaC7sBSL+IK6fa1P0z
-   wL0puquWHo1bnEIBUbyX9If2CpqW6+NMh+/kOguPa/45qIHCj0U7rsckU
-   C9BR4AXM+4AZvPteyKtIyfILPC0JLajAmF3AnlYY9H2SgWv886cIR9oJJ
-   w==;
-X-CSE-ConnectionGUID: MEG72f5cS3+vlJoi2BjgGQ==
-X-CSE-MsgGUID: gvFF3oPOQtyx71e3H3FmSQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11394"; a="49064523"
+  bh=giulut+PrxF/O0P30CwxI5j9ksQr3ldBC5eDinXEP3c=;
+  b=ZJi2baZOQkFSQOYkks+/IkqkG9TMOd7SrhNHK0NAHjB33FiD9JSzyP8r
+   bFHjjwbm+cghjG1duyNczIBAHwxwJL2YCbMqA0daxRMq8x5bNxcY0Fwzg
+   /6VH7xkvhEvQeN7YoASV291H25CQYN5XFqBUAoB/f/qkRRuL9OOJa7d05
+   8UTCxD3IOUv05Yon/qfEQWJCXA28DkTkCzjKPyeu5eVuQrKjJU+lcZ3n1
+   djXEyfpgQ6XQY8r4datZTvc3TmDROjRmdU/91IGt5cKnowxPfeEq/39sU
+   Wd4cDNG94GXPgUPUpF3jN+7tepgZ1mPpDYxwVE4pOSEq8yRJfeFptCwqg
+   Q==;
+X-CSE-ConnectionGUID: siOqq8vTS4+nREasVANftw==
+X-CSE-MsgGUID: ZuFiVlfYRQ6Ivx2V7TY+mw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11394"; a="49064539"
 X-IronPort-AV: E=Sophos;i="6.15,189,1739865600"; 
-   d="scan'208";a="49064523"
+   d="scan'208";a="49064539"
 Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 19:02:33 -0700
-X-CSE-ConnectionGUID: 1a/Sqrq0QAqulzvOM4QDhA==
-X-CSE-MsgGUID: OciFOaSYQwuAk8MVNQiG1w==
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2025 19:02:34 -0700
+X-CSE-ConnectionGUID: phdwfIJuQnmfaBYBelhYdw==
+X-CSE-MsgGUID: RtJF8pFtRCWo8Pibg7DFqQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,189,1739865600"; 
-   d="scan'208";a="127954060"
+   d="scan'208";a="127954061"
 Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
   by fmviesa010.fm.intel.com with ESMTP; 04 Apr 2025 19:02:28 -0700
 Received: from kbuild by b207828170a5 with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1u0srZ-0001jb-2I;
+	id 1u0srZ-0001jY-2G;
 	Sat, 05 Apr 2025 02:02:25 +0000
-Date: Sat, 5 Apr 2025 10:01:40 +0800
+Date: Sat, 5 Apr 2025 10:01:39 +0800
 From: kernel test robot <lkp@intel.com>
 To: Anusha Srivatsa <asrivats@redhat.com>,
 	Neil Armstrong <neil.armstrong@linaro.org>,
@@ -68,12 +68,12 @@ To: Anusha Srivatsa <asrivats@redhat.com>,
 	Janne Grunau <j@jannau.net>,
 	Michael Trimarchi <michael@amarulasolutions.com>,
 	Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: oe-kbuild-all@lists.linux.dev, dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org, asahi@lists.linux.dev,
-	Anusha Srivatsa <asrivats@redhat.com>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	asahi@lists.linux.dev, Anusha Srivatsa <asrivats@redhat.com>
 Subject: Re: [PATCH 41/46] panel/widechips-ws2401: Use refcounted allocation
  in place of devm_kzalloc()
-Message-ID: <202504050919.KlKBUNDh-lkp@intel.com>
+Message-ID: <202504050913.gq6yJY4f-lkp@intel.com>
 References: <20250403-b4-drm_panel_mass_driver_convert_part3-v1-41-965b15ad5b8e@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -95,89 +95,18 @@ url:    https://github.com/intel-lab-lkp/linux/commits/Anusha-Srivatsa/panel-ori
 base:   de04bb0089a96cc00d13b12cbf66a088befe3057
 patch link:    https://lore.kernel.org/r/20250403-b4-drm_panel_mass_driver_convert_part3-v1-41-965b15ad5b8e%40redhat.com
 patch subject: [PATCH 41/46] panel/widechips-ws2401: Use refcounted allocation in place of devm_kzalloc()
-config: x86_64-buildonly-randconfig-001-20250405 (https://download.01.org/0day-ci/archive/20250405/202504050919.KlKBUNDh-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250405/202504050919.KlKBUNDh-lkp@intel.com/reproduce)
+config: x86_64-buildonly-randconfig-004-20250405 (https://download.01.org/0day-ci/archive/20250405/202504050913.gq6yJY4f-lkp@intel.com/config)
+compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250405/202504050913.gq6yJY4f-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504050919.KlKBUNDh-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504050913.gq6yJY4f-lkp@intel.com/
 
-All errors (new ones prefixed by >>):
+All errors (new ones prefixed by >>, old ones prefixed by <<):
 
-   ld: drivers/gpu/drm/panel/panel-widechips-ws2401.o: in function `ws2401_probe':
->> drivers/gpu/drm/panel/panel-widechips-ws2401.c:350: undefined reference to `__devm_drm_panel_alloc'
-
-
-vim +350 drivers/gpu/drm/panel/panel-widechips-ws2401.c
-
-   343	
-   344	static int ws2401_probe(struct spi_device *spi)
-   345	{
-   346		struct device *dev = &spi->dev;
-   347		struct ws2401 *ws;
-   348		int ret;
-   349	
- > 350		ws = devm_drm_panel_alloc(dev, struct ws2401, panel, &ws2401_drm_funcs,
-   351					   DRM_MODE_CONNECTOR_DPI);
-   352		if (IS_ERR(ws))
-   353			return PTR_ERR(ws);
-   354	
-   355		ws->dev = dev;
-   356	
-   357		/*
-   358		 * VCI   is the analog voltage supply
-   359		 * VCCIO is the digital I/O voltage supply
-   360		 */
-   361		ws->regulators[0].supply = "vci";
-   362		ws->regulators[1].supply = "vccio";
-   363		ret = devm_regulator_bulk_get(dev,
-   364					      ARRAY_SIZE(ws->regulators),
-   365					      ws->regulators);
-   366		if (ret)
-   367			return dev_err_probe(dev, ret, "failed to get regulators\n");
-   368	
-   369		ws->reset = devm_gpiod_get(dev, "reset", GPIOD_OUT_HIGH);
-   370		if (IS_ERR(ws->reset)) {
-   371			ret = PTR_ERR(ws->reset);
-   372			return dev_err_probe(dev, ret, "no RESET GPIO\n");
-   373		}
-   374	
-   375		ret = mipi_dbi_spi_init(spi, &ws->dbi, NULL);
-   376		if (ret)
-   377			return dev_err_probe(dev, ret, "MIPI DBI init failed\n");
-   378		ws->dbi.read_commands = ws2401_dbi_read_commands;
-   379	
-   380		ws2401_power_on(ws);
-   381		ws2401_read_mtp_id(ws);
-   382		ws2401_power_off(ws);
-   383	
-   384		ret = drm_panel_of_backlight(&ws->panel);
-   385		if (ret)
-   386			return dev_err_probe(dev, ret,
-   387					"failed to get external backlight device\n");
-   388	
-   389		if (!ws->panel.backlight) {
-   390			dev_dbg(dev, "no external backlight, using internal backlight\n");
-   391			ws->panel.backlight =
-   392				devm_backlight_device_register(dev, "ws2401", dev, ws,
-   393					&ws2401_bl_ops, &ws2401_bl_props);
-   394			if (IS_ERR(ws->panel.backlight))
-   395				return dev_err_probe(dev, PTR_ERR(ws->panel.backlight),
-   396					"failed to register backlight device\n");
-   397		} else {
-   398			dev_dbg(dev, "using external backlight\n");
-   399		}
-   400	
-   401		spi_set_drvdata(spi, ws);
-   402	
-   403		drm_panel_add(&ws->panel);
-   404		dev_dbg(dev, "added panel\n");
-   405	
-   406		return 0;
-   407	}
-   408	
+>> ERROR: modpost: "__devm_drm_panel_alloc" [drivers/gpu/drm/panel/panel-widechips-ws2401.ko] undefined!
 
 -- 
 0-DAY CI Kernel Test Service
