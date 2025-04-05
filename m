@@ -1,143 +1,125 @@
-Received: from mail-pg1-f193.google.com (mail-pg1-f193.google.com [209.85.215.193])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD0A0EED8;
-	Sat,  5 Apr 2025 14:18:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE1EC3A1BA
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 14:19:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743862700; cv=none; b=Xt0uCU5Z9bJnsCi8rMTRqmuPsRIlWPxmwTa5mOdDw2xV6EwNZX0fP9Kmgz2NMpRewvfVbQe+jvUS0YFqJrR/gymMEd0CRkm6O5OVGPstyCGvjTGkOeJDvYNkki2uta60WAy1bQ7W+hghqtbxGVeiQzvLi9/Djqcz5Fi4FNLniZA=
+	t=1743862762; cv=none; b=GT6vJYagq+cW6HHy3Uv01HQCI7RL0ljjYdDI6dUQlp18DmjBO7guvKijUFa6a2TiuVa5lz0bRn4/BLQEdvriv6NlX1FDeGrCaYzlXNVeYLQH1fHzTQLnsTV/pAJT+aEFATtmHzy+SXAW8XOJd8pmI0erk9WHQc9WPXbIvz+DeW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743862700; c=relaxed/simple;
-	bh=XEjfPkQ0xDf3298mOZu4CUGzRm/UeFS1ndsXjAJED9c=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IM8PeYIxjg6EgGFJaNI3RzyZ/S9e7qArW6UUU+m4uhhycJ/GFQcbEi2ZkjpYrJCrIp+zuJCqtpy3f06FDIp3ZZbRCYTv4RKQbTHIq/z+eigG7znIm0VRmPQtoaphl4bWUgD9xEIRziLN8B8jBMKzwT5hgMqOYGpM56h0pcn5YoE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DEjxiEWq; arc=none smtp.client-ip=209.85.215.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743862762; c=relaxed/simple;
+	bh=l74iBGb8CYoPepq0f+0E27YnDUTS+yR30dVNzQkwb8s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EUVGwVIhZDTrmL9Cw/oNuX0emObs3dfrNTJyQUkYLgvBT+5Ootb4rKpgn8rmcIikzLguKaJxwojsLvYh6igtL1LpaT5aETNddm07k/7iNj6aCpd9X73q7TJWaZLqzsgfn/9eOLgGgJdUtXJhLuuQT/rBh32PLkTSiHFhznvBimQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UNW56sIl; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DEjxiEWq"
-Received: by mail-pg1-f193.google.com with SMTP id 41be03b00d2f7-af9065f0fc0so1992052a12.2;
-        Sat, 05 Apr 2025 07:18:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UNW56sIl"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43cfecdd8b2so23523415e9.2
+        for <linux-kernel@vger.kernel.org>; Sat, 05 Apr 2025 07:19:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743862698; x=1744467498; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Flo9A1xpfb3u2VecU2C1QdOzijhYyfyrS/0Oo29D4es=;
-        b=DEjxiEWqkMZ4G7pV1ahoHKVYvnlGh8SjhffZzWKas61bjnueWqEfGqszGC8W7X6VB9
-         Dc7ArQN3DVbmaZGUtwUia5+uLY5G524Yt4Q5QL5CQAdKJZ21vzu2nrCkbjm9wdbr8NKO
-         MCik7qDINhB9IKCllr/6xQlDBmEwVPBUrp82UP13J416gHClbxs98lzuGJ+UU//e+0YK
-         zbnQgSA2h3nR2H2RpeS8tqcwFXqhQzBNxkctByYfK1eD+rCOcYc78vvPCfOtoNOrZjrE
-         hGuxlnDLYX9CPkFDDxSXs4fd7P0od1GICdIQCwHSeE12KnIXK/ULeRwPyVptiBWW0pCH
-         VWlQ==
+        d=linaro.org; s=google; t=1743862758; x=1744467558; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=QREsqMnXp3ed/MAkal6kS2dgg2uSOYjf8lEHpd+2mJA=;
+        b=UNW56sIlR0nTQ9QByQtdfHhMfsnnwGsSui+MzZIv0CbInBOTkly9muzaXHFtXEGcXO
+         wWl9/Ygc6YIc9USZQga+AJ7Ak0i8+jmOt2y1kAAj1RoKblBJ7KSNrljpB+jlKFSTQlGP
+         xsTKgd+W7U2OnKoC7MWqD+vBQpz3a2+C+anWJeAf/Jgl6OKQ+3Lui4pMP6ukEPn9qbrj
+         6rtO0ZiGHyJp4AKAae1LR3fCPVI/YaOEnWMXYU796cVmbewd84Ad+ZXgM1P9P9dvRsTE
+         RFzj5+IbjIRb1oMGOXirWZ2pqo3WJxWMeIKdJGLmeI/NHzcsqROk4WU7PQzVKfmZzXua
+         M5ow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743862698; x=1744467498;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Flo9A1xpfb3u2VecU2C1QdOzijhYyfyrS/0Oo29D4es=;
-        b=coE5WUbT3dn621JcdacLKcIf7kONkrVpOaJvf0TRoHTk/5MbU84YLudOg6rNcR16MK
-         F4wjF8k4nqeMoxTnBQDu0cDDj0emGFrjPdtSlHQL0F+S0W0CF3UTYGwvv8Ytk6QU972B
-         5cJCT2WCfb1dlzPZQ0lZa6JzxVuJz+ICodVjJJJMD3kozK3crmAoJnoeNrvCa4+P04w0
-         sebS6huWwKFjk0P+hiuBeFwLROqO/X1Q4nqDi99/DAp47hlr+08FUYHNyMknymTYVAdo
-         cy+omPPoXu+y4+4Oh9+rrv7iCuKvThiLkNpSKlomB9J70RJvuDfaAzJFjqOkIHFNe1wC
-         WdeA==
-X-Forwarded-Encrypted: i=1; AJvYcCWCG7g52lhKp7Hd6U7WTgkuZ4TkXv1rWchccDy6JzEhe8SGCIH+K72Y3v3U4aMl3d29hhSMRyqr0f+mgUA=@vger.kernel.org, AJvYcCXblX5Om8rTK8ckeloCtZYZtELQAuJ+p7AQtZEmlDgku23yVoeKgCe2U/swz9sLnL0tNXzgeG1WbLPcxB2IeV+Pmg==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxp4pb4JFL/U1IFuSxMVySqYH8tV7aphv1DrPadxaT/asvfHFiP
-	wdkQzSA69Bn0kO8a8lK8z05ZXfxypgbxQ2HfVQuVBO2HDIlUqSHp
-X-Gm-Gg: ASbGncvMTyK20QcAiGw0D7mKtpX9PkmvYiajdcSRB7Sfc3j9/Lol49PxMD4X71yIiBe
-	y2rMqTsbl0gHVtKt0SvYXSR6aqbiePe+SB7gwjLdBo6XLR1cYZa0+qBHi/Dw492bV/dgO5mK8J9
-	ORtqr0uMxTwAz+9SucYxZJBDtzpNPCjm7797WwrF6UmytiUCfx+Vu2T2Mb/genRs3B9eA9zOrwr
-	4rarx+JQviI387YSIQicAqTfYz6UFcBU/6CE9vo99I/TOUbdzHsrbWClXokfpF4NX1SfEK0T1yL
-	rbmEG8PRIcwtDr8ivD0pEEqvu/UfomPOylOcZSEsDkvX6mrWhUaGtuIJdcAB
-X-Google-Smtp-Source: AGHT+IG1l1fUb+vj79kWm4gxgX7cPBckhYi8BFLzhtqeH8SfToaC5EGkGpV6VDxUoOHz/fYbKD/+EA==
-X-Received: by 2002:a17:902:ce06:b0:224:3db:a296 with SMTP id d9443c01a7336-22a8a047ba3mr102453765ad.2.1743862698009;
-        Sat, 05 Apr 2025 07:18:18 -0700 (PDT)
-Received: from localhost.localdomain ([27.38.130.242])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2297865dfd7sm50208505ad.136.2025.04.05.07.18.12
+        d=1e100.net; s=20230601; t=1743862758; x=1744467558;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QREsqMnXp3ed/MAkal6kS2dgg2uSOYjf8lEHpd+2mJA=;
+        b=GNI2yBr8el8nzwIRR8Cj+zVV5iMSZ7SOSmOsX5HjnbSxKqXS5QzAPmv3mmP6eu0iRW
+         KamB0Unq47SN1U0C+fLDsGPGiQhOuR9ri7i9Sy9Fw+OWbkDiGGh5XVcAgXfPvgihnzAF
+         dsnlbGyGBOBWXQV/Ucq6Jew72p7f0b/WlM218xgCEdqQrubMlUq06qe2TDgMO4mt9hNK
+         9zcx7V4N/50OKL4f90xJYBjRD7oJjXiSY0lLfj9FDJWeIyS5msDF7SVrpkFSIpF7rOdH
+         J059TrYHtzFCZxSOmIZ1oWAo8XbddqsseRCqAwjfKkJdDbJnqf8R2qOUXhTrjxIqra7Q
+         DJVg==
+X-Forwarded-Encrypted: i=1; AJvYcCVEGkAAtf/1GJOZSrJKJtut1x+dSI6ES8IZ8viHcmvJmSVB2dC9aLZ6fvZVCEPC942iOeiyBj21sq2rQ4k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZPOcuzs5yiJBct7RY+8HHbLUdILrGcxfRihYwgmJjg5Tskusr
+	Tl83BfY5+CMTNsmHjJ1AlitOdBo4Oj+25YqPEIKWsPPLSr181k5yMaHxTLHo9Dw=
+X-Gm-Gg: ASbGnct+g0QjUH4aGnSXvgyfvLh45ssmZSrNUrwXmdeJtHzBe6IF8f02Fe8bzuU0K4s
+	Us0I128vWRgjaX68TNBOzpKF72UNhursEpQPXEwtVOtv2dVZnKdny/7bHMQvdLgWUiWqOHMEc8h
+	HA/BeHkww92a2v85UseKLmrKSuZZhtS2j5ynFuEJKNQ/lZ3hAogCbNyW516c+D8QmQpx2ZUTMEo
+	X4TrthJfCcRqzHlfcfIMl52HmQ8As6ujaGnsTGbRg8EcztjxxGB61Icb7KK4L2Z4t/H3UK/PpUi
+	x9WG8AgLS/jhr9b0PF44qV/g3pb4PQ1SgcNNSjxGZhxSaq8qng==
+X-Google-Smtp-Source: AGHT+IFW8L+8WZ3ckDNSGjgYJDZALIThBZS5wEzhYuabxviGgmk9WPLFChRNbWZnh+bHR59rItd3kA==
+X-Received: by 2002:a05:600c:1387:b0:43c:f513:9585 with SMTP id 5b1f17b1804b1-43ed0bde88amr69216715e9.13.1743862758182;
+        Sat, 05 Apr 2025 07:19:18 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-39c301a9da1sm6900116f8f.22.2025.04.05.07.19.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Apr 2025 07:18:17 -0700 (PDT)
-From: Qing Wong <wangqing7171@gmail.com>
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	kan.liang@linux.intel.com,
-	linux-perf-users@vger.kernel.org,
+        Sat, 05 Apr 2025 07:19:17 -0700 (PDT)
+Date: Sat, 5 Apr 2025 17:19:13 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Erick Karanja <karanja99erick@gmail.com>
+Cc: gregkh@linuxfoundation.org, outreachy@lists.linux.dev,
+	philipp.g.hortmann@gmail.com, linux-staging@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Cc: Qing Wang <wangqing7171@gmail.com>
-Subject: [PATCH 2/2] perf/core: Fix broken throttling when max_samples_per_tick=1
-Date: Sat,  5 Apr 2025 22:16:35 +0800
-Message-ID: <20250405141635.243786-3-wangqing7171@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250405141635.243786-1-wangqing7171@gmail.com>
-References: <20250405141635.243786-1-wangqing7171@gmail.com>
+Subject: Re: [PATCH 1/2] staging: rtl8723bs: Optimize variable initialization
+ in rtl8723b_hal_init.c
+Message-ID: <8ce041b2-087c-4d47-891f-28ecc0c91c76@stanley.mountain>
+References: <cover.1743820815.git.karanja99erick@gmail.com>
+ <f7b63d834b98aedfe2ce277d8008d7e398ea29ba.1743820815.git.karanja99erick@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f7b63d834b98aedfe2ce277d8008d7e398ea29ba.1743820815.git.karanja99erick@gmail.com>
 
-From: Qing Wang <wangqing7171@gmail.com>
+On Sat, Apr 05, 2025 at 06:14:48AM +0300, Erick Karanja wrote:
+> Optimize variable initialization by integrating the initialization
+> directly into the variable declaration in cases where the initialization
+> is simple and doesn't depend on other variables or complex expressions.
+> This makes the code more concise and readable.
+> 
+> Signed-off-by: Erick Karanja <karanja99erick@gmail.com>
+> ---
+>  .../staging/rtl8723bs/hal/rtl8723b_hal_init.c | 155 +++++-------------
+>  1 file changed, 41 insertions(+), 114 deletions(-)
+> 
+> diff --git a/drivers/staging/rtl8723bs/hal/rtl8723b_hal_init.c b/drivers/staging/rtl8723bs/hal/rtl8723b_hal_init.c
+> index e15ec6452fd0..1e980b291e90 100644
+> --- a/drivers/staging/rtl8723bs/hal/rtl8723b_hal_init.c
+> +++ b/drivers/staging/rtl8723bs/hal/rtl8723b_hal_init.c
+> @@ -152,13 +152,12 @@ static int _WriteFW(struct adapter *padapter, void *buffer, u32 size)
+>  void _8051Reset8723(struct adapter *padapter)
+>  {
+>  	u8 cpu_rst;
+> -	u8 io_rst;
+> +	u8 io_rst = rtw_read8(padapter, REG_RSV_CTRL + 1);
+>  
+>  
+>  	/*  Reset 8051(WLMCU) IO wrapper */
+>  	/*  0x1c[8] = 0 */
+>  	/*  Suggested by Isaac@SD1 and Gimmy@SD1, coding by Lucas@20130624 */
+> -	io_rst = rtw_read8(padapter, REG_RSV_CTRL+1);
+>  	io_rst &= ~BIT(0);
+>  	rtw_write8(padapter, REG_RSV_CTRL+1, io_rst);
 
-According to the throttling mechanism, the pmu interrupts number can not
-exceed the max_samples_per_tick in one tick. But this mechanism is
-ineffective when max_samples_per_tick=1, because the throttling check is
-skipped during the first interrupt and only performed when the second
-interrupt arrives.
+I hate this.  It's a bad idea to put "code" in the declaration block.
 
-Perhaps this bug may cause little influence in one tick, but if in a
-larger time scale, the problem can not be underestimated.
+> @@ -501,8 +499,7 @@ void Hal_GetEfuseDefinition(
+>  	switch (type) {
+>  	case TYPE_EFUSE_MAX_SECTION:
+>  		{
+> -			u8 *pMax_section;
+> -			pMax_section = pOut;
+> +			u8 *pMax_section = pOut;
 
-When max_samples_per_tick = 1:
-Allowed-interrupts-per-second max-samples-per-second  default-HZ  ARCH
-200                           100                     100         X86
-500                           250                     250         ARM64
-...
-Obviously, the pmu interrupt number far exceed the user's expect.
+This is fine because "pOut" is a variable.  It doesn't have side effects
+and it's not "code" in that sense.
 
-Fixes: e050e3f0a71b ("perf: Fix broken interrupt rate throttling")
-Signed-off-by: Qing Wang <wangqing7171@gmail.com>
----
- kernel/events/core.c | 17 ++++++++---------
- 1 file changed, 8 insertions(+), 9 deletions(-)
-
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 29cdb240e104..4ac2ac988ddc 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -10047,16 +10047,15 @@ __perf_event_account_interrupt(struct perf_event *event, int throttle)
- 	if (seq != hwc->interrupts_seq) {
- 		hwc->interrupts_seq = seq;
- 		hwc->interrupts = 1;
--	} else {
-+	} else
- 		hwc->interrupts++;
--		if (unlikely(throttle
--			     && hwc->interrupts >= max_samples_per_tick)) {
--			__this_cpu_inc(perf_throttled_count);
--			tick_dep_set_cpu(smp_processor_id(), TICK_DEP_BIT_PERF_EVENTS);
--			hwc->interrupts = MAX_INTERRUPTS;
--			perf_log_throttle(event, 0);
--			ret = 1;
--		}
-+
-+	if (unlikely(throttle && hwc->interrupts >= max_samples_per_tick)) {
-+		__this_cpu_inc(perf_throttled_count);
-+		tick_dep_set_cpu(smp_processor_id(), TICK_DEP_BIT_PERF_EVENTS);
-+		hwc->interrupts = MAX_INTERRUPTS;
-+		perf_log_throttle(event, 0);
-+		ret = 1;
- 	}
- 
- 	if (event->attr.freq) {
--- 
-2.43.0
+regards,
+dan carpenter
 
