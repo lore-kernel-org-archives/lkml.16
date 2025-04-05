@@ -1,85 +1,108 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 384BA4430;
-	Sat,  5 Apr 2025 01:36:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 463BA634;
+	Sat,  5 Apr 2025 01:48:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743816988; cv=none; b=Hc/vRWMseMoLP3kbDBghkTdD8e10emWSS9VGY+t3TXNeeoOYdlWDa+iKEll16pdBS9V3slqQ9u8b1TYo/S5SCYAA58R7qGSsZEL4TkAlPZXm47CEts/PVEzYEvGQc+4KzUf/MbbW3Fb5ktCGaY3QGB6Tn8W4IQrWHQDk83zQal4=
+	t=1743817683; cv=none; b=PPrzsAsz9G9pXxtPPt8IQS6ozqqSfS9M8LXXwUsrTESc+Bpgp7VFA1lp+kmAOKR16DrMer7tBlTF4ef8KSRpZmMMs1uqr3F5cMoYtzu6uMOF0sn59X3O5TbGxCoIU6wNPim1n4QDJ8swKzDD2t8bBhaIyPFuBFyKtoqIL1EwoVw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743816988; c=relaxed/simple;
-	bh=xVrkcKcDu/Sx8DgpNbf6S6ch7iL+i7maBa3ur0Fu5Yg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jUEdyKCDupQ2ELVWMGfgCaqo4M3l2IGofYdAiNXT4v5I07pm/va9DFnQDr+yuFlbZFI0KdzSgU32UcJ60zjkLVIRvo+qfF30xE0GY1owy4j7dtMGwhw6WXxLXBN6DHivOHGOfpsYHkM7x0MwVMo6SkkZipv8EOVQwlLYngihvAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=onB85GR3; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1743817683; c=relaxed/simple;
+	bh=nHf4Zr86swx/RSMX3KTxsmjvbUst9VfVBDQTbA4op+A=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WmgQ7g3l+dZqLMZY90RnHYSjooFJBPUvTz6orZi2VoDsuOnzUv4C1vcDhkmlcJAHRMRnzB3XQXOg4ckUrwJsDJfW5i+meClnkGHMJGL6hY3Wri0FVcMISZ3b66r7PvWHRPPxYfObr5dIHAHYD6vSdxs2hFzuZp8dfImZ6h8Rq+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Bp30tp8i; arc=none smtp.client-ip=209.85.222.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="onB85GR3"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=LdNfgo5LdMi+OWZTcfRuPHCbrKLIP4sBcG9FsApsoek=; b=onB85GR3PyyFOTgcuFyV+wtkNO
-	cTayvdrSWg1mlxDCeDwuTCQiSzTJhdgZ0lNnk5hnjsHIHhCxe1R5/L733bW/SvN97OmteqRbO51FG
-	qQZHhGZa4/dn8B6WPJ14PGOdpHSZzemFBTuIlR8zZo3atso4RQRO6jxaDMsc1y0W5U3Gds6p58xCY
-	y/AZsD1P+bJ7NyES+JzAPMu/QVHyX3haZ4q8UVQisqmQLLy0475CB2zVG4MryzmzUW6kWCMwTXtKD
-	X94HmnosK2CdRBM6MVoFGF2UTsIAFlBkZqTzgtdHKR3C0RxdgdmD0NPU0yUs2+WxONN4Iwll0VyHw
-	T/CVf9Ew==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1u0sSL-00CxTn-37;
-	Sat, 05 Apr 2025 09:36:23 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Sat, 05 Apr 2025 09:36:21 +0800
-Date: Sat, 5 Apr 2025 09:36:21 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: T Pratham <t-pratham@ti.com>
-Cc: "David S. Miller" <davem@davemloft.net>, linux-crypto@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Vignesh Raghavendra <vigneshr@ti.com>,
-	Praneeth Bajjuri <praneeth@ti.com>,
-	Kamlesh Gurudasani <kamlesh@ti.com>,
-	Manorit Chawdhry <m-chawdhry@ti.com>
-Subject: Re: [PATCH RFC 1/2] crypto: ti: Add support for SHA224/256/384/512
- in DTHE V2 driver
-Message-ID: <Z_CJFVjAtvhi5Rvy@gondor.apana.org.au>
-References: <20250218104943.2304730-1-t-pratham@ti.com>
- <20250218104943.2304730-2-t-pratham@ti.com>
- <Z8QSVLoucZxG1xlc@gondor.apana.org.au>
- <f7105c10-7e36-4914-a9e8-e83eb61f0189@ti.com>
- <104cdd15-8763-49fc-9f4b-9b21020bd6a1@ti.com>
- <Z-5IaY0JoTYcx1JW@gondor.apana.org.au>
- <8aa65022-8adc-4c4a-a812-11bfd64e628c@ti.com>
- <Z--zFB8Rm007AMzP@gondor.apana.org.au>
- <8536cdf7-f4bd-4f9a-9eaf-9e38fba67741@ti.com>
- <Z_CIUXS-YfiRJxi5@gondor.apana.org.au>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bp30tp8i"
+Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-7c592764e24so296386285a.0;
+        Fri, 04 Apr 2025 18:48:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743817681; x=1744422481; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=3sQ8NjoXzJOH8Ke5HnVIn3JhMsqDWPHif5pTMyDKJF4=;
+        b=Bp30tp8idviNZ6x40yiN3SwWjgYX3KHfID25cgjv5T5NzFkpVv3+DqIZyc2kieb+gR
+         Q0OBO62peFNAl64KDOKhqDgYZLeUNvQ4HjRvDxrNHuJHLFS0xCUcuvvn+DtU/8q7o5fm
+         oBeEBS/Yud9SsgglwolXCCMNpxPby5PzcAPj3bYSLZpqro5eHePJn5MIAGK6oi0oOOFm
+         9qM6p7FG9DaVwBg1FHHkCMOgkpQMLqrGeP9/C196OdM2WjPclYZStdpa6J5g8joZpu05
+         v8/4YN/N0+lD1ZY20lrpj3jzYP7ao18TBkvB7mYfPEYRy51tyo87Xw033APrE7IBwbbB
+         bXeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743817681; x=1744422481;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3sQ8NjoXzJOH8Ke5HnVIn3JhMsqDWPHif5pTMyDKJF4=;
+        b=eMhY0rq+Cz2ZhTyeZ4wnBCtaIsW/FPPW0HMjZXdFrbwqvWoHjosD3NxHEtSwdK9N1w
+         sgSk9FBZDu5NdgIHFKQDdW4SjM1M9pOhDvHPzoZCmE7c4f40OsArmabkG1skg9OZnMlt
+         zJJkq//betO12cXhW/vSZCfiW1sSjgVbW3O3ZEBceO3sGXCmnGkWtD3hCUVN2oAcz6rU
+         h6giG5xgptR7DUwDXAJ9MZ4MIfyAK2fQ6bwhI0+H3DybHzs32xXtgCm4DmBgElyKPn4c
+         lxXm8Prf0NdTK0wqtXoksMtYpGrFdNOIkABIb+uPlgHPk9VUBe2/kO0io/Z5zzuqlrN+
+         1iYw==
+X-Forwarded-Encrypted: i=1; AJvYcCVwaW2AJb+j5BfgXfXk3+aAS0cN4XcaxOzSTFCl4UMRPcMaUUp4ec5eKsoe86NizkLVyGYKngZM9sWOYL23TVrNbw==@vger.kernel.org, AJvYcCXEC2UNzrp8YsTIeJ0kfcfcusUrRwBTnqheqyCqzlVhiAtVLPvM0IaIlJHsV1wQMBx9j23LAYnG8IOqRLU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzhwRiDn4WIlrn0PB6f0cSqeHGFSWAB6G6L7wSz7dJDvt93nEpB
+	dy8QjpSaHoy5N+5tIS3LLefdC8ycypmukoLGIU/Hw2gHwCJoW0DO
+X-Gm-Gg: ASbGnctglsc8SJATZWvBXZYYhMfMdiZvhkdBVplUvyt9Pg3g1Jac/KnWdI3Q8LfQ5rT
+	5983l1BuY/sFaZOAzFZ/epkJi91tplDzyLEwvtZXBg0/w2d7VeNpp4k0cM1FCs+KYAgm/enkX8l
+	1nukLK3p/6madq9uJ3iNl7fa8W8WpVq4lYn4yxh8VI9xQ0aLB9U6mxT5whS/kci7Q8vdiV/t5lr
+	cbwazOEkyXyvQwjxoKWc0E5Qtko8uJKQI11jrolGIXUj0Pb+V6glfpKH09+dunQdtSqBf/vin38
+	x5wUaR5NgKqmkmDleOIWjpvhDFIPb6f0lCu7Vad7DdFHkMMXfp0=
+X-Google-Smtp-Source: AGHT+IGZzAiHFBGoLZi4qBZSctLNyksrZmj9QG1qvCZ16hskKacfrBQgelDYjCutJLnJXLgJbXg8rw==
+X-Received: by 2002:a05:620a:4001:b0:7c3:cccd:92ec with SMTP id af79cd13be357-7c76c90259emr1477571585a.0.1743817681084;
+        Fri, 04 Apr 2025 18:48:01 -0700 (PDT)
+Received: from howard.neu.edu ([50.232.161.101])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6ef0f0483besm28416786d6.67.2025.04.04.18.47.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Apr 2025 18:48:00 -0700 (PDT)
+From: Howard Chu <howardchu95@gmail.com>
+To: acme@kernel.org
+Cc: mingo@redhat.com,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	peterz@infradead.org,
+	kan.liang@linux.intel.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Howard Chu <howardchu95@gmail.com>
+Subject: [PATCH] perf test: Remove the temporary trace record file when the test fails
+Date: Fri,  4 Apr 2025 18:47:57 -0700
+Message-ID: <20250405014757.3447393-1-howardchu95@gmail.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z_CIUXS-YfiRJxi5@gondor.apana.org.au>
+Content-Transfer-Encoding: 8bit
 
-On Sat, Apr 05, 2025 at 09:33:05AM +0800, Herbert Xu wrote:
->
-> This is not unique either.  Even the software implementation has
-> to deal with this.
-> 
-> This needs to be dealt with in your update function.  Simply buffer
-> leftover data and only feed whole blocks to the hardware, until
-> fina/finup is called.
+Even if there's no nanosleep in the trace record file, it doesn't mean
+the file itself doesn't exist. Remove the temporary file since the test
+frequently fails on my machine and leaves behind many uncleaned
+temporary files.
 
-But it's a bit silly to duplicate code dealing with this common
-problem.  Since I'm going through every driver for the export format,
-I think I will change the calling convention so that non-whole blocks
-are dealt with by the API.
+Signed-off-by: Howard Chu <howardchu95@gmail.com>
+---
+ tools/perf/tests/shell/trace_record_replay.sh | 1 +
+ 1 file changed, 1 insertion(+)
 
-Cheers,
+diff --git a/tools/perf/tests/shell/trace_record_replay.sh b/tools/perf/tests/shell/trace_record_replay.sh
+index 6b4ed863c1ef..555537dc6cfa 100755
+--- a/tools/perf/tests/shell/trace_record_replay.sh
++++ b/tools/perf/tests/shell/trace_record_replay.sh
+@@ -15,6 +15,7 @@ file=$(mktemp /tmp/temporary_file.XXXXX)
+ perf trace record -o ${file} sleep 1 || exit 1
+ if ! perf trace -i ${file} 2>&1 | grep nanosleep; then
+ 	echo "Failed: cannot find *nanosleep syscall"
++	rm -f ${file}
+ 	exit 1
+ fi
+ 
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+2.45.2
+
