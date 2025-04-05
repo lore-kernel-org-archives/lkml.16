@@ -1,72 +1,131 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77B89335BA
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 19:56:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 315E6186A;
+	Sat,  5 Apr 2025 20:03:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743882965; cv=none; b=QURV8zNIEff6jmcOvvt8tE9P9t/H4jOX660jArOFsY0GqCjzrXwcJ1xxmHFE9vKLkJaH8I7JA3suBqLU/LGP6hGvyndoj7ABuPNg9S/V+qEn4s5eMVlw9a1iAL6nPqr/GMiQ/gd274xtJd6gqnQu0nw8aOI5PA/rXWgnxx9/4eQ=
+	t=1743883440; cv=none; b=DGCZWNXyw8yNjDvuH8OLgkUE9wPfj+Z7wpOrt9Qdb013Z4xj9wSvAD9qvWMikJeKyK5ccIjdO59OL8rWNn/P/7GbECSLyi8+puA1jDKHEag3dGjz+iaaamgnPrVmBrmoYx8wUdbVQvPl0mRfnfNR/B9PpspCmouc5dFB2ymV9MY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743882965; c=relaxed/simple;
-	bh=pp+gU6q2X8jmA2HgYrgWk833yDw6nt8vTIAOrrXSbeQ=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=sa+zFuO1nthp9tpxkWr4AZNknvY84VydM/NDqvLv5kXl9JxDWREvuxMxhOuCQFf18iqnTawwp+cMAsXz2sflsoOun0+FT7fY6ZyB2x6m5yunO8oIFZpcGP7G9sRiqLr5uV2x60Vf2YxQfbhc81RKombJOfUfpKmLhZujpgY0dGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3d6d6d82603so29910605ab.2
-        for <linux-kernel@vger.kernel.org>; Sat, 05 Apr 2025 12:56:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743882963; x=1744487763;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8Hm8eM0LgqeHm2e5edqCzh5LAaCNPzPWs2dgSjTS7SU=;
-        b=bDWeRW+KCvlraAy9tgVlmaoAxCumdx7PiFWhIgCblIMx/ZH2MA+nOaPOdWn4lUsJ5p
-         fmZNaeWDT/V2gVdNidPgXHc6go771rO2RMO1CjYt7BUqpTWYa8vFc+5t/d4tL+JR0caT
-         7euSm5Wr3UaDXBVGBVLaOTSX+PKBcyKdlL2y/bFYHyBBw2hKrFn9cNynjzW3lJxYmkYo
-         t/dOzkvsFxDKv2/r0GvYpfC+nsHAaHspGvhcWw8sdt7D3YKqyY5Gra3tbL1YqninkzVZ
-         l93VErcw/rmNufpk1oLS15FAfYK2oJV9miQGquqMQtmssovEu/l1SqOlgPkTX/zjgL6x
-         fPuA==
-X-Forwarded-Encrypted: i=1; AJvYcCXTLBH6NzpirsA3VU7oAefuKll53Z2d47BgxDvACr3atnVA79vsKu7xsAuuLgC+REHYeav4rRCahemQHwI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx0tf2FY1fDxfmbESYcOtnhGmgTjCGranbx1hQw2iL+VgAG5K4Y
-	a1fizoKy8bh07unwAwNu5Rs23cJZ3Y6mIMzYfXjGyu7QLsJqnr5cFx0FEK/fP36rqNbXeZVf3QM
-	GYImZhiPgbOBzHE6P+ilEFb7HfyyWV+8arUZFPw92Dv4b/mUFR3xEq/w=
-X-Google-Smtp-Source: AGHT+IGNJ/ZH8fm9v+6nUbPybtNaKru9G9hrW854Ja7Bw19aoQfnh9x+ZL4k6PKTYPkJ+UtjD9C3KIsqbfO0Sej+NeWS/POAvs+I
+	s=arc-20240116; t=1743883440; c=relaxed/simple;
+	bh=FWBwk0Cr/rThQ6vVS3vU5yEyW68sRp7Z4RBTakOBlAc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ytnp8/90asraMnP7IEAWDSBWiuNyQWC77byfugcaoOh324ZSeiJ/yc4M0fZz4OcchA9b7VaiL6FajBwhalOcLgNBbWF4vMgv4JKRqjY4sYGCq9G+XUHMDVme5NobAC5xpHMrV2qCPe1ei196yj71BBg7D1t0Gtf01jXebBRma64=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=apQqujuK; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="apQqujuK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743883439; x=1775419439;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=FWBwk0Cr/rThQ6vVS3vU5yEyW68sRp7Z4RBTakOBlAc=;
+  b=apQqujuKAtKyfPrPAJQ/fspgMZEMdZP80CUQjgS5C0Z/WkDmZNL3Phsw
+   IiKsEQdNPaB+Ou/PhQFSXM8SLgwRulH0Px8VgYp3HbFFkvcUSXj/94zVm
+   p+bw6e+lfvPHbcpRha2sQFFQZfdVnOWokterp5/1rCX5937lt8JUFd9qx
+   nqRSwibpXO8fnwnGNS8uJXs/jbXXvnCM2bUffQwW+tS7vJs6QYfyz5laX
+   sxMsTwy1VHK3OJGDJ/AdIGD0Y9Yoimxgv3AKNEL19rxobmA/TcEv6rG0/
+   JUMz8YFVmbol/CAkwQ/Bpl4Y8+oxlkTD6kUeVbKyU51/LBhL+twSLDNSd
+   Q==;
+X-CSE-ConnectionGUID: YYgT+xSeQkucR97rhnir5w==
+X-CSE-MsgGUID: TPe2Qeg+RxqM1ZDGC0sjQA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11395"; a="45191874"
+X-IronPort-AV: E=Sophos;i="6.15,192,1739865600"; 
+   d="scan'208";a="45191874"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2025 13:03:58 -0700
+X-CSE-ConnectionGUID: uZExyyHDSgOxAu6cWrxDvw==
+X-CSE-MsgGUID: AAqF7o+hRF2OuKRfTw9AfQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,192,1739865600"; 
+   d="scan'208";a="128081559"
+Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
+  by fmviesa010.fm.intel.com with ESMTP; 05 Apr 2025 13:03:54 -0700
+Received: from kbuild by b207828170a5 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u19k7-0002FD-2q;
+	Sat, 05 Apr 2025 20:03:51 +0000
+Date: Sun, 6 Apr 2025 04:02:54 +0800
+From: kernel test robot <lkp@intel.com>
+To: Jerome Brunet <jbrunet@baylibre.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Helgaas <helgaas@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Jon Mason <jdmason@kudzu.us>, Dave Jiang <dave.jiang@intel.com>,
+	Allen Hubbe <allenbh@gmail.com>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Marek Vasut <marek.vasut+renesas@gmail.com>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	Yuya Hamamachi <yuya.hamamachi.sx@renesas.com>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	ntb@lists.linux.dev, Jerome Brunet <jbrunet@baylibre.com>
+Subject: Re: [PATCH v2 1/3] PCI: endpoint: add epc_feature argument for
+ pci_epf_free_space()
+Message-ID: <202504060315.dkEQSXkB-lkp@intel.com>
+References: <20250404-pci-ep-size-alignment-v2-1-c3a0db4cfc57@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:3081:b0:3d3:cdb0:a227 with SMTP id
- e9e14a558f8ab-3d6e5324ab2mr68055775ab.9.1743882963610; Sat, 05 Apr 2025
- 12:56:03 -0700 (PDT)
-Date: Sat, 05 Apr 2025 12:56:03 -0700
-In-Reply-To: <20250405193222.577992-1-gshahrouzi@gmail.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67f18ad3.050a0220.0a13.0249.GAE@google.com>
-Subject: Re: [syzbot] [perf?] WARNING in __free_event
-From: syzbot <syzbot+ff3aa851d46ab82953a3@syzkaller.appspotmail.com>
-To: gshahrouzi@gmail.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250404-pci-ep-size-alignment-v2-1-c3a0db4cfc57@baylibre.com>
 
-Hello,
+Hi Jerome,
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-unregister_netdevice: waiting for DEV to become free
+kernel test robot noticed the following build errors:
 
-unregister_netdevice: waiting for batadv0 to become free. Usage count = 3
+[auto build test ERROR on dea140198b846f7432d78566b7b0b83979c72c2b]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Jerome-Brunet/PCI-endpoint-add-epc_feature-argument-for-pci_epf_free_space/20250405-014733
+base:   dea140198b846f7432d78566b7b0b83979c72c2b
+patch link:    https://lore.kernel.org/r/20250404-pci-ep-size-alignment-v2-1-c3a0db4cfc57%40baylibre.com
+patch subject: [PATCH v2 1/3] PCI: endpoint: add epc_feature argument for pci_epf_free_space()
+config: s390-allmodconfig (https://download.01.org/0day-ci/archive/20250406/202504060315.dkEQSXkB-lkp@intel.com/config)
+compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250406/202504060315.dkEQSXkB-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504060315.dkEQSXkB-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> drivers/nvme/target/pci-epf.c:2165:69: error: too few arguments to function call, expected 5, have 4
+    2165 |         pci_epf_free_space(epf, nvme_epf->reg_bar, BAR_0, PRIMARY_INTERFACE);
+         |         ~~~~~~~~~~~~~~~~~~                                                 ^
+   include/linux/pci-epf.h:224:6: note: 'pci_epf_free_space' declared here
+     224 | void pci_epf_free_space(struct pci_epf *epf, void *addr, enum pci_barno bar,
+         |      ^                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     225 |                         const struct pci_epc_features *epc_features,
+         |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     226 |                         enum pci_epc_interface_type type);
+         |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   1 error generated.
 
 
-Tested on:
+vim +2165 drivers/nvme/target/pci-epf.c
 
-commit:         c9661394 selftests/bpf: Convert comma to semicolon
-git tree:       bpf-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=17df2b4c580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f2054704dd53fb80
-dashboard link: https://syzkaller.appspot.com/bug?extid=ff3aa851d46ab82953a3
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=165f0d78580000
+0faa0fe6f90ea5 Damien Le Moal 2025-01-04  2157  
+0faa0fe6f90ea5 Damien Le Moal 2025-01-04  2158  static void nvmet_pci_epf_free_bar(struct nvmet_pci_epf *nvme_epf)
+0faa0fe6f90ea5 Damien Le Moal 2025-01-04  2159  {
+0faa0fe6f90ea5 Damien Le Moal 2025-01-04  2160  	struct pci_epf *epf = nvme_epf->epf;
+0faa0fe6f90ea5 Damien Le Moal 2025-01-04  2161  
+0faa0fe6f90ea5 Damien Le Moal 2025-01-04  2162  	if (!nvme_epf->reg_bar)
+0faa0fe6f90ea5 Damien Le Moal 2025-01-04  2163  		return;
+0faa0fe6f90ea5 Damien Le Moal 2025-01-04  2164  
+0faa0fe6f90ea5 Damien Le Moal 2025-01-04 @2165  	pci_epf_free_space(epf, nvme_epf->reg_bar, BAR_0, PRIMARY_INTERFACE);
+0faa0fe6f90ea5 Damien Le Moal 2025-01-04  2166  	nvme_epf->reg_bar = NULL;
+0faa0fe6f90ea5 Damien Le Moal 2025-01-04  2167  }
+0faa0fe6f90ea5 Damien Le Moal 2025-01-04  2168  
 
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
