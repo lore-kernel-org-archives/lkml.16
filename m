@@ -1,65 +1,114 @@
-Received: from ombertech.com (ombertech.com [74.48.158.51])
+Received: from omta36.uswest2.a.cloudfilter.net (omta36.uswest2.a.cloudfilter.net [35.89.44.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65587EED8
-	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 02:09:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.48.158.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFDE27464
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 02:11:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743818992; cv=none; b=fWgSzxtlACfUF7xwuZEDYY3zHe2c7r16s5qpxk6O1IsdJ+64O94/v/jfp49ciF7R7QxZGGzrAVpYPxWgo4CWTLY/Fek4oo0tYcyKtSS3jMsxWtAFFNTWjgsswX+3JFdqTsLAy7SS+WV15WUReg4chjDa/u+GgGYJvyZUgJ7Ee/0=
+	t=1743819105; cv=none; b=iJNeVmHG4Bm6/z/lh94LgPX2GcdwVLP4GZA9HzbNINiCBYacMkDV+7Ss1jgbkMV1okWRgz6+5iw1iSEAWvyqqtkP2mDdAsYLH4pnOLzGbKZDhojDdUOfi0mBaBkLFqYcdw7E76gnrZm5U3bbQ0Ln/UcKH7XTf3avc6/hToF/YM4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743818992; c=relaxed/simple;
-	bh=Mi0wOvC1D34aKNLV9iycWbVPaivaA/gFewasr9abd58=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=OjKHYv4B4VVPP7UPdeX+ikCMaPl/YbfF28C89ocGMy5bxYYsQgM5IrZUDTxwvR95tpP13+iaXaJOfs+P45uoXHyRlzMxvDQIp48FuDYprfphpNx2kSx92uIxxRJhgAc4scjNWP9ANg6SkgrMykXvyeYmFczckT36mnNRxCrbwmg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ombertech.com; spf=pass smtp.mailfrom=ombertech.com; dkim=pass (2048-bit key) header.d=ombertech.com header.i=@ombertech.com header.b=j1Y8K2sO; arc=none smtp.client-ip=74.48.158.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ombertech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ombertech.com
+	s=arc-20240116; t=1743819105; c=relaxed/simple;
+	bh=i28rsqTkL0yCxQVdtr1WhAy4rZHhalYgykYNnCQYrEw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Eoutkh+kbn9WKbzWdtjB3I3B6x+SVG1i5UrvWbijsfDoyTMvg6Bl42aUz3Z29anuAmb8UmqdSWcaGl8hwXo9IlX0qCBwznE/hZBklvDUqgJGJKJZg6BSl7IQPJ3MVqKkRdbc40n8VDaD5DjSNbNIdWmAWRefDu+LiDTqXPexH50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net; spf=pass smtp.mailfrom=w6rz.net; dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b=ZmtxkZ6B; arc=none smtp.client-ip=35.89.44.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w6rz.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ombertech.com header.i=@ombertech.com header.b="j1Y8K2sO"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=ombertech.com; s=2022;
-	t=1743818258; bh=Mi0wOvC1D34aKNLV9iycWbVPaivaA/gFewasr9abd58=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=j1Y8K2sOpdVvmFb2pZtvcdaZHhOgoE68iKt2lbKA6XDLCQrTjhExS7tWMbMFu1r9r
-	 mlSsAMgRmeqtdjv/4Bd3SeDD1T1SQSUoG7ZIc+wk/bFL+y25W/SxVrnUwVlRHrjTms
-	 iJCdTnoLgp1xia8vPGfHWzVE7Z480vYAYt3dgPRHESfYCIot78jJPBNhbE1Izemxbv
-	 FdLXkulBW1XAg9aSQL/B7VAYgKTqU9nkRZtnlohTuYpJWbSEe9wnT+fdZCXAPe+40N
-	 xrwAOGlkTRXcb7lt4LQW4viKdJw7KuiIYuZwU4p1vDfoGrcD0p4nINCjr4EsCz8iC9
-	 DAtDTefooYn7A==
-Received: from 192.168.1.100 (unknown [1.145.245.115])
-	by ombertech.com (Postfix) with ESMTPSA id 227C85BE68;
-	Sat,  5 Apr 2025 01:57:36 +0000 (UTC)
-Date: Sat, 5 Apr 2025 13:03:06 +1100
-From: Kevin Koster <lkml@ombertech.com>
-To: Oerg866 <oerg866@googlemail.com>
-Cc: linux-kernel@vger.kernel.org, Borislav Petkov <bp@alien8.de>, Thomas
- Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Dave Hansen
- <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin"
- <hpa@zytor.com>
-Subject: Re: [PATCH] x86/microcode: Fix crashes on early 486 CPUs due to
- usage of 'cpuid'.
-Message-Id: <20250405130306.ca9822c1f27db119cc973603@ombertech.com>
-In-Reply-To: <CANpbe9Wm3z8fy9HbgS8cuhoj0TREYEEkBipDuhgkWFvqX0UoVQ@mail.gmail.com>
-References: <CANpbe9Wm3z8fy9HbgS8cuhoj0TREYEEkBipDuhgkWFvqX0UoVQ@mail.gmail.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-unknown-linux-gnu)
+	dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b="ZmtxkZ6B"
+Received: from eig-obgw-5008a.ext.cloudfilter.net ([10.0.29.246])
+	by cmsmtp with ESMTPS
+	id 0XhcuxEzUMETl0t0Yu95e7; Sat, 05 Apr 2025 02:11:42 +0000
+Received: from box5620.bluehost.com ([162.241.219.59])
+	by cmsmtp with ESMTPS
+	id 0t0XunqYTYhzZ0t0XuTFyD; Sat, 05 Apr 2025 02:11:42 +0000
+X-Authority-Analysis: v=2.4 cv=fK8/34ae c=1 sm=1 tr=0 ts=67f0915e
+ a=30941lsx5skRcbJ0JMGu9A==:117 a=30941lsx5skRcbJ0JMGu9A==:17
+ a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=7vwVE5O1G3EA:10 a=VwQbUJbxAAAA:8
+ a=HaFmDPmJAAAA:8 a=CTIpb7JmY0c5bVNJeN8A:9 a=QEXdDO2ut3YA:10
+ a=nmWuMzfKamIsx3l42hEX:22 a=hTR6fmoedSdf3N0JiVF8:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=w6rz.net;
+	s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=aGMqSPDx75PlOjA9guoqkzJBHGzvYNjkN5Ly2HoZxH4=; b=ZmtxkZ6BUgOp9TbQmnTTm+wfN1
+	eQoxfqi7shbOVbpk4kImVj7mFwhR3cg0u+HB0huEXGEthNBvhdsQgXGh1nGqz8IaUd39maBYHwD0s
+	6bprzRjxX5oeC9Ysr/2nzFL5PrdlHN5W4Op8V868JVBNeDhEukai/b+GSjHKdsUWjwehZyBbZmpJ1
+	uThv9cTkwZCDbYXDuyIRC2nXAfbNMcdITbWFABpn5vY/+U3oMgPbJGxBUllgdYfBunZVGwbMepr5I
+	9Eud5NMyNAWFQOKaXvmPVcSdAdR67o+CQWHOxKYa9kQyT1VIaFrGDBxBwyWQd30BCP7Mu05Usd0VT
+	Jib+dvyQ==;
+Received: from c-73-223-253-157.hsd1.ca.comcast.net ([73.223.253.157]:55020 helo=[10.0.1.116])
+	by box5620.bluehost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.98.1)
+	(envelope-from <re@w6rz.net>)
+	id 1u0t0V-00000001U71-1b78;
+	Fri, 04 Apr 2025 20:11:39 -0600
+Message-ID: <816d0ebc-fd6f-451d-81ba-8059d3098f22@w6rz.net>
+Date: Fri, 4 Apr 2025 19:11:36 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6.13 00/23] 6.13.10-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250403151622.273788569@linuxfoundation.org>
+Content-Language: en-US
+From: Ron Economos <re@w6rz.net>
+In-Reply-To: <20250403151622.273788569@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - box5620.bluehost.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - w6rz.net
+X-BWhitelist: no
+X-Source-IP: 73.223.253.157
+X-Source-L: No
+X-Exim-ID: 1u0t0V-00000001U71-1b78
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: c-73-223-253-157.hsd1.ca.comcast.net ([10.0.1.116]) [73.223.253.157]:55020
+X-Source-Auth: re@w6rz.net
+X-Email-Count: 35
+X-Org: HG=bhshared;ORG=bluehost;
+X-Source-Cap: d3NpeHJ6bmU7d3NpeHJ6bmU7Ym94NTYyMC5ibHVlaG9zdC5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfAjUwSLEzbp8a6se7BSr7rlZxtzMggGJQ0DV8WZoSmmod4X3ivUPbyWCm++5bTBBRUAzY8C7rYBJl8qd9/dFEC6d69/v+x8g9SFxkO61dNE9Fep1hbYC
+ ZkVP9r2wTxB2kWYq6032x+3OFkmgsexMQwY4MSZUO8+CpR2EvFSh9b081ryULLaoBYez30lv8aBQWXl4ze1vk8wkFRWQNISXLHI=
 
-On Sat, 19 Oct 2024 08:29:04 +0200
-Oerg866 <oerg866@googlemail.com> wrote:
+On 4/3/25 08:20, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.13.10 release.
+> There are 23 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Sat, 05 Apr 2025 15:16:11 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.13.10-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.13.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-> Starting with v6.7-rc1, the kernel was no longer able to boot on early
-> i486-class CPUs.
+Built and booted successfully on RISC-V RV64 (HiFive Unmatched).
 
-Thanks for this patch! It solves my problem with kernel 6.12.11
-rebooting at start-up on 486 CPUs, which had me puzzled. (tested on
-AM486DX2-66 and CX486DX4-100)
+Tested-by: Ron Economos <re@w6rz.net>
 
-Is there a reason why the patch wasn't accepted? I've proposed using it
-for the Tiny Core Linux distro's x86 kernel builds, which target 486DX
-and later CPUs.
