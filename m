@@ -1,251 +1,103 @@
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3C651F462E;
-	Sat,  5 Apr 2025 23:16:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5541415533F
+	for <linux-kernel@vger.kernel.org>; Sat,  5 Apr 2025 23:18:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743894994; cv=none; b=LbdEzmCRTqNJkvMMEcc6e+MTrtf8oNDHf/ufsi4NeK8FG4eptGAAEfUUyFAeQW2O0AJa60FwezlZ1qd8Z1ttYI9ZmPHdMGtgTYdGNk8tG+9mhPalRV0zz+g9ZDC0WQuzLDBGOrwcdqh6an5Xb9Euc0F+XSDlMJ0+AGApabNVUME=
+	t=1743895114; cv=none; b=sXAE1qTeXC4arpmbjAPx10kMAFK/WJTkkSv0UxFF/hJPNheScXjKSHEuSl4+V3jJuSljEdycwjXkiPLV5iLDIavnh5AWQQFaLOBasKJp/zEy/q6imVHeZYbFt3wI1pQ0/l1YJuB8rWm1fb04IzHq0pa4sdfjnran463jGheGsrQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743894994; c=relaxed/simple;
-	bh=5Z9X682HZUgLJ1v6uu51TGEAsXE/8Sre+u8dfgEfwT0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=bHfOjLiJWrkTGFF/QLUhgUe1GEN+gXxAiAnL5zmJvc+dNwoVvSNN5CCaJFSS0DsqVI5g1pDdrQvWmMmOlhTNgMDTuPz253wKMxnD6bwmpn98U+bLclofzX1oDLsAn2gk0JIcnd7JlI4kSeUbC1pj67VQU8/nGKWEFqqsLLp0s4o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PUVPpccP; arc=none smtp.client-ip=209.85.215.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743895114; c=relaxed/simple;
+	bh=HcbDSBDe1C0JUq+OPrFV7j+/wiQCp956AGnlcoZs2PM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rzgqIEAg/UmG97Wj+Z4ia98HWuts6EPKuQQ367PLuGjg5/i8mIQqljngX2zF1k88QJE0YyiAO0nhz93AwRU/3Yl58ppVJDJnrzCZIG+KaGRavaDdgEhQyMwdtTLJ63gtcc6tL5eXXa9RB8oEYmg2P8n6XihCo8cwYS7raQjY4zI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=AhQk53qI; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PUVPpccP"
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-7fd35b301bdso3147358a12.2;
-        Sat, 05 Apr 2025 16:16:32 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="AhQk53qI"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ac2af2f15d1so429166266b.1
+        for <linux-kernel@vger.kernel.org>; Sat, 05 Apr 2025 16:18:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743894992; x=1744499792; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=rBN7lJc+bnC3l4ET99fupuYYeHLn5bLfe23gswQ1Cp8=;
-        b=PUVPpccPdcUfMWXtkcChmJujd2QjVX6+6wewDqNW9s16kO2mhwGY/kcJIeqFJ9ubOI
-         8n5y3luorl+gUHVed38JcMuYQPgZ19arW4e5Nqcaw/peFfsb7MWWWade9KNHDBcxj0hL
-         XP1uWlpswbpcvNIzF8cQBlB/W570SsBdszToxjbk1ukq2SOHyct1RkMizcWAnA5ZLZCd
-         Fsmx9UdClqVtfJlKtiOVUUQqsywYieK/AW77Q507akm4FvTUxEncMm9N7tGAeXHxGkoX
-         EpfbH5rkLjCVIECipYapFpHh5KpK3nOLgPl4hlb8e5fjXaUaSwnAaE9ADWy/7qOtcseL
-         aicQ==
+        d=linux-foundation.org; s=google; t=1743895110; x=1744499910; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Qhf/rx7t8bMwyY/f1Kp0rJLQEBrQ/aBJkKwcV4l30K4=;
+        b=AhQk53qI391OYN04PRiFxKNwXd4qj1wJ7TP1H+pj1mP9Htry51RCnNBmYmCybAP1dA
+         xJzyJwZLA8o2wPmE+0FbDJLaCqpQNejh3HXx6yrxwWjiwpJXZU4eetQiRngJY+2rmWR6
+         4ZO1GQJwweyZ/uZH0ZMyrVgHxMoCIqS0X9ciU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743894992; x=1744499792;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rBN7lJc+bnC3l4ET99fupuYYeHLn5bLfe23gswQ1Cp8=;
-        b=dDG3nF25MI8eXl2107HlQ5ouLxG3whsgAPmSzJkttgoH6GJbEB+W1RqSfsOjOqUF3P
-         UtdAr/JI4JrSyPoG25Lu1oqlnhCLxmhOIsW18+BeDAKLZv5dDuRkBIdze1KaayUu2X4Y
-         3FGyxi0qQ2+MLFYQCqPmrdogGEdoJtKJHmJ8zxyUsoJt8luhF6O6xt0wZDFDArWnDYn9
-         wm6zpJNva7zn74+riGJ6NXPSQZxqTsVyM8Z3nPdReyVDYY7EjWWLQMJy96QqRYAEeHIe
-         wcFsgZ/4IZQYWZiNs3Z0OtKaw83l1sAn/uDipr1IbfkPi/BEcMPqzYHldg4wBJGyu2Q0
-         5OZA==
-X-Forwarded-Encrypted: i=1; AJvYcCU6Q+hZkHTvrCKTr+N1rdengp7XgSKtzzc3jjkpqmGcWGY26EuuslVCuoABwuHzvsG4FufvuQgvYSc6ybg=@vger.kernel.org, AJvYcCWJLco+Tv0qs+k0INOzqQfFhCQ8AxEKv8KYFblBF2tZuI4y9TM1LiZlM0eqw/Kl681wqPsA7NHOHa0ZxYc=@vger.kernel.org, AJvYcCWKy+bS2Js0Ms3x0MvU4yKlxHHvr2e67rAVQ740b5Pgyneux1geBHmFU7XeWjVrauGsj3mbevpnn9r2@vger.kernel.org, AJvYcCXk4dAUPcvzGOuYZMobQ3OJOlGVpkk2rWoRuAgTtM6BXXOSpeZPURaChuuROrA5+mP+KoM43dcw0/gewHwN@vger.kernel.org
-X-Gm-Message-State: AOJu0YygF94viy3XM1qrn/VVGO3nc72A6vKQvuoUJpSsbp9kmqMRbI0S
-	ZF1uP6pXGw+twiw3/EYcr/dr/XFrFIGWqmviBmek4EVO93bVTND1fvIqDOTe
-X-Gm-Gg: ASbGncv1SJfZkEnjW93pESEgsASKn/fvpfpgJ1oD7nQREHDFMIKRmQ2TgfD3uKL3XYI
-	e1hn/FMWl7W1CDA5pGEG35LuFtaz1cXjvfKuakJAEYKsbV4nJOvecl0KLb5UNrVGzjlGPYYyJ0p
-	yOnEuLfR7Grl8xnh+wPsrqpfp7V9VmpUMI/fHdRZAgLCFRG7lwVFuIRdQaPt3I6zIf5pORfCDRZ
-	22vqYJ0UkRmeA9ryArBMRyON/QS6qt9ANVNLzqA72xR+wPhaZy1elS1JzD81O5tAEULfqDsXNlz
-	qLF06jqNxTOWWJQADVF7iHvRJCyQgNp96OzFuouySHe74PxLs8BNN9T46CCjlMBUltTg+ee2kCt
-	tjOghcw3cN35k6TcDpRu5VtPY/j/uGk/Vd54PFRV16ikFiXEsRA==
-X-Google-Smtp-Source: AGHT+IGboQXup/sgtzEmkEwk8oMDufzhXkatqPuP1Cmf7+D+uVwma1W1OUqGKi2mrfi+tqTDKqnBBw==
-X-Received: by 2002:a17:90b:2e41:b0:2ee:b8ac:73b0 with SMTP id 98e67ed59e1d1-306a47c2d6amr11531890a91.2.1743894992161;
-        Sat, 05 Apr 2025 16:16:32 -0700 (PDT)
-Received: from [192.168.2.3] (2403-580a-80ed-0-4835-5a07-49e7-f115.ip6.aussiebb.net. [2403:580a:80ed:0:4835:5a07:49e7:f115])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-229785c994esm55048345ad.102.2025.04.05.16.16.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Apr 2025 16:16:31 -0700 (PDT)
-From: James Calligeros <jcalligeros99@gmail.com>
-Date: Sun, 06 Apr 2025 09:15:12 +1000
-Subject: [PATCH v5 8/8] ASoC: tas2764: expose die temp to hwmon
+        d=1e100.net; s=20230601; t=1743895110; x=1744499910;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Qhf/rx7t8bMwyY/f1Kp0rJLQEBrQ/aBJkKwcV4l30K4=;
+        b=Y1xnwwuhXHPWbZYWKW/0T1nIFl/uC/7rzPHnoHk2ht4U3yYZcBBP3ocblvV0BcyWZ+
+         wHy0q7owhFWbY+8+Les3Djx8C28Locr1yl7jM/HUHy2Zs7sKocGbkEDiKSpYbbBEb2El
+         miSEiITevpf8RUJpINfM19w1PXrjBtTRsSVkza+mu2NYXmo8j3GfRJgkPajoPnO/eblX
+         xUk18MoRO1Sl94nIeynqlkV1NftKzu6OH5U7iUe3VzlqQ7poXjHCb7R2gvWZhWtZaRQc
+         DAlQR8Fgkk7KOq8lxadDrHAJBL2srX1DWFJrYhTgucM5bRPYv5c3cA0AaQZf0cMy1DqH
+         3O9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVGE4ftIiO2klp5k+fvWZFTNM9u07rGeKcI4yDDzt1qUX1B9imuYRF/+bK5RgOzSPwS5hbLZHW62CaE0CQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YytBW6lc0x/WMir1CgOYe+TLN64/9cliRu1UYejPsDxd8pOvAuH
+	/EIMnC7dZFU45IBNbY9h5AP2xueR78E4t7JoUZvZKYO9hKfQonXRDVVgK/DNILwI6ueaIZzNiwz
+	86ss=
+X-Gm-Gg: ASbGncsgjfXaOIIwUk7QS0c8R3tL3EPbJn9XurzlvJhcmAUzvhuvDH6gxnHE544/IhT
+	H0X37vQq+8n/wYkR3u4EyaoILWdGH+tbZVv9YVY+ZoIcajMy45wTuZFjaUOSkC/F/Mmmna9cJ78
+	Lzde1wE6QBWw6vXSm6ePWpnnduvNcyCuSQjepQ8djfa/1lrLSbQE8LtAWmoG9oIMwA2vin7sBsw
+	auswGI87ehpDAvVoodfQ1Ksyic1xBHc/7tBX84XNnds7x0R6/sPsV6PNhMkfsUgXbjg8xLsbyp8
+	niWxt85fiudC8g4ycuUmMSzLvQesV8ypZW6K+tw/heMnw8yUPCdAiOiu/4jtnOyUcFGPQlblOaj
+	Kbedsh4pmg8OTAOIg/WU=
+X-Google-Smtp-Source: AGHT+IH9Yy+6aV//D3/sh5Xh0hWmY+MzF3lWYYh/TW9n+vKt/5hR2Qwfbklh99giNpIxDjMRrHn2rw==
+X-Received: by 2002:a17:907:9605:b0:ac3:8993:3c6d with SMTP id a640c23a62f3a-ac7e72b6218mr320105166b.26.1743895110396;
+        Sat, 05 Apr 2025 16:18:30 -0700 (PDT)
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com. [209.85.218.42])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7bfe99b46sm484233266b.42.2025.04.05.16.18.29
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 05 Apr 2025 16:18:29 -0700 (PDT)
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ac41514a734so554810966b.2
+        for <linux-kernel@vger.kernel.org>; Sat, 05 Apr 2025 16:18:29 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVCQnMLM0p5fNcpRSfxNw94c9ttBqxmgYyOX3DE9MRiDKe4uY1809wax74w9VcxJXcpHGoFPTtlWPCPlLI=@vger.kernel.org
+X-Received: by 2002:a17:906:81d0:b0:ac7:ec6f:a7c with SMTP id
+ a640c23a62f3a-ac7ec6f0b0fmr227244666b.13.1743895108623; Sat, 05 Apr 2025
+ 16:18:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250406-apple-codec-changes-v5-8-50a00ec850a3@gmail.com>
-References: <20250406-apple-codec-changes-v5-0-50a00ec850a3@gmail.com>
-In-Reply-To: <20250406-apple-codec-changes-v5-0-50a00ec850a3@gmail.com>
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
- Shenghao Ding <shenghao-ding@ti.com>, Kevin Lu <kevin-lu@ti.com>, 
- Baojun Xu <baojun.xu@ti.com>, Dan Murphy <dmurphy@ti.com>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Shi Fu <shifu0704@thundersoft.com>, 
- Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>
-Cc: Alyssa Rosenzweig <alyssa@rosenzweig.io>, 
- =?utf-8?q?Martin_Povi=C5=A1er?= <povik+lin@cutebit.org>, 
- Hector Martin <marcan@marcan.st>, linux-sound@vger.kernel.org, 
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
- asahi@lists.linux.dev, linux-hwmon@vger.kernel.org, 
- James Calligeros <jcalligeros99@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4733;
- i=jcalligeros99@gmail.com; h=from:subject:message-id;
- bh=5Z9X682HZUgLJ1v6uu51TGEAsXE/8Sre+u8dfgEfwT0=;
- b=owGbwMvMwCV2xczoYuD3ygTG02pJDOkfd3Ydffj9fdjhS7FJN4MP3lQONy7btTkkfquglGhlp
- KdAlsaRjlIWBjEuBlkxRZYNTUIes43YbvaLVO6FmcPKBDKEgYtTACZys4HhF1OSiWzl0nUxlpJ9
- wea9roGCa6+2byjY0Rrm5LN27fLiDYwMW6dJu2v3uVa/3yfL+Lp0Y9H9iL1lj54qVVZt2/SYhYW
- NAwA=
-X-Developer-Key: i=jcalligeros99@gmail.com; a=openpgp;
- fpr=B08212489B3206D98F1479BDD43632D151F77960
+References: <CAPM=9twD=Epq278=nVGxMU4veeEpznYLnr_PVQ9WqvdnxZac_w@mail.gmail.com>
+ <CAPM=9tw5SBS_P1oX+ySAhNx-M_NeO4RzK249i6vtwSU0V4mbDA@mail.gmail.com> <CAHk-=wi+93hTajFWaRL+vih3NjrwsNe8gzgMxmQc5BE+gPQnoA@mail.gmail.com>
+In-Reply-To: <CAHk-=wi+93hTajFWaRL+vih3NjrwsNe8gzgMxmQc5BE+gPQnoA@mail.gmail.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Sat, 5 Apr 2025 16:18:12 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjcoeRQ2ywrcY=1eYRtYgye65eG+eiwgKc-hEWs9rvLCg@mail.gmail.com>
+X-Gm-Features: ATxdqUHFMm87zCO8Rc7Je2B4WCFw6-4VH0NK94B5F2-ank9OPYFEmgzZhqqov1I
+Message-ID: <CAHk-=wjcoeRQ2ywrcY=1eYRtYgye65eG+eiwgKc-hEWs9rvLCg@mail.gmail.com>
+Subject: Re: [git pull] drm fixes for 6.15-rc1
+To: Dave Airlie <airlied@gmail.com>, Alex Deucher <alexander.deucher@amd.com>, 
+	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+Cc: Simona Vetter <simona@ffwll.ch>, dri-devel <dri-devel@lists.freedesktop.org>, 
+	LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-TAS2764 contains an ADC that reports the chip's die temperature.
-The temperature in degrees Celsius is yielded by subtracting 93
-from the raw value reported by the ADC.
+On Sat, 5 Apr 2025 at 15:34, Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> Does any of this happen to fix this (repeated a couple of hundred
+> times each time):
+>
+>   [drm] scheduler comp_1.1.1 is not ready, skipping
+>   [drm] scheduler comp_1.3.0 is not ready, skipping
+>   [drm] scheduler comp_1.0.1 is not ready, skipping
+>
+> which seems to happen on my machine when the display goes to sleep and
+> then comes back from low-power state.
 
-Expose the codec die temperature to the hwmon interface.
+Seems to be fixed. Knock wood. I'm not entirely sure it was 100%
+reproducible (and it wasn't just the display that went to sleep, it
+was the whole machine that suspended).
 
-The chip will initialise the temperature register to 2.6 *C
-to avoid triggering over temp protection. As the ADC is powered
-down during software shutdown, this value will persist until the
-chip is fully powered up (e.g. when the PCM it's attached to is
-opened). When the chip is powered back down, the last value sampled
-will persist in the register.
-
-Co-developed-by: Martin Povišer <povik+lin@cutebit.org>
-Signed-off-by: Martin Povišer <povik+lin@cutebit.org>
-Signed-off-by: James Calligeros <jcalligeros99@gmail.com>
----
- sound/soc/codecs/tas2764.c | 89 +++++++++++++++++++++++++
- sound/soc/codecs/tas2764.h |  3 +
- 2 files changed, 92 insertions(+)
-
-diff --git a/sound/soc/codecs/tas2764.c b/sound/soc/codecs/tas2764.c
-index 21c38b2394b71ef7d05b4c2e781fdf73926fec5b..97968ee3af42e8400b8cbcc23fe2184afc8c715c 100644
---- a/sound/soc/codecs/tas2764.c
-+++ b/sound/soc/codecs/tas2764.c
-@@ -8,6 +8,7 @@
- #include <linux/err.h>
- #include <linux/init.h>
- #include <linux/delay.h>
-+#include <linux/hwmon.h>
- #include <linux/pm.h>
- #include <linux/i2c.h>
- #include <linux/gpio/consumer.h>
-@@ -577,6 +578,80 @@ static int tas2764_apply_init_quirks(struct tas2764_priv *tas2764)
- 	return 0;
- }
- 
-+static int tas2764_read_die_temp(struct tas2764_priv *tas2764, long *result)
-+{
-+	int ret, reg;
-+
-+	ret = regmap_read(tas2764->regmap, TAS2764_TEMP, &reg);
-+	if (ret)
-+		return ret;
-+	/*
-+	 * As per datasheet, subtract 93 from raw value to get degrees
-+	 * Celsius. hwmon wants millidegrees.
-+	 *
-+	 * NOTE: The chip will initialise the TAS2764_TEMP register to
-+	 * 2.6 *C to avoid triggering temperature protection. Since the
-+	 * ADC is powered down during software shutdown, this value will
-+	 * persist until the chip is fully powered up (e.g. the PCM it's
-+	 * attached to is opened). The ADC will power down again when
-+	 * the chip is put back into software shutdown, with the last
-+	 * value sampled persisting in the ADC's register.
-+	 */
-+	*result = (reg - 93) * 1000;
-+	return 0;
-+}
-+
-+static umode_t tas2764_hwmon_is_visible(const void *data,
-+					enum hwmon_sensor_types type, u32 attr,
-+					int channel)
-+{
-+	if (type != hwmon_temp)
-+		return 0;
-+
-+	switch (attr) {
-+	case hwmon_temp_input:
-+		return 0444;
-+	default:
-+		break;
-+	}
-+
-+	return 0;
-+}
-+
-+static int tas2764_hwmon_read(struct device *dev,
-+			      enum hwmon_sensor_types type,
-+			      u32 attr, int channel, long *val)
-+{
-+	struct tas2764_priv *tas2764 = dev_get_drvdata(dev);
-+	int ret;
-+
-+	switch (attr) {
-+	case hwmon_temp_input:
-+		ret = tas2764_read_die_temp(tas2764, val);
-+		break;
-+	default:
-+		ret = -EOPNOTSUPP;
-+		break;
-+	}
-+
-+	return ret;
-+}
-+
-+static const struct hwmon_channel_info *const tas2764_hwmon_info[] = {
-+	HWMON_CHANNEL_INFO(temp, HWMON_T_INPUT),
-+	NULL
-+};
-+
-+static const struct hwmon_ops tas2764_hwmon_ops = {
-+	.is_visible	= tas2764_hwmon_is_visible,
-+	.read		= tas2764_hwmon_read,
-+};
-+
-+static const struct hwmon_chip_info tas2764_hwmon_chip_info = {
-+	.ops	= &tas2764_hwmon_ops,
-+	.info	= tas2764_hwmon_info,
-+};
-+
- static int tas2764_codec_probe(struct snd_soc_component *component)
- {
- 	struct tas2764_priv *tas2764 = snd_soc_component_get_drvdata(component);
-@@ -825,6 +900,20 @@ static int tas2764_i2c_probe(struct i2c_client *client)
- 		}
- 	}
- 
-+	if (IS_REACHABLE(CONFIG_HWMON)) {
-+		struct device *hwmon;
-+
-+		hwmon = devm_hwmon_device_register_with_info(&client->dev, "tas2764",
-+							tas2764,
-+							&tas2764_hwmon_chip_info,
-+							NULL);
-+		if (IS_ERR(hwmon)) {
-+			return dev_err_probe(&client->dev, PTR_ERR(hwmon),
-+					     "Failed to register temp sensor\n");
-+		}
-+	}
-+
-+
- 	return devm_snd_soc_register_component(tas2764->dev,
- 					       &soc_component_driver_tas2764,
- 					       tas2764_dai_driver,
-diff --git a/sound/soc/codecs/tas2764.h b/sound/soc/codecs/tas2764.h
-index 3251dc0106e07862dd69efd69fa0e40c3858ecb7..538290ed3d92acea3322240a3bd09edd63694e50 100644
---- a/sound/soc/codecs/tas2764.h
-+++ b/sound/soc/codecs/tas2764.h
-@@ -117,6 +117,9 @@
- #define TAS2764_INT_LTCH3               TAS2764_REG(0x0, 0x50)
- #define TAS2764_INT_LTCH4               TAS2764_REG(0x0, 0x51)
- 
-+/* Readout Registers */
-+#define TAS2764_TEMP                    TAS2764_REG(0x0, 0x56)
-+
- /* Clock/IRQ Settings */
- #define TAS2764_INT_CLK_CFG             TAS2764_REG(0x0, 0x5c)
- #define TAS2764_INT_CLK_CFG_IRQZ_CLR    BIT(2)
-
--- 
-2.49.0
-
+            Linus
