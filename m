@@ -1,95 +1,244 @@
-Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41D84219FC;
-	Sun,  6 Apr 2025 08:45:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C2BE219FC;
+	Sun,  6 Apr 2025 08:48:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743929149; cv=none; b=HpfrP7ZDK8vhYfySXR/ebyE1AutaawyV9AvNNaqaN9PrxSlMcsQeqAZaE2Pkuu6ZHCefZcM9SV/FV0nA7dvijPshsNHVs5a/5Nk9rzuEiVY1vtusHWZL1LyDZMPy+zu13+XE6L6+rzhwGqpfzUKcBibpilgSfgmqDNS+1xq+oI4=
+	t=1743929296; cv=none; b=aMHzHDGihOxU4UkDAEbcoDovOdMryVPLpRAh51KuQH26Sfuj0jTqGisSyfflV0DXfbonQpZF3ynOSMCdeJSUDOSwVFU0HmyU5JCH/hcF8614Y+mqsyvbxS4vqsLTD0Ok6HegiWC1kZERKuMOJeLpeaBYE0uByh6BZR3wHQK0XDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743929149; c=relaxed/simple;
-	bh=LlzX1kcRFPEFmjGFFhIYoLpgsX3j0aUAkFJIpyNT7Jg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nk4zRVfKuNUaMECe5F9kLGhuHZa93nTRa5okRZv3zF8S1Ck1RivgOW1eb3A4R1c06YnIIalYiMJaoRHcWt1caFlOqtc1mA9BigSh62c7oJavG73Lhr13aku/reNaGKYMkiVBSX2hihWoo+eY5ZqYm33VI5Xyq2q1k/daJcgDljA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost.localdomain (unknown [221.222.48.127])
-	by APP-03 (Coremail) with SMTP id rQCowAAn0z8wP_Jn47WOBg--.17314S2;
-	Sun, 06 Apr 2025 16:45:37 +0800 (CST)
-From: Wentao Liang <vulab@iscas.ac.cn>
-To: arend.vanspriel@broadcom.com,
-	kvalo@kernel.org
-Cc: christophe.jaillet@wanadoo.fr,
-	megi@xff.cz,
-	saikrishnag@marvell.com,
-	linux-wireless@vger.kernel.org,
-	brcm80211@lists.linux.dev,
-	brcm80211-dev-list.pdl@broadcom.com,
-	linux-kernel@vger.kernel.org,
-	Wentao Liang <vulab@iscas.ac.cn>,
-	stable@vger.kernel.org
-Subject: [PATCH] brcm80211: fmac: Add error handling for brcmf_usb_dl_writeimage()
-Date: Sun,  6 Apr 2025 16:45:15 +0800
-Message-ID: <20250406084515.2991-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.42.0.windows.2
+	s=arc-20240116; t=1743929296; c=relaxed/simple;
+	bh=cZogAL37BrditkuA6/iID0XEzaJF/kRmnZNyepXySaQ=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=AtR45BjqweTjYL2SMCv7tqsjvGA0ulDXcqaiAF1SYvupVTiHDKcIWuAeJRXE4gMIjrxDEdd3x6TEWgvGdtHXggbZIH8BapK5IypNqsVZ/ovvXtWPmtvIGj4QMYlJWb7EmmgSHk5qxPF1dXrc87t0YF1eCZjkTQ9kWTkl9kOWT1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=TGDTVr0H; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="TGDTVr0H"
+Received: by linux.microsoft.com (Postfix, from userid 1134)
+	id 627AB2112533; Sun,  6 Apr 2025 01:48:09 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 627AB2112533
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1743929289;
+	bh=wSGP4SJBUnsmhJUgOkT/omo/JNKbUWLMShPZLni6L/c=;
+	h=From:To:Cc:Subject:Date:From;
+	b=TGDTVr0Hz/oA1h9jG8IHPffo/IZu5+hU/tW/JAwhed5t0W3JgVP0wmStiPIyGqNMH
+	 BAMoymsQT2+0khy98J9tQa4mabz6WFvsg9HoPfPQSiDrBtus9hWBqpCp1lMDF19F0o
+	 hqsK3Xd12QC3Z85LngR/Ig6/bUGDSD8k7WJSOjkc=
+From: Shradha Gupta <shradhagupta@linux.microsoft.com>
+To: "K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Shradha Gupta <shradhagupta@linux.microsoft.com>,
+	Shradha Gupta <shradhagupta@microsoft.com>
+Subject: [PATCH v3] hv/hv_kvp_daemon: Enable debug logs for hv_kvp_daemon
+Date: Sun,  6 Apr 2025 01:48:08 -0700
+Message-Id: <1743929288-7181-1-git-send-email-shradhagupta@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:rQCowAAn0z8wP_Jn47WOBg--.17314S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxJrykZr13Kw4UuFW5uryUZFb_yoW8XFyfp3
-	Z7XasrurykW3yaka17tFs7AFykK3WrJa4vkFW8Zwn3XF4kCw10krs0gFyFkw4DCrWfAa47
-	JF4DAry7Jrs8KFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9E14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-	6F4UM28EF7xvwVC2z280aVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJV
-	WxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
-	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_Jw0_GFylc2xSY4AK67AK6r43MxAIw28IcxkI7VAKI4
-	8JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xv
-	wVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjx
-	v20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20E
-	Y4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267
-	AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUjKLvtUUUUU==
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiBg0EA2fyGW47pwAAsy
 
-The function brcmf_usb_dl_writeimage() calls the function
-brcmf_usb_dl_cmd() but dose not check its return value. The
-'state.state' and the 'state.bytes' are uninitialized if the
-function brcmf_usb_dl_cmd() fails. It is dangerous to use
-uninitialized variables in the conditions.
+Allow the KVP daemon to log the KVP updates triggered in the VM
+with a new debug flag(-d).
+When the daemon is started with this flag, it logs updates and debug
+information in syslog with loglevel LOG_DEBUG. This information comes
+in handy for debugging issues where the key-value pairs for certain
+pools show mismatch/incorrect values.
+The distro-vendors can further consume these changes and modify the
+respective service files to redirect the logs to specific files as
+needed.
 
-Add error handling for brcmf_usb_dl_cmd() to jump to error
-handling path if the brcmf_usb_dl_cmd() fails and the
-'state.state' and the 'state.bytes' are uninitialized.
-
-Fixes: 71bb244ba2fd ("brcm80211: fmac: add USB support for bcm43235/6/8 chipsets")
-Cc: stable@vger.kernel.org # v3.4+
-Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
 ---
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ Changes in v3:
+ * remove timestamp from raw message
+ * use i+1 instead of i while printing record array
+ * add debug logs in delete operation
+---
+ Changes in v2:
+ * log the debug logs in syslog(debug) instead of a seperate file that
+   we will have to maintain.
+ * fix the commit message to indicate the same.
+---
+ tools/hv/hv_kvp_daemon.c | 71 +++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 63 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
-index 50dddac8a2ab..1c97cd777225 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
-@@ -901,7 +901,9 @@ brcmf_usb_dl_writeimage(struct brcmf_usbdev_info *devinfo, u8 *fw, int fwlen)
+diff --git a/tools/hv/hv_kvp_daemon.c b/tools/hv/hv_kvp_daemon.c
+index 04ba035d67e9..7a1b7b0a9233 100644
+--- a/tools/hv/hv_kvp_daemon.c
++++ b/tools/hv/hv_kvp_daemon.c
+@@ -83,6 +83,7 @@ enum {
+ };
+ 
+ static int in_hand_shake;
++static int debug_enabled;
+ 
+ static char *os_name = "";
+ static char *os_major = "";
+@@ -183,6 +184,20 @@ static void kvp_update_file(int pool)
+ 	kvp_release_lock(pool);
+ }
+ 
++static void kvp_dump_initial_pools(int pool)
++{
++	int i;
++
++	syslog(LOG_DEBUG, "===Start dumping the contents of pool %d ===\n",
++	       pool);
++
++	for (i = 0; i < kvp_file_info[pool].num_records; i++)
++		syslog(LOG_DEBUG, "pool: %d, %d/%d key=%s val=%s\n",
++		       pool, i + 1, kvp_file_info[pool].num_records,
++		       kvp_file_info[pool].records[i].key,
++		       kvp_file_info[pool].records[i].value);
++}
++
+ static void kvp_update_mem_state(int pool)
+ {
+ 	FILE *filep;
+@@ -270,6 +285,8 @@ static int kvp_file_init(void)
+ 			return 1;
+ 		kvp_file_info[i].num_records = 0;
+ 		kvp_update_mem_state(i);
++		if (debug_enabled)
++			kvp_dump_initial_pools(i);
  	}
  
- 	/* 1) Prepare USB boot loader for runtime image */
--	brcmf_usb_dl_cmd(devinfo, DL_START, &state, sizeof(state));
-+	err = brcmf_usb_dl_cmd(devinfo, DL_START, &state, sizeof(state));
-+	if (err)
-+		goto fail;
+ 	return 0;
+@@ -297,6 +314,9 @@ static int kvp_key_delete(int pool, const __u8 *key, int key_size)
+ 		 * Found a match; just move the remaining
+ 		 * entries up.
+ 		 */
++		if (debug_enabled)
++			syslog(LOG_DEBUG, "%s: deleting the KVP: pool=%d key=%s val=%s",
++			       __func__, pool, record[i].key, record[i].value);
+ 		if (i == (num_records - 1)) {
+ 			kvp_file_info[pool].num_records--;
+ 			kvp_update_file(pool);
+@@ -315,20 +335,36 @@ static int kvp_key_delete(int pool, const __u8 *key, int key_size)
+ 		kvp_update_file(pool);
+ 		return 0;
+ 	}
++
++	if (debug_enabled)
++		syslog(LOG_DEBUG, "%s: could not delete KVP: pool=%d key=%s. Record not found",
++		       __func__, pool, key);
++
+ 	return 1;
+ }
  
- 	rdlstate = le32_to_cpu(state.state);
- 	rdlbytes = le32_to_cpu(state.bytes);
+ static int kvp_key_add_or_modify(int pool, const __u8 *key, int key_size,
+ 				 const __u8 *value, int value_size)
+ {
+-	int i;
+-	int num_records;
+ 	struct kvp_record *record;
++	int num_records;
+ 	int num_blocks;
++	int i;
++
++	if (debug_enabled)
++		syslog(LOG_DEBUG, "%s: got a KVP: pool=%d key=%s val=%s",
++		       __func__, pool, key, value);
+ 
+ 	if ((key_size > HV_KVP_EXCHANGE_MAX_KEY_SIZE) ||
+-		(value_size > HV_KVP_EXCHANGE_MAX_VALUE_SIZE))
++		(value_size > HV_KVP_EXCHANGE_MAX_VALUE_SIZE)) {
++		syslog(LOG_ERR, "Got a too long key or value: key=%s, val=%s",
++		       key, value);
++
++		if (debug_enabled)
++			syslog(LOG_DEBUG, "%s: Got a too long key or value: pool=%d, key=%s, val=%s",
++			       __func__, pool, key, value);
+ 		return 1;
++	}
+ 
+ 	/*
+ 	 * First update the in-memory state.
+@@ -348,6 +384,9 @@ static int kvp_key_add_or_modify(int pool, const __u8 *key, int key_size,
+ 		 */
+ 		memcpy(record[i].value, value, value_size);
+ 		kvp_update_file(pool);
++		if (debug_enabled)
++			syslog(LOG_DEBUG, "%s: updated: pool=%d key=%s val=%s",
++			       __func__, pool, key, value);
+ 		return 0;
+ 	}
+ 
+@@ -359,8 +398,10 @@ static int kvp_key_add_or_modify(int pool, const __u8 *key, int key_size,
+ 		record = realloc(record, sizeof(struct kvp_record) *
+ 			 ENTRIES_PER_BLOCK * (num_blocks + 1));
+ 
+-		if (record == NULL)
++		if (!record) {
++			syslog(LOG_ERR, "%s: Memory alloc failure", __func__);
+ 			return 1;
++		}
+ 		kvp_file_info[pool].num_blocks++;
+ 
+ 	}
+@@ -368,6 +409,11 @@ static int kvp_key_add_or_modify(int pool, const __u8 *key, int key_size,
+ 	memcpy(record[i].key, key, key_size);
+ 	kvp_file_info[pool].records = record;
+ 	kvp_file_info[pool].num_records++;
++
++	if (debug_enabled)
++		syslog(LOG_DEBUG, "%s: added: pool=%d key=%s val=%s",
++		       __func__, pool, key, value);
++
+ 	kvp_update_file(pool);
+ 	return 0;
+ }
+@@ -1662,6 +1708,7 @@ void print_usage(char *argv[])
+ 	fprintf(stderr, "Usage: %s [options]\n"
+ 		"Options are:\n"
+ 		"  -n, --no-daemon        stay in foreground, don't daemonize\n"
++		"  -d, --debug-enabled    Enable debug logs(syslog debug by default)\n"
+ 		"  -h, --help             print this help\n", argv[0]);
+ }
+ 
+@@ -1681,12 +1728,13 @@ int main(int argc, char *argv[])
+ 	int daemonize = 1, long_index = 0, opt;
+ 
+ 	static struct option long_options[] = {
+-		{"help",	no_argument,	   0,  'h' },
+-		{"no-daemon",	no_argument,	   0,  'n' },
+-		{0,		0,		   0,  0   }
++		{"help",		no_argument,	   0,  'h' },
++		{"no-daemon",		no_argument,	   0,  'n' },
++		{"debug-enabled",	no_argument,	   0,  'd' },
++		{0,			0,		   0,  0   }
+ 	};
+ 
+-	while ((opt = getopt_long(argc, argv, "hn", long_options,
++	while ((opt = getopt_long(argc, argv, "hnd", long_options,
+ 				  &long_index)) != -1) {
+ 		switch (opt) {
+ 		case 'n':
+@@ -1695,6 +1743,9 @@ int main(int argc, char *argv[])
+ 		case 'h':
+ 			print_usage(argv);
+ 			exit(0);
++		case 'd':
++			debug_enabled = 1;
++			break;
+ 		default:
+ 			print_usage(argv);
+ 			exit(EXIT_FAILURE);
+@@ -1717,6 +1768,9 @@ int main(int argc, char *argv[])
+ 	 */
+ 	kvp_get_domain_name(full_domain_name, sizeof(full_domain_name));
+ 
++	if (debug_enabled)
++		syslog(LOG_INFO, "Logging debug info in syslog(debug)");
++
+ 	if (kvp_file_init()) {
+ 		syslog(LOG_ERR, "Failed to initialize the pools");
+ 		exit(EXIT_FAILURE);
 -- 
-2.42.0.windows.2
+2.34.1
 
