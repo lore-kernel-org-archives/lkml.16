@@ -1,135 +1,129 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1B25EACD;
-	Sun,  6 Apr 2025 11:08:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 470A5EACD;
+	Sun,  6 Apr 2025 11:08:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743937690; cv=none; b=Y7R+OJzmwc9QgMky4ewi/0cfPT5cwH2mnwsvNKhvkPfaNAf2BCC2x4etnKGEjMQrXyHqqGIho96do72FLQaO/FjRACcHM7hd/XaMGCt5+heTZRxMwsAHZ26it3Xjs6jeeMt8FhWvBtM3p1/fNt47ysP6OTWlbBf5N7t0RUMWIbE=
+	t=1743937702; cv=none; b=H89sHnUSIBxQ54oyTE1JZpgZGK4gGvZrkncDnSqL4Mr0rI5Fj4UF/etFm40U71Iy57HBt9OmKaVXxDF25jZEHl4+PoHz7+1sSMc9VVLmloL+bRRnwjKbPzIWQKdYfI0/7sedkk64XyKyr917j4IxVY0Zk2WvR9Gxd2J2NZN9Ako=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743937690; c=relaxed/simple;
-	bh=oUhxAnOMCHsqdz8DNQsypzn7+qug73xuCJrLxNoJ6pw=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=Ms1zxxndSNttxFQr+lf09vXA49sel/C3sA8LoF24TN260fgBC+kopzmLzOwaV3fRNAk6yiH3Q2phfZeDKfXLAPLat0+UyavlpN9sa0tlvyC5jzxDZntFJxPqLwpbIxiUV5mTEg0HvKO70oiysPp5QsSY6Cck6fAgwW46fye1AcU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bAvsywBG; arc=none smtp.client-ip=209.85.210.175
+	s=arc-20240116; t=1743937702; c=relaxed/simple;
+	bh=hWNh0A3W8u8N1g08xzyAM+5+gHdaPqHAGDJMaNk7T0Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TWxKv1a97AOq5dTGFxSm1v4iKoyGdrzF2V2QNo1uGqSkx3EhBwMn7UoBMboa+O7BtGhTMmRNOTUb3/+ycPuKpeHmLdVWc1a4lnk5Za6wt1vn2GfMH616YK/Si+xWlwYWxSqgzHVA4w/HiF2D3Tw3ONIw0EFInZBgIH3aK+glZ9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h/CCMi5s; arc=none smtp.client-ip=209.85.214.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bAvsywBG"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-736b0c68092so2643097b3a.0;
-        Sun, 06 Apr 2025 04:08:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h/CCMi5s"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2243803b776so47711105ad.0;
+        Sun, 06 Apr 2025 04:08:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743937688; x=1744542488; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language:subject
-         :references:cc:to:user-agent:mime-version:date:message-id:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZT8Yrr5vxwZg9guu+30Mw3AXNH1uiqWJ290W7GyHofo=;
-        b=bAvsywBGRSiLhT40kWIJYL42DJbtaVgF8GgJvSoS7jxIA41gCjhPHmK591ATSbxT9N
-         iBF+S4DvXF1dWT30+BQfUKB+V6GlFZmcTwN0ojtkDBknjNJkNzCAXUmE/flEewLBhtaw
-         epLlB6wmZIvCjN+wwTXJX8r6f6GEiA2R8sr9lMVCVaO1WMADQvhWIxlOdt3Lj+xAgHzP
-         vfvm9t9fiuCvZBKa664cCLNWpqAEdteVD/CS2eeh8sJWRDHN4IRbNkAwzl6BqntTv+yJ
-         QKq5pSj4xTukyJIOZT4LFxVnNDBxzicMxwl6AkUUMdLXnn0rqsCMthdMYvxj/WdFKWjE
-         5dJw==
+        d=gmail.com; s=20230601; t=1743937700; x=1744542500; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=9dnQwUYlFHrp/etLwYkyL8PEf5G7FcHtzONo+0MlGRs=;
+        b=h/CCMi5sfvqI1fPE9fiK60CEaNsg6TzrRNEJEWnpZamMjujGAIPBY08EXPv/DFfOAx
+         JZYwne0MuDI8quy+qb7f8j5uFajC0GOSg9wTRzVU+amBAMGl1O93CDLKBb1PZLpHbDK5
+         ddDMMvIRpRMPDWqdiUTCUIMAF2adQAQlSbPtL/z634uY+kh4+UdRLYO4dVk2yUbfQ6Ht
+         fqo5jzef43XiRk7r2wzs50nUjllvGSxOw4qdsgKsvzN4CizUUEpOPtvv7p+yEFyCN2fW
+         4Bgnw1jwUer0ncs+FeSxN+bduss2FXSmuwHDdtU3kJ4tqLVH6HDlysG+thI1ZnqlIsEo
+         HjvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743937688; x=1744542488;
-        h=content-transfer-encoding:in-reply-to:from:content-language:subject
-         :references:cc:to:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZT8Yrr5vxwZg9guu+30Mw3AXNH1uiqWJ290W7GyHofo=;
-        b=UU1LtfYB/TljChcTFaqIMNCjHZj4Vx0kRf3FxmHBxuoaqAb8pMVf8azZaZ+N2Qyb+9
-         PdScbFd3zcW6MC42MSBNI5qB8kTTX9OVfIUnVQrfzEfo2f3Rcj3yArLicJWtPWBxPcES
-         MLL4E6szT5zrFvcjnQFm0P2jxjiKIO0Iv7FtTrU19FBX6hTLnG6FM2CBcDN109FfyNAO
-         XVVciPOSaebZzggN/4aJRJi5G3/4IpOPvJHK4HPGTwdLt25z11csISJOB3MNcQsGP0nF
-         YdbwDX8gnN0Vq25FHRb48RP0rldU2X5oOQWFa6Vd1Q/fXg9LMNMRtYAXBHFw8ONYbbdY
-         BjhA==
-X-Forwarded-Encrypted: i=1; AJvYcCUrPkTqTp1I0ou1bYLefIajpGJOCtw/7dZ7COkZSBq7vq9E6ox6g6KlIfRK38rdqRgJjUaloYemhFx0Wkre@vger.kernel.org, AJvYcCWugRpPzhsVYMa0qcoHPuJmiyk1jruqOr00PY9TWpSp5e64KDe3zwt9oRycmXdBuRrjH0fuha3LGD0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YywsIpUEqmu7q3THrpM4ZBlcBlTYxo9zqQNWnBIJuIheHq0oD89
-	sqF4IsBJlIoBQtgHgZKUGi3HUUeWn0zOyf7TcO3Bck5q3RJujC6P
-X-Gm-Gg: ASbGncsxCpYIhAJsbtulHiumcaFtgmg7rYU2ZJKfyTdsVMFHxvu9nJj93etR5ukNwFb
-	zEsREuR12EzPx2whCn4caj77qTcGgzdqrdZp1sxBalLkoOqXSJgBPHWirUt2yWUVk63HP9f2T2+
-	X8d2FhrU7r13+G1h/LvKa9bfmjFWV+XN/BXGWmMPGmS/SokSWiUr6JkY7W1X+bnUAonEgRAC9+K
-	1noCpnhlJ2g5fD9rn6iF6tSNbdObeX2ZDv/mGDr4TqK8TaUQgbLcoBcbD7DYEUqPdL4AZF7evzB
-	2WDGWpQG7bVz8MSjYqdfGAgwqEOpTbwpfxIRB4Ke0V8IvPHlw1BAI7hBh/jKA6fiVyYLjw4bbnV
-	kNZEj8zgXvkGBaiM=
-X-Google-Smtp-Source: AGHT+IEjBAE/rld+9aiCuqigpuY+9zpIRh773iCRiL5ITop6OwxL60YXEg8KAl4CRgm6Ds8OhqjP/A==
-X-Received: by 2002:a05:6a20:72a3:b0:1f3:4427:74ae with SMTP id adf61e73a8af0-2010462b559mr14593665637.25.1743937688009;
-        Sun, 06 Apr 2025 04:08:08 -0700 (PDT)
-Received: from [10.0.2.15] (KD106167137155.ppp-bb.dion.ne.jp. [106.167.137.155])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739d97ee385sm6471991b3a.45.2025.04.06.04.08.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 06 Apr 2025 04:08:07 -0700 (PDT)
-Message-ID: <48bdc474-2dd8-4c51-a32f-04bc7e9f50e7@gmail.com>
-Date: Sun, 6 Apr 2025 20:08:04 +0900
+        d=1e100.net; s=20230601; t=1743937700; x=1744542500;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9dnQwUYlFHrp/etLwYkyL8PEf5G7FcHtzONo+0MlGRs=;
+        b=fRx1gpN9kIrEqEl+VieBvGUzuK3vjRF2TAZrk9pagFxo6IJYiR+tJp7EtArlIxMOG2
+         shbEr16QN5qdKEAA5HNTn/I/8c2XVkJwvkURosGut9fzxI10D7G+Iy7UYs7YkvXbmxn2
+         fnibPvaKQVY3Oi28q+sfRUtuSPcQodgS++jAdfszmVNl1LBMriSdLiuvFDYt/WfObtI/
+         6u4p/VSJ6Xf9Rnd7SOa/Iyf9LZyOxO5YfutIi4b/ixWQe7T/2VvCLc2VSijFQNmqEWlo
+         Pm+49EjmoCkLItvS08Yb7QELQqaSSIOxbBnOIDun1/ZD4k41XH7PTOTXK4FEx0sW0ato
+         Yjiw==
+X-Forwarded-Encrypted: i=1; AJvYcCV/T7QXe9x5JfRxWmHhB0hV/jP7w3hSbKOVRTjfs0/rhltY1/u+g6Zx5Dqs2zUnuQ4UV//pjLlR3zbNzRIvnA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwEkKq/ANtOa6xPVaBPd3MnvYftYIdk4rZFsR6H0onOOR1XfANl
+	rWxlkBdl4oNzIWfxY5Aw+XtF4BdQGFoRqt20+yHbN05IiYo8BvC81wAgwmlP
+X-Gm-Gg: ASbGncu7vjKCP4a0OByMm5Lkf4lAF5m2DNnMf5DgDm3EMyy2NoWxJ7CIJwyZ31Z0j6C
+	v8mWqWmrH/EaJ3CFLgimmAzMG9Wbfpzd0EmOuczmug5blBDzW4AeesEvw4To8uGW9x48JrF4Wbp
+	M8M01xfuF1s0CPzOQ/tERQJ9Dljj9AqSsjlXyyMVemifI5AWQNZ2LPE8UCjIDV5c0VCK4iXFPln
+	GJI5P8QhnxwNjs3SXZ8enZTuKZlPJHmyt4gPW2SIZqFhs5Fhibfr/mEQC/GDA0vEmJ8P8bZh1Qb
+	nRBENtRs+MgeQUs6ozmUL+AO/NtWNtNr6niWRDG813SaRbNiqBWw4hWeamTJLdtLkgD+7VWubHe
+	oFqAMPwZDumrgbbOf+Tng5w==
+X-Google-Smtp-Source: AGHT+IGBkNHlZTkRBJ+cjT+zdbZJ0DTmQcTZki1gKDglGnid1ae8Jf8cHUn3Vis4oVu3IAcp/ojqmg==
+X-Received: by 2002:a17:902:e805:b0:223:501c:7581 with SMTP id d9443c01a7336-22a95511e49mr76521815ad.16.1743937700025;
+        Sun, 06 Apr 2025 04:08:20 -0700 (PDT)
+Received: from mew.. (p4204131-ipxg22701hodogaya.kanagawa.ocn.ne.jp. [153.160.176.131])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-229785adb04sm62080215ad.15.2025.04.06.04.08.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 06 Apr 2025 04:08:19 -0700 (PDT)
+From: FUJITA Tomonori <fujita.tomonori@gmail.com>
+To: linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org
+Cc: boqun.feng@gmail.com,
+	ojeda@kernel.org,
+	alex.gaynor@gmail.com,
+	gary@garyguo.net,
+	bjorn3_gh@protonmail.com,
+	benno.lossin@proton.me,
+	a.hindborg@samsung.com,
+	aliceryhl@google.com,
+	tmgross@umich.edu,
+	dakr@kernel.org,
+	mingo@redhat.com,
+	peterz@infradead.org,
+	juri.lelli@redhat.com,
+	vincent.guittot@linaro.org,
+	dietmar.eggemann@arm.com,
+	rostedt@goodmis.org,
+	bsegall@google.com,
+	mgorman@suse.de,
+	vschneid@redhat.com,
+	pmladek@suse.com
+Subject: [PATCH v1 0/2] add Rust version of might_sleep()
+Date: Sun,  6 Apr 2025 20:07:16 +0900
+Message-ID: <20250406110718.126146-1-fujita.tomonori@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: kevinpaul468@gmail.com
-Cc: corbet@lwn.net, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- rbrasga@uci.edu, rdunlap@infradead.org, skhan@linuxfoundation.org,
- Akira Yokosawa <akiyks@gmail.com>
-References: <20250405165116.147958-1-kevinpaul468@gmail.com>
-Subject: Re: [PATCH] Added usb_string function to a namespace
-Content-Language: en-US
-From: Akira Yokosawa <akiyks@gmail.com>
-In-Reply-To: <20250405165116.147958-1-kevinpaul468@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi,
+This patchset adds Rust version of might_sleep().
 
-Kevin Paul Reddy Janagari wrote:
-> with reference to WARNING:
-> Duplicate C declaration, also defined at driver-api/usb/gadget:804
-> There is a function usb_string in the file message.c,
-> there is also a struct usb_string in the kernel api headers.
-> The docs is unable to index the function as the index is occupied by struct
-> This fix adds messgae.c to the usb_core namespace (in docs) hence providing
-> usb_sting a unique index usb_core.usb_string()
+These patches were previously part of the IO polling patchset [1], but
+they were split out to make upstreaming easier.
 
-This is a bug of Sphinx.
-Quote of my message in July 2023 [1]:
+The first patch is for sched/core, which adds
+__might_sleep_precision(), rust friendly version of __might_sleep(),
+which takes a pointer to a string with the length instead of a
+null-terminated string. Rust's core::panic::Location::file(), which
+gives the file name of a caller, doesn't provide a null-terminated
+string. __might_sleep_precision() uses a precision specifier in the
+printk format, which specifies the length of a string; a string
+doesn't need to be a null-terminated. Providing a null-terminated
+string for better C interoperability is under discussion [2].
 
- > This is a bug of Sphinx >=3.1, first reported by Mauro back in September 2020 at:
- >
- >     https://github.com/sphinx-doc/sphinx/issues/8241
- >
- > It was closed when a local fix was presented.  Unfortunately, it was not
- > merged at the time and a subsequent pull request was opened at:
- >
- >     https://github.com/sphinx-doc/sphinx/pull/8313
- >
- > It is not merged yet and carries a milestone of Sphinx 7.x.
+The second patch adds a Rust implementation of might_sleep(), on top
+of the changes in the first patch.
 
-[1]: https://lore.kernel.org/0475d177-4c01-0988-0b34-3099dd703498@gmail.com/
+[1]: https://lore.kernel.org/lkml/20250220070611.214262-1-fujita.tomonori@gmail.com/
+[2]: https://github.com/rust-lang/libs-team/issues/466
 
-The PR carries a milestone of Sphinx 8.x now ...
+FUJITA Tomonori (2):
+  sched/core: Add __might_sleep_precision()
+  rust: task: add Rust version of might_sleep()
 
-It might be a high time to make some noise in the PR.
+ include/linux/kernel.h |  2 ++
+ kernel/sched/core.c    | 62 ++++++++++++++++++++++++++++--------------
+ rust/helpers/task.c    |  6 ++++
+ rust/kernel/task.rs    | 26 ++++++++++++++++++
+ 4 files changed, 75 insertions(+), 21 deletions(-)
 
-       Thanks, Akira
 
-> 
-> Signed-off-by: Kevin Paul Reddy Janagari <kevinpaul468@gmail.com>
-> ---
->  Documentation/driver-api/usb/usb.rst | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/driver-api/usb/usb.rst b/Documentation/driver-api/usb/usb.rst
-> index 89f9c37bb979..976fb4221062 100644
-> --- a/Documentation/driver-api/usb/usb.rst
-> +++ b/Documentation/driver-api/usb/usb.rst
-> @@ -161,6 +161,7 @@ rely on 64bit DMA to eliminate another kind of bounce buffer.
->  .. kernel-doc:: drivers/usb/core/urb.c
->     :export:
->  
-> +.. c:namespace:: usb_core
->  .. kernel-doc:: drivers/usb/core/message.c
->     :export:
->  
-> -- 
-> 2.39.5
+base-commit: f4d2ef48250ad057e4f00087967b5ff366da9f39
+-- 
+2.43.0
 
