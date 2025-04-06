@@ -1,202 +1,134 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from ombertech.com (ombertech.com [74.48.158.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ED2914A82;
-	Sun,  6 Apr 2025 05:09:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0074B17F7
+	for <linux-kernel@vger.kernel.org>; Sun,  6 Apr 2025 05:40:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.48.158.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743916184; cv=none; b=PegYMD3Hvw5YyeP+ELlvIWYeCOZeqllAkiXWhksE7mlhRusA3XebSVi401fSj7Qpfl5XPpVl22ousNAJZjj7iGfwkiJ9e8+kq7xAIfyRD04dtMFr/gB03CTfGmustsCLAp6gKw045WvbKVRbZdERhwK8w8aStD8DDMj5BA8u/YI=
+	t=1743918018; cv=none; b=neuxkeToi9BE5NTlU8Uu26WpChKrZ6g9NZdVdrA0Z508NZMSZRM9tH+zVIIJoH/jGapRB343xSHvQ3Ky0xz1hRSfsIvD2uUjOVoDyBjixmq1/JxFoZo4gB5CEiDTBdmdEGekbetvqZI2ZfrxfYMWFUKlOcAmAiScJ6xxlqX3cro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743916184; c=relaxed/simple;
-	bh=2Vv16BmJQGGt1ruqb/MSgE5G4w4jvnFeftNhxmRK96Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F8WrHohwSrVM+sJKYAztF/8tfyLXcZPIijNuYPmMFICuZ/T3ZbasaOxFaCXpzrUK8kc3aj2/Bp0HGzL68h6gNBT6Kifdg923xsEMkgtsgEgyvFXUmhbAlMkcON0fBblCxgSbMpIYvWotmJsWZAahqCSf0IWMHUs5Vv2BFJPdqYM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=N3xz6tdg; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1743918018; c=relaxed/simple;
+	bh=eGPssONKMwss0s7vqd0jkbyJcrBZkDhYjLj39eimxAY=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=DELEDJUhGQJ8nJlpc+cV23T0pO5yZYfePptrAHzZX/fRBaGmqPsHTGmL00snp/w/odRNnq3coNl9PnqyVrU1wsmfTvCVE0n7BFXeEHsy/r/wtRRxqFwFE0Jg1u1i5VT0LBt9DwFFnRGXTvQViOTRjZ2QAzSnAZqR1cjWcztil1c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ombertech.com; spf=pass smtp.mailfrom=ombertech.com; dkim=pass (2048-bit key) header.d=ombertech.com header.i=@ombertech.com header.b=dDfbTuCZ; arc=none smtp.client-ip=74.48.158.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ombertech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ombertech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N3xz6tdg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743916182; x=1775452182;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=2Vv16BmJQGGt1ruqb/MSgE5G4w4jvnFeftNhxmRK96Q=;
-  b=N3xz6tdgDYyZjg8+6OHAxIbGh+a5pEfwi+leZFRYrl2gwD18LxCvv+iE
-   aI8wC27VtTqNMtZgrjbZkSS0mr8cC/M2wYNttd3QR1W1TgaucjrJADBSt
-   jHxeOhRYN6TGpVkP1O/xUq0/iJCE4/+IqE5uMPgCwd8+DvpHj4sCqDeKi
-   06Dd9M1AN2f2D9fAvyz4+uXwAGQ+varb0UDeJXfyzFGcc25K+csoJCjKD
-   JhCPrbpSNADdIEjDhxGjA0hQjWy4BKG7CuxCgXnaeBtU2dha7KGS1CZNo
-   6Hx/Vhs8NRMLtfUDWFMU/NZzaE5VIwRKl6FLS83khG6KstfXr9XRVpBNd
-   Q==;
-X-CSE-ConnectionGUID: 0C93XjmsQq2xv24+xl7wtw==
-X-CSE-MsgGUID: CyRoFPaERWagfF2d6RPlEQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11395"; a="32920992"
-X-IronPort-AV: E=Sophos;i="6.15,192,1739865600"; 
-   d="scan'208";a="32920992"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2025 22:09:38 -0700
-X-CSE-ConnectionGUID: 9Z3oBZg/R0ipWzs40aYBCA==
-X-CSE-MsgGUID: BNJayHtETV6W0UmceMgCLQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,192,1739865600"; 
-   d="scan'208";a="128141955"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by fmviesa010.fm.intel.com with ESMTP; 05 Apr 2025 22:09:35 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u1IGC-0002Rz-22;
-	Sun, 06 Apr 2025 05:09:32 +0000
-Date: Sun, 6 Apr 2025 13:08:57 +0800
-From: kernel test robot <lkp@intel.com>
-To: Waiman Long <longman@redhat.com>, Johannes Weiner <hannes@cmpxchg.org>,
-	Michal Hocko <mhocko@kernel.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Muchun Song <muchun.song@linux.dev>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Tejun Heo <tj@kernel.org>,
-	Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
-	Shuah Khan <skhan@linuxfoundation.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Linux Memory Management List <linux-mm@kvack.org>,
-	linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, Waiman Long <longman@redhat.com>
-Subject: Re: [PATCH v3 1/2] mm/vmscan: Skip memcg with !usage in
- shrink_node_memcgs()
-Message-ID: <202504061254.DqfqHfM7-lkp@intel.com>
-References: <20250406024010.1177927-2-longman@redhat.com>
+	dkim=pass (2048-bit key) header.d=ombertech.com header.i=@ombertech.com header.b="dDfbTuCZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=ombertech.com; s=2022;
+	t=1743917719; bh=eGPssONKMwss0s7vqd0jkbyJcrBZkDhYjLj39eimxAY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=dDfbTuCZEafoGGy1GD/g+2379zozMNWQOB/VUGBnPjAwQWJXVNJgRcFKfFgiakDTk
+	 h3VfJG+XLup0EdfWVvoFlFOt3KZUbfG5m+w2jwFq3IXrwhmgLavlyfA2TM1UlHGVNH
+	 uNFgtkJP0uLyLIW2+VcNqV/dwcNiO5qZATAbktWJFHN5uRGCQ3GIyZ6HP+cTs3pSQD
+	 Yu/ubppb5dkBWNDI1a4WtILASI9qgyJZYVJAIkayhNNk07dm16iWtOqqWUwOKHtEJU
+	 sS5vjw/KVZD+/rWMXl5c2gau61C6fT7W7PxGp9TxKYXgGOtxgq138tRfoK8L7JaF1h
+	 /H9+v5MBNAbiA==
+Received: from 192.168.1.100 (unknown [1.145.161.245])
+	by ombertech.com (Postfix) with ESMTPSA id 9A7F766946;
+	Sun,  6 Apr 2025 05:35:17 +0000 (UTC)
+Date: Sun, 6 Apr 2025 16:40:49 +1000
+From: Kevin Koster <lkml@ombertech.com>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Oerg866 <oerg866@googlemail.com>, linux-kernel@vger.kernel.org, Thomas
+ Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Dave Hansen
+ <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin"
+ <hpa@zytor.com>
+Subject: Re: [PATCH] x86/microcode: Fix crashes on early 486 CPUs due to
+ usage of 'cpuid'.
+Message-Id: <20250406164049.c0666bc18073e3b88c92d1f1@ombertech.com>
+In-Reply-To: <20250405093127.GAZ_D4b6NdyTS-UW1J@fat_crate.local>
+References: <CANpbe9Wm3z8fy9HbgS8cuhoj0TREYEEkBipDuhgkWFvqX0UoVQ@mail.gmail.com>
+	<20250405130306.ca9822c1f27db119cc973603@ombertech.com>
+	<20250405093127.GAZ_D4b6NdyTS-UW1J@fat_crate.local>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-unknown-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250406024010.1177927-2-longman@redhat.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Waiman,
+On Sat, 5 Apr 2025 11:32:26 +0200
+Borislav Petkov <bp@alien8.de> wrote:
+> On Sat, Apr 05, 2025 at 01:03:06PM +1100, Kevin Koster wrote:
+> > On Sat, 19 Oct 2024 08:29:04 +0200
+> > Oerg866 <oerg866@googlemail.com> wrote:
+> > 
+> > > Starting with v6.7-rc1, the kernel was no longer able to boot on
+> > > early i486-class CPUs.
+> > 
+> > Thanks for this patch! It solves my problem with kernel 6.12.11
+> > rebooting at start-up on 486 CPUs, which had me puzzled. (tested on
+> > AM486DX2-66 and CX486DX4-100)
+> > 
+> > Is there a reason why the patch wasn't accepted?
+> 
+> Yes, too many patches, too little time. :-(
+> 
+> Anyway, does the one below - only build-tested - work for both y'all
+> too?
 
-kernel test robot noticed the following build errors:
+On my AM486DX2-66 it gets past the immediate reboot problem but gets
+an Oops and kernel panic here:
 
-[auto build test ERROR on tj-cgroup/for-next]
-[also build test ERROR on akpm-mm/mm-everything linus/master v6.14 next-20250404]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Waiman-Long/mm-vmscan-Skip-memcg-with-usage-in-shrink_node_memcgs/20250406-104208
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git for-next
-patch link:    https://lore.kernel.org/r/20250406024010.1177927-2-longman%40redhat.com
-patch subject: [PATCH v3 1/2] mm/vmscan: Skip memcg with !usage in shrink_node_memcgs()
-config: arm-randconfig-001-20250406 (https://download.01.org/0day-ci/archive/20250406/202504061254.DqfqHfM7-lkp@intel.com/config)
-compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project 92c93f5286b9ff33f27ff694d2dc33da1c07afdd)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250406/202504061254.DqfqHfM7-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504061254.DqfqHfM7-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> mm/vmscan.c:5929:32: error: incomplete definition of type 'struct mem_cgroup'
-    5929 |                 if (!page_counter_read(&memcg->memory))
-         |                                         ~~~~~^
-   include/linux/mm_types.h:33:8: note: forward declaration of 'struct mem_cgroup'
-      33 | struct mem_cgroup;
-         |        ^
-   1 error generated.
-
-
-vim +5929 mm/vmscan.c
-
-  5890	
-  5891	static void shrink_node_memcgs(pg_data_t *pgdat, struct scan_control *sc)
-  5892	{
-  5893		struct mem_cgroup *target_memcg = sc->target_mem_cgroup;
-  5894		struct mem_cgroup_reclaim_cookie reclaim = {
-  5895			.pgdat = pgdat,
-  5896		};
-  5897		struct mem_cgroup_reclaim_cookie *partial = &reclaim;
-  5898		struct mem_cgroup *memcg;
-  5899	
-  5900		/*
-  5901		 * In most cases, direct reclaimers can do partial walks
-  5902		 * through the cgroup tree, using an iterator state that
-  5903		 * persists across invocations. This strikes a balance between
-  5904		 * fairness and allocation latency.
-  5905		 *
-  5906		 * For kswapd, reliable forward progress is more important
-  5907		 * than a quick return to idle. Always do full walks.
-  5908		 */
-  5909		if (current_is_kswapd() || sc->memcg_full_walk)
-  5910			partial = NULL;
-  5911	
-  5912		memcg = mem_cgroup_iter(target_memcg, NULL, partial);
-  5913		do {
-  5914			struct lruvec *lruvec = mem_cgroup_lruvec(memcg, pgdat);
-  5915			unsigned long reclaimed;
-  5916			unsigned long scanned;
-  5917	
-  5918			/*
-  5919			 * This loop can become CPU-bound when target memcgs
-  5920			 * aren't eligible for reclaim - either because they
-  5921			 * don't have any reclaimable pages, or because their
-  5922			 * memory is explicitly protected. Avoid soft lockups.
-  5923			 */
-  5924			cond_resched();
-  5925	
-  5926			mem_cgroup_calculate_protection(target_memcg, memcg);
-  5927	
-  5928			/* Skip memcg with no usage */
-> 5929			if (!page_counter_read(&memcg->memory))
-  5930				continue;
-  5931	
-  5932			if (mem_cgroup_below_min(target_memcg, memcg)) {
-  5933				/*
-  5934				 * Hard protection.
-  5935				 * If there is no reclaimable memory, OOM.
-  5936				 */
-  5937				continue;
-  5938			} else if (mem_cgroup_below_low(target_memcg, memcg)) {
-  5939				/*
-  5940				 * Soft protection.
-  5941				 * Respect the protection only as long as
-  5942				 * there is an unprotected supply
-  5943				 * of reclaimable memory from other cgroups.
-  5944				 */
-  5945				if (!sc->memcg_low_reclaim) {
-  5946					sc->memcg_low_skipped = 1;
-  5947					continue;
-  5948				}
-  5949				memcg_memory_event(memcg, MEMCG_LOW);
-  5950			}
-  5951	
-  5952			reclaimed = sc->nr_reclaimed;
-  5953			scanned = sc->nr_scanned;
-  5954	
-  5955			shrink_lruvec(lruvec, sc);
-  5956	
-  5957			shrink_slab(sc->gfp_mask, pgdat->node_id, memcg,
-  5958				    sc->priority);
-  5959	
-  5960			/* Record the group's reclaim efficiency */
-  5961			if (!sc->proactive)
-  5962				vmpressure(sc->gfp_mask, memcg, false,
-  5963					   sc->nr_scanned - scanned,
-  5964					   sc->nr_reclaimed - reclaimed);
-  5965	
-  5966			/* If partial walks are allowed, bail once goal is reached */
-  5967			if (partial && sc->nr_reclaimed >= sc->nr_to_reclaim) {
-  5968				mem_cgroup_iter_break(target_memcg, memcg);
-  5969				break;
-  5970			}
-  5971		} while ((memcg = mem_cgroup_iter(target_memcg, memcg, partial)));
-  5972	}
-  5973	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+[snip]
+smpboot: SMP disabled
+Performance Events: no PMU driver, software events only.
+signal: max sigframe size: 928
+Oops: invalid opcode: 0000 [#1] SMP
+CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.14.0 #1
+EIP: 0xc0b5e1d7
+Code: 7d dc 00 74 0b b9 07 00 00 00 89 df b0 01 f3 a5 83 c4 1c 5b 5e 5f 5d c3 55 b8 01 00 00 00 89 e5 57 56 31 f6 53 89 f1 83 ec 30 <0f> a2 b9 04 00 00 00 89 45 c4 8d 7d c8 89 f0 f3 ab e8 a0 fc ff ff
+EAX: 00000001 EBX: c0be6b00 ECX: 00000000 EDX: 00000246
+ESI: 00000000 EDI: 00000000 EBP: c1309f08 ESP: c1309ecc
+DS: 007b ES: 007b FS: 00d8 GS: 0000 SS: 0068 EFLAGS: 00010286
+CR0: 80050033 CR2: ffd38000 CR3: 00c16000 CR4: 00000000
+Call Trace:
+ ? 0xc01231af
+ ? 0xc01231c8
+ ? 0xc0123222
+ ? 0xc0123245
+ ? 0xc01215ef
+ ? 0xc01217f7
+ ? 0xc0b5e1d7
+ ? 0xc0848e09
+ ? 0xc012186f
+ ? 0xc0b5e1d7
+ ? 0xc0848e41
+ ? 0xc010105d
+ ? 0xc01500d8
+ ? 0xc0848e09
+ ? 0xc0b5e1d7
+ ? 0xc01500d8
+ ? 0xc0848e09
+ ? 0xc0b5e1d7
+ ? 0xc085148a
+ ? 0xc0524da8
+ ? 0xc0b5e1c5
+ 0xc0102100
+ ? 0xc08514d5
+ ? 0xc085148a
+ ? 0xc0171bde
+ ? 0xc0175987
+ ? 0xc016d672
+ 0xc0b4c9e2
+ ? 0xc084c9b8
+ 0xc084c9ca
+ 0xc0127d3a
+ ? 0xc084c9b8
+ 0xc01027a2
+ 0xc0100e3d
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+EIP: 0xc0b5e1d7
+Code: 7d dc 00 74 0b b9 07 00 00 00 89 df b0 01 f3 a5 83 c4 1c 5b 5e 5f 5d c3 55 b8 01 00 00 00 89 e5 57 56 31 f6 53 89 f1 83 ec 30 <0f> a2 b9 04 00 00 00 89 45 c4 8d 7d c8 89 f0 f3 ab e8 a0 fc ff ff
+EAX: 00000001 EBX: c0be6b00 ECX: 00000000 EDX: 00000246
+ESI: 00000000 EDI: 00000000 EBP: c1309f08 ESP: c1309ecc
+DS: 007b ES: 007b FS: 00d8 GS: 0000 SS: 0068 EFLAGS: 00010286
+CR0: 80050033 CR2: ffd38000 CR3: 00c16000 CR4: 00000000
+Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b
+Rebooting in 60 seconds..
