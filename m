@@ -1,207 +1,244 @@
-Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A9D31E50E
-	for <linux-kernel@vger.kernel.org>; Sun,  6 Apr 2025 02:26:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9EDD2E62BD;
+	Sun,  6 Apr 2025 02:29:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743906396; cv=none; b=JVau6cjJH+GPTCqJvTjs6pGJA73JYQzvNmC3Het30MD0wQ3R2MSgOOgSIPC9XVwDGDoasB7U8HiHrJ+RlZyJgVtR24AHFfip/2Mzf/3wddraSZ+rjfiJQfTnlUEhSs2kyFTSQ5KmXad8vtq2xAA9/m1UM6bUkr6n0YGREeNiVvo=
+	t=1743906555; cv=none; b=V49p0N1au/ltG5jZviEXDbUOWhXBmqiQ94lqxypuik4zWL3PQKFRcW5wZfqXczY9bJxYs0oddVUGcO2Wtb3SjYRn2L6RA+e7/fkzTAUcpslKJ9hZsnYNAUHztHjEM1tModyOKjo6sPW0pMlmznaJTj2lWzs4+2xeotSn7vKlDHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743906396; c=relaxed/simple;
-	bh=S8xIaWNmHVVdPvzYp2CSqwW6L/QzgTyDR5DDkDBcRso=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=J4xEo/ESINmt4h/W2Wspa1JUap+H/qzLhYlCd74UfU0A/OU9wNuO7IW3ApmHIlzza8Nx9308gfdpfIFDbV956EYxAeYu2zA0dk+qog1sy3MY2ZPtM9FyFdaLIscg/SMWV2b2K9Njjsn2ebZh3sbO9kWsCKI7Z0W4XlgOtVegeh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=sfh2oRYZ; arc=none smtp.client-ip=209.85.222.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1743906555; c=relaxed/simple;
+	bh=+cc9Wf+8QVea7RzuFaCWm/KHgmB6BfU8yHWa+l0lN+c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ixm1USB5ZKm4FteJW0YRYXWYWNLQmCDVd7RrMMISDHXzbfpXTDyOHNsdQOkNOLhr66jNL89zZV2/pw5+WotLXAwT4ntT8Iciu5kbENJn1tcf150zMwkL2P0CqxMjlm13wHzr+sluvlp5QdlydC5eCzPiTXpnQxENKr37xA8zeJc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YA0z2bez; arc=none smtp.client-ip=209.85.219.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="sfh2oRYZ"
-Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-7c55500d08cso310275485a.0
-        for <linux-kernel@vger.kernel.org>; Sat, 05 Apr 2025 19:26:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YA0z2bez"
+Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-6ecfc2cb1aaso34978646d6.3;
+        Sat, 05 Apr 2025 19:29:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1743906392; x=1744511192; darn=vger.kernel.org;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=1IqxqfopP4aCBejumITSRdoprnx2Np5TJebDfmw6Dxk=;
-        b=sfh2oRYZuctdYxW/cNmhvHvgKioKFmAo0J0BEOLm57aKk5KVrybR63M82ZkDIIy8J5
-         PuRlI4itLBbXAxfYk0PrsLuuMRHf/NsQnsB/OEe4lK2JfInYB3zuTQOLCGxvqV92xxPh
-         9CeU44iGLu4K9ZSEI78gTNVtuQIYLkBsjiAhAJ8sZSRdeB7o9KFS49X8poQWHVA24w6c
-         /vgKlDZhYkc7MKELcdKHm2zhPhru4aTZKa9itVRYbJbxTcXcScerm5drNeedanp1XrS0
-         fBWBonacnno9zpj/lkQ3CcfoB4LTPOFWNjmhKUbo1AKc42YpT+ZxG/OIN/aalwUHJUQ2
-         r7og==
+        d=gmail.com; s=20230601; t=1743906553; x=1744511353; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CIiylM2j9zQF/1YnJzm9yePwxAWbQcx1fkMSx40gJuk=;
+        b=YA0z2bezrjhK6QjxrsOBP/KQIa3E4FYSmcvveJ+Y400GzMFKRwn1IYImz2alYwwh5/
+         +y7ViSuEPusq8EaFupxvgDZhZxkMgEvkuZ3+W4uAyA1b/Ac0q7Cm/GCoECPN1hP7jVgu
+         3BGa4Bj70ni/bfl1xejkArotiiWcbCkNjWxeF7eXc3/lXCAe+sUA1GHES96Gwka/tXCp
+         F/lWzVMmjLlOi3m3P1i8YJyDRJzi+CMV8n3ms86af6lXHNT1Fy37Hc5efpRSOeaqKWMj
+         UdTufXGpOPptd2+fbotysQrhn2YX+l1UU+gW54T1ZunDLANLPumCFqWPUDYhpWbxA+NI
+         SWDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743906392; x=1744511192;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1IqxqfopP4aCBejumITSRdoprnx2Np5TJebDfmw6Dxk=;
-        b=VWc4QJhmaCiZjP3vDK/VHt10p6+PYKi9HK3Y4zNiID/kPCEgjk2ST33RlSnb7kHLz7
-         IsGnAozuNvbeoqJkxgNsDYT55sHmjGXj1JEbzP3WSzpSHz3H8Yz+Bpu1aXYdiAInvGWF
-         hBLT8QwDVKgr1FsqCh//jC0tvHJtPPzTwvty5hcO7NlNue4KrlQk06o+VgDHC7yJL15U
-         qEFZILM5vb6q1sTj6A9dHjZAn2agzGV0cObzpr8fuFEIQFzVOePbtjwbY6vzC3gXIOma
-         eAm62rf5njF8t2df1FcmhziTocP4pGZQ6+nZDa26rU7WwHKMou08IiBdqtjpHv2I4Two
-         1plQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWrboEa/hzcrTaudJ4+VxsKfx8ym936LeQSdB+UOF5qd+/9aX6ctc8dGCTz+3xf50VzkY8uNI+M+uQpdMA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxTC+JdrU0BSBxEbT1GbjS9XCOT30WPbGNnmqw+Ep0evkJRmwk3
-	ZIOIyJ3iW4oko0rDwIx+nMOQJG2G5Ba++8tINg5R6Ql5c3Cwf364T0kmTVhhX+k=
-X-Gm-Gg: ASbGncvv8x2xvpo5ZwRHqo72C6G4Hm+Dz9z43kEAMb27tMwkpejOTKBZmyfE5Z43E9P
-	A6wrE/RM4kR6aEkJknoGgi0DmXbKFWOV0UUslofQbls3z5BsRMOLFd0gBMBPYcZ+mnBvebWS8s/
-	tHsrqAJO1l6dtjFWLa1G97kNM1bc5L3Dicq50N79J80gnXjapZs6VZXzlnlY/9c2YOtscbluOHE
-	ZYGCrh1O1QMlMZcTQGfIzrMhPAVe5N2S9CzUniddqyU/WiidWQacI0OxaMY3M7F5iJ1FEEpkMiH
-	uss4UHsV6xKUFwnJ9Mj2FL4/EUFYMqP1/ktEiHXaQPT/t8omuAdJ+/tPGOxh1DzeqRcDHL5n/Rv
-	SvfzUzsI=
-X-Google-Smtp-Source: AGHT+IEKcYuHBokEnfHVN3ItPKhyhlOg2e8P8WeGSvB6sn6m5NkO6lQDUAtvVNKU7WRsLsmADw0CEA==
-X-Received: by 2002:a05:620a:4549:b0:7c5:a575:75da with SMTP id af79cd13be357-7c77dd441aemr677491085a.6.1743906391909;
-        Sat, 05 Apr 2025 19:26:31 -0700 (PDT)
-Received: from xanadu (modemcable179.17-162-184.mc.videotron.ca. [184.162.17.179])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c76e7354bdsm424148685a.20.2025.04.05.19.26.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Apr 2025 19:26:31 -0700 (PDT)
-Date: Sat, 5 Apr 2025 22:26:30 -0400 (EDT)
-From: Nicolas Pitre <npitre@baylibre.com>
-To: David Laight <david.laight.linux@gmail.com>
-cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, 
-    =?ISO-8859-15?Q?Uwe_Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>, 
-    Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-    Biju Das <biju.das.jz@bp.renesas.com>
-Subject: Re: [PATCH 3/3] lib: Update the muldiv64 tests to verify the C on
- x86-64
-In-Reply-To: <20250405204530.186242-4-david.laight.linux@gmail.com>
-Message-ID: <62qp434q-q2ps-r698-qs2n-43345rn4npn0@onlyvoer.pbz>
-References: <20250405204530.186242-1-david.laight.linux@gmail.com> <20250405204530.186242-4-david.laight.linux@gmail.com>
+        d=1e100.net; s=20230601; t=1743906553; x=1744511353;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CIiylM2j9zQF/1YnJzm9yePwxAWbQcx1fkMSx40gJuk=;
+        b=Sw6/9D42qjamRjddNvVHYa0N0hi0nJgGaLHAp73FzN7+dh2eALtBAR/+5CBZfL0tnP
+         4eyBnsfKAMp8b0KhgrfUfHOzTnJnmWbhf3t2GoeUhVjcA/x1DVby7vx28ZdvCkYDU2Ek
+         Vx65rvNTU7HE8wvOnfipazag735G8+IPqG0rn6Do265TUc+hURpGvDlzAoGVZ7CLY6xP
+         VrWoeZh5EVy8/O81ITEZhvgHMqw+bOf2dLZsYNv9BQs1d7KetNn70nQi/NEk+9Oetz/i
+         W9IUYQDj4gnvqDAdm/gu2ePiPfpYGOVRULhmlWVEziQRC7KWLhxpsa8velmfXzSGqfCn
+         h1jQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV/mlo4q4SkBi04s7E/SxGBgkXXtKSN46Wu0bT+2qTfGPrSyjlVAWX1RnQdQjGdb75LrUys6LjEKlopSnu/@vger.kernel.org, AJvYcCW/4MT/OhkHuNh9Sn20IK/3P8OulUwXGHfBBnxUJ1djSDABcS9x6TEj1iARIXlGg9Iw050=@vger.kernel.org, AJvYcCWz1xfN389EMLNvEfkgCgE1Iuf14um68aZQi4umlMrOFN0FhLysNLnHs0PWdAhY4MADO5E6gE/E6QxH3EvH2hc5pQ==@vger.kernel.org, AJvYcCXC6AHUuOK0h1FwY/GSnsUM8dXiegEIzxxtxv/wjQ3rVLbJpVng0NxjrehxelNxxU7xAjwgakRpHHKB/Q9I1w==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxyxLwO2rQO9wS8H/k9HMHPZJat+ezVF7kO1lLSj+R95YKu1HUk
+	wY43Swz3+4ZRwGzhS8F4e6KubtRdfOUhVyTqDyE+qs8hleGlkn1FocrA4gov9S0ySMhlhsKlcch
+	aF/rzX3o56403P+8kMTcG7Bl5YyE=
+X-Gm-Gg: ASbGncttAzEiNMM9ODVZJ2u9WvbNUFnSq7mFlrLyvYgxJ3loCZP+H+snVNBbH0ilUO6
+	EXJG235xnP/xvTlj1/GOw9DXVB6AXx2GYX5zn6drvHpdCZlLPCWYqgTKjymtoB6hiY67WhNCKBq
+	VvvCsoUyQjsntrzr4JMwZsAlY4mWQ=
+X-Google-Smtp-Source: AGHT+IGS6yvI0ZrRHzw3B/bNPjznQvxjxVF/nePT6AW/hLY+icoun8BTFzmTjAUxyoEUlJrRWte4+c8X7BaV5K1U6WI=
+X-Received: by 2002:ad4:5948:0:b0:6ea:d393:962c with SMTP id
+ 6a1803df08f44-6f058535e23mr100523026d6.30.1743906552498; Sat, 05 Apr 2025
+ 19:29:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20250331121820.455916-1-bhupesh@igalia.com> <20250331121820.455916-2-bhupesh@igalia.com>
+ <CALOAHbB51b-reG6+ypr43sBJ-QpQhF39r5WPjuEp5rgabgRmoA@mail.gmail.com> <6beead5a-8c21-af57-0304-1bf825588481@igalia.com>
+In-Reply-To: <6beead5a-8c21-af57-0304-1bf825588481@igalia.com>
+From: Yafang Shao <laoar.shao@gmail.com>
+Date: Sun, 6 Apr 2025 10:28:36 +0800
+X-Gm-Features: ATxdqUEO5JDPKu66gRn-W6p4DyZydEyISAr6eMeFr_OFfhxP-niPWJgczuY4Eew
+Message-ID: <CALOAHbDE3ToDc0knbUtGu0on9n9uUiWfKZEb-bgm1mW57VTZvg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] exec: Dynamically allocate memory to store task's
+ full name
+To: Bhupesh Sharma <bhsharma@igalia.com>
+Cc: Bhupesh <bhupesh@igalia.com>, Linus Torvalds <torvalds@linux-foundation.org>, 
+	akpm@linux-foundation.org, kernel-dev@igalia.com, 
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-mm@kvack.org, oliver.sang@intel.com, lkp@intel.com, pmladek@suse.com, 
+	rostedt@goodmis.org, mathieu.desnoyers@efficios.com, arnaldo.melo@gmail.com, 
+	alexei.starovoitov@gmail.com, andrii.nakryiko@gmail.com, 
+	mirq-linux@rere.qmqm.pl, peterz@infradead.org, willy@infradead.org, 
+	david@redhat.com, viro@zeniv.linux.org.uk, keescook@chromium.org, 
+	ebiederm@xmission.com, brauner@kernel.org, jack@suse.cz, mingo@redhat.com, 
+	juri.lelli@redhat.com, bsegall@google.com, mgorman@suse.de, 
+	vschneid@redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, 5 Apr 2025, David Laight wrote:
+On Fri, Apr 4, 2025 at 2:35=E2=80=AFPM Bhupesh Sharma <bhsharma@igalia.com>=
+ wrote:
+>
+>
+> On 4/1/25 7:37 AM, Yafang Shao wrote:
+> > On Mon, Mar 31, 2025 at 8:18=E2=80=AFPM Bhupesh <bhupesh@igalia.com> wr=
+ote:
+> >> Provide a parallel implementation for get_task_comm() called
+> >> get_task_full_name() which allows the dynamically allocated
+> >> and filled-in task's full name to be passed to interested
+> >> users such as 'gdb'.
+> >>
+> >> Currently while running 'gdb', the 'task->comm' value of a long
+> >> task name is truncated due to the limitation of TASK_COMM_LEN.
+> >>
+> >> For example using gdb to debug a simple app currently which generate
+> >> threads with long task names:
+> >>    # gdb ./threadnames -ex "run info thread" -ex "detach" -ex "quit" >=
+ log
+> >>    # cat log
+> >>
+> >>    NameThatIsTooLo
+> >>
+> >> This patch does not touch 'TASK_COMM_LEN' at all, i.e.
+> >> 'TASK_COMM_LEN' and the 16-byte design remains untouched. Which means
+> >> that all the legacy / existing ABI, continue to work as before using
+> >> '/proc/$pid/task/$tid/comm'.
+> >>
+> >> This patch only adds a parallel, dynamically-allocated
+> >> 'task->full_name' which can be used by interested users
+> >> via '/proc/$pid/task/$tid/full_name'.
+> >>
+> >> After this change, gdb is able to show full name of the task:
+> >>    # gdb ./threadnames -ex "run info thread" -ex "detach" -ex "quit" >=
+ log
+> >>    # cat log
+> >>
+> >>    NameThatIsTooLongForComm[4662]
+> >>
+> >> Signed-off-by: Bhupesh <bhupesh@igalia.com>
+> >> ---
+> >>   fs/exec.c             | 21 ++++++++++++++++++---
+> >>   include/linux/sched.h |  9 +++++++++
+> >>   2 files changed, 27 insertions(+), 3 deletions(-)
+> >>
+> >> diff --git a/fs/exec.c b/fs/exec.c
+> >> index f45859ad13ac..4219d77a519c 100644
+> >> --- a/fs/exec.c
+> >> +++ b/fs/exec.c
+> >> @@ -1208,6 +1208,9 @@ int begin_new_exec(struct linux_binprm * bprm)
+> >>   {
+> >>          struct task_struct *me =3D current;
+> >>          int retval;
+> >> +       va_list args;
+> >> +       char *name;
+> >> +       const char *fmt;
+> >>
+> >>          /* Once we are committed compute the creds */
+> >>          retval =3D bprm_creds_from_file(bprm);
+> >> @@ -1348,11 +1351,22 @@ int begin_new_exec(struct linux_binprm * bprm)
+> >>                   * detecting a concurrent rename and just want a term=
+inated name.
+> >>                   */
+> >>                  rcu_read_lock();
+> >> -               __set_task_comm(me, smp_load_acquire(&bprm->file->f_pa=
+th.dentry->d_name.name),
+> >> -                               true);
+> >> +               fmt =3D smp_load_acquire(&bprm->file->f_path.dentry->d=
+_name.name);
+> >> +               name =3D kvasprintf(GFP_KERNEL, fmt, args);
+> >> +               if (!name)
+> >> +                       return -ENOMEM;
+> >> +
+> >> +               me->full_name =3D name;
+> >> +               __set_task_comm(me, fmt, true);
+> >>                  rcu_read_unlock();
+> >>          } else {
+> >> -               __set_task_comm(me, kbasename(bprm->filename), true);
+> >> +               fmt =3D kbasename(bprm->filename);
+> >> +               name =3D kvasprintf(GFP_KERNEL, fmt, args);
+> >> +               if (!name)
+> >> +                       return -ENOMEM;
+> >> +
+> >> +               me->full_name =3D name;
+> >> +               __set_task_comm(me, fmt, true);
+> >>          }
+> >>
+> >>          /* An exec changes our domain. We are no longer part of the t=
+hread
+> >> @@ -1399,6 +1413,7 @@ int begin_new_exec(struct linux_binprm * bprm)
+> >>          return 0;
+> >>
+> >>   out_unlock:
+> >> +       kfree(me->full_name);
+> >>          up_write(&me->signal->exec_update_lock);
+> >>          if (!bprm->cred)
+> >>                  mutex_unlock(&me->signal->cred_guard_mutex);
+> >> diff --git a/include/linux/sched.h b/include/linux/sched.h
+> >> index 56ddeb37b5cd..053b52606652 100644
+> >> --- a/include/linux/sched.h
+> >> +++ b/include/linux/sched.h
+> >> @@ -1166,6 +1166,9 @@ struct task_struct {
+> >>           */
+> >>          char                            comm[TASK_COMM_LEN];
+> >>
+> >> +       /* To store the full name if task comm is truncated. */
+> >> +       char                            *full_name;
+> >> +
+> > Adding another field to store the task name isn=E2=80=99t ideal. What a=
+bout
+> > combining them into a single field, as Linus suggested [0]?
+> >
+> > [0]. https://lore.kernel.org/all/CAHk-=3DwjAmmHUg6vho1KjzQi2=3DpsR30+Co=
+gFd4aXrThr2gsiS4g@mail.gmail.com/
+> >
+>
+> Thanks for sharing Linus's suggestion. I went through the suggested
+> changes in the related threads and came up with the following set of poin=
+ts:
+>
+> 1. struct task_struct would contain both 'comm' and 'full_name',
 
-> div64.c contains a 128 by 64 division algorithm which x86-64 overrides
-> it with an asm implementation.
-> So running the muldiv64 tests only verifies the asm code.
-> Since x86-64 is the most likely test system compile the default
-> code into an x86-64 kernel (under a different name) when the tests
-> are being built.
-> Verify that both the asm and C functions generate the correct results.
-> 
-> Signed-off-by: David Laight <david.laight.linux@gmail.com>
-> ---
->  lib/math/div64.c                    | 18 ++++++++++++++++--
->  lib/math/test_mul_u64_u64_div_u64.c | 26 ++++++++++++++++++++------
->  2 files changed, 36 insertions(+), 8 deletions(-)
-> 
-> diff --git a/lib/math/div64.c b/lib/math/div64.c
-> index 50e025174495..38ee5c01c288 100644
-> --- a/lib/math/div64.c
-> +++ b/lib/math/div64.c
-> @@ -25,6 +25,8 @@
->  #include <linux/minmax.h>
->  #include <linux/log2.h>
->  
-> +#include <generated/autoconf.h>
+Correct.
 
-Isn't this automatically included everywhere by the Makefile?
+> 2. Remove the task_lock() inside __get_task_comm(),
 
-> @@ -183,10 +185,22 @@ u32 iter_div_u64_rem(u64 dividend, u32 divisor, u64 *remainder)
->  }
->  EXPORT_SYMBOL(iter_div_u64_rem);
->  
-> -#if !defined(mul_u64_add_u64_div_u64)
-> +/*
-> + * If the architecture overrides the implementation below and the test module
-> + * is being built then compile the default implementation with a different name
-> + * so that it can be tested.
-> + */
-> +#if defined(mul_u64_add_u64_div_u64) && (defined(CONFIG_TEST_MULDIV64) || defined(CONFIG_TEST_MULDIV64_MODULE))
+This has been implemented in the patch series titled "Improve the copy
+of task comm". For details, please refer to:
+https://lore.kernel.org/linux-mm/20240828030321.20688-1-laoar.shao@gmail.co=
+m/.
 
-You could shorten this to:
+> 3. Users of task->comm will be affected in the following ways:
 
-#if defined(mul_u64_add_u64_div_u64) && IS_ENABLED(CONFIG_TEST_MULDIV64)
+Correct.
 
-> +#define TEST_MULDIV64
+>      (a). Printing with '%s' and tsk->comm would just continue to
+> work,but will get a longer max string.
+>      (b). For users of memcpy.*->comm\>', we should change 'memcpy()' to
+> 'copy_comm()' which would look like:
+>
+>          memcpy(dst, src, TASK_COMM_LEN);
+>          dst[TASK_COMM_LEN-1] =3D 0;
+>
+>     (c). Users which use "sizeof(->comm)" will continue to get the old va=
+lue because of the hacky union.
 
-Then I'd use IS_ENABLED(CONFIG_TEST_MULDIV64) in place of TEST_MULDIV64.
-It is more self explanatory.
+Using a separate pointer rather than a union could simplify the
+implementation. I=E2=80=99m open to introducing a new pointer if you believ=
+e
+it=E2=80=99s the better approach.
 
-> +#undef mul_u64_add_u64_div_u64
-> +#define mul_u64_add_u64_div_u64 mul_u64_add_u64_div_u64_test
-> +u64 mul_u64_add_u64_div_u64_test(u64 a, u64 b, u64 c, u64 d);
-> +#endif
-
-Hmmm... I wish there could be a better way to do this, but other than 
-the above suggestion I don't see one.
-
-> +
-> +#if !defined( mul_u64_add_u64_div_u64) || defined(TEST_MULDIV64)
->  u64 mul_u64_add_u64_div_u64(u64 a, u64 b, u64 c, u64 d)
->  {
-> -#if defined(__SIZEOF_INT128__)
-> +#if defined(__SIZEOF_INT128__) && !defined(TEST_MULDIV64)
->  
->  	/* native 64x64=128 bits multiplication */
->  	u128 prod = (u128)a * b + c;
-> diff --git a/lib/math/test_mul_u64_u64_div_u64.c b/lib/math/test_mul_u64_u64_div_u64.c
-> index 9548eb7458c7..e2289b412601 100644
-> --- a/lib/math/test_mul_u64_u64_div_u64.c
-> +++ b/lib/math/test_mul_u64_u64_div_u64.c
-> @@ -73,6 +73,10 @@ done
->  
->   */
->  
-> +#ifdef mul_u64_add_u64_div_u64
-> +u64 mul_u64_add_u64_div_u64_test(u64 a, u64 b, u64 add, u64 c);
-> +#endif
-> +
->  static int __init test_init(void)
->  {
->  	int errors = 0;
-> @@ -80,21 +84,31 @@ static int __init test_init(void)
->  
->  	pr_info("Starting mul_u64_u64_div_u64() test\n");
->  
-> -	for (i = 0; i < ARRAY_SIZE(test_values); i++) {
-> -		u64 a = test_values[i].a;
-> -		u64 b = test_values[i].b;
-> -		u64 c = test_values[i].c;
-> -		u64 expected_result = test_values[i].result;
-> +	for (i = 0; i < ARRAY_SIZE(test_values) * 2; i++) {
-> +		u64 a = test_values[i / 2].a;
-> +		u64 b = test_values[i / 2].b;
-> +		u64 c = test_values[i / 2].c;
-> +		u64 expected_result = test_values[i / 2].result;
-
-I don't see the point of the loop doubling here.
-If I understand it correctly, you'll test the default version twice and 
-the _test version once for each test entry.
+>
+> Am I missing something here. Please let me know your views.
 
 
->  		u64 result = mul_u64_u64_div_u64(a, b, c);
->  		u64 result_up = mul_u64_u64_div_u64_roundup(a, b, c);
->  
-> +#ifdef mul_u64_add_u64_div_u64
-> +		if (i & 1) {
-> +			/* Verify the generic C version */
-> +			result = mul_u64_add_u64_div_u64_test(a, b, 0, c);
-> +			result_up = mul_u64_add_u64_div_u64_test(a, b, c - 1, c);
-> +		}
-> +#else
-> +		i++;
-> +#endif
-> +
->  		if (result != expected_result) {
->  			pr_err("ERROR: 0x%016llx * 0x%016llx / 0x%016llx\n", a, b, c);
->  			pr_err("ERROR: expected result: %016llx\n", expected_result);
->  			pr_err("ERROR: obtained result: %016llx\n", result);
->  			errors++;
->  		}
-> -		expected_result += test_values[i].round_up;
-> +		expected_result += test_values[i / 2].round_up;
->  		if (result_up != expected_result) {
->  			pr_err("ERROR: 0x%016llx * 0x%016llx +/ 0x%016llx\n", a, b, c);
->  			pr_err("ERROR: expected result: %016llx\n", expected_result);
-> -- 
-> 2.39.5
-> 
-> 
+--=20
+Regards
+Yafang
