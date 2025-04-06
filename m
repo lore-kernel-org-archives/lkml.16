@@ -1,141 +1,85 @@
 Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5180F7E0E4;
-	Sun,  6 Apr 2025 20:48:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40C472A8C1;
+	Sun,  6 Apr 2025 20:54:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743972491; cv=none; b=nxt4+fhNI1Y9eloTIxD7dkrZq9da7t3DLfGaUne8/9LQYsoqWnLVY31Qq4yvTu5hEVl32WVsD8G0ROtFTUKcITnbUbGQeHCtGofJlMZzdmdlc0X4sWSs34C+2XMVeFdZCqUtqGKhOe2SFWcNOtVleFwBVZQ9Gv0Ibu4UIul1Mo0=
+	t=1743972878; cv=none; b=XFkHRSfDYeRFsRxf2GapO+oP7+ap+LfbH+aGNqX59ycE46UlqtDTHJRra4O/Nu9GGGaVhE3AXJ3PW6pY/p63V09qigcmvqaTAnGIe7Cp18aqLUPgU+ErsJEfBCiHfTs830hihjg1fmP+GTEV+cVGtFB5jPpK98qaWMGoOeqMG70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743972491; c=relaxed/simple;
-	bh=GdqMTgVunw0G91gOpHFux9zh+YXHkcPVNJEbqwyRp3E=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MP9YjzHAbq/hIkLMRgonHgAGh6LxoO41aiMWhoiwAUb5Ho3utqWqiP3f7BLZHuXs6FHRbjdnQqtrEg0Gz6mtgajMltrkQam5p+xU5O1hNXf1W9X9YW07lM6t6AMXwtDPXQ2BvlCCVtOKfiJMxclIvzLO4OdJ2FIofbP0WcITOt8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=PjKVqqDL; arc=none smtp.client-ip=150.107.74.76
+	s=arc-20240116; t=1743972878; c=relaxed/simple;
+	bh=3u5D7QMdelDpQ5v2tzGaK5MeEw9WB/xTKNmlFuHNTis=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=K768PpfO2ztMhAm5ARzzBTTpMeByhIbxIhVXxVHCc5HfA1oKLYCUddwEeI9b76StpxzfpwI0JDgN4KpCXvIskgRqJXvi8efsVR3U/dD1Z6UDwHj6jlzbnWhLLaoEXUyuuOrI+TqpLPGxvAkHh/K1CJCAUJGAr0u4R63bDXK4g5E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=IgKAVIbO; arc=none smtp.client-ip=150.107.74.76
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="PjKVqqDL"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="IgKAVIbO"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1743972087;
-	bh=a3OoJp9teMIqGbKZWXOaRPl1wcCIcIOyOl73XiC36Tk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=PjKVqqDLbSjm4dWQWMqaMjAhDeTuDRo/zv1shSYZ/MYlJG8GV1iWYjRIXQQl17gI2
-	 jeOXI/sXCVCCS8G7nLd+w5rVnCAwRMvFXvZFHUVIxmUVg32lmq4zCRb2zk+6XCKBZX
-	 GvJ1wu9FsTeGgyM8Sh0d6rUhqxw3VPYdTdR/HbyJyeFn9xUw5UThFHnfgoXQZ/Q32i
-	 16t+YPcDetUwn2ASyfInjYL0y3a3yPehARI7XufXq+y3NGc55+Rq+p8FqVz7E/p5hb
-	 Zf++W85Lamj9HnfZTsIG2/i8ywKl/KiXP4y1EpzYLR4ipXiptv8jB9cWJn7jPbtgvu
-	 Tu8+eJ9NlUoSQ==
+	s=202503; t=1743972874;
+	bh=3u5D7QMdelDpQ5v2tzGaK5MeEw9WB/xTKNmlFuHNTis=;
+	h=Date:From:To:Cc:Subject:From;
+	b=IgKAVIbOY2O3iE64zRTYDjrS+bEU8sURYNsXFaDz2GAXsaGqAgpYZfsTKs/BsURDs
+	 /3eNJU0EHSAOt7YqWL/X/t07ckAAbtLGm/p23c0BrXaNLBump/QDfxv26CuMFxfgap
+	 aCjAJv9+e1fEqG6hBRiX7nI9y/NxPH7bc3lxSCyPWiwRgrBvE5bdtmfOf7wD0wExk9
+	 b05rXJ5qlQVpbEs1MOjOEgKNF7aMaZiemzsd72diFPDsa5y+8A9WU4abJ6Jfo10wOP
+	 UkxqrWGT17q9NfbEQLrj+qGqgbTT+gbBnay5FPx2adkQ9JvV2Vekg0G1jFd0fDGKPr
+	 6nGoStNXbOunw==
 Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZW44l1rdhz4xFb;
-	Mon,  7 Apr 2025 06:41:27 +1000 (AEST)
-Date: Mon, 7 Apr 2025 06:41:09 +1000
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZW4Ms4Cffz4wyh;
+	Mon,  7 Apr 2025 06:54:33 +1000 (AEST)
+Date: Mon, 7 Apr 2025 06:54:32 +1000
 From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Damian Tometzki <damian@riscv-rocks.de>, Masahiro Yamada
- <masahiroy@kernel.org>, Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
- Vlastimil Babka <vbabka@suse.cz>, Linux Kbuild mailing list
- <linux-kbuild@vger.kernel.org>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>
-Subject: Re: [GIT PULL] Kbuild updates for v6.15-rc1
-Message-ID: <20250407064109.5b441f5e@canb.auug.org.au>
-In-Reply-To: <CAHk-=wh-k04MsoEC0SGKff2Snm6bBF_e+0pHOKwaWv4umZ_SnQ@mail.gmail.com>
-References: <CAK7LNATT_+Z6x0kBy9fkTTucM5NTv0XiG9TYKNDOwL2M9y3WhA@mail.gmail.com>
-	<01070196099fd059-e8463438-7b1b-4ec8-816d-173874be9966-000000@eu-central-1.amazonses.com>
-	<CAHk-=wh-k04MsoEC0SGKff2Snm6bBF_e+0pHOKwaWv4umZ_SnQ@mail.gmail.com>
+To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>
+Subject: linux-next: failure fetchign the the tip tree
+Message-ID: <20250407065432.0f5a8c30@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/7uBCrq//tkCcj0GB.RJ9tL=";
+Content-Type: multipart/signed; boundary="Sig_/1=gDHofyclz.xA82aVnHFgR";
  protocol="application/pgp-signature"; micalg=pgp-sha256
 
---Sig_/7uBCrq//tkCcj0GB.RJ9tL=
+--Sig_/1=gDHofyclz.xA82aVnHFgR
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
-Hi Linus,
+Hi all,
 
-On Sun, 6 Apr 2025 09:50:05 -0700 Linus Torvalds <torvalds@linux-foundation=
-.org> wrote:
->
-> On Sat, 5 Apr 2025 at 22:43, Damian Tometzki <damian@riscv-rocks.de> wrot=
-e:
-> >
-> > i got the following error after this pull request.
-> >
-> >  MODPOST Module.symvers
-> > ERROR: modpost: missing MODULE_DESCRIPTION() in lib/tests/slub_kunit.o
-> > make[3]: *** [/home/damian/kernel/linux/scripts/Makefile.modpost:147: M=
-odule.symvers] Error 1
-> > make[2]: *** [/home/damian/kernel/linux/Makefile:1956: modpost] Error 2
-> > make[1]: *** [/home/damian/kernel/linux/Makefile:248: __sub-make] Error=
- 2
-> > make[1]: Leaving directory '/home/damian/kernel/build'
-> > make: *** [Makefile:248: __sub-make] Error 2 =20
->=20
-> Bah. And the reason it doesn't show up in my normal build tests is
-> that my 'allmodconfig' tests end up picking up SLUB_TINY - which
-> disables a lot of slub cases, including this test.
->=20
-> And my normal non-allmodconfig tests don't enable SLUB_KUNIT_TEST.
->=20
-> That said, I'm not sure if making it a hard error was a good idea in
-> the first place. It *used* to be just a warning, and it used to be
-> enabled only with 'extra_warn'.
->=20
-> So switching it on to always warn was probably a good idea, but then
-> also making it a hard error may have been a bit excessive.
->=20
-> In related news - I also wonder whether SLUB_TINY should just be
-> turned off for COMPILE_TEST. It's not a very interesting config option
-> to test for, and it disables much more code than it enables [*].
->=20
-> Testing this without SLUB_TINY, I see that it *also* triggers this one:
->=20
->     ERROR: modpost: missing MODULE_DESCRIPTION() in mm/kasan/kasan_test.o
->=20
-> so the claim in commit 6c6c1fc09de3 ("modpost: require a
-> MODULE_DESCRIPTION()") that "all known instances of this issue have
-> been fixed" is clearly wrong.
->=20
-> For all we know, there are lots of other cases like this that just
-> never got tested with W=3D1 at all.
->=20
-> I think I'll downgrade the error() to a warn() again, and make
-> SLUB_TINY depend on !COMPILE_TEST.
->=20
-> And I'm not even convinced we should require module descriptions for
-> silly test modules, but whatever.
->=20
-> We'll see if something else pops up, but making the lack of a module
-> description a fatal error was clearly not right as-is.
+Fetching the tip tree
+(https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git#master)
+today produces this error:
 
-https://lore.kernel.org/lkml/20250324103048.3d8230f9@canb.auug.org.au/
+remote: fatal: bad tree object 7bbeab06d5538bd4ae6a29ef18c9ccd2499dfaeb
+remote: aborting due to possible repository corruption on the remote side.
+fatal: protocol error: bad pack header
 
 --=20
 Cheers,
 Stephen Rothwell
 
---Sig_/7uBCrq//tkCcj0GB.RJ9tL=
+--Sig_/1=gDHofyclz.xA82aVnHFgR
 Content-Type: application/pgp-signature
 Content-Description: OpenPGP digital signature
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmfy5uUACgkQAVBC80lX
-0GwR4Af+Kwyqoil1SkAJPiMIYRqXXSBhUDdC/JULZFmUcLHat7cQLafBFMd37CPJ
-HtC1SUar1I4j4ZXoAOJp/ksJHNyb6G12TPIPj9MJeKQpoiH+xJUrshgiZQl+L37E
-nvQh9MJl3/BpSW2CUL2jgoMkx8+fPQedTF9qE9Uv2/rrDsOr+39j5CjhtPA+w7gN
-UGxVhzRWs4sgUw9kErFvH1caYOTViAXE0BgV32Pc2Oxgli/nU4XY6rCO6qoUip3s
-aeJxsHO97uZMJznzf3FElYh9Nye6prHiZemKrZTx2L7OzQF8ajv/xOsO3IDFNDXe
-I9xeZZiVe/azZDMiJQo44NbyKVAZ8w==
-=8yE/
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmfy6ggACgkQAVBC80lX
+0Gw51Qf+Kg1l4JlYgyWD3mViEFvmX1wNQpVHEYdVM7edsK3YQabhclQD4CXcEUrj
+3L25yog60ErJ7sLo2fJh+FFxb4XqDno16nplnSkUIBohgLsLI5n6fWmUPhovEG5E
+W+f70itkm1Oe729hwiMBYal3atuhoUr7Mgum56GOcmhmkqIByXUh++MkxjsGyrD8
+4i9lyIRmlWn5dmm3A6d1euJVYOdFAxholFuTx9enzv1Yx2bxivK/7vuCH1MD1+FJ
+bPfMKKVDEDD2hzFGEumykcVmJcz0vw4c+mwSDoIIQK182E7ACKvsXjgAXWnXqBeX
+b2kV4T1EZCC4G6w11wOurNzFhidbhA==
+=ndCK
 -----END PGP SIGNATURE-----
 
---Sig_/7uBCrq//tkCcj0GB.RJ9tL=--
+--Sig_/1=gDHofyclz.xA82aVnHFgR--
