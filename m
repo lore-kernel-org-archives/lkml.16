@@ -1,149 +1,164 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DF0C1CD1F;
-	Sun,  6 Apr 2025 07:14:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B30D145A05;
+	Sun,  6 Apr 2025 07:20:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743923666; cv=none; b=M2Rxchvims8Yx1q6kBpp1CDZ0BUq3jcuKystLILtWzWkF8RAVoNjC3890ocZluhqeJ3Y5X8ckJCksEttB4/2xXQsTaYAiAxcw1Ib1xAG9bvbSu84HNQOIrIUai+BqiHhALpzSqtj15sF0toOpz22m8x/A9Dp1KXLsn8VE67McBY=
+	t=1743924056; cv=none; b=FxmnUcKYV9QwIfnRp4qwbLkN64EQDJSCjycINgxTJ81oS2+PlR7dJbclVZA7UMuZSc4Kt+WMPHq7EavTjuW/nn329xVmhkyXHe2bXKdx5AYCtmyocrzDV0bNM0IlvqFI5wb/aitibmRp6JdhC6W69ieBASZLL0nci6yOwVafOhw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743923666; c=relaxed/simple;
-	bh=xyheJqHVSb0yuy/N+Ze7eNy0LUuR9Dn/m3N8SB/4dfc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Es+Ugv91pV4TeW78UI7DLidD1PlyTaG/vJxJ6cdGTJo9rx9xQgsChYNe+t0oOrXX0VxrTWR3wTiLD0YJvDNL+e+UYWvWw1eTgqZivtpzV9c44TTmAXLESLP25UaU+L06pGz7VEV1r0PWokko++oHFjEV+SIsi4blxPRFzlqXOPY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o7BHyot3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743924056; c=relaxed/simple;
+	bh=gOz7WzrVKVFjQogYNZGybSPujxfm5zi1yI/Mn2wZfLE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IBwpTcH+zgGWwTWIZHaynSkmy2v9sAgIJc33Z0D736Bune3ql4NHFsgFQsweEga3gw+3iNudnmmim7qS26AvWxeQwyRMEDGZy0NyyK+JfWm9T9PffgXFN48xNyiI2Fc2ujtqonbeQac2r77HtKI+h6GZEZGH9Vd8fyATE50R8cA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LFxXAmxF; arc=none smtp.client-ip=209.85.160.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o7BHyot3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B61C0C4CEE3;
-	Sun,  6 Apr 2025 07:14:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743923665;
-	bh=xyheJqHVSb0yuy/N+Ze7eNy0LUuR9Dn/m3N8SB/4dfc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=o7BHyot3yR1ippB0dV38oSBDp/3FEyjBWlVHrw8VU7FjRh7uokzNs8dWU/yKt3OXX
-	 k3pXmybARjW6MM+VXCIoZAEM5lVxQ4cxPaBB8ImBGzbOjk7Hh7qO+Urdcx3qoQHRug
-	 feBEsmRGJEzvVcTSJ4jMi9FB/PDvjS3mLUNQeAMIHDJxdaZ/h3eJOCdD2ykQOraMQs
-	 D2ILrs776BqAZQV2dOuXhhBXTfTwkAdLT4i1KZstaGI47yp1LFzgcpKMAF2r/55SJ/
-	 esLtjI+KH+jRaI/sEpIOFde79mSfAZ8+TSEgRQPpWJTHEN4A5xtxkYxzwvJGPZU68k
-	 nTyIh5M798arQ==
-Date: Sun, 6 Apr 2025 09:14:20 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Mateusz Guzik <mjguzik@gmail.com>
-Cc: Christoph Hellwig <hch@infradead.org>, 
-	Penglei Jiang <superman.xpt@gmail.com>, viro@zeniv.linux.org.uk, jack@suse.cz, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzbot+5d8e79d323a13aa0b248@syzkaller.appspotmail.com
-Subject: Re: [PATCH] anon_inode: use a proper mode internally
-Message-ID: <20250406-reime-kneifen-11714c0a421d@brauner>
-References: <20250404-aphorismen-reibung-12028a1db7e3@brauner>
- <CAGudoHErv6sX+Tq=NNLL3b61Q70TeZxi93Nx_MEcMrQSg47JGA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LFxXAmxF"
+Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-47664364628so35615311cf.1;
+        Sun, 06 Apr 2025 00:20:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743924053; x=1744528853; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CsjPYecOwi8hQj5aoNaycY/6PTPOmGRunWyU+08oUb8=;
+        b=LFxXAmxFuABJfrdNVZD1FAsTRBSafwfCQyhSeDVUOm70/qDmvUZx3aCl0wqFbTYjDR
+         kjqMZ5SuS+j0e9yBbEb6W2XxGYQ8LH7GAAa1p/UvGVPBN3Ep2+OQD3WAHAbl72uNciQj
+         X47qaDQZB8BwS9Teaw12ZkUZMIXnxojSsZ008cwDCR618kyopXAaZmiFc3YVo1I2gKxl
+         FGQV/b9zK/Ut7TRGiAcPyryraUyjr3ZAoPfXfBs+UceCcyOAvADr/3XsTmgxQmkQ1s6m
+         QzbE/GwAb8zaznk4WHKbGtYMnUFHrE6LUnM59O0WMCiO1dd37AiYj33v1SCiVddx2NOw
+         xzXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743924053; x=1744528853;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CsjPYecOwi8hQj5aoNaycY/6PTPOmGRunWyU+08oUb8=;
+        b=s/OAsreH+AS/N0UKQfpSA3ZXeI4PoijLxlFuEH0mfeRrwwesD9M/JRRHKf56wtmsRW
+         ruywNCAXSu6F4med3Cinqigfs2bzMbPJZC0gY197BTsYu5kZGPzNT9/3F5sJH+/uqQ6/
+         zFKaW7FvQd6n4EBgydpuTT4xVPtWtm4LYskFqREiearKfhxzIKDuB3b+eOZaAC7eyx42
+         WS6sjcy2AEVKkye9UZgWZi22+DN225Ce19JzuKUOSAe1oQJeJctFdYP5zj6UoF3mvF8w
+         5Y8ssYAmj+NwY3nw6UaWuXbAG6hij1gcubiVFI+POFXvJD+fC8peAXVFIrnMqnLab6wv
+         YQRw==
+X-Forwarded-Encrypted: i=1; AJvYcCXhExURLMDC6g3u5L/1GBvLrBK5TmA2IeDwqWtSizpFCejF3deiyE440C0mTNLe2RQXyIRNUOVowRitasNtNh2B@vger.kernel.org
+X-Gm-Message-State: AOJu0YxJ3fmHgDgOC9uc5EgbQIIBxjhefYdmbrlQOUeuTKMQSTMY67F8
+	rt2dpOEmudP6CYWbt/MJGdn9iU3hpQHtoCXLTPXsVTgsxRWEx4bcxsNB1gMoo7GZ8BEYrpbFQpA
+	chdKZstKxx55R9Lu4e70ubwaDa5M=
+X-Gm-Gg: ASbGncurxrB4P/D5VjAPxUatoLVjaO3tL22NrCL1kKBmuO1E4AIuiuw/KLEJnaLR04L
+	nk1vuwmSfq7dzFp2/e+TR7axe/T9j4a8fzOD8ro+iuA4gcLWD+Vc5SPHjrEPFbMFrOHvooLmv15
+	niv7MxRcATeT3njACdgDeIUv+deUyhrHxK5Ul7vMvlMgodDMaRKy1Ej98VsA==
+X-Google-Smtp-Source: AGHT+IEH037Fk40ggPFgWWQx+6QNlWtiRSd+WTm/tEXwShD9X4Cl0uf7VM7Wg13I2mwt/EV/fsG8++jMYskagKq7dZA=
+X-Received: by 2002:ac8:570a:0:b0:477:113e:1fb3 with SMTP id
+ d75a77b69052e-47916130d85mr160207961cf.3.1743924053394; Sun, 06 Apr 2025
+ 00:20:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAGudoHErv6sX+Tq=NNLL3b61Q70TeZxi93Nx_MEcMrQSg47JGA@mail.gmail.com>
+References: <20250405203036.582721-1-gshahrouzi@gmail.com>
+In-Reply-To: <20250405203036.582721-1-gshahrouzi@gmail.com>
+From: Gabriel <gshahrouzi@gmail.com>
+Date: Sun, 6 Apr 2025 03:20:00 -0400
+X-Gm-Features: ATxdqUH0xUlfHS73rix1kl26hMdjVR8MUvx_Q8JTUzR4eSinZEmrrW8YuckWqU0
+Message-ID: <CAKUZ0zKwPoh6MrtpN+gM_rsKV7_+yy-MgWNU=fs98BhwWKa-qQ@mail.gmail.com>
+Subject: Re: [PATCH] perf/core: Prevent WARN_ON(!ctx) in __free_event for
+ partial init
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	linux-perf-users@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Shuah Khan <skhan@linuxfoundation.org>, linux-kernel-mentees@lists.linux.dev, 
+	syzkaller-bugs@googlegroups.com, 
+	syzbot+ff3aa851d46ab82953a3@syzkaller.appspotmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, Apr 05, 2025 at 06:54:28AM +0200, Mateusz Guzik wrote:
-> On Fri, Apr 4, 2025 at 12:39 PM Christian Brauner <brauner@kernel.org> wrote:
-> >
-> > This allows the VFS to not trip over anonymous inodes and we can add
-> > asserts based on the mode into the vfs. When we report it to userspace
-> > we can simply hide the mode to avoid regressions. I've audited all
-> > direct callers of alloc_anon_inode() and only secretmen overrides i_mode
-> > and i_op inode operations but it already uses a regular file.
-> >
-> [snip]
-> > diff --git a/fs/libfs.c b/fs/libfs.c
-> > index 6393d7c49ee6..0ad3336f5b49 100644
-> > --- a/fs/libfs.c
-> > +++ b/fs/libfs.c
-> > @@ -1647,7 +1647,7 @@ struct inode *alloc_anon_inode(struct super_block *s)
-> >          * that it already _is_ on the dirty list.
-> >          */
-> >         inode->i_state = I_DIRTY;
-> > -       inode->i_mode = S_IRUSR | S_IWUSR;
-> > +       inode->i_mode = S_IFREG | S_IRUSR | S_IWUSR;
-> >         inode->i_uid = current_fsuid();
-> >         inode->i_gid = current_fsgid();
-> >         inode->i_flags |= S_PRIVATE;
-> 
-> Switching the mode to S_IFREG imo can open a can of worms (perhaps a
-> dedicated in-kernel only mode would be better? S_IFANON?), but that's
+On Sat, Apr 5, 2025 at 4:30=E2=80=AFPM Gabriel Shahrouzi <gshahrouzi@gmail.=
+com> wrote:
+>
+> Move the get_ctx(child_ctx) call and the child_event->ctx assignment to
+> occur immediately after the child event is allocated. Ensure that
+> child_event->ctx is non-NULL before any subsequent error path within
+> inherit_event calls free_event(), satisfying the assumptions of the
+> cleanup code.
+>
+> Reported-by: syzbot+ff3aa851d46ab82953a3@syzkaller.appspotmail.com
+> Closes: https://syzkaller.appspot.com/bug?extid=3Dff3aa851d46ab82953a3
+> Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+> ---
+>  kernel/events/core.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 0bb21659e252..153ba622cfa0 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -14016,6 +14016,9 @@ inherit_event(struct perf_event *parent_event,
+>         if (IS_ERR(child_event))
+>                 return child_event;
+>
+> +       get_ctx(child_ctx);
+> +       child_event->ctx =3D child_ctx;
+> +
+>         pmu_ctx =3D find_get_pmu_context(child_event->pmu, child_ctx, chi=
+ld_event);
+>         if (IS_ERR(pmu_ctx)) {
+>                 free_event(child_event);
+> @@ -14037,8 +14040,6 @@ inherit_event(struct perf_event *parent_event,
+>                 return NULL;
+>         }
+>
+> -       get_ctx(child_ctx);
+> -
+>         /*
+>          * Make the child state follow the state of the parent event,
+>          * not its attr.disabled bit.  We hold the parent's mutex,
+> @@ -14059,7 +14060,6 @@ inherit_event(struct perf_event *parent_event,
+>                 local64_set(&hwc->period_left, sample_period);
+>         }
+>
+> -       child_event->ctx =3D child_ctx;
+>         child_event->overflow_handler =3D parent_event->overflow_handler;
+>         child_event->overflow_handler_context
+>                 =3D parent_event->overflow_handler_context;
+> --
+> 2.43.0
+>
+I want to clarify three things [1] why the Fixes: tag was not used;
+[2] what the author=E2=80=99s original intent was and how to maintain it; [=
+3]
+how to improve my patch.
 
-No, I don't think we should have weird kernel-only things in i_mode.
-That's what i_flags is for.
+[1] This bug is a side-effect of multiple interacting commits over
+time (up to 15 years old), not a single regression. Bisection yielded
+a false positive
+(https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git/commit/?i=
+d=3D00b35530811f2aa3d7ceec2dbada80861c7632a8),
+and testing on an earlier branch (6.14-c8) hit unrelated issues,
+confirming no single commit is responsible. A Fixes: tag is therefore
+unsuitable.
 
-> a long and handwave-y subject, so I'm going to stop at this remark.
-> 
-> I think the key here is to provide an invariant that anon inodes don't
-> pass MAY_EXEC in may_open() regardless of their specific i_mode and
-> which the kernel fails to provide at the moment afaics.
+[2] The code initially incremented refcount then assigned context
+immediately after the child_event was created. Later, an early
+validity check for child_event was added before the
+refcount/assignment. Even later, a WARN_ON_ONCE cleanup check was
+added, assuming event->ctx is valid if the pmu_ctx is valid.
+The problem is that the WARN_ON_ONCE could trigger after the initial
+check passed but before child_event->ctx was assigned, violating its
+precondition. The solution is to assign child_event->ctx right after
+its initial validation. This ensures the context exists for any
+subsequent checks or cleanup routines, resolving the WARN_ON_ONCE.
 
-The current way of relying on IS_REG() in do_open_execat() is broken
-with current kernel semantics ever since commit 633fb6ac3980 ("exec:
-move S_ISREG() check earlier"). That commit introduced a WARN_ON_ONCE()
-around the S_ISREG() check which indicates that it wasn't clear to the
-authors that this is very likely a reachable WARN_ON_ONCE() via e.g.:
-
-int main(int argc, char *argv[])
-{
-	int ret, sfd;
-	sigset_t mask;
-	struct signalfd_siginfo fdsi;
-
-	sigemptyset(&mask);
-	sigaddset(&mask, SIGINT);
-	sigaddset(&mask, SIGQUIT);
-
-	ret = sigprocmask(SIG_BLOCK, &mask, NULL);
-	if (ret < 0)
-		_exit(1);
-
-	sfd = signalfd(-1, &mask, 0);
-	if (sfd < 0)
-		_exit(2);
-
-	ret = fchown(sfd, 5555, 5555);
-        if (ret < 0)
-		_exit(3);
-
-	ret = fchmod(sfd, 0777);
-	if (ret < 0)
-		_exit(3);
-
-	/* trigger the WARN_ON_ONCE() */
-	execveat(sfd, "", NULL, NULL, AT_EMPTY_PATH);
-	_exit(4);
-}
-
-Because the mode and owner of the single anonymous inode in the
-kernel can be changed by anonyone with suitable privileges. That of
-course it itself a bug although not a really meaningful one because
-anonymous inodes don't really figure into path lookup. They cannot be
-reopened via /proc/<pid>/fd/<nr> and can't be used for lookup itself. So
-they can only ever serve as direct references. But I'm going to fix
-that. Similar to pidfs we should simply fail setattr [1]. Given that noone has
-been hitting the execveat() WARN_ON_ONCE() it's safe to say that no one
-ever bothered chowning/chmoding anonymous inodes. With that removed it's
-not possible to exec anonymous inodes but we should harden this by
-setting SB_I_NOEXEC as well (Secretmem is another very fun example
-because it uses anonymous inodes but does set S_ISREG already. So
-chmod() on such an inode and passing it to execveat() could be fun.)
-
-Anyway, I'm finishing the patch and testing tomorrow and will send out
-with all the things I mentioned (unless I find out I'm wrong).
-
-[1]: That's been a constant sore spot for me. We currently simply
-     fallback to simple_setattr() if the fs doesn't provide a dedicated
-     ->setattr() function. Imho that's broken and we need to remove
-     that. All fses that need it need to set ->setattr() and if it isn't
-     set EOPNOTSUPP will be returned. So that would need some code audit
-     which fses definitely don't need or expect it. Otherwise we risk
-     setting attributes on things that don't want them changed. That's
-     patch I had on my backlog for quite a while ever since the big
-     xattr/acl rework.
+[3]. Defer the refcount update and child_event->ctx assignment
+directly after child_event->pmu_ctx is set but before checking if the
+parent event is orphaned. The cleanup routine depends on
+event->pmu_ctx being non-NULL before it verifies event->ctx is
+non-NULL. This also maintains the author's original intent of passing
+in child_ctx to find_get_pmu_context before its refcount/assignment.
