@@ -1,115 +1,113 @@
-Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FB50C2EF;
-	Sun,  6 Apr 2025 09:31:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10B1D17A2E5;
+	Sun,  6 Apr 2025 09:31:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743931872; cv=none; b=pllK2+LEKBDwe5QBC86DXtqgNh4ynU5m8s1b8zIdRX+OJM6c7Kxx+6zKm2YmehqKKe0/XqqiNebN69BZJUcfPCJ+khIEntiKiLVVuRXt4l4cIC4hKm8KX81trJp12HljfM3YikMO8trPODE79fWXzxcldER/MT/5SozPOIvJw9A=
+	t=1743931915; cv=none; b=liO/+SPiuwlNRuzCPnZTMPKlvG6BtmQxx9jz+JPWYbbGSlIxX5NBJJiPlrrOoxJHP0sPVg+7FqZYeRj3HvlJedQMcJMyPlwd0AbxDyhZi1WFK69dU0CCNDagJVdTSQ8RMj6DDHG8t3fTtHl3RLi84a+ZqMZYTXEGn1zBOZl1fHk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743931872; c=relaxed/simple;
-	bh=KNR9s/z37rrTB883Rr+3wXkXm+XAx8K2YsXKsd82FdU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Zxii+EqJyufFG8LH7K7CAMQNmZEnI7M7Uw7F9HAPctQZXPTQY1VrOIy8lMbifDZvyho9Bnc4Vi/tfYWNokgvNawlYsQ3eBrsY8FJauh6cDdIAfKst764KV37Alp2fMRNAbF1lE9hBG6lm0x8UUXIKV/3Wza1ihdgCTXoYBcgCfA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=juzZYhUR; arc=none smtp.client-ip=209.85.167.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743931915; c=relaxed/simple;
+	bh=NupIctgv6eyPgDfdu7cJa5QG0aJbIdTwbFdNvq2g5u0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=SLkt7zH1ekxsM7cMlseoK0mQZSDxwS75jpdUi17yhJiEEBsyqiRXC1wr75yx3wpXQTRMzgAuw9VU5uU/NaADESPmKQgcnSPLRoycUFMakR5f/jpjfDNa7jQqYXkn762Czp5WKnq2LHdntBXu6cOw4PtckE9kwzLVVYZLt6fWe4c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MYiTGhJI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="juzZYhUR"
-Received: by mail-oi1-f180.google.com with SMTP id 5614622812f47-3f8df49e75fso966286b6e.1;
-        Sun, 06 Apr 2025 02:31:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743931867; x=1744536667; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fHmP/Qg/EJyJa26FRzbLoPkPrFVf0HVFbniEqKsAmzY=;
-        b=juzZYhURw6oj7S5y0DQ8d4Jn0FiFNcQbJOS3DMXLC7noC9t1ATI9Q/urXb2VyG066h
-         /GwcgffMC/dqhdmO2HlN8qnywKf6rtjzboqbaOAFpO2yzkZwEJOiMCn5D/UgVBb/gYbH
-         nVim2t5u7gcwpj/hx1pYtXYN5QEa8dz48kAl1O8qA5sn0KOKLC0EGVwJ/m9E4025hNKV
-         1ELrRrUYQxIEZOTUPcb5qEi3NUtvXHQVrxQQNzAgkN5xrt//sj0viSXLpGKQDaZ32GR1
-         SqpOwXtuzwb89G2dsikh3G8VeuXSoJ3emcrlrl68RTlEcl1wq2ENN8dSYAzHWMLv7ROs
-         uifg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743931867; x=1744536667;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fHmP/Qg/EJyJa26FRzbLoPkPrFVf0HVFbniEqKsAmzY=;
-        b=CTooW55URQ1MGleHzQ7PO/Tjz/TjEmryMvxZOCGRkZTPbgbrANwVXszHYXsc8tewVY
-         1BfClvRtcqhl3+j/NcJQ6KmHNqNTKO6eHvgr43yLtZiTDvxqocFwV27y7/DFqZij70HY
-         Sq/EzUm5ImsdPs1jLNIdpC1peM51VLrFibLwzIYCaQYgTWVYwjraOxayRLPOOE5NWkiy
-         FHPp7xLDTq9XdaRxwpZP+0AQnVr8ZE58IBSJoBPH7xOAM/q+dNUkdyGArs4JyTI9vriB
-         D9fY10C2CbTwBWvjFZ7/NpLkHFfzoP3TLqlgLPOAUUzFWgk/Zwd1O3g/9i9k6Dtj6Yue
-         vDmQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUgrtYRTDdyQn8eR24r55k32UJuLtw3FiAYvPwOU2Vp3MXZYnLfXAVjyAAIzorshBQFGswQUgAEuI01Fa8=@vger.kernel.org, AJvYcCXUONfnhQs+dbEOpSrm65hLYgZveeD/iwUkCDbfvEyzWVFYuwfLw8d4Ma2u/MmEmn0iS67Z19hm3F4mgFLpC8c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzHXDYn5HKtfgiiBv9UC/pNE+CWmOFMIYxhoGsHyF98aE47WK0M
-	N07P8ODhC63pdO4y4ZDDGr1KS2LDMQFJmIgIbe4u5kj/wEp52ifv
-X-Gm-Gg: ASbGnctN98/5xEFQNPos7iire7PQHtr1PjWLumruLtjlkLyh3cnVZBgqPYtHOaQDujQ
-	l0J/xes8CQZSQeMXdV+bVSi70GEX8IwIiQ/tCZNuvwRxx7FC4404N1TK//+S+/J+8/iUOCrFfiY
-	DrgcEH+0APAlUAVMXpXe9qwECDFjAJW4gDvqWcQ9ihvvR+JenTjXUrTAUDz9sbg3vUGRtBxMXfw
-	BH2TavW0ck6Vh0dLgaOjXvZsa01DNE8CNuu4/2a7yUOZkLZI+uo3CkuSBeo/DwIXhQUsu5TrM5N
-	oyO11avBftaVHts5lbp5iXXjbd3EaJogbf7HLHisf4WUIsUzenrqYJ2ov1bAkM0csSQU4t1mcJC
-	LsyTTqd9cJW9jTuQv
-X-Google-Smtp-Source: AGHT+IH3FJ5kGG0Wg/P7+DauHff2Q8I3DdhxiyMON9kl/B34ns20VCHv08p5xFw8uDaJF9ytGCKjqA==
-X-Received: by 2002:a05:6808:309c:b0:3f8:b73b:682f with SMTP id 5614622812f47-40045578aafmr4837432b6e.1.1743931867307;
-        Sun, 06 Apr 2025 02:31:07 -0700 (PDT)
-Received: from my-computer.lan (c-73-76-29-249.hsd1.tx.comcast.net. [73.76.29.249])
-        by smtp.googlemail.com with ESMTPSA id 5614622812f47-400400809e9sm1344818b6e.36.2025.04.06.02.31.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Apr 2025 02:31:06 -0700 (PDT)
-From: Andrew Ballance <andrewjballance@gmail.com>
-To: willy@infradead.org
-Cc: Liam.Howlett@oracle.com,
-	a.hindborg@kernel.org,
-	akpm@linux-foundation.org,
-	alex.gaynor@gmail.com,
-	aliceryhl@google.com,
-	andrewjballance@gmail.com,
-	benno.lossin@proton.me,
-	bjorn3_gh@protonmail.com,
-	boqun.feng@gmail.com,
-	brauner@kernel.org,
-	dakr@kernel.org,
-	dingxiangfei2009@gmail.com,
-	gary@garyguo.net,
-	gregkh@linuxfoundation.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	maple-tree@lists.infradead.org,
-	ojeda@kernel.org,
-	rust-for-linux@vger.kernel.org,
-	tmgross@umich.edu,
-	wedsonaf@gmail.com
-Subject: Re: [RFC PATCH 1/2] maple_tree: add __mtree_insert_range function
-Date: Sun,  6 Apr 2025 04:30:08 -0500
-Message-ID: <20250406093008.1655905-1-andrewjballance@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <Z_FKugtgoN0l6JNm@casper.infradead.org>
-References: <Z_FKugtgoN0l6JNm@casper.infradead.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MYiTGhJI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 388BAC4CEE3;
+	Sun,  6 Apr 2025 09:31:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743931914;
+	bh=NupIctgv6eyPgDfdu7cJa5QG0aJbIdTwbFdNvq2g5u0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=MYiTGhJIT74BxQ+RClM9BfPnKX99vk/MwgKtw6jDV/paog20fiRVTU8BH/tdhMI3j
+	 6ar9sqamuYkSkuqoY+XXEPhwjHN5Bnxy1b4XhyzHnjTA9kxfqpFPrNACAJT5F+vHJo
+	 DQHScsbvizyq/rrZVW60RXmoJDDPEZkX1BmTPNXzywOpJOXwW82eGy5LyET18j71/Q
+	 oeLnNhwqUpRNNJv1WZyR3ajvJOZLqDjeQxj9jIXmgoQJVmon6M1vChX1/KqrSS7r0V
+	 Dw1Fk+Uulth7/4rQVz+cTgr+PuIzTcelO5aUzTapftfWFuf0w47eKnqi7/UWjNn1LN
+	 voOkCfyoa8hkA==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: Boqun Feng <boqun.feng@gmail.com>
+Cc: FUJITA Tomonori <fujita.tomonori@gmail.com>,
+  rust-for-linux@vger.kernel.org,  linux-kernel@vger.kernel.org,
+  netdev@vger.kernel.org,  andrew@lunn.ch,  hkallweit1@gmail.com,
+  tmgross@umich.edu,  ojeda@kernel.org,  alex.gaynor@gmail.com,
+  gary@garyguo.net,  bjorn3_gh@protonmail.com,  benno.lossin@proton.me,
+  a.hindborg@samsung.com,  aliceryhl@google.com,  anna-maria@linutronix.de,
+  frederic@kernel.org,  tglx@linutronix.de,  arnd@arndb.de,
+  jstultz@google.com,  sboyd@kernel.org,  mingo@redhat.com,
+  peterz@infradead.org,  juri.lelli@redhat.com,
+  vincent.guittot@linaro.org,  dietmar.eggemann@arm.com,
+  rostedt@goodmis.org,  bsegall@google.com,  mgorman@suse.de,
+  vschneid@redhat.com,  tgunders@redhat.com,  me@kloenk.dev,
+  david.laight.linux@gmail.com
+Subject: Re: [PATCH v12 5/5] MAINTAINERS: rust: Add a new section for all of
+ the time stuff
+In-Reply-To: <Z_Hcg32LhKjqFkVG@boqun-archlinux> (Boqun Feng's message of "Sat,
+	5 Apr 2025 18:44:35 -0700")
+References: <20250406013445.124688-1-fujita.tomonori@gmail.com>
+	<20250406013445.124688-6-fujita.tomonori@gmail.com>
+	<Z_Hcg32LhKjqFkVG@boqun-archlinux>
+User-Agent: mu4e 1.12.7; emacs 29.4
+Date: Sun, 06 Apr 2025 11:31:42 +0200
+Message-ID: <87v7rhtz41.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On Sat, Apr 05, 2025 at 04:22:34PM +0100, Matthew Wilcox wrote:
-> On Sat, Apr 05, 2025 at 01:01:53AM -0500, Andrew Ballance wrote:
-> > adds the __mtree_insert_range which is identical to mtree_insert_range
-> > but does not aquire ma_lock.
-> > This function is needed for the rust bindings for maple trees because
-> > the locking is handled on the rust side.
-> 
-> No.
-> 
-> The support for external locking is a TEMPORARY HACK.  I've talked
-> before about why this is and don't feel like explaining it again.
+Boqun Feng <boqun.feng@gmail.com> writes:
 
-this does use the maple_tree's internal ma_lock. the locking is
-done on the rust side using bindings to mtree_lock(). it is done this
-way so that rust can track the lifetimes of any values from mtree_load.
+> On Sun, Apr 06, 2025 at 10:34:45AM +0900, FUJITA Tomonori wrote:
+>> Add a new section for all of the time stuff to MAINTAINERS file, with
+>> the existing hrtimer entry fold.
+>> 
+>> Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
+>
+> Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
+>
+>> ---
+>>  MAINTAINERS | 11 +++++++----
+>>  1 file changed, 7 insertions(+), 4 deletions(-)
+>> 
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index d32ce85c5c66..fafb79c42ac3 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -10581,20 +10581,23 @@ F:	kernel/time/timer_list.c
+>>  F:	kernel/time/timer_migration.*
+>>  F:	tools/testing/selftests/timers/
+>>  
+>> -HIGH-RESOLUTION TIMERS [RUST]
+>> +DELAY, SLEEP, TIMEKEEPING, TIMERS [RUST]
+>>  M:	Andreas Hindborg <a.hindborg@kernel.org>
+>>  R:	Boqun Feng <boqun.feng@gmail.com>
+>> +R:	FUJITA Tomonori <fujita.tomonori@gmail.com>
+>>  R:	Frederic Weisbecker <frederic@kernel.org>
+>>  R:	Lyude Paul <lyude@redhat.com>
+>>  R:	Thomas Gleixner <tglx@linutronix.de>
+>>  R:	Anna-Maria Behnsen <anna-maria@linutronix.de>
+>> +R:	John Stultz <jstultz@google.com>
+>> +R:	Stephen Boyd <sboyd@kernel.org>
+>>  L:	rust-for-linux@vger.kernel.org
+>>  S:	Supported
+>>  W:	https://rust-for-linux.com
+>>  B:	https://github.com/Rust-for-Linux/linux/issues
+>> -T:	git https://github.com/Rust-for-Linux/linux.git hrtimer-next
+>> -F:	rust/kernel/time/hrtimer.rs
+>> -F:	rust/kernel/time/hrtimer/
+>> +T:	git https://github.com/Rust-for-Linux/linux.git rust-timekeeping-next
+>
+> @Andreas, this branch is currently missing, right?
 
-the easiest way to do this was to add code to the c side. 
-for the v2 I can make changes so that this does not touch the c side. 
+Yes, I'll ping Miguel to set it up when we are ready to go with this.
+
+
+Best regards,
+Andreas Hindborg
+
+
+
