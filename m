@@ -1,96 +1,79 @@
-Received: from ombertech.com (ombertech.com [74.48.158.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9F9513D89D
-	for <linux-kernel@vger.kernel.org>; Sun,  6 Apr 2025 22:58:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.48.158.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70F1A224F0
+	for <linux-kernel@vger.kernel.org>; Sun,  6 Apr 2025 23:09:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743980290; cv=none; b=dgF8rWDd2C/Zk4ItMlZVPPWlzYqoKzmswsgjVI98F4egGt8Gb+cGFEybOzccNsrPUVTXhaAanB7ODzYaE5LHTL96uGWfBCExa+I6WENoDCYsM0V4FTv5s1T1zKXBrfeWO8R+yQ1tcsar0Z4mJpUzHMg86OsPBnjASoM1c3mGFWg=
+	t=1743980944; cv=none; b=DOmS9flRH0KytefCVgbr6MieFTQM8ayupAxxD9ZtpGs1s6cOBm+5TslPuG1+aVxUWGtskH7dNbEGKmd8buxliXVbA9h2ruG5T/Vl73z8gYhQ8/2tGGhjX5KK8kCuvXWWGqXSWKYVB3aC1z8Fk/hphoO0CShSUnRGrFnzgXakABA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743980290; c=relaxed/simple;
-	bh=dY/i0Dks2KO8z0Hq/GALHzznPitxZdcEM8Oa+/p0C4c=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=kHF/AuKLhWxOcfuknoi04Dsz69msMPJkK3JAfO8B3V1C/kT5Z6C7a4CMDzXbVrojJjI0tVo998W8SiKs/fBLRFhHeTMXe5XT+lg3ENvRhKmd9qtDvrb8se8Sq4CRMcxz+ZpSab0mHxmn5nzQADhk2+FQLRFecdBS3w4t4T18xak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ombertech.com; spf=pass smtp.mailfrom=ombertech.com; dkim=pass (2048-bit key) header.d=ombertech.com header.i=@ombertech.com header.b=fhz9tGZ4; arc=none smtp.client-ip=74.48.158.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ombertech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ombertech.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ombertech.com header.i=@ombertech.com header.b="fhz9tGZ4"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=ombertech.com; s=2022;
-	t=1743979995; bh=dY/i0Dks2KO8z0Hq/GALHzznPitxZdcEM8Oa+/p0C4c=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=fhz9tGZ4b2hHprOIIP0ktQdx8GudvOOKSy2BxKSoV6MPO5yDmSl8D0JKdaGvWKb4a
-	 I91/By6Ig8TJTmY1iqYqc1uE2/qU37DPJQrdjwkM+MKbXs16sgGfq62zP2w+n/lta3
-	 xt5id1EUn0W1g+zkkEWprf5BcQ1Ou2qLY0ff+tWwjXDXfZaAy9KraHvhnX3lAFW9X8
-	 NTaIbk3XbMCQkGRZ5Fjk6+FuYtP6IRTUvX9O+RQnGQ4fuGl8cW34Rf42CxMy0I1QVL
-	 IpbaFi5BTgRFEp3MA26rsH+XcHcjU4BrD6Nnr2vAlffzKZuj1uDLZ5jbt+l9YUAu/S
-	 xfmuEpQ5WBKeA==
-Received: from 192.168.1.100 (unknown [1.145.193.55])
-	by ombertech.com (Postfix) with ESMTPSA id 258175B1A1;
-	Sun,  6 Apr 2025 22:53:13 +0000 (UTC)
-Date: Mon, 7 Apr 2025 09:58:48 +1000
-From: Kevin Koster <lkml@ombertech.com>
-To: Borislav Petkov <bp@alien8.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Oerg866 <oerg866@googlemail.com>,
- linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Dave Hansen
- <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin"
- <hpa@zytor.com>
-Subject: Re: [PATCH] x86/microcode: Fix crashes on early 486 CPUs due to
- usage of 'cpuid'.
-Message-Id: <20250407095848.7933a358c9f450fe03fb8234@ombertech.com>
-In-Reply-To: <20250406190253.GAZ_LP3RPZInWKcHN7@fat_crate.local>
-References: <CANpbe9Wm3z8fy9HbgS8cuhoj0TREYEEkBipDuhgkWFvqX0UoVQ@mail.gmail.com>
-	<20250405130306.ca9822c1f27db119cc973603@ombertech.com>
-	<20250405093127.GAZ_D4b6NdyTS-UW1J@fat_crate.local>
-	<20250406164049.c0666bc18073e3b88c92d1f1@ombertech.com>
-	<20250406174633.2c581923c145687476191753@ombertech.com>
-	<20250406190253.GAZ_LP3RPZInWKcHN7@fat_crate.local>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-unknown-linux-gnu)
+	s=arc-20240116; t=1743980944; c=relaxed/simple;
+	bh=nBx/MltWEgayUVotVSMqrSbGCkiOHklfegQP9SnZgEk=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=h3+1TgW4lbDw6BrQhxszw45bKVo672QHnXTah1IyC3pc/eQhgzWWErMxUwPNoKcG6XejakLKK9Q+dfDgTLfpDzApwppapVQaTyrPO16v1qt+XK06WINH6ersRd08UjussaLOCYaFe8VdASVLFvU4vzevPRUfyTFpHgLq8jH07nU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-84cdae60616so475453139f.3
+        for <linux-kernel@vger.kernel.org>; Sun, 06 Apr 2025 16:09:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743980942; x=1744585742;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+u0rYlPftXycLzardq4cSj1OE2iCZVoLU6ei3WvPyKI=;
+        b=pRGHaNs5E8BxxdGiaLsyJc7Nh4RiDQHjndgld0fDkwGxV59TWepwECO3a2AD+w8LjS
+         hvRE0mWeafKr0kOeCoJEKoUxDcAcGEK49moqAbZuLnBfiCYFR+rOfZavvfngsRPAzBcB
+         hGkF9U//ZW5QZ6HbFcv3P0syXHgKF0D8uD+HBt0ZuuJK/NYq1BRstgtkgPkx+8Rr7JqS
+         I3dJUlvrorMx+d1MVGsbYjw2kYgk6zFj50h6YQKrL5Zt08NbUxVTDXwmB1wRYwaQ8BAm
+         wF2Yv9L5QqZ4wXcS87gldhbYGnMTGR/3uQjxPi5sVSORyey4W1FXpjPnLBcjdawpgDk3
+         kySA==
+X-Forwarded-Encrypted: i=1; AJvYcCXW1LMENiAjHnT6TAurLpm7s0rE9L5pdohKVlWIXqJk4BY1W3ginQKs0HhQsDNMGKwGOMsq57xbEli1BgI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywg130e76elb8fegsVkZ1gPEqkK0jk63taoXBDBjBwsaJIRH/No
+	Xc16xllIuAxMCPud19z4I9PJYwR+wA6vEF+RuZl2Wos2CIk5lStEKMGx513ZWjzRk7Mlt08XUvV
+	DXhpjdEDKpz7tBWLnI8tAaSXvittto2e59sgesdEvMIDXxcDCVDlgClo=
+X-Google-Smtp-Source: AGHT+IHjPiOtD6eAAG4bJPmJWU+QCxmzHHl5XoGkvHZoAkjEA/DriSDK+8t1FrVUZldbqmOOLwht++CJOZIuegiF+zEKCHLUSsG7
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+X-Received: by 2002:a05:6e02:1a4d:b0:3d3:fdb8:1799 with SMTP id
+ e9e14a558f8ab-3d6ec590c21mr75697825ab.22.1743980942635; Sun, 06 Apr 2025
+ 16:09:02 -0700 (PDT)
+Date: Sun, 06 Apr 2025 16:09:02 -0700
+In-Reply-To: <67392d6d.050a0220.e1c64.000a.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67f3098e.050a0220.0a13.0276.GAE@google.com>
+Subject: Re: [syzbot] [fs?] BUG: unable to handle kernel NULL pointer
+ dereference in filemap_read_folio (4)
+From: syzbot <syzbot+09b7d050e4806540153d@syzkaller.appspotmail.com>
+To: akpm@linux-foundation.org, andrii@kernel.org, ast@kernel.org, 
+	eddyz87@gmail.com, hdanton@sina.com, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, shakeel.butt@linux.dev, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Sun, 6 Apr 2025 21:02:53 +0200
-Borislav Petkov <bp@alien8.de> wrote:
+syzbot has bisected this issue to:
 
-> On Sun, Apr 06, 2025 at 05:46:33PM +1000, Kevin Koster wrote:
-> > But if I move "cpuid_1_eax = native_cpuid_eax(1);" to after the
-> > microcode_loader_disabled() check in amd.c, like in the first
-> > patch, it boots fine!
-> 
-> Yeah, I noticed that too last night. Here's a hopefully better
-> version after I ran it on my 32-bit Atom - I don't have your old rust
+commit ad41251c290dfe3c01472c94d2439a59de23fe97
+Author: Andrii Nakryiko <andrii@kernel.org>
+Date:   Thu Aug 29 17:42:28 2024 +0000
 
-There is the 86box emulator which Eric Voirin suggested before for
-reproducing this issue, although that adds the uncertainty of whether
-the emulator matches real hardware behaviour.
+    lib/buildid: implement sleepable build_id_parse() API
 
-> and maybe you should simply throw it in the garbage - that thing is
-> probably not worth the electricity it uses to power up... :-)
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1601923f980000
+start commit:   a2cc6ff5ec8f Merge tag 'firewire-updates-6.15' of git://gi..
+git tree:       upstream
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=1501923f980000
+console output: https://syzkaller.appspot.com/x/log.txt?x=1101923f980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=6fe3b5e6a2cb1cc2
+dashboard link: https://syzkaller.appspot.com/bug?extid=09b7d050e4806540153d
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15743998580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10143404580000
 
-Well my testing modern Linux on 486s was originally prompted by people
-on the Tiny Core Linux forums finding compatibility issues with old
-PCs. But I like to know Linux really works on the hardware it's built
-for, and I'm not much better, writing this now on a Pentium 1.
+Reported-by: syzbot+09b7d050e4806540153d@syzkaller.appspotmail.com
+Fixes: ad41251c290d ("lib/buildid: implement sleepable build_id_parse() API")
 
-[snip]
-> diff --git a/arch/x86/kernel/cpu/microcode/amd.c
-> b/arch/x86/kernel/cpu/microcode/amd.c index
-> b61028cf5c8a..dda7f0d409e9 100644
-> --- a/arch/x86/kernel/cpu/microcode/amd.c
-> +++ b/arch/x86/kernel/cpu/microcode/amd.c
-> @@ -1099,7 +1099,7 @@ static int __init save_microcode_in_initrd(void)
->  	enum ucode_state ret;
->  	struct cpio_data cp;
->  
-> -	if (dis_ucode_ldr || c->x86_vendor != X86_VENDOR_AMD || c->x86 < 0x10)
-> +	if (microcode_loader_disabled() || c->x86_vendor != X86_VENDOR_AMD || c->x86 < 0x10)
-		return 0;
-
-Still fails unless the native_cpuid_eax(1) call is moved under here. After that
-change, it boots fine.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
