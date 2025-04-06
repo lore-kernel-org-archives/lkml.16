@@ -1,70 +1,69 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2071.outbound.protection.outlook.com [40.107.94.71])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2070.outbound.protection.outlook.com [40.107.243.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D66D79CF;
-	Sun,  6 Apr 2025 13:02:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CE6E79CF;
+	Sun,  6 Apr 2025 13:05:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.70
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743944530; cv=fail; b=VdKbA3yN/cY2OTzTWUyM8tSGBSxMXI+yIllqJc3t/jY8lW7/JdoMyIzoaVK2neBiDf2gyjac+Y+0wo3NWANdW2pHGoFvHsRoigM8rAdDy1ACluSfzHV6hCXfUc23hoUbT5FyBK9ksqEhKm9r2bwI8PI3yfvIfUD49JtgRMAHf+c=
+	t=1743944750; cv=fail; b=GTt0NXXm1rdCumnRTOn4EM1XvARgDNWVzYrkk+jYHNRLy56tdWZKxBx10ayOJpTLzCZOd6sfctV7Y5iFPLEbRRM7sshU4PtWG3hT6u6MPPZmSBpr1a44ktboULI0NlGfxLw7xtRNSfI91SSE1NP4SLa2nI8AAsfHXq64BdAiaXg=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743944530; c=relaxed/simple;
-	bh=ZBjVutlg8NztvQwoYYuXzReP4+NkTLFWM99bT1MI0Y8=;
-	h=From:Date:Subject:Content-Type:Message-Id:To:Cc:MIME-Version; b=h+6mnLWzqHf4hWKLerFXfvruZ1Kp+p7sHP7RDwB5eYmRmOmzFAr9VDRnxWJmS9W6KMQaQ9Bw2MtSa0Tj+sF+M4wpv6Z1ePy0/qPzIJ+v16HXszU2jchjN++JOiECCWzIRhbzMoFQ0xU0EqKLzC5z58QFuBpK8S/Yy9eYPM4nRw8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=RcyMZYDj; arc=fail smtp.client-ip=40.107.94.71
+	s=arc-20240116; t=1743944750; c=relaxed/simple;
+	bh=Uo/tJ+IgV0BSVx4YDlp+4CdYpEi40TN6j+GQEj+boZw=;
+	h=Content-Type:Date:Message-Id:Cc:Subject:From:To:References:
+	 In-Reply-To:MIME-Version; b=Zbe+GT/pXouHpU0LqQBfrLtgdwlTHubJ4Oc9rT6JTU53c52bLVuhs3qd3jwQ4K77f2bI+ajvV7q8dBucY7dxYLm2poAyYBMv/F/hb0CELF+4mupW9Wr3RPq35rtsGkiklpPjxeMMxic3uRmCmhkTIx3MzQfXM1OY+jjU/PYVbhU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=V5MgJcRx; arc=fail smtp.client-ip=40.107.243.70
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="RcyMZYDj"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="V5MgJcRx"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=TZTR4QvtybiO/r2kKShy3z3G8eanKWvdKFKnNOV4K1uB7o8vCOtp+oxaQYSojcLCH6ei0ZZX9kYjMFUEsCeTGAXIyKZOo86+SvtvPX3LiOxfpt3sI+ZfAi0F3yt4zeHtJvLJA9gwUR9ej5uSl/EIHeZ8vEv5ERNpk9qgPnNAPD7DpSsdhCLUMNjP6To7f52M0KAEVevPmVtpD7a00Pjq4kWbUbzXbLMQzTzEnbgXobN6kYOr7Wc3ywELuf2gz7ETsRNigsaQKDb5d2YIhWIU673COlQtcWiGhBYP5HBhp6Q4QIMlmDxWfBHqKHyjmrDKSp9O4VeLqwxDVZqFAmOIEw==
+ b=arODCqRLl7T808gVMSpDErT+Z4axFoJ4LYqo0IVEydWHas0ux3W/JDcqSNx3Nd5BVXt0b4tW6CYwIl6xeWy6wsZ/nSpwDp9jfX6PGNBSs5QflZqBnnMrTROVfr9RkYXf2OgBJxvYDyROgVrda1uM/+k46LTUtbfZKrCYf/cBEb164+O6Nl4yaysD0hChVUHZ4/TQl4vykd+7++heHJvzLKskChdrp7iNMwvSnjFsTS1uQZ9txhQIwi56ZFgIyxO8mUcPNskxCI5c8Imwzx36UF8hMCumV3yq7out9YqBkZ/55AV5/3hOBxiD7X+p/sBBUkLh/EToekkr8Gl5GNEJAw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5uHNQ7+7NbAzT8RsOF8E/1GUB0tOA99CNGBtmmgE+W8=;
- b=V2WiUwZzp64550S4z6+oU6PwIIFJ17Oq6gaT81te7fMUoA5Ep84lIuj/NkyxSAGkc8mCQMF/ILkJFBZvpWJkJSkkJdEeAv2XEpNg245iKSMSXEyTOwYamVcoyiF1nARF5QqtFCGR3buS39WbDhhCoA0Xybr0XdT2bJSEozxjqxAMy9G3lzvVvWeqeHMmfUnHVAxyBEqtju6j7E4wiHth6f8urUmbHHiaFzvcICEdkadkM3oMRsFU7y9b7dwJbwskyO7jYy3LQDN16O3m7SMkAnZFApr0c4UDbLsOb02lTVKyOVHN3hnlGArHAjquCf7KCWtJ0koKg8XE9oSpj6jz9A==
+ bh=L2vSc/IeF2Ff4R4gQKCpOoa/HSxnnwGtWVQdvKNu9iY=;
+ b=l4/+Wvj3WiWxkna8Vqip4GetrOcewwOtDr2XSf2AopJmahzzwqzSI7SWEvbe1JcTMnU6vq6UD+ky4UX06vbiiF9xkQle5zjVk6HhHQM8peMrbg5aRDfGz+1U+F+n06L8duWMOjT/Q0Wxwqoo769iGITq3XIk758NhcXGFp//1Y5pFhuC/1nSHWc/OrY/1QVim4bLE8K+iOPvv3Z4r8yt97CTm1qR/Zof1L9MIEo7VoEQpTJQvtDYGSnCpAyk/gqPZi2hZYE0ZQ76KS27cKntRzJsAlI3/JJmC2LNdi9VHjniKmbwCvbvqZMKC8V9e1r0EukxPsq96GhueCxzi8fNfQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
  dkim=pass header.d=nvidia.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5uHNQ7+7NbAzT8RsOF8E/1GUB0tOA99CNGBtmmgE+W8=;
- b=RcyMZYDjUdNx1SxIrP7QvyQXIp87gapM1lQIKgK4R+pxEyQvYE4SP1ZMG6YOvFiyrU1IXJIhUBN/dzj1vzscHoDPxrvT4g3UGST2Fm8IItHT3q/g/k/12E35oF7A0AN5lPlv1SSzaY0o20oQkCbVdyfFRY7cqF3pWA889NGRFlnY4epJSxTFZWmmeXQmW4ktyEp2dTY/iHTECl8/kPxPR8hqyJjhHREQtd+C1n4YGd7OpIiv44+P2+gsbVYhfL1Lbm1bssuZQu4GouXQykbZ2HMDAnawMP7GlvGLPzi+yB7sbuSMR6sy7XvEp3VBwRBYEXjP2bzB2RHP3WMwGGgiJA==
+ bh=L2vSc/IeF2Ff4R4gQKCpOoa/HSxnnwGtWVQdvKNu9iY=;
+ b=V5MgJcRxYNcULdV6S+eNUDY8VgZSqiFNGYJ2O7Qy8jyOMpDsLsvL4Y6/bZnwg2cT1y0DugwG03YJBX5qR0X3mXvz+vvm+jGkeYRRhTBBUVM3AOHJAnXbIByvemhNY5d6O8n2QINJtWsT2u6q00XsnhYXphGTYDk5mmi37grvs8CxBhVGaskfCmL2rcnSlHyj+0o0MbPhm7HClHteDzNtxOyG+zW5ktp3bfDlwCOWTe+DfDw3LxTUV/Yr5Eh972SsNRzUBwW69z/qHTLTPMsyjAj2GGtokTYPY0dulb1n48YDywyiWwApBXS+rRyTaFHxkxX54F88khAcHBiv/AmXoQ==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nvidia.com;
 Received: from CH2PR12MB3990.namprd12.prod.outlook.com (2603:10b6:610:28::18)
  by IA0PR12MB8087.namprd12.prod.outlook.com (2603:10b6:208:401::5) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.33; Sun, 6 Apr
- 2025 13:02:05 +0000
+ 2025 13:05:42 +0000
 Received: from CH2PR12MB3990.namprd12.prod.outlook.com
  ([fe80::6e37:569f:82ee:3f99]) by CH2PR12MB3990.namprd12.prod.outlook.com
  ([fe80::6e37:569f:82ee:3f99%6]) with mapi id 15.20.8606.029; Sun, 6 Apr 2025
- 13:02:05 +0000
-From: Alexandre Courbot <acourbot@nvidia.com>
-Date: Sun, 06 Apr 2025 22:01:55 +0900
-Subject: [PATCH v3] rust: alloc: implement `extend` for `Vec`
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250406-vec_extend-v3-1-ec5c5c0acf2a@nvidia.com>
-X-B4-Tracking: v=1; b=H4sIAEJ78mcC/3WNywrCMBBFf6XM2kjzourK/xCRPEY7C1NNaqiU/
- rtpXYigy3PhnDtCwkiYYFeNEDFToi4UkKsKXGvCBRn5wiBqoWtVa5bRnXDoMXimpOBCc+Oc4FC
- EW8QzDUvscHxzxPujNPvP2FLqu/hcDjOf15/tzBln1jaeb61qjHf7kMmTWbvuCnMni/+uKC4qs
- 9HmrKSz8sudpukFccb1GfYAAAA=
-X-Change-ID: 20250405-vec_extend-4321251acc21
-To: Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
- Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
- Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <benno.lossin@proton.me>, 
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
- Trevor Gross <tmgross@umich.edu>
-Cc: Joel Fernandes <joelagnelf@nvidia.com>, 
- John Hubbard <jhubbard@nvidia.com>, rust-for-linux@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Alexandre Courbot <acourbot@nvidia.com>
-X-Mailer: b4 0.14.2
-X-ClientProxiedBy: TYCP301CA0053.JPNP301.PROD.OUTLOOK.COM
- (2603:1096:400:384::20) To CH2PR12MB3990.namprd12.prod.outlook.com
+ 13:05:42 +0000
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Sun, 06 Apr 2025 22:05:39 +0900
+Message-Id: <D8ZKTDE05HBM.2S9OI9WDVEV6U@nvidia.com>
+Cc: "Danilo Krummrich" <dakr@kernel.org>, "Miguel Ojeda" <ojeda@kernel.org>,
+ "Alex Gaynor" <alex.gaynor@gmail.com>, "Gary Guo" <gary@garyguo.net>,
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
+ <benno.lossin@proton.me>, "Andreas Hindborg" <a.hindborg@kernel.org>,
+ "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
+ "Joel Fernandes" <joelagnelf@nvidia.com>, "John Hubbard"
+ <jhubbard@nvidia.com>, <rust-for-linux@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] rust: alloc: implement `extend` for `Vec`
+From: "Alexandre Courbot" <acourbot@nvidia.com>
+To: "Alexandre Courbot" <acourbot@nvidia.com>, "Boqun Feng"
+ <boqun.feng@gmail.com>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250405-vec_extend-v2-1-e4a85af43cb3@nvidia.com>
+ <Z_GIELVB_HI_qeWX@boqun-archlinux> <D8ZKOIHKPBCN.OIHEWU3TUE1W@nvidia.com>
+In-Reply-To: <D8ZKOIHKPBCN.OIHEWU3TUE1W@nvidia.com>
+X-ClientProxiedBy: TYCP286CA0297.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:400:3c8::20) To CH2PR12MB3990.namprd12.prod.outlook.com
  (2603:10b6:610:28::18)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -74,276 +73,216 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: CH2PR12MB3990:EE_|IA0PR12MB8087:EE_
-X-MS-Office365-Filtering-Correlation-Id: ca9e2adf-7431-46bd-646f-08dd750b3b38
+X-MS-Office365-Filtering-Correlation-Id: 2174982d-46e1-46d9-fde6-08dd750bbc98
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|366016|10070799003|1800799024|921020;
+	BCL:0;ARA:13230040|7416014|376014|366016|10070799003|1800799024;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?MDFEMEZXUVZ0Mk5BKzZtaFozUVFiZTdZcEgzWmU2NEtpVlF4eFd1eU5VazVz?=
- =?utf-8?B?dVMzU09acnc5UUdneGErbXlVakU0N1VtQlNrUEx4QkxicEwyM1l4Uml4SE0v?=
- =?utf-8?B?UlV2RjJNR3dybHkwMFNpb3lGdUpJZHorZVoxSTVnOTNNc0piYWRkUktiSVdh?=
- =?utf-8?B?dHljd1daNlZad2ZWT3NiMzNRNTZneHNmQWp4ZEF3MUt6N2h1bnlkcDV1aTgw?=
- =?utf-8?B?UmtsdjVOYmZFK3RKN1NqWHZxc25kcWtjZlhUcXhDZjRaa3ZmanJiR0U3NVRC?=
- =?utf-8?B?b1dqcVRvckdHNk5pdEV6Y3Jmb01QaEM0eVg5NWN0OXo4ME5aRkErb0xXRU5P?=
- =?utf-8?B?d3RCbFdxdHUvelNhNCswZ2tKbWRsSFdqNSswSmRMbXd4MFVUbWtEdzc4b2Fi?=
- =?utf-8?B?c1BkbDlnMVRxY0xxL1N2b2NpWDVKYldXV0R3VFNQdStZclg2R1BxSlNCaUVh?=
- =?utf-8?B?Y0JqU3VIK2ZtQmp4THY4VnNmVDlsK21JaS9CN3NwUnZncTI3OW04NmE1Q0s3?=
- =?utf-8?B?YWEzTzZJek5XUGMyZW1jZDkxSThicCt6N0R1Wml5cGh6eS80UDhwLzh4eDU0?=
- =?utf-8?B?TjhtV01rU3ZONjFpNnVVODJpdEN2RTFKeC8rVlpraG5mRzcxa1RUL09Sak5H?=
- =?utf-8?B?OCtQUnVxbVlBcFNza3FrWTRKVjRnNU12aWwvRVYrUXBlUU53MHozT1JBbkcv?=
- =?utf-8?B?Nzk2N3NDcXUxNTJZbkFxWitVWmx0TTJmMzc2ejN5MHRUTC9jVjMrNFpJOFd4?=
- =?utf-8?B?RHFOa011WEUrd2JUdnR5VWFnNVRva0U2VytCMndLbGFRc2I1YXBENWxCQ2Ft?=
- =?utf-8?B?V2QvWjZ6ckFBM2NCTFVrQUt4c3IyZGJzamtDT3hVZzVLNENzTnJuSlkyT1Vq?=
- =?utf-8?B?cW9oNy9rOW9xeGR2KzJTOXJpSVA5b0hYbDlVUUErVDNTU1dhdUx6b2RmS3M4?=
- =?utf-8?B?WGo0OVV6L096OHJyaXVHNDlHYVRUNFhIL2hsWTN1aEFRaW1NKzZVRk5JR0ZW?=
- =?utf-8?B?QzNlMXhlQXNaVnpMRDRmVDhJZmpGQTZMZWFlVzdoeE9ITzJ1NGtOckJTdE9O?=
- =?utf-8?B?VlVHZjdBMFZmd0ZHVjZXWVQvN2xFcUpoUDNCbXM1bEhUdEdMWUxvVjdXZUFz?=
- =?utf-8?B?NkxramdxbDlrRGJoUFhkWThRZW4zcTNjdDB4ZmhuWGp5VzZNM2UyK3Q1VGRz?=
- =?utf-8?B?eGtkOWZ1eUY0RFQ4TkpsbFN0QlVmUE8yYUxZdVhXclcyYU1pVWZKcmkyMEJl?=
- =?utf-8?B?OWk2alZ4YVB3b05hVHRwQ1VaMElOYTBOSzNGd1NuV28yTmwybnltYjZFaE52?=
- =?utf-8?B?UlppeG04RzIxVjVESzZobFYwMk5qd2xwdHhaT0ExaERmdXFNVUMvQkMrRjNo?=
- =?utf-8?B?aDVoVEZkeVRoS3NXTkFGeFJqOWE0YXJCbmh0aXU1RXRjRG9BVGdXclVtTHYw?=
- =?utf-8?B?WmRkMkxXYmRncWJmM1pxS1pBU29qZlVuYjFzc2tBQ0t0L2lZaCt3aXZwM2Fp?=
- =?utf-8?B?bFdNRUVzTVp2dURPRVY3NGgxN3R4VHBwcjUyc0RIbU1UNm02bXNBNU5sbXY2?=
- =?utf-8?B?OVVONGFWZ0c5bmh0TXZCRnRKYjd4QWIvc25JVGx0a1ZudmgzNUM5T3M2Nndj?=
- =?utf-8?B?aEZDVVpzbGZEdnNFTTJuZGE4SklTYURNR0JBVURxV3Z0WjNXb1RWakdLamtQ?=
- =?utf-8?B?UTVYU2d4Z29yWDgwQ1MrKzY0dVBLRGMzenlLZzRjT29DbkJiclpsTjJ0VGFS?=
- =?utf-8?B?ZFd5Nk5ZZE9sYzFNVTYrNGlrYmZmSGUyaWFNOUJsd3BQblFwTitKQVRIaExk?=
- =?utf-8?B?SVJlNndQWTBGM2FzL1JjQ3p0VzFiQW1yWFVUVkpaek8ybG1QWUNXTnUzd1Ex?=
- =?utf-8?B?KzN2UEk0cjFkbnU2ek5jRXA5V1RsUjF0NXVvUHhyUHY0bHB1azlLSFpWcHll?=
- =?utf-8?Q?QU++W6JkfUw=3D?=
+	=?utf-8?B?RS9sVlpCd1BtK1FzRkgyYzZvYlNIaFltV3pzV3RJaGpSQzArdTJxR0hDMXBo?=
+ =?utf-8?B?Vi8zWU5RQ0VrWHFuQllrRmNYYlBLYlA2N1I0NUpSSlhJZFo2dTk0eTRoeXhh?=
+ =?utf-8?B?cHZDVnM2bU84VlhKOTNaK3hrL3VLblhHYWplaFBzOFl6blNZVmo4UUprZ0NK?=
+ =?utf-8?B?UkhjblF3WUkwQkUxaTdsUkRLbVR2eHA5cWtPZUtsQVFpTC9tdEhUdUVya0xH?=
+ =?utf-8?B?UWdFRjNKNE5hS08weVBGeXRsdXcvRVJ4U2lyTW1ZR0R5U2pQMGxtOEtGRnAz?=
+ =?utf-8?B?Q3FtNFZuVXI0WVJTTWdHV3FBd0grSkpvTkhDUmFkNEhiTUtkekdCR0o2dUZR?=
+ =?utf-8?B?byt5TE9lZ3FOMzNuOXJFTjFDRFFhd0Q4UUx1U1hXS3VFWU1FTzhDbjFHVWtN?=
+ =?utf-8?B?Z21PcHZ5a0hHanFrWEpyYnkrNE1UZWxTbjE2T2h2SnJYelkzVnp4S1pBTFIr?=
+ =?utf-8?B?ekhhSWo3Y056ZG5rVTBGZDdNZlRDN0NyYVYwa1dSbmlTOGNJcTAxaURhQU1M?=
+ =?utf-8?B?a0VCOXIzVVdzSHo1Q2svRDdoU0p0Z2p3UTdNdEtIUFdCbHh5SHRQQnZMQWFG?=
+ =?utf-8?B?eUc0M3kwL3V3SjJuZ0Nna2RSQThVajRXY3c3WVdkYlNTUFpFdTBGdEhvbDVo?=
+ =?utf-8?B?UVlBVnpOa2tpQkttNGhad1VoSjhQTHlCMHRZSlBHd0VBMCt1S2V3dlp3OTRQ?=
+ =?utf-8?B?QUxXUnJHVFBQdFJyVjRQdXFIRk1pZnErOFIwNGUyOFRtTmdLejNFeFp6U3py?=
+ =?utf-8?B?cmpVUkwrc0tERkE1KzRCWE5kUFB3ait2MWtEQ3lzcUNUOFIxZzQ4b1loZ3RN?=
+ =?utf-8?B?dklueXc3c2JzalJhMFFUVFJLQXlYRlZKbGVweW9EekdNM2tCeWlSZHdoTTl6?=
+ =?utf-8?B?RmlMYXpITm9zOWpqMW9BQzJabFhGVkJhSHg2c01teWJPUGN1eWpabE84QlZy?=
+ =?utf-8?B?bHhVais4czcydkNuOEl0YS9qc2p6TTFiY2liMklSQlAreGprOHBaelk0ajJj?=
+ =?utf-8?B?clNYY1NKd29QcDN2UVE0WmVCQzlXM1FQUU1IYzduYUVQOVgycStKSU5TSHdT?=
+ =?utf-8?B?V2NNd2ZKM0hobXFreHAra0E3V0x1amt5OTBTWG15Y2tQUk1vK2dxY3hYaThX?=
+ =?utf-8?B?cVdET1VxbEc0enZsYk5TZlkzZk1udzVmV2ZuLzBKUmVDVW12Y25URUsvZFo4?=
+ =?utf-8?B?RXcrYUpnVCtjUThnajVkdDZMM005aDZQeloydUE0QlVqc1EwdFUwK2pxRHJz?=
+ =?utf-8?B?VzQyM2d1OUljT2hDQ1ZvU1o5NGR0dklpNW5CQXdzbmp6WmNGWE5Kd3g3ajlt?=
+ =?utf-8?B?ajd1NkJNU0xTeStmYldFTTlmSFhRc1FFWW9JUjZqaEs5SnhYZEcrMDNmbnZ0?=
+ =?utf-8?B?NTcyeDZuNFc1MGkzSUU1eFZSZHFqS0hhM2RMUE5DKzZobTJYN2NmRjM5V0VU?=
+ =?utf-8?B?MWdJZHlmcjB0K3RkelJIWDZPWnE2ZmM1NEhwRTNFSklSTWoxbnFqMWRFL0h1?=
+ =?utf-8?B?b0ZvZUdiaU9VZ1FHdVplWFFwSytnVmI5RDlPMzVKM1M3OElSQW9UYkNObzNw?=
+ =?utf-8?B?bGJ5SmluTlBhNEFsY3NCWERLNGlTTmZwZzI0aGFhZ2JqY2RYa2x4eW9rM1cw?=
+ =?utf-8?B?Kzg3Um5sZnkwbjVxL1lKbGdxMmRLQmtIZjJvUlVTNDhjUGg5RmxxNXhsMTB2?=
+ =?utf-8?B?cjl4ajdnQWR5OVFSRmNCamo2a05IWEF1QVdUSjZKZjNjZEprdXNuZ29Cb01k?=
+ =?utf-8?B?RmtUNEwrRklpMmt5V1Y4eVZ0NWpNN2pRUDBvaFh0WGQvQVQ5MlNKRFIxMjVT?=
+ =?utf-8?B?WkhTd1d0T3hPMkFodkFtSzVqVGNKdTFNR2N0M25HeXJVUW9TK0RSWVJDSWdk?=
+ =?utf-8?Q?vtCvN27aNhd74?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3990.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(10070799003)(1800799024)(921020);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3990.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(10070799003)(1800799024);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?aVFNd0RJZHhpN2hkblk1RUt1eTc4YjZ6cUg5ZlZNMG9RVUpwSGUrQm9YVkMx?=
- =?utf-8?B?SVBOdmVjbDlPeVZTRVZnVTdVM3FPMEpuUGZXZ2FncDcyVEZLUlEwRW0vYTlz?=
- =?utf-8?B?YVdrbnR6OGViMUFaOVA0VXpUUkxPRXJYUnU3aWF6ME5INTF5aEppdnl1TlFT?=
- =?utf-8?B?MzVraEh3THo2UlFKVHE3YWFuWGpoNERXd3FFVXpwVEdkbXREcVBpWWRHZ3N6?=
- =?utf-8?B?eWZoNzVWVXQvMGEzQXo1azBoRUVmclFHVGhVY1RJYllkNy9wMkNrTTVOZmtM?=
- =?utf-8?B?ZXNnejNFKythdjIyUUJJNkE0ck5UMkZQajNKL25CUXNYSTJGY0N0NEdqYXM3?=
- =?utf-8?B?M2R1Ni9TRENNTGozellGYjFuMmEvdGU5RXZZVGFobTh5a0RmNUFMdEJKL09i?=
- =?utf-8?B?QnRYZ1JiZXY0eW11U29nYlR4YjR3RFBHM1IwSzUra1FycHJNOThCbVJkWjdR?=
- =?utf-8?B?MEZvMktqSjVKcDdWaVpWc25mVUszQVZVbWRrSmNyNHZGV1BlOEhtcGY1Uzd4?=
- =?utf-8?B?bnFZd3lXUkd6amdFdlJqY3ZpMWlYWCtiTmJWUWc0YytTNFlDS1RSUENQVVMy?=
- =?utf-8?B?YzhtY3pUek9DdTVKYWVCUkhLd20yWnlmNkhDS2JjQmo4cWZQWGpza3lZWisz?=
- =?utf-8?B?dmI5SGlKQjNZSjB5ZTZVck1YSVBZVm5ub2pDRjlQc1J0NndyUzZtN0Q5bFJs?=
- =?utf-8?B?OEFvanU5Z1pvVWxPUGl4TXhkd01QSVU1dUVXbk8zNTEwMFN0bHRzYXVoM0Rk?=
- =?utf-8?B?ZDZwKzE1ZlRjSWJlUGRvNVBsT29BZFZ2WlkzNVhLek5sakUwSVFQM3F0YThz?=
- =?utf-8?B?c05ZQkY0S0tHdzFmZ2huN0dUQk1TclBnaDQzdTlQRlhRM084SE5FUkd5SDBl?=
- =?utf-8?B?N2VHRmQxd3ZjdmtVZm5jR1NuTHZPZWl1TnRiQ1h5K3pwVTd2Z2t1U2NXank4?=
- =?utf-8?B?Y29BTHJCSkdEcU5IbmNXUUVjVlJraUZLZXpuRDBkSnBEemF0VzNzMjBvVWlE?=
- =?utf-8?B?NWsvNlYrZ3VFNlFlTlcyMS9IS2pIWDhtbGNLSEFGSHpqcGVhYUt3ZFlQcm9k?=
- =?utf-8?B?Z1hxbHlaSUUzbS9IcWNhZEhvYnJIQWVkSU4vS3J2RXU0Y3NCQlBYWEhudExN?=
- =?utf-8?B?aXh3OW9NT2hacEhaMzFidmVHVFhnVzJoWVBvWWZPMnNEQmYxdjBRQnlBVFda?=
- =?utf-8?B?a0p6S0xVbWV6dzhZWVUzc0hSL0dnaSs5NUtEeDFGUkczOHhUaHVGVFJGNXMv?=
- =?utf-8?B?ekowYjEvb3Y3VE9BbjI5WnI3SkFDeEk4RFY5L1daUEh5S0ZWTzE2aEQycHVy?=
- =?utf-8?B?NVg4ejJXL1R1SCtGc2NIRmFTbUl0eE5FRTVOY3FwNnBuTWZaMDBuMEYrdFFG?=
- =?utf-8?B?UTFVRjh4aGc0Q3hvdWNOT1dBL3ZxdWhESlZjMFFlTE9ROGlCY0lrTzlxbUM5?=
- =?utf-8?B?NkNYaTFETEd2U3h2aVpTUWN3YldtdTJteXkyTXVFUUp6N0Q3a1A1Z0ZBVVND?=
- =?utf-8?B?MXl1bURTd1IyZy9KKzNLSk9JZVRMWTJ5dEM1Zk1HbWV3dFR4UGFvZEhrZ2Zo?=
- =?utf-8?B?MDBCcUV6dnRiMGFKaFRaMXNaTjV2bmp0RUtzdXNmRndqMzgzZmhMTmZHc091?=
- =?utf-8?B?VzcrcGdIN2VLQ0hyRUptanF1U29KbFhlbmpaTW5EN2xQZ2NzcjhhUEVUYnYv?=
- =?utf-8?B?d1JJRXhiWE9qUUltZytwYUoxV1FhaDhKeGtORTY1RkZkVEZ2UWNQajV5bE9K?=
- =?utf-8?B?RHp1TGVOblF5NTNtYW9GS1krSXVyNnRCdzFSWURtTmFxMU5ZeERnS2hoRGEr?=
- =?utf-8?B?Z1hpejViRlJOU1BVMjMwcnBidkppQThJY21TUHJTTE1WSUVjTXlHNXFYUCtz?=
- =?utf-8?B?blh4KzNGcmRuUnVocjU4enhkYXFYUlVQbGgwSDFUVXFBcUJPaTdrblRVbm1G?=
- =?utf-8?B?dFdKVXBCRjZXRVpOM2lVSHpUcjdkMU1vZE1NK2hyb2lBY1hBdFQyQXpKOVc2?=
- =?utf-8?B?aU9WREViZ2RleFRyZk5XZGdXSGZoTkg2OGFFaURtWSs5dmd4NiswT3BhTWMr?=
- =?utf-8?B?QXZLVG1jUTNtMnhKdXBFUUFwMmlHbld0VFVxM2xrWkcxTU5nb2VrMFNzYkY5?=
- =?utf-8?B?MDZXQ2dCaFRpSDJCVjd4U0lhR3l2UEgxdnJhVVFORTFmSjRFTE9vdG91R2JT?=
- =?utf-8?Q?zOSgzPQwEhjcIXe8/LlmVdT/XaL611KO3flV8tEzj7+9?=
+	=?utf-8?B?dzNYSFFmY05qNGRGd1AwUU9JWm04eWEzbGZxV3JreXgyR0ZhYitJS1JtOG83?=
+ =?utf-8?B?UjQ4OVhxZUdiWnNxQ3JNSms0Ykd0dkRMMmIveXJNYWtZaEVIWExBZkVFMWds?=
+ =?utf-8?B?cFdpV2V3dmRkcjBOeGVtMkF4MElvcFZBRmxvU1RjakwrL3M3WWt5T1hCUDZ6?=
+ =?utf-8?B?UmVWbFZZSWx2TUY5NStmeXhORHFseXdsbWROdHQxeEhFdGU4ckFvNGZZcDV1?=
+ =?utf-8?B?bEtHRlNlYUN2WE93WDZGQyt6RVRjYkNtdWVXZDEzQVFYMTg3RnI1ZFhLTXFZ?=
+ =?utf-8?B?Qnl5Q083UnNCQnhoaEp6MDNuTldNMTltWUxrM0xDNm91Q3gzcE1rRHJuN25o?=
+ =?utf-8?B?M1VxTzI5WFpYanRIa2F4RzNoMUtpak9telA0aGh5VStGZEZieUZPb3krcFJX?=
+ =?utf-8?B?clQyZExCUUhLTzNDOHFpS0RqaHFjNm13RWVUaHRLMyswN0Vwb3hyK0NmL3Vh?=
+ =?utf-8?B?MHFrZVJaanJJQVVRWk03UnRoMHlaZzFWdTQ3K04vR1k4SzRxak1BZGxGNys2?=
+ =?utf-8?B?VW5RYmkrNUpmNkwyVW9tUlBJbXRJNHNFbXd3SUhRZzB0OXdmTFJFME5FT2xX?=
+ =?utf-8?B?bTFXM3U3R0VyczVDM3U2R1MyWklBdUFXK1N0QXdtSVRWR1FoOUxiS0xsSEh5?=
+ =?utf-8?B?NEVjdEdxZUFaalJiYzdxY21Sck1IV1ZDZjVkSnRhQTVpMEJVbnVCL0FJaks5?=
+ =?utf-8?B?YXVEQnFDellEVzcwcnQyMmlmanpVRkJ3S2ZxRjFENnpWRW9ETGszS29JbUY0?=
+ =?utf-8?B?OVQwd3dqMFdvcW9QdzloNkxwUHhVTlhUUkk5ZFZLcG16b3VMeFNlOHpiTWdG?=
+ =?utf-8?B?bktYZDM1cTgvNWlGSHlRTXB0NjNiSGRFMVFUS2VHM1VNYm9xdkI5VlNsNEgx?=
+ =?utf-8?B?ei8xU1FiM251Z013NEN1b3J2Tk5tOXF0dExab2ZVcHhvUnNFckd5TU56YjRl?=
+ =?utf-8?B?bzg3RTZlVlMvaG1hVy9KSjFMNUVyUlNBMlFUd2FPdmVyWU16QjFNQVVMb2Mr?=
+ =?utf-8?B?cFQvYWR5TEc0cW4zc2lDOW92Tmo4RE5tT0dMQWRqdklvMW0weFlqbGFhcnN6?=
+ =?utf-8?B?Zy80TUxpUm1vZ0FMWGtISFlPQm9FbmNVTWxkSENXMEhwMlNnaHdFa1ZGWmE0?=
+ =?utf-8?B?MmpRNnY2K2Z0TytjV0pKcmpDS1hDUEUyVUZaMzIraS9mMjRWUzdnd1c4dzNx?=
+ =?utf-8?B?K3RadkZuL2hYNFpGVGgzOGZ6amovUU5NRG5Hd1BPLzFQa1YxaWs2cU4zTERy?=
+ =?utf-8?B?dDhGeFlHNTA0c2J5WnNoeGsxWStLdHZYRmVldUE0eUVjeERaZmJkbkpWYkQr?=
+ =?utf-8?B?ZlRJT2EwcWJpL2hVdGFLeDQzWDViS3hGOGk2NmM3eHpJeXFBTXpTbXVsK0wy?=
+ =?utf-8?B?WXhHOVdiZkJIZUtjYytBQnhVSE80eGlSTkFGZ1hOZ0tkelVQdzRFUGdEbko2?=
+ =?utf-8?B?SmZibnUvRy9QWHB6VEZ5VmpKZVZjOUkwTDd2WjhTa0FobTZQWTBGM0JEdUx0?=
+ =?utf-8?B?WGc3RVlNdFVmRlg0Nkl6S3I3dGRBYXd1M21Ya0pIVVFzWUtFTkhjeEZvS2hs?=
+ =?utf-8?B?T2FWSmRXS0cxQ1Z4YkNsL1Mrd1BJTHRhUmYwZ0d0UFFqaURScUFLSG1zK2p4?=
+ =?utf-8?B?Y0JJeGpweVRFMEVUZXJvNThrWXRycGFzK0hNN2JsczkvempJbzBabVIzazhF?=
+ =?utf-8?B?dmw4aHNwMGcybWhKM0YxSHdCTCt5cUZoeGdNOEtmRmtjWExnaGV3eUtpUHlW?=
+ =?utf-8?B?YVowbjZ1Q3NyNS9sc0lkbjdkckdWK2pQM2lxZHZFUVk0UFo5YTFVN29tR2Jz?=
+ =?utf-8?B?SU8yNHFUcXczT2ZKNGVZelVRYUgxL3IreWcwamdNL3d5WGJvd2E5Z3MyYXU5?=
+ =?utf-8?B?Q2w2ZVlmUVhGd0NwSkpDMllPSW5lYlhqMkd4WnNzcHdVVmVrUmZjOVZhTVUw?=
+ =?utf-8?B?VjR6Wm5aazYwRHRuNTN1blVPa1pvQy9acnNnVFFIa0krbE1xVmdxSW5sTTRQ?=
+ =?utf-8?B?WHhOakIzS1ZEbGZ5UUg5T0hhUVJOeE9rT0VDM2JhZXo2bTJMVGxvMERSbHlT?=
+ =?utf-8?B?UWVOOGxPNnhuSVJGd3hWS2hORXpXQ2xlVDBFcytCR2Rrc0ExRDBvOCtGRU1L?=
+ =?utf-8?B?dkNhM0J4WUMvcXJLWFpuNkpxQ1RkQWh0Nis5VUhYV1l4aGpEbm1jT08wY0tJ?=
+ =?utf-8?Q?OA32qcR5t8HflGHkirt7h42t7OxYLfbFl9WfrkEO3WwC?=
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ca9e2adf-7431-46bd-646f-08dd750b3b38
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2174982d-46e1-46d9-fde6-08dd750bbc98
 X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB3990.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Apr 2025 13:02:05.6669
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Apr 2025 13:05:42.6857
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 2ihOJqbrOpM7OiTKjAY2ne0Yb2QuCQGH5Ahw13pZl9Z7aHqYBXU3+UeFZ7G40v54F4T6shLSfMhx1CFLZpmybA==
+X-MS-Exchange-CrossTenant-UserPrincipalName: dt1eddJZtnb4lRSSVNM+deBSxh6AKtP9ulZTvA3wdSsxWaN+CUlNN899pXFzB6Bsw1I4gR6QlUy4uIRuzTzzhA==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8087
 
-KVec currently has `extend_with` and `extend_from_slice` methods, but no
-way extend a vector from a regular iterator as provided by the `Extend`
-trait.
+On Sun Apr 6, 2025 at 9:59 PM JST, Alexandre Courbot wrote:
+> Hi Boqun, thanks for the review!
+>
+> On Sun Apr 6, 2025 at 4:44 AM JST, Boqun Feng wrote:
+>> Hi Alexandre,
+>>
+>> Thanks for the patch.
+>>
+>> On Sat, Apr 05, 2025 at 10:51:41PM +0900, Alexandre Courbot wrote:
+>>> KVec currently has `extend_with` and `extend_from_slice` methods, but n=
+o
+>>> way extend a vector from a regular iterator as provided by the `Extend`
+>>> trait.
+>>>=20
+>>> Due to the need to provide the GFP flags, `Extend` cannot be implemente=
+d
+>>> directly, so simply define a homonymous method that takes an extra
+>>> `flags` argument.
+>>>=20
+>>> The aforementioned `extend_with` and `extend_from_slice` can then be
+>>> reimplemented as direct invocations of this new method - maybe they can
+>>> eventually be removed.
+>>>=20
+>>> Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
+>>> ---
+>>> I was a bit surprised to find no equivalent of the `Extend` trait for
+>>> KVec, and while I anticipate to be told the reason for this, I also
+>>> didn't hit any hard wall trying to come with my own implementation so
+>>> here it is.
+>>>=20
+>>> I expect the new `extend_with` and `extend_from_slice` to be optimized
+>>> into something close to their previous implementations, but am not sure
+>>> how I can simply verify that this is the case - any hint would be
+>>> appreciated!
+>>> ---
+>>> Changes in v2:
+>>> - Changed the diff algorithm to histogram for a more readable patch.
+>>> ---
+>>>  rust/kernel/alloc/kvec.rs | 89 +++++++++++++++++++++++++++++----------=
+--------
+>>>  1 file changed, 56 insertions(+), 33 deletions(-)
+>>>=20
+>>> diff --git a/rust/kernel/alloc/kvec.rs b/rust/kernel/alloc/kvec.rs
+>>> index ae9d072741cedbb34bed0be0c20cc75472aa53be..e78cb5ee575ce01e44283f8=
+b4905689fb1e96165 100644
+>>> --- a/rust/kernel/alloc/kvec.rs
+>>> +++ b/rust/kernel/alloc/kvec.rs
+>>> @@ -454,30 +454,64 @@ pub fn reserve(&mut self, additional: usize, flag=
+s: Flags) -> Result<(), AllocEr
+>>>      }
+>>>  }
+>>> =20
+>>> +impl<T, A: Allocator> Vec<T, A> {
+>>> +    /// Extends the vector by the elements of `iter`.
+>>> +    ///
+>>> +    /// This uses [`Iterator::size_hint`] to optimize reallocation of =
+memory, but will work even
+>>> +    /// with imprecise implementations - albeit with potentially more =
+memory reallocations.
+>>> +    ///
+>>> +    /// In the kernel most iterators are expected to have a precise `s=
+ize_hint` implementation, so
+>>> +    /// this should nicely optimize out in most cases.
+>>> +    pub fn extend<I>(&mut self, iter: I, flags: Flags) -> Result<(), A=
+llocError>
+>>> +    where
+>>> +        I: IntoIterator<Item =3D T>,
+>>> +    {
+>>> +        let mut iter =3D iter.into_iter();
+>>> +
+>>> +        loop {
+>>> +            let low_bound =3D match iter.size_hint() {
+>>> +                // No more items expected, we can return.
+>>> +                (0, Some(0)) =3D> break,
+>>> +                // Possibly more items but not certain, tentatively ad=
+d one.
+>>> +                (0, _) =3D> 1,
+>>> +                // More items pending, reserve space for the lower bou=
+nd.
+>>> +                (low_bound, _) =3D> low_bound,
+>>> +            };
+>>> +
+>>> +            self.reserve(low_bound, flags)?;
+>>> +
+>>
+>> I want to point out this might cause a behavior change, previously
+>> extend_with() and extend_with_slice() do a "all-or-nothing" extension
+>> depending on memory allocation, i.e. if there is enough memory for all
+>> the new items, do the extension, otherwise do nothing. Your changes here
+>> make it that extension can fail in-between due to AllocError, that is,
+>> only part of the `iter` is added. Of course, in practice, both
+>> slice::Iter and iter::Take will just return the number of all the items
+>> as the low_bound of .size_hint(), but it's not guaranteed.
+>
+> That's a very valid point, and one of the reasons why I would like to
+> see how the code is actually optimized in `extend_with` and
+> `extend_with_slice`. While the method is designed to handle
+> imprecise/incorrect implementations of `size_hint`, the expectation is
+> that outside of very unusual uses the code should be able to be
+> optimized into a single-allocation, non-loop pass.
+>
+> We could probably enforce that if we had access to `TrustedLen` or
+> defined our own equivalent trait for the kernel. The set of iterators
+> that could be passed as arguments would be more limited, but for the
+> same reason as above I don't think that would be a big limitation.
+>
+>> I don't see a direct correct-or-wrong answer for what behavior is
+>> desired, but if we are moving to a new behavior, we need to make sure
+>> updating the document of the extend*() function. Plus if failing
+>> in-between, should we return the `iter` so that users can continue do
+>> something about the `iter`?
+>
+> I have updated the documentation with more details about the sub-optimal
+> and error cases. I am not sure what use a caller would have from the
+> remaining items - and after all, the currently existing methods also
+> don't return the iterator upon failure. If we want to preserve the
+> current behavior, we can always reduce the size of the vector to its
+> pre-call value on the error path.
 
-Due to the need to provide the GFP flags, `Extend` cannot be implemented
-directly, so simply define a homonymous method that takes an extra
-`flags` argument.
-
-The aforementioned `extend_with` and `extend_from_slice` can then be
-reimplemented as direct invocations of this new method - maybe they can
-eventually be removed.
-
-Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
----
-I was a bit surprised to find no equivalent of the `Extend` trait for
-KVec, and while I anticipate to be told the reason for this, I also
-didn't hit any hard wall trying to come with my own implementation so
-here it is.
-
-I expect the new `extend_with` and `extend_from_slice` to be optimized
-into something close to their previous implementations, but am not sure
-how I can simply verify that this is the case - any hint would be
-appreciated!
----
-Changes in v3:
-- Use repeat_n() instead of repeat() for extend_with() in order to avoid
-  an extra clone of the value.
-- Be more precise about the cases where extend() will perform optimally
-  or not in its documentation, and how the vector might be modified even
-  in case of an error.
-- Replace into_iter() with iter() and iter_mut() where suggested by the
-  kernel test robot.
-- Link to v2: https://lore.kernel.org/r/20250405-vec_extend-v2-1-e4a85af43cb3@nvidia.com
-
-Changes in v2:
-- Changed the diff algorithm to histogram for a more readable patch.
----
- rust/kernel/alloc/kvec.rs | 111 ++++++++++++++++++++++++++++++++--------------
- 1 file changed, 78 insertions(+), 33 deletions(-)
-
-diff --git a/rust/kernel/alloc/kvec.rs b/rust/kernel/alloc/kvec.rs
-index ae9d072741cedbb34bed0be0c20cc75472aa53be..b3c4227e232cca3b5c17930abc63810240b9c4da 100644
---- a/rust/kernel/alloc/kvec.rs
-+++ b/rust/kernel/alloc/kvec.rs
-@@ -454,30 +454,86 @@ pub fn reserve(&mut self, additional: usize, flags: Flags) -> Result<(), AllocEr
-     }
- }
- 
-+impl<T, A: Allocator> Vec<T, A> {
-+    /// Extends the vector by the elements of `iter`.
-+    ///
-+    /// This uses [`Iterator::size_hint`] to optimize memory reallocations, but will work even with
-+    /// imprecise implementations - albeit in a non-optimal way.
-+    ///
-+    /// This method returns an error if a memory reallocation required to accommodate the new items
-+    /// failed. In this case, callers must assume that some (but not all) elements of `iter` might
-+    /// have been added to the vector.
-+    ///
-+    /// # Note on optimal behavior and correctness
-+    ///
-+    /// The efficiency of this method depends on how reliable the [`Iterator::size_hint`]
-+    /// implementation of the `iter` is.
-+    ///
-+    /// It performs optimally with at most a single memory reallocation if the lower bound of
-+    /// `size_hint` is the exact number of items actually yielded.
-+    ///
-+    /// If `size_hint` is more vague, there may be as many memory reallocations as necessary to
-+    /// cover the whole iterator from the successive lower bounds returned by `size_hint`.
-+    ///
-+    /// If `size_hint` signals more items than actually yielded by the iterator, some unused memory
-+    /// might be reserved.
-+    ///
-+    /// Finally, whenever `size_hint` returns `(0, Some(0))`, the method assumes that no more items
-+    /// are yielded by the iterator and returns. This may result in some items not being added if
-+    /// there were still some remaining.
-+    ///
-+    /// In the kernel most iterators are expected to have a precise and correct `size_hint`
-+    /// implementation, so this should nicely optimize out for these cases.
-+    pub fn extend<I>(&mut self, iter: I, flags: Flags) -> Result<(), AllocError>
-+    where
-+        I: IntoIterator<Item = T>,
-+    {
-+        let mut iter = iter.into_iter();
-+
-+        loop {
-+            let low_bound = match iter.size_hint() {
-+                // No more items expected, we can return.
-+                (0, Some(0)) => break,
-+                // Possibly more items but not certain, tentatively add one.
-+                (0, _) => 1,
-+                // More items pending, reserve space for the lower bound.
-+                (low_bound, _) => low_bound,
-+            };
-+
-+            self.reserve(low_bound, flags)?;
-+
-+            // Number of items we actually added.
-+            let added_items = self
-+                .spare_capacity_mut()
-+                .iter_mut()
-+                // Take a mutable reference to the iterator so we can reuse it in the next
-+                // iteration of the loop if needed.
-+                .zip(&mut iter)
-+                .fold(0, |count, (dst, src)| {
-+                    dst.write(src);
-+
-+                    count + 1
-+                });
-+
-+            // SAFETY:
-+            // - `self.len() + added_items <= self.capacity()` due to the call to `reserve` above,
-+            // - items `[self.len()..self.len() + added_items - 1]` are initialized.
-+            unsafe { self.set_len(self.len() + added_items) };
-+
-+            // `size_hint` was incorrect and our iterator ended before its advertized lower bound.
-+            if added_items < low_bound {
-+                break;
-+            }
-+        }
-+
-+        Ok(())
-+    }
-+}
-+
- impl<T: Clone, A: Allocator> Vec<T, A> {
-     /// Extend the vector by `n` clones of `value`.
-     pub fn extend_with(&mut self, n: usize, value: T, flags: Flags) -> Result<(), AllocError> {
--        if n == 0 {
--            return Ok(());
--        }
--
--        self.reserve(n, flags)?;
--
--        let spare = self.spare_capacity_mut();
--
--        for item in spare.iter_mut().take(n - 1) {
--            item.write(value.clone());
--        }
--
--        // We can write the last element directly without cloning needlessly.
--        spare[n - 1].write(value);
--
--        // SAFETY:
--        // - `self.len() + n < self.capacity()` due to the call to reserve above,
--        // - the loop and the line above initialized the next `n` elements.
--        unsafe { self.set_len(self.len() + n) };
--
--        Ok(())
-+        self.extend(core::iter::repeat_n(value, n), flags)
-     }
- 
-     /// Pushes clones of the elements of slice into the [`Vec`] instance.
-@@ -496,18 +552,7 @@ pub fn extend_with(&mut self, n: usize, value: T, flags: Flags) -> Result<(), Al
-     /// # Ok::<(), Error>(())
-     /// ```
-     pub fn extend_from_slice(&mut self, other: &[T], flags: Flags) -> Result<(), AllocError> {
--        self.reserve(other.len(), flags)?;
--        for (slot, item) in core::iter::zip(self.spare_capacity_mut(), other) {
--            slot.write(item.clone());
--        }
--
--        // SAFETY:
--        // - `other.len()` spare entries have just been initialized, so it is safe to increase
--        //   the length by the same number.
--        // - `self.len() + other.len() <= self.capacity()` is guaranteed by the preceding `reserve`
--        //   call.
--        unsafe { self.set_len(self.len() + other.len()) };
--        Ok(())
-+        self.extend(other.iter().cloned(), flags)
-     }
- 
-     /// Create a new `Vec<T, A>` and extend it by `n` clones of `value`.
-
----
-base-commit: a2cc6ff5ec8f91bc463fd3b0c26b61166a07eb11
-change-id: 20250405-vec_extend-4321251acc21
-
-Best regards,
--- 
-Alexandre Courbot <acourbot@nvidia.com>
-
+Err of course they don't have any iterator to return so that last point
+is mostly moot, except maybe for `extend_with` which doesn't return the
+passed value, which the caller hasn't necessarily kept a clone of.
