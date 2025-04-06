@@ -1,248 +1,106 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2273BC2EF
-	for <linux-kernel@vger.kernel.org>; Sun,  6 Apr 2025 10:27:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E898F19C546;
+	Sun,  6 Apr 2025 10:28:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743935249; cv=none; b=EuSDHnahFXI442EWOQ+m6JpUHXZwPtduGqN7Wd2tVjIqBydgHZanaHEl3U+07Rge3dbfSSrJmgenoG+4X6wYePKSnePxd44f8oQ8DAXURCMqdQZxytMGzlhQFCs1+igrGNWDJcPX/lxPx2Tr8/jZe1y4ks6V4UUv+qHtFyit9hI=
+	t=1743935287; cv=none; b=lyJi3JGXeM4qD1SDcud1Jr1AM5DVCUofYBl13+BVy8OsBueyVQD5oyQgq1NeBd9mgig13uYtU2Vlnti9QxdzEXlgbfSEAsQ+90B222rv8+TPEgZCyGaGvvzquYd8R6FefYo1vGoNDS25qNELloE5n8M49hJfVFj9FC2joqvSwM4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743935249; c=relaxed/simple;
-	bh=xqxK3OjMwfYRc2rS1poO5L+gj09bvK1cGqirA5vpjY4=;
-	h=From:To:Cc:Subject:Message-ID:Content-Type:MIME-Version:Date; b=OzNmZDzjI33v67S0ZmhmXk1NDPki8y8mned+5zzsocgsvFhR3FRJKWUCtAMJzt8NpvRtTrfmDNBboZIGr/ikjto4xGcujxsdeCKM9z8uNaTK7Y5j/2kje2qLg4gKMaEJd+slZ8qvnUeSYkOOe6sqqHMCwNRhcmpgONeG91xqcnI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BI1kWfs/; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=pUcEs3CE; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1743935287; c=relaxed/simple;
+	bh=Ds/EHRcbW1fQ9vSrhDuOvsxpy35gSYew1q56WWGx1J4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eljbB7xDMx5hfqcgxFUWgALCqUo4w5y1CQb/oW8BNB2FkGIDI0XxVjUVSNk5/XQtJb69O5tjdrces7YIXFsQPCXVYFYnnkEnWgmUu1aOTmCqEGnX0Q7lsbfqJ+hNPz5AK0sAPMtcRy3PQIfzwFjQzrRFaMNDpdjbZwyA01h6inU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QQCW5BLI; arc=none smtp.client-ip=209.85.216.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BI1kWfs/";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pUcEs3CE"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1743935244;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=VnSnLpYetFyGZa9N6yqK17zTHirukHMFwk0QG2sNOmU=;
-	b=BI1kWfs/Os2U7EHmGsaPPbY4XF7sPj6xEg+nJDT2yisFb8/A/8xHLtQXmKQ8bYLeva/rKN
-	zH6INgAEqeLyJzYzZBW/pHnlkvKCoRLZZgqA7NP+MjDbPahoGH5InaUixnPVbk5CEFrxVi
-	BOUdz9mgmD3+6Gc8ST17jat9yUqoKC24jg+e5a5MVW4CFYKw/W2UK+ROvzOSnWpHTldoXS
-	CtyNP8oSro6ni8fDpqZMCA9xCtTxECo5UsWCRgjfcORV/JfI45S71y3fcI5izt1F2Exx2y
-	0Ug/0ARWaWHDIO3qFTPDG63zlVQGvLvt2qg6QIkrS7VnH65opTAnl1YxxrGd7Q==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1743935244;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=VnSnLpYetFyGZa9N6yqK17zTHirukHMFwk0QG2sNOmU=;
-	b=pUcEs3CEbLXz3bk1NAl7fmOnA5483dcKGx0hhv2lxJPTHeqK1kG5qudZZ4XzDujlRddDBE
-	2KWICrlg9aw5ZGBA==
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: [GIT pull] timers/urgent for 6.15-rc1
-Message-ID: <174393522830.2343710.9366104924015273132.tglx@xen13>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QQCW5BLI"
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2ff67f44fcaso677816a91.3;
+        Sun, 06 Apr 2025 03:28:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743935285; x=1744540085; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fmqSW6TwffvBILaVrMbvieozlgt4lB+aem/Hd3IBsbE=;
+        b=QQCW5BLIMcGNjhWMT5N+cW/g/DUkPN2FUH7KM/AbNe8cEaRPQ7JpTZIYGPjqv51lKe
+         TT7sDsP/KDsBLzFzVwNHqC37yCzM8pvAeWQmqDXnVT8ZHMYv8kFoqWcMbQPqFtjz5May
+         JL97aKNDzF1EOqYfiyCJsU+WMKOwHB3haX8Qh6V+DsDjCQfG8UrSj0WYyUVHqD54CJtE
+         B9wukJtDsNQvTPdnem94+0ru954T3IZ0rgLjW1NjIH47tCuX4/upWt3mBm70NBUPisXl
+         c4uKK5Teak2i8xU476xU75rpKgWgDArVO1LOyZvL8LTEs7wOqOOC0daSmLCtdUmRLhL1
+         C0zg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743935285; x=1744540085;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fmqSW6TwffvBILaVrMbvieozlgt4lB+aem/Hd3IBsbE=;
+        b=KYqkYseDCba+4UKR3fybZahfMs5IP8OzC4GR/EbLXXGF0cEYBLqGqX/xBwvAuYw4qo
+         5uE6akItdN/alJPbS1lpI+xWkWfJbeX/KjKRd755OXZUfj4r/BYxu9N807EXBaiRFooE
+         k+MdcBXLjUTdXgSvcfz4161PlTrp4zOuQKeK/r9SFvyll6XoO61ygumUkYW3bVOnq2Fn
+         7A3qaM4zq39biqJ/vn18Qa67L68L5gF+ZVSvP2har51TH+aV/p7Wo8hh5s6VKtS7wlqq
+         /3Pu8gvib4fcaC2oohvIHJkIe2jDmRjAoFwEd5U+Le2b4u0VAAb6qpMiy+v/SHE9Mlxl
+         yGVA==
+X-Forwarded-Encrypted: i=1; AJvYcCU7ow1l2KqcQYz5l+W7py5gIXhLnP42UwUJlANwy54U6tL1IIpuvzZKyXiQt6kxRy2i/mpHtmi5AOF9/m4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzcscIsibjfKgrXUAa5+wqto3g2oj7Rf9gj1pMue38wzqnnX67N
+	EpsT1FGavDGf8iVUExvU99kpmj5vPNIJ6eJA3ROzssOBxHTKlLAVf60mphkalJBRrGGmEgPtccW
+	uUOdYd8QjbaiFKcYnnQ2HsQbomnQ=
+X-Gm-Gg: ASbGnctpqHsbkGxVZB+QmEGQHQiODYtYsckUUrmK1qqSn5GWxLmA9E4Se/5TQxaoyo4
+	T0eUj44kX/aznWvtxzdkyjDpGuJu1bcXVDNlZKJ1M340s2FgunB3ejjxcfV92/Io6taJS/SAaVB
+	aLaIBra5rfb1SdMEIATrcL47huLg==
+X-Google-Smtp-Source: AGHT+IF7ARgNsZLghgpskglcRUiIaATRek2ORxtV326eeTWm9504H44zRqMPRhASvAbQow72w3FmMazxy4a+WSK1Z3I=
+X-Received: by 2002:a17:90b:534c:b0:306:b593:4551 with SMTP id
+ 98e67ed59e1d1-306b593465fmr1876804a91.6.1743935285091; Sun, 06 Apr 2025
+ 03:28:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Sun,  6 Apr 2025 12:27:24 +0200 (CEST)
+References: <95E3B7B9ECBFB14C+20250406034811.32347-1-xizheyin@smail.nju.edu.cn>
+In-Reply-To: <95E3B7B9ECBFB14C+20250406034811.32347-1-xizheyin@smail.nju.edu.cn>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Sun, 6 Apr 2025 12:27:53 +0200
+X-Gm-Features: ATxdqUFUStzc7fYH5Ev4BuWuM2EroFK-dCYOU1KuZ67NUjxNEQCNC6LnJK4UDrg
+Message-ID: <CANiq72m55Fi-XyFz=h7_3QNj+mA0N+E9Vo2_anLFyN1sr-FXMA@mail.gmail.com>
+Subject: Re: [PATCH] rust: convert raw URLs to Markdown autolinks in comments
+To: Xizhe Yin <xizheyin@smail.nju.edu.cn>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Miguel Ojeda <ojeda@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Linus,
+On Sun, Apr 6, 2025 at 5:51=E2=80=AFAM Xizhe Yin <xizheyin@smail.nju.edu.cn=
+> wrote:
+>
+> From: xizheyin <xizheyin@smail.nju.edu.cn>
 
-please pull the latest timers/urgent branch from:
+This should ideally match your Signed-off-by.
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers-urgent-20=
-25-04-06
+> Some comments in Rust files use raw URLs (http://example.com) rather
+> than Markdown autolinks [text](URL). This inconsistency makes the
+> documentation less uniform and harder to maintain.
+>
+> This patch converts all remaining raw URLs in Rust code comments to use
+> the Markdown autolink format, maintaining consistency with the rest of
+> the codebase which already uses this style.
+>
+> Link: Rust-for-Linux#1153
+> Suggested-by: Miguel Ojeda <ojeda@kernel.org>
 
-up to:  324a2219ba38: Revert "timekeeping: Fix possible inconsistencies in _C=
-OARSE clockids"
+I am really a newbie on the Markdown spec, but as far as I can tell,
+Markdown autolinks are the `<...>` ones:
 
+    https://spec.commonmark.org/0.31.2/#autolinks
 
-A revert to fix a adjtimex() regression:
+So what I was trying to suggest adding a few missing `<>` to a few raw
+URLs we have.
 
-The recent change to prevent that time goes backwards for the coarse time
-getters due to immediate multiplier adjustments via adjtimex(), changed the
-way how the timekeeping core treats that.
+By the way, the "Link" should be a full URL to the issue here :)
 
-That change result in a regression on the adjtimex() side, which is user
-space visible:
-   =20
- 1) The forwarding of the base time moves the update out of the original
-    period and establishes a new one. That's changing the behaviour of the
-    [PF]LL control, which user space expects to be applied periodically.
-   =20
- 2) The clearing of the accumulated NTP error due to #1, changes the
-    behaviour as well.
+Thanks  for the patch!
 
-It was tried to delay the multiplier/frequency update to the next tick, but
-that did not solve the problem as userspace expects that the multiplier or
-frequency updates are in effect, when the syscall returns.
-
-There is a different solution for the coarse time problem available, so
-revert the offending commit to restore the existing adjtimex() behaviour.
-
-Thanks,
-
-	tglx
-
------------------->
-Thomas Gleixner (1):
-      Revert "timekeeping: Fix possible inconsistencies in _COARSE clockids"
-
-
- kernel/time/timekeeping.c | 94 +++++++++++++--------------------------------=
---
- 1 file changed, 25 insertions(+), 69 deletions(-)
-
-diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
-index 929846b8b45a..1e67d076f195 100644
---- a/kernel/time/timekeeping.c
-+++ b/kernel/time/timekeeping.c
-@@ -682,19 +682,20 @@ static void timekeeping_update_from_shadow(struct tk_da=
-ta *tkd, unsigned int act
- }
-=20
- /**
-- * timekeeping_forward - update clock to given cycle now value
-+ * timekeeping_forward_now - update clock to the current time
-  * @tk:		Pointer to the timekeeper to update
-- * @cycle_now:  Current clocksource read value
-  *
-  * Forward the current clock to update its state since the last call to
-  * update_wall_time(). This is useful before significant clock changes,
-  * as it avoids having to deal with this time offset explicitly.
-  */
--static void timekeeping_forward(struct timekeeper *tk, u64 cycle_now)
-+static void timekeeping_forward_now(struct timekeeper *tk)
- {
--	u64 delta =3D clocksource_delta(cycle_now, tk->tkr_mono.cycle_last, tk->tkr=
-_mono.mask,
--				      tk->tkr_mono.clock->max_raw_delta);
-+	u64 cycle_now, delta;
-=20
-+	cycle_now =3D tk_clock_read(&tk->tkr_mono);
-+	delta =3D clocksource_delta(cycle_now, tk->tkr_mono.cycle_last, tk->tkr_mon=
-o.mask,
-+				  tk->tkr_mono.clock->max_raw_delta);
- 	tk->tkr_mono.cycle_last =3D cycle_now;
- 	tk->tkr_raw.cycle_last  =3D cycle_now;
-=20
-@@ -709,21 +710,6 @@ static void timekeeping_forward(struct timekeeper *tk, u=
-64 cycle_now)
- 	}
- }
-=20
--/**
-- * timekeeping_forward_now - update clock to the current time
-- * @tk:		Pointer to the timekeeper to update
-- *
-- * Forward the current clock to update its state since the last call to
-- * update_wall_time(). This is useful before significant clock changes,
-- * as it avoids having to deal with this time offset explicitly.
-- */
--static void timekeeping_forward_now(struct timekeeper *tk)
--{
--	u64 cycle_now =3D tk_clock_read(&tk->tkr_mono);
--
--	timekeeping_forward(tk, cycle_now);
--}
--
- /**
-  * ktime_get_real_ts64 - Returns the time of day in a timespec64.
-  * @ts:		pointer to the timespec to be set
-@@ -2165,54 +2151,6 @@ static u64 logarithmic_accumulation(struct timekeeper =
-*tk, u64 offset,
- 	return offset;
- }
-=20
--static u64 timekeeping_accumulate(struct timekeeper *tk, u64 offset,
--				  enum timekeeping_adv_mode mode,
--				  unsigned int *clock_set)
--{
--	int shift =3D 0, maxshift;
--
--	/*
--	 * TK_ADV_FREQ indicates that adjtimex(2) directly set the
--	 * frequency or the tick length.
--	 *
--	 * Accumulate the offset, so that the new multiplier starts from
--	 * now. This is required as otherwise for offsets, which are
--	 * smaller than tk::cycle_interval, timekeeping_adjust() could set
--	 * xtime_nsec backwards, which subsequently causes time going
--	 * backwards in the coarse time getters. But even for the case
--	 * where offset is greater than tk::cycle_interval the periodic
--	 * accumulation does not have much value.
--	 *
--	 * Also reset tk::ntp_error as it does not make sense to keep the
--	 * old accumulated error around in this case.
--	 */
--	if (mode =3D=3D TK_ADV_FREQ) {
--		timekeeping_forward(tk, tk->tkr_mono.cycle_last + offset);
--		tk->ntp_error =3D 0;
--		return 0;
--	}
--
--	/*
--	 * With NO_HZ we may have to accumulate many cycle_intervals
--	 * (think "ticks") worth of time at once. To do this efficiently,
--	 * we calculate the largest doubling multiple of cycle_intervals
--	 * that is smaller than the offset.  We then accumulate that
--	 * chunk in one go, and then try to consume the next smaller
--	 * doubled multiple.
--	 */
--	shift =3D ilog2(offset) - ilog2(tk->cycle_interval);
--	shift =3D max(0, shift);
--	/* Bound shift to one less than what overflows tick_length */
--	maxshift =3D (64 - (ilog2(ntp_tick_length()) + 1)) - 1;
--	shift =3D min(shift, maxshift);
--	while (offset >=3D tk->cycle_interval) {
--		offset =3D logarithmic_accumulation(tk, offset, shift, clock_set);
--		if (offset < tk->cycle_interval << shift)
--			shift--;
--	}
--	return offset;
--}
--
- /*
-  * timekeeping_advance - Updates the timekeeper to the current time and
-  * current NTP tick length
-@@ -2222,6 +2160,7 @@ static bool timekeeping_advance(enum timekeeping_adv_mo=
-de mode)
- 	struct timekeeper *tk =3D &tk_core.shadow_timekeeper;
- 	struct timekeeper *real_tk =3D &tk_core.timekeeper;
- 	unsigned int clock_set =3D 0;
-+	int shift =3D 0, maxshift;
- 	u64 offset;
-=20
- 	guard(raw_spinlock_irqsave)(&tk_core.lock);
-@@ -2238,7 +2177,24 @@ static bool timekeeping_advance(enum timekeeping_adv_m=
-ode mode)
- 	if (offset < real_tk->cycle_interval && mode =3D=3D TK_ADV_TICK)
- 		return false;
-=20
--	offset =3D timekeeping_accumulate(tk, offset, mode, &clock_set);
-+	/*
-+	 * With NO_HZ we may have to accumulate many cycle_intervals
-+	 * (think "ticks") worth of time at once. To do this efficiently,
-+	 * we calculate the largest doubling multiple of cycle_intervals
-+	 * that is smaller than the offset.  We then accumulate that
-+	 * chunk in one go, and then try to consume the next smaller
-+	 * doubled multiple.
-+	 */
-+	shift =3D ilog2(offset) - ilog2(tk->cycle_interval);
-+	shift =3D max(0, shift);
-+	/* Bound shift to one less than what overflows tick_length */
-+	maxshift =3D (64 - (ilog2(ntp_tick_length())+1)) - 1;
-+	shift =3D min(shift, maxshift);
-+	while (offset >=3D tk->cycle_interval) {
-+		offset =3D logarithmic_accumulation(tk, offset, shift, &clock_set);
-+		if (offset < tk->cycle_interval<<shift)
-+			shift--;
-+	}
-=20
- 	/* Adjust the multiplier to correct NTP error */
- 	timekeeping_adjust(tk, offset);
-
+Cheers,
+Miguel
