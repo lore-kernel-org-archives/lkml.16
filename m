@@ -1,158 +1,103 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE877154C00
-	for <linux-kernel@vger.kernel.org>; Sun,  6 Apr 2025 20:33:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B7232E62C
+	for <linux-kernel@vger.kernel.org>; Sun,  6 Apr 2025 20:35:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743971621; cv=none; b=VaQbXgOj4PNw8eV6ZXsCJ0dwF+1W7J+vOU8hxgVY7pmFOldhV2K8ajeOKQyiU04ycGQJSV0xIuX1otMCdWBEzdyuCckHOH4qWFM4EeQPF4AydnGNMWsSQx3AxPfq3hDHqzYocRh3icU8PnPuYQJBOi8NZACimZcclz2ba7CN9Ug=
+	t=1743971738; cv=none; b=H7aXU/kYiRVuzBJ9AqL5B5GjuMQyYt1cck5IuLxQi3GFr5ggL1YScvEPnG2y4ZgR+8TyLRk19ubGVrGoY/OaKnsBlcvXDWzQtDI7NWjoxSj2NV0v+U9Dqg91At9ExtPkiqtaOPGpElo7c7RO3CqokzjAh+7nN/KYIVzsQUAWp9Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743971621; c=relaxed/simple;
-	bh=DWya8jh2xYXaCJnsy7kqSiKaD73itXYuK6UFzHlZibY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iNx9Rdwso7DuDgpjXbya53imdDj8X0CUpE4gj+WG43Mx2MChpOg7tqHV9Yz44dkHwHWzPCfykNyKZSAkgUHiw9ilDPei27DFSkDlmUJhTBTfVAQWesl/Xcv9wook1PkVNwzlmkzIwoNFVsSXb3E2xG3F52ZhROag9DTE8FPjIpI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ImTvZbGc; arc=none smtp.client-ip=209.85.221.43
+	s=arc-20240116; t=1743971738; c=relaxed/simple;
+	bh=UbI8Gh0YS/za2rbwjxm9DmBDDl36qAmIDgTkA7RT64I=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=G2VkcFLyt6c0TcmPlVfLq8nrR19cJX5gGFl0GgNH6h8GaJfR7eOtKWBV625KmEwKmaXIji2KBTpB7FrVQNXwusVz8SD6zSzk4bF1JXzJWXwKAbkCLjLUr0Q5sY1aVwaV1HU0sMbDR/N3A9pOyFB6lYjZZ4F/9jaeO3+X2Bp8InA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WV7QwQl0; arc=none smtp.client-ip=209.85.221.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ImTvZbGc"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-39ac9aea656so3267456f8f.3
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Apr 2025 13:33:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WV7QwQl0"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-39127effa72so351723f8f.2
+        for <linux-kernel@vger.kernel.org>; Sun, 06 Apr 2025 13:35:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743971618; x=1744576418; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=VCGCDpg/t2fUSVKec7gttoFuR8UXHlXhKq+zwaUKf+Y=;
-        b=ImTvZbGcmN2jdytwRlcqg8IlmbaQNmT9jBtN0b9qDXUoG4kHr+NdVepnEtHsG4eSpf
-         s8R74LMKTUJRp+RDeGEPiemjUwE8rxrnJpoV1mFVOqWtgThh2L/Tn8JzRu+Ht2t0FDi2
-         cr4IyptAaRwmgy0pNZHZKAMxpJzAGXBY9oDFUEnn05D3rqpy6rdB+3i6wqwcmMBJ6FIo
-         DS0TbyRhzo64s5DH3+fWYEyKecHTca3MKKMJL1DFcnns9MwRsKXMMyxQEcFpIeOL4njB
-         zc4vfkY3VNcIH+vjNLNO21AW5OzOq2s7QK10PstJ96FIZKfKEZrQcI/PbjV1b6m++ZnX
-         0fSw==
+        d=linaro.org; s=google; t=1743971734; x=1744576534; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=vqE+fJoQoP5EIZsKKCKpe2hB/iRkIebJfJA+OiuqQwA=;
+        b=WV7QwQl0zGWbUNzrCOIl4wtl+cQmUZZRsXkkCgj92rTeCcPY+0btn4Vu7Wyd6JuIpB
+         bWpQF2miyqzbM90o5VrxZbdWbcYFvkxlhuV/HAfzY0Ln8hqAZWyMlDq4C7QQ3NEiUm43
+         32aHP8oCUjT70ikONK4pI8GXZmVtq3NRq0ryECKXG8ch1FoN0XsFAans2GrkbhbDWu4o
+         Yyxoc3L2gqMltlmnSY7E/9vZVEbAN5U4Qrye17/DZ6I/lklfqCV5S3GLyMwHP3Pz/w5Z
+         hmuGNR/7+sTI5PciHmmvsS+5fKJUcnS4/aSYimYqth0b+Jbq7MjtgGtnpmnPlxS1Jl5Y
+         zjnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743971618; x=1744576418;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=VCGCDpg/t2fUSVKec7gttoFuR8UXHlXhKq+zwaUKf+Y=;
-        b=fSkGM1M5K20diCHVpr0IJErNTauSa6WburY6N2bbAjpFwrXns2WclYSU7rDJ5oizmp
-         pR5rR77jy55i6jl1eY3WF5L4WJcwZQYd0kULwU/0i4RkRJM5/ClIsSBkyiN9t9E9hOly
-         6k9hNfOryN61RByWkej0yNdaa57JdJd4kL+2CMpF9FrNMTJTgdWA/nYMarqQaRiaXvf5
-         EHWMXuhQiP/eORjyvCcpoHxzpfAKnOH7lyzqDmpMeIZEkIv7pYNs4shRn+0Mba0ym/DA
-         E4IUE2dbRHK7LbIVuDOn+pa0+C+0+CgYHLz7IKw9udT1RRD31LaG0Gd5Helrn5p2kimY
-         8jBg==
-X-Forwarded-Encrypted: i=1; AJvYcCUVglsLqj03C0WE5UkQIJsj8IcD37zzuQrbzCZVhgFgzQL0ndNG1P097bhhqKbG6Pe6ST9F7Q6BN28FugM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyJQNW2RivDJ1bW3t7vwVb4AOyiki+x/yPugq01K5fcvpUE7K4C
-	lAqAXnsUpV5pnmUJAINE+65amXNJxwbpYX89d8MDDakQbaG1VMRR/XpJxn9Aed8=
-X-Gm-Gg: ASbGncvOX7mnk37UJAaCBKc4O0NwCBiXSB4BSswaGfCAvNixIqmh3pgdJD+SGJlhqEL
-	xehneoKkuU3E0dXQYJynpmqU3rI9lOFGC/4F8gT/OHtrsy1JRZPaqEPTjXGfVebgHZmNXAQYveI
-	1DVlNN24vCySb58w+Y+qrmJPJiZztqOez8os8pVvCKpiAwALok+Qg4hLGAwlwGtfOIDrLA54hPT
-	69tAr82tV343kYed/ifUol+LYNTECLQ24NWsNEvg5UyfXbfJDWJkDpfMOcDl9jwhd5z7J7wd03A
-	K30+wmk1FeABkUORDW7nL57BZnUVGF3PGSF3Bt+z0K7X3S0JA3A0Hmb/EtgHKJAeeIxvD7+JZfz
-	8tmaZ8mdBeS8iF0Aa/bk=
-X-Google-Smtp-Source: AGHT+IESJ8Rxdp/XXpq92L2e0M83vsXuVGRWnHDL4atp/VFNNs1LmSeanqZA4fRos5yy9QpaMq7APw==
-X-Received: by 2002:a05:6000:178c:b0:391:45e9:face with SMTP id ffacd0b85a97d-39d14662fc6mr8760585f8f.54.1743971617976;
-        Sun, 06 Apr 2025 13:33:37 -0700 (PDT)
-Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-39c301a6a60sm10022277f8f.29.2025.04.06.13.33.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 06 Apr 2025 13:33:36 -0700 (PDT)
-Message-ID: <60132403-d849-47a7-a11c-e829ffefc7a9@linaro.org>
-Date: Sun, 6 Apr 2025 22:33:35 +0200
+        d=1e100.net; s=20230601; t=1743971734; x=1744576534;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vqE+fJoQoP5EIZsKKCKpe2hB/iRkIebJfJA+OiuqQwA=;
+        b=ps8V8ZMjB4B1OfNHVb9s3j8B3qauUaoGnHOAKvps20lbv7UUvd2+psjUk6CaK5k1uF
+         Hs4IxG2HTNVof92PF3mw6H4G5W35IehOYSB0On6f4NAbfozCr3YN3lDNQrMSI81n1uJg
+         guBSLcU43Lh6OdnAQsRiboINg70oX8bOBseFzWMAlZfAEFRt9uF1sBZ+O9Hb5JcvA6+m
+         M1MxJ0PZn8Elknh9KeIUmlNQUK/Hy1biBPym1t/c1yZ1g5cdxky5YnD7w2VUgr9ValxE
+         cjBBo2HQh7M/6YcywR+pnde4PvfdtQTz4uW8d2NckdkXEcHamEp0gb1iYIGCcM7WXL3E
+         loGA==
+X-Forwarded-Encrypted: i=1; AJvYcCUT6aU74ou8nLerkNxONeQQXsi+tCH2ifhLw/pw8HudJ26nER3pneIut+54Hkb8Xy9D+r6aoiBq+gRanZA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwAVllft85OdBsfnS5G1VNcHPa+H2nFBnq4r2kv+uX6CGUt2MtT
+	Eg7dbbm7wMGm9yXlOsFirJa6sKnpCnz/ho/JYGX7wKNF0sRZHkxRMQLOv72KTtw=
+X-Gm-Gg: ASbGncvMrWkemJ1mtT0ic/UR6lkB0g4fwBhouSZMlhdJdgARZ1yK3n0p31l46ZCQWJD
+	eiphnPwhDjTtuh9If9T4C1AeaF7i1DLqh9stLe36xEny94m56adjU5Osr3OKU9/uBsdgr9XX2eZ
+	m5pKirMVIR8H4HpWyuI2/SE8wB0igjo8o5nxfmTJ45jEy9TscfR6WGF28eM4kAdXfEBO0X89vug
+	JVv6l+/DyIQNjwY8sU9ZL9TCfaRMSetWXenszM3EuKxibAzsEjAQWWk9rS10jNnZegdfX0radBh
+	QApt7rwde740E6AgdcdPAVyAQyjH3uGEviBg+ldTKHUy758RszHCYw==
+X-Google-Smtp-Source: AGHT+IGnWAB5N19dqxV+uf9H1b+D2cecFF/JdZzD4NafcpKENqOS32Y9IbVOYHktlCW19MYWLq1llQ==
+X-Received: by 2002:a5d:5983:0:b0:391:277e:c400 with SMTP id ffacd0b85a97d-39cba93faf2mr3373054f8f.13.1743971734540;
+        Sun, 06 Apr 2025 13:35:34 -0700 (PDT)
+Received: from shite.. ([178.197.198.86])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39d7c6d838bsm38022f8f.69.2025.04.06.13.35.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 06 Apr 2025 13:35:33 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	linux-watchdog@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH 1/2] watchdog: stm32: Fix wakeup source leaks on device unbind
+Date: Sun,  6 Apr 2025 22:35:30 +0200
+Message-ID: <20250406203531.61322-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] dt-bindings: watchdog: Add NXP Software Watchdog
- Timer
-To: Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>,
- wim@linux-watchdog.org
-Cc: linux@roeck-us.net, linux-watchdog@vger.kernel.org,
- linux-kernel@vger.kernel.org, S32@nxp.com, ghennadi.procopciuc@nxp.com,
- thomas.fossati@linaro.org, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, devicetree@vger.kernel.org,
- Vincent Guittot <vincent.guittot@linaro.org>
-References: <20250402154942.3645283-1-daniel.lezcano@linaro.org>
- <20250402154942.3645283-2-daniel.lezcano@linaro.org>
- <64b6d599-fe67-586a-e4b0-73d9b73499de@oss.nxp.com>
- <c570c99d-53f5-4f77-a730-42e5a2016dc5@linaro.org>
- <93d83df2-d3bc-e32d-70a6-158571504275@oss.nxp.com>
-Content-Language: en-US
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-In-Reply-To: <93d83df2-d3bc-e32d-70a6-158571504275@oss.nxp.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 04/04/2025 08:35, Ghennadi Procopciuc wrote:
-> On 4/3/2025 6:10 PM, Daniel Lezcano wrote:
->> On 03/04/2025 08:19, Ghennadi Procopciuc wrote:
->>> On 4/2/2025 6:49 PM, Daniel Lezcano wrote:
->>> [ ... ]
->>>> +examples:
->>>> +  - |
->>>> +    watchdog@0x40100000 {
->>>> +        compatible = "nxp,s32g2-swt";
->>>> +        reg = <0x40100000 0x1000>;
->>>> +        clocks = <&clks 0x3a>;
->>>> +        timeout-sec = <10>;
->>>> +    };
->>>
->>> The S32G reference manual specifies two clocks for the SWT module: one
->>> for the registers and another for the counter itself. Shouldn't both
->>> clocks be represented in the bindings?
->>
->> AFAICS, there are two clocks as described in the documentation for the
->> s32g2 page 846, section 23.7.3.3 SWT clocking.
-> 
-> This diagram illustrates the module clocks and their connections to the
-> S32GS system clocks. From the module's perspective, there are three
-> clocks: MODULE_CLOCK, REG_INTF, and COUNTER_CLOCK. Specifically, on
-> S32G2 SoCs, the first two are connected to XBAR_DIV3_CLK, while the
-> counter clock is linked to FIRC_CLK. Based on my understanding of the
-> device tree, this configuration should be listed as follows:
-> 
-> clocks = <&clks XBAR_DIV3_CLK>, <&clks XBAR_DIV3_CLK>, <&clks FIRC_CLK>;
-> clock-names = "module", "reg", "counter";
-> 
-> Configuring it this way allows flexibility to reuse the same clocking
-> scheme for other SoCs where the integration is performed differently. It
-> is possible that the 'module' and 'reg' clocks could be linked to two
-> distinct system clocks.
+Device can be unbound or probe can fail, so driver must also release
+memory for the wakeup source.
 
-That is something we can handle when the other SoC will be in the 
-process of being upstream, no ?
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ drivers/watchdog/stm32_iwdg.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I don't see how that can help with the current hardware we are 
-describing. What is the benefit ?
-
-I would prefer to stick to what is needed today
-
->> The module and the register clock are fed by the XBAR_DIV3_CLK which is
->> an system clock always-on.
-> 
-> XBAR_DIV3_CLK is not an always-on clock, meaning it is not available
-> during suspend, if that is what you mean by always-on. The SIRC can be
-> considered the only always-on clock on this device.
-> 
->>
->> The counter is fed by the FIRC_CLK which described as "FIRC_CLK is the
->> default clock for the entire system at power-up."
->>
->>  From my understanding, we should not describe the XBAR_DIV3_CLK as it is
->> a system clock.
->>
->> And the FIRC_CLK is only there to get the clock rate in the driver.
->>
-> 
-
-
+diff --git a/drivers/watchdog/stm32_iwdg.c b/drivers/watchdog/stm32_iwdg.c
+index 8ad06b54c5ad..b356a272ff9a 100644
+--- a/drivers/watchdog/stm32_iwdg.c
++++ b/drivers/watchdog/stm32_iwdg.c
+@@ -291,7 +291,7 @@ static int stm32_iwdg_irq_init(struct platform_device *pdev,
+ 		return 0;
+ 
+ 	if (of_property_read_bool(np, "wakeup-source")) {
+-		ret = device_init_wakeup(dev, true);
++		ret = devm_device_init_wakeup(dev);
+ 		if (ret)
+ 			return ret;
+ 
 -- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+2.45.2
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
