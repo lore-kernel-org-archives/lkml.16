@@ -1,161 +1,175 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BA1B218EAB;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BA014A24;
 	Sun,  6 Apr 2025 15:36:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743953789; cv=none; b=HPpebeZKrqBsSD1SuYVHZfpiauc91SKgi1G8hSaRniYeHXTq6fTZHiIccZZq5SZm30FTtEqTfUT0nQ/q0mX+rztFeQ/08SUuZNzz7K7K51oGgzbPKx06Tcr2o048B85m/Ihp3kqAX3uHu//PPK2V9mjN2nJ1PioNTP9iTUj24hE=
+	t=1743953790; cv=none; b=GhlOcLlG0zAzrOToFR+Q61YbX6U80Ddz22hIKQGR5N8c3ON7gNJIgP5EYcx6yxDI5u0srChEa0C9FMJQC0cbmTwfKYOXOoEgfX9aBaSZQ95ogi4r2xq9Sh41mHUVnCwTFOAWedMqJtASI5galh0ArGbIbLhKux6NECYRaOXXapw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743953789; c=relaxed/simple;
-	bh=TRkUE22EAW4BUbGjQ64uqpYI4lJKNEuA696+sk6eIco=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NK2tTJQIww54cPGJWDOpeWnZUZwsYOluIp37VXNMXvTdDmgRYCVG9aAnQ8519CQm35coCSXv5mjAeHSj2MTpDE00MAkisywydsonwXWwNcYuzAY3Yb5nxw0ZoWMxVa5X1t5SvrPP8ed83OiYMiiO6a3XiDwYXNLX2bNXwI/rMNw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C2dmxU4u; arc=none smtp.client-ip=209.85.167.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743953790; c=relaxed/simple;
+	bh=dAUz5nWt212a9mjO6jtVMFKmRV6J2U9WqhzJxntF4Hs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dgxeNcPu/5mv8sqKUI6YrYKjG2kAu/8us9XsG6iba1rUe8SRzaBDjei6LTWSZSONPePXTmTZUrxEYGOPsDuuFbr7rniLvDfYdAOfk/oipMn71kHwq2cSFKEpBxGawQ/tflje3hSHSjwkCxRr5jj08BEIm2xXG8G/0GvoO2Euxck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ngX8f879; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C2dmxU4u"
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-5493b5bc6e8so4504092e87.2;
-        Sun, 06 Apr 2025 08:36:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743953786; x=1744558586; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zkjZ88rah3dSogYkkyDVPh5HtEIzjtYwoEYxK470L24=;
-        b=C2dmxU4uWpEs45m6gNiA9e/oZttKMiSWRFMW2donD5AVBFkm/Mf6L4s99oH1bRjo5w
-         vf5iRauHH/GvX2UTqx8zGy+CZptJND8/KC2yCR6a3k91EU89phGRr5wQmiP/X/LiFTXY
-         C4weQ7bgVkzH/pv0M6t/BOxsFOXDG3FL63xQqYBUspQzNqmxbGuOY/msCiT5O6RxaC6N
-         /1YQeqs+qkMweGPK4f61Bg3Z2rkLaUzOJtT8kxuzCoibDh22VGu0lYL5r8Fa8PBmkXMZ
-         alZDflnCzreHzv+mVTlG5FMSXCkvm7Xf/kPlr/MZ3LuqN5uX/wIVESsSVY5TM+AQwYWt
-         Vl9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743953786; x=1744558586;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zkjZ88rah3dSogYkkyDVPh5HtEIzjtYwoEYxK470L24=;
-        b=imTAB89hJeSj+BqXrJkZBrL7aoODqQRkWvyMSlKCKXyDId/WBmAt2moqfcBasvOHdr
-         BBvz1C+NZoQ4oDRfbUEcVdBP7aC4X2tZ/RS0AHhGYwCPS+/RvBtgx4ymssiy87KGnAgh
-         TngE5Y/hmT6PmZtZKrmHE/C61X78MAN0zLAbF7k7MxsH9qvs6Ee6kMpnHzyTbyphfdCx
-         GghyjGtd1aYfqLCxiIqVYiw3pku7Qg5WHr+ETHMJgUY1PKNutu1tWJQ4yd3dZespJ5pb
-         WB7CHJ4Ti/1nJXBNvMeyqWHKCumsaA5NSyKjLQrCkA/Cv404YJzSZNEzGBFfKPN6waGu
-         ZZdQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU3M7vq6NL4Y1BlPoxMVV/4yaWHWjRPbQW8gvwbp+VlmvJ3lY3Y1jKzaZ8HXlSOtAvW7+iOrTYZDHPOmjY=@vger.kernel.org, AJvYcCUhP9ONZ5YOmGT1O1C0KDfaV5mhaUj8PE0mpnt6yFHYtRZaPaO5J+z2s7hBIE+zYNDREAIfkanQUpeDeV66@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx89S1/flqr1negLrtwYMgdb/1EwFOraUg/mRnPvbTLs8A4oWEa
-	TGIbUd5JBtyRqvtAbdpPz0yI5uZjHbNjLMQj4UV9Eg0gtQRGaWr8IpTSdzKsm0wTNIaM3BixhrG
-	KA/RloMoOYmdFTtxm7uRe2q+QOY8=
-X-Gm-Gg: ASbGncsQTEnQF2J+OkHB8t/Yl7c8pLs7aDw9d+XAFW8np2LHRIDxsTjXVYQOsZIqPHL
-	L4DEH59GXhLGOjjOOatHvLkH5K3w7FdawzRa0D45yXnLoW6d68TtNbAvMF5fjVc9Dje6QyorQkT
-	OMliTNnYAWUro/n/xXBAHTcjGHHQ==
-X-Google-Smtp-Source: AGHT+IENrOJnBHatVZdN1RRLNEn+AZCvPmiaUC7JbCeoAXaJgMSRuNFEFbdwdmvkc+9urj6y+xDuq5+lR/cY1mADtc4=
-X-Received: by 2002:a05:651c:158b:b0:30b:f775:bae0 with SMTP id
- 38308e7fff4ca-30f0c086c20mr30711211fa.36.1743953785312; Sun, 06 Apr 2025
- 08:36:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ngX8f879"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743953787; x=1775489787;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=dAUz5nWt212a9mjO6jtVMFKmRV6J2U9WqhzJxntF4Hs=;
+  b=ngX8f879oUmngaxT9HWcsjzVuKTuHOdAXvSNOH7AFxEn6cc6Yl3orvkK
+   QATs9gjkM0vmIC5GHFXiiqvozd8utvfjWbJR7ptK9cW/r1Vo4GWeDVWC6
+   d39qw3ZQ0PxnHVk444ZRYEOlmzQiqUGpqplNbOPh+QUirCRuxZxWCFLya
+   ba4el9voPV1IpkqmJZFEdl0vKZHN5/bKur0bAReUixPvpRzmShjVOTh2W
+   lQCJ4tUluT2EK5zrCV0+jM64BZwNezqcy9RyqOvbsl5XefKhraU5Zi7g2
+   yBHrC+Gxm+8VLQebSKReRLfNZ2+Y0vzuCEdRAULb2wexGiGYdKzrmQApI
+   w==;
+X-CSE-ConnectionGUID: 3AB8f23xTTqZttI50+siww==
+X-CSE-MsgGUID: W5Dn/mx1R5uF3JnMfl8Ogg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11396"; a="56709809"
+X-IronPort-AV: E=Sophos;i="6.15,193,1739865600"; 
+   d="scan'208";a="56709809"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2025 08:36:26 -0700
+X-CSE-ConnectionGUID: mnxmPAr3TL2JtJZVyVG/Yg==
+X-CSE-MsgGUID: zszONF3UTbiipkyM/QQNkA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,193,1739865600"; 
+   d="scan'208";a="132578217"
+Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
+  by orviesa003.jf.intel.com with ESMTP; 06 Apr 2025 08:36:24 -0700
+Received: from kbuild by b207828170a5 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u1S2n-0002fT-2D;
+	Sun, 06 Apr 2025 15:36:21 +0000
+Date: Sun, 6 Apr 2025 23:36:10 +0800
+From: kernel test robot <lkp@intel.com>
+To: Dzmitry Sankouski <dsankouski@gmail.com>,
+	Jean Delvare <jdelvare@suse.com>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Chanwoo Choi <cw00.choi@samsung.com>,
+	Krzysztof Kozlowski <krzk@kernel.org>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Dzmitry Sankouski <dsankouski@gmail.com>
+Subject: Re: [PATCH v3] hwmon: (max77705) add initial support
+Message-ID: <202504062351.7jqIfzxh-lkp@intel.com>
+References: <20250405-initial-support-for-max77705-sensors-v3-1-e5f64fccd005@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250404102535.705090-1-ubizjak@gmail.com> <CAK7LNATO1RfACvWhHJuLi-FYWMnSn6+Tp67-EZtVWNk+RCSTVQ@mail.gmail.com>
- <CAFULd4bx9BGKo_4kn14rsVr44otpdjpjn_o6=zMp8iu98f9Upg@mail.gmail.com>
- <CAK7LNATnactfA2U0CB2VcoE1eDc+bj=Jjye-Khsc3xG-iZ2XVQ@mail.gmail.com>
- <CAFULd4b25r5wf31DJputSOZhhMTrejQ_3-2P5rpeOL8H=4_mcA@mail.gmail.com> <CAK7LNAQVbwnnX5TJLmEShtmUtLCwr=rnZgwX9NoAke+PqzsqiA@mail.gmail.com>
-In-Reply-To: <CAK7LNAQVbwnnX5TJLmEShtmUtLCwr=rnZgwX9NoAke+PqzsqiA@mail.gmail.com>
-From: Uros Bizjak <ubizjak@gmail.com>
-Date: Sun, 6 Apr 2025 17:36:13 +0200
-X-Gm-Features: ATxdqUGAC3ok08g7nDCGm_BqUNPxvyKCYmF7ZT0xIFGxmZ5b6WeVsadMw6U5jx4
-Message-ID: <CAFULd4b2azU-oBOTTXgQ6ahkVeYWHTJrnmJ97vtLm3P6jMOeug@mail.gmail.com>
-Subject: Re: [PATCH] compiler.h: Avoid the usage of __typeof_unqual__() when
- __GENKSYMS__ is defined
-To: Masahiro Yamada <masahiroy@kernel.org>
-Cc: linux-modules@vger.kernel.org, linux-kbuild@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Paul Menzel <pmenzel@molgen.mpg.de>, 
-	Sami Tolvanen <samitolvanen@google.com>, Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250405-initial-support-for-max77705-sensors-v3-1-e5f64fccd005@gmail.com>
 
-On Fri, Apr 4, 2025 at 9:14=E2=80=AFPM Masahiro Yamada <masahiroy@kernel.or=
-g> wrote:
->
-> On Fri, Apr 4, 2025 at 11:37=E2=80=AFPM Uros Bizjak <ubizjak@gmail.com> w=
-rote:
-> >
-> > On Fri, Apr 4, 2025 at 4:06=E2=80=AFPM Masahiro Yamada <masahiroy@kerne=
-l.org> wrote:
-> >
-> > > > > > Current version of genksyms doesn't know anything about __typeo=
-f_unqual__()
-> > > > > > operator.  Avoid the usage of __typeof_unqual__() with genksyms=
- to prevent
-> > > > > > errors when symbols are versioned.
-> > > > > >
-> > > > > > There were no problems with gendwarfksyms.
-> > > > > >
-> > > > > > Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-> > > > > > Fixes: ac053946f5c40 ("compiler.h: introduce TYPEOF_UNQUAL() ma=
-cro")
-> > > > > > Reported-by: Paul Menzel <pmenzel@molgen.mpg.de>
-> > > > > > Closes: https://lore.kernel.org/lkml/81a25a60-de78-43fb-b56a-13=
-1151e1c035@molgen.mpg.de/
-> > > > > > Cc: Sami Tolvanen <samitolvanen@google.com>
-> > > > > > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > > > > > ---
-> > > > >
-> > > > >
-> > > > > Why don't you add it to the genksyms keyword table?
-> > > >
-> > > > It doesn't work, even if I patch it with an even more elaborate pat=
-ch
-> > > > (attached).
-> > > >
-> > > > I guess some more surgery will be needed, but for now a fallback wo=
-rks
-> > > > as expected.
-> > > >
-> > > > Uros.
-> > >
-> > > The attached patch looks good to me.
-> >
-> > FAOD - do you refer to the submitted one for compiler.h or to the one
-> > for scripts/genksyms/keywords.c? (The latter doesn't fix the warning,
-> > though).
->
->
->
-> You are still seeing the warnings because __typeof_unqual__
-> is not only the issue.
->
-> Hint:
->
-> $ make -s KCFLAGS=3D-D__GENKSYMS__  arch/x86/kernel/setup_percpu.i
-> $ grep  'this_cpu_off;'  arch/x86/kernel/setup_percpu.i
+Hi Dzmitry,
 
-I see.
+kernel test robot noticed the following build warnings:
 
-With my workaround, this_cpu_off is declared as:
+[auto build test WARNING on a4cda136f021ad44b8b52286aafd613030a6db5f]
 
-extern __attribute__((section(".data..percpu" "..hot.."
-"this_cpu_off"))) __typeof__(unsigned long) this_cpu_off;
+url:    https://github.com/intel-lab-lkp/linux/commits/Dzmitry-Sankouski/hwmon-max77705-add-initial-support/20250405-233235
+base:   a4cda136f021ad44b8b52286aafd613030a6db5f
+patch link:    https://lore.kernel.org/r/20250405-initial-support-for-max77705-sensors-v3-1-e5f64fccd005%40gmail.com
+patch subject: [PATCH v3] hwmon: (max77705) add initial support
+config: s390-allmodconfig (https://download.01.org/0day-ci/archive/20250406/202504062351.7jqIfzxh-lkp@intel.com/config)
+compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250406/202504062351.7jqIfzxh-lkp@intel.com/reproduce)
 
-while without workaround, the same variable is declared as:
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504062351.7jqIfzxh-lkp@intel.com/
 
-extern __seg_gs __attribute__((section(".data..percpu" "..hot.."
-"this_cpu_off"))) __typeof__(unsigned long) this_cpu_off;
+All warnings (new ones prefixed by >>):
 
-It looks that genksyms should be extended to handle (or ignore)
-__seg_gs/__seg_fs named address prefix. Somewhat surprising, because
-genksyms can process:
+>> drivers/hwmon/max77705-hwmon.c:116:3: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
+     116 |                 default:
+         |                 ^
+   drivers/hwmon/max77705-hwmon.c:116:3: note: insert 'break;' to avoid fall-through
+     116 |                 default:
+         |                 ^
+         |                 break; 
+>> drivers/hwmon/max77705-hwmon.c:66:35: warning: unused variable 'max77705_hwmon_regmap_config' [-Wunused-const-variable]
+      66 | static const struct regmap_config max77705_hwmon_regmap_config = {
+         |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   2 warnings generated.
 
-extern __attribute__((section(".data..percpu" "..hot.."
-"const_current_task"))) __typeof__(struct task_struct * const
-__seg_gs) const_current_task
 
-without problems.
+vim +116 drivers/hwmon/max77705-hwmon.c
 
-I'm sorry, but I'm not able to extend genksyms with a new keyword by myself=
-...
+    65	
+  > 66	static const struct regmap_config max77705_hwmon_regmap_config = {
+    67		.name = "max77705_hwmon",
+    68		.reg_bits = 8,
+    69		.val_bits = 16,
+    70		.rd_table = &max77705_hwmon_readable_table,
+    71		.max_register = MAX77705_FG_END,
+    72		.val_format_endian = REGMAP_ENDIAN_LITTLE
+    73	};
+    74	
+    75	static int max77705_read_and_convert(struct regmap *regmap, u8 reg, u32 res, long *val)
+    76	{
+    77		int ret;
+    78		u32 regval;
+    79	
+    80		ret = regmap_read(regmap, reg, &regval);
+    81		if (ret < 0)
+    82			return ret;
+    83		*val = mult_frac((long)regval, res, 1000000);
+    84	
+    85		return 0;
+    86	}
+    87	
+    88	static umode_t max77705_is_visible(const void *data,
+    89					   enum hwmon_sensor_types type,
+    90					   u32 attr, int channel)
+    91	{
+    92		switch (type) {
+    93		case hwmon_in:
+    94			if (channel >= ARRAY_SIZE(voltage_channel_desc))
+    95				return 0;
+    96	
+    97			switch (attr) {
+    98			case hwmon_in_input:
+    99			case hwmon_in_label:
+   100				return 0444;
+   101			default:
+   102				break;
+   103			}
+   104			break;
+   105		case hwmon_curr:
+   106			if (channel >= ARRAY_SIZE(current_channel_desc))
+   107				return 0;
+   108	
+   109			switch (attr) {
+   110			case hwmon_curr_input:
+   111			case hwmon_in_label:
+   112				return 0444;
+   113			case hwmon_curr_average:
+   114				if (current_channel_desc[channel].avg_reg)
+   115					return 0444;
+ > 116			default:
+   117				break;
+   118			}
+   119			break;
+   120		default:
+   121			break;
+   122		}
+   123		return 0;
+   124	}
+   125	
 
-Uros.
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
