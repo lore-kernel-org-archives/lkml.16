@@ -1,184 +1,106 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17CA61A3035
-	for <linux-kernel@vger.kernel.org>; Sun,  6 Apr 2025 21:32:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF12F17A30B
+	for <linux-kernel@vger.kernel.org>; Sun,  6 Apr 2025 21:34:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743975154; cv=none; b=CZ3afv5mgEo5b0nvh79RoawWDY8soU1u3DFe8Cvu+ep2a/PzBtWeDASvXM5n5V2EKtuVnlUeeJfJQJmzxjxbPuU+4KFBtOg1tAC0jewsqvzkLKOeVPudGOoty4OORZ2kivQMvZ5kZVbXPhI9R0NayqgpYUWPlL4hN5jqnE1DiWs=
+	t=1743975254; cv=none; b=cCkZ1iylfkNgPsD9zedvKflCM6OboPDH4aluhQuD5VknQDvVCUt4G/AbtXX/Fs3UUsJGnevIe7EZM5AyreDOmHDmXABw0jUo5XpablmpDABZb4wKMHntaVVvTPvr6+pEk65EBG2czQocKBP+vLIXtWI9v1Elpga7M6EuJHJWoIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743975154; c=relaxed/simple;
-	bh=S7UwqcJJoO5b9nBl8qVyAYQ7e87sp4oTdoEjMGzFTV0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LZor7NNiOelGB0UkA8LKaL2q8lHETM1da3j3nZs/pefOshr8xgj2IJ+p7SWajX16rMMHW2mVId7epUiZWSAFb6taLXejzIFcIgY5hOSEJn+lkRSlqHv37ABQvBhprYoMPdX/qcNbG6UDBCQwrfPDKZ4GOm3duUJqFVEp/qN/aNU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=SRXyOuRF; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1743975254; c=relaxed/simple;
+	bh=1thCHGzusRG1ZlrUII7P1iJSUsOlzC1ZFkjlxRYfWZA=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Fb0BpR2OQwiGhW5+proxl4QtgFb1ZML1wMt3j/iIkFkZdDYzJZc5/B0mvsRWpI6xodLesF4KnTX3JUsETor7BNSnCxlJZIm4n9FRrgs18C0IkaLu2kMRv3LCZYO/A8nohaOi8pdMOUAu3d8nXe1VhLrn6FGa2WCfTEPSmg+eYlk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MFNDMnRu; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="SRXyOuRF"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 536KeVrL012354
-	for <linux-kernel@vger.kernel.org>; Sun, 6 Apr 2025 21:32:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=0tjh5MMU03iFzSO9fdJiKaZd
-	Vjsqa8YnKVuGo7pzdWg=; b=SRXyOuRFW06+fUjDKuBWELpdmCLnwtTHKnvLay/3
-	SMy40zPH0ElyOgjyGKFWAJx9X0SP4Ggw+naoC5aWIAwhHooAEhzZfJMq3NNaMxJC
-	t1JcpH0DnlkqO8lol+GnekAXsWJt7oCE9fyTF9ZnoYHH7r6aDzKWos0r77gFCTUK
-	DgNlp3+EvS5eWafLR+rgzP7HEfWP98AByJB0gQIbBBQT/18ipYEVeP0HG3vKL0zG
-	+hdqVSkpkCd2oKSKn8OShkzTDyGX9WHtTHJ6nrwmwO41hTK/LdoQVK0qG4wf6Ma7
-	CXfIKQVr3ehdmedDamOfN6+peC56lsv1brz4fuAzO/yHqw==
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twbe2c9j-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Sun, 06 Apr 2025 21:32:31 +0000 (GMT)
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7c3c8f8ab79so597919585a.2
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Apr 2025 14:32:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MFNDMnRu"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2240aad70f2so295335ad.0
+        for <linux-kernel@vger.kernel.org>; Sun, 06 Apr 2025 14:34:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1743975252; x=1744580052; darn=vger.kernel.org;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=bBPMncQ6TC7hw2oKsOjfoaHvrckjy1WxXt515TcLyfI=;
+        b=MFNDMnRuyueVh6iVaVV4O3hMRKCYZWOjD/jUDThbaeOhTcEAK438Zbk/QUhGpFNSnG
+         c7fryo3DSaA70vmFJZu+kF6PcwGST6wduQItZdgYqmim4qukZAJmeKXy1AFbuWplBbXS
+         fBBONgcbBjq/3i0KMV09uGX2DGnOlkWCMcKQv8w6JYwfIQBGAlyqQURVgjD46Pt4+uL6
+         opk1CBxusVxNBRiepx9p/NOXo6wrVoFmR9Ea9OD6/0bkK/JZgl3KoDQfUoZBNAr6gjpA
+         Tq958V7a6R6sfbTCN+wTHBHhPegXbeEGcPc4f2r2J1ZE7zrt4mrM6BfHX8bBK38npmks
+         atoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743975150; x=1744579950;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0tjh5MMU03iFzSO9fdJiKaZdVjsqa8YnKVuGo7pzdWg=;
-        b=G0G/4K9ev9xkgkHw2bYx1HW5BC+Qzx7jMbrxBLv1Spd4IyF4Mk4qSddNVrQbOxlqQN
-         F24me6o4TWPbnG76kR7PNwlVnlxWJ/YSYKGixyjpdF1QpgRxDmQtEe6k1ZAAay6Gy/6Q
-         Ubj13JfNfS1GUQTscrB8M+ALbilQCA1ymuv/pMSSZiREdOfyruN/7du8uICF3rTdj7Lr
-         y20xehESfvRpRKLh+oISu3BQjaIV9XkgSD+s1qT/V5S4ChwgNBDGCPVQxwoKZ9T5OCSN
-         bXYtlrUIZIHBQFDTzaf6s+6PLQdpT1tC6mocnV9OsAHTPCYuJ1e3ii5li2hO/INwYM61
-         dp6A==
-X-Forwarded-Encrypted: i=1; AJvYcCVQp9tYvpWzOMdWgqew2T3c6L46LKf/VWmOh9esZRkZWVRPqP2YlLOafUenAlVhFzazsv4rveKKS8pNOvw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyNLouQ3lheMe5W82W2iEH3YRmSaISs5azQUWrcY0RwyxxQ+1wt
-	ucEyaXl/VcrOFdHZVItRv/BfRLTyzoTSk3s02wT824eX4Z3txZ+ivPsDzUdYfiQofF/bpc1GuMK
-	iixnCpx3zkeV8k18D71PKizYqy/ig4kLQrPjDNyrVPavqDYK+YpeBmfNNpBXg/mk=
-X-Gm-Gg: ASbGncsegc7O9Oh0qe5iQzIAIl/qZHVfQoHlYNpQVMTWBEY1PdVInZOTeDw6S6S/9Hq
-	MEyqhGa9VY/UpUJdnI6VD0mLUVIWSFRTICp4EQnu/4PGBax/LXYIEOLp28ChcugP+9zW+NYx0MA
-	4Vd4wPTI0gZevY+xH8GpJzFK4FfVmyUbHHTBABMgo7HR2pUoOPynbk/5Vz1SbFHIVmJ9dQi1u5p
-	t3qCt34E/rJvjojwbzjCybc+sTEfhTuoAKeofawZd7Szhj3vE+oONZ4ZLy+V9rNytV+ynuKSRoe
-	M3Dbvlb3acu0iJQDbpZWiX6kw8r0kLpwhzCkZ3wcPl/KzSGKt5h+jJxXzsXCTNKzfRjJEITchB2
-	8oFw=
-X-Received: by 2002:a05:620a:4154:b0:7c5:49d6:733a with SMTP id af79cd13be357-7c77dd61f77mr1098207785a.21.1743975150504;
-        Sun, 06 Apr 2025 14:32:30 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGPxi/Cy4ZI0jgCL/m186L4t9f/4IWHa+q0KVz28z2I5NuRx0R5Dr+tUUUDfiYp2TRM9UhMHA==
-X-Received: by 2002:a05:620a:4154:b0:7c5:49d6:733a with SMTP id af79cd13be357-7c77dd61f77mr1098205685a.21.1743975150149;
-        Sun, 06 Apr 2025 14:32:30 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30f031bcfcasm14148611fa.79.2025.04.06.14.32.28
+        d=1e100.net; s=20230601; t=1743975252; x=1744580052;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bBPMncQ6TC7hw2oKsOjfoaHvrckjy1WxXt515TcLyfI=;
+        b=kr6kZxlUjaTgbcCRtZJDhweaqN9W6jq2l7nkqUfkHyvYBcN2Z2+2e5TIoCEdxGw1LG
+         W6ydJpV1HX1FTidHC8GXyv7SJL6Huw9Eh4zWpuhHffBsq3bXpspU3iX1Y8Pkp9+fPT2z
+         I6VPIyZYxyPWOJIi06uQZ4u453iIknKVTtcHXZUwuNfF/5vGxlSi4nrqY3oK/Irmu8bR
+         3vjsM2A9JQK5UaxMDbz5nr76KOvD1x7otgWM3xVmlKYlGUDQzdJEyxaBKGDp89jqasTq
+         gx/KaJ4Om6UT0SmZG3Wf2BzipJLcQ8orOVIy62Rt22XbGkTqd6UUbd7gamteSzY1NF/b
+         X04g==
+X-Forwarded-Encrypted: i=1; AJvYcCXzp60/HSTJg7+RGpxRuqwqC+P6SZZU3Sdcj/qADzvDmTzN9NFbUQHvZpZPLL+fu3BrtfLJqMz5tE0fBIQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyOltc73EezNQtCsJTqhJENo+25veQWNsFdPYHHtgUVyKa957J3
+	usGn/vyYD34/9U1hZBhxZJgVq+GvkzsCTaNJp9XveJt7kZDprx+4ZDwZBwdqLi5pBXZnR08cMT0
+	rmQ==
+X-Gm-Gg: ASbGncu4frrSyoqGmdESqCWL17wosCs6i9aw+1EVPmafLSbu0dhK8V6qVsI5zSQFPrB
+	qkjmOGp7KLun+XOWwHhx/l01Rk1lEA0zrkYjGvVWVtFChArWxZYFoJ9A3Wf9Y1CkjCjzU/8oUML
+	66eH8sHZRwcA/RGRBrWBt5M1ZR84pn7Ifq+t9HAqL4ZHSSWWstkStBX2O5TCNUGDdoSrw2odq0i
+	KvdpYM8Ei+wY4qHHJnvYJVmY79iAzfswPyy4S78pUvFFF2SJlZa+CCQxJzauL/C+EcYNlwD7Uyu
+	zS0JSD9+tiCszHfrXIuoKWREn0HAXt3AnvssK5XwFJ/UOzI5te8Hvu+uiB8W+FIJ2ZvRtH0jXjH
+	kDDhNZmk1VS7//l9O5eoH5vj2GBByMmHsqNRa
+X-Google-Smtp-Source: AGHT+IHiRINMzxnjTrrhfoZBhhxSAkmIUO6KvhjzqPNAjX/wOWw4Id8jKa17QVFoK7hXxJREv7ldBA==
+X-Received: by 2002:a17:902:d591:b0:21f:631c:7fc9 with SMTP id d9443c01a7336-22a95daaff5mr3142305ad.0.1743975251735;
+        Sun, 06 Apr 2025 14:34:11 -0700 (PDT)
+Received: from [2a00:79e0:2eb0:8:2005:ca9c:736:e1f6] ([2a00:79e0:2eb0:8:2005:ca9c:736:e1f6])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-229785c27b3sm68020535ad.97.2025.04.06.14.34.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Apr 2025 14:32:29 -0700 (PDT)
-Date: Mon, 7 Apr 2025 00:32:27 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Pengyu Luo <mitltlatltl@gmail.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] clk: qcom: rpmh: make clkaN optional
-Message-ID: <lt2v3pw4byfdmmgwo35sppmempnyeeu4hsl6eoula5o4h7q22j@z7dmakunwnuk>
-References: <20250404072003.515796-1-mitltlatltl@gmail.com>
+        Sun, 06 Apr 2025 14:34:10 -0700 (PDT)
+Date: Sun, 6 Apr 2025 14:34:09 -0700 (PDT)
+From: David Rientjes <rientjes@google.com>
+To: Michal Hocko <mhocko@kernel.org>
+cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, 
+    Rik van Riel <riel@surriel.com>, Johannes Weiner <hannes@cmpxchg.org>, 
+    Roman Gushchin <roman.gushchin@linux.dev>, 
+    Shakeel Butt <shakeel.butt@linux.dev>, Muchun Song <muchun.song@linux.dev>, 
+    cgroups mailinglist <cgroups@vger.kernel.org>, 
+    LKML <linux-kernel@vger.kernel.org>, Michal Hocko <mhocko@suse.com>
+Subject: Re: [PATCH] memcg, oom: do not bypass oom killer for dying tasks
+In-Reply-To: <20250402090117.130245-1-mhocko@kernel.org>
+Message-ID: <ad2ce9e6-1651-8170-f944-1ba4ce4c14c9@google.com>
+References: <20250402090117.130245-1-mhocko@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250404072003.515796-1-mitltlatltl@gmail.com>
-X-Proofpoint-GUID: vYp5hsfzlWo_D3k5PIfqbhBnCjS3me6r
-X-Authority-Analysis: v=2.4 cv=T7OMT+KQ c=1 sm=1 tr=0 ts=67f2f2ef cx=c_pps a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=pGLkceISAAAA:8 a=AZcm_5yHBFW_TKN9jTcA:9 a=CjuIK1q_8ugA:10 a=PEH46H7Ffwr30OY-TuGO:22
-X-Proofpoint-ORIG-GUID: vYp5hsfzlWo_D3k5PIfqbhBnCjS3me6r
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-06_06,2025-04-03_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- mlxlogscore=818 lowpriorityscore=0 adultscore=0 phishscore=0 bulkscore=0
- mlxscore=0 malwarescore=0 suspectscore=0 priorityscore=1501 spamscore=0
- clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504060157
+Content-Type: text/plain; charset=US-ASCII
 
-On Fri, Apr 04, 2025 at 03:20:02PM +0800, Pengyu Luo wrote:
-> On sm8650, clkaN are missing in cmd-db for some specific devices. This
-> caused a boot failure. Printing log during initramfs phase, I found
+On Wed, 2 Apr 2025, Michal Hocko wrote:
+
+> From: Michal Hocko <mhocko@suse.com>
 > 
-> [    0.053281] clk-rpmh 17a00000.rsc:clock-controller: missing RPMh resource address for clka1
+> 7775face2079 ("memcg: killed threads should not invoke memcg OOM killer") has added
+> a bypass of the oom killer path for dying threads because a very
+> specific workload (described in the changelog) could hit "no killable
+> tasks" path. This itself is not fatal condition but it could be annoying
+> if this was a common case.
 > 
-> Adding the optional property to avoid probing failure which causes
-> countless deferred probe. In the downstream tree,similar workarounds
-> are introduced for sm7635, sm8550, sm8635, sm8650, sm8750.
-
-Nit: SM7635, SM8550, etc.
-
+> On the other hand the bypass has some issues on its own. Without
+> triggering oom killer we won't be able to trigger async oom reclaim
+> (oom_reaper) which can operate on killed tasks as well as long as they
+> still have their mm available. This could be the case during futex
+> cleanup when the memory as pointed out by Johannes in [1]. The said case
+> is still not fully understood but let's drop this bypass that was mostly
+> driven by an artificial workload and allow dying tasks to go into oom
+> path. This will make the code easier to reason about and also help
+> corner cases where oom_reaper could help to release memory.
 > 
-> Tested-by: Pengyu Luo <mitltlatltl@gmail.com> # Oneplus Pad Pro / Oneplus Pad 2
-
-I'm not so sure about this tag. You are expected to test the patch that
-you are submitting.
-
-> Signed-off-by: Pengyu Luo <mitltlatltl@gmail.com>
-> ---
->  drivers/clk/qcom/clk-rpmh.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
+> [1] https://lore.kernel.org/all/20241212183012.GB1026@cmpxchg.org/T/#u
 > 
-> diff --git a/drivers/clk/qcom/clk-rpmh.c b/drivers/clk/qcom/clk-rpmh.c
-> index c7675930f..68704c4f0 100644
-> --- a/drivers/clk/qcom/clk-rpmh.c
-> +++ b/drivers/clk/qcom/clk-rpmh.c
-> @@ -66,6 +66,8 @@ struct clk_rpmh {
->  struct clk_rpmh_desc {
->  	struct clk_hw **clks;
->  	size_t num_clks;
-> +	/* rpmh clock clkaN are optional for this latform */
+> Suggested-by: Johannes Weiner <hannes@cmpxchg.org>
+> Signed-off-by: Michal Hocko <mhocko@suse.com>
 
-RPMh, platform
-
-> +	bool clka_optional;
->  };
->  
->  static DEFINE_MUTEX(rpmh_clk_lock);
-> @@ -648,6 +650,7 @@ static struct clk_hw *sm8550_rpmh_clocks[] = {
->  static const struct clk_rpmh_desc clk_rpmh_sm8550 = {
->  	.clks = sm8550_rpmh_clocks,
->  	.num_clks = ARRAY_SIZE(sm8550_rpmh_clocks),
-> +	.clka_optional = true,
->  };
->  
->  static struct clk_hw *sm8650_rpmh_clocks[] = {
-> @@ -679,6 +682,7 @@ static struct clk_hw *sm8650_rpmh_clocks[] = {
->  static const struct clk_rpmh_desc clk_rpmh_sm8650 = {
->  	.clks = sm8650_rpmh_clocks,
->  	.num_clks = ARRAY_SIZE(sm8650_rpmh_clocks),
-> +	.clka_optional = true,
->  };
->  
->  static struct clk_hw *sc7280_rpmh_clocks[] = {
-> @@ -847,6 +851,7 @@ static struct clk_hw *sm8750_rpmh_clocks[] = {
->  static const struct clk_rpmh_desc clk_rpmh_sm8750 = {
->  	.clks = sm8750_rpmh_clocks,
->  	.num_clks = ARRAY_SIZE(sm8750_rpmh_clocks),
-> +	.clka_optional = true,
->  };
->  
->  static struct clk_hw *of_clk_rpmh_hw_get(struct of_phandle_args *clkspec,
-> @@ -890,6 +895,11 @@ static int clk_rpmh_probe(struct platform_device *pdev)
->  		rpmh_clk = to_clk_rpmh(hw_clks[i]);
->  		res_addr = cmd_db_read_addr(rpmh_clk->res_name);
->  		if (!res_addr) {
-> +			hw_clks[i] = NULL;
-> +
-> +			if (desc->clka_optional && !strncmp(rpmh_clk->res_name, "clka", sizeof("clka") - 1))
-
-Carriage return after &&
-
-> +				continue;
-> +
->  			dev_err(&pdev->dev, "missing RPMh resource address for %s\n",
->  				rpmh_clk->res_name);
->  			return -ENODEV;
-> -- 
-> 2.48.1
-> 
-
--- 
-With best wishes
-Dmitry
+Acked-by: David Rientjes <rientjes@google.com>
