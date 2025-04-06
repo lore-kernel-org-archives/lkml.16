@@ -1,113 +1,85 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB746191461;
-	Sun,  6 Apr 2025 22:37:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9322186E2D
+	for <linux-kernel@vger.kernel.org>; Sun,  6 Apr 2025 22:43:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743979047; cv=none; b=EC02aKT+SHINmx3mFLn+pN++f5tev2g3rbUaUDVHe3W5A6yjfLCA0QuktCmZX7C698uahWlHryAUNq0tjpuoriZ+ZAzBdf/+kQVqveLtn7SZECgki39o/g3BD2Qm8L11NRGPCGiJOjRSybu1T9YzRrZ7HCsQHMl6bDTN24W1CWM=
+	t=1743979431; cv=none; b=tjjc91HLQuLYVttHdzkhsFpJOrDvIF9Zs14qvyP5yIKw0GPcAFXIKJosrslZ/8FF38Qn8nMnSJc+hJNmTGUtdJRZfcn+1edrN9xp/k0YEj4seKVKBsVD2G9Mv7ea8VS5Wjf4FKjp9qeI1Zwov+bSLjQnWR1mW8ZsjC7IfzRMTN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743979047; c=relaxed/simple;
-	bh=BEZuxW/tPkj0TNRpDw+niTh+GANp78QImBZ+kCA3ghE=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=Ir3rcOt+u/lWGy/lSwDFRLMMCQS7M8cd/5//vjFunNV+3DgzRkjGGj/fdg8O/l0YPGQ9tfs0nCzDov5zZfsuuHrPdRGzrA6gPd0+jX74j/0Hv4VTj06lAuhfmnCJ0FZLFzqy4sVJkcqB7rAS8vAv5D2rBqye+TiuEYMYYB7Jhrk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DCgHd3s2; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743979431; c=relaxed/simple;
+	bh=PPnslXylEhTtIqcZP1zA7VjxCnH22TgyFdaY9P/3FW8=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=mzvRMQPTQGGwIZuTGPDw8f2gGlXNIGWgToHl6PnU1EV4I86d1N5QrUGzsQViotYs7G7h9ShrKU60cIiPofIjgRsweA0rEbpyUN7jnhMySQdRayLNgAem4lnEJ2VC6UjyLKYIV7kSz8VlOjNTZyCz5ZvzaXaPWMajNuSIUdxk02Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=wuPMvxVC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DCgHd3s2"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ac73723b2d5so790810966b.3;
-        Sun, 06 Apr 2025 15:37:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743979043; x=1744583843; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=WHqUPfV6WMZ2X/rA9+CQ7dYZUn1Zy97wM7iX0HT+Yec=;
-        b=DCgHd3s28Vvnh+c9coJWRoHifVeGW0XquS/eDLC3+67SpGB8SxZoyENSFvBuSuVCoh
-         xJTHs1I/I3t4nxtKQ22ML4PUqMk6wSQWbkNKThLjmZpWV2sC4Y61AWIAoifAj4rL9LOi
-         UiBYQwbGIhrVcP4lAaMRSIa/v7OuMhAXUO8ZPoDevkpxo+g5K34QbuyASYj42YMuoyzU
-         YzF0VXW/X5vKhdIVtVNRFG1c+wM+QjHgXt+k2PSnqqIBDKmYaZvhFQXnGV+xk1v06Oi9
-         OY+VbtFQrRwvcZAw3arEjXzj84myXPkl2alQv5TCs0tPmzro6zgOOJvQgDfXmfbmSoCo
-         0Aww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743979043; x=1744583843;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WHqUPfV6WMZ2X/rA9+CQ7dYZUn1Zy97wM7iX0HT+Yec=;
-        b=FJsmo8JSW3Xg9Gaouvocu57KM1AzB7Xk6dWj2vR5VydtE58KBxhcge8Xt9hZSxkd0Z
-         CTZKPfSXvun0QcqsOKij0SD8Tz5Y+kd9nFQe6ys13j9HnJW6LTsXbmkpGx7T6d33+PJ7
-         kXxrlz1UwQfBYbc7yiCIgsZBejY2/IC/HTOI90qBedUTsjHQUxqiunt9PuDigH9wH+4K
-         ZgD1cAwT0RdaM/jFsB/cQThrq9X/5xxqTStEbyZtmucCNc33L8EOz0xbik4u77y9Nf/t
-         Kb7m58MvecxJsJkDW/dVFBYiVTtoBVqkVE2zoIGBnGqs1zURDWIPszCErnKS64GkdU0b
-         AzQw==
-X-Forwarded-Encrypted: i=1; AJvYcCVjAcJuoqJpcQet9hVzDsnpRYiqGqTzjllSZsHbzxvt05fkF/hlZ4XYYQ6xzXHBo9Hu7kHIS7+846u3Bqyv@vger.kernel.org, AJvYcCWQEBJj8DCLwvv27d+TFslkmLdUV55rUnSZyNjNuD8I1anqslh33Ks2yk/D+ckYg2o92YN35euxbXcK@vger.kernel.org, AJvYcCXF/w/73U+Ibh3d8TRWHI2uiQkw/+Qe1hOKb8WQOngqqTrfgHatLRtB+KRVAoZb1nF/e4oWRxfH1SELwyibJV0=@vger.kernel.org, AJvYcCXZdXf7/S43yyVfs5C4f/mt4G7SV/FfQ9GzCsMs5xPEKCBk5BotlNRvrn47T0b2GYtJW3L9cNLM/+Rh@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx0kNv1mGo/KTgkmUWC/pub/wZc7aiEgn26v5AqtxJsKRLnnvPe
-	N4Nln0y0yjfIk4Kbr8sjzqTsG5K1gKIiDlwKuXWLzA2yg64ZhI4j
-X-Gm-Gg: ASbGncs5eLSiyCje8etqDpdiid0mOE+VDXOg6b9XsQyhsDC3QSousVKelhowGF9FPnL
-	Jp+g98ono87On/p0UW7HfD3jb75x7hAOtevXIO2pXW11J6aayF1NTMIxVlxdu19tgXWEbtNSH06
-	DXFX3iodpi/RQln0Wx6rzb4bffBLf3NgaJyVoZ0R7P8cluYyfGazJPqPF1/dGtw1TIWzLmbR+Rj
-	OxaXIyvEb95XnDmjR9I+TfO+VVZ/858nRWaVzKDQYAiWV1DnJNaI57en90YSKgSexUIo7uvv7wM
-	J/R0GbfJRlTYy+2R9ov/QJzqQbNAmg2tqG4GPtwEYwJo5DRhlOi2/Q==
-X-Google-Smtp-Source: AGHT+IGH/JCb2haLK8M6Hg83Hl1Ir/URcGcMma3Wfc+3EBUya5WF+wecNHln934OF3SpETZoePDA2Q==
-X-Received: by 2002:a17:906:c110:b0:abf:607b:d0d with SMTP id a640c23a62f3a-ac7e71b25e7mr739510166b.16.1743979042671;
-        Sun, 06 Apr 2025 15:37:22 -0700 (PDT)
-Received: from [192.168.0.50] ([79.119.240.177])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7bfe5c804sm649423466b.15.2025.04.06.15.37.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 06 Apr 2025 15:37:22 -0700 (PDT)
-Message-ID: <14513d89-1ee3-4d90-bd26-1d761714a8a9@gmail.com>
-Date: Mon, 7 Apr 2025 01:37:17 +0300
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="wuPMvxVC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0044AC4CEE3;
+	Sun,  6 Apr 2025 22:43:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1743979431;
+	bh=PPnslXylEhTtIqcZP1zA7VjxCnH22TgyFdaY9P/3FW8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=wuPMvxVCE8+4aiqtGExDnopvHAcsq6uBA8+PJ8FwpBrL+wivAF84r8joG6Pjyaz5+
+	 q10idyUKzG83mIdwq69Ww9afBWPyfglXGwhLXi//rJALgNHz2b/v0TjRSVNH/gJ83j
+	 B2LIp3iygXgBNHkRv5lx6JxN5sqeM31Gs38ANEAM=
+Date: Sun, 6 Apr 2025 15:43:50 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
+ "Liam R . Howlett" <Liam.Howlett@oracle.com>, Pedro Falcato
+ <pfalcato@suse.de>, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6.15] mm/vma: add give_up_on_oom option on modify/merge,
+ use in uffd release
+Message-Id: <20250406154350.c548ca25ef60b41fc86d5942@linux-foundation.org>
+In-Reply-To: <20250321100937.46634-1-lorenzo.stoakes@oracle.com>
+References: <20250321100937.46634-1-lorenzo.stoakes@oracle.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Bitterblue Smith <rtl8821cerfe2@gmail.com>
-Subject: Re: [PATCH 0/2] Onboard USB device support for RTL8188 2.4GHz USB
- WiFi module
-To: j.ne@posteo.net, Johannes Berg <johannes@sipsolutions.net>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, =?UTF-8?Q?J=2E_Neusch=C3=A4fer?=
- <j.neuschaefer@gmx.net>, Matthias Kaehlcke <mka@chromium.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
- Jes Sorensen <Jes.Sorensen@gmail.com>, linux-wireless@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-usb@vger.kernel.org
-References: <20250403-rtl-onboard-v1-0-10ca9a6a4ee0@posteo.net>
-Content-Language: en-US
-In-Reply-To: <20250403-rtl-onboard-v1-0-10ca9a6a4ee0@posteo.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 03/04/2025 17:07, J. Neuschäfer via B4 Relay wrote:
-> This patchset adds rtl8188 (usbbda,179) to the onboard_usb_dev driver.
+On Fri, 21 Mar 2025 10:09:37 +0000 Lorenzo Stoakes <lorenzo.stoakes@oracle.com> wrote:
 
-RTL8188 could mean at least five different chips (C, E, F, G).
-Should you use a more specific name like RTL8188EU?
+> Currently, if a VMA merge fails due to an OOM condition arising on commit
+> merge or a failure to duplicate anon_vma's, we report this so the caller
+> can handle it.
+> 
+> However there are cases where the caller is only ostensibly trying a
+> merge, and doesn't mind if it fails due to this condition.
+> 
+> Since we do not want to introduce an implicit assumption that we only
+> actually modify VMAs after OOM conditions might arise, add a 'give up on
+> oom' option and make an explicit contract that, should this flag be set, we
+> absolutely will not modify any VMAs should OOM arise and just bail out.
+> 
+> Since it'd be very unusual for a user to try to vma_modify() with this flag
+> set but be specifying a range within a VMA which ends up being split (which
+> can fail due to rlimit issues, not only OOM), we add a debug warning for
+> this condition.
+> 
+> The motivating reason for this is uffd release - syzkaller (and Pedro
+> Falcato's VERY astute analysis) found a way in which an injected fault on
+> allocation, triggering an OOM condition on commit merge, would result in
+> uffd code becoming confused and treating an error value as if it were a VMA
+> pointer.
+> 
+> To avoid this, we make use of this new VMG flag to ensure that this never
+> occurs, utilising the fact that, should we be clearing entire VMAs, we do
+> not wish an OOM event to be reported to us.
+> 
+> Many thanks to Pedro Falcato for his excellent analysis and Jann Horn for
+> his insightful and intelligent analysis of the situation, both of whom were
+> instrumental in this fix.
+> 
+> Reported-by: syzbot+20ed41006cf9d842c2b5@syzkaller.appspotmail.com
+> Closes: https://lore.kernel.org/all/67dc67f0.050a0220.25ae54.001e.GAE@google.com/
+> Fixes: 47b16d0462a4 ("mm: abort vma_modify() on merge out of memory failure")
 
-> It is found in a set-top box called "Fernsehfee 3.0".
-> 
-> As a side note, this device is currently marked untested in the RTL8XXXU
-> driver. In my experience it works (tested with a WPA2 home network).
-> 
-> Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
-> ---
-> J. Neuschäfer (2):
->       dt-bindings: net: wireless: Add Realtek RTL8188 USB WiFi
->       usb: misc: onboard_dev: Add Realtek RTL8188 WiFi (0bda:0179)
-> 
->  .../bindings/net/wireless/realtek,rtl8188.yaml     | 51 ++++++++++++++++++++++
->  drivers/usb/misc/onboard_usb_dev.c                 |  1 +
->  drivers/usb/misc/onboard_usb_dev.h                 |  8 ++++
->  3 files changed, 60 insertions(+)
-> ---
-> base-commit: 38fec10eb60d687e30c8c6b5420d86e8149f7557
-> change-id: 20250403-rtl-onboard-f38354f0b14b
-> 
-> Best regards,
+I've added a cc:stable to this.
 
