@@ -1,93 +1,226 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B21C821348;
-	Sun,  6 Apr 2025 13:15:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4753C17BB35
+	for <linux-kernel@vger.kernel.org>; Sun,  6 Apr 2025 13:16:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743945354; cv=none; b=Yv85ZmN5C7yp++UMPDSar5wom3CHWBU8z1hLmYroUYuDGqmGuXpNDLb1y5SFjS3p5enmFx6V+jJkt5q3Myk/NrQfg5ys1/zjza7IfY3wq+0HA48UMthJ8Jot8e9zvZ+3xAHURSCKtjr+2LDYAa5Td2sWOEtZHH0/OiMTtywX+mA=
+	t=1743945420; cv=none; b=agQw0sOYSORsf0akmzFLB/qEa+/8/vRD9KyB7xzw2sZ1lU3YWIIj4QmBSmlxdiGKJT0xpxbudAnpxsfQDMuFw6fZLpYqz16nZhO4Z8ydDn4ZqJBPpaNaNmD4wbHCfe5UPoT4pa1loAa1hto6IqC0GnpCRCKnRSJpP7kxKpJVlCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743945354; c=relaxed/simple;
-	bh=4vqXGkNXNdZ8RWlPXAoKD8zxOXuq628gIHsbciSrKr4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Hbh/v1M4syvGnNpkkHL8nLbUyye0MNnBjkcrFiNkJ0vFcvzzOo2H4u7NzP00qJqfq6yxBEr/Curj7hrAynEux6dcTs4Xb8h/ln3zTNNwjrdbpdJmT8cp4b7oiAL0FQsyCxiVMq1KZLVOlp7r477Yt2r5b3BLrYFYE1AOtgVNIs4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Kj3cy5hm; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743945420; c=relaxed/simple;
+	bh=7kEgD6DzeKFEjMWiZPVq1otJgnMgklAD9SfrOlfX+Gc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=RPkp5tzqZ9pM4pyfATPLsabgun58d146jvTlp1rBLWzjB1L7maxVCCUoMBzfu5Sdx/+erJskveaugGAx/SS6mVXTkKETofmtgHSbzxVEpv7zcd64jyhlrwIVxPoMKIouJqJwa1OrlrRLhb3IODYcljvwAS0zAJy7vwf9OP8U5e8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=sjR5zR6o; arc=none smtp.client-ip=91.218.175.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kj3cy5hm"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2240b4de10eso7124205ad.1;
-        Sun, 06 Apr 2025 06:15:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743945352; x=1744550152; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4vqXGkNXNdZ8RWlPXAoKD8zxOXuq628gIHsbciSrKr4=;
-        b=Kj3cy5hmoYOdgI7Ki6jObaD4ByVXnQ6p1WsfufOd774BdTUckPMWQ3SkPM3546dYKr
-         aBqfoYAWx5eX5dPuQIydSEIwF7thft48l+W2xhnAhElRgSuYQ4MVhvSJnrhPAaVkU6G5
-         j5O1kDwT45buFglv2yQYEnaQ4yFnwyiTSfjPm0gdKcw1uDJxvYgCqK61IzuvYUhc1nL7
-         UtMD2fFEuaFRI8ZRb/dL01uwIPh3Di/Hg7/4Jphe/9KqpznCPZOxyqf0neFAmDvaBeUg
-         7Y5J4+yO+TfmOL11k1X6gB8frU1JJ1ch1ww8mpdh8UG16hiOM2afMPnzF3wSFM/W6LX1
-         ZDJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743945352; x=1744550152;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4vqXGkNXNdZ8RWlPXAoKD8zxOXuq628gIHsbciSrKr4=;
-        b=PHpQFEAQvvouWsCs6mWdm2I5xBHLdPzQHV3u0zKwF1MivxinK0+opBTzO93LmDXUPD
-         y8y+4dNRAINC7ZUir7i34g+5mihk1QNASWFgvQ/xyU/woXeT9a2ENERNHQ610NC7ogb+
-         wyFI7hOdIMm//zy3L8IPfza4PKF58+nUxz7p0K0w/5T9aYFcuhkHE3rXvxMs6/2yUxFV
-         GZe+LTEyoHbQ1qPFCMGknC2/41Ouj9WNDuENyJoT7CgLCwncqJaGbrKGOLP82PoNEXTh
-         n6Y9EKid9VAeyCkhSzeKuex9dPGLq7gbaggByDRzWQFcoCz/eXfU4B9He8h0BF8pjeb0
-         wwuQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXZTfus12X6KEU2g2Ma9w+TRKRsE7kLGdsirIbr/8eaiuArLFHHM4T3qjUtcqU16LwMKXPDsBvKYnum2HQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwaXLY5Fbqp4UtJLja05eaQYvXPeg0eM+okaZj6FCORkNpZTwMR
-	qvl+CBk/e4cSo5NA2ETnbI3XPPf/gDKwBEzvOGIo8k0q4ztZrwGqKXafQCBvaBeQYq5gLiKyoXv
-	KQMpN9D/zUQs3m8atRbmE4muJtl8=
-X-Gm-Gg: ASbGncubtOjgls1lAD9VVGEeK/eOrADPzBf32S4KgGDQL5IVGoyjgDmTtEPE/M8sojX
-	2V4iHkYC5tiqsWYxIBA/N43/6p1dBoZwOyfB+GGBffSSwkpYKfzSsy7BtWv6GrdMknr34OJ1yIN
-	ppFuoGSRZzsc+6E/5tH4BSJ8kp5Q==
-X-Google-Smtp-Source: AGHT+IE66LbNMGTzh7l4BnJkPePaFBEgdyDbrqvGEbpMM8l0ljxHmQ3JKNpqbmoR516pPyo1zi/jEcUl7UZLm71jU1c=
-X-Received: by 2002:a17:90b:1b11:b0:305:5f20:b28c with SMTP id
- 98e67ed59e1d1-306a48a5bebmr5175613a91.5.1743945351829; Sun, 06 Apr 2025
- 06:15:51 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="sjR5zR6o"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1743945415;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9CEJ/sO7DltNlZUxnxCEA4NszRFr0//KBDDudIa4h8M=;
+	b=sjR5zR6okZRx7GOZEVcu4YBsJOMaeuprpQyx9sgdtdI4uwmuzl5giYFuIfI8HF+Z9vvyo5
+	qnEe/TKF4Vxo/avWmJARHTFw2l+3FFDFL5QZBypkpGhlWuybMJ80ftsBz+rDE8Ofq6aEmo
+	Krx8LmU2Q7WudZwu9TsMRRlrzvX91vE=
+From: Aradhya Bhatia <aradhya.bhatia@linux.dev>
+To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Andrzej Hajda <andrzej.hajda@intel.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Robert Foss <rfoss@kernel.org>,
+	Jonas Karlman <jonas@kwiboo.se>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>
+Cc: Nishanth Menon <nm@ti.com>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Devarsh Thakkar <devarsht@ti.com>,
+	Praneeth Bajjuri <praneeth@ti.com>,
+	Udit Kumar <u-kumar1@ti.com>,
+	Jayesh Choudhary <j-choudhary@ti.com>,
+	Alexander Sverdlin <alexander.sverdlin@siemens.com>,
+	DRI Development List <dri-devel@lists.freedesktop.org>,
+	Linux Kernel List <linux-kernel@vger.kernel.org>,
+	Aradhya Bhatia <aradhya.bhatia@linux.dev>
+Subject: [PATCH v12 1/5] drm/atomic-helper: Refactor crtc & encoder-bridge op loops into separate functions
+Date: Sun,  6 Apr 2025 18:46:38 +0530
+Message-Id: <20250406131642.171240-2-aradhya.bhatia@linux.dev>
+In-Reply-To: <20250406131642.171240-1-aradhya.bhatia@linux.dev>
+References: <20250406131642.171240-1-aradhya.bhatia@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <95E3B7B9ECBFB14C+20250406034811.32347-1-xizheyin@smail.nju.edu.cn>
- <CANiq72m55Fi-XyFz=h7_3QNj+mA0N+E9Vo2_anLFyN1sr-FXMA@mail.gmail.com>
- <tencent_3DAE6B923FC67B543D90D970@qq.com> <CANiq72=c7yzLM4C-zctYFpUnFbQ2o4i5Uhp73xc4Td3-H_yDeQ@mail.gmail.com>
- <tencent_4FDA7C47625666C054E0F8D7@qq.com> <tencent_2441D11C4D8973701A185871@qq.com>
-In-Reply-To: <tencent_2441D11C4D8973701A185871@qq.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Sun, 6 Apr 2025 15:15:39 +0200
-X-Gm-Features: ATxdqUGd468m3qog8EE8Em0XzKuoaq96kK4ejJDgOX5tIIKOrOwwQLKMpdf3i_o
-Message-ID: <CANiq72=1ukM1T-2n3Z-4piNLLmRGxuhi91V38yDnfz1J5or8QQ@mail.gmail.com>
-Subject: Re: [PATCH] rust: convert raw URLs to Markdown autolinks in comments
-To: =?UTF-8?B?5bC554aZ5ZaG?= <xizheyin@smail.nju.edu.cn>
-Cc: rust-for-linux <rust-for-linux@vger.kernel.org>, 
-	linux-kernel <linux-kernel@vger.kernel.org>, Miguel Ojeda <ojeda@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Sun, Apr 6, 2025 at 2:27=E2=80=AFPM =E5=B0=B9=E7=86=99=E5=96=86 <xizheyi=
-n@smail.nju.edu.cn> wrote:
->
-> I submitted the v3 version of the patch, sorry for the trouble. After thi=
-s submission, I am familiar with some of the process, but I believe I need =
-to spend more time reading through the documentation.
+From: Aradhya Bhatia <a-bhatia1@ti.com>
 
-Thanks, and no need to apologize!
+The way any singular display pipeline, in need of a modeset, gets
+enabled is as follows -
 
-> By the way, where can I see the latest emails? I'm interested in this pro=
-ject and would like to keep up to date with the latest progress.
+	crtc enable
+	(all) bridge pre-enable
+	encoder enable
+	(all) bridge enable
 
-Please see https://lore.kernel.org/rust-for-linux/
+- and the disable sequence is exactly the reverse of this.
 
-Cheers,
-Miguel
+The crtc operations occur by looping over the old and new crtc states,
+while the encoder and bridge operations occur together, by looping over
+the connector states of the display pipelines.
+
+Refactor these operations - crtc enable/disable, and encoder & bridge
+(pre/post) enable/disable - into separate functions each, to make way
+for the re-ordering of the enable/disable sequences.
+
+This patch doesn't alter the sequence of crtc/encoder/bridge operations
+in any way, but helps to cleanly pave the way for the next two patches,
+by maintaining logical bisectability.
+
+Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Tested-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Tested-by: Alexander Sverdlin <alexander.sverdlin@siemens.com>
+Signed-off-by: Aradhya Bhatia <a-bhatia1@ti.com>
+Signed-off-by: Aradhya Bhatia <aradhya.bhatia@linux.dev>
+---
+ drivers/gpu/drm/drm_atomic_helper.c | 69 ++++++++++++++++++++---------
+ 1 file changed, 49 insertions(+), 20 deletions(-)
+
+diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
+index ee64ca1b1bec..d185486071c5 100644
+--- a/drivers/gpu/drm/drm_atomic_helper.c
++++ b/drivers/gpu/drm/drm_atomic_helper.c
+@@ -1160,11 +1160,10 @@ crtc_needs_disable(struct drm_crtc_state *old_state,
+ }
+ 
+ static void
+-disable_outputs(struct drm_device *dev, struct drm_atomic_state *state)
++encoder_bridge_disable(struct drm_device *dev, struct drm_atomic_state *state)
+ {
+ 	struct drm_connector *connector;
+ 	struct drm_connector_state *old_conn_state, *new_conn_state;
+-	struct drm_crtc *crtc;
+ 	struct drm_crtc_state *old_crtc_state, *new_crtc_state;
+ 	int i;
+ 
+@@ -1227,6 +1226,14 @@ disable_outputs(struct drm_device *dev, struct drm_atomic_state *state)
+ 
+ 		drm_atomic_bridge_chain_post_disable(bridge, state);
+ 	}
++}
++
++static void
++crtc_disable(struct drm_device *dev, struct drm_atomic_state *state)
++{
++	struct drm_crtc *crtc;
++	struct drm_crtc_state *old_crtc_state, *new_crtc_state;
++	int i;
+ 
+ 	for_each_oldnew_crtc_in_state(state, crtc, old_crtc_state, new_crtc_state, i) {
+ 		const struct drm_crtc_helper_funcs *funcs;
+@@ -1274,6 +1281,14 @@ disable_outputs(struct drm_device *dev, struct drm_atomic_state *state)
+ 	}
+ }
+ 
++static void
++disable_outputs(struct drm_device *dev, struct drm_atomic_state *state)
++{
++	encoder_bridge_disable(dev, state);
++
++	crtc_disable(dev, state);
++}
++
+ /**
+  * drm_atomic_helper_update_legacy_modeset_state - update legacy modeset state
+  * @dev: DRM device
+@@ -1483,28 +1498,12 @@ static void drm_atomic_helper_commit_writebacks(struct drm_device *dev,
+ 	}
+ }
+ 
+-/**
+- * drm_atomic_helper_commit_modeset_enables - modeset commit to enable outputs
+- * @dev: DRM device
+- * @state: atomic state object being committed
+- *
+- * This function enables all the outputs with the new configuration which had to
+- * be turned off for the update.
+- *
+- * For compatibility with legacy CRTC helpers this should be called after
+- * drm_atomic_helper_commit_planes(), which is what the default commit function
+- * does. But drivers with different needs can group the modeset commits together
+- * and do the plane commits at the end. This is useful for drivers doing runtime
+- * PM since planes updates then only happen when the CRTC is actually enabled.
+- */
+-void drm_atomic_helper_commit_modeset_enables(struct drm_device *dev,
+-					      struct drm_atomic_state *state)
++static void
++crtc_enable(struct drm_device *dev, struct drm_atomic_state *state)
+ {
+ 	struct drm_crtc *crtc;
+ 	struct drm_crtc_state *old_crtc_state;
+ 	struct drm_crtc_state *new_crtc_state;
+-	struct drm_connector *connector;
+-	struct drm_connector_state *new_conn_state;
+ 	int i;
+ 
+ 	for_each_oldnew_crtc_in_state(state, crtc, old_crtc_state, new_crtc_state, i) {
+@@ -1528,6 +1527,14 @@ void drm_atomic_helper_commit_modeset_enables(struct drm_device *dev,
+ 				funcs->commit(crtc);
+ 		}
+ 	}
++}
++
++static void
++encoder_bridge_enable(struct drm_device *dev, struct drm_atomic_state *state)
++{
++	struct drm_connector *connector;
++	struct drm_connector_state *new_conn_state;
++	int i;
+ 
+ 	for_each_new_connector_in_state(state, connector, new_conn_state, i) {
+ 		const struct drm_encoder_helper_funcs *funcs;
+@@ -1565,6 +1572,28 @@ void drm_atomic_helper_commit_modeset_enables(struct drm_device *dev,
+ 
+ 		drm_atomic_bridge_chain_enable(bridge, state);
+ 	}
++}
++
++/**
++ * drm_atomic_helper_commit_modeset_enables - modeset commit to enable outputs
++ * @dev: DRM device
++ * @state: atomic state object being committed
++ *
++ * This function enables all the outputs with the new configuration which had to
++ * be turned off for the update.
++ *
++ * For compatibility with legacy CRTC helpers this should be called after
++ * drm_atomic_helper_commit_planes(), which is what the default commit function
++ * does. But drivers with different needs can group the modeset commits together
++ * and do the plane commits at the end. This is useful for drivers doing runtime
++ * PM since planes updates then only happen when the CRTC is actually enabled.
++ */
++void drm_atomic_helper_commit_modeset_enables(struct drm_device *dev,
++					      struct drm_atomic_state *state)
++{
++	crtc_enable(dev, state);
++
++	encoder_bridge_enable(dev, state);
+ 
+ 	drm_atomic_helper_commit_writebacks(dev, state);
+ }
+-- 
+2.34.1
+
