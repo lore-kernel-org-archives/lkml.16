@@ -1,169 +1,87 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 179A44A21;
-	Sun,  6 Apr 2025 20:36:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09B921487F6;
+	Sun,  6 Apr 2025 20:38:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743971791; cv=none; b=j+tTPe262bjJ/hP0sMoVPj9Mh0CE4cLGt7EWdA4PIlI0pC4DPn+P5NpEQIGxP3u6gtRdiG3zz9UhTvroF1hBgd2yCr0aFeiYYgHMihDkReJW58q+QUgVJqJMjDkPyco1Ode6B5569JEEohonn+Um/DQ9j+eoFJ7xI1/SaUaUYX8=
+	t=1743971939; cv=none; b=GzpigS2DlsszuKfgaki6gkeb3jocFhxqrhh/mjINMA2/t/O3aAHxrJwb9DPrO6lyPfPIB3d3wsrZSBZ8xb4sFBLH35UYRblwPJf6YFkB261rjZMyN8sD/lSZnVIj2d4MsI6iSAV5fUDP0Y9AQO+oORsxaViQNyKMc2wAcKqOiWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743971791; c=relaxed/simple;
-	bh=/HTgL1GKRkOei+N9qzEycOw7NOzDX255Wrn+YCYI3KA=;
+	s=arc-20240116; t=1743971939; c=relaxed/simple;
+	bh=NI1/kyy0gTrSMXMDeYc9TiMNCu+lNoTvc7HFd6GFVr8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tqoXhrZi2RtcUCxm+uwL6S+wYAhcSifNTxJyO+ddHSkU1hnK1tNkR7Cu71vY9R2C98ihCKXG/MKQyQlAte+Z7cSJchK+IdZ04PGOqoraZeL7/H2lX5TNk98K2qhxVoiGJOA94UMoiwmggAdEoAhfZmu9saMR6csjdx6Zq5Sdrt4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=DGeUwaWn; arc=none smtp.client-ip=209.85.214.179
+	 To:Cc:Content-Type; b=H+n/BOXv1IKaRg9LOxDGYniT0IHu+SCYQjV65nGBXMsfzE5x7jD63I/bXVKryCz8rVPP81c2lTZrXmkkqjv+3u61YZz9jp2fFFtKp5FyYNNhTivDYQVMbbzEKJE4OCvtjdjXX6sr/yesG5oNvdfomo6gQXW0/WZbDQTw+HvPHao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=C8qbSjl1; arc=none smtp.client-ip=209.85.214.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="DGeUwaWn"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-22423adf751so34531685ad.2;
-        Sun, 06 Apr 2025 13:36:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="C8qbSjl1"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-223fd89d036so40654815ad.1;
+        Sun, 06 Apr 2025 13:38:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20230601; t=1743971789; x=1744576589; darn=vger.kernel.org;
+        d=googlemail.com; s=20230601; t=1743971937; x=1744576737; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=eTDKXTFTQLBPdri3otdi82MBqYNCG52DLi/ttprD1dA=;
-        b=DGeUwaWnbyDRezksfP3pz0GXJgthKZA+j71A6UpuPYPjG9MfEFjCsfL9KBHwwZ2AYJ
-         dd2g8g1im214cL4VVAdZ0hEZfCBs1XtxQXue1N453/njecr+MZO0Cm8YNxeIqb65EkeT
-         Ld/uolsDrsNymNI9vDjjISrTE9UNEI+eeD3ftDW3Nc9kg5oN7aJHJTs2guK2KjSuHO+H
-         OJv6NBMXwrXl87l710/PYt6R1cQBaODr+3k3RVHsFp7Q+DYYQZIY6X1vEEvSsrz5/+IU
-         JR1Gq6mC3oJf5Ui4EiGQPKZcCkr09J3usrS04M2NRo84Nd0xkPKMhWcBXfChVxxfIXGf
-         gJug==
+        bh=ydwO1JyYbeugO8yOiEfHx3MM3FsXIUg1LfWXi3rj/4M=;
+        b=C8qbSjl1w73HTPnPSeQN6y3Q2za9i09nDD+6K5A8qppvqKxkW8ei4SRDbDkNJ7bykU
+         Dd2EKkPVECsyydhJzVcGw01i0k3XnC7+kpWhbc0MMITnSdg8Gb80X+QoRHvP2+kGq0Z+
+         B+z3FiqQmZ8GaD1ElgMiXaHInea1JAIQNbI3dtGQU09F15+w9PTMvGGXwVcNLxtgqe+D
+         sGFWHBNnJaXknjSxZjS4zOsfTboG6IO1eXHg8Q/D2468L9roosulC/+IZ9ujPvJJbXP+
+         1a0T4BA87JzLSSu8Y5mUxDGT11yDMZRx0p2BHyAejB/DsRcoEvrVf/VSl7XSMMHLg5Lh
+         nk6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743971789; x=1744576589;
+        d=1e100.net; s=20230601; t=1743971937; x=1744576737;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=eTDKXTFTQLBPdri3otdi82MBqYNCG52DLi/ttprD1dA=;
-        b=N+HcptKXqrWb9U6wkXit5rLyNHwRgLOriHV0LI2akxWkb/BezkPoyADhoNDMeL7Pgd
-         5WEA5C5BonDV2335bWkO6gGCk8d81eJNBq2Jge3Md5rKSUKeDdfJsE+G+UPOh7sVfIfK
-         PcBubHNi7n8+AsWAZZmg4eTmEdpcT1reVZqoedTMsclVLAocZRyDyIrMVqkIUpI7rsKa
-         2a6ZeoxlPPpG4QundYgWyzp2fXAY6XUo6fUv3Wxc49ausEkRI0H5CFf7zR2x5T4mLUyJ
-         CoVeVKgT7BCwtWXoIvJsBSLIu4lqUndRh/XdXJvRb+a2YNzcr8zYNDoDVsf4ilFYVAhz
-         kdfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVf/S10zhUOuqWqnu6HA+FqmDip5kZwbghIxjIbViWUeI7gxt3EYil/1mlJf/ABvJv9FMxvrfSt3IuA@vger.kernel.org, AJvYcCXE0ELoF3T88tpWsVL470vimZkIO+Wuqd6S9AX0J+iBCbiJ8YNSSfPPTHfiOJrLVhFqunGcDQFqZ2gdpjEE@vger.kernel.org
-X-Gm-Message-State: AOJu0YzHRV2bhJkIBdFOa57CTy7O9qXbjuCOXzJATTjDMBSpEkfiijo5
-	HNL1X1S7lJkDTbYXfTJY5xIYoiU2MLDxzfGD5t0izP2XlK2ESWrCTJARQDydiABXQcxjKuVLjko
-	/HdWngz/QPPjdOYdVwBs7WaIwb3U=
-X-Gm-Gg: ASbGnctxha/tgtyOv3r5alBwKpYqfiESbY9AZjEUXe64lKjWX5XodJN6EuSWCTpkB1O
-	jS2qwC0v2fsjXQLkfQl36QmdcuBzrnC30+rmuf4CY2ygS2wxKW3kjeum8jDXlO7kfizpPpb8kY7
-	hGcA++aMrhkXHOMek8tHiiS6NvrZCfKjtmxCR5+N+r
-X-Google-Smtp-Source: AGHT+IHVq/OJ+5eWqAgV0C40CkVvYiB3g3UpuuHrRaTOdnWvFTptDTYS2PzO/EixgKcm/7GKrRXQgpJN+Y1ESqaqhMM=
-X-Received: by 2002:a17:902:f610:b0:220:fce7:d3a6 with SMTP id
- d9443c01a7336-22a8a06b429mr135619515ad.23.1743971789179; Sun, 06 Apr 2025
- 13:36:29 -0700 (PDT)
+        bh=ydwO1JyYbeugO8yOiEfHx3MM3FsXIUg1LfWXi3rj/4M=;
+        b=Dhgl0/Pzncv+UTIolytm8XX7Vs+wiNGgZzIl2qfPJGy2waUvJ/yjB1NeUzScrLdsDp
+         fTeeKABCv0U/4oOJvk6R8/jm7iLxnsE0f5Ydh8TLfzPsTXMiXAE03mQIJZaw3VM/ItcT
+         cT1knUPy4RK3GLgxOjGewAzTK4mIJGxuCTlMZvGtgdnqatK64/HmwO8OpHSmFYx+9t5b
+         XzGUEeqFNQWTaHbdI8YIs8hJ3CF1dZuOvnN+dyTmwb/UU741UwhG993JO4k0dKyxgl9u
+         Nz3F7RGSUC5JqgHDZrx7ukWZH/F3DSUNRStZrrRXMrX4xVKvmRi4WKHa+RHrAvpqDCwg
+         U3Fg==
+X-Forwarded-Encrypted: i=1; AJvYcCVG95vaJlo3OUbMiDDgiGKBGCNgmpQazqROrFvwdj9JpwD42xLiBuvfSdsPX8Ai8yyzV+AmR72tBieb@vger.kernel.org, AJvYcCVSNrI4MNA+/ml5uhWG26joZccThljyyZrf7AhUITJuqSOYQ5yNyEcLy3HiS5/+83kAMwonbGFa3+kTI0uCvBQ=@vger.kernel.org, AJvYcCX5EmEK/2tbaFjTWr2dxLOdSAvU3vwc6FctsiJ2Xhr5Ou/JnmOZ0U01HW9UgLHGR3tm0lJahP0jQaFL@vger.kernel.org, AJvYcCXPZjfMTilyV6evsZkt498oSO2t9j4qg/uovX7AhhO9doHKWjHLXJWKqtxhW2HiQvY22WRCGerHxm6QL73k@vger.kernel.org
+X-Gm-Message-State: AOJu0YyAK3qgBBm7O7hKhlQxD4JpBK4f5ItYyKGtL0dLMT9qKoxgsZi4
+	SOmVorRF1nVpj/h27yGqZgUgEIzaXWfJyQeLmeaX/f9PvYmkUhLTosXJ6s8VH3+RkmdKxX86wFc
+	zVlwhmtBreQVdMkZKBdclteke//s=
+X-Gm-Gg: ASbGncuVsaH6GpPzGy+uE6j0yX2ZhHzhWoUYHaWBUMtzXPwbVaeIV1uUStNDXW1YckU
+	dEBOzAttB6Md/hbmM0i15L10C7ylZwFE9dDlxpD/7pydqQIzOcZjycKhOlGhTRdCENpbzQYCwzH
+	EySvXKtGyA1UXrb5eKZuuY1KG/vfAb3Y3Q3NTD4vtA
+X-Google-Smtp-Source: AGHT+IGDuS2E1gbvf+gLEVGC9aXsTzLI97TA0L4xSj8FjsSjT4qJXWhbv3i5QpV5K5VBN+QeBy8RRJfKYOEPI2TztGs=
+X-Received: by 2002:a17:903:2ec5:b0:216:6283:5a8c with SMTP id
+ d9443c01a7336-22a8a0a3599mr145741465ad.39.1743971937401; Sun, 06 Apr 2025
+ 13:38:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250323-fernsehfee-v1-0-2621341cd37a@posteo.net>
- <20250323-fernsehfee-v1-3-2621341cd37a@posteo.net> <CAFBinCD13CNuxRkrSoPXUMNQ9AJH7UV0gsOfdgeRKhkXsANgnw@mail.gmail.com>
- <Z-vjWFFWvo1gesCe@probook>
-In-Reply-To: <Z-vjWFFWvo1gesCe@probook>
+References: <20250403-rtl-onboard-v1-0-10ca9a6a4ee0@posteo.net> <20250403-rtl-onboard-v1-1-10ca9a6a4ee0@posteo.net>
+In-Reply-To: <20250403-rtl-onboard-v1-1-10ca9a6a4ee0@posteo.net>
 From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date: Sun, 6 Apr 2025 22:36:18 +0200
-X-Gm-Features: ATxdqUGmtk00PreuVDRwGTRsD3__is8AGxXyJNh6rRQ0MhHTNzn1k6d2MHuZvGY
-Message-ID: <CAFBinCDgn30H13hfkEsfyzSjO-HJ-XpAUwSwimBk7VPpKyNKMw@mail.gmail.com>
-Subject: Re: [PATCH 3/3] ARM: dts: amlogic: Add TCU Fernsehfee 3.0
-To: =?UTF-8?B?Si4gTmV1c2Now6RmZXI=?= <j.ne@posteo.net>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-amlogic@lists.infradead.org
+Date: Sun, 6 Apr 2025 22:38:46 +0200
+X-Gm-Features: ATxdqUHvsyKfKqx08asuwFCr7vofQGUcWxylj7FIDVyn6z9dRxtd3LDG4d6Z8JE
+Message-ID: <CAFBinCADBn2uUvdL9he0LZEZx4Kt=qPqrhifw_MUn4=BxLeJFw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: net: wireless: Add Realtek RTL8188 USB WiFi
+To: j.ne@posteo.net
+Cc: Johannes Berg <johannes@sipsolutions.net>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	=?UTF-8?B?Si4gTmV1c2Now6RmZXI=?= <j.neuschaefer@gmx.net>, 
+	Matthias Kaehlcke <mka@chromium.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Jes Sorensen <Jes.Sorensen@gmail.com>, linux-wireless@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-usb@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 1, 2025 at 3:00=E2=80=AFPM J. Neusch=C3=A4fer <j.ne@posteo.net>=
- wrote:
->
-> On Sun, Mar 30, 2025 at 11:10:28PM +0200, Martin Blumenstingl wrote:
-> > Thanks for your patch!
-> >
-> > On Sun, Mar 23, 2025 at 1:38=E2=80=AFPM J. Neusch=C3=A4fer via B4 Relay
-> > <devnull+j.ne.posteo.net@kernel.org> wrote:
-> > [...]
-> > > +               eth_phy0: ethernet-phy@0 {
-> > > +                       /* IC Plus IP101A (0x02430c54) */
-> > > +                       reg =3D <0>;
-> > Does reg =3D <1> also work on your board?
-> > 0 is the broadcast address. It's unfortunately something that we still
-> > have incorrect in a lot of .dts files.
->
-> Unfortunately not. I tried addresses 1 to 31 without success, which
-> seems strange; my guess was that the PHY should respond to one of them.
-> I get this error:
->
-> # ip l set eth0 up
-> [    6.806847] meson6-dwmac c9410000.ethernet eth0: Register MEM_TYPE_PAG=
-E_POOL RxQ-0
-> [    6.810609] meson6-dwmac c9410000.ethernet eth0: __stmmac_open: Cannot=
- attach to PHY (error: -19)
-Thanks for testing. Let's keep it at zero then.
-
-> >
-> > [...]
-> > > +&i2c_AO {
-> > > +       status =3D "okay";
-> > > +       pinctrl-0 =3D <&i2c_ao_pins>;
-> > > +       pinctrl-names =3D "default";
-> > > +
-> > > +       pmic@32 {
-> > > +               compatible =3D "ricoh,rn5t618";
-> > > +               reg =3D <0x32>;
-> > > +               system-power-controller;
-> > Here I'm a bit surprised:
-> > Aren't some of the outputs used to drive VCCK (CPU power rail) and
-> > VDDEE (everything else power rail, which also powers the GPU)?
->
-> Unfortunately I don't have schematics and I wasn't able to trace the
-> connections on the board because they're so tiny. So it's quite possible =
-that
-> you're right, but I can't be sure.
->
-> Are there voltage sensors in the Meson8 SoC that I could use to establish=
-s the
-> relation between PMIC outputs and SoC supplies?
-There aren't any sensors (that I'm aware of). But you can check
-/sys/kernel/debug/regulator/regulator_summary and compare the values
-with the ones from arch/arm/boot/dts/amlogic/meson8m2-mxiii-plus.dts
-Also the vendor u-boot and kernel logs may provide some information.
-
-> >
-> > [...]
-> > > +&usb1 {
-> > > +       status =3D "okay";
-> > > +       dr_mode =3D "host";
-> > > +       /*
-> > > +        * This bus features a Realtek RTL8188 2.4GHz WiFi module, wi=
-th a
-> > > +        * 3.3V supply voltage that must be enabled before use.
-> > > +        */
-> > > +       vbus-supply =3D <&wifi_3v3>;
-> > If you want to go for perfection then you can use
-> > Documentation/devicetree/bindings/sound/xmos,xvf3500.yaml as
-> > reference.
-> > It's also an "onboard" USB device which requires toggling a GPIO and re=
-gulators.
-> > The driver side is super easy to manage as it's generic (meaning: it
-> > parses any GPIO and regulator as long as the USB ID is registered):
-> > drivers/usb/misc/onboard_usb_dev.c
->
-> I considered using onboard_usb_dev, but then came to the conclusion that
-> I don't need it because I don't need reset sequencing, only power.
->
-> > That way you can just describe the RTL8188 on the USB bus and assign
-> > it's vd33-supply without having to (ab)use vbus-supply of the USB
-> > controller.
->
-> This does sound reasonable. I'll reconsider the onboard_usb_dev
-> approach.
-Thank you for the onboard usb device patches (for those who are curious: [0=
-])!
-
-
-[0] https://lore.kernel.org/lkml/20250403-rtl-onboard-v1-0-10ca9a6a4ee0@pos=
-teo.net/
+On Thu, Apr 3, 2025 at 4:07=E2=80=AFPM J. Neusch=C3=A4fer via B4 Relay
+<devnull+j.ne.posteo.net@kernel.org> wrote:
+[...]
+> +description:
+> +  The Realtek RTL8188 is a USB-connected 2.4 GHz WiFi module.
+> +  TODO- website or soemthing
+When you re-send this patch (to update the email address) please
+delete the TODO (a website is not strictly necessary)
