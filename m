@@ -1,106 +1,141 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF12F17A30B
-	for <linux-kernel@vger.kernel.org>; Sun,  6 Apr 2025 21:34:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62DF313C8E8
+	for <linux-kernel@vger.kernel.org>; Sun,  6 Apr 2025 21:36:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743975254; cv=none; b=cCkZ1iylfkNgPsD9zedvKflCM6OboPDH4aluhQuD5VknQDvVCUt4G/AbtXX/Fs3UUsJGnevIe7EZM5AyreDOmHDmXABw0jUo5XpablmpDABZb4wKMHntaVVvTPvr6+pEk65EBG2czQocKBP+vLIXtWI9v1Elpga7M6EuJHJWoIo=
+	t=1743975408; cv=none; b=SkHK6DiTiiK526NzvE8ch72foFCEfDHcOBAf/853Fr2/N0lDghZX6A8Gwx7TStuKMqHD4SSyXdODHv5GcgjlPMIeLu/p7Ce2WSAVaEvGOVScfJpjgA/pyOFqiRClXQeSUTVBSfJiFfDXrBUucf+/QPclpFgcOs8f2AcofQHxBMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743975254; c=relaxed/simple;
-	bh=1thCHGzusRG1ZlrUII7P1iJSUsOlzC1ZFkjlxRYfWZA=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Fb0BpR2OQwiGhW5+proxl4QtgFb1ZML1wMt3j/iIkFkZdDYzJZc5/B0mvsRWpI6xodLesF4KnTX3JUsETor7BNSnCxlJZIm4n9FRrgs18C0IkaLu2kMRv3LCZYO/A8nohaOi8pdMOUAu3d8nXe1VhLrn6FGa2WCfTEPSmg+eYlk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MFNDMnRu; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1743975408; c=relaxed/simple;
+	bh=QIPh/3ojkhjZ9qgDVHKg/wBsn9s4t/UW3jZ2wCoHoWQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qgvmsVehceWbo/qKUF2HYj4gbtRofgCq/vShyBrO2aoqojU7Y/lRCmf8r8i7vpLllSmU/gynqy7tVIy6A+JMw0oej22IzqCmF7q/u9fQUfSgHkWxs8A9J4ma/Lzfo6aANHnmmMSWvuLRVJsrK1bNjbICny50I6Ofh3aOm0P6kgA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=EGyNsMyU; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MFNDMnRu"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2240aad70f2so295335ad.0
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Apr 2025 14:34:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743975252; x=1744580052; darn=vger.kernel.org;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=bBPMncQ6TC7hw2oKsOjfoaHvrckjy1WxXt515TcLyfI=;
-        b=MFNDMnRuyueVh6iVaVV4O3hMRKCYZWOjD/jUDThbaeOhTcEAK438Zbk/QUhGpFNSnG
-         c7fryo3DSaA70vmFJZu+kF6PcwGST6wduQItZdgYqmim4qukZAJmeKXy1AFbuWplBbXS
-         fBBONgcbBjq/3i0KMV09uGX2DGnOlkWCMcKQv8w6JYwfIQBGAlyqQURVgjD46Pt4+uL6
-         opk1CBxusVxNBRiepx9p/NOXo6wrVoFmR9Ea9OD6/0bkK/JZgl3KoDQfUoZBNAr6gjpA
-         Tq958V7a6R6sfbTCN+wTHBHhPegXbeEGcPc4f2r2J1ZE7zrt4mrM6BfHX8bBK38npmks
-         atoQ==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="EGyNsMyU"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 536H1492009224
+	for <linux-kernel@vger.kernel.org>; Sun, 6 Apr 2025 21:36:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=LA2b95tB59ohrGjXN2aVGAOl
+	vonTQAAFKlsjkjBixBc=; b=EGyNsMyUldVu6C5qhZQSv7k16yAgHi5EqiOUGDiY
+	F9qf+RuVJefw06PwfjKDTVaqq1JvH742nks58yEepT+NBd1L3Q0XSp8bWf+LISRZ
+	2oCZ9hP+CGLZkRd7umFBMjyyszsdBe4gKiW4EVLnD9sKDo8kgXnOMgbl2lIKyxKu
+	OGIFEqF+Vb9u+x9bGfUerRo98K+6KWTACuYHd8YXqZFruNY/e7IA5FfqSgTBJAlp
+	MBLISR8lHejDqwrb3+s88WASZ8ODDCdGGKPWgN8MYd58k964+LYIOCPLCaodUjYh
+	78b5kRq2HtpqnUukviQBgKgHzV5YUlPDLbk5T7JGO7Ke9w==
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twbe2cdr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Sun, 06 Apr 2025 21:36:46 +0000 (GMT)
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c5e28d0cc0so670887785a.3
+        for <linux-kernel@vger.kernel.org>; Sun, 06 Apr 2025 14:36:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743975252; x=1744580052;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bBPMncQ6TC7hw2oKsOjfoaHvrckjy1WxXt515TcLyfI=;
-        b=kr6kZxlUjaTgbcCRtZJDhweaqN9W6jq2l7nkqUfkHyvYBcN2Z2+2e5TIoCEdxGw1LG
-         W6ydJpV1HX1FTidHC8GXyv7SJL6Huw9Eh4zWpuhHffBsq3bXpspU3iX1Y8Pkp9+fPT2z
-         I6VPIyZYxyPWOJIi06uQZ4u453iIknKVTtcHXZUwuNfF/5vGxlSi4nrqY3oK/Irmu8bR
-         3vjsM2A9JQK5UaxMDbz5nr76KOvD1x7otgWM3xVmlKYlGUDQzdJEyxaBKGDp89jqasTq
-         gx/KaJ4Om6UT0SmZG3Wf2BzipJLcQ8orOVIy62Rt22XbGkTqd6UUbd7gamteSzY1NF/b
-         X04g==
-X-Forwarded-Encrypted: i=1; AJvYcCXzp60/HSTJg7+RGpxRuqwqC+P6SZZU3Sdcj/qADzvDmTzN9NFbUQHvZpZPLL+fu3BrtfLJqMz5tE0fBIQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyOltc73EezNQtCsJTqhJENo+25veQWNsFdPYHHtgUVyKa957J3
-	usGn/vyYD34/9U1hZBhxZJgVq+GvkzsCTaNJp9XveJt7kZDprx+4ZDwZBwdqLi5pBXZnR08cMT0
-	rmQ==
-X-Gm-Gg: ASbGncu4frrSyoqGmdESqCWL17wosCs6i9aw+1EVPmafLSbu0dhK8V6qVsI5zSQFPrB
-	qkjmOGp7KLun+XOWwHhx/l01Rk1lEA0zrkYjGvVWVtFChArWxZYFoJ9A3Wf9Y1CkjCjzU/8oUML
-	66eH8sHZRwcA/RGRBrWBt5M1ZR84pn7Ifq+t9HAqL4ZHSSWWstkStBX2O5TCNUGDdoSrw2odq0i
-	KvdpYM8Ei+wY4qHHJnvYJVmY79iAzfswPyy4S78pUvFFF2SJlZa+CCQxJzauL/C+EcYNlwD7Uyu
-	zS0JSD9+tiCszHfrXIuoKWREn0HAXt3AnvssK5XwFJ/UOzI5te8Hvu+uiB8W+FIJ2ZvRtH0jXjH
-	kDDhNZmk1VS7//l9O5eoH5vj2GBByMmHsqNRa
-X-Google-Smtp-Source: AGHT+IHiRINMzxnjTrrhfoZBhhxSAkmIUO6KvhjzqPNAjX/wOWw4Id8jKa17QVFoK7hXxJREv7ldBA==
-X-Received: by 2002:a17:902:d591:b0:21f:631c:7fc9 with SMTP id d9443c01a7336-22a95daaff5mr3142305ad.0.1743975251735;
-        Sun, 06 Apr 2025 14:34:11 -0700 (PDT)
-Received: from [2a00:79e0:2eb0:8:2005:ca9c:736:e1f6] ([2a00:79e0:2eb0:8:2005:ca9c:736:e1f6])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-229785c27b3sm68020535ad.97.2025.04.06.14.34.10
+        d=1e100.net; s=20230601; t=1743975405; x=1744580205;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LA2b95tB59ohrGjXN2aVGAOlvonTQAAFKlsjkjBixBc=;
+        b=MNCKX7pRSp3Gym3gGRR5gKflP2m2smKqXGP2Qfy1bVqNiDcOSsYhNLTBh5e+6vqYtx
+         +mo4ETsMV4Q0DJv6HYUrlIqAkx6vAdE4Uj1ThOvmXuqqm7uc+CPXda3FdrX0FRzsuvQk
+         yI+XP3UatN/J8guvVplNrFibOlVwj5oS5JKKGhGXV/Wb0Oi/qfOEgm76qF3x6t8v8046
+         6KZHFxkmgCgkhXVpttHkPD6YHg84bVBr/aYRdW2Qg2/zlBLKdfJWeL+NjtwrdMPeojVF
+         he2Ga3BMaEc73ur3LbBTQlOxX7kkJm6vooNp2DHe4E3Plx91LX4+m6V/vP1XwAaL7So8
+         djug==
+X-Forwarded-Encrypted: i=1; AJvYcCUvmDlwKmWWxwbv0JIddgFhl5bBjd9Ci54pxXVQGCN36396ylwQFWDqXIYEQmsa3+RCCvD/0+zIwWCRH6c=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywmx+eW3Uu4K62RzdBLEvmE48+gEor2emb1whSy3eAwJES9tZhU
+	MIM/5pgpQqkkGXunm7IPdWCX50VyJO4uVFjvb2I/+LdsRD3Ur0CGD9VQgWysQc+W5fvAVHRF21M
+	92uaIysaeKK7uhz3uzTU1RmytiY5hKmP/oksCc933sgfeTU+XCojBlzoCoU1v620=
+X-Gm-Gg: ASbGncuPUNE2mFBZqjBdnqy/+fL1WEoKyHUmbaDAkzCHaYsUECW9K+lB+MG0BZfk9bS
+	v9A/rVvg2PlzpMfUVeJhpFbsFb0NFX+6/7JZ7psTHzujCE8MCD1Ybph6Cg4x+nooQ8Zjv71NxgG
+	lXI1uMKwPgcsAMDWPNztzv/68tT1IxVd6ntuN6jcfdFF2uY4d1l4pS05g2AL8AXeeDRmZa8tpAh
+	JHiR9kE6gattAI+K0tlbJAJVNnt2U8pe6Z0+HAtOq8L9mOGJka5d5XnV2Y5qETZ2sh5wxWcYEkV
+	P3IFLnHtzCNeCOC+CaXMiMniiQpAUSP2dSoAhY96f8js2e71yw3VwlaodVDLyUQ0lFybZ8blghN
+	hxpw=
+X-Received: by 2002:a05:620a:170a:b0:7c5:aeb9:b156 with SMTP id af79cd13be357-7c774d25490mr1222759185a.2.1743975405033;
+        Sun, 06 Apr 2025 14:36:45 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEXOIrDHONKlmIGfRGduQF9wgQXrsQc1m26S1z8TJbNPef5cMDCD02IbAks0R2tS+ktHBCXFQ==
+X-Received: by 2002:a05:620a:170a:b0:7c5:aeb9:b156 with SMTP id af79cd13be357-7c774d25490mr1222757685a.2.1743975404737;
+        Sun, 06 Apr 2025 14:36:44 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54c1e63708fsm1037160e87.124.2025.04.06.14.36.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Apr 2025 14:34:10 -0700 (PDT)
-Date: Sun, 6 Apr 2025 14:34:09 -0700 (PDT)
-From: David Rientjes <rientjes@google.com>
-To: Michal Hocko <mhocko@kernel.org>
-cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, 
-    Rik van Riel <riel@surriel.com>, Johannes Weiner <hannes@cmpxchg.org>, 
-    Roman Gushchin <roman.gushchin@linux.dev>, 
-    Shakeel Butt <shakeel.butt@linux.dev>, Muchun Song <muchun.song@linux.dev>, 
-    cgroups mailinglist <cgroups@vger.kernel.org>, 
-    LKML <linux-kernel@vger.kernel.org>, Michal Hocko <mhocko@suse.com>
-Subject: Re: [PATCH] memcg, oom: do not bypass oom killer for dying tasks
-In-Reply-To: <20250402090117.130245-1-mhocko@kernel.org>
-Message-ID: <ad2ce9e6-1651-8170-f944-1ba4ce4c14c9@google.com>
-References: <20250402090117.130245-1-mhocko@kernel.org>
+        Sun, 06 Apr 2025 14:36:43 -0700 (PDT)
+Date: Mon, 7 Apr 2025 00:36:42 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 1/4] extcon: adc-jack: Fix wakeup source leaks on device
+ unbind
+Message-ID: <brvru6m6fkvxfqr5w2wxirrwgnuai76ciaqvs6jwtkzji3kq2t@jebft6ckvgmy>
+References: <20250406-device-wakeup-leak-extcon-v1-0-8873eca57465@linaro.org>
+ <20250406-device-wakeup-leak-extcon-v1-1-8873eca57465@linaro.org>
+ <xosjgzwpwz3rnqt4wybekzuaag4na7vbfn6et46omkqyy6nvs7@zqoswpjy6srh>
+ <80a8a1c5-843c-46e3-83ac-93e5af3aad67@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <80a8a1c5-843c-46e3-83ac-93e5af3aad67@linaro.org>
+X-Proofpoint-GUID: IgesSM33Wq0GvkUfiM6mENUkJoS2X9gR
+X-Authority-Analysis: v=2.4 cv=T7OMT+KQ c=1 sm=1 tr=0 ts=67f2f3ee cx=c_pps a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=KKAkSRfTAAAA:8 a=3Z5a0wXc1gOgKeFd5GoA:9 a=CjuIK1q_8ugA:10 a=NFOGd7dJGGMPyQGDc5-O:22
+ a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-ORIG-GUID: IgesSM33Wq0GvkUfiM6mENUkJoS2X9gR
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-06_07,2025-04-03_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ mlxlogscore=999 lowpriorityscore=0 adultscore=0 phishscore=0 bulkscore=0
+ mlxscore=0 malwarescore=0 suspectscore=0 priorityscore=1501 spamscore=0
+ clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504060158
 
-On Wed, 2 Apr 2025, Michal Hocko wrote:
+On Sun, Apr 06, 2025 at 10:43:35PM +0200, Krzysztof Kozlowski wrote:
+> On 06/04/2025 22:27, Dmitry Baryshkov wrote:
+> > On Sun, Apr 06, 2025 at 10:16:39PM +0200, Krzysztof Kozlowski wrote:
+> >> Device can be unbound, so driver must also release memory for the wakeup
+> >> source.
+> >>
+> >> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> >> ---
+> >>  drivers/extcon/extcon-adc-jack.c | 1 +
+> >>  1 file changed, 1 insertion(+)
+> >>
+> >> diff --git a/drivers/extcon/extcon-adc-jack.c b/drivers/extcon/extcon-adc-jack.c
+> >> index 46c40d85c2ac89599ffbe7b6d11b161b295d5564..d7e4b1418d7e6b242780b3511f2a49def3acb7a6 100644
+> >> --- a/drivers/extcon/extcon-adc-jack.c
+> >> +++ b/drivers/extcon/extcon-adc-jack.c
+> >> @@ -164,6 +164,7 @@ static void adc_jack_remove(struct platform_device *pdev)
+> >>  {
+> >>  	struct adc_jack_data *data = platform_get_drvdata(pdev);
+> >>  
+> >> +	device_init_wakeup(&pdev->dev, 0);
+> > 
+> > s/0/false/
+> 
+> Sure
+> 
+> > 
+> > It might be better to use devm_ though
+> 
+> Entire driver would need to be converted, otherwise you got entirely
+> different order of cleanup. I explained this in cover letter.
 
-> From: Michal Hocko <mhocko@suse.com>
-> 
-> 7775face2079 ("memcg: killed threads should not invoke memcg OOM killer") has added
-> a bypass of the oom killer path for dying threads because a very
-> specific workload (described in the changelog) could hit "no killable
-> tasks" path. This itself is not fatal condition but it could be annoying
-> if this was a common case.
-> 
-> On the other hand the bypass has some issues on its own. Without
-> triggering oom killer we won't be able to trigger async oom reclaim
-> (oom_reaper) which can operate on killed tasks as well as long as they
-> still have their mm available. This could be the case during futex
-> cleanup when the memory as pointed out by Johannes in [1]. The said case
-> is still not fully understood but let's drop this bypass that was mostly
-> driven by an artificial workload and allow dying tasks to go into oom
-> path. This will make the code easier to reason about and also help
-> corner cases where oom_reaper could help to release memory.
-> 
-> [1] https://lore.kernel.org/all/20241212183012.GB1026@cmpxchg.org/T/#u
-> 
-> Suggested-by: Johannes Weiner <hannes@cmpxchg.org>
-> Signed-off-by: Michal Hocko <mhocko@suse.com>
+Please move this to the commit message. There are enough developers who
+skip cover letters.
 
-Acked-by: David Rientjes <rientjes@google.com>
+-- 
+With best wishes
+Dmitry
