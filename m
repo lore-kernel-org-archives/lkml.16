@@ -1,268 +1,209 @@
-Received: from EUR02-DB5-obe.outbound.protection.outlook.com (mail-db5eur02on2081.outbound.protection.outlook.com [40.107.249.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 458828488;
-	Sun,  6 Apr 2025 01:06:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.249.81
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743901618; cv=fail; b=Je32EShnCL1FWBv/weuBVNduwf1ufGiUuam2FGbzB3vPmOJu87UgnN/tUhEUjP4oqp2ID2JU7P7O77iJfHs/YtqYLFxoIzu7tYngXaFPD/zM4I0u0R/vsH9v9mJ+k1jtGoIScBBwkClNUVSJTGfkr0HExtoleLVqNSOmVutabFA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743901618; c=relaxed/simple;
-	bh=qjVnW19Xv19U5hZO/8A+nZipFLcMQKK7trbXhrx0d8k=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=S4Y6E6X0/+H+JPSlsiw+9ShIGWPdU9gG2S4dIvggz39MZMHbxwOSxED8kfGbTqdC4J9AJ1QANVKChMf8YEVSGo0KkGBJmyFYjjToHb/POWorom8AoTcH2yBY6MGPhjJThB830OBAmtoQjuAcmejUf05JNA29El4xy0wwj3oXIDw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=vh62ynkM; arc=fail smtp.client-ip=40.107.249.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEE5C6ADD;
+	Sun,  6 Apr 2025 01:35:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743903319; cv=none; b=WGJA5OgCVi6/BaIJil5z+e7eNQA40sdIppF/NSDB1UP/ld5OBpazVStQzLYpmvT+NACVwVwMjZDLgaJtWED3NFzn82LUswHESFsTH1wMRt4ew/V3egaMh27BrmU6dS6dTFSkTmNnVvOYyVVJJrR7YOx5p+s2TS2sWZFhyuoQy0Q=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743903319; c=relaxed/simple;
+	bh=q5vR44eIfRZEuiN9gUjuScPb2LpSVmHww2A7+Efe4c8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=a1p6SPhyxaDqoIz1xdNZfimta1oq9a5YRWQ7CA++JK4ppLBkk1vsyZxsQ4GWMrJ8HN+DTsIlA8uJ6sGQdD8Ptqw0sne+HkObC1eymzLGUbhcofM08/H6NihVBfhzqWYmkGmfuJslHrYXZr0+VYyVppAghpqe15IBGZuJ4ebuJPI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jKQmWtN7; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="vh62ynkM"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=wtTsfTV+nQtzeSCsbok0KxNZMu3jMxVrzl7otjKoRlO7GAQlKYifiUbbB6rGDkLJT9ClNPr8G9+teoJ36C/CwqKLo3RgxiyjKQCY5TPkSoe3iVuYGX0sHcW8ZLiheDwrMCjWNJksIUJ8+vSj52TUnMgPrBhhDzByHHoWpdLeZt4cwsNlkuh1NlvNrOFJleMT18Z7TarQKZZS8fQOWCwiHPSN6x1SLIOJ8iBAWq5HR3H44SIMJeF0LPm8CLz3djw9XdYo8uj06kGO3hBkhXU8hDgfPTdvDywtguJxH/PJRJAl2Nd+UZK0Yu0DFJapE8bw+LufA3zZd7K9KXj+Z8fYeA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=KSva5J88JBaDEQXsHcReZoxm0FS+XsAMvEJHmYYJI9o=;
- b=BsWF53kJixL2Rl0UZwjZXi7Ad3xT8YPgn3xlIEFzLj5Vbj1ByxupVNa4XunYNoZzHxxtHflDYE0/GLGQ4kmnKKA+I83hciyxsFGLmb9dmQNkWvrNw82yBOrhX4lXswI+Dj0nyvRMWTeDVR0LkfLGASOgm/jzGSYqmb7eJHiODLkepIGjoYF2vc5cuFyEC5yUUaq6lmxvUtY55TsBphn68kyuGQYUzdgrtQHAGpnk8uiMY+kJRRj53uctpluNYqRKITP/uRdCUpMfMF7fP5s5sZoqRagX7euK83qE+JQanZFbDtTUYonVhgUfviRPejUuub4CFvTAQowYKW4ew910Ng==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector1-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KSva5J88JBaDEQXsHcReZoxm0FS+XsAMvEJHmYYJI9o=;
- b=vh62ynkMmTq9cUk7vXL4Znlddf7SLNanFMflMv9WQaOgDF31i4QMAIauXSf1V+85y0zf6kbnlp0FEoFHB63jgH/I2ZJGsxQ5V9jBEPbT4YPfw0KPGyEfPUhUmULQC5smUhQMRZ7aLp0CHp03PX9fz9Z4M6QAXbPHMvePH5NgeVay/uBdLuRVpi9kpB6doevUnh2qa2YJukTj3b3011OnjlkiV3kUKFn81viKZ4UKPn4SNiGnZ+vHb3bmAlWnBZyez91ZboPvX65CiY83ie8pu7EgjikHDvE9NOkSnb/Cp3pBdn6ZRGrsHnYD45vAD7raYfTobp7PMtsL9uaPUlk+dg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-Received: from PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
- by GV1PR04MB10276.eurprd04.prod.outlook.com (2603:10a6:150:1af::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.47; Sun, 6 Apr
- 2025 01:06:51 +0000
-Received: from PAXPR04MB8459.eurprd04.prod.outlook.com
- ([fe80::165a:30a2:5835:9630]) by PAXPR04MB8459.eurprd04.prod.outlook.com
- ([fe80::165a:30a2:5835:9630%6]) with mapi id 15.20.8606.027; Sun, 6 Apr 2025
- 01:06:51 +0000
-From: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-To: Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Peng Fan <peng.fan@nxp.com>,
-	linux-sound@vger.kernel.org (open list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM...),
-	linux-kernel@vger.kernel.org (open list),
-	linux-gpio@vger.kernel.org (open list:GPIO SUBSYSTEM:Keyword:(devm_)?gpio_(request|free|direction|get|set))
-Cc: andriy.shevchenko@intel.com
-Subject: [PATCH V2] ASoC: codec: ak5386: Convert to GPIO descriptors
-Date: Sun,  6 Apr 2025 09:05:23 +0800
-Message-Id: <20250406010532.1212894-1-peng.fan@oss.nxp.com>
-X-Mailer: git-send-email 2.37.1
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SG2PR02CA0048.apcprd02.prod.outlook.com
- (2603:1096:3:18::36) To PAXPR04MB8459.eurprd04.prod.outlook.com
- (2603:10a6:102:1da::15)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jKQmWtN7"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-736c3e7b390so2866859b3a.2;
+        Sat, 05 Apr 2025 18:35:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743903316; x=1744508116; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=2+PCL2OUEh2hiTZatqVQoNxi6KO3hVe1igBRT0vir/Y=;
+        b=jKQmWtN7FOFgjVjt4K7y8iaghI2n2lDEIaqKSpNgptIgRJ7LqiWLavv85Q3xeAWD/V
+         Ro4ymoUP4UN4xJRaekew8ULEFrigaAC67z3eN4OfRreDkPSvAVmdEYWhJqVqIiz2Jcs1
+         +9OXHBb/6mKpC6DgsbiMf1app9iF7wGEcKOeejZT8lVLTjQwH3jbJEjMXIFkRRb5J6s+
+         yyl0UQl86xlb52CwsiaVrZajT9bTqOXZZVVu6U8EndO1QGYwlxp+K/j7fs3Qg/Zi5Hwi
+         ibIwcoypWYGfsCNpTu0yexWd7f9e4Gp0xDx7ofr6Sicu+ongQldLyPPK/XovyOGoSVxA
+         JzGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743903316; x=1744508116;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2+PCL2OUEh2hiTZatqVQoNxi6KO3hVe1igBRT0vir/Y=;
+        b=sSw1d7JeftRCxTJ9Ub29ECtgG1dBUsUaqo3gqCwOKOQkjG2NCCYxOzd9Zz3uQJi5tk
+         aBUfyI0dWQcttK89k0Ewd6tQz7gb0L9kguvduFTN7pjoQ5gZKTOGlaa//pd6yT4xYq0y
+         9rY9K7WHGgiUgdpJx0Kp50Nww4KYzDDsHzGQz5aXSFTR4EWzZCR32DEs//5Tg8joCIrT
+         G/6bqjUJOGikVAPcaSzSAUqcu0uUZDzOxXiqakL8PEVltk5UJkMMatOPSRmwSYvbt5cA
+         /NVjlc9UqLgyP1fSbcI0+b/3vT8M5gBjRDVrCSKR93Kx4hOVQyUVvHulZAl0oToDAz6R
+         csAg==
+X-Forwarded-Encrypted: i=1; AJvYcCVAkWA0xPjJbe5fuupzbhfk//bK3MeAscsYweLHlnh9eIB4DR1h2nGoIeQVo7gdMYlIoMm8YQI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyAH58xK7h8CAm1oye4qE9fBjtcb5qFHR4mB23iBvZtz7JIaB3K
+	zSJ9N34SUoJpAmMpAheNolfILIhdD25+kSVrEhgRx9r9s0zf3Ojg1a6zDpZh
+X-Gm-Gg: ASbGncsuZ08/E9OfVM8NXrivkCwEIpaWJ6Vu7a5TksGbHQci7bRkwuVOFgeuOgitjWg
+	hRKzLjRqw6rgNpDEcuHuaaUE1fiNLua0t9USffd+dg4asl4KzTMorpUjVRC0rAX/LxwovVYnxVK
+	tkZX7s36yzbgIVWNBLzPluBMjuK8W5c4SIgnMPdaMeT37Y8pld1/pb0cXfD1rVp6gl2gPAq66Uu
+	CiJ33OGWI7SRsdxNCQ6FXwMJOarzsDCRPLktckwlCffmlz7YqH1HnmztMSDWO2G4EKKu3kcXJDC
+	LJZNyfcq/25kwFGO0rQL030B4WMX1cI77Unf/nKNua3xEwubqHDwFSkWcUpyBLhwxDA2aJGSs9I
+	1LN6XxVJTjGMFLqd+75n5aQ==
+X-Google-Smtp-Source: AGHT+IF/BOq0AnchPDL5eAscTdh3DB/v6gk5itdPNX2t2u8wvsYyRd7cUAUVB7U4VbH0aq48CWsVWA==
+X-Received: by 2002:a05:6a00:4646:b0:736:532b:7c10 with SMTP id d2e1a72fcca58-739e716242amr9688542b3a.21.1743903316314;
+        Sat, 05 Apr 2025 18:35:16 -0700 (PDT)
+Received: from mew.. (p4204131-ipxg22701hodogaya.kanagawa.ocn.ne.jp. [153.160.176.131])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739da0bc052sm5846849b3a.156.2025.04.05.18.35.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 05 Apr 2025 18:35:15 -0700 (PDT)
+From: FUJITA Tomonori <fujita.tomonori@gmail.com>
+To: rust-for-linux@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	andrew@lunn.ch,
+	hkallweit1@gmail.com,
+	tmgross@umich.edu,
+	ojeda@kernel.org,
+	alex.gaynor@gmail.com,
+	gary@garyguo.net,
+	bjorn3_gh@protonmail.com,
+	benno.lossin@proton.me,
+	a.hindborg@samsung.com,
+	aliceryhl@google.com,
+	anna-maria@linutronix.de,
+	frederic@kernel.org,
+	tglx@linutronix.de,
+	arnd@arndb.de,
+	jstultz@google.com,
+	sboyd@kernel.org,
+	mingo@redhat.com,
+	peterz@infradead.org,
+	juri.lelli@redhat.com,
+	vincent.guittot@linaro.org,
+	dietmar.eggemann@arm.com,
+	rostedt@goodmis.org,
+	bsegall@google.com,
+	mgorman@suse.de,
+	vschneid@redhat.com,
+	tgunders@redhat.com,
+	me@kloenk.dev,
+	david.laight.linux@gmail.com
+Subject: [PATCH v12 0/5] rust: Add IO polling
+Date: Sun,  6 Apr 2025 10:34:40 +0900
+Message-ID: <20250406013445.124688-1-fujita.tomonori@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB8459:EE_|GV1PR04MB10276:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1a72729f-64e0-4e08-342c-08dd74a74f0b
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|1800799024|52116014|7416014|366016|921020|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?WVlKMkFzRkdCQlpKdHVuUkUzcXgrQW11YWQvMGMwcHF5VUFlazMxK1hyZGV5?=
- =?utf-8?B?M0FPNEUyZHJ3bnBERWVGbWVnLy9iNWZUTTBrcTdEZWdiTzJYemFSTFJxQ2ZX?=
- =?utf-8?B?cE5QUmlCWGMvaXJkTWI0ZGQweUU3ZFFNdTQxNjVwOHlQSmd0L0c3c0oxRkdK?=
- =?utf-8?B?bENDa1Bmek9GZ0lSdGQ0VXhrNkMzYkIxVDJZWjRCNUI3OUg5MThURnF4VWtU?=
- =?utf-8?B?ZDI4R1lhMEJUcFZBMXhOT3lFSFdIc0JBTDIwOTN3NlNMdENtT1NVcVJIcDRi?=
- =?utf-8?B?d2tnWUhuZHRyOG8vNlVCR2lsTktrUGk2UmpXRm9yQnpDOXhIbEp1Y3J1czZC?=
- =?utf-8?B?dnpNdVg0YytOL2VFMld6WmNJenl4bkNpd2crcjM5aU5aQ05NdUVjc0JPSnhX?=
- =?utf-8?B?ZU9FVDU0NlJaUmo4MFhCTmxNNEVUbjRJWk84OUNSRE5aVWxweVZobXhGT29I?=
- =?utf-8?B?SUNTd1QyUEhndnZMRFgwMFBZbVhlTWFBMlhQZGFENEVQQjFQb2hOYUZ6M1d5?=
- =?utf-8?B?bHBPc3RiTW1qa0kvMzc5cVJRK3N3VE9mQTN4WWx0VlY1SldCMFdGS2Jod2Vi?=
- =?utf-8?B?cU9YbUlsT0FYUWxxMklTUjVaUW51VGh6R2FuUTNrVXY1aWEwNm5VRmthY09F?=
- =?utf-8?B?ZXhZblVlb0NWdnY5TTNtQkFxeFMvYzRyV3liVERFQjJZZ0ZzQmMwSnp2TXZz?=
- =?utf-8?B?OEFlZS8wMEJwS1cwdkZJaTZNcHQzNTJESGpZNmEwbCtreDQ0VUtXd3NtamVH?=
- =?utf-8?B?K002d3pmaDlPNDRDSWd5VGw5aUxBQ3lsenlvaTROSk8raE1JUGFkbUtKZG91?=
- =?utf-8?B?QXlJTU9YNGF3ek9IbDZzZ3lscTB6LzEzRHEybjJaQ21wU0RGUkVJSURHM25Q?=
- =?utf-8?B?N09nakxzVlZNbEsrWTBDemtYS3ZMNkZzS3lLOEYwR3NNZjhWT2RaNjhncTFV?=
- =?utf-8?B?NklUTmxaT2t2dEd1THFCSUVGWk03U2ZjRjdXeVI1OWNNY2RJc3ptRUtVY21n?=
- =?utf-8?B?YkRSdG9XUHZidlhKT3FEa2NsRTBhSU5MRmpqWXh2VUJOYnZQcVRaaWhJUXBh?=
- =?utf-8?B?YzdxbjR6SkFaNmxCaDBpdE9HdW1RQkEweWtOdG0rQUxxbmRYL05MMCtJRW9R?=
- =?utf-8?B?YlY1QTFMY0xpcVZoOG9rVlFiZytta0hTVlVSWlNZVXpmOVZLdnBMRnlBaXZR?=
- =?utf-8?B?eWV3KzE2S21vbVNqRW9naEx5YU5NT21Bd1Q2NUZDZ0tXZFd6ODFMY1V5RGw5?=
- =?utf-8?B?NTBReE11U1I4NU13cFBmK2tMa01rczQrT2pCdHVqMHpnUzJCdmswN3VsZ1l1?=
- =?utf-8?B?cVVwMXBxclJUZkhpcmYyNVBZRExDam1xME95NWV1Tml6Sk9aLzB5dkcvNG9C?=
- =?utf-8?B?RU5HMzYrTGdtU2R2WnNqbnJnODBnSHRGeG02aDZwUGQrR1J2R1ZLN2FUb0Uz?=
- =?utf-8?B?VU9ORXJlN2VXUUp6RHNyaTBmMG5hdGZyemZSMkhaZ3d3OS94eXV1dEFrazQ5?=
- =?utf-8?B?MlhQUzR6dW5kNWJ0VFBhN1dEeXo5ZXFlVDh5WlhhaTJhSWNlU3B0TnR4eFgx?=
- =?utf-8?B?Rk16SmhMY1UrWnhaTDBqZDFIc1lLU2U5ZFRzRkNTTkZ1eDR2NFl0NjhHVW84?=
- =?utf-8?B?cHhnTjBYQ0tiMHB1NzV6bjNGTmVzZWlEVkRyRmdpbUhFZXVqMWl0M0hQOGU5?=
- =?utf-8?B?SExORUxvc0hNWitPUnorL3dGQjRwT1I5UEpYZ051SWJyaVhvL1UzazZ6TGp5?=
- =?utf-8?B?K2FZcEd2ZXhCZE16TFBNVXBHRXpLV3hxL2dZclYrT2ZvcmdXQTZjWDBkanhL?=
- =?utf-8?B?VklyNUl5aHpLak9OSGptNGFqb0ZvR1lveFAyL29pK0dkQ2UwSCtramU0OHhs?=
- =?utf-8?B?QWJjbGQ3RjJUNFNZemlIb2hBWnkrMnFPSFJBVW1WOVE2TVdoa0U1OU5YbGtq?=
- =?utf-8?Q?hK5O0MjZdEHCn1R+mp5fo8EKTYFHG/sE?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8459.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(52116014)(7416014)(366016)(921020)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?bEp0ZDc3eXpvb05LVGpXWDN6UjdTU0Vob1NOcnp4MjJET0VUZGZ6SmR2cWJp?=
- =?utf-8?B?dE13Q0Nna0JKTDM2cWV4cTlJRGoydGdQUVo4ZmN5Y3BtYkZJTXFqbEx1OEFZ?=
- =?utf-8?B?cFlMVGJYeCt1enMyTGZjT1c5REdYdFo5YkNhTmxsY3lBeWZ3UW8xeFo5RjZp?=
- =?utf-8?B?SS81NDk0YXFFTFlxSEFYSlZabk1rbnhHYXBsdkdQV2NTa1dJTjB1dHR2aHRr?=
- =?utf-8?B?dTFYVnZodTNock5lQmRGVmFHd1pvTjRCc2FuckswaWxoSTZUaUExdDZDYVhD?=
- =?utf-8?B?YjNxT1dBWnA2MGNjNXlsZzdIWDRVTEJvU3J5NTFOaG9MSlFWWkgwMDNQRTVR?=
- =?utf-8?B?MkZ0M1J6YzFrNEl0ZWloNVhXeG5sNVN3WnVhQWVQcENUZm9lcW1UUjNaYnNU?=
- =?utf-8?B?Z2FCMjh3cC9DMWNKOUFrWHZHUDRYU3RDV3U2VWJXSDlJQ3UyMzEwdU44QVBm?=
- =?utf-8?B?eitaVHdSWTIrS0FZTUM2OTQ2enRYQ1RSS3RzNUJiYm5pKy9ocGVkSGRHclp4?=
- =?utf-8?B?a3NlcVlGVU9IQ24xLzl1L0x0VkdpdGx4bUpaSEx1SUp1dlVsOEJ0S0xxTVRH?=
- =?utf-8?B?MDhySFJJTzBtOEgrTE9yNmxkcWdUT3NvRE1rZmtQV05qaTUzWkM4dTdoSjYv?=
- =?utf-8?B?bHVIVnRSNE9XVEY4M0tvTGtnQ3oxbjNaZStjZXRmSVBRdDRaSXNzeVhRbzZF?=
- =?utf-8?B?YlFjRytNZm96TWcyZllJK2xtSGFXeEI1OFh1UHpFUFQvaWljZkZ1Qkh5SjJ3?=
- =?utf-8?B?K2RWWlFzbW5Rbkh3MmhvcmVLR1B4dWFJdG44M2tXNVdnamhPdzBGWjRZU1hW?=
- =?utf-8?B?bWRuUGpZRFpSTEQ4R1NpMUc5K0NJam0yUGFncDgrVS9VZ3o4eXlUdnZLL1p4?=
- =?utf-8?B?K21ZTmNTM2k2N1BRN0U5MUpFSGlEQk9QK245NXZuZ3ZGemt4TlJ1bFhWejZW?=
- =?utf-8?B?TG1OdC9hSy9XbjRXUXpUcHhKK2xRQnQ5OFdqVkQvRmxCTjhTVzUxL0lTb0Zi?=
- =?utf-8?B?dzZkcmNFZzdaTnRmOFlpMmhQeUxUTzVoeVp5NEExbzF5dVRHa0I0N1hjOVNH?=
- =?utf-8?B?OE0yZzVRQXRmR1RIWVdwZmxlVlBYMVhacFJyQ3NhTTJKcFhOWDU4VzFzMzFM?=
- =?utf-8?B?Z2RNNXVEbU0vMHVKQU1ORXBWVXZZS1U5N1JlOEZUN0J3Z3kvSG9qQU9HNXQ2?=
- =?utf-8?B?aFZ0WE9UVnhMM2VVM2R1bWh1VmplclUzZFNkcXh4dHFpV3FoNEU2UXFGdTNa?=
- =?utf-8?B?c0t5cHEzTlFZSzV6UGh3aUNxaTdYZDhOWTMxUGxtUGlWMDVZQ1FoSWdGMnVV?=
- =?utf-8?B?Vi81ODliUDA1RW5IbFJ1Yyt5ZW93c1U4Q2pxcjRBK0JWSmpCRTBQb1ZYM3lh?=
- =?utf-8?B?UlAwQ1JSRjNkY2FBTFRmTWlGSjhCVzJNU0Qxay91aXl1ZVJZRnI1WDJFelV0?=
- =?utf-8?B?azdtVTNSTHZDdUpNUElvNHpvTjh2bmF1VC8rQjBCcDJhV3kxMit1ZERrWlk5?=
- =?utf-8?B?YlYzaWRLeDh4cDRBSFlUUzZlS05YMTE0eCtJbFFNbTFGbkFiLzJVNzBxKzJH?=
- =?utf-8?B?Y2l1WFJWbGhxSDd2YUZid2p5NmVpV3pFU2lKNTJja1dLcVIvbzJ2RU5vNDVk?=
- =?utf-8?B?RW82d0JnVDBCcTI0cXFLNGpuWExKTENhWVVPWEk5SXFnQ3NpYTY2T2k0Wm53?=
- =?utf-8?B?SHIxQUFHL0d5ZmhPdEo4bTEvODlDV1VxNjMvU0xNdWl1OUxwS0ZmMjVBYWhC?=
- =?utf-8?B?VndxdFdySTEvQXkxdHAxUmNKVzJ5bFdIdFRhLzBJa0NYVGRTQmRxYTBWdmlW?=
- =?utf-8?B?U3d1VkVnMFVQcVZKaStIdDZHQVZwZkF3WFU5b2dHeEt0SkQ1N204dWNDdy84?=
- =?utf-8?B?eXBkT1ZnNWtidi9oZ3ROZjRtakczL016Z25JUjNpTm9lQUhrYy9tTXkrS2pS?=
- =?utf-8?B?di8raWk5RU5zTUJvdzZoV2dwWGZBOGM1TnFzeWczYUFlRU5ha3NSSlFVd3BQ?=
- =?utf-8?B?WktJbFh5RHdKR00wdE1mdWRsRE5IQUtuSWxOVmx4SS9wa1pCM0R6Q0dnSHR4?=
- =?utf-8?B?blRDb3Z6eDJlMWJ4dSthdHR4VXpPR0VNMUJxcVEyNG1UZFV6QUJTbU9aeDhZ?=
- =?utf-8?Q?SmI2iWZzjVxqLzdIIXXiktGpy?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1a72729f-64e0-4e08-342c-08dd74a74f0b
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8459.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Apr 2025 01:06:51.4597
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 30Ve0kjvlrYafpTeL5RgUjS8UP3Vk7qs+6VxPlLGHYZeYRhYzR9vJrJDVTIihoV0a1sinjJUdJ3IrnQdkxuTPA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR04MB10276
+Content-Transfer-Encoding: 8bit
 
-From: Peng Fan <peng.fan@nxp.com>
+Add two new types, Instant and Delta, which represent a specific point
+in time and a span of time, respectively, with Rust version of
+fsleep().
 
- of_gpio.h is deprecated, update the driver to use GPIO descriptors.
- - Use devm_gpiod_get_optional to get GPIO descriptor.
- - Use gpiod_set_value to configure output value.
+I dropped patches related with read_poll_timeout() in this version,
+which we haven't reached agreement on yet. There are other potential
+uses for the Instant and Delta types, so it's better to upstream them
+first. Note that I haven't changed the subject to avoid confusion.
 
-With legacy of_gpio API, the driver set GPIO value 1 to power up
-AK5386, and set value 0 to power down.
-Per datasheet for PDN(reset_gpio in the driver):
- Power Down & Reset Mode Pin
- “H”: Power up, “L”: Power down & Reset
- The AK5386 must be reset once upon power-up.
+Unlike the old rust time branch, this adds a wrapper for fsleep()
+instead of msleep(). fsleep() automatically chooses the best sleep
+method based on a duration.
 
-There is no in-tree DTS using this codec, and the bindings does not
-specify polarity. Per driver and datasheet, the GPIO polarity should be
-active-high which is to power up the codec. So using GPIOD_OUT_LOW
-when get the GPIO descriptor matches GPIOF_OUT_INIT_LOW when using
-of_gpio API.
+v12
+- drop #1, #6, and #7 patches, which we haven't reached agreement on yet
+- adjust hrtimer code to use Instance for the removal of Ktime
+v11: https://lore.kernel.org/lkml/20250220070611.214262-1-fujita.tomonori@gmail.com/
+- use file_len arg name in __might_resched_precision() instead of len for clarity
+- remove unnecessary strlen in __might_resched(); just use a large value for the precision
+- add more doc and example for read_poll_timeout()
+- fix read_poll_timeout() to call __might_sleep() only with CONFIG_DEBUG_ATOMIC_SLEEP enabled
+- call might_sleep() instead of __might_sleep() in read_poll_timeout() to match the C version
+- Add new sections for the abstractions in MAINTAINERS instead of adding rust files to the existing sections
+v10: https://lore.kernel.org/lkml/20250207132623.168854-1-fujita.tomonori@gmail.com/
+- rebased on rust-next
+- use Option type for timeout argument for read_poll_timeout()
+- remove obsoleted comment on read_poll_timeout()
+v9: https://lore.kernel.org/lkml/20250125101854.112261-1-fujita.tomonori@gmail.com/
+- make the might_sleep() changes into as a separate patch
+- add as_millis() method to Delta for Binder driver
+- make Delta's as_*() methods const (useful in some use cases)
+- add Delta::ZERO const; used in fsleep()
+- fix typos
+- use intra-doc links
+- place the #[inline] marker before the documentation
+- remove Instant's from_raw() method
+- add Invariants to Instant type
+- improve Delta's methods documents
+- fix fsleep() SAFETY comment
+- improve fsleep() documents
+- lift T:Copy restriction in read_poll_timeout()
+- use MutFn for Cond in read_poll_timeout() instead of Fn
+- fix might_sleep() call in read_poll_timeout()
+- simplify read_poll_timeout() logic
+v8: https://lore.kernel.org/lkml/20250116044100.80679-1-fujita.tomonori@gmail.com/
+- fix compile warnings
+v7: https://lore.kernel.org/lkml/20241220061853.2782878-1-fujita.tomonori@gmail.com/
+- rebased on rust-next
+- use crate::ffi instead of core::ffi
+v6: https://lore.kernel.org/lkml/20241114070234.116329-1-fujita.tomonori@gmail.com/
+- use super::Delta in delay.rs
+- improve the comments
+- add Delta's is_negative() method
+- rename processor.rs to cpu.rs for cpu_relax()
+- add __might_sleep_precision() taking pointer to a string with the length
+- implement read_poll_timeout as normal function instead of macro
+v5: https://lore.kernel.org/lkml/20241101010121.69221-1-fujita.tomonori@gmail.com/
+- set the range of Delta for fsleep function
+- update comments
+v4: https://lore.kernel.org/lkml/20241025033118.44452-1-fujita.tomonori@gmail.com/
+- rebase on the tip tree's timers/core
+- add Instant instead of using Ktime
+- remove unused basic methods
+- add Delta as_micros_ceil method
+- use const fn for Delta from_* methods
+- add more comments based on the feedback
+- add a safe wrapper for cpu_relax()
+- add __might_sleep() macro
+v3: https://lore.kernel.org/lkml/20241016035214.2229-1-fujita.tomonori@gmail.com/
+- Update time::Delta methods (use i64 for everything)
+- Fix read_poll_timeout to show the proper debug info (file and line)
+- Move fsleep to rust/kernel/time/delay.rs
+- Round up delta for fsleep
+- Access directly ktime_t instead of using ktime APIs
+- Add Eq and Ord with PartialEq and PartialOrd
+v2: https://lore.kernel.org/lkml/20241005122531.20298-1-fujita.tomonori@gmail.com/
+- Introduce time::Delta instead of core::time::Duration
+- Add some trait to Ktime for calculating timeout
+- Use read_poll_timeout in QT2025 driver instead of using fsleep directly
+v1: https://lore.kernel.org/netdev/20241001112512.4861-1-fujita.tomonori@gmail.com/
 
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
----
+FUJITA Tomonori (5):
+  rust: time: Add PartialEq/Eq/PartialOrd/Ord trait to Ktime
+  rust: time: Introduce Delta type
+  rust: time: Introduce Instant type
+  rust: time: Add wrapper for fsleep() function
+  MAINTAINERS: rust: Add a new section for all of the time stuff
 
-V2:
- Typo fixes in commit log
- Drop uneeded gpio check before gpiod_set_value
- Include more headers
+ MAINTAINERS                         |  11 +-
+ rust/helpers/helpers.c              |   1 +
+ rust/helpers/time.c                 |   8 ++
+ rust/kernel/time.rs                 | 165 ++++++++++++++++++++++------
+ rust/kernel/time/delay.rs           |  49 +++++++++
+ rust/kernel/time/hrtimer.rs         |  14 +--
+ rust/kernel/time/hrtimer/arc.rs     |   4 +-
+ rust/kernel/time/hrtimer/pin.rs     |   4 +-
+ rust/kernel/time/hrtimer/pin_mut.rs |   4 +-
+ rust/kernel/time/hrtimer/tbox.rs    |   4 +-
+ 10 files changed, 210 insertions(+), 54 deletions(-)
+ create mode 100644 rust/helpers/time.c
+ create mode 100644 rust/kernel/time/delay.rs
 
- sound/soc/codecs/ak5386.c | 28 +++++++++++++---------------
- 1 file changed, 13 insertions(+), 15 deletions(-)
 
-diff --git a/sound/soc/codecs/ak5386.c b/sound/soc/codecs/ak5386.c
-index 21a44476f48d..6525d50b7ab2 100644
---- a/sound/soc/codecs/ak5386.c
-+++ b/sound/soc/codecs/ak5386.c
-@@ -6,11 +6,13 @@
-  * (c) 2013 Daniel Mack <zonque@gmail.com>
-  */
- 
-+#include <linux/device.h>
-+#include <linux/dev_printk.h>
-+#include <linux/err.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/module.h>
--#include <linux/slab.h>
--#include <linux/of.h>
--#include <linux/of_gpio.h>
- #include <linux/regulator/consumer.h>
-+#include <linux/slab.h>
- #include <sound/soc.h>
- #include <sound/pcm.h>
- #include <sound/initval.h>
-@@ -20,7 +22,7 @@ static const char * const supply_names[] = {
- };
- 
- struct ak5386_priv {
--	int reset_gpio;
-+	struct gpio_desc *reset_gpio;
- 	struct regulator_bulk_data supplies[ARRAY_SIZE(supply_names)];
- };
- 
-@@ -110,8 +112,7 @@ static int ak5386_hw_params(struct snd_pcm_substream *substream,
- 	 * the AK5386 in power-down mode (PDN pin = “L”).
- 	 */
- 
--	if (gpio_is_valid(priv->reset_gpio))
--		gpio_set_value(priv->reset_gpio, 1);
-+	gpiod_set_value(priv->reset_gpio, 1);
- 
- 	return 0;
- }
-@@ -122,8 +123,7 @@ static int ak5386_hw_free(struct snd_pcm_substream *substream,
- 	struct snd_soc_component *component = dai->component;
- 	struct ak5386_priv *priv = snd_soc_component_get_drvdata(component);
- 
--	if (gpio_is_valid(priv->reset_gpio))
--		gpio_set_value(priv->reset_gpio, 0);
-+	gpiod_set_value(priv->reset_gpio, 0);
- 
- 	return 0;
- }
-@@ -177,14 +177,12 @@ static int ak5386_probe(struct platform_device *pdev)
- 	if (ret < 0)
- 		return ret;
- 
--	priv->reset_gpio = of_get_named_gpio(dev->of_node,
--					     "reset-gpio", 0);
-+	priv->reset_gpio = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_LOW);
-+	if (IS_ERR(priv->reset_gpio))
-+		return dev_err_probe(dev, PTR_ERR(priv->reset_gpio),
-+				     "Failed to get AK5386 reset GPIO\n");
- 
--	if (gpio_is_valid(priv->reset_gpio))
--		if (devm_gpio_request_one(dev, priv->reset_gpio,
--					  GPIOF_OUT_INIT_LOW,
--					  "AK5386 Reset"))
--			priv->reset_gpio = -EINVAL;
-+	gpiod_set_consumer_name(priv->reset_gpio, "AK5386 Reset");
- 
- 	return devm_snd_soc_register_component(dev, &soc_component_ak5386,
- 				      &ak5386_dai, 1);
+base-commit: a2cc6ff5ec8f91bc463fd3b0c26b61166a07eb11
 -- 
-2.37.1
+2.43.0
 
