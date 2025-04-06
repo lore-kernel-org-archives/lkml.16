@@ -1,103 +1,135 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D72E91A5B8E
-	for <linux-kernel@vger.kernel.org>; Sun,  6 Apr 2025 20:40:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13FF718C03F;
+	Sun,  6 Apr 2025 20:42:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743972059; cv=none; b=uywXLmwS6MCBljGhPqRCFEvjUyYIo10V+PZLmiPqvbxDB1ug0UNf1FXlxeP3t8Rr7ftN0iF5ESNXZ65WC9z2Hdogi+FvMJSFWuHKADJSFlNiIoSFAXFaBoAXzeJ/n0IUpCn1+/8Y+oJ4FPJvMak0w2IHmVWG8rEVMFp9Q/ZNhkI=
+	t=1743972182; cv=none; b=ScDb9wdm8vhDYnWHxSYImlky+V+Zx2VIC9Bryxrz5wFK1XXi3yzzuoDE9D7qCPDdAQoPItMfuqTUZvZbWAlgcoCukO4AyIvr+CA+sZEmP8QcTCekTB3C/RXmgsa19GeEsiwORc6v9jE+jypydz6R8CL+7ybpj5w5ZWSABsYsNak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743972059; c=relaxed/simple;
-	bh=lVCMtD03NGUi1+3/wJh+B38jb8GdFNhjnbe4ZG93O9M=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kPdIyR8c5rNw+9bMPArm52gnMu46p07yYDTCdYngjA4ErhbPNXmdAdtsU93KwWwhFaygarhpsEFqhWSwiPgKdpSfGcLvCQcmCWkh6nSIu5/sjB2/POXGEmJ+y/sGqT5AatSJSpVq4zs9xxKfFoiDuqOgZUKqlR2mQk1FELFSYVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Mi6iQWY8; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1743972182; c=relaxed/simple;
+	bh=ucTOR97qFqJDSGh++Oi8YunL4fytJwroFSyVVKXhxw8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QQ9t1/62a5eKuYzuXh/FdA4cUzJNxHJ8LJodOuU3h3wwVncndjDxQJ47FYAbd+VPw6ZSvBO1SoNrJazgQcCsA9nV4QtFMIa78EzOsk0ktko5V32A3iDeBv31M4SkV0oiFxHdwsIvq917+emS7/+yS5utoa0xZZnMZzd7vZiQXz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RCfRAANi; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Mi6iQWY8"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3913290f754so449110f8f.1
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Apr 2025 13:40:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743972056; x=1744576856; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/qeCppP+Rln/Mksz9KnQhz7mwwvDX1H3vv1ZRST/ETI=;
-        b=Mi6iQWY8q55B5rRkT1abuFZHlxllVQD1ddO1cqxeMI5PyQX9hfq8sPsEfQm0c02Kb2
-         GwPoS+XG3RKpu+S+C/asg3hSWIF/rZxeQ+UxBtxiu3cxWD+lWZ4A9OAwz+/vS4MiAwgH
-         YmLG5pz2KglwOvPVonPal7GTiKgNzoJi9PvEedlPYyDBrMjiHo/nHdJdTUUIn4rDqa/v
-         5DOhriO0aoLehljlYYfUKS7A+RBjvsNIh7qkoCrJw/C5ueagdF/IfohzbapjE/Zq26cM
-         Ww/LaokW/uQ29ZKpgOp60yUfUpXBQc3/nkkK98bPu4cAOHrdSE72+LcWhrXnXBr7sCQR
-         qmyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743972056; x=1744576856;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/qeCppP+Rln/Mksz9KnQhz7mwwvDX1H3vv1ZRST/ETI=;
-        b=bFW/4CfWBp+InaVnyvW9eGPvJKcXw3Xrc7hyd1nlAB9yp4M7sXO/wXVjLbje/6hlix
-         q8HmwWhLR5s0xXu6hTGwdSJYcdj3sczKqkWBG5zKhmRaAvLO9s/OxbzxIK7QrSKEOv13
-         agbRRDEiMi0ZSdgIs1rAaIXHKwEpgQyALJxMW6FMW7TJoY8C+868P9YNdj0f9roaRDCB
-         Tpr+OkIvK9cab+TeM/3ml1QT5rigtAZJTNCscvvzNvgmMvRINf3dMNsPjXe7t/cUDIto
-         aTVbhfL7qwl2JZzRnDc/2wPzjwhfwkw8570YZqXFfW7jCjOPRW778vHeQdn2kcLj1DK6
-         mtTA==
-X-Forwarded-Encrypted: i=1; AJvYcCVfYwTAY5zo388wC49PrCRyC24oBGKUB/zSELEhK02f8woeQIVF0bLTAYB0pReZ8oUFKuDffCnaGUYdNm0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyk1gu4SxFyhJXTH4Pay0A74Jp2pkzObrKd3vD2CZTP8m64MlJ3
-	YYBKSknwCKtiiM+f8WrHWT2paCBa2WOycZDfBSoqoIuEH9t/lLXA57jTi5ABNmg=
-X-Gm-Gg: ASbGncusRsHgBOVvZL9aRkPnOsU3Txkn4ltoK8uc5i+NcsRpR57jiv5vZC55kxQkquv
-	u8bD3OHY9B+Tf1p2I/zGpi2SAtWmsHLl/gyt14I18+W05GoIRTS7+LWtrBUrqFvzE2tzTrAA39r
-	pC1VR+UJlMvOB11kdqysenkYAIQ1e5hOeb1IDIiM8xMkzqiMdBqDyDQMJwKjY9+zOVPv9Fu769P
-	aSBVR5vKU6+uQLVOFyunwOZhDoLNrxmFBnVmEiJbWBCwKrf58EmVFR7meMvVaZr2WPcD1ve8yxE
-	jHJwwNMjPjqM1/hixJmgWh4OZ8YGDrSCEHLDECxci+Ss4GsXDwzqCw==
-X-Google-Smtp-Source: AGHT+IFALjZG6RCT3tgEKFB/Q+s6vxmhQDm88jfmYRNHOnoIoO4cH/esD9rNMVN3x+CCKt0zFAUyCQ==
-X-Received: by 2002:a05:6000:4009:b0:39c:1258:17d5 with SMTP id ffacd0b85a97d-39cba940fbemr3160203f8f.14.1743972056151;
-        Sun, 06 Apr 2025 13:40:56 -0700 (PDT)
-Received: from shite.. ([178.197.198.86])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec17b0dbesm113167335e9.33.2025.04.06.13.40.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Apr 2025 13:40:55 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH 2/2] usb: typec: tipd: Fix wakeup source leaks on device unbind
-Date: Sun,  6 Apr 2025 22:40:51 +0200
-Message-ID: <20250406204051.63446-2-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250406204051.63446-1-krzysztof.kozlowski@linaro.org>
-References: <20250406204051.63446-1-krzysztof.kozlowski@linaro.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RCfRAANi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743972180; x=1775508180;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ucTOR97qFqJDSGh++Oi8YunL4fytJwroFSyVVKXhxw8=;
+  b=RCfRAANiFlsffxsLkeOrf3D2ZxEdUtpkJ7iUEcGjAYGGPvkwsIydz1Fl
+   4Fcdra37AWaAzXnc7mtm8SV0gjrTuOcaOQ3NvmykOBiJo71gtMg2NhanK
+   0YY9JmBAcZSmDiUlg9e6lpAaaZbmNRnsez8C9syFOQ9Y+f9fhNDG82/Lt
+   cE0amL0ZwPPLmALE0ts9ebCRM9R3V4yiOKac6HszOgbG1m2aZLVMNlb/v
+   Ay6V/fkQy9bVdgBpWVE1HbkcI/IJBq+xIF6XgHxQexJb3u9UKwsUomWhG
+   HCzyuKbowCSBZxBxWXct4hGXQJnwoKm0Fq2zKP3meO6/1KTmgT9wAnnWX
+   w==;
+X-CSE-ConnectionGUID: T6WPsuguRsaw4+xAPBrnFA==
+X-CSE-MsgGUID: z+EiWtdLSdGJW8Guhc1I0w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11396"; a="62893348"
+X-IronPort-AV: E=Sophos;i="6.15,193,1739865600"; 
+   d="scan'208";a="62893348"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2025 13:42:59 -0700
+X-CSE-ConnectionGUID: 7A1SZ+9HQaeEOp+zSzOO2A==
+X-CSE-MsgGUID: 1Mu686fJRWm6vbVCtSdAXQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,193,1739865600"; 
+   d="scan'208";a="128624589"
+Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
+  by fmviesa009.fm.intel.com with ESMTP; 06 Apr 2025 13:42:53 -0700
+Received: from kbuild by b207828170a5 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u1WpO-0002lj-2N;
+	Sun, 06 Apr 2025 20:42:50 +0000
+Date: Mon, 7 Apr 2025 04:42:09 +0800
+From: kernel test robot <lkp@intel.com>
+To: Blaise Boscaccy <bboscaccy@linux.microsoft.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	David Howells <dhowells@redhat.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>,
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas@fjasle.eu>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	=?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
+	=?iso-8859-1?Q?G=FCnther?= Noack <gnoack@google.com>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Jarkko Sakkinen <jarkko@kernel.org>,
+	Jan Stancek <jstancek@redhat.com>, Neal Gompa <neal@gompa.dev>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	keyrings@vger.kernel.org, linux-crypto@vger.kernel.org,
+	linux-security-module@vger.kernel.org, linux-kbuild@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
+	llvm@lists.linux.dev
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	netdev@vger.kernel.org
+Subject: Re: [PATCH v2 security-next 1/4] security: Hornet LSM
+Message-ID: <202504070413.eDHSjWGP-lkp@intel.com>
+References: <20250404215527.1563146-2-bboscaccy@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250404215527.1563146-2-bboscaccy@linux.microsoft.com>
 
-Device can be unbound, so driver must also release memory for the wakeup
-source.
+Hi Blaise,
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- drivers/usb/typec/tipd/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+kernel test robot noticed the following build errors:
 
-diff --git a/drivers/usb/typec/tipd/core.c b/drivers/usb/typec/tipd/core.c
-index 7ee721a877c1..dcf141ada078 100644
---- a/drivers/usb/typec/tipd/core.c
-+++ b/drivers/usb/typec/tipd/core.c
-@@ -1431,7 +1431,7 @@ static int tps6598x_probe(struct i2c_client *client)
- 
- 	tps->wakeup = device_property_read_bool(tps->dev, "wakeup-source");
- 	if (tps->wakeup && client->irq) {
--		device_init_wakeup(&client->dev, true);
-+		devm_device_init_wakeup(&client->dev);
- 		enable_irq_wake(client->irq);
- 	}
- 
+[auto build test ERROR on shuah-kselftest/next]
+[also build test ERROR on shuah-kselftest/fixes herbert-cryptodev-2.6/master herbert-crypto-2.6/master masahiroy-kbuild/for-next masahiroy-kbuild/fixes v6.14]
+[cannot apply to linus/master next-20250404]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Blaise-Boscaccy/security-Hornet-LSM/20250405-055741
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest.git next
+patch link:    https://lore.kernel.org/r/20250404215527.1563146-2-bboscaccy%40linux.microsoft.com
+patch subject: [PATCH v2 security-next 1/4] security: Hornet LSM
+config: s390-allmodconfig (https://download.01.org/0day-ci/archive/20250407/202504070413.eDHSjWGP-lkp@intel.com/config)
+compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250407/202504070413.eDHSjWGP-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504070413.eDHSjWGP-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> security/hornet/hornet_lsm.c:221:31: error: incompatible function pointer types initializing 'int (*)(struct bpf_prog *, union bpf_attr *, struct bpf_token *)' with an expression of type 'int (struct bpf_prog *, union bpf_attr *, struct bpf_token *, bool)' (aka 'int (struct bpf_prog *, union bpf_attr *, struct bpf_token *, _Bool)') [-Wincompatible-function-pointer-types]
+     221 |         LSM_HOOK_INIT(bpf_prog_load, hornet_bpf_prog_load),
+         |                                      ^~~~~~~~~~~~~~~~~~~~
+   include/linux/lsm_hooks.h:136:21: note: expanded from macro 'LSM_HOOK_INIT'
+     136 |                 .hook = { .NAME = HOOK }                \
+         |                                   ^~~~
+   1 error generated.
+
+
+vim +221 security/hornet/hornet_lsm.c
+
+   219	
+   220	static struct security_hook_list hornet_hooks[] __ro_after_init = {
+ > 221		LSM_HOOK_INIT(bpf_prog_load, hornet_bpf_prog_load),
+   222	};
+   223	
+
 -- 
-2.45.2
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
