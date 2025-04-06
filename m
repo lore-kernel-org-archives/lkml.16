@@ -1,165 +1,127 @@
-Received: from www571.your-server.de (www571.your-server.de [78.46.3.230])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f195.google.com (mail-pf1-f195.google.com [209.85.210.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D93F3186E20;
-	Sun,  6 Apr 2025 09:07:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.46.3.230
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D126319D07C;
+	Sun,  6 Apr 2025 09:08:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743930466; cv=none; b=GdhcfWK/keNuwJB48yF7zNYYYXfoL952y0cvqphPN/bmHu/1/JZJfKL53/uvXCY59ae8rcZAfp+WummRsgvM3FkvA07DS2Uh7b/zwTmRqW2kMB+pzPfw3J4gN1vJhgmktyQTa/73FbIaoe8oFvRAXY9xehVuU+0FNYLO4y+nwak=
+	t=1743930537; cv=none; b=so5YIa9TlkvcdcJJIA7Z9NrhHFBx3UoYzhY65LaRGuPOJiEBX2g553WYMxXFDZTLb0sGRGxgNMXtXF9msn8acLnkKMrRLfwOjbWptrcZRViYiqepf9rPUSEN3l4PaMKHjana3Taq25MECDNpZw6ig3lVhlxYr9ffATmRjly88m0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743930466; c=relaxed/simple;
-	bh=+PWWCS63/CbxJpONq3AEhtxPWS3WKuwnVusvHLRtnAw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J4PaXMyOkRavowha/7v+vY0GJJ3DLFhxbQDDykvzRsDwntBXrVUftWYbS4SBXPvfvqvTsKsdL0qBaUAhyWWoSMAVgkJDvVH/2JnEQRKHZFCuZNfWGOMYKLNq6o0aG9rvsjveEz7y57jrCIDtSqt694rUT2IW7qwMG43H1c1RX3o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=it-klinger.de; spf=pass smtp.mailfrom=it-klinger.de; dkim=pass (2048-bit key) header.d=it-klinger.de header.i=@it-klinger.de header.b=RCiVDabu; arc=none smtp.client-ip=78.46.3.230
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=it-klinger.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=it-klinger.de
+	s=arc-20240116; t=1743930537; c=relaxed/simple;
+	bh=SzoCK8uTEbEoC4J8gPsTOWxyFf85tq5CnyJPJwV2p/U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cz0Z+IEtkcT7nT7zKxIEQ3OgcesvRzbdu4K+8FNVBiSRAdunn/1ceno/A+t2SWeqQkWmV8md7/b3jJCLzkQJz1UBFCjAbaRQJArMALpXXpgUeH4lrjJY9084g4ZxZWXMbcNDderCaKTP1wCDsI8pUv10BFrUiYVJrCYGBnHeJp8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JliAhiMl; arc=none smtp.client-ip=209.85.210.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=it-klinger.de header.i=@it-klinger.de header.b="RCiVDabu"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=it-klinger.de; s=default2502; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=mhp6ovL8zavoyaSxkv5HYHmsZacM5L2V4hmeVvMF4l4=; b=RCiVDabuoQ59c0QZCA399+Bwv6
-	5ORzt0YRL5HT1GFyd264QOsg6XJ3+8FLBUZh7So2Iu9wGw0tBNqM3Na2YGTaTDHcTgprycmR5Q/WJ
-	UnUKlYZDcsOWKSK1NrTn3F+LOjinv3T0KFJqO+kCoi7kzTpNEigCSYXmyHOXKBPfa+qzVhmXOaXgw
-	wXNOvjqew3x9s55pyh3v2SAzCTCN/RxUWtPqObMOX+m110Ei6y+ST96ngSaFLCz4kP+qoSdspNLC3
-	wzxgoccsTY0xa79rikNuTNzyzkvFd0eBIchyvugd8KRbVuaYgorWG70U4SGvJ4vuaKHf5zU/cgZsk
-	g7CjKDbw==;
-Received: from sslproxy05.your-server.de ([78.46.172.2])
-	by www571.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96.2)
-	(envelope-from <ak@it-klinger.de>)
-	id 1u1LbB-000MBB-2l;
-	Sun, 06 Apr 2025 10:43:25 +0200
-Received: from [31.220.115.242] (helo=mail.your-server.de)
-	by sslproxy05.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <ak@it-klinger.de>)
-	id 1u1LbB-000LS7-1S;
-	Sun, 06 Apr 2025 10:43:25 +0200
-Date: Sun, 6 Apr 2025 10:43:23 +0200
-From: Andreas Klinger <ak@it-klinger.de>
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	lars@metafoo.de, linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	javier.carrasco.cruz@gmail.com, mazziesaccount@gmail.com,
-	subhajit.ghosh@tweaklogic.com, muditsharma.info@gmail.com,
-	arthur.becker@sentec.com, ivan.orlov0322@gmail.com
-Subject: Re: [PATCH 2/3] iio: light: add support for veml6046x00 RGBIR color
- sensor
-Message-ID: <Z_I-qwzUrTNz1DZp@mail.your-server.de>
-References: <20250316113131.62884-1-ak@it-klinger.de>
- <20250316113131.62884-3-ak@it-klinger.de>
- <20250317115005.72a539a0@jic23-huawei>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JliAhiMl"
+Received: by mail-pf1-f195.google.com with SMTP id d2e1a72fcca58-7376dd56eccso3659406b3a.0;
+        Sun, 06 Apr 2025 02:08:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743930535; x=1744535335; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=4UGKRwJioPxy+lp/bM0MgZCwB2oOxusUsTVwfHCoqAI=;
+        b=JliAhiMlfuv3kehlDZRth3pCVgT0Obpyl0HSFfnyC0s+l9QmXLCSyFK8mH6yTuWBdw
+         zkyv07kBOFODQ2NcL2CNXD9i7+YHNsoC2Qj2ulvq/KAmCvY/KhFM9uncTwH3BWLI+NJk
+         rJTkB8+xGewbORU5Ylfhm+cmsd4IhiEWOL2rgH3A5gAf4edCvqaUf7NfygsqNhv3KEQM
+         8lbz5SK7ZHEqIzUDZo1gfosfBgS+DGvslsE0L6lqTPtama4Czw2AXTS/LyvBuE7RXMdZ
+         QP+h/2iqcDbtXubqviLyn7C+Lm7i4du/5CPaoH8HQAm4fQSqqYWgjcBqQElq/yqljnNS
+         iE4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743930535; x=1744535335;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4UGKRwJioPxy+lp/bM0MgZCwB2oOxusUsTVwfHCoqAI=;
+        b=RFmGol2dTVJNjzqeK/wAE4+HAg/nMjVW+0RqKV4khsLFjEFU6YPR1ZoQvflAgOKv7Z
+         ZO06DAj0FlMRsC6NnA5DiG0jB0isM9Bu4m3e3QD+LhKrtTahH6L2EP5fyGS8kEojpZz3
+         9dV0HjdfsINLYIoSIqHOlm2hc93XG8ts40UUQO5wCjws+rJSXpQLMzyYakuA3RHdBcyO
+         2MqNG6JhiaxIsSzqkdQXGnSj031pDBMQuKuksmlaZe5inlzFB7YYnq3WjWriFX0beqTZ
+         GZ8UZOQcYipsokumZuJiY6PFBbnqUxsi5posAK8Qvnctx7B3kYiRbGmvUq3w8DCBgXzH
+         xq2A==
+X-Forwarded-Encrypted: i=1; AJvYcCUAJ92VtqWLCxtC7F9ZSdfSLU7RMCWzkKk6MBT/JLoQ4mTX82niHMAKC6QzRoGWj9JQLJmQcvLM5+dfN04=@vger.kernel.org, AJvYcCX4256v2HY0M6cDtHdrq99t1l52fzTWA/Juj/NTGjGp0y31nUOG9gs7EogK+MMHQ+44G6mCE0P+7o1P@vger.kernel.org
+X-Gm-Message-State: AOJu0YzDyIBlIaYtQndTW3UCfrC3oR/Ln15KbHk32u7GZNV1aOf53SAx
+	ZhpERzWr2mUiU0kLtJ8i3Cnc1eG5fbFAE/r83lQZT0dK6MvTZYo=
+X-Gm-Gg: ASbGncval1zrxUOOaR1Xyb9Y3b3Eg8AwnVwcHwepY+y2d6bKYFW6iyEE89x3xeLjKcW
+	V6R1EzWeKUPGmPKSMpHxZju6nTKvHXHiTW3WEX7aMvzMrRfZnqKSluz+UKKMQp8tXAuDZuugw2o
+	tktB5sHHjuNNEuXppPX35uu90fPqIGKrR+1K45ePcPMDN1G66RuZMEtufT+8gbQfiXuKyKS0wgy
+	VrcOAljjSa0wwMv138RgkR8kYVC0i7EKoL1aIqAtOS9unTFbFKjZhLv9+ydLTsJG+uR9QRJadwZ
+	tgRiZPW5zDvaLejswvTCbr/wwIktS2JnxbAKsXMkXeKBwRnvSELQlq/ukDCWMhQsvFc=
+X-Google-Smtp-Source: AGHT+IGx3mo4nQMC3y9JnPjB4iYOcrizjmsZJi15Y+a2ajNjUpR+hn/ORK2/xlZO5qXYUMxj7FK8iQ==
+X-Received: by 2002:a05:6a00:4606:b0:736:592e:795f with SMTP id d2e1a72fcca58-739e6ff6b02mr10889859b3a.9.1743930534978;
+        Sun, 06 Apr 2025 02:08:54 -0700 (PDT)
+Received: from localhost.localdomain ([139.227.17.3])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739d97d1c5asm6396850b3a.2.2025.04.06.02.08.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 06 Apr 2025 02:08:54 -0700 (PDT)
+From: Tomita Moeko <tomitamoeko@gmail.com>
+To: Bjorn Helgaas <bhelgaas@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>
+Cc: Tomita Moeko <tomitamoeko@gmail.com>,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] x86/pci: Check signature before assigning shadow ROM
+Date: Sun,  6 Apr 2025 17:08:34 +0800
+Message-ID: <20250406090835.7721-1-tomitamoeko@gmail.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="OfXP2FohRUruAtNP"
-Content-Disposition: inline
-In-Reply-To: <20250317115005.72a539a0@jic23-huawei>
-X-Authenticated-Sender: ak@it-klinger.de
-X-Virus-Scanned: Clear (ClamAV 1.0.7/27599/Sat Apr  5 10:34:42 2025)
+Content-Transfer-Encoding: 8bit
 
+Recent IGD platforms without VBIOS or UEFI CSM support do not contain
+VGA ROM at 0xC0000. Check whether the VGA ROM region is a valid PCI
+option ROM with 0xAA55 signature before assigning the shadow ROM.
 
---OfXP2FohRUruAtNP
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Tomita Moeko <tomitamoeko@gmail.com>
+---
+ arch/x86/pci/fixup.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-Hi Jonathan,
+diff --git a/arch/x86/pci/fixup.c b/arch/x86/pci/fixup.c
+index efefeb82ab61..da9fb86c2ea0 100644
+--- a/arch/x86/pci/fixup.c
++++ b/arch/x86/pci/fixup.c
+@@ -317,6 +317,7 @@ static void pci_fixup_video(struct pci_dev *pdev)
+ 	struct pci_bus *bus;
+ 	u16 config;
+ 	struct resource *res;
++	void __iomem *rom;
+ 
+ 	/* Is VGA routed to us? */
+ 	bus = pdev->bus;
+@@ -338,9 +339,12 @@ static void pci_fixup_video(struct pci_dev *pdev)
+ 		}
+ 		bus = bus->parent;
+ 	}
+-	if (!vga_default_device() || pdev == vga_default_device()) {
++
++	rom = ioremap(0xC0000, 0x20000);
++	if (rom && (!vga_default_device() || pdev == vga_default_device())) {
+ 		pci_read_config_word(pdev, PCI_COMMAND, &config);
+-		if (config & (PCI_COMMAND_IO | PCI_COMMAND_MEMORY)) {
++		if ((config & (PCI_COMMAND_IO | PCI_COMMAND_MEMORY)) &&
++		    (readw(rom) == 0xAA55)) {
+ 			res = &pdev->resource[PCI_ROM_RESOURCE];
+ 
+ 			pci_disable_rom(pdev);
+@@ -354,6 +358,7 @@ static void pci_fixup_video(struct pci_dev *pdev)
+ 			dev_info(&pdev->dev, "Video device with shadowed ROM at %pR\n",
+ 				 res);
+ 		}
++		iounmap(rom);
+ 	}
+ }
+ DECLARE_PCI_FIXUP_CLASS_HEADER(PCI_ANY_ID, PCI_ANY_ID,
+-- 
+2.47.2
 
-I need to pick up the meaning of scale once again for clarification.
-
-Jonathan Cameron <jic23@kernel.org> schrieb am Mo, 17. M=C3=A4r 11:50:
-> On Sun, 16 Mar 2025 12:31:30 +0100
-> Andreas Klinger <ak@it-klinger.de> wrote:
->=20
-> > +static int veml6046x00_get_scale(struct veml6046x00_data *data,
-> > +				 int *val, int *val2)
->=20
-> How is this related to integration time?  I'd normally expect
-> to see that read in here somewhere as well as doubling integration
-> time tends to double scale.
-
-In the documentation file "sysfs-bus-iio" it says:
-"
-What:           /sys/.../iio:deviceX/in_illuminanceY_raw
-[...]
-Description:
-                Illuminance measurement, units after application of scale
-                                and offset are lux.
-"
-
-This means that the scale should be the real factor and not the gain multip=
-lied
-by photodiode size (PDDIV) as i implemented it so far.
-
-This means also that doubling integration time should halve the scale. The
-higher raw value should lead to the same lux value.
-
-The documentation of the sensor (veml6046x00.pdf) provides us the calculati=
-on
-between raw green values and lux.
-Wouldn't it be better to give the user the real factor to be able to get lu=
-x?
-
-The fact that only the green channel can be used for calculation could be
-documented in the driver.
-
-Then i found the "in_illuminance_hardwaregain" property. It seems that this=
- is
-exactly what the combination of gain and PDDIV is used for.
-
-So what is the scale at the moment could become the hardwaregain and the sc=
-ale
-the factor from raw value to lux.
-
-
-To sum up the suggested interface under /sys/bus/iio/devices/iio\:deviceX w=
-ould
-be something like:
-
-in_illuminance_hardwaregain --> set and get gain and PDDIV on the sensor
-
-integration_time            --> set and get integration time on the sensor
-
-integration_time_available  --> show available integration time values
-
-scale                       --> (only) get real calculation value, taken fr=
-om
-                                sensor documenation, e.g. 1.3440
-
-scale_available             --> not existing anymore
-
-
-What do you think?
-
-Andreas
-
-
---OfXP2FohRUruAtNP
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQGzBAABCgAdFiEE7/NrAFtB/Pj7rTUyyHDM+xwPAVEFAmfyPqsACgkQyHDM+xwP
-AVGLqwv/baxRfp2PxoUBztYueZOw/nCf/0TWvxbwS+onIe8CUgUsJsyeV24ij/Ff
-XUhfyo1PZZqYCSfoJ2T353NAP5e2htqrhJmZ49Mj9MOh82bXxORBuUc0pyRFlzIJ
-C4bwFG2tU5ToIMRMWI3S9nZJDpKyyVK2A4xYwfZ4CXdg9rRrh6SEJll6AyL/huTA
-RwqTBlJgz7r62ZW+Zh3LYLQ5FUcVh4Rald4F+SO0r4H2xT92xvs1PhoDMNh4w+jK
-goLmmMYtsV6PuRgWCqotl1+9tdMnQh6O49VMa3I57mQlD8naQNDVDq7x+yBbPrS0
-JlJFQyVoM/s3OSmpw8Et6TyjJn848klSEIdiZpPk0Yea2/g0ez0IO+eDZk32TzJM
-3xviaZcDNa678t42Xzxkxb6OxFNiSfVmo5glD8Iq7DDp3mdwpNqd9vdROsPV0aOx
-ZpSwDiMUTWsn8OXLzpLtbE56o5RcmsvK6ZE/tjhl6EdrYxOhAJfcCqZBVYjenF3P
-N7YJRdJq
-=wPB5
------END PGP SIGNATURE-----
-
---OfXP2FohRUruAtNP--
