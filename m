@@ -1,211 +1,141 @@
-Received: from bg1.exmail.qq.com (bg1.exmail.qq.com [114.132.77.159])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73CAF1EEE6;
-	Sun,  6 Apr 2025 03:52:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.132.77.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F392714375D
+	for <linux-kernel@vger.kernel.org>; Sun,  6 Apr 2025 04:12:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743911545; cv=none; b=IfHvFE7AWVfZVwRd+9Hk5U6sNKoqu1MifNffliIVOkH0/soo+bA+D6BtS0AqOcmG334mmvHonkOHc5MlQExJ0aTNa6YhBHnTNIg9A2BvpVnhnoY6JDKFngft4lgAIfxOYQl3VLN1ZyaP5Jr90xLQwXClFvGE2jdhsGJbVwbNQns=
+	t=1743912730; cv=none; b=R+983weH8aN9VVei55+rG7TKueEIDTe2n7jchMwL8iP3UV+t+1wOF6t/XpU0vsNufLW9sVrFhaLyUv/CmmdLlpUdqRlql3eiR0WSLXo6KMKbMAqkIkeDRuIcXoYBGkcmgLM+llibUhq6B8huyI3aGvqDs5Wje0X93CO+p+o0bio=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743911545; c=relaxed/simple;
-	bh=rY8/OwWhSh4Wdmz1L/w3ngh8RvKLFRK1JgTiRPZ0OhU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BWm8W+OlUPsSIsUy9QbksnDikJcHHzO/VtimdonhF9tm76zNy0IoyAun7SaAdjRzXqqS8+Xsv1ryoRhX7XzhkgQxD/B76x7OtMEM3XKc9gkcsHekEAU6tj7RdReYiWT+kmqOsREsd4iTqEbYKkWvPbffqo1fy0Hc5NERHVzR1kM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=smail.nju.edu.cn; spf=pass smtp.mailfrom=smail.nju.edu.cn; arc=none smtp.client-ip=114.132.77.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=smail.nju.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=smail.nju.edu.cn
-X-QQ-mid: bizesmtpsz11t1743911437thz15z
-X-QQ-Originating-IP: Qlqy6PbPAX34c31erUbh4nfB0lOCsT12VJwmJiBOUfU=
-Received: from localhost.localdomain ( [36.152.24.133])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Sun, 06 Apr 2025 11:50:35 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 13127222276208916939
-EX-QQ-RecipientCnt: 4
-From: Xizhe Yin <xizheyin@smail.nju.edu.cn>
-To: rust-for-linux@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	xizheyin <xizheyin@smail.nju.edu.cn>,
-	Miguel Ojeda <ojeda@kernel.org>
-Subject: [PATCH] rust: convert raw URLs to Markdown autolinks in comments
-Date: Sun,  6 Apr 2025 11:48:11 +0800
-Message-ID: <95E3B7B9ECBFB14C+20250406034811.32347-1-xizheyin@smail.nju.edu.cn>
-X-Mailer: git-send-email 2.49.0
+	s=arc-20240116; t=1743912730; c=relaxed/simple;
+	bh=hGIVXXAhHctDsjy1naMvfXrRCQwyDdpNe4VQbCn8dv0=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=XZKtVB9MYHbcQTXCJ+j7hJaLguyd7c/Tkt2YidGLJNWrq1u0uhdWZWqN6GwRYRkd3u+ddIPLZ0VigyEkE99sUg1M8WlrjPDGi53lauFwfIk1nI7KKTlxvXPKMM9i3W2fuyq+QrByYBHoFdEgcvAPv4YNYQnQt/wBRZM1BBe/N+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lESGD8uI; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lESGD8uI"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43cf257158fso22116825e9.2
+        for <linux-kernel@vger.kernel.org>; Sat, 05 Apr 2025 21:12:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743912726; x=1744517526; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=CkhZzdyHthH3zlmYOF4rhVybnNJuyP+fVbqgr5eqZcQ=;
+        b=lESGD8uIekTC1fEkf/VpUCe4UX2LVgAwwhMYiL2czuhwx9Y9DctRKwT1gHwqdxMN/c
+         wlkQibaMuWIJDx15b1GMnfJ5dsPPrdNHpZblXLfWXzXPJ854EH6bapUoeOMjVl5vfc4C
+         +R1t2E5gwNPB665JeXYcFqIorSdFAq4lIwTUJOAYcpHBBJvXTQ5UHIb4V+nbHyZVbAvZ
+         y1qw+NLjPPweHz0S18/9SyT6xCbUqrUcogYNfSVoSLh1mQ71ZgYji7vE1/ZP/oRypUzh
+         TqurggFcaAT/TrQXQyg2QuYepoeO53sqgoUzH1Ht/Lsl9D7+ueHiyFVhNl9Xq/11rgrJ
+         xmfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743912726; x=1744517526;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=CkhZzdyHthH3zlmYOF4rhVybnNJuyP+fVbqgr5eqZcQ=;
+        b=whIMjjwn52yvLYsOcbR9R89QcYHNC0vH8jYqcADsewdY3OoZEuqwhupnzAFcf2eI9V
+         D8cqnXFD2WR2BC95PEdmpxF8Ag9hE70+I1qd3+oCxEK/3xZ1tv5LUvA5HWfToVVCvTJ9
+         VhpWwIISWBxuA0OX5VdPyirpDiweVr9JzMaNBVbnZI07uJOnDoi7D3NxeiAo9kgzFoAW
+         eqDGuPLZwdrh1J8z9fkAx8j4vS7biIYj2y/6/tXvlMbrZkDT9+OF8r9ekfaEURtDw4Xz
+         8hrbTUE2ldbI0G63J0VN+29HLzh/7cZWyCTNdiQ3XmA9ukU9TiJdfHDYAXxsMaiKdYsO
+         yeRA==
+X-Forwarded-Encrypted: i=1; AJvYcCWY1EznEYrwziNZr2E9lsu4uE9DhTGVtqPL1vvLiWD7R+T0ktb1vP5knuhZHsD4qK7z1/+tLNSTdsrSEAA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyjPGruCdzpNO14Tb8z/Z0D9S2onwLzhFZZvphrVUOZEVP1eZdr
+	3xQNstjMcaCOlIWBW6eXyyVRNayB3d4p0AGhMiCXSBq+zghOWux/
+X-Gm-Gg: ASbGnctiS0CH4V8LurjH859AtR3ol7UYe9RrF4uCCjioFxSvgmocepIVg2LDQYDHuNf
+	n8Ok6INkP5tVATIGWNPZGfIvB1Txt6dkgTWeRNN+0Zp2DNM558DCYFkAt1lMdhwg9YZlCp077Ul
+	zzeTOdWlcKXM6G3uwnNAYTSYDfALuOH5d/yyuyN2EU5EjFoLyO4kW4B1jxQIRG3nud32wsOzPCN
+	r5CZPttK0yZ2WTUznobs8848KidwkuIDuSwj+SKkuUm1Okovr0v6uq6S7fImxmotBngDENKN3OC
+	qef7keKZxuMSodQGrV+hkg0FMAeGfu9p5sln9Ehm3rPXOo3FIiH4rkaLKbo=
+X-Google-Smtp-Source: AGHT+IGC1ME0LK4Hbev186Hx/YDZFRCSQdBf01P3L8jVlOccePJ7qVSVmJivVIhwZkJfuIasb9ou4w==
+X-Received: by 2002:a05:6000:400f:b0:391:4674:b10f with SMTP id ffacd0b85a97d-39cba9332fdmr7099197f8f.36.1743912725851;
+        Sat, 05 Apr 2025 21:12:05 -0700 (PDT)
+Received: from [192.168.210.251] ([197.232.62.223])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c30096964sm8471638f8f.15.2025.04.05.21.12.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 05 Apr 2025 21:12:05 -0700 (PDT)
+Message-ID: <b5cc9143f1ff84ac13aff6e5f56e1c14b4a181f7.camel@gmail.com>
+Subject: Re: [PATCH 1/2] staging: rtl8723bs: Optimize variable
+ initialization in rtl8723b_hal_init.c
+From: Erick Karanja <karanja99erick@gmail.com>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: gregkh@linuxfoundation.org, outreachy@lists.linux.dev, 
+	philipp.g.hortmann@gmail.com, linux-staging@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Date: Sun, 06 Apr 2025 07:11:56 +0300
+In-Reply-To: <8ce041b2-087c-4d47-891f-28ecc0c91c76@stanley.mountain>
+References: <cover.1743820815.git.karanja99erick@gmail.com>
+	 <f7b63d834b98aedfe2ce277d8008d7e398ea29ba.1743820815.git.karanja99erick@gmail.com>
+	 <8ce041b2-087c-4d47-891f-28ecc0c91c76@stanley.mountain>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpsz:smail.nju.edu.cn:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: NDtUtlvFer7vuL30EMS9WW//AhR2V8eVnM5LKYZgJsHOa4XSIg5er6NU
-	/VkH0wmhHjme8CUmsPGN3+tVuSIeGbuUxQrG7CrlljWB10z6Gt+abS50gWZsdgpJ7mLGskk
-	fAqskA8iAT/VVU5xnId8Q6Xvgg8rXU78O///FEvX/3PWE6I6IYKUUBCB1MP70wQFNn1KRoO
-	pPFCSQtLJlA3KFlO982mCwHROnVjmpt2GQd268Wc4iN51tguNBnGeq3ONeNQXvXatbjhiUU
-	vAzu7+U8idvrgn+oqznWTh6NMzrEOwEx/lGzx8uc6TtoSx8FQWvSamg0MauLnYS2Kh4t90m
-	h3XBeJTaBk/szjZMT7lZ5x4LvXPj8j7xjpZnSTIO4xcFnTd71OnHSIohHJ7drU71FS8dNdB
-	0gEvNeOQgjSQb67XOdsKsFzbe9p+J+C4mBMm6n3G70TPTJsOVeZEMMoRiz5y2RnmsmsvoBC
-	dfTLPPie5BTHAYTsc2xzrV/GihEi+290h/XyfNb2vVmJYeHrJHXeOI8qA4bsTXUfl7fKyyk
-	rBSBI5cIBKErU2i7lUBhAUoGA4wDpO5TxNkvg+W0LYa0wLSckeNxj713V/K6XghWV3CauK/
-	jIBZQYVfKdiRwiwhHVwqwSgqo6ZI8hHkR4/YBNgxLE9ZFBkPUGfCAOPJbkBHbYJ1jzsyaeB
-	bklO3V0N09NdYbFKfGSMeePARw044P/8R8j89EI1d64aHhGNhhEZuRyrKe0O1oH5+a28ka2
-	DzdYM9RaM6qwwfrqfMHc526Wpa6VRBkmGlaPQjcukIIiF63wGlyGZaFuW67EgfRWWowzmlP
-	1kcXk4zq+b/XD4XzQGaDHSp4UwLWTraAvVoD9rZUwALuvIP03k7mGqUnG1U1iihT9j5DGTn
-	nR7zSHk6dOqkaeu4NU433BLmWqp1UJRNrjUqQHGev3mHMoYNRXm7+eZPfZ+XX5MjTp8lw7t
-	NsPgwVAxtl+VJTm1d8L7lyfEhw+Sh9ob1DY3LJu2RhO5oCA==
-X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
-X-QQ-RECHKSPAM: 0
 
-From: xizheyin <xizheyin@smail.nju.edu.cn>
-
-Some comments in Rust files use raw URLs (http://example.com) rather
-than Markdown autolinks [text](URL). This inconsistency makes the
-documentation less uniform and harder to maintain.
-
-This patch converts all remaining raw URLs in Rust code comments to use
-the Markdown autolink format, maintaining consistency with the rest of
-the codebase which already uses this style.
-
-Link: Rust-for-Linux#1153
-Suggested-by: Miguel Ojeda <ojeda@kernel.org>
-Signed-off-by: Xizhe Yin <xizheyin@smail.nju.edu.cn>
----
- rust/kernel/alloc.rs               | 2 +-
- rust/kernel/alloc/allocator.rs     | 2 +-
- rust/kernel/cred.rs                | 2 +-
- rust/kernel/kunit.rs               | 2 +-
- rust/kernel/miscdevice.rs          | 2 +-
- rust/kernel/print.rs               | 2 +-
- rust/kernel/rbtree.rs              | 2 +-
- rust/kernel/std_vendor.rs          | 4 ++--
- rust/kernel/sync/arc/std_vendor.rs | 4 ++--
- 9 files changed, 11 insertions(+), 11 deletions(-)
-
-diff --git a/rust/kernel/alloc.rs b/rust/kernel/alloc.rs
-index fc9c9c41cd79..d2f067ed8986 100644
---- a/rust/kernel/alloc.rs
-+++ b/rust/kernel/alloc.rs
-@@ -152,7 +152,7 @@ pub unsafe trait Allocator {
-     /// - aligned to `layout.align()`,
-     ///
-     /// Additionally, `Flags` are honored as documented in
--    /// <https://docs.kernel.org/core-api/mm-api.html#mm-api-gfp-flags>.
-+    /// [kernel documentation: GFP flags](https://docs.kernel.org/core-api/mm-api.html#mm-api-gfp-flags).
-     fn alloc(layout: Layout, flags: Flags) -> Result<NonNull<[u8]>, AllocError> {
-         // SAFETY: Passing `None` to `realloc` is valid by its safety requirements and asks for a
-         // new memory allocation.
-diff --git a/rust/kernel/alloc/allocator.rs b/rust/kernel/alloc/allocator.rs
-index aa2dfa9dca4c..2e05ae842b62 100644
---- a/rust/kernel/alloc/allocator.rs
-+++ b/rust/kernel/alloc/allocator.rs
-@@ -6,7 +6,7 @@
- //! linked below. For instance, this includes the concept of "get free page" (GFP) flags and the
- //! typical application of the different kernel allocators.
- //!
--//! Reference: <https://docs.kernel.org/core-api/memory-allocation.html>
-+//! Reference: [kernel documentation: Memory Allocation](https://docs.kernel.org/core-api/memory-allocation.html)
- 
- use super::Flags;
- use core::alloc::Layout;
-diff --git a/rust/kernel/cred.rs b/rust/kernel/cred.rs
-index 2599f01e8b28..589557e18d79 100644
---- a/rust/kernel/cred.rs
-+++ b/rust/kernel/cred.rs
-@@ -6,7 +6,7 @@
- //!
- //! C header: [`include/linux/cred.h`](srctree/include/linux/cred.h).
- //!
--//! Reference: <https://www.kernel.org/doc/html/latest/security/credentials.html>
-+//! Reference: [kernel documentation: Credentials](https://www.kernel.org/doc/html/latest/security/credentials.html)
- 
- use crate::{
-     bindings,
-diff --git a/rust/kernel/kunit.rs b/rust/kernel/kunit.rs
-index 1604fb6a5b1b..ec0d4889cc12 100644
---- a/rust/kernel/kunit.rs
-+++ b/rust/kernel/kunit.rs
-@@ -4,7 +4,7 @@
- //!
- //! C header: [`include/kunit/test.h`](srctree/include/kunit/test.h)
- //!
--//! Reference: <https://docs.kernel.org/dev-tools/kunit/index.html>
-+//! Reference: [kernel documentation: KUnit](https://docs.kernel.org/dev-tools/kunit/index.html)
- 
- use core::{ffi::c_void, fmt};
- 
-diff --git a/rust/kernel/miscdevice.rs b/rust/kernel/miscdevice.rs
-index fa9ecc42602a..3cbd0258475c 100644
---- a/rust/kernel/miscdevice.rs
-+++ b/rust/kernel/miscdevice.rs
-@@ -6,7 +6,7 @@
- //!
- //! C headers: [`include/linux/miscdevice.h`](srctree/include/linux/miscdevice.h).
- //!
--//! Reference: <https://www.kernel.org/doc/html/latest/driver-api/misc_devices.html>
-+//! Reference: [kernel documentation: Miscdevices](https://www.kernel.org/doc/html/latest/driver-api/misc_devices.html)
- 
- use crate::{
-     bindings,
-diff --git a/rust/kernel/print.rs b/rust/kernel/print.rs
-index cf4714242e14..896a2ef2652a 100644
---- a/rust/kernel/print.rs
-+++ b/rust/kernel/print.rs
-@@ -4,7 +4,7 @@
- //!
- //! C header: [`include/linux/printk.h`](srctree/include/linux/printk.h)
- //!
--//! Reference: <https://docs.kernel.org/core-api/printk-basics.html>
-+//! Reference: [kernel documentation: Printk basics](https://docs.kernel.org/core-api/printk-basics.html)
- 
- use crate::{
-     ffi::{c_char, c_void},
-diff --git a/rust/kernel/rbtree.rs b/rust/kernel/rbtree.rs
-index 5246b2c8a4ff..a9b10ae73dbf 100644
---- a/rust/kernel/rbtree.rs
-+++ b/rust/kernel/rbtree.rs
-@@ -4,7 +4,7 @@
- //!
- //! C header: [`include/linux/rbtree.h`](srctree/include/linux/rbtree.h)
- //!
--//! Reference: <https://docs.kernel.org/core-api/rbtree.html>
-+//! Reference: [kernel documentation: Rbtree](https://docs.kernel.org/core-api/rbtree.html)
- 
- use crate::{alloc::Flags, bindings, container_of, error::Result, prelude::*};
- use core::{
-diff --git a/rust/kernel/std_vendor.rs b/rust/kernel/std_vendor.rs
-index 279bd353687a..ae2a56d7cdc7 100644
---- a/rust/kernel/std_vendor.rs
-+++ b/rust/kernel/std_vendor.rs
-@@ -3,9 +3,9 @@
- //! Rust standard library vendored code.
- //!
- //! The contents of this file come from the Rust standard library, hosted in
--//! the <https://github.com/rust-lang/rust> repository, licensed under
-+//! the [rust-lang/rust](https://github.com/rust-lang/rust) repository, licensed under
- //! "Apache-2.0 OR MIT" and adapted for kernel use. For copyright details,
--//! see <https://github.com/rust-lang/rust/blob/master/COPYRIGHT>.
-+//! see [rust-lang/rust/blob/master/COPYRIGHT].
- 
- /// [`std::dbg`], but using [`pr_info`] instead of [`eprintln`].
- ///
-diff --git a/rust/kernel/sync/arc/std_vendor.rs b/rust/kernel/sync/arc/std_vendor.rs
-index 11b3f4ecca5f..a95002ee4add 100644
---- a/rust/kernel/sync/arc/std_vendor.rs
-+++ b/rust/kernel/sync/arc/std_vendor.rs
-@@ -3,9 +3,9 @@
- //! Rust standard library vendored code.
- //!
- //! The contents of this file come from the Rust standard library, hosted in
--//! the <https://github.com/rust-lang/rust> repository, licensed under
-+//! the [rust-lang/rust](https://github.com/rust-lang/rust) repository, licensed under
- //! "Apache-2.0 OR MIT" and adapted for kernel use. For copyright details,
--//! see <https://github.com/rust-lang/rust/blob/master/COPYRIGHT>.
-+//! see [rust-lang/rust/blob/master/COPYRIGHT].
- 
- use crate::sync::{arc::ArcInner, Arc};
- use core::any::Any;
--- 
-2.49.0
+On Sat, 2025-04-05 at 17:19 +0300, Dan Carpenter wrote:
+> On Sat, Apr 05, 2025 at 06:14:48AM +0300, Erick Karanja wrote:
+> > Optimize variable initialization by integrating the initialization
+> > directly into the variable declaration in cases where the
+> > initialization
+> > is simple and doesn't depend on other variables or complex
+> > expressions.
+> > This makes the code more concise and readable.
+> >=20
+> > Signed-off-by: Erick Karanja <karanja99erick@gmail.com>
+> > ---
+> > =C2=A0.../staging/rtl8723bs/hal/rtl8723b_hal_init.c | 155 +++++--------=
+-
+> > ----
+> > =C2=A01 file changed, 41 insertions(+), 114 deletions(-)
+> >=20
+> > diff --git a/drivers/staging/rtl8723bs/hal/rtl8723b_hal_init.c
+> > b/drivers/staging/rtl8723bs/hal/rtl8723b_hal_init.c
+> > index e15ec6452fd0..1e980b291e90 100644
+> > --- a/drivers/staging/rtl8723bs/hal/rtl8723b_hal_init.c
+> > +++ b/drivers/staging/rtl8723bs/hal/rtl8723b_hal_init.c
+> > @@ -152,13 +152,12 @@ static int _WriteFW(struct adapter *padapter,
+> > void *buffer, u32 size)
+> > =C2=A0void _8051Reset8723(struct adapter *padapter)
+> > =C2=A0{
+> > =C2=A0	u8 cpu_rst;
+> > -	u8 io_rst;
+> > +	u8 io_rst =3D rtw_read8(padapter, REG_RSV_CTRL + 1);
+> > =C2=A0
+> > =C2=A0
+> > =C2=A0	/*=C2=A0 Reset 8051(WLMCU) IO wrapper */
+> > =C2=A0	/*=C2=A0 0x1c[8] =3D 0 */
+> > =C2=A0	/*=C2=A0 Suggested by Isaac@SD1 and Gimmy@SD1, coding by
+> > Lucas@20130624 */
+> > -	io_rst =3D rtw_read8(padapter, REG_RSV_CTRL+1);
+> > =C2=A0	io_rst &=3D ~BIT(0);
+> > =C2=A0	rtw_write8(padapter, REG_RSV_CTRL+1, io_rst);
+>=20
+> I hate this.=C2=A0 It's a bad idea to put "code" in the declaration block=
+.
+Thank you on the review I believe updating the semantic patch to check
+for this could be great.
+>=20
+> > @@ -501,8 +499,7 @@ void Hal_GetEfuseDefinition(
+> > =C2=A0	switch (type) {
+> > =C2=A0	case TYPE_EFUSE_MAX_SECTION:
+> > =C2=A0		{
+> > -			u8 *pMax_section;
+> > -			pMax_section =3D pOut;
+> > +			u8 *pMax_section =3D pOut;
+>=20
+> This is fine because "pOut" is a variable.=C2=A0 It doesn't have side
+> effects
+> and it's not "code" in that sense.
+>=20
+> regards,
+> dan carpenter
+>=20
 
