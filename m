@@ -1,65 +1,64 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E622F1ACEDE
-	for <linux-kernel@vger.kernel.org>; Sun,  6 Apr 2025 19:50:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46CAB1B4223
+	for <linux-kernel@vger.kernel.org>; Sun,  6 Apr 2025 19:50:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743969033; cv=none; b=Cg/sYFpslAQgiaedD5pH22pMSUAgd1uFVi6F6+umuKXHCLD3mh/GCrTBYCgPhQWBS5KWItDEQO6dGPPX4ERsH9WQOxjePn3YYpJM3JwH5md/vTPjt83Sv3kAWaMzS3RwIV79XQ7RtmbkSxGbIeOVAHPm1dIE2+JyVazR6JLEKkE=
+	t=1743969035; cv=none; b=nSpTrTNts1hyFzelVuQvPbFVa5J4sjXsiwNlaFYasmkCpXkh01Plct86bxNHyXzvQPcm/mIlIGzI4vTTXfzPnaeCfd6kCz/shO0gVgGxddImxCAeQD3wTX/d70XKOo6gXKHwgIkComTgiFyFLI1QPQN9kg5pLHih775+JO94BHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743969033; c=relaxed/simple;
-	bh=7E3lHXVCsgJOkQ7AaPEKNlLTmxxbGsbpfYEKauuK9hk=;
+	s=arc-20240116; t=1743969035; c=relaxed/simple;
+	bh=a9qheLkJ9G/a0gSpyASbiRRdDdncTZ0T8HcY8kFp15I=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=aFP75WOokBnCvsM2Y3qqZkxCnriTWXQcNwy88GJ88+uZX28X7+DHIBEDCqwGK2XxddmQDdwbj6vF8XcSNJgASRRrjbNL/UtQHqhvWmsbqgXbb7ZQFi6WGWV264nJGbg/ngXQ6f7ZgBmCeGQ1Fw6xLHcjHs240jVyifpwgojtOKY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=A/NHdnbd; arc=none smtp.client-ip=209.85.221.43
+	 In-Reply-To:To:Cc; b=M6V756yFtK9P8d210l3p/2sv50/s13eBj3sgkuo8fMJmBoo0hZLITzWKqNZgncP1HZfO0NEPu7XlJKuF1/0Ot+PE3j1HAou2jH+Zy/3UYb8SOv8b0Pyb/WQq4BhWJwaCasR1qugLaOea6aZfdeZKGq4ztclpsI0mtQRb/ESnQ2g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GXwX43MG; arc=none smtp.client-ip=209.85.221.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="A/NHdnbd"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-39973c72e8cso400091f8f.0
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Apr 2025 12:50:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GXwX43MG"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3912b75c0f2so498308f8f.0
+        for <linux-kernel@vger.kernel.org>; Sun, 06 Apr 2025 12:50:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743969030; x=1744573830; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1743969031; x=1744573831; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=VR97euHE162ApOlfxWuhoAZeFnhz9Q18WWSjNJsmRcQ=;
-        b=A/NHdnbditwDch8uCa9jbR2tnHEbVteQ3oBNr9ktgflABJNFU1UvqbwVmIHM1EOd9N
-         9FjD0t7009TACnVcWCTtTchSF+4roU6uz/ANDjdj1WHXIVEsPnO7mZe1alGN6C7Go/KV
-         Vc0FxuGhHNnscc5S+YI7sJOxeWvmzXK9PpHHno3zizE2MI9zfeL8Dd/GH7TapcHVk4y9
-         xuSoOiCFLEmaRpWppAGnscbY9+9e6NGDPrzmQpxtUUpcWtOzo5rLoz2l6nGnhOQgCuqT
-         U/NophUNsIXA4zjA4cg1IkfyQzPa2ngixJO+GLtpZ+q7oVloOAfWw6Jz39gc2S/w20+O
-         5JeA==
+        bh=ZDkiZVmg4AIfX8pESt1JXnk8CGq+bjZDxSINRLpNjsQ=;
+        b=GXwX43MGn+irBKyMc0jT5DBkrgmAjgNtlRXt8b73D0BjzzJI7793qLLuIqoy9Qp7lC
+         LbZ6qvBgCg0fleuN/x6KGA492igoT//xaJ+G1wKCruEZoWVncBb1F2js/G61gFXXHjmJ
+         G4m7ZYNNsmgWtK4a2g95ARRjRm+DDy0J/+N/gdbExgBaGmdPhqbK0iUXlLN2yOD6Np1G
+         ZFAkvDdC4Bt3BeBDhn7OS7drhQ3tkGcD2vWQLmyBuW5fw+Lm2KOxHg26ExcIKwx4F5ud
+         kj6PpQtQLopBGRDDS3cVo0+hWf2fmKx3NrlHzxHEUkruyNBzh95oRlUNzVM6/Q0kBaY6
+         bQJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743969030; x=1744573830;
+        d=1e100.net; s=20230601; t=1743969031; x=1744573831;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=VR97euHE162ApOlfxWuhoAZeFnhz9Q18WWSjNJsmRcQ=;
-        b=MUACwBMWzf3FqNu2iW2V1Y2DJg1go2FwJvvQ6UB0JBocWVm2ljVsQzDFVnAaV5O4sm
-         q5CHu2KFmzmT2EuHfus7bwjC90XW9wVrjTSoZe997teOpEcEndrKEkWFC0lh4LnUWjx+
-         ovwgHlWNmCJzQwPtSJU2QSZNpttbfHV9DsgtGOmAtFEciHQNfZRHzDC2jCA1g50dCH6v
-         Jm5WQvTRNoyeKDo0oTCG2BVV0CLiwO1xjeMJmlr1nkekZpxUOQk0QWIdo9gVRVchSFyq
-         SWz3kvUyZ2KUZQYMFR055/OnlWKvk+xKbab66Vs8D2fFDRIDBHYCvscply7tFATDXb14
-         pX9Q==
-X-Gm-Message-State: AOJu0Yx/e1otX2zJQVLGwr6vxQICKkMgIv+GmWZYPwceYrJ1HIQUpcJO
-	eb1PTnadnVSyfPkC9j/KTal38pzTYk/29iB9UMqUurtdQwVf+bCQNvDic03z3LlYq8JWt+v7v/X
-	4
-X-Gm-Gg: ASbGncs9Lk9tWwWpcw7rLfzmK2uwjBbIpTCkWo0gEaCLIVLSAr2MZkkr2VHk6yUQSSg
-	l+ohjBjTiPo2hNMzqrrBrKufw71XsQJzzxF2vtlaQ2zONUxAPiABo8CKFgc1AU6qmESCCQLGm8+
-	fD7hKxrOm0S0PTOiOdblXnRnwCqk0A1kBQNJ05baMFD/bJZBEDIGFZEVqA7H1DAt4ZF7p7hhSQ1
-	z5Pg/mLHtzpU/gdwbDtytdtEbxnj7RA9sCUxssSUWEyThM8ER8klNp+TvZzrd5V8fw1DgwohwDs
-	JPx5fQ7r2Owczx44bJ3A+vgcwnn4KoYbW5wYz8XCcYMNNV3Q2yL6G9PizG6i9Vg=
-X-Google-Smtp-Source: AGHT+IEtbLNMWw4XaETfOT1ZVrJRsoA6YQ4JX3rCVHW3wWScVhJbyysTJPCmndulqnls/c6HijzdPw==
-X-Received: by 2002:a05:600c:45d0:b0:43d:2318:ed7f with SMTP id 5b1f17b1804b1-43ecf57e769mr34648875e9.0.1743969030323;
-        Sun, 06 Apr 2025 12:50:30 -0700 (PDT)
+        bh=ZDkiZVmg4AIfX8pESt1JXnk8CGq+bjZDxSINRLpNjsQ=;
+        b=ZnfQnw+OZXTQ3GfauJNkdPK0oPGWHyRyjkWq58gFQ2o+M4j4PCvAceLLaDL8G0+DkJ
+         UhF5i2j76LKSXHQlewIelLJoDb3PdEHjtItU/pTco79LAXF7ki14knJmCUJ6lfnhPvAY
+         H2V2kwxrm7iqPd12gjLf43u/7rETEcxK1gJGAnASkQS8/sj2icZE7oN72jH+UKVeu3ia
+         2RHecGdKU/nL/izM0Y4s4rwBIXo/r7lnH0Xqx17Ni45qL9L/85qzOgeydHa25Pts54ac
+         KqkGQAdx8CxkOfJfhAS6EmkV/QK4c9eOt49pvCeXRt+43pDyVhrN9INKB8y79BJyxYXO
+         MSLg==
+X-Gm-Message-State: AOJu0YwwZnzwfs4ihwZ/X88d64d3ZC0FsRzREFrygtIUCxuZmJNL4vQa
+	yAtNu7lqyNEZZupyfqJJVVMsrRKC69xs1XRXK/itDLXaRvTRKsqxFtG5nCpTgmQ=
+X-Gm-Gg: ASbGncv4WoIhaoVlIzokd0BWsdDxuIOWnkOoIPxFezgT0wTuSXlVnVDaxxp2ZWtrEg1
+	onHkG3+1b2WQHRM+oBZhObO+W2zkHOGkk9NjQTSRzwJaem/2x5HrI8QKmC1IeowyYWg9EPF7aQD
+	7SkpCVBfWhSVwl/WeCMVGaY3kCAzrF4ATHmmHSaxispTPiQumPUwR6AnNxSskzYEoGlm8+FT0pU
+	aIoK0iRidvmZMeOzCnu/8X7bah6+EgkC8F7tw6nzJllfF1SQufhQES7Kb+6gAC8YT3tqi6Sx6AA
+	+gMLgod76G2By5ErZDasvRG9cACdjBnbfl4dCRFEGhB/rtT+pAxa1yEKYy6/V1U=
+X-Google-Smtp-Source: AGHT+IHLrtMclK8VcZgIu5o7LMvtyM3oVnyeACZFIOpwCRqYoq9QiN4CsiiISvWSu47uMhHgmdiXmA==
+X-Received: by 2002:a05:600c:35c2:b0:43b:c962:ad29 with SMTP id 5b1f17b1804b1-43ecf81e058mr30045245e9.1.1743969031565;
+        Sun, 06 Apr 2025 12:50:31 -0700 (PDT)
 Received: from [192.168.1.26] ([178.197.198.86])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c301b69c4sm10053842f8f.43.2025.04.06.12.50.28
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c301b69c4sm10053842f8f.43.2025.04.06.12.50.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Apr 2025 12:50:29 -0700 (PDT)
+        Sun, 06 Apr 2025 12:50:31 -0700 (PDT)
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Date: Sun, 06 Apr 2025 21:50:11 +0200
-Subject: [PATCH 3/8] mfd: max14577: Fix wakeup source leaks on device
+Date: Sun, 06 Apr 2025 21:50:12 +0200
+Subject: [PATCH 4/8] mfd: max77541: Fix wakeup source leaks on device
  unbind
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -69,7 +68,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250406-mfd-device-wakekup-leak-v1-3-318e14bdba0a@linaro.org>
+Message-Id: <20250406-mfd-device-wakekup-leak-v1-4-318e14bdba0a@linaro.org>
 References: <20250406-mfd-device-wakekup-leak-v1-0-318e14bdba0a@linaro.org>
 In-Reply-To: <20250406-mfd-device-wakekup-leak-v1-0-318e14bdba0a@linaro.org>
 To: Karel Balej <balejk@matfyz.cz>, Lee Jones <lee@kernel.org>, 
@@ -80,21 +79,21 @@ To: Karel Balej <balejk@matfyz.cz>, Lee Jones <lee@kernel.org>,
 Cc: linux-kernel@vger.kernel.org, 
  Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=798;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=785;
  i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
- bh=7E3lHXVCsgJOkQ7AaPEKNlLTmxxbGsbpfYEKauuK9hk=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBn8tr3ROW9QB8peMNUt0PvVNsXHegREeVqqwtYJ
- RV5ejDG4dmJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZ/La9wAKCRDBN2bmhouD
- 13S/D/wPqpX4uT5yfTWz0Gu2YhI1/k6Xhy3CoEseQGJPBNQqkVSIvj2pNNtsG2YsuaYdAhB8e3U
- +5FEco5rUvBuJ8NQOtNzNjHFU2gNei8OUaW8U4aw2meFoaAIjTHZM0z5ZrWKUx5+EBDhfTzJH/M
- PqPWHmXkS/3EtilpaITZpFm7tyF27nMSLTjx3wni9vvYGvtL/eWarscK9lCA+UXrX/oGkuC2MLQ
- aZj/rrrWbjaHcXa8TYmMO8Tw7gHQMx8nMGwojJMqOixni7Gh8whWFaSVt54IoP/itQ1Qz9OF2tg
- H6r3onywTVWs/uUm9LtZYmi9L6zqcqCrlrKKwKsUUQLty9iRwAw2CzJ5FbU65nXkZS64J7awumE
- YmF6YK25RrYN8WIVUDwOtA+03ufB9iEMu4iFvu209zNYVpfGXDEcoTXa+3PNur54bWFZFkA2nxN
- PxC38C/sGPRoonPFT6IL/7rmakrDHI7DPn6lwrdAgXNsrl4ZiAvrTKJKnSzyS8iif5qqwGh0VqV
- tojzupb2rlHCzTc1SXdRo7cj8nopzZTkWvUXHwKHelsCSguBzozL53dh9MFgAf2pBjlKpDlT+nU
- iKPrOuycEmUTK/o2Ety2c3Enf3RPKKMAlOb5j09QxsPVFpOUIzBF2/OOO1qZEoDnTX9OpZGcX+F
- g1NzWNGZPsdJClw==
+ bh=a9qheLkJ9G/a0gSpyASbiRRdDdncTZ0T8HcY8kFp15I=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBn8tr4AV7Y4qG43E9u6J2PWTGEE8to4nntaI6ya
+ qZwORfWCa6JAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZ/La+AAKCRDBN2bmhouD
+ 1wxND/9qo7JsMiyvaVPUtWqdVDMzJMgEyq9td+m7R0bAAg+rPqBziSVJyoxvfPavvBlhMh5iLxP
+ 3OAD+AKBqJKONv15meWcd8JAuoIOrdMK2XNAWXRe9DubIpaSHi+HhA0yTgrlN59FWZEbKyOY7va
+ cE/xYgiVIii/ojRkSubeakK6A1bhzBL3FruTCCFyy08Hw4szbsbJytcDClDYHaIPch0ZKsBQbIr
+ XGvpIR7oaeyr3C1WGi78Cc9pM+eV8N8NEij5c0Sgw2/GbWxkua+kfP1uDxpLGbql9XSLxwTGdXK
+ 2xquKOg2y4tSwFXd1sf2JogrpGJoPpSnzOoPd5SGBw0d0rv59LbzMDK/6ZV0F3PtHml5tqxbRKj
+ 4+/PDN50j7o5vDxY8o5kj98fi3DRjLO8CH8E6lnALMqeW4TxXVFXbwzawNmn9u3xf12mOcaKhZu
+ 5YQ4kBZLHgB0UCWi/6HSOAixoTKLNrZGSWwOdQpJzWtRf1jRW1wwSD9eH6R3JEAOkUPWwZL2mGe
+ 7d9lzPlClC1dHit7y6sjk6RsATVuvzqx279+owl0N3fg9+e9OxQKxeknPV7+/XMGAavzbK4qAzK
+ ys5Nok0FktnYBhFf5OLe5EEkJNdBlx4xF6XaomkXyx/ybK60Z/nT6MNq91NVVH3CnRiFpJmB+X2
+ aB2ny2dvLWgKBMw==
 X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
  fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 
@@ -103,21 +102,22 @@ source.
 
 Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
- drivers/mfd/max14577.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/mfd/max77541.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/mfd/max14577.c b/drivers/mfd/max14577.c
-index 6fce79ec2dc64682ef4d85f22d762ec8e2ce1adb..7e7e8af9af224660557e76c2b80d92b05c86d202 100644
---- a/drivers/mfd/max14577.c
-+++ b/drivers/mfd/max14577.c
-@@ -456,6 +456,7 @@ static void max14577_i2c_remove(struct i2c_client *i2c)
- {
- 	struct max14577 *max14577 = i2c_get_clientdata(i2c);
+diff --git a/drivers/mfd/max77541.c b/drivers/mfd/max77541.c
+index d77c31c86e4356f5c19eb0e1d958d1e2f360f4cb..f91b4f5373ce938ccdab2d473039540aeb408b1d 100644
+--- a/drivers/mfd/max77541.c
++++ b/drivers/mfd/max77541.c
+@@ -152,7 +152,7 @@ static int max77541_pmic_setup(struct device *dev)
+ 	if (ret)
+ 		return dev_err_probe(dev, ret, "Failed to initialize IRQ\n");
  
-+	device_init_wakeup(max14577->dev, false);
- 	mfd_remove_devices(max14577->dev);
- 	regmap_del_irq_chip(max14577->irq, max14577->irq_data);
- 	if (max14577->dev_type == MAXIM_DEVICE_TYPE_MAX77836)
+-	ret = device_init_wakeup(dev, true);
++	ret = devm_device_init_wakeup(dev);
+ 	if (ret)
+ 		return dev_err_probe(dev, ret, "Unable to init wakeup\n");
+ 
 
 -- 
 2.45.2
